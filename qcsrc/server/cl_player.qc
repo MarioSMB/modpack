@@ -771,7 +771,8 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		{
 			if(substring(msgin, 0, 3) == "/me")
 			{
-				msgin = strreplace("/me", "", msgin);
+				//msgin = strreplace("/me", "", msgin);
+				msgin = substring(msgin, 3, strlen(msgin));
 				msgstr = strcat("\{1}^4* ^7", namestr, "^7", msgin);
 			}
 			else
