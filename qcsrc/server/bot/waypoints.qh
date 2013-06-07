@@ -1,0 +1,61 @@
+/*
+ * Globals and Fields
+ */
+
+float WAYPOINTFLAG_GENERATED = 8388608;
+float WAYPOINTFLAG_ITEM = 4194304;
+float WAYPOINTFLAG_TELEPORT = 2097152;
+float WAYPOINTFLAG_NORELINK = 1048576;
+float WAYPOINTFLAG_PERSONAL = 524288;
+
+// fields you can query using prvm_global server to get some statistics about waypoint linking culling
+float relink_total, relink_walkculled, relink_pvsculled, relink_lengthculled;
+
+float botframe_waypointeditorlightningtime;
+float botframe_loadedforcedlinks;
+float botframe_cachedwaypointlinks;
+
+.entity wp00, wp01, wp02, wp03, wp04, wp05, wp06, wp07, wp08, wp09, wp10, wp11, wp12, wp13, wp14, wp15;
+.entity wp16, wp17, wp18, wp19, wp20, wp21, wp22, wp23, wp24, wp25, wp26, wp27, wp28, wp29, wp30, wp31;
+
+// itemscore = (howmuchmoreIwant / howmuchIcanwant) / itemdistance
+.float wp00mincost, wp01mincost, wp02mincost, wp03mincost, wp04mincost, wp05mincost, wp06mincost, wp07mincost;
+.float wp08mincost, wp09mincost, wp10mincost, wp11mincost, wp12mincost, wp13mincost, wp14mincost, wp15mincost;
+.float wp16mincost, wp17mincost, wp18mincost, wp19mincost, wp20mincost, wp21mincost, wp22mincost, wp23mincost;
+.float wp24mincost, wp25mincost, wp26mincost, wp27mincost, wp28mincost, wp29mincost, wp30mincost, wp31mincost;
+
+.float wpfire, wpcost, wpconsidered, wpisbox, wpflags, wplinked, wphardwired;
+
+.vector wpnearestpoint;
+
+/*
+ * Functions
+ */
+
+void spawnfunc_waypoint();
+void waypoint_addlink(entity from, entity to);
+void waypoint_think();
+void waypoint_clearlinks(entity wp);
+void waypoint_schedulerelink(entity wp);
+
+void waypoint_remove(entity e);
+void waypoint_removeall();
+void waypoint_schedulerelinkall();
+void waypoint_load_links_hardwired();
+void waypoint_save_links();
+void waypoint_saveall();
+
+void waypoint_spawnforitem_force(entity e, vector org);
+void waypoint_spawnforitem(entity e);
+void waypoint_spawnforteleporter(entity e, vector destination, float timetaken);
+void botframe_showwaypointlinks();
+
+float waypoint_loadall();
+float waypoint_load_links();
+
+entity waypoint_spawn(vector m1, vector m2, float f);
+entity waypoint_spawnpersonal(vector position);
+
+vector waypoint_fixorigin(vector position);
+
+void botframe_autowaypoints();

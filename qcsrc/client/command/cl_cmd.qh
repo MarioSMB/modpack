@@ -1,0 +1,10 @@
+// ==============================================
+//  CSQC client commands code, written by Samual
+//  Last updated: December 17th, 2011
+// ==============================================
+
+void Cmd_HUD_SetFields(float);
+void Cmd_HUD_Help();
+
+// used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
+void LocalCommand_macro_write_aliases(float fh);

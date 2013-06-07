@@ -1,0 +1,12 @@
+#define SVQC
+
+#define ATTN_NORM builtin_ATTN_NORM
+#define objerror builtin_objerror
+#define droptofloor builtin_droptofloor
+#define sound builtin_sound
+#define remove builtin_remove
+#define cvar_set builtin_cvar_set
+#define cvar_string builtin_cvar_string
+#define cvar builtin_cvar
+
+#pragma noref 1

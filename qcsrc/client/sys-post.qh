@@ -1,0 +1,12 @@
+#pragma noref 0
+
+#undef ATTN_NORM
+
+#ifdef COMPAT_050_ENGINE
+// WORKAROUND for 0.5.0 engine
+// FIXME remove this after 0.6 release
+#undef getproperty
+#undef getpropertyvec
+float (float property) getproperty = #303;
+vector (float property) getpropertyvec = #303;
+#endif

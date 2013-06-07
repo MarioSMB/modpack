@@ -1,0 +1,32 @@
+#define POSITIVE_PITCH_IS_DOWN
+
+#ifdef POSITIVE_PITCH_IS_DOWN
+#define fixedmakevectors makevectors
+vector fixedvectoangles(vector a);
+vector fixedvectoangles2(vector a, vector b);
+#else
+void fixedmakevectors(vector a);
+#define fixedvectoangles2 vectoangles2
+#define fixedvectoangles vectoangles
+#endif
+
+vector AnglesTransform_Apply(vector transform, vector v);
+vector AnglesTransform_Multiply(vector t1, vector t2); // A B
+vector AnglesTransform_Invert(vector transform);
+vector AnglesTransform_TurnDirectionFU(vector transform);
+vector AnglesTransform_TurnDirectionFR(vector transform);
+vector AnglesTransform_RightDivide(vector to_transform, vector from_transform); // A B^-1
+vector AnglesTransform_LeftDivide(vector from_transform, vector to_transform); // A^-1 B
+
+vector AnglesTransform_Normalize(vector t, float minimize_roll); // makes sure all angles are in their range: yaw in -180..180, pitch in -90..90, roll in -180..180 (or if minimize_roll is set, pitch in -180..180, roll in -90..90)
+
+vector AnglesTransform_ApplyToAngles(vector transform, vector v);
+vector AnglesTransform_ApplyToVAngles(vector transform, vector v);
+vector AnglesTransform_FromAngles(vector v);
+vector AnglesTransform_ToAngles(vector v);
+vector AnglesTransform_FromVAngles(vector v);
+vector AnglesTransform_ToVAngles(vector v);
+
+// transformed = original * transform + postshift
+vector AnglesTransform_Multiply_GetPostShift(vector sf0, vector st0, vector t1, vector st1);
+vector AnglesTransform_PrePostShift_GetPostShift(vector sf, vector t, vector st);

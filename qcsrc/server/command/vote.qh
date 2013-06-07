@@ -1,0 +1,51 @@
+// ================================================
+//  Declarations for the vote system/vote commands
+//  Last updated: December 14th, 2011
+// ================================================
+
+// definitions for command selection between progs
+#define VC_ASGNMNT_BOTH 1
+#define VC_ASGNMNT_CLIENTONLY 2
+#define VC_ASGNMNT_SERVERONLY 3
+
+// vote selection definitions
+#define VOTE_SELECT_ABSTAIN -2
+#define VOTE_SELECT_REJECT -1
+#define VOTE_SELECT_NULL 0
+#define VOTE_SELECT_ACCEPT 1
+
+// different statuses of the current vote
+#define VOTE_NULL 0
+#define VOTE_NORMAL 1
+#define VOTE_MASTER 2
+
+// global vote information declarations
+entity vote_caller; // original caller of the current vote
+float vote_called; // stores status of current vote (See VOTE_*)
+float vote_endtime; // time when the vote is finished
+float vote_accept_count; // total amount of players who accept the vote (counted by VoteCount() function)
+float vote_reject_count; // same as above, but rejected
+float vote_abstain_count; // same as above, but abstained
+float vote_needed_overall; // total amount of players NEEDED for a vote to pass (based on sv_vote_majority_factor)
+.float vote_master; // flag for if the player has vote master privelages 
+.float vote_waittime; // flag for how long the player must wait before they can vote again
+.float vote_selection; // flag for which vote selection the player has made (See VOTE_SELECT_*)
+string vote_called_command; // command sent by client
+string vote_called_display; // visual string of command sent by client
+string vote_parsed_command; // command which is fixed after being parsed
+string vote_parsed_display; // visual string which is fixed after being parsed
+
+// allow functions to be used in other code like g_world.qc and teamplay.qc
+void VoteThink();
+void VoteReset();
+void VoteCommand(float request, entity caller, float argc, string vote_command);
+
+// warmup and nagger stuff
+#define RESTART_COUNTDOWN 10
+entity nagger;
+float readycount; // amount of players who are ready
+float readyrestart_happened; // keeps track of whether a restart has already happened
+float restart_mapalreadyrestarted; // bool, indicates whether reset_map() was already executed
+.float ready; // flag for if a player is ready
+void reset_map(float dorespawn);
+void ReadyCount();

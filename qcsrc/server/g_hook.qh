@@ -1,0 +1,17 @@
+// Wazat's grappling hook
+.entity		hook;
+void GrapplingHookFrame();
+void RemoveGrapplingHook(entity pl);
+void SetGrappleHookBindings();
+// (note: you can change the hook impulse #'s to whatever you please)
+.float hook_time;
+
+float HOOK_FIRING = 1;
+float HOOK_REMOVING = 2;
+float HOOK_PULLING = 4;
+float HOOK_RELEASING = 8;
+float HOOK_WAITING_FOR_RELEASE = 16;
+.float hook_state;
+
+void GrappleHookInit();
+vector hook_shotorigin[4];

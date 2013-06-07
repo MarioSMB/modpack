@@ -1,0 +1,76 @@
+/*
+ * Globals and Fields
+ */
+
+float navigation_bestrating;
+float bot_navigation_movemode;
+float navigation_testtracewalk;
+
+vector jumpstepheightvec;
+vector stepheightvec;
+
+entity botframe_dangerwaypoint;
+entity navigation_bestgoal;
+
+// stack of current goals (the last one of which may be an item or other
+// desirable object, the rest are typically waypoints to reach it)
+.entity goalcurrent, goalstack01, goalstack02, goalstack03;
+.entity goalstack04, goalstack05, goalstack06, goalstack07;
+.entity goalstack08, goalstack09, goalstack10, goalstack11;
+.entity goalstack12, goalstack13, goalstack14, goalstack15;
+.entity goalstack16, goalstack17, goalstack18, goalstack19;
+.entity goalstack20, goalstack21, goalstack22, goalstack23;
+.entity goalstack24, goalstack25, goalstack26, goalstack27;
+.entity goalstack28, goalstack29, goalstack30, goalstack31;
+.entity nearestwaypoint;
+
+.float nearestwaypointtimeout;
+.float navigation_hasgoals;
+.float lastteleporttime;
+
+.float blacklisted;
+
+.entity navigation_jetpack_goal;
+.vector navigation_jetpack_point;
+
+float DEBUG_NODE_SUCCESS        = 1;
+float DEBUG_NODE_WARNING        = 2;
+float DEBUG_NODE_FAIL           = 3;
+vector debuglastnode;
+
+entity bot_waypoint_queue_owner; 	// Owner of the temporary list of goals
+entity bot_waypoint_queue_goal;		// Head of the temporary list of goals
+.entity bot_waypoint_queue_nextgoal;
+entity bot_waypoint_queue_bestgoal;
+float bot_waypoint_queue_bestgoalrating;
+
+/*
+ * Functions
+ */
+
+void debugresetnodes();
+void debugnode(vector node);
+void debugnodestatus(vector position, float status);
+
+void debuggoalstack();
+
+float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float movemode);
+
+float navigation_markroutes_nearestwaypoints(entity waylist, float maxdist);
+float navigation_routetogoal(entity e, vector startposition);
+
+void navigation_clearroute();
+void navigation_pushroute(entity e);
+void navigation_poproute();
+void navigation_markroutes_checkwaypoint(entity w, entity wp, float cost2, vector p);
+void navigation_markroutes(entity fixed_source_waypoint);
+void navigation_markroutes_inverted(entity fixed_source_waypoint);
+void navigation_routerating(entity e, float f, float rangebias);
+void navigation_poptouchedgoals();
+void navigation_goalrating_start();
+void navigation_goalrating_end();
+void navigation_unstuck();
+
+void botframe_updatedangerousobjects(float maxupdate);
+
+entity navigation_findnearestwaypoint(entity ent, float walkfromwp);

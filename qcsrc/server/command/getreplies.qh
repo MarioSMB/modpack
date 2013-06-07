@@ -1,0 +1,17 @@
+// ======================================================
+//  Declarations for reply messages, re-worked by Samual
+//  Last updated: December 30th, 2011
+// ======================================================
+
+// ladder bullshit todo
+#define LADDER_FIRSTPOINT 100
+#define LADDER_CNT 10 // position X still gives LADDER_FIRSTPOINT/X points
+#define LADDER_SIZE 30 	// ladder shows the top X players
+
+string top_uids[LADDER_SIZE];
+float top_scores[LADDER_SIZE];
+
+// allow functions to be used in other code like g_world.qc and race.qc
+string getrecords(float page);
+string getrankings(void);
+string getladder(void);

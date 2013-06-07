@@ -1,0 +1,125 @@
+entity scores_initialized; // non-world when scores labels/rules have been set
+.float scores[MAX_SCORE];
+.float teamscores[MAX_TEAMSCORE];
+
+/**
+ * Attaches a PlayerScore entity to a player. Use that in ClientConnect.
+ * Remember to detach it in ClientDisconnect!
+ */
+void PlayerScore_Attach(entity player);
+
+/**
+ * Detaches a PlayerScore entity from the player. Use that in ClientDisconnect.
+ */
+void PlayerScore_Detach(entity player);
+
+/**
+ * Adds a score to the player's scores.
+ * NEVER call this if PlayerScore_Attach has not been called yet!
+ * Means: FIXME make players unable to join the game when not called ClientConnect yet.
+ * Returns the new score.
+ */
+float PlayerScore_Add(entity player, float scorefield, float score);
+
+/**
+ * Initialize the score of this player if needed.
+ * Does nothing in teamplay.
+ * Use that when a spectator becomes a player.
+ * Returns whether clearing has been performed
+ */
+float PlayerScore_Clear(entity player);
+
+/**
+ * Adds a score to the player's team's scores.
+ * NEVER call this if team has not been set yet!
+ * Returns the new score.
+ */
+float TeamScore_Add(entity player, float scorefield, float score);
+
+/**
+ * Adds a score to the given team.
+ * NEVER call this if team has not been set yet!
+ * Returns the new score.
+ */
+float TeamScore_AddToTeam(float t, float scorefield, float score);
+
+/**
+ * Returns a value indicating the team score (and higher is better).
+ */
+float TeamScore_GetCompareValue(float t);
+
+/**
+ * Adds a score to both the player and the team. Returns the team score if
+ * possible, otherwise the player score.
+ */
+float PlayerTeamScore_Add(entity player, float pscorefield, float tscorefield, float score);
+
+/**
+ * Adds to the generic score fields for both the player and the team.
+ */
+#define PlayerTeamScore_AddScore(p,s) PlayerTeamScore_Add(p, SP_SCORE, ST_SCORE, s)
+
+/**
+ * Set the label of a team score item, as well as the scoring flags.
+ */
+void ScoreInfo_SetLabel_TeamScore(float i, string label, float scoreflags);
+
+/**
+ * Set the label of a player score item, as well as the scoring flags.
+ */
+void ScoreInfo_SetLabel_PlayerScore(float i, string label, float scoreflags);
+
+/**
+ * Initialize the scores info for the given number of teams.
+ * Set all labels right before this call.
+ */
+void ScoreInfo_Init(float teams);
+
+/**
+ * Clear ALL scores (for ready-restart).
+ */
+void Score_ClearAll();
+
+/**
+ * Prints the scores to the console of a player.
+ */
+void Score_NicePrint(entity to);
+
+/**
+ * Sets the following results for the current scores entities.
+ */
+void WinningConditionHelper();
+float WinningConditionHelper_topscore;      ///< highest score
+float WinningConditionHelper_secondscore;   ///< second highest score
+float WinningConditionHelper_winnerteam;    ///< the color of the winning team, or -1 if none
+float WinningConditionHelper_secondteam;    ///< the color of the second team, or -1 if none
+float WinningConditionHelper_equality;      ///< we have no winner
+entity WinningConditionHelper_winner;       ///< the winning player, or world if none
+entity WinningConditionHelper_second;       ///< the second player, or world if none
+float WinningConditionHelper_lowerisbetter; ///< lower is better, duh
+float WinningConditionHelper_zeroisworst;   ///< zero is worst, duh
+#define WINNINGCONDITIONHELPER_LOWERISBETTER_WORST 999999999
+
+/**
+ * Returns score strings for eventlog etc.
+ * When called with world, or 0, as argument, they return the labels in the
+ * same order.
+ * The strings are comma separated; labels that end with !! designate primary,
+ * labels that end with ! designate high priority.
+ * Labels get an appended < if the scores are better if smaller (e.g. deaths).
+ * High priorities always come first.
+ * Example label string: score!!,kills,deaths<,suicides<
+ * If shortString is set, only the sort keys are returned.
+ */
+string GetPlayerScoreString(entity pl, float shortString);
+string GetTeamScoreString(float tm, float shortString);
+
+/**
+ * Sorts the players and stores their place in the given field, starting with
+ * 1. Non-players get 0 written into that field.
+ * Returns the beginning of a sorted chain of the non-spectators.
+ * teams: >0: sort by teams first (always strict ordering); <0: sort by teams only (respects strict flag)
+ * strict: return a strict ordering
+ * nospectators: exclude spectators
+ */
+entity PlayerScore_Sort(.float field, float teams, float strict, float nospectators);

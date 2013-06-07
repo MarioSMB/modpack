@@ -1,0 +1,15 @@
+.float cvar_cl_accuracy_data_share;
+
+// init/free
+void accuracy_init(entity e);
+void accuracy_free(entity e);
+
+// force a resend of a player's accuracy stats
+void accuracy_resend(entity e);
+
+// update accuracy stats
+void accuracy_add(entity e, float w, float fired, float hit);
+
+// helper
+float accuracy_isgooddamage(entity attacker, entity targ);
+float accuracy_canbegooddamage(entity attacker);

@@ -1,0 +1,14 @@
+#pragma noref 0
+
+#undef ATTN_NORM
+#undef objerror
+#undef droptofloor
+#undef sound
+#undef remove
+#undef cvar_set
+#undef cvar_string
+#undef cvar
+
+var float(string var) cvar;
+var string(string var) cvar_string;
+var void(string var, string val) cvar_set;

@@ -1,0 +1,28 @@
+float FL_GENERATOR = 2048;
+
+float ignore_turrets;
+
+#define SP_TD_DESTROYS 4
+#define ST_TD_DESTROYS 1
+
+float redalive, bluealive, total_alive;
+
+var float max_monsters = 20;
+var float max_alive = 10;
+
+float max_perteam;
+
+float total_killed;
+
+var float max_turrets = 10;
+
+.float turret_buff;
+
+.float newfuel; // hack to not give players fuel every time they spawn
+
+float last_check;
+
+.float turret_cnt;
+
+.float level;
+.float last_trace;

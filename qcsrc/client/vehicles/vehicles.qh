@@ -1,0 +1,4 @@
+void RaptorCBShellfragDraw();
+void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang);
+void Vehicles_Precache();
+

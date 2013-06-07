@@ -1,0 +1,23 @@
+Open issues:
+- grep for TODO and FIXME
+- when shot origin is inside warpzone, nex shot fails (and is even drawn in totally wrong direction). WHY? Possibly v_forward got lost?
+
+Weapon support:
+
+- laser: YES
+- shotgun: YES
+- uzi: YES
+- grenadelauncher: YES
+- electro: YES
+- crylink: YES
+- nex: YES
+- hagar: YES
+- rocketlauncher: YES (except for trail bug)
+- porto: YES (bwahahahaha)
+- hlac: YES
+- minstanex: YES
+- rifle: YES
+- fireball: YES (BFG effect cannot work through warpzones by design, so it's not available through warpzones)
+- hook: YES
+
+- tuba: NO (sound)

@@ -1,0 +1,22 @@
+// =========================================================
+//  Declarations for common command code, written by Samual
+//  Last updated: December 28th, 2011
+// =========================================================
+
+// Used by other game command systems for common commands,
+// and it returns true if handled, false if not. 
+// Note: It tokenizes its input, so be careful!
+float GenericCommand(string command);
+
+// Returns command prefix specific for whatever program it is compiled in
+string GetProgramCommandPrefix(void); 
+
+// used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
+#define CMD_Write(s) fputs(fh, s)
+#define CMD_Write_Alias(execute,command,description) CMD_Write(sprintf("alias %-20s \"%-13s %-20s ${* ?}\" // %s\n", command, execute, command, description))
+void GenericCommand_macro_write_aliases(float fh);
+
+void Curl_URI_Get_Callback(float id, float status, string data);
+float curl_uri_get_pos;
+float curl_uri_get_exec[URI_GET_CURL_END - URI_GET_CURL + 1];
+string curl_uri_get_cvar[URI_GET_CURL_END - URI_GET_CURL + 1];

@@ -1,0 +1,18 @@
+float URL_READY_ERROR    = -1;
+float URL_READY_CLOSED   =  0;
+float URL_READY_CANWRITE =  1;
+float URL_READY_CANREAD  =  2;
+// errors: -1, or negative HTTP status code
+typedef void(entity handle, entity pass, float status) url_ready_func;
+
+void url_single_fopen(string url, float mode, url_ready_func rdy, entity pass);
+void url_fclose(entity e);
+string url_fgets(entity e);
+void url_fputs(entity e, string s);
+
+// returns true if handled
+float url_URI_Get_Callback(float id, float status, string data);
+#define MIN_URL_ID URI_GET_URLLIB
+#define NUM_URL_ID (URI_GET_URLLIB_END - URI_GET_URLLIB + 1)
+
+void url_multi_fopen(string url, float mode, url_ready_func rdy, entity pass);

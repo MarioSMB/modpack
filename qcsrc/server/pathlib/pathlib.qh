@@ -1,0 +1,118 @@
+.entity pathlib_list;
+.entity path_next;
+.entity path_prev;
+
+#define inwater(point) (pointcontents(point) == CONTENT_WATER)
+#define medium spawnshieldtime
+
+#define PLIB_FORWARD '0 1 0'
+//#define PLIB_BACK    '0 -1 0'
+#define PLIB_RIGHT   '1 0 0'
+//#define PLIB_LEFT    '-1 0 0'
+
+#define DEBUGPATHING
+#ifdef DEBUGPATHING
+void pathlib_showpath(entity start);
+void pathlib_showpath2(entity path);
+#endif
+
+entity openlist;
+entity closedlist;
+
+entity goal_node;
+entity start_node;
+
+.float is_path_node;
+.float pathlib_node_g;
+.float pathlib_node_h;
+.float pathlib_node_f;
+.float pathlib_node_c;
+
+#define pathlib_node_edgeflag_unknown        0
+#define pathlib_node_edgeflag_left           2
+#define pathlib_node_edgeflag_right          4
+#define pathlib_node_edgeflag_forward        8
+#define pathlib_node_edgeflag_back           16
+#define pathlib_node_edgeflag_backleft       32
+#define pathlib_node_edgeflag_backright      64
+#define pathlib_node_edgeflag_forwardleft    128
+#define pathlib_node_edgeflag_forwardright   256
+#define pathlib_node_edgeflag_none           512
+.float pathlib_node_edgeflags;
+
+float pathlib_open_cnt;
+float pathlib_closed_cnt;
+float pathlib_made_cnt;
+float pathlib_merge_cnt;
+float pathlib_searched_cnt;
+float pathlib_bestopen_seached;
+float pathlib_bestcash_hits;
+float pathlib_bestcash_saved;
+float pathlib_gridsize;
+float pathlib_movecost;
+float pathlib_movecost_diag;
+float pathlib_movecost_waterfactor;
+float pathlib_foundgoal;
+
+float pathlib_starttime;
+#define pathlib_maxtime 60
+
+entity best_open_node;
+
+vector tile_check_up;
+vector tile_check_down;
+float  tile_check_size;
+float     tile_check_cross(vector where);
+float     tile_check_plus(vector where);
+float     tile_check_star(vector where);
+var float tile_check(vector where);
+
+float  movenode_stepsize;
+vector movenode_stepup;
+vector movenode_maxdrop;
+vector movenode_boxup;
+vector movenode_boxmax;
+vector movenode_boxmin;
+float  pathlib_movenode_goodnode;
+
+vector     pathlib_wateroutnode(vector start, vector end, float doedge);
+vector     pathlib_swimnode(vector start, vector end, float doedge);
+vector     pathlib_flynode(vector start, vector end, float doedge);
+vector     pathlib_walknode(vector start, vector end, float doedge);
+var vector pathlib_movenode(vector start, vector end, float doedge);
+
+float      pathlib_expandnode_star(entity node, vector start, vector goal);
+float      pathlib_expandnode_box(entity node, vector start, vector goal);
+float      pathlib_expandnode_octagon(entity node, vector start, vector goal);
+var float  pathlib_expandnode(entity node, vector start, vector goal);
+
+float      pathlib_g_static(entity parent, vector to, float static_cost);
+float      pathlib_g_static_water(entity parent, vector to, float static_cost);
+float      pathlib_g_euclidean(entity parent, vector to, float static_cost);
+float      pathlib_g_euclidean_water(entity parent, vector to, float static_cost);
+var float  pathlib_cost(entity parent, vector to, float static_cost);
+
+float      pathlib_h_manhattan(vector a, vector b);
+float      pathlib_h_diagonal(vector a, vector b);
+float      pathlib_h_euclidean(vector a,vector b);
+float      pathlib_h_diagonal2(vector a, vector b);
+float      pathlib_h_diagonal3(vector a, vector b);
+float      pathlib_h_diagonal2sdp(vector preprev, vector prev, vector point, vector end);
+float      pathlib_h_none(vector preprev, vector prev) { return 0; }
+var float  pathlib_heuristic(vector from, vector to);
+
+var float  pathlib_makenode(entity parent,vector start, vector to, vector goal,float cost);
+var float  buildpath_nodefilter(vector n,vector c,vector p);
+
+var float  pathlib_wpp_waypointcallback(entity wp, entity wp_prev);
+
+#ifdef DEBUGPATHING
+	#include "debug.qc"
+#endif
+
+#include "utility.qc"
+#include "movenode.qc"
+#include "costs.qc"
+#include "expandnode.qc"
+#include "main.qc"
+#include "path_waypoint.qc"

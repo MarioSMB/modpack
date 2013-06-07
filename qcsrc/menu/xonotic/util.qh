@@ -1,0 +1,47 @@
+float GL_CheckExtension(string ext);
+float GL_Have_TextureCompression();
+
+void forAllDescendants(entity root, void(entity, entity) funcPre, void(entity, entity) funcPost, entity pass);
+void saveAllCvars(entity root);
+void loadAllCvars(entity root);
+
+void makeMulti(entity me, string otherCvars);
+string getCvarsMulti(entity me);
+void makeCallback(entity me, entity cbent, void(entity, entity) cbfunc);
+
+void setDependent(entity e, string theCvarName, float theCvarMin, float theCvarMax);
+void setDependentAND(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max);
+void setDependentOR(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max);
+void setDependentAND3(entity e, string theCvarName, float theCvarMin, float theCvarMax, string theCvar2Name, float theCvar2Min, float theCvar2Max, string theCvar3Name, float theCvar3Min, float theCvar3Max);
+void setDependentStringNotEqual(entity e, string theCvarName, string theCvarValue);
+void setDependentWeird(entity e, float(entity) func);
+
+float tooltipdb;
+void loadTooltips();
+void unloadTooltips();
+string getZonedTooltipForIdentifier(string s);
+
+string resolvemod(string m);
+
+void UpdateNotification_URI_Get_Callback(float id, float status, string data);
+
+void URI_Get_Callback(float id, float status, string data);
+
+// game type list box stuff (does not NEED to contain all game types, other
+// types stay available via console)
+float GameType_GetID(float cnt);
+string GameType_GetName(float cnt);
+string GameType_GetIcon(float cnt);
+//string GameType_GetTeams(float cnt);
+float GameType_GetCount();
+
+void dialog_hudpanel_common_notoggle(entity me, string panelname);
+#define DIALOG_HUDPANEL_COMMON_NOTOGGLE() \
+	dialog_hudpanel_common_notoggle(me, panelname)
+#define DIALOG_HUDPANEL_COMMON() \
+	me.TR(me); \
+		me.TD(me, 1, 4, e = makeXonoticCheckBox(0, strzone(strcat("hud_panel_", panelname)), _("Enable panel"))); \
+	DIALOG_HUDPANEL_COMMON_NOTOGGLE()
+
+string _Nex_ExtResponseSystem_BannedServers;
+float _Nex_ExtResponseSystem_BannedServersNeedsRefresh;

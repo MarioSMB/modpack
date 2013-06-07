@@ -1,0 +1,11 @@
+.float portal_id;
+.entity portal_in, portal_out;
+
+void Portal_ClearAll(entity own);
+void Portal_ClearAllLater(entity own);
+float Portal_SpawnOutPortalAtTrace(entity own, vector dir, float id);
+float Portal_SpawnInPortalAtTrace(entity own, vector dir, float id);
+void Portal_ClearWithID(entity own, float id);
+
+vector Portal_ApplyTransformToPlayerAngle(vector transform, vector vangle);
+void Portal_ClearAll_PortalsOnly(entity own);

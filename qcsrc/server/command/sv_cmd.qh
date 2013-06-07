@@ -1,0 +1,16 @@
+// =================================================
+//  Declarations for server side game commands
+//  Last updated: December 25th, 2011
+// =================================================
+
+string GotoMap(string m);
+
+void race_deleteTime(string map, float pos);
+
+#define SHUFFLETEAMS_MAX_PLAYERS 255
+#define SHUFFLETEAMS_MAX_TEAMS 4
+float shuffleteams_players[SHUFFLETEAMS_MAX_PLAYERS]; // maximum of 255 player slots
+float shuffleteams_teams[SHUFFLETEAMS_MAX_TEAMS]; // maximum of 4 teams
+
+// used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
+void GameCommand_macro_write_aliases(float fh);

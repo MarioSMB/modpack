@@ -1,0 +1,34 @@
+.float move_movetype;
+.float move_time;
+.vector move_origin;
+.vector move_angles;
+.vector move_velocity;
+.vector move_avelocity;
+.float move_flags;
+.void(void) move_touch;
+.float move_bounce_factor;
+.float move_bounce_stopspeed;
+.float move_nomonsters; // -1 for MOVE_NORMAL, otherwise a MOVE_ constant
+
+void Movetype_Physics_MatchTicrate(float tr, float sloppy);
+void Movetype_Physics_MatchServer(float sloppy);
+void Movetype_Physics_NoMatchServer();
+
+float	MOVETYPE_NONE				= 0;
+float	MOVETYPE_ANGLENOCLIP			= 1;
+float	MOVETYPE_ANGLECLIP			= 2;
+float	MOVETYPE_WALK				= 3;
+float	MOVETYPE_STEP				= 4;
+float	MOVETYPE_FLY				= 5;
+float	MOVETYPE_TOSS				= 6;
+float	MOVETYPE_PUSH				= 7;
+float	MOVETYPE_NOCLIP				= 8;
+float	MOVETYPE_FLYMISSILE			= 9;
+float	MOVETYPE_BOUNCE				= 10;
+float	MOVETYPE_BOUNCEMISSILE	= 11;	// Like bounce but doesn't lose speed on bouncing
+float MOVETYPE_FOLLOW = 12;
+float MOVETYPE_FAKEPUSH = 13;
+float MOVETYPE_FLY_WORLDONLY = 33;
+
+float   FL_ITEM                 = 256;
+float	FL_ONGROUND				= 512;

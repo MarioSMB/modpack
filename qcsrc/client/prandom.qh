@@ -1,0 +1,20 @@
+// prandom - PREDICTABLE random number generator
+
+#define USE_PRANDOM
+
+#ifdef USE_PRANDOM
+float prandom();
+vector prandomvec();
+
+void psrandom(float seed);
+#ifdef USE_PRANDOM_DEBUG
+void prandom_debug();
+#else
+#define prandom_debug()
+#endif
+#else
+#define prandom random
+#define prandomvec randomvec
+#define psrandom(x)
+#define prandom_debug()
+#endif

@@ -1,0 +1,5 @@
+.vector spawnpoint_score;
+float spawnpoint_nag;
+float SpawnEvent_Send(entity to, float sf);
+entity Spawn_FilterOutBadSpots(entity firstspot, float mindist, float teamcheck);
+

@@ -1,0 +1,10 @@
+.string bgmscript;
+.float bgmscriptattack;
+.float bgmscriptdecay;
+.float bgmscriptsustain;
+.float bgmscriptrelease;
+
+.float just_toggled;
+
+void BGMScript_InitEntity(entity e);
+float BGMScript(entity e);

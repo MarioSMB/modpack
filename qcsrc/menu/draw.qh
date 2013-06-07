@@ -1,0 +1,45 @@
+// from the engine
+vector drawfontscale;
+#define draw_fontscale drawfontscale
+#define draw_fontscale_x drawfontscale_x
+#define draw_fontscale_y drawfontscale_y
+#define draw_fontscale_z drawfontscale_z
+
+vector draw_shift;
+vector draw_scale;
+float draw_alpha;
+vector draw_fontscale;
+
+void draw_reset(float cw, float ch, float ox, float oy);
+void draw_beginBoldFont();
+void draw_endBoldFont();
+void draw_setMousePointer(string pic, vector theSize, vector theOffset);
+void draw_drawMousePointer(vector where);
+
+string draw_PreloadPicture(string pic);
+string draw_PreloadPictureWithFlags(string pic, float f);
+void draw_ButtonPicture(vector theOrigin, string pic, vector theSize, vector theColor, float theAlpha);
+void draw_VertButtonPicture(vector theOrigin, string pic, vector theSize, vector theColor, float theAlpha);
+void draw_BorderPicture(vector theOrigin, string pic, vector theSize, vector theColor, float theAlpha, vector theBorderSize);
+void draw_Picture(vector origin, string pic, vector size, vector color, float alpha);
+vector draw_PictureSize(string pic);
+void draw_Fill(vector theOrigin, vector theSize, vector theColor, float theAlpha);
+void draw_Text(vector origin, string text, vector size, vector color, float alpha, float allowColorCodes);
+void draw_CenterText(vector origin, string text, vector size, vector color, float alpha, float allowColorCodes);
+float draw_TextWidth(string text, float allowColorCodes, vector size);
+string draw_TextShortenToWidth(string text, float maxWidth, float allowColorCodes, vector size);
+float draw_TextLengthUpToWidth(string text, float maxWidth, float allowColorCodes, vector size);
+
+void draw_SetClip();
+void draw_SetClipRect(vector theOrigin, vector theScale);
+void draw_ClearClip();
+
+vector boxToGlobal(vector v, vector shift, vector scale);
+vector boxToGlobalSize(vector v, vector scale);
+vector globalToBox(vector v, vector shift, vector scale);
+vector globalToBoxSize(vector v, vector scale);
+
+float draw_NeedResizeNotify;
+
+float draw_TextWidth_WithColors(string s, vector size);
+float draw_TextWidth_WithoutColors(string s, vector size);

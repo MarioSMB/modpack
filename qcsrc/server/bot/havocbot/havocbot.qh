@@ -1,0 +1,63 @@
+/*
+ * Globals and Fields
+ */
+
+.float havocbot_keyboardskill;
+.float facingwalltime, ignoregoaltime;
+.float lastfiredweapon;
+.float lastcombotime;
+.float havocbot_blockhead;
+
+.float havocbot_keyboardtime;
+.float havocbot_ducktime;
+.float bot_timelastseengoal;
+.float bot_canruntogoal;
+.float bot_chooseweapontime;
+.float rocketjumptime;
+.float nextaim;
+.float havocbot_personal_waypoint_searchtime;
+.float havocbot_personal_waypoint_failcounter;
+.float havocbot_chooseenemy_finished;
+.float havocbot_stickenemy;
+.float havocbot_role_timeout;
+
+.entity ignoregoal;
+.entity bot_lastseengoal;
+.entity havocbot_personal_waypoint;
+
+.vector havocbot_keyboard;
+
+/*
+ * Functions
+ */
+
+void havocbot_ai();
+void havocbot_aim();
+void havocbot_setupbot();
+void havocbot_movetogoal();
+void havocbot_chooserole();
+void havocbot_chooseenemy();
+void havocbot_chooseweapon();
+void havocbot_bunnyhop(vector dir);
+void havocbot_keyboard_movement(vector destorg);
+
+float havocbot_resetgoal();
+float havocbot_moveto(vector pos);
+float havocbot_moveto_refresh_route();
+
+vector havocbot_dodge();
+
+.void() havocbot_role;
+.void() havocbot_previous_role;
+
+void(float ratingscale, vector org, float sradius) havocbot_goalrating_items;
+void(float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplayers;
+
+/*
+ * Imports
+ */
+
+.entity draggedby;
+.float ladder_time;
+.entity ladder_entity;
+

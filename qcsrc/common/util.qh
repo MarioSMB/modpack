@@ -1,0 +1,408 @@
+// a dummy macro that prevents the "hanging ;" warning
+#define ENDS_WITH_CURLY_BRACE
+
+#ifdef HAVE_YO_DAWG_CPP
+// TODO make ascii art pic of xzibit
+// YO DAWG!
+// I HERD YO LIEK MACROS
+// SO I PUT A MACRO DEFINITION IN YO MACRO DEFINITION
+// SO YO CAN EXPAND MACROS WHILE YO EXPAND MACROS
+# define ACCUMULATE_FUNCTION(func,otherfunc) \
+	#ifdef func \
+	void __merge__##otherfunc() { func(); otherfunc(); } \
+	#undef func \
+	#define func __merge__##otherfunc \
+	#else \
+	#define func otherfunc \
+	#endif
+# define CALL_ACCUMULATED_FUNCTION(func) \
+	func()
+#else
+# define ACCUMULATE_FUNCTION(func,otherfunc) \
+	.void _ACCUMULATE_##func##__##otherfunc;
+void ACCUMULATE_call(string func)
+{
+	float i;
+	float n = numentityfields();
+	string funcprefix = strcat("_ACCUMULATE_", func, "__");
+	float funcprefixlen = strlen(funcprefix);
+	for(i = 0; i < n; ++i)
+	{
+		string name = entityfieldname(i);
+		if(substring(name, 0, funcprefixlen) == funcprefix)
+			callfunction(substring(name, funcprefixlen, -1));
+	}
+}
+# define CALL_ACCUMULATED_FUNCTION(func) \
+	ACCUMULATE_call(#func)
+#endif
+
+// used for simplifying ACCUMULATE_FUNCTIONs
+#define SET_FIRST_OR_LAST(input,first,count) if(!input) { input = (first + count); }
+#define SET_FIELD_COUNT(field,first,count) if(!field) { field = (first + count); ++count; }
+#define CHECK_MAX_COUNT(name,max,count,type) if(count == max) { error(strcat("Maximum ", type, " hit: ", #name, ": ", ftos(count), ".\n")); }
+
+// this returns a tempstring containing a copy of s with additional \n newlines added, it also replaces \n in the text with a real newline
+// NOTE: s IS allowed to be a tempstring
+string wordwrap(string s, float l);
+#ifndef MENUQC
+#ifndef CSQC
+void wordwrap_sprint(string s, float l);
+#endif
+#endif
+void wordwrap_cb(string s, float l, void(string) callback);
+
+#ifndef SVQC
+string draw_currentSkin;
+string draw_UseSkinFor(string pic);
+#endif
+
+// iterative depth-first search, with fields that go "up", "down left" and "right" in a tree
+// for each element, funcPre is called first, then funcPre and funcPost for all its children, and funcPost last
+void depthfirst(entity start, .entity up, .entity downleft, .entity right, void(entity, entity) funcPre, void(entity, entity) funcPost, entity pass);
+
+float median(float a, float b, float c);
+
+// converts a number to a string with the indicated number of decimals
+// works for up to 10 decimals!
+string ftos_decimals(float number, float decimals);
+
+float fexists(string f);
+
+vector colormapPaletteColor(float c, float isPants);
+
+// unzone the string, and return it as tempstring. Safe to be called on string_null
+string fstrunzone(string s);
+
+// database (NOTE: keys are case sensitive)
+void db_save(float db, string filename);
+void db_dump(float db, string pFilename);
+float db_create();
+float db_load(string filename);
+void db_close(float db);
+string db_get(float db, string key);
+void db_put(float db, string key, string value);
+
+// stringbuffer loading/saving
+float buf_load(string filename);
+void buf_save(float buf, string filename);
+
+// modulo function
+#ifndef MENUQC
+float mod(float a, float b) { return a - (floor(a / b) * b); }   
+#endif
+
+#define TIME_TO_NTHS(t,n) floor((t) * (n) + 0.4)
+string mmsss(float t);
+string mmssss(float t);
+
+#define TIME_DECIMALS 2
+#define TIME_FACTOR 100
+#define TIME_ENCODED_TOSTRING(n) mmssss(n)
+#define RACE_RECORD "/race100record/"
+#define CTS_RECORD "/cts100record/"
+#define TIME_ENCODE(t) TIME_TO_NTHS(t, TIME_FACTOR)
+#define TIME_DECODE(n) ((n) / TIME_FACTOR)
+
+string ScoreString(float vflags, float value);
+
+float dotproduct(vector a, vector b);
+vector cross(vector a, vector b);
+
+void compressShortVector_init();
+vector decompressShortVector(float data);
+float compressShortVector(vector vec);
+
+#ifndef MENUQC
+float CheckWireframeBox(entity forent, vector v0, vector dvx, vector dvy, vector dvz);
+#endif
+
+string fixPriorityList(string pl, float from, float to, float subtract, float complete);
+string mapPriorityList(string order, string(string) mapfunc);
+string swapInPriorityList(string order, float i, float j);
+
+float cvar_value_issafe(string s);
+
+float cvar_settemp(string pKey, string pValue);
+float cvar_settemp_restore();
+
+#ifndef MENUQC
+// modes: 0 = trust q3map2 (_mini images)
+//        1 = trust tracebox (_radar images)
+// in both modes, mapinfo's "size" overrides
+
+string mi_shortname;
+vector mi_min;
+vector mi_max;
+void get_mi_min_max(float mode);
+
+vector mi_picmin; // adjusted mins that map to the picture (square)
+vector mi_picmax; // adjusted maxs that map to the picture (square)
+vector mi_pictexcoord0; // texcoords of the image corners (after transforming, these are 2D coords too)
+vector mi_pictexcoord1; // texcoords of the image corners (after transforming, these are 2D coords too)
+vector mi_pictexcoord2; // texcoords of the image corners (after transforming, these are 2D coords too)
+vector mi_pictexcoord3; // texcoords of the image corners (after transforming, these are 2D coords too)
+void get_mi_min_max_texcoords(float mode);
+#endif
+
+float almost_equals(float a, float b);
+float almost_in_bounds(float a, float b, float c);
+
+float power2of(float e);
+float log2of(float x);
+
+string HEXDIGITS = "0123456789ABCDEF0123456789abcdef";
+#define HEXDIGIT_TO_DEC_RAW(d) (strstrofs(HEXDIGITS, (d), 0))
+#define HEXDIGIT_TO_DEC(d) ((HEXDIGIT_TO_DEC_RAW(d) | 0x10) - 0x10)
+#define DEC_TO_HEXDIGIT(d) (substring(HEXDIGITS, (d), 1))
+
+vector rgb_to_hsl(vector rgb);
+vector hsl_to_rgb(vector hsl);
+vector rgb_to_hsv(vector rgb);
+vector hsv_to_rgb(vector hsv);
+string rgb_to_hexcolor(vector rgb);
+
+float boxesoverlap(vector m1, vector m2, vector m3, vector m4);
+float boxinsidebox(vector smins, vector smaxs, vector bmins, vector bmaxs);
+
+typedef float(string s, vector size) textLengthUpToWidth_widthFunction_t;
+typedef float(string s) textLengthUpToLength_lenFunction_t;
+float textLengthUpToWidth(string theText, float maxWidth, vector size, textLengthUpToWidth_widthFunction_t tw);
+string textShortenToWidth(string theText, float maxWidth, vector size, textLengthUpToWidth_widthFunction_t tw);
+float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_lenFunction_t tw);
+string textShortenToLength(string theText, float maxWidth, textLengthUpToLength_lenFunction_t tw);
+
+string getWrappedLine_remaining;
+string getWrappedLine(float w, vector size, textLengthUpToWidth_widthFunction_t tw);
+string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw);
+
+float isGametypeInFilter(float gt, float tp, float ts, string pattern);
+
+typedef void(float i1, float i2, entity pass) swapfunc_t; // is only ever called for i1 < i2
+typedef float(float i1, float i2, entity pass) comparefunc_t; // <0 for <, ==0 for ==, >0 for > (like strcmp)
+void shuffle(float n, swapfunc_t swap, entity pass);
+void heapsort(float n, swapfunc_t swap, comparefunc_t cmp, entity pass);
+
+string swapwords(string str, float i, float j);
+string shufflewords(string str);
+
+string substring_range(string s, float b, float e);
+
+vector solve_quadratic(float a, float b, float c);
+// solution 1 -> x
+// solution 2 -> y
+// z = 1 if a real solution exists, 0 if not
+// if no real solution exists, x contains the real part and y the imaginary part of the complex solutions x+iy and x-iy
+
+vector solve_shotdirection(vector myorg, vector myvel, vector eorg, vector evel, float spd, float newton_style);
+vector get_shotvelocity(vector myvel, vector mydir, float spd, float newton_style, float mi, float ma);
+
+void check_unacceptable_compiler_bugs();
+
+float compressShotOrigin(vector v);
+vector decompressShotOrigin(float f);
+
+#ifdef SVQC
+string rankings_reply, ladder_reply, lsmaps_reply, lsnewmaps_reply, maplist_reply; // cached replies
+string records_reply[10];
+#endif
+
+float RandomSelection_totalweight;
+float RandomSelection_best_priority;
+entity RandomSelection_chosen_ent;
+float RandomSelection_chosen_float;
+string RandomSelection_chosen_string;
+void RandomSelection_Init();
+void RandomSelection_Add(entity e, float f, string s, float weight, float priority);
+
+vector healtharmor_maxdamage(float h, float a, float armorblock); // returns vector: maxdamage, armorideal, 1 if fully armored
+vector healtharmor_applydamage(float a, float armorblock, float damage); // returns vector: take, save, 0
+
+string getcurrentmod();
+
+#ifndef MENUQC
+#ifdef CSQC
+float ReadInt24_t();
+#else
+void WriteInt24_t(float dest, float val);
+#endif
+#endif
+
+// the NULL function
+#ifdef GMQCC
+#define func_null nil
+#define string_null nil
+#else
+var void func_null(void);
+var string string_null;
+#endif
+float float2range11(float f);
+float float2range01(float f);
+
+float gsl_ran_gaussian(float sigma);
+
+string car(string s); // returns first word
+string cdr(string s); // returns all but first word
+float matchacl(string acl, string str); // matches str against ACL acl (with entries +foo*, +foo, +*foo, +*foo*, and same with - for forbidding)
+float startsWith(string haystack, string needle);
+float startsWithNocase(string haystack, string needle);
+
+string get_model_datafilename(string mod, float skn, string fil); // skin -1 will return wildcard, mod string_null will also put wildcard there
+string get_model_parameters_modelname;
+float get_model_parameters_modelskin;
+string get_model_parameters_name;
+float get_model_parameters_species;
+string get_model_parameters_sex;
+float get_model_parameters_weight;
+float get_model_parameters_age;
+string get_model_parameters_bone_upperbody;
+string get_model_parameters_bone_weapon;
+#define MAX_AIM_BONES 4
+string get_model_parameters_bone_aim[MAX_AIM_BONES];
+float get_model_parameters_bone_aimweight[MAX_AIM_BONES];
+float get_model_parameters_fixbone;
+string get_model_parameters_desc;
+float get_model_parameters(string mod, float skn); // call with string_null to clear; skin -1 means mod is the filename of the txt file and is to be split
+
+vector vec2(vector v);
+
+#ifndef MENUQC
+vector NearestPointOnBox(entity box, vector org);
+#endif
+
+float vercmp(string v1, string v2);
+
+float u8_strsize(string s);
+
+// translation helpers
+string prvm_language;
+string language_filename(string s);
+string CTX(string s);
+#define ZCTX(s) strzone(CTX(s))
+
+// x-encoding (encoding as zero length invisible string)
+// encodes approx. 14 bits into 5 bytes of color code string
+const float XENCODE_MAX = 21295; // 2*22*22*22-1
+const float XENCODE_LEN = 5;
+string xencode(float f);
+float xdecode(string s);
+
+#ifndef COMPAT_XON010_CHANNELS
+#define sound(e,c,s,v,a) sound7(e,c,s,v,a,0,0)
+#endif
+
+float lowestbit(float f);
+
+#ifdef CSQC
+entity ReadCSQCEntity();
+#endif
+
+#ifndef MENUQC
+string strtolower(string s);
+#endif
+
+string MakeConsoleSafe(string input);
+
+#ifndef MENUQC
+float InterpretBoolean(string input);
+#endif
+
+// generic shutdown handler
+void Shutdown();
+
+#ifndef MENUQC
+.float skeleton_bones;
+void Skeleton_SetBones(entity e);
+// loops through the tags of model v using counter tagnum
+#define FOR_EACH_TAG(v) float tagnum; Skeleton_SetBones(v); for(tagnum = 0; tagnum < v.skeleton_bones; tagnum++, gettaginfo(v, tagnum))
+#endif
+#ifdef SVQC
+void WriteApproxPastTime(float dst, float t);
+#endif
+#ifdef CSQC
+float ReadApproxPastTime();
+#endif
+
+// execute-stuff-next-frame subsystem
+void execute_next_frame();
+void queue_to_execute_next_frame(string s);
+
+// for marking written-to values as unused where it's a good idea to do this
+noref float unused_float;
+
+// a function f with:
+// f(0) = 0
+// f(1) = 1
+// f'(0) = startspeedfactor
+// f'(1) = endspeedfactor
+float cubic_speedfunc(float startspeedfactor, float endspeedfactor, float x);
+
+// checks whether f'(x) = 0 anywhere from 0 to 1
+// because if this is the case, the function is not usable for platforms
+// as it may exceed 0..1 bounds, or go in reverse
+float cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor);
+
+typedef entity(entity cur, entity near, entity pass) findNextEntityNearFunction_t;
+typedef float(entity a, entity b, entity pass) isConnectedFunction_t;
+void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t nxt, isConnectedFunction_t iscon, entity pass);
+
+// expand multiple arguments into one argument by stripping parenthesis
+#define XPD(...) __VA_ARGS__
+
+#ifndef MENUQC
+void backtrace(string msg);
+#endif
+
+// color code replace, place inside of sprintf and parse the string... defaults described as constants
+// foreground/normal colors
+var string autocvar_hud_colorset_foreground_1 = "2"; // F1 - Green  // primary priority (important names, etc)
+var string autocvar_hud_colorset_foreground_2 = "3"; // F2 - Yellow // secondary priority (items, locations, numbers, etc)
+var string autocvar_hud_colorset_foreground_3 = "4"; // F3 - Blue   // tertiary priority or relatively inconsequential text
+var string autocvar_hud_colorset_foreground_4 = "1"; // F4 - Red    // notice/attention grabbing texting
+// "kill" colors
+var string autocvar_hud_colorset_kill_1 = "1"; // K1 - Red    // "bad" or "dangerous" text (death messages against you, kill notifications, etc)
+var string autocvar_hud_colorset_kill_2 = "3"; // K2 - Yellow // similar to above, but less important... OR, a highlight out of above message type
+var string autocvar_hud_colorset_kill_3 = "4"; // K3 - Blue   // "good" or "beneficial" text (you fragging someone, etc)
+// background color
+var string autocvar_hud_colorset_background = "7"; // BG - White // neutral/unimportant text
+
+string CCR(string input);
+
+#ifndef MENUQC
+#ifdef CSQC
+#define GENTLE (autocvar_cl_gentle || autocvar_cl_gentle_messages)
+#else
+#define GENTLE autocvar_sv_gentle
+#endif
+#define normal_or_gentle(normal,gentle) (GENTLE ? ((gentle != "") ? gentle : normal) : normal)
+#endif
+
+// allow writing to also pass through to spectators (like so spectators see the same centerprints as players for example)
+#define WRITESPECTATABLE_MSG_ONE_VARNAME(varname,statement) entity varname; varname = msg_entity; FOR_EACH_REALCLIENT(msg_entity) if(msg_entity == varname || (msg_entity.classname == STR_SPECTATOR && msg_entity.enemy == varname)) statement msg_entity = varname
+#define WRITESPECTATABLE_MSG_ONE(statement) WRITESPECTATABLE_MSG_ONE_VARNAME(oldmsg_entity, statement)
+#define WRITESPECTATABLE(msg,statement) if(msg == MSG_ONE) { WRITESPECTATABLE_MSG_ONE(statement); } else statement float WRITESPECTATABLE_workaround = 0
+
+vector vec3(float x, float y, float z);
+
+#ifndef MENUQC
+vector animfixfps(entity e, vector a, vector b);
+#endif
+
+#ifdef SVQC
+void dedicated_print(string input);
+#endif
+
+// todo: better way to do this?
+#ifdef MENUQC
+#define PROGNAME "MENUQC"
+#else
+#ifdef SVQC
+#define PROGNAME "SVQC"
+#else
+#define PROGNAME "CSQC"
+#endif
+#endif
+
+#ifndef MENUQC
+float Announcer_PickNumber(float num);
+#endif

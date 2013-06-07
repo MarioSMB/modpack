@@ -1,0 +1,473 @@
+// Comment out below to skip turrets
+#define TTURRETS_ENABLED
+
+#ifdef TTURRETS_ENABLED
+#ifdef SVQC
+//#message "with tZork turrets"
+
+float turret_count;
+
+vector real_origin(entity ent);
+
+/// Map time control over pain inflicted
+.float turret_scale_damage;
+/// Map time control targetting range
+.float turret_scale_range;
+/// Map time control refire
+.float turret_scale_refire;
+/// Map time control ammo held and recharged
+.float turret_scale_ammo;
+/// Map time control aim speed
+.float turret_scale_aim;
+/// Map time control health
+.float turret_scale_health;
+/// Map time control respawn time
+.float turret_scale_respawn;
+
+/// Used for cvar reloading
+.string cvar_basename;
+
+//.float spawnflags
+#define TSF_SUSPENDED     1
+/// Spawn a pillar model under the turret to make it look ok on uneven ground surfaces
+#define TSF_TERRAINBASE   2
+/// Disable builtin ammo regeneration
+#define TSF_NO_AMMO_REGEN 4
+/// Dont break path to chase enemys. will still fire at them if possible.
+#define TSF_NO_PATHBREAK  8
+/// Dont respawn
+#define TSL_NO_RESPAWN    16
+/// Let this turret roam when idle.
+#define TSL_ROAM          32
+
+/// target selection flags
+.float target_select_flags;
+/// target validatoin flags
+.float target_validate_flags;
+/// Dont select a target on its own.
+#define TFL_TARGETSELECT_NO            2
+/// Need line of sight
+#define TFL_TARGETSELECT_LOS           4
+/// Players are valid targets
+#define TFL_TARGETSELECT_PLAYERS       8
+/// Missiles are valid targets
+#define TFL_TARGETSELECT_MISSILES      16
+/// Responds to turret_trigger_target events
+#define TFL_TARGETSELECT_TRIGGERTARGET 32
+/// Angular limitations of turret head limits target selection
+#define TFL_TARGETSELECT_ANGLELIMITS   64
+/// Range limits apply in targetselection
+#define TFL_TARGETSELECT_RANGELIMTS    128
+/// DOnt select targets with a .team matching its own
+#define TFL_TARGETSELECT_TEAMCHECK     256
+/// Cant select targets on its own. needs to be triggerd or slaved.
+#define TFL_TARGETSELECT_NOBUILTIN     512
+/// TFL_TARGETSELECT_TEAMCHECK is inverted (selects only mebers of own .team)
+#define TFL_TARGETSELECT_OWNTEAM       1024
+/// Turrets aren't valid targets
+#define TFL_TARGETSELECT_NOTURRETS     2048
+/// Use feild of view
+#define TFL_TARGETSELECT_FOV           4096
+
+#define TFL_TARGETSELECT_MISSILESONLY  8192
+
+/// aim flags
+.float aim_flags;
+/// Dont aim.
+#define TFL_AIM_NO                  1
+/// Go for ground, not direct hit, but only if target is on ground.
+#define TFL_AIM_GROUNDGROUND        2
+/// Try to predict target movement (does not account for gravity)
+#define TFL_AIM_LEAD                4
+/// Compensate for shot traveltime when lead
+#define TFL_AIM_SHOTTIMECOMPENSATE  8
+/// Try to do real prediction of targets z pos at impact.
+#define TFL_AIM_ZPREDICT            16
+/// Simply aim at target's current location
+#define TFL_AIM_SIMPLE              32
+
+/// track (turn and pitch head) flags
+.float track_flags;
+/// Dont move head
+#define TFL_TRACK_NO    2
+/// Pitch the head
+#define TFL_TRACK_PITCH 4
+/// Rotate the head
+#define TFL_TRACK_ROT   8
+
+/// How tracking is preformed
+.float track_type;
+/// Hard angle increments. Ugly for fast turning, best accuracy.
+#define TFL_TRACKTYPE_STEPMOTOR    1
+/// Smoth absolute movement. Looks ok, fair accuracy.
+#define TFL_TRACKTYPE_FLUIDPRECISE 2
+/// Simulated inertia. "Wobbly mode" Looks kool, can mean really bad accuracy depending on how the fields below are set
+#define TFL_TRACKTYPE_FLUIDINERTIA 3
+/// TFL_TRACKTYPE_FLUIDINERTIA: pitch multiplier
+.float track_accel_pitch;
+/// TFL_TRACKTYPE_FLUIDINERTIA: rotation multiplier
+.float  track_accel_rot;
+/// TFL_TRACKTYPE_FLUIDINERTIA: Blendrate with old rotation (inertia simulation) 1  = only old, 0 = only new
+.float  track_blendrate;
+
+/// How prefire check is preformed
+.float firecheck_flags;
+/// Dont kill the dead
+#define TFL_FIRECHECK_DEAD        4
+/// Range limits apply
+#define TFL_FIRECHECK_DISTANCES   8
+/// Line Of Sight needs to be clear
+#define TFL_FIRECHECK_LOS         16
+/// Consider distance inpactpoint<->aimspot
+#define TFL_FIRECHECK_AIMDIST     32
+/// Consider enemy origin<->impactpoint
+#define TFL_FIRECHECK_REALDIST    64
+/// Consider angular diff head<->aimspot
+#define TFL_FIRECHECK_ANGLEDIST  128
+/// (re)consider target.team<->self.team
+#define TFL_FIRECHECK_TEAMCECK   256
+/// Try to avoid friendly fire
+#define TFL_FIRECHECK_AFF        512
+/// Own .ammo needs to be >= then own .shot_dmg
+#define TFL_FIRECHECK_OWM_AMMO   1024
+/// Others ammo need to be < others .ammo_max
+#define TFL_FIRECHECK_OTHER_AMMO 2048
+/// Check own .attack_finished_single vs time
+#define TFL_FIRECHECK_REFIRE     4096
+/// Move the acctual target to aimspot before tracing impact (and back after)
+//#define TFL_FIRECHECK_VERIFIED   8192
+/// Dont do any chekcs
+#define TFL_FIRECHECK_NO         16384
+
+/// How shooting is done
+.float shoot_flags;
+/// Dont shoot
+#define  TFL_SHOOT_NO          64
+/// Fire in vollys (partial implementation through .shot_volly)
+#define  TFL_SHOOT_VOLLY       2
+/// Always do a full volly, even if target is lost or dead. (not implemented)
+#define  TFL_SHOOT_VOLLYALWAYS 4
+/// Loop though all valid tarters, and hit them.
+#define  TFL_SHOOT_HITALLVALID 8
+/// Fiering makes unit loose target (after volly is done, if in volly mode)
+#define  TFL_SHOOT_CLEARTARGET 16
+///Custom shooting;
+#define  TFL_SHOOT_CUSTOM 32
+
+/// Information aboute the units capabilities
+.float turrcaps_flags;
+/// No kown capabilities
+#define  TFL_TURRCAPS_NONE        0
+/// Capable of sniping
+#define  TFL_TURRCAPS_SNIPER      2
+/// Capable of splasdamage
+#define  TFL_TURRCAPS_RADIUSDMG   4
+/// Has one or more cannons with zero shot traveltime
+#define  TFL_TURRCAPS_HITSCAN     8
+/// More then one (type of) gun
+#define  TFL_TURRCAPS_MULTIGUN    16
+/// Carries at least one guided weapon
+#define  TFL_TURRCAPS_GUIDED      32
+/// At least one gun fiers slow projectiles
+#define  TFL_TURRCAPS_SLOWPROJ    64
+/// At least one gun fiers medium speed projectiles
+#define  TFL_TURRCAPS_MEDPROJ     128
+/// At least one gun fiers fast projectiles
+#define  TFL_TURRCAPS_FASTPROJ    256
+/// At least one gun capable of damaging players
+#define  TFL_TURRCAPS_PLAYERKILL  512
+/// At least one gun that can shoot town missiles
+#define  TFL_TURRCAPS_MISSILEKILL 1024
+/// Has support capabilities. powerplants and sutch.
+#define  TFL_TURRCAPS_SUPPORT     2048
+/// Proveides at least one type of ammmo
+#define  TFL_TURRCAPS_AMMOSOURCE  4096
+/// Can recive targets from external sources
+#define TFL_TURRCAPS_RECIVETARGETS 8192
+/// Capable of self-transport
+#define TFL_TURRCAPS_MOVE 16384
+/// Will roam arround even if not chasing anyting
+#define TFL_TURRCAPS_ROAM 32768
+#define TFL_TURRCAPS_ISTURRET 65536
+
+/// Ammo types needed and/or provided
+//.float ammo_flags;
+#define ammo_flags currentammo
+/// Has and needs no ammo
+#define  TFL_AMMO_NONE     64
+/// Uses power
+#define  TFL_AMMO_ENERGY   2
+/// Uses bullets
+#define  TFL_AMMO_BULLETS  4
+/// Uses explosives
+#define  TFL_AMMO_ROCKETS  8
+/// Regenerates ammo on its own
+#define  TFL_AMMO_RECHARGE 16
+/// Can recive ammo from others
+#define  TFL_AMMO_RECIVE   32
+
+/// How incomming damage is handeld
+.float damage_flags;
+/// Cant be hurt
+#define  TFL_DMG_NO              256
+/// Can be damaged
+#define  TFL_DMG_YES             2
+/// Can be damaged  by teammates
+#define  TFL_DMG_TAKEFROMTEAM    4
+/// Traget attackers
+#define  TFL_DMG_RETALIATE       8
+/// Target attackers, even is on own team
+#define  TFL_DMG_RETALIATEONTEAM 16
+/// Loses target when damaged
+#define  TFL_DMG_TARGETLOSS      32
+/// Reciving damage trows off aim (pointless atm, aim gets recalculated to fast). not implemented.
+#define  TFL_DMG_AIMSHAKE        64
+/// Reciving damage slaps the head arround
+#define  TFL_DMG_HEADSHAKE       128
+/// Die and stay dead.
+#define  TFL_DMG_DEATH_NORESPAWN 256
+
+// Spawnflags
+/// Spawn in teambased modes
+#define TFL_SPAWN_TEAM      2
+/// Spawn in FFA modes
+#define TFL_SPAWN_FFA       4
+
+
+/*
+* Fields used by turrets
+*/
+/// Turrets internal ai speed
+.float      ticrate;
+
+/// Where to point the when no target
+.vector     idle_aim;
+
+/// Top part of turret
+.entity     tur_head;
+
+/// Start/respawn health
+.float      tur_health;
+
+/// Defend this entity (or ratehr this entitys position)
+.entity     tur_defend;
+
+/// and shoot from here. (can be non constant, think MLRS)
+.vector     tur_shotorg;
+
+/// Aim at this spot
+.vector     tur_aimpos;
+
+/// Predicted time the round will impact
+.float      tur_impacttime;
+
+// Predicted place the round will impact
+//.vector     tur_impactpoint; // unused
+
+/// What entity the aimtrace hit, if any.
+.entity     tur_impactent;
+
+/// Distance to enemy
+.float      tur_dist_enemy;
+
+/// Distance to aimspot
+.float      tur_dist_aimpos;
+
+/// Distance impact<->aim
+.float      tur_dist_impact_to_aimpos;
+
+/// Decresment counter form .shot_volly to 0.
+.float      volly_counter;
+
+/*
+* Projectile/missile. its up to the individual turret implementation to
+** deal the damage, blow upp the missile or whatever.
+*/
+/// Track then refireing is possible
+//.float attack_finished; = attack_finished_single
+/// Shoot this often
+.float shot_refire;
+/// Shots travel this fast, when appliable
+.float shot_speed;
+/// Inaccuracy
+.float shot_spread;
+/// Estimated (core) damage of projectiles. also reduce on ammo with this amount when fiering
+.float shot_dmg;
+/// If radius dmg, this is how big that radius is.
+.float shot_radius;
+/// Max force exserted by round impact
+.float shot_force;
+/// < 1 = shoot # times at target (if possible)
+.float shot_volly;
+/// Refire after a compleated volly.
+.float shot_volly_refire;
+
+/// Consider targets within this range
+.float target_range;
+/// Dont consider targets closer then
+.float target_range_min;
+/// Targets closer to this are prefered
+.float target_range_optimal;
+
+/*
+* The standard targetselection tries to select a target based on
+* range, angle offset, target type, "is old target"
+* Thise biases will allow score scaling to (dis)favor diffrent targets
+*/
+/// (dis)Favor best range this mutch
+.float target_select_rangebias;
+/// (dis)Favor targeting my old enemy this mutch
+.float target_select_samebias;
+/// (dis)Favor targeting the enemy closest to my guns current angle this mutch
+.float target_select_anglebias;
+/// (dis)Favor Missiles? (-1 to diable targeting compleatly)
+.float target_select_missilebias;
+/// (dis)Favot living players (-1 to diable targeting compleatly)
+.float target_select_playerbias;
+/// Field of view
+//.float target_select_fov;
+/// Last timestamp this turret aquierd a valid target
+.float target_select_time;
+/// Throttle re-validation of current target
+.float target_validate_time;
+/*
+* Aim refers to real aiming, not gun pos (thats done by track)
+*/
+/// Maximum offset between impact and aim spot to fire
+.float aim_firetolerance_dist;
+/// How fast can i rotate/pitch (per second in stepmotor mode, base force in smooth modes)
+.float aim_speed;
+/// cant aim higher/lower then this
+.float aim_maxpitch;
+/// I cant rotate more then this
+.float aim_maxrot;
+
+// Ammo/power. keeping dmg and ammo on a one to one ratio is preferable (for rating)
+/// Staring & current ammo
+.float ammo;
+/// Regenerate this mutch ammo (per second)
+.float ammo_recharge;
+/// Max amount of ammo i can hold
+.float ammo_max;
+
+
+// Uncomment below to enable various debug output.
+//#define TURRET_DEBUG
+//#define TURRET_DEBUG_TARGETVALIDATE
+//#define TURRET_DEBUG_TARGETSELECT
+
+#ifdef TURRET_DEBUG
+.float tur_dbg_dmg_t_h; // Total dmg that hit something (can be more then tur_dbg_dmg_t_f since it should count radius dmg.
+.float tur_dbg_dmg_t_f; // Total damage spent
+.float tur_dbg_start;   // When did i go online?
+.float tur_dbg_tmr1;    // timer for random use
+.float tur_dbg_tmr2;    // timer for random use
+.float tur_dbg_tmr3;    // timer for random use
+.vector tur_dbg_rvec;   // Random vector, mainly for coloruing stuff'
+#endif
+
+// System main's
+/// Main AI loop
+void turret_think();
+/// Prefire checks and sutch
+void turret_fire();
+
+// Callbacks
+/// implements the actual fiering
+.void()  turret_firefunc;
+/// prefire checks go here. return 1 to go bang, 0 not to.
+.float() turret_firecheckfunc;
+/// Execure AFTER main AI loop
+.void()  turret_postthink;
+
+/// Add a target
+.float(entity e_target,entity e_sender) turret_addtarget;
+
+.void() turret_diehook;
+.void() turret_respawnhook;
+
+/*
+* Target selection, preferably but not nessesarely
+* return a normalized result.
+*/
+/// Function to use for target evaluation. usualy turret_stdproc_targetscore_generic
+.float(entity _turret, entity _target) turret_score_target;
+
+/*
+* Target selection
+*/
+/// Generic, fairly smart, bias-aware target selection.
+float   turret_stdproc_targetscore_generic(entity _turret, entity _target);
+/// Experimental supportunits targetselector
+float   turret_stdproc_targetscore_support(entity _turret,entity _target);
+
+/*
+* Aim functions
+*/
+/// Generic aimer guided by self.aim_flags
+vector turret_stdproc_aim_generic();
+
+/*
+* Turret turning & pitch
+*/
+/// Tries to line up the turret head with the aimpos
+void turret_stdproc_track();
+
+/// Generic damage handeling. blows up the turret when health <= 0
+void turret_stdproc_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce);
+/// Spawns a explotion, does some damage & trows bits arround.
+void turret_stdproc_die();
+/// reassembles the turret.
+void turret_stdproc_respawn();
+
+/// Evaluate target validity
+float turret_validate_target(entity e_turret,entity e_target,float validate_flags);
+/// Turret Head Angle Diff Vector. updated by a sucsessfull call to turret_validate_target
+vector tvt_thadv;
+/// Turret Angle Diff Vector. updated by a sucsessfull call to turret_validate_target
+vector tvt_tadv;
+/// Turret Head Angle Diff Float. updated by a sucsessfull call to turret_validate_target
+float  tvt_thadf;
+/// Turret Angle Diff Float. updated by a sucsessfull call to turret_validate_target
+float  tvt_tadf;
+/// Distance. updated by a sucsessfull call to turret_validate_target
+float  tvt_dist;
+
+/// updates aim org, shot org, shot dir and enemy org for selected turret
+void turret_do_updates(entity e_turret);
+.vector tur_shotdir_updated;
+
+void turrets_precash();
+#endif // SVQC
+
+// common
+.float turret_type;
+float TID_COMMON        = 1;
+float TID_EWHEEL        = 2;
+float TID_FLAC          = 3;
+float TID_FUSION        = 4;
+float TID_HELLION       = 5;
+float TID_HK            = 6;
+float TID_MACHINEGUN    = 7;
+float TID_MLRS          = 8;
+float TID_PHASER        = 9;
+float TID_PLASMA        = 10;
+float TID_PLASMA_DUAL   = 11;
+float TID_TESLA         = 12;
+float TID_WALKER        = 13;
+float TID_LAST          = 13;
+
+float TNSF_UPDATE       = 2;
+float TNSF_STATUS       = 4;
+float TNSF_SETUP        = 8;
+float TNSF_ANG          = 16;
+float TNSF_AVEL         = 32;
+float TNSF_MOVE         = 64;
+.float anim_start_time;
+float TNSF_ANIM         = 128;
+
+float TNSF_FULL_UPDATE  = 16777215;
+
+#endif // TTURRETS_ENABLED
+
+

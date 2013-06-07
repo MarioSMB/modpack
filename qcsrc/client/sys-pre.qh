@@ -1,0 +1,16 @@
+#ifdef USE_FTE
+#pragma target FTE
+#endif
+
+#define CSQC
+
+#define ATTN_NORM builtin_ATTN_NORM
+
+#ifdef COMPAT_050_ENGINE
+// WORKAROUND for 0.5.0 engine
+// FIXME remove this after 0.6 release
+#define getproperty builtin_getproperty
+#define getpropertyvec builtin_getpropertyvec
+#endif
+
+#pragma noref 1

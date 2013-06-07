@@ -1,0 +1,23 @@
+// these are needed since mutators are compiled last
+
+// score rule declarations
+#define ST_DOM_TICKS 1
+#define SP_DOM_TICKS 4
+#define SP_DOM_TAKES 5
+
+// pps: points per second
+.float dom_total_pps;
+.float dom_pps_red;
+.float dom_pps_blue;
+.float dom_pps_yellow;
+.float dom_pps_pink;
+float total_pps;
+float pps_red;
+float pps_blue;
+float pps_yellow;
+float pps_pink;
+
+// capture declarations
+.float enemy_playerid;
+.entity sprite;
+.float captime;

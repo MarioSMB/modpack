@@ -1,0 +1,13 @@
+#ifdef CSQC
+void cl_notice_read();
+void sv_notice_to(entity _to, string _notice, float _howlong, float _modal);
+#endif
+
+#ifdef SVQC
+string autocvar_sv_join_notices;
+float  autocvar_sv_join_notices_time;
+
+void sv_notice_to(entity _to, string _notice, float _howlong, float _modal);
+void sv_notice_toall(string _notice, float _howlong, float _modal);
+void sv_notice_join();
+#endif

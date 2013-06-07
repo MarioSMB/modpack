@@ -1,0 +1,23 @@
+#ifdef FTEQCC
+#pragma flag enable subscope
+#pragma flag enable lo
+#endif
+
+// FTEQCC can do this
+#define HAVE_YO_DAWG_CPP
+
+#ifndef NOCOMPAT
+//# define WORKAROUND_XON010
+//# define COMPAT_XON010_CHANNELS
+//# define COMPAT_XON050_ENGINE
+# define COMPAT_NO_MOD_IS_XONOTIC
+# define COMPAT_XON060_DONTCRASH_CHECKPVS
+#endif
+
+#ifdef FTEQCC
+#ifdef WATERMARK
+string FTEQCC_SUCKS_WATERMARKS_THROUGH_C60_FULLERENES = WATERMARK();
+#undef WATERMARK
+#define WATERMARK FTEQCC_SUCKS_WATERMARKS_THROUGH_C60_FULLERENES
+#endif
+#endif
