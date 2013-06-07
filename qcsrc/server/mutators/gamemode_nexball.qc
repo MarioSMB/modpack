@@ -929,6 +929,9 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerPreThink)
 		}
 		
 	}
+	
+	nexball_setstatus();
+	
 	return FALSE;
 }
 
@@ -944,6 +947,13 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerSpawn)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(nexball_SetStartItems)
+{
+	start_items |= IT_UNLIMITED_SUPERWEAPONS; // FIXME BAD BAD BAD BAD HACK, NEXBALL SHOULDN'T ABUSE PORTO'S WEAPON SLOT
+	
+	return FALSE;
+}
+
 MUTATOR_DEFINITION(gamemode_nexball)
 {
 	MUTATOR_HOOK(PlayerDies, nexball_BallDrop, CBC_ORDER_ANY);
@@ -953,6 +963,7 @@ MUTATOR_DEFINITION(gamemode_nexball)
 	MUTATOR_HOOK(BuildMutatorsString, nexball_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, nexball_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, nexball_PlayerPreThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SetStartItems, nexball_SetStartItems, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

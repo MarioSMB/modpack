@@ -537,7 +537,6 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, cvar_cl_weaponimpulsemode, "cl_weaponimpulsemode");
 	GetCvars_handleFloat(s, f, cvar_cl_autotaunt, "cl_autotaunt");
 	GetCvars_handleFloat(s, f, cvar_cl_noantilag, "cl_noantilag");
-	GetCvars_handleFloat(s, f, cvar_cl_multijump, "cl_multijump");
 	GetCvars_handleFloat(s, f, cvar_cl_voice_directional, "cl_voice_directional");
 	GetCvars_handleFloat(s, f, cvar_cl_voice_directional_taunt_attenuation, "cl_voice_directional_taunt_attenuation");
 	GetCvars_handleFloat(s, f, cvar_cl_accuracy_data_share, "cl_accuracy_data_share");
@@ -801,7 +800,6 @@ void readplayerstartcvars()
 
 	if (g_weaponarena)
 	{
-		g_pinata = 0; // incompatible
 		g_weapon_stay = 0; // incompatible
 		WEPSET_COPY_AA(start_weapons, g_weaponarena_weapons);
 		start_items |= IT_UNLIMITED_AMMO;
@@ -823,10 +821,7 @@ void readplayerstartcvars()
 
 	if(!cvar("g_use_ammunition"))
 		start_items |= IT_UNLIMITED_AMMO;
-
-	if(cvar("g_nexball"))
-		start_items |= IT_UNLIMITED_SUPERWEAPONS; // FIXME BAD BAD BAD BAD HACK, NEXBALL SHOULDN'T ABUSE PORTO'S WEAPON SLOT
-
+	
 	if(start_items & IT_UNLIMITED_WEAPON_AMMO)
 	{
 		start_ammo_rockets = 999;
@@ -955,8 +950,16 @@ void readlevelcvars(void)
 	CHECK_MUTATOR_ADD("g_superspectate", mutator_superspec, 1);
 	CHECK_MUTATOR_ADD("g_overkill", mutator_overkill, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_rifle_arena", mutator_rifle_arena, !cvar("g_minstagib"));
-	CHECK_MUTATOR_ADD("g_random_gravity", mutator_random_gravity, 1);
 	CHECK_MUTATOR_ADD("g_freeze", mutator_freeze, !g_freezetag);
+	CHECK_MUTATOR_ADD("g_pinata", mutator_pinata, !cvar("g_minstagib"));
+	CHECK_MUTATOR_ADD("g_midair", mutator_midair, 1);
+	CHECK_MUTATOR_ADD("g_bloodloss", mutator_bloodloss, !cvar("g_minstagib"));
+	CHECK_MUTATOR_ADD("g_random_gravity", mutator_random_gravity, 1);
+	CHECK_MUTATOR_ADD("g_norecoil", mutator_norecoil, 1);
+	CHECK_MUTATOR_ADD("g_multijump", mutator_multijump, 1);
+	CHECK_MUTATOR_ADD("g_jump_grunt", mutator_jump_grunt, 1);
+	CHECK_MUTATOR_ADD("g_footsteps", mutator_footsteps, 1);
+	CHECK_MUTATOR_ADD("g_melee_only", mutator_melee_only, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_sandbox", sandbox, 1);
 	
 	#undef CHECK_MUTATOR_ADD
@@ -989,13 +992,8 @@ void readlevelcvars(void)
 	g_cloaked = cvar("g_cloaked");
     if(g_cts)
         g_cloaked = 1; // always enable cloak in CTS
-	g_jump_grunt = cvar("g_jump_grunt");
-	g_footsteps = cvar("g_footsteps");
 	g_grappling_hook = cvar("g_grappling_hook");
 	g_jetpack = cvar("g_jetpack");
-	g_midair = cvar("g_midair");
-	g_norecoil = cvar("g_norecoil");
-	g_bloodloss = cvar("g_bloodloss");
 	sv_maxidle = cvar("sv_maxidle");
 	sv_maxidle_spectatorsareidle = cvar("sv_maxidle_spectatorsareidle");
 	sv_autotaunt = cvar("sv_autotaunt");
@@ -1006,7 +1004,7 @@ void readlevelcvars(void)
 	g_warmup_allguns = cvar("g_warmup_allguns");
 	g_warmup_allow_timeout = cvar("g_warmup_allow_timeout");
 
-	if ((g_race && g_race_qualifying == 2) || g_arena || g_minstagib || g_assault || cvar("g_campaign"))
+	if ((g_race && g_race_qualifying == 2) || g_arena || g_assault || cvar("g_campaign"))
 		inWarmupStage = 0; // these modes cannot work together, sorry
 
 	g_pickup_respawntime_weapon = cvar("g_pickup_respawntime_weapon");
@@ -1068,8 +1066,6 @@ void readlevelcvars(void)
 
 	g_pickup_ammo_anyway = cvar("g_pickup_ammo_anyway");
 	g_pickup_weapons_anyway = cvar("g_pickup_weapons_anyway");
-
-	g_pinata = cvar("g_pinata");
 
     g_weapon_stay = cvar(strcat("g_", GetGametype(), "_weapon_stay"));
     if(!g_weapon_stay)
@@ -1382,12 +1378,6 @@ void precache()
 		precache_playermodel("models/player/pony.iqm");
 		precache_playermodel("models/player/mario.dpm");
 	}
-
-    if (g_footsteps)
-    {
-        PrecacheGlobalSound((globalsound_step = "misc/footstep0 6"));
-        PrecacheGlobalSound((globalsound_metalstep = "misc/metalfootstep0 6"));
-    }
 
     // gore and miscellaneous sounds
     //precache_sound ("misc/h2ohit.wav");

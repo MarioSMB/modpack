@@ -38,11 +38,9 @@ void hmg_fire_auto()
 	W_DecreaseAmmo(ammo_nails, autocvar_g_balance_hmg_sustained_ammo, autocvar_g_balance_hmg_reload_ammo);
 
 	W_SetupShot (self, autocvar_g_antilag_bullets && autocvar_g_balance_hmg_speed >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, autocvar_g_balance_hmg_sustained_damage, self.weapon);
-	if (!g_norecoil)
-	{
-		self.punchangle_x = random () - 0.5;
-		self.punchangle_y = random () - 0.5;
-	}
+	
+	self.punchangle_x = random () - 0.5;
+	self.punchangle_y = random () - 0.5;
 
 	uzi_spread = bound(autocvar_g_balance_hmg_spread_min, autocvar_g_balance_hmg_spread_min + (autocvar_g_balance_hmg_spread_add * self.misc_bulletcounter), autocvar_g_balance_hmg_spread_max);
 	fireBallisticBullet(w_shotorg, w_shotdir, uzi_spread, autocvar_g_balance_hmg_speed, 5, autocvar_g_balance_hmg_sustained_damage, autocvar_g_balance_hmg_sustained_force, WEP_HMG, 0, 1, autocvar_g_balance_hmg_bulletconstant);

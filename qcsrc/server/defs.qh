@@ -16,7 +16,7 @@ noref float require_spawnfunc_prefix; // if this float exists, only functions wi
 
 // Globals
 
-float g_cloaked, g_footsteps, g_jump_grunt, g_grappling_hook, g_midair, g_minstagib, g_pinata, g_norecoil, g_bloodloss;
+float g_cloaked, g_grappling_hook, g_minstagib;
 float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
@@ -227,9 +227,6 @@ float alreadychangedlevel;
 .float in_swamp;              // bool
 .entity swampslug;            // Uses this to release from swamp ("untouch" fix)
 
-// footstep interval
-.float nextstep;
-
 float blockSpectators; //if set, new or existing spectators or observers will be removed unless they become a player within g_maxplayers_spectator_blocktime seconds
 .float spectatortime; //point in time since the client is spectating or observing
 void checkSpectatorBlock();
@@ -264,8 +261,6 @@ float default_weapon_alpha;
 .float cvar_cl_autoscreenshot;
 .float cvar_cl_movement_track_canjump;
 .float cvar_cl_newusekeysupported;
-
-.float cvar_cl_multijump;
 
 .string cvar_g_xonoticversion;
 .string cvar_cl_weaponpriority;
@@ -552,7 +547,6 @@ float client_cefc_accumulatortime;
 
 .float spectatee_status;
 .float zoomstate;
-.float bloodloss_timer;
 .float restriction;
 
 .entity clientdata;

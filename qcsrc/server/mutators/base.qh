@@ -78,6 +78,11 @@ MUTATOR_HOOKABLE(PlayerDies);
 		entity frag_attacker;
 		entity frag_target; // same as self
 		float frag_deathtype;
+		
+MUTATOR_HOOKABLE(PlayerJump);
+	// called when a player presses the jump key
+	// INPUT, OUTPUT:
+		float player_multijump;
 
 MUTATOR_HOOKABLE(GiveFragsForKill);
 	// called when someone was fragged by "self", and is expected to change frag_score to adjust scoring for the kill

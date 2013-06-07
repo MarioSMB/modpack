@@ -107,34 +107,6 @@ void CreatureFrame (void)
 
 			if(autocvar_g_maxspeed > 0 && velocity_len > autocvar_g_maxspeed)
 				Damage (self, world, world, 100000, DEATH_SHOOTING_STAR, self.origin, '0 0 0');
-			// play stupid sounds
-			if (g_footsteps)
-			if (!gameover)
-			if (self.flags & FL_ONGROUND)
-			if (velocity_len > autocvar_sv_maxspeed * 0.6)
-			if (!self.deadflag)
-			if (time < self.lastground + 0.2)
-			{
-				if((time > self.nextstep) || (time < (self.nextstep - 10.0)))
-				{
-					self.nextstep = time + 0.3 + random() * 0.1;
-					trace_dphitq3surfaceflags = 0;
-					tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
-					/*
-					if(trace_fraction == 1)
-						dprint("nohit\n");
-					else
-						dprint(ftos(trace_dphitq3surfaceflags), "\n");
-					*/
-					if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
-					{
-						if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-							GlobalSound(globalsound_metalstep, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-						else
-							GlobalSound(globalsound_step, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-					}
-				}
-			}
 		}
 		
         self.oldvelocity = self.velocity;

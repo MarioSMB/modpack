@@ -1577,15 +1577,6 @@ void player_powerups (void)
 	if(autocvar_g_fullbrightplayers)
 		self.effects = self.effects | EF_FULLBRIGHT;
 
-	// midair gamemode: damage only while in the air
-	// if in midair mode, being on ground grants temporary invulnerability
-	// (this is so that multishot weapon don't clear the ground flag on the
-	// first damage in the frame, leaving the player vulnerable to the
-	// remaining hits in the same frame)
-	if (self.flags & FL_ONGROUND)
-	if (g_midair)
-		self.spawnshieldtime = max(self.spawnshieldtime, time + autocvar_g_midair_shieldtime);
-
 	if (time >= game_starttime)
 	if (time < self.spawnshieldtime)
 		self.effects = self.effects | (EF_ADDITIVE | EF_FULLBRIGHT);
@@ -2432,8 +2423,6 @@ void PlayerPreThink (void)
 		float do_crouch = self.BUTTON_CROUCH;
 		if(self.hook.state)
 			do_crouch = 0;
-		if(self.health <= g_bloodloss)
-			do_crouch = 1;
 		if(self.vehicle)
 			do_crouch = 0;
 		if(self.frozen)
@@ -2465,15 +2454,6 @@ void PlayerPreThink (void)
 			}
 		}
 
-		if(self.health <= g_bloodloss && self.deadflag == DEAD_NO)
-		{
-			if(self.bloodloss_timer < time)
-			{
-				self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
-				self.bloodloss_timer = time + 0.5 + random() * 0.5;
-			}
-		}
-
 		FixPlayermodel();
 
 		GrapplingHookFrame();
@@ -2501,9 +2481,6 @@ void PlayerPreThink (void)
 
 		if(frametime)
 			player_anim();
-
-		if(g_nexball)
-			nexball_setstatus();
 		
 		// secret status
 		secrets_setstatus();

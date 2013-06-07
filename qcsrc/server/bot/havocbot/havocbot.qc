@@ -253,9 +253,6 @@ void havocbot_bunnyhop(vector dir)
 	float maxspeed;
 	vector gco, gno;
 
-	if(autocvar_g_midair)
-		return;
-
 	// Don't jump when attacking
 	if(self.aistatus & AI_STATUS_ATTACKING)
 		return;

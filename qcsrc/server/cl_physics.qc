@@ -10,10 +10,6 @@
 .float wasFlying;
 .float spectatorspeed;
 
-.float multijump_count;
-.float multijump_ready;
-.float prevjumpbutton;
-
 /*
 =============
 PlayerJump
@@ -23,13 +19,19 @@ When you press the jump key
 */
 void PlayerJump (void)
 {
+	float doublejump = FALSE;
+
 	if(self.frozen)
 		return; // no jumping in freezetag when frozen
 
-	float mjumpheight;
-	float doublejump;
+	player_multijump = doublejump;
+	if(MUTATOR_CALLHOOK(PlayerJump))
+		return;
+		
+	doublejump = player_multijump;
 
-	doublejump = FALSE;
+	float mjumpheight;
+	
 	if (autocvar_sv_doublejump)
 	{
 		tracebox(self.origin + '0 0 0.01', self.mins, self.maxs, self.origin - '0 0 0.01', MOVE_NORMAL, self);
@@ -52,58 +54,6 @@ void PlayerJump (void)
 		return;
 	}
 
-	if (autocvar_g_multijump)
-	if (self.cvar_cl_multijump)
-	{
-		if (self.prevjumpbutton == FALSE && !(self.flags & FL_ONGROUND)) // jump button pressed this frame and we are in midair
-			self.multijump_ready = TRUE;  // this is necessary to check that we released the jump button and pressed it again
-		else
-			self.multijump_ready = FALSE;
-	}
-
-	if(!doublejump && self.multijump_ready && self.multijump_count < autocvar_g_multijump && self.velocity_z > autocvar_g_multijump_speed && vlen(self.velocity) <= autocvar_g_multijump_maxspeed)
-	{
-		// doublejump = FALSE; // checked above in the if
-		if (autocvar_g_multijump)
-		if (self.cvar_cl_multijump)
-		{
-			if (autocvar_g_multijump_add == 0) // in this case we make the z velocity == jumpvelocity
-			{
-				if (self.velocity_z < mjumpheight)
-				{
-					doublejump = TRUE;
-					self.velocity_z = 0;
-				}
-			}
-			else
-				doublejump = TRUE;
-
-			if(doublejump)
-			{
-				if(self.movement_x != 0 || self.movement_y != 0) // don't remove all speed if player isnt pressing any movement keys
-				{
-					float curspeed;
-					vector wishvel, wishdir;
-
-					curspeed = max(
-						vlen(vec2(self.velocity)), // current xy speed
-						vlen(vec2(antilag_takebackavgvelocity(self, max(self.lastteleporttime + sys_frametime, time - 0.25), time))) // average xy topspeed over the last 0.25 secs
-					);
-					makevectors(self.v_angle_y * '0 1 0');
-					wishvel = v_forward * self.movement_x + v_right * self.movement_y;
-					wishdir = normalize(wishvel);
-
-					self.velocity_x = wishdir_x * curspeed; // allow "dodging" at a multijump
-					self.velocity_y = wishdir_y * curspeed;
-					// keep velocity_z unchanged!
-				}
-				if (autocvar_g_multijump > 0)
-					self.multijump_count += 1;
-			}
-		}
-		self.multijump_ready = FALSE; // require releasing and pressing the jump button again for the next jump
-	}
-
 	if (!doublejump)
 		if (!(self.flags & FL_ONGROUND))
 			return;
@@ -111,9 +61,6 @@ void PlayerJump (void)
 	if(self.cvar_cl_movement_track_canjump)
 		if (!(self.flags & FL_JUMPRELEASED))
 			return;
-
-	if(self.health <= g_bloodloss)
-		return;
 
 	// sv_jumpspeedcap_min/sv_jumpspeedcap_max act as baseline
 	// velocity bounds.  Final velocity is bound between (jumpheight *
@@ -167,9 +114,6 @@ void PlayerJump (void)
 
 	animdecide_setaction(self, ANIMACTION_JUMP, TRUE);
 
-	if(g_jump_grunt)
-		PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-
 	self.restart_jump = -1; // restart jump anim next time
 	// value -1 is used to not use the teleport bit (workaround for tiny hitch when re-jumping)
 }
@@ -203,14 +147,6 @@ void CheckWaterJump()
 }
 void CheckPlayerJump()
 {
-	if(self.flags & FL_ONGROUND)
-	{
-		if (autocvar_g_multijump > 0)
-			self.multijump_count = 0;
-		else
-			self.multijump_count = -2; // the cvar value for infinite jumps is -1, so this needs to be smaller
-	}
-
 	if (self.BUTTON_JUMP)
 		PlayerJump ();
 	else
@@ -218,7 +154,6 @@ void CheckPlayerJump()
 
 	if (self.waterlevel == WATERLEVEL_SWIMMING)
 		CheckWaterJump ();
-	self.prevjumpbutton = self.BUTTON_JUMP;
 }
 
 float racecar_angle(float forward, float down)
@@ -930,29 +865,6 @@ void SV_PlayerPhysics()
 		self.angles_x = 0;
 		self.angles_y = self.v_angle_y;
 		self.angles_z = 0;
-	}
-
-	if(self.flags & FL_ONGROUND)
-	if(IS_PLAYER(self)) // no fall sounds for observers thank you very much
-	if(self.wasFlying)
-	{
-		self.wasFlying = 0;
-
-		if(self.waterlevel < WATERLEVEL_SWIMMING)
-		if(time >= self.ladder_time)
-		if not(self.hook)
-		{
-			self.nextstep = time + 0.3 + random() * 0.1;
-			trace_dphitq3surfaceflags = 0;
-			tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
-			if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
-			{
-				if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
-					GlobalSound(globalsound_metalfall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-				else
-					GlobalSound(globalsound_fall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-			}
-		}
 	}
 
 	if(IsFlying(self))
