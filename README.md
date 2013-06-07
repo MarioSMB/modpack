@@ -17,4 +17,4 @@ Usage
 Compile GMQCC & copy the compiled binaries to client, menu & server folders inside esk-modpack/qcsrc
 Run this from a terminal in the qcsrc folder: make "$@"
 Copy the compiled .dat files from esk-modpack to Xonotic/data
-Run the game. Configuration files will be available for the new features soon
+Configuration files will be available for the new features soon
