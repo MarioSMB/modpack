@@ -584,6 +584,8 @@ float serverflags;
 .float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
 .entity iceblock;
 
+.float poisoned;
+
 .entity muzzle_flash;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.
 

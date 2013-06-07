@@ -132,6 +132,15 @@ MUTATOR_HOOKFUNCTION(minstagib_MonsterLoot)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(minstagib_MonsterSpawn)
+{
+	// always refill ammo
+	if(self.monsterid == MONSTER_MAGE)
+		self.skin = 1;
+	
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(minstagib_BotShouldAttack)
 {
 	if(checkentity.items & IT_STRENGTH)
@@ -502,6 +511,7 @@ MUTATOR_DEFINITION(mutator_minstagib)
 	MUTATOR_HOOK(MatchEnd, minstagib_MatchEnd, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleEnter, minstagib_VehicleEnter, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterDropItem, minstagib_MonsterLoot, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MonsterSpawn, minstagib_MonsterSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BotShouldAttack, minstagib_BotShouldAttack, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, minstagib_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, minstagib_PlayerDamage, CBC_ORDER_ANY);

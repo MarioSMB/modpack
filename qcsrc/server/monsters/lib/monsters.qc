@@ -205,14 +205,14 @@ void monster_setupsounds(string mon)
 	if(self.msound_sight == "") self.msound_sight = strzone(strcat("monsters/", mon, "_sight.wav"));
 }
 
-void monster_melee (entity targ, float damg, float er, float deathtype, float dostop)
+float monster_melee (entity targ, float damg, float er, float deathtype, float dostop)
 {
 	float dot, rdmg = damg * random();
 
 	if (self.health <= 0)
-		return;
+		return FALSE;
 	if (targ == world)
-		return;
+		return FALSE;
 		
 	if(dostop)
 	{
@@ -227,6 +227,8 @@ void monster_melee (entity targ, float damg, float er, float deathtype, float do
 	
 	if(dot > er)
 		Damage(targ, self, self, rdmg * monster_skill, deathtype, targ.origin, normalize(targ.origin - self.origin));
+		
+	return TRUE;
 }
 
 void Monster_CheckDropCvars (string mon)
@@ -351,24 +353,10 @@ void monster_checkattack(entity e, entity targ)
 	if(e == world)
 		return;
 	if(targ == world)
-	{
-		e.monster_delayedattack = func_null;
-		e.delay = -1;
 		return;
-	}
 		
 	if not(e.monster_attackfunc)
 		return;
-		
-	if(e.monster_delayedattack && e.delay != -1)
-	{
-		if(time < e.delay)
-			return;
-			
-		e.monster_delayedattack();
-		
-		return;
-	}
 	
 	if(time < e.attack_finished_single)
 		return;
@@ -432,7 +420,7 @@ vector monster_pickmovetarget(entity targ)
 	if(self.enemy)
 	{
 		self.monster_movestate = MONSTER_MOVE_ENEMY;
-		self.last_trace = time + 0.1;
+		self.last_trace = time + 1.2;
 		return self.enemy.origin;
 	}
 	
@@ -488,6 +476,8 @@ vector monster_pickmovetarget(entity targ)
 
 void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_run, float manim_walk, float manim_idle)
 {
+	fixedmakevectors(self.angles);
+
 	if(self.target2)
 		self.goalentity = find(world, targetname, self.target2);
 		
@@ -575,8 +565,12 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(IsDifferentTeam(self.monster_owner, self))
 		self.monster_owner = world;
 		
+	if(time >= self.last_trace)
 	if not(monster_isvalidtarget(self.enemy, self))
-		self.enemy = world; // check enemy each think frame?
+		self.enemy = world;
+		
+	if(self.enemy && self.enemy.health < 1)
+		self.enemy = world; // enough!
 		
 	if not(self.enemy)
 	{
@@ -595,15 +589,8 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if not(self.enemy)
 		monster_sound(self.msound_idle, 5, TRUE);
 	
-	vector angles_face = vectoangles(self.moveto - self.origin);
-	vector owner_face = vectoangles(self.monster_owner.origin - self.origin);
-	vector enemy_face = vectoangles(self.enemy.origin - self.origin);
-	
-	if(!(self.flags & FL_FLY || self.flags & FL_SWIM))
-		self.moveto_z = self.origin_z;
-	
 	if(self.state != MONSTER_STATE_ATTACK_LEAP && self.state != MONSTER_STATE_ATTACK_MELEE)
-		self.angles_y = angles_face_y;
+		self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
 	
 	if(self.state == MONSTER_STATE_ATTACK_LEAP && (self.flags & FL_ONGROUND))
 	{
@@ -611,7 +598,29 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.touch = MonsterTouch;
 	}
 	 
-	v_forward = normalize(self.moveto - self.origin);
+	//v_forward = normalize(self.moveto - self.origin);
+	
+	self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
+	
+	float turny = 0;
+	vector real_angle = vectoangles(self.steerto) - self.angles;
+	
+	if(self.state != MONSTER_STATE_ATTACK_LEAP && self.state != MONSTER_STATE_ATTACK_MELEE)
+		turny = 20;
+	
+	if(turny)
+	{
+		turny = bound(turny * -1, shortangle_f(real_angle_y, self.angles_y), turny);
+		self.angles_y += turny;
+	}
+	
+	if(self.state == MONSTER_STATE_ATTACK_MELEE)
+		self.moveto = self.origin;
+	else if(self.enemy)
+		self.moveto = self.moveto * 0.9 + ((self.origin + v_forward * 500) + randomvec() * 400) * 0.1;
+	
+	if(!(self.flags & FL_FLY || self.flags & FL_SWIM))
+		self.moveto_z = self.origin_z; 
 	
 	float l = vlen(self.moveto - self.origin);
 	float t1 = trace_path(self.origin+'0 0 10', self.moveto+'0 0 10');
@@ -633,25 +642,17 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	}
 	else
 	{
-		if(targ.target)
-			self.target2 = targ.target;
-		else if(targ.target2)
-			self.target2 = targ.target2;
-		else
-		{
-			movelib_beak_simple(stopspeed);
-			if(time > self.attack_finished_single)
-			if(time > self.pain_finished)
-			if (vlen(self.velocity) <= 30)
-			{
-				monsters_setframe(manim_idle);
-				if(self.state != MONSTER_STATE_ATTACK_MELEE && self.state != MONSTER_STATE_ATTACK_LEAP)
-				if(self.enemy)
-					self.angles_y = enemy_face_y;
-				else
-					self.angles_y = ((self.monster_owner) ? owner_face_y : self.pos2_y); // reset looking angle now?
-			}
-		}
+		entity e = find(world, targetname, self.target2);
+		if(e.target2)
+			self.target2 = e.target2;
+		else if(e.target)
+			self.target2 = e.target;
+		
+		movelib_beak_simple(stopspeed);
+		if(time > self.attack_finished_single)
+		if(time > self.pain_finished)
+		if (vlen(self.velocity) <= 30)
+			monsters_setframe(manim_idle);
 	}
 	
 	if(self.enemy)
@@ -934,6 +935,7 @@ void monster_hook_spawn()
 	}
 	
 	if not(self.monster_respawned)
+	if not(self.skin)
 		self.skin = rint(random() * 4);
 	
 	self.pos1 = self.origin;
@@ -1001,7 +1003,6 @@ float monster_initialize(string  net_name, float mon_id,
 	self.solid				= SOLID_BBOX;
 	self.scale				= 1;
 	self.movetype			= MOVETYPE_WALK;
-	self.delay				= -1; // used in attack delay code
 	self.spawnshieldtime	= time + autocvar_g_monsters_spawnshieldtime;
 	monsters_spawned	   += 1;
 	self.enemy				= world;

@@ -389,6 +389,8 @@ float last_beam;
 float rainbow_last_flicker;
 vector rainbow_prev_color;
 
+float old_v_idlescale;
+
 #define BUTTON_3 4
 #define BUTTON_4 8
 float cl_notice_run();
@@ -905,7 +907,7 @@ void CSQC_UpdateView(float w, float h)
 		}
 	}
 
-	if(autocvar_hud_damage && !getstati(STAT_FROZEN))
+	if(autocvar_hud_damage && !getstati(STAT_FROZEN) && !getstati(STAT_POISONED))
 	{
 		splash_size_x = max(vid_conwidth, vid_conheight);
 		splash_size_y = max(vid_conwidth, vid_conheight);
@@ -990,6 +992,21 @@ void CSQC_UpdateView(float w, float h)
 			}
 		}
 	}
+	
+	if(getstati(STAT_POISONED))
+	{
+		if(cvar("v_idlescale") != 50)
+		{
+			old_v_idlescale = cvar("v_idlescale");
+			cvar_set("v_idlescale", "50");
+		}
+	}
+	else
+	{
+		if(cvar("v_idlescale") == 50)
+			cvar_set("v_idlescale", ftos(old_v_idlescale));
+	}
+		
 
 	float e1 = (autocvar_hud_postprocessing_maxbluralpha != 0);
 	float e2 = (autocvar_hud_powerup != 0);
@@ -1089,6 +1106,9 @@ void CSQC_UpdateView(float w, float h)
 			DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
 			drawstring_aspect(eY * 0.64 * vid_conheight, _("Revival progress"), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
 		}
+		
+		if(getstati(STAT_POISONED))
+			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, '0.25 0.90 0.25', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
 
 		if(autocvar_r_letterbox == 0)
 			if(autocvar_viewsize < 120)

@@ -43,7 +43,6 @@ const float MONSTERFLAG_INFRONT = 10; // only check for enemies infront of us
 
 .void() monster_spawnfunc;
 .void() monster_die;
-.void() monster_delayedattack;
 
 .float monster_movestate; // used to tell what the monster is currently doing
 const float MONSTER_MOVE_OWNER = 1; // monster will move to owner if in range, or stand still

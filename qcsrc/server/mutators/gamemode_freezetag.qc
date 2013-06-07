@@ -165,7 +165,6 @@ void freezetag_Unfreeze(entity attacker)
 	Unfreeze(self);
 }
 
-
 // ================
 // Bot player logic
 // ================

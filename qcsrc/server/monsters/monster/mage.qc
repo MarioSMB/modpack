@@ -38,33 +38,72 @@ void() mage_heal;
 void() mage_shield;
 void() mage_shield_die;
 
+float friend_needshelp(entity e)
+{
+	if(e == world)
+		return FALSE;
+	if(e.health <= 0)
+		return FALSE;
+	if(vlen(e.origin - self.origin) > autocvar_g_monster_mage_heal_range)
+		return FALSE;
+	if(IsDifferentTeam(e, self))
+		return FALSE;
+	if(e.frozen)
+		return FALSE;
+	if(!IS_PLAYER(e))
+		return (e.health < e.max_health);
+	if(e.items & IT_INVINCIBLE)
+		return FALSE;
+
+	switch(self.skin)
+	{
+		case 0:
+		{
+			if(e.health < autocvar_g_balance_health_regenstable)
+				return TRUE;
+			break;
+		}
+		case 1:
+		{
+			if((e.ammo_cells && e.ammo_cells < g_pickup_cells_max) || (e.ammo_rockets && e.ammo_rockets < g_pickup_rockets_max) || (e.ammo_nails && e.ammo_nails < g_pickup_nails_max) || (e.ammo_shells && e.ammo_shells < g_pickup_shells_max))
+				return TRUE;
+			break;
+		}
+		case 2:
+		{
+			if(e.armorvalue < autocvar_g_balance_armor_regenstable)
+				return TRUE;
+			break;
+		}
+		case 3:
+		{
+			if(e.health > 0)
+				return TRUE;
+			break;
+		}
+	}
+	
+	return FALSE;
+}
+
 void mage_think()
 {
 	entity head;
-	float friend_needshelp = FALSE, need_hpammo = FALSE;
+	float need_help = FALSE;
 	
 	FOR_EACH_PLAYER(head)
+	if(friend_needshelp(head))
 	{
-		need_hpammo = ((g_minstagib) ? head.ammo_cells < start_ammo_cells : head.health < autocvar_g_balance_health_regenstable);
-		if not(IsDifferentTeam(head, self))
-		if(head.health > 0)
-		if(vlen(head.origin - self.origin) < autocvar_g_monster_mage_heal_range)
-		if(need_hpammo)
-		{
-			friend_needshelp = TRUE;
-			break; // found 1 player near us who is low on health
-		}
+		need_help = TRUE;
+		break; // found 1 player near us who is low on health
 	}
-	FOR_EACH_MONSTER(head) if(head != self)
+	if(!need_help)
+	FOR_EACH_MONSTER(head)
+	if(head != self)
+	if(friend_needshelp(head))
 	{
-		if not(IsDifferentTeam(head, self))
-		if(head.health > 0)
-		if(vlen(head.origin - self.origin) < autocvar_g_monster_mage_heal_range)
-		if(head.health < head.max_health)
-		{
-			friend_needshelp = TRUE;
-			break; // found 1 player near us who is low on health
-		}
+		need_help = TRUE;
+		break; // found 1 player near us who is low on health
 	}
 	
 	self.think = mage_think;
@@ -74,7 +113,7 @@ void mage_think()
 	if(time >= self.weaponentity.ltime)
 		mage_shield_die();
 		
-	if(self.health < autocvar_g_monster_mage_heal_minhealth || friend_needshelp)
+	if(self.health < autocvar_g_monster_mage_heal_minhealth || need_help)
 	if(time >= self.attack_finished_single)
 	if(random() < 0.5)
 		mage_heal();
@@ -91,9 +130,6 @@ void mage_think()
 void mageattack_melee()
 {
 	monster_melee(self.enemy, autocvar_g_monster_mage_attack_melee_damage, 0.3, DEATH_MONSTER_MAGE, TRUE);
-	
-	self.delay = -1;
-	self.monster_delayedattack = func_null;
 }
 
 void mage_grenade_explode()
@@ -189,9 +225,6 @@ void mage_spike()
 {
 	entity missile;
 	vector dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
-	
-	self.delay = -1;
-	self.monster_delayedattack = func_null;
 
 	makevectors(self.angles);
 
@@ -216,37 +249,54 @@ void mage_spike()
 void mage_heal()
 {
 	entity head;
-	if(self.health < self.max_health) // only show our effect if we are healing ourself too
-		pointparticles(particleeffectnum("healing_fx"), self.origin, '0 0 0', 1);
-	self.health = bound(0, self.health + autocvar_g_monster_mage_heal_self, self.max_health);
-	WaypointSprite_UpdateHealth(self.sprite, self.health);
-	monsters_setframe(mage_anim_attack);
-	self.attack_finished_single = time + autocvar_g_monster_mage_heal_delay;
+	float washealed = FALSE;
 	
-	for(head = world; (head = findfloat(head, monster_attack, TRUE)); )
+	for(head = world; (head = findfloat(head, monster_attack, TRUE)); ) if(friend_needshelp(head))
 	{
-		if(head.health > 0)
-		if not(head.frozen)
-		if(vlen(head.origin - self.origin) < autocvar_g_monster_mage_heal_range)
-		if not(IsDifferentTeam(head, self))
+		washealed = TRUE;
+		string fx = "";
+		if(IS_PLAYER(head))
 		{
-			if(IS_PLAYER(head))
+			switch(self.skin)
 			{
-				if((g_minstagib && head.ammo_cells < start_ammo_cells) || head.health < start_health)
-					pointparticles(particleeffectnum(((g_minstagib) ? "ammoregen_fx" : "healing_fx")), head.origin, '0 0 0', 1);
-				if(g_minstagib)
-					head.ammo_cells = bound(0, head.ammo_cells + 1, start_ammo_cells);
-				else
-					head.health = bound(0, head.health + autocvar_g_monster_mage_heal_friends, g_pickup_healthmedium_max);
+				case 0:
+					if(head.health < autocvar_g_balance_health_regenstable) head.health = bound(0, head.health + autocvar_g_monster_mage_heal_friends, autocvar_g_balance_health_regenstable);
+					fx = "healing_fx";
+					break;
+				case 1:
+					if(head.ammo_cells) head.ammo_cells = bound(head.ammo_cells, head.ammo_cells + 1, g_pickup_cells_max);
+					if(head.ammo_rockets) head.ammo_rockets = bound(head.ammo_rockets, head.ammo_rockets + 1, g_pickup_rockets_max);
+					if(head.ammo_shells) head.ammo_shells = bound(head.ammo_shells, head.ammo_shells + 2, g_pickup_shells_max);
+					if(head.ammo_nails) head.ammo_nails = bound(head.ammo_nails, head.ammo_nails + 5, g_pickup_nails_max);
+					fx = "ammoregen_fx";
+					break;
+				case 2:
+					if(head.armorvalue < autocvar_g_balance_armor_regenstable)
+					{
+						head.armorvalue = bound(0, head.armorvalue + autocvar_g_monster_mage_heal_friends, autocvar_g_balance_armor_regenstable);
+						fx = "armorrepair_fx";
+					}
+					break;
+				case 3:
+					head.health = bound(0, head.health - ((head == self)  ? autocvar_g_monster_mage_heal_self : autocvar_g_monster_mage_heal_friends), autocvar_g_balance_health_regenstable);
+					fx = "rage";
+					break;
 			}
-			else
-			{
-				if(head.health < head.max_health)
-					pointparticles(particleeffectnum("healing_fx"), head.origin, '0 0 0', 1);
-				head.health = bound(0, head.health + autocvar_g_monster_mage_heal_friends, head.max_health);
-				WaypointSprite_UpdateHealth(head.sprite, head.health);
-			}
+			
+			pointparticles(particleeffectnum(fx), head.origin, '0 0 0', 1);
 		}
+		else
+		{
+			pointparticles(particleeffectnum("healing_fx"), head.origin, '0 0 0', 1);
+			head.health = bound(0, head.health + autocvar_g_monster_mage_heal_friends, head.max_health);
+			WaypointSprite_UpdateHealth(head.sprite, head.health);
+		}
+	}
+	
+	if(washealed)
+	{
+		monsters_setframe(mage_anim_attack);
+		self.attack_finished_single = time + autocvar_g_monster_mage_heal_delay;
 	}
 }
 
@@ -300,10 +350,9 @@ float mage_attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			self.monster_delayedattack = mageattack_melee;
-			self.delay = time + 0.2;
 			monsters_setframe(mage_anim_attack);
 			self.attack_finished_single = time + autocvar_g_monster_mage_attack_melee_delay;
+			defer(0.2, mageattack_melee);
 			
 			return TRUE;
 		}
@@ -316,9 +365,8 @@ float mage_attack(float attack_type)
 			}
 	
 			monsters_setframe(mage_anim_attack);
-			self.delay = time + 0.2;
 			self.attack_finished_single = time + autocvar_g_monster_mage_attack_spike_delay;
-			self.monster_delayedattack = mage_spike;
+			defer(0.2, mage_spike);
 			
 			return TRUE;
 		}

@@ -39,28 +39,16 @@ void brute_blade()
 {
 	self.brute_cycles += 1;
 	self.angles_y = self.angles_y + random()* 25;
-	self.delay = time + 0.2;
-	self.monster_delayedattack = brute_blade;
 	
 	monster_melee(self.enemy, autocvar_g_monster_brute_chainsaw_damage, 0.3, DEATH_MONSTER_BRUTE_BLADE, TRUE);
 	
-	if(self.brute_cycles >= 4)
-	{
-		self.monster_delayedattack = func_null;
-		self.delay = -1;
-	}
+	if(self.brute_cycles <= 4)
+		defer(0.2, brute_blade);
 }
 
 void brute_uzi()
 {
 	self.brute_cycles += 1;
-	
-	if(self.brute_cycles > autocvar_g_monster_brute_attack_uzi_bullets)
-	{
-		self.monster_delayedattack = func_null;
-		self.delay = -1;
-		return;
-	}
 	
 	monster_makevectors(self.enemy);
 	
@@ -68,8 +56,8 @@ void brute_uzi()
 	fireBallisticBullet(w_shotorg, w_shotdir, 0.02, 18000, 5, autocvar_g_monster_brute_attack_uzi_damage, autocvar_g_monster_brute_attack_uzi_force, DEATH_MONSTER_BRUTE_UZI, 0, 1, 115);
 	endFireBallisticBullet();
 	
-	self.delay = time + 0.1;
-	self.monster_delayedattack = brute_uzi;
+	if(self.brute_cycles <= autocvar_g_monster_brute_attack_uzi_bullets)
+		defer(0.1, brute_uzi);
 }
 
 void brute_grenade_explode()
@@ -178,8 +166,7 @@ float brute_attack(float attack_type)
 			{
 				monsters_setframe(brute_anim_pain);
 				self.attack_finished_single = time + 0.8;
-				self.delay = time + 0.1;
-				self.monster_delayedattack = brute_uzi;
+				defer(0.1, brute_uzi);
 			}
 			else
 			{

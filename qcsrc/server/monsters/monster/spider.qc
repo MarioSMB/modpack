@@ -34,63 +34,69 @@ void spider_think()
 
 void spider_web_explode()
 {
-	float damg = 0, edamg = 0, rad = 1;
-	switch(self.realowner.spider_type)
+	entity e;
+	if(self)
 	{
-		case SPIDER_TYPE_ICE:
-			break; // no change
-		case SPIDER_TYPE_FIRE:
-			damg = 15;
-			rad = 25;
-			edamg = 6;
-			break;
+		float damg = 0, edamg = 0, rad = 1;
+		switch(self.realowner.spider_type)
+		{
+			case SPIDER_TYPE_ICE:
+				pointparticles(particleeffectnum("electro_impact"), self.origin, '0 0 0', 1);
+				break;
+			case SPIDER_TYPE_FIRE:
+				pointparticles(particleeffectnum("fireball_explode"), self.origin, '0 0 0', 1);
+				damg = 15;
+				rad = 25;
+				edamg = 6;
+				break;
+		}
+		
+		RadiusDamage(self, self.realowner, damg, edamg, 0, world, rad, DEATH_MONSTER_SPIDER_FIRE, world); // ice deals no damage anyway
+		
+		if(self.realowner.spider_type == SPIDER_TYPE_FIRE)
+		for(e = findradius(self.origin, rad); e; e = e.chain) if(e.takedamage && e.deadflag == DEAD_NO)
+		{
+			switch(self.realowner.spider_type)
+			{
+				case SPIDER_TYPE_ICE:
+					Freeze(other, 0.3, 2, FALSE);
+					break;
+				case SPIDER_TYPE_FIRE:
+					Fire_AddDamage(e, self.realowner, 5 * monster_skill, autocvar_g_monster_spider_attack_fire_time, DEATH_MONSTER_SPIDER_FIRE, FALSE);
+					break;
+			}
+		}
+		
+		remove(self);
 	}
-	
-	RadiusDamage (self, self.realowner, damg, edamg, rad, world, 0, self.projectiledeathtype, other);
-	
-	remove (self);
 }
 
 void spider_web_touch()
 {
 	PROJECTILE_TOUCH;
 	
-	if(other.takedamage == DAMAGE_AIM)
-	if(other.health > 0)
-	switch(self.realowner.spider_type)
-	{
-		case SPIDER_TYPE_ICE:
-			Freeze(other, 0.3, 2, FALSE);
-			break;
-		case SPIDER_TYPE_FIRE:
-			Fire_AddDamage(other, self.realowner, 5 * monster_skill, autocvar_g_monster_spider_attack_fire_time, DEATH_MONSTER_SPIDER_FIRE);
-			break;
-	}
-		
 	spider_web_explode();
 }
 
 void spider_shootweb(float ptype)
 {
-	float p = 0, dt = 0;
+	float p = 0;
 	string snd = "";
 	switch(ptype)
 	{
 		case SPIDER_TYPE_ICE:
 			p = PROJECTILE_ELECTRO;
-			dt = WEP_ELECTRO;
 			snd = "weapons/electro_fire2.wav";
 			break;
 		case SPIDER_TYPE_FIRE:
 			p = PROJECTILE_FIREMINE;
-			dt = WEP_FIREBALL;
 			snd = "weapons/fireball_fire.wav";
 			break;
 	}
 	
 	vector fmins = '-4 -4 -4', fmaxs = '4 4 4';
 
-	W_SetupShot_ProjectileSize(self, fmins, fmaxs, FALSE, 2, snd, CH_WEAPON_A, 0, dt);
+	W_SetupShot_ProjectileSize(self, fmins, fmaxs, FALSE, 2, snd, CH_WEAPON_A, 0, DEATH_MONSTER_SPIDER_FIRE);
 
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
@@ -103,7 +109,7 @@ void spider_shootweb(float ptype)
 	proj.bot_dodgerating = 0;
 	proj.nextthink = time + 5;
 	PROJECTILE_MAKETRIGGER(proj);
-	proj.projectiledeathtype = dt | HITTYPE_SECONDARY;
+	proj.projectiledeathtype = DEATH_MONSTER_SPIDER_FIRE;
 	setorigin(proj, w_shotorg);
 
 	//proj.glow_size = 50;

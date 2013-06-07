@@ -1135,10 +1135,12 @@ float Fire_IsBurning(entity e)
 	return (time < e.fire_endtime);
 }
 
-float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
+float Fire_AddDamage(entity e, entity o, float d, float t, float dt, float ispoison)
 {
 	float dps;
 	float maxtime, mintime, maxdamage, mindamage, maxdps, mindps, totaldamage, totaltime;
+	
+	e.poisoned = ispoison;
 
 	if(IS_PLAYER(e))
 	{
@@ -1268,6 +1270,7 @@ void Fire_ApplyDamage(entity e)
 		o = e.fire_owner;
 
 	// water and slime stop fire
+	if(!e.poisoned)
 	if(e.waterlevel)
 	if(e.watertype != CONTENT_LAVA)
 		e.fire_endtime = 0;
@@ -1299,7 +1302,7 @@ void Fire_ApplyDamage(entity e)
 		{
 			t = autocvar_g_balance_firetransfer_time * (e.fire_endtime - time);
 			d = autocvar_g_balance_firetransfer_damage * e.fire_damagepersec * t;
-			Fire_AddDamage(other, o, d, t, DEATH_FIRE);
+			Fire_AddDamage(other, o, d, t, DEATH_FIRE, FALSE);
 		}
 	}
 }
@@ -1323,6 +1326,7 @@ void fireburner_think()
 	Fire_ApplyEffect(self.owner);
 	if(!Fire_IsBurning(self.owner))
 	{
+		self.owner.poisoned = FALSE;
 		self.owner.fire_burner = world;
 		remove(self);
 		return;

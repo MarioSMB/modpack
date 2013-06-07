@@ -32,40 +32,28 @@ void shambler_think()
 
 void shambler_smash()
 {
-	self.monster_delayedattack = func_null;
-	self.delay = -1;
-	
 	monster_melee(self.enemy, autocvar_g_monster_shambler_damage, 0.3, DEATH_MONSTER_SHAMBLER_SMASH, TRUE);
 }
 
 void shambler_delayedsmash()
 {
 	monsters_setframe(shambler_anim_smash);
-	self.monster_delayedattack = shambler_smash;
-	self.delay = time + 0.7;
+	defer(0.7, shambler_smash);
 	self.attack_finished_single = time + 1.1;
 }
 
 void shambler_swing()
 {
-	float r = ((random() < 0.5) ? TRUE : FALSE);
+	float r = (random() < 0.5);
 	monsters_setframe((r) ? shambler_anim_swingr : shambler_anim_swingl);
 	monster_melee(self.enemy, autocvar_g_monster_shambler_attack_claw_damage, 0.3, DEATH_MONSTER_SHAMBLER_CLAW, TRUE);
 	self.attack_finished_single = time + 0.8;
-	self.monster_delayedattack = func_null;
-	self.delay = -1;
 	if(r)
-	{
-		self.monster_delayedattack = shambler_swing;
-		self.delay = time + 0.5;
-	}
+		defer(0.5, shambler_swing);
 }
 
 void CastLightning()
 {
-	self.monster_delayedattack = func_null;
-	self.delay = -1;
-
 	local vector org, dir;
 	//vector v = '0 0 0';
 
@@ -106,8 +94,7 @@ float shambler_attack(float attack_type)
 		{
 			monsters_setframe(shambler_anim_magic);
 			self.attack_finished_single = time + 1.1;
-			self.monster_delayedattack = CastLightning;
-			self.delay = time + 0.6;
+			defer(0.6, CastLightning);
 			
 			return TRUE;
 		}
