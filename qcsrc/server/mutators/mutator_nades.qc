@@ -147,9 +147,12 @@ void toss_nade(entity e, vector _velocity, float _time)
 	remove(e.fake_nade);
 	e.fake_nade = world;
 	
+	makevectors(self.v_angle);
+	
 	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_NADES);
 	
-	setorigin(_nade, gettaginfo(_nade, gettagindex(_nade, "Object001")));
+	setorigin(_nade, CENTER_OR_VIEWOFS(e) + (v_right * 10) * -1);
+	setmodel(_nade, "models/weapons/v_ok_grenade.md3");
 	setattachment(_nade, world, "");
 	PROJECTILE_MAKETRIGGER(_nade);
 	setsize(_nade, '-16 -16 -16', '16 16 16');
@@ -178,6 +181,8 @@ void toss_nade(entity e, vector _velocity, float _time)
 		_nade.think = nade_boom;
 		_nade.nextthink = _time;
 	}
+	else
+		_nade.projectiledeathtype = DEATH_NADE_NORMAL;
 
 	e.nade_refire = time + autocvar_g_nades_nade_refire;
 }
@@ -189,8 +194,6 @@ void nade_prime()
 		
 	if(self.fake_nade)
 		remove(self.fake_nade);
-	
-	makevectors(self.angles);
 	
 	self.nade = spawn();
 	setmodel(self.nade, "null");
