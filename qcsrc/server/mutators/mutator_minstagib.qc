@@ -117,14 +117,6 @@ MUTATOR_HOOKFUNCTION(minstagib_MatchEnd)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(minstagib_VehicleEnter)
-{
-	if(other.ok_nade)
-		ok_toss_nade(other, '0 0 100', max(other.ok_nade.wait, time + 0.05));
-	
-	return FALSE;
-}
-
 MUTATOR_HOOKFUNCTION(minstagib_MonsterLoot)
 {
 	other.monster_loot = spawnfunc_item_minst_cells;
@@ -157,11 +149,6 @@ MUTATOR_HOOKFUNCTION(minstagib_MakePlayerObserver)
 
 MUTATOR_HOOKFUNCTION(minstagib_PlayerSpawn)
 {
-	if(autocvar_g_overkill_spawnsystem_give_nade)
-		self.ok_nade_refire = time + autocvar_g_spawnshieldtime;
-	else
-		self.ok_nade_refire  = time + autocvar_g_overkill_nade_refire;
-
 	self.effects |= EF_FULLBRIGHT;
 	return FALSE;
 }
@@ -169,31 +156,6 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerSpawn)
 MUTATOR_HOOKFUNCTION(minstagib_PlayerPreThink)
 {
 	minstagib_ammocheck();
-	
-	if(self.ok_nade)
-		if(self.ok_nade.wait - 0.1 <= time)
-			ok_toss_nade(self, '0 0 0', time + 0.05);
-			
-	if(ok_CanThrowNade())
-	if(self.ok_nade_refire < time)
-	{
-		if(self.button16)
-		{
-			if(!self.ok_nade)
-				ok_nade_prime();
-		}
-		else if(time - self.ok_nade.cnt >= 1)
-		{
-			if(self.ok_nade)
-			{
-				makevectors(self.v_angle);
-				float _force = time - self.ok_nade.cnt;
-				_force /= autocvar_g_overkill_nade_lifetime;
-				_force = autocvar_g_overkill_nade_minforce + (_force * (autocvar_g_overkill_nade_maxforce - autocvar_g_overkill_nade_minforce));				
-				ok_toss_nade(self, (v_forward * 0.7 + v_up * 0.2 + v_right * 0.1) * _force, 0);
-			}
-		}
-	}
 	
 	return FALSE;
 }
@@ -265,31 +227,8 @@ MUTATOR_HOOKFUNCTION(minstagib_SplitHealthArmor)
 
 MUTATOR_HOOKFUNCTION(minstagib_ForbidThrowing)
 {
-	// weapon dropping on death handled by FilterItem
-	if(!ok_CanThrowNade())
-		return TRUE;
+	nades_CheckThrow();
 
-	if(!self.ok_nade)
-	{
-		if(self.ok_nade_refire < time)
-		{
-			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_OVERKILL_GRENADE);
-			ok_nade_prime();
-			self.ok_nade_refire  = time + autocvar_g_overkill_nade_refire;
-		}
-	}
-	else
-	{
-		if(time - self.ok_nade.cnt >= 1)
-		{
-			makevectors(self.v_angle);
-			float _force = time - self.ok_nade.cnt;
-			_force /= autocvar_g_overkill_nade_lifetime;
-			_force = autocvar_g_overkill_nade_minforce + (_force * (autocvar_g_overkill_nade_maxforce - autocvar_g_overkill_nade_minforce));
-			ok_toss_nade(self, (v_forward * 0.75 + v_up * 0.2 + v_right * 0.05) * _force, 0);
-		}
-	}
-	
 	return TRUE;
 }
 
@@ -432,10 +371,7 @@ MUTATOR_HOOKFUNCTION(minstagib_ItemCountdown)
 }
 
 MUTATOR_HOOKFUNCTION(minstagib_PlayerDies)
-{
-	if(self.ok_nade)
-		ok_toss_nade(self, '0 0 100', max(self.ok_nade.wait, time + 0.05));
-		
+{	
 	if(DEATH_ISWEAPON(frag_deathtype, WEP_MINSTANEX) || (autocvar_g_rm && DEATH_ISWEAPON(frag_deathtype, WEP_ROCKET_LAUNCHER)) || ((autocvar_g_rm || autocvar_g_rm_laser == 2) && DEATH_ISWEAPON(frag_deathtype, WEP_ELECTRO)))
 		frag_damage = 1000;
 		
@@ -509,7 +445,6 @@ MUTATOR_HOOKFUNCTION(minstagib_BuildMutatorsPrettyString)
 MUTATOR_DEFINITION(mutator_minstagib)
 {
 	MUTATOR_HOOK(MatchEnd, minstagib_MatchEnd, CBC_ORDER_ANY);
-	MUTATOR_HOOK(VehicleEnter, minstagib_VehicleEnter, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterDropItem, minstagib_MonsterLoot, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterSpawn, minstagib_MonsterSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BotShouldAttack, minstagib_BotShouldAttack, CBC_ORDER_ANY);
@@ -533,18 +468,7 @@ MUTATOR_DEFINITION(mutator_minstagib)
 	
 	MUTATOR_ONADD
 	{
-		precache_model("models/ok_nade_counter/ok_nade_counter.md3");
-		
-		precache_model("models/weapons/h_ok_grenade.iqm");
-		precache_model("models/weapons/v_ok_grenade.md3");
 		precache_sound("weapons/rocket_impact.wav");
-		precache_sound("weapons/grenade_bounce1.wav");
-		precache_sound("weapons/grenade_bounce2.wav");
-		precache_sound("weapons/grenade_bounce3.wav");
-		precache_sound("weapons/grenade_bounce4.wav");
-		precache_sound("weapons/grenade_bounce5.wav");
-		precache_sound("weapons/grenade_bounce6.wav");
-		precache_sound("overkill/grenadebip.ogg");
 	}
 
 	return FALSE;

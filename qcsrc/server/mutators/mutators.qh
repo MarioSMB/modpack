@@ -23,6 +23,7 @@ MUTATOR_DECLARATION(mutator_superspec);
 MUTATOR_DECLARATION(mutator_minstagib);
 MUTATOR_DECLARATION(mutator_freeze);
 MUTATOR_DECLARATION(mutator_overkill);
+MUTATOR_DECLARATION(mutator_nades);
 MUTATOR_DECLARATION(mutator_touchexplode);
 MUTATOR_DECLARATION(mutator_rifle_arena);
 MUTATOR_DECLARATION(mutator_touchexplode);

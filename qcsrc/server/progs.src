@@ -49,6 +49,7 @@ mutators/gamemode_towerdefense.qh
 mutators/mutator_overkill.qh
 mutators/mutator_freeze.qh
 mutators/mutator_minstagib.qh
+mutators/mutator_nades.qh
 
 //// tZork Turrets ////
 tturrets/include/turrets_early.qh
@@ -261,6 +262,7 @@ mutators/sandbox.qc
 mutators/mutator_superspec.qc
 mutators/mutator_freeze.qc
 mutators/mutator_overkill.qc
+mutators/mutator_nades.qc
 mutators/mutator_minstagib.qc
 mutators/mutator_touchexplode.qc
 mutators/mutator_rifle_arena.qc

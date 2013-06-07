@@ -1,17 +1,3 @@
-float autocvar_g_overkill_spawnsystem_give_nade;
-
-float autocvar_g_overkill_nade_lifetime;
-float autocvar_g_overkill_nade_minforce;
-float autocvar_g_overkill_nade_maxforce;
-float autocvar_g_overkill_nade_health;
-float autocvar_g_overkill_nade_refire;
-
-float autocvar_g_overkill_nade_damage;
-float autocvar_g_overkill_nade_edgedamage;
-float autocvar_g_overkill_nade_radius;
-float autocvar_g_overkill_nade_force;
-float autocvar_g_overkill_nade_newton_style;
-
 float autocvar_g_overkill_powerups_replace;
 float autocvar_g_overkill_superguns_builtin;
 float autocvar_g_overkill_superguns_respawn_time;
@@ -24,8 +10,6 @@ float autocvar_g_overkill_ammo_start;
 .vector ok_deathloc;
 .float  ok_spawnsys_timer;
 .float  ok_lastwep;
-.float  ok_nade_refire;
-.entity ok_nade;
 .float ok_item;
 //.entity ok_nade_timer;
 
