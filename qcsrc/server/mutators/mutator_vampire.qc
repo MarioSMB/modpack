@@ -1,13 +1,14 @@
 MUTATOR_HOOKFUNCTION(vampire_PlayerDamage)
 {
-	if(time < self.spawnshieldtime)
-		return 0;
-	if(frag_attacker == frag_target)
-		return 0;
+	if(time >= frag_target.spawnshieldtime)
+	if(frag_target != frag_attacker)
+	if(frag_target.deadflag == DEAD_NO)
+	{
+		frag_attacker.health += bound(0, damage_take, frag_target.health);
+		frag_attacker.health = bound(0, frag_attacker.health, autocvar_g_balance_health_limit);
+	}
 		
-	// gain health from damage dealt to enemies
-	frag_attacker.health = frag_attacker.health + bound(0, damage_take, self.health);
-	return 0;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(vampire_BuildMutatorsString)
