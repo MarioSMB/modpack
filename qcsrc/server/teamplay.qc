@@ -315,6 +315,9 @@ string getwelcomemessage(void)
 
 	if (g_grappling_hook)
 		s = strcat(s, "\n\n^3grappling hook^8 is enabled, press 'e' to use it\n");
+		
+	if (cvar("g_nades"))
+		s = strcat(s, "\n\n^3nades^8 are enabled, press 'g' to use them\n");
 
 	if(cache_lastmutatormsg != autocvar_g_mutatormsg)
 	{
