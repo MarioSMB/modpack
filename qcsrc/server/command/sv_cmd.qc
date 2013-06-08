@@ -71,6 +71,23 @@ void changematchtime(float delta, float mi, float ma)
 	cvar_set("timelimit", ftos(new / 60));
 }
 
+void MorningRescue(entity e)
+{
+	if(e == world)
+		return;
+	
+	float accepted;
+	
+	accepted = VerifyClientEntity(e, TRUE, FALSE);
+					
+	if(accepted > 0) 
+	{
+		msg_entity = e;
+		WriteByte(MSG_ONE, SVC_TEMPENTITY);
+		WriteByte(MSG_ONE, TE_CSQC_MORNINGRESCUE);
+	}
+}
+
 
 // =======================
 //  Command Sub-Functions
@@ -1611,11 +1628,7 @@ void GameCommand_supermentalrescue(float request)
 			entity head;
 			
 			FOR_EACH_REALPLAYER(head)
-			{
-				msg_entity = head;
-				WriteByte(MSG_ONE, SVC_TEMPENTITY);
-				WriteByte(MSG_ONE, TE_CSQC_MORNINGRESCUE);
-			}
+				MorningRescue(head);
 			
 			FOR_EACH_PLAYER(head)
 				Unfreeze(head);
