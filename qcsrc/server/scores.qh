@@ -1,6 +1,7 @@
 entity scores_initialized; // non-world when scores labels/rules have been set
 .float scores[MAX_SCORE];
 .float teamscores[MAX_TEAMSCORE];
+.entity scorekeeper;
 
 /**
  * Attaches a PlayerScore entity to a player. Use that in ClientConnect.
@@ -20,6 +21,14 @@ void PlayerScore_Detach(entity player);
  * Returns the new score.
  */
 float PlayerScore_Add(entity player, float scorefield, float score);
+
+/**
+ * Sets the player's scorefield to an absolute value.
+ * NEVER call this if PlayerScore_Attach has not been called yet!
+ * Means: FIXME make players unable to join the game when not called ClientConnect yet.
+ * Returns the new score.
+ */
+float PlayerScore_Set(entity player, float scorefield, float score);
 
 /**
  * Initialize the score of this player if needed.

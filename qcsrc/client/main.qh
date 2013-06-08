@@ -154,3 +154,6 @@ float minsta_range;
 float mr_appeartime;
 float mr_fadetime;
 float morningrescue;
+
+float cl_fps;
+float sv_showfps;

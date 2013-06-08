@@ -687,6 +687,7 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, autocvar_g_balance_porto_secondary);
 	WriteByte(MSG_ENTITY, self.minsta_refire * 255.0);
 	WriteByte(MSG_ENTITY, self.minsta_range * 255.0);
+	WriteByte(MSG_ENTITY, sv_showfps);
 	return TRUE;
 }
 

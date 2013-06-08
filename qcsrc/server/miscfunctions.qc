@@ -987,6 +987,8 @@ void readlevelcvars(void)
 	monster_skill = cvar("g_monsters_skill");
 	
 	g_minstagib = cvar("g_minstagib");
+	
+	sv_showfps = cvar("sv_showfps");
 
 	sv_clones = cvar("sv_clones");
 	sv_foginterval = cvar("sv_foginterval");

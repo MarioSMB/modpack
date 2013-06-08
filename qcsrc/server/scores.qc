@@ -1,4 +1,3 @@
-.entity scorekeeper;
 entity teamscorekeepers[16];
 string scores_label[MAX_SCORE];
 float scores_flags[MAX_SCORE];
@@ -352,6 +351,29 @@ float PlayerScore_Add(entity player, float scorefield, float score)
 	if(!inWarmupStage)
 		PlayerStats_Event(s.owner, strcat(PLAYERSTATS_TOTAL, scores_label[scorefield]), score);
 	return (s.(scores[scorefield]) += score);
+}
+
+float PlayerScore_Set(entity player, float scorefield, float score)
+{
+	if(!scores_initialized)	return 0;
+	
+	entity s = player.scorekeeper;
+	
+	if(!s) {
+		if(gameover)
+			return 0;
+		error("Setting score of unknown player!");
+	}
+	
+	float old = s.(scores[scorefield]);
+	
+	if(old == score)
+		return old;
+	
+	s.SendFlags |= pow(2, scorefield);
+	s.(scores[scorefield]) = score;
+	
+	return score;
 }
 
 float PlayerTeamScore_Add(entity player, float pscorefield, float tscorefield, float score)

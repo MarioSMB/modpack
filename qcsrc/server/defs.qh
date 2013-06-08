@@ -626,3 +626,5 @@ string modname;
 
 .float minsta_range;
 .float minsta_refire;
+
+float sv_showfps;

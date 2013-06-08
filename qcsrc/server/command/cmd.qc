@@ -142,6 +142,30 @@ void ClientCommand_mv_getpicture(float request, float argc) // internal command,
 	}
 }
 
+void ClientCommand_fpsreport(float request, float argc) 
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if(sv_showfps)
+			if(self)
+			if(self.scorekeeper)
+				PlayerScore_Set(self, SP_FPS, stof(argv(1)));
+			
+			return; // never fall through to usage
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(self, "\nUsage:^3 cmd fpsreport [fps]\n");
+			sprint(self, "  Where 'fps' is your scoreboard frames per second.\n");
+			return;
+		}
+	}
+}
+
 void ClientCommand_join(float request) 
 {
 	switch(request)
@@ -694,6 +718,7 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("checkfail", ClientCommand_checkfail(request, command), "Report if a client-side check failed") \
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(request, arguments), "Release version of the game") \
 	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(request, arguments), "Retrieve mapshot picture from the server") \
+	CLIENT_COMMAND("fpsreport", ClientCommand_fpsreport(request, arguments), "Retrieve frames per second") \
 	CLIENT_COMMAND("join", ClientCommand_join(request), "Become a player in the game") \
 	CLIENT_COMMAND("mobedit", ClientCommand_mobedit(request, arguments), "Edit your monster's properties") \
 	CLIENT_COMMAND("mobkill", ClientCommand_mobkill(request), "Kills your monster") \

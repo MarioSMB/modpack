@@ -279,7 +279,7 @@ const vector eZ = '0 0 1';
 /**
  * Score indices
  */
-#define MAX_SCORE 10
+#define MAX_SCORE 11
 #define MAX_TEAMSCORE 2
 
 #define ST_SCORE 0
@@ -287,6 +287,7 @@ const vector eZ = '0 0 1';
 #define SP_DEATHS 1
 #define SP_SUICIDES 2
 #define SP_SCORE 3
+#define SP_FPS 10
 // game mode specific indices are not in common/, but in server/scores_rules.qc!
 
 #ifdef COMPAT_XON010_CHANNELS

@@ -302,7 +302,7 @@ void Cmd_HUD_Help()
 string HUD_DefaultColumnLayout()
 {
 	return strcat( // fteqcc sucks
-		"ping pl name | ",
+		strcat("ping pl ", ((sv_showfps) ? "fps " : ""), "name | "),
 		"-teams,race,lms/kills +freezetag/kills -teams,lms/deaths +freezetag/deaths -teams,lms,race,ka/suicides +freezetag/suicides -race,dm,tdm,ka,freezetag/frags ", // tdm already has this in "score"
 		"+ctf/deaths +ctf/suicides +ctf/caps +ctf/pickups +ctf/fckills +ctf/returns ",
 		"+lms/lives +lms/rank ",
@@ -385,6 +385,8 @@ void Cmd_HUD_SetFields(float argc)
 			hud_field[hud_num_fields] = SP_PING;
 		} else if(str == "pl") {
 			hud_field[hud_num_fields] = SP_PL;
+		} else if(str == "fps") {
+			hud_field[hud_num_fields] = SP_FPS;
 		} else if(str == "kd" || str == "kdr" || str == "kdratio" || str == "k/d") {
 			hud_field[hud_num_fields] = SP_KDRATIO;
 		} else if(str == "name" || str == "nick") {
@@ -544,6 +546,17 @@ string HUD_GetField(entity pl, float field)
 			tmp = bound(0, f / 0.2 + tmp / 0.04, 1); // 20% is REALLY BAD pl
 			hud_field_rgb = '1 0.5 0.5' - '0 0.5 0.5'*tmp;
 			return str;
+			
+		case SP_FPS:
+			if not(pl.gotscores)
+				return _("N/A");
+			
+			tmp = pl.(scores[field]);
+			if(tmp == 0)
+				return "";
+			
+			hud_field_rgb = '1 0 0' + '0 1 1' * (bound(0, tmp, 60) / 60);
+			return ftos(tmp);
 
 		case SP_NAME:
 			if(ready_waiting && pl.ready)

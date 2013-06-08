@@ -391,6 +391,20 @@ vector rainbow_prev_color;
 
 float old_v_idlescale;
 
+float fps_start;
+float fps_frames;
+
+// FIXME: make it unaffected by slowmo
+void FPSCounter_Update() {
+	if(time - fps_start >= 1) {
+		cl_fps = fps_frames;
+		fps_frames = 0;
+		fps_start = time;
+	}
+	
+	fps_frames++;
+}
+
 #define BUTTON_3 4
 #define BUTTON_4 8
 float cl_notice_run();
@@ -1635,6 +1649,8 @@ void CSQC_UpdateView(float w, float h)
         else if(hud == HUD_BUMBLEBEE_GUN)
             CSQC_BUMBLE_GUN_HUD();
     }
+	
+	FPSCounter_Update();
 	
 	cl_notice_run();
 	
