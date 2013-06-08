@@ -147,7 +147,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 	remove(e.fake_nade);
 	e.fake_nade = world;
 	
-	makevectors(self.v_angle);
+	makevectors(e.v_angle);
 	
 	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_NADES);
 	
