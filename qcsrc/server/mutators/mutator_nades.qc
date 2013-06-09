@@ -115,8 +115,14 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 	if(DEATH_ISWEAPON(deathtype, WEP_UZI))
 		damage = autocvar_g_nades_nade_health * 0.1;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_SHOTGUN))
+	if(DEATH_ISWEAPON(deathtype, WEP_SHOTGUN) && !(deathtype & HITTYPE_SECONDARY))
 		damage = autocvar_g_nades_nade_health * 1.1;
+		
+	if(DEATH_ISWEAPON(deathtype, WEP_SHOTGUN) && (deathtype & HITTYPE_SECONDARY))
+	{
+		damage = autocvar_g_nades_nade_health * 0.1;
+		force *= 15;
+	}
 	
 	self.velocity += force;
 
@@ -170,7 +176,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 	_nade.solid = SOLID_BBOX;
 	_nade.touch = nade_touch;
 	_nade.health = autocvar_g_nades_nade_health;
-	_nade.takedamage = DAMAGE_YES;
+	_nade.takedamage = DAMAGE_AIM;
 	_nade.event_damage = nade_damage;
 	_nade.teleportable = TRUE;
 
@@ -226,6 +232,9 @@ float CanThrowNade()
 		return FALSE;
 		
 	if(gameover)
+		return FALSE;
+		
+	if(self.deadflag != DEAD_NO)
 		return FALSE;
 	
 	if not(autocvar_g_nades)
