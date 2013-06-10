@@ -156,7 +156,6 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerSpawn)
 MUTATOR_HOOKFUNCTION(minstagib_PlayerPreThink)
 {
 	minstagib_ammocheck();
-	
 	return FALSE;
 }
 
@@ -227,6 +226,7 @@ MUTATOR_HOOKFUNCTION(minstagib_SplitHealthArmor)
 
 MUTATOR_HOOKFUNCTION(minstagib_ForbidThrowing)
 {
+	// weapon dropping on death handled by FilterItem
 	nades_CheckThrow();
 
 	return TRUE;

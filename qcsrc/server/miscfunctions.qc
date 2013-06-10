@@ -303,7 +303,7 @@ string formatmessage(string msg)
 	entity cursor_ent;
 	string escape;
 	string replacement;
-	entity bluefc = world, redfc = world, tmp_entity; // NOTE: blue = red player
+	entity bluefc = world, redfc = world, yellowfc = world, pinkfc = world, tmp_entity; // NOTE: blue = red player
 	entity tfc = world, sfc = world;
 	p = 0;
 	n = 7;
@@ -314,6 +314,10 @@ string formatmessage(string msg)
 			redfc = tmp_entity.owner;
 		if(tmp_entity.owner && tmp_entity.team == NUM_TEAM_2)
 			bluefc = tmp_entity.owner;
+		if(tmp_entity.owner && tmp_entity.team == NUM_TEAM_3)
+			yellowfc = tmp_entity.owner;
+		if(tmp_entity.owner && tmp_entity.team == NUM_TEAM_4)
+			pinkfc = tmp_entity.owner;
 			
 		if(tmp_entity.owner && tmp_entity.owner.team == self.team)
 			tfc = tmp_entity.owner;
@@ -372,6 +376,10 @@ string formatmessage(string msg)
 			replacement = ((redfc) ? redfc.netname : "(nobody)");
 		else if (escape == "T")
 			replacement = ((bluefc) ? bluefc.netname : "(nobody)");
+		else if (escape == "p")
+			replacement = ((yellowfc) ? yellowfc.netname : "(nobody)");
+		else if (escape == "P")
+			replacement = ((pinkfc) ? pinkfc.netname : "(nobody)");
 		else if (escape == "y")
 			replacement = NearestLocation(cursor);
 		else if (escape == "d")

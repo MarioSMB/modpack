@@ -2731,30 +2731,34 @@ void HUD_Mod_CA(vector myPos, vector mySize)
 }
 
 // CTF HUD modicon section
-float redflag_prevframe, blueflag_prevframe; // status during previous frame
-float redflag_prevstatus, blueflag_prevstatus; // last remembered status
-float redflag_statuschange_time, blueflag_statuschange_time; // time when the status changed
+float redflag_prevframe, blueflag_prevframe, yellowflag_prevframe, pinkflag_prevframe; // status during previous frame
+float redflag_prevstatus, blueflag_prevstatus, yellowflag_prevstatus, pinkflag_prevstatus; // last remembered status
+float redflag_statuschange_time, blueflag_statuschange_time, yellowflag_statuschange_time, pinkflag_statuschange_time; // time when the status changed
 
 void HUD_Mod_CTF_Reset(void)
 {
-	redflag_prevstatus = blueflag_prevstatus = redflag_prevframe = blueflag_prevframe = redflag_statuschange_time = blueflag_statuschange_time = 0;
+	redflag_prevstatus = blueflag_prevstatus = yellowflag_prevstatus = pinkflag_prevstatus = 0;
+	redflag_prevframe = blueflag_prevframe = yellowflag_prevframe = pinkflag_prevframe = 0;
+	redflag_statuschange_time = blueflag_statuschange_time = yellowflag_statuschange_time = pinkflag_statuschange_time = 0;
 }
 
 void HUD_Mod_CTF(vector pos, vector mySize)
 {
-	vector redflag_pos, blueflag_pos;
+	vector redflag_pos, blueflag_pos, yellowflag_pos, pinkflag_pos;
 	vector flag_size;
 	float f; // every function should have that
 
-	float redflag, blueflag; // current status
-	float redflag_statuschange_elapsedtime, blueflag_statuschange_elapsedtime; // time since the status changed
+	float redflag, blueflag, yellowflag, pinkflag; // current status
+	float redflag_statuschange_elapsedtime, blueflag_statuschange_elapsedtime, yellowflag_statuschange_elapsedtime, pinkflag_statuschange_elapsedtime; // time since the status changed
 	float stat_items;
 
 	stat_items = getstati(STAT_ITEMS, 0, 24);
 	redflag = (stat_items/IT_RED_FLAG_TAKEN) & 3;
 	blueflag = (stat_items/IT_BLUE_FLAG_TAKEN) & 3;
+	yellowflag = (stat_items/IT_YELLOW_FLAG_TAKEN) & 3;
+	pinkflag = (stat_items/IT_PINK_FLAG_TAKEN) & 3;
 	
-	if(redflag || blueflag)
+	if(redflag || blueflag || yellowflag || pinkflag)
 		mod_active = 1;
 	else
 		mod_active = 0;
@@ -2763,6 +2767,8 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	{
 		redflag = 1;
 		blueflag = 2;
+		yellowflag = 0;
+		pinkflag = 0;
 	}
 
 	// when status CHANGES, set old status into prevstatus and current status into status
@@ -2779,9 +2785,25 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		blueflag_prevstatus = blueflag_prevframe;
 		blueflag_prevframe = blueflag;
 	}
+	
+	if (yellowflag != yellowflag_prevframe)
+	{
+		yellowflag_statuschange_time = time;
+		yellowflag_prevstatus = yellowflag_prevframe;
+		yellowflag_prevframe = yellowflag;
+	}
+
+	if (pinkflag != pinkflag_prevframe)
+	{
+		pinkflag_statuschange_time = time;
+		pinkflag_prevstatus = pinkflag_prevframe;
+		pinkflag_prevframe = pinkflag;
+	}
 
 	redflag_statuschange_elapsedtime = time - redflag_statuschange_time;
 	blueflag_statuschange_elapsedtime = time - blueflag_statuschange_time;
+	yellowflag_statuschange_elapsedtime = time - yellowflag_statuschange_time;
+	pinkflag_statuschange_elapsedtime = time - pinkflag_statuschange_time;
 
 	float BLINK_FACTOR = 0.15;
 	float BLINK_BASE = 0.85;
@@ -2847,25 +2869,142 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 				blue_icon_prevstatus = string_null;
 			break;
 	}
+	
+	string yellow_icon, yellow_icon_prevstatus;
+	float yellow_alpha, yellow_alpha_prevstatus;
+	yellow_alpha = yellow_alpha_prevstatus = 1;
+	switch(yellowflag) {
+		case 1: yellow_icon = "flag_yellow_taken"; break;
+		case 2: yellow_icon = "flag_yellow_lost"; break;
+		case 3: yellow_icon = "flag_yellow_carrying"; yellow_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+		default:
+			if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_3))
+				yellow_icon = "flag_yellow_shielded";
+			else
+				yellow_icon = string_null;
+			break;
+	}
+	switch(yellowflag_prevstatus) {
+		case 1: yellow_icon_prevstatus = "flag_yellow_taken"; break;
+		case 2: yellow_icon_prevstatus = "flag_yellow_lost"; break;
+		case 3: yellow_icon_prevstatus = "flag_yellow_carrying"; yellow_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+		default:
+			if(yellowflag == 3)
+				yellow_icon_prevstatus = "flag_yellow_carrying"; // make it more visible
+			else if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_3))
+				yellow_icon_prevstatus = "flag_yellow_shielded";
+			else
+				yellow_icon_prevstatus = string_null;
+			break;
+	}
+	
+	string pink_icon, pink_icon_prevstatus;
+	float pink_alpha, pink_alpha_prevstatus;
+	pink_alpha = pink_alpha_prevstatus = 1;
+	switch(pinkflag) {
+		case 1: pink_icon = "flag_pink_taken"; break;
+		case 2: pink_icon = "flag_pink_lost"; break;
+		case 3: pink_icon = "flag_pink_carrying"; pink_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+		default:
+			if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_4))
+				pink_icon = "flag_pink_shielded";
+			else
+				pink_icon = string_null;
+			break;
+	}
+	switch(pinkflag_prevstatus) {
+		case 1: pink_icon_prevstatus = "flag_pink_taken"; break;
+		case 2: pink_icon_prevstatus = "flag_pink_lost"; break;
+		case 3: pink_icon_prevstatus = "flag_pink_carrying"; pink_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+		default:
+			if(pinkflag == 3)
+				pink_icon_prevstatus = "flag_pink_carrying"; // make it more visible
+			else if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_4))
+				pink_icon_prevstatus = "flag_pink_shielded";
+			else
+				pink_icon_prevstatus = string_null;
+			break;
+	}
 
-	if(mySize_x > mySize_y) {
-		if (myteam == NUM_TEAM_1) { // always draw own flag on left
-			redflag_pos = pos;
-			blueflag_pos = pos + eX * 0.5 * mySize_x;
-		} else {
-			blueflag_pos = pos;
-			redflag_pos = pos + eX * 0.5 * mySize_x;
+	if(mySize_x > mySize_y)
+	{
+		switch(myteam)
+		{
+			default:
+			case NUM_TEAM_1:
+			{
+				redflag_pos = pos;
+				blueflag_pos = pos + eX * 0.3 * mySize_x;
+				yellowflag_pos = pos - eX * 0.3 * mySize_x;
+				pinkflag_pos = pos + eX * 0.6 * mySize_x;
+				break;
+			}
+			case NUM_TEAM_2:
+			{
+				redflag_pos = pos + eX * 0.6 * mySize_x;
+				blueflag_pos = pos;
+				yellowflag_pos = pos + eX * 0.3 * mySize_x;
+				pinkflag_pos = pos - eX * 0.3 * mySize_x;
+				break;
+			}
+			case NUM_TEAM_3:
+			{
+				redflag_pos = pos + eX * 0.3 * mySize_x;
+				blueflag_pos = pos - eX * 0.3 * mySize_x;
+				yellowflag_pos = pos;
+				pinkflag_pos = pos + eX * 0.3 * mySize_x;
+				break;
+			}
+			case NUM_TEAM_4:
+			{
+				redflag_pos = pos - eX * 0.3 * mySize_x;
+				blueflag_pos = pos + eX * 0.6 * mySize_x;
+				yellowflag_pos = pos + eX * 0.3 * mySize_x;
+				pinkflag_pos = pos;
+				break;
+			}
 		}
-		flag_size = eX * 0.5 * mySize_x + eY * mySize_y;
-	} else {
-		if (myteam == NUM_TEAM_1) { // always draw own flag on left
-			redflag_pos = pos;
-			blueflag_pos = pos + eY * 0.5 * mySize_y;
-		} else {
-			blueflag_pos = pos;
-			redflag_pos = pos + eY * 0.5 * mySize_y;
+		flag_size = eX * 0.3 * mySize_x + eY * mySize_y;
+	}
+	else
+	{
+		switch(myteam)
+		{
+			default:
+			case NUM_TEAM_1:
+			{
+				redflag_pos = pos;
+				blueflag_pos = pos + eX * 0.3 * mySize_y;
+				yellowflag_pos = pos - eX * 0.3 * mySize_y;
+				pinkflag_pos = pos + eX * 0.3 * mySize_y;
+				break;
+			}
+			case NUM_TEAM_2:
+			{
+				redflag_pos = pos - eX * 0.3 * mySize_y;
+				blueflag_pos = pos;
+				yellowflag_pos = pos + eX * 0.3 * mySize_y;
+				pinkflag_pos = pos + eX * 0.3 * mySize_y;
+				break;
+			}
+			case NUM_TEAM_3:
+			{
+				redflag_pos = pos + eX * 0.3 * mySize_y;
+				blueflag_pos = pos + eX * 0.3 * mySize_y;
+				yellowflag_pos = pos;
+				pinkflag_pos = pos - eX * 0.3 * mySize_y;
+				break;
+			}
+			case NUM_TEAM_4:
+			{
+				redflag_pos = pos + eX * 0.3 * mySize_y;
+				blueflag_pos = pos - eX * 0.3 * mySize_y;
+				yellowflag_pos = pos + eX * 0.3 * mySize_y;
+				pinkflag_pos = pos;
+				break;
+			}
 		}
-		flag_size = eY * 0.5 * mySize_y + eX * mySize_x;
+		flag_size = eY * 0.3 * mySize_y + eX * mySize_x;
 	}
 
 	f = bound(0, redflag_statuschange_elapsedtime*2, 1);
@@ -2879,6 +3018,18 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		drawpic_aspect_skin_expanding(blueflag_pos, blue_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * blue_alpha_prevstatus, DRAWFLAG_NORMAL, f);
 	if(blue_icon)
 		drawpic_aspect_skin(blueflag_pos, blue_icon, flag_size, '1 1 1', panel_fg_alpha * blue_alpha * f, DRAWFLAG_NORMAL);
+		
+	f = bound(0, yellowflag_statuschange_elapsedtime*2, 1);
+	if(yellow_icon_prevstatus && f < 1)
+		drawpic_aspect_skin_expanding(yellowflag_pos, yellow_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * yellow_alpha_prevstatus, DRAWFLAG_NORMAL, f);
+	if(yellow_icon)
+		drawpic_aspect_skin(yellowflag_pos, yellow_icon, flag_size, '1 1 1', panel_fg_alpha * yellow_alpha * f, DRAWFLAG_NORMAL);
+		
+	f = bound(0, pinkflag_statuschange_elapsedtime*2, 1);
+	if(pink_icon_prevstatus && f < 1)
+		drawpic_aspect_skin_expanding(pinkflag_pos, pink_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * pink_alpha_prevstatus, DRAWFLAG_NORMAL, f);
+	if(pink_icon)
+		drawpic_aspect_skin(pinkflag_pos, pink_icon, flag_size, '1 1 1', panel_fg_alpha * pink_alpha * f, DRAWFLAG_NORMAL);
 }
 
 // Keyhunt HUD modicon section

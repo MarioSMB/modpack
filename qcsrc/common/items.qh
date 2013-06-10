@@ -41,6 +41,12 @@ float   IT_HEALTH                    = 32768;
 	float	IT_BLUE_FLAG_TAKEN		= 131072;
 	float	IT_BLUE_FLAG_LOST		= 262144;
 	float	IT_BLUE_FLAG_CARRYING	= 393216;
+	float	IT_YELLOW_FLAG_TAKEN	= 786432;
+	float	IT_YELLOW_FLAG_LOST		= 1572864;
+	float	IT_YELLOW_FLAG_CARRYING	= 3145728;
+	float	IT_PINK_FLAG_TAKEN		= 6291456;
+	float	IT_PINK_FLAG_LOST		= 12582912;
+	float	IT_PINK_FLAG_CARRYING	= 25165824;
 // end
 float   IT_5HP                       = 524288;
 float   IT_25HP                      = 1048576;

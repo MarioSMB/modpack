@@ -1,8 +1,2 @@
 // should be removed in the future, as other code should not have to care
 .float caplayer; // 0.5 if scheduled to join the next round
-
-#ifdef SVQC
-
-#define ST_CA_ROUNDS 1
-
-#endif

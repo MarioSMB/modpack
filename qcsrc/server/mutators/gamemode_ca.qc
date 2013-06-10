@@ -182,12 +182,8 @@ MUTATOR_HOOKFUNCTION(ca_reset_map_global)
 
 MUTATOR_HOOKFUNCTION(ca_GetTeamCount)
 {
-	ca_teams = autocvar_g_ca_teams_override;
-	if(ca_teams < 2)
-		ca_teams = autocvar_g_ca_teams;
-	ca_teams = bound(2, ca_teams, 4);
 	ret_float = ca_teams;
-	return 1;
+	return 0;
 }
 
 MUTATOR_HOOKFUNCTION(ca_PlayerDies)
@@ -238,22 +234,16 @@ MUTATOR_HOOKFUNCTION(ca_SetStartItems)
 	return 0;
 }
 
-// scoreboard setup
-void ca_ScoreRules()
-{
-	ScoreRules_basics(2, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
-	ScoreInfo_SetLabel_TeamScore  (ST_CA_ROUNDS,    "rounds",    SFL_SORT_PRIO_PRIMARY);
-	ScoreRules_basics_end();
-}
-
-void ca_DelayedInit() // Do this check with a delay so we can wait for teams to be set up.
-{
-	ca_ScoreRules();
-}
-
 void ca_Initialize()
 {
 	allowed_to_spawn = TRUE;
+
+	ca_teams = autocvar_g_ca_teams_override;
+	if(ca_teams < 2)
+		ca_teams = autocvar_g_ca_teams;
+	ca_teams = bound(2, ca_teams, 4);
+	ret_float = ca_teams;
+	ScoreRules_ca(ca_teams);
 
 	round_handler_Spawn(CA_CheckTeams, CA_CheckWinner, CA_RoundStart);
 	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
@@ -262,8 +252,6 @@ void ca_Initialize()
 	addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
 	addstat(STAT_YELLOWALIVE, AS_INT, yellowalive_stat);
 	addstat(STAT_PINKALIVE, AS_INT, pinkalive_stat);
-
-	InitializeEntity(world, ca_DelayedInit, INITPRIO_GAMETYPE);
 }
 
 MUTATOR_DEFINITION(gamemode_ca)
