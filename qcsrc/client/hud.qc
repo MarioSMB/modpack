@@ -2941,7 +2941,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 			}
 			case NUM_TEAM_2:
 			{
-				redflag_pos = pos + eX * 0.6 * mySize_x;
+				redflag_pos = pos + eX * 0.3 * mySize_x;
 				blueflag_pos = pos;
 				yellowflag_pos = pos + eX * 0.3 * mySize_x;
 				pinkflag_pos = pos - eX * 0.3 * mySize_x;
@@ -2958,7 +2958,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 			case NUM_TEAM_4:
 			{
 				redflag_pos = pos - eX * 0.3 * mySize_x;
-				blueflag_pos = pos + eX * 0.6 * mySize_x;
+				blueflag_pos = pos + eX * 0.3 * mySize_x;
 				yellowflag_pos = pos + eX * 0.3 * mySize_x;
 				pinkflag_pos = pos;
 				break;
