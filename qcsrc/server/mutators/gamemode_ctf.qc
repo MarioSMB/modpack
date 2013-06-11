@@ -17,7 +17,8 @@ void ctf_FakeTimeLimit(entity e, float t)
 void ctf_EventLog(string mode, float flagteam, entity actor) // use an alias for easy changing and quick editing later
 {
 	if(autocvar_sv_eventlog)
-		GameLogEcho(strcat(":ctf:", mode, ":", ftos(flagteam), ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
+		GameLogEcho(sprintf(":ctf:%s:%d:%d:%s", mode, flagteam, actor.team, ((actor != world) ? ftos(actor.playerid) : "")));
+		//GameLogEcho(strcat(":ctf:", mode, ":", ftos(flagteam), ((actor != world) ? (strcat(":", ftos(actor.playerid))) : ""), "));
 }
 
 void ctf_CaptureRecord(entity flag, entity player)
