@@ -2943,13 +2943,13 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 			{
 				redflag_pos = pos + eX * 0.3 * mySize_x;
 				blueflag_pos = pos;
-				yellowflag_pos = pos + eX * 0.3 * mySize_x;
+				yellowflag_pos = pos + eX * 0.6 * mySize_x;
 				pinkflag_pos = pos - eX * 0.3 * mySize_x;
 				break;
 			}
 			case NUM_TEAM_3:
 			{
-				redflag_pos = pos + eX * 0.3 * mySize_x;
+				redflag_pos = pos + eX * 0.6 * mySize_x;
 				blueflag_pos = pos - eX * 0.3 * mySize_x;
 				yellowflag_pos = pos;
 				pinkflag_pos = pos + eX * 0.3 * mySize_x;
@@ -2958,7 +2958,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 			case NUM_TEAM_4:
 			{
 				redflag_pos = pos - eX * 0.3 * mySize_x;
-				blueflag_pos = pos + eX * 0.3 * mySize_x;
+				blueflag_pos = pos + eX * 0.5 * mySize_x;
 				yellowflag_pos = pos + eX * 0.3 * mySize_x;
 				pinkflag_pos = pos;
 				break;
@@ -2976,20 +2976,20 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 				redflag_pos = pos;
 				blueflag_pos = pos + eX * 0.3 * mySize_y;
 				yellowflag_pos = pos - eX * 0.3 * mySize_y;
-				pinkflag_pos = pos + eX * 0.3 * mySize_y;
+				pinkflag_pos = pos + eX * 0.6 * mySize_y;
 				break;
 			}
 			case NUM_TEAM_2:
 			{
-				redflag_pos = pos - eX * 0.3 * mySize_y;
+				redflag_pos = pos + eX * 0.3 * mySize_y;
 				blueflag_pos = pos;
-				yellowflag_pos = pos + eX * 0.3 * mySize_y;
-				pinkflag_pos = pos + eX * 0.3 * mySize_y;
+				yellowflag_pos = pos + eX * 0.6 * mySize_y;
+				pinkflag_pos = pos - eX * 0.3 * mySize_y;
 				break;
 			}
 			case NUM_TEAM_3:
 			{
-				redflag_pos = pos + eX * 0.3 * mySize_y;
+				redflag_pos = pos + eX * 0.6 * mySize_y;
 				blueflag_pos = pos + eX * 0.3 * mySize_y;
 				yellowflag_pos = pos;
 				pinkflag_pos = pos - eX * 0.3 * mySize_y;
@@ -2997,8 +2997,8 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 			}
 			case NUM_TEAM_4:
 			{
-				redflag_pos = pos + eX * 0.3 * mySize_y;
-				blueflag_pos = pos - eX * 0.3 * mySize_y;
+				redflag_pos = pos - eX * 0.3 * mySize_y;
+				blueflag_pos = pos + eX * 0.6 * mySize_y;
 				yellowflag_pos = pos + eX * 0.3 * mySize_y;
 				pinkflag_pos = pos;
 				break;
