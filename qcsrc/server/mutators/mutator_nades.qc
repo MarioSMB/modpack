@@ -82,8 +82,8 @@ void nade_boom() // TODO: DamageInfo
 void nade_touch()
 {
 	PROJECTILE_TOUCH;
-	setsize(self, '-2 -2 -2', '2 2 2');
-	UpdateCSQCProjectile(self);
+	//setsize(self, '-2 -2 -2', '2 2 2');
+	//UpdateCSQCProjectile(self);
 	if(self.health == autocvar_g_nades_nade_health)
 	{
 		spamsound(self, CH_SHOTS, strcat("weapons/grenade_bounce", ftos(1 + rint(random() * 5)), ".wav"), VOL_BASE, ATTN_NORM);
@@ -155,14 +155,21 @@ void toss_nade(entity e, vector _velocity, float _time)
 	
 	makevectors(e.v_angle);
 	
+	W_SetupShot(e, FALSE, FALSE, "", CH_WEAPON_A, 0, DEATH_NADE_NORMAL);
+	
 	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_NADES);
 	
-	setorigin(_nade, CENTER_OR_VIEWOFS(e) + (v_right * 10) * -1);
+	//setorigin(_nade, CENTER_OR_VIEWOFS(e) + (v_right * 10) * -1);
+	setorigin(_nade, w_shotorg + (v_right * 10) * -1);
 	setmodel(_nade, "models/weapons/v_ok_grenade.md3");
 	setattachment(_nade, world, "");
 	PROJECTILE_MAKETRIGGER(_nade);
 	setsize(_nade, '-16 -16 -16', '16 16 16');
 	_nade.movetype = MOVETYPE_BOUNCE;
+	
+	tracebox(_nade.origin, _nade.mins, _nade.maxs, _nade.origin, FALSE, _nade);
+	if (trace_startsolid)
+		setorigin(_nade, e.origin);
 	
 	if(e.crouch)
 		_nade.velocity = '0 0 -10';
@@ -171,7 +178,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 	else if(autocvar_g_nades_nade_newton_style == 2)
 		_nade.velocity = _velocity;
 	else
-		_nade.velocity = W_CalculateProjectileVelocity(e.velocity, _velocity, FALSE);
+		_nade.velocity = W_CalculateProjectileVelocity(e.velocity, _velocity, TRUE);
 
 	_nade.solid = SOLID_BBOX;
 	_nade.touch = nade_touch;
@@ -179,6 +186,12 @@ void toss_nade(entity e, vector _velocity, float _time)
 	_nade.takedamage = DAMAGE_AIM;
 	_nade.event_damage = nade_damage;
 	_nade.teleportable = TRUE;
+	_nade.pushable = TRUE;
+	_nade.gravity = 1;
+	_nade.missile_flags = MIF_SPLASH | MIF_ARC;
+	_nade.damagedbycontents = TRUE;
+	_nade.angles = vectoangles(_nade.velocity);
+	_nade.flags = FL_PROJECTILE;
 
 	nade_spawn(_nade);
 
@@ -209,7 +222,7 @@ void nade_prime()
 	self.nade.colormap = self.colormap;
 	self.nade.glowmod = self.glowmod;
 	self.nade.wait = time + autocvar_g_nades_nade_lifetime;
-	self.nade.cnt = time;
+	self.nade.lifetime = time;
 	self.nade.think = nade_beep;
 	self.nade.nextthink = max(self.nade.wait - 3, time);
 	self.nade.projectiledeathtype = DEATH_NADE_NORMAL;
@@ -265,10 +278,10 @@ void nades_CheckThrow()
 	}
 	else
 	{
-		if(time - self.nade.cnt >= 1)
+		if(time - self.nade.lifetime >= 1)
 		{
 			makevectors(self.v_angle);
-			float _force = time - self.nade.cnt;
+			float _force = time - self.nade.lifetime;
 			_force /= autocvar_g_nades_nade_lifetime;
 			_force = autocvar_g_nades_nade_minforce + (_force * (autocvar_g_nades_nade_maxforce - autocvar_g_nades_nade_minforce));
 			toss_nade(self, (v_forward * 0.75 + v_up * 0.2 + v_right * 0.05) * _force, 0);
@@ -300,12 +313,12 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 			if(!self.nade)
 				nade_prime();
 		}
-		else if(time - self.nade.cnt >= 1)
+		else if(time - self.nade.lifetime >= 1)
 		{
 			if(self.nade)
 			{
 				makevectors(self.v_angle);
-				float _force = time - self.nade.cnt;
+				float _force = time - self.nade.lifetime;
 				_force /= autocvar_g_nades_nade_lifetime;
 				_force = autocvar_g_nades_nade_minforce + (_force * (autocvar_g_nades_nade_maxforce - autocvar_g_nades_nade_minforce));				
 				toss_nade(self, (v_forward * 0.7 + v_up * 0.2 + v_right * 0.1) * _force, 0);

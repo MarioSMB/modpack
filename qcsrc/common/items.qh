@@ -37,7 +37,7 @@ float   IT_HEALTH                    = 32768;
 	// for players:
 	float	IT_RED_FLAG_TAKEN		= 32768;
 	float	IT_RED_FLAG_LOST		= 65536;
-	float	IT_RED_FLAG_CARRYING		= 98304;
+	float	IT_RED_FLAG_CARRYING	= 98304;
 	float	IT_BLUE_FLAG_TAKEN		= 131072;
 	float	IT_BLUE_FLAG_LOST		= 262144;
 	float	IT_BLUE_FLAG_CARRYING	= 393216;

@@ -2822,7 +2822,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		case 2: red_icon = "flag_red_lost"; break;
 		case 3: red_icon = "flag_red_carrying"; red_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
-			if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_2))
+			if((stat_items & IT_CTF_SHIELDED) && (myteam != NUM_TEAM_1))
 				red_icon = "flag_red_shielded";
 			else
 				red_icon = string_null;
@@ -2835,7 +2835,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		default:
 			if(redflag == 3)
 				red_icon_prevstatus = "flag_red_carrying"; // make it more visible
-			else if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_2))
+			else if((stat_items & IT_CTF_SHIELDED) && (myteam != NUM_TEAM_1))
 				red_icon_prevstatus = "flag_red_shielded";
 			else
 				red_icon_prevstatus = string_null;
@@ -2850,7 +2850,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		case 2: blue_icon = "flag_blue_lost"; break;
 		case 3: blue_icon = "flag_blue_carrying"; blue_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
-			if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_1))
+			if((stat_items & IT_CTF_SHIELDED) && (myteam != NUM_TEAM_2))
 				blue_icon = "flag_blue_shielded";
 			else
 				blue_icon = string_null;
@@ -2863,7 +2863,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		default:
 			if(blueflag == 3)
 				blue_icon_prevstatus = "flag_blue_carrying"; // make it more visible
-			else if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_1))
+			else if((stat_items & IT_CTF_SHIELDED) && (myteam != NUM_TEAM_2))
 				blue_icon_prevstatus = "flag_blue_shielded";
 			else
 				blue_icon_prevstatus = string_null;
@@ -2878,7 +2878,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		case 2: yellow_icon = "flag_yellow_lost"; break;
 		case 3: yellow_icon = "flag_yellow_carrying"; yellow_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
-			if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_3))
+			if((stat_items & IT_CTF_SHIELDED) && (myteam != NUM_TEAM_3))
 				yellow_icon = "flag_yellow_shielded";
 			else
 				yellow_icon = string_null;
@@ -2891,7 +2891,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		default:
 			if(yellowflag == 3)
 				yellow_icon_prevstatus = "flag_yellow_carrying"; // make it more visible
-			else if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_3))
+			else if((stat_items & IT_CTF_SHIELDED) && (myteam != NUM_TEAM_3))
 				yellow_icon_prevstatus = "flag_yellow_shielded";
 			else
 				yellow_icon_prevstatus = string_null;
@@ -2906,7 +2906,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		case 2: pink_icon = "flag_pink_lost"; break;
 		case 3: pink_icon = "flag_pink_carrying"; pink_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
-			if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_4))
+			if((stat_items & IT_CTF_SHIELDED) && (myteam != NUM_TEAM_4))
 				pink_icon = "flag_pink_shielded";
 			else
 				pink_icon = string_null;
@@ -2919,7 +2919,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		default:
 			if(pinkflag == 3)
 				pink_icon_prevstatus = "flag_pink_carrying"; // make it more visible
-			else if((stat_items & IT_CTF_SHIELDED) && (myteam == NUM_TEAM_4))
+			else if((stat_items & IT_CTF_SHIELDED) && (myteam != NUM_TEAM_4))
 				pink_icon_prevstatus = "flag_pink_shielded";
 			else
 				pink_icon_prevstatus = string_null;

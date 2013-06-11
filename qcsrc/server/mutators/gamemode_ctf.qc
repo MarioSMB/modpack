@@ -138,15 +138,21 @@ float ctf_CheckPassDirection(vector head_center, vector passer_center, vector pa
 
 float ctf_CaptureShield_CheckStatus(entity p) 
 {
-	float s, se;
+	float s, s2, s3, s4, se, se2, se3, se4, sr, ser;
 	entity e;
 	float players_worseeq, players_total;
 
 	if(ctf_captureshield_max_ratio <= 0)
 		return FALSE;
-
-	s = PlayerScore_Add(p, SP_SCORE, 0);
-	if(s >= -ctf_captureshield_min_negscore)
+		
+	s = PlayerScore_Add(p, SP_CTF_CAPS, 0);
+	s2 = PlayerScore_Add(p, SP_CTF_PICKUPS, 0);
+	s3 = PlayerScore_Add(p, SP_CTF_RETURNS, 0);
+	s4 = PlayerScore_Add(p, SP_CTF_FCKILLS, 0);
+	
+	sr = ((s - s2) + (s3 + s4));
+	
+	if(sr >= -ctf_captureshield_min_negscore)
 		return FALSE;
 
 	players_total = players_worseeq = 0;
@@ -154,8 +160,14 @@ float ctf_CaptureShield_CheckStatus(entity p)
 	{
 		if(IsDifferentTeam(e, p))
 			continue;
-		se = PlayerScore_Add(e, SP_SCORE, 0);
-		if(se <= s)
+		se = PlayerScore_Add(e, SP_CTF_CAPS, 0);
+		se2 = PlayerScore_Add(e, SP_CTF_PICKUPS, 0);
+		se3 = PlayerScore_Add(e, SP_CTF_RETURNS, 0);
+		se4 = PlayerScore_Add(e, SP_CTF_FCKILLS, 0);
+		
+		ser = ((se - se2) + (se3 + se4));
+		
+		if(ser <= sr)
 			++players_worseeq;
 		++players_total;
 	}

@@ -395,8 +395,8 @@ void Ent_Projectile()
 			case PROJECTILE_NADE_PINK:
 			case PROJECTILE_NADE_BURN:
 			case PROJECTILE_NADE:
-				self.mins = '-3 -3 -3';
-				self.maxs = '3 3 3';
+				self.mins = '-16 -16 -16';
+				self.maxs = '16 16 16';
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = func_null;
 				self.scale = 1.5;

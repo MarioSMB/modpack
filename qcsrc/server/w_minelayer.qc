@@ -207,7 +207,7 @@ void W_Mine_Think (void)
 	head = findradius(self.origin, autocvar_g_balance_minelayer_proximityradius);
 	while(head)
 	{
-		if(IS_PLAYER(head) && head.deadflag == DEAD_NO)
+		if(IS_PLAYER(head) && head.deadflag == DEAD_NO && !head.frozen)
 		if(head != self.realowner && IsDifferentTeam(head, self.realowner)) // don't trigger for team mates
 		if(!self.mine_time)
 		{
