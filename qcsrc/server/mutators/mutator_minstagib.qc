@@ -469,6 +469,8 @@ MUTATOR_DEFINITION(mutator_minstagib)
 	MUTATOR_ONADD
 	{
 		precache_sound("weapons/rocket_impact.wav");
+		
+		cvar_settemp("g_balance_laser_primary_force_zscale", cvar_string("g_balance_minstanex_laser_force_zscale"));
 	}
 
 	return FALSE;
