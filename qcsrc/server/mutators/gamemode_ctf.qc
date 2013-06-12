@@ -1018,8 +1018,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 
 	setattachment(flag, world, "");
 
-	flag.netname = ((teamnumber) ? "^1RED^7 flag" : "^4BLUE^7 flag"); // Primarily only used for debugging or when showing nearby item name
-	//flag.team = ((teamnumber) ? NUM_TEAM_1 : NUM_TEAM_2); // NUM_TEAM_1: color 4 team (red) - NUM_TEAM_2: color 13 team (blue)
+	flag.netname = strcat(strtoupper(Static_Team_ColorName(teamnumber)), "^7 flag");
 	flag.team = teamnumber;
 	flag.items = ((teamnumber) ? IT_KEY2 : IT_KEY1); // IT_KEY2: gold key (redish enough) - IT_KEY1: silver key (bluish enough)
 	flag.classname = "item_flag_team";
