@@ -262,10 +262,8 @@ mutators/sandbox.qc
 mutators/mutator_superspec.qc
 mutators/mutator_freeze.qc
 mutators/mutator_overkill.qc
-mutators/mutator_nades.qc
 mutators/mutator_minstagib.qc
 mutators/mutator_touchexplode.qc
-mutators/mutator_rifle_arena.qc
 mutators/mutator_pinata.qc
 mutators/mutator_midair.qc
 mutators/mutator_bloodloss.qc
@@ -275,6 +273,9 @@ mutators/mutator_multijump.qc
 mutators/mutator_jump_grunt.qc
 mutators/mutator_footsteps.qc
 mutators/mutator_melee_only.qc
+mutators/mutator_nades.qc
+mutators/mutator_riflearena.qc
+mutators/mutator_campcheck.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc

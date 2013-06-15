@@ -1,7 +1,3 @@
-.entity nade;
-.entity fake_nade;
-.float nade_refire;
-
 void nade_timer_think()
 {
 	self.skin = 8 - (self.owner.wait - time) / (autocvar_g_nades_nade_lifetime / 10);
@@ -55,7 +51,7 @@ void nade_spawn(entity _nade)
 	
 }
 
-void nade_boom() // TODO: DamageInfo
+void nade_boom()
 {
 	string expef;
 	
@@ -71,6 +67,8 @@ void nade_boom() // TODO: DamageInfo
 	sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTN_NORM);
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
 	pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
+	
+	Damage_DamageInfo(self.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage, autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, self.projectiledeathtype, 0, self);
 
 	self.takedamage = DAMAGE_NO;
 	RadiusDamage(self, self.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
@@ -84,7 +82,7 @@ void nade_touch()
 	PROJECTILE_TOUCH;
 	//setsize(self, '-2 -2 -2', '2 2 2');
 	//UpdateCSQCProjectile(self);
-	if(self.health == autocvar_g_nades_nade_health)
+	if(self.health == self.max_health)
 	{
 		spamsound(self, CH_SHOTS, strcat("weapons/grenade_bounce", ftos(1 + rint(random() * 5)), ".wav"), VOL_BASE, ATTN_NORM);
 		return;
@@ -109,18 +107,18 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 	if(DEATH_ISWEAPON(deathtype, WEP_NEX) || DEATH_ISWEAPON(deathtype, WEP_MINSTANEX))
 	{
 		force *= 6;
-		damage = autocvar_g_nades_nade_health * 0.55;
+		damage = self.max_health * 0.55;
 	}
 
 	if(DEATH_ISWEAPON(deathtype, WEP_UZI))
-		damage = autocvar_g_nades_nade_health * 0.1;
+		damage = self.max_health * 0.1;
 
 	if(DEATH_ISWEAPON(deathtype, WEP_SHOTGUN) && !(deathtype & HITTYPE_SECONDARY))
-		damage = autocvar_g_nades_nade_health * 1.1;
+		damage = self.max_health * 1.1;
 		
 	if(DEATH_ISWEAPON(deathtype, WEP_SHOTGUN) && (deathtype & HITTYPE_SECONDARY))
 	{
-		damage = autocvar_g_nades_nade_health * 0.1;
+		damage = self.max_health * 0.1;
 		force *= 15;
 	}
 	
@@ -129,7 +127,7 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 	if(!damage)
 		return;
 
-	if(self.health == autocvar_g_nades_nade_health)
+	if(self.health == self.max_health)
 	{
 		sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, 0.5 *(ATTN_LARGE + ATTN_MAX));
 		self.nextthink = max(time + autocvar_g_nades_nade_lifetime, time);
@@ -159,8 +157,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 	
 	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_NADES);
 	
-	//setorigin(_nade, CENTER_OR_VIEWOFS(e) + (v_right * 10) * -1);
-	setorigin(_nade, w_shotorg + (v_right * 10) * -1);
+	setorigin(_nade, w_shotorg + (v_right * 25) * -1);
 	setmodel(_nade, "models/weapons/v_ok_grenade.md3");
 	setattachment(_nade, world, "");
 	PROJECTILE_MAKETRIGGER(_nade);
@@ -179,10 +176,10 @@ void toss_nade(entity e, vector _velocity, float _time)
 		_nade.velocity = _velocity;
 	else
 		_nade.velocity = W_CalculateProjectileVelocity(e.velocity, _velocity, TRUE);
-
-	//_nade.solid = SOLID_BBOX; // TODO: remember why this was needed
+	
 	_nade.touch = nade_touch;
 	_nade.health = autocvar_g_nades_nade_health;
+	_nade.max_health = _nade.health;
 	_nade.takedamage = DAMAGE_AIM;
 	_nade.event_damage = nade_damage;
 	_nade.teleportable = TRUE;
@@ -231,7 +228,6 @@ void nade_prime()
 	setmodel(self.fake_nade, "models/weapons/h_ok_grenade.iqm");
 	setattachment(self.fake_nade, self.weaponentity, "");
 	self.fake_nade.classname = "fake_nade";
-	//self.fake_nade.viewmodelforclient = self;
 	self.fake_nade.realowner = self.fake_nade.owner = self;
 	self.fake_nade.colormap = self.colormap;
 	self.fake_nade.glowmod = self.glowmod;
@@ -299,7 +295,7 @@ MUTATOR_HOOKFUNCTION(nades_VehicleEnter)
 
 MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 {
-	float key_pressed = ((g_grappling_hook) ? self.button16 : self.BUTTON_HOOK);
+	float key_pressed = ((g_grappling_hook || client_hasweapon(self, WEP_HOOK, FALSE, FALSE) || WEPSET_CONTAINS_AW(weaponsInMap, WEP_HOOK)) ? self.button16 : self.BUTTON_HOOK);
 	
 	if(self.nade)
 		if(self.nade.wait - 0.1 <= time)

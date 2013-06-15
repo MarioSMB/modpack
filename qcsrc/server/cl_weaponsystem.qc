@@ -667,7 +667,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 	if(complain)
 		self.hasweapon_complain_spam = time + 0.2;
 		
-	if(wpn == WEP_HOOK && !g_grappling_hook && autocvar_g_nades && !WEPSET_CONTAINS_AW(weaponsInMap, wpn))
+	if(wpn == WEP_HOOK && !g_grappling_hook && autocvar_g_nades && !WEPSET_CONTAINS_EW(cl, wpn) && !WEPSET_CONTAINS_AW(weaponsInMap, wpn))
 		complain = 0;
 
 	if (wpn < WEP_FIRST || wpn > WEP_LAST)

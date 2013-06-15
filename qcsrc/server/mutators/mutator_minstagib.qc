@@ -448,6 +448,7 @@ MUTATOR_DEFINITION(mutator_minstagib)
 	MUTATOR_HOOK(MonsterDropItem, minstagib_MonsterLoot, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterSpawn, minstagib_MonsterSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BotShouldAttack, minstagib_BotShouldAttack, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerPhysics, minstagib_PlayerPhysics, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, minstagib_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, minstagib_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, minstagib_MakePlayerObserver, CBC_ORDER_ANY);
@@ -458,7 +459,6 @@ MUTATOR_DEFINITION(mutator_minstagib)
 	MUTATOR_HOOK(Item_RespawnCountdown, minstagib_ItemCountdown, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, minstagib_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, minstagib_SplitHealthArmor, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPhysics, minstagib_PlayerPhysics, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPowerups, minstagib_PlayerPowerups, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, minstagib_ForbidThrowing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, minstagib_PlayerPreThink, CBC_ORDER_ANY);

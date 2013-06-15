@@ -1,1 +1,5 @@
+.entity nade;
+.entity fake_nade;
+.float nade_refire;
+
 void() nades_CheckThrow;

@@ -1,6 +1,16 @@
+void ra_SetCvars()
+{
+	cvar_settemp("g_balance_rifle_secondary_spread", ftos(cvar("g_riflearena_rifle_secondary_spread")));
+	cvar_settemp("g_balance_rifle_secondary_shots", ftos(cvar("g_riflearena_rifle_secondary_shots")));
+	cvar_settemp("g_balance_rifle_secondary_animtime", ftos(cvar("g_riflearena_rifle_secondary_animtime")));
+	cvar_settemp("g_balance_rifle_secondary_refire", ftos(cvar("g_riflearena_rifle_secondary_refire")));
+	cvar_settemp("g_balance_rifle_secondary_damage", ftos(cvar("g_riflearena_rifle_secondary_damage")));
+}
+
 MUTATOR_HOOKFUNCTION(ra_PlayerDamage)
 {
 	if(IS_PLAYER(frag_attacker))
+	if(IS_PLAYER(frag_target))
 	{
 		if (DEATH_ISWEAPON(frag_deathtype, WEP_LASER))
 		{
@@ -46,8 +56,6 @@ MUTATOR_HOOKFUNCTION(ra_StartItems)
 {
 	start_items |= IT_UNLIMITED_AMMO;
 	start_ammo_nails = 100;
-	
-	g_grappling_hook = 0;
 
 	return FALSE;
 }
@@ -55,20 +63,19 @@ MUTATOR_HOOKFUNCTION(ra_StartItems)
 MUTATOR_HOOKFUNCTION(ra_ForbidThrowCurrentWeapon)
 {
 	nades_CheckThrow();
-
 	return TRUE;
 }
 
 MUTATOR_HOOKFUNCTION(ra_BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":RA");
-	return 0;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(ra_BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Rifle Arena");
-	return 0;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(ra_SetModname)
@@ -77,7 +84,7 @@ MUTATOR_HOOKFUNCTION(ra_SetModname)
 	return TRUE;
 }
 
-MUTATOR_DEFINITION(mutator_rifle_arena)
+MUTATOR_DEFINITION(mutator_riflearena)
 {
 	MUTATOR_HOOK(PlayerDamage_Calculate, ra_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, ra_PlayerSpawn, CBC_ORDER_ANY);
@@ -89,30 +96,16 @@ MUTATOR_DEFINITION(mutator_rifle_arena)
 	
 	MUTATOR_ONADD
 	{
-		cvar_settemp("g_balance_rifle_secondary_spread", "0");
-		cvar_settemp("g_balance_rifle_secondary_shots", "1");
-		cvar_settemp("g_balance_rifle_secondary_animtime", "0.15");
-		cvar_settemp("g_balance_rifle_secondary_refire", "0.15");
-		cvar_settemp("g_balance_rifle_secondary_damage", "40");
-		
-		precache_sound("weapons/rocket_impact.wav");
+		ra_SetCvars();
 		
 		weapon_action(WEP_LASER, WR_PRECACHE);
 		weapon_action(WEP_RIFLE, WR_PRECACHE);
-		
-		get_weaponinfo(WEP_HOOK).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
 	}
-	
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		get_weaponinfo(WEP_HOOK).spawnflags &~= WEP_FLAG_MUTATORBLOCKED;
-	}
-	
 	MUTATOR_ONREMOVE
 	{
 		print("This cannot be removed at runtime\n");
 		return -1;
 	}
 
-	return 0;
+	return FALSE;
 }

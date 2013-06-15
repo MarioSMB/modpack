@@ -949,7 +949,6 @@ void readlevelcvars(void)
 	CHECK_MUTATOR_ADD("g_spawn_near_teammate", mutator_spawn_near_teammate, 1);
 	CHECK_MUTATOR_ADD("g_physical_items", mutator_physical_items, 1);
 	CHECK_MUTATOR_ADD("g_touchexplode", mutator_touchexplode, 1);
-	CHECK_MUTATOR_ADD("g_nades", mutator_nades, 1);
 	CHECK_MUTATOR_ADD("g_minstagib", mutator_minstagib, 1);
 	CHECK_MUTATOR_ADD("g_invincible_projectiles", mutator_invincibleprojectiles, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_new_toys", mutator_new_toys, !cvar("g_minstagib"));
@@ -958,7 +957,6 @@ void readlevelcvars(void)
 	CHECK_MUTATOR_ADD("g_vampire", mutator_vampire, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_superspectate", mutator_superspec, 1);
 	CHECK_MUTATOR_ADD("g_overkill", mutator_overkill, !cvar("g_minstagib"));
-	CHECK_MUTATOR_ADD("g_rifle_arena", mutator_rifle_arena, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_freeze", mutator_freeze, !g_freezetag);
 	CHECK_MUTATOR_ADD("g_pinata", mutator_pinata, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_midair", mutator_midair, 1);
@@ -969,7 +967,10 @@ void readlevelcvars(void)
 	CHECK_MUTATOR_ADD("g_jump_grunt", mutator_jump_grunt, 1);
 	CHECK_MUTATOR_ADD("g_footsteps", mutator_footsteps, 1);
 	CHECK_MUTATOR_ADD("g_melee_only", mutator_melee_only, !cvar("g_minstagib"));
+	CHECK_MUTATOR_ADD("g_nades", mutator_nades, 1);
 	CHECK_MUTATOR_ADD("g_sandbox", sandbox, 1);
+	CHECK_MUTATOR_ADD("g_riflearena", mutator_riflearena, !cvar("g_minstagib"));
+	CHECK_MUTATOR_ADD("g_campcheck", mutator_campcheck, 1);
 	
 	#undef CHECK_MUTATOR_ADD
 	

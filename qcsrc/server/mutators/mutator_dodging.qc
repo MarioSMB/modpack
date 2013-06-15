@@ -41,6 +41,10 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	float new_velocity_gain;
 	float velocity_difference;
 	float clean_up_and_do_nothing;
+	float horiz_speed = autocvar_sv_dodging_horiz_speed;
+	
+	if(self.frozen)
+		horiz_speed = autocvar_sv_dodging_horiz_speed_frozen;
 
     if (self.deadflag != DEAD_NO)
         return 0;
@@ -77,7 +81,7 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	if (common_factor > 1) 
 		common_factor = 1;
 
-	new_velocity_gain = self.dodging_velocity_gain - (common_factor * autocvar_sv_dodging_horiz_speed);
+	new_velocity_gain = self.dodging_velocity_gain - (common_factor * horiz_speed);
 	if (new_velocity_gain < 0)
 		new_velocity_gain = 0;
 

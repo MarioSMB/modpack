@@ -46,14 +46,6 @@ MUTATOR_HOOKFUNCTION(lms_PlayerPreSpawn)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(lms_PlayerSpawn)
-{
-	self.lms_nextcheck = time + autocvar_g_lms_campcheck_interval*2;
-	self.lms_traveled_distance = 0;
-		
-	return FALSE;
-}
-
 MUTATOR_HOOKFUNCTION(lms_PlayerDies)
 {
 	self.respawn_flags |= RESPAWN_FORCE;
@@ -96,50 +88,6 @@ MUTATOR_HOOKFUNCTION(lms_PlayerThink)
 {
 	if(self.deadflag == DEAD_DYING)
 		self.deadflag = DEAD_RESPAWNING;
-		
-	if not(self.deadflag)
-	if(autocvar_g_lms_campcheck_interval)
-	{
-		vector dist;
-
-		// calculate player movement (in 2 dimensions only, so jumping on one spot doesn't count as movement)
-		dist = self.prevorigin - self.origin;
-		dist_z = 0;
-		self.lms_traveled_distance += fabs(vlen(dist));
-
-		if((autocvar_g_campaign && !campaign_bots_may_start) || (time < game_starttime))
-		{
-			self.lms_nextcheck = time + autocvar_g_lms_campcheck_interval*2;
-			self.lms_traveled_distance = 0;
-		}
-
-		if(time > self.lms_nextcheck)
-		{
-			if(self.lms_traveled_distance < autocvar_g_lms_campcheck_distance)
-			{
-				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_LMS_CAMPCHECK);
-				if(self.vehicle)
-					Damage(self.vehicle, self, self, autocvar_g_lms_campcheck_damage * 2, DEATH_CAMP, self.vehicle.origin, '0 0 0');
-				else
-					Damage(self, self, self, bound(0, autocvar_g_lms_campcheck_damage, self.health + self.armorvalue * autocvar_g_balance_armor_blockpercent + 5), DEATH_CAMP, self.origin, '0 0 0');
-			}
-			self.lms_nextcheck = time + autocvar_g_lms_campcheck_interval;
-			self.lms_traveled_distance = 0;
-		}
-	}
-		
-	return FALSE;
-}
-
-MUTATOR_HOOKFUNCTION(lms_PlayerDamage)
-{
-	if(IS_PLAYER(frag_target))
-	if(IS_PLAYER(frag_attacker))
-	if(frag_attacker != frag_target)
-	{
-		frag_target.lms_traveled_distance = autocvar_g_lms_campcheck_distance;
-		frag_attacker.lms_traveled_distance = autocvar_g_lms_campcheck_distance;
-	}
 		
 	return FALSE;
 }
@@ -237,12 +185,10 @@ MUTATOR_DEFINITION(gamemode_lms)
 	MUTATOR_HOOK(reset_map_global, lms_ResetMap, CBC_ORDER_ANY);
 	MUTATOR_HOOK(reset_map_players, lms_ResetPlayers, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PutClientInServer, lms_PlayerPreSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerSpawn, lms_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, lms_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, lms_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientConnect, lms_ClientConnect, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, lms_PlayerThink, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDamage_Calculate, lms_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, lms_ForbidThrowing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, lms_GiveFragsForKill, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, lms_SetStartItems, CBC_ORDER_ANY);

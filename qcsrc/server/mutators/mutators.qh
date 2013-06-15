@@ -23,9 +23,6 @@ MUTATOR_DECLARATION(mutator_superspec);
 MUTATOR_DECLARATION(mutator_minstagib);
 MUTATOR_DECLARATION(mutator_freeze);
 MUTATOR_DECLARATION(mutator_overkill);
-MUTATOR_DECLARATION(mutator_nades);
-MUTATOR_DECLARATION(mutator_touchexplode);
-MUTATOR_DECLARATION(mutator_rifle_arena);
 MUTATOR_DECLARATION(mutator_touchexplode);
 MUTATOR_DECLARATION(mutator_pinata);
 MUTATOR_DECLARATION(mutator_midair);
@@ -36,5 +33,8 @@ MUTATOR_DECLARATION(mutator_multijump);
 MUTATOR_DECLARATION(mutator_jump_grunt);
 MUTATOR_DECLARATION(mutator_footsteps);
 MUTATOR_DECLARATION(mutator_melee_only);
+MUTATOR_DECLARATION(mutator_nades);
+MUTATOR_DECLARATION(mutator_riflearena);
+MUTATOR_DECLARATION(mutator_campcheck);
 
 MUTATOR_DECLARATION(sandbox);
