@@ -787,7 +787,15 @@ void SV_PlayerPhysics()
 		
 	if(self.frozen)
 	{
-		self.movement = '0 0 0';
+		if(autocvar_sv_dodging_frozen)
+		{
+			self.movement_x = bound(-5, self.movement_x, 5);
+			self.movement_y = bound(-5, self.movement_y, 5);
+			self.movement_z = bound(-5, self.movement_z, 5);
+		}
+		else
+			self.movement = '0 0 0';
+		
 		self.disableclientprediction = 1;
 	
 		vector midpoint = ((self.absmin + self.absmax) * 0.5);
