@@ -1018,10 +1018,18 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	ctf_worldflaglist = flag;
 
 	setattachment(flag, world, "");
+	
+	switch(teamnumber) // switch again now that teamnumber is correctly set
+	{
+		case NUM_TEAM_1: flag.items = IT_KEY2; break;
+		case NUM_TEAM_2: flag.items = IT_KEY1; break;
+		case NUM_TEAM_3: flag.items = IT_SUIT; break;
+		case NUM_TEAM_4: flag.items = IT_QUAD; break;
+	}
 
 	flag.netname = strcat(strtoupper(Static_Team_ColorName(teamnumber)), "^7 flag");
 	flag.team = teamnumber;
-	flag.items = ((teamnumber) ? IT_KEY2 : IT_KEY1); // IT_KEY2: gold key (redish enough) - IT_KEY1: silver key (bluish enough)
+	//flag.items = ((teamnumber) ? IT_KEY2 : IT_KEY1); // IT_KEY2: gold key (redish enough) - IT_KEY1: silver key (bluish enough)
 	flag.classname = "item_flag_team";
 	flag.target = "###item###"; // wut?
 	flag.flags = FL_ITEM | FL_NOTARGET;
@@ -1791,12 +1799,12 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 	// scan through all the flags and notify the client about them 
 	for(flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
 	{
-		switch(flag.team)
+		switch(flag.items)
 		{
-			case NUM_TEAM_1: t = IT_RED_FLAG_CARRYING; t2 = IT_RED_FLAG_TAKEN; t3 = IT_RED_FLAG_LOST; break;
-			case NUM_TEAM_2: t = IT_BLUE_FLAG_CARRYING; t2 = IT_BLUE_FLAG_TAKEN; t3 = IT_BLUE_FLAG_LOST; break;
-			case NUM_TEAM_3: t = IT_YELLOW_FLAG_CARRYING; t2 = IT_YELLOW_FLAG_TAKEN; t3 = IT_YELLOW_FLAG_LOST; break;
-			case NUM_TEAM_4: t = IT_PINK_FLAG_CARRYING; t2 = IT_PINK_FLAG_TAKEN; t3 = IT_PINK_FLAG_LOST; break;
+			case IT_KEY2: t = IT_RED_FLAG_CARRYING; t2 = IT_RED_FLAG_TAKEN; t3 = IT_RED_FLAG_LOST; break;
+			case IT_KEY1: t = IT_BLUE_FLAG_CARRYING; t2 = IT_BLUE_FLAG_TAKEN; t3 = IT_BLUE_FLAG_LOST; break;
+			case IT_SUIT: t = IT_YELLOW_FLAG_CARRYING; t2 = IT_YELLOW_FLAG_TAKEN; t3 = IT_YELLOW_FLAG_LOST; break;
+			case IT_QUAD: t = IT_PINK_FLAG_CARRYING; t2 = IT_PINK_FLAG_TAKEN; t3 = IT_PINK_FLAG_LOST; break;
 		}
 	
 		switch(flag.ctf_status)
