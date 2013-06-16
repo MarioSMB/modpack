@@ -692,6 +692,7 @@ void ctf_FlagDamage(entity inflictor, entity attacker, float damage, float death
 	}
 }
 
+.float last_color;
 void ctf_FlagThink()
 {
 	// declarations
@@ -1078,7 +1079,14 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	
 	if(autocvar_g_ctf_flag_glowtrails)
 	{
-		flag.glow_color = ((teamnumber) ? 251 : 210); // 251: red - 210: blue
+		//flag.glow_color = ((teamnumber) ? 251 : 210); // 251: red - 210: blue
+		switch(teamnumber)
+		{
+			case NUM_TEAM_1: flag.glow_color = 251; break; // red
+			case NUM_TEAM_2: flag.glow_color = 210; break; // blue
+			case NUM_TEAM_3: flag.glow_color = 110; break; // yellow
+			case NUM_TEAM_4: flag.glow_color = 145; break; // pink
+		}
 		flag.glow_size = 25;
 		flag.glow_trail = 1;
 	}
