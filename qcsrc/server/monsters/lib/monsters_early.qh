@@ -54,6 +54,7 @@ string monster_id2string(float mnster)
 		case MONSTER_STINGRAY: 	return "stingray";
 		case MONSTER_MAGE: 		return "mage";
 		case MONSTER_SPIDER: 	return "spider";
+		case MONSTER_GRUNT:		return "grunt";
 		default: return "";
 	}
 }
@@ -73,6 +74,7 @@ float monster_string2id(string monster)
 		case "stingray": 	return MONSTER_STINGRAY;
 		case "mage": 		return MONSTER_MAGE;
 		case "spider": 		return MONSTER_SPIDER;
+		case "grunt":		return MONSTER_GRUNT;
 		default: 			return 0;
 	}
 }
