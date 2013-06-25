@@ -315,7 +315,8 @@ void ClientCommand_mobspawn(float request, float argc)
 				totalspawned += 1;
 			
 				makevectors(self.v_angle);
-				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 150, MOVE_NORMAL, self);
+				WarpZone_TraceBox (CENTER_OR_VIEWOFS(self), PL_MIN, PL_MAX, CENTER_OR_VIEWOFS(self) + v_forward * 150, TRUE, self);
+				//WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 150, MOVE_NORMAL, self);
 			
 				e = spawnmonster(tospawn, 0, self, self, trace_endpos, FALSE, moveflag);
 				if(mname) e.netname = strzone(mname);

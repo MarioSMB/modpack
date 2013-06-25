@@ -64,7 +64,7 @@ void knight_inferno()
 	sound(self.enemy, CHAN_AUTO, "player/lava.wav", 1, ATTN_NORM);
 	
 	if(vlen(self.enemy.origin - self.origin) <= 2000)
-		Fire_AddDamage(self.enemy, self, autocvar_g_monster_knight_inferno_damage * monster_skill, autocvar_g_monster_knight_inferno_damagetime, DEATH_MONSTER_KNIGHT_INFERNO, FALSE);
+		Fire_AddDamage(self.enemy, self, autocvar_g_monster_knight_inferno_damage * monster_skill, autocvar_g_monster_knight_inferno_damagetime, DEATH_MONSTER_KNIGHT_INFERNO);
 }
 
 void knight_fireball_explode()
@@ -77,7 +77,7 @@ void knight_fireball_explode()
 		RadiusDamage(self, self.realowner, autocvar_g_monster_knight_fireball_damage, autocvar_g_monster_knight_fireball_edgedamage, autocvar_g_monster_knight_fireball_force, world, autocvar_g_monster_knight_fireball_radius, self.projectiledeathtype, world);
 		
 		for(e = world; (e = findfloat(e, takedamage, DAMAGE_AIM)); ) if(vlen(e.origin - self.origin) <= autocvar_g_monster_knight_fireball_radius)
-			Fire_AddDamage(e, self, 5 * monster_skill, autocvar_g_monster_knight_inferno_damagetime, self.projectiledeathtype, FALSE);
+			Fire_AddDamage(e, self, 5 * monster_skill, autocvar_g_monster_knight_inferno_damagetime, self.projectiledeathtype);
 		
 		remove(self);
 	}

@@ -721,7 +721,6 @@ void ctf_FlagDamage(entity inflictor, entity attacker, float damage, float death
 	}
 }
 
-.float last_color;
 void ctf_FlagThink()
 {
 	// declarations

@@ -31,9 +31,7 @@ float stingray_attack(float attack_type)
 		{
 			monsters_setframe(stingray_anim_attack);
 			self.attack_finished_single = time + 0.5;
-			if(monster_melee(self.enemy, autocvar_g_monster_stingray_damage, 0.1, DEATH_MONSTER_STINGRAY, FALSE))
-			if(random() < 0.2)
-				Fire_AddDamage(self.enemy, self, 30, 10, DEATH_MONSTER_STINGRAY, TRUE);
+			monster_melee(self.enemy, autocvar_g_monster_stingray_damage, 0.1, DEATH_MONSTER_STINGRAY, FALSE);
 			
 			return TRUE;
 		}

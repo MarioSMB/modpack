@@ -15,6 +15,7 @@ sys-post.qh
 ../common/constants.qh
 ../common/teams.qh
 ../common/util.qh
+../common/test.qh
 ../common/counting.qh
 ../common/items.qh
 ../common/explosion_equation.qh
@@ -285,6 +286,7 @@ mutators/mutator_hats.qc
 ../warpzonelib/server.qc
 
 ../common/animdecide.qc
+../common/test.qc
 ../common/util.qc
 ../common/notifications.qc
 

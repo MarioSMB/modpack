@@ -107,7 +107,7 @@ void movelib_move_simple_gravity(vector newdir,float velo,float blendrate)
     float z_speed = self.velocity_z;
     self.movelib_lastupdate = time;
     self.velocity = self.velocity * (1 - blendrate) + (newdir * blendrate) * velo;
-    self.velocity_z = z_speed;
+    self.velocity_z = z_speed * self.gravity;
 }
 
 void movelib_jump_simple(float power){

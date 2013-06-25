@@ -379,7 +379,7 @@ void monster_makevectors(entity e)
 {
 	vector v;
 		
-	v = e.origin + (e.mins + e.maxs) * 0.5;
+	v = CENTER_OR_VIEWOFS(e);
 	self.v_angle = vectoangles(v - (self.origin + self.view_ofs));
 	self.v_angle_x = -self.v_angle_x;
 	
@@ -414,6 +414,7 @@ float trace_path(vector from, vector to)
 }
 
 .float last_trace;
+.float last_enemycheck; // for checking enemy
 vector monster_pickmovetarget(entity targ)
 {
 	// enemy is always preferred target
@@ -565,9 +566,12 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(IsDifferentTeam(self.monster_owner, self))
 		self.monster_owner = world;
 		
-	if(time >= self.last_trace)
-	if not(monster_isvalidtarget(self.enemy, self))
-		self.enemy = world;
+	if(time >= self.last_enemycheck)
+	{
+		if not(monster_isvalidtarget(self.enemy, self))
+			self.enemy = world;
+		self.last_enemycheck = time + 2;
+	}
 		
 	if(self.enemy && self.enemy.health < 1)
 		self.enemy = world; // enough!
@@ -597,16 +601,17 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.state = 0;
 		self.touch = MonsterTouch;
 	}
-	 
-	//v_forward = normalize(self.moveto - self.origin);
 	
-	self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
+	//self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
 	
 	float turny = 0;
 	vector real_angle = vectoangles(self.steerto) - self.angles;
 	
 	if(self.state != MONSTER_STATE_ATTACK_LEAP && self.state != MONSTER_STATE_ATTACK_MELEE)
 		turny = 20;
+		
+	if(g_td || self.flags & FL_SWIM)
+		turny = vlen(self.angles - self.moveto);
 	
 	if(turny)
 	{
@@ -619,12 +624,15 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	else if(self.enemy)
 		self.moveto = self.moveto * 0.9 + ((self.origin + v_forward * 500) + randomvec() * 400) * 0.1;
 	
-	if(!(self.flags & FL_FLY || self.flags & FL_SWIM))
+	if not(self.flags & FL_FLY || self.flags & FL_SWIM)
 		self.moveto_z = self.origin_z; 
 	
 	float l = vlen(self.moveto - self.origin);
 	float t1 = trace_path(self.origin+'0 0 10', self.moveto+'0 0 10');
 	float t2 = trace_path(self.origin-'0 0 15', self.moveto-'0 0 15'); 
+	
+	if(self.flags & FL_FLY || self.flags & FL_SWIM)
+		v_forward = normalize(self.moveto - self.origin);
 	
 	if(t1*l-t2*l>50 && (t1*l > 100 || t1 > 0.8))
 	if(self.flags & FL_ONGROUND)
@@ -1016,6 +1024,7 @@ float monster_initialize(string  net_name, float mon_id,
 	self.deadflag			= DEAD_NO; // UNDEAD
 	self.noalign			= nodrop;
 	self.spawn_time			= time;
+	self.gravity			= 1;
 	self.dphitcontentsmask 	= DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 	
 	if not(self.attack_range)

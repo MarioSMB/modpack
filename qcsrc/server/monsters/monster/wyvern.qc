@@ -39,7 +39,7 @@ void wyvern_fireball_explode()
 		RadiusDamage(self, self.realowner, autocvar_g_monster_wyvern_fireball_damage, autocvar_g_monster_wyvern_fireball_edgedamage, autocvar_g_monster_wyvern_fireball_force, world, autocvar_g_monster_wyvern_fireball_radius, self.projectiledeathtype, world);
 		
 		for(e = world; (e = findfloat(e, takedamage, DAMAGE_AIM)); ) if(vlen(e.origin - self.origin) <= autocvar_g_monster_wyvern_fireball_radius)
-			Fire_AddDamage(e, self, 5 * monster_skill, autocvar_g_monster_wyvern_fireball_damagetime, self.projectiledeathtype, FALSE);
+			Fire_AddDamage(e, self, 5 * monster_skill, autocvar_g_monster_wyvern_fireball_damagetime, self.projectiledeathtype);
 		
 		remove(self);
 	}

@@ -23,92 +23,72 @@ void XonoticAudioSettingsTab_fill(entity me)
 	entity e, s, sl;
 
 	me.TR(me);
-		s = makeXonoticDecibelsSlider(-40, 0, 1, "mastervolume");
-		me.TD(me, 1, 1, e = makeXonoticSliderCheckBox(-1000000, 1, s, _("Master:")));
-		if(s.value != e.savedValue)
-			e.savedValue = 0; // default
+		s = makeXonoticDecibelsSlider(-40, 0, 0.4, "mastervolume");
+		me.TD(me, 1, 1, e = makeXonoticTextLabel(0, _("Master:")));
 		me.TD(me, 1, 2, s);
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		s = makeXonoticDecibelsSlider(-40, 0, 1, "bgmvolume");
+		s = makeXonoticDecibelsSlider(-40, 0, 0.4, "bgmvolume");
 		makeMulti(s, "snd_channel8volume");
-		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1000000, 1, s, _("Music:")));
-		if(s.value != e.savedValue)
-			e.savedValue = 0; // default
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Music:")));
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "mastervolume", "0");
 		setDependentStringNotEqual(s, "mastervolume", "0");
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		s = makeXonoticDecibelsSlider(-40, 0, 1, "snd_staticvolume");
+		s = makeXonoticDecibelsSlider(-40, 0, 0.4, "snd_staticvolume");
 		makeMulti(s, "snd_channel9volume");
-		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1000000, 1, s, ZCTX(_("VOL^Ambient:"))));
-		if(s.value != e.savedValue)
-			e.savedValue = 0; // default
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, ZCTX(_("VOL^Ambient:"))));
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "mastervolume", "0");
 		setDependentStringNotEqual(s, "mastervolume", "0");
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		s = makeXonoticDecibelsSlider(-40, 0, 1, "snd_channel0volume");
-		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1000000, 1, s, _("Info:")));
-		if(s.value != e.savedValue)
-			e.savedValue = 0; // default
+		s = makeXonoticDecibelsSlider(-40, 0, 0.4, "snd_channel0volume");
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Info:")));
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "mastervolume", "0");
 		setDependentStringNotEqual(s, "mastervolume", "0");
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		s = makeXonoticDecibelsSlider(-40, 0, 1, "snd_channel3volume");
-		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1000000, 1, s, _("Items:")));
-		if(s.value != e.savedValue)
-			e.savedValue = 0; // default
+		s = makeXonoticDecibelsSlider(-40, 0, 0.4, "snd_channel3volume");
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Items:")));
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "mastervolume", "0");
 		setDependentStringNotEqual(s, "mastervolume", "0");
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		s = makeXonoticDecibelsSlider(-40, 0, 1, "snd_channel6volume");
-		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1000000, 1, s, _("Pain:")));
-		if(s.value != e.savedValue)
-			e.savedValue = 0; // default
+		s = makeXonoticDecibelsSlider(-40, 0, 0.4, "snd_channel6volume");
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Pain:")));
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "mastervolume", "0");
 		setDependentStringNotEqual(s, "mastervolume", "0");
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		s = makeXonoticDecibelsSlider(-40, 0, 1, "snd_channel7volume");
-		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1000000, 1, s, _("Player:")));
-		if(s.value != e.savedValue)
-			e.savedValue = 0; // default
+		s = makeXonoticDecibelsSlider(-40, 0, 0.4, "snd_channel7volume");
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Player:")));
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "mastervolume", "0");
 		setDependentStringNotEqual(s, "mastervolume", "0");
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		s = makeXonoticDecibelsSlider(-40, 0, 1, "snd_channel4volume");
-		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1000000, 1, s, _("Shots:")));
-		if(s.value != e.savedValue)
-			e.savedValue = 0; // default
+		s = makeXonoticDecibelsSlider(-40, 0, 0.4, "snd_channel4volume");
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Shots:")));
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "mastervolume", "0");
 		setDependentStringNotEqual(s, "mastervolume", "0");
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		s = makeXonoticDecibelsSlider(-40, 0, 1, "snd_channel2volume");
-		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1000000, 1, s, _("Voice:")));
-		if(s.value != e.savedValue)
-			e.savedValue = 0; // default
+		s = makeXonoticDecibelsSlider(-40, 0, 0.4, "snd_channel2volume");
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Voice:")));
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "mastervolume", "0");
 		setDependentStringNotEqual(s, "mastervolume", "0");
 	me.TR(me);
 		me.TDempty(me, 0.2);
-		s = makeXonoticDecibelsSlider(-40, 0, 1, "snd_channel1volume");
+		s = makeXonoticDecibelsSlider(-40, 0, 0.4, "snd_channel1volume");
 		makeMulti(s, "snd_channel5volume"); // @!#%'n Tuba
-		me.TD(me, 1, 0.8, e = makeXonoticSliderCheckBox(-1000000, 1, s, _("Weapons:")));
-		if(s.value != e.savedValue)
-			e.savedValue = 0; // default
+		me.TD(me, 1, 0.8, e = makeXonoticTextLabel(0, _("Weapons:")));
 		me.TD(me, 1, 2, s);
 		setDependentStringNotEqual(e, "mastervolume", "0");
 		setDependentStringNotEqual(s, "mastervolume", "0");

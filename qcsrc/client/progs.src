@@ -16,6 +16,7 @@ Defs.qc
 
 ../common/teams.qh
 ../common/util.qh
+../common/test.qh
 ../common/counting.qh
 ../common/items.qh
 ../common/explosion_equation.qh
@@ -102,6 +103,7 @@ prandom.qc
 bgmscript.qc
 noise.qc
 
+../common/test.qc
 ../common/util.qc
 ../common/notifications.qc
 ../common/command/markup.qc

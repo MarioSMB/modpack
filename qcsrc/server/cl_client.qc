@@ -316,6 +316,11 @@ void FixPlayermodel()
 			defaultmodel = "models/player/pony.iqm";
 			defaultskin = self.cvar_cl_pony_skin;
 		}
+		if(self.cvar_cl_bikini)
+		{
+			defaultmodel = "models/player/abyss.zym";
+			defaultskin = self.cvar_cl_bikini_skin;
+		}
 		if(self.cvar_cl_sparkle > 2)
 			defaultmodel = "models/player/mario.dpm";
 	}
@@ -1479,7 +1484,7 @@ void player_powerups (void)
 
 	self.effects &~= (EF_RED | EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT | EF_FLAME | EF_NODEPTHTEST);
 
-	if(self.alpha < 0 || self.deadflag) // don't apply the flags if the player is gibbed
+	if((self.alpha < 0 || self.deadflag) && !self.vehicle) // don't apply the flags if the player is gibbed
 		return;
 
 	Fire_ApplyDamage(self);
@@ -2301,9 +2306,6 @@ void PlayerPreThink (void)
 		if(self.revive_progress >= 1)
 			Unfreeze(self);
 	}
-	
-	if(!Fire_IsBurning(self))
-		self.poisoned = FALSE;
 
 	MUTATOR_CALLHOOK(PlayerPreThink);
 

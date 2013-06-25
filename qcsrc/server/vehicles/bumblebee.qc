@@ -685,43 +685,14 @@ void bumb_exit(float eject)
 	
 	spot = vehicles_findgoodexit(spot);
 	
+	// Hide beam
+	if(self.gun3.enemy || !wasfreed(self.gun3.enemy)) {
+		self.gun3.enemy.effects |= EF_NODRAW;
+    }
 
 	self.owner.velocity = 0.75 * self.vehicle.velocity + normalize(spot - self.vehicle.origin) * 200;
 	self.owner.velocity_z += 10;
 	setorigin(self.owner, spot);
-
-	/*if(eject)
-	{
-	    spot = self.origin + v_forward * 100 + '0 0 64';
-	    spot = vehicles_findgoodexit(spot);
-	    //setorigin(self.owner , spot);
-	    self.owner.velocity = (v_up + v_forward * 0.25) * 250;
-	    self.owner.oldvelocity = self.owner.velocity;
-	}
-	else
-	{
-		if(vlen(self.velocity) > autocvar_g_vehicle_bumblebee_speed_forward * 0.5)		
-		{
-			if(vlen(self.velocity) > autocvar_sv_maxairspeed)
-				self.owner.velocity = normalize(self.velocity) * autocvar_sv_maxairspeed;
-			else
-				self.owner.velocity = self.velocity + v_forward * 100;
-			
-			self.owner.velocity_z += 200;
-			spot = self.origin + v_forward * 128 + '0 0 32';
-			spot = vehicles_findgoodexit(spot);
-		}
-		else
-		{
-			self.owner.velocity = self.velocity * 0.5;
-			self.owner.velocity_z += 10;
-			spot = self.origin - v_forward * 300 + '0 0 32';
-			spot = vehicles_findgoodexit(spot);
-		}
-	    self.owner.oldvelocity = self.owner.velocity;
-	    //setorigin(self.owner , spot);
-	}
-	*/
 	
 	antilag_clear(self.owner);
     self.owner = world;

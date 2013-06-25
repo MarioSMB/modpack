@@ -136,7 +136,7 @@ void Projectile_Draw()
 	trailorigin = self.origin;
 	switch(self.cnt)
 	{
-	    case PROJECTILE_NADE_RED_BURN:
+		case PROJECTILE_NADE_RED_BURN:
 		case PROJECTILE_NADE_RED:
 		case PROJECTILE_NADE_BLUE_BURN:
 		case PROJECTILE_NADE_BLUE:

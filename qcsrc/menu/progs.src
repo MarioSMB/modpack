@@ -10,6 +10,7 @@ config.qh
 
 ../warpzonelib/mathlib.qh
 ../common/util.qh
+../common/test.qh
 
 oo/base.h
 
@@ -37,6 +38,7 @@ oo/implementation.h
 	classes.c
 
 ../common/util.qc
+../common/test.qc
 ../common/command/markup.qc
 ../common/command/rpn.qc
 ../common/command/generic.qc

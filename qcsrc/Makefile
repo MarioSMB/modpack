@@ -3,9 +3,8 @@ PERL ?= perl
 QCCFLAGS_WATERMARK ?= -DWATERMARK='"$(shell git describe)"' -DCVAR_POPCON=1
 QCC ?= gmqcc
 
-VERSION_MESSAGE = $(shell cd server && $(QCC) --version --help)
-ifneq (,$(findstring GMQCC,$(VERSION_MESSAGE)))
-# this is gmqcc
+QCCVERSIONFILE := qccversion.$(shell $(QCC) --version > qccversion.txt && git hash-object qccversion.txt)
+
 QCCFLAGS ?= \
 	-std=fteqcc \
 	-Werror -Wall \
@@ -36,10 +35,6 @@ QCCFLAGS ?= \
 	-fno-permissive \
 	-fvariadic-args \
 	$(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)
-else
-# this. is. fteqccccccccccccccccccc!
-QCCFLAGS ?= -Werror -Wno-Q302 -O3 -Ono-return_only -fno-fastarrays $(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)
-endif
 
 # xonotic build system overrides this by command line argument to turn off the update-cvarcount step
 XON_BUILDSYSTEM =
@@ -57,18 +52,22 @@ qc-recursive: ../menu.dat ../progs.dat ../csprogs.dat
 clean:
 	rm -f ../progs.dat ../menu.dat ../csprogs.dat
 
+$(QCCVERSIONFILE):
+	$(RM) qccversion.*
+	echo This file intentionally left blank. > $@
+
 FILES_CSPROGS = $(shell find client common warpzonelib csqcmodellib -type f -not -name fteqcc.log -not -name qc.asm) $(wildcard server/w_*.qc)
-../csprogs.dat: $(FILES_CSPROGS)
+../csprogs.dat: $(FILES_CSPROGS) $(QCCVERSIONFILE)
 	@echo make[1]: Entering directory \`$(PWD)/client\'
 	cd client && $(QCC) $(QCCFLAGS)
 
 FILES_PROGS = $(shell find server common warpzonelib csqcmodellib -type f -not -name fteqcc.log -not -name qc.asm) $(wildcard server/w_*.qc)
-../progs.dat: $(FILES_PROGS)
+../progs.dat: $(FILES_PROGS) $(QCCVERSIONFILE)
 	@echo make[1]: Entering directory \`$(PWD)/server\'
 	cd server && $(QCC) $(QCCFLAGS)
 
 FILES_MENU = $(shell find menu common warpzonelib -type f -not -name fteqcc.log -not -name qc.asm) $(wildcard server/w_*.qc)
-../menu.dat: $(FILES_MENU)
+../menu.dat: $(FILES_MENU) $(QCCVERSIONFILE)
 	@echo make[1]: Entering directory \`$(PWD)/menu\'
 	cd menu && $(QCC) $(QCCFLAGS)
 

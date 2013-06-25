@@ -1167,12 +1167,9 @@ void weapon_defaultspawnfunc(float wpn)
 
 		if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 		{
-			print("Attempted to spawn a mutator-blocked weapon; these guns will in the future require a mutator\n");
-			/*
 			objerror("Attempted to spawn a mutator-blocked weapon rejected");
 			startitem_failed = TRUE;
 			return;
-			*/
 		}
 
 		s = W_Apply_Weaponreplace(e.netname);

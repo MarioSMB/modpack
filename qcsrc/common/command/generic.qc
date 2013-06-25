@@ -525,6 +525,32 @@ void GenericCommand_settemp_restore(float request, float argc)
 	}
 }
 
+void GenericCommand_runtest(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if(argc > 1)
+			{
+				float i;
+				for(i = 1; i < argc; ++i)
+					TEST_Run(argv(i));
+			}
+			else
+				TEST_RunAll();
+			return;
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " [function to run]"));
+			return;
+		}
+	}
+}
+
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
 void GenericCommand_(float request)
@@ -565,6 +591,7 @@ void GenericCommand_(float request)
 	GENERIC_COMMAND("rpn", GenericCommand_rpn(request, arguments, command), "RPN calculator") \
 	GENERIC_COMMAND("settemp", GenericCommand_settemp(request, arguments), "Temporarily set a value to a cvar which is restored later") \
 	GENERIC_COMMAND("settemp_restore", GenericCommand_settemp_restore(request, arguments), "Restore all cvars set by settemp command") \
+	GENERIC_COMMAND("runtest", GenericCommand_runtest(request, arguments), "Run unit tests") \
 	/* nothing */
 
 void GenericCommand_macro_help()

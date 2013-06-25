@@ -41,6 +41,7 @@ void spider_web_explode()
 		switch(self.realowner.spider_type)
 		{
 			case SPIDER_TYPE_ICE:
+				rad = 25;
 				pointparticles(particleeffectnum("electro_impact"), self.origin, '0 0 0', 1);
 				break;
 			case SPIDER_TYPE_FIRE:
@@ -53,16 +54,15 @@ void spider_web_explode()
 		
 		RadiusDamage(self, self.realowner, damg, edamg, 0, world, rad, DEATH_MONSTER_SPIDER_FIRE, world); // ice deals no damage anyway
 		
-		if(self.realowner.spider_type == SPIDER_TYPE_FIRE)
 		for(e = findradius(self.origin, rad); e; e = e.chain) if(e.takedamage && e.deadflag == DEAD_NO)
 		{
 			switch(self.realowner.spider_type)
 			{
 				case SPIDER_TYPE_ICE:
-					Freeze(other, 0.3, 2, FALSE);
+					Freeze(e, 0.3, 2, FALSE);
 					break;
 				case SPIDER_TYPE_FIRE:
-					Fire_AddDamage(e, self.realowner, 5 * monster_skill, autocvar_g_monster_spider_attack_fire_time, DEATH_MONSTER_SPIDER_FIRE, FALSE);
+					Fire_AddDamage(e, self.realowner, 5 * monster_skill, autocvar_g_monster_spider_attack_fire_time, DEATH_MONSTER_SPIDER_FIRE);
 					break;
 			}
 		}

@@ -9,11 +9,75 @@ void hat_think()
 	self.alpha = self.owner.alpha; // keep alpha
 }
 
+void GiveHat(entity ent, entity targ)
+{
+	if(ent == world || targ == world)
+		return; // avoid crashes where possible
+		
+	pointparticles(particleeffectnum("item_pickup"), ent.origin, '0 0 0', 1);
+	
+	sound(other, CH_TRIGGER, "misc/itempickup", VOL_BASE, ATTN_NORM);
+	
+	ent.solid = SOLID_NOT;
+	ent.alpha = targ.alpha;
+	ent.movetype = MOVETYPE_NONE;
+	ent.touch = func_null;
+	ent.owner = ent.realowner = targ;
+	ent.effects = targ.effects & EFMASK_CHEAP;
+	ent.team = targ.team;
+	ent.glowmod = targ.glowmod;
+	ent.colormap = targ.colormap;
+	targ.hat = ent;
+	ent.velocity = '0 0 0';
+	setorigin(ent, '0 0 0');
+	setattachment(ent, targ, "head");
+	ent.think = hat_think;
+	ent.nextthink = time + 0.1;
+}
+
+void hat_touch()
+{
+	if(other == world)
+		return;
+	
+	if(other.hat)
+		return;
+		
+	if not(IS_PLAYER(other))
+		return;
+		
+	if(other.cvar_cl_pony || (other.cvar_cl_sparkle > 1) || other.cvar_cl_bikini)
+		return; // don't allow custom models to wear hats
+		
+	GiveHat(self, other);
+}
+
+MUTATOR_HOOKFUNCTION(hats_PlayerDies)
+{
+	if(self.hat)
+	{
+		entity _hat = self.hat;
+		self.hat = world;
+		_hat.owner = world;
+		
+		setattachment(_hat, world, "");
+		setsize(_hat, '-24 -24 -15', '24 24 12');
+		setorigin(_hat, self.origin + self.view_ofs);
+		_hat.alpha = 1;
+		_hat.effects = 0;
+		_hat.touch = hat_touch;
+		_hat.movetype = MOVETYPE_BOUNCE;
+		_hat.solid = SOLID_TRIGGER;
+		_hat.velocity = '0 0 20';
+		//_hat.velocity = self.velocity;
+		SUB_SetFade(_hat, time + 5, 1);
+	}
+	
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(hats_PlayerSpawn)
 {
-	if(self.cvar_cl_sparkle == 1)
-		sprint(self, "Hats enabled!\n");
-
 	if(self.cvar_cl_hat == "")
 	{
 		if(self.hat)
@@ -66,6 +130,7 @@ MUTATOR_HOOKFUNCTION(hats_BuildMutatorsString)
 
 MUTATOR_DEFINITION(mutator_hats)
 {
+	MUTATOR_HOOK(PlayerDies, hats_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, hats_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, hats_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, hats_RemovePlayer, CBC_ORDER_ANY);
@@ -77,6 +142,7 @@ MUTATOR_DEFINITION(mutator_hats)
 	MUTATOR_ONADD
 	{
 		precache_all_playermodels("models/hats/*.md3");
+		precache_sound ("misc/itempickup.wav");
 	}
 
 	return FALSE;

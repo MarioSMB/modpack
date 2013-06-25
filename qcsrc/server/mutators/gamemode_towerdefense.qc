@@ -734,7 +734,7 @@ MUTATOR_HOOKFUNCTION(td_PlayerSpawn)
 MUTATOR_HOOKFUNCTION(td_Damage)
 {
 	if(IS_PLAYER(frag_attacker))
-	if(frag_target.flags & FL_MONSTER)
+	if(frag_target.flags & FL_MONSTER || frag_target.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
 		frag_damage = 0;
 		
 	if(IS_PLAYER(frag_attacker) || frag_attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
