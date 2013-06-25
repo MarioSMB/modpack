@@ -9,14 +9,16 @@ void hat_think()
 	self.alpha = self.owner.alpha; // keep alpha
 }
 
-void GiveHat(entity ent, entity targ)
+void GiveHat(entity ent, entity targ, float ispickup)
 {
 	if(ent == world || targ == world)
 		return; // avoid crashes where possible
 		
-	pointparticles(particleeffectnum("item_pickup"), ent.origin, '0 0 0', 1);
-	
-	sound(other, CH_TRIGGER, "misc/itempickup", VOL_BASE, ATTN_NORM);
+	if(ispickup)
+	{
+		pointparticles(particleeffectnum("item_pickup"), ent.origin, '0 0 0', 1);
+		sound(other, CH_TRIGGER, "misc/itempickup.wav", VOL_BASE, ATTN_NORM);
+	}
 	
 	ent.solid = SOLID_NOT;
 	ent.alpha = targ.alpha;
@@ -49,29 +51,33 @@ void hat_touch()
 	if(other.cvar_cl_pony || (other.cvar_cl_sparkle > 1) || other.cvar_cl_bikini)
 		return; // don't allow custom models to wear hats
 		
-	GiveHat(self, other);
+	GiveHat(self, other, TRUE);
+}
+
+void DropHat(entity pl)
+{
+	if(pl.hat == world)
+		return;
+		
+	entity _hat = pl.hat;
+	pl.hat = world;
+	_hat.owner = world;
+		
+	setattachment(_hat, world, "");
+	setsize(_hat, '-24 -24 -15', '24 24 12');
+	setorigin(_hat, pl.origin + pl.view_ofs);
+	_hat.alpha = 1;
+	_hat.effects = 0;
+	_hat.touch = hat_touch;
+	_hat.movetype = MOVETYPE_BOUNCE;
+	_hat.solid = SOLID_TRIGGER;
+	_hat.velocity = '0 0 20';
+	SUB_SetFade(_hat, time + 5, 1);
 }
 
 MUTATOR_HOOKFUNCTION(hats_PlayerDies)
 {
-	if(self.hat)
-	{
-		entity _hat = self.hat;
-		self.hat = world;
-		_hat.owner = world;
-		
-		setattachment(_hat, world, "");
-		setsize(_hat, '-24 -24 -15', '24 24 12');
-		setorigin(_hat, self.origin + self.view_ofs);
-		_hat.alpha = 1;
-		_hat.effects = 0;
-		_hat.touch = hat_touch;
-		_hat.movetype = MOVETYPE_BOUNCE;
-		_hat.solid = SOLID_TRIGGER;
-		_hat.velocity = '0 0 20';
-		//_hat.velocity = self.velocity;
-		SUB_SetFade(_hat, time + 5, 1);
-	}
+	DropHat(self);
 	
 	return FALSE;
 }
