@@ -29,6 +29,8 @@ void GiveHat(entity ent, entity targ, float ispickup)
 	ent.team = targ.team;
 	ent.glowmod = targ.glowmod;
 	ent.colormap = targ.colormap;
+	ent.angles = '0 0 0';
+	ent.avelocity = '0 0 0';
 	targ.hat = ent;
 	ent.velocity = '0 0 0';
 	setorigin(ent, '0 0 0');
@@ -39,6 +41,9 @@ void GiveHat(entity ent, entity targ, float ispickup)
 
 void hat_touch()
 {
+	makevectors(self.angles);
+	self.avelocity = -250 * v_forward;  // maybe there is a way to make it look better?
+
 	if(other == world)
 		return;
 	
