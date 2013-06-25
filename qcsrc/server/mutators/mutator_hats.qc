@@ -53,6 +53,9 @@ void hat_touch()
 	if not(IS_PLAYER(other))
 		return;
 		
+	if(other.vehicle)
+		return;
+		
 	if(other.deadflag != DEAD_NO)
 		return;
 		
