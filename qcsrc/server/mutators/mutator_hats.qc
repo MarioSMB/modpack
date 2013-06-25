@@ -53,6 +53,9 @@ void hat_touch()
 	if not(IS_PLAYER(other))
 		return;
 		
+	if(other.deadflag != DEAD_NO)
+		return;
+		
 	if(other.cvar_cl_pony || (other.cvar_cl_sparkle > 1) || other.cvar_cl_bikini)
 		return; // don't allow custom models to wear hats
 		
