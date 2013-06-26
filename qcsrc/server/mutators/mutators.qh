@@ -36,6 +36,5 @@ MUTATOR_DECLARATION(mutator_melee_only);
 MUTATOR_DECLARATION(mutator_nades);
 MUTATOR_DECLARATION(mutator_riflearena);
 MUTATOR_DECLARATION(mutator_campcheck);
-MUTATOR_DECLARATION(mutator_hats);
 
 MUTATOR_DECLARATION(sandbox);
