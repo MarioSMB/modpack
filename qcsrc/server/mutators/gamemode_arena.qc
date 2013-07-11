@@ -237,6 +237,15 @@ MUTATOR_HOOKFUNCTION(arena_SV_StartFrame)
 	return 1;
 }
 
+MUTATOR_HOOKFUNCTION(arena_FilterItem)
+{
+	if(autocvar_g_powerups <= 0)
+	if(self.flags & FL_POWERUP)
+		return TRUE;
+		
+	return FALSE;
+}
+
 void arena_Initialize()
 {
 	maxspawned = max(2, autocvar_g_arena_maxspawned);
@@ -260,6 +269,7 @@ MUTATOR_DEFINITION(gamemode_arena)
 	MUTATOR_HOOK(GiveFragsForKill, arena_GiveFragsForKill, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, arena_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SV_StartFrame, arena_SV_StartFrame, CBC_ORDER_ANY);
+	MUTATOR_HOOK(FilterItem, arena_FilterItem, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

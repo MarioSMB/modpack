@@ -976,7 +976,6 @@ void readlevelcvars(void)
 	CHECK_MUTATOR_ADD("g_random_gravity", mutator_random_gravity, 1);
 	CHECK_MUTATOR_ADD("g_norecoil", mutator_norecoil, 1);
 	CHECK_MUTATOR_ADD("g_multijump", mutator_multijump, 1);
-	CHECK_MUTATOR_ADD("g_jump_grunt", mutator_jump_grunt, 1);
 	CHECK_MUTATOR_ADD("g_footsteps", mutator_footsteps, 1);
 	CHECK_MUTATOR_ADD("g_melee_only", mutator_melee_only, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_nades", mutator_nades, 1);

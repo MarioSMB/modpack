@@ -113,6 +113,9 @@ void PlayerJump (void)
 	self.flags &~= FL_JUMPRELEASED;
 
 	animdecide_setaction(self, ANIMACTION_JUMP, TRUE);
+	
+	if(autocvar_g_jump_grunt)
+		PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 
 	self.restart_jump = -1; // restart jump anim next time
 	// value -1 is used to not use the teleport bit (workaround for tiny hitch when re-jumping)

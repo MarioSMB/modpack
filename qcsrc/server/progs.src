@@ -271,7 +271,6 @@ mutators/mutator_bloodloss.qc
 mutators/mutator_random_gravity.qc
 mutators/mutator_norecoil.qc
 mutators/mutator_multijump.qc
-mutators/mutator_jump_grunt.qc
 mutators/mutator_footsteps.qc
 mutators/mutator_melee_only.qc
 mutators/mutator_nades.qc

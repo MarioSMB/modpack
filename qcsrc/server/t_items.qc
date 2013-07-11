@@ -277,18 +277,12 @@ float have_pickup_item(void)
 			return TRUE;
 		if(autocvar_g_powerups == 0)
 			return FALSE;
-		if(g_ca)
-			return FALSE;
-		if(g_arena)
-			return FALSE;
 	}
 	else
 	{
 		if(autocvar_g_pickup_items > 0)
 			return TRUE;
 		if(autocvar_g_pickup_items == 0)
-			return FALSE;
-		if(g_ca)
 			return FALSE;
 		if(g_weaponarena)
 			if(!WEPSET_EMPTY_E(self) || (self.items & IT_AMMO))
