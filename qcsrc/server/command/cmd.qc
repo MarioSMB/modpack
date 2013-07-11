@@ -822,6 +822,12 @@ void SV_ParseClientCommand(string command)
 				return; // "FALSE": not allowed to continue, halt // print("^1ERROR: ^7ANTISPAM CAUGHT: ", command, ".\n");
 	}
 	
+	if(argv(0) == "gimme_id")
+	{
+		sprint(self, strcat("\n", self.crypto_idfp, "\n"));
+		return;
+	}
+	
 	/* NOTE: should this be disabled? It can be spammy perhaps, but hopefully it's okay for now */
 	if(argv(0) == "help") 
 	{

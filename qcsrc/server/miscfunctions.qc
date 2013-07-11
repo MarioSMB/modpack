@@ -3,6 +3,16 @@ void objerror(string s);
 void droptofloor();
 .vector dropped_origin;
 
+float checkinlist(string command, string list)
+{
+	string l = strcat(" ", list, " ");
+	
+	if(strstrofs(l, strcat(" ", command, " "), 0) >= 0)
+		return TRUE;
+	
+	return FALSE;
+}
+
 void traceline_antilag (entity source, vector v1, vector v2, float nomonst, entity forent, float lag);
 void crosshair_trace(entity pl)
 {
@@ -973,6 +983,7 @@ void readlevelcvars(void)
 	CHECK_MUTATOR_ADD("g_sandbox", sandbox, 1);
 	CHECK_MUTATOR_ADD("g_riflearena", mutator_riflearena, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_campcheck", mutator_campcheck, 1);
+	CHECK_MUTATOR_ADD("g_hats", mutator_hats, 1);
 	
 	#undef CHECK_MUTATOR_ADD
 	

@@ -277,6 +277,7 @@ mutators/mutator_melee_only.qc
 mutators/mutator_nades.qc
 mutators/mutator_riflearena.qc
 mutators/mutator_campcheck.qc
+mutators/mutator_hats.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc

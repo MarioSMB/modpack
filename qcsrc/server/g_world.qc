@@ -247,6 +247,7 @@ void cvar_changes_init()
 		BADPREFIX("sv_weaponstats_");
 		BADPREFIX("sv_waypointsprite_");
 		BADCVAR("rescan_pending");
+		BADPREFIX("sv_allow_customplayermodels");
 
 		// these can contain player IDs, so better hide
 		BADPREFIX("g_forced_team_");

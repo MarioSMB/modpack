@@ -1350,4 +1350,6 @@ float autocvar_g_monsters_skill_hard;
 float autocvar_g_monsters_skill_insane;
 float autocvar_g_monsters_skill_nightmare;
 float autocvar_sv_allow_customplayermodels;
+string autocvar_sv_allow_customplayermodels_mario_id;
+string autocvar_sv_allow_customplayermodels_bikini_id;
 float autocvar_g_td_debug;

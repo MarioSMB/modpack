@@ -140,9 +140,12 @@ void CSQC_Init(void)
 	
 	registercvar("cl_freeze", "0");
 	registercvar("cl_pony", "0");
+	registercvar("cl_pony_skin", "0");
 	registercvar("cl_sparkle", "0");
 	registercvar("cl_multijump", "0");
 	registercvar("cl_dodging", "0");
+	registercvar("cl_bikini", "0");
+	registercvar("cl_bikini_skin", "0");
 
 	gametype = 0;
 

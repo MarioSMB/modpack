@@ -316,12 +316,12 @@ void FixPlayermodel()
 			defaultmodel = "models/player/pony.iqm";
 			defaultskin = self.cvar_cl_pony_skin;
 		}
-		if(self.cvar_cl_bikini)
+		if(self.cvar_cl_bikini && checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_bikini_id))
 		{
 			defaultmodel = "models/player/abyss.zym";
 			defaultskin = self.cvar_cl_bikini_skin;
 		}
-		if(self.cvar_cl_sparkle > 2)
+		if(self.cvar_cl_sparkle > 2 && checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_mario_id))
 			defaultmodel = "models/player/mario.dpm";
 	}
 
@@ -572,10 +572,10 @@ void PutClientInServer (void)
 		self.bot_attack = TRUE;
 		self.monster_attack = TRUE;
 		
-		if(self.cvar_cl_sparkle >= 1)
+		if(self.cvar_cl_sparkle >= 1 && checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_mario_id))
 			self.effects |= EF_STARDUST;
 			
-		if(self.cvar_cl_sparkle == 2)
+		if(self.cvar_cl_sparkle == 2 && checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_mario_id))
 			self.colormap = 1039;
 
 		self.statdraintime = time + 5;
