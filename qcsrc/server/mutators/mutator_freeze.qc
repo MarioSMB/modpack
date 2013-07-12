@@ -134,6 +134,18 @@ MUTATOR_HOOKFUNCTION(freeze_GetCvars)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(freeze_BuildMutatorsPrettyString)
+{
+	ret_string = strcat(ret_string, ", Freeze");
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(freeze_SetModname)
+{
+	modname = "Freeze";
+	return TRUE;
+}
+
 MUTATOR_DEFINITION(mutator_freeze)
 {
 	MUTATOR_HOOK(PlayerSpawn, freeze_PlayerSpawn, CBC_ORDER_ANY);
@@ -141,6 +153,8 @@ MUTATOR_DEFINITION(mutator_freeze)
 	MUTATOR_HOOK(PlayerPreThink, freeze_PlayerPreThink, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(PlayerDamage_Calculate, freeze_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetCvars, freeze_GetCvars, CBC_ORDER_ANY);
+	MUTATOR_HOOK(BuildMutatorsString, freeze_BuildMutatorsString, CBC_ORDER_ANY);
+	MUTATOR_HOOK(BuildMutatorsPrettyString, freeze_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
