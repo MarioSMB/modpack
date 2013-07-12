@@ -124,7 +124,7 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 	
 	self.velocity += force;
 
-	if(!damage)
+	if(!damage || self.flags & FL_ONGROUND)
 		return;
 
 	if(self.health == self.max_health)
