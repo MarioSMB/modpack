@@ -134,16 +134,16 @@ MUTATOR_HOOKFUNCTION(freeze_GetCvars)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(freeze_BuildMutatorsString)
+{
+	ret_string = strcat(ret_string, ":Freeze");
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(freeze_BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Freeze");
 	return FALSE;
-}
-
-MUTATOR_HOOKFUNCTION(freeze_SetModname)
-{
-	modname = "Freeze";
-	return TRUE;
 }
 
 MUTATOR_DEFINITION(mutator_freeze)
