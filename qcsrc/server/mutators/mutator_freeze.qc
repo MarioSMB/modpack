@@ -1,29 +1,3 @@
-void freeze_Initialize()
-{
-	precache_model("models/ice/ice.md3");
-}
-
-// this is needed to allow the player to turn his view around (fixangle can't
-// be used to freeze his view, as that also changes the angles), while not
-// turning that ice object with the player
-void freeze_Ice_Think()
-{
-	setorigin(self, self.owner.origin - '0 0 16');
-	self.nextthink = time;
-	
-	if(self.owner.health < 1)
-	{
-		remove(self);
-		return;
-	}
-	
-	if not(self.owner)
-	{
-		remove(self);
-		return;
-	}
-}
-
 void freeze_Unfreeze(entity ent)
 {
 	ent.freeze_flag = FROZEN_THAWING; // thawing is fine, as this is only checked when the player is frozen
@@ -34,23 +8,19 @@ void freeze_Unfreeze(entity ent)
 }
 
 
-// ==============
-// Hook Functions
-// ==============
-
 MUTATOR_HOOKFUNCTION(freeze_PlayerSpawn)
 {
 	freeze_Unfreeze(self);
 	
-	return 0;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(freeze_PlayerDies)
 {
 	if(frag_deathtype == DEATH_HURTTRIGGER)
-		return 1;
+		return FALSE;
 		
-	self.respawn_time = time + autocvar_g_respawn_delay;
+	SetRespawnDelays(); // player doesn't actually die
 	
 	float can_freeze = FALSE;
 	
@@ -72,13 +42,14 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerDies)
 		Freeze(frag_target, 0, 1, FALSE);
 	}
 
-	return 1;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 {
 	if(self.deadflag != DEAD_NO || self.classname != STR_PLAYER)
-		return 0;
+		return FALSE;
+		
 	float button_pressed;
 	if(self.frozen == 1) // Auto revive in freeze mutator
 	{
@@ -114,7 +85,7 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 			freeze_Unfreeze(self);
 	}
 
-	return 1;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(freeze_PlayerDamage)
@@ -124,7 +95,7 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerDamage)
         frag_damage = 0;
         frag_force = frag_force * autocvar_g_freeze_frozen_force;
     }
-    return 1;
+    return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(freeze_GetCvars)
@@ -158,8 +129,8 @@ MUTATOR_DEFINITION(mutator_freeze)
 
 	MUTATOR_ONADD
 	{
-		freeze_Initialize();
+		precache_model("models/ice/ice.md3");
 	}
 
-	return 0;
+	return FALSE;
 }

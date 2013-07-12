@@ -321,11 +321,43 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	}
 }
 
+void SetRespawnDelays()
+{
+	float sdelay = 0, waves = 0;
+	
+	if(autocvar_g_respawn_delay_forced)
+		sdelay = autocvar_g_respawn_delay;
+	else
+		sdelay = cvar(strcat("g_", GetGametype(), "_respawn_delay"));
+	if(!sdelay)
+	{
+		if(g_cts)
+			sdelay = 0; // no respawn delay in CTS
+		else
+			sdelay = autocvar_g_respawn_delay;
+	}
+	waves = cvar(strcat("g_", GetGametype(), "_respawn_waves"));
+	if(!waves)
+		waves = autocvar_g_respawn_waves;
+	if(waves)
+		self.respawn_time = ceil((time + sdelay) / waves) * waves;
+	else
+		self.respawn_time = time + sdelay;
+	if(autocvar_g_respawn_delay_max && autocvar_g_forced_respawn)
+		self.respawn_time_max = time + autocvar_g_respawn_delay_max;
+	else
+		self.respawn_time_max = self.respawn_time;
+	if((sdelay + waves >= 5.0) && (self.respawn_time - time > 1.75))
+		self.respawn_countdown = 10; // first number to count down from is 10
+	else
+		self.respawn_countdown = -1; // do not count down
+}
+
 void ClientKill_Now_TeamChange();
 
 void PlayerDamage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	float take, save, waves, sdelay, dh, da, j;
+	float take, save, dh, da, j;
 	vector v;
 	float valid_damage_for_weaponstats;
 	float excess;
@@ -628,34 +660,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		// dying animation
 		self.deadflag = DEAD_DYING;
 		// when to allow respawn
-		sdelay = 0;
-		waves = 0;
-		if(autocvar_g_respawn_delay_forced)
-			sdelay = autocvar_g_respawn_delay;
-		else
-			sdelay = cvar(strcat("g_", GetGametype(), "_respawn_delay"));
-		if(!sdelay)
-		{
-			if(g_cts)
-				sdelay = 0; // no respawn delay in CTS
-			else
-				sdelay = autocvar_g_respawn_delay;
-		}
-		waves = cvar(strcat("g_", GetGametype(), "_respawn_waves"));
-		if(!waves)
-			waves = autocvar_g_respawn_waves;
-		if(waves)
-			self.respawn_time = ceil((time + sdelay) / waves) * waves;
-		else
-			self.respawn_time = time + sdelay;
-		if(autocvar_g_respawn_delay_max && autocvar_g_forced_respawn)
-			self.respawn_time_max = time + autocvar_g_respawn_delay_max;
-		else
-			self.respawn_time_max = self.respawn_time;
-		if((sdelay + waves >= 5.0) && (self.respawn_time - time > 1.75))
-			self.respawn_countdown = 10; // first number to count down from is 10
-		else
-			self.respawn_countdown = -1; // do not count down
+		SetRespawnDelays();
 
 		if(g_cts || autocvar_g_forced_respawn)
 			self.respawn_flags = self.respawn_flags | RESPAWN_FORCE;
