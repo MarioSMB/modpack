@@ -2301,7 +2301,7 @@ void PlayerPreThink (void)
 	{
 		self.revive_progress = bound(0, self.revive_progress + frametime * self.revive_speed, 1);
 		self.health = max(1, self.revive_progress * autocvar_g_balance_health_start);
-		self.iceblock.alpha = 1 - self.revive_progress;
+		self.iceblock.alpha = bound(0.2, 1 - self.revive_progress, 1);
 
 		if(self.revive_progress >= 1)
 			Unfreeze(self);
