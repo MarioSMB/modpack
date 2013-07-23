@@ -56,8 +56,6 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 		self.revive_progress = bound(0, self.revive_progress + frametime * autocvar_g_freeze_revive_speed, 1);
 		self.health = max(1, self.revive_progress * autocvar_g_balance_health_start);
 		
-		self.iceblock.alpha = bound(0.2, 1 - self.revive_progress, 1);
-		
 		if(self.health >= autocvar_g_freeze_revive_minhealth)
 			button_pressed = (self.BUTTON_JUMP || self.BUTTON_USE); // we're about to defrost, only detect jumps
 		else
