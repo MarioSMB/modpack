@@ -1329,6 +1329,8 @@ var float autocvar_g_player_crush_damage = 200;
 float autocvar_g_player_crush_headheight;
 float autocvar_g_freeze_revive_speed;
 float autocvar_g_freeze_revive_minhealth;
+float autocvar_g_freeze_revive_falldamage;
+float autocvar_g_freeze_revive_falldamage_health;
 float autocvar_g_freeze_frozen_force;
 float autocvar_g_monsters_target_range;
 float autocvar_g_monsters_target_infront;

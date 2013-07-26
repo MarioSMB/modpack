@@ -92,6 +92,17 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerDamage)
 {
     if(frag_target.frozen == 1 && frag_deathtype != DEATH_HURTTRIGGER)
     {
+		if(autocvar_g_freeze_revive_falldamage > 0)
+		if(frag_deathtype == DEATH_FALL)
+		if(frag_damage >= autocvar_g_freeze_revive_falldamage)
+		{
+			freeze_Unfreeze(frag_target);
+			frag_target.health = autocvar_g_freeze_revive_falldamage_health;
+			pointparticles(particleeffectnum("iceorglass"), frag_target.origin, '0 0 0', 3);
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, frag_target.netname);
+			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_REVIVE_FALL);
+		}
+	
         frag_damage = 0;
         frag_force = frag_force * autocvar_g_freeze_frozen_force;
     }
