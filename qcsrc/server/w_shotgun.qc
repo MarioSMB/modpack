@@ -155,6 +155,39 @@ void shotgun_meleethink (void)
 	}
 }
 
+// alternate secondary weapon frames
+void shotgun_fire2_04()
+{
+	if (!weapon_action(self.weapon, WR_CHECKAMMO2))
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		W_SwitchWeapon_Force(self, w_getbestweapon(self));
+		w_ready();
+		return;
+	}
+		
+	W_Shotgun_Attack(WEP_SHOTGUN);
+	weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_shotgun_secondary_alt_animtime, w_ready);
+}
+void shotgun_fire2_03()
+{
+	if (!weapon_action(self.weapon, WR_CHECKAMMO2))
+	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	{
+		W_SwitchWeapon_Force(self, w_getbestweapon(self));
+		w_ready();
+		return;
+	}
+		
+	W_Shotgun_Attack(WEP_SHOTGUN);
+	weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_shotgun_secondary_alt_animtime,shotgun_fire2_04);
+}
+void shotgun_fire2_02()
+{
+	W_Shotgun_Attack(WEP_SHOTGUN);
+	weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_shotgun_secondary_alt_animtime, shotgun_fire2_03);
+}
+
 void W_Shotgun_Attack2 (void)
 {
 	sound (self, CH_WEAPON_A, "weapons/shotgun_melee.wav", VOL_BASE, ATTN_NORM);
@@ -198,9 +231,9 @@ float w_shotgun(float req)
 		{
 			if (self.BUTTON_ATCK)
 			{
-				if (time >= self.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
+				if (time >= self.shotgun_primarytime || autocvar_g_balance_shotgun_secondary_alt) // handle refire separately so the secondary can be fired straight after a primary
 				{
-					if(weapon_prepareattack(0, autocvar_g_balance_shotgun_primary_animtime))
+					if(weapon_prepareattack(0, ((autocvar_g_balance_shotgun_secondary_alt) ? autocvar_g_balance_shotgun_primary_refire : autocvar_g_balance_shotgun_primary_animtime)))
 					{
 						W_Shotgun_Attack(WEP_SHOTGUN);
 						self.shotgun_primarytime = time + autocvar_g_balance_shotgun_primary_refire * W_WeaponRateFactor();
@@ -208,10 +241,19 @@ float w_shotgun(float req)
 					}
 				}
 			}
+			if (self.BUTTON_ATCK2 && autocvar_g_balance_shotgun_secondary_alt)
+			{
+				if (weapon_prepareattack(1, autocvar_g_balance_shotgun_secondary_alt_refire))
+				{
+					W_Shotgun_Attack(WEP_SHOTGUN);
+					self.shotgun_primarytime = time + autocvar_g_balance_shotgun_secondary_alt_refire * W_WeaponRateFactor();
+					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_shotgun_secondary_alt_animtime, shotgun_fire2_03);
+				}
+			}
 		}
 		if (self.clip_load >= 0) // we are not currently reloading
 		if (!self.crouch) // no crouchmelee please
-		if (self.BUTTON_ATCK2 && autocvar_g_balance_shotgun_secondary)
+		if (self.BUTTON_ATCK2 && autocvar_g_balance_shotgun_secondary && !autocvar_g_balance_shotgun_secondary_alt)
 		if (weapon_prepareattack(1, autocvar_g_balance_shotgun_secondary_refire))
 		{
 			// attempt forcing playback of the anim by switching to another anim (that we never play) here...
@@ -242,6 +284,12 @@ float w_shotgun(float req)
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
+		if(autocvar_g_balance_shotgun_secondary_alt)
+		{
+			ammo_amount = self.ammo_shells >= autocvar_g_balance_shotgun_secondary_alt_ammo;
+			ammo_amount += self.(weapon_load[WEP_SHOTGUN]) >= autocvar_g_balance_shotgun_secondary_alt_ammo;
+			return ammo_amount;
+		}
 		// melee attack is always available
 		return TRUE;
 	}
