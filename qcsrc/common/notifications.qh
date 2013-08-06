@@ -478,7 +478,7 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_ROUND_OVER,                  0, 0, "",             CPID_ROUND,          "0 0", _("^BGRound over, there's no winner"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CAMPCHECK,                   0, 0, "",             CPID_CAMPCHECK,      "0 0", _("^F2Don't camp!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_CAPTURESHIELD_FREE,      0, 0, "",             CPID_CTF_CAPSHIELD,  "0 0", _("^BGYou are now free.\n^BGFeel free to ^F2try to capture^BG the flag again\n^BGif you think you will succeed."), "") \
-	MSG_CENTER_NOTIF(1, CENTER_CTF_CAPTURESHIELD_SHIELDED,  0, 0, "",             CPID_CTF_CAPSHIELD,  "0 0", _("^BGYou are now ^F1shielded^BG from the flag\n^BGfor ^F2too many unsuccessful attempts^BG to capture.\n^BGMake some defensive scores before trying again."), "") \
+	MSG_CENTER_NOTIF(1, CENTER_CTF_CAPTURESHIELD_SHIELDED,  0, 0, "",             CPID_CTF_CAPSHIELD,  "0 0", _("^BGYou are now ^F1shielded^BG from the flag(s)\n^BGfor ^F2too many unsuccessful attempts^BG to capture.\n^BGMake some defensive scores before trying again."), "") \
 	MULTITEAM_CENTER(1, CENTER_CTF_CAPTURE_, 4,             0, 0, "",             CPID_CTF_LOWPRIO,    "0 0", _("^BGYou captured the ^TC^TT^BG flag!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_FLAG_THROW_PUNISH,       0, 1, "f1secs",       CPID_CTF_LOWPRIO,    "0 0", _("^BGToo many flag throws! Throwing disabled for %s."), "") \
 	MULTITEAM_CENTER(1, CENTER_CTF_PASS_OTHER_, 4,          2, 0, "s1 s2",        CPID_CTF_PASS,       "0 0", _("^BG%s^BG passed the ^TC^TT^BG flag to %s"), "") \

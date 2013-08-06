@@ -2751,6 +2751,13 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	float redflag, blueflag, yellowflag, pinkflag; // current status
 	float redflag_statuschange_elapsedtime, blueflag_statuschange_elapsedtime, yellowflag_statuschange_elapsedtime, pinkflag_statuschange_elapsedtime; // time since the status changed
 	float stat_items;
+	float teams_count = 0;
+	float fs, fs2;
+	entity tm;
+	
+	for(tm = teams.sort_next; tm; tm = tm.sort_next)
+	if(tm.team != NUM_SPECTATOR)
+		++teams_count;
 
 	stat_items = getstati(STAT_ITEMS, 0, 24);
 	redflag = (stat_items/IT_RED_FLAG_TAKEN) & 3;
@@ -2767,10 +2774,10 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	{
 		redflag = 1;
 		blueflag = 2;
-		if(yellowflag)
-			yellowflag = 3;
-		if(pinkflag)
-			pinkflag = 2;
+		if(teams_count >= 3)
+			yellowflag = 2;
+		if(teams_count >= 4)
+			pinkflag = 3;
 	}
 
 	// when status CHANGES, set old status into prevstatus and current status into status
@@ -2927,6 +2934,17 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 				pink_icon_prevstatus = string_null;
 			break;
 	}
+	
+	if(teams_count >= 3)
+	{
+		fs = 0.75;
+		fs2 = 0.25;
+	}
+	else
+	{
+		fs = 0.5;
+		fs2 = 0.5;
+	}
 
 	if(mySize_x > mySize_y)
 	{
@@ -2936,37 +2954,37 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 			case NUM_TEAM_1:
 			{
 				redflag_pos = pos;
-				blueflag_pos = pos + eX * 0.3 * mySize_x;
-				yellowflag_pos = pos - eX * 0.3 * mySize_x;
-				pinkflag_pos = pos + eX * 0.6 * mySize_x;
+				blueflag_pos = pos + eX * fs2 * mySize_x;
+				yellowflag_pos = pos - eX * fs2 * mySize_x;
+				pinkflag_pos = pos + eX * 0.5 * mySize_x;
 				break;
 			}
 			case NUM_TEAM_2:
 			{
-				redflag_pos = pos + eX * 0.3 * mySize_x;
+				redflag_pos = pos + eX * fs2 * mySize_x;
 				blueflag_pos = pos;
-				yellowflag_pos = pos + eX * 0.6 * mySize_x;
-				pinkflag_pos = pos - eX * 0.3 * mySize_x;
+				yellowflag_pos = pos + eX * 0.5 * mySize_x;
+				pinkflag_pos = pos - eX * fs2 * mySize_x;
 				break;
 			}
 			case NUM_TEAM_3:
 			{
-				redflag_pos = pos + eX * 0.6 * mySize_x;
-				blueflag_pos = pos - eX * 0.3 * mySize_x;
+				redflag_pos = pos + eX * 0.5 * mySize_x;
+				blueflag_pos = pos - eX * fs2 * mySize_x;
 				yellowflag_pos = pos;
-				pinkflag_pos = pos + eX * 0.3 * mySize_x;
+				pinkflag_pos = pos + eX * fs2 * mySize_x;
 				break;
 			}
 			case NUM_TEAM_4:
 			{
-				redflag_pos = pos - eX * 0.3 * mySize_x;
-				blueflag_pos = pos + eX * 0.6 * mySize_x;
-				yellowflag_pos = pos + eX * 0.3 * mySize_x;
+				redflag_pos = pos - eX * fs2 * mySize_x;
+				blueflag_pos = pos + eX * 0.5 * mySize_x;
+				yellowflag_pos = pos + eX * fs2 * mySize_x;
 				pinkflag_pos = pos;
 				break;
 			}
 		}
-		flag_size = eX * 0.3 * mySize_x + eY * mySize_y;
+		flag_size = eX * fs * mySize_x + eY * mySize_y;
 	}
 	else
 	{
@@ -2976,37 +2994,37 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 			case NUM_TEAM_1:
 			{
 				redflag_pos = pos;
-				blueflag_pos = pos + eX * 0.3 * mySize_y;
-				yellowflag_pos = pos - eX * 0.3 * mySize_y;
-				pinkflag_pos = pos + eX * 0.6 * mySize_y;
+				blueflag_pos = pos + eX * fs2 * mySize_y;
+				yellowflag_pos = pos - eX * fs2 * mySize_y;
+				pinkflag_pos = pos + eX * 0.5 * mySize_y;
 				break;
 			}
 			case NUM_TEAM_2:
 			{
-				redflag_pos = pos + eX * 0.3 * mySize_y;
+				redflag_pos = pos + eX * fs2 * mySize_y;
 				blueflag_pos = pos;
-				yellowflag_pos = pos + eX * 0.6 * mySize_y;
-				pinkflag_pos = pos - eX * 0.3 * mySize_y;
+				yellowflag_pos = pos + eX * 0.5 * mySize_y;
+				pinkflag_pos = pos - eX * fs2 * mySize_y;
 				break;
 			}
 			case NUM_TEAM_3:
 			{
-				redflag_pos = pos + eX * 0.6 * mySize_y;
-				blueflag_pos = pos + eX * 0.3 * mySize_y;
+				redflag_pos = pos + eX * 0.5 * mySize_y;
+				blueflag_pos = pos + eX * fs2 * mySize_y;
 				yellowflag_pos = pos;
-				pinkflag_pos = pos - eX * 0.3 * mySize_y;
+				pinkflag_pos = pos - eX * fs2 * mySize_y;
 				break;
 			}
 			case NUM_TEAM_4:
 			{
-				redflag_pos = pos - eX * 0.3 * mySize_y;
-				blueflag_pos = pos + eX * 0.6 * mySize_y;
-				yellowflag_pos = pos + eX * 0.3 * mySize_y;
+				redflag_pos = pos - eX * fs2 * mySize_y;
+				blueflag_pos = pos + eX * 0.5 * mySize_y;
+				yellowflag_pos = pos + eX * fs2 * mySize_y;
 				pinkflag_pos = pos;
 				break;
 			}
 		}
-		flag_size = eY * 0.3 * mySize_y + eX * mySize_x;
+		flag_size = eY * fs * mySize_y + eX * mySize_x;
 	}
 
 	f = bound(0, redflag_statuschange_elapsedtime*2, 1);
