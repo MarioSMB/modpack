@@ -2767,8 +2767,10 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	{
 		redflag = 1;
 		blueflag = 2;
-		yellowflag = 3;
-		pinkflag = 2;
+		if(yellowflag)
+			yellowflag = 3;
+		if(pinkflag)
+			pinkflag = 2;
 	}
 
 	// when status CHANGES, set old status into prevstatus and current status into status

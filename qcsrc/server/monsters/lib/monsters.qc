@@ -610,7 +610,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(self.state != MONSTER_STATE_ATTACK_LEAP && self.state != MONSTER_STATE_ATTACK_MELEE)
 		turny = 20;
 		
-	if(g_td || self.flags & FL_SWIM)
+	if(self.flags & FL_SWIM)
 		turny = vlen(self.angles - self.moveto);
 	
 	if(turny)
@@ -663,8 +663,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 			monsters_setframe(manim_idle);
 	}
 	
-	if(self.enemy)
-		monster_checkattack(self, self.enemy);
+	monster_checkattack(self, self.enemy);
 		
 	self.SendFlags |= MSF_ANG;
 	self.SendFlags |= MSF_MOVE;
@@ -821,10 +820,6 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 	if(time < self.spawnshieldtime)
 		return;
 		
-	if((ignore_turrets && !(attacker.turrcaps_flags & TFL_TURRCAPS_ISTURRET)) || !ignore_turrets)
-	if(monster_isvalidtarget(attacker, self))
-		self.enemy = attacker;
-		
 	if(deathtype != DEATH_KILL)
 		damage *= self.armorvalue;
 		
@@ -887,7 +882,7 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 	self.SendFlags |= MSF_STATUS;
 }
 
-// used to hook into monster post death functions without a mutator
+// post-death functions
 void monster_hook_death()
 {
 	WaypointSprite_Kill(self.sprite);
@@ -925,7 +920,7 @@ void monster_hook_death()
 	totalspawned -= 1;
 }
 
-// used to hook into monster post spawn functions without a mutator
+// post-spawn functions
 void monster_hook_spawn()
 {
 	if not(self.monster_respawned)

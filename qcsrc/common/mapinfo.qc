@@ -313,8 +313,6 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF;
 				else if(v == "team_CTF_blueflag")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF;
-				else if(v == "td_generator" || v == "td_spawnpoint")
-					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_TD;
 				else if(v == "target_assault_roundend")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ASSAULT;
 				else if(v == "onslaught_generator")
@@ -1075,20 +1073,21 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 		}
 		else if(t == "fog")
 		{
-			if not(cvar_value_issafe(t))
+			if not(cvar_value_issafe(s))
 				print("Map ", pFilename, " contains a potentially harmful fog setting, ignored\n");
 			else
 				MapInfo_Map_fog = s;
 		}
 		else if(t == "cdtrack")
 		{
-			if(pGametypeToSet)
+			t = car(s); s = cdr(s);
+			if(pGametypeToSet) // FIXME is this check right here?
 			{
 				if not(cvar_value_issafe(t))
 					print("Map ", pFilename, " contains a potentially harmful cdtrack, ignored\n");
 				else
 					MapInfo_Map_clientstuff = strcat(
-						MapInfo_Map_clientstuff, "cd loop \"", s, "\"\n"
+						MapInfo_Map_clientstuff, "cd loop \"", t, "\"\n"
 					);
 			}
 		}

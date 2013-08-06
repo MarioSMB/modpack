@@ -107,7 +107,7 @@ void walker_rocket_think()
     m_speed = vlen(self.velocity);
 
     // Enemy dead? just keep on the current heading then.
-    if (self.enemy == world || self.enemy.deadflag != DEAD_NO || (g_td && !(self.enemy.flags & FL_MONSTER || self.enemy.classname == "td_generator")) || self.enemy.classname == "td_generator")
+    if (self.enemy == world || self.enemy.deadflag != DEAD_NO || self.enemy.classname == "td_generator")
         self.enemy = world;
 
     if (self.enemy)

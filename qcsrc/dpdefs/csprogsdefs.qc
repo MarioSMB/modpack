@@ -1447,6 +1447,9 @@ float PARTICLES_USEALPHA = 1;
 float particles_alphamin, particles_alphamax;
 float PARTICLES_USECOLOR = 2;
 vector particles_colormin, particles_colormax;
+float PARTICLES_USEFADE = 4;  // fades the COUNT (fade alpha using alphamin/alphamax)
+float particles_fade;
+float PARTICLES_DRAWASTRAIL = 128;
 void(float effectindex, entity own, vector org_from, vector org_to, vector dir_from, vector dir_to, float countmultiplier, float flags) boxparticles = #502;
 float trace_networkentity;
 const float RF_FULLBRIGHT	= 256;

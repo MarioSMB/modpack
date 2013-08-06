@@ -40,8 +40,8 @@ void Projectile_DrawTrail(vector to)
 
 	if (self.traileffect)
 	{
-		particles_alphamin = particles_alphamax = sqrt(self.alpha);
-		boxparticles(self.traileffect, self, from, to, self.velocity, self.velocity, sqrt(self.alpha), PARTICLES_USEALPHA);
+		particles_alphamin = particles_alphamax = particles_fade = sqrt(self.alpha);
+		boxparticles(self.traileffect, self, from, to, self.velocity, self.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);
 	}
 }
 

@@ -39,9 +39,6 @@ REGISTER_GAMETYPE(_("Deathmatch"),dm,g_dm,DEATHMATCH,"timelimit=20 pointlimit=30
 REGISTER_GAMETYPE(_("Last Man Standing"),lms,g_lms,LMS,"timelimit=20 lives=9 leadlimit=0")
 #define g_lms IS_GAMETYPE(LMS)
 
-REGISTER_GAMETYPE(_("Tower Defense"),td,g_td,TD,"timelimit=0 pointlimit=1 leadlimit=0")
-#define g_td IS_GAMETYPE(TD)
-
 REGISTER_GAMETYPE(_("Arena"),arena,g_arena,ARENA,"timelimit=20 pointlimit=10 leadlimit=0")
 #define g_arena IS_GAMETYPE(ARENA)
 

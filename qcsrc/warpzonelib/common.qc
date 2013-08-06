@@ -469,12 +469,13 @@ void WarpZone_TrailParticles_WithMultiplier_trace_callback(vector from, vector e
 	boxparticles(WarpZone_TrailParticles_trace_callback_eff, WarpZone_TrailParticles_trace_callback_own, from, endpos, WarpZone_TrailParticles_trace_callback_own.velocity, WarpZone_TrailParticles_trace_callback_own.velocity, WarpZone_TrailParticles_trace_callback_f, WarpZone_TrailParticles_trace_callback_flags);
 }
 
+float PARTICLES_DRAWASTRAIL = 128;
 void WarpZone_TrailParticles_WithMultiplier(entity own, float eff, vector org, vector end, float f, float boxflags)
 {
 	WarpZone_TrailParticles_trace_callback_own = own;
 	WarpZone_TrailParticles_trace_callback_eff = eff;
 	WarpZone_TrailParticles_trace_callback_f = f;
-	WarpZone_TrailParticles_trace_callback_flags = boxflags;
+	WarpZone_TrailParticles_trace_callback_flags = boxflags | PARTICLES_DRAWASTRAIL;
 	WarpZone_TraceBox_ThroughZone(org, '0 0 0', '0 0 0', end, MOVE_NOMONSTERS, world, world, WarpZone_TrailParticles_WithMultiplier_trace_callback);
 }
 #endif

@@ -1358,4 +1358,4 @@ float autocvar_g_monsters_skill_insane;
 float autocvar_g_monsters_skill_nightmare;
 float autocvar_sv_allow_customplayermodels;
 string autocvar_sv_allow_customplayermodels_idlist;
-float autocvar_g_td_debug;
+

@@ -267,7 +267,6 @@ void cvar_changes_init()
 		BADCVAR("g_freezetag_teams");
 		BADCVAR("g_keepaway");
 		BADCVAR("g_keyhunt");
-		BADCVAR("g_td");
 		BADCVAR("g_keyhunt_teams");
 		BADCVAR("g_lms");
 		BADCVAR("g_nexball");

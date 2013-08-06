@@ -7,11 +7,6 @@ void turret_fusionreactor_fire()
     vector fl_org;
 
     self.enemy.ammo = min(self.enemy.ammo + self.shot_dmg,self.enemy.ammo_max);
-    if(g_td) // auto heal monsters in tower defense
-	{
-        self.enemy.health = min(self.enemy.health + self.shot_dmg,self.enemy.max_health);
-		self.enemy.SendFlags |= MSF_STATUS;
-	}
     fl_org = 0.5 * (self.enemy.absmin + self.enemy.absmax);
     te_smallflash(fl_org);
 }
@@ -47,23 +42,11 @@ float turret_fusionreactor_firecheck()
 	
 	if (vlen(self.enemy.origin - self.origin) > self.target_range)
 		return 0;	
-
-    if(g_td)
-    {
-        if(self.enemy.health >= self.enemy.max_health)
-            return 0;
-			
-		if(IsDifferentTeam(self.enemy, self))
-			return 0;
-			
-		if(self.enemy.flags & FL_MONSTER)
-			return 1; // the following checks are for turrets only
-    }
 	
 	if (self.enemy.ammo >= self.enemy.ammo_max)
 		return 0;
 	
-	if(teamplay && self.team != self.enemy.team)
+	if(teamplay && IsDifferentTeam(self, self.enemy))
 		return 0;
 	
 	if not (self.enemy.ammo_flags & TFL_AMMO_ENERGY)

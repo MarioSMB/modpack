@@ -2,6 +2,7 @@ float music_disabled;
 entity music_default;
 entity music_target;
 entity music_trigger;
+// FIXME also control bgmvolume here, to not require a target_music for the default track.
 
 .float state;
 .float lastvol;

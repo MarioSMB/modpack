@@ -7,7 +7,6 @@ MUTATOR_DECLARATION(gamemode_keepaway);
 MUTATOR_DECLARATION(gamemode_ctf);
 MUTATOR_DECLARATION(gamemode_nexball);
 MUTATOR_DECLARATION(gamemode_onslaught);
-MUTATOR_DECLARATION(gamemode_towerdefense);
 MUTATOR_DECLARATION(gamemode_domination);
 MUTATOR_DECLARATION(gamemode_lms);
 

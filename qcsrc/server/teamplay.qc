@@ -105,14 +105,6 @@ void InitGameplayMode()
 		MUTATOR_ADD(gamemode_ctf);
 		have_team_spawns = -1; // request team spawns
 	}
-    
-	if(g_td)
-	{
-		ActivateTeamplay();
-		leadlimit_override = 0; // not supported by TD
-		timelimit_override = 0;
-		MUTATOR_ADD(gamemode_towerdefense);
-	}
 
 	if(g_lms)
 	{

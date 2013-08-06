@@ -182,23 +182,6 @@ MUTATOR_HOOKFUNCTION(ok_MonsterDrop)
 	SUB_SetFade(self, time + 5, 1);
 	self = oldself;
 	
-	if(g_td)
-	{
-		oldself = self;
-		self = spawn();
-		self.ok_item = TRUE;
-		self.noalign = TRUE;
-		self.pickup_anyway = TRUE;
-		spawn_td_fuel(oldself.ammo_fuel);
-		self.movetype = MOVETYPE_TOSS;
-		self.gravity = 1;
-		setorigin(self, oldself.origin + '0 0 32');
-		self.velocity = randomvec() * 175 + '0 0 325';
-		self.touch = ok_Item_Touch;
-		SUB_SetFade(self, time + 5, 1);
-		self = oldself;
-	}
-	
 	return FALSE;
 }
 

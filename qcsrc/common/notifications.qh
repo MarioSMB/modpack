@@ -400,27 +400,6 @@ void Send_Notification_WOVA(
 	MULTITEAM_INFO(1, INFO_SCORES_, 4,                     0, 0, "", "",                            "",                     _("^TC^TT ^BGteam scores!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_SPECTATE_WARNING,               0, 1, "f1secs", "",                      "",                     _("^F2You have to become a player within the next %s, otherwise you will be kicked, because spectating isn't allowed at this time!\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_SUPERWEAPON_PICKUP,             1, 0, "s1", "s1",                        "strength",             _("^BG%s^K1 picked up a Superweapon\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_AIM_REMOVE,           	   0, 0, "", "",                            "",                     _("^BGYou need to aim at your turret to remove it\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_AIM_REPAIR,           	   0, 0, "", "",                            "",                     _("^BGYou need to aim at your turret to repair it\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_AIM_UPGRADE,           	   0, 0, "", "",                            "",                     _("^BGYou need to aim at your turret to upgrade it\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_CANTSPAWN,           	  	   0, 0, "", "",                            "",                     _("^BGYou can't currently spawn a turret\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_GENDESTROYED,           	   0, 0, "", "",                            "",                     _("^K1A generator was destroyed!\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_INVALID,           	   	   0, 0, "", "",                            "",                     _("^K1Invalid turret. Check '^F2turretspawn list^K1' to see available turrets\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_LIST,           	   		   1, 0, "s1", "",                          "",                     _("^BGAvailable turrets: ^F2%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_MAXHEALTH,           	   	   0, 0, "", "",                            "",                     _("^BGThis turret is already at max health\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_MAXPOWER,           	  	   0, 0, "", "",                            "",                    	_("^BGThis turret is already at max power\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_MAXTURRETS,           	   0, 1, "f1", "",                          "",                    	_("^BGYou can't spawn more than %s turrets\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_NOFUEL,           	   	   0, 0, "", "",                            "",                     _("^BGYou don't have enough fuel to spawn that turret\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_NOFUEL_REPAIR,           	   0, 1, "f1", "",                          "",                    	_("^BGYou need %s fuel to repair this turret\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_NOFUEL_UPGRADE,              0, 1, "f1", "",                          "",                    	_("^BGYou need %s fuel to increase this turret's power\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_PHASE_BUILD,           	   0, 3, "f1 f2 f3", "",                    "",                     _("^BGWave ^F2%s^BG build phase... Next monsters: ^F2%s^BG, wave starts in ^F2%s seconds\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_PHASE_COMBAT,           	   0, 0, "", "",                            "",                     _("^K1Combat phase!\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_REMOVE,           	   	   0, 0, "", "",                            "",                     _("^BGTurret removed\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_REPAIR,           	   	   0, 0, "", "",                            "",                     _("^F1Turret repaired by 100 health points!\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_SPAWN,           	   	   	   0, 0, "", "",                            "",                     _("^BGYou spawned a turret\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_DISABLED,            		   0, 0, "", "",                            "",                    	_("^BGTurrets are disabled on this map\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_UPGRADE,           	   	   0, 0, "", "",                            "",                     _("^F1Turret power increased by 20 percent!\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_TD_VICTORY,           	   	   1, 0, "s1", "",                          "",                     _("^F1%s^F1 victory!\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_BETA,                   2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have ^F2Xonotic %s\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_OLD,                    2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s\n"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_OUTDATED,               2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get the update from ^F3http://www.xonotic.org/^BG!\n"), "") \
@@ -614,29 +593,6 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_BROKEN,          0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Superweapons have broken down"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_LOST,            0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Superweapons have been lost"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SUPERWEAPON_PICKUP,          0, 0, "",              CPID_POWERUP,          "0 0", _("^F2You now have a superweapon"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_AIM_REMOVE,           	0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^BGYou need to aim at your turret to remove it"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_AIM_REPAIR,           	0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^BGYou need to aim at your turret to repair it"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_AIM_UPGRADE,           	0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^BGYou need to aim at your turret to upgrade it"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_ANNOUNCE_SPAWN,           1, 0, "s1",            CPID_TOWERDEFENSE,     "3 0", _("^K1A ^K2%s^K1 has arrived!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_CANTSPAWN,           		0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^BGYou can't currently spawn a turret"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_GENDAMAGED,          		0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^K1The generator is under attack!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_GENDESTROYED,          	0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^K1A generator was destroyed!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_LIST,           			1, 0, "s1",            CPID_TOWERDEFENSE,     "0 0", _("^BGAvilable turrets: ^F2%s"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_MAXHEALTH,           		0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^BGThis turret is already at max health"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_MAXPOWER,           		0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^BGThis turret is already at max power"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_MAXTURRETS,           	0, 1, "f1",            CPID_TOWERDEFENSE,     "0 0", _("^BGYou can't spawn more than %s turrets"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_NOFUEL,           		0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^BGYou don't have enough fuel to spawn that turret"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_NOFUEL_REPAIR,           	0, 1, "f1",            CPID_TOWERDEFENSE,     "0 0", _("^BGYou need %s fuel to repair this turret"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_NOFUEL_UPGRADE,           0, 1, "f1",            CPID_TOWERDEFENSE,     "0 0", _("^BGYou need %s fuel to increase this turret's power"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_PHASE_BUILD,           	0, 3, "f1 f2 f3",      CPID_TOWERDEFENSE,     "5 0", _("^BGWave ^F2%s^BG build phase... Next monsters: ^F2%s\n^BG wave starts in ^F2%s seconds"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_PHASE_COMBAT,          	0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^K1Combat phase\n^K2Protect the generator from monsters!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_PROTECT,                  0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^BGProtect the generator from waves of monsters!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_REMOVE,           		0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^BGTurret removed"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_REPAIR,           		0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^F1Turret repaired by 100 health points!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_SPAWN,           			0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^BGYou spawned a turret"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_DISABLED,         		0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^BGTurrets are disabled on this map"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_UPGRADE,           		0, 0, "",              CPID_TOWERDEFENSE,     "0 0", _("^F1Turret power increased by 20 percent!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TD_VICTORY,           		1, 0, "s1",            CPID_TOWERDEFENSE,     "0 0", _("^F1%s^F1 victory!"), "") \
 	MULTITEAM_CENTER(1, CENTER_TEAMCHANGE_, 4,              0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^K1Changing to ^TC^TT^K1 in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_AUTO,             0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^K1Changing team in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SPECTATE,         0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^K1Spectating in ^COUNT"), "") \
@@ -748,26 +704,6 @@ void Send_Notification_WOVA(
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_UNAVAILABLE,              NO_MSG,        INFO_ITEM_WEAPON_UNAVAILABLE,              CENTER_ITEM_WEAPON_UNAVAILABLE) \
 	MSG_MULTI_NOTIF(1, MULTI_COUNTDOWN_BEGIN,                ANNCE_BEGIN,   NO_MSG,                                    CENTER_COUNTDOWN_BEGIN) \
 	MSG_MULTI_NOTIF(1, MULTI_MINSTA_FINDAMMO,                ANNCE_NUM_10,  NO_MSG,                                    CENTER_MINSTA_FINDAMMO_FIRST) \
-	MSG_MULTI_NOTIF(1, MULTI_TD_AIM_REMOVE,              	 NO_MSG,		INFO_TD_AIM_REMOVE,	             		   CENTER_TD_AIM_REMOVE) \
-	MSG_MULTI_NOTIF(1, MULTI_TD_AIM_REPAIR,              	 NO_MSG,		INFO_TD_AIM_REPAIR,	             		   CENTER_TD_AIM_REPAIR) \
-	MSG_MULTI_NOTIF(1, MULTI_TD_AIM_UPGRADE,              	 NO_MSG,		INFO_TD_AIM_UPGRADE,	             	   CENTER_TD_AIM_UPGRADE) \
-	MSG_MULTI_NOTIF(1, MULTI_TD_CANTSPAWN,              	 NO_MSG,		INFO_TD_CANTSPAWN,	             		   CENTER_TD_CANTSPAWN) \
-	MSG_MULTI_NOTIF(1, MULTI_TD_DISABLED,              		 NO_MSG,		INFO_TD_DISABLED,	             		   CENTER_TD_DISABLED) \
-	MSG_MULTI_NOTIF(1, MULTI_TD_GENDESTROYED,              	 NO_MSG,		INFO_TD_GENDESTROYED,             		   CENTER_TD_GENDESTROYED) \
-	MSG_MULTI_NOTIF(1, MULTI_TD_LIST,              			 NO_MSG,		INFO_TD_LIST,	             		   	   CENTER_TD_LIST) \
-	MSG_MULTI_NOTIF(1, MULTI_TD_MAXHEALTH,              	 NO_MSG,		INFO_TD_MAXHEALTH,	             		   CENTER_TD_MAXHEALTH) \
-	MSG_MULTI_NOTIF(1, MULTI_TD_MAXPOWER,              	 	 NO_MSG,		INFO_TD_MAXPOWER,	             		   CENTER_TD_MAXPOWER) \
-	MSG_MULTI_NOTIF(1, MULTI_TD_MAXTURRETS,              	 NO_MSG,		INFO_TD_MAXTURRETS,	             		   CENTER_TD_MAXTURRETS) \
-	MSG_MULTI_NOTIF(1, MULTI_TD_NOFUEL,               		 NO_MSG,		INFO_TD_NOFUEL,	             	   		   CENTER_TD_NOFUEL) \
-	MSG_MULTI_NOTIF(1, MULTI_TD_NOFUEL_REPAIR,               NO_MSG,		INFO_TD_NOFUEL_REPAIR,	             	   CENTER_TD_NOFUEL_REPAIR) \
-	MSG_MULTI_NOTIF(1, MULTI_TD_NOFUEL_UPGRADE,              NO_MSG,		INFO_TD_NOFUEL_UPGRADE,	             	   CENTER_TD_NOFUEL_UPGRADE) \
-	MSG_MULTI_NOTIF(1, MULTI_TD_PHASE_BUILD,              	 NO_MSG,		INFO_TD_PHASE_BUILD,             		   CENTER_TD_PHASE_BUILD) \
-	MSG_MULTI_NOTIF(1, MULTI_TD_PHASE_COMBAT,              	 NO_MSG,		INFO_TD_PHASE_COMBAT,             		   CENTER_TD_PHASE_COMBAT) \
-	MSG_MULTI_NOTIF(1, MULTI_TD_REMOVE,              	 	 NO_MSG,		INFO_TD_REMOVE,	             		   	   CENTER_TD_REMOVE) \
-	MSG_MULTI_NOTIF(1, MULTI_TD_REPAIR,              	 	 NO_MSG,		INFO_TD_REPAIR,	             		   	   CENTER_TD_REPAIR) \
-	MSG_MULTI_NOTIF(1, MULTI_TD_SPAWN,              	 	 NO_MSG,		INFO_TD_SPAWN,	             		   	   CENTER_TD_SPAWN) \
-	MSG_MULTI_NOTIF(1, MULTI_TD_UPGRADE,              	     NO_MSG,		INFO_TD_UPGRADE,	             		   CENTER_TD_UPGRADE) \
-	MSG_MULTI_NOTIF(1, MULTI_TD_VICTORY,              	 	 NO_MSG,		INFO_TD_VICTORY,             		 	   CENTER_TD_VICTORY) \
 	MSG_MULTI_NOTIF(1, WEAPON_ACCORDEON_MURDER,              NO_MSG,        INFO_WEAPON_ACCORDEON_MURDER,              NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_ACCORDEON_SUICIDE,             NO_MSG,        INFO_WEAPON_ACCORDEON_SUICIDE,             CENTER_DEATH_SELF_GENERIC) \
 	MSG_MULTI_NOTIF(1, WEAPON_CRYLINK_MURDER,                NO_MSG,        INFO_WEAPON_CRYLINK_MURDER,                NO_MSG) \
