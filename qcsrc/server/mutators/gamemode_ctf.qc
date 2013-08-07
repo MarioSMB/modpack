@@ -1810,10 +1810,10 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 	
 	// initially clear items so they can be set as necessary later.
 	self.items &~= (IT_RED_FLAG_CARRYING | IT_RED_FLAG_TAKEN | IT_RED_FLAG_LOST 
-		| IT_BLUE_FLAG_CARRYING | IT_BLUE_FLAG_TAKEN | IT_BLUE_FLAG_LOST
-		| IT_YELLOW_FLAG_CARRYING | IT_YELLOW_FLAG_TAKEN | IT_YELLOW_FLAG_LOST
-		| IT_PINK_FLAG_CARRYING | IT_PINK_FLAG_TAKEN | IT_PINK_FLAG_LOST
-		| IT_CTF_SHIELDED);
+				  | IT_BLUE_FLAG_CARRYING | IT_BLUE_FLAG_TAKEN | IT_BLUE_FLAG_LOST
+				  | IT_YELLOW_FLAG_CARRYING | IT_YELLOW_FLAG_TAKEN | IT_YELLOW_FLAG_LOST
+				  | IT_PINK_FLAG_CARRYING | IT_PINK_FLAG_TAKEN | IT_PINK_FLAG_LOST
+				  | IT_CTF_SHIELDED);
 
 	// scan through all the flags and notify the client about them 
 	for(flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
@@ -1834,7 +1834,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 				if((flag.owner == self) || (flag.pass_sender == self))
 					self.items |= t; // carrying: self is currently carrying the flag
 				else 
-					self.items |= t2; // taken: someone on self's team is carrying the flag
+					self.items |= t2; // taken: someone else is carrying the flag
 				break;
 			}
 			case FLAG_DROPPED:
