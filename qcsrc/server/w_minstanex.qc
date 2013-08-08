@@ -17,6 +17,10 @@ REGISTER_WEAPON(
 .float jump_interval2;
 .float held_down;
 
+.float rm_force;
+.float rm_damage;
+.float rm_edmg;
+
 float RocketMinsta_ColorLaser (entity colorme)
 {
     switch(colorme.team)
@@ -25,7 +29,7 @@ float RocketMinsta_ColorLaser (entity colorme)
         case NUM_TEAM_2: return PROJECTILE_ROCKETMINSTA_LASER_BLUE;
         case NUM_TEAM_3: return PROJECTILE_ROCKETMINSTA_LASER_YELLOW;
         case NUM_TEAM_4: return PROJECTILE_ROCKETMINSTA_LASER_PINK;
-		default: return PROJECTILE_ELECTRO_BEAM;
+		default: 		 return PROJECTILE_ELECTRO_BEAM;
     }
 }
 
@@ -45,14 +49,17 @@ void W_RocketMinsta_Explode (void)
 void W_RocketMinsta_Touch (void)
 {
 	PROJECTILE_TOUCH;
-	W_RocketMinsta_Explode ();
+	W_RocketMinsta_Explode();
 }
 
 void W_RocketMinsta_Attack (void)
 {
 	entity gren;
     
-    float SPEED = 90000000; // its over 9000!
+    float SPEED = 90000000;
+	
+	W_SetupShot_ProjectileSize(self, '0 0 -3', '0 0 -3', FALSE, 0, "", CH_WEAPON_A, autocvar_g_rm_damage / 2, self.weapon);
+	w_shotdir = v_forward; // no TrueAim for grenades please
 
 	gren = spawn ();
 	gren.owner = gren.realowner = self;
@@ -71,12 +78,13 @@ void W_RocketMinsta_Attack (void)
 
 	gren.takedamage = DAMAGE_NO;
 	gren.event_damage = func_null;
+	
+	W_SetupProjectileVelocity(gren, SPEED, 0);
 
 	gren.angles = vectoangles (gren.velocity);
-	gren.velocity = w_shotdir * SPEED;
 	gren.flags = FL_PROJECTILE;
 
-	CSQCProjectile(gren, TRUE, PROJECTILE_ROCKET, TRUE);
+	CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE, TRUE);
 }
 
 void W_MinstaNex_Attack (void)
@@ -170,14 +178,16 @@ void W_RocketMinsta_Laser_Explode (void)
 
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
-	RadiusDamage (self, self.realowner, autocvar_g_rm_laser_damage / autocvar_g_rm_laser_count, autocvar_g_rm_laser_edgedamage, autocvar_g_rm_laser_radius, world, autocvar_g_rm_laser_force / autocvar_g_rm_laser_count, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, self.rm_damage, self.rm_edmg, autocvar_g_rm_laser_radius, world, self.rm_force, self.projectiledeathtype, other);
 	remove(self);
 }
 
 void W_RocketMinsta_Laser_Touch (void)
 {
 	PROJECTILE_TOUCH;
-	W_RocketMinsta_Laser_Explode ();
+	//W_RocketMinsta_Laser_Explode ();
+	RadiusDamage (self, self.realowner, self.rm_damage, self.rm_edmg, autocvar_g_rm_laser_radius, world, self.rm_force, self.projectiledeathtype, other);
+	remove(self);
 }
 
 void W_RocketMinsta_Attack2(void)
@@ -190,7 +200,7 @@ void W_RocketMinsta_Attack2(void)
 	float spread = autocvar_g_rm_laser_spread;
 	float rndspread = autocvar_g_rm_laser_spread_random;
 
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/electro_fire.wav", CH_WEAPON_A, autocvar_g_rm_laser_damage, WEP_ELECTRO);
+	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/crylink_fire.wav", CH_WEAPON_A, autocvar_g_rm_laser_damage, WEP_ELECTRO);
 	
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -207,11 +217,18 @@ void W_RocketMinsta_Attack2(void)
         PROJECTILE_MAKETRIGGER(proj);
         proj.projectiledeathtype = WEP_ELECTRO;
         setorigin(proj, w_shotorg);
+		
+		proj.rm_force = autocvar_g_rm_laser_force / total;
+		proj.rm_damage = autocvar_g_rm_laser_damage / total;
+		proj.rm_edmg = proj.rm_damage;
         
-        W_SetupProjectileVelocity(proj, autocvar_g_rm_laser_speed, spread * (rndspread ? random() : 1) * autocvar_g_rm_laser_speed);
+        //W_SetupProjectileVelocity(proj, autocvar_g_rm_laser_speed, spread * (rndspread ? random() : 1) * autocvar_g_rm_laser_speed);
 
-        proj.movetype = MOVETYPE_FLY;
-        W_SETUPPROJECTILEVELOCITY(proj, g_balance_minstanex_laser);
+        proj.movetype = MOVETYPE_BOUNCEMISSILE;
+        //W_SETUPPROJECTILEVELOCITY(proj, g_balance_minstanex_laser);
+		proj.velocity = (w_shotdir + (((counter + 0.5) / total) * 2 - 1) * v_right * (spread * (rndspread ? random() : 1))) * cvar("g_rm_laser_speed");
+		proj.velocity_z = proj.velocity_z + cvar("g_rm_laser_zspread") * (random() - 0.5);
+		proj.velocity = W_CalculateProjectileVelocity(proj.realowner.velocity, proj.velocity, TRUE);
         proj.angles = vectoangles(proj.velocity);
         proj.touch = W_RocketMinsta_Laser_Touch;
         setsize(proj, '0 0 -3', '0 0 -3');
@@ -230,45 +247,38 @@ void W_RocketMinsta_Attack3 (void)
 	makevectors(self.v_angle);
 
 	entity proj;
-	float counter;
-	float total = 1;
 	float spread = 0;
 	float rndspread = autocvar_g_rm_laser_spread_random;
-	counter = 0;
 
 	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/electro_fire2.wav", CH_WEAPON_A, autocvar_g_rm_laser_damage, WEP_ELECTRO);
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
-
-    while(counter < total)
-	{
-        proj = spawn ();
-        proj.classname = "plasma_prim";
-        proj.owner = proj.realowner = self;
-        proj.bot_dodge = TRUE;
-        proj.bot_dodgerating = autocvar_g_rm_laser_damage;
-        proj.use = W_Plasma_Explode;
-        proj.think = adaptor_think2use_hittype_splash;
-        proj.nextthink = time + autocvar_g_rm_laser_lifetime;
-        PROJECTILE_MAKETRIGGER(proj);
-        proj.projectiledeathtype = WEP_ELECTRO;
-        setorigin(proj, w_shotorg);
+	
+	proj = spawn ();
+	proj.classname = "plasma_prim";
+	proj.owner = proj.realowner = self;
+	proj.bot_dodge = TRUE;
+	proj.bot_dodgerating = autocvar_g_rm_laser_damage;
+	proj.use = W_Plasma_Explode;
+	proj.think = adaptor_think2use_hittype_splash;
+	proj.nextthink = time + autocvar_g_rm_laser_lifetime;
+	PROJECTILE_MAKETRIGGER(proj);
+	proj.projectiledeathtype = WEP_ELECTRO;
+	setorigin(proj, w_shotorg);
         
-        W_SetupProjectileVelocity(proj, autocvar_g_rm_laser_speed, spread * (rndspread ? random() : 1) * autocvar_g_rm_laser_speed);
+	W_SetupProjectileVelocity(proj, autocvar_g_rm_laser_speed, spread * (rndspread ? random() : 1) * autocvar_g_rm_laser_speed);
 
-        proj.movetype = MOVETYPE_FLY;
-        W_SETUPPROJECTILEVELOCITY(proj, g_balance_minstanex_laser);
-        proj.angles = vectoangles(proj.velocity);
-        proj.touch = W_RocketMinsta_Laser_Touch;
-        setsize(proj, '0 0 -3', '0 0 -3');
-        proj.flags = FL_PROJECTILE;
-        proj.missile_flags = MIF_SPLASH;
+	proj.movetype = MOVETYPE_BOUNCEMISSILE;
+	W_SetupProjectileVelocity(proj, autocvar_g_rm_laser_speed, autocvar_g_rm_laser_spread);
+	proj.angles = vectoangles(proj.velocity);
+	proj.touch = W_RocketMinsta_Laser_Touch;
+	setsize(proj, '0 0 -3', '0 0 -3');
+	proj.flags = FL_PROJECTILE;
+	proj.missile_flags = MIF_SPLASH;
+	
+	other = proj; MUTATOR_CALLHOOK(EditProjectile);
 
-        CSQCProjectile(proj, TRUE, RocketMinsta_ColorLaser(self), TRUE);
-
-        other = proj; MUTATOR_CALLHOOK(EditProjectile);
-        counter++;
-    }
+	CSQCProjectile(proj, TRUE, RocketMinsta_ColorLaser(self), TRUE);
 }
 
 void spawnfunc_weapon_minstanex (void); // defined in t_items.qc
@@ -316,17 +326,17 @@ float w_minstanex(float req)
 					self.jump_interval2 = time + autocvar_g_rm_laser_rapid_delay;
 					damage_goodhits = 0;
 					W_RocketMinsta_Attack2();
-                    weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_minstanex_laser_animtime, w_ready);
+                    //weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_minstanex_laser_animtime, w_ready);
 				}
 				else if(rapid && self.jump_interval2 <= time && self.held_down)
 				{
 					self.jump_interval2 = time + autocvar_g_rm_laser_rapid_refire;
 					damage_goodhits = 0;
 					W_RocketMinsta_Attack3();
-                    weapon_thinkf(WFRAME_FIRE2, autocvar_g_rm_laser_rapid_animtime, w_ready);
+                    //weapon_thinkf(WFRAME_FIRE2, autocvar_g_rm_laser_rapid_animtime, w_ready);
 				}
             }
-			else if (self.jump_interval <= time && weapon_prepareattack(1, -1))
+			else if (self.jump_interval <= time)
 			{
 				// handle refire manually, so that primary and secondary can be fired without conflictions (important for minstagib)
 				self.jump_interval = time + autocvar_g_balance_minstanex_laser_refire * W_WeaponRateFactor();
@@ -351,7 +361,7 @@ float w_minstanex(float req)
 		precache_model ("models/weapons/v_minstanex.md3");
 		precache_model ("models/weapons/h_minstanex.iqm");
 		precache_sound ("weapons/minstanexfire.wav");
-		precache_sound ("weapons/electro_fire.wav");
+		precache_sound ("weapons/crylink_fire.wav");
         precache_sound ("weapons/electro_fire2.wav");
 		precache_sound ("weapons/nexwhoosh1.wav");
 		precache_sound ("weapons/nexwhoosh2.wav");

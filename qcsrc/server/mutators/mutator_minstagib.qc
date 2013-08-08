@@ -237,12 +237,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 	if(frag_deathtype == DEATH_NOAMMO)
 		return FALSE;
 		
-	if((autocvar_g_rm || autocvar_g_rm_laser == 2) && DEATH_ISWEAPON(frag_deathtype, WEP_ELECTRO) && frag_target == frag_attacker)
-	{
-		frag_force_z *= autocvar_g_balance_laser_primary_force_zscale;
-		frag_damage = 0;
-	}
-	if(autocvar_g_rm && DEATH_ISWEAPON(frag_deathtype, WEP_ROCKET_LAUNCHER) && frag_target == frag_attacker)
+	if((autocvar_g_rm || autocvar_g_rm_laser == 2) && (DEATH_ISWEAPON(frag_deathtype, WEP_ROCKET_LAUNCHER) || DEATH_ISWEAPON(frag_deathtype, WEP_ELECTRO)) && frag_target == frag_attacker)
 		frag_damage = 0;
 		
 	if(IS_PLAYER(frag_target))
