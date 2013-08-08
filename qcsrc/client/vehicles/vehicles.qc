@@ -69,12 +69,12 @@ float alarm1time;
 float alarm2time;
 float weapon2mode;
 
-void vehicle_alarm(entity e, string s0und)
+void vehicle_alarm(entity e, float ch, string s0und)
 {
 	if not(autocvar_cl_vehicles_alarm)
 		return;
 		
-	sound(e, CH_TRIGGER_SINGLE, s0und, VOL_BASEVOICE, ATTN_NONE);
+	sound(e, ch, s0und, VOL_BASEVOICE, ATTN_NONE);
 }
 
 void AuxiliaryXhair_Draw2D()
@@ -280,7 +280,7 @@ void CSQC_BUMBLE_HUD()
         if(alarm1time < time)
         {
             alarm1time = time + 2;
-			vehicle_alarm(self, "vehicles/alarm.wav");
+			vehicle_alarm(self, CH_PAIN_SINGLE, "vehicles/alarm.wav");
         }
         
         drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
@@ -290,7 +290,7 @@ void CSQC_BUMBLE_HUD()
         drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
         if(alarm1time)
         {
-			vehicle_alarm(self, "misc/null.wav");
+			vehicle_alarm(self, CH_PAIN_SINGLE, "misc/null.wav");
             alarm1time = 0;
         }        
     }
@@ -309,7 +309,7 @@ void CSQC_BUMBLE_HUD()
         if(alarm2time < time)
         {
             alarm2time = time + 1;
-			vehicle_alarm(self, "vehicles/alarm_shield.wav");
+			vehicle_alarm(self, CH_TRIGGER_SINGLE, "vehicles/alarm_shield.wav");
         }
         drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
     }
@@ -318,7 +318,7 @@ void CSQC_BUMBLE_HUD()
         drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
         if(alarm2time)
         {            
-			vehicle_alarm(self, "misc/null.wav");
+			vehicle_alarm(self, CH_TRIGGER_SINGLE, "misc/null.wav");
             alarm2time = 0;
         }
     }
@@ -430,7 +430,7 @@ void CSQC_BUMBLE_GUN_HUD()
         if(alarm1time < time)
         {
             alarm1time = time + 2;
-			vehicle_alarm(self, "vehicles/alarm.wav");
+			vehicle_alarm(self, CH_PAIN_SINGLE, "vehicles/alarm.wav");
         }
         
         drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
@@ -440,7 +440,7 @@ void CSQC_BUMBLE_GUN_HUD()
         drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
         if(alarm1time)
         {
-			vehicle_alarm(self, "misc/null.wav");
+			vehicle_alarm(self, CH_PAIN_SINGLE, "misc/null.wav");
             alarm1time = 0;
         }        
     }
@@ -459,7 +459,7 @@ void CSQC_BUMBLE_GUN_HUD()
         if(alarm2time < time)
         {
             alarm2time = time + 1;
-			vehicle_alarm(self, "vehicles/alarm_shield.wav");
+			vehicle_alarm(self, CH_TRIGGER_SINGLE, "vehicles/alarm_shield.wav");
         }
         drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
     }
@@ -468,7 +468,7 @@ void CSQC_BUMBLE_GUN_HUD()
         drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
         if(alarm2time)
         {            
-			vehicle_alarm(self, "misc/null.wav");
+			vehicle_alarm(self, CH_TRIGGER_SINGLE, "misc/null.wav");
             alarm2time = 0;
         }
     }
@@ -551,7 +551,7 @@ void CSQC_SPIDER_HUD()
         if(alarm1time < time)
         {
             alarm1time = time + 2;
-			vehicle_alarm(self, "vehicles/alarm.wav");
+			vehicle_alarm(self, CH_PAIN_SINGLE, "vehicles/alarm.wav");
         }        
         drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
     }        
@@ -560,7 +560,7 @@ void CSQC_SPIDER_HUD()
         drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
         if(alarm1time)
         {
-			vehicle_alarm(self, "misc/null.wav");
+			vehicle_alarm(self, CH_PAIN_SINGLE, "misc/null.wav");
             alarm1time = 0;
         }        
     }
@@ -578,7 +578,7 @@ void CSQC_SPIDER_HUD()
         if(alarm2time < time)
         {
             alarm2time = time + 1;
-			vehicle_alarm(self, "vehicles/alarm_shield.wav");
+			vehicle_alarm(self, CH_TRIGGER_SINGLE, "vehicles/alarm_shield.wav");
         }
         drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
     }
@@ -587,7 +587,7 @@ void CSQC_SPIDER_HUD()
         drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
         if(alarm2time)
         {            
-			vehicle_alarm(self, "misc/null.wav");
+			vehicle_alarm(self, CH_TRIGGER_SINGLE, "misc/null.wav");
             alarm2time = 0;
         }
     }
@@ -716,7 +716,7 @@ void CSQC_RAPTOR_HUD()
         if(alarm1time < time)
         {
             alarm1time = time + 2;
-			vehicle_alarm(self, "vehicles/alarm.wav");
+			vehicle_alarm(self, CH_PAIN_SINGLE, "vehicles/alarm.wav");
         }
         
         drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
@@ -726,7 +726,7 @@ void CSQC_RAPTOR_HUD()
         drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
         if(alarm1time)
         {
-			vehicle_alarm(self, "misc/null.wav");
+			vehicle_alarm(self, CH_PAIN_SINGLE, "misc/null.wav");
             alarm1time = 0;
         }
     }
@@ -745,7 +745,7 @@ void CSQC_RAPTOR_HUD()
         if(alarm2time < time)
         {
             alarm2time = time + 1;
-			vehicle_alarm(self, "vehicles/alarm_shield.wav");
+			vehicle_alarm(self, CH_TRIGGER_SINGLE, "vehicles/alarm_shield.wav");
         }
         drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
     }
@@ -754,7 +754,7 @@ void CSQC_RAPTOR_HUD()
         drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
         if(alarm2time)
         {            
-			vehicle_alarm(self, "misc/null.wav");
+			vehicle_alarm(self, CH_TRIGGER_SINGLE, "misc/null.wav");
             alarm2time = 0;
         }
     }
@@ -908,7 +908,7 @@ void CSQC_WAKIZASHI_HUD()
         if(alarm1time < time)
         {
             alarm1time = time + 2;
-			vehicle_alarm(self, "vehicles/alarm.wav");
+			vehicle_alarm(self, CH_PAIN_SINGLE, "vehicles/alarm.wav");
         }
         
         drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
@@ -918,7 +918,7 @@ void CSQC_WAKIZASHI_HUD()
         drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
         if(alarm1time)
         {
-			vehicle_alarm(self, "misc/null.wav");
+			vehicle_alarm(self, CH_PAIN_SINGLE, "misc/null.wav");
             alarm1time = 0;
         }        
     }
@@ -938,7 +938,7 @@ void CSQC_WAKIZASHI_HUD()
         if(alarm2time < time)
         {
             alarm2time = time + 1;
-			vehicle_alarm(self, "vehicles/alarm_shield.wav");
+			vehicle_alarm(self, CH_TRIGGER_SINGLE, "vehicles/alarm_shield.wav");
         }
         drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
     }
@@ -947,7 +947,7 @@ void CSQC_WAKIZASHI_HUD()
         drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
         if(alarm2time)
         {            
-			vehicle_alarm(self, "misc/null.wav");
+			vehicle_alarm(self, CH_TRIGGER_SINGLE, "misc/null.wav");
             alarm2time = 0;
         }
     }

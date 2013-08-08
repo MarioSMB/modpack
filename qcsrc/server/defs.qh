@@ -16,7 +16,7 @@ noref float require_spawnfunc_prefix; // if this float exists, only functions wi
 
 // Globals
 
-float g_cloaked, g_grappling_hook, g_minstagib;
+float g_cloaked, g_footsteps, g_grappling_hook, g_minstagib;
 float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
@@ -226,6 +226,9 @@ float alreadychangedlevel;
 //swamp
 .float in_swamp;              // bool
 .entity swampslug;            // Uses this to release from swamp ("untouch" fix)
+
+// footstep interval
+.float nextstep;
 
 float blockSpectators; //if set, new or existing spectators or observers will be removed unless they become a player within g_maxplayers_spectator_blocktime seconds
 .float spectatortime; //point in time since the client is spectating or observing

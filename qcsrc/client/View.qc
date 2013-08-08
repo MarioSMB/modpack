@@ -1004,7 +1004,7 @@ void CSQC_UpdateView(float w, float h)
 			}
 		}
 	}
-	
+
 	float e1 = (autocvar_hud_postprocessing_maxbluralpha != 0);
 	float e2 = (autocvar_hud_powerup != 0);
 	if(autocvar_hud_postprocessing && (e1 || e2)) // TODO: Remove this code and re-do the postprocess handling in the engine, where it properly belongs.

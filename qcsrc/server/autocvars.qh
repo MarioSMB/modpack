@@ -936,6 +936,7 @@ float autocvar_g_nix_with_laser;
 float autocvar_g_nix_with_powerups;
 float autocvar_g_nodepthtestitems;
 float autocvar_g_nodepthtestplayers;
+float autocvar_g_norecoil;
 float autocvar_g_onslaught_cp_buildhealth;
 float autocvar_g_onslaught_cp_buildtime;
 float autocvar_g_onslaught_cp_health;

@@ -704,6 +704,10 @@ void spawnfunc_worldspawn (void)
 			s = strcat(s, ":", autocvar_g_weaponarena, " arena");
 
 		// TODO to mutator system
+		if(autocvar_g_norecoil)
+			s = strcat(s, ":norecoil");
+
+		// TODO to mutator system
 		if(autocvar_g_powerups == 0)
 			s = strcat(s, ":no_powerups");
 		if(autocvar_g_powerups > 0)
@@ -892,7 +896,7 @@ void spawnfunc_worldspawn (void)
 		s = "";
 		n = tokenize_console(cvar_string("sv_curl_serverpackages"));
 		for(i = 0; i < n; ++i)
-			if(substring(argv(i), -14, -1) != "-serverpackage.txt")
+			if(substring(argv(i), -18, -1) != "-serverpackage.txt")
 			if(substring(argv(i), -14, -1) != ".serverpackage") // OLD legacy
 				s = strcat(s, " ", argv(i));
 		fd = search_begin("*-serverpackage.txt", TRUE, FALSE);

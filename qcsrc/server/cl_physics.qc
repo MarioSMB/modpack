@@ -878,6 +878,29 @@ void SV_PlayerPhysics()
 		self.angles_z = 0;
 	}
 
+	if(self.flags & FL_ONGROUND)
+	if(IS_PLAYER(self)) // no fall sounds for observers thank you very much
+	if(self.wasFlying)
+	{
+		self.wasFlying = 0;
+
+		if(self.waterlevel < WATERLEVEL_SWIMMING)
+		if(time >= self.ladder_time)
+		if not(self.hook)
+		{
+			self.nextstep = time + 0.3 + random() * 0.1;
+			trace_dphitq3surfaceflags = 0;
+			tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
+			if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
+			{
+				if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
+					GlobalSound(globalsound_metalfall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+				else
+					GlobalSound(globalsound_fall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+			}
+		}
+	}
+
 	if(IsFlying(self))
 		self.wasFlying = 1;
 

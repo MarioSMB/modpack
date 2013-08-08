@@ -974,15 +974,12 @@ void readlevelcvars(void)
 	CHECK_MUTATOR_ADD("g_midair", mutator_midair, 1);
 	CHECK_MUTATOR_ADD("g_bloodloss", mutator_bloodloss, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_random_gravity", mutator_random_gravity, 1);
-	CHECK_MUTATOR_ADD("g_norecoil", mutator_norecoil, 1);
 	CHECK_MUTATOR_ADD("g_multijump", mutator_multijump, 1);
-	CHECK_MUTATOR_ADD("g_footsteps", mutator_footsteps, 1);
 	CHECK_MUTATOR_ADD("g_melee_only", mutator_melee_only, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_nades", mutator_nades, 1);
 	CHECK_MUTATOR_ADD("g_sandbox", sandbox, 1);
 	CHECK_MUTATOR_ADD("g_riflearena", mutator_riflearena, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_campcheck", mutator_campcheck, 1);
-	CHECK_MUTATOR_ADD("g_hats", mutator_hats, 1);
 	
 	#undef CHECK_MUTATOR_ADD
 	
@@ -1016,6 +1013,7 @@ void readlevelcvars(void)
 	g_cloaked = cvar("g_cloaked");
     if(g_cts)
         g_cloaked = 1; // always enable cloak in CTS
+	g_footsteps = cvar("g_footsteps");
 	g_grappling_hook = cvar("g_grappling_hook");
 	g_jetpack = cvar("g_jetpack");
 	sv_maxidle = cvar("sv_maxidle");
@@ -1403,6 +1401,12 @@ void precache()
 		precache_playermodel("models/player/mario.dpm");
 		precache_playermodel("models/player/abyss.zym");
 	}
+
+    if (g_footsteps)
+    {
+        PrecacheGlobalSound((globalsound_step = "misc/footstep0 6"));
+        PrecacheGlobalSound((globalsound_metalstep = "misc/metalfootstep0 6"));
+    }
 
     // gore and miscellaneous sounds
     //precache_sound ("misc/h2ohit.wav");

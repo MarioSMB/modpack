@@ -2752,7 +2752,8 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 	float redflag_statuschange_elapsedtime, blueflag_statuschange_elapsedtime, yellowflag_statuschange_elapsedtime, pinkflag_statuschange_elapsedtime; // time since the status changed
 	float stat_items;
 	float teams_count = 0;
-	float fs, fs2;
+	float fs, fs2, fs3, size1, size2;
+	vector e1, e2;
 	entity tm;
 	
 	for(tm = teams.sort_next; tm; tm = tm.sort_next)
@@ -2935,97 +2936,66 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 			break;
 	}
 	
-	if(teams_count >= 3)
+	switch(teams_count)
 	{
-		fs = 0.75;
-		fs2 = 0.25;
+		default:
+		case 2: fs = 0.5; fs2 = 0.5; fs3 = 0.5; break;
+		case 3: fs = 1; fs2 = 0.35; fs3 = 0.35; break;
+		case 4: fs = 0.75; fs2 = 0.25; fs3 = 0.5; break;
 	}
-	else
-	{
-		fs = 0.5;
-		fs2 = 0.5;
-	}
-
+	
 	if(mySize_x > mySize_y)
 	{
-		switch(myteam)
-		{
-			default:
-			case NUM_TEAM_1:
-			{
-				redflag_pos = pos;
-				blueflag_pos = pos + eX * fs2 * mySize_x;
-				yellowflag_pos = pos - eX * fs2 * mySize_x;
-				pinkflag_pos = pos + eX * 0.5 * mySize_x;
-				break;
-			}
-			case NUM_TEAM_2:
-			{
-				redflag_pos = pos + eX * fs2 * mySize_x;
-				blueflag_pos = pos;
-				yellowflag_pos = pos + eX * 0.5 * mySize_x;
-				pinkflag_pos = pos - eX * fs2 * mySize_x;
-				break;
-			}
-			case NUM_TEAM_3:
-			{
-				redflag_pos = pos + eX * 0.5 * mySize_x;
-				blueflag_pos = pos - eX * fs2 * mySize_x;
-				yellowflag_pos = pos;
-				pinkflag_pos = pos + eX * fs2 * mySize_x;
-				break;
-			}
-			case NUM_TEAM_4:
-			{
-				redflag_pos = pos - eX * fs2 * mySize_x;
-				blueflag_pos = pos + eX * 0.5 * mySize_x;
-				yellowflag_pos = pos + eX * fs2 * mySize_x;
-				pinkflag_pos = pos;
-				break;
-			}
-		}
-		flag_size = eX * fs * mySize_x + eY * mySize_y;
+		size1 = mySize_x;
+		size2 = mySize_y;
+		e1 = eX;
+		e2 = eY;
 	}
 	else
 	{
-		switch(myteam)
-		{
-			default:
-			case NUM_TEAM_1:
-			{
-				redflag_pos = pos;
-				blueflag_pos = pos + eX * fs2 * mySize_y;
-				yellowflag_pos = pos - eX * fs2 * mySize_y;
-				pinkflag_pos = pos + eX * 0.5 * mySize_y;
-				break;
-			}
-			case NUM_TEAM_2:
-			{
-				redflag_pos = pos + eX * fs2 * mySize_y;
-				blueflag_pos = pos;
-				yellowflag_pos = pos + eX * 0.5 * mySize_y;
-				pinkflag_pos = pos - eX * fs2 * mySize_y;
-				break;
-			}
-			case NUM_TEAM_3:
-			{
-				redflag_pos = pos + eX * 0.5 * mySize_y;
-				blueflag_pos = pos + eX * fs2 * mySize_y;
-				yellowflag_pos = pos;
-				pinkflag_pos = pos - eX * fs2 * mySize_y;
-				break;
-			}
-			case NUM_TEAM_4:
-			{
-				redflag_pos = pos - eX * fs2 * mySize_y;
-				blueflag_pos = pos + eX * 0.5 * mySize_y;
-				yellowflag_pos = pos + eX * fs2 * mySize_y;
-				pinkflag_pos = pos;
-				break;
-			}
-		}
-		flag_size = eY * fs * mySize_y + eX * mySize_x;
+		size1 = mySize_y;
+		size2 = mySize_x;
+		e1 = eY;
+		e2 = eX;
 	}
+	
+	switch(myteam)
+	{
+		default:
+		case NUM_TEAM_1:
+		{
+			redflag_pos = pos;
+			blueflag_pos = pos + eX * fs2 * size1;
+			yellowflag_pos = pos - eX * fs2 * size1;
+			pinkflag_pos = pos + eX * fs3 * size1;
+			break;
+		}
+		case NUM_TEAM_2:
+		{
+			redflag_pos = pos + eX * fs2 * size1;
+			blueflag_pos = pos;
+			yellowflag_pos = pos - eX * fs2 * size1;
+			pinkflag_pos = pos + eX * fs3 * size1;
+			break;
+		}
+		case NUM_TEAM_3:
+		{
+			redflag_pos = pos + eX * fs3 * size1;
+			blueflag_pos = pos - eX * fs2 * size1;
+			yellowflag_pos = pos;
+			pinkflag_pos = pos + eX * fs2 * size1;
+			break;
+		}
+		case NUM_TEAM_4:
+		{
+			redflag_pos = pos - eX * fs2 * size1;
+			blueflag_pos = pos + eX * fs3 * size1;
+			yellowflag_pos = pos + eX * fs2 * size1;
+			pinkflag_pos = pos;
+			break;
+		}
+	}
+	flag_size = e1 * fs * size1 + e2 * size2;
 
 	f = bound(0, redflag_statuschange_elapsedtime*2, 1);
 	if(red_icon_prevstatus && f < 1)

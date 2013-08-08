@@ -27,13 +27,10 @@ MUTATOR_DECLARATION(mutator_pinata);
 MUTATOR_DECLARATION(mutator_midair);
 MUTATOR_DECLARATION(mutator_bloodloss);
 MUTATOR_DECLARATION(mutator_random_gravity);
-MUTATOR_DECLARATION(mutator_norecoil);
 MUTATOR_DECLARATION(mutator_multijump);
-MUTATOR_DECLARATION(mutator_footsteps);
 MUTATOR_DECLARATION(mutator_melee_only);
 MUTATOR_DECLARATION(mutator_nades);
 MUTATOR_DECLARATION(mutator_riflearena);
 MUTATOR_DECLARATION(mutator_campcheck);
-MUTATOR_DECLARATION(mutator_hats);
 
 MUTATOR_DECLARATION(sandbox);

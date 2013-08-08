@@ -1072,18 +1072,18 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 
 	// appearence
 	if(!flag.scale)				{ flag.scale = FLAG_SCALE; }
-	if(flag.model == "") 		{ flag.model = strzone(cvar_string(strcat("g_ctf_flag_", strtolower(Static_Team_ColorName(teamnumber)), "_model"))); }
-	if(flag.toucheffect == "") 	{ flag.toucheffect = strzone(strcat(strtolower(Static_Team_ColorName(teamnumber)), "_touch")); }
-	if(flag.passeffect == "") 	{ flag.passeffect = strzone(strcat(strtolower(Static_Team_ColorName(teamnumber)), "_pass")); }
-	if(flag.capeffect == "") 	{ flag.capeffect = strzone(strcat(strtolower(Static_Team_ColorName(teamnumber)), "_cap")); }
-	if(!flag.skin) 				{ flag.skin = cvar(strcat("g_ctf_flag_", strtolower(Static_Team_ColorName(teamnumber)), "_skin")); }
+	if(flag.model == "") 		{ flag.model = strzone(cvar_string(strcat("g_ctf_flag_", Static_Team_ColorName_Lower(teamnumber), "_model"))); }
+	if(flag.toucheffect == "") 	{ flag.toucheffect = strzone(strcat(Static_Team_ColorName_Lower(teamnumber), "_touch")); }
+	if(flag.passeffect == "") 	{ flag.passeffect = strzone(strcat(Static_Team_ColorName_Lower(teamnumber), "_pass")); }
+	if(flag.capeffect == "") 	{ flag.capeffect = strzone(strcat(Static_Team_ColorName_Lower(teamnumber), "_cap")); }
+	if(!flag.skin) 				{ flag.skin = cvar(strcat("g_ctf_flag_", Static_Team_ColorName_Lower(teamnumber), "_skin")); }
 	
 	// sound 
-	if(flag.snd_flag_taken == "")    { flag.snd_flag_taken  = strzone(strcat("ctf/", strtolower(Static_Team_ColorName(teamnumber)), "_taken.wav")); }
-	if(flag.snd_flag_returned == "") { flag.snd_flag_returned = strzone(strcat("ctf/", strtolower(Static_Team_ColorName(teamnumber)), "_returned.wav")); }
-	if(flag.snd_flag_capture == "")  { flag.snd_flag_capture = strzone(strcat("ctf/", strtolower(Static_Team_ColorName(teamnumber)), "_capture.wav")); } // blue team scores by capturing the red flag
+	if(flag.snd_flag_taken == "")    { flag.snd_flag_taken  = strzone(strcat("ctf/", Static_Team_ColorName_Lower(teamnumber), "_taken.wav")); }
+	if(flag.snd_flag_returned == "") { flag.snd_flag_returned = strzone(strcat("ctf/", Static_Team_ColorName_Lower(teamnumber), "_returned.wav")); }
+	if(flag.snd_flag_capture == "")  { flag.snd_flag_capture = strzone(strcat("ctf/", Static_Team_ColorName_Lower(teamnumber), "_capture.wav")); } // blue team scores by capturing the red flag
 	if(flag.snd_flag_respawn == "")  { flag.snd_flag_respawn = "ctf/flag_respawn.wav"; } // if there is ever a team-based sound for this, update the code to match.
-	if(flag.snd_flag_dropped == "")  { flag.snd_flag_dropped = strzone(strcat("ctf/", strtolower(Static_Team_ColorName(teamnumber)), "_dropped.wav")); }
+	if(flag.snd_flag_dropped == "")  { flag.snd_flag_dropped = strzone(strcat("ctf/", Static_Team_ColorName_Lower(teamnumber), "_dropped.wav")); }
 	if(flag.snd_flag_touch == "")    { flag.snd_flag_touch = "ctf/touch.wav"; } // again has no team-based sound
 	if(flag.snd_flag_pass == "")     { flag.snd_flag_pass = "ctf/pass.wav"; } // same story here
 	
@@ -1120,7 +1120,17 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	
 	flag.effects |= EF_LOWPRECISION;
 	if(autocvar_g_ctf_fullbrightflags) { flag.effects |= EF_FULLBRIGHT; }
-	if(autocvar_g_ctf_dynamiclights)   { flag.effects |= ((teamnumber) ? EF_RED : EF_BLUE); }
+	if(autocvar_g_ctf_dynamiclights)
+	{
+		// flag.effects |= ((teamnumber) ? EF_RED : EF_BLUE);
+		switch(teamnumber)
+		{
+			case NUM_TEAM_1: flag.effects |= EF_RED; break;
+			case NUM_TEAM_2: flag.effects |= EF_BLUE; break;
+			case NUM_TEAM_3: flag.effects |= EF_DIMLIGHT; break;
+			case NUM_TEAM_4: flag.effects |= EF_RED; break;
+		}
+	}
 	
 	// flag placement
 	if((flag.spawnflags & 1) || flag.noalign) // don't drop to floor, just stay at fixed location

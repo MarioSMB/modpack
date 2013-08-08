@@ -233,7 +233,8 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 
 	ent.dphitcontentsmask = oldsolid; // restore solid type (generally SOLID_SLIDEBOX)
 
-	ent.punchangle_x = recoil * -1;
+	if (!autocvar_g_norecoil)
+		ent.punchangle_x = recoil * -1;
 
 	if (snd != "")
 	{

@@ -26,7 +26,7 @@ void LocalCommand_blurtest(float request)
 {
 	// Simple command to work with postprocessing temporarily... possibly completely pointless, the glsl shader is used for a real feature now...
 	// Anyway, to enable it, just compile the client with -DBLURTEST and then you can use the command.
-	
+
 	#ifdef BLURTEST
 	switch(request)
 	{
@@ -55,6 +55,57 @@ void LocalCommand_blurtest(float request)
 		return;
 	}
 	#endif
+}
+
+void LocalCommand_boxparticles(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if (argc == 9)
+			{
+				float effect = particleeffectnum(argv(1));
+				if (effect >= 0)
+				{
+					float index = stof(argv(2));
+					entity own;
+					if(index <= 0)
+						own = entitybyindex(-index);
+					else
+						own = findfloat(world, entnum, index);
+					vector org_from = stov(argv(3));
+					vector org_to = stov(argv(4));
+					vector dir_from = stov(argv(5));
+					vector dir_to = stov(argv(6));
+					float countmultiplier = stof(argv(7));
+					float flags = stof(argv(8));
+					boxparticles(effect, own, org_from, org_to, dir_from, dir_to, countmultiplier, flags);
+					return;
+				}
+			}
+		}
+
+		default:
+			print("Incorrect parameters for ^2boxparticles^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 lv_cmd boxparticles effectname own org_from org_to, dir_from, dir_to, countmultiplier, flags\n");
+			print("  'effectname' is the name of a particle effect in effectinfo.txt\n");
+			print("  'own' is the entity number of the owner (negative for csqc ent, positive for svqc ent)\n");
+			print("  'org_from' is the starting origin of the box\n");
+			print("  'org_to' is the ending origin of the box\n");
+			print("  'dir_from' is the minimum velocity\n");
+			print("  'dir_to' is the maximum velocity\n");
+			print("  'countmultiplier' defines a multiplier for the particle count (affects count only, not countabsolute or trailspacing)\n");
+			print("  'flags' can contain:\n");
+			print("    1 to respect globals particles_alphamin, particles_alphamax (set right before via prvm_globalset client)\n");
+			print("    2 to respect globals particles_colormin, particles_colormax (set right before via prvm_globalset client)\n");
+			print("    4 to respect globals particles_fade (set right before via prvm_globalset client)\n");
+			print("    128 to draw a trail, not a box\n");
+			return;
+		}
+	}
 }
 
 void LocalCommand_create_scrshot_ent(float request)
@@ -351,6 +402,7 @@ void LocalCommand_(float request)
 // Normally do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define CLIENT_COMMANDS(request,arguments) \
 	CLIENT_COMMAND("blurtest", LocalCommand_blurtest(request), "Feature for testing blur postprocessing") \
+	CLIENT_COMMAND("boxparticles", LocalCommand_boxparticles(request, arguments), "Spawn particles manually") \
 	CLIENT_COMMAND("create_scrshot_ent", LocalCommand_create_scrshot_ent(request), "Create an entity at this location for automatic screenshots") \
 	CLIENT_COMMAND("debugmodel", LocalCommand_debugmodel(request, arguments), "Spawn a debug model manually") \
 	CLIENT_COMMAND("handlevote", LocalCommand_handlevote(request, arguments), "System to handle selecting a vote or option") \

@@ -53,8 +53,11 @@ void W_UZI_Attack (float deathtype)
 {
 	W_SetupShot (self, autocvar_g_antilag_bullets && autocvar_g_balance_uzi_speed >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, ((self.misc_bulletcounter == 1) ? autocvar_g_balance_uzi_first_damage : autocvar_g_balance_uzi_sustained_damage), self.weapon);
 	
-	self.punchangle_x = random () - 0.5;
-	self.punchangle_y = random () - 0.5;
+	if (!autocvar_g_norecoil)
+	{
+		self.punchangle_x = random () - 0.5;
+		self.punchangle_y = random () - 0.5;
+	}
 
 	// this attack_finished just enforces a cooldown at the end of a burst
 	ATTACK_FINISHED(self) = time + autocvar_g_balance_uzi_first_refire * W_WeaponRateFactor();
@@ -128,8 +131,11 @@ void uzi_mode1_fire_auto()
 
 	W_SetupShot (self, autocvar_g_antilag_bullets && autocvar_g_balance_uzi_speed >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, autocvar_g_balance_uzi_sustained_damage, self.weapon);
 	
-	self.punchangle_x = random () - 0.5;
-	self.punchangle_y = random () - 0.5;
+	if (!autocvar_g_norecoil)
+	{
+		self.punchangle_x = random () - 0.5;
+		self.punchangle_y = random () - 0.5;
+	}
 
 	uzi_spread = bound(autocvar_g_balance_uzi_spread_min, autocvar_g_balance_uzi_spread_min + (autocvar_g_balance_uzi_spread_add * self.misc_bulletcounter), autocvar_g_balance_uzi_spread_max);
 	fireBallisticBullet(w_shotorg, w_shotdir, uzi_spread, autocvar_g_balance_uzi_speed, 5, autocvar_g_balance_uzi_sustained_damage, autocvar_g_balance_uzi_sustained_force, WEP_UZI, 0, 1, autocvar_g_balance_uzi_bulletconstant);
@@ -153,8 +159,11 @@ void uzi_mode1_fire_burst()
 {
 	W_SetupShot (self, autocvar_g_antilag_bullets && autocvar_g_balance_uzi_speed >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, autocvar_g_balance_uzi_sustained_damage, self.weapon);
 	
-	self.punchangle_x = random () - 0.5;
-	self.punchangle_y = random () - 0.5;
+	if (!autocvar_g_norecoil)
+	{
+		self.punchangle_x = random () - 0.5;
+		self.punchangle_y = random () - 0.5;
+	}
 
 	fireBallisticBullet(w_shotorg, w_shotdir, autocvar_g_balance_uzi_burst_spread, autocvar_g_balance_uzi_speed, 5, autocvar_g_balance_uzi_sustained_damage, autocvar_g_balance_uzi_sustained_force, WEP_UZI, 0, 1, autocvar_g_balance_uzi_bulletconstant);
 	endFireBallisticBullet();
