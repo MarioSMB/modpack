@@ -245,40 +245,50 @@ void W_RocketMinsta_Attack2(void)
 void W_RocketMinsta_Attack3 (void)
 {
 	makevectors(self.v_angle);
-
+	
 	entity proj;
-	float spread = 0;
-	float rndspread = autocvar_g_rm_laser_spread_random;
+	float counter = 0;
+	float total = 1;
 
 	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/electro_fire2.wav", CH_WEAPON_A, autocvar_g_rm_laser_damage, WEP_ELECTRO);
-
+	
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
-	
-	proj = spawn ();
-	proj.classname = "plasma_prim";
-	proj.owner = proj.realowner = self;
-	proj.bot_dodge = TRUE;
-	proj.bot_dodgerating = autocvar_g_rm_laser_damage;
-	proj.use = W_Plasma_Explode;
-	proj.think = adaptor_think2use_hittype_splash;
-	proj.nextthink = time + autocvar_g_rm_laser_lifetime;
-	PROJECTILE_MAKETRIGGER(proj);
-	proj.projectiledeathtype = WEP_ELECTRO;
-	setorigin(proj, w_shotorg);
+
+    while(counter < total)
+	{
+        proj = spawn ();
+        proj.classname = "plasma_prim";
+        proj.owner = proj.realowner = self;
+        proj.bot_dodge = TRUE;
+        proj.bot_dodgerating = autocvar_g_rm_laser_damage;
+        proj.use = W_RocketMinsta_Laser_Explode;
+        proj.think = adaptor_think2use_hittype_splash;
+        proj.nextthink = time + autocvar_g_rm_laser_lifetime;
+        PROJECTILE_MAKETRIGGER(proj);
+        proj.projectiledeathtype = WEP_ELECTRO;
+        setorigin(proj, w_shotorg);
+		
+		proj.rm_force = autocvar_g_rm_laser_force / total;
+		proj.rm_damage = autocvar_g_rm_laser_damage / total;
+		proj.rm_edmg = proj.rm_damage;
         
-	W_SetupProjectileVelocity(proj, autocvar_g_rm_laser_speed, spread * (rndspread ? random() : 1) * autocvar_g_rm_laser_speed);
+        //W_SetupProjectileVelocity(proj, autocvar_g_rm_laser_speed, spread * (rndspread ? random() : 1) * autocvar_g_rm_laser_speed);
 
-	proj.movetype = MOVETYPE_BOUNCEMISSILE;
-	W_SetupProjectileVelocity(proj, autocvar_g_rm_laser_speed, autocvar_g_rm_laser_spread);
-	proj.angles = vectoangles(proj.velocity);
-	proj.touch = W_RocketMinsta_Laser_Touch;
-	setsize(proj, '0 0 -3', '0 0 -3');
-	proj.flags = FL_PROJECTILE;
-	proj.missile_flags = MIF_SPLASH;
-	
-	other = proj; MUTATOR_CALLHOOK(EditProjectile);
+        proj.movetype = MOVETYPE_BOUNCEMISSILE;
+        //W_SETUPPROJECTILEVELOCITY(proj, g_balance_minstanex_laser);
+		proj.velocity = w_shotdir * autocvar_g_rm_laser_speed;
+		proj.velocity = W_CalculateProjectileVelocity(proj.realowner.velocity, proj.velocity, TRUE);
+        proj.angles = vectoangles(proj.velocity);
+        proj.touch = W_RocketMinsta_Laser_Touch;
+        setsize(proj, '0 0 -3', '0 0 -3');
+        proj.flags = FL_PROJECTILE;
+        proj.missile_flags = MIF_SPLASH;
 
-	CSQCProjectile(proj, TRUE, RocketMinsta_ColorLaser(self), TRUE);
+        CSQCProjectile(proj, TRUE, RocketMinsta_ColorLaser(self), TRUE);
+
+        other = proj; MUTATOR_CALLHOOK(EditProjectile);
+        counter++;
+    }
 }
 
 void spawnfunc_weapon_minstanex (void); // defined in t_items.qc
