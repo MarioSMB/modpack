@@ -308,7 +308,7 @@ string HUD_DefaultColumnLayout()
 		"+lms/lives +lms/rank ",
 		"+kh/caps +kh/pushes +kh/destroyed ",
 		"?+race/laps ?+race/time ?+race/fastest ",
-		"+as/objectives +nexball/faults +nexball/goals +ka/pickups +ka/bckills +ka/bctime +freezetag/revivals ",
+		"+as/objectives +nexball/faults +nexball/goals +ka/pickups +ka/bckills +ka/bctime +freezetag/revivals +vip/survivals +vip/vipkills ",
 		"-lms,race,nexball/score");
 }
 

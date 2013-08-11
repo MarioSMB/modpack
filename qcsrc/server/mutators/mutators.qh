@@ -9,6 +9,7 @@ MUTATOR_DECLARATION(gamemode_nexball);
 MUTATOR_DECLARATION(gamemode_onslaught);
 MUTATOR_DECLARATION(gamemode_domination);
 MUTATOR_DECLARATION(gamemode_lms);
+MUTATOR_DECLARATION(gamemode_vip);
 
 MUTATOR_DECLARATION(mutator_dodging);
 MUTATOR_DECLARATION(mutator_invincibleprojectiles);

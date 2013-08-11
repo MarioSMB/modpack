@@ -237,8 +237,8 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 	if(frag_deathtype == DEATH_NOAMMO)
 		return FALSE;
 		
-	if((autocvar_g_rm || autocvar_g_rm_laser == 2) && (DEATH_ISWEAPON(frag_deathtype, WEP_ROCKET_LAUNCHER) || DEATH_ISWEAPON(frag_deathtype, WEP_ELECTRO)) && frag_target == frag_attacker)
-		frag_damage = 0;
+	if((autocvar_g_rm || autocvar_g_rm_laser == 2) && (DEATH_ISWEAPON(frag_deathtype, WEP_ROCKET_LAUNCHER) || DEATH_ISWEAPON(frag_deathtype, WEP_ELECTRO)) && (frag_target == frag_attacker || frag_target.classname == "nade"))
+		frag_damage = 0; // no self/nade damage?
 		
 	if(IS_PLAYER(frag_target))
 	{

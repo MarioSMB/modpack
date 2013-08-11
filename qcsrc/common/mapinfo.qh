@@ -78,6 +78,9 @@ REGISTER_GAMETYPE(_("Freeze Tag"),ft,g_freezetag,FREEZETAG,"timelimit=20 pointli
 REGISTER_GAMETYPE(_("Keepaway"),ka,g_keepaway,KEEPAWAY,"timelimit=20 pointlimit=30")
 #define g_keepaway IS_GAMETYPE(KEEPAWAY)
 
+REGISTER_GAMETYPE(_("VIP"),vip,g_vip,VIP,"timelimit=20 pointlimit=10 leadlimit=0")
+#define g_vip IS_GAMETYPE(VIP)
+
 float MAPINFO_FEATURE_WEAPONS       = 1; // not defined for minstagib-only maps
 float MAPINFO_FEATURE_VEHICLES      = 2;
 float MAPINFO_FEATURE_TURRETS       = 4;

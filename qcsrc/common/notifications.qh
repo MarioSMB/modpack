@@ -456,7 +456,9 @@ void Send_Notification_WOVA(
 	MSG_INFO_NOTIF(1, INFO_WEAPON_TUBA_MURDER,                   3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weapontuba",             _("^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Tuba%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_TUBA_SUICIDE,                  2, 1, "s1 s2loc spree_lost", "s1",                 "weapontuba",             _("^BG%s^K1 hurt their own ears with the @!#%%'n Tuba%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_UZI_MURDER_SNIPE,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponuzi",              _("^BG%s%s^K1 was sniped by ^BG%s^K1's Machine Gun%s%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_WEAPON_UZI_MURDER_SPRAY,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponuzi",              _("^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s\n"), "") 
+	MSG_INFO_NOTIF(1, INFO_WEAPON_UZI_MURDER_SPRAY,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponuzi",              _("^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_VIP_DROP,                             1, 0, "s1", "",                                    "",                       _("^BG%s^F2 is no longer a VIP!\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_VIP_PICKUP,                           1, 0, "s1", "",                                    "",                       _("^BG%s^F2 is now a VIP!\n"), "") 
 
 #define MULTITEAM_CENTER(default,prefix,teams,strnum,flnum,args,cpid,durcnt,normal,gentle) \
 	MSG_CENTER_NOTIF(default, prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_1, strtoupper(NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(NAME_TEAM_1))) \
@@ -599,7 +601,14 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SUICIDE,          0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^K1Suicide in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_BEGINNING,           0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout begins in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_ENDING,              0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout ends in ^COUNT"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_VEHICLE_ENTER,         		0, 0, "",              NO_CPID,     		  "0 0",  _("^BGPress ^F2DROPFLAG^BG [^F2+use^BG] to exit the vehicle"), "")
+	MSG_CENTER_NOTIF(1, CENTER_VEHICLE_ENTER,         		0, 0, "",              NO_CPID,     		  "0 0",  _("^BGPress ^F2DROPFLAG^BG [^F2+use^BG] to exit the vehicle"), "") \
+	MULTITEAM_CENTER(1, CENTER_VIP_BEGIN_, 2,               0, 0, "",              CPID_VIP,              "4 0",  _("^BGYou are the ^TC^TT^BG VIP!\n^F2Survive or your team will lose!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_VIP_MISSING,              	0, 0, "",              CPID_MISSING_TEAMS,    "0 0",  _("^BGWaiting for VIPs...\nPickup your Soul Gem to become a VIP"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_VIP_MISSING_ENEMY,           0, 0, "",              CPID_MISSING_TEAMS,    "0 0",  _("^BGWaiting for an enemy VIP"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_VIP_DROP,              	    1, 0, "s1",            CPID_VIP,          	  "0 0",  _("^BG%s^F2 is no longer a VIP!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_VIP_DROP_SELF,               0, 0, "",              CPID_VIP,          	  "0 0",  _("^F2You are no longer a VIP!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_VIP_PICKUP,              	1, 0, "s1",            CPID_VIP,          	  "0 0",  _("^BG%s^F2 is now a VIP!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_VIP_PICKUP_SELF,             0, 0, "",              CPID_VIP,          	  "0 0",  _("^F2You are now a VIP!"), "") 
 
 #define MSG_MULTI_NOTIFICATIONS \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_CHEAT,                   NO_MSG,        INFO_DEATH_MURDER_CHEAT,                   NO_MSG) \

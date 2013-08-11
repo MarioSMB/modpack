@@ -58,6 +58,8 @@ void W_RocketMinsta_Attack (void)
     
     float SPEED = 90000000;
 	
+	makevectors(self.v_angle); // incase they are changed
+	
 	W_SetupShot_ProjectileSize(self, '0 0 -3', '0 0 -3', FALSE, 0, "", CH_WEAPON_A, autocvar_g_rm_damage / 2, self.weapon);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 

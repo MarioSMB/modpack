@@ -1,0 +1,26 @@
+void vip_SpawnSoulGem(vector, float);
+void vip_SetVIP(entity player, float tm);
+
+float g_vip_soulgems;
+
+.float gem_pickedup;
+.float gem_dropped;
+
+float allowed_to_spawn;
+float red_players, blue_players;
+float prev_total_players, total_players;
+.float isvip;
+.entity wps_vip;
+float redgem_count, bluegem_count;
+
+const float VIP_TEAMS = 17;
+float vip_count[VIP_TEAMS];
+
+// score rule declarations
+#define SP_VIP_VIPKILLS 4
+#define SP_VIP_SURVIVALS 5
+
+#define ST_VIP_SCORE 1
+
+.float stat_vip_red;
+.float stat_vip_blue;

@@ -45,6 +45,7 @@ mutators/gamemode_keyhunt.qh // TODO fix this
 mutators/gamemode_keepaway.qh
 mutators/gamemode_nexball.qh 
 mutators/gamemode_lms.qh
+mutators/gamemode_vip.qh
 mutators/mutator_dodging.qh
 mutators/mutator_overkill.qh
 mutators/mutator_freeze.qh
@@ -249,6 +250,7 @@ mutators/gamemode_keepaway.qc
 mutators/gamemode_nexball.qc
 mutators/gamemode_onslaught.qc
 mutators/gamemode_lms.qc
+mutators/gamemode_vip.qc
 mutators/mutator_invincibleproj.qc
 mutators/mutator_new_toys.qc
 mutators/mutator_nix.qc

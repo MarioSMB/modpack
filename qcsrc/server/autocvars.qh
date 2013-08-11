@@ -1274,6 +1274,10 @@ float autocvar_g_touchexplode_radius;
 float autocvar_g_touchexplode_damage;
 float autocvar_g_touchexplode_edgedamage;
 float autocvar_g_touchexplode_force;
+float autocvar_g_vip_warmup;
+float autocvar_g_vip_round_timelimit;
+float autocvar_g_vip_point_limit;
+float autocvar_g_vip_point_leadlimit;
 #define autocvar_g_bloodloss cvar("g_bloodloss")
 float autocvar_g_random_gravity_negative_chance;
 float autocvar_g_random_gravity_min;

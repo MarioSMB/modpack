@@ -310,9 +310,9 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 				if(v == "dom_controlpoint")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_DOMINATION;
 				else if(v == "item_flag_team2")
-					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF;
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF | MAPINFO_TYPE_VIP;
 				else if(v == "team_CTF_blueflag")
-					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF;
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF | MAPINFO_TYPE_VIP;
 				else if(v == "target_assault_roundend")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ASSAULT;
 				else if(v == "onslaught_generator")
@@ -353,7 +353,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	}
 	diameter = vlen(mapMaxs - mapMins);
 
-	twoBaseModes = MapInfo_Map_supportedGametypes & (MAPINFO_TYPE_CTF | MAPINFO_TYPE_ASSAULT | MAPINFO_TYPE_RACE | MAPINFO_TYPE_NEXBALL);
+	twoBaseModes = MapInfo_Map_supportedGametypes & (MAPINFO_TYPE_CTF | MAPINFO_TYPE_ASSAULT | MAPINFO_TYPE_RACE | MAPINFO_TYPE_NEXBALL | MAPINFO_TYPE_VIP);
 	if(twoBaseModes && (MapInfo_Map_supportedGametypes == twoBaseModes))
 	{
 		// we have a CTF-only or Assault-only map. Don't add other modes then,
@@ -369,6 +369,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_TEAM_DEATHMATCH;
 			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_FREEZETAG;
 			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CA;
+			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_VIP;
 		}
 		if(                     diameter < 4096)
 			MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ARENA;
@@ -493,6 +494,14 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 	}
 
 	if(pWantedType == MAPINFO_TYPE_CTF)
+	{
+		sa = car(s);
+		if(sa != "")
+			cvar_set("fraglimit", sa);
+		s = cdr(s);
+	}
+	
+	if(pWantedType == MAPINFO_TYPE_VIP)
 	{
 		sa = car(s);
 		if(sa != "")

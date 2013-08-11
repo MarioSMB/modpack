@@ -2730,6 +2730,108 @@ void HUD_Mod_CA(vector myPos, vector mySize)
 	}
 }
 
+// VIP mod icons
+float redvip_prevframe, bluevip_prevframe; // status during previous frame
+float redvip_prevstatus, bluevip_prevstatus; // last remembered status
+float redvip_statuschange_time, bluevip_statuschange_time; // time when the status changed
+void HUD_Mod_VIP_Reset(void)
+{
+	redvip_prevstatus = bluevip_prevstatus = redvip_prevframe = bluevip_prevframe = redvip_statuschange_time = bluevip_statuschange_time = 0;
+}
+void HUD_Mod_VIP(vector pos, vector mySize)
+{
+	vector redvip_pos, bluevip_pos;
+	vector vip_size;
+	float f; // every function should have that
+
+	float redvip, bluevip; // current status
+	float redvip_statuschange_elapsedtime, bluevip_statuschange_elapsedtime; // time since the status changed
+	
+	redvip = (getstatf(STAT_VIP_RED) != 0);
+	bluevip = (getstatf(STAT_VIP_BLUE) != 0);
+	
+	if(redvip || bluevip)
+		mod_active = 1;
+	else
+		mod_active = 0;
+		
+	if(autocvar__hud_configure)
+	{
+		redvip = 1;
+		bluevip = 2;
+	}
+	// when status CHANGES, set old status into prevstatus and current status into status
+	if (redvip != redvip_prevframe)
+	{
+		redvip_statuschange_time = time;
+		redvip_prevstatus = redvip_prevframe;
+		redvip_prevframe = redvip;
+	}
+
+	if (bluevip != bluevip_prevframe)
+	{
+		bluevip_statuschange_time = time;
+		bluevip_prevstatus = bluevip_prevframe;
+		bluevip_prevframe = bluevip;
+	}
+
+	redvip_statuschange_elapsedtime = time - redvip_statuschange_time;
+	bluevip_statuschange_elapsedtime = time - bluevip_statuschange_time;
+	
+	if(mySize_x > mySize_y) {
+		if (myteam == NUM_TEAM_1) { // always draw own vip on left
+			redvip_pos = pos;
+			bluevip_pos = pos + eX * 0.5 * mySize_x;
+		} else {
+			bluevip_pos = pos;
+			redvip_pos = pos + eX * 0.5 * mySize_x;
+		}
+		vip_size = eX * 0.5 * mySize_x + eY * mySize_y;
+	} else {
+		if (myteam == NUM_TEAM_1) { // always draw own vip on left
+			redvip_pos = pos;
+			bluevip_pos = pos + eY * 0.5 * mySize_y;
+		} else {
+			bluevip_pos = pos;
+			redvip_pos = pos + eY * 0.5 * mySize_y;
+		}
+		vip_size = eY * 0.5 * mySize_y + eX * mySize_x;
+	}
+	
+	string red_icon, red_icon_prevstatus;
+	string blue_icon, blue_icon_prevstatus;
+	
+	if(redvip)
+		red_icon = "player_red";
+	else
+		red_icon = "";
+	if(bluevip)
+		blue_icon = "player_blue";
+	else
+		blue_icon = "";
+	
+	if(redvip_prevframe)
+		red_icon_prevstatus = "player_red";
+	else
+		red_icon_prevstatus = "";
+	if(bluevip_prevframe)
+		blue_icon_prevstatus = "player_blue";
+	else
+		blue_icon_prevstatus = "";
+
+	f = bound(0, redvip_statuschange_elapsedtime*2, 1);
+	if(red_icon_prevstatus && f < 1)
+		drawpic_aspect_skin_expanding(redvip_pos, red_icon_prevstatus, vip_size, '1 1 1', panel_fg_alpha * 1, DRAWFLAG_NORMAL, f);
+	if(red_icon)
+		drawpic_aspect_skin(redvip_pos, red_icon, vip_size, '1 1 1', panel_fg_alpha * 1 * f, DRAWFLAG_NORMAL);
+
+	f = bound(0, bluevip_statuschange_elapsedtime*2, 1);
+	if(blue_icon_prevstatus && f < 1)
+		drawpic_aspect_skin_expanding(bluevip_pos, blue_icon_prevstatus, vip_size, '1 1 1', panel_fg_alpha * 1, DRAWFLAG_NORMAL, f);
+	if(blue_icon)
+		drawpic_aspect_skin(bluevip_pos, blue_icon, vip_size, '1 1 1', panel_fg_alpha * 1 * f, DRAWFLAG_NORMAL);
+}
+
 // CTF HUD modicon section
 float redflag_prevframe, blueflag_prevframe, yellowflag_prevframe, pinkflag_prevframe; // status during previous frame
 float redflag_prevstatus, blueflag_prevstatus, yellowflag_prevstatus, pinkflag_prevstatus; // last remembered status
@@ -3507,7 +3609,7 @@ void HUD_ModIcons(void)
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_modicons) return;
-		if (gametype != MAPINFO_TYPE_CTF && gametype != MAPINFO_TYPE_KEYHUNT && gametype != MAPINFO_TYPE_NEXBALL && gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && gametype != MAPINFO_TYPE_CA && gametype != MAPINFO_TYPE_FREEZETAG && gametype != MAPINFO_TYPE_KEEPAWAY && gametype != MAPINFO_TYPE_DOMINATION) return;
+		if (gametype != MAPINFO_TYPE_CTF && gametype != MAPINFO_TYPE_KEYHUNT && gametype != MAPINFO_TYPE_NEXBALL && gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && gametype != MAPINFO_TYPE_CA && gametype != MAPINFO_TYPE_FREEZETAG && gametype != MAPINFO_TYPE_KEEPAWAY && gametype != MAPINFO_TYPE_DOMINATION && gametype != MAPINFO_TYPE_VIP) return;
 	}
 
 	HUD_Panel_UpdateCvars();
@@ -3553,6 +3655,8 @@ void HUD_ModIcons(void)
 		HUD_Mod_Dom(pos, mySize);
 	else if(gametype == MAPINFO_TYPE_KEEPAWAY)
 		HUD_Mod_Keepaway(pos, mySize);
+	else if(gametype == MAPINFO_TYPE_VIP)
+		HUD_Mod_VIP(pos, mySize);
 
 	draw_endBoldFont();
 }
@@ -4645,6 +4749,8 @@ void HUD_Reset (void)
 		HUD_Mod_KH_Reset();
 	else if(gametype == MAPINFO_TYPE_CTF)
 		HUD_Mod_CTF_Reset();
+	else if(gametype == MAPINFO_TYPE_VIP)
+		HUD_Mod_VIP_Reset();
 }
 
 void HUD_Main (void)
