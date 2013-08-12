@@ -66,6 +66,7 @@ void turret_stdproc_respawn()
     self.tur_head.avelocity     = self.avelocity;
     self.tur_head.angles        = self.idle_aim;
     self.health                 = self.tur_health;
+	self.max_health				= self.tur_health;
 
     self.enemy                  = world;
     self.volly_counter          = self.shot_volly;

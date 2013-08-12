@@ -2214,6 +2214,7 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_team1()
 {
+	if(g_vip && g_vip_soulgems) { vip_SpawnSoulGem(self.origin, NUM_TEAM_1); remove(self); return; }
 	if(!g_ctf) { remove(self); return; }
 
 	ctf_FlagSetup(1, self); // 1 = red
@@ -2232,6 +2233,7 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_team2()
 {
+	if(g_vip && g_vip_soulgems) { vip_SpawnSoulGem(self.origin, NUM_TEAM_2); remove(self); return; }
 	if(!g_ctf) { remove(self); return; }
 
 	ctf_FlagSetup(0, self); // the 0 is misleading, but -- 0 = blue.

@@ -1,0 +1,7 @@
+float numspawned;
+float maxspawned;
+float roundcnt;
+float maxrounds;
+float numkilled;
+float last_check;
+float maxcurrent;

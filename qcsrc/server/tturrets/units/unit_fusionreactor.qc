@@ -38,13 +38,13 @@ float turret_fusionreactor_firecheck()
 		return 0;
 
 	if (self.ammo < self.shot_dmg)
-		return 0;
-
-	if (self.enemy.ammo >= self.enemy.ammo_max)
-		return 0;
+		return 0;	
 	
 	if (vlen(self.enemy.origin - self.origin) > self.target_range)
-		return 0;				
+		return 0;	
+	
+	if (self.enemy.ammo >= self.enemy.ammo_max)
+		return 0;
 	
 	if(teamplay && IsDifferentTeam(self, self.enemy))
 		return 0;

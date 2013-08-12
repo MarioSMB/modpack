@@ -207,6 +207,15 @@ void InitGameplayMode()
 		MUTATOR_ADD(gamemode_vip);
 	}
 
+	if(g_invasion)
+	{
+		timelimit_override = 0; // no timelimit in invasion, round based
+		fraglimit_override = autocvar_g_invasion_round_limit;
+		maxrounds = fraglimit_override;
+		fraglimit_override = 0; // also no frag limit
+		MUTATOR_ADD(gamemode_invasion);
+	}
+
 	if(teamplay)
 		entcs_init();
 
