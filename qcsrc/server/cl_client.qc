@@ -1662,6 +1662,18 @@ void player_regen (void)
 
 	if(g_ca)
 		rot_mod = 0;
+	if(g_vip)
+	{
+		// VIP regens to 200
+		if(self.isvip)
+		{
+			maxh = 200;
+			maxa = 200;
+			minh = 200;
+			mina = 200;
+			regen_mod = 0.5; // half regen speed
+		}
+	}
 
 	if (!g_minstagib && !g_ca && (!g_lms || autocvar_g_lms_regenerate))
 	{
