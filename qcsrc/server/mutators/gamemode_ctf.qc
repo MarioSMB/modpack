@@ -625,7 +625,7 @@ void ctf_CheckFlagReturn(entity flag, float returntype)
 void ctf_CheckStalemate(void)
 {
 	// declarations
-	float stale_red_flags = 0, stale_blue_flags = 0, stale_yellow_flags = 0, stale_pink_flags = 0;
+	float stale_flags = 0, stale_red_flags = 0, stale_blue_flags = 0, stale_yellow_flags = 0, stale_pink_flags = 0;
 	entity tmp_entity;
 
 	entity ctf_staleflaglist = world; // reset the list, we need to build the list each time this function runs
@@ -640,49 +640,21 @@ void ctf_CheckStalemate(void)
 			tmp_entity.ctf_staleflagnext = ctf_staleflaglist; // link flag into staleflaglist
 			ctf_staleflaglist = tmp_entity;
 			
-			switch(tmp_entity.team)
-			{
-				case NUM_TEAM_1: ++stale_red_flags; break;
-				case NUM_TEAM_2: ++stale_blue_flags; break;
-				case NUM_TEAM_3: ++stale_yellow_flags; break;
-				case NUM_TEAM_4: ++stale_pink_flags; break;
-			}
+			if(tmp_entity.team == NUM_TEAM_1) { ++stale_red_flags; }
+			if(tmp_entity.team == NUM_TEAM_2) { ++stale_blue_flags; }
+			if(tmp_entity.team == NUM_TEAM_3) { ++stale_yellow_flags; }
+			if(tmp_entity.team == NUM_TEAM_4) { ++stale_pink_flags; }
 		}
 	}
 	
-	switch(ctf_teams)
-	{
-		case 2:
-		{
-			if(stale_red_flags && stale_blue_flags)
-				ctf_stalemate = TRUE;
-			else if((!stale_red_flags && !stale_blue_flags) && autocvar_g_ctf_stalemate_endcondition == 2)
-				{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; }
-			else if((!stale_red_flags || !stale_blue_flags) && autocvar_g_ctf_stalemate_endcondition == 1)
-				{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; }
-			break;
-		}
-		case 3:
-		{
-			if(stale_red_flags && stale_blue_flags && stale_yellow_flags)
-				ctf_stalemate = TRUE;
-			else if((!stale_red_flags && !stale_blue_flags && !stale_yellow_flags) && autocvar_g_ctf_stalemate_endcondition == 2)
-				{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; }
-			else if((!stale_red_flags || !stale_blue_flags || !stale_yellow_flags) && autocvar_g_ctf_stalemate_endcondition == 1)
-				{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; }
-			break;
-		}
-		case 4:
-		{
-			if(stale_red_flags && stale_blue_flags && stale_yellow_flags && stale_pink_flags)
-				ctf_stalemate = TRUE;
-			else if((!stale_red_flags && !stale_blue_flags && !stale_yellow_flags && !stale_pink_flags) && autocvar_g_ctf_stalemate_endcondition == 2)
-				{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; }
-			else if((!stale_red_flags || !stale_blue_flags || !stale_yellow_flags || !stale_pink_flags) && autocvar_g_ctf_stalemate_endcondition == 1)
-				{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; }
-			break;
-		}
-	}
+	stale_flags = (stale_red_flags > 0) + (stale_blue_flags > 0) + (stale_yellow_flags > 0) + (stale_pink_flags > 0);
+	
+	if(stale_flags >= ctf_teams)
+		ctf_stalemate = TRUE;
+	else if(stale_flags < ctf_teams && autocvar_g_ctf_stalemate_endcondition == 2)
+		{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; }
+	else if(stale_flags > 0 && autocvar_g_ctf_stalemate_endcondition == 1)
+		{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; }
 		
 	// if sufficient stalemate, then set up the waypointsprite and announce the stalemate if necessary
 	if(ctf_stalemate)
@@ -833,6 +805,7 @@ void ctf_FlagThink()
 			
 			if((self.pass_target == world)
 				|| (self.pass_target.deadflag != DEAD_NO)
+				|| (self.pass_target.flagcarried)
 				|| (vlen(self.origin - targ_origin) > autocvar_g_ctf_pass_radius)
 				|| ((trace_fraction < 1) && (trace_ent != self.pass_target))
 				|| (time > self.ctf_droptime + autocvar_g_ctf_pass_timelimit))
@@ -1441,7 +1414,7 @@ void havocbot_role_ctf_carrier()
 		{
 			// Can't navigate to my own base, suicide!
 			// TODO: drop it and wander around
-			Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
+			//Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
 			return;
 		}
 	}
