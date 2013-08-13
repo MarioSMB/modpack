@@ -132,6 +132,12 @@ float ctf_CheckPassDirection(vector head_center, vector passer_center, vector pa
 	else { return TRUE; }
 }
 
+float ctf_IsDifferentTeam(entity a, entity b)
+{
+	float f = IsDifferentTeam(a, b);
+	return (autocvar_g_ctf_reverse) ? !f : f;
+}
+
 
 // =======================
 // CaptureShield Functions 
@@ -195,7 +201,7 @@ void ctf_CaptureShield_Update(entity player, float wanted_status)
 float ctf_CaptureShield_Customize()
 {
 	if(!other.ctf_captureshielded) { return FALSE; }
-	if(!IsDifferentTeam(self, other)) { return FALSE; }
+	if(!ctf_IsDifferentTeam(self, other)) { return FALSE; }
 	
 	return TRUE;
 }
@@ -203,7 +209,7 @@ float ctf_CaptureShield_Customize()
 void ctf_CaptureShield_Touch()
 {
 	if(!other.ctf_captureshielded) { return; }
-	if(!IsDifferentTeam(self, other)) { return; }
+	if(!ctf_IsDifferentTeam(self, other)) { return; }
 	
 	vector mymid = (self.absmin + self.absmax) * 0.5;
 	vector othermid = (other.absmin + other.absmax) * 0.5;
@@ -421,7 +427,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	
 	if not(player) { return; } // without someone to give the reward to, we can't possibly cap
 	if(player.fc_waskilled) { return; } // player died, so don't cap
-	if(IsDifferentTeam(player, flag)) { return; }
+	if(ctf_IsDifferentTeam(player, flag)) { return; }
 	
 	player.throw_prevtime = time;
 	player.throw_count = 0;
@@ -429,7 +435,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	// messages and sounds
 	Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_4(enemy_flag, CENTER_CTF_CAPTURE_));
 	ctf_CaptureRecord(enemy_flag, player);
-	sound(player, CH_TRIGGER, flag.snd_flag_capture, VOL_BASE, ATTN_NONE);
+	sound(player, CH_TRIGGER, ((IsDifferentTeam(player, flag)) ? enemy_flag.snd_flag_capture : flag.snd_flag_capture), VOL_BASE, ATTN_NONE);
 	
 	switch(capturetype)
 	{
@@ -541,7 +547,7 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 			else
 				Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_4(flag, CENTER_CTF_PICKUP_TEAM_), Team_ColorCode(player.team));
 		}
-		else if(IsDifferentTeam(tmp_player, player) && !IsDifferentTeam(flag, tmp_player))
+		else if(IsDifferentTeam(tmp_player, player) && !ctf_IsDifferentTeam(flag, tmp_player))
 		{
 			if(tmp_player.PICKUP_ENEMY_VERBOSE)
 				Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, CENTER_CTF_PICKUP_ENEMY_VERBOSE, Team_ColorCode(player.team), player.netname);
@@ -874,16 +880,16 @@ void ctf_FlagTouch()
 	{	
 		case FLAG_BASE:
 		{
-			if(!IsDifferentTeam(toucher, self) && (toucher.flagcarried) && IsDifferentTeam(toucher.flagcarried, self) && !(toucher.flags & FL_MONSTER))
+			if(!ctf_IsDifferentTeam(toucher, self) && (toucher.flagcarried) && IsDifferentTeam(toucher.flagcarried, self) && !(toucher.flags & FL_MONSTER))
 				ctf_Handle_Capture(self, toucher, CAPTURE_NORMAL); // toucher just captured the enemies flag to his base
-			else if(IsDifferentTeam(toucher, self) && (!toucher.flagcarried) && (!toucher.ctf_captureshielded) && (time > toucher.next_take_time) && !(toucher.flags & FL_MONSTER))
+			else if(ctf_IsDifferentTeam(toucher, self) && (!toucher.flagcarried) && (!toucher.ctf_captureshielded) && (time > toucher.next_take_time) && !(toucher.flags & FL_MONSTER))
 				ctf_Handle_Pickup(self, toucher, PICKUP_BASE); // toucher just stole the enemies flag
 			break;
 		}
 		
 		case FLAG_DROPPED:
 		{
-			if(!IsDifferentTeam(toucher, self))
+			if(!ctf_IsDifferentTeam(toucher, self))
 				ctf_Handle_Return(self, toucher); // toucher just returned his own flag
 			else if(!(toucher.flags & FL_MONSTER) && (!toucher.flagcarried) && ((toucher != self.ctf_dropper) || (time > self.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
 				ctf_Handle_Pickup(self, toucher, PICKUP_DROPPED); // toucher just picked up a dropped enemy flag
@@ -995,24 +1001,7 @@ void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf
 void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc 
 {
 	// declarations
-	//teamnumber = fabs(teamnumber - bound(0, autocvar_g_ctf_reverse, 1)); // if we were originally 1, this will become 0. If we were originally 0, this will become 1. 
 	self = flag; // for later usage with droptofloor()
-	
-	switch(teamnumber)
-	{
-		case 0: // blue
-			teamnumber = ((autocvar_g_ctf_reverse) ? NUM_TEAM_1 : NUM_TEAM_2);
-			break;
-		case 1: // red
-			teamnumber = ((autocvar_g_ctf_reverse) ? NUM_TEAM_2 : NUM_TEAM_1);
-			break;
-		case 2: // yellow
-			teamnumber = ((autocvar_g_ctf_reverse) ? NUM_TEAM_4 : NUM_TEAM_3);
-			break;
-		case 3: // pink
-			teamnumber = ((autocvar_g_ctf_reverse) ? NUM_TEAM_3 : NUM_TEAM_4);
-			break;
-	}
 	
 	// main setup
 	flag.ctf_worldflagnext = ctf_worldflaglist; // link flag into ctf_worldflaglist
@@ -1020,7 +1009,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 
 	setattachment(flag, world, "");
 
-	flag.netname = strcat(strtoupper(Static_Team_ColorName(teamnumber)), "^7 flag");
+	flag.netname = strcat(Static_Team_ColorName_Upper(teamnumber), "^7 flag");
 	flag.team = teamnumber;
 	flag.classname = "item_flag_team";
 	flag.target = "###item###"; // wut?
@@ -1044,12 +1033,12 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	flag.ctf_status = FLAG_BASE;
 
 	// appearence
-	if(!flag.scale)				{ flag.scale = FLAG_SCALE; }
-	if(flag.model == "") 		{ flag.model = strzone(cvar_string(strcat("g_ctf_flag_", Static_Team_ColorName_Lower(teamnumber), "_model"))); }
-	if(flag.toucheffect == "") 	{ flag.toucheffect = strzone(strcat(Static_Team_ColorName_Lower(teamnumber), "_touch")); }
-	if(flag.passeffect == "") 	{ flag.passeffect = strzone(strcat(Static_Team_ColorName_Lower(teamnumber), "_pass")); }
-	if(flag.capeffect == "") 	{ flag.capeffect = strzone(strcat(Static_Team_ColorName_Lower(teamnumber), "_cap")); }
-	if(!flag.skin) 				{ flag.skin = cvar(strcat("g_ctf_flag_", Static_Team_ColorName_Lower(teamnumber), "_skin")); }
+	if(flag.model == "")       { flag.model = strzone(cvar_string(strcat("g_ctf_flag_", Static_Team_ColorName_Lower(teamnumber), "_model"))); }
+	if(!flag.scale)            { flag.scale = FLAG_SCALE; }
+	if(!flag.skin)             { flag.skin = cvar(strcat("g_ctf_flag_", Static_Team_ColorName_Lower(teamnumber), "_skin")); }
+	if(flag.toucheffect == "") { flag.toucheffect = strzone(strcat(Static_Team_ColorName_Lower(teamnumber), "_touch")); }
+	if(flag.passeffect == "")  { flag.passeffect = strzone(strcat(Static_Team_ColorName_Lower(teamnumber), "_pass")); }
+	if(flag.capeffect == "")   { flag.capeffect = strzone(strcat(Static_Team_ColorName_Lower(teamnumber), "_cap")); }
 	
 	// sound 
 	if(flag.snd_flag_taken == "")    { flag.snd_flag_taken  = strzone(strcat("ctf/", Static_Team_ColorName_Lower(teamnumber), "_taken.wav")); }
@@ -1157,7 +1146,7 @@ entity havocbot_ctf_find_flag(entity bot)
 	f = ctf_worldflaglist;
 	while (f)
 	{
-		if (bot.team == f.team)
+		if (!ctf_IsDifferentTeam(bot, f))
 			return f;
 		f = f.ctf_worldflagnext;
 	}
@@ -1170,7 +1159,7 @@ entity havocbot_ctf_find_enemy_flag(entity bot)
 	f = ctf_worldflaglist;
 	while (f)
 	{
-		if (bot.team != f.team)
+		if (ctf_IsDifferentTeam(bot, f))
 			return f;
 		f = f.ctf_worldflagnext;
 	}
@@ -1203,7 +1192,7 @@ void havocbot_goalrating_ctf_ourflag(float ratingscale)
 	head = ctf_worldflaglist;
 	while (head)
 	{
-		if (self.team == head.team)
+		if (!ctf_IsDifferentTeam(self, head))
 			break;
 		head = head.ctf_worldflagnext;
 	}
@@ -1217,7 +1206,7 @@ void havocbot_goalrating_ctf_ourbase(float ratingscale)
 	head = ctf_worldflaglist;
 	while (head)
 	{
-		if (self.team == head.team)
+		if (!ctf_IsDifferentTeam(self, head))
 			break;
 		head = head.ctf_worldflagnext;
 	}
@@ -1233,7 +1222,7 @@ void havocbot_goalrating_ctf_enemyflag(float ratingscale)
 	head = ctf_worldflaglist;
 	while (head)
 	{
-		if (self.team != head.team)
+		if (ctf_IsDifferentTeam(self, head))
 			break;
 		head = head.ctf_worldflagnext;
 	}
@@ -1801,13 +1790,10 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 	// scan through all the flags and notify the client about them 
 	for(flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
 	{
-		switch(flag.team)
-		{
-			case NUM_TEAM_1: t = IT_RED_FLAG_CARRYING; t2 = IT_RED_FLAG_TAKEN; t3 = IT_RED_FLAG_LOST; break;
-			case NUM_TEAM_2: t = IT_BLUE_FLAG_CARRYING; t2 = IT_BLUE_FLAG_TAKEN; t3 = IT_BLUE_FLAG_LOST; break;
-			case NUM_TEAM_3: t = IT_YELLOW_FLAG_CARRYING; t2 = IT_YELLOW_FLAG_TAKEN; t3 = IT_YELLOW_FLAG_LOST; break;
-			case NUM_TEAM_4: t = IT_PINK_FLAG_CARRYING; t2 = IT_PINK_FLAG_TAKEN; t3 = IT_PINK_FLAG_LOST; break;
-		}
+		if(flag.team == NUM_TEAM_1) { t = IT_RED_FLAG_CARRYING; t2 = IT_RED_FLAG_TAKEN; t3 = IT_RED_FLAG_LOST; }
+		if(flag.team == NUM_TEAM_2) { t = IT_BLUE_FLAG_CARRYING; t2 = IT_BLUE_FLAG_TAKEN; t3 = IT_BLUE_FLAG_LOST; }
+		if(flag.team == NUM_TEAM_3) { t = IT_YELLOW_FLAG_CARRYING; t2 = IT_YELLOW_FLAG_TAKEN; t3 = IT_YELLOW_FLAG_LOST; }
+		if(flag.team == NUM_TEAM_4) { t = IT_PINK_FLAG_CARRYING; t2 = IT_PINK_FLAG_TAKEN; t3 = IT_PINK_FLAG_LOST; }
 	
 		switch(flag.ctf_status)
 		{
@@ -1854,7 +1840,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDamage) // for changing damage and force values t
 			frag_force *= autocvar_g_ctf_flagcarrier_forcefactor;
 		}
 	}
-	else if(frag_target.flagcarried && (frag_target.deadflag == DEAD_NO) && IsDifferentTeam(frag_target, frag_attacker)) // if the target is a flagcarrier
+	else if(frag_target.flagcarried && (frag_target.deadflag == DEAD_NO) && ctf_IsDifferentTeam(frag_target, frag_attacker)) // if the target is a flagcarrier
 	{
 		if(autocvar_g_ctf_flagcarrier_auto_helpme_damage > ('1 0 0' * healtharmor_maxdamage(frag_target.health, frag_target.armorvalue, autocvar_g_balance_armor_blockpercent)))
 		if(time > frag_target.wps_helpme_time + autocvar_g_ctf_flagcarrier_auto_helpme_time)
@@ -2190,7 +2176,7 @@ void spawnfunc_item_flag_team1()
 	if(g_vip && g_vip_soulgems) { vip_SpawnSoulGem(self.origin, NUM_TEAM_1); remove(self); return; }
 	if(!g_ctf) { remove(self); return; }
 
-	ctf_FlagSetup(1, self); // 1 = red
+	ctf_FlagSetup(NUM_TEAM_1, self);
 }
 
 /*QUAKED spawnfunc_item_flag_team2 (0 0.5 0.8) (-48 -48 -37) (48 48 37)
@@ -2209,7 +2195,7 @@ void spawnfunc_item_flag_team2()
 	if(g_vip && g_vip_soulgems) { vip_SpawnSoulGem(self.origin, NUM_TEAM_2); remove(self); return; }
 	if(!g_ctf) { remove(self); return; }
 
-	ctf_FlagSetup(0, self); // the 0 is misleading, but -- 0 = blue.
+	ctf_FlagSetup(NUM_TEAM_2, self);
 }
 
 /*QUAKED spawnfunc_item_flag_team3 (0 0.5 0.8) (-48 -48 -37) (48 48 37)
@@ -2227,7 +2213,7 @@ void spawnfunc_item_flag_team3()
 {
 	if(!g_ctf) { remove(self); return; }
 
-	ctf_FlagSetup(2, self); // 2 = yellow?
+	ctf_FlagSetup(NUM_TEAM_3, self);
 }
 
 /*QUAKED spawnfunc_item_flag_team4 (0 0.5 0.8) (-48 -48 -37) (48 48 37)
@@ -2245,7 +2231,7 @@ void spawnfunc_item_flag_team4()
 {
 	if(!g_ctf) { remove(self); return; }
 
-	ctf_FlagSetup(3, self); // 3 = pink?
+	ctf_FlagSetup(NUM_TEAM_4, self);
 }
 
 /*QUAKED spawnfunc_ctf_team (0 .5 .8) (-16 -16 -24) (16 16 32)
