@@ -2332,11 +2332,9 @@ void ctf_DelayedInit() // Do this check with a delay so we can wait for teams to
 		ctf_SpawnTeam("Red", NUM_TEAM_1 - 1);
 		ctf_SpawnTeam("Blue", NUM_TEAM_2 - 1);
 		if(ctf_teams >= 3)
-		{
 			ctf_SpawnTeam("Yellow", NUM_TEAM_3 - 1);
-			if(ctf_teams >= 4)
-				ctf_SpawnTeam("Pink", NUM_TEAM_4 - 1);
-		}
+		if(ctf_teams >= 4)
+			ctf_SpawnTeam("Pink", NUM_TEAM_4 - 1);
 	}
 	
 	ret_float = ctf_teams;
