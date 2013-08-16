@@ -138,6 +138,19 @@ float ctf_IsDifferentTeam(entity a, entity b)
 	return (autocvar_g_ctf_reverse) ? !f : f;
 }
 
+float ctf_Stalemate_waypointsprite_visible_for_player(entity e)
+{
+	// team waypoints
+	if(ctf_IsDifferentTeam(self.owner.flagcarried, self.owner))
+	if(ctf_IsDifferentTeam(self.owner.flagcarried, e))
+	if(!IsDifferentTeam(self.owner, e))
+		return FALSE;
+	if not(IS_PLAYER(e))
+		return FALSE;
+
+	return TRUE;
+}
+
 
 // =======================
 // CaptureShield Functions 
@@ -668,7 +681,10 @@ void ctf_CheckStalemate(void)
 		for(tmp_entity = ctf_staleflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_staleflagnext)
 		{
 			if((tmp_entity.owner) && (!tmp_entity.owner.wps_enemyflagcarrier))
-				WaypointSprite_Spawn("enemyflagcarrier", 0, 0, tmp_entity.owner, FLAG_WAYPOINT_OFFSET, world, tmp_entity.team, tmp_entity.owner, wps_enemyflagcarrier, TRUE, RADARICON_FLAG, WPCOLOR_ENEMYFC(tmp_entity.owner.team));
+			{
+				WaypointSprite_Spawn("enemyflagcarrier", 0, 0, tmp_entity.owner, FLAG_WAYPOINT_OFFSET, world, 0, tmp_entity.owner, wps_enemyflagcarrier, TRUE, RADARICON_FLAG, WPCOLOR_ENEMYFC(tmp_entity.owner.team));
+				tmp_entity.owner.wps_enemyflagcarrier.waypointsprite_visible_for_player = ctf_Stalemate_waypointsprite_visible_for_player;
+			}
 		}
 		
 		if not(wpforenemy_announced)
@@ -799,6 +815,11 @@ void ctf_FlagThink()
 					ctf_CheckStalemate();
 					wpforenemy_nextthink = time + WPFE_THINKRATE; // waypoint for enemy think rate (to reduce unnecessary spam of this check)
 				}
+			}
+			if(!ctf_IsDifferentTeam(self, self.owner))
+			{
+				// drop the flag if reverse status has changed
+				ctf_Handle_Throw(self.owner, world, DROP_THROW);
 			}
 			return;
 		}
@@ -1068,7 +1089,6 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	
 	if(autocvar_g_ctf_flag_glowtrails)
 	{
-		//flag.glow_color = ((teamnumber) ? 251 : 210); // 251: red - 210: blue
 		switch(teamnumber)
 		{
 			case NUM_TEAM_1: flag.glow_color = 251; break; // red
@@ -1084,7 +1104,6 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	if(autocvar_g_ctf_fullbrightflags) { flag.effects |= EF_FULLBRIGHT; }
 	if(autocvar_g_ctf_dynamiclights)
 	{
-		// flag.effects |= ((teamnumber) ? EF_RED : EF_BLUE);
 		switch(teamnumber)
 		{
 			case NUM_TEAM_1: flag.effects |= EF_RED; break;

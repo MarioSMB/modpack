@@ -302,3 +302,120 @@ void Net_ReadNexgunBeamParticle()
 	else
 		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum("nex_beam"), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
 }
+
+.vector sw_shotorg;
+.vector sw_endpos;
+.float sw_spread_max;
+.float sw_spread_min;
+.float sw_time;
+
+void Draw_Shockwave()
+{
+	float a = bound(0, (0.5 - ((time - self.sw_time) / 0.4)), 0.5);
+
+	if not(a) { remove(self); }
+	
+	vector deviation, angle;
+
+	vector sw_color = getcsqcplayercolor(self.sv_entnum); // GetTeamRGB(GetPlayerColor(self.sv_entnum));
+
+	vector first_min_end = '0 0 0', prev_min_end = '0 0 0', new_min_end = '0 0 0';
+	vector first_max_end = '0 0 0', prev_max_end = '0 0 0', new_max_end = '0 0 0';
+
+	float new_max_dist, new_min_dist;
+	
+	vector shotdir = normalize(self.sw_endpos - self.sw_shotorg);
+	vectorvectors(shotdir);
+	vector right = v_right;
+	vector up = v_up;
+	
+	float counter, dist_before_normal = 200, shots = 20;
+	
+	vector min_end = ((self.sw_shotorg + (shotdir * dist_before_normal)) + (up * self.sw_spread_min));
+	vector max_end = (self.sw_endpos + (up * self.sw_spread_max));
+	
+	float spread_to_min = vlen(normalize(min_end - self.sw_shotorg) - shotdir);
+	float spread_to_max = vlen(normalize(max_end - min_end) - shotdir);
+	
+	for(counter = 0; counter < shots; ++counter)
+	{
+		// perfect circle effect lines
+		angle = '0 0 0';
+		makevectors('0 360 0' * (0.75 + (counter - 0.5) / shots));
+		angle_y = v_forward_x;
+		angle_z = v_forward_y;
+
+		// first do the spread_to_min effect
+		deviation = angle * spread_to_min;
+		deviation = ((shotdir + (right * deviation_y) + (up * deviation_z)));
+		new_min_dist = dist_before_normal;
+		new_min_end = (self.sw_shotorg + (deviation * new_min_dist));
+		//te_lightning2(world, new_min_end, self.sw_shotorg);
+
+		// then calculate spread_to_max effect
+		deviation = angle * spread_to_max;
+		deviation = ((shotdir + (right * deviation_y) + (up * deviation_z)));
+		new_max_dist = vlen(new_min_end - self.sw_endpos);
+		new_max_end = (new_min_end + (deviation * new_max_dist));
+		//te_lightning2(world, new_end, prev_min_end);
+		
+
+		if(counter == 0)
+		{
+			first_min_end = new_min_end;
+			first_max_end = new_max_end;
+		}
+
+		if(counter >= 1)
+		{
+			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(new_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(self.sw_shotorg, '0 0 0', sw_color, a);
+			R_EndPolygon();
+
+			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_PolygonVertex(new_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(prev_max_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(new_max_end, '0 0 0', sw_color, a);
+			R_EndPolygon();
+		}
+
+		prev_min_end = new_min_end;
+		prev_max_end = new_max_end;
+
+		if((counter + 1) == shots)
+		{
+			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(first_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(self.sw_shotorg, '0 0 0', sw_color, a);
+			R_EndPolygon();
+
+			R_BeginPolygon("", DRAWFLAG_NORMAL);
+			R_PolygonVertex(first_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(prev_min_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(prev_max_end, '0 0 0', sw_color, a);
+			R_PolygonVertex(first_max_end, '0 0 0', sw_color, a);
+			R_EndPolygon();
+		}
+	}
+}
+
+void Net_ReadShockwaveParticle()
+{
+	entity shockwave;
+	shockwave = spawn();
+	shockwave.draw = Draw_Shockwave;
+	
+	shockwave.sw_shotorg_x = ReadCoord(); shockwave.sw_shotorg_y = ReadCoord(); shockwave.sw_shotorg_z = ReadCoord();
+	shockwave.sw_endpos_x  = ReadCoord(); shockwave.sw_endpos_y  = ReadCoord(); shockwave.sw_endpos_z  = ReadCoord();
+	
+	shockwave.sw_spread_max = ReadByte();
+	shockwave.sw_spread_min = ReadByte();
+
+	shockwave.sv_entnum = ReadByte();
+
+	shockwave.sw_time = time;
+}

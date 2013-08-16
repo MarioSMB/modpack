@@ -346,6 +346,10 @@ typedef entity(entity cur, entity near, entity pass) findNextEntityNearFunction_
 typedef float(entity a, entity b, entity pass) isConnectedFunction_t;
 void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t nxt, isConnectedFunction_t iscon, entity pass);
 
+#ifdef SVQC
+vector get_corner_position(entity box, float corner);
+#endif
+
 // expand multiple arguments into one argument by stripping parenthesis
 #define XPD(...) __VA_ARGS__
 
