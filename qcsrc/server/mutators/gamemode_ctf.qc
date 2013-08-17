@@ -875,7 +875,7 @@ void ctf_FlagTouch()
 	// special touch behaviors
 	if(toucher.vehicle_flags & VHF_ISVEHICLE)
 	{
-		if(autocvar_g_ctf_allow_vehicle_touch)
+		if(autocvar_g_ctf_allow_vehicle_touch && toucher.owner)
 			toucher = toucher.owner; // the player is actually the vehicle owner, not other
 		else
 			return; // do nothing
