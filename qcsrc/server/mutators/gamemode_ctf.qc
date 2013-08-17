@@ -140,13 +140,21 @@ float ctf_IsDifferentTeam(entity a, entity b)
 
 float ctf_Stalemate_waypointsprite_visible_for_player(entity e)
 {
+	// personal waypoints
+	if(self.enemy)
+		if(self.enemy != e)
+			return FALSE;
+			
 	// team waypoints
-	if(ctf_IsDifferentTeam(self.owner.flagcarried, self.owner))
-	if(ctf_IsDifferentTeam(self.owner.flagcarried, e))
-	if(!IsDifferentTeam(self.owner, e))
-		return FALSE;
-	if not(IS_PLAYER(e))
-		return FALSE;
+	if(self.rule == SPRITERULE_DEFAULT)
+	{
+		if(ctf_IsDifferentTeam(self.owner.flagcarried, self.owner))
+		if(ctf_IsDifferentTeam(self.owner.flagcarried, e))
+		if(!IsDifferentTeam(self.owner, e))
+			return FALSE;
+		if not(IS_PLAYER(e))
+			return FALSE;
+	}
 
 	return TRUE;
 }

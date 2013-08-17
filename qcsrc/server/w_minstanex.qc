@@ -563,9 +563,9 @@ float w_minstanex(float req)
 			{
 				if(weapon_prepareattack(0, autocvar_g_balance_minstanex_refire))
 				{
-					sound(self, CH_SHOTS, "weapons/minstanex_charge1.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, "weapons/minstanex_charge_new.wav", VOL_BASE, ATTN_NORM);
 					self.minstanex_held_down = 2;
-					self.minstanex_jumpinterval = time + 2.5;
+					self.minstanex_jumpinterval = time + 1.822;
 					weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_minstanex_refire, w_ready); // update frame so we dont get stuck
 				}
 			}
@@ -629,7 +629,7 @@ float w_minstanex(float req)
 		precache_model ("models/weapons/v_minstanex.md3");
 		precache_model ("models/weapons/h_minstanex.iqm");
 		precache_sound ("weapons/minstanexfire.wav");
-		precache_sound ("weapons/minstanex_charge1.wav");
+		precache_sound ("weapons/minstanex_charge_new.wav");
 		precache_sound ("weapons/minstanex_charge2.wav");
 		precache_sound ("weapons/crylink_fire.wav");
         precache_sound ("weapons/electro_fire2.wav");
