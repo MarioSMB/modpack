@@ -55,7 +55,7 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	if (g_dodging == 0)
 		clean_up_and_do_nothing = 1;
 		
-	if not(self.cvar_cl_dodging)
+	if(!self.cvar_cl_dodging && !cvar("g_overkill"))
 		clean_up_and_do_nothing = 1;
 
 	// when swimming, no dodging allowed..
