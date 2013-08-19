@@ -1391,4 +1391,4 @@ float autocvar_g_invasion_round_limit;
 float autocvar_g_invasion_warmup;
 float autocvar_g_invasion_monster_count;
 float autocvar_g_invasion_zombies_only;
-
+float autocvar_sv_showspectators;

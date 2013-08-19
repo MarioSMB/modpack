@@ -4082,6 +4082,22 @@ void HUD_InfoMessages(void)
 			s = _("^2Currently in ^1warmup^2 stage!");
 			drawInfoMessage(s)
 		}
+		
+		if(autocvar_cl_showspectators)
+		if(num_spectators)
+		if not(spectatee_status)
+		{
+			s = _("^1Spectating you:");
+			drawInfoMessage(s)
+			float limit = min(num_spectators, MAX_SPECTATORS);
+			float i;
+			for(i = 0; i < limit; ++i)
+			{
+				float slot = spectatorlist[i];
+				s = strcat("^3", GetPlayerName(slot));
+				drawInfoMessage(s)
+			}
+		}
 
 		string blinkcolor;
 		if(mod(time, 1) >= 0.5)

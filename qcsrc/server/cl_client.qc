@@ -392,6 +392,7 @@ PutClientInServer
 Called when a client spawns in the server
 =============
 */
+void WriteSpectatorInfoOf(entity);
 void PutClientInServer (void)
 {
 	if(IS_BOT_CLIENT(self))
@@ -410,6 +411,10 @@ void PutClientInServer (void)
 
 	if(gameover)
 		self.classname = "observer";
+		
+	entity oldenemy = self.enemy;
+	self.enemy = world;
+	WriteSpectatorInfoOf(oldenemy);
 
 	if(IS_PLAYER(self))
 	{
@@ -1304,6 +1309,10 @@ Called when a client disconnects from the server
 void ReadyCount();
 void ClientDisconnect (void)
 {
+	entity e = self.enemy;
+	self.enemy = world;
+	WriteSpectatorInfoOf(e);
+
 	if(self.vehicle)
 	    vehicles_exit(VHEF_RELESE);
 
@@ -1844,8 +1853,52 @@ float SpectateUpdate() {
 		return 0;
 
 	SpectateCopy(self.enemy);
+	
+	WriteSpectatorInfoOf(self.enemy);
 
 	return 1;
+}
+
+void WriteSpectatorInfoOf(entity player)
+{
+	if(!IS_REAL_CLIENT(player))
+		return;
+		
+	if(!IS_PLAYER(player))
+		return;
+	
+	entity spec;
+	float specs = 0;
+	
+	FOR_EACH_REALCLIENT(spec) if(IS_SPEC(spec)) if(spec.enemy == player) ++specs;	
+	
+	msg_entity = player;
+	WriteByte(MSG_ONE, SVC_TEMPENTITY);
+	WriteByte(MSG_ONE, TE_CSQC_SPECINFO);
+	
+	if not(autocvar_sv_showspectators)
+	{
+		WriteByte(MSG_ONE, 0);
+		return;
+	}
+	
+	WriteByte(MSG_ONE, specs);
+	
+	FOR_EACH_REALCLIENT(spec)
+	if(IS_SPEC(spec))
+	if(spec.enemy == player)
+		WriteByte(MSG_ONE, num_for_edict(spec));
+}
+
+void ResetSpectatorInfo(entity player)
+{
+    if(!IS_REAL_CLIENT(player))
+		return;
+
+    msg_entity = player;
+    WriteByte(MSG_ONE, SVC_TEMPENTITY);
+    WriteByte(MSG_ONE, TE_CSQC_SPECINFO);
+    WriteByte(MSG_ONE, 0);
 }
 
 

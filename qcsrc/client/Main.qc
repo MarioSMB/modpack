@@ -1236,6 +1236,19 @@ void Net_ReadMorningRescue()
 	mr_fadetime   = time + 9;
 }
 
+void Net_ReadSpecInfo()
+{
+	float i;
+	
+	num_spectators = ReadByte();
+	for(i = 0; i < num_spectators; ++i)
+	{
+		local float slot = ReadByte();
+		if(i < MAX_SPECTATORS)
+			spectatorlist[i] = slot - 1;
+	}
+}
+
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
 // You must ALWAYS first acquire the temporary ID, which is sent as a byte.
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
@@ -1299,6 +1312,10 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_MORNINGRESCUE:
 			Net_ReadMorningRescue();
+			bHandled = true;
+			break;
+		case TE_CSQC_SPECINFO:
+			Net_ReadSpecInfo();
 			bHandled = true;
 			break;
 		case TE_CSQC_SHOCKWAVEPARTICLE:
