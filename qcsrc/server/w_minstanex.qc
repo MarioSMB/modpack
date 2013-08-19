@@ -662,6 +662,8 @@ float w_minstanex(float req)
 	else if (req == WR_RESETPLAYER)
 	{
 		self.minstanex_lasthit = 0;
+		self.minstanex_held_down = 0;
+		self.held_down = 0;
 	}
 	else if (req == WR_RELOAD)
 	{
