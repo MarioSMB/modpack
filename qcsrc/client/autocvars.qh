@@ -430,4 +430,4 @@ string autocvar__cl_playermodel;
 float autocvar_cl_deathglow;
 float autocvar_developer_csqcentities;
 float autocvar_g_jetpack_attenuation;
-var float autocvar_cl_showspectators = 1;
+float autocvar_cl_showspectators;
