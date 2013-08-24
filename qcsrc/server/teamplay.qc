@@ -203,7 +203,7 @@ void InitGameplayMode()
 		fraglimit_override = autocvar_g_vip_point_limit;
 		leadlimit_override = autocvar_g_vip_point_leadlimit;
 		ActivateTeamplay();
-        have_team_spawns = -1; // request team spawns
+		have_team_spawns = -1; // request team spawns
 		MUTATOR_ADD(gamemode_vip);
 	}
 

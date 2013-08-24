@@ -78,9 +78,6 @@ void CSQC_Init(void)
 			break;
 	maxclients = i;
 	
-	if(cvar("menu_updatecheck") > 0)
-		localcmd("\nmenu_updatecheck 0; menu_restart\n"); // TODO: find out why this is showing update message for everyone
-	
 	localcmd("\nalias nobobbing \"cl_bob 0; cl_bob2 0; cl_followmodel 0; cl_leanmodel 0\"\n");
 
 	//registercommand("hud_configure");
@@ -100,6 +97,7 @@ void CSQC_Init(void)
 	registercvar("cl_dodging", "0");
 	registercvar("cl_bikini", "0");
 	registercvar("cl_bikini_skin", "0");
+	registercvar("cl_damnfurries", "0");
 
 	gametype = 0;
 

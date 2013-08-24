@@ -54,7 +54,7 @@ void spider_web_explode()
 		
 		RadiusDamage(self, self.realowner, damg, edamg, 0, world, rad, DEATH_MONSTER_SPIDER_FIRE, world); // ice deals no damage anyway
 		
-		for(e = findradius(self.origin, rad); e; e = e.chain) if(e.takedamage && e.deadflag == DEAD_NO)
+		for(e = findradius(self.origin, rad); e; e = e.chain) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0)
 		{
 			switch(self.realowner.spider_type)
 			{

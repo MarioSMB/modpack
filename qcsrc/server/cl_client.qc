@@ -316,6 +316,8 @@ void FixPlayermodel()
 			defaultmodel = "models/player/pony.iqm";
 			defaultskin = self.cvar_cl_pony_skin;
 		}
+		if(self.cvar_cl_damnfurries && checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
+			defaultmodel = "models/player/renamon.iqm";
 		if(self.cvar_cl_bikini && checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
 		{
 			defaultmodel = "models/player/abyss.zym";

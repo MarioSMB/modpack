@@ -623,6 +623,7 @@ string modname;
 .float cvar_cl_pony_skin;
 .float cvar_cl_bikini;
 .float cvar_cl_bikini_skin;
+.float cvar_cl_damnfurries;
 
 .entity lastkiller;
 .entity lastkilled;

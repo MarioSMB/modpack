@@ -236,7 +236,7 @@ float CheatImpulse(float i)
 					break;
 				}
 			}
-			if(MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((gamestart_sv_cheats < 2) ? 100 : 100000), 1024, 256))
+			if(MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((gamestart_sv_cheats < 2) ? 100 : 100000), 384, 384))
 			{
 				sprint(self, "Emergency teleport used random location\n");
 				self.angles_x = -self.angles_x;

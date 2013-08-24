@@ -4570,7 +4570,7 @@ void HUD_CenterPrint (void)
 			float r;
 			r = random();
 			if (r > 0.9)
-				centerprint_generic(floor(r*1000), strcat(sprintf("^3Countdown message at time %s", seconds_tostring(time)), ", seconds left: %d"), 1, 10);
+				centerprint_generic(floor(r*1000), strcat(sprintf("^3Countdown message at time %s", seconds_tostring(time)), ", seconds left: ^COUNT"), 1, 10);
 			else if (r > 0.8)
 				centerprint_generic(0, sprintf("^1Multiline message at time %s that\n^1lasts longer than normal", seconds_tostring(time)), 20, 0);
 			else
@@ -4956,7 +4956,7 @@ void HUD_Main (void)
 				hud_panel[panel_order[i]].update_time = time;
 		}
 	}
-	else if (hud_configure_prev && autocvar_hud_cursormode)
+	else if(hud_configure_prev && hud_configure_prev != -1 && autocvar_hud_cursormode)
 		setcursormode(0);
 
 	hud_configure_prev = autocvar__hud_configure;

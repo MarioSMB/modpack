@@ -257,6 +257,19 @@ void m_keydown(float key, float ascii)
 		return;
 	if(!Menu_Active)
 		return;
+
+	if(menuMouseMode)
+	if(key >= K_MOUSE1 && key <= K_MOUSE3)
+	{
+		// detect a click outside of the game window
+		vector p = getmousepos();
+		if(p_x < 0 || p_x > realconwidth || p_y < 0 || p_y > realconheight)
+		{
+			++mouseButtonsPressed;
+			return;
+		}
+	}
+
 	if(keyGrabber)
 	{
 		entity e;

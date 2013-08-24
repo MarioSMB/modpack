@@ -19,10 +19,10 @@ When you press the jump key
 */
 void PlayerJump (void)
 {
-	float doublejump = FALSE;
-
 	if(self.frozen)
 		return; // no jumping in freezetag when frozen
+		
+	float doublejump = FALSE;
 
 	player_multijump = doublejump;
 	if(MUTATOR_CALLHOOK(PlayerJump))
@@ -790,7 +790,7 @@ void SV_PlayerPhysics()
 		
 	if(self.frozen)
 	{
-		if(autocvar_sv_dodging_frozen)
+		if(autocvar_sv_dodging_frozen && IS_REAL_CLIENT(self))
 		{
 			self.movement_x = bound(-5, self.movement_x, 5);
 			self.movement_y = bound(-5, self.movement_y, 5);
@@ -798,7 +798,6 @@ void SV_PlayerPhysics()
 		}
 		else
 			self.movement = '0 0 0';
-		
 		self.disableclientprediction = 1;
 	
 		vector midpoint = ((self.absmin + self.absmax) * 0.5);

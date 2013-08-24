@@ -1,2 +1,7 @@
 float g_dodging;
 
+// set to 1 to indicate dodging has started.. reset by physics hook after dodge has been done..
+.float dodging_action;
+
+// the jump part of the dodge cannot be ramped
+.float dodging_single_action;

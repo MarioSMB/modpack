@@ -580,6 +580,7 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_MOTD,                        1, 0, "s1",            CPID_MOTD,             "5 0", _("^BG%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_NIX_COUNTDOWN,               0, 2, "item_wepname",  CPID_NIX,              "1 f2", _("^F2^COUNT^BG until weapon change...\nNext weapon: ^F1%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_NIX_NEWWEAPON,               0, 1, "item_wepname",  CPID_NIX,              "0 0", _("^F2Active weapon: ^F1%s"), "") \
+        MSG_CENTER_NOTIF(1, CENTER_NADE,            		0, 0, "",              NO_CPID,		      "0 0", _("^BGPress ^F2DROPWEAPON^BG again to toss the nade!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_OVERKILL_CHARGE,             0, 0, "",              CPID_OVERKILL,         "0 0", _("^BGYour weapon's charge is too low, release the attack button & wait for it to charge"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_FRAG,               0, 0, "",              CPID_OVERTIME,         "0 0", _("^F2Now playing ^F4OVERTIME^F2!\nKeep fragging until we have a winner!"), _("^F2Now playing ^F4OVERTIME^F2!\nKeep scoring until we have a winner!")) \
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_TIME,               0, 1, "f1time",        CPID_OVERTIME,         "0 0", _("^F2Now playing ^F4OVERTIME^F2!\n^BGAdded ^F4%s^BG to the game!"), "") \

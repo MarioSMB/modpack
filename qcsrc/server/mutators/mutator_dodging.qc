@@ -17,16 +17,10 @@
 // and to ramp up the dodge acceleration in the physics hook.
 .float last_dodging_time;
 
-// set to 1 to indicate dodging has started.. reset by physics hook after dodge has been done..
-.float dodging_action;
-
 // This is the velocity gain to be added over the ramp time.
 // It will decrease from frame to frame during dodging_action = 1
 // until it's 0.
 .float dodging_velocity_gain;
-
-// the jump part of the dodge cannot be ramped
-.float dodging_single_action;
 
 MUTATOR_HOOKFUNCTION(dodging_GetCvars) {
 	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_dodging, "cl_dodging");
@@ -55,8 +49,11 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	if (g_dodging == 0)
 		clean_up_and_do_nothing = 1;
 		
-	if(!self.cvar_cl_dodging && !cvar("g_overkill"))
+	if(!self.cvar_cl_dodging)
 		clean_up_and_do_nothing = 1;
+
+	if(cvar("g_overkill"))
+		clean_up_and_do_nothing = 0; // always enabled in overkill
 
 	// when swimming, no dodging allowed..
 	if (self.waterlevel >= WATERLEVEL_SWIMMING)
@@ -181,11 +178,14 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	tap_direction_y = 0;
 
 	float dodge_detected;
-	if (g_dodging == 0)
-		return 0;
+	if not(cvar("g_overkill"))
+	{
+		if (g_dodging == 0)
+			return 0;
 
-	if not(self.cvar_cl_dodging)
-		return 0;
+		if not(self.cvar_cl_dodging)
+			return 0;
+	}
 
 	dodge_detected = 0;
 
