@@ -527,11 +527,16 @@ float bumb_pilot_frame()
 	vang = vehicle_aimturret(vehic, trace_endpos, self.gun3, "fire",
 					  autocvar_g_vehicle_bumblebee_raygun_pitchlimit_down * -1,  autocvar_g_vehicle_bumblebee_raygun_pitchlimit_up,
 					  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides * -1,  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides,  autocvar_g_vehicle_bumblebee_raygun_turnspeed);
-
-	if((pilot.BUTTON_ATCK || pilot.BUTTON_ATCK2) && (vehic.vehicle_energy > autocvar_g_vehicle_bumblebee_raygun_dps * sys_frametime || autocvar_g_vehicle_bumblebee_raygun == 0))
+					  
+	if((pilot.BUTTON_ATCK || pilot.BUTTON_ATCK2) && (vehic.vehicle_energy > autocvar_g_vehicle_bumblebee_raygun_dps * sys_frametime || (autocvar_g_vehicle_bumblebee_raygun == 0 || pilot.BUTTON_ATCK)))
 	{
 		vehic.gun3.enemy.realowner = pilot;
 		vehic.gun3.enemy.effects &~= EF_NODRAW;
+		
+		if(pilot.BUTTON_ATCK)
+			vehic.gun3.enemy.cnt = 0;
+		else
+			vehic.gun3.enemy.cnt = 1;
 		
 		vehic.gun3.enemy.hook_start = gettaginfo(vehic.gun3, gettagindex(vehic.gun3, "fire"));
 		vehic.gun3.enemy.SendFlags |= BRG_START;
@@ -540,7 +545,7 @@ float bumb_pilot_frame()
 		
 		if(trace_ent)
 		{
-			if(autocvar_g_vehicle_bumblebee_raygun)
+			if(pilot.BUTTON_ATCK2 && autocvar_g_vehicle_bumblebee_raygun)
 			{
 				Damage(trace_ent, vehic, pilot, autocvar_g_vehicle_bumblebee_raygun_dps * sys_frametime, DEATH_GENERIC, trace_endpos, v_forward * autocvar_g_vehicle_bumblebee_raygun_fps * sys_frametime);
 				vehic.vehicle_energy -= autocvar_g_vehicle_bumblebee_raygun_aps * sys_frametime;
