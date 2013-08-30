@@ -3712,7 +3712,7 @@ void HUD_MorningRescue(void)
 	local string mycolor = "";
 	local string mychar;
 	local float j;
-	local string mrstring = _("^xFB0Morning ^7Rescue");
+	local string mrstring = _("^xFB0MMorning ^7Rescue");
 
 	local float k;
 	
