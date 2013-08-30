@@ -57,6 +57,7 @@ CLASS(XonoticServerList) EXTENDS(XonoticListBox)
 	ATTRIB(XonoticServerList, seenIPv6, float, 0)
 ENDCLASS(XonoticServerList)
 entity makeXonoticServerList();
+
 void ServerList_Connect_Click(entity btn, entity me);
 void ServerList_ShowEmpty_Click(entity box, entity me);
 void ServerList_ShowFull_Click(entity box, entity me);
@@ -65,6 +66,7 @@ void ServerList_Favorite_Click(entity btn, entity me);
 void ServerList_Info_Click(entity btn, entity me);
 void ServerList_Update_favoriteButton(entity btn, entity me);
 
+#ifndef IMPLEMENTATION
 float SLIST_FIELD_CNAME;
 float SLIST_FIELD_PING;
 float SLIST_FIELD_GAME;
@@ -80,6 +82,8 @@ float SLIST_FIELD_FREESLOTS;
 float SLIST_FIELD_PLAYERS;
 float SLIST_FIELD_QCSTATUS;
 float SLIST_FIELD_ISFAVORITE;
+#endif
+
 #endif
 
 #ifdef IMPLEMENTATION

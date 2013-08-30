@@ -29,6 +29,9 @@ Defs.qc
 ../common/animdecide.qh
 command/cl_cmd.qh
 
+../common/monsters/cl_monsters.qh
+../common/monsters/monsters.qh
+
 autocvars.qh
 
 ../common/notifications.qh // must be after autocvars
@@ -47,8 +50,6 @@ bgmscript.qh
 noise.qh
 tturrets.qh
 ../server/tturrets/include/turrets_early.qh
-monsters.qh
-../server/monsters/lib/monsters_early.qh
 ../server/movelib.qc
 ../server/generator.qh
 main.qh
@@ -116,6 +117,9 @@ noise.qc
 ../common/urllib.qc
 command/cl_cmd.qc
 
+../common/monsters/cl_monsters.qc
+../common/monsters/monsters.qc
+
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc
 ../warpzonelib/common.qc
@@ -123,9 +127,6 @@ command/cl_cmd.qc
 tturrets.qc
 
 ../server/generator.qc
-
-../server/monsters/monsters.qh
-monsters.qc
 
 player_skeleton.qc
 ../common/animdecide.qc

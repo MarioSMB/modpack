@@ -2,13 +2,80 @@
 entity weapon_info[WEP_MAXCOUNT];
 entity dummy_weapon_info;
 
-void register_weapon(float id, float(float) func, float ammotype, float i, float weapontype, float pickupbasevalue, string modelname, string shortname, string wname)
+#if WEP_MAXCOUNT > 72
+# error Kein Weltraum links auf dem Gerät
+#endif
+
+WepSet WepSet_FromWeapon(float a) {
+	a -= WEP_FIRST;
+#if WEP_MAXCOUNT > 24
+	if(a >= 24) {
+		a -= 24;
+#if WEP_MAXCOUNT > 48
+		if(a >= 24) {
+			a -= 24;
+			return '0 0 1' * power2of(a);
+		}
+#endif
+		return '0 1 0' * power2of(a);
+	}
+#endif
+	return '1 0 0' * power2of(a);
+}
+#ifdef SVQC
+void WepSet_AddStat()
+{
+	addstat(STAT_WEAPONS, AS_INT, weapons_x);
+#if WEP_MAXCOUNT > 24
+	addstat(STAT_WEAPONS2, AS_INT, weapons_y);
+#if WEP_MAXCOUNT > 48
+	addstat(STAT_WEAPONS3, AS_INT, weapons_z);
+#endif
+#endif
+}
+void WriteWepSet(float dst, WepSet w)
+{
+#if WEP_MAXCOUNT > 48
+	WriteInt72_t(dst, w);
+#elif WEP_MAXCOUNT > 24
+	WriteInt48_t(dst, w);
+#else
+	WriteInt24_t(dst, w_x);
+#endif
+}
+#endif
+#ifdef CSQC
+WepSet WepSet_GetFromStat()
+{
+	WepSet w = '0 0 0';
+	w_x = getstati(STAT_WEAPONS);
+#if WEP_MAXCOUNT > 24
+	w_y = getstati(STAT_WEAPONS2);
+#if WEP_MAXCOUNT > 48
+	w_z = getstati(STAT_WEAPONS3);
+#endif
+#endif
+	return w;
+}
+WepSet ReadWepSet()
+{
+#if WEP_MAXCOUNT > 48
+	return ReadInt72_t();
+#elif WEP_MAXCOUNT > 24
+	return ReadInt48_t();
+#else
+	return ReadInt24_t() * '1 0 0';
+#endif
+}
+#endif
+
+void register_weapon(float id, WepSet bit, float(float) func, float ammotype, float i, float weapontype, float pickupbasevalue, string modelname, string shortname, string wname)
 {
 	entity e;
 	weapon_info[id - 1] = e = spawn();
 	e.classname = "weapon_info";
 	e.weapon = id;
-	WEPSET_COPY_EW(e, id);
+	e.weapons = bit;
 	e.netname = shortname;
 	e.message = wname;
 	e.items = ammotype;
@@ -41,7 +108,7 @@ void register_weapons_done()
 	dummy_weapon_info = spawn();
 	dummy_weapon_info.classname = "weapon_info";
 	dummy_weapon_info.weapon = 0; // you can recognize dummies by this
-	WEPSET_CLEAR_E(dummy_weapon_info);
+	dummy_weapon_info.weapons = '0 0 0';
 	dummy_weapon_info.netname = "";
 	dummy_weapon_info.message = "AOL CD Thrower";
 	dummy_weapon_info.items = 0;
@@ -157,20 +224,20 @@ string W_FixWeaponOrder_ForceComplete(string order)
 void W_RandomWeapons(entity e, float n)
 {
 	float i, j;
-	WEPSET_DECLARE_A(remaining);
-	WEPSET_DECLARE_A(result);
-	WEPSET_COPY_AE(remaining, e);
-	WEPSET_CLEAR_A(result);
+	WepSet remaining;
+	WepSet result;
+	remaining = e.weapons;
+	result = '0 0 0';
 	for(i = 0; i < n; ++i)
 	{
 		RandomSelection_Init();
 		for(j = WEP_FIRST; j <= WEP_LAST; ++j)
-			if(WEPSET_CONTAINS_AW(remaining, j))
+			if(remaining & WepSet_FromWeapon(j))
 				RandomSelection_Add(world, j, string_null, 1, 1);
-		WEPSET_OR_AW(result, RandomSelection_chosen_float);
-		WEPSET_ANDNOT_AW(remaining, RandomSelection_chosen_float);
+		result |= WepSet_FromWeapon(RandomSelection_chosen_float);
+		remaining &= ~WepSet_FromWeapon(RandomSelection_chosen_float);
 	}
-	WEPSET_COPY_EA(e, result);
+	e.weapons = result;
 }
 
 string W_Name(float weaponid)

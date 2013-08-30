@@ -180,7 +180,7 @@ void W_Laser_Attack2 ()
 	// only play fire sound if 0.5 sec has passed since player let go the fire button
 	if(time - self.prevgauntletfire > 0.5)
 	{
-		sound (self, CH_WEAPON_A, "weapons/gauntlet_fire.wav", VOL_BASE, ATTN_NORM);
+		sound (self, CH_WEAPON_A, "weapons/gauntlet_fire.wav", VOL_BASE, ATTEN_NORM);
 	}
 
 	entity beam, oldself;
@@ -312,7 +312,7 @@ float w_laser(float req)
 		org2 = w_org + w_backoff * 6;
 		pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
 		if(!w_issilent)
-			sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTEN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{

@@ -74,7 +74,7 @@ void vehicle_alarm(entity e, float ch, string s0und)
 	if not(autocvar_cl_vehicles_alarm)
 		return;
 		
-	sound(e, ch, s0und, VOL_BASEVOICE, ATTN_NONE);
+	sound(e, ch, s0und, VOL_BASEVOICE, ATTEN_NONE);
 }
 
 void AuxiliaryXhair_Draw2D()
@@ -139,8 +139,8 @@ void Net_VehicleSetup()
     // hud_id == 0 means we exited a vehicle, so stop alarm sound/s
     if(hud_id == 0)
     {
-        sound(self, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTN_NONE);
-        sound(self, CH_PAIN_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTN_NONE);    
+        sound(self, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
+        sound(self, CH_PAIN_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);    
         return;
     }
     

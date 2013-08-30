@@ -195,45 +195,45 @@ void Send_Notification_WOVA(
 */
 
 #define MSG_ANNCE_NOTIFICATIONS \
-	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_AIRSHOT,       CH_INFO, "airshot",           VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_AMAZING,       CH_INFO, "amazing",           VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_AWESOME,       CH_INFO, "awesome",           VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_BOTLIKE,       CH_INFO, "botlike",           VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(2, ANNCE_ACHIEVEMENT_ELECTROBITCH,  CH_INFO, "electrobitch",      VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_IMPRESSIVE,    CH_INFO, "impressive",        VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_YODA,          CH_INFO, "yoda",              VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(2, ANNCE_BEGIN,                     CH_INFO, "begin",             VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_03,             CH_INFO, "03kills",           VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_05,             CH_INFO, "05kills",           VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_10,             CH_INFO, "10kills",           VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_15,             CH_INFO, "15kills",           VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_20,             CH_INFO, "20kills",           VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_25,             CH_INFO, "25kills",           VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_30,             CH_INFO, "30kills",           VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(1, ANNCE_MINSTAGIB_LASTSECOND,      CH_INFO, "lastsecond",        VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(1, ANNCE_MINSTAGIB_NARROWLY,        CH_INFO, "narrowly",          VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(1, ANNCE_MINSTAGIB_TERMINATED,      CH_INFO, "terminated",        VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(0, ANNCE_MULTIFRAG,                 CH_INFO, "multifrag",         VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(2, ANNCE_NUM_1,                     CH_INFO, "1",                 VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(2, ANNCE_NUM_2,                     CH_INFO, "2",                 VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(2, ANNCE_NUM_3,                     CH_INFO, "3",                 VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(2, ANNCE_NUM_4,                     CH_INFO, "4",                 VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(2, ANNCE_NUM_5,                     CH_INFO, "5",                 VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(2, ANNCE_NUM_6,                     CH_INFO, "6",                 VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(2, ANNCE_NUM_7,                     CH_INFO, "7",                 VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(2, ANNCE_NUM_8,                     CH_INFO, "8",                 VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(2, ANNCE_NUM_9,                     CH_INFO, "9",                 VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(2, ANNCE_NUM_10,                    CH_INFO, "10",                VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(2, ANNCE_PREPARE,                   CH_INFO, "prepareforbattle",  VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(1, ANNCE_REMAINING_FRAG_1,          CH_INFO, "1fragleft",         VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(1, ANNCE_REMAINING_FRAG_2,          CH_INFO, "2fragsleft",        VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(1, ANNCE_REMAINING_FRAG_3,          CH_INFO, "3fragsleft",        VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(2, ANNCE_REMAINING_MIN_1,           CH_INFO, "1minuteremains",    VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(2, ANNCE_REMAINING_MIN_5,           CH_INFO, "5minutesremain",    VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(2, ANNCE_TIMEOUT,                   CH_INFO, "timeoutcalled",     VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(2, ANNCE_VOTE_ACCEPT,               CH_INFO, "voteaccept",        VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(2, ANNCE_VOTE_CALL,                 CH_INFO, "votecall",          VOL_BASEVOICE, ATTN_NONE) \
-	MSG_ANNCE_NOTIF(2, ANNCE_VOTE_FAIL,                 CH_INFO, "votefail",          VOL_BASEVOICE, ATTN_NONE)
+	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_AIRSHOT,       CH_INFO, "airshot",           VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_AMAZING,       CH_INFO, "amazing",           VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_AWESOME,       CH_INFO, "awesome",           VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_BOTLIKE,       CH_INFO, "botlike",           VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_ACHIEVEMENT_ELECTROBITCH,  CH_INFO, "electrobitch",      VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_IMPRESSIVE,    CH_INFO, "impressive",        VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_YODA,          CH_INFO, "yoda",              VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_BEGIN,                     CH_INFO, "begin",             VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_03,             CH_INFO, "03kills",           VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_05,             CH_INFO, "05kills",           VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_10,             CH_INFO, "10kills",           VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_15,             CH_INFO, "15kills",           VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_20,             CH_INFO, "20kills",           VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_25,             CH_INFO, "25kills",           VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_30,             CH_INFO, "30kills",           VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_MINSTAGIB_LASTSECOND,      CH_INFO, "lastsecond",        VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_MINSTAGIB_NARROWLY,        CH_INFO, "narrowly",          VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_MINSTAGIB_TERMINATED,      CH_INFO, "terminated",        VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(0, ANNCE_MULTIFRAG,                 CH_INFO, "multifrag",         VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_NUM_1,                     CH_INFO, "1",                 VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_NUM_2,                     CH_INFO, "2",                 VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_NUM_3,                     CH_INFO, "3",                 VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_NUM_4,                     CH_INFO, "4",                 VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_NUM_5,                     CH_INFO, "5",                 VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_NUM_6,                     CH_INFO, "6",                 VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_NUM_7,                     CH_INFO, "7",                 VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_NUM_8,                     CH_INFO, "8",                 VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_NUM_9,                     CH_INFO, "9",                 VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_NUM_10,                    CH_INFO, "10",                VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_PREPARE,                   CH_INFO, "prepareforbattle",  VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_REMAINING_FRAG_1,          CH_INFO, "1fragleft",         VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_REMAINING_FRAG_2,          CH_INFO, "2fragsleft",        VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(1, ANNCE_REMAINING_FRAG_3,          CH_INFO, "3fragsleft",        VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_REMAINING_MIN_1,           CH_INFO, "1minuteremains",    VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_REMAINING_MIN_5,           CH_INFO, "5minutesremain",    VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_TIMEOUT,                   CH_INFO, "timeoutcalled",     VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_VOTE_ACCEPT,               CH_INFO, "voteaccept",        VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_VOTE_CALL,                 CH_INFO, "votecall",          VOL_BASEVOICE, ATTEN_NONE) \
+	MSG_ANNCE_NOTIF(2, ANNCE_VOTE_FAIL,                 CH_INFO, "votefail",          VOL_BASEVOICE, ATTEN_NONE)
 
 #define MULTITEAM_INFO(default,prefix,teams,strnum,flnum,args,hudargs,icon,normal,gentle) \
 	MSG_INFO_NOTIF(default, prefix##RED, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_1)), TCR(normal, COL_TEAM_1, strtoupper(NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(NAME_TEAM_1))) \
@@ -265,9 +265,7 @@ void Send_Notification_WOVA(
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_FIRE,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was burnt up into a crisp by ^BG%s^K1%s%s\n"), _("^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s\n")) \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_LAVA,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_lava",          _("^BG%s%s^K1 was cooked by ^BG%s^K1%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_MONSTER,           3, 2, "spree_inf s1 s2 s3loc spree_end", "",  	  "",          			  _("^BG%s%s^K1 was pushed infront of a monster by ^BG%s^K1%s%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_NADE_NEX,          3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_nade",          _("^BG%s%s^K1 was blown up by ^BG%s^K1's rocket-propelled nade%s%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_NADE_NORMAL,       3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_nade",          _("^BG%s%s^K1 was blown up by ^BG%s^K1's nade%s%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_NADE_SG,       	   3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_nade",          _("^BG%s%s^K1 was blown up by ^BG%s^K1's shrapnel-filled nade%s%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_NADE,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_nade",         _("^BG%s%s^K1 was blown up by ^BG%s^K1's Nade%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_SHOOTING_STAR,     3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_shootingstar",  _("^BG%s%s^K1 was shot into space by ^BG%s^K1%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_SLIME,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_slime",         _("^BG%s%s^K1 was slimed by ^BG%s^K1%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_SWAMP,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_slime",         _("^BG%s%s^K1 was preserved by ^BG%s^K1%s%s\n"), "") \
@@ -320,8 +318,7 @@ void Send_Notification_WOVA(
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_WYVERN,          2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was fireballed by a Wyvern%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_ZOMBIE_JUMP,     2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 joins the Zombies%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_ZOMBIE_MELEE,    2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was given kung fu lessons by a Zombie%s%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_NADE_BOOST,		   2, 1, "s1 s2loc spree_lost", "s1",		"notify_nade",			_("^BG%s^K1 shot their nade a little too close%s%s\n"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_NADE_NORMAL,		   2, 1, "s1 s2loc spree_lost", "s1",		"notify_nade",			_("^BG%s^K1 ate their own nade%s%s\n"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_NADE,                2, 1, "s1 s2loc spree_lost", "s1",       "notify_nade",     	_("^BG%s^K1 mastered the art of self-nading%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_NOAMMO,              2, 1, "s1 s2loc spree_lost", "s1",       "notify_outofammo",     _("^BG%s^K1 died%s%s. What's the point of living without ammo?\n"), _("^BG%s^K1 ran out of ammo%s%s\n")) \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_ROT,                 2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 rotted away%s%s\n"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_SHOOTING_STAR,       2, 1, "s1 s2loc spree_lost", "s1",       "notify_shootingstar",  _("^BG%s^K1 became a shooting star%s%s\n"), "") \
@@ -516,7 +513,7 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_GENERIC,          0, 0, "",             NO_CPID,             "0 0", _("^K1You killed your own dumb self!"), _("^K1You need to be more careful!")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_LAVA,             0, 0, "",             NO_CPID,             "0 0", _("^K1You couldn't stand the heat!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_MONSTER,          0, 0, "",             NO_CPID,             "0 0", _("^K1You were killed by a monster!"), _("^K1You need to watch out for monsters!")) \
-	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_NADE,				0, 0, "",			  NO_CPID,			   "0 0", _("^K1You ate your own grenade!"), _("^K1Tastes like chicken!")) \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_NADE,				0, 0, "",			  NO_CPID,			   "0 0", _("^K1You forgot to put the pin back in!"), _("^K1Tastes like chicken!")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_NOAMMO,           0, 0, "",             NO_CPID,             "0 0", _("^K1You were killed for running out of ammo..."), _("^K1You are respawning for running out of ammo...")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_ROT,              0, 0, "",             NO_CPID,             "0 0", _("^K1You grew too old without taking your medicine"), _("^K1You need to preserve your health")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_SHOOTING_STAR,    0, 0, "",             NO_CPID,             "0 0", _("^K1You became a shooting star!"), "") \
@@ -576,11 +573,11 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_MINSTA_FINDAMMO,             0, 0, "",              CPID_MINSTA_FINDAMMO,  "1 9", _("^F4^COUNT^BG left to find some ammo!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MINSTA_FINDAMMO_FIRST,       0, 0, "",              CPID_MINSTA_FINDAMMO,  "1 10", _("^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"), _("^BGGet some ammo! ^F4^COUNT^BG left!")) \
 	MSG_CENTER_NOTIF(1, CENTER_MINSTA_LIVES_REMAINING,      0, 1, "f1",            NO_CPID,  			  "0 0", _("^F2Extra lives remaining: ^K1%s"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_MINSTA_SECONDARY,            0, 0, "",              NO_CPID,         	  "0 0", _("^BGSecondary fire inflicts no damage!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_MINSTA_SECONDARY,            0, 0, "",              NO_CPID,  			  "0 0", _("^BGSecondary fire inflicts no damage!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MOTD,                        1, 0, "s1",            CPID_MOTD,             "5 0", _("^BG%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_NIX_COUNTDOWN,               0, 2, "item_wepname",  CPID_NIX,              "1 f2", _("^F2^COUNT^BG until weapon change...\nNext weapon: ^F1%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_NIX_NEWWEAPON,               0, 1, "item_wepname",  CPID_NIX,              "0 0", _("^F2Active weapon: ^F1%s"), "") \
-        MSG_CENTER_NOTIF(1, CENTER_NADE,            		0, 0, "",              NO_CPID,		      "0 0", _("^BGPress ^F2DROPWEAPON^BG again to toss the nade!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_NADE,            			0, 0, "",              NO_CPID,		          "0 0", _("^BGPress ^F2DROPWEAPON^BG again to toss the grenade!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_OVERKILL_CHARGE,             0, 0, "",              CPID_OVERKILL,         "0 0", _("^BGYour weapon's charge is too low, release the attack button & wait for it to charge"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_FRAG,               0, 0, "",              CPID_OVERTIME,         "0 0", _("^F2Now playing ^F4OVERTIME^F2!\nKeep fragging until we have a winner!"), _("^F2Now playing ^F4OVERTIME^F2!\nKeep scoring until we have a winner!")) \
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_TIME,               0, 1, "f1time",        CPID_OVERTIME,         "0 0", _("^F2Now playing ^F4OVERTIME^F2!\n^BGAdded ^F4%s^BG to the game!"), "") \
@@ -619,9 +616,7 @@ void Send_Notification_WOVA(
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_FIRE,                    NO_MSG,        INFO_DEATH_MURDER_FIRE,                    NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_LAVA,                    NO_MSG,        INFO_DEATH_MURDER_LAVA,                    NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_MONSTER,                 NO_MSG,        INFO_DEATH_MURDER_MONSTER,                 CENTER_DEATH_SELF_MONSTER) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_NADE_NEX,				 NO_MSG,		INFO_DEATH_MURDER_NADE_NEX,				   NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_NADE_NORMAL,			 NO_MSG,		INFO_DEATH_MURDER_NADE_NORMAL,			   NO_MSG) \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_NADE_SG,				 NO_MSG,		INFO_DEATH_MURDER_NADE_SG,				   NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_NADE,                    NO_MSG,        INFO_DEATH_MURDER_NADE,                   NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_SHOOTING_STAR,           NO_MSG,        INFO_DEATH_MURDER_SHOOTING_STAR,           NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_SLIME,                   NO_MSG,        INFO_DEATH_MURDER_SLIME,                   NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_SWAMP,                   NO_MSG,        INFO_DEATH_MURDER_SWAMP,                   NO_MSG) \
@@ -674,8 +669,7 @@ void Send_Notification_WOVA(
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_WYVERN,			 	 NO_MSG,        INFO_DEATH_SELF_MON_WYVERN,				   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_ZOMBIE_JUMP,		 	 NO_MSG,        INFO_DEATH_SELF_MON_ZOMBIE_JUMP,		   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_ZOMBIE_MELEE,		 	 NO_MSG,        INFO_DEATH_SELF_MON_ZOMBIE_MELEE,		   CENTER_DEATH_SELF_MONSTER) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_NADE_BOOST,				 NO_MSG,		INFO_DEATH_SELF_NADE_BOOST,				   CENTER_DEATH_SELF_NADE) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_NADE_NORMAL,				 NO_MSG,		INFO_DEATH_SELF_NADE_NORMAL,			   CENTER_DEATH_SELF_NADE) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_NADE,				 		 NO_MSG,		INFO_DEATH_SELF_NADE,			   		   CENTER_DEATH_SELF_NADE) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_NOAMMO,                    NO_MSG,        INFO_DEATH_SELF_NOAMMO,                    CENTER_DEATH_SELF_NOAMMO) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_ROT,                       NO_MSG,        INFO_DEATH_SELF_ROT,                       CENTER_DEATH_SELF_ROT) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_SHOOTING_STAR,             NO_MSG,        INFO_DEATH_SELF_SHOOTING_STAR,             CENTER_DEATH_SELF_SHOOTING_STAR) \

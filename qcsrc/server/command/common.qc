@@ -340,43 +340,20 @@ void CommonCommand_ladder(float request, entity caller)
 	}
 }
 
-void CommonCommand_lsmaps(float request, entity caller, float argc)
+void CommonCommand_lsmaps(float request, entity caller)
 {
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			string maplist_string = lsmaps_reply;
-			if(argv(1) == "1") { maplist_string = strreplace(" ", "\n", maplist_string); }
-			
-			print_to(caller, maplist_string);
+			print_to(caller, lsmaps_reply);
 			return; // never fall through to usage
 		}
 			
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " lsmaps [1]"));
-			print_to(caller, "  Shows each map on a new line with argument 1.");
-			return;
-		}
-	}
-}
-
-void CommonCommand_lsnewmaps(float request, entity caller)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			print_to(caller, lsnewmaps_reply);
-			return; // never fall through to usage
-		}
-			
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " lsnewmaps"));
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " lsmaps"));
 			print_to(caller, "  No arguments required.");
 			return;
 		}
@@ -695,8 +672,7 @@ void CommonCommand_(float request, entity caller)
 	COMMON_COMMAND("cvar_purechanges", CommonCommand_cvar_purechanges(request, caller), "Prints a list of all changed gameplay cvars") \
 	COMMON_COMMAND("info", CommonCommand_info(request, caller, arguments), "Request for unique server information set up by admin") \
 	COMMON_COMMAND("ladder", CommonCommand_ladder(request, caller), "Get information about top players if supported") \
-	COMMON_COMMAND("lsmaps", CommonCommand_lsmaps(request, caller, arguments), "List maps which can be used with the current game mode") \
-	COMMON_COMMAND("lsnewmaps", CommonCommand_lsnewmaps(request, caller), "List maps which have no records or are seemingly unplayed yet") \
+	COMMON_COMMAND("lsmaps", CommonCommand_lsmaps(request, caller), "List maps which can be used with the current game mode") \
 	COMMON_COMMAND("printmaplist", CommonCommand_printmaplist(request, caller), "Display full server maplist reply") \
 	COMMON_COMMAND("rankings", CommonCommand_rankings(request, caller), "Print information about rankings") \
 	COMMON_COMMAND("records", CommonCommand_records(request, caller), "List top 10 records for the current map") \

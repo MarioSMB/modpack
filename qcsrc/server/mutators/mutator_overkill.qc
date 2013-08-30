@@ -121,21 +121,11 @@ MUTATOR_HOOKFUNCTION(ok_WeaponSetup)
 {
 	switch(self.weapon)
 	{
-		case WEP_SHOTGUN:
-			self.weaponname = "ok_shotgun";
-			break;
-		case WEP_UZI:
-			self.weaponname = "ok_mg";
-			break;
-		case WEP_NEX:
-			self.weaponname = "ok_sniper";
-			break;
-		case WEP_HMG:
-			self.weaponname = "ok_hmg";
-			break;  
-		case WEP_RPC:
-			self.weaponname = "ok_rl";
-			break;
+		case WEP_SHOTGUN: self.weaponname = "ok_shotgun"; break;
+		case WEP_UZI: self.weaponname = "ok_mg"; break;
+		case WEP_NEX: self.weaponname = "ok_sniper"; break;
+		case WEP_HMG: self.weaponname = "ok_hmg"; break;  
+		case WEP_RPC: self.weaponname = "ok_rl"; break;
 	}
 
 	return 0;
@@ -218,7 +208,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 	ok_IncreaseCharge(self, self.weapon);
 	
 	if not(autocvar_g_overkill_ammo_charge)
-	if(WEPSET_CONTAINS_EW(self, WEP_HMG))
+	if(self.weapons & WEPSET_HMG)
 	if(self.superweapons_finished < time)
 	{
 		weapon_action(WEP_UZI, WR_RESETPLAYER);
@@ -227,12 +217,12 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 	}
 
 	if(self.BUTTON_ATCK2)
-		if(self.jump_interval <= time)
-		{
-			self.jump_interval = time + autocvar_g_balance_laser_primary_refire * W_WeaponRateFactor();
-			makevectors(self.v_angle);
-			W_Laser_Attack(3, WEP_LASER, WEP_LASER);
-		}
+	if(self.jump_interval <= time)
+	{
+		self.jump_interval = time + autocvar_g_balance_laser_primary_refire * W_WeaponRateFactor();
+		makevectors(self.v_angle);
+		W_Laser_Attack(3, WEP_LASER, WEP_LASER);
+	}
 
 	self.BUTTON_ATCK2 = 0;
 	return 0;
@@ -240,10 +230,10 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 
 MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
 {
-	WEPSET_CLEAR_E(self);
-	WEPSET_OR_EW(self, WEP_UZI);
-	WEPSET_OR_EW(self, WEP_NEX);
-	WEPSET_OR_EW(self, WEP_SHOTGUN);
+	self.weapons = '0 0 0';
+	self.weapons |= WEPSET_UZI;
+	self.weapons |= WEPSET_NEX;
+	self.weapons |= WEPSET_SHOTGUN;
 	
 	if(autocvar_g_overkill_ammo_charge)
 	{

@@ -19,9 +19,6 @@
 	precache_model("models/gibs/robo7.md3");
 	precache_model("models/gibs/robo8.md3");
 	precache_model("models/hook.md3");
-			precache_model("models/monsters/grunt_torso.md3");
-			precache_model("models/monsters/grunt_legs.md3");
-			precache_model("models/monsters/grunt_arm.md3");
 	precache_model("models/ebomb.mdl");
 	precache_model("models/elaser.mdl");
 	precache_model("models/grenademodel.md3");
@@ -79,7 +76,6 @@
 	precache_sound("weapons/lgbeam_fly.wav");
 	precache_sound("weapons/gauntletbeam_fly.wav");
 	precache_sound ("misc/invshot.wav");
-			precache_sound("weapons/rocket_impact.wav");
 	precache_sound("weapons/electro_fly.wav");
 	precache_sound("weapons/rocket_fly.wav");
 	precache_sound("weapons/fireball_fly.wav");

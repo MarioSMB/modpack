@@ -2,18 +2,18 @@
  * Globals and Fields
  */
 
-float AI_STATUS_ROAMING						= 1;	// Bot is just crawling the map. No enemies at sight
-float AI_STATUS_ATTACKING					= 2;	// There are enemies at sight
-float AI_STATUS_RUNNING						= 4;	// Bot is bunny hopping
-float AI_STATUS_DANGER_AHEAD				= 8;	// There is lava/slime/trigger_hurt ahead
-float AI_STATUS_OUT_JUMPPAD					= 16;	// Trying to get out of a "vertical" jump pad
-float AI_STATUS_OUT_WATER					= 32;	// Trying to get out of water
-float AI_STATUS_WAYPOINT_PERSONAL_LINKING	= 64;	// Waiting for the personal waypoint to be linked
-float AI_STATUS_WAYPOINT_PERSONAL_GOING		= 128;	// Going to a personal waypoint
-float AI_STATUS_WAYPOINT_PERSONAL_REACHED	= 256;	// Personal waypoint reached
-float AI_STATUS_JETPACK_FLYING				= 512;
-float AI_STATUS_JETPACK_LANDING				= 1024;
-float AI_STATUS_STUCK						= 2048; // Cannot reach any goal
+const float AI_STATUS_ROAMING						= 1;	// Bot is just crawling the map. No enemies at sight
+const float AI_STATUS_ATTACKING					= 2;	// There are enemies at sight
+const float AI_STATUS_RUNNING						= 4;	// Bot is bunny hopping
+const float AI_STATUS_DANGER_AHEAD				= 8;	// There is lava/slime/trigger_hurt ahead
+const float AI_STATUS_OUT_JUMPPAD					= 16;	// Trying to get out of a "vertical" jump pad
+const float AI_STATUS_OUT_WATER					= 32;	// Trying to get out of water
+const float AI_STATUS_WAYPOINT_PERSONAL_LINKING	= 64;	// Waiting for the personal waypoint to be linked
+const float AI_STATUS_WAYPOINT_PERSONAL_GOING		= 128;	// Going to a personal waypoint
+const float AI_STATUS_WAYPOINT_PERSONAL_REACHED	= 256;	// Personal waypoint reached
+const float AI_STATUS_JETPACK_FLYING				= 512;
+const float AI_STATUS_JETPACK_LANDING				= 1024;
+const float AI_STATUS_STUCK						= 2048; // Cannot reach any goal
 
 .float isbot; // true if this client is actually a bot
 .float aistatus;

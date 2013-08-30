@@ -86,9 +86,9 @@ void XonoticColorButton_saveCvars(entity me)
 	if(me.checked)
 	{
 		if(me.cvarPart == 1)
-			cvar_set(me.cvarName, ftos(cvar(me.cvarName) & 15 + me.cvarValueFloat * 16));
+			cvar_set(me.cvarName, ftos((cvar(me.cvarName) & 15) + me.cvarValueFloat * 16));
 		else
-			cvar_set(me.cvarName, ftos(cvar(me.cvarName) & 240 + me.cvarValueFloat));
+			cvar_set(me.cvarName, ftos((cvar(me.cvarName) & 240) + me.cvarValueFloat));
 	}
 	// TODO on an apply button, read _cl_color and execute the color command for it
 }

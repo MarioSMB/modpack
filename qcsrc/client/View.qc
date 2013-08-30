@@ -1,10 +1,5 @@
 entity porto;
 vector polyline[16];
-float Q3SURFACEFLAG_SLICK = 2; // low friction surface
-float DPCONTENTS_SOLID = 1; // blocks player movement
-float DPCONTENTS_BODY = 32; // blocks player movement
-float DPCONTENTS_CORPSE = 64; // blocks player movement
-float DPCONTENTS_PLAYERCLIP = 256; // blocks player movement
 void Porto_Draw()
 {
 	vector p, dir, ang, q, nextdir;
@@ -350,8 +345,8 @@ void PostInit(void);
 void CSQC_Demo_Camera();
 float HUD_WouldDrawScoreboard();
 float camera_mode;
-float CAMERA_FREE = 1;
-float CAMERA_CHASE = 2;
+const float CAMERA_FREE = 1;
+const float CAMERA_CHASE = 2;
 float reticle_type;
 string NextFrameCommand;
 void CSQC_SPIDER_HUD();
@@ -500,7 +495,7 @@ void CSQC_UpdateView(float w, float h)
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
-		if(spectatee_status >= 0 && (autocvar_cl_eventchase_death && is_dead) || intermission)
+		if((spectatee_status >= 0 && (autocvar_cl_eventchase_death && is_dead)) || intermission)
 		{
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = (csqcplayer ? csqcplayer.origin : pmove_org);
@@ -825,11 +820,11 @@ void CSQC_UpdateView(float w, float h)
 	// the view to go back to normal, so reticle_type would become 0 as we fade out)
 	if(spectatee_status || is_dead || hud != HUD_NORMAL)
 		reticle_type = 0; // prevent reticle from showing during the respawn zoom effect or for spectators
-	else if(activeweapon == WEP_NEX && (button_zoom || zoomscript_caught) || activeweapon == WEP_RIFLE && (button_zoom || zoomscript_caught) || activeweapon == WEP_MINSTANEX && (button_zoom || zoomscript_caught))
+	else if((activeweapon == WEP_NEX || activeweapon == WEP_RIFLE || activeweapon == WEP_MINSTANEX) && (button_zoom || zoomscript_caught))
 		reticle_type = 2; // nex zoom
 	else if(button_zoom || zoomscript_caught)
 		reticle_type = 1; // normal zoom
-	else if(activeweapon == WEP_NEX && button_attack2 || activeweapon == WEP_RIFLE && button_attack2)
+	else if((activeweapon == WEP_NEX) && button_attack2)
 		reticle_type = 2; // nex zoom
     
 	if(reticle_type && autocvar_cl_reticle)
@@ -1092,7 +1087,7 @@ void CSQC_UpdateView(float w, float h)
 	if(hit_time > nextsound_hit_time && autocvar_cl_hitsound)
 	{
 		if(time - hit_time < MAX_TIME_DIFF) // don't play the sound if it's too old.
-			sound(world, CH_INFO, "misc/hit.wav", VOL_BASE, ATTN_NONE);
+			sound(world, CH_INFO, "misc/hit.wav", VOL_BASE, ATTEN_NONE);
 			
 		nextsound_hit_time = time + autocvar_cl_hitsound_antispam_time;
 	}
@@ -1100,7 +1095,7 @@ void CSQC_UpdateView(float w, float h)
 	if(typehit_time > nextsound_typehit_time) 
 	{
 		if(time - typehit_time < MAX_TIME_DIFF) // don't play the sound if it's too old.
-			sound(world, CH_INFO, "misc/typehit.wav", VOL_BASE, ATTN_NONE);
+			sound(world, CH_INFO, "misc/typehit.wav", VOL_BASE, ATTEN_NONE);
 			
 		nextsound_typehit_time = time + autocvar_cl_hitsound_antispam_time;
 	}
@@ -1383,7 +1378,7 @@ void CSQC_UpdateView(float w, float h)
 			
 				WarpZone_TrailParticles(self, particleeffectnum(s), view_origin, view_origin + v + view_forward * minsta_range);
 				
-				//sound(self, CH_SHOTS, "weapons/minstanexfire.wav", VOL_BASE, ATTN_LARGE);
+				//sound(self, CH_SHOTS, "weapons/minstanexfire.wav", VOL_BASE, ATTEN_LARGE);
 				
 				pointparticles(particleeffectnum("nex_impact"), trace_endpos, '0 0 0', 1);
 					

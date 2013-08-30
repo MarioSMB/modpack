@@ -193,7 +193,7 @@ void CSQCPlayer_SetCamera()
 
 			// get crouch state from the server
 			if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS_z)
-				self.pmove_flags &~= PMF_DUCKED;
+				self.pmove_flags &= ~PMF_DUCKED;
 			else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS_z)
 				self.pmove_flags |= PMF_DUCKED;
 
@@ -201,7 +201,7 @@ void CSQCPlayer_SetCamera()
 			if(pmove_onground)
 				self.pmove_flags |= PMF_ONGROUND;
 			else
-				self.pmove_flags &~= PMF_ONGROUND;
+				self.pmove_flags &= ~PMF_ONGROUND;
 
 			CSQCPlayer_SetMinsMaxs();
 
@@ -214,7 +214,7 @@ void CSQCPlayer_SetCamera()
 		else
 		{
 			float flg = self.iflags;
-			self.iflags &~= IFLAG_ORIGIN | IFLAG_ANGLES;
+			self.iflags &= ~(IFLAG_ORIGIN | IFLAG_ANGLES);
 			InterpolateOrigin_Do();
 			self.iflags = flg;
 
@@ -231,7 +231,7 @@ void CSQCPlayer_SetCamera()
 
 				// get crouch state from the server
 				if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS_z)
-					self.pmove_flags &~= PMF_DUCKED;
+					self.pmove_flags &= ~PMF_DUCKED;
 				else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS_z)
 					self.pmove_flags |= PMF_DUCKED;
 
@@ -239,7 +239,7 @@ void CSQCPlayer_SetCamera()
 				if(pmove_onground)
 					self.pmove_flags |= PMF_ONGROUND;
 				else
-					self.pmove_flags &~= PMF_ONGROUND;
+					self.pmove_flags &= ~PMF_ONGROUND;
 
 				CSQCPlayer_SavePrediction();
 			}
@@ -248,7 +248,7 @@ void CSQCPlayer_SetCamera()
 #ifdef CSQCMODEL_SERVERSIDE_CROUCH
 			// get crouch state from the server (LAG)
 			if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS_z)
-				self.pmove_flags &~= PMF_DUCKED;
+				self.pmove_flags &= ~PMF_DUCKED;
 			else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS_z)
 				self.pmove_flags |= PMF_DUCKED;
 #endif

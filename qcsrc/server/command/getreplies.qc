@@ -285,3 +285,58 @@ string getladder()
 	else
 		return strcat("Top ", ftos(LADDER_SIZE), " ladder rankings:\n", s);
 }
+
+string getmaplist()
+{
+	string maplist = "", col;
+	float i, argc;
+	
+	argc = tokenize_console(autocvar_g_maplist);
+	for(i = 0; i < argc; ++i)
+	{
+		if(MapInfo_CheckMap(argv(i)))
+		{
+			if(mod(i, 2)) { col = "^2"; }
+			else { col = "^3"; }
+			maplist = sprintf("%s%s%s ", maplist, col, argv(i));
+		}
+	}
+
+	MapInfo_ClearTemps();
+	return sprintf(_("^7Maps in list: %s\n"), maplist);
+}
+
+	
+string getlsmaps()
+{
+	string lsmaps = "", col;
+	float i, newmaps = 0;
+	
+	for(i = 0; i < MapInfo_count; ++i)
+	{
+		if((MapInfo_Get_ByID(i)) && !(MapInfo_Map_flags & MapInfo_ForbiddenFlags()))
+		{
+			// todo: Check by play count of maps for other game types?
+			if(
+				(g_race && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, RACE_RECORD, "time"))))
+				||
+				(g_cts && !stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, CTS_RECORD, "time"))))
+			)
+			{
+				newmaps = TRUE;
+				if(mod(i, 2)) { col = "^4*"; }
+				else { col = "^5*"; }
+			}
+			else
+			{
+				if(mod(i, 2)) { col = "^2"; }
+				else { col = "^3"; }
+			}
+
+			lsmaps = sprintf("%s%s%s ", lsmaps, col, MapInfo_Map_bspname);
+		}
+	}
+
+	MapInfo_ClearTemps();
+	return sprintf(_("^7Maps available%s: %s\n"), (newmaps ? _(" (New maps have asterisks marked in blue)") : ""), lsmaps);
+}

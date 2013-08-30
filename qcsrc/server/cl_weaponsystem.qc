@@ -27,11 +27,11 @@ void W_SwitchWeapon_Force(entity e, float w)
 .float antilag_debug;
 
 // VorteX: static frame globals
-float WFRAME_DONTCHANGE = -1;
-float WFRAME_FIRE1 = 0;
-float WFRAME_FIRE2 = 1;
-float WFRAME_IDLE = 2;
-float WFRAME_RELOAD = 3;
+const float WFRAME_DONTCHANGE = -1;
+const float WFRAME_FIRE1 = 0;
+const float WFRAME_FIRE2 = 1;
+const float WFRAME_IDLE = 2;
+const float WFRAME_RELOAD = 3;
 .float wframe;
 
 void(float fr, float t, void() func) weapon_thinkf;
@@ -88,7 +88,7 @@ void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, 
 	vector org;
 	float lag;
 
-	if(player.hitplotfh >= 0 && !(player.flags & FL_MONSTER))
+	if(player.hitplotfh >= 0)
 	{
 		lag = ANTILAG_LATENCY(player);
 		if(lag < 0.001)
@@ -121,7 +121,7 @@ void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
 		&& ((time > player.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
 		|| (time > player.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
 		{
-			sound(player, CH_TRIGGER, "weapons/strength_fire.wav", VOL_BASE, ATTN_NORM);
+			sound(player, CH_TRIGGER, "weapons/strength_fire.wav", VOL_BASE, ATTEN_NORM);
 			player.prevstrengthsound = time;
 		}
 		player.prevstrengthsoundattempt = time;
@@ -163,7 +163,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	// track max damage
 	if(accuracy_canbegooddamage(ent))
 		accuracy_add(ent, wep, maxdamage, 0);
-
+		
 	W_HitPlotAnalysis(ent, v_forward, v_right, v_up);
 
 	if(ent.weaponentity.movedir_x > 0)
@@ -238,7 +238,7 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 
 	if (snd != "")
 	{
-		sound (ent, chan, snd, VOL_BASE, ATTN_NORM);
+		sound (ent, chan, snd, VOL_BASE, ATTEN_NORM);
 		W_PlayStrengthSound(ent);
 	}
 
@@ -517,10 +517,10 @@ void CL_Weaponentity_Think()
 
 	tb = (self.effects & (EF_TELEPORT_BIT | EF_RESTARTANIM_BIT));
 	self.effects = self.owner.effects & EFMASK_CHEAP;
-	self.effects &~= EF_LOWPRECISION;
-	self.effects &~= EF_FULLBRIGHT; // can mask team color, so get rid of it
-	self.effects &~= EF_TELEPORT_BIT;
-	self.effects &~= EF_RESTARTANIM_BIT;
+	self.effects &= ~EF_LOWPRECISION;
+	self.effects &= ~EF_FULLBRIGHT; // can mask team color, so get rid of it
+	self.effects &= ~EF_TELEPORT_BIT;
+	self.effects &= ~EF_RESTARTANIM_BIT;
 	self.effects |= tb;
 
 	if(self.owner.alpha == default_player_alpha)
@@ -668,7 +668,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 	if(complain)
 		self.hasweapon_complain_spam = time + 0.2;
 		
-	if(wpn == WEP_HOOK && !g_grappling_hook && autocvar_g_nades && !WEPSET_CONTAINS_EW(cl, wpn) && !WEPSET_CONTAINS_AW(weaponsInMap, wpn))
+	if(wpn == WEP_HOOK && !g_grappling_hook && autocvar_g_nades && !((cl.weapons | weaponsInMap) & WepSet_FromWeapon(wpn)))
 		complain = 0;
 
 	if (wpn < WEP_FIRST || wpn > WEP_LAST)
@@ -677,7 +677,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			sprint(self, "Invalid weapon\n");
 		return FALSE;
 	}
-	if (WEPSET_CONTAINS_EW(cl, wpn))
+	if (cl.weapons & WepSet_FromWeapon(wpn))
 	{
 		if (andammo)
 		{
@@ -717,7 +717,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 	{
 		// DRESK - 3/16/07
 		// Report Proper Weapon Status / Modified Weapon Ownership Message
-		if (WEPSET_CONTAINS_AW(weaponsInMap, wpn))
+		if (weaponsInMap & WepSet_FromWeapon(wpn))
 		{
 			Send_WeaponComplain(cl, wpn, W_Name(wpn), 1);
 
@@ -782,7 +782,7 @@ void weapon_setup(float windex)
 {
 	entity e;
 	e = get_weaponinfo(windex);
-	self.items &~= IT_AMMO;
+	self.items &= ~IT_AMMO;
 	self.items = self.items | (e.items & IT_AMMO);
 
 	// the two weapon entities will notice this has changed and update their models
@@ -800,11 +800,11 @@ void W_SwitchToOtherWeapon(entity pl)
 	// hack to ensure it switches to an OTHER weapon (in case the other fire mode still has ammo, we want that anyway)
 	float w, ww;
 	w = pl.weapon;
-	if(WEPSET_CONTAINS_EW(pl, w))
+	if(pl.weapons & WepSet_FromWeapon(w))
 	{
-		WEPSET_ANDNOT_EW(pl, w);
+		pl.weapons &= ~WepSet_FromWeapon(w);
 		ww = w_getbestweapon(pl);
-		WEPSET_OR_EW(pl, w);
+		pl.weapons |= WepSet_FromWeapon(w);
 	}
 	else
 		ww = w_getbestweapon(pl);
@@ -827,7 +827,7 @@ float weapon_prepareattack_checkammo(float secondary)
 
 		if(self.weapon == self.switchweapon && time - self.prevdryfire > 1) // only play once BEFORE starting to switch weapons
 		{
-			sound (self, CH_WEAPON_A, "weapons/dryfire.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_WEAPON_A, "weapons/dryfire.wav", VOL_BASE, ATTEN_NORM);
 			self.prevdryfire = time;
 		}
 
@@ -1017,8 +1017,6 @@ vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity, float f
 
 void W_AttachToShotorg(entity flash, vector offset)
 {
-	if(self.flags & FL_MONSTER)
-		return; // no flash for monsters
 	entity xflash;
 	flash.owner = self;
 	flash.angles_z = random() * 360;
@@ -1287,9 +1285,6 @@ void W_DecreaseAmmo(.float ammo_type, float ammo_use, float ammo_reload)
 	if(MUTATOR_CALLHOOK(DecreaseAmmo))
 		return;
 		
-	if(self.flags & FL_MONSTER) // no ammo for monsters... yet
-		return;
-		
 	if((self.items & IT_UNLIMITED_WEAPON_AMMO) && !ammo_reload)
 		return;
 
@@ -1399,7 +1394,7 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 
 	// now begin the reloading process
 
-	sound (self, CH_WEAPON_SINGLE, self.reload_sound, VOL_BASE, ATTN_NORM);
+	sound (self, CH_WEAPON_SINGLE, self.reload_sound, VOL_BASE, ATTEN_NORM);
 
 	// do not set ATTACK_FINISHED in reload code any more. This causes annoying delays if eg: You start reloading a weapon,
 	// then quickly switch to another weapon and back. Reloading is canceled, but the reload delay is still there,

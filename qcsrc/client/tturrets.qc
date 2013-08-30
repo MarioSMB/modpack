@@ -509,7 +509,7 @@ void turret_gibboom()
 {
     float i;
     
-    sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+    sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
     pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
 
     for (i = 1; i < 5; i = i + 1)
@@ -556,7 +556,7 @@ entity turret_gibtoss(string _model, vector _from, vector _to, vector _cmod, flo
 void turret_die()
 {    
     
-    sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+    sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
     pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
     turret_tid2info(self.turret_type);
     if (!autocvar_cl_nogibs)

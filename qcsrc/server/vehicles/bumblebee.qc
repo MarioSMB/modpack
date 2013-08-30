@@ -232,7 +232,7 @@ void bumb_gunner_exit(float _exitflag)
 	self.takedamage     = DAMAGE_AIM;
 	self.solid          = SOLID_SLIDEBOX;
 	self.movetype       = MOVETYPE_WALK;
-	self.effects        &~= EF_NODRAW;
+	self.effects        &= ~EF_NODRAW;
 	self.alpha          = 1;
 	self.PlayerPhysplug = func_null;
 	self.view_ofs       = PL_VIEW_OFS;
@@ -315,7 +315,7 @@ float bumb_gunner_enter()
 	other.vehicle_reload2   = self.vehicle_reload2;
 	other.vehicle_energy    = self.vehicle_energy;
 	other.PlayerPhysplug    = bumb_gunner_frame;
-	other.flags             &~= FL_ONGROUND;
+	other.flags             &= ~FL_ONGROUND;
 
 	msg_entity = other;
 	WriteByte(MSG_ONE, SVC_SETVIEWPORT);
@@ -531,7 +531,7 @@ float bumb_pilot_frame()
 	if((pilot.BUTTON_ATCK || pilot.BUTTON_ATCK2) && (vehic.vehicle_energy > autocvar_g_vehicle_bumblebee_raygun_dps * sys_frametime || (autocvar_g_vehicle_bumblebee_raygun == 0 || pilot.BUTTON_ATCK)))
 	{
 		vehic.gun3.enemy.realowner = pilot;
-		vehic.gun3.enemy.effects &~= EF_NODRAW;
+		vehic.gun3.enemy.effects &= ~EF_NODRAW;
 		
 		if(pilot.BUTTON_ATCK)
 			vehic.gun3.enemy.cnt = 0;
@@ -711,7 +711,7 @@ void bumb_blowup()
 				 autocvar_g_vehicle_bumblebee_blowup_forceintensity,
 				 DEATH_VH_BUMB_DEATH, world);
 
-	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 	pointparticles(particleeffectnum("explosion_large"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	
 	if(self.owner.deadflag == DEAD_DYING)
@@ -727,7 +727,7 @@ void bumb_diethink()
 
 	if(random() < 0.1)
 	{
-		sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 		pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	}
 

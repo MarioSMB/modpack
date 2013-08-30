@@ -1,7 +1,7 @@
-float URL_READY_ERROR    = -1;
-float URL_READY_CLOSED   =  0;
-float URL_READY_CANWRITE =  1;
-float URL_READY_CANREAD  =  2;
+const float URL_READY_ERROR    = -1;
+const float URL_READY_CLOSED   =  0;
+const float URL_READY_CANWRITE =  1;
+const float URL_READY_CANREAD  =  2;
 // errors: -1, or negative HTTP status code
 typedef void(entity handle, entity pass, float status) url_ready_func;
 

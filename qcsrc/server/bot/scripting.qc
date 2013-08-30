@@ -551,7 +551,7 @@ float bot_cmd_impulse()
 
 float bot_cmd_continue()
 {
-	self.bot_exec_status &~= BOT_EXEC_STATUS_PAUSED;
+	self.bot_exec_status &= ~BOT_EXEC_STATUS_PAUSED;
 	return CMD_STATUS_FINISHED;
 }
 
@@ -562,7 +562,7 @@ float bot_cmd_wait()
 	{
 		if(time>=self.bot_cmd_wait_time)
 		{
-			self.bot_exec_status &~= BOT_EXEC_STATUS_WAITING;
+			self.bot_exec_status &= ~BOT_EXEC_STATUS_WAITING;
 			return CMD_STATUS_FINISHED;
 		}
 		else
@@ -581,7 +581,7 @@ float bot_cmd_wait_until()
 		self.bot_exec_status |= BOT_EXEC_STATUS_WAITING;
 		return CMD_STATUS_EXECUTING;
 	}
-	self.bot_exec_status &~= BOT_EXEC_STATUS_WAITING;
+	self.bot_exec_status &= ~BOT_EXEC_STATUS_WAITING;
 	return CMD_STATUS_FINISHED;
 }
 
@@ -758,7 +758,7 @@ float bot_cmd_if()
 
 float bot_cmd_else()
 {
-	self.bot_cmd_condition_status &~= CMD_CONDITION_TRUE_BLOCK;
+	self.bot_cmd_condition_status &= ~CMD_CONDITION_TRUE_BLOCK;
 	self.bot_cmd_condition_status |= CMD_CONDITION_FALSE_BLOCK;
 	return CMD_STATUS_FINISHED;
 }
@@ -952,79 +952,79 @@ float bot_cmd_keypress_handler(string key, float enabled)
 			if(enabled)
 			{
 				self.bot_cmd_keys |= BOT_CMD_KEY_FORWARD;
-				self.bot_cmd_keys &~= BOT_CMD_KEY_BACKWARD;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_BACKWARD;
 			}
 			else
-				self.bot_cmd_keys &~= BOT_CMD_KEY_FORWARD;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_FORWARD;
 			break;
 		case "backward":
 			if(enabled)
 			{
 				self.bot_cmd_keys |= BOT_CMD_KEY_BACKWARD;
-				self.bot_cmd_keys &~= BOT_CMD_KEY_FORWARD;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_FORWARD;
 			}
 			else
-				self.bot_cmd_keys &~= BOT_CMD_KEY_BACKWARD;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_BACKWARD;
 			break;
 		case "left":
 			if(enabled)
 			{
 				self.bot_cmd_keys |= BOT_CMD_KEY_LEFT;
-				self.bot_cmd_keys &~= BOT_CMD_KEY_RIGHT;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_RIGHT;
 			}
 			else
-				self.bot_cmd_keys &~= BOT_CMD_KEY_LEFT;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_LEFT;
 			break;
 		case "right":
 			if(enabled)
 			{
 				self.bot_cmd_keys |= BOT_CMD_KEY_RIGHT;
-				self.bot_cmd_keys &~= BOT_CMD_KEY_LEFT;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_LEFT;
 			}
 			else
-				self.bot_cmd_keys &~= BOT_CMD_KEY_RIGHT;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_RIGHT;
 			break;
 		case "jump":
 			if(enabled)
 				self.bot_cmd_keys |= BOT_CMD_KEY_JUMP;
 			else
-				self.bot_cmd_keys &~= BOT_CMD_KEY_JUMP;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_JUMP;
 			break;
 		case "crouch":
 			if(enabled)
 				self.bot_cmd_keys |= BOT_CMD_KEY_CROUCH;
 			else
-				self.bot_cmd_keys &~= BOT_CMD_KEY_CROUCH;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_CROUCH;
 			break;
 		case "attack1":
 			if(enabled)
 				self.bot_cmd_keys |= BOT_CMD_KEY_ATTACK1;
 			else
-				self.bot_cmd_keys &~= BOT_CMD_KEY_ATTACK1;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_ATTACK1;
 			break;
 		case "attack2":
 			if(enabled)
 				self.bot_cmd_keys |= BOT_CMD_KEY_ATTACK2;
 			else
-				self.bot_cmd_keys &~= BOT_CMD_KEY_ATTACK2;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_ATTACK2;
 			break;
 		case "use":
 			if(enabled)
 				self.bot_cmd_keys |= BOT_CMD_KEY_USE;
 			else
-				self.bot_cmd_keys &~= BOT_CMD_KEY_USE;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_USE;
 			break;
 		case "hook":
 			if(enabled)
 				self.bot_cmd_keys |= BOT_CMD_KEY_HOOK;
 			else
-				self.bot_cmd_keys &~= BOT_CMD_KEY_HOOK;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_HOOK;
 			break;
 		case "chat":
 			if(enabled)
 				self.bot_cmd_keys |= BOT_CMD_KEY_CHAT;
 			else
-				self.bot_cmd_keys &~= BOT_CMD_KEY_CHAT;
+				self.bot_cmd_keys &= ~BOT_CMD_KEY_CHAT;
 			break;
 		default:
 			break;
@@ -1102,7 +1102,7 @@ float bot_cmd_sound()
 	string sample = f;
 	float chan = CH_WEAPON_B;
 	float vol = VOL_BASE;
-	float atten = ATTN_MIN;
+	float atten = ATTEN_MIN;
 
 	if(n >= 1)
 		sample = argv(n - 1);

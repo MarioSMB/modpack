@@ -5,36 +5,18 @@ QCC ?= gmqcc
 
 QCCVERSIONFILE := qccversion.$(shell $(QCC) --version > qccversion.txt && git hash-object qccversion.txt)
 
-QCCFLAGS ?= \
-	-std=fteqcc \
-	-Werror -Wall \
-	-Wcpp \
+# We eventually need to get rid of these.
+QCCFLAGS_WTFS ?= \
 	-Wno-field-redeclared \
 	-Wno-double-declaration \
-	-Wno-uninitialized-global \
-	-O3 \
-	-fadjust-vector-fields \
-	-fftepp \
-	-fftepp-predefs \
-	-frelaxed-switch \
-	-fshort-logic \
-	-fno-perl-logic \
-	-ftranslatable-strings \
-	-fno-initialized-nonconstants \
-	-fno-assign-function-types \
+
+QCCFLAGS ?= \
+	-std=gmqcc \
+	-O3 -flno \
 	-DSTUFFTO_ENABLED \
-	-flno \
-	-fcorrect-ternary \
-	-fno-single-vector-defs \
-	-fcorrect-logic \
-	-ftrue-empty-strings \
-	-fno-false-empty-strings \
-	-futf8 \
-	-fno-bail-on-werror \
-	-floop-labels \
-	-funtyped-nil \
-	-fno-permissive \
-	-fvariadic-args \
+	-Werror -fno-bail-on-werror -Wall \
+	-fftepp -fftepp-predefs -Wcpp -futf8 \
+	$(QCCFLAGS_WTFS) \
 	$(QCCFLAGS_EXTRA) $(QCCFLAGS_WATERMARK)
 
 # xonotic build system overrides this by command line argument to turn off the update-cvarcount step

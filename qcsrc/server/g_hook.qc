@@ -22,8 +22,8 @@ void GrapplingHookFrame();
 void RemoveGrapplingHook(entity pl);
 void SetGrappleHookBindings();
 // hook impulses
-float GRAPHOOK_FIRE		= 20;
-float GRAPHOOK_RELEASE		= 21;
+const float GRAPHOOK_FIRE		= 20;
+const float GRAPHOOK_RELEASE		= 21;
 // (note: you can change the hook impulse #'s to whatever you please)
 
 4. Open client.c and add this to the top of PutClientInServer():
@@ -75,7 +75,7 @@ void GrapplingHookThink();
 void GrapplingHook_Stop()
 {
 	pointparticles(particleeffectnum("grapple_impact"), self.origin, '0 0 0', 1);
-	sound (self, CH_SHOTS, "weapons/hook_impact.wav", VOL_BASE, ATTN_NORM);
+	sound (self, CH_SHOTS, "weapons/hook_impact.wav", VOL_BASE, ATTEN_NORM);
 
 	self.state = 1;
 	self.think = GrapplingHookThink;
@@ -211,14 +211,14 @@ void GrapplingHookThink()
 					{
 						v = v - dv * 0.5;
 						self.aiment.velocity = self.aiment.velocity - dv * 0.5;
-						self.aiment.flags &~= FL_ONGROUND;
+						self.aiment.flags &= ~FL_ONGROUND;
 						self.aiment.pusher = self.realowner;
 						self.aiment.pushltime = time + autocvar_g_maxpushtime;
 						self.aiment.istypefrag = self.aiment.BUTTON_CHAT;
 					}
 				}
 
-				self.realowner.flags &~= FL_ONGROUND;
+				self.realowner.flags &= ~FL_ONGROUND;
 			}
 
 			self.realowner.velocity = WarpZone_RefSys_TransformVelocity(self, self.realowner, v);
@@ -236,7 +236,7 @@ void GrapplingHookThink()
 			self.realowner.velocity = dir*spd;
 			self.realowner.movetype = MOVETYPE_FLY;
 
-			self.realowner.flags &~= FL_ONGROUND;
+			self.realowner.flags &= ~FL_ONGROUND;
 		}
 	}
 
@@ -346,7 +346,7 @@ void FireGrapplingHook (void)
 	vs = hook_shotorigin[s];
 
 	// UGLY WORKAROUND: play this on CH_WEAPON_B so it can't cut off fire sounds
-	sound (self, CH_WEAPON_B, "weapons/hook_fire.wav", VOL_BASE, ATTN_NORM);
+	sound (self, CH_WEAPON_B, "weapons/hook_fire.wav", VOL_BASE, ATTEN_NORM);
 	org = self.origin + self.view_ofs + v_forward * vs_x + v_right * -vs_y + v_up * vs_z;
 
 	tracebox(self.origin + self.view_ofs, '-3 -3 -3', '3 3 3', org, MOVE_NORMAL, self);
@@ -427,19 +427,19 @@ void GrapplingHookFrame()
 		else
 		{
 			self.hook_state |= HOOK_REMOVING;
-			self.hook_state &~= HOOK_WAITING_FOR_RELEASE;
+			self.hook_state &= ~HOOK_WAITING_FOR_RELEASE;
 		}
 
-		self.hook_state &~= HOOK_RELEASING;
+		self.hook_state &= ~HOOK_RELEASING;
 		if(self.BUTTON_CROUCH)
 		{
-			self.hook_state &~= HOOK_PULLING;
+			self.hook_state &= ~HOOK_PULLING;
 			//self.hook_state |= HOOK_RELEASING;
 		}
 		else
 		{
 			self.hook_state |= HOOK_PULLING;
-			//self.hook_state &~= HOOK_RELEASING;
+			//self.hook_state &= ~HOOK_RELEASING;
 		}
 	}
 	else if(!(self.items & IT_JETPACK) && !g_grappling_hook && self.switchweapon != WEP_HOOK)
@@ -451,7 +451,7 @@ void GrapplingHookFrame()
 
 	if(!g_grappling_hook && self.weapon != WEP_HOOK)
 	{
-		self.hook_state &~= HOOK_FIRING;
+		self.hook_state &= ~HOOK_FIRING;
 		self.hook_state |= HOOK_REMOVING;
 	}
 
@@ -460,13 +460,13 @@ void GrapplingHookFrame()
 		if (self.hook)
 			RemoveGrapplingHook(self);
 		FireGrapplingHook();
-		self.hook_state &~= HOOK_FIRING;
+		self.hook_state &= ~HOOK_FIRING;
 	}
 	else if(self.hook_state & HOOK_REMOVING)
 	{
 		if (self.hook)
 			RemoveGrapplingHook(self);
-		self.hook_state &~= HOOK_REMOVING;
+		self.hook_state &= ~HOOK_REMOVING;
 	}
 
 	/*

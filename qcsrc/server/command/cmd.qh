@@ -13,7 +13,5 @@ float totalspawned;
 
 string MapVote_Suggest(string m);
 
-entity spawnmonster(string monster, float mnster, entity spawnedby, entity own, vector orig, float respwn, float moveflag);
-
 // used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
 void ClientCommand_macro_write_aliases(float fh);

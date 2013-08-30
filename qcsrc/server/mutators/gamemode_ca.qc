@@ -229,7 +229,7 @@ MUTATOR_HOOKFUNCTION(ca_SetStartItems)
 	start_ammo_cells = cvar("g_lms_start_ammo_cells");
 	start_ammo_fuel = cvar("g_lms_start_ammo_fuel");
 	
-	start_items &~= IT_UNLIMITED_AMMO;
+	start_items &= ~IT_UNLIMITED_AMMO;
 
 	return 0;
 }

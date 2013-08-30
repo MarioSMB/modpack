@@ -319,7 +319,7 @@ float racer_frame()
         {
             self.sounds = 1;
             self.sound_nexttime = time + 10.922667; //soundlength("vehicles/racer_move.wav");
-            sound (self, CH_TRIGGER_SINGLE, "vehicles/racer_move.wav", VOL_VEHICLEENGINE, ATTN_NORM);
+            sound (self, CH_TRIGGER_SINGLE, "vehicles/racer_move.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
         }
     }
     else
@@ -328,7 +328,7 @@ float racer_frame()
         {
             self.sounds = 0;
             self.sound_nexttime = time + 11.888604; //soundlength("vehicles/racer_idle.wav");
-            sound (self, CH_TRIGGER_SINGLE, "vehicles/racer_idle.wav", VOL_VEHICLEENGINE, ATTN_NORM);
+            sound (self, CH_TRIGGER_SINGLE, "vehicles/racer_idle.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
         }
     }
 
@@ -354,13 +354,13 @@ float racer_frame()
         if(racer.strength_finished < time)
         {
             racer.strength_finished = time + 10.922667; //soundlength("vehicles/racer_boost.wav");
-            sound (racer.tur_head, CH_TRIGGER_SINGLE, "vehicles/racer_boost.wav", VOL_VEHICLEENGINE, ATTN_NORM);
+            sound (racer.tur_head, CH_TRIGGER_SINGLE, "vehicles/racer_boost.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
         }
     }
     else
     {
         racer.strength_finished = 0;
-        sound (racer.tur_head, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_VEHICLEENGINE, ATTN_NORM);
+        sound (racer.tur_head, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
     }
 
 	df -= v_up * (vlen(racer.velocity) * autocvar_g_vehicle_racer_downforce);
@@ -490,7 +490,7 @@ void racer_exit(float eject)
     self.think      = racer_think;
     self.nextthink  = time;
     self.movetype   = MOVETYPE_BOUNCE;
-    sound (self.tur_head, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_VEHICLEENGINE, ATTN_NORM);
+    sound (self.tur_head, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
 
     if not (self.owner)
         return;

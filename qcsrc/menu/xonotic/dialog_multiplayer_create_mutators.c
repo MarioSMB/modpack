@@ -232,7 +232,7 @@ void XonoticMutatorsDialog_fill(entity me)
 		w = get_weaponinfo(i);
 		if(w.spawnflags & WEP_FLAG_HIDDEN)
 			continue;
-		if(j & 1 == 0)
+		if((j & 1) == 0)
 			me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 1.8, e = makeXonoticWeaponarenaCheckBox(strzone(w.netname), strzone(w.message)));

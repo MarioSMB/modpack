@@ -89,9 +89,9 @@ float DistributeEvenly_GetRandomized(float weight)
 
 #define move_out_of_solid(e) WarpZoneLib_MoveOutOfSolid(e)
 
-string STR_PLAYER = "player";
-string STR_SPECTATOR = "spectator";
-string STR_OBSERVER = "observer";
+const string STR_PLAYER = "player";
+const string STR_SPECTATOR = "spectator";
+const string STR_OBSERVER = "observer";
 
 #define IS_PLAYER(v) 			(v.classname == STR_PLAYER)
 #define IS_SPEC(v) 				(v.classname == STR_SPECTATOR)
@@ -190,7 +190,7 @@ float strstr(string haystack, string needle, float offset)
 }
 */
 
-float NUM_NEAREST_ENTITIES = 4;
+const float NUM_NEAREST_ENTITIES = 4;
 entity nearest_entity[NUM_NEAREST_ENTITIES];
 float nearest_length[NUM_NEAREST_ENTITIES];
 entity findnearest(vector point, .string field, string value, vector axismod)
@@ -645,7 +645,7 @@ float g_pickup_healthmega_anyway;
 float g_pickup_ammo_anyway;
 float g_pickup_weapons_anyway;
 float g_weaponarena;
-WEPSET_DECLARE_A(g_weaponarena_weapons);
+WepSet g_weaponarena_weapons;
 float g_weaponarena_random;
 float g_weaponarena_random_with_laser;
 string g_weaponarena_list;
@@ -655,9 +655,9 @@ float g_weapondamagefactor;
 float g_weaponforcefactor;
 float g_weaponspreadfactor;
 
-WEPSET_DECLARE_A(start_weapons);
-WEPSET_DECLARE_A(start_weapons_default);
-WEPSET_DECLARE_A(start_weapons_defaultmask);
+WepSet start_weapons;
+WepSet start_weapons_default;
+WepSet start_weapons_defaultmask;
 float start_items;
 float start_ammo_shells;
 float start_ammo_nails;
@@ -666,9 +666,9 @@ float start_ammo_cells;
 float start_ammo_fuel;
 float start_health;
 float start_armorvalue;
-WEPSET_DECLARE_A(warmup_start_weapons);
-WEPSET_DECLARE_A(warmup_start_weapons_default);
-WEPSET_DECLARE_A(warmup_start_weapons_defaultmask);
+WepSet warmup_start_weapons;
+WepSet warmup_start_weapons_default;
+WepSet warmup_start_weapons_defaultmask;
 float warmup_start_ammo_shells;
 float warmup_start_ammo_nails;
 float warmup_start_ammo_rockets;
@@ -730,9 +730,9 @@ void readplayerstartcvars()
 	string s;
 
 	// initialize starting values for players
-	WEPSET_CLEAR_A(start_weapons);
-	WEPSET_CLEAR_A(start_weapons_default);
-	WEPSET_CLEAR_A(start_weapons_defaultmask);
+	start_weapons = '0 0 0';
+	start_weapons_default = '0 0 0';
+	start_weapons_defaultmask = '0 0 0';
 	start_items = 0;
 	start_ammo_shells = 0;
 	start_ammo_nails = 0;
@@ -742,7 +742,7 @@ void readplayerstartcvars()
 	start_armorvalue = cvar("g_balance_armor_start");
 
 	g_weaponarena = 0;
-	WEPSET_CLEAR_A(g_weaponarena_weapons);
+	g_weaponarena_weapons = '0 0 0';
 
 	s = cvar_string("g_weaponarena");
 	if (s == "0" || s == "")
@@ -767,7 +767,7 @@ void readplayerstartcvars()
 		{
 			e = get_weaponinfo(j);
 			if not(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
-				WEPSET_OR_AW(g_weaponarena_weapons, j);
+				g_weaponarena_weapons |= WepSet_FromWeapon(j);
 		}
 	}
 	else if (s == "most")
@@ -779,7 +779,7 @@ void readplayerstartcvars()
 			e = get_weaponinfo(j);
 			if not(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 				if (e.spawnflags & WEP_FLAG_NORMAL)
-					WEPSET_OR_AW(g_weaponarena_weapons, j);
+					g_weaponarena_weapons |= WepSet_FromWeapon(j);
 		}
 	}
 	else if (s == "none")
@@ -800,7 +800,7 @@ void readplayerstartcvars()
 				e = get_weaponinfo(j);
 				if (e.netname == s)
 				{
-					WEPSET_OR_AW(g_weaponarena_weapons, j);
+					g_weaponarena_weapons |= WepSet_FromWeapon(j);
 					g_weaponarena_list = strcat(g_weaponarena_list, e.message, " & ");
 					break;
 				}
@@ -822,7 +822,7 @@ void readplayerstartcvars()
 	if (g_weaponarena)
 	{
 		g_weapon_stay = 0; // incompatible
-		WEPSET_COPY_AA(start_weapons, g_weaponarena_weapons);
+		start_weapons = g_weaponarena_weapons;
 		start_items |= IT_UNLIMITED_AMMO;
 	}
 	else
@@ -832,11 +832,11 @@ void readplayerstartcvars()
 			e = get_weaponinfo(i);
 			float w = want_weapon("g_start_weapon_", e, FALSE);
 			if(w & 1)
-				WEPSET_OR_AW(start_weapons, i);
+				start_weapons |= WepSet_FromWeapon(i);
 			if(w & 2)
-				WEPSET_OR_AW(start_weapons_default, i);
+				start_weapons_default |= WepSet_FromWeapon(i);
 			if(w & 4)
-				WEPSET_OR_AW(start_weapons_defaultmask, i);
+				start_weapons_defaultmask |= WepSet_FromWeapon(i);
 		}
 	}
 
@@ -869,9 +869,9 @@ void readplayerstartcvars()
 		warmup_start_ammo_fuel = start_ammo_fuel;
 		warmup_start_health = start_health;
 		warmup_start_armorvalue = start_armorvalue;
-		WEPSET_COPY_AA(warmup_start_weapons, start_weapons);
-		WEPSET_COPY_AA(warmup_start_weapons_default, start_weapons_default);
-		WEPSET_COPY_AA(warmup_start_weapons_defaultmask, start_weapons_defaultmask);
+		warmup_start_weapons = start_weapons;
+		warmup_start_weapons_default = start_weapons_default;
+		warmup_start_weapons_defaultmask = start_weapons_defaultmask;
 
 		if (!g_weaponarena && !g_ca)
 		{
@@ -882,19 +882,19 @@ void readplayerstartcvars()
 			warmup_start_ammo_fuel = cvar("g_warmup_start_ammo_fuel");
 			warmup_start_health = cvar("g_warmup_start_health");
 			warmup_start_armorvalue = cvar("g_warmup_start_armor");
-			WEPSET_CLEAR_A(warmup_start_weapons);
-			WEPSET_CLEAR_A(warmup_start_weapons_default);
-			WEPSET_CLEAR_A(warmup_start_weapons_defaultmask);
+			warmup_start_weapons = '0 0 0';
+			warmup_start_weapons_default = '0 0 0';
+			warmup_start_weapons_defaultmask = '0 0 0';
 			for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
 				float w = want_weapon("g_start_weapon_", e, cvar("g_warmup_allguns"));
 				if(w & 1)
-					WEPSET_OR_AW(warmup_start_weapons, i);
+					warmup_start_weapons |= WepSet_FromWeapon(i);
 				if(w & 2)
-					WEPSET_OR_AW(warmup_start_weapons_default, i);
+					warmup_start_weapons_default |= WepSet_FromWeapon(i);
 				if(w & 4)
-					WEPSET_OR_AW(warmup_start_weapons_defaultmask, i);
+					warmup_start_weapons_defaultmask |= WepSet_FromWeapon(i);
 			}
 		}
 	}
@@ -904,7 +904,7 @@ void readplayerstartcvars()
 
 	MUTATOR_CALLHOOK(SetStartItems);
 
-	if ((start_items & IT_JETPACK) || (g_grappling_hook && WEPSET_CONTAINS_AW(start_weapons, WEP_HOOK)))
+	if ((start_items & IT_JETPACK) || (g_grappling_hook && (start_weapons & WEPSET_HOOK)))
 	{
 		g_grappling_hook = 0; // these two can't coexist, as they use the same button
 		start_items |= IT_FUEL_REGEN;
@@ -915,7 +915,7 @@ void readplayerstartcvars()
 	for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
 		e = get_weaponinfo(i);
-		if(WEPSET_CONTAINS_AW(start_weapons, i) || WEPSET_CONTAINS_AW(warmup_start_weapons, i))
+		if((start_weapons | warmup_start_weapons) & WepSet_FromWeapon(i))
 			weapon_action(i, WR_PRECACHE);
 	}
 
@@ -1265,7 +1265,7 @@ void play2(entity e, string filename)
 {
     //stuffcmd(e, strcat("play2 ", filename, "\n"));
     msg_entity = e;
-    soundtoat(MSG_ONE, world, '0 0 0', CH_INFO, filename, VOL_BASE, ATTN_NONE);
+    soundtoat(MSG_ONE, world, '0 0 0', CH_INFO, filename, VOL_BASE, ATTEN_NONE);
 }
 
 // use this one if you might be causing spam (e.g. from touch functions that might get called more than once per frame)
@@ -1303,7 +1303,7 @@ void play2all(string samp)
     if (autocvar_bot_sound_monopoly)
         return;
 
-    sound(world, CH_INFO, samp, VOL_BASE, ATTN_NONE);
+    sound(world, CH_INFO, samp, VOL_BASE, ATTEN_NONE);
 }
 
 void PrecachePlayerSounds(string f);
@@ -1481,7 +1481,7 @@ void precache()
     if (self.noise)
     {
         precache_sound (self.noise);
-        ambientsound ('0 0 0', self.noise, VOL_BASE, ATTN_NONE);
+        ambientsound ('0 0 0', self.noise, VOL_BASE, ATTEN_NONE);
     }
 #endif
 

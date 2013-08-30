@@ -186,7 +186,7 @@ void walker_fire_rocket(vector org)
     rocket = spawn ();
     setorigin(rocket, org);
 
-    sound (self, CH_WEAPON_A, "weapons/hagar_fire.wav", VOL_BASE, ATTN_NORM);
+    sound (self, CH_WEAPON_A, "weapons/hagar_fire.wav", VOL_BASE, ATTEN_NORM);
     setsize (rocket, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
     rocket.classname          = "walker_rocket";
@@ -514,7 +514,7 @@ void walker_postthink()
 
 void walker_attack()
 {
-    sound (self, CH_WEAPON_A, "weapons/uzi_fire.wav", VOL_BASE, ATTN_NORM);
+    sound (self, CH_WEAPON_A, "weapons/uzi_fire.wav", VOL_BASE, ATTEN_NORM);
     fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, self.shot_speed, 5, self.shot_dmg, self.shot_force, DEATH_TURRET_WALK_GUN, 0, 1, autocvar_g_balance_uzi_bulletconstant);
     endFireBallisticBullet();
     pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);

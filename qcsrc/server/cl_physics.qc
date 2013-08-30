@@ -109,8 +109,8 @@ void PlayerJump (void)
 	self.velocity_z = self.velocity_z + mjumpheight;
 	self.oldvelocity_z = self.velocity_z;
 
-	self.flags &~= FL_ONGROUND;
-	self.flags &~= FL_JUMPRELEASED;
+	self.flags &= ~FL_ONGROUND;
+	self.flags &= ~FL_JUMPRELEASED;
 
 	animdecide_setaction(self, ANIMACTION_JUMP, TRUE);
 	
@@ -142,7 +142,7 @@ void CheckWaterJump()
 		{	// open at eye level
 			self.flags |= FL_WATERJUMP;
 			self.velocity_z = 225;
-			self.flags &~= FL_JUMPRELEASED;
+			self.flags &= ~FL_JUMPRELEASED;
 			self.teleport_time = time + 2;	// safety net
 			return;
 		}
@@ -330,7 +330,7 @@ void RaceCarPhysics()
 		else
 		{
 			// now set angles_x so that the car points forward, but is tilted in velocity direction
-			self.flags &~= FL_ONGROUND;
+			self.flags &= ~FL_ONGROUND;
 		}
 
 		self.velocity = (neworigin - self.origin) * (1.0 / frametime);
@@ -751,7 +751,7 @@ void SV_PlayerPhysics()
 		bot_think();
 	}
 	
-	self.items &~= IT_USING_JETPACK;
+	self.items &= ~IT_USING_JETPACK;
 
 	if(IS_PLAYER(self))
 	{
@@ -834,15 +834,15 @@ void SV_PlayerPhysics()
 		maxspd_mod = autocvar_sv_spectator_speed_multiplier;
 		if(!self.spectatorspeed)
 			self.spectatorspeed = maxspd_mod;
-		if(self.impulse && self.impulse <= 19 || self.impulse >= 200 && self.impulse <= 209 || self.impulse >= 220 && self.impulse <= 229)
+		if(self.impulse && self.impulse <= 19 || (self.impulse >= 200 && self.impulse <= 209) || (self.impulse >= 220 && self.impulse <= 229))
 		{
 			if(self.lastclassname != "player")
 			{
-				if(self.impulse == 10 || self.impulse == 15 || self.impulse == 18 || self.impulse >= 200 && self.impulse <= 209)
+				if(self.impulse == 10 || self.impulse == 15 || self.impulse == 18 || (self.impulse >= 200 && self.impulse <= 209))
 					self.spectatorspeed = bound(1, self.spectatorspeed + 0.5, 5);
 				else if(self.impulse == 11)
 					self.spectatorspeed = maxspd_mod;
-				else if(self.impulse == 12 || self.impulse == 16  || self.impulse == 19 || self.impulse >= 220 && self.impulse <= 229)
+				else if(self.impulse == 12 || self.impulse == 16  || self.impulse == 19 || (self.impulse >= 220 && self.impulse <= 229))
 					self.spectatorspeed = bound(1, self.spectatorspeed - 0.5, 5);
 				else if(self.impulse >= 1 && self.impulse <= 9)
 					self.spectatorspeed = 1 + 0.5 * (self.impulse - 1);
@@ -912,7 +912,7 @@ void SV_PlayerPhysics()
 		self.velocity_y = self.movedir_y;
 		if (time > self.teleport_time || self.waterlevel == WATERLEVEL_NONE)
 		{
-			self.flags &~= FL_WATERJUMP;
+			self.flags &= ~FL_WATERJUMP;
 			self.teleport_time = 0;
 		}
 	}
@@ -923,7 +923,7 @@ void SV_PlayerPhysics()
 	else if (self.movetype == MOVETYPE_NOCLIP || self.movetype == MOVETYPE_FLY || self.movetype == MOVETYPE_FLY_WORLDONLY)
 	{
 		// noclipping or flying
-		self.flags &~= FL_ONGROUND;
+		self.flags &= ~FL_ONGROUND;
 
 		self.velocity = self.velocity * (1 - frametime * autocvar_sv_friction);
 		makevectors(self.v_angle);
@@ -940,7 +940,7 @@ void SV_PlayerPhysics()
 	else if (self.waterlevel >= WATERLEVEL_SWIMMING)
 	{
 		// swimming
-		self.flags &~= FL_ONGROUND;
+		self.flags &= ~FL_ONGROUND;
 
 		makevectors(self.v_angle);
 		//wishvel = v_forward * self.movement_x + v_right * self.movement_y + v_up * self.movement_z;
@@ -963,7 +963,7 @@ void SV_PlayerPhysics()
 	else if (time < self.ladder_time)
 	{
 		// on a spawnfunc_func_ladder or swimming in spawnfunc_func_water
-		self.flags &~= FL_ONGROUND;
+		self.flags &= ~FL_ONGROUND;
 
 		float g;
 		g = autocvar_sv_gravity * frametime;
@@ -1103,7 +1103,7 @@ void SV_PlayerPhysics()
 			self.velocity = self.velocity + wishvel * f * frametime;
 			if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 				self.ammo_fuel -= autocvar_g_jetpack_fuel * frametime * fvel * f;
-			self.flags &~= FL_ONGROUND;
+			self.flags &= ~FL_ONGROUND;
 			self.items |= IT_USING_JETPACK;
 
 			// jetpack also inhibits health regeneration, but only for 1 second

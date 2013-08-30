@@ -29,7 +29,9 @@ CLASS(XonoticDialog) EXTENDS(Dialog)
 
 	METHOD(XonoticDialog, configureDialog, void(entity))
 ENDCLASS(XonoticDialog)
+#ifndef IMPLEMENTATION
 entity currentDialog;
+#endif
 #endif
 
 #ifdef IMPLEMENTATION

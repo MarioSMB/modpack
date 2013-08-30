@@ -137,8 +137,8 @@ void SUB_UseTargets()
 
 //=============================================================================
 
-float	SPAWNFLAG_NOMESSAGE = 1;
-float	SPAWNFLAG_NOTOUCH = 1;
+const float	SPAWNFLAG_NOMESSAGE = 1;
+const float	SPAWNFLAG_NOTOUCH = 1;
 
 // the wait time has passed, so set back up for another activation
 void multi_wait()
@@ -171,7 +171,7 @@ void multi_trigger()
 	}
 
 	if (self.noise)
-		sound (self.enemy, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
+		sound (self.enemy, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 
 // don't trigger again until reset
 	self.takedamage = DAMAGE_NO;
@@ -210,7 +210,7 @@ void multi_touch()
 			return;
 
 	if(self.team)
-		if((self.spawnflags & 4 == 0) == (self.team != other.team))
+		if(((self.spawnflags & 4) == 0) == (self.team != other.team))
 			return;
 
 // if the trigger has an angles field, check player's facing direction
@@ -445,7 +445,7 @@ void trigger_hurt_touch()
 		return;
 
 	if(self.team)
-		if((self.spawnflags & 4 == 0) == (self.team != other.team))
+		if(((self.spawnflags & 4) == 0) == (self.team != other.team))
 			return;
 
 	// only do the EXACTTRIGGER_TOUCH checks when really needed (saves some cpu)
@@ -549,7 +549,7 @@ void trigger_heal_touch()
 			{
 				other.health = min(other.health + self.health, self.max_health);
 				other.pauserothealth_finished = max(other.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);
-				sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
+				sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 			}
 		}
 	}
@@ -660,7 +660,7 @@ void trigger_gravity_touch()
 	{
 		other.gravity = g;
 		if(self.noise != "")
-			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
+			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 		UpdateCSQCProjectile(self.owner);
 	}
 }
@@ -775,9 +775,9 @@ void spawnfunc_target_speaker()
 	if(!self.atten && !(self.spawnflags & 4))
 	{
 		IFTARGETED
-			self.atten = ATTN_NORM;
+			self.atten = ATTEN_NORM;
 		else
-			self.atten = ATTN_STATIC;
+			self.atten = ATTEN_STATIC;
 	}
 	else if(self.atten < 0)
 		self.atten = 0;
@@ -949,7 +949,7 @@ void spawnfunc_func_pointparticles()
 		self.bgmscriptsustain = 0;
 
 	if(!self.atten)
-		self.atten = ATTN_NORM;
+		self.atten = ATTEN_NORM;
 	else if(self.atten < 0)
 		self.atten = 0;
 	if(!self.volume)
@@ -1214,7 +1214,7 @@ void misc_laser_think()
 	if(self.dmg)
 	{
 		if(self.team)
-			if((self.spawnflags & 8 == 0) == (self.team != hitent.team))
+			if(((self.spawnflags & 8) == 0) == (self.team != hitent.team))
 				return;
 		if(hitent.takedamage)
 			Damage(hitent, self, self, ((self.dmg < 0) ? 100000 : (self.dmg * frametime)), DEATH_HURTTRIGGER, hitloc, '0 0 0');
@@ -1400,7 +1400,7 @@ void trigger_impulse_touch1()
     if(!pushdeltatime) return;
 
     other.velocity = other.velocity + normalize(targ.origin - self.origin) * str * pushdeltatime;
-    other.flags &~= FL_ONGROUND;
+    other.flags &= ~FL_ONGROUND;
     UpdateCSQCProjectile(other);
 }
 

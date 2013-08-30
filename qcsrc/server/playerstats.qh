@@ -1,26 +1,26 @@
 // time the player was alive and kicking
-string PLAYERSTATS_ALIVETIME  = "alivetime";
-string PLAYERSTATS_AVGLATENCY = "avglatency";
-string PLAYERSTATS_WINS = "wins";
-string PLAYERSTATS_MATCHES = "matches";
-string PLAYERSTATS_JOINS = "joins";
-string PLAYERSTATS_SCOREBOARD_VALID = "scoreboardvalid";
-string PLAYERSTATS_RANK = "rank";
-string PLAYERSTATS_SCOREBOARD_POS = "scoreboardpos";
+const string PLAYERSTATS_ALIVETIME  = "alivetime";
+const string PLAYERSTATS_AVGLATENCY = "avglatency";
+const string PLAYERSTATS_WINS = "wins";
+const string PLAYERSTATS_MATCHES = "matches";
+const string PLAYERSTATS_JOINS = "joins";
+const string PLAYERSTATS_SCOREBOARD_VALID = "scoreboardvalid";
+const string PLAYERSTATS_RANK = "rank";
+const string PLAYERSTATS_SCOREBOARD_POS = "scoreboardpos";
 
-string PLAYERSTATS_TOTAL = "total-";
-string PLAYERSTATS_SCOREBOARD = "scoreboard-";
+const string PLAYERSTATS_TOTAL = "total-";
+const string PLAYERSTATS_SCOREBOARD = "scoreboard-";
 
-string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3 = "achievement-kill-spree-3";
-string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5 = "achievement-kill-spree-5";
-string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_10 = "achievement-kill-spree-10";
-string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_15 = "achievement-kill-spree-15";
-string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_20 = "achievement-kill-spree-20";
-string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_25 = "achievement-kill-spree-25";
-string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_30 = "achievement-kill-spree-30";
-string PLAYERSTATS_ACHIEVEMENT_BOTLIKE = "achievement-botlike";
-string PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD = "achievement-firstblood";
-string PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM = "achievement-firstvictim";
+const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3 = "achievement-kill-spree-3";
+const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5 = "achievement-kill-spree-5";
+const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_10 = "achievement-kill-spree-10";
+const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_15 = "achievement-kill-spree-15";
+const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_20 = "achievement-kill-spree-20";
+const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_25 = "achievement-kill-spree-25";
+const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_30 = "achievement-kill-spree-30";
+const string PLAYERSTATS_ACHIEVEMENT_BOTLIKE = "achievement-botlike";
+const string PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD = "achievement-firstblood";
+const string PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM = "achievement-firstvictim";
 
 // delay map switch until this is set
 float playerstats_waitforme;

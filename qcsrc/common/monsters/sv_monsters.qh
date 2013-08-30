@@ -1,0 +1,70 @@
+.string spawnmob;
+.float monster_attack;
+
+float monster_skill;
+
+.entity monster_owner; // new monster owner entity, fixes non-solid monsters
+.float monstercount; // per player monster count
+
+.float stat_monsters_killed; // stats
+.float stat_monsters_total;
+float monsters_total;
+float monsters_killed;
+void monsters_setstatus(); // monsters.qc
+.float monster_moveflags; // checks where to move when not attacking
+
+.float(float attack_type) monster_attackfunc;
+const float MONSTER_ATTACK_MELEE 	= 1;
+const float MONSTER_ATTACK_RANGED 	= 2;
+
+.float candrop;
+
+.float attack_range;
+
+.float spawn_time; // stop monster from moving around right after spawning
+
+.string oldtarget2;
+.float lastshielded;
+
+.vector oldangles;
+
+.float monster_respawned; // used to make sure we're not recounting respawned monster stats
+
+float monsters_spawned;
+
+.float monster_flags;
+const float MONSTERFLAG_INFRONT = 10; // only check for enemies infront of us
+
+const float MONSTERSKILL_NOTEASY = 256; // monster will not spawn on skill <= 2
+const float MONSTERSKILL_NOTMEDIUM = 512; // monster will not spawn on skill 3
+const float MONSTERSKILL_NOTHARD = 1024; // monster will not spawn on skill 4
+const float MONSTERSKILL_NOTINSANE = 2048; // monster will not spawn on skill 5
+const float MONSTERSKILL_NOTNIGHTMARE = 4096; // monster will not spawn on skill >= 6
+
+// new flags
+const float MONSTERFLAG_MINIBOSS = 1;  // monster spawns as mini-boss (also has a chance of naturally becoming one)
+const float MONSTERFLAG_APPEAR = 2; // delay spawn until triggered
+const float MONSTERFLAG_NORESPAWN = 4;
+const float MONSTERFLAG_SPAWNED = 512; // flag for spawned monsters
+
+.float msound_delay; // restricts some monster sounds
+.string msound_idle;
+.string msound_death;
+.string msound_attack_melee;
+.string msound_attack_ranged;
+.string msound_spawn;
+.string msound_sight;
+.string msound_pain;
+
+.void() monster_spawnfunc;
+
+.float monster_movestate; // used to tell what the monster is currently doing
+const float MONSTER_MOVE_OWNER = 1; // monster will move to owner if in range, or stand still
+const float MONSTER_MOVE_WANDER = 2; // monster will ignore owner & wander around
+const float MONSTER_MOVE_SPAWNLOC = 3; // monster will move to its spawn location when not attacking
+const float MONSTER_MOVE_NOMOVE = 4; // monster simply stands still
+const float MONSTER_MOVE_ENEMY = 5; // used only as a movestate
+
+const float MONSTER_STATE_ATTACK_LEAP = 1;
+const float MONSTER_STATE_ATTACK_MELEE = 2;
+

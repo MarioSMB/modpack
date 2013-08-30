@@ -3,20 +3,20 @@
 #ifdef VEHICLES_ENABLED
 
 .float vehicle_flags;
-float VHF_ISVEHICLE     = 2;    /// Indicates vehicle
-float VHF_HASSHIELD     = 4;    /// Vehicle has shileding
-float VHF_SHIELDREGEN   = 8;    /// Vehicles shield regenerates
-float VHF_HEALTHREGEN   = 16;   /// Vehicles health regenerates
-float VHF_ENERGYREGEN   = 32;   /// Vehicles energy regenerates
-float VHF_DEATHEJECT    = 64;   /// Vehicle ejects pilot upon fatal damage
-float VHF_MOVE_GROUND   = 128;  /// Vehicle moves on gound
-float VHF_MOVE_HOVER    = 256;  /// Vehicle hover close to gound
-float VHF_MOVE_FLY      = 512;  /// Vehicle is airborn
-float VHF_DMGSHAKE      = 1024; /// Add random velocity each frame if health < 50%
-float VHF_DMGROLL       = 2048; /// Add random angles each frame if health < 50%
-float VHF_DMGHEADROLL   = 4096; /// Add random head angles each frame if health < 50%
-float VHF_MULTISLOT     = 8192; /// Vehicle has multiple player slots
-float VHF_PLAYERSLOT    = 16384;    /// This ent is a player slot on a multi-person vehicle
+const float VHF_ISVEHICLE     = 2;    /// Indicates vehicle
+const float VHF_HASSHIELD     = 4;    /// Vehicle has shileding
+const float VHF_SHIELDREGEN   = 8;    /// Vehicles shield regenerates
+const float VHF_HEALTHREGEN   = 16;   /// Vehicles health regenerates
+const float VHF_ENERGYREGEN   = 32;   /// Vehicles energy regenerates
+const float VHF_DEATHEJECT    = 64;   /// Vehicle ejects pilot upon fatal damage
+const float VHF_MOVE_GROUND   = 128;  /// Vehicle moves on gound
+const float VHF_MOVE_HOVER    = 256;  /// Vehicle hover close to gound
+const float VHF_MOVE_FLY      = 512;  /// Vehicle is airborn
+const float VHF_DMGSHAKE      = 1024; /// Add random velocity each frame if health < 50%
+const float VHF_DMGROLL       = 2048; /// Add random angles each frame if health < 50%
+const float VHF_DMGHEADROLL   = 4096; /// Add random head angles each frame if health < 50%
+const float VHF_MULTISLOT     = 8192; /// Vehicle has multiple player slots
+const float VHF_PLAYERSLOT    = 16384;    /// This ent is a player slot on a multi-person vehicle
 
 .entity gun1;
 .entity gun2;
@@ -49,13 +49,13 @@ float VHF_PLAYERSLOT    = 16384;    /// This ent is a player slot on a multi-per
 
 void vehicles_exit(float eject);
 .void(float exit_flags) vehicle_exit;
-float VHEF_NORMAL = 0;  /// User pressed exit key
-float VHEF_EJECT  = 1;  /// User pressed exit key 3 times fast (not implemented) or vehile is dying
-float VHEF_RELESE = 2;  /// Release ownership, client possibly allready dissconnected / went spec / changed team / used "kill" (not implemented)
+const float VHEF_NORMAL = 0;  /// User pressed exit key
+const float VHEF_EJECT  = 1;  /// User pressed exit key 3 times fast (not implemented) or vehile is dying
+const float VHEF_RELESE = 2;  /// Release ownership, client possibly allready dissconnected / went spec / changed team / used "kill" (not implemented)
 
-float SVC_SETVIEWPORT   = 5;   // Net.Protocol 0x05
-float SVC_SETVIEWANGLES = 10;  // Net.Protocol 0x0A
-float SVC_UPDATEENTITY  = 128; // Net.Protocol 0x80
+const float SVC_SETVIEWPORT   = 5;   // Net.Protocol 0x05
+const float SVC_SETVIEWANGLES = 10;  // Net.Protocol 0x0A
+const float SVC_UPDATEENTITY  = 128; // Net.Protocol 0x80
 
 .void() vehicle_enter;  /// Vehicles custom funciton to be executed when owner exit it
 .void() vehicle_die;    /// Vehicles custom function to be executed when vehile die

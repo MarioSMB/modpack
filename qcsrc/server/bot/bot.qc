@@ -32,7 +32,7 @@ void bot_think()
 	if (self.bot_nextthink > time)
 		return;
 
-	self.flags &~= FL_GODMODE;
+	self.flags &= ~FL_GODMODE;
 	if(autocvar_bot_god)
 		self.flags |= FL_GODMODE;
 

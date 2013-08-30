@@ -2,7 +2,7 @@ void Announcer_Play(string announcement)
 {
 	/*if((announcement != previous_announcement) || (time >= (previous_announcement_time + autocvar_cl_announcer_antispam)))
 	{
-		sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/", announcement, ".wav"), VOL_BASEVOICE, ATTN_NONE);
+		sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/", announcement, ".wav"), VOL_BASEVOICE, ATTEN_NONE);
 
 		if(previous_announcement) { strunzone(previous_announcement); }
 		

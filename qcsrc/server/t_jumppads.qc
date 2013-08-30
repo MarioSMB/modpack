@@ -1,5 +1,5 @@
-float PUSH_ONCE			= 1;
-float PUSH_SILENT		= 2;
+const float PUSH_ONCE			= 1;
+const float PUSH_SILENT		= 2;
 
 .float pushltime;
 .float istypefrag;
@@ -137,7 +137,7 @@ void trigger_push_touch()
 		return;
 
 	if(self.team)
-		if((self.spawnflags & 4 == 0) == (self.team != other.team))
+		if(((self.spawnflags & 4) == 0) == (self.team != other.team))
 			return;
 
 	EXACTTRIGGER_TOUCH;
@@ -164,7 +164,7 @@ void trigger_push_touch()
 		other.velocity = self.movedir;
 	}
 
-	other.flags &~= FL_ONGROUND;
+	other.flags &= ~FL_ONGROUND;
 
 	if (IS_PLAYER(other))
 	{
@@ -175,7 +175,7 @@ void trigger_push_touch()
 		{
 			// flash when activated
 			pointparticles(particleeffectnum("jumppad_activate"), other.origin, other.velocity, 1);
-			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTN_NORM);
+			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 			self.pushltime = time + 0.2;
 		}
 		if(IS_REAL_CLIENT(other) || IS_BOT_CLIENT(other))

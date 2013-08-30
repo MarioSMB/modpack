@@ -1,150 +1,23 @@
-float	FALSE					= 0;
-float	TRUE					= 1;
+const float FL_WEAPON = 8192;
+const float FL_POWERUP = 16384;
+const float FL_PROJECTILE = 32768;
+const float FL_TOSSED = 65536;
+const float FL_NO_WEAPON_STAY = 131072;
+const float FL_SPAWNING = 262144;
 
-float	FL_FLY					= 1;
-float	FL_SWIM					= 2;
-float	FL_CLIENT				= 8;
-float	FL_INWATER				= 16;
-float	FL_MONSTER				= 32;
-float	FL_GODMODE				= 64;
-float	FL_NOTARGET				= 128;
-float	FL_ITEM					= 256;
-float	FL_ONGROUND				= 512;
-float	FL_PARTIALGROUND			= 1024;
-float	FL_WATERJUMP				= 2048;
-float	FL_JUMPRELEASED				= 4096;
-float	FL_WEAPON				= 8192;
-float	FL_POWERUP				= 16384;
-float	FL_PROJECTILE				= 32768;
-float	FL_TOSSED				= 65536;
-float   FL_NO_WEAPON_STAY       = 131072;
-float   FL_SPAWNING       = 262144;
+const float SVC_SOUND = 6;
+const float SVC_STOPSOUND = 16;
+const float SVC_SETVIEW = 5;
 
-float	MOVETYPE_NONE				= 0;
-float	MOVETYPE_ANGLENOCLIP			= 1;
-float	MOVETYPE_ANGLECLIP			= 2;
-float	MOVETYPE_WALK				= 3;
-float	MOVETYPE_STEP				= 4;
-float	MOVETYPE_FLY				= 5;
-float	MOVETYPE_TOSS				= 6;
-float	MOVETYPE_PUSH				= 7;
-float	MOVETYPE_NOCLIP				= 8;
-float	MOVETYPE_FLYMISSILE			= 9;
-float	MOVETYPE_BOUNCE				= 10;
-float	MOVETYPE_BOUNCEMISSILE	= 11;	// Like bounce but doesn't lose speed on bouncing
-//float	MOVETYPE_FOLLOW				= 12;	// 'Attaches' the entity to its aim_ent
-//float MOVETYPE_FLY_WORLDONLY = 33;
-
-float	SOLID_NOT				= 0;
-float	SOLID_TRIGGER				= 1;
-float	SOLID_BBOX				= 2;
-float	SOLID_SLIDEBOX				= 3;
-float	SOLID_BSP				= 4;
-
-float	DEAD_NO					= 0;
-float	DEAD_DYING				= 1;
-float	DEAD_DEAD				= 2;
-float	DEAD_RESPAWNABLE			= 3;
-float	DEAD_RESPAWNING			= 4;
-
-float	RESPAWN_FORCE			= 1;
-float	RESPAWN_SILENT			= 2;
-
-float	DAMAGE_NO				= 0;
-float	DAMAGE_YES				= 1;
-float	DAMAGE_AIM				= 2;
-
-float	CONTENT_EMPTY				= -1;
-float	CONTENT_SOLID				= -2;
-float	CONTENT_WATER				= -3;
-float	CONTENT_SLIME				= -4;
-float	CONTENT_LAVA				= -5;
-float	CONTENT_SKY				= -6;
-
-float	SVC_BAD					= 0;
-float	SVC_NOP					= 1;
-float	SVC_DISCONNECT				= 2;
-float	SVC_UPDATESTAT				= 3;
-float	SVC_VERSION				= 4;
-float	SVC_SETVIEW				= 5;
-float	SVC_SOUND				= 6;
-float	SVC_TIME				= 7;
-float	SVC_PRINT				= 8;
-float	SVC_STUFFTEXT				= 9;
-float	SVC_SETANGLE				= 10;
-float	SVC_SERVERINFO				= 11;
-float	SVC_LIGHTSTYLE				= 12;
-float	SVC_UPDATENAME				= 13;
-float	SVC_UPDATEFRAGS				= 14;
-float	SVC_CLIENTDATA				= 15;
-float	SVC_STOPSOUND				= 16;
-float	SVC_UPDATECOLORS			= 17;
-float	SVC_PARTICLE				= 18;
-float	SVC_DAMAGE				= 19;
-float	SVC_SPAWNSTATIC				= 20;
-float	SVC_SPAWNBINARY				= 21;
-float	SVC_SPAWNBASELINE			= 22;
-float	SVC_TEMPENTITY				= 23;
-float	SVC_SETPAUSE				= 24;
-float	SVC_SIGNONNUM				= 25;
-float	SVC_CENTERPRINT				= 26;
-float	SVC_KILLEDMONSTER			= 27;
-float	SVC_FOUNDSECRET				= 28;
-float	SVC_SPAWNSTATICSOUND			= 29;
-float	SVC_INTERMISSION			= 30;
-float	SVC_FINALE				= 31;
-float	SVC_CDTRACK				= 32;
-float	SVC_SELLSCREEN				= 33;
-float	SVC_CUTSCENE				= 34;
-
-float	TE_SPIKE				= 0;
-float	TE_SUPERSPIKE				= 1;
-float	TE_GUNSHOT				= 2;
-float	TE_EXPLOSION				= 3;
-float	TE_TAREXPLOSION				= 4;
-float	TE_LIGHTNING1				= 5;
-float	TE_LIGHTNING2				= 6;
-float	TE_WIZSPIKE				= 7;
-float	TE_KNIGHTSPIKE				= 8;
-float	TE_LIGHTNING3				= 9;
-float	TE_LAVASPLASH				= 10;
-float	TE_TELEPORT				= 11;
-float TE_BEAM					= 13;		// grappling hook
-
-float	UPDATE_GENERAL				= 0;
-float	UPDATE_STATIC				= 1;
-float	UPDATE_BINARY				= 2;
-float	UPDATE_TEMP				= 3;
-
-float	EF_BRIGHTFIELD				= 1;
-float	EF_MUZZLEFLASH				= 2;
-float	EF_BRIGHTLIGHT				= 4;
-float	EF_DIMLIGHT				= 8;
+const float RESPAWN_FORCE = 1;
+const float RESPAWN_SILENT = 2;
 
 #define EFMASK_CHEAP (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NODRAW | EF_NOGUNBOB | EF_NOSHADOW | EF_LOWPRECISION | EF_SELECTABLE | EF_TELEPORT_BIT)
 
-float	MSG_BROADCAST				= 0; // unreliable
-float	MSG_ONE					= 1; // reliable
-float	MSG_ALL					= 2; // reliable
-float	MSG_INIT				= 3; // initialization
-float	MSG_ENTITY				= 5; // csqc
+const float MSG_ENTITY = 5; // csqc
 
-// Sajt - added these, just as constants. Not sure how you want them actually put in the game, but I just
-// did this so at least they worked
-// NOTE: instagib IS NOT compatible with rocket-arena, so make sure to prevent selecting both in a menu
-//float	GAME_INSTAGIB				= 1;   /// everyone gets the nex gun with infinite ammo, and one shot kills
-//float	GAME_ROCKET_ARENA			= 16;  /// Everyone starts with a rocket launcher
-//float	GAME_FULLBRIGHT_PLAYERS			= 64; /// makes the players model fullbright
-//float	GAME_TEAMS				= 128; /// Teams, red/green/yellow/blue
+const float NUM_PLAYERSKINS_TEAMPLAY = 3;
 
+const float ASSAULT_VALUE_INACTIVE = 1000;
 
-//float	POWERUP_STRENGTH_DAMAGE			= 2; // damage multiplier for strength powerup
-//float	POWERUP_STRENGTH_FORCE			= 4; // force multiplier for strength powerup
-
-//float	POWERUP_INVINCIBLE_TAKEDAMAGE		= 0.2; // received damage multiplier for invincible powerup
-
-float NUM_PLAYERSKINS_TEAMPLAY = 3;
-
-float ASSAULT_VALUE_INACTIVE = 1000;
-
-float DOOR_NOSPLASH = 256; // generic anti-splashdamage spawnflag
+const float DOOR_NOSPLASH = 256; // generic anti-splashdamage spawnflag

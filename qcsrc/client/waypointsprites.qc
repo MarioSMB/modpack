@@ -38,14 +38,14 @@ float waypointsprite_alpha;
 .float build_starthealth;
 .float build_finished;
 
-float SPRITE_HEALTHBAR_WIDTH = 144;
-float SPRITE_HEALTHBAR_HEIGHT = 9;
-float SPRITE_HEALTHBAR_MARGIN = 6;
-float SPRITE_HEALTHBAR_BORDER = 2;
-float SPRITE_HEALTHBAR_BORDERALPHA = 1;
-float SPRITE_HEALTHBAR_HEALTHALPHA = 0.5;
-float SPRITE_ARROW_SCALE = 1.0;
-float SPRITE_HELPME_BLINK = 2;
+const float SPRITE_HEALTHBAR_WIDTH = 144;
+const float SPRITE_HEALTHBAR_HEIGHT = 9;
+const float SPRITE_HEALTHBAR_MARGIN = 6;
+const float SPRITE_HEALTHBAR_BORDER = 2;
+const float SPRITE_HEALTHBAR_BORDERALPHA = 1;
+const float SPRITE_HEALTHBAR_HEALTHALPHA = 0.5;
+const float SPRITE_ARROW_SCALE = 1.0;
+const float SPRITE_HELPME_BLINK = 2;
 
 void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, vector rgb, float a, float f)
 {

@@ -903,7 +903,7 @@ void navigation_poptouchedgoals()
 			if(self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
 			if(self.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && self.goalcurrent.owner==self)
 			{
-				self.aistatus &~= AI_STATUS_WAYPOINT_PERSONAL_GOING;
+				self.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 				self.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
 			}
 			navigation_poproute();
@@ -950,7 +950,7 @@ void navigation_poptouchedgoals()
 				if(self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
 				if(self.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && self.goalcurrent.owner==self)
 				{
-					self.aistatus &~= AI_STATUS_WAYPOINT_PERSONAL_GOING;
+					self.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 					self.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
 				}
 
@@ -965,7 +965,7 @@ void navigation_poptouchedgoals()
 		if(self.aistatus & AI_STATUS_WAYPOINT_PERSONAL_GOING)
 		if(self.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL && self.goalcurrent.owner==self)
 		{
-			self.aistatus &~= AI_STATUS_WAYPOINT_PERSONAL_GOING;
+			self.aistatus &= ~AI_STATUS_WAYPOINT_PERSONAL_GOING;
 			self.aistatus |= AI_STATUS_WAYPOINT_PERSONAL_REACHED;
 		}
 
@@ -1088,7 +1088,7 @@ void navigation_unstuck()
 				bot_debug(strcat(self.netname, " stuck, reachable waypoint found, heading to it\n"));
 				navigation_routetogoal(bot_waypoint_queue_bestgoal, self.origin);
 				self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
-				self.aistatus &~= AI_STATUS_STUCK;
+				self.aistatus &= ~AI_STATUS_STUCK;
 			}
 			else
 			{

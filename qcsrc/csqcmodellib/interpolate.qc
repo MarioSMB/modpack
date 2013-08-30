@@ -29,7 +29,7 @@
 .float itime1, itime2;
 void InterpolateOrigin_Reset()
 {
-	self.iflags &~= IFLAG_INTERNALMASK;
+	self.iflags &= ~IFLAG_INTERNALMASK;
 	self.itime1 = self.itime2 = 0;
 }
 void InterpolateOrigin_Note()
@@ -106,7 +106,7 @@ void InterpolateOrigin_Note()
 
 	if(self.iflags & IFLAG_TELEPORTED)
 	{
-		self.iflags &~= IFLAG_TELEPORTED;
+		self.iflags &= ~IFLAG_TELEPORTED;
 		self.itime1 = self.itime2 = time; // don't lerp
 	}
 	else if(vlen(self.iorigin2 - self.iorigin1) > 1000)

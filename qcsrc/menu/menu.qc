@@ -91,8 +91,8 @@ void m_init()
 	}
 }
 
-float MENU_ASPECT = 1.25; // 1280x1024
-float MENU_MINHEIGHT = 600;
+const float MENU_ASPECT = 1.25; // 1280x1024
+const float MENU_MINHEIGHT = 600;
 float conwidth_s, conheight_s, realconwidth, realconheight, screenconwidth, screenconheight;
 void draw_reset_cropped()
 {
@@ -302,11 +302,11 @@ void m_keydown(float key, float ascii)
 	if(key == K_SHIFT) menuShiftState |= S_SHIFT;
 }
 
-float SCALEMODE_CROP = 0;
-float SCALEMODE_LETTERBOX = 1;
-float SCALEMODE_WIDTH = 2;
-float SCALEMODE_HEIGHT = 3;
-float SCALEMODE_STRETCH = 4;
+const float SCALEMODE_CROP = 0;
+const float SCALEMODE_LETTERBOX = 1;
+const float SCALEMODE_WIDTH = 2;
+const float SCALEMODE_HEIGHT = 3;
+const float SCALEMODE_STRETCH = 4;
 void draw_Picture_Aligned(vector algn, float scalemode, string img, float a)
 {
 	vector sz, org, isz, isz_w, isz_h;

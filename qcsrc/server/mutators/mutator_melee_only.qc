@@ -3,8 +3,8 @@ MUTATOR_HOOKFUNCTION(melee_SetStartItems)
 	start_ammo_shells = 0;
 	warmup_start_ammo_shells = 0;
 	
-	WEPSET_COPY_AW(start_weapons, WEP_SHOTGUN);
-	WEPSET_COPY_AW(warmup_start_weapons, WEP_SHOTGUN);
+	start_weapons = WEPSET_SHOTGUN;
+	warmup_start_weapons = WEPSET_SHOTGUN;
 		
 	return FALSE;
 }

@@ -192,7 +192,7 @@ void CSQCModel_Draw()
 		root = root.tag_entity;
 	if(self != root)
 	{
-		self.renderflags &~= RF_EXTERNALMODEL | RF_VIEWMODEL;
+		self.renderflags &= ~(RF_EXTERNALMODEL | RF_VIEWMODEL);
 		self.renderflags |= (root.renderflags & (RF_EXTERNALMODEL | RF_VIEWMODEL));
 	}
 
@@ -267,7 +267,7 @@ void CSQCModel_Read(float isnew)
 #endif
 		self.renderflags |= RF_EXTERNALMODEL;
 	else
-		self.renderflags &~= RF_EXTERNALMODEL;
+		self.renderflags &= ~RF_EXTERNALMODEL;
 
 	// draw it
 	self.drawmask = MASK_NORMAL;

@@ -153,7 +153,7 @@ void generator_draw()
 	// White shockwave
 	if(self.count==40||self.count==20)
 	{
-		sound(self, CH_TRIGGER, "onslaught/shockwave.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER, "onslaught/shockwave.wav", VOL_BASE, ATTEN_NORM);
 		pointparticles(particleeffectnum("electro_combo"), self.origin, '0 0 0', 6);
 	}
 
@@ -180,7 +180,7 @@ void generator_draw()
 	if(random() < 0.25)
 	{
 		te_explosion(self.origin);
-		sound(self, CH_TRIGGER, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER, "weapons/grenade_impact.wav", VOL_BASE, ATTEN_NORM);
 	}
 
 	// Particles
@@ -199,7 +199,7 @@ void generator_draw()
 		org = self.origin;
 		te_explosion(org);
 		pointparticles(particleeffectnum("onslaught_generator_finalexplosion"), org, '0 0 0', 1);
-		sound(self, CH_TRIGGER, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 	}
 	
 	self.move_time = time + 0.05;

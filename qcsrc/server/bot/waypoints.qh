@@ -2,11 +2,11 @@
  * Globals and Fields
  */
 
-float WAYPOINTFLAG_GENERATED = 8388608;
-float WAYPOINTFLAG_ITEM = 4194304;
-float WAYPOINTFLAG_TELEPORT = 2097152;
-float WAYPOINTFLAG_NORELINK = 1048576;
-float WAYPOINTFLAG_PERSONAL = 524288;
+const float WAYPOINTFLAG_GENERATED = 8388608;
+const float WAYPOINTFLAG_ITEM = 4194304;
+const float WAYPOINTFLAG_TELEPORT = 2097152;
+const float WAYPOINTFLAG_NORELINK = 1048576;
+const float WAYPOINTFLAG_PERSONAL = 524288;
 
 // fields you can query using prvm_global server to get some statistics about waypoint linking culling
 float relink_total, relink_walkculled, relink_pvsculled, relink_lengthculled;

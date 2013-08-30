@@ -666,7 +666,7 @@ float w_seeker(float req)
 			if(w_deathtype & HITTYPE_SECONDARY)
 			{
 				if(!w_issilent)
-					sound(self, CH_SHOTS, "weapons/tag_impact.wav", 1, ATTN_NORM);
+					sound(self, CH_SHOTS, "weapons/tag_impact.wav", 1, ATTEN_NORM);
 			}
 			else
 			{
@@ -674,11 +674,11 @@ float w_seeker(float req)
 				if(!w_issilent)
 				{
 					if (w_random<0.15)
-						sound(self, CH_SHOTS, "weapons/tagexp1.wav", 1, ATTN_NORM);
+						sound(self, CH_SHOTS, "weapons/tagexp1.wav", 1, ATTEN_NORM);
 					else if (w_random<0.7)
-						sound(self, CH_SHOTS, "weapons/tagexp2.wav", 1, ATTN_NORM);
+						sound(self, CH_SHOTS, "weapons/tagexp2.wav", 1, ATTEN_NORM);
 					else
-						sound(self, CH_SHOTS, "weapons/tagexp3.wav", 1, ATTN_NORM);
+						sound(self, CH_SHOTS, "weapons/tagexp3.wav", 1, ATTEN_NORM);
 				}
 			}
 		}
@@ -688,11 +688,11 @@ float w_seeker(float req)
 			if(!w_issilent)
 			{
 				if (w_random<0.15)
-					sound(self, CH_SHOTS, "weapons/seekerexp1.wav", 1, ATTN_NORM);
+					sound(self, CH_SHOTS, "weapons/seekerexp1.wav", 1, ATTEN_NORM);
 				else if (w_random<0.7)
-					sound(self, CH_SHOTS, "weapons/seekerexp2.wav", 1, ATTN_NORM);
+					sound(self, CH_SHOTS, "weapons/seekerexp2.wav", 1, ATTEN_NORM);
 				else
-					sound(self, CH_SHOTS, "weapons/seekerexp3.wav", 1, ATTN_NORM);
+					sound(self, CH_SHOTS, "weapons/seekerexp3.wav", 1, ATTEN_NORM);
 			}
 		}
 	}

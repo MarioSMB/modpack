@@ -5,18 +5,20 @@ void invasion_spawnpoint()
 	self.classname = "invasion_spawnpoint";
 }
 
-float invasion_PickMonster(float have_shamblers)
+float invasion_PickMonster(float supermonster_count)
 {
 	if(autocvar_g_invasion_zombies_only)
-		return MONSTER_ZOMBIE;
+		return MON_ZOMBIE;
 
 	float i;
+	entity mon;
 	
 	RandomSelection_Init();
 	
-	for(i = MONSTER_FIRST + 1; i < MONSTER_LAST; ++i)
+	for(i = MON_FIRST; i <= MON_LAST; ++i)
 	{
-		if(i == MONSTER_STINGRAY || i == MONSTER_WYVERN || (i == MONSTER_SHAMBLER && have_shamblers >= 1))
+		mon = get_monsterinfo(i);
+		if((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM) || (mon.spawnflags & MON_FLAG_SUPERMONSTER && supermonster_count >= 1))
 			continue; // flying/swimming monsters not yet supported
 		
 		RandomSelection_Add(world, i, "", 1, 1);
@@ -52,9 +54,9 @@ void invasion_SpawnChosenMonster(float mon)
 	monster = spawnmonster("", mon, spawn_point, spawn_point, spawn_point.origin, FALSE, 2);
 }
 
-void invasion_SpawnMonsters(float have_shamblers)
+void invasion_SpawnMonsters(float supermonster_count)
 {
-	float chosen_monster = invasion_PickMonster(have_shamblers);
+	float chosen_monster = invasion_PickMonster(supermonster_count);
 	
 	invasion_SpawnChosenMonster(chosen_monster);
 }
@@ -84,12 +86,12 @@ float Invasion_CheckWinner()
 		return 1;
 	}
 	
-	float total_alive_monsters = 0, shamblers = 0;
+	float total_alive_monsters = 0, supermonster_count = 0;
 	
 	FOR_EACH_MONSTER(head) if(head.health > 0)
 	{
-		if(head.monsterid == MONSTER_SHAMBLER)
-			++shamblers;
+		if((get_monsterinfo(head.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
+			++supermonster_count;
 		++total_alive_monsters;
 	}
 
@@ -97,7 +99,7 @@ float Invasion_CheckWinner()
 	{
 		if(time >= last_check)
 		{
-			invasion_SpawnMonsters(shamblers);
+			invasion_SpawnMonsters(supermonster_count);
 			last_check = time + 2;
 		}
 		
@@ -247,7 +249,8 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerCommand)
 
 MUTATOR_HOOKFUNCTION(invasion_SetStartItems)
 {
-	start_armorvalue = 100;
+	start_health = 200;
+	start_armorvalue = 200;
 	
 	return FALSE;
 }

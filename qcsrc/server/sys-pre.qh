@@ -1,6 +1,6 @@
 #define SVQC
 
-#define ATTN_NORM builtin_ATTN_NORM
+#define ATTEN_NORM builtin_ATTEN_NORM
 #define objerror builtin_objerror
 #define droptofloor builtin_droptofloor
 #define sound builtin_sound

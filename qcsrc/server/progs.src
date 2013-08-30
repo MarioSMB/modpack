@@ -27,6 +27,12 @@ sys-post.qh
 ../common/net_notice.qh
 ../common/animdecide.qh
 
+../common/monsters/config.qh
+../common/monsters/monsters.qh
+../common/monsters/sv_monsters.qh
+../common/monsters/spawn.qh
+
+
 autocvars.qh
 constants.qh
 defs.qh		// Should rename this, it has fields and globals
@@ -56,8 +62,6 @@ mutators/mutator_nades.qh
 //// tZork Turrets ////
 tturrets/include/turrets_early.qh
 vehicles/vehicles_def.qh
-
-monsters/lib/monsters_early.qh
 
 generator.qh
 
@@ -237,7 +241,11 @@ round_handler.qc
 
 ../common/explosion_equation.qc
 
-monsters/monsters.qh
+../common/monsters/sv_monsters.qc
+../common/monsters/config.qc
+../common/monsters/monsters.qc
+
+../common/monsters/spawn.qc
 
 mutators/base.qc
 mutators/gamemode_assault.qc

@@ -128,7 +128,7 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 		culprit = DEATH_WEAPONOF(deathtype);
 		if(!culprit)
 			culprit = attacker.weapon;
-		else if(!WEPSET_CONTAINS_EW(attacker, culprit))
+		else if(!(attacker.weapons & WepSet_FromWeapon(culprit)))
 			culprit = attacker.weapon;
 
 		if(g_weaponarena_random_with_laser && culprit == WEP_LASER)
@@ -144,26 +144,26 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 			}
 
 			if(inWarmupStage)
-				WEPSET_COPY_EA(GiveFrags_randomweapons, warmup_start_weapons);
+				GiveFrags_randomweapons.weapons = warmup_start_weapons;
 			else
-				WEPSET_COPY_EA(GiveFrags_randomweapons, start_weapons);
+				GiveFrags_randomweapons.weapons = start_weapons;
 
 			// all others (including the culprit): remove
-			WEPSET_ANDNOT_EE(GiveFrags_randomweapons, attacker);
-			WEPSET_ANDNOT_EW(GiveFrags_randomweapons, culprit);
+			GiveFrags_randomweapons.weapons &= ~attacker.weapons;
+			GiveFrags_randomweapons.weapons &= ~WepSet_FromWeapon(culprit);
 
 			// among the remaining ones, choose one by random
 			W_RandomWeapons(GiveFrags_randomweapons, 1);
 
-			if(!WEPSET_EMPTY_E(GiveFrags_randomweapons))
+			if(GiveFrags_randomweapons.weapons)
 			{
-				WEPSET_OR_EE(attacker, GiveFrags_randomweapons);
-				WEPSET_ANDNOT_EW(attacker, culprit);
+				attacker.weapons |= GiveFrags_randomweapons.weapons;
+				attacker.weapons &= ~WepSet_FromWeapon(culprit);
 			}
 		}
 
 		// after a frag, choose another random weapon set
-		if not(WEPSET_CONTAINS_EW(attacker, attacker.weapon))
+		if not(attacker.weapons & WepSet_FromWeapon(attacker.weapon))
 			W_SwitchWeapon_Force(attacker, w_getbestweapon(attacker));
 	}
 
@@ -552,11 +552,7 @@ void Ice_Think()
 
 void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypoint)
 {
-	float monster = (targ.flags & FL_MONSTER);
-	float player = (targ.flags & FL_CLIENT);
-	entity head;
-	
-	if(!player && !monster) // only specified entities can be freezed
+	if(!IS_PLAYER(targ) && !(targ.flags & FL_MONSTER)) // only specified entities can be freezed
 		return;
 		
 	if(targ.frozen)
@@ -567,7 +563,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	targ.health = 1;
 	targ.revive_speed = freeze_time;
 
-	entity ice;
+	entity ice, head;
 	ice = spawn();
 	ice.owner = targ;
 	ice.classname = "ice";
@@ -600,8 +596,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 void Unfreeze (entity targ)
 {
-	// only reset health if we were actually frozen
-	if(targ.frozen)
+	if(targ.frozen) // only reset health if target was frozen
 		targ.health = ((IS_PLAYER(targ)) ? autocvar_g_balance_health_start : targ.max_health);
 
 	entity head;
@@ -745,7 +740,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			mirrorforce *= g_weaponforcefactor;
 		}
 		
-		if(((targ.frozen == 2 && attacker.monsterid != MONSTER_SPIDER) || (targ.frozen == 1)) && deathtype != DEATH_HURTTRIGGER)
+		if(((targ.frozen == 2 && attacker.monsterid != MON_SPIDER) || (targ.frozen == 1)) && deathtype != DEATH_HURTTRIGGER)
 		{
 			damage = 0;
 			force *= 0.2;
@@ -870,7 +865,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		}
 		else
 			self.velocity = self.velocity + farce;
-		self.flags &~= FL_ONGROUND;
+		self.flags &= ~FL_ONGROUND;
 		UpdateCSQCProjectile(self);
 	}
 	// apply damage
@@ -1309,7 +1304,7 @@ void Fire_ApplyEffect(entity e)
 	if(Fire_IsBurning(e))
 		e.effects |= EF_FLAME;
 	else
-		e.effects &~= EF_FLAME;
+		e.effects &= ~EF_FLAME;
 }
 
 void fireburner_think()

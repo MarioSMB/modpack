@@ -85,8 +85,8 @@ void havocbot_goalrating_items(float ratingscale, vector org, float sradius)
 					if( head.armorvalue && player.armorvalue > self.armorvalue)
 						continue;
 
-					if( !WEPSET_EMPTY_E(head) )
-					if( !WEPSET_CONTAINS_ALL_EE(player, head) )
+					if( head.weapons )
+					if( head.weapons & ~player.weapons )
 						continue;
 
 					if (head.ammo_shells && player.ammo_shells > self.ammo_shells)
@@ -175,11 +175,11 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 				continue;
 			*/
 
-			if(head.flags & FL_INWATER || head.flags & FL_PARTIALGROUND)
+			if((head.flags & FL_INWATER) || (head.flags & FL_PARTIALGROUND))
 				continue;
 
 			// not falling
-			if(head.flags & FL_ONGROUND == 0)
+			if((head.flags & FL_ONGROUND) == 0)
 			{
 				traceline(head.origin, head.origin + '0 0 -1500', TRUE, world);
 				t = pointcontents(trace_endpos + '0 0 1');

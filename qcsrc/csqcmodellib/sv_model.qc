@@ -78,13 +78,13 @@ void CSQCModel_CheckUpdate()
 	if(self.effects & EF_RESTARTANIM_BIT)
 	{
 		self.SendFlags |= CSQCMODEL_PROPERTY_FRAME | CSQCMODEL_PROPERTY_FRAME2; // full anim resend please
-		self.effects &~= EF_RESTARTANIM_BIT;
+		self.effects &= ~EF_RESTARTANIM_BIT;
 	}
 
 	if(self.effects & EF_TELEPORT_BIT)
 	{
 		self.SendFlags |= CSQCMODEL_PROPERTY_TELEPORTED; // no interpolation please
-		self.effects &~= EF_TELEPORT_BIT;
+		self.effects &= ~EF_TELEPORT_BIT;
 	}
 
 #define CSQCMODEL_IF(cond) if(cond) {

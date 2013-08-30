@@ -54,7 +54,7 @@ void InitGameplayMode()
 
 	MapInfo_LoadMapSettings(mapname);
 	teamplay = 0;
-	serverflags &~= SERVERFLAG_TEAMPLAY;
+	serverflags &= ~SERVERFLAG_TEAMPLAY;
 
 	if not(cvar_value_issafe(world.fog))
 	{
@@ -211,8 +211,6 @@ void InitGameplayMode()
 	{
 		timelimit_override = 0; // no timelimit in invasion, round based
 		fraglimit_override = autocvar_g_invasion_round_limit;
-		maxrounds = fraglimit_override;
-		fraglimit_override = 0; // also no frag limit
 		MUTATOR_ADD(gamemode_invasion);
 	}
 
@@ -254,6 +252,12 @@ void InitGameplayMode()
 		}
 		else
 			g_race_qualifying = 0;
+	}
+	
+	if(g_invasion)
+	{
+		maxrounds = cvar("fraglimit");
+		cvar_set("fraglimit", "0");
 	}
 
 	if(g_race || g_cts)

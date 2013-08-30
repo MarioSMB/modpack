@@ -272,7 +272,7 @@ void ImpulseCommands (void)
 					for(e = findchain(classname, "waypoint"); e; e = e.chain)
 					{
 						e.colormod = '0.5 0.5 0.5';
-						e.effects &~= EF_NODEPTHTEST | EF_RED | EF_BLUE;
+						e.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
 					}
 					e2 = navigation_findnearestwaypoint(self, FALSE);
 					navigation_markroutes(e2);
@@ -318,7 +318,7 @@ void ImpulseCommands (void)
 						if(navigation_findnearestwaypoint(e, FALSE))
 						{
 							setorigin(e, org);
-							e.effects &~= EF_NODEPTHTEST;
+							e.effects &= ~EF_NODEPTHTEST;
 							e.model = "";
 						}
 						else
@@ -341,7 +341,7 @@ void ImpulseCommands (void)
 					start = findchainflags(flags, FL_ITEM);
 					for(e = start; e; e = e.chain)
 					{
-						e.effects &~= EF_NODEPTHTEST | EF_RED | EF_BLUE;
+						e.effects &= ~(EF_NODEPTHTEST | EF_RED | EF_BLUE);
 						e.colormod = '0.5 0.5 0.5';
 					}
 					for(e = start; e; e = e.chain)

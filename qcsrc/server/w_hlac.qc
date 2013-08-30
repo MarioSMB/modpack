@@ -249,7 +249,7 @@ float w_hlac(float req)
 		org2 = w_org + w_backoff * 6;
 		pointparticles(particleeffectnum("laser_impact"), org2, w_backoff * 1000, 1);
 		if(!w_issilent)
-			sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTEN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{

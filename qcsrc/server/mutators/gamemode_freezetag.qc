@@ -409,9 +409,9 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 		n = 0;
 		FOR_EACH_PLAYER(other) if(self != other)
 		{
-			if(!other.frozen)
+			if(other.frozen == 0)
 			{
-				if(other.team == self.team)
+				if(!IsDifferentTeam(other, self))
 				{
 					if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax))
 					{

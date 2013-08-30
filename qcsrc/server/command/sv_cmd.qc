@@ -173,23 +173,24 @@ void GameCommand_butcher(float request)
 		case CMD_REQUEST_COMMAND:
 		{
 			if(autocvar_g_campaign) { print("This command doesn't work in campaign mode.\n"); return; }
+			if(g_invasion) { print("This command doesn't work during an invasion.\n"); return; }
 		
             float removed_count = 0;
-			entity montokill, head;
+			entity head;
 			
-            FOR_EACH_MONSTER(montokill)
-            {
-				WaypointSprite_Kill(montokill.sprite);
+			FOR_EACH_MONSTER(head)
+			{
+				WaypointSprite_Kill(head.sprite);
 				
-				if(montokill.weaponentity)
-					remove(montokill.weaponentity);
+				if(head.weaponentity)
+					remove(head.weaponentity);
 					
-				if(montokill.iceblock)
-					remove(montokill.iceblock);
-                    
-                remove(montokill);
-                removed_count += 1;
-            }
+				if(head.iceblock)
+					remove(head.iceblock);
+					
+				remove(head);
+				++removed_count;
+			}
 			
 			FOR_EACH_PLAYER(head)
 				head.monstercount = 0;
@@ -814,7 +815,12 @@ void GameCommand_gametype(float request, float argc)
 					MapInfo_SwitchGameType(t);
 					MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 					if(MapInfo_count > 0)
+					{
+						// update lsmaps in case the gametype changed, this way people can easily list maps for it
+						if(lsmaps_reply != "") { strunzone(lsmaps_reply); }
+						lsmaps_reply = strzone(getlsmaps());
 						bprint("Game type successfully switched to ", s, "\n");
+					}
 					else
 					{
 						bprint("Cannot use this game type: no map for it found\n");
@@ -1916,7 +1922,7 @@ void GameCommand_(float request)
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define SERVER_COMMANDS(request,arguments,command) \
 	SERVER_COMMAND("adminmsg", GameCommand_adminmsg(request, arguments), "Send an admin message to a client directly") \
-    	SERVER_COMMAND("butcher", GameCommand_butcher(request), "Instantly removes all monsters on the map") \
+	SERVER_COMMAND("butcher", GameCommand_butcher(request), "Instantly removes all monsters on the map") \
 	SERVER_COMMAND("allready", GameCommand_allready(request), "Restart the server and reset the players") \
 	SERVER_COMMAND("allspec", GameCommand_allspec(request, arguments), "Force all players to spectate") \
 	SERVER_COMMAND("anticheat", GameCommand_anticheat(request, arguments), "Create an anticheat report for a client") \

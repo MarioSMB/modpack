@@ -46,7 +46,7 @@ float turret_fusionreactor_firecheck()
 	if (self.enemy.ammo >= self.enemy.ammo_max)
 		return 0;
 	
-	if(teamplay && IsDifferentTeam(self, self.enemy))
+	if(IsDifferentTeam(self, self.enemy))
 		return 0;
 	
 	if not (self.enemy.ammo_flags & TFL_AMMO_ENERGY)

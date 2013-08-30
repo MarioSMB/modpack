@@ -632,7 +632,7 @@ float w_minstanex(float req)
 		precache_sound ("weapons/minstanex_charge_new.wav");
 		precache_sound ("weapons/minstanex_charge2.wav");
 		precache_sound ("weapons/crylink_fire.wav");
-        precache_sound ("weapons/electro_fire2.wav");
+		precache_sound ("weapons/electro_fire2.wav");
 		precache_sound ("weapons/nexwhoosh1.wav");
 		precache_sound ("weapons/nexwhoosh2.wav");
 		precache_sound ("weapons/nexwhoosh3.wav");
@@ -695,7 +695,7 @@ float w_minstanex(float req)
 		org2 = w_org + w_backoff * 6;
 		pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
 		if(!w_issilent)
-			sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTEN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{

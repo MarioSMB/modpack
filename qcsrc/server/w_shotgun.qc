@@ -190,7 +190,7 @@ void shotgun_fire2_02()
 
 void W_Shotgun_Attack2 (void)
 {
-	sound (self, CH_WEAPON_A, "weapons/shotgun_melee.wav", VOL_BASE, ATTN_NORM);
+	sound (self, CH_WEAPON_A, "weapons/shotgun_melee.wav", VOL_BASE, ATTEN_NORM);
 	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_shotgun_secondary_animtime, w_ready);
 
 	entity meleetemp;
@@ -323,11 +323,11 @@ float w_shotgun(float req)
 		if(!w_issilent && time - self.prevric > 0.25)
 		{
 			if(w_random < 0.0165)
-				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTEN_NORM);
 			else if(w_random < 0.033)
-				sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTEN_NORM);
 			else if(w_random < 0.05)
-				sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTEN_NORM);
 			self.prevric = time;
 		}
 	}

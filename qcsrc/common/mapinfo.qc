@@ -380,7 +380,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 	if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_RACE)
 	if(!spawnplaces)
 	{
-		MapInfo_Map_supportedGametypes &~= MAPINFO_TYPE_RACE;
+		MapInfo_Map_supportedGametypes &= ~MAPINFO_TYPE_RACE;
 		MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTS;
 	}
 

@@ -116,6 +116,7 @@ void CSQC_Init(void)
 
 	// needs to be done so early because of the constants they create
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
+	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
@@ -127,8 +128,7 @@ void CSQC_Init(void)
 	precache_model("null");
 	precache_sound("misc/hit.wav");
 	precache_sound("misc/typehit.wav");
-
-	Monsters_Precache();
+	
 	generator_precache();
 	Projectile_Precache();
 	Hook_Precache();
@@ -749,7 +749,7 @@ void Ent_ReadSpawnEvent(float is_new)
 			}
 			if(autocvar_cl_spawn_event_sound)
 			{
-				sound(self, CH_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTN_NORM);
+				sound(self, CH_TRIGGER, "misc/spawn.wav", VOL_BASE, ATTEN_NORM);
 			}
 		}
 	}

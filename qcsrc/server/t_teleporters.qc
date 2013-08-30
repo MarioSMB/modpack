@@ -97,7 +97,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 		if(self.pushltime < time) // only show one teleport effect per teleporter per 0.2 seconds, for better fps
 		{
 			if(tflags & TELEPORT_FLAG_SOUND)
-				sound (player, CH_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTN_NORM);
+				sound (player, CH_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTEN_NORM);
 			if(tflags & TELEPORT_FLAG_PARTICLES)
 			{
 				pointparticles(particleeffectnum("teleport"), player.origin, '0 0 0', 1);
@@ -126,7 +126,7 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 				tdeath(player, teleporter, telefragger, telefragmin, telefragmax);
 
 		// player no longer is on ground
-		player.flags &~= FL_ONGROUND;
+		player.flags &= ~FL_ONGROUND;
 
 		// reset tracking of oldvelocity for impact damage (sudden velocity changes)
 		player.oldvelocity = player.velocity;
@@ -216,7 +216,7 @@ void Teleport_Touch (void)
 		return;
 
 	if(self.team)
-		if((self.spawnflags & 4 == 0) == (self.team != other.team))
+		if(((self.spawnflags & 4) == 0) == (self.team != other.team))
 			return;
 
 	EXACTTRIGGER_TOUCH;

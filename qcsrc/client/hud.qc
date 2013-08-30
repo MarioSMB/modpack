@@ -447,8 +447,7 @@ float GetAmmoTypeForWep(float i)
 void HUD_Weapons(void)
 {
 	// declarations
-	WEPSET_DECLARE_A(weapons_stat);
-	WEPSET_COPY_AS(weapons_stat);
+	WepSet weapons_stat = WepSet_GetFromStat();
 	float i, f, a;
 	float screen_ar, center_x = 0, center_y;
 	float weapon_count, weapon_id;
@@ -532,9 +531,9 @@ void HUD_Weapons(void)
 	{
 		if(autocvar__hud_configure)
 		{
-			if (WEPSET_EMPTY_A(weapons_stat))
+			if (!weapons_stat)
 				for(i = WEP_FIRST; i <= WEP_LAST; i += floor((WEP_LAST-WEP_FIRST)/5))
-					WEPSET_OR_AW(weapons_stat, i);
+					weapons_stat |= WepSet_FromWeapon(i);
 
 			if(menu_enabled != 2)
 				HUD_Panel_DrawBg(1); // also draw the bg of the entire panel
@@ -543,7 +542,7 @@ void HUD_Weapons(void)
 		// do we own this weapon?
 		weapon_count = 0;
 		for(i = 0; i <= WEP_LAST-WEP_FIRST; ++i)
-			if(WEPSET_CONTAINS_AW(weapons_stat, weaponorder[i].weapon))
+			if(weapons_stat & WepSet_FromWeapon(weaponorder[i].weapon))
 				++weapon_count;
 
 		// add it anyway if weaponcomplain is shown
@@ -735,7 +734,7 @@ void HUD_Weapons(void)
 
 		// skip this weapon if we don't own it (and onlyowned is enabled)-- or if weapons_complainbubble is showing for this weapon
 		if(autocvar_hud_panel_weapons_onlyowned)
-		if not(WEPSET_CONTAINS_AW(weapons_stat, self.weapon) || (self.weapon == complain_weapon))
+		if not((weapons_stat & WepSet_FromWeapon(self.weapon)) || (self.weapon == complain_weapon))
 			continue;
 
 		// figure out the drawing position of weapon
@@ -759,7 +758,7 @@ void HUD_Weapons(void)
 		}
 
 		// drawing all the weapon items
-		if(WEPSET_CONTAINS_AW(weapons_stat, self.weapon))
+		if(weapons_stat & WepSet_FromWeapon(self.weapon))
 		{
 			// draw the weapon image
 			drawpic_aspect_skin(weapon_pos, strcat("weapon", self.netname), weapon_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
@@ -3383,7 +3382,7 @@ void HUD_Mod_Race(vector pos, vector mySize)
 		if(autocvar_cl_autodemo_delete_keeprecords)
 		{
 			f = autocvar_cl_autodemo_delete;
-			f &~= 1;
+			f &= ~1;
 			cvar_set("cl_autodemo_delete", ftos(f)); // don't delete demo with new record!
 		}
 	}

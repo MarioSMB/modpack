@@ -1,63 +1,63 @@
-float BOT_PICKUP_RATING_LOW	= 2500;
-float BOT_PICKUP_RATING_MID	= 5000;
-float BOT_PICKUP_RATING_HIGH	= 10000;
+const float BOT_PICKUP_RATING_LOW	= 2500;
+const float BOT_PICKUP_RATING_MID	= 5000;
+const float BOT_PICKUP_RATING_HIGH	= 10000;
 
-float WEP_TYPE_OTHER	      =  0x00; // not for damaging people
-float WEP_TYPE_SPLASH	      =  0x01; // splash damage
-float WEP_TYPE_HITSCAN	      =  0x02; // hitscan
-float WEP_TYPEMASK            =  0x0F;
-float WEP_FLAG_CANCLIMB       =  0x10; // can be used for movement
-float WEP_FLAG_NORMAL         =  0x20; // in "most weapons" set
-float WEP_FLAG_HIDDEN         =  0x40; // hides from menu
-float WEP_FLAG_RELOADABLE     =  0x80; // can has reload
-float WEP_FLAG_SUPERWEAPON    = 0x100; // powerup timer
-float WEP_FLAG_MUTATORBLOCKED = 0x200; // hides from impulse 99 etc. (mutators are allowed to clear this flag)
+const float WEP_TYPE_OTHER	      =  0x00; // not for damaging people
+const float WEP_TYPE_SPLASH	      =  0x01; // splash damage
+const float WEP_TYPE_HITSCAN	      =  0x02; // hitscan
+const float WEP_TYPEMASK            =  0x0F;
+const float WEP_FLAG_CANCLIMB       =  0x10; // can be used for movement
+const float WEP_FLAG_NORMAL         =  0x20; // in "most weapons" set
+const float WEP_FLAG_HIDDEN         =  0x40; // hides from menu
+const float WEP_FLAG_RELOADABLE     =  0x80; // can has reload
+const float WEP_FLAG_SUPERWEAPON    = 0x100; // powerup timer
+const float WEP_FLAG_MUTATORBLOCKED = 0x200; // hides from impulse 99 etc. (mutators are allowed to clear this flag)
 
-float	IT_UNLIMITED_WEAPON_AMMO     = 1;
+const float	IT_UNLIMITED_WEAPON_AMMO     = 1;
 // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
-float	IT_UNLIMITED_SUPERWEAPONS    = 2;
+const float	IT_UNLIMITED_SUPERWEAPONS    = 2;
 // when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
-float   IT_CTF_SHIELDED              = 4; // set for the flag shield
-float   IT_USING_JETPACK             = 8; // confirmation that button is pressed
-float   IT_JETPACK                   = 16; // actual item
-float   IT_FUEL_REGEN                = 32; // fuel regeneration trigger
-float   IT_SHELLS                    = 256;
-float   IT_NAILS                     = 512;
-float   IT_ROCKETS                   = 1024;
-float   IT_CELLS                     = 2048;
-float   IT_SUPERWEAPON               = 4096;
-float   IT_FUEL                      = 128;
-float   IT_STRENGTH                  = 8192;
-float   IT_INVINCIBLE                = 16384;
-float   IT_HEALTH                    = 32768;
+const float   IT_CTF_SHIELDED              = 4; // set for the flag shield
+const float   IT_USING_JETPACK             = 8; // confirmation that button is pressed
+const float   IT_JETPACK                   = 16; // actual item
+const float   IT_FUEL_REGEN                = 32; // fuel regeneration trigger
+WANT_CONST float   IT_SHELLS                    = 256;
+WANT_CONST float   IT_NAILS                     = 512;
+WANT_CONST float   IT_ROCKETS                   = 1024;
+WANT_CONST float   IT_CELLS                     = 2048;
+const float   IT_SUPERWEAPON               = 4096;
+const float   IT_FUEL                      = 128;
+const float   IT_STRENGTH                  = 8192;
+const float   IT_INVINCIBLE                = 16384;
+const float   IT_HEALTH                    = 32768;
 // union:
 	// for items:
-	float	IT_KEY1					= 131072;
-	float	IT_KEY2					= 262144;
+	WANT_CONST float	IT_KEY1					= 131072;
+	WANT_CONST float	IT_KEY2					= 262144;
 	// for players:
-	float	IT_RED_FLAG_TAKEN		= 32768;
-	float	IT_RED_FLAG_LOST		= 65536;
-	float	IT_RED_FLAG_CARRYING		= 98304;
-	float	IT_BLUE_FLAG_TAKEN		= 131072;
-	float	IT_BLUE_FLAG_LOST		= 262144;
-	float	IT_BLUE_FLAG_CARRYING	= 393216;
-	float	IT_YELLOW_FLAG_TAKEN	= 524288;
-	float	IT_YELLOW_FLAG_LOST		= 1048576;
-	float	IT_YELLOW_FLAG_CARRYING	= 1572864;
-	float	IT_PINK_FLAG_TAKEN		= 2097152;
-	float	IT_PINK_FLAG_LOST		= 4194304;
-	float	IT_PINK_FLAG_CARRYING	= 6291456;
+	const float	IT_RED_FLAG_TAKEN		= 32768;
+	const float	IT_RED_FLAG_LOST		= 65536;
+	const float	IT_RED_FLAG_CARRYING		= 98304;
+	const float	IT_BLUE_FLAG_TAKEN		= 131072;
+	const float	IT_BLUE_FLAG_LOST		= 262144;
+	const float	IT_BLUE_FLAG_CARRYING		= 393216;
+	const float	IT_YELLOW_FLAG_TAKEN		= 524288;
+	const float	IT_YELLOW_FLAG_LOST		= 1048576;
+	const float	IT_YELLOW_FLAG_CARRYING		= 1572864;
+	const float	IT_PINK_FLAG_TAKEN		= 2097152;
+	const float	IT_PINK_FLAG_LOST		= 4194304;
+	const float	IT_PINK_FLAG_CARRYING		= 6291456;
 // end
-float   IT_5HP                       = 524288;
-float   IT_25HP                      = 1048576;
-float   IT_ARMOR_SHARD               = 2097152;
-float   IT_ARMOR                     = 4194304;
+const float   IT_5HP                       = 524288;
+const float   IT_25HP                      = 1048576;
+const float   IT_ARMOR_SHARD               = 2097152;
+const float   IT_ARMOR                     = 4194304;
 
-float   IT_AMMO                      = 3968; // IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_FUEL;
-float   IT_PICKUPMASK                = 51; // IT_FUEL_REGEN | IT_JETPACK | IT_UNLIMITED_AMMO; // strength and invincible are handled separately
-float   IT_UNLIMITED_AMMO            = 3; // IT_UNLIMITED_SUPERWEAPONS | IT_UNLIMITED_WEAPON_AMMO;
+const float   IT_AMMO                      = 3968; // IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_FUEL;
+const float   IT_PICKUPMASK                = 51; // IT_FUEL_REGEN | IT_JETPACK | IT_UNLIMITED_AMMO; // strength and invincible are handled separately
+const float   IT_UNLIMITED_AMMO            = 3; // IT_UNLIMITED_SUPERWEAPONS | IT_UNLIMITED_WEAPON_AMMO;
 
-float AMMO_COUNT = 4; // amount of ammo types to show in the inventory panel
+const float AMMO_COUNT = 4; // amount of ammo types to show in the inventory panel
 
 // variables:
 string weaponorder_byid;
@@ -76,8 +76,29 @@ string W_NumberWeaponOrder(string order);
 .float ammo_fuel;
 .float ammo_batteries; // dummy
 
+// Weapon sets
+typedef vector WepSet;
+WepSet WepSet_FromWeapon(float a);
+#ifdef SVQC
+void WepSet_AddStat();
+void WriteWepSet(float dest, WepSet w);
+#endif
+#ifdef CSQC
+WepSet WepSet_GetFromStat();
+WepSet ReadWepSet();
+#endif
+
+// Weapon name macros
+#define WEP_FIRST 1
+#define WEP_MAXCOUNT 24 // Increase as needed. Can be up to three times as much.
+float WEP_COUNT;
+float WEP_LAST;
+WepSet WEPSET_ALL;
+WepSet WEPSET_SUPERWEAPONS;
+
 // entity properties of weaponinfo:
 .float weapon; // WEP_...
+.WepSet weapons; // WEPSET_...
 .string netname; // short name
 .string message; // human readable name
 .float items; // IT_...
@@ -89,149 +110,33 @@ string W_NumberWeaponOrder(string order);
 .float bot_pickupbasevalue; // bot weapon priority
 .string model2; // wpn- sprite name
 ..float ammo_field; // main ammo field
-// also, weaponinfo ents can act as a WEPSET
 
 // dynamic weapon adding
 float w_null(float dummy);
-void register_weapon(float id, float(float) func, float ammotype, float i, float weapontype, float pickupbasevalue, string modelname, string shortname, string wname);
+void register_weapon(float id, WepSet bit, float(float) func, float ammotype, float i, float weapontype, float pickupbasevalue, string modelname, string shortname, string wname);
 void register_weapons_done();
 
-#define WEP_FIRST 1
-float WEP_COUNT;
-float WEP_LAST;
-
-#if 1
-# define WEP_MAXCOUNT 24
-// default storage
-.float _WS_weapons;
-# define WEPSET_BIT(a)                  power2of((a) - WEP_FIRST)
-# define WEPSET_DECLARE_A(a)            float _WS_##a
-# define WEPSET_CLEAR_E(e)              ((e)._WS_weapons = 0)
-# define WEPSET_CLEAR_A(a)              (_WS_##a = 0)
-# define WEPSET_EMPTY_E(e)              ((e)._WS_weapons == 0)
-# define WEPSET_EMPTY_A(a)              (_WS_##a == 0)
-# define WEPSET_COPY_AS(a)              (_WS_##a = getstati(STAT_WEAPONS))
-# define WEPSET_ADDSTAT()               addstat(STAT_WEAPONS, AS_INT, _WS_weapons)
-# define WEPSET_WRITE_E(dest,a)         WriteInt24_t(dest, (a)._WS_weapons)
-# define WEPSET_WRITE_A(dest,a)         WriteInt24_t(dest, _WS_##a)
-# define WEPSET_WRITE_W(dest,a)         WriteInt24_t(dest, WEPSET_BIT(a))
-# define WEPSET_READ_E(a)               (a)._WS_weapons = ReadInt24_t()
-# define WEPSET_READ_A(a)               (_WS_##a) = ReadInt24_t()
-# define WEPSET_OP1_EE(a,b,mergeop,x)   ((a)._WS_weapons x (b)._WS_weapons)
-# define WEPSET_OP2_EE(a,b,mergeop,x,y) ((a)._WS_weapons x (b)._WS_weapons y (a)._WS_weapons)
-# define WEPSET_OP1_EA(a,b,mergeop,x)   ((a)._WS_weapons x _WS_##b)
-# define WEPSET_OP2_EA(a,b,mergeop,x,y) ((a)._WS_weapons x _WS_##b y (a)._WS_weapons)
-# define WEPSET_OP1_EW(a,b,mergeop,x)   ((a)._WS_weapons x WEPSET_BIT(b))
-# define WEPSET_OP2_EW(a,b,mergeop,x,y) ((a)._WS_weapons x WEPSET_BIT(b) y (a)._WS_weapons)
-# define WEPSET_OP1_AE(a,b,mergeop,x)   (_WS_##a x (b)._WS_weapons)
-# define WEPSET_OP2_AE(a,b,mergeop,x,y) (_WS_##a x (b)._WS_weapons y _WS_##a)
-# define WEPSET_OP1_AA(a,b,mergeop,x)   (_WS_##a x _WS_##b)
-# define WEPSET_OP2_AA(a,b,mergeop,x,y) (_WS_##a x _WS_##b y _WS_##a)
-# define WEPSET_OP1_AW(a,b,mergeop,x)   (_WS_##a x WEPSET_BIT(b))
-# define WEPSET_OP2_AW(a,b,mergeop,x,y) (_WS_##a x WEPSET_BIT(b) y _WS_##a)
-#else
-# define WEP_MAXCOUNT 48
-# define WEP_FIRST2 25
-.float _WS1_weapons;
-.float _WS2_weapons;
-# define WEPSET_BIT1(a)                 (((a) < WEP_FIRST2) ? power2of((a) - WEP_FIRST) : 0)
-# define WEPSET_BIT2(a)                 (((a) >= WEP_FIRST2) ? power2of((a) - WEP_FIRST2) : 0)
-# define WEPSET_DECLARE_A(a)            float _WS1_##a, _WS2_##a
-# define WEPSET_CLEAR_E(e)              ((e)._WS1_weapons = (e)._WS2_weapons = 0)
-# define WEPSET_CLEAR_A(a)              ((_WS1_##a) = (_WS2_##a) = 0)
-# define WEPSET_EMPTY_E(e)              ((e)._WS1_weapons == 0 && (e)._WS2_weapons == 0)
-# define WEPSET_EMPTY_A(a)              ((_WS1_##a) == 0 && (_WS2_##a) == 0)
-# define WEPSET_COPY_AS(a)              ((_WS1_##a) = getstati(STAT_WEAPONS), (_WS2_##a) = getstati(STAT_WEAPONS2))
-# define WEPSET_ADDSTAT()               addstat(STAT_WEAPONS, AS_INT, _WS1_weapons); addstat(STAT_WEAPONS2, AS_INT, _WS2_weapons)
-# define WEPSET_WRITE_E(dest,a)         WriteInt24_t(dest, (a)._WS1_weapons); WriteInt24_t(dest, (a)._WS2_weapons)
-# define WEPSET_WRITE_A(dest,a)         WriteInt24_t(dest, _WS1_##a); WriteInt24_t(dest, _WS2_##a)
-# define WEPSET_WRITE_W(dest,a)         WriteInt24_t(dest, WEPSET_BIT1(a)); WriteInt24_t(dest, WEPSET_BIT2(a))
-# define WEPSET_READ_E(a)               (a)._WS1_weapons = ReadInt24_t(); (a)._WS2_weapons = ReadInt24_t()
-# define WEPSET_READ_A(a)               (_WS1_##a) = ReadInt24_t(); (_WS2_##a) = ReadInt24_t()
-# define WEPSET_OP1_EE(a,b,mergeop,x)   (((a)._WS1_weapons x (b)._WS1_weapons) mergeop ((a)._WS2_weapons x (b)._WS2_weapons))
-# define WEPSET_OP2_EE(a,b,mergeop,x,y) (((a)._WS1_weapons x (b)._WS1_weapons y (a)._WS1_weapons) mergeop ((a)._WS2_weapons x (b)._WS2_weapons y (a)._WS2_weapons))
-# define WEPSET_OP1_EA(a,b,mergeop,x)   (((a)._WS1_weapons x _WS1_##b) mergeop ((a)._WS2_weapons x _WS2_##b))
-# define WEPSET_OP2_EA(a,b,mergeop,x,y) (((a)._WS1_weapons x _WS1_##b y (a)._WS1_weapons) mergeop ((a)._WS2_weapons x _WS2_##b y (a)._WS2_weapons))
-# define WEPSET_OP1_EW(a,b,mergeop,x)   (((a)._WS1_weapons x WEPSET_BIT1(b)) mergeop ((a)._WS2_weapons x WEPSET_BIT2(b)))
-# define WEPSET_OP2_EW(a,b,mergeop,x,y) (((a)._WS1_weapons x WEPSET_BIT1(b) y (a)._WS1_weapons) mergeop ((a)._WS2_weapons x WEPSET_BIT2(b) y (a)._WS2_weapons))
-# define WEPSET_OP1_AE(a,b,mergeop,x)   ((_WS1_##a x (b)._WS1_weapons) mergeop (_WS2_##a x (b)._WS2_weapons))
-# define WEPSET_OP2_AE(a,b,mergeop,x,y) ((_WS1_##a x (b)._WS1_weapons y _WS1_##a) mergeop (_WS2_##a x (b)._WS2_weapons y _WS2_##a))
-# define WEPSET_OP1_AA(a,b,mergeop,x)   ((_WS1_##a x _WS1_##b) mergeop (_WS2_##a x _WS2_##b))
-# define WEPSET_OP2_AA(a,b,mergeop,x,y) ((_WS1_##a x _WS1_##b y _WS1_##a) mergeop (_WS2_##a x _WS2_##b y _WS2_##a))
-# define WEPSET_OP1_AW(a,b,mergeop,x)   ((_WS1_##a x WEPSET_BIT1(b)) mergeop (_WS2_##a x WEPSET_BIT2(b)))
-# define WEPSET_OP2_AW(a,b,mergeop,x,y) ((_WS1_##a x WEPSET_BIT1(b) y _WS1_##a) mergeop (_WS2_##a x WEPSET_BIT2(b) y _WS2_##a))
-#endif
-
-#define XX ,
-
-#define WEPSET_COPY_EE(a,b)            WEPSET_OP1_EE(a,b,XX,=)
-#define WEPSET_EQ_EE(a,b)              WEPSET_OP1_EE(a,b,&&,==)
-#define WEPSET_OR_EE(a,b)              WEPSET_OP1_EE(a,b,XX,|=)
-#define WEPSET_AND_EE(a,b)             WEPSET_OP2_EE(a,b,XX,=,&)
-#define WEPSET_ANDNOT_EE(a,b)          WEPSET_OP1_EE(a,b,XX,&~=)
-#define WEPSET_CONTAINS_ANY_EE(a,b) !!(WEPSET_OP1_EE(a,b,||,&))
-#define WEPSET_CONTAINS_ALL_EE(a,b)    WEPSET_OP2_EE(b,a,&&,==,&)
-
-#define WEPSET_COPY_EA(a,b)            WEPSET_OP1_EA(a,b,XX,=)
-#define WEPSET_EQ_EA(a,b)              WEPSET_OP1_EA(a,b,&&,==)
-#define WEPSET_OR_EA(a,b)              WEPSET_OP1_EA(a,b,XX,|=)
-#define WEPSET_AND_EA(a,b)             WEPSET_OP2_EA(a,b,XX,=,&)
-#define WEPSET_ANDNOT_EA(a,b)          WEPSET_OP1_EA(a,b,XX,&~=)
-#define WEPSET_CONTAINS_ANY_EA(a,b) !!(WEPSET_OP1_EA(a,b,||,&))
-#define WEPSET_CONTAINS_ALL_EA(a,b)    WEPSET_OP2_EA(b,a,&&,==,&)
-
-#define WEPSET_COPY_EW(a,b)            WEPSET_OP1_EW(a,b,XX,=)
-#define WEPSET_EQ_EW(a,b)              WEPSET_OP1_EW(a,b,&&,==)
-#define WEPSET_OR_EW(a,b)              WEPSET_OP1_EW(a,b,XX,|=)
-#define WEPSET_AND_EW(a,b)             WEPSET_OP2_EW(a,b,XX,=,&)
-#define WEPSET_ANDNOT_EW(a,b)          WEPSET_OP1_EW(a,b,XX,&~=)
-#define WEPSET_CONTAINS_EW(a,b)     !!(WEPSET_OP1_EW(a,b,||,&))
-
-#define WEPSET_COPY_AE(a,b)            WEPSET_OP1_AE(a,b,XX,=)
-#define WEPSET_EQ_AE(a,b)              WEPSET_OP1_AE(a,b,&&,==)
-#define WEPSET_OR_AE(a,b)              WEPSET_OP1_AE(a,b,XX,|=)
-#define WEPSET_AND_AE(a,b)             WEPSET_OP2_AE(a,b,XX,=,&)
-#define WEPSET_ANDNOT_AE(a,b)          WEPSET_OP1_AE(a,b,XX,&~=)
-#define WEPSET_CONTAINS_ANY_AE(a,b) !!(WEPSET_OP1_AE(a,b,||,&))
-#define WEPSET_CONTAINS_ALL_AE(a,b)    WEPSET_OP2_AE(b,a,&&,==,&)
-
-#define WEPSET_COPY_AA(a,b)            WEPSET_OP1_AA(a,b,XX,=)
-#define WEPSET_EQ_AA(a,b)              WEPSET_OP1_AA(a,b,&&,==)
-#define WEPSET_OR_AA(a,b)              WEPSET_OP1_AA(a,b,XX,|=)
-#define WEPSET_AND_AA(a,b)             WEPSET_OP2_AA(a,b,XX,=,&)
-#define WEPSET_ANDNOT_AA(a,b)          WEPSET_OP1_AA(a,b,XX,&~=)
-#define WEPSET_CONTAINS_ANY_AA(a,b) !!(WEPSET_OP1_AA(a,b,||,&))
-#define WEPSET_CONTAINS_ALL_AA(a,b)    WEPSET_OP2_AA(b,a,&&,==,&)
-
-#define WEPSET_COPY_AW(a,b)            WEPSET_OP1_AW(a,b,XX,=)
-#define WEPSET_EQ_AW(a,b)              WEPSET_OP1_AW(a,b,&&,==)
-#define WEPSET_OR_AW(a,b)              WEPSET_OP1_AW(a,b,XX,|=)
-#define WEPSET_AND_AW(a,b)             WEPSET_OP2_AW(a,b,XX,=,&)
-#define WEPSET_ANDNOT_AW(a,b)          WEPSET_OP1_AW(a,b,XX,&~=)
-#define WEPSET_CONTAINS_AW(a,b)     !!(WEPSET_OP1_AW(a,b,||,&))
-
-WEPSET_DECLARE_A(WEPBIT_ALL);
-WEPSET_DECLARE_A(WEPBIT_SUPERWEAPONS);
-// note: the fabs call is just there to hide "if result is constant" warning
-#define REGISTER_WEAPON_2(id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
+#define REGISTER_WEAPON_2(id,bit,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
 	float id; \
+	WepSet bit; \
 	float func(float); \
 	void RegisterWeapons_##id() \
 	{ \
 		WEP_LAST = (id = WEP_FIRST + WEP_COUNT); \
-		WEPSET_OR_AW(WEPBIT_ALL, id); \
-		if(fabs(weapontype & WEP_FLAG_SUPERWEAPON)) \
-			WEPSET_OR_AW(WEPBIT_SUPERWEAPONS, id); \
+		bit = WepSet_FromWeapon(id); \
+		WEPSET_ALL |= bit; \
+		if((weapontype) & WEP_FLAG_SUPERWEAPON) \
+			WEPSET_SUPERWEAPONS |= bit; \
 		++WEP_COUNT; \
-		register_weapon(id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname); \
+		register_weapon(id,bit,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname); \
 	} \
 	ACCUMULATE_FUNCTION(RegisterWeapons, RegisterWeapons_##id)
 #ifdef MENUQC
 #define REGISTER_WEAPON(id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
-	REGISTER_WEAPON_2(WEP_##id,w_null,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname)
+	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,w_null,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname)
 #else
 #define REGISTER_WEAPON(id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname) \
-	REGISTER_WEAPON_2(WEP_##id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname)
+	REGISTER_WEAPON_2(WEP_##id,WEPSET_##id,func,ammotype,i,weapontype,pickupbasevalue,modelname,shortname,wname)
 #endif
 
 #include "../server/w_all.qc"

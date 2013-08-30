@@ -1,7 +1,7 @@
-float LOOP = 1;
+const float LOOP = 1;
 
-float DNOSHADOW = 2;
-float DFOLLOW = 4;
+const float DNOSHADOW = 2;
+const float DFOLLOW = 4;
 .float light_lev;
 .float lefty;
 .vector color;

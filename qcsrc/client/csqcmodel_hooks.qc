@@ -452,22 +452,22 @@ void CSQCModel_AutoTagIndex_Apply(void)
 }
 
 // FEATURE: EF_NODRAW workalike
-float EF_BRIGHTFIELD	= 1;
-float EF_BRIGHTLIGHT 	= 4;
-float EF_DIMLIGHT 	= 8;
-float EF_DOUBLESIDED = 32768;
-float EF_NOSELFSHADOW = 65536;
-float EF_DYNAMICMODELLIGHT = 131072;
-float EF_RESTARTANIM_BIT = 1048576;
-float EF_TELEPORT_BIT = 2097152;
-float MF_ROCKET  =   1; // leave a trail
-float MF_GRENADE =   2; // leave a trail
-float MF_GIB     =   4; // leave a trail
-float MF_ROTATE  =   8; // rotate (bonus items)
-float MF_TRACER  =  16; // green split trail
-float MF_ZOMGIB  =  32; // small blood trail
-float MF_TRACER2 =  64; // orange split trail
-float MF_TRACER3 = 128; // purple trail
+const float EF_BRIGHTFIELD	= 1;
+const float EF_BRIGHTLIGHT 	= 4;
+const float EF_DIMLIGHT 	= 8;
+const float EF_DOUBLESIDED = 32768;
+const float EF_NOSELFSHADOW = 65536;
+const float EF_DYNAMICMODELLIGHT = 131072;
+const float EF_RESTARTANIM_BIT = 1048576;
+const float EF_TELEPORT_BIT = 2097152;
+const float MF_ROCKET  =   1; // leave a trail
+const float MF_GRENADE =   2; // leave a trail
+const float MF_GIB     =   4; // leave a trail
+const float MF_ROTATE  =   8; // rotate (bonus items)
+const float MF_TRACER  =  16; // green split trail
+const float MF_ZOMGIB  =  32; // small blood trail
+const float MF_TRACER2 =  64; // orange split trail
+const float MF_TRACER3 = 128; // purple trail
 .float csqcmodel_effects;
 .float csqcmodel_modelflags;
 void CSQCModel_Effects_PreUpdate(void)
@@ -488,9 +488,9 @@ void CSQCModel_Effects_PostUpdate(void)
 void CSQCModel_Effects_Apply(void)
 {
 	float eff = self.csqcmodel_effects;
-	eff &~= CSQCMODEL_EF_RESPAWNGHOST;
+	eff &= ~CSQCMODEL_EF_RESPAWNGHOST;
 
-	self.renderflags &~= (RF_DEPTHHACK | RF_ADDITIVE | RF_FULLBRIGHT | EF_NOSHADOW | RF_USEAXIS);
+	self.renderflags &= ~(RF_DEPTHHACK | RF_ADDITIVE | RF_FULLBRIGHT | EF_NOSHADOW | RF_USEAXIS);
 	self.effects = 0;
 	self.traileffect = 0;
 	                

@@ -295,7 +295,7 @@ float raptor_takeoff()
     if(self.sound_nexttime < time)
     {        
         self.sound_nexttime = time + 7.955812; //soundlength("vehicles/raptor_fly.wav");
-        sound (self, CH_TRIGGER_SINGLE, "vehicles/raptor_speed.wav", VOL_VEHICLEENGINE, ATTN_NORM);
+        sound (self, CH_TRIGGER_SINGLE, "vehicles/raptor_speed.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
     }   
 
     // Takeoff sequense
@@ -388,15 +388,15 @@ float raptor_frame()
     if(self.sound_nexttime < time)
     {        
         self.sound_nexttime = time + 7.955812; 
-        //sound (self.tur_head, CH_TRIGGER_SINGLE, "vehicles/raptor_fly.wav", 1 - ftmp,   ATTN_NORM );
-        sound (self, CH_TRIGGER_SINGLE, "vehicles/raptor_speed.wav", 1, ATTN_NORM);        
+        //sound (self.tur_head, CH_TRIGGER_SINGLE, "vehicles/raptor_fly.wav", 1 - ftmp,   ATTEN_NORM );
+        sound (self, CH_TRIGGER_SINGLE, "vehicles/raptor_speed.wav", 1, ATTEN_NORM);        
         self.wait = ftmp;
     }        
     /*
     else if(fabs(ftmp - self.wait) > 0.2)
     {
-        sound (self.tur_head, CH_TRIGGER_SINGLE, "", 1 - ftmp,   ATTN_NORM );
-        sound (self, CH_TRIGGER_SINGLE, "", ftmp, ATTN_NORM);        
+        sound (self.tur_head, CH_TRIGGER_SINGLE, "", 1 - ftmp,   ATTEN_NORM );
+        sound (self, CH_TRIGGER_SINGLE, "", ftmp, ATTEN_NORM);        
         self.wait = ftmp;
     }
     */
@@ -669,7 +669,7 @@ float raptor_frame()
         }
         
         if(_incomming)
-            sound(self, CH_PAIN_SINGLE, "vehicles/missile_alarm.wav", VOL_BASE, ATTN_NONE);
+            sound(self, CH_PAIN_SINGLE, "vehicles/missile_alarm.wav", VOL_BASE, ATTEN_NONE);
         
         self.bomb1.cnt = time + 1;
     }
@@ -711,7 +711,7 @@ void raptor_diethink()
     
     if(random() < 0.1)
     {
-        sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+        sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
         pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
     }
     self.nextthink = time + 0.1;

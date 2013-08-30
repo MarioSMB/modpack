@@ -1,0 +1,29 @@
+// ==========================
+//  Monster Config Generator
+// ==========================
+
+void Dump_Monster_Settings(void);
+float mon_config_file;
+float mon_config_alsoprint;
+
+#define MAX_MON_CONFIG 256
+float MON_CONFIG_COUNT;
+string mon_config_queue[MAX_MON_CONFIG];
+
+#define MON_CONFIG_QUEUE(a) { \
+	mon_config_queue[MON_CONFIG_COUNT] = a; \
+	++MON_CONFIG_COUNT; }
+
+#define MON_CONFIG_WRITETOFILE(a) { \
+	fputs(mon_config_file, a); \
+	if(mon_config_alsoprint) { print(a); } }
+
+#define MON_CONFIG_WRITE_CVARS(monster,name) \
+		{ MON_CONFIG_QUEUE( \
+			sprintf("set g_monster_%s_%s %g\n", #monster, #name, \
+			cvar(sprintf("g_monster_%s_%s", #monster, #name)))) } \
+
+#define MON_CONFIG_SETTINGS(monsettings) \
+	#define MON_ADD_CVAR(monster,name) MON_CONFIG_WRITE_CVARS(monster,name) \
+	monsettings \
+	#undef MON_ADD_CVAR

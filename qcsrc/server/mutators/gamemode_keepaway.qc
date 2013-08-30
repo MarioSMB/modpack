@@ -41,7 +41,7 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 		WaypointSprite_Spawn("ka-ball", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAGCARRIER, '0 1 1');
 		WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);	
 
-		sound(self, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTN_NONE); // ATTN_NONE (it's a sound intended to be heard anywhere) 
+		sound(self, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere) 
 	}
 	else
 	{
@@ -74,7 +74,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	if not(IS_PLAYER(other)) 
 	{  // The ball just touched an object, most likely the world
 		pointparticles(particleeffectnum("kaball_sparks"), self.origin, '0 0 0', 1);
-		sound(self, CH_TRIGGER, "keepaway/touch.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER, "keepaway/touch.wav", VOL_BASE, ATTEN_NORM);
 		return; 
 	}
 	else if(self.wait > time) { return; }
@@ -103,7 +103,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	ka_EventLog("pickup", other);
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_KEEPAWAY_PICKUP, other.netname);
 	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEEPAWAY_PICKUP, other.netname);
-	sound(self.owner, CH_TRIGGER, "keepaway/pickedup.wav", VOL_BASE, ATTN_NONE); // ATTN_NONE (it's a sound intended to be heard anywhere) 
+	sound(self.owner, CH_TRIGGER, "keepaway/pickedup.wav", VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere) 
 	
 	// scoring
 	PlayerScore_Add(other, SP_KEEPAWAY_PICKUPS, 1);
@@ -131,7 +131,7 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	ball.think = ka_RespawnBall;
 	ball.nextthink = time + autocvar_g_keepawayball_respawntime;
 	ball.takedamage = DAMAGE_YES;
-	ball.effects &~= EF_NODRAW; 
+	ball.effects &= ~EF_NODRAW; 
 	setorigin(ball, plyr.origin + '0 0 10');
 	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
 	ball.owner.ballcarried = world; // I hope nothing checks to see if the world has the ball in the rest of my code :P 
@@ -139,13 +139,13 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	
 	// reset the player effects
 	plyr.glow_trail = FALSE;
-	plyr.effects &~= autocvar_g_keepaway_ballcarrier_effects;
+	plyr.effects &= ~autocvar_g_keepaway_ballcarrier_effects;
 
 	// messages and sounds
 	ka_EventLog("dropped", plyr);
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_KEEPAWAY_DROPPED, plyr.netname);
 	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEEPAWAY_DROPPED, plyr.netname);
-	sound(other, CH_TRIGGER, "keepaway/dropped.wav", VOL_BASE, ATTN_NONE);	// ATTN_NONE (it's a sound intended to be heard anywhere) 
+	sound(other, CH_TRIGGER, "keepaway/dropped.wav", VOL_BASE, ATTEN_NONE);	// ATTEN_NONE (it's a sound intended to be heard anywhere) 
 	
 	// scoring
 	// PlayerScore_Add(plyr, SP_KEEPAWAY_DROPS, 1); Not anymore, this is 100% the same as pickups and is useless.
@@ -271,7 +271,7 @@ MUTATOR_HOOKFUNCTION(ka_GiveFragsForKill)
 MUTATOR_HOOKFUNCTION(ka_PlayerPreThink)
 {
 	// clear the item used for the ball in keepaway
-	self.items &~= IT_KEY1;
+	self.items &= ~IT_KEY1;
 	
 	// if the player has the ball, make sure they have the item for it (Used for HUD primarily)
 	if(self.ballcarried)
@@ -333,7 +333,7 @@ MUTATOR_HOOKFUNCTION(ka_PlayerPowerups)
 	// In the future this hook is supposed to allow me to do some extra stuff with waypointsprites and invisibility powerup
 	// So bare with me until I can fix a certain bug with ka_ballcarrier_waypointsprite_visible_for_player() 
 	
-	self.effects &~= autocvar_g_keepaway_ballcarrier_effects;
+	self.effects &= ~autocvar_g_keepaway_ballcarrier_effects;
 
 	if(self.ballcarried)
 		self.effects |= autocvar_g_keepaway_ballcarrier_effects;

@@ -17,7 +17,7 @@ float NIX_CanChooseWeapon(float wpn)
 		return FALSE;
 	if(g_weaponarena)
 	{
-		if not(WEPSET_CONTAINS_AW(g_weaponarena_weapons, wpn))
+		if(!(g_weaponarena_weapons & WepSet_FromWeapon(wpn)))
 			return FALSE;
 	}
 	else
@@ -136,10 +136,10 @@ void NIX_GiveCurrentWeapon()
 		self.nix_nextincr = time + autocvar_g_balance_nix_incrtime;
 	}
 
-	WEPSET_CLEAR_E(self);
+	self.weapons = '0 0 0';
 	if(g_nix_with_laser)
-		WEPSET_ANDNOT_EW(self, WEP_LASER);
-	WEPSET_OR_EW(self, nix_weapon);
+		self.weapons &= ~WEPSET_LASER;
+	self.weapons |= WepSet_FromWeapon(nix_weapon);
 
 	if(self.switchweapon != nix_weapon)
 		if(!client_hasweapon(self, self.switchweapon, TRUE, FALSE))
@@ -263,7 +263,7 @@ MUTATOR_DEFINITION(mutator_nix)
 			e.ammo_nails = start_ammo_nails;
 			e.ammo_rockets = start_ammo_rockets;
 			e.ammo_fuel = start_ammo_fuel;
-			WEPSET_COPY_EA(e, start_weapons);
+			e.weapons = start_weapons;
 			if(!client_hasweapon(e, e.weapon, TRUE, FALSE))
 				e.switchweapon = w_getbestweapon(self);
 		}

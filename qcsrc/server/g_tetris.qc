@@ -26,28 +26,28 @@ float tet_vs_current_timeout;
 
 var float tet_high_score = 0;
 
-vector TET_START_PIECE_POS = '5 1 0';
-float TET_LINES = 22;
-float TET_DISPLAY_LINES = 20;
-float TET_WIDTH = 10;
-string TET_EMPTY_LINE = "0000000000"; // must match TET_WIDTH
+const vector TET_START_PIECE_POS = '5 1 0';
+const float TET_LINES = 22;
+const float TET_DISPLAY_LINES = 20;
+const float TET_WIDTH = 10;
+const string TET_EMPTY_LINE = "0000000000"; // must match TET_WIDTH
 //character values
-float TET_BORDER = 139;
-float TET_BLOCK = 133;
-float TET_SPACE = 160; // blankness
+const float TET_BORDER = 139;
+const float TET_BLOCK = 133;
+const float TET_SPACE = 160; // blankness
 
 
 
-float TETKEY_UP = 1;
-float TETKEY_DOWN = 2;
-float TETKEY_LEFT = 4;
-float TETKEY_RIGHT = 8;
-float TETKEY_ROTLEFT = 16;
-float TETKEY_ROTRIGHT = 32;
-float TETKEY_DROP = 64;
-string TET_PADDING_RIGHT = "\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0"; // get away from crosshair
+const float TETKEY_UP = 1;
+const float TETKEY_DOWN = 2;
+const float TETKEY_LEFT = 4;
+const float TETKEY_RIGHT = 8;
+const float TETKEY_ROTLEFT = 16;
+const float TETKEY_ROTRIGHT = 32;
+const float TETKEY_DROP = 64;
+const string TET_PADDING_RIGHT = "\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0"; // get away from crosshair
 
-float PIECES = 7;
+const float PIECES = 7;
 
 float tet_line_buf;
 
@@ -875,8 +875,8 @@ void CementPiece(float piece, float orgx, float orgy, float rot) /*FIXDECL*/
 	}
 }
 
-float LINE_LOW = 349525;
-float LINE_HIGH = 699050; // above number times 2
+const float LINE_LOW = 349525;
+const float LINE_HIGH = 699050; // above number times 2
 
 void AddLines(float n)
 {

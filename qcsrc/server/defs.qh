@@ -192,15 +192,15 @@ void w_ready();
 .void() weapon_think;
 
 //float	PLAYER_WEAPONSELECTION_DELAY = );
-float	PLAYER_WEAPONSELECTION_SPEED = 18;
-vector	PLAYER_WEAPONSELECTION_RANGE = '0 20 -40';
+const float	PLAYER_WEAPONSELECTION_SPEED = 18;
+const vector	PLAYER_WEAPONSELECTION_RANGE = '0 20 -40';
 
 // weapon states (self.weaponentity.state)
-float WS_CLEAR			= 0; // no weapon selected
-float WS_RAISE			= 1; // raise frame
-float WS_DROP			= 2; // deselecting frame
-float WS_INUSE			= 3; // fire state
-float WS_READY			= 4; // idle frame
+const float WS_CLEAR			= 0; // no weapon selected
+const float WS_RAISE			= 1; // raise frame
+const float WS_DROP			= 2; // deselecting frame
+const float WS_INUSE			= 3; // fire state
+const float WS_READY			= 4; // idle frame
 
 // there is 2 weapon tics that can run in one server frame
 #define W_TICSPERFRAME 2
@@ -297,7 +297,7 @@ string W_Apply_Weaponreplace(string in);
 void FixIntermissionClient(entity e);
 void FixClientCvars(entity e);
 
-WEPSET_DECLARE_A(weaponsInMap);
+WepSet weaponsInMap;
 
 .float respawn_countdown; // next number to count
 

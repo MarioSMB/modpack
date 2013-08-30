@@ -10,11 +10,6 @@
 .float scale; // scaling factor of the thickness
 .float modelscale; // scaling factor of the dlight
 
-// TODO move these into a heade file
-float trace_dphitq3surfaceflags;
-float Q3SURFACEFLAG_SKY = 4; // sky surface (also has NOIMPACT and NOMARKS set)
-float Q3SURFACEFLAG_NOIMPACT = 16; // projectiles should remove themselves on impact (this is set on sky)
-
 void Draw_Laser()
 {
 	if(!self.state)

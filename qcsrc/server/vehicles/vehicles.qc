@@ -23,7 +23,7 @@ void vehicles_setreturn();
 /** AuxiliaryXhair*
     Send additional points of interest to be drawn, to vehicle owner
 **/
-float MAX_AXH = 4;
+const float MAX_AXH = 4;
 .entity AuxiliaryXhair[MAX_AXH];
 
 float SendAuxiliaryXhair(entity to, float sf)
@@ -131,7 +131,7 @@ void CSQCVehicleSetup(entity own, float vehicle_id)
 .float  lock_strength;
 .float  lock_time;
 .float  lock_soundtime;
-float	DAMAGE_TARGETDRONE = 10;
+const float	DAMAGE_TARGETDRONE = 10;
 
 vector targetdrone_getnewspot()
 {
@@ -442,7 +442,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
         proj.flags           = FL_PROJECTILE | FL_NOTARGET;
 
     if(_mzlsound)
-        sound (self, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTN_NORM);
+        sound (self, CH_WEAPON_A, _mzlsound, VOL_BASE, ATTEN_NORM);
 
     if(_mzlfx)
         pointparticles(particleeffectnum(_mzlfx), proj.origin, proj.velocity, 1);
@@ -637,8 +637,8 @@ void vehicles_enter()
     //self.exteriormodeltoclient = self.owner;
     //self.tur_head.exteriormodeltoclient = self.owner;
 
-    other.flags &~= FL_ONGROUND;
-    self.flags  &~= FL_ONGROUND;
+    other.flags &= ~FL_ONGROUND;
+    self.flags  &= ~FL_ONGROUND;
 
     self.team                 = self.owner.team;
     self.flags               -= FL_NOTARGET;
@@ -790,7 +790,7 @@ void vehicles_exit(float eject)
         _player.takedamage     = DAMAGE_AIM;
         _player.solid          = SOLID_SLIDEBOX;
         _player.movetype       = MOVETYPE_WALK;
-        _player.effects        &~= EF_NODRAW;
+        _player.effects        &= ~EF_NODRAW;
         _player.alpha          = 1;
         _player.PlayerPhysplug = func_null;
         _player.vehicle        = world;
@@ -819,7 +819,7 @@ void vehicles_exit(float eject)
 
     _vehicle.team = _vehicle.tur_head.team;
         
-    sound (_vehicle, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTN_NORM);
+    sound (_vehicle, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTEN_NORM);
     _vehicle.vehicle_hudmodel.viewmodelforclient = _vehicle;	
     _vehicle.phase = time + 1;
 	_vehicle.monster_attack = FALSE;
@@ -926,7 +926,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
         self.vehicle_shieldent.alpha       = 0.45;
         self.vehicle_shieldent.angles      = vectoangles(normalize(hitloc - (self.origin + self.vehicle_shieldent.origin))) - self.angles;
         self.vehicle_shieldent.nextthink   = time;
-        self.vehicle_shieldent.effects &~= EF_NODRAW;
+        self.vehicle_shieldent.effects &= ~EF_NODRAW;
 
         self.vehicle_shield -= damage;
 
@@ -938,11 +938,11 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
             self.vehicle_shieldent.alpha    = 0.75;
 
         	if(sound_allowed(MSG_BROADCAST, attacker))
-                spamsound (self, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);   // FIXME: PLACEHOLDER
+                spamsound (self, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTEN_NORM);   // FIXME: PLACEHOLDER
         }
         else
         	if(sound_allowed(MSG_BROADCAST, attacker))
-                spamsound (self, CH_PAIN, "onslaught/electricity_explode.wav", VOL_BASE, ATTN_NORM);  // FIXME: PLACEHOLDER
+                spamsound (self, CH_PAIN, "onslaught/electricity_explode.wav", VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
 
     }
     else
@@ -950,7 +950,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
         self.vehicle_health -= damage;
 
         if(sound_allowed(MSG_BROADCAST, attacker))
-            spamsound (self, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTN_NORM);  // FIXME: PLACEHOLDER
+            spamsound (self, CH_PAIN, "onslaught/ons_hit2.wav", VOL_BASE, ATTEN_NORM);  // FIXME: PLACEHOLDER
     }
     
 	if(self.damageforcescale < 1 && self.damageforcescale > 0)
@@ -1357,7 +1357,7 @@ vector vehicle_aimturret(entity _vehic, vector _target, entity _turrret, string 
 
 void vehicles_gib_explode()
 {
-	sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+	sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 	pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	remove(self);
 }

@@ -54,7 +54,7 @@ void turret_stdproc_respawn()
     // this function doubles as "teamchange" function.
     self.tur_head.team 	= self.team;
 
-    self.effects             &~= EF_NODRAW;
+    self.effects             &= ~EF_NODRAW;
     self.deadflag           = DEAD_NO;
     self.effects            = EF_LOWPRECISION;
     self.solid              = SOLID_BBOX;
@@ -66,7 +66,6 @@ void turret_stdproc_respawn()
     self.tur_head.avelocity     = self.avelocity;
     self.tur_head.angles        = self.idle_aim;
     self.health                 = self.tur_health;
-	self.max_health				= self.tur_health;
 
     self.enemy                  = world;
     self.volly_counter          = self.shot_volly;

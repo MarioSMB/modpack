@@ -1,3 +1,8 @@
+#define WANT_CONST
+// commonly used, but better make them macros
+#define TRUE 1
+#define FALSE 0
+
 // a dummy macro that prevents the "hanging ;" warning
 #define ENDS_WITH_CURLY_BRACE
 
@@ -151,7 +156,7 @@ float almost_in_bounds(float a, float b, float c);
 float power2of(float e);
 float log2of(float x);
 
-string HEXDIGITS = "0123456789ABCDEF0123456789abcdef";
+const string HEXDIGITS = "0123456789ABCDEF0123456789abcdef";
 #define HEXDIGIT_TO_DEC_RAW(d) (strstrofs(HEXDIGITS, (d), 0))
 #define HEXDIGIT_TO_DEC(d) ((HEXDIGIT_TO_DEC_RAW(d) | 0x10) - 0x10)
 #define DEC_TO_HEXDIGIT(d) (substring(HEXDIGITS, (d), 1))
@@ -203,7 +208,7 @@ float compressShotOrigin(vector v);
 vector decompressShotOrigin(float f);
 
 #ifdef SVQC
-string rankings_reply, ladder_reply, lsmaps_reply, lsnewmaps_reply, maplist_reply; // cached replies
+string rankings_reply, ladder_reply, lsmaps_reply, maplist_reply; // cached replies
 string records_reply[10];
 #endif
 
@@ -223,8 +228,12 @@ string getcurrentmod();
 #ifndef MENUQC
 #ifdef CSQC
 float ReadInt24_t();
+vector ReadInt48_t();
+vector ReadInt72_t();
 #else
 void WriteInt24_t(float dest, float val);
+void WriteInt48_t(float dest, vector val);
+void WriteInt72_t(float dest, vector val);
 #endif
 #endif
 

@@ -442,31 +442,31 @@ void turrets_precash();
 
 // common
 .float turret_type;
-float TID_COMMON        = 1;
-float TID_EWHEEL        = 2;
-float TID_FLAC          = 3;
-float TID_FUSION        = 4;
-float TID_HELLION       = 5;
-float TID_HK            = 6;
-float TID_MACHINEGUN    = 7;
-float TID_MLRS          = 8;
-float TID_PHASER        = 9;
-float TID_PLASMA        = 10;
-float TID_PLASMA_DUAL   = 11;
-float TID_TESLA         = 12;
-float TID_WALKER        = 13;
-float TID_LAST          = 13;
+const float TID_COMMON        = 1;
+const float TID_EWHEEL        = 2;
+const float TID_FLAC          = 3;
+const float TID_FUSION        = 4;
+const float TID_HELLION       = 5;
+const float TID_HK            = 6;
+const float TID_MACHINEGUN    = 7;
+const float TID_MLRS          = 8;
+const float TID_PHASER        = 9;
+const float TID_PLASMA        = 10;
+const float TID_PLASMA_DUAL   = 11;
+const float TID_TESLA         = 12;
+const float TID_WALKER        = 13;
+const float TID_LAST          = 13;
 
-float TNSF_UPDATE       = 2;
-float TNSF_STATUS       = 4;
-float TNSF_SETUP        = 8;
-float TNSF_ANG          = 16;
-float TNSF_AVEL         = 32;
-float TNSF_MOVE         = 64;
+const float TNSF_UPDATE       = 2;
+const float TNSF_STATUS       = 4;
+const float TNSF_SETUP        = 8;
+const float TNSF_ANG          = 16;
+const float TNSF_AVEL         = 32;
+const float TNSF_MOVE         = 64;
 .float anim_start_time;
-float TNSF_ANIM         = 128;
+const float TNSF_ANIM         = 128;
 
-float TNSF_FULL_UPDATE  = 16777215;
+const float TNSF_FULL_UPDATE  = 16777215;
 
 #endif // TTURRETS_ENABLED
 

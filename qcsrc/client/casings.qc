@@ -11,7 +11,7 @@ void Casing_Draw()
 	{
 		self.move_angles_x = 0;
 		self.move_angles_z = 0;
-		self.flags &~= FL_ONGROUND;
+		self.flags &= ~FL_ONGROUND;
 	}
 
 	Movetype_Physics_MatchTicrate(autocvar_cl_casings_ticrate, autocvar_cl_casings_sloppy);
@@ -57,7 +57,7 @@ void Casing_Touch()
 						break;
 				}
 
-				sound (self, CH_SHOTS, s, VOL_BASE, ATTN_LARGE);
+				sound (self, CH_SHOTS, s, VOL_BASE, ATTEN_LARGE);
 			}
 		}
 	}
@@ -70,7 +70,7 @@ void Casing_Damage(float thisdmg, float hittype, vector org, vector thisforce)
 	if(thisforce_z < 0)
 		thisforce_z = 0;
 	self.move_velocity = self.move_velocity + thisforce + '0 0 100';
-	self.move_flags &~= FL_ONGROUND;
+	self.move_flags &= ~FL_ONGROUND;
 }
 
 void Ent_Casing(float isNew)

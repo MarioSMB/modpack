@@ -1,6 +1,6 @@
 #pragma noref 0
 
-#undef ATTN_NORM
+#undef ATTEN_NORM
 
 #ifdef COMPAT_050_ENGINE
 // WORKAROUND for 0.5.0 engine

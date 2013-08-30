@@ -33,9 +33,9 @@ entity navigation_bestgoal;
 .entity navigation_jetpack_goal;
 .vector navigation_jetpack_point;
 
-float DEBUG_NODE_SUCCESS        = 1;
-float DEBUG_NODE_WARNING        = 2;
-float DEBUG_NODE_FAIL           = 3;
+const float DEBUG_NODE_SUCCESS        = 1;
+const float DEBUG_NODE_WARNING        = 2;
+const float DEBUG_NODE_FAIL           = 3;
 vector debuglastnode;
 
 entity bot_waypoint_queue_owner; 	// Owner of the temporary list of goals

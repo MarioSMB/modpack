@@ -43,7 +43,7 @@ float Nagger_SendEntity(entity to, float sendflags)
 		nags |= 128;
 
 	if(!(nags & 4)) // no vote called? send no string
-		nags &~= (64 | 128);
+		nags &= ~(64 | 128);
 
 	WriteByte(MSG_ENTITY, nags);
 

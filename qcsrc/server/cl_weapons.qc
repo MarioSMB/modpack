@@ -188,7 +188,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	wep.flags |= FL_TOSSED;
 	wep.colormap = own.colormap;
 
-	if(WEPSET_CONTAINS_AW(WEPBIT_SUPERWEAPONS, wpn))
+	if(WepSet_FromWeapon(wpn) & WEPSET_SUPERWEAPONS)
 	{
 		if(own.items & IT_UNLIMITED_SUPERWEAPONS)
 		{
@@ -198,8 +198,8 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 		{
 			float superweapons = 1;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-				if(WEPSET_CONTAINS_AW(WEPBIT_SUPERWEAPONS, i))
-					if(WEPSET_CONTAINS_EW(own, i))
+				if(WepSet_FromWeapon(i) & WEPSET_SUPERWEAPONS)
+					if(own.weapons & WepSet_FromWeapon(i))
 						++superweapons;
 			if(superweapons <= 1)
 			{
@@ -309,7 +309,7 @@ float W_IsWeaponThrowable(float w)
         return 0;
 	
 	wa = W_AmmoItemCode(w);
-	if(WEPSET_CONTAINS_AW(start_weapons, w))
+	if(start_weapons & WepSet_FromWeapon(w))
 	{
 		// start weapons that take no ammo can't be dropped (this prevents dropping the laser, as long as it continues to use no ammo)
 		if(start_items & IT_UNLIMITED_WEAPON_AMMO)
@@ -341,9 +341,9 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	if(!W_IsWeaponThrowable(w))
 		return;
 
-	if(!WEPSET_CONTAINS_EW(self, w))
+	if(!(self.weapons & WepSet_FromWeapon(w)))
 		return;
-	WEPSET_ANDNOT_EW(self, w);
+	self.weapons &= ~WepSet_FromWeapon(w);
 
 	W_SwitchWeapon_Force(self, w_getbestweapon(self));
 	a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);
@@ -391,7 +391,7 @@ void W_WeaponFrame()
 		self.switchingweapon = 0;
 		self.weaponentity.state = WS_CLEAR;
 		self.weaponname = "";
-		self.items &~= IT_AMMO;
+		self.items &= ~IT_AMMO;
 		return;
 	}
 
@@ -445,7 +445,7 @@ void W_WeaponFrame()
 			if(ATTACK_FINISHED(self) <= time + self.weapon_frametime * 0.5)
 			{
 #endif
-			sound (self, CH_WEAPON_SINGLE, "weapons/weapon_switch.wav", VOL_BASE, ATTN_NORM);
+			sound (self, CH_WEAPON_SINGLE, "weapons/weapon_switch.wav", VOL_BASE, ATTEN_NORM);
 			self.weaponentity.state = WS_DROP;
 			// set up weapon switch think in the future, and start drop anim
 			weapon_thinkf(WFRAME_DONTCHANGE, cvar(sprintf("g_balance_%s_switchdelay_drop", oldwep.netname)), w_clear);
@@ -472,7 +472,7 @@ void W_WeaponFrame()
 	while (c < W_TICSPERFRAME)
 	{
 		c = c + 1;
-		if(w && !WEPSET_CONTAINS_EW(self, w))
+		if(w && !(self.weapons & WepSet_FromWeapon(w)))
 		{
 			if(self.weapon == self.switchweapon)
 				W_SwitchWeapon_Force(self, w_getbestweapon(self));

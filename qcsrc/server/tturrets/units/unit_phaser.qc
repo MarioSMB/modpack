@@ -40,7 +40,7 @@ void beam_think()
         self.owner.attack_finished_single = time + self.owner.shot_refire;
         self.owner.fireflag = 2;
         self.owner.tur_head.frame = 10;
-        sound (self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTN_NORM);
+        sound (self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
         remove(self);
         return;
     }
@@ -50,7 +50,7 @@ void beam_think()
     if (time - self.shot_spread > 0)
     {
         self.shot_spread = time + 2;
-        sound (self, CH_SHOTS_SINGLE, "turrets/phaser.wav", VOL_BASE, ATTN_NORM);
+        sound (self, CH_SHOTS_SINGLE, "turrets/phaser.wav", VOL_BASE, ATTEN_NORM);
     }
 
 
@@ -93,7 +93,7 @@ void turret_phaser_attack()
     beam.enemy = self.enemy;
     beam.bot_dodge = TRUE;
     beam.bot_dodgerating = beam.shot_dmg;
-    sound (beam, CH_SHOTS_SINGLE, "turrets/phaser.wav", VOL_BASE, ATTN_NORM);
+    sound (beam, CH_SHOTS_SINGLE, "turrets/phaser.wav", VOL_BASE, ATTEN_NORM);
     self.fireflag = 1;
 
     beam.attack_finished_single = self.attack_finished_single;
@@ -101,7 +101,7 @@ void turret_phaser_attack()
 
     setattachment(beam,self.tur_head,"tag_fire");
 
-    soundat (self, trace_endpos, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
+    soundat (self, trace_endpos, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTEN_NORM);
 
     if (self.tur_head.frame == 0)
         self.tur_head.frame = 1;

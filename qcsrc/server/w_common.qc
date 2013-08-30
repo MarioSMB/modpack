@@ -6,7 +6,7 @@ void W_GiveWeapon (entity e, float wep)
 	if (!wep)
 		return;
 
-	WEPSET_OR_EW(e, wep);
+	e.weapons |= WepSet_FromWeapon(wep);
 
 	oldself = self;
 	self = e;
@@ -117,7 +117,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 
 			if(!pseudoprojectile)
 				pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
-			soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, snd, VOL_BASE * f, ATTN_NONE);
+			soundtoat(MSG_ONE, pseudoprojectile, beampos, CH_SHOTS, snd, VOL_BASE * f, ATTEN_NONE);
 		}
 
 		if(pseudoprojectile)
@@ -219,7 +219,7 @@ void W_BallisticBullet_LeaveSolid_think()
 	self.nextthink = max(time, self.W_BallisticBullet_LeaveSolid_nextthink_save);
 	self.W_BallisticBullet_LeaveSolid_think_save = func_null;
 
-	self.flags &~= FL_ONGROUND;
+	self.flags &= ~FL_ONGROUND;
 
 	if(self.enemy.solid == SOLID_BSP)
 	{

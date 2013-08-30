@@ -8,7 +8,6 @@ vector drawfontscale;
 vector draw_shift;
 vector draw_scale;
 float draw_alpha;
-vector draw_fontscale;
 
 void draw_reset(float cw, float ch, float ox, float oy);
 void draw_beginBoldFont();

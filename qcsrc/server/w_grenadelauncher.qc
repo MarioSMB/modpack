@@ -95,23 +95,23 @@ void W_Grenade_Touch1 (void)
 		float r;
 		r = random() * 6;
 		if(r < 1)
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce1.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce1.wav", VOL_BASE, ATTEN_NORM);
 		else if(r < 2)
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce2.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce2.wav", VOL_BASE, ATTEN_NORM);
 		else if(r < 3)
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce3.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce3.wav", VOL_BASE, ATTEN_NORM);
 		else if(r < 4)
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce4.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce4.wav", VOL_BASE, ATTEN_NORM);
 		else if(r < 5)
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce5.wav", VOL_BASE, ATTEN_NORM);
 		else
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce6.wav", VOL_BASE, ATTEN_NORM);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 		self.gl_bouncecnt += 1;
 	}
 	else if(autocvar_g_balance_grenadelauncher_primary_type == 2 && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))) // stick
 	{
-		spamsound (self, CH_SHOTS, "weapons/grenade_stick.wav", VOL_BASE, ATTN_NORM);
+		spamsound (self, CH_SHOTS, "weapons/grenade_stick.wav", VOL_BASE, ATTEN_NORM);
 
 		// let it stick whereever it is
 		self.oldvelocity = self.velocity;
@@ -139,17 +139,17 @@ void W_Grenade_Touch2 (void)
 		float r;
 		r = random() * 6;
 		if(r < 1)
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce1.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce1.wav", VOL_BASE, ATTEN_NORM);
 		else if(r < 2)
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce2.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce2.wav", VOL_BASE, ATTEN_NORM);
 		else if(r < 3)
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce3.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce3.wav", VOL_BASE, ATTEN_NORM);
 		else if(r < 4)
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce4.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce4.wav", VOL_BASE, ATTEN_NORM);
 		else if(r < 5)
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce5.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce5.wav", VOL_BASE, ATTEN_NORM);
 		else
-			spamsound (self, CH_SHOTS, "weapons/grenade_bounce6.wav", VOL_BASE, ATTN_NORM);
+			spamsound (self, CH_SHOTS, "weapons/grenade_bounce6.wav", VOL_BASE, ATTEN_NORM);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 		self.gl_bouncecnt += 1;
 		
@@ -159,7 +159,7 @@ void W_Grenade_Touch2 (void)
 	}
 	else if(autocvar_g_balance_grenadelauncher_secondary_type == 2 && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))) // stick
 	{
-		spamsound (self, CH_SHOTS, "weapons/grenade_stick.wav", VOL_BASE, ATTN_NORM);
+		spamsound (self, CH_SHOTS, "weapons/grenade_stick.wav", VOL_BASE, ATTEN_NORM);
 
 		// let it stick whereever it is
 		self.oldvelocity = self.velocity;
@@ -331,7 +331,7 @@ float w_glauncher(float req)
 					}
 				}
 				if(nadefound)
-					sound (self, CH_WEAPON_B, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
+					sound (self, CH_WEAPON_B, "weapons/rocket_det.wav", VOL_BASE, ATTEN_NORM);
 			}
 			else if (weapon_prepareattack(1, autocvar_g_balance_grenadelauncher_secondary_refire))
 			{
@@ -402,7 +402,7 @@ float w_glauncher(float req)
 		org2 = w_org + w_backoff * 12;
 		pointparticles(particleeffectnum("grenade_explode"), org2, '0 0 0', 1);
 		if(!w_issilent)
-			sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTN_NORM);
+			sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTEN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{

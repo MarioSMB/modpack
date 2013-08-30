@@ -19,7 +19,7 @@ float item_keys_usekey(entity l, entity p) {
 		return TRUE;
 	} else {
 		// only some of the needed keys were given
-		l.itemkeys &~= valid;
+		l.itemkeys &= ~valid;
 		return TRUE;
 	}
 }

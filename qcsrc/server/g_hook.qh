@@ -6,11 +6,11 @@ void SetGrappleHookBindings();
 // (note: you can change the hook impulse #'s to whatever you please)
 .float hook_time;
 
-float HOOK_FIRING = 1;
-float HOOK_REMOVING = 2;
-float HOOK_PULLING = 4;
-float HOOK_RELEASING = 8;
-float HOOK_WAITING_FOR_RELEASE = 16;
+const float HOOK_FIRING = 1;
+const float HOOK_REMOVING = 2;
+const float HOOK_PULLING = 4;
+const float HOOK_RELEASING = 8;
+const float HOOK_WAITING_FOR_RELEASE = 16;
 .float hook_state;
 
 void GrappleHookInit();

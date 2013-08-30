@@ -15,3 +15,5 @@ float top_scores[LADDER_SIZE];
 string getrecords(float page);
 string getrankings(void);
 string getladder(void);
+string getmaplist(void);
+string getlsmaps(void);

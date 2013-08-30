@@ -397,9 +397,9 @@ float RadarMap_Make(float argc)
 				case "--force": { radarmapper.count |= 1; break; }
 				case "--loop": { radarmapper.count |= 2; break; }
 				case "--quit": { radarmapper.count |= 4; break; }
-				case "--block": { radarmapper.count &~= 24; break; }
-				case "--trace": { radarmapper.count &~= 24; radarmapper.count |= 8; break; }
-				case "--sample": { radarmapper.count &~= 24; radarmapper.count |= 16; break; }
+				case "--block": { radarmapper.count &= ~24; break; }
+				case "--trace": { radarmapper.count &= ~24; radarmapper.count |= 8; break; }
+				case "--sample": { radarmapper.count &= ~24; radarmapper.count |= 16; break; }
 				case "--lineblock": { radarmapper.count |= 24; break; }
 				case "--flags": { ++i; radarmapper.count = stof(argv(i)); break; } // for the recursive call
 				case "--sharpen": { ++i; radarmapper.ltime = stof(argv(i)); break; } // for the recursive call

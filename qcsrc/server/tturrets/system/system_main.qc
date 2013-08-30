@@ -176,7 +176,7 @@ entity turret_projectile(string _snd, float _size, float _health, float _death, 
 {
     entity proj;
 
-    sound (self, CH_WEAPON_A, _snd, VOL_BASE, ATTN_NORM);
+    sound (self, CH_WEAPON_A, _snd, VOL_BASE, ATTEN_NORM);
     proj                 = spawn ();
     setorigin(proj, self.tur_shotorg);
     setsize(proj, '-0.5 -0.5 -0.5' * _size, '0.5 0.5 0.5' * _size);
@@ -1110,7 +1110,6 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
     if not (self.health)
         self.health = 1000;
     self.tur_health = max(1, self.health);
-	self.max_health = self.tur_health;
 	self.bot_attack = TRUE;
     self.monster_attack = TRUE;
 

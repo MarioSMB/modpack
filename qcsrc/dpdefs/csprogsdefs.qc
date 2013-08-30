@@ -335,7 +335,7 @@ void(entity e, vector o) setorigin = #2;
 void(entity e, string m) setmodel = #3;
 void(entity e, vector min, vector max) setsize = #4;
 
-void() break_builtin = #6;
+void() break_to_debugger = #6;
 float() random = #7;
 void(entity e, float chan, string samp) sound = #8;
 vector(vector v) normalize = #9;
@@ -1068,14 +1068,6 @@ float SOUNDFLAG_RELIABLE = 1;
 //- WIP2 ideas: SOUNDFLAG_RELIABLE_TO_ONE, SOUNDFLAG_NOPHS, SOUNDFLAG_FORCELOOP
 //- NOTE: to check for this, ALSO OR a check with DP_SND_SOUND7 to also support
 //  the finished extension once done
-
-//DP_MOVETYPEFLYWORLDONLY
-//idea: Samual
-//darkplaces implementation: Samual
-//movetype definitions:
-float MOVETYPE_FLY_WORLDONLY = 33;
-//description:
-//like MOVETYPE_FLY, but does all traces with MOVE_WORLDONLY, and is ignored by MOVETYPE_PUSH. Should only be combined with SOLID_NOT and SOLID_TRIGGER.
 
 //DP_PRECACHE_PIC_FLAGS
 //idea: divVerent

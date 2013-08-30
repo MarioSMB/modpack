@@ -4,7 +4,7 @@
 
 #define CSQC
 
-#define ATTN_NORM builtin_ATTN_NORM
+#define ATTEN_NORM builtin_ATTEN_NORM
 
 #ifdef COMPAT_050_ENGINE
 // WORKAROUND for 0.5.0 engine

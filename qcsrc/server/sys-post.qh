@@ -1,6 +1,6 @@
 #pragma noref 0
 
-#undef ATTN_NORM
+#undef ATTEN_NORM
 #undef objerror
 #undef droptofloor
 #undef sound

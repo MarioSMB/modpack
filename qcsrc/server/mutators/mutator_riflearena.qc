@@ -33,9 +33,9 @@ MUTATOR_HOOKFUNCTION(ra_PlayerDamage)
 
 MUTATOR_HOOKFUNCTION(ra_PlayerSpawn)
 {
-	WEPSET_CLEAR_E(self);
-	WEPSET_OR_EW(self, WEP_RIFLE);
-	WEPSET_OR_EW(self, WEP_LASER);
+	self.weapons = '0 0 0';
+	self.weapons |= WEPSET_RIFLE;
+	self.weapons |= WEPSET_LASER;
 	
 	return FALSE;
 }

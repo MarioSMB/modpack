@@ -9,7 +9,7 @@ float scoreboard_alpha_name_self;
 void drawstringright(vector, string, vector, vector, float, float);
 void drawstringcenter(vector, string, vector, vector, float, float);
 
-float SCOREBOARD_OFFSET = 50;
+const float SCOREBOARD_OFFSET = 50;
 
 // wrapper to put all possible scores titles through gettext
 string TranslateScoresLabel(string l)
@@ -1082,14 +1082,9 @@ vector HUD_DrawKeyValue(vector pos, string key, string value) {
 
 vector HUD_DrawMapStats(vector pos, vector rgb, vector bg_size) {
 	float stat_secrets_found, stat_secrets_total;
-	float stat_current_wave, stat_totalwaves;
 	float stat_monsters_killed, stat_monsters_total;
 	float rows = 0;
 	string val;
-	
-	// get tower defense stats
-	stat_current_wave = getstatf(STAT_CURRENT_WAVE);
-	stat_totalwaves = getstatf(STAT_TOTALWAVES);
 	
 	// get monster stats
 	stat_monsters_killed = getstatf(STAT_MONSTERS_KILLED);
@@ -1101,8 +1096,6 @@ vector HUD_DrawMapStats(vector pos, vector rgb, vector bg_size) {
 
 	// get number of rows
 	if(stat_secrets_total)
-		rows += 1;
-	if(stat_totalwaves)
 		rows += 1;
 	if(stat_monsters_total)
 		rows += 1;
@@ -1125,13 +1118,6 @@ vector HUD_DrawMapStats(vector pos, vector rgb, vector bg_size) {
 	else
 		drawpic_tiled(pos, "gfx/scoreboard/scoreboard_bg", bg_size, tmp, rgb, scoreboard_alpha_bg, DRAWFLAG_NORMAL);
 	drawborderlines(autocvar_scoreboard_border_thickness, pos, tmp, '0 0 0', scoreboard_alpha_bg * 0.75, DRAWFLAG_NORMAL);
-	
-	// draw waves
-	if(stat_totalwaves)
-	{
-		val = sprintf("%d/%d", stat_current_wave, stat_totalwaves);
-		pos = HUD_DrawKeyValue(pos, _("Current wave:"), val);
-	}
 	
 	// draw monsters
 	if(stat_monsters_total)

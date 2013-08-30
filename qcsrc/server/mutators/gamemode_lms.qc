@@ -121,7 +121,7 @@ MUTATOR_HOOKFUNCTION(lms_GiveFragsForKill)
 
 MUTATOR_HOOKFUNCTION(lms_SetStartItems)
 {
-	start_items &~= IT_UNLIMITED_AMMO;
+	start_items &= ~IT_UNLIMITED_AMMO;
 	start_ammo_shells = cvar("g_lms_start_ammo_shells");
 	start_ammo_nails = cvar("g_lms_start_ammo_nails");
 	start_ammo_rockets = cvar("g_lms_start_ammo_rockets");
