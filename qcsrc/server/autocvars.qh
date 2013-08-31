@@ -1345,7 +1345,6 @@ float autocvar_g_monsters_miniboss_healthboost;
 float autocvar_g_monsters_drop_time;
 float autocvar_g_monsters_spawnshieldtime;
 float autocvar_g_monsters_teams;
-float autocvar_g_monsters_healthbars;
 float autocvar_g_monsters_respawn_delay;
 float autocvar_g_monsters_respawn;
 float autocvar_g_touchexplode_radius;

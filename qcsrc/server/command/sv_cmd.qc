@@ -180,8 +180,6 @@ void GameCommand_butcher(float request)
 			
 			FOR_EACH_MONSTER(head)
 			{
-				WaypointSprite_Kill(head.sprite);
-				
 				if(head.weaponentity)
 					remove(head.weaponentity);
 					

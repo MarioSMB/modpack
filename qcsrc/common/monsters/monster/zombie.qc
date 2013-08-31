@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ ZOMBIE,
 /* function   */ m_zombie,
-/* spawnflags */ 0,
+/* spawnflags */ MON_FLAG_MELEE,
 /* mins,maxs  */ '-18 -18 -25', '18 18 47',
 /* model      */ "zombie.dpm",
 /* netname    */ "zombie",
@@ -91,20 +91,19 @@ float zombie_attack(float attack_type)
 				chosen_anim = zombie_anim_attackstanding2;
 			else
 				chosen_anim = zombie_anim_attackstanding3;
+			
+			if(monster_melee(self.enemy, MON_CVAR(zombie, attack_melee_damage), chosen_anim, self.attack_range, MON_CVAR(zombie, attack_melee_delay), DEATH_MONSTER_ZOMBIE_MELEE, TRUE))
+				return TRUE;
 				
-			monsters_setframe(chosen_anim);
-
-			self.attack_finished_single = time + MON_CVAR(zombie, attack_melee_delay);
-			
-			monster_melee(self.enemy, MON_CVAR(zombie, attack_melee_damage), self.attack_range, DEATH_MONSTER_ZOMBIE_MELEE, TRUE);
-			
-			return TRUE;
+			return FALSE;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
 			makevectors(self.angles);
 			if(monster_leap(zombie_anim_attackleap, zombie_attack_leap_touch, v_forward * MON_CVAR(zombie, attack_leap_speed) + '0 0 200', MON_CVAR(zombie, attack_leap_delay)))
 				return TRUE;
+				
+			return FALSE;
 		}
 	}
 	

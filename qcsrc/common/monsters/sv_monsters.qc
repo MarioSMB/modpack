@@ -63,16 +63,25 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if(targ == ent)
 		return FALSE; // don't attack ourselves
 		
+	traceline(ent.origin, targ.origin, MOVE_NORMAL, ent);
+		
+	if(trace_ent != targ)
+	{
+		if(trace_ent != world)
+			targ = trace_ent;
+		else
+			return FALSE;
+	}
+		
+	if(targ.vehicle_flags & VHF_ISVEHICLE)
+	if not((get_monsterinfo(ent.monsterid)).spawnflags & MON_FLAG_RANGED)
+		return FALSE; // melee attacks are useless against vehicles
+		
 	if(time < game_starttime)
 		return FALSE; // monsters do nothing before the match has started
-		
-	WarpZone_TraceLine(ent.origin, targ.origin, MOVE_NORMAL, ent);
 	
 	if(vlen(targ.origin - ent.origin) >= ent.target_range)
 		return FALSE; // enemy is too far away
-	
-	if(trace_ent != targ)
-		return FALSE; // we can't see the enemy
 		
 	if(targ.takedamage == DAMAGE_NO)
 		return FALSE; // enemy can't be damaged
@@ -86,6 +95,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if(IS_SPEC(targ) || IS_OBSERVER(targ))
 		return FALSE; // enemy is a spectator
 	
+	if not(targ.vehicle_flags & VHF_ISVEHICLE)
 	if(targ.deadflag != DEAD_NO || ent.deadflag != DEAD_NO || targ.health <= 0 || ent.health <= 0)
 		return FALSE; // enemy/self is dead
 		
@@ -95,6 +105,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if(targ.monster_owner == ent)
 		return FALSE; // don't attack our pet
 	
+	if not(targ.vehicle_flags & VHF_ISVEHICLE)
 	if(targ.flags & FL_NOTARGET)
 		return FALSE; // enemy can't be targeted
 	
@@ -206,14 +217,12 @@ void monster_makevectors(entity e)
 	makevectors(self.v_angle);
 }
 
-float monster_melee(entity targ, float damg, float er, float deathtype, float dostop)
+float monster_melee(entity targ, float damg, float anim, float er, float anim_finished, float deathtype, float dostop)
 {
 	float rdmg = damg * random();
 
 	if (self.health <= 0)
-		return FALSE;
-	if (targ == world)
-		return FALSE;
+		return FALSE; // attacking while dead?!
 		
 	if(dostop)
 	{
@@ -222,13 +231,18 @@ float monster_melee(entity targ, float damg, float er, float deathtype, float do
 		self.state = MONSTER_STATE_ATTACK_MELEE;
 		self.SendFlags |= MSF_MOVE;
 	}
+	
+	monsters_setframe(anim);
+	
+	if(anim_finished != 0)
+		self.attack_finished_single = time + anim_finished;
 
 	monster_makevectors(targ);
 	
 	traceline(self.origin + self.view_ofs, self.origin + v_forward * er, 0, self);
 	
 	if(trace_ent.takedamage)
-		Damage(targ, self, self, rdmg * monster_skill, deathtype, targ.origin, normalize(targ.origin - self.origin));
+		Damage(trace_ent, self, self, rdmg * monster_skill, deathtype, trace_ent.origin, normalize(trace_ent.origin - self.origin));
 		
 	return TRUE;
 }
@@ -377,9 +391,10 @@ vector monster_pickmovetarget(entity targ)
 	// enemy is always preferred target
 	if(self.enemy)
 	{
+		makevectors(self.angles);
 		self.monster_movestate = MONSTER_MOVE_ENEMY;
 		self.last_trace = time + 1.2;
-		return self.enemy.origin;
+		return self.enemy.origin * 0.9 + ((self.origin + v_forward * 500) + randomvec() * 400) * 0.1;
 	}
 	
 	switch(self.monster_moveflags)
@@ -446,7 +461,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.revive_progress = bound(0, self.revive_progress + frametime * self.revive_speed, 1);
 		self.health = max(1, self.max_health * self.revive_progress);
 		
-		if(self.sprite) WaypointSprite_UpdateHealth(self.sprite, self.health);
+		self.SendFlags |= MSF_STATUS;
 			
 		movelib_beak_simple(stopspeed);
 			
@@ -517,7 +532,11 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		if(time >= self.spawn_time)
 			monsters_setframe(manim_idle);
 		movelib_beak_simple(stopspeed);
-		self.SendFlags |= MSF_MOVE;
+		if(self.oldorigin != self.origin)
+		{
+			self.oldorigin = self.origin;
+			self.SendFlags |= MSF_MOVE;
+		}
 		return;
 	}
 	
@@ -586,8 +605,9 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	
 	if(self.state == MONSTER_STATE_ATTACK_MELEE)
 		self.moveto = self.origin;
-	else if(self.enemy)
-		self.moveto = self.moveto * 0.9 + ((self.origin + v_forward * 500) + randomvec() * 400) * 0.1;
+		
+	if(self.enemy && self.enemy.vehicle)
+		runspeed = 0;
 	
 	if not(self.flags & FL_FLY || self.flags & FL_SWIM)
 		self.moveto_z = self.origin_z; 
@@ -651,7 +671,11 @@ void monster_dead_think()
 		return;
 	}
 	
-	self.SendFlags |= MSF_MOVE; // keep up to date on the monster's location
+	if(self.oldorigin != self.origin)
+	{
+		self.oldorigin = self.origin;
+		self.SendFlags |= MSF_MOVE;
+	}
 }
 
 void monsters_setstatus()
@@ -692,7 +716,7 @@ void monsters_reset()
 	self.attack_finished_single = 0;
 	self.moveto = self.origin;
 	
-	WaypointSprite_UpdateHealth(self.sprite, self.health);
+	self.SendFlags |= MSF_STATUS;
 }
 
 float monster_send(entity to, float sf)
@@ -785,8 +809,6 @@ void monster_die()
 	self.ltime = time + 5;
 	
 	monster_dropitem();
-
-	WaypointSprite_Kill(self.sprite);
 		
 	if(self.weaponentity)
 	{
@@ -842,9 +864,6 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		self.weaponentity.health -= damage;
 		
 	self.health -= damage;
-	
-	if(self.sprite)
-		WaypointSprite_UpdateHealth(self.sprite, self.health);
 		
 	self.dmg_time = time;
 
@@ -864,10 +883,6 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		
 	if(self.health <= 0)
 	{
-		// Update one more time to avoid waypoint fading without emptying healthbar
-		if(self.sprite)
-			WaypointSprite_UpdateHealth(self.sprite, 0);
-		
 		if(deathtype == DEATH_KILL)
 			self.candrop = FALSE; // killed by mobkill command
 			
@@ -936,13 +951,6 @@ void monster_spawn()
 	
 	if(teamplay)
 		self.monster_attack = TRUE; // we can have monster enemies in team games
-		
-	if(autocvar_g_monsters_healthbars)
-	{
-		WaypointSprite_Spawn(strzone(strdecolorize(self.monster_name)), 0, 600, self, '0 0 1' * (self.maxs_z + 15), world, 0, self, sprite, FALSE, RADARICON_DANGER, ((self.team) ? Team_ColorRGB(self.team) : '1 0 0'));	
-		WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
-		WaypointSprite_UpdateHealth(self.sprite, self.health);
-	}
 	
 	monster_sound(self.msound_spawn, 0, FALSE);
 

@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ BRUTE,
 /* function   */ m_brute,
-/* spawnflags */ 0,
+/* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RANGED,
 /* mins,maxs  */ '-36 -36 -20', '36 36 50',
 /* model      */ "ogre.dpm",
 /* netname    */ "brute",
@@ -45,7 +45,7 @@ void brute_blade()
 	self.brute_cycles += 1;
 	self.angles_y = self.angles_y + random()* 25;
 	
-	monster_melee(self.enemy, MON_CVAR(brute, attack_chainsaw_damage), self.attack_range, DEATH_MONSTER_BRUTE_BLADE, TRUE);
+	monster_melee(self.enemy, MON_CVAR(brute, attack_chainsaw_damage), brute_anim_swing, self.attack_range, 0, DEATH_MONSTER_BRUTE_BLADE, TRUE);
 	
 	if(self.brute_cycles <= 4)
 		defer(0.2, brute_blade);
@@ -159,7 +159,6 @@ float brute_attack(float attack_type)
 		case MONSTER_ATTACK_MELEE:
 		{
 			self.brute_cycles = 0;
-			monsters_setframe(brute_anim_swing);
 			self.attack_finished_single = time + 1.3;
 			brute_blade();
 			

@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ SPIDER,
 /* function   */ m_spider,
-/* spawnflags */ 0,
+/* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RANGED,
 /* mins,maxs  */ '-18 -18 -25', '18 18 30',
 /* model      */ "spider.dpm",
 /* netname    */ "spider",
@@ -142,11 +142,10 @@ float spider_attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			monster_melee(self.enemy, MON_CVAR(spider, attack_bite_damage), self.attack_range, DEATH_MONSTER_SPIDER, TRUE);
-			monsters_setframe((random() > 0.5) ? spider_anim_attack : spider_anim_attack2);
-			self.attack_finished_single = time + MON_CVAR(spider, attack_bite_delay);
-			
-			return TRUE;
+			if(monster_melee(self.enemy, MON_CVAR(spider, attack_bite_damage), ((random() > 0.5) ? spider_anim_attack : spider_anim_attack2), self.attack_range, MON_CVAR(spider, attack_bite_delay), DEATH_MONSTER_SPIDER, TRUE))
+				return TRUE;
+				
+			return FALSE;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{

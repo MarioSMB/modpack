@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ MAGE,
 /* function   */ m_mage,
-/* spawnflags */ 0,
+/* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RANGED,
 /* mins,maxs  */ '-36 -36 -24', '36 36 50',
 /* model      */ "mage.dpm",
 /* netname    */ "mage",
@@ -90,7 +90,7 @@ float friend_needshelp(entity e)
 
 void mageattack_melee()
 {
-	monster_melee(self.enemy, MON_CVAR(mage, attack_melee_damage), self.attack_range, DEATH_MONSTER_MAGE, TRUE);
+	monster_melee(self.enemy, MON_CVAR(mage, attack_melee_damage), mage_anim_attack, self.attack_range, MON_CVAR(mage, attack_melee_delay) - 0.2, DEATH_MONSTER_MAGE, TRUE);
 }
 
 void mage_grenade_explode()
@@ -292,7 +292,7 @@ void mage_heal()
 		{
 			pointparticles(particleeffectnum("healing_fx"), head.origin, '0 0 0', 1);
 			head.health = bound(0, head.health + MON_CVAR(mage, heal_allies), head.max_health);
-			WaypointSprite_UpdateHealth(head.sprite, head.health);
+			head.SendFlags |= MSF_STATUS;
 		}
 	}
 	

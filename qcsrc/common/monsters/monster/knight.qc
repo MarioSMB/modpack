@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ KNIGHT,
 /* function   */ m_knight,
-/* spawnflags */ MONSTER_SIZE_BROKEN,
+/* spawnflags */ MONSTER_SIZE_BROKEN | MON_FLAG_MELEE | MON_FLAG_RANGED,
 /* mins,maxs  */ '-20 -20 -32', '20 20 41',
 /* model      */ "hknight.mdl",
 /* netname    */ "knight",
@@ -240,17 +240,18 @@ float knight_attack(float attack_type)
 				anim = knight_anim_smash;
 			else
 				anim = knight_anim_wattack;
-			
-			monsters_setframe(anim);
-			self.attack_finished_single = time + 0.7;
-			monster_melee(self.enemy, MON_CVAR(knight, attack_melee_damage), self.attack_range, DEATH_MONSTER_KNIGHT_MELEE, TRUE);
-			
-			return TRUE;
+				
+			if(monster_melee(self.enemy, MON_CVAR(knight, attack_melee_damage), anim, self.attack_range, 0.7, DEATH_MONSTER_KNIGHT_MELEE, TRUE))
+				return TRUE;
+				
+			return FALSE;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
 			if(knight_attack_ranged())
 				return TRUE;
+				
+			return FALSE;
 		}
 	}
 	

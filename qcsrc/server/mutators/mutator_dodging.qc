@@ -49,7 +49,7 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	if (g_dodging == 0)
 		clean_up_and_do_nothing = 1;
 		
-	if(!self.cvar_cl_dodging)
+	if(!self.cvar_cl_dodging && !self.frozen)
 		clean_up_and_do_nothing = 1;
 
 	if(cvar("g_overkill"))

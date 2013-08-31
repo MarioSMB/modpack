@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ BRUISER,
 /* function   */ m_bruiser,
-/* spawnflags */ MONSTER_SIZE_BROKEN,
+/* spawnflags */ MONSTER_SIZE_BROKEN | MON_FLAG_MELEE,
 /* mins,maxs  */ '-20 -20 -31', '20 20 53',
 /* model      */ "knight.mdl",
 /* netname    */ "bruiser",
@@ -40,12 +40,11 @@ float bruiser_attack(float attack_type)
 		case MONSTER_ATTACK_MELEE:
 		{
 			float len = vlen(self.velocity);
-			monsters_setframe((len < 50) ? bruiser_anim_attack : bruiser_anim_runattack);
-			self.attack_finished_single = time + 1.25;
 			
-			monster_melee(self.enemy, MON_CVAR(bruiser, attack_melee_damage), self.attack_range, DEATH_MONSTER_BRUISER, FALSE);
+			if(monster_melee(self.enemy, MON_CVAR(bruiser, attack_melee_damage), ((len < 50) ? bruiser_anim_attack : bruiser_anim_runattack), self.attack_range, 1.25, DEATH_MONSTER_BRUISER, FALSE))
+				return TRUE;
 			
-			return TRUE;
+			return FALSE;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{

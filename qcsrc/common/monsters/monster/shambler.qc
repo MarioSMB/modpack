@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ SHAMBLER,
 /* function   */ m_shambler,
-/* spawnflags */ MONSTER_SIZE_BROKEN | MON_FLAG_SUPERMONSTER,
+/* spawnflags */ MONSTER_SIZE_BROKEN | MON_FLAG_SUPERMONSTER | MON_FLAG_MELEE | MON_FLAG_RANGED,
 /* mins,maxs  */ '-41 -41 -31', '41 41 65',
 /* model      */ "shambler.mdl",
 /* netname    */ "shambler",
@@ -35,7 +35,7 @@ const float shambler_anim_death 	= 8;
 
 void shambler_smash()
 {
-	monster_melee(self.enemy, MON_CVAR(shambler, attack_smash_damage), self.attack_range, DEATH_MONSTER_SHAMBLER_SMASH, TRUE);
+	monster_melee(self.enemy, MON_CVAR(shambler, attack_smash_damage), shambler_anim_smash, self.attack_range, 0.4, DEATH_MONSTER_SHAMBLER_SMASH, TRUE);
 }
 
 void shambler_delayedsmash()
@@ -48,9 +48,7 @@ void shambler_delayedsmash()
 void shambler_swing()
 {
 	float r = (random() < 0.5);
-	monsters_setframe((r) ? shambler_anim_swingr : shambler_anim_swingl);
-	monster_melee(self.enemy, MON_CVAR(shambler, attack_claw_damage), self.attack_range, DEATH_MONSTER_SHAMBLER_CLAW, TRUE);
-	self.attack_finished_single = time + 0.8;
+	monster_melee(self.enemy, MON_CVAR(shambler, attack_claw_damage), ((r) ? shambler_anim_swingr : shambler_anim_swingl), self.attack_range, 0.8, DEATH_MONSTER_SHAMBLER_CLAW, TRUE);
 	if(r)
 		defer(0.5, shambler_swing);
 }

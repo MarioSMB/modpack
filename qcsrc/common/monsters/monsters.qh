@@ -9,11 +9,13 @@
 entity get_monsterinfo(float id);
 
 // special spawn flags
-const float MONSTER_RESPAWN_DEATHPOINT = 128; // re-spawn where we died
-const float MONSTER_TYPE_FLY = 256;
-const float MONSTER_TYPE_SWIM = 512;
-const float MONSTER_SIZE_BROKEN = 1024; // TODO: remove when bad models are replaced
-const float MON_FLAG_SUPERMONSTER = 2048; // incredibly powerful monster
+const float MONSTER_RESPAWN_DEATHPOINT = 16; // re-spawn where we died
+const float MONSTER_TYPE_FLY = 32;
+const float MONSTER_TYPE_SWIM = 64;
+const float MONSTER_SIZE_BROKEN = 128; // TODO: remove when bad models are replaced
+const float MON_FLAG_SUPERMONSTER = 256; // incredibly powerful monster
+const float MON_FLAG_RANGED = 512; // monster shoots projectiles
+const float MON_FLAG_MELEE = 1024;
 
 // entity properties of monsterinfo:
 .float monsterid; // MON_...
@@ -28,12 +30,12 @@ const float MON_FLAG_SUPERMONSTER = 2048; // incredibly powerful monster
 #ifndef MENUQC
 .float anim_start_time;
 
-float MSF_UPDATE       = 2;
-float MSF_STATUS       = 4;
-float MSF_SETUP        = 8;
-float MSF_ANG          = 16;
-float MSF_MOVE         = 32;
-float MSF_ANIM         = 64;
+float MSF_UPDATE		= 2;
+float MSF_STATUS		= 4;
+float MSF_SETUP			= 8;
+float MSF_ANG			= 16;
+float MSF_MOVE			= 32;
+float MSF_ANIM			= 64;
 
 float MSF_FULL_UPDATE  = 16777215;
 #endif

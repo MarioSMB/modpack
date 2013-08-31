@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ CERBERUS,
 /* function   */ m_cerberus,
-/* spawnflags */ 0,
+/* spawnflags */ MON_FLAG_MELEE,
 /* mins,maxs  */ '-16 -16 -24', '16 16 12',
 /* model      */ "dog.dpm",
 /* netname    */ "cerberus",
@@ -89,17 +89,18 @@ float cerberus_attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			monsters_setframe(cerberus_anim_attack);
-			self.attack_finished_single = time + 0.7;
-			monster_melee(self.enemy, MON_CVAR(cerberus, attack_bite_damage), self.attack_range, DEATH_MONSTER_CERBERUS_BITE, TRUE);
-			
-			return TRUE;
+			if(monster_melee(self.enemy, MON_CVAR(cerberus, attack_bite_damage), cerberus_anim_attack, self.attack_range, 0.7, DEATH_MONSTER_CERBERUS_BITE, TRUE))
+				return TRUE;
+				
+			return FALSE;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
 			makevectors(self.angles);
 			if(monster_leap(cerberus_anim_attack, cerberus_touch_jump, v_forward * 300 + '0 0 200', 0.8))
 				return TRUE;
+				
+			return FALSE;
 		}
 	}
 	

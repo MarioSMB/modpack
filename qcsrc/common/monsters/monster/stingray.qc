@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ STINGRAY,
 /* function   */ m_stingray,
-/* spawnflags */ MONSTER_TYPE_SWIM | MONSTER_SIZE_BROKEN,
+/* spawnflags */ MONSTER_TYPE_SWIM | MONSTER_SIZE_BROKEN | MON_FLAG_MELEE,
 /* mins,maxs  */ '-20 -20 -31', '20 20 20',
 /* model      */ "fish.mdl",
 /* netname    */ "stingray",
@@ -33,13 +33,16 @@ float stingray_attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			monsters_setframe(stingray_anim_attack);
-			self.attack_finished_single = time + MON_CVAR(stingray, attack_bite_delay);
-			monster_melee(self.enemy, MON_CVAR(stingray, attack_bite_damage), self.attack_range, DEATH_MONSTER_STINGRAY, FALSE);
-			
-			return TRUE;
+			if(monster_melee(self.enemy, MON_CVAR(stingray, attack_bite_damage), stingray_anim_attack, self.attack_range, MON_CVAR(stingray, attack_bite_delay), DEATH_MONSTER_STINGRAY, FALSE))
+				return TRUE;
+				
+			return FALSE;
 		}
 		case MONSTER_ATTACK_RANGED:
+		{
+			// no ranged attack for stingray (yet?)
+			return FALSE;
+		}
 	}
 	
 	return FALSE;

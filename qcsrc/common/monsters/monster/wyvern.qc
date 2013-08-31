@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ WYVERN,
 /* function   */ m_wyvern,
-/* spawnflags */ MONSTER_TYPE_FLY | MONSTER_SIZE_BROKEN,
+/* spawnflags */ MONSTER_TYPE_FLY | MONSTER_SIZE_BROKEN | MON_FLAG_RANGED,
 /* mins,maxs  */ '-20 -20 -58', '20 20 20',
 /* model      */ "wizard.mdl",
 /* netname    */ "wyvern",

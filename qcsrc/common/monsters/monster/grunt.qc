@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ GRUNT,
 /* function   */ m_grunt,
-/* spawnflags */ 0,
+/* spawnflags */ MON_FLAG_MELEE,
 /* mins,maxs  */ '-18 -18 -25', '18 18 47',
 /* model      */ "grunt.dpm",
 /* netname    */ "grunt",
@@ -36,7 +36,7 @@ float grunt_attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			float rand = random(), chosen_anim;
+			float rand = random(), chosen_anim, atck_fin;
 		
 			if(vlen(self.velocity) > 20)
 				chosen_anim = grunt_anim_attackrun;
@@ -44,17 +44,15 @@ float grunt_attack(float attack_type)
 				chosen_anim = grunt_anim_attack1;
 			else
 				chosen_anim = grunt_anim_attack2;
-				
-			monsters_setframe(chosen_anim);
 			
 			monster_sound(self.msound_attack_melee, 0, FALSE);
 
 			if(vlen(self.velocity) > 20)
-				self.attack_finished_single = time + 0.9;
+				atck_fin = time + 0.9;
 			else
-				self.attack_finished_single = time + 1.9;
+				atck_fin = time + 1.9;
 			
-			if(monster_melee(self.enemy, MON_CVAR(grunt, attack_melee_damage), self.attack_range, DEATH_MONSTER_GRUNT, ((vlen(self.velocity) > 20) ? FALSE : TRUE)))
+			if(monster_melee(self.enemy, MON_CVAR(grunt, attack_melee_damage), chosen_anim, self.attack_range, DEATH_MONSTER_GRUNT, atck_fin, ((vlen(self.velocity) > 20) ? FALSE : TRUE)))
 				monster_sound(self.msound_attack_ranged, 0, FALSE); // if it is going to hit, play claw sound too	
 			
 			return TRUE;
