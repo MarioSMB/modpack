@@ -36,7 +36,7 @@ float grunt_attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			float rand = random(), chosen_anim, dot;
+			float rand = random(), chosen_anim;
 		
 			if(vlen(self.velocity) > 20)
 				chosen_anim = grunt_anim_attackrun;
@@ -54,13 +54,8 @@ float grunt_attack(float attack_type)
 			else
 				self.attack_finished_single = time + 1.9;
 			
-			monster_melee(self.enemy, MON_CVAR(grunt, attack_melee_damage), 0.3, DEATH_MONSTER_GRUNT, ((vlen(self.velocity) > 20) ? FALSE : TRUE)); // only stop if we were already standing
-			
-			makevectors (self.angles);
-			dot = normalize (self.enemy.origin - self.origin) * v_forward;
-			
-			if(dot > 0.3)
-				monster_sound(self.msound_attack_ranged, 0, FALSE); // if it is going to hit, play claw sound too
+			if(monster_melee(self.enemy, MON_CVAR(grunt, attack_melee_damage), self.attack_range, DEATH_MONSTER_GRUNT, ((vlen(self.velocity) > 20) ? FALSE : TRUE)))
+				monster_sound(self.msound_attack_ranged, 0, FALSE); // if it is going to hit, play claw sound too	
 			
 			return TRUE;
 		}
