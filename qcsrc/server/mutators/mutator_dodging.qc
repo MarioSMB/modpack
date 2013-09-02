@@ -49,11 +49,14 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	if (g_dodging == 0)
 		clean_up_and_do_nothing = 1;
 		
-	if(!self.cvar_cl_dodging && !self.frozen)
+	if(!self.cvar_cl_dodging)
 		clean_up_and_do_nothing = 1;
 
 	if(cvar("g_overkill"))
 		clean_up_and_do_nothing = 0; // always enabled in overkill
+		
+	if(self.frozen)
+		clean_up_and_do_nothing = 0; // also enabled in freezetag
 
 	// when swimming, no dodging allowed..
 	if (self.waterlevel >= WATERLEVEL_SWIMMING)
