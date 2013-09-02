@@ -181,19 +181,26 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	tap_direction_y = 0;
 	
 	float frozen_dodging;
+	float do_nothing = 0;
 	frozen_dodging = (self.frozen && autocvar_sv_dodging_frozen);
 
 	float dodge_detected;
-	if not(cvar("g_overkill"))
-	{
-		if (g_dodging == 0)
-			return 0;
+	if (g_dodging == 0)
+		do_nothing = 1;
 
-		if not(self.cvar_cl_dodging)
-			return 0;
-	}
+	if not(self.cvar_cl_dodging)
+		do_nothing = 1;
+	
+	if(cvar("g_overkill"))
+		do_nothing = 0;
+		
+	if(frozen_dodging)
+		do_nothing = 0;
 
 	dodge_detected = 0;
+	
+	if(do_nothing != 0)
+		return 0;
 
 	// first check if the last dodge is far enough back in time so we can dodge again
 	if ((time - self.last_dodging_time) < autocvar_sv_dodging_delay)

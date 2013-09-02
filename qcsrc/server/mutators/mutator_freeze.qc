@@ -102,7 +102,6 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 				{
 					self.respawn_time = time + 1; // only retry once a second
 					PutClientInServer();
-					PlayerScore_Add(self, SP_SCORE, -1); // lose score for this
 				}
 				
 				return 1; // if we get here, normal revivals have been cancelled
@@ -124,7 +123,10 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 				{
 					other.freeze_flag = FROZEN_RESPAWNING;
 					other.respawn_time = time + 1;
+					PlayerScore_Add(other, SP_SCORE, -1); // lose score for this
 				}
+				
+				PlayerScore_Add(self, SP_SCORE, -1); // lose score for this
 				
 				self.freeze_flag = FROZEN_RESPAWNING;
 				self.respawn_time = time + 1; // delay a bit
@@ -146,6 +148,7 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 			n = 0;
 			FOR_EACH_PLAYER(other) if(self != other)
 			{
+				if(other.deadflag == DEAD_NO)
 				if(other.frozen == 0)
 				{
 					if(!IsDifferentTeam(other, self))
