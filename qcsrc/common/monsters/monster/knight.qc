@@ -241,17 +241,11 @@ float knight_attack(float attack_type)
 			else
 				anim = knight_anim_wattack;
 				
-			if(monster_melee(self.enemy, MON_CVAR(knight, attack_melee_damage), anim, self.attack_range, 0.7, DEATH_MONSTER_KNIGHT_MELEE, TRUE))
-				return TRUE;
-				
-			return FALSE;
+			return monster_melee(self.enemy, MON_CVAR(knight, attack_melee_damage), anim, self.attack_range, 0.7, DEATH_MONSTER_KNIGHT_MELEE, TRUE);
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			if(knight_attack_ranged())
-				return TRUE;
-				
-			return FALSE;
+			return knight_attack_ranged();
 		}
 	}
 	
@@ -307,6 +301,7 @@ float m_knight(float req)
 		case MR_INIT:
 		{
 			precache_sound ("player/lava.wav");
+			precache_sound ("weapons/fireball2.wav");
 			return TRUE;
 		}
 		case MR_CONFIG:

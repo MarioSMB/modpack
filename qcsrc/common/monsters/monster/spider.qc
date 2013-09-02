@@ -141,11 +141,8 @@ float spider_attack(float attack_type)
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
-		{
-			if(monster_melee(self.enemy, MON_CVAR(spider, attack_bite_damage), ((random() > 0.5) ? spider_anim_attack : spider_anim_attack2), self.attack_range, MON_CVAR(spider, attack_bite_delay), DEATH_MONSTER_SPIDER, TRUE))
-				return TRUE;
-				
-			return FALSE;
+		{	
+			return monster_melee(self.enemy, MON_CVAR(spider, attack_bite_damage), ((random() > 0.5) ? spider_anim_attack : spider_anim_attack2), self.attack_range, MON_CVAR(spider, attack_bite_delay), DEATH_MONSTER_SPIDER, TRUE);
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
@@ -187,7 +184,7 @@ float m_spider(float req)
 		case MR_DEATH:
 		{
 			monsters_setframe(spider_anim_attack);
-			self.angles += '180 0 0';
+			self.angles_x = 180;
 			self.SendFlags |= MSF_ANG;
 			return TRUE;
 		}
@@ -204,7 +201,9 @@ float m_spider(float req)
 		}
 		case MR_INIT:
 		{
-			// nothing
+			precache_model ("models/ice/ice.md3");
+			precache_sound ("weapons/electro_fire2.wav");
+			precache_sound ("weapons/fireball_fire.wav");
 			return TRUE;
 		}
 		case MR_CONFIG:

@@ -45,7 +45,7 @@ float grunt_attack(float attack_type)
 			else
 				chosen_anim = grunt_anim_attack2;
 			
-			monster_sound(self.msound_attack_melee, 0, FALSE);
+			MonsterSound(monstersound_melee, 0, FALSE, CH_VOICE);
 
 			if(vlen(self.velocity) > 20)
 				atck_fin = time + 0.9;
@@ -53,11 +53,15 @@ float grunt_attack(float attack_type)
 				atck_fin = time + 1.9;
 			
 			if(monster_melee(self.enemy, MON_CVAR(grunt, attack_melee_damage), chosen_anim, self.attack_range, DEATH_MONSTER_GRUNT, atck_fin, ((vlen(self.velocity) > 20) ? FALSE : TRUE)))
-				monster_sound(self.msound_attack_ranged, 0, FALSE); // if it is going to hit, play claw sound too	
+				MonsterSound(monstersound_ranged, 0, FALSE, CH_VOICE); // if it is going to hit, play claw sound too	
 			
 			return TRUE;
 		}
 		case MONSTER_ATTACK_RANGED:
+		{
+			// nothing
+			return FALSE;
+		}
 	}
 	
 	return FALSE;
@@ -117,7 +121,7 @@ float m_grunt(float req)
 			if not(self.health) self.health = MON_CVAR(grunt, health);
 			if not(self.target_range) self.target_range = MON_CVAR(grunt, target_range);
 			
-			self.monster_flags = MONSTERFLAG_INFRONT; // always use line of sight target finding
+			self.spawnflags |= MONSTERFLAG_INFRONT; // always use line of sight target finding
 			self.monster_moveflags = MONSTER_MOVE_WANDER; // always wander around
 			self.monster_attackfunc	= grunt_attack;
 			monsters_setframe(grunt_anim_idle);

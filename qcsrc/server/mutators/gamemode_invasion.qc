@@ -52,6 +52,9 @@ void invasion_SpawnChosenMonster(float mon)
 	}
 	
 	monster = spawnmonster("", mon, spawn_point, spawn_point, spawn_point.origin, FALSE, 2);
+	
+	if(roundcnt >= maxrounds)
+		monster.spawnflags |= MONSTERFLAG_MINIBOSS;
 }
 
 void invasion_SpawnMonsters(float supermonster_count)
@@ -85,24 +88,36 @@ float Invasion_CheckWinner()
 		return 1;
 	}
 	
-	float total_alive_monsters = 0, supermonster_count = 0;
-	
-	FOR_EACH_MONSTER(head) if(head.health > 0)
+	// boss round
+	if(roundcnt >= maxrounds)
 	{
-		if((get_monsterinfo(head.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
-			++supermonster_count;
-		++total_alive_monsters;
-	}
-
-	if((total_alive_monsters + numkilled) < maxspawned && maxcurrent < 10) // 10 at a time should be plenty
-	{
-		if(time >= last_check)
+		if(numspawned < 1)
 		{
-			invasion_SpawnMonsters(supermonster_count);
-			last_check = time + 2;
+			maxspawned = 1;
+			invasion_SpawnMonsters(0);
 		}
+	}
+	else
+	{
+		float total_alive_monsters = 0, supermonster_count = 0;
 		
-		return 0;
+		FOR_EACH_MONSTER(head) if(head.health > 0)
+		{
+			if((get_monsterinfo(head.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
+				++supermonster_count;
+			++total_alive_monsters;
+		}
+
+		if((total_alive_monsters + numkilled) < maxspawned && maxcurrent < 10) // 10 at a time should be plenty
+		{
+			if(time >= last_check)
+			{
+				invasion_SpawnMonsters(supermonster_count);
+				last_check = time + 2;
+			}
+			
+			return 0;
+		}
 	}
 	
 	if(numspawned < 1 || numkilled < maxspawned)
@@ -169,18 +184,21 @@ void Invasion_RoundStart()
 
 MUTATOR_HOOKFUNCTION(invasion_MonsterDies)
 {
-	numkilled += 1;
-	maxcurrent -= 1;
+	if not(self.monster_respawned)
+	{
+		numkilled += 1;
+		maxcurrent -= 1;
 	
-	if(IS_PLAYER(frag_attacker))
-		PlayerScore_Add(frag_attacker, SP_KILLS, +1);
+		if(IS_PLAYER(frag_attacker))
+			PlayerScore_Add(frag_attacker, SP_KILLS, +1);
+	}
 	
 	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
 {
-	if(self.realowner == world)
+	if not(self.spawnflags & MONSTERFLAG_SPAWNED)
 	{
 		if(self.weaponentity) remove(self.weaponentity);
 		if(self.iceblock) remove(self.iceblock);
@@ -188,8 +206,14 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
 		return FALSE;
 	}
 	
-	numspawned += 1;
-	maxcurrent += 1;
+	if(roundcnt < maxrounds && self.spawnflags & MONSTERFLAG_MINIBOSS)
+		self.spawnflags &= ~MONSTERFLAG_MINIBOSS;
+	
+	if not(self.monster_respawned)
+	{
+		numspawned += 1;
+		maxcurrent += 1;
+	}
 	
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 	
@@ -217,9 +241,6 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerDamage)
 		frag_damage = 0;
 		frag_force = '0 0 0';
 	}
-	
-	if(frag_attacker.flags & FL_MONSTER && frag_target.flags & FL_MONSTER && frag_attacker != frag_target)
-		frag_damage = 0;
 	
 	return FALSE;
 }

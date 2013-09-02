@@ -33,10 +33,7 @@ float stingray_attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			if(monster_melee(self.enemy, MON_CVAR(stingray, attack_bite_damage), stingray_anim_attack, self.attack_range, MON_CVAR(stingray, attack_bite_delay), DEATH_MONSTER_STINGRAY, FALSE))
-				return TRUE;
-				
-			return FALSE;
+			return monster_melee(self.enemy, MON_CVAR(stingray, attack_bite_damage), stingray_anim_attack, self.attack_range, MON_CVAR(stingray, attack_bite_delay), DEATH_MONSTER_STINGRAY, FALSE);
 		}
 		case MONSTER_ATTACK_RANGED:
 		{

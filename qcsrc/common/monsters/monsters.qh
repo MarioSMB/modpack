@@ -25,6 +25,7 @@ const float MON_FLAG_MELEE = 1024;
 .string mdl; // currently a copy of the model
 .string model; // full name of model
 .float spawnflags;
+.vector mins, maxs; // monster hitbox size
 
 // csqc linking
 #ifndef MENUQC
@@ -67,8 +68,13 @@ float MON_LAST;
 		register_monster(id,func,monsterflags,min_s,max_s,modelname,shortname,mname); \
 	} \
 	ACCUMULATE_FUNCTION(RegisterMonsters, RegisterMonsters_##id)
+#ifdef MENUQC
+#define REGISTER_MONSTER(id,func,monsterflags,min_s,max_s,modelname,shortname,mname) \
+	REGISTER_MONSTER_2(MON_##id,m_null,monsterflags,min_s,max_s,modelname,shortname,mname)
+#else
 #define REGISTER_MONSTER(id,func,monsterflags,min_s,max_s,modelname,shortname,mname) \
 	REGISTER_MONSTER_2(MON_##id,func,monsterflags,min_s,max_s,modelname,shortname,mname)
+#endif
 
 #define MON_DUPECHECK(dupecheck,cvar) \
 	#ifndef dupecheck \

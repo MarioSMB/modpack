@@ -173,7 +173,7 @@ float autocvar_g_waypointsprite_timealphaexponent;
 var float autocvar_g_waypointsprite_turrets = TRUE;
 var float autocvar_g_waypointsprite_turrets_maxdist = 5000;
 var float autocvar_g_waypointsprite_monsters = TRUE;
-var float autocvar_g_waypointsprite_monsters_maxdist = 5000;
+var float autocvar_g_waypointsprite_monsters_maxdist = 2000;
 var float autocvar_hud_cursormode = TRUE;
 float autocvar_hud_colorflash_alpha;
 float autocvar_hud_configure_checkcollisions;

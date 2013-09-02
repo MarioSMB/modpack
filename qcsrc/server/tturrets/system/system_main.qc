@@ -571,14 +571,6 @@ float turret_stdproc_firecheck()
 float turret_validate_target(entity e_turret, entity e_target, float validate_flags)
 {
     vector v_tmp;
-	
-	turret_target = e_target;
-	turret_flags = validate_flags;
-	turret = e_turret;
-	if(MUTATOR_CALLHOOK(TurretValidateTarget))
-		return 1;
-	e_target = turret_target;
-	e_turret = turret;
         
     //if(!validate_flags & TFL_TARGETSELECT_NOBUILTIN)
     //    return -0.5;

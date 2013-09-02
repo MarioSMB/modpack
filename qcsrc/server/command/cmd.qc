@@ -304,7 +304,7 @@ void ClientCommand_mobspawn(float request, float argc)
 			else if not(autocvar_g_monsters) { Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_MONSTERS_DISABLED); }
 			else if(self.vehicle) { sprint(self, "You can't spawn monsters while driving a vehicle.\n"); }
 			else if(autocvar_g_campaign) { sprint(self, "You can't spawn monsters in campaign mode.\n"); }
-			else if(self.deadflag) { sprint(self, "You can't spawn monsters while dead.\n"); }
+			else if(self.deadflag != DEAD_NO) { sprint(self, "You can't spawn monsters while dead.\n"); }
 			else if(self.monstercount >= autocvar_g_monsters_max_perplayer) { sprint(self, "You have spawned too many monsters, kill some before trying to spawn any more.\n"); }
 			else if(totalspawned >= autocvar_g_monsters_max) { sprint(self, "The global maximum monster count has been reached, kill some before trying to spawn any more.\n"); }
 			else // all worked out, so continue

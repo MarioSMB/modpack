@@ -41,10 +41,7 @@ float bruiser_attack(float attack_type)
 		{
 			float len = vlen(self.velocity);
 			
-			if(monster_melee(self.enemy, MON_CVAR(bruiser, attack_melee_damage), ((len < 50) ? bruiser_anim_attack : bruiser_anim_runattack), self.attack_range, 1.25, DEATH_MONSTER_BRUISER, FALSE))
-				return TRUE;
-			
-			return FALSE;
+			return monster_melee(self.enemy, MON_CVAR(bruiser, attack_melee_damage), ((len < 50) ? bruiser_anim_attack : bruiser_anim_runattack), self.attack_range, 1.25, DEATH_MONSTER_BRUISER, FALSE);
 		}
 		case MONSTER_ATTACK_RANGED:
 		{

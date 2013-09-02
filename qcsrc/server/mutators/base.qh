@@ -134,16 +134,6 @@ MUTATOR_HOOKABLE(TurretSpawn);
 	// return error to request removal
 	// INPUT: self - turret
 	
-MUTATOR_HOOKABLE(TurretDies);
-	// called when a turret dies
-	
-MUTATOR_HOOKABLE(TurretValidateTarget);
-	// return target score
-	// INPUT:
-		entity turret_target;
-		entity turret;
-		float turret_flags;
-	
 MUTATOR_HOOKABLE(OnEntityPreSpawn);
 	// return error to prevent entity spawn, or modify the entity
 

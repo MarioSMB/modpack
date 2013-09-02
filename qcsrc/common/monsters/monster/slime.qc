@@ -55,8 +55,7 @@ float slime_attack(float attack_type)
 		case MONSTER_ATTACK_RANGED:
 		{
 			makevectors(self.angles);
-			if(monster_leap(slime_anim_jump, slime_touch_jump, v_forward * 600 + '0 0 200', 0.5))
-				return TRUE;
+			return monster_leap(slime_anim_jump, slime_touch_jump, v_forward * 600 + '0 0 200', 0.5);
 		}
 	}
 	
@@ -132,7 +131,7 @@ float m_slime(float req)
 		}
 		case MR_INIT:
 		{
-			// nothing
+			precache_sound ("weapons/rocket_impact.wav");
 			return TRUE;
 		}
 		case MR_CONFIG:

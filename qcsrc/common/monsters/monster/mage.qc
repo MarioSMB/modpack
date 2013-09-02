@@ -58,7 +58,6 @@ const float mage_anim_run		= 5;
 
 void() mage_heal;
 void() mage_shield;
-void() mage_shield_die;
 
 float friend_needshelp(entity e)
 {
@@ -303,16 +302,17 @@ void mage_heal()
 	}
 }
 
-void mage_shield_die()
+void mage_shield_think()
 {
-	if not(self.weaponentity)
-		return; // why would this be called without a shield?
-	
-	self.armorvalue = 1;
-	
-	remove(self.weaponentity);
-	
-	self.weaponentity = world;
+	self.nextthink = time;
+
+	if(time >= self.ltime || self.owner.health <= 0)
+	{
+		self.owner.armorvalue = 0;
+		self.owner.m_armor_blockpercent = autocvar_g_monsters_armor_blockpercent;
+		remove(self);
+		return;
+	}
 }
 
 void mage_shield()
@@ -325,26 +325,26 @@ void mage_shield()
 	shield.owner = self;
 	shield.team = self.team;
 	shield.ltime = time + MON_CVAR(mage, shield_time);
-	shield.health = 70;
 	shield.classname = "shield";
 	shield.effects = EF_ADDITIVE;
 	shield.movetype = MOVETYPE_NOCLIP;
 	shield.solid = SOLID_TRIGGER;
 	shield.avelocity = '7 0 11';
 	shield.scale = self.scale * 0.6;
+	shield.think = mage_shield_think;
+	shield.nextthink = time;
 	
 	setattachment(shield, self, "");
 	setmodel(shield, "models/ctf/shield.md3");
 	setsize(shield, shield.scale * shield.mins, shield.scale * shield.maxs);
-	
-	self.weaponentity = shield;
 	
 	self.lastshielded = time + MON_CVAR(mage, shield_delay);
 	
 	monsters_setframe(mage_anim_attack);
 	self.attack_finished_single = time + 1;
 	
-	self.armorvalue = MON_CVAR(mage, shield_blockpercent) / 100;
+	self.m_armor_blockpercent = MON_CVAR(mage, shield_blockpercent);
+	self.armorvalue = self.health;
 }
 
 float mage_attack(float attack_type)
@@ -416,10 +416,6 @@ float m_mage(float req)
 				need_help = TRUE;
 				break; // found 1 player near us who is low on health
 			}
-			
-			if(self.weaponentity)
-			if(time >= self.weaponentity.ltime)
-				mage_shield_die();
 				
 			if(self.health < MON_CVAR(mage, heal_minhealth) || need_help)
 			if(time >= self.attack_finished_single)
@@ -452,7 +448,9 @@ float m_mage(float req)
 		}
 		case MR_INIT:
 		{
-			// nothing
+			precache_model ("models/items/g_h50.md3");
+			precache_model ("models/ctf/shield.md3");
+			precache_sound ("weapons/grenade_impact.wav");
 			return TRUE;
 		}
 		case MR_CONFIG:
