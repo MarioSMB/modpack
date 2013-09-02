@@ -673,13 +673,13 @@ void ctf_CheckStalemate(void)
 		}
 	}
 	
-	stale_flags = (stale_red_flags > 0) + (stale_blue_flags > 0) + (stale_yellow_flags > 0) + (stale_pink_flags > 0);
+	stale_flags = (stale_red_flags >= 1) + (stale_blue_flags >= 1) + (stale_yellow_flags >= 1) + (stale_pink_flags >= 1);
 	
 	if(stale_flags == ctf_teams)
 		ctf_stalemate = TRUE;
 	else if(stale_flags == 0 && autocvar_g_ctf_stalemate_endcondition == 2)
 		{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; }
-	else if(stale_flags < ctf_teams && stale_flags > 0 && autocvar_g_ctf_stalemate_endcondition == 1)
+	else if(stale_flags < ctf_teams && stale_flags >= 1 && autocvar_g_ctf_stalemate_endcondition == 1)
 		{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; }
 		
 	// if sufficient stalemate, then set up the waypointsprite and announce the stalemate if necessary
@@ -955,9 +955,7 @@ void ctf_RespawnFlag(entity flag)
 	// reset the player (if there is one)
 	if((flag.owner) && (flag.owner.flagcarried == flag))
 	{
-		if(flag.owner.wps_enemyflagcarrier)
-			WaypointSprite_Kill(flag.owner.wps_enemyflagcarrier);
-			
+		WaypointSprite_Kill(flag.owner.wps_enemyflagcarrier);	
 		WaypointSprite_Kill(flag.wps_flagcarrier);
 		
 		flag.owner.flagcarried = world;
@@ -966,7 +964,7 @@ void ctf_RespawnFlag(entity flag)
 			ctf_FakeTimeLimit(flag.owner, -1);
 	}
 
-	if((flag.ctf_status == FLAG_DROPPED) && (flag.wps_flagdropped))
+	if(flag.ctf_status == FLAG_DROPPED)
 		{ WaypointSprite_Kill(flag.wps_flagdropped); }
 
 	// reset the flag
