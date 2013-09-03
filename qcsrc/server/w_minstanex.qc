@@ -555,7 +555,8 @@ float w_minstanex(float req)
 				if(weapon_prepareattack(0, autocvar_g_balance_minstanex_refire))
 				{
 					W_MinstaNex_Attack();
-					self.minstanex_held_down = 1;
+					if(autocvar_g_balance_minstanex_superblast)
+						self.minstanex_held_down = 1;
 					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_minstanex_animtime, w_ready);
 				}
 			}

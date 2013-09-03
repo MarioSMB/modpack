@@ -65,7 +65,11 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerDies)
 
 MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 {
-	if(self.deadflag != DEAD_NO || self.classname != STR_PLAYER)
+	if(self.deadflag != DEAD_NO || !IS_PLAYER(self) || gameover)
+		return FALSE;
+		
+	if(round_handler_IsActive())
+	if(!round_handler_IsRoundStarted())
 		return FALSE;
 		
 	float button_pressed, n;
@@ -77,11 +81,7 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 		{
 			// keep health = 1
 			self.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
-		}
-
-		if(round_handler_IsActive())
-		if(!round_handler_IsRoundStarted())
-			return 1;
+		}		
 
 		if(self.frozen == 1)
 		{
