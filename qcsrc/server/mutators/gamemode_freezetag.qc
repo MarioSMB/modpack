@@ -149,6 +149,9 @@ void freezetag_Freeze(entity attacker)
 {
 	if(self.frozen)
 		return;
+		
+	if(autocvar_g_freezetag_frozen_maxtime > 0)
+		self.freezetag_frozen_timeout = time + autocvar_g_freezetag_frozen_maxtime;
 	
 	Freeze(self, 0, 1, TRUE);
 	

@@ -58,6 +58,9 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerDies)
 		}
 		
 		Freeze(frag_target, 0, 1, (teamplay && autocvar_g_freeze_noauto));
+		if(autocvar_g_freezetag_frozen_maxtime > 0)
+			self.freezetag_frozen_timeout = time + autocvar_g_freezetag_frozen_maxtime;
+		self.freezetag_frozen_time = time;
 	}
 
 	return FALSE;
@@ -256,7 +259,7 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 
 MUTATOR_HOOKFUNCTION(freeze_PlayerDamage)
 {
-    if(frag_target.frozen == 1 && frag_deathtype != DEATH_HURTTRIGGER)
+    if(frag_target.frozen == 1 && frag_deathtype != DEATH_HURTTRIGGER && frag_deathtype != DEATH_TEAMCHANGE && frag_deathtype != DEATH_AUTOTEAMCHANGE)
     {
 		if(autocvar_g_freeze_revive_falldamage > 0)
 		if(frag_deathtype == DEATH_FALL)
