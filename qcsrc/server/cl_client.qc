@@ -311,20 +311,25 @@ void FixPlayermodel()
 	
 	if(autocvar_sv_allow_customplayermodels)
 	{
+		// public hax
 		if(self.cvar_cl_pony)
 		{
 			defaultmodel = "models/player/pony.iqm";
 			defaultskin = self.cvar_cl_pony_skin;
 		}
-		if(self.cvar_cl_damnfurries && checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
-			defaultmodel = "models/player/renamon.iqm";
-		if(self.cvar_cl_bikini && checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
+		// special hax
+		if(checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
 		{
-			defaultmodel = "models/player/abyss.zym";
-			defaultskin = self.cvar_cl_bikini_skin;
+			if(self.cvar_cl_damnfurries)
+				defaultmodel = "models/player/renamon.iqm";
+			if(self.cvar_cl_bikini)
+			{
+				defaultmodel = "models/player/abyss.zym";
+				defaultskin = self.cvar_cl_bikini_skin;
+			}
+			if(self.cvar_cl_sparkle > 2)
+				defaultmodel = "models/player/mario.dpm";
 		}
-		if(self.cvar_cl_sparkle > 2 && checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
-			defaultmodel = "models/player/mario.dpm";
 	}
 
 	if(defaultmodel != "")

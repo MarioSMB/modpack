@@ -276,7 +276,6 @@ void UpdateMonsterSounds()
 	self.skin_for_monstersound = self.skin;
 	ClearMonsterSounds();
 	//LoadMonsterSounds("sound/monsters/default.sounds", 1);
-	if(!autocvar_g_debug_defaultsounds)
 	if(!LoadMonsterSounds(get_monster_model_datafilename(mon.model, self.skin, "sounds"), 0))
 		LoadMonsterSounds(get_monster_model_datafilename(mon.model, 0, "sounds"), 0);
 }
