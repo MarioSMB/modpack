@@ -3,16 +3,6 @@
 // =========================
 
 
-void M_Item_Touch ()
-{
-	if(self && IS_PLAYER(other) && other.deadflag == DEAD_NO)
-	{
-		Item_Touch();
-		self.think = SUB_Remove;
-		self.nextthink = time + 0.1;
-	}
-}
-
 void monster_item_spawn()
 {
 	if(self.monster_loot)
@@ -20,7 +10,7 @@ void monster_item_spawn()
 
 	self.gravity = 1;
 	self.velocity = randomvec() * 175 + '0 0 325';
-	self.touch = M_Item_Touch;
+	self.classname = "droppedweapon"; // hax
 
 	SUB_SetFade(self, time + autocvar_g_monsters_drop_time, 1);
 }
@@ -41,8 +31,11 @@ void monster_dropitem()
 	MUTATOR_CALLHOOK(MonsterDropItem);
 	e = other;
 
-	e.think = monster_item_spawn;
-	e.nextthink = time + 0.3;
+	if(e)
+	{
+		e.think = monster_item_spawn;
+		e.nextthink = time + 0.3;
+	}
 }
 
 void monsters_setframe(float _frame)
@@ -276,6 +269,7 @@ void UpdateMonsterSounds()
 	self.skin_for_monstersound = self.skin;
 	ClearMonsterSounds();
 	//LoadMonsterSounds("sound/monsters/default.sounds", 1);
+	if(!autocvar_g_debug_defaultsounds)
 	if(!LoadMonsterSounds(get_monster_model_datafilename(mon.model, self.skin, "sounds"), 0))
 		LoadMonsterSounds(get_monster_model_datafilename(mon.model, 0, "sounds"), 0);
 }
@@ -900,6 +894,7 @@ void monster_die()
 		W_ThrowNewWeapon(self, self.weapon, 0, self.origin, randomvec() * 150 + '0 0 325');
 
 	if(IS_CLIENT(self.realowner))
+	if not(self.monster_respawned)
 		self.realowner.monstercount -= 1;
 
 	self.event_damage	= monsters_corpse_damage;

@@ -40,6 +40,9 @@ void monster_draw2d()
 
 	if(autocvar_cl_hidewaypoints)
 		return;
+		
+	if(self.solid == SOLID_CORPSE)
+		return; // re-spawning
 
 	if(self.health <= 0)
 		return;
