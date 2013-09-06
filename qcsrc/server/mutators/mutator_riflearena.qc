@@ -31,15 +31,6 @@ MUTATOR_HOOKFUNCTION(ra_PlayerDamage)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(ra_PlayerSpawn)
-{
-	self.weapons = '0 0 0';
-	self.weapons |= WEPSET_RIFLE;
-	self.weapons |= WEPSET_LASER;
-	
-	return FALSE;
-}
-
 MUTATOR_HOOKFUNCTION(ra_FilterItem)
 {
 	switch (self.items)
@@ -56,6 +47,7 @@ MUTATOR_HOOKFUNCTION(ra_StartItems)
 {
 	start_items |= IT_UNLIMITED_AMMO;
 	start_ammo_nails = 100;
+	start_weapons = (WEPSET_RIFLE | WEPSET_LASER);
 
 	return FALSE;
 }
@@ -87,7 +79,6 @@ MUTATOR_HOOKFUNCTION(ra_SetModname)
 MUTATOR_DEFINITION(mutator_riflearena)
 {
 	MUTATOR_HOOK(PlayerDamage_Calculate, ra_PlayerDamage, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerSpawn, ra_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, ra_FilterItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, ra_StartItems, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, ra_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);

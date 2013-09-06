@@ -230,11 +230,6 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 
 MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
 {
-	self.weapons = '0 0 0';
-	self.weapons |= WEPSET_UZI;
-	self.weapons |= WEPSET_NEX;
-	self.weapons |= WEPSET_SHOTGUN;
-	
 	if(autocvar_g_overkill_ammo_charge)
 	{
 		float i;
@@ -362,6 +357,7 @@ MUTATOR_HOOKFUNCTION(ok_SetModname)
 MUTATOR_HOOKFUNCTION(ok_StartItems)
 {
 	start_items |= IT_UNLIMITED_WEAPON_AMMO;
+	start_weapons = (WEPSET_UZI | WEPSET_NEX | WEPSET_SHOTGUN);
 	
 	return FALSE;
 }

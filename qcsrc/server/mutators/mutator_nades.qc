@@ -294,7 +294,10 @@ MUTATOR_HOOKFUNCTION(nades_VehicleEnter)
 
 MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 {
-	float key_pressed = ((g_grappling_hook || client_hasweapon(self, WEP_HOOK, FALSE, FALSE) || (weaponsInMap & WEPSET_HOOK)) ? self.button16 : self.BUTTON_HOOK);
+	float key_pressed = self.BUTTON_HOOK;
+	
+	if(g_grappling_hook || client_hasweapon(self, WEP_HOOK, FALSE, FALSE) || (weaponsInMap & WEPSET_HOOK))
+		key_pressed = self.button16; // if hook is enabled, use an alternate key
 	
 	if(self.nade)
 		if(self.nade.wait - 0.1 <= time)
