@@ -209,12 +209,13 @@ void GrapplingHookThink()
 				{
 					if(self.aiment.movetype == MOVETYPE_WALK)
 					{
+						entity aim_ent = ((self.aiment.vehicle_flags & VHF_ISVEHICLE && self.aiment.owner) ? self.aiment.owner : self.aiment);
 						v = v - dv * 0.5;
 						self.aiment.velocity = self.aiment.velocity - dv * 0.5;
 						self.aiment.flags &= ~FL_ONGROUND;
-						self.aiment.pusher = self.realowner;
-						self.aiment.pushltime = time + autocvar_g_maxpushtime;
-						self.aiment.istypefrag = self.aiment.BUTTON_CHAT;
+						aim_ent.pusher = self.realowner;
+						aim_ent.pushltime = time + autocvar_g_maxpushtime;
+						aim_ent.istypefrag = aim_ent.BUTTON_CHAT;
 					}
 				}
 
