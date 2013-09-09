@@ -270,9 +270,41 @@ MUTATOR_HOOKFUNCTION(vip_PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(vip_PlayerUseKey)
 {
-	if(!round_handler_IsRoundStarted())
-	if(self.isvip)
-		vip_DropSoulGem(self);
+	if(MUTATOR_RETURNVALUE || gameover || round_handler_IsRoundStarted()) { return FALSE; }
+	
+	entity player = self;
+		
+	if((time > player.pickup_antispam) && (player.deadflag == DEAD_NO) && !player.vehicle) //&& (!player.vehicle || autocvar_g_vip_allow_vehicle_touch)) vehicle support coming soon(?)
+	{
+		if(autocvar_g_vip_drop && player.isvip)
+		{
+			if(player.drop_count == -1)
+			{
+				if(time > player.drop_prevtime + autocvar_g_vip_drop_punish_delay)
+				{
+					player.drop_prevtime = time;
+					player.drop_count = 1;
+					vip_DropSoulGem(player);
+					return TRUE;
+				}
+				else
+				{
+					Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_VIP_DROP_PUNISH, rint((player.drop_prevtime + autocvar_g_vip_drop_punish_delay) - time));
+					return FALSE;
+				}
+			}
+			else
+			{
+				if(time > player.drop_prevtime + autocvar_g_vip_drop_punish_time) { player.drop_count = 1; }
+				else { player.drop_count += 1; }
+				if(player.drop_count >= autocvar_g_vip_drop_punish_count) { player.drop_count = -1; }
+					
+				player.drop_prevtime = time;
+				vip_DropSoulGem(player);
+				return TRUE;
+			}
+		}
+	}
 	
 	return TRUE;
 }
@@ -322,6 +354,7 @@ void vip_SetVIP(entity player, float tm)
 	player.isvip = TRUE;
 	player.health = 200;
 	player.armorvalue = ((g_minstagib) ? 5 : 200);
+	player.pickup_antispam = time + autocvar_g_vip_pickup_wait;
 	
 	vip_count[tm] += 1;
 	

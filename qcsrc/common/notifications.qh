@@ -605,6 +605,7 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_VIP_MISSING,              	0, 0, "",              CPID_MISSING_TEAMS,    "0 0",  _("^BGWaiting for VIPs...\nPickup your Soul Gem to become a VIP"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VIP_MISSING_ENEMY,           0, 0, "",              CPID_MISSING_TEAMS,    "0 0",  _("^BGWaiting for an enemy VIP"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VIP_DROP,              	    1, 0, "s1",            CPID_VIP,          	  "0 0",  _("^BG%s^F2 is no longer a VIP!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_VIP_DROP_PUNISH,             0, 1, "f1secs",        CPID_VIP,              "0 0", _("^BGToo many dropped gems! Dropping disabled for %s."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VIP_DROP_SELF,               0, 0, "",              CPID_VIP,          	  "0 0",  _("^F2You are no longer a VIP!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VIP_PICKUP,              	1, 0, "s1",            CPID_VIP,          	  "0 0",  _("^BG%s^F2 is now a VIP!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VIP_PICKUP_SELF,             0, 0, "",              CPID_VIP,          	  "0 0",  _("^F2You are now a VIP!"), "") 

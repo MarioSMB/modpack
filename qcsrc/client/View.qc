@@ -166,15 +166,19 @@ vector GetCurrentFov(float fov)
 
 	if(autocvar_cl_velocityzoom && autocvar_cl_velocityzoom_type) // _type = 0 disables velocity zoom too
 	{
-		v = pmove_vel;
-		if(csqcplayer)
-			v = csqcplayer.velocity;
-
-		switch(autocvar_cl_velocityzoom_type)
+		if(intermission) { curspeed = 0; }
+		else
 		{
-			case 3: curspeed = max(0, v_forward * v); break;
-			case 2: curspeed = (v_forward * v); break;
-			case 1: default: curspeed = vlen(v); break;
+			v = pmove_vel;
+			if(csqcplayer)
+				v = csqcplayer.velocity;
+
+			switch(autocvar_cl_velocityzoom_type)
+			{
+				case 3: curspeed = max(0, v_forward * v); break;
+				case 2: curspeed = (v_forward * v); break;
+				case 1: default: curspeed = vlen(v); break;
+			}
 		}
 		
 		velocityzoom = bound(0, drawframetime / max(0.000000001, autocvar_cl_velocityzoom_time), 1); // speed at which the zoom adapts to player velocity
@@ -1010,7 +1014,7 @@ void CSQC_UpdateView(float w, float h)
 			}
 		}
 	}
-	
+
 	float e1 = (autocvar_hud_postprocessing_maxbluralpha != 0);
 	float e2 = (autocvar_hud_powerup != 0);
 	if(autocvar_hud_postprocessing && (e1 || e2)) // TODO: Remove this code and re-do the postprocess handling in the engine, where it properly belongs.

@@ -54,6 +54,7 @@ float gametype;
 #define SP_CLRATIO -5
 #define SP_PL -6
 #define SP_FRAGS -7
+#define SP_SUM -8
 
 #define SP_SEPARATOR -100
 

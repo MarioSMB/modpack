@@ -642,7 +642,7 @@ void vehicles_enter()
 
     self.team                 = self.owner.team;
     self.flags               -= FL_NOTARGET;
-	self.monster_attack		  = TRUE;
+    self.monster_attack		  = TRUE;
     
     if (IS_REAL_CLIENT(other))
     {
@@ -822,7 +822,7 @@ void vehicles_exit(float eject)
     sound (_vehicle, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTEN_NORM);
     _vehicle.vehicle_hudmodel.viewmodelforclient = _vehicle;	
     _vehicle.phase = time + 1;
-	_vehicle.monster_attack = FALSE;
+    _vehicle.monster_attack = FALSE;
     
     _vehicle.vehicle_exit(eject);
     

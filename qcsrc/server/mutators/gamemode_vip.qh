@@ -13,6 +13,10 @@ float prev_total_players, total_players;
 .entity wps_vip;
 float redgem_count, bluegem_count;
 
+.float drop_count;
+.float drop_prevtime;
+.float pickup_antispam;
+
 const float VIP_TEAMS = 17;
 float vip_count[VIP_TEAMS];
 

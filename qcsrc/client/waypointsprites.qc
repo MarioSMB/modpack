@@ -323,6 +323,9 @@ string spritelookuptext(string s)
 		case "frozen": return _("Frozen!");
 		case "tagged-target": return _("Tagged");
 		case "vehicle": return _("Vehicle");
+		case "survivals": return _("Survivals");
+		case "vipkills": return _("VIP kills");
+		case "vip": return _("VIP");
 		default: return s;
 	}
 }

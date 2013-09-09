@@ -1102,8 +1102,6 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
     if not (self.health)
         self.health = 1000;
     self.tur_health = max(1, self.health);
-	self.bot_attack = TRUE;
-    self.monster_attack = TRUE;
 
     if not (self.turrcaps_flags)
         self.turrcaps_flags = TFL_TURRCAPS_RADIUSDMG | TFL_TURRCAPS_MEDPROJ | TFL_TURRCAPS_PLAYERKILL;
@@ -1336,6 +1334,8 @@ float turret_stdproc_init (string cvar_base_name, string base, string head, floa
         self.turret_score_target    = turret_stdproc_targetscore_generic;
 
     self.use = turret_stdproc_use;
+    self.bot_attack = TRUE;
+    self.monster_attack = TRUE;
 
     ++turret_count;
     self.nextthink = time + 1;

@@ -117,7 +117,7 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 	if(deathtype & HITTYPE_SECONDARY)
 	{
 		damage = self.max_health * 0.1;
-		force *= 7;
+		force *= 10;
 	}
 	else
 		damage = self.max_health * 1.1;
