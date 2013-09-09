@@ -16,5 +16,6 @@ float autocvar_g_overkill_ammo_start;
 .float ok_notice_time;
 .float ammo_charge[WEP_MAXCOUNT];
 .float ok_use_ammocharge;
+.float ok_ammo_charge;
 
 void(entity ent, float wep) ok_DecreaseCharge;

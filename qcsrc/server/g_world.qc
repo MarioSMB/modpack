@@ -819,7 +819,7 @@ void spawnfunc_worldspawn (void)
 	
 	// overkill
 	addstat(STAT_OK_AMMO_CHARGE, AS_FLOAT, ok_use_ammocharge);
-	addstat(STAT_OK_AMMO_CHARGEPOOl, AS_FLOAT, ammo_charge);
+	addstat(STAT_OK_AMMO_CHARGEPOOl, AS_FLOAT, ok_ammo_charge);
 
 	// misc
 	addstat(STAT_RESPAWN_TIME, AS_FLOAT, stat_respawn_time);

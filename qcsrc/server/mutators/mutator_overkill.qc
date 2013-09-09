@@ -184,7 +184,7 @@ MUTATOR_HOOKFUNCTION(ok_ForbidThrowCurrentWeapon)
 
 MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 {
-	if(intermission_running)
+	if(intermission_running || gameover)
 		return 0;
 
 	if(self.deadflag != DEAD_NO || !IS_PLAYER(self))
@@ -223,6 +223,8 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 		makevectors(self.v_angle);
 		W_Laser_Attack(3, WEP_LASER, WEP_LASER);
 	}
+	
+	self.ok_ammo_charge = self.ammo_charge[self.switchweapon];
 
 	self.BUTTON_ATCK2 = 0;
 	return 0;
@@ -329,7 +331,8 @@ MUTATOR_HOOKFUNCTION(ok_WeaponFrame)
 		if(autocvar_g_overkill_ammo_charge_notice && time > self.ok_notice_time && self.BUTTON_ATCK)
 		{
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_OVERKILL_CHARGE);
-			self.ok_notice_time = time + 1;
+			self.ok_notice_time = time + 2;
+			play2(self, "weapons/dryfire.wav");
 		}
 		if(self.weaponentity.state != WS_CLEAR)
 			w_ready();
@@ -451,11 +454,15 @@ void ok_Initialize()
 	precache_model("models/weapons/g_ok_sniper.md3");
 	
 	precache_sound("weapons/rocket_impact.wav");
+	precache_sound("weapons/dryfire.wav");
 
 	w_uzi(WR_PRECACHE);
 	w_nex(WR_PRECACHE);
 	w_shotgun(WR_PRECACHE);
 	w_laser(WR_PRECACHE);
+	
+	(get_weaponinfo(WEP_RPC)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+	(get_weaponinfo(WEP_HMG)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 }
 
 MUTATOR_DEFINITION(mutator_overkill)
@@ -482,6 +489,12 @@ MUTATOR_DEFINITION(mutator_overkill)
 	MUTATOR_ONADD
 	{
 		ok_Initialize();
+	}
+	
+	MUTATOR_ONREMOVE
+	{
+		(get_weaponinfo(WEP_RPC)).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+		(get_weaponinfo(WEP_HMG)).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
 	}
 
 	return 0;

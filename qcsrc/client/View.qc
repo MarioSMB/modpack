@@ -1481,7 +1481,7 @@ void CSQC_UpdateView(float w, float h)
 					else if (ok_ammo_charge)
 					{
 						ring_value = ok_ammo_chargepool;
-						ring_alpha = autocvar_crosshair_ring_nex_alpha;
+						ring_alpha = autocvar_crosshair_ring_reload_alpha;
 						ring_rgb = wcross_color;
 						ring_image = "gfx/crosshair_ring.tga";
 					}

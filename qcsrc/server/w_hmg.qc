@@ -4,7 +4,7 @@ REGISTER_WEAPON(
 /* function  */ w_hmg,
 /* ammotype  */ IT_NAILS,
 /* impulse   */ 3,
-/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_SUPERWEAPON,
+/* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_SUPERWEAPON,
 /* rating    */ BOT_PICKUP_RATING_HIGH,
 /* model     */ "hmg",
 /* shortname */ "hmg",

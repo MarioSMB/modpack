@@ -4,7 +4,7 @@ REGISTER_WEAPON(
 /* function  */ w_rpc,
 /* ammotype  */ IT_ROCKETS,
 /* impulse   */ 7,
-/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_SUPERWEAPON,
+/* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_SUPERWEAPON,
 /* rating    */ BOT_PICKUP_RATING_HIGH,
 /* model     */ "rpc",
 /* shortname */ "rpc",
