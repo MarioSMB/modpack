@@ -1141,6 +1141,7 @@ float autocvar_sv_dodging_delay;
 float autocvar_sv_dodging_height_threshold;
 float autocvar_sv_dodging_horiz_speed;
 float autocvar_sv_dodging_horiz_speed_frozen;
+float autocvar_sv_dodging_frozen_autorepeat;
 float autocvar_sv_dodging_ramp_time;
 float autocvar_sv_dodging_sound;
 float autocvar_sv_dodging_up_speed;
