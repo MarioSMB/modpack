@@ -422,13 +422,6 @@ void ok_Initialize()
 	(get_weaponinfo(WEP_SHOTGUN)).mdl = "ok_shotgun";
 	(get_weaponinfo(WEP_UZI)).mdl = "ok_mg";
 	(get_weaponinfo(WEP_NEX)).mdl = "ok_sniper";
-	
-	if(autocvar_g_overkill_ammo_charge)
-	{
-		(get_weaponinfo(WEP_UZI)).spawnflags &= WEP_FLAG_RELOADABLE;
-		(get_weaponinfo(WEP_HMG)).spawnflags &= WEP_FLAG_RELOADABLE;
-		(get_weaponinfo(WEP_RPC)).spawnflags &= WEP_FLAG_RELOADABLE;
-	}
 }
 
 MUTATOR_DEFINITION(mutator_overkill)

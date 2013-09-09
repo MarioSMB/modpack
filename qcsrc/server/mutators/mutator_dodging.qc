@@ -185,7 +185,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	
 	float frozen_dodging;
 	float do_nothing = 0;
-	frozen_dodging = (self.frozen && autocvar_sv_dodging_frozen);
+	frozen_dodging = (self.frozen && autocvar_sv_dodging_frozen && !autocvar_sv_dodging_frozen_toubletap);
 
 	float dodge_detected;
 	if (g_dodging == 0)
