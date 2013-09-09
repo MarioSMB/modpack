@@ -790,8 +790,6 @@ void weapon_setup(float windex)
 	self.switchingweapon = windex; // to make sure
 	self.weaponname = e.mdl;
 	self.bulletcounter = 0;
-	
-	MUTATOR_CALLHOOK(WeaponSetup);
 }
 
 // perform weapon to attack (weaponstate and attack_finished check is here)

@@ -6,7 +6,7 @@ REGISTER_WEAPON(
 /* impulse   */ 3,
 /* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_SUPERWEAPON,
 /* rating    */ BOT_PICKUP_RATING_HIGH,
-/* model     */ "hmg",
+/* model     */ "ok_hmg",
 /* shortname */ "hmg",
 /* fullname  */ _("Heavy Machine Gun")
 );

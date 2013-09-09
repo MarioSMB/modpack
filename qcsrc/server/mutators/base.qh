@@ -43,9 +43,6 @@ void Mutator_Remove(mutatorfunc_t func, string name); // calls error() on fail
 
 // register all possible hooks here
 
-MUTATOR_HOOKABLE(WeaponSetup);
-    // self = player
-
 MUTATOR_HOOKABLE(WeaponReload);
     // self = player
 

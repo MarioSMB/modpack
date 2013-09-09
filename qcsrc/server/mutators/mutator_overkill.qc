@@ -117,20 +117,6 @@ void ok_Item_Touch()
 	}
 }
 
-MUTATOR_HOOKFUNCTION(ok_WeaponSetup)
-{
-	switch(self.weapon)
-	{
-		case WEP_SHOTGUN: self.weaponname = "ok_shotgun"; break;
-		case WEP_UZI: self.weaponname = "ok_mg"; break;
-		case WEP_NEX: self.weaponname = "ok_sniper"; break;
-		case WEP_HMG: self.weaponname = "ok_hmg"; break;  
-		case WEP_RPC: self.weaponname = "ok_rl"; break;
-	}
-
-	return 0;
-}
-
 MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 {
 	entity oldself = self;
@@ -150,7 +136,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 	SUB_SetFade(self, time + 5, 1);
 	self = oldself;
 
-	return 0;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(ok_MonsterDrop)
@@ -185,13 +171,13 @@ MUTATOR_HOOKFUNCTION(ok_ForbidThrowCurrentWeapon)
 MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 {
 	if(intermission_running || gameover)
-		return 0;
+		return FALSE;
 
 	if(self.deadflag != DEAD_NO || !IS_PLAYER(self))
-		return 0;
+		return FALSE;
 
 	if(self.frozen)
-		return 0;
+		return FALSE;
 	
 	if(self.ok_lastwep != 0)
 	{
@@ -206,15 +192,6 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 	}
 	
 	ok_IncreaseCharge(self, self.weapon);
-	
-	if not(autocvar_g_overkill_ammo_charge)
-	if(self.weapons & WEPSET_HMG)
-	if(self.superweapons_finished < time)
-	{
-		weapon_action(WEP_UZI, WR_RESETPLAYER);
-		self.switchweapon = WEP_UZI;
-		W_SwitchWeapon(WEP_UZI);
-	}
 
 	if(self.BUTTON_ATCK2)
 	if(self.jump_interval <= time)
@@ -227,7 +204,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 	self.ok_ammo_charge = self.ammo_charge[self.switchweapon];
 
 	self.BUTTON_ATCK2 = 0;
-	return 0;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
@@ -250,7 +227,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
 	self.ammo_shells = autocvar_g_overkill_ammo_start;
 	self.ammo_rockets = autocvar_g_overkill_ammo_start;
 
-	return 0;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
@@ -463,6 +440,10 @@ void ok_Initialize()
 	
 	(get_weaponinfo(WEP_RPC)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 	(get_weaponinfo(WEP_HMG)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+	
+	(get_weaponinfo(WEP_SHOTGUN)).mdl = "ok_shotgun";
+	(get_weaponinfo(WEP_UZI)).mdl = "ok_mg";
+	(get_weaponinfo(WEP_NEX)).mdl = "ok_sniper";
 }
 
 MUTATOR_DEFINITION(mutator_overkill)
@@ -474,7 +455,6 @@ MUTATOR_DEFINITION(mutator_overkill)
 	MUTATOR_HOOK(PlayerSpawn, ok_PlayerSpawn, CBC_ORDER_LAST);
 	MUTATOR_HOOK(PlayerDamage_Calculate, ok_PlayerDamage_Calculate, CBC_ORDER_LAST);
 	MUTATOR_HOOK(PlayerDies, ok_PlayerDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(WeaponSetup, ok_WeaponSetup, CBC_ORDER_ANY);
 	MUTATOR_HOOK(OnEntityPreSpawn, ok_OnEntityPreSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(WeaponReload, ok_WeaponReload, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ItemTouch, ok_ItemTouch, CBC_ORDER_ANY);

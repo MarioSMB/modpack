@@ -306,8 +306,8 @@ string spritelookuptext(string s)
 		case "wpn-hlac": return _("HLAC");
 		case "wpn-campingrifle": return _("Rifle");
 		case "wpn-minelayer": return _("Mine Layer");
-		case "wpn-hmg": return _("Heavy MachineGun");
-		case "wpn-rpc": return _("Rocket-Propelled Chainsaw");
+		case "wpn-ok_hmg": return _("Heavy Machine Gun");
+		case "wpn-ok_rl": return _("Rocket-Propelled Chainsaw");
 		case "dom-neut": return _("Control point");
 		case "dom-red": return _("Control point");
 		case "dom-blue": return _("Control point");
