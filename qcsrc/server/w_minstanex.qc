@@ -288,7 +288,7 @@ void W_MinstaNex_SuperBlast()
 
 	// do the firing effect now
 	SendCSQCSuperBlastParticle(attack_endpos);
-	Damage_DamageInfo(attack_hitpos, autocvar_g_balance_minstanex_superblast_splash_damage, autocvar_g_balance_minstanex_superblast_splash_edgedamage, autocvar_g_balance_minstanex_superblast_splash_radius, w_shotdir * autocvar_g_balance_minstanex_superblast_splash_force, WEP_MINSTANEX, 0, self);
+	Damage_DamageInfo(attack_hitpos, autocvar_g_balance_minstanex_superblast_splash_damage, autocvar_g_balance_minstanex_superblast_splash_edgedamage, autocvar_g_balance_minstanex_superblast_splash_radius, w_shotdir * autocvar_g_balance_minstanex_superblast_splash_force, (WEP_MINSTANEX | HITTYPE_SPLASH), 0, self);
 
 	// splash damage/jumping trace
 	head = WarpZone_FindRadius(attack_hitpos, max(autocvar_g_balance_minstanex_superblast_splash_radius, autocvar_g_balance_minstanex_superblast_jump_radius), FALSE);
@@ -316,7 +316,7 @@ void W_MinstaNex_SuperBlast()
 				final_force_z *= autocvar_g_balance_minstanex_superblast_jump_force_zscale;
 				final_damage = (autocvar_g_balance_minstanex_superblast_jump_damage * multiplier + autocvar_g_balance_minstanex_superblast_jump_edgedamage * (1 - multiplier));
 
-				Damage(head, self, self, final_damage, WEP_MINSTANEX, head.origin, final_force);
+				Damage(head, self, self, final_damage, (WEP_MINSTANEX | HITTYPE_SPLASH), head.origin, final_force);
 				//print("SELF HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
 			}
 			else if (distance_to_head <= autocvar_g_balance_minstanex_superblast_splash_radius)
@@ -388,7 +388,7 @@ void W_MinstaNex_SuperBlast()
 		final_force = shockwave_hit_force[i];
 		final_damage = shockwave_hit_damage[i];
 		
-		Damage(head, self, self, final_damage, WEP_MINSTANEX, head.origin, final_force);
+		Damage(head, self, self, final_damage, (WEP_MINSTANEX | HITTYPE_SPLASH), head.origin, final_force);
 		accuracy_add(self, WEP_MINSTANEX, 1, final_damage);
 		//print("SHOCKWAVE by ", self.netname, ": damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force)), ".\n");
 		
@@ -682,7 +682,10 @@ float w_minstanex(float req)
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
-		return WEAPON_MINSTANEX_MURDER;
+		if(w_deathtype & HITTYPE_SPLASH)
+			return WEAPON_MINSTANEX_MURDER_CHARGE;
+		else
+			return WEAPON_MINSTANEX_MURDER;
 	}
 	return TRUE;
 }
