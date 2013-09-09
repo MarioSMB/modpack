@@ -1277,11 +1277,13 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 #define W_SETUPPROJECTILEVELOCITY(m,s) W_SetupProjectileVelocityEx(m, w_shotdir, v_up, cvar(#s "_speed"), 0, 0, cvar(#s "_spread"), FALSE)
 
 void W_DecreaseAmmo(.float ammo_type, float ammo_use, float ammo_reload)
-{
-	decrease_reload = ammo_reload;
-	decrease_ammo = ammo_use;
-	if(MUTATOR_CALLHOOK(DecreaseAmmo))
-		return;
+{	
+	if(cvar("g_overkill"))
+	if(autocvar_g_overkill_ammo_charge)
+	{
+		ok_DecreaseCharge(self, self.weapon);
+		return; // TODO
+	}
 		
 	if((self.items & IT_UNLIMITED_WEAPON_AMMO) && !ammo_reload)
 		return;
@@ -1332,9 +1334,6 @@ void W_ReloadedAndReady()
 
 void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, string sent_sound)
 {
-	if(MUTATOR_CALLHOOK(WeaponReload))
-		return;
-
 	// set global values to work with
 
 	self.reload_ammo_min = sent_ammo_min;
@@ -1346,6 +1345,10 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 
 	entity e;
 	e = get_weaponinfo(self.weapon);
+	
+	if(cvar("g_overkill"))
+	if(autocvar_g_overkill_ammo_charge)
+		return; // TODO
 
 	// don't reload weapons that don't have the RELOADABLE flag
 	if not(e.spawnflags & WEP_FLAG_RELOADABLE)

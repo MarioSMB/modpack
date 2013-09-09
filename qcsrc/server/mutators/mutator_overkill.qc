@@ -201,9 +201,27 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 		W_Laser_Attack(3, WEP_LASER, WEP_LASER);
 	}
 	
+	self.weapon_blocked = FALSE;
+	
 	self.ok_ammo_charge = self.ammo_charge[self.switchweapon];
+	
+	if(autocvar_g_overkill_ammo_charge)
+	if(!ok_CheckWeaponCharge(self, self.weapon, self.switchweapon))
+	{
+		if(autocvar_g_overkill_ammo_charge_notice && time > self.ok_notice_time && self.BUTTON_ATCK)
+		{
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_OVERKILL_CHARGE);
+			self.ok_notice_time = time + 2;
+			play2(self, "weapons/dryfire.wav");
+		}
+		if(self.weaponentity.state != WS_CLEAR)
+			w_ready();
+		
+		self.weapon_blocked = TRUE;
+	}
 
 	self.BUTTON_ATCK2 = 0;
+	
 	return FALSE;
 }
 
@@ -285,46 +303,6 @@ MUTATOR_HOOKFUNCTION(ok_SpectateCopy)
 	self.ammo_charge[self.weapon] = other.ammo_charge[other.weapon];
 	self.ok_use_ammocharge = other.ok_use_ammocharge;
 	
-	return FALSE;
-}
-
-MUTATOR_HOOKFUNCTION(ok_Decharge)
-{
-	if not(autocvar_g_overkill_ammo_charge)
-		return FALSE; // not using ammo charging system
-		
-	ok_DecreaseCharge(self, self.weapon);
-	
-	return TRUE;
-}
-
-MUTATOR_HOOKFUNCTION(ok_WeaponFrame)
-{
-	if not(autocvar_g_overkill_ammo_charge)
-		return FALSE; // no charging, so we can always fire
-			
-	if(!ok_CheckWeaponCharge(self, self.weapon, self.switchweapon))
-	{
-		if(autocvar_g_overkill_ammo_charge_notice && time > self.ok_notice_time && self.BUTTON_ATCK)
-		{
-			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_OVERKILL_CHARGE);
-			self.ok_notice_time = time + 2;
-			play2(self, "weapons/dryfire.wav");
-		}
-		if(self.weaponentity.state != WS_CLEAR)
-			w_ready();
-		
-		return TRUE; // our weapon cant fire
-	}
-
-	return FALSE;
-}
-
-MUTATOR_HOOKFUNCTION(ok_WeaponReload)
-{
-	if(autocvar_g_overkill_ammo_charge)
-		return TRUE;
-		
 	return FALSE;
 }
 
@@ -444,6 +422,13 @@ void ok_Initialize()
 	(get_weaponinfo(WEP_SHOTGUN)).mdl = "ok_shotgun";
 	(get_weaponinfo(WEP_UZI)).mdl = "ok_mg";
 	(get_weaponinfo(WEP_NEX)).mdl = "ok_sniper";
+	
+	if(autocvar_g_overkill_ammo_charge)
+	{
+		(get_weaponinfo(WEP_UZI)).spawnflags &= WEP_FLAG_RELOADABLE;
+		(get_weaponinfo(WEP_HMG)).spawnflags &= WEP_FLAG_RELOADABLE;
+		(get_weaponinfo(WEP_RPC)).spawnflags &= WEP_FLAG_RELOADABLE;
+	}
 }
 
 MUTATOR_DEFINITION(mutator_overkill)
@@ -456,14 +441,11 @@ MUTATOR_DEFINITION(mutator_overkill)
 	MUTATOR_HOOK(PlayerDamage_Calculate, ok_PlayerDamage_Calculate, CBC_ORDER_LAST);
 	MUTATOR_HOOK(PlayerDies, ok_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(OnEntityPreSpawn, ok_OnEntityPreSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(WeaponReload, ok_WeaponReload, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ItemTouch, ok_ItemTouch, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetModname, ok_SetModname, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, ok_ItemRemove, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterDropItem, ok_MonsterDrop, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SpectateCopy, ok_SpectateCopy, CBC_ORDER_ANY);
-	MUTATOR_HOOK(DecreaseAmmo, ok_Decharge, CBC_ORDER_ANY);
-	MUTATOR_HOOK(WeaponFrame, ok_WeaponFrame, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, ok_StartItems, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD

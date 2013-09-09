@@ -43,9 +43,6 @@ void Mutator_Remove(mutatorfunc_t func, string name); // calls error() on fail
 
 // register all possible hooks here
 
-MUTATOR_HOOKABLE(WeaponReload);
-    // self = player
-
 MUTATOR_HOOKABLE(MakePlayerObserver);
 	// called when a player becomes observer, after shared setup
 
@@ -274,15 +271,6 @@ MUTATOR_HOOKABLE(Item_Spawn);
 	// return 1 to remove an item
 	// INPUT
 	entity self; // the item
-	
-MUTATOR_HOOKABLE(DecreaseAmmo);
-	// called when a weapon uses ammo
-	// INPUT:
-		float decrease_reload;
-		float decrease_ammo;
-		
-MUTATOR_HOOKABLE(WeaponFrame);
-	// main weapon think function (can be used to stop weapon from firing)
 
 MUTATOR_HOOKABLE(SetWeaponreplace);
 	// IN

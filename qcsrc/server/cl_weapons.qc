@@ -360,6 +360,8 @@ float forbidWeaponUse()
 		return 1;
 	if(self.player_blocked)
 		return 1;
+	if(self.weapon_blocked)
+		return 1;
 	if(self.frozen)
 		return 1;
 	return 0;
@@ -371,9 +373,6 @@ void W_WeaponFrame()
 
 	if (frametime)
 		self.weapon_frametime = frametime;
-		
-	if(MUTATOR_CALLHOOK(WeaponFrame))
-		return;
 
 	if (!self.weaponentity || self.health < 1)
 		return; // Dead player can't use weapons and injure impulse commands

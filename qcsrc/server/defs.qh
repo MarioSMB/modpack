@@ -581,6 +581,7 @@ float serverflags;
 .float team_forced; // can be a team number to force a team, or 0 for default action, or -1 for forced spectator
 
 .float player_blocked;
+.float weapon_blocked; // weapon use disabled
 
 .float frozen; // for freeze attacks
 .float revive_progress;
