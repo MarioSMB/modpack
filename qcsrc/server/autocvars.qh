@@ -1389,3 +1389,8 @@ float autocvar_g_jump_grunt;
 float autocvar_g_za_max_monsters;
 string autocvar_g_za_spawnmonster;
 float autocvar_g_za_spawn_delay;
+float autocvar_g_spawnsystem;
+float autocvar_g_spawnsystem_delay;
+float autocvar_g_spawnsystem_delay_death;
+float autocvar_g_spawnsystem_check_health;
+float autocvar_g_spawnsystem_closetodeath;
