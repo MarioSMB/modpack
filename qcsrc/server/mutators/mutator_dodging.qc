@@ -55,6 +55,9 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	if(cvar("g_overkill"))
 		clean_up_and_do_nothing = 0; // always enabled in overkill
 		
+	if(g_dodging == 2)
+		clean_up_and_do_nothing = 0; // forced enabled
+		
 	if(self.frozen)
 		clean_up_and_do_nothing = 0; // also enabled in freezetag
 
