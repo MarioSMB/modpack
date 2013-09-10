@@ -183,9 +183,10 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	tap_direction_x = 0;
 	tap_direction_y = 0;
 	
-	float frozen_dodging;
+	float frozen_dodging, frozen_no_doubletap;
 	float do_nothing = 0;
-	frozen_dodging = (self.frozen && autocvar_sv_dodging_frozen && !autocvar_sv_dodging_frozen_toubletap);
+	frozen_dodging = (self.frozen && autocvar_sv_dodging_frozen);
+	frozen_no_doubletap = (frozen_dodging && !autocvar_sv_dodging_frozen_doubletap);
 
 	float dodge_detected;
 	if (g_dodging == 0)
@@ -215,7 +216,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 	if (self.movement_x > 0) {
 		// is this a state change?
-		if (!(self.pressedkeys & KEY_FORWARD) || frozen_dodging) {
+		if (!(self.pressedkeys & KEY_FORWARD) || frozen_no_doubletap) {
 			if ((time - self.last_FORWARD_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				tap_direction_x = 1.0;
 				dodge_detected = 1;
@@ -226,7 +227,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 	if (self.movement_x < 0) {
 		// is this a state change?
- 		if (!(self.pressedkeys & KEY_BACKWARD) || frozen_dodging) {
+ 		if (!(self.pressedkeys & KEY_BACKWARD) || frozen_no_doubletap) {
 			tap_direction_x = -1.0;
 			if ((time - self.last_BACKWARD_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				dodge_detected = 1;
@@ -237,7 +238,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 	if (self.movement_y > 0) {
 		// is this a state change?
-		if (!(self.pressedkeys & KEY_RIGHT) || frozen_dodging) {
+		if (!(self.pressedkeys & KEY_RIGHT) || frozen_no_doubletap) {
 			tap_direction_y = 1.0;
 			if ((time - self.last_RIGHT_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				dodge_detected = 1;
@@ -248,7 +249,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 	if (self.movement_y < 0) {
 		// is this a state change?
-		if (!(self.pressedkeys & KEY_LEFT) || frozen_dodging) {
+		if (!(self.pressedkeys & KEY_LEFT) || frozen_no_doubletap) {
 			tap_direction_y = -1.0;
 			if ((time - self.last_LEFT_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
 				dodge_detected = 1;
