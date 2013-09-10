@@ -188,7 +188,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	frozen_dodging = (self.frozen && autocvar_sv_dodging_frozen);
 	frozen_no_doubletap = (frozen_dodging && !autocvar_sv_dodging_frozen_doubletap);
 
-	float dodge_detected;
+	float dodge_detected = 0;
 	if (g_dodging == 0)
 		do_nothing = 1;
 
@@ -200,8 +200,9 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 		
 	if(frozen_dodging)
 		do_nothing = 0;
-
-	dodge_detected = 0;
+		
+	if(g_dodging == 2)
+		do_nothing = 0;
 	
 	if(do_nothing != 0)
 		return 0;
@@ -292,21 +293,10 @@ MUTATOR_DEFINITION(mutator_dodging)
 
 	// get timeout information from the client, so the client can configure it..
 	MUTATOR_HOOK(GetCvars, dodging_GetCvars, CBC_ORDER_ANY);
-
-	// this just turns on the cvar.
+	
 	MUTATOR_ONADD
 	{
-		g_dodging = 1;
-	}
-
-	// this just turns off the cvar.
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		g_dodging = 0;
-	}
-
-	MUTATOR_ONREMOVE
-	{
+		g_dodging = cvar("g_dodging");
 	}
 
 	return 0;
