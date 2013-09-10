@@ -88,7 +88,7 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 
 		if(self.frozen == 1)
 		{
-			button_pressed = (self.BUTTON_JUMP || self.BUTTON_USE); // only detect jumps
+			button_pressed = (!autocvar_g_freeze_norespawn && (self.BUTTON_JUMP || self.BUTTON_USE)); // only detect jumps
 			if(self.freeze_flag == FROZEN_THAWING)
 			{
 				if(!button_pressed)
@@ -229,6 +229,9 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 			button_pressed = (self.BUTTON_JUMP || self.BUTTON_USE); // we're about to defrost, only detect jumps
 		else
 			button_pressed = (self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE);
+			
+		if(autocvar_g_freeze_norespawn)
+			button_pressed = 0; // don't allow re-spawning via jump/attack
 		
 		if(self.freeze_flag == FROZEN_THAWING)
 		{

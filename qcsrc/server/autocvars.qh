@@ -1332,6 +1332,7 @@ float autocvar_g_player_crush_headheight;
 float autocvar_g_freeze_revive_speed;
 float autocvar_g_freeze_revive_speed_random;
 float autocvar_g_freeze_noauto;
+float autocvar_g_freeze_norespawn;
 float autocvar_g_freeze_revive_minhealth;
 float autocvar_g_freeze_revive_falldamage;
 float autocvar_g_freeze_revive_falldamage_health;
