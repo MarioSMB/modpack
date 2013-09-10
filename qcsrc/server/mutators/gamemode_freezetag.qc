@@ -308,6 +308,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 		}
 		else
 			freezetag_Unfreeze(world); // remove ice
+		self.health = 0; // Unfreeze resets health
 		self.freezetag_frozen_timeout = -2; // freeze on respawn
 		return 1;
 	}

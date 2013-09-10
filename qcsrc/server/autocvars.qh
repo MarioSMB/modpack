@@ -826,6 +826,7 @@ float autocvar_g_ctf_stalemate_time;
 float autocvar_g_ctf_reverse;
 float autocvar_g_ctf_dropped_capture_delay;
 float autocvar_g_ctf_dropped_capture_radius;
+float autocvar_g_ctf_powerups_replace_flags;
 float autocvar_g_cts_finish_kill_delay;
 float autocvar_g_cts_selfdamage;
 float autocvar_g_debug_bot_commands;

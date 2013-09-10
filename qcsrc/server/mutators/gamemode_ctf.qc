@@ -2197,7 +2197,15 @@ Keys:
 void spawnfunc_item_flag_team1()
 {
 	if(g_vip && g_vip_soulgems) { vip_SpawnSoulGem(self.origin, NUM_TEAM_1); remove(self); return; }
-	if(!g_ctf) { remove(self); return; }
+	if not(g_ctf)
+	{
+		if(autocvar_g_ctf_powerups_replace_flags)
+			spawnfunc_item_invincible();
+		else
+			remove(self);
+			
+		return;
+	}
 
 	ctf_FlagSetup(NUM_TEAM_1, self);
 }
@@ -2216,7 +2224,15 @@ Keys:
 void spawnfunc_item_flag_team2()
 {
 	if(g_vip && g_vip_soulgems) { vip_SpawnSoulGem(self.origin, NUM_TEAM_2); remove(self); return; }
-	if(!g_ctf) { remove(self); return; }
+	if not(g_ctf)
+	{
+		if(autocvar_g_ctf_powerups_replace_flags)
+			spawnfunc_item_strength();
+		else
+			remove(self);
+			
+		return;
+	}
 
 	ctf_FlagSetup(NUM_TEAM_2, self);
 }
@@ -2234,7 +2250,15 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_team3()
 {
-	if(!g_ctf) { remove(self); return; }
+	if not(g_ctf)
+	{
+		if(autocvar_g_ctf_powerups_replace_flags)
+			spawnfunc_item_invincible();
+		else
+			remove(self);
+			
+		return;
+	}
 
 	ctf_FlagSetup(NUM_TEAM_3, self);
 }
@@ -2252,7 +2276,15 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_team4()
 {
-	if(!g_ctf) { remove(self); return; }
+	if not(g_ctf)
+	{
+		if(autocvar_g_ctf_powerups_replace_flags)
+			spawnfunc_item_strength();
+		else
+			remove(self);
+			
+		return;
+	}
 
 	ctf_FlagSetup(NUM_TEAM_4, self);
 }
