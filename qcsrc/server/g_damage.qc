@@ -663,6 +663,10 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 	if(deathtype == DEATH_KILL || deathtype == DEATH_TEAMCHANGE || deathtype == DEATH_AUTOTEAMCHANGE)
 	{
+		// exit the vehicle before killing (fixes a crash)
+		if(IS_PLAYER(targ) && targ.vehicle)
+			vehicles_exit(VHEF_RELESE);
+	
 		// These are ALWAYS lethal
 		// No damage modification here
 		// Instead, prepare the victim for his death...
