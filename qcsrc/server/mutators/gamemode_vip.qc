@@ -6,10 +6,8 @@ void VIP_count_players()
 	for(head = world; (head = find(head, classname, "player")); )
 	{
 		++total_players;
-		if(head.team == NUM_TEAM_1)
-			++red_players;
-		else if(head.team == NUM_TEAM_2)
-			++blue_players;
+		red_players += (head.team == NUM_TEAM_1);
+		blue_players += (head.team == NUM_TEAM_2);
 	}
 }
 
@@ -222,7 +220,6 @@ MUTATOR_HOOKFUNCTION(vip_PlayerDies)
 		WaypointSprite_Kill(frag_target.wps_vip);
 	}
 	
-	
 	return FALSE;
 }
 
@@ -240,8 +237,8 @@ MUTATOR_HOOKFUNCTION(vip_RemovePlayer)
 
 MUTATOR_HOOKFUNCTION(vip_PlayerThink)
 {
-	if(self.wps_vip) 
-		WaypointSprite_UpdateHealth(self.wps_vip, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent));
+	if(self.wps_vip)
+		WaypointSprite_UpdateHealth(self.wps_vip, ((g_minstagib) ? self.armorvalue : '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent)));
 		
 	self.stat_vip_red = vip_count[NUM_TEAM_1];
 	self.stat_vip_blue = vip_count[NUM_TEAM_2];
@@ -261,7 +258,8 @@ MUTATOR_HOOKFUNCTION(vip_PlayerSpawn)
 {
 	if(self.isvip)
 	{
-		self.health = 200;
+		if not(g_minstagib)
+			self.health = 200;
 		self.armorvalue = ((g_minstagib) ? 5 : 200); // 5 lives in minstagib
 	}
 	
@@ -315,24 +313,18 @@ vector vip_SoulGemColormod(float theteam, float iseffect)
 	{
 		switch(theteam)
 		{
-			case NUM_TEAM_1:
-				return '1 .4 .4';
-			case NUM_TEAM_2:
-				return '.4 .4 1';
-			default:
-				return '.1 .1 .1';
+			case NUM_TEAM_1: return '1 0.4 0.4';
+			case NUM_TEAM_2: return '0.4 0.4 1';
+			default:		 return '0.1 0.1 0.1';
 		}
 	}
 	else
 	{
 		switch(theteam)
 		{
-			case NUM_TEAM_1:
-				return '1 .8 .8';
-			case NUM_TEAM_2:
-				return '.8 .8 1';
-			default:
-				return '.2 .2 .2';
+			case NUM_TEAM_1: return '1 0.8 0.8';
+			case NUM_TEAM_2: return '0.8 0.8 1';
+			default:		 return '0.2 0.2 0.2';
 		}
 	}
 	
@@ -342,8 +334,8 @@ vector vip_SoulGemColormod(float theteam, float iseffect)
 void vip_VIPWaypoints(entity player)
 {
 	WaypointSprite_Spawn("vip", 0, 0, player, FLAG_WAYPOINT_OFFSET, world, 0, player, wps_vip, TRUE, RADARICON_FLAG, Team_ColorRGB(player.team));
-	WaypointSprite_UpdateMaxHealth(player.wps_vip, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent) * 2);
-	WaypointSprite_UpdateHealth(player.wps_vip, '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent));
+	WaypointSprite_UpdateMaxHealth(player.wps_vip, ((g_minstagib) ? 5 : '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent) * 2));
+	WaypointSprite_UpdateHealth(player.wps_vip, ((g_minstagib) ? self.armorvalue : '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent)));
 	WaypointSprite_UpdateTeamRadar(player.wps_vip, RADARICON_FLAGCARRIER, Team_ColorRGB(player.team));
 }
 
@@ -423,6 +415,12 @@ void vip_SoulGem_reset()
 		WaypointSprite_Spawn("keycarrier-finish", 0, 0, self, FLAG_WAYPOINT_OFFSET, world, self.team, self, waypointsprite_attached, TRUE, RADARICON_FLAG, '0 1 1');
 }
 
+void vip_DelayedGemSetup() // called after a gem is placed on a map
+{
+	// waypointsprites
+	WaypointSprite_Spawn("keycarrier-finish", 0, 0, self, FLAG_WAYPOINT_OFFSET, world, self.team, self, waypointsprite_attached, TRUE, RADARICON_FLAG, '0 1 1');
+}
+
 void vip_SpawnSoulGem(vector orig, float theteam)
 {
 	entity e = spawn();
@@ -465,17 +463,15 @@ void vip_SpawnSoulGem(vector orig, float theteam)
 	e.enemy.colormod = vip_SoulGemColormod(theteam, TRUE);
 
 	e.alpha = e.enemy.alpha = 0.8;
-	e.effects = e.enemy.effects = (EF_ADDITIVE | EF_FULLBRIGHT);
-	
-	// "run here" waypoint
-	if(!e.waypointsprite_attached)
-		WaypointSprite_Spawn("keycarrier-finish", 0, 0, e, FLAG_WAYPOINT_OFFSET, world, e.team, e, waypointsprite_attached, TRUE, RADARICON_FLAG, '0 1 1');
+	e.effects = e.enemy.effects = (EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION);
 		
 	// update gem counts
 	if(e.team == NUM_TEAM_1)
 		redgem_count += 1;
 	else if(e.team == NUM_TEAM_2)
 		bluegem_count += 1;
+	
+	InitializeEntity(e, vip_DelayedGemSetup, INITPRIO_SETLOCATION);
 }
 
 // for maps without flags
@@ -512,9 +508,7 @@ void vip_ScoreRules()
 
 void vip_DelayedInit() // Do this check with a delay so we can wait for teams to be set up.
 {
-	independent_players = 1;
 	vip_ScoreRules();
-	independent_players = 0;
 }
 
 void vip_Initialize()
