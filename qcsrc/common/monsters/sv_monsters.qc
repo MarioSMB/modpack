@@ -889,7 +889,8 @@ void monster_die(entity attacker)
 
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED) && !self.monster_respawned)
 		monsters_killed += 1;
-
+		
+	if(IS_PLAYER(attacker))
 	if( autocvar_g_monsters_score_spawned || 
 			( !(self.spawnflags & MONSTERFLAG_SPAWNED) && !self.monster_respawned) )
 		PlayerScore_Add(attacker, SP_SCORE, +autocvar_g_monsters_score_kill);
