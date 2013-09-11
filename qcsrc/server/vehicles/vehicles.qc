@@ -1292,10 +1292,11 @@ float vehicle_initialize(string  net_name,
     self.vehicle_spawn       = spawnproc;
     self.effects             = EF_NODRAW;
 	self.dphitcontentsmask	 = DPCONTENTS_BODY | DPCONTENTS_SOLID;
-    if(!autocvar_g_vehicles_delayspawn)
-        self.nextthink = time + game_starttime;
+	
+    if(autocvar_g_vehicles_delayspawn)
+		self.nextthink = time + _respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter);
     else
-        self.nextthink = time + _respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter);
+        self.nextthink = time + game_starttime;
 
 	if(autocvar_g_playerclip_collisions)
 		self.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;

@@ -406,6 +406,7 @@ float bumb_pilot_frame()
 {
 	entity pilot, vehic;
 	vector newvel;
+	float draw_beam = 0;
 
 	pilot = self;
 	vehic = self.vehicle;
@@ -528,64 +529,42 @@ float bumb_pilot_frame()
 					  autocvar_g_vehicle_bumblebee_raygun_pitchlimit_down * -1,  autocvar_g_vehicle_bumblebee_raygun_pitchlimit_up,
 					  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides * -1,  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides,  autocvar_g_vehicle_bumblebee_raygun_turnspeed);
 					  
-	if((pilot.BUTTON_ATCK || pilot.BUTTON_ATCK2) && (vehic.vehicle_energy > autocvar_g_vehicle_bumblebee_raygun_dps * sys_frametime || (autocvar_g_vehicle_bumblebee_raygun == 0 || pilot.BUTTON_ATCK)))
+	if(pilot.BUTTON_ATCK)
 	{
+		draw_beam = TRUE; // always draw for primary
+	
 		vehic.gun3.enemy.realowner = pilot;
 		vehic.gun3.enemy.effects &= ~EF_NODRAW;
-		
-		if(pilot.BUTTON_ATCK2 && autocvar_g_vehicle_bumblebee_raygun)
-			vehic.gun3.enemy.cnt = 1;
-		else
-			vehic.gun3.enemy.cnt = 0;
-		
+		vehic.gun3.enemy.cnt = 0;
 		vehic.gun3.enemy.hook_start = gettaginfo(vehic.gun3, gettagindex(vehic.gun3, "fire"));
 		vehic.gun3.enemy.SendFlags |= BRG_START;
 		
 		traceline(vehic.gun3.enemy.hook_start, vehic.gun3.enemy.hook_start + v_forward * autocvar_g_vehicle_bumblebee_raygun_range, MOVE_NORMAL, vehic);
 		
 		if(trace_ent)
+		if(trace_ent.deadflag == DEAD_NO)
+		if(trace_ent.frozen == 0)
+		if(!IsDifferentTeam(trace_ent, pilot))
 		{
-			if(autocvar_g_vehicle_bumblebee_raygun)
+			if(trace_ent.vehicle_flags & VHF_ISVEHICLE)
 			{
-				if(pilot.BUTTON_ATCK2)
-				{
-					Damage(trace_ent, vehic, pilot, autocvar_g_vehicle_bumblebee_raygun_dps * sys_frametime, DEATH_GENERIC, trace_endpos, v_forward * autocvar_g_vehicle_bumblebee_raygun_fps * sys_frametime);
-					vehic.vehicle_energy -= autocvar_g_vehicle_bumblebee_raygun_aps * sys_frametime;
-				}
+				if(autocvar_g_vehicle_bumblebee_healgun_hps)
+					trace_ent.vehicle_health = min(trace_ent.vehicle_health, trace_ent.vehicle_health + autocvar_g_vehicle_bumblebee_healgun_hps * frametime);
+				if(autocvar_g_vehicle_bumblebee_healgun_sps && trace_ent.vehicle_health <= trace_ent.tur_health)
+					trace_ent.vehicle_shield = min(trace_ent.vehicle_shield, trace_ent.vehicle_shield + autocvar_g_vehicle_bumblebee_healgun_sps * frametime);
 			}
-			else
+			else if(IS_CLIENT(trace_ent))
 			{
-				if(trace_ent.deadflag == DEAD_NO)
-					if((teamplay && trace_ent.team == pilot.team) || !teamplay)
-					{
-
-						if(trace_ent.vehicle_flags & VHF_ISVEHICLE)
-						{
-							if(autocvar_g_vehicle_bumblebee_healgun_sps && trace_ent.vehicle_health <= trace_ent.tur_health)
-								trace_ent.vehicle_shield = min(trace_ent.vehicle_shield + autocvar_g_vehicle_bumblebee_healgun_sps * frametime, trace_ent.tur_head.tur_health);
-
-							if(autocvar_g_vehicle_bumblebee_healgun_hps)
-								trace_ent.vehicle_health = min(trace_ent.vehicle_health + autocvar_g_vehicle_bumblebee_healgun_hps * frametime, trace_ent.tur_health);
-						}
-						else if(IS_CLIENT(trace_ent))
-						{
-							if(trace_ent.health <= autocvar_g_vehicle_bumblebee_healgun_hmax && autocvar_g_vehicle_bumblebee_healgun_hps)
-								trace_ent.health = min(trace_ent.health + autocvar_g_vehicle_bumblebee_healgun_hps * frametime, autocvar_g_vehicle_bumblebee_healgun_hmax);
-
-							if(trace_ent.armorvalue <= autocvar_g_vehicle_bumblebee_healgun_amax && autocvar_g_vehicle_bumblebee_healgun_aps)
-								trace_ent.armorvalue = min(trace_ent.armorvalue + autocvar_g_vehicle_bumblebee_healgun_aps * frametime, autocvar_g_vehicle_bumblebee_healgun_amax);
-
-							trace_ent.health = min(trace_ent.health + autocvar_g_vehicle_bumblebee_healgun_hps * frametime, autocvar_g_vehicle_bumblebee_healgun_hmax);
-						}
-						else if(trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
-						{
-							if(trace_ent.health  <= trace_ent.tur_health && autocvar_g_vehicle_bumblebee_healgun_hps)
-								trace_ent.health = min(trace_ent.health + autocvar_g_vehicle_bumblebee_healgun_hps * frametime, trace_ent.tur_health);
-							//else ..hmmm what? ammo?
-
-							trace_ent.SendFlags |= TNSF_STATUS;
-						}
-					}
+				if(trace_ent.health <= autocvar_g_vehicle_bumblebee_healgun_hmax && autocvar_g_vehicle_bumblebee_healgun_hps)
+					trace_ent.health = min(trace_ent.health, trace_ent.health + autocvar_g_vehicle_bumblebee_healgun_hps * frametime, autocvar_g_vehicle_bumblebee_healgun_hmax);
+				if(trace_ent.armorvalue <= autocvar_g_vehicle_bumblebee_healgun_amax && autocvar_g_vehicle_bumblebee_healgun_aps)
+					trace_ent.armorvalue = min(trace_ent.armorvalue, trace_ent.armorvalue + autocvar_g_vehicle_bumblebee_healgun_aps * frametime);
+			}
+			else if(trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+			{
+				if(trace_ent.health <= trace_ent.tur_health && autocvar_g_vehicle_bumblebee_healgun_hps)
+					trace_ent.health = min(trace_ent.tur_health + autocvar_g_vehicle_bumblebee_healgun_hps * frametime, trace_ent.health);
+				trace_ent.SendFlags |= TNSF_STATUS;
 			}
 		}
 		
@@ -595,15 +574,37 @@ float bumb_pilot_frame()
 		
 		vehic.wait = time + 1;
 	}
-	else
-		vehic.gun3.enemy.effects |= EF_NODRAW;
-	/*{
-		if(vehic.gun3.enemy)
-			remove(vehic.gun3.enemy);
-
-		vehic.gun3.enemy = world;
+	else if(pilot.BUTTON_ATCK2)
+	{
+		if(autocvar_g_vehicle_bumblebee_raygun)
+		if(vehic.vehicle_energy > autocvar_g_vehicle_bumblebee_raygun_dps * sys_frametime)
+		{
+			draw_beam = TRUE;
+		
+			vehic.gun3.enemy.realowner = pilot;
+			vehic.gun3.enemy.effects &= ~EF_NODRAW;
+			vehic.gun3.enemy.cnt = 1;
+			vehic.gun3.enemy.hook_start = gettaginfo(vehic.gun3, gettagindex(vehic.gun3, "fire"));
+			vehic.gun3.enemy.SendFlags |= BRG_START;
+			
+			traceline(vehic.gun3.enemy.hook_start, vehic.gun3.enemy.hook_start + v_forward * autocvar_g_vehicle_bumblebee_raygun_range, MOVE_NORMAL, vehic);
+			
+			if(trace_ent)
+			{
+				Damage(trace_ent, vehic, pilot, autocvar_g_vehicle_bumblebee_raygun_dps * sys_frametime, DEATH_GENERIC, trace_endpos, v_forward * autocvar_g_vehicle_bumblebee_raygun_fps * sys_frametime);
+				vehic.vehicle_energy -= autocvar_g_vehicle_bumblebee_raygun_aps * sys_frametime;
+			}
+			
+			vehic.gun3.enemy.hook_end = trace_endpos;
+			setorigin(vehic.gun3.enemy, trace_endpos);
+			vehic.gun3.enemy.SendFlags |= BRG_END;
+			
+			vehic.wait = time + 1;
+		}
 	}
-	*/
+		
+	if not(draw_beam)
+		vehic.gun3.enemy.effects |= EF_NODRAW;
 	
 	VEHICLE_UPDATE_PLAYER(pilot, health, bumblebee);
 	VEHICLE_UPDATE_PLAYER(pilot, energy, bumblebee);

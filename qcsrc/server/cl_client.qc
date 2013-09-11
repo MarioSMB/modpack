@@ -2421,6 +2421,7 @@ void PlayerPreThink (void)
 		entity veh;
 		for(veh = world; (veh = findflags(veh, vehicle_flags, VHF_ISVEHICLE)); )
 		if(vlen(veh.origin - self.origin) < autocvar_g_vehicles_enter_radius)
+		if(!veh.team || !IsDifferentTeam(self, veh))
 		if(veh.deadflag == DEAD_NO)
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_VEHICLE_ENTER);
 			
