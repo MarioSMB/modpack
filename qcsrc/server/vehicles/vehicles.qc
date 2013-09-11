@@ -814,6 +814,8 @@ void vehicles_exit(float eject)
     
     if(!teamplay)
         _vehicle.team = 0;
+		
+	Kill_Notification(NOTIF_ONE, _player, MSG_CENTER_CPID, CPID_VEHICLES);
 
     vh_player = _player;
     vh_vehicle = _vehicle;
