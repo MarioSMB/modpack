@@ -2284,7 +2284,7 @@ void PlayerUseKey()
 		if(self.deadflag == DEAD_NO)
 		{
 			entity head, closest_target = world;
-			head = WarpZone_FindRadius(self.origin, autocvar_g_vehicles_enter_radius, FALSE);
+			head = WarpZone_FindRadius(self.origin, autocvar_g_vehicles_enter_radius, TRUE);
 				
 			while(head) // find the closest acceptable target to enter
 			{
@@ -2413,6 +2413,7 @@ void PlayerPreThink (void)
 	
 	if(autocvar_g_vehicles_enter)
 	if(time > self.last_vehiclecheck)
+	if(IS_PLAYER(self))
 	if not(self.frozen)
 	if not(self.vehicle)
 	if(self.deadflag == DEAD_NO)
