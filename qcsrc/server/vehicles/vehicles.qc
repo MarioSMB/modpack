@@ -593,14 +593,6 @@ void vehicles_enter(entity pl, entity veh)
 	if(veh.team)
 	if(IsDifferentTeam(pl, veh))
 		return;
-		
-	entity wp = world;
-	wp = findentity(wp, wp00, veh);
-	if(wp)
-	{
-		wp.think = SUB_Remove;
-		wp.nextthink = time;
-	}
 
     RemoveGrapplingHook(pl);
 
@@ -675,6 +667,14 @@ void vehicles_enter(entity pl, entity veh)
     }
 
     vehicles_clearrturn();
+	
+	entity wp = world;
+	wp = findentity(wp, wp00, veh);
+	if(wp)
+	{
+		wp.think = SUB_Remove;
+		wp.nextthink = time;
+	}
 
     CSQCVehicleSetup(pl, veh.hud);
     
