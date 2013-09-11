@@ -2289,6 +2289,7 @@ void PlayerUseKey()
 			while(head) // find the closest acceptable target to enter
 			{
 				if(head.vehicle_flags & VHF_ISVEHICLE)
+				if(head.deadflag == DEAD_NO)
 				if not(head.owner)
 				{
 					if(closest_target)
@@ -2419,6 +2420,7 @@ void PlayerPreThink (void)
 		entity veh;
 		for(veh = world; (veh = findflags(veh, vehicle_flags, VHF_ISVEHICLE)); )
 		if(vlen(veh.origin - self.origin) < autocvar_g_vehicles_enter_radius)
+		if(veh.deadflag == DEAD_NO)
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_VEHICLE_ENTER);
 			
 		self.last_vehiclecheck = time + 1;
