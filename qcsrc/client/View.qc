@@ -499,7 +499,7 @@ void CSQC_UpdateView(float w, float h)
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
-		if((spectatee_status >= 0 && (autocvar_cl_eventchase_death && is_dead)) || intermission)
+		if((spectatee_status >= 0 && (autocvar_cl_eventchase_death && is_dead)) || intermission || (hud != HUD_NORMAL && autocvar_cl_eventchase_vehicle))
 		{
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = (csqcplayer ? csqcplayer.origin : pmove_org);
