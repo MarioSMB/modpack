@@ -16,7 +16,7 @@ void vehicles_return();
 void vehicles_enter(entity pl, entity veh);
 void vehicles_touch();
 void vehicles_reset_colors();
-void vehicles_clearrturn();
+void vehicles_clearrturn(entity veh);
 void vehicles_setreturn();
 
 
@@ -666,15 +666,7 @@ void vehicles_enter(entity pl, entity veh)
         }
     }
 
-    vehicles_clearrturn();
-	
-	entity wp = world;
-	wp = findentity(wp, wp00, veh);
-	if(wp)
-	{
-		wp.think = SUB_Remove;
-		wp.nextthink = time;
-	}
+    vehicles_clearrturn(veh);
 
     CSQCVehicleSetup(pl, veh.hud);
     
@@ -988,21 +980,20 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
     }
 }
 
-void vehicles_clearrturn()
+void vehicles_clearrturn(entity veh)
 {
     entity ret;
     // Remove "return helper", if any.
     ret = findchain(classname, "vehicle_return");
     while(ret)
     {
-        if(ret.wp00 == self)
+        if(ret.wp00 == veh)
         {
             ret.classname   = "";
             ret.think       = SUB_Remove;
             ret.nextthink   = time + 0.1;
-
-            if(ret.waypointsprite_attached)
-                WaypointSprite_Kill(ret.waypointsprite_attached);
+			
+			WaypointSprite_Kill(ret.waypointsprite_attached);
 
             return;
         }
@@ -1078,7 +1069,7 @@ void vehicles_setreturn()
 {
     entity ret;
 
-    vehicles_clearrturn();
+    vehicles_clearrturn(self);
 
     ret = spawn();
     ret.classname   = "vehicle_return";
