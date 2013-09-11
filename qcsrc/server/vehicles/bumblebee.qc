@@ -529,7 +529,7 @@ float bumb_pilot_frame()
 					  autocvar_g_vehicle_bumblebee_raygun_pitchlimit_down * -1,  autocvar_g_vehicle_bumblebee_raygun_pitchlimit_up,
 					  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides * -1,  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides,  autocvar_g_vehicle_bumblebee_raygun_turnspeed);
 					  
-	if(pilot.BUTTON_ATCK)
+	if(pilot.BUTTON_ATCK || (pilot.BUTTON_ATCK2 && !autocvar_g_vehicle_bumblebee_raygun))
 	{
 		draw_beam = TRUE; // always draw for primary
 	
