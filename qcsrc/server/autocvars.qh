@@ -1341,6 +1341,7 @@ float autocvar_g_monsters_target_range;
 float autocvar_g_monsters_target_infront;
 float autocvar_g_monsters_attack_range;
 float autocvar_g_monsters_score_kill;
+float autocvar_g_monsters_score_spawned;
 float autocvar_g_monsters_typefrag;
 float autocvar_g_monsters_owners;
 float autocvar_g_monsters_miniboss_chance;

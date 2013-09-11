@@ -877,7 +877,7 @@ void monsters_corpse_damage (entity inflictor, entity attacker, float damage, fl
 	}
 }
 
-void monster_die()
+void monster_die(entity attacker)
 {
 	self.think = monster_dead_think;
 	self.nextthink = self.ticrate;
@@ -889,6 +889,11 @@ void monster_die()
 
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED) && !self.monster_respawned)
 		monsters_killed += 1;
+
+	if( autocvar_g_monsters_score_spawned || 
+			( !(self.spawnflags & MONSTERFLAG_SPAWNED) && !self.monster_respawned) )
+		PlayerScore_Add(attacker, SP_SCORE, +autocvar_g_monsters_score_kill);
+
 
 	if(self.candrop && self.weapon)
 		W_ThrowNewWeapon(self, self.weapon, 0, self.origin, randomvec() * 150 + '0 0 325');
@@ -966,10 +971,8 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		SUB_UseTargets();
 		self.target2 = self.oldtarget2; // reset to original target on death, incase we respawn
 
-		monster_die();
-        
-        PlayerScore_Add(attacker, SP_SCORE, +autocvar_g_monsters_score_kill);
-
+		monster_die(attacker);
+		
 		frag_attacker = attacker;
 		frag_target = self;
 		MUTATOR_CALLHOOK(MonsterDies);
