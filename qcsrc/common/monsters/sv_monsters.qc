@@ -967,6 +967,8 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		self.target2 = self.oldtarget2; // reset to original target on death, incase we respawn
 
 		monster_die();
+        
+        PlayerScore_Add(attacker, SP_SCORE, +autocvar_g_monsters_score_kill);
 
 		frag_attacker = attacker;
 		frag_target = self;
