@@ -56,14 +56,14 @@ void nade_napalm()
 	entity proj;
 	vector kick;
 	
-	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', FALSE, 2, "weapons/fireball_fire.wav", CH_WEAPON_A, autocvar_g_balance_fireball_secondary_damage, self.weapon);
+	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', FALSE, 2, "weapons/fireball_fire.wav", CH_WEAPON_A, autocvar_g_nades_napalm_damage, self.weapon);
 	
 	proj = spawn ();
 	proj.owner = proj.realowner = self;
 	proj.team = self.owner.team;
 	proj.classname = "grenade";
 	proj.bot_dodge = TRUE;
-	proj.bot_dodgerating = autocvar_g_balance_fireball_secondary_damage;
+	proj.bot_dodgerating = autocvar_g_nades_napalm_damage;
 	proj.movetype = MOVETYPE_BOUNCE;
 	proj.projectiledeathtype = WEP_FIREBALL | HITTYPE_SECONDARY;
 	proj.touch = W_Firemine_Touch;
@@ -72,15 +72,14 @@ void nade_napalm()
 	setorigin(proj, self.origin);
 	proj.think = W_Firemine_Think;
 	proj.nextthink = time;
-	proj.damageforcescale = autocvar_g_balance_fireball_secondary_damageforcescale;
+	proj.damageforcescale = autocvar_g_nades_napalm_damageforcescale;
 	
 	kick_x =(random() - 0.5) * 2 * autocvar_g_nades_napalm_spread;
 	kick_y = (random() - 0.5) * 2 * autocvar_g_nades_napalm_spread;
 	kick_z = random() * autocvar_g_nades_napalm_spread;
 	proj.velocity = kick;
 	
-	proj.pushltime = time + autocvar_g_balance_fireball_secondary_lifetime;
-	//W_SETUPPROJECTILEVELOCITY_UP(proj, g_balance_fireball_secondary);
+	proj.pushltime = time + autocvar_g_nades_napalm_lifetime;
 
 	proj.angles = vectoangles(proj.velocity);
 	proj.flags = FL_PROJECTILE;
