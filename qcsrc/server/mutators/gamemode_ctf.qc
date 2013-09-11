@@ -138,20 +138,20 @@ float ctf_IsDifferentTeam(entity a, entity b)
 	return (autocvar_g_ctf_reverse) ? !f : f;
 }
 
-float ctf_Stalemate_waypointsprite_visible_for_player(entity e)
+float ctf_Stalemate_customizeentityforclient()
 {
-	// personal waypoints
-	if(self.enemy)
-		if(self.enemy != e)
-			return FALSE;
-			
+	// make spectators see what the player would see
+	entity e, wp_owner;
+	e = WaypointSprite_getviewentity(other);
+	wp_owner = self.owner;
+	
 	// team waypoints
-	if(self.rule == SPRITERULE_DEFAULT)
-	if(ctf_IsDifferentTeam(self.owner.flagcarried, self.owner))
-	if(ctf_IsDifferentTeam(self.owner.flagcarried, e))
-	if(!IsDifferentTeam(self.owner, e) || !IS_PLAYER(e))
+	if(!ctf_IsDifferentTeam(wp_owner.flagcarried, wp_owner))
 		return FALSE;
-
+		
+	if not(IS_PLAYER(e))
+		return FALSE;
+		
 	return TRUE;
 }
 
@@ -452,7 +452,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	// messages and sounds
 	Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_4(enemy_flag, CENTER_CTF_CAPTURE_));
 	ctf_CaptureRecord(enemy_flag, player);
-	sound(player, CH_TRIGGER, ((IsDifferentTeam(player, flag)) ? enemy_flag.snd_flag_capture : flag.snd_flag_capture), VOL_BASE, ATTN_NONE);
+	sound(player, CH_TRIGGER, ((IsDifferentTeam(player, flag)) ? enemy_flag.snd_flag_capture : flag.snd_flag_capture), VOL_BASE, ATTEN_NONE);
 	
 	switch(capturetype)
 	{
@@ -679,7 +679,7 @@ void ctf_CheckStalemate(void)
 		ctf_stalemate = TRUE;
 	else if(stale_flags == 0 && autocvar_g_ctf_stalemate_endcondition == 2)
 		{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; }
-	else if(stale_flags < ctf_teams && stale_flags >= 1 && autocvar_g_ctf_stalemate_endcondition == 1)
+	else if(stale_flags < ctf_teams && autocvar_g_ctf_stalemate_endcondition == 1)
 		{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; }
 		
 	// if sufficient stalemate, then set up the waypointsprite and announce the stalemate if necessary
@@ -690,7 +690,7 @@ void ctf_CheckStalemate(void)
 			if((tmp_entity.owner) && (!tmp_entity.owner.wps_enemyflagcarrier))
 			{
 				WaypointSprite_Spawn("enemyflagcarrier", 0, 0, tmp_entity.owner, FLAG_WAYPOINT_OFFSET, world, 0, tmp_entity.owner, wps_enemyflagcarrier, TRUE, RADARICON_FLAG, WPCOLOR_ENEMYFC(tmp_entity.owner.team));
-				tmp_entity.owner.wps_enemyflagcarrier.waypointsprite_visible_for_player = ctf_Stalemate_waypointsprite_visible_for_player;
+				tmp_entity.owner.wps_enemyflagcarrier.customizeentityforclient = ctf_Stalemate_customizeentityforclient;
 			}
 		}
 		
@@ -1804,10 +1804,10 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerPreThink)
 	float t = 0, t2 = 0, t3 = 0;
 	
 	// initially clear items so they can be set as necessary later.
-	self.items &= ~(IT_RED_FLAG_CARRYING | IT_RED_FLAG_TAKEN | IT_RED_FLAG_LOST 
-				  | IT_BLUE_FLAG_CARRYING | IT_BLUE_FLAG_TAKEN | IT_BLUE_FLAG_LOST
-				  | IT_YELLOW_FLAG_CARRYING | IT_YELLOW_FLAG_TAKEN | IT_YELLOW_FLAG_LOST
-				  | IT_PINK_FLAG_CARRYING | IT_PINK_FLAG_TAKEN | IT_PINK_FLAG_LOST
+	self.items &= ~(IT_RED_FLAG_CARRYING 	| IT_RED_FLAG_TAKEN 	| IT_RED_FLAG_LOST 
+				  | IT_BLUE_FLAG_CARRYING 	| IT_BLUE_FLAG_TAKEN 	| IT_BLUE_FLAG_LOST
+				  | IT_YELLOW_FLAG_CARRYING | IT_YELLOW_FLAG_TAKEN 	| IT_YELLOW_FLAG_LOST
+				  | IT_PINK_FLAG_CARRYING 	| IT_PINK_FLAG_TAKEN 	| IT_PINK_FLAG_LOST
 				  | IT_CTF_SHIELDED);
 
 	// scan through all the flags and notify the client about them 
@@ -2352,16 +2352,9 @@ void ctf_DelayedInit() // Do this check with a delay so we can wait for teams to
 	
 	entity tmp_entity;
 	for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
-	if(tmp_entity.team == NUM_TEAM_3)
 	{
-		++ctf_teams;
-		break; // found 1 flag for this team
-	}
-	for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
-	if(tmp_entity.team == NUM_TEAM_4)
-	{
-		++ctf_teams;
-		break; // found 1 flag for this team
+		if(tmp_entity.team == NUM_TEAM_3) { ctf_teams = max(3, ctf_teams); }
+		if(tmp_entity.team == NUM_TEAM_4) { ctf_teams = max(4, ctf_teams); }
 	}
 	
 	ctf_teams = bound(2, ctf_teams, 4);
