@@ -218,11 +218,12 @@ void GrapplingHookThink()
 						aim_ent.istypefrag = aim_ent.BUTTON_CHAT;
 					}
 				}
-
-				self.realowner.flags &= ~FL_ONGROUND;
+				if not ( autocvar_g_grappling_hook_nopull_owner )
+					self.realowner.flags &= ~FL_ONGROUND;
 			}
 
-			self.realowner.velocity = WarpZone_RefSys_TransformVelocity(self, self.realowner, v);
+			if not ( autocvar_g_grappling_hook_nopull_owner )
+				self.realowner.velocity = WarpZone_RefSys_TransformVelocity(self, self.realowner, v);
 		}
 		else
 		{
@@ -234,10 +235,13 @@ void GrapplingHookThink()
 				spd = pullspeed;
 			if(spd < 50)
 				spd = 0;
-			self.realowner.velocity = dir*spd;
-			self.realowner.movetype = MOVETYPE_FLY;
-
-			self.realowner.flags &= ~FL_ONGROUND;
+			
+			if not ( autocvar_g_grappling_hook_nopull_owner )
+			{
+				self.realowner.velocity = dir*spd;
+				self.realowner.movetype = MOVETYPE_FLY;
+				self.realowner.flags &= ~FL_ONGROUND;
+			}
 		}
 	}
 
