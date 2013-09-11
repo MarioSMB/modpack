@@ -252,6 +252,12 @@ void toss_nade(entity e, vector _velocity, float _time)
 	e.nade_refire = time + autocvar_g_nades_nade_refire;
 }
 
+void nades_GiveBonus(entity player)
+{
+	if ( player.bonus_nades < autocvar_g_nades_napalm_bonus_max )
+		player.bonus_nades++;
+}
+
 void nade_prime()
 {
 	if(self.nade)

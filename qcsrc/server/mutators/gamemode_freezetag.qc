@@ -459,13 +459,13 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 					PlayerScore_Add(other, SP_FREEZETAG_REVIVALS, +1);
 					PlayerScore_Add(other, SP_SCORE, +1);
 					
-					if ( autocvar_g_nades_napalm_freezetag )
+					if ( autocvar_g_nades_napalm_bonus_freezetag )
 					{
 						other.revivals_row++;
-						if ( other.revivals_row >= autocvar_g_nades_napalm_freezetag )
+						if ( other.revivals_row >= autocvar_g_nades_napalm_bonus_freezetag )
 						{
 							other.revivals_row = 0;
-							other.bonus_nades ++;
+							nades_GiveBonus(other);
 						}
 					}
 				}

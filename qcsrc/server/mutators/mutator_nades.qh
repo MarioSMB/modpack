@@ -4,3 +4,4 @@
 .float bonus_nades;
 
 void() nades_CheckThrow;
+void(entity player) nades_GiveBonus;
