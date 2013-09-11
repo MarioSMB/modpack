@@ -593,6 +593,14 @@ void vehicles_enter(entity pl, entity veh)
 	if(veh.team)
 	if(IsDifferentTeam(pl, veh))
 		return;
+		
+	entity wp = world;
+	wp = findentity(wp, wp00, veh);
+	if(wp)
+	{
+		wp.think = SUB_Remove;
+		wp.nextthink = time;
+	}
 
     RemoveGrapplingHook(pl);
 
@@ -1008,9 +1016,8 @@ void vehicles_return()
 
     self.wp00.think     = vehicles_spawn;
     self.wp00.nextthink = time;
-
-    if(self.waypointsprite_attached)
-        WaypointSprite_Kill(self.waypointsprite_attached);
+	
+    WaypointSprite_Kill(self.waypointsprite_attached);
 
     remove(self);
 }
@@ -1037,7 +1044,7 @@ void vehicles_showwp()
     else
     {
         self.think      = vehicles_return;
-        self.nextthink  = time +1;
+        self.nextthink  = time + 1;
 
         oldself = self;
         self = spawn();
