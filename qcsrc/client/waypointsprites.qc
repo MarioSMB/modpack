@@ -326,6 +326,7 @@ string spritelookuptext(string s)
 		case "survivals": return _("Survivals");
 		case "vipkills": return _("VIP kills");
 		case "vip": return _("VIP");
+		case "intruder": return _("Intruder!");
 		default: return s;
 	}
 }

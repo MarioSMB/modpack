@@ -565,6 +565,7 @@ void vehicles_touch()
     vehicles_enter(other, self);
 }
 var float autocvar_g_vehicles_allow_bots = 0;
+.entity wps_intruder;
 void vehicles_enter(entity pl, entity veh)
 {
    // Remove this when bots know how to use vehicles
@@ -592,7 +593,17 @@ void vehicles_enter(entity pl, entity veh)
 	if(teamplay)
 	if(veh.team)
 	if(IsDifferentTeam(pl, veh))
-		return;
+	if(autocvar_g_vehicles_steal)
+	{
+		entity head;
+		FOR_EACH_PLAYER(head) if not(IsDifferentTeam(head, veh))
+			Send_Notification(NOTIF_ONE, head, MSG_CENTER, CENTER_VEHICLE_STEAL);
+			
+		Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_VEHICLE_STEAL_SELF);
+		
+		WaypointSprite_Spawn("intruder", 0, 0, pl, '0 0 68', world, veh.team, veh, wps_intruder, TRUE, RADARICON_DANGER, Team_ColorRGB(pl.team));
+	}
+	else return;
 
     RemoveGrapplingHook(pl);
 
@@ -816,6 +827,8 @@ void vehicles_exit(float eject)
         _vehicle.team = 0;
 		
 	Kill_Notification(NOTIF_ONE, _player, MSG_CENTER_CPID, CPID_VEHICLES);
+	
+	WaypointSprite_Kill(_vehicle.wps_intruder);
 
     vh_player = _player;
     vh_vehicle = _vehicle;

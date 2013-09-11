@@ -2421,9 +2421,12 @@ void PlayerPreThink (void)
 		entity veh;
 		for(veh = world; (veh = findflags(veh, vehicle_flags, VHF_ISVEHICLE)); )
 		if(vlen(veh.origin - self.origin) < autocvar_g_vehicles_enter_radius)
-		if(!veh.team || !IsDifferentTeam(self, veh))
 		if(veh.deadflag == DEAD_NO)
+		if not(veh.owner)
+		if(!veh.team || !IsDifferentTeam(self, veh))
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_VEHICLE_ENTER);
+		else if(autocvar_g_vehicles_steal)
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_VEHICLE_ENTER_STEAL);
 			
 		self.last_vehiclecheck = time + 1;
 	}
