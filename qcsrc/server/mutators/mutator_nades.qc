@@ -51,6 +51,53 @@ void nade_spawn(entity _nade)
 	
 }
 
+void nade_napalm()
+{
+	entity proj;
+	vector kick;
+	
+	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', FALSE, 2, "weapons/fireball_fire.wav", CH_WEAPON_A, autocvar_g_balance_fireball_secondary_damage, self.weapon);
+	
+	proj = spawn ();
+	proj.owner = proj.realowner = self;
+	proj.team = self.owner.team;
+	proj.classname = "grenade";
+	proj.bot_dodge = TRUE;
+	proj.bot_dodgerating = autocvar_g_balance_fireball_secondary_damage;
+	proj.movetype = MOVETYPE_BOUNCE;
+	proj.projectiledeathtype = WEP_FIREBALL | HITTYPE_SECONDARY;
+	proj.touch = W_Firemine_Touch;
+	PROJECTILE_MAKETRIGGER(proj);
+	setsize(proj, '-4 -4 -4', '4 4 4');
+	setorigin(proj, self.origin);
+	proj.think = W_Firemine_Think;
+	proj.nextthink = time;
+	proj.damageforcescale = autocvar_g_balance_fireball_secondary_damageforcescale;
+	
+	kick_x =(random() - 0.5) * 2 * autocvar_g_nades_napalm_spread;
+	kick_y = (random() - 0.5) * 2 * autocvar_g_nades_napalm_spread;
+	kick_z = random() * autocvar_g_nades_napalm_spread;
+	proj.velocity = kick;
+	
+	proj.pushltime = time + autocvar_g_balance_fireball_secondary_lifetime;
+	//W_SETUPPROJECTILEVELOCITY_UP(proj, g_balance_fireball_secondary);
+
+	proj.angles = vectoangles(proj.velocity);
+	proj.flags = FL_PROJECTILE;
+    proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
+    
+	CSQCProjectile(proj, TRUE, PROJECTILE_FIREMINE, TRUE);
+	
+	MUTATOR_CALLHOOK(EditProjectile);
+}
+
+void nade_napalm_boom()
+{
+	local float c;
+	for (c = 0; c < autocvar_g_nades_napalm_count; c ++) 
+		nade_napalm();
+}
+
 void nade_boom()
 {
 	string expef;
@@ -73,6 +120,10 @@ void nade_boom()
 	self.takedamage = DAMAGE_NO;
 	RadiusDamage(self, self.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
 				 autocvar_g_nades_nade_radius, self, autocvar_g_nades_nade_force, self.projectiledeathtype, self.enemy);
+	
+	if ( self.classname == "nade_napalm" )
+		nade_napalm_boom();
+	
 
 	remove(self);
 }
@@ -213,7 +264,10 @@ void nade_prime()
 	self.nade = spawn();
 	setmodel(self.nade, "null");
 	setattachment(self.nade, self, "bip01 l hand");
-	self.nade.classname = "nade";
+	if ( autocvar_g_nades_napalm )
+		self.nade.classname = "nade_napalm";
+	else
+		self.nade.classname = "nade";
 	self.nade.realowner = self;
 	self.nade.colormap = self.colormap;
 	self.nade.glowmod = self.glowmod;
