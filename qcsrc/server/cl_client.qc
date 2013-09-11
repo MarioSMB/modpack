@@ -2267,6 +2267,7 @@ void SpectatorThink()
 	self.flags |= FL_CLIENT | FL_NOTARGET;
 }
 
+void vehicles_enter (entity pl, entity veh);
 void PlayerUseKey()
 {
 	if not(IS_PLAYER(self))
@@ -2276,6 +2277,33 @@ void PlayerUseKey()
 	{
         vehicles_exit(VHEF_NORMAL);
         return;
+	}
+	else if(autocvar_g_vehicles_enter)
+	{
+		if not(self.frozen)
+		if(self.deadflag == DEAD_NO)
+		{
+			entity head, closest_target = world;
+			head = WarpZone_FindRadius(self.origin, autocvar_g_vehicles_enter_radius, FALSE);
+				
+			while(head) // find the closest acceptable target to enter
+			{
+				if(head.vehicle_flags & VHF_ISVEHICLE)
+				if not(head.owner)
+				{
+					if(closest_target)
+					{
+						if(vlen(self.origin - head.origin) < vlen(self.origin - closest_target.origin))
+						{ closest_target = head; }
+					}
+					else { closest_target = head; }
+				}
+				
+				head = head.chain;
+			}
+				
+			if(closest_target) { vehicles_enter(self, closest_target); return; }
+		}
 	}
 	
 	// a use key was pressed; call handlers
@@ -2292,6 +2320,7 @@ Called every frame for each client before the physics are run
 .float usekeypressed;
 void() nexball_setstatus;
 .float items_added;
+.float last_vehiclecheck;
 void PlayerPreThink (void)
 {
 	WarpZone_PlayerPhysics_FixVAngle();
@@ -2380,6 +2409,20 @@ void PlayerPreThink (void)
 	}
 
 	MUTATOR_CALLHOOK(PlayerPreThink);
+	
+	if(autocvar_g_vehicles_enter)
+	if(time > self.last_vehiclecheck)
+	if not(self.frozen)
+	if not(self.vehicle)
+	if(self.deadflag == DEAD_NO)
+	{
+		entity veh;
+		for(veh = world; (veh = findflags(veh, vehicle_flags, VHF_ISVEHICLE)); )
+		if(vlen(veh.origin - self.origin) < autocvar_g_vehicles_enter_radius)
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_VEHICLE_ENTER);
+			
+		self.last_vehiclecheck = time + 1;
+	}
 
 	if(!self.cvar_cl_newusekeysupported) // FIXME remove this - it was a stupid idea to begin with, we can JUST use the button
 	{

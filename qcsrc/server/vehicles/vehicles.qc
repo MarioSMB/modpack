@@ -13,7 +13,7 @@ float autocvar_g_vehicles;
 
 void vehicles_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force);
 void vehicles_return();
-void vehicles_enter();
+void vehicles_enter(entity pl, entity veh);
 void vehicles_touch();
 void vehicles_reset_colors();
 void vehicles_clearrturn();
@@ -558,127 +558,130 @@ void vehicles_touch()
 
         return;
     }
-
-    if not(IS_PLAYER(other))
-        return;
-
-    if(other.deadflag != DEAD_NO)
-        return;
-		
-	if(other.frozen)
+	
+	if(autocvar_g_vehicles_enter)
 		return;
 
-    if(other.vehicle != world)
-        return;
-
-    vehicles_enter();
+    vehicles_enter(other, self);
 }
 var float autocvar_g_vehicles_allow_bots = 0;
-void vehicles_enter()
+void vehicles_enter(entity pl, entity veh)
 {
    // Remove this when bots know how to use vehicles
-   
-    if (IS_BOT_CLIENT(other))    
-        if (autocvar_g_vehicles_allow_bots)
-            dprint("Bot enters vehicle\n"); // This is where we need to disconnect (some, all?) normal bot AI and hand over to vehicle's _aiframe()
-        else
-            return;
-
-    if(self.phase > time)
-        return;
+	if (IS_BOT_CLIENT(pl))    
+	if (autocvar_g_vehicles_allow_bots)
+		dprint("Bot enters vehicle\n"); // This is where we need to disconnect (some, all?) normal bot AI and hand over to vehicle's _aiframe()
+	else
+		return;
 		
-	if(other.frozen)
+	if not(IS_PLAYER(pl))
 		return;
 
-    if(teamplay)
-    if(self.team)
-    if(self.team != other.team)
+    if(veh.phase > time)
         return;
+		
+	if(pl.frozen)
+		return;
+		
+	if(pl.deadflag != DEAD_NO)
+		return;
+		
+	if(pl.vehicle)
+		return;
+		
+	if(teamplay)
+	if(veh.team)
+	if(IsDifferentTeam(pl, veh))
+		return;
 
-    RemoveGrapplingHook(other);
+    RemoveGrapplingHook(pl);
 
-    self.vehicle_ammo1   = 0;
-    self.vehicle_ammo2   = 0;
-    self.vehicle_reload1 = 0;
-    self.vehicle_reload2 = 0;
-    self.vehicle_energy  = 0;
+    veh.vehicle_ammo1   = 0;
+    veh.vehicle_ammo2   = 0;
+    veh.vehicle_reload1 = 0;
+    veh.vehicle_reload2 = 0;
+    veh.vehicle_energy  = 0;
 
-    self.owner          = other;
-    self.switchweapon   = other.switchweapon;
+    veh.owner = pl;
+	pl.vehicle = veh;
 
     // .viewmodelforclient works better.
-    //self.vehicle_hudmodel.drawonlytoclient = self.owner;
+    //veh.vehicle_hudmodel.drawonlytoclient = veh.owner;
 
-    self.vehicle_hudmodel.viewmodelforclient = self.owner;
+    veh.vehicle_hudmodel.viewmodelforclient = pl;
 
-    self.event_damage         = vehicles_damage;
-    self.nextthink            = 0;
-    self.owner.angles         = self.angles;
-    self.owner.takedamage     = DAMAGE_NO;
-    self.owner.solid          = SOLID_NOT;
-    self.owner.movetype       = MOVETYPE_NOCLIP;
-    self.owner.alpha          = -1;
-    self.owner.vehicle        = self;
-    self.owner.event_damage   = func_null;
-    self.owner.view_ofs       = '0 0 0';
-    self.colormap             = self.owner.colormap;
-    if(self.tur_head)
-        self.tur_head.colormap    = self.owner.colormap;
+    veh.event_damage  = vehicles_damage;
+    veh.nextthink     = 0;
+    pl.angles         = veh.angles;
+    pl.takedamage     = DAMAGE_NO;
+    pl.solid          = SOLID_NOT;
+    pl.movetype       = MOVETYPE_NOCLIP;
+    pl.alpha          = -1;
+    pl.vehicle        = veh;
+    pl.event_damage   = func_null;
+    pl.view_ofs       = '0 0 0';
+    veh.colormap      = pl.colormap;
+    if(veh.tur_head)
+        veh.tur_head.colormap = pl.colormap;
+    veh.switchweapon = pl.switchweapon;
+    pl.hud            = veh.hud;
+    pl.PlayerPhysplug = veh.PlayerPhysplug;
 
-    self.owner.hud            = self.hud;
-    self.owner.PlayerPhysplug = self.PlayerPhysplug;
-
-    self.owner.vehicle_ammo1    = self.vehicle_ammo1;
-    self.owner.vehicle_ammo2    = self.vehicle_ammo2;
-    self.owner.vehicle_reload1  = self.vehicle_reload1;
-    self.owner.vehicle_reload2  = self.vehicle_reload2;
+    pl.vehicle_ammo1    = veh.vehicle_ammo1;
+    pl.vehicle_ammo2    = veh.vehicle_ammo2;
+    pl.vehicle_reload1  = veh.vehicle_reload1;
+    pl.vehicle_reload2  = veh.vehicle_reload2;
 
     // Cant do this, hides attached objects too.
-    //self.exteriormodeltoclient = self.owner;
-    //self.tur_head.exteriormodeltoclient = self.owner;
+    //veh.exteriormodeltoclient = veh.owner;
+    //veh.tur_head.exteriormodeltoclient = veh.owner;
 
-    other.flags &= ~FL_ONGROUND;
-    self.flags  &= ~FL_ONGROUND;
+    pl.flags &= ~FL_ONGROUND;
+    veh.flags &= ~FL_ONGROUND;
 
-    self.team                 = self.owner.team;
-    self.flags               -= FL_NOTARGET;
-    self.monster_attack		  = TRUE;
+    veh.team                 = pl.team;
+    veh.flags               -= FL_NOTARGET;
+    veh.monster_attack		  = TRUE;
     
-    if (IS_REAL_CLIENT(other))
+    if (IS_REAL_CLIENT(pl))
     {
-	Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_VEHICLE_ENTER);
+        Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_VEHICLE_ENTER);
 	
-        msg_entity = other;
+        msg_entity = pl;
         WriteByte (MSG_ONE, SVC_SETVIEWPORT);
-        WriteEntity(MSG_ONE, self.vehicle_viewport);
+        WriteEntity(MSG_ONE, veh.vehicle_viewport);
                 
         WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
-        if(self.tur_head)
+        if(veh.tur_head)
         {
-            WriteAngle(MSG_ONE, self.tur_head.angles_x + self.angles_x); // tilt
-            WriteAngle(MSG_ONE, self.tur_head.angles_y + self.angles_y); // yaw
+            WriteAngle(MSG_ONE, veh.tur_head.angles_x + veh.angles_x); // tilt
+            WriteAngle(MSG_ONE, veh.tur_head.angles_y + veh.angles_y); // yaw
             WriteAngle(MSG_ONE, 0);                                      // roll
         }
         else
         {
-            WriteAngle(MSG_ONE,  self.angles_x * -1); // tilt
-            WriteAngle(MSG_ONE,  self.angles_y);      // yaw
+            WriteAngle(MSG_ONE,  veh.angles_x * -1); // tilt
+            WriteAngle(MSG_ONE,  veh.angles_y);      // yaw
             WriteAngle(MSG_ONE,  0);                  // roll
         }
     }
 
     vehicles_clearrturn();
 
-    CSQCVehicleSetup(self.owner, self.hud);
+    CSQCVehicleSetup(pl, veh.hud);
     
-    vh_player = other;
-    vh_vehicle = self;
+    vh_player = pl;
+    vh_vehicle = veh;
     MUTATOR_CALLHOOK(VehicleEnter);
-    other = vh_player;
-    self = vh_vehicle;
-
-    self.vehicle_enter();
-    antilag_clear(other);
+    pl = vh_player;
+    veh = vh_vehicle;
+	
+	entity oldself = self;
+	self = veh;
+    veh.vehicle_enter();
+	self = oldself;
+	
+    antilag_clear(pl);
 }
 
 /** vehicles_findgoodexit
@@ -798,6 +801,7 @@ void vehicles_exit(float eject)
         _player.event_damage   = PlayerDamage;
         _player.hud            = HUD_NORMAL;
         _player.switchweapon   = _vehicle.switchweapon;
+		_player.last_vehiclecheck = time + 3;
 
         CSQCVehicleSetup(_player, HUD_NORMAL);
     }

@@ -600,7 +600,7 @@ void Send_Notification_WOVA(
 	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SUICIDE,          0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^K1Suicide in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_BEGINNING,           0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout begins in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_ENDING,              0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout ends in ^COUNT"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_VEHICLE_ENTER,         		0, 0, "",              NO_CPID,     		  "0 0",  _("^BGPress ^F2DROPFLAG^BG [^F2+use^BG] to exit the vehicle"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_VEHICLE_ENTER,         		0, 0, "",              NO_CPID,     		  "0 0",  _("^BGPress ^F2DROPFLAG^BG [^F2+use^BG] to enter/exit the vehicle"), "") \
 	MULTITEAM_CENTER(1, CENTER_VIP_BEGIN_, 2,               0, 0, "",              CPID_VIP,              "4 0",  _("^BGYou are the ^TC^TT^BG VIP!\n^F2Survive or your team will lose!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VIP_MISSING,              	0, 0, "",              CPID_MISSING_TEAMS,    "0 0",  _("^BGWaiting for VIPs...\nPickup your Soul Gem to become a VIP"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VIP_MISSING_ENEMY,           0, 0, "",              CPID_MISSING_TEAMS,    "0 0",  _("^BGWaiting for an enemy VIP"), "") \
