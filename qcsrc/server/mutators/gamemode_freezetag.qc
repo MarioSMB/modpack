@@ -1,6 +1,8 @@
 .float freezetag_frozen_time;
 .float freezetag_frozen_timeout;
 .float freezetag_revive_progress;
+.float revivals_row;
+
 #define ICE_MAX_ALPHA 1
 #define ICE_MIN_ALPHA 0.1
 float freezetag_teams;
@@ -153,6 +155,7 @@ void freezetag_Freeze(entity attacker)
 	if(autocvar_g_freezetag_frozen_maxtime > 0)
 		self.freezetag_frozen_timeout = time + autocvar_g_freezetag_frozen_maxtime;
 	
+	self.revivals_row = 0;
 	Freeze(self, 0, 1, TRUE);
 	
 	freezetag_count_alive_players();
@@ -279,6 +282,7 @@ void havocbot_role_ft_freeing()
 MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 {
 	self.health = 0; // neccessary to update correctly alive stats
+	self.revivals_row = 0;
 	freezetag_Unfreeze(world);
 	freezetag_count_alive_players();
 	return 1;
@@ -454,6 +458,16 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 				{
 					PlayerScore_Add(other, SP_FREEZETAG_REVIVALS, +1);
 					PlayerScore_Add(other, SP_SCORE, +1);
+					
+					if ( autocvar_g_nades_napalm_freezetag )
+					{
+						other.revivals_row++;
+						if ( other.revivals_row >= autocvar_g_nades_napalm_freezetag )
+						{
+							other.revivals_row = 0;
+							other.bonus_nades ++;
+						}
+					}
 				}
 			}
 

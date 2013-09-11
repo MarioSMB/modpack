@@ -263,7 +263,12 @@ void nade_prime()
 	self.nade = spawn();
 	setmodel(self.nade, "null");
 	setattachment(self.nade, self, "bip01 l hand");
-	if ( autocvar_g_nades_napalm )
+	if ( self.bonus_nades )
+	{
+		self.bonus_nades --;
+		self.nade.classname = "nade_napalm";
+	}
+	else if ( autocvar_g_nades_napalm )
 		self.nade.classname = "nade_napalm";
 	else
 		self.nade.classname = "nade";

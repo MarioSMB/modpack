@@ -1,5 +1,6 @@
 .entity nade;
 .entity fake_nade;
 .float nade_refire;
+.float bonus_nades;
 
 void() nades_CheckThrow;
