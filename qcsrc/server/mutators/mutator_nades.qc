@@ -254,8 +254,12 @@ void toss_nade(entity e, vector _velocity, float _time)
 
 void nades_GiveBonus(entity player)
 {
-	if ( player.bonus_nades < autocvar_g_nades_napalm_bonus_max )
-		player.bonus_nades++;
+	if ( autocvar_g_nades_napalm == 1 )
+		if ( player.bonus_nades < autocvar_g_nades_napalm_bonus_max )
+		{
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_NADE_BONUS);
+			player.bonus_nades++;
+		}
 }
 
 void nade_prime()
@@ -269,15 +273,19 @@ void nade_prime()
 	self.nade = spawn();
 	setmodel(self.nade, "null");
 	setattachment(self.nade, self, "bip01 l hand");
-	if ( self.bonus_nades )
+	if not ( autocvar_g_nades_napalm  )
+	{
+		self.nade.classname = "nade";
+	}
+	else if ( autocvar_g_nades_napalm > 1 )
+	{
+		self.nade.classname = "nade_napalm";
+	}
+	else if ( autocvar_g_nades_napalm == 1 && self.bonus_nades )
 	{
 		self.bonus_nades --;
 		self.nade.classname = "nade_napalm";
 	}
-	else if ( autocvar_g_nades_napalm )
-		self.nade.classname = "nade_napalm";
-	else
-		self.nade.classname = "nade";
 	self.nade.realowner = self;
 	self.nade.colormap = self.colormap;
 	self.nade.glowmod = self.glowmod;
