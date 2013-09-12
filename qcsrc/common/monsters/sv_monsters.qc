@@ -105,7 +105,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 		return FALSE; // enemy is on our team
 		
 	if ( autocvar_g_monsters_ignore_frozen )
-	if ( targ.frozen )
+	if ( targ.frozen == 1 )
 		return FALSE; // ignore frozen
 
 	if(autocvar_g_monsters_target_infront || ent.spawnflags & MONSTERFLAG_INFRONT)
