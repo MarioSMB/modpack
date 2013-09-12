@@ -59,7 +59,8 @@ void nade_napalm()
 	spamsound(self, CH_SHOTS, "weapons/fireball_fire.wav", VOL_BASE, ATTEN_NORM);
 	
 	proj = spawn ();
-	proj.owner = proj.realowner = self;
+	proj.owner = self.owner;
+	proj.realowner = self.realowner;
 	proj.team = self.owner.team;
 	proj.classname = "grenade";
 	proj.bot_dodge = TRUE;
