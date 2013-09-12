@@ -994,6 +994,13 @@ void monster_think()
 {
 	self.think = monster_think;
 	self.nextthink = self.ticrate;
+	
+	if(self.ltime)
+	if(time >= self.ltime)
+	{
+		Damage(self, self, self, self.health + self.max_health, DEATH_KILL, self.origin, self.origin);
+		return;
+	}
 
 	MON_ACTION(self.monsterid, MR_THINK);
 }
