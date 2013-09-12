@@ -116,6 +116,7 @@ float GrapplingHookSend(entity to, float sf)
 void GrapplingHookThink()
 {
 	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch, s;
+	float has_target;
 	vector dir, org, end, v0, dv, v, myorg, vs;
 	if(self.realowner.hook != self)	// how did that happen?
 	{
@@ -171,6 +172,8 @@ void GrapplingHookThink()
 		dir = self.origin - myorg;
 		dist = vlen(dir);
 		dir = normalize(dir);
+		
+		has_target = 0;
 
 		if(autocvar_g_grappling_hook_tarzan)
 		{
@@ -216,6 +219,7 @@ void GrapplingHookThink()
 						aim_ent.pusher = self.realowner;
 						aim_ent.pushltime = time + autocvar_g_maxpushtime;
 						aim_ent.istypefrag = aim_ent.BUTTON_CHAT;
+						has_target = 1;
 					}
 				}
 				if not ( autocvar_g_grappling_hook_nopull_owner )
@@ -243,6 +247,10 @@ void GrapplingHookThink()
 				self.realowner.flags &= ~FL_ONGROUND;
 			}
 		}
+		
+		
+		if ( autocvar_g_grappling_hook_nopull_owner && !has_target )
+			RemoveGrapplingHook(self.realowner);
 	}
 
 	makevectors(self.angles_x * '-1 0 0' + self.angles_y * '0 1 0');
