@@ -1171,7 +1171,7 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 		mindps = e.fire_damagepersec;
 		maxdps = max(mindps, dps);
 
-		if(maxtime > mintime || maxdps > mindps)
+		if ( mindps && (maxtime > mintime || maxdps > mindps) )
 		{
 			// Constraints:
 			

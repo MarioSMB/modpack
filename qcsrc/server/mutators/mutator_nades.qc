@@ -51,6 +51,7 @@ void nade_spawn(entity _nade)
 	
 }
 
+
 void nade_napalm()
 {
 	entity proj;
@@ -89,11 +90,41 @@ void nade_napalm()
 	CSQCProjectile(proj, TRUE, PROJECTILE_FIREMINE, TRUE);
 }
 
+void napalm_fountain_think()
+{
+	if(time >= self.ltime) 
+	{
+		remove(self);
+		return;
+	}
+	
+	self.nextthink = time + autocvar_g_nades_napalm_fountain_delay;
+	nade_napalm();
+}
+
 void nade_napalm_boom()
 {
+	entity fountain;
 	local float c;
 	for (c = 0; c < autocvar_g_nades_napalm_count; c ++) 
 		nade_napalm();
+	
+	
+	fountain = spawn();
+	fountain.owner = self.owner;
+	fountain.realowner = self.realowner;
+	fountain.origin = self.origin;
+	setorigin(fountain, fountain.origin);
+	fountain.think = napalm_fountain_think;
+	fountain.nextthink = time + autocvar_g_nades_napalm_fountain_delay;
+	fountain.ltime = time + autocvar_g_nades_napalm_fountain_lifetime;
+	fountain.team = self.team;
+	fountain.movetype = MOVETYPE_TOSS;
+	fountain.bot_dodge = TRUE;
+	fountain.bot_dodgerating = autocvar_g_nades_napalm_damage;
+	fountain.touch = W_Firemine_Touch;
+	setsize(fountain, '-16 -16 -16', '16 16 16');
+	CSQCProjectile(fountain, TRUE, PROJECTILE_FIREBALL, TRUE);
 }
 
 void nade_boom()
