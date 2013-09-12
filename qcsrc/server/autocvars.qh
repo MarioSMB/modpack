@@ -1352,7 +1352,6 @@ float autocvar_g_monsters_teams;
 float autocvar_g_monsters_respawn_delay;
 float autocvar_g_monsters_respawn;
 float autocvar_g_monsters_armor_blockpercent;
-float autocvar_g_monsters_ignore_frozen;
 float autocvar_g_touchexplode_radius;
 float autocvar_g_touchexplode_damage;
 float autocvar_g_touchexplode_edgedamage;

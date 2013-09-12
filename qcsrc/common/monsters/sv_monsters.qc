@@ -104,7 +104,6 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if not(IsDifferentTeam(targ, ent))
 		return FALSE; // enemy is on our team
 		
-	if ( autocvar_g_monsters_ignore_frozen )
 	if ( targ.frozen == 1 )
 		return FALSE; // ignore frozen
 
