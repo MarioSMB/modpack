@@ -1417,3 +1417,8 @@ float autocvar_g_spawn_near_teammate_ignore_spawnpoint_closetodeath;
 float autocvar_g_vehicles_enter;
 float autocvar_g_vehicles_enter_radius;
 float autocvar_g_vehicles_steal;
+float autocvar_g_walljump;
+float autocvar_g_walljump_delay;
+float autocvar_g_walljump_force;
+float autocvar_g_walljump_velocity_xy_factor;
+float autocvar_g_walljump_velocity_z_factor;

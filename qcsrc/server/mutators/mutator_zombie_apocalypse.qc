@@ -6,8 +6,6 @@ void za_SpawnMonster()
 	
 	if(MoveToRandomMapLocation(e, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
 		mon = spawnmonster(autocvar_g_za_spawnmonster, 0, self, self, e.origin, FALSE, 2);
-	else
-		za_SpawnMonster(); // finding a location failed, retry
 		
 	e.think = SUB_Remove;
 	e.nextthink = time + 0.1;
