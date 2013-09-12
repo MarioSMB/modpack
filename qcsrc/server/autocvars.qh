@@ -1401,6 +1401,7 @@ float autocvar_g_nades_napalm_damageforcescale;
 float autocvar_g_nades_napalm_lifetime;
 float autocvar_g_nades_napalm_bonus_freezetag;
 float autocvar_g_nades_napalm_bonus_max;
+float autocvar_g_nades_napalm_blast;
 float autocvar_g_campcheck_damage;
 float autocvar_g_campcheck_distance;
 float autocvar_g_campcheck_interval;
