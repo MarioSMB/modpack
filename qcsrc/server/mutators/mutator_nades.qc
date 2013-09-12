@@ -52,7 +52,7 @@ void nade_spawn(entity _nade)
 }
 
 
-void nade_napalm()
+void nade_napalm_ball()
 {
 	entity proj;
 	vector kick;
@@ -65,7 +65,7 @@ void nade_napalm()
 	proj.team = self.owner.team;
 	proj.classname = "grenade";
 	proj.bot_dodge = TRUE;
-	proj.bot_dodgerating = autocvar_g_nades_napalm_damage;
+	proj.bot_dodgerating = autocvar_g_nades_napalm_ball_damage;
 	proj.movetype = MOVETYPE_BOUNCE;
 	proj.projectiledeathtype = DEATH_NADE_NAPALM;
 	proj.touch = W_Firemine_Touch;
@@ -74,20 +74,52 @@ void nade_napalm()
 	setorigin(proj, self.origin);
 	proj.think = W_Firemine_Think;
 	proj.nextthink = time;
-	proj.damageforcescale = autocvar_g_nades_napalm_damageforcescale;
+	proj.damageforcescale = autocvar_g_nades_napalm_ball_damageforcescale;
 	
-	kick_x =(random() - 0.5) * 2 * autocvar_g_nades_napalm_spread;
-	kick_y = (random() - 0.5) * 2 * autocvar_g_nades_napalm_spread;
-	kick_z = random() * autocvar_g_nades_napalm_spread;
+	kick_x =(random() - 0.5) * 2 * autocvar_g_nades_napalm_ball_spread;
+	kick_y = (random() - 0.5) * 2 * autocvar_g_nades_napalm_ball_spread;
+	kick_z = random() * autocvar_g_nades_napalm_ball_spread;
 	proj.velocity = kick;
 	
-	proj.pushltime = time + autocvar_g_nades_napalm_lifetime;
+	proj.pushltime = time + autocvar_g_nades_napalm_ball_lifetime;
 
 	proj.angles = vectoangles(proj.velocity);
 	proj.flags = FL_PROJECTILE;
     proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
     
 	CSQCProjectile(proj, TRUE, PROJECTILE_FIREMINE, TRUE);
+}
+
+
+void napalm_damage(float dist, float damage, float edgedamage, float burntime)
+{
+	entity e;
+	float d;
+	vector p;
+
+	RandomSelection_Init();
+	for(e = WarpZone_FindRadius(self.origin, dist, TRUE); e; e = e.chain)
+		if(e.takedamage == DAMAGE_AIM) if(!IS_PLAYER(e) || !self.realowner || IsDifferentTeam(e, self))
+		{
+			p = e.origin;
+			p_x += e.mins_x + random() * (e.maxs_x - e.mins_x);
+			p_y += e.mins_y + random() * (e.maxs_y - e.mins_y);
+			p_z += e.mins_z + random() * (e.maxs_z - e.mins_z);
+			d = vlen(WarpZone_UnTransformOrigin(e, self.origin) - p);
+			if(d < dist)
+			{
+				e.fireball_impactvec = p;
+				RandomSelection_Add(e, 0, string_null, 1 / (1 + d), !Fire_IsBurning(e));
+			}
+		}
+	if(RandomSelection_chosen_ent)
+	{
+		d = vlen(WarpZone_UnTransformOrigin(RandomSelection_chosen_ent, self.origin) - RandomSelection_chosen_ent.fireball_impactvec);
+		d = damage + (edgedamage - damage) * (d / dist);
+		Fire_AddDamage(RandomSelection_chosen_ent, self.realowner, d * burntime, burntime, self.projectiledeathtype | HITTYPE_BOUNCE);
+		//trailparticles(self, particleeffectnum("fireball_laser"), self.origin, RandomSelection_chosen_ent.fireball_impactvec);
+		pointparticles(particleeffectnum("fireball_laser"), self.origin, RandomSelection_chosen_ent.fireball_impactvec - self.origin, 1);
+	}
 }
 
 void napalm_fountain_think()
@@ -98,16 +130,24 @@ void napalm_fountain_think()
 		return;
 	}
 	
-	self.nextthink = time + autocvar_g_nades_napalm_fountain_delay;
-	nade_napalm();
+	napalm_damage(autocvar_g_nades_napalm_fountain_radius, autocvar_g_nades_napalm_fountain_damage,
+		autocvar_g_nades_napalm_fountain_edgedamage, autocvar_g_nades_napalm_burntime);
+	
+	self.nextthink = time + 0.1;
+	self.fire_fountain_time += 0.1;
+	if ( self.fire_fountain_time >= autocvar_g_nades_napalm_fountain_delay )
+	{
+		self.fire_fountain_time -= autocvar_g_nades_napalm_fountain_delay;
+		nade_napalm_ball();
+	}
 }
 
 void nade_napalm_boom()
 {
 	entity fountain;
 	local float c;
-	for (c = 0; c < autocvar_g_nades_napalm_count; c ++) 
-		nade_napalm();
+	for (c = 0; c < autocvar_g_nades_napalm_ball_count; c ++) 
+		nade_napalm_ball();
 	
 	
 	fountain = spawn();
@@ -116,13 +156,15 @@ void nade_napalm_boom()
 	fountain.origin = self.origin;
 	setorigin(fountain, fountain.origin);
 	fountain.think = napalm_fountain_think;
-	fountain.nextthink = time + autocvar_g_nades_napalm_fountain_delay;
+	fountain.nextthink = time;
 	fountain.ltime = time + autocvar_g_nades_napalm_fountain_lifetime;
+	fountain.pushltime = fountain.ltime;
 	fountain.team = self.team;
 	fountain.movetype = MOVETYPE_TOSS;
 	fountain.bot_dodge = TRUE;
-	fountain.bot_dodgerating = autocvar_g_nades_napalm_damage;
-	fountain.touch = W_Firemine_Touch;
+	fountain.bot_dodgerating = autocvar_g_nades_napalm_fountain_damage;
+	fountain.touch = W_Fireball_TouchExplode;
+	fountain.fire_fountain_time = 0;
 	setsize(fountain, '-16 -16 -16', '16 16 16');
 	CSQCProjectile(fountain, TRUE, PROJECTILE_FIREBALL, TRUE);
 }

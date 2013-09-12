@@ -2,6 +2,7 @@
 .entity fake_nade;
 .float nade_refire;
 .float bonus_nades;
+.float fire_fountain_time;
 
 void() nades_CheckThrow;
 void(entity player) nades_GiveBonus;
