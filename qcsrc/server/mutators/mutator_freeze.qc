@@ -122,17 +122,12 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 			}
 			if(nplayers == frozen_count)
 			{
-				FOR_EACH_PLAYER(other) if not(IsDifferentTeam(self, other)) if(self != other)
+				FOR_EACH_PLAYER(other) if not(IsDifferentTeam(self, other))
 				{
 					other.freeze_flag = FROZEN_RESPAWNING;
-					other.respawn_time = time + 1;
+					other.respawn_time = time + autocvar_g_freeze_respawn_time;
 					PlayerScore_Add(other, SP_SCORE, -1); // lose score for this
 				}
-				
-				PlayerScore_Add(self, SP_SCORE, -1); // lose score for this
-				
-				self.freeze_flag = FROZEN_RESPAWNING;
-				self.respawn_time = time + 1; // delay a bit
 				
 				return 1;
 			}
