@@ -52,45 +52,6 @@ void nade_spawn(entity _nade)
 }
 
 
-void nade_napalm_ball()
-{
-	entity proj;
-	vector kick;
-	
-	spamsound(self, CH_SHOTS, "weapons/fireball_fire.wav", VOL_BASE, ATTEN_NORM);
-	
-	proj = spawn ();
-	proj.owner = self.owner;
-	proj.realowner = self.realowner;
-	proj.team = self.owner.team;
-	proj.classname = "grenade";
-	proj.bot_dodge = TRUE;
-	proj.bot_dodgerating = autocvar_g_nades_napalm_ball_damage;
-	proj.movetype = MOVETYPE_BOUNCE;
-	proj.projectiledeathtype = DEATH_NADE_NAPALM;
-	proj.touch = W_Firemine_Touch;
-	PROJECTILE_MAKETRIGGER(proj);
-	setsize(proj, '-4 -4 -4', '4 4 4');
-	setorigin(proj, self.origin);
-	proj.think = W_Firemine_Think;
-	proj.nextthink = time;
-	proj.damageforcescale = autocvar_g_nades_napalm_ball_damageforcescale;
-	
-	kick_x =(random() - 0.5) * 2 * autocvar_g_nades_napalm_ball_spread;
-	kick_y = (random() - 0.5) * 2 * autocvar_g_nades_napalm_ball_spread;
-	kick_z = random() * autocvar_g_nades_napalm_ball_spread;
-	proj.velocity = kick;
-	
-	proj.pushltime = time + autocvar_g_nades_napalm_ball_lifetime;
-
-	proj.angles = vectoangles(proj.velocity);
-	proj.flags = FL_PROJECTILE;
-    proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
-    
-	CSQCProjectile(proj, TRUE, PROJECTILE_FIREMINE, TRUE);
-}
-
-
 void napalm_damage(float dist, float damage, float edgedamage, float burntime)
 {
 	entity e;
@@ -121,6 +82,61 @@ void napalm_damage(float dist, float damage, float edgedamage, float burntime)
 		pointparticles(particleeffectnum("fireball_laser"), self.origin, RandomSelection_chosen_ent.fireball_impactvec - self.origin, 1);
 	}
 }
+
+
+void napalm_ball_think()
+{
+	if(time > self.pushltime)
+	{
+		remove(self);
+		return;
+	}
+
+	napalm_damage(autocvar_g_nades_napalm_ball_radius,autocvar_g_nades_napalm_ball_damage,
+				  autocvar_g_nades_napalm_ball_damage,autocvar_g_nades_napalm_burntime);
+
+	self.nextthink = time + 0.1;
+}
+
+
+void nade_napalm_ball()
+{
+	entity proj;
+	vector kick;
+	
+	spamsound(self, CH_SHOTS, "weapons/fireball_fire.wav", VOL_BASE, ATTEN_NORM);
+	
+	proj = spawn ();
+	proj.owner = self.owner;
+	proj.realowner = self.realowner;
+	proj.team = self.owner.team;
+	proj.classname = "grenade";
+	proj.bot_dodge = TRUE;
+	proj.bot_dodgerating = autocvar_g_nades_napalm_ball_damage;
+	proj.movetype = MOVETYPE_BOUNCE;
+	proj.projectiledeathtype = DEATH_NADE_NAPALM;
+	proj.touch = W_Firemine_Touch;
+	PROJECTILE_MAKETRIGGER(proj);
+	setsize(proj, '-4 -4 -4', '4 4 4');
+	setorigin(proj, self.origin);
+	proj.think = napalm_ball_think;
+	proj.nextthink = time;
+	proj.damageforcescale = autocvar_g_nades_napalm_ball_damageforcescale;
+	
+	kick_x =(random() - 0.5) * 2 * autocvar_g_nades_napalm_ball_spread;
+	kick_y = (random() - 0.5) * 2 * autocvar_g_nades_napalm_ball_spread;
+	kick_z = (random()/2+0.5) * autocvar_g_nades_napalm_ball_spread;
+	proj.velocity = kick;
+	
+	proj.pushltime = time + autocvar_g_nades_napalm_ball_lifetime;
+
+	proj.angles = vectoangles(proj.velocity);
+	proj.flags = FL_PROJECTILE;
+    proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
+    
+	CSQCProjectile(proj, TRUE, PROJECTILE_FIREMINE, TRUE);
+}
+
 
 void napalm_fountain_think()
 {
