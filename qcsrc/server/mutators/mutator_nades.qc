@@ -56,7 +56,7 @@ void nade_napalm()
 	entity proj;
 	vector kick;
 	
-	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', FALSE, 2, "weapons/fireball_fire.wav", CH_WEAPON_A, autocvar_g_nades_napalm_damage, self.weapon);
+	spamsound(self, CH_SHOTS, "weapons/fireball_fire.wav", VOL_BASE, ATTEN_NORM);
 	
 	proj = spawn ();
 	proj.owner = proj.realowner = self;
@@ -65,7 +65,7 @@ void nade_napalm()
 	proj.bot_dodge = TRUE;
 	proj.bot_dodgerating = autocvar_g_nades_napalm_damage;
 	proj.movetype = MOVETYPE_BOUNCE;
-	proj.projectiledeathtype = WEP_FIREBALL | HITTYPE_SECONDARY;
+	proj.projectiledeathtype = DEATH_NADE_NAPALM;
 	proj.touch = W_Firemine_Touch;
 	PROJECTILE_MAKETRIGGER(proj);
 	setsize(proj, '-4 -4 -4', '4 4 4');
@@ -86,8 +86,6 @@ void nade_napalm()
     proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
     
 	CSQCProjectile(proj, TRUE, PROJECTILE_FIREMINE, TRUE);
-	
-	MUTATOR_CALLHOOK(EditProjectile);
 }
 
 void nade_napalm_boom()
