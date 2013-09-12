@@ -111,11 +111,10 @@ void nade_napalm_ball()
 	proj.realowner = self.realowner;
 	proj.team = self.owner.team;
 	proj.classname = "grenade";
-	proj.bot_dodge = TRUE;
-	proj.bot_dodgerating = autocvar_g_nades_napalm_ball_damage;
+	//proj.bot_dodge = TRUE;
+	//proj.bot_dodgerating = autocvar_g_nades_napalm_ball_damage;
 	proj.movetype = MOVETYPE_BOUNCE;
 	proj.projectiledeathtype = DEATH_NADE_NAPALM;
-	proj.touch = W_Firemine_Touch;
 	PROJECTILE_MAKETRIGGER(proj);
 	setsize(proj, '-4 -4 -4', '4 4 4');
 	setorigin(proj, self.origin);
@@ -179,7 +178,6 @@ void nade_napalm_boom()
 	fountain.movetype = MOVETYPE_TOSS;
 	fountain.bot_dodge = TRUE;
 	fountain.bot_dodgerating = autocvar_g_nades_napalm_fountain_damage;
-	fountain.touch = W_Fireball_TouchExplode;
 	fountain.fire_fountain_time = 0;
 	setsize(fountain, '-16 -16 -16', '16 16 16');
 	CSQCProjectile(fountain, TRUE, PROJECTILE_FIREBALL, TRUE);
