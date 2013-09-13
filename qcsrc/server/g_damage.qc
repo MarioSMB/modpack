@@ -1314,6 +1314,7 @@ void Fire_ApplyDamage(entity e)
 	e.fire_hitsound = TRUE;
 
 	if not(IS_INDEPENDENT_PLAYER(e))
+	if not(e.frozen)
 	FOR_EACH_PLAYER(other) if(e != other)
 	{
 		if(IS_PLAYER(other))

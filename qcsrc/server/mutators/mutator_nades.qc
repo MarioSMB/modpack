@@ -184,6 +184,7 @@ void nade_napalm_boom()
 	fountain.pushltime = fountain.ltime;
 	fountain.team = self.team;
 	fountain.movetype = MOVETYPE_TOSS;
+	fountain.projectiledeathtype = DEATH_NADE_NAPALM;
 	fountain.bot_dodge = TRUE;
 	fountain.bot_dodgerating = autocvar_g_nades_napalm_fountain_damage;
 	fountain.fire_fountain_time = 0;
@@ -351,7 +352,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 void nades_GiveBonus(entity player)
 {
 	if ( autocvar_g_nades_napalm == 1 )
-		if ( player.bonus_nades < autocvar_g_nades_napalm_bonus_max )
+		if ( IS_PLAYER(player) && player.bonus_nades < autocvar_g_nades_napalm_bonus_max )
 		{
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_NADE_BONUS);
 			player.bonus_nades++;
