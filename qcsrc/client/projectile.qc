@@ -111,6 +111,7 @@ void Projectile_Draw()
 			case PROJECTILE_NADE_PINK:
 			case PROJECTILE_NADE_BURN:
 			case PROJECTILE_NADE:
+			case PROJECTILE_NADE_NAPALM:
 				rot = self.avelocity; 
 				break;
 			case PROJECTILE_HOOKBOMB:
@@ -146,6 +147,7 @@ void Projectile_Draw()
 		case PROJECTILE_NADE_PINK:
 		case PROJECTILE_NADE_BURN:
 		case PROJECTILE_NADE:
+		case PROJECTILE_NADE_NAPALM:
 			trailorigin += v_up * 4;
 			break;
 		case PROJECTILE_GRENADE:
@@ -341,6 +343,7 @@ void Ent_Projectile()
 			case PROJECTILE_NADE_PINK_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_pink_burn"); break;
 			case PROJECTILE_NADE: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade"); break;
 			case PROJECTILE_NADE_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_burn"); break;
+			case PROJECTILE_NADE_NAPALM: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
 			case PROJECTILE_RPC: setmodel(self, "models/weapons/ok_rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
 
 			default:
@@ -395,6 +398,7 @@ void Ent_Projectile()
 			case PROJECTILE_NADE_PINK:
 			case PROJECTILE_NADE_BURN:
 			case PROJECTILE_NADE:
+			case PROJECTILE_NADE_NAPALM:
 				self.mins = '-16 -16 -16';
 				self.maxs = '16 16 16';
 				self.move_movetype = MOVETYPE_BOUNCE;

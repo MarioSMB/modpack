@@ -38,13 +38,18 @@ void nade_spawn(entity _nade)
 	timer.owner = _nade;	
 	timer.skin = 10;
 	
-	switch(_nade.realowner.team)
+	if ( _nade.classname == "nade_napalm" )
+		p = PROJECTILE_NADE_NAPALM;
+	else
 	{
-		case NUM_TEAM_1: p = PROJECTILE_NADE_RED; break;
-		case NUM_TEAM_2: p = PROJECTILE_NADE_BLUE; break;
-		case NUM_TEAM_3: p = PROJECTILE_NADE_YELLOW; break;
-		case NUM_TEAM_4: p = PROJECTILE_NADE_PINK; break;
-		default:		 p = PROJECTILE_NADE; break;
+		switch(_nade.realowner.team)
+		{
+			case NUM_TEAM_1: p = PROJECTILE_NADE_RED; break;
+			case NUM_TEAM_2: p = PROJECTILE_NADE_BLUE; break;
+			case NUM_TEAM_3: p = PROJECTILE_NADE_YELLOW; break;
+			case NUM_TEAM_4: p = PROJECTILE_NADE_PINK; break;
+			default:		 p = PROJECTILE_NADE; break;
+		}
 	}
 	
 	CSQCProjectile(_nade, TRUE, p, TRUE);

@@ -392,6 +392,7 @@ const float PROJECTILE_NADE_PINK_BURN = 57;
 const float PROJECTILE_NADE = 58;
 const float PROJECTILE_NADE_BURN = 59;
 const float PROJECTILE_RPC = 60;
+const float PROJECTILE_NADE_NAPALM = 61;
 
 const float SPECIES_HUMAN = 0;
 const float SPECIES_ROBOT_SOLID = 1;
