@@ -867,7 +867,6 @@ float autocvar_g_fullbrightitems;
 float autocvar_g_fullbrightplayers;
 #define autocvar_g_grappling_hook cvar("g_grappling_hook")
 float autocvar_g_grappling_hook_tarzan;
-float autocvar_g_grappling_hook_nopull_owner;
 float autocvar_g_hitplots;
 string autocvar_g_hitplots_individuals;
 float autocvar_g_jetpack_acceleration_side;
