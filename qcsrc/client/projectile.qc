@@ -34,7 +34,7 @@ void Projectile_DrawTrail(vector to)
 	self.trail_oldtime = time;
 
 	// force the effect even for stationary firemine
-	if(self.cnt == PROJECTILE_FIREMINE)
+	if(self.cnt == PROJECTILE_FIREMINE || self.cnt == PROJECTILE_NAPALM_FIRE)
 		if(from == to)
 			from_z += 1;
 
@@ -315,6 +315,7 @@ void Ent_Projectile()
 			case PROJECTILE_HAGAR: setmodel(self, "models/hagarmissile.mdl");self.traileffect = particleeffectnum("tr_hagar"); self.scale = 0.75; break;
 			case PROJECTILE_HAGAR_BOUNCING: setmodel(self, "models/hagarmissile.mdl");self.traileffect = particleeffectnum("tr_hagar"); self.scale = 0.75; break;
 			case PROJECTILE_FIREBALL: self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum("fireball"); break; // particle effect is good enough
+			case PROJECTILE_NAPALM_FIRE: 
 			case PROJECTILE_FIREMINE: self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum("firemine"); break; // particle effect is good enough
 			case PROJECTILE_TAG: setmodel(self, "models/laser.mdl"); self.traileffect = particleeffectnum("TR_ROCKET"); break;
 			case PROJECTILE_FLAC: setmodel(self, "models/hagarmissile.mdl"); self.scale = 0.4; self.traileffect = particleeffectnum("TR_SEEKER"); break;
@@ -388,6 +389,8 @@ void Ent_Projectile()
 				self.move_bounce_factor = g_balance_grenadelauncher_bouncefactor;
 				self.move_bounce_stopspeed = g_balance_grenadelauncher_bouncestop;
 				break;
+			case PROJECTILE_NADE_NAPALM:
+				self.colormod = '2 0.5 0';
 			case PROJECTILE_NADE_RED_BURN:
 			case PROJECTILE_NADE_RED:
 			case PROJECTILE_NADE_BLUE_BURN:
@@ -398,7 +401,6 @@ void Ent_Projectile()
 			case PROJECTILE_NADE_PINK:
 			case PROJECTILE_NADE_BURN:
 			case PROJECTILE_NADE:
-			case PROJECTILE_NADE_NAPALM:
 				self.mins = '-16 -16 -16';
 				self.maxs = '16 16 16';
 				self.move_movetype = MOVETYPE_BOUNCE;
@@ -435,6 +437,7 @@ void Ent_Projectile()
 				self.mins = '-16 -16 -16';
 				self.maxs = '16 16 16';
 				break;
+			case PROJECTILE_NAPALM_FIRE:
 			case PROJECTILE_FIREMINE:
 				loopsound(self, CH_SHOTS_SINGLE, "weapons/fireball_fly.wav", VOL_BASE, ATTEN_NORM);
 				self.move_movetype = MOVETYPE_BOUNCE;

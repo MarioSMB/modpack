@@ -143,7 +143,7 @@ void nade_napalm_ball()
 	proj.flags = FL_PROJECTILE;
     proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
     
-	CSQCProjectile(proj, TRUE, PROJECTILE_FIREMINE, TRUE);
+	CSQCProjectile(proj, TRUE, PROJECTILE_NAPALM_FIRE, TRUE);
 }
 
 
@@ -402,6 +402,10 @@ void nade_prime()
 	self.nade.projectiledeathtype = DEATH_NADE;
 
 	self.fake_nade = spawn();
+	if ( self.nade.classname == "nade_napalm" )
+	{
+		self.fake_nade.colormod = '2 0.5 0';
+	}
 	setmodel(self.fake_nade, "models/weapons/h_ok_grenade.iqm");
 	setattachment(self.fake_nade, self.weaponentity, "");
 	self.fake_nade.classname = "fake_nade";
