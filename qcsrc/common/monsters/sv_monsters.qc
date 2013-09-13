@@ -290,7 +290,7 @@ void monster_makevectors(entity e)
 {
 	vector v;
 
-	v = CENTER_OR_VIEWOFS(e);
+	v = (e.mins + e.maxs) * 0.5;
 	self.v_angle = vectoangles(v - (self.origin + self.view_ofs));
 	self.v_angle_x = -self.v_angle_x;
 
@@ -786,6 +786,8 @@ void monsters_reset()
 {
 	setorigin(self, self.pos1);
 	self.angles = self.pos2;
+	
+	Unfreeze(self); // remove any icy remains
 
 	self.health = self.max_health;
 	self.velocity = '0 0 0';
@@ -885,6 +887,8 @@ void monster_die(entity attacker)
 	self.think = monster_dead_think;
 	self.nextthink = self.ticrate;
 	self.ltime = time + 5;
+	
+	Unfreeze(self); // remove any icy remains
 
 	monster_dropitem();
 
