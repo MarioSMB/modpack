@@ -385,7 +385,7 @@ void nade_prime()
 		{
 			self.nade.classname = "nade_napalm";
 		}
-		else if ( self.bonus_nades )
+		else if ( self.bonus_nades > 0 )
 		{
 			self.bonus_nades --;
 			self.nade.classname = "nade_napalm";
