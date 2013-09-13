@@ -68,7 +68,9 @@ void napalm_damage(float dist, float damage, float edgedamage, float burntime)
 
 	RandomSelection_Init();
 	for(e = WarpZone_FindRadius(self.origin, dist, TRUE); e; e = e.chain)
-		if(e.takedamage == DAMAGE_AIM) if(!IS_PLAYER(e) || !self.realowner || IsDifferentTeam(e, self))
+		if(e.takedamage == DAMAGE_AIM) 
+			if ( self.realowner != e || cvar("g_nades_napalm_selfdamage") ) 
+				if(!IS_PLAYER(e) || !self.realowner || IsDifferentTeam(e, self))
 		{
 			p = e.origin;
 			p_x += e.mins_x + random() * (e.maxs_x - e.mins_x);
