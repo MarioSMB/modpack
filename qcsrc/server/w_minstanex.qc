@@ -272,6 +272,7 @@ void W_MinstaNex_SuperBlast()
 	// declarations
 	float multiplier, multiplier_from_accuracy, multiplier_from_distance;
 	float final_damage; //, final_spread;
+	float minstanex_ammo = ((g_minstagib) ? 1 : autocvar_g_balance_minstanex_ammo);
 	vector final_force, center, vel;
 	entity head, next;
 
@@ -397,6 +398,8 @@ void W_MinstaNex_SuperBlast()
 		shockwave_hit_damage[i] = 0;
 	}
 	//print("queue was ", ftos(queue), ".\n\n");
+	
+	W_DecreaseAmmo(ammo_cells, minstanex_ammo, autocvar_g_balance_minstanex_reload_ammo);
 }
 
 void W_RocketMinsta_Laser_Explode (void)
