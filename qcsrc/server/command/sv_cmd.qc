@@ -133,7 +133,8 @@ void GameCommand_adminmsg(float request, float argc)
 					}
 					else
 					{
-						Send_Notification(NOTIF_ONE_ONLY, client, MSG_MULTI, MULTI_ADMINMESSAGE, admin_name(), admin_message);
+						centerprint(client, strcat("^3", admin_name(), ":\n^7", admin_message));
+						sprint(client, strcat("\{1}\{13}^3", admin_name(), "^7: ", admin_message, "\n"));
 					}
 					
 					successful = strcat(successful, (successful ? ", " : ""), client.netname);

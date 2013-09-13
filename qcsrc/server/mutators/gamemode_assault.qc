@@ -63,12 +63,13 @@ void assault_objective_decrease_use()
 			PlayerTeamScore_Add(activator, SP_ASSAULT_OBJECTIVES, ST_ASSAULT_OBJECTIVES, 1);
 			self.enemy.health = -1;
 
-			entity oldself, oldactivator;
+			entity oldself, oldactivator, head;
 
 			oldself = self;
 			self = oldself.enemy;
 			if(self.message)
-				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TRIGGER, self.message);
+			FOR_EACH_PLAYER(head)
+				centerprint(head, self.message);
 
 			oldactivator = activator;
 			activator = oldself;

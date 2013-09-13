@@ -327,7 +327,6 @@ void Send_Notification_WOCOVA(
 		MSG_INFO_NOTIF(default, prefix##PINK, strnum, flnum, args, hudargs, sprintf(icon, strtolower(STATIC_NAME_TEAM_4)), TCR(normal, COL_TEAM_4, strtoupper(NAME_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(NAME_TEAM_4))) \
 	#endif
 #define MSG_INFO_NOTIFICATIONS \
-	MSG_INFO_NOTIF(2, INFO_ADMINMESSAGE,                   2, 0, "s1 s2", "",                       "",                     _("^F2%s^BG: %s"), "") \
 	MSG_INFO_NOTIF(2, INFO_COINTOSS,                       1, 0, "s1", "",                          "",                     _("^F2Throwing coin... Result: %s^F2!"), "") \
 	MSG_INFO_NOTIF(1, INFO_JETPACK_NOFUEL,                 0, 0, "", "",                            "",                     _("^BGYou don't have any fuel for the ^F1Jetpack"), "") \
 	MSG_INFO_NOTIF(2, INFO_SUPERSPEC_MISSING_UID,          0, 0, "", "",                            "",                     _("^F2You lack a UID, superspec options will not be saved/restored"), "") \
@@ -554,7 +553,6 @@ void Send_Notification_WOCOVA(
 		MSG_CENTER_NOTIF(default, prefix##PINK, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_4, strtoupper(NAME_TEAM_4)), TCR(gentle, COL_TEAM_4, strtoupper(NAME_TEAM_4))) \
 	#endif
 #define MSG_CENTER_NOTIFICATIONS \
-	MSG_CENTER_NOTIF(1, CENTER_ADMINMESSAGE,                2, 0, "s1 s2",        NO_CPID,             "3 0", _("^F2%s^BG:\n^BG%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ASSAULT_ATTACKING,           0, 0, "",             CPID_ASSAULT_ROLE,   "0 0", _("^BGYou are attacking!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ASSAULT_DEFENDING,           0, 0, "",             CPID_ASSAULT_ROLE,   "0 0", _("^BGYou are defending!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_COUNTDOWN_BEGIN,             0, 0, "",             CPID_ROUND,          "2 0", _("^F4Begin!"), "") \
@@ -699,7 +697,6 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_TEAMCHANGE_SUICIDE,          0, 1, "",              CPID_TEAMCHANGE,       "1 f1", _("^K1Suicide in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_BEGINNING,           0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout begins in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_ENDING,              0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout ends in ^COUNT"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_TRIGGER,                     1, 0, "s1",            NO_CPID,               "0 0",  _("^BG%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VEHICLE_ENTER,         	    0, 0, "pass_key",      CPID_VEHICLES,         "0 0",  _("^BGPress ^F2DROPFLAG%s^BG to enter/exit the vehicle"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VEHICLE_ENTER_STEAL,         0, 0, "pass_key",      CPID_VEHICLES,         "0 0",  _("^BGPress ^F2DROPFLAG%s^BG to steal this vehicle"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VEHICLE_STEAL,         	    0, 0, "",              CPID_VEHICLES_OTHER,   "0 0",  _("^F2The enemy is stealing one of your vehicles!\n^F4Stop them!"), "") \
@@ -820,7 +817,6 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_NOAMMO,                   NO_MSG,        INFO_ITEM_WEAPON_NOAMMO,                   CENTER_ITEM_WEAPON_NOAMMO) \
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_PRIMORSEC,                NO_MSG,        INFO_ITEM_WEAPON_PRIMORSEC,                CENTER_ITEM_WEAPON_PRIMORSEC) \
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_UNAVAILABLE,              NO_MSG,        INFO_ITEM_WEAPON_UNAVAILABLE,              CENTER_ITEM_WEAPON_UNAVAILABLE) \
-	MSG_MULTI_NOTIF(1, MULTI_ADMINMESSAGE,                   NO_MSG,        INFO_ADMINMESSAGE,                         CENTER_ADMINMESSAGE) \
 	MSG_MULTI_NOTIF(1, MULTI_COINTOSS,                       NO_MSG,        INFO_COINTOSS,                             CENTER_COINTOSS) \
 	MSG_MULTI_NOTIF(1, MULTI_COUNTDOWN_BEGIN,                ANNCE_BEGIN,   NO_MSG,                                    CENTER_COUNTDOWN_BEGIN) \
 	MSG_MULTI_NOTIF(1, MULTI_MINSTA_FINDAMMO,                ANNCE_NUM_10,  NO_MSG,                                    CENTER_MINSTA_FINDAMMO_FIRST) \

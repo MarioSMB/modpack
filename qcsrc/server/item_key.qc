@@ -73,7 +73,7 @@ void item_key_touch(void) {
 	other.itemkeys |= self.itemkeys;
 	play2(other, self.noise);
 	
-	Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_TRIGGER, self.message);
+	centerprint(other, self.message);
 };
 
 /**
@@ -352,7 +352,7 @@ void trigger_keylock_touch(void) {
 	} else {
 		// all keys were given!
 		play2(other, self.noise);
-		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_TRIGGER, self.message);
+		centerprint(other, self.message);
 		
 		if (self.target)
 			trigger_keylock_trigger(self.target);

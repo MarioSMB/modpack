@@ -64,7 +64,7 @@ void SUB_UseTargets()
 	if(IS_PLAYER(activator) && self.message != "")
 	if(IS_REAL_CLIENT(activator))
 	{
-		Send_Notification(NOTIF_ONE, activator, MSG_CENTER, CENTER_TRIGGER, self.message);
+		centerprint(activator, self.message);
 		if (self.noise == "")
 			play2(activator, "misc/talk.wav");
 	}

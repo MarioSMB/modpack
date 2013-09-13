@@ -1068,7 +1068,7 @@ void door_touch()
 	if (!(self.owner.dmg) && (self.owner.message != ""))
 	{
 		if (IS_CLIENT(other))
-			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_TRIGGER, self.owner.message);
+			centerprint(other, self.message);
 		play2(other, "misc/talk.wav");
 	}
 }
@@ -1741,7 +1741,7 @@ void secret_touch()
 	if (self.message)
 	{
 		if (IS_CLIENT(other))
-			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_TRIGGER, self.message);
+			centerprint(other, self.message);
 		play2(other, "misc/talk.wav");
 	}
 }

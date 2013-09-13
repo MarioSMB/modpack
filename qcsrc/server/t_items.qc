@@ -1496,7 +1496,7 @@ void target_items_use (void)
 			remove(e);
 
 	if(GiveItems(activator, 0, tokenize_console(self.netname)))
-		Send_Notification(NOTIF_ONE, activator, MSG_CENTER, CENTER_TRIGGER, self.message);
+		centerprint(activator, self.message);
 }
 
 void spawnfunc_target_items (void)
