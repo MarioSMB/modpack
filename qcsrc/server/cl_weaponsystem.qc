@@ -1297,7 +1297,7 @@ void W_DecreaseAmmo(.float ammo_type, float ammo_use, float ammo_reload)
 		self.(weapon_load[self.weapon]) = self.clip_load;
 	}
 	else
-		self.(self.current_ammo) -= ammo_use;
+		self.ammo_type -= ammo_use;
 }
 
 // weapon reloading code
