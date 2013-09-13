@@ -98,10 +98,6 @@ void W_MinstaNex_Attack (void)
 	float flying;
 	float minstanex_damage = ((autocvar_g_balance_minstanex_damage) ? autocvar_g_balance_minstanex_damage : 10000);
 	
-	// just incase they're somehow not updated
-	if not(self.minsta_refire)
-		self.minsta_refire = autocvar_g_balance_minstanex_refire;
-	
 	if not(self.minsta_range)
 		self.minsta_range = ((autocvar_g_balance_minstanex_distance) ? autocvar_g_balance_minstanex_distance : MAX_SHOT_DISTANCE);
 		
