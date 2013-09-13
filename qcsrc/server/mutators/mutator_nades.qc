@@ -279,19 +279,26 @@ void nade_prime()
 	self.nade = spawn();
 	setmodel(self.nade, "null");
 	setattachment(self.nade, self, "bip01 l hand");
-	if not ( autocvar_g_nades_napalm  )
-	{
-		self.nade.classname = "nade";
-	}
-	else if ( autocvar_g_nades_napalm > 1 )
+
+	self.nade.classname = "nade";
+
+	if ( autocvar_g_nades_napalm > 1 )
 	{
 		self.nade.classname = "nade_napalm";
 	}
-	else if ( autocvar_g_nades_napalm == 1 && self.bonus_nades )
+	else if ( autocvar_g_nades_napalm == 1 )
 	{
-		self.bonus_nades --;
-		self.nade.classname = "nade_napalm";
+		if ( self.strength_finished && cvar("g_nades_napalm_onstrength") )
+		{
+			self.nade.classname = "nade_napalm";
+		}
+		else if ( self.bonus_nades )
+		{
+			self.bonus_nades --;
+			self.nade.classname = "nade_napalm";
+		}
 	}
+	
 	self.nade.realowner = self;
 	self.nade.colormap = self.colormap;
 	self.nade.glowmod = self.glowmod;
