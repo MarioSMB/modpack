@@ -530,8 +530,8 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_4(flag, CENTER_CTF_PICKUP_));
 	if(ctf_stalemate) { Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_STALEMATE_CARRIER); }
 	
-	Send_Notification(NOTIF_TEAM_EXCEPT, player, MSG_CHOICE, APP_TEAM_ENT_4(player, CHOICE_CTF_PICKUP_TEAM_), Team_ColorCode(player.team), player.netname);
-	Send_Notification(NOTIF_TEAM, flag, MSG_CHOICE, APP_TEAM_ENT_4(player, CHOICE_CTF_PICKUP_ENEMY_), Team_ColorCode(player.team), player.netname);
+	Send_Notification(NOTIF_TEAM_EXCEPT, player, MSG_CHOICE, APP_TEAM_ENT_4(flag, CHOICE_CTF_PICKUP_TEAM_), Team_ColorCode(player.team), player.netname);
+	Send_Notification(NOTIF_TEAM, flag, MSG_CHOICE, APP_TEAM_ENT_4(flag, CHOICE_CTF_PICKUP_ENEMY_), Team_ColorCode(player.team), player.netname);
 	
 	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTEN_NONE);
 	
