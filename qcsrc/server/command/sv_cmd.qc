@@ -512,14 +512,12 @@ void GameCommand_cointoss(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			entity client;
-			string result1 = (argv(2) ? strcat("^7", argv(1), "^3!\n") : "^1HEADS^3!\n");
-			string result2 = (argv(2) ? strcat("^7", argv(2), "^3!\n") : "^4TAILS^3!\n");
+			string result1 = (argv(2) ? strcat("^7", argv(1)) : "^1HEADS");
+			string result2 = (argv(2) ? strcat("^7", argv(2)) : "^4TAILS");
 			string choice = ((random() > 0.5) ? result1 : result2);
 			
-			FOR_EACH_CLIENT(client)
-				centerprint(client, strcat("^3Throwing coin... Result: ", choice));
-			bprint(strcat("^3Throwing coin... Result: ", choice));
+			Send_Notification(NOTIF_ALL, world, MSG_MULTI, MULTI_COINTOSS, choice);
+			
 			return;
 		}
 		

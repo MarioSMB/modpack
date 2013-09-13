@@ -1114,7 +1114,7 @@ void SV_PlayerPhysics()
 	{
 		// we get here if we ran out of ammo
 		if((self.items & IT_JETPACK) && self.BUTTON_HOOK && !(buttons_prev & 32) && self.ammo_fuel < 0.01)
-			sprint(self, "You don't have any fuel for the ^2Jetpack\n");
+			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_JETPACK_NOFUEL);
 
 		// walking
 		makevectors(self.v_angle_y * '0 1 0');
@@ -1197,7 +1197,7 @@ void SV_PlayerPhysics()
 		float wishspeed0;
 		// we get here if we ran out of ammo
 		if((self.items & IT_JETPACK) && self.BUTTON_HOOK && !(buttons_prev & 32) && self.ammo_fuel < 0.01)
-			sprint(self, "You don't have any fuel for the ^2Jetpack\n");
+			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_JETPACK_NOFUEL);
 
 		if(maxspd_mod < 1)
 		{

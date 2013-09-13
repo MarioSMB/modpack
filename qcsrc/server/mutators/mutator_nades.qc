@@ -38,13 +38,18 @@ void nade_spawn(entity _nade)
 	timer.owner = _nade;	
 	timer.skin = 10;
 	
-	switch(_nade.realowner.team)
+	if ( _nade.classname == "nade_napalm" )
+		p = PROJECTILE_NADE_NAPALM;
+	else
 	{
-		case NUM_TEAM_1: p = PROJECTILE_NADE_RED; break;
-		case NUM_TEAM_2: p = PROJECTILE_NADE_BLUE; break;
-		case NUM_TEAM_3: p = PROJECTILE_NADE_YELLOW; break;
-		case NUM_TEAM_4: p = PROJECTILE_NADE_PINK; break;
-		default:		 p = PROJECTILE_NADE; break;
+		switch(_nade.realowner.team)
+		{
+			case NUM_TEAM_1: p = PROJECTILE_NADE_RED; break;
+			case NUM_TEAM_2: p = PROJECTILE_NADE_BLUE; break;
+			case NUM_TEAM_3: p = PROJECTILE_NADE_YELLOW; break;
+			case NUM_TEAM_4: p = PROJECTILE_NADE_PINK; break;
+			default:		 p = PROJECTILE_NADE; break;
+		}
 	}
 	
 	CSQCProjectile(_nade, TRUE, p, TRUE);
@@ -361,19 +366,26 @@ void nade_prime()
 	self.nade = spawn();
 	setmodel(self.nade, "null");
 	setattachment(self.nade, self, "bip01 l hand");
-	if not ( autocvar_g_nades_napalm  )
-	{
-		self.nade.classname = "nade";
-	}
-	else if ( autocvar_g_nades_napalm > 1 )
+
+	self.nade.classname = "nade";
+
+	if ( autocvar_g_nades_napalm > 1 )
 	{
 		self.nade.classname = "nade_napalm";
 	}
-	else if ( autocvar_g_nades_napalm == 1 && self.bonus_nades )
+	else if ( autocvar_g_nades_napalm == 1 )
 	{
-		self.bonus_nades --;
-		self.nade.classname = "nade_napalm";
+		if ( self.strength_finished && cvar("g_nades_napalm_onstrength") )
+		{
+			self.nade.classname = "nade_napalm";
+		}
+		else if ( self.bonus_nades )
+		{
+			self.bonus_nades --;
+			self.nade.classname = "nade_napalm";
+		}
 	}
+	
 	self.nade.realowner = self;
 	self.nade.colormap = self.colormap;
 	self.nade.glowmod = self.glowmod;

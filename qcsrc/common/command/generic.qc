@@ -489,19 +489,21 @@ void GenericCommand_restartnotifs(float request)
 			print(sprintf(
 				strcat(
 					"Restart_Notifications(): Restarting %d notifications... ",
-					"Counts: MSG_ANNCE = %d, MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d\n"
+					"Counts: MSG_ANNCE = %d, MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d, MSG_CHOICE = %d\n"
 				),
 				(
 					NOTIF_ANNCE_COUNT +
 					NOTIF_INFO_COUNT +
 					NOTIF_CENTER_COUNT +
-					NOTIF_MULTI_COUNT
+					NOTIF_MULTI_COUNT +
+					NOTIF_CHOICE_COUNT
 				),
 				NOTIF_ANNCE_COUNT,
 				NOTIF_INFO_COUNT,
 				NOTIF_CENTER_COUNT,
-				NOTIF_MULTI_COUNT
-			));
+				NOTIF_MULTI_COUNT,
+				NOTIF_CHOICE_COUNT
+			));	
 			Destroy_All_Notifications();
 			CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 			#else

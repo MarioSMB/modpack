@@ -33,7 +33,7 @@ float Nagger_SendEntity(entity to, float sendflags)
 		if(to.vote_selection == 0)
 			nags |= 8;
 	}
-	if(inWarmupStage)
+	if(warmup_stage)
 		nags |= 16;
 
 	if(sendflags & 64)
@@ -191,7 +191,7 @@ void VoteCount(float first_count)
 	vote_accept_count = vote_reject_count = vote_abstain_count = 0;
 	
 	float spectators_allowed = ((autocvar_sv_vote_nospectators != 2) 
-				|| ((autocvar_sv_vote_nospectators == 1) && (inWarmupStage || gameover))
+				|| ((autocvar_sv_vote_nospectators == 1) && (warmup_stage || gameover))
 				|| (autocvar_sv_vote_nospectators == 0));
 				
 	float vote_player_count = 0, notvoters = 0;
@@ -429,7 +429,7 @@ void ReadyRestart_force()
 	restart_mapalreadyrestarted = 0; // reset this var, needed when cvar sv_ready_restart_repeatable is in use
 
 	// disable the warmup global for the server
-	inWarmupStage = 0; // once the game is restarted the game is in match stage
+	warmup_stage = 0; // once the game is restarted the game is in match stage
 
 	// reset the .ready status of all players (also spectators)
 	FOR_EACH_REALCLIENT(tmp_player) { tmp_player.ready = 0; }
@@ -778,7 +778,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 		case CMD_REQUEST_COMMAND:
 		{
 			float spectators_allowed = ((autocvar_sv_vote_nospectators != 2) 
-				|| ((autocvar_sv_vote_nospectators == 1) && inWarmupStage) 
+				|| ((autocvar_sv_vote_nospectators == 1) && warmup_stage) 
 				|| (autocvar_sv_vote_nospectators == 0));
 				
 			float tmp_playercount = 0;
@@ -883,7 +883,7 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 					default: // calling a vote for master
 					{
 						float spectators_allowed = ((autocvar_sv_vote_nospectators != 2) 
-							|| ((autocvar_sv_vote_nospectators == 1) && inWarmupStage) 
+							|| ((autocvar_sv_vote_nospectators == 1) && warmup_stage) 
 							|| (autocvar_sv_vote_nospectators == 0));
 						
 						if not(autocvar_sv_vote_master_callable) { print_to(caller, "^1Vote to become vote master is not allowed."); }

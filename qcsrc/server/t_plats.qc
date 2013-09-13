@@ -904,14 +904,14 @@ float door_check_keys(void) {
 		// some keys were used
 		if (other.key_door_messagetime <= time) {
 			play2(other, "misc/talk.wav");
-			centerprint(other, strcat("You also need ", item_keys_keylist(door.itemkeys), "!"));
+			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_ALSONEED, item_keys_keylist(door.itemkeys));
 			other.key_door_messagetime = time + 2;
 		}
 	} else {
 		// no keys were used
 		if (other.key_door_messagetime <= time) {
 			play2(other, "misc/talk.wav");
-			centerprint(other, strcat("You need ", item_keys_keylist(door.itemkeys), "!"));
+			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_NEED, item_keys_keylist(door.itemkeys));
 			other.key_door_messagetime = time + 2;
 		}
 	}
@@ -919,7 +919,7 @@ float door_check_keys(void) {
 	if (door.itemkeys) {
 		// door is now unlocked
 		play2(other, "misc/talk.wav");
-		centerprint(other, "Door unlocked!");
+		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_UNLOCKED);
 		return TRUE;
 	} else
 		return FALSE;
@@ -1068,7 +1068,7 @@ void door_touch()
 	if (!(self.owner.dmg) && (self.owner.message != ""))
 	{
 		if (IS_CLIENT(other))
-			centerprint (other, self.owner.message);
+			centerprint(other, self.message);
 		play2(other, "misc/talk.wav");
 	}
 }
@@ -1741,7 +1741,7 @@ void secret_touch()
 	if (self.message)
 	{
 		if (IS_CLIENT(other))
-			centerprint (other, self.message);
+			centerprint(other, self.message);
 		play2(other, "misc/talk.wav");
 	}
 }

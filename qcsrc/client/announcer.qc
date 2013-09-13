@@ -1,16 +1,3 @@
-void Announcer_Play(string announcement)
-{
-	/*if((announcement != previous_announcement) || (time >= (previous_announcement_time + autocvar_cl_announcer_antispam)))
-	{
-		sound(world, CH_INFO, strcat("announcer/", autocvar_cl_announcer, "/", announcement, ".wav"), VOL_BASEVOICE, ATTEN_NONE);
-
-		if(previous_announcement) { strunzone(previous_announcement); }
-		
-		previous_announcement = strzone(announcement);
-		previous_announcement_time = time;
-	}*/
-}
-
 float announcer_1min;
 float announcer_5min;
 void Announcer_Countdown() 
@@ -41,15 +28,14 @@ void Announcer_Countdown()
 	else // countdown is still going
 	{
 		if(roundstarttime == starttime)
-			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, countdown_rounded);
-		else
-			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_GAMESTART, countdown_rounded);
-
-		switch(countdown_rounded)
 		{
-			case 1: Local_Notification(MSG_ANNCE, ANNCE_NUM_1); break;
-			case 2: Local_Notification(MSG_ANNCE, ANNCE_NUM_2); break;
-			case 3: Local_Notification(MSG_ANNCE, ANNCE_NUM_3); break;
+			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_ROUNDSTART, countdown_rounded);
+			Local_Notification(MSG_ANNCE, Announcer_PickNumber(CNT_ROUNDSTART, countdown_rounded));
+		}
+		else
+		{
+			Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_GAMESTART, countdown_rounded);
+			Local_Notification(MSG_ANNCE, Announcer_PickNumber(CNT_GAMESTART, countdown_rounded));
 		}
 
 		self.nextthink = (starttime - (countdown - 1));
