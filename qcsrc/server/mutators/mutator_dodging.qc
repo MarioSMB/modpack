@@ -58,7 +58,7 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	if(g_dodging == 2)
 		clean_up_and_do_nothing = 0; // forced enabled
 		
-	if(self.frozen)
+	if(self.frozen == 1)
 		clean_up_and_do_nothing = 0; // also enabled in freezetag
 
 	// when swimming, no dodging allowed..
@@ -185,7 +185,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	
 	float frozen_dodging, frozen_no_doubletap;
 	float do_nothing = 0;
-	frozen_dodging = (self.frozen && autocvar_sv_dodging_frozen);
+	frozen_dodging = (self.frozen == 1 && autocvar_sv_dodging_frozen);
 	frozen_no_doubletap = (frozen_dodging && !autocvar_sv_dodging_frozen_doubletap);
 
 	float dodge_detected = 0;
