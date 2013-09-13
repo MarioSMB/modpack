@@ -115,7 +115,7 @@ float GrapplingHookSend(entity to, float sf)
 
 void GrapplingHookThink()
 {
-	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch, s;
+	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch, s, frozen_pulling;
 	vector dir, org, end, v0, dv, v, myorg, vs;
 	if(self.realowner.hook != self)	// how did that happen?
 	{
@@ -167,6 +167,8 @@ void GrapplingHookThink()
 		ropeairfriction = autocvar_g_balance_grapplehook_airfriction;//0.2
 		// while hanging on the rope, this friction component will help you a
 		// bit to control the rope
+		
+		frozen_pulling = (autocvar_g_grappling_hook_tarzan >= 2 && autocvar_g_balance_grapplehook_pull_frozen);
 
 		dir = self.origin - myorg;
 		dist = vlen(dir);
@@ -211,8 +213,11 @@ void GrapplingHookThink()
 					{
 						entity aim_ent = ((self.aiment.vehicle_flags & VHF_ISVEHICLE && self.aiment.owner) ? self.aiment.owner : self.aiment);
 						v = v - dv * 0.5;
-						self.aiment.velocity = self.aiment.velocity - dv * 0.5;
-						self.aiment.flags &= ~FL_ONGROUND;
+						if((frozen_pulling && self.aiment.frozen) || !frozen_pulling)
+						{
+							self.aiment.velocity = self.aiment.velocity - dv * 0.5;
+							self.aiment.flags &= ~FL_ONGROUND;
+						}
 						aim_ent.pusher = self.realowner;
 						aim_ent.pushltime = time + autocvar_g_maxpushtime;
 						aim_ent.istypefrag = aim_ent.BUTTON_CHAT;
@@ -222,7 +227,8 @@ void GrapplingHookThink()
 				self.realowner.flags &= ~FL_ONGROUND;
 			}
 
-			self.realowner.velocity = WarpZone_RefSys_TransformVelocity(self, self.realowner, v);
+			if not(frozen_pulling)
+				self.realowner.velocity = WarpZone_RefSys_TransformVelocity(self, self.realowner, v);
 		}
 		else
 		{
