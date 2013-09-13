@@ -270,6 +270,7 @@ float autocvar_g_balance_grapplehook_health;
 float autocvar_g_balance_grapplehook_length_min;
 float autocvar_g_balance_grapplehook_speed_fly;
 float autocvar_g_balance_grapplehook_speed_pull;
+float autocvar_g_balance_grapplehook_pull_frozen;
 float autocvar_g_balance_grapplehook_stretch;
 float autocvar_g_balance_grapplehook_damagedbycontents;
 float autocvar_g_balance_grenadelauncher_bouncefactor;
