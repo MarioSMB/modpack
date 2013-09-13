@@ -1680,7 +1680,7 @@ float WinningCondition_Onslaught()
 
 	WinningConditionHelper(); // set worldstatus
 
-	if(inWarmupStage)
+	if(warmup_stage)
 		return WINNING_NO;
 
 	// first check if the game has ended
@@ -2073,7 +2073,7 @@ void CheckRules_World()
 	fraglimit = autocvar_fraglimit;
 	leadlimit = autocvar_leadlimit;
 
-	if(inWarmupStage || time <= game_starttime) // NOTE: this is <= to prevent problems in the very tic where the game starts
+	if(warmup_stage || time <= game_starttime) // NOTE: this is <= to prevent problems in the very tic where the game starts
 	{
 		if(timelimit > 0)
 			timelimit = 0; // timelimit is not made for warmup

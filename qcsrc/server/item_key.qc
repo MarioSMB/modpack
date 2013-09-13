@@ -73,7 +73,7 @@ void item_key_touch(void) {
 	other.itemkeys |= self.itemkeys;
 	play2(other, self.noise);
 	
-	centerprint(other, self.message);
+	Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_TRIGGER, self.message);
 };
 
 /**
@@ -333,12 +333,12 @@ void trigger_keylock_touch(void) {
 		if (key_used) {
 			// one or more keys were given, but others are still missing!
 			play2(other, self.noise1);
-			centerprint(other, strcat("You also need ", item_keys_keylist(self.itemkeys), "!"));
+			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_ALSONEED, item_keys_keylist(self.itemkeys));
 			other.key_door_messagetime = time + 2;
 		} else if (other.key_door_messagetime <= time) {
 			// no keys were given
 			play2(other, self.noise2);
-			centerprint(other, strcat("You need ", item_keys_keylist(self.itemkeys), "!"));
+			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_DOOR_LOCKED_NEED, item_keys_keylist(self.itemkeys));
 			other.key_door_messagetime = time + 2;
 		}
 		
@@ -352,7 +352,7 @@ void trigger_keylock_touch(void) {
 	} else {
 		// all keys were given!
 		play2(other, self.noise);
-		centerprint(other, self.message);
+		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_TRIGGER, self.message);
 		
 		if (self.target)
 			trigger_keylock_trigger(self.target);

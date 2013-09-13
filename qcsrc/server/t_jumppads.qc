@@ -195,7 +195,7 @@ void trigger_push_touch()
 			if(IS_REAL_CLIENT(other))
 			{
 				if(self.message)
-					centerprint(other, self.message);
+					Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_TRIGGER, self.message);
 			}
 			else
 				other.lastteleporttime = time;

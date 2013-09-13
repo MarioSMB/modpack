@@ -429,9 +429,7 @@ MUTATOR_HOOKFUNCTION(superspec_BuildMutatorsPrettyString)
 void superspec_hello()
 {
 	if(self.enemy.crypto_idfp == "")
-		centerprint(self.enemy, "Your client have/allow no crypto id, superspec options will not be saved/restored.");
-	else
-		centerprint(self.enemy, sprintf("Hello %s\nSince your client has a Crypto ID, your superspec preferences will be persisted on this server.", self.enemy.netname));
+		Send_Notification(NOTIF_ONE_ONLY, self.enemy, MSG_INFO, INFO_SUPERSPEC_MISSING_UID);
 
 	remove(self);
 }

@@ -391,8 +391,7 @@ void onslaught_generator_think()
 		{
 			if (!overtime_msg_time)
 			{
-				FOR_EACH_PLAYER(e)
-					centerprint(e, "^3Now playing ^1OVERTIME^3!\n^3Generators start now to decay.\n^3The more control points your team holds,\n^3the faster the enemy generator decays.");
+				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_OVERTIME_CONTROLPOINT);
 				overtime_msg_time = time;
 			}
 			// self.max_health / 300 gives 5 minutes of overtime.
@@ -423,9 +422,9 @@ void onslaught_generator_think()
             self.wait = time + 5;
             FOR_EACH_REALPLAYER(e)
             {
-                if(e.team == self.team)
+				if not(IsDifferentTeam(e, self))
                 {
-                    centerprint(e, "^1Your generator is NOT shielded!\n^7Re-capture controlpoints to shield it!");
+					Send_Notification(NOTIF_ONE, e, MSG_CENTER, CENTER_ONS_NOTSHIELDED);
                     soundto(MSG_ONE, e, CHAN_AUTO, "kh/alarm.wav", VOL_BASE, ATTEN_NONE);    // FIXME: Uniqe sound?
                 }
             }
@@ -576,7 +575,7 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 	float i;
 	if (damage <= 0)
 		return;
-	if(inWarmupStage)
+	if(warmup_stage)
 		return;
 	if (attacker != self)
 	{
@@ -614,7 +613,7 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 #endif
 		self.lasthealth = self.health;
 	}
-	else if not(inWarmupStage)
+	else if not(warmup_stage)
 	{
 		if (attacker == self)
 			bprint(Team_ColoredFullName(self.team), " generator spontaneously exploded due to overtime!\n");

@@ -627,7 +627,7 @@ float Item_GiveTo(entity item, entity player)
 	{
 		pickedup = TRUE;
 		player.items |= it;
-		sprint (player, strcat("You got the ^2", item.netname, "\n"));
+		Send_Notification(NOTIF_ONE, player, MSG_INFO, INFO_ITEM_WEAPON_GOT, item.netname);
 	}
 
 	if (item.strength_finished)
@@ -1496,7 +1496,7 @@ void target_items_use (void)
 			remove(e);
 
 	if(GiveItems(activator, 0, tokenize_console(self.netname)))
-		centerprint(activator, self.message);
+		Send_Notification(NOTIF_ONE, activator, MSG_CENTER, CENTER_TRIGGER, self.message);
 }
 
 void spawnfunc_target_items (void)

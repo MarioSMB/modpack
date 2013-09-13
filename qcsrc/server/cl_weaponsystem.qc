@@ -748,7 +748,9 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			}
 		}
 		else
+		{
 			Send_WeaponComplain (cl, wpn, W_Name(wpn), 2);
+		}
 
 		play2(cl, "weapons/unavailable.wav");
 	}

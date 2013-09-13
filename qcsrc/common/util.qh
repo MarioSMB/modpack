@@ -417,5 +417,11 @@ void dedicated_print(string input);
 #endif
 
 #ifndef MENUQC
-float Announcer_PickNumber(float num);
+#define CNT_NORMAL 1
+#define CNT_GAMESTART 2
+#define CNT_IDLE 3
+#define CNT_KILL 4
+#define CNT_RESPAWN 5
+#define CNT_ROUNDSTART 6
+float Announcer_PickNumber(float type, float num);
 #endif

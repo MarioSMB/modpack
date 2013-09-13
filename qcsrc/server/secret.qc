@@ -19,7 +19,7 @@ void trigger_secret_touch() {
 	//print(ftos(secret_counter.count), "\n");
 
 	// centerprint message (multi_touch() doesn't always call centerprint())
-	centerprint(other, self.message);
+	Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_TRIGGER, self.message);
 	self.message = "";
 	
 	// handle normal trigger features

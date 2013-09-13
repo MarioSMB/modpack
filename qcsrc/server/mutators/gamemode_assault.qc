@@ -68,15 +68,7 @@ void assault_objective_decrease_use()
 			oldself = self;
 			self = oldself.enemy;
 			if(self.message)
-			{
-				entity player;
-				string s;
-				FOR_EACH_PLAYER(player)
-				{
-					s = strcat(self.message, "\n");
-					centerprint(player, s);
-				}
-			}
+				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_TRIGGER, self.message);
 
 			oldactivator = activator;
 			activator = oldself;
@@ -546,9 +538,9 @@ void havocbot_ast_reset_role(entity bot)
 MUTATOR_HOOKFUNCTION(assault_PlayerSpawn)
 {
 	if(self.team == assault_attacker_team)
-		centerprint(self, "You are attacking!");
+		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_ASSAULT_ATTACKING);
 	else
-		centerprint(self, "You are defending!");
+		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_ASSAULT_DEFENDING);
 		
 	return FALSE;
 }
