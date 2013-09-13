@@ -100,7 +100,7 @@ float CA_CheckWinner()
 
 void CA_RoundStart()
 {
-	if(inWarmupStage)
+	if(warmup_stage)
 		allowed_to_spawn = TRUE;
 	else
 		allowed_to_spawn = FALSE;

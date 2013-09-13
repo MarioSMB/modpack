@@ -98,10 +98,6 @@ void W_MinstaNex_Attack (void)
 	float flying;
 	float minstanex_damage = ((autocvar_g_balance_minstanex_damage) ? autocvar_g_balance_minstanex_damage : 10000);
 	
-	// just incase they're somehow not updated
-	if not(self.minsta_refire)
-		self.minsta_refire = autocvar_g_balance_minstanex_refire;
-	
 	if not(self.minsta_range)
 		self.minsta_range = ((autocvar_g_balance_minstanex_distance) ? autocvar_g_balance_minstanex_distance : MAX_SHOT_DISTANCE);
 		
@@ -272,6 +268,7 @@ void W_MinstaNex_SuperBlast()
 	// declarations
 	float multiplier, multiplier_from_accuracy, multiplier_from_distance;
 	float final_damage; //, final_spread;
+	float minstanex_ammo = ((g_minstagib) ? 1 : autocvar_g_balance_minstanex_ammo);
 	vector final_force, center, vel;
 	entity head, next;
 
@@ -397,6 +394,8 @@ void W_MinstaNex_SuperBlast()
 		shockwave_hit_damage[i] = 0;
 	}
 	//print("queue was ", ftos(queue), ".\n\n");
+	
+	W_DecreaseAmmo(ammo_cells, minstanex_ammo, autocvar_g_balance_minstanex_reload_ammo);
 }
 
 void W_RocketMinsta_Laser_Explode (void)

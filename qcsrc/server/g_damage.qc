@@ -143,7 +143,7 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 				GiveFrags_randomweapons.classname = "GiveFrags_randomweapons";
 			}
 
-			if(inWarmupStage)
+			if(warmup_stage)
 				GiveFrags_randomweapons.weapons = warmup_start_weapons;
 			else
 				GiveFrags_randomweapons.weapons = start_weapons;
@@ -247,7 +247,7 @@ void Obituary_SpecialDeath(
 		{
 			if(deathent.death_msgmurder)
 			{
-				Send_Notification_WOVA(
+				Send_Notification_WOCOVA(
 					NOTIF_ONE,
 					notif_target,
 					MSG_MULTI,
@@ -255,7 +255,7 @@ void Obituary_SpecialDeath(
 					s1, s2, s3, "",
 					f1, f2, f3, 0
 				);
-				Send_Notification_WOVA(
+				Send_Notification_WOCOVA(
 					NOTIF_ALL_EXCEPT,
 					notif_target,
 					MSG_INFO,
@@ -269,7 +269,7 @@ void Obituary_SpecialDeath(
 		{
 			if(deathent.death_msgself)
 			{
-				Send_Notification_WOVA(
+				Send_Notification_WOCOVA(
 					NOTIF_ONE,
 					notif_target,
 					MSG_MULTI,
@@ -277,7 +277,7 @@ void Obituary_SpecialDeath(
 					s1, s2, s3, "",
 					f1, f2, f3, 0
 				);
-				Send_Notification_WOVA(
+				Send_Notification_WOCOVA(
 					NOTIF_ALL_EXCEPT,
 					notif_target,
 					MSG_INFO,
@@ -308,7 +308,7 @@ float Obituary_WeaponDeath(
 
 		if(death_message)
 		{
-			Send_Notification_WOVA(
+			Send_Notification_WOCOVA(
 				NOTIF_ONE,
 				notif_target,
 				MSG_MULTI,
@@ -316,7 +316,7 @@ float Obituary_WeaponDeath(
 				s1, s2, s3, "",
 				f1, f2, 0, 0
 			);
-			Send_Notification_WOVA(
+			Send_Notification_WOCOVA(
 				NOTIF_ALL_EXCEPT,
 				notif_target,
 				MSG_INFO,
@@ -462,30 +462,51 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				kill_count_to_target = 0;
 			}
 
-			float verbose_allowed = (autocvar_notification_server_allows_frag_verbose && ((autocvar_notification_server_allows_frag_verbose == 2) || inWarmupStage));
 			if(targ.istypefrag)
 			{
-				if(attacker.FRAG_VERBOSE && verbose_allowed)
-					Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE, targ.netname, kill_count_to_attacker, (IS_BOT_CLIENT(targ) ? NO_MSG : targ.ping));
-				else
-					Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_MURDER_TYPEFRAG, targ.netname, kill_count_to_attacker);
-
-				if(targ.FRAG_VERBOSE && verbose_allowed)
-					Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE, attacker.netname, kill_count_to_target, attacker.health, attacker.armorvalue, (IS_BOT_CLIENT(attacker) ? NO_MSG : attacker.ping));
-				else
-					Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_MURDER_TYPEFRAGGED, attacker.netname, kill_count_to_target);
+				Send_Notification(
+					NOTIF_ONE,
+					attacker,
+					MSG_CHOICE,
+					CHOICE_TYPEFRAG,
+					targ.netname,
+					kill_count_to_attacker,
+					(IS_BOT_CLIENT(targ) ? NO_MSG : targ.ping)
+				);
+				Send_Notification(
+					NOTIF_ONE,
+					targ,
+					MSG_CHOICE,
+					CHOICE_TYPEFRAGGED,
+					attacker.netname,
+					kill_count_to_target,
+					attacker.health,
+					attacker.armorvalue,
+					(IS_BOT_CLIENT(attacker) ? NO_MSG : attacker.ping)
+				);
 			}
 			else
 			{
-				if(attacker.FRAG_VERBOSE && verbose_allowed)
-					Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_MURDER_FRAG_VERBOSE, targ.netname, kill_count_to_attacker, (IS_BOT_CLIENT(targ) ? NO_MSG : targ.ping));
-				else
-					Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_MURDER_FRAG, targ.netname, kill_count_to_attacker);
-
-				if(targ.FRAG_VERBOSE && verbose_allowed)
-					Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_MURDER_FRAGGED_VERBOSE, attacker.netname, kill_count_to_target, attacker.health, attacker.armorvalue, (IS_BOT_CLIENT(attacker) ? NO_MSG : attacker.ping));
-				else
-					Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_MURDER_FRAGGED, attacker.netname, kill_count_to_target);
+				Send_Notification(
+					NOTIF_ONE,
+					attacker,
+					MSG_CHOICE,
+					CHOICE_FRAG,
+					targ.netname,
+					kill_count_to_attacker,
+					(IS_BOT_CLIENT(targ) ? NO_MSG : targ.ping)
+				);
+				Send_Notification(
+					NOTIF_ONE,
+					targ,
+					MSG_CHOICE,
+					CHOICE_FRAGGED,
+					attacker.netname,
+					kill_count_to_target,
+					attacker.health,
+					attacker.armorvalue,
+					(IS_BOT_CLIENT(attacker) ? NO_MSG : attacker.ping)
+				);
 			}
 
 			if not(Obituary_WeaponDeath(targ, TRUE, deathtype, targ.netname, attacker.netname, deathlocation, targ.killcount, kill_count_to_attacker))

@@ -103,6 +103,9 @@ float monster_isvalidtarget (entity targ, entity ent)
 
 	if not(IsDifferentTeam(targ, ent))
 		return FALSE; // enemy is on our team
+		
+	if (targ.frozen == 1 || (targ.frozen == 2 && ent.monsterid != MON_SPIDER))
+		return FALSE; // ignore frozen
 
 	if(autocvar_g_monsters_target_infront || ent.spawnflags & MONSTERFLAG_INFRONT)
 	if(ent.enemy != targ)

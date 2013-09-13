@@ -343,7 +343,7 @@ void ClientCommand_ready(float request) // todo: anti-spam for toggling readynes
 		{
 			if(IS_CLIENT(self))
 			{
-				if(inWarmupStage || autocvar_sv_ready_restart || g_race_qualifying == 2)
+				if(warmup_stage || autocvar_sv_ready_restart || g_race_qualifying == 2)
 				{
 					if(!readyrestart_happened || autocvar_sv_ready_restart_repeatable)
 					{

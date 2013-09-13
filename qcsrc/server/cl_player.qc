@@ -896,7 +896,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	if not(IS_PLAYER(source))
 	{
 		if not(intermission_running)
-			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(inWarmupStage || gameover)))
+			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || gameover)))
 				teamsay = -1; // spectators
 	}
 

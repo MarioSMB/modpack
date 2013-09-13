@@ -299,5 +299,15 @@ MUTATOR_DEFINITION(mutator_dodging)
 		g_dodging = cvar("g_dodging");
 	}
 
+	// this just turns off the cvar.
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		g_dodging = 0;
+	}
+
+	MUTATOR_ONREMOVE
+	{
+	}
+
 	return 0;
 }

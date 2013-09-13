@@ -63,20 +63,13 @@ void assault_objective_decrease_use()
 			PlayerTeamScore_Add(activator, SP_ASSAULT_OBJECTIVES, ST_ASSAULT_OBJECTIVES, 1);
 			self.enemy.health = -1;
 
-			entity oldself, oldactivator;
+			entity oldself, oldactivator, head;
 
 			oldself = self;
 			self = oldself.enemy;
 			if(self.message)
-			{
-				entity player;
-				string s;
-				FOR_EACH_PLAYER(player)
-				{
-					s = strcat(self.message, "\n");
-					centerprint(player, s);
-				}
-			}
+			FOR_EACH_PLAYER(head)
+				centerprint(head, self.message);
 
 			oldactivator = activator;
 			activator = oldself;
@@ -546,9 +539,9 @@ void havocbot_ast_reset_role(entity bot)
 MUTATOR_HOOKFUNCTION(assault_PlayerSpawn)
 {
 	if(self.team == assault_attacker_team)
-		centerprint(self, "You are attacking!");
+		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_ASSAULT_ATTACKING);
 	else
-		centerprint(self, "You are defending!");
+		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_ASSAULT_DEFENDING);
 		
 	return FALSE;
 }

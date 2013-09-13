@@ -221,7 +221,7 @@ void StartFrame (void)
 	game_delay_last = game_delay;
 
 	// if in warmup stage and limit for warmup is hit start match
-	if (inWarmupStage)
+	if (warmup_stage)
 	if ((g_warmup_limit > 0 && time >= g_warmup_limit)
 	 || (g_warmup_limit == 0 && autocvar_timelimit != 0 && time >= autocvar_timelimit * 60))
 	{

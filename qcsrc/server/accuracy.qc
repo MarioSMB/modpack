@@ -111,7 +111,7 @@ float accuracy_isgooddamage(entity attacker, entity targ)
 {
 	float targ_isvalid = ((g_invasion) ? targ.flags & FL_MONSTER : IS_CLIENT(targ));
 
-	if(!inWarmupStage)
+	if(!warmup_stage)
 	if(targ_isvalid)
 	if not(attacker.flags & FL_MONSTER) // no accuracy for monsters
 	if(targ.deadflag == DEAD_NO)
@@ -123,7 +123,7 @@ float accuracy_isgooddamage(entity attacker, entity targ)
 
 float accuracy_canbegooddamage(entity attacker)
 {
-	if(!inWarmupStage)
+	if(!warmup_stage)
 		return TRUE;
 	return FALSE;
 }

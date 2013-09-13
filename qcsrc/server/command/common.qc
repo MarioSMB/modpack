@@ -534,7 +534,7 @@ void CommonCommand_timeout(float request, entity caller) // DEAR GOD THIS COMMAN
 				
 				if(timeout_status) { print_to(caller, "^7Error: A timeout is already active."); }
 				else if(vote_called) { print_to(caller, "^7Error: You can not call a timeout while a vote is active."); }
-				else if(inWarmupStage && !g_warmup_allow_timeout) { print_to(caller, "^7Error: You can not call a timeout in warmup-stage."); }
+				else if(warmup_stage && !g_warmup_allow_timeout) { print_to(caller, "^7Error: You can not call a timeout in warmup-stage."); }
 				else if(time < game_starttime) { print_to(caller, "^7Error: You can not call a timeout while the map is being restarted."); }
 				else if(caller && (caller.allowed_timeouts < 1)) { print_to(caller, "^7Error: You already used all your timeout calls for this map."); }
 				else if(caller && !IS_PLAYER(caller)) { print_to(caller, "^7Error: You must be a player to call a timeout."); }
