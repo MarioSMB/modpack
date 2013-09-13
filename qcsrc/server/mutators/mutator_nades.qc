@@ -62,6 +62,9 @@ void napalm_damage(float dist, float damage, float edgedamage, float burntime)
 	entity e;
 	float d;
 	vector p;
+	
+	if ( damage < 0 )
+		return;
 
 	RandomSelection_Init();
 	for(e = WarpZone_FindRadius(self.origin, dist, TRUE); e; e = e.chain)
@@ -116,8 +119,8 @@ void nade_napalm_ball()
 	proj.realowner = self.realowner;
 	proj.team = self.owner.team;
 	proj.classname = "grenade";
-	//proj.bot_dodge = TRUE;
-	//proj.bot_dodgerating = autocvar_g_nades_napalm_ball_damage;
+	proj.bot_dodge = TRUE;
+	proj.bot_dodgerating = autocvar_g_nades_napalm_ball_damage;
 	proj.movetype = MOVETYPE_BOUNCE;
 	proj.projectiledeathtype = DEATH_NADE_NAPALM;
 	PROJECTILE_MAKETRIGGER(proj);
