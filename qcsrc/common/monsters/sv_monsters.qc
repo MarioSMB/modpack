@@ -889,6 +889,7 @@ void monster_die(entity attacker)
 	self.ltime = time + 5;
 	
 	Unfreeze(self); // remove any icy remains
+	self.health = 0; // reset by Unfreeze
 
 	monster_dropitem();
 
