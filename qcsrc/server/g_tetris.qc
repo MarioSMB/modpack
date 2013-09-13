@@ -387,7 +387,7 @@ void DrawLine(float ln)
 
 void DrawPiece(float pc, float ln)
 {
-	float x, d, piece_ln, pcolor;
+	float x, piece_ln, pcolor;
 	vector piece_dat;
 	pcolor = PieceColor(pc);
 	WriteChar(MSG_ONE, TET_SPACE); // pad to 6
