@@ -67,21 +67,22 @@ void napalm_damage(float dist, float damage, float edgedamage, float burntime)
 
 	RandomSelection_Init();
 	for(e = WarpZone_FindRadius(self.origin, dist, TRUE); e; e = e.chain)
-	if(e.takedamage == DAMAGE_AIM) 
-	if(self.realowner != e || autocvar_g_nades_napalm_selfdamage) 
-	if(!IS_PLAYER(e) || !self.realowner || DIFF_TEAM(e, self))
-	{
-		p = e.origin;
-		p_x += e.mins_x + random() * (e.maxs_x - e.mins_x);
-		p_y += e.mins_y + random() * (e.maxs_y - e.mins_y);
-		p_z += e.mins_z + random() * (e.maxs_z - e.mins_z);
-		d = vlen(WarpZone_UnTransformOrigin(e, self.origin) - p);
-		if(d < dist)
+		if(e.takedamage == DAMAGE_AIM) 
+		if(self.realowner != e || autocvar_g_nades_napalm_selfdamage) 
+		if(!IS_PLAYER(e) || !self.realowner || DIFF_TEAM(e, self))
+		if not (e.frozen) 
 		{
-			e.fireball_impactvec = p;
-			RandomSelection_Add(e, 0, string_null, 1 / (1 + d), !Fire_IsBurning(e));
+			p = e.origin;
+			p_x += e.mins_x + random() * (e.maxs_x - e.mins_x);
+			p_y += e.mins_y + random() * (e.maxs_y - e.mins_y);
+			p_z += e.mins_z + random() * (e.maxs_z - e.mins_z);
+			d = vlen(WarpZone_UnTransformOrigin(e, self.origin) - p);
+			if(d < dist)
+			{
+				e.fireball_impactvec = p;
+				RandomSelection_Add(e, 0, string_null, 1 / (1 + d), !Fire_IsBurning(e));
+			}
 		}
-	}
 	if(RandomSelection_chosen_ent)
 	{
 		d = vlen(WarpZone_UnTransformOrigin(RandomSelection_chosen_ent, self.origin) - RandomSelection_chosen_ent.fireball_impactvec);

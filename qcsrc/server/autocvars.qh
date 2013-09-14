@@ -1401,7 +1401,7 @@ float autocvar_g_nades_napalm_ball_damage;
 float autocvar_g_nades_napalm_ball_damageforcescale;
 float autocvar_g_nades_napalm_ball_lifetime;
 float autocvar_g_nades_napalm_ball_radius;
-float autocvar_g_nades_napalm_bonus_freezetag;
+float autocvar_g_nades_napalm_bonus_unfreeze;
 float autocvar_g_nades_napalm_bonus_max;
 float autocvar_g_nades_napalm_bonus_frag;
 float autocvar_g_nades_napalm_blast;
