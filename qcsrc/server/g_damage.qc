@@ -350,6 +350,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	);
 	#endif
 	
+	nades_RemoveBonus(targ);
+	
 	// =======
 	// SUICIDE
 	// =======
@@ -406,6 +408,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 
 			// In this case, the death message will ALWAYS be "foo was betrayed by bar"
 			// No need for specific death/weapon messages...
+			
+			nades_RemoveBonus(attacker);
 		}
 		else
 		{

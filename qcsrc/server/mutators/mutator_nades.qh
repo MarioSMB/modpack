@@ -10,4 +10,8 @@ const float NADE_TYPE_NAPALM = 2;
 //const float NADE_TYPE_MONSTER = 3;
 
 void() nades_CheckThrow;
+
+// Give a bonus grenade to a player
 void(entity player) nades_GiveBonus;
+// Remove all bonus nades from a player
+void(entity player) nades_RemoveBonus;

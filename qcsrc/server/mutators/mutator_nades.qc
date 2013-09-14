@@ -371,6 +371,15 @@ void nades_GiveBonus(entity player)
 		}
 }
 
+void nades_RemoveBonus(entity player)
+{
+		if ( IS_PLAYER(player) )
+		{
+			player.bonus_nades = 0;
+		}
+}
+
+
 void nade_prime()
 {
 	if(self.nade)
@@ -389,13 +398,18 @@ void nade_prime()
 	switch(autocvar_g_nades_napalm)
 	{
 		case 2: n.nade_type = NADE_TYPE_NAPALM; break;
-		case 1: if((self.items & IT_STRENGTH && autocvar_g_nades_napalm_onstrength)
-				|| (self.bonus_nades >= 1))
-				{
-					n.nade_type = NADE_TYPE_NAPALM;
-					self.bonus_nades -= 1;
-					break;
-				}
+		case 1: 
+			if(self.items & IT_STRENGTH && autocvar_g_nades_napalm_onstrength)
+			{
+				n.nade_type = NADE_TYPE_NAPALM;
+				break;
+			}
+			else if (self.bonus_nades >= 1)
+			{
+				n.nade_type = NADE_TYPE_NAPALM;
+				self.bonus_nades -= 1;
+				break;
+			}
 		default:
 		case 0: n.nade_type = NADE_TYPE_NORMAL; break;
 	}
