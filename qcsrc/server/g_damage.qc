@@ -433,8 +433,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			}
 			#undef SPREE_ITEM
 			
-			if ( autocvar_g_nades_napalm_bonus_frag )
-				if ( attacker.killcount % autocvar_g_nades_napalm_bonus_frag == 0 )
+			if ( autocvar_g_nades_bonus_frag )
+				if ( attacker.killcount % autocvar_g_nades_bonus_frag == 0 )
 			{
 				nades_GiveBonus(attacker);
 			}

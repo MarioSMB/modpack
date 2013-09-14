@@ -593,7 +593,7 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE,  1, 4, "spree_cen s1 frag_stats",  NO_CPID, "0 0", _("^K1%sYou were typefragged by ^BG%s^BG%s"), _("^K1%sYou were scored against by ^BG%s^K1 while typing^BG%s")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE,     1, 2, "spree_cen s1 frag_ping",   NO_CPID, "0 0", _("^K1%sYou typefragged ^BG%s^BG%s"), _("^K1%sYou scored against ^BG%s^K1 while they were typing^BG%s")) \
 	MSG_CENTER_NOTIF(1, CENTER_NADE_THROW,            		0, 0, "",             CPID_NADES,          "0 0", _("^BGPress ^F2DROPWEAPON^BG again to toss the nade!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_NADE_BONUS,            		0, 0, "",             CPID_NADES,          "0 0", _("^F2You got a ^K1NAPALM GRENADE^F2!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_NADE_BONUS,            		0, 0, "",             CPID_NADES,          "0 0", _("^F2You got a ^K1BONUS GRENADE^F2!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_AUTOTEAMCHANGE,   0, 1, "death_team",   NO_CPID,             "0 0", _("^BGYou have been moved into a different team\nYou are now on: %s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_BETRAYAL,         0, 0, "",             NO_CPID,             "0 0", _("^K1Don't shoot your team mates!"), _("^K1Don't go against your team mates!")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_CAMP,             0, 0, "",             NO_CPID,             "0 0", _("^K1Die camper!"), _("^K1Reconsider your tactics, camper!")) \

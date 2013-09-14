@@ -363,8 +363,8 @@ void toss_nade(entity e, vector _velocity, float _time)
 
 void nades_GiveBonus(entity player)
 {
-	if ( autocvar_g_nades_napalm == 1 )
-		if ( IS_PLAYER(player) && player.bonus_nades < autocvar_g_nades_napalm_bonus_max )
+	if ( autocvar_g_nades_bonus )
+		if ( IS_PLAYER(player) && player.bonus_nades < autocvar_g_nades_bonus_max )
 		{
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_NADE_BONUS);
 			player.bonus_nades++;
@@ -382,6 +382,8 @@ void nades_RemoveBonus(entity player)
 
 void nade_prime()
 {
+	string nade_type_name;
+	
 	if(self.nade)
 		remove(self.nade);
 		
@@ -395,23 +397,20 @@ void nade_prime()
 
 	n.classname = "nade";
 	
-	switch(autocvar_g_nades_napalm)
+	if(self.items & IT_STRENGTH && autocvar_g_nades_bonus_onstrength)
+		nade_type_name = autocvar_g_nades_bonus_type;
+	else if (self.bonus_nades >= 1)
 	{
-		case 2: n.nade_type = NADE_TYPE_NAPALM; break;
-		case 1: 
-			if(self.items & IT_STRENGTH && autocvar_g_nades_napalm_onstrength)
-			{
-				n.nade_type = NADE_TYPE_NAPALM;
-				break;
-			}
-			else if (self.bonus_nades >= 1)
-			{
-				n.nade_type = NADE_TYPE_NAPALM;
-				self.bonus_nades -= 1;
-				break;
-			}
-		default:
-		case 0: n.nade_type = NADE_TYPE_NORMAL; break;
+		nade_type_name = autocvar_g_nades_bonus_type;
+		self.bonus_nades -= 1;
+	}
+	else
+		nade_type_name = autocvar_g_nades_nade_type;
+	
+	switch(nade_type_name)
+	{
+		case "napalm": n.nade_type = NADE_TYPE_NAPALM; break;
+		default: n.nade_type = NADE_TYPE_NORMAL; break;
 	}
 	
 	n.realowner = self;

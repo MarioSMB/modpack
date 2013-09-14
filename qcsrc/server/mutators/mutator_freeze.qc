@@ -189,10 +189,10 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 					{
 						PlayerScore_Add(other, SP_SCORE, +1);
 						
-						if ( autocvar_g_nades_napalm_bonus_unfreeze )
+						if ( autocvar_g_nades_bonus_unfreeze )
 						{
 							other.revivals_row++;
-							if ( other.revivals_row >= autocvar_g_nades_napalm_bonus_unfreeze )
+							if ( other.revivals_row >= autocvar_g_nades_bonus_unfreeze )
 							{
 								other.revivals_row = 0;
 								nades_GiveBonus(other);
