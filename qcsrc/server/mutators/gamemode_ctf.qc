@@ -3,6 +3,10 @@
 //  Last updated: September, 2012
 // ================================================================
 
+.float capture_spree;
+.float fckill_spree;
+.float return_spree;
+
 void ctf_FakeTimeLimit(entity e, float t)
 {
 	msg_entity = e;
@@ -416,6 +420,18 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	entity player = ((capturetype == CAPTURE_NORMAL) ? toucher : enemy_flag.ctf_dropper);
 	float old_time, new_time; 
 	
+	if ( autocvar_g_nades_bonus )
+	if ( IS_PLAYER(player) )
+	if ( autocvar_g_nades_bonus_ctf_captures )
+	{
+		player.capture_spree++;
+		if ( player.capture_spree >= autocvar_g_nades_bonus_ctf_captures )
+		{
+			player.capture_spree -= autocvar_g_nades_bonus_ctf_captures;
+			nades_GiveBonus(player);
+		}
+	}
+	
 	if not(player) { return; } // without someone to give the reward to, we can't possibly cap
 	if(player.fc_waskilled) { return; } // player died, so don't cap
 	if(CTF_DIFFTEAM(player, flag)) { return; }
@@ -478,6 +494,19 @@ void ctf_Handle_Return(entity flag, entity player)
 	{
 		PlayerTeamScore_AddScore(player, autocvar_g_ctf_score_return); // reward for return
 		PlayerScore_Add(player, SP_CTF_RETURNS, 1); // add to count of returns
+		
+		
+		if ( autocvar_g_nades_bonus )
+		if ( IS_PLAYER(player) )
+		if ( autocvar_g_nades_bonus_ctf_returns )
+		{
+			player.return_spree++;
+			if ( player.return_spree >= autocvar_g_nades_bonus_ctf_returns )
+			{
+				player.return_spree -= autocvar_g_nades_bonus_ctf_returns;
+				nades_GiveBonus(player);
+			}
+		}
 	}
 
 	TeamScore_AddToTeam(flag.team, ST_SCORE, -autocvar_g_ctf_score_penalty_returned); // punish the team who was last carrying it
@@ -1838,10 +1867,24 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDamage) // for changing damage and force values t
 
 MUTATOR_HOOKFUNCTION(ctf_PlayerDies)
 {
+	
+	frag_target.capture_spree = frag_target.fckill_spree = frag_target.return_spree = 0;
+
 	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)) && (frag_target.flagcarried))
 	{
 		PlayerTeamScore_AddScore(frag_attacker, autocvar_g_ctf_score_kill);
 		PlayerScore_Add(frag_attacker, SP_CTF_FCKILLS, 1);
+		
+		if ( autocvar_g_nades_bonus )
+			if ( autocvar_g_nades_bonus_ctf_fckills )
+		{
+			frag_attacker.fckill_spree++;
+			if ( frag_attacker.fckill_spree >= autocvar_g_nades_bonus_ctf_fckills )
+			{
+				frag_attacker.fckill_spree -= autocvar_g_nades_bonus_ctf_fckills;
+				nades_GiveBonus(frag_attacker);
+			}
+		}
 	}
 				
 	if(frag_target.flagcarried)
