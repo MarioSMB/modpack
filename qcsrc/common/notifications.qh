@@ -577,6 +577,8 @@ void Send_Notification_WOCOVA(
 	MULTITEAM_CENTER(1, CENTER_CTF_PICKUP_, 4,              0, 0, "",             CPID_CTF_LOWPRIO,    "0 0", _("^BGYou got the ^TC^TT^BG flag!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_ENEMY,            1, 0, "s1",           CPID_CTF_LOWPRIO,    "0 0", _("^BGThe %senemy^BG got your flag! Retrieve it!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_ENEMY_VERBOSE,    2, 0, "s1 s2 s1",     CPID_CTF_LOWPRIO,    "0 0", _("^BGThe %senemy (^BG%s%s)^BG got your flag! Retrieve it!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_ENEMY_TEAM,        1, 0, "s1",          CPID_CTF_LOWPRIO,    "0 0", _("^BGThe %senemy^BG got their flag! Retrieve it!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_ENEMY_TEAM_VERBOSE,2, 0, "s1 s2 s1",    CPID_CTF_LOWPRIO,    "0 0", _("^BGThe %senemy (^BG%s%s)^BG got their flag! Retrieve it!"), "") \
 	MULTITEAM_CENTER(1, CENTER_CTF_PICKUP_TEAM_, 4,         1, 0, "s1",           CPID_CTF_LOWPRIO,    "0 0", _("^BGYour %steam mate^BG got the ^TC^TT^BG flag! Protect them!"), "") \
 	MULTITEAM_CENTER(1, CENTER_CTF_PICKUP_TEAM_VERBOSE_, 4, 2, 0, "s1 s2 s1",     CPID_CTF_LOWPRIO,    "0 0", _("^BGYour %steam mate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"), "") \
 	MULTITEAM_CENTER(1, CENTER_CTF_RETURN_, 4,              0, 0, "",             CPID_CTF_LOWPRIO,    "0 0", _("^BGYou returned the ^TC^TT^BG flag!"), "") \
@@ -896,6 +898,7 @@ void Send_Notification_WOCOVA(
 	MULTITEAM_CHOICE(1, 2, CHOICE_CTF_CAPTURE_UNBROKEN_, 4,  MSG_INFO,    INFO_CTF_CAPTURE_,                INFO_CTF_CAPTURE_UNBROKEN_) \
 	MULTITEAM_CHOICE(1, 2, CHOICE_CTF_PICKUP_TEAM_, 4,       MSG_CENTER,  CENTER_CTF_PICKUP_TEAM_,          CENTER_CTF_PICKUP_TEAM_VERBOSE_) \
 	MSG_CHOICE_NOTIF(1, 2, CHOICE_CTF_PICKUP_ENEMY,          MSG_CENTER,  CENTER_CTF_PICKUP_ENEMY,          CENTER_CTF_PICKUP_ENEMY_VERBOSE) \
+	MSG_CHOICE_NOTIF(1, 2, CHOICE_CTF_PICKUP_ENEMY_TEAM,     MSG_CENTER,  CENTER_CTF_PICKUP_ENEMY_TEAM,     CENTER_CTF_PICKUP_ENEMY_TEAM_VERBOSE) \
 	MSG_CHOICE_NOTIF(1, 1, CHOICE_FRAG,                      MSG_CENTER,  CENTER_DEATH_MURDER_FRAG,         CENTER_DEATH_MURDER_FRAG_VERBOSE) \
 	MSG_CHOICE_NOTIF(1, 1, CHOICE_FRAGGED,                   MSG_CENTER,  CENTER_DEATH_MURDER_FRAGGED,      CENTER_DEATH_MURDER_FRAGGED_VERBOSE) \
 	MSG_CHOICE_NOTIF(1, 1, CHOICE_TYPEFRAG,                  MSG_CENTER,  CENTER_DEATH_MURDER_TYPEFRAG,     CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE) \

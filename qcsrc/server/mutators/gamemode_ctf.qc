@@ -497,6 +497,7 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 {
 	// declarations
 	float pickup_dropped_score; // used to calculate dropped pickup score
+	entity tmp_entity; // temporary entity
 	
 	// attach the flag to the player
 	player.fc_waskilled = FALSE;
@@ -525,7 +526,10 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	if(ctf_stalemate) { Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_STALEMATE_CARRIER); }
 	
 	Send_Notification(NOTIF_TEAM_EXCEPT, player, MSG_CHOICE, APP_TEAM_ENT_4(flag, CHOICE_CTF_PICKUP_TEAM_), Team_ColorCode(player.team), player.netname);
-	Send_Notification(NOTIF_TEAM, flag, MSG_CHOICE, CHOICE_CTF_PICKUP_ENEMY, Team_ColorCode(player.team), player.netname);
+	
+	FOR_EACH_PLAYER(tmp_entity)
+	if(CTF_SAMETEAM(flag, tmp_entity))
+		Send_Notification(NOTIF_ONE, tmp_entity, MSG_CHOICE, ((SAME_TEAM(flag, player)) ? CHOICE_CTF_PICKUP_ENEMY_TEAM : CHOICE_CTF_PICKUP_ENEMY), Team_ColorCode(player.team), player.netname);
 	
 	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTEN_NONE);
 	
