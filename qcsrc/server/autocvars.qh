@@ -1411,6 +1411,8 @@ float autocvar_g_nades_napalm_fountain_radius;
 float autocvar_g_nades_napalm_fountain_damage;
 float autocvar_g_nades_napalm_fountain_edgedamage;
 float autocvar_g_nades_napalm_burntime;
+float autocvar_g_nades_napalm_selfdamage;
+float autocvar_g_nades_napalm_onstrength;
 float autocvar_g_campcheck_damage;
 float autocvar_g_campcheck_distance;
 float autocvar_g_campcheck_interval;

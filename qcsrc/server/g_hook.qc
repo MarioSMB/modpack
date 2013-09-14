@@ -122,7 +122,7 @@ void GrapplingHookThink()
 		error("Owner lost the hook!\n");
 		return;
 	}
-	if(LostMovetypeFollow(self) || intermission_running || self.aiment.classname == "nade" || (round_handler_IsActive() && !round_handler_IsRoundStarted()))
+	if(LostMovetypeFollow(self) || intermission_running || (self.aiment.flags & FL_PROJECTILE) || (round_handler_IsActive() && !round_handler_IsRoundStarted()))
 	{
 		RemoveGrapplingHook(self.realowner);
 		return;

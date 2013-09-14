@@ -4,5 +4,10 @@
 .float bonus_nades;
 .float fire_fountain_time;
 
+.float nade_type;
+const float NADE_TYPE_NORMAL = 1;
+const float NADE_TYPE_NAPALM = 2;
+//const float NADE_TYPE_MONSTER = 3;
+
 void() nades_CheckThrow;
 void(entity player) nades_GiveBonus;
