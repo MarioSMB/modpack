@@ -544,7 +544,7 @@ float bumb_pilot_frame()
 		if(trace_ent)
 		if(trace_ent.deadflag == DEAD_NO)
 		if(trace_ent.frozen == 0)
-		if(!IsDifferentTeam(trace_ent, pilot))
+		if(SAME_TEAM(trace_ent, pilot))
 		{
 			if(trace_ent.vehicle_flags & VHF_ISVEHICLE)
 			{

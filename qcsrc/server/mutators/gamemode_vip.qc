@@ -376,7 +376,7 @@ void vip_SoulGem_touch()
 	if(other.deadflag != DEAD_NO)
 		return;
 	
-	if(IsDifferentTeam(other, self))
+	if(DIFF_TEAM(other, self))
 		return;
 	
 	self.gem_pickedup = 1;

@@ -1415,3 +1415,4 @@ float autocvar_g_walljump_delay;
 float autocvar_g_walljump_force;
 float autocvar_g_walljump_velocity_xy_factor;
 float autocvar_g_walljump_velocity_z_factor;
+

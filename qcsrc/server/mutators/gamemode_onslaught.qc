@@ -422,7 +422,7 @@ void onslaught_generator_think()
             self.wait = time + 5;
             FOR_EACH_REALPLAYER(e)
             {
-				if not(IsDifferentTeam(e, self))
+				if(SAME_TEAM(e, self))
                 {
 					Send_Notification(NOTIF_ONE, e, MSG_CENTER, CENTER_ONS_NOTSHIELDED);
                     soundto(MSG_ONE, e, CHAN_AUTO, "kh/alarm.wav", VOL_BASE, ATTEN_NONE);    // FIXME: Uniqe sound?

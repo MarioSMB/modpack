@@ -67,7 +67,7 @@ float friend_needshelp(entity e)
 		return FALSE;
 	if(vlen(e.origin - self.origin) > MON_CVAR(mage, heal_range))
 		return FALSE;
-	if(IsDifferentTeam(e, self))
+	if(DIFF_TEAM(e, self))
 		return FALSE;
 	if(e.frozen)
 		return FALSE;

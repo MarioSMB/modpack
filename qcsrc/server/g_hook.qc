@@ -260,20 +260,20 @@ void GrapplingHookThink()
 		self.SendFlags |= 4;
 		self.hook_end = org;
 	}
-	entity dmgent = ((self.owner.team == self.aiment.team && autocvar_g_rm_hook_team) ? self.owner : self.aiment);
+	entity dmgent = ((SAME_TEAM(self.owner, self.aiment) && autocvar_g_rm_hook_team) ? self.owner : self.aiment);
     
 	if(IS_PLAYER(self.aiment))
 	if(self.last_dmg < time)
 	if(!self.aiment.frozen)
 	if(time >= game_starttime)
-	if(self.owner.team != self.aiment.team || autocvar_g_rm_hook_team)
+	if(DIFF_TEAM(self.owner, self.aiment) || autocvar_g_rm_hook_team)
 	if(self.aiment.health > 0)
 	if(autocvar_g_rm || autocvar_g_rm_hook_damage_always)
 	{
 		self.last_dmg = time + autocvar_g_rm_hook_damagefactor;
 		self.owner.hitsound += 1;
 		Damage(dmgent, self, self.owner, autocvar_g_rm_hook_damage, WEP_HOOK, self.origin, '0 0 0');
-		if(teamplay && self.owner.team == self.aiment.team)
+		if(teamplay && SAME_TEAM(self.owner, self.aiment))
 			self.aiment.health = bound(1, self.aiment.health + autocvar_g_rm_hook_damage_health, 200);
 		else
 			self.owner.health = bound(1, self.owner.health + autocvar_g_rm_hook_damage_health, 200);
@@ -310,7 +310,7 @@ void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, floa
 	if(!autocvar_g_rm_hook_breakable_owner && attacker == self.realowner)
 		return;
 		
-	if((((autocvar_g_rm || autocvar_g_rm_laser == 2) && g_minstagib && (DEATH_ISWEAPON(deathtype, WEP_ROCKET_LAUNCHER) || DEATH_ISWEAPON(deathtype, WEP_ELECTRO))) || DEATH_ISWEAPON(deathtype, WEP_LASER)) && IsDifferentTeam(attacker, self.realowner))
+	if((((autocvar_g_rm || autocvar_g_rm_laser == 2) && g_minstagib && (DEATH_ISWEAPON(deathtype, WEP_ROCKET_LAUNCHER) || DEATH_ISWEAPON(deathtype, WEP_ELECTRO))) || DEATH_ISWEAPON(deathtype, WEP_LASER)) && DIFF_TEAM(attacker, self.realowner))
 	{
 		Damage (self.realowner, attacker, attacker, 5, WEP_HOOK | HITTYPE_SPLASH, self.realowner.origin, '0 0 0');
 		RemoveGrapplingHook(self.realowner);

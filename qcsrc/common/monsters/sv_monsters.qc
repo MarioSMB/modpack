@@ -101,7 +101,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if(targ.BUTTON_CHAT)
 		return FALSE; // no typefragging!
 
-	if not(IsDifferentTeam(targ, ent))
+	if(SAME_TEAM(targ, ent))
 		return FALSE; // enemy is on our team
 		
 	if (targ.frozen == 1 || (targ.frozen == 2 && ent.monsterid != MON_SPIDER))
@@ -623,7 +623,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 
 	if(teamplay)
 	if(autocvar_g_monsters_teams)
-	if(IsDifferentTeam(self.monster_owner, self))
+	if(DIFF_TEAM(self.monster_owner, self))
 		self.monster_owner = world;
 
 	if(self.enemy && self.enemy.health < 1)

@@ -43,7 +43,7 @@ void cerberus_findowner()
 	if(head.monsterid == MON_BRUISER)
 	if(findentity(world, monster_owner, head) == world)
 	if(vlen(head.origin - self.origin) < self.target_range)
-	if(!IsDifferentTeam(head, self))
+	if(SAME_TEAM(head, self))
 	if(head.enemy == world)
 	{
 		self.monster_owner = head;
@@ -64,7 +64,7 @@ void cerberus_checkowner()
 		self.monster_owner = world;
 	if(self.monster_owner.health < 1)
 		self.monster_owner = world;
-	if(IsDifferentTeam(self.monster_owner, self))
+	if(DIFF_TEAM(self.monster_owner, self))
 		self.monster_owner = world;
 		
 	self.cerberus_last_trace = time + 3;

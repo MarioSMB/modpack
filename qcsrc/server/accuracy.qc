@@ -116,7 +116,7 @@ float accuracy_isgooddamage(entity attacker, entity targ)
 	if not(attacker.flags & FL_MONSTER) // no accuracy for monsters
 	if(targ.deadflag == DEAD_NO)
 	if not(targ.frozen)
-	if(IsDifferentTeam(attacker, targ))
+	if(DIFF_TEAM(attacker, targ))
 		return TRUE;
 	return FALSE;
 }
