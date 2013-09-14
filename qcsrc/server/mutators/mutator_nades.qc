@@ -190,7 +190,7 @@ void nade_napalm_boom()
 	fountain.bot_dodgerating = autocvar_g_nades_napalm_fountain_damage;
 	fountain.fire_fountain_time = 0;
 	setsize(fountain, '-16 -16 -16', '16 16 16');
-	CSQCProjectile(fountain, TRUE, PROJECTILE_FIREBALL, TRUE);
+	CSQCProjectile(fountain, TRUE, PROJECTILE_NAPALM_FOUNTAIN, TRUE);
 }
 
 void nade_boom()
@@ -199,18 +199,23 @@ void nade_boom()
 	float napalm_blast;
 	
 	napalm_blast = (self.nade_type != NADE_TYPE_NAPALM || autocvar_g_nades_napalm_blast);
+
+	if ( self.nade_type == NADE_TYPE_NAPALM )
+		//Some nice effects for this: 
+		//EF_FLAME  onslaught_generator_gib_explode explosion_big explosion_medium explosion_small
+		expef = "explosion_medium";
+	else
+		switch(self.realowner.team)
+		{
+			case NUM_TEAM_1: expef = "nade_red_explode"; break;
+			case NUM_TEAM_2: expef = "nade_blue_explode"; break;
+			case NUM_TEAM_3: expef = "nade_yellow_explode"; break;
+			case NUM_TEAM_4: expef = "nade_pink_explode"; break;
+			default: 		 expef = "nade_explode"; break;
+		}
 	
-	switch(self.realowner.team)
-	{
-		case NUM_TEAM_1: expef = "nade_red_explode"; break;
-		case NUM_TEAM_2: expef = "nade_blue_explode"; break;
-		case NUM_TEAM_3: expef = "nade_yellow_explode"; break;
-		case NUM_TEAM_4: expef = "nade_pink_explode"; break;
-		default: 		 expef = "nade_explode"; break;
-	}
 	
-	if(napalm_blast)
-		pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
+	pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
 		
 	sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
