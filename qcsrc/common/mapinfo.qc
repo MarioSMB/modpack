@@ -717,6 +717,7 @@ string MapInfo_Type_ToText(float t)
 	for(e = MapInfo_Type_first; e; e = e.enemy)
 		if(t == e.items)
 			return e.message;
+	/* xgettext:no-c-format */
 	return _("@!#%'n Tuba Throwing");
 }
 

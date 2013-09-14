@@ -54,7 +54,7 @@ MUTATOR_HOOKFUNCTION(msnt_PlayerSpawn)
 			if((autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health >= 0 && team_mate.health >= autocvar_g_balance_health_regenstable) || autocvar_g_spawn_near_teammate_ignore_spawnpoint_check_health == 0)
 			if(team_mate.deadflag == DEAD_NO)
 			if(team_mate.msnt_timer < time)
-			if(!IsDifferentTeam(self, team_mate))
+			if(SAME_TEAM(self, team_mate))
 			if(time > team_mate.spawnshieldtime) // spawn shielding
 			if(team_mate.frozen == 0)
 			if(team_mate != self)

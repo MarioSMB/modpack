@@ -114,7 +114,7 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 		if(self.frozen == 1)
 		{
 			float frozen_count = 0, nplayers = 0;
-			FOR_EACH_PLAYER(other) if not(IsDifferentTeam(self, other))
+			FOR_EACH_PLAYER(other) if(SAME_TEAM(self, other))
 			{
 				++nplayers;
 				if(other.frozen == 1)
@@ -122,7 +122,7 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 			}
 			if(nplayers == frozen_count)
 			{
-				FOR_EACH_PLAYER(other) if not(IsDifferentTeam(self, other))
+				FOR_EACH_PLAYER(other) if(SAME_TEAM(self, other))
 				{
 					other.freeze_flag = FROZEN_RESPAWNING;
 					other.respawn_time = time + autocvar_g_freeze_respawn_time;
@@ -149,7 +149,7 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 				if(other.deadflag == DEAD_NO)
 				if(other.frozen == 0)
 				{
-					if(!IsDifferentTeam(other, self))
+					if(SAME_TEAM(other, self))
 					{
 						if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax))
 						{

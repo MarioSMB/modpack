@@ -46,7 +46,7 @@ float turret_fusionreactor_firecheck()
 	if (vlen(self.enemy.origin - self.origin) > self.target_range)
 		return 0;				
 	
-	if(IsDifferentTeam(self, self.enemy))
+	if(DIFF_TEAM(self, self.enemy))
 		return 0;
 	
 	if not (self.enemy.ammo_flags & TFL_AMMO_ENERGY)

@@ -56,7 +56,7 @@ void spider_web_explode()
 				break;
 		}
 		
-		RadiusDamage(self, self.realowner, damg, edamg, 0, world, rad, DEATH_MONSTER_SPIDER_FIRE, world); // ice deals no damage anyway
+		RadiusDamage(self, self.realowner, damg, edamg, rad, world, rad, DEATH_MONSTER_SPIDER_FIRE, world); // ice deals no damage anyway
 		
 		for(e = findradius(self.origin, rad); e; e = e.chain) if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0)
 		{
@@ -98,8 +98,6 @@ void spider_shootweb(float ptype)
 			break;
 	}
 	
-	vector fmins = '-4 -4 -4', fmaxs = '4 4 4';
-	
 	monster_makevectors(self.enemy);
 	
 	sound(self, CH_SHOTS, snd, VOL_BASE, ATTEN_NORM);
@@ -121,7 +119,7 @@ void spider_shootweb(float ptype)
 	proj.movetype = MOVETYPE_BOUNCE;
 	W_SetupProjectileVelocityEx(proj, v_forward, v_up, MON_CVAR(spider, attack_web_speed), MON_CVAR(spider, attack_web_speed_up), 0, 0, FALSE);
 	proj.touch = spider_web_touch;
-	setsize(proj, fmins, fmaxs);
+	setsize(proj, '-4 -4 -4', '4 4 4');
 	proj.takedamage = DAMAGE_NO;
 	proj.damageforcescale = 0;
 	proj.health = 500;

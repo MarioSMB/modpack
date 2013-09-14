@@ -348,7 +348,7 @@ MUTATOR_HOOKFUNCTION(minstagib_CustomizeWaypoint)
 	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
 	// but only apply this to real players, not to spectators
 	if((self.owner.flags & FL_CLIENT) && (self.owner.items & IT_STRENGTH) && (e == other))
-	if(IsDifferentTeam(self.owner, e))
+	if(DIFF_TEAM(self.owner, e))
 		return TRUE;
 	
 	return FALSE;

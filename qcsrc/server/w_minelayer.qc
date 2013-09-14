@@ -73,7 +73,7 @@ void W_Mine_Explode ()
 {
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
-			if(IsDifferentTeam(self.realowner, other))
+			if(DIFF_TEAM(self.realowner, other))
 				if(other.deadflag == DEAD_NO)
 					if(IsFlying(other))
 						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
@@ -148,7 +148,7 @@ void W_Mine_ProximityExplode ()
 		head = findradius(self.origin, autocvar_g_balance_minelayer_radius);
 		while(head)
 		{
-			if(head == self.realowner || !IsDifferentTeam(head, self.realowner))
+			if(head == self.realowner || SAME_TEAM(head, self.realowner))
 				return;
 			head = head.chain;
 		}
@@ -208,7 +208,7 @@ void W_Mine_Think (void)
 	while(head)
 	{
 		if(IS_PLAYER(head) && head.deadflag == DEAD_NO && !head.frozen)
-		if(head != self.realowner && IsDifferentTeam(head, self.realowner)) // don't trigger for team mates
+		if(head != self.realowner && DIFF_TEAM(head, self.realowner)) // don't trigger for team mates
 		if(!self.mine_time)
 		{
 			spamsound (self, CH_SHOTS, "weapons/mine_trigger.wav", VOL_BASE, ATTEN_NORM);

@@ -112,12 +112,6 @@ float ctf_CheckPassDirection(vector head_center, vector passer_center, vector pa
 	else { return TRUE; }
 }
 
-float ctf_IsDifferentTeam(entity a, entity b)
-{
-	float f = IsDifferentTeam(a, b);
-	return (autocvar_g_ctf_reverse) ? !f : f;
-}
-
 float ctf_Stalemate_customizeentityforclient()
 {
 	// make spectators see what the player would see
@@ -126,7 +120,7 @@ float ctf_Stalemate_customizeentityforclient()
 	wp_owner = self.owner;
 	
 	// team waypoints
-	if(!ctf_IsDifferentTeam(wp_owner.flagcarried, wp_owner))
+	if(CTF_SAMETEAM(wp_owner.flagcarried, wp_owner))
 		return FALSE;
 		
 	if not(IS_PLAYER(e))
@@ -162,7 +156,7 @@ float ctf_CaptureShield_CheckStatus(entity p)
 	players_total = players_worseeq = 0;
 	FOR_EACH_PLAYER(e)
 	{
-		if(IsDifferentTeam(e, p))
+		if(DIFF_TEAM(e, p))
 			continue;
 		se = PlayerScore_Add(e, SP_CTF_CAPS, 0);
 		se2 = PlayerScore_Add(e, SP_CTF_PICKUPS, 0);
@@ -198,7 +192,7 @@ void ctf_CaptureShield_Update(entity player, float wanted_status)
 float ctf_CaptureShield_Customize()
 {
 	if(!other.ctf_captureshielded) { return FALSE; }
-	if(!ctf_IsDifferentTeam(self, other)) { return FALSE; }
+	if(CTF_SAMETEAM(self, other)) { return FALSE; }
 	
 	return TRUE;
 }
@@ -206,7 +200,7 @@ float ctf_CaptureShield_Customize()
 void ctf_CaptureShield_Touch()
 {
 	if(!other.ctf_captureshielded) { return; }
-	if(!ctf_IsDifferentTeam(self, other)) { return; }
+	if(CTF_SAMETEAM(self, other)) { return; }
 	
 	vector mymid = (self.absmin + self.absmax) * 0.5;
 	vector othermid = (other.absmin + other.absmax) * 0.5;
@@ -311,7 +305,7 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_4(flag, CENTER_CTF_PASS_SENT_), player.netname);
 		else if(tmp_player == player)
 			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_4(flag, CENTER_CTF_PASS_RECEIVED_), sender.netname);
-		else if(!IsDifferentTeam(tmp_player, sender))
+		else if(SAME_TEAM(tmp_player, sender))
 			Send_Notification(NOTIF_ONE, tmp_player, MSG_CENTER, APP_TEAM_ENT_4(flag, CENTER_CTF_PASS_OTHER_), sender.netname, player.netname);
 	}
 	
@@ -424,7 +418,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	
 	if not(player) { return; } // without someone to give the reward to, we can't possibly cap
 	if(player.fc_waskilled) { return; } // player died, so don't cap
-	if(ctf_IsDifferentTeam(player, flag)) { return; }
+	if(CTF_DIFFTEAM(player, flag)) { return; }
 	
 	player.throw_prevtime = time;
 	player.throw_count = 0;
@@ -432,7 +426,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	// messages and sounds
 	Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_4(enemy_flag, CENTER_CTF_CAPTURE_));
 	ctf_CaptureRecord(enemy_flag, player);
-	sound(player, CH_TRIGGER, ((IsDifferentTeam(player, flag)) ? enemy_flag.snd_flag_capture : flag.snd_flag_capture), VOL_BASE, ATTEN_NONE);
+	sound(player, CH_TRIGGER, ((DIFF_TEAM(player, flag)) ? enemy_flag.snd_flag_capture : flag.snd_flag_capture), VOL_BASE, ATTEN_NONE);
 	
 	switch(capturetype)
 	{
@@ -531,7 +525,7 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	if(ctf_stalemate) { Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_STALEMATE_CARRIER); }
 	
 	Send_Notification(NOTIF_TEAM_EXCEPT, player, MSG_CHOICE, APP_TEAM_ENT_4(flag, CHOICE_CTF_PICKUP_TEAM_), Team_ColorCode(player.team), player.netname);
-	Send_Notification(NOTIF_TEAM, flag, MSG_CHOICE, APP_TEAM_ENT_4(flag, CHOICE_CTF_PICKUP_ENEMY_), Team_ColorCode(player.team), player.netname);
+	Send_Notification(NOTIF_TEAM, flag, MSG_CHOICE, CHOICE_CTF_PICKUP_ENEMY, Team_ColorCode(player.team), player.netname);
 	
 	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTEN_NONE);
 	
@@ -785,7 +779,7 @@ void ctf_FlagThink()
 					wpforenemy_nextthink = time + WPFE_THINKRATE; // waypoint for enemy think rate (to reduce unnecessary spam of this check)
 				}
 			}
-			if(!ctf_IsDifferentTeam(self, self.owner))
+			if(CTF_SAMETEAM(self, self.owner))
 			{
 				// drop the flag if reverse status has changed
 				ctf_Handle_Throw(self.owner, world, DROP_THROW);
@@ -869,16 +863,16 @@ void ctf_FlagTouch()
 	{	
 		case FLAG_BASE:
 		{
-			if(!ctf_IsDifferentTeam(toucher, self) && (toucher.flagcarried) && IsDifferentTeam(toucher.flagcarried, self) && !(toucher.flags & FL_MONSTER))
+			if(CTF_SAMETEAM(toucher, self) && (toucher.flagcarried) && DIFF_TEAM(toucher.flagcarried, self) && !(toucher.flags & FL_MONSTER))
 				ctf_Handle_Capture(self, toucher, CAPTURE_NORMAL); // toucher just captured the enemies flag to his base
-			else if(ctf_IsDifferentTeam(toucher, self) && (!toucher.flagcarried) && (!toucher.ctf_captureshielded) && (time > toucher.next_take_time) && !(toucher.flags & FL_MONSTER))
+			else if(CTF_DIFFTEAM(toucher, self) && (!toucher.flagcarried) && (!toucher.ctf_captureshielded) && (time > toucher.next_take_time) && !(toucher.flags & FL_MONSTER))
 				ctf_Handle_Pickup(self, toucher, PICKUP_BASE); // toucher just stole the enemies flag
 			break;
 		}
 		
 		case FLAG_DROPPED:
 		{
-			if(!ctf_IsDifferentTeam(toucher, self))
+			if(CTF_SAMETEAM(toucher, self))
 				ctf_Handle_Return(self, toucher); // toucher just returned his own flag
 			else if(!(toucher.flags & FL_MONSTER) && (!toucher.flagcarried) && ((toucher != self.ctf_dropper) || (time > self.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
 				ctf_Handle_Pickup(self, toucher, PICKUP_DROPPED); // toucher just picked up a dropped enemy flag
@@ -895,7 +889,7 @@ void ctf_FlagTouch()
 		{
 			if((IS_PLAYER(toucher)) && (toucher.deadflag == DEAD_NO) && (toucher != self.pass_sender))
 			{
-				if(IsDifferentTeam(toucher, self.pass_sender))
+				if(DIFF_TEAM(toucher, self.pass_sender))
 					ctf_Handle_Return(self, toucher);
 				else
 					ctf_Handle_Retrieve(self, toucher);
@@ -1131,7 +1125,7 @@ entity havocbot_ctf_find_flag(entity bot)
 	f = ctf_worldflaglist;
 	while (f)
 	{
-		if (!ctf_IsDifferentTeam(bot, f))
+		if (CTF_SAMETEAM(bot, f))
 			return f;
 		f = f.ctf_worldflagnext;
 	}
@@ -1144,7 +1138,7 @@ entity havocbot_ctf_find_enemy_flag(entity bot)
 	f = ctf_worldflaglist;
 	while (f)
 	{
-		if (ctf_IsDifferentTeam(bot, f))
+		if (CTF_DIFFTEAM(bot, f))
 			return f;
 		f = f.ctf_worldflagnext;
 	}
@@ -1177,7 +1171,7 @@ void havocbot_goalrating_ctf_ourflag(float ratingscale)
 	head = ctf_worldflaglist;
 	while (head)
 	{
-		if (!ctf_IsDifferentTeam(self, head))
+		if (CTF_SAMETEAM(self, head))
 			break;
 		head = head.ctf_worldflagnext;
 	}
@@ -1191,7 +1185,7 @@ void havocbot_goalrating_ctf_ourbase(float ratingscale)
 	head = ctf_worldflaglist;
 	while (head)
 	{
-		if (!ctf_IsDifferentTeam(self, head))
+		if (CTF_SAMETEAM(self, head))
 			break;
 		head = head.ctf_worldflagnext;
 	}
@@ -1207,7 +1201,7 @@ void havocbot_goalrating_ctf_enemyflag(float ratingscale)
 	head = ctf_worldflaglist;
 	while (head)
 	{
-		if (ctf_IsDifferentTeam(self, head))
+		if(CTF_DIFFTEAM(self, head))
 			break;
 		head = head.ctf_worldflagnext;
 	}
@@ -1825,7 +1819,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDamage) // for changing damage and force values t
 			frag_force *= autocvar_g_ctf_flagcarrier_forcefactor;
 		}
 	}
-	else if(frag_target.flagcarried && (frag_target.deadflag == DEAD_NO) && ctf_IsDifferentTeam(frag_target, frag_attacker)) // if the target is a flagcarrier
+	else if(frag_target.flagcarried && (frag_target.deadflag == DEAD_NO) && CTF_DIFFTEAM(frag_target, frag_attacker)) // if the target is a flagcarrier
 	{
 		if(autocvar_g_ctf_flagcarrier_auto_helpme_damage > ('1 0 0' * healtharmor_maxdamage(frag_target.health, frag_target.armorvalue, autocvar_g_balance_armor_blockpercent)))
 		if(time > frag_target.wps_helpme_time + autocvar_g_ctf_flagcarrier_auto_helpme_time)
@@ -1901,7 +1895,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerUseKey)
 			while(head) // find the closest acceptable target to pass to
 			{
 				if(IS_PLAYER(head) && head.deadflag == DEAD_NO)
-				if(head != player && !IsDifferentTeam(head, player))
+				if(head != player && SAME_TEAM(head, player))
 				if(!head.speedrunning && !head.vehicle)
 				{
 					// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc) 

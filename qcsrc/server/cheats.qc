@@ -252,7 +252,7 @@ float CheatImpulse(float i)
 			RandomSelection_Init();
 			FOR_EACH_PLAYER(e)
 				if(e.deadflag == DEAD_NO)
-					if(IsDifferentTeam(e, self))
+					if(DIFF_TEAM(e, self))
 						RandomSelection_Add(e, 0, string_null, 1, 1);
 			if(RandomSelection_chosen_ent)
 				e = RandomSelection_chosen_ent;
@@ -771,7 +771,7 @@ float CheatFrame()
 								drag = TRUE;
 							break;
 						case 2: // owner and team mates can grab
-							if(!IsDifferentTeam(trace_ent.owner, self) || !IsDifferentTeam(trace_ent.realowner, self) || trace_ent.team == self.team)
+							if(SAME_TEAM(trace_ent.owner, self) || SAME_TEAM(trace_ent.realowner, self) || trace_ent.team == self.team)
 								drag = TRUE;
 							break;
 						case 3: // anyone can grab

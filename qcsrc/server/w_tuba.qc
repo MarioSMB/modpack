@@ -8,6 +8,7 @@ REGISTER_WEAPON(
 /* rating    */ BOT_PICKUP_RATING_MID,
 /* model     */ "tuba",
 /* shortname */ "tuba",
+/* xgettext:no-c-format */
 /* fullname  */ _("@!#%'n Tuba")
 );
 #else

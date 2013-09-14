@@ -529,7 +529,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	if(vbot || IS_REAL_CLIENT(self))
 	if(abot || IS_REAL_CLIENT(attacker))
 	if(attacker && self != attacker)
-	if(IsDifferentTeam(self, attacker))
+	if(DIFF_TEAM(self, attacker))
 	{
 		if(DEATH_ISSPECIAL(deathtype))
 			awep = attacker.weapon;

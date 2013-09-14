@@ -592,11 +592,11 @@ void vehicles_enter(entity pl, entity veh)
 		
 	if(teamplay)
 	if(veh.team)
-	if(IsDifferentTeam(pl, veh))
+	if(DIFF_TEAM(pl, veh))
 	if(autocvar_g_vehicles_steal)
 	{
 		entity head;
-		FOR_EACH_PLAYER(head) if not(IsDifferentTeam(head, veh))
+		FOR_EACH_PLAYER(head) if(SAME_TEAM(head, veh))
 			Send_Notification(NOTIF_ONE, head, MSG_CENTER, CENTER_VEHICLE_STEAL);
 			
 		Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_VEHICLE_STEAL_SELF);

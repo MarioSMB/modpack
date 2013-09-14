@@ -101,7 +101,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if(targ.BUTTON_CHAT)
 		return FALSE; // no typefragging!
 
-	if not(IsDifferentTeam(targ, ent))
+	if(SAME_TEAM(targ, ent))
 		return FALSE; // enemy is on our team
 		
 	if (targ.frozen == 1 || (targ.frozen == 2 && ent.monsterid != MON_SPIDER))
@@ -290,7 +290,7 @@ void monster_makevectors(entity e)
 {
 	vector v;
 
-	v = CENTER_OR_VIEWOFS(e);
+	v = (e.mins + e.maxs) * 0.5;
 	self.v_angle = vectoangles(v - (self.origin + self.view_ofs));
 	self.v_angle_x = -self.v_angle_x;
 
@@ -623,7 +623,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 
 	if(teamplay)
 	if(autocvar_g_monsters_teams)
-	if(IsDifferentTeam(self.monster_owner, self))
+	if(DIFF_TEAM(self.monster_owner, self))
 		self.monster_owner = world;
 
 	if(self.enemy && self.enemy.health < 1)
@@ -786,6 +786,8 @@ void monsters_reset()
 {
 	setorigin(self, self.pos1);
 	self.angles = self.pos2;
+	
+	Unfreeze(self); // remove any icy remains
 
 	self.health = self.max_health;
 	self.velocity = '0 0 0';
@@ -885,6 +887,9 @@ void monster_die(entity attacker)
 	self.think = monster_dead_think;
 	self.nextthink = self.ticrate;
 	self.ltime = time + 5;
+	
+	Unfreeze(self); // remove any icy remains
+	self.health = 0; // reset by Unfreeze
 
 	monster_dropitem();
 
