@@ -539,10 +539,11 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.SendFlags |= MSF_STATUS;
 
 		movelib_beak_simple(stopspeed);
-
-		self.velocity = '0 0 0';
+		
+		monsters_setframe(manim_idle);
+		
 		self.enemy = world;
-		self.nextthink = time + 0.1;
+		self.nextthink = time + self.ticrate;
 
 		if(self.revive_progress >= 1)
 			Unfreeze(self); // wait for next think before attacking
@@ -941,7 +942,7 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 	if(time < self.pain_finished && deathtype != DEATH_KILL)
 		return;
 
-	if(time < self.spawnshieldtime)
+	if(time < self.spawnshieldtime && deathtype != DEATH_KILL)
 		return;
 
 	vector v;
@@ -986,7 +987,7 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		frag_target = self;
 		MUTATOR_CALLHOOK(MonsterDies);
 
-		if(self.health <= -100) // check if we're already gibbed
+		if(self.health <= -100 || deathtype == DEATH_KILL) // check if we're already gibbed
 		{
 			Violence_GibSplash(self, 1, 0.5, attacker);
 
