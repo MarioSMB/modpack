@@ -11,14 +11,17 @@ void nade_burn_spawn(entity _nade)
 {
 	float p;
 	
-	switch(_nade.realowner.team)
-	{
-		case NUM_TEAM_1: p = PROJECTILE_NADE_RED_BURN; break;
-		case NUM_TEAM_2: p = PROJECTILE_NADE_BLUE_BURN; break;
-		case NUM_TEAM_3: p = PROJECTILE_NADE_YELLOW_BURN; break;
-		case NUM_TEAM_4: p = PROJECTILE_NADE_PINK_BURN; break;
-		default:		 p = PROJECTILE_NADE_BURN; break;
-	}
+	if(_nade.nade_type == NADE_TYPE_NAPALM)
+		p = PROJECTILE_NADE_NAPALM_BURN;
+	else
+		switch(_nade.realowner.team)
+		{
+			case NUM_TEAM_1: p = PROJECTILE_NADE_RED_BURN; break;
+			case NUM_TEAM_2: p = PROJECTILE_NADE_BLUE_BURN; break;
+			case NUM_TEAM_3: p = PROJECTILE_NADE_YELLOW_BURN; break;
+			case NUM_TEAM_4: p = PROJECTILE_NADE_PINK_BURN; break;
+			default:		 p = PROJECTILE_NADE_BURN; break;
+		}
 	
 	CSQCProjectile(_nade, TRUE, p, TRUE);
 }
@@ -139,7 +142,7 @@ void nade_napalm_ball()
 	proj.movetype = MOVETYPE_BOUNCE;
 	proj.projectiledeathtype = DEATH_NADE_NAPALM;
 	PROJECTILE_MAKETRIGGER(proj);
-	setmodel(proj, "");
+	setmodel(proj, "null");
 	proj.scale = 1;//0.5;
 	setsize(proj, '-4 -4 -4', '4 4 4');
 	setorigin(proj, self.origin);

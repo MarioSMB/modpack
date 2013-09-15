@@ -112,6 +112,7 @@ void Projectile_Draw()
 			case PROJECTILE_NADE_BURN:
 			case PROJECTILE_NADE:
 			case PROJECTILE_NADE_NAPALM:
+			case PROJECTILE_NADE_NAPALM_BURN:
 				rot = self.avelocity; 
 				break;
 			case PROJECTILE_HOOKBOMB:
@@ -148,6 +149,7 @@ void Projectile_Draw()
 		case PROJECTILE_NADE_BURN:
 		case PROJECTILE_NADE:
 		case PROJECTILE_NADE_NAPALM:
+		case PROJECTILE_NADE_NAPALM_BURN:
 			trailorigin += v_up * 4;
 			break;
 		case PROJECTILE_GRENADE:
@@ -345,6 +347,7 @@ void Ent_Projectile()
 			case PROJECTILE_NADE: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade"); break;
 			case PROJECTILE_NADE_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_burn"); break;
 			case PROJECTILE_NADE_NAPALM: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
+			case PROJECTILE_NADE_NAPALM_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3"); self.traileffect = particleeffectnum("spiderbot_rocket_thrust"); break;
 			case PROJECTILE_RPC: setmodel(self, "models/weapons/ok_rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
 
 			default:
@@ -390,6 +393,7 @@ void Ent_Projectile()
 				self.move_bounce_stopspeed = g_balance_grenadelauncher_bouncestop;
 				break;
 			case PROJECTILE_NADE_NAPALM:
+			case PROJECTILE_NADE_NAPALM_BURN:
 				self.colormod = '2 0.5 0';
 			case PROJECTILE_NADE_RED_BURN:
 			case PROJECTILE_NADE_RED:
