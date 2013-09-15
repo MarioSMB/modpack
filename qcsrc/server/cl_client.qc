@@ -1699,7 +1699,11 @@ void player_regen (void)
 	
 	// if player rotted to death...  die!
 	if(self.health < 1)
+	{
+		if(self.vehicle)
+			vehicles_exit(VHEF_RELESE);
 		self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
+	}
 
 	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, rot_mod * frametime * (time > self.pauserotfuel_finished), limitf);
