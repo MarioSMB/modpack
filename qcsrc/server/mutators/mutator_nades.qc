@@ -103,6 +103,16 @@ void napalm_ball_think()
 		remove(self);
 		return;
 	}
+	
+	vector midpoint = ((self.absmin + self.absmax) * 0.5);
+	if(pointcontents(midpoint) == CONTENT_WATER)
+	{
+		self.velocity = self.velocity * 0.5;
+					
+		if(pointcontents(midpoint + '0 0 16') == CONTENT_WATER)
+			{ self.velocity_z = 200; }
+	}
+	
 	self.angles = vectoangles(self.velocity);
 
 	napalm_damage(autocvar_g_nades_napalm_ball_radius,autocvar_g_nades_napalm_ball_damage,
@@ -129,7 +139,7 @@ void nade_napalm_ball()
 	proj.movetype = MOVETYPE_BOUNCE;
 	proj.projectiledeathtype = DEATH_NADE_NAPALM;
 	PROJECTILE_MAKETRIGGER(proj);
-	setmodel(proj, "models/laser.mdl");
+	setmodel(proj, "");
 	proj.scale = 1;//0.5;
 	setsize(proj, '-4 -4 -4', '4 4 4');
 	setorigin(proj, self.origin);
@@ -161,14 +171,24 @@ void napalm_fountain_think()
 		return;
 	}
 	
+	vector midpoint = ((self.absmin + self.absmax) * 0.5);
+	if(pointcontents(midpoint) == CONTENT_WATER)
+	{
+		self.velocity = self.velocity * 0.5;
+					
+		if(pointcontents(midpoint + '0 0 16') == CONTENT_WATER)
+			{ self.velocity_z = 200; }
+			
+		UpdateCSQCProjectile(self);
+	}
+	
 	napalm_damage(autocvar_g_nades_napalm_fountain_radius, autocvar_g_nades_napalm_fountain_damage,
 		autocvar_g_nades_napalm_fountain_edgedamage, autocvar_g_nades_napalm_burntime);
 	
 	self.nextthink = time + 0.1;
-	self.fire_fountain_time += 0.1;
-	if ( self.fire_fountain_time >= autocvar_g_nades_napalm_fountain_delay )
+	if(time >= self.fire_fountain_time)
 	{
-		self.fire_fountain_time -= autocvar_g_nades_napalm_fountain_delay;
+		self.fire_fountain_time = time + autocvar_g_nades_napalm_fountain_delay;
 		nade_napalm_ball();
 	}
 }
@@ -195,7 +215,7 @@ void nade_napalm_boom()
 	fountain.projectiledeathtype = DEATH_NADE_NAPALM;
 	fountain.bot_dodge = TRUE;
 	fountain.bot_dodgerating = autocvar_g_nades_napalm_fountain_damage;
-	fountain.fire_fountain_time = 0;
+	fountain.fire_fountain_time = time;
 	setsize(fountain, '-16 -16 -16', '16 16 16');
 	CSQCProjectile(fountain, TRUE, PROJECTILE_NAPALM_FOUNTAIN, TRUE);
 }
@@ -388,7 +408,6 @@ void nades_RemoveBonus(entity player)
 
 void nade_prime()
 {
-	string nade_type_name;
 	
 	if(self.nade)
 		remove(self.nade);
@@ -404,21 +423,15 @@ void nade_prime()
 	n.classname = "nade";
 	
 	if(self.items & IT_STRENGTH && autocvar_g_nades_bonus_onstrength)
-		nade_type_name = autocvar_g_nades_bonus_type;
+		n.nade_type = autocvar_g_nades_bonus_type;
 	else if (self.bonus_nades >= 1)
 	{
-		nade_type_name = autocvar_g_nades_bonus_type;
+		 n.nade_type = autocvar_g_nades_bonus_type;
 		self.bonus_nades -= 1;
 	}
 	else
-		nade_type_name = autocvar_g_nades_nade_type;
-	
-	switch(nade_type_name)
-	{
-		case "napalm": n.nade_type = NADE_TYPE_NAPALM; break;
-		default: n.nade_type = NADE_TYPE_NORMAL; break;
-	}
-	
+		 n.nade_type = autocvar_g_nades_nade_type;
+
 	n.realowner = self;
 	n.colormap = self.colormap;
 	n.glowmod = self.glowmod;
@@ -603,8 +616,6 @@ MUTATOR_DEFINITION(mutator_nades)
 		precache_sound("weapons/grenade_bounce5.wav");
 		precache_sound("weapons/grenade_bounce6.wav");
 		precache_sound("overkill/grenadebip.ogg");
-		
-		precache_model("models/laser.mdl");
 	}
 
 	return FALSE;
