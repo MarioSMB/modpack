@@ -38,6 +38,8 @@ void nade_spawn(entity _nade)
 	timer.owner = _nade;	
 	timer.skin = 10;
 	
+	_nade.effects |= EF_LOWPRECISION;
+	
 	if(_nade.nade_type == NADE_TYPE_NAPALM)
 		p = PROJECTILE_NADE_NAPALM;
 	else
@@ -51,7 +53,7 @@ void nade_spawn(entity _nade)
 			default:		 p = PROJECTILE_NADE; break;
 		}
 	}
-	
+		
 	CSQCProjectile(_nade, TRUE, p, TRUE);
 }
 
@@ -101,6 +103,7 @@ void napalm_ball_think()
 		remove(self);
 		return;
 	}
+	self.angles = vectoangles(self.velocity);
 
 	napalm_damage(autocvar_g_nades_napalm_ball_radius,autocvar_g_nades_napalm_ball_damage,
 				  autocvar_g_nades_napalm_ball_damage,autocvar_g_nades_napalm_burntime);
@@ -126,11 +129,14 @@ void nade_napalm_ball()
 	proj.movetype = MOVETYPE_BOUNCE;
 	proj.projectiledeathtype = DEATH_NADE_NAPALM;
 	PROJECTILE_MAKETRIGGER(proj);
+	setmodel(proj, "models/laser.mdl");
+	proj.scale = 1;//0.5;
 	setsize(proj, '-4 -4 -4', '4 4 4');
 	setorigin(proj, self.origin);
 	proj.think = napalm_ball_think;
 	proj.nextthink = time;
 	proj.damageforcescale = autocvar_g_nades_napalm_ball_damageforcescale;
+	proj.effects = EF_LOWPRECISION | EF_FLAME;
 	
 	kick_x =(random() - 0.5) * 2 * autocvar_g_nades_napalm_ball_spread;
 	kick_y = (random() - 0.5) * 2 * autocvar_g_nades_napalm_ball_spread;
@@ -143,7 +149,7 @@ void nade_napalm_ball()
 	proj.flags = FL_PROJECTILE;
     proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
     
-	CSQCProjectile(proj, TRUE, PROJECTILE_NAPALM_FIRE, TRUE);
+	//CSQCProjectile(proj, TRUE, PROJECTILE_NAPALM_FIRE, TRUE);
 }
 
 
@@ -597,6 +603,8 @@ MUTATOR_DEFINITION(mutator_nades)
 		precache_sound("weapons/grenade_bounce5.wav");
 		precache_sound("weapons/grenade_bounce6.wav");
 		precache_sound("overkill/grenadebip.ogg");
+		
+		precache_model("models/laser.mdl");
 	}
 
 	return FALSE;
