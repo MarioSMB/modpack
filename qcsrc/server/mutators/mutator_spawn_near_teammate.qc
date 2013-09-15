@@ -111,6 +111,8 @@ MUTATOR_HOOKFUNCTION(msnt_PlayerSpawn)
 									{
 										setorigin(self, trace_endpos);
 										self.angles = team_mate.angles;
+										self.angles_z = 0; // never spawn tilted even if the spot says to
+										self.fixangle = TRUE;
 										team_mate.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay;
 										return 0;
 									}
@@ -135,6 +137,8 @@ MUTATOR_HOOKFUNCTION(msnt_PlayerSpawn)
 	{
 		self.angles = vectoangles(spawn_spot.msnt_lookat.origin - self.origin);
 		self.angles_x = -self.angles_x;
+		self.angles_z = 0; // never spawn tilted even if the spot says to
+		self.fixangle = TRUE;
 		/*
 		sprint(self, "You should be looking at ", spawn_spot.msnt_lookat.netname, "^7.\n");
 		sprint(self, "distance: ", vtos(spawn_spot.msnt_lookat.origin - self.origin), "\n");
