@@ -290,7 +290,7 @@ void monster_makevectors(entity e)
 {
 	vector v;
 
-	v = (e.mins + e.maxs) * 0.5;
+	v = e.origin + (e.mins + e.maxs) * 0.5;
 	self.v_angle = vectoangles(v - (self.origin + self.view_ofs));
 	self.v_angle_x = -self.v_angle_x;
 
