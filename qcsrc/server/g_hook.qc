@@ -231,7 +231,10 @@ void GrapplingHookThink()
 				self.realowner.velocity = WarpZone_RefSys_TransformVelocity(self, self.realowner, v);
 				
 			if(frozen_pulling && !self.aiment.frozen)
+			{
 				RemoveGrapplingHook(self.realowner);
+				return;
+			}
 		}
 		else
 		{
