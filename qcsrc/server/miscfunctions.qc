@@ -1375,7 +1375,6 @@ void precache()
         precache_all_playermodels("models/player/*.md3");
         precache_all_playermodels("models/player/*.psk");
         precache_all_playermodels("models/player/*.iqm");
-        precache_all_playermodels("models/ok_player/*.dpm");
     }
 
     if (autocvar_sv_defaultcharacter)
