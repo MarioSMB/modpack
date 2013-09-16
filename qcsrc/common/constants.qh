@@ -399,6 +399,9 @@ const float PROJECTILE_RPC = 60;
 const float PROJECTILE_NADE_NAPALM = 61;
 const float PROJECTILE_NADE_NAPALM_BURN = 62;
 const float PROJECTILE_NAPALM_FOUNTAIN = 63;
+const float PROJECTILE_NADE_ICE = 64;
+const float PROJECTILE_NADE_ICE_BURN = 65;
+
 
 const float SPECIES_HUMAN = 0;
 const float SPECIES_ROBOT_SOLID = 1;

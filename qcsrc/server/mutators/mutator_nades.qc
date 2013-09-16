@@ -11,17 +11,20 @@ void nade_burn_spawn(entity _nade)
 {
 	float p;
 	
-	if(_nade.nade_type == NADE_TYPE_NAPALM)
-		p = PROJECTILE_NADE_NAPALM_BURN;
-	else
-		switch(_nade.realowner.team)
-		{
-			case NUM_TEAM_1: p = PROJECTILE_NADE_RED_BURN; break;
-			case NUM_TEAM_2: p = PROJECTILE_NADE_BLUE_BURN; break;
-			case NUM_TEAM_3: p = PROJECTILE_NADE_YELLOW_BURN; break;
-			case NUM_TEAM_4: p = PROJECTILE_NADE_PINK_BURN; break;
-			default:		 p = PROJECTILE_NADE_BURN; break;
-		}
+	switch(_nade.nade_type)
+	{
+		case NADE_TYPE_NAPALM: p = PROJECTILE_NADE_NAPALM_BURN; break;
+		case NADE_TYPE_ICE: p = PROJECTILE_NADE_ICE_BURN; break;
+		default:
+			switch(_nade.realowner.team)
+			{
+				case NUM_TEAM_1: p = PROJECTILE_NADE_RED_BURN; break;
+				case NUM_TEAM_2: p = PROJECTILE_NADE_BLUE_BURN; break;
+				case NUM_TEAM_3: p = PROJECTILE_NADE_YELLOW_BURN; break;
+				case NUM_TEAM_4: p = PROJECTILE_NADE_PINK_BURN; break;
+				default:		 p = PROJECTILE_NADE_BURN; break;
+			}
+	}
 	
 	CSQCProjectile(_nade, TRUE, p, TRUE);
 }
@@ -43,18 +46,19 @@ void nade_spawn(entity _nade)
 	
 	_nade.effects |= EF_LOWPRECISION;
 	
-	if(_nade.nade_type == NADE_TYPE_NAPALM)
-		p = PROJECTILE_NADE_NAPALM;
-	else
+	switch(_nade.nade_type)
 	{
-		switch(_nade.realowner.team)
-		{
-			case NUM_TEAM_1: p = PROJECTILE_NADE_RED; break;
-			case NUM_TEAM_2: p = PROJECTILE_NADE_BLUE; break;
-			case NUM_TEAM_3: p = PROJECTILE_NADE_YELLOW; break;
-			case NUM_TEAM_4: p = PROJECTILE_NADE_PINK; break;
-			default:		 p = PROJECTILE_NADE; break;
-		}
+		case NADE_TYPE_NAPALM: p = PROJECTILE_NADE_NAPALM; break;
+		case NADE_TYPE_ICE: p = PROJECTILE_NADE_ICE; break;
+		default:
+			switch(_nade.realowner.team)
+			{
+				case NUM_TEAM_1: p = PROJECTILE_NADE_RED; break;
+				case NUM_TEAM_2: p = PROJECTILE_NADE_BLUE; break;
+				case NUM_TEAM_3: p = PROJECTILE_NADE_YELLOW; break;
+				case NUM_TEAM_4: p = PROJECTILE_NADE_PINK; break;
+				default:		 p = PROJECTILE_NADE; break;
+			}
 	}
 		
 	CSQCProjectile(_nade, TRUE, p, TRUE);
@@ -223,26 +227,49 @@ void nade_napalm_boom()
 	CSQCProjectile(fountain, TRUE, PROJECTILE_NAPALM_FOUNTAIN, TRUE);
 }
 
+void nade_ice_boom()
+{
+	entity e;
+	for(e = findradius(self.origin, autocvar_g_nades_ice_freeze_radius); e; e = e.chain) 
+		if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0)
+		if ( DIFF_TEAM(e,self.realowner) || autocvar_g_nades_ice_friendly_freeze >= 2 )
+		if ( e != self.realowner || autocvar_g_nades_ice_friendly_freeze )
+		{
+			Freeze(e, 1/autocvar_g_nades_ice_freeze_time, 2, FALSE);
+			pointparticles(particleeffectnum("electro_impact"), e.origin, '0 0 0', 1);
+		}
+}
+
 void nade_boom()
 {
 	string expef;
-	float napalm_blast;
+	float nade_blast;
 	
-	napalm_blast = (self.nade_type != NADE_TYPE_NAPALM || autocvar_g_nades_napalm_blast);
+	nade_blast = 1;
 
-	if ( self.nade_type == NADE_TYPE_NAPALM )
-		//Some nice effects for this: 
-		//EF_FLAME  onslaught_generator_gib_explode explosion_big explosion_medium explosion_small
-		expef = "explosion_medium";
-	else
-		switch(self.realowner.team)
-		{
-			case NUM_TEAM_1: expef = "nade_red_explode"; break;
-			case NUM_TEAM_2: expef = "nade_blue_explode"; break;
-			case NUM_TEAM_3: expef = "nade_yellow_explode"; break;
-			case NUM_TEAM_4: expef = "nade_pink_explode"; break;
-			default: 		 expef = "nade_explode"; break;
-		}
+	switch ( self.nade_type )
+	{
+		case NADE_TYPE_NAPALM: 
+			nade_blast = autocvar_g_nades_napalm_blast;
+			expef = "explosion_medium"; 
+			break;
+		case NADE_TYPE_ICE:   
+			nade_blast = 0;
+			//pointparticles(particleeffectnum("icefield"), self.origin + '0 0 1', '0 0 0', 1);
+			expef = "TE_SPIKEQUAD"; 
+			break;
+	
+		default:
+		case NADE_TYPE_NORMAL:
+			switch(self.realowner.team)
+			{
+				case NUM_TEAM_1: expef = "nade_red_explode"; break;
+				case NUM_TEAM_2: expef = "nade_blue_explode"; break;
+				case NUM_TEAM_3: expef = "nade_yellow_explode"; break;
+				case NUM_TEAM_4: expef = "nade_pink_explode"; break;
+				default: 		 expef = "nade_explode"; break;
+			}
+	}
 	
 	
 	pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
@@ -252,15 +279,19 @@ void nade_boom()
 	
 	self.takedamage = DAMAGE_NO;
 	
-	if(napalm_blast)
+	if(nade_blast)
 	{
 		RadiusDamage(self, self.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
 				 autocvar_g_nades_nade_radius, self, autocvar_g_nades_nade_force, self.projectiledeathtype, self.enemy);
 		Damage_DamageInfo(self.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage, autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, self.projectiledeathtype, 0, self);
 	}
 	
-	if(self.nade_type == NADE_TYPE_NAPALM)
-		nade_napalm_boom();
+	switch ( self.nade_type )
+	{
+		case NADE_TYPE_NAPALM: nade_napalm_boom(); break;
+		case NADE_TYPE_ICE: nade_ice_boom(); break;
+	}
+			
 
 	remove(self);
 }
@@ -453,8 +484,11 @@ void nade_prime()
 	n.nextthink = max(n.wait - 3, time);
 	n.projectiledeathtype = DEATH_NADE;
 	
-	if(n.nade_type == NADE_TYPE_NAPALM)
-		fn.colormod = '2 0.5 0';
+	switch(n.nade_type)
+	{
+		case NADE_TYPE_NAPALM: fn.colormod = '2 0.5 0'; break;
+		case NADE_TYPE_ICE: fn.colormod = '0 0.5 2'; break;
+	}
 		
 	setmodel(fn, "models/weapons/h_ok_grenade.iqm");
 	setattachment(fn, self.weaponentity, "");

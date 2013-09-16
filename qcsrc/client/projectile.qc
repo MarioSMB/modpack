@@ -339,6 +339,7 @@ void Ent_Projectile()
 			case PROJECTILE_NADE_RED: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red"); break;
 			case PROJECTILE_NADE_RED_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red_burn"); break;
 			case PROJECTILE_NADE_BLUE: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_blue"); break;
+			case PROJECTILE_NADE_ICE_BURN:
 			case PROJECTILE_NADE_BLUE_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_blue_burn"); break;
 			case PROJECTILE_NADE_YELLOW: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_yellow"); break;
 			case PROJECTILE_NADE_YELLOW_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_yellow_burn"); break;
@@ -348,6 +349,7 @@ void Ent_Projectile()
 			case PROJECTILE_NADE_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_burn"); break;
 			case PROJECTILE_NADE_NAPALM: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
 			case PROJECTILE_NADE_NAPALM_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3"); self.traileffect = particleeffectnum("spiderbot_rocket_thrust"); break;
+			case PROJECTILE_NADE_ICE: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
 			case PROJECTILE_RPC: setmodel(self, "models/weapons/ok_rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
 
 			default:
@@ -405,6 +407,16 @@ void Ent_Projectile()
 			case PROJECTILE_NADE_PINK:
 			case PROJECTILE_NADE_BURN:
 			case PROJECTILE_NADE:
+				self.mins = '-16 -16 -16';
+				self.maxs = '16 16 16';
+				self.move_movetype = MOVETYPE_BOUNCE;
+				self.move_touch = func_null;
+				self.scale = 1.5;
+				self.avelocity = randomvec() * 720;
+				break;
+			case PROJECTILE_NADE_ICE:
+			case PROJECTILE_NADE_ICE_BURN:
+				self.colormod = '0 0.5 2';
 				self.mins = '-16 -16 -16';
 				self.maxs = '16 16 16';
 				self.move_movetype = MOVETYPE_BOUNCE;
