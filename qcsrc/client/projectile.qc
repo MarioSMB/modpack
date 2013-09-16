@@ -34,7 +34,7 @@ void Projectile_DrawTrail(vector to)
 	self.trail_oldtime = time;
 
 	// force the effect even for stationary firemine
-	if(self.cnt == PROJECTILE_FIREMINE)
+	if(self.cnt == PROJECTILE_FIREMINE )
 		if(from == to)
 			from_z += 1;
 
@@ -111,6 +111,8 @@ void Projectile_Draw()
 			case PROJECTILE_NADE_PINK:
 			case PROJECTILE_NADE_BURN:
 			case PROJECTILE_NADE:
+			case PROJECTILE_NADE_NAPALM:
+			case PROJECTILE_NADE_NAPALM_BURN:
 				rot = self.avelocity; 
 				break;
 			case PROJECTILE_HOOKBOMB:
@@ -146,6 +148,8 @@ void Projectile_Draw()
 		case PROJECTILE_NADE_PINK:
 		case PROJECTILE_NADE_BURN:
 		case PROJECTILE_NADE:
+		case PROJECTILE_NADE_NAPALM:
+		case PROJECTILE_NADE_NAPALM_BURN:
 			trailorigin += v_up * 4;
 			break;
 		case PROJECTILE_GRENADE:
@@ -312,6 +316,7 @@ void Ent_Projectile()
 			case PROJECTILE_HOOKBOMB: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_KNIGHTSPIKE"); break;
 			case PROJECTILE_HAGAR: setmodel(self, "models/hagarmissile.mdl");self.traileffect = particleeffectnum("tr_hagar"); self.scale = 0.75; break;
 			case PROJECTILE_HAGAR_BOUNCING: setmodel(self, "models/hagarmissile.mdl");self.traileffect = particleeffectnum("tr_hagar"); self.scale = 0.75; break;
+			case PROJECTILE_NAPALM_FOUNTAIN: //self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum("torch_small"); break;
 			case PROJECTILE_FIREBALL: self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum("fireball"); break; // particle effect is good enough
 			case PROJECTILE_FIREMINE: self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum("firemine"); break; // particle effect is good enough
 			case PROJECTILE_TAG: setmodel(self, "models/laser.mdl"); self.traileffect = particleeffectnum("TR_ROCKET"); break;
@@ -341,6 +346,8 @@ void Ent_Projectile()
 			case PROJECTILE_NADE_PINK_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_pink_burn"); break;
 			case PROJECTILE_NADE: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade"); break;
 			case PROJECTILE_NADE_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_burn"); break;
+			case PROJECTILE_NADE_NAPALM: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
+			case PROJECTILE_NADE_NAPALM_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3"); self.traileffect = particleeffectnum("spiderbot_rocket_thrust"); break;
 			case PROJECTILE_RPC: setmodel(self, "models/weapons/ok_rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
 
 			default:
@@ -385,6 +392,9 @@ void Ent_Projectile()
 				self.move_bounce_factor = g_balance_grenadelauncher_bouncefactor;
 				self.move_bounce_stopspeed = g_balance_grenadelauncher_bouncestop;
 				break;
+			case PROJECTILE_NADE_NAPALM:
+			case PROJECTILE_NADE_NAPALM_BURN:
+				self.colormod = '2 0.5 0';
 			case PROJECTILE_NADE_RED_BURN:
 			case PROJECTILE_NADE_RED:
 			case PROJECTILE_NADE_BLUE_BURN:
@@ -426,6 +436,7 @@ void Ent_Projectile()
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = func_null;
 				break;
+			case PROJECTILE_NAPALM_FOUNTAIN:
 			case PROJECTILE_FIREBALL:
 				loopsound(self, CH_SHOTS_SINGLE, "weapons/fireball_fly2.wav", VOL_BASE, ATTEN_NORM);
 				self.mins = '-16 -16 -16';
