@@ -10,4 +10,3 @@
 #include "monster/mage.qc"
 #include "monster/zombie.qc"
 #include "monster/spider.qc"
-#include "monster/grunt.qc"

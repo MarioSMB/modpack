@@ -31,9 +31,6 @@ void monster_draw2d()
 {
 	if(self.netname == "")
 		return;
-		
-	if(self.monsterid == MON_GRUNT)
-		return; // special case
 	
 	if(!autocvar_g_waypointsprite_monsters)
 		return;
