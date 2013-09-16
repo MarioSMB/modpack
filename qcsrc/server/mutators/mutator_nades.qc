@@ -11,14 +11,17 @@ void nade_burn_spawn(entity _nade)
 {
 	float p;
 	
-	switch(_nade.realowner.team)
-	{
-		case NUM_TEAM_1: p = PROJECTILE_NADE_RED_BURN; break;
-		case NUM_TEAM_2: p = PROJECTILE_NADE_BLUE_BURN; break;
-		case NUM_TEAM_3: p = PROJECTILE_NADE_YELLOW_BURN; break;
-		case NUM_TEAM_4: p = PROJECTILE_NADE_PINK_BURN; break;
-		default:		 p = PROJECTILE_NADE_BURN; break;
-	}
+	if(_nade.nade_type == NADE_TYPE_NAPALM)
+		p = PROJECTILE_NADE_NAPALM_BURN;
+	else
+		switch(_nade.realowner.team)
+		{
+			case NUM_TEAM_1: p = PROJECTILE_NADE_RED_BURN; break;
+			case NUM_TEAM_2: p = PROJECTILE_NADE_BLUE_BURN; break;
+			case NUM_TEAM_3: p = PROJECTILE_NADE_YELLOW_BURN; break;
+			case NUM_TEAM_4: p = PROJECTILE_NADE_PINK_BURN; break;
+			default:		 p = PROJECTILE_NADE_BURN; break;
+		}
 	
 	CSQCProjectile(_nade, TRUE, p, TRUE);
 }
@@ -38,41 +41,226 @@ void nade_spawn(entity _nade)
 	timer.owner = _nade;	
 	timer.skin = 10;
 	
-	switch(_nade.realowner.team)
+	_nade.effects |= EF_LOWPRECISION;
+	
+	if(_nade.nade_type == NADE_TYPE_NAPALM)
+		p = PROJECTILE_NADE_NAPALM;
+	else
 	{
-		case NUM_TEAM_1: p = PROJECTILE_NADE_RED; break;
-		case NUM_TEAM_2: p = PROJECTILE_NADE_BLUE; break;
-		case NUM_TEAM_3: p = PROJECTILE_NADE_YELLOW; break;
-		case NUM_TEAM_4: p = PROJECTILE_NADE_PINK; break;
-		default:		 p = PROJECTILE_NADE; break;
+		switch(_nade.realowner.team)
+		{
+			case NUM_TEAM_1: p = PROJECTILE_NADE_RED; break;
+			case NUM_TEAM_2: p = PROJECTILE_NADE_BLUE; break;
+			case NUM_TEAM_3: p = PROJECTILE_NADE_YELLOW; break;
+			case NUM_TEAM_4: p = PROJECTILE_NADE_PINK; break;
+			default:		 p = PROJECTILE_NADE; break;
+		}
+	}
+		
+	CSQCProjectile(_nade, TRUE, p, TRUE);
+}
+
+
+void napalm_damage(float dist, float damage, float edgedamage, float burntime)
+{
+	entity e;
+	float d;
+	vector p;
+	
+	if ( damage < 0 )
+		return;
+
+	RandomSelection_Init();
+	for(e = WarpZone_FindRadius(self.origin, dist, TRUE); e; e = e.chain)
+		if(e.takedamage == DAMAGE_AIM) 
+		if(self.realowner != e || autocvar_g_nades_napalm_selfdamage) 
+		if(!IS_PLAYER(e) || !self.realowner || DIFF_TEAM(e, self))
+		if not (e.frozen) 
+		{
+			p = e.origin;
+			p_x += e.mins_x + random() * (e.maxs_x - e.mins_x);
+			p_y += e.mins_y + random() * (e.maxs_y - e.mins_y);
+			p_z += e.mins_z + random() * (e.maxs_z - e.mins_z);
+			d = vlen(WarpZone_UnTransformOrigin(e, self.origin) - p);
+			if(d < dist)
+			{
+				e.fireball_impactvec = p;
+				RandomSelection_Add(e, 0, string_null, 1 / (1 + d), !Fire_IsBurning(e));
+			}
+		}
+	if(RandomSelection_chosen_ent)
+	{
+		d = vlen(WarpZone_UnTransformOrigin(RandomSelection_chosen_ent, self.origin) - RandomSelection_chosen_ent.fireball_impactvec);
+		d = damage + (edgedamage - damage) * (d / dist);
+		Fire_AddDamage(RandomSelection_chosen_ent, self.realowner, d * burntime, burntime, self.projectiledeathtype | HITTYPE_BOUNCE);
+		//trailparticles(self, particleeffectnum("fireball_laser"), self.origin, RandomSelection_chosen_ent.fireball_impactvec);
+		pointparticles(particleeffectnum("fireball_laser"), self.origin, RandomSelection_chosen_ent.fireball_impactvec - self.origin, 1);
+	}
+}
+
+
+void napalm_ball_think()
+{
+	if(time > self.pushltime)
+	{
+		remove(self);
+		return;
 	}
 	
-	CSQCProjectile(_nade, TRUE, p, TRUE);
+	vector midpoint = ((self.absmin + self.absmax) * 0.5);
+	if(pointcontents(midpoint) == CONTENT_WATER)
+	{
+		self.velocity = self.velocity * 0.5;
+					
+		if(pointcontents(midpoint + '0 0 16') == CONTENT_WATER)
+			{ self.velocity_z = 200; }
+	}
 	
+	self.angles = vectoangles(self.velocity);
+
+	napalm_damage(autocvar_g_nades_napalm_ball_radius,autocvar_g_nades_napalm_ball_damage,
+				  autocvar_g_nades_napalm_ball_damage,autocvar_g_nades_napalm_burntime);
+
+	self.nextthink = time + 0.1;
+}
+
+
+void nade_napalm_ball()
+{
+	entity proj;
+	vector kick;
+	
+	spamsound(self, CH_SHOTS, "weapons/fireball_fire.wav", VOL_BASE, ATTEN_NORM);
+	
+	proj = spawn ();
+	proj.owner = self.owner;
+	proj.realowner = self.realowner;
+	proj.team = self.owner.team;
+	proj.classname = "grenade";
+	proj.bot_dodge = TRUE;
+	proj.bot_dodgerating = autocvar_g_nades_napalm_ball_damage;
+	proj.movetype = MOVETYPE_BOUNCE;
+	proj.projectiledeathtype = DEATH_NADE_NAPALM;
+	PROJECTILE_MAKETRIGGER(proj);
+	setmodel(proj, "null");
+	proj.scale = 1;//0.5;
+	setsize(proj, '-4 -4 -4', '4 4 4');
+	setorigin(proj, self.origin);
+	proj.think = napalm_ball_think;
+	proj.nextthink = time;
+	proj.damageforcescale = autocvar_g_nades_napalm_ball_damageforcescale;
+	proj.effects = EF_LOWPRECISION | EF_FLAME;
+	
+	kick_x =(random() - 0.5) * 2 * autocvar_g_nades_napalm_ball_spread;
+	kick_y = (random() - 0.5) * 2 * autocvar_g_nades_napalm_ball_spread;
+	kick_z = (random()/2+0.5) * autocvar_g_nades_napalm_ball_spread;
+	proj.velocity = kick;
+	
+	proj.pushltime = time + autocvar_g_nades_napalm_ball_lifetime;
+
+	proj.angles = vectoangles(proj.velocity);
+	proj.flags = FL_PROJECTILE;
+    proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
+    
+	//CSQCProjectile(proj, TRUE, PROJECTILE_NAPALM_FIRE, TRUE);
+}
+
+
+void napalm_fountain_think()
+{
+	if(time >= self.ltime) 
+	{
+		remove(self);
+		return;
+	}
+	
+	vector midpoint = ((self.absmin + self.absmax) * 0.5);
+	if(pointcontents(midpoint) == CONTENT_WATER)
+	{
+		self.velocity = self.velocity * 0.5;
+					
+		if(pointcontents(midpoint + '0 0 16') == CONTENT_WATER)
+			{ self.velocity_z = 200; }
+			
+		UpdateCSQCProjectile(self);
+	}
+	
+	napalm_damage(autocvar_g_nades_napalm_fountain_radius, autocvar_g_nades_napalm_fountain_damage,
+		autocvar_g_nades_napalm_fountain_edgedamage, autocvar_g_nades_napalm_burntime);
+	
+	self.nextthink = time + 0.1;
+	if(time >= self.fire_fountain_time)
+	{
+		self.fire_fountain_time = time + autocvar_g_nades_napalm_fountain_delay;
+		nade_napalm_ball();
+	}
+}
+
+void nade_napalm_boom()
+{
+	entity fountain;
+	local float c;
+	for (c = 0; c < autocvar_g_nades_napalm_ball_count; c ++) 
+		nade_napalm_ball();
+	
+	
+	fountain = spawn();
+	fountain.owner = self.owner;
+	fountain.realowner = self.realowner;
+	fountain.origin = self.origin;
+	setorigin(fountain, fountain.origin);
+	fountain.think = napalm_fountain_think;
+	fountain.nextthink = time;
+	fountain.ltime = time + autocvar_g_nades_napalm_fountain_lifetime;
+	fountain.pushltime = fountain.ltime;
+	fountain.team = self.team;
+	fountain.movetype = MOVETYPE_TOSS;
+	fountain.projectiledeathtype = DEATH_NADE_NAPALM;
+	fountain.bot_dodge = TRUE;
+	fountain.bot_dodgerating = autocvar_g_nades_napalm_fountain_damage;
+	fountain.fire_fountain_time = time;
+	setsize(fountain, '-16 -16 -16', '16 16 16');
+	CSQCProjectile(fountain, TRUE, PROJECTILE_NAPALM_FOUNTAIN, TRUE);
 }
 
 void nade_boom()
 {
 	string expef;
+	float napalm_blast;
 	
-	switch(self.realowner.team)
-	{
-		case NUM_TEAM_1: expef = "nade_red_explode"; break;
-		case NUM_TEAM_2: expef = "nade_blue_explode"; break;
-		case NUM_TEAM_3: expef = "nade_yellow_explode"; break;
-		case NUM_TEAM_4: expef = "nade_pink_explode"; break;
-		default: 		 expef = "nade_explode"; break;
-	}
+	napalm_blast = (self.nade_type != NADE_TYPE_NAPALM || autocvar_g_nades_napalm_blast);
+
+	if ( self.nade_type == NADE_TYPE_NAPALM )
+		//Some nice effects for this: 
+		//EF_FLAME  onslaught_generator_gib_explode explosion_big explosion_medium explosion_small
+		expef = "explosion_medium";
+	else
+		switch(self.realowner.team)
+		{
+			case NUM_TEAM_1: expef = "nade_red_explode"; break;
+			case NUM_TEAM_2: expef = "nade_blue_explode"; break;
+			case NUM_TEAM_3: expef = "nade_yellow_explode"; break;
+			case NUM_TEAM_4: expef = "nade_pink_explode"; break;
+			default: 		 expef = "nade_explode"; break;
+		}
 	
+	
+	pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
+		
 	sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
-	pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
 	
-	Damage_DamageInfo(self.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage, autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, self.projectiledeathtype, 0, self);
-
 	self.takedamage = DAMAGE_NO;
-	RadiusDamage(self, self.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
+	
+	if(napalm_blast)
+	{
+		RadiusDamage(self, self.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
 				 autocvar_g_nades_nade_radius, self, autocvar_g_nades_nade_force, self.projectiledeathtype, self.enemy);
+		Damage_DamageInfo(self.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage, autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, self.projectiledeathtype, 0, self);
+	}
+	
+	if(self.nade_type == NADE_TYPE_NAPALM)
+		nade_napalm_boom();
 
 	remove(self);
 }
@@ -202,36 +390,74 @@ void toss_nade(entity e, vector _velocity, float _time)
 	e.nade_refire = time + autocvar_g_nades_nade_refire;
 }
 
+void nades_GiveBonus(entity player)
+{
+	if ( autocvar_g_nades_bonus )
+		if ( IS_PLAYER(player) && player.bonus_nades < autocvar_g_nades_bonus_max )
+		{
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_NADE_BONUS);
+			player.bonus_nades++;
+		}
+}
+
+void nades_RemoveBonus(entity player)
+{
+		if ( IS_PLAYER(player) )
+		{
+			player.bonus_nades = 0;
+		}
+}
+
+
 void nade_prime()
 {
+	
 	if(self.nade)
 		remove(self.nade);
 		
 	if(self.fake_nade)
 		remove(self.fake_nade);
+		
+	entity n = spawn(), fn = spawn();
 	
-	self.nade = spawn();
-	setmodel(self.nade, "null");
-	setattachment(self.nade, self, "bip01 l hand");
-	self.nade.classname = "nade";
-	self.nade.realowner = self;
-	self.nade.colormap = self.colormap;
-	self.nade.glowmod = self.glowmod;
-	self.nade.wait = time + autocvar_g_nades_nade_lifetime;
-	self.nade.lifetime = time;
-	self.nade.think = nade_beep;
-	self.nade.nextthink = max(self.nade.wait - 3, time);
-	self.nade.projectiledeathtype = DEATH_NADE;
+	setmodel(n, "null");
+	setattachment(n, self, "bip01 l hand");
 
-	self.fake_nade = spawn();
-	setmodel(self.fake_nade, "models/weapons/h_ok_grenade.iqm");
-	setattachment(self.fake_nade, self.weaponentity, "");
-	self.fake_nade.classname = "fake_nade";
-	self.fake_nade.realowner = self.fake_nade.owner = self;
-	self.fake_nade.colormap = self.colormap;
-	self.fake_nade.glowmod = self.glowmod;
-	self.fake_nade.think = SUB_Remove;
-	self.fake_nade.nextthink = self.nade.wait;
+	n.classname = "nade";
+	
+	if(self.items & IT_STRENGTH && autocvar_g_nades_bonus_onstrength)
+		n.nade_type = autocvar_g_nades_bonus_type;
+	else if (self.bonus_nades >= 1)
+	{
+		 n.nade_type = autocvar_g_nades_bonus_type;
+		self.bonus_nades -= 1;
+	}
+	else
+		 n.nade_type = autocvar_g_nades_nade_type;
+
+	n.realowner = self;
+	n.colormap = self.colormap;
+	n.glowmod = self.glowmod;
+	n.wait = time + autocvar_g_nades_nade_lifetime;
+	n.lifetime = time;
+	n.think = nade_beep;
+	n.nextthink = max(n.wait - 3, time);
+	n.projectiledeathtype = DEATH_NADE;
+	
+	if(n.nade_type == NADE_TYPE_NAPALM)
+		fn.colormod = '2 0.5 0';
+		
+	setmodel(fn, "models/weapons/h_ok_grenade.iqm");
+	setattachment(fn, self.weaponentity, "");
+	fn.classname = "fake_nade";
+	fn.realowner = fn.owner = self;
+	fn.colormap = self.colormap;
+	fn.glowmod = self.glowmod;
+	fn.think = SUB_Remove;
+	fn.nextthink = n.wait;
+	
+	self.nade = n;
+	self.fake_nade = fn;
 }
 
 float CanThrowNade()

@@ -350,6 +350,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	);
 	#endif
 	
+	nades_RemoveBonus(targ);
+	
 	// =======
 	// SUICIDE
 	// =======
@@ -406,6 +408,8 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 
 			// In this case, the death message will ALWAYS be "foo was betrayed by bar"
 			// No need for specific death/weapon messages...
+			
+			nades_RemoveBonus(attacker);
 		}
 		else
 		{
@@ -428,6 +432,12 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				default: break;
 			}
 			#undef SPREE_ITEM
+			
+			if ( autocvar_g_nades_bonus_frag )
+				if ( attacker.killcount % autocvar_g_nades_bonus_frag == 0 )
+			{
+				nades_GiveBonus(attacker);
+			}
 
 			if(!checkrules_firstblood)
 			{
@@ -1173,10 +1183,10 @@ float Fire_AddDamage(entity e, entity o, float d, float t, float dt)
 		mintime = e.fire_endtime - time;
 		maxtime = max(mintime, t);
 
-		mindps = e.fire_damagepersec;
+		mindps = max(0.1, e.fire_damagepersec);
 		maxdps = max(mindps, dps);
 
-		if(maxtime > mintime || maxdps > mindps)
+		if ( maxtime > mintime || maxdps > mindps )
 		{
 			// Constraints:
 			
@@ -1298,6 +1308,7 @@ void Fire_ApplyDamage(entity e)
 	e.fire_hitsound = TRUE;
 
 	if not(IS_INDEPENDENT_PLAYER(e))
+	if not(e.frozen)
 	FOR_EACH_PLAYER(other) if(e != other)
 	{
 		if(IS_PLAYER(other))
