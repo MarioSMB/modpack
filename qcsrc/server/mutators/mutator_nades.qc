@@ -255,8 +255,7 @@ void nade_boom()
 			break;
 		case NADE_TYPE_ICE:   
 			nade_blast = 0;
-			//pointparticles(particleeffectnum("icefield"), self.origin + '0 0 1', '0 0 0', 1);
-			expef = "TE_SPIKEQUAD"; 
+			expef = "electro_combo"; // hookbomb_explode electro_combo bigplasma_impact
 			break;
 	
 		default:
