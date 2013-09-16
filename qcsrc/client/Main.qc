@@ -98,6 +98,7 @@ void CSQC_Init(void)
 	registercvar("cl_bikini", "0");
 	registercvar("cl_bikini_skin", "0");
 	registercvar("cl_damnfurries", "0");
+	registercvar("cl_robot", "0");
 
 	gametype = 0;
 

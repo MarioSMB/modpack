@@ -542,6 +542,7 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, cvar_cl_bikini, "cl_bikini");
 	GetCvars_handleFloat(s, f, cvar_cl_bikini_skin, "cl_bikini_skin");
 	GetCvars_handleFloat(s, f, cvar_cl_damnfurries, "cl_damnfurries");
+	GetCvars_handleFloat(s, f, cvar_cl_robot, "cl_robot");
 	GetCvars_handleFloat(s, f, cvar_cl_handicap, "cl_handicap");
 	GetCvars_handleFloat(s, f, cvar_cl_clippedspectating, "cl_clippedspectating");
 	GetCvars_handleString_Fixup(s, f, cvar_cl_weaponpriority, "cl_weaponpriority", W_FixWeaponOrder_ForceComplete_AndBuildImpulseList);
@@ -1403,6 +1404,7 @@ void precache()
 		precache_playermodel("models/player/mario.dpm");
 		precache_playermodel("models/player/abyss.zym");
 		precache_playermodel("models/player/renamon.iqm");
+		precache_playermodel("models/player/terminusmale.iqm");
 	}
 
     if (g_footsteps)

@@ -327,6 +327,8 @@ void FixPlayermodel()
 				defaultmodel = "models/player/abyss.zym";
 				defaultskin = self.cvar_cl_bikini_skin;
 			}
+			if(self.cvar_cl_robot)
+				defaultmodel = "models/player/terminusmale.iqm";
 			if(self.cvar_cl_sparkle > 2)
 				defaultmodel = "models/player/mario.dpm";
 		}
