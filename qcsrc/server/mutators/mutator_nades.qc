@@ -396,6 +396,7 @@ void nades_GiveBonus(entity player)
 		if ( IS_PLAYER(player) && player.bonus_nades < autocvar_g_nades_bonus_max )
 		{
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_NADE_BONUS);
+			play2(player,"kh/alarm.wav");
 			player.bonus_nades++;
 		}
 }
