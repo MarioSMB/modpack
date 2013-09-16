@@ -113,6 +113,8 @@ void Projectile_Draw()
 			case PROJECTILE_NADE:
 			case PROJECTILE_NADE_NAPALM:
 			case PROJECTILE_NADE_NAPALM_BURN:
+			case PROJECTILE_NADE_ICE:
+			case PROJECTILE_NADE_ICE_BURN:
 				rot = self.avelocity; 
 				break;
 			case PROJECTILE_HOOKBOMB:
@@ -150,6 +152,8 @@ void Projectile_Draw()
 		case PROJECTILE_NADE:
 		case PROJECTILE_NADE_NAPALM:
 		case PROJECTILE_NADE_NAPALM_BURN:
+		case PROJECTILE_NADE_ICE:
+		case PROJECTILE_NADE_ICE_BURN:
 			trailorigin += v_up * 4;
 			break;
 		case PROJECTILE_GRENADE:
