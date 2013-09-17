@@ -904,6 +904,12 @@ void DrawAmmoNades(vector myPos, vector mySize)
 		numpos = myPos + eX * mySize_y;
 		picpos = myPos;
 	}
+	
+	// fix image posionom because "notify_nade" has a 2:1 aspect ratio
+	local float fiximgy = 1.75;
+	local float fiximgx = 3;
+	picpos_x -= mySize_x*(1/3)/fiximgx;
+	picpos_y -= mySize_y*(fiximgy-1)/2;
 
 
     if(a > 0 && autocvar_hud_panel_ammo_progressbar)
@@ -911,15 +917,15 @@ void DrawAmmoNades(vector myPos, vector mySize)
 
     if(autocvar_hud_panel_ammo_text)
     {
-        if(a > 0 )
+        //if(a > 0 )
             drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
-        else // "ghost" ammo count
-            drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
+        //else // "ghost" ammo count
+        //    drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
     }
-	if(a > 0)
-		drawpic_aspect_skin(picpos, "notify_nade", '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
-	else // "ghost" ammo icon
-		drawpic_aspect_skin(picpos, "notify_nade", '1 1 0' * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
+	//if(a > 0)
+		drawpic_aspect_skin(picpos, "notify_nade", '1 1 0' * mySize_y*fiximgy, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+	//else // "ghost" ammo icon
+	//	drawpic_aspect_skin(picpos, "notify_nade", '1 1 0' * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
 }
 
 void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_selected, float infinite_ammo)
