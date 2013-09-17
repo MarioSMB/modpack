@@ -888,7 +888,7 @@ void DrawAmmoNades(vector myPos, vector mySize)
 {
 	string nade_icon;
 	
-	switch(nade_bonus_type)
+	switch(getstati(STAT_GRENADE_BONUS_TYPE))
 	{
 		case 2: nade_icon = "notify_nade_napalm"; break;
 		default: nade_icon = "notify_nade"; break;

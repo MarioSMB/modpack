@@ -398,11 +398,6 @@ void nades_GiveBonus(entity player)
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_NADE_BONUS);
 			play2(player,"kh/alarm.wav");
 			player.bonus_nades++;
-			
-			msg_entity = player; 
-			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_NADE_BONUS_TYPE); 
-			WriteByte(MSG_ONE, autocvar_g_nades_bonus_type);
 		}
 }
 
@@ -555,6 +550,9 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 			}
 		}
 	}
+	
+	
+	self.nade_type = autocvar_g_nades_bonus_type;
 
 	return FALSE;
 }

@@ -162,5 +162,3 @@ float sv_showfps;
 float num_spectators;
 #define MAX_SPECTATORS 7
 float spectatorlist[MAX_SPECTATORS];
-
-float nade_bonus_type;
