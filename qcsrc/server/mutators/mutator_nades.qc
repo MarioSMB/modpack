@@ -232,8 +232,6 @@ void nade_ice_boom()
 	entity e;
 	for(e = findradius(self.origin, autocvar_g_nades_ice_freeze_radius); e; e = e.chain) 
 		if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0)
-		if ( DIFF_TEAM(e,self.realowner) || autocvar_g_nades_ice_friendly_freeze >= 2 )
-		if ( e != self.realowner || autocvar_g_nades_ice_friendly_freeze )
 		{
 			Freeze(e, 1/autocvar_g_nades_ice_freeze_time, 2, FALSE);
 			pointparticles(particleeffectnum("electro_impact"), e.origin, '0 0 0', 1);
