@@ -549,8 +549,8 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 		}
 	}
 	
-	
-	self.nade_type = autocvar_g_nades_bonus_type;
+	if(IS_PLAYER(self))
+		self.nade_type = autocvar_g_nades_bonus_type;
 
 	return FALSE;
 }
@@ -584,6 +584,13 @@ MUTATOR_HOOKFUNCTION(nades_RemovePlayer)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(nades_SpectateCopy)
+{
+	self.nade_type = other.nade_type;
+	self.bonus_nades = other.bonus_nades;
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(nades_BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":Nades");
@@ -604,6 +611,7 @@ MUTATOR_DEFINITION(mutator_nades)
 	MUTATOR_HOOK(PlayerDies, nades_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, nades_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, nades_RemovePlayer, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SpectateCopy, nades_SpectateCopy, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, nades_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, nades_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 	
