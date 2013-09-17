@@ -883,6 +883,59 @@ string GetAmmoPicture(float i)
 	}
 }
 
+
+void DrawAmmoNades(vector myPos, vector mySize)
+{
+	string nade_icon;
+	
+	switch(getstati(STAT_GRENADE_BONUS_TYPE))
+	{
+		case 2: nade_icon = "notify_nade_napalm"; break;
+		default: nade_icon = "notify_nade"; break;
+	}
+	
+	float a;
+	a = getstati(STAT_GRENADE_BONUS); // how much ammo do we have of type itemcode?
+
+	vector color = '1 1 1';
+
+	float theAlpha = 1;
+	
+	vector picpos, numpos;
+	if(autocvar_hud_panel_ammo_iconalign)
+	{
+		numpos = myPos;
+		picpos = myPos + eX * 2 * mySize_y;
+	}
+	else
+	{
+		numpos = myPos + eX * mySize_y;
+		picpos = myPos;
+	}
+	
+	// fix image posionom because "notify_nade" has a 2:1 aspect ratio
+	local float fiximgy = 1.75;
+	local float fiximgx = 3;
+	picpos_x -= mySize_x*(1/3)/fiximgx;
+	picpos_y -= mySize_y*(fiximgy-1)/2;
+
+
+    if(a > 0 && autocvar_hud_panel_ammo_progressbar)
+        HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, autocvar_hud_panel_ammo_progressbar_name, a/autocvar_hud_panel_ammo_maxammo, 0, 0, color, autocvar_hud_progressbar_alpha * panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+
+    if(autocvar_hud_panel_ammo_text)
+    {
+        //if(a > 0 )
+            drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+        //else // "ghost" ammo count
+        //    drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
+    }
+	//if(a > 0)
+		drawpic_aspect_skin(picpos,nade_icon , '1 1 0' * mySize_y*fiximgy, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+	//else // "ghost" ammo icon
+	//	drawpic_aspect_skin(picpos, nade_icon, '1 1 0' * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
+}
+
 void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_selected, float infinite_ammo)
 {
 	float a;
@@ -963,21 +1016,30 @@ void HUD_Ammo(void)
 		pos += '1 1 0' * panel_bg_padding;
 		mySize -= '2 2 0' * panel_bg_padding;
 	}
+	
 
 	float rows = 0, columns, row, column;
+	float draw_nades = getstati(STAT_GRENADE_BONUS) ? 1 : 0;
+	float total_ammo_count;
+	
 	vector ammo_size;
 	if (autocvar_hud_panel_ammo_onlycurrent)
-		ammo_size = mySize;
+		total_ammo_count = 1;
 	else
-	{
-		rows = mySize_y/mySize_x;
-		rows = bound(1, floor((sqrt(4 * (3/1) * rows * AMMO_COUNT + rows * rows) + rows + 0.5) / 2), AMMO_COUNT);
-		//                               ^^^ ammo item aspect goes here
+		total_ammo_count = AMMO_COUNT;
+	
+	if ( draw_nades )
+		total_ammo_count++;
+	
+	
+	rows = mySize_y/mySize_x;
+	rows = bound(1, floor((sqrt(4 * (3/1) * rows * (total_ammo_count) + rows * rows) + rows + 0.5) / 2), (total_ammo_count));
+	//                               ^^^ ammo item aspect goes here
 
-		columns = ceil(AMMO_COUNT/rows);
+	columns = ceil((total_ammo_count)/rows);
 
-		ammo_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
-	}
+	ammo_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+	
 
 	local vector offset = '0 0 0'; // fteqcc sucks
 	float newSize;
@@ -998,6 +1060,9 @@ void HUD_Ammo(void)
 
 	float i, stat_items, currently_selected, infinite_ammo;
 	infinite_ammo = FALSE;
+	
+	row = column = 0;
+	
 	if (autocvar_hud_panel_ammo_onlycurrent)
 	{
 		if(autocvar__hud_configure)
@@ -1018,13 +1083,19 @@ void HUD_Ammo(void)
 				}
 			}
 		}
+		
+		++row;
+		if(row >= rows)
+		{
+			row = 0;
+			column = column + 1;
+		}
 	}
 	else
 	{
 		stat_items = getstati(STAT_ITEMS, 0, 24);
 		if (stat_items & IT_UNLIMITED_WEAPON_AMMO)
 			infinite_ammo = TRUE;
-		row = column = 0;
 		for (i = 0; i < AMMO_COUNT; ++i) {
 			currently_selected = stat_items & GetAmmoItemCode(i);
 			DrawAmmoItem(pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y), ammo_size, i, currently_selected, infinite_ammo);
@@ -1036,6 +1107,9 @@ void HUD_Ammo(void)
 			}
 		}
 	}
+	
+	if ( draw_nades )
+		DrawAmmoNades(pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y), ammo_size);
 
 	draw_endBoldFont();
 }
