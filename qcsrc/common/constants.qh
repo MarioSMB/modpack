@@ -194,6 +194,9 @@ const float STAT_MONSTERS_KILLED = 77;
 const float STAT_OK_AMMO_CHARGE = 78;
 const float STAT_OK_AMMO_CHARGEPOOl = 79;
 
+const float STAT_GRENADE_BONUS = 80;
+const float STAT_GRENADE_BONUS_TYPE = 81;
+
 // mod stats (1xx)
 const float STAT_REDALIVE = 100;
 const float STAT_BLUEALIVE = 101;
