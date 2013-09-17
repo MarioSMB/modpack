@@ -392,21 +392,19 @@ void toss_nade(entity e, vector _velocity, float _time)
 
 void nades_GiveBonus(entity player)
 {
-	if ( autocvar_g_nades_bonus )
-		if ( IS_PLAYER(player) && player.bonus_nades < autocvar_g_nades_bonus_max )
-		{
-			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_NADE_BONUS);
-			play2(player,"kh/alarm.wav");
-			player.bonus_nades++;
-		}
+	if (autocvar_g_nades_bonus)
+	if (IS_REAL_CLIENT(player))
+	if (IS_PLAYER(player) && player.bonus_nades < autocvar_g_nades_bonus_max)
+	{
+		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_NADE_BONUS);
+		play2(player,"kh/alarm.wav");
+		player.bonus_nades++;
+	}
 }
 
 void nades_RemoveBonus(entity player)
 {
-		if ( IS_PLAYER(player) )
-		{
-			player.bonus_nades = 0;
-		}
+	player.bonus_nades = 0;
 }
 
 
