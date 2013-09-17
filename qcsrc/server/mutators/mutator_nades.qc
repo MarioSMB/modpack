@@ -193,9 +193,9 @@ void napalm_fountain_think()
 		autocvar_g_nades_napalm_fountain_edgedamage, autocvar_g_nades_napalm_burntime);
 	
 	self.nextthink = time + 0.1;
-	if(time >= self.fire_fountain_time)
+	if(time >= self.nade_special_time)
 	{
-		self.fire_fountain_time = time + autocvar_g_nades_napalm_fountain_delay;
+		self.nade_special_time = time + autocvar_g_nades_napalm_fountain_delay;
 		nade_napalm_ball();
 	}
 }
@@ -222,20 +222,81 @@ void nade_napalm_boom()
 	fountain.projectiledeathtype = DEATH_NADE_NAPALM;
 	fountain.bot_dodge = TRUE;
 	fountain.bot_dodgerating = autocvar_g_nades_napalm_fountain_damage;
-	fountain.fire_fountain_time = time;
+	fountain.nade_special_time = time;
 	setsize(fountain, '-16 -16 -16', '16 16 16');
 	CSQCProjectile(fountain, TRUE, PROJECTILE_NAPALM_FOUNTAIN, TRUE);
 }
 
-void nade_ice_boom()
+void nade_ice_think()
 {
+	if(time >= self.ltime) 
+	{
+		entity e;
+		for(e = findradius(self.origin, autocvar_g_nades_ice_freeze_radius); e; e = e.chain) 
+			if ( e.frozen )
+			{
+				e.revive_speed = 1/autocvar_g_nades_ice_freeze_time;
+			}
+		
+		remove(self);
+		return;
+	}
+	
+	
+	self.nextthink = time+0.1;
+	
+	
+	
+	// gaussian
+	float randomr;
+	randomr = random();
+	randomr = exp(-5*randomr*randomr)*autocvar_g_nades_ice_freeze_radius;
+	float randomw;
+	randomw = random()*M_PI*2;
+	vector randomp;
+	randomp_x = randomr*cos(randomw);
+	randomp_y = randomr*sin(randomw);
+	randomp_z = 1;
+	pointparticles(particleeffectnum("electro_muzzleflash"), self.origin + randomp, '0 0 0', 1);
+	
+	if(time >= self.nade_special_time)
+	{
+		self.nade_special_time = time+0.7;
+		
+		
+		pointparticles(particleeffectnum("electro_impact"), self.origin, '0 0 0', 1);
+	}
+	
+	
+	
 	entity e;
 	for(e = findradius(self.origin, autocvar_g_nades_ice_freeze_radius); e; e = e.chain) 
-		if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0)
+		if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0) if not ( e.frozen )
 		{
-			Freeze(e, 1/autocvar_g_nades_ice_freeze_time, 2, FALSE);
 			pointparticles(particleeffectnum("electro_impact"), e.origin, '0 0 0', 1);
+			Freeze(e, 0, 2, FALSE);
 		}
+}
+
+void nade_ice_boom()
+{
+	entity fountain;
+	fountain = spawn();
+	fountain.owner = self.owner;
+	fountain.realowner = self.realowner;
+	fountain.origin = self.origin;
+	setorigin(fountain, fountain.origin);
+	fountain.think = nade_ice_think;
+	fountain.nextthink = time;
+	fountain.ltime = time + autocvar_g_nades_ice_freezefield_time;
+	fountain.pushltime = fountain.ltime;
+	fountain.team = self.team;
+	fountain.movetype = MOVETYPE_TOSS;
+	fountain.projectiledeathtype = DEATH_NADE;
+	fountain.bot_dodge = FALSE;
+	setsize(fountain, '-16 -16 -16', '16 16 16');
+	fountain.nade_special_time = time+0.3;
+	//fountain.effects = EF_LOWPRECISION | EF_FLAME;
 }
 
 void nade_boom()

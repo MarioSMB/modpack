@@ -2,7 +2,7 @@
 .entity fake_nade;
 .float nade_refire;
 .float bonus_nades;
-.float fire_fountain_time;
+.float nade_special_time;
 .float bonus_nade_score;
 
 .float nade_type;
