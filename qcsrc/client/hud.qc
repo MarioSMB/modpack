@@ -886,6 +886,14 @@ string GetAmmoPicture(float i)
 
 void DrawAmmoNades(vector myPos, vector mySize)
 {
+	string nade_icon;
+	
+	switch(nade_bonus_type)
+	{
+		case 2: nade_icon = "notify_nade_napalm"; break;
+		default: nade_icon = "notify_nade"; break;
+	}
+	
 	float a;
 	a = getstati(STAT_GRENADE_BONUS); // how much ammo do we have of type itemcode?
 
@@ -923,9 +931,9 @@ void DrawAmmoNades(vector myPos, vector mySize)
         //    drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
     }
 	//if(a > 0)
-		drawpic_aspect_skin(picpos, "notify_nade", '1 1 0' * mySize_y*fiximgy, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(picpos,nade_icon , '1 1 0' * mySize_y*fiximgy, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 	//else // "ghost" ammo icon
-	//	drawpic_aspect_skin(picpos, "notify_nade", '1 1 0' * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
+	//	drawpic_aspect_skin(picpos, nade_icon, '1 1 0' * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
 }
 
 void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_selected, float infinite_ammo)

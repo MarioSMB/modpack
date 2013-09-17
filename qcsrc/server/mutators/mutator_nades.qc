@@ -399,6 +399,10 @@ void nades_GiveBonus(entity player)
 			play2(player,"kh/alarm.wav");
 			player.bonus_nades++;
 			
+			msg_entity = player; 
+			WriteByte(MSG_ONE, SVC_TEMPENTITY);
+			WriteByte(MSG_ONE, TE_CSQC_NADE_BONUS_TYPE); 
+			WriteByte(MSG_ONE, autocvar_g_nades_bonus_type);
 		}
 }
 
