@@ -275,6 +275,8 @@ void nade_ice_think()
 		{
 			pointparticles(particleeffectnum("electro_impact"), e.origin, '0 0 0', 1);
 			Freeze(e, 0, 2, FALSE);
+			if ( e.flagcarried )
+				ctf_Handle_Throw(e, world, DROP_THROW);
 		}
 }
 
