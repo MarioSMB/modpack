@@ -822,6 +822,8 @@ void spawnfunc_worldspawn (void)
 
 	// misc
 	addstat(STAT_RESPAWN_TIME, AS_FLOAT, stat_respawn_time);
+	
+	addstat(STAT_GRENADE_BONUS, AS_INT, bonus_nades);
 
 	next_pingtime = time + 5;
 

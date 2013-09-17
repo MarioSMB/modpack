@@ -398,6 +398,7 @@ void nades_GiveBonus(entity player)
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_NADE_BONUS);
 			play2(player,"kh/alarm.wav");
 			player.bonus_nades++;
+			
 		}
 }
 
