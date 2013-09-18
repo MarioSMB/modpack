@@ -562,8 +562,8 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 	{
 		self.nade_type = autocvar_g_nades_bonus_type;
 		
-		if ( self.bonus_nade_score > 0 )
-			self.bonus_nade_score -= autocvar_g_nades_bonus_score_decay;
+		if ( self.bonus_nade_score >= 0 )
+			nades_GiveBonus(self,autocvar_g_nades_bonus_score_time);
 	}
 
 	return FALSE;
