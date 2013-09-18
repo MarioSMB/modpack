@@ -1058,8 +1058,6 @@ void HUD_Ammo(void)
 	else
 		nade_prevstatus = nade_prevframe = nade_statuschange_time = 0;
 	
-	print(ftos(total_ammo_count), "\n");
-	
 	rows = mySize_y/mySize_x;
 	rows = bound(1, floor((sqrt(4 * (3/1) * rows * (total_ammo_count) + rows * rows) + rows + 0.5) / 2), (total_ammo_count));
 	//                               ^^^ ammo item aspect goes here
