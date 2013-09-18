@@ -212,7 +212,8 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 		{
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_OVERKILL_CHARGE);
 			self.ok_notice_time = time + 2;
-			play2(self, "weapons/dryfire.wav");
+			if(IS_REAL_CLIENT(self))
+				play2(self, "weapons/dryfire.wav");
 		}
 		if(self.weaponentity.state != WS_CLEAR)
 			w_ready();
