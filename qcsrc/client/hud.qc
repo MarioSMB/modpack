@@ -883,6 +883,24 @@ string GetAmmoPicture(float i)
 	}
 }
 
+void DrawNadeScoreBar(vector myPos, vector mySize)
+{
+	vector color;
+	
+	switch(getstati(STAT_GRENADE_BONUS_TYPE))
+	{
+		case NADE_TYPE_NAPALM: color = '2 0.5 0'; break;
+		default: color = '1 1 1'; break;
+	}
+	
+	HUD_Panel_DrawProgressBar(
+		myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, 
+		mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, 
+		autocvar_hud_panel_ammo_progressbar_name, 
+		getstatf(STAT_GRENADE_BONUS_SCORE), 0, 0, color, 
+		autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
+
+}
 
 void DrawAmmoNades(vector myPos, vector mySize)
 {
@@ -890,7 +908,7 @@ void DrawAmmoNades(vector myPos, vector mySize)
 	
 	switch(getstati(STAT_GRENADE_BONUS_TYPE))
 	{
-		case 2: nade_icon = "nade_napalm"; break;
+		case NADE_TYPE_NAPALM: nade_icon = "nade_napalm"; break;
 		default: nade_icon = "nade"; break;
 	}
 	
@@ -913,6 +931,7 @@ void DrawAmmoNades(vector myPos, vector mySize)
 		picpos = myPos;
 	}
 
+	DrawNadeScoreBar(myPos,mySize);
 
     if(a > 0 && autocvar_hud_panel_ammo_progressbar)
         HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, autocvar_hud_panel_ammo_progressbar_name, a/autocvar_hud_panel_ammo_maxammo, 0, 0, color, autocvar_hud_progressbar_alpha * panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
@@ -928,6 +947,7 @@ void DrawAmmoNades(vector myPos, vector mySize)
 		drawpic_aspect_skin(picpos,nade_icon , '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 	//else // "ghost" ammo icon
 	//	drawpic_aspect_skin(picpos, nade_icon, '1 1 0' * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
+
 }
 
 void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_selected, float infinite_ammo)
@@ -1013,7 +1033,7 @@ void HUD_Ammo(void)
 	
 
 	float rows = 0, columns, row, column;
-	float draw_nades = getstati(STAT_GRENADE_BONUS) ? 1 : 0;
+	float draw_nades = getstati(STAT_GRENADE_BONUS)+getstatf(STAT_GRENADE_BONUS_SCORE) > 0 ? 1 : 0;
 	float total_ammo_count;
 	
 	vector ammo_size;
