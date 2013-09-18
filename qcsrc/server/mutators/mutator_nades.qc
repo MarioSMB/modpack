@@ -595,12 +595,13 @@ MUTATOR_HOOKFUNCTION(nades_PlayerDies)
 	{
 		if (SAME_TEAM(frag_attacker, frag_target) || frag_attacker == frag_target)
 			nades_RemoveBonus(frag_attacker);
+		else if(frag_target.flagcarried)
+			nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_medium);
 		else
-			nades_GiveBonus(frag_attacker,autocvar_g_nades_bonus_score_low);
+			nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_minor);
 	}
 		
 	nades_RemoveBonus(frag_target);
-	
 		
 	return FALSE;
 }

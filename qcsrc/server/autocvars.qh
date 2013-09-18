@@ -1407,6 +1407,7 @@ float autocvar_g_nades_bonus_onstrength;
 float autocvar_g_nades_bonus_max;
 float autocvar_g_nades_bonus_score_max;
 float autocvar_g_nades_bonus_score_time;
+float autocvar_g_nades_bonus_score_minor;
 float autocvar_g_nades_bonus_score_low;
 float autocvar_g_nades_bonus_score_high;
 float autocvar_g_nades_bonus_score_medium;

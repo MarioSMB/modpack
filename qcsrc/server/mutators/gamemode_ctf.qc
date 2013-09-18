@@ -543,6 +543,7 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	
 	// scoring
 	PlayerScore_Add(player, SP_CTF_PICKUPS, 1);
+	nades_GiveBonus(player, autocvar_g_nades_bonus_score_minor);
 	switch(pickuptype)
 	{		
 		case PICKUP_BASE:
@@ -1851,8 +1852,6 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDies)
 	{
 		PlayerTeamScore_AddScore(frag_attacker, autocvar_g_ctf_score_kill);
 		PlayerScore_Add(frag_attacker, SP_CTF_FCKILLS, 1);
-		
-		nades_GiveBonus(frag_attacker,autocvar_g_nades_bonus_score_medium);
 	}
 				
 	if(frag_target.flagcarried)
