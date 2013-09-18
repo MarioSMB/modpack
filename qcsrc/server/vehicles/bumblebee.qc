@@ -556,7 +556,7 @@ float bumb_pilot_frame()
 			else if(IS_CLIENT(trace_ent))
 			{
 				if(trace_ent.health <= autocvar_g_vehicle_bumblebee_healgun_hmax && autocvar_g_vehicle_bumblebee_healgun_hps)
-					trace_ent.health = min(trace_ent.health, trace_ent.health + autocvar_g_vehicle_bumblebee_healgun_hps * frametime, autocvar_g_vehicle_bumblebee_healgun_hmax);
+					trace_ent.health = min(trace_ent.health + autocvar_g_vehicle_bumblebee_healgun_hps * frametime, autocvar_g_vehicle_bumblebee_healgun_hmax);
 				if(trace_ent.armorvalue <= autocvar_g_vehicle_bumblebee_healgun_amax && autocvar_g_vehicle_bumblebee_healgun_aps)
 					trace_ent.armorvalue = min(trace_ent.armorvalue, trace_ent.armorvalue + autocvar_g_vehicle_bumblebee_healgun_aps * frametime);
 			}

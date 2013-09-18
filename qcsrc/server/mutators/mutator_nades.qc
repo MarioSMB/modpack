@@ -567,8 +567,20 @@ MUTATOR_HOOKFUNCTION(nades_PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(nades_PlayerDies)
 {
-	if(self.nade)
-		toss_nade(self, '0 0 100', max(self.nade.wait, time + 0.05));
+	if(frag_target.nade)
+		toss_nade(frag_target, '0 0 100', max(frag_target.nade.wait, time + 0.05));
+		
+	if(IS_PLAYER(frag_attacker) && SAME_TEAM(frag_attacker, frag_target))
+		nades_RemoveBonus(frag_attacker);
+		
+	nades_RemoveBonus(frag_target);
+	
+	if(autocvar_g_nades_bonus_frag)
+	if(IS_PLAYER(frag_target))
+	if(frag_attacker.killcount % autocvar_g_nades_bonus_frag == 0)
+	{
+		nades_GiveBonus(frag_attacker);
+	}
 		
 	return FALSE;
 }

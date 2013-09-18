@@ -350,8 +350,6 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 	);
 	#endif
 	
-	nades_RemoveBonus(targ);
-	
 	// =======
 	// SUICIDE
 	// =======
@@ -408,8 +406,6 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 
 			// In this case, the death message will ALWAYS be "foo was betrayed by bar"
 			// No need for specific death/weapon messages...
-			
-			nades_RemoveBonus(attacker);
 		}
 		else
 		{
@@ -432,12 +428,6 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				default: break;
 			}
 			#undef SPREE_ITEM
-			
-			if ( autocvar_g_nades_bonus_frag )
-				if ( attacker.killcount % autocvar_g_nades_bonus_frag == 0 )
-			{
-				nades_GiveBonus(attacker);
-			}
 
 			if(!checkrules_firstblood)
 			{
