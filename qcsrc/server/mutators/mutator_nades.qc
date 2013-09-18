@@ -392,12 +392,12 @@ void toss_nade(entity e, vector _velocity, float _time)
 
 void nades_GiveBonus(entity player, float score)
 {
-	if(autocvar_g_nades)
+	if (autocvar_g_nades)
 	if (autocvar_g_nades_bonus)
 	if (IS_REAL_CLIENT(player))
 	if (IS_PLAYER(player) && player.bonus_nades < autocvar_g_nades_bonus_max)
-	if not ( player.frozen )
-	if ( player.deadflag == DEAD_NO )
+	if (player.frozen == 0)
+	if (player.deadflag == DEAD_NO)
 	{
 		if ( player.bonus_nade_score < 1 )
 			player.bonus_nade_score += score/autocvar_g_nades_bonus_score_max;
@@ -529,6 +529,8 @@ MUTATOR_HOOKFUNCTION(nades_VehicleEnter)
 
 MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 {
+	if not(IS_PLAYER(self)) { return FALSE; }
+	
 	float key_pressed = self.BUTTON_HOOK;
 	
 	if(g_grappling_hook || client_hasweapon(self, WEP_HOOK, FALSE, FALSE) || (weaponsInMap & WEPSET_HOOK) || g_jetpack || self.items & IT_JETPACK)
@@ -611,9 +613,10 @@ MUTATOR_HOOKFUNCTION(nades_RemovePlayer)
 {
 	if(self.nade)
 		remove(self.nade);
-
 	if(self.fake_nade)
 		remove(self.fake_nade);
+	
+	self.nade = self.fake_nade = world;
 	
 	nades_RemoveBonus(self);
 		

@@ -902,7 +902,7 @@ void DrawNadeScoreBar(vector myPos, vector mySize)
 
 }
 
-void DrawAmmoNades(vector myPos, vector mySize)
+void DrawAmmoNades(vector myPos, vector mySize, float draw_expanding, float expand_time)
 {
 	string nade_icon;
 	
@@ -912,8 +912,9 @@ void DrawAmmoNades(vector myPos, vector mySize)
 		default: nade_icon = "nade"; break;
 	}
 	
-	float a;
-	a = getstati(STAT_GRENADE_BONUS); // how much ammo do we have of type itemcode?
+	float a, b;
+	a = getstati(STAT_GRENADE_BONUS);
+	b = getstatf(STAT_GRENADE_BONUS_SCORE);
 
 	vector color = '1 1 1';
 
@@ -935,19 +936,17 @@ void DrawAmmoNades(vector myPos, vector mySize)
 
     if(a > 0 && autocvar_hud_panel_ammo_progressbar)
         HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, autocvar_hud_panel_ammo_progressbar_name, a/autocvar_hud_panel_ammo_maxammo, 0, 0, color, autocvar_hud_progressbar_alpha * panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
-
-    if(autocvar_hud_panel_ammo_text)
-    {
-        //if(a > 0 )
-            drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
-        //else // "ghost" ammo count
-        //    drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
-    }
-	//if(a > 0)
-		drawpic_aspect_skin(picpos,nade_icon , '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
-	//else // "ghost" ammo icon
-	//	drawpic_aspect_skin(picpos, nade_icon, '1 1 0' * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
-
+		
+	if(b > 0 || a > 0)
+	{
+		if(autocvar_hud_panel_ammo_text)
+		drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+		
+		if(draw_expanding)
+			drawpic_aspect_skin_expanding(picpos, nade_icon, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, expand_time);
+		
+		drawpic_aspect_skin(picpos, nade_icon , '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+	}
 }
 
 void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_selected, float infinite_ammo)
@@ -1006,6 +1005,9 @@ void DrawAmmoItem(vector myPos, vector mySize, float itemcode, float currently_s
 		drawpic_aspect_skin(picpos, GetAmmoPicture(itemcode), '1 1 0' * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
 }
 
+float nade_prevstatus;
+float nade_prevframe;
+float nade_statuschange_time;
 void HUD_Ammo(void)
 {
     if(hud != HUD_NORMAL) return;
@@ -1033,7 +1035,8 @@ void HUD_Ammo(void)
 	
 
 	float rows = 0, columns, row, column;
-	float draw_nades = getstati(STAT_GRENADE_BONUS)+getstatf(STAT_GRENADE_BONUS_SCORE) > 0 ? 1 : 0;
+	float nade_cnt = getstati(STAT_GRENADE_BONUS), nade_score = getstatf(STAT_GRENADE_BONUS_SCORE);
+	float draw_nades = nade_cnt + nade_score, nade_statuschange_elapsedtime;
 	float total_ammo_count;
 	
 	vector ammo_size;
@@ -1042,8 +1045,18 @@ void HUD_Ammo(void)
 	else
 		total_ammo_count = AMMO_COUNT;
 	
-	if ( draw_nades )
+	if(draw_nades)
+	{
 		total_ammo_count++;
+		if (nade_cnt != nade_prevframe)
+		{
+			nade_statuschange_time = time;
+			nade_prevstatus = nade_prevframe;
+			nade_prevframe = nade_cnt;
+		}
+	}
+	else
+		nade_prevstatus = nade_prevframe = nade_statuschange_time = 0;
 	
 	
 	rows = mySize_y/mySize_x;
@@ -1122,8 +1135,14 @@ void HUD_Ammo(void)
 		}
 	}
 	
-	if ( draw_nades )
-		DrawAmmoNades(pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y), ammo_size);
+	if (draw_nades)
+	{
+		nade_statuschange_elapsedtime = time - nade_statuschange_time;
+	
+		float f = bound(0, nade_statuschange_elapsedtime*2, 1);
+	
+		DrawAmmoNades(pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y), ammo_size, nade_prevstatus < nade_cnt && nade_cnt != 0 && f < 1, f);
+	}
 
 	draw_endBoldFont();
 }
