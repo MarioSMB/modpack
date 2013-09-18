@@ -392,6 +392,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 
 void nades_GiveBonus(entity player, float score)
 {
+	if(autocvar_g_nades)
 	if (autocvar_g_nades_bonus)
 	if (IS_REAL_CLIENT(player))
 	if (IS_PLAYER(player) && player.bonus_nades < autocvar_g_nades_bonus_max)
