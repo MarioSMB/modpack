@@ -890,6 +890,7 @@ void DrawNadeScoreBar(vector myPos, vector mySize)
 	switch(getstati(STAT_GRENADE_BONUS_TYPE))
 	{
 		case NADE_TYPE_NAPALM: color = '2 0.5 0'; break;
+		case NADE_TYPE_ICE: color = '0 0.5 2'; break;
 		default: color = '1 1 1'; break;
 	}
 	
@@ -909,6 +910,7 @@ void DrawAmmoNades(vector myPos, vector mySize, float draw_expanding, float expa
 	switch(getstati(STAT_GRENADE_BONUS_TYPE))
 	{
 		case NADE_TYPE_NAPALM: nade_icon = "nade_napalm"; break;
+		case NADE_TYPE_ICE: nade_icon = "nade_ice"; break;
 		default: nade_icon = "nade"; break;
 	}
 	

@@ -491,3 +491,4 @@ noref var vector autocvar_sv_player_headsize = '24 24 12';
 
 const float NADE_TYPE_NORMAL = 1;
 const float NADE_TYPE_NAPALM = 2;
+const float NADE_TYPE_ICE = 3;
