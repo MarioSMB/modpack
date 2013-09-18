@@ -560,10 +560,17 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 	
 	if(IS_PLAYER(self))
 	{
-		self.nade_type = autocvar_g_nades_bonus_type;
-		
-		if ( self.bonus_nade_score >= 0 )
-			nades_GiveBonus(self,autocvar_g_nades_bonus_score_time);
+		if ( autocvar_g_nades_bonus && autocvar_g_nades )
+		{
+			self.nade_type = autocvar_g_nades_bonus_type;
+			
+			if ( self.bonus_nade_score >= 0 )
+				nades_GiveBonus(self,autocvar_g_nades_bonus_score_time);
+		}
+		else
+		{
+			self.bonus_nades = self.bonus_nade_score = 0;
+		}
 	}
 
 	return FALSE;
