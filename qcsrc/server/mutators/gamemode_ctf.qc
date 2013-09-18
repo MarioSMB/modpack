@@ -420,7 +420,7 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	entity player = ((capturetype == CAPTURE_NORMAL) ? toucher : enemy_flag.ctf_dropper);
 	float old_time, new_time; 
 	
-	nades_GiveBonus(player, autocvar_g_nades_bonus_score_ctf_captures );
+	nades_GiveBonus(player, autocvar_g_nades_bonus_score_high );
 	
 	if not(player) { return; } // without someone to give the reward to, we can't possibly cap
 	if(player.fc_waskilled) { return; } // player died, so don't cap
@@ -485,7 +485,7 @@ void ctf_Handle_Return(entity flag, entity player)
 		PlayerTeamScore_AddScore(player, autocvar_g_ctf_score_return); // reward for return
 		PlayerScore_Add(player, SP_CTF_RETURNS, 1); // add to count of returns
 		
-		nades_GiveBonus(player,autocvar_g_nades_bonus_score_ctf_returns);
+		nades_GiveBonus(player,autocvar_g_nades_bonus_score_medium);
 	}
 
 	TeamScore_AddToTeam(flag.team, ST_SCORE, -autocvar_g_ctf_score_penalty_returned); // punish the team who was last carrying it
@@ -1852,7 +1852,7 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDies)
 		PlayerTeamScore_AddScore(frag_attacker, autocvar_g_ctf_score_kill);
 		PlayerScore_Add(frag_attacker, SP_CTF_FCKILLS, 1);
 		
-		nades_GiveBonus(frag_attacker,autocvar_g_nades_bonus_score_ctf_fckills);
+		nades_GiveBonus(frag_attacker,autocvar_g_nades_bonus_score_medium);
 	}
 				
 	if(frag_target.flagcarried)

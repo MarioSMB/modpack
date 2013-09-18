@@ -187,7 +187,7 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 					{
 						PlayerScore_Add(other, SP_SCORE, +1);
 						
-						nades_GiveBonus(other,autocvar_g_nades_bonus_score_unfreeze);
+						nades_GiveBonus(other,autocvar_g_nades_bonus_score_low);
 					}
 				}
 

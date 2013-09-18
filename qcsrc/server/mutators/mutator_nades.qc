@@ -564,8 +564,8 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 		{
 			self.nade_type = autocvar_g_nades_bonus_type;
 			
-			if ( self.bonus_nade_score >= 0 )
-				nades_GiveBonus(self,autocvar_g_nades_bonus_score_time);
+			if ( self.bonus_nade_score >= 0 && autocvar_g_nades_bonus_score_max )
+				nades_GiveBonus(self,autocvar_g_nades_bonus_score_time/autocvar_g_nades_bonus_score_max);
 		}
 		else
 		{
@@ -596,7 +596,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerDies)
 		if (SAME_TEAM(frag_attacker, frag_target) || frag_attacker == frag_target)
 			nades_RemoveBonus(frag_attacker);
 		else
-			nades_GiveBonus(frag_attacker,autocvar_g_nades_bonus_score_frag);
+			nades_GiveBonus(frag_attacker,autocvar_g_nades_bonus_score_low);
 	}
 		
 	nades_RemoveBonus(frag_target);
