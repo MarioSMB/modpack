@@ -398,15 +398,15 @@ void nades_GiveBonus(entity player, float score)
 	if not ( player.frozen )
 	if ( player.deadflag == DEAD_NO )
 	{
-		if ( player.bonus_nade_score < autocvar_g_nades_bonus_score_max )
-			player.bonus_nade_score += score;
+		if ( player.bonus_nade_score < 1 )
+			player.bonus_nade_score += score/autocvar_g_nades_bonus_score_max;
 		
-		if ( player.bonus_nade_score > autocvar_g_nades_bonus_score_max )
+		if ( player.bonus_nade_score >= 1 )
 		{
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_NADE_BONUS);
 			play2(player,"kh/alarm.wav");
 			player.bonus_nades++;
-			player.bonus_nade_score -= autocvar_g_nades_bonus_score_max;
+			player.bonus_nade_score -= 1;
 		}
 	}
 }
@@ -559,7 +559,9 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 	}
 	
 	if(IS_PLAYER(self))
+	{
 		self.nade_type = autocvar_g_nades_bonus_type;
+	}
 
 	return FALSE;
 }
