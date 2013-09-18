@@ -6,9 +6,6 @@
 .float bonus_nade_score;
 
 .float nade_type;
-const float NADE_TYPE_NORMAL = 1;
-const float NADE_TYPE_NAPALM = 2;
-//const float NADE_TYPE_MONSTER = 3;
 
 void() nades_CheckThrow;
 
