@@ -1033,7 +1033,7 @@ void HUD_Ammo(void)
 	
 
 	float rows = 0, columns, row, column;
-	float draw_nades = getstati(STAT_GRENADE_BONUS) ? 1 : 0;
+	float draw_nades = 1;//getstati(STAT_GRENADE_BONUS) ? 1 : 0;
 	float total_ammo_count;
 	
 	vector ammo_size;
