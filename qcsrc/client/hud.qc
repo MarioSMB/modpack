@@ -913,7 +913,7 @@ void DrawAmmoNades(vector myPos, vector mySize, float draw_expanding, float expa
 	}
 	
 	float a, b;
-	a = getstati(STAT_GRENADE_BONUS);
+	a = getstatf(STAT_GRENADE_BONUS);
 	b = getstatf(STAT_GRENADE_BONUS_SCORE);
 
 	vector color = '1 1 1';
@@ -1035,8 +1035,8 @@ void HUD_Ammo(void)
 	
 
 	float rows = 0, columns, row, column;
-	float nade_cnt = getstati(STAT_GRENADE_BONUS), nade_score = getstatf(STAT_GRENADE_BONUS_SCORE);
-	float draw_nades = nade_cnt + nade_score, nade_statuschange_elapsedtime;
+	float nade_cnt = getstatf(STAT_GRENADE_BONUS), nade_score = getstatf(STAT_GRENADE_BONUS_SCORE);
+	float draw_nades = (nade_cnt > 0 || nade_score > 0), nade_statuschange_elapsedtime;
 	float total_ammo_count;
 	
 	vector ammo_size;
@@ -1058,6 +1058,7 @@ void HUD_Ammo(void)
 	else
 		nade_prevstatus = nade_prevframe = nade_statuschange_time = 0;
 	
+	print(ftos(total_ammo_count), "\n");
 	
 	rows = mySize_y/mySize_x;
 	rows = bound(1, floor((sqrt(4 * (3/1) * rows * (total_ammo_count) + rows * rows) + rows + 0.5) / 2), (total_ammo_count));
