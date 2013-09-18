@@ -567,6 +567,9 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	if(targ.frozen)
 		return;
 		
+	if ( frozen_type == 1 )
+		nades_RemoveBonus(targ);
+		
 	targ.frozen = frozen_type;
 	targ.revive_progress = 0;
 	targ.health = 1;

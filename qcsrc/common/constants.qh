@@ -196,6 +196,7 @@ const float STAT_OK_AMMO_CHARGEPOOl = 79;
 
 const float STAT_GRENADE_BONUS = 80;
 const float STAT_GRENADE_BONUS_TYPE = 81;
+const float STAT_GRENADE_BONUS_SCORE = 82;
 
 // mod stats (1xx)
 const float STAT_REDALIVE = 100;
@@ -483,3 +484,7 @@ noref var vector autocvar_sv_player_headsize = '24 24 12';
 #define URI_GET_UPDATENOTIFICATION 33
 #define URI_GET_URLLIB 128
 #define URI_GET_URLLIB_END 191
+
+
+const float NADE_TYPE_NORMAL = 1;
+const float NADE_TYPE_NAPALM = 2;
