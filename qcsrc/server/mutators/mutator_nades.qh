@@ -3,6 +3,7 @@
 .float nade_refire;
 .float bonus_nades;
 .float fire_fountain_time;
+.float bonus_nade_score;
 
 .float nade_type;
 const float NADE_TYPE_NORMAL = 1;
@@ -12,6 +13,6 @@ const float NADE_TYPE_NAPALM = 2;
 void() nades_CheckThrow;
 
 // Give a bonus grenade to a player
-void(entity player) nades_GiveBonus;
+void(entity player, float score) nades_GiveBonus;
 // Remove all bonus nades from a player
 void(entity player) nades_RemoveBonus;

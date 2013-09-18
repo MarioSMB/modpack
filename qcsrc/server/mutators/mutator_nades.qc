@@ -390,21 +390,30 @@ void toss_nade(entity e, vector _velocity, float _time)
 	e.nade_refire = time + autocvar_g_nades_nade_refire;
 }
 
-void nades_GiveBonus(entity player)
+void nades_GiveBonus(entity player, float score)
 {
 	if (autocvar_g_nades_bonus)
 	if (IS_REAL_CLIENT(player))
 	if (IS_PLAYER(player) && player.bonus_nades < autocvar_g_nades_bonus_max)
+	if not ( player.frozen )
+	if ( player.deadflag == DEAD_NO )
 	{
-		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_NADE_BONUS);
-		play2(player,"kh/alarm.wav");
-		player.bonus_nades++;
+		if ( player.bonus_nade_score < autocvar_g_nades_bonus_score_max )
+			player.bonus_nade_score += score;
+		
+		if ( player.bonus_nade_score > autocvar_g_nades_bonus_score_max )
+		{
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_NADE_BONUS);
+			play2(player,"kh/alarm.wav");
+			player.bonus_nades++;
+			player.bonus_nade_score -= autocvar_g_nades_bonus_score_max;
+		}
 	}
 }
 
 void nades_RemoveBonus(entity player)
 {
-	player.bonus_nades = 0;
+	player.bonus_nades = player.bonus_nade_score = 0;
 }
 
 
@@ -425,10 +434,10 @@ void nade_prime()
 	n.classname = "nade";
 	
 	if(self.items & IT_STRENGTH && autocvar_g_nades_bonus_onstrength)
-		n.nade_type = autocvar_g_nades_bonus_type;
+		n.nade_type = self.nade_type;
 	else if (self.bonus_nades >= 1)
 	{
-		 n.nade_type = autocvar_g_nades_bonus_type;
+		n.nade_type = self.nade_type;
 		self.bonus_nades -= 1;
 	}
 	else
@@ -570,17 +579,16 @@ MUTATOR_HOOKFUNCTION(nades_PlayerDies)
 	if(frag_target.nade)
 		toss_nade(frag_target, '0 0 100', max(frag_target.nade.wait, time + 0.05));
 		
-	if(IS_PLAYER(frag_attacker) && SAME_TEAM(frag_attacker, frag_target))
-		nades_RemoveBonus(frag_attacker);
+	if(IS_PLAYER(frag_attacker))
+	{
+		if (SAME_TEAM(frag_attacker, frag_target) || frag_attacker == frag_target)
+			nades_RemoveBonus(frag_attacker);
+		else
+			nades_GiveBonus(frag_attacker,autocvar_g_nades_bonus_score_frag);
+	}
 		
 	nades_RemoveBonus(frag_target);
 	
-	if(autocvar_g_nades_bonus_frag)
-	if(IS_PLAYER(frag_target))
-	if(frag_attacker.killcount % autocvar_g_nades_bonus_frag == 0)
-	{
-		nades_GiveBonus(frag_attacker);
-	}
 		
 	return FALSE;
 }
@@ -592,6 +600,8 @@ MUTATOR_HOOKFUNCTION(nades_RemovePlayer)
 
 	if(self.fake_nade)
 		remove(self.fake_nade);
+	
+	nades_RemoveBonus(self);
 		
 	return FALSE;
 }
@@ -600,6 +610,7 @@ MUTATOR_HOOKFUNCTION(nades_SpectateCopy)
 {
 	self.nade_type = other.nade_type;
 	self.bonus_nades = other.bonus_nades;
+	self.bonus_nade_score = other.bonus_nade_score;
 	return FALSE;
 }
 

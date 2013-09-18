@@ -25,8 +25,6 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerDies)
 		
 	SetRespawnDelays(); // player doesn't actually die
 	
-	frag_target.revivals_row = 0;
-	
 	float can_freeze = FALSE;
 	
 	if(frag_target.cvar_cl_freeze)
@@ -189,15 +187,7 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 					{
 						PlayerScore_Add(other, SP_SCORE, +1);
 						
-						if ( autocvar_g_nades_bonus_unfreeze )
-						{
-							other.revivals_row++;
-							if ( other.revivals_row >= autocvar_g_nades_bonus_unfreeze )
-							{
-								other.revivals_row = 0;
-								nades_GiveBonus(other);
-							}
-						}
+						nades_GiveBonus(other,autocvar_g_nades_bonus_score_unfreeze);
 					}
 				}
 
