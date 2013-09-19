@@ -1831,10 +1831,13 @@ void RandomSelection_Add(entity e, float f, string s, float weight, float priori
 	}
 }
 
-vector healtharmor_maxdamage(float h, float a, float armorblock)
+#ifndef MENUQC
+vector healtharmor_maxdamage(float h, float a, float armorblock, float deathtype)
 {
 	// NOTE: we'll always choose the SMALLER value...
 	float healthdamage, armordamage, armorideal;
+	if (deathtype == DEATH_DROWN)  // Why should armor help here...
+		armorblock = 0;
 	vector v;
 	healthdamage = (h - 1) / (1 - armorblock); // damage we can take if we could use more health
 	armordamage = a + (h - 1); // damage we can take if we could use more armor
@@ -1853,14 +1856,17 @@ vector healtharmor_maxdamage(float h, float a, float armorblock)
 	return v;
 }
 
-vector healtharmor_applydamage(float a, float armorblock, float damage)
+vector healtharmor_applydamage(float a, float armorblock, float deathtype, float damage)
 {
 	vector v;
+	if (deathtype == DEATH_DROWN)  // Why should armor help here...
+		armorblock = 0;
 	v_y = bound(0, damage * armorblock, a); // save
 	v_x = bound(0, damage - v_y, damage); // take
 	v_z = 0;
 	return v;
 }
+#endif
 
 string getcurrentmod()
 {

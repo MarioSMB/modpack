@@ -7,6 +7,7 @@ CLASS(XonoticHUDVoteDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticHUDVoteDialog, rows, float, 15)
 	ATTRIB(XonoticHUDVoteDialog, columns, float, 4)
 	ATTRIB(XonoticHUDVoteDialog, name, string, "HUDvote")
+	ATTRIB(XonoticHUDVoteDialog, requiresConnection, float, TRUE)
 ENDCLASS(XonoticHUDVoteDialog)
 #endif
 

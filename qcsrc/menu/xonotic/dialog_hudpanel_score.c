@@ -7,6 +7,7 @@ CLASS(XonoticHUDScoreDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticHUDScoreDialog, rows, float, 15)
 	ATTRIB(XonoticHUDScoreDialog, columns, float, 4)
 	ATTRIB(XonoticHUDScoreDialog, name, string, "HUDscore")
+	ATTRIB(XonoticHUDScoreDialog, requiresConnection, float, TRUE)
 ENDCLASS(XonoticHUDScoreDialog)
 #endif
 

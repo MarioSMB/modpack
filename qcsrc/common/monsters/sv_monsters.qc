@@ -949,7 +949,7 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 	vector v;
 	float take, save;
 
-	v = healtharmor_applydamage(self.armorvalue, self.m_armor_blockpercent, damage);
+	v = healtharmor_applydamage(self.armorvalue, self.m_armor_blockpercent, damage, deathtype);
 	take = v_x;
 	save = v_y;
 

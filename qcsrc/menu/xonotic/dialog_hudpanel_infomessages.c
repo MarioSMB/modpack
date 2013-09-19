@@ -7,6 +7,7 @@ CLASS(XonoticHUDInfoMessagesDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticHUDInfoMessagesDialog, rows, float, 15)
 	ATTRIB(XonoticHUDInfoMessagesDialog, columns, float, 4)
 	ATTRIB(XonoticHUDInfoMessagesDialog, name, string, "HUDinfomessages")
+	ATTRIB(XonoticHUDInfoMessagesDialog, requiresConnection, float, TRUE)
 ENDCLASS(XonoticHUDInfoMessagesDialog)
 #endif
 

@@ -7,6 +7,7 @@ CLASS(XonoticHUDPowerupsDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticHUDPowerupsDialog, rows, float, 15)
 	ATTRIB(XonoticHUDPowerupsDialog, columns, float, 4)
 	ATTRIB(XonoticHUDPowerupsDialog, name, string, "HUDpowerups")
+	ATTRIB(XonoticHUDPowerupsDialog, requiresConnection, float, TRUE)
 ENDCLASS(XonoticHUDPowerupsDialog)
 #endif
 

@@ -7,6 +7,7 @@ CLASS(XonoticHUDWeaponsDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticHUDWeaponsDialog, rows, float, 18)
 	ATTRIB(XonoticHUDWeaponsDialog, columns, float, 4)
 	ATTRIB(XonoticHUDWeaponsDialog, name, string, "HUDweapons")
+	ATTRIB(XonoticHUDWeaponsDialog, requiresConnection, float, TRUE)
 ENDCLASS(XonoticHUDWeaponsDialog)
 #endif
 

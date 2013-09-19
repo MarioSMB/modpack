@@ -58,6 +58,8 @@ CLASS(Dialog) EXTENDS(InputContainer)
 	ATTRIB(Dialog, zoomedOutTitleBarPosition, float, 0)
 	ATTRIB(Dialog, zoomedOutTitleBar, float, 0)
 
+	ATTRIB(Dialog, requiresConnection, float, 0) // set to TRUE if the dialog requires a connection to be opened
+
 	ATTRIB(Dialog, backgroundImage, string, string_null)
 	ATTRIB(Dialog, borderLines, float, 1)
 	ATTRIB(Dialog, closeButtonImage, string, string_null)
