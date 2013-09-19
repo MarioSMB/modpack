@@ -238,8 +238,6 @@ void nade_ice_think()
 	
 	self.nextthink = time+0.1;
 	
-	
-	
 	// gaussian
 	float randomr;
 	randomr = random();
@@ -258,6 +256,7 @@ void nade_ice_think()
 		
 		
 		pointparticles(particleeffectnum("electro_impact"), self.origin, '0 0 0', 1);
+		pointparticles(particleeffectnum("icefield"), self.origin, '0 0 0', 1);
 	}
 	
 	
