@@ -269,7 +269,8 @@ void nade_ice_think()
 	
 	entity e;
 	for(e = findradius(self.origin, autocvar_g_nades_ice_freeze_radius); e; e = e.chain) 
-		if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0) if not ( e.frozen )
+		if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0) 
+			if not ( e.frozen ) if ( current_freeze_time > 0 )
 		{
 			pointparticles(particleeffectnum("electro_impact"), e.origin, '0 0 0', 1);
 			Freeze(e, 1/current_freeze_time, 2, FALSE);
