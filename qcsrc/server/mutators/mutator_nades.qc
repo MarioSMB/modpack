@@ -259,14 +259,20 @@ void nade_ice_think()
 		pointparticles(particleeffectnum("icefield"), self.origin, '0 0 0', 1);
 	}
 	
-	
+	/* Quadratic interpolation
+	 * Players frozen first will be unfrozen last
+	 */
+	float field_time = autocvar_g_nades_ice_freezefield_time;
+	float max_time = field_time+autocvar_g_nades_ice_extra_freeze_time;
+	float current_time = time-self.ltime+field_time;
+	float current_freeze_time = max_time - max_time/(field_time*field_time)*(current_time*current_time) - current_time;
 	
 	entity e;
 	for(e = findradius(self.origin, autocvar_g_nades_ice_freeze_radius); e; e = e.chain) 
 		if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0) if not ( e.frozen )
 		{
 			pointparticles(particleeffectnum("electro_impact"), e.origin, '0 0 0', 1);
-			Freeze(e, 1/(self.ltime-time), 2, FALSE);
+			Freeze(e, 1/current_freeze_time, 2, FALSE);
 			if ( e.flagcarried )
 				ctf_Handle_Throw(e, world, DROP_THROW);
 		}
@@ -282,7 +288,7 @@ void nade_ice_boom()
 	setorigin(fountain, fountain.origin);
 	fountain.think = nade_ice_think;
 	fountain.nextthink = time;
-	fountain.ltime = time + autocvar_g_nades_ice_freeze_time;
+	fountain.ltime = time + autocvar_g_nades_ice_freezefield_time;
 	fountain.pushltime = fountain.ltime;
 	fountain.team = self.team;
 	fountain.movetype = MOVETYPE_TOSS;
