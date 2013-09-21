@@ -65,6 +65,8 @@ float Arena_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
 		round_handler_Init(5, autocvar_g_arena_warmup, autocvar_g_arena_round_timelimit);
+		FOR_EACH_CLIENT(e)
+			nades_Clear(e);
 		return 1;
 	}
 
@@ -77,6 +79,7 @@ float Arena_CheckWinner()
 	{
 		if(e.spawned && IS_PLAYER(e))
 			champion = e;
+		nades_Clear(e);
 	}
 
 	if(champion)

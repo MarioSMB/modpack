@@ -611,17 +611,22 @@ MUTATOR_HOOKFUNCTION(nades_PlayerDies)
 	return FALSE;
 }
 
+
+void nades_Clear(entity player)
+{
+	
+	if(player.nade)
+		remove(player.nade);
+	if(player.fake_nade)
+		remove(player.fake_nade);
+	
+	player.nade = player.fake_nade = world;
+}
+
 MUTATOR_HOOKFUNCTION(nades_RemovePlayer)
 {
-	if(self.nade)
-		remove(self.nade);
-	if(self.fake_nade)
-		remove(self.fake_nade);
-	
-	self.nade = self.fake_nade = world;
-	
+	nades_Clear(self);
 	nades_RemoveBonus(self);
-		
 	return FALSE;
 }
 
