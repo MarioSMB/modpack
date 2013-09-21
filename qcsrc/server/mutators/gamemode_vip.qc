@@ -58,9 +58,11 @@ float VIP_CheckWinner()
 		
 		entity head;
 		FOR_EACH_PLAYER(head)
-		if(head.isvip && head.health > 0)
-			PlayerScore_Add(head, SP_VIP_SURVIVALS, 1);
-			
+		{
+			if(head.isvip && head.health > 0)
+				PlayerScore_Add(head, SP_VIP_SURVIVALS, 1);
+			nades_Clear(e);
+		}
 		vip_ClearVIPs();
 		allowed_to_spawn = FALSE;
 		round_handler_Init(5, autocvar_g_vip_warmup, autocvar_g_vip_round_timelimit);
@@ -101,6 +103,11 @@ float VIP_CheckWinner()
 	allowed_to_spawn = FALSE;
 	
 	round_handler_Init(5, autocvar_g_vip_warmup, autocvar_g_vip_round_timelimit);
+	
+	
+	FOR_EACH_PLAYER(e)
+		nades_Clear(e);
+		
 	return 1;
 }
 
