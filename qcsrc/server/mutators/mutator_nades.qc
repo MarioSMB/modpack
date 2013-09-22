@@ -231,6 +231,22 @@ void nade_ice_think()
 {
 	if(time >= self.ltime) 
 	{
+		string expef;
+		switch(self.realowner.team)
+		{
+			case NUM_TEAM_1: expef = "nade_red_explode"; break;
+			case NUM_TEAM_2: expef = "nade_blue_explode"; break;
+			case NUM_TEAM_3: expef = "nade_yellow_explode"; break;
+			case NUM_TEAM_4: expef = "nade_pink_explode"; break;
+			default: 		 expef = "nade_explode"; break;
+		}
+		pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
+		
+		RadiusDamage(self, self.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
+			autocvar_g_nades_nade_radius, self, autocvar_g_nades_nade_force, self.projectiledeathtype, self.enemy);
+		Damage_DamageInfo(self.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage, 
+			autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, self.projectiledeathtype, 0, self);
+		
 		remove(self);
 		return;
 	}
@@ -241,7 +257,7 @@ void nade_ice_think()
 	// gaussian
 	float randomr;
 	randomr = random();
-	randomr = exp(-5*randomr*randomr)*autocvar_g_nades_ice_freeze_radius;
+	randomr = exp(-5*randomr*randomr)*autocvar_g_nades_nade_radius;
 	float randomw;
 	randomw = random()*M_PI*2;
 	vector randomp;
@@ -259,16 +275,12 @@ void nade_ice_think()
 		pointparticles(particleeffectnum("icefield"), self.origin, '0 0 0', 1);
 	}
 	
-	/* Quadratic interpolation
-	 * Players frozen first will be unfrozen last
-	 */
-	float field_time = autocvar_g_nades_ice_freezefield_time;
-	float max_time = field_time+autocvar_g_nades_ice_extra_freeze_time;
-	float current_time = time-self.ltime+field_time;
-	float current_freeze_time = max_time - max_time/(field_time*field_time)*(current_time*current_time) - current_time;
+
+	float current_time = time-self.ltime+autocvar_g_nades_ice_freeze_time;
+	float current_freeze_time = autocvar_g_nades_ice_freeze_time - current_time;
 	
 	entity e;
-	for(e = findradius(self.origin, autocvar_g_nades_ice_freeze_radius); e; e = e.chain) 
+	for(e = findradius(self.origin, autocvar_g_nades_nade_radius); e; e = e.chain) 
 		if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0) 
 			if not ( e.frozen ) if ( current_freeze_time > 0 )
 		{
@@ -289,14 +301,16 @@ void nade_ice_boom()
 	setorigin(fountain, fountain.origin);
 	fountain.think = nade_ice_think;
 	fountain.nextthink = time;
-	fountain.ltime = time + autocvar_g_nades_ice_freezefield_time;
+	fountain.ltime = time + autocvar_g_nades_ice_freeze_time;
 	fountain.pushltime = fountain.ltime;
 	fountain.team = self.team;
 	fountain.movetype = MOVETYPE_TOSS;
-	fountain.projectiledeathtype = DEATH_NADE;
+	fountain.projectiledeathtype = DEATH_NADE_ICE;
 	fountain.bot_dodge = FALSE;
 	setsize(fountain, '-16 -16 -16', '16 16 16');
 	fountain.nade_special_time = time+0.3;
+	setmodel(fountain, "models/grenademodel.md3");
+	fountain.angles = self.angles;
 	//fountain.effects = EF_LOWPRECISION | EF_FLAME;
 }
 
