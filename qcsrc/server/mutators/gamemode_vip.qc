@@ -51,17 +51,17 @@ float VIP_GetWinnerTeam()
 
 float VIP_CheckWinner()
 {
+	entity head;
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
 		
-		entity head;
 		FOR_EACH_PLAYER(head)
 		{
 			if(head.isvip && head.health > 0)
 				PlayerScore_Add(head, SP_VIP_SURVIVALS, 1);
-			nades_Clear(e);
+			nades_Clear(head);
 		}
 		vip_ClearVIPs();
 		allowed_to_spawn = FALSE;
@@ -105,8 +105,8 @@ float VIP_CheckWinner()
 	round_handler_Init(5, autocvar_g_vip_warmup, autocvar_g_vip_round_timelimit);
 	
 	
-	FOR_EACH_PLAYER(e)
-		nades_Clear(e);
+	FOR_EACH_PLAYER(head)
+		nades_Clear(head);
 		
 	return 1;
 }
