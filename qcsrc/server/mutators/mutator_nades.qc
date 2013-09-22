@@ -64,7 +64,6 @@ void nade_spawn(entity _nade)
 	CSQCProjectile(_nade, TRUE, p, TRUE);
 }
 
-
 void napalm_damage(float dist, float damage, float edgedamage, float burntime)
 {
 	entity e;
@@ -105,6 +104,13 @@ void napalm_damage(float dist, float damage, float edgedamage, float burntime)
 
 void napalm_ball_think()
 {
+	if(round_handler_IsActive())
+	if(!round_handler_IsRoundStarted())
+	{
+		remove(self);
+		return;
+	}
+	
 	if(time > self.pushltime)
 	{
 		remove(self);
@@ -172,6 +178,14 @@ void nade_napalm_ball()
 
 void napalm_fountain_think()
 {
+	
+	if(round_handler_IsActive())
+	if(!round_handler_IsRoundStarted())
+	{
+		remove(self);
+		return;
+	}
+	
 	if(time >= self.ltime) 
 	{
 		remove(self);
@@ -229,6 +243,14 @@ void nade_napalm_boom()
 
 void nade_ice_think()
 {
+	
+	if(round_handler_IsActive())
+	if(!round_handler_IsRoundStarted())
+	{
+		remove(self);
+		return;
+	}
+	
 	if(time >= self.ltime) 
 	{
 		string expef;
