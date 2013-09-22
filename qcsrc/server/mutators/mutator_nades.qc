@@ -299,7 +299,7 @@ void nade_ice_think()
 	
 
 	float current_time = time-self.ltime+autocvar_g_nades_ice_freeze_time;
-	float current_freeze_time = autocvar_g_nades_ice_freeze_time - current_time -0.1;
+	float current_freeze_time = autocvar_g_nades_ice_freeze_time - current_time - 0.1;
 	
 	entity e;
 	for(e = findradius(self.origin, autocvar_g_nades_nade_radius); e; e = e.chain) 
@@ -307,7 +307,10 @@ void nade_ice_think()
 			if not ( e.frozen ) if ( current_freeze_time > 0 )
 		{
 			pointparticles(particleeffectnum("electro_impact"), e.origin, '0 0 0', 1);
-			Freeze(e, 1/current_freeze_time, 2, FALSE);
+			if (e.flags & FL_MONSTER)
+				Freeze(e, 1/current_freeze_time*3/0.1*autocvar_g_monsters_think_delay, 2, FALSE);
+			else 
+				Freeze(e, 1/current_freeze_time, 2, FALSE);
 			if ( e.flagcarried )
 				ctf_Handle_Throw(e, world, DROP_THROW);
 		}
