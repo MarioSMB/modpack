@@ -534,7 +534,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 
 	if(self.frozen)
 	{
-		self.revive_progress = bound(0, self.revive_progress + frametime * self.revive_speed, 1);
+		self.revive_progress = bound(0, self.revive_progress + self.ticrate * self.revive_speed, 1);
 		self.health = max(1, self.max_health * self.revive_progress);
 
 		self.SendFlags |= MSF_STATUS;

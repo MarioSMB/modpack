@@ -307,10 +307,7 @@ void nade_ice_think()
 			if not ( e.frozen ) if ( current_freeze_time > 0 )
 		{
 			pointparticles(particleeffectnum("electro_impact"), e.origin, '0 0 0', 1);
-			if (e.flags & FL_MONSTER)
-				Freeze(e, 1/current_freeze_time*3/0.1*autocvar_g_monsters_think_delay, 2, FALSE);
-			else 
-				Freeze(e, 1/current_freeze_time, 2, FALSE);
+			Freeze(e, 1/current_freeze_time, 2, FALSE);
 			if ( e.flagcarried )
 				ctf_Handle_Throw(e, world, DROP_THROW);
 		}
