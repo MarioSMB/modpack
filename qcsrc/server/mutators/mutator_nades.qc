@@ -298,8 +298,7 @@ void nade_ice_think()
 	}
 	
 
-	float current_time = time-self.ltime+autocvar_g_nades_ice_freeze_time;
-	float current_freeze_time = autocvar_g_nades_ice_freeze_time - current_time - 0.1;
+	float current_freeze_time = self.ltime - time - 0.1;
 	
 	entity e;
 	for(e = findradius(self.origin, autocvar_g_nades_nade_radius); e; e = e.chain) 
