@@ -382,7 +382,13 @@ void Monster_Fade ()
 		self.SendFlags |= MSF_STATUS;
 	}
 	else
+	{
+		if(IS_CLIENT(self.realowner))
+		if not(self.monster_respawned)
+			self.realowner.monstercount -= 1;
+		
 		SUB_SetFade(self, time + 3, 1);
+	}
 }
 
 float Monster_CanJump (vector vel)
@@ -908,10 +914,6 @@ void monster_die(entity attacker)
 
 	if(self.candrop && self.weapon)
 		W_ThrowNewWeapon(self, self.weapon, 0, self.origin, randomvec() * 150 + '0 0 325');
-
-	if(IS_CLIENT(self.realowner))
-	if not(self.monster_respawned)
-		self.realowner.monstercount -= 1;
 
 	self.event_damage	= monsters_corpse_damage;
 	self.solid			= SOLID_CORPSE;
