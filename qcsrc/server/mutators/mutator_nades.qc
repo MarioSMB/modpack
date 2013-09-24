@@ -532,6 +532,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 	if not(IS_PLAYER(self)) { return FALSE; }
 	
 	float key_pressed = self.BUTTON_HOOK;
+	float time_score;
 	
 	if(g_grappling_hook || client_hasweapon(self, WEP_HOOK, FALSE, FALSE) || (weaponsInMap & WEPSET_HOOK) || g_jetpack || self.items & IT_JETPACK)
 		key_pressed = self.button16; // if hook/jetpack is enabled, use an alternate key
@@ -565,10 +566,15 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 	{
 		if ( autocvar_g_nades_bonus && autocvar_g_nades )
 		{
+			if(self.flagcarried)
+				time_score = autocvar_g_nades_bonus_score_time_flagcarrier;
+			else
+				time_score = autocvar_g_nades_bonus_score_time;
+		
 			self.nade_type = autocvar_g_nades_bonus_type;
 			
-			if ( self.bonus_nade_score >= 0 && autocvar_g_nades_bonus_score_max )
-				nades_GiveBonus(self,autocvar_g_nades_bonus_score_time/autocvar_g_nades_bonus_score_max);
+			if(self.bonus_nade_score >= 0 && autocvar_g_nades_bonus_score_max)
+				nades_GiveBonus(self, time_score / autocvar_g_nades_bonus_score_max);
 		}
 		else
 		{
