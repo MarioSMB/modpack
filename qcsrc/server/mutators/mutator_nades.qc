@@ -323,7 +323,7 @@ void nade_ice_boom()
 	fountain.think = nade_ice_think;
 	fountain.nextthink = time;
 	fountain.ltime = time + autocvar_g_nades_ice_freeze_time;
-	fountain.pushltime = fountain.ltime;
+	fountain.pushltime = fountain.wait = fountain.ltime;
 	fountain.team = self.team;
 	fountain.movetype = MOVETYPE_TOSS;
 	fountain.projectiledeathtype = DEATH_NADE_ICE;
@@ -333,6 +333,19 @@ void nade_ice_boom()
 	setmodel(fountain, "models/grenademodel.md3");
 	fountain.angles = self.angles;
 	//fountain.effects = EF_LOWPRECISION | EF_FLAME;
+	
+	
+	entity timer = spawn();
+	setmodel(timer, "models/ok_nade_counter/ok_nade_counter.md3");
+	setattachment(timer, fountain, "");
+	timer.classname = "nade_timer";
+	timer.colormap = self.colormap;
+	timer.glowmod = self.glowmod;
+	timer.think = nade_timer_think;
+	timer.nextthink = time;
+	timer.wait = fountain.ltime;
+	timer.owner = fountain;	
+	timer.skin = 10;
 }
 
 void nade_boom()
