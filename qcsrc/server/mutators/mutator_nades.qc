@@ -160,8 +160,8 @@ void nade_napalm_ball()
 
 	proj.angles = vectoangles(proj.velocity);
 	proj.flags = FL_PROJECTILE;
-    proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
-    
+	proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
+	
 	//CSQCProjectile(proj, TRUE, PROJECTILE_NAPALM_FIRE, TRUE);
 }
 

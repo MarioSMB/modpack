@@ -326,8 +326,10 @@ void FixPlayermodel()
 		// special hax
 		if(checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
 		{
-			if(self.cvar_cl_damnfurries)
+			if(self.cvar_cl_damnfurries == 1)
 				defaultmodel = "models/player/renamon.iqm";
+			if(self.cvar_cl_damnfurries == 2)
+				defaultmodel = "models/player/yoshi.dpm";
 			if(self.cvar_cl_bikini)
 			{
 				defaultmodel = "models/player/abyss.zym";

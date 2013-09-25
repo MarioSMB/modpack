@@ -1405,6 +1405,7 @@ void precache()
 		precache_playermodel("models/player/abyss.zym");
 		precache_playermodel("models/player/renamon.iqm");
 		precache_playermodel("models/player/terminusmale.iqm");
+		precache_playermodel("models/player/yoshi.dpm");
 	}
 
     if (g_footsteps)
