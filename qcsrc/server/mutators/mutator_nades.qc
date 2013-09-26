@@ -248,6 +248,7 @@ void nade_ice_think()
 			default: 		 expef = "nade_explode"; break;
 		}
 		pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
+		sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 		
 		RadiusDamage(self, self.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
 			autocvar_g_nades_nade_radius, self, autocvar_g_nades_nade_force, self.projectiledeathtype, self.enemy);
