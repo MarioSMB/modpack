@@ -15,15 +15,7 @@ void nade_burn_spawn(entity _nade)
 	{
 		case NADE_TYPE_NAPALM: p = PROJECTILE_NADE_NAPALM_BURN; break;
 		case NADE_TYPE_ICE: p = PROJECTILE_NADE_ICE_BURN; break;
-		default:
-			switch(_nade.realowner.team)
-			{
-				case NUM_TEAM_1: p = PROJECTILE_NADE_RED_BURN; break;
-				case NUM_TEAM_2: p = PROJECTILE_NADE_BLUE_BURN; break;
-				case NUM_TEAM_3: p = PROJECTILE_NADE_YELLOW_BURN; break;
-				case NUM_TEAM_4: p = PROJECTILE_NADE_PINK_BURN; break;
-				default:		 p = PROJECTILE_NADE_BURN; break;
-			}
+		default: p = PROJECTILE_NADE_BURN; break;
 	}
 	
 	CSQCProjectile(_nade, TRUE, p, TRUE);
@@ -50,19 +42,12 @@ void nade_spawn(entity _nade)
 	{
 		case NADE_TYPE_NAPALM: p = PROJECTILE_NADE_NAPALM; break;
 		case NADE_TYPE_ICE: p = PROJECTILE_NADE_ICE; break;
-		default:
-			switch(_nade.realowner.team)
-			{
-				case NUM_TEAM_1: p = PROJECTILE_NADE_RED; break;
-				case NUM_TEAM_2: p = PROJECTILE_NADE_BLUE; break;
-				case NUM_TEAM_3: p = PROJECTILE_NADE_YELLOW; break;
-				case NUM_TEAM_4: p = PROJECTILE_NADE_PINK; break;
-				default:		 p = PROJECTILE_NADE; break;
-			}
+		default: p = PROJECTILE_NADE; break;
 	}
 		
 	CSQCProjectile(_nade, TRUE, p, TRUE);
 }
+
 
 void napalm_damage(float dist, float damage, float edgedamage, float burntime)
 {
@@ -170,8 +155,8 @@ void nade_napalm_ball()
 
 	proj.angles = vectoangles(proj.velocity);
 	proj.flags = FL_PROJECTILE;
-    proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
-    
+	proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
+	
 	//CSQCProjectile(proj, TRUE, PROJECTILE_NAPALM_FIRE, TRUE);
 }
 
@@ -673,6 +658,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 	if not(IS_PLAYER(self)) { return FALSE; }
 	
 	float key_pressed = self.BUTTON_HOOK;
+	float time_score;
 	
 	if(g_grappling_hook || client_hasweapon(self, WEP_HOOK, FALSE, FALSE) || (weaponsInMap & WEPSET_HOOK) || g_jetpack || self.items & IT_JETPACK)
 		key_pressed = self.button16; // if hook/jetpack is enabled, use an alternate key
@@ -706,10 +692,15 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 	{
 		if ( autocvar_g_nades_bonus && autocvar_g_nades )
 		{
+			if(self.flagcarried || self.isvip || self.ballcarried) // this player is important
+				time_score = autocvar_g_nades_bonus_score_time_flagcarrier;
+			else
+				time_score = autocvar_g_nades_bonus_score_time;
+		
 			self.nade_type = autocvar_g_nades_bonus_type;
 			
-			if ( self.bonus_nade_score >= 0 && autocvar_g_nades_bonus_score_max )
-				nades_GiveBonus(self,autocvar_g_nades_bonus_score_time/autocvar_g_nades_bonus_score_max);
+			if(self.bonus_nade_score >= 0 && autocvar_g_nades_bonus_score_max)
+				nades_GiveBonus(self, time_score / autocvar_g_nades_bonus_score_max);
 		}
 		else
 		{
@@ -752,17 +743,22 @@ MUTATOR_HOOKFUNCTION(nades_PlayerDies)
 	return FALSE;
 }
 
+
+void nades_Clear(entity player)
+{
+	
+	if(player.nade)
+		remove(player.nade);
+	if(player.fake_nade)
+		remove(player.fake_nade);
+	
+	player.nade = player.fake_nade = world;
+}
+
 MUTATOR_HOOKFUNCTION(nades_RemovePlayer)
 {
-	if(self.nade)
-		remove(self.nade);
-	if(self.fake_nade)
-		remove(self.fake_nade);
-	
-	self.nade = self.fake_nade = world;
-	
+	nades_Clear(self);
 	nades_RemoveBonus(self);
-		
 	return FALSE;
 }
 

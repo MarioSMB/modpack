@@ -1524,7 +1524,7 @@ void HUD_HealthArmor(void)
 	if(autocvar_hud_panel_healtharmor == 2) // combined health and armor display
 	{
 		vector v;
-		v = healtharmor_maxdamage(health, armor, armorblockpercent);
+		v = healtharmor_maxdamage(health, armor, armorblockpercent, DEATH_WEAPON);
 
 		float x;
 		x = floor(v_x + 1);

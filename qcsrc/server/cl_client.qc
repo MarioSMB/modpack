@@ -299,7 +299,13 @@ void FixPlayermodel()
 
 		n = tokenize_console(defaultmodel);
 		if(n > 0)
+		{
 			defaultmodel = argv(floor(n * self.model_randomizer));
+			// However, do NOT randomize if the player-selected model is in the list.
+			for (i = 0; i < n; ++i)
+				if ((argv(i) == self.playermodel && defaultskin == stof(self.playerskin)) || argv(i) == strcat(self.playermodel, ":", self.playerskin))
+					defaultmodel = argv(i);
+		}
 
 		i = strstrofs(defaultmodel, ":", 0);
 		if(i >= 0)
@@ -320,8 +326,10 @@ void FixPlayermodel()
 		// special hax
 		if(checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
 		{
-			if(self.cvar_cl_damnfurries)
+			if(self.cvar_cl_damnfurries == 1)
 				defaultmodel = "models/player/renamon.iqm";
+			if(self.cvar_cl_damnfurries == 2)
+				defaultmodel = "models/player/yoshi.dpm";
 			if(self.cvar_cl_bikini)
 			{
 				defaultmodel = "models/player/abyss.zym";
@@ -712,7 +720,7 @@ float ClientInit_SendEntity(entity to, float sf)
 
 void ClientInit_CheckUpdate()
 {
-	float mrange = ((autocvar_g_balance_minstanex_distance) ? autocvar_g_balance_minstanex_distance : MAX_SHOT_DISTANCE);
+	float mrange = ((autocvar_g_balance_minstanex_distance > 0) ? autocvar_g_balance_minstanex_distance : MAX_SHOT_DISTANCE);
 	self.nextthink = time;
 	if(self.count != autocvar_g_balance_armor_blockpercent)
 	{
@@ -2805,7 +2813,7 @@ void PlayerPostThink (void)
 	//pointparticles(particleeffectnum("machinegun_impact"), self.origin + self.view_ofs + '0 0 7', '0 0 0', 1);
 
 	if(self.waypointsprite_attachedforcarrier)
-		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent));
+		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON));
 
 	playerdemo_write();
 

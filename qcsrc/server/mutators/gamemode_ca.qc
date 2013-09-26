@@ -67,12 +67,15 @@ float CA_GetWinnerTeam()
 #define CA_ALIVE_TEAMS_OK() (CA_ALIVE_TEAMS() == ca_teams)
 float CA_CheckWinner()
 {
+	entity e;
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
 		allowed_to_spawn = FALSE;
 		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
+		FOR_EACH_PLAYER(e)
+			nades_Clear(e);
 		return 1;
 	}
 
@@ -95,6 +98,10 @@ float CA_CheckWinner()
 
 	allowed_to_spawn = FALSE;
 	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
+	
+	FOR_EACH_PLAYER(e)
+		nades_Clear(e);
+		
 	return 1;
 }
 

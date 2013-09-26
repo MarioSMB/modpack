@@ -7,6 +7,7 @@ CLASS(XonoticHUDNotificationDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticHUDNotificationDialog, rows, float, 15)
 	ATTRIB(XonoticHUDNotificationDialog, columns, float, 4)
 	ATTRIB(XonoticHUDNotificationDialog, name, string, "HUDnotify")
+	ATTRIB(XonoticHUDNotificationDialog, requiresConnection, float, TRUE)
 ENDCLASS(XonoticHUDNotificationDialog)
 #endif
 

@@ -51,16 +51,18 @@ float VIP_GetWinnerTeam()
 
 float VIP_CheckWinner()
 {
+	entity head;
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
 		
-		entity head;
 		FOR_EACH_PLAYER(head)
-		if(head.isvip && head.health > 0)
-			PlayerScore_Add(head, SP_VIP_SURVIVALS, 1);
-			
+		{
+			if(head.isvip && head.health > 0)
+				PlayerScore_Add(head, SP_VIP_SURVIVALS, 1);
+			nades_Clear(head);
+		}
 		vip_ClearVIPs();
 		allowed_to_spawn = FALSE;
 		round_handler_Init(5, autocvar_g_vip_warmup, autocvar_g_vip_round_timelimit);
@@ -101,6 +103,11 @@ float VIP_CheckWinner()
 	allowed_to_spawn = FALSE;
 	
 	round_handler_Init(5, autocvar_g_vip_warmup, autocvar_g_vip_round_timelimit);
+	
+	
+	FOR_EACH_PLAYER(head)
+		nades_Clear(head);
+		
 	return 1;
 }
 
@@ -238,7 +245,7 @@ MUTATOR_HOOKFUNCTION(vip_RemovePlayer)
 MUTATOR_HOOKFUNCTION(vip_PlayerThink)
 {
 	if(self.wps_vip)
-		WaypointSprite_UpdateHealth(self.wps_vip, ((g_minstagib) ? self.armorvalue : '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent)));
+		WaypointSprite_UpdateHealth(self.wps_vip, ((g_minstagib) ? self.armorvalue : '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON)));
 		
 	self.stat_vip_red = vip_count[NUM_TEAM_1];
 	self.stat_vip_blue = vip_count[NUM_TEAM_2];
@@ -334,8 +341,8 @@ vector vip_SoulGemColormod(float theteam, float iseffect)
 void vip_VIPWaypoints(entity player)
 {
 	WaypointSprite_Spawn("vip", 0, 0, player, FLAG_WAYPOINT_OFFSET, world, 0, player, wps_vip, TRUE, RADARICON_FLAG, Team_ColorRGB(player.team));
-	WaypointSprite_UpdateMaxHealth(player.wps_vip, ((g_minstagib) ? 5 : '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent) * 2));
-	WaypointSprite_UpdateHealth(player.wps_vip, ((g_minstagib) ? self.armorvalue : '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent)));
+	WaypointSprite_UpdateMaxHealth(player.wps_vip, ((g_minstagib) ? 5 : '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON) * 2));
+	WaypointSprite_UpdateHealth(player.wps_vip, ((g_minstagib) ? self.armorvalue : '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON)));
 	WaypointSprite_UpdateTeamRadar(player.wps_vip, RADARICON_FLAGCARRIER, Team_ColorRGB(player.team));
 }
 

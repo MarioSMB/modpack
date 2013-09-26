@@ -7,6 +7,7 @@ CLASS(XonoticHUDAmmoDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticHUDAmmoDialog, rows, float, 15)
 	ATTRIB(XonoticHUDAmmoDialog, columns, float, 4)
 	ATTRIB(XonoticHUDAmmoDialog, name, string, "HUDammo")
+	ATTRIB(XonoticHUDAmmoDialog, requiresConnection, float, TRUE)
 ENDCLASS(XonoticHUDAmmoDialog)
 #endif
 

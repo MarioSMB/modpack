@@ -9,6 +9,9 @@
 
 void() nades_CheckThrow;
 
+// Remove nades that are being thrown
+void(entity player) nades_Clear;
+
 // Give a bonus grenade to a player
 void(entity player, float score) nades_GiveBonus;
 // Remove all bonus nades from a player

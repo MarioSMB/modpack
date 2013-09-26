@@ -80,7 +80,7 @@ string XonoticMutatorsDialog_toString(entity me)
 		s = strcat(s, ", ", WeaponArenaString());
 	if(cvar("g_start_weapon_laser") == 0)
 		s = strcat(s, ", ", _("No start weapons"));
-	if(cvar("sv_gravity") < 800)
+	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		s = strcat(s, ", ", _("Low gravity"));
 	if(cvar("g_cloaked"))
 		s = strcat(s, ", ", _("Cloaked"));

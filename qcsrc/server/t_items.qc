@@ -268,6 +268,10 @@ float ItemSend(entity to, float sf)
     return TRUE;
 }
 
+void ItemUpdate(entity item)
+{
+	item.SendFlags |= ISF_LOCATION;
+}
 
 float have_pickup_item(void)
 {

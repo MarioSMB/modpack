@@ -7,6 +7,7 @@ CLASS(XonoticHUDRadarDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticHUDRadarDialog, rows, float, 15)
 	ATTRIB(XonoticHUDRadarDialog, columns, float, 4)
 	ATTRIB(XonoticHUDRadarDialog, name, string, "HUDradar")
+	ATTRIB(XonoticHUDRadarDialog, requiresConnection, float, TRUE)
 ENDCLASS(XonoticHUDRadarDialog)
 #endif
 

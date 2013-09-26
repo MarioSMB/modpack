@@ -7,6 +7,7 @@ CLASS(XonoticHUDTimerDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticHUDTimerDialog, rows, float, 15)
 	ATTRIB(XonoticHUDTimerDialog, columns, float, 4)
 	ATTRIB(XonoticHUDTimerDialog, name, string, "HUDtimer")
+	ATTRIB(XonoticHUDTimerDialog, requiresConnection, float, TRUE)
 ENDCLASS(XonoticHUDTimerDialog)
 #endif
 

@@ -23,150 +23,6 @@ REGISTER_WEAPON(
 .float rm_damage;
 .float rm_edmg;
 
-float RocketMinsta_ColorLaser (entity colorme)
-{
-    switch(colorme.team)
-    {
-        case NUM_TEAM_1: return PROJECTILE_ROCKETMINSTA_LASER_RED;
-        case NUM_TEAM_2: return PROJECTILE_ROCKETMINSTA_LASER_BLUE;
-        case NUM_TEAM_3: return PROJECTILE_ROCKETMINSTA_LASER_YELLOW;
-        case NUM_TEAM_4: return PROJECTILE_ROCKETMINSTA_LASER_PINK;
-		default: 		 return PROJECTILE_ELECTRO_BEAM;
-    }
-}
-
-void W_RocketMinsta_Explode (void)
-{
-	self.event_damage = func_null;
-	self.takedamage = DAMAGE_NO;
-
-	if(self.movetype == MOVETYPE_NONE)
-		self.velocity = self.oldvelocity;
-
-	RadiusDamage (self, self.realowner, autocvar_g_rm_damage, autocvar_g_rm_edgedamage, autocvar_g_rm_radius, world, autocvar_g_rm_force, self.projectiledeathtype, other);
-
-	remove (self);
-}
-
-void W_RocketMinsta_Touch (void)
-{
-	PROJECTILE_TOUCH;
-	W_RocketMinsta_Explode();
-}
-
-void W_RocketMinsta_Attack (void)
-{
-	entity gren;
-    
-    float SPEED = 90000000;
-	
-	makevectors(self.v_angle); // incase they are changed
-	
-	W_SetupShot_ProjectileSize(self, '0 0 -3', '0 0 -3', FALSE, 0, "", CH_WEAPON_A, autocvar_g_rm_damage / 2, WEP_ROCKET_LAUNCHER);
-	w_shotdir = v_forward; // no TrueAim for grenades please
-
-	gren = spawn ();
-	gren.owner = gren.realowner = self;
-	gren.classname = "plasma_prim";
-	gren.bot_dodge = TRUE;
-	gren.bot_dodgerating = autocvar_g_rm_damage;
-	gren.movetype = MOVETYPE_FLY;
-	PROJECTILE_MAKETRIGGER(gren);
-	gren.projectiledeathtype = WEP_ROCKET_LAUNCHER;
-	setorigin(gren, w_shotorg);
-	setsize(gren, '0 0 -3', '0 0 -3');
-
-	gren.think = adaptor_think2use;
-	gren.use = W_RocketMinsta_Explode;
-	gren.touch = W_RocketMinsta_Touch;
-
-	gren.takedamage = DAMAGE_NO;
-	gren.event_damage = func_null;
-	
-	W_SetupProjectileVelocity(gren, SPEED, 0);
-
-	gren.angles = vectoangles (gren.velocity);
-	gren.flags = FL_PROJECTILE;
-
-	CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE, TRUE);
-}
-
-void W_MinstaNex_Attack (void)
-{
-	makevectors(self.v_angle);
-	
-	float flying;
-	float minstanex_damage = ((autocvar_g_balance_minstanex_damage) ? autocvar_g_balance_minstanex_damage : 10000);
-	
-	if not(self.minsta_range)
-		self.minsta_range = ((autocvar_g_balance_minstanex_distance) ? autocvar_g_balance_minstanex_distance : MAX_SHOT_DISTANCE);
-		
-	float minstanex_ammo = ((g_minstagib) ? 1 : autocvar_g_balance_minstanex_ammo);
-	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
-
-	W_SetupShot (self, TRUE, 0, "weapons/minstanexfire.wav", CH_WEAPON_A, minstanex_damage, self.weapon);
-	
-	self.projectiledeathtype = WEP_MINSTANEX;
-
-	yoda = 0;
-	damage_goodhits = 0;
-	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * self.minsta_range, minstanex_damage, 800, 0, 0, 0, 0, self.projectiledeathtype);
-
-	if(yoda && flying)
-		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
-	if(damage_goodhits && self.minstanex_lasthit)
-	{
-		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
-		damage_goodhits = 0; // only every second time
-	}
-
-	self.minstanex_lasthit = damage_goodhits;
-
-	pointparticles(particleeffectnum("nex_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
-	
-	if(autocvar_g_rm)
-		W_RocketMinsta_Attack();
-
-	// teamcolor / hit beam effect
-	vector v;
-	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-	switch(self.team)
-	{
-		case NUM_TEAM_1:   // Red
-			if(damage_goodhits)
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3RED_HIT"), w_shotorg, v);
-			else
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3RED"), w_shotorg, v);
-			break;
-		case NUM_TEAM_2:   // Blue
-			if(damage_goodhits)
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3BLUE_HIT"), w_shotorg, v);
-			else
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3BLUE"), w_shotorg, v);
-			break;
-		case NUM_TEAM_3:   // Yellow
-			if(damage_goodhits)
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3YELLOW_HIT"), w_shotorg, v);
-			else
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3YELLOW"), w_shotorg, v);
-			break;
-		case NUM_TEAM_4:   // Pink
-			if(damage_goodhits)
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3PINK_HIT"), w_shotorg, v);
-			else
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3PINK"), w_shotorg, v);
-			break;
-		default:
-			if(damage_goodhits)
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3_HIT"), w_shotorg, v);
-			else
-				WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3"), w_shotorg, v);
-			break;
-	}
-	
-	W_DecreaseAmmo(ammo_cells, minstanex_ammo, autocvar_g_balance_minstanex_reload_ammo);
-}
-
 void SendCSQCSuperBlastParticle(vector endpos) 
 {
 	//endpos = WarpZone_UnTransformOrigin(transform, endpos);
@@ -261,6 +117,119 @@ float W_MinstaNex_SuperBlast_CheckHit(float queue, entity head, vector final_for
 	shockwave_hit_force[queue] = final_force;
 	shockwave_hit_damage[queue] = final_damage;
 	return TRUE;
+}
+
+void W_RocketMinsta_Explosion(vector loc)
+{
+	pointparticles(particleeffectnum("rocket_explode"), loc, '0 0 0', 1);
+	
+	if(accuracy_canbegooddamage(self))
+		accuracy_add(self, WEP_ROCKET_LAUNCHER, autocvar_g_rm_damage, 0);
+
+	// declarations
+	float multiplier, multiplier_from_accuracy;
+	float final_damage = 0; //, final_spread;
+	vector final_force, center;
+	entity head, next;
+	
+	float i, queue = 0;
+	
+	// splash damage/jumping trace
+	head = WarpZone_FindRadius(loc, autocvar_g_rm_radius, FALSE);
+	while(head)
+	{
+		next = head.chain;
+
+		if(head.takedamage)
+		{
+			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
+			//center = PLAYER_CENTER(head);
+			center = WarpZone_UnTransformOrigin(head, PLAYER_CENTER(head));
+
+			float distance_to_head = vlen(loc - head.WarpZone_findradius_nearest);
+			
+			if (distance_to_head <= autocvar_g_rm_radius || head == self)
+			{
+				multiplier_from_accuracy = (1 - (distance_to_head ? min(1, (distance_to_head / autocvar_g_rm_radius)) : 0));
+				multiplier = max(autocvar_g_rm_damage_multiplier_min, multiplier_from_accuracy * autocvar_g_rm_damage_multiplier_accuracy);
+
+				final_force = normalize(center - loc);
+				if(head == self)
+					final_force = (final_force * autocvar_g_rm_force);
+				else
+					final_force = ((final_force * autocvar_g_rm_force) * multiplier);
+					
+				final_damage = (autocvar_g_rm_damage * multiplier + autocvar_g_rm_edgedamage * (1 - multiplier));
+
+				if(W_MinstaNex_SuperBlast_CheckHit(queue, head, final_force, final_damage)) { ++queue; }
+			}
+		}
+		head = next;
+	}
+
+	for(i = 1; i <= queue; ++i)
+	{
+		head = shockwave_hit[i];
+		final_force = shockwave_hit_force[i];
+		final_damage = shockwave_hit_damage[i];
+		
+		if(accuracy_isgooddamage(self, head))
+			accuracy_add(self, WEP_ROCKET_LAUNCHER, 0, final_damage);
+		
+		Damage(head, self, self, final_damage, (WEP_ROCKET_LAUNCHER | HITTYPE_SPLASH), head.origin, final_force);
+		//print("SHOCKWAVE by ", self.netname, ": damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force)), ".\n");
+		
+		shockwave_hit[i] = world;
+		shockwave_hit_force[i] = '0 0 0';
+		shockwave_hit_damage[i] = 0;
+	}
+}
+
+void W_MinstaNex_Attack (void)
+{
+	makevectors(self.v_angle);
+	
+	float flying;
+	float minstanex_damage = ((autocvar_g_balance_minstanex_damage) ? autocvar_g_balance_minstanex_damage : 10000);
+	
+	if not(self.minsta_range)
+		self.minsta_range = ((autocvar_g_balance_minstanex_distance > 0) ? autocvar_g_balance_minstanex_distance : MAX_SHOT_DISTANCE);
+		
+	float minstanex_ammo = ((g_minstagib) ? 1 : autocvar_g_balance_minstanex_ammo);
+	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
+
+	W_SetupShot (self, TRUE, 0, "weapons/minstanexfire.wav", CH_WEAPON_A, minstanex_damage, self.weapon);
+	
+	self.projectiledeathtype = WEP_MINSTANEX;
+
+	yoda = 0;
+	damage_goodhits = 0;
+	FireRailgunBullet (w_shotorg, w_shotorg + w_shotdir * self.minsta_range, minstanex_damage, 800, 0, 0, 0, 0, self.projectiledeathtype);
+
+	if(yoda && flying)
+		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
+	if(damage_goodhits && self.minstanex_lasthit)
+	{
+		Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_ACHIEVEMENT_IMPRESSIVE);
+		damage_goodhits = 0; // only every second time
+	}
+
+	self.minstanex_lasthit = damage_goodhits;
+
+	pointparticles(particleeffectnum("nex_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+
+	// teamcolor / hit beam effect
+	vector v;
+	string s;
+	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
+	s = strcat("TE_TEI_G3", Static_Team_ColorName_Upper(self.team), ((damage_goodhits) ? "_HIT" : ""));
+	
+	if(autocvar_g_rm)
+		W_RocketMinsta_Explosion(trace_endpos);
+		
+	WarpZone_TrailParticles(world, particleeffectnum(s), w_shotorg, v);
+	
+	W_DecreaseAmmo(ammo_cells, minstanex_ammo, autocvar_g_balance_minstanex_reload_ammo);
 }
 
 void W_MinstaNex_SuperBlast()
@@ -386,7 +355,9 @@ void W_MinstaNex_SuperBlast()
 		final_damage = shockwave_hit_damage[i];
 		
 		Damage(head, self, self, final_damage, (WEP_MINSTANEX | HITTYPE_SPLASH), head.origin, final_force);
-		accuracy_add(self, WEP_MINSTANEX, 1, final_damage);
+		
+		if(accuracy_isgooddamage(self, head))
+			accuracy_add(self, WEP_MINSTANEX, 1, final_damage);
 		//print("SHOCKWAVE by ", self.netname, ": damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force)), ".\n");
 		
 		shockwave_hit[i] = world;
@@ -466,7 +437,7 @@ void W_RocketMinsta_Attack2(void)
         proj.flags = FL_PROJECTILE;
         proj.missile_flags = MIF_SPLASH;
 
-        CSQCProjectile(proj, TRUE, RocketMinsta_ColorLaser(self), TRUE);
+        CSQCProjectile(proj, TRUE, PROJECTILE_ROCKETMINSTA_LASER, TRUE);
 
         other = proj; MUTATOR_CALLHOOK(EditProjectile);
         counter++;
@@ -515,7 +486,7 @@ void W_RocketMinsta_Attack3 (void)
         proj.flags = FL_PROJECTILE;
         proj.missile_flags = MIF_SPLASH;
 
-        CSQCProjectile(proj, TRUE, RocketMinsta_ColorLaser(self), TRUE);
+        CSQCProjectile(proj, TRUE, PROJECTILE_ROCKETMINSTA_LASER, TRUE);
 
         other = proj; MUTATOR_CALLHOOK(EditProjectile);
         counter++;

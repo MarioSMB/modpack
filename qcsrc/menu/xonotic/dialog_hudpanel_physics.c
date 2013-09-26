@@ -8,6 +8,7 @@ CLASS(XonoticHUDPhysicsDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticHUDPhysicsDialog, columns, float, 4)
 	ATTRIB(XonoticHUDPhysicsDialog, name, string, "HUDphysics")
 	ATTRIB(XonoticHUDPhysicsDialog, sliderTopspeedTime, entity, NULL)
+	ATTRIB(XonoticHUDPhysicsDialog, requiresConnection, float, TRUE)
 ENDCLASS(XonoticHUDPhysicsDialog)
 #endif
 

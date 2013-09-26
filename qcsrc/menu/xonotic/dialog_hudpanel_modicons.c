@@ -7,6 +7,7 @@ CLASS(XonoticHUDModIconsDialog) EXTENDS(XonoticRootDialog)
 	ATTRIB(XonoticHUDModIconsDialog, rows, float, 15)
 	ATTRIB(XonoticHUDModIconsDialog, columns, float, 4)
 	ATTRIB(XonoticHUDModIconsDialog, name, string, "HUDmodicons")
+	ATTRIB(XonoticHUDModIconsDialog, requiresConnection, float, TRUE)
 ENDCLASS(XonoticHUDModIconsDialog)
 #endif
 

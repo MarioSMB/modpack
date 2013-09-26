@@ -100,7 +100,10 @@ float freezetag_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
 		FOR_EACH_PLAYER(e)
+		{
 			e.freezetag_frozen_timeout = 0;
+			nades_Clear(e);
+		}
 		round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 		return 1;
 	}
@@ -123,7 +126,10 @@ float freezetag_CheckWinner()
 	}
 
 	FOR_EACH_PLAYER(e)
+	{
 		e.freezetag_frozen_timeout = 0;
+		nades_Clear(e);
+	}
 	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 	return 1;
 }

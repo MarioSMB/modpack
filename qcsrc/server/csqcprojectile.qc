@@ -1,4 +1,5 @@
 .float csqcprojectile_type;
+.float csqcprojectile_owner;
 
 float CSQCProjectile_SendEntity(entity to, float sf)
 {
@@ -12,6 +13,9 @@ float CSQCProjectile_SendEntity(entity to, float sf)
 
 	if(self.flags & FL_ONGROUND)
 		sf |= 0x40;
+		
+	if(num_for_edict(self.realowner) != self.csqcprojectile_owner)
+		sf |= 3;
 
 	ft = fr = 0;
 	if(self.fade_time != 0 || self.fade_rate != 0)
@@ -48,6 +52,8 @@ float CSQCProjectile_SendEntity(entity to, float sf)
 			WriteByte(MSG_ENTITY, ft);
 			WriteByte(MSG_ENTITY, fr);
 		}
+		
+		WriteByte(MSG_ENTITY, self.realowner.team);
 	}
 
 	if(sf & 2)
@@ -85,6 +91,10 @@ void CSQCProjectile(entity e, float clientanimate, float type, float docull)
 	e.csqcprojectile_type = type;
 }
 
+// FIXME HACK
+float ItemSend(entity to, float sf);
+void ItemUpdate(entity item);
+// END HACK
 void UpdateCSQCProjectile(entity e)
 {
 	if(e.SendEntity == CSQCProjectile_SendEntity)
@@ -92,6 +102,12 @@ void UpdateCSQCProjectile(entity e)
 		// send new origin data
 		e.SendFlags |= 0x01;
 	}
+// FIXME HACK
+	else if(e.SendEntity == ItemSend)
+	{
+		ItemUpdate(e);
+	}
+// END HACK
 }
 
 void UpdateCSQCProjectileAfterTeleport(entity e)
