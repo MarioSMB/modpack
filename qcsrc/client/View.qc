@@ -1373,14 +1373,7 @@ void CSQC_UpdateView(float w, float h)
 				string s;
 				vector v = '0 0 1' * getstati(STAT_VIEWHEIGHT);
 				
-				switch(myteam)
-				{
-					case NUM_TEAM_1: s = "TE_TEI_G3RED"; break;
-					case NUM_TEAM_2: s = "TE_TEI_G3BLUE"; break;
-					case NUM_TEAM_3: s = "TE_TEI_G3YELLOW"; break;
-					case NUM_TEAM_4: s = "TE_TEI_G3PINK"; break;
-					default: 		 s = "TE_TEI_G3"; break;
-				}
+				s = strcat("TE_TEI_G3", Static_Team_ColorName_Upper(myteam));
 			
 				WarpZone_TrailParticles(self, particleeffectnum(s), view_origin, view_origin + v + view_forward * minsta_range);
 				

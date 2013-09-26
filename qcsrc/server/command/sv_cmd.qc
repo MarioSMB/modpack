@@ -701,7 +701,7 @@ void GameCommand_effectindexdump(float request)
 			db_put(d, "TE_BLOOD", "1"); print("effect TE_BLOOD is ", ftos(particleeffectnum("TE_BLOOD")), "\n");
 			db_put(d, "TE_SPARK", "1"); print("effect TE_SPARK is ", ftos(particleeffectnum("TE_SPARK")), "\n");
 			db_put(d, "TE_PLASMABURN", "1"); print("effect TE_PLASMABURN is ", ftos(particleeffectnum("TE_PLASMABURN")), "\n");
-			db_put(d, "TE_TEI_G3", "1"); print("effect TE_TEI_G3 is ", ftos(particleeffectnum("TE_TEI_G3")), "\n");
+			db_put(d, "TE_TEI_G3NEUTRAL", "1"); print("effect TE_TEI_G3NEUTRAL is ", ftos(particleeffectnum("TE_TEI_G3NEUTRAL")), "\n");
 			db_put(d, "TE_TEI_SMOKE", "1"); print("effect TE_TEI_SMOKE is ", ftos(particleeffectnum("TE_TEI_SMOKE")), "\n");
 			db_put(d, "TE_TEI_BIGEXPLOSION", "1"); print("effect TE_TEI_BIGEXPLOSION is ", ftos(particleeffectnum("TE_TEI_BIGEXPLOSION")), "\n");
 			db_put(d, "TE_TEI_PLASMAHIT", "1"); print("effect TE_TEI_PLASMAHIT is ", ftos(particleeffectnum("TE_TEI_PLASMAHIT")), "\n");
@@ -714,7 +714,6 @@ void GameCommand_effectindexdump(float request)
 			db_put(d, "TR_KNIGHTSPIKE", "1"); print("effect TR_KNIGHTSPIKE is ", ftos(particleeffectnum("TR_KNIGHTSPIKE")), "\n");
 			db_put(d, "TR_VORESPIKE", "1"); print("effect TR_VORESPIKE is ", ftos(particleeffectnum("TR_VORESPIKE")), "\n");
 			db_put(d, "TR_NEHAHRASMOKE", "1"); print("effect TR_NEHAHRASMOKE is ", ftos(particleeffectnum("TR_NEHAHRASMOKE")), "\n");
-			db_put(d, "TR_NEXUIZPLASMA", "1"); print("effect TR_NEXUIZPLASMA is ", ftos(particleeffectnum("TR_NEXUIZPLASMA")), "\n");
 			db_put(d, "TR_GLOWTRAIL", "1"); print("effect TR_GLOWTRAIL is ", ftos(particleeffectnum("TR_GLOWTRAIL")), "\n");
 			db_put(d, "TR_SEEKER", "1"); print("effect TR_SEEKER is ", ftos(particleeffectnum("TR_SEEKER")), "\n");
 			db_put(d, "SVC_PARTICLE", "1"); print("effect SVC_PARTICLE is ", ftos(particleeffectnum("SVC_PARTICLE")), "\n");
@@ -1801,7 +1800,7 @@ void GameCommand_trace(float request, float argc)
 						vv = stov(argv(2));
 						dv = stov(argv(3));
 						traceline(vv, dv, MOVE_NORMAL, world);
-						trailparticles(world, particleeffectnum("TR_NEXUIZPLASMA"), vv, trace_endpos);
+						trailparticles(world, particleeffectnum("rocketminsta_laser_neutral"), vv, trace_endpos);
 						trailparticles(world, particleeffectnum("TR_CRYLINKPLASMA"), trace_endpos, dv);
 						return;
 					}

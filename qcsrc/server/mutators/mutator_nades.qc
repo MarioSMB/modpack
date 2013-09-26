@@ -14,14 +14,7 @@ void nade_burn_spawn(entity _nade)
 	if(_nade.nade_type == NADE_TYPE_NAPALM)
 		p = PROJECTILE_NADE_NAPALM_BURN;
 	else
-		switch(_nade.realowner.team)
-		{
-			case NUM_TEAM_1: p = PROJECTILE_NADE_RED_BURN; break;
-			case NUM_TEAM_2: p = PROJECTILE_NADE_BLUE_BURN; break;
-			case NUM_TEAM_3: p = PROJECTILE_NADE_YELLOW_BURN; break;
-			case NUM_TEAM_4: p = PROJECTILE_NADE_PINK_BURN; break;
-			default:		 p = PROJECTILE_NADE_BURN; break;
-		}
+		p = PROJECTILE_NADE_BURN;
 	
 	CSQCProjectile(_nade, TRUE, p, TRUE);
 }
@@ -46,16 +39,7 @@ void nade_spawn(entity _nade)
 	if(_nade.nade_type == NADE_TYPE_NAPALM)
 		p = PROJECTILE_NADE_NAPALM;
 	else
-	{
-		switch(_nade.realowner.team)
-		{
-			case NUM_TEAM_1: p = PROJECTILE_NADE_RED; break;
-			case NUM_TEAM_2: p = PROJECTILE_NADE_BLUE; break;
-			case NUM_TEAM_3: p = PROJECTILE_NADE_YELLOW; break;
-			case NUM_TEAM_4: p = PROJECTILE_NADE_PINK; break;
-			default:		 p = PROJECTILE_NADE; break;
-		}
-	}
+		p = PROJECTILE_NADE;
 		
 	CSQCProjectile(_nade, TRUE, p, TRUE);
 }

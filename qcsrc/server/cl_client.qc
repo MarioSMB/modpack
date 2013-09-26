@@ -720,7 +720,7 @@ float ClientInit_SendEntity(entity to, float sf)
 
 void ClientInit_CheckUpdate()
 {
-	float mrange = ((autocvar_g_balance_minstanex_distance) ? autocvar_g_balance_minstanex_distance : MAX_SHOT_DISTANCE);
+	float mrange = ((autocvar_g_balance_minstanex_distance > 0) ? autocvar_g_balance_minstanex_distance : MAX_SHOT_DISTANCE);
 	self.nextthink = time;
 	if(self.count != autocvar_g_balance_armor_blockpercent)
 	{

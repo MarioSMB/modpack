@@ -1300,6 +1300,8 @@ float autocvar_g_physical_items_reset;
 float autocvar_g_rm;
 float autocvar_g_rm_damage;
 float autocvar_g_rm_edgedamage;
+float autocvar_g_rm_damage_multiplier_accuracy;
+float autocvar_g_rm_damage_multiplier_min;
 float autocvar_g_rm_force;
 float autocvar_g_rm_radius;
 float autocvar_g_rm_laser;
