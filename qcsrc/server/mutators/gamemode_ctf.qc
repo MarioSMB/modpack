@@ -1001,8 +1001,14 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	ctf_worldflaglist = flag;
 
 	setattachment(flag, world, "");
-
-	flag.netname = strcat(Static_Team_ColorName_Upper(teamnumber), "^7 flag");
+	
+	switch(teamnumber)
+	{
+		case NUM_TEAM_1: flag.netname = "^1RED^7 flag"; break;
+		case NUM_TEAM_2: flag.netname = "^2BLUE^7 flag"; break;
+		case NUM_TEAM_3: flag.netname = "^3YELLOW^7 flag"; break;
+		case NUM_TEAM_4: flag.netname = "^6PINK^7 flag"; break;
+	}
 	flag.team = teamnumber;
 	flag.classname = "item_flag_team";
 	flag.target = "###item###"; // wut?
@@ -1026,19 +1032,68 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	flag.ctf_status = FLAG_BASE;
 
 	// appearence
-	if(flag.model == "")       { flag.model = strzone(cvar_string(strcat("g_ctf_flag_", Static_Team_ColorName_Lower(teamnumber), "_model"))); }
-	if(!flag.scale)            { flag.scale = FLAG_SCALE; }
-	if(!flag.skin)             { flag.skin = cvar(strcat("g_ctf_flag_", Static_Team_ColorName_Lower(teamnumber), "_skin")); }
-	if(flag.toucheffect == "") { flag.toucheffect = strzone(strcat(Static_Team_ColorName_Lower(teamnumber), "_touch")); }
-	if(flag.passeffect == "")  { flag.passeffect = strzone(strcat(Static_Team_ColorName_Lower(teamnumber), "_pass")); }
-	if(flag.capeffect == "")   { flag.capeffect = strzone(strcat(Static_Team_ColorName_Lower(teamnumber), "_cap")); }
+	switch(teamnumber)
+	{
+		case NUM_TEAM_1: 
+			if(flag.model == "")       { flag.model = autocvar_g_ctf_flag_red_model; }
+			if(!flag.skin)             { flag.skin = autocvar_g_ctf_flag_red_skin; }
+			if(flag.toucheffect == "") { flag.toucheffect = "redflag_touch"; }
+			if(flag.passeffect == "")  { flag.passeffect = "red_pass"; }
+			if(flag.capeffect == "")   { flag.capeffect = "red_cap"; }
+			break;
+		case NUM_TEAM_2: 
+			if(flag.model == "")       { flag.model = autocvar_g_ctf_flag_blue_model; }
+			if(!flag.skin)             { flag.skin = autocvar_g_ctf_flag_blue_skin; }
+			if(flag.toucheffect == "") { flag.toucheffect = "blueflag_touch"; }
+			if(flag.passeffect == "")  { flag.passeffect = "blue_pass"; }
+			if(flag.capeffect == "")   { flag.capeffect = "blue_cap"; }
+			break;
+		case NUM_TEAM_3: 
+			if(flag.model == "")       { flag.model = autocvar_g_ctf_flag_yellow_model; }
+			if(!flag.skin)             { flag.skin = autocvar_g_ctf_flag_yellow_skin; }
+			if(flag.toucheffect == "") { flag.toucheffect = "yellowflag_touch"; }
+			if(flag.passeffect == "")  { flag.passeffect = "yellow_pass"; }
+			if(flag.capeffect == "")   { flag.capeffect = "yellow_cap"; }
+			break;
+		case NUM_TEAM_4: 
+			if(flag.model == "")       { flag.model = autocvar_g_ctf_flag_pink_model; }
+			if(!flag.skin)             { flag.skin = autocvar_g_ctf_flag_pink_skin; }
+			if(flag.toucheffect == "") { flag.toucheffect = "pinkflag_touch"; }
+			if(flag.passeffect == "")  { flag.passeffect = "pink_pass"; }
+			if(flag.capeffect == "")   { flag.capeffect = "pink_cap"; }
+			break;
+	}
+	if(!flag.scale) { flag.scale = FLAG_SCALE; }
 	
 	// sound 
-	if(flag.snd_flag_taken == "")    { flag.snd_flag_taken  = strzone(strcat("ctf/", Static_Team_ColorName_Lower(teamnumber), "_taken.wav")); }
-	if(flag.snd_flag_returned == "") { flag.snd_flag_returned = strzone(strcat("ctf/", Static_Team_ColorName_Lower(teamnumber), "_returned.wav")); }
-	if(flag.snd_flag_capture == "")  { flag.snd_flag_capture = strzone(strcat("ctf/", Static_Team_ColorName_Lower(teamnumber), "_capture.wav")); } // blue team scores by capturing the red flag
+	switch(teamnumber)
+	{
+		case NUM_TEAM_1:
+			if(flag.snd_flag_taken == "")    { flag.snd_flag_taken = "ctf/red_taken.wav"; }
+			if(flag.snd_flag_returned == "") { flag.snd_flag_returned = "ctf/red_returned.wav"; }
+			if(flag.snd_flag_capture == "")  { flag.snd_flag_capture = "ctf/red_capture.wav"; }
+			if(flag.snd_flag_dropped == "")  { flag.snd_flag_dropped = "ctf/red_dropped.wav"; }
+			break;
+		case NUM_TEAM_2:
+			if(flag.snd_flag_taken == "")    { flag.snd_flag_taken = "ctf/blue_taken.wav"; }
+			if(flag.snd_flag_returned == "") { flag.snd_flag_returned = "ctf/blue_returned.wav"; }
+			if(flag.snd_flag_capture == "")  { flag.snd_flag_capture = "ctf/blue_capture.wav"; }
+			if(flag.snd_flag_dropped == "")  { flag.snd_flag_dropped = "ctf/blue_dropped.wav"; }
+			break;
+		case NUM_TEAM_3:
+			if(flag.snd_flag_taken == "")    { flag.snd_flag_taken = "ctf/yellow_taken.wav"; }
+			if(flag.snd_flag_returned == "") { flag.snd_flag_returned = "ctf/yellow_returned.wav"; }
+			if(flag.snd_flag_capture == "")  { flag.snd_flag_capture = "ctf/yellow_capture.wav"; }
+			if(flag.snd_flag_dropped == "")  { flag.snd_flag_dropped = "ctf/yellow_dropped.wav"; }
+			break;
+		case NUM_TEAM_4:
+			if(flag.snd_flag_taken == "")    { flag.snd_flag_taken = "ctf/pink_taken.wav"; }
+			if(flag.snd_flag_returned == "") { flag.snd_flag_returned = "ctf/pink_returned.wav"; }
+			if(flag.snd_flag_capture == "")  { flag.snd_flag_capture = "ctf/pink_capture.wav"; }
+			if(flag.snd_flag_dropped == "")  { flag.snd_flag_dropped = "ctf/pink_dropped.wav"; }
+			break;
+	}
 	if(flag.snd_flag_respawn == "")  { flag.snd_flag_respawn = "ctf/flag_respawn.wav"; } // if there is ever a team-based sound for this, update the code to match.
-	if(flag.snd_flag_dropped == "")  { flag.snd_flag_dropped = strzone(strcat("ctf/", Static_Team_ColorName_Lower(teamnumber), "_dropped.wav")); }
 	if(flag.snd_flag_touch == "")    { flag.snd_flag_touch = "ctf/touch.wav"; } // again has no team-based sound
 	if(flag.snd_flag_pass == "")     { flag.snd_flag_pass = "ctf/pass.wav"; } // same story here
 	
