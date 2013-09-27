@@ -1030,7 +1030,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	if(!flag.skin)             { flag.skin = ((teamnumber == NUM_TEAM_1) ? autocvar_g_ctf_flag_red_skin : ((teamnumber == NUM_TEAM_2) ? autocvar_g_ctf_flag_blue_skin : ((teamnumber == NUM_TEAM_3) ? autocvar_g_ctf_flag_yellow_skin : autocvar_g_ctf_flag_pink_skin))); }
 	if(flag.toucheffect == "") { flag.toucheffect = ((teamnumber == NUM_TEAM_1) ? "redflag_touch" : ((teamnumber == NUM_TEAM_2) ? "blueflag_touch" : ((teamnumber == NUM_TEAM_3) ? "yellowflag_touch" : "pinkflag_touch"))); }
 	if(flag.passeffect == "")  { flag.passeffect = ((teamnumber == NUM_TEAM_1) ? "red_pass" : ((teamnumber == NUM_TEAM_2) ? "blue_pass" : ((teamnumber == NUM_TEAM_3) ? "yellow_pass" : "pink_pass"))); }
-	if(flag.capeffect == "")   { flag.passeffect = ((teamnumber == NUM_TEAM_1) ? "red_cap" : ((teamnumber == NUM_TEAM_2) ? "blue_cap" : ((teamnumber == NUM_TEAM_3) ? "yellow_cap" : "pink_cap"))); }
+	if(flag.capeffect == "")   { flag.capeffect = ((teamnumber == NUM_TEAM_1) ? "red_cap" : ((teamnumber == NUM_TEAM_2) ? "blue_cap" : ((teamnumber == NUM_TEAM_3) ? "yellow_cap" : "pink_cap"))); }
 	if(!flag.scale) { flag.scale = FLAG_SCALE; }
 	
 	// sound
