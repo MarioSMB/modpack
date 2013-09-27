@@ -173,7 +173,8 @@ void W_RocketMinsta_Explosion(vector loc)
 		final_force = shockwave_hit_force[i];
 		final_damage = shockwave_hit_damage[i];
 		
-		accuracy_add(self, WEP_ROCKET_LAUNCHER, 0, final_damage);
+		if(accuracy_isgooddamage(self, head))
+			accuracy_add(self, WEP_ROCKET_LAUNCHER, 0, final_damage);
 		
 		Damage(head, self, self, final_damage, (WEP_ROCKET_LAUNCHER | HITTYPE_SPLASH), head.origin, final_force);
 		//print("SHOCKWAVE by ", self.netname, ": damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force)), ".\n");
@@ -354,7 +355,9 @@ void W_MinstaNex_SuperBlast()
 		final_damage = shockwave_hit_damage[i];
 		
 		Damage(head, self, self, final_damage, (WEP_MINSTANEX | HITTYPE_SPLASH), head.origin, final_force);
-		accuracy_add(self, WEP_MINSTANEX, 1, final_damage);
+		
+		if(accuracy_isgooddamage(self, head))
+			accuracy_add(self, WEP_MINSTANEX, 1, final_damage);
 		//print("SHOCKWAVE by ", self.netname, ": damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force)), ".\n");
 		
 		shockwave_hit[i] = world;
