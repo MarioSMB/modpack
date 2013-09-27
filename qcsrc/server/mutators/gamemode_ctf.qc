@@ -1002,13 +1002,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 
 	setattachment(flag, world, "");
 	
-	switch(teamnumber)
-	{
-		case NUM_TEAM_1: flag.netname = "^1RED^7 flag"; break;
-		case NUM_TEAM_2: flag.netname = "^2BLUE^7 flag"; break;
-		case NUM_TEAM_3: flag.netname = "^3YELLOW^7 flag"; break;
-		case NUM_TEAM_4: flag.netname = "^6PINK^7 flag"; break;
-	}
+	flag.netname = ((teamnumber == NUM_TEAM_1) ? "^1RED^7 flag" : ((teamnumber == NUM_TEAM_2) ? "^2BLUE^7 flag" : ((teamnumber == NUM_TEAM_3) ? "^3YELLOW^7 flag" : "^6PINK^7 flag")));
 	flag.team = teamnumber;
 	flag.classname = "item_flag_team";
 	flag.target = "###item###"; // wut?
@@ -1032,67 +1026,18 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	flag.ctf_status = FLAG_BASE;
 
 	// appearence
-	switch(teamnumber)
-	{
-		case NUM_TEAM_1: 
-			if(flag.model == "")       { flag.model = autocvar_g_ctf_flag_red_model; }
-			if(!flag.skin)             { flag.skin = autocvar_g_ctf_flag_red_skin; }
-			if(flag.toucheffect == "") { flag.toucheffect = "redflag_touch"; }
-			if(flag.passeffect == "")  { flag.passeffect = "red_pass"; }
-			if(flag.capeffect == "")   { flag.capeffect = "red_cap"; }
-			break;
-		case NUM_TEAM_2: 
-			if(flag.model == "")       { flag.model = autocvar_g_ctf_flag_blue_model; }
-			if(!flag.skin)             { flag.skin = autocvar_g_ctf_flag_blue_skin; }
-			if(flag.toucheffect == "") { flag.toucheffect = "blueflag_touch"; }
-			if(flag.passeffect == "")  { flag.passeffect = "blue_pass"; }
-			if(flag.capeffect == "")   { flag.capeffect = "blue_cap"; }
-			break;
-		case NUM_TEAM_3: 
-			if(flag.model == "")       { flag.model = autocvar_g_ctf_flag_yellow_model; }
-			if(!flag.skin)             { flag.skin = autocvar_g_ctf_flag_yellow_skin; }
-			if(flag.toucheffect == "") { flag.toucheffect = "yellowflag_touch"; }
-			if(flag.passeffect == "")  { flag.passeffect = "yellow_pass"; }
-			if(flag.capeffect == "")   { flag.capeffect = "yellow_cap"; }
-			break;
-		case NUM_TEAM_4: 
-			if(flag.model == "")       { flag.model = autocvar_g_ctf_flag_pink_model; }
-			if(!flag.skin)             { flag.skin = autocvar_g_ctf_flag_pink_skin; }
-			if(flag.toucheffect == "") { flag.toucheffect = "pinkflag_touch"; }
-			if(flag.passeffect == "")  { flag.passeffect = "pink_pass"; }
-			if(flag.capeffect == "")   { flag.capeffect = "pink_cap"; }
-			break;
-	}
+	if(flag.model == "")       { flag.model = ((teamnumber == NUM_TEAM_1) ? autocvar_g_ctf_flag_red_model : ((teamnumber == NUM_TEAM_2) ? autocvar_g_ctf_flag_blue_model : ((teamnumber == NUM_TEAM_3) ? autocvar_g_ctf_flag_yellow_model : autocvar_g_ctf_flag_pink_model))); }
+	if(!flag.skin)             { flag.skin = ((teamnumber == NUM_TEAM_1) ? autocvar_g_ctf_flag_red_skin : ((teamnumber == NUM_TEAM_2) ? autocvar_g_ctf_flag_blue_skin : ((teamnumber == NUM_TEAM_3) ? autocvar_g_ctf_flag_yellow_skin : autocvar_g_ctf_flag_pink_skin))); }
+	if(flag.toucheffect == "") { flag.toucheffect = ((teamnumber == NUM_TEAM_1) ? "redflag_touch" : ((teamnumber == NUM_TEAM_2) ? "blueflag_touch" : ((teamnumber == NUM_TEAM_3) ? "yellowflag_touch" : "pinkflag_touch"))); }
+	if(flag.passeffect == "")  { flag.passeffect = ((teamnumber == NUM_TEAM_1) ? "red_pass" : ((teamnumber == NUM_TEAM_2) ? "blue_pass" : ((teamnumber == NUM_TEAM_3) ? "yellow_pass" : "pink_pass"))); }
+	if(flag.capeffect == "")   { flag.passeffect = ((teamnumber == NUM_TEAM_1) ? "red_cap" : ((teamnumber == NUM_TEAM_2) ? "blue_cap" : ((teamnumber == NUM_TEAM_3) ? "yellow_cap" : "pink_cap"))); }
 	if(!flag.scale) { flag.scale = FLAG_SCALE; }
 	
-	// sound 
-	switch(teamnumber)
-	{
-		case NUM_TEAM_1:
-			if(flag.snd_flag_taken == "")    { flag.snd_flag_taken = "ctf/red_taken.wav"; }
-			if(flag.snd_flag_returned == "") { flag.snd_flag_returned = "ctf/red_returned.wav"; }
-			if(flag.snd_flag_capture == "")  { flag.snd_flag_capture = "ctf/red_capture.wav"; }
-			if(flag.snd_flag_dropped == "")  { flag.snd_flag_dropped = "ctf/red_dropped.wav"; }
-			break;
-		case NUM_TEAM_2:
-			if(flag.snd_flag_taken == "")    { flag.snd_flag_taken = "ctf/blue_taken.wav"; }
-			if(flag.snd_flag_returned == "") { flag.snd_flag_returned = "ctf/blue_returned.wav"; }
-			if(flag.snd_flag_capture == "")  { flag.snd_flag_capture = "ctf/blue_capture.wav"; }
-			if(flag.snd_flag_dropped == "")  { flag.snd_flag_dropped = "ctf/blue_dropped.wav"; }
-			break;
-		case NUM_TEAM_3:
-			if(flag.snd_flag_taken == "")    { flag.snd_flag_taken = "ctf/yellow_taken.wav"; }
-			if(flag.snd_flag_returned == "") { flag.snd_flag_returned = "ctf/yellow_returned.wav"; }
-			if(flag.snd_flag_capture == "")  { flag.snd_flag_capture = "ctf/yellow_capture.wav"; }
-			if(flag.snd_flag_dropped == "")  { flag.snd_flag_dropped = "ctf/yellow_dropped.wav"; }
-			break;
-		case NUM_TEAM_4:
-			if(flag.snd_flag_taken == "")    { flag.snd_flag_taken = "ctf/pink_taken.wav"; }
-			if(flag.snd_flag_returned == "") { flag.snd_flag_returned = "ctf/pink_returned.wav"; }
-			if(flag.snd_flag_capture == "")  { flag.snd_flag_capture = "ctf/pink_capture.wav"; }
-			if(flag.snd_flag_dropped == "")  { flag.snd_flag_dropped = "ctf/pink_dropped.wav"; }
-			break;
-	}
+	// sound
+	if(flag.snd_flag_taken == "")    { flag.snd_flag_taken = ((teamnumber == NUM_TEAM_1) ? "ctf/red_taken.wav" : ((teamnumber == NUM_TEAM_2) ? "ctf/blue_taken.wav" : ((teamnumber == NUM_TEAM_3) ? "ctf/yellow_taken.wav" : "ctf/pink_taken.wav"))); }
+	if(flag.snd_flag_returned == "") { flag.snd_flag_returned = ((teamnumber == NUM_TEAM_1) ? "ctf/red_returned.wav" : ((teamnumber == NUM_TEAM_2) ? "ctf/blue_returned.wav" : ((teamnumber == NUM_TEAM_3) ? "ctf/yellow_returned.wav" : "ctf/pink_returned.wav"))); }
+	if(flag.snd_flag_capture == "")  { flag.snd_flag_capture = ((teamnumber == NUM_TEAM_1) ? "ctf/red_capture.wav" : ((teamnumber == NUM_TEAM_2) ? "ctf/blue_capture.wav" : ((teamnumber == NUM_TEAM_3) ? "ctf/yellow_capture.wav" : "ctf/pink_capture.wav"))); }
+	if(flag.snd_flag_dropped == "")  { flag.snd_flag_dropped = ((teamnumber == NUM_TEAM_1) ? "ctf/red_dropped.wav" : ((teamnumber == NUM_TEAM_2) ? "ctf/blue_dropped.wav" : ((teamnumber == NUM_TEAM_3) ? "ctf/yellow_dropped.wav" : "ctf/pink_dropped.wav"))); }
 	if(flag.snd_flag_respawn == "")  { flag.snd_flag_respawn = "ctf/flag_respawn.wav"; } // if there is ever a team-based sound for this, update the code to match.
 	if(flag.snd_flag_touch == "")    { flag.snd_flag_touch = "ctf/touch.wav"; } // again has no team-based sound
 	if(flag.snd_flag_pass == "")     { flag.snd_flag_pass = "ctf/pass.wav"; } // same story here
@@ -1116,13 +1061,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	
 	if(autocvar_g_ctf_flag_glowtrails)
 	{
-		switch(teamnumber)
-		{
-			case NUM_TEAM_1: flag.glow_color = 251; break; // red
-			case NUM_TEAM_2: flag.glow_color = 210; break; // blue
-			case NUM_TEAM_3: flag.glow_color = 110; break; // yellow
-			case NUM_TEAM_4: flag.glow_color = 145; break; // pink
-		}
+		flag.glow_color = ((teamnumber == NUM_TEAM_1) ? 251 : ((teamnumber == NUM_TEAM_2) ? 210 : ((teamnumber == NUM_TEAM_3) ? 110 : 145)));
 		flag.glow_size = 25;
 		flag.glow_trail = 1;
 	}
