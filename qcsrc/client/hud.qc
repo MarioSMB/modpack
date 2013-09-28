@@ -4134,9 +4134,9 @@ void HUD_InfoMessages(void)
 				s = _("^1Observing");
 			else
 #ifdef COMPAT_XON050_ENGINE
-				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(spectatee_status - 1));
+				s = sprintf(_("^1Spectating: ^7%s ^1(^3fov: %d^1)"), GetPlayerName(spectatee_status - 1), fovlock);
 #else
-				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(player_localentnum - 1));
+				s = sprintf(_("^1Spectating: ^7%s ^1(^3fov: %d^1)"), GetPlayerName(player_localentnum - 1), fovlock);
 #endif
 			drawInfoMessage(s)
 
@@ -4906,6 +4906,10 @@ void HUD_Main (void)
 		(panel = HUD_PANEL(CENTERPRINT)).panel_draw();
 		return;
 	}
+	
+	if(spectatee_status == -1 || !spectatee_status)
+	if(fovlock >= 0)
+		fovlock = -1;
 
 	if(!autocvar__hud_configure && !hud_fade_alpha)
 		return;

@@ -322,12 +322,14 @@ void Playerchecker_Think()
 	self.nextthink = time + 0.2;
 }
 
-void FPSReporter_Think() {
-	localcmd("cmd fpsreport ", ftos(floor(cl_fps)), "\n");
+void FPSReporter_Think()
+{
+	localcmd("\ncmd report fps ", ftos(floor(cl_fps)), "\n");
 	self.nextthink = time + sv_showfps;
 }
 
-void FPSReporter_Init() {
+void FPSReporter_Init()
+{
 	if not(sv_showfps)
 		return;
 	
@@ -350,6 +352,8 @@ void PostInit(void)
 	Porto_Init();
 	TrueAim_Init();
 	FPSReporter_Init();
+	
+	fovlock = -1;
 
 	postinit = true;
 }
@@ -1238,6 +1242,11 @@ void Net_ReadMorningRescue()
 void Net_ReadSpecInfo()
 {
 	float i;
+	
+	fovlock = ReadByte();
+	
+	if(fovlock == 0)
+		fovlock = -1;
 	
 	num_spectators = ReadByte();
 	for(i = 0; i < num_spectators; ++i)

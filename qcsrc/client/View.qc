@@ -409,6 +409,7 @@ void FPSCounter_Update() {
 #define BUTTON_4 8
 float cl_notice_run();
 float prev_myteam;
+float oldfov;
 void CSQC_UpdateView(float w, float h)
 {
 	entity e;
@@ -622,6 +623,13 @@ void CSQC_UpdateView(float w, float h)
 	Announcer();
 
 	fov = autocvar_fov;
+	
+	if(fov != oldfov)
+	{
+		localcmd("\ncmd report fov ", ftos(fov), "\n");
+		oldfov = fov;
+	}
+	
 	if(fov <= 59.5)
 	{
 		if(!zoomscript_caught)
@@ -709,7 +717,10 @@ void CSQC_UpdateView(float w, float h)
 	vid_conheight = autocvar_vid_conheight;
 	vid_pixelheight = autocvar_vid_pixelheight;
 
-	setproperty(VF_FOV, GetCurrentFov(fov));
+	if(fovlock > -1)
+		setproperty(VF_FOV, GetCurrentFov(fovlock));
+	else
+		setproperty(VF_FOV, GetCurrentFov(fov));
 
 	// Camera for demo playback
 	if(camera_active)

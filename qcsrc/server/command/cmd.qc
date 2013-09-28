@@ -142,30 +142,6 @@ void ClientCommand_mv_getpicture(float request, float argc) // internal command,
 	}
 }
 
-void ClientCommand_fpsreport(float request, float argc) 
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			if(sv_showfps)
-			if(self)
-			if(self.scorekeeper)
-				PlayerScore_Set(self, SP_FPS, stof(argv(1)));
-			
-			return; // never fall through to usage
-		}
-			
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			sprint(self, "\nUsage:^3 cmd fpsreport [fps]\n");
-			sprint(self, "  Where 'fps' is your scoreboard frames per second.\n");
-			return;
-		}
-	}
-}
-
 void ClientCommand_join(float request) 
 {
 	switch(request)
@@ -376,6 +352,38 @@ void ClientCommand_ready(float request) // todo: anti-spam for toggling readynes
 		{
 			sprint(self, "\nUsage:^3 cmd ready\n");
 			sprint(self, "  No arguments required.\n");
+			return;
+		}
+	}
+}
+
+void ClientCommand_report(float request, float argc) 
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if(argv(1) == "fps")
+			if(sv_showfps)
+			if(IS_PLAYER(self))
+			if(self.scorekeeper)
+				PlayerScore_Set(self, SP_FPS, stof(argv(2)));
+				
+			if(argv(1) == "fov")
+			{
+				self.clientfov = stof(argv(2));
+				UpdateSpectators(world, world);
+			}
+			
+			return; // never fall through to usage
+		}
+			
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(self, "\nUsage:^3 cmd report [fps fov]\n");
+			sprint(self, "  Where 'fps' is your scoreboard frames per second.\n");
+			sprint(self, "  Where 'fov' is your current field of view.\n");
 			return;
 		}
 	}
@@ -716,12 +724,12 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("checkfail", ClientCommand_checkfail(request, command), "Report if a client-side check failed") \
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(request, arguments), "Release version of the game") \
 	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(request, arguments), "Retrieve mapshot picture from the server") \
-	CLIENT_COMMAND("fpsreport", ClientCommand_fpsreport(request, arguments), "Retrieve frames per second") \
 	CLIENT_COMMAND("join", ClientCommand_join(request), "Become a player in the game") \
 	CLIENT_COMMAND("mobedit", ClientCommand_mobedit(request, arguments), "Edit your monster's properties") \
 	CLIENT_COMMAND("mobkill", ClientCommand_mobkill(request), "Kills your monster") \
 	CLIENT_COMMAND("mobspawn", ClientCommand_mobspawn(request, arguments), "Spawn monsters infront of yourself") \
 	CLIENT_COMMAND("ready", ClientCommand_ready(request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
+	CLIENT_COMMAND("report", ClientCommand_report(request, arguments), "Retrieve values from the client") \
 	CLIENT_COMMAND("say", ClientCommand_say(request, arguments, command), "Print a message to chat to all players") \
 	CLIENT_COMMAND("say_team", ClientCommand_say_team(request, arguments, command), "Print a message to chat to all team mates") \
 	CLIENT_COMMAND("selectteam", ClientCommand_selectteam(request, arguments), "Attempt to choose a team to join into") \
