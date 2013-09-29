@@ -298,7 +298,7 @@ void Net_ReadNexgunBeamParticle()
 	particles_alphamin = particles_alphamax = particles_fade = charge;
 
 	if (autocvar_cl_particles_oldnexbeam && (getstati(STAT_ALLOW_OLDNEXBEAM) || isdemo()))
-		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum("TE_TEI_G3"), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
+		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum("TE_TEI_G3NEUTRAL"), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
 	else
 		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum("nex_beam"), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
 }

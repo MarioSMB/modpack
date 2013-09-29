@@ -714,6 +714,7 @@ void GameCommand_effectindexdump(float request)
 			db_put(d, "TR_KNIGHTSPIKE", "1"); print("effect TR_KNIGHTSPIKE is ", ftos(particleeffectnum("TR_KNIGHTSPIKE")), "\n");
 			db_put(d, "TR_VORESPIKE", "1"); print("effect TR_VORESPIKE is ", ftos(particleeffectnum("TR_VORESPIKE")), "\n");
 			db_put(d, "TR_NEHAHRASMOKE", "1"); print("effect TR_NEHAHRASMOKE is ", ftos(particleeffectnum("TR_NEHAHRASMOKE")), "\n");
+			db_put(d, "TR_NEXUIZPLASMA", "1"); print("effect TR_NEXUIZPLASMA is ", ftos(particleeffectnum("TR_NEXUIZPLASMA")), "\n");
 			db_put(d, "TR_GLOWTRAIL", "1"); print("effect TR_GLOWTRAIL is ", ftos(particleeffectnum("TR_GLOWTRAIL")), "\n");
 			db_put(d, "TR_SEEKER", "1"); print("effect TR_SEEKER is ", ftos(particleeffectnum("TR_SEEKER")), "\n");
 			db_put(d, "SVC_PARTICLE", "1"); print("effect SVC_PARTICLE is ", ftos(particleeffectnum("SVC_PARTICLE")), "\n");
@@ -1800,7 +1801,7 @@ void GameCommand_trace(float request, float argc)
 						vv = stov(argv(2));
 						dv = stov(argv(3));
 						traceline(vv, dv, MOVE_NORMAL, world);
-						trailparticles(world, particleeffectnum("rocketminsta_laser_neutral"), vv, trace_endpos);
+						trailparticles(world, particleeffectnum("TR_NEXUIZPLASMA"), vv, trace_endpos);
 						trailparticles(world, particleeffectnum("TR_CRYLINKPLASMA"), trace_endpos, dv);
 						return;
 					}

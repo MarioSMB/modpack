@@ -46,8 +46,8 @@ void rpn_set(string s)
 
 float rpn_getf() { return stof(rpn_get()); }
 float rpn_popf() { return stof(rpn_pop()); }
-void rpn_pushf(float f) { return rpn_push(ftos(f)); }
-void rpn_setf(float f) { return rpn_set(ftos(f)); }
+void rpn_pushf(float f) { return rpn_push(sprintf("%.9g", f)); }
+void rpn_setf(float f) { return rpn_set(sprintf("%.9g", f)); }
 
 void GenericCommand_rpn(float request, float argc, string command)
 {
@@ -158,6 +158,31 @@ void GenericCommand_rpn(float request, float argc, string command)
 						f = rpn_popf();
 						f2 = rpn_getf();
 						rpn_setf(f2 - f * floor(f2 / f));
+					} else if(rpncmd == "pow" || rpncmd == "**") {
+						f = rpn_popf();
+						rpn_setf(pow(rpn_getf(), f));
+					} else if(rpncmd == "bitand" || rpncmd == "&") {
+						f = rpn_popf();
+						rpn_setf(rpn_getf() & f);
+					} else if(rpncmd == "bitor" || rpncmd == "|") {
+						f = rpn_popf();
+						rpn_setf(rpn_getf() | f);
+					} else if(rpncmd == "bitxor" || rpncmd == "^") {
+						f = rpn_popf();
+						rpn_setf(rpn_getf() ^ f);
+					} else if(rpncmd == "and" || rpncmd == "&&") {
+						f = rpn_popf();
+						rpn_setf(rpn_getf() && f);
+					} else if(rpncmd == "or" || rpncmd == "||") {
+						f = rpn_popf();
+						rpn_setf(rpn_getf() || f);
+					} else if(rpncmd == "xor" || rpncmd == "^^") {
+						f = rpn_popf();
+						rpn_setf(!rpn_getf() != !f);
+					} else if(rpncmd == "bitnot") {
+						rpn_setf(~rpn_popf());
+					} else if(rpncmd == "not") {
+						rpn_setf(!rpn_popf());
 					} else if(rpncmd == "abs") {
 						rpn_setf(fabs(rpn_getf()));
 					} else if(rpncmd == "sgn") {
@@ -174,6 +199,14 @@ void GenericCommand_rpn(float request, float argc, string command)
 						rpn_setf(floor(rpn_getf()));
 					} else if(rpncmd == "ceil" || rpncmd == "c") {
 						rpn_setf(ceil(rpn_getf()));
+					} else if(rpncmd == "exp") {
+						rpn_setf(exp(rpn_getf()));
+					} else if(rpncmd == "log") {
+						rpn_setf(exp(rpn_getf()));
+					} else if(rpncmd == "sin") {
+						rpn_setf(sin(rpn_getf()));
+					} else if(rpncmd == "cos") {
+						rpn_setf(cos(rpn_getf()));
 					} else if(rpncmd == "max") {
 						f = rpn_popf();
 						f2 = rpn_getf();
@@ -528,9 +561,12 @@ void GenericCommand_rpn(float request, float argc, string command)
 			print("    x x exch --------------------------> x x : swap the top two\n");
 			print("    /cvarname load --------------------> x   : loads a cvar\n");
 			print("    /cvarname x def ------------------->     : writes to a cvar\n");
-			print("    f f add|sub|mul|div|mod|max|min ---> f   : adds/... two numbers\n");
-			print("    f f eq|ne|gt|ge|lt|le -------------> f   : compares two numbers\n");
+			print("    f f add|sub|mul|div|mod|pow -------> f   : adds/... two numbers\n");
+			print("    f f and|or|xor|bitand|bitor|bitxor > f   : logical and bitwise operations\n");
+			print("    f f eq|ne|gt|ge|lt|le|max|min -----> f   : compares two numbers\n");
 			print("    f neg|abs|sgn|rand|floor|ceil------> f   : negates/... a number\n");
+			print("    f not|bitnot ----------------------> f   : logical and bitwise negation\n");
+			print("    f exp|log|sin|cos -----------------> f   : exponential function & Co.\n");
 			print("    f f f bound -----------------------> f   : bounds the middle number\n");
 			print("    f1 f2 b when ----------------------> f   : f1 if b, f2 otherwise\n");
 			print("    s s union|intersection|difference -> s   : set operations\n");

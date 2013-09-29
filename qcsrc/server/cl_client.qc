@@ -1354,6 +1354,8 @@ void ClientDisconnect (void)
 	playerdemo_shutdown();
 
 	bot_clientdisconnect();
+	
+	stuffcmd(self, "\nfs_rescan\n"); // unload packages
 
 	if(self.entcs)
 		detach_entcs();
@@ -2191,7 +2193,7 @@ void PrintWelcomeMessage()
 	{
 		if(self.BUTTON_INFO) // BUTTON_INFO hides initial MOTD
 			self.motd_actived_time = -2; // wait until BUTTON_INFO gets released
-		else if(self.motd_actived_time == -2 || IS_PLAYER(self) || time - self.jointime > autocvar_welcome_message_time)
+		else if(self.motd_actived_time == -2 || IS_PLAYER(self))
 		{
 			// instanctly hide MOTD
 			self.motd_actived_time = 0;
