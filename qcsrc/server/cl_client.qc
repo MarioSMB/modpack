@@ -1339,7 +1339,7 @@ void ClientDisconnect (void)
 		print("Warning: ClientDisconnect without ClientConnect\n");
 		return;
 	}
-
+	
 	PlayerStats_AddGlobalInfo(self);
 
 	CheatShutdownClient();
@@ -1356,8 +1356,6 @@ void ClientDisconnect (void)
 	playerdemo_shutdown();
 
 	bot_clientdisconnect();
-	
-	stuffcmd(self, "\nfs_rescan\n"); // unload packages
 
 	if(self.entcs)
 		detach_entcs();
