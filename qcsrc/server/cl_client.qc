@@ -326,6 +326,9 @@ void FixPlayermodel()
 			defaultmodel = "models/player/pony.iqm";
 			defaultskin = self.cvar_cl_pony_skin;
 		}
+		if(self.cvar_cl_robot)
+			defaultmodel = "models/player/terminusmale.iqm";
+			
 		// special hax
 		if(checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
 		{
@@ -338,8 +341,6 @@ void FixPlayermodel()
 				defaultmodel = "models/player/abyss.zym";
 				defaultskin = self.cvar_cl_bikini_skin;
 			}
-			if(self.cvar_cl_robot)
-				defaultmodel = "models/player/terminusmale.iqm";
 			if(self.cvar_cl_sparkle > 2)
 				defaultmodel = "models/player/mario.dpm";
 		}
