@@ -225,7 +225,7 @@ void nade_boom()
 			case NUM_TEAM_2: expef = "nade_blue_explode"; break;
 			case NUM_TEAM_3: expef = "nade_yellow_explode"; break;
 			case NUM_TEAM_4: expef = "nade_pink_explode"; break;
-			default: 		 expef = "nade_explode"; break;
+			default: 		 expef = "nade_neutral_explode"; break;
 		}
 	
 	

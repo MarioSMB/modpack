@@ -287,6 +287,7 @@ void Net_ReadNexgunBeamParticle()
 {
 	vector shotorg, endpos;
 	float charge;
+	string s;
 	shotorg_x = ReadCoord(); shotorg_y = ReadCoord(); shotorg_z = ReadCoord();
 	endpos_x = ReadCoord(); endpos_y = ReadCoord(); endpos_z = ReadCoord();
 	charge = ReadByte() / 255.0;
@@ -296,11 +297,13 @@ void Net_ReadNexgunBeamParticle()
 	//draw either the old v2.3 beam or the new beam
 	charge = sqrt(charge); // divide evenly among trail spacing and alpha
 	particles_alphamin = particles_alphamax = particles_fade = charge;
+	
+	s = ((charge >= 0.95) ? "nex_beam_charged" : "nex_beam");
 
 	if (autocvar_cl_particles_oldnexbeam && (getstati(STAT_ALLOW_OLDNEXBEAM) || isdemo()))
 		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum("TE_TEI_G3NEUTRAL"), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
 	else
-		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum("nex_beam"), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
+		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum(s), shotorg, endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
 }
 
 .vector sw_shotorg;
