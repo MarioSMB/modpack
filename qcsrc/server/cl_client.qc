@@ -319,6 +319,7 @@ void FixPlayermodel()
 	}
 	
 	if(autocvar_sv_allow_customplayermodels)
+	if not(cvar("g_overkill"))
 	{
 		// public hax
 		if(self.cvar_cl_pony)
