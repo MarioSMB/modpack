@@ -1424,6 +1424,7 @@ float autocvar_g_nades_napalm_burntime;
 float autocvar_g_nades_napalm_selfdamage;
 float autocvar_g_nades_ice_freeze_time;
 float autocvar_g_nades_ice_health;
+float autocvar_g_nades_ice_explode;
 float autocvar_g_campcheck_damage;
 float autocvar_g_campcheck_distance;
 float autocvar_g_campcheck_interval;

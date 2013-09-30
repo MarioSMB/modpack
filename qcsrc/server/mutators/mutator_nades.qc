@@ -238,23 +238,25 @@ void nade_ice_think()
 	
 	if(time >= self.ltime) 
 	{
-		string expef;
-		switch(self.realowner.team)
+		if ( autocvar_g_nades_ice_explode )
 		{
-			case NUM_TEAM_1: expef = "nade_red_explode"; break;
-			case NUM_TEAM_2: expef = "nade_blue_explode"; break;
-			case NUM_TEAM_3: expef = "nade_yellow_explode"; break;
-			case NUM_TEAM_4: expef = "nade_pink_explode"; break;
-			default: 		 expef = "nade_neutral_explode"; break;
+			string expef;
+			switch(self.realowner.team)
+			{
+				case NUM_TEAM_1: expef = "nade_red_explode"; break;
+				case NUM_TEAM_2: expef = "nade_blue_explode"; break;
+				case NUM_TEAM_3: expef = "nade_yellow_explode"; break;
+				case NUM_TEAM_4: expef = "nade_pink_explode"; break;
+				default: 		 expef = "nade_neutral_explode"; break;
+			}
+			pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
+			sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+			
+			RadiusDamage(self, self.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
+				autocvar_g_nades_nade_radius, self, autocvar_g_nades_nade_force, self.projectiledeathtype, self.enemy);
+			Damage_DamageInfo(self.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage, 
+				autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, self.projectiledeathtype, 0, self);
 		}
-		pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
-		sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
-		
-		RadiusDamage(self, self.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
-			autocvar_g_nades_nade_radius, self, autocvar_g_nades_nade_force, self.projectiledeathtype, self.enemy);
-		Damage_DamageInfo(self.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage, 
-			autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, self.projectiledeathtype, 0, self);
-		
 		remove(self);
 		return;
 	}
@@ -316,22 +318,25 @@ void nade_ice_boom()
 	fountain.bot_dodge = FALSE;
 	setsize(fountain, '-16 -16 -16', '16 16 16');
 	fountain.nade_special_time = time+0.3;
-	setmodel(fountain, "models/grenademodel.md3");
 	fountain.angles = self.angles;
-	//fountain.effects = EF_LOWPRECISION | EF_FLAME;
 	
-	
-	entity timer = spawn();
-	setmodel(timer, "models/ok_nade_counter/ok_nade_counter.md3");
-	setattachment(timer, fountain, "");
-	timer.classname = "nade_timer";
-	timer.colormap = self.colormap;
-	timer.glowmod = self.glowmod;
-	timer.think = nade_timer_think;
-	timer.nextthink = time;
-	timer.wait = fountain.ltime;
-	timer.owner = fountain;	
-	timer.skin = 10;
+	if ( autocvar_g_nades_ice_explode )
+	{
+		setmodel(fountain, "models/grenademodel.md3");
+		entity timer = spawn();
+		setmodel(timer, "models/ok_nade_counter/ok_nade_counter.md3");
+		setattachment(timer, fountain, "");
+		timer.classname = "nade_timer";
+		timer.colormap = self.colormap;
+		timer.glowmod = self.glowmod;
+		timer.think = nade_timer_think;
+		timer.nextthink = time;
+		timer.wait = fountain.ltime;
+		timer.owner = fountain;	
+		timer.skin = 10;
+	}
+	else
+		setmodel(fountain, "null");
 }
 
 void nade_boom()
