@@ -605,7 +605,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 
 void Unfreeze (entity targ)
 {
-	if(targ.frozen) // only reset health if target was frozen
+	if(targ.frozen != 3) // only reset health if target was frozen
 		targ.health = ((IS_PLAYER(targ)) ? autocvar_g_balance_health_start : targ.max_health);
 
 	entity head;

@@ -2422,6 +2422,15 @@ void PlayerPreThink (void)
 		if(self.revive_progress >= 1)
 			Unfreeze(self);
 	}
+	else if(self.frozen == 3)
+	{
+		self.revive_progress = bound(0, self.revive_progress + frametime * self.revive_speed, 1);
+		self.health = 100 - self.revive_progress * (100-autocvar_g_nades_ice_health);
+		self.iceblock.alpha = bound(0.2, 1 - self.revive_progress, 1);
+
+		if(self.revive_progress >= 1)
+			Unfreeze(self);
+	}
 
 	MUTATOR_CALLHOOK(PlayerPreThink);
 	

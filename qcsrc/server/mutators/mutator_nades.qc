@@ -292,7 +292,7 @@ void nade_ice_think()
 			if not ( e.frozen ) if ( current_freeze_time > 0 )
 		{
 			pointparticles(particleeffectnum("electro_impact"), e.origin, '0 0 0', 1);
-			Freeze(e, 1/current_freeze_time, 2, FALSE);
+			Freeze(e, 1/current_freeze_time, 3, FALSE);
 			if ( e.flagcarried )
 				ctf_Handle_Throw(e, world, DROP_THROW);
 		}
