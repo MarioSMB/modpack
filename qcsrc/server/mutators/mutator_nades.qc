@@ -245,7 +245,7 @@ void nade_ice_think()
 			case NUM_TEAM_2: expef = "nade_blue_explode"; break;
 			case NUM_TEAM_3: expef = "nade_yellow_explode"; break;
 			case NUM_TEAM_4: expef = "nade_pink_explode"; break;
-			default: 		 expef = "nade_explode"; break;
+			default: 		 expef = "nade_neutral_explode"; break;
 		}
 		pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
 		sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
@@ -360,7 +360,7 @@ void nade_boom()
 				case NUM_TEAM_2: expef = "nade_blue_explode"; break;
 				case NUM_TEAM_3: expef = "nade_yellow_explode"; break;
 				case NUM_TEAM_4: expef = "nade_pink_explode"; break;
-				default: 		 expef = "nade_explode"; break;
+				default: 		 expef = "nade_neutral_explode"; break;
 			}
 	}
 	
