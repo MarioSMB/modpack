@@ -925,7 +925,7 @@ void DrawAmmoNades(vector myPos, vector mySize, float draw_expanding, float expa
 	if(b > 0 || a > 0)
 	{
 		if(autocvar_hud_panel_ammo_text)
-			drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, nade_color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 		
 		if(draw_expanding)
 			drawpic_aspect_skin_expanding(picpos, "nade_nbg", '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, expand_time);
