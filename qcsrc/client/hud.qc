@@ -883,16 +883,8 @@ string GetAmmoPicture(float i)
 	}
 }
 
-void DrawNadeScoreBar(vector myPos, vector mySize)
+void DrawNadeScoreBar(vector myPos, vector mySize, vector color)
 {
-	vector color;
-	
-	switch(getstati(STAT_GRENADE_BONUS_TYPE))
-	{
-		case NADE_TYPE_NAPALM: color = '2 0.5 0'; break;
-		case NADE_TYPE_ICE: color = '0 0.5 2'; break;
-		default: color = '1 1 1'; break;
-	}
 	
 	HUD_Panel_DrawProgressBar(
 		myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, 
@@ -905,24 +897,18 @@ void DrawNadeScoreBar(vector myPos, vector mySize)
 
 void DrawAmmoNades(vector myPos, vector mySize, float draw_expanding, float expand_time)
 {
-	string nade_icon;
+	float theAlpha = 1, a, b;
+	vector nade_color = '1 1 1', picpos, numpos;
 	
 	switch(getstati(STAT_GRENADE_BONUS_TYPE))
 	{
-		case NADE_TYPE_NAPALM: nade_icon = "nade_napalm"; break;
-		case NADE_TYPE_ICE: nade_icon = "nade_ice"; break;
-		default: nade_icon = "nade"; break;
+		case NADE_TYPE_NAPALM: nade_color = '2 0.5 0'; break;
+		case NADE_TYPE_ICE: nade_color = '0 0.5 2'; break;
 	}
 	
-	float a, b;
 	a = getstatf(STAT_GRENADE_BONUS);
 	b = getstatf(STAT_GRENADE_BONUS_SCORE);
-
-	vector color = '1 1 1';
-
-	float theAlpha = 1;
 	
-	vector picpos, numpos;
 	if(autocvar_hud_panel_ammo_iconalign)
 	{
 		numpos = myPos;
@@ -934,20 +920,18 @@ void DrawAmmoNades(vector myPos, vector mySize, float draw_expanding, float expa
 		picpos = myPos;
 	}
 
-	DrawNadeScoreBar(myPos,mySize);
+	DrawNadeScoreBar(myPos, mySize, nade_color);
 
-    if(a > 0 && autocvar_hud_panel_ammo_progressbar)
-        HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, autocvar_hud_panel_ammo_progressbar_name, a/autocvar_hud_panel_ammo_maxammo, 0, 0, color, autocvar_hud_progressbar_alpha * panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
-		
 	if(b > 0 || a > 0)
 	{
 		if(autocvar_hud_panel_ammo_text)
-		drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+			drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, nade_color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 		
 		if(draw_expanding)
-			drawpic_aspect_skin_expanding(picpos, nade_icon, '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, expand_time);
-		
-		drawpic_aspect_skin(picpos, nade_icon , '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+			drawpic_aspect_skin_expanding(picpos, "nade_nbg", '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL, expand_time);
+			
+		drawpic_aspect_skin(picpos, "nade_bg" , '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(picpos, "nade_nbg" , '1 1 0' * mySize_y, nade_color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 	}
 }
 
