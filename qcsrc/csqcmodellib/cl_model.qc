@@ -237,10 +237,11 @@ void CSQCModel_Read(float isnew)
 
 	if(sf & CSQCMODEL_PROPERTY_MODELINDEX)
 	{
+		vector oldmins = self.mins, oldmaxs = self.maxs;
 		setmodelindex(self, self.modelindex); // this retrieves the .model key and sets mins/maxs/absmin/absmax
 		// FIXME do we WANT this to override mins/maxs?
 		if(isplayer)
-			setsize(self, PL_MIN, PL_MAX);
+			setsize(self, oldmins, oldmaxs);
 		else if(self.monsterid)
 		{
 			entity mon = get_monsterinfo(self.monsterid);
