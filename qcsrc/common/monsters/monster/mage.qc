@@ -67,7 +67,7 @@ float friend_needshelp(entity e)
 		return FALSE;
 	if(vlen(e.origin - self.origin) > MON_CVAR(mage, heal_range))
 		return FALSE;
-	if(DIFF_TEAM(e, self))
+	if(DIFF_TEAM(e, self) && e != self.monster_owner)
 		return FALSE;
 	if(e.frozen)
 		return FALSE;
@@ -291,13 +291,13 @@ void mage_heal()
 		{
 			pointparticles(particleeffectnum("healing_fx"), head.origin, '0 0 0', 1);
 			head.health = bound(0, head.health + MON_CVAR(mage, heal_allies), head.max_health);
-			head.SendFlags |= MSF_STATUS;
+			WaypointSprite_UpdateHealth(head.sprite, head.health);
 		}
 	}
 	
 	if(washealed)
 	{
-		monsters_setframe(mage_anim_attack);
+		self.frame = mage_anim_attack;
 		self.attack_finished_single = time + MON_CVAR(mage, heal_delay);
 	}
 }
@@ -340,7 +340,7 @@ void mage_shield()
 	
 	self.lastshielded = time + MON_CVAR(mage, shield_delay);
 	
-	monsters_setframe(mage_anim_attack);
+	self.frame = mage_anim_attack;
 	self.attack_finished_single = time + 1;
 	
 	self.m_armor_blockpercent = MON_CVAR(mage, shield_blockpercent);
@@ -353,7 +353,7 @@ float mage_attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			monsters_setframe(mage_anim_attack);
+			self.frame = mage_anim_attack;
 			self.attack_finished_single = time + MON_CVAR(mage, attack_melee_delay);
 			defer(0.2, mageattack_melee);
 			
@@ -367,7 +367,7 @@ float mage_attack(float attack_type)
 				return TRUE;
 			}
 	
-			monsters_setframe(mage_anim_attack);
+			self.frame = mage_anim_attack;
 			self.attack_finished_single = time + MON_CVAR(mage, attack_spike_delay);
 			defer(0.2, mage_spike);
 			
@@ -433,7 +433,7 @@ float m_mage(float req)
 		}
 		case MR_DEATH:
 		{
-			monsters_setframe(mage_anim_death);
+			self.frame = mage_anim_death;
 			return TRUE;
 		}
 		case MR_SETUP:
@@ -442,12 +442,13 @@ float m_mage(float req)
 			
 			self.monster_loot = spawnfunc_item_health_large;
 			self.monster_attackfunc	= mage_attack;
-			monsters_setframe(mage_anim_walk);
+			self.frame = mage_anim_walk;
 			
 			return TRUE;
 		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
+			precache_model ("models/monsters/mage.dpm");
 			precache_model ("models/items/g_h50.md3");
 			precache_model ("models/ctf/shield.md3");
 			precache_sound ("weapons/grenade_impact.wav");
@@ -469,12 +470,7 @@ float m_mage(float req)
 {
 	switch(req)
 	{
-		case MR_DEATH:
-		{
-			// nothing
-			return TRUE;
-		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
 			precache_model ("models/monsters/mage.dpm");
 			return TRUE;

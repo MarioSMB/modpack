@@ -133,7 +133,7 @@ float m_cerberus(float req)
 		{
 			if(self.monster_owner.flags & FL_MONSTER)
 				self.monster_owner = world;
-			monsters_setframe(cerberus_anim_die);
+			self.frame = cerberus_anim_die;
 			return TRUE;
 		}
 		case MR_SETUP:
@@ -142,13 +142,13 @@ float m_cerberus(float req)
 			
 			self.monster_loot = spawnfunc_item_health_small;
 			self.monster_attackfunc	= cerberus_attack;
-			monsters_setframe(cerberus_anim_idle);
+			self.frame = cerberus_anim_idle;
 			
 			return TRUE;
 		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
-			// nothing
+			precache_model ("models/monsters/dog.dpm");
 			return TRUE;
 		}
 		case MR_CONFIG:
@@ -167,12 +167,7 @@ float m_cerberus(float req)
 {
 	switch(req)
 	{
-		case MR_DEATH:
-		{
-			// nothing
-			return TRUE;
-		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
 			precache_model ("models/monsters/dog.dpm");
 			return TRUE;

@@ -82,14 +82,14 @@ void zombie_blockend()
 	if(self.health <= 0)
 		return;
 
-	monsters_setframe(zombie_anim_blockend);
+	self.frame = zombie_anim_blockend;
 	self.armorvalue = 0;
 	self.m_armor_blockpercent = autocvar_g_monsters_armor_blockpercent;
 }
 
 float zombie_block()
 {
-	monsters_setframe(zombie_anim_blockstart);
+	self.frame = zombie_anim_blockstart;
 	self.armorvalue = 100;
 	self.m_armor_blockpercent = 0.9;
 	self.state = MONSTER_STATE_ATTACK_MELEE; // freeze monster
@@ -157,7 +157,7 @@ float m_zombie(float req)
 		{
 			self.armorvalue = 0;
 			self.m_armor_blockpercent = autocvar_g_monsters_armor_blockpercent;
-			monsters_setframe((random() > 0.5) ? zombie_anim_deathback1 : zombie_anim_deathfront1);
+			self.frame = ((random() > 0.5) ? zombie_anim_deathback1 : zombie_anim_deathfront1);
 			return TRUE;
 		}
 		case MR_SETUP:
@@ -169,16 +169,16 @@ float m_zombie(float req)
 			
 			self.monster_loot = spawnfunc_item_health_medium;
 			self.monster_attackfunc	= zombie_attack;
-			monsters_setframe(zombie_anim_spawn);
+			self.frame = zombie_anim_spawn;
 			self.spawn_time = time + 2.1;
 			self.spawnshieldtime = self.spawn_time;
 			self.respawntime = 0.2;
 			
 			return TRUE;
 		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
-			// nothing
+			precache_model ("models/monsters/zombie.dpm");
 			return TRUE;
 		}
 		case MR_CONFIG:
@@ -197,12 +197,7 @@ float m_zombie(float req)
 {
 	switch(req)
 	{
-		case MR_DEATH:
-		{
-			// nothing
-			return TRUE;
-		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
 			precache_model ("models/monsters/zombie.dpm");
 			return TRUE;

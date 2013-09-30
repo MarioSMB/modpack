@@ -188,7 +188,7 @@ float knight_attack_ranged()
 	{
 		case 1:
 		{
-			monsters_setframe(knight_anim_magic2);
+			self.frame = knight_anim_magic2;
 			self.attack_finished_single = time + 2;
 			defer(0.4, knight_fireball);
 			
@@ -202,7 +202,7 @@ float knight_attack_ranged()
 		}
 		case 3:
 		{
-			monsters_setframe(knight_anim_magic3);
+			self.frame = knight_anim_magic3;
 			self.attack_finished_single = time + 3;
 			defer(0.4, knight_spikes);
 			
@@ -279,7 +279,7 @@ float m_knight(float req)
 		case MR_DEATH:
 		{
 			float chance = random();
-			monsters_setframe((random() > 0.5) ? knight_anim_death1 : knight_anim_death2);
+			self.frame = ((random() > 0.5) ? knight_anim_death1 : knight_anim_death2);
 			if(chance < 0.10 || self.spawnflags & MONSTERFLAG_MINIBOSS)
 			if(self.candrop)
 			{
@@ -294,12 +294,13 @@ float m_knight(float req)
 			
 			self.monster_loot = spawnfunc_item_armor_big;
 			self.monster_attackfunc	= knight_attack;
-			monsters_setframe(knight_anim_stand);
+			self.frame = knight_anim_stand;
 			
 			return TRUE;
 		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
+			precache_model ("models/monsters/hknight.mdl");
 			precache_sound ("player/lava.wav");
 			precache_sound ("weapons/fireball2.wav");
 			return TRUE;
@@ -320,12 +321,7 @@ float m_knight(float req)
 {
 	switch(req)
 	{
-		case MR_DEATH:
-		{
-			// nothing
-			return TRUE;
-		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
 			precache_model ("models/monsters/hknight.mdl");
 			return TRUE;

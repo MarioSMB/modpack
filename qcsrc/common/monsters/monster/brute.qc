@@ -169,7 +169,7 @@ float brute_attack(float attack_type)
 			self.brute_cycles = 0;
 			if(random() <= MON_CVAR(brute, attack_uzi_chance))
 			{
-				monsters_setframe(brute_anim_pain);
+				self.frame = brute_anim_pain;
 				self.attack_finished_single = time + 0.8;
 				defer(0.1, brute_uzi);
 			}
@@ -177,7 +177,7 @@ float brute_attack(float attack_type)
 			{
 				monster_makevectors(self.enemy);
 				brute_grenade();
-				monsters_setframe(brute_anim_pain);
+				self.frame = brute_anim_pain;
 				self.attack_finished_single = time + 1.2;
 			}
 			
@@ -214,7 +214,7 @@ float m_brute(float req)
 		}
 		case MR_DEATH:
 		{
-			monsters_setframe(brute_anim_die);
+			self.frame = brute_anim_die;
 			return TRUE;
 		}
 		case MR_SETUP:
@@ -223,13 +223,14 @@ float m_brute(float req)
 			
 			self.monster_loot = spawnfunc_item_bullets;
 			self.monster_attackfunc	= brute_attack;
-			monsters_setframe(brute_anim_idle);
+			self.frame = brute_anim_idle;
 			self.weapon = WEP_GRENADE_LAUNCHER;
 			
 			return TRUE;
 		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
+			precache_model ("models/monsters/ogre.dpm");
 			precache_sound ("weapons/uzi_fire.wav");
 			precache_sound ("weapons/grenade_impact.wav");
 			precache_sound ("weapons/grenade_fire.wav");
@@ -251,12 +252,7 @@ float m_brute(float req)
 {
 	switch(req)
 	{
-		case MR_DEATH:
-		{
-			// nothing
-			return TRUE;
-		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
 			precache_model ("models/monsters/ogre.dpm");
 			return TRUE;

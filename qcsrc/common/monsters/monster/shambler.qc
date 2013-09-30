@@ -40,7 +40,7 @@ void shambler_smash()
 
 void shambler_delayedsmash()
 {
-	monsters_setframe(shambler_anim_smash);
+	self.frame = shambler_anim_smash;
 	defer(0.7, shambler_smash);
 	self.attack_finished_single = time + 1.1;
 }
@@ -93,7 +93,7 @@ float shambler_attack(float attack_type)
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			monsters_setframe(shambler_anim_magic);
+			self.frame = shambler_anim_magic;
 			self.attack_finished_single = time + 1.1;
 			defer(0.6, CastLightning);
 			
@@ -127,7 +127,7 @@ float m_shambler(float req)
 		}
 		case MR_DEATH:
 		{
-			monsters_setframe(shambler_anim_death);
+			self.frame = shambler_anim_death;
 			return TRUE;
 		}
 		case MR_SETUP:
@@ -137,14 +137,14 @@ float m_shambler(float req)
 			
 			self.monster_loot = spawnfunc_item_health_mega;
 			self.monster_attackfunc	= shambler_attack;
-			monsters_setframe(shambler_anim_stand);
+			self.frame = shambler_anim_stand;
 			self.weapon = WEP_NEX;
 			
 			return TRUE;
 		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
-			// nothing
+			precache_model ("models/monsters/shambler.mdl");
 			return TRUE;
 		}
 		case MR_CONFIG:
@@ -163,12 +163,7 @@ float m_shambler(float req)
 {
 	switch(req)
 	{
-		case MR_DEATH:
-		{
-			// nothing
-			return TRUE;
-		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
 			precache_model ("models/monsters/shambler.mdl");
 			return TRUE;

@@ -73,6 +73,7 @@ float Invasion_CheckWinner()
 		{
 			if(head.weaponentity) remove(head.weaponentity);
 			if(head.iceblock) remove(head.iceblock);
+			WaypointSprite_Kill(head.sprite);
 			remove(head);
 		}
 		
@@ -210,6 +211,7 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
 	{
 		if(self.weaponentity) remove(self.weaponentity);
 		if(self.iceblock) remove(self.iceblock);
+		WaypointSprite_Kill(self.sprite);
 		remove(self);
 		return FALSE;
 	}

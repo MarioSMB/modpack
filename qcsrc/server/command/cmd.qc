@@ -196,7 +196,7 @@ void ClientCommand_mobedit(float request, float argc)
 			
 			switch(argv(1))
 			{
-				case "skin": if(trace_ent.monsterid != MON_MAGE) { trace_ent.skin = stof(argv(2)); trace_ent.SendFlags |= MSF_STATUS; } return;
+				case "skin": if(trace_ent.monsterid != MON_MAGE) { trace_ent.skin = stof(argv(2)); } return;
 				case "movetarget": trace_ent.monster_moveflags = stof(argv(2)); return;
 			}
 		}

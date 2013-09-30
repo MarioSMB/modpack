@@ -186,6 +186,8 @@ void GameCommand_butcher(float request)
 				if(head.iceblock)
 					remove(head.iceblock);
 					
+				WaypointSprite_Kill(head.sprite);
+					
 				remove(head);
 				++removed_count;
 			}

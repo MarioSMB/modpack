@@ -104,8 +104,7 @@ const float ENT_CLIENT_NOTIFICATION = 38;
 const float ENT_CLIENT_TURRET = 40;
 const float ENT_CLIENT_AUXILIARYXHAIR = 50;
 const float ENT_CLIENT_VEHICLE = 60;
-const float ENT_CLIENT_MONSTER = 70;
-const float ENT_CLIENT_GENERATOR = 80;
+const float ENT_CLIENT_GENERATOR = 70;
 
 const float SPRITERULE_DEFAULT = 0;
 const float SPRITERULE_TEAMPLAY = 1;

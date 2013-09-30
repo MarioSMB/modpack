@@ -29,7 +29,6 @@ Defs.qc
 ../common/animdecide.qh
 command/cl_cmd.qh
 
-../common/monsters/cl_monsters.qh
 ../common/monsters/monsters.qh
 
 autocvars.qh
@@ -117,7 +116,6 @@ noise.qc
 ../common/urllib.qc
 command/cl_cmd.qc
 
-../common/monsters/cl_monsters.qc
 ../common/monsters/monsters.qc
 
 ../warpzonelib/anglestransform.qc

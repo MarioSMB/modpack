@@ -122,7 +122,7 @@ float m_wyvern(float req)
 		}
 		case MR_DEATH:
 		{
-			monsters_setframe(wyvern_anim_death);
+			self.frame = wyvern_anim_death;
 			self.velocity_x = -200 + 400 * random();
 			self.velocity_y = -200 + 400 * random();
 			self.velocity_z = 100 + 100 * random();
@@ -134,13 +134,13 @@ float m_wyvern(float req)
 			
 			self.monster_loot = spawnfunc_item_cells;
 			self.monster_attackfunc	= wyvern_attack;
-			monsters_setframe(wyvern_anim_hover);
+			self.frame = wyvern_anim_hover;
 			
 			return TRUE;
 		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
-			// nothing
+			precache_model ("models/monsters/wizard.mdl");
 			return TRUE;
 		}
 		case MR_CONFIG:
@@ -159,12 +159,7 @@ float m_wyvern(float req)
 {
 	switch(req)
 	{
-		case MR_DEATH:
-		{
-			// nothing
-			return TRUE;
-		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
 			precache_model ("models/monsters/wizard.mdl");
 			return TRUE;

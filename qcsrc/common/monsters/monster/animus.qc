@@ -93,7 +93,7 @@ float m_animus(float req)
 		}
 		case MR_DEATH:
 		{
-			monsters_setframe(animus_anim_death);
+			self.frame = animus_anim_death;
 			return TRUE;
 		}
 		case MR_SETUP:
@@ -102,13 +102,13 @@ float m_animus(float req)
 			
 			self.monster_loot = spawnfunc_item_health_medium;
 			self.monster_attackfunc = animus_attack;
-			monsters_setframe(animus_anim_stand);
+			self.frame = animus_anim_stand;
 			
 			return TRUE;
 		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
-			// nothing
+			precache_model ("models/monsters/demon.mdl");
 			return TRUE;
 		}
 		case MR_CONFIG:
@@ -127,12 +127,7 @@ float m_animus(float req)
 {
 	switch(req)
 	{
-		case MR_DEATH:
-		{
-			// nothing
-			return TRUE;
-		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
 			precache_model ("models/monsters/demon.mdl");
 			return TRUE;

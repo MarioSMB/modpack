@@ -20,7 +20,7 @@ void register_monster(float id, float(float) func, float monsterflags, vector mi
 	e.model = strzone(strcat("models/monsters/", modelname));
 	
 	#ifndef MENUQC
-	func(MR_INIT);
+	func(MR_PRECACHE);
 	#endif
 }
 float m_null(float dummy) { return 0; }
