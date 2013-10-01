@@ -209,9 +209,17 @@ void func_breakable_damage(entity inflictor, entity attacker, float damage, floa
 	}
 }
 
+void func_breakable_think()
+{
+	self.nextthink = time;
+	CSQCMODEL_AUTOUPDATE();
+}
+
 void func_breakable_reset()
 {
 	self.team = self.team_saved;
+	self.think = func_breakable_think;
+	self.nextthink = time;
 	func_breakable_look_restore();
 	if(self.spawnflags & 1)
 		func_breakable_behave_destroyed();
@@ -268,6 +276,8 @@ void spawnfunc_func_breakable() {
 
 	self.reset = func_breakable_reset;
 	func_breakable_reset();
+	
+	CSQCMODEL_AUTOINIT();
 }
 
 // for use in maps with a "model" key set
