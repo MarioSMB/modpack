@@ -142,16 +142,16 @@ float stringwidth_nocolors(string s, vector theSize)
 	return stringwidth(s, FALSE, theSize);
 }
 
-void drawstringright(vector position, string text, vector scale, vector rgb, float theAlpha, float flag)
+void drawstringright(vector position, string text, vector theScale, vector rgb, float theAlpha, float flag)
 {
-	position_x -= 2 / 3 * strlen(text) * scale_x;
-	drawstring(position, text, scale, rgb, theAlpha, flag);
+	position_x -= 2 / 3 * strlen(text) * theScale_x;
+	drawstring(position, text, theScale, rgb, theAlpha, flag);
 }
 
-void drawstringcenter(vector position, string text, vector scale, vector rgb, float theAlpha, float flag)
+void drawstringcenter(vector position, string text, vector theScale, vector rgb, float theAlpha, float flag)
 {
-	position_x = 0.5 * (vid_conwidth - 0.6025 * strlen(text) * scale_x);
-	drawstring(position, text, scale, rgb, theAlpha, flag);
+	position_x = 0.5 * (vid_conwidth - 0.6025 * strlen(text) * theScale_x);
+	drawstring(position, text, theScale, rgb, theAlpha, flag);
 }
 
 // return the string of the onscreen race timer
