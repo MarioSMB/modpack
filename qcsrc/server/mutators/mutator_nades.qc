@@ -226,6 +226,54 @@ void nade_napalm_boom()
 	CSQCProjectile(fountain, TRUE, PROJECTILE_NAPALM_FOUNTAIN, TRUE);
 }
 
+// Handles health and frozen status of ice nade victims
+void nade_ice_killer_think()
+{
+	entity target = self.nade_damage_target;
+	if(time >= self.ltime || !target.frozen )
+	{
+		remove(self);
+		return;
+	}
+	
+	
+	self.nextthink = time+0.1;
+	
+	target.revive_progress = bound(0, target.revive_progress + 0.1 * target.revive_speed, 1);
+	target.health = 100 - target.revive_progress * (100-autocvar_g_nades_ice_health);
+	target.iceblock.alpha = bound(0.2, 1 - target.revive_progress, 1);
+
+	if ( target.health <= 0 )
+		Damage(target,self.owner,self.realowner,1,DEATH_NADE_ICE_FREEZE,target.origin,'0 0 0');
+	else if(target.revive_progress >= 1)
+		Unfreeze(target);
+	
+}
+
+void nade_ice_killer_spawn(entity freezefield, entity frost_target, float freeze_time)
+{
+	
+	
+	entity ice_killer;
+	ice_killer = spawn();
+	ice_killer.owner = freezefield;
+	ice_killer.realowner = freezefield.realowner;
+	ice_killer.team = freezefield.team;
+	ice_killer.origin = frost_target.origin;
+	setorigin(ice_killer, ice_killer.origin);
+	ice_killer.think = nade_ice_killer_think;
+	ice_killer.nextthink = time;
+	ice_killer.ltime = time + freeze_time;
+	ice_killer.pushltime = ice_killer.wait = ice_killer.ltime;
+	ice_killer.nade_damage_target = frost_target;
+	
+	
+	pointparticles(particleeffectnum("electro_impact"), frost_target.origin, '0 0 0', 1);
+	Freeze(frost_target, 1/freeze_time, 3, FALSE);
+	if ( frost_target.flagcarried )
+		ctf_Handle_Throw(frost_target, world, DROP_THROW);
+}
+
 void nade_ice_think()
 {
 	
@@ -293,10 +341,7 @@ void nade_ice_think()
 		if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0) 
 			if not ( e.frozen ) if ( current_freeze_time > 0 )
 		{
-			pointparticles(particleeffectnum("electro_impact"), e.origin, '0 0 0', 1);
-			Freeze(e, 1/current_freeze_time, 3, FALSE);
-			if ( e.flagcarried )
-				ctf_Handle_Throw(e, world, DROP_THROW);
+			nade_ice_killer_spawn(self,e,current_freeze_time);
 		}
 }
 
