@@ -230,8 +230,11 @@ void nade_napalm_boom()
 void nade_ice_killer_think()
 {
 	entity target = self.nade_damage_target;
+	
 	if(time >= self.ltime || !target.frozen )
 	{
+		if ( target.frozen )
+			Unfreeze(target);
 		remove(self);
 		return;
 	}
