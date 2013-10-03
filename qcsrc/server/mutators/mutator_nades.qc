@@ -239,18 +239,28 @@ void nade_ice_killer_think()
 		return;
 	}
 	
+	const float think_delay = 0.1;
 	
-	self.nextthink = time+0.1;
-	
-	target.revive_progress = bound(0, target.revive_progress + 0.1 * target.revive_speed, 1);
-	target.health = 100 - target.revive_progress * (100-autocvar_g_nades_ice_health);
+	target.revive_progress = bound(0, target.revive_progress + think_delay * target.revive_speed, 1);
 	target.iceblock.alpha = bound(0.2, 1 - target.revive_progress, 1);
-
-	if ( target.health <= 0 )
-		Damage(target,self.owner,self.realowner,1,DEATH_NADE_ICE_FREEZE,target.origin,'0 0 0');
-	else if(target.revive_progress >= 1)
-		Unfreeze(target);
 	
+	target.health = 100 - target.revive_progress * (100-autocvar_g_nades_ice_health);
+	
+	if ( target.health <= 0 )
+	{
+		Unfreeze(target);
+		target.health = 0;
+		Damage(target,self.owner,self.realowner,1,DEATH_NADE_ICE_FREEZE,target.origin,'0 0 0');
+		remove(self);
+	}
+	else
+	{
+
+		self.nextthink = time+think_delay;
+		
+		if(target.revive_progress >= 1)
+			Unfreeze(target);
+	}
 }
 
 void nade_ice_killer_spawn(entity freezefield, entity frost_target, float freeze_time)
