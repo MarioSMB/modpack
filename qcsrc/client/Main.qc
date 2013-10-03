@@ -322,12 +322,14 @@ void Playerchecker_Think()
 	self.nextthink = time + 0.2;
 }
 
-void FPSReporter_Think() {
-	localcmd("cmd fpsreport ", ftos(floor(cl_fps)), "\n");
+void FPSReporter_Think()
+{
+	localcmd("\ncmd report fps ", ftos(floor(cl_fps)), "\n");
 	self.nextthink = time + sv_showfps;
 }
 
-void FPSReporter_Init() {
+void FPSReporter_Init()
+{
 	if not(sv_showfps)
 		return;
 	
@@ -350,6 +352,8 @@ void PostInit(void)
 	Porto_Init();
 	TrueAim_Init();
 	FPSReporter_Init();
+	
+	fovlock = -1;
 
 	postinit = true;
 }
@@ -853,7 +857,6 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
 		case ENT_CLIENT_TURRET: ent_turret(); break; 
-		case ENT_CLIENT_MONSTER: ent_monster(); break;
 		case ENT_CLIENT_GENERATOR: ent_generator(); break;
 		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
 		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;  
@@ -1238,6 +1241,11 @@ void Net_ReadMorningRescue()
 void Net_ReadSpecInfo()
 {
 	float i;
+	
+	fovlock = ReadByte();
+	
+	if(fovlock == 0)
+		fovlock = -1;
 	
 	num_spectators = ReadByte();
 	for(i = 0; i < num_spectators; ++i)

@@ -142,16 +142,16 @@ float stringwidth_nocolors(string s, vector theSize)
 	return stringwidth(s, FALSE, theSize);
 }
 
-void drawstringright(vector position, string text, vector scale, vector rgb, float theAlpha, float flag)
+void drawstringright(vector position, string text, vector theScale, vector rgb, float theAlpha, float flag)
 {
-	position_x -= 2 / 3 * strlen(text) * scale_x;
-	drawstring(position, text, scale, rgb, theAlpha, flag);
+	position_x -= 2 / 3 * strlen(text) * theScale_x;
+	drawstring(position, text, theScale, rgb, theAlpha, flag);
 }
 
-void drawstringcenter(vector position, string text, vector scale, vector rgb, float theAlpha, float flag)
+void drawstringcenter(vector position, string text, vector theScale, vector rgb, float theAlpha, float flag)
 {
-	position_x = 0.5 * (vid_conwidth - 0.6025 * strlen(text) * scale_x);
-	drawstring(position, text, scale, rgb, theAlpha, flag);
+	position_x = 0.5 * (vid_conwidth - 0.6025 * strlen(text) * theScale_x);
+	drawstring(position, text, theScale, rgb, theAlpha, flag);
 }
 
 // return the string of the onscreen race timer
@@ -4120,9 +4120,9 @@ void HUD_InfoMessages(void)
 				s = _("^1Observing");
 			else
 #ifdef COMPAT_XON050_ENGINE
-				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(spectatee_status - 1));
+				s = sprintf(_("^1Spectating: ^7%s ^1(^3fov: %d^1)"), GetPlayerName(spectatee_status - 1), fovlock);
 #else
-				s = sprintf(_("^1Spectating: ^7%s"), GetPlayerName(player_localentnum - 1));
+				s = sprintf(_("^1Spectating: ^7%s ^1(^3fov: %d^1)"), GetPlayerName(player_localentnum - 1), fovlock);
 #endif
 			drawInfoMessage(s)
 
@@ -4892,6 +4892,10 @@ void HUD_Main (void)
 		(panel = HUD_PANEL(CENTERPRINT)).panel_draw();
 		return;
 	}
+	
+	if(spectatee_status == -1 || !spectatee_status)
+	if(fovlock >= 0)
+		fovlock = -1;
 
 	if(!autocvar__hud_configure && !hud_fade_alpha)
 		return;

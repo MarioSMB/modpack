@@ -91,6 +91,7 @@ const float MAPINFO_FEATURE_TURRETS       = 4;
 const float MAPINFO_FLAG_HIDDEN           = 1; // not in lsmaps/menu/vcall/etc., can just be changed to manually
 const float MAPINFO_FLAG_FORBIDDEN        = 2; // don't even allow the map by a cvar setting that allows hidden maps
 const float MAPINFO_FLAG_FRUSTRATING      = 4; // this map is near impossible to play, enable at your own risk
+const float MAPINFO_FLAG_NOAUTOMAPLIST    = 8; // do not include when automatically building maplist (counts as hidden for maplist building purposes)
 
 float MapInfo_count;
 

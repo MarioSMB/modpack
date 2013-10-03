@@ -136,9 +136,10 @@ putting a client as observer in the server
 =============
 */
 void FixPlayermodel();
+void UpdateSpectators(entity is_spec, entity is_player);
 void PutObserverInServer (void)
 {
-	entity	spot;
+	entity spot;
     self.hud = HUD_NORMAL;
 	race_PreSpawnObserver();
 
@@ -153,6 +154,8 @@ void PutObserverInServer (void)
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, self);
 	}
+	
+	UpdateSpectators(self, self); // don't update spectators or spectatees
 
 	if((g_race && g_race_qualifying) || g_cts)
 	{
@@ -316,6 +319,7 @@ void FixPlayermodel()
 	}
 	
 	if(autocvar_sv_allow_customplayermodels)
+	if not(cvar("g_overkill"))
 	{
 		// public hax
 		if(self.cvar_cl_pony)
@@ -323,6 +327,9 @@ void FixPlayermodel()
 			defaultmodel = "models/player/pony.iqm";
 			defaultskin = self.cvar_cl_pony_skin;
 		}
+		if(self.cvar_cl_robot)
+			defaultmodel = "models/player/terminusmale.iqm";
+			
 		// special hax
 		if(checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
 		{
@@ -335,8 +342,6 @@ void FixPlayermodel()
 				defaultmodel = "models/player/abyss.zym";
 				defaultskin = self.cvar_cl_bikini_skin;
 			}
-			if(self.cvar_cl_robot)
-				defaultmodel = "models/player/terminusmale.iqm";
 			if(self.cvar_cl_sparkle > 2)
 				defaultmodel = "models/player/mario.dpm";
 		}
@@ -409,7 +414,7 @@ PutClientInServer
 Called when a client spawns in the server
 =============
 */
-void WriteSpectatorInfoOf(entity);
+void UpdateSpectators(entity is_spec, entity is_player);
 void PutClientInServer (void)
 {
 	if(IS_BOT_CLIENT(self))
@@ -420,7 +425,7 @@ void PutClientInServer (void)
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, self);
 	}
-
+	
 	// reset player keys
 	self.itemkeys = 0;
 
@@ -428,10 +433,6 @@ void PutClientInServer (void)
 
 	if(gameover)
 		self.classname = "observer";
-		
-	entity oldenemy = self.enemy;
-	self.enemy = world;
-	WriteSpectatorInfoOf(oldenemy);
 
 	if(IS_PLAYER(self))
 	{
@@ -675,6 +676,8 @@ void PutClientInServer (void)
 	{
 		PutObserverInServer ();
 	}
+	
+	UpdateSpectators(((IS_PLAYER(self)) ? world : self), ((IS_SPEC(self) || IS_OBSERVER(self)) ? self : world));
 }
 
 .float ebouncefactor, ebouncestop; // electro's values
@@ -1326,9 +1329,7 @@ Called when a client disconnects from the server
 void ReadyCount();
 void ClientDisconnect (void)
 {
-	entity e = self.enemy;
-	self.enemy = world;
-	WriteSpectatorInfoOf(e);
+	UpdateSpectators(self, world);
 
 	if(self.vehicle)
 	    vehicles_exit(VHEF_RELESE);
@@ -1338,7 +1339,7 @@ void ClientDisconnect (void)
 		print("Warning: ClientDisconnect without ClientConnect\n");
 		return;
 	}
-
+	
 	PlayerStats_AddGlobalInfo(self);
 
 	CheatShutdownClient();
@@ -1871,57 +1872,51 @@ float SpectateUpdate() {
 		return 0;
 
 	if not(IS_PLAYER(self.enemy))
+	{
+		self.enemy = world;
 		return 0;
+	}
 
 	SpectateCopy(self.enemy);
 	
-	WriteSpectatorInfoOf(self.enemy);
+	//UpdateSpectators(world, world);
 
 	return 1;
 }
 
-void WriteSpectatorInfoOf(entity player)
+void UpdateSpectators(entity is_spec, entity is_player)
 {
-	if(!IS_REAL_CLIENT(player))
-		return;
-		
-	if(!IS_PLAYER(player))
-		return;
-	
-	entity spec;
+	entity head, spec;
 	float specs = 0;
-	
-	FOR_EACH_REALCLIENT(spec) if(IS_SPEC(spec)) if(spec.enemy == player) ++specs;	
-	
-	msg_entity = player;
-	WriteByte(MSG_ONE, SVC_TEMPENTITY);
-	WriteByte(MSG_ONE, TE_CSQC_SPECINFO);
-	
-	if not(autocvar_sv_showspectators)
+	FOR_EACH_REALCLIENT(head)
 	{
-		WriteByte(MSG_ONE, 0);
-		return;
+		msg_entity = head;
+		WriteByte(MSG_ONE, SVC_TEMPENTITY);
+		WriteByte(MSG_ONE, TE_CSQC_SPECINFO);
+		
+		if(IS_PLAYER(head))
+			WriteByte(MSG_ONE, head.clientfov);
+		else if(head.enemy)
+			WriteByte(MSG_ONE, head.enemy.clientfov);
+		else
+			WriteByte(MSG_ONE, 0);
+		
+		specs = 0;
+		
+		FOR_EACH_SPEC(spec) if(spec.enemy == head && is_player != spec && spec != is_player)
+			++specs;
+	
+		if(IS_SPEC(head) || IS_OBSERVER(head) || head == is_spec || !autocvar_sv_showspectators)
+		{
+			WriteByte(MSG_ONE, 0);
+			continue;
+		}
+		
+		WriteByte(MSG_ONE, specs);
+		FOR_EACH_SPEC(spec) if(spec.enemy == head && is_player != spec)
+			WriteByte(MSG_ONE, num_for_edict(spec));
 	}
-	
-	WriteByte(MSG_ONE, specs);
-	
-	FOR_EACH_REALCLIENT(spec)
-	if(IS_SPEC(spec))
-	if(spec.enemy == player)
-		WriteByte(MSG_ONE, num_for_edict(spec));
 }
-
-void ResetSpectatorInfo(entity player)
-{
-    if(!IS_REAL_CLIENT(player))
-		return;
-
-    msg_entity = player;
-    WriteByte(MSG_ONE, SVC_TEMPENTITY);
-    WriteByte(MSG_ONE, TE_CSQC_SPECINFO);
-    WriteByte(MSG_ONE, 0);
-}
-
 
 float SpectateSet()
 {
@@ -1950,6 +1945,7 @@ float SpectateSet()
 		if(!SpectateUpdate())
 			PutObserverInServer();
 	//}
+	
 	return TRUE;
 }
 
@@ -2000,7 +1996,10 @@ float SpectateNext()
 	}
 
 	if (other)
+	{
 		self.enemy = other;
+		UpdateSpectators(world, world);
+	}
 
 	return SpectateSet();
 }
@@ -2040,6 +2039,7 @@ float SpectatePrev()
 			other = first;
 	}
 	self.enemy = other;
+	UpdateSpectators(world, world);
 	return SpectateSet();
 }
 
@@ -2193,7 +2193,7 @@ void PrintWelcomeMessage()
 	{
 		if(self.BUTTON_INFO) // BUTTON_INFO hides initial MOTD
 			self.motd_actived_time = -2; // wait until BUTTON_INFO gets released
-		else if(self.motd_actived_time == -2 || IS_PLAYER(self) || time - self.jointime > autocvar_welcome_message_time)
+		else if(self.motd_actived_time == -2 || IS_PLAYER(self))
 		{
 			// instanctly hide MOTD
 			self.motd_actived_time = 0;

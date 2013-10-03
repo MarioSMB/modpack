@@ -56,6 +56,8 @@ void sandbox_ObjectFunction_Think()
 	}
 
 	self.nextthink = time;
+	
+	CSQCMODEL_AUTOUPDATE();
 }
 
 .float old_solid, old_movetype;
@@ -137,7 +139,7 @@ entity sandbox_ObjectSpawn(float database)
 {
 	// spawn a new object with default properties
 
-	entity e;
+	entity e, oldself;
 	e = spawn();
 	e.classname = "object";
 	e.takedamage = DAMAGE_AIM;
@@ -172,6 +174,11 @@ entity sandbox_ObjectSpawn(float database)
 		setorigin(e, trace_endpos);
 		e.angles_y = self.v_angle_y;
 	}
+	
+	oldself = self;
+	self = e;
+	CSQCMODEL_AUTOINIT();
+	self = oldself;
 
 	object_count += 1;
 	return e;

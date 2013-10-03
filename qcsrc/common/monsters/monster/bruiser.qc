@@ -85,7 +85,7 @@ float m_bruiser(float req)
 		}
 		case MR_DEATH:
 		{
-			monsters_setframe((random() > 0.5) ? bruiser_anim_death1 : bruiser_anim_death2);
+			self.frame = ((random() > 0.5) ? bruiser_anim_death1 : bruiser_anim_death2);
 			return TRUE;
 		}
 		case MR_SETUP:
@@ -94,13 +94,13 @@ float m_bruiser(float req)
 			
 			self.monster_loot = spawnfunc_item_armor_medium;
 			self.monster_attackfunc	= bruiser_attack;
-			monsters_setframe(bruiser_anim_stand);
+			self.frame = bruiser_anim_stand;
 			
 			return TRUE;
 		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
-			// nothing
+			precache_model ("models/monsters/knight.mdl");
 			return TRUE;
 		}
 		case MR_CONFIG:
@@ -119,12 +119,7 @@ float m_bruiser(float req)
 {
 	switch(req)
 	{
-		case MR_DEATH:
-		{
-			// nothing
-			return TRUE;
-		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
 			precache_model ("models/monsters/knight.mdl");
 			return TRUE;

@@ -1,5 +1,4 @@
 .float csqcprojectile_type;
-.float csqcprojectile_owner;
 
 float CSQCProjectile_SendEntity(entity to, float sf)
 {
@@ -13,9 +12,6 @@ float CSQCProjectile_SendEntity(entity to, float sf)
 
 	if(self.flags & FL_ONGROUND)
 		sf |= 0x40;
-		
-	if(num_for_edict(self.realowner) != self.csqcprojectile_owner)
-		sf |= 3;
 
 	ft = fr = 0;
 	if(self.fade_time != 0 || self.fade_rate != 0)

@@ -147,7 +147,7 @@ float spider_attack(float attack_type)
 			if(self.enemy.frozen)
 				return FALSE;
 			
-			monsters_setframe(spider_anim_attack2);
+			self.frame = spider_anim_attack2;
 			self.attack_finished_single = time + MON_CVAR(spider, attack_web_delay);
 			spider_shootweb(self.spider_type);
 			
@@ -181,9 +181,8 @@ float m_spider(float req)
 		}
 		case MR_DEATH:
 		{
-			monsters_setframe(spider_anim_attack);
+			self.frame = spider_anim_attack;
 			self.angles_x = 180;
-			self.SendFlags |= MSF_ANG;
 			return TRUE;
 		}
 		case MR_SETUP:
@@ -193,12 +192,13 @@ float m_spider(float req)
 			
 			self.monster_loot = spawnfunc_item_health_medium;
 			self.monster_attackfunc	= spider_attack;
-			monsters_setframe(spider_anim_idle);
+			self.frame = spider_anim_idle;
 			
 			return TRUE;
 		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
+			precache_model ("models/monsters/spider.dpm");
 			precache_model ("models/ice/ice.md3");
 			precache_sound ("weapons/electro_fire2.wav");
 			precache_sound ("weapons/fireball_fire.wav");
@@ -220,12 +220,7 @@ float m_spider(float req)
 {
 	switch(req)
 	{
-		case MR_DEATH:
-		{
-			// nothing
-			return TRUE;
-		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
 			precache_model ("models/monsters/spider.dpm");
 			return TRUE;

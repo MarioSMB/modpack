@@ -102,19 +102,6 @@ void movelib_move(vector force,float max_velocity,float drag,float theMass,float
             self.velocity = normalize(self.velocity) * (mspeed - 50);//* max_velocity;
 }
 
-void movelib_move_simple_gravity(vector newdir,float velo,float blendrate)
-{
-    float z_speed = self.velocity_z;
-    self.movelib_lastupdate = time;
-    self.velocity = self.velocity * (1 - blendrate) + (newdir * blendrate) * velo;
-    self.velocity_z = z_speed * self.gravity;
-}
-
-void movelib_jump_simple(float power){
-    self.velocity_z=power;
-    self.movelib_lastupdate = time;
-}
-
 /*
 .float mass;
 .float side_friction;
@@ -183,6 +170,9 @@ void movelib_move_simple(vector newdir,float velo,float blendrate)
 */
 #define movelib_move_simple(newdir,velo,blendrate) \
     self.velocity = self.velocity * (1 - blendrate) + (newdir * blendrate) * velo
+	
+#define movelib_move_simple_gravity(newdir,velo,blendrate) \
+    if(self.flags & FL_ONGROUND) movelib_move_simple(newdir,velo,blendrate)
 
 void movelib_beak_simple(float force)
 {

@@ -699,6 +699,17 @@ void nades_CheckThrow()
 	}
 }
 
+void nades_Clear(entity player)
+{
+	
+	if(player.nade)
+		remove(player.nade);
+	if(player.fake_nade)
+		remove(player.fake_nade);
+	
+	player.nade = player.fake_nade = world;
+}
+
 MUTATOR_HOOKFUNCTION(nades_VehicleEnter)
 {
 	if(other.nade)
@@ -797,16 +808,14 @@ MUTATOR_HOOKFUNCTION(nades_PlayerDies)
 	return FALSE;
 }
 
-
-void nades_Clear(entity player)
+MUTATOR_HOOKFUNCTION(nades_MonsterDies)
 {
+	if(IS_PLAYER(frag_attacker))
+	if(DIFF_TEAM(frag_attacker, self))
+	if not(self.spawnflags & MONSTERFLAG_SPAWNED)
+		nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_minor);
 	
-	if(player.nade)
-		remove(player.nade);
-	if(player.fake_nade)
-		remove(player.fake_nade);
-	
-	player.nade = player.fake_nade = world;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(nades_RemovePlayer)
@@ -842,6 +851,7 @@ MUTATOR_DEFINITION(mutator_nades)
 	MUTATOR_HOOK(PlayerPreThink, nades_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, nades_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, nades_PlayerDies, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MonsterDies, nades_MonsterDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, nades_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, nades_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SpectateCopy, nades_SpectateCopy, CBC_ORDER_ANY);

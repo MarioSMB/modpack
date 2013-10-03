@@ -690,6 +690,8 @@ void Item_Touch (void)
 		return;
 	if (self.owner == other)
 		return;
+	if (time < self.wait)
+		return;
 
 	switch(MUTATOR_CALLHOOK(ItemTouch))
 	{

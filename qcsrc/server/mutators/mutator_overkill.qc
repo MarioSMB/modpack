@@ -26,7 +26,7 @@ void ok_IncreaseCharge(entity ent, float wep)
 float ok_CheckWeaponCharge(entity ent, float wep, float swep)
 {
 	if not(autocvar_g_overkill_ammo_charge) return TRUE;
-	if(wep != swep) return TRUE; // switching, don't even bother checking
+	//if(wep != swep) return TRUE; // switching, don't even bother checking
 	
 	entity wepent = get_weaponinfo(wep);
 	
@@ -203,17 +203,16 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 	
 	self.weapon_blocked = FALSE;
 	
-	self.ok_ammo_charge = self.ammo_charge[self.switchweapon];
+	self.ok_ammo_charge = self.ammo_charge[self.weapon];
 	
 	if(autocvar_g_overkill_ammo_charge)
 	if(!ok_CheckWeaponCharge(self, self.weapon, self.switchweapon))
 	{
-		if(autocvar_g_overkill_ammo_charge_notice && time > self.ok_notice_time && self.BUTTON_ATCK)
+		if(autocvar_g_overkill_ammo_charge_notice && time > self.ok_notice_time && self.BUTTON_ATCK && IS_REAL_CLIENT(self))
 		{
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_OVERKILL_CHARGE);
 			self.ok_notice_time = time + 2;
-			if(IS_REAL_CLIENT(self))
-				play2(self, "weapons/dryfire.wav");
+			play2(self, "weapons/dryfire.wav");
 		}
 		if(self.weaponentity.state != WS_CLEAR)
 			w_ready();

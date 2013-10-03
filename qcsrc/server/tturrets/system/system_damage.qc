@@ -125,6 +125,10 @@ void turret_stdproc_damage (entity inflictor, entity attacker, float damage, flo
         self.takedamage             = DAMAGE_NO;
         self.nextthink = time;
         self.think = turret_stdproc_die;
+		
+		if(IS_PLAYER(attacker))
+		if(DIFF_TEAM(attacker, self))
+			nades_GiveBonus(attacker, autocvar_g_nades_bonus_score_low);
     }
     
     self.SendFlags  |= TNSF_STATUS;

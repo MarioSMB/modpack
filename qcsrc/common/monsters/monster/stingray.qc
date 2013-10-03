@@ -68,7 +68,7 @@ float m_stingray(float req)
 		}
 		case MR_DEATH:
 		{
-			monsters_setframe(stingray_anim_death);
+			self.frame = stingray_anim_death;
 			return TRUE;
 		}
 		case MR_SETUP:
@@ -77,13 +77,13 @@ float m_stingray(float req)
 			
 			self.monster_loot = spawnfunc_item_health_small;
 			self.monster_attackfunc	= stingray_attack;
-			monsters_setframe(stingray_anim_swim);
+			self.frame = stingray_anim_swim;
 			
 			return TRUE;
 		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
-			// nothing
+			precache_model ("models/monsters/fish.mdl");
 			return TRUE;
 		}
 		case MR_CONFIG:
@@ -102,12 +102,7 @@ float m_stingray(float req)
 {
 	switch(req)
 	{
-		case MR_DEATH:
-		{
-			// nothing
-			return TRUE;
-		}
-		case MR_INIT:
+		case MR_PRECACHE:
 		{
 			precache_model ("models/monsters/fish.mdl");
 			return TRUE;

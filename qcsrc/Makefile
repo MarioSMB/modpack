@@ -14,7 +14,6 @@ QCCFLAGS ?= \
 	-std=gmqcc \
 	-O3 -flno \
 	-DSTUFFTO_ENABLED \
-	-DTETRIS \
 	-Werror -fno-bail-on-werror -Wall \
 	-fftepp -fftepp-predefs -Wcpp -futf8 \
 	$(QCCFLAGS_WTFS) \

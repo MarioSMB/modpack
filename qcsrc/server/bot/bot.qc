@@ -392,6 +392,7 @@ void bot_clientconnect()
 	self.bot_nextthink = time - random();
 	self.lag_func = bot_lagfunc;
 	self.isbot = TRUE;
+	self.clientfov = 90;
 	self.createdtime = self.bot_nextthink;
 
 	if(!self.bot_config_loaded) // This is needed so team overrider doesn't break between matches

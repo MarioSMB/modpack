@@ -1,8 +1,8 @@
 // monster requests
 #define MR_SETUP          1 // (SERVER) setup monster data
 #define MR_THINK		  2 // (SERVER) logic to run every frame
-#define MR_DEATH          3 // (BOTH) called when monster dies
-#define MR_INIT           4 // (BOTH) precaches models/sounds used by this monster
+#define MR_DEATH          3 // (SERVER) called when monster dies
+#define MR_PRECACHE       4 // (BOTH) precaches models/sounds used by this monster
 #define MR_CONFIG         5 // (ALL)
 
 // functions:
@@ -26,20 +26,6 @@ const float MON_FLAG_MELEE = 1024;
 .string model; // full name of model
 .float spawnflags;
 .vector mins, maxs; // monster hitbox size
-
-// csqc linking
-#ifndef MENUQC
-.float anim_start_time;
-
-float MSF_UPDATE		= 2;
-float MSF_STATUS		= 4;
-float MSF_SETUP			= 8;
-float MSF_ANG			= 16;
-float MSF_MOVE			= 32;
-float MSF_ANIM			= 64;
-
-float MSF_FULL_UPDATE  = 16777215;
-#endif
 
 // other useful macros
 #define MON_ACTION(monstertype,mrequest) (get_monsterinfo(monstertype)).monster_func(mrequest)

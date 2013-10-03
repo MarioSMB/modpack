@@ -1001,6 +1001,10 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 		{
 			MapInfo_Map_flags |= MAPINFO_FLAG_FRUSTRATING;
 		}
+		else if(t == "noautomaplist")
+		{
+			MapInfo_Map_flags |= MAPINFO_FLAG_NOAUTOMAPLIST;
+		}
 		else if(t == "type")
 		{
 			t = car(s); s = cdr(s);
