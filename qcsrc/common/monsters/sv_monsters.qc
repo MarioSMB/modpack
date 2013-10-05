@@ -529,6 +529,8 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 
 	if(self.frozen)
 	{
+		self.frame = manim_idle;
+		
 		if(self.frozen == 3)
 		{
 			self.revive_progress = bound(0, self.revive_progress - self.ticrate * self.revive_speed, 1);
@@ -537,7 +539,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 			if(self.health < 1)
 			{
 				Unfreeze(self);
-				self.health = -100;
+				self.health = 0;
 				Damage(self,self.frozen_by,self.frozen_by,1,DEATH_NADE_ICE_FREEZE,self.origin,'0 0 0');
 			}
 			else if ( self.revive_progress <= 0 )
@@ -550,13 +552,13 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 			
 			if(self.revive_progress >= 1)
 				Unfreeze(self); // wait for next think before attacking
+				
 		}
 
 		WaypointSprite_UpdateHealth(self.sprite, self.health);
 		
 		movelib_beak_simple(stopspeed);
 		
-		self.frame = manim_idle;
 		
 		self.enemy = world;
 		self.nextthink = time + self.ticrate;
