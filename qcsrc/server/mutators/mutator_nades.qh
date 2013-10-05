@@ -8,6 +8,7 @@
 .entity nade_damage_target;
 
 void() nades_CheckThrow;
+void toss_nade(entity e, vector _velocity, float _time);
 
 // Remove nades that are being thrown
 void(entity player) nades_Clear;

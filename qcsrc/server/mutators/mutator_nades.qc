@@ -226,62 +226,15 @@ void nade_napalm_boom()
 	CSQCProjectile(fountain, TRUE, PROJECTILE_NAPALM_FOUNTAIN, TRUE);
 }
 
-// Handles health and frozen status of ice nade victims
-void nade_ice_killer_think()
+void nade_ice_freeze(entity freezefield, entity frost_target, float freeze_time)
 {
-	entity target = self.nade_damage_target;
-	
-	if(time >= self.ltime || !target.frozen )
-	{
-		if ( target.frozen )
-			Unfreeze(target);
-		remove(self);
-		return;
-	}
-	
-	target.revive_progress = bound(0, target.revive_progress + frametime * target.revive_speed, 1);
-	target.iceblock.alpha = bound(0.2, 1 - target.revive_progress, 1);
-	
-	target.health = 100 - target.revive_progress * (100-autocvar_g_nades_ice_health);
-	
-	if ( target.health < 1 )
-	{
-		Unfreeze(target);
-		target.health = 0;
-		Damage(target,self.owner,self.realowner,1,DEATH_NADE_ICE_FREEZE,target.origin,'0 0 0');
-		remove(self);
-	}
-	else
-	{
-		self.nextthink = time+frametime;
-		
-		if(target.revive_progress >= 1)
-			Unfreeze(target);
-	}
-}
-
-void nade_ice_killer_spawn(entity freezefield, entity frost_target, float freeze_time)
-{
-	
-	
-	entity ice_killer;
-	ice_killer = spawn();
-	ice_killer.owner = freezefield;
-	ice_killer.realowner = freezefield.realowner;
-	ice_killer.team = freezefield.team;
-	ice_killer.origin = frost_target.origin;
-	setorigin(ice_killer, ice_killer.origin);
-	ice_killer.think = nade_ice_killer_think;
-	ice_killer.nextthink = time;
-	ice_killer.ltime = time + freeze_time;
-	ice_killer.pushltime = ice_killer.wait = ice_killer.ltime;
-	ice_killer.nade_damage_target = frost_target;
-	
-	
+	frost_target.frozen_by = freezefield.realowner;
 	pointparticles(particleeffectnum("electro_impact"), frost_target.origin, '0 0 0', 1);
 	Freeze(frost_target, 1/freeze_time, 3, FALSE);
 	if ( frost_target.flagcarried )
 		ctf_Handle_Throw(frost_target, world, DROP_THROW);
+	if(frost_target.nade)
+		toss_nade(frost_target, '0 0 0', time + 0.05);
 }
 
 void nade_ice_think()
@@ -351,7 +304,7 @@ void nade_ice_think()
 		if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0) 
 			if not ( e.frozen ) if ( current_freeze_time > 0 )
 		{
-			nade_ice_killer_spawn(self,e,current_freeze_time);
+			nade_ice_freeze(self,e,current_freeze_time);
 		}
 }
 
@@ -517,6 +470,9 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 
 void toss_nade(entity e, vector _velocity, float _time)
 {
+	if(e.nade == world)
+		return;
+	
 	entity _nade = e.nade;
 	e.nade = world;
 	
@@ -779,6 +735,57 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 			self.bonus_nades = self.bonus_nade_score = 0;
 		}
 	}
+	
+		float n = 0;
+		entity o = world;
+		if(self.freezetag_frozen_timeout > 0 && time >= self.freezetag_frozen_timeout)
+			n = -1;
+		else
+		{
+			vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
+			n = 0;
+			FOR_EACH_PLAYER(other) if(self != other)
+			{
+				if(other.deadflag == DEAD_NO)
+				if(other.frozen == 0)
+				{
+					if(SAME_TEAM(other, self))
+					{
+						if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax))
+						{
+							if(!o)
+								o = other;
+							if(self.frozen == 1)
+								other.reviving = TRUE;
+							++n;
+						}
+					}
+				}
+			}
+		}
+
+		if(n && self.frozen == 3) // OK, there is at least one teammate reviving us
+		{
+			self.revive_progress = bound(0, self.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
+			self.health = max(1, self.revive_progress * autocvar_g_balance_health_start);
+
+			if(self.revive_progress >= 1)
+			{
+				Unfreeze(self);
+
+				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
+				Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, self.netname);
+			}
+
+			FOR_EACH_PLAYER(other)
+			{
+				if(other.reviving)
+				{
+					other.revive_progress = self.revive_progress;
+					other.reviving = FALSE;
+				}
+			}
+		}
 
 	return FALSE;
 }

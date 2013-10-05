@@ -587,6 +587,7 @@ float serverflags;
 .float revive_progress;
 .float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
 .entity iceblock;
+.entity frozen_by; // for ice fields
 
 .entity muzzle_flash;
 .float misc_bulletcounter;	// replaces uzi & hlac bullet counter.

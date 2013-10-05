@@ -2422,6 +2422,20 @@ void PlayerPreThink (void)
 		if(self.revive_progress >= 1)
 			Unfreeze(self);
 	}
+	else if(self.frozen == 3)
+	{
+		self.revive_progress = bound(0, self.revive_progress - frametime * self.revive_speed, 1);
+		self.health = max(0, autocvar_g_nades_ice_health + (autocvar_g_balance_health_start-autocvar_g_nades_ice_health) * self.revive_progress );
+		
+		if(self.health < 1)
+		{
+			if(self.vehicle)
+				vehicles_exit(VHEF_RELESE);
+			Damage(self,self.frozen_by,self.frozen_by,1,DEATH_NADE_ICE_FREEZE,self.origin,'0 0 0');
+		}
+		else if ( self.revive_progress <= 0 )
+			Unfreeze(self);
+	}
 
 	MUTATOR_CALLHOOK(PlayerPreThink);
 	

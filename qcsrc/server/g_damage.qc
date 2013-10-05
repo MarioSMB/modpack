@@ -566,10 +566,12 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 		
 	if(targ.frozen)
 		return;
+	
+	float targ_maxhealth = ((targ.flags & FL_MONSTER) ? targ.max_health : autocvar_g_balance_health_start);
 		
 	targ.frozen = frozen_type;
-	targ.revive_progress = 0;
-	targ.health = 1;
+	targ.revive_progress = ((frozen_type == 3) ? 1 : 0);
+	targ.health = ((frozen_type == 3) ? targ_maxhealth : 1);
 	targ.revive_speed = freeze_time;
 
 	entity ice, head;

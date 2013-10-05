@@ -529,10 +529,27 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 
 	if(self.frozen)
 	{
-		if ( self.frozen != 3 )
+		if(self.frozen == 3)
+		{
+			self.revive_progress = bound(0, self.revive_progress - self.ticrate * self.revive_speed, 1);
+			self.health = max(0, autocvar_g_nades_ice_health + (self.max_health-autocvar_g_nades_ice_health) * self.revive_progress );
+		
+			if(self.health < 1)
+			{
+				Unfreeze(self);
+				self.health = 0;
+				Damage(self,self,self,1,DEATH_KILL,self.origin,'0 0 0');
+			}
+			else if ( self.revive_progress <= 0 )
+				Unfreeze(self);
+		}
+		else
 		{
 			self.revive_progress = bound(0, self.revive_progress + self.ticrate * self.revive_speed, 1);
 			self.health = max(1, self.max_health * self.revive_progress);
+			
+			if(self.revive_progress >= 1)
+				Unfreeze(self); // wait for next think before attacking
 		}
 
 		WaypointSprite_UpdateHealth(self.sprite, self.health);
@@ -543,9 +560,6 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		
 		self.enemy = world;
 		self.nextthink = time + self.ticrate;
-
-		if(self.revive_progress >= 1)
-			Unfreeze(self); // wait for next think before attacking
 
 		return; // no moving while frozen
 	}
