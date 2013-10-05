@@ -239,14 +239,12 @@ void nade_ice_killer_think()
 		return;
 	}
 	
-	const float think_delay = 0.1;
-	
-	target.revive_progress = bound(0, target.revive_progress + think_delay * target.revive_speed, 1);
+	target.revive_progress = bound(0, target.revive_progress + frametime * target.revive_speed, 1);
 	target.iceblock.alpha = bound(0.2, 1 - target.revive_progress, 1);
 	
 	target.health = 100 - target.revive_progress * (100-autocvar_g_nades_ice_health);
 	
-	if ( target.health <= 0 )
+	if ( target.health < 1 )
 	{
 		Unfreeze(target);
 		target.health = 0;
@@ -255,8 +253,7 @@ void nade_ice_killer_think()
 	}
 	else
 	{
-
-		self.nextthink = time+think_delay;
+		self.nextthink = time+frametime;
 		
 		if(target.revive_progress >= 1)
 			Unfreeze(target);
