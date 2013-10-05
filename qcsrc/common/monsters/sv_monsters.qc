@@ -537,8 +537,8 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 			if(self.health < 1)
 			{
 				Unfreeze(self);
-				self.health = 0;
-				Damage(self,self,self,1,DEATH_KILL,self.origin,'0 0 0');
+				self.health = -100;
+				Damage(self,self.frozen_by,self.frozen_by,1,DEATH_NADE_ICE_FREEZE,self.origin,'0 0 0');
 			}
 			else if ( self.revive_progress <= 0 )
 				Unfreeze(self);
@@ -806,9 +806,12 @@ void monster_die(entity attacker)
 	self.nextthink = self.ticrate;
 	self.ltime = time + 5;
 	
-	Unfreeze(self); // remove any icy remains
-	self.health = 0; // reset by Unfreeze
-
+	if ( self.frozen )
+	{
+		Unfreeze(self); // remove any icy remains
+		self.health = 0; // reset by Unfreeze
+	}
+	
 	monster_dropitem();
 
 	MonsterSound(monstersound_death, 0, FALSE, CH_VOICE);
@@ -847,6 +850,7 @@ void monster_die(entity attacker)
 
 void monsters_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
+	
 	if(self.frozen && deathtype != DEATH_KILL)
 		return;
 
