@@ -352,6 +352,8 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_MONSTER,           3, 2, "spree_inf s1 s2 s3loc spree_end", "",  	  "",          			  _("^BG%s%s^K1 was pushed infront of a monster by ^BG%s^K1%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_NADE,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_nade",          _("^BG%s%s^K1 was blown up by ^BG%s^K1's Nade%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_NADE_NAPALM,       3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_nade_napalm",   _("^BG%s%s^K1 was burned to death by ^BG%s^K1's Napalm Nade%s%s"), _("^BG%s%s^K1 got too close to a napalm explosion%s%s")) \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_NADE_ICE,          3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_nade_ice",      _("^BG%s%s^K1 was blown up by ^BG%s^K1's Ice Nade%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_NADE_ICE_FREEZE,   3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_nade_ice",      _("^BG%s%s^K1 was frozen to death up by ^BG%s^K1's Ice Nade%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_SHOOTING_STAR,     3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_shootingstar",  _("^BG%s%s^K1 was shot into space by ^BG%s^K1%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_SLIME,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_slime",         _("^BG%s%s^K1 was slimed by ^BG%s^K1%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_SWAMP,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_slime",         _("^BG%s%s^K1 was preserved by ^BG%s^K1%s%s"), "") \
@@ -405,6 +407,8 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_ZOMBIE_MELEE,    2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was given kung fu lessons by a Zombie%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_NADE,                2, 1, "s1 s2loc spree_lost", "s1",       "notify_nade",          _("^BG%s^K1 mastered the art of self-nading%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_NADE_NAPALM,         2, 1, "s1 s2loc spree_lost", "s1",       "notify_nade_napalm",   _("^BG%s^K1 was burned to death by their own Napalm Nade%s%s"), _("^BG%s^K1 decided to take a look at the results of their napalm explosion%s%s")) \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_NADE_ICE,            2, 1, "s1 s2loc spree_lost", "s1",       "notify_nade_ice",      _("^BG%s^K1 mastered the art of self-nading%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_NADE_ICE_FREEZE,     2, 1, "s1 s2loc spree_lost", "s1",       "notify_nade_ice",      _("^BG%s^K1 was frozen to death by their own Ice Nade%s%s"), _("^BG%s^K1 felt a little cold%s%s")) \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_NOAMMO,              2, 1, "s1 s2loc spree_lost", "s1",       "notify_outofammo",     _("^BG%s^K1 died%s%s. What's the point of living without ammo?"), _("^BG%s^K1 ran out of ammo%s%s")) \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_ROT,                 2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 rotted away%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_SHOOTING_STAR,       2, 1, "s1 s2loc spree_lost", "s1",       "notify_shootingstar",  _("^BG%s^K1 became a shooting star%s%s"), "") \
@@ -606,6 +610,8 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_MONSTER,          0, 0, "",             NO_CPID,             "0 0", _("^K1You were killed by a monster!"), _("^K1You need to watch out for monsters!")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_NADE,				0, 0, "",			  NO_CPID,			   "0 0", _("^K1You forgot to put the pin back in!"), _("^K1Tastes like chicken!")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_NADE_NAPALM,		0, 0, "",			  NO_CPID,			   "0 0", _("^K1Hanging around a napalm explosion is bad!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_NADE_ICE,			0, 0, "",			  NO_CPID,			   "0 0", _("^K1Hanging around an ice explosion is bad!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_NADE_ICE_FREEZE,  0, 0, "",			  NO_CPID,			   "0 0", _("^K1You got a little bit too cold!"), _("^K1You felt a little too cold!")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_NOAMMO,           0, 0, "",             NO_CPID,             "0 0", _("^K1You were killed for running out of ammo..."), _("^K1You are respawning for running out of ammo...")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_ROT,              0, 0, "",             NO_CPID,             "0 0", _("^K1You grew too old without taking your medicine"), _("^K1You need to preserve your health")) \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_SHOOTING_STAR,    0, 0, "",             NO_CPID,             "0 0", _("^K1You became a shooting star!"), "") \
@@ -734,6 +740,8 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_MONSTER,                 NO_MSG,        INFO_DEATH_MURDER_MONSTER,                 CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_NADE,                    NO_MSG,        INFO_DEATH_MURDER_NADE,                    NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_NADE_NAPALM,             NO_MSG,        INFO_DEATH_MURDER_NADE_NAPALM,             NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_NADE_ICE,                NO_MSG,        INFO_DEATH_MURDER_NADE_ICE,                NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_NADE_ICE_FREEZE,         NO_MSG,        INFO_DEATH_MURDER_NADE_ICE_FREEZE,         NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_SHOOTING_STAR,           NO_MSG,        INFO_DEATH_MURDER_SHOOTING_STAR,           NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_SLIME,                   NO_MSG,        INFO_DEATH_MURDER_SLIME,                   NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_SWAMP,                   NO_MSG,        INFO_DEATH_MURDER_SWAMP,                   NO_MSG) \
@@ -787,6 +795,8 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_ZOMBIE_MELEE,		 	 NO_MSG,        INFO_DEATH_SELF_MON_ZOMBIE_MELEE,		   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_NADE,				 		 NO_MSG,		INFO_DEATH_SELF_NADE,			   		   CENTER_DEATH_SELF_NADE) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_NADE_NAPALM,				 NO_MSG,		INFO_DEATH_SELF_NADE_NAPALM,			   CENTER_DEATH_SELF_NADE_NAPALM) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_NADE_ICE,					 NO_MSG,		INFO_DEATH_SELF_NADE_ICE,				   CENTER_DEATH_SELF_NADE_ICE) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_NADE_ICE_FREEZE,           NO_MSG,		INFO_DEATH_SELF_NADE_ICE_FREEZE,           CENTER_DEATH_SELF_NADE_ICE_FREEZE) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_NOAMMO,                    NO_MSG,        INFO_DEATH_SELF_NOAMMO,                    CENTER_DEATH_SELF_NOAMMO) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_ROT,                       NO_MSG,        INFO_DEATH_SELF_ROT,                       CENTER_DEATH_SELF_ROT) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_SHOOTING_STAR,             NO_MSG,        INFO_DEATH_SELF_SHOOTING_STAR,             CENTER_DEATH_SELF_SHOOTING_STAR) \

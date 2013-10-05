@@ -11,10 +11,12 @@ void nade_burn_spawn(entity _nade)
 {
 	float p;
 	
-	if(_nade.nade_type == NADE_TYPE_NAPALM)
-		p = PROJECTILE_NADE_NAPALM_BURN;
-	else
-		p = PROJECTILE_NADE_BURN;
+	switch(_nade.nade_type)
+	{
+		case NADE_TYPE_NAPALM: p = PROJECTILE_NADE_NAPALM_BURN; break;
+		case NADE_TYPE_ICE: p = PROJECTILE_NADE_ICE_BURN; break;
+		default: p = PROJECTILE_NADE_BURN; break;
+	}
 	
 	CSQCProjectile(_nade, TRUE, p, TRUE);
 }
@@ -36,10 +38,12 @@ void nade_spawn(entity _nade)
 	
 	_nade.effects |= EF_LOWPRECISION;
 	
-	if(_nade.nade_type == NADE_TYPE_NAPALM)
-		p = PROJECTILE_NADE_NAPALM;
-	else
-		p = PROJECTILE_NADE;
+	switch(_nade.nade_type)
+	{
+		case NADE_TYPE_NAPALM: p = PROJECTILE_NADE_NAPALM; break;
+		case NADE_TYPE_ICE: p = PROJECTILE_NADE_ICE; break;
+		default: p = PROJECTILE_NADE; break;
+	}
 		
 	CSQCProjectile(_nade, TRUE, p, TRUE);
 }
@@ -85,6 +89,13 @@ void napalm_damage(float dist, float damage, float edgedamage, float burntime)
 
 void napalm_ball_think()
 {
+	if(round_handler_IsActive())
+	if(!round_handler_IsRoundStarted())
+	{
+		remove(self);
+		return;
+	}
+	
 	if(time > self.pushltime)
 	{
 		remove(self);
@@ -152,6 +163,14 @@ void nade_napalm_ball()
 
 void napalm_fountain_think()
 {
+	
+	if(round_handler_IsActive())
+	if(!round_handler_IsRoundStarted())
+	{
+		remove(self);
+		return;
+	}
+	
 	if(time >= self.ltime) 
 	{
 		remove(self);
@@ -173,9 +192,9 @@ void napalm_fountain_think()
 		autocvar_g_nades_napalm_fountain_edgedamage, autocvar_g_nades_napalm_burntime);
 	
 	self.nextthink = time + 0.1;
-	if(time >= self.fire_fountain_time)
+	if(time >= self.nade_special_time)
 	{
-		self.fire_fountain_time = time + autocvar_g_nades_napalm_fountain_delay;
+		self.nade_special_time = time + autocvar_g_nades_napalm_fountain_delay;
 		nade_napalm_ball();
 	}
 }
@@ -202,31 +221,161 @@ void nade_napalm_boom()
 	fountain.projectiledeathtype = DEATH_NADE_NAPALM;
 	fountain.bot_dodge = TRUE;
 	fountain.bot_dodgerating = autocvar_g_nades_napalm_fountain_damage;
-	fountain.fire_fountain_time = time;
+	fountain.nade_special_time = time;
 	setsize(fountain, '-16 -16 -16', '16 16 16');
 	CSQCProjectile(fountain, TRUE, PROJECTILE_NAPALM_FOUNTAIN, TRUE);
+}
+
+void nade_ice_freeze(entity freezefield, entity frost_target, float freeze_time)
+{
+	frost_target.frozen_by = freezefield.realowner;
+	pointparticles(particleeffectnum("electro_impact"), frost_target.origin, '0 0 0', 1);
+	Freeze(frost_target, 1/freeze_time, 3, FALSE);
+	if ( frost_target.flagcarried )
+		ctf_Handle_Throw(frost_target, world, DROP_THROW);
+	if(frost_target.nade)
+		toss_nade(frost_target, '0 0 0', time + 0.05);
+}
+
+void nade_ice_think()
+{
+	
+	if(round_handler_IsActive())
+	if(!round_handler_IsRoundStarted())
+	{
+		remove(self);
+		return;
+	}
+	
+	if(time >= self.ltime) 
+	{
+		if ( autocvar_g_nades_ice_explode )
+		{
+			string expef;
+			switch(self.realowner.team)
+			{
+				case NUM_TEAM_1: expef = "nade_red_explode"; break;
+				case NUM_TEAM_2: expef = "nade_blue_explode"; break;
+				case NUM_TEAM_3: expef = "nade_yellow_explode"; break;
+				case NUM_TEAM_4: expef = "nade_pink_explode"; break;
+				default: 		 expef = "nade_neutral_explode"; break;
+			}
+			pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
+			sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+			
+			RadiusDamage(self, self.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
+				autocvar_g_nades_nade_radius, self, autocvar_g_nades_nade_force, self.projectiledeathtype, self.enemy);
+			Damage_DamageInfo(self.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage, 
+				autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, self.projectiledeathtype, 0, self);
+		}
+		remove(self);
+		return;
+	}
+	
+	
+	self.nextthink = time+0.1;
+	
+	// gaussian
+	float randomr;
+	randomr = random();
+	randomr = exp(-5*randomr*randomr)*autocvar_g_nades_nade_radius;
+	float randomw;
+	randomw = random()*M_PI*2;
+	vector randomp;
+	randomp_x = randomr*cos(randomw);
+	randomp_y = randomr*sin(randomw);
+	randomp_z = 1;
+	pointparticles(particleeffectnum("electro_muzzleflash"), self.origin + randomp, '0 0 0', 1);
+	
+	if(time >= self.nade_special_time)
+	{
+		self.nade_special_time = time+0.7;
+		
+		
+		pointparticles(particleeffectnum("electro_impact"), self.origin, '0 0 0', 1);
+		pointparticles(particleeffectnum("icefield"), self.origin, '0 0 0', 1);
+	}
+	
+
+	float current_freeze_time = self.ltime - time - 0.1;
+	
+	entity e;
+	for(e = findradius(self.origin, autocvar_g_nades_nade_radius); e; e = e.chain) 
+		if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0) 
+			if not ( e.frozen ) if ( current_freeze_time > 0 )
+		{
+			nade_ice_freeze(self,e,current_freeze_time);
+		}
+}
+
+void nade_ice_boom()
+{
+	entity fountain;
+	fountain = spawn();
+	fountain.owner = self.owner;
+	fountain.realowner = self.realowner;
+	fountain.origin = self.origin;
+	setorigin(fountain, fountain.origin);
+	fountain.think = nade_ice_think;
+	fountain.nextthink = time;
+	fountain.ltime = time + autocvar_g_nades_ice_freeze_time;
+	fountain.pushltime = fountain.wait = fountain.ltime;
+	fountain.team = self.team;
+	fountain.movetype = MOVETYPE_TOSS;
+	fountain.projectiledeathtype = DEATH_NADE_ICE;
+	fountain.bot_dodge = FALSE;
+	setsize(fountain, '-16 -16 -16', '16 16 16');
+	fountain.nade_special_time = time+0.3;
+	fountain.angles = self.angles;
+	
+	if ( autocvar_g_nades_ice_explode )
+	{
+		setmodel(fountain, "models/grenademodel.md3");
+		entity timer = spawn();
+		setmodel(timer, "models/ok_nade_counter/ok_nade_counter.md3");
+		setattachment(timer, fountain, "");
+		timer.classname = "nade_timer";
+		timer.colormap = self.colormap;
+		timer.glowmod = self.glowmod;
+		timer.think = nade_timer_think;
+		timer.nextthink = time;
+		timer.wait = fountain.ltime;
+		timer.owner = fountain;	
+		timer.skin = 10;
+	}
+	else
+		setmodel(fountain, "null");
 }
 
 void nade_boom()
 {
 	string expef;
-	float napalm_blast;
+	float nade_blast;
 	
-	napalm_blast = (self.nade_type != NADE_TYPE_NAPALM || autocvar_g_nades_napalm_blast);
+	nade_blast = 1;
 
-	if ( self.nade_type == NADE_TYPE_NAPALM )
-		//Some nice effects for this: 
-		//EF_FLAME  onslaught_generator_gib_explode explosion_big explosion_medium explosion_small
-		expef = "explosion_medium";
-	else
-		switch(self.realowner.team)
-		{
-			case NUM_TEAM_1: expef = "nade_red_explode"; break;
-			case NUM_TEAM_2: expef = "nade_blue_explode"; break;
-			case NUM_TEAM_3: expef = "nade_yellow_explode"; break;
-			case NUM_TEAM_4: expef = "nade_pink_explode"; break;
-			default: 		 expef = "nade_neutral_explode"; break;
-		}
+	switch ( self.nade_type )
+	{
+		case NADE_TYPE_NAPALM: 
+			nade_blast = autocvar_g_nades_napalm_blast;
+			expef = "explosion_medium"; 
+			break;
+		case NADE_TYPE_ICE:   
+			nade_blast = 0;
+			expef = "electro_combo"; // hookbomb_explode electro_combo bigplasma_impact
+			break;
+	
+		default:
+		case NADE_TYPE_NORMAL:
+			switch(self.realowner.team)
+			{
+				case NUM_TEAM_1: expef = "nade_red_explode"; break;
+				case NUM_TEAM_2: expef = "nade_blue_explode"; break;
+				case NUM_TEAM_3: expef = "nade_yellow_explode"; break;
+				case NUM_TEAM_4: expef = "nade_pink_explode"; break;
+				default: 		 expef = "nade_neutral_explode"; break;
+			}
+	}
 	
 	
 	pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
@@ -236,15 +385,19 @@ void nade_boom()
 	
 	self.takedamage = DAMAGE_NO;
 	
-	if(napalm_blast)
+	if(nade_blast)
 	{
 		RadiusDamage(self, self.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
 				 autocvar_g_nades_nade_radius, self, autocvar_g_nades_nade_force, self.projectiledeathtype, self.enemy);
 		Damage_DamageInfo(self.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage, autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, self.projectiledeathtype, 0, self);
 	}
 	
-	if(self.nade_type == NADE_TYPE_NAPALM)
-		nade_napalm_boom();
+	switch ( self.nade_type )
+	{
+		case NADE_TYPE_NAPALM: nade_napalm_boom(); break;
+		case NADE_TYPE_ICE: nade_ice_boom(); break;
+	}
+			
 
 	remove(self);
 }
@@ -317,6 +470,9 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 
 void toss_nade(entity e, vector _velocity, float _time)
 {
+	if(e.nade == world)
+		return;
+	
 	entity _nade = e.nade;
 	e.nade = world;
 	
@@ -437,8 +593,11 @@ void nade_prime()
 	n.nextthink = max(n.wait - 3, time);
 	n.projectiledeathtype = DEATH_NADE;
 	
-	if(n.nade_type == NADE_TYPE_NAPALM)
-		fn.colormod = '2 0.5 0';
+	switch(n.nade_type)
+	{
+		case NADE_TYPE_NAPALM: fn.colormod = '2 0.5 0'; break;
+		case NADE_TYPE_ICE: fn.colormod = '0 0.5 2'; break;
+	}
 		
 	setmodel(fn, "models/weapons/h_ok_grenade.iqm");
 	setattachment(fn, self.weaponentity, "");
@@ -576,6 +735,57 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 			self.bonus_nades = self.bonus_nade_score = 0;
 		}
 	}
+	
+		float n = 0;
+		entity o = world;
+		if(self.freezetag_frozen_timeout > 0 && time >= self.freezetag_frozen_timeout)
+			n = -1;
+		else
+		{
+			vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
+			n = 0;
+			FOR_EACH_PLAYER(other) if(self != other)
+			{
+				if(other.deadflag == DEAD_NO)
+				if(other.frozen == 0)
+				{
+					if(SAME_TEAM(other, self))
+					{
+						if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax))
+						{
+							if(!o)
+								o = other;
+							if(self.frozen == 1)
+								other.reviving = TRUE;
+							++n;
+						}
+					}
+				}
+			}
+		}
+
+		if(n && self.frozen == 3) // OK, there is at least one teammate reviving us
+		{
+			self.revive_progress = bound(0, self.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
+			self.health = max(1, self.revive_progress * autocvar_g_balance_health_start);
+
+			if(self.revive_progress >= 1)
+			{
+				Unfreeze(self);
+
+				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
+				Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, self.netname);
+			}
+
+			FOR_EACH_PLAYER(other)
+			{
+				if(other.reviving)
+				{
+					other.revive_progress = self.revive_progress;
+					other.reviving = FALSE;
+				}
+			}
+		}
 
 	return FALSE;
 }

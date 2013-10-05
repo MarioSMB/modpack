@@ -524,20 +524,39 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 
 	if(self.frozen)
 	{
-		self.revive_progress = bound(0, self.revive_progress + self.ticrate * self.revive_speed, 1);
-		self.health = max(1, self.max_health * self.revive_progress);
+		self.frame = manim_idle;
 		
+		if(self.frozen == 3)
+		{
+			self.revive_progress = bound(0, self.revive_progress - self.ticrate * self.revive_speed, 1);
+			self.health = max(0, autocvar_g_nades_ice_health + (self.max_health-autocvar_g_nades_ice_health) * self.revive_progress );
+		
+			if(self.health < 1)
+			{
+				Unfreeze(self);
+				self.health = 0;
+				Damage(self,self.frozen_by,self.frozen_by,1,DEATH_NADE_ICE_FREEZE,self.origin,'0 0 0');
+			}
+			else if ( self.revive_progress <= 0 )
+				Unfreeze(self);
+		}
+		else
+		{
+			self.revive_progress = bound(0, self.revive_progress + self.ticrate * self.revive_speed, 1);
+			self.health = max(1, self.max_health * self.revive_progress);
+			
+			if(self.revive_progress >= 1)
+				Unfreeze(self); // wait for next think before attacking
+				
+		}
+
 		WaypointSprite_UpdateHealth(self.sprite, self.health);
 		
 		movelib_beak_simple(stopspeed);
 		
-		self.frame = manim_idle;
 		
 		self.enemy = world;
 		self.nextthink = time + self.ticrate;
-
-		if(self.revive_progress >= 1)
-			Unfreeze(self); // wait for next think before attacking
 
 		return; // no moving while frozen
 	}
@@ -781,9 +800,12 @@ void monster_die(entity attacker, float gibbed)
 	self.nextthink = time;
 	self.ltime = time + 5;
 	
-	Unfreeze(self); // remove any icy remains
-	self.health = 0; // reset by Unfreeze
-
+	if ( self.frozen )
+	{
+		Unfreeze(self); // remove any icy remains
+		self.health = 0; // reset by Unfreeze
+	}
+	
 	monster_dropitem();
 
 	MonsterSound(monstersound_death, 0, FALSE, CH_VOICE);
@@ -829,6 +851,7 @@ void monster_die(entity attacker, float gibbed)
 
 void monsters_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
+	
 	if(self.frozen && deathtype != DEATH_KILL)
 		return;
 

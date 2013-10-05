@@ -2,12 +2,13 @@
 .entity fake_nade;
 .float nade_refire;
 .float bonus_nades;
-.float fire_fountain_time;
+.float nade_special_time;
 .float bonus_nade_score;
-
 .float nade_type;
+.entity nade_damage_target;
 
 void() nades_CheckThrow;
+void toss_nade(entity e, vector _velocity, float _time);
 
 // Remove nades that are being thrown
 void(entity player) nades_Clear;
