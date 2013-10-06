@@ -337,6 +337,7 @@ void Monster_CheckMinibossFlag ()
 float Monster_CanRespawn(entity ent)
 {
 	other = ent;
+	if(ent.deadflag == DEAD_DEAD) // don't call when monster isn't dead
 	if(MUTATOR_CALLHOOK(MonsterRespawn))
 		return TRUE; // enabled by a mutator
 
@@ -371,13 +372,7 @@ void Monster_Fade ()
 		setmodel(self, "null");
 	}
 	else
-	{
-		if(IS_CLIENT(self.realowner))
-		if not(self.monster_respawned)
-			self.realowner.monstercount -= 1;
-		
 		SUB_SetFade(self, time + 3, 1);
-	}
 }
 
 float Monster_CanJump (vector vel)
@@ -708,10 +703,9 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 
 void monster_dead_think()
 {
-	self.think = monster_dead_think;
 	self.nextthink = time + self.ticrate;
-
-	self.deadflag = DEAD_DEAD;
+	
+	CSQCMODEL_AUTOUPDATE();
 
 	if(self.ltime != 0)
 	if(time >= self.ltime)
@@ -719,8 +713,6 @@ void monster_dead_think()
 		Monster_Fade();
 		return;
 	}
-	
-	CSQCMODEL_AUTOUPDATE();
 }
 
 void monsters_setstatus()
@@ -783,10 +775,10 @@ void monsters_corpse_damage (entity inflictor, entity attacker, float damage, fl
 	}
 }
 
-void monster_die(entity attacker)
+void monster_die(entity attacker, float gibbed)
 {
 	self.think = monster_dead_think;
-	self.nextthink = self.ticrate;
+	self.nextthink = time;
 	self.ltime = time + 5;
 	
 	Unfreeze(self); // remove any icy remains
@@ -804,6 +796,15 @@ void monster_die(entity attacker)
 			( !(self.spawnflags & MONSTERFLAG_SPAWNED) && !self.monster_respawned) )
 		PlayerScore_Add(attacker, SP_SCORE, +autocvar_g_monsters_score_kill);
 
+	if(!Monster_CanRespawn(self) || gibbed)
+	{
+		// number of monsters spawned with mobspawn command
+		totalspawned -= 1;
+		
+		if(IS_CLIENT(self.realowner))
+		if not(self.monster_respawned)
+			self.realowner.monstercount -= 1;
+	}
 
 	if(self.candrop && self.weapon)
 		W_ThrowNewWeapon(self, self.weapon, 0, self.origin, randomvec() * 150 + '0 0 325');
@@ -811,6 +812,7 @@ void monster_die(entity attacker)
 	self.event_damage	= monsters_corpse_damage;
 	self.solid			= SOLID_CORPSE;
 	self.takedamage		= DAMAGE_AIM;
+	self.deadflag		= DEAD_DEAD;
 	self.enemy			= world;
 	self.movetype		= MOVETYPE_TOSS;
 	self.moveto			= self.origin;
@@ -821,9 +823,6 @@ void monster_die(entity attacker)
 
 	if not(self.flags & FL_FLY)
 		self.velocity = '0 0 0';
-
-	// number of monsters spawned with mobspawn command
-	totalspawned -= 1;
 
 	MON_ACTION(self.monsterid, MR_DEATH);
 }
@@ -877,7 +876,7 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		SUB_UseTargets();
 		self.target2 = self.oldtarget2; // reset to original target on death, incase we respawn
 
-		monster_die(attacker);
+		monster_die(attacker, (self.health <= -100 || deathtype == DEATH_KILL));
 		
 		WaypointSprite_Kill(self.sprite);
 		
@@ -888,10 +887,6 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		if(self.health <= -100 || deathtype == DEATH_KILL) // check if we're already gibbed
 		{
 			Violence_GibSplash(self, 1, 0.5, attacker);
-			
-			if(IS_CLIENT(self.realowner))
-			if not(self.monster_respawned)
-				self.realowner.monstercount -= 1;
 
 			self.think = SUB_Remove;
 			self.nextthink = time + 0.1;
