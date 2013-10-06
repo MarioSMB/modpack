@@ -302,7 +302,7 @@ void nade_ice_think()
 	entity e;
 	for(e = findradius(self.origin, autocvar_g_nades_nade_radius); e; e = e.chain) 
 	if(e != self)
-	if(autocvar_g_nades_ice_teamcheck && SAME_TEAM(e, self.realowner))
+	if((autocvar_g_nades_ice_teamcheck && (DIFF_TEAM(e, self.realowner) || e == self.realowner)) || !autocvar_g_nades_ice_teamcheck)
 	if(e.takedamage && e.deadflag == DEAD_NO)
 	if(e.health > 0) 
 	if not(e.frozen)
