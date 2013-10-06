@@ -301,11 +301,13 @@ void nade_ice_think()
 	
 	entity e;
 	for(e = findradius(self.origin, autocvar_g_nades_nade_radius); e; e = e.chain) 
-		if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0) 
-			if not ( e.frozen ) if ( current_freeze_time > 0 )
-		{
-			nade_ice_freeze(self,e,current_freeze_time);
-		}
+	if(e != self)
+	if(autocvar_g_nades_ice_teamcheck && SAME_TEAM(e, self.realowner))
+	if(e.takedamage && e.deadflag == DEAD_NO)
+	if(e.health > 0) 
+	if not(e.frozen)
+	if(current_freeze_time > 0)
+		nade_ice_freeze(self, e, current_freeze_time);
 }
 
 void nade_ice_boom()
