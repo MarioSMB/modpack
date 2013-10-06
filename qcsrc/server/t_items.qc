@@ -430,6 +430,16 @@ void Item_Show (entity e, float mode)
     e.SendFlags |= ISF_STATUS;
 }
 
+void Item_Think()
+{
+	self.nextthink = time;
+	if(self.origin != self.oldorigin)
+	{
+		self.oldorigin = self.origin;
+		ItemUpdate(self);
+	}
+}
+
 void Item_Respawn (void)
 {
 	Item_Show(self, 1);
@@ -441,6 +451,9 @@ void Item_Respawn (void)
 	else
 		sound (self, CH_TRIGGER, "misc/itemrespawn.wav", VOL_BASE, ATTEN_NORM);	// play respawn sound
 	setorigin (self, self.origin);
+	
+	self.think = Item_Think;
+	self.nextthink = time;
 
 	//pointparticles(particleeffectnum("item_respawn"), self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
 	pointparticles(particleeffectnum("item_respawn"), self.origin + 0.5 * (self.mins + self.maxs), '0 0 0', 1);
@@ -509,15 +522,11 @@ void Item_ScheduleRespawnIn(entity e, float t)
 {
 	if((e.flags & FL_POWERUP) || (e.weapons & WEPSET_SUPERWEAPONS))
 	{
-		e.think = Item_RespawnCountdown;
-		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
+		defer(max(0, t - ITEM_RESPAWN_TICKS), Item_RespawnCountdown);
 		e.count = 0;
 	}
 	else
-	{
-		e.think = Item_Respawn;
-		e.nextthink = time + t;
-	}
+		defer(t, Item_Respawn);
 }
 
 void Item_ScheduleRespawn(entity e)
@@ -758,8 +767,8 @@ void Item_Reset()
 
 	if(self.classname != "droppedweapon")
 	{
-		self.think = func_null;
-		self.nextthink = 0;
+		self.think = Item_Think;
+		self.nextthink = time;
 
 		if(self.waypointsprite_attached)
 			WaypointSprite_Kill(self.waypointsprite_attached);

@@ -94,9 +94,9 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	if (self.dodging_action == 1) {
 		//disable jump key during dodge accel phase
 		if (self.movement_z > 0) self.movement_z = 0;
+		self.BUTTON_JUMP = TRUE;
 
-		self.velocity = 
-			  self.velocity 
+		self.velocity +=
 			+ ((self.dodging_direction_y * velocity_difference) * v_right)
 			+ ((self.dodging_direction_x * velocity_difference) * v_forward);
 
@@ -106,10 +106,9 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	// the up part of the dodge is a single shot action
 	if (self.dodging_single_action == 1) {
 		self.flags &= ~FL_ONGROUND;
+		self.BUTTON_JUMP = TRUE;
 
-		self.velocity = 
-			  self.velocity 
-			+ (autocvar_sv_dodging_up_speed * v_up);
+		self.velocity += (autocvar_sv_dodging_up_speed * v_up);
 
 		if (autocvar_sv_dodging_sound == 1)
 			PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
