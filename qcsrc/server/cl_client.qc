@@ -327,8 +327,10 @@ void FixPlayermodel()
 			defaultmodel = "models/player/pony.iqm";
 			defaultskin = self.cvar_cl_pony_skin;
 		}
-		if(self.cvar_cl_robot)
+		if(self.cvar_cl_robot == 1)
 			defaultmodel = "models/player/terminusmale.iqm";
+		else if(self.cvar_cl_robot == 2)
+			defaultmodel = "models/player/ubot.iqm";
 			
 		// special hax
 		if(checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
@@ -418,7 +420,10 @@ void UpdateSpectators(entity is_spec, entity is_player);
 void PutClientInServer (void)
 {
 	if(IS_BOT_CLIENT(self))
+	{
 		self.classname = "player";
+		self.cvar_cl_robot = 2; // always make bots ubot?
+	}
 	else if(IS_REAL_CLIENT(self))
 	{
 		msg_entity = self;

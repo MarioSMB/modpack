@@ -767,10 +767,23 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		mirrordamage = frag_mirrordamage;
 		force = frag_force;
 		
-		if(((targ.frozen == 2 && attacker.monsterid != MON_SPIDER) || (targ.frozen == 1)) && deathtype != DEATH_HURTTRIGGER)
+		if(targ.frozen)
+		if(deathtype != DEATH_HURTTRIGGER && deathtype != DEATH_TEAMCHANGE && deathtype != DEATH_AUTOTEAMCHANGE)
+		if(attacker.monsterid != MON_SPIDER)
 		{
+			if(autocvar_g_freeze_revive_falldamage > 0)
+			if(deathtype == DEATH_FALL)
+			if(damage >= autocvar_g_freeze_revive_falldamage)
+			{
+				Unfreeze(targ);
+				targ.health = autocvar_g_freeze_revive_falldamage_health;
+				pointparticles(particleeffectnum("iceorglass"), targ.origin, '0 0 0', 3);
+				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, targ.netname);
+				Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_FREEZETAG_REVIVE_FALL);
+			}
+		
 			damage = 0;
-			force *= 0.2;
+			force *= autocvar_g_freeze_frozen_force;
 		}
 		
 		if not(g_minstagib)

@@ -259,27 +259,6 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(freeze_PlayerDamage)
-{
-    if(frag_target.frozen == 1 && frag_deathtype != DEATH_HURTTRIGGER && frag_deathtype != DEATH_TEAMCHANGE && frag_deathtype != DEATH_AUTOTEAMCHANGE)
-    {
-		if(autocvar_g_freeze_revive_falldamage > 0)
-		if(frag_deathtype == DEATH_FALL)
-		if(frag_damage >= autocvar_g_freeze_revive_falldamage)
-		{
-			freeze_Unfreeze(frag_target);
-			frag_target.health = autocvar_g_freeze_revive_falldamage_health;
-			pointparticles(particleeffectnum("iceorglass"), frag_target.origin, '0 0 0', 3);
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, frag_target.netname);
-			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_REVIVE_FALL);
-		}
-	
-        frag_damage = 0;
-        frag_force = frag_force * autocvar_g_freeze_frozen_force;
-    }
-    return FALSE;
-}
-
 MUTATOR_HOOKFUNCTION(freeze_GetCvars)
 {
 	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_freeze, "cl_freeze");
@@ -304,7 +283,6 @@ MUTATOR_DEFINITION(mutator_freeze)
 	MUTATOR_HOOK(PlayerSpawn, freeze_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, freeze_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, freeze_PlayerPreThink, CBC_ORDER_FIRST);
-	MUTATOR_HOOK(PlayerDamage_Calculate, freeze_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetCvars, freeze_GetCvars, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, freeze_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, freeze_BuildMutatorsPrettyString, CBC_ORDER_ANY);
