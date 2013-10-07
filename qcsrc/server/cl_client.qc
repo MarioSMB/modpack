@@ -2436,7 +2436,7 @@ void PlayerPreThink (void)
 		{
 			if(self.vehicle)
 				vehicles_exit(VHEF_RELESE);
-			Damage(self,self.frozen_by,self.frozen_by,1,DEATH_NADE_ICE_FREEZE,self.origin,'0 0 0');
+			self.event_damage(self, self.frozen_by, 1, DEATH_NADE_ICE_FREEZE, self.origin, '0 0 0');
 		}
 		else if ( self.revive_progress <= 0 )
 			Unfreeze(self);
