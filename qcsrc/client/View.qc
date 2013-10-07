@@ -1382,9 +1382,20 @@ void CSQC_UpdateView(float w, float h)
 			if(time >= last_beam)
 			{
 				string s;
+				float hit = 0;
 				vector v = '0 0 1' * getstati(STAT_VIEWHEIGHT);
 				
 				s = strcat("TE_TEI_G3", Static_Team_ColorName_Upper(myteam));
+				
+				WarpZone_TraceLine(view_origin, view_origin + v + view_forward * minsta_range, MOVE_NORMAL, world);
+				
+				if(trace_fraction < 1 && !trace_ent.entnum)
+					hit = 0;
+				else
+					hit = 1;
+					
+				if(hit)
+					s = strcat(s, "_HIT");
 			
 				WarpZone_TrailParticles(self, particleeffectnum(s), view_origin, view_origin + v + view_forward * minsta_range);
 				
