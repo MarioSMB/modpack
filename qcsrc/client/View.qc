@@ -1371,6 +1371,8 @@ void CSQC_UpdateView(float w, float h)
 			if not(minsta_range)
 				minsta_range = MAX_SHOT_DISTANCE;
 			
+			entity me = playerslots[player_localnum];
+			
 			if(activeweapon == WEP_MINSTANEX)
 			if(time >= getstatf(STAT_GAMESTARTTIME))
 			if(time >= getstatf(STAT_ROUNDSTARTTIME))
@@ -1378,7 +1380,7 @@ void CSQC_UpdateView(float w, float h)
 			if not(getstatf(STAT_FROZEN))
 			if not(spectatee_status)
 			if(button_attack)
-			if(autocvar_cl_minstabeam)
+			if(autocvar_cl_minstabeam || me.ping >= 200)
 			if(time >= last_beam)
 			{
 				string s;
