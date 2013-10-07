@@ -1009,7 +1009,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 		{
 			t = car(s); s = cdr(s);
 			f = MapInfo_Type_FromString(t);
-			print("Map ", pFilename, " contains the legacy 'type' keyword which is deprecated and will be removed in the future. Please migrate the mapinfo file to 'gametype'.\n");
+			dprint("Map ", pFilename, " contains the legacy 'type' keyword which is deprecated and will be removed in the future. Please migrate the mapinfo file to 'gametype'.\n");
 			if(f)
 				_MapInfo_Map_ApplyGametype (s, pGametypeToSet, f, TRUE);
 			else
