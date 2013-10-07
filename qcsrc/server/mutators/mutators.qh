@@ -36,5 +36,6 @@ MUTATOR_DECLARATION(mutator_riflearena);
 MUTATOR_DECLARATION(mutator_campcheck);
 MUTATOR_DECLARATION(mutator_zombie_apocalypse);
 MUTATOR_DECLARATION(mutator_walljump);
+MUTATOR_DECLARATION(mutator_status_effects);
 
 MUTATOR_DECLARATION(sandbox);
