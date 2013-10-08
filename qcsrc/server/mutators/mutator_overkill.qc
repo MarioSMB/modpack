@@ -105,20 +105,12 @@ MUTATOR_HOOKFUNCTION(ok_BuildMutatorsPrettyString)
 	return FALSE;
 }
 
-void ok_Item_Touch()
-{
-	if(IS_PLAYER(other))
-	if(other.deadflag == DEAD_NO)
-	if(!other.frozen)
-	{
-		Item_Touch();
-		remove(self);
-	}
-}
-
 MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 {
 	entity oldself = self;
+	
+	if(other.flags & FL_MONSTER)
+		other.monster_loot = func_null;
 
 	self.ok_lastwep = self.weapon;
 	self.ok_deathloc = self.origin;
@@ -132,30 +124,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 	self.reset = SUB_Remove;
 	setorigin(self, frag_target.origin + '0 0 32');
 	self.velocity = '0 0 200' + normalize(frag_attacker.origin - self.origin) * 500;
-	self.touch = ok_Item_Touch;
-	SUB_SetFade(self, time + 5, 1);
-	self = oldself;
-
-	return FALSE;
-}
-
-MUTATOR_HOOKFUNCTION(ok_MonsterDrop)
-{
-	other.monster_loot = func_null;
-
-	entity oldself;
-	oldself = self;
-	self = spawn();
-	self.ok_item = TRUE;
-	self.noalign = TRUE;
-	self.pickup_anyway = TRUE;
-	spawnfunc_item_armor_small();
-	self.movetype = MOVETYPE_TOSS;
-	self.gravity = 1;
-	self.reset = SUB_Remove;
-	setorigin(self, oldself.origin + '0 0 32');
-	self.velocity = randomvec() * 175 + '0 0 325';
-	self.touch = ok_Item_Touch;
+	self.classname = "droppedweapon"; // hax
 	SUB_SetFade(self, time + 5, 1);
 	self = oldself;
 
@@ -420,7 +389,7 @@ MUTATOR_DEFINITION(mutator_overkill)
 	MUTATOR_HOOK(OnEntityPreSpawn, ok_OnEntityPreSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetModname, ok_SetModname, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, ok_ItemRemove, CBC_ORDER_ANY);
-	MUTATOR_HOOK(MonsterDropItem, ok_MonsterDrop, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MonsterDropItem, ok_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SpectateCopy, ok_SpectateCopy, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, ok_StartItems, CBC_ORDER_ANY);
 
