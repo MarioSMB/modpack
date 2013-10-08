@@ -211,6 +211,7 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 		wep.ok_item = TRUE;
 		wep.think = start_hmg;
 		wep.nextthink = time + 0.1;
+		wep.noalign = self.noalign;
 		return TRUE;
 	}
 
@@ -223,6 +224,7 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 		wep.ok_item = TRUE;
 		wep.think = start_rpc;
 		wep.nextthink = time + 0.1;
+		wep.noalign = self.noalign;
 		return TRUE;
 	}
 
