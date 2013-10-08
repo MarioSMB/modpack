@@ -771,6 +771,7 @@ void spawnfunc_worldspawn (void)
 	WeaponStats_Init();
 
 	WepSet_AddStat();
+	WepSet_AddStat_InMap();
 	addstat(STAT_SWITCHWEAPON, AS_INT, switchweapon);
 	addstat(STAT_SWITCHINGWEAPON, AS_INT, switchingweapon);
 	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_game_starttime);

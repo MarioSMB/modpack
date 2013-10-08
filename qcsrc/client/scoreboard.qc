@@ -981,8 +981,24 @@ float HUD_WouldDrawScoreboard() {
 float average_accuracy;
 vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 {
+	WepSet weapons_stat = WepSet_GetFromStat();
+	WepSet weapons_inmap = WepSet_GetFromStat_InMap();
 	float i;
-	float weapon_cnt = WEP_COUNT - 5; // either minstanex/nex are hidden, no port-o-launch, no tuba
+	float weapon_stats;
+	float disownedcnt = 0;
+	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
+	{
+		self = get_weaponinfo(i);
+		if not(self.weapon)
+			continue;
+			
+		weapon_stats = weapon_accuracy[i-WEP_FIRST];
+		
+		if(weapon_stats < 0 && !(weapons_stat & WepSet_FromWeapon(i) || weapons_inmap & WepSet_FromWeapon(i)))
+			++disownedcnt;
+	}
+	
+	float weapon_cnt = WEP_COUNT - disownedcnt; // either minstanex/nex are hidden, no port-o-launch, no tuba
 	float rows;
 	if(autocvar_scoreboard_accuracy_doublerows)
 		rows = 2;
@@ -1028,7 +1044,6 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	if(switchweapon == WEP_MINSTANEX)
 		g_minstagib = 1; // TODO: real detection for minstagib?
 
-	float weapon_stats;
 	if(autocvar_scoreboard_accuracy_nocolors)
 		rgb = '1 1 1';
 	else
@@ -1039,9 +1054,11 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		self = get_weaponinfo(i);
 		if not(self.weapon)
 			continue;
-		if (i == WEP_RPC || i == WEP_HMG || (i == WEP_NEX && g_minstagib) || i == WEP_PORTO || (i == WEP_MINSTANEX && !g_minstagib) || i == WEP_TUBA) // skip port-o-launch, nex || minstanex and tuba
-			continue;
+		//if (i == WEP_RPC || i == WEP_HMG || (i == WEP_NEX && g_minstagib) || i == WEP_PORTO || (i == WEP_MINSTANEX && !g_minstagib) || i == WEP_TUBA) // skip port-o-launch, nex || minstanex and tuba
 		weapon_stats = weapon_accuracy[i-WEP_FIRST];
+		
+		if(weapon_stats < 0 && !(weapons_stat & WepSet_FromWeapon(i) || weapons_inmap & WepSet_FromWeapon(i)))
+			continue;
 
 		float weapon_alpha;
 		if(weapon_stats >= 0)

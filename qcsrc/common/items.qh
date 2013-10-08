@@ -81,10 +81,12 @@ typedef vector WepSet;
 WepSet WepSet_FromWeapon(float a);
 #ifdef SVQC
 void WepSet_AddStat();
+void WepSet_AddStat_InMap();
 void WriteWepSet(float dest, WepSet w);
 #endif
 #ifdef CSQC
 WepSet WepSet_GetFromStat();
+WepSet WepSet_GetFromStat_InMap();
 WepSet ReadWepSet();
 #endif
 

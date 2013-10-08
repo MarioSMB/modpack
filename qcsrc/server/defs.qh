@@ -299,6 +299,8 @@ void FixClientCvars(entity e);
 
 WepSet weaponsInMap;
 
+.WepSet weaponsinmap;
+
 .float respawn_countdown; // next number to count
 
 float bot_waypoints_for_items;

@@ -197,6 +197,10 @@ const float STAT_GRENADE_BONUS = 80;
 const float STAT_GRENADE_BONUS_TYPE = 81;
 const float STAT_GRENADE_BONUS_SCORE = 82;
 
+const float STAT_WEAPONSINMAP = 90;
+const float STAT_WEAPONSINMAP2 = 91;
+const float STAT_WEAPONSINMAP3 = 92;
+
 // mod stats (1xx)
 const float STAT_REDALIVE = 100;
 const float STAT_BLUEALIVE = 101;
