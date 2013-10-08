@@ -214,8 +214,8 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 			self.ok_notice_time = time + 2;
 			play2(self, "weapons/dryfire.wav");
 		}
-		if(self.weaponentity.state != WS_CLEAR)
-			w_ready();
+		//if(self.weaponentity.state != WS_CLEAR)
+			//w_ready();
 
 		self.weapon_blocked = TRUE;
 	}
