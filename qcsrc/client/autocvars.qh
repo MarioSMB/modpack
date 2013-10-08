@@ -371,7 +371,6 @@ float autocvar_r_fakelight;
 float autocvar_r_fullbright;
 float autocvar_r_letterbox;
 float autocvar_scoreboard_accuracy;
-float autocvar_scoreboard_accuracy_doublerows;
 float autocvar_scoreboard_accuracy_nocolors;
 float autocvar_scoreboard_alpha_bg;
 var float autocvar_scoreboard_alpha_fg = 1.0;

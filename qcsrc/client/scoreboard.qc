@@ -999,11 +999,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	}
 	
 	float weapon_cnt = WEP_COUNT - disownedcnt; // either minstanex/nex are hidden, no port-o-launch, no tuba
-	float rows;
-	if(autocvar_scoreboard_accuracy_doublerows)
-		rows = 2;
-	else
-		rows = 1;
+	float rows = 1;
 	float height = 40;
 	float fontsize = height * 1/3;
 	float weapon_height = height * 2/3;
