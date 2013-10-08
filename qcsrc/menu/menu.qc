@@ -16,10 +16,13 @@ float menuInitialized;
 float menuNotTheFirstFrame;
 float menuMouseMode;
 
+float conwidth_s, conheight_s, vidwidth_s, vidheight_s, vidpixelheight_s,
+      realconwidth, realconheight, screenconwidth, screenconheight;
+
 void m_sync()
 {
 	updateCompression();
-	updateConwidths();
+	vidwidth_s = vidheight_s = vidpixelheight_s = 0;  // Force updateConwidths on next draw.
 
 	loadAllCvars(main);
 }
@@ -79,7 +82,6 @@ void m_init()
 	updateCompression();
 	if(ddsload != cvar("r_texture_dds_load") || texcomp != cvar("gl_texturecompression"))
 		localcmd("\nr_restart\n");
-	initConwidths();
 
 	if(!restarting)
 	{
@@ -93,7 +95,7 @@ void m_init()
 
 const float MENU_ASPECT = 1.25; // 1280x1024
 const float MENU_MINHEIGHT = 600;
-float conwidth_s, conheight_s, realconwidth, realconheight, screenconwidth, screenconheight;
+
 void draw_reset_cropped()
 {
 	draw_reset(screenconwidth, screenconheight, 0.5 * (realconwidth - screenconwidth), 0.5 * (realconheight - screenconheight));
@@ -102,8 +104,16 @@ void draw_reset_full()
 {
 	draw_reset(realconwidth, realconheight, 0, 0);
 }
-void UpdateConWidthHeight()
+
+void UpdateConWidthHeight(float w, float h, float p)
 {
+	if (w != vidwidth_s || h != vidheight_s || p != vidpixelheight_s)
+	{
+		updateConwidths(w, h, p);
+		vidwidth_s = w;
+		vidheight_s = h;
+		vidpixelheight_s = p;
+	}
 	conwidth_s = conwidth;
 	conheight_s = conheight;
 	realconwidth = cvar("vid_conwidth");
@@ -140,6 +150,10 @@ void UpdateConWidthHeight()
 			main.resizeNotify(main, '0 0 0', eX * conwidth + eY * conheight, '0 0 0', eX * conwidth + eY * conheight);
 		}
 	}
+	else
+	{
+		vidwidth_s = vidheight_s = vidpixelheight_s = 0; // retry next frame
+	}
 }
 
 string m_goto_buffer;
@@ -148,8 +162,6 @@ void m_init_delayed()
 	float fh, glob, n, i;
 	string s;
 
-	conwidth = conheight = -1;
-	UpdateConWidthHeight();
 	draw_reset_cropped();
 
 	menuInitialized = 0;
@@ -671,7 +683,7 @@ void m_tooltip(vector pos)
 	}
 }
 
-void m_draw()
+void m_draw(float width, float height)
 {
 	float t;
 	float realFrametime;
@@ -685,8 +697,7 @@ void m_draw()
 	if (anim)
 		anim.tickAll(anim);
 
-	if(main)
-		UpdateConWidthHeight();
+	UpdateConWidthHeight(width, height, cvar("vid_pixelheight"));
 
 	if(!menuInitialized)
 	{

@@ -78,32 +78,31 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 		frag_damage = 0;
 
 	if(!IS_PLAYER(frag_target) || frag_target == frag_attacker)
-		return 0;
+		return FALSE;
 
 	if not (DEATH_ISWEAPON(frag_deathtype, WEP_LASER))
-		return 0;
+		return FALSE;
 
 	frag_damage = 0;
 
-	if(frag_target.health >= 1 && IS_PLAYER(frag_target) && !frag_target.frozen)
+	if(frag_target.health >= 1 && !frag_target.frozen)
 		Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_MINSTA_SECONDARY);
 
 	frag_force = '0 0 0';
-	frag_attacker = frag_target;
 
-	return 0;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(ok_BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":OK");
-	return 0;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(ok_BuildMutatorsPrettyString)
 {
 	ret_string = strcat(ret_string, ", Overkill");
-	return 0;
+	return FALSE;
 }
 
 void ok_Item_Touch()
@@ -130,6 +129,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 	spawnfunc_item_armor_small();
 	self.movetype = MOVETYPE_TOSS;
 	self.gravity = 1;
+	self.reset = SUB_Remove;
 	setorigin(self, frag_target.origin + '0 0 32');
 	self.velocity = '0 0 200' + normalize(frag_attacker.origin - self.origin) * 500;
 	self.touch = ok_Item_Touch;
@@ -152,6 +152,7 @@ MUTATOR_HOOKFUNCTION(ok_MonsterDrop)
 	spawnfunc_item_armor_small();
 	self.movetype = MOVETYPE_TOSS;
 	self.gravity = 1;
+	self.reset = SUB_Remove;
 	setorigin(self, oldself.origin + '0 0 32');
 	self.velocity = randomvec() * 175 + '0 0 325';
 	self.touch = ok_Item_Touch;
@@ -163,8 +164,6 @@ MUTATOR_HOOKFUNCTION(ok_MonsterDrop)
 
 MUTATOR_HOOKFUNCTION(ok_ForbidThrowCurrentWeapon)
 {
-	nades_CheckThrow();
-
 	return TRUE;
 }
 
@@ -178,18 +177,6 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 
 	if(self.frozen)
 		return FALSE;
-
-	if(self.ok_lastwep != 0)
-	{
-		if(self.ok_lastwep == WEP_HMG)
-			W_SwitchWeapon(WEP_UZI);
-		else if(self.ok_lastwep == WEP_RPC)
-			W_SwitchWeapon(WEP_NEX);
-		else
-			W_SwitchWeapon(self.ok_lastwep);
-
-		self.ok_lastwep = 0;
-	}
 
 	ok_IncreaseCharge(self, self.weapon);
 
@@ -210,12 +197,12 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 	{
 		if(autocvar_g_overkill_ammo_charge_notice && time > self.ok_notice_time && self.BUTTON_ATCK && IS_REAL_CLIENT(self))
 		{
-			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_OVERKILL_CHARGE);
+			//Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_OVERKILL_CHARGE);
 			self.ok_notice_time = time + 2;
 			play2(self, "weapons/dryfire.wav");
 		}
-		//if(self.weaponentity.state != WS_CLEAR)
-			//w_ready();
+		if(self.weaponentity.state != WS_CLEAR)
+			w_ready();
 
 		self.weapon_blocked = TRUE;
 	}
@@ -239,11 +226,6 @@ MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
 	}
 	else
 		self.ok_use_ammocharge = 0;
-
-	self.ammo_nails = autocvar_g_overkill_ammo_start;
-	self.ammo_cells = autocvar_g_overkill_ammo_start;
-	self.ammo_shells = autocvar_g_overkill_ammo_start;
-	self.ammo_rockets = autocvar_g_overkill_ammo_start;
 
 	return FALSE;
 }
@@ -279,23 +261,16 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 
 MUTATOR_HOOKFUNCTION(ok_ItemRemove)
 {
-	if(self.ok_item == TRUE)
+	if(self.ok_item)
 		return FALSE;
 
 	switch(self.items)
 	{
-		case IT_HEALTH: if(autocvar_g_overkill_100h_anyway) return FALSE;
-		case IT_ARMOR: if(autocvar_g_overkill_100a_anyway) return FALSE;
-		default: return TRUE;
+		case IT_HEALTH: return !(autocvar_g_overkill_100h_anyway);
+		case IT_ARMOR: return !(autocvar_g_overkill_100a_anyway);
 	}
-}
-
-MUTATOR_HOOKFUNCTION(ok_ItemTouch)
-{
-	if (autocvar_g_overkill_superguns_builtin)
-		return FALSE;
-
-	return FALSE;
+	
+	return TRUE;
 }
 
 MUTATOR_HOOKFUNCTION(ok_SpectateCopy)
@@ -316,6 +291,9 @@ MUTATOR_HOOKFUNCTION(ok_StartItems)
 {
 	start_items |= IT_UNLIMITED_WEAPON_AMMO;
 	start_weapons = (WEPSET_UZI | WEPSET_NEX | WEPSET_SHOTGUN);
+
+	start_ammo_nails = start_ammo_cells = start_ammo_shells = start_ammo_rockets =
+	warmup_start_ammo_nails = warmup_start_ammo_cells = warmup_start_ammo_shells = warmup_start_ammo_rockets = autocvar_g_overkill_ammo_start;
 
 	return FALSE;
 }
@@ -411,8 +389,10 @@ void ok_Initialize()
 	precache_model("models/weapons/v_ok_sniper.md3");
 	precache_model("models/weapons/g_ok_sniper.md3");
 
-	precache_sound("weapons/rocket_impact.wav");
 	precache_sound("weapons/dryfire.wav");
+	
+	addstat(STAT_OK_AMMO_CHARGE, AS_FLOAT, ok_use_ammocharge);
+	addstat(STAT_OK_AMMO_CHARGEPOOl, AS_FLOAT, ok_ammo_charge);
 
 	w_uzi(WR_PRECACHE);
 	w_nex(WR_PRECACHE);
@@ -437,7 +417,6 @@ MUTATOR_DEFINITION(mutator_overkill)
 	MUTATOR_HOOK(PlayerDamage_Calculate, ok_PlayerDamage_Calculate, CBC_ORDER_LAST);
 	MUTATOR_HOOK(PlayerDies, ok_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(OnEntityPreSpawn, ok_OnEntityPreSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(ItemTouch, ok_ItemTouch, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetModname, ok_SetModname, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, ok_ItemRemove, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterDropItem, ok_MonsterDrop, CBC_ORDER_ANY);
@@ -455,5 +434,5 @@ MUTATOR_DEFINITION(mutator_overkill)
 		(get_weaponinfo(WEP_HMG)).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
 	}
 
-	return 0;
+	return FALSE;
 }

@@ -6,7 +6,9 @@ CLASS(TextSlider) EXTENDS(Slider)
 	METHOD(TextSlider, valueToIdentifier, string(entity, float))
 	METHOD(TextSlider, setValueFromIdentifier, void(entity, string))
 	METHOD(TextSlider, getIdentifier, string(entity))
+	METHOD(TextSlider, clearValues, void(entity))
 	METHOD(TextSlider, addValue, void(entity, string, string))
+	METHOD(TextSlider, insertValue, void(entity, float, string, string))
 	METHOD(TextSlider, configureTextSliderValues, void(entity, string))
 	ATTRIBARRAY(TextSlider, valueStrings, string, 256)
 	ATTRIBARRAY(TextSlider, valueIdentifiers, string, 256)
@@ -46,10 +48,24 @@ string TextSlider_getIdentifier(entity me)
 {
 	return me.valueToIdentifier(me, me.value);
 }
+void TextSlider_clearValues(entity me)
+{
+	me.nValues = 0;
+}
 void TextSlider_addValue(entity me, string theString, string theIdentifier)
 {
 	me.(valueStrings[me.nValues]) = theString;
 	me.(valueIdentifiers[me.nValues]) = theIdentifier;
+	me.nValues += 1;
+}
+void TextSlider_insertValue(entity me, float pos, string theString, string theIdentifier)
+{
+	float i;
+	for (i = me.nValues; i > pos; --i)
+		me.(valueStrings[i]) = me.(valueStrings[i-1]);
+		me.(valueIdentifiers[i]) = me.(valueIdentifiers[i-1]);
+	me.(valueStrings[pos]) = theString;
+	me.(valueIdentifiers[pos]) = theIdentifier;
 	me.nValues += 1;
 }
 void TextSlider_configureTextSliderValues(entity me, string theDefault)

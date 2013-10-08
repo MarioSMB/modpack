@@ -814,10 +814,6 @@ void spawnfunc_worldspawn (void)
 	// monsters
 	addstat(STAT_MONSTERS_TOTAL, AS_FLOAT, stat_monsters_total);
 	addstat(STAT_MONSTERS_KILLED, AS_FLOAT, stat_monsters_killed);
-	
-	// overkill
-	addstat(STAT_OK_AMMO_CHARGE, AS_FLOAT, ok_use_ammocharge);
-	addstat(STAT_OK_AMMO_CHARGEPOOl, AS_FLOAT, ok_ammo_charge);
 
 	// misc
 	addstat(STAT_RESPAWN_TIME, AS_FLOAT, stat_respawn_time);

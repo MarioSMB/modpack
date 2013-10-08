@@ -39,10 +39,10 @@
 	DEATHTYPE(DEATH_MONSTER_WYVERN,		DEATH_SELF_MON_WYVERN,		    DEATH_MURDER_MONSTER,		   NORMAL_POS) \
 	DEATHTYPE(DEATH_MONSTER_ZOMBIE_JUMP,	DEATH_SELF_MON_ZOMBIE_JUMP,         DEATH_MURDER_MONSTER,		   NORMAL_POS) \
 	DEATHTYPE(DEATH_MONSTER_ZOMBIE_MELEE,	DEATH_SELF_MON_ZOMBIE_MELEE,	    DEATH_MURDER_MONSTER,		   DEATH_MONSTER_LAST) \
-	DEATHTYPE(DEATH_NADE,			DEATH_SELF_NADE,		    DEATH_MURDER_NADE,	   		   NORMAL_POS) \
-	DEATHTYPE(DEATH_NADE_NAPALM,		DEATH_SELF_NADE_NAPALM,		    DEATH_MURDER_NADE_NAPALM,	   NORMAL_POS) \
-	DEATHTYPE(DEATH_NADE_ICE,				DEATH_SELF_NADE_ICE,				DEATH_MURDER_NADE_ICE,		   NORMAL_POS) \
-	DEATHTYPE(DEATH_NADE_ICE_FREEZE,		DEATH_SELF_NADE_ICE_FREEZE,         DEATH_MURDER_NADE_ICE_FREEZE,  NORMAL_POS) \
+	DEATHTYPE(DEATH_NADE,			DEATH_SELF_NADE,		    DEATH_MURDER_NADE,             NORMAL_POS) \
+	DEATHTYPE(DEATH_NADE_NAPALM,		DEATH_SELF_NADE_NAPALM,		    DEATH_MURDER_NADE_NAPALM,      NORMAL_POS) \
+	DEATHTYPE(DEATH_NADE_ICE,               DEATH_SELF_NADE_ICE,                DEATH_MURDER_NADE_ICE,         NORMAL_POS) \
+	DEATHTYPE(DEATH_NADE_ICE_FREEZE,        DEATH_SELF_NADE_ICE_FREEZE,         DEATH_MURDER_NADE_ICE_FREEZE,  NORMAL_POS) \
 	DEATHTYPE(DEATH_NOAMMO,                 DEATH_SELF_NOAMMO,                  NO_MSG,                        NORMAL_POS) \
 	DEATHTYPE(DEATH_ROT,                    DEATH_SELF_ROT,                     NO_MSG,                        NORMAL_POS) \
 	DEATHTYPE(DEATH_SHOOTING_STAR,          DEATH_SELF_SHOOTING_STAR,           DEATH_MURDER_SHOOTING_STAR,    NORMAL_POS) \
@@ -100,14 +100,12 @@ entity deathtypes[DT_MAX];
 		deathtypes[(name - DT_FIRST)] = deathent; \
 		deathent.classname = "deathtype"; \
 		deathent.nent_name = #name; \
-		#if (msg_death != NO_MSG) \
+		if (msg_death != NO_MSG) \
 			deathent.death_msgself = msg_multi_notifs[msg_death - 1]; \
-		#endif \
-		#if (msg_death_by != NO_MSG) \
+		if (msg_death_by != NO_MSG) \
 			deathent.death_msgmurder = msg_multi_notifs[msg_death_by - 1]; \
-		#endif \
 	} \
-	ACCUMULATE_FUNCTION(RegisterDeathtypes, RegisterDeathtype_##name)
+	ACCUMULATE_FUNCTION(RegisterDeathtypes, RegisterDeathtype_##name);
 
 DEATHTYPES
 #undef DEATHTYPE

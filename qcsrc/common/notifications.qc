@@ -331,12 +331,21 @@ string Process_Notif_Args(
 
 				switch(strtolower(selected))
 				{
-					#define ARG_CASE(prog,selected,result) \
-						#if (prog != ARG_DC) \
-							case selected: { ++sel_num; break; } \
-						#endif
+					#define ARG_CASE_ARG_CS_SV_HA(selected,result) case selected: { ++sel_num; break; }
+					#define ARG_CASE_ARG_CS_SV_DC(selected,result) case selected: { ++sel_num; break; }
+					#define ARG_CASE_ARG_CS_SV(selected,result)    case selected: { ++sel_num; break; }
+					#define ARG_CASE_ARG_CS(selected,result)       case selected: { ++sel_num; break; }
+					#define ARG_CASE_ARG_SV(selected,result)       case selected: { ++sel_num; break; }
+					#define ARG_CASE_ARG_DC(selected,result)
+					#define ARG_CASE(prog,selected,result)         ARG_CASE_##prog(selected,result)
 					NOTIF_ARGUMENT_LIST
 					#undef ARG_CASE
+					#undef ARG_CASE_ARG_DC
+					#undef ARG_CASE_ARG_SV
+					#undef ARG_CASE_ARG_CS
+					#undef ARG_CASE_ARG_CS_SV
+					#undef ARG_CASE_ARG_CS_SV_DC
+					#undef ARG_CASE_ARG_CS_SV_HA
 					default:
 					{
 						print(sprintf(
@@ -373,12 +382,21 @@ string Process_Notif_Args(
 
 				switch(strtolower(selected))
 				{
-					#define ARG_CASE(prog,selected,result) \
-						#if (prog == ARG_CS_SV_HA) \
-							case selected: { ++sel_num; break; } \
-						#endif
+					#define ARG_CASE_ARG_CS_SV_HA(selected,result) case selected: { ++sel_num; break; }
+					#define ARG_CASE_ARG_CS_SV_DC(selected,result)
+					#define ARG_CASE_ARG_CS_SV(selected,result)
+					#define ARG_CASE_ARG_CS(selected,result)
+					#define ARG_CASE_ARG_SV(selected,result)
+					#define ARG_CASE_ARG_DC(selected,result)
+					#define ARG_CASE(prog,selected,result)         ARG_CASE_##prog(selected,result)
 					NOTIF_ARGUMENT_LIST
 					#undef ARG_CASE
+					#undef ARG_CASE_ARG_DC
+					#undef ARG_CASE_ARG_SV
+					#undef ARG_CASE_ARG_CS
+					#undef ARG_CASE_ARG_CS_SV
+					#undef ARG_CASE_ARG_CS_SV_DC
+					#undef ARG_CASE_ARG_CS_SV_HA
 					default:
 					{
 						print(sprintf(
@@ -415,12 +433,21 @@ string Process_Notif_Args(
 
 				switch(strtolower(selected))
 				{
-					#define ARG_CASE(prog,selected,result) \
-						#if (prog == ARG_CS_SV_DC) || (prog == ARG_DC) \
-							case selected: { ++sel_num; break; } \
-						#endif
+					#define ARG_CASE_ARG_CS_SV_HA(selected,result)
+					#define ARG_CASE_ARG_CS_SV_DC(selected,result) case selected: { ++sel_num; break; }
+					#define ARG_CASE_ARG_CS_SV(selected,result)
+					#define ARG_CASE_ARG_CS(selected,result)
+					#define ARG_CASE_ARG_SV(selected,result)
+					#define ARG_CASE_ARG_DC(selected,result)       case selected: { ++sel_num; break; }
+					#define ARG_CASE(prog,selected,result)         ARG_CASE_##prog(selected,result)
 					NOTIF_ARGUMENT_LIST
 					#undef ARG_CASE
+					#undef ARG_CASE_ARG_DC
+					#undef ARG_CASE_ARG_SV
+					#undef ARG_CASE_ARG_CS
+					#undef ARG_CASE_ARG_CS_SV
+					#undef ARG_CASE_ARG_CS_SV_DC
+					#undef ARG_CASE_ARG_CS_SV_HA
 					default:
 					{
 						if(ftos(stof(selected)) != "") { ++sel_num; }
@@ -1183,18 +1210,30 @@ string Local_Notification_sprintf(
 		NOTIF_HIT_MAX(NOTIF_MAX_ARGS, "Local_Notification_sprintf")
 		switch(strtolower(selected))
 		{
-			#define ARG_CASE(prog,selected,result) \
-				#ifdef CSQC \
-					#if (prog != ARG_SV) && (prog != ARG_DC) \
-						case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
-					#endif \
-				#else \
-					#if (prog != ARG_CS) && (prog != ARG_DC) \
-						case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
-					#endif \
-				#endif
+			#ifdef CSQC
+			#define ARG_CASE_ARG_CS_SV_HA(selected,result) case selected: { arg_slot[sel_num] = result; ++sel_num; break; }
+			#define ARG_CASE_ARG_CS_SV_DC(selected,result) case selected: { arg_slot[sel_num] = result; ++sel_num; break; }
+			#define ARG_CASE_ARG_CS_SV(selected,result)    case selected: { arg_slot[sel_num] = result; ++sel_num; break; }
+			#define ARG_CASE_ARG_CS(selected,result)       case selected: { arg_slot[sel_num] = result; ++sel_num; break; }
+			#define ARG_CASE_ARG_SV(selected,result)
+			#define ARG_CASE_ARG_DC(selected,result)
+			#else
+			#define ARG_CASE_ARG_CS_SV_HA(selected,result) case selected: { arg_slot[sel_num] = result; ++sel_num; break; }
+			#define ARG_CASE_ARG_CS_SV_DC(selected,result) case selected: { arg_slot[sel_num] = result; ++sel_num; break; }
+			#define ARG_CASE_ARG_CS_SV(selected,result)    case selected: { arg_slot[sel_num] = result; ++sel_num; break; }
+			#define ARG_CASE_ARG_CS(selected,result)
+			#define ARG_CASE_ARG_SV(selected,result)       case selected: { arg_slot[sel_num] = result; ++sel_num; break; }
+			#define ARG_CASE_ARG_DC(selected,result)
+			#endif
+			#define ARG_CASE(prog,selected,result)         ARG_CASE_##prog(selected,result)
 			NOTIF_ARGUMENT_LIST
 			#undef ARG_CASE
+			#undef ARG_CASE_ARG_DC
+			#undef ARG_CASE_ARG_SV
+			#undef ARG_CASE_ARG_CS
+			#undef ARG_CASE_ARG_CS_SV
+			#undef ARG_CASE_ARG_CS_SV_DC
+			#undef ARG_CASE_ARG_CS_SV_HA
 			default: NOTIF_HIT_UNKNOWN(NOTIF_MAX_ARGS, "Local_Notification_sprintf")
 		}
 	}
@@ -1285,12 +1324,21 @@ void Local_Notification_HUD_Notify_Push(
 		NOTIF_HIT_MAX(NOTIF_MAX_HUDARGS, "Local_Notification_HUD_Notify_Push")
 		switch(strtolower(selected))
 		{
-			#define ARG_CASE(prog,selected,result) \
-				#if (prog == ARG_CS_SV_HA) \
-					case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
-				#endif
+			#define ARG_CASE_ARG_CS_SV_HA(selected,result) case selected: { arg_slot[sel_num] = result; ++sel_num; break; }
+			#define ARG_CASE_ARG_CS_SV_DC(selected,result)
+			#define ARG_CASE_ARG_CS_SV(selected,result)
+			#define ARG_CASE_ARG_CS(selected,result)
+			#define ARG_CASE_ARG_SV(selected,result)
+			#define ARG_CASE_ARG_DC(selected,result)
+			#define ARG_CASE(prog,selected,result)         ARG_CASE_##prog(selected,result)
 			NOTIF_ARGUMENT_LIST
 			#undef ARG_CASE
+			#undef ARG_CASE_ARG_DC
+			#undef ARG_CASE_ARG_SV
+			#undef ARG_CASE_ARG_CS
+			#undef ARG_CASE_ARG_CS_SV
+			#undef ARG_CASE_ARG_CS_SV_DC
+			#undef ARG_CASE_ARG_CS_SV_HA
 			default: NOTIF_HIT_UNKNOWN(NOTIF_MAX_HUDARGS, "Local_Notification_HUD_Notify_Push")
 		}
 	}
@@ -1320,12 +1368,21 @@ void Local_Notification_centerprint_generic(
 		NOTIF_HIT_MAX(NOTIF_MAX_DURCNT, "Local_Notification_centerprint_generic")
 		switch(strtolower(selected))
 		{
-			#define ARG_CASE(prog,selected,result) \
-				#if (prog == ARG_CS_SV_DC) || (prog == ARG_DC) \
-					case selected: { arg_slot[sel_num] = result; ++sel_num; break; } \
-				#endif
+			#define ARG_CASE_ARG_CS_SV_HA(selected,result)
+			#define ARG_CASE_ARG_CS_SV_DC(selected,result) case selected: { arg_slot[sel_num] = result; ++sel_num; break; }
+			#define ARG_CASE_ARG_CS_SV(selected,result)
+			#define ARG_CASE_ARG_CS(selected,result)
+			#define ARG_CASE_ARG_SV(selected,result)
+			#define ARG_CASE_ARG_DC(selected,result)       case selected: { arg_slot[sel_num] = result; ++sel_num; break; }
+			#define ARG_CASE(prog,selected,result)         ARG_CASE_##prog(selected,result)
 			NOTIF_ARGUMENT_LIST
 			#undef ARG_CASE
+			#undef ARG_CASE_ARG_DC
+			#undef ARG_CASE_ARG_SV
+			#undef ARG_CASE_ARG_CS
+			#undef ARG_CASE_ARG_CS_SV
+			#undef ARG_CASE_ARG_CS_SV_DC
+			#undef ARG_CASE_ARG_CS_SV_HA
 			default:
 			{
 				if(ftos(stof(selected)) != "") { arg_slot[sel_num] = selected; ++sel_num; }

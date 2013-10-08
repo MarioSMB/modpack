@@ -132,7 +132,7 @@ float current_player;
 		hud_panelent.panel_draw = ##draw_func; \
 		++HUD_PANEL_NUM; \
 	} \
-	ACCUMULATE_FUNCTION(RegisterHUD_Panels, RegisterHUD_Panel_##NAME)
+	ACCUMULATE_FUNCTION(RegisterHUD_Panels, RegisterHUD_Panel_##NAME);
 
 HUD_PANELS
 #undef HUD_PANEL

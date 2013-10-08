@@ -142,7 +142,7 @@ void register_weapons_done();
 #include "../server/w_all.qc"
 
 #undef REGISTER_WEAPON
-ACCUMULATE_FUNCTION(RegisterWeapons, register_weapons_done)
+ACCUMULATE_FUNCTION(RegisterWeapons, register_weapons_done);
 
 
 string W_FixWeaponOrder(string order, float complete);

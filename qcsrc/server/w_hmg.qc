@@ -13,13 +13,12 @@ REGISTER_WEAPON(
 #else
 #ifdef SVQC
 
-
 // weapon frames
 
 void hmg_fire_auto()
 {
 	float uzi_spread;
-	
+
 	if (!self.BUTTON_ATCK)
 	{
 		w_ready();
@@ -90,25 +89,6 @@ float w_hmg(float req)
 				self.misc_bulletcounter = 0;
 				hmg_fire_auto();
 			}
-
-			/*
-			if(self.BUTTON_ATCK2)
-			if(weapon_prepareattack(1, 0))
-			{
-				if (!weapon_action(self.weapon, WR_CHECKAMMO2))
-				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
-				{
-					W_SwitchWeapon_Force(self, w_getbestweapon(self));
-					w_ready();
-					return FALSE;
-				}
-
-				W_DecreaseAmmo(ammo_nails, autocvar_g_balance_hmg_burst_ammo, autocvar_g_balance_hmg_reload_ammo);
-
-				self.misc_bulletcounter = autocvar_g_balance_hmg_burst * -1;
-				uzi_mode1_fire_burst();
-			}
-			*/
 		}
 	}
 	else if (req == WR_PRECACHE)
@@ -153,9 +133,9 @@ float w_hmg(float req)
 	else if (req == WR_KILLMESSAGE)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
-			return WEAPON_LASER_MURDER;
+			return WEAPON_HMG_MURDER_SNIPE;
 		else
-			return WEAPON_HMG_MURDER;
+			return WEAPON_HMG_MURDER_SPRAY;
 	}
 	return TRUE;
 }

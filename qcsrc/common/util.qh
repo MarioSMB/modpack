@@ -24,7 +24,7 @@
 	func()
 #else
 # define ACCUMULATE_FUNCTION(func,otherfunc) \
-	.void _ACCUMULATE_##func##__##otherfunc;
+	.float _ACCUMULATE_##func##__##otherfunc
 void ACCUMULATE_call(string func)
 {
 	float i;

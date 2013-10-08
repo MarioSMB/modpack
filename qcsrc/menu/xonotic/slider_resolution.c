@@ -1,30 +1,37 @@
 #ifdef INTERFACE
 CLASS(XonoticResolutionSlider) EXTENDS(XonoticTextSlider)
 	METHOD(XonoticResolutionSlider, configureXonoticResolutionSlider, void(entity))
+	METHOD(XonoticResolutionSlider, loadResolutions, void(entity, float))
 	METHOD(XonoticResolutionSlider, addResolution, void(entity, float, float, float))
 	METHOD(XonoticResolutionSlider, loadCvars, void(entity))
 	METHOD(XonoticResolutionSlider, saveCvars, void(entity))
+	METHOD(XonoticResolutionSlider, draw, void(entity))
+	ATTRIB(XonoticResolutionSlider, vid_fullscreen, float, -1)
 ENDCLASS(XonoticResolutionSlider)
 entity makeXonoticResolutionSlider();
-void initConwidths();
-void updateConwidths();
+void updateConwidths(float width, float height, float pixelheight);
 #endif
 
 #ifdef IMPLEMENTATION
-void initConwidths()
-{
-	cvar_set("_menu_vid_width", cvar_string("vid_width"));
-	cvar_set("_menu_vid_height", cvar_string("vid_height"));
-	cvar_set("_menu_vid_pixelheight", cvar_string("vid_pixelheight"));
-}
-void updateConwidths()
+
+/* private static */ float XonoticResolutionSlider_DataHasChanged;
+
+// Updates cvars (to be called by menu.qc at startup or on detected res change)
+void updateConwidths(float width, float height, float pixelheight)
 {
 	vector r, c;
 	float minfactor, maxfactor;
 	float sz, f;
-	r_x = cvar("_menu_vid_width");
-	r_y = cvar("_menu_vid_height");
-	r_z = cvar("_menu_vid_pixelheight");
+
+	// Save off current settings.
+	cvar_set("_menu_vid_width", ftos(width));
+	cvar_set("_menu_vid_height", ftos(height));
+	cvar_set("_menu_vid_pixelheight", ftos(pixelheight));
+	cvar_set("_menu_vid_desktopfullscreen", cvar_string("vid_desktopfullscreen"));
+
+	r_x = width;
+	r_y = height;
+	r_z = pixelheight;
 	sz = cvar("menu_vid_scale");
 
 	// calculate the base resolution
@@ -54,11 +61,9 @@ void updateConwidths()
 		f = 1;
 	c = c * f; // fteqcc fail
 
-	cvar_set("vid_width", ftos(rint(r_x)));
-	cvar_set("vid_height", ftos(rint(r_y)));
-	cvar_set("vid_pixelheight", ftos(rint(r_z)));
 	cvar_set("vid_conwidth", ftos(rint(c_x)));
 	cvar_set("vid_conheight", ftos(rint(c_y)));
+	XonoticResolutionSlider_DataHasChanged = TRUE;
 }
 entity makeXonoticResolutionSlider()
 {
@@ -69,47 +74,88 @@ entity makeXonoticResolutionSlider()
 }
 void XonoticResolutionSlider_addResolution(entity me, float w, float h, float pixelheight)
 {
-	me.addValue(me, strzone(sprintf(_("%dx%d"), w, h)), strzone(strcat(ftos(w), " ", ftos(h), " ", ftos(pixelheight))));
+	float i;
+	for (i = 0; i < me.nValues; ++i)
+	{
+		tokenize_console(me.valueToIdentifier(me, i));
+		if (w > stof(argv(0))) continue;
+		if (w < stof(argv(0))) break;
+		if (h > stof(argv(1))) continue;
+		if (h < stof(argv(1))) break;
+		if (pixelheight > stof(argv(2)) + 0.01) continue;
+		if (pixelheight < stof(argv(2)) - 0.01) break;
+		return;  // already there
+	}
+	if (pixelheight != 1)
+	{
+		float aspect = w / (h * pixelheight);
+		float bestdenom = rint(aspect);
+		float bestnum = 1;
+		float denom;
+		for (denom = 2; denom < 10; ++denom) {
+			float num = rint(aspect * denom);
+			if (fabs(num / denom - aspect) < fabs(bestnum / bestdenom - aspect))
+			{
+				bestnum = num;
+				bestdenom = denom;
+			}
+		}
+		me.insertValue(me, i, strzone(sprintf(_("%dx%d (%d:%d)"), w, h, bestnum, bestdenom)), strzone(strcat(ftos(w), " ", ftos(h), " ", ftos(pixelheight))));
+	}
+	else
+		me.insertValue(me, i, strzone(sprintf(_("%dx%d"), w, h)), strzone(strcat(ftos(w), " ", ftos(h), " ", ftos(pixelheight))));
 	// FIXME (in case you ever want to dynamically instantiate this): THIS IS NEVER FREED
 }
 float autocvar_menu_vid_allowdualscreenresolution;
 void XonoticResolutionSlider_configureXonoticResolutionSlider(entity me)
 {
-	float i;
-	vector r0, r;
-
 	me.configureXonoticTextSlider(me, "_menu_vid_width");
+	me.loadResolutions(me, cvar("vid_fullscreen"));
+}
+void XonoticResolutionSlider_loadResolutions(entity me, float fullscreen)
+{
+	float i;
+	vector r;
 
-	r0 = '0 0 0';
-	for(i = 0;; ++i)
+	me.clearValues(me);
+
+	if (fullscreen)
 	{
-		r = getresolution(i);
-		if(r_x == 0 && r_y == 0)
-			break;
-		if(r_z == 0)
-			r_z = 1; // compat
-		if(r == r0)
-			continue;
-		r0 = r;
-		if(r_x < 640 || r_y < 480)
-			continue;
-		if(r_x > 2 * r_y) // likely dualscreen resolution, skip this one
-			if(autocvar_menu_vid_allowdualscreenresolution <= 0)
+		for(i = 0;; ++i)
+		{
+			r = getresolution(i);
+			if(r_x == 0 && r_y == 0)
+				break;
+			if(r_x < 640 || r_y < 480)
 				continue;
-			
-		me.addResolution(me, r_x, r_y, r_z);
+			if(r_x > 2 * r_y) // likely dualscreen resolution, skip this one
+				if(autocvar_menu_vid_allowdualscreenresolution <= 0)
+					continue;
+			me.addResolution(me, r_x, r_y, r_z);
+		}
+		r = getresolution(-1);
+		if(r_x != 0 || r_y != 0)
+			me.addResolution(me, r_x, r_y, r_z);
 	}
 
 	if(me.nValues == 0)
 	{
-		me.addResolution(me, 640, 480, 1);
-		me.addResolution(me, 800, 600, 1);
-		me.addResolution(me, 1024, 768, 1);
-		me.addResolution(me, 1280, 960, 1);
-		me.addResolution(me, 1280, 1024, 1);
-		me.addResolution(me, 1650, 1080, 1);
-		me.addResolution(me, 1920, 1080, 1);
+		me.addResolution(me, 640, 480, 1); // pc res
+		me.addResolution(me, 720, 480, 1.125); // DVD NTSC 4:3
+		me.addResolution(me, 720, 576, 0.9375); // DVD PAL 4:3
+		me.addResolution(me, 720, 480, 0.84375); // DVD NTSC 16:9
+		me.addResolution(me, 720, 576, 0.703125); // DVD PAL 16:9
+		me.addResolution(me, 800, 480, 1); // 480p at 1:1 pixel aspect
+		me.addResolution(me, 800, 600, 1); // pc res
+		me.addResolution(me, 1024, 600, 1); // notebook res
+		me.addResolution(me, 1024, 768, 1); // pc res
+		me.addResolution(me, 1280, 720, 1); // 720p
+		me.addResolution(me, 1280, 960, 1); // pc res
+		me.addResolution(me, 1280, 1024, 1); // pc res
+		me.addResolution(me, 1920, 1080, 1); // 1080p
 	}
+
+	me.vid_fullscreen = fullscreen;
 
 	me.configureXonoticTextSliderValues(me);
 }
@@ -125,6 +171,25 @@ void XonoticResolutionSlider_saveCvars(entity me)
 		cvar_set("_menu_vid_width", argv(0));
 		cvar_set("_menu_vid_height", argv(1));
 		cvar_set("_menu_vid_pixelheight", argv(2));
+		vector r = getresolution(-1);
+		if (stof(argv(0)) == r_x && stof(argv(1)) == r_y && fabs(stof(argv(2)) - r_z) < 0.01)
+			cvar_set("_menu_vid_desktopfullscreen", "1");
+		else
+			cvar_set("_menu_vid_desktopfullscreen", "0");
 	}
+}
+void XonoticResolutionSlider_draw(entity me)
+{
+	if (cvar("vid_fullscreen") != me.vid_fullscreen)
+	{
+		me.loadResolutions(me, cvar("vid_fullscreen"));
+		XonoticResolutionSlider_DataHasChanged = TRUE;
+	}
+	if (XonoticResolutionSlider_DataHasChanged)
+	{
+		XonoticResolutionSlider_DataHasChanged = FALSE;
+		me.loadCvars(me);
+	}
+	SUPER(XonoticResolutionSlider).draw(me);
 }
 #endif

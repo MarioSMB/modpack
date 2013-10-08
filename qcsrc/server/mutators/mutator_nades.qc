@@ -562,7 +562,6 @@ void nades_RemoveBonus(entity player)
 
 void nade_prime()
 {
-	
 	if(self.nade)
 		remove(self.nade);
 		
@@ -673,6 +672,12 @@ void nades_Clear(entity player)
 		remove(player.fake_nade);
 	
 	player.nade = player.fake_nade = world;
+}
+
+MUTATOR_HOOKFUNCTION(nades_CheckThrow)
+{
+	if(MUTATOR_RETURNVALUE) { nades_CheckThrow(); }
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(nades_VehicleEnter)
@@ -863,6 +868,7 @@ MUTATOR_HOOKFUNCTION(nades_BuildMutatorsPrettyString)
 
 MUTATOR_DEFINITION(mutator_nades)
 {
+	MUTATOR_HOOK(ForbidThrowCurrentWeapon, nades_CheckThrow, CBC_ORDER_LAST);
 	MUTATOR_HOOK(VehicleEnter, nades_VehicleEnter, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, nades_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, nades_PlayerSpawn, CBC_ORDER_ANY);
@@ -871,6 +877,7 @@ MUTATOR_DEFINITION(mutator_nades)
 	MUTATOR_HOOK(MakePlayerObserver, nades_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, nades_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SpectateCopy, nades_SpectateCopy, CBC_ORDER_ANY);
+	MUTATOR_HOOK(reset_map_global, nades_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, nades_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, nades_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 	

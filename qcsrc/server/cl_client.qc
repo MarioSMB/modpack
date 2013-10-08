@@ -430,7 +430,7 @@ void PutClientInServer (void)
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, self);
 	}
-	
+
 	// reset player keys
 	self.itemkeys = 0;
 
@@ -1344,7 +1344,7 @@ void ClientDisconnect (void)
 		print("Warning: ClientDisconnect without ClientConnect\n");
 		return;
 	}
-	
+
 	PlayerStats_AddGlobalInfo(self);
 
 	CheatShutdownClient();
@@ -1950,7 +1950,6 @@ float SpectateSet()
 		if(!SpectateUpdate())
 			PutObserverInServer();
 	//}
-	
 	return TRUE;
 }
 

@@ -13,7 +13,6 @@ REGISTER_WEAPON(
 #else
 #ifdef SVQC
 
-
 void W_RPC_Explode()
 {
 	self.event_damage = func_null;
@@ -199,8 +198,10 @@ float w_rpc(float req)
 	{
 		if(w_deathtype & HITTYPE_SECONDARY)
 			return WEAPON_LASER_MURDER;
+		else if((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
+			return WEAPON_RPC_MURDER_SPLASH;
 		else
-			return WEAPON_RPC_MURDER;
+			return WEAPON_RPC_MURDER_DIRECT;
 	}
 	return TRUE;
 }

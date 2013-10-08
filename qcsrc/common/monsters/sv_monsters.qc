@@ -9,6 +9,8 @@ void monster_item_spawn()
 		self.monster_loot();
 
 	self.gravity = 1;
+	self.reset = SUB_Remove;
+	self.noalign = TRUE;
 	self.velocity = randomvec() * 175 + '0 0 325';
 	self.classname = "droppedweapon"; // hax
 	self.wait = time + 0.7;

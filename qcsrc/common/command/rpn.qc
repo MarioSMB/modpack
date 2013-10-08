@@ -222,12 +222,12 @@ void GenericCommand_rpn(float request, float argc, string command)
 						rpn_setf(bound(f3, f2, f));
 					} else if(rpncmd == "when") {
 						f = rpn_popf();
-						f2 = rpn_popf();
-						f3 = rpn_getf();
+						s = rpn_pop();
+						s2 = rpn_get();
 						if(f)
-							rpn_setf(f3);
+							rpn_set(s2);
 						else
-							rpn_setf(f2);
+							rpn_set(s);
 					} else if(rpncmd == ">" || rpncmd == "gt") {
 						f = rpn_popf();
 						rpn_setf(rpn_getf() > f);
@@ -535,6 +535,11 @@ void GenericCommand_rpn(float request, float argc, string command)
 					} else if(rpncmd == "sprintf1s") {
 						s = rpn_pop();
 						rpn_set(sprintf(s, rpn_get()));
+					} else if(rpncmd == "eval") {
+						s = rpn_pop();
+						command = strcat(s, substring(command, argv_end_index(rpnpos), -1));
+						argc = tokenize_console(command);
+						rpnpos = -1;
 					} else {
 						rpn_push(cvar_string(rpncmd));
 					}
@@ -587,6 +592,7 @@ void GenericCommand_rpn(float request, float argc, string command)
 			print("    s /MD4 digest ---------------------> s   : MD4 digest\n");
 			print("    s /SHA256 digest ------------------> s   : SHA256 digest\n");
 			print("    s /formatstring sprintf1s ---------> s   : sprintf with 1 string (pad, cut)\n");
+			print("    s eval ---------------------------->     : does something eval\n");
 			print("    Set operations operate on 'such''strings'.\n");
 			print("    Unknown tokens insert their cvar value.\n");
 			return;

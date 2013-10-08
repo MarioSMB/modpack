@@ -79,4 +79,4 @@ float MON_LAST;
 
 #undef MON_ADD_CVAR
 #undef REGISTER_MONSTER
-ACCUMULATE_FUNCTION(RegisterMonsters, register_monsters_done)
+ACCUMULATE_FUNCTION(RegisterMonsters, register_monsters_done);

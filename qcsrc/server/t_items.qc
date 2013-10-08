@@ -518,6 +518,19 @@ void Item_RespawnCountdown (void)
 	}
 }
 
+void Item_RespawnThink()
+{
+	self.nextthink = time;
+	if(self.origin != self.oldorigin)
+	{
+		self.oldorigin = self.origin;
+		ItemUpdate(self);
+	}
+	
+	if(time >= self.wait)
+		Item_Respawn();
+}
+
 void Item_ScheduleRespawnIn(entity e, float t)
 {
 	if((e.flags & FL_POWERUP) || (e.weapons & WEPSET_SUPERWEAPONS))
@@ -527,7 +540,11 @@ void Item_ScheduleRespawnIn(entity e, float t)
 		e.count = 0;
 	}
 	else
-		defer(t, Item_Respawn);
+	{
+		self.think = Item_RespawnThink;
+		self.nextthink = time;
+		self.wait = time + t;
+	}
 }
 
 void Item_ScheduleRespawn(entity e)

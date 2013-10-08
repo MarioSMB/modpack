@@ -33,55 +33,55 @@ entity MapInfo_Type_last;
 #define IS_GAMETYPE(NAME) \
 	(MapInfo_LoadedGametype == MAPINFO_TYPE_##NAME)
 
-REGISTER_GAMETYPE(_("Deathmatch"),dm,g_dm,DEATHMATCH,"timelimit=20 pointlimit=30 leadlimit=0")
+REGISTER_GAMETYPE(_("Deathmatch"),dm,g_dm,DEATHMATCH,"timelimit=20 pointlimit=30 leadlimit=0");
 #define g_dm IS_GAMETYPE(DEATHMATCH)
 
-REGISTER_GAMETYPE(_("Last Man Standing"),lms,g_lms,LMS,"timelimit=20 lives=9 leadlimit=0")
+REGISTER_GAMETYPE(_("Last Man Standing"),lms,g_lms,LMS,"timelimit=20 lives=9 leadlimit=0");
 #define g_lms IS_GAMETYPE(LMS)
 
-REGISTER_GAMETYPE(_("Arena"),arena,g_arena,ARENA,"timelimit=20 pointlimit=10 leadlimit=0")
+REGISTER_GAMETYPE(_("Arena"),arena,g_arena,ARENA,"timelimit=20 pointlimit=10 leadlimit=0");
 #define g_arena IS_GAMETYPE(ARENA)
 
-REGISTER_GAMETYPE(_("Race"),rc,g_race,RACE,"timelimit=20 qualifying_timelimit=5 laplimit=7 teamlaplimit=15 leadlimit=0")
+REGISTER_GAMETYPE(_("Race"),rc,g_race,RACE,"timelimit=20 qualifying_timelimit=5 laplimit=7 teamlaplimit=15 leadlimit=0");
 #define g_race IS_GAMETYPE(RACE)
 
-REGISTER_GAMETYPE(_("Race CTS"),cts,g_cts,CTS,"timelimit=20 skill=-1")
+REGISTER_GAMETYPE(_("Race CTS"),cts,g_cts,CTS,"timelimit=20 skill=-1");
 #define g_cts IS_GAMETYPE(CTS)
 
-REGISTER_GAMETYPE(_("Team Deathmatch"),tdm,g_tdm,TEAM_DEATHMATCH,"timelimit=20 pointlimit=50 teams=2 leadlimit=0")
+REGISTER_GAMETYPE(_("Team Deathmatch"),tdm,g_tdm,TEAM_DEATHMATCH,"timelimit=20 pointlimit=50 teams=2 leadlimit=0");
 #define g_tdm IS_GAMETYPE(TEAM_DEATHMATCH)
 
-REGISTER_GAMETYPE(_("Capture the Flag"),ctf,g_ctf,CTF,"timelimit=20 caplimit=10 leadlimit=0")
+REGISTER_GAMETYPE(_("Capture the Flag"),ctf,g_ctf,CTF,"timelimit=20 caplimit=10 leadlimit=0");
 #define g_ctf IS_GAMETYPE(CTF)
 
-REGISTER_GAMETYPE(_("Clan Arena"),ca,g_ca,CA,"timelimit=20 pointlimit=10 leadlimit=0")
+REGISTER_GAMETYPE(_("Clan Arena"),ca,g_ca,CA,"timelimit=20 pointlimit=10 leadlimit=0");
 #define g_ca IS_GAMETYPE(CA)
 
-REGISTER_GAMETYPE(_("Domination"),dom,g_domination,DOMINATION,"timelimit=20 pointlimit=200 teams=2 leadlimit=0")
+REGISTER_GAMETYPE(_("Domination"),dom,g_domination,DOMINATION,"timelimit=20 pointlimit=200 teams=2 leadlimit=0");
 #define g_domination IS_GAMETYPE(DOMINATION)
 
-REGISTER_GAMETYPE(_("Key Hunt"),kh,g_keyhunt,KEYHUNT,"timelimit=20 pointlimit=1000 teams=3 leadlimit=0")
+REGISTER_GAMETYPE(_("Key Hunt"),kh,g_keyhunt,KEYHUNT,"timelimit=20 pointlimit=1000 teams=3 leadlimit=0");
 #define g_keyhunt IS_GAMETYPE(KEYHUNT)
 
-REGISTER_GAMETYPE(_("Assault"),as,g_assault,ASSAULT,"timelimit=20")
+REGISTER_GAMETYPE(_("Assault"),as,g_assault,ASSAULT,"timelimit=20");
 #define g_assault IS_GAMETYPE(ASSAULT)
 
-REGISTER_GAMETYPE(_("Onslaught"),ons,g_onslaught,ONSLAUGHT,"timelimit=20")
+REGISTER_GAMETYPE(_("Onslaught"),ons,g_onslaught,ONSLAUGHT,"timelimit=20");
 #define g_onslaught IS_GAMETYPE(ONSLAUGHT)
 
-REGISTER_GAMETYPE(_("Nexball"),nb,g_nexball,NEXBALL,"timelimit=20 pointlimit=5 leadlimit=0")
+REGISTER_GAMETYPE(_("Nexball"),nb,g_nexball,NEXBALL,"timelimit=20 pointlimit=5 leadlimit=0");
 #define g_nexball IS_GAMETYPE(NEXBALL)
 
-REGISTER_GAMETYPE(_("Freeze Tag"),ft,g_freezetag,FREEZETAG,"timelimit=20 pointlimit=10 teams=2 leadlimit=0")
+REGISTER_GAMETYPE(_("Freeze Tag"),ft,g_freezetag,FREEZETAG,"timelimit=20 pointlimit=10 teams=2 leadlimit=0");
 #define g_freezetag IS_GAMETYPE(FREEZETAG)
 
-REGISTER_GAMETYPE(_("Keepaway"),ka,g_keepaway,KEEPAWAY,"timelimit=20 pointlimit=30")
+REGISTER_GAMETYPE(_("Keepaway"),ka,g_keepaway,KEEPAWAY,"timelimit=20 pointlimit=30");
 #define g_keepaway IS_GAMETYPE(KEEPAWAY)
 
-REGISTER_GAMETYPE(_("VIP"),vip,g_vip,VIP,"timelimit=20 pointlimit=10 leadlimit=0")
+REGISTER_GAMETYPE(_("VIP"),vip,g_vip,VIP,"timelimit=20 pointlimit=10 leadlimit=0");
 #define g_vip IS_GAMETYPE(VIP)
 
-REGISTER_GAMETYPE(_("Invasion"),invasion,g_invasion,INVASION,"pointlimit=5")
+REGISTER_GAMETYPE(_("Invasion"),invasion,g_invasion,INVASION,"pointlimit=5");
 #define g_invasion IS_GAMETYPE(INVASION)
 
 const float MAPINFO_FEATURE_WEAPONS       = 1; // not defined for minstagib-only maps
