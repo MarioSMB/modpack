@@ -424,6 +424,12 @@ MUTATOR_HOOKFUNCTION(minstagib_OnEntityPreSpawn)
 	return TRUE;
 }
 
+MUTATOR_HOOKFUNCTION(minstagib_SetModname)
+{
+	modname = "MinstaGib";
+	return TRUE;
+}
+
 MUTATOR_HOOKFUNCTION(minstagib_BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":MinstaGib");
@@ -457,6 +463,7 @@ MUTATOR_DEFINITION(mutator_minstagib)
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, minstagib_ForbidThrowing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, minstagib_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(OnEntityPreSpawn, minstagib_OnEntityPreSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SetModname, minstagib_SetModname, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, minstagib_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, minstagib_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 	
