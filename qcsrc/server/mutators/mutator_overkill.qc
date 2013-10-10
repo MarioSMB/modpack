@@ -315,7 +315,7 @@ void ok_SetCvars()
 	cvar_settemp("g_balance_nex_primary_damage", "100");
 	cvar_settemp("g_balance_nex_primary_force", "500");
 	cvar_settemp("g_balance_nex_primary_refire", "0.75");
-	cvar_settemp("g_balance_nex_primary_animtime", "0.95");
+	cvar_settemp("g_balance_nex_primary_animtime", "0.75");
 	cvar_settemp("g_balance_nex_primary_ammo", "6");
 	cvar_settemp("g_balance_nex_primary_damagefalloff_mindist", "0");
 	cvar_settemp("g_balance_nex_primary_damagefalloff_maxdist", "0");
