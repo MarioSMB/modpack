@@ -83,6 +83,7 @@ MUTATOR_DEFINITION(mutator_riflearena)
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, ra_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, ra_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, ra_BuildMutatorsPrettyString, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SetModname, ra_SetModname, CBC_ORDER_ANY);
 	
 	MUTATOR_ONADD
 	{
