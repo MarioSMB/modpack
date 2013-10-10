@@ -1380,7 +1380,7 @@ void CSQC_UpdateView(float w, float h)
 			if not(getstatf(STAT_FROZEN))
 			if not(spectatee_status)
 			if(button_attack)
-			if(autocvar_cl_minstabeam || me.ping >= 200)
+			if(autocvar_cl_minstabeam || (me.ping >= 200 && autocvar_cl_minstabeam != -1))
 			if(time >= last_beam)
 			{
 				string s;
@@ -1403,7 +1403,8 @@ void CSQC_UpdateView(float w, float h)
 				
 				//sound(self, CH_SHOTS, "weapons/minstanexfire.wav", VOL_BASE, ATTEN_LARGE);
 				
-				pointparticles(particleeffectnum("nex_impact"), trace_endpos, '0 0 0', 1);
+				if not(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT))
+					pointparticles(particleeffectnum("nex_impact"), trace_endpos, '0 0 0', 1);
 					
 				last_beam = time + minsta_delay;
 			}
