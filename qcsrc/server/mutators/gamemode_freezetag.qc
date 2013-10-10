@@ -286,8 +286,8 @@ void havocbot_role_ft_freeing()
 
 MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 {
-	freezetag_Unfreeze(world);
 	self.health = 0; // neccessary to update correctly alive stats
+	freezetag_Unfreeze(world);
 	freezetag_count_alive_players();
 	return 1;
 }
