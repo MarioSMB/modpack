@@ -135,11 +135,11 @@ void NIX_GiveCurrentWeapon()
 			self.ammo_fuel = self.ammo_fuel + autocvar_g_balance_nix_ammoincr_fuel;
 		self.nix_nextincr = time + autocvar_g_balance_nix_incrtime;
 	}
-
-	self.weapons = '0 0 0';
+	
+	self.weapons = WepSet_FromWeapon(nix_weapon);
+	
 	if(g_nix_with_laser)
-		self.weapons &= ~WEPSET_LASER;
-	self.weapons |= WepSet_FromWeapon(nix_weapon);
+		self.weapons |= WEPSET_LASER;
 
 	if(self.switchweapon != nix_weapon)
 		if(!client_hasweapon(self, self.switchweapon, TRUE, FALSE))
