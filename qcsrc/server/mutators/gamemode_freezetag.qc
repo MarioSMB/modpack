@@ -10,7 +10,8 @@ void freezetag_count_alive_players()
 {
 	entity e;
 	total_players = redalive = bluealive = yellowalive = pinkalive = 0;
-	FOR_EACH_PLAYER(e) {
+	FOR_EACH_PLAYER(e)
+	{
 		if(e.team == NUM_TEAM_1 && e.health >= 1)
 		{
 			++total_players;
@@ -285,8 +286,8 @@ void havocbot_role_ft_freeing()
 
 MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 {
-	self.health = 0; // neccessary to update correctly alive stats
 	freezetag_Unfreeze(world);
+	self.health = 0; // neccessary to update correctly alive stats
 	freezetag_count_alive_players();
 	return 1;
 }
