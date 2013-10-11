@@ -985,6 +985,7 @@ void readlevelcvars(void)
 	CHECK_MUTATOR_ADD("g_overkill", mutator_overkill, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_za", mutator_zombie_apocalypse, cvar("g_monsters"));
 	CHECK_MUTATOR_ADD("g_walljump", mutator_walljump, 1);
+	CHECK_MUTATOR_ADD("g_hats", mutator_hats, !cvar("g_overkill"));
 	
 	#undef CHECK_MUTATOR_ADD
 	

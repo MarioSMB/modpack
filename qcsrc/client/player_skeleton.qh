@@ -7,3 +7,4 @@ void skeleton_loadinfo(entity e);
 .float bone_aim[MAX_AIM_BONES];
 .float bone_aimweight[MAX_AIM_BONES];
 .float fixbone;
+.float bone_hat;

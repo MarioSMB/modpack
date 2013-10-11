@@ -434,6 +434,26 @@ void CSQCModel_AutoTagIndex_Apply(void)
 						self.tag_index = self.tag_entity.bone_weapon;
 					}
 				}
+				else if(substring(self.model, 0, 12) == "models/hats/")
+				{
+					if(substring(self.tag_entity.model, 0, 12) == "models/hats/")
+					{
+						self.tag_index = gettagindex(self.tag_entity, "tag_head");
+						if(!self.tag_index)
+							self.tag_index = gettagindex(self.tag_entity, "head");
+						if(!self.tag_index)
+						{
+							// we need to prevent this from 'appening
+							self.tag_entity = world;
+							self.drawmask = 0;
+						}
+					}
+					else if(self.tag_entity.isplayermodel)
+					{
+						skeleton_loadinfo(self.tag_entity);
+						self.tag_index = self.tag_entity.bone_hat;
+					}
+				}
 
 				if(substring(self.tag_entity.model, 0, 17) == "models/weapons/v_")
 				{

@@ -285,6 +285,7 @@ mutators/mutator_riflearena.qc
 mutators/mutator_campcheck.qc
 mutators/mutator_zombie_apocalypse.qc
 mutators/mutator_walljump.qc
+mutators/mutator_hats.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc

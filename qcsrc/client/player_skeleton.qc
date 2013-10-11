@@ -13,6 +13,11 @@ void skeleton_loadinfo(entity e)
 		return;
 	e.bone_upperbody = 0;
 	e.bone_weapon = gettagindex(e, "weapon");
+	e.bone_hat = gettagindex(e, "head");
+	if(!e.bone_hat)
+		e.bone_hat = gettagindex(e, "tag_head");
+	if(!e.bone_hat)
+		e.bone_hat = gettagindex(e, "bip01 head");
 	if(!e.bone_weapon)
 		e.bone_weapon = gettagindex(e, "tag_weapon");
 	if(!e.bone_weapon)
