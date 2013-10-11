@@ -498,7 +498,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 	if (trace_startsolid)
 		setorigin(_nade, e.origin);
 	
-	if(self.v_angle_x >= 70)
+	if(self.v_angle_x >= 70 && self.v_angle_x <= 110)
 		_nade.velocity = '0 0 100';
 	else if(autocvar_g_nades_nade_newton_style == 1)
 		_nade.velocity = e.velocity + _velocity;
