@@ -243,6 +243,7 @@ float game_completion_ratio; // 0 at start, 1 near end
 float nJoinAllowed(entity ignore);
 
 .float spawnshieldtime;
+.float item_spawnshieldtime;
 
 .entity flagcarried;
 

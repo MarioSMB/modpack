@@ -13,7 +13,7 @@ void monster_item_spawn()
 	self.noalign = TRUE;
 	self.velocity = randomvec() * 175 + '0 0 325';
 	self.classname = "droppedweapon"; // hax
-	self.wait = time + 0.7;
+	self.item_spawnshieldtime = time + 0.7;
 
 	SUB_SetFade(self, time + autocvar_g_monsters_drop_time, 1);
 }

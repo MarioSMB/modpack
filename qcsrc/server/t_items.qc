@@ -717,7 +717,7 @@ void Item_Touch (void)
 		return;
 	if (self.owner == other)
 		return;
-	if (time < self.wait)
+	if (time < self.item_spawnshieldtime)
 		return;
 
 	switch(MUTATOR_CALLHOOK(ItemTouch))
