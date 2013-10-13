@@ -1,4 +1,4 @@
-entity spawnmonster (string monster, float mnster, entity spawnedby, entity own, vector orig, float respwn, float moveflag)
+entity spawnmonster (string monster, float monster_id, entity spawnedby, entity own, vector orig, float respwn, float moveflag)
 {
 	// ensure spawnfunc database is initialized
 	initialize_field_db();
@@ -30,8 +30,8 @@ entity spawnmonster (string monster, float mnster, entity spawnedby, entity own,
 	}
 		
 	if(monster == "")
-	if(mnster)
-		monster = (get_monsterinfo(mnster)).netname;
+	if(monster_id)
+		monster = (get_monsterinfo(monster_id)).netname;
 	
 	e.realowner = spawnedby;
 	
@@ -42,11 +42,6 @@ entity spawnmonster (string monster, float mnster, entity spawnedby, entity own,
 	{
 		if(teamplay && autocvar_g_monsters_teams)
 			e.team = spawnedby.team; // colors handled in spawn code
-			
-		if(e.team)
-			e.colormap = 1024;
-		else
-			e.colormap = spawnedby.colormap;
 			
 		if(autocvar_g_monsters_owners)
 			e.monster_owner = own; // using .owner makes the monster non-solid for its master

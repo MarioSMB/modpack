@@ -14,6 +14,11 @@ REGISTER_MONSTER(
 	MON_ADD_CVAR(monster, attack_smash_damage) \
 	MON_ADD_CVAR(monster, attack_claw_damage) \
 	MON_ADD_CVAR(monster, attack_lightning_damage) \
+	MON_ADD_CVAR(monster, attack_lightning_force) \
+	MON_ADD_CVAR(monster, attack_lightning_radius) \
+	MON_ADD_CVAR(monster, attack_lightning_radius_zap) \
+	MON_ADD_CVAR(monster, attack_lightning_speed) \
+	MON_ADD_CVAR(monster, attack_lightning_speed_up) \
 	MON_ADD_CVAR(monster, speed_stop) \
 	MON_ADD_CVAR(monster, speed_run) \
 	MON_ADD_CVAR(monster, speed_walk) 
@@ -33,16 +38,18 @@ const float shambler_anim_magic 	= 6;
 const float shambler_anim_pain 		= 7;
 const float shambler_anim_death 	= 8;
 
+.float shambler_lastattack; // delay attacks separately
+
 void shambler_smash()
 {
-	monster_melee(self.enemy, MON_CVAR(shambler, attack_smash_damage), shambler_anim_smash, self.attack_range, 0.4, DEATH_MONSTER_SHAMBLER_SMASH, TRUE);
-}
-
-void shambler_delayedsmash()
-{
-	self.frame = shambler_anim_smash;
-	defer(0.7, shambler_smash);
-	self.attack_finished_single = time + 1.1;
+	makevectors(self.angles);
+	pointparticles(particleeffectnum("explosion_medium"), (self.origin + (v_forward * 150)) - ('0 0 1' * self.maxs_z), '0 0 0', 1);
+	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+	
+	tracebox(self.origin + v_forward * 50, self.mins * 0.5, self.maxs * 0.5, self.origin + v_forward * 500, MOVE_NORMAL, self);
+	
+	if(trace_ent.takedamage)
+		Damage(trace_ent, self, self, MON_CVAR(shambler, attack_smash_damage) * Monster_SkillModifier(), DEATH_MONSTER_SHAMBLER_SMASH, trace_ent.origin, normalize(trace_ent.origin - self.origin));
 }
 
 void shambler_swing()
@@ -50,30 +57,107 @@ void shambler_swing()
 	float r = (random() < 0.5);
 	monster_melee(self.enemy, MON_CVAR(shambler, attack_claw_damage), ((r) ? shambler_anim_swingr : shambler_anim_swingl), self.attack_range, 0.8, DEATH_MONSTER_SHAMBLER_CLAW, TRUE);
 	if(r)
+	{
 		defer(0.5, shambler_swing);
+		self.attack_finished_single += 0.5;
+	}
 }
 
-void CastLightning()
+void shambler_lightning_explode()
 {
-	local vector org, dir;
-	//vector v = '0 0 0';
+	entity head;
+	
+	sound(self, CH_SHOTS, "weapons/electro_impact.wav", VOL_BASE, ATTEN_NORM);
+	pointparticles(particleeffectnum("electro_impact"), '0 0 0', '0 0 0', 1);
 
-	self.effects |= EF_MUZZLEFLASH;
+	self.event_damage = func_null;
+	self.takedamage = DAMAGE_NO;
+	self.movetype = MOVETYPE_NONE;
+	self.velocity = '0 0 0';
 
-	org = self.origin + '0 0 40';
+	if(self.movetype == MOVETYPE_NONE)
+		self.velocity = self.oldvelocity;
 
-	dir = self.enemy.origin + '0 0 16' - org;
-	dir = normalize (dir);
+	RadiusDamage (self, self.realowner, MON_CVAR(shambler, attack_lightning_damage), MON_CVAR(shambler, attack_lightning_damage), MON_CVAR(shambler, attack_lightning_radius), world, MON_CVAR(shambler, attack_lightning_force), self.projectiledeathtype, other);
+	
+	for(head = findradius(self.origin, MON_CVAR(shambler, attack_lightning_radius_zap)); head; head = head.chain) if(head != self.realowner) if(head.takedamage)
+	{
+		te_csqc_lightningarc(self.origin, head.origin);
+		Damage(head, self, self.realowner, MON_CVAR(shambler, attack_lightning_damage) * Monster_SkillModifier(), DEATH_MONSTER_SHAMBLER_ZAP, head.origin, '0 0 0');
+	}
 
-	traceline (org, self.origin + dir * 1000, TRUE, self);
+	self.think = SUB_Remove;
+	self.nextthink = time + 0.2;
+}
+
+void shambler_lightning_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+{
+	if (self.health <= 0)
+		return;
 		
-	FireRailgunBullet (org, org + dir * 1000, MON_CVAR(shambler, attack_lightning_damage) * monster_skill, 0, 0, 0, 0, 0, DEATH_MONSTER_SHAMBLER_ZAP);
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+		return; // g_projectiles_damage says to halt
+		
+	self.health = self.health - damage;
 	
-	// teamcolor / hit beam effect
-	//v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-	//WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3"), org, v);
+	if (self.health <= 0)
+		W_PrepareExplosionByDamage(attacker, self.use);
+}
+
+void shambler_lightning_touch()
+{
+	PROJECTILE_TOUCH;
 	
-	te_csqc_lightningarc(org, trace_endpos);
+	self.use ();
+}
+
+void shambler_lightning_think()
+{
+	self.nextthink = time;
+	if (time > self.cnt)
+	{
+		other = world;
+		shambler_lightning_explode();
+		return;
+	}
+}
+
+void shambler_lightning()
+{
+	entity gren;
+	
+	monster_makevectors(self.enemy);
+
+	gren = spawn ();
+	gren.owner = gren.realowner = self;
+	gren.classname = "grenade";
+	gren.bot_dodge = TRUE;
+	gren.bot_dodgerating = MON_CVAR(shambler, attack_lightning_damage);
+	gren.movetype = MOVETYPE_BOUNCE;
+	PROJECTILE_MAKETRIGGER(gren);
+	gren.projectiledeathtype = DEATH_MONSTER_SHAMBLER_ZAP;
+	setorigin(gren, CENTER_OR_VIEWOFS(self));
+	setsize(gren, '-8 -8 -8', '8 8 8');
+	gren.scale = 2.5;
+
+	gren.cnt = time + 5;
+	gren.nextthink = time;
+	gren.think = shambler_lightning_think;
+	gren.use = shambler_lightning_explode;
+	gren.touch = shambler_lightning_touch;
+
+	gren.takedamage = DAMAGE_YES;
+	gren.health = 50;
+	gren.damageforcescale = 0;
+	gren.event_damage = shambler_lightning_damage;
+	gren.damagedbycontents = TRUE;
+	gren.missile_flags = MIF_SPLASH | MIF_ARC;
+	W_SetupProjectileVelocityEx(gren, v_forward, v_up, MON_CVAR(shambler, attack_lightning_speed), MON_CVAR(shambler, attack_lightning_speed_up), 0, 0, FALSE);
+
+	gren.angles = vectoangles (gren.velocity);
+	gren.flags = FL_PROJECTILE;
+
+	CSQCProjectile(gren, TRUE, PROJECTILE_SHAMBLER_LIGHTNING, TRUE);
 }
 
 float shambler_attack(float attack_type)
@@ -82,22 +166,30 @@ float shambler_attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			float chance = random();
-
-			if(chance > 0.6)
-				shambler_delayedsmash();
-			else
-				shambler_swing();
-			
+			shambler_swing();
 			return TRUE;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			self.frame = shambler_anim_magic;
-			self.attack_finished_single = time + 1.1;
-			defer(0.6, CastLightning);
+			if(time >= self.shambler_lastattack) // shambler doesn't attack much
+			if(random() <= 0.5 && vlen(self.enemy.origin - self.origin) <= 500)
+			{
+				self.frame = shambler_anim_smash;
+				defer(0.7, shambler_smash);
+				self.attack_finished_single = time + 1.1;
+				self.shambler_lastattack = time + 3;
+				return TRUE;
+			}
+			else if(random() <= 0.1) // small chance, don't want this spammed
+			{
+				self.frame = shambler_anim_magic;
+				self.attack_finished_single = time + 1.1;
+				self.shambler_lastattack = time + 3;
+				defer(0.6, shambler_lightning);
+				return TRUE;
+			}
 			
-			return TRUE;
+			return FALSE;
 		}
 	}
 	

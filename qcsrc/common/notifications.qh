@@ -394,26 +394,11 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_FIRE,                2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 became a bit too crispy%s%s"), _("^BG%s^K1 felt a little hot%s%s")) \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_GENERIC,             2, 1, "s1 s2loc spree_lost", "s1",       "notify_selfkill",      _("^BG%s^K1 died%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_LAVA,                2, 1, "s1 s2loc spree_lost", "s1",       "notify_lava",          _("^BG%s^K1 turned into hot slag%s%s"), _("^BG%s^K1 found a hot place%s%s")) \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_CERBERUS_BITE,   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was mauled by a Cerberus%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_CERBERUS_JUMP,   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 didn't see the pouncing Cerberus%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_ANIMUS,	       2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was eviscerated by an Animus%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_STINGRAY,	       2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was fatally wounded by a Stingray%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_KNIGHT_CRUSH,    2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was crushed by a pouncing Knight%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_KNIGHT_FBALL,    2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was turned to ash by a Knight%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_KNIGHT_INFERNO,  2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was burned to death by a Knight%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_KNIGHT_MELEE,    2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was slain by a Knight%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_KNIGHT_SPIKE,    2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was cursed by a Knight%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_BRUISER,   	   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was beaten in a fistfight by a Bruiser%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_BRUTE_BLADE,     2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was cut down by a Brute%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_BRUTE_GRENADE,   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 almost dodged a Brute's grenade%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_BRUTE_UZI,  	   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was nailed by a Brute%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_MAGE,    		   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was exploded by a Mage%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_SHAMBLER_CLAW,   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1's innards became outwards by a Shambler%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_SHAMBLER_SMASH,  2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was smashed by a Shambler%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_SHAMBLER_ZAP,    2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was zapped to death by a Shambler%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_SPIDER,      	   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was bitten by a Spider%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_SPIDER_FIRE,     2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was incinerated by a Spider%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_SLIME,           2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was blown up by a Slime%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_WYVERN,          2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was fireballed by a Wyvern%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_ZOMBIE_JUMP,     2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 joins the Zombies%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_ZOMBIE_MELEE,    2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was given kung fu lessons by a Zombie%s%s"), "") \
@@ -669,6 +654,7 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_ROUND_PLAYER_WIN,            1, 0, "s1",           CPID_ROUND,          "0 0", _("^BG%s^BG wins the round"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_SELF,              0, 0, "",             NO_CPID,             "0 0", _("^K1You froze yourself"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_SPAWN_LATE,        0, 0, "",             NO_CPID,             "0 0", _("^K1Round already started, you spawn as frozen"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_INVASION_SUPERMONSTER,       1, 0, "s1",           NO_CPID,             "0 0", _("^K1A %s has arrived!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_DONTHAVE,        0, 1, "item_wepname",                      CPID_ITEM, "item_centime 0", _("^BGYou do not have the ^F1%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_DROP,            1, 1, "item_wepname item_wepammo",         CPID_ITEM, "item_centime 0", _("^BGYou dropped the ^F1%s^BG%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_GOT,             0, 1, "item_wepname",                      CPID_ITEM, "item_centime 0", _("^BGYou got the ^F1%s"), "") \
@@ -795,26 +781,11 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, DEATH_SELF_FIRE,                      NO_MSG,        INFO_DEATH_SELF_FIRE,                      CENTER_DEATH_SELF_FIRE) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_GENERIC,                   NO_MSG,        INFO_DEATH_SELF_GENERIC,                   CENTER_DEATH_SELF_GENERIC) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_LAVA,                      NO_MSG,        INFO_DEATH_SELF_LAVA,                      CENTER_DEATH_SELF_LAVA) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_CERBERUS_BITE,	 	 NO_MSG,        INFO_DEATH_SELF_MON_CERBERUS_BITE,		   CENTER_DEATH_SELF_MONSTER) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_CERBERUS_JUMP,	 	 NO_MSG,        INFO_DEATH_SELF_MON_CERBERUS_JUMP,		   CENTER_DEATH_SELF_MONSTER) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_ANIMUS,		 	 	 NO_MSG,        INFO_DEATH_SELF_MON_ANIMUS,				   CENTER_DEATH_SELF_MONSTER) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_STINGRAY,				 NO_MSG,        INFO_DEATH_SELF_MON_STINGRAY,			   CENTER_DEATH_SELF_MONSTER) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_KNIGHT_CRUSH,	 		 NO_MSG,        INFO_DEATH_SELF_MON_KNIGHT_CRUSH,		   CENTER_DEATH_SELF_MONSTER) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_KNIGHT_FBALL,	 	     NO_MSG,        INFO_DEATH_SELF_MON_KNIGHT_FBALL,		   CENTER_DEATH_SELF_MONSTER) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_KNIGHT_INFERNO,	 	 NO_MSG,        INFO_DEATH_SELF_MON_KNIGHT_INFERNO,	       CENTER_DEATH_SELF_MONSTER) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_KNIGHT_MELEE,	 	     NO_MSG,        INFO_DEATH_SELF_MON_KNIGHT_MELEE,		   CENTER_DEATH_SELF_MONSTER) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_KNIGHT_SPIKE,	 	     NO_MSG,        INFO_DEATH_SELF_MON_KNIGHT_SPIKE,		   CENTER_DEATH_SELF_MONSTER) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_BRUISER,			 	 NO_MSG,        INFO_DEATH_SELF_MON_BRUISER,			   CENTER_DEATH_SELF_MONSTER) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_BRUTE_BLADE,	 		 NO_MSG,        INFO_DEATH_SELF_MON_BRUTE_BLADE,		   CENTER_DEATH_SELF_MONSTER) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_BRUTE_GRENADE,		 NO_MSG,        INFO_DEATH_SELF_MON_BRUTE_GRENADE,		   CENTER_DEATH_SELF_MONSTER) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_BRUTE_UZI,			 NO_MSG,        INFO_DEATH_SELF_MON_BRUTE_UZI,			   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_MAGE,				 	 NO_MSG,        INFO_DEATH_SELF_MON_MAGE,				   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_SHAMBLER_CLAW,	 	 NO_MSG,        INFO_DEATH_SELF_MON_SHAMBLER_CLAW,		   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_SHAMBLER_SMASH,	 	 NO_MSG,        INFO_DEATH_SELF_MON_SHAMBLER_SMASH,		   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_SHAMBLER_ZAP,		 	 NO_MSG,        INFO_DEATH_SELF_MON_SHAMBLER_ZAP,		   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_SPIDER,			 	 NO_MSG,        INFO_DEATH_SELF_MON_SPIDER,				   CENTER_DEATH_SELF_MONSTER) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_SPIDER_FIRE,			 NO_MSG,        INFO_DEATH_SELF_MON_SPIDER_FIRE,		   CENTER_DEATH_SELF_MONSTER) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_SLIME,			 	 NO_MSG,        INFO_DEATH_SELF_MON_SLIME,			   	   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_WYVERN,			 	 NO_MSG,        INFO_DEATH_SELF_MON_WYVERN,				   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_ZOMBIE_JUMP,		 	 NO_MSG,        INFO_DEATH_SELF_MON_ZOMBIE_JUMP,		   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_ZOMBIE_MELEE,		 	 NO_MSG,        INFO_DEATH_SELF_MON_ZOMBIE_MELEE,		   CENTER_DEATH_SELF_MONSTER) \

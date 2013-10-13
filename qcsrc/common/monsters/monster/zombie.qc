@@ -69,7 +69,7 @@ void zombie_attack_leap_touch()
 	{
 		angles_face = vectoangles(self.moveto - self.origin);
 		angles_face = normalize(angles_face) * MON_CVAR(zombie, attack_leap_force);
-		Damage(other, self, self, MON_CVAR(zombie, attack_leap_damage) * monster_skill, DEATH_MONSTER_ZOMBIE_JUMP, other.origin, angles_face);
+		Damage(other, self, self, MON_CVAR(zombie, attack_leap_damage) * Monster_SkillModifier(), DEATH_MONSTER_ZOMBIE_JUMP, other.origin, angles_face);
 		self.touch = MonsterTouch; // instantly turn it off to stop damage spam
 	}
 

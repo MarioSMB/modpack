@@ -29,6 +29,7 @@
 #include "xonotic/dialog_firstrun.c"
 #include "xonotic/dialog_teamselect.c"
 #include "xonotic/dialog_sandboxtools.c"
+#include "xonotic/dialog_monstertools.c"
 #include "xonotic/dialog_settings.c"
 #include "xonotic/dialog_settings_video.c"
 #include "xonotic/dialog_settings_effects.c"

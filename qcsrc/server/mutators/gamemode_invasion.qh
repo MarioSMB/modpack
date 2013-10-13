@@ -5,3 +5,5 @@ float maxrounds;
 float numkilled;
 float last_check;
 float maxcurrent;
+
+float invasion_monsterskill;

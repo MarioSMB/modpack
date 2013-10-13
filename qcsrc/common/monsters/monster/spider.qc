@@ -17,7 +17,6 @@ REGISTER_MONSTER(
 	MON_ADD_CVAR(monster, attack_web_speed) \
 	MON_ADD_CVAR(monster, attack_web_speed_up) \
 	MON_ADD_CVAR(monster, attack_web_delay) \
-	MON_ADD_CVAR(monster, attack_type) \
 	MON_ADD_CVAR(monster, speed_stop) \
 	MON_ADD_CVAR(monster, speed_run) \
 	MON_ADD_CVAR(monster, speed_walk) 
@@ -32,44 +31,18 @@ const float spider_anim_walk		= 1;
 const float spider_anim_attack		= 2;
 const float spider_anim_attack2		= 3;
 
-.float spider_type; // used to switch between fire & ice attacks
-const float SPIDER_TYPE_ICE		= 0;
-const float SPIDER_TYPE_FIRE	= 1;
+.float spider_web_delay;
 
 void spider_web_explode()
 {
 	entity e;
 	if(self)
 	{
-		float damg = 0, edamg = 0, rad = 1;
-		switch(self.realowner.spider_type)
-		{
-			case SPIDER_TYPE_ICE:
-				rad = 25;
-				pointparticles(particleeffectnum("electro_impact"), self.origin, '0 0 0', 1);
-				break;
-			case SPIDER_TYPE_FIRE:
-				pointparticles(particleeffectnum("fireball_explode"), self.origin, '0 0 0', 1);
-				damg = 15;
-				rad = 25;
-				edamg = 6;
-				break;
-		}
+		pointparticles(particleeffectnum("electro_impact"), self.origin, '0 0 0', 1);
+		RadiusDamage(self, self.realowner, 0, 0, 25, world, 25, self.projectiledeathtype, world);
 		
-		RadiusDamage(self, self.realowner, damg, edamg, rad, world, rad, DEATH_MONSTER_SPIDER_FIRE, world); // ice deals no damage anyway
-		
-		for(e = findradius(self.origin, rad); e; e = e.chain) if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0)
-		{
-			switch(self.realowner.spider_type)
-			{
-				case SPIDER_TYPE_ICE:
-					Freeze(e, 0.3, 2, FALSE);
-					break;
-				case SPIDER_TYPE_FIRE:
-					Fire_AddDamage(e, self.realowner, 5 * monster_skill, MON_CVAR(spider, attack_web_damagetime), DEATH_MONSTER_SPIDER_FIRE);
-					break;
-			}
-		}
+		for(e = findradius(self.origin, 25); e; e = e.chain) if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0)
+			e.spider_slowness = time + MON_CVAR(spider, attack_web_damagetime);
 		
 		remove(self);
 	}
@@ -82,25 +55,11 @@ void spider_web_touch()
 	spider_web_explode();
 }
 
-void spider_shootweb(float ptype)
+void spider_shootweb()
 {
-	float p = 0;
-	string snd = "";
-	switch(ptype)
-	{
-		case SPIDER_TYPE_ICE:
-			p = PROJECTILE_ELECTRO;
-			snd = "weapons/electro_fire2.wav";
-			break;
-		case SPIDER_TYPE_FIRE:
-			p = PROJECTILE_FIREMINE;
-			snd = "weapons/fireball_fire.wav";
-			break;
-	}
-	
 	monster_makevectors(self.enemy);
 	
-	sound(self, CH_SHOTS, snd, VOL_BASE, ATTEN_NORM);
+	sound(self, CH_SHOTS, "weapons/electro_fire2.wav", VOL_BASE, ATTEN_NORM);
 
 	entity proj = spawn ();
 	proj.classname = "plasma";
@@ -111,7 +70,7 @@ void spider_shootweb(float ptype)
 	proj.bot_dodgerating = 0;
 	proj.nextthink = time + 5;
 	PROJECTILE_MAKETRIGGER(proj);
-	proj.projectiledeathtype = DEATH_MONSTER_SPIDER_FIRE;
+	proj.projectiledeathtype = DEATH_MONSTER_SPIDER;
 	setorigin(proj, CENTER_OR_VIEWOFS(self));
 
 	//proj.glow_size = 50;
@@ -131,7 +90,7 @@ void spider_shootweb(float ptype)
 	proj.bouncestop = 0.05;
 	proj.missile_flags = MIF_SPLASH | MIF_ARC;
 
-	CSQCProjectile(proj, TRUE, p, TRUE);
+	CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO, TRUE);
 }
 
 float spider_attack(float attack_type)
@@ -144,14 +103,16 @@ float spider_attack(float attack_type)
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			if(self.enemy.frozen)
-				return FALSE;
+			if(time >= self.spider_web_delay)
+			{
+				self.frame = spider_anim_attack2;
+				self.attack_finished_single = time + MON_CVAR(spider, attack_web_delay);
+				spider_shootweb();
+				self.spider_web_delay = time + 3;
+				return TRUE;
+			}
 			
-			self.frame = spider_anim_attack2;
-			self.attack_finished_single = time + MON_CVAR(spider, attack_web_delay);
-			spider_shootweb(self.spider_type);
-			
-			return TRUE;
+			return FALSE;
 		}
 	}
 	
@@ -188,7 +149,6 @@ float m_spider(float req)
 		case MR_SETUP:
 		{
 			if not(self.health) self.health = MON_CVAR(spider, health);
-			if not(self.spider_type) self.spider_type = MON_CVAR(spider, attack_type);
 			
 			self.monster_loot = spawnfunc_item_health_medium;
 			self.monster_attackfunc	= spider_attack;
@@ -199,9 +159,7 @@ float m_spider(float req)
 		case MR_PRECACHE:
 		{
 			precache_model ("models/monsters/spider.dpm");
-			precache_model ("models/ice/ice.md3");
 			precache_sound ("weapons/electro_fire2.wav");
-			precache_sound ("weapons/fireball_fire.wav");
 			return TRUE;
 		}
 		case MR_CONFIG:

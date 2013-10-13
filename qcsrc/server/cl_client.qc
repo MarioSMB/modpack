@@ -599,6 +599,8 @@ void PutClientInServer (void)
 
 		self.bot_attack = TRUE;
 		self.monster_attack = TRUE;
+
+		self.spider_slowness = 0;
 		
 		if(self.cvar_cl_sparkle >= 1 && checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
 			self.effects |= EF_STARDUST;
@@ -1692,7 +1694,7 @@ void player_regen (void)
 	limita = limita * limit_mod;
 	//limitf = limitf * limit_mod;
 
-	if(g_ca)
+	if(g_ca || g_invasion)
 		rot_mod = 0;
 	if(g_vip)
 	{
@@ -1707,7 +1709,7 @@ void player_regen (void)
 		}
 	}
 
-	if (!g_minstagib && !g_ca && !self.frozen && (!g_lms || autocvar_g_lms_regenerate))
+	if (!g_minstagib && !g_ca && !g_invasion && !self.frozen && (!g_lms || autocvar_g_lms_regenerate))
 	{
 		self.armorvalue = CalcRotRegen(self.armorvalue, mina, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished), maxa, autocvar_g_balance_armor_rot, autocvar_g_balance_armor_rotlinear, rot_mod * frametime * (time > self.pauserotarmor_finished), limita);
 		self.health = CalcRotRegen(self.health, minh, autocvar_g_balance_health_regen, autocvar_g_balance_health_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished), maxh, autocvar_g_balance_health_rot, autocvar_g_balance_health_rotlinear, rot_mod * frametime * (time > self.pauserothealth_finished), limith);

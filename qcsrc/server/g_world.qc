@@ -830,6 +830,7 @@ void spawnfunc_worldspawn (void)
 	// set up information replies for clients and server to use
 	maplist_reply = strzone(getmaplist());
 	lsmaps_reply = strzone(getlsmaps());
+	monsterlist_reply = strzone(getmonsterlist());
 	for(i = 0; i < 10; ++i)
 	{
 		s = getrecords(i);

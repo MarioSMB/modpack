@@ -1008,8 +1008,6 @@ void readlevelcvars(void)
     g_bugrigs_speed_pow = cvar("g_bugrigs_speed_pow");
     g_bugrigs_steer = cvar("g_bugrigs_steer");
 	
-	monster_skill = cvar("g_monsters_skill");
-	
 	g_minstagib = cvar("g_minstagib");
 	
 	sv_showfps = cvar("sv_showfps");

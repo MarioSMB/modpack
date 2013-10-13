@@ -180,15 +180,7 @@ void GameCommand_butcher(float request)
 			
 			FOR_EACH_MONSTER(head)
 			{
-				if(head.weaponentity)
-					remove(head.weaponentity);
-					
-				if(head.iceblock)
-					remove(head.iceblock);
-					
-				WaypointSprite_Kill(head.sprite);
-					
-				remove(head);
+				monster_remove(head);
 				++removed_count;
 			}
 			
@@ -203,7 +195,7 @@ void GameCommand_butcher(float request)
 			if(removed_count <= 0)
 				print("No monsters to kill\n");
 			else
-				print(strcat("Killed ", ftos(removed_count), " monster", ((removed_count == 1) ? "\n" : "s\n")));
+				print(sprintf("Killed %d monster%s\n", removed_count, ((removed_count == 1) ? "" : "s")));
 				
 			return; // never fall through to usage
 		}

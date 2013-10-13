@@ -70,12 +70,7 @@ float Invasion_CheckWinner()
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
 		FOR_EACH_MONSTER(head)
-		{
-			if(head.weaponentity) remove(head.weaponentity);
-			if(head.iceblock) remove(head.iceblock);
-			WaypointSprite_Kill(head.sprite);
-			remove(head);
-		}
+			monster_remove(head);
 		
 		if(roundcnt >= maxrounds)
 		{
@@ -146,6 +141,9 @@ float Invasion_CheckWinner()
 			winner = head;
 		}
 	}
+	
+	FOR_EACH_MONSTER(head)
+		monster_remove(head);
 
 	if(winner)
 	{
@@ -179,6 +177,8 @@ void Invasion_RoundStart()
 		
 	roundcnt += 1;
 	
+	invasion_monsterskill = roundcnt + (numplayers * 0.3);
+	
 	maxcurrent = 0;
 	numspawned = 0;
 	numkilled = 0;
@@ -187,8 +187,6 @@ void Invasion_RoundStart()
 		maxspawned = rint(autocvar_g_invasion_monster_count * (roundcnt * 0.5));
 	else
 		maxspawned = autocvar_g_invasion_monster_count;
-	
-	monster_skill += 0.1 * numplayers;
 }
 
 MUTATOR_HOOKFUNCTION(invasion_MonsterDies)
@@ -209,10 +207,7 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
 {
 	if not(self.spawnflags & MONSTERFLAG_SPAWNED)
 	{
-		if(self.weaponentity) remove(self.weaponentity);
-		if(self.iceblock) remove(self.iceblock);
-		WaypointSprite_Kill(self.sprite);
-		remove(self);
+		monster_remove(self);
 		return FALSE;
 	}
 	
@@ -224,6 +219,11 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
 		numspawned += 1;
 		maxcurrent += 1;
 	}
+	
+	self.monster_skill = invasion_monsterskill;
+	
+	if((get_monsterinfo(self.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_INVASION_SUPERMONSTER, M_NAME(self.monsterid));
 	
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 	
@@ -268,7 +268,7 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerCommand)
 		sprint(self, strcat("roundcnt = ", ftos(roundcnt), "\n"));
 		sprint(self, strcat("monsters_total = ", ftos(monsters_total), "\n"));
 		sprint(self, strcat("monsters_killed = ", ftos(monsters_killed), "\n"));
-		sprint(self, strcat("monster_skill = ", ftos(monster_skill), "\n"));
+		sprint(self, strcat("invasion_monsterskill = ", ftos(invasion_monsterskill), "\n"));
 		
 		return TRUE;
 	}
@@ -303,8 +303,6 @@ void invasion_Initialize()
 	round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
 	
 	allowed_to_spawn = TRUE;
-	
-	monster_skill = 0.5;
 	
 	roundcnt = 0;
 }

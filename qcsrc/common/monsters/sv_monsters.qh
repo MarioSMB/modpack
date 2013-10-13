@@ -1,8 +1,6 @@
 .string spawnmob;
 .float monster_attack;
 
-float monster_skill;
-
 .entity monster_owner; // new monster owner entity, fixes non-solid monsters
 .float monstercount; // per player monster count
 
@@ -13,9 +11,20 @@ float monsters_killed;
 void monsters_setstatus(); // monsters.qc
 .float monster_moveflags; // checks where to move when not attacking
 
+.float spider_slowness; // special spider timer
+
+void monster_remove(entity mon); // removes a monster
+
 .float(float attack_type) monster_attackfunc;
-const float MONSTER_ATTACK_MELEE 	= 1;
-const float MONSTER_ATTACK_RANGED 	= 2;
+const float MONSTER_ATTACK_MELEE = 1;
+const float MONSTER_ATTACK_RANGED = 2;
+
+.float monster_skill;
+const float MONSTER_SKILL_EASY = 1;
+const float MONSTER_SKILL_MEDIUM = 3;
+const float MONSTER_SKILL_HARD = 5;
+const float MONSTER_SKILL_INSANE = 7;
+const float MONSTER_SKILL_NIGHTMARE = 10;
 
 .float fish_wasdrowning; // used to reset a drowning fish's angles if it reaches water again
 

@@ -535,15 +535,15 @@ void Item_ScheduleRespawnIn(entity e, float t)
 {
 	if((e.flags & FL_POWERUP) || (e.weapons & WEPSET_SUPERWEAPONS))
 	{
-		self.think = Item_RespawnCountdown;
-		self.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
+		e.think = Item_RespawnCountdown;
+		e.nextthink = time + max(0, t - ITEM_RESPAWN_TICKS);
 		e.count = 0;
 	}
 	else
 	{
-		self.think = Item_RespawnThink;
-		self.nextthink = time;
-		self.wait = time + t;
+		e.think = Item_RespawnThink;
+		e.nextthink = time;
+		e.wait = time + t;
 	}
 }
 

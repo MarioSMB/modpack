@@ -373,6 +373,7 @@ float autocvar_r_letterbox;
 float autocvar_scoreboard_accuracy;
 float autocvar_scoreboard_accuracy_nocolors;
 float autocvar_scoreboard_alpha_bg;
+var float autocvar_scoreboard_extras = 1;
 var float autocvar_scoreboard_alpha_fg = 1.0;
 var float autocvar_scoreboard_alpha_name = 0.9;
 var float autocvar_scoreboard_alpha_name_self = 1;

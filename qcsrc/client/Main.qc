@@ -100,6 +100,7 @@ void CSQC_Init(void)
 	registercvar("cl_damnfurries", "0");
 	registercvar("cl_robot", "0");
 	registercvar("cl_charge", "0");
+	registercvar("cl_magical_hax", "");
 
 	gametype = 0;
 

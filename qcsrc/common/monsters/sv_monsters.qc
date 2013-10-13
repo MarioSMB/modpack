@@ -41,6 +41,13 @@ void monster_dropitem()
 	}
 }
 
+float Monster_SkillModifier()
+{
+	float t = 0.5+self.monster_skill*((1.2-0.3)/10);
+	
+	return t;
+}
+
 float monster_isvalidtarget (entity targ, entity ent)
 {
 	if(!targ || !ent)
@@ -97,7 +104,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if(SAME_TEAM(targ, ent))
 		return FALSE; // enemy is on our team
 		
-	if (targ.frozen == 1 || (targ.frozen == 2 && ent.monsterid != MON_SPIDER))
+	if (targ.frozen)
 		return FALSE; // ignore frozen
 
 	if(autocvar_g_monsters_target_infront || ent.spawnflags & MONSTERFLAG_INFRONT)
@@ -292,8 +299,6 @@ void monster_makevectors(entity e)
 
 float monster_melee(entity targ, float damg, float anim, float er, float anim_finished, float deathtype, float dostop)
 {
-	float rdmg = damg * random();
-
 	if (self.health <= 0)
 		return FALSE; // attacking while dead?!
 
@@ -314,7 +319,7 @@ float monster_melee(entity targ, float damg, float anim, float er, float anim_fi
 	traceline(self.origin + self.view_ofs, self.origin + v_forward * er, 0, self);
 
 	if(trace_ent.takedamage)
-		Damage(trace_ent, self, self, rdmg * monster_skill, deathtype, trace_ent.origin, normalize(trace_ent.origin - self.origin));
+		Damage(trace_ent, self, self, damg * Monster_SkillModifier(), deathtype, trace_ent.origin, normalize(trace_ent.origin - self.origin));
 
 	return TRUE;
 }
@@ -526,39 +531,20 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 
 	if(self.frozen)
 	{
-		self.frame = manim_idle;
+		self.revive_progress = bound(0, self.revive_progress + self.ticrate * self.revive_speed, 1);
+		self.health = max(1, self.max_health * self.revive_progress);
 		
-		if(self.frozen == 3)
-		{
-			self.revive_progress = bound(0, self.revive_progress - self.ticrate * self.revive_speed, 1);
-			self.health = max(0, autocvar_g_nades_ice_health + (self.max_health-autocvar_g_nades_ice_health) * self.revive_progress );
-		
-			if(self.health < 1)
-			{
-				Unfreeze(self);
-				self.health = 0;
-				Damage(self,self.frozen_by,self.frozen_by,1,DEATH_NADE_ICE_FREEZE,self.origin,'0 0 0');
-			}
-			else if ( self.revive_progress <= 0 )
-				Unfreeze(self);
-		}
-		else
-		{
-			self.revive_progress = bound(0, self.revive_progress + self.ticrate * self.revive_speed, 1);
-			self.health = max(1, self.max_health * self.revive_progress);
-			
-			if(self.revive_progress >= 1)
-				Unfreeze(self); // wait for next think before attacking
-				
-		}
-
 		WaypointSprite_UpdateHealth(self.sprite, self.health);
 		
 		movelib_beak_simple(stopspeed);
 		
+		self.frame = manim_idle;
 		
 		self.enemy = world;
 		self.nextthink = time + self.ticrate;
+
+		if(self.revive_progress >= 1)
+			Unfreeze(self); // wait for next think before attacking
 
 		return; // no moving while frozen
 	}
@@ -617,8 +603,14 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	}
 
 	targ = monster_target;
-	runspeed = monster_speed_run;
-	walkspeed = monster_speed_walk;
+	runspeed = bound(0, monster_speed_run * Monster_SkillModifier(), runspeed * 2); // limit maxspeed to prevent craziness
+	walkspeed = bound(0, monster_speed_walk * Monster_SkillModifier(), walkspeed * 2); // limit maxspeed to prevent craziness
+	
+	if(time < self.spider_slowness)
+	{
+		runspeed *= 0.5;
+		walkspeed *= 0.5;
+	}
 
 	if(teamplay)
 	if(autocvar_g_monsters_teams)
@@ -651,7 +643,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.moveto = monster_pickmovetarget(targ);
 
 	if not(self.enemy)
-		MonsterSound(monstersound_idle, 5, TRUE, CH_VOICE);
+		MonsterSound(monstersound_idle, 7, TRUE, CH_VOICE);
 
 	if(self.state != MONSTER_STATE_ATTACK_LEAP && self.state != MONSTER_STATE_ATTACK_MELEE)
 		self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
@@ -720,6 +712,24 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	}
 
 	monster_checkattack(self, self.enemy);
+}
+
+void monster_remove(entity mon)
+{
+	if not(mon)
+		return; // nothing to remove
+		
+	pointparticles(particleeffectnum("item_pickup"), mon.origin, '0 0 0', 1);
+		
+	if(mon.weaponentity)
+		remove(mon.weaponentity);
+					
+	if(mon.iceblock)
+		remove(mon.iceblock);
+					
+	WaypointSprite_Kill(mon.sprite);
+					
+	remove(mon);
 }
 
 void monster_dead_think()
@@ -919,6 +929,29 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 	}
 }
 
+void monster_setupcolors()
+{
+	if(IS_PLAYER(self.monster_owner))
+		self.colormap = self.monster_owner.colormap;
+	else if(teamplay && self.team)
+		self.colormap = 1024 + (self.team - 1) * 17;
+	else
+	{
+		if(self.monster_skill <= MONSTER_SKILL_EASY)
+			self.colormap = 1029;
+		else if(self.monster_skill <= MONSTER_SKILL_MEDIUM)
+			self.colormap = 1027;
+		else if(self.monster_skill <= MONSTER_SKILL_HARD)
+			self.colormap = 1038;
+		else if(self.monster_skill <= MONSTER_SKILL_INSANE)
+			self.colormap = 1028;
+		else if(self.monster_skill <= MONSTER_SKILL_NIGHTMARE)
+			self.colormap = 1032;
+		else
+			self.colormap = 1024;
+	}
+}
+
 void monster_think()
 {
 	self.think = monster_think;
@@ -936,12 +969,15 @@ void monster_think()
 	CSQCMODEL_AUTOUPDATE();
 }
 
-void monster_spawn()
+float monster_spawn()
 {
 	MON_ACTION(self.monsterid, MR_SETUP);
 
 	if not(self.monster_respawned)
+	{
 		Monster_CheckMinibossFlag();
+		self.health *= Monster_SkillModifier();
+	}
 
 	self.max_health = self.health;
 	self.pain_finished = self.nextthink;
@@ -970,8 +1006,11 @@ void monster_spawn()
 
 	self.think = monster_think;
 	self.nextthink = time + self.ticrate;
-
-	MUTATOR_CALLHOOK(MonsterSpawn);
+	
+	if(MUTATOR_CALLHOOK(MonsterSpawn))
+		return FALSE;
+	
+	return TRUE;
 }
 
 float monster_initialize(float mon_id, float nodrop)
@@ -980,11 +1019,14 @@ float monster_initialize(float mon_id, float nodrop)
 		return FALSE;
 
 	entity mon = get_monsterinfo(mon_id);
+	
+	if not(self.monster_skill)
+		self.monster_skill = cvar("g_monsters_skill");
 
 	// support for quake style removing monsters based on skill
-	if(monster_skill <= 1) if(self.spawnflags & MONSTERSKILL_NOTEASY) { return FALSE; }
-	if(monster_skill == 2) if(self.spawnflags & MONSTERSKILL_NOTMEDIUM) { return FALSE; }
-	if(monster_skill >= 3) if(self.spawnflags & MONSTERSKILL_NOTHARD) { return FALSE; }
+	if(self.monster_skill == MONSTER_SKILL_EASY) if(self.spawnflags & MONSTERSKILL_NOTEASY) { return FALSE; }
+	if(self.monster_skill == MONSTER_SKILL_MEDIUM) if(self.spawnflags & MONSTERSKILL_NOTMEDIUM) { return FALSE; }
+	if(self.monster_skill == MONSTER_SKILL_HARD) if(self.spawnflags & MONSTERSKILL_NOTHARD) { return FALSE; }
 
 	if(self.team && !teamplay)
 		self.team = 0;
@@ -1024,6 +1066,7 @@ float monster_initialize(float mon_id, float nodrop)
 	self.scale				= 1;
 	self.noalign			= nodrop;
 	self.spawn_time			= time;
+	self.spider_slowness	= 0;
 	self.gravity			= 1;
 	self.dphitcontentsmask	= DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 	
@@ -1069,7 +1112,11 @@ float monster_initialize(float mon_id, float nodrop)
 		setorigin(self, trace_endpos);
 	}
 		
-	monster_spawn();
+	if not(monster_spawn())
+		return FALSE;
+		
+	if not(self.monster_respawned)
+		monster_setupcolors();
 	
 	CSQCMODEL_AUTOINIT();
 

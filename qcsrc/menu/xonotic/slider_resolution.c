@@ -104,7 +104,6 @@ void XonoticResolutionSlider_addResolution(entity me, float w, float h, float pi
 	}
 	else
 		me.insertValue(me, i, strzone(sprintf(_("%dx%d"), w, h)), strzone(strcat(ftos(w), " ", ftos(h), " ", ftos(pixelheight))));
-	// FIXME (in case you ever want to dynamically instantiate this): THIS IS NEVER FREED
 }
 float autocvar_menu_vid_allowdualscreenresolution;
 void XonoticResolutionSlider_configureXonoticResolutionSlider(entity me)
@@ -117,6 +116,14 @@ void XonoticResolutionSlider_loadResolutions(entity me, float fullscreen)
 	float i;
 	vector r;
 
+	// HACK: text slider assumes the strings are constants, so clearValues
+	// will not unzone them
+	for(i = 0; i < me.nValues; ++i)
+	{
+		strunzone(me.valueToIdentifier(me, i));
+		strunzone(me.valueToText(me, i));
+	}
+	// NOW we can safely clear.
 	me.clearValues(me);
 
 	if (fullscreen)
@@ -136,6 +143,7 @@ void XonoticResolutionSlider_loadResolutions(entity me, float fullscreen)
 		r = getresolution(-1);
 		if(r_x != 0 || r_y != 0)
 			me.addResolution(me, r_x, r_y, r_z);
+		dprint("Added system resolutions.\n");
 	}
 
 	if(me.nValues == 0)
@@ -153,7 +161,9 @@ void XonoticResolutionSlider_loadResolutions(entity me, float fullscreen)
 		me.addResolution(me, 1280, 960, 1); // pc res
 		me.addResolution(me, 1280, 1024, 1); // pc res
 		me.addResolution(me, 1920, 1080, 1); // 1080p
+		dprint("Added default resolutions.\n");
 	}
+	dprint("Total number of resolutions detected: ", ftos(me.nValues), "\n");
 
 	me.vid_fullscreen = fullscreen;
 
