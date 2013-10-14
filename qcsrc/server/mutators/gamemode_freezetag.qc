@@ -419,22 +419,18 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	{
 		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 		n = 0;
-		FOR_EACH_PLAYER(other) if(self != other)
+		FOR_EACH_PLAYER(other)
+		if(self != other)
+		if(other.frozen == 0)
+		if(other.deadflag == DEAD_NO)
+		if(SAME_TEAM(other, self))
+		if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax))
 		{
-			if(other.frozen == 0)
-			{
-				if(SAME_TEAM(other, self))
-				{
-					if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax))
-					{
-						if(!o)
-							o = other;
-						if(self.frozen == 1)
-							other.reviving = TRUE;
-						++n;
-					}
-				}
-			}
+			if(!o)
+				o = other;
+			if(self.frozen == 1)
+				other.reviving = TRUE;
+			++n;
 		}
 	}
 
