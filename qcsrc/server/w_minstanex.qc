@@ -90,8 +90,6 @@ float W_MinstaNex_SuperBlast_IsVisible(entity head, vector nearest_on_line, vect
 	return FALSE;
 }
 
-#define PLAYER_CENTER(ent) (ent.origin + ((IS_PLAYER(ent)) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
-
 entity shockwave_hit[32];
 float shockwave_hit_damage[32];
 vector shockwave_hit_force[32];
@@ -143,8 +141,8 @@ void W_RocketMinsta_Explosion(vector loc)
 		if(head.takedamage)
 		{
 			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
-			//center = PLAYER_CENTER(head);
-			center = WarpZone_UnTransformOrigin(head, PLAYER_CENTER(head));
+			//center = CENTER_OR_VIEWOFS(head);
+			center = WarpZone_UnTransformOrigin(head, CENTER_OR_VIEWOFS(head));
 
 			float distance_to_head = vlen(loc - head.WarpZone_findradius_nearest);
 			
@@ -265,7 +263,7 @@ void W_MinstaNex_SuperBlast()
 		if(head.takedamage)
 		{
 			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
-			center = PLAYER_CENTER(head);
+			center = CENTER_OR_VIEWOFS(head);
 
 			float distance_to_head = vlen(attack_hitpos - head.WarpZone_findradius_nearest);
 			
@@ -313,7 +311,7 @@ void W_MinstaNex_SuperBlast()
 		if((head != self) && head.takedamage)
 		{
 			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc) 
-			center = PLAYER_CENTER(head);
+			center = CENTER_OR_VIEWOFS(head);
 
 			// find the closest point on the enemy to the center of the attack
 			float ang; // angle between shotdir and h
