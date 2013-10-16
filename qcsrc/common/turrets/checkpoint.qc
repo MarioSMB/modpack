@@ -12,7 +12,6 @@
 */
 
 .entity pathgoal;
-.entity pathcurrent;
 
 /*
 entity path_makeorcache(entity forwho,entity start, entity end)

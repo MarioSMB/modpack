@@ -163,7 +163,6 @@ void assault_roundstart_use()
 	activator = self;
 	SUB_UseTargets();
 
-#ifdef TTURRETS_ENABLED
 	entity ent, oldself;
 
 	//(Re)spawn all turrets
@@ -179,12 +178,11 @@ void assault_roundstart_use()
 		self = ent;
 
 		// Dubbles as teamchange
-		turret_stdproc_respawn();
+		turret_respawn();
 
 		ent = find(ent, classname, "turret_main");
 	}
 	self = oldself;
-#endif
 }
 
 void assault_wall_think()

@@ -209,7 +209,7 @@ void Teleport_Touch (void)
 	if(!other.vehicle.teleportable)
 		return;
 			
-	if(other.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+	if(IS_TURRET(other))
 		return;
         
 	if(other.deadflag != DEAD_NO)

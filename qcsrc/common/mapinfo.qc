@@ -922,7 +922,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 			else
 				fputs(fh, "// uncomment this if you added turrets: has turrets\n");
 			if(MapInfo_Map_supportedFeatures & MAPINFO_FEATURE_VEHICLES)
-				fputs(fh, "has weapons\n");
+				fputs(fh, "has vehicles\n");
 			else
 				fputs(fh, "// uncomment this if you added vehicles: has vehicles\n");
 			if(MapInfo_Map_flags & MAPINFO_FLAG_FRUSTRATING)

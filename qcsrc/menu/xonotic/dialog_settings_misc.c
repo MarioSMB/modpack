@@ -51,6 +51,10 @@ void XonoticMiscSettingsTab_fill(entity me)
 		me.TD(me, 1, 1, e = makeXonoticInputBox(0, "cl_port"));
 			e.enableClearButton = 0;
 	me.TR(me);
+		me.TDempty(me, 0.2);
+		if(cvar_type("crypto_aeslevel") & CVAR_TYPEFLAG_ENGINE)
+			me.TD(me, 1, 2.8, e = makeXonoticCheckBoxEx(2, 1, "crypto_aeslevel", _("Use encryption (AES) when available")));
+	me.TR(me);
 	me.TR(me);
 		me.TDempty(me, 0.2);
 		me.TD(me, 1, 2.8, e = makeXonoticCheckBox(0, "shownetgraph", _("Show netgraph")));

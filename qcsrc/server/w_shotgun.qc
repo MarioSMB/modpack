@@ -102,7 +102,7 @@ void shotgun_meleethink (void)
 		//te_customflash(targpos, 40,  2, '1 1 1');
 		
 		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body");
-		is_monster = (trace_ent.flags & FL_MONSTER);
+		is_monster = IS_MONSTER(trace_ent);
 
 		if((trace_fraction < 1) // if trace is good, apply the damage and remove self
 			&& (trace_ent.takedamage == DAMAGE_AIM)  

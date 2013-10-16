@@ -11,7 +11,7 @@ void turret_targettrigger_touch()
     e = find(world, targetname, self.target);
     while (e)
     {
-        if (e.turrcaps_flags & TFL_TURRCAPS_RECIVETARGETS)
+        if (e.turret_flags & TUR_FLAG_RECIEVETARGETS)
         {
             self = e;
             if(e.turret_addtarget)
@@ -30,11 +30,7 @@ void turret_targettrigger_touch()
 */
 void spawnfunc_turret_targettrigger()
 {
-    if (!autocvar_g_turrets)
-    {
-        remove(self);
-        return;
-    }
+    if not(autocvar_g_turrets) { remove(self); return; }
 
     InitTrigger ();
 

@@ -211,7 +211,7 @@ void GrapplingHookThink()
 				{
 					if(self.aiment.movetype == MOVETYPE_WALK)
 					{
-						entity aim_ent = ((self.aiment.vehicle_flags & VHF_ISVEHICLE && self.aiment.owner) ? self.aiment.owner : self.aiment);
+						entity aim_ent = ((IS_VEHICLE(self.aiment) && self.aiment.owner) ? self.aiment.owner : self.aiment);
 						v = v - dv * 0.5;
 						if((frozen_pulling && self.aiment.frozen) || !frozen_pulling)
 						{

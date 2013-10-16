@@ -1,3 +1,0 @@
-void ent_turret();
-void turrets_precache();
-.entity tur_head;

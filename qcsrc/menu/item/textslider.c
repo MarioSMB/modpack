@@ -62,8 +62,10 @@ void TextSlider_insertValue(entity me, float pos, string theString, string theId
 {
 	float i;
 	for (i = me.nValues; i > pos; --i)
+	{
 		me.(valueStrings[i]) = me.(valueStrings[i-1]);
 		me.(valueIdentifiers[i]) = me.(valueIdentifiers[i-1]);
+	}
 	me.(valueStrings[pos]) = theString;
 	me.(valueIdentifiers[pos]) = theIdentifier;
 	me.nValues += 1;

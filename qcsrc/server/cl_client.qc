@@ -2308,7 +2308,7 @@ void PlayerUseKey()
 				
 			while(head) // find the closest acceptable target to enter
 			{
-				if(head.vehicle_flags & VHF_ISVEHICLE)
+				if(IS_VEHICLE(head))
 				if(head.deadflag == DEAD_NO)
 				if not(head.owner)
 				{

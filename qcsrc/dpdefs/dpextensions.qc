@@ -2426,6 +2426,7 @@ string(float ccase, float calpha, float cnum, string s, ...) strconv = #224; // 
 string(float chars, string s, ...) strpad = #225; // pad string with spaces to a specified length, < 0 = left padding, > 0 = right padding
 string(string info, string key, string value, ...) infoadd = #226; // sets or adds a key/value pair to an infostring - note: forbidden characters are \ and "
 string(string info, string key) infoget = #227; // gets a key/value pair in an infostring, returns value or null if not found
+float(string s1, string s2) strcmp = #228; // compare two strings
 float(string s1, string s2, float len) strncmp = #228; // compare two strings up to the specified number of characters, if their length differs and is within the specified limit the result will be negative, otherwise it is the difference in value of their first non-matching character.
 float(string s1, string s2) strcasecmp = #229; // compare two strings with case-insensitive matching, characters a-z are considered equivalent to the matching A-Z character, no other differences, and this does not consider special characters equal even if they look similar
 float(string s1, string s2, float len) strncasecmp = #230; // same as strcasecmp but with a length limit, see strncmp

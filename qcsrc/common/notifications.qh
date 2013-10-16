@@ -230,7 +230,7 @@ void Send_Notification_WOCOVA(
 	MSG_ANNCE_NOTIF(default, prefix##YELLOW, channel, sprintf(sound, strtolower(STATIC_NAME_TEAM_3)), volume, position) \
 	MSG_ANNCE_NOTIF(default, prefix##PINK, channel, sprintf(sound, strtolower(STATIC_NAME_TEAM_4)), volume, position)
 #define MULTITEAM_ANNCE(default,prefix,teams,channel,sound,volume,position) \
-	MSG_ANNCE_NOTIF_##teams(default,prefix,channel,sound,volume,position) \
+	MULTITEAM_ANNCE##teams(default,prefix,channel,sound,volume,position)
 
 #define MSG_ANNCE_NOTIFICATIONS \
 	MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_AIRSHOT,       CH_INFO, "airshot",           VOL_BASEVOICE, ATTEN_NONE) \
@@ -425,7 +425,7 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_PLASMA,       2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 got served some superheated plasma from a turret%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_TESLA,        2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 was electrocuted by a Tesla turret%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_WALK_GUN,     2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 got served a lead enrichment by a Walker turret%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_WALK_MEELE,   2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 was impaled by a Walker turret%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_WALK_MELEE,   2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 was impaled by a Walker turret%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_TURRET_WALK_ROCKET,  2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 was blasted away by a Walker turret%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_BUMB_DEATH,       2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 got caught in the blast of a Bumblebee explosion%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_CRUSH,            2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 was crushed by a vehicle%s%s"), "") \
@@ -812,7 +812,7 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_PLASMA,             NO_MSG,        INFO_DEATH_SELF_TURRET_PLASMA,             CENTER_DEATH_SELF_TURRET) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_TESLA,              NO_MSG,        INFO_DEATH_SELF_TURRET_TESLA,              CENTER_DEATH_SELF_TURRET) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_WALK_GUN,           NO_MSG,        INFO_DEATH_SELF_TURRET_WALK_GUN,           CENTER_DEATH_SELF_TURRET_WALK) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_WALK_MEELE,         NO_MSG,        INFO_DEATH_SELF_TURRET_WALK_MEELE,         CENTER_DEATH_SELF_TURRET_WALK) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_WALK_MELEE,         NO_MSG,        INFO_DEATH_SELF_TURRET_WALK_MELEE,         CENTER_DEATH_SELF_TURRET_WALK) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_TURRET_WALK_ROCKET,        NO_MSG,        INFO_DEATH_SELF_TURRET_WALK_ROCKET,        CENTER_DEATH_SELF_TURRET_WALK) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_BUMB_DEATH,             NO_MSG,        INFO_DEATH_SELF_VH_BUMB_DEATH,             CENTER_DEATH_SELF_VH_BUMB_DEATH) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_CRUSH,                  NO_MSG,        INFO_DEATH_SELF_VH_CRUSH,                  CENTER_DEATH_SELF_VH_CRUSH) \

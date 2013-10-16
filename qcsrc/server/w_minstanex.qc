@@ -90,7 +90,7 @@ float W_MinstaNex_SuperBlast_IsVisible(entity head, vector nearest_on_line, vect
 	return FALSE;
 }
 
-#define PLAYER_CENTER(ent) (ent.origin + ((ent.classname == "player") ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
+#define PLAYER_CENTER(ent) (ent.origin + ((IS_PLAYER(ent)) ? ent.view_ofs : ((ent.mins + ent.maxs) * 0.5)))
 
 entity shockwave_hit[32];
 float shockwave_hit_damage[32];

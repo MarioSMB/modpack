@@ -546,7 +546,7 @@ float bumb_pilot_frame()
 		if(trace_ent.frozen == 0)
 		if(SAME_TEAM(trace_ent, pilot))
 		{
-			if(trace_ent.vehicle_flags & VHF_ISVEHICLE)
+			if(IS_VEHICLE(trace_ent))
 			{
 				if(autocvar_g_vehicle_bumblebee_healgun_hps)
 					trace_ent.vehicle_health = min(trace_ent.vehicle_health, trace_ent.vehicle_health + autocvar_g_vehicle_bumblebee_healgun_hps * frametime);
@@ -560,7 +560,7 @@ float bumb_pilot_frame()
 				if(trace_ent.armorvalue <= autocvar_g_vehicle_bumblebee_healgun_amax && autocvar_g_vehicle_bumblebee_healgun_aps)
 					trace_ent.armorvalue = min(trace_ent.armorvalue, trace_ent.armorvalue + autocvar_g_vehicle_bumblebee_healgun_aps * frametime);
 			}
-			else if(trace_ent.turrcaps_flags & TFL_TURRCAPS_ISTURRET)
+			else if(IS_TURRET(trace_ent))
 			{
 				if(trace_ent.health <= trace_ent.tur_health && autocvar_g_vehicle_bumblebee_healgun_hps)
 					trace_ent.health = min(trace_ent.tur_health + autocvar_g_vehicle_bumblebee_healgun_hps * frametime, trace_ent.health);

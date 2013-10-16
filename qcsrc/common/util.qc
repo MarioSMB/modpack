@@ -2492,6 +2492,28 @@ float cubic_speedfunc_is_sane(float startspeedfactor, float endspeedfactor)
 	// (3, [0..3])
 	// (3.5, [0.2..2.3])
 	// (4, 1)
+
+	/*
+	   On another note:
+	   inflection point is always at (2s + e - 3) / (3s + 3e - 6).
+
+	   s + e - 2 == 0: no inflection
+
+	   s + e > 2:
+	   0 < inflection < 1 if:
+	   0 < 2s + e - 3 < 3s + 3e - 6
+	   2s + e > 3 and 2e + s > 3
+
+	   s + e < 2:
+	   0 < inflection < 1 if:
+	   0 > 2s + e - 3 > 3s + 3e - 6
+	   2s + e < 3 and 2e + s < 3
+
+	   Therefore: there is an inflection point iff:
+	   e outside (3 - s)/2 .. 3 - s*2
+	   
+	   in other words, if (s,e) in triangle (1,1)(0,3)(0,1.5) or in triangle (1,1)(3,0)(1.5,0)
+	*/
 }
 
 .float FindConnectedComponent_processing;

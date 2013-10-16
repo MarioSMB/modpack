@@ -1,6 +1,5 @@
 void SUB_NullThink(void) { }
 
-void(vector destangle, float tspeed, void() func) SUB_CalcAngleMove;
 void()  SUB_CalcMoveDone;
 void() SUB_CalcAngleMoveDone;
 //void() SUB_UseTargets;
@@ -153,6 +152,7 @@ void SUB_CalcMoveDone (void)
 		self.think1 ();
 }
 
+.float platmovetype_turn;
 void SUB_CalcMove_controller_think (void)
 {
 	entity oldself;
@@ -162,6 +162,7 @@ void SUB_CalcMove_controller_think (void)
 	vector delta;
 	vector delta2;
 	vector veloc;
+	vector angloc;
 	vector nextpos;
 	delta = self.destvec;
 	delta2 = self.destvec2;
@@ -170,23 +171,31 @@ void SUB_CalcMove_controller_think (void)
 
 		traveltime = self.animstate_endtime - self.animstate_starttime;
 		phasepos = (nexttick - self.animstate_starttime) / traveltime; // range: [0, 1]
-		if(self.platmovetype != 1)
-		{
-			phasepos = 3.14159265 + (phasepos * 3.14159265); // range: [pi, 2pi]
-			phasepos = cos(phasepos); // cos [pi, 2pi] is in [-1, 1]
-			phasepos = phasepos + 1; // correct range to [0, 2]
-			phasepos = phasepos / 2; // correct range to [0, 1]
-		}
+		phasepos = cubic_speedfunc(self.platmovetype_start, self.platmovetype_end, phasepos);
 		nextpos = self.origin + (delta * phasepos) + (delta2 * phasepos * phasepos);
 		// derivative: delta + 2 * delta2 * phasepos (e.g. for angle positioning)
 
-		if(nexttick < self.animstate_endtime) {
-			veloc = nextpos - self.owner.origin;
-			veloc = veloc * (1 / sys_frametime); // so it arrives for the next frame
-		} else {
-			veloc = self.finaldest - self.owner.origin;
-			veloc = veloc * (1 / sys_frametime); // so it arrives for the next frame
+		if(self.owner.platmovetype_turn)
+		{
+			vector destangle;
+			destangle = delta + 2 * delta2 * phasepos;
+			destangle = vectoangles(destangle);
+			destangle_x = -destangle_x; // flip up / down orientation
+
+			// take the shortest distance for the angles
+			self.owner.angles_x -= 360 * floor((self.owner.angles_x - destangle_x) / 360 + 0.5);
+			self.owner.angles_y -= 360 * floor((self.owner.angles_y - destangle_y) / 360 + 0.5);
+			self.owner.angles_z -= 360 * floor((self.owner.angles_z - destangle_z) / 360 + 0.5);
+			angloc = destangle - self.owner.angles;
+			angloc = angloc * (1 / sys_frametime); // so it arrives for the next frame
+			self.owner.avelocity = angloc;
 		}
+		if(nexttick < self.animstate_endtime)
+			veloc = nextpos - self.owner.origin;
+		else
+			veloc = self.finaldest - self.owner.origin;
+		veloc = veloc * (1 / sys_frametime); // so it arrives for the next frame
+
 		self.owner.velocity = veloc;
 		self.nextthink = nexttick;
 	} else {
@@ -211,6 +220,7 @@ void SUB_CalcMove_controller_setbezier (entity controller, vector org, vector co
 
 	controller.destvec = 2 * control; // control point
 	controller.destvec2 = dest - 2 * control; // quadratic part required to reach end point
+	// also: initial d/dphasepos origin = 2 * control, final speed = 2 * (dest - control)
 }
 
 void SUB_CalcMove_controller_setlinear (entity controller, vector org, vector dest)
@@ -226,7 +236,13 @@ void SUB_CalcMove_controller_setlinear (entity controller, vector org, vector de
 	controller.destvec2 = '0 0 0';
 }
 
-void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeed, void() func)
+float TSPEED_TIME = -1;
+float TSPEED_LINEAR = 0;
+float TSPEED_START = 1;
+float TSPEED_END = 2;
+// TODO average too?
+
+void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeedtype, float tspeed, void() func)
 {
 	float	traveltime;
 	entity controller;
@@ -238,10 +254,22 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeed, void() fu
 	self.finaldest = tdest;
 	self.think = SUB_CalcMoveDone;
 
-	if(tspeed > 0) // positive: start speed
-		traveltime = 2 * vlen(tcontrol - self.origin) /  tspeed;
-	else // negative: end speed
-		traveltime = 2 * vlen(tcontrol - tdest)       / -tspeed;
+	switch(tspeedtype)
+	{
+		default:
+		case TSPEED_START:
+			traveltime = 2 * vlen(tcontrol - self.origin) / tspeed;
+			break;
+		case TSPEED_END:
+			traveltime = 2 * vlen(tcontrol - tdest)       / tspeed;
+			break;
+		case TSPEED_LINEAR:
+			traveltime = vlen(tdest - self.origin)        / tspeed;
+			break;
+		case TSPEED_TIME:
+			traveltime = tspeed;
+			break;
+	}
 
 	if (traveltime < 0.1) // useless anim
 	{
@@ -254,6 +282,8 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeed, void() fu
 	controller.classname = "SUB_CalcMove_controller";
 	controller.owner = self;
 	controller.platmovetype = self.platmovetype;
+	controller.platmovetype_start = self.platmovetype_start;
+	controller.platmovetype_end = self.platmovetype_end;
 	SUB_CalcMove_controller_setbezier(controller, self.origin, tcontrol, tdest);
 	controller.finaldest = (tdest + '0 0 0.125'); // where do we want to end? Offset to overshoot a bit.
 	controller.animstate_starttime = time;
@@ -271,7 +301,7 @@ void SUB_CalcMove_Bezier (vector tcontrol, vector tdest, float tspeed, void() fu
 	self = self.owner;
 }
 
-void SUB_CalcMove (vector tdest, float tspeed, void() func)
+void SUB_CalcMove (vector tdest, float tspeedtype, float tspeed, void() func)
 {
 	vector	delta;
 	float	traveltime;
@@ -291,13 +321,25 @@ void SUB_CalcMove (vector tdest, float tspeed, void() func)
 	}
 
 	delta = tdest - self.origin;
-	traveltime = vlen (delta) / tspeed;
+
+	switch(tspeedtype)
+	{
+		default:
+		case TSPEED_START:
+		case TSPEED_END:
+		case TSPEED_LINEAR:
+			traveltime = vlen (delta) / tspeed;
+			break;
+		case TSPEED_TIME:
+			traveltime = tspeed;
+			break;
+	}
 
 	// Very short animations don't really show off the effect
 	// of controlled animation, so let's just use linear movement.
 	// Alternatively entities can choose to specify non-controlled movement.
         // The only currently implemented alternative movement is linear (value 1)
-	if (traveltime < 0.15 || self.platmovetype == 1)
+	if (traveltime < 0.15 || (self.platmovetype_start == 1 && self.platmovetype_end == 1)) // is this correct?
 	{
 		self.velocity = delta * (1/traveltime);	// QuakeC doesn't allow vector/float division
 		self.nextthink = self.ltime + traveltime;
@@ -305,17 +347,17 @@ void SUB_CalcMove (vector tdest, float tspeed, void() func)
 	}
 
 	// now just run like a bezier curve...
-	SUB_CalcMove_Bezier((self.origin + tdest) * 0.5, tdest, tspeed, func);
+	SUB_CalcMove_Bezier((self.origin + tdest) * 0.5, tdest, tspeedtype, tspeed, func);
 }
 
-void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeed, void() func)
+void SUB_CalcMoveEnt (entity ent, vector tdest, float tspeedtype, float tspeed, void() func)
 {
 	entity	oldself;
 
 	oldself = self;
 	self = ent;
 
-	SUB_CalcMove (tdest, tspeed, func);
+	SUB_CalcMove (tdest, tspeedtype, tspeed, func);
 
 	self = oldself;
 }
@@ -341,7 +383,7 @@ void SUB_CalcAngleMoveDone (void)
 }
 
 // FIXME: I fixed this function only for rotation around the main axes
-void SUB_CalcAngleMove (vector destangle, float tspeed, void() func)
+void SUB_CalcAngleMove (vector destangle, float tspeedtype, float tspeed, void() func)
 {
 	vector	delta;
 	float	traveltime;
@@ -354,7 +396,19 @@ void SUB_CalcAngleMove (vector destangle, float tspeed, void() func)
 	self.angles_y -= 360 * floor((self.angles_y - destangle_y) / 360 + 0.5);
 	self.angles_z -= 360 * floor((self.angles_z - destangle_z) / 360 + 0.5);
 	delta = destangle - self.angles;
-	traveltime = vlen (delta) / tspeed;
+
+	switch(tspeedtype)
+	{
+		default:
+		case TSPEED_START:
+		case TSPEED_END:
+		case TSPEED_LINEAR:
+			traveltime = vlen (delta) / tspeed;
+			break;
+		case TSPEED_TIME:
+			traveltime = tspeed;
+			break;
+	}
 
 	self.think1 = func;
 	self.finalangle = destangle;
@@ -371,14 +425,14 @@ void SUB_CalcAngleMove (vector destangle, float tspeed, void() func)
 	self.nextthink = self.ltime + traveltime;
 }
 
-void SUB_CalcAngleMoveEnt (entity ent, vector destangle, float tspeed, void() func)
+void SUB_CalcAngleMoveEnt (entity ent, vector destangle, float tspeedtype, float tspeed, void() func)
 {
 	entity	oldself;
 
 	oldself = self;
 	self = ent;
 
-	SUB_CalcAngleMove (destangle, tspeed, func);
+	SUB_CalcAngleMove (destangle, tspeedtype, tspeed, func);
 
 	self = oldself;
 }

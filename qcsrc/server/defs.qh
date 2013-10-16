@@ -73,7 +73,8 @@ float server_is_dedicated;
 //.float	style;
 //.float	skill;
 .float	sounds;
-.float  platmovetype;
+.string  platmovetype;
+.float platmovetype_start, platmovetype_end;
 
 .string killtarget;
 
@@ -474,6 +475,7 @@ void target_voicescript_clear(entity pl);
 .string target2;
 .string target3;
 .string target4;
+.string curvetarget;
 .float target_random;
 .float trigger_reverse;
 

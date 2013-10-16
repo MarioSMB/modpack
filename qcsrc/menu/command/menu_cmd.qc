@@ -51,6 +51,12 @@ void GameCommand(string theCommand)
 		return;
 	}
 
+	if(argv(0) == "update_conwidths_before_vid_restart")
+	{
+		updateConwidths(cvar("vid_width"), cvar("vid_height"), cvar("vid_pixelheight"));
+		return;
+	}
+
 	if(argv(0) == "directmenu" || argv(0) == "directpanelhudmenu")
 	{
 		string filter = string_null;

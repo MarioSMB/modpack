@@ -47,6 +47,10 @@ const float VHF_PLAYERSLOT    = 16384;    /// This ent is a player slot on a mul
 .float  vehicle_respawntime;
 //.void() vehicle_spawn;
 
+.float volly_counter;
+
+.float tur_health;
+
 void vehicles_exit(float eject);
 .void(float exit_flags) vehicle_exit;
 const float VHEF_NORMAL = 0;  /// User pressed exit key

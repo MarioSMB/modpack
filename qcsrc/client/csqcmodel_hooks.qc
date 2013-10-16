@@ -180,7 +180,7 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 	float isfriend;
 	float cm;
 	cm = self.forceplayermodels_savecolormap;
-	cm = (cm >= 1024) ? cm : (stof(getplayerkeyvalue(self.colormap - 1, "colors")) + 1024);
+	cm = (cm >= 1024) ? cm : (stof(getplayerkeyvalue(cm - 1, "colors")) + 1024);
 
 	if(teamplay)
 		isfriend = (cm == 1024 + 17 * myteam);

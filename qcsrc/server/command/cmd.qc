@@ -191,7 +191,7 @@ void ClientCommand_mobedit(float request, float argc)
 			makevectors(self.v_angle);
 			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
 			
-			if not(trace_ent.flags & FL_MONSTER) { sprint(self, "You need to aim at your monster to edit its properties.\n"); return; }
+			if not(IS_MONSTER(trace_ent)) { sprint(self, "You need to aim at your monster to edit its properties.\n"); return; }
 			if(trace_ent.realowner != self) { sprint(self, "That monster does not belong to you.\n"); return; }
 			
 			switch(argv(1))
@@ -220,7 +220,7 @@ void ClientCommand_mobkill(float request)
 			makevectors(self.v_angle);
 			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
 			
-			if(trace_ent.flags & FL_MONSTER)
+			if(IS_MONSTER(trace_ent))
 			{
 				if(trace_ent.realowner != self)
 				{

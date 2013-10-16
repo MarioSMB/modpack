@@ -140,6 +140,6 @@ void XonoticVideoSettingsTab_fill(entity me)
 	}
 
 	me.gotoRC(me, me.rows - 1, 0);
-		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "vid_width $_menu_vid_width; vid_height $_menu_vid_height; vid_pixelheight $_menu_vid_pixelheight; vid_desktopfullscreen $_menu_vid_desktopfullscreen; vid_restart; menu_restart; menu_cmd videosettings", COMMANDBUTTON_APPLY));
+		me.TD(me, 1, me.columns, makeXonoticCommandButton(_("Apply immediately"), '0 0 0', "vid_width $_menu_vid_width; vid_height $_menu_vid_height; vid_pixelheight $_menu_vid_pixelheight; vid_desktopfullscreen $_menu_vid_desktopfullscreen; menu_cmd update_conwidths_before_vid_restart; vid_restart; menu_cmd sync", COMMANDBUTTON_APPLY));
 }
 #endif

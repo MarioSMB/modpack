@@ -109,7 +109,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 {
 	entity oldself = self;
 	
-	if(other.flags & FL_MONSTER)
+	if(IS_MONSTER(other))
 		other.monster_loot = func_null;
 
 	self.ok_lastwep = self.weapon;

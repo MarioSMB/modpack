@@ -546,6 +546,7 @@ void spawnfunc___init_dedicated_server(void)
 	// needs to be done so early because of the constants they create
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
 	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
+	CALL_ACCUMULATED_FUNCTION(RegisterTurrets);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
@@ -595,6 +596,7 @@ void spawnfunc_worldspawn (void)
 	// needs to be done so early because of the constants they create
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
 	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
+	CALL_ACCUMULATED_FUNCTION(RegisterTurrets);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);

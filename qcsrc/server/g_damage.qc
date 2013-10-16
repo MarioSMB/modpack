@@ -561,13 +561,13 @@ void Ice_Think()
 
 void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypoint)
 {
-	if(!IS_PLAYER(targ) && !(targ.flags & FL_MONSTER)) // only specified entities can be freezed
+	if(!IS_PLAYER(targ) && !IS_MONSTER(targ)) // only specified entities can be freezed
 		return;
 		
 	if(targ.frozen)
 		return;
 	
-	float targ_maxhealth = ((targ.flags & FL_MONSTER) ? targ.max_health : autocvar_g_balance_health_start);
+	float targ_maxhealth = ((IS_MONSTER(targ)) ? targ.max_health : autocvar_g_balance_health_start);
 		
 	targ.frozen = frozen_type;
 	targ.revive_progress = ((frozen_type == 3) ? 1 : 0);
@@ -828,12 +828,12 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		if(targ != attacker)
 		{
 			entity victim;
-			if((targ.vehicle_flags & VHF_ISVEHICLE) && targ.owner)
+			if(IS_VEHICLE(targ) && targ.owner)
 				victim = targ.owner;
 			else
 				victim = targ;
 
-			if(IS_PLAYER(victim) || victim.turrcaps_flags & TFL_TURRCAPS_ISTURRET || victim.flags & FL_MONSTER)
+			if(IS_PLAYER(victim) || IS_TURRET(victim) || IS_MONSTER(victim))
 			{
 				if(DIFF_TEAM(victim, attacker))
 				{

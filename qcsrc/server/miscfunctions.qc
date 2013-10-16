@@ -100,6 +100,9 @@ const string STR_OBSERVER = "observer";
 #define IS_BOT_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_BOT)
 #define IS_REAL_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_REAL)
 #define IS_NOT_A_CLIENT(v) 		(clienttype(v) == CLIENTTYPE_NOTACLIENT)
+#define IS_TURRET(v)			(v.turret_flags & TUR_FLAG_ISTURRET)
+#define IS_VEHICLE(v)			(v.vehicle_flags & VHF_ISVEHICLE)
+#define IS_MONSTER(v)			(v.flags & FL_MONSTER)
 
 #define FOR_EACH_CLIENTSLOT(v) for(v = world; (v = nextent(v)) && (num_for_edict(v) <= maxclients); )
 #define FOR_EACH_CLIENT(v) FOR_EACH_CLIENTSLOT(v) if(IS_CLIENT(v))
@@ -1361,11 +1364,6 @@ void precache()
 {
     // gamemode related things
     precache_model ("models/misc/chatbubble.spr");
-
-#ifdef TTURRETS_ENABLED
-    if (autocvar_g_turrets)
-        turrets_precash();
-#endif
 
     // Precache all player models if desired
     if (autocvar_sv_precacheplayermodels)

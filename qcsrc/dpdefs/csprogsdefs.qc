@@ -447,6 +447,7 @@ string(float ccase, float calpha, float cnum, string s, ...) strconv = #224;
 string(float chars, string s, ...) strpad = #225;
 string(string info, string key, string value, ...) infoadd = #226;
 string(string info, string key) infoget = #227;
+float(string s1, string s2) strcmp = #228;
 float(string s1, string s2, float len) strncmp = #228;
 float(string s1, string s2) strcasecmp = #229;
 float(string s1, string s2, float len) strncasecmp = #230;

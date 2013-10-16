@@ -17,7 +17,7 @@ float menuNotTheFirstFrame;
 float menuMouseMode;
 
 float conwidth_s, conheight_s, vidwidth_s, vidheight_s, vidpixelheight_s,
-      realconwidth, realconheight, screenconwidth, screenconheight;
+      realconwidth, realconheight;
 
 void m_sync()
 {
@@ -94,11 +94,10 @@ void m_init()
 }
 
 const float MENU_ASPECT = 1.25; // 1280x1024
-const float MENU_MINHEIGHT = 600;
 
 void draw_reset_cropped()
 {
-	draw_reset(screenconwidth, screenconheight, 0.5 * (realconwidth - screenconwidth), 0.5 * (realconheight - screenconheight));
+	draw_reset(conwidth, conheight, 0.5 * (realconwidth - conwidth), 0.5 * (realconheight - conheight));
 }
 void draw_reset_full()
 {
@@ -109,7 +108,8 @@ void UpdateConWidthHeight(float w, float h, float p)
 {
 	if (w != vidwidth_s || h != vidheight_s || p != vidpixelheight_s)
 	{
-		updateConwidths(w, h, p);
+		if (updateConwidths(w, h, p))
+			localcmd(sprintf("\nexec %s\n", cvar_string("menu_font_cfg")));
 		vidwidth_s = w;
 		vidheight_s = h;
 		vidpixelheight_s = p;
@@ -129,18 +129,6 @@ void UpdateConWidthHeight(float w, float h, float p)
 		// squarescreen
 		conwidth = realconwidth;
 		conheight = realconwidth / MENU_ASPECT;
-	}
-	screenconwidth = conwidth;
-	screenconheight = conheight;
-	if(conwidth < MENU_MINHEIGHT * MENU_ASPECT)
-	{
-		conheight *= MENU_MINHEIGHT * MENU_ASPECT / conwidth;
-		conwidth = MENU_MINHEIGHT * MENU_ASPECT;
-	}
-	if(conheight < MENU_MINHEIGHT)
-	{
-		conwidth *= MENU_MINHEIGHT / conheight;
-		conheight = MENU_MINHEIGHT;
 	}
 	if(main)
 	{
