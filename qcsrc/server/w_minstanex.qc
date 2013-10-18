@@ -2,7 +2,7 @@
 REGISTER_WEAPON(
 /* WEP_##id  */ MINSTANEX,
 /* function  */ w_minstanex,
-/* ammotype  */ IT_CELLS,
+/* ammotype  */ IT_CELLS | IT_SUPERCELLS,
 /* impulse   */ 7,
 /* flags     */ WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_FLAG_SUPERWEAPON | WEP_TYPE_HITSCAN,
 /* rating    */ BOT_PICKUP_RATING_HIGH,
@@ -235,7 +235,6 @@ void W_MinstaNex_SuperBlast()
 	// declarations
 	float multiplier, multiplier_from_accuracy, multiplier_from_distance;
 	float final_damage; //, final_spread;
-	float minstanex_ammo = ((g_minstagib) ? 1 : autocvar_g_balance_minstanex_ammo);
 	vector final_force, center, vel;
 	entity head, next;
 
@@ -364,7 +363,15 @@ void W_MinstaNex_SuperBlast()
 	}
 	//print("queue was ", ftos(queue), ".\n\n");
 	
-	W_DecreaseAmmo(ammo_cells, minstanex_ammo, autocvar_g_balance_minstanex_reload_ammo);
+	W_DecreaseAmmo(ammo_supercells, 1, autocvar_g_balance_minstanex_reload_ammo);
+}
+
+float W_MinstaNex_SuperBlast_CheckAmmo()
+{
+	float ammo_amount;
+	ammo_amount = self.ammo_supercells >= 1;
+	ammo_amount += self.(weapon_load[WEP_MINSTANEX]) >= 1;
+	return ammo_amount;
 }
 
 void W_RocketMinsta_Laser_Explode (void)
@@ -523,8 +530,12 @@ float w_minstanex(float req)
 				if(weapon_prepareattack(0, autocvar_g_balance_minstanex_refire))
 				{
 					W_MinstaNex_Attack();
+					
+					if(time >= self.minstanex_jumpinterval)
 					if(autocvar_g_balance_minstanex_superblast == 1 || (autocvar_g_balance_minstanex_superblast == 2 && self.cvar_cl_charge))
+					if(W_MinstaNex_SuperBlast_CheckAmmo())
 						self.minstanex_held_down = 1;
+						
 					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_minstanex_animtime, w_ready);
 				}
 			}
@@ -665,6 +676,7 @@ float w_minstanex(float req)
 	{
 		vector org2;
 		org2 = w_org + w_backoff * 6;
+		if not(w_deathtype & HITTYPE_SPLASH)
 		if not(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT))
 			pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
 		if(!w_issilent)

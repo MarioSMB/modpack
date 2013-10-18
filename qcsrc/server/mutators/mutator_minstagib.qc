@@ -9,6 +9,17 @@ void spawnfunc_item_minst_cells (void)
 			   "MinstaNex Ammo", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
 }
 
+void minstagib_item_supercells() 
+{
+	if not(g_minstagib) { remove(self); return; }
+	if not(self.ammo_supercells)
+		self.ammo_supercells = 2;
+		
+	StartItem ("models/items/a_supercells.md3",
+			   "misc/itempickup.wav", 45, 0,
+			   "supercells", IT_SUPERCELLS, 0, 0, generic_pickupevalfunc, 100);
+}
+
 void minstagib_health_mega()
 {
 	self.max_health = 1;
@@ -334,7 +345,7 @@ MUTATOR_HOOKFUNCTION(minstagib_FilterItem)
 	if(self.ammo_cells > autocvar_g_minstagib_ammo_drop && self.classname != "item_minst_cells")
 		self.ammo_cells = autocvar_g_minstagib_ammo_drop;
 		
-	if(self.ammo_cells && !self.weapon)
+	if((self.ammo_cells || self.ammo_supercells) && !self.weapon)
 		return FALSE;
 		
 	return TRUE;
@@ -374,7 +385,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDies)
 
 MUTATOR_HOOKFUNCTION(minstagib_ItemTouch)
 {
-	if(self.ammo_cells)
+	if(self.ammo_cells || self.ammo_supercells)
 	{
 		// play some cool sounds ;)
 		if (IS_CLIENT(other))
@@ -403,6 +414,11 @@ MUTATOR_HOOKFUNCTION(minstagib_ItemTouch)
 
 MUTATOR_HOOKFUNCTION(minstagib_OnEntityPreSpawn)
 {
+	if(autocvar_g_balance_minstanex_superblast)
+	if(self.classname == "item_cells" || self.classname == "item_minst_cells")
+	if(random() <= 0.5)
+		minstagib_item_supercells();
+
 	if not(autocvar_g_powerups) { return FALSE; }
 	if not(self.classname == "item_strength" || self.classname == "item_invincible" || self.classname == "item_health_mega")
 		return FALSE;

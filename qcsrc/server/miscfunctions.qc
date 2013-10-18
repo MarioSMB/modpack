@@ -410,6 +410,7 @@ string formatmessage(string msg)
 			else if (self.items & IT_NAILS) replacement = "bullets";
 			else if (self.items & IT_ROCKETS) replacement = "rockets";
 			else if (self.items & IT_CELLS) replacement = "cells";
+			else if (self.items & IT_SUPERCELLS) replacement = "supercells";
 			else replacement = "batteries"; // ;)
 		} else if (escape == "x") {
 			replacement = cursor_ent.netname;

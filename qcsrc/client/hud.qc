@@ -417,6 +417,7 @@ float GetAmmoStat(float i)
 		case 2: return STAT_ROCKETS;
 		case 3: return STAT_CELLS;
 		case 4: return STAT_FUEL;
+		case 5: return STAT_SUPERCELLS;
 		default: return -1;
 	}
 }
@@ -798,6 +799,7 @@ void HUD_Weapons(void)
 						case 2: ammo_full = autocvar_hud_panel_weapons_ammo_full_rockets; break;
 						case 3: ammo_full = autocvar_hud_panel_weapons_ammo_full_cells; break;
 						case 4: ammo_full = autocvar_hud_panel_weapons_ammo_full_fuel; break;
+						case 5: ammo_full = autocvar_hud_panel_weapons_ammo_full_cells; break;
 						default: ammo_full = 60;
 					}
 
@@ -866,6 +868,7 @@ float GetAmmoItemCode(float i)
 		case 2: return IT_ROCKETS;
 		case 3: return IT_CELLS;
 		case 4: return IT_FUEL;
+		case 5: return IT_SUPERCELLS;
 		default: return -1;
 	}
 }
@@ -879,6 +882,7 @@ string GetAmmoPicture(float i)
 		case 2: return "ammo_rockets";
 		case 3: return "ammo_cells";
 		case 4: return "ammo_fuel";
+		case 5: return "ammo_supercells";
 		default: return "";
 	}
 }
@@ -1029,11 +1033,11 @@ void HUD_Ammo(void)
 	if (autocvar_hud_panel_ammo_onlycurrent)
 		total_ammo_count = 1;
 	else
-		total_ammo_count = AMMO_COUNT;
+		total_ammo_count = AMMO_COUNT - 1; // fuel
 	
 	if(draw_nades)
 	{
-		total_ammo_count++;
+		++total_ammo_count;
 		if (nade_cnt != nade_prevframe)
 		{
 			nade_statuschange_time = time;
@@ -1087,6 +1091,7 @@ void HUD_Ammo(void)
 			if (stat_items & IT_UNLIMITED_WEAPON_AMMO)
 				infinite_ammo = TRUE;
 			for (i = 0; i < AMMO_COUNT; ++i) {
+				if(i == 4) continue; // fuel
 				currently_selected = stat_items & GetAmmoItemCode(i);
 				if (currently_selected)
 				{
@@ -1109,6 +1114,7 @@ void HUD_Ammo(void)
 		if (stat_items & IT_UNLIMITED_WEAPON_AMMO)
 			infinite_ammo = TRUE;
 		for (i = 0; i < AMMO_COUNT; ++i) {
+			if(i == 4) continue; // fuel
 			currently_selected = stat_items & GetAmmoItemCode(i);
 			DrawAmmoItem(pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y), ammo_size, i, currently_selected, infinite_ammo);
 			++row;

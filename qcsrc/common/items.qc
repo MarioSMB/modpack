@@ -118,6 +118,8 @@ void register_weapon(float id, WepSet bit, float(float) func, float ammotype, fl
 		e.ammo_field = ammo_cells;
 	else if(ammotype & IT_FUEL)
 		e.ammo_field = ammo_fuel;
+	else if(ammotype & IT_SUPERCELLS)
+		e.ammo_field = ammo_supercells;
 	else
 		e.ammo_field = ammo_batteries;
 }

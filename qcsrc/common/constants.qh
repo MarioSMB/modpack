@@ -201,6 +201,8 @@ const float STAT_WEAPONSINMAP = 90;
 const float STAT_WEAPONSINMAP2 = 91;
 const float STAT_WEAPONSINMAP3 = 92;
 
+const float STAT_SUPERCELLS = 93;
+
 // mod stats (1xx)
 const float STAT_REDALIVE = 100;
 const float STAT_BLUEALIVE = 101;

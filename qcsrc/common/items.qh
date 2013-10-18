@@ -25,6 +25,7 @@ WANT_CONST float   IT_SHELLS                    = 256;
 WANT_CONST float   IT_NAILS                     = 512;
 WANT_CONST float   IT_ROCKETS                   = 1024;
 WANT_CONST float   IT_CELLS                     = 2048;
+WANT_CONST float   IT_SUPERCELLS                = 8388608;
 const float   IT_SUPERWEAPON               = 4096;
 const float   IT_FUEL                      = 128;
 const float   IT_STRENGTH                  = 8192;
@@ -57,7 +58,7 @@ const float   IT_AMMO                      = 3968; // IT_SHELLS | IT_NAILS | IT_
 const float   IT_PICKUPMASK                = 51; // IT_FUEL_REGEN | IT_JETPACK | IT_UNLIMITED_AMMO; // strength and invincible are handled separately
 const float   IT_UNLIMITED_AMMO            = 3; // IT_UNLIMITED_SUPERWEAPONS | IT_UNLIMITED_WEAPON_AMMO;
 
-const float AMMO_COUNT = 4; // amount of ammo types to show in the inventory panel
+const float AMMO_COUNT = 6; // amount of ammo types to show in the inventory panel
 
 // variables:
 string weaponorder_byid;
@@ -74,6 +75,7 @@ string W_NumberWeaponOrder(string order);
 .float ammo_rockets;
 .float ammo_cells;
 .float ammo_fuel;
+.float ammo_supercells;
 .float ammo_batteries; // dummy
 
 // Weapon sets

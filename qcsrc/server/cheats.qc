@@ -140,6 +140,7 @@ float CheatImpulse(float i)
 			self.personal.ammo_rockets = self.ammo_rockets;
 			self.personal.ammo_nails = self.ammo_nails;
 			self.personal.ammo_cells = self.ammo_cells;
+			self.personal.ammo_supercells = self.ammo_supercells;
 			self.personal.ammo_shells = self.ammo_shells;
 			self.personal.ammo_fuel = self.ammo_fuel;
 			self.personal.health = self.health;

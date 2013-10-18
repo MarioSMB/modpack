@@ -800,6 +800,8 @@ void spawnfunc_worldspawn (void)
 
 	addstat(STAT_HAGAR_LOAD, AS_INT, hagar_load);
 	
+	addstat(STAT_SUPERCELLS, AS_INT, ammo_supercells);
+	
 	// freeze attacks
 	addstat(STAT_FROZEN, AS_INT, frozen);
 	addstat(STAT_REVIVE_PROGRESS, AS_FLOAT, revive_progress);

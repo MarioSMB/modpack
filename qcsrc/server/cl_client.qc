@@ -497,6 +497,7 @@ void PutClientInServer (void)
 			self.ammo_rockets = warmup_start_ammo_rockets;
 			self.ammo_cells = warmup_start_ammo_cells;
 			self.ammo_fuel = warmup_start_ammo_fuel;
+			self.ammo_supercells = 0; // never start with super cells
 			self.health = warmup_start_health;
 			self.armorvalue = warmup_start_armorvalue;
 			self.weapons = warmup_start_weapons;
@@ -508,6 +509,7 @@ void PutClientInServer (void)
 			self.ammo_rockets = start_ammo_rockets;
 			self.ammo_cells = start_ammo_cells;
 			self.ammo_fuel = start_ammo_fuel;
+			self.ammo_supercells = 0; // never start with super cells
 			self.health = start_health;
 			self.armorvalue = start_armorvalue;
 			self.weapons = start_weapons;

@@ -310,6 +310,7 @@ floatfield Item_CounterField(float it)
 		case IT_NAILS:       return ammo_nails;
 		case IT_ROCKETS:     return ammo_rockets;
 		case IT_CELLS:       return ammo_cells;
+		case IT_SUPERCELLS:  return ammo_supercells;
 		case IT_FUEL:        return ammo_fuel;
 		case IT_5HP:         return health;
 		case IT_25HP:        return health;
@@ -334,6 +335,7 @@ string Item_CounterFieldName(float it)
 		case IT_ROCKETS:     return "rockets";
 		case IT_CELLS:       return "cells";
 		case IT_FUEL:        return "fuel";
+		case IT_SUPERCELLS:  return "supercells";
 
 		// add more things here (health, armor)
 		default:             error("requested item has no counter field name");
@@ -636,6 +638,7 @@ float Item_GiveTo(entity item, entity player)
 	pickedup |= Item_GiveAmmoTo(item, player, ammo_nails, g_pickup_nails_max, ITEM_MODE_NONE);
 	pickedup |= Item_GiveAmmoTo(item, player, ammo_rockets, g_pickup_rockets_max, ITEM_MODE_NONE);
 	pickedup |= Item_GiveAmmoTo(item, player, ammo_cells, g_pickup_cells_max, ITEM_MODE_NONE);
+	pickedup |= Item_GiveAmmoTo(item, player, ammo_supercells, g_pickup_cells_max, ITEM_MODE_NONE);
 	pickedup |= Item_GiveAmmoTo(item, player, health, item.max_health, ITEM_MODE_HEALTH);
 	pickedup |= Item_GiveAmmoTo(item, player, armorvalue, item.max_armorvalue, ITEM_MODE_ARMOR);
 
@@ -891,7 +894,7 @@ float weapon_pickupevalfunc(entity player, entity item)
 float commodity_pickupevalfunc(entity player, entity item)
 {
 	float c, i;
-	float need_shells = FALSE, need_nails = FALSE, need_rockets = FALSE, need_cells = FALSE, need_fuel = FALSE;
+	float need_shells = FALSE, need_nails = FALSE, need_rockets = FALSE, need_cells = FALSE, need_fuel = FALSE, need_supercells = FALSE;
 	entity wi;
 	c = 0;
 
@@ -913,6 +916,8 @@ float commodity_pickupevalfunc(entity player, entity item)
 			need_cells = TRUE;
 		else if(wi.items & IT_FUEL)
 			need_cells = TRUE;
+		else if(wi.items & IT_SUPERCELLS)
+			need_supercells = TRUE;
 	}
 
 	// TODO: figure out if the player even has the weapon this ammo is for?
@@ -934,6 +939,10 @@ float commodity_pickupevalfunc(entity player, entity item)
 	if (item.ammo_cells)
 	if (player.ammo_cells < g_pickup_cells_max)
 		c = c + max(0, 1 - player.ammo_cells / g_pickup_cells_max);
+	if (need_supercells)
+	if (item.ammo_supercells)
+	if (player.ammo_supercells < g_pickup_cells_max)
+		c = c + max(0, 1 - player.ammo_supercells / g_pickup_cells_max);
 	if (need_fuel)
 	if (item.ammo_fuel)
 	if (player.ammo_fuel < g_pickup_fuel_max)
@@ -1629,6 +1638,7 @@ void spawnfunc_target_items (void)
 		if(self.ammo_nails != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_nails), "nails");
 		if(self.ammo_rockets != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_rockets), "rockets");
 		if(self.ammo_cells != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_cells), "cells");
+		if(self.ammo_supercells != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_supercells), "supercells");
 		if(self.ammo_fuel != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_fuel), "fuel");
 		if(self.health != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.health), "health");
 		if(self.armorvalue != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.health), "armor");
@@ -1842,6 +1852,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	PREGIVE(e, superweapons_finished);
 	PREGIVE(e, ammo_nails);
 	PREGIVE(e, ammo_cells);
+	PREGIVE(e, ammo_supercells);
 	PREGIVE(e, ammo_shells);
 	PREGIVE(e, ammo_rockets);
 	PREGIVE(e, ammo_fuel);
@@ -1895,6 +1906,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				}
 			case "allammo":
 				got += GiveValue(e, ammo_cells, op, val);
+				got += GiveValue(e, ammo_supercells, op, val);
 				got += GiveValue(e, ammo_shells, op, val);
 				got += GiveValue(e, ammo_nails, op, val);
 				got += GiveValue(e, ammo_rockets, op, val);
@@ -1926,6 +1938,9 @@ float GiveItems(entity e, float beginarg, float endarg)
 				break;
 			case "cells":
 				got += GiveValue(e, ammo_cells, op, val);
+				break;
+			case "supercells":
+				got += GiveValue(e, ammo_supercells, op, val);
 				break;
 			case "shells":
 				got += GiveValue(e, ammo_shells, op, val);
@@ -1983,6 +1998,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	POSTGIVE_VALUE(e, invincible_finished, 1, "misc/powerup_shield.wav", "misc/poweroff.wav");
 	POSTGIVE_VALUE(e, ammo_nails, 0, "misc/itempickup.wav", string_null);
 	POSTGIVE_VALUE(e, ammo_cells, 0, "misc/itempickup.wav", string_null);
+	POSTGIVE_VALUE(e, ammo_supercells, 0, "misc/itempickup.wav", string_null);
 	POSTGIVE_VALUE(e, ammo_shells, 0, "misc/itempickup.wav", string_null);
 	POSTGIVE_VALUE(e, ammo_rockets, 0, "misc/itempickup.wav", string_null);
 	POSTGIVE_VALUE_ROT(e, ammo_fuel, 1, pauserotfuel_finished, autocvar_g_balance_pause_fuel_rot, pauseregen_finished, autocvar_g_balance_pause_fuel_regen, "misc/itempickup.wav", string_null);
