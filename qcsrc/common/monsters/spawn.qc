@@ -4,6 +4,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 	initialize_field_db();
 	
 	entity e = spawn();
+	float i;
 	
 	e.spawnflags = MONSTERFLAG_SPAWNED;
 	
@@ -12,9 +13,18 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 	
 	setorigin(e, orig);
 	
+	if(monster == "random")
+	{
+		RandomSelection_Init();
+		for(i = MON_FIRST; i <= MON_LAST; ++i)
+			RandomSelection_Add(world, 0, (get_monsterinfo(i)).netname, 1, 1);
+				
+		monster = RandomSelection_chosen_string;
+	}
+	
 	if(monster != "")
 	{
-		float i, found = 0;
+		float found = 0;
 		entity mon;
 		for(i = MON_FIRST; i <= MON_LAST; ++i)
 		{
@@ -28,7 +38,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 		if not(found)
 			monster = (get_monsterinfo(MON_FIRST)).netname;
 	}
-		
+	
 	if(monster == "")
 	if(monster_id)
 		monster = (get_monsterinfo(monster_id)).netname;
