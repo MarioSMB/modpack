@@ -657,7 +657,10 @@ float w_minstanex(float req)
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{
-		return WEAPON_THINKING_WITH_PORTALS;
+		if(w_deathtype & HITTYPE_SPLASH)
+			return WEAPON_MINSTANEX_SUICIDE;
+		else
+			return WEAPON_THINKING_WITH_PORTALS;
 	}
 	else if (req == WR_KILLMESSAGE)
 	{
