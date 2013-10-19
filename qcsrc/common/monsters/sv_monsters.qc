@@ -545,6 +545,8 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 
 		if(self.revive_progress >= 1)
 			Unfreeze(self);
+			
+		return;
 	}
 	else if(self.frozen == 3)
 	{
@@ -560,10 +562,16 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.nextthink = time + self.ticrate;
 		
 		if(self.health < 1)
+		{
+			Unfreeze(self);
+			self.health = 0;
 			self.event_damage(self, self.frozen_by, 1, DEATH_NADE_ICE_FREEZE, self.origin, '0 0 0');
+		}
 			
 		else if ( self.revive_progress <= 0 )
 			Unfreeze(self);
+			
+		return;
 	}
 
 	if(self.flags & FL_SWIM)
