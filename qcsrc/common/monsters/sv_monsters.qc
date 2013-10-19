@@ -528,25 +528,42 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.goalentity = find(world, targetname, self.target2);
 
 	entity targ;
-
-	if(self.frozen)
+	
+	if(self.frozen == 2)
 	{
 		self.revive_progress = bound(0, self.revive_progress + self.ticrate * self.revive_speed, 1);
-		self.health = max(1, self.max_health * self.revive_progress);
+		self.health = max(1, self.revive_progress * self.max_health);
+		self.iceblock.alpha = bound(0.2, 1 - self.revive_progress, 1);
 		
 		WaypointSprite_UpdateHealth(self.sprite, self.health);
 		
 		movelib_beak_simple(stopspeed);
-		
 		self.frame = manim_idle;
 		
 		self.enemy = world;
 		self.nextthink = time + self.ticrate;
 
 		if(self.revive_progress >= 1)
-			Unfreeze(self); // wait for next think before attacking
-
-		return; // no moving while frozen
+			Unfreeze(self);
+	}
+	else if(self.frozen == 3)
+	{
+		self.revive_progress = bound(0, self.revive_progress - self.ticrate * self.revive_speed, 1);
+		self.health = max(0, autocvar_g_nades_ice_health + (self.max_health-autocvar_g_nades_ice_health) * self.revive_progress );
+		
+		WaypointSprite_UpdateHealth(self.sprite, self.health);
+		
+		movelib_beak_simple(stopspeed);
+		self.frame = manim_idle;
+		
+		self.enemy = world;
+		self.nextthink = time + self.ticrate;
+		
+		if(self.health < 1)
+			self.event_damage(self, self.frozen_by, 1, DEATH_NADE_ICE_FREEZE, self.origin, '0 0 0');
+			
+		else if ( self.revive_progress <= 0 )
+			Unfreeze(self);
 	}
 
 	if(self.flags & FL_SWIM)
@@ -864,7 +881,7 @@ void monster_die(entity attacker, float gibbed)
 void monsters_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	
-	if(self.frozen && deathtype != DEATH_KILL)
+	if(self.frozen && deathtype != DEATH_KILL && deathtype != DEATH_NADE_ICE_FREEZE)
 		return;
 
 	if(time < self.pain_finished && deathtype != DEATH_KILL)
