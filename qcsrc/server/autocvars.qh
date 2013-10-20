@@ -384,6 +384,7 @@ float autocvar_g_balance_hook_primary_hooked_fuel;
 float autocvar_g_balance_hook_primary_hooked_time_free;
 float autocvar_g_balance_hook_primary_hooked_time_max;
 float autocvar_g_balance_hook_primary_refire;
+float autocvar_g_balance_hook_secondary;
 float autocvar_g_balance_hook_secondary_ammo;
 float autocvar_g_balance_hook_secondary_animtime;
 float autocvar_g_balance_hook_secondary_damage;

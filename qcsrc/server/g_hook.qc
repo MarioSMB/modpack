@@ -115,7 +115,7 @@ float GrapplingHookSend(entity to, float sf)
 
 void GrapplingHookThink()
 {
-	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch, s, frozen_pulling;
+	float spd, dist, minlength, pullspeed, ropestretch, ropeairfriction, rubberforce, newlength, rubberforce_overstretch, s, frozen_pulling, tarzan;
 	vector dir, org, end, v0, dv, v, myorg, vs;
 	if(self.realowner.hook != self)	// how did that happen?
 	{
@@ -169,12 +169,18 @@ void GrapplingHookThink()
 		// bit to control the rope
 		
 		frozen_pulling = (autocvar_g_grappling_hook_tarzan >= 2 && autocvar_g_balance_grapplehook_pull_frozen);
+		
+		tarzan = autocvar_g_grappling_hook_tarzan;
+		
+		if(autocvar_g_balance_hook_secondary == 2)
+		if(self.realowner.BUTTON_ATCK2)
+			tarzan = 0;
 
 		dir = self.origin - myorg;
 		dist = vlen(dir);
 		dir = normalize(dir);
 
-		if(autocvar_g_grappling_hook_tarzan)
+		if(tarzan)
 		{
 			v = v0 = WarpZone_RefSys_TransformVelocity(self.realowner, self, self.realowner.velocity);
 
@@ -193,6 +199,9 @@ void GrapplingHookThink()
 
 				self.hook_length = newlength;
 			}
+			
+			if(self.realowner.movetype == MOVETYPE_FLY)
+				self.realowner.movetype = MOVETYPE_WALK;
 
 			if(self.realowner.hook_state & HOOK_RELEASING)
 			{

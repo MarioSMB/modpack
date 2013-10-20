@@ -38,9 +38,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 		if not(found)
 			monster = (get_monsterinfo(MON_FIRST)).netname;
 	}
-	
-	if(monster == "")
-	if(monster_id)
+	else if(monster_id)
 		monster = (get_monsterinfo(monster_id)).netname;
 	
 	e.realowner = spawnedby;

@@ -148,7 +148,7 @@ float w_hook(float req)
 	}
 	else if (req == WR_THINK)
 	{
-		if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
+		if ((self.BUTTON_ATCK || (self.BUTTON_ATCK2 && autocvar_g_balance_hook_secondary == 2)) || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
 		{
 			if(!self.hook)
 			if not(self.hook_state & HOOK_WAITING_FOR_RELEASE)
@@ -162,7 +162,7 @@ float w_hook(float req)
 			}
 		}
 
-		if (self.BUTTON_ATCK2)
+		if (self.BUTTON_ATCK2 && autocvar_g_balance_hook_secondary == 1)
 		{
 			if (weapon_prepareattack(1, autocvar_g_balance_hook_secondary_refire))
 			{
@@ -222,7 +222,7 @@ float w_hook(float req)
 		if (self.BUTTON_CROUCH)
 		{
 			self.hook_state &= ~HOOK_PULLING;
-			if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
+			if ((self.BUTTON_ATCK || (self.BUTTON_ATCK2 && autocvar_g_balance_hook_secondary == 2)) || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
 				self.hook_state &= ~HOOK_RELEASING;
 			else
 				self.hook_state |= HOOK_RELEASING;
@@ -232,7 +232,7 @@ float w_hook(float req)
 			self.hook_state |= HOOK_PULLING;
 			self.hook_state &= ~HOOK_RELEASING;
 
-			if (self.BUTTON_ATCK || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
+			if ((self.BUTTON_ATCK || (self.BUTTON_ATCK2 && autocvar_g_balance_hook_secondary == 2)) || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
 			{
 				// already fired
 				if(self.hook)
@@ -269,6 +269,12 @@ float w_hook(float req)
 	}
 	else if (req == WR_CHECKAMMO2)
 	{
+		if(autocvar_g_balance_hook_secondary == 2)
+		if(self.hook)
+			return self.ammo_fuel > 0;
+		else
+			return self.ammo_fuel >= autocvar_g_balance_hook_primary_fuel;
+			
 		return self.ammo_cells >= autocvar_g_balance_hook_secondary_ammo;
 	}
 	else if (req == WR_RESETPLAYER)
