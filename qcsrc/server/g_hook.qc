@@ -173,7 +173,7 @@ void GrapplingHookThink()
 		tarzan = autocvar_g_grappling_hook_tarzan;
 		
 		if(autocvar_g_balance_hook_secondary == 2)
-		if(self.realowner.BUTTON_ATCK2)
+		if(self.realowner.BUTTON_ATCK2 && self.realowner.weapon == WEP_HOOK)
 			tarzan = 0;
 
 		dir = self.origin - myorg;
