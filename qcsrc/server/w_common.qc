@@ -63,7 +63,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 			continue;
 		}
 
-		if(trace_ent.solid == SOLID_BSP || trace_ent.solid == SOLID_SLIDEBOX)
+		if(trace_ent.solid == SOLID_BSP || trace_ent.solid == SOLID_SLIDEBOX || trace_ent.classname == "object")
 			Damage_DamageInfo(trace_endpos, bdamage, 0, 0, force, deathtype, trace_ent.species, self);
 
 		// if it is world we can't hurt it so stop now
