@@ -78,7 +78,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		trace_ent.railgunforce = WarpZone_TransformVelocity(WarpZone_trace_transform, force);
 
 		// stop if this is a wall
-		if (trace_ent.solid == SOLID_BSP)
+		if (trace_ent.solid == SOLID_BSP || trace_ent.classname == "object")
 			break;
 
 		// make the entity non-solid
