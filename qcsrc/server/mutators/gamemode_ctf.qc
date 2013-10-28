@@ -419,11 +419,11 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	entity player = ((capturetype == CAPTURE_NORMAL) ? toucher : enemy_flag.ctf_dropper);
 	float old_time, new_time; 
 	
-	nades_GiveBonus(player, autocvar_g_nades_bonus_score_high );
-	
 	if not(player) { return; } // without someone to give the reward to, we can't possibly cap
 	if(player.fc_waskilled) { return; } // player died, so don't cap
 	if(CTF_DIFFTEAM(player, flag)) { return; }
+	
+	nades_GiveBonus(player, autocvar_g_nades_bonus_score_high );
 	
 	player.throw_prevtime = time;
 	player.throw_count = 0;
