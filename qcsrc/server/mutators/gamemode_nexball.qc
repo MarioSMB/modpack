@@ -288,7 +288,7 @@ void basketball_touch(void)
 		football_touch();
 		return;
 	}
-	if(!self.cnt && IS_PLAYER(other) && (other != self.nb_dropper || time > self.nb_droptime + autocvar_g_nexball_delay_collect))
+	if(!self.cnt && IS_PLAYER(other) && !other.frozen && !other.deadflag && (other != self.nb_dropper || time > self.nb_droptime + autocvar_g_nexball_delay_collect))
 	{
 		if(other.health <= 0)
 			return;
@@ -674,7 +674,7 @@ void W_Nexball_Touch(void)
 	
 	PROJECTILE_TOUCH;
 	if(attacker.team != other.team || autocvar_g_nexball_basketball_teamsteal)
-		if((ball = other.ballcarried) && (IS_PLAYER(attacker)))
+		if((ball = other.ballcarried) && !other.frozen && !other.deadflag && (IS_PLAYER(attacker)))
 		{
 			other.velocity = other.velocity + normalize(self.velocity) * other.damageforcescale * autocvar_g_balance_nexball_secondary_force;
 			other.flags &= ~FL_ONGROUND;
