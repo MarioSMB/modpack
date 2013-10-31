@@ -546,8 +546,8 @@ MUTATOR_HOOKFUNCTION(assault_PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(assault_TurretSpawn)
 {
-	if not (self.team)
-		self.team = 14;
+	if(!self.team || self.team == MAX_SHOT_DISTANCE)
+		self.team = 5; // this gets reversed when match starts?
 
 	return FALSE;
 }
