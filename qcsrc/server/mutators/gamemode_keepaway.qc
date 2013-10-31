@@ -71,6 +71,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 		return;
 	}
 	if(other.deadflag != DEAD_NO) { return; }
+	if(other.frozen) { return; }
 	if not(IS_PLAYER(other)) 
 	{  // The ball just touched an object, most likely the world
 		pointparticles(particleeffectnum("kaball_sparks"), self.origin, '0 0 0', 1);
