@@ -428,6 +428,8 @@ void kh_Key_Touch()  // runs many, many times when a key has been dropped and ca
 
 	if not(IS_PLAYER(other))
 		return;
+	if(other.frozen)
+		return;
 	if(other.deadflag != DEAD_NO)
 		return;
 	if(other == self.enemy)
