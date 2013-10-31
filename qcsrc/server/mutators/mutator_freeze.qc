@@ -75,7 +75,7 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 	if(!round_handler_IsRoundStarted())
 		return FALSE;
 		
-	float button_pressed, n;
+	float button_pressed = FALSE, n;
 	
 	if(teamplay && autocvar_g_freeze_noauto)
 	{
