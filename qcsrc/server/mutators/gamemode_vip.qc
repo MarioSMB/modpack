@@ -265,7 +265,7 @@ MUTATOR_HOOKFUNCTION(vip_PlayerSpawn)
 {
 	if(self.isvip)
 	{
-		if not(g_minstagib)
+		if(!g_minstagib)
 			self.health = 200;
 		self.armorvalue = ((g_minstagib) ? 5 : 200); // 5 lives in minstagib
 	}

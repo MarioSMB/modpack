@@ -113,7 +113,7 @@ float WarpZoneLib_BoxTouchesBrush_Recurse()
 		return 0;
 	}
 #endif
-	if not(trace_ent)
+	if (!trace_ent)
 		return 0;
 	if (trace_ent == WarpZoneLib_BoxTouchesBrush_ent)
 		return 1;

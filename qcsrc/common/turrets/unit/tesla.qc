@@ -9,16 +9,8 @@ REGISTER_TURRET(
 /* netname	  */ "tesla",
 /* fullname   */ _("Tesla Coil")
 );
-
-#define TESLA_SETTINGS(turret) 
-
-
-#ifdef SVQC
-TESLA_SETTINGS(tesla)
-#endif // SVQC
 #else
 #ifdef SVQC
-
 entity toast(entity from, float range, float damage)
 {
 	entity e;
@@ -88,7 +80,7 @@ float turret_tesla_firecheck()
 		self.target_select_time = time;
 	}
 
-	if not (turret_firecheck())
+	if(!turret_firecheck())
 		return 0;
 
 	if(self.enemy)
@@ -97,7 +89,7 @@ float turret_tesla_firecheck()
 	return 0;
 }
 
-void spawnfunc_turret_tesla() { if not(turret_initialize(TUR_TESLA)) remove(self); }
+void spawnfunc_turret_tesla() { if(!turret_initialize(TUR_TESLA)) remove(self); }
 
 float t_tesla(float req)
 {
@@ -143,7 +135,7 @@ float t_tesla(float req)
 		}
 		case TR_THINK:
 		{
-			if not (self.active)
+			if(!self.active)
 			{
 				self.tur_head.avelocity = '0 0 0';
 				return TRUE;
@@ -195,11 +187,6 @@ float t_tesla(float req)
 		{
 			precache_model ("models/turrets/tesla_base.md3");
 			precache_model ("models/turrets/tesla_head.md3");
-			return TRUE;
-		}
-		case TR_CONFIG:
-		{
-			TUR_CONFIG_SETTINGS(TESLA_SETTINGS(tesla))
 			return TRUE;
 		}
 	}

@@ -81,7 +81,7 @@ void XonoticCheckBox_loadCvars(entity me)
 {
 	float m, d;
 
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	m = (me.yesValue + me.noValue) * 0.5;
@@ -90,7 +90,7 @@ void XonoticCheckBox_loadCvars(entity me)
 }
 void XonoticCheckBox_saveCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	if(me.checked)

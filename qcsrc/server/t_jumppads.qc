@@ -329,7 +329,7 @@ void spawnfunc_trigger_push()
 		self.speed = 1000;
 	self.movedir = self.movedir * self.speed * 10;
 
-	if not(self.noise)
+	if (!self.noise)
 		self.noise = "misc/jumppad.wav";
 	precache_sound (self.noise);
 

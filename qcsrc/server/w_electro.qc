@@ -279,7 +279,7 @@ void lgbeam_think()
 	dt = frametime;
 
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
-	if not(owner_player.items & IT_UNLIMITED_WEAPON_AMMO)
+	if (!(owner_player.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		if(autocvar_g_balance_electro_primary_ammo)
 		{

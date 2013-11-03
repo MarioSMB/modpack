@@ -34,9 +34,9 @@ MUTATOR_HOOKFUNCTION(walljump_PlayerJump)
 {
 	if(autocvar_g_walljump)
 	if(time - self.lastwj > autocvar_g_walljump_delay)
-	if not(self.flags & FL_ONGROUND)
+	if(!(self.flags & FL_ONGROUND))
 	if(self.flags & FL_JUMPRELEASED)
-	if not(self.frozen)
+	if(!self.frozen)
 	if(self.deadflag == DEAD_NO)
 	{
 		vector plane_normal = PlayerTouchWall();

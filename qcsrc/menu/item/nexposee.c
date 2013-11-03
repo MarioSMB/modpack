@@ -228,7 +228,7 @@ float Nexposee_mousePress(entity me, vector pos)
 	}
 	else if(me.animationState == 2)
 	{
-		if not(SUPER(Nexposee).mousePress(me, pos))
+		if (!(SUPER(Nexposee).mousePress(me, pos)))
 		{
 			me.animationState = 3;
 			SUPER(Nexposee).setFocus(me, NULL);
@@ -291,14 +291,14 @@ float Nexposee_keyDown(entity me, float scan, float ascii, float shift)
 			{
 				if(me.selectedChild)
 					me.selectedChild = me.selectedChild.prevSibling;
-				if not(me.selectedChild)
+				if (!me.selectedChild)
 					me.selectedChild = me.lastChild;
 			}
 			else
 			{
 				if(me.selectedChild)
 					me.selectedChild = me.selectedChild.nextSibling;
-				if not(me.selectedChild)
+				if (!me.selectedChild)
 					me.selectedChild = me.firstChild;
 			}
 		}
@@ -331,7 +331,7 @@ float Nexposee_keyDown(entity me, float scan, float ascii, float shift)
 		}
 		if(me.focusedChild)
 			me.selectedChild = me.focusedChild;
-		if not(me.selectedChild)
+		if (!me.selectedChild)
 			me.animationState = 0;
 		SUPER(Nexposee).setFocus(me, NULL);
 		return 1;

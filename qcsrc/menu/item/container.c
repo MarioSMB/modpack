@@ -85,7 +85,7 @@ void Container_showNotify(entity me)
 void Container_hideNotify(entity me)
 {
 	entity e;
-	if not(me.shown)
+	if (!me.shown)
 		return;
 	me.shown = 0;
 	for(e = me.firstChild; e; e = e.nextSibling)
@@ -347,7 +347,7 @@ void Container_removeItem(entity me, entity other)
 void Container_setFocus(entity me, entity other)
 {
 	if(other)
-		if not(me.focused)
+		if (!me.focused)
 			error("Trying to set focus in a non-focused control!");
 	if(me.focusedChild == other)
 		return;

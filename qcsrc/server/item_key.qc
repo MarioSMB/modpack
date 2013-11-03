@@ -10,7 +10,7 @@ TODO:
 float item_keys_usekey(entity l, entity p) {
 	float valid = l.itemkeys & p.itemkeys;
 	
-	if not(valid) {
+	if (!valid) {
 		// other has none of the needed keys
 		return FALSE;
 	} else if (l.itemkeys == valid) {
@@ -29,7 +29,7 @@ string item_keys_keylist(float keylist) {
 	string n;
 	
 	// no keys
-	if not(keylist)
+	if (!keylist)
 		return "";
 	
 	// one key
@@ -63,7 +63,7 @@ item_key
  * Key touch handler.
  */
 void item_key_touch(void) {
-	if not(IS_PLAYER(other))
+	if (!IS_PLAYER(other))
 		return;
 		
 	// player already picked up this key
@@ -318,7 +318,7 @@ void trigger_keylock_touch(void) {
 	started_delay = FALSE;
 	
 	// only player may trigger the lock
-	if not(IS_PLAYER(other))
+	if (!IS_PLAYER(other))
 		return;
 	
 	

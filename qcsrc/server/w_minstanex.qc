@@ -96,7 +96,7 @@ vector shockwave_hit_force[32];
 
 float W_MinstaNex_SuperBlast_CheckHit(float queue, entity head, vector final_force, float final_damage)
 {
-	if not(head) { return FALSE; }
+	if(!head) { return FALSE; }
 	float i;
 
 	++queue;
@@ -190,7 +190,7 @@ void W_MinstaNex_Attack (void)
 	float flying;
 	float minstanex_damage = ((autocvar_g_balance_minstanex_damage) ? autocvar_g_balance_minstanex_damage : 10000);
 	
-	if not(self.minsta_range)
+	if(!self.minsta_range)
 		self.minsta_range = ((autocvar_g_balance_minstanex_distance > 0) ? autocvar_g_balance_minstanex_distance : MAX_SHOT_DISTANCE);
 		
 	float minstanex_ammo = ((g_minstagib) ? 1 : autocvar_g_balance_minstanex_ammo);
@@ -679,8 +679,8 @@ float w_minstanex(float req)
 	{
 		vector org2;
 		org2 = w_org + w_backoff * 6;
-		if not(w_deathtype & HITTYPE_SPLASH)
-		if not(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT))
+		if(!(w_deathtype & HITTYPE_SPLASH))
+		if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
 			pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
 		if(!w_issilent)
 			sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTEN_NORM);

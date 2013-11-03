@@ -70,7 +70,7 @@ void LaunchDebris (string debrisname, vector force)
 void func_breakable_colormod()
 {
 	float h;
-	if not(self.spawnflags & 2)
+	if (!(self.spawnflags & 2))
 		return;
 	h = self.health / self.max_health;
 	if(h < 0.25)

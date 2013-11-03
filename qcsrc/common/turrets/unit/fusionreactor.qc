@@ -9,16 +9,8 @@ REGISTER_TURRET(
 /* netname	  */ "fusionreactor",
 /* fullname   */ _("Fusion Reactor")
 );
-
-#define FUSIONREACTOR_SETTINGS(turret) 
-
-
-#ifdef SVQC
-FUSIONREACTOR_SETTINGS(fusionreactor)
-#endif // SVQC
 #else
 #ifdef SVQC
-
 float turret_fusionreactor_firecheck()
 {
 	if (self.attack_finished_single > time)
@@ -42,13 +34,13 @@ float turret_fusionreactor_firecheck()
 	if(self.team != self.enemy.team)
 		return 0;
 
-	if not (self.enemy.ammo_flags & TFL_AMMO_ENERGY)
+	if(!(self.enemy.ammo_flags & TFL_AMMO_ENERGY))
 		return 0;
 
 	return 1;
 }
 
-void spawnfunc_turret_fusionreactor() { if not(turret_initialize(TUR_FUSIONREACTOR)) remove(self); }
+void spawnfunc_turret_fusionreactor() { if(!turret_initialize(TUR_FUSIONREACTOR)) remove(self); }
 
 float t_fusionreactor(float req)
 {
@@ -94,11 +86,6 @@ float t_fusionreactor(float req)
 		{
 			precache_model ("models/turrets/base.md3");
 			precache_model ("models/turrets/reactor.md3");
-			return TRUE;
-		}
-		case TR_CONFIG:
-		{
-			TUR_CONFIG_SETTINGS(FUSIONREACTOR_SETTINGS(fusionreactor))
 			return TRUE;
 		}
 	}

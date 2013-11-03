@@ -19,7 +19,7 @@ void Draw_ShowNames(entity ent)
 #else
 	if(ent.sv_entnum == player_localentnum) // ent is me or person i'm spectating
 #endif
-		if not (autocvar_hud_shownames_self && autocvar_chase_active) 
+		if(!(autocvar_hud_shownames_self && autocvar_chase_active))
 			return;
 
 	makevectors(view_angles);
@@ -57,7 +57,7 @@ void Draw_ShowNames(entity ent)
 				if(e == ent)
 					continue;
 				eo = project_3d_to_2d(e.origin);
-				if not(eo_z < 0 || eo_x < 0 || eo_y < 0 || eo_x > vid_conwidth || eo_y > vid_conheight)
+				if (!(eo_z < 0 || eo_x < 0 || eo_y < 0 || eo_x > vid_conwidth || eo_y > vid_conheight))
 				{
 					eo_z = 0;
 					if(vlen((eX * o_x + eY * o_y) - eo) < autocvar_hud_shownames_antioverlap_distance && vlen(ent.origin - view_origin) > vlen(e.origin - view_origin))
@@ -77,7 +77,7 @@ void Draw_ShowNames(entity ent)
 			if(autocvar_hud_shownames_crosshairdistance > crosshairdistance)
 				ent.pointtime = time;
 				
-			if not(ent.pointtime + autocvar_hud_shownames_crosshairdistance_time > time)
+			if (!(ent.pointtime + autocvar_hud_shownames_crosshairdistance_time > time))
 				overlap = TRUE;
 			else
 				overlap = (autocvar_hud_shownames_crosshairdistance_antioverlap ? overlap : FALSE); // override what antioverlap says unless allowed by cvar.

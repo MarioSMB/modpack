@@ -52,7 +52,7 @@ void Draw_Laser()
 			Draw_CylindricLine(self.origin, trace_endpos, self.scale, "particles/laserbeam", 0, time * 3, self.colormod, 0.5, DRAWFLAG_ADDITIVE, view_origin);
 		}
 	}
-	if not(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT))
+	if (!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
 	{
 		if(self.cnt >= 0)
 			pointparticles(self.cnt, trace_endpos, trace_plane_normal, drawframetime * 1000);

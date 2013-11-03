@@ -363,7 +363,7 @@ void bot_relinkplayerlist()
 
 void bot_clientdisconnect()
 {
-	if not(IS_BOT_CLIENT(self))
+	if (!IS_BOT_CLIENT(self))
 		return;
 	bot_clearqueue(self);
 	if(self.cleanname)
@@ -386,7 +386,7 @@ void bot_clientdisconnect()
 
 void bot_clientconnect()
 {
-	if not(IS_BOT_CLIENT(self))
+	if (!IS_BOT_CLIENT(self))
 		return;
 	self.bot_preferredcolors = self.clientcolors;
 	self.bot_nextthink = time - random();

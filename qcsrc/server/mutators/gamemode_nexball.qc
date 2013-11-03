@@ -248,7 +248,7 @@ void football_touch(void)
 			self.nextthink = time + autocvar_g_nexball_delay_idle;
 		return;
 	}
-	if not(IS_PLAYER(other))
+	if (!IS_PLAYER(other))
 		return;
 	if(other.health < 1)
 		return;
@@ -529,7 +529,7 @@ void spawnfunc_nexball_basketball(void)
 {
 	nexball_mode |= NBM_BASKETBALL;
 	self.classname = "nexball_basketball";
-	if not(balls & BALL_BASKET)
+	if (!(balls & BALL_BASKET))
 	{
 		/*
 		CVTOV(g_nexball_basketball_effects_default);

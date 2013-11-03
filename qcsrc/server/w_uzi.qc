@@ -94,7 +94,7 @@ void uzi_fire1_02()
 	if (self.BUTTON_ATCK)
 	{
 		if (!weapon_action(self.weapon, WR_CHECKAMMO2))
-		if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+		if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			W_SwitchWeapon_Force(self, w_getbestweapon(self));
 			w_ready();
@@ -120,7 +120,7 @@ void uzi_mode1_fire_auto()
 	}
 
 	if (!weapon_action(self.weapon, WR_CHECKAMMO1))
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(self, w_getbestweapon(self));
 		w_ready();
@@ -219,7 +219,7 @@ float w_uzi(float req)
 			if(weapon_prepareattack(1, 0))
 			{
 				if (!weapon_action(self.weapon, WR_CHECKAMMO2))
-				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+				if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 				{
 					W_SwitchWeapon_Force(self, w_getbestweapon(self));
 					w_ready();

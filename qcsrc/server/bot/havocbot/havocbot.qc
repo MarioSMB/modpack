@@ -20,7 +20,7 @@ void havocbot_ai()
 		}
 		else
 		{
-			if not(self.jumppadcount)
+			if (!self.jumppadcount)
 				self.havocbot_role();
 		}
 
@@ -146,7 +146,7 @@ void havocbot_ai()
 	havocbot_movetogoal();
 
 	// if the bot is not attacking, consider reloading weapons
-	if not(self.aistatus & AI_STATUS_ATTACKING)
+	if (!(self.aistatus & AI_STATUS_ATTACKING))
 	{
 		float i;
 		entity e;
@@ -316,7 +316,7 @@ void havocbot_bunnyhop(vector dir)
 
 					if(self.aistatus & AI_STATUS_ROAMING)
 					if(self.goalcurrent.classname=="waypoint")
-					if not(self.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL)
+					if (!(self.goalcurrent.wpflags & WAYPOINTFLAG_PERSONAL))
 					if(fabs(gco_z - self.origin_z) < self.maxs_z - self.mins_z)
 					if(self.goalstack01!=world)
 					{
@@ -422,7 +422,7 @@ void havocbot_movetogoal()
 		}
 
 		// Take off
-		if not(self.aistatus & AI_STATUS_JETPACK_FLYING)
+		if (!(self.aistatus & AI_STATUS_JETPACK_FLYING))
 		{
 			// Brake almost completely so it can get a good direction
 			if(vlen(self.velocity)>10)
@@ -546,7 +546,7 @@ void havocbot_movetogoal()
 
 	// If there is a trigger_hurt right below try to use the jetpack or make a rocketjump
 	if(skill>6)
-	if not(self.flags & FL_ONGROUND)
+	if (!(self.flags & FL_ONGROUND))
 	{
 		tracebox(self.origin, self.mins, self.maxs, self.origin + '0 0 -65536', MOVE_NOMONSTERS, self);
 		if(tracebox_hits_trigger_hurt(self.origin, self.mins, self.maxs, trace_endpos ))

@@ -10,7 +10,7 @@ vector pathlib_wateroutnode(vector start,vector end, float doedge)
     traceline(end + ('0 0 0.25' * pathlib_gridsize),end - ('0 0 1' * pathlib_gridsize),MOVE_WORLDONLY,self);
     end = trace_endpos;
 
-    if not(pointcontents(end - '0 0 1') == CONTENT_SOLID)
+    if(pointcontents(end - '0 0 1') != CONTENT_SOLID)
         return end;
 
     for(surface = start ; surface_z < (end_z + 32); ++surface_z)

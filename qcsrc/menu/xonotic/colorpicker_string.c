@@ -40,7 +40,7 @@ void XonoticColorpickerString_configureXonoticColorpickerString(entity me, strin
 
 void XonoticColorPickerString_loadCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	if(substring(me.cvarName, -1, 1) == "_")
@@ -57,7 +57,7 @@ void XonoticColorPickerString_loadCvars(entity me)
 
 void XonoticColorPickerString_saveCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	if(substring(me.cvarName, -1, 1) == "_")

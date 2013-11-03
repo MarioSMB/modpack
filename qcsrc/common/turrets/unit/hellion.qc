@@ -9,17 +9,10 @@ REGISTER_TURRET(
 /* netname	  */ "hellion",
 /* fullname   */ _("Hellion Missile Turret")
 );
-
-#define HELLION_SETTINGS(turret) \
-	TUR_ADD_CVAR(turret, shot_speed_gain) \
-	TUR_ADD_CVAR(turret, shot_speed_max) 
-
-
-#ifdef SVQC
-HELLION_SETTINGS(hellion)
-#endif // SVQC
 #else
 #ifdef SVQC
+float autocvar_g_turrets_unit_hellion_shot_speed_gain;
+float autocvar_g_turrets_unit_hellion_shot_speed_max;
 
 void turret_hellion_missile_think()
 {
@@ -48,7 +41,7 @@ void turret_hellion_missile_think()
 			turret_projectile_explode();
 
 		// Accelerate
-		self.velocity = olddir * min(vlen(self.velocity) * TUR_CVAR(hellion, shot_speed_gain), TUR_CVAR(hellion, shot_speed_max));
+		self.velocity = olddir * min(vlen(self.velocity) * (autocvar_g_turrets_unit_hellion_shot_speed_gain), (autocvar_g_turrets_unit_hellion_shot_speed_max));
 
 		UpdateCSQCProjectile(self);
 
@@ -75,7 +68,7 @@ void turret_hellion_missile_think()
 	self.angles = vectoangles(self.velocity);
 
 	// Accelerate
-	self.velocity = newdir * min(vlen(self.velocity) * TUR_CVAR(hellion, shot_speed_gain), TUR_CVAR(hellion, shot_speed_max));
+	self.velocity = newdir * min(vlen(self.velocity) * (autocvar_g_turrets_unit_hellion_shot_speed_gain), (autocvar_g_turrets_unit_hellion_shot_speed_max));
 
 	if (itime < 0.05)
 		self.think = turret_projectile_explode;
@@ -83,7 +76,7 @@ void turret_hellion_missile_think()
 	UpdateCSQCProjectile(self);
 }
 
-void spawnfunc_turret_hellion() { if not(turret_initialize(TUR_HELLION)) remove(self); }
+void spawnfunc_turret_hellion() { if(!turret_initialize(TUR_HELLION)) remove(self); }
 
 float t_hellion(float req)
 {
@@ -137,11 +130,6 @@ float t_hellion(float req)
 		{
 			precache_model ("models/turrets/base.md3");
 			precache_model ("models/turrets/hellion.md3");
-			return TRUE;
-		}
-		case TR_CONFIG:
-		{
-			TUR_CONFIG_SETTINGS(HELLION_SETTINGS(hellion))
 			return TRUE;
 		}
 	}

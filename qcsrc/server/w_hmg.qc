@@ -26,8 +26,8 @@ void hmg_fire_auto()
 	}
 
 	if(autocvar_g_balance_hmg_reload_ammo)
-	if (!weapon_action(self.weapon, WR_CHECKAMMO1))
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	if(!weapon_action(self.weapon, WR_CHECKAMMO1))
+	if(!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(self, w_getbestweapon(self));
 		w_ready();
@@ -38,7 +38,7 @@ void hmg_fire_auto()
 
 	W_SetupShot (self, autocvar_g_antilag_bullets && autocvar_g_balance_hmg_speed >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, autocvar_g_balance_hmg_sustained_damage, self.weapon);
 	
-	if not(autocvar_g_norecoil)
+	if(!autocvar_g_norecoil)
 	{
 		self.punchangle_x = random () - 0.5;
 		self.punchangle_y = random () - 0.5;

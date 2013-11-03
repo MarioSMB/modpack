@@ -142,7 +142,7 @@ float DoesQ3ARemoveThisEntity()
 			return 1;
 
 	if(self.notta)
-		if not(!teamplay || g_tdm || g_ctf)
+		if (!(!teamplay || g_tdm || g_ctf))
 			return 1;
 
 	if(self.notsingle)

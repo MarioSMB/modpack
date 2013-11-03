@@ -6,6 +6,12 @@
 // a dummy macro that prevents the "hanging ;" warning
 #define ENDS_WITH_CURLY_BRACE
 
+#ifdef GMQCC
+# define ACCUMULATE_FUNCTION(func,otherfunc) \
+	[[accumulate]] void func() { otherfunc(); }
+# define CALL_ACCUMULATED_FUNCTION(func) \
+	func()
+#else
 #ifdef HAVE_YO_DAWG_CPP
 // TODO make ascii art pic of xzibit
 // YO DAWG!
@@ -40,6 +46,7 @@ void ACCUMULATE_call(string func)
 }
 # define CALL_ACCUMULATED_FUNCTION(func) \
 	ACCUMULATE_call(#func)
+#endif
 #endif
 
 // used for simplifying ACCUMULATE_FUNCTIONs

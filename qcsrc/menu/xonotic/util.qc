@@ -507,7 +507,7 @@ void preMenuDraw()
 		draw_CenterText(mid - 1 * line, l1, fs, '1 0 0', 1, 0);
 		draw_CenterText(mid - 0 * line, l2, fs, '0 0 1', 1, 0);
 	}
-	if not(campaign_name_previous)
+	if (!campaign_name_previous)
 		campaign_name_previous = strzone(strcat(campaign_name, "x")); // force unequal
 	if(campaign_name == campaign_name_previous)
 	{

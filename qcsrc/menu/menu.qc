@@ -67,7 +67,7 @@ void m_init()
 		for(i = 0; ; ++i)
 		{
 			s = getgamedirinfo(i, GETGAMEDIRINFO_NAME);
-			if not(s)
+			if (!s)
 				break;
 			dprint(s, ": ", getgamedirinfo(i, GETGAMEDIRINFO_DESCRIPTION));
 		}

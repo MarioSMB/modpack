@@ -25,7 +25,7 @@ string getrecords(float page) // 50 records per page
 			{
 				r = stof(db_get(ServerProgsDB, strcat(MapInfo_Map_bspname, "/captimerecord/time")));
 				
-				if not(r)
+				if (!r)
 					continue;
 					
 				// TODO: uid2name
@@ -44,7 +44,7 @@ string getrecords(float page) // 50 records per page
 			{
 				r = race_readTime(MapInfo_Map_bspname, 1);
 				
-				if not(r)
+				if (!r)
 					continue;
 					
 				h = race_readName(MapInfo_Map_bspname, 1);
@@ -62,7 +62,7 @@ string getrecords(float page) // 50 records per page
 			{
 				r = race_readTime(MapInfo_Map_bspname, 1);
 				
-				if not(r)
+				if (!r)
 					continue;
 					
 				h = race_readName(MapInfo_Map_bspname, 1);

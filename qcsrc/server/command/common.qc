@@ -24,7 +24,7 @@ string GetCallerName(entity caller)
 // verify that the client provided is acceptable for use
 float VerifyClientEntity(entity client, float must_be_real, float must_be_bots)
 {
-	if not(IS_CLIENT(client))
+	if (!IS_CLIENT(client))
 		return CLIENT_DOESNT_EXIST;
 	else if(must_be_real && !IS_REAL_CLIENT(client))
 		return CLIENT_NOT_REAL;
@@ -479,7 +479,7 @@ void CommonCommand_timein(float request, entity caller)
 		{
 			if(!caller || autocvar_sv_timeout)
 			{
-				if not(timeout_status) { print_to(caller, "^7Error: There is no active timeout called."); }
+				if (!timeout_status) { print_to(caller, "^7Error: There is no active timeout called."); }
 				else if(caller && (caller != timeout_caller)) { print_to(caller, "^7Error: You are not allowed to stop the active timeout."); }
 					
 				else // everything should be okay, continue aborting timeout

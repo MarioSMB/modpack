@@ -3,7 +3,6 @@
 #define MR_THINK		  2 // (SERVER) logic to run every frame
 #define MR_DEATH          3 // (SERVER) called when monster dies
 #define MR_PRECACHE       4 // (BOTH) precaches models/sounds used by this monster
-#define MR_CONFIG         5 // (ALL)
 
 // functions:
 entity get_monsterinfo(float id);
@@ -62,21 +61,7 @@ float MON_LAST;
 	REGISTER_MONSTER_2(MON_##id,func,monsterflags,min_s,max_s,modelname,shortname,mname)
 #endif
 
-#define MON_DUPECHECK(dupecheck,cvar) \
-	#ifndef dupecheck \
-		#define dupecheck \
-		float cvar; \
-	#else \
-		#error DUPLICATE MONSTER CVAR: cvar \
-	#endif
-
-#define MON_ADD_CVAR(monster,name) \
-		MON_DUPECHECK(MON_CVAR_##monster##_##name, autocvar_g_monster_##monster##_##name)
-
-#define MON_CVAR(monster,name) autocvar_g_monster_##monster##_##name
-
 #include "all.qh"
 
-#undef MON_ADD_CVAR
 #undef REGISTER_MONSTER
 ACCUMULATE_FUNCTION(RegisterMonsters, register_monsters_done);

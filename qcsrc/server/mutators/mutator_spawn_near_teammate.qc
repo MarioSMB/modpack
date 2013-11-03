@@ -61,7 +61,7 @@ MUTATOR_HOOKFUNCTION(msnt_PlayerSpawn)
 			{
 				tracebox(team_mate.origin, PL_MIN, PL_MAX, team_mate.origin - '0 0 100', MOVE_WORLDONLY, team_mate);
 				if(trace_fraction != 1.0)
-				if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY)
+				if(!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_SKY))
 				{
 					pc = pointcontents(trace_endpos + '0 0 1');
 					if(pc == CONTENT_EMPTY)

@@ -126,7 +126,7 @@ void CreatureFrame (void)
 					else
 						dprint(ftos(trace_dphitq3surfaceflags), "\n");
 					*/
-					if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
+					if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS))
 					{
 						if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
 							GlobalSound(globalsound_metalstep, CH_PLAYER, VOICETYPE_PLAYERSOUND);
@@ -250,7 +250,7 @@ void SV_OnEntityPreSpawnFunction()
 {
 	if (self)
 	if (self.gametypefilter != "")
-	if not(isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, self.gametypefilter))
+	if (!isGametypeInFilter(MapInfo_LoadedGametype, teamplay, have_team_spawns, self.gametypefilter))
 	{
 		remove(self);
 		return;
@@ -350,14 +350,14 @@ void SV_OnEntityPreSpawnFunction()
 			else
 			{
 				k = s;
-				if not(cvar(k))
+				if (!cvar(k))
 					goto cvar_fail;
 			}
 		}
 		inv = !inv;
 :cvar_fail
 		// now inv is 1 if we want to keep the item, and 0 if we want to get rid of it
-		if not(inv)
+		if (!inv)
 		{
 			//print("cvarfilter fail\n");
 			remove(self);

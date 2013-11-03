@@ -75,8 +75,8 @@ void XonoticRadioButton_loadCvars(entity me)
 }
 void XonoticRadioButton_draw(entity me)
 {
-	if not(me.cvarValue)
-		if not(me.cvarName)
+	if (!me.cvarValue)
+		if (!me.cvarName)
 		{
 			// this is the "other" option
 			// always select this if none other is

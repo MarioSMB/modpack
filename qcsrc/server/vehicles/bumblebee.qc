@@ -339,7 +339,7 @@ float bumb_gunner_enter()
 
 float vehicles_valid_pilot()
 {
-	if not(IS_PLAYER(other))
+	if (!IS_PLAYER(other))
 		return FALSE;
 
 	if(other.deadflag != DEAD_NO)
@@ -348,7 +348,7 @@ float vehicles_valid_pilot()
 	if(other.vehicle != world)
 		return FALSE;
 
-	if not(IS_REAL_CLIENT(other))
+	if (!IS_REAL_CLIENT(other))
 		if(!autocvar_g_vehicles_allow_bots)
 			return FALSE;
 
@@ -603,7 +603,7 @@ float bumb_pilot_frame()
 		}
 	}
 		
-	if not(draw_beam)
+	if(!draw_beam)
 		vehic.gun3.enemy.effects |= EF_NODRAW;
 	
 	VEHICLE_UPDATE_PLAYER(pilot, health, bumblebee);
@@ -922,7 +922,7 @@ void spawnfunc_vehicle_bumblebee()
 	if(autocvar_g_vehicle_bumblebee_health_regen)
 		self.vehicle_flags |= VHF_HEALTHREGEN;
 
-	if not(vehicle_initialize(
+	if(!vehicle_initialize(
 			   "Bumblebee", "models/vehicles/bumblebee_body.dpm",
 			   "", "models/vehicles/spiderbot_cockpit.dpm", "", "", "tag_viewport",
 			   HUD_BUMBLEBEE, BUMB_MIN, BUMB_MAX, FALSE,

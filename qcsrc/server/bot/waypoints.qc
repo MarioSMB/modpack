@@ -6,7 +6,7 @@ entity waypoint_spawn(vector m1, vector m2, float f)
 	entity w;
 	w = find(world, classname, "waypoint");
 
-	if not(f & WAYPOINTFLAG_PERSONAL)
+	if (!(f & WAYPOINTFLAG_PERSONAL))
 	while (w)
 	{
 		// if a matching spawnfunc_waypoint already exists, don't add a duplicate
@@ -683,11 +683,11 @@ float waypoint_loadall()
 		{
 			m1 = stov(s);
 			s = fgets(file);
-			if not(s)
+			if (!s)
 				break;
 			m2 = stov(s);
 			s = fgets(file);
-			if not(s)
+			if (!s)
 				break;
 			fl = stof(s);
 			waypoint_spawn(m1, m2, fl);

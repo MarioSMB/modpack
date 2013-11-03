@@ -72,7 +72,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	}
 	if(other.deadflag != DEAD_NO) { return; }
 	if(other.frozen) { return; }
-	if not(IS_PLAYER(other)) 
+	if(!IS_PLAYER(other)) 
 	{  // The ball just touched an object, most likely the world
 		pointparticles(particleeffectnum("kaball_sparks"), self.origin, '0 0 0', 1);
 		sound(self, CH_TRIGGER, "keepaway/touch.wav", VOL_BASE, ATTEN_NORM);
@@ -307,7 +307,7 @@ MUTATOR_HOOKFUNCTION(ka_PlayerDamage) // for changing damage and force values th
 			frag_force *= autocvar_g_keepaway_ballcarrier_force;
 		}
 	}
-	else if not(frag_target.ballcarried) // if the target is a noncarrier
+	else if (!frag_target.ballcarried) // if the target is a noncarrier
 	{
 		if(frag_target == frag_attacker) // damage done to yourself
 		{

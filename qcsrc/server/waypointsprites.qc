@@ -197,7 +197,7 @@ float WaypointSprite_visible_for_player(entity e)
 	{
 		if(self.team != e.team)
 			return FALSE;
-		if not(IS_PLAYER(e))
+		if (!IS_PLAYER(e))
 			return FALSE;
 	}
 

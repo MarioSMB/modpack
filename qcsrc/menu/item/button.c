@@ -77,7 +77,7 @@ float Button_mouseRelease(entity me, vector pos)
 	me.mouseDrag(me, pos); // verify coordinates
 	if(me.pressed)
 	{
-		if not(me.disabled)
+		if (!me.disabled)
 		{
 			if(cvar("menu_sounds"))
 				localsound("sound/misc/menu2.wav");
@@ -162,7 +162,7 @@ void Button_draw(entity me)
 	if(me.clickTime > 0 && me.clickTime <= frametime)
 	{
 		// keyboard click timer expired? Fire the event then.
-		if not(me.disabled)
+		if (!me.disabled)
 			if(me.onClick)
 				me.onClick(me, me.onClickEntity);
 	}

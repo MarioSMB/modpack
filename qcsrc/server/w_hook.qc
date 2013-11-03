@@ -151,8 +151,8 @@ float w_hook(float req)
 		if ((self.BUTTON_ATCK || (self.BUTTON_ATCK2 && autocvar_g_balance_hook_secondary == 2)) || (!(self.items & IT_JETPACK) && self.BUTTON_HOOK))
 		{
 			if(!self.hook)
-			if not(self.hook_state & HOOK_WAITING_FOR_RELEASE)
-			if not(self.hook_state & HOOK_FIRING)
+			if (!(self.hook_state & HOOK_WAITING_FOR_RELEASE))
+			if (!(self.hook_state & HOOK_FIRING))
 			if (time > self.hook_refire)
 			if (weapon_prepareattack(0, -1))
 			{
@@ -177,7 +177,7 @@ float w_hook(float req)
 			self.hook_refire = max(self.hook_refire, time + autocvar_g_balance_hook_primary_refire * W_WeaponRateFactor());
 
 			// hook also inhibits health regeneration, but only for 1 second
-			if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+			if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 				self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_pause_fuel_regen);
 		}
 
@@ -195,7 +195,7 @@ float w_hook(float req)
 			{
 				if ( time > self.hook_time_fueldecrease )
 				{
-					if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+					if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 					{
 						if ( self.ammo_fuel >= (time - self.hook_time_fueldecrease) * hooked_fuel )
 						{

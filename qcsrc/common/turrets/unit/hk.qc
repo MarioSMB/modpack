@@ -9,21 +9,14 @@ REGISTER_TURRET(
 /* netname	  */ "hk",
 /* fullname   */ _("Hunter-Killer Turret")
 );
-
-#define HK_SETTINGS(turret) \
-	TUR_ADD_CVAR(turret, shot_speed) \
-	TUR_ADD_CVAR(turret, shot_speed_accel) \
-	TUR_ADD_CVAR(turret, shot_speed_accel2) \
-	TUR_ADD_CVAR(turret, shot_speed_decel) \
-	TUR_ADD_CVAR(turret, shot_speed_max) \
-	TUR_ADD_CVAR(turret, shot_speed_turnrate) 
-
-
-#ifdef SVQC
-HK_SETTINGS(hk)
-#endif // SVQC
 #else
 #ifdef SVQC
+float autocvar_g_turrets_unit_hk_shot_speed;
+float autocvar_g_turrets_unit_hk_shot_speed_accel;
+float autocvar_g_turrets_unit_hk_shot_speed_accel2;
+float autocvar_g_turrets_unit_hk_shot_speed_decel;
+float autocvar_g_turrets_unit_hk_shot_speed_max;
+float autocvar_g_turrets_unit_hk_shot_speed_turnrate;
 
 //#define TURRET_DEBUG_HK
 
@@ -152,12 +145,12 @@ void turret_hk_missile_think()
 		ad = vlen(vectoangles(normalize(self.enemy.origin - self.origin)) - self.angles);
 
 		// To close to something, Slow down!
-		if ( ((ff < 0.7) || (ad > 4)) && (myspeed > TUR_CVAR(hk, shot_speed)) )
-			myspeed = max(myspeed * TUR_CVAR(hk, shot_speed_decel), TUR_CVAR(hk, shot_speed));
+		if ( ((ff < 0.7) || (ad > 4)) && (myspeed > (autocvar_g_turrets_unit_hk_shot_speed)) )
+			myspeed = max(myspeed * (autocvar_g_turrets_unit_hk_shot_speed_decel), (autocvar_g_turrets_unit_hk_shot_speed));
 
 		// Failry clear, accelerate.
-		if ( (ff > 0.7) && (myspeed < TUR_CVAR(hk, shot_speed_max)) )
-			myspeed = min(myspeed * TUR_CVAR(hk, shot_speed_accel), TUR_CVAR(hk, shot_speed_max));
+		if ( (ff > 0.7) && (myspeed < (autocvar_g_turrets_unit_hk_shot_speed_max)) )
+			myspeed = min(myspeed * (autocvar_g_turrets_unit_hk_shot_speed_accel), (autocvar_g_turrets_unit_hk_shot_speed_max));
 
 		// Setup trace pitch
 		pt_seek = 1 - ff;
@@ -213,14 +206,14 @@ void turret_hk_missile_think()
 	{
 		// Got a clear path to target, speed up fast (if not at full speed) and go straight for it.
 		myspeed = vlen(self.velocity);
-		if (myspeed < TUR_CVAR(hk, shot_speed_max))
-			myspeed = min(myspeed * TUR_CVAR(hk, shot_speed_accel2),TUR_CVAR(hk, shot_speed_max));
+		if (myspeed < (autocvar_g_turrets_unit_hk_shot_speed_max))
+			myspeed = min(myspeed * (autocvar_g_turrets_unit_hk_shot_speed_accel2),(autocvar_g_turrets_unit_hk_shot_speed_max));
 
 		wishdir = ve;
 	}
 
-	if ((myspeed > TUR_CVAR(hk, shot_speed)) && (self.cnt > time))
-		myspeed = min(myspeed * TUR_CVAR(hk, shot_speed_accel2),TUR_CVAR(hk, shot_speed_max));
+	if ((myspeed > (autocvar_g_turrets_unit_hk_shot_speed)) && (self.cnt > time))
+		myspeed = min(myspeed * (autocvar_g_turrets_unit_hk_shot_speed_accel2),(autocvar_g_turrets_unit_hk_shot_speed_max));
 
 	// Ranoutagazfish?
 	if (self.cnt < time)
@@ -233,7 +226,7 @@ void turret_hk_missile_think()
 
 	// Calculate new heading
 	olddir = normalize(self.velocity);
-	newdir = normalize(olddir + wishdir * TUR_CVAR(hk, shot_speed_turnrate));
+	newdir = normalize(olddir + wishdir * (autocvar_g_turrets_unit_hk_shot_speed_turnrate));
 
 	// Set heading & speed
 	self.velocity = newdir * myspeed;
@@ -280,7 +273,7 @@ float turret_hk_addtarget(entity e_target,entity e_sender)
 	return 0;
 }
 
-void spawnfunc_turret_hk() { if not(turret_initialize(TUR_HK)) remove(self); }
+void spawnfunc_turret_hk() { if(!turret_initialize(TUR_HK)) remove(self); }
 
 float t_hk(float req)
 {
@@ -338,11 +331,6 @@ float t_hk(float req)
 		{
 			precache_model ("models/turrets/base.md3");
 			precache_model ("models/turrets/hk.md3");
-			return TRUE;
-		}
-		case TR_CONFIG:
-		{
-			TUR_CONFIG_SETTINGS(HK_SETTINGS(hk))
 			return TRUE;
 		}
 	}

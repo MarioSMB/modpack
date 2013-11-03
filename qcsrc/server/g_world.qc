@@ -2259,7 +2259,7 @@ string MapVote_Suggest(string m)
 	if(mapvote_initialized)
 		return "Can't suggest - voting is already in progress!";
 	m = MapInfo_FixName(m);
-	if not(m)
+	if (!m)
 		return "The map you suggested is not available on this server.";
 	if(!autocvar_g_maplist_votable_suggestions_override_mostrecent)
 		if(Map_IsRecent(m))

@@ -99,7 +99,7 @@ void spiderbot_rocket_guided()
 
     self.nextthink  = time;
 
-    if not (self.realowner.vehicle)
+    if (!self.realowner.vehicle)
         self.think = spiderbot_rocket_unguided;
 
     crosshair_trace(self.realowner);
@@ -117,7 +117,7 @@ void spiderbot_guide_release()
 {
     entity rkt;
     rkt = findchainentity(realowner, self.owner);
-    if not (rkt)
+    if (!rkt)
         return;
 
     crosshair_trace(self.owner);
@@ -245,7 +245,7 @@ void spiderbot_rocket_do()
     }
         
     if (self.wait != -10)
-        if not (self.owner.BUTTON_ATCK2)
+        if (!self.owner.BUTTON_ATCK2)
             return;
 
 
@@ -601,7 +601,7 @@ void spiderbot_exit(float eject)
     self.frame      = 5;
     self.movetype   = MOVETYPE_WALK;
     
-    if not (self.owner)
+    if (!self.owner)
         return;
 
 	makevectors(self.angles);
@@ -855,7 +855,7 @@ void spawnfunc_vehicle_spiderbot()
     if(autocvar_g_vehicle_spiderbot_health_regen)
         self.vehicle_flags |= VHF_HEALTHREGEN;
         
-    if not (vehicle_initialize(
+    if(!vehicle_initialize(
              "Spiderbot",
              "models/vehicles/spiderbot.dpm",
              "models/vehicles/spiderbot_top.dpm",

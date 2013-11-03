@@ -141,7 +141,7 @@ float _MapInfo_FilterList_cmp(float i, float j, entity pass)
 float MapInfo_FilterGametype(float pGametype, float pFeatures, float pFlagsRequired, float pFlagsForbidden, float pAbortOnGenerate)
 {
 	float i, j;
-	if not(_MapInfo_filtered_allocated)
+	if (!_MapInfo_filtered_allocated)
 	{
 		_MapInfo_filtered_allocated = 1;
 		_MapInfo_filtered = buf_create();
@@ -257,7 +257,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 
 	for(;;)
 	{
-		if not((s = fgets(fh)))
+		if (!((s = fgets(fh))))
 			break;
 		if(inWorldspawn == 1)
 			if(startsWith(s, "}"))
@@ -765,7 +765,7 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 			{
 				for(;;)
 				{
-					if not((s = fgets(fh)))
+					if (!((s = fgets(fh))))
 						break;
 
 					// catch different sorts of comments
@@ -793,9 +793,9 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 	}
 	else if(t == "")
 		print("Map ", pFilename, " contains a potentially harmful setting, ignored\n");
-	else if not(cvar_value_issafe(t))
+	else if (!cvar_value_issafe(t))
 		print("Map ", pFilename, " contains a potentially harmful setting, ignored\n");
-	else if not (cvar_value_issafe(s))
+	else if (!cvar_value_issafe(s))
 		print("Map ", pFilename, " contains a potentially harmful setting, ignored\n");
 	else if(matchacl(MAPINFO_SETTEMP_ACL_SYSTEM, t) <= 0)
 		print("Map ", pFilename, " contains a potentially harmful setting, ignored\n");
@@ -955,7 +955,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 	_MapInfo_Map_Reset();
 	for(;;)
 	{
-		if not((s = fgets(fh)))
+		if (!((s = fgets(fh))))
 			break;
 
 		// catch different sorts of comments
@@ -1087,7 +1087,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 		}
 		else if(t == "fog")
 		{
-			if not(cvar_value_issafe(s))
+			if (!cvar_value_issafe(s))
 				print("Map ", pFilename, " contains a potentially harmful fog setting, ignored\n");
 			else
 				MapInfo_Map_fog = s;
@@ -1097,7 +1097,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 			t = car(s); s = cdr(s);
 			if(pGametypeToSet) // FIXME is this check right here?
 			{
-				if not(cvar_value_issafe(t))
+				if (!cvar_value_issafe(t))
 					print("Map ", pFilename, " contains a potentially harmful cdtrack, ignored\n");
 				else
 					MapInfo_Map_clientstuff = strcat(
@@ -1130,7 +1130,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 	if(cvar("g_tdm_on_dm_maps"))
 	{
 		// if this is set, all DM maps support TDM too
-		if not(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH)
+		if (!(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_TEAM_DEATHMATCH))
 			if(MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH)
 				_MapInfo_Map_ApplyGametypeEx ("", pGametypeToSet, MAPINFO_TYPE_TEAM_DEATHMATCH);
 	}
@@ -1378,11 +1378,11 @@ float MapInfo_ForbiddenFlags()
 	f = MAPINFO_FLAG_FORBIDDEN;
 
 #ifndef MENUQC
-	if not(cvar("g_maplist_allow_hidden"))
+	if (!cvar("g_maplist_allow_hidden"))
 #endif
 		f |= MAPINFO_FLAG_HIDDEN;
 
-	if not(cvar("g_maplist_allow_frustrating"))
+	if (!cvar("g_maplist_allow_frustrating"))
 		f |= MAPINFO_FLAG_FRUSTRATING;
 
 	return f;

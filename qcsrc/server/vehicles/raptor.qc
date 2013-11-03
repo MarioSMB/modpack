@@ -249,7 +249,7 @@ void raptor_exit(float eject)
         self.nextthink  = time;
     }
 
-    if not (self.owner)
+    if (!self.owner)
         return;
 	
 	makevectors(self.angles);
@@ -914,7 +914,7 @@ void spawnfunc_vehicle_raptor()
     precache_sound ("vehicles/raptor_speed.wav");
     precache_sound ("vehicles/missile_alarm.wav");
     
-    if not (vehicle_initialize(
+    if(!vehicle_initialize(
              "Raptor",
              "models/vehicles/raptor.dpm",
              "",

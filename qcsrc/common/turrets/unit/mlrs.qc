@@ -9,17 +9,9 @@ REGISTER_TURRET(
 /* netname	  */ "mlrs",
 /* fullname   */ _("MLRS Turret")
 );
-
-#define MLRS_SETTINGS(turret) 
-
-
-#ifdef SVQC
-MLRS_SETTINGS(mlrs)
-#endif // SVQC
 #else
 #ifdef SVQC
-
-void spawnfunc_turret_mlrs() { if not(turret_initialize(TUR_MLRS)) remove(self); }
+void spawnfunc_turret_mlrs() { if(!turret_initialize(TUR_MLRS)) remove(self); }
 
 float t_mlrs(float req)
 {
@@ -68,11 +60,6 @@ float t_mlrs(float req)
 		{
 			precache_model ("models/turrets/base.md3");
 			precache_model ("models/turrets/mlrs.md3");
-			return TRUE;
-		}
-		case TR_CONFIG:
-		{
-			TUR_CONFIG_SETTINGS(MLRS_SETTINGS(mlrs))
 			return TRUE;
 		}
 	}

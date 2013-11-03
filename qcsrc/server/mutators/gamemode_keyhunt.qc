@@ -426,7 +426,7 @@ void kh_Key_Touch()  // runs many, many times when a key has been dropped and ca
 		// maybe start a shorter countdown?
 	}
 
-	if not(IS_PLAYER(other))
+	if(!IS_PLAYER(other))
 		return;
 	if(other.frozen)
 		return;
@@ -843,7 +843,7 @@ float kh_CheckPlayers(float num)
 					if(tmp_player.team == t_team)
 						++players;
 		
-		if not(players) { return t_team; }
+		if (!players) { return t_team; }
 	}
 	return 0;
 }
@@ -857,7 +857,7 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 	}
 
 	float p1 = kh_CheckPlayers(0), p2 = kh_CheckPlayers(1), p3 = kh_CheckPlayers(2), p4 = kh_CheckPlayers(3);
-	if not(p1 || p2 || p3 || p4)
+	if (!(p1 || p2 || p3 || p4))
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
 		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);

@@ -1,6 +1,6 @@
 void invasion_spawnpoint()
 {
-	if not(g_invasion) { remove(self); return; }
+	if(!g_invasion) { remove(self); return; }
 	
 	self.classname = "invasion_spawnpoint";
 }
@@ -191,7 +191,7 @@ void Invasion_RoundStart()
 
 MUTATOR_HOOKFUNCTION(invasion_MonsterDies)
 {
-	if not(self.monster_respawned)
+	if(!self.monster_respawned)
 	{
 		numkilled += 1;
 		maxcurrent -= 1;
@@ -205,7 +205,7 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterDies)
 
 MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
 {
-	if not(self.spawnflags & MONSTERFLAG_SPAWNED)
+	if(!(self.spawnflags & MONSTERFLAG_SPAWNED))
 	{
 		monster_remove(self);
 		return FALSE;
@@ -214,7 +214,7 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
 	if(roundcnt < maxrounds && self.spawnflags & MONSTERFLAG_MINIBOSS)
 		self.spawnflags &= ~MONSTERFLAG_MINIBOSS;
 	
-	if not(self.monster_respawned)
+	if(!self.monster_respawned)
 	{
 		numspawned += 1;
 		maxcurrent += 1;

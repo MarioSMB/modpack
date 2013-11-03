@@ -232,12 +232,12 @@ void XonoticServerInfoDialog_loadServerInfo(entity me, float i)
 	me.encryptLabel.setText(me.encryptLabel, me.currentServerEncrypt);
 	
 	s = crypto_getidfp(me.currentServerCName);
-	if not(s) { s = _("N/A"); }
+	if (!s) { s = _("N/A"); }
 	me.currentServerID = strzone(s);
 	me.idLabel.setText(me.idLabel, me.currentServerID);
 
 	s = crypto_getkeyfp(me.currentServerCName);
-	if not(s) { s = _("N/A"); }
+	if (!s) { s = _("N/A"); }
 	me.currentServerKey = strzone(s);
 	me.keyLabel.setText(me.keyLabel, me.currentServerKey);
 }

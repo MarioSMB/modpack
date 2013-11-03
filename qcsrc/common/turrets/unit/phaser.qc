@@ -9,16 +9,8 @@ REGISTER_TURRET(
 /* netname	  */ "phaser",
 /* fullname   */ _("Phaser Cannon")
 );
-
-#define PHASER_SETTINGS(turret) 
-
-
-#ifdef SVQC
-PHASER_SETTINGS(phaser)
-#endif // SVQC
 #else
 #ifdef SVQC
-
 .float fireflag;
 
 float turret_phaser_firecheck()
@@ -67,7 +59,7 @@ void beam_think()
 
 }
 
-void spawnfunc_turret_phaser() { if not(turret_initialize(TUR_PHASER)) remove(self); }
+void spawnfunc_turret_phaser() { if(!turret_initialize(TUR_PHASER)) remove(self); }
 
 float t_phaser(float req)
 {
@@ -151,11 +143,6 @@ float t_phaser(float req)
 			precache_model ("models/turrets/phaser.md3");
 			precache_model ("models/turrets/phaser_beam.md3");
 			precache_sound ("turrets/phaser.wav");
-			return TRUE;
-		}
-		case TR_CONFIG:
-		{
-			TUR_CONFIG_SETTINGS(PHASER_SETTINGS(phaser))
 			return TRUE;
 		}
 	}

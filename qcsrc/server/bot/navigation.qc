@@ -117,7 +117,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 							break;
 				}
 
-				if not (pointcontents(org + '0 0 1') == CONTENT_EMPTY)
+				if(pointcontents(org + '0 0 1') != CONTENT_EMPTY)
 				{
 					if(autocvar_bot_debug_tracewalk)
 						debugnodestatus(org, DEBUG_NODE_FAIL);
@@ -196,7 +196,7 @@ float tracewalk(entity e, vector start, vector m1, vector m2, vector end, float 
 			{
 				float c;
 				c = pointcontents(org + '0 0 1');
-				if not(c == CONTENT_WATER || c == CONTENT_LAVA || c == CONTENT_SLIME)
+				if (!(c == CONTENT_WATER || c == CONTENT_LAVA || c == CONTENT_SLIME))
 					swimming = FALSE;
 				else
 					continue;
@@ -779,7 +779,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 
 		if(e.flags & FL_ITEM)
 		{
-			if not(e.flags & FL_WEAPON)
+			if (!(e.flags & FL_WEAPON))
 			if(e.nearestwaypoint)
 				search = FALSE;
 		}
@@ -997,10 +997,10 @@ void navigation_goalrating_end()
 	bot_debug(strcat("best goal ", self.goalcurrent.classname , "\n"));
 
 	// If the bot got stuck then try to reach the farthest waypoint
-	if not (self.navigation_hasgoals)
+	if (!self.navigation_hasgoals)
 	if (autocvar_bot_wander_enable)
 	{
-		if not(self.aistatus & AI_STATUS_STUCK)
+		if (!(self.aistatus & AI_STATUS_STUCK))
 		{
 			bot_debug(strcat(self.netname, " cannot walk to any goal\n"));
 			self.aistatus |= AI_STATUS_STUCK;
@@ -1052,10 +1052,10 @@ void navigation_unstuck()
 {
 	float search_radius = 1000;
 
-	if not(autocvar_bot_wander_enable)
+	if (!autocvar_bot_wander_enable)
 		return;
 
-	if not(bot_waypoint_queue_owner)
+	if (!bot_waypoint_queue_owner)
 	{
 		bot_debug(strcat(self.netname, " sutck, taking over the waypoints queue\n"));
 		bot_waypoint_queue_owner = self;
@@ -1081,7 +1081,7 @@ void navigation_unstuck()
 		}
 		bot_waypoint_queue_goal = bot_waypoint_queue_goal.bot_waypoint_queue_nextgoal;
 
-		if not(bot_waypoint_queue_goal)
+		if (!bot_waypoint_queue_goal)
 		{
 			if (bot_waypoint_queue_bestgoal)
 			{
@@ -1147,7 +1147,7 @@ void debugresetnodes()
 
 void debugnode(vector node)
 {
-	if not(IS_PLAYER(self))
+	if (!IS_PLAYER(self))
 		return;
 
 	if(debuglastnode=='0 0 0')

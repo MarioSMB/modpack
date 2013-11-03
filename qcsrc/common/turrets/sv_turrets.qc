@@ -38,7 +38,7 @@ vector turret_aim_generic()
 			prep = pre_pos + (self.enemy.velocity * (impact_time + mintime));
 
 			if(self.aim_flags & TFL_AIM_ZPREDICT)
-			if not(self.enemy.flags & FL_ONGROUND)
+			if(!(self.enemy.flags & FL_ONGROUND))
 			if(self.enemy.movetype == MOVETYPE_WALK || self.enemy.movetype == MOVETYPE_TOSS || self.enemy.movetype == MOVETYPE_BOUNCE)
 			{
 				float vz;
@@ -221,7 +221,7 @@ void turret_damage (entity inflictor, entity attacker, float damage, float death
 		return;
 
 	// Inactive turrets take no damage. (hm..)
-	if not (self.active)
+	if(!self.active)
 		return;
 
 	if (teamplay)
@@ -378,13 +378,13 @@ void load_unit_settings(entity ent, string unitname, float is_reload)
 	if (ent == world)
 		return;
 
-	if not (ent.turret_scale_damage)	ent.turret_scale_damage = 1;
-	if not (ent.turret_scale_range)	 ent.turret_scale_range  = 1;
-	if not (ent.turret_scale_refire)	ent.turret_scale_refire = 1;
-	if not (ent.turret_scale_ammo)	  ent.turret_scale_ammo	= 1;
-	if not (ent.turret_scale_aim)	   ent.turret_scale_aim	 = 1;
-	if not (ent.turret_scale_health)	ent.turret_scale_health = 1;
-	if not (ent.turret_scale_respawn)   ent.turret_scale_respawn = 1;
+	if(!ent.turret_scale_damage)	ent.turret_scale_damage = 1;
+	if(!ent.turret_scale_range)		ent.turret_scale_range  = 1;
+	if(!ent.turret_scale_refire)	ent.turret_scale_refire = 1;
+	if(!ent.turret_scale_ammo)		ent.turret_scale_ammo	= 1;
+	if(!ent.turret_scale_aim)		ent.turret_scale_aim	 = 1;
+	if(!ent.turret_scale_health)	ent.turret_scale_health = 1;
+	if(!ent.turret_scale_respawn)	ent.turret_scale_respawn = 1;
 
 	sbase = strcat(cvar_base,unitname);
 	if (is_reload)
@@ -560,7 +560,7 @@ void turret_track()
 	if (self.track_flags == TFL_TRACK_NO)
 		return;
 
-	if not (self.active)
+	if(!self.active)
 		target_angle = self.idle_aim - ('1 0 0' * self.aim_maxpitch);
 	else if (self.enemy == world)
 	{
@@ -709,10 +709,10 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 	if(e_target.owner == e_turret)
 		return -0.5;
 
-	if not(checkpvs(e_target.origin, e_turret))
+	if(!checkpvs(e_target.origin, e_turret))
 		return -1;
 
-	if not (e_target)
+	if(!e_target)
 		return -2;
 
 	if(g_onslaught)
@@ -738,7 +738,7 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 	// player
 	if (IS_CLIENT(e_target))
 	{
-		if not (validate_flags & TFL_TARGETSELECT_PLAYERS)
+		if(!(validate_flags & TFL_TARGETSELECT_PLAYERS))
 			return -7;
 
 		if (e_target.deadflag != DEAD_NO)
@@ -753,12 +753,12 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 
 	// Missile
 	if (e_target.flags & FL_PROJECTILE)
-		if not (validate_flags & TFL_TARGETSELECT_MISSILES)
-			return -10;
+	if(!(validate_flags & TFL_TARGETSELECT_MISSILES))
+		return -10;
 
 	if (validate_flags & TFL_TARGETSELECT_MISSILESONLY)
-		if not (e_target.flags & FL_PROJECTILE)
-			return -10.5;
+	if(!(e_target.flags & FL_PROJECTILE))
+		return -10.5;
 
 	// Team check
 	if (validate_flags & TFL_TARGETSELECT_TEAMCHECK)
@@ -1040,13 +1040,13 @@ void turret_think()
 #endif
 
 	// Handle ammo
-	if not (self.spawnflags & TSF_NO_AMMO_REGEN)
+	if (!(self.spawnflags & TSF_NO_AMMO_REGEN))
 	if (self.ammo < self.ammo_max)
 		self.ammo = min(self.ammo + self.ammo_recharge, self.ammo_max);
 
 	// Inactive turrets needs to run the think loop,
 	// So they can handle animation and wake up if need be.
-	if not (self.active)
+	if(!self.active)
 	{
 		turret_track();
 		return;
@@ -1082,11 +1082,11 @@ void turret_think()
 		// This one is doing something.. oddball. assume its handles what needs to be handled.
 
 		// Predict?
-		if not(self.aim_flags & TFL_AIM_NO)
+		if(!(self.aim_flags & TFL_AIM_NO))
 			self.tur_aimpos = turret_aim_generic();
 
 		// Turn & pitch?
-		if not(self.track_flags & TFL_TRACK_NO)
+		if(!(self.track_flags & TFL_TRACK_NO))
 			turret_track();
 
 		turret_do_updates(self);
@@ -1102,11 +1102,11 @@ void turret_think()
 			if(self.volly_counter != self.shot_volly)
 			{
 				// Predict or whatnot
-				if not(self.aim_flags & TFL_AIM_NO)
+				if(!(self.aim_flags & TFL_AIM_NO))
 					self.tur_aimpos = turret_aim_generic();
 
 				// Turn & pitch
-				if not(self.track_flags & TFL_TRACK_NO)
+				if(!(self.track_flags & TFL_TRACK_NO))
 					turret_track();
 
 				turret_do_updates(self);
@@ -1150,7 +1150,7 @@ void turret_think()
 		if (self.enemy == world)
 		{
 			// Turn & pitch
-			if not(self.track_flags & TFL_TRACK_NO)
+			if(!(self.track_flags & TFL_TRACK_NO))
 				turret_track();
 				
 			TUR_ACTION(self.turretid, TR_THINK);
@@ -1162,11 +1162,11 @@ void turret_think()
 			self.lip = time + autocvar_g_turrets_aimidle_delay; // Keep track of the last time we had a target.
 
 		// Predict?
-		if not(self.aim_flags & TFL_AIM_NO)
+		if(!(self.aim_flags & TFL_AIM_NO))
 			self.tur_aimpos = turret_aim_generic();
 
 		// Turn & pitch?
-		if not(self.track_flags & TFL_TRACK_NO)
+		if(!(self.track_flags & TFL_TRACK_NO))
 			turret_track();
 
 		turret_do_updates(self);
@@ -1228,7 +1228,7 @@ void turrets_manager_think()
 
 float turret_initialize(float tur_id)
 {
-	if not(autocvar_g_turrets)
+	if(!autocvar_g_turrets)
 		return FALSE;
 
 	entity e;
@@ -1237,7 +1237,7 @@ float turret_initialize(float tur_id)
 		return FALSE; // invalid turret
 
 	e = find(world, classname, "turret_manager");
-	if not (e)
+	if(!e)
 	{
 		e = spawn();
 		e.classname = "turret_manager";
@@ -1245,25 +1245,25 @@ float turret_initialize(float tur_id)
 		e.nextthink = time + 2;
 	}
 
-	if not(self.spawnflags & TSF_SUSPENDED)
+	if(!(self.spawnflags & TSF_SUSPENDED))
 		builtin_droptofloor();
 
 	self.cvar_basename = tur.cvar_basename;
 	load_unit_settings(self, self.cvar_basename, 0);
 	
-	if not(self.team || teamplay) 	{ self.team = MAX_SHOT_DISTANCE; }
-	if not(self.ticrate) 			{ self.ticrate = ((self.turret_flags & TUR_FLAG_SUPPORT) ? 0.2 : 0.1); }
-	if not(self.health) 			{ self.health = 1000; }
-	if not(self.shot_refire) 		{ self.shot_refire = 1; }
-	if not(self.tur_shotorg)		{ self.tur_shotorg = '50 0 50'; }
-	if not(self.turret_flags) 		{ self.turret_flags = TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER; }
-	if not(self.damage_flags) 		{ self.damage_flags = TFL_DMG_YES | TFL_DMG_RETALIATE | TFL_DMG_AIMSHAKE; }
-	if not(self.aim_flags)			{ self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE; }
-	if not(self.track_type)			{ self.track_type = TFL_TRACKTYPE_STEPMOTOR; }
-	if not(self.track_flags)		{ self.track_flags = TFL_TRACK_PITCH | TFL_TRACK_ROTATE; }
-	if not(self.ammo_flags)			{ self.ammo_flags = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE; }
-	if not(self.target_select_flags){ self.target_select_flags = TFL_TARGETSELECT_LOS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_ANGLELIMITS; }
-	if not(self.firecheck_flags) 	{ self.firecheck_flags = TFL_FIRECHECK_DEAD | TFL_FIRECHECK_DISTANCES | TFL_FIRECHECK_LOS
+	if(!(self.team || teamplay))	{ self.team = MAX_SHOT_DISTANCE; }
+	if(!self.ticrate)				{ self.ticrate = ((self.turret_flags & TUR_FLAG_SUPPORT) ? 0.2 : 0.1); }
+	if(!self.health)				{ self.health = 1000; }
+	if(!self.shot_refire)			{ self.shot_refire = 1; }
+	if(!self.tur_shotorg)			{ self.tur_shotorg = '50 0 50'; }
+	if(!self.turret_flags)			{ self.turret_flags = TUR_FLAG_SPLASH | TUR_FLAG_MEDPROJ | TUR_FLAG_PLAYER; }
+	if(!self.damage_flags)			{ self.damage_flags = TFL_DMG_YES | TFL_DMG_RETALIATE | TFL_DMG_AIMSHAKE; }
+	if(!self.aim_flags)				{ self.aim_flags = TFL_AIM_LEAD | TFL_AIM_SHOTTIMECOMPENSATE; }
+	if(!self.track_type)			{ self.track_type = TFL_TRACKTYPE_STEPMOTOR; }
+	if(!self.track_flags)			{ self.track_flags = TFL_TRACK_PITCH | TFL_TRACK_ROTATE; }
+	if(!self.ammo_flags)			{ self.ammo_flags = TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE; }
+	if(!self.target_select_flags)	{ self.target_select_flags = TFL_TARGETSELECT_LOS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_ANGLELIMITS; }
+	if(!self.firecheck_flags)		{ self.firecheck_flags = TFL_FIRECHECK_DEAD | TFL_FIRECHECK_DISTANCES | TFL_FIRECHECK_LOS
 														   | TFL_FIRECHECK_AIMDIST | TFL_FIRECHECK_TEAMCHECK | TFL_FIRECHECK_AMMO_OWN | TFL_FIRECHECK_REFIRE; }
 														   
 	if(self.track_type != TFL_TRACKTYPE_STEPMOTOR)
@@ -1273,9 +1273,9 @@ float turret_initialize(float tur_id)
 		
 		self.aim_speed = bound(0.1, ((!self.aim_speed) ? 180 : self.aim_speed), 1000);
 		
-		if not(self.track_accel_pitch) 	{ self.track_accel_pitch = 0.5; }
-		if not(self.track_accel_rotate) 	{ self.track_accel_rotate = 0.5; }
-		if not(self.track_blendrate) 	{ self.track_blendrate = 0.35; }
+		if(!self.track_accel_pitch)		{ self.track_accel_pitch = 0.5; }
+		if(!self.track_accel_rotate)	{ self.track_accel_rotate = 0.5; }
+		if(!self.track_blendrate)		{ self.track_blendrate = 0.35; }
 	}
 	
 	self.respawntime 				= max(-1, ((!self.respawntime) ? 60 : self.respawntime));
@@ -1360,7 +1360,7 @@ float turret_initialize(float tur_id)
 	self.tur_head.solid			= SOLID_NOT;
 	self.tur_head.movetype		= self.movetype;
 	
-	if not(self.tur_defend)
+	if(!self.tur_defend)
 	if(self.target != "")
 	{
 		self.tur_defend = find(world, targetname, self.target);

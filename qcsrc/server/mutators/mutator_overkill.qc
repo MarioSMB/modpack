@@ -1,6 +1,6 @@
 void ok_DecreaseCharge(entity ent, float wep)
 {
-	if not(autocvar_g_overkill_ammo_charge) return;
+	if(!autocvar_g_overkill_ammo_charge) return;
 
 	entity wepent = get_weaponinfo(wep);
 
@@ -18,14 +18,14 @@ void ok_IncreaseCharge(entity ent, float wep)
 		return; // dummy
 
 	if(autocvar_g_overkill_ammo_charge)
-	if not(ent.BUTTON_ATCK)
+	if(!ent.BUTTON_ATCK)
 	if(ent.ammo_charge[wep] <= autocvar_g_overkill_ammo_charge_limit)
 		ent.ammo_charge[wep] = min(autocvar_g_overkill_ammo_charge_limit, ent.ammo_charge[wep] + cvar(sprintf("g_overkill_ammo_charge_rate_%s", wepent.netname)) * frametime / W_TICSPERFRAME);
 }
 
 float ok_CheckWeaponCharge(entity ent, float wep, float swep)
 {
-	if not(autocvar_g_overkill_ammo_charge) return TRUE;
+	if(!autocvar_g_overkill_ammo_charge) return TRUE;
 	//if(wep != swep) return TRUE; // switching, don't even bother checking
 
 	entity wepent = get_weaponinfo(wep);
@@ -80,7 +80,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 	if(!IS_PLAYER(frag_target) || frag_target == frag_attacker)
 		return FALSE;
 
-	if not (DEATH_ISWEAPON(frag_deathtype, WEP_LASER))
+	if(!DEATH_ISWEAPON(frag_deathtype, WEP_LASER))
 		return FALSE;
 
 	frag_damage = 0;

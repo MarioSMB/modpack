@@ -105,7 +105,7 @@ MUTATOR_DEFINITION(mutator_physical_items)
 	// check if we have a physics engine
 	MUTATOR_ONADD
 	{
-		if not(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE"))
+		if (!(autocvar_physics_ode && checkextension("DP_PHYSICS_ODE")))
 		{
 			dprint("Warning: Physical items are enabled but no physics engine can be used. Reverting to old items.\n");
 			return -1;

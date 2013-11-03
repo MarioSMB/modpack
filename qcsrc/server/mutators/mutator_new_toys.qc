@@ -110,7 +110,7 @@ string nt_GetReplacement(string w, float m)
 	if(m == NT_AUTOREPLACE_NEVER)
 		return w;
 	string s = nt_GetFullReplacement(w);
-	if not(s)
+	if (!s)
 		return w;
 	if(m == NT_AUTOREPLACE_RANDOM)
 		s = strcat(w, " ", s);

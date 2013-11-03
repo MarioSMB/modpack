@@ -467,7 +467,7 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 	// check whether antilagged traces are enabled
 	if (lag < 0.001)
 		lag = 0;
-	if not(IS_REAL_CLIENT(forent))
+	if (!IS_REAL_CLIENT(forent))
 		lag = 0; // only antilag for clients
 
 	// change shooter to SOLID_BBOX so the shot can hit corpses
@@ -799,7 +799,7 @@ void LODmodel_attach()
 	}
 
 	if(self.lodmodelindex1)
-		if not(self.SendEntity)
+		if (!self.SendEntity)
 			SetCustomizer(self, LOD_customize, LOD_uncustomize);
 }
 

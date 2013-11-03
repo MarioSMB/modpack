@@ -67,7 +67,7 @@ void XonoticColorButton_setChecked(entity me, float val)
 }
 void XonoticColorButton_loadCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	if(cvar_string(me.cvarName) == cvar_defstring(me.cvarName))
@@ -80,7 +80,7 @@ void XonoticColorButton_loadCvars(entity me)
 }
 void XonoticColorButton_saveCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	if(me.checked)

@@ -63,7 +63,7 @@ void napalm_damage(float dist, float damage, float edgedamage, float burntime)
 		if(e.takedamage == DAMAGE_AIM) 
 		if(self.realowner != e || autocvar_g_nades_napalm_selfdamage) 
 		if(!IS_PLAYER(e) || !self.realowner || DIFF_TEAM(e, self))
-		if not (e.frozen) 
+		if(!e.frozen) 
 		{
 			p = e.origin;
 			p_x += e.mins_x + random() * (e.maxs_x - e.mins_x);
@@ -305,7 +305,7 @@ void nade_ice_think()
 	if((autocvar_g_nades_ice_teamcheck && (DIFF_TEAM(e, self.realowner) || e == self.realowner)) || !autocvar_g_nades_ice_teamcheck)
 	if(e.takedamage && e.deadflag == DEAD_NO)
 	if(e.health > 0) 
-	if not(e.frozen)
+	if(!e.frozen)
 	if(current_freeze_time > 0)
 		nade_ice_freeze(self, e, current_freeze_time);
 }
@@ -624,13 +624,13 @@ float CanThrowNade()
 	if(self.deadflag != DEAD_NO)
 		return FALSE;
 	
-	if not(autocvar_g_nades)
+	if (!autocvar_g_nades)
 		return FALSE; // allow turning them off mid match
 		
 	if(forbidWeaponUse())
 		return FALSE;
 		
-	if not(IS_PLAYER(self))
+	if (!IS_PLAYER(self))
 		return FALSE;
 		
 	return TRUE;
@@ -690,7 +690,7 @@ MUTATOR_HOOKFUNCTION(nades_VehicleEnter)
 
 MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 {
-	if not(IS_PLAYER(self)) { return FALSE; }
+	if(!IS_PLAYER(self)) { return FALSE; }
 	
 	float key_pressed = self.BUTTON_HOOK;
 	float time_score;
@@ -833,7 +833,7 @@ MUTATOR_HOOKFUNCTION(nades_MonsterDies)
 {
 	if(IS_PLAYER(frag_attacker))
 	if(DIFF_TEAM(frag_attacker, self))
-	if not(self.spawnflags & MONSTERFLAG_SPAWNED)
+	if(!(self.spawnflags & MONSTERFLAG_SPAWNED))
 		nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_minor);
 	
 	return FALSE;

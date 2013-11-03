@@ -864,7 +864,7 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, WEAPON_MINELAYER_SUICIDE,             NO_MSG,        INFO_WEAPON_MINELAYER_SUICIDE,             CENTER_DEATH_SELF_GENERIC) \
 	MSG_MULTI_NOTIF(1, WEAPON_MINSTANEX_MURDER,              NO_MSG,        INFO_WEAPON_MINSTANEX_MURDER,              NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_MINSTANEX_MURDER_CHARGE,       NO_MSG,        INFO_WEAPON_MINSTANEX_MURDER_CHARGE,       NO_MSG) \
-    MSG_MULTI_NOTIF(1, WEAPON_MINSTANEX_SUICIDE,             NO_MSG,        INFO_WEAPON_MINSTANEX_SUICIDE,             NO_MSG) \
+        MSG_MULTI_NOTIF(1, WEAPON_MINSTANEX_SUICIDE,             NO_MSG,        INFO_WEAPON_MINSTANEX_SUICIDE,             NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_MORTAR_MURDER_BOUNCE,          NO_MSG,        INFO_WEAPON_MORTAR_MURDER_BOUNCE,          NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_MORTAR_MURDER_EXPLODE,         NO_MSG,        INFO_WEAPON_MORTAR_MURDER_EXPLODE,         NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_MORTAR_SUICIDE_BOUNCE,         NO_MSG,        INFO_WEAPON_MORTAR_SUICIDE_BOUNCE,         CENTER_DEATH_SELF_GENERIC) \
@@ -1082,7 +1082,7 @@ string notif_arg_frag_ping(float newline, float fping)
 
 string notif_arg_frag_stats(float fhealth, float farmor, float fping)
 {
-	if not(fhealth < 1)
+	if (!(fhealth < 1))
 		return sprintf(CCR(_("\n(Health ^1%d^BG / Armor ^2%d^BG)%s")), fhealth, farmor, notif_arg_frag_ping(FALSE, fping));
 	else
 		return sprintf(CCR(_("\n(^F4Dead^BG)%s")), notif_arg_frag_ping(FALSE, fping));
@@ -1129,7 +1129,7 @@ string notif_arg_spree_cen(float spree)
 				KILL_SPREE_LIST
 				default:
 				{
-					if not(autocvar_notification_show_sprees_center_specialonly)
+					if (!autocvar_notification_show_sprees_center_specialonly)
 					{
 						return
 							sprintf(
@@ -1187,7 +1187,7 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 						KILL_SPREE_LIST
 						default:
 						{
-							if not(autocvar_notification_show_sprees_info_specialonly)
+							if (!autocvar_notification_show_sprees_info_specialonly)
 							{
 								return
 									sprintf(

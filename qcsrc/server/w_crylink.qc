@@ -637,7 +637,7 @@ float w_crylink(float req)
 				}
 				self.crylink_waitrelease = 0;
 				if(!w_crylink(WR_CHECKAMMO1) && !w_crylink(WR_CHECKAMMO2))
-				if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+				if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 				{
 					// ran out of ammo!
 					self.cnt = WEP_CRYLINK;

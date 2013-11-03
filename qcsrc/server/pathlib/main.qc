@@ -110,7 +110,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
                 node.path_prev = parent;
             }
 
-            if not (best_open_node)
+            if (!best_open_node)
                 best_open_node = node;
             else if(best_open_node.pathlib_node_f > node.pathlib_node_f)
                 best_open_node = node;
@@ -121,7 +121,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
 
     where = pathlib_movenode(parent.origin, to, 0);
 
-    if not(pathlib_movenode_goodnode)
+    if (!pathlib_movenode_goodnode)
     {
         //pathlib_showsquare(where, 0 ,30);
         //pathlib_showsquare(parent.origin, 1 ,30);
@@ -141,7 +141,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
 
 
     if(doedge)
-        if not (tile_check(where))
+        if (!tile_check(where))
         {
             dprint("tile_check fail\n");
             pathlib_showsquare(where, 0 ,30);
@@ -175,7 +175,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
                     //}
                 }
 
-                if not (best_open_node)
+                if (!best_open_node)
                     best_open_node = node;
                 else if(best_open_node.pathlib_node_f > node.pathlib_node_f)
                     best_open_node = node;
@@ -192,7 +192,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
     node.pathlib_node_g = g;
     node.pathlib_node_f = f;
 
-    if not (best_open_node)
+    if (!best_open_node)
         best_open_node = node;
     else if(best_open_node.pathlib_node_f > node.pathlib_node_f)
         best_open_node = node;
@@ -405,10 +405,10 @@ entity pathlib_astar(vector from,vector to)
         pathlib_movenode   = pathlib_swimnode;
     }
 
-    if not(openlist)
+    if (!openlist)
         openlist       = spawn();
 
-    if not(closedlist)
+    if (!closedlist)
         closedlist     = spawn();
 
     pathlib_closed_cnt       = 0;

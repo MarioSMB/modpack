@@ -257,7 +257,7 @@ void assault_new_round()
 // spawnfuncs
 void spawnfunc_info_player_attacker()
 {
-	if not(g_assault) { remove(self); return; }
+	if (!g_assault) { remove(self); return; }
 	
 	self.team = NUM_TEAM_1; // red, gets swapped every round
 	spawnfunc_info_player_deathmatch();
@@ -265,7 +265,7 @@ void spawnfunc_info_player_attacker()
 
 void spawnfunc_info_player_defender()
 {
-	if not(g_assault) { remove(self); return; }
+	if (!g_assault) { remove(self); return; }
 	
 	self.team = NUM_TEAM_2; // blue, gets swapped every round
 	spawnfunc_info_player_deathmatch();
@@ -273,7 +273,7 @@ void spawnfunc_info_player_defender()
 
 void spawnfunc_target_objective()
 {
-	if not(g_assault) { remove(self); return; }
+	if (!g_assault) { remove(self); return; }
 	
 	self.classname = "target_objective";
 	self.use = assault_objective_use;
@@ -284,7 +284,7 @@ void spawnfunc_target_objective()
 
 void spawnfunc_target_objective_decrease()
 {
-	if not(g_assault) { remove(self); return; }
+	if (!g_assault) { remove(self); return; }
 
 	self.classname = "target_objective_decrease";
 
@@ -302,7 +302,7 @@ void spawnfunc_target_objective_decrease()
 // destructible walls that can be used to trigger target_objective_decrease
 void spawnfunc_func_assault_destructible()
 {
-	if not(g_assault) { remove(self); return; }
+	if (!g_assault) { remove(self); return; }
 	
 	self.spawnflags = 3;
 	self.classname = "func_assault_destructible";
@@ -317,7 +317,7 @@ void spawnfunc_func_assault_destructible()
 
 void spawnfunc_func_assault_wall()
 {
-	if not(g_assault) { remove(self); return; }
+	if (!g_assault) { remove(self); return; }
 	
 	self.classname = "func_assault_wall";
 	self.mdl = self.model;
@@ -330,7 +330,7 @@ void spawnfunc_func_assault_wall()
 
 void spawnfunc_target_assault_roundend()
 {
-	if not(g_assault) { remove(self); return; }
+	if (!g_assault) { remove(self); return; }
 
 	self.winning = 0; // round not yet won by attackers
 	self.classname = "target_assault_roundend";
@@ -341,7 +341,7 @@ void spawnfunc_target_assault_roundend()
 
 void spawnfunc_target_assault_roundstart()
 {
-	if not(g_assault) { remove(self); return; }
+	if (!g_assault) { remove(self); return; }
 	
 	assault_attacker_team = NUM_TEAM_1;
 	self.classname = "target_assault_roundstart";
@@ -364,7 +364,7 @@ void havocbot_goalrating_ast_targets(float ratingscale)
 		if (ad.target == "")
 			continue;
 
-		if not(ad.bot_attack)
+		if (!ad.bot_attack)
 			continue;
 
 		found = FALSE;

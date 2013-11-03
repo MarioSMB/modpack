@@ -241,7 +241,7 @@ vector colormapPaletteColor(float c, float isPants)
 string fstrunzone(string s)
 {
 	string sc;
-	if not(s)
+	if (!s)
 		return s;
 	sc = strcat(s, "");
 	strunzone(s);
@@ -866,7 +866,7 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 
 	created_saved_value = 0;
 
-	if not(tmp_cvar || tmp_value)
+	if (!(tmp_cvar || tmp_value))
 	{
 		dprint("Error: Invalid usage of cvar_settemp(string, string); !\n");
 		return 0;
@@ -1476,7 +1476,7 @@ float isGametypeInFilter(float gt, float tp, float ts, string pattern)
 		if(strstrofs(strcat(",", pattern, ","), subpattern2, 0) < 0)
 		if(strstrofs(strcat(",", pattern, ","), subpattern3, 0) < 0)
 		{
-			if not(subpattern4)
+			if (!subpattern4)
 				return 0;
 			if(strstrofs(strcat(",", pattern, ","), subpattern4, 0) < 0)
 				return 0;
@@ -1712,7 +1712,7 @@ void check_unacceptable_compiler_bugs()
 		error("fteqcc bug introduced with revision 3178 detected. Please upgrade fteqcc to a later revision, downgrade fteqcc to revision 3177, or pester Spike until he fixes it. You can set _allow_unacceptable_compiler_bugs 1 to skip this check, but expect stuff to be horribly broken then.");
 
 	string s = "";
-	if not(s)
+	if (!s)
 		error("The empty string counts as false. We do not want that!");
 }
 
@@ -2052,7 +2052,7 @@ float get_model_parameters(string m, float sk)
 	}
 	get_model_parameters_fixbone = 0;
 
-	if not(m)
+	if (!m)
 		return 1;
 
 	if(substring(m, -9, 5) == "_lod1" || substring(m, -9, 5) == "_lod2")

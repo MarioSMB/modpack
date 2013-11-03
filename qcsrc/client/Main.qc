@@ -5,7 +5,7 @@
 entity clearentity_ent;
 void clearentity(entity e)
 {
-	if not(clearentity_ent)
+	if (!clearentity_ent)
 	{
 		clearentity_ent = spawn();
 		clearentity_ent.classname = "clearentity";
@@ -204,11 +204,11 @@ void Shutdown(void)
 	if(autocvar_chase_active < 0)
 		cvar_set("chase_active", "0");
 
-	if not(isdemo())
+	if (!isdemo())
 	{
-		if not(calledhooks & HOOK_START)
+		if (!(calledhooks & HOOK_START))
 			localcmd("\n_cl_hook_gamestart nop\n");
-		if not(calledhooks & HOOK_END)
+		if (!(calledhooks & HOOK_END))
 			localcmd("\ncl_hook_gameend\n");
 	}
 }
@@ -264,7 +264,7 @@ float SetTeam(entity o, float Team)
 	}
 	else
 	{
-		if not(o.has_team)
+		if (!o.has_team)
 		{
 			o.team = Team;
 			tm = GetTeam(Team, true);
@@ -305,10 +305,10 @@ void Playerchecker_Think()
 		}
 		else
 		{
-			if not(e.sort_prev)
+			if (!e.sort_prev)
 			{
 				// player connected
-				if not(e)
+				if (!e)
 					playerslots[i] = e = spawn();
 				e.sv_entnum = i;
 				e.ping = 0;
@@ -332,7 +332,7 @@ void FPSReporter_Think()
 
 void FPSReporter_Init()
 {
-	if not(sv_showfps)
+	if(!sv_showfps)
 		return;
 	
 	entity e = spawn();
@@ -469,13 +469,13 @@ void Ent_ReadPlayerScore()
 
 	self.sv_entnum = n;
 
-	if not(playerslots[self.sv_entnum])
+	if (!(playerslots[self.sv_entnum]))
 		playerslots[self.sv_entnum] = spawn();
 	o = self.owner = playerslots[self.sv_entnum];
 	o.sv_entnum = self.sv_entnum;
 	o.gotscores = 1;
 
-	//if not(o.sort_prev)
+	//if (!o.sort_prev)
 	//	RegisterPlayer(o);
 	//playerchecker will do this for us later, if it has not already done so
 
@@ -624,7 +624,7 @@ void Ent_Nagger()
 		{
 			f = ReadByte();
 			for(j = i-1, b = 1; b < 256; b *= 2, ++j)
-				if not(f & b)
+				if (!(f & b))
 					if(playerslots[j])
 						playerslots[j].ready = 0;
 		}
@@ -919,7 +919,7 @@ void CSQC_Ent_Remove()
 
 void Gamemode_Init()
 {
-	if not(isdemo())
+	if (!isdemo())
 	{
 		if(!(calledhooks & HOOK_START))
 			localcmd("\n_cl_hook_gamestart ", MapInfo_Type_ToString(gametype), "\n");
@@ -1201,7 +1201,7 @@ void Net_ReadPingPLReport()
 	pi = ReadShort();
 	pl = ReadByte();
 	ml = ReadByte();
-	if not(playerslots[e])
+	if (!(playerslots[e]))
 		return;
 	playerslots[e].ping = pi;
 	playerslots[e].ping_packetloss = pl / 255.0;

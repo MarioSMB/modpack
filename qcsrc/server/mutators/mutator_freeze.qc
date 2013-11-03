@@ -38,9 +38,9 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerDies)
 		can_freeze = FALSE; // force off (easier than disabling & restarting, will fix later)
 	
 	if(can_freeze)
-	if not(frag_target.frozen)
+	if(!frag_target.frozen)
 	{
-		if not(teamplay && autocvar_g_freeze_noauto)
+		if(!(teamplay && autocvar_g_freeze_noauto))
 		if(IS_REAL_CLIENT(frag_target))
 			Send_Notification(NOTIF_ONE_ONLY, frag_target, MSG_CENTER, CENTER_FREEZE_THAWING);
 		frag_target.health = 1; // "respawn" the player :P

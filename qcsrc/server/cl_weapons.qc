@@ -348,7 +348,7 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	W_SwitchWeapon_Force(self, w_getbestweapon(self));
 	a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);
 	
-	if not(a) return;
+	if (!a) return;
 	Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_WEAPON_DROP, a, w);
 }
 

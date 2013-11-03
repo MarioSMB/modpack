@@ -20,7 +20,7 @@ void sandbox_ObjectFunction_Touch()
 	intensity = vlen(self.velocity) + vlen(other.velocity);
 	if(intensity) // avoid divisions by 0
 		intensity /= 2; // average the two velocities
-	if not(intensity >= autocvar_g_sandbox_object_material_velocity_min)
+	if (!(intensity >= autocvar_g_sandbox_object_material_velocity_min))
 		return; // impact not strong enough to do anything
 	// now offset intensity and apply it to the effects
 	intensity -= autocvar_g_sandbox_object_material_velocity_min; // start from minimum velocity, not actual velocity
@@ -76,7 +76,7 @@ entity sandbox_ObjectEdit_Get(float permissions)
 		return trace_ent; // don't check permissions, anyone can edit this object
 	if(trace_ent.crypto_idfp == "")
 		return trace_ent; // the player who spawned this object did not have an UID, so anyone can edit it
-	if not(trace_ent.realowner != self && autocvar_g_sandbox_editor_free < 2)
+	if (!(trace_ent.realowner != self && autocvar_g_sandbox_editor_free < 2))
 		return trace_ent; // object does not belong to the player, and players can only edit their own objects on this server
 	return world;
 }
@@ -491,7 +491,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					print_to(self, "^1SANDBOX - WARNING: ^7Attempted to spawn an object without specifying a model. Please specify the path to your model file after the 'object_spawn' command");
 					return TRUE;
 				}
-				if not(fexists(argv(2)))
+				if (!(fexists(argv(2))))
 				{
 					print_to(self, "^1SANDBOX - WARNING: ^7Attempted to spawn an object with a non-existent model. Make sure the path to your model file is correct");
 					return TRUE;

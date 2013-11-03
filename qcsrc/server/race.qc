@@ -249,7 +249,7 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 
 	if(tvalid)
 	if(cp == race_timed_checkpoint) // finish line
-	if not(e.race_completed)
+	if (!e.race_completed)
 	{
 		float s;
 		if(g_race_qualifying)
@@ -457,7 +457,7 @@ void checkpoint_passed()
 	/*
 	 * Trigger targets
 	 */
-	if not((self.spawnflags & 2) && (IS_PLAYER(other)))
+	if (!((self.spawnflags & 2) && (IS_PLAYER(other))))
 	{
 		activator = other;
 		oldmsg = self.message;
@@ -466,7 +466,7 @@ void checkpoint_passed()
 		self.message = oldmsg;
 	}
 
-	if not(IS_PLAYER(other))
+	if (!IS_PLAYER(other))
 		return;
 
 	/*
@@ -800,7 +800,7 @@ void spawnfunc_trigger_race_checkpoint()
 	EXACTTRIGGER_INIT;
 
 	self.use = checkpoint_use;
-	if not(self.spawnflags & 1)
+	if (!(self.spawnflags & 1))
 		self.touch = checkpoint_touch;
 
 	o = (self.absmin + self.absmax) * 0.5;
@@ -853,7 +853,7 @@ void spawnfunc_target_checkpoint() // defrag entity
 	EXACTTRIGGER_INIT;
 
 	self.use = checkpoint_use;
-	if not(self.spawnflags & 1)
+	if (!(self.spawnflags & 1))
 		self.touch = checkpoint_touch;
 
 	o = (self.absmin + self.absmax) * 0.5;
@@ -1090,7 +1090,7 @@ void spawnfunc_trigger_race_penalty()
 	EXACTTRIGGER_INIT;
 
 	self.use = penalty_use;
-	if not(self.spawnflags & 1)
+	if (!(self.spawnflags & 1))
 		self.touch = penalty_touch;
 
 	if (self.race_penalty_reason == "")

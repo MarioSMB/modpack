@@ -52,7 +52,7 @@ void XonoticTextSlider_setValue(entity me, float val)
 }
 void XonoticTextSlider_loadCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	var float n = tokenize_console(me.cvarName);
@@ -74,7 +74,7 @@ void XonoticTextSlider_loadCvars(entity me)
 }
 void XonoticTextSlider_saveCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	if(me.value >= 0 && me.value < me.nValues)

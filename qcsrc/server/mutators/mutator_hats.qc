@@ -4,7 +4,7 @@
 
 float is_customplayermodel(entity ent)
 {
-	if not(autocvar_sv_allow_customplayermodels)
+	if(!autocvar_sv_allow_customplayermodels)
 		return FALSE;
 	
 	if(ent.cvar_cl_damnfurries)
@@ -112,7 +112,7 @@ void hats_SpawnHat()
 
 MUTATOR_HOOKFUNCTION(hats_PlayerSpawn)
 {
-	if not(is_customplayermodel(self))
+	if(!is_customplayermodel(self))
 	{
 		hats_SpawnHat();
 		self.hatentity.alpha = default_weapon_alpha;

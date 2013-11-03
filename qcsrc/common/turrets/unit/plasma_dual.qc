@@ -9,17 +9,9 @@ REGISTER_TURRET(
 /* netname	  */ "plasma_dual",
 /* fullname   */ _("Dual Plasma Cannon")
 );
-
-#define PLASMA_DUAL_SETTINGS(turret) 
-
-
-#ifdef SVQC
-PLASMA_DUAL_SETTINGS(plasma_dual)
-#endif // SVQC
 #else
 #ifdef SVQC
-
-void spawnfunc_turret_plasma_dual() { if not(turret_initialize(TUR_PLASMA_DUAL)) remove(self); }
+void spawnfunc_turret_plasma_dual() { if(!turret_initialize(TUR_PLASMA_DUAL)) remove(self); }
 
 float t_plasma_dual(float req)
 {
@@ -103,11 +95,6 @@ float t_plasma_dual(float req)
 		{
 			precache_model ("models/turrets/base.md3");
 			precache_model ("models/turrets/plasmad.md3");
-			return TRUE;
-		}
-		case TR_CONFIG:
-		{
-			TUR_CONFIG_SETTINGS(PLASMA_DUAL_SETTINGS(plasma_dual))
 			return TRUE;
 		}
 	}

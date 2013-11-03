@@ -9,25 +9,21 @@ REGISTER_MONSTER(
 /* fullname   */ _("Shambler")
 );
 
-#define SHAMBLER_SETTINGS(monster) \
-	MON_ADD_CVAR(monster, health) \
-	MON_ADD_CVAR(monster, attack_smash_damage) \
-	MON_ADD_CVAR(monster, attack_claw_damage) \
-	MON_ADD_CVAR(monster, attack_lightning_damage) \
-	MON_ADD_CVAR(monster, attack_lightning_force) \
-	MON_ADD_CVAR(monster, attack_lightning_radius) \
-	MON_ADD_CVAR(monster, attack_lightning_radius_zap) \
-	MON_ADD_CVAR(monster, attack_lightning_speed) \
-	MON_ADD_CVAR(monster, attack_lightning_speed_up) \
-	MON_ADD_CVAR(monster, speed_stop) \
-	MON_ADD_CVAR(monster, speed_run) \
-	MON_ADD_CVAR(monster, speed_walk) 
-
-#ifdef SVQC
-SHAMBLER_SETTINGS(shambler)
-#endif // SVQC
 #else
 #ifdef SVQC
+float autocvar_g_monster_shambler_health;
+float autocvar_g_monster_shambler_attack_smash_damage;
+float autocvar_g_monster_shambler_attack_claw_damage;
+float autocvar_g_monster_shambler_attack_lightning_damage;
+float autocvar_g_monster_shambler_attack_lightning_force;
+float autocvar_g_monster_shambler_attack_lightning_radius;
+float autocvar_g_monster_shambler_attack_lightning_radius_zap;
+float autocvar_g_monster_shambler_attack_lightning_speed;
+float autocvar_g_monster_shambler_attack_lightning_speed_up;
+float autocvar_g_monster_shambler_speed_stop;
+float autocvar_g_monster_shambler_speed_run;
+float autocvar_g_monster_shambler_speed_walk;
+
 const float shambler_anim_stand 	= 0;
 const float shambler_anim_walk 		= 1;
 const float shambler_anim_run 		= 2;
@@ -49,13 +45,13 @@ void shambler_smash()
 	tracebox(self.origin + v_forward * 50, self.mins * 0.5, self.maxs * 0.5, self.origin + v_forward * 500, MOVE_NORMAL, self);
 	
 	if(trace_ent.takedamage)
-		Damage(trace_ent, self, self, MON_CVAR(shambler, attack_smash_damage) * Monster_SkillModifier(), DEATH_MONSTER_SHAMBLER_SMASH, trace_ent.origin, normalize(trace_ent.origin - self.origin));
+		Damage(trace_ent, self, self, (autocvar_g_monster_shambler_attack_smash_damage) * Monster_SkillModifier(), DEATH_MONSTER_SHAMBLER_SMASH, trace_ent.origin, normalize(trace_ent.origin - self.origin));
 }
 
 void shambler_swing()
 {
 	float r = (random() < 0.5);
-	monster_melee(self.enemy, MON_CVAR(shambler, attack_claw_damage), ((r) ? shambler_anim_swingr : shambler_anim_swingl), self.attack_range, 0.8, DEATH_MONSTER_SHAMBLER_CLAW, TRUE);
+	monster_melee(self.enemy, (autocvar_g_monster_shambler_attack_claw_damage), ((r) ? shambler_anim_swingr : shambler_anim_swingl), self.attack_range, 0.8, DEATH_MONSTER_SHAMBLER_CLAW, TRUE);
 	if(r)
 	{
 		defer(0.5, shambler_swing);
@@ -78,12 +74,12 @@ void shambler_lightning_explode()
 	if(self.movetype == MOVETYPE_NONE)
 		self.velocity = self.oldvelocity;
 
-	RadiusDamage (self, self.realowner, MON_CVAR(shambler, attack_lightning_damage), MON_CVAR(shambler, attack_lightning_damage), MON_CVAR(shambler, attack_lightning_radius), world, MON_CVAR(shambler, attack_lightning_force), self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_radius), world, (autocvar_g_monster_shambler_attack_lightning_force), self.projectiledeathtype, other);
 	
-	for(head = findradius(self.origin, MON_CVAR(shambler, attack_lightning_radius_zap)); head; head = head.chain) if(head != self.realowner) if(head.takedamage)
+	for(head = findradius(self.origin, (autocvar_g_monster_shambler_attack_lightning_radius_zap)); head; head = head.chain) if(head != self.realowner) if(head.takedamage)
 	{
 		te_csqc_lightningarc(self.origin, head.origin);
-		Damage(head, self, self.realowner, MON_CVAR(shambler, attack_lightning_damage) * Monster_SkillModifier(), DEATH_MONSTER_SHAMBLER_ZAP, head.origin, '0 0 0');
+		Damage(head, self, self.realowner, (autocvar_g_monster_shambler_attack_lightning_damage) * Monster_SkillModifier(), DEATH_MONSTER_SHAMBLER_ZAP, head.origin, '0 0 0');
 	}
 
 	self.think = SUB_Remove;
@@ -132,7 +128,7 @@ void shambler_lightning()
 	gren.owner = gren.realowner = self;
 	gren.classname = "grenade";
 	gren.bot_dodge = TRUE;
-	gren.bot_dodgerating = MON_CVAR(shambler, attack_lightning_damage);
+	gren.bot_dodgerating = (autocvar_g_monster_shambler_attack_lightning_damage);
 	gren.movetype = MOVETYPE_BOUNCE;
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = DEATH_MONSTER_SHAMBLER_ZAP;
@@ -152,7 +148,7 @@ void shambler_lightning()
 	gren.event_damage = shambler_lightning_damage;
 	gren.damagedbycontents = TRUE;
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
-	W_SetupProjectileVelocityEx(gren, v_forward, v_up, MON_CVAR(shambler, attack_lightning_speed), MON_CVAR(shambler, attack_lightning_speed_up), 0, 0, FALSE);
+	W_SetupProjectileVelocityEx(gren, v_forward, v_up, (autocvar_g_monster_shambler_attack_lightning_speed), (autocvar_g_monster_shambler_attack_lightning_speed_up), 0, 0, FALSE);
 
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
@@ -205,7 +201,7 @@ void spawnfunc_monster_shambler()
 	if(Monster_CheckAppearFlags(self))
 		return;
 	
-	if not(monster_initialize(MON_SHAMBLER, FALSE)) { remove(self); return; }
+	if(!monster_initialize(MON_SHAMBLER, FALSE)) { remove(self); return; }
 }
 
 float m_shambler(float req)
@@ -214,7 +210,7 @@ float m_shambler(float req)
 	{
 		case MR_THINK:
 		{
-			monster_move(MON_CVAR(shambler, speed_run), MON_CVAR(shambler, speed_walk), MON_CVAR(shambler, speed_stop), shambler_anim_run, shambler_anim_walk, shambler_anim_stand);
+			monster_move((autocvar_g_monster_shambler_speed_run), (autocvar_g_monster_shambler_speed_walk), (autocvar_g_monster_shambler_speed_stop), shambler_anim_run, shambler_anim_walk, shambler_anim_stand);
 			return TRUE;
 		}
 		case MR_DEATH:
@@ -224,8 +220,8 @@ float m_shambler(float req)
 		}
 		case MR_SETUP:
 		{
-			if not(self.health) self.health = MON_CVAR(shambler, health);
-			if not(self.attack_range) self.attack_range = 150;
+			if(!self.health) self.health = (autocvar_g_monster_shambler_health);
+			if(!self.attack_range) self.attack_range = 150;
 			
 			self.monster_loot = spawnfunc_item_health_mega;
 			self.monster_attackfunc	= shambler_attack;
@@ -237,11 +233,6 @@ float m_shambler(float req)
 		case MR_PRECACHE:
 		{
 			precache_model ("models/monsters/shambler.mdl");
-			return TRUE;
-		}
-		case MR_CONFIG:
-		{
-			MON_CONFIG_SETTINGS(SHAMBLER_SETTINGS(shambler))
 			return TRUE;
 		}
 	}

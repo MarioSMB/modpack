@@ -9,20 +9,14 @@ REGISTER_TURRET(
 /* netname    */ "ewheel",
 /* fullname   */ _("eWheel Turret")
 );
-
-#define EWHEEL_SETTINGS(turret) \
-	TUR_ADD_CVAR(turret, speed_fast) \
-	TUR_ADD_CVAR(turret, speed_slow) \
-	TUR_ADD_CVAR(turret, speed_slower) \
-	TUR_ADD_CVAR(turret, speed_stop) \
-	TUR_ADD_CVAR(turret, turnrate) 
-	
-
-#ifdef SVQC
-EWHEEL_SETTINGS(ewheel)
-#endif // SVQC
 #else
 #ifdef SVQC
+float autocvar_g_turrets_unit_ewheel_speed_fast;
+float autocvar_g_turrets_unit_ewheel_speed_slow;
+float autocvar_g_turrets_unit_ewheel_speed_slower;
+float autocvar_g_turrets_unit_ewheel_speed_stop;
+float autocvar_g_turrets_unit_ewheel_turnrate;
+
 const float ewheel_anim_stop = 0;
 const float ewheel_anim_fwd_slow = 1;
 const float ewheel_anim_fwd_fast = 2;
@@ -69,7 +63,7 @@ void ewheel_move_path()
 		self.moveto = self.pathcurrent.origin;
 		self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
 
-		movelib_move_simple(v_forward, TUR_CVAR(ewheel, speed_fast), 0.4);
+		movelib_move_simple(v_forward, (autocvar_g_turrets_unit_ewheel_speed_fast), 0.4);
 	}
 }
 
@@ -86,29 +80,29 @@ void ewheel_move_enemy()
 		if ( self.tur_head.spawnshieldtime < 1 )
 		{
 			newframe = ewheel_anim_fwd_fast;
-			movelib_move_simple(v_forward, TUR_CVAR(ewheel, speed_fast), 0.4);
+			movelib_move_simple(v_forward, (autocvar_g_turrets_unit_ewheel_speed_fast), 0.4);
 		}
 		else if (self.tur_head.spawnshieldtime < 2)
 		{
 
 			newframe = ewheel_anim_fwd_slow;
-			movelib_move_simple(v_forward, TUR_CVAR(ewheel, speed_slow), 0.4);
+			movelib_move_simple(v_forward, (autocvar_g_turrets_unit_ewheel_speed_slow), 0.4);
 	   }
 		else
 		{
 			newframe = ewheel_anim_fwd_slow;
-			movelib_move_simple(v_forward, TUR_CVAR(ewheel, speed_slower), 0.4);
+			movelib_move_simple(v_forward, (autocvar_g_turrets_unit_ewheel_speed_slower), 0.4);
 		}
 	}
 	else if (self.tur_dist_enemy < self.target_range_optimal * 0.5)
 	{
 		newframe = ewheel_anim_bck_slow;
-		movelib_move_simple(v_forward * -1, TUR_CVAR(ewheel, speed_slow), 0.4);
+		movelib_move_simple(v_forward * -1, (autocvar_g_turrets_unit_ewheel_speed_slow), 0.4);
 	}
 	else
 	{
 		newframe = ewheel_anim_stop;
-		movelib_beak_simple(TUR_CVAR(ewheel, speed_stop));
+		movelib_beak_simple((autocvar_g_turrets_unit_ewheel_speed_stop));
 	}
 
 	turrets_setframe(newframe, FALSE);
@@ -124,10 +118,10 @@ void ewheel_move_idle()
 
 	self.frame = 0;
 	if (vlen(self.velocity))
-		movelib_beak_simple(TUR_CVAR(ewheel, speed_stop));
+		movelib_beak_simple((autocvar_g_turrets_unit_ewheel_speed_stop));
 }
 
-void spawnfunc_turret_ewheel() { if not(turret_initialize(TUR_EWHEEL)) remove(self); }
+void spawnfunc_turret_ewheel() { if(!turret_initialize(TUR_EWHEEL)) remove(self); }
 
 float t_ewheel(float req)
 {
@@ -251,7 +245,7 @@ float t_ewheel(float req)
 			self.ammo_flags				= TFL_AMMO_ENERGY | TFL_AMMO_RECHARGE | TFL_AMMO_RECIEVE;
 			
 			// Convert from dgr / sec to dgr / tic
-			self.tur_head.aim_speed = TUR_CVAR(ewheel, turnrate);
+			self.tur_head.aim_speed = (autocvar_g_turrets_unit_ewheel_turnrate);
 			self.tur_head.aim_speed = self.tur_head.aim_speed / (1 / self.ticrate);
 		
 			return TRUE;
@@ -260,11 +254,6 @@ float t_ewheel(float req)
 		{
 			precache_model ("models/turrets/ewheel-base2.md3");
 			precache_model ("models/turrets/ewheel-gun1.md3");
-			return TRUE;
-		}
-		case TR_CONFIG:
-		{
-			TUR_CONFIG_SETTINGS(EWHEEL_SETTINGS(ewheel))
 			return TRUE;
 		}
 	}

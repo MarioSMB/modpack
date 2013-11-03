@@ -33,7 +33,7 @@ float check_tdeath(entity player, vector org, vector telefragmin, vector telefra
 	{
 		TDEATHLOOP(org)
 		{
-			if not(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team)
+			if (!(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team))
 				if(IS_PLAYER(head))
 					if(head.health >= 1)
 						return 1;
@@ -48,7 +48,7 @@ void tdeath(entity player, entity teleporter, entity telefragger, vector telefra
 	{
 		if (IS_PLAYER(player) && player.health >= 1)
 		{
-			if not(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team)
+			if (!(teamplay && autocvar_g_telefrags_teamplay && head.team == player.team))
 			{
 				if(IS_PLAYER(head))
 					if(head.health >= 1)
@@ -202,7 +202,7 @@ void Teleport_Touch (void)
 	if (self.active != ACTIVE_ACTIVE)
 		return;
 	
-	if not(other.teleportable)
+	if (!other.teleportable)
 		return;
     
 	if(other.vehicle)
@@ -230,7 +230,7 @@ void Teleport_Touch (void)
 	activator = other;
 	s = self.target; self.target = string_null;
 	SUB_UseTargets();
-	if not(self.target) self.target = s;
+	if (!self.target) self.target = s;
 
 	oldself = self;
 	self = e;

@@ -71,7 +71,7 @@ float weapon2mode;
 
 void vehicle_alarm(entity e, float ch, string s0und)
 {
-	if not(autocvar_cl_vehicles_alarm)
+	if(!autocvar_cl_vehicles_alarm)
 		return;
 		
 	sound(e, ch, s0und, VOL_BASEVOICE, ATTEN_NONE);
@@ -83,7 +83,7 @@ void AuxiliaryXhair_Draw2D()
 
     psize = self.axh_scale * draw_getimagesize(self.axh_image);
     loc = project_3d_to_2d(self.move_origin) - 0.5 * psize;
-    if not (loc_z < 0 || loc_x < 0 || loc_y < 0 || loc_x > vid_conwidth || loc_y > vid_conheight)
+    if (!(loc_z < 0 || loc_x < 0 || loc_y < 0 || loc_x > vid_conwidth || loc_y > vid_conheight))
     {
         loc_z = 0;
         psize_z = 0;
@@ -816,7 +816,7 @@ void CSQC_RAPTOR_HUD()
             setorigin(dropmark, trace_endpos);
             picsize = draw_getimagesize(raptor_drop) * 0.2;
 
-            if not (where_z < 0 || where_x < 0 || where_y < 0 || where_x > vid_conwidth || where_y > vid_conheight)
+            if (!(where_z < 0 || where_x < 0 || where_y < 0 || where_x > vid_conwidth || where_y > vid_conheight))
             {
                 where_x -= picsize_x * 0.5;
                 where_y -= picsize_y * 0.5;
@@ -833,7 +833,7 @@ void CSQC_RAPTOR_HUD()
                 where = project_3d_to_2d(dropmark.origin);
                 picsize = draw_getimagesize(raptor_drop) * 0.25;
 
-                if not (where_z < 0 || where_x < 0 || where_y < 0 || where_x > vid_conwidth || where_y > vid_conheight)
+                if (!(where_z < 0 || where_x < 0 || where_y < 0 || where_x > vid_conwidth || where_y > vid_conheight))
                 {
                     where_x -= picsize_x * 0.5;
                     where_y -= picsize_y * 0.5;

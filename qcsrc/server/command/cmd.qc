@@ -5,7 +5,7 @@
 
 float SV_ParseClientCommand_floodcheck()
 {
-	if not(timeout_status) // not while paused
+	if (!timeout_status) // not while paused
 	{
 		if(time <= (self.cmd_floodtime + autocvar_sv_clientcommand_antispam_time))
 		{
@@ -191,7 +191,7 @@ void ClientCommand_mobedit(float request, float argc)
 			makevectors(self.v_angle);
 			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
 			
-			if not(IS_MONSTER(trace_ent)) { sprint(self, "You need to aim at your monster to edit its properties.\n"); return; }
+			if(!IS_MONSTER(trace_ent)) { sprint(self, "You need to aim at your monster to edit its properties.\n"); return; }
 			if(trace_ent.realowner != self) { sprint(self, "That monster does not belong to you.\n"); return; }
 			
 			switch(argv(1))
@@ -331,7 +331,7 @@ void ClientCommand_ready(float request) // todo: anti-spam for toggling readynes
 						}
 
 						// cannot reset the game while a timeout is active!
-						if not(timeout_status)
+						if (!timeout_status)
 							ReadyCount();
 					} else {
 						sprint(self, "^1Game has already been restarted\n");
@@ -434,8 +434,8 @@ void ClientCommand_selectteam(float request, float argc)
 				if(IS_CLIENT(self))
 				{
 					if(teamplay)
-						if not(self.team_forced > 0) 
-							if not(lockteams) 
+						if(self.team_forced <= 0)
+							if (!lockteams) 
 							{
 								float selection;
 								

@@ -189,7 +189,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	if (g_dodging == 0)
 		do_nothing = 1;
 
-	if not(self.cvar_cl_dodging)
+	if(!self.cvar_cl_dodging)
 		do_nothing = 1;
 	
 	if(cvar("g_overkill"))

@@ -15,7 +15,7 @@ void HUDSetup_Start(entity me, entity btn);
 #ifdef IMPLEMENTATION
 void HUDSetup_Check_Gamestatus(entity me, entity btn)
 {
-	if not(gamestatus & (GAME_CONNECTED | GAME_ISSERVER)) // we're not in a match, ask the player if they want to start one anyway
+	if(!(gamestatus & (GAME_CONNECTED | GAME_ISSERVER))) // we're not in a match, ask the player if they want to start one anyway
 	{
 		DialogOpenButton_Click(me, main.hudconfirmDialog);
 	}

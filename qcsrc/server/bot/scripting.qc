@@ -1265,7 +1265,7 @@ float bot_execute_commands_once()
 	ispressingkey = !!bot_presskeys();
 
 	// Handle conditions
-	if not(bot_cmd.bot_cmd_type==BOT_CMD_FI||bot_cmd.bot_cmd_type==BOT_CMD_ELSE)
+	if (!(bot_cmd.bot_cmd_type==BOT_CMD_FI||bot_cmd.bot_cmd_type==BOT_CMD_ELSE))
 	if(self.bot_cmd_condition_status & CMD_CONDITION_TRUE && self.bot_cmd_condition_status & CMD_CONDITION_FALSE_BLOCK)
 	{
 		bot_command_executed(TRUE);

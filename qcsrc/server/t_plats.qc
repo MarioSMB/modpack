@@ -95,7 +95,7 @@ void plat_go_up()
 
 void plat_center_touch()
 {
-	if not(other.iscreature)
+	if (!other.iscreature)
 		return;
 
 	if (other.health <= 0)
@@ -110,7 +110,7 @@ void plat_center_touch()
 
 void plat_outside_touch()
 {
-	if not(other.iscreature)
+	if (!other.iscreature)
 		return;
 
 	if (other.health <= 0)
@@ -258,7 +258,7 @@ void spawnfunc_func_plat()
 	self.angles = '0 0 0';
 
 	self.classname = "plat";
-	if not(InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger())
 		return;
 	self.effects |= EF_LOWPRECISION;
 	setsize (self, self.mins , self.maxs);
@@ -422,7 +422,7 @@ void spawnfunc_func_train()
 	else
 		self.view_ofs = self.mins;
 
-	if not(InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger())
 		return;
 	self.effects |= EF_LOWPRECISION;
 
@@ -509,7 +509,7 @@ void spawnfunc_func_rotating()
 
     self.dmgtime2 = time;
 
-	if not(InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger())
 		return;
 	// no EF_LOWPRECISION here, as rounding angles is bad
 
@@ -528,7 +528,7 @@ void func_bobbing_controller_think()
 	vector v;
 	self.nextthink = time + 0.1;
 	
-	if not (self.owner.active == ACTIVE_ACTIVE)
+	if(self.owner.active != ACTIVE_ACTIVE)
 	{
 		self.owner.velocity = '0 0 0';		
 		return;
@@ -588,7 +588,7 @@ void spawnfunc_func_bobbing()
 	else // Z
 		self.movedir = '0 0 1' * self.height;
 
-	if not(InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger())
 		return;
 
 	// wait for targets to spawn
@@ -612,7 +612,7 @@ void func_pendulum_controller_think()
 	float v;
 	self.nextthink = time + 0.1;
 
-	if not (self.owner.active == ACTIVE_ACTIVE)
+	if (!(self.owner.active == ACTIVE_ACTIVE))
 	{
 		self.owner.avelocity_x = 0;
 		return;
@@ -656,7 +656,7 @@ void spawnfunc_func_pendulum()
 	self.blocked = generic_plat_blocked;
 
 	self.avelocity_z = 0.0000001;
-	if not(InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger())
 		return;
 
 	if(!self.freq)
@@ -745,7 +745,7 @@ void button_reset()
 
 void button_use()
 {
-	if not (self.active == ACTIVE_ACTIVE)
+	if(self.active != ACTIVE_ACTIVE)
 		return;
 
 	self.enemy = activator;
@@ -756,7 +756,7 @@ void button_touch()
 {
 	if (!other)
 		return;
-	if not(other.iscreature)
+	if (!other.iscreature)
 		return;
 	if(other.velocity * self.movedir < 0)
 		return;
@@ -799,7 +799,7 @@ void spawnfunc_func_button()
 {
 	SetMovedir ();
 
-	if not(InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger())
 		return;
 	self.effects |= EF_LOWPRECISION;
 
@@ -1000,12 +1000,12 @@ float door_check_keys(void) {
 		door = self;
 	
 	// no key needed
-	if not(door.itemkeys)
+	if (!door.itemkeys)
 		return TRUE;
 
 	// this door require a key
 	// only a player can have a key
-	if not(IS_PLAYER(other))
+	if (!IS_PLAYER(other))
 		return FALSE;
 	
 	if (item_keys_usekey(door, other)) {
@@ -1113,7 +1113,7 @@ void door_use()
 void door_trigger_touch()
 {
 	if (other.health < 1)
-		if not(other.iscreature && other.deadflag == DEAD_NO)
+		if (!(other.iscreature && other.deadflag == DEAD_NO))
 			return;
 
 	if (time < self.attack_finished_single)
@@ -1166,7 +1166,7 @@ Prints messages
 */
 void door_touch()
 {
-	if not(IS_PLAYER(other))
+	if (!IS_PLAYER(other))
 		return;
 	if (self.owner.attack_finished_single > time)
 		return;
@@ -1176,7 +1176,7 @@ void door_touch()
 	if (!(self.owner.dmg) && (self.owner.message != ""))
 	{
 		if (IS_CLIENT(other))
-			centerprint(other, self.message);
+			centerprint (other, self.owner.message);
 		play2(other, "misc/talk.wav");
 	}
 }
@@ -1495,7 +1495,7 @@ void spawnfunc_func_door()
 	SetMovedir ();
 
 	self.max_health = self.health;
-	if not(InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger())
 		return;
 	self.effects |= EF_LOWPRECISION;
 	self.classname = "door";
@@ -1621,7 +1621,7 @@ void spawnfunc_func_door_rotating()
 
 	self.max_health = self.health;
 	self.avelocity = self.movedir;
-	if not(InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger())
 		return;
 	self.velocity = '0 0 0';
 	//self.effects |= EF_LOWPRECISION;
@@ -1839,7 +1839,7 @@ Prints messages
 */
 void secret_touch()
 {
-	if not(other.iscreature)
+	if (!other.iscreature)
 		return;
 	if (self.attack_finished_single > time)
 		return;
@@ -1895,7 +1895,7 @@ void spawnfunc_func_door_secret()
 	self.mangle = self.angles;
 	self.angles = '0 0 0';
 	self.classname = "door";
-	if not(InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger())
 		return;
 	self.effects |= EF_LOWPRECISION;
 
@@ -1940,7 +1940,7 @@ void func_fourier_controller_think()
 	float n, i, t;
 
 	self.nextthink = time + 0.1;
-	if not (self.owner.active == ACTIVE_ACTIVE)
+	if(self.owner.active != ACTIVE_ACTIVE)
 	{
 		self.owner.velocity = '0 0 0';		
 		return;
@@ -1991,7 +1991,7 @@ void spawnfunc_func_fourier()
 	if(self.netname == "")
 		self.netname = "1 0 0 0 1";
 
-	if not(InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger())
 		return;
 
 	self.active = ACTIVE_ACTIVE;
@@ -2073,7 +2073,7 @@ void func_vectormamamam_controller_think()
 {
 	self.nextthink = time + 0.1;
 
-	if not (self.owner.active == ACTIVE_ACTIVE)
+	if(self.owner.active != ACTIVE_ACTIVE)
 	{
 		self.owner.velocity = '0 0 0';		
 		return;
@@ -2154,7 +2154,7 @@ void spawnfunc_func_vectormamamam()
 	if(self.netname == "")
 		self.netname = "1 0 0 0 1";
 
-	if not(InitMovingBrushTrigger())
+	if (!InitMovingBrushTrigger())
 		return;
 
 	// wait for targets to spawn

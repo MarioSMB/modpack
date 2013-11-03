@@ -65,7 +65,7 @@ void Announcer_Gamestart()
 		if(time < startTime) 
 		{
 			entity e = find(world, classname, "announcer_countdown");
-			if not(e)
+			if (!e)
 			{
 				e = spawn();
 				e.classname = "announcer_countdown";
@@ -106,7 +106,7 @@ void Announcer_Time()
 				|| (warmup_stage && autocvar_g_warmup_limit > 0 && warmup_timeleft < 300 && warmup_timeleft > 299))
 			{
 				//if we're in warmup mode, check whether there's a warmup timelimit
-				if not(autocvar_g_warmup_limit == -1 && warmup_stage) 
+				if(!(autocvar_g_warmup_limit == -1 && warmup_stage))
 				{
 					announcer_5min = TRUE;
 					Local_Notification(MSG_ANNCE, ANNCE_REMAINING_MIN_5);
@@ -128,7 +128,7 @@ void Announcer_Time()
 			|| (warmup_stage && autocvar_g_warmup_limit > 0 && warmup_timeleft < 60))
 		{
 			// if we're in warmup mode, check whether there's a warmup timelimit
-			if not(autocvar_g_warmup_limit == -1 && warmup_stage) 
+			if(!(autocvar_g_warmup_limit == -1 && warmup_stage))
 			{
 				announcer_1min = TRUE;
 				Local_Notification(MSG_ANNCE, ANNCE_REMAINING_MIN_1);

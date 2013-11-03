@@ -133,7 +133,7 @@ void Ent_DamageInfo(float isNew)
 	force = decompressShortVector(ReadShort());
 	species = ReadByte();
 
-	if not(isNew)
+	if (!isNew)
 		return;
 
 	if(rad < 0)
@@ -336,7 +336,7 @@ void Ent_DamageInfo(float isNew)
 	
 	// TODO spawn particle effects and sounds based on w_deathtype
 	if(!DEATH_ISSPECIAL(w_deathtype))
-	if not(hitplayer && !rad) // don't show ground impacts for hitscan weapons if a player was hit
+	if(!hitplayer || rad) // don't show ground impacts for hitscan weapons if a player was hit
 	{
 		float hitwep;
 

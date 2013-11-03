@@ -109,7 +109,7 @@ string Deathtype_Name(float deathtype)
 	if(DEATH_ISSPECIAL(deathtype))
 	{
 		entity deathent = deathtypes[(deathtype - DT_FIRST)];
-		if not(deathent) { backtrace("Deathtype_Name: Could not find deathtype entity!\n"); return ""; }
+		if (!deathent) { backtrace("Deathtype_Name: Could not find deathtype entity!\n"); return ""; }
 		return deathent.nent_name;
 	}
 	else { return ftos(deathtype); }

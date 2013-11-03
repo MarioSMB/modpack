@@ -719,7 +719,7 @@ float CheatCommand(float argc)
 	END_CHEAT_FUNCTION();
 }
 
-float Drag(entity e, float grab, float ischeat);
+float Drag(float force_allow_pick, float ischeat);
 void Drag_Begin(entity dragger, entity draggee, vector touchpoint);
 void Drag_Finish(entity dragger);
 float Drag_IsDraggable(entity draggee);
@@ -749,40 +749,11 @@ float CheatFrame()
 			{
 				// use cheat dragging if cheats are enabled
 				crosshair_trace_plusvisibletriggers(self);
-				Drag(trace_ent, TRUE, TRUE);
+				Drag(TRUE, TRUE);
 			}
 			else
 			{
-				// drag is TRUE if the object can be picked up. While an object is being carried, the Drag() function
-				// must execute for it either way, otherwise it would cause bugs if it went out of the player's trace.
-				// This also makes sure that an object can only pe picked up if in range, but does not get dropped if
-				// it goes out of range while slinging it around.
-
-				float drag;
-				crosshair_trace_plusvisibletriggers(self);
-				drag = FALSE;
-				if(vlen(self.origin - trace_ent.origin) <= autocvar_g_grab_range)
-				{
-					switch(trace_ent.grab)
-					{
-						case 0: // can't grab
-							break;
-						case 1: // owner can grab
-							if(trace_ent.owner == self || trace_ent.realowner == self)
-								drag = TRUE;
-							break;
-						case 2: // owner and team mates can grab
-							if(SAME_TEAM(trace_ent.owner, self) || SAME_TEAM(trace_ent.realowner, self) || trace_ent.team == self.team)
-								drag = TRUE;
-							break;
-						case 3: // anyone can grab
-							drag = TRUE;
-							break;
-						default:
-							break;
-					}
-				}
-				Drag(trace_ent, drag, FALSE); // execute dragging
+				Drag(FALSE, FALSE); // execute dragging
 			}
 			break;
 	}
@@ -796,7 +767,7 @@ float CheatFrame()
 
 // ENTITY DRAGGING
 
-float Drag(entity e, float pick, float ischeat)
+float Drag(float force_allow_pick, float ischeat)
 {
 	BEGIN_CHEAT_FUNCTION();
 
@@ -841,9 +812,42 @@ float Drag(entity e, float pick, float ischeat)
 			else
 			{
 				if(Drag_CanDrag(self))
-					if(self.BUTTON_DRAG && pick)
+					if(self.BUTTON_DRAG)
 					{
-						if(e)
+						crosshair_trace_plusvisibletriggers(self);
+						entity e = trace_ent;
+						float pick = force_allow_pick;
+						if (e && !pick)
+						{
+							// pick is TRUE if the object can be picked up. While an object is being carried, the Drag() function
+							// must execute for it either way, otherwise it would cause bugs if it went out of the player's trace.
+							// This also makes sure that an object can only pe picked up if in range, but does not get dropped if
+							// it goes out of range while slinging it around.
+
+							if(vlen(self.origin - e.origin) <= autocvar_g_grab_range)
+							{
+								switch(e.grab)
+								{
+									case 0: // can't grab
+										break;
+									case 1: // owner can grab
+										if(e.owner == self || e.realowner == self)
+											pick = TRUE;
+										break;
+									case 2: // owner and team mates can grab
+										if(SAME_TEAM(e.owner, self) || SAME_TEAM(e.realowner, self) || e.team == self.team)
+											pick = TRUE;
+										break;
+									case 3: // anyone can grab
+										pick = TRUE;
+										break;
+									default:
+										break;
+								}
+							}
+						}
+						// Find e and pick
+						if(e && pick)
 							if(Drag_IsDraggable(e))
 							{
 								if(ischeat)

@@ -9,17 +9,9 @@ REGISTER_TURRET(
 /* netname	  */ "plasma",
 /* fullname   */ _("Plasma Cannon")
 );
-
-#define PLASMA_SETTINGS(turret) 
-
-
-#ifdef SVQC
-PLASMA_SETTINGS(plasma)
-#endif // SVQC
 #else
 #ifdef SVQC
-
-void spawnfunc_turret_plasma() { if not(turret_initialize(TUR_PLASMA)) remove(self); }
+void spawnfunc_turret_plasma() { if(!turret_initialize(TUR_PLASMA)) remove(self); }
 
 float t_plasma(float req)
 {
@@ -105,11 +97,6 @@ float t_plasma(float req)
 		{
 			precache_model ("models/turrets/base.md3");
 			precache_model ("models/turrets/plasma.md3");
-			return TRUE;
-		}
-		case TR_CONFIG:
-		{
-			TUR_CONFIG_SETTINGS(PLASMA_SETTINGS(plasma))
 			return TRUE;
 		}
 	}

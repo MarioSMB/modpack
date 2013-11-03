@@ -72,13 +72,13 @@ void XonoticInputBox_setText(entity me, string new)
 }
 void XonoticInputBox_loadCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 	SUPER(XonoticInputBox).setText(me, cvar_string(me.cvarName));
 }
 void XonoticInputBox_saveCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 	cvar_set(me.cvarName, me.text);
 }

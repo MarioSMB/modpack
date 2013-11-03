@@ -121,7 +121,7 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 {
 	// FORCEMODEL
 	// which one is ALWAYS good?
-	if not(forceplayermodels_goodmodel)
+	if (!forceplayermodels_goodmodel)
 	{
 		entity e;
 		e = spawn();

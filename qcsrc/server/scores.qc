@@ -333,7 +333,7 @@ float PlayerScore_Add(entity player, float scorefield, float score)
 	entity s;
 
 	if(gameover)
-	if not(g_lms && scorefield == SP_LMS_RANK) // allow writing to this field in intermission as it is needed for newly joining players
+	if(!(g_lms && scorefield == SP_LMS_RANK)) // allow writing to this field in intermission as it is needed for newly joining players
 		score = 0;
 
 	if(!scores_initialized) return 0; // FIXME remove this when everything uses this system
@@ -764,7 +764,7 @@ entity PlayerScore_Sort(.float field, float teams, float strict, float nospectat
 
 		pbest.field = j;
 
-		if not(pfirst)
+		if (!pfirst)
 			pfirst = pbest;
 		if(plast)
 			plast.chain = pbest;
@@ -787,7 +787,7 @@ float TeamScore_GetCompareValue(float t)
 	}
 
 	sk = teamscorekeepers[t - 1];
-	if not(sk)
+	if (!sk)
 		return -999999999;
 	s = sk.teamscores_primary;
 	if(teamscores_flags_primary & SFL_ZERO_IS_WORST)
@@ -921,9 +921,9 @@ void Score_NicePrint(entity to)
 	
 	t = 0;
 	FOR_EACH_CLIENT(p)
-	if not(IS_PLAYER(p))
+	if (!IS_PLAYER(p))
 	{
-		if not(t)
+		if (!t)
 			Score_NicePrint_Spectators(to);
 		Score_NicePrint_Spectator(to, p);
 		t = 1;

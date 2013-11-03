@@ -58,14 +58,14 @@ void XonoticSlider_setValue(entity me, float val)
 }
 void XonoticSlider_loadCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	me.setValue( me, cvar(me.cvarName) );
 }
 void XonoticSlider_saveCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	cvar_set(me.cvarName, ftos(me.value));

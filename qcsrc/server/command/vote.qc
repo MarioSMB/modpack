@@ -455,7 +455,7 @@ void ReadyRestart_force()
 	if(autocvar_sv_timeout) { FOR_EACH_REALPLAYER(tmp_player) { tmp_player.allowed_timeouts = autocvar_sv_timeout_number; } }
 
 	//reset map immediately if this cvar is not set
-	if not(autocvar_sv_ready_restart_after_countdown) { reset_map(TRUE); }
+	if (!autocvar_sv_ready_restart_after_countdown) { reset_map(TRUE); }
 
 	if(autocvar_sv_eventlog) { GameLogEcho(":restart"); }
 }
@@ -470,7 +470,7 @@ void ReadyRestart()
 
 	// Reset ALL scores, but only do that at the beginning of the countdown if sv_ready_restart_after_countdown is off!
 	// Otherwise scores could be manipulated during the countdown.
-	if not(autocvar_sv_ready_restart_after_countdown) { Score_ClearAll(); }
+	if (!autocvar_sv_ready_restart_after_countdown) { Score_ClearAll(); }
 
 	ReadyRestart_force();
 	
@@ -564,7 +564,7 @@ string ValidateMap(string validated_map, entity caller)
 {
 	validated_map = MapInfo_FixName(validated_map);
 	
-	if not(validated_map)
+	if (!validated_map)
 	{
 		print_to(caller, "This map is not available on this server.");
 		return string_null;
@@ -680,10 +680,10 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 	)
 		return FALSE;
 
-	if not(VoteCommand_checkinlist(first_command, vote_list))
+	if (!VoteCommand_checkinlist(first_command, vote_list))
 		return FALSE;
 
-	if not(VoteCommand_checkargs(startpos, argc))
+	if (!VoteCommand_checkargs(startpos, argc))
 		return FALSE;
 
 	switch(first_command) // now go through and parse the proper commands to adjust as needed.
@@ -717,7 +717,7 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 		case "gotomap": // re-direct all map selection commands to gotomap
 		{
 			vote_command = ValidateMap(argv(startpos + 1), caller);
-			if not(vote_command) { return FALSE; }
+			if (!vote_command) { return FALSE; }
 			vote_parsed_command = strcat("gotomap ", vote_command);
 			vote_parsed_display = strzone(strcat("^1", vote_parsed_command));
 			
@@ -747,8 +747,8 @@ void VoteCommand_abstain(float request, entity caller) // CLIENT ONLY
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if not(vote_called) { print_to(caller, "^1No vote called."); }
-			else if not(caller.vote_selection == VOTE_SELECT_NULL || autocvar_sv_vote_change) { print_to(caller, "^1You have already voted."); }
+			if (!vote_called) { print_to(caller, "^1No vote called."); }
+			else if(caller.vote_selection != VOTE_SELECT_NULL && !autocvar_sv_vote_change) { print_to(caller, "^1You have already voted."); }
 			
 			else // everything went okay, continue changing vote
 			{
@@ -786,14 +786,14 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 			
 			vote_command = VoteCommand_extractcommand(vote_command, 2, argc);
 			
-			if not(autocvar_sv_vote_call || !caller) { print_to(caller, "^1Vote calling is not allowed."); }
+			if(!autocvar_sv_vote_call && caller) { print_to(caller, "^1Vote calling is not allowed."); }
 			else if(!autocvar_sv_vote_gamestart && time < game_starttime) { print_to(caller, "^1Vote calling is not allowed before the match has started."); }
 			else if(vote_called) { print_to(caller, "^1There is already a vote called."); }
 			else if(!spectators_allowed && (caller && !IS_PLAYER(caller))) { print_to(caller, "^1Only players can call a vote."); }
 			else if(timeout_status) { print_to(caller, "^1You can not call a vote while a timeout is active."); }
 			else if(caller && (time < caller.vote_waittime)) { print_to(caller, strcat("^1You have to wait ^2", ftos(ceil(caller.vote_waittime - time)), "^1 seconds before you can again call a vote.")); }
-			else if not(VoteCommand_checknasty(vote_command)) { print_to(caller, "^1Syntax error in command, see 'vhelp' for more info."); }
-			else if not(VoteCommand_parse(caller, vote_command, autocvar_sv_vote_commands, 2, argc)) { print_to(caller, "^1This command is not acceptable, see 'vhelp' for more info."); }
+			else if (!VoteCommand_checknasty(vote_command)) { print_to(caller, "^1Syntax error in command, see 'vhelp' for more info."); }
+			else if (!VoteCommand_parse(caller, vote_command, autocvar_sv_vote_commands, 2, argc)) { print_to(caller, "^1This command is not acceptable, see 'vhelp' for more info."); }
 
 			else // everything went okay, continue with calling the vote
 			{
@@ -848,9 +848,9 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 					{
 						vote_command = VoteCommand_extractcommand(vote_command, 3, argc);
 						
-						if not(caller.vote_master) { print_to(caller, "^1You do not have vote master privelages."); }
-						else if not(VoteCommand_checknasty(vote_command)) { print_to(caller, "^1Syntax error in command, see 'vhelp' for more info."); }
-						else if not(VoteCommand_parse(caller, vote_command, strcat(autocvar_sv_vote_commands, " ", autocvar_sv_vote_master_commands), 3, argc)) { print_to(caller, "^1This command is not acceptable, see 'vhelp' for more info."); }
+						if (!caller.vote_master) { print_to(caller, "^1You do not have vote master privelages."); }
+						else if (!VoteCommand_checknasty(vote_command)) { print_to(caller, "^1Syntax error in command, see 'vhelp' for more info."); }
+						else if (!VoteCommand_parse(caller, vote_command, strcat(autocvar_sv_vote_commands, " ", autocvar_sv_vote_master_commands), 3, argc)) { print_to(caller, "^1This command is not acceptable, see 'vhelp' for more info."); }
 						
 						else // everything went okay, proceed with command
 						{
@@ -865,9 +865,9 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 					
 					case "login":
 					{
-						if not(autocvar_sv_vote_master_password != "") { print_to(caller, "^1Login to vote master is not allowed."); }
+						if(autocvar_sv_vote_master_password == "") { print_to(caller, "^1Login to vote master is not allowed."); }
 						else if(caller.vote_master) { print_to(caller, "^1You are already logged in as vote master."); }
-						else if not(autocvar_sv_vote_master_password == argv(3)) { print_to(caller, strcat("Rejected vote master login from ", GetCallerName(caller))); }
+						else if(autocvar_sv_vote_master_password != argv(3)) { print_to(caller, strcat("Rejected vote master login from ", GetCallerName(caller))); }
 
 						else // everything went okay, proceed with giving this player master privilages
 						{
@@ -886,7 +886,7 @@ void VoteCommand_master(float request, entity caller, float argc, string vote_co
 							|| ((autocvar_sv_vote_nospectators == 1) && warmup_stage) 
 							|| (autocvar_sv_vote_nospectators == 0));
 						
-						if not(autocvar_sv_vote_master_callable) { print_to(caller, "^1Vote to become vote master is not allowed."); }
+						if (!autocvar_sv_vote_master_callable) { print_to(caller, "^1Vote to become vote master is not allowed."); }
 						else if(vote_called) { print_to(caller, "^1There is already a vote called."); }
 						else if(!spectators_allowed && (caller && !IS_PLAYER(caller))) { print_to(caller, "^1Only players can call a vote."); }
 						else if(timeout_status) { print_to(caller, "^1You can not call a vote while a timeout is active."); }
@@ -934,8 +934,8 @@ void VoteCommand_no(float request, entity caller) // CLIENT ONLY
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if not(vote_called) { print_to(caller, "^1No vote called."); }
-			else if not(caller.vote_selection == VOTE_SELECT_NULL || autocvar_sv_vote_change) { print_to(caller, "^1You have already voted."); }
+			if (!vote_called) { print_to(caller, "^1No vote called."); }
+			else if(caller.vote_selection != VOTE_SELECT_NULL && !autocvar_sv_vote_change) { print_to(caller, "^1You have already voted."); }
 			else if(((caller == vote_caller) || caller.vote_master) && autocvar_sv_vote_no_stops_vote) { VoteStop(caller); }
 			
 			else // everything went okay, continue changing vote
@@ -989,7 +989,7 @@ void VoteCommand_stop(float request, entity caller) // BOTH
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if not(vote_called) { print_to(caller, "^1No vote called."); }
+			if (!vote_called) { print_to(caller, "^1No vote called."); }
 			else if((caller == vote_caller) || !caller || caller.vote_master) { VoteStop(caller); }
 			else { print_to(caller, "^1You are not allowed to stop that vote."); }
 			
@@ -1012,8 +1012,8 @@ void VoteCommand_yes(float request, entity caller) // CLIENT ONLY
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			if not(vote_called) { print_to(caller, "^1No vote called."); }
-			else if not(caller.vote_selection == VOTE_SELECT_NULL || autocvar_sv_vote_change) { print_to(caller, "^1You have already voted."); }
+			if (!vote_called) { print_to(caller, "^1No vote called."); }
+			else if(caller.vote_selection != VOTE_SELECT_NULL && autocvar_sv_vote_change) { print_to(caller, "^1You have already voted."); }
 			
 			else // everything went okay, continue changing vote
 			{

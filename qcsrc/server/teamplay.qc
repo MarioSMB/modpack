@@ -56,7 +56,7 @@ void InitGameplayMode()
 	teamplay = 0;
 	serverflags &= ~SERVERFLAG_TEAMPLAY;
 
-	if not(cvar_value_issafe(world.fog))
+	if (!cvar_value_issafe(world.fog))
 	{
 		print("The current map contains a potentially harmful fog setting, ignored\n");
 		world.fog = string_null;

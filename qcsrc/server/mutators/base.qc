@@ -101,7 +101,7 @@ float Mutator_Add(mutatorfunc_t func, string name)
 	{
 		if(name == loaded_mutators[i])
 			return 1; // already added
-		if not(loaded_mutators[i])
+		if (!(loaded_mutators[i]))
 			j = i;
 	}
 	if(j < 0)

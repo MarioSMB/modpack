@@ -25,7 +25,7 @@ void WarpZone_Read(float isnew)
 	float f;
 
 	warpzone_warpzones_exist = 1;
-	if not(self.enemy)
+	if (!self.enemy)
 	{
 		self.enemy = spawn();
 		self.enemy.classname = "warpzone_from";

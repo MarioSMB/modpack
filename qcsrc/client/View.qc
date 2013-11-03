@@ -776,7 +776,7 @@ void CSQC_UpdateView(float w, float h)
 	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
 
 	if(autocvar_r_fakelight >= 2 || autocvar_r_fullbright)
-	if not(serverflags & SERVERFLAG_ALLOW_FULLBRIGHT)
+	if (!(serverflags & SERVERFLAG_ALLOW_FULLBRIGHT))
 	{
 		// apply night vision effect
 		vector tc_00, tc_01, tc_10, tc_11;
@@ -1025,7 +1025,7 @@ void CSQC_UpdateView(float w, float h)
 			}
 		}
 	}
-
+	
 	float e1 = (autocvar_hud_postprocessing_maxbluralpha != 0);
 	float e2 = (autocvar_hud_powerup != 0);
 	if(autocvar_hud_postprocessing && (e1 || e2)) // TODO: Remove this code and re-do the postprocess handling in the engine, where it properly belongs.
@@ -1132,7 +1132,7 @@ void CSQC_UpdateView(float w, float h)
 		// crosshair goes VERY LAST
 		if(!scoreboard_active && !camera_active && intermission != 2 && spectatee_status != -1 && hud == HUD_NORMAL) 
 		{
-			if not(autocvar_crosshair_enabled) // main toggle for crosshair rendering
+			if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
 				return;
 				
 			string wcross_style;
@@ -1366,9 +1366,9 @@ void CSQC_UpdateView(float w, float h)
 			wcross_alpha_goal_prev = wcross_alpha;
 			wcross_color_goal_prev = wcross_color;
 			
-			if not(minsta_delay)
+			if(!minsta_delay)
 				minsta_delay = 0.75;
-			if not(minsta_range)
+			if(!minsta_range)
 				minsta_range = MAX_SHOT_DISTANCE;
 			
 			entity me = playerslots[player_localnum];
@@ -1376,9 +1376,9 @@ void CSQC_UpdateView(float w, float h)
 			if(activeweapon == WEP_MINSTANEX)
 			if(time >= getstatf(STAT_GAMESTARTTIME))
 			if(time >= getstatf(STAT_ROUNDSTARTTIME))
-			if not(autocvar_chase_active)
-			if not(getstatf(STAT_FROZEN))
-			if not(spectatee_status)
+			if(!autocvar_chase_active)
+			if(!getstatf(STAT_FROZEN))
+			if(!spectatee_status)
 			if(button_attack)
 			if(autocvar_cl_minstabeam || (me.ping >= 200 && autocvar_cl_minstabeam != -1))
 			if(time >= last_beam)
@@ -1403,7 +1403,7 @@ void CSQC_UpdateView(float w, float h)
 				
 				//sound(self, CH_SHOTS, "weapons/minstanexfire.wav", VOL_BASE, ATTEN_LARGE);
 				
-				if not(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT))
+				if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
 					pointparticles(particleeffectnum("nex_impact"), trace_endpos, '0 0 0', 1);
 					
 				last_beam = time + minsta_delay;
@@ -1528,7 +1528,7 @@ void CSQC_UpdateView(float w, float h)
 					if(autocvar_crosshair_effect_time > 0)
 					{
 						f = (time - wcross_name_changestarttime) / autocvar_crosshair_effect_time;
-						if not(f < 1)
+						if (!(f < 1))
 						{
 							wcross_ring_prev = ((ring_image) ? TRUE : FALSE);
 						}

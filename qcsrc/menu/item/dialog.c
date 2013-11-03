@@ -135,7 +135,7 @@ void Dialog_configureDialog(entity me)
 	me.frame.alpha = me.alpha;
 	me.addItem(me, me.frame, '0 0 0', '1 1 0', 1);
 
-	if not(me.titleFontSize)
+	if (!me.titleFontSize)
 		me.titleHeight = 0; // no title bar
 
 	absWidth = me.intendedWidth * conwidth;

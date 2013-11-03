@@ -835,7 +835,7 @@ void SV_PlayerPhysics()
 	if(self.conveyor.state)
 		self.velocity -= self.conveyor.movedir;
 
-	if not(IS_PLAYER(self))
+	if (!IS_PLAYER(self))
 	{
 		maxspd_mod = autocvar_sv_spectator_speed_multiplier;
 		if(!self.spectatorspeed)
@@ -891,12 +891,12 @@ void SV_PlayerPhysics()
 
 		if(self.waterlevel < WATERLEVEL_SWIMMING)
 		if(time >= self.ladder_time)
-		if not(self.hook)
+		if (!self.hook)
 		{
 			self.nextstep = time + 0.3 + random() * 0.1;
 			trace_dphitq3surfaceflags = 0;
 			tracebox(self.origin, self.mins, self.maxs, self.origin - '0 0 1', MOVE_NOMONSTERS, self);
-			if not(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS)
+			if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS))
 			{
 				if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_METALSTEPS)
 					GlobalSound(globalsound_metalfall, CH_PLAYER, VOICETYPE_PLAYERSOUND);
@@ -1107,7 +1107,7 @@ void SV_PlayerPhysics()
 		if (f > 0 && wishvel != '0 0 0')
 		{
 			self.velocity = self.velocity + wishvel * f * frametime;
-			if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+			if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 				self.ammo_fuel -= autocvar_g_jetpack_fuel * frametime * fvel * f;
 			self.flags &= ~FL_ONGROUND;
 			self.items |= IT_USING_JETPACK;

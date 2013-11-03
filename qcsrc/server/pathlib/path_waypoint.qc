@@ -137,7 +137,7 @@ entity pathlib_waypointpath(entity wp_from, entity wp_to, float callback)
 	pathlib_movecost 		= 300;
 	pathlib_movecost_diag  	= vlen('1 1 0' * pathlib_movecost);
 	
-	if not (pathlib_wpp_waypointcallback) 
+	if (!pathlib_wpp_waypointcallback) 
 		callback = FALSE;
 		
 	if (callback)
@@ -147,10 +147,10 @@ entity pathlib_waypointpath(entity wp_from, entity wp_to, float callback)
 	
 	pathlib_heuristic = pathlib_h_none;
 	
-    if not(openlist)
+    if (!openlist)
         openlist       = spawn();
 
-    if not(closedlist)
+    if (!closedlist)
         closedlist     = spawn();
 
     pathlib_closed_cnt       = 0;

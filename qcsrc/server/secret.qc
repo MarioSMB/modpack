@@ -10,7 +10,7 @@ void secrets_setstatus() {
  */
 void trigger_secret_touch() {
 	// only a player can trigger this
-	if not(IS_PLAYER(other))
+	if (!IS_PLAYER(other))
 		return;
 	
 	// update secrets found counter
@@ -52,7 +52,7 @@ void spawnfunc_trigger_secret() {
 	
 	// set default sound
 	if (self.noise == "")
-	if not(self.sounds)
+	if (!self.sounds)
 		self.sounds = 1; // misc/secret.wav
 	
 	// this entity can't be a target itself!!!!

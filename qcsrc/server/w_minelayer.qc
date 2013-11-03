@@ -470,7 +470,7 @@ float w_minelayer(float req)
 		if(autocvar_g_balance_minelayer_reload_ammo && self.clip_load < autocvar_g_balance_minelayer_ammo) // forced reload
 		{
 			// not if we're holding the minelayer without enough ammo, but can detonate existing mines
-			if not (W_PlacedMines(FALSE) && self.ammo_rockets < autocvar_g_balance_minelayer_ammo)
+			if (!(W_PlacedMines(FALSE) && self.ammo_rockets < autocvar_g_balance_minelayer_ammo))
 				weapon_action(self.weapon, WR_RELOAD);
 		}
 		else if (self.BUTTON_ATCK)

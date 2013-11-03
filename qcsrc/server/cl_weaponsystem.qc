@@ -93,7 +93,7 @@ void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, 
 		lag = ANTILAG_LATENCY(player);
 		if(lag < 0.001)
 			lag = 0;
-		if not(IS_REAL_CLIENT(player))
+		if (!IS_REAL_CLIENT(player))
 			lag = 0; // only antilag for clients
 
 		org = player.origin + player.view_ofs;
@@ -733,7 +733,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				{
 					if(e.classname == "droppedweapon")
 						continue;
-					if not(e.flags & FL_ITEM)
+					if (!(e.flags & FL_ITEM))
 						continue;
 					WaypointSprite_Spawn(
 						s,
@@ -816,7 +816,7 @@ void W_SwitchToOtherWeapon(entity pl)
 .float prevwarntime;
 float weapon_prepareattack_checkammo(float secondary)
 {
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	if (!weapon_action(self.weapon, WR_CHECKAMMO1 + secondary))
 	{
 		// always keep the Mine Layer if we placed mines, so that we can detonate them
@@ -1353,7 +1353,7 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 		return; // TODO
 
 	// don't reload weapons that don't have the RELOADABLE flag
-	if not(e.spawnflags & WEP_FLAG_RELOADABLE)
+	if (!(e.spawnflags & WEP_FLAG_RELOADABLE))
 	{
 		dprint("Warning: Attempted to reload a weapon that does not have the WEP_FLAG_RELOADABLE flag. Fix your code!\n");
 		return;
@@ -1369,7 +1369,7 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 
 	// no ammo, so nothing to load
 	if(!self.(self.current_ammo) && self.reload_ammo_min)
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		if(IS_REAL_CLIENT(self) && self.reload_complain < time)
 		{
@@ -1378,7 +1378,7 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 			self.reload_complain = time + 1;
 		}
 		// switch away if the amount of ammo is not enough to keep using this weapon
-		if not(weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2))
+		if (!(weapon_action(self.weapon, WR_CHECKAMMO1) + weapon_action(self.weapon, WR_CHECKAMMO2)))
 		{
 			self.clip_load = -1; // reload later
 			W_SwitchToOtherWeapon(self);

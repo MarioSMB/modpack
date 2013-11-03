@@ -50,14 +50,14 @@ void XonoticCrosshairButton_setChecked(entity me, float val)
 }
 void XonoticCrosshairButton_loadCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	me.checked = (cvar(me.cvarName) == me.cvarValueFloat);
 }
 void XonoticCrosshairButton_saveCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	if(me.checked)

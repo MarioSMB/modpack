@@ -53,14 +53,14 @@ void XonoticGametypeButton_setChecked(entity me, float val)
 }
 void XonoticGametypeButton_loadCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	me.checked = cvar(me.cvarName);
 }
 void XonoticGametypeButton_saveCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	cvar_set(me.cvarName, ftos(me.checked));

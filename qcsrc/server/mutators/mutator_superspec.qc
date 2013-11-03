@@ -33,7 +33,7 @@ void superspec_save_client_conf()
 	string fn = "superspec-local.options";
 	float fh;
 
-	if not(_ISLOCAL)
+	if (!_ISLOCAL)
 	{
 		if(self.crypto_idfp == "")
 			return;
@@ -68,7 +68,7 @@ void superspec_msg(string _center_title, string _con_title, entity _to, string _
 		return;
 
 	if(_spamlevel > 1)
-		if not(_to.superspec_flags & SSF_VERBOSE)
+		if (!(_to.superspec_flags & SSF_VERBOSE))
 			return;
 
 	centerprint(_to, strcat(_center_title, _msg));
@@ -450,7 +450,7 @@ MUTATOR_HOOKFUNCTION(superspec_ClientConnect)
 	_hello.think = superspec_hello;
 	_hello.nextthink = time + 5;
 
-	if not(_ISLOCAL)
+	if (!_ISLOCAL)
 	{
 		if(self.crypto_idfp == "")
 			return FALSE;

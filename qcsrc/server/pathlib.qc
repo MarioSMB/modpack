@@ -149,7 +149,7 @@ float floor_ok(vector point)
         case CONTENT_SKY:
             return 0;
         case CONTENT_EMPTY:
-            if not (pointcontents(point - '0 0 1') == CONTENT_SOLID)
+            if(pointcontents(point - '0 0 1') != CONTENT_SOLID)
                 return 0;
             break;
         case CONTENT_WATER:
@@ -171,7 +171,7 @@ float inwater(vector point)
 }
 */
 
-#define _pcheck(p) traceline(p+z_up,p-z_down,MOVE_WORLDONLY,self); if not(floor_ok(trace_endpos)) return 1
+#define _pcheck(p) traceline(p+z_up,p-z_down,MOVE_WORLDONLY,self); if (!floor_ok(trace_endpos)) return 1
 float edge_check(vector point,float fsize)
 {
     vector z_up,z_down;
@@ -226,7 +226,7 @@ vector pathlib_wateroutnode(vector start,vector end,float doedge)
     traceline(end + ('0 0 0.25' * pathlib_gridsize),end - ('0 0 1' * pathlib_gridsize),MOVE_WORLDONLY,self);
     end = trace_endpos;
 
-    if not(pointcontents(end - '0 0 1') == CONTENT_SOLID)
+    if(pointcontents(end - '0 0 1') != CONTENT_SOLID)
         return end;
 
     for(surface = start ; surface_z < (end_z + 32); ++surface_z)
@@ -324,7 +324,7 @@ vector pathlib_walknode(vector start,vector end,float doedge)
             return trace_endpos;
 
         point = trace_endpos;
-        if not(floor_ok(trace_endpos))
+        if (!floor_ok(trace_endpos))
             return trace_endpos;
 
         tracebox(last_point + walknode_boxup, walknode_boxmin,walknode_boxmax, point + walknode_boxup, MOVE_WORLDONLY, self);
@@ -352,7 +352,7 @@ vector pathlib_walknode(vector start,vector end,float doedge)
 
     point = trace_endpos;
 
-    if not(floor_ok(trace_endpos))
+    if (!floor_ok(trace_endpos))
         return trace_endpos;
 
     tracebox(last_point + walknode_boxup, walknode_boxmin,walknode_boxmax, point + walknode_boxup, MOVE_WORLDONLY, self);
@@ -618,7 +618,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
     }
 
     where = pathlib_movenode(parent.origin,to,0);
-    if not(pathlib_movenode_goodnode)
+    if (!pathlib_movenode_goodnode)
         return 0;
 
     if(doedge)
@@ -648,7 +648,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
                     node.path_prev = parent;
                 }
 
-                if not (best_open_node)
+                if (!best_open_node)
                     best_open_node = node;
                 else if(best_open_node.pathlib_node_f > node.pathlib_node_f)
                     best_open_node = node;
@@ -664,7 +664,7 @@ float pathlib_makenode_adaptive(entity parent,vector start, vector to, vector go
     node.pathlib_node_g = g;
     node.pathlib_node_f = f;
 
-    if not (best_open_node)
+    if (!best_open_node)
         best_open_node = node;
     else if(best_open_node.pathlib_node_f > node.pathlib_node_f)
         best_open_node = node;
@@ -899,13 +899,13 @@ entity pathlib_astar(vector from,vector to)
         pathlib_movenode   = pathlib_swimnode;
     }
 
-    if not(openlist)
+    if (!openlist)
         openlist       = spawn();
 
-    if not(closedlist)
+    if (!closedlist)
         closedlist     = spawn();
 
-    if not(scraplist)
+    if (!scraplist)
         scraplist      = spawn();
 
     pathlib_closed_cnt       = 0;

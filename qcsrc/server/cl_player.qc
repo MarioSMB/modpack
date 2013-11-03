@@ -385,7 +385,10 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		ear1 += v_right * -10;
 		ear2 += v_right * +10;
 		d = inflictor.origin - self.origin;
-		f = (d * v_right) / vlen(d); // this is cos of angle of d and v_right!
+		if (d)
+			f = (d * v_right) / vlen(d); // this is cos of angle of d and v_right!
+		else
+			f = 0;  // Assum ecenter.
 		force = v_right * vlen(force);
 		Violence_GibSplash_At(ear1, force * -1, 2, bound(0, damage, 25) / 2 * (0.5 - 0.5 * f), self, attacker);
 		Violence_GibSplash_At(ear2, force,      2, bound(0, damage, 25) / 2 * (0.5 + 0.5 * f), self, attacker);
@@ -459,7 +462,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 	if (take > 100)
 		Violence_GibSplash_At(hitloc, force * -0.2, 3, 1, self, attacker);
 
-	if not(autocvar_g_spawnshield_nodamage)
+	if (!autocvar_g_spawnshield_nodamage)
 	if (time >= self.spawnshieldtime)
 	{
 		if (!(self.flags & FL_GODMODE))
@@ -720,7 +723,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 
 	msgin = formatmessage(msgin);
 
-	if not(IS_PLAYER(source))
+	if(!IS_PLAYER(source))
 		colorstr = "^0"; // black for spectators
 	else if(teamplay)
 		colorstr = Team_ColorCode(source.team);
@@ -893,9 +896,9 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	}
 
 	if(!privatesay)
-	if not(IS_PLAYER(source))
+	if (!IS_PLAYER(source))
 	{
-		if not(intermission_running)
+		if (!intermission_running)
 			if(teamsay || (autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || gameover)))
 				teamsay = -1; // spectators
 	}
@@ -939,7 +942,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		{
 			sprint(source, sourcemsgstr);
 			sprint(privatesay, msgstr);
-			if not(autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
+			if (!autocvar_g_chat_tellprivacy) { dedicated_print(msgstr); } // send to server console too if "tellprivacy" is disabled
 			if(cmsgstr != "")
 				centerprint(privatesay, cmsgstr);
 		}
@@ -961,7 +964,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		{
 			sprint(source, sourcemsgstr);
 			dedicated_print(msgstr); // send to server console too
-			FOR_EACH_REALCLIENT(head) if not(IS_PLAYER(head))
+			FOR_EACH_REALCLIENT(head) if (!IS_PLAYER(head))
 				if(head != source)
 					sprint(head, msgstr);
 		}
@@ -989,9 +992,6 @@ void IRCSay(string sourcename, string msgin)
 		msgin = substring(msgin, 1, strlen(msgin) - 1); // work around DP say bug (say_team does not have this!)
 
 	msgin = formatmessage(msgin);
-
-	if(msgin == "")
-		return;
 
 	if(msgin == "")
 		return;
@@ -1077,7 +1077,7 @@ void PrecachePlayerSounds(string f)
 	}
 	fclose(fh);
 
-	if not(allvoicesamples)
+	if (!allvoicesamples)
 	{
 #define _VOICEMSG(m) allvoicesamples = strcat(allvoicesamples, " ", #m);
 		ALLVOICEMSGS

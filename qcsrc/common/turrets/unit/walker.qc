@@ -9,37 +9,30 @@ REGISTER_TURRET(
 /* netname	  */ "walker",
 /* fullname   */ _("Walker Turret")
 );
-
-#define WALKER_SETTINGS(turret) \
-	TUR_ADD_CVAR(turret, melee_damage) \
-	TUR_ADD_CVAR(turret, melee_force) \
-	TUR_ADD_CVAR(turret, melee_range) \
-	TUR_ADD_CVAR(turret, rocket_damage) \
-	TUR_ADD_CVAR(turret, rocket_radius) \
-	TUR_ADD_CVAR(turret, rocket_force) \
-	TUR_ADD_CVAR(turret, rocket_speed) \
-	TUR_ADD_CVAR(turret, rocket_range) \
-	TUR_ADD_CVAR(turret, rocket_range_min) \
-	TUR_ADD_CVAR(turret, rocket_refire) \
-	TUR_ADD_CVAR(turret, rocket_turnrate) \
-	TUR_ADD_CVAR(turret, speed_stop) \
-	TUR_ADD_CVAR(turret, speed_walk) \
-	TUR_ADD_CVAR(turret, speed_run) \
-	TUR_ADD_CVAR(turret, speed_jump) \
-	TUR_ADD_CVAR(turret, speed_swim) \
-	TUR_ADD_CVAR(turret, speed_roam) \
-	TUR_ADD_CVAR(turret, turn) \
-	TUR_ADD_CVAR(turret, turn_walk) \
-	TUR_ADD_CVAR(turret, turn_strafe) \
-	TUR_ADD_CVAR(turret, turn_swim) \
-	TUR_ADD_CVAR(turret, turn_run) 
-
-
-#ifdef SVQC
-WALKER_SETTINGS(walker)
-#endif // SVQC
 #else
 #ifdef SVQC
+float autocvar_g_turrets_unit_walker_melee_damage;
+float autocvar_g_turrets_unit_walker_melee_force;
+float autocvar_g_turrets_unit_walker_melee_range;
+float autocvar_g_turrets_unit_walker_rocket_damage;
+float autocvar_g_turrets_unit_walker_rocket_radius;
+float autocvar_g_turrets_unit_walker_rocket_force;
+float autocvar_g_turrets_unit_walker_rocket_speed;
+float autocvar_g_turrets_unit_walker_rocket_range;
+float autocvar_g_turrets_unit_walker_rocket_range_min;
+float autocvar_g_turrets_unit_walker_rocket_refire;
+float autocvar_g_turrets_unit_walker_rocket_turnrate;
+float autocvar_g_turrets_unit_walker_speed_stop;
+float autocvar_g_turrets_unit_walker_speed_walk;
+float autocvar_g_turrets_unit_walker_speed_run;
+float autocvar_g_turrets_unit_walker_speed_jump;
+float autocvar_g_turrets_unit_walker_speed_swim;
+float autocvar_g_turrets_unit_walker_speed_roam;
+float autocvar_g_turrets_unit_walker_turn;
+float autocvar_g_turrets_unit_walker_turn_walk;
+float autocvar_g_turrets_unit_walker_turn_strafe;
+float autocvar_g_turrets_unit_walker_turn_swim;
+float autocvar_g_turrets_unit_walker_turn_run;
 
 #define ANIM_NO         0
 #define ANIM_TURN       1
@@ -80,7 +73,7 @@ void walker_melee_do_dmg()
 	{
 		if (turret_validate_target(self, e, self.target_validate_flags))
 			if (e != self && e.owner != self)
-				Damage(e, self, self, TUR_CVAR(walker, melee_damage), DEATH_TURRET_WALK_MELEE, '0 0 0', v_forward * TUR_CVAR(walker, melee_force));
+				Damage(e, self, self, (autocvar_g_turrets_unit_walker_melee_damage), DEATH_TURRET_WALK_MELEE, '0 0 0', v_forward * (autocvar_g_turrets_unit_walker_melee_force));
 
 		e = e.chain;
 	}
@@ -93,7 +86,7 @@ void walker_setnoanim()
 }
 void walker_rocket_explode()
 {
-	RadiusDamage (self, self.owner, TUR_CVAR(walker, rocket_damage), 0, TUR_CVAR(walker, rocket_radius), self, TUR_CVAR(walker, rocket_force), DEATH_TURRET_WALK_ROCKET, world);
+	RadiusDamage (self, self.owner, (autocvar_g_turrets_unit_walker_rocket_damage), 0, (autocvar_g_turrets_unit_walker_rocket_radius), self, (autocvar_g_turrets_unit_walker_rocket_force), DEATH_TURRET_WALK_ROCKET, world);
 	remove (self);
 }
 
@@ -106,7 +99,7 @@ void walker_rocket_damage (entity inflictor, entity attacker, float damage, floa
 		W_PrepareExplosionByDamage(self.owner, walker_rocket_explode);
 }
 
-#define WALKER_ROCKET_MOVE movelib_move_simple(newdir, TUR_CVAR(walker, rocket_speed), TUR_CVAR(walker, rocket_turnrate)); UpdateCSQCProjectile(self)
+#define WALKER_ROCKET_MOVE movelib_move_simple(newdir, (autocvar_g_turrets_unit_walker_rocket_speed), (autocvar_g_turrets_unit_walker_rocket_turnrate)); UpdateCSQCProjectile(self)
 void walker_rocket_loop();
 void walker_rocket_think()
 {
@@ -251,7 +244,7 @@ void walker_fire_rocket(vector org)
 
 	rocket.nextthink		  = time;
 	rocket.movetype		   = MOVETYPE_FLY;
-	rocket.velocity		   = normalize((v_forward + v_up * 0.5) + (randomvec() * 0.2)) * TUR_CVAR(walker, rocket_speed);
+	rocket.velocity		   = normalize((v_forward + v_up * 0.5) + (randomvec() * 0.2)) * (autocvar_g_turrets_unit_walker_rocket_speed);
 	rocket.angles			 = vectoangles(rocket.velocity);
 	rocket.touch			  = walker_rocket_explode;
 	rocket.flags			  = FL_PROJECTILE;
@@ -341,7 +334,7 @@ void walker_move_path()
 #endif
 }
 
-void spawnfunc_turret_walker() { if not(turret_initialize(TUR_WALKER)) remove(self); }
+void spawnfunc_turret_walker() { if(!turret_initialize(TUR_WALKER)) remove(self); }
 
 float t_walker(float req)
 {
@@ -423,7 +416,7 @@ float t_walker(float req)
 			}
 			else
 			{
-				if (self.tur_dist_enemy < TUR_CVAR(walker, melee_range) && self.animflag != ANIM_MELEE)
+				if (self.tur_dist_enemy < (autocvar_g_turrets_unit_walker_melee_range) && self.animflag != ANIM_MELEE)
 				{
 					vector wish_angle;
 
@@ -444,7 +437,7 @@ float t_walker(float req)
 
 						self.tur_head.shot_volly = self.tur_head.shot_volly -1;
 						if(self.tur_head.shot_volly == 0)
-							self.tur_head.attack_finished_single = time + TUR_CVAR(walker, rocket_refire);
+							self.tur_head.attack_finished_single = time + (autocvar_g_turrets_unit_walker_rocket_refire);
 						else
 							self.tur_head.attack_finished_single = time + 0.2;
 
@@ -455,8 +448,8 @@ float t_walker(float req)
 					}
 					else
 					{
-						if (self.tur_dist_enemy > TUR_CVAR(walker, rocket_range_min))
-						if (self.tur_dist_enemy < TUR_CVAR(walker, rocket_range))
+						if (self.tur_dist_enemy > (autocvar_g_turrets_unit_walker_rocket_range_min))
+						if (self.tur_dist_enemy < (autocvar_g_turrets_unit_walker_rocket_range))
 							self.tur_head.shot_volly = 4;
 					}
 				}
@@ -478,36 +471,36 @@ float t_walker(float req)
 				switch (self.animflag)
 				{
 					case ANIM_NO:
-						movelib_beak_simple(TUR_CVAR(walker, speed_stop));
+						movelib_beak_simple((autocvar_g_turrets_unit_walker_speed_stop));
 						break;
 
 					case ANIM_TURN:
-						turny = TUR_CVAR(walker, turn);
-						movelib_beak_simple(TUR_CVAR(walker, speed_stop));
+						turny = (autocvar_g_turrets_unit_walker_turn);
+						movelib_beak_simple((autocvar_g_turrets_unit_walker_speed_stop));
 						break;
 
 					case ANIM_WALK:
-						turny = TUR_CVAR(walker, turn_walk);
-						movelib_move_simple(v_forward, TUR_CVAR(walker, speed_walk), 0.6);
+						turny = (autocvar_g_turrets_unit_walker_turn_walk);
+						movelib_move_simple(v_forward, (autocvar_g_turrets_unit_walker_speed_walk), 0.6);
 						break;
 
 					case ANIM_RUN:
-						turny = TUR_CVAR(walker, turn_run);
-						movelib_move_simple(v_forward, TUR_CVAR(walker, speed_run), 0.6);
+						turny = (autocvar_g_turrets_unit_walker_turn_run);
+						movelib_move_simple(v_forward, (autocvar_g_turrets_unit_walker_speed_run), 0.6);
 						break;
 
 					case ANIM_STRAFE_L:
-						turny = TUR_CVAR(walker, turn_strafe);
-						movelib_move_simple(v_right * -1, TUR_CVAR(walker, speed_walk), 0.8);
+						turny = (autocvar_g_turrets_unit_walker_turn_strafe);
+						movelib_move_simple(v_right * -1, (autocvar_g_turrets_unit_walker_speed_walk), 0.8);
 						break;
 
 					case ANIM_STRAFE_R:
-						turny = TUR_CVAR(walker, turn_strafe);
-						movelib_move_simple(v_right, TUR_CVAR(walker, speed_walk), 0.8);
+						turny = (autocvar_g_turrets_unit_walker_turn_strafe);
+						movelib_move_simple(v_right, (autocvar_g_turrets_unit_walker_speed_walk), 0.8);
 						break;
 
 					case ANIM_JUMP:
-						self.velocity += '0 0 1' * TUR_CVAR(walker, speed_jump);
+						self.velocity += '0 0 1' * (autocvar_g_turrets_unit_walker_speed_jump);
 						break;
 
 					case ANIM_LAND:
@@ -526,21 +519,21 @@ float t_walker(float req)
 							defer(0.21, walker_melee_do_dmg);
 						}
 
-						movelib_beak_simple(TUR_CVAR(walker, speed_stop));
+						movelib_beak_simple((autocvar_g_turrets_unit_walker_speed_stop));
 						break;
 
 					case ANIM_SWIM:
-						turny = TUR_CVAR(walker, turn_swim);
-						turnx = TUR_CVAR(walker, turn_swim);
+						turny = (autocvar_g_turrets_unit_walker_turn_swim);
+						turnx = (autocvar_g_turrets_unit_walker_turn_swim);
 
 						self.angles_x += bound(-10, shortangle_f(real_angle_x, self.angles_x), 10);
-						movelib_move_simple(v_forward, TUR_CVAR(walker, speed_swim), 0.3);
+						movelib_move_simple(v_forward, (autocvar_g_turrets_unit_walker_speed_swim), 0.3);
 						vz = self.velocity_z + sin(time * 4) * 8;
 						break;
 
 					case ANIM_ROAM:
-						turny = TUR_CVAR(walker, turn_walk);
-						movelib_move_simple(v_forward ,TUR_CVAR(walker, speed_roam), 0.5);
+						turny = (autocvar_g_turrets_unit_walker_turn_walk);
+						movelib_move_simple(v_forward ,(autocvar_g_turrets_unit_walker_speed_roam), 0.5);
 						break;
 				}
 
@@ -650,11 +643,6 @@ float t_walker(float req)
 			precache_model ("models/turrets/walker_head_minigun.md3");
 			precache_model ("models/turrets/rocket.md3");
 			precache_sound ("weapons/rocket_impact.wav");
-			return TRUE;
-		}
-		case TR_CONFIG:
-		{
-			TUR_CONFIG_SETTINGS(WALKER_SETTINGS(walker))
 			return TRUE;
 		}
 	}

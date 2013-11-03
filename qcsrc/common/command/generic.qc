@@ -41,7 +41,7 @@ void Curl_URI_Get_Callback(float id, float status, string data)
 		strunzone(do_cvar);
 	}
 	if(!do_exec)
-		if not(do_cvar)
+		if (!do_cvar)
 			print(data);
 }
 
@@ -227,59 +227,6 @@ void GenericCommand_dumpcommands(float request)
 	}
 }
 
-void GenericCommand_dumpmonsters(float request)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			#ifdef SVQC
-			mon_config_file = -1;
-			mon_config_alsoprint = -1;
-			string filename = argv(1);
-			
-			if(filename == "")
-			{
-				filename = "monsters_dump.cfg";
-				mon_config_alsoprint = FALSE;
-			}
-			else if(filename == "-")
-			{
-				filename = "monsters_dump.cfg";
-				mon_config_alsoprint = TRUE;
-			}
-			mon_config_file = fopen(filename, FILE_WRITE);
-			
-			if(mon_config_file >= 0)
-			{
-				Dump_Monster_Settings();
-				print(sprintf("Dumping monsters... File located in ^2data/data/%s^7.\n", filename));
-				fclose(mon_config_file);
-				mon_config_file = -1;
-				mon_config_alsoprint = -1;
-			}
-			else
-			{
-				print(sprintf("^1Error: ^7Could not open file '%s'!\n", filename));
-			}
-			#else
-			print(_("Monsters dump command only works with sv_cmd.\n"));
-			#endif
-			return;
-		}
-			
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpmonsters [filename]"));
-			print("  Where 'filename' is the file to write (default is monsters_dump.cfg),\n");
-			print("  if supplied with '-' output to console as well as default,\n");
-			print("  if left blank, it will only write to default.\n");
-			return;
-		}
-	}
-}
-
 void GenericCommand_dumpnotifs(float request)
 {
 	switch(request)
@@ -323,59 +270,6 @@ void GenericCommand_dumpnotifs(float request)
 		{
 			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpnotifs [filename]"));
 			print("  Where 'filename' is the file to write (default is notifications.cfg),\n");
-			print("  if supplied with '-' output to console as well as default,\n");
-			print("  if left blank, it will only write to default.\n");
-			return;
-		}
-	}
-}
-
-void GenericCommand_dumpturrets(float request)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			#ifdef SVQC
-			tur_config_file = -1;
-			tur_config_alsoprint = -1;
-			string filename = argv(1);
-			
-			if(filename == "")
-			{
-				filename = "turrets_dump.cfg";
-				tur_config_alsoprint = FALSE;
-			}
-			else if(filename == "-")
-			{
-				filename = "turrets_dump.cfg";
-				tur_config_alsoprint = TRUE;
-			}
-			tur_config_file = fopen(filename, FILE_WRITE);
-			
-			if(tur_config_file >= 0)
-			{
-				Dump_Turret_Settings();
-				print(sprintf("Dumping turrets... File located in ^2data/data/%s^7.\n", filename));
-				fclose(tur_config_file);
-				tur_config_file = -1;
-				tur_config_alsoprint = -1;
-			}
-			else
-			{
-				print(sprintf("^1Error: ^7Could not open file '%s'!\n", filename));
-			}
-			#else
-			print(_("Turrets dump command only works with sv_cmd.\n"));
-			#endif
-			return;
-		}
-			
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " dumpturrets [filename]"));
-			print("  Where 'filename' is the file to write (default is turrets_dump.cfg),\n");
 			print("  if supplied with '-' output to console as well as default,\n");
 			print("  if left blank, it will only write to default.\n");
 			return;
@@ -690,9 +584,7 @@ void GenericCommand_(float request)
 #define GENERIC_COMMANDS(request,arguments,command) \
 	GENERIC_COMMAND("addtolist", GenericCommand_addtolist(request, arguments), "Add a string to a cvar") \
 	GENERIC_COMMAND("dumpcommands", GenericCommand_dumpcommands(request), "Dump all commands on the program to *_cmd_dump.txt") \
-	GENERIC_COMMAND("dumpmonsters", GenericCommand_dumpmonsters(request), "Dump all monsters into monsters_dump.cfg") \
 	GENERIC_COMMAND("dumpnotifs", GenericCommand_dumpnotifs(request), "Dump all notifications into notifications_dump.txt") \
-	GENERIC_COMMAND("dumpturrets", GenericCommand_dumpturrets(request), "Dump all turrets into turrets_dump.txt") \
 	GENERIC_COMMAND("maplist", GenericCommand_maplist(request, arguments), "Automatic control of maplist") \
 	GENERIC_COMMAND("nextframe", GenericCommand_nextframe(request, arguments, command), "Execute the given command next frame of this VM") \
 	GENERIC_COMMAND("qc_curl", GenericCommand_qc_curl(request, arguments), "Queries a URL") \

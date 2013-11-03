@@ -185,7 +185,7 @@ void PutObserverInServer (void)
 
 	WaypointSprite_PlayerDead();
 
-	if not(g_ca)  // don't reset teams when moving a ca player to the spectators
+	if (!g_ca)  // don't reset teams when moving a ca player to the spectators
 		self.team = -1;  // move this as it is needed to log the player spectating in eventlog
 
 	if(self.killcount != -666)
@@ -319,7 +319,7 @@ void FixPlayermodel()
 	}
 	
 	if(autocvar_sv_allow_customplayermodels)
-	if not(cvar("g_overkill"))
+	if(!cvar("g_overkill"))
 	{
 		// public hax
 		if(self.cvar_cl_pony)
@@ -394,10 +394,7 @@ void PlayerTouch (void)
 	if(other == world)
 		return;
 
-	if not(IS_PLAYER(other))
-		return;
-		
-	if not(IS_PLAYER(self))
+	if(!IS_PLAYER(other) || !IS_PLAYER(self))
 		return;
 	
 	if(self.deadflag != DEAD_NO)
@@ -500,7 +497,7 @@ void PutClientInServer (void)
 			self.ammo_supercells = 0; // never start with super cells
 			self.health = warmup_start_health;
 			self.armorvalue = warmup_start_armorvalue;
-			self.weapons = warmup_start_weapons;
+			self.weapons = WARMUP_START_WEAPONS;
 		}
 		else
 		{
@@ -601,7 +598,7 @@ void PutClientInServer (void)
 
 		self.bot_attack = TRUE;
 		self.monster_attack = TRUE;
-
+		
 		self.spider_slowness = 0;
 		
 		if(self.cvar_cl_sparkle >= 1 && checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
@@ -1076,7 +1073,7 @@ float PlayerInIDList(entity p, string idlist)
 	string s;
 
 	// NOTE: we do NOT check crypto_keyfp here, an unsigned ID is fine too for this
-	if not(p.crypto_idfp)
+	if (!p.crypto_idfp)
 		return 0;
 
 	// this function allows abbreviated player IDs too!
@@ -1343,7 +1340,7 @@ void ClientDisconnect (void)
 	if(self.vehicle)
 	    vehicles_exit(VHEF_RELESE);
 
-	if not(IS_CLIENT(self))
+	if (!IS_CLIENT(self))
 	{
 		print("Warning: ClientDisconnect without ClientConnect\n");
 		return;
@@ -1526,7 +1523,7 @@ void player_powerups (void)
 	Fire_ApplyDamage(self);
 	Fire_ApplyEffect(self);
 
-	if not(g_minstagib)
+	if (!g_minstagib)
 	{
 		if (self.items & IT_STRENGTH)
 		{
@@ -1725,7 +1722,7 @@ void player_regen (void)
 		self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
 	}
 
-	if not(self.items & IT_UNLIMITED_WEAPON_AMMO)
+	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
 		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, rot_mod * frametime * (time > self.pauserotfuel_finished), limitf);
 }
 
@@ -1880,7 +1877,7 @@ float SpectateUpdate() {
 	if (self == self.enemy)
 		return 0;
 
-	if not(IS_PLAYER(self.enemy))
+	if(!IS_PLAYER(self.enemy))
 	{
 		self.enemy = world;
 		return 0;
@@ -2016,7 +2013,7 @@ float SpectatePrev()
 {
 	// NOTE: chain order is from the highest to the lower entnum (unlike find)
 	other = findchain(classname, "player");
-	if not(other) // no player
+	if (!other) // no player
 		return FALSE;
 
 	entity first = other;
@@ -2030,7 +2027,7 @@ float SpectatePrev()
 		do { other = other.chain; }
 		while(other && other.team != self.team);
 
-		if not(other)
+		if (!other)
 		{
 			other = first;
 			while(other.team != self.team)
@@ -2292,7 +2289,7 @@ void SpectatorThink()
 void vehicles_enter (entity pl, entity veh);
 void PlayerUseKey()
 {
-	if not(IS_PLAYER(self))
+	if (!IS_PLAYER(self))
 		return;
 
 	if(self.vehicle)
@@ -2302,7 +2299,7 @@ void PlayerUseKey()
 	}
 	else if(autocvar_g_vehicles_enter)
 	{
-		if not(self.frozen)
+		if(!self.frozen)
 		if(self.deadflag == DEAD_NO)
 		{
 			entity head, closest_target = world;
@@ -2312,7 +2309,7 @@ void PlayerUseKey()
 			{
 				if(IS_VEHICLE(head))
 				if(head.deadflag == DEAD_NO)
-				if not(head.owner)
+				if(!head.owner)
 				{
 					if(closest_target)
 					{
@@ -2452,15 +2449,15 @@ void PlayerPreThink (void)
 	if(autocvar_g_vehicles_enter)
 	if(time > self.last_vehiclecheck)
 	if(IS_PLAYER(self))
-	if not(self.frozen)
-	if not(self.vehicle)
+	if(!self.frozen)
+	if(!self.vehicle)
 	if(self.deadflag == DEAD_NO)
 	{
 		entity veh;
 		for(veh = world; (veh = findflags(veh, vehicle_flags, VHF_ISVEHICLE)); )
 		if(vlen(veh.origin - self.origin) < autocvar_g_vehicles_enter_radius)
 		if(veh.deadflag == DEAD_NO)
-		if not(veh.owner)
+		if(!veh.owner)
 		if(!veh.team || SAME_TEAM(self, veh))
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_VEHICLE_ENTER);
 		else if(autocvar_g_vehicles_steal)
@@ -2843,7 +2840,7 @@ void PlayerPostThink (void)
 
 	if((g_cts || g_race) && self.cvar_cl_allow_uidtracking == 1 && self.cvar_cl_allow_uid2name == 1)
 	{
-		if not(self.stored_netname)
+		if (!self.stored_netname)
 			self.stored_netname = strzone(uid2name(self.crypto_idfp));
 		if(self.stored_netname != self.netname)
 		{

@@ -111,7 +111,7 @@ entity GetTeam(float Team, float add)
 	num = (Team == NUM_SPECTATOR) ? 16 : Team;
 	if(teamslots[num])
 		return teamslots[num];
-	if not(add)
+	if (!add)
 		return world;
 	tm = spawn();
 	tm.team = Team;
@@ -385,7 +385,7 @@ float PolyDrawModelSurface(entity e, float i_s)
 	vector tri;
 	string tex;
 	tex = getsurfacetexture(e, i_s);
-	if not(tex)
+	if (!tex)
 		return 0; // this is beyond the last one
 	n_t = getsurfacenumtriangles(e, i_s);
 	for(i_t = 0; i_t < n_t; ++i_t)

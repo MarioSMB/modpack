@@ -313,7 +313,7 @@ void W_Tuba_NoteOn(float hittype)
 		}
 	}
 
-	if not(self.tuba_note)
+	if (!self.tuba_note)
 	{
 		self.tuba_note = spawn();
 		self.tuba_note.owner = self.tuba_note.realowner = self;

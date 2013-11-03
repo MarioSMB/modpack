@@ -288,7 +288,7 @@ void ent_generator()
 		self.count = ReadByte();
 		self.team = ReadByte();
 		
-		if not(self.count)
+		if(!self.count)
 			self.count = 40;
 		
 		generator_changeteam();

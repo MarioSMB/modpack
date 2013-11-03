@@ -316,7 +316,7 @@ void Draw_Shockwave()
 {
 	float a = bound(0, (0.5 - ((time - self.sw_time) / 0.4)), 0.5);
 
-	if not(a) { remove(self); }
+	if(!a) { remove(self); }
 	
 	vector deviation, angle;
 

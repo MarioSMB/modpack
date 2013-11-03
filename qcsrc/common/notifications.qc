@@ -105,15 +105,15 @@ string Notification_CheckArgs(
 		
 		case NOTIF_TEAM:
 		{
-			if not(teamplay)
+			if (!teamplay)
 				{ checkargs = sprintf("%sTeamplay not active!", checkargs); }
-			//else if not(client.team) { checkargs = sprintf("%sNo team provided!", checkargs); }
+			//else if (!client.team) { checkargs = sprintf("%sNo team provided!", checkargs); }
 			break;
 		}
 		
 		case NOTIF_TEAM_EXCEPT:
 		{
-			if not(teamplay)
+			if (!teamplay)
 				{ checkargs = sprintf("%sTeamplay not active!", checkargs); }
 			else if(IS_NOT_A_CLIENT(client))
 				{ checkargs = sprintf("%sException can't be a non-client!", checkargs); }
@@ -230,7 +230,7 @@ void Destroy_All_Notifications(void)
 		for(i = 1; i <= count; ++i) \
 		{ \
 			notif = Get_Notif_Ent(type, i); \
-			if not(notif) { backtrace("Destroy_All_Notifications(): Missing notification entity!\n"); return; } \
+			if (!notif) { backtrace("Destroy_All_Notifications(): Missing notification entity!\n"); return; } \
 			Destroy_Notification_Entity(notif); \
 		}
 
@@ -576,7 +576,7 @@ void Create_Notification_Entity(
 		{
 			// Set MSG_ANNCE information and handle precaching
 			#ifdef CSQC
-			if not(GENTLE && (var_cvar == 1))
+			if (!(GENTLE && (var_cvar == 1)))
 			{
 				if(snd != "")
 				{
@@ -1004,7 +1004,7 @@ void Dump_Notifications(float fh, float alsoprint)
 	for(i = 1; i <= NOTIF_ANNCE_COUNT; ++i)
 	{
 		e = Get_Notif_Ent(MSG_ANNCE, i);
-		if not(e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
+		if (!e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 		
 		NOTIF_WRITE_ENTITY(
 			"Notification control cvar: 0 = disabled, 1 = enabled if gentle mode is off, 2 = always enabled)"
@@ -1015,7 +1015,7 @@ void Dump_Notifications(float fh, float alsoprint)
 	for(i = 1; i <= NOTIF_INFO_COUNT; ++i)
 	{
 		e = Get_Notif_Ent(MSG_INFO, i);
-		if not(e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
+		if (!e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 		
 		NOTIF_WRITE_ENTITY(
 			"Notification control cvar: 0 = off, 1 = print to console, "
@@ -1027,7 +1027,7 @@ void Dump_Notifications(float fh, float alsoprint)
 	for(i = 1; i <= NOTIF_CENTER_COUNT; ++i)
 	{
 		e = Get_Notif_Ent(MSG_CENTER, i);
-		if not(e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
+		if (!e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 		
 		NOTIF_WRITE_ENTITY(
 			"Notification control cvar: 0 = off, 1 = centerprint"
@@ -1038,7 +1038,7 @@ void Dump_Notifications(float fh, float alsoprint)
 	for(i = 1; i <= NOTIF_MULTI_COUNT; ++i)
 	{
 		e = Get_Notif_Ent(MSG_MULTI, i);
-		if not(e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
+		if (!e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 		
 		NOTIF_WRITE_ENTITY(
 			"Notification control cvar: 0 = off, 1 = trigger subcalls"
@@ -1049,7 +1049,7 @@ void Dump_Notifications(float fh, float alsoprint)
 	for(i = 1; i <= NOTIF_CHOICE_COUNT; ++i)
 	{
 		e = Get_Notif_Ent(MSG_CHOICE, i);
-		if not(e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
+		if (!e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 		
 		NOTIF_WRITE_ENTITY_CHOICE(
 			"Notification control cvar: 0 = off, 1 = trigger option A subcall, 2 = trigger option B subcall",
@@ -1437,7 +1437,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 
 	// retreive entity of this notification
 	entity notif = Get_Notif_Ent(net_type, net_name);
-	if not(notif)
+	if (!notif)
 	{
 		#ifdef NOTIFICATIONS_DEBUG
 		Debug_Notification(sprintf(
@@ -1451,7 +1451,7 @@ void Local_Notification(float net_type, float net_name, ...count)
 	}
 
 	// check if the notification is enabled
-	if not(notif.nent_enabled)
+	if (!notif.nent_enabled)
 	{
 		#ifdef NOTIFICATIONS_DEBUG
 		Debug_Notification(sprintf(
@@ -1695,7 +1695,7 @@ void Read_Notification(float is_new)
 	else
 	{
 		notif = Get_Notif_Ent(net_type, net_name);
-		if not(notif) { backtrace("Read_Notification: Could not find notification entity!\n"); return; }
+		if (!notif) { backtrace("Read_Notification: Could not find notification entity!\n"); return; }
 
 		#ifdef NOTIFICATIONS_DEBUG
 		Debug_Notification(sprintf(
@@ -1732,7 +1732,7 @@ void Read_Notification(float is_new)
 #ifdef SVQC
 void Net_Notification_Remove()
 {
-	if not(self) { backtrace(sprintf("Net_Notification_Remove() at %f: Missing self!?\n", time)); return; }
+	if (!self) { backtrace(sprintf("Net_Notification_Remove() at %f: Missing self!?\n", time)); return; }
 	
 	#ifdef NOTIFICATIONS_DEBUG
 	Debug_Notification(sprintf(
@@ -1797,7 +1797,7 @@ void Kill_Notification(
 			if(net_name)
 			{
 				entity notif = Get_Notif_Ent(net_type, net_name);
-				if not(notif) { backtrace("Kill_Notification: Could not find notification entity!\n"); return; }
+				if (!notif) { backtrace("Kill_Notification: Could not find notification entity!\n"); return; }
 				
 				if(notif.nent_cpid)
 					killed_cpid = notif.nent_cpid;
@@ -1896,7 +1896,7 @@ void Send_Notification(
 
 	// retreive entity of this notification
 	entity notif = Get_Notif_Ent(net_type, net_name);
-	if not(notif)
+	if (!notif)
 	{
 		#ifdef NOTIFICATIONS_DEBUG
 		Debug_Notification(sprintf(

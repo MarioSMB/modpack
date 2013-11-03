@@ -84,7 +84,7 @@ void XonoticMapList_g_maplistCacheToggle(entity me, float i)
 	string a, b, c, s, bspname;
 	float n;
 	s = me.g_maplistCache;
-	if not(s)
+	if (!s)
 		return;
 	b = substring(s, i, 1);
 	if(b == "0")
@@ -98,7 +98,7 @@ void XonoticMapList_g_maplistCacheToggle(entity me, float i)
 	strunzone(s);
 	me.g_maplistCache = strzone(strcat(a, b, c));
 	// TODO also update the actual cvar
-	if not((bspname = MapInfo_BSPName_ByID(i)))
+	if (!((bspname = MapInfo_BSPName_ByID(i))))
 		return;
 	if(b == "1")
 		cvar_set("g_maplist", strcat(bspname, " ", cvar_string("g_maplist")));
@@ -275,7 +275,7 @@ void MapList_LoadMap(entity btn, entity me)
 		return;
 
 	m = MapInfo_BSPName_ByID(i);
-	if not(m)
+	if (!m)
 	{
 		print(_("Huh? Can't play this (m is NULL). Refiltering so this won't happen again.\n"));
 		me.refilter(me);
@@ -313,7 +313,7 @@ float XonoticMapList_keyDown(entity me, float scan, float ascii, float shift)
 	}
 	else if(ascii == 43) // +
 	{
-		if not(me.g_maplistCacheQuery(me, me.selectedItem))
+		if (!me.g_maplistCacheQuery(me, me.selectedItem))
 			me.g_maplistCacheToggle(me, me.selectedItem);
 	}
 	else if(ascii == 45) // -

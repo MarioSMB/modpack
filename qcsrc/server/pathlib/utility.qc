@@ -94,25 +94,25 @@ float tile_check_cross(vector where)
     // forward-right
     p = where + f + r;
     traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
-    if not (location_isok(trace_endpos, 1, 0))
+    if (!location_isok(trace_endpos, 1, 0))
         return 0;
 
     // Forward-left
     p = where + f - r;
     traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
-    if not (location_isok(trace_endpos, 1, 0))
+    if (!location_isok(trace_endpos, 1, 0))
         return 0;
 
     // Back-right
     p = where - f + r;
     traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
-    if not (location_isok(trace_endpos, 1 ,0))
+    if (!location_isok(trace_endpos, 1 ,0))
         return 0;
 
     //Back-left
     p = where - f - r;
     traceline(p + tile_check_up, p - tile_check_down, MOVE_WORLDONLY, self);
-    if not (location_isok(trace_endpos, 1, 0))
+    if (!location_isok(trace_endpos, 1, 0))
         return 0;
 
     return 1;
@@ -128,26 +128,26 @@ float tile_check_plus(vector where)
     // forward
     p = where + f;
     traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
-    if not (location_isok(trace_endpos,1,0))
+    if (!location_isok(trace_endpos,1,0))
         return 0;
 
 
     //left
     p = where - r;
     traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
-    if not (location_isok(trace_endpos,1,0))
+    if (!location_isok(trace_endpos,1,0))
         return 0;
 
     // Right
     p = where + r;
     traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
-    if not (location_isok(trace_endpos,1,0))
+    if (!location_isok(trace_endpos,1,0))
         return 0;
 
     //Back
     p = where - f;
     traceline(p+tile_check_up,p-tile_check_down,MOVE_WORLDONLY,self);
-    if not (location_isok(trace_endpos,1,0))
+    if (!location_isok(trace_endpos,1,0))
         return 0;
 
     return 1;

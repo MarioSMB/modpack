@@ -37,7 +37,7 @@ void spawnfunc_func_healthcharger() {}
 
 void func_ladder_touch()
 {
-	if not(other.iscreature)
+	if (!other.iscreature)
 		return;
 	if(IS_VEHICLE(other))
 		return;

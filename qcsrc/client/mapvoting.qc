@@ -176,7 +176,7 @@ void MapVote_Draw()
 	if(!mv_active)
 		return;
 
-	if not(autocvar_hud_cursormode)
+	if (!autocvar_hud_cursormode)
 	{
 		mv_mousepos = mv_mousepos + getmousepos();
 		
@@ -470,7 +470,7 @@ void MapVote_UpdateMask()
 
 	// remove votes that no longer apply
 	for(i = 0, power = 1; i < mv_num_maps; ++i, power *= 2)
-		if not(mv_maps_mask & power)
+		if (!(mv_maps_mask & power))
 			mv_votes[i] = -1;
 
 	mv_top2_time = time;

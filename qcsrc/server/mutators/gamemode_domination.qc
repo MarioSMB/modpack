@@ -182,7 +182,7 @@ void dompointthink()
 void dompointtouch()
 {
 	entity head;
-	if not(IS_PLAYER(other))
+	if (!IS_PLAYER(other))
 		return;
 	if (other.health < 1)
 		return;

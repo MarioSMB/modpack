@@ -48,7 +48,7 @@ void XonoticDecibelsSlider_loadCvars(entity me)
 {
 	float v;
 
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	v = cvar(me.cvarName);
@@ -61,7 +61,7 @@ void XonoticDecibelsSlider_loadCvars(entity me)
 }
 void XonoticDecibelsSlider_saveCvars(entity me)
 {
-	if not(me.cvarName)
+	if (!me.cvarName)
 		return;
 
 	if(me.value > me.valueMax - 0.5 * me.valueStep)

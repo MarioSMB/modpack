@@ -26,7 +26,7 @@ float NIX_CanChooseWeapon(float wpn)
 			return FALSE;
 		if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
 			return FALSE;
-		if not(e.spawnflags & WEP_FLAG_NORMAL)
+		if (!(e.spawnflags & WEP_FLAG_NORMAL))
 			return FALSE;
 	}
 	return TRUE;

@@ -9,16 +9,8 @@ REGISTER_TURRET(
 /* netname	  */ "flac",
 /* fullname   */ _("FLAC Cannon")
 );
-
-#define FLAC_SETTINGS(turret) 
-
-
-#ifdef SVQC
-FLAC_SETTINGS(flac)
-#endif // SVQC
 #else
 #ifdef SVQC
-
 void turret_flac_projectile_think_explode()
 {
 	if(self.enemy != world)
@@ -36,7 +28,7 @@ void turret_flac_projectile_think_explode()
 	remove(self);
 }
 
-void spawnfunc_turret_flac() { if not(turret_initialize(TUR_FLAC)) remove(self); }
+void spawnfunc_turret_flac() { if(!turret_initialize(TUR_FLAC)) remove(self); }
 
 float t_flac(float req)
 {
@@ -81,11 +73,6 @@ float t_flac(float req)
 		{
 			precache_model ("models/turrets/base.md3");
 			precache_model ("models/turrets/flac.md3");
-			return TRUE;
-		}
-		case TR_CONFIG:
-		{
-			TUR_CONFIG_SETTINGS(FLAC_SETTINGS(flac))
 			return TRUE;
 		}
 	}

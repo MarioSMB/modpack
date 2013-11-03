@@ -236,7 +236,7 @@ void GrapplingHookThink()
 				self.realowner.flags &= ~FL_ONGROUND;
 			}
 
-			if not(frozen_pulling)
+			if(!frozen_pulling)
 				self.realowner.velocity = WarpZone_RefSys_TransformVelocity(self, self.realowner, v);
 				
 			if(frozen_pulling && !self.aiment.frozen)
@@ -440,7 +440,7 @@ void GrapplingHookFrame()
 		// offhand hook controls
 		if(self.BUTTON_HOOK)
 		{
-			if not(self.hook || (self.hook_state & HOOK_WAITING_FOR_RELEASE))
+			if (!(self.hook || (self.hook_state & HOOK_WAITING_FOR_RELEASE)))
 			{
 				self.hook_state |= HOOK_FIRING;
 				self.hook_state |= HOOK_WAITING_FOR_RELEASE;
