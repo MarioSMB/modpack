@@ -4918,7 +4918,7 @@ void HUD_Main (void)
 	}
 
 	// HUD configure visible grid
-	if(autocvar__hud_configure && autocvar_hud_configure_grid && autocvar_hud_configure_grid_alpha)
+	if((autocvar__hud_configure || autocvar_hud_configure_grid == 2) && autocvar_hud_configure_grid && autocvar_hud_configure_grid_alpha)
 	{
 		hud_configure_gridSize_x = bound(0.005, cvar("hud_configure_grid_xsize"), 0.2);
 		hud_configure_gridSize_y = bound(0.005, cvar("hud_configure_grid_ysize"), 0.2);
