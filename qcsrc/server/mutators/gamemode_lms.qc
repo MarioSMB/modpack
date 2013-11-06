@@ -72,7 +72,7 @@ MUTATOR_HOOKFUNCTION(lms_RemovePlayer)
 
 MUTATOR_HOOKFUNCTION(lms_ClientConnect)
 {
-	self.classname = "player";
+	//self.classname = "player"; // don't force everyone to play
 	campaign_bots_may_start = 1;
 	
 	if(PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives()) <= 0)

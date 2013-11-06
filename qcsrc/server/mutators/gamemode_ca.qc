@@ -148,7 +148,7 @@ MUTATOR_HOOKFUNCTION(ca_PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(ca_PutClientInServer)
 {
-	if(!allowed_to_spawn)
+	if(!allowed_to_spawn && self.classname != "observer")
 	{
 		self.classname = "observer";
 		if(!self.caplayer)
