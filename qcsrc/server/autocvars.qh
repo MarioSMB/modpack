@@ -805,6 +805,7 @@ float autocvar_g_ctf_flag_red_skin;
 float autocvar_g_ctf_flag_return_time;
 float autocvar_g_ctf_flag_return_when_unreachable;
 float autocvar_g_ctf_flag_return_damage;
+float autocvar_g_ctf_flag_return_damage_delay;
 float autocvar_g_ctf_flag_return_dropped;
 string autocvar_g_ctf_flag_yellow_model;
 float autocvar_g_ctf_flag_yellow_skin;

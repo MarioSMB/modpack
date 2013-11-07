@@ -101,6 +101,7 @@ float ctf_captimerecord; // record time for capturing the flag
 .entity ctf_dropper; // don't allow spam of dropping the flag
 .float max_flag_health;
 .float next_take_time;
+.float ctf_flagdamaged;
 float ctf_teams;
 
 // passing/throwing properties

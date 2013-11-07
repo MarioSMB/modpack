@@ -676,9 +676,15 @@ void ctf_FlagDamage(entity inflictor, entity attacker, float damage, float death
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
-		// automatically kill the flag and return it
-		self.health = 0;
-		ctf_CheckFlagReturn(self, RETURN_NEEDKILL);
+		if(autocvar_g_ctf_flag_return_damage_delay)
+		{
+			self.ctf_flagdamaged = TRUE;
+		}
+		else
+		{
+			self.health = 0;
+			ctf_CheckFlagReturn(self, RETURN_NEEDKILL);
+		}
 		return;
 	}
 	if(autocvar_g_ctf_flag_return_damage) 
@@ -761,12 +767,18 @@ void ctf_FlagThink()
 					return;
 				}
 			}
-			if(autocvar_g_ctf_flag_return_time)
+			if(self.ctf_flagdamaged)
+			{
+				self.health -= ((self.max_flag_health / autocvar_g_ctf_flag_return_damage_delay) * FLAG_THINKRATE);
+				ctf_CheckFlagReturn(self, RETURN_NEEDKILL);
+				return;
+			}
+			else if(autocvar_g_ctf_flag_return_time)
 			{
 				self.health -= ((self.max_flag_health / autocvar_g_ctf_flag_return_time) * FLAG_THINKRATE);
 				ctf_CheckFlagReturn(self, RETURN_TIMEOUT);
 				return;
-			} 
+			}
 			return;
 		}
 			
@@ -840,8 +852,11 @@ void ctf_FlagTouch()
 	// automatically kill the flag and return it if it touched lava/slime/nodrop surfaces
 	if(ITEM_TOUCH_NEEDKILL())
 	{
-		self.health = 0;
-		ctf_CheckFlagReturn(self, RETURN_NEEDKILL);
+		if(!autocvar_g_ctf_flag_return_damage_delay)
+		{
+			self.health = 0;
+			ctf_CheckFlagReturn(self, RETURN_NEEDKILL);
+		}
 		return;
 	}
 	
@@ -955,6 +970,7 @@ void ctf_RespawnFlag(entity flag)
 	flag.ctf_dropper = world;
 	flag.ctf_pickuptime = 0;
 	flag.ctf_droptime = 0;
+	flag.ctf_flagdamaged = 0;
 }
 
 void ctf_Reset()
