@@ -30,6 +30,7 @@
 	precache_model("models/rocket.md3");
 	precache_model("models/tagrocket.md3");
 	precache_model("models/tracer.mdl");
+	precache_model("models/runematch/rune.mdl");
 	precache_model("models/weapons/v_ok_grenade.md3");
 	precache_model("models/weapons/ok_rocket.md3");
 	precache_sound("misc/hit.wav");

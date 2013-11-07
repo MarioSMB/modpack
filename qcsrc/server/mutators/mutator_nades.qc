@@ -15,6 +15,7 @@ void nade_burn_spawn(entity _nade)
 	{
 		case NADE_TYPE_NAPALM: p = PROJECTILE_NADE_NAPALM_BURN; break;
 		case NADE_TYPE_ICE: p = PROJECTILE_NADE_ICE_BURN; break;
+		case NADE_TYPE_TRANSLOCATE: p = PROJECTILE_NADE_TRANSLOCATE_BURN; break;
 		default: p = PROJECTILE_NADE_BURN; break;
 	}
 	
@@ -42,6 +43,7 @@ void nade_spawn(entity _nade)
 	{
 		case NADE_TYPE_NAPALM: p = PROJECTILE_NADE_NAPALM; break;
 		case NADE_TYPE_ICE: p = PROJECTILE_NADE_ICE; break;
+		case NADE_TYPE_TRANSLOCATE: p = PROJECTILE_NADE_TRANSLOCATE; break;
 		default: p = PROJECTILE_NADE; break;
 	}
 		
@@ -349,6 +351,21 @@ void nade_ice_boom()
 		setmodel(fountain, "null");
 }
 
+void nade_translocate_boom()
+{
+	vector locout = self.origin + '0 0 1' * (1 - self.realowner.mins_z - 24);
+		
+	makevectors(self.realowner.angles);
+	
+	entity oldself = self;
+	self = self.realowner;
+	MUTATOR_CALLHOOK(PortalTeleport);
+	self.realowner = self;
+	self = oldself;
+	
+	TeleportPlayer(self, self.realowner, locout, self.realowner.mangle, v_forward * vlen(self.realowner.velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
+}
+
 void nade_boom()
 {
 	string expef;
@@ -366,6 +383,10 @@ void nade_boom()
 			nade_blast = 0;
 			expef = "electro_combo"; // hookbomb_explode electro_combo bigplasma_impact
 			break;
+		case NADE_TYPE_TRANSLOCATE:
+			nade_blast = 0;
+			expef = "";
+			break;
 	
 		default:
 		case NADE_TYPE_NORMAL:
@@ -378,7 +399,6 @@ void nade_boom()
 				default: 		 expef = "nade_neutral_explode"; break;
 			}
 	}
-	
 	
 	pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
 		
@@ -398,8 +418,8 @@ void nade_boom()
 	{
 		case NADE_TYPE_NAPALM: nade_napalm_boom(); break;
 		case NADE_TYPE_ICE: nade_ice_boom(); break;
+		case NADE_TYPE_TRANSLOCATE: nade_translocate_boom(); break;
 	}
-			
 
 	remove(self);
 }
@@ -428,6 +448,9 @@ void nade_beep()
 
 void nade_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
+	if(self.nade_type == NADE_TYPE_TRANSLOCATE)
+		return;
+
 	if(DEATH_ISWEAPON(deathtype, WEP_LASER))
 		return;
 
@@ -598,6 +621,7 @@ void nade_prime()
 	{
 		case NADE_TYPE_NAPALM: fn.colormod = '2 0.5 0'; break;
 		case NADE_TYPE_ICE: fn.colormod = '0 0.5 2'; break;
+		case NADE_TYPE_TRANSLOCATE: fn.colormod = '1 0.0625 1'; break;
 	}
 		
 	setmodel(fn, "models/weapons/h_ok_grenade.iqm");

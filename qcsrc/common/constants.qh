@@ -396,6 +396,8 @@ const float PROJECTILE_NADE_NAPALM_BURN = 62;
 const float PROJECTILE_NAPALM_FOUNTAIN = 63;
 const float PROJECTILE_NADE_ICE = 64;
 const float PROJECTILE_NADE_ICE_BURN = 65;
+const float PROJECTILE_NADE_TRANSLOCATE = 66;
+const float PROJECTILE_NADE_TRANSLOCATE_BURN = 67;
 
 
 const float SPECIES_HUMAN = 0;
@@ -482,9 +484,3 @@ noref var vector autocvar_sv_player_headsize = '24 24 12';
 #define URI_GET_UPDATENOTIFICATION 33
 #define URI_GET_URLLIB 128
 #define URI_GET_URLLIB_END 191
-
-
-const float NADE_TYPE_NORMAL = 1;
-const float NADE_TYPE_NAPALM = 2;
-const float NADE_TYPE_ICE = 3;
-

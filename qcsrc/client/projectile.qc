@@ -107,6 +107,8 @@ void Projectile_Draw()
 			case PROJECTILE_NADE_NAPALM_BURN:
 			case PROJECTILE_NADE_ICE:
 			case PROJECTILE_NADE_ICE_BURN:
+			case PROJECTILE_NADE_TRANSLOCATE:
+			case PROJECTILE_NADE_TRANSLOCATE_BURN:
 				rot = self.avelocity; 
 				break;
 			case PROJECTILE_HOOKBOMB:
@@ -138,6 +140,8 @@ void Projectile_Draw()
 		case PROJECTILE_NADE_NAPALM_BURN:
 		case PROJECTILE_NADE_ICE:
 		case PROJECTILE_NADE_ICE_BURN:
+		case PROJECTILE_NADE_TRANSLOCATE:
+		case PROJECTILE_NADE_TRANSLOCATE_BURN:
 			trailorigin += v_up * 4;
 			break;
 		case PROJECTILE_GRENADE:
@@ -335,6 +339,8 @@ void Ent_Projectile()
 			case PROJECTILE_NADE_NAPALM_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3"); self.traileffect = particleeffectnum("spiderbot_rocket_thrust"); nade_color = '2 0.5 0'; break;
 			case PROJECTILE_NADE_ICE: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); nade_color = '0 0.5 2'; break;
 			case PROJECTILE_NADE_ICE_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("wakizashi_rocket_thrust"); nade_color = '0 0.5 2'; break;
+			case PROJECTILE_NADE_TRANSLOCATE: setmodel(self, "models/runematch/rune.mdl"); self.traileffect = particleeffectnum("TR_CRYLINKPLASMA"); nade_color = '1 0.0625 1'; break;
+			case PROJECTILE_NADE_TRANSLOCATE_BURN: setmodel(self, "models/runematch/rune.mdl"); self.traileffect = particleeffectnum("wakizashi_rocket_thrust"); nade_color = '1 0.0625 1'; break;
 			
 			case PROJECTILE_RPC: setmodel(self, "models/weapons/ok_rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
 
@@ -384,6 +390,8 @@ void Ent_Projectile()
 			case PROJECTILE_NADE_NAPALM_BURN:
 			case PROJECTILE_NADE_ICE:
 			case PROJECTILE_NADE_ICE_BURN:
+			case PROJECTILE_NADE_TRANSLOCATE:
+			case PROJECTILE_NADE_TRANSLOCATE_BURN:
 			case PROJECTILE_NADE_BURN:
 			case PROJECTILE_NADE:
 				self.mins = '-16 -16 -16';
@@ -519,6 +527,7 @@ void Projectile_Precache()
 	precache_model("models/rocket.md3");
 	precache_model("models/tagrocket.md3");
 	precache_model("models/tracer.mdl");
+	precache_model("models/runematch/rune.mdl");
 	
 	precache_model("models/weapons/v_ok_grenade.md3");
 	precache_model("models/weapons/ok_rocket.md3");
