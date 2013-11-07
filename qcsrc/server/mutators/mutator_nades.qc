@@ -621,7 +621,7 @@ void nade_prime()
 	{
 		case NADE_TYPE_NAPALM: fn.colormod = '2 0.5 0'; break;
 		case NADE_TYPE_ICE: fn.colormod = '0 0.5 2'; break;
-		case NADE_TYPE_TRANSLOCATE: fn.colormod = '1 0.0625 1'; break;
+		case NADE_TYPE_TRANSLOCATE: fn.colormod = '1 0.0625 1'; self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP; break;
 	}
 		
 	setmodel(fn, "models/weapons/h_ok_grenade.iqm");
