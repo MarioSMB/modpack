@@ -743,56 +743,49 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 		}
 	}
 	
-		float n = 0;
-		entity o = world;
-		if(self.freezetag_frozen_timeout > 0 && time >= self.freezetag_frozen_timeout)
-			n = -1;
-		else
+	float n = 0;
+	entity o = world;
+	if(self.freezetag_frozen_timeout > 0 && time >= self.freezetag_frozen_timeout)
+		n = -1;
+	else
+	{
+		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
+		n = 0;
+		FOR_EACH_PLAYER(other) if(self != other)
 		{
-			vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
-			n = 0;
-			FOR_EACH_PLAYER(other) if(self != other)
+			if(other.deadflag == DEAD_NO)
+			if(other.frozen == 0)
+			if(SAME_TEAM(other, self))
+			if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax))
 			{
-				if(other.deadflag == DEAD_NO)
-				if(other.frozen == 0)
-				{
-					if(SAME_TEAM(other, self))
-					{
-						if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax))
-						{
-							if(!o)
-								o = other;
-							if(self.frozen == 1)
-								other.reviving = TRUE;
-							++n;
-						}
-					}
-				}
+				if(!o)
+					o = other;
+				if(self.frozen == 1)
+					other.reviving = TRUE;
+				++n;
 			}
 		}
+	}
 
-		if(n && self.frozen == 3) // OK, there is at least one teammate reviving us
+	if(n && self.frozen == 3) // OK, there is at least one teammate reviving us
+	{
+		self.revive_progress = bound(0, self.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
+		self.health = max(1, self.revive_progress * autocvar_g_balance_health_start);
+
+		if(self.revive_progress >= 1)
 		{
-			self.revive_progress = bound(0, self.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
-			self.health = max(1, self.revive_progress * autocvar_g_balance_health_start);
+			Unfreeze(self);
 
-			if(self.revive_progress >= 1)
-			{
-				Unfreeze(self);
-
-				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
-				Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, self.netname);
-			}
-
-			FOR_EACH_PLAYER(other)
-			{
-				if(other.reviving)
-				{
-					other.revive_progress = self.revive_progress;
-					other.reviving = FALSE;
-				}
-			}
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
+			Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, self.netname);
 		}
+
+		FOR_EACH_PLAYER(other) if(other.reviving)
+		{
+			other.revive_progress = self.revive_progress;
+			other.reviving = FALSE;
+		}
+	}
 
 	return FALSE;
 }
