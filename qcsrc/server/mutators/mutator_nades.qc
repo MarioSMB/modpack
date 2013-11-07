@@ -583,7 +583,7 @@ void nade_prime()
 		self.bonus_nades -= 1;
 	}
 	else
-		 n.nade_type = autocvar_g_nades_nade_type;
+		 n.nade_type = ((autocvar_g_nades_client_select) ? self.cvar_cl_nade_type : autocvar_g_nades_nade_type);
 
 	n.realowner = self;
 	n.colormap = self.colormap;
@@ -731,8 +731,11 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 				time_score = autocvar_g_nades_bonus_score_time_flagcarrier;
 			else
 				time_score = autocvar_g_nades_bonus_score_time;
-		
-			self.nade_type = autocvar_g_nades_bonus_type;
+			
+			if(autocvar_g_nades_bonus_client_select)
+				self.nade_type = self.cvar_cl_nade_type;
+			else
+				self.nade_type = autocvar_g_nades_bonus_type;
 			
 			if(self.bonus_nade_score >= 0 && autocvar_g_nades_bonus_score_max)
 				nades_GiveBonus(self, time_score / autocvar_g_nades_bonus_score_max);
@@ -796,6 +799,9 @@ MUTATOR_HOOKFUNCTION(nades_PlayerSpawn)
 		self.nade_refire = time + autocvar_g_spawnshieldtime;
 	else
 		self.nade_refire  = time + autocvar_g_nades_nade_refire;
+		
+	if(autocvar_g_nades_bonus_client_select)
+		self.nade_type = self.cvar_cl_nade_type;
 
 	return FALSE;
 }
@@ -847,6 +853,13 @@ MUTATOR_HOOKFUNCTION(nades_SpectateCopy)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(nades_GetCvars)
+{
+	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_nade_type, "cl_nade_type");
+
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(nades_BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":Nades");
@@ -870,6 +883,7 @@ MUTATOR_DEFINITION(mutator_nades)
 	MUTATOR_HOOK(MakePlayerObserver, nades_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, nades_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SpectateCopy, nades_SpectateCopy, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GetCvars, nades_GetCvars, CBC_ORDER_ANY);
 	MUTATOR_HOOK(reset_map_global, nades_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, nades_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, nades_BuildMutatorsPrettyString, CBC_ORDER_ANY);

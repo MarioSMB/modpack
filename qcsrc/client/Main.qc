@@ -101,6 +101,7 @@ void CSQC_Init(void)
 	registercvar("cl_robot", "0");
 	registercvar("cl_charge", "0");
 	registercvar("cl_magical_hax", "");
+	registercvar("cl_nade_type", "1");
 
 	gametype = 0;
 
