@@ -1,0 +1,47 @@
+const float NADE_TYPE_NORMAL = 1;
+const float NADE_TYPE_NAPALM = 2;
+const float NADE_TYPE_ICE = 3;
+const float NADE_TYPE_TRANSLOCATE = 4;
+
+vector Nade_Color(float nadeid)
+{
+	switch(nadeid)
+	{
+		case NADE_TYPE_NORMAL: return '1 1 1';
+		case NADE_TYPE_NAPALM: return '2 0.5 0';
+		case NADE_TYPE_ICE: return '0 0.5 2';
+		case NADE_TYPE_TRANSLOCATE: return '1 0.0625 1';
+	}
+
+    return '0 0 0';
+}
+
+float Nade_IDFromProjectile(float proj)
+{
+	switch(proj)
+	{
+		case PROJECTILE_NADE:
+		case PROJECTILE_NADE_BURN: return NADE_TYPE_NORMAL;
+		case PROJECTILE_NADE_NAPALM:
+		case PROJECTILE_NADE_NAPALM_BURN: return NADE_TYPE_NAPALM;
+		case PROJECTILE_NADE_ICE:
+		case PROJECTILE_NADE_ICE_BURN: return NADE_TYPE_ICE;
+		case PROJECTILE_NADE_TRANSLOCATE:
+		case PROJECTILE_NADE_TRANSLOCATE_BURN: return NADE_TYPE_TRANSLOCATE;
+	}
+	
+	return 0;
+}
+
+float Nade_ProjectileFromID(float proj, float burn)
+{
+	switch(proj)
+	{
+		case NADE_TYPE_NORMAL: return (burn) ? PROJECTILE_NADE_BURN : PROJECTILE_NADE;
+		case NADE_TYPE_NAPALM: return (burn) ? PROJECTILE_NADE_NAPALM_BURN : PROJECTILE_NADE_NAPALM;
+		case NADE_TYPE_ICE: return (burn) ? PROJECTILE_NADE_ICE_BURN : PROJECTILE_NADE_ICE;
+		case NADE_TYPE_TRANSLOCATE: return (burn) ? PROJECTILE_NADE_TRANSLOCATE_BURN : PROJECTILE_NADE_TRANSLOCATE;
+	}
+
+	return 0;
+}
