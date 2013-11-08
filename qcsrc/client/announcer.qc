@@ -1,6 +1,6 @@
 float announcer_1min;
 float announcer_5min;
-void Announcer_Countdown() 
+void Announcer_Countdown()
 {
 	float starttime = getstatf(STAT_GAMESTARTTIME);
 	float roundstarttime = getstatf(STAT_ROUNDSTARTTIME);
@@ -20,8 +20,8 @@ void Announcer_Countdown()
 
 	if(countdown <= 0) // countdown has finished, starttime is now
 	{
-		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_BEGIN); 
-		Local_Notification(MSG_MULTI, MULTI_COUNTDOWN_BEGIN); 
+		Local_Notification(MSG_CENTER, CENTER_COUNTDOWN_BEGIN);
+		Local_Notification(MSG_MULTI, MULTI_COUNTDOWN_BEGIN);
 		remove(self);
 		return;
 	}
@@ -50,19 +50,19 @@ void Announcer_Countdown()
  * and STAT_FRAGLIMIT to be auto-sent)
  */
  float previous_game_starttime;
-void Announcer_Gamestart() 
+void Announcer_Gamestart()
 {
 	float startTime = getstatf(STAT_GAMESTARTTIME);
 	float roundstarttime = getstatf(STAT_ROUNDSTARTTIME);
 	if(roundstarttime > startTime)
 		startTime = roundstarttime;
 
-	if(previous_game_starttime != startTime) 
+	if(previous_game_starttime != startTime)
 	{
 		if((time + 5.0) < startTime) // if connecting to server while restart was active don't always play prepareforbattle
 			Local_Notification(MSG_ANNCE, ANNCE_PREPARE);
 
-		if(time < startTime) 
+		if(time < startTime)
 		{
 			entity e = find(world, classname, "announcer_countdown");
 			if (!e)
@@ -74,35 +74,35 @@ void Announcer_Gamestart()
 			e.nextthink = startTime - floor(startTime - time); //synchronize nextthink to startTime
 		}
 	}
-	
+
 	previous_game_starttime = startTime;
 }
 
 
 // Plays the 1 minute or 5 minutes (of maptime) remaining sound, if client wants it
-void Announcer_Time() 
+void Announcer_Time()
 {
 	float timelimit = getstatf(STAT_TIMELIMIT);
 	float timeleft = max(0, timelimit * 60 + getstatf(STAT_GAMESTARTTIME) - time);
 	float warmup_timeleft = 0;
-	
-	if(warmup_stage) 
+
+	if(warmup_stage)
 		if(autocvar_g_warmup_limit > 0)
-			warmup_timeleft = max(0, autocvar_g_warmup_limit + getstatf(STAT_GAMESTARTTIME) - time); 
+			warmup_timeleft = max(0, autocvar_g_warmup_limit + getstatf(STAT_GAMESTARTTIME) - time);
 
 	// 5 minute check
-	if(autocvar_cl_announcer_maptime >= 2) 
+	if(autocvar_cl_announcer_maptime >= 2)
 	{
 		// make sure that after connect (and e.g. 4 minutes left) we will not get a wrong sound
 		if(announcer_5min)
 		{
-			if(((!warmup_stage || autocvar_g_warmup_limit == 0) && timeleft > 300) 
+			if(((!warmup_stage || autocvar_g_warmup_limit == 0) && timeleft > 300)
 				|| (warmup_stage && autocvar_g_warmup_limit > 0 && warmup_timeleft > 300))
 					announcer_5min = FALSE;
 		}
-		else 
+		else
 		{
-			if(((!warmup_stage || autocvar_g_warmup_limit == 0) && timelimit > 0 && timeleft < 300 && timeleft > 299) 
+			if(((!warmup_stage || autocvar_g_warmup_limit == 0) && timelimit > 0 && timeleft < 300 && timeleft > 299)
 				|| (warmup_stage && autocvar_g_warmup_limit > 0 && warmup_timeleft < 300 && warmup_timeleft > 299))
 			{
 				//if we're in warmup mode, check whether there's a warmup timelimit
@@ -120,11 +120,11 @@ void Announcer_Time()
 	{
 		if (announcer_1min)
 		{
-			if(((!warmup_stage || autocvar_g_warmup_limit == 0) && timeleft > 60) 
+			if(((!warmup_stage || autocvar_g_warmup_limit == 0) && timeleft > 60)
 				|| (warmup_stage && autocvar_g_warmup_limit > 0 && warmup_timeleft > 60))
 					announcer_1min = FALSE;
 		}
-		else if(((!warmup_stage || autocvar_g_warmup_limit == 0) && timelimit > 0 && timeleft < 60) 
+		else if(((!warmup_stage || autocvar_g_warmup_limit == 0) && timelimit > 0 && timeleft < 60)
 			|| (warmup_stage && autocvar_g_warmup_limit > 0 && warmup_timeleft < 60))
 		{
 			// if we're in warmup mode, check whether there's a warmup timelimit

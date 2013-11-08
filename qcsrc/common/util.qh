@@ -101,7 +101,7 @@ void buf_save(float buf, string filename);
 
 // modulo function
 #ifndef MENUQC
-float mod(float a, float b) { return a - (floor(a / b) * b); }   
+float mod(float a, float b) { return a - (floor(a / b) * b); }
 #endif
 
 #define TIME_TO_NTHS(t,n) floor((t) * (n) + 0.4)
@@ -281,7 +281,6 @@ float get_model_parameters_bone_aimweight[MAX_AIM_BONES];
 float get_model_parameters_fixbone;
 string get_model_parameters_desc;
 float get_model_parameters(string mod, float skn); // call with string_null to clear; skin -1 means mod is the filename of the txt file and is to be split
-
 vector vec2(vector v);
 
 #ifndef MENUQC

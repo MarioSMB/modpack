@@ -21,17 +21,17 @@ void PlayerJump (void)
 {
 	if(self.frozen)
 		return; // no jumping in freezetag when frozen
-		
+
 	float doublejump = FALSE;
 
 	player_multijump = doublejump;
 	if(MUTATOR_CALLHOOK(PlayerJump))
 		return;
-		
+
 	doublejump = player_multijump;
 
 	float mjumpheight;
-	
+
 	if (autocvar_sv_doublejump)
 	{
 		tracebox(self.origin + '0 0 0.01', self.mins, self.maxs, self.origin - '0 0 0.01', MOVE_NORMAL, self);
@@ -113,7 +113,7 @@ void PlayerJump (void)
 	self.flags &= ~FL_JUMPRELEASED;
 
 	animdecide_setaction(self, ANIMACTION_JUMP, TRUE);
-	
+
 	if(autocvar_g_jump_grunt)
 		PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 
@@ -520,9 +520,9 @@ void PM_Accelerate(vector wishdir, float wishspeed, float wishspeed0, float acce
 	}
 	else
 		vel_perpend = vel_perpend * max(0, 1 - frametime * wishspeed * sidefric);
-	
+
 	vel_xy = vel_straight * wishdir + vel_perpend;
-	
+
 	if(speedclamp >= 0)
 	{
 		float vel_xy_preclamp;
@@ -636,7 +636,7 @@ void SV_PlayerPhysics()
 	string c;
 
 	WarpZone_PlayerPhysics_FixVAngle();
-	
+
 	maxspd_mod = 1;
 	if(self.ballcarried)
 		if(g_nexball)
@@ -750,7 +750,7 @@ void SV_PlayerPhysics()
 			return;
 		bot_think();
 	}
-	
+
 	self.items &= ~IT_USING_JETPACK;
 
 	if(IS_PLAYER(self))
@@ -787,7 +787,7 @@ void SV_PlayerPhysics()
 	self.disableclientprediction = 0;
 	if(time < self.ladder_time)
 		self.disableclientprediction = 1;
-		
+
 	if(time < self.spider_slowness)
 	{
 		self.stat_sv_maxspeed *= 0.5; // half speed while slow from spider

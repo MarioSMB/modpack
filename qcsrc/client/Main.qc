@@ -79,16 +79,17 @@ void CSQC_Init(void)
 	maxclients = i;
 	
 	localcmd("\nalias nobobbing \"cl_bob 0; cl_bob2 0; cl_followmodel 0; cl_leanmodel 0\"\n");
+	localcmd("\nalias quickmenu \"cl_cmd hud quickmenu\"\n");
 
 	//registercommand("hud_configure");
 	//registercommand("hud_save");
 	//registercommand("menu_action");
-	
+
 	ConsoleCommand_macro_init();
 
 	registercvar("hud_usecsqc", "1");
 	registercvar("scoreboard_columns", "default");
-	
+
 	registercvar("cl_freeze", "0");
 	registercvar("cl_pony", "0");
 	registercvar("cl_pony_skin", "0");
@@ -102,6 +103,17 @@ void CSQC_Init(void)
 	registercvar("cl_charge", "0");
 	registercvar("cl_magical_hax", "");
 	registercvar("cl_nade_type", "1");
+
+	// these need to be defined for quickmenu to work
+	registercvar("hud_panel_quickmenu_pos", "0.010000 0.410000");
+	registercvar("hud_panel_quickmenu_size", "0.210000 0.250000");
+	registercvar("hud_panel_quickmenu_bg", "");
+	registercvar("hud_panel_quickmenu_bg_color", "");
+	registercvar("hud_panel_quickmenu_bg_color_team", "");
+	registercvar("hud_panel_quickmenu_bg_alpha", "");
+	registercvar("hud_panel_quickmenu_bg_border", "");
+	registercvar("hud_panel_quickmenu_bg_padding", "");
+	registercvar("hud_panel_quickmenu_align", "0");
 
 	gametype = 0;
 
@@ -143,13 +155,13 @@ void CSQC_Init(void)
 	Vehicles_Precache();
 	Tuba_Precache();
 	CSQCPlayer_Precache();
-	
+
 	if(autocvar_cl_reticle)
 	{
 		if(autocvar_cl_reticle_item_normal) { precache_pic("gfx/reticle_normal"); }
 		if(autocvar_cl_reticle_item_nex) { precache_pic("gfx/reticle_nex"); }
 	}
-	
+
 	get_mi_min_max_texcoords(1); // try the CLEVER way first
 	minimapname = strcat("gfx/", mi_shortname, "_radar.tga");
 	shortmapname = mi_shortname;
@@ -335,7 +347,7 @@ void FPSReporter_Init()
 {
 	if(!sv_showfps)
 		return;
-	
+
 	entity e = spawn();
 	e.think = FPSReporter_Think;
 	e.nextthink = time + 1;
@@ -355,7 +367,7 @@ void PostInit(void)
 	Porto_Init();
 	TrueAim_Init();
 	FPSReporter_Init();
-	
+
 	fovlock = -1;
 
 	postinit = true;
@@ -376,6 +388,9 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	bSkipKey = false;
 
 	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
+		return true;
+
+	if (HUD_QuickMenu_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
 	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
@@ -688,7 +703,7 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 	spn_origin_x = ReadShort();
 	spn_origin_y = ReadShort();
 	spn_origin_z = ReadShort();
-	
+
 	if(is_new)
 	{
 		self.origin = spn_origin;
@@ -719,7 +734,7 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 				}
 			}
 			else { self.cnt = particleeffectnum("spawn_point_neutral"); }
-			
+
 			self.draw = Spawn_Draw;
 		}
 	}
@@ -733,7 +748,7 @@ void Ent_ReadSpawnEvent(float is_new)
 	// this way the server can disable the sending of
 	// spawn origin or such to clients if wanted.
 	float entnum = ReadByte();
-	
+
 	if(entnum)
 	{
 		self.origin_x = ReadShort();
@@ -761,7 +776,7 @@ void Ent_ReadSpawnEvent(float is_new)
 			}
 		}
 	}
-	
+
 	// local spawn actions
 	if(is_new && (!entnum || (entnum == player_localentnum)))
 	{
@@ -774,7 +789,7 @@ void Ent_ReadSpawnEvent(float is_new)
 			button_zoom = FALSE;
 		}
 	}
-	
+
 	//print(sprintf("Ent_ReadSpawnEvent(is_new = %d); origin = %s, entnum = %d, localentnum = %d\n", is_new, vtos(self.origin), entnum, player_localentnum));
 }
 
@@ -859,10 +874,10 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
-		case ENT_CLIENT_TURRET: ent_turret(); break; 
+		case ENT_CLIENT_TURRET: ent_turret(); break;
 		case ENT_CLIENT_GENERATOR: ent_generator(); break;
 		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
-		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;  
+		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;
 		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;
 		case ENT_CLIENT_SPAWNPOINT: Ent_ReadSpawnPoint(bIsNewEntity); break;
 		case ENT_CLIENT_SPAWNEVENT: Ent_ReadSpawnEvent(bIsNewEntity); break;
@@ -1024,10 +1039,10 @@ void Ent_Init()
 
 	g_trueaim_minrange = ReadCoord();
 	g_balance_porto_secondary = ReadByte();
-	
+
 	minsta_delay = ReadByte() / 255.0;
 	minsta_range = ReadByte() / 255.0;
-	
+
 	sv_showfps = ReadByte();
 
 	if(!postinit)
@@ -1234,7 +1249,7 @@ void Net_ReadMorningRescue()
 {
 	if(morningrescue)
 		return;
-	
+
 	localcmd("play2 sound/misc/morningrescue\n");
 	morningrescue = 1;
 	mr_appeartime = time;
@@ -1244,12 +1259,12 @@ void Net_ReadMorningRescue()
 void Net_ReadSpecInfo()
 {
 	float i;
-	
+
 	fovlock = ReadByte();
-	
+
 	if(fovlock == 0)
 		fovlock = -1;
-	
+
 	num_spectators = ReadByte();
 	for(i = 0; i < num_spectators; ++i)
 	{

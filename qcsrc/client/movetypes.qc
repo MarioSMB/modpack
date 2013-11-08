@@ -128,7 +128,7 @@ float _Movetype_TestEntityPosition(vector ofs) // SV_TestEntityPosition
 	vector org;
 	float cont;
 	org = self.move_origin + ofs;
-	
+
 	cont = self.dphitcontentsmask;
 	self.dphitcontentsmask = DPCONTENTS_SOLID;
 	tracebox(self.move_origin, self.mins, self.maxs, self.move_origin, MOVE_NOMONSTERS, self);
@@ -264,7 +264,7 @@ void _Movetype_Physics_Toss(float dt) // SV_Physics_Toss
 		_Movetype_PushEntity(move, TRUE);
 		if(wasfreed(self))
 			return;
-	
+
 		if(trace_startsolid)
 		{
 			_Movetype_UnstickEntity();

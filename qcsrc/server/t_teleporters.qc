@@ -25,7 +25,7 @@ void trigger_teleport_use()
 		if(head != player) \
 			if(head.takedamage) \
 				if(boxesoverlap(deathmin, deathmax, head.absmin, head.absmax))
-	
+
 
 float check_tdeath(entity player, vector org, vector telefragmin, vector telefragmax)
 {
@@ -153,14 +153,14 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 	vector locout;
 	entity e;
 	float p;
-	
+
 	// Find the output teleporter
 	if(teleporter.enemy)
 	{
 		e = teleporter.enemy;
 	}
 	else
-	{ 
+	{
 		RandomSelection_Init();
 		for(e = world; (e = find(e, targetname, teleporter.target)); )
 		{
@@ -177,13 +177,13 @@ entity Simple_TeleportPlayer(entity teleporter, entity player)
 	}
 
 	if(!e) { sprint(player, "Teleport destination vanished. Sorry... please complain to the mapper.\n"); }
-	
+
 	makevectors(e.mangle);
 
 	if(e.speed)
 		if(vlen(player.velocity) > e.speed)
 			player.velocity = normalize(player.velocity) * max(0, e.speed);
-			
+
 	if(autocvar_g_teleport_maxspeed)
 		if(vlen(player.velocity) > autocvar_g_teleport_maxspeed)
 			player.velocity = normalize(player.velocity) * max(0, autocvar_g_teleport_maxspeed);
@@ -201,17 +201,17 @@ void Teleport_Touch (void)
 
 	if (self.active != ACTIVE_ACTIVE)
 		return;
-	
+
 	if (!other.teleportable)
 		return;
-    
+
 	if(other.vehicle)
 	if(!other.vehicle.teleportable)
 		return;
-			
+
 	if(IS_TURRET(other))
 		return;
-        
+
 	if(other.deadflag != DEAD_NO)
 		return;
 
@@ -223,7 +223,7 @@ void Teleport_Touch (void)
 
 	if(IS_PLAYER(other))
 		RemoveGrapplingHook(other);
-		
+
 	entity e;
 	e = Simple_TeleportPlayer(self, other);
 
@@ -310,16 +310,16 @@ entity Teleport_Find(vector mi, vector ma)
 	return world;
 }
 
-entity teleport_first; 
+entity teleport_first;
 .entity teleport_next;
 void spawnfunc_trigger_teleport (void)
 {
 	self.angles = '0 0 0';
 
 	EXACTTRIGGER_INIT;
-	
-	self.active = ACTIVE_ACTIVE;	
-	
+
+	self.active = ACTIVE_ACTIVE;
+
 	self.use = trigger_teleport_use;
 
 	// this must be called to spawn the teleport waypoints for bots
@@ -330,7 +330,7 @@ void spawnfunc_trigger_teleport (void)
 		objerror ("Teleporter with no target");
 		return;
 	}
-	
+
 	self.teleport_next = teleport_first;
 	teleport_first = self;
 }

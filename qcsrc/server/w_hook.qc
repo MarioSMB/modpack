@@ -66,12 +66,12 @@ void W_Hook_Damage (entity inflictor, entity attacker, float damage, float death
 {
 	if (self.health <= 0)
 		return;
-		
+
 	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
-		return; // g_projectiles_damage says to halt	
-	
+		return; // g_projectiles_damage says to halt
+
 	self.health = self.health - damage;
-	
+
 	if (self.health <= 0)
 		W_PrepareExplosionByDamage(self.realowner, W_Hook_Explode2);
 }
@@ -104,7 +104,7 @@ void W_Hook_Attack2()
 	gren.think = adaptor_think2use_hittype_splash;
 	gren.use = W_Hook_Explode2;
 	gren.touch = W_Hook_Touch2;
-	
+
 	gren.takedamage = DAMAGE_YES;
 	gren.health = autocvar_g_balance_hook_secondary_health;
 	gren.damageforcescale = autocvar_g_balance_hook_secondary_damageforcescale;
@@ -141,7 +141,7 @@ void spawnfunc_weapon_hook (void)
 float w_hook(float req)
 {
 	float hooked_time_max, hooked_fuel;
-		
+
 	if (req == WR_AIM)
 	{
 		// ... sorry ...
@@ -183,13 +183,13 @@ float w_hook(float req)
 
 		if(self.hook && self.hook.state == 1)
 		{
-			hooked_time_max = autocvar_g_balance_hook_primary_hooked_time_max;			
+			hooked_time_max = autocvar_g_balance_hook_primary_hooked_time_max;
 			if (hooked_time_max > 0)
 			{
 				if ( time > self.hook_time_hooked + hooked_time_max )
 					self.hook_state |= HOOK_REMOVING;
 			}
-			
+
 			hooked_fuel = autocvar_g_balance_hook_primary_hooked_fuel;
 			if (hooked_fuel > 0)
 			{
@@ -215,7 +215,7 @@ float w_hook(float req)
 		}
 		else
 		{
-			self.hook_time_hooked = time;				
+			self.hook_time_hooked = time;
 			self.hook_time_fueldecrease = time + autocvar_g_balance_hook_primary_hooked_time_free;
 		}
 
@@ -274,7 +274,7 @@ float w_hook(float req)
 			return self.ammo_fuel > 0;
 		else
 			return self.ammo_fuel >= autocvar_g_balance_hook_primary_fuel;
-			
+
 		return self.ammo_cells >= autocvar_g_balance_hook_secondary_ammo;
 	}
 	else if (req == WR_RESETPLAYER)

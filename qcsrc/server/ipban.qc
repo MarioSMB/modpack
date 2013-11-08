@@ -8,7 +8,7 @@
  *     GET g_ban_sync_uri?action=unban&hostname=...&ip=xxx.xxx.xxx
  * - Querying the ban list
  *     GET g_ban_sync_uri?action=list&hostname=...&servers=xxx.xxx.xxx.xxx;xxx.xxx.xxx.xxx;...
- *     
+ *
  *     shows the bans from the listed servers, and possibly others.
  *     Format of a ban is ASCII plain text, four lines per ban, delimited by
  *     newline ONLY (no carriage return):
@@ -114,7 +114,7 @@ void OnlineBanList_URI_Get_Callback(float id, float status, string data)
 	}
 	if(syncinterval > 0)
 		syncinterval *= 60;
-	
+
 	if(status != 0)
 	{
 		print("error: status is ", ftos(status), "\n");
@@ -193,7 +193,7 @@ void OnlineBanList_Think()
 	float argc;
 	string uri;
 	float i, n;
-	
+
 	if(autocvar_g_ban_sync_uri == "")
 		goto killme;
 	if(autocvar_g_ban_sync_interval == 0) // < 0 is okay, it means "sync on level start only"
@@ -208,7 +208,7 @@ void OnlineBanList_Think()
 	for(i = 1; i < argc; ++i)
 		OnlineBanList_Servers = strcat(OnlineBanList_Servers, ";", argv(i));
 	OnlineBanList_Servers = strzone(OnlineBanList_Servers);
-	
+
 	uri = strcat(     "action=list&hostname=", uri_escape(autocvar_hostname));
 	uri = strcat(uri, "&servers=", uri_escape(OnlineBanList_Servers));
 
@@ -227,7 +227,7 @@ void OnlineBanList_Think()
 		else
 			uri_get(strcat(argv(i), "?", uri), URI_GET_IPBAN + i); // 1000 = "banlist" callback target
 	}
-	
+
 	if(autocvar_g_ban_sync_interval > 0)
 		self.nextthink = time + max(60, autocvar_g_ban_sync_interval * 60);
 	else
@@ -321,24 +321,24 @@ void Ban_View()
 {
 	float i, n;
 	string msg;
-	
+
 	print("^2Listing all existing active bans:\n");
-	
+
 	n = 0;
 	for(i = 0; i < ban_count; ++i)
 	{
 		if(time > ban_expire[i])
 			continue;
-			
+
 		++n; // total number of existing bans
-			
+
 		msg = strcat("#", ftos(i), ": ");
 		msg = strcat(msg, ban_ip[i], " is still banned for ");
 		msg = strcat(msg, ftos(ban_expire[i] - time), " seconds");
-		
+
 		print("  ", msg, "\n");
 	}
-	
+
 	print("^2Done listing all active (", ftos(n), ") bans.\n");
 }
 
@@ -367,7 +367,7 @@ float Ban_GetClientIP(entity client)
 	i4 = strstrofs(s, ".", i3 + 1);
 	if(i4 >= 0)
 		s = substring(s, 0, i4);
-	
+
 	ban_ip1 = substring(s, 0, i1); // 8
 	ban_ip2 = substring(s, 0, i2); // 16
 	ban_ip3 = substring(s, 0, i3); // 24

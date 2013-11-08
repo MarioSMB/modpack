@@ -245,7 +245,7 @@ MUTATOR_HOOKFUNCTION(arena_FilterItem)
 	if(autocvar_g_powerups <= 0)
 	if(self.flags & FL_POWERUP)
 		return TRUE;
-		
+
 	return FALSE;
 }
 

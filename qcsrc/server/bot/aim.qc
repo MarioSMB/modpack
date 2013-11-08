@@ -137,11 +137,11 @@ float bot_shouldattack(entity e)
 		return FALSE;
 	if(e.flags & FL_NOTARGET)
 		return FALSE;
-		
+
 	checkentity = e;
 	if(MUTATOR_CALLHOOK(BotShouldAttack))
 		return FALSE;
-		
+
 	return TRUE;
 }
 

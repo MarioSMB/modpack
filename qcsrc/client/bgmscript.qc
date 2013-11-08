@@ -17,10 +17,10 @@ float GetAttackDecaySustainAmplitude(float a, float d, float s, float t)
 	//   attack: from 0 to 1, in time a for a full length
 	//   decay: from 1 to s, in time d
 	//   sustain: s
-	
+
 	if(t < 0)
 		return 0;
-	
+
 	if(a)
 		if(t <= a)
 			return t / a;
@@ -38,10 +38,10 @@ float GetReleaseAmplitude(float d, float s, float r, float t)
 
 	if(!r)
 		return 0;
-	
+
 	if(t > r)
 		return 0;
-	
+
 	releaseval = s * (1 - t / r);
 
 	if(t < -d)
@@ -70,7 +70,7 @@ float GetReleaseTime(float d, float s, float r, float amp)
 
 	if(!s)
 		return 0;
-	
+
 	// if amp > s, we may be in the attack or in the prolonged decay curve
 	releasetime = (1 - amp / s) * r;
 
@@ -172,7 +172,7 @@ float BGMScript(entity e)
 
 	if(e.bgmscript == "")
 		return 1;
-	
+
 	if(autocvar_bgmvolume <= 0)
 		return -1;
 

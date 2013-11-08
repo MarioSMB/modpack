@@ -38,7 +38,7 @@ void ctf_RespawnFlag(entity flag);
 #define WPCOLOR_FLAGCARRIER(t) ('0.8 0.8 0')
 #define WPCOLOR_DROPPEDFLAG(t) (('0.25 0.25 0.25' + colormapPaletteColor(t - 1, FALSE)) * 0.5)
 
-// sounds 
+// sounds
 #define snd_flag_taken noise
 #define snd_flag_returned noise1
 #define snd_flag_capture noise2
@@ -60,7 +60,7 @@ entity ctf_worldflaglist;
 // waypoint sprites
 .entity bot_basewaypoint; // flag waypointsprite
 .entity wps_helpme;
-.entity wps_flagbase; 
+.entity wps_flagbase;
 .entity wps_flagcarrier;
 .entity wps_flagdropped;
 .entity wps_enemyflagcarrier;

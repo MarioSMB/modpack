@@ -192,7 +192,7 @@ void W_BallisticBullet_Hit (void)
 		/*if(yoda && (time > (self.last_yoda + 5)))
 		{
 			Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_YODA);
-			self.last_yoda = time; 
+			self.last_yoda = time;
 		}*/
 
 		// calculate hits for ballistic weapons
@@ -247,7 +247,7 @@ float W_BallisticBullet_LeaveSolid(float eff)
 	if(self.origin_x > world.maxs_x || self.origin_y > world.maxs_y || self.origin_z > world.maxs_z || self.origin_x < world.mins_x || self.origin_y < world.mins_y || self.origin_z < world.mins_z)
 		return 0;
 
-	// special case for zero density and zero bullet constant: 
+	// special case for zero density and zero bullet constant:
 
 	if(self.dmg_radius == 0)
 	{
@@ -578,7 +578,7 @@ float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtyp
 	float is_from_contents = (deathtype == DEATH_SLIME || deathtype == DEATH_LAVA);
 	float is_from_owner = (inflictor == projowner);
 	float is_from_exception = (exception != -1);
-	
+
 	//dprint(strcat("W_CheckProjectileDamage: from_contents ", ftos(is_from_contents), " : from_owner ", ftos(is_from_owner), " : exception ", strcat(ftos(is_from_exception), " (", ftos(exception), "). \n")));
 
 	if(autocvar_g_projectiles_damage <= -2)
@@ -598,7 +598,7 @@ float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtyp
 			return (exception); // if exception is detected, allow it to override
 		else if (!is_from_contents)
 			return FALSE; // otherwise, only allow damage from contents
-	}	
+	}
 	else if(autocvar_g_projectiles_damage == 1)
 	{
 		if(is_from_exception)
@@ -619,13 +619,13 @@ void W_PrepareExplosionByDamage(entity attacker, void() explode)
 {
 	self.takedamage = DAMAGE_NO;
 	self.event_damage = func_null;
-	
+
 	if(IS_CLIENT(attacker) && !autocvar_g_projectiles_keep_owner)
 	{
 		self.owner = attacker;
 		self.realowner = attacker;
 	}
-	
+
 	// do not explode NOW but in the NEXT FRAME!
 	// because recursive calls to RadiusDamage are not allowed
 	self.nextthink = time;

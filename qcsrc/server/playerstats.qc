@@ -17,7 +17,7 @@ void PlayerStats_Init() // initiated before InitGameplayMode so that scores are 
 	if(playerstats_db >= 0)
 		playerstats_waitforme = FALSE; // must wait for it at match end
 
-	serverflags |= SERVERFLAG_PLAYERSTATS;	
+	serverflags |= SERVERFLAG_PLAYERSTATS;
 
 	PlayerStats_AddEvent(PLAYERSTATS_ALIVETIME);
 	PlayerStats_AddEvent(PLAYERSTATS_AVGLATENCY);
@@ -83,7 +83,7 @@ void PlayerStats_AddPlayer(entity e)
 
 	string key;
 	key = sprintf("%s:*", e.playerstats_id);
-	
+
 	string p;
 	p = db_get(playerstats_db, key);
 	if(p == "")
@@ -106,7 +106,7 @@ void PlayerStats_AddTeam(float t)
 
 	string key;
 	key = sprintf("%d", t);
-	
+
 	string p;
 	p = db_get(playerstats_db, key);
 	if(p == "")
@@ -126,10 +126,10 @@ void PlayerStats_AddEvent(string event_id)
 {
 	if(playerstats_db < 0)
 		return;
-	
+
 	string key;
 	key = sprintf("*:%s", event_id);
-	
+
 	string p;
 	p = db_get(playerstats_db, key);
 	if(p == "")
@@ -149,7 +149,7 @@ float PlayerStats_Event(entity e, string event_id, float value)
 {
 	if((e.playerstats_id == "") || playerstats_db < 0)
 		return 0;
-	
+
 	string key;
 	float val;
 	key = sprintf("%s:%s", e.playerstats_id, event_id);
@@ -194,7 +194,7 @@ float PlayerStats_TeamScore(float t, string event_id, float value)
 	U: UDP port number of the server
 	D: duration of the match
 	P: player ID of an existing player; this also sets the owner for all following "n", "e" and "t" lines (lower case!)
-	Q: team number of an existing team (format: team#NN); this also sets the owner for all following "e" lines (lower case!) 
+	Q: team number of an existing team (format: team#NN); this also sets the owner for all following "e" lines (lower case!)
 	n: nickname of the player (optional)
 	t: team ID
 	i: player index

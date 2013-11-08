@@ -257,7 +257,7 @@ float target_spawn_cancreate()
 	++c; // increase count to not include MYSELF
 	for(e = world; (e = findfloat(e, target_spawn_id, self.target_spawn_id)); --c)
 		;
-	
+
 	// if c now is 0, we have AT LEAST the given count (maybe more), so don't spawn any more
 	if(c == 0)
 		return 0;

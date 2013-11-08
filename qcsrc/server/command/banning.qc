@@ -14,9 +14,9 @@ void BanCommand_ban(float request, float argc, string command)
 				string ip = argv(1);
 				float reason_arg, bantime;
 				string reason;
-				
-				reason_arg = 2; 
-				
+
+				reason_arg = 2;
+
 				GET_BAN_ARG(bantime, autocvar_g_ban_default_bantime);
 				GET_BAN_REASON(reason, "No reason provided");
 
@@ -24,7 +24,7 @@ void BanCommand_ban(float request, float argc, string command)
 				return;
 			}
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2ban^7\n");
 		case CMD_REQUEST_USAGE:
@@ -48,7 +48,7 @@ void BanCommand_banlist(float request)
 			Ban_View();
 			return;
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -72,26 +72,26 @@ void BanCommand_kickban(float request, float argc, string command)
 				float accepted = VerifyClientEntity(client, TRUE, FALSE);
 				float reason_arg, bantime, masksize;
 				string reason;
-				
-				if(accepted > 0) 
+
+				if(accepted > 0)
 				{
-					reason_arg = next_token; 
+					reason_arg = next_token;
 
 					GET_BAN_ARG(bantime, autocvar_g_ban_default_bantime);
 					GET_BAN_ARG(masksize, autocvar_g_ban_default_masksize);
 					GET_BAN_REASON(reason, "No reason provided");
 
 					Ban_KickBanClient(client, bantime, masksize, reason);
-					
+
 					return;
 				}
 				else
 				{
-					print("kickban: ", GetClientErrorString(accepted, argv(1)), ".\n"); 
+					print("kickban: ", GetClientErrorString(accepted, argv(1)), ".\n");
 				}
 			}
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2kickban^7\n");
 		case CMD_REQUEST_USAGE:
@@ -117,19 +117,19 @@ void BanCommand_mute(float request, float argc, string command) // TODO: Add a s
 			{
 				entity client = GetFilteredEntity(argv(1));
 				float accepted = VerifyClientEntity(client, TRUE, FALSE);
-				
-				if(accepted > 0) 
+
+				if(accepted > 0)
 				{
 					client.muted = TRUE;
 					return;
 				}
 				else
 				{
-					print("mute: ", GetClientErrorString(accepted, argv(1)), ".\n"); 
+					print("mute: ", GetClientErrorString(accepted, argv(1)), ".\n");
 				}
 			}
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2mute^7\n");
 		case CMD_REQUEST_USAGE:
@@ -147,16 +147,16 @@ void BanCommand_unban(float request, float argc)
 	switch(request)
 	{
 		case CMD_REQUEST_COMMAND:
-		{	
+		{
 			if(argv(1))
 			{
 				float tmp_number = -1;
 				string tmp_string;
-				
+
 				if(substring(argv(1), 0, 1) == "#")
 				{
 					tmp_string = substring(argv(1), 1, -1);
-					
+
 					if(tmp_string != "") // is it all one token? like #1
 					{
 						tmp_number = stof(tmp_string);
@@ -171,7 +171,7 @@ void BanCommand_unban(float request, float argc)
 				else // maybe it's ONLY a number?
 				{
 					tmp_number = stof(argv(1));
-					
+
 					if((tmp_number == 0) && (argv(1) != "0"))
 						{ tmp_number = -1; }
 				}
@@ -183,7 +183,7 @@ void BanCommand_unban(float request, float argc)
 				}
 			}
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -205,19 +205,19 @@ void BanCommand_unmute(float request, float argc)
 			{
 				entity client = GetFilteredEntity(argv(1));
 				float accepted = VerifyClientEntity(client, TRUE, FALSE);
-				
-				if(accepted > 0) 
+
+				if(accepted > 0)
 				{
 					client.muted = FALSE;
 					return;
 				}
 				else
 				{
-					print("unmute: ", GetClientErrorString(accepted, argv(1)), ".\n"); 
+					print("unmute: ", GetClientErrorString(accepted, argv(1)), ".\n");
 				}
 			}
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2mute^7\n");
 		case CMD_REQUEST_USAGE:
@@ -238,10 +238,10 @@ void BanCommand_(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			
+
 			return;
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -272,10 +272,10 @@ void BanCommand_macro_help()
 {
 	#define BAN_COMMAND(name,function,description) \
 		{ if(strtolower(description) != "") { print("  ^2", name, "^7: ", description, "\n"); } }
-		
+
 	BAN_COMMANDS(0, 0, "")
 	#undef BAN_COMMAND
-	
+
 	return;
 }
 
@@ -283,10 +283,10 @@ float BanCommand_macro_command(float argc, string command)
 {
 	#define BAN_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
-		
+
 	BAN_COMMANDS(CMD_REQUEST_COMMAND, argc, command)
 	#undef BAN_COMMAND
-	
+
 	return FALSE;
 }
 
@@ -294,10 +294,10 @@ float BanCommand_macro_usage(float argc)
 {
 	#define BAN_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
-		
+
 	BAN_COMMANDS(CMD_REQUEST_USAGE, argc, "")
 	#undef BAN_COMMAND
-	
+
 	return FALSE;
 }
 
@@ -305,26 +305,26 @@ void BanCommand_macro_write_aliases(float fh)
 {
 	#define BAN_COMMAND(name,function,description) \
 		{ if(strtolower(description) != "") { CMD_Write_Alias("qc_cmd_sv", name, description); } }
-	
+
 	BAN_COMMANDS(0, 0, "")
 	#undef BAN_COMMAND
-	
+
 	return;
 }
 
 float BanCommand(string command)
 {
 	float argc = tokenize_console(command);
-	
+
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4
-	// argv:   0    - 1      - 2     - 3 
+	// argv:   0    - 1      - 2     - 3
 	// cmd     vote - master - login - password
 
 	if(BanCommand_macro_command(argc, command)) // continue as usual and scan for normal commands
 	{
 		return TRUE; // handled by one of the above GenericCommand_* functions
 	}
-	
+
 	return FALSE;
 }

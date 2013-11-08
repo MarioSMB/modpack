@@ -22,7 +22,7 @@ MUTATOR_HOOKFUNCTION(lms_ResetMap)
 {
 	lms_lowest_lives = 999;
 	lms_next_place = player_count;
-	
+
 	return FALSE;
 }
 
@@ -32,7 +32,7 @@ MUTATOR_HOOKFUNCTION(lms_ResetPlayers)
 	FOR_EACH_CLIENT(self)
 	if(IS_PLAYER(self))
 		PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives());
-	
+
 	return FALSE;
 }
 
@@ -49,7 +49,7 @@ MUTATOR_HOOKFUNCTION(lms_PlayerPreSpawn)
 MUTATOR_HOOKFUNCTION(lms_PlayerDies)
 {
 	self.respawn_flags |= RESPAWN_FORCE;
-	
+
 	return FALSE;
 }
 
@@ -60,13 +60,13 @@ MUTATOR_HOOKFUNCTION(lms_RemovePlayer)
 		self.frags = FRAGS_SPECTATOR;
 	else
 		self.frags = FRAGS_LMS_LOSER;
-		
+
 	if(self.killcount != -666)
 		if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0 && self.lms_spectate_warning != 2)
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_LMS_NOLIVES, self.netname);
 		else
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_LMS_FORFEIT, self.netname);
-		
+
 	return FALSE;
 }
 
@@ -74,13 +74,13 @@ MUTATOR_HOOKFUNCTION(lms_ClientConnect)
 {
 	//self.classname = "player"; // don't force everyone to play
 	campaign_bots_may_start = 1;
-	
+
 	if(PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives()) <= 0)
 	{
 		PlayerScore_Add(self, SP_LMS_RANK, 666);
 		self.frags = FRAGS_SPECTATOR;
 	}
-			
+
 	return FALSE;
 }
 
@@ -88,7 +88,7 @@ MUTATOR_HOOKFUNCTION(lms_PlayerThink)
 {
 	if(self.deadflag == DEAD_DYING)
 		self.deadflag = DEAD_RESPAWNING;
-		
+
 	return FALSE;
 }
 
@@ -115,7 +115,7 @@ MUTATOR_HOOKFUNCTION(lms_GiveFragsForKill)
 		--lms_next_place;
 	}
 	frag_score = 0;
-		
+
 	return TRUE;
 }
 
@@ -147,7 +147,7 @@ MUTATOR_HOOKFUNCTION(lms_FilterItem)
 		self.max_health = 1;
 		return FALSE;
 	}
-	
+
 	return TRUE;
 }
 
@@ -159,7 +159,7 @@ MUTATOR_HOOKFUNCTION(lms_ItemTouch)
 		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_EXTRALIVES);
 		PlayerScore_Add(other, SP_LMS_LIVES, autocvar_g_lms_extra_lives);
 	}
-	
+
 	return MUT_ITEMTOUCH_CONTINUE;
 }
 
@@ -176,7 +176,7 @@ void lms_Initialize()
 {
 	lms_lowest_lives = 9999;
 	lms_next_place = 0;
-	
+
 	lms_ScoreRules();
 }
 

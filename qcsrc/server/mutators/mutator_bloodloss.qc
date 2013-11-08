@@ -6,7 +6,7 @@ MUTATOR_HOOKFUNCTION(bloodloss_PlayerThink)
 	if(self.health <= autocvar_g_bloodloss && self.deadflag == DEAD_NO)
 	{
 		self.BUTTON_CROUCH = TRUE;
-		
+
 		if(time >= self.bloodloss_timer)
 		{
 			if(self.vehicle)
@@ -15,7 +15,7 @@ MUTATOR_HOOKFUNCTION(bloodloss_PlayerThink)
 			self.bloodloss_timer = time + 0.5 + random() * 0.5;
 		}
 	}
-	
+
 	return FALSE;
 }
 
@@ -23,7 +23,7 @@ MUTATOR_HOOKFUNCTION(bloodloss_PlayerJump)
 {
 	if(self.health <= autocvar_g_bloodloss)
 		return TRUE;
-		
+
 	return FALSE;
 }
 

@@ -67,67 +67,67 @@ void shotgun_meleethink (void)
 
 	if(!self.cnt) // set start time of melee
 	{
-		self.cnt = time; 
+		self.cnt = time;
 		W_PlayStrengthSound(self.realowner);
 	}
 
 	makevectors(self.realowner.v_angle); // update values for v_* vectors
-	
+
 	// calculate swing percentage based on time
 	meleetime = autocvar_g_balance_shotgun_secondary_melee_time * W_WeaponRateFactor();
 	swing = bound(0, (self.cnt + meleetime - time) / meleetime, 10);
 	f = ((1 - swing) * autocvar_g_balance_shotgun_secondary_melee_traces);
-	
+
 	// check to see if we can still continue, otherwise give up now
 	if((self.realowner.deadflag != DEAD_NO) && autocvar_g_balance_shotgun_secondary_melee_no_doubleslap)
 	{
 		remove(self);
 		return;
 	}
-	
-	// if okay, perform the traces needed for this frame 
+
+	// if okay, perform the traces needed for this frame
 	for(i=self.swing_prev; i < f; ++i)
 	{
 		swing_factor = ((1 - (i / autocvar_g_balance_shotgun_secondary_melee_traces)) * 2 - 1);
-		
-		targpos = (self.realowner.origin + self.realowner.view_ofs 
+
+		targpos = (self.realowner.origin + self.realowner.view_ofs
 			+ (v_forward * autocvar_g_balance_shotgun_secondary_melee_range)
 			+ (v_up * swing_factor * autocvar_g_balance_shotgun_secondary_melee_swing_up)
 			+ (v_right * swing_factor * autocvar_g_balance_shotgun_secondary_melee_swing_side));
 
 		WarpZone_traceline_antilag(self, self.realowner.origin + self.realowner.view_ofs, targpos, FALSE, self, ANTILAG_LATENCY(self.realowner));
-		
+
 		// draw lightning beams for debugging
-		//te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5); 
+		//te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5);
 		//te_customflash(targpos, 40,  2, '1 1 1');
-		
+
 		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body");
 		is_monster = IS_MONSTER(trace_ent);
 
 		if((trace_fraction < 1) // if trace is good, apply the damage and remove self
-			&& (trace_ent.takedamage == DAMAGE_AIM)  
+			&& (trace_ent.takedamage == DAMAGE_AIM)
 			&& (trace_ent != self.swing_alreadyhit)
 			&& ((is_player || is_monster) || autocvar_g_balance_shotgun_secondary_melee_nonplayerdamage))
 		{
 			target_victim = trace_ent; // so it persists through other calls
-			
+
 			if(is_player || is_monster) // this allows us to be able to nerf the non-player damage done in e.g. assault or onslaught.
 				swing_damage = (autocvar_g_balance_shotgun_secondary_damage * min(1, swing_factor + 1));
 			else
 				swing_damage = (autocvar_g_balance_shotgun_secondary_melee_nonplayerdamage * min(1, swing_factor + 1));
-			
+
 			//print(strcat(self.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
-			
-			Damage(target_victim, self.realowner, self.realowner, 
-				swing_damage, WEP_SHOTGUN | HITTYPE_SECONDARY, 
-				self.realowner.origin + self.realowner.view_ofs, 
+
+			Damage(target_victim, self.realowner, self.realowner,
+				swing_damage, WEP_SHOTGUN | HITTYPE_SECONDARY,
+				self.realowner.origin + self.realowner.view_ofs,
 				v_forward * autocvar_g_balance_shotgun_secondary_force);
-				
+
 			if(accuracy_isgooddamage(self.realowner, target_victim)) { accuracy_add(self.realowner, WEP_SHOTGUN, 0, swing_damage); }
-				
+
 			// draw large red flash for debugging
 			//te_customflash(targpos, 200, 2, '15 0 0');
-			
+
 			if(autocvar_g_balance_shotgun_secondary_melee_multihit) // allow multiple hits with one swing, but not against the same player twice.
 			{
 				self.swing_alreadyhit = target_victim;
@@ -140,7 +140,7 @@ void shotgun_meleethink (void)
 			}
 		}
 	}
-	
+
 	if(time >= self.cnt + meleetime)
 	{
 		// melee is finished
@@ -149,7 +149,7 @@ void shotgun_meleethink (void)
 	}
 	else
 	{
-		// set up next frame 
+		// set up next frame
 		self.swing_prev = i;
 		self.nextthink = time;
 	}
@@ -165,7 +165,7 @@ void shotgun_fire2_04()
 		w_ready();
 		return;
 	}
-		
+
 	W_Shotgun_Attack(WEP_SHOTGUN);
 	weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_shotgun_secondary_alt_animtime, w_ready);
 }
@@ -178,7 +178,7 @@ void shotgun_fire2_03()
 		w_ready();
 		return;
 	}
-		
+
 	W_Shotgun_Attack(WEP_SHOTGUN);
 	weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_shotgun_secondary_alt_animtime,shotgun_fire2_04);
 }

@@ -42,7 +42,7 @@ void W_Laser_Think()
 void W_Laser_Attack (float issecondary, float deathtype, float wep)
 {
 	makevectors(self.v_angle);
-	
+
 	entity missile;
 	vector s_forward;
 	float a;
@@ -76,7 +76,7 @@ void W_Laser_Attack (float issecondary, float deathtype, float wep)
 	missile.touch = W_Laser_Touch;
 
 	missile.flags = FL_PROJECTILE;
-	missile.missile_flags = MIF_SPLASH; 
+	missile.missile_flags = MIF_SPLASH;
 
 	missile.think = W_Laser_Think;
 	missile.nextthink = time + autocvar_g_balance_laser_primary_delay;

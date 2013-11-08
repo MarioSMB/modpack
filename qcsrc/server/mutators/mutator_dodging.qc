@@ -36,7 +36,7 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	float velocity_difference;
 	float clean_up_and_do_nothing;
 	float horiz_speed = autocvar_sv_dodging_horiz_speed;
-	
+
 	if(self.frozen)
 		horiz_speed = autocvar_sv_dodging_horiz_speed_frozen;
 
@@ -48,16 +48,16 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 
 	if (g_dodging == 0)
 		clean_up_and_do_nothing = 1;
-		
+
 	if(!self.cvar_cl_dodging)
 		clean_up_and_do_nothing = 1;
 
 	if(cvar("g_overkill"))
 		clean_up_and_do_nothing = 0; // always enabled in overkill
-		
+
 	if(g_dodging == 2)
 		clean_up_and_do_nothing = 0; // forced enabled
-		
+
 	if(self.frozen)
 		clean_up_and_do_nothing = 0; // also enabled in freezetag
 
@@ -75,13 +75,13 @@ MUTATOR_HOOKFUNCTION(dodging_PlayerPhysics) {
 	// make sure v_up, v_right and v_forward are sane
 	makevectors(self.angles);
 
-	// if we have e.g. 0.5 sec ramptime and a frametime of 0.25, then the ramp code 
-	// will be called ramp_time/frametime times = 2 times. so, we need to 
+	// if we have e.g. 0.5 sec ramptime and a frametime of 0.25, then the ramp code
+	// will be called ramp_time/frametime times = 2 times. so, we need to
 	// add 0.5 * the total speed each frame until the dodge action is done..
 	common_factor = sys_frametime / autocvar_sv_dodging_ramp_time;
 
 	// if ramp time is smaller than frametime we get problems ;D
-	if (common_factor > 1) 
+	if (common_factor > 1)
 		common_factor = 1;
 
 	new_velocity_gain = self.dodging_velocity_gain - (common_factor * horiz_speed);
@@ -179,7 +179,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 	tap_direction_x = 0;
 	tap_direction_y = 0;
-	
+
 	float frozen_dodging, frozen_no_doubletap;
 	float do_nothing = 0;
 	frozen_dodging = (self.frozen && autocvar_sv_dodging_frozen);
@@ -191,16 +191,16 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 
 	if(!self.cvar_cl_dodging)
 		do_nothing = 1;
-	
+
 	if(cvar("g_overkill"))
 		do_nothing = 0;
-		
+
 	if(frozen_dodging)
 		do_nothing = 0;
-		
+
 	if(g_dodging == 2)
 		do_nothing = 0;
-	
+
 	if(do_nothing != 0)
 		return 0;
 
@@ -208,14 +208,14 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 	if ((time - self.last_dodging_time) < autocvar_sv_dodging_delay)
 		return 0;
 
-	if (check_close_to_ground(autocvar_sv_dodging_height_threshold) != 1 
+	if (check_close_to_ground(autocvar_sv_dodging_height_threshold) != 1
 		&& check_close_to_wall(autocvar_sv_dodging_wall_distance_threshold) != 1)
 		return 0;
 
 	if (self.movement_x > 0) {
 		// is this a state change?
 		if (!(self.pressedkeys & KEY_FORWARD) || frozen_no_doubletap) {
-			if ((time - self.last_FORWARD_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
+			if ((time - self.last_FORWARD_KEY_time) < self.cvar_cl_dodging_timeout)	{
 				tap_direction_x = 1.0;
 				dodge_detected = 1;
 			}
@@ -227,7 +227,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 		// is this a state change?
  		if (!(self.pressedkeys & KEY_BACKWARD) || frozen_no_doubletap) {
 			tap_direction_x = -1.0;
-			if ((time - self.last_BACKWARD_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
+			if ((time - self.last_BACKWARD_KEY_time) < self.cvar_cl_dodging_timeout)	{
 				dodge_detected = 1;
 			}
  			self.last_BACKWARD_KEY_time = time;
@@ -238,7 +238,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 		// is this a state change?
 		if (!(self.pressedkeys & KEY_RIGHT) || frozen_no_doubletap) {
 			tap_direction_y = 1.0;
-			if ((time - self.last_RIGHT_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
+			if ((time - self.last_RIGHT_KEY_time) < self.cvar_cl_dodging_timeout)	{
 				dodge_detected = 1;
 			}
  			self.last_RIGHT_KEY_time = time;
@@ -249,7 +249,7 @@ MUTATOR_HOOKFUNCTION(dodging_GetPressedKeys) {
 		// is this a state change?
 		if (!(self.pressedkeys & KEY_LEFT) || frozen_no_doubletap) {
 			tap_direction_y = -1.0;
-			if ((time - self.last_LEFT_KEY_time) < self.cvar_cl_dodging_timeout)	{ 
+			if ((time - self.last_LEFT_KEY_time) < self.cvar_cl_dodging_timeout)	{
 				dodge_detected = 1;
 			}
  			self.last_LEFT_KEY_time = time;
@@ -290,7 +290,7 @@ MUTATOR_DEFINITION(mutator_dodging)
 
 	// get timeout information from the client, so the client can configure it..
 	MUTATOR_HOOK(GetCvars, dodging_GetCvars, CBC_ORDER_ANY);
-	
+
 	MUTATOR_ONADD
 	{
 		g_dodging = cvar("g_dodging");

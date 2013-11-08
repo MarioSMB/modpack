@@ -52,13 +52,13 @@ void ImpulseCommands (void)
 
 	if (timeout_status == TIMEOUT_ACTIVE) //don't allow any impulses while the game is paused
 		return;
-    
+
     if(self.vehicle)
         if(self.vehicle.deadflag == DEAD_NO)
             if(self.vehicle.vehicles_impusle)
                 if(self.vehicle.vehicles_impusle(imp))
                     return;
-    
+
 	if(CheatImpulse(imp))
 	{
 	}

@@ -809,22 +809,22 @@ void WarpZone_StartFrame()
 	for(e = world; (e = nextent(e)); )
 	{
 		if(warpzone_warpzones_exist) { WarpZone_StoreProjectileData(e); }
-		
+
 		if(IS_REAL_CLIENT(e))
 		{
 			if(e.solid == SOLID_NOT) // not spectating?
 			if(e.movetype == MOVETYPE_NOCLIP || e.movetype == MOVETYPE_FLY || e.movetype == MOVETYPE_FLY_WORLDONLY) // not spectating? (this is to catch observers)
 			{
 				other = e; // player
-			
+
 				// warpzones
-				if(warpzone_warpzones_exist) { 
-				self = WarpZone_Find(e.origin + e.mins, e.origin + e.maxs); 
+				if(warpzone_warpzones_exist) {
+				self = WarpZone_Find(e.origin + e.mins, e.origin + e.maxs);
 				if(self)
 				if(!WarpZoneLib_ExactTrigger_Touch())
 					if(WarpZone_PlaneDist(self, e.origin + e.view_ofs) <= 0)
 						WarpZone_Teleport(self, e, -1, 0); } // NOT triggering targets by this!
-			
+
 				// teleporters
 				self = Teleport_Find(e.origin + e.mins, e.origin + e.maxs);
 				if(self)
@@ -832,7 +832,7 @@ void WarpZone_StartFrame()
 					Simple_TeleportPlayer(self, other); // NOT triggering targets by this!
 			}
 		}
-		
+
 		if(IS_NOT_A_CLIENT(e))
 		{
 			if(warpzone_warpzones_exist)

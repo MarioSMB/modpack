@@ -59,7 +59,7 @@ float g_clientmodel_genericsendentity (entity to, float sf)
 		sf |= 0x40;
 	if(self.lodmodelindex1)
 		sf |= 0x80;
-	
+
 	WriteByte(MSG_ENTITY, ENT_CLIENT_WALL);
 	WriteByte(MSG_ENTITY, sf);
 

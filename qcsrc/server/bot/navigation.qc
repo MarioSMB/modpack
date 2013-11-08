@@ -733,7 +733,7 @@ void navigation_routerating(entity e, float f, float rangebias)
 			t = zdistance / autocvar_g_jetpack_maxspeed_up;
 			t += xydistance / autocvar_g_jetpack_maxspeed_side;
 			fuel = t * autocvar_g_jetpack_fuel * 0.8;
-			
+
 			bot_debug(strcat("jetpack ai: required fuel ", ftos(fuel), " self.ammo_fuel ", ftos(self.ammo_fuel), "\n"));
 
 			// enough fuel ?

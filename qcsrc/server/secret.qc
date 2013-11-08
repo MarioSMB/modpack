@@ -12,7 +12,7 @@ void trigger_secret_touch() {
 	// only a player can trigger this
 	if (!IS_PLAYER(other))
 		return;
-	
+
 	// update secrets found counter
 	secrets_found += 1;
 	//print("Secret found: ", ftos(secret_counter.cnt), "/");
@@ -21,7 +21,7 @@ void trigger_secret_touch() {
 	// centerprint message (multi_touch() doesn't always call centerprint())
 	centerprint(other, self.message);
 	self.message = "";
-	
+
 	// handle normal trigger features
 	multi_touch();
 	remove(self);
@@ -42,32 +42,32 @@ Trigger secret can only be trigger by a player's touch and can not be a target i
 */
 void spawnfunc_trigger_secret() {
 	// FIXME: should it be disabled in most modes?
-	
+
 	// update secrets count
 	secrets_total += 1;
-	
+
 	// add default message
 	if (self.message == "")
 		self.message = "You found a secret!";
-	
+
 	// set default sound
 	if (self.noise == "")
 	if (!self.sounds)
 		self.sounds = 1; // misc/secret.wav
-	
+
 	// this entity can't be a target itself!!!!
 	self.targetname = "";
-	
+
 	// you can't just shoot a room to find it, can you?
 	self.health = 0;
-	
+
 	// a secret can not be delayed
 	self.delay = 0;
-	
+
 	// convert this trigger to trigger_once
 	self.classname = "trigger_once";
 	spawnfunc_trigger_once();
-	
+
 	// take over the touch() function, so we can mark secret as found
 	self.touch = trigger_secret_touch;
 	// ignore triggering;

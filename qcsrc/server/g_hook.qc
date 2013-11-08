@@ -167,11 +167,11 @@ void GrapplingHookThink()
 		ropeairfriction = autocvar_g_balance_grapplehook_airfriction;//0.2
 		// while hanging on the rope, this friction component will help you a
 		// bit to control the rope
-		
+
 		frozen_pulling = (autocvar_g_grappling_hook_tarzan >= 2 && autocvar_g_balance_grapplehook_pull_frozen);
-		
+
 		tarzan = autocvar_g_grappling_hook_tarzan;
-		
+
 		if(autocvar_g_balance_hook_secondary == 2)
 		if(self.realowner.BUTTON_ATCK2 && self.realowner.weapon == WEP_HOOK)
 			tarzan = 0;
@@ -199,7 +199,7 @@ void GrapplingHookThink()
 
 				self.hook_length = newlength;
 			}
-			
+
 			if(self.realowner.movetype == MOVETYPE_FLY)
 				self.realowner.movetype = MOVETYPE_WALK;
 
@@ -238,7 +238,7 @@ void GrapplingHookThink()
 
 			if(!frozen_pulling)
 				self.realowner.velocity = WarpZone_RefSys_TransformVelocity(self, self.realowner, v);
-				
+
 			if(frozen_pulling && !self.aiment.frozen)
 			{
 				RemoveGrapplingHook(self.realowner);
@@ -276,7 +276,7 @@ void GrapplingHookThink()
 		self.hook_end = org;
 	}
 	entity dmgent = ((SAME_TEAM(self.owner, self.aiment) && autocvar_g_rm_hook_team) ? self.owner : self.aiment);
-    
+
 	if(IS_PLAYER(self.aiment))
 	if(self.last_dmg < time)
 	if(!self.aiment.frozen)
@@ -292,7 +292,7 @@ void GrapplingHookThink()
 			self.aiment.health = bound(1, self.aiment.health + autocvar_g_rm_hook_damage_health, 200);
 		else
 			self.owner.health = bound(1, self.owner.health + autocvar_g_rm_hook_damage_health, 200);
-			
+
 		if(dmgent == self.owner)
 			dmgent.health -= autocvar_g_rm_hook_damage; // FIXME: friendly fire?!
 	}
@@ -318,25 +318,25 @@ void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, floa
 {
 	if(self.health <= 0)
 		return;
-		
+
 	if(!autocvar_g_rm_hook_breakable)
 		return;
-		
+
 	if(!autocvar_g_rm_hook_breakable_owner && attacker == self.realowner)
 		return;
-		
+
 	if((((autocvar_g_rm || autocvar_g_rm_laser == 2) && g_minstagib && (DEATH_ISWEAPON(deathtype, WEP_ROCKET_LAUNCHER) || DEATH_ISWEAPON(deathtype, WEP_ELECTRO))) || DEATH_ISWEAPON(deathtype, WEP_LASER)) && DIFF_TEAM(attacker, self.realowner))
 	{
 		Damage (self.realowner, attacker, attacker, 5, WEP_HOOK | HITTYPE_SPLASH, self.realowner.origin, '0 0 0');
 		RemoveGrapplingHook(self.realowner);
 		return; // dead
 	}
-		
+
 	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
 		return; // g_balance_projectiledamage says to halt
-			
+
 	self.health = self.health - damage;
-		
+
 	if (self.health <= 0)
 	{
 		if(attacker != self.realowner)

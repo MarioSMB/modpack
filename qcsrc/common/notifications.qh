@@ -5,7 +5,7 @@
 
 // main types/groups of notifications
 #define MSG_ANNCE 1 // "Global" AND "personal" announcer messages
-#define MSG_INFO 2 // "Global" information messages 
+#define MSG_INFO 2 // "Global" information messages
 #define MSG_CENTER 3 // "Personal" centerprint messages
 #define MSG_CENTER_CPID 4 // Kill centerprint message
 #define MSG_MULTI 5 // Subcall MSG_INFO and/or MSG_CENTER notifications
@@ -51,7 +51,7 @@ void Create_Notification_Entity(
 	float strnum,
 	float flnum,
 	/* MSG_ANNCE */
-	float channel, 
+	float channel,
 	string snd,
 	float vol,
 	float position,
@@ -188,7 +188,7 @@ void Send_Notification_WOCOVA(
 
  Check out the definitions in util.qc/util.qh/teams.qh for string CCR(...) and
  string TCR(...) to better understand how these code replacements work.
- 
+
  Additionally, you can find all the definitions and explanations for
  the argument values and what they return down below in this file.
 
@@ -949,7 +949,7 @@ var float autocvar_notification_item_centerprinttime = 1.5;
 
 // 0 = no, 1 = yes, 2 = forced on for all MSG_INFO notifs
 // DISABLED IN CODE, BUT ENABLED IN CONFIG FOR COMPATIBILITY WITH OLD CLIENTS
-var float autocvar_notification_allow_chatboxprint = 0; 
+var float autocvar_notification_allow_chatboxprint = 0;
 
 var float autocvar_notification_show_sprees_center = TRUE;
 var float autocvar_notification_show_sprees_center_specialonly = TRUE;
@@ -966,14 +966,14 @@ var float autocvar_notification_show_sprees_center_specialonly = TRUE;
  allows for more dynamic data to be inferred by the local
  notification parser, so that the server does not have to network
  anything too crazy on a per-client/per-situation basis.
- 
+
  Pay attention to the CSQC/SVQC relations, some of these are redefined
  in slightly different ways for different programs, this is because the
  server does a more conservative approach to the notifs than the client.
- 
+
  All arguments are swapped into strings, so be sure that your
  sprintf usage matches with proper %s placement.
- 
+
  Argument descriptions:
     s1-s4: string arguments to be literally swapped into sprintf
     s2loc: s2 string of locations of deaths or other events
@@ -1117,13 +1117,13 @@ string notif_arg_missing_teams(float f1, float f2, float f3, float f4)
 string notif_arg_spree_cen(float spree)
 {
 	// 0 = off, 1 = target (but only for first victim) and attacker
-	if(autocvar_notification_show_sprees_center) 
+	if(autocvar_notification_show_sprees_center)
 	{
 		if(spree > 1)
 		{
 			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
 				case counta: { return normal_or_gentle(center, sprintf(_("%d score spree! "), spree)); }
-			
+
 			switch(spree)
 			{
 				KILL_SPREE_LIST
@@ -1139,7 +1139,7 @@ string notif_arg_spree_cen(float spree)
 								),
 								spree);
 					}
-					else { return ""; } // don't show spree information if it isn't an achievement 
+					else { return ""; } // don't show spree information if it isn't an achievement
 				}
 			}
 
@@ -1166,7 +1166,7 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 		{
 			// 0 = off, 1 = target only, 2 = attacker only, 3 = target and attacker
 			// this conditional (& 2) is true for 2 and 3
-			if(autocvar_notification_show_sprees_info & 2) 
+			if(autocvar_notification_show_sprees_info & 2)
 			{
 				#ifdef CSQC
 				string spree_newline =
@@ -1176,12 +1176,12 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 				string spree_newline =
 					(autocvar_notification_show_sprees_info_newline ? "\n" : "");
 				#endif
-				
+
 				if(spree > 1)
 				{
 					#define SPREE_ITEM(counta,countb,center,normal,gentle) \
 						case counta: { return sprintf(CCR(normal_or_gentle(normal, gentle)), player, spree_newline); }
-					
+
 					switch(spree)
 					{
 						KILL_SPREE_LIST
@@ -1200,7 +1200,7 @@ string notif_arg_spree_inf(float type, string input, string player, float spree)
 										spree_newline
 									);
 							}
-							else { return ""; } // don't show spree information if it isn't an achievement 
+							else { return ""; } // don't show spree information if it isn't an achievement
 						}
 					}
 
@@ -1556,9 +1556,9 @@ void RegisterNotifications_First()
 	#else
 	#define dedi ""
 	#endif
-	
+
 	print(sprintf("Beginning notification initialization on %s%s program...\n", dedi, PROGNAME));
-	
+
 	// maybe do another implementation of this with checksums? for now, we don't need versioning
 	/*if(autocvar_notification_version != NOTIF_VERSION)
 	{

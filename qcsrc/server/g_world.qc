@@ -429,7 +429,7 @@ void cvar_changes_init()
 		BADCVAR("g_nix");
 		BADCVAR("g_grappling_hook");
 		BADCVAR("g_jetpack");
-		
+
 #undef BADPREFIX
 #undef BADCVAR
 
@@ -799,9 +799,9 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_NEX_CHARGEPOOL, AS_FLOAT, nex_chargepool_ammo);
 
 	addstat(STAT_HAGAR_LOAD, AS_INT, hagar_load);
-	
+
 	addstat(STAT_SUPERCELLS, AS_INT, ammo_supercells);
-	
+
 	// freeze attacks
 	addstat(STAT_FROZEN, AS_INT, frozen);
 	addstat(STAT_REVIVE_PROGRESS, AS_FLOAT, revive_progress);
@@ -815,14 +815,14 @@ void spawnfunc_worldspawn (void)
 	// secrets
 	addstat(STAT_SECRETS_TOTAL, AS_FLOAT, stat_secrets_total);
 	addstat(STAT_SECRETS_FOUND, AS_FLOAT, stat_secrets_found);
-	
+
 	// monsters
 	addstat(STAT_MONSTERS_TOTAL, AS_FLOAT, stat_monsters_total);
 	addstat(STAT_MONSTERS_KILLED, AS_FLOAT, stat_monsters_killed);
 
 	// misc
 	addstat(STAT_RESPAWN_TIME, AS_FLOAT, stat_respawn_time);
-	
+
 	addstat(STAT_GRENADE_BONUS, AS_FLOAT, bonus_nades);
 	addstat(STAT_GRENADE_BONUS_TYPE, AS_INT, nade_type);
 	addstat(STAT_GRENADE_BONUS_SCORE, AS_FLOAT, bonus_nade_score);
@@ -1535,7 +1535,7 @@ void NextLevel()
 		PlayerStats_AddGlobalInfo(e);
 	PlayerStats_Shutdown();
 	WeaponStats_Shutdown();
-	
+
 	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, 0); // kill all centerprints now
 
 	if(autocvar_sv_eventlog)

@@ -18,7 +18,7 @@ void W_HLAC_Touch (void)
 	PROJECTILE_TOUCH;
 
 	self.event_damage = func_null;
-	
+
 	if(self.projectiledeathtype & HITTYPE_SECONDARY)
 		RadiusDamage (self, self.realowner, autocvar_g_balance_hlac_secondary_damage, autocvar_g_balance_hlac_secondary_edgedamage, autocvar_g_balance_hlac_secondary_radius, world, autocvar_g_balance_hlac_secondary_force, self.projectiledeathtype, other);
 	else
@@ -112,7 +112,7 @@ void W_HLAC_Attack2f (void)
     missile.nextthink = time + autocvar_g_balance_hlac_secondary_lifetime;
 
 	missile.flags = FL_PROJECTILE;
-	missile.missile_flags = MIF_SPLASH; 
+	missile.missile_flags = MIF_SPLASH;
 	missile.projectiledeathtype = WEP_HLAC | HITTYPE_SECONDARY;
 
 	CSQCProjectile(missile, TRUE, PROJECTILE_HLAC, TRUE);

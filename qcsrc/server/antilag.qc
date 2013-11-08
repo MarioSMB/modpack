@@ -11,7 +11,7 @@ void antilag_record(entity e, float t)
 {
     if (e.vehicle && e.vehicle.vehicle_flags == VHF_PLAYERSLOT)
         return;
-        
+
     if(e.vehicle)
         antilag_record(e.vehicle, t);
 

@@ -356,23 +356,23 @@ float PlayerScore_Add(entity player, float scorefield, float score)
 float PlayerScore_Set(entity player, float scorefield, float score)
 {
 	if(!scores_initialized)	return 0;
-	
+
 	entity s = player.scorekeeper;
-	
+
 	if(!s) {
 		if(gameover)
 			return 0;
 		error("Setting score of unknown player!");
 	}
-	
+
 	float old = s.(scores[scorefield]);
-	
+
 	if(old == score)
 		return old;
-	
+
 	s.SendFlags |= pow(2, scorefield);
 	s.(scores[scorefield]) = score;
-	
+
 	return score;
 }
 
@@ -710,7 +710,7 @@ float PlayerTeamScore_Compare(entity p1, entity p2, float teams, float strict)
 		if(teams < 0)
 			return 0;
 	}
-	
+
 	return PlayerScore_Compare(p1.scorekeeper, p2.scorekeeper, strict);
 }
 
@@ -734,7 +734,7 @@ entity PlayerScore_Sort(.float field, float teams, float strict, float nospectat
 		plist = p;
 	}
 	// Now plist points to the whole list.
-	
+
 	pfirst = plast = world;
 
 	i = j = 0;
@@ -835,7 +835,7 @@ void Score_NicePrint_Team(entity to, float t, float w)
 		s = "Scores:";
 
 	s = strcat(s, strpad(max(0, NAMEWIDTH - strlennocol(s)), ""));
-	
+
 	for(i = 0; i < MAX_SCORE; ++i)
 		if(scores_label[i] != "")
 		{
@@ -869,7 +869,7 @@ void Score_NicePrint_Player(entity to, entity p, float w)
 			break;
 		}
 	}
-	
+
 	for(i = 0; i < MAX_SCORE; ++i)
 		if(scores_label[i] != "")
 		{
@@ -918,7 +918,7 @@ void Score_NicePrint(entity to)
 		t = p.team;
 		p = p.chain;
 	}
-	
+
 	t = 0;
 	FOR_EACH_CLIENT(p)
 	if (!IS_PLAYER(p))

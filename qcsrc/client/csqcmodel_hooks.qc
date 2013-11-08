@@ -93,7 +93,7 @@ string forceplayermodels_goodmodel;
 float forceplayermodels_goodmodelindex;
 
 .vector glowmod;
-.vector old_glowmod; 
+.vector old_glowmod;
 
 void CSQCPlayer_ModelAppearance_PreUpdate(void)
 {
@@ -283,7 +283,7 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 			// Fade out to black now...
 			if(self.old_glowmod == '0 0 0') { self.old_glowmod = self.glowmod; }
 			self.colormap = 0;
-			
+
 			self.glowmod = self.old_glowmod * bound(0, 1 - (time - self.death_time) / autocvar_cl_deathglow, 1);
 			self.glowmod_x = max(self.glowmod_x, 0.0001);
 			self.glowmod_y = max(self.glowmod_y, 0.0001);
@@ -513,7 +513,7 @@ void CSQCModel_Effects_Apply(void)
 	self.renderflags &= ~(RF_DEPTHHACK | RF_ADDITIVE | RF_FULLBRIGHT | EF_NOSHADOW | RF_USEAXIS);
 	self.effects = 0;
 	self.traileffect = 0;
-	                
+
 	if(eff & EF_BRIGHTFIELD)
 		self.traileffect = particleeffectnum("rocketminsta_laser_neutral");
 	// ignoring EF_MUZZLEFLASH

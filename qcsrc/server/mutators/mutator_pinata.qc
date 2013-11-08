@@ -6,7 +6,7 @@ MUTATOR_HOOKFUNCTION(pinata_PlayerDies)
 	if(self.switchweapon != j)
 	if(W_IsWeaponThrowable(j))
 		W_ThrowNewWeapon(self, j, FALSE, self.origin + (self.mins + self.maxs) * 0.5, randomvec() * 175 + '0 0 325');
-		
+
 	return TRUE;
 }
 

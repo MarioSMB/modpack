@@ -39,13 +39,13 @@ void ClientCommand_autoswitch(float request, float argc)
 				return;
 			}
 		}
-			
+
 		default:
 			sprint(self, "Incorrect parameters for ^2autoswitch^7\n");
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(self, "\nUsage:^3 cmd autoswitch selection\n");
-			sprint(self, "  Where 'selection' controls if autoswitch is on or off.\n"); 
+			sprint(self, "  Where 'selection' controls if autoswitch is on or off.\n");
 			return;
 		}
 	}
@@ -61,7 +61,7 @@ void ClientCommand_checkfail(float request, string command) // internal command,
 			self.checkfail = 1;
 			return; // never fall through to usage
 		}
-			
+
 		default:
 			sprint(self, "Incorrect parameters for ^2checkfail^7\n");
 		case CMD_REQUEST_USAGE:
@@ -84,27 +84,27 @@ void ClientCommand_clientversion(float request, float argc) // internal command,
 				if(IS_CLIENT(self))
 				{
 					self.version = ((argv(1) == "$gameversion") ? 1 : stof(argv(1)));
-					
+
 					if(self.version < autocvar_gameversion_min || self.version > autocvar_gameversion_max)
 					{
 						self.version_mismatch = 1;
 						ClientKill_TeamChange(-2); // observe
-					} 
-					else if(autocvar_g_campaign || autocvar_g_balance_teams) 
+					}
+					else if(autocvar_g_campaign || autocvar_g_balance_teams)
 					{
 						//JoinBestTeam(self, FALSE, TRUE);
-					} 
-					else if(teamplay && !autocvar_sv_spectate && !(self.team_forced > 0)) 
+					}
+					else if(teamplay && !autocvar_sv_spectate && !(self.team_forced > 0))
 					{
 						self.classname = "observer"; // really?
 						stuffcmd(self, "menu_showteamselect\n");
 					}
 				}
-				
+
 				return;
 			}
 		}
-			
+
 		default:
 			sprint(self, "Incorrect parameters for ^2clientversion^7\n");
 		case CMD_REQUEST_USAGE:
@@ -124,13 +124,13 @@ void ClientCommand_mv_getpicture(float request, float argc) // internal command,
 		{
 			if(argv(1) != "")
 			{
-				if(intermission_running)				
+				if(intermission_running)
 					MapVote_SendPicture(stof(argv(1)));
 
 				return;
 			}
 		}
-			
+
 		default:
 			sprint(self, "Incorrect parameters for ^2mv_getpicture^7\n");
 		case CMD_REQUEST_USAGE:
@@ -142,7 +142,7 @@ void ClientCommand_mv_getpicture(float request, float argc) // internal command,
 	}
 }
 
-void ClientCommand_join(float request) 
+void ClientCommand_join(float request)
 {
 	switch(request)
 	{
@@ -152,7 +152,7 @@ void ClientCommand_join(float request)
 			{
 				if(!IS_PLAYER(self) && !lockteams && !g_arena)
 				{
-					if(nJoinAllowed(self)) 
+					if(nJoinAllowed(self))
 					{
 						if(autocvar_g_campaign) { campaign_bots_may_start = 1; }
 
@@ -162,7 +162,7 @@ void ClientCommand_join(float request)
 						Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_PLAY, self.netname);
 						PutClientInServer();
 					}
-					else 
+					else
 					{
 						//player may not join because of g_maxplayers is set
 						Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_JOIN_PREVENT);
@@ -171,7 +171,7 @@ void ClientCommand_join(float request)
 			}
 			return; // never fall through to usage
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -340,7 +340,7 @@ void ClientCommand_ready(float request) // todo: anti-spam for toggling readynes
 			}
 			return; // never fall through to usage
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -392,7 +392,7 @@ void ClientCommand_say(float request, float argc, string command)
 			if(argc >= 2) { Say(self, FALSE, world, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1); }
 			return; // never fall through to usage
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -412,7 +412,7 @@ void ClientCommand_say_team(float request, float argc, string command)
 			if(argc >= 2) { Say(self, TRUE, world, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1); }
 			return; // never fall through to usage
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -435,10 +435,10 @@ void ClientCommand_selectteam(float request, float argc)
 				{
 					if(teamplay)
 						if(self.team_forced <= 0)
-							if (!lockteams) 
+							if (!lockteams)
 							{
 								float selection;
-								
+
 								switch(argv(1))
 								{
 									case "red": selection = NUM_TEAM_1; break;
@@ -446,10 +446,10 @@ void ClientCommand_selectteam(float request, float argc)
 									case "yellow": selection = NUM_TEAM_3; break;
 									case "pink": selection = NUM_TEAM_4; break;
 									case "auto": selection = (-1); break;
-									
+
 									default: selection = 0; break;
 								}
-								
+
 								if(selection)
 								{
 									if(self.team == selection && self.deadflag == DEAD_NO)
@@ -467,7 +467,7 @@ void ClientCommand_selectteam(float request, float argc)
 					else
 						sprint(self, "^7selectteam can only be used in teamgames\n");
 				}
-				return; 
+				return;
 			}
 		}
 
@@ -495,7 +495,7 @@ void ClientCommand_selfstuff(float request, string command)
 				return;
 			}
 		}
-			
+
 		default:
 			sprint(self, "Incorrect parameters for ^2selectteam^7\n");
 		case CMD_REQUEST_USAGE:
@@ -517,19 +517,19 @@ void ClientCommand_sentcvar(float request, float argc, string command)
 			{
 				//float tokens;
 				string s;
-				
+
 				if(argc == 2) // undefined cvar: use the default value on the server then
 				{
 					s = strcat(substring(command, argv_start_index(0), argv_end_index(1) - argv_start_index(0)), " \"", cvar_defstring(argv(1)), "\"");
 					tokenize_console(s);
 				}
-				
+
 				GetCvars(1);
-				
+
 				return;
 			}
 		}
-			
+
 		default:
 			sprint(self, "Incorrect parameters for ^2sentcvar^7\n");
 		case CMD_REQUEST_USAGE:
@@ -541,7 +541,7 @@ void ClientCommand_sentcvar(float request, float argc, string command)
 	}
 }
 
-void ClientCommand_spectate(float request) 
+void ClientCommand_spectate(float request)
 {
 	switch(request)
 	{
@@ -549,7 +549,7 @@ void ClientCommand_spectate(float request)
 		{
 			if(IS_CLIENT(self))
 			{
-				if(g_arena) { return; } 
+				if(g_arena) { return; }
 				if(g_lms)
 				{
 					if(self.lms_spectate_warning)
@@ -566,8 +566,8 @@ void ClientCommand_spectate(float request)
 						return;
 					}
 				}
-				
-				if(IS_PLAYER(self) && autocvar_sv_spectate == 1) 
+
+				if(IS_PLAYER(self) && autocvar_sv_spectate == 1)
 					ClientKill_TeamChange(-2); // observe
 
 				// in CA, allow a dead player to move to spectators (without that, caplayer!=0 will be moved back to the player list)
@@ -580,7 +580,7 @@ void ClientCommand_spectate(float request)
 			}
 			return; // never fall through to usage
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -603,7 +603,7 @@ void ClientCommand_suggestmap(float request, float argc)
 				return;
 			}
 		}
-			
+
 		default:
 			sprint(self, "Incorrect parameters for ^2suggestmap^7\n");
 		case CMD_REQUEST_USAGE:
@@ -625,7 +625,7 @@ void ClientCommand_tell(float request, float argc, string command)
 			{
 				entity tell_to = GetIndexedEntity(argc, 1);
 				float tell_accepted = VerifyClientEntity(tell_to, TRUE, FALSE);
-				
+
 				if(tell_accepted > 0) // the target is a real client
 				{
 					if(tell_to != self) // and we're allowed to send to them :D
@@ -635,15 +635,15 @@ void ClientCommand_tell(float request, float argc, string command)
 					}
 					else { print_to(self, "You can't ^2tell^7 a message to yourself."); return; }
 				}
-				else if(argv(1) == "#0") 
-				{ 
+				else if(argv(1) == "#0")
+				{
 					trigger_magicear_processmessage_forallears(self, -1, world, substring(command, argv_start_index(next_token), argv_end_index(-1) - argv_start_index(next_token)));
 					return;
 				}
 				else { print_to(self, strcat("tell: ", GetClientErrorString(tell_accepted, argv(1)), ".")); return; }
 			}
 		}
-			
+
 		default:
 			sprint(self, "Incorrect parameters for ^2tell^7\n");
 		case CMD_REQUEST_USAGE:
@@ -655,7 +655,7 @@ void ClientCommand_tell(float request, float argc, string command)
 	}
 }
 
-void ClientCommand_voice(float request, float argc, string command) 
+void ClientCommand_voice(float request, float argc, string command)
 {
 	switch(request)
 	{
@@ -667,11 +667,11 @@ void ClientCommand_voice(float request, float argc, string command)
 					VoiceMessage(argv(1), substring(command, argv_start_index(2), argv_end_index(-1) - argv_start_index(2)));
 				else
 					VoiceMessage(argv(1), "");
-					
+
 				return;
 			}
 		}
-			
+
 		default:
 			sprint(self, "Incorrect parameters for ^2voice^7\n");
 		case CMD_REQUEST_USAGE:
@@ -692,10 +692,10 @@ void ClientCommand_(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			
+
 			return; // never fall through to usage
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -734,15 +734,15 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("tell", ClientCommand_tell(request, arguments, command), "Send a message directly to a player") \
 	CLIENT_COMMAND("voice", ClientCommand_voice(request, arguments, command), "Send voice message via sound") \
 	/* nothing */
-	
+
 void ClientCommand_macro_help()
 {
 	#define CLIENT_COMMAND(name,function,description) \
 		{ sprint(self, "  ^2", name, "^7: ", description, "\n"); }
-		
+
 	CLIENT_COMMANDS(0, 0, "")
 	#undef CLIENT_COMMAND
-	
+
 	return;
 }
 
@@ -750,10 +750,10 @@ float ClientCommand_macro_command(float argc, string command)
 {
 	#define CLIENT_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
-		
+
 	CLIENT_COMMANDS(CMD_REQUEST_COMMAND, argc, command)
 	#undef CLIENT_COMMAND
-	
+
 	return FALSE;
 }
 
@@ -761,21 +761,21 @@ float ClientCommand_macro_usage(float argc)
 {
 	#define CLIENT_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
-		
+
 	CLIENT_COMMANDS(CMD_REQUEST_USAGE, argc, "")
 	#undef CLIENT_COMMAND
-	
+
 	return FALSE;
 }
 
 void ClientCommand_macro_write_aliases(float fh)
 {
 	#define CLIENT_COMMAND(name,function,description) \
-		{ CMD_Write_Alias("qc_cmd_cmd", name, description); } 
-		
+		{ CMD_Write_Alias("qc_cmd_cmd", name, description); }
+
 	CLIENT_COMMANDS(0, 0, "")
 	#undef CLIENT_COMMAND
-	
+
 	return;
 }
 
@@ -791,17 +791,17 @@ void SV_ParseClientCommand(string command)
 		return;
 
 	float argc = tokenize_console(command);
-	
+
 	// for the mutator hook system
 	cmd_name = strtolower(argv(0));
 	cmd_argc = argc;
 	cmd_string = command;
-	
+
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4
-	// argv:   0    - 1      - 2     - 3 
+	// argv:   0    - 1      - 2     - 3
 	// cmd     vote - master - login - password
-	
+
 	// for floodcheck
 	switch(strtolower(argv(0)))
 	{
@@ -813,29 +813,29 @@ void SV_ParseClientCommand(string command)
 		case "prespawn": break; // handled by engine in host_cmd.c
 		case "sentcvar": break; // handled by server in this file
 		case "spawn": break; // handled by engine in host_cmd.c
-		
-		default: 
+
+		default:
 			if(SV_ParseClientCommand_floodcheck())
 				break; // "TRUE": continue, as we're not flooding yet
 			else
 				return; // "FALSE": not allowed to continue, halt // print("^1ERROR: ^7ANTISPAM CAUGHT: ", command, ".\n");
 	}
-	
+
 	/* NOTE: should this be disabled? It can be spammy perhaps, but hopefully it's okay for now */
-	if(argv(0) == "help") 
+	if(argv(0) == "help")
 	{
-		if(argc == 1) 
+		if(argc == 1)
 		{
 			sprint(self, "\nClient networked commands:\n");
 			ClientCommand_macro_help();
-			
+
 			sprint(self, "\nCommon networked commands:\n");
 			CommonCommand_macro_help(self);
-			
+
 			sprint(self, "\nUsage:^3 cmd COMMAND...^7, where possible commands are listed above.\n");
 			sprint(self, "For help about a specific command, type cmd help COMMAND\n");
 			return;
-		} 
+		}
 		else if(CommonCommand_macro_usage(argc, self)) // Instead of trying to call a command, we're going to see detailed information about it
 		{
 			return;
@@ -844,12 +844,12 @@ void SV_ParseClientCommand(string command)
 		{
 			return;
 		}
-	} 
+	}
 	else if(MUTATOR_CALLHOOK(SV_ParseClientCommand))
 	{
 		return; // handled by a mutator
 	}
-	else if(CheatCommand(argc)) 
+	else if(CheatCommand(argc))
 	{
 		return; // handled by server/cheats.qc
 	}

@@ -156,12 +156,12 @@ void freezetag_Freeze(entity attacker)
 {
 	if(self.frozen)
 		return;
-		
+
 	if(autocvar_g_freezetag_frozen_maxtime > 0)
 		self.freezetag_frozen_timeout = time + autocvar_g_freezetag_frozen_maxtime;
-	
+
 	Freeze(self, 0, 1, TRUE);
-	
+
 	freezetag_count_alive_players();
 
 	freezetag_Add_Score(attacker);
@@ -171,9 +171,10 @@ void freezetag_Unfreeze(entity attacker)
 {
 	self.freezetag_frozen_time = 0;
 	self.freezetag_frozen_timeout = 0;
-	
+
 	Unfreeze(self);
 }
+
 
 // ================
 // Bot player logic
@@ -322,7 +323,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 
 	if(self.frozen)
 		return 1;
-		
+
 	if(g_minstagib)
 		frag_target.ammo_cells = start_ammo_cells; // we need more ammo in minstagib, otherwise the player will defrost & die again
 
@@ -457,7 +458,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 				{
 					PlayerScore_Add(other, SP_FREEZETAG_REVIVALS, +1);
 					PlayerScore_Add(other, SP_SCORE, +1);
-					
+
 					nades_GiveBonus(other,autocvar_g_nades_bonus_score_low);
 				}
 			}

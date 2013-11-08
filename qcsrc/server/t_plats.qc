@@ -448,9 +448,9 @@ void spawnfunc_func_train()
 
 void func_rotating_setactive(float astate)
 {
-	
+
 	if (astate == ACTIVE_TOGGLE)
-	{		
+	{
 		if(self.active == ACTIVE_ACTIVE)
 			self.active = ACTIVE_NOT;
 		else
@@ -458,8 +458,8 @@ void func_rotating_setactive(float astate)
 	}
 	else
 		self.active = astate;
-		
-	if(self.active  == ACTIVE_NOT)		
+
+	if(self.active  == ACTIVE_NOT)
 		self.avelocity = '0 0 0';
 	else
 		self.avelocity = self.pos1;
@@ -480,10 +480,10 @@ void spawnfunc_func_rotating()
 		precache_sound(self.noise);
 		ambientsound(self.origin, self.noise, VOL_BASE, ATTEN_IDLE);
 	}
-	
+
 	self.active = ACTIVE_ACTIVE;
 	self.setactive = func_rotating_setactive;
-	
+
 	if (!self.speed)
 		self.speed = 100;
 	// FIXME: test if this turns the right way, then remove this comment (negate as needed)
@@ -495,9 +495,9 @@ void spawnfunc_func_rotating()
 	// FIXME: test if this turns the right way, then remove this comment (negate as needed)
 	else // Z
 		self.avelocity = '0 1 0' * self.speed;
-	
+
 	self.pos1 = self.avelocity;
-    
+
     if(self.dmg && (self.message == ""))
         self.message = " was squished";
     if(self.dmg && (self.message2 == ""))
@@ -527,13 +527,13 @@ void func_bobbing_controller_think()
 {
 	vector v;
 	self.nextthink = time + 0.1;
-	
+
 	if(self.owner.active != ACTIVE_ACTIVE)
 	{
-		self.owner.velocity = '0 0 0';		
+		self.owner.velocity = '0 0 0';
 		return;
 	}
-		
+
 	// calculate sinewave using makevectors
 	makevectors((self.nextthink * self.owner.cnt + self.owner.phase * 360) * '0 1 0');
 	v = self.owner.destvec + self.owner.movedir * v_forward_y;
@@ -992,13 +992,13 @@ ACTIVATION FUNCTIONS
 
 float door_check_keys(void) {
 	local entity door;
-	
-	
+
+
 	if (self.owner)
 		door = self.owner;
 	else
 		door = self;
-	
+
 	// no key needed
 	if (!door.itemkeys)
 		return TRUE;
@@ -1007,7 +1007,7 @@ float door_check_keys(void) {
 	// only a player can have a key
 	if (!IS_PLAYER(other))
 		return FALSE;
-	
+
 	if (item_keys_usekey(door, other)) {
 		// some keys were used
 		if (other.key_door_messagetime <= time) {
@@ -1099,7 +1099,7 @@ void door_use()
 	entity oself;
 
 	//dprint("door_use (model: ");dprint(self.model);dprint(")\n");
-	
+
 	if (self.owner)
 	{
 		oself = self;
@@ -1118,11 +1118,11 @@ void door_trigger_touch()
 
 	if (time < self.attack_finished_single)
 		return;
-	
+
 	// check if door is locked
 	if (!door_check_keys())
 		return;
-	
+
 	self.attack_finished_single = time + 1;
 
 	activator = other;
@@ -1139,12 +1139,12 @@ void door_damage(entity inflictor, entity attacker, float damage, float deathtyp
 		if(!(DEATH_ISSPECIAL(deathtype)) && (deathtype & HITTYPE_SPLASH))
 			return;
 	self.health = self.health - damage;
-	
+
 	if (self.itemkeys) {
 		// don't allow opening doors through damage if keys are required
 		return;
 	}
-	
+
 	if (self.health <= 0)
 	{
 		oself = self;
@@ -1489,7 +1489,7 @@ void spawnfunc_func_door()
 		self.itemkeys |= ITEM_KEY_BIT(0);
 	if (self.spawnflags & SPAWNFLAGS_SILVER_KEY)
 		self.itemkeys |= ITEM_KEY_BIT(1);
-		
+
 	//if (!self.deathtype) // map makers can override this
 	//	self.deathtype = " got in the way";
 	SetMovedir ();
@@ -1942,7 +1942,7 @@ void func_fourier_controller_think()
 	self.nextthink = time + 0.1;
 	if(self.owner.active != ACTIVE_ACTIVE)
 	{
-		self.owner.velocity = '0 0 0';		
+		self.owner.velocity = '0 0 0';
 		return;
 	}
 
@@ -2075,7 +2075,7 @@ void func_vectormamamam_controller_think()
 
 	if(self.owner.active != ACTIVE_ACTIVE)
 	{
-		self.owner.velocity = '0 0 0';		
+		self.owner.velocity = '0 0 0';
 		return;
 	}
 

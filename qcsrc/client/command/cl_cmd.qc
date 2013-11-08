@@ -37,9 +37,9 @@ void LocalCommand_blurtest(float request)
 			blurtest_radius = stof(argv(2));
 			blurtest_power = stof(argv(3));
 			print("Enabled blurtest\n");
-			return; 
+			return;
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -117,7 +117,7 @@ void LocalCommand_create_scrshot_ent(float request)
 			float fh;
 			string filename = strcat(MapInfo_Map_bspname, "_scrshot_ent.txt");
 			fh = fopen(filename, FILE_WRITE);
-			
+
 			if(fh >= 0)
 			{
 				fputs(fh, "{\n");
@@ -125,9 +125,9 @@ void LocalCommand_create_scrshot_ent(float request)
 				fputs(fh, strcat("\"origin\" \"", strcat(ftos(view_origin_x), " ", ftos(view_origin_y), " ", ftos(view_origin_z)), "\"\n"));
 				fputs(fh, strcat("\"angles\" \"", strcat(ftos(view_angles_x), " ", ftos(view_angles_y), " ", ftos(view_angles_z)), "\"\n"));
 				fputs(fh, "}\n");
-				
+
 				print("Completed screenshot entity dump in ^2data/data/", MapInfo_Map_bspname, "_scrshot_ent.txt^7.\n");
-				
+
 				fclose(fh);
 			}
 			else
@@ -136,7 +136,7 @@ void LocalCommand_create_scrshot_ent(float request)
 			}
 			return;
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -155,7 +155,7 @@ void LocalCommand_debugmodel(float request, float argc)
 		{
 			string modelname = argv(1);
 			entity debugmodel_entity;
-			
+
 			debugmodel_entity = spawn();
 			precache_model(modelname);
 			setmodel(debugmodel_entity, modelname);
@@ -163,10 +163,10 @@ void LocalCommand_debugmodel(float request, float argc)
 			debugmodel_entity.angles = view_angles;
 			debugmodel_entity.draw = DrawDebugModel;
 			debugmodel_entity.classname = "debugmodel";
-			
-			return; 
+
+			return;
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -185,18 +185,18 @@ void LocalCommand_handlevote(float request, float argc)
 		{
 			float vote_selection;
 			string vote_string;
-			
+
 			if(InterpretBoolean(argv(1)))
 			{
-				vote_selection = 2; 
+				vote_selection = 2;
 				vote_string = "yes";
 			}
 			else
 			{
-				vote_selection = 1; 
-				vote_string = "no"; 
+				vote_selection = 1;
+				vote_string = "no";
 			}
-			
+
 			if(vote_selection)
 			{
 				if(uid2name_dialog) // handled by "uid2name" option
@@ -208,11 +208,11 @@ void LocalCommand_handlevote(float request, float argc)
 					uid2name_dialog = 0;
 				}
 				else { localcmd(strcat("cmd vote ", vote_string, "\n")); }
-				
+
 				return;
 			}
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2handlevote^7\n");
 		case CMD_REQUEST_USAGE:
@@ -237,7 +237,16 @@ void LocalCommand_hud(float request, float argc)
 					cvar_set("_hud_configure", ftos(!autocvar__hud_configure));
 					return;
 				}
-				
+
+				case "quickmenu":
+				{
+					if(argc == 2 && HUD_QuickMenu_IsOpened())
+						HUD_QuickMenu_Close();
+					else
+						HUD_QuickMenu_Open();
+					return;
+				}
+
 				case "save":
 				{
 					if(argv(2))
@@ -250,10 +259,10 @@ void LocalCommand_hud(float request, float argc)
 						break; // go to usage, we're missing the paramater needed here.
 					}
 				}
-				
+
 				case "scoreboard_columns_set":
 				{
-					Cmd_HUD_SetFields(argc); 
+					Cmd_HUD_SetFields(argc);
 					return;
 				}
 
@@ -262,7 +271,7 @@ void LocalCommand_hud(float request, float argc)
 					Cmd_HUD_Help();
 					return;
 				}
-				
+
 				case "radar":
 				{
 					if(argv(2))
@@ -273,7 +282,7 @@ void LocalCommand_hud(float request, float argc)
 				}
 			}
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2hud^7\n");
 		case CMD_REQUEST_USAGE:
@@ -283,7 +292,7 @@ void LocalCommand_hud(float request, float argc)
 			print("  'configname' is the name to save to for \"save\" action,\n");
 			print("  'radartoggle' is to control hud_panel_radar_maximized for \"radar\" action,\n");
 			print("  and 'layout' is how to organize the scoreboard columns for the set action.\n");
-			print("  Full list of commands here: \"configure, save, scoreboard_columns_help, scoreboard_columns_set, radar.\"\n");
+			print("  Full list of commands here: \"configure, quickmenu, save, scoreboard_columns_help, scoreboard_columns_set, radar.\"\n");
 			return;
 		}
 	}
@@ -298,10 +307,10 @@ void LocalCommand_localprint(float request, float argc)
 			if(argv(1))
 			{
 				centerprint_hud(argv(1));
-				return; 
+				return;
 			}
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2localprint^7\n");
 		case CMD_REQUEST_USAGE:
@@ -322,10 +331,10 @@ void LocalCommand_mv_download(float request, float argc)
 			if(argv(1))
 			{
 				Cmd_MapVote_MapDownload(argc);
-				return; 
+				return;
 			}
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2mv_download^7\n");
 		case CMD_REQUEST_USAGE:
@@ -348,18 +357,18 @@ void LocalCommand_sendcvar(float request, float argc)
 				// W_FixWeaponOrder will trash argv, so save what we need.
 				string thiscvar = strzone(argv(1));
 				string s = cvar_string(thiscvar);
-				
+
 				if(thiscvar == "cl_weaponpriority")
 					s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 1);
 				else if(substring(thiscvar, 0, 17) == "cl_weaponpriority" && strlen(thiscvar) == 18)
 					s = W_FixWeaponOrder(W_NumberWeaponOrder(s), 0);
-					
+
 				localcmd("cmd sentcvar ", thiscvar, " \"", s, "\"\n");
 				strunzone(thiscvar);
-				return; 
+				return;
 			}
 		}
-			
+
 		default:
 			print("Incorrect parameters for ^2sendcvar^7\n");
 		case CMD_REQUEST_USAGE:
@@ -379,10 +388,10 @@ void LocalCommand_(float request)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			
-			return; 
+
+			return;
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
@@ -411,15 +420,15 @@ void LocalCommand_(float request)
 	CLIENT_COMMAND("mv_download", LocalCommand_mv_download(request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("sendcvar", LocalCommand_sendcvar(request, arguments), "Send a cvar to the server (like weaponpriority)") \
 	/* nothing */
-	
+
 void LocalCommand_macro_help()
 {
 	#define CLIENT_COMMAND(name,function,description) \
 		{ if(strtolower(description) != "") { print("  ^2", name, "^7: ", description, "\n"); } }
-		
+
 	CLIENT_COMMANDS(0, 0)
 	#undef CLIENT_COMMAND
-	
+
 	return;
 }
 
@@ -427,10 +436,10 @@ float LocalCommand_macro_command(float argc)
 {
 	#define CLIENT_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(0))) { function; return TRUE; } }
-		
+
 	CLIENT_COMMANDS(CMD_REQUEST_COMMAND, argc)
 	#undef CLIENT_COMMAND
-	
+
 	return FALSE;
 }
 
@@ -438,10 +447,10 @@ float LocalCommand_macro_usage(float argc)
 {
 	#define CLIENT_COMMAND(name,function,description) \
 		{ if(name == strtolower(argv(1))) { function; return TRUE; } }
-		
+
 	CLIENT_COMMANDS(CMD_REQUEST_USAGE, argc)
 	#undef CLIENT_COMMAND
-	
+
 	return FALSE;
 }
 
@@ -449,10 +458,10 @@ void LocalCommand_macro_write_aliases(float fh)
 {
 	#define CLIENT_COMMAND(name,function,description) \
 		{ if(strtolower(description) != "") { CMD_Write_Alias("qc_cmd_cl", name, description); } }
-		
+
 	CLIENT_COMMANDS(0, 0)
 	#undef CLIENT_COMMAND
-	
+
 	return;
 }
 
@@ -468,24 +477,24 @@ void GameCommand(string command)
 
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4
-	// argv:   0    - 1      - 2     - 3 
+	// argv:   0    - 1      - 2     - 3
 	// cmd     vote - master - login - password
 
-	if(strtolower(argv(0)) == "help") 
+	if(strtolower(argv(0)) == "help")
 	{
-		if(argc == 1) 
+		if(argc == 1)
 		{
 			print("\nClient console commands:\n");
 			LocalCommand_macro_help();
 
 			print("\nGeneric commands shared by all programs:\n");
 			GenericCommand_macro_help();
-			
+
 			print("\nUsage:^3 cl_cmd COMMAND...^7, where possible commands are listed above.\n");
 			print("For help about a specific command, type cl_cmd help COMMAND\n");
-			
+
 			return;
-		} 
+		}
 		else if(GenericCommand_macro_usage(argc)) // Instead of trying to call a command, we're going to see detailed information about it
 		{
 			return;
@@ -494,8 +503,8 @@ void GameCommand(string command)
 		{
 			return;
 		}
-	} 
-	else if(GenericCommand(command)) 
+	}
+	else if(GenericCommand(command))
 	{
 		return; // handled by common/command/generic.qc
 	}
@@ -503,10 +512,10 @@ void GameCommand(string command)
 	{
 		return; // handled by one of the above LocalCommand_* functions
 	}
-	
+
 	// nothing above caught the command, must be invalid
 	print(((command != "") ? strcat("Unknown client command \"", command, "\"") : "No command provided"), ". For a list of supported commands, try cl_cmd help.\n");
-	
+
 	return;
 }
 
@@ -523,7 +532,7 @@ void GameCommand(string command)
 	CONSOLE_COMMAND("+showaccuracy", { scoreboard_showaccuracy = TRUE; }) \
 	CONSOLE_COMMAND("-showaccuracy", { scoreboard_showaccuracy = FALSE; }) \
 	/* nothing */
-	
+
 #define CONSOLE_COMMANDS_MOVEMENT \
 	CONSOLE_COMMAND("+forward", { ++camera_direction_x; }) \
 	CONSOLE_COMMAND("-forward", { --camera_direction_x; }) \
@@ -551,7 +560,7 @@ void ConsoleCommand_macro_init()
 
 	CONSOLE_COMMANDS_NORMAL
 	#undef CONSOLE_COMMAND
-	
+
 	// then init movement commands
 	#ifndef CAMERATEST
 	if(isdemo())
@@ -565,7 +574,7 @@ void ConsoleCommand_macro_init()
 	#ifndef CAMERATEST
 	}
 	#endif
-	
+
 	return;
 }
 
@@ -573,10 +582,10 @@ float ConsoleCommand_macro_normal(float argc)
 {
 	#define CONSOLE_COMMAND(name,execution) \
 		{ if(name == strtolower(argv(0))) { { execution } return TRUE; } }
-		
+
 	CONSOLE_COMMANDS_NORMAL
 	#undef CONSOLE_COMMAND
-	
+
 	return FALSE;
 }
 
@@ -590,7 +599,7 @@ float ConsoleCommand_macro_movement(float argc)
 		CONSOLE_COMMANDS_MOVEMENT
 		#undef CONSOLE_COMMAND
 	}
-	
+
 	return FALSE;
 }
 
@@ -612,7 +621,7 @@ float CSQC_ConsoleCommand(string command)
 	{
 		return TRUE;
 	}
-	
+
 	// Return value should be 1 if CSQC handled the command, otherwise return 0 to have the engine handle it.
 
 	return FALSE;

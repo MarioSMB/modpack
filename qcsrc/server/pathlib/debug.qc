@@ -24,7 +24,7 @@ void path_dbg_think()
 
 void __showpath2_think()
 {
-    #ifdef TURRET_DEBUG 
+    #ifdef TURRET_DEBUG
 	mark_info(self.origin,1);
 	#endif
     if(self.path_next)

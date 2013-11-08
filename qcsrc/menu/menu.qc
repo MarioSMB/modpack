@@ -441,7 +441,7 @@ float m_allocatetooltipbox(vector pos)
 	v = pos + avoidplus;
 	if(m_testtooltipbox(v))
 		return TRUE;
-	
+
 	// bottom center
 	v_x = pos_x - menuTooltipSize_x * 0.5;
 	if(m_testtooltipbox(v))
@@ -461,12 +461,12 @@ float m_allocatetooltipbox(vector pos)
 	v_x = pos_x - menuTooltipSize_x * 0.5;
 	if(m_testtooltipbox(v))
 		return TRUE;
-	
+
 	// top right
 	v_x = pos_x + avoidplus_x;
 	if(m_testtooltipbox(v))
 		return TRUE;
-	
+
 	return FALSE;
 }
 entity m_findtooltipitem(entity root, vector pos)
@@ -990,7 +990,7 @@ void m_goto(string itemname)
 		for(e = NULL; (e = find(e, name, itemname)); )
 			if(e.classname != "vtbl")
 				break;
-				
+
 		if((e) && (!e.requiresConnection || (gamestatus & (GAME_ISSERVER | GAME_CONNECTED))))
 		{
 			m_hide();

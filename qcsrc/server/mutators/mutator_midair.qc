@@ -18,7 +18,7 @@ MUTATOR_HOOKFUNCTION(midair_PlayerPowerups)
 		self.effects |= (EF_ADDITIVE | EF_FULLBRIGHT);
 		self.midair_shieldtime = max(self.midair_shieldtime, time + autocvar_g_midair_shieldtime);
 	}
-		
+
 	return FALSE;
 }
 

@@ -131,7 +131,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_maximized_scale");
 					HUD_Write_PanelCvar_q("_maximized_size");
 					HUD_Write_PanelCvar_q("_maximized_rotation");
-					HUD_Write_PanelCvar_q("_maximized_zoommode"); 
+					HUD_Write_PanelCvar_q("_maximized_zoommode");
 					break;
 				case HUD_PANEL_SCORE:
 					HUD_Write_PanelCvar_q("_rankings");
@@ -187,6 +187,9 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_fade_subsequent_passtwo_minalpha");
 					HUD_Write_PanelCvar_q("_fade_subsequent_minfontsize");
 					HUD_Write_PanelCvar_q("_fade_minfontsize");
+					break;
+				case HUD_PANEL_QUICKMENU:
+					HUD_Write_PanelCvar_q("_align");
 					break;
 			}
 			HUD_Write("\n");
@@ -978,7 +981,7 @@ void HUD_Panel_FirstInDrawQ(float id)
 	}
 	// now save the new top id
 	panel_order[0] = id;
-	
+
 	// let's save them into the cvar by some strcat trickery
 	string s = "";
 	for(i = 0; i < HUD_PANEL_NUM; ++i)
@@ -1090,7 +1093,7 @@ void HUD_Panel_Mouse()
 	if (!autocvar_hud_cursormode)
 	{
 		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
-		
+
 		mousepos_x = bound(0, mousepos_x, vid_conwidth);
 		mousepos_y = bound(0, mousepos_y, vid_conheight);
 	}

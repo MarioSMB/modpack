@@ -576,25 +576,25 @@ vector getplayerorigin(float pl)
 vector getcsqcplayercolor(float pl)
 {
 	entity e;
-	
+
 	e = CSQCModel_server2csqc(pl);
 	if(e)
 	{
 		if(e.colormap > 0)
 			return colormapPaletteColor(((e.colormap >= 1024) ? e.colormap : stof(getplayerkeyvalue(e.colormap - 1, "colors"))) & 0x0F, TRUE);
 	}
-	
+
 	return '1 1 1';
 }
 
 float getplayerisdead(float pl)
 {
 	entity e;
-	
+
 	e = CSQCModel_server2csqc(pl + 1);
 	if(e)
 		return e.csqcmodel_isdead;
-	
+
 	return FALSE;
 }
 

@@ -170,13 +170,13 @@ void W_RocketMinsta_Explosion(vector loc)
 		head = shockwave_hit[i];
 		final_force = shockwave_hit_force[i];
 		final_damage = shockwave_hit_damage[i];
-		
+
 		if(accuracy_isgooddamage(self, head))
 			accuracy_add(self, WEP_ROCKET_LAUNCHER, 0, final_damage);
 		
 		Damage(head, self, self, final_damage, (WEP_ROCKET_LAUNCHER | HITTYPE_SPLASH), head.origin, final_force);
 		//print("SHOCKWAVE by ", self.netname, ": damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force)), ".\n");
-		
+
 		shockwave_hit[i] = world;
 		shockwave_hit_force[i] = '0 0 0';
 		shockwave_hit_damage[i] = 0;
@@ -186,13 +186,13 @@ void W_RocketMinsta_Explosion(vector loc)
 void W_MinstaNex_Attack (void)
 {
 	makevectors(self.v_angle);
-	
+
 	float flying;
 	float minstanex_damage = ((autocvar_g_balance_minstanex_damage) ? autocvar_g_balance_minstanex_damage : 10000);
-	
+
 	if(!self.minsta_range)
 		self.minsta_range = ((autocvar_g_balance_minstanex_distance > 0) ? autocvar_g_balance_minstanex_distance : MAX_SHOT_DISTANCE);
-		
+
 	float minstanex_ammo = ((g_minstagib) ? 1 : autocvar_g_balance_minstanex_ammo);
 	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
 
@@ -588,19 +588,19 @@ float w_minstanex(float req)
 			{
 				// handle refire manually, so that primary and secondary can be fired without conflictions (important for minstagib)
 				self.jump_interval = time + autocvar_g_balance_minstanex_laser_refire * W_WeaponRateFactor();
-				
+
 				// decrease ammo for the laser?
 				if(autocvar_g_balance_minstanex_laser_ammo)
 					W_DecreaseAmmo(ammo_cells, autocvar_g_balance_minstanex_laser_ammo, autocvar_g_balance_minstanex_reload_ammo);
 
 				W_Laser_Attack(2, WEP_LASER, WEP_LASER);
-				
+
 				// now do normal refire
 				weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_minstanex_laser_animtime, w_ready);
 			}
 		}
 		else
-            self.held_down = FALSE;
+			self.held_down = FALSE;
 	}
 	else if (req == WR_PRECACHE)
 	{

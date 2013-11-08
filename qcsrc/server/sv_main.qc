@@ -2,16 +2,16 @@ void CreatureFrame (void)
 {
 	entity oldself;
 	float dm;
-	
+
 	oldself = self;
 	for(self = world; (self = findfloat(self, damagedbycontents, TRUE)); )
 	{
 		if (self.movetype == MOVETYPE_NOCLIP) { continue; }
-		
+
 		float vehic = IS_VEHICLE(self);
 		float projectile = (self.flags & FL_PROJECTILE);
 		float monster = IS_MONSTER(self);
-		
+
 		if (self.watertype <= CONTENT_WATER && self.waterlevel > 0) // workaround a retarded bug made by id software :P (yes, it's that old of a bug)
 		{
 			if (!(self.flags & FL_INWATER))
@@ -39,11 +39,11 @@ void CreatureFrame (void)
 					}
 				}
 			}
-			
+
 			if (self.dmgtime < time)
 			{
-				self.dmgtime = time + autocvar_g_balance_contents_damagerate; 
-				
+				self.dmgtime = time + autocvar_g_balance_contents_damagerate;
+
 				if (projectile)
 				{
 					if (self.watertype == CONTENT_LAVA)
@@ -136,7 +136,7 @@ void CreatureFrame (void)
 				}
 			}
 		}
-		
+
         self.oldvelocity = self.velocity;
 	}
 	self = oldself;

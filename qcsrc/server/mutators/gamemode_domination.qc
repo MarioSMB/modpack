@@ -34,7 +34,7 @@ void dompoint_captured ()
 	self.model = head.mdl;
 	self.modelindex = head.dmg;
 	self.skin = head.skin;
-	
+
 	float points, wait_time;
 	if (autocvar_g_domination_point_amt)
 		points = autocvar_g_domination_point_amt;
@@ -75,7 +75,7 @@ void dompoint_captured ()
 	SUB_UseTargets ();
 	self.delay = old_delay;
 	self.team = old_team;
-	
+
 	switch(self.team)
 	{
 		case NUM_TEAM_1: msg = "dom-red"; break;
@@ -85,7 +85,7 @@ void dompoint_captured ()
 	}
 
 	WaypointSprite_UpdateSprites(self.sprite, msg, "", "");
-	
+
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
 	for(head = world; (head = find(head, classname, "dom_controlpoint")) != world; )
 	{
@@ -467,7 +467,7 @@ void dom_DelayedInit() // Do this check with a delay so we can wait for teams to
 		print("No ""dom_team"" entities found on this map, creating them anyway.\n");
 		dom_spawnteams();
 	}
-	
+
 	ScoreRules_dom();
 }
 
@@ -479,13 +479,13 @@ void dom_Initialize()
 	precache_model("models/domination/dom_pink.md3");
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_sound("domination/claim.wav");
-	
+
 	addstat(STAT_DOM_TOTAL_PPS, AS_FLOAT, dom_total_pps);
 	addstat(STAT_DOM_PPS_RED, AS_FLOAT, dom_pps_red);
 	addstat(STAT_DOM_PPS_BLUE, AS_FLOAT, dom_pps_blue);
 	if(c3 >= 0) addstat(STAT_DOM_PPS_YELLOW, AS_FLOAT, dom_pps_yellow);
 	if(c4 >= 0) addstat(STAT_DOM_PPS_PINK, AS_FLOAT, dom_pps_pink);
-	
+
 	InitializeEntity(world, dom_DelayedInit, INITPRIO_GAMETYPE);
 }
 
@@ -494,7 +494,7 @@ MUTATOR_DEFINITION(gamemode_domination)
 {
 	MUTATOR_HOOK(ClientConnect, dom_ClientConnect, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRule, dom_BotRoles, CBC_ORDER_ANY);
-	
+
 	MUTATOR_ONADD
 	{
 		if(time > 1) // game loads at time 1

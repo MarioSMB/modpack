@@ -63,7 +63,7 @@ float CampaignFile_Load(float offset, float n)
 
 				campaign_entries = campaign_entries + 1;
 
-				if(campaign_entries >= n)				
+				if(campaign_entries >= n)
 					break;
 			}
 			lineno = lineno + 1;

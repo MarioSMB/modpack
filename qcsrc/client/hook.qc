@@ -8,7 +8,7 @@ void Draw_CylindricLine(vector from, vector to, float thickness, string texture,
 {
 	// I want to draw a quad...
 	// from and to are MIDPOINTS.
-	
+
 	vector axis, thickdir, A, B, C, D;
 	float length_tex;
 

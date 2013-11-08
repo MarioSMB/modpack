@@ -22,14 +22,14 @@ float pathlib_wpp_opencb(entity wp, entity child, float cost)
 
 	// FIXME! wp.wp##mincost is NOT distance. Make it distance or add a field for distance to be used here (for better speed)
 	cost = vlen(child.origin - wp.origin);
-	
+
     child.path_prev 	 = wp;
     child.pathlib_list   = openlist;
     child.pathlib_node_g = wp.pathlib_node_g + cost;
     child.pathlib_node_h = pathlib_heuristic(child.origin, goal_node.origin);
     child.pathlib_node_c = pathlib_wpp_waypointcallback(child, wp);
     child.pathlib_node_f = child.pathlib_node_g + child.pathlib_node_h + child.pathlib_node_c;
-    
+
 
     if(child == goal_node)
         pathlib_foundgoal = TRUE;
@@ -50,11 +50,11 @@ float pathlib_wpp_openncb(entity wp, entity child, float cost)
 
 	// FIXME! wp.wp##mincost is NOT distance. Make it distance or add a field for distance to be used here (for better speed)
 	cost = vlen(child.origin - wp.origin);
-	
+
     child.path_prev 	 = wp;
     child.pathlib_list   = openlist;
     child.pathlib_node_g = wp.pathlib_node_g + cost;
-    child.pathlib_node_h = pathlib_heuristic(child.origin, goal_node.origin); 
+    child.pathlib_node_h = pathlib_heuristic(child.origin, goal_node.origin);
     child.pathlib_node_f = child.pathlib_node_g + child.pathlib_node_h;
 
     if(child == goal_node)
@@ -102,7 +102,7 @@ float pathlib_wpp_expand(entity wp)
     if(wp.wp29) pathlib_wpp_open(wp,wp.wp29,wp.wp29mincost); else return 29;
     if(wp.wp30) pathlib_wpp_open(wp,wp.wp30,wp.wp30mincost); else return 30;
     if(wp.wp31) pathlib_wpp_open(wp,wp.wp31,wp.wp31mincost); else return 31;
-    
+
     return 32;
 }
 
@@ -133,20 +133,20 @@ entity pathlib_waypointpath(entity wp_from, entity wp_to, float callback)
     float ptime;
 
     ptime 					= gettime(GETTIME_REALTIME);
-    pathlib_starttime 		= ptime;	
+    pathlib_starttime 		= ptime;
 	pathlib_movecost 		= 300;
 	pathlib_movecost_diag  	= vlen('1 1 0' * pathlib_movecost);
-	
-	if (!pathlib_wpp_waypointcallback) 
+
+	if (!pathlib_wpp_waypointcallback)
 		callback = FALSE;
-		
+
 	if (callback)
 		pathlib_wpp_open = pathlib_wpp_opencb;
 	else
 		pathlib_wpp_open = pathlib_wpp_openncb;
-	
+
 	pathlib_heuristic = pathlib_h_none;
-	
+
     if (!openlist)
         openlist       = spawn();
 
@@ -168,12 +168,12 @@ entity pathlib_waypointpath(entity wp_from, entity wp_to, float callback)
         n.pathlib_node_g = 0;
         n.pathlib_node_f = 0;
         n.pathlib_node_h = 0;
-        
+
         //setmodel(n, "models/runematch/rune.mdl");
         //n.effects = EF_LOWPRECISION;
         //n.colormod = '0 0 0';
         //n.scale = 1;
-        
+
     }
 
     goal_node  = wp_to;
@@ -202,18 +202,18 @@ entity pathlib_waypointpath_step()
     }
     pathlib_wpp_close(n);
 	dprint("Expanding ",ftos(pathlib_wpp_expand(n))," links\n");
-	
+
     if(pathlib_foundgoal)
     {
         entity start, end, open, ln;
-        
+
         dprint("Target found. Rebuilding and filtering path...\n");
-        
+
 		buildpath_nodefilter = buildpath_nodefilter_none;
 		start = path_build(world, start_node.origin, world, world);
 		end   = path_build(world, goal_node.origin, world, start);
 		ln    = end;
-		
+
 		for(open = goal_node; open.path_prev != start_node; open = open.path_prev)
 		{
 			n    = path_build(ln,open.origin,open.path_prev,start);
@@ -221,8 +221,8 @@ entity pathlib_waypointpath_step()
 			ln = n;
 		}
 		start.path_next = n;
-		n.path_prev = start;		
-		
+		n.path_prev = start;
+
         return start;
     }
 

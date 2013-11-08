@@ -182,7 +182,7 @@ void W_Mine_Think (void)
 			self.movetype = MOVETYPE_NONE;
 		}
 	}
-	
+
 	// our lifetime has expired, it's time to die - mine_time just allows us to play a sound for this
 	// TODO: replace this mine_trigger.wav sound with a real countdown
 	if ((time > self.cnt) && (!self.mine_time))
@@ -258,15 +258,15 @@ void W_Mine_Damage (entity inflictor, entity attacker, float damage, float death
 {
 	if (self.health <= 0)
 		return;
-		
+
 	float is_from_enemy = (inflictor.realowner != self.realowner);
-		
+
 	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, (is_from_enemy ? 1 : -1)))
 		return; // g_projectiles_damage says to halt
-		
+
 	self.health = self.health - damage;
 	self.angles = vectoangles(self.velocity);
-	
+
 	if (self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, W_Mine_Explode);
 }
@@ -337,7 +337,7 @@ void W_Mine_Attack (void)
 	// common properties
 
 	other = mine; MUTATOR_CALLHOOK(EditProjectile);
-	
+
 	self.minelayer_mines = W_Mine_Count(self);
 }
 

@@ -59,12 +59,12 @@ void W_Grenade_Damage (entity inflictor, entity attacker, float damage, float de
 {
 	if (self.health <= 0)
 		return;
-		
+
 	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
-		
+
 	self.health = self.health - damage;
-	
+
 	if (self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, self.use);
 }
@@ -152,10 +152,10 @@ void W_Grenade_Touch2 (void)
 			spamsound (self, CH_SHOTS, "weapons/grenade_bounce6.wav", VOL_BASE, ATTEN_NORM);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 		self.gl_bouncecnt += 1;
-		
+
 		if (autocvar_g_balance_grenadelauncher_secondary_lifetime_bounce && self.gl_bouncecnt == 1)
 			self.nextthink = time + autocvar_g_balance_grenadelauncher_secondary_lifetime_bounce;
-			
+
 	}
 	else if(autocvar_g_balance_grenadelauncher_secondary_type == 2 && (!other || (other.takedamage != DAMAGE_AIM && other.movetype == MOVETYPE_NONE))) // stick
 	{

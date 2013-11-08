@@ -50,7 +50,7 @@ string Team_ColorCode(float teamid)
     	case NUM_TEAM_3: return COL_TEAM_3;
     	case NUM_TEAM_4: return COL_TEAM_4;
 	}
-	
+
 	return "^7";
 }
 
@@ -76,7 +76,7 @@ string Team_ColorName(float teamid)
     	case NUM_TEAM_3: return NAME_TEAM_3;
     	case NUM_TEAM_4: return NAME_TEAM_4;
 	}
-	
+
     return NAME_NEUTRAL;
 }
 
@@ -90,7 +90,7 @@ string Static_Team_ColorName(float teamid)
     	case NUM_TEAM_3: return STATIC_NAME_TEAM_3;
     	case NUM_TEAM_4: return STATIC_NAME_TEAM_4;
 	}
-	
+
     return NAME_NEUTRAL;
 }
 
@@ -104,7 +104,7 @@ float Team_ColorToTeam(string team_color)
     	case "pink": return NUM_TEAM_4;
     	case "auto": return 0;
 	}
-	
+
 	return -1;
 }
 
@@ -117,7 +117,7 @@ float Team_NumberToTeam(float number)
 		case 3: return NUM_TEAM_3;
 		case 4: return NUM_TEAM_4;
 	}
-	
+
 	return -1;
 }
 
@@ -130,7 +130,7 @@ float Team_TeamToNumber(float teamid)
 		case NUM_TEAM_3: return 3;
 		case NUM_TEAM_4: return 4;
 	}
-	
+
 	return -1;
 }
 

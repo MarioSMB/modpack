@@ -13,7 +13,7 @@ float SpawnPoint_Send(entity to, float sf)
 float SpawnEvent_Send(entity to, float sf)
 {
 	float send;
-	
+
 	WriteByte(MSG_ENTITY, ENT_CLIENT_SPAWNEVENT);
 
 	if(autocvar_g_spawn_alloweffects)

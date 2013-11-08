@@ -56,16 +56,16 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 	vector rgb;
 	string label;
 	float text_size;
-	
+
 	isize -= hud_fontsize_y; // respect the text when calculating the image size
 
 	rgb = MapVote_RGB(id, count);
-	
+
 	img_size_y = isize;
 	img_size_x = isize / 0.75; // 4:3 x can be stretched easily, height is defined in isize
 
 	pos_y = pos_y + img_size_y;
-	
+
 	label = MapVote_FormatMapItem(id, map, count, tsize, hud_fontsize);
 
 	text_size = stringwidth(label, false, hud_fontsize);
@@ -78,7 +78,7 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 
 	pos_x -= text_size*0.5;
 	drawstring(pos, label, hud_fontsize, rgb, theAlpha, DRAWFLAG_NORMAL);
-	
+
 	pos_x = pos_x + text_size*0.5 - img_size_x*0.5;
 	pos_y = pos_y - img_size_y;
 
@@ -110,15 +110,15 @@ void MapVote_DrawAbstain(vector pos, float isize, float tsize, float count, floa
 	vector rgb;
 	float text_size;
 	string label;
-	
+
 	rgb = MapVote_RGB(id, count);
 
 	pos_y = pos_y + hud_fontsize_y;
-	
+
 	label = MapVote_FormatMapItem(id, _("Don't care"), count, tsize, hud_fontsize);
 
 	text_size = stringwidth(label, false, hud_fontsize);
-	
+
 	pos_x -= text_size*0.5;
 	drawstring(pos, label, hud_fontsize, rgb, 1, DRAWFLAG_NORMAL);
 }
@@ -179,7 +179,7 @@ void MapVote_Draw()
 	if (!autocvar_hud_cursormode)
 	{
 		mv_mousepos = mv_mousepos + getmousepos();
-		
+
 		mv_mousepos_x = bound(0, mv_mousepos_x, vid_conwidth);
 		mv_mousepos_y = bound(0, mv_mousepos_y, vid_conheight);
 	}
@@ -273,12 +273,12 @@ void Cmd_MapVote_MapDownload(float argc)
 		print(_("mv_mapdownload: ^3You're not supposed to use this command on your own!\n"));
 		return;
 	}
-	
+
 	id = stof(argv(1));
 	for(pak = mv_pk3list; pak; pak = pak.chain)
 		if(pak.sv_entnum == id)
 			break;
-	
+
 	if(!pak || pak.sv_entnum != id) {
 		print(_("^1Error:^7 Couldn't find pak index.\n"));
 		return;
@@ -301,10 +301,10 @@ void MapVote_CheckPK3(string pic, string pk3, float id)
 	pak.netname = pk3;
 	pak.message = pic;
 	pak.sv_entnum = id;
-	
+
 	pak.chain = mv_pk3list;
 	mv_pk3list = pak;
-	
+
 	if(pk3 != "")
 	{
 		localcmd(strcat("\ncurl --pak ", pk3, "; wait; cl_cmd mv_download ", ftos(id), "\n"));
@@ -367,10 +367,10 @@ void MapVote_Init()
 		mv_maps_mask = ReadByte();
 	else
 		mv_maps_mask = ReadShort();
-	
+
 	// Assume mv_pk3list is world, there should only be 1 mapvote per round
 	mv_pk3list = world; // I'm still paranoid!
-	
+
 	for(i = 0, power = 1; i < mv_num_maps; ++i, power *= 2)
 	{
 		mv_votes[i] = 0;
@@ -380,7 +380,7 @@ void MapVote_Init()
 			map = strzone(ReadString());
 			pk3 = strzone(ReadString());
 			j = bound(0, ReadByte(), n_ssdirs - 1);
-	
+
 			mv_maps[i] = map;
 			mv_pk3[i] = pk3;
 			map = strzone(strcat(ssdirs[j], "/", map));

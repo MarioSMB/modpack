@@ -4,13 +4,12 @@ void nade_timer_think()
 	self.nextthink = time;
 	if(!self.owner || wasfreed(self.owner))
 		remove(self);
-	
 }
 
 void nade_burn_spawn(entity _nade)
 {
 	float p;
-	
+
 	switch(_nade.nade_type)
 	{
 		case NADE_TYPE_NAPALM: p = PROJECTILE_NADE_NAPALM_BURN; break;
@@ -18,7 +17,7 @@ void nade_burn_spawn(entity _nade)
 		case NADE_TYPE_TRANSLOCATE: p = PROJECTILE_NADE_TRANSLOCATE_BURN; break;
 		default: p = PROJECTILE_NADE_BURN; break;
 	}
-	
+
 	CSQCProjectile(_nade, TRUE, p, TRUE);
 }
 
@@ -34,11 +33,11 @@ void nade_spawn(entity _nade)
 	timer.think = nade_timer_think;
 	timer.nextthink = time;
 	timer.wait = _nade.wait;
-	timer.owner = _nade;	
+	timer.owner = _nade;
 	timer.skin = 10;
-	
+
 	_nade.effects |= EF_LOWPRECISION;
-	
+
 	switch(_nade.nade_type)
 	{
 		case NADE_TYPE_NAPALM: p = PROJECTILE_NADE_NAPALM; break;
@@ -46,7 +45,7 @@ void nade_spawn(entity _nade)
 		case NADE_TYPE_TRANSLOCATE: p = PROJECTILE_NADE_TRANSLOCATE; break;
 		default: p = PROJECTILE_NADE; break;
 	}
-		
+
 	CSQCProjectile(_nade, TRUE, p, TRUE);
 }
 
@@ -370,7 +369,7 @@ void nade_boom()
 {
 	string expef;
 	float nade_blast;
-	
+
 	nade_blast = 1;
 
 	switch ( self.nade_type )
@@ -387,7 +386,7 @@ void nade_boom()
 			nade_blast = 0;
 			expef = "";
 			break;
-	
+
 		default:
 		case NADE_TYPE_NORMAL:
 			switch(self.realowner.team)
@@ -399,21 +398,21 @@ void nade_boom()
 				default: 		 expef = "nade_neutral_explode"; break;
 			}
 	}
-	
+
 	pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
-		
+
 	sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
-	
+
 	self.takedamage = DAMAGE_NO;
-	
+
 	if(nade_blast)
 	{
 		RadiusDamage(self, self.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
 				 autocvar_g_nades_nade_radius, self, autocvar_g_nades_nade_force, self.projectiledeathtype, self.enemy);
 		Damage_DamageInfo(self.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage, autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, self.projectiledeathtype, 0, self);
 	}
-	
+
 	switch ( self.nade_type )
 	{
 		case NADE_TYPE_NAPALM: nade_napalm_boom(); break;
@@ -462,7 +461,7 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 
 	if(DEATH_ISWEAPON(deathtype, WEP_UZI) || DEATH_ISWEAPON(deathtype, WEP_HMG))
 		damage = self.max_health * 0.1;
-		
+
 	if(DEATH_ISWEAPON(deathtype, WEP_SHOTGUN))
 	if(deathtype & HITTYPE_SECONDARY)
 	{
@@ -471,7 +470,7 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 	}
 	else
 		damage = self.max_health * 1.1;
-		
+
 	self.velocity += force;
 
 	if(!damage || (self.flags & FL_ONGROUND && IS_PLAYER(attacker)))
@@ -497,30 +496,30 @@ void toss_nade(entity e, vector _velocity, float _time)
 {
 	if(e.nade == world)
 		return;
-	
+
 	entity _nade = e.nade;
 	e.nade = world;
-	
+
 	remove(e.fake_nade);
 	e.fake_nade = world;
-	
+
 	makevectors(e.v_angle);
-	
+
 	W_SetupShot(e, FALSE, FALSE, "", CH_WEAPON_A, 0, DEATH_NADE);
-	
+
 	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_NADES);
-	
+
 	setorigin(_nade, w_shotorg + (v_right * 25) * -1);
 	setmodel(_nade, "models/weapons/v_ok_grenade.md3");
 	setattachment(_nade, world, "");
 	PROJECTILE_MAKETRIGGER(_nade);
 	setsize(_nade, '-16 -16 -16', '16 16 16');
 	_nade.movetype = MOVETYPE_BOUNCE;
-	
+
 	tracebox(_nade.origin, _nade.mins, _nade.maxs, _nade.origin, FALSE, _nade);
 	if (trace_startsolid)
 		setorigin(_nade, e.origin);
-	
+
 	if(self.v_angle_x >= 70 && self.v_angle_x <= 110)
 		_nade.velocity = '0 0 100';
 	else if(autocvar_g_nades_nade_newton_style == 1)
@@ -529,7 +528,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 		_nade.velocity = _velocity;
 	else
 		_nade.velocity = W_CalculateProjectileVelocity(e.velocity, _velocity, TRUE);
-	
+
 	_nade.touch = nade_touch;
 	_nade.health = autocvar_g_nades_nade_health;
 	_nade.max_health = _nade.health;
@@ -587,12 +586,12 @@ void nade_prime()
 {
 	if(self.nade)
 		remove(self.nade);
-		
+
 	if(self.fake_nade)
 		remove(self.fake_nade);
-		
+
 	entity n = spawn(), fn = spawn();
-	
+
 	setmodel(n, "null");
 	setattachment(n, self, "bip01 l hand");
 
@@ -616,14 +615,14 @@ void nade_prime()
 	n.think = nade_beep;
 	n.nextthink = max(n.wait - 3, time);
 	n.projectiledeathtype = DEATH_NADE;
-	
+
 	switch(n.nade_type)
 	{
 		case NADE_TYPE_NAPALM: fn.colormod = '2 0.5 0'; break;
 		case NADE_TYPE_ICE: fn.colormod = '0 0.5 2'; break;
 		case NADE_TYPE_TRANSLOCATE: fn.colormod = '1 0.0625 1'; self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP; break;
 	}
-		
+
 	setmodel(fn, "models/weapons/h_ok_grenade.iqm");
 	setattachment(fn, self.weaponentity, "");
 	fn.classname = "fake_nade";
@@ -632,7 +631,7 @@ void nade_prime()
 	fn.glowmod = self.glowmod;
 	fn.think = SUB_Remove;
 	fn.nextthink = n.wait;
-	
+
 	self.nade = n;
 	self.fake_nade = fn;
 }
@@ -641,22 +640,22 @@ float CanThrowNade()
 {
 	if(self.vehicle)
 		return FALSE;
-		
+
 	if(gameover)
 		return FALSE;
-		
+
 	if(self.deadflag != DEAD_NO)
 		return FALSE;
-	
+
 	if (!autocvar_g_nades)
 		return FALSE; // allow turning them off mid match
-		
+
 	if(forbidWeaponUse())
 		return FALSE;
-		
+
 	if (!IS_PLAYER(self))
 		return FALSE;
-		
+
 	return TRUE;
 }
 
@@ -664,7 +663,7 @@ void nades_CheckThrow()
 {
 	if(!CanThrowNade())
 		return;
-		
+
 	if(!self.nade)
 	{
 		if(self.nade_refire < time)
@@ -689,12 +688,11 @@ void nades_CheckThrow()
 
 void nades_Clear(entity player)
 {
-	
 	if(player.nade)
 		remove(player.nade);
 	if(player.fake_nade)
 		remove(player.fake_nade);
-	
+
 	player.nade = player.fake_nade = world;
 }
 
@@ -708,24 +706,24 @@ MUTATOR_HOOKFUNCTION(nades_VehicleEnter)
 {
 	if(other.nade)
 		toss_nade(other, '0 0 100', max(other.nade.wait, time + 0.05));
-	
+
 	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 {
 	if(!IS_PLAYER(self)) { return FALSE; }
-	
+
 	float key_pressed = self.BUTTON_HOOK;
 	float time_score;
-	
+
 	if(g_grappling_hook || client_hasweapon(self, WEP_HOOK, FALSE, FALSE) || (weaponsInMap & WEPSET_HOOK) || g_jetpack || self.items & IT_JETPACK)
 		key_pressed = self.button16; // if hook/jetpack is enabled, use an alternate key
-	
+
 	if(self.nade)
 		if(self.nade.wait - 0.1 <= time)
 			toss_nade(self, '0 0 0', time + 0.05);
-			
+
 	if(CanThrowNade())
 	if(self.nade_refire < time)
 	{
@@ -741,12 +739,12 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 				makevectors(self.v_angle);
 				float _force = time - self.nade.lifetime;
 				_force /= autocvar_g_nades_nade_lifetime;
-				_force = autocvar_g_nades_nade_minforce + (_force * (autocvar_g_nades_nade_maxforce - autocvar_g_nades_nade_minforce));				
+				_force = autocvar_g_nades_nade_minforce + (_force * (autocvar_g_nades_nade_maxforce - autocvar_g_nades_nade_minforce));
 				toss_nade(self, (v_forward * 0.7 + v_up * 0.2 + v_right * 0.1) * _force, 0);
 			}
 		}
 	}
-	
+
 	if(IS_PLAYER(self))
 	{
 		if ( autocvar_g_nades_bonus && autocvar_g_nades )
@@ -755,12 +753,12 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 				time_score = autocvar_g_nades_bonus_score_time_flagcarrier;
 			else
 				time_score = autocvar_g_nades_bonus_score_time;
-			
+
 			if(autocvar_g_nades_bonus_client_select)
 				self.nade_type = self.cvar_cl_nade_type;
 			else
 				self.nade_type = autocvar_g_nades_bonus_type;
-			
+
 			if(self.bonus_nade_score >= 0 && autocvar_g_nades_bonus_score_max)
 				nades_GiveBonus(self, time_score / autocvar_g_nades_bonus_score_max);
 		}
@@ -823,7 +821,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerSpawn)
 		self.nade_refire = time + autocvar_g_spawnshieldtime;
 	else
 		self.nade_refire  = time + autocvar_g_nades_nade_refire;
-		
+
 	if(autocvar_g_nades_bonus_client_select)
 		self.nade_type = self.cvar_cl_nade_type;
 
@@ -911,11 +909,11 @@ MUTATOR_DEFINITION(mutator_nades)
 	MUTATOR_HOOK(reset_map_global, nades_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, nades_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, nades_BuildMutatorsPrettyString, CBC_ORDER_ANY);
-	
+
 	MUTATOR_ONADD
 	{
 		precache_model("models/ok_nade_counter/ok_nade_counter.md3");
-		
+
 		precache_model("models/weapons/h_ok_grenade.iqm");
 		precache_model("models/weapons/v_ok_grenade.md3");
 		precache_sound("weapons/rocket_impact.wav");

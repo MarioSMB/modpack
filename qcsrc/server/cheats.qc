@@ -50,7 +50,7 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 		return 0;
 	if(gamestart_sv_cheats < 2 && !IS_PLAYER(self))
 		return 0;
-	
+
 	// sv_clones
 	if(i == CHIMPULSE_CLONE_MOVING || i == CHIMPULSE_CLONE_STANDING)
 		if(self.lip < sv_clones)
@@ -59,7 +59,7 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 	// haha
 	if(self.maycheat)
 		return 1;
-	
+
 	// sv_cheats
 	if(gamestart_sv_cheats && autocvar_sv_cheats)
 		return 1;
@@ -191,7 +191,7 @@ float CheatImpulse(float i)
 					self.oldvelocity = self.velocity = self.personal.velocity;
 					self.angles = self.personal.v_angle;
 					self.fixangle = TRUE;
-					
+
 					MUTATOR_CALLHOOK(AbortSpeedrun);
 				}
 

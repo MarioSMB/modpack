@@ -27,7 +27,7 @@ float vote_accept_count; // total amount of players who accept the vote (counted
 float vote_reject_count; // same as above, but rejected
 float vote_abstain_count; // same as above, but abstained
 float vote_needed_overall; // total amount of players NEEDED for a vote to pass (based on sv_vote_majority_factor)
-.float vote_master; // flag for if the player has vote master privelages 
+.float vote_master; // flag for if the player has vote master privelages
 .float vote_waittime; // flag for how long the player must wait before they can vote again
 .float vote_selection; // flag for which vote selection the player has made (See VOTE_SELECT_*)
 string vote_called_command; // command sent by client

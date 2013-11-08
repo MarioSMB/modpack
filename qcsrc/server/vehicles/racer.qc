@@ -637,8 +637,8 @@ void spawnfunc_vehicle_racer()
     {
         remove(self);
         return;
-    }        
-    
+    }
+
     self.vehicle_flags |= VHF_DMGSHAKE;
     self.vehicle_flags |= VHF_DMGROLL;
 
@@ -679,7 +679,7 @@ void spawnfunc_vehicle_racer()
              racer_frame,
              racer_enter, racer_exit,
              racer_die,   racer_think,
-             TRUE, 
+             TRUE,
              autocvar_g_vehicle_racer_health,
              autocvar_g_vehicle_racer_shield))
     {

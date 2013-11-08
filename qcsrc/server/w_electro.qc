@@ -96,10 +96,10 @@ void W_Plasma_Damage (entity inflictor, entity attacker, float damage, float dea
 
 	// note: combos are usually triggered by W_Plasma_TriggerCombo, not damage
 	float is_combo = (inflictor.classname == "plasma_chain" || inflictor.classname == "plasma_prim");
-	
+
 	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, (is_combo ? 1 : -1)))
-		return; // g_projectiles_damage says to halt	
-	
+		return; // g_projectiles_damage says to halt
+
 	self.health = self.health - damage;
 	if (self.health <= 0)
 	{

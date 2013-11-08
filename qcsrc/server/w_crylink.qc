@@ -241,7 +241,7 @@ float W_Crylink_Touch_WouldHitFriendly(entity projectile, float rad)
 			else
 				++hit_enemy;
 		}
-			
+
 		head = head.chain;
 	}
 
@@ -267,7 +267,7 @@ void W_Crylink_Touch (void)
 		f *= a;
 
 	float totaldamage = RadiusDamage(self, self.realowner, autocvar_g_balance_crylink_primary_damage * f, autocvar_g_balance_crylink_primary_edgedamage * f, autocvar_g_balance_crylink_primary_radius, world, autocvar_g_balance_crylink_primary_force * f, self.projectiledeathtype, other);
-	
+
 	if(totaldamage && ((autocvar_g_balance_crylink_primary_linkexplode == 2) || ((autocvar_g_balance_crylink_primary_linkexplode == 1) && !W_Crylink_Touch_WouldHitFriendly(self, autocvar_g_balance_crylink_primary_radius))))
 	{
 		if(self == self.realowner.crylink_lastgroup)
@@ -311,7 +311,7 @@ void W_Crylink_Touch2 (void)
 		f *= a;
 
 	float totaldamage = RadiusDamage(self, self.realowner, autocvar_g_balance_crylink_secondary_damage * f, autocvar_g_balance_crylink_secondary_edgedamage * f, autocvar_g_balance_crylink_secondary_radius, world, autocvar_g_balance_crylink_secondary_force * f, self.projectiledeathtype, other);
-		
+
 	if(totaldamage && ((autocvar_g_balance_crylink_secondary_linkexplode == 2) || ((autocvar_g_balance_crylink_secondary_linkexplode == 1) && !W_Crylink_Touch_WouldHitFriendly(self, autocvar_g_balance_crylink_secondary_radius))))
 	{
 		if(self == self.realowner.crylink_lastgroup)
@@ -439,7 +439,7 @@ void W_Crylink_Attack (void)
 
 		proj.flags = FL_PROJECTILE;
     proj.missile_flags = MIF_SPLASH;
-    
+
 		CSQCProjectile(proj, TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
 
 		other = proj; MUTATOR_CALLHOOK(EditProjectile);
@@ -555,7 +555,7 @@ void W_Crylink_Attack2 (void)
 
 		proj.flags = FL_PROJECTILE;
         proj.missile_flags = MIF_SPLASH;
-        
+
 		CSQCProjectile(proj, TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
 
 		other = proj; MUTATOR_CALLHOOK(EditProjectile);

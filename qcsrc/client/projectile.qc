@@ -109,7 +109,7 @@ void Projectile_Draw()
 			case PROJECTILE_NADE_ICE_BURN:
 			case PROJECTILE_NADE_TRANSLOCATE:
 			case PROJECTILE_NADE_TRANSLOCATE_BURN:
-				rot = self.avelocity; 
+				rot = self.avelocity;
 				break;
 			case PROJECTILE_HOOKBOMB:
 				rot = '1000 0 0'; // forward
@@ -273,7 +273,7 @@ void Ent_Projectile()
 			self.fade_time = 0;
 			self.fade_rate = 0;
 		}
-		
+
 		self.team = ReadByte() - 1;
 	}
 
@@ -283,7 +283,7 @@ void Ent_Projectile()
 		vector nade_color = '0 0 0';
 		nade_suffix = strcat("nade_", Static_Team_ColorName_Lower(self.team));
 		rm_suffix = strcat("rocketminsta_laser_", Static_Team_ColorName_Lower(self.team));
-	
+
 		self.cnt = ReadByte();
 
 		self.silent = (self.cnt & 0x80);
@@ -332,7 +332,7 @@ void Ent_Projectile()
 
 			case PROJECTILE_BUMBLE_GUN: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("rocketminsta_laser_neutral"); break;
 			case PROJECTILE_BUMBLE_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("rocketminsta_laser_neutral"); break;
-			
+
 			case PROJECTILE_NADE: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum(nade_suffix); break;		
 			case PROJECTILE_NADE_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum(strcat(nade_suffix, "_burn")); break;
 			case PROJECTILE_NADE_NAPALM: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("TR_ROCKET"); nade_color = '2 0.5 0'; break;
@@ -471,7 +471,7 @@ void Ent_Projectile()
 				break;
             case PROJECTILE_WAKIROCKET:
                 loopsound(self, CH_SHOTS_SINGLE, "weapons/tag_rocket_fly.wav", VOL_BASE, ATTEN_NORM);
-				break;            
+				break;
             /*
             case PROJECTILE_WAKICANNON:
 				break;
@@ -528,7 +528,7 @@ void Projectile_Precache()
 	precache_model("models/tagrocket.md3");
 	precache_model("models/tracer.mdl");
 	precache_model("models/runematch/rune.mdl");
-	
+
 	precache_model("models/weapons/v_ok_grenade.md3");
 	precache_model("models/weapons/ok_rocket.md3");
 

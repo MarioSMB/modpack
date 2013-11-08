@@ -84,7 +84,7 @@ float MapInfo_Cache_Retrieve(string map)
 
 // GLOB HANDLING (for all BSP files)
 float _MapInfo_globopen;
-float _MapInfo_globcount; 
+float _MapInfo_globcount;
 float _MapInfo_globhandle;
 string _MapInfo_GlobItem(float i)
 {
@@ -164,7 +164,7 @@ float MapInfo_FilterGametype(float pGametype, float pFeatures, float pFlagsRequi
 	}
 	MapInfo_count = j + 1;
 	MapInfo_ClearTemps();
-	
+
 	// sometimes the glob isn't sorted nicely, so fix it here...
 	heapsort(MapInfo_count, _MapInfo_FilterList_swap, _MapInfo_FilterList_cmp, world);
 
@@ -443,7 +443,7 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 
 	if(load_default)
 		_MapInfo_Map_ApplyGametype(_MapInfo_GetDefault(pThisType), pWantedType, pThisType, FALSE);
-	
+
 	if(pWantedType == MAPINFO_TYPE_ASSAULT || pWantedType == MAPINFO_TYPE_ONSLAUGHT || pWantedType == MAPINFO_TYPE_RACE || pWantedType == MAPINFO_TYPE_CTS) // these modes don't use fraglimit
 	{
 		cvar_set("fraglimit", "0");
@@ -500,7 +500,7 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 			cvar_set("fraglimit", sa);
 		s = cdr(s);
 	}
-	
+
 	if(pWantedType == MAPINFO_TYPE_VIP)
 	{
 		sa = car(s);
@@ -518,7 +518,7 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 		s = cdr(s);
 	}
 	*/
-	
+
 	// rc = timelimit timelimit_qualification laps laps_teamplay
 	if(pWantedType == MAPINFO_TYPE_RACE)
 	{
@@ -703,7 +703,7 @@ float MapInfo_Type_FromString(string t)
 string MapInfo_Type_ToString(float t)
 {
 	entity e;
-	if(t == MAPINFO_TYPE_ALL)     
+	if(t == MAPINFO_TYPE_ALL)
 	 	return "all";
 	for(e = MapInfo_Type_first; e; e = e.enemy)
 		if(t == e.items)
@@ -744,12 +744,12 @@ void _MapInfo_Parse_Settemp(string pFilename, string acl, float type, string s, 
 	o = strstrofs(s, "\"", 0);
 	if(o >= 0)
 		s = substring(s, 0, o);
-	
+
 	//   remove // comments
 	o = strstrofs(s, "//", 0);
 	if(o >= 0)
 		s = substring(s, 0, o);
-	
+
 	//   remove trailing spaces
 	while(substring(s, -1, 1) == " ")
 		s = substring(s, 0, -2);
@@ -1260,7 +1260,7 @@ void MapInfo_LoadMap(string s, float reinit)
 	//	print("EMERGENCY: can't play the selected map in the given game mode. Falling back to DM.\n");
 	//	MapInfo_SwitchGameType(MAPINFO_TYPE_DEATHMATCH);
 	//}
-	
+
 	cvar_settemp_restore();
 	if(reinit)
 		localcmd(strcat("\nmap ", s, "\n"));

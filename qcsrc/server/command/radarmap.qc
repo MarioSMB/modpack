@@ -226,7 +226,7 @@ void RadarMap_Think()
 	//   size: pixel width/height
 	//   maxs: cell width/height
 	//   frame: counter
-	
+
 	float i, x, l;
 	string si;
 
@@ -380,7 +380,7 @@ void RadarMap_Think()
 float RadarMap_Make(float argc)
 {
 	float i;
-	
+
 	if(!radarmapper)
 	{
 		radarmapper = spawn();
@@ -407,21 +407,21 @@ float RadarMap_Make(float argc)
 				case "--resolution": { ++i; radarmapper.size_x = stof(argv(i)); ++i; radarmapper.size_y = stof(argv(i)); break; }
 				case "--qual": // minor alias
 				case "--quality": { ++i; radarmapper.size_z = stof(argv(i)); break; }
-				
-				default: 
-					i = argc; 
+
+				default:
+					i = argc;
 					remove(radarmapper);
 					radarmapper = world;
 					break;
 			}
 		}
-				
-		if(radarmapper) // after doing the arguments, see if we successfully went forward. 
+
+		if(radarmapper) // after doing the arguments, see if we successfully went forward.
 		{
 			print("Radarmap entity spawned.\n");
 			return TRUE; // if so, don't print usage.
 		}
 	}
-	
+
 	return FALSE;
 }

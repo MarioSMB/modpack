@@ -4,12 +4,12 @@
 // =========================================================
 
 // Used by other game command systems for common commands,
-// and it returns true if handled, false if not. 
+// and it returns true if handled, false if not.
 // Note: It tokenizes its input, so be careful!
 float GenericCommand(string command);
 
 // Returns command prefix specific for whatever program it is compiled in
-string GetProgramCommandPrefix(void); 
+string GetProgramCommandPrefix(void);
 
 // used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
 #define CMD_Write(s) fputs(fh, s)

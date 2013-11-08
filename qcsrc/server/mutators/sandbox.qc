@@ -56,7 +56,7 @@ void sandbox_ObjectFunction_Think()
 	}
 
 	self.nextthink = time;
-	
+
 	CSQCMODEL_AUTOUPDATE();
 }
 
@@ -174,7 +174,7 @@ entity sandbox_ObjectSpawn(float database)
 		setorigin(e, trace_endpos);
 		e.angles_y = self.v_angle_y;
 	}
-	
+
 	oldself = self;
 	self = e;
 	CSQCMODEL_AUTOINIT();

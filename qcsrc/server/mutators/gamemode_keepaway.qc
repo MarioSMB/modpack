@@ -3,12 +3,12 @@
 //  Last updated: September, 2012
 // ===========================================================
 
-float ka_ballcarrier_waypointsprite_visible_for_player(entity e) // runs on waypoints which are attached to ballcarriers, updates once per frame 
+float ka_ballcarrier_waypointsprite_visible_for_player(entity e) // runs on waypoints which are attached to ballcarriers, updates once per frame
 {
 	if(e.ballcarried)
-		if(IS_SPEC(other)) 
+		if(IS_SPEC(other))
 			return FALSE; // we don't want spectators of the ballcarrier to see the attached waypoint on the top of their screen
-		
+
 	// TODO: Make the ballcarrier lack a waypointsprite whenever they have the invisibility powerup
 
 	return TRUE;
@@ -24,7 +24,7 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 {
 	if(gameover) { return; }
 	vector oldballorigin = self.origin;
-	
+
 	if(MoveToRandomMapLocation(self, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
 	{
 		makevectors(self.angles);
@@ -34,18 +34,18 @@ void ka_RespawnBall() // runs whenever the ball needs to be relocated
 		self.effects = autocvar_g_keepawayball_effects;
 		self.think = ka_RespawnBall;
 		self.nextthink = time + autocvar_g_keepawayball_respawntime;
-		
+
 		pointparticles(particleeffectnum("electro_combo"), oldballorigin, '0 0 0', 1);
 		pointparticles(particleeffectnum("electro_combo"), self.origin, '0 0 0', 1);
 
 		WaypointSprite_Spawn("ka-ball", 0, 0, self, '0 0 64', world, self.team, self, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAGCARRIER, '0 1 1');
-		WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);	
+		WaypointSprite_Ping(self.waypointsprite_attachedforcarrier);
 
-		sound(self, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere) 
+		sound(self, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 	}
 	else
 	{
-		ka_RespawnBall(); // finding a location failed, retry 
+		ka_RespawnBall(); // finding a location failed, retry
 	}
 }
 
@@ -55,7 +55,7 @@ void ka_TimeScoring()
 	{ // add points for holding the ball after a certain amount of time
 		if(autocvar_g_keepaway_score_timepoints)
 			PlayerScore_Add(self.owner, SP_SCORE, autocvar_g_keepaway_score_timepoints);
-			
+
 		PlayerScore_Add(self.owner, SP_KEEPAWAY_BCTIME, (autocvar_g_keepaway_score_timeinterval / 1)); // interval is divided by 1 so that time always shows "seconds"
 		self.nextthink = time + autocvar_g_keepaway_score_timeinterval;
 	}
@@ -72,11 +72,11 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	}
 	if(other.deadflag != DEAD_NO) { return; }
 	if(other.frozen) { return; }
-	if(!IS_PLAYER(other)) 
+	if(!IS_PLAYER(other))
 	{  // The ball just touched an object, most likely the world
 		pointparticles(particleeffectnum("kaball_sparks"), self.origin, '0 0 0', 1);
 		sound(self, CH_TRIGGER, "keepaway/touch.wav", VOL_BASE, ATTEN_NORM);
-		return; 
+		return;
 	}
 	else if(self.wait > time) { return; }
 
@@ -85,7 +85,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	other.ballcarried = self;
 	setattachment(self, other, "");
 	setorigin(self, '0 0 0');
-	
+
 	// make the ball invisible/unable to do anything/set up time scoring
 	self.velocity = '0 0 0';
 	self.movetype = MOVETYPE_NONE;
@@ -99,13 +99,13 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	other.glow_color = autocvar_g_keepawayball_trail_color;
 	other.glow_trail = TRUE;
 	other.effects |= autocvar_g_keepaway_ballcarrier_effects;
-	
+
 	// messages and sounds
 	ka_EventLog("pickup", other);
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_KEEPAWAY_PICKUP, other.netname);
 	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEEPAWAY_PICKUP, other.netname);
-	sound(self.owner, CH_TRIGGER, "keepaway/pickedup.wav", VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere) 
-	
+	sound(self.owner, CH_TRIGGER, "keepaway/pickedup.wav", VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
+
 	// scoring
 	PlayerScore_Add(other, SP_KEEPAWAY_PICKUPS, 1);
 
@@ -113,7 +113,7 @@ void ka_TouchEvent() // runs any time that the ball comes in contact with someth
 	WaypointSprite_AttachCarrier("ka-ballcarrier", other, RADARICON_FLAGCARRIER, '1 0 0');
 	other.waypointsprite_attachedforcarrier.waypointsprite_visible_for_player = ka_ballcarrier_waypointsprite_visible_for_player;
 	WaypointSprite_UpdateRule(other.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
-	WaypointSprite_Ping(other.waypointsprite_attachedforcarrier);	
+	WaypointSprite_Ping(other.waypointsprite_attachedforcarrier);
 	WaypointSprite_Kill(self.waypointsprite_attachedforcarrier);
 }
 
@@ -123,21 +123,21 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	ball = plyr.ballcarried;
 
 	if(!ball) { return; }
-	
+
 	// reset the ball
 	setattachment(ball, world, "");
 	ball.movetype = MOVETYPE_BOUNCE;
-	ball.wait = time + 1; 
+	ball.wait = time + 1;
 	ball.touch = ka_TouchEvent;
 	ball.think = ka_RespawnBall;
 	ball.nextthink = time + autocvar_g_keepawayball_respawntime;
 	ball.takedamage = DAMAGE_YES;
-	ball.effects &= ~EF_NODRAW; 
+	ball.effects &= ~EF_NODRAW;
 	setorigin(ball, plyr.origin + '0 0 10');
 	ball.velocity = '0 0 200' + '0 100 0'*crandom() + '100 0 0'*crandom();
-	ball.owner.ballcarried = world; // I hope nothing checks to see if the world has the ball in the rest of my code :P 
+	ball.owner.ballcarried = world; // I hope nothing checks to see if the world has the ball in the rest of my code :P
 	ball.owner = world;
-	
+
 	// reset the player effects
 	plyr.glow_trail = FALSE;
 	plyr.effects &= ~autocvar_g_keepaway_ballcarrier_effects;
@@ -146,15 +146,15 @@ void ka_DropEvent(entity plyr) // runs any time that a player is supposed to los
 	ka_EventLog("dropped", plyr);
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_KEEPAWAY_DROPPED, plyr.netname);
 	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEEPAWAY_DROPPED, plyr.netname);
-	sound(other, CH_TRIGGER, "keepaway/dropped.wav", VOL_BASE, ATTEN_NONE);	// ATTEN_NONE (it's a sound intended to be heard anywhere) 
-	
+	sound(other, CH_TRIGGER, "keepaway/dropped.wav", VOL_BASE, ATTEN_NONE);	// ATTEN_NONE (it's a sound intended to be heard anywhere)
+
 	// scoring
 	// PlayerScore_Add(plyr, SP_KEEPAWAY_DROPS, 1); Not anymore, this is 100% the same as pickups and is useless.
-	
+
 	// waypoints
 	WaypointSprite_Spawn("ka-ball", 0, 0, ball, '0 0 64', world, ball.team, ball, waypointsprite_attachedforcarrier, FALSE, RADARICON_FLAGCARRIER, '0 1 1');
 	WaypointSprite_UpdateRule(ball.waypointsprite_attachedforcarrier, 0, SPRITERULE_DEFAULT);
-	WaypointSprite_Ping(ball.waypointsprite_attachedforcarrier);	
+	WaypointSprite_Ping(ball.waypointsprite_attachedforcarrier);
 	WaypointSprite_Kill(plyr.waypointsprite_attachedforcarrier);
 }
 
@@ -266,14 +266,14 @@ MUTATOR_HOOKFUNCTION(ka_Scoring)
 MUTATOR_HOOKFUNCTION(ka_GiveFragsForKill)
 {
 	frag_score = 0; // no frags counted in keepaway
-	return 1; // you deceptive little bugger ;3 This needs to be true in order for this function to even count. 
+	return 1; // you deceptive little bugger ;3 This needs to be true in order for this function to even count.
 }
 
 MUTATOR_HOOKFUNCTION(ka_PlayerPreThink)
 {
 	// clear the item used for the ball in keepaway
 	self.items &= ~IT_KEY1;
-	
+
 	// if the player has the ball, make sure they have the item for it (Used for HUD primarily)
 	if(self.ballcarried)
 		self.items |= IT_KEY1;
@@ -332,13 +332,13 @@ MUTATOR_HOOKFUNCTION(ka_RemovePlayer)
 MUTATOR_HOOKFUNCTION(ka_PlayerPowerups)
 {
 	// In the future this hook is supposed to allow me to do some extra stuff with waypointsprites and invisibility powerup
-	// So bare with me until I can fix a certain bug with ka_ballcarrier_waypointsprite_visible_for_player() 
-	
+	// So bare with me until I can fix a certain bug with ka_ballcarrier_waypointsprite_visible_for_player()
+
 	self.effects &= ~autocvar_g_keepaway_ballcarrier_effects;
 
 	if(self.ballcarried)
 		self.effects |= autocvar_g_keepaway_ballcarrier_effects;
-	
+
 	return 0;
 }
 
@@ -359,10 +359,10 @@ MUTATOR_HOOKFUNCTION(ka_BotRoles)
 void ka_SpawnBall() // loads various values for the ball, runs only once at start of match
 {
 	if(!g_keepaway) { return; }
-	
+
 	entity e;
 	e = spawn();
-	e.model = "models/orbs/orbblue.md3";	
+	e.model = "models/orbs/orbblue.md3";
 	precache_model(e.model);
 	setmodel(e, e.model);
 	setsize(e, '-16 -16 -20', '16 16 20'); // 20 20 20 was too big, player is only 16 16 24... gotta cheat with the Z (20) axis so that the particle isn't cut off
@@ -379,7 +379,7 @@ void ka_SpawnBall() // loads various values for the ball, runs only once at star
 	e.owner = world;
 	ka_ball = e;
 
-	InitializeEntity(e, ka_RespawnBall, INITPRIO_SETLOCATION); // is this the right priority? Neh, I have no idea.. Well-- it works! So. 
+	InitializeEntity(e, ka_RespawnBall, INITPRIO_SETLOCATION); // is this the right priority? Neh, I have no idea.. Well-- it works! So.
 }
 
 void ka_ScoreRules()
@@ -395,7 +395,7 @@ void ka_Initialize() // run at the start of a match, initiates game mode
 {
 	if(!g_keepaway)
 		return;
-		
+
 	precache_sound("keepaway/pickedup.wav");
 	precache_sound("keepaway/dropped.wav");
 	precache_sound("keepaway/respawn.wav");

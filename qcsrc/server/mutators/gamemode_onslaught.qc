@@ -406,12 +406,12 @@ void onslaught_generator_think()
 						d = d + 1;
 				e = e.chain;
 			}
-			
+
 			if(autocvar_g_campaign && autocvar__campaign_testrun)
 				d = d * self.max_health;
 			else
 				d = d * self.max_health / max(30, 60 * autocvar_timelimit_suddendeath);
-			
+
 			Damage(self, self, self, d, DEATH_HURTTRIGGER, self.origin, '0 0 0');
 		}
 		else if (overtime_msg_time)
@@ -666,7 +666,7 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 	if(random() < damage/200+0.2)
 		if(random() < 0.5)
 			ons_throwgib(hitloc + '0 0 20', randomvec()*360, "models/onslaught/gen_gib1.md3", 5, FALSE);
-			
+
 	self.SendFlags |= GSF_STATUS;
 }
 
@@ -676,7 +676,7 @@ void onslaught_generator_delayed()
 	onslaught_updatelinks();
 	// now begin normal thinking
 	generator_link(onslaught_generator_think);
-	
+
 	self.SendFlags = GSF_SETUP;
 }
 
@@ -833,7 +833,7 @@ void onslaught_generator_reset()
 	self.nextthink = time + 0.2;
 	setmodel(self, "models/onslaught/generator.md3");
 	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
-	
+
 	self.SendFlags |= GSF_STATUS;
 
 	if(!self.noalign)
@@ -883,13 +883,13 @@ void spawnfunc_onslaught_generator()
 	precache_sound("onslaught/generator_underattack.wav");
 	if (!self.team)
 		objerror("team must be set");
-	
+
 	if(self.team == NUM_TEAM_1)
         ons_red_generator = self;
 
 	if(self.team == NUM_TEAM_2)
         ons_blue_generator = self;
-        
+
 	self.team_saved = self.team;
 	self.colormap = 1024 + (self.team - 1) * 17;
 	self.solid = SOLID_BBOX;
@@ -929,7 +929,7 @@ void spawnfunc_onslaught_generator()
 	waypoint_spawnforitem(self);
 
 	onslaught_updatelinks();
-	
+
 	self.reset = onslaught_generator_reset;
 }
 
@@ -1057,7 +1057,7 @@ void onslaught_controlpoint_icon_think()
         float _friendly_count = 0;
         float _dist;
         entity _player;
-        
+
         FOR_EACH_PLAYER(_player)
         {
             if(!_player.deadflag)
@@ -1199,7 +1199,7 @@ void onslaught_controlpoint_icon_buildthink()
 	a = onslaught_controlpoint_can_be_linked(self.owner, self.owner.team);
 	if(!a)
 		return;
-    
+
 	self.health = self.health + self.count;
 
 	if (self.health >= self.max_health)
@@ -1379,7 +1379,7 @@ void spawnfunc_onslaught_controlpoint()
 	self.enemy.colormap = self.colormap;
 
 	waypoint_spawnforitem(self);
-	
+
 	self.think = onslaught_controlpoint_think;
 	self.nextthink = time;
 
@@ -1389,7 +1389,7 @@ void spawnfunc_onslaught_controlpoint()
 	onslaught_updatelinks();
 
 	self.reset = onslaught_controlpoint_reset;
-	
+
 	CSQCMODEL_AUTOINIT();
 }
 
@@ -1511,24 +1511,24 @@ MUTATOR_HOOKFUNCTION(ons_BuildMutatorsPrettyString)
 
 MUTATOR_HOOKFUNCTION(ons_Spawn_Score)
 {
-    
+
     /*
     float _neer_home = (random() > 0.5 ? TRUE : FALSE);
-    
+
 	RandomSelection_Init();
-	
+
 	if(self.team == NUM_TEAM_1)
         RandomSelection_Add(ons_red_generator, 0, string_null, 1, 1);
-	
+
 	if(self.team == NUM_TEAM_2)
         RandomSelection_Add(ons_blue_generator, 0, string_null, 1, 1);
-	
+
 	entity _cp = findchain(classname, "onslaught_controlpoint"):
 	while _cp;
 	{
-	    if(_cp.team == self.team)            
+	    if(_cp.team == self.team)
             RandomSelection_Add(_cp, 0, string_null, 1, 1);
-		
+
 		_cp = _cp.chain;
 	}
 
@@ -1539,9 +1539,9 @@ MUTATOR_HOOKFUNCTION(ons_Spawn_Score)
 	}
 	else if(self.team == spawn_spot.team)
 		spawn_score_x += SPAWN_PRIO_NEAR_TEAMMATE_SAMETEAM; // prefer same team, if we can't find a spawn near teammate
-    
+
     */
-    
+
 	return 0;
 }
 
@@ -1549,55 +1549,55 @@ MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
 {
     if(!autocvar_g_onslaught_spawn_at_controlpoints)
         return 0;
-        
+
     if(random() < 0.5)  // 50/50 chane to use default spawnsystem.
         return 0;
-    
+
     float _close_to_home = ((random() > 0.5) ? TRUE : FALSE);
     entity _best = world, _trg_gen = world;
     float _score, _best_score = MAX_SHOT_DISTANCE;
-    
+
 	RandomSelection_Init();
-    
+
 	if(self.team == NUM_TEAM_1)
 	{
 	    if(!_close_to_home)
             _trg_gen = ons_blue_generator;
-        else    
-            _trg_gen  = ons_red_generator;        
+        else
+            _trg_gen  = ons_red_generator;
 	}
-	
+
 	if(self.team == NUM_TEAM_2)
 	{
 	    if(_close_to_home)
             _trg_gen = ons_blue_generator;
-        else    
-            _trg_gen  = ons_red_generator;        
+        else
+            _trg_gen  = ons_red_generator;
 	}
-	
+
 	entity _cp = findchain(classname, "onslaught_controlpoint");
 	while(_cp)
 	{
-	    if(_cp.team == self.team)            
-        {            
+	    if(_cp.team == self.team)
+        {
             _score = vlen(_trg_gen.origin - _cp.origin);
             if(_score < _best_score)
             {
                 _best = _cp;
-                _best_score = _score;            
+                _best_score = _score;
             }
-        }		
+        }
 		_cp = _cp.chain;
 	}
-	
-    vector _loc;        
-    float i;    
+
+    vector _loc;
+    float i;
     if(_best)
     {
         for(i = 0; i < 10; ++i)
         {
             _loc = _best.origin + '0 0 96';
-            _loc += ('0 1 0' * random()) * 128; 
+            _loc += ('0 1 0' * random()) * 128;
             tracebox(_loc, PL_MIN, PL_MAX, _loc, MOVE_NORMAL, self);
             if(trace_fraction == 1.0 && !trace_startsolid)
             {
@@ -1611,13 +1611,13 @@ MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
     {
         if(!autocvar_g_onslaught_spawn_at_generator)
             return 0;
-        
+
         _trg_gen = ((self.team == NUM_TEAM_1) ? ons_red_generator : ons_blue_generator);
-        
+
         for(i = 0; i < 10; ++i)
         {
             _loc = _trg_gen.origin + '0 0 96';
-            _loc += ('0 1 0' * random()) * 128; 
+            _loc += ('0 1 0' * random()) * 128;
             tracebox(_loc, PL_MIN, PL_MAX, _loc, MOVE_NORMAL, self);
             if(trace_fraction == 1.0 && !trace_startsolid)
             {
@@ -1627,7 +1627,7 @@ MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
             }
         }
     }
-    
+
     return 0;
 }
 

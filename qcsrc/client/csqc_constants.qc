@@ -39,7 +39,7 @@ const float		VF_PERSPECTIVE					= 200;	//(float)
 const float		VF_CL_VIEWANGLES				= 33;	//(vector)
 const float		VF_CL_VIEWANGLES_X				= 34;	//(float)
 const float		VF_CL_VIEWANGLES_Y				= 35;	//(float)
-const float		VF_CL_VIEWANGLES_Z				= 36;	//(float) 
+const float		VF_CL_VIEWANGLES_Z				= 36;	//(float)
 
 // Server Autosent Stat Constants
 const float		STAT_HEALTH						= 0;

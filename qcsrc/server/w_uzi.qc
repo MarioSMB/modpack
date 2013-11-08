@@ -52,7 +52,7 @@ void UziFlash()
 void W_UZI_Attack (float deathtype)
 {
 	W_SetupShot (self, autocvar_g_antilag_bullets && autocvar_g_balance_uzi_speed >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, ((self.misc_bulletcounter == 1) ? autocvar_g_balance_uzi_first_damage : autocvar_g_balance_uzi_sustained_damage), self.weapon);
-	
+
 	if (!autocvar_g_norecoil)
 	{
 		self.punchangle_x = random () - 0.5;
@@ -130,7 +130,7 @@ void uzi_mode1_fire_auto()
 	W_DecreaseAmmo(ammo_nails, autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_reload_ammo);
 
 	W_SetupShot (self, autocvar_g_antilag_bullets && autocvar_g_balance_uzi_speed >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, autocvar_g_balance_uzi_sustained_damage, self.weapon);
-	
+
 	if (!autocvar_g_norecoil)
 	{
 		self.punchangle_x = random () - 0.5;
@@ -158,7 +158,7 @@ void uzi_mode1_fire_auto()
 void uzi_mode1_fire_burst()
 {
 	W_SetupShot (self, autocvar_g_antilag_bullets && autocvar_g_balance_uzi_speed >= autocvar_g_antilag_bullets, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, autocvar_g_balance_uzi_sustained_damage, self.weapon);
-	
+
 	if (!autocvar_g_norecoil)
 	{
 		self.punchangle_x = random () - 0.5;

@@ -125,10 +125,10 @@ void W_Fireball_Damage (entity inflictor, entity attacker, float damage, float d
 {
 	if(self.health <= 0)
 		return;
-		
+
 	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
-		
+
 	self.health = self.health - damage;
 	if (self.health <= 0)
 	{
@@ -170,7 +170,7 @@ void W_Fireball_Attack1()
 	setsize(proj, '-16 -16 -16', '16 16 16');
 	proj.flags = FL_PROJECTILE;
     proj.missile_flags = MIF_SPLASH | MIF_PROXY;
-    
+
 	CSQCProjectile(proj, TRUE, PROJECTILE_FIREBALL, TRUE);
 
 	other = proj; MUTATOR_CALLHOOK(EditProjectile);
@@ -301,7 +301,7 @@ void W_Fireball_Attack2()
 	proj.angles = vectoangles(proj.velocity);
 	proj.flags = FL_PROJECTILE;
     proj.missile_flags = MIF_SPLASH | MIF_PROXY | MIF_ARC;
-    
+
 	CSQCProjectile(proj, TRUE, PROJECTILE_FIREMINE, TRUE);
 
 	other = proj; MUTATOR_CALLHOOK(EditProjectile);

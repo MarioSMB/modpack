@@ -192,12 +192,12 @@ void InitGameplayMode()
         have_team_spawns = -1; // request team spawns
 	    MUTATOR_ADD(gamemode_nexball);
 	}
-        
+
 	if(g_keepaway)
 	{
 		MUTATOR_ADD(gamemode_keepaway);
 	}
-	
+
 	if(g_vip)
 	{
 		fraglimit_override = autocvar_g_vip_point_limit;
@@ -253,7 +253,7 @@ void InitGameplayMode()
 		else
 			g_race_qualifying = 0;
 	}
-	
+
 	if(g_invasion)
 	{
 		maxrounds = cvar("fraglimit");
@@ -329,7 +329,7 @@ string getwelcomemessage(void)
 
 	if (g_grappling_hook)
 		s = strcat(s, "\n\n^3grappling hook^8 is enabled, press 'e' to use it\n");
-		
+
 	if (cvar("g_nades"))
 		s = strcat(s, "\n\n^3nades^8 are enabled, press 'g' to use them\n");
 
@@ -625,7 +625,7 @@ float TeamSmallerEqThanTeam(float ta, float tb, entity e)
 			cb -= cbb * 0.999;
 		}
 	}
-	
+
 	// keep teams alive (teams of size 0 always count as smaller, ignoring score)
 	if(ca < 1)
 		if(cb >= 1)
@@ -696,7 +696,7 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 		GetTeamCounts(world);
 
 	RandomSelection_Init();
-	
+
 	t = 1;
 	if(TeamSmallerEqThanTeam(2, t, pl))
 		t = 2;

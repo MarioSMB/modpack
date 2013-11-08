@@ -247,7 +247,7 @@ void CSQCModel_Read(float isnew)
 		self.iflags |= IFLAG_TELEPORTED;
 		self.csqcmodel_teleported = 1;
 	}
-	
+
 	CSQCModel_InterpolateAnimation_Note(sf);
 	InterpolateOrigin_Note();
 	CSQCPlayer_PostUpdate();

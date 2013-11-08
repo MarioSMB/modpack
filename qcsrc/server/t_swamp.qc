@@ -1,7 +1,7 @@
 /*
 *		t_swamp.c
 *		Adds spawnfunc_trigger_swamp and suppoart routines for xonotic 1.2.1+
-*		Author tZork (Jakob MG) 
+*		Author tZork (Jakob MG)
 *		jakob@games43.se
 *		2005 11 29
 */
@@ -20,16 +20,16 @@ void swampslug_think();
 * It works like this: When the plyer enters teh swamp the spawnfunc_trigger_swamp
 * attaches a new "swampslug" to the player. As long as the plyer is inside
 * the swamp the swamp gives the slug new health. But the slug slowly kills itself
-* so when the player goes outside the swamp, it dies and releases the player from the 
-* swamps curses (dmg/slowdown) 
-* 
+* so when the player goes outside the swamp, it dies and releases the player from the
+* swamps curses (dmg/slowdown)
+*
 * I do it this way becuz there is no "untouch" event.
 *
-* --NOTE-- 
+* --NOTE--
 * THE ACCTUAL slowdown is done in cl_physics.c on line 57-60
 * --NOTE--
 */
-void swampslug_think(void) 
+void swampslug_think(void)
 {
 	//Slowly kill the slug
 	self.health = self.health - 1;
@@ -41,7 +41,7 @@ void swampslug_think(void)
 		//centerprint(self.owner,"Killing slug...\n");
 		return;
 	}
-	
+
 	// Slug still alive, so we are still in the swamp
 	// Or we have exited it very recently.
 	// Do the damage and renew the timer.
@@ -50,7 +50,7 @@ void swampslug_think(void)
 	self.nextthink = time + self.swamp_interval;
 }
 
-void swamp_touch(void) 
+void swamp_touch(void)
 {
 	// If whatever thats touching the swamp is not a player
 	// or if its a dead player, just dont care abt it.
@@ -82,20 +82,20 @@ void swamp_touch(void)
 }
 
 /*QUAKED spawnfunc_trigger_swamp (.5 .5 .5) ?
-Players gettin into the swamp will 
+Players gettin into the swamp will
 get slowd down and damaged
 */
 void spawnfunc_trigger_swamp(void)
 {
 	// Init stuff
 	EXACTTRIGGER_INIT;
-	self.touch = swamp_touch;	
+	self.touch = swamp_touch;
 
 	// Setup default keys, if missing
-	if(self.dmg <= 0) 
+	if(self.dmg <= 0)
 		self.dmg = 5;
-	if(self.swamp_interval <= 0) 
+	if(self.swamp_interval <= 0)
 		self.swamp_interval = 1;
-	if(self.swamp_slowdown <= 0) 
+	if(self.swamp_slowdown <= 0)
 		self.swamp_slowdown = 0.5;
 }

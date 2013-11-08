@@ -307,7 +307,7 @@ float W_IsWeaponThrowable(float w)
 		return 0;
     if(w == 0)
         return 0;
-	
+
 	wa = W_AmmoItemCode(w);
 	if(start_weapons & WepSet_FromWeapon(w))
 	{
@@ -347,7 +347,7 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 
 	W_SwitchWeapon_Force(self, w_getbestweapon(self));
 	a = W_ThrowNewWeapon(self, w, doreduce, self.origin + delta, velo);
-	
+
 	if (!a) return;
 	Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_WEAPON_DROP, a, w);
 }
@@ -439,7 +439,7 @@ void W_WeaponFrame()
 			self.switchingweapon = self.switchweapon;
 
 			entity oldwep = get_weaponinfo(self.weapon);
-			
+
 #ifndef INDEPENDENT_ATTACK_FINISHED
 			if(ATTACK_FINISHED(self) <= time + self.weapon_frametime * 0.5)
 			{

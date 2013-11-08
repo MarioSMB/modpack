@@ -10,9 +10,9 @@ void spawnfunc_worldspawn()
 	dprint("TESTCASE: START\n");
 	r = test();
 	if(r == 1)
-		error("TESTCASE: PASS"); 
+		error("TESTCASE: PASS");
 	else if(r == 0)
-		error("TESTCASE: FAIL"); 
+		error("TESTCASE: FAIL");
 	else
-		error("TESTCASE: INVALID"); 
+		error("TESTCASE: INVALID");
 }

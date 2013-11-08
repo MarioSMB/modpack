@@ -50,7 +50,7 @@
 		ZCTX(_("CI_SEC^%d seconds")), /* second */ \
 		ZCTX(_("CI_THI^%d seconds")), /* third */ \
 		ZCTX(_("CI_MUL^%d seconds"))) /* multi */
-		
+
 string count_ordinal(float interval)
 {
 	// This function is designed primarily for the English language, it's impossible
@@ -72,7 +72,7 @@ string count_ordinal(float interval)
 		}
 	}
 	else { return sprintf(_("%dth"), interval); }
-	
+
 	return "";
 }
 
@@ -88,7 +88,7 @@ string count_fill(float interval, string zeroth, string first, string second, st
 	//   1 second
 	//   2 seconds
 	//   3 seconds
-	//   etc... minutes, hours, days, etc. 
+	//   etc... minutes, hours, days, etc.
 
 	switch(floor(interval))
 	{
@@ -111,28 +111,28 @@ string process_time(float outputtype, float seconds)
 {
 	float tmp_hours = 0, tmp_minutes = 0, tmp_seconds = 0;
 	float tmp_years = 0, tmp_weeks = 0, tmp_days = 0;
-	
+
 	tmp_seconds = floor(seconds);
 
 	if(tmp_seconds)
 	{
 		tmp_minutes = floor(tmp_seconds / 60);
-		
+
 		if(tmp_minutes)
 		{
 			tmp_seconds -= (tmp_minutes * 60);
 			tmp_hours = floor(tmp_minutes / 60);
-			
+
 			if(tmp_hours)
 			{
 				tmp_minutes -= (tmp_hours * 60);
 				tmp_days = floor(tmp_hours / 24);
-				
+
 				if(tmp_days)
 				{
 					tmp_hours -= (tmp_days * 24);
 					tmp_weeks = floor(tmp_days / 7);
-					
+
 					if(tmp_weeks)
 					{
 						tmp_days -= (tmp_weeks * 7);

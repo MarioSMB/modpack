@@ -72,7 +72,7 @@ MUTATOR_HOOKABLE(PlayerDies);
 		entity frag_attacker;
 		entity frag_target; // same as self
 		float frag_deathtype;
-		
+
 MUTATOR_HOOKABLE(PlayerJump);
 	// called when a player presses the jump key
 	// INPUT, OUTPUT:
@@ -114,7 +114,7 @@ MUTATOR_HOOKABLE(BuildMutatorsPrettyString);
 	// appends ", Mutator name" to ret_string for display
 	// INPUT, OUTPUT:
 		string ret_string;
-		
+
 MUTATOR_HOOKABLE(CustomizeWaypoint);
 	// called every frame
 	// customizes the waypoint for spectators
@@ -127,7 +127,7 @@ MUTATOR_HOOKABLE(FilterItem);
 MUTATOR_HOOKABLE(TurretSpawn);
 	// return error to request removal
 	// INPUT: self - turret
-	
+
 MUTATOR_HOOKABLE(OnEntityPreSpawn);
 	// return error to prevent entity spawn, or modify the entity
 
@@ -152,26 +152,26 @@ MUTATOR_HOOKABLE(EditProjectile);
 	// INPUT:
 		entity self;
 		entity other;
-        
+
 MUTATOR_HOOKABLE(MonsterSpawn);
 	// called when a monster spawns
-    
+
 MUTATOR_HOOKABLE(MonsterDies);
 	// called when a monster dies
 	// INPUT:
 		entity frag_attacker;
-		
+
 MUTATOR_HOOKABLE(MonsterRespawn);
 	// called when a monster wants to respawn
 	// INPUT:
 		entity other;
-		
+
 MUTATOR_HOOKABLE(MonsterDropItem);
 	// called when a monster is dropping loot
 	// INPUT, OUTPUT:
 		.void() monster_loot;
 		entity other;
-	
+
 MUTATOR_HOOKABLE(MonsterMove);
 	// called when a monster moves
 	// returning TRUE makes the monster stop
@@ -179,10 +179,10 @@ MUTATOR_HOOKABLE(MonsterMove);
 		float monster_speed_run;
 		float monster_speed_walk;
 		entity monster_target;
-    
+
 MUTATOR_HOOKABLE(MonsterFindTarget);
 	// called when a monster looks for another target
-    
+
 MUTATOR_HOOKABLE(MonsterCheckBossFlag);
     // called to change a random monster to a miniboss
 
@@ -197,7 +197,7 @@ MUTATOR_HOOKABLE(PlayerDamage_SplitHealthArmor);
 	// INPUT, OUTPUT:
 		float damage_take;
 		float damage_save;
-		
+
 MUTATOR_HOOKABLE(PlayerDamage_Calculate);
 	// called to adjust damage and force values which are applied to the player, used for e.g. strength damage/force multiplier
 	// i'm not sure if I should change this around slightly (Naming of the entities, and also how they're done in g_damage).
@@ -214,7 +214,7 @@ MUTATOR_HOOKABLE(PlayerPowerups);
 	// called at the end of player_powerups() in cl_client.qc, used for manipulating the values which are set by powerup items.
 	// INPUT
 	entity self;
-	float olditems; // also technically output, but since it is at the end of the function it's useless for that :P 
+	float olditems; // also technically output, but since it is at the end of the function it's useless for that :P
 
 MUTATOR_HOOKABLE(PlayerUseKey);
 	// called when the use key is pressed
@@ -265,7 +265,7 @@ MUTATOR_HOOKABLE(SV_StartFrame);
 MUTATOR_HOOKABLE(SetModname);
 	// OUT
 	string modname; // name of the mutator/mod if it warrants showing as such in the server browser
-	
+
 MUTATOR_HOOKABLE(Item_Spawn);
 	// called for each item being spawned on a map, including dropped weapons
 	// return 1 to remove an item
@@ -278,13 +278,13 @@ MUTATOR_HOOKABLE(SetWeaponreplace);
 		entity other; // weapon info
 	// IN+OUT
 		string ret_string;
-		
+
 MUTATOR_HOOKABLE(Item_RespawnCountdown);
 	// called when an item is about to respawn
 	// INPUT+OUTPUT:
 	string item_name;
 	vector item_color;
-		
+
 MUTATOR_HOOKABLE(BotShouldAttack);
 	// called when a bot checks a target to attack
 	// INPUT
@@ -295,7 +295,7 @@ MUTATOR_HOOKABLE(PortalTeleport);
 	// allows you to strip a player of an item if they go through the teleporter to help prevent cheating
 	// INPUT
 	entity self;
-	
+
 MUTATOR_HOOKABLE(HelpMePing);
 	// called whenever a player uses impulse 33 (help me) in cl_impulse.qc
 	// normally help me ping uses self.waypointsprite_attachedforcarrier,
@@ -303,32 +303,32 @@ MUTATOR_HOOKABLE(HelpMePing);
 	// in a special manner using this hook
 	// INPUT
 	entity self; // the player who pressed impulse 33
-	
+
 MUTATOR_HOOKABLE(VehicleSpawn);
 	// called when a vehicle initializes
 	// return TRUE to remove the vehicle
-	
+
 MUTATOR_HOOKABLE(VehicleEnter);
 	// called when a player enters a vehicle
 	// allows mutators to set special settings in this event
 	// INPUT
 	entity vh_player; // player
 	entity vh_vehicle; // vehicle
-	
+
 MUTATOR_HOOKABLE(VehicleTouch);
 	// called when a player touches a vehicle
 	// return TRUE to stop player from entering the vehicle
 	// INPUT
 	entity self; // vehicle
 	entity other; // player
-	
+
 MUTATOR_HOOKABLE(VehicleExit);
 	// called when a player exits a vehicle
 	// allows mutators to set special settings in this event
 	// INPUT
 	entity vh_player; // player
 	entity vh_vehicle; // vehicle
-	
+
 MUTATOR_HOOKABLE(AbortSpeedrun);
 	// called when a speedrun is aborted and the player is teleported back to start position
 	// INPUT

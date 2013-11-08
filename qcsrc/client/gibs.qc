@@ -176,7 +176,7 @@ void Ent_GibSplash(float isNew)
 	{
 		if(cl_gentle_gibs == 2)
 			gentle_prefix = "";
-		else if(cl_gentle_gibs == 3) 
+		else if(cl_gentle_gibs == 3)
 			gentle_prefix = "happy_";
 	}
 	else if(autocvar_cl_particlegibs)
