@@ -15,6 +15,7 @@ Defs.qc
 ../warpzonelib/client.qh
 
 ../common/teams.qh
+../common/nades.qh
 ../common/util.qh
 ../common/test.qh
 ../common/counting.qh

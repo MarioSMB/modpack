@@ -8,22 +8,11 @@ void nade_timer_think()
 
 void nade_burn_spawn(entity _nade)
 {
-	float p;
-
-	switch(_nade.nade_type)
-	{
-		case NADE_TYPE_NAPALM: p = PROJECTILE_NADE_NAPALM_BURN; break;
-		case NADE_TYPE_ICE: p = PROJECTILE_NADE_ICE_BURN; break;
-		case NADE_TYPE_TRANSLOCATE: p = PROJECTILE_NADE_TRANSLOCATE_BURN; break;
-		default: p = PROJECTILE_NADE_BURN; break;
-	}
-
-	CSQCProjectile(_nade, TRUE, p, TRUE);
+	CSQCProjectile(_nade, TRUE, Nade_ProjectileFromID(_nade.nade_type, TRUE), TRUE);
 }
 
 void nade_spawn(entity _nade)
 {
-	float p;
 	entity timer = spawn();
 	setmodel(timer, "models/ok_nade_counter/ok_nade_counter.md3");
 	setattachment(timer, _nade, "");
@@ -38,15 +27,7 @@ void nade_spawn(entity _nade)
 
 	_nade.effects |= EF_LOWPRECISION;
 
-	switch(_nade.nade_type)
-	{
-		case NADE_TYPE_NAPALM: p = PROJECTILE_NADE_NAPALM; break;
-		case NADE_TYPE_ICE: p = PROJECTILE_NADE_ICE; break;
-		case NADE_TYPE_TRANSLOCATE: p = PROJECTILE_NADE_TRANSLOCATE; break;
-		default: p = PROJECTILE_NADE; break;
-	}
-
-	CSQCProjectile(_nade, TRUE, p, TRUE);
+	CSQCProjectile(_nade, TRUE, Nade_ProjectileFromID(_nade.nade_type, FALSE), TRUE);
 }
 
 
@@ -616,17 +597,11 @@ void nade_prime()
 	n.nextthink = max(n.wait - 3, time);
 	n.projectiledeathtype = DEATH_NADE;
 
-	switch(n.nade_type)
-	{
-		case NADE_TYPE_NAPALM: fn.colormod = '2 0.5 0'; break;
-		case NADE_TYPE_ICE: fn.colormod = '0 0.5 2'; break;
-		case NADE_TYPE_TRANSLOCATE: fn.colormod = '1 0.0625 1'; self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP; break;
-	}
-
 	setmodel(fn, "models/weapons/h_ok_grenade.iqm");
 	setattachment(fn, self.weaponentity, "");
 	fn.classname = "fake_nade";
 	fn.realowner = fn.owner = self;
+	fn.colormod = Nade_Color(n.nade_type);
 	fn.colormap = self.colormap;
 	fn.glowmod = self.glowmod;
 	fn.think = SUB_Remove;

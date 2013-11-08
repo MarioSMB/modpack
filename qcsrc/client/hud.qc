@@ -902,14 +902,9 @@ void DrawNadeScoreBar(vector myPos, vector mySize, vector color)
 void DrawAmmoNades(vector myPos, vector mySize, float draw_expanding, float expand_time)
 {
 	float theAlpha = 1, a, b;
-	vector nade_color = '1 1 1', picpos, numpos;
+	vector nade_color, picpos, numpos;
 	
-	switch(getstati(STAT_GRENADE_BONUS_TYPE))
-	{
-		case NADE_TYPE_NAPALM: nade_color = '2 0.5 0'; break;
-		case NADE_TYPE_ICE: nade_color = '0 0.5 2'; break;
-		case NADE_TYPE_TRANSLOCATE: nade_color = '1 0.0625 1'; break;
-	}
+	nade_color = Nade_Color(getstati(STAT_GRENADE_BONUS_TYPE));
 	
 	a = getstatf(STAT_GRENADE_BONUS);
 	b = getstatf(STAT_GRENADE_BONUS_SCORE);

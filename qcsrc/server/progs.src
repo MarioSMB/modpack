@@ -14,6 +14,7 @@ sys-post.qh
 
 ../common/constants.qh
 ../common/teams.qh
+../common/nades.qh
 ../common/util.qh
 ../common/test.qh
 ../common/counting.qh

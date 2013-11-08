@@ -19,8 +19,3 @@ void(entity player, float score) nades_GiveBonus;
 // Remove all bonus nades from a player
 void(entity player) nades_RemoveBonus;
 #endif // SVQC
-
-const float NADE_TYPE_NORMAL = 1;
-const float NADE_TYPE_NAPALM = 2;
-const float NADE_TYPE_ICE = 3;
-const float NADE_TYPE_TRANSLOCATE = 4;

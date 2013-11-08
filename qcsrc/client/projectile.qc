@@ -396,7 +396,7 @@ void Ent_Projectile()
 			case PROJECTILE_NADE:
 				self.mins = '-16 -16 -16';
 				self.maxs = '16 16 16';
-				self.colormod = nade_color;
+				self.colormod = Nade_Color(Nade_IDFromProjectile(self.cnt));
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = func_null;
 				self.scale = 1.5;
