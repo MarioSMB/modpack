@@ -5218,7 +5218,7 @@ void HUD_QuickMenu_Mouse()
 				color = '1 1 1';
 			drawfill(panel_pos, eX * panel_size_x + eY * fontsize_y, color, .2, DRAWFLAG_NORMAL);
 
-			if(!mouseClicked && prevMouseClicked & S_MOUSE1)
+			if(!mouseClicked && (prevMouseClicked & S_MOUSE1))
 			{
 				float f;
 				if (entry_num < QUICKMENU_MAXLINES - 1)
