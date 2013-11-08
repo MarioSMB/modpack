@@ -908,6 +908,7 @@ void DrawAmmoNades(vector myPos, vector mySize, float draw_expanding, float expa
 	{
 		case NADE_TYPE_NAPALM: nade_color = '2 0.5 0'; break;
 		case NADE_TYPE_ICE: nade_color = '0 0.5 2'; break;
+		case NADE_TYPE_TRANSLOCATE: nade_color = '1 0.0625 1'; break;
 	}
 	
 	a = getstatf(STAT_GRENADE_BONUS);
