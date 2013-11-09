@@ -62,8 +62,6 @@ vehicles/vehicles.qh
 projectile.qh
 player_skeleton.qh
 
-../server/mutators/mutator_nades.qh
-
 sortlist.qc
 miscfunctions.qc
 ../server/t_items.qc

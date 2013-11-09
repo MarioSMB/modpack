@@ -1,4 +1,3 @@
-#ifdef SVQC
 .entity nade;
 .entity fake_nade;
 .float nade_refire;
@@ -18,4 +17,3 @@ void(entity player) nades_Clear;
 void(entity player, float score) nades_GiveBonus;
 // Remove all bonus nades from a player
 void(entity player) nades_RemoveBonus;
-#endif // SVQC
