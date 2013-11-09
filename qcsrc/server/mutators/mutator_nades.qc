@@ -573,11 +573,9 @@ void nade_prime()
 
 	entity n = spawn(), fn = spawn();
 
-	setmodel(n, "null");
-	setattachment(n, self, "bip01 l hand");
-
 	n.classname = "nade";
-	
+	fn.classname = "fake_nade";
+
 	if(self.items & IT_STRENGTH && autocvar_g_nades_bonus_onstrength)
 		n.nade_type = self.nade_type;
 	else if (self.bonus_nades >= 1)
@@ -588,6 +586,8 @@ void nade_prime()
 	else
 		 n.nade_type = ((autocvar_g_nades_client_select) ? self.cvar_cl_nade_type : autocvar_g_nades_nade_type);
 
+	setmodel(n, "null");
+	setattachment(n, self, "bip01 l hand");
 	n.realowner = self;
 	n.colormap = self.colormap;
 	n.glowmod = self.glowmod;
@@ -599,7 +599,6 @@ void nade_prime()
 
 	setmodel(fn, "models/weapons/h_ok_grenade.iqm");
 	setattachment(fn, self.weaponentity, "");
-	fn.classname = "fake_nade";
 	fn.realowner = fn.owner = self;
 	fn.colormod = Nade_Color(n.nade_type);
 	fn.colormap = self.colormap;
