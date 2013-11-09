@@ -66,12 +66,12 @@ IN THE SOFTWARE.\
 	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_ORIGIN, float, ReadCoord, WriteCoord, origin_x) \
 	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_ORIGIN, float, ReadCoord, WriteCoord, origin_y) \
 	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_ORIGIN, float, ReadCoord, WriteCoord, origin_z) \
-	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_SIZE, float, ReadCoord, WriteCoord, mins_x) \
-	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_SIZE, float, ReadCoord, WriteCoord, mins_y) \
-	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_SIZE, float, ReadCoord, WriteCoord, mins_z) \
-	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_SIZE, float, ReadCoord, WriteCoord, maxs_x) \
-	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_SIZE, float, ReadCoord, WriteCoord, maxs_y) \
-	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_SIZE, float, ReadCoord, WriteCoord, maxs_z) \
+	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_SIZE, float, ReadChar, WriteChar, mins_x) \
+	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_SIZE, float, ReadChar, WriteChar, mins_y) \
+	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_SIZE, float, ReadChar, WriteChar, mins_z) \
+	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_SIZE, float, ReadChar, WriteChar, maxs_x) \
+	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_SIZE, float, ReadChar, WriteChar, maxs_y) \
+	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_SIZE, float, ReadChar, WriteChar, maxs_z) \
 	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_PITCHROLL, float, ReadAngle, WriteAngle, angles_x) \
 	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_YAW, float, ReadAngle, WriteAngle, angles_y) \
 	CSQCMODEL_PROPERTY(CSQCMODEL_PROPERTY_PITCHROLL, float, ReadAngle, WriteAngle, angles_z) \
