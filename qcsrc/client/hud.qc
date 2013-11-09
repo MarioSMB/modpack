@@ -5176,7 +5176,7 @@ void HUD_QuickMenu_Mouse()
 		return;
 	}
 
-	if not(autocvar_hud_cursormode)
+	if(!autocvar_hud_cursormode)
 	{
 		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
 
