@@ -237,9 +237,9 @@ void CSQCModel_Read(float isnew)
 
 	if(sf & CSQCMODEL_PROPERTY_MODELINDEX)
 	{
-		//vector oldmins = self.mins, oldmaxs = self.maxs;
+		vector pmin = self.mins, pmax = self.maxs;
 		setmodelindex(self, self.modelindex); // this retrieves the .model key and sets mins/maxs/absmin/absmax
-		//setsize(self, oldmins, oldmaxs);
+		setsize(self, pmin, pmax);
 	}
 
 	if(sf & CSQCMODEL_PROPERTY_TELEPORTED)
