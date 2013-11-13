@@ -755,12 +755,6 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			mirrorforce *= g_weaponforcefactor;
 		}
 
-		if(targ.frozen && deathtype != DEATH_HURTTRIGGER)
-		{
-			damage = 0;
-			force *= 0.2;
-		}
-
 		// should this be changed at all? If so, in what way?
 		frag_attacker = attacker;
 		frag_target = targ;
