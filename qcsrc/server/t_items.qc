@@ -528,7 +528,7 @@ void Item_RespawnThink()
 		self.oldorigin = self.origin;
 		ItemUpdate(self);
 	}
-	
+
 	if(time >= self.wait)
 		Item_Respawn();
 }

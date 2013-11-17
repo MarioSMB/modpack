@@ -77,7 +77,7 @@ void CSQC_Init(void)
 		if(getplayerkeyvalue(i, "viewentity") == "")
 			break;
 	maxclients = i;
-	
+
 	localcmd("\nalias nobobbing \"cl_bob 0; cl_bob2 0; cl_followmodel 0; cl_leanmodel 0\"\n");
 	localcmd("\nalias quickmenu \"cl_cmd hud quickmenu\"\n");
 
@@ -145,7 +145,7 @@ void CSQC_Init(void)
 	precache_model("null");
 	precache_sound("misc/hit.wav");
 	precache_sound("misc/typehit.wav");
-	
+
 	generator_precache();
 	Projectile_Precache();
 	Hook_Precache();

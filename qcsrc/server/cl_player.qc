@@ -324,7 +324,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 void SetRespawnDelays()
 {
 	float sdelay = 0, waves = 0;
-	
+
 	if(autocvar_g_respawn_delay_forced)
 		sdelay = autocvar_g_respawn_delay;
 	else
@@ -987,7 +987,7 @@ void IRCSay(string sourcename, string msgin)
 {
 	string msgstr, cmsgstr, fullmsgstr, fullcmsgstr;
 	entity head;
-        
+
 	if(substring(msgin, 0, 1) == " ")
 		msgin = substring(msgin, 1, strlen(msgin) - 1); // work around DP say bug (say_team does not have this!)
 

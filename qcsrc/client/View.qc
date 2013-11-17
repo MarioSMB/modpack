@@ -626,7 +626,7 @@ void CSQC_UpdateView(float w, float h)
 
 	if(fov != oldfov)
 	{
-		localcmd("\ncmd report fov ", ftos(fov), "\n");
+		localcmd(strcat("\ncmd report fov ", ftos(fov), "\n"));
 		oldfov = fov;
 	}
 
@@ -1365,14 +1365,14 @@ void CSQC_UpdateView(float w, float h)
 			wcross_scale_goal_prev = wcross_scale;
 			wcross_alpha_goal_prev = wcross_alpha;
 			wcross_color_goal_prev = wcross_color;
-			
+
 			if(!minsta_delay)
 				minsta_delay = 0.75;
 			if(!minsta_range)
 				minsta_range = MAX_SHOT_DISTANCE;
-			
+
 			entity me = playerslots[player_localnum];
-			
+
 			if(activeweapon == WEP_MINSTANEX)
 			if(time >= getstatf(STAT_GAMESTARTTIME))
 			if(time >= getstatf(STAT_ROUNDSTARTTIME))
@@ -1386,29 +1386,29 @@ void CSQC_UpdateView(float w, float h)
 				string s;
 				float hit = 0;
 				vector v = '0 0 1' * getstati(STAT_VIEWHEIGHT);
-				
+
 				s = strcat("TE_TEI_G3", Static_Team_ColorName_Upper(myteam));
-				
+
 				WarpZone_TraceLine(view_origin, view_origin + v + view_forward * minsta_range, MOVE_NORMAL, world);
-				
+
 				if(trace_fraction < 1 && !trace_ent.entnum)
 					hit = 0;
 				else
 					hit = 1;
-					
+
 				if(hit)
 					s = strcat(s, "_HIT");
-			
+
 				WarpZone_TrailParticles(self, particleeffectnum(s), view_origin, view_origin + v + view_forward * minsta_range);
-				
+
 				//sound(self, CH_SHOTS, "weapons/minstanexfire.wav", VOL_BASE, ATTEN_LARGE);
-				
+
 				if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
 					pointparticles(particleeffectnum("nex_impact"), trace_endpos, '0 0 0', 1);
-					
+
 				last_beam = time + minsta_delay;
 			}
-			
+
 			if(shottype == SHOTTYPE_HITTEAM || (shottype == SHOTTYPE_HITOBSTRUCTION && autocvar_crosshair_hittest_blur && !autocvar_chase_active))
 			{
 				wcross_blur = 1;
@@ -1416,10 +1416,10 @@ void CSQC_UpdateView(float w, float h)
 			}
 			else
 				wcross_blur = 0;
-				
+
 			if(autocvar_cl_rumraisin)
 				wcross_blur = 0;
-				
+
 			// *_prev is at time-frametime
 			// * is at wcross_changedonetime+f
 			// what do we have at time?
@@ -1458,7 +1458,7 @@ void CSQC_UpdateView(float w, float h)
 					float nex_charge, nex_chargepool;
 					nex_charge = getstatf(STAT_NEX_CHARGE);
 					nex_chargepool = getstatf(STAT_NEX_CHARGEPOOL);
-					
+
 					float ok_ammo_charge, ok_ammo_chargepool;
 					ok_ammo_charge = getstatf(STAT_OK_AMMO_CHARGE);
 					ok_ammo_chargepool = getstatf(STAT_OK_AMMO_CHARGEPOOl);

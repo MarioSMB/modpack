@@ -563,12 +563,12 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 {
 	if(!IS_PLAYER(targ) && !IS_MONSTER(targ)) // only specified entities can be freezed
 		return;
-		
+
 	if(targ.frozen)
 		return;
-	
+
 	float targ_maxhealth = ((IS_MONSTER(targ)) ? targ.max_health : autocvar_g_balance_health_start);
-		
+
 	targ.frozen = frozen_type;
 	targ.revive_progress = ((frozen_type == 3) ? 1 : 0);
 	targ.health = ((frozen_type == 3) ? targ_maxhealth : 1);
@@ -595,11 +595,11 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	self = oldself;
 
 	RemoveGrapplingHook(targ);
-	
+
 	FOR_EACH_PLAYER(head)
 	if(head.hook.aiment == targ)
 		RemoveGrapplingHook(head);
-	
+
 	// add waypoint
 	if(show_waypoint)	
 		WaypointSprite_Spawn("frozen", 0, 0, targ, '0 0 64', world, targ.team, targ, waypointsprite_attached, TRUE, RADARICON_WAYPOINT, '0.25 0.90 1');

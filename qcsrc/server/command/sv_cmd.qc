@@ -22,10 +22,10 @@ void make_mapinfo_Think()
 float GameCommand_checkinlist(string game_command, string list)
 {
 	string l = strcat(" ", list, " ");
-	
+
 	if(strstrofs(l, strcat(" ", game_command, " "), 0) >= 0)
 		return TRUE;
-	
+
 	return FALSE;
 }
 
@@ -1621,13 +1621,13 @@ void GameCommand_supermentalrescue(float request)
 		case CMD_REQUEST_COMMAND:
 		{
 			entity head;
-			
+
 			FOR_EACH_REALPLAYER(head)
 				MorningRescue(head);
-			
+
 			FOR_EACH_PLAYER(head)
 				Unfreeze(head);
-			
+
 			return; // never fall through to usage
 		}
 		

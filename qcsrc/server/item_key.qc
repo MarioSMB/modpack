@@ -363,7 +363,7 @@ void trigger_keylock_touch(void) {
 		remove(self);
 	}
 
-}
+};
 
 /*QUAKED trigger_keylock (.0 .5 .8) ?
 Keylock trigger.  Must target other entities.

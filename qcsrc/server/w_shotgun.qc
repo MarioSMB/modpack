@@ -35,9 +35,9 @@ void W_Shotgun_Attack (float deathtype)
 
 	W_DecreaseAmmo(ammo_shells, ammoamount, autocvar_g_balance_shotgun_reload_ammo);
 
-	W_SetupShot (self, autocvar_g_antilag_bullets && bulletspeed >= autocvar_g_antilag_bullets, 5, "weapons/shotgun_fire.wav", CH_WEAPON_A, d * bullets, self.weapon);
+	W_SetupShot (self, TRUE, 5, "weapons/shotgun_fire.wav", CH_WEAPON_A, d * bullets, self.weapon);
 	for (sc = 0;sc < bullets;sc = sc + 1)
-		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, f, deathtype, 0, 1, bulletconstant);
+		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, f, deathtype, 0, bulletconstant);
 	endFireBallisticBullet();
 
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, autocvar_g_balance_shotgun_primary_ammo);
@@ -212,12 +212,7 @@ float w_shotgun(float req)
 		if(vlen(self.origin-self.enemy.origin) <= autocvar_g_balance_shotgun_secondary_melee_range)
 			self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
 		else
-		{
-			if(autocvar_g_antilag_bullets)
-				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
-			else
-				self.BUTTON_ATCK = bot_aim(autocvar_g_balance_shotgun_primary_speed, 0, 0.001, FALSE);
-		}
+			self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
 
 	else if (req == WR_THINK)
 	{

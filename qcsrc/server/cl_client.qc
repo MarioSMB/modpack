@@ -317,7 +317,7 @@ void FixPlayermodel()
 			defaultmodel = substring(defaultmodel, 0, i);
 		}
 	}
-	
+
 	if(autocvar_sv_allow_customplayermodels)
 	if(!cvar("g_overkill"))
 	{
@@ -329,7 +329,7 @@ void FixPlayermodel()
 		}
 		if(self.cvar_cl_robot == 1)
 			defaultmodel = "models/player/terminusmale.iqm";
-			
+
 		// special hax
 		if(checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist) || IS_BOT_CLIENT(self))
 		{

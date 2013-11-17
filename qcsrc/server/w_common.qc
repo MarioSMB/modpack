@@ -389,29 +389,20 @@ void fireBallisticBullet_trace_callback(vector start, vector hit, vector end)
 	self.owner = world;
 }
 
-void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
+void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float force, float dtype, float tracereffects, float bulletconstant)
 {
 	float lag, dt, savetime; //, density;
 	entity pl, oldself;
-	float antilagging;
-
-	antilagging = (autocvar_g_antilag_bullets && (pSpeed >= autocvar_g_antilag_bullets));
 
 	entity proj;
 	proj = spawn();
 	proj.classname = "bullet";
 	proj.owner = proj.realowner = self;
 	PROJECTILE_MAKETRIGGER(proj);
-	if(gravityfactor > 0)
-	{
-		proj.movetype = MOVETYPE_TOSS;
-		proj.gravity = gravityfactor;
-	}
-	else
-		proj.movetype = MOVETYPE_FLY;
+	proj.movetype = MOVETYPE_FLY;
 	proj.think = SUB_Remove;
 	proj.nextthink = time + lifetime; // min(pLifetime, vlen(world.maxs - world.mins) / pSpeed);
-	W_SetupProjectileVelocityEx(proj, dir, v_up, pSpeed, 0, 0, spread, antilagging);
+	W_SetupProjectileVelocityEx(proj, dir, v_up, pSpeed, 0, 0, spread, TRUE);
 	proj.angles = vectoangles(proj.velocity);
 	if(bulletconstant > 0)
 		proj.dmg_radius = autocvar_g_ballistics_materialconstant / bulletconstant;
@@ -432,122 +423,108 @@ void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, f
 
 	other = proj; MUTATOR_CALLHOOK(EditProjectile);
 
-	if(antilagging)
-	{
-		float eff;
-
-		if(tracereffects & EF_RED)
-			eff = particleeffectnum("tr_rifle");
-		else if(tracereffects & EF_BLUE)
-			eff = particleeffectnum("tr_rifle_weak");
-		else
-			eff = particleeffectnum("tr_bullet");
-
-		// NOTE: this may severely throw off weapon balance
-		lag = ANTILAG_LATENCY(self);
-		if(lag < 0.001)
-			lag = 0;
-		if (!IS_REAL_CLIENT(self))
-			lag = 0;
-		if(autocvar_g_antilag == 0 || self.cvar_cl_noantilag)
-			lag = 0; // only do hitscan, but no antilag
-
-		if(lag)
-			FOR_EACH_PLAYER(pl)
-				if(pl != self)
-					antilag_takeback(pl, time - lag);
-
-		oldself = self;
-		self = proj;
-
-		savetime = frametime;
-		frametime = 0.05;
-
-		for(;;)
-		{
-			// DP tracetoss is stupid and always traces in 0.05s
-			// ticks. This makes it trace in 0.05*0.125s ticks
-			// instead.
-			vector v0;
-			float g0;
-			v0 = self.velocity;
-			g0 = self.gravity;
-			self.velocity = self.velocity * 0.125;
-			self.gravity *= 0.125 * 0.125;
-			trace_fraction = 0;
-			fireBallisticBullet_trace_callback_ent = self;
-			fireBallisticBullet_trace_callback_eff = eff;
-			WarpZone_TraceToss_ThroughZone(self, self.owner, world, fireBallisticBullet_trace_callback);
-			self.velocity = v0;
-			self.gravity = g0;
-
-			if(trace_fraction == 1)
-				break;
-				// won't hit anything anytime soon (DP's
-				// tracetoss does 200 tics of, here,
-				// 0.05*0.125s, that is, 1.25 seconds
-
-			other = trace_ent;
-			dt = WarpZone_tracetoss_time * 0.125; // this is only approximate!
-			setorigin(self, trace_endpos);
-			self.velocity = WarpZone_tracetoss_velocity * (1 / 0.125);
-
-			if(!SUB_OwnerCheck())
-			{
-				if(SUB_NoImpactCheck())
-					break;
-
-				// hit the player
-				W_BallisticBullet_Hit();
-			}
-
-			if(proj.dmg_radius < 0) // these NEVER penetrate solid
-				break;
-
-			// if we hit "weapclip", bail out
-			//
-			// rationale of this check:
-			//
-			// any shader that is solid, nodraw AND trans is meant to clip weapon
-			// shots and players, but has no other effect!
-			//
-			// if it is not trans, it is caulk and should not have this side effect
-			//
-			// matching shaders:
-			//   common/weapclip (intended)
-			//   common/noimpact (is supposed to eat projectiles, but is erased farther above)
-			if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NODRAW)
-			if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NONSOLID))
-			if (!(trace_dphitcontents & DPCONTENTS_OPAQUE))
-				break;
-
-			// go through solid!
-			if(!W_BallisticBullet_LeaveSolid((other && (other.solid != SOLID_BSP)) ? eff : -1))
-				break;
-
-			W_BallisticBullet_LeaveSolid_think();
-
-			self.projectiledeathtype |= HITTYPE_BOUNCE;
-		}
-		frametime = savetime;
-		self = oldself;
-
-		if(lag)
-			FOR_EACH_PLAYER(pl)
-				if(pl != self)
-					antilag_restore(pl);
-
-		remove(proj);
-
-		return;
-	}
+	float eff;
 
 	if(tracereffects & EF_RED)
-		CSQCProjectile(proj, TRUE, PROJECTILE_BULLET_GLOWING_TRACER, TRUE);
+		eff = particleeffectnum("tr_rifle");
 	else if(tracereffects & EF_BLUE)
-		CSQCProjectile(proj, TRUE, PROJECTILE_BULLET_GLOWING, TRUE);
+		eff = particleeffectnum("tr_rifle_weak");
 	else
-		CSQCProjectile(proj, TRUE, PROJECTILE_BULLET, TRUE);
+		eff = particleeffectnum("tr_bullet");
+
+	// NOTE: this may severely throw off weapon balance
+	lag = ANTILAG_LATENCY(self);
+	if(lag < 0.001)
+		lag = 0;
+	if (!IS_REAL_CLIENT(self))
+		lag = 0;
+	if(autocvar_g_antilag == 0 || self.cvar_cl_noantilag)
+		lag = 0; // only do hitscan, but no antilag
+
+	if(lag)
+		FOR_EACH_PLAYER(pl)
+			if(pl != self)
+				antilag_takeback(pl, time - lag);
+
+	oldself = self;
+	self = proj;
+
+	savetime = frametime;
+	frametime = 0.05;
+
+	for(;;)
+	{
+		// DP tracetoss is stupid and always traces in 0.05s
+		// ticks. This makes it trace in 0.05*0.125s ticks
+		// instead.
+		vector v0;
+		v0 = self.velocity;
+		self.velocity = self.velocity * 0.125;
+		trace_fraction = 0;
+		fireBallisticBullet_trace_callback_ent = self;
+		fireBallisticBullet_trace_callback_eff = eff;
+		WarpZone_TraceToss_ThroughZone(self, self.owner, world, fireBallisticBullet_trace_callback);
+		self.velocity = v0;
+
+		if(trace_fraction == 1)
+			break;
+			// won't hit anything anytime soon (DP's
+			// tracetoss does 200 tics of, here,
+			// 0.05*0.125s, that is, 1.25 seconds
+
+		other = trace_ent;
+		dt = WarpZone_tracetoss_time * 0.125; // this is only approximate!
+		setorigin(self, trace_endpos);
+		self.velocity = WarpZone_tracetoss_velocity * (1 / 0.125);
+
+		if(!SUB_OwnerCheck())
+		{
+			if(SUB_NoImpactCheck())
+				break;
+
+			// hit the player
+			W_BallisticBullet_Hit();
+		}
+
+		if(proj.dmg_radius < 0) // these NEVER penetrate solid
+			break;
+
+		// if we hit "weapclip", bail out
+		//
+		// rationale of this check:
+		//
+		// any shader that is solid, nodraw AND trans is meant to clip weapon
+		// shots and players, but has no other effect!
+		//
+		// if it is not trans, it is caulk and should not have this side effect
+		//
+		// matching shaders:
+		//   common/weapclip (intended)
+		//   common/noimpact (is supposed to eat projectiles, but is erased farther above)
+		if(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NODRAW)
+		if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NONSOLID))
+		if (!(trace_dphitcontents & DPCONTENTS_OPAQUE))
+			break;
+
+		// go through solid!
+		if(!W_BallisticBullet_LeaveSolid((other && (other.solid != SOLID_BSP)) ? eff : -1))
+			break;
+
+		W_BallisticBullet_LeaveSolid_think();
+
+		self.projectiledeathtype |= HITTYPE_BOUNCE;
+	}
+	frametime = savetime;
+	self = oldself;
+
+	if(lag)
+		FOR_EACH_PLAYER(pl)
+			if(pl != self)
+				antilag_restore(pl);
+
+	remove(proj);
+
+	return;
 }
 
 void fireBullet (vector start, vector dir, float spread, float damage, float force, float dtype, float tracer)
@@ -566,7 +543,7 @@ void fireBullet (vector start, vector dir, float spread, float damage, float for
 	if (pointcontents (trace_endpos) != CONTENT_SKY)
 	{
 		if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
-			Damage_DamageInfo(trace_endpos, damage, 0, 0, dir * max(1, force), dtype, trace_ent.species, self);                    
+			Damage_DamageInfo(trace_endpos, damage, 0, 0, dir * max(1, force), dtype, trace_ent.species, self);
 
 		Damage (trace_ent, self, self, damage, dtype, trace_endpos, dir * force);
 	}

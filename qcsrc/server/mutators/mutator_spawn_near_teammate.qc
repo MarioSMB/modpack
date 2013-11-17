@@ -45,7 +45,7 @@ MUTATOR_HOOKFUNCTION(msnt_PlayerSpawn)
 	{
 		if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death)
 			self.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death;
-			
+
 		entity team_mate, best_mate = world;
 		vector best_spot = '0 0 0';
 		float pc = 0, best_dist = 0, dist = 0;

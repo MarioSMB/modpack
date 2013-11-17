@@ -343,7 +343,7 @@ float t_walker(float req)
 		case TR_ATTACK:
 		{
 			sound (self, CH_WEAPON_A, "weapons/uzi_fire.wav", VOL_BASE, ATTEN_NORM);
-			fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, self.shot_speed, 5, self.shot_dmg, self.shot_force, DEATH_TURRET_WALK_GUN, 0, 1, autocvar_g_balance_uzi_bulletconstant);
+			fireBallisticBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, self.shot_speed, 5, self.shot_dmg, self.shot_force, DEATH_TURRET_WALK_GUN, 0, autocvar_g_balance_uzi_bulletconstant);
 			endFireBallisticBullet();
 			pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
@@ -588,11 +588,7 @@ float t_walker(float req)
 			
 			self.ammo_flags = TFL_AMMO_BULLETS | TFL_AMMO_RECHARGE | TFL_AMMO_RECIEVE;
 			self.aim_flags = TFL_AIM_LEAD;
-
-			if (autocvar_g_antilag_bullets)
-				self.turret_flags |= TUR_FLAG_HITSCAN;
-			else
-				self.aim_flags |= TFL_AIM_SHOTTIMECOMPENSATE;
+			self.turret_flags |= TUR_FLAG_HITSCAN;
 				
 			self.target_select_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;
 			self.target_validate_flags = TFL_TARGETSELECT_PLAYERS | TFL_TARGETSELECT_RANGELIMITS | TFL_TARGETSELECT_TEAMCHECK | TFL_TARGETSELECT_LOS;

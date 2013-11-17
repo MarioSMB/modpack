@@ -4113,7 +4113,7 @@ void HUD_InfoMessages(void)
 			HUD_MorningRescue();
 		else
 			morningrescue = 0;
-	
+
 		if(spectatee_status && !intermission)
 		{
 			a = 1;
@@ -4174,7 +4174,7 @@ void HUD_InfoMessages(void)
 			s = _("^2Currently in ^1warmup^2 stage!");
 			drawInfoMessage(s)
 		}
-		
+
 		if(autocvar_cl_showspectators)
 		if(num_spectators)
 		if(!spectatee_status)
@@ -5360,7 +5360,7 @@ void HUD_Main (void)
 		(panel = HUD_PANEL(CENTERPRINT)).panel_draw();
 		return;
 	}
-	
+
 	if(spectatee_status == -1 || !spectatee_status)
 	if(fovlock >= 0)
 		fovlock = -1;

@@ -793,7 +793,7 @@ void SV_PlayerPhysics()
 		self.stat_sv_maxspeed *= 0.5; // half speed while slow from spider
 		self.stat_sv_airspeedlimit_nonqw *= 0.5;
 	}
-		
+
 	if(self.frozen)
 	{
 		if(autocvar_sv_dodging_frozen && IS_REAL_CLIENT(self))

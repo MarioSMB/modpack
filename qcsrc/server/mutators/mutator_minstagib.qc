@@ -344,7 +344,7 @@ MUTATOR_HOOKFUNCTION(minstagib_FilterItem)
 
 	if(self.ammo_cells > autocvar_g_minstagib_ammo_drop && self.classname != "item_minst_cells")
 		self.ammo_cells = autocvar_g_minstagib_ammo_drop;
-		
+
 	if((self.ammo_cells || self.ammo_supercells) && !self.weapon)
 		return FALSE;
 

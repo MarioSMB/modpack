@@ -21,7 +21,7 @@ void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSpeed
 
 	W_DecreaseAmmo(ammo_nails, pAmmo, autocvar_g_balance_rifle_reload_ammo);
 
-	W_SetupShot (self, autocvar_g_antilag_bullets && pSpeed >= autocvar_g_antilag_bullets, 2, pSound, CH_WEAPON_A, pDamage * pShots, self.weapon);
+	W_SetupShot (self, TRUE, 2, pSound, CH_WEAPON_A, pDamage * pShots, self.weapon);
 
 	pointparticles(particleeffectnum("rifle_muzzleflash"), w_shotorg, w_shotdir * 2000, 1);
 
@@ -32,7 +32,7 @@ void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSpeed
 	}
 
 	for(i = 0; i < pShots; ++i)
-		fireBallisticBullet(w_shotorg, w_shotdir, pSpread, pSpeed, pLifetime, pDamage, pForce, deathtype, (pTracer ? EF_RED : EF_BLUE), 1, pBulletConstant);
+		fireBallisticBullet(w_shotorg, w_shotdir, pSpread, pSpeed, pLifetime, pDamage, pForce, deathtype, (pTracer ? EF_RED : EF_BLUE), pBulletConstant);
 	endFireBallisticBullet();
 
 	if (autocvar_g_casings >= 2)

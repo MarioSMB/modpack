@@ -70,7 +70,6 @@ float autocvar_ekg;
 #define autocvar_fraglimit_override cvar("fraglimit_override")
 float autocvar_g_allow_oldnexbeam;
 float autocvar_g_antilag;
-float autocvar_g_antilag_bullets;
 float autocvar_g_antilag_nudge;
 float autocvar_g_arena_maxspawned;
 float autocvar_g_arena_point_leadlimit;

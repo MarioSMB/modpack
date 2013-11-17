@@ -546,7 +546,7 @@ void nades_GiveBonus(entity player, float score)
 	{
 		if ( player.bonus_nade_score < 1 )
 			player.bonus_nade_score += score/autocvar_g_nades_bonus_score_max;
-		
+
 		if ( player.bonus_nade_score >= 1 )
 		{
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_NADE_BONUS);
@@ -806,9 +806,9 @@ MUTATOR_HOOKFUNCTION(nades_PlayerDies)
 {
 	if(frag_target.nade)
 		toss_nade(frag_target, '0 0 100', max(frag_target.nade.wait, time + 0.05));
-		
+
 	float killcount_bonus = ((frag_attacker.killcount >= 1) ? bound(0, autocvar_g_nades_bonus_score_minor * frag_attacker.killcount, autocvar_g_nades_bonus_score_medium) : autocvar_g_nades_bonus_score_minor);
-		
+
 	if(IS_PLAYER(frag_attacker))
 	{
 		if (SAME_TEAM(frag_attacker, frag_target) || frag_attacker == frag_target)
@@ -818,9 +818,9 @@ MUTATOR_HOOKFUNCTION(nades_PlayerDies)
 		else
 			nades_GiveBonus(frag_attacker, killcount_bonus);
 	}
-		
+
 	nades_RemoveBonus(frag_target);
-		
+
 	return FALSE;
 }
 

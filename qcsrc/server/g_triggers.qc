@@ -384,7 +384,7 @@ void counter_use()
 	{
 		if(IS_PLAYER(activator) && (self.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
 			Send_Notification(NOTIF_ONE, activator, MSG_CENTER, CENTER_SEQUENCE_COMPLETED);
-			
+
 		self.enemy = activator;
 		multi_trigger ();
 	}

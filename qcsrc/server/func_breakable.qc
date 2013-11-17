@@ -276,7 +276,7 @@ void spawnfunc_func_breakable() {
 
 	self.reset = func_breakable_reset;
 	func_breakable_reset();
-	
+
 	CSQCMODEL_AUTOINIT();
 }
 

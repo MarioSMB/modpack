@@ -1307,7 +1307,7 @@ void onslaught_controlpoint_reset()
 
 	activator = self;
 	SUB_UseTargets(); // to reset the structures, playerspawns etc.
-	
+
 	CSQCMODEL_AUTOUPDATE();
 }
 
@@ -1675,13 +1675,13 @@ MUTATOR_HOOKFUNCTION(ons_TurretSpawn)
 			ee = e;
 		}
 	}
-	
+
 	if(ee)
 	{
 		activator = ee;
 		self.use();
 	}
-	
+
 	return FALSE;
 }
 
