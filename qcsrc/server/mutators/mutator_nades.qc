@@ -357,6 +357,12 @@ void nade_spawn_boom()
 	spawnloc.drawonlytoclient = self.realowner;
 	spawnloc.effects = EF_STARDUST;
 	
+	if(self.realowner.nade_spawnloc)
+	{
+		remove(self.realowner.nade_spawnloc);
+		self.realowner.nade_spawnloc = world;
+	}
+	
 	self.realowner.nade_spawnloc = spawnloc;
 }
 
