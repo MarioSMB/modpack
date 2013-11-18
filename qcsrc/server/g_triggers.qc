@@ -61,6 +61,7 @@ void SUB_UseTargets()
 //
 // print the message
 //
+	if(self)
 	if(IS_PLAYER(activator) && self.message != "")
 	if(IS_REAL_CLIENT(activator))
 	{
