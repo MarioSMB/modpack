@@ -1,3 +1,5 @@
+.entity nade_spawnloc;
+
 void nade_timer_think()
 {
 	self.skin = 8 - (self.owner.wait - time) / (autocvar_g_nades_nade_lifetime / 10);
@@ -29,7 +31,6 @@ void nade_spawn(entity _nade)
 
 	CSQCProjectile(_nade, TRUE, Nade_ProjectileFromID(_nade.nade_type, FALSE), TRUE);
 }
-
 
 void napalm_damage(float dist, float damage, float edgedamage, float burntime)
 {
@@ -346,6 +347,19 @@ void nade_translocate_boom()
 	TeleportPlayer(self, self.realowner, locout, self.realowner.mangle, v_forward * vlen(self.realowner.velocity), '0 0 0', '0 0 0', TELEPORT_FLAGS_TELEPORTER);
 }
 
+void nade_spawn_boom()
+{
+	entity spawnloc = spawn();
+	setorigin(spawnloc, self.origin);
+	setsize(spawnloc, self.realowner.mins, self.realowner.maxs);
+	spawnloc.movetype = MOVETYPE_NONE;
+	spawnloc.solid = SOLID_NOT;
+	spawnloc.drawonlytoclient = self.realowner;
+	spawnloc.effects = EF_STARDUST;
+	
+	self.realowner.nade_spawnloc = spawnloc;
+}
+
 void nade_boom()
 {
 	string expef;
@@ -366,6 +380,17 @@ void nade_boom()
 		case NADE_TYPE_TRANSLOCATE:
 			nade_blast = 0;
 			expef = "";
+			break;
+		case NADE_TYPE_SPAWN:
+			nade_blast = 0;
+			switch(self.realowner.team)
+			{
+				case NUM_TEAM_1: expef = "spawn_event_red"; break;
+				case NUM_TEAM_2: expef = "spawn_event_blue"; break;
+				case NUM_TEAM_3: expef = "spawn_event_yellow"; break;
+				case NUM_TEAM_4: expef = "spawn_event_pink"; break;
+				default: expef = "spawn_event_neutral"; break;
+			}
 			break;
 
 		default:
@@ -399,6 +424,7 @@ void nade_boom()
 		case NADE_TYPE_NAPALM: nade_napalm_boom(); break;
 		case NADE_TYPE_ICE: nade_ice_boom(); break;
 		case NADE_TYPE_TRANSLOCATE: nade_translocate_boom(); break;
+		case NADE_TYPE_SPAWN: nade_spawn_boom(); break;
 	}
 
 	remove(self);
@@ -428,7 +454,7 @@ void nade_beep()
 
 void nade_damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	if(self.nade_type == NADE_TYPE_TRANSLOCATE)
+	if(self.nade_type == NADE_TYPE_TRANSLOCATE || self.nade_type == NADE_TYPE_SPAWN)
 		return;
 
 	if(DEATH_ISWEAPON(deathtype, WEP_LASER))
@@ -798,6 +824,13 @@ MUTATOR_HOOKFUNCTION(nades_PlayerSpawn)
 
 	if(autocvar_g_nades_bonus_client_select)
 		self.nade_type = self.cvar_cl_nade_type;
+		
+	if(self.nade_spawnloc)
+	{
+		setorigin(self, self.nade_spawnloc.origin);
+		remove(self.nade_spawnloc);
+		self.nade_spawnloc = world;
+	}
 
 	return FALSE;
 }
