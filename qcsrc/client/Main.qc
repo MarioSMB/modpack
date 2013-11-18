@@ -134,6 +134,7 @@ void CSQC_Init(void)
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
 	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
 	CALL_ACCUMULATED_FUNCTION(RegisterTurrets);
+	CALL_ACCUMULATED_FUNCTION(RegisterVehicles);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
@@ -152,7 +153,6 @@ void CSQC_Init(void)
 	GibSplash_Precache();
 	Casings_Precache();
 	DamageInfo_Precache();
-	Vehicles_Precache();
 	Tuba_Precache();
 	CSQCPlayer_Precache();
 

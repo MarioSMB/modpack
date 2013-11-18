@@ -353,8 +353,6 @@ const float CAMERA_FREE = 1;
 const float CAMERA_CHASE = 2;
 float reticle_type;
 string NextFrameCommand;
-void CSQC_SPIDER_HUD();
-void CSQC_RAPTOR_HUD();
 
 vector freeze_org, freeze_ang;
 entity nightvision_noise, nightvision_noise2;
@@ -1665,18 +1663,7 @@ void CSQC_UpdateView(float w, float h)
 		HUD_QuickMenu_Mouse();
 
     if(hud && !intermission)
-    {
-        if(hud == HUD_SPIDERBOT)
-            CSQC_SPIDER_HUD();
-        else if(hud == HUD_WAKIZASHI)
-            CSQC_WAKIZASHI_HUD();
-        else if(hud == HUD_RAPTOR)
-            CSQC_RAPTOR_HUD();
-        else if(hud == HUD_BUMBLEBEE)
-            CSQC_BUMBLE_HUD();
-        else if(hud == HUD_BUMBLEBEE_GUN)
-            CSQC_BUMBLE_GUN_HUD();
-    }
+		VEH_ACTION(hud, VR_HUD);
 
 	FPSCounter_Update();
 
@@ -1703,22 +1690,6 @@ void CSQC_common_hud(void)
         HUD_FinaleOverlay();
         HUD_Reset();
     }
-	/*
-	switch(hud)
-	{
-		case HUD_SPIDERBOT:
-			CSQC_SPIDER_HUD();
-			break;
-
-		case HUD_WAKIZASHI:
-			CSQC_WAKIZASHI_HUD();
-			break;
-
-        case HUD_BUMBLEBEE:
-            CSQC_BUMBLE_HUD();
-            break;
-	}
-	*/
 }
 
 

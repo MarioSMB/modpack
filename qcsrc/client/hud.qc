@@ -1071,9 +1071,9 @@ void HUD_Ammo(void)
 
 	float i, stat_items, currently_selected, infinite_ammo;
 	infinite_ammo = FALSE;
-	
+
 	row = column = 0;
-	
+
 	if (autocvar_hud_panel_ammo_onlycurrent)
 	{
 		if(autocvar__hud_configure)

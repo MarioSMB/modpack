@@ -82,7 +82,6 @@ const float ENT_CLIENT_MAPVOTE = 17;
 const float ENT_CLIENT_CLIENTDATA = 18;
 const float ENT_CLIENT_RANDOMSEED = 19;
 const float ENT_CLIENT_WALL = 20;
-const float ENT_CLIENT_SPIDERBOT = 21;
 const float ENT_CLIENT_MODELEFFECT = 22;
 const float ENT_CLIENT_TUBANOTE = 23;
 const float ENT_CLIENT_WARPZONE = 24;
@@ -177,6 +176,7 @@ const float STAT_VEHICLESTAT_AMMO1 = 63;
 const float STAT_VEHICLESTAT_RELOAD1 = 64;
 const float STAT_VEHICLESTAT_AMMO2 = 65;
 const float STAT_VEHICLESTAT_RELOAD2 = 66;
+const float STAT_VEHICLESTAT_W2MODE = 67;
 
 const float STAT_SECRETS_TOTAL = 70;
 const float STAT_SECRETS_FOUND = 71;
@@ -224,8 +224,6 @@ const float STAT_DOM_PPS_YELLOW = 104;
 const float STAT_VIP_RED = 100;
 const float STAT_VIP_BLUE = 101;
 
-//const float STAT_SPIDERBOT_AIM 53 // compressShotOrigin
-//const float STAT_SPIDERBOT_TARGET 54 // compressShotOrigin
 
 // see DP source, quakedef.h
 const float STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW = 222;
@@ -238,13 +236,7 @@ const float CTF_STATE_DEFEND = 2;
 const float CTF_STATE_COMMANDER = 3;
 
 const float HUD_NORMAL = 0;
-const float HUD_VEHICLE_FIRST = 10;
-const float HUD_SPIDERBOT = 10;
-const float HUD_WAKIZASHI = 11;
-const float HUD_RAPTOR = 12;
-const float HUD_BUMBLEBEE = 13;
-const float HUD_BUMBLEBEE_GUN = 14;
-const float HUD_VEHICLE_LAST = 14;
+const float HUD_BUMBLEBEE_GUN = 25;
 
 const vector eX = '1 0 0';
 const vector eY = '0 1 0';

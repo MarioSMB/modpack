@@ -27,32 +27,16 @@ float t_plasma(float req)
 				FireRailgunBullet (self.tur_shotorg, self.tur_shotorg + self.tur_shotdir_updated * MAX_SHOT_DISTANCE, 10000000000,
 								   800, 0, 0, 0, 0, DEATH_TURRET_PLASMA);
 
-
 				pointparticles(particleeffectnum("nex_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
 				// teamcolor / hit beam effect
 				vector v;
+				string s;
 				v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-				if(teamplay)
-				{
-					switch(self.team)
-					{
-						case NUM_TEAM_1:   // Red
-								WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3RED"), self.tur_shotorg, v);
-							break;
-						case NUM_TEAM_2:   // Blue
-								WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3BLUE"), self.tur_shotorg, v);
-							break;
-						case NUM_TEAM_3:   // Yellow
-								WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3YELLOW"), self.tur_shotorg, v);
-							break;
-						case NUM_TEAM_4:   // Pink
-								WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3PINK"), self.tur_shotorg, v);
-							break;
-					}
-				}
-				else
-					WarpZone_TrailParticles(world, particleeffectnum("TE_TEI_G3"), self.tur_shotorg, v);
+				s = strcat("TE_TEI_G3", Static_Team_ColorName_Upper(self.team));
+				
+				WarpZone_TrailParticles(world, particleeffectnum(s), self.tur_shotorg, v);
+				
 				if (self.tur_head.frame == 0)
 					self.tur_head.frame = 1;
 			}

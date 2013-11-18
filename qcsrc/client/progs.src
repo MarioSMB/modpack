@@ -54,7 +54,7 @@ noise.qh
 ../server/movelib.qc
 ../server/generator.qh
 main.qh
-vehicles/vehicles.qh
+../common/vehicles/vehicles_include.qh
 ../common/csqcmodel_settings.qh
 ../csqcmodellib/common.qh
 ../csqcmodellib/cl_model.qh
@@ -90,8 +90,7 @@ modeleffects.qc
 tuba.qc
 target_music.qc
 
-vehicles/vehicles.qc
-../server/vehicles/bumblebee.qc
+../common/vehicles/vehicles_include.qc
 shownames.qh
 shownames.qc
 

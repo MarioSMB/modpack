@@ -43,6 +43,8 @@ defs.qh		// Should rename this, it has fields and globals
 ../common/turrets/sv_turrets.qh
 ../common/turrets/util.qc
 
+../common/vehicles/vehicles_include.qh
+
 mutators/base.qh
 mutators/mutators.qh
 mutators/gamemode_assault.qh
@@ -61,9 +63,6 @@ mutators/mutator_overkill.qh
 mutators/mutator_freeze.qh
 mutators/mutator_minstagib.qh
 mutators/mutator_nades.qh
-
-//// tZork Vehicles ////
-vehicles/vehicles_def.qh
 
 generator.qh
 
@@ -209,10 +208,6 @@ t_quake.qc
 
 race.qc
 
-
-//// tZork Vehicles ////
-vehicles/vehicles.qh
-
 scores.qc
 
 spawnpoints.qc
@@ -227,6 +222,7 @@ target_music.qc
 
 ../common/items.qc
 
+../common/vehicles/vehicles_include.qc
 
 accuracy.qc
 ../csqcmodellib/sv_model.qc

@@ -210,7 +210,7 @@ void assault_wall_think()
 
 // trigger new round
 // reset objectives, toggle spawnpoints, reset triggers, ...
-void vehicles_clearrturn(entity veh);
+void vehicles_clearreturn(entity veh);
 void vehicles_spawn();
 void assault_new_round()
 {
@@ -228,7 +228,7 @@ void assault_new_round()
     self = findchainflags(vehicle_flags, VHF_ISVEHICLE);
     while(self)
     {
-        vehicles_clearrturn(self);
+        vehicles_clearreturn(self);
         vehicles_spawn();
         self = self.chain;
     }
