@@ -39,8 +39,6 @@ void WarpZone_crosshair_trace(entity pl)
 	WarpZone_traceline_antilag(pl, pl.cursor_trace_start, pl.cursor_trace_start + normalize(pl.cursor_trace_endpos - pl.cursor_trace_start) * MAX_SHOT_DISTANCE, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }
 
-void() spawnfunc_info_player_deathmatch; // needed for the other spawnpoints
-void() spawnpoint_use;
 string GetMapname();
 
 string admin_name(void)
