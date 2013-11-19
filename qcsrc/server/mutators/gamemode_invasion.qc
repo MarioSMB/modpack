@@ -18,7 +18,7 @@ float invasion_PickMonster(float supermonster_count)
 	for(i = MON_FIRST; i <= MON_LAST; ++i)
 	{
 		mon = get_monsterinfo(i);
-		if((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM) || (mon.spawnflags & MON_FLAG_SUPERMONSTER && supermonster_count >= 1))
+		if((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM) || ((mon.spawnflags & MON_FLAG_SUPERMONSTER) && supermonster_count >= 1))
 			continue; // flying/swimming monsters not yet supported
 		
 		RandomSelection_Add(world, i, "", 1, 1);
