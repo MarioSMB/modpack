@@ -1,3 +1,0 @@
-// build config file
-#define MENUQC // so common/*.qc can check for menu QC or game QC
-
