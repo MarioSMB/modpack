@@ -71,6 +71,9 @@ void race_SendNextCheckpoint(entity e, float spec) // qualifying only
 	recordholder = race_checkpoint_recordholders[cp];
 	if(recordholder == e.netname)
 		recordholder = "";
+		
+	if(!IS_REAL_CLIENT(e))
+		return;
 
 	if(!spec)
 		msg_entity = e;
@@ -121,6 +124,9 @@ void race_SendRankings(float pos, float prevpos, float del, float msg)
 
 void race_SendStatus(float id, entity e)
 {
+	if(!IS_REAL_CLIENT(e))
+		return;
+		
 	float msg;
 	if (id == 0)
 		msg = MSG_ONE;
@@ -326,18 +332,21 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 			recordholder = "";
 		}
 
-		msg_entity = e;
-		if(g_race_qualifying)
+		if(IS_REAL_CLIENT(e))
 		{
-			WRITESPECTATABLE_MSG_ONE_VARNAME(dummy1, {
-				WriteByte(MSG_ONE, SVC_TEMPENTITY);
-				WriteByte(MSG_ONE, TE_CSQC_RACE);
-				WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_QUALIFYING);
-				WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player now is at
-				WriteInt24_t(MSG_ONE, t); // time to that intermediate
-				WriteInt24_t(MSG_ONE, recordtime); // previously best time
-				WriteString(MSG_ONE, recordholder); // record holder
-			});
+			msg_entity = e;
+			if(g_race_qualifying)
+			{
+				WRITESPECTATABLE_MSG_ONE_VARNAME(dummy1, {
+					WriteByte(MSG_ONE, SVC_TEMPENTITY);
+					WriteByte(MSG_ONE, TE_CSQC_RACE);
+					WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_QUALIFYING);
+					WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player now is at
+					WriteInt24_t(MSG_ONE, t); // time to that intermediate
+					WriteInt24_t(MSG_ONE, recordtime); // previously best time
+					WriteString(MSG_ONE, recordholder); // record holder
+				});
+			}
 		}
 	}
 	else // RACE! Not Qualifying
@@ -354,49 +363,55 @@ void race_SendTime(entity e, float cp, float t, float tvalid)
 		else
 			lself = lother = othtime = 0;
 
-		msg_entity = e;
-		WRITESPECTATABLE_MSG_ONE_VARNAME(dummy2, {
-			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_RACE);
-			WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_RACE);
-			WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player now is at
-			if(e == oth)
-			{
-				WriteInt24_t(MSG_ONE, 0);
-				WriteByte(MSG_ONE, 0);
-				WriteString(MSG_ONE, "");
-			}
-			else
-			{
-				WriteInt24_t(MSG_ONE, TIME_ENCODE(time - race_checkpoint_lasttimes[cp]));
-				WriteByte(MSG_ONE, lself - lother);
-				WriteString(MSG_ONE, oth.netname); // record holder
-			}
-		});
+		if(IS_REAL_CLIENT(e))
+		{
+			msg_entity = e;
+			WRITESPECTATABLE_MSG_ONE_VARNAME(dummy2, {
+				WriteByte(MSG_ONE, SVC_TEMPENTITY);
+				WriteByte(MSG_ONE, TE_CSQC_RACE);
+				WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_RACE);
+				WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player now is at
+				if(e == oth)
+				{
+					WriteInt24_t(MSG_ONE, 0);
+					WriteByte(MSG_ONE, 0);
+					WriteString(MSG_ONE, "");
+				}
+				else
+				{
+					WriteInt24_t(MSG_ONE, TIME_ENCODE(time - race_checkpoint_lasttimes[cp]));
+					WriteByte(MSG_ONE, lself - lother);
+					WriteString(MSG_ONE, oth.netname); // record holder
+				}
+			});
+		}
 
 		race_checkpoint_lastplayers[cp] = e;
 		race_checkpoint_lasttimes[cp] = time;
 		race_checkpoint_lastlaps[cp] = lself;
 
-		msg_entity = oth;
-		WRITESPECTATABLE_MSG_ONE_VARNAME(dummy3, {
-			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_RACE);
-			WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_RACE_BY_OPPONENT);
-			WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player now is at
-			if(e == oth)
-			{
-				WriteInt24_t(MSG_ONE, 0);
-				WriteByte(MSG_ONE, 0);
-				WriteString(MSG_ONE, "");
-			}
-			else
-			{
-				WriteInt24_t(MSG_ONE, TIME_ENCODE(time - othtime));
-				WriteByte(MSG_ONE, lother - lself);
-				WriteString(MSG_ONE, e.netname); // record holder
-			}
-		});
+		if(IS_REAL_CLIENT(oth))
+		{
+			msg_entity = oth;
+			WRITESPECTATABLE_MSG_ONE_VARNAME(dummy3, {
+				WriteByte(MSG_ONE, SVC_TEMPENTITY);
+				WriteByte(MSG_ONE, TE_CSQC_RACE);
+				WriteByte(MSG_ONE, RACE_NET_CHECKPOINT_HIT_RACE_BY_OPPONENT);
+				WriteByte(MSG_ONE, race_CheckpointNetworkID(cp)); // checkpoint the player now is at
+				if(e == oth)
+				{
+					WriteInt24_t(MSG_ONE, 0);
+					WriteByte(MSG_ONE, 0);
+					WriteString(MSG_ONE, "");
+				}
+				else
+				{
+					WriteInt24_t(MSG_ONE, TIME_ENCODE(time - othtime));
+					WriteByte(MSG_ONE, lother - lself);
+					WriteString(MSG_ONE, e.netname); // record holder
+				}
+			});
+		}
 	}
 }
 
@@ -407,6 +422,9 @@ void race_ClearTime(entity e)
 	e.race_movetime = e.race_movetime_frac = e.race_movetime_count = 0;
 	e.race_penalty_accumulator = 0;
 	e.race_lastpenalty = world;
+	
+	if(!IS_REAL_CLIENT(e))
+		return;
 
 	msg_entity = e;
 	WRITESPECTATABLE_MSG_ONE({
@@ -1047,26 +1065,32 @@ void race_ImposePenaltyTime(entity pl, float penalty, string reason)
 	if(g_race_qualifying)
 	{
 		pl.race_penalty_accumulator += penalty;
-		msg_entity = pl;
-		WRITESPECTATABLE_MSG_ONE({
-			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_RACE);
-			WriteByte(MSG_ONE, RACE_NET_PENALTY_QUALIFYING);
-			WriteShort(MSG_ONE, TIME_ENCODE(penalty));
-			WriteString(MSG_ONE, reason);
-		});
+		if(IS_REAL_CLIENT(pl))
+		{
+			msg_entity = pl;
+			WRITESPECTATABLE_MSG_ONE({
+				WriteByte(MSG_ONE, SVC_TEMPENTITY);
+				WriteByte(MSG_ONE, TE_CSQC_RACE);
+				WriteByte(MSG_ONE, RACE_NET_PENALTY_QUALIFYING);
+				WriteShort(MSG_ONE, TIME_ENCODE(penalty));
+				WriteString(MSG_ONE, reason);
+			});
+		}
 	}
 	else
 	{
 		pl.race_penalty = time + penalty;
-		msg_entity = pl;
-		WRITESPECTATABLE_MSG_ONE_VARNAME(dummy, {
-			WriteByte(MSG_ONE, SVC_TEMPENTITY);
-			WriteByte(MSG_ONE, TE_CSQC_RACE);
-			WriteByte(MSG_ONE, RACE_NET_PENALTY_RACE);
-			WriteShort(MSG_ONE, TIME_ENCODE(penalty));
-			WriteString(MSG_ONE, reason);
-		});
+		if(IS_REAL_CLIENT(pl))
+		{
+			msg_entity = pl;
+			WRITESPECTATABLE_MSG_ONE_VARNAME(dummy, {
+				WriteByte(MSG_ONE, SVC_TEMPENTITY);
+				WriteByte(MSG_ONE, TE_CSQC_RACE);
+				WriteByte(MSG_ONE, RACE_NET_PENALTY_RACE);
+				WriteShort(MSG_ONE, TIME_ENCODE(penalty));
+				WriteString(MSG_ONE, reason);
+			});
+		}
 	}
 }
 

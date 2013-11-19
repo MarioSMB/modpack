@@ -1305,9 +1305,12 @@ void ClientConnect (void)
 		speedaward_alltimebest_holder = uid2name(db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/crypto_idfp")));
 		race_send_speedaward_alltimebest(MSG_ONE);
 
-		float i;
-		for (i = 1; i <= RANKINGS_CNT; ++i) {
-			race_SendRankings(i, 0, 0, MSG_ONE);
+		if(IS_REAL_CLIENT(self))
+		{
+			float i;
+			for (i = 1; i <= RANKINGS_CNT; ++i) {
+				race_SendRankings(i, 0, 0, MSG_ONE);
+			}
 		}
 	}
 	else if(autocvar_sv_teamnagger && !(autocvar_bot_vs_human && (c3==-1 && c4==-1)) && !g_ca) // teamnagger is currently bad for ca
