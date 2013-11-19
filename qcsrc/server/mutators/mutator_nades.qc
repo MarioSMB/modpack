@@ -369,9 +369,7 @@ void nade_spawn_boom()
 void nade_boom()
 {
 	string expef;
-	float nade_blast;
-
-	nade_blast = 1;
+	float nade_blast = 1;
 
 	switch ( self.nade_type )
 	{
