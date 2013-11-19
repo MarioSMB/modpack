@@ -106,6 +106,7 @@ void GameCommand_adminmsg(float request, float argc)
 			string original_targets = strreplace(" ", ", ", targets);
 			string admin_message = argv(2);
 			float infobartime = stof(argv(3));
+			string admin_name = ((autocvar_sv_adminnick == "") ? "SERVER ADMIN" : autocvar_sv_adminnick);
 
 			string successful, t;
 			successful = string_null;
@@ -133,8 +134,8 @@ void GameCommand_adminmsg(float request, float argc)
 					}
 					else
 					{
-						centerprint(client, strcat("^3", admin_name(), ":\n^7", admin_message));
-						sprint(client, strcat("\{1}\{13}^3", admin_name(), "^7: ", admin_message, "\n"));
+						centerprint(client, strcat("^3", admin_name, ":\n^7", admin_message));
+						sprint(client, strcat("\{1}\{13}^3", admin_name, "^7: ", admin_message, "\n"));
 					}
 
 					successful = strcat(successful, (successful ? ", " : ""), client.netname);

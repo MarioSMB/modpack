@@ -117,6 +117,8 @@ scores_rules.qc
 
 miscfunctions.qc
 
+mutators/mutators.qc
+
 waypointsprites.qc
 
 bot/bot.qc

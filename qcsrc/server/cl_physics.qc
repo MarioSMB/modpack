@@ -623,7 +623,6 @@ void race_send_speedaward_alltimebest(float msg)
 	WriteString(msg, speedaward_alltimebest_holder);
 }
 
-string GetMapname(void);
 float speedaward_lastupdate;
 float speedaward_lastsent;
 void SV_PlayerPhysics()
