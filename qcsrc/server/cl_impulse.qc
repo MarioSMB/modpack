@@ -53,11 +53,11 @@ void ImpulseCommands (void)
 	if (timeout_status == TIMEOUT_ACTIVE) //don't allow any impulses while the game is paused
 		return;
 
-    if(self.vehicle)
-        if(self.vehicle.deadflag == DEAD_NO)
-            if(self.vehicle.vehicles_impulse)
-                if(self.vehicle.vehicles_impulse(imp))
-                    return;
+	if(self.vehicle)
+	if(self.vehicle.deadflag == DEAD_NO)
+	if(self.vehicle.vehicles_impulse)
+	if(self.vehicle.vehicles_impulse(imp))
+		return;
 
 	if(CheatImpulse(imp))
 	{
@@ -111,8 +111,8 @@ void ImpulseCommands (void)
 					break;
 			}
 		}
-		else
-			self.impulse = imp; // retry in next frame
+		//else
+			//self.impulse = imp; // retry in next frame
 	}
 	else if(imp == 21)
 	{
