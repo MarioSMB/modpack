@@ -440,7 +440,7 @@ float raptor_frame()
 
 		if(raptor.gun1.enemy)
 		{
-			float i, distance, impact_time;
+			float distance, impact_time;
 
 			vf = real_origin(raptor.gun1.enemy);
 			UpdateAuxiliaryXhair(player, vf, '1 0 0', 1);
@@ -451,12 +451,9 @@ float raptor_frame()
 			if(autocvar_g_vehicle_raptor_cannon_predicttarget)
 			{
 				ad = vf;
-				for(i = 0; i < 4; ++i)
-				{
-					distance = vlen(ad - player.origin);
-					impact_time = distance / autocvar_g_vehicle_raptor_cannon_speed;
-					ad = vf + _vel * impact_time;
-				}
+				distance = vlen(ad - player.origin);
+				impact_time = distance / autocvar_g_vehicle_raptor_cannon_speed;
+				ad = vf + _vel * impact_time;
 				trace_endpos = ad;
 			}
 			else

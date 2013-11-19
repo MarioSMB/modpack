@@ -160,7 +160,7 @@ float bumblebee_gunner_frame()
 
 	if(gun.enemy)
 	{
-		float i, distance, impact_time;
+		float distance, impact_time;
 
 		vector vf = real_origin(gun.enemy);
 		vector _vel = gun.enemy.velocity;
@@ -169,12 +169,9 @@ float bumblebee_gunner_frame()
 
 
 		ad = vf;
-		for(i = 0; i < 4; ++i)
-		{
-			distance = vlen(ad - gunner.origin);
-			impact_time = distance / autocvar_g_vehicle_bumblebee_cannon_speed;
-			ad = vf + _vel * impact_time;
-		}
+		distance = vlen(ad - gunner.origin);
+		impact_time = distance / autocvar_g_vehicle_bumblebee_cannon_speed;
+		ad = vf + _vel * impact_time;
 		trace_endpos = ad;
 
 

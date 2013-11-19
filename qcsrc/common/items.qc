@@ -108,20 +108,6 @@ void register_weapon(float id, WepSet bit, float(float) func, float ammotype, fl
 	e.model2 = strzone(strcat("wpn-", e.mdl));
 	e.impulse = i;
 	e.bot_pickupbasevalue = pickupbasevalue;
-	if(ammotype & IT_SHELLS)
-		e.ammo_field = ammo_shells;
-	else if(ammotype & IT_NAILS)
-		e.ammo_field = ammo_nails;
-	else if(ammotype & IT_ROCKETS)
-		e.ammo_field = ammo_rockets;
-	else if(ammotype & IT_CELLS)
-		e.ammo_field = ammo_cells;
-	else if(ammotype & IT_FUEL)
-		e.ammo_field = ammo_fuel;
-	else if(ammotype & IT_SUPERCELLS)
-		e.ammo_field = ammo_supercells;
-	else
-		e.ammo_field = ammo_batteries;
 }
 float w_null(float dummy)
 {

@@ -25,15 +25,10 @@ vector turret_aim_generic()
 	{
 		if (self.aim_flags & TFL_AIM_SHOTTIMECOMPENSATE)	   // Need to conpensate for shot traveltime
 		{
-			// FIXME: this cant be the best way to do this..
 			prep = pre_pos;
-
-			for(i = 0; i < 4; ++i)
-			{
-				distance = vlen(prep - self.tur_shotorg);
-				impact_time = distance / self.shot_speed;
-				prep = pre_pos + self.enemy.velocity * impact_time;
-			}
+			
+			distance = vlen(prep - self.tur_shotorg);
+			impact_time = distance / self.shot_speed;
 
 			prep = pre_pos + (self.enemy.velocity * (impact_time + mintime));
 

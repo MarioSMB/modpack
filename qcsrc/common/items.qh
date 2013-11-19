@@ -113,7 +113,6 @@ WepSet WEPSET_SUPERWEAPONS;
 .float impulse; // weapon impulse
 .float bot_pickupbasevalue; // bot weapon priority
 .string model2; // wpn- sprite name
-..float ammo_field; // main ammo field
 
 // dynamic weapon adding
 float w_null(float dummy);

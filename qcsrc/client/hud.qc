@@ -3557,23 +3557,29 @@ void HUD_Mod_Race(vector pos, vector mySize)
 	vector rankpos;
 	rankpos = medalPos + '0 0.15 0' * squareSize;
 
-	if(race_status == 0)
-		drawpic_aspect_skin(medalPos, "race_newfail", '1 1 0' * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-	else if(race_status == 1) {
-		drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newtime", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-		drawcolorcodedstring_aspect(namepos, s, '1 0.2 0' * squareSize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-		drawstring_aspect(rankpos, rankname, '1 0.15 0' * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-	} else if(race_status == 2) {
-		if(race_status_name == GetPlayerName(player_localnum) || !race_myrank || race_myrank < rank)
-			drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newrankgreen", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-		else
-			drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newrankyellow", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-		drawcolorcodedstring_aspect(namepos, s, '1 0.2 0' * squareSize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-		drawstring_aspect(rankpos, rankname, '1 0.15 0' * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-	} else if(race_status == 3) {
-		drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newrecordserver", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-		drawcolorcodedstring_aspect(namepos, s, '1 0.2 0' * squareSize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-		drawstring_aspect(rankpos, rankname, '1 0.15 0' * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+	switch(race_status)
+	{
+		case 0:
+			drawpic_aspect_skin(medalPos, "race_newfail", '1 1 0' * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			break;
+		case 1:
+			drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newtime", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring_aspect(namepos, s, '1 0.2 0' * squareSize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawstring_aspect(rankpos, rankname, '1 0.15 0' * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			break;
+		case 2:
+			if(race_status_name == GetPlayerName(player_localnum) || !race_myrank || race_myrank < rank)
+				drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newrankgreen", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			else
+				drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newrankyellow", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring_aspect(namepos, s, '1 0.2 0' * squareSize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawstring_aspect(rankpos, rankname, '1 0.15 0' * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			break;
+		case 3:
+			drawpic_aspect_skin(medalPos + '0.1 0 0' * squareSize, "race_newrecordserver", '1 1 0' * 0.8 * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawcolorcodedstring_aspect(namepos, s, '1 0.2 0' * squareSize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			drawstring_aspect(rankpos, rankname, '1 0.15 0' * squareSize, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			break;
 	}
 
 	if (race_status_time - time <= 0) {
@@ -3701,8 +3707,25 @@ void HUD_ModIcons(void)
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_modicons) return;
-		if (gametype != MAPINFO_TYPE_CTF && gametype != MAPINFO_TYPE_KEYHUNT && gametype != MAPINFO_TYPE_NEXBALL && gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && gametype != MAPINFO_TYPE_CA && gametype != MAPINFO_TYPE_FREEZETAG && gametype != MAPINFO_TYPE_KEEPAWAY && gametype != MAPINFO_TYPE_DOMINATION && gametype != MAPINFO_TYPE_VIP) return;
+		switch(gametype)
+		{
+			case MAPINFO_TYPE_CTF:
+			case MAPINFO_TYPE_KEYHUNT:
+			case MAPINFO_TYPE_NEXBALL:
+			case MAPINFO_TYPE_CTS:
+			case MAPINFO_TYPE_RACE:
+			case MAPINFO_TYPE_CA:
+			case MAPINFO_TYPE_FREEZETAG:
+			case MAPINFO_TYPE_KEEPAWAY:
+			case MAPINFO_TYPE_DOMINATION:
+			case MAPINFO_TYPE_VIP:
+				break;
+			default:
+				return;
+		}
 	}
+	
+	float gtype = gametype;
 
 	HUD_Panel_UpdateCvars();
 	HUD_Panel_ApplyFadeAlpha();
@@ -3733,22 +3756,22 @@ void HUD_ModIcons(void)
 	}
 
 	// these MUST be ran in order to update mod_active
-	if(gametype == MAPINFO_TYPE_KEYHUNT)
-		HUD_Mod_KH(pos, mySize);
-	else if(gametype == MAPINFO_TYPE_CTF || autocvar__hud_configure)
-		HUD_Mod_CTF(pos, mySize); // forcealpha only needed for ctf icons, as only they are shown in config mode
-	else if(gametype == MAPINFO_TYPE_NEXBALL)
-		HUD_Mod_NexBall(pos, mySize);
-	else if(gametype == MAPINFO_TYPE_CTS || gametype == MAPINFO_TYPE_RACE)
-		HUD_Mod_Race(pos, mySize);
-	else if(gametype == MAPINFO_TYPE_CA || gametype == MAPINFO_TYPE_FREEZETAG)
-		HUD_Mod_CA(pos, mySize);
-	else if(gametype == MAPINFO_TYPE_DOMINATION)
-		HUD_Mod_Dom(pos, mySize);
-	else if(gametype == MAPINFO_TYPE_KEEPAWAY)
-		HUD_Mod_Keepaway(pos, mySize);
-	else if(gametype == MAPINFO_TYPE_VIP)
-		HUD_Mod_VIP(pos, mySize);
+	if(autocvar__hud_configure)
+		gtype = MAPINFO_TYPE_CTF;
+	
+	switch(gtype)
+	{
+		case MAPINFO_TYPE_KEYHUNT: HUD_Mod_KH(pos, mySize); break;
+		case MAPINFO_TYPE_CTF: HUD_Mod_CTF(pos, mySize); break;
+		case MAPINFO_TYPE_NEXBALL: HUD_Mod_NexBall(pos, mySize); break;
+		case MAPINFO_TYPE_CTS:
+		case MAPINFO_TYPE_RACE: HUD_Mod_Race(pos, mySize); break;
+		case MAPINFO_TYPE_CA:
+		case MAPINFO_TYPE_FREEZETAG: HUD_Mod_CA(pos, mySize); break;
+		case MAPINFO_TYPE_DOMINATION: HUD_Mod_Dom(pos, mySize); break;
+		case MAPINFO_TYPE_KEEPAWAY: HUD_Mod_Keepaway(pos, mySize); break;
+		case MAPINFO_TYPE_VIP: HUD_Mod_VIP(pos, mySize); break;
+	}
 
 	draw_endBoldFont();
 }
@@ -5320,12 +5343,12 @@ Main HUD system
 void HUD_Reset (void)
 {
 	// reset gametype specific icons
-	if(gametype == MAPINFO_TYPE_KEYHUNT)
-		HUD_Mod_KH_Reset();
-	else if(gametype == MAPINFO_TYPE_CTF)
-		HUD_Mod_CTF_Reset();
-	else if(gametype == MAPINFO_TYPE_VIP)
-		HUD_Mod_VIP_Reset();
+	switch(gametype)
+	{
+		case MAPINFO_TYPE_KEYHUNT: HUD_Mod_KH_Reset(); break;
+		case MAPINFO_TYPE_CTF: HUD_Mod_CTF_Reset(); break;
+		case MAPINFO_TYPE_VIP: HUD_Mod_VIP_Reset(); break;
+	}
 }
 
 void HUD_Main (void)
