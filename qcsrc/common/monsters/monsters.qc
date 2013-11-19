@@ -18,7 +18,7 @@ void register_monster(float id, float(float) func, float monsterflags, vector mi
 	e.mins = min_s;
 	e.maxs = max_s;
 	e.model = strzone(strcat("models/monsters/", modelname));
-	
+
 	#ifndef MENUQC
 	func(MR_PRECACHE);
 	#endif

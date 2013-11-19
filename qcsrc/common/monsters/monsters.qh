@@ -1,8 +1,8 @@
 // monster requests
-#define MR_SETUP          1 // (SERVER) setup monster data
+#define MR_SETUP		  1 // (SERVER) setup monster data
 #define MR_THINK		  2 // (SERVER) logic to run every frame
-#define MR_DEATH          3 // (SERVER) called when monster dies
-#define MR_PRECACHE       4 // (BOTH) precaches models/sounds used by this monster
+#define MR_DEATH		  3 // (SERVER) called when monster dies
+#define MR_PRECACHE		  4 // (BOTH) precaches models/sounds used by this monster
 
 // functions:
 entity get_monsterinfo(float id);
@@ -31,7 +31,7 @@ const float MON_FLAG_MELEE = 1024;
 #define M_NAME(monstertype) (get_monsterinfo(monstertype)).monster_name
 
 // =====================
-//  Monster Registration
+//	Monster Registration
 // =====================
 
 float m_null(float dummy);

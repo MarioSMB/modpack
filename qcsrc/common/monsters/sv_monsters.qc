@@ -1,5 +1,5 @@
 // =========================
-//  SVQC Monster Properties
+//	SVQC Monster Properties
 // =========================
 
 
@@ -44,7 +44,7 @@ void monster_dropitem()
 float Monster_SkillModifier()
 {
 	float t = 0.5+self.monster_skill*((1.2-0.3)/10);
-	
+
 	return t;
 }
 
@@ -103,7 +103,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 
 	if(SAME_TEAM(targ, ent))
 		return FALSE; // enemy is on our team
-		
+
 	if (targ.frozen)
 		return FALSE; // ignore frozen
 
@@ -528,49 +528,49 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.goalentity = find(world, targetname, self.target2);
 
 	entity targ;
-	
+
 	if(self.frozen == 2)
 	{
 		self.revive_progress = bound(0, self.revive_progress + self.ticrate * self.revive_speed, 1);
 		self.health = max(1, self.revive_progress * self.max_health);
 		self.iceblock.alpha = bound(0.2, 1 - self.revive_progress, 1);
-		
+
 		WaypointSprite_UpdateHealth(self.sprite, self.health);
-		
+
 		movelib_beak_simple(stopspeed);
 		self.frame = manim_idle;
-		
+
 		self.enemy = world;
 		self.nextthink = time + self.ticrate;
 
 		if(self.revive_progress >= 1)
 			Unfreeze(self);
-			
+
 		return;
 	}
 	else if(self.frozen == 3)
 	{
 		self.revive_progress = bound(0, self.revive_progress - self.ticrate * self.revive_speed, 1);
 		self.health = max(0, autocvar_g_nades_ice_health + (self.max_health-autocvar_g_nades_ice_health) * self.revive_progress );
-		
+
 		WaypointSprite_UpdateHealth(self.sprite, self.health);
-		
+
 		movelib_beak_simple(stopspeed);
 		self.frame = manim_idle;
-		
+
 		self.enemy = world;
 		self.nextthink = time + self.ticrate;
-		
+
 		if(self.health < 1)
 		{
 			Unfreeze(self);
 			self.health = 0;
 			self.event_damage(self, self.frozen_by, 1, DEATH_NADE_ICE_FREEZE, self.origin, '0 0 0');
 		}
-			
+
 		else if ( self.revive_progress <= 0 )
 			Unfreeze(self);
-			
+
 		return;
 	}
 
@@ -630,7 +630,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	targ = monster_target;
 	runspeed = bound(0, monster_speed_run * Monster_SkillModifier(), runspeed * 2); // limit maxspeed to prevent craziness
 	walkspeed = bound(0, monster_speed_walk * Monster_SkillModifier(), walkspeed * 2); // limit maxspeed to prevent craziness
-	
+
 	if(time < self.spider_slowness)
 	{
 		runspeed *= 0.5;
@@ -743,24 +743,24 @@ void monster_remove(entity mon)
 {
 	if(!mon)
 		return; // nothing to remove
-		
+
 	pointparticles(particleeffectnum("item_pickup"), mon.origin, '0 0 0', 1);
-		
+
 	if(mon.weaponentity)
 		remove(mon.weaponentity);
-					
+
 	if(mon.iceblock)
 		remove(mon.iceblock);
-					
+
 	WaypointSprite_Kill(mon.sprite);
-					
+
 	remove(mon);
 }
 
 void monster_dead_think()
 {
 	self.nextthink = time + self.ticrate;
-	
+
 	CSQCMODEL_AUTOUPDATE();
 
 	if(self.ltime != 0)
@@ -801,7 +801,7 @@ void monsters_reset()
 {
 	setorigin(self, self.pos1);
 	self.angles = self.pos2;
-	
+
 	Unfreeze(self); // remove any icy remains
 
 	self.health = self.max_health;
@@ -821,7 +821,7 @@ void monsters_corpse_damage (entity inflictor, entity attacker, float damage, fl
 	if(self.health <= -100) // 100 health until gone?
 	{
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
-		
+
 		if(IS_CLIENT(self.realowner))
 		if(!self.monster_respawned)
 			self.realowner.monstercount -= 1;
@@ -836,22 +836,22 @@ void monster_die(entity attacker, float gibbed)
 	self.think = monster_dead_think;
 	self.nextthink = time;
 	self.ltime = time + 5;
-	
+
 	if ( self.frozen )
 	{
 		Unfreeze(self); // remove any icy remains
 		self.health = 0; // reset by Unfreeze
 	}
-	
+
 	monster_dropitem();
 
 	MonsterSound(monstersound_death, 0, FALSE, CH_VOICE);
 
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED) && !self.monster_respawned)
 		monsters_killed += 1;
-		
+
 	if(IS_PLAYER(attacker))
-	if( autocvar_g_monsters_score_spawned || 
+	if( autocvar_g_monsters_score_spawned ||
 			( !(self.spawnflags & MONSTERFLAG_SPAWNED) && !self.monster_respawned) )
 		PlayerScore_Add(attacker, SP_SCORE, +autocvar_g_monsters_score_kill);
 
@@ -859,7 +859,7 @@ void monster_die(entity attacker, float gibbed)
 	{
 		// number of monsters spawned with mobspawn command
 		totalspawned -= 1;
-		
+
 		if(IS_CLIENT(self.realowner))
 		if(!self.monster_respawned)
 			self.realowner.monstercount -= 1;
@@ -888,7 +888,7 @@ void monster_die(entity attacker, float gibbed)
 
 void monsters_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	
+
 	if(self.frozen && deathtype != DEATH_KILL && deathtype != DEATH_NADE_ICE_FREEZE)
 		return;
 
@@ -906,7 +906,7 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 	save = v_y;
 
 	self.health -= take;
-	
+
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
 
 	self.dmg_time = time;
@@ -937,9 +937,9 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		self.target2 = self.oldtarget2; // reset to original target on death, incase we respawn
 
 		monster_die(attacker, (self.health <= -100 || deathtype == DEATH_KILL));
-		
+
 		WaypointSprite_Kill(self.sprite);
-		
+
 		frag_attacker = attacker;
 		frag_target = self;
 		MUTATOR_CALLHOOK(MonsterDies);
@@ -981,7 +981,7 @@ void monster_think()
 {
 	self.think = monster_think;
 	self.nextthink = self.ticrate;
-	
+
 	if(self.ltime)
 	if(time >= self.ltime)
 	{
@@ -990,7 +990,7 @@ void monster_think()
 	}
 
 	MON_ACTION(self.monsterid, MR_THINK);
-	
+
 	CSQCMODEL_AUTOUPDATE();
 }
 
@@ -1006,7 +1006,7 @@ float monster_spawn()
 
 	self.max_health = self.health;
 	self.pain_finished = self.nextthink;
-	
+
 	if(IS_PLAYER(self.monster_owner))
 		self.effects |= EF_DIMLIGHT;
 
@@ -1016,25 +1016,25 @@ float monster_spawn()
 
 	if(!self.attack_range)
 		self.attack_range = autocvar_g_monsters_attack_range;
-	
+
 	precache_monstersounds();
 	UpdateMonsterSounds();
 
 	if(teamplay)
 		self.monster_attack = TRUE; // we can have monster enemies in team games
-		
+
 	MonsterSound(monstersound_spawn, 0, FALSE, CH_VOICE);
-	
+
 	WaypointSprite_Spawn(M_NAME(self.monsterid), 0, 1024, self, '0 0 1' * (self.maxs_z + 15), world, self.team, self, sprite, TRUE, RADARICON_DANGER, ((self.team) ? Team_ColorRGB(self.team) : '1 0 0'));
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
 
 	self.think = monster_think;
 	self.nextthink = time + self.ticrate;
-	
+
 	if(MUTATOR_CALLHOOK(MonsterSpawn))
 		return FALSE;
-	
+
 	return TRUE;
 }
 
@@ -1044,7 +1044,7 @@ float monster_initialize(float mon_id, float nodrop)
 		return FALSE;
 
 	entity mon = get_monsterinfo(mon_id);
-	
+
 	if(!self.monster_skill)
 		self.monster_skill = cvar("g_monsters_skill");
 
@@ -1094,10 +1094,10 @@ float monster_initialize(float mon_id, float nodrop)
 	self.spider_slowness	= 0;
 	self.gravity			= 1;
 	self.dphitcontentsmask	= DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
-	
+
 	if(autocvar_g_fullbrightplayers)
 		self.effects |= EF_FULLBRIGHT;
-		
+
 	if(autocvar_g_nodepthtestplayers)
 		self.effects |= EF_NODEPTHTEST;
 
@@ -1129,20 +1129,20 @@ float monster_initialize(float mon_id, float nodrop)
 
 	if(!self.monster_moveflags)
 		self.monster_moveflags = MONSTER_MOVE_WANDER;
-		
+
 	if(!self.noalign)
 	{
 		setorigin(self, self.origin + '0 0 20');
 		tracebox(self.origin + '0 0 64', self.mins, self.maxs, self.origin - '0 0 10000', MOVE_WORLDONLY, self);
 		setorigin(self, trace_endpos);
 	}
-		
+
 	if(!monster_spawn())
 		return FALSE;
-		
+
 	if(!self.monster_respawned)
 		monster_setupcolors();
-	
+
 	CSQCMODEL_AUTOINIT();
 
 	return TRUE;

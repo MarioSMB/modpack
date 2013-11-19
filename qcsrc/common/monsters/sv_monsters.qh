@@ -51,7 +51,7 @@ const float MONSTER_SKILL_NIGHTMARE = 10;
 		_MSOUND(melee) \
 		_MSOUND(pain) \
 		_MSOUND(spawn) \
-		_MSOUND(idle) 
+		_MSOUND(idle)
 
 #define _MSOUND(m) .string monstersound_##m;
 ALLMONSTERSOUNDS
@@ -70,7 +70,7 @@ const float MONSTERFLAG_APPEAR = 2; // delay spawn until triggered
 const float MONSTERFLAG_NORESPAWN = 4;
 const float MONSTERFLAG_FLY_VERTICAL = 8; // fly/swim vertically
 const float MONSTERFLAG_INFRONT = 32; // only check for enemies infront of us
-const float MONSTERFLAG_MINIBOSS = 64;  // monster spawns as mini-boss (also has a chance of naturally becoming one)
+const float MONSTERFLAG_MINIBOSS = 64;	// monster spawns as mini-boss (also has a chance of naturally becoming one)
 const float MONSTERFLAG_SPAWNED = 16384; // flag for spawned monsters
 
 .void() monster_spawnfunc;
