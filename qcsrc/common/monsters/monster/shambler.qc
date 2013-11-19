@@ -1,12 +1,12 @@
 #ifdef REGISTER_MONSTER
 REGISTER_MONSTER(
-/* MON_##id   */ SHAMBLER,
-/* function   */ m_shambler,
+/* MON_##id	  */ SHAMBLER,
+/* function	  */ m_shambler,
 /* spawnflags */ MONSTER_SIZE_BROKEN | MON_FLAG_SUPERMONSTER | MON_FLAG_MELEE | MON_FLAG_RANGED,
 /* mins,maxs  */ '-41 -41 -31', '41 41 65',
-/* model      */ "shambler.mdl",
-/* netname    */ "shambler",
-/* fullname   */ _("Shambler")
+/* model	  */ "shambler.mdl",
+/* netname	  */ "shambler",
+/* fullname	  */ _("Shambler")
 );
 
 #else
@@ -24,15 +24,15 @@ float autocvar_g_monster_shambler_speed_stop;
 float autocvar_g_monster_shambler_speed_run;
 float autocvar_g_monster_shambler_speed_walk;
 
-const float shambler_anim_stand 	= 0;
-const float shambler_anim_walk 		= 1;
-const float shambler_anim_run 		= 2;
-const float shambler_anim_smash 	= 3;
-const float shambler_anim_swingr 	= 4;
-const float shambler_anim_swingl 	= 5;
-const float shambler_anim_magic 	= 6;
-const float shambler_anim_pain 		= 7;
-const float shambler_anim_death 	= 8;
+const float shambler_anim_stand		= 0;
+const float shambler_anim_walk		= 1;
+const float shambler_anim_run		= 2;
+const float shambler_anim_smash		= 3;
+const float shambler_anim_swingr	= 4;
+const float shambler_anim_swingl	= 5;
+const float shambler_anim_magic		= 6;
+const float shambler_anim_pain		= 7;
+const float shambler_anim_death		= 8;
 
 .float shambler_lastattack; // delay attacks separately
 
@@ -41,9 +41,9 @@ void shambler_smash()
 	makevectors(self.angles);
 	pointparticles(particleeffectnum("explosion_medium"), (self.origin + (v_forward * 150)) - ('0 0 1' * self.maxs_z), '0 0 0', 1);
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
-	
+
 	tracebox(self.origin + v_forward * 50, self.mins * 0.5, self.maxs * 0.5, self.origin + v_forward * 500, MOVE_NORMAL, self);
-	
+
 	if(trace_ent.takedamage)
 		Damage(trace_ent, self, self, (autocvar_g_monster_shambler_attack_smash_damage) * Monster_SkillModifier(), DEATH_MONSTER_SHAMBLER_SMASH, trace_ent.origin, normalize(trace_ent.origin - self.origin));
 }
@@ -62,7 +62,7 @@ void shambler_swing()
 void shambler_lightning_explode()
 {
 	entity head;
-	
+
 	sound(self, CH_SHOTS, "weapons/electro_impact.wav", VOL_BASE, ATTEN_NORM);
 	pointparticles(particleeffectnum("electro_impact"), '0 0 0', '0 0 0', 1);
 
@@ -75,7 +75,7 @@ void shambler_lightning_explode()
 		self.velocity = self.oldvelocity;
 
 	RadiusDamage (self, self.realowner, (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_damage), (autocvar_g_monster_shambler_attack_lightning_radius), world, (autocvar_g_monster_shambler_attack_lightning_force), self.projectiledeathtype, other);
-	
+
 	for(head = findradius(self.origin, (autocvar_g_monster_shambler_attack_lightning_radius_zap)); head; head = head.chain) if(head != self.realowner) if(head.takedamage)
 	{
 		te_csqc_lightningarc(self.origin, head.origin);
@@ -90,12 +90,12 @@ void shambler_lightning_damage(entity inflictor, entity attacker, float damage, 
 {
 	if (self.health <= 0)
 		return;
-		
+
 	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
-		
+
 	self.health = self.health - damage;
-	
+
 	if (self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, self.use);
 }
@@ -103,7 +103,7 @@ void shambler_lightning_damage(entity inflictor, entity attacker, float damage, 
 void shambler_lightning_touch()
 {
 	PROJECTILE_TOUCH;
-	
+
 	self.use ();
 }
 
@@ -121,7 +121,7 @@ void shambler_lightning_think()
 void shambler_lightning()
 {
 	entity gren;
-	
+
 	monster_makevectors(self.enemy);
 
 	gren = spawn ();
@@ -184,23 +184,23 @@ float shambler_attack(float attack_type)
 				defer(0.6, shambler_lightning);
 				return TRUE;
 			}
-			
+
 			return FALSE;
 		}
 	}
-	
+
 	return FALSE;
 }
 
 void spawnfunc_monster_shambler()
 {
 	self.classname = "monster_shambler";
-	
+
 	self.monster_spawnfunc = spawnfunc_monster_shambler;
-	
+
 	if(Monster_CheckAppearFlags(self))
 		return;
-	
+
 	if(!monster_initialize(MON_SHAMBLER, FALSE)) { remove(self); return; }
 }
 
@@ -222,12 +222,12 @@ float m_shambler(float req)
 		{
 			if(!self.health) self.health = (autocvar_g_monster_shambler_health);
 			if(!self.attack_range) self.attack_range = 150;
-			
+
 			self.monster_loot = spawnfunc_item_health_mega;
 			self.monster_attackfunc	= shambler_attack;
 			self.frame = shambler_anim_stand;
 			self.weapon = WEP_NEX;
-			
+
 			return TRUE;
 		}
 		case MR_PRECACHE:
@@ -236,7 +236,7 @@ float m_shambler(float req)
 			return TRUE;
 		}
 	}
-	
+
 	return TRUE;
 }
 
@@ -252,7 +252,7 @@ float m_shambler(float req)
 			return TRUE;
 		}
 	}
-	
+
 	return TRUE;
 }
 

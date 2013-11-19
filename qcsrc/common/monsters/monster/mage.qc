@@ -1,12 +1,12 @@
 #ifdef REGISTER_MONSTER
 REGISTER_MONSTER(
-/* MON_##id   */ MAGE,
-/* function   */ m_mage,
+/* MON_##id	  */ MAGE,
+/* function	  */ m_mage,
 /* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RANGED,
 /* mins,maxs  */ '-36 -36 -24', '36 36 50',
-/* model      */ "mage.dpm",
-/* netname    */ "mage",
-/* fullname   */ _("Mage")
+/* model	  */ "mage.dpm",
+/* netname	  */ "mage",
+/* fullname	  */ _("Mage")
 );
 
 #else
@@ -40,10 +40,10 @@ float autocvar_g_monster_mage_speed_run;
 float autocvar_g_monster_mage_speed_walk;
 
 const float mage_anim_idle		= 0;
-const float mage_anim_walk 		= 1;
-const float mage_anim_attack 	= 2;
-const float mage_anim_pain 		= 3;
-const float mage_anim_death 	= 4;
+const float mage_anim_walk		= 1;
+const float mage_anim_attack	= 2;
+const float mage_anim_pain		= 3;
+const float mage_anim_death		= 4;
 const float mage_anim_run		= 5;
 
 void() mage_heal;
@@ -74,18 +74,18 @@ float friend_needshelp(entity e)
 		case 2: return (e.armorvalue < autocvar_g_balance_armor_regenstable);
 		case 3: return (e.health > 0);
 	}
-	
+
 	return FALSE;
 }
 
 void mage_spike_explode()
 {
 	self.event_damage = func_null;
-	
+
 	sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTEN_NORM);
-	
+
 	self.realowner.mage_spike = world;
-	
+
 	pointparticles(particleeffectnum("explosion_small"), self.origin, '0 0 0', 1);
 	RadiusDamage (self, self.realowner, (autocvar_g_monster_mage_attack_spike_damage), (autocvar_g_monster_mage_attack_spike_damage) * 0.5, (autocvar_g_monster_mage_attack_spike_radius), world, 0, DEATH_MONSTER_MAGE, other);
 
@@ -127,12 +127,12 @@ void mage_spike_think()
 
 	if (self.enemy != world)
 	{
-		e               = self.enemy;
-		eorg            = 0.5 * (e.absmin + e.absmax);
-		turnrate        = (autocvar_g_monster_mage_attack_spike_turnrate); // how fast to turn
-		desireddir      = normalize(eorg - self.origin);
-		olddir          = normalize(self.velocity); // get my current direction
-		dist            = vlen(eorg - self.origin);
+		e				= self.enemy;
+		eorg			= 0.5 * (e.absmin + e.absmax);
+		turnrate		= (autocvar_g_monster_mage_attack_spike_turnrate); // how fast to turn
+		desireddir		= normalize(eorg - self.origin);
+		olddir			= normalize(self.velocity); // get my current direction
+		dist			= vlen(eorg - self.origin);
 
 		// Do evasive maneuvers for world objects? ( this should be a cpu hog. :P )
 		if ((autocvar_g_monster_mage_attack_spike_smart) && (dist > (autocvar_g_monster_mage_attack_spike_smart_mindist)))
@@ -147,15 +147,15 @@ void mage_spike_think()
 			self.wait = bound((autocvar_g_monster_mage_attack_spike_smart_trace_min), vlen(self.origin - trace_endpos), self.wait = (autocvar_g_monster_mage_attack_spike_smart_trace_max));
 
 			// Calc how important it is that we turn and add this to the desierd (enemy) dir.
-			desireddir  = normalize(((trace_plane_normal * (1 - trace_fraction)) + (desireddir * trace_fraction)) * 0.5);
+			desireddir = normalize(((trace_plane_normal * (1 - trace_fraction)) + (desireddir * trace_fraction)) * 0.5);
 		}
-		
+
 		newdir = normalize(olddir + desireddir * turnrate); // take the average of the 2 directions; not the best method but simple & easy
 		self.velocity = newdir * spd; // make me fly in the new direction at my flight speed
 	}
 	else
 		dist = 0;
-		
+
 	///////////////
 
 	//self.angles = vectoangles(self.velocity);			// turn model in the new flight direction
@@ -179,14 +179,14 @@ void mage_attack_spike()
 	missile.movetype = MOVETYPE_FLYMISSILE;
 	missile.flags = FL_PROJECTILE;
 	setorigin(missile, self.origin + v_forward * 14 + '0 0 30' + v_right * -14);
-	setsize (missile, '0 0 0', '0 0 0');	
+	setsize (missile, '0 0 0', '0 0 0');
 	missile.velocity = dir * 400;
 	missile.avelocity = '300 300 300';
 	missile.enemy = self.enemy;
 	missile.touch = mage_spike_touch;
-	
+
 	self.mage_spike = missile;
-	
+
 	CSQCProjectile(missile, TRUE, PROJECTILE_MAGE_SPIKE, TRUE);
 }
 
@@ -194,7 +194,7 @@ void mage_heal()
 {
 	entity head;
 	float washealed = FALSE;
-	
+
 	for(head = findradius(self.origin, (autocvar_g_monster_mage_heal_range)); head; head = head.chain) if(friend_needshelp(head))
 	{
 		washealed = TRUE;
@@ -226,7 +226,7 @@ void mage_heal()
 					fx = "rage";
 					break;
 			}
-			
+
 			pointparticles(particleeffectnum(fx), head.origin, '0 0 0', 1);
 		}
 		else
@@ -236,7 +236,7 @@ void mage_heal()
 			WaypointSprite_UpdateHealth(head.sprite, head.health);
 		}
 	}
-	
+
 	if(washealed)
 	{
 		self.frame = mage_anim_attack;
@@ -249,7 +249,7 @@ void mage_push()
 	sound(self, CH_SHOTS, "weapons/tagexp1.wav", 1, ATTEN_NORM);
 	RadiusDamage (self, self, (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_radius), world, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE, self.enemy);
 	pointparticles(particleeffectnum("TE_EXPLOSION"), self.origin, '0 0 0', 1);
-	
+
 	self.frame = mage_anim_attack;
 	self.attack_finished_single = time + (autocvar_g_monster_mage_attack_push_delay);
 }
@@ -261,13 +261,13 @@ void mage_teleport()
 
 	makevectors(self.enemy.angles);
 	tracebox(self.enemy.origin + ((v_forward * -1) * 200), self.mins, self.maxs, self.origin, MOVE_NOMONSTERS, self);
-	
+
 	if(trace_fraction < 1)
 		return;
-		
+
 	pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1);
 	setorigin(self, self.enemy.origin + ((v_forward * -1) * 200));
-	
+
 	self.attack_finished_single = time + 0.2;
 }
 
@@ -300,7 +300,7 @@ float mage_attack(float attack_type)
 				mage_push();
 				return TRUE;
 			}
-				
+
 			return FALSE;
 		}
 		case MONSTER_ATTACK_RANGED:
@@ -320,26 +320,26 @@ float mage_attack(float attack_type)
 					return TRUE;
 				}
 			}
-			
+
 			if(self.mage_spike)
 				return TRUE;
 			else
 				return FALSE;
 		}
 	}
-	
+
 	return FALSE;
 }
 
 void spawnfunc_monster_mage()
 {
 	self.classname = "monster_mage";
-	
+
 	self.monster_spawnfunc = spawnfunc_monster_mage;
-	
+
 	if(Monster_CheckAppearFlags(self))
 		return;
-	
+
 	if(!monster_initialize(MON_MAGE, FALSE)) { remove(self); return; }
 }
 
@@ -354,7 +354,7 @@ float m_mage(float req)
 		{
 			entity head;
 			float need_help = FALSE;
-			
+
 			for(head = findradius(self.origin, (autocvar_g_monster_mage_heal_range)); head; head = head.chain)
 			if(head != self)
 			if(friend_needshelp(head))
@@ -362,21 +362,21 @@ float m_mage(float req)
 				need_help = TRUE;
 				break;
 			}
-				
+
 			if(self.health < (autocvar_g_monster_mage_heal_minhealth) || need_help)
 			if(time >= self.attack_finished_single)
 			if(random() < 0.5)
 				mage_heal();
-				
+
 			if(time >= self.shield_ltime && self.armorvalue)
 				mage_shield_remove();
-				
+
 			if(self.enemy)
 			if(self.health < self.max_health)
 			if(time >= self.lastshielded)
 			if(random() < 0.5)
 				mage_shield();
-			
+
 			monster_move((autocvar_g_monster_mage_speed_run), (autocvar_g_monster_mage_speed_walk), (autocvar_g_monster_mage_speed_stop), mage_anim_walk, mage_anim_run, mage_anim_idle);
 			return TRUE;
 		}
@@ -388,11 +388,11 @@ float m_mage(float req)
 		case MR_SETUP:
 		{
 			if(!self.health) self.health = (autocvar_g_monster_mage_health);
-			
+
 			self.monster_loot = spawnfunc_item_health_large;
 			self.monster_attackfunc	= mage_attack;
 			self.frame = mage_anim_walk;
-			
+
 			return TRUE;
 		}
 		case MR_PRECACHE:
@@ -403,7 +403,7 @@ float m_mage(float req)
 			return TRUE;
 		}
 	}
-	
+
 	return TRUE;
 }
 
@@ -419,7 +419,7 @@ float m_mage(float req)
 			return TRUE;
 		}
 	}
-	
+
 	return TRUE;
 }
 

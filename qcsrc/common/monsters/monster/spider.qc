@@ -1,12 +1,12 @@
 #ifdef REGISTER_MONSTER
 REGISTER_MONSTER(
-/* MON_##id   */ SPIDER,
-/* function   */ m_spider,
+/* MON_##id	  */ SPIDER,
+/* function	  */ m_spider,
 /* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RANGED,
 /* mins,maxs  */ '-18 -18 -25', '18 18 30',
-/* model      */ "spider.dpm",
-/* netname    */ "spider",
-/* fullname   */ _("Spider")
+/* model	  */ "spider.dpm",
+/* netname	  */ "spider",
+/* fullname	  */ _("Spider")
 );
 
 #else
@@ -36,10 +36,10 @@ void spider_web_explode()
 	{
 		pointparticles(particleeffectnum("electro_impact"), self.origin, '0 0 0', 1);
 		RadiusDamage(self, self.realowner, 0, 0, 25, world, 25, self.projectiledeathtype, world);
-		
+
 		for(e = findradius(self.origin, 25); e; e = e.chain) if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0)
 			e.spider_slowness = time + (autocvar_g_monster_spider_attack_web_damagetime);
-		
+
 		remove(self);
 	}
 }
@@ -47,14 +47,14 @@ void spider_web_explode()
 void spider_web_touch()
 {
 	PROJECTILE_TOUCH;
-	
+
 	spider_web_explode();
 }
 
 void spider_shootweb()
 {
 	monster_makevectors(self.enemy);
-	
+
 	sound(self, CH_SHOTS, "weapons/electro_fire2.wav", VOL_BASE, ATTEN_NORM);
 
 	entity proj = spawn ();
@@ -94,7 +94,7 @@ float spider_attack(float attack_type)
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
-		{	
+		{
 			return monster_melee(self.enemy, (autocvar_g_monster_spider_attack_bite_damage), ((random() > 0.5) ? spider_anim_attack : spider_anim_attack2), self.attack_range, (autocvar_g_monster_spider_attack_bite_delay), DEATH_MONSTER_SPIDER, TRUE);
 		}
 		case MONSTER_ATTACK_RANGED:
@@ -107,23 +107,23 @@ float spider_attack(float attack_type)
 				self.spider_web_delay = time + 3;
 				return TRUE;
 			}
-			
+
 			return FALSE;
 		}
 	}
-	
+
 	return FALSE;
 }
 
-void spawnfunc_monster_spider() 
+void spawnfunc_monster_spider()
 {
 	self.classname = "monster_spider";
-	
+
 	self.monster_spawnfunc = spawnfunc_monster_spider;
-	
+
 	if(Monster_CheckAppearFlags(self))
 		return;
-	
+
 	if(!monster_initialize(MON_SPIDER, FALSE)) { remove(self); return; }
 }
 
@@ -145,11 +145,11 @@ float m_spider(float req)
 		case MR_SETUP:
 		{
 			if(!self.health) self.health = (autocvar_g_monster_spider_health);
-			
+
 			self.monster_loot = spawnfunc_item_health_medium;
 			self.monster_attackfunc	= spider_attack;
 			self.frame = spider_anim_idle;
-			
+
 			return TRUE;
 		}
 		case MR_PRECACHE:
@@ -159,7 +159,7 @@ float m_spider(float req)
 			return TRUE;
 		}
 	}
-	
+
 	return TRUE;
 }
 
@@ -175,7 +175,7 @@ float m_spider(float req)
 			return TRUE;
 		}
 	}
-	
+
 	return TRUE;
 }
 
