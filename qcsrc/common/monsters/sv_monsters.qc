@@ -361,7 +361,7 @@ void Monster_Fade ()
 {
 	if(Monster_CanRespawn(self))
 	{
-		self.monster_respawned = TRUE;
+		self.spawnflags |= MONSTERFLAG_RESPAWNED;
 		self.think = self.monster_spawnfunc;
 		self.nextthink = time + self.respawntime;
 		self.ltime = 0;
@@ -823,7 +823,7 @@ void monsters_corpse_damage (entity inflictor, entity attacker, float damage, fl
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 
 		if(IS_CLIENT(self.realowner))
-		if(!self.monster_respawned)
+		if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 			self.realowner.monstercount -= 1;
 
 		self.think = SUB_Remove;
@@ -847,12 +847,11 @@ void monster_die(entity attacker, float gibbed)
 
 	MonsterSound(monstersound_death, 0, FALSE, CH_VOICE);
 
-	if(!(self.spawnflags & MONSTERFLAG_SPAWNED) && !self.monster_respawned)
+	if(!(self.spawnflags & MONSTERFLAG_SPAWNED) && !(self.spawnflags & MONSTERFLAG_RESPAWNED))
 		monsters_killed += 1;
 
 	if(IS_PLAYER(attacker))
-	if( autocvar_g_monsters_score_spawned ||
-			( !(self.spawnflags & MONSTERFLAG_SPAWNED) && !self.monster_respawned) )
+	if(autocvar_g_monsters_score_spawned || !((self.spawnflags & MONSTERFLAG_SPAWNED) || (self.spawnflags & MONSTERFLAG_RESPAWNED)))
 		PlayerScore_Add(attacker, SP_SCORE, +autocvar_g_monsters_score_kill);
 
 	if(!Monster_CanRespawn(self) || gibbed)
@@ -861,7 +860,7 @@ void monster_die(entity attacker, float gibbed)
 		totalspawned -= 1;
 
 		if(IS_CLIENT(self.realowner))
-		if(!self.monster_respawned)
+		if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 			self.realowner.monstercount -= 1;
 	}
 
@@ -998,7 +997,7 @@ float monster_spawn()
 {
 	MON_ACTION(self.monsterid, MR_SETUP);
 
-	if(!self.monster_respawned)
+	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
 		Monster_CheckMinibossFlag();
 		self.health *= Monster_SkillModifier();
@@ -1010,7 +1009,7 @@ float monster_spawn()
 	if(IS_PLAYER(self.monster_owner))
 		self.effects |= EF_DIMLIGHT;
 
-	if(!self.monster_respawned)
+	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 	if(!self.skin)
 		self.skin = rint(random() * 4);
 
@@ -1057,7 +1056,7 @@ float monster_initialize(float mon_id, float nodrop)
 		self.team = 0;
 
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED)) // naturally spawned monster
-	if(!self.monster_respawned)
+	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 		monsters_total += 1;
 
 	setmodel(self, mon.model);
@@ -1140,7 +1139,7 @@ float monster_initialize(float mon_id, float nodrop)
 	if(!monster_spawn())
 		return FALSE;
 
-	if(!self.monster_respawned)
+	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 		monster_setupcolors();
 
 	CSQCMODEL_AUTOINIT();

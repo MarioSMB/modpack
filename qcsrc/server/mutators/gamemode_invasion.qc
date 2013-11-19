@@ -191,7 +191,7 @@ void Invasion_RoundStart()
 
 MUTATOR_HOOKFUNCTION(invasion_MonsterDies)
 {
-	if(!self.monster_respawned)
+	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
 		numkilled += 1;
 		maxcurrent -= 1;
@@ -214,7 +214,7 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
 	if(roundcnt < maxrounds && self.spawnflags & MONSTERFLAG_MINIBOSS)
 		self.spawnflags &= ~MONSTERFLAG_MINIBOSS;
 	
-	if(!self.monster_respawned)
+	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
 		numspawned += 1;
 		maxcurrent += 1;
