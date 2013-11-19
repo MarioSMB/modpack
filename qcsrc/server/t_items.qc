@@ -11,6 +11,7 @@
 #define ISF_COLORMAP 16
 #define ISF_DROP 32
 #define ISF_ANGLES 64
+#define ISF_SIZE 128
 
 .float ItemStatus;
 
@@ -94,6 +95,17 @@ void ItemRead(float _IsNew)
         self.angles_z = ReadCoord();
         self.move_angles = self.angles;
     }
+	
+	if(sf & ISF_SIZE)
+	{
+		self.mins_x = ReadCoord();
+		self.mins_y = ReadCoord();
+		self.mins_z = ReadCoord();
+		self.maxs_x = ReadCoord();
+		self.maxs_y = ReadCoord();
+		self.maxs_z = ReadCoord();
+		setsize(self, self.mins, self.maxs);
+	}
 
     if(sf & ISF_STATUS) // need to read/write status frist so model can handle simple, fb etc.
     {
@@ -138,7 +150,7 @@ void ItemRead(float _IsNew)
     if(sf & ISF_MODEL)
     {
         self.drawmask  = MASK_NORMAL;
-        self.movetype  = MOVETYPE_NOCLIP;
+        self.movetype  = MOVETYPE_BOUNCE;
         self.draw       = ItemDraw;
 
         if(self.mdl)
@@ -186,7 +198,7 @@ void ItemRead(float _IsNew)
     if(sf & ISF_DROP)
     {
         self.gravity = 1;
-        self.move_angles = '0 0 0';
+        //self.move_angles = '0 0 0';
         self.move_movetype = MOVETYPE_TOSS;
         self.move_velocity_x = ReadCoord();
         self.move_velocity_y = ReadCoord();
@@ -241,6 +253,16 @@ float ItemSend(entity to, float sf)
         WriteCoord(MSG_ENTITY, self.angles_y);
         WriteCoord(MSG_ENTITY, self.angles_z);
     }
+	
+	if(sf & ISF_SIZE)
+	{
+		WriteCoord(MSG_ENTITY, self.mins_x);
+		WriteCoord(MSG_ENTITY, self.mins_y);
+		WriteCoord(MSG_ENTITY, self.mins_z);
+		WriteCoord(MSG_ENTITY, self.maxs_x);
+		WriteCoord(MSG_ENTITY, self.maxs_y);
+		WriteCoord(MSG_ENTITY, self.maxs_z);
+	}
 
     if(sf & ISF_STATUS)
         WriteByte(MSG_ENTITY, self.ItemStatus);
@@ -1071,6 +1093,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 				setsize (self, '-16 -16 0', '16 16 48');
 			else
 				setsize (self, '-16 -16 0', '16 16 32');
+			self.SendFlags |= ISF_SIZE;
 			// note droptofloor returns FALSE if stuck/or would fall too far
 			droptofloor();
 			waypoint_spawnforitem(self);
@@ -1143,6 +1166,8 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
         self.pos2 = '16 16 32';
     }
     setsize (self, self.pos1, self.pos2);
+	
+	self.SendFlags |= ISF_SIZE;
 
     if(itemflags & FL_POWERUP)
         self.ItemStatus |= ITS_ANIMATE1;
