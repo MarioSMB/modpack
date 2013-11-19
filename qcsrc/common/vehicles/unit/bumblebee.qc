@@ -322,13 +322,17 @@ float bumblebee_gunner_enter()
 	other.PlayerPhysplug    = bumblebee_gunner_frame;
 	other.flags             &= ~FL_ONGROUND;
 
-	msg_entity = other;
-	WriteByte(MSG_ONE, SVC_SETVIEWPORT);
-	WriteEntity(MSG_ONE, _gun.vehicle_viewport);
-	WriteByte(MSG_ONE, SVC_SETVIEWANGLES);
-	WriteAngle(MSG_ONE, _gun.angles_x + self.angles_x);    // tilt
-	WriteAngle(MSG_ONE, _gun.angles_y + self.angles_y);    // yaw
-	WriteAngle(MSG_ONE, 0);                             // roll
+	if(IS_REAL_CLIENT(other))
+	{
+		msg_entity = other;
+		WriteByte(MSG_ONE, SVC_SETVIEWPORT);
+		WriteEntity(MSG_ONE, _gun.vehicle_viewport);
+		WriteByte(MSG_ONE, SVC_SETVIEWANGLES);
+		WriteAngle(MSG_ONE, _gun.angles_x + self.angles_x);    // tilt
+		WriteAngle(MSG_ONE, _gun.angles_y + self.angles_y);    // yaw
+		WriteAngle(MSG_ONE, 0);                             // roll
+	}
+	
 	_gun.vehicle_hudmodel.viewmodelforclient = other;
 
 	CSQCVehicleSetup(other, other.hud);
