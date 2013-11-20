@@ -1013,7 +1013,7 @@ void VoteCommand_yes(float request, entity caller) // CLIENT ONLY
 		case CMD_REQUEST_COMMAND:
 		{
 			if (!vote_called) { print_to(caller, "^1No vote called."); }
-			else if(caller.vote_selection != VOTE_SELECT_NULL && autocvar_sv_vote_change) { print_to(caller, "^1You have already voted."); }
+			else if(caller.vote_selection != VOTE_SELECT_NULL && !autocvar_sv_vote_change) { print_to(caller, "^1You have already voted."); }
 
 			else // everything went okay, continue changing vote
 			{
