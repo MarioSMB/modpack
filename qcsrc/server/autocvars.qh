@@ -846,6 +846,10 @@ float autocvar_g_domination_disable_frags;
 float autocvar_g_domination_point_amt;
 float autocvar_g_domination_point_fullbright;
 float autocvar_g_domination_point_leadlimit;
+float autocvar_g_domination_roundbased;
+float autocvar_g_domination_roundbased_point_limit;
+float autocvar_g_domination_round_timelimit;
+float autocvar_g_domination_warmup;
 #define autocvar_g_domination_point_limit cvar("g_domination_point_limit")
 float autocvar_g_domination_point_rate;
 float autocvar_g_domination_teams_override;

@@ -3621,7 +3621,6 @@ void DrawDomItem(vector myPos, vector mySize, float aspect_ratio, float layout, 
 			pic = "dom_icon_yellow";
 			color = '1 1 0';
 			break;
-		default:
 		case 3:
 			stat = getstatf(STAT_DOM_PPS_PINK);
 			pic = "dom_icon_pink";

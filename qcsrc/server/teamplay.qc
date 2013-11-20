@@ -94,6 +94,10 @@ void InitGameplayMode()
 		fraglimit_override = autocvar_g_domination_point_limit;
 		leadlimit_override = autocvar_g_domination_point_leadlimit;
 		MUTATOR_ADD(gamemode_domination);
+		
+		if(autocvar_g_domination_roundbased && autocvar_g_domination_roundbased_point_limit)
+			fraglimit_override = autocvar_g_domination_roundbased_point_limit;
+		
 		have_team_spawns = -1; // request team spawns
 	}
 

@@ -4,6 +4,8 @@
 #define ST_DOM_TICKS 1
 #define SP_DOM_TICKS 4
 #define SP_DOM_TAKES 5
+#define ST_DOM_CAPS 1
+#define SP_DOM_CAPS 4
 
 // pps: points per second
 .float dom_total_pps;
@@ -21,3 +23,7 @@ float pps_pink;
 .float enemy_playerid;
 .entity sprite;
 .float captime;
+
+// misc globals
+float domination_roundbased;
+float domination_teams;
