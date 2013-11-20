@@ -27,7 +27,7 @@ MUTATOR_HOOKFUNCTION(ra_PlayerDamage)
 			}
 		}
 	}
-		
+
 	return FALSE;
 }
 
@@ -39,7 +39,7 @@ MUTATOR_HOOKFUNCTION(ra_FilterItem)
 		case IT_ARMOR_SHARD:
 			return FALSE;
 	}
-		
+
 	return TRUE;
 }
 
@@ -84,11 +84,11 @@ MUTATOR_DEFINITION(mutator_riflearena)
 	MUTATOR_HOOK(BuildMutatorsString, ra_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, ra_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetModname, ra_SetModname, CBC_ORDER_ANY);
-	
+
 	MUTATOR_ONADD
 	{
 		ra_SetCvars();
-		
+
 		weapon_action(WEP_LASER, WR_PRECACHE);
 		weapon_action(WEP_RIFLE, WR_PRECACHE);
 	}

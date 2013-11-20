@@ -15,7 +15,7 @@ vector Nade_Color(float nadeid)
 		case NADE_TYPE_SPAWN: return '1 0.9 0.06';
 	}
 
-    return '0 0 0';
+	return '0 0 0';
 }
 
 float Nade_IDFromProjectile(float proj)
@@ -31,7 +31,7 @@ float Nade_IDFromProjectile(float proj)
 		case PROJECTILE_NADE_TRANSLOCATE: return NADE_TYPE_TRANSLOCATE;
 		case PROJECTILE_NADE_SPAWN: return NADE_TYPE_SPAWN;
 	}
-	
+
 	return 0;
 }
 

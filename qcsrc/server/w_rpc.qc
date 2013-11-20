@@ -1,14 +1,14 @@
 #ifdef REGISTER_WEAPON
 REGISTER_WEAPON(
-/* WEP_##id  */ RPC,
-/* function  */ w_rpc,
-/* ammotype  */ IT_ROCKETS,
-/* impulse   */ 7,
-/* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_SUPERWEAPON,
-/* rating    */ BOT_PICKUP_RATING_HIGH,
-/* model     */ "ok_rl",
+/* WEP_##id	 */ RPC,
+/* function	 */ w_rpc,
+/* ammotype	 */ IT_ROCKETS,
+/* impulse	 */ 7,
+/* flags	 */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_NORMAL | WEP_FLAG_CANCLIMB | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_SUPERWEAPON,
+/* rating	 */ BOT_PICKUP_RATING_HIGH,
+/* model	 */ "ok_rl",
 /* shortname */ "rpc",
-/* fullname  */ _("Rocket Propelled Chainsaw")
+/* fullname	 */ _("Rocket Propelled Chainsaw")
 );
 #else
 #ifdef SVQC
@@ -25,13 +25,13 @@ void W_RPC_Explode()
 
 void W_RPC_Touch (void)
 {
-	if(WarpZone_Projectile_Touch())	
+	if(WarpZone_Projectile_Touch())
 		if(wasfreed(self))
-            return;
-	
+			return;
+
 	//if(other.solid != SOLID_BSP)
-    //    return;
-	
+	//	  return;
+
 	W_RPC_Explode();
 }
 
@@ -39,51 +39,51 @@ void W_RPC_Damage (entity inflictor, entity attacker, float damage, float deatht
 {
 	if (self.health <= 0)
 		return;
-	
+
 	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
-		
+
 	self.health = self.health - damage;
-	
+
 	if (self.health <= 0)
-		W_PrepareExplosionByDamage(attacker, W_RPC_Explode);    
+		W_PrepareExplosionByDamage(attacker, W_RPC_Explode);
 }
 
 void W_RPC_Think()
 {
-    if(self.cnt <= time)
-    {
-        remove(self);
-        return;
-    }
-    
-    self.cnt = vlen(self.velocity);
-    self.wait = self.cnt * sys_frametime;
-    self.pos1 = normalize(self.velocity);
-    
-    tracebox(self.origin, self.mins, self.maxs, self.origin + self.pos1 * (2 * self.wait), MOVE_NORMAL, self);            
+	if(self.cnt <= time)
+	{
+		remove(self);
+		return;
+	}
+
+	self.cnt = vlen(self.velocity);
+	self.wait = self.cnt * sys_frametime;
+	self.pos1 = normalize(self.velocity);
+
+	tracebox(self.origin, self.mins, self.maxs, self.origin + self.pos1 * (2 * self.wait), MOVE_NORMAL, self);
 	if(IS_PLAYER(trace_ent))
-        Damage (trace_ent, self, self.realowner, autocvar_g_balance_rpc_damage2, self.projectiledeathtype, self.origin, normalize(self.origin - other.origin) * autocvar_g_balance_rpc_force);
-    
-    self.velocity = self.pos1 * (self.cnt + (autocvar_g_balance_rpc_speedaccel * sys_frametime));
-    
-    UpdateCSQCProjectile(self);
-    self.nextthink = time;
+		Damage (trace_ent, self, self.realowner, autocvar_g_balance_rpc_damage2, self.projectiledeathtype, self.origin, normalize(self.origin - other.origin) * autocvar_g_balance_rpc_force);
+
+	self.velocity = self.pos1 * (self.cnt + (autocvar_g_balance_rpc_speedaccel * sys_frametime));
+
+	UpdateCSQCProjectile(self);
+	self.nextthink = time;
 }
 
 void W_RPC_Attack (void)
 {
 	entity missile = spawn(); //WarpZone_RefSys_SpawnSameRefSys(self);
 	entity flash = spawn ();
-	
+
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_rpc_ammo, autocvar_g_balance_rpc_reload_ammo);
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 5, "weapons/rocket_fire.wav", CH_WEAPON_A, autocvar_g_balance_rpc_damage, self.weapon);
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
-    PROJECTILE_MAKETRIGGER(missile);
-	
+	PROJECTILE_MAKETRIGGER(missile);
+
 	missile.owner = missile.realowner = self;
 	missile.bot_dodge = TRUE;
-	missile.bot_dodgerating = autocvar_g_balance_rpc_damage * 2; 
+	missile.bot_dodgerating = autocvar_g_balance_rpc_damage * 2;
 
 	missile.takedamage = DAMAGE_YES;
 	missile.damageforcescale = autocvar_g_balance_rpc_damageforcescale;
@@ -91,7 +91,7 @@ void W_RPC_Attack (void)
 	missile.event_damage = W_RPC_Damage;
 	missile.damagedbycontents = TRUE;
 	missile.movetype = MOVETYPE_FLY;
-	
+
 	missile.projectiledeathtype = WEP_RPC;
 	setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
@@ -99,29 +99,29 @@ void W_RPC_Attack (void)
 	W_SetupProjectileVelocity(missile, autocvar_g_balance_rpc_speed, 0);
 
 	missile.touch = W_RPC_Touch;
-	
+
 	missile.think = W_RPC_Think;
 	//missile.think = SUB_Remove;
 	missile.cnt = time + autocvar_g_balance_rpc_lifetime;
-	missile.nextthink = time; 
+	missile.nextthink = time;
 	//missile.nextthink = time + autocvar_g_balance_rpc_lifetime;
 	missile.flags = FL_PROJECTILE;
 
 	CSQCProjectile(missile, TRUE, PROJECTILE_RPC, FALSE);
 	//CSQCProjectile(missile, TRUE, PROJECTILE_ROCKET, FALSE);
-	
+
 	setmodel (flash, "models/flash.md3"); // precision set below
 	SUB_SetFade (flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	W_AttachToShotorg(flash, '5 0 0');
-    missile.pos1 = missile.velocity;
-    
+	missile.pos1 = missile.velocity;
+
 	other = missile; MUTATOR_CALLHOOK(EditProjectile);
 	//BITXOR_ASSIGN(self.weaponentity.effects, EF_RESTARTANIM_BIT);
 }
 
 void spawnfunc_weapon_rpc()
-{    
+{
 	weapon_defaultspawnfunc(WEP_RPC);
 }
 
@@ -150,7 +150,7 @@ float w_rpc(float req)
 
 			if (self.BUTTON_ATCK2)
 			{
-			    // to-do
+				// to-do
 			}
 		}
 	}
@@ -171,15 +171,15 @@ float w_rpc(float req)
 	}
 	else if (req == WR_CHECKAMMO1)
 	{
-        if(autocvar_g_balance_rpc_reload_ammo)
-        {
-            if(self.ammo_rockets < autocvar_g_balance_rpc_ammo && self.(weapon_load[WEP_RPC]) < autocvar_g_balance_rpc_ammo)
-                ammo_amount = TRUE;
-        }
-        else if(self.ammo_rockets < autocvar_g_balance_rpc_ammo)
-            ammo_amount = TRUE;
-        
-        return !ammo_amount;
+		if(autocvar_g_balance_rpc_reload_ammo)
+		{
+			if(self.ammo_rockets < autocvar_g_balance_rpc_ammo && self.(weapon_load[WEP_RPC]) < autocvar_g_balance_rpc_ammo)
+				ammo_amount = TRUE;
+		}
+		else if(self.ammo_rockets < autocvar_g_balance_rpc_ammo)
+			ammo_amount = TRUE;
+
+		return !ammo_amount;
 	}
 	else if (req == WR_CHECKAMMO2)
 		return FALSE;

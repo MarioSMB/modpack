@@ -108,7 +108,7 @@ MUTATOR_HOOKFUNCTION(ok_BuildMutatorsPrettyString)
 MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 {
 	entity oldself = self;
-	
+
 	if(IS_MONSTER(other))
 		other.monster_loot = func_null;
 
@@ -241,7 +241,7 @@ MUTATOR_HOOKFUNCTION(ok_ItemRemove)
 		case IT_HEALTH: return !(autocvar_g_overkill_100h_anyway);
 		case IT_ARMOR: return !(autocvar_g_overkill_100a_anyway);
 	}
-	
+
 	return TRUE;
 }
 
@@ -362,7 +362,7 @@ void ok_Initialize()
 	precache_model("models/weapons/g_ok_sniper.md3");
 
 	precache_sound("weapons/dryfire.wav");
-	
+
 	addstat(STAT_OK_AMMO_CHARGE, AS_FLOAT, ok_use_ammocharge);
 	addstat(STAT_OK_AMMO_CHARGEPOOl, AS_FLOAT, ok_ammo_charge);
 

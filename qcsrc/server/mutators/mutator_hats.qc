@@ -6,22 +6,22 @@ float is_customplayermodel(entity ent)
 {
 	if(!autocvar_sv_allow_customplayermodels)
 		return FALSE;
-	
+
 	if(ent.cvar_cl_damnfurries)
 		return TRUE;
-	
+
 	if(ent.cvar_cl_robot)
 		return TRUE;
-	
+
 	if(ent.cvar_cl_bikini)
 		return TRUE;
-		
+
 	if(ent.cvar_cl_sparkle > 2)
 		return TRUE;
-		
+
 	if(ent.cvar_cl_pony)
 		return TRUE;
-	
+
 	return FALSE;
 }
 
@@ -65,7 +65,7 @@ void hat_Think()
 			setmodel(self, strcat("models/hats/", self.owner.hatname, ".md3")); // precision set below
 		else
 			self.model = "";
-			
+
 		if((tag_found = gettagindex(self.owner, "tag_head")))
 		{
 			self.tag_index = tag_found;
@@ -101,7 +101,7 @@ void hats_SpawnHat()
 	self.hatentity.angles = '0 0 0';
 	self.hatentity.think = hat_Think;
 	self.hatentity.nextthink = time;
-	
+
 	{
 		entity oldself = self;
 		self = self.hatentity;
@@ -118,7 +118,7 @@ MUTATOR_HOOKFUNCTION(hats_PlayerSpawn)
 		self.hatentity.alpha = default_weapon_alpha;
 		self.hatname = strzone(self.cvar_cl_hat);
 	}
-	
+
 	return FALSE;
 }
 
@@ -132,7 +132,7 @@ MUTATOR_HOOKFUNCTION(hats_RemovePlayer)
 {
 	self.hatentity = world;
 	self.hatname = "";
-	
+
 	return FALSE;
 }
 
@@ -142,7 +142,7 @@ MUTATOR_DEFINITION(mutator_hats)
 	MUTATOR_HOOK(PlayerSpawn, hats_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, hats_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, hats_RemovePlayer, CBC_ORDER_ANY);
-	
+
 	MUTATOR_ONADD
 	{
 		hats_Precache("models/hats/*.md3");

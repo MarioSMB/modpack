@@ -4,19 +4,19 @@ float generator_precached;
 
 vector randompos(vector m1, vector m2)
 {
-    vector v;
-    m2 = m2 - m1;
-    v_x = m2_x * random() + m1_x;
-    v_y = m2_y * random() + m1_y;
-    v_z = m2_z * random() + m1_z;
-    return  v;
+	vector v;
+	m2 = m2 - m1;
+	v_x = m2_x * random() + m1_x;
+	v_y = m2_y * random() + m1_y;
+	v_z = m2_z * random() + m1_z;
+	return	v;
 }
 
 void generator_precache()
 {
 	if(generator_precached)
 		return; // already precached
-		
+
 	precache_model("models/onslaught/generator.md3");
 	precache_model("models/onslaught/generator_dead.md3");
 	precache_model("models/onslaught/generator_dmg1.md3");
@@ -29,16 +29,16 @@ void generator_precache()
 	precache_model("models/onslaught/generator_dmg8.md3");
 	precache_model("models/onslaught/generator_dmg9.md3");
 	precache_model("models/onslaught/generator_dead.md3");
-	
+
 	precache_model("models/onslaught/ons_ray.md3");
 	precache_sound("onslaught/shockwave.wav");
 	precache_sound("weapons/grenade_impact.wav");
 	precache_sound("weapons/rocket_impact.wav");
-	
+
 	precache_model("models/onslaught/gen_gib1.md3");
 	precache_model("models/onslaught/gen_gib2.md3");
 	precache_model("models/onslaught/gen_gib3.md3");
-	
+
 	generator_precached = TRUE;
 }
 
@@ -67,9 +67,9 @@ void gib_draw()
 		remove(self);
 		return;
 	}
-	
+
 	self.alpha -= 0.05;
-	
+
 	if(self.alpha < 0.1)
 	{
 		remove(self);
@@ -99,11 +99,11 @@ void ons_throwgib(vector v_from, vector v_to, string smodel, float f_lifetime, f
 	gib.move_time = time;
 	gib.drawmask = MASK_NORMAL;
 	gib.giblifetime	= time + f_lifetime;
-	
+
 	if(b_burn)
 		gib.draw = gib_draw;
 	else
-		gib.draw = gib_draw_noburn;	
+		gib.draw = gib_draw_noburn;
 }
 
 void onslaught_generator_ray_think()
@@ -141,13 +141,13 @@ void generator_draw()
 {
 	if(self.health > 0)
 		return;
-	  
+
 	if(time < self.move_time)
 		return;
 	if(self.count <= 0)
 		return;
-    
-    vector org;
+
+	vector org;
 	float i;
 
 	// White shockwave
@@ -201,7 +201,7 @@ void generator_draw()
 		pointparticles(particleeffectnum("onslaught_generator_finalexplosion"), org, '0 0 0', 1);
 		sound(self, CH_TRIGGER, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 	}
-	
+
 	self.move_time = time + 0.05;
 
 	self.count -= 1;
@@ -232,7 +232,7 @@ void generator_damage(float hp)
 		setmodel(self, "models/onslaught/generator_dmg1.md3");
 	else if(hp <= self.max_health || hp >= self.max_health)
 		setmodel(self, "models/onslaught/generator.md3");
-		
+
 	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
 }
 
@@ -243,13 +243,13 @@ void generator_construct()
 	setorigin(self, self.origin);
 	setmodel(self, "models/onslaught/generator.md3");
 	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
-	
+
 	self.move_movetype	= MOVETYPE_NOCLIP;
 	self.solid			= SOLID_BBOX;
-	self.movetype		= MOVETYPE_NOCLIP; 
+	self.movetype		= MOVETYPE_NOCLIP;
 	self.move_origin	= self.origin;
 	self.move_time		= time;
-	self.drawmask		= MASK_NORMAL;  
+	self.drawmask		= MASK_NORMAL;
 	self.alpha			= 1;
 	self.draw			= generator_draw;
 }
@@ -282,15 +282,15 @@ void ent_generator()
 		self.origin_y = ReadCoord();
 		self.origin_z = ReadCoord();
 		setorigin(self, self.origin);
-		
+
 		self.health = ReadByte();
 		self.max_health = ReadByte();
 		self.count = ReadByte();
 		self.team = ReadByte();
-		
+
 		if(!self.count)
 			self.count = 40;
-		
+
 		generator_changeteam();
 		generator_precache();
 		generator_construct();
@@ -301,13 +301,13 @@ void ent_generator()
 		float _tmp;
 		_tmp = ReadByte();
 		if(_tmp != self.team)
-		{			
-			self.team = _tmp;				
+		{
+			self.team = _tmp;
 			generator_changeteam();
 		}
-		
+
 		_tmp = ReadByte();
-		
+
 		if(_tmp != self.health)
 			generator_damage(_tmp);
 
@@ -319,37 +319,37 @@ void ent_generator()
 #ifdef SVQC
 float generator_send(entity to, float sf)
 {
-	WriteByte(MSG_ENTITY, ENT_CLIENT_GENERATOR);    
+	WriteByte(MSG_ENTITY, ENT_CLIENT_GENERATOR);
 	WriteByte(MSG_ENTITY, sf);
 	if(sf & GSF_SETUP)
 	{
-	    WriteCoord(MSG_ENTITY, self.origin_x);
-	    WriteCoord(MSG_ENTITY, self.origin_y);
-	    WriteCoord(MSG_ENTITY, self.origin_z);
-		
+		WriteCoord(MSG_ENTITY, self.origin_x);
+		WriteCoord(MSG_ENTITY, self.origin_y);
+		WriteCoord(MSG_ENTITY, self.origin_z);
+
 		WriteByte(MSG_ENTITY, self.health);
 		WriteByte(MSG_ENTITY, self.max_health);
 		WriteByte(MSG_ENTITY, self.count);
 		WriteByte(MSG_ENTITY, self.team);
-    }
-    
-    if(sf & GSF_STATUS)
-    {
+	}
+
+	if(sf & GSF_STATUS)
+	{
 		WriteByte(MSG_ENTITY, self.team);
-	
-        if(self.health <= 0)
-            WriteByte(MSG_ENTITY, 0);
-        else
-            WriteByte(MSG_ENTITY, ceil((self.health / self.max_health) * 255));
-    }
-    
+
+		if(self.health <= 0)
+			WriteByte(MSG_ENTITY, 0);
+		else
+			WriteByte(MSG_ENTITY, ceil((self.health / self.max_health) * 255));
+	}
+
 	return TRUE;
 }
 
 void generator_link(void() spawnproc)
 {
-    Net_LinkEntity(self, TRUE, 0, generator_send);
-    self.think      = spawnproc;
-    self.nextthink  = time;
+	Net_LinkEntity(self, TRUE, 0, generator_send);
+	self.think		= spawnproc;
+	self.nextthink	= time;
 }
 #endif // SVQC

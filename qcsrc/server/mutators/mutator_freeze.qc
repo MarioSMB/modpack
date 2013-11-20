@@ -1,12 +1,12 @@
 void freeze_Unfreeze(entity ent)
 {
 	ent.freeze_flag = FROZEN_THAWING; // thawing is fine, as this is only checked when the player is frozen
-	
+
 	self.freezetag_frozen_time = 0;
 	self.freezetag_frozen_timeout = 0;
-	
+
 	Kill_Notification(NOTIF_ONE_ONLY, ent, MSG_CENTER_CPID, CPID_FREEZE);
-	
+
 	Unfreeze(ent);
 }
 
@@ -14,7 +14,7 @@ void freeze_Unfreeze(entity ent)
 MUTATOR_HOOKFUNCTION(freeze_PlayerSpawn)
 {
 	freeze_Unfreeze(self);
-	
+
 	return FALSE;
 }
 
@@ -22,21 +22,21 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerDies)
 {
 	if(frag_deathtype == DEATH_HURTTRIGGER)
 		return FALSE;
-		
+
 	SetRespawnDelays(); // player doesn't actually die
-	
+
 	float can_freeze = FALSE;
-	
+
 	if(frag_target.cvar_cl_freeze)
 	if(cvar("g_freeze") == 1)
 		can_freeze = TRUE;
-		
+
 	if(cvar("g_freeze") == 2)
 		can_freeze = TRUE;
-		
+
 	if(cvar("g_freeze") == 3)
 		can_freeze = FALSE; // force off (easier than disabling & restarting, will fix later)
-	
+
 	if(can_freeze)
 	if(!frag_target.frozen)
 	{
@@ -44,10 +44,10 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerDies)
 		if(IS_REAL_CLIENT(frag_target))
 			Send_Notification(NOTIF_ONE_ONLY, frag_target, MSG_CENTER, CENTER_FREEZE_THAWING);
 		frag_target.health = 1; // "respawn" the player :P
-		
+
 		if(g_minstagib)
 			frag_target.ammo_cells = start_ammo_cells; // we need more ammo in minstagib, otherwise the player will defrost & die again
-			
+
 		if(ITEM_DAMAGE_NEEDKILL(frag_deathtype)
 			|| frag_deathtype == DEATH_TEAMCHANGE || frag_deathtype == DEATH_AUTOTEAMCHANGE)
 		{
@@ -56,7 +56,7 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerDies)
 				freeze_Unfreeze(self); // remove ice
 			return 1;
 		}
-		
+
 		Freeze(frag_target, 0, 1, (teamplay && autocvar_g_freeze_noauto));
 		if(autocvar_g_freezetag_frozen_maxtime > 0)
 			self.freezetag_frozen_timeout = time + autocvar_g_freezetag_frozen_maxtime;
@@ -70,13 +70,13 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 {
 	if(self.deadflag != DEAD_NO || !IS_PLAYER(self) || gameover)
 		return FALSE;
-		
+
 	if(round_handler_IsActive())
 	if(!round_handler_IsRoundStarted())
 		return FALSE;
-		
+
 	float button_pressed = FALSE, n;
-	
+
 	if(teamplay && autocvar_g_freeze_noauto)
 	{
 		// copied from freezetag
@@ -84,7 +84,7 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 		{
 			// keep health = 1
 			self.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
-		}		
+		}
 
 		if(self.frozen == 1)
 		{
@@ -106,11 +106,11 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 					self.respawn_time = time + 1; // only retry once a second
 					PutClientInServer();
 				}
-				
+
 				return 1; // if we get here, normal revivals have been cancelled
 			}
 		}
-			
+
 		if(self.frozen == 1)
 		{
 			float frozen_count = 0, nplayers = 0;
@@ -128,11 +128,11 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 					other.respawn_time = time + autocvar_g_freeze_respawn_time;
 					PlayerScore_Add(other, SP_SCORE, -1); // lose score for this
 				}
-				
+
 				return 1;
 			}
 		}
-		
+
 		entity o;
 		o = world;
 		if(self.freezetag_frozen_timeout > 0 && time < self.freezetag_frozen_timeout)
@@ -186,7 +186,7 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 					if(other.reviving)
 					{
 						PlayerScore_Add(other, SP_SCORE, +1);
-						
+
 						nades_GiveBonus(other,autocvar_g_nades_bonus_score_low);
 					}
 				}
@@ -220,18 +220,18 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 		float rspeed = autocvar_g_freeze_revive_speed;
 		if(autocvar_g_freeze_revive_speed_random)
 			rspeed *= (random() * autocvar_g_freeze_revive_speed_random);
-		
+
 		self.revive_progress = bound(0, self.revive_progress + frametime * rspeed, 1);
 		self.health = max(1, self.revive_progress * autocvar_g_balance_health_start);
-		
+
 		if(self.health >= autocvar_g_freeze_revive_minhealth)
 			button_pressed = (self.BUTTON_JUMP || self.BUTTON_USE); // we're about to defrost, only detect jumps
 		else
 			button_pressed = (self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE);
-			
+
 		if(autocvar_g_freeze_norespawn)
 			button_pressed = 0; // don't allow re-spawning via jump/attack
-		
+
 		if(self.freeze_flag == FROZEN_THAWING)
 		{
 			if(!button_pressed)

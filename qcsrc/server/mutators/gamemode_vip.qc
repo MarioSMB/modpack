@@ -2,7 +2,7 @@ void VIP_count_players()
 {
 	total_players = red_players = blue_players = 0;
 	entity head;
-	
+
 	for(head = world; (head = find(head, classname, "player")); )
 	{
 		++total_players;
@@ -15,7 +15,7 @@ void vip_ClearVIPs()
 {
 	entity head;
 	float i;
-	
+
 	FOR_EACH_PLAYER(head)
 	{
 		if(head.wps_vip)
@@ -26,7 +26,7 @@ void vip_ClearVIPs()
 		head.isvip = FALSE;
 		head.gem_dropped = FALSE;
 	}
-		
+
 	for(i = 0; i < VIP_TEAMS; ++i)
 		vip_count[i] = 0;
 }
@@ -56,7 +56,7 @@ float VIP_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
-		
+
 		FOR_EACH_PLAYER(head)
 		{
 			if(head.isvip && head.health > 0)
@@ -79,35 +79,35 @@ float VIP_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_2(winner_team, CENTER_ROUND_TEAM_WIN_));
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_2(winner_team, INFO_ROUND_TEAM_WIN_));
 		TeamScore_AddToTeam(winner_team, ST_VIP_SCORE, +1);
-		
+
 		entity head;
 		FOR_EACH_PLAYER(head)
 		if(head.isvip && head.health > 0 && head.team == winner_team)
 			PlayerScore_Add(head, SP_VIP_SURVIVALS, 1);
-		
+
 		play2all((winner_team == NUM_TEAM_1) ? "ctf/red_capture.wav" : "ctf/blue_capture.wav");
 	}
 	else if(winner_team == -1)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_TIED);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
-		
+
 		entity head;
 		FOR_EACH_PLAYER(head)
 		if(head.isvip && head.health > 0)
 			PlayerScore_Add(head, SP_VIP_SURVIVALS, 1);
 	}
-	
+
 	vip_ClearVIPs();
-	
+
 	allowed_to_spawn = FALSE;
-	
+
 	round_handler_Init(5, autocvar_g_vip_warmup, autocvar_g_vip_round_timelimit);
-	
-	
+
+
 	FOR_EACH_PLAYER(head)
 		nades_Clear(head);
-		
+
 	return 1;
 }
 
@@ -131,14 +131,14 @@ void vip_SelectVIPs()
 	FOR_EACH_PLAYER(head) if(head.health > 0)
 	if((redgem_count < 1 || !usegems) && head.team == NUM_TEAM_1 && vip_count[NUM_TEAM_1] < 1)
 		RandomSelection_Add(head, 0, string_null, 1, ((IS_REAL_CLIENT(head) && !head.gem_dropped) ? 1 : 0.5));
-		
+
 	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_1);
-	
+
 	RandomSelection_Init();
 	FOR_EACH_PLAYER(head) if(head.health > 0)
 	if((bluegem_count < 1 || !usegems) && head.team == NUM_TEAM_2 && vip_count[NUM_TEAM_2] < 1)
 		RandomSelection_Add(head, 0, string_null, 1, ((IS_REAL_CLIENT(head) && !head.gem_dropped) ? 1 : 0.5));
-		
+
 	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_2);
 }
 
@@ -154,7 +154,7 @@ float VIP_CheckTeams()
 		entity head;
 		if(!g_vip_soulgems || redgem_count < 1 || bluegem_count < 1)
 			vip_SelectVIPs();
-		
+
 		FOR_EACH_PLAYER(head)
 		{
 			if((head.team == NUM_TEAM_1 && vip_count[NUM_TEAM_1] > 0) || (head.team == NUM_TEAM_2 && vip_count[NUM_TEAM_2] > 0))
@@ -186,25 +186,25 @@ void vip_DropSoulGem(entity player)
 {
 	if(!player.isvip)
 		return;
-		
+
 	if(player.wps_vip)
 	{
 		WaypointSprite_Ping(player.wps_vip);
 		WaypointSprite_Kill(player.wps_vip);
 	}
-	
+
 	player.health = 100; // reset these now?
 	player.armorvalue = 0;
 	player.isvip = FALSE;
 	player.gem_dropped = TRUE;
 	vip_count[player.team] -= 1;
-	
+
 	if(IS_REAL_CLIENT(player))
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_VIP_DROP_SELF);
-	
+
 	Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_CENTER, CENTER_VIP_DROP, player.netname);
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_VIP_DROP, player.netname);
-	
+
 	play2all("kh/destroy.wav");
 }
 
@@ -217,16 +217,16 @@ MUTATOR_HOOKFUNCTION(vip_PlayerDies)
 			PlayerScore_Add(frag_attacker, SP_VIP_VIPKILLS, 1);
 			PlayerScore_Add(frag_attacker, SP_SCORE, 1);
 		}
-		
+
 		vip_count[frag_target.team] -= 1;
 		frag_target.isvip = FALSE;
-		
+
 		play2all("kh/destroy.wav");
-		
+
 		WaypointSprite_Ping(frag_target.wps_vip);
 		WaypointSprite_Kill(frag_target.wps_vip);
 	}
-	
+
 	return FALSE;
 }
 
@@ -238,7 +238,7 @@ MUTATOR_HOOKFUNCTION(vip_RemovePlayer)
 		self.isvip = FALSE;
 		WaypointSprite_Kill(self.wps_vip);
 	}
-		
+
 	return FALSE;
 }
 
@@ -246,10 +246,10 @@ MUTATOR_HOOKFUNCTION(vip_PlayerThink)
 {
 	if(self.wps_vip)
 		WaypointSprite_UpdateHealth(self.wps_vip, ((g_minstagib) ? self.armorvalue : '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON)));
-		
+
 	self.stat_vip_red = vip_count[NUM_TEAM_1];
 	self.stat_vip_blue = vip_count[NUM_TEAM_2];
-	
+
 	return FALSE;
 }
 
@@ -257,7 +257,7 @@ MUTATOR_HOOKFUNCTION(vip_ResetMap)
 {
 	FOR_EACH_PLAYER(self)
 		PutClientInServer();
-	
+
 	return TRUE;
 }
 
@@ -269,16 +269,16 @@ MUTATOR_HOOKFUNCTION(vip_PlayerSpawn)
 			self.health = 200;
 		self.armorvalue = ((g_minstagib) ? 5 : 200); // 5 lives in minstagib
 	}
-	
+
 	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(vip_PlayerUseKey)
 {
 	if(MUTATOR_RETURNVALUE || gameover || round_handler_IsRoundStarted()) { return FALSE; }
-	
+
 	entity player = self;
-		
+
 	if((time > player.pickup_antispam) && (player.deadflag == DEAD_NO) && !player.vehicle) //&& (!player.vehicle || autocvar_g_vip_allow_vehicle_touch)) vehicle support coming soon(?)
 	{
 		if(autocvar_g_vip_drop && player.isvip)
@@ -303,14 +303,14 @@ MUTATOR_HOOKFUNCTION(vip_PlayerUseKey)
 				if(time > player.drop_prevtime + autocvar_g_vip_drop_punish_time) { player.drop_count = 1; }
 				else { player.drop_count += 1; }
 				if(player.drop_count >= autocvar_g_vip_drop_punish_count) { player.drop_count = -1; }
-					
+
 				player.drop_prevtime = time;
 				vip_DropSoulGem(player);
 				return TRUE;
 			}
 		}
 	}
-	
+
 	return TRUE;
 }
 
@@ -334,7 +334,7 @@ vector vip_SoulGemColormod(float theteam, float iseffect)
 			default:		 return '0.2 0.2 0.2';
 		}
 	}
-	
+
 	return (iseffect) ? '0.2 0.2 0.2' : '0.1 0.1 0.1';
 }
 
@@ -354,14 +354,14 @@ void vip_SetVIP(entity player, float tm)
 	player.health = 200;
 	player.armorvalue = ((g_minstagib) ? 5 : 200);
 	player.pickup_antispam = time + autocvar_g_vip_pickup_wait;
-	
+
 	vip_count[tm] += 1;
-	
+
 	vip_VIPWaypoints(player);
-	
+
 	if(IS_REAL_CLIENT(player))
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_VIP_PICKUP_SELF);
-	
+
 	Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_CENTER, CENTER_VIP_PICKUP, player.netname);
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_VIP_PICKUP, player.netname);
 }
@@ -370,33 +370,33 @@ void vip_SoulGem_touch()
 {
 	if(!IS_PLAYER(other))
 		return;
-	
+
 	if(self.gem_pickedup)
 		return;
-		
+
 	if(other.isvip)
 		return;
-		
+
 	if(!allowed_to_spawn)
 		return;
-		
+
 	if(other.deadflag != DEAD_NO)
 		return;
-	
+
 	if(DIFF_TEAM(other, self))
 		return;
-	
+
 	self.gem_pickedup = 1;
 	self.owner = other;
 	self.alpha = 0;
 	self.enemy.alpha = 0;
 	self.colormod = vip_SoulGemColormod(-self.team, FALSE);
 	self.enemy.colormod = vip_SoulGemColormod(-self.team, TRUE);
-	
+
 	WaypointSprite_Kill(self.waypointsprite_attached);
-	
+
 	play2all("kh/capture.wav");
-	
+
 	vip_SetVIP(other, other.team);
 }
 
@@ -404,7 +404,7 @@ void vip_SoulGem_think()
 {
 	self.glow_size = 256 + cos(time * 2) * 64;
 	self.nextthink = time + 0.1;
-	
+
 	if(vip_count[self.team] < 1 && self.gem_pickedup && allowed_to_spawn && self.owner && !self.owner.isvip)
 		self.reset();
 }
@@ -416,7 +416,7 @@ void vip_SoulGem_reset()
 	self.colormod = vip_SoulGemColormod(self.team, FALSE);
 	self.enemy.colormod = vip_SoulGemColormod(self.team, TRUE);
 	self.owner = world;
-	
+
 	// "run here" waypoint
 	if(!self.waypointsprite_attached)
 		WaypointSprite_Spawn("keycarrier-finish", 0, 0, self, FLAG_WAYPOINT_OFFSET, world, self.team, self, waypointsprite_attached, TRUE, RADARICON_FLAG, '0 1 1');
@@ -443,11 +443,11 @@ void vip_SpawnSoulGem(vector orig, float theteam)
 	e.reset = vip_SoulGem_reset;
 	setmodel(e, "models/runematch/rune.mdl");
 	setsize(e, '0 0 -35', '0 0 0');
-	
+
 	e.glow_size = 256;
 	e.glow_color = (theteam == NUM_TEAM_1) ? 251 : 250;
 	e.glow_trail = 1;
-	
+
 	e.enemy = spawn();
 	e.enemy.enemy = e;
 	e.enemy.classname = "vip_soulgem_effect";
@@ -459,7 +459,7 @@ void vip_SpawnSoulGem(vector orig, float theteam)
 
 	if (!move_out_of_solid(e))
 		bprint("\x01^!WARNING: ^7failed to move soulgem out of solid\n");
-	
+
 	entity oldself;
 	oldself = self;
 	self = e;
@@ -471,13 +471,13 @@ void vip_SpawnSoulGem(vector orig, float theteam)
 
 	e.alpha = e.enemy.alpha = 0.8;
 	e.effects = e.enemy.effects = (EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION);
-		
+
 	// update gem counts
 	if(e.team == NUM_TEAM_1)
 		redgem_count += 1;
 	else if(e.team == NUM_TEAM_2)
 		bluegem_count += 1;
-	
+
 	InitializeEntity(e, vip_DelayedGemSetup, INITPRIO_SETLOCATION);
 }
 
@@ -485,9 +485,9 @@ void vip_SpawnSoulGem(vector orig, float theteam)
 void spawnfunc_item_soulgem_team1()
 {
 	if(!g_vip || !g_vip_soulgems) { remove(self); return; }
-	
+
 	vip_SpawnSoulGem(self.origin, NUM_TEAM_1);
-	
+
 	self.think = SUB_Remove;
 	self.nextthink = time + 0.1;
 }
@@ -495,9 +495,9 @@ void spawnfunc_item_soulgem_team1()
 void spawnfunc_item_soulgem_team2()
 {
 	if(!g_vip || !g_vip_soulgems) { remove(self); return; }
-	
+
 	vip_SpawnSoulGem(self.origin, NUM_TEAM_2);
-	
+
 	self.think = SUB_Remove;
 	self.nextthink = time + 0.1;
 }
@@ -521,20 +521,20 @@ void vip_DelayedInit() // Do this check with a delay so we can wait for teams to
 void vip_Initialize()
 {
 	allowed_to_spawn = TRUE;
-	
+
 	g_vip_soulgems = cvar("g_vip_soulgems");
-	
+
 	round_handler_Spawn(VIP_CheckTeams, VIP_CheckWinner, VIP_RoundStart);
 	round_handler_Init(5, autocvar_g_vip_warmup, autocvar_g_vip_round_timelimit);
-	
+
 	precache_sound("kh/capture.wav");
 	precache_sound("kh/destroy.wav");
 	precache_sound("ctf/red_capture.wav");
-    precache_sound("ctf/blue_capture.wav");
-	
+	precache_sound("ctf/blue_capture.wav");
+
 	addstat(STAT_VIP_RED, AS_FLOAT, stat_vip_red);
 	addstat(STAT_VIP_BLUE, AS_FLOAT, stat_vip_blue);
-	
+
 	InitializeEntity(world, vip_DelayedInit, INITPRIO_GAMETYPE);
 }
 
@@ -547,14 +547,14 @@ MUTATOR_DEFINITION(gamemode_vip)
 	MUTATOR_HOOK(reset_map_players, vip_ResetMap, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, vip_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerUseKey, vip_PlayerUseKey, CBC_ORDER_ANY);
-	
+
 	MUTATOR_ONADD
 	{
 		if(time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
 		vip_Initialize();
 	}
-	
+
 	MUTATOR_ONROLLBACK_OR_REMOVE
 	{
 		// we actually cannot roll back vip_Initialize here
