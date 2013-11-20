@@ -201,6 +201,8 @@ void dompointtouch()
 		head = find(head, classname, "dom_team");
 	if (!head || head.netname == "" || head == self.goalentity)
 		return;
+		
+	nades_GiveBonus(other, autocvar_g_nades_bonus_score_medium);
 
 	// delay capture
 
