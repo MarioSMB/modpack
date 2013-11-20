@@ -344,10 +344,7 @@ float Domination_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
 		round_handler_Init(5, autocvar_g_domination_warmup, autocvar_g_domination_round_timelimit);
 		FOR_EACH_CLIENT(e)
-		{
-			e.player_blocked = 1;
 			nades_Clear(e);
-		}
 		return 1;
 	}
 
@@ -373,10 +370,7 @@ float Domination_CheckWinner()
 	round_handler_Init(5, autocvar_g_domination_warmup, autocvar_g_domination_round_timelimit);
 	
 	FOR_EACH_PLAYER(e)
-	{
 		nades_Clear(e);
-		e.player_blocked = 1;
-	}
 	
 	return 1;
 }

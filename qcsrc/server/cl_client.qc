@@ -393,11 +393,20 @@ void PlayerTouch (void)
 {
 	if(other == world)
 		return;
+		
+	if(!IS_PLAYER(self))
+		return;
 
-	if(!IS_PLAYER(other) || !IS_PLAYER(self))
+	if(!IS_PLAYER(other))
 		return;
 
 	if(self.deadflag != DEAD_NO)
+		return;
+		
+	if(other.deadflag != DEAD_NO)
+		return;
+		
+	if(forbidWeaponUse())
 		return;
 
 	vector vdir = normalize(other.origin - self.origin);
