@@ -139,7 +139,6 @@ cl_physics.qc
 // tZork's libs
 movelib.qc
 steerlib.qc
-pathlib/pathlib.qh
 
 g_world.qc
 g_casings.qc
