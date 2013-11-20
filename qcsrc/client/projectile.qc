@@ -279,6 +279,7 @@ void Ent_Projectile()
 		{
 			case PROJECTILE_ELECTRO: setmodel(self, "models/ebomb.mdl");self.traileffect = particleeffectnum(rm_suffix); break;
 			case PROJECTILE_ROCKET: setmodel(self, "models/rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); self.scale = 2; break;
+			case PROJECTILE_SUPERROCKET: setmodel(self, "models/rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); self.scale = 15; break;
 			case PROJECTILE_ROCKETMINSTA_LASER: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum(rm_suffix); break;
 			case PROJECTILE_CRYLINK: setmodel(self, "models/plasmatrail.mdl");self.traileffect = particleeffectnum("TR_CRYLINKPLASMA"); break;
 			case PROJECTILE_CRYLINK_BOUNCING: setmodel(self, "models/plasmatrail.mdl");self.traileffect = particleeffectnum("TR_CRYLINKPLASMA"); break;
@@ -354,6 +355,11 @@ void Ent_Projectile()
 				loopsound(self, CH_SHOTS_SINGLE, "weapons/rocket_fly.wav", VOL_BASE, ATTEN_NORM);
 				self.mins = '-3 -3 -3';
 				self.maxs = '3 3 3';
+				break;
+			case PROJECTILE_SUPERROCKET:
+				loopsound(self, CH_SHOTS_SINGLE, "weapons/rocket_fly.wav", VOL_BASE, ATTEN_NORM);
+				self.mins = '-32 -32 -32';
+				self.maxs = '32 32 32';
 				break;
 			case PROJECTILE_GRENADE:
 				self.mins = '-3 -3 -3';

@@ -19,6 +19,8 @@ REGISTER_WEAPON(
 .float minstanex_held_down;
 .float minstanex_jumpinterval;
 
+.float superrocket_lasthit;
+
 .float rm_force;
 .float rm_damage;
 .float rm_edmg;
@@ -368,10 +370,106 @@ void W_MinstaNex_SuperBlast()
 
 float W_MinstaNex_SuperBlast_CheckAmmo()
 {
+	if(autocvar_g_balance_minstanex_superblast == 3)
+		return TRUE; // forced
 	float ammo_amount;
 	ammo_amount = self.ammo_supercells >= 1;
 	ammo_amount += self.(weapon_load[WEP_MINSTANEX]) >= 1;
 	return ammo_amount;
+}
+
+void W_RocketMinsta_SuperRocket_Explode()
+{
+	self.event_damage = func_null;
+	self.takedamage = DAMAGE_NO;
+
+	RadiusDamage (self, self.realowner, 250, 250, 250, world, 250, self.projectiledeathtype, other);
+
+	remove (self);
+}
+
+void W_RocketMinsta_SuperRocket_Think (void)
+{
+	self.nextthink = time;
+	makevectors(self.angles);
+	self.velocity = v_forward * autocvar_g_rm_superrocket_speed;
+	if (time > self.cnt)
+	{
+		other = world;
+		self.projectiledeathtype |= HITTYPE_BOUNCE;
+		W_RocketMinsta_SuperRocket_Explode ();
+		return;
+	}
+}
+
+void W_RocketMinsta_SuperRocket_Touch (void)
+{
+	if(other.takedamage == DAMAGE_AIM && other.classname != "object" && time > other.superrocket_lasthit)
+	{
+		float minstanex_damage = ((autocvar_g_balance_minstanex_damage) ? autocvar_g_balance_minstanex_damage : 10000);
+		Damage(other, self, self.realowner, minstanex_damage, WEP_ROCKET_LAUNCHER, other.origin, '0 0 0');
+		other.superrocket_lasthit = time + 1;
+		return;
+	}
+	W_RocketMinsta_SuperRocket_Explode();
+}
+
+void W_RocketMinsta_SuperRocket_Damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+{
+	if (self.health <= 0)
+		return;
+
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+		return; // g_projectiles_damage says to halt
+
+	self.health = self.health - damage;
+	self.angles = vectoangles(self.velocity);
+
+	if (self.health <= 0)
+		W_PrepareExplosionByDamage(attacker, W_RocketMinsta_SuperRocket_Explode);
+}
+
+void W_RocketMinsta_SuperRocket()
+{
+	entity missile;
+	float minstanex_damage = ((autocvar_g_balance_minstanex_damage) ? autocvar_g_balance_minstanex_damage : 10000);
+	
+	makevectors(self.angles);
+
+	W_DecreaseAmmo(ammo_cells, 1, 0);
+
+	W_SetupShot_ProjectileSize (self, '-32 -32 -32', '32 32 32', FALSE, 5, "weapons/minstanex_charge2.wav", CH_WEAPON_A, minstanex_damage, WEP_ROCKET_LAUNCHER);
+	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+
+	missile = WarpZone_RefSys_SpawnSameRefSys(self);
+	missile.owner = missile.realowner = self;
+	missile.classname = "rocket";
+	missile.bot_dodge = TRUE;
+	missile.bot_dodgerating = minstanex_damage;
+
+	missile.takedamage = DAMAGE_YES;
+	missile.damageforcescale = 0;
+	missile.health = 350;
+	missile.event_damage = W_RocketMinsta_SuperRocket_Damage;
+	missile.damagedbycontents = TRUE;
+
+	missile.movetype = MOVETYPE_FLYMISSILE;
+	PROJECTILE_MAKETRIGGER(missile);
+	missile.projectiledeathtype = WEP_ROCKET_LAUNCHER;
+	setsize (missile, '-32 -32 -32', '32 32 32'); // give it some size so it can be shot
+
+	setorigin (missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
+	W_SetupProjectileVelocity(missile, autocvar_g_rm_superrocket_speed, 0);
+	missile.angles = self.v_angle;
+
+	missile.touch = W_RocketMinsta_SuperRocket_Touch;
+	missile.think = W_RocketMinsta_SuperRocket_Think;
+	missile.nextthink = time;
+	missile.cnt = time + 10;
+	missile.flags = FL_PROJECTILE;
+	//missile.missile_flags = MIF_SPLASH;
+
+	CSQCProjectile(missile, TRUE, PROJECTILE_SUPERROCKET, FALSE); // because of fly sound
 }
 
 void W_RocketMinsta_Laser_Explode (void)
@@ -532,7 +630,7 @@ float w_minstanex(float req)
 					W_MinstaNex_Attack();
 					
 					if(time >= self.minstanex_jumpinterval)
-					if(autocvar_g_balance_minstanex_superblast == 1 || (autocvar_g_balance_minstanex_superblast == 2 && self.cvar_cl_charge))
+					if(autocvar_g_balance_minstanex_superblast == 1 || (autocvar_g_balance_minstanex_superblast == 2 && self.cvar_cl_charge) || autocvar_g_balance_minstanex_superblast >= 3)
 					if(W_MinstaNex_SuperBlast_CheckAmmo())
 						self.minstanex_held_down = 1;
 						
@@ -553,7 +651,11 @@ float w_minstanex(float req)
 			{
 				if(weapon_prepareattack(0, autocvar_g_balance_minstanex_refire))
 				{
-					W_MinstaNex_SuperBlast();
+					if((autocvar_g_rm && autocvar_g_rm_superrocket) || autocvar_g_rm_superrocket == 2)
+						W_RocketMinsta_SuperRocket();
+					else
+						W_MinstaNex_SuperBlast();
+						
 					self.minstanex_held_down = 0;
 					weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_minstanex_animtime, w_ready);
 				}

@@ -1284,6 +1284,8 @@ float autocvar_g_rm_laser_rapid_refire;
 float autocvar_g_rm_laser_rapid_delay;
 float autocvar_g_rm_laser_radius;
 float autocvar_g_rm_laser_force;
+float autocvar_g_rm_superrocket;
+float autocvar_g_rm_superrocket_speed;
 float autocvar_g_rm_hook_damage;
 float autocvar_g_rm_hook_damage_always;
 float autocvar_g_rm_hook_team;
