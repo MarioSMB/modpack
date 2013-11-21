@@ -46,8 +46,8 @@ MUTATOR_HOOKFUNCTION(ra_FilterItem)
 MUTATOR_HOOKFUNCTION(ra_StartItems)
 {
 	start_items |= IT_UNLIMITED_AMMO;
-	start_ammo_nails = 100;
-	start_weapons = (WEPSET_RIFLE | WEPSET_LASER);
+	start_ammo_nails = warmup_start_ammo_nails = 100;
+	warmup_start_weapons = start_weapons = (WEPSET_RIFLE | WEPSET_LASER);
 
 	return FALSE;
 }
