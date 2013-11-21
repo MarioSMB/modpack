@@ -23,10 +23,9 @@ void ok_IncreaseCharge(entity ent, float wep)
 		ent.ammo_charge[wep] = min(autocvar_g_overkill_ammo_charge_limit, ent.ammo_charge[wep] + cvar(sprintf("g_overkill_ammo_charge_rate_%s", wepent.netname)) * frametime / W_TICSPERFRAME);
 }
 
-float ok_CheckWeaponCharge(entity ent, float wep, float swep)
+float ok_CheckWeaponCharge(entity ent, float wep)
 {
 	if(!ent.ok_use_ammocharge) return TRUE;
-	//if(wep != swep) return TRUE; // switching, don't even bother checking
 
 	entity wepent = get_weaponinfo(wep);
 
@@ -90,18 +89,6 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(ok_BuildMutatorsString)
-{
-	ret_string = strcat(ret_string, ":OK");
-	return FALSE;
-}
-
-MUTATOR_HOOKFUNCTION(ok_BuildMutatorsPrettyString)
-{
-	ret_string = strcat(ret_string, ", Overkill");
-	return FALSE;
-}
-
 MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 {
 	entity oldself = self;
@@ -138,10 +125,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 	if(intermission_running || gameover)
 		return FALSE;
 
-	if(self.deadflag != DEAD_NO || !IS_PLAYER(self))
-		return FALSE;
-
-	if(self.frozen)
+	if(self.deadflag != DEAD_NO || !IS_PLAYER(self) || self.frozen)
 		return FALSE;
 
 	ok_IncreaseCharge(self, self.weapon);
@@ -160,7 +144,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 	self.ok_ammo_charge = self.ammo_charge[self.weapon];
 
 	if(self.ok_use_ammocharge)
-	if(!ok_CheckWeaponCharge(self, self.weapon, self.switchweapon))
+	if(!ok_CheckWeaponCharge(self, self.weapon))
 	{
 		if(autocvar_g_overkill_ammo_charge_notice && time > self.ok_notice_time && self.BUTTON_ATCK && IS_REAL_CLIENT(self))
 		{
@@ -250,12 +234,6 @@ MUTATOR_HOOKFUNCTION(ok_SpectateCopy)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(ok_SetModname)
-{
-	modname = "Overkill";
-	return TRUE;
-}
-
 MUTATOR_HOOKFUNCTION(ok_StartItems)
 {
 	start_items |= IT_UNLIMITED_WEAPON_AMMO;
@@ -265,6 +243,24 @@ MUTATOR_HOOKFUNCTION(ok_StartItems)
 	warmup_start_ammo_nails = warmup_start_ammo_cells = warmup_start_ammo_shells = warmup_start_ammo_rockets = autocvar_g_overkill_ammo_start;
 
 	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(ok_BuildMutatorsString)
+{
+	ret_string = strcat(ret_string, ":OK");
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(ok_BuildMutatorsPrettyString)
+{
+	ret_string = strcat(ret_string, ", Overkill");
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(ok_SetModname)
+{
+	modname = "Overkill";
+	return TRUE;
 }
 
 void ok_SetCvars()
@@ -379,18 +375,18 @@ void ok_Initialize()
 MUTATOR_DEFINITION(mutator_overkill)
 {
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, ok_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsString, ok_BuildMutatorsString, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsPrettyString, ok_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, ok_PlayerPreThink, CBC_ORDER_LAST);
 	MUTATOR_HOOK(PlayerSpawn, ok_PlayerSpawn, CBC_ORDER_LAST);
 	MUTATOR_HOOK(PlayerDamage_Calculate, ok_PlayerDamage_Calculate, CBC_ORDER_LAST);
 	MUTATOR_HOOK(PlayerDies, ok_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(OnEntityPreSpawn, ok_OnEntityPreSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SetModname, ok_SetModname, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, ok_ItemRemove, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterDropItem, ok_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SpectateCopy, ok_SpectateCopy, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, ok_StartItems, CBC_ORDER_ANY);
+	MUTATOR_HOOK(BuildMutatorsString, ok_BuildMutatorsString, CBC_ORDER_ANY);
+	MUTATOR_HOOK(BuildMutatorsPrettyString, ok_BuildMutatorsPrettyString, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SetModname, ok_SetModname, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
