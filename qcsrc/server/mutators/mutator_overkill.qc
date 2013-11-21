@@ -260,6 +260,7 @@ MUTATOR_HOOKFUNCTION(ok_StartItems)
 {
 	start_items |= IT_UNLIMITED_WEAPON_AMMO;
 	start_weapons = (WEPSET_UZI | WEPSET_NEX | WEPSET_SHOTGUN);
+	warmup_start_weapons = (WEPSET_UZI | WEPSET_NEX | WEPSET_SHOTGUN);
 
 	start_ammo_nails = start_ammo_cells = start_ammo_shells = start_ammo_rockets =
 	warmup_start_ammo_nails = warmup_start_ammo_cells = warmup_start_ammo_shells = warmup_start_ammo_rockets = autocvar_g_overkill_ammo_start;
