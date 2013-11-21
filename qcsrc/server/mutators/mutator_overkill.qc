@@ -1,6 +1,6 @@
 void ok_DecreaseCharge(entity ent, float wep)
 {
-	if(!autocvar_g_overkill_ammo_charge) return;
+	if(!ent.ok_use_ammocharge) return;
 
 	entity wepent = get_weaponinfo(wep);
 
@@ -17,7 +17,7 @@ void ok_IncreaseCharge(entity ent, float wep)
 	if(wepent.netname == "")
 		return; // dummy
 
-	if(autocvar_g_overkill_ammo_charge)
+	if(ent.ok_use_ammocharge)
 	if(!ent.BUTTON_ATCK)
 	if(ent.ammo_charge[wep] <= autocvar_g_overkill_ammo_charge_limit)
 		ent.ammo_charge[wep] = min(autocvar_g_overkill_ammo_charge_limit, ent.ammo_charge[wep] + cvar(sprintf("g_overkill_ammo_charge_rate_%s", wepent.netname)) * frametime / W_TICSPERFRAME);
@@ -25,7 +25,7 @@ void ok_IncreaseCharge(entity ent, float wep)
 
 float ok_CheckWeaponCharge(entity ent, float wep, float swep)
 {
-	if(!autocvar_g_overkill_ammo_charge) return TRUE;
+	if(!ent.ok_use_ammocharge) return TRUE;
 	//if(wep != swep) return TRUE; // switching, don't even bother checking
 
 	entity wepent = get_weaponinfo(wep);
@@ -74,21 +74,18 @@ void start_ma_anyway()
 
 MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 {
-	if(DEATH_ISWEAPON(frag_deathtype, WEP_LASER) && frag_target == frag_attacker)
+	if(IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target))
+	if(DEATH_ISWEAPON(frag_deathtype, WEP_LASER))
+	{
 		frag_damage = 0;
 
-	if(!IS_PLAYER(frag_target) || frag_target == frag_attacker)
-		return FALSE;
-
-	if(!DEATH_ISWEAPON(frag_deathtype, WEP_LASER))
-		return FALSE;
-
-	frag_damage = 0;
-
-	if(frag_target.health >= 1 && !frag_target.frozen)
-		Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_MINSTA_SECONDARY);
-
-	frag_force = '0 0 0';
+		if(frag_attacker != frag_target)
+		{
+			if(frag_target.health >= 1 && !frag_target.frozen)
+				Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_LASER_NODAMAGE);
+			frag_force = '0 0 0';
+		}
+	}
 
 	return FALSE;
 }
@@ -110,7 +107,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 	entity oldself = self;
 
 	if(IS_MONSTER(other))
-		other.monster_loot = func_null;
+		other.monster_loot = func_null; // ?!
 
 	self.ok_lastwep = self.weapon;
 	self.ok_deathloc = self.origin;
@@ -162,7 +159,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 
 	self.ok_ammo_charge = self.ammo_charge[self.weapon];
 
-	if(autocvar_g_overkill_ammo_charge)
+	if(self.ok_use_ammocharge)
 	if(!ok_CheckWeaponCharge(self, self.weapon, self.switchweapon))
 	{
 		if(autocvar_g_overkill_ammo_charge_notice && time > self.ok_notice_time && self.BUTTON_ATCK && IS_REAL_CLIENT(self))

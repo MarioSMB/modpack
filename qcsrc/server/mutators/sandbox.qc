@@ -805,33 +805,16 @@ MUTATOR_HOOKFUNCTION(sandbox_StartFrame)
 	return TRUE;
 }
 
-MUTATOR_HOOKFUNCTION(sandbox_SetModname)
-{
-	modname = "Sandbox";
-	return TRUE;
-}
-
 MUTATOR_DEFINITION(sandbox)
 {
 	MUTATOR_HOOK(SV_ParseClientCommand, sandbox_PlayerCommand, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SV_StartFrame, sandbox_StartFrame, CBC_ORDER_ANY);
-	MUTATOR_HOOK(SetModname, sandbox_SetModname, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
 		autosave_time = time + autocvar_g_sandbox_storage_autosave; // don't save the first server frame
 		if(autocvar_g_sandbox_storage_autoload)
 			sandbox_Database_Load();
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// nothing to roll back
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		// nothing to remove
 	}
 
 	return FALSE;

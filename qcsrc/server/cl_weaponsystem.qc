@@ -1281,7 +1281,7 @@ void W_SetupProjectileVelocity(entity missile, float pSpeed, float spread)
 void W_DecreaseAmmo(.float ammo_type, float ammo_use, float ammo_reload)
 {
 	if(cvar("g_overkill"))
-	if(autocvar_g_overkill_ammo_charge)
+	if(self.ok_use_ammocharge)
 	{
 		ok_DecreaseCharge(self, self.weapon);
 		return; // TODO
@@ -1349,7 +1349,7 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 	e = get_weaponinfo(self.weapon);
 
 	if(cvar("g_overkill"))
-	if(autocvar_g_overkill_ammo_charge)
+	if(self.ok_use_ammocharge)
 		return; // TODO
 
 	// don't reload weapons that don't have the RELOADABLE flag
