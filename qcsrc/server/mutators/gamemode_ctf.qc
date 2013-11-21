@@ -2166,7 +2166,6 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_team1()
 {
-	if(g_vip && g_vip_soulgems) { vip_SpawnSoulGem(self.origin, NUM_TEAM_1); remove(self); return; }
 	if(!g_ctf)
 	{
 		if(autocvar_g_ctf_powerups_replace_flags)
@@ -2193,7 +2192,6 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_team2()
 {
-	if(g_vip && g_vip_soulgems) { vip_SpawnSoulGem(self.origin, NUM_TEAM_2); remove(self); return; }
 	if(!g_ctf)
 	{
 		if(autocvar_g_ctf_powerups_replace_flags)

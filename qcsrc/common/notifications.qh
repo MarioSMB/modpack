@@ -718,7 +718,7 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_VEHICLE_ENTER_STEAL,         0, 0, "pass_key",      CPID_VEHICLES,         "0 0",  _("^BGPress ^F2DROPFLAG%s^BG to steal this vehicle"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VEHICLE_STEAL,         	    0, 0, "",              CPID_VEHICLES_OTHER,   "0 0",  _("^F2The enemy is stealing one of your vehicles!\n^F4Stop them!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VEHICLE_STEAL_SELF,         	0, 0, "",              CPID_VEHICLES_OTHER,   "4 0",  _("^F2You have stolen the enemy's vehicle, you are now visible on their radar!"), "") \
-	MULTITEAM_CENTER(1, CENTER_VIP_BEGIN_, 2,               0, 0, "",              CPID_VIP,              "4 0",  _("^BGYou are the ^TC^TT^BG VIP!\n^F2Survive or your team will lose!"), "") \
+	MULTITEAM_CENTER(1, CENTER_VIP_BEGIN_, 4,               0, 0, "",              CPID_VIP,              "4 0",  _("^BGYou are the ^TC^TT^BG VIP!\n^F2Survive or your team will lose!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VIP_MISSING,              	0, 0, "",              CPID_MISSING_TEAMS,    "0 0",  _("^BGWaiting for VIPs...\nPickup your Soul Gem to become a VIP"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VIP_MISSING_ENEMY,           0, 0, "",              CPID_MISSING_TEAMS,    "0 0",  _("^BGWaiting for an enemy VIP"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VIP_DROP,              	    1, 0, "s1",            CPID_VIP,          	  "0 0",  _("^BG%s^F2 is no longer a VIP!"), "") \

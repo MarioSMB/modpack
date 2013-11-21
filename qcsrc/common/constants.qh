@@ -223,6 +223,8 @@ const float STAT_DOM_PPS_PINK = 103;
 // vip
 const float STAT_VIP_RED = 100;
 const float STAT_VIP_BLUE = 101;
+const float STAT_VIP_YELLOW = 102;
+const float STAT_VIP_PINK = 103;
 
 
 // see DP source, quakedef.h

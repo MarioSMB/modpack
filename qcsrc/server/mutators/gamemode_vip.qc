@@ -1,6 +1,6 @@
 void VIP_count_players()
 {
-	total_players = red_players = blue_players = 0;
+	total_players = red_players = blue_players = yellow_players = pink_players = 0;
 	entity head;
 
 	for(head = world; (head = find(head, classname, "player")); )
@@ -8,6 +8,8 @@ void VIP_count_players()
 		++total_players;
 		red_players += (head.team == NUM_TEAM_1);
 		blue_players += (head.team == NUM_TEAM_2);
+		yellow_players += (head.team == NUM_TEAM_3);
+		pink_players += (head.team == NUM_TEAM_4);
 	}
 }
 
@@ -31,8 +33,9 @@ void vip_ClearVIPs()
 		vip_count[i] = 0;
 }
 
-#define VIP_TEAMS_COUNT() ((red_players > 0) + (blue_players > 0))
-#define VIP_TEAMS_OK() (VIP_TEAMS_COUNT() == 2)
+#define VIP_TEAMS_COUNT() ((red_players > 0) + (blue_players > 0) + (yellow_players > 0) + (pink_players > 0))
+#define VIP_TEAMS_OK() (VIP_TEAMS_COUNT() == vip_teams)
+#define VIP_COUNT() ((vip_count[NUM_TEAM_1] > 0) + (vip_count[NUM_TEAM_2] > 0) + (vip_count[NUM_TEAM_3] > 0) + (vip_count[NUM_TEAM_4] > 0))
 
 float VIP_GetWinnerTeam()
 {
@@ -43,6 +46,16 @@ float VIP_GetWinnerTeam()
 	{
 		if(winner_team) return 0;
 		winner_team = NUM_TEAM_2;
+	}
+	if(vip_count[NUM_TEAM_3] > 0)
+	{
+		if(winner_team) return 0;
+		winner_team = NUM_TEAM_3;
+	}
+	if(vip_count[NUM_TEAM_4] > 0)
+	{
+		if(winner_team) return 0;
+		winner_team = NUM_TEAM_4;
 	}
 	if(winner_team)
 		return winner_team;
@@ -70,14 +83,14 @@ float VIP_CheckWinner()
 	}
 
 	VIP_count_players();
-	if(VIP_TEAMS_COUNT() > 1 && vip_count[NUM_TEAM_1] > 0 && vip_count[NUM_TEAM_2] > 0)
+	if(VIP_COUNT() > 1)
 		return 0;
 
 	float winner_team = VIP_GetWinnerTeam();
 	if(winner_team > 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_2(winner_team, CENTER_ROUND_TEAM_WIN_));
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_2(winner_team, INFO_ROUND_TEAM_WIN_));
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner_team, CENTER_ROUND_TEAM_WIN_));
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(winner_team, INFO_ROUND_TEAM_WIN_));
 		TeamScore_AddToTeam(winner_team, ST_VIP_SCORE, +1);
 
 		entity head;
@@ -85,7 +98,13 @@ float VIP_CheckWinner()
 		if(head.isvip && head.health > 0 && head.team == winner_team)
 			PlayerScore_Add(head, SP_VIP_SURVIVALS, 1);
 
-		play2all((winner_team == NUM_TEAM_1) ? "ctf/red_capture.wav" : "ctf/blue_capture.wav");
+		switch(winner_team)
+		{
+			case NUM_TEAM_1: play2all("ctf/red_capture.wav"); break;
+			case NUM_TEAM_2: play2all("ctf/blue_capture.wav"); break;
+			case NUM_TEAM_3: play2all("ctf/yellow_capture.wav"); break;
+			case NUM_TEAM_4: play2all("ctf/pink_capture.wav"); break;
+		}
 	}
 	else if(winner_team == -1)
 	{
@@ -117,7 +136,7 @@ void VIP_RoundStart()
 	FOR_EACH_PLAYER(self)
 	{
 		if(self.isvip)
-			Send_Notification(NOTIF_ONE, self, MSG_CENTER, APP_TEAM_ENT_2(self, CENTER_VIP_BEGIN_));
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, APP_TEAM_ENT_4(self, CENTER_VIP_BEGIN_));
 		PutClientInServer();
 	}
 	self = oldself;
@@ -140,24 +159,40 @@ void vip_SelectVIPs()
 		RandomSelection_Add(head, 0, string_null, 1, ((IS_REAL_CLIENT(head) && !head.gem_dropped) ? 1 : 0.5));
 
 	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_2);
+	
+	RandomSelection_Init();
+	FOR_EACH_PLAYER(head) if(head.health > 0)
+	if((yellowgem_count < 1 || !usegems) && head.team == NUM_TEAM_3 && vip_count[NUM_TEAM_3] < 1)
+		RandomSelection_Add(head, 0, string_null, 1, ((IS_REAL_CLIENT(head) && !head.gem_dropped) ? 1 : 0.5));
+
+	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_3);
+	
+	RandomSelection_Init();
+	FOR_EACH_PLAYER(head) if(head.health > 0)
+	if((pinkgem_count < 1 || !usegems) && head.team == NUM_TEAM_4 && vip_count[NUM_TEAM_4] < 1)
+		RandomSelection_Add(head, 0, string_null, 1, ((IS_REAL_CLIENT(head) && !head.gem_dropped) ? 1 : 0.5));
+
+	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_4);
 }
 
 float VIP_CheckTeams()
 {
-	float rc, bc;
+	float rc, bc, yc, pc;
 	rc = ((redgem_count) ? redgem_count : 1);
 	bc = ((bluegem_count) ? bluegem_count : 1);
+	yc = ((yellowgem_count) ? yellowgem_count : 1);
+	pc = ((pinkgem_count) ? pinkgem_count : 1);
 	allowed_to_spawn = TRUE;
 	VIP_count_players();
-	if(vip_count[NUM_TEAM_1] < rc || vip_count[NUM_TEAM_2] < bc)
+	if(vip_count[NUM_TEAM_1] < rc || vip_count[NUM_TEAM_2] < bc || (vip_teams >= 3 && vip_count[NUM_TEAM_3] < yc) || (vip_teams >= 4 && vip_count[NUM_TEAM_4] < pc))
 	{
 		entity head;
-		if(!g_vip_soulgems || redgem_count < 1 || bluegem_count < 1)
+		if(!g_vip_soulgems || redgem_count < 1 || bluegem_count < 1 || (vip_teams >= 3 && yellowgem_count < 1) || (vip_teams >= 4 && pinkgem_count < 1))
 			vip_SelectVIPs();
 
 		FOR_EACH_PLAYER(head)
 		{
-			if((head.team == NUM_TEAM_1 && vip_count[NUM_TEAM_1] > 0) || (head.team == NUM_TEAM_2 && vip_count[NUM_TEAM_2] > 0))
+			if((head.team == NUM_TEAM_1 && vip_count[NUM_TEAM_1] > 0) || (head.team == NUM_TEAM_2 && vip_count[NUM_TEAM_2] > 0) || (vip_teams >= 3 && head.team == NUM_TEAM_3 && vip_count[NUM_TEAM_3] > 0) || (vip_teams >= 4 && head.team == NUM_TEAM_4 && vip_count[NUM_TEAM_4] > 0))
 				Send_Notification(NOTIF_ONE, head, MSG_CENTER, CENTER_VIP_MISSING_ENEMY);
 			else
 				Send_Notification(NOTIF_ONE, head, MSG_CENTER, CENTER_VIP_MISSING);
@@ -173,10 +208,16 @@ float VIP_CheckTeams()
 	}
 	if(prev_total_players != total_players)
 	{
-		float p1 = 0, p2 = 0;
+		float p1 = 0, p2 = 0, p3 = 0, p4 = 0;
 		if(!red_players) p1 = NUM_TEAM_1;
 		if(!blue_players) p2 = NUM_TEAM_2;
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, p1, p2);
+		if(!yellow_players) p3 = NUM_TEAM_3;
+		if(!pink_players) p4 = NUM_TEAM_4;
+		if(vip_teams < 3)
+			p3 = 1; // don't count them
+		if(vip_teams < 4)
+			p4 = 1; // don't count them
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, p1, p2, p3, p4);
 		prev_total_players = total_players;
 	}
 	return 0;
@@ -249,6 +290,8 @@ MUTATOR_HOOKFUNCTION(vip_PlayerThink)
 
 	self.stat_vip_red = vip_count[NUM_TEAM_1];
 	self.stat_vip_blue = vip_count[NUM_TEAM_2];
+	self.stat_vip_yellow = vip_count[NUM_TEAM_3];
+	self.stat_vip_pink = vip_count[NUM_TEAM_4];
 
 	return FALSE;
 }
@@ -314,6 +357,44 @@ MUTATOR_HOOKFUNCTION(vip_PlayerUseKey)
 	return TRUE;
 }
 
+MUTATOR_HOOKFUNCTION(vip_OnEntityPreSpawn)
+{
+	if(!g_vip_soulgems)
+		return FALSE;
+
+	if(self.classname == "item_flag_team1")
+	{
+		vip_SpawnSoulGem(self.origin, NUM_TEAM_1);
+		return TRUE;
+	}
+
+	if(self.classname == "item_flag_team2")
+	{
+		vip_SpawnSoulGem(self.origin, NUM_TEAM_2);
+		return TRUE;
+	}
+	
+	if(self.classname == "item_flag_team3")
+	{
+		vip_SpawnSoulGem(self.origin, NUM_TEAM_3);
+		return TRUE;
+	}
+	
+	if(self.classname == "item_flag_team4")
+	{
+		vip_SpawnSoulGem(self.origin, NUM_TEAM_4);
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(vip_GetTeamCount)
+{
+	ret_float = vip_teams;
+	return 0;
+}
+
 vector vip_SoulGemColormod(float theteam, float iseffect)
 {
 	if(iseffect)
@@ -322,7 +403,8 @@ vector vip_SoulGemColormod(float theteam, float iseffect)
 		{
 			case NUM_TEAM_1: return '1 0.4 0.4';
 			case NUM_TEAM_2: return '0.4 0.4 1';
-			default:		 return '0.1 0.1 0.1';
+			case NUM_TEAM_3: return '1 1 0.4';
+			case NUM_TEAM_4: return '1 0.4 1';
 		}
 	}
 	else
@@ -331,7 +413,8 @@ vector vip_SoulGemColormod(float theteam, float iseffect)
 		{
 			case NUM_TEAM_1: return '1 0.8 0.8';
 			case NUM_TEAM_2: return '0.8 0.8 1';
-			default:		 return '0.2 0.2 0.2';
+			case NUM_TEAM_3: return '1 1 0.8';
+			case NUM_TEAM_4: return '1 0.8 1';
 		}
 	}
 
@@ -473,10 +556,13 @@ void vip_SpawnSoulGem(vector orig, float theteam)
 	e.effects = e.enemy.effects = (EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION);
 
 	// update gem counts
-	if(e.team == NUM_TEAM_1)
-		redgem_count += 1;
-	else if(e.team == NUM_TEAM_2)
-		bluegem_count += 1;
+	switch(theteam)
+	{
+		case NUM_TEAM_1: redgem_count += 1; break;
+		case NUM_TEAM_2: bluegem_count += 1; break;
+		case NUM_TEAM_3: yellowgem_count += 1; break;
+		case NUM_TEAM_4: pinkgem_count += 1; break;
+	}
 
 	InitializeEntity(e, vip_DelayedGemSetup, INITPRIO_SETLOCATION);
 }
@@ -502,11 +588,31 @@ void spawnfunc_item_soulgem_team2()
 	self.nextthink = time + 0.1;
 }
 
+void spawnfunc_item_soulgem_team3()
+{
+	if(!g_vip || !g_vip_soulgems) { remove(self); return; }
+
+	vip_SpawnSoulGem(self.origin, NUM_TEAM_3);
+
+	self.think = SUB_Remove;
+	self.nextthink = time + 0.1;
+}
+
+void spawnfunc_item_soulgem_team4()
+{
+	if(!g_vip || !g_vip_soulgems) { remove(self); return; }
+
+	vip_SpawnSoulGem(self.origin, NUM_TEAM_4);
+
+	self.think = SUB_Remove;
+	self.nextthink = time + 0.1;
+}
+
 // scoreboard setup
 void vip_ScoreRules()
 {
 	CheckAllowedTeams(world);
-	ScoreRules_basics(2, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+	ScoreRules_basics(vip_teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
 	ScoreInfo_SetLabel_PlayerScore(SP_VIP_SURVIVALS,	"survivals",	0);
 	ScoreInfo_SetLabel_PlayerScore(SP_VIP_VIPKILLS,		"vipkills",		SFL_SORT_PRIO_SECONDARY);
 	ScoreInfo_SetLabel_TeamScore(  ST_VIP_SCORE,		"scores",		SFL_SORT_PRIO_PRIMARY);
@@ -515,6 +621,16 @@ void vip_ScoreRules()
 
 void vip_DelayedInit() // Do this check with a delay so we can wait for teams to be set up.
 {
+	vip_teams = 2;
+	
+	if(yellowgem_count > 0) vip_teams = max(3, vip_teams);
+	if(pinkgem_count > 0) vip_teams = max(4, vip_teams);
+	
+	if(autocvar_g_vip_teams >= 2)
+		vip_teams = autocvar_g_vip_teams;
+
+	vip_teams = bound(2, vip_teams, 4);
+	
 	vip_ScoreRules();
 }
 
@@ -531,9 +647,16 @@ void vip_Initialize()
 	precache_sound("kh/destroy.wav");
 	precache_sound("ctf/red_capture.wav");
 	precache_sound("ctf/blue_capture.wav");
+	precache_sound("ctf/yellow_capture.wav");
+	precache_sound("ctf/pink_capture.wav");
+	
+	precache_model("models/runematch/rune.mdl");
+	precache_model("models/runematch/curse.mdl");
 
 	addstat(STAT_VIP_RED, AS_FLOAT, stat_vip_red);
 	addstat(STAT_VIP_BLUE, AS_FLOAT, stat_vip_blue);
+	addstat(STAT_VIP_YELLOW, AS_FLOAT, stat_vip_yellow);
+	addstat(STAT_VIP_PINK, AS_FLOAT, stat_vip_pink);
 
 	InitializeEntity(world, vip_DelayedInit, INITPRIO_GAMETYPE);
 }
@@ -547,6 +670,8 @@ MUTATOR_DEFINITION(gamemode_vip)
 	MUTATOR_HOOK(reset_map_players, vip_ResetMap, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, vip_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerUseKey, vip_PlayerUseKey, CBC_ORDER_ANY);
+	MUTATOR_HOOK(OnEntityPreSpawn, vip_OnEntityPreSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GetTeamCount, vip_GetTeamCount, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

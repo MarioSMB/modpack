@@ -1333,6 +1333,7 @@ float autocvar_g_touchexplode_radius;
 float autocvar_g_touchexplode_damage;
 float autocvar_g_touchexplode_edgedamage;
 float autocvar_g_touchexplode_force;
+float autocvar_g_vip_teams;
 float autocvar_g_vip_warmup;
 float autocvar_g_vip_round_timelimit;
 float autocvar_g_vip_point_limit;

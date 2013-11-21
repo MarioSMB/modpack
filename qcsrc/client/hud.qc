@@ -2823,26 +2823,37 @@ void HUD_Mod_CA(vector myPos, vector mySize)
 }
 
 // VIP mod icons
-float redvip_prevframe, bluevip_prevframe; // status during previous frame
-float redvip_prevstatus, bluevip_prevstatus; // last remembered status
-float redvip_statuschange_time, bluevip_statuschange_time; // time when the status changed
+float redvip_prevframe, bluevip_prevframe, yellowvip_prevframe, pinkvip_prevframe; // status during previous frame
+float redvip_prevstatus, bluevip_prevstatus, yellowvip_prevstatus, pinkvip_prevstatus; // last remembered status
+float redvip_statuschange_time, bluevip_statuschange_time, yellowvip_statuschange_time, pinkvip_statuschange_time; // time when the status changed
 void HUD_Mod_VIP_Reset(void)
 {
-	redvip_prevstatus = bluevip_prevstatus = redvip_prevframe = bluevip_prevframe = redvip_statuschange_time = bluevip_statuschange_time = 0;
+	redvip_prevstatus = bluevip_prevstatus = yellowvip_prevstatus = pinkvip_prevstatus = redvip_prevframe = bluevip_prevframe = yellowvip_prevframe = pinkvip_prevframe = redvip_statuschange_time = bluevip_statuschange_time = yellowvip_statuschange_time = pinkvip_statuschange_time = 0;
 }
 void HUD_Mod_VIP(vector pos, vector mySize)
 {
-	vector redvip_pos, bluevip_pos;
+	vector redvip_pos, bluevip_pos, yellowvip_pos, pinkvip_pos;
 	vector vip_size;
+	vector e1, e2;
+	float size1, size2;
+	float fs, fs2, fs3;
 	float f; // every function should have that
+	float teams_count = 0;
 
-	float redvip, bluevip; // current status
-	float redvip_statuschange_elapsedtime, bluevip_statuschange_elapsedtime; // time since the status changed
+	float redvip, bluevip, yellowvip, pinkvip; // current status
+	float redvip_statuschange_elapsedtime, bluevip_statuschange_elapsedtime, yellowvip_statuschange_elapsedtime, pinkvip_statuschange_elapsedtime; // time since the status changed
 	
 	redvip = (getstatf(STAT_VIP_RED) != 0);
 	bluevip = (getstatf(STAT_VIP_BLUE) != 0);
+	yellowvip = (getstatf(STAT_VIP_YELLOW) != 0);
+	pinkvip = (getstatf(STAT_VIP_PINK) != 0);
 	
-	if(redvip || bluevip)
+	entity tm;
+	for(tm = teams.sort_next; tm; tm = tm.sort_next)
+	if(tm.team != NUM_SPECTATOR)
+		++teams_count;
+	
+	if(redvip || bluevip || yellowvip || pinkvip)
 		mod_active = 1;
 	else
 		mod_active = 0;
@@ -2851,6 +2862,10 @@ void HUD_Mod_VIP(vector pos, vector mySize)
 	{
 		redvip = 1;
 		bluevip = 2;
+		if(teams_count >= 3)
+			yellowvip = 1;
+		if(teams_count >= 4)
+			pinkvip = 2;
 	}
 	// when status CHANGES, set old status into prevstatus and current status into status
 	if (redvip != redvip_prevframe)
@@ -2866,50 +2881,116 @@ void HUD_Mod_VIP(vector pos, vector mySize)
 		bluevip_prevstatus = bluevip_prevframe;
 		bluevip_prevframe = bluevip;
 	}
+	
+	if (yellowvip != yellowvip_prevframe)
+	{
+		yellowvip_statuschange_time = time;
+		yellowvip_prevstatus = yellowvip_prevframe;
+		yellowvip_prevframe = yellowvip;
+	}
+	
+	if (pinkvip != pinkvip_prevframe)
+	{
+		pinkvip_statuschange_time = time;
+		pinkvip_prevstatus = pinkvip_prevframe;
+		pinkvip_prevframe = pinkvip;
+	}
 
 	redvip_statuschange_elapsedtime = time - redvip_statuschange_time;
 	bluevip_statuschange_elapsedtime = time - bluevip_statuschange_time;
+	yellowvip_statuschange_elapsedtime = time - yellowvip_statuschange_time;
+	pinkvip_statuschange_elapsedtime = time - pinkvip_statuschange_time;
 	
-	if(mySize_x > mySize_y) {
-		if (myteam == NUM_TEAM_1) { // always draw own vip on left
-			redvip_pos = pos;
-			bluevip_pos = pos + eX * 0.5 * mySize_x;
-		} else {
-			bluevip_pos = pos;
-			redvip_pos = pos + eX * 0.5 * mySize_x;
-		}
-		vip_size = eX * 0.5 * mySize_x + eY * mySize_y;
-	} else {
-		if (myteam == NUM_TEAM_1) { // always draw own vip on left
-			redvip_pos = pos;
-			bluevip_pos = pos + eY * 0.5 * mySize_y;
-		} else {
-			bluevip_pos = pos;
-			redvip_pos = pos + eY * 0.5 * mySize_y;
-		}
-		vip_size = eY * 0.5 * mySize_y + eX * mySize_x;
+	switch(teams_count)
+	{
+		default:
+		case 2: fs = 0.5; fs2 = 0.5; fs3 = 0.5; break;
+		case 3: fs = 1; fs2 = 0.35; fs3 = 0.35; break;
+		case 4: fs = 0.75; fs2 = 0.25; fs3 = 0.5; break;
 	}
 	
-	string red_icon, red_icon_prevstatus;
-	string blue_icon, blue_icon_prevstatus;
+	if(mySize_x > mySize_y)
+	{
+		size1 = mySize_x;
+		size2 = mySize_y;
+		e1 = eX;
+		e2 = eY;
+	}
+	else
+	{
+		size1 = mySize_y;
+		size2 = mySize_x;
+		e1 = eY;
+		e2 = eX;
+	}
+	
+	switch(myteam)
+	{
+		default:
+		case NUM_TEAM_1:
+		{
+			redvip_pos = pos;
+			bluevip_pos = pos + eX * fs2 * size1;
+			yellowvip_pos = pos - eX * fs2 * size1;
+			pinkvip_pos = pos + eX * fs3 * size1;
+			break;
+		}
+		case NUM_TEAM_2:
+		{
+			redvip_pos = pos + eX * fs2 * size1;
+			bluevip_pos = pos;
+			yellowvip_pos = pos - eX * fs2 * size1;
+			pinkvip_pos = pos + eX * fs3 * size1;
+			break;
+		}
+		case NUM_TEAM_3:
+		{
+			redvip_pos = pos + eX * fs3 * size1;
+			bluevip_pos = pos - eX * fs2 * size1;
+			yellowvip_pos = pos;
+			pinkvip_pos = pos + eX * fs2 * size1;
+			break;
+		}
+		case NUM_TEAM_4:
+		{
+			redvip_pos = pos - eX * fs2 * size1;
+			bluevip_pos = pos + eX * fs3 * size1;
+			yellowvip_pos = pos + eX * fs2 * size1;
+			pinkvip_pos = pos;
+			break;
+		}
+	}
+	vip_size = e1 * fs * size1 + e2 * size2;
+	
+	string red_icon = "", red_icon_prevstatus = "";
+	string blue_icon = "", blue_icon_prevstatus = "";
+	string yellow_icon = "", yellow_icon_prevstatus = "";
+	string pink_icon = "", pink_icon_prevstatus = "";
 	
 	if(redvip)
 		red_icon = "player_red";
-	else
-		red_icon = "";
+
 	if(bluevip)
 		blue_icon = "player_blue";
-	else
-		blue_icon = "";
-	
+
+	if(yellowvip)
+		yellow_icon = "player_yellow";
+
+	if(pinkvip)
+		pink_icon = "player_pink";
+
 	if(redvip_prevframe)
 		red_icon_prevstatus = "player_red";
-	else
-		red_icon_prevstatus = "";
+
 	if(bluevip_prevframe)
 		blue_icon_prevstatus = "player_blue";
-	else
-		blue_icon_prevstatus = "";
+
+	if(yellowvip_prevframe)
+		yellow_icon_prevstatus = "player_yellow";
+
+	if(pinkvip_prevframe)
+		pink_icon_prevstatus = "player_pink";
+
 
 	f = bound(0, redvip_statuschange_elapsedtime*2, 1);
 	if(red_icon_prevstatus && f < 1)
@@ -2922,6 +3003,18 @@ void HUD_Mod_VIP(vector pos, vector mySize)
 		drawpic_aspect_skin_expanding(bluevip_pos, blue_icon_prevstatus, vip_size, '1 1 1', panel_fg_alpha * 1, DRAWFLAG_NORMAL, f);
 	if(blue_icon)
 		drawpic_aspect_skin(bluevip_pos, blue_icon, vip_size, '1 1 1', panel_fg_alpha * 1 * f, DRAWFLAG_NORMAL);
+		
+	f = bound(0, yellowvip_statuschange_elapsedtime*2, 1);
+	if(yellow_icon_prevstatus && f < 1)
+		drawpic_aspect_skin_expanding(yellowvip_pos, yellow_icon_prevstatus, vip_size, '1 1 1', panel_fg_alpha * 1, DRAWFLAG_NORMAL, f);
+	if(yellow_icon)
+		drawpic_aspect_skin(yellowvip_pos, yellow_icon, vip_size, '1 1 1', panel_fg_alpha * 1 * f, DRAWFLAG_NORMAL);
+		
+	f = bound(0, pinkvip_statuschange_elapsedtime*2, 1);
+	if(pink_icon_prevstatus && f < 1)
+		drawpic_aspect_skin_expanding(pinkvip_pos, pink_icon_prevstatus, vip_size, '1 1 1', panel_fg_alpha * 1, DRAWFLAG_NORMAL, f);
+	if(pink_icon)
+		drawpic_aspect_skin(pinkvip_pos, pink_icon, vip_size, '1 1 1', panel_fg_alpha * 1 * f, DRAWFLAG_NORMAL);
 }
 
 // CTF HUD modicon section
