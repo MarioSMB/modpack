@@ -308,12 +308,11 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 
 MUTATOR_HOOKFUNCTION(minstagib_SetStartItems)
 {
-	start_ammo_cells = cvar("g_minstagib_ammo_start");
+	start_ammo_cells = warmup_start_ammo_cells = cvar("g_minstagib_ammo_start");
 
-	start_health = 100;
-	start_armorvalue = 0;
-	start_weapons = WEPSET_MINSTANEX;
-	warmup_start_weapons = WEPSET_MINSTANEX;
+	start_health = warmup_start_health = 100;
+	start_armorvalue = warmup_start_armorvalue = 0;
+	start_weapons = warmup_start_weapons = WEPSET_MINSTANEX;
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;
 
 	return FALSE;
