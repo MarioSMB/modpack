@@ -2857,16 +2857,7 @@ void HUD_Mod_VIP(vector pos, vector mySize)
 		mod_active = 1;
 	else
 		mod_active = 0;
-		
-	if(autocvar__hud_configure)
-	{
-		redvip = 1;
-		bluevip = 2;
-		if(teams_count >= 3)
-			yellowvip = 1;
-		if(teams_count >= 4)
-			pinkvip = 2;
-	}
+
 	// when status CHANGES, set old status into prevstatus and current status into status
 	if (redvip != redvip_prevframe)
 	{
