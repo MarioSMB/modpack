@@ -44,12 +44,11 @@ void dompoint_captured ()
 		wait_time = autocvar_g_domination_point_rate;
 	else
 		wait_time = self.wait;
-
-	bprint("^3", head.netname, "^3", self.message);
-	if (points != 1)
-		bprint(" ^7(", ftos(points), " points every ", ftos(wait_time), " seconds)\n");
+		
+	if(domination_roundbased)
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_DOMINATION_CAPTURE, head.netname, self.message);
 	else
-		bprint(" ^7(", ftos(points), " point every ", ftos(wait_time), " seconds)\n");
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_DOMINATION_CAPTURE_TIME, head.netname, self.message, points, wait_time);
 
 	if(self.enemy.playerid == self.enemy_playerid)
 		PlayerScore_Add(self.enemy, SP_DOM_TAKES, 1);
