@@ -434,7 +434,8 @@ void vip_SetVIP(entity player, float tm)
 	if(!IS_PLAYER(player) || player == world || player.isvip)
 		return; // TODO: check how this can be called at all for non players
 	player.isvip = TRUE;
-	player.health = 200;
+	if(!g_minstagib)
+		player.health = 200;
 	player.armorvalue = ((g_minstagib) ? 5 : 200);
 	player.pickup_antispam = time + autocvar_g_vip_pickup_wait;
 
