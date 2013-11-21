@@ -2,3 +2,5 @@
 /*.dat
 qccversion.*
 Thumbs.db
+
+/qcsrc/server/precache-for-csqc.inc
