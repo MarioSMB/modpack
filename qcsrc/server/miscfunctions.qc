@@ -2036,65 +2036,6 @@ float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, f
         return FALSE;
 }
 
-float zcurveparticles_effectno;
-vector zcurveparticles_start;
-float zcurveparticles_spd;
-
-void endzcurveparticles()
-{
-	if(zcurveparticles_effectno)
-	{
-		// terminator
-		WriteShort(MSG_BROADCAST, zcurveparticles_spd | 0x8000);
-	}
-	zcurveparticles_effectno = 0;
-}
-
-void zcurveparticles(float effectno, vector start, vector end, float end_dz, float spd)
-{
-	spd = bound(0, floor(spd / 16), 32767);
-	if(effectno != zcurveparticles_effectno || start != zcurveparticles_start)
-	{
-		endzcurveparticles();
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_CSQC_ZCURVEPARTICLES);
-		WriteShort(MSG_BROADCAST, effectno);
-		WriteCoord(MSG_BROADCAST, start_x);
-		WriteCoord(MSG_BROADCAST, start_y);
-		WriteCoord(MSG_BROADCAST, start_z);
-		zcurveparticles_effectno = effectno;
-		zcurveparticles_start = start;
-	}
-	else
-		WriteShort(MSG_BROADCAST, zcurveparticles_spd);
-	WriteCoord(MSG_BROADCAST, end_x);
-	WriteCoord(MSG_BROADCAST, end_y);
-	WriteCoord(MSG_BROADCAST, end_z);
-	WriteCoord(MSG_BROADCAST, end_dz);
-	zcurveparticles_spd = spd;
-}
-
-void zcurveparticles_from_tracetoss(float effectno, vector start, vector end, vector vel)
-{
-	float end_dz;
-	vector vecxy, velxy;
-
-	vecxy = end - start;
-	vecxy_z = 0;
-	velxy = vel;
-	velxy_z = 0;
-
-	if (vlen(velxy) < 0.000001 * fabs(vel_z))
-	{
-		endzcurveparticles();
-		trailparticles(world, effectno, start, end);
-		return;
-	}
-
-	end_dz = vlen(vecxy) / vlen(velxy) * vel_z - (end_z - start_z);
-	zcurveparticles(effectno, start, end, end_dz, vlen(vel));
-}
-
 void write_recordmarker(entity pl, float tstart, float dt)
 {
     GameLogEcho(strcat(":recordset:", ftos(pl.playerid), ":", ftos(dt)));

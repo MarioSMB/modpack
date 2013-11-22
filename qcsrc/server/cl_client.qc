@@ -393,7 +393,7 @@ void PlayerTouch (void)
 {
 	if(other == world)
 		return;
-		
+
 	if(!IS_PLAYER(self))
 		return;
 
@@ -402,10 +402,10 @@ void PlayerTouch (void)
 
 	if(self.deadflag != DEAD_NO)
 		return;
-		
+
 	if(other.deadflag != DEAD_NO)
 		return;
-		
+
 	if(forbidWeaponUse())
 		return;
 
@@ -1909,25 +1909,25 @@ void UpdateSpectators(entity is_spec, entity is_player)
 		msg_entity = head;
 		WriteByte(MSG_ONE, SVC_TEMPENTITY);
 		WriteByte(MSG_ONE, TE_CSQC_SPECINFO);
-		
+
 		if(IS_PLAYER(head))
 			WriteByte(MSG_ONE, head.clientfov);
 		else if(head.enemy)
 			WriteByte(MSG_ONE, head.enemy.clientfov);
 		else
 			WriteByte(MSG_ONE, 0);
-		
+
 		specs = 0;
-		
+
 		FOR_EACH_SPEC(spec) if(spec.enemy == head && is_player != spec && spec != is_player)
 			++specs;
-	
+
 		if(IS_SPEC(head) || IS_OBSERVER(head) || head == is_spec || !autocvar_sv_showspectators)
 		{
 			WriteByte(MSG_ONE, 0);
 			continue;
 		}
-		
+
 		WriteByte(MSG_ONE, specs);
 		FOR_EACH_SPEC(spec) if(spec.enemy == head && is_player != spec)
 			WriteByte(MSG_ONE, num_for_edict(spec));
@@ -2314,7 +2314,7 @@ void PlayerUseKey()
 		{
 			entity head, closest_target = world;
 			head = WarpZone_FindRadius(self.origin, autocvar_g_vehicles_enter_radius, TRUE);
-				
+
 			while(head) // find the closest acceptable target to enter
 			{
 				if(IS_VEHICLE(head))
@@ -2328,14 +2328,14 @@ void PlayerUseKey()
 					}
 					else { closest_target = head; }
 				}
-				
+
 				head = head.chain;
 			}
-				
+
 			if(closest_target) { vehicles_enter(self, closest_target); return; }
 		}
 	}
-	
+
 	// a use key was pressed; call handlers
 	MUTATOR_CALLHOOK(PlayerUseKey);
 }

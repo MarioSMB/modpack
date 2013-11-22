@@ -21,8 +21,7 @@ void W_Shotgun_Attack (float deathtype)
 	float	d;
 	float	f;
 	float	spread;
-	float	bulletspeed;
-	float	bulletconstant;
+	float	solidpenetration;
 	entity flash;
 
 	ammoamount = autocvar_g_balance_shotgun_primary_ammo;
@@ -30,15 +29,13 @@ void W_Shotgun_Attack (float deathtype)
 	d = autocvar_g_balance_shotgun_primary_damage;
 	f = autocvar_g_balance_shotgun_primary_force;
 	spread = autocvar_g_balance_shotgun_primary_spread;
-	bulletspeed = autocvar_g_balance_shotgun_primary_speed;
-	bulletconstant = autocvar_g_balance_shotgun_primary_bulletconstant;
+	solidpenetration = autocvar_g_balance_shotgun_primary_solidpenetration;
 
 	W_DecreaseAmmo(ammo_shells, ammoamount, autocvar_g_balance_shotgun_reload_ammo);
 
 	W_SetupShot (self, TRUE, 5, "weapons/shotgun_fire.wav", CH_WEAPON_A, d * bullets, self.weapon);
 	for (sc = 0;sc < bullets;sc = sc + 1)
-		fireBallisticBullet(w_shotorg, w_shotdir, spread, bulletspeed, 5, d, f, deathtype, 0, bulletconstant);
-	endFireBallisticBullet();
+		fireBullet(w_shotorg, w_shotdir, spread, solidpenetration, d, f, WEP_SHOTGUN, 0);
 
 	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, autocvar_g_balance_shotgun_primary_ammo);
 

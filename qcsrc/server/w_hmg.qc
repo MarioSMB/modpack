@@ -45,8 +45,7 @@ void hmg_fire_auto()
 	}
 
 	uzi_spread = bound(autocvar_g_balance_hmg_spread_min, autocvar_g_balance_hmg_spread_min + (autocvar_g_balance_hmg_spread_add * self.misc_bulletcounter), autocvar_g_balance_hmg_spread_max);
-	fireBallisticBullet(w_shotorg, w_shotdir, uzi_spread, autocvar_g_balance_hmg_speed, 5, autocvar_g_balance_hmg_sustained_damage, autocvar_g_balance_hmg_sustained_force, WEP_HMG, 0, autocvar_g_balance_hmg_bulletconstant);
-	endFireBallisticBullet();
+	fireBullet(w_shotorg, w_shotdir, uzi_spread, autocvar_g_balance_hmg_solidpenetration, autocvar_g_balance_hmg_sustained_damage, autocvar_g_balance_hmg_sustained_force, WEP_HMG, 0);
 
 	self.misc_bulletcounter = self.misc_bulletcounter + 1;
 

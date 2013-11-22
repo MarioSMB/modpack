@@ -30,7 +30,6 @@ const float AS_FLOAT = 8;
 
 const float TE_CSQC_PICTURE = 100;
 const float TE_CSQC_RACE = 101;
-const float TE_CSQC_ZCURVEPARTICLES = 102;
 const float TE_CSQC_NEXGUNBEAMPARTICLE = 103;
 const float TE_CSQC_LIGHTNINGARC = 104;
 const float TE_CSQC_TEAMNAGGER = 105;

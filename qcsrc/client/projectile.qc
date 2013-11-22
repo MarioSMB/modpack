@@ -135,10 +135,10 @@ void Projectile_Draw()
 		default:
 			break;
 	}
-	
+
 	if(Nade_IDFromProjectile(self.cnt) != 0)
 		trailorigin += v_up * 4;
-	
+
 	if(drawn)
 		Projectile_DrawTrail(trailorigin);
 	else
@@ -300,7 +300,7 @@ void Ent_Projectile()
 			case PROJECTILE_TAG: setmodel(self, "models/laser.mdl"); self.traileffect = particleeffectnum("TR_ROCKET"); break;
 			case PROJECTILE_FLAC: setmodel(self, "models/hagarmissile.mdl"); self.scale = 0.4; self.traileffect = particleeffectnum("TR_SEEKER"); break;
 			case PROJECTILE_SEEKER: setmodel(self, "models/tagrocket.md3"); self.traileffect = particleeffectnum("TR_SEEKER"); break;
-			
+
 			case PROJECTILE_MAGE_SPIKE: setmodel(self, "models/ebomb.mdl"); self.traileffect = particleeffectnum("TR_VORESPIKE"); break;
 			case PROJECTILE_SHAMBLER_LIGHTNING: setmodel(self, "models/ebomb.mdl"); self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
 

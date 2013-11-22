@@ -57,8 +57,7 @@ float autocvar_g_vehicle_spiderbot_minigun_ammo_max;
 float autocvar_g_vehicle_spiderbot_minigun_ammo_regen;
 float autocvar_g_vehicle_spiderbot_minigun_ammo_regen_pause;
 float autocvar_g_vehicle_spiderbot_minigun_force;
-float autocvar_g_vehicle_spiderbot_minigun_speed;
-float autocvar_g_vehicle_spiderbot_minigun_bulletconstant;
+float autocvar_g_vehicle_spiderbot_minigun_solidpenetration;
 
 float autocvar_g_vehicle_spiderbot_rocket_damage;
 float autocvar_g_vehicle_spiderbot_rocket_force;
@@ -493,15 +492,8 @@ float spiderbot_frame()
 			v_forward = normalize(v_forward);
 			v += v_forward * 50;
 
-//void fireBallisticBullet(vector start, vector dir, float spread, float pSpeed, float lifetime, float damage, float force, float dtype, float tracereffects, float gravityfactor, float bulletconstant)
-
-			fireBallisticBullet(v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_speed,
-								5, autocvar_g_vehicle_spiderbot_minigun_damage, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_VH_SPID_MINIGUN, 0, autocvar_g_vehicle_spiderbot_minigun_bulletconstant);
-
-			endFireBallisticBullet();
-
-//			fireBullet (v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_damage,
-//				autocvar_g_vehicle_spiderbot_minigun_spread, DEATH_VH_SPID_MINIGUN, 0);
+			fireBullet(v, v_forward, autocvar_g_vehicle_spiderbot_minigun_spread, autocvar_g_vehicle_spiderbot_minigun_solidpenetration,
+                                autocvar_g_vehicle_spiderbot_minigun_damage, autocvar_g_vehicle_spiderbot_minigun_force, DEATH_VH_SPID_MINIGUN, 0);
 
 			sound (gun, CH_WEAPON_A, "weapons/uzi_fire.wav", VOL_BASE, ATTEN_NORM);
 			//trailparticles(self, particleeffectnum("spiderbot_minigun_trail"), v, trace_endpos);

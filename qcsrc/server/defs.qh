@@ -462,7 +462,6 @@ void W_Porto_Remove (entity p);
 
 .string message2;
 
-vector railgun_start, railgun_end; // filled by FireRailgunBullet, used by damage code for head shot
 .float stat_allow_oldnexbeam;
 
 // reset to 0 on weapon switch
