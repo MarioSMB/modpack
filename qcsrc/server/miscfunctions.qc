@@ -579,17 +579,7 @@ void GetCvars(float f)
 }
 
 // decolorizes and team colors the player name when needed
-string playername(entity p)
-{
-    string t;
-    if (teamplay && !intermission_running && IS_PLAYER(p))
-    {
-        t = Team_ColorCode(p.team);
-        return strcat(t, strdecolorize(p.netname));
-    }
-    else
-        return p.netname;
-}
+#define PLAYERNAME(p) ((teamplay && !intermission_running && IS_PLAYER(p)) ? strcat(Team_ColorCode(p.team), strdecolorize(p.netname)) : p.netname)
 
 vector randompos(vector m1, vector m2)
 {

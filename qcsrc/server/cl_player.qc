@@ -751,7 +751,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	*/
 
 	if(autocvar_g_chat_teamcolors)
-		namestr = playername(source);
+		namestr = PLAYERNAME(source);
 	else
 		namestr = source.netname;
 
@@ -764,7 +764,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 			msgstr = strcat(msgstr, msgin);
 			cmsgstr = strcat(colorstr, "^3", namestr, "^3 tells you:\n^7", msgin);
 			if(autocvar_g_chat_teamcolors)
-				privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", playername(privatesay), ": ^7");
+				privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", PLAYERNAME(privatesay), ": ^7");
 			else
 				privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", privatesay.netname, ": ^7");
 		}
@@ -904,7 +904,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	}
 
 	if(flood)
-		print("NOTE: ", playername(source), "^7 is flooding.\n");
+		print("NOTE: ", PLAYERNAME(source), "^7 is flooding.\n");
 
 	// build sourcemsgstr by cutting off a prefix and replacing it by the other one
 	if(privatesay)

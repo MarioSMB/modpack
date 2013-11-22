@@ -643,3 +643,5 @@ string modname;
 float sv_showfps;
 
 .float clientfov;
+
+#define ADMIN_NAME() ((autocvar_sv_adminnick == "") ? "SERVER ADMIN" : autocvar_sv_adminnick)

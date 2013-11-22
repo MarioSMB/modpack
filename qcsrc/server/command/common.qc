@@ -18,7 +18,7 @@ string GetCallerName(entity caller)
 	if(caller)
 		return caller.netname;
 	else
-		return ((autocvar_sv_adminnick == "") ? "SERVER ADMIN" : autocvar_sv_adminnick);
+		return ADMIN_NAME();
 }
 
 // verify that the client provided is acceptable for use
