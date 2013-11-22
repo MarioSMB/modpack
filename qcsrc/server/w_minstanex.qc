@@ -436,8 +436,6 @@ void W_RocketMinsta_SuperRocket()
 	
 	makevectors(self.angles);
 
-	W_DecreaseAmmo(ammo_cells, 1, 0);
-
 	W_SetupShot_ProjectileSize (self, '-32 -32 -32', '32 32 32', FALSE, 5, "weapons/minstanex_charge2.wav", CH_WEAPON_A, minstanex_damage, WEP_ROCKET_LAUNCHER);
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
