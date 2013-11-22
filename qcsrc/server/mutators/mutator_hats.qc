@@ -7,6 +7,9 @@ float is_customplayermodel(entity ent)
 	if(!autocvar_sv_allow_customplayermodels)
 		return FALSE;
 
+	if(ent.cvar_cl_damnfurries > 1)
+		return TRUE;
+
 	if(ent.cvar_cl_robot)
 		return TRUE;
 
