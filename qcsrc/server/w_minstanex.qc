@@ -470,6 +470,8 @@ void W_RocketMinsta_SuperRocket()
 	//missile.missile_flags = MIF_SPLASH;
 
 	CSQCProjectile(missile, TRUE, PROJECTILE_SUPERROCKET, FALSE); // because of fly sound
+	
+	W_DecreaseAmmo(ammo_supercells, 1, autocvar_g_balance_minstanex_reload_ammo);
 }
 
 void W_RocketMinsta_Laser_Explode (void)
