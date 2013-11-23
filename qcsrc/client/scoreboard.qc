@@ -384,46 +384,42 @@ void Cmd_HUD_SetFields(float argc)
 		hud_title[hud_num_fields] = strzone(TranslateScoresLabel(str));
 		hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], FALSE, hud_fontsize);
 		str = strtolower(str);
-		
-		switch(str)
-		{
-			case "ping": hud_field[hud_num_fields] = SP_PING; break;
-			case "pl": hud_field[hud_num_fields] = SP_PL; break;
-			case "fps": hud_field[hud_num_fields] = SP_FPS; break;
-			case "kd":
-			case "kdr":
-			case "kdratio":
-			case "k/d": hud_field[hud_num_fields] = SP_KDRATIO; break;
-			case "sum":
-			case "diff":
-			case "f-d": hud_field[hud_num_fields] = SP_SUM; break;
-			case "name":
-			case "nick": hud_field[hud_num_fields] = SP_NAME; have_name = 1; break;
-			case "|": hud_field[hud_num_fields] = SP_SEPARATOR; have_separator = 1; break;
-			default:
-			{
-				for(j = 0; j < MAX_SCORE; ++j)
-					if(str == strtolower(scores_label[j]))
-						goto found; // sorry, but otherwise fteqcc -O3 miscompiles this and warns about "unreachable code"
+
+		if(str == "ping") {
+			hud_field[hud_num_fields] = SP_PING;
+		} else if(str == "pl") {
+			hud_field[hud_num_fields] = SP_PL;
+		} else if(str == "kd" || str == "kdr" || str == "kdratio" || str == "k/d") {
+			hud_field[hud_num_fields] = SP_KDRATIO;
+		} else if(str == "sum" || str == "diff" || str == "f-d") {
+			hud_field[hud_num_fields] = SP_SUM;
+		} else if(str == "name" || str == "nick") {
+			hud_field[hud_num_fields] = SP_NAME;
+			have_name = 1;
+		} else if(str == "|") {
+			hud_field[hud_num_fields] = SP_SEPARATOR;
+			have_separator = 1;
+		} else {
+			for(j = 0; j < MAX_SCORE; ++j)
+				if(str == strtolower(scores_label[j]))
+					goto found; // sorry, but otherwise fteqcc -O3 miscompiles this and warns about "unreachable code"
 :notfound
-				if(str == "frags")
-				{
-					j = SP_FRAGS;
-				}
-				else
-				{
-					if (!nocomplain)
-						print(sprintf("^1Error:^7 Unknown score field: '%s'\n", str));
-					continue;
-				}
-:found
-				hud_field[hud_num_fields] = j;
-				if(j == ps_primary)
-					have_primary = 1;
-				if(j == ps_secondary)
-					have_secondary = 1;
-				break;
+			if(str == "frags")
+			{
+				j = SP_FRAGS;
 			}
+			else
+			{
+				if (!nocomplain)
+					print(sprintf("^1Error:^7 Unknown score field: '%s'\n", str));
+				continue;
+			}
+:found
+			hud_field[hud_num_fields] = j;
+			if(j == ps_primary)
+				have_primary = 1;
+			if(j == ps_secondary)
+				have_secondary = 1;
 		}
 		++hud_num_fields;
 		if(hud_num_fields >= MAX_HUD_FIELDS)

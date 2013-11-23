@@ -266,25 +266,26 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 		v = unquote(cdr(s));
 		if(inWorldspawn)
 		{
-			switch(k)
+			if(k == "classname" && v == "worldspawn")
+				inWorldspawn = 1;
+			else if(k == "author")
+				MapInfo_Map_author = v;
+			else if(k == "_description")
+				MapInfo_Map_description = v;
+			else if(k == "music")
+				_MapInfo_Map_worldspawn_music = v;
+			else if(k == "noise")
+				_MapInfo_Map_worldspawn_music = v;
+			else if(k == "message")
 			{
-				case "classname": if(v == "worldspawn") inWorldspawn = 1; break;
-				case "author": MapInfo_Map_author = v; break;
-				case "description": MapInfo_Map_description = v; break;
-				case "music":
-				case "noise": _MapInfo_Map_worldspawn_music = v; break;
-				case "message":
+				i = strstrofs(v, " by ", 0);
+				if(MapInfo_Map_author == "<AUTHOR>" && i >= 0)
 				{
-					i = strstrofs(v, " by ", 0);
-					if(MapInfo_Map_author == "<AUTHOR>" && i >= 0)
-					{
-						MapInfo_Map_title = substring(v, 0, i);
-						MapInfo_Map_author = substring(v, i + 4, strlen(v) - (i + 4));
-					}
-					else
-						MapInfo_Map_title = v;
-					break;
+					MapInfo_Map_title = substring(v, 0, i);
+					MapInfo_Map_author = substring(v, i + 4, strlen(v) - (i + 4));
 				}
+				else
+					MapInfo_Map_title = v;
 			}
 		}
 		else
@@ -306,27 +307,44 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 			}
 			else if(k == "classname")
 			{
-				switch(v)
-				{
-					case "dom_controlpoint": MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_DOMINATION; break;
-					case "item_flag_team2":
-					case "team_CTF_blueflag": MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTF | MAPINFO_TYPE_VIP; break;
-					case "target_assault_roundend": MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ASSAULT; break;
-					case "onslaught_generator": MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ONSLAUGHT; break;
-					case "info_player_team1":
-					case "info_player_team2":
-					case "info_player_start":
-					case "info_player_deathmatch": ++spawnpoints; break;
-					case "trigger_race_checkpoint": MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_RACE; break;
-					case "target_startTimer": MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTS; break;
-					case "target_music":
-					case "trigger_music": _MapInfo_Map_worldspawn_music = string_null; break; // don't use regular BGM
-				}
-				
-				if(startsWith(v, "nexball_") || startsWith(v, "ball")) MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_NEXBALL;
-				else if(startsWith(v, "weapon_") && v != "weapon_nex" && v != "weapon_railgun") MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_WEAPONS;
-				else if(startsWith(v, "turret_")) MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_TURRETS;
-				else if(startsWith(v, "vehicle_")) MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_VEHICLES;
+				if(v == "dom_controlpoint")
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_DOMINATION;
+				else if(v == "item_flag_team2")
+					MapInfo_Map_supportedGametypes |= (MAPINFO_TYPE_CTF | MAPINFO_TYPE_VIP);
+				else if(v == "team_CTF_blueflag")
+					MapInfo_Map_supportedGametypes |= (MAPINFO_TYPE_CTF | MAPINFO_TYPE_VIP);
+				else if(v == "target_assault_roundend")
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ASSAULT;
+				else if(v == "invasion_spawnpoint")
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_INVASION;
+				else if(v == "onslaught_generator")
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ONSLAUGHT;
+				else if(substring(v, 0, 8) == "nexball_" || substring(v, 0, 4) == "ball")
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_NEXBALL;
+				else if(v == "info_player_team1")
+					++spawnpoints;
+				else if(v == "info_player_team2")
+					++spawnpoints;
+				else if(v == "info_player_start")
+					++spawnpoints;
+				else if(v == "info_player_deathmatch")
+					++spawnpoints;
+				else if(v == "trigger_race_checkpoint")
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_RACE;
+				else if(v == "target_startTimer")
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CTS;
+				else if(v == "weapon_nex")
+					{ }
+				else if(v == "weapon_railgun")
+					{ }
+				else if(startsWith(v, "weapon_"))
+					MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_WEAPONS;
+				else if(startsWith(v, "turret_"))
+					MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_TURRETS;
+				else if(startsWith(v, "vehicle_"))
+					MapInfo_Map_supportedFeatures |= MAPINFO_FEATURE_VEHICLES;
+				else if(v == "target_music" || v == "trigger_music")
+					_MapInfo_Map_worldspawn_music = string_null; // don't use regular BGM
 			}
 		}
 	}

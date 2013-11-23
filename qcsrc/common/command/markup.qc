@@ -80,14 +80,31 @@ string GenericCommand_markup(string s2)
 
 		if(j == NUM_MARKUPS)
 		{
-			switch(substring(s2, i, 2))
+			if(substring(s2, i, 2) == "&&")
 			{
-				case "&&": s = strcat(s, strconv(ccase, red, red, "&")); ++i; break;
-				case "&d": red = 2; ccase = 0; ++i; break;
-				case "&a": red = 2; ccase = 2; ++i; break;
-				case "&n": red = 0; ccase = 0; ++i; break;
-				default: s = strcat(s, strconv(ccase, red, red, substring(s2, i, 1))); break;
+				s = strcat(s, strconv(ccase, red, red, "&"));
+				++i;
 			}
+			else if(substring(s2, i, 2) == "&d")
+			{
+				red = 2;
+				ccase = 0;
+				++i;
+			}
+			else if(substring(s2, i, 2) == "&a")
+			{
+				red = 2;
+				ccase = 2;
+				++i;
+			}
+			else if(substring(s2, i, 2) == "&n")
+			{
+				red = 0;
+				ccase = 0;
+				++i;
+			}
+			else
+				s = strcat(s, strconv(ccase, red, red, substring(s2, i, 1)));
 		}
 	}
 

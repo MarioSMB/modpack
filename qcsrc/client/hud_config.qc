@@ -336,91 +336,84 @@ vector HUD_Panel_CheckResize(vector mySize, vector resizeorigin) {
 		if(resizeorigin_x > panel_pos_x && resizeorigin_x < targEndPos_x && resizeorigin_y > panel_pos_y && resizeorigin_y < targEndPos_y)
 			continue;
 
-		switch(resizeCorner)
+		if (resizeCorner == 1)
 		{
-			case 1:
-			{
-				// check if this panel is on our way
-				if (resizeorigin_x <= panel_pos_x)
-					continue;
-				if (resizeorigin_y <= panel_pos_y)
-					continue;
-				if (targEndPos_x <= resizeorigin_x - mySize_x)
-					continue;
-				if (targEndPos_y <= resizeorigin_y - mySize_y)
-					continue;
+			// check if this panel is on our way
+			if (resizeorigin_x <= panel_pos_x)
+				continue;
+			if (resizeorigin_y <= panel_pos_y)
+				continue;
+			if (targEndPos_x <= resizeorigin_x - mySize_x)
+				continue;
+			if (targEndPos_y <= resizeorigin_y - mySize_y)
+				continue;
 
-				// there is a collision:
-				// detect which side of the panel we are facing is actually limiting the resizing
-				// (which side the resize direction finds for first) and reduce the size up to there
-				//
-				// dist is the distance between resizeorigin and the "analogous" point of the panel
-				// in this case between resizeorigin (bottom-right point) and the bottom-right point of the panel
-				dist_x = resizeorigin_x - targEndPos_x;
-				dist_y = resizeorigin_y - targEndPos_y;
-				if (dist_y <= 0 || dist_x / dist_y > ratio)
-					mySize_x = min(mySize_x, dist_x);
-				else
-					mySize_y = min(mySize_y, dist_y);
-				break;
-			}
-			case 2:
-			{
-				if (resizeorigin_x >= targEndPos_x)
-					continue;
-				if (resizeorigin_y <= panel_pos_y)
-					continue;
-				if (panel_pos_x >= resizeorigin_x + mySize_x)
-					continue;
-				if (targEndPos_y <= resizeorigin_y - mySize_y)
-					continue;
+			// there is a collision:
+			// detect which side of the panel we are facing is actually limiting the resizing
+			// (which side the resize direction finds for first) and reduce the size up to there
+			//
+			// dist is the distance between resizeorigin and the "analogous" point of the panel
+			// in this case between resizeorigin (bottom-right point) and the bottom-right point of the panel
+			dist_x = resizeorigin_x - targEndPos_x;
+			dist_y = resizeorigin_y - targEndPos_y;
+			if (dist_y <= 0 || dist_x / dist_y > ratio)
+				mySize_x = min(mySize_x, dist_x);
+			else
+				mySize_y = min(mySize_y, dist_y);
+		}
+		else if (resizeCorner == 2)
+		{
+			if (resizeorigin_x >= targEndPos_x)
+				continue;
+			if (resizeorigin_y <= panel_pos_y)
+				continue;
+			if (panel_pos_x >= resizeorigin_x + mySize_x)
+				continue;
+			if (targEndPos_y <= resizeorigin_y - mySize_y)
+				continue;
 
-				dist_x = panel_pos_x - resizeorigin_x;
-				dist_y = resizeorigin_y - targEndPos_y;
-				if (dist_y <= 0 || dist_x / dist_y > ratio)
-					mySize_x = min(mySize_x, dist_x);
-				else
-					mySize_y = min(mySize_y, dist_y);
-				break;
-			}
-			case 3:
-			{
-				if (resizeorigin_x <= panel_pos_x)
-					continue;
-				if (resizeorigin_y >= targEndPos_y)
-					continue;
-				if (targEndPos_x <= resizeorigin_x - mySize_x)
-					continue;
-				if (panel_pos_y >= resizeorigin_y + mySize_y)
-					continue;
+			dist_x = panel_pos_x - resizeorigin_x;
+			dist_y = resizeorigin_y - targEndPos_y;
+			if (dist_y <= 0 || dist_x / dist_y > ratio)
+				mySize_x = min(mySize_x, dist_x);
+			else
+				mySize_y = min(mySize_y, dist_y);
+		}
+		else if (resizeCorner == 3)
+		{
+			if (resizeorigin_x <= panel_pos_x)
+				continue;
+			if (resizeorigin_y >= targEndPos_y)
+				continue;
+			if (targEndPos_x <= resizeorigin_x - mySize_x)
+				continue;
+			if (panel_pos_y >= resizeorigin_y + mySize_y)
+				continue;
 
-				dist_x = resizeorigin_x - targEndPos_x;
-				dist_y = panel_pos_y - resizeorigin_y;
-				if (dist_y <= 0 || dist_x / dist_y > ratio)
-					mySize_x = min(mySize_x, dist_x);
-				else
-					mySize_y = min(mySize_y, dist_y);
-				break;
-			}
-			case 4:
-			{
-				if (resizeorigin_x >= targEndPos_x)
-					continue;
-				if (resizeorigin_y >= targEndPos_y)
-					continue;
-				if (panel_pos_x >= resizeorigin_x + mySize_x)
-					continue;
-				if (panel_pos_y >= resizeorigin_y + mySize_y)
-					continue;
+			dist_x = resizeorigin_x - targEndPos_x;
+			dist_y = panel_pos_y - resizeorigin_y;
+			if (dist_y <= 0 || dist_x / dist_y > ratio)
+				mySize_x = min(mySize_x, dist_x);
+			else
+				mySize_y = min(mySize_y, dist_y);
+		}
+		else if (resizeCorner == 4)
+		{
+			if (resizeorigin_x >= targEndPos_x)
+				continue;
+			if (resizeorigin_y >= targEndPos_y)
+				continue;
+			if (panel_pos_x >= resizeorigin_x + mySize_x)
+				continue;
+			if (panel_pos_y >= resizeorigin_y + mySize_y)
+				continue;
 
-				dist_x = panel_pos_x - resizeorigin_x;
-				dist_y = panel_pos_y - resizeorigin_y;
-				if (dist_y <= 0 || dist_x / dist_y > ratio)
-					mySize_x = min(mySize_x, dist_x);
-				else
-					mySize_y = min(mySize_y, dist_y);
-				break;
-			}
+			dist_x = panel_pos_x - resizeorigin_x;
+			dist_y = panel_pos_y - resizeorigin_y;
+			if (dist_y <= 0 || dist_x / dist_y > ratio)
+				mySize_x = min(mySize_x, dist_x);
+			else
+				mySize_y = min(mySize_y, dist_y);
 		}
 		//if(cvar("hud_configure_checkcollisions_debug"))
 			//drawfill(panel_pos, panel_size, '1 1 0', .3, DRAWFLAG_NORMAL);
@@ -451,24 +444,18 @@ void HUD_Panel_SetPosSize(vector mySize)
 	// -----------------+
 
 	// we need to know pos at this stage, but it might still change later if we hit a screen edge/other panel (?)
-	switch(resizeCorner)
-	{
-		case 1:
-			myPos_x = resizeorigin_x - mySize_x;
-			myPos_y = resizeorigin_y - mySize_y;
-			break;
-		case 2:
-			myPos_x = resizeorigin_x;
-			myPos_y = resizeorigin_y - mySize_y;
-			break;
-		case 3:
-			myPos_x = resizeorigin_x - mySize_x;
-			myPos_y = resizeorigin_y;
-			break;
-		default:
-			myPos_x = resizeorigin_x;
-			myPos_y = resizeorigin_y;
-			break;
+	if(resizeCorner == 1) {
+		myPos_x = resizeorigin_x - mySize_x;
+		myPos_y = resizeorigin_y - mySize_y;
+	} else if(resizeCorner == 2) {
+		myPos_x = resizeorigin_x;
+		myPos_y = resizeorigin_y - mySize_y;
+	} else if(resizeCorner == 3) {
+		myPos_x = resizeorigin_x - mySize_x;
+		myPos_y = resizeorigin_y;
+	} else { // resizeCorner == 4
+		myPos_x = resizeorigin_x;
+		myPos_y = resizeorigin_y;
 	}
 
 	// left/top screen edges
@@ -501,24 +488,18 @@ void HUD_Panel_SetPosSize(vector mySize)
 	mySize_y = max(0.025 * vid_conheight, mySize_y);
 
 	// do another pos check, as size might have changed by now
-	switch(resizeCorner)
-	{
-		case 1:
-			myPos_x = resizeorigin_x - mySize_x;
-			myPos_y = resizeorigin_y - mySize_y;
-			break;
-		case 2:
-			myPos_x = resizeorigin_x;
-			myPos_y = resizeorigin_y - mySize_y;
-			break;
-		case 3:
-			myPos_x = resizeorigin_x - mySize_x;
-			myPos_y = resizeorigin_y;
-			break;
-		default:
-			myPos_x = resizeorigin_x;
-			myPos_y = resizeorigin_y;
-			break;
+	if(resizeCorner == 1) {
+		myPos_x = resizeorigin_x - mySize_x;
+		myPos_y = resizeorigin_y - mySize_y;
+	} else if(resizeCorner == 2) {
+		myPos_x = resizeorigin_x;
+		myPos_y = resizeorigin_y - mySize_y;
+	} else if(resizeCorner == 3) {
+		myPos_x = resizeorigin_x - mySize_x;
+		myPos_y = resizeorigin_y;
+	} else { // resizeCorner == 4
+		myPos_x = resizeorigin_x;
+		myPos_y = resizeorigin_y;
 	}
 
 	//if(cvar("hud_configure_checkcollisions_debug"))
@@ -580,13 +561,14 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 	if (hudShiftState & S_ALT) // resize
 	{
 		highlightedAction = 1;
-		switch(nPrimary)
-		{
-			case K_UPARROW: resizeCorner = 1; break;
-			case K_RIGHTARROW: resizeCorner = 2; break;
-			case K_LEFTARROW: resizeCorner = 3; break;
-			default: resizeCorner = 4; break;
-		}
+		if(nPrimary == K_UPARROW)
+			resizeCorner = 1;
+		else if(nPrimary == K_RIGHTARROW)
+			resizeCorner = 2;
+		else if(nPrimary == K_LEFTARROW)
+			resizeCorner = 3;
+		else // if(nPrimary == K_DOWNARROW)
+			resizeCorner = 4;
 
 		// ctrl+arrow reduces the size, instead of increasing it
 		// Note that ctrl disables collisions check too, but it's fine
@@ -599,23 +581,17 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 		vector mySize;
 		mySize = panel_size;
 		panel_click_resizeorigin = panel_pos;
-		switch(resizeCorner)
-		{
-			case 1:
-				panel_click_resizeorigin += mySize;
-				mySize_y += step;
-				break;
-			case 2:
-				panel_click_resizeorigin_y += mySize_y;
-				mySize_x += step;
-				break;
-			case 3:
-				panel_click_resizeorigin_x += mySize_x;
-				mySize_x += step;
-				break;
-			default:
-				mySize_y += step;
-				break;
+		if(resizeCorner == 1) {
+			panel_click_resizeorigin += mySize;
+			mySize_y += step;
+		} else if(resizeCorner == 2) {
+			panel_click_resizeorigin_y += mySize_y;
+			mySize_x += step;
+		} else if(resizeCorner == 3) {
+			panel_click_resizeorigin_x += mySize_x;
+			mySize_x += step;
+		} else { // resizeCorner == 4
+			mySize_y += step;
 		}
 		HUD_Panel_SetPosSize(mySize);
 	}
@@ -624,13 +600,14 @@ void HUD_Panel_Arrow_Action(float nPrimary)
 		highlightedAction = 2;
 		vector pos;
 		pos = panel_pos;
-		switch(nPrimary)
-		{
-			case K_UPARROW: pos_y -= step; break;
-			case K_DOWNARROW: pos_y += step; break;
-			case K_LEFTARROW: pos_x -= step; break;
-			default: pos_x += step; break;
-		}
+		if(nPrimary == K_UPARROW)
+			pos_y -= step;
+		else if(nPrimary == K_DOWNARROW)
+			pos_y += step;
+		else if(nPrimary == K_LEFTARROW)
+			pos_x -= step;
+		else // if(nPrimary == K_RIGHTARROW)
+			pos_x += step;
 
 		HUD_Panel_SetPos(pos);
 	}
@@ -1212,13 +1189,14 @@ void HUD_Panel_Mouse()
 	const vector cursorsize = '32 32 0';
 	float cursor_alpha = 1 - autocvar__menu_alpha;
 
-	switch(mouse_over_panel)
-	{
-		case 0: drawpic(mousepos, strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', cursor_alpha, DRAWFLAG_NORMAL); break;
-		case 1: drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_move.tga"), cursorsize, '1 1 1', cursor_alpha, DRAWFLAG_NORMAL); break;
-		case 2: drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_resize.tga"), cursorsize, '1 1 1', cursor_alpha, DRAWFLAG_NORMAL); break;
-		default: drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_resize2.tga"), cursorsize, '1 1 1', cursor_alpha, DRAWFLAG_NORMAL); break;
-	}
+	if(!mouse_over_panel)
+		drawpic(mousepos, strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', cursor_alpha, DRAWFLAG_NORMAL);
+	else if(mouse_over_panel == 1)
+		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_move.tga"), cursorsize, '1 1 1', cursor_alpha, DRAWFLAG_NORMAL);
+	else if(mouse_over_panel == 2)
+		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_resize.tga"), cursorsize, '1 1 1', cursor_alpha, DRAWFLAG_NORMAL);
+	else
+		drawpic(mousepos - cursorsize * 0.5, strcat("gfx/menu/", autocvar_menu_skin, "/cursor_resize2.tga"), cursorsize, '1 1 1', cursor_alpha, DRAWFLAG_NORMAL);
 
 	prevMouseClicked = mouseClicked;
 }

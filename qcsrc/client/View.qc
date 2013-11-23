@@ -412,7 +412,7 @@ void CSQC_UpdateView(float w, float h)
 {
 	entity e;
 	float fov;
-	float f, i;
+	float f, i, j;
 	vector v;
 	vector vf_size, vf_min;
 	float a;
@@ -1555,11 +1555,9 @@ void CSQC_UpdateView(float w, float h)
 				{ \
 					if(wcross_blur > 0) \
 					{ \
-						M(-2,-2,sz,wcross_name,wcross_alpha*0.04); \
-						M(-1,-1,sz,wcross_name,wcross_alpha*0.04); \
-						M(0,0,sz,wcross_name,wcross_alpha*0.04); \
-						M(1,1,sz,wcross_name,wcross_alpha*0.04); \
-						M(2,2,sz,wcross_name,wcross_alpha*0.04); \
+						for(i = -2; i <= 2; ++i) \
+						for(j = -2; j <= 2; ++j) \
+						M(i,j,sz,wcross_name,wcross_alpha*0.04); \
 					} \
 					else \
 					{ \

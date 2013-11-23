@@ -165,7 +165,17 @@ string ColorTranslateRGB(string s)
 }
 
 // decolorizes and team colors the player name when needed
-#define PLAYERNAME(thename,teamid) ((teamplay) ? strcat(Team_ColorCode(teamid), strdecolorize(thename)) : thename)
+string playername(string thename, float teamid)
+{
+    string t;
+    if (teamplay)
+    {
+        t = Team_ColorCode(teamid);
+        return strcat(t, strdecolorize(thename));
+    }
+    else
+        return strdecolorize(thename);
+}
 
 float cvar_or(string cv, float v)
 {
