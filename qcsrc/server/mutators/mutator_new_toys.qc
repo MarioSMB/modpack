@@ -69,6 +69,7 @@ roflsound "New toys, new toys!" sound.
 .string new_toys;
 
 float autocvar_g_new_toys_autoreplace;
+float autocvar_g_new_toys_use_pickupsound;
 #define NT_AUTOREPLACE_NEVER 0
 #define NT_AUTOREPLACE_ALWAYS 1
 #define NT_AUTOREPLACE_RANDOM 2
@@ -183,7 +184,7 @@ MUTATOR_HOOKFUNCTION(nt_SetWeaponreplace)
 
 MUTATOR_HOOKFUNCTION(nt_FilterItem)
 {
-	if(nt_IsNewToy(self.weapon))
+	if(nt_IsNewToy(self.weapon) && autocvar_g_new_toys_use_pickupsound)
 		self.item_pickupsound = "weapons/weaponpickup_new_toys.wav";
 	return 0;
 }
