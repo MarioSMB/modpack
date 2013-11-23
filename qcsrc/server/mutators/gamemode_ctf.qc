@@ -495,6 +495,10 @@ void ctf_Handle_Return(entity flag, entity player)
 		ctf_CaptureShield_Update(flag.ctf_dropper, 0); // shield player from picking up flag
 		flag.ctf_dropper.next_take_time = time + autocvar_g_ctf_flag_collect_delay; // set next take time
 	}
+	
+	// other
+	if(player.flagcarried == flag)
+		WaypointSprite_Kill(player.wps_flagcarrier);
 
 	// reset the flag
 	ctf_RespawnFlag(flag);
@@ -533,9 +537,13 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	if(ctf_stalemate) { Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_CTF_STALEMATE_CARRIER); }
 
 	Send_Notification(NOTIF_TEAM_EXCEPT, player, MSG_CHOICE, APP_TEAM_ENT_4(flag, CHOICE_CTF_PICKUP_TEAM_), Team_ColorCode(player.team), player.netname);
-	
+
 	FOR_EACH_PLAYER(tmp_entity)
+	if(tmp_entity != player)
 	if(CTF_SAMETEAM(flag, tmp_entity))
+	if(SAME_TEAM(player, tmp_entity))
+		Send_Notification(NOTIF_ONE, tmp_entity, MSG_CHOICE, APP_TEAM_ENT_4(flag, CHOICE_CTF_PICKUP_TEAM_), Team_ColorCode(player.team), player.netname);
+	else
 		Send_Notification(NOTIF_ONE, tmp_entity, MSG_CHOICE, ((SAME_TEAM(flag, player)) ? CHOICE_CTF_PICKUP_ENEMY_TEAM : CHOICE_CTF_PICKUP_ENEMY), Team_ColorCode(player.team), player.netname);
 
 	sound(player, CH_TRIGGER, flag.snd_flag_taken, VOL_BASE, ATTEN_NONE);
@@ -805,8 +813,10 @@ void ctf_FlagThink()
 			}
 			if(CTF_SAMETEAM(self, self.owner))
 			{
-				// drop the flag if reverse status has changed
-				ctf_Handle_Throw(self.owner, world, DROP_THROW);
+				if(autocvar_g_ctf_flag_return) // drop the flag if reverse status has changed
+					ctf_Handle_Throw(self.owner, world, DROP_THROW);
+				else if(vlen(self.owner.origin - self.ctf_spawnorigin) <= autocvar_g_ctf_flag_return_carried)
+					ctf_Handle_Return(self, self.owner);
 			}
 			return;
 		}
@@ -899,7 +909,7 @@ void ctf_FlagTouch()
 
 		case FLAG_DROPPED:
 		{
-			if(CTF_SAMETEAM(toucher, self))
+			if(CTF_SAMETEAM(toucher, self) && autocvar_g_ctf_flag_return)
 				ctf_Handle_Return(self, toucher); // toucher just returned his own flag
 			else if(!IS_MONSTER(toucher) && (!toucher.flagcarried) && ((toucher != self.ctf_dropper) || (time > self.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
 				ctf_Handle_Pickup(self, toucher, PICKUP_DROPPED); // toucher just picked up a dropped enemy flag

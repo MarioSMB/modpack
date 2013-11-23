@@ -795,6 +795,8 @@ string autocvar_g_ctf_flag_pink_model;
 float autocvar_g_ctf_flag_pink_skin;
 string autocvar_g_ctf_flag_red_model;
 float autocvar_g_ctf_flag_red_skin;
+float autocvar_g_ctf_flag_return;
+float autocvar_g_ctf_flag_return_carried;
 float autocvar_g_ctf_flag_return_time;
 float autocvar_g_ctf_flag_return_when_unreachable;
 float autocvar_g_ctf_flag_return_damage;
