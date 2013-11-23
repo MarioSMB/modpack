@@ -243,7 +243,7 @@ float SetTeam(entity o, float Team)
 			default:
 				if(GetTeam(Team, false) == world)
 				{
-					print(sprintf(_("trying to switch to unsupported team %d\n"), Team));
+					dprint(sprintf(_("trying to switch to unsupported team %d\n"), Team));
 					Team = NUM_SPECTATOR;
 				}
 				break;
@@ -259,7 +259,7 @@ float SetTeam(entity o, float Team)
 			default:
 				if(GetTeam(Team, false) == world)
 				{
-					print(sprintf(_("trying to switch to unsupported team %d\n"), Team));
+					dprint(sprintf(_("trying to switch to unsupported team %d\n"), Team));
 					Team = NUM_SPECTATOR;
 				}
 				break;
