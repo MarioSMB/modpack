@@ -389,6 +389,8 @@ void Cmd_HUD_SetFields(float argc)
 			hud_field[hud_num_fields] = SP_PING;
 		} else if(str == "pl") {
 			hud_field[hud_num_fields] = SP_PL;
+		} else if(str == "fps") {
+			hud_field[hud_num_fields] = SP_FPS;
 		} else if(str == "kd" || str == "kdr" || str == "kdratio" || str == "k/d") {
 			hud_field[hud_num_fields] = SP_KDRATIO;
 		} else if(str == "sum" || str == "diff" || str == "f-d") {
