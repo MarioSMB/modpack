@@ -469,6 +469,9 @@ void vip_SoulGem_touch()
 
 	if(DIFF_TEAM(other, self))
 		return;
+		
+	if(round_handler_IsRoundStarted())
+		return;
 
 	self.gem_pickedup = 1;
 	self.owner = other;
@@ -489,7 +492,7 @@ void vip_SoulGem_think()
 	self.glow_size = 256 + cos(time * 2) * 64;
 	self.nextthink = time + 0.1;
 
-	if(vip_count[self.team] < 1 && self.gem_pickedup && allowed_to_spawn && self.owner && !self.owner.isvip)
+	if(vip_count[self.team] < 1 && self.gem_pickedup && allowed_to_spawn && self.owner && !self.owner.isvip && !round_handler_IsRoundStarted())
 		self.reset();
 }
 
