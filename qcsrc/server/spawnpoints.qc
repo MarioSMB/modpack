@@ -318,12 +318,7 @@ entity SelectSpawnPoint (float anypoint)
 	}
 	else
 	{
-		float mindist;
-		if(g_arena && arena_roundbased)
-			mindist = 800;
-		else
-			mindist = 100;
-		firstspot = Spawn_FilterOutBadSpots(firstspot, mindist, teamcheck);
+		firstspot = Spawn_FilterOutBadSpots(firstspot, 100, teamcheck);
 
 		// there is 50/50 chance of choosing a random spot or the furthest spot
 		// (this means that roughly every other spawn will be furthest, so you

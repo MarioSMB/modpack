@@ -18,6 +18,7 @@ void(float keynr, float ascii) m_keydown;
 void(float width, float height) m_draw;
 void(float mode) m_toggle;
 void() m_shutdown;
+// optional: float(float) m_gethostcachecategory;
 
 /////////////////////////////////////////////////////////
 // sys constants
@@ -562,8 +563,11 @@ void 	resethostcachemasks(void) = #615;
 void 	sethostcachemaskstring(float mask, float fld, string str, float op) = #616;
 void	sethostcachemasknumber(float mask, float fld, float num, float op) = #617;
 void 	resorthostcache(void) = #618;
-void	sethostcachesort(float fld, float descending) = #619;
-void	refreshhostcache(void) = #620;
+float SLSF_DESCENDING = 1;
+float SLSF_FAVORITES = 2;
+float SLSF_CATEGORIES = 4;
+void	sethostcachesort(float fld, float slsf) = #619;
+void	refreshhostcache(...) = #620;  // optional boolean argument "clear_list"
 float	gethostcachenumber(float fld, float hostnr) = #621;
 float	gethostcacheindexforkey(string key) = #622;
 void	addwantedhostcachekey(string key) = #623;

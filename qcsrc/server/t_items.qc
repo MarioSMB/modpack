@@ -150,7 +150,7 @@ void ItemRead(float _IsNew)
     if(sf & ISF_MODEL)
     {
         self.drawmask  = MASK_NORMAL;
-        self.movetype  = MOVETYPE_BOUNCE;
+        self.movetype  = MOVETYPE_TOSS;
         self.draw       = ItemDraw;
 
         if(self.mdl)

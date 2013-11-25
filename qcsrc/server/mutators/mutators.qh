@@ -1,5 +1,4 @@
 MUTATOR_DECLARATION(gamemode_assault);
-MUTATOR_DECLARATION(gamemode_arena);
 MUTATOR_DECLARATION(gamemode_ca);
 MUTATOR_DECLARATION(gamemode_keyhunt);
 MUTATOR_DECLARATION(gamemode_freezetag);

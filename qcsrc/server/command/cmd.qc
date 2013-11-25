@@ -150,7 +150,7 @@ void ClientCommand_join(float request)
 		{
 			if(IS_CLIENT(self))
 			{
-				if(!IS_PLAYER(self) && !lockteams && !g_arena)
+				if(!IS_PLAYER(self) && !lockteams)
 				{
 					if(nJoinAllowed(self))
 					{
@@ -549,7 +549,6 @@ void ClientCommand_spectate(float request)
 		{
 			if(IS_CLIENT(self))
 			{
-				if(g_arena) { return; }
 				if(g_lms)
 				{
 					if(self.lms_spectate_warning)

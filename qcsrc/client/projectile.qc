@@ -107,10 +107,10 @@ void Projectile_Draw()
 			default:
 				break;
 		}
-		
+
 		if(Nade_IDFromProjectile(self.cnt) != 0)
 			rot = self.avelocity;
-		
+
 		self.angles = AnglesTransform_ToAngles(AnglesTransform_Multiply(AnglesTransform_FromAngles(self.angles), rot * (t - self.spawntime)));
 	}
 

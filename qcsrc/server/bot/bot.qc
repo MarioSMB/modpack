@@ -552,7 +552,7 @@ float bot_fixcount()
 
 	FOR_EACH_REALCLIENT(head)
 	{
-		if(IS_PLAYER(head) || g_lms || g_arena || head.caplayer == 1)
+		if(IS_PLAYER(head) || g_lms || head.caplayer == 1)
 			++activerealplayers;
 		++realplayers;
 	}

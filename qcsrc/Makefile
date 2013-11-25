@@ -1,6 +1,6 @@
 SCM := $(shell if [ -d .svn ]; then echo svn; elif [ -d ../.git ]; then echo git; fi)
 PERL ?= perl
-QCCFLAGS_WATERMARK ?= -DWATERMARK='"$(shell git describe)"' -DCVAR_POPCON=1
+QCCFLAGS_WATERMARK ?= -DWATERMARK='"$(shell git describe)"'
 QCC ?= gmqcc
 
 QCCVERSIONFILE := qccversion.$(shell $(QCC) --version > qccversion.txt && git hash-object qccversion.txt)

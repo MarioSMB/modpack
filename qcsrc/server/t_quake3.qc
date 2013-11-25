@@ -164,8 +164,6 @@ float DoesQ3ARemoveThisEntity()
 		gametypename = "ffa";
 		if(teamplay)
 			gametypename = "team";
-		if(g_arena)
-			gametypename = "tournament";
 		if(g_ctf)
 			gametypename = "ctf";
 		if(maxclients == 1)

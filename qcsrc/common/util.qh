@@ -52,7 +52,7 @@ void ACCUMULATE_call(string func)
 // used for simplifying ACCUMULATE_FUNCTIONs
 #define SET_FIRST_OR_LAST(input,first,count) if(!input) { input = (first + count); }
 #define SET_FIELD_COUNT(field,first,count) if(!field) { field = (first + count); ++count; }
-#define CHECK_MAX_COUNT(name,max,count,type) if(count == max) { error(strcat("Maximum ", type, " hit: ", #name, ": ", ftos(count), ".\n")); }
+#define CHECK_MAX_COUNT(name,max,count,type) if(count > max) { error(strcat("Maximum ", type, " hit: ", #name, ": ", ftos(count), ".\n")); }
 
 // this returns a tempstring containing a copy of s with additional \n newlines added, it also replaces \n in the text with a real newline
 // NOTE: s IS allowed to be a tempstring

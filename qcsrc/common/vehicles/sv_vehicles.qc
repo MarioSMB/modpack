@@ -914,6 +914,7 @@ void vehicles_enter(entity pl, entity veh)
 	if(veh.team)
 	if(DIFF_TEAM(pl, veh))
 	if(autocvar_g_vehicles_steal)
+	if(autocvar_g_vehicles_steal_show_waypoint)
 	{
 		entity head;
 		FOR_EACH_PLAYER(head) if(SAME_TEAM(head, veh))
@@ -1097,7 +1098,7 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 		}
 	}
 
-	if(self.team && !teamplay)
+	if(self.team && (!teamplay || !autocvar_g_vehicles_teams))
 		self.team = 0;
 
 	self.vehicle_flags |= VHF_ISVEHICLE;
