@@ -323,7 +323,10 @@ void Ent_Projectile()
 			case PROJECTILE_NADE_ICE_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("wakizashi_rocket_thrust"); break;
 			case PROJECTILE_NADE_TRANSLOCATE: setmodel(self, "models/runematch/rune.mdl"); self.traileffect = particleeffectnum("TR_CRYLINKPLASMA"); break;
 			case PROJECTILE_NADE_SPAWN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_yellow"); break;
-			
+			case PROJECTILE_NADE_HEAL: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red"); break;       
+			case PROJECTILE_NADE_HEAL_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red_burn"); break;
+            
+            
 			case PROJECTILE_RPC: setmodel(self, "models/weapons/ok_rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
 
 			default:

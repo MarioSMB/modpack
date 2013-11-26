@@ -366,6 +366,62 @@ void nade_spawn_boom()
 	self.realowner.nade_spawnloc = spawnloc;
 }
 
+void nade_heal_think()
+{
+	float maxhealth;
+	float health_factor;
+	
+	if(time >= self.ltime)
+	{
+		remove(self);
+		return;
+	}
+	
+	self.nextthink = time+0.1;
+	
+	entity e;
+	for(e = findradius(self.origin, autocvar_g_nades_nade_radius); e; e = e.chain)
+		if(IS_PLAYER(e) || IS_MONSTER(e))
+		if(e.deadflag == DEAD_NO)
+		if(!e.frozen)
+		{
+			health_factor = autocvar_g_nades_heal_rate*0.1;
+			if ( e != self.realowner )
+			{
+				if ( SAME_TEAM(e,self) )
+					health_factor *= autocvar_g_nades_heal_friend;
+				else
+					health_factor *= autocvar_g_nades_heal_foe;
+			}
+			if ( health_factor > 0 )
+			{
+				pointparticles(particleeffectnum("healing_fx"), e.origin, '0 0 0', 1);
+				maxhealth = (IS_MONSTER(e)) ? e.max_health : autocvar_g_balance_health_start;
+				e.health = min(e.health+health_factor, maxhealth);
+			}
+		}
+}
+
+void nade_heal_boom()
+{
+	entity healer;
+	healer = spawn();
+	healer.owner = self.owner;
+	healer.realowner = self.realowner;
+	healer.origin = self.origin;
+	setorigin(healer, healer.origin);
+	healer.think = nade_heal_think;
+	healer.nextthink = time;
+	healer.ltime = time + autocvar_g_nades_heal_time;
+	healer.pushltime = healer.wait = healer.ltime;
+	healer.team = self.team;
+	healer.movetype = MOVETYPE_TOSS;
+	healer.bot_dodge = FALSE;
+	setsize(healer, '-16 -16 -16', '16 16 16');
+	healer.colormod = '1 0 0';
+	setmodel(healer, "models/items/g_h25.md3");
+}
+
 void nade_boom()
 {
 	string expef;
@@ -395,6 +451,10 @@ void nade_boom()
 				case NUM_TEAM_4: expef = "spawn_event_pink"; break;
 				default: expef = "spawn_event_neutral"; break;
 			}
+			break;
+		case NADE_TYPE_HEAL:
+			nade_blast = 0;
+			expef = "healing_fx";
 			break;
 
 		default:
@@ -429,6 +489,7 @@ void nade_boom()
 		case NADE_TYPE_ICE: nade_ice_boom(); break;
 		case NADE_TYPE_TRANSLOCATE: nade_translocate_boom(); break;
 		case NADE_TYPE_SPAWN: nade_spawn_boom(); break;
+		case NADE_TYPE_HEAL: nade_heal_boom(); break;
 	}
 
 	remove(self);
