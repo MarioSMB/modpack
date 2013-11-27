@@ -420,7 +420,7 @@ void nade_heal_boom()
 	healer.ltime = time + autocvar_g_nades_heal_time;
 	healer.pushltime = healer.wait = healer.ltime;
 	healer.team = self.team;
-	healer.movetype = MOVETYPE_TOSS;
+	//healer.movetype = MOVETYPE_TOSS;
 	healer.bot_dodge = FALSE;
 	healer.solid = SOLID_NOT;
 	healer.colormod = '1 0 0';
