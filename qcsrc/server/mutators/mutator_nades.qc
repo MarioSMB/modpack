@@ -399,6 +399,10 @@ void nade_heal_think()
 				maxhealth = (IS_MONSTER(e)) ? e.max_health : autocvar_g_balance_health_start;
 				e.health = min(e.health+health_factor, maxhealth);
 			}
+			else if ( health_factor < 0 )
+			{
+				Damage(e,self,self.realowner,-health_factor,DEATH_NADE_HEAL,e.origin,'0 0 0');
+			}
 		}
 }
 
@@ -417,9 +421,12 @@ void nade_heal_boom()
 	healer.team = self.team;
 	healer.movetype = MOVETYPE_TOSS;
 	healer.bot_dodge = FALSE;
-	setsize(healer, '-16 -16 -16', '16 16 16');
+	vector size;
+	size_x = size_y = size_z = autocvar_g_nades_nade_radius/2;
+	setsize(healer, -size, size);
+	healer.scale = autocvar_g_nades_nade_radius;
 	healer.colormod = '1 0 0';
-	setmodel(healer, "models/items/g_h25.md3");
+	setmodel(healer, "models/runematch/rune.mdl");
 }
 
 void nade_boom()
