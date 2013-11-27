@@ -368,8 +368,6 @@ void nade_spawn_boom()
 
 void nade_heal_think()
 {
-	float maxhealth;
-	float health_factor;
 	
 	if(time >= self.ltime)
 	{
@@ -379,6 +377,9 @@ void nade_heal_think()
 	
 	self.nextthink = time+0.1;
 	
+
+	float maxhealth;
+	float health_factor;
 	entity e;
 	for(e = findradius(self.origin, autocvar_g_nades_nade_radius); e; e = e.chain)
 		if(IS_PLAYER(e) || IS_MONSTER(e))
@@ -421,12 +422,15 @@ void nade_heal_boom()
 	healer.team = self.team;
 	healer.movetype = MOVETYPE_TOSS;
 	healer.bot_dodge = FALSE;
-	vector size;
-	size_x = size_y = size_z = autocvar_g_nades_nade_radius/2;
-	setsize(healer, -size, size);
-	healer.scale = autocvar_g_nades_nade_radius;
+	healer.solid = SOLID_NOT;
 	healer.colormod = '1 0 0';
-	setmodel(healer, "models/runematch/rune.mdl");
+	setmodel(healer, "models/ctf/shield.md3");
+	healer.scale = autocvar_g_nades_nade_radius/healer.maxs_x;
+	healer.effects = EF_ADDITIVE;
+	healer.avelocity = '7 0 11';
+	/*vector size;
+	size_x = size_y = size_z = autocvar_g_nades_nade_radius/2;
+	setsize(healer, -size, size);*/
 }
 
 void nade_boom()
