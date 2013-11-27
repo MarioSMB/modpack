@@ -431,6 +431,7 @@ void nade_heal_boom()
 	healer.scale = 0;
 	healer.effects = EF_ADDITIVE;
 	healer.avelocity = '7 0 11';
+	healer.ticrate = 0.01;
 	/*vector size;
 	size_x = size_y = size_z = autocvar_g_nades_nade_radius/2;
 	setsize(healer, -size, size);*/
