@@ -914,7 +914,6 @@ void vehicles_enter(entity pl, entity veh)
 	if(veh.team)
 	if(DIFF_TEAM(pl, veh))
 	if(autocvar_g_vehicles_steal)
-	if(autocvar_g_vehicles_steal_show_waypoint)
 	{
 		entity head;
 		FOR_EACH_PLAYER(head) if(SAME_TEAM(head, veh))
@@ -922,7 +921,8 @@ void vehicles_enter(entity pl, entity veh)
 
 		Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_VEHICLE_STEAL_SELF);
 
-		WaypointSprite_Spawn("intruder", 0, 0, pl, '0 0 68', world, veh.team, veh, wps_intruder, TRUE, RADARICON_DANGER, Team_ColorRGB(pl.team));
+		if(autocvar_g_vehicles_steal_show_waypoint)
+			WaypointSprite_Spawn("intruder", 0, 0, pl, '0 0 68', world, veh.team, veh, wps_intruder, TRUE, RADARICON_DANGER, Team_ColorRGB(pl.team));
 	}
 	else return;
 
