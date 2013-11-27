@@ -5459,10 +5459,6 @@ void HUD_Main (void)
 		return;
 	}
 
-	if(spectatee_status == -1 || !spectatee_status)
-	if(fovlock >= 0)
-		fovlock = -1;
-
 	if(!autocvar__hud_configure && !hud_fade_alpha)
 		return;
 
