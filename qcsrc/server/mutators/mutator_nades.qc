@@ -375,8 +375,11 @@ void nade_heal_think()
 		return;
 	}
 	
-	self.nextthink = time+0.1;
+	self.nextthink = time+self.ticrate;
 	
+	self.alpha = (self.ltime - time) / autocvar_g_nades_heal_time;
+	float max_radius = autocvar_g_nades_nade_radius/self.maxs_x;
+	self.scale = min((1 - (self.ltime-time)/autocvar_g_nades_heal_time)*autocvar_g_nades_heal_time*3,1)*max_radius;
 
 	float maxhealth;
 	float health_factor;
@@ -386,7 +389,7 @@ void nade_heal_think()
 		if(e.deadflag == DEAD_NO)
 		if(!e.frozen)
 		{
-			health_factor = autocvar_g_nades_heal_rate*0.1;
+			health_factor = autocvar_g_nades_heal_rate*self.ticrate;
 			if ( e != self.realowner )
 			{
 				if ( SAME_TEAM(e,self) )
@@ -425,7 +428,7 @@ void nade_heal_boom()
 	healer.solid = SOLID_NOT;
 	healer.colormod = '1 0 0';
 	setmodel(healer, "models/ctf/shield.md3");
-	healer.scale = autocvar_g_nades_nade_radius/healer.maxs_x;
+	healer.scale = 0;
 	healer.effects = EF_ADDITIVE;
 	healer.avelocity = '7 0 11';
 	/*vector size;
