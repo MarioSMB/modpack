@@ -555,7 +555,7 @@ void racer_deadtouch()
 void spawnfunc_vehicle_racer()
 {
 	if(!autocvar_g_vehicle_racer) { remove(self); return; }
-	if(!vehicle_initialize(VEH_RACER, TRUE)) { remove(self); return; }
+	if(!vehicle_initialize(VEH_RACER, FALSE)) { remove(self); return; }
 }
 
 float v_racer(float req)
