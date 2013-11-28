@@ -188,7 +188,7 @@ void W_Laser_Attack2 ()
 	self.gauntletbeam = beam = spawn();
 	beam.solid = SOLID_NOT;
 	beam.think = gauntletbeam_think;
-	beam.owner = self;
+	beam.owner = beam.realowner = self;
 	beam.movetype = MOVETYPE_NONE;
 	beam.shot_spread = 0;
 	beam.bot_dodge = TRUE;
