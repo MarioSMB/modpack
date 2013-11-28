@@ -414,6 +414,10 @@ void spawnfunc_func_train()
 	if (!self.speed)
 		self.speed = 100;
 
+	if (!InitMovingBrushTrigger())
+		return;
+	self.effects |= EF_LOWPRECISION;
+	
 	if (self.spawnflags & 2)
 	{
 		self.platmovetype_turn = TRUE;
@@ -421,10 +425,6 @@ void spawnfunc_func_train()
 	}
 	else
 		self.view_ofs = self.mins;
-
-	if (!InitMovingBrushTrigger())
-		return;
-	self.effects |= EF_LOWPRECISION;
 
 	// wait for targets to spawn
 	InitializeEntity(self, func_train_find, INITPRIO_SETLOCATION);
