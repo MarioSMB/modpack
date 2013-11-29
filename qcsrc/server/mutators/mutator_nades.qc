@@ -422,7 +422,7 @@ void nade_heal_boom()
 	healer.nextthink = time;
 	healer.ltime = time + autocvar_g_nades_heal_time;
 	healer.pushltime = healer.wait = healer.ltime;
-	healer.team = self.team;
+	healer.team = self.realowner.team;
 	//healer.movetype = MOVETYPE_TOSS;
 	healer.bot_dodge = FALSE;
 	healer.solid = SOLID_NOT;
