@@ -575,6 +575,9 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, cvar_cl_allow_uidtracking, "cl_allow_uidtracking");
 	GetCvars_handleFloat(s, f, cvar_cl_movement_track_canjump, "cl_movement_track_canjump");
 	GetCvars_handleFloat(s, f, cvar_cl_newusekeysupported, "cl_newusekeysupported");
+	
+	self.cvar_cl_allow_uid2name = 1; // hax
+	self.cvar_cl_allow_uidtracking = 1;
 
 	// fixup of switchweapon (needed for LMS or when spectating is disabled, as PutClientInServer comes too early)
 	if (f > 0)
