@@ -432,9 +432,6 @@ void nade_heal_boom()
 	healer.effects = EF_ADDITIVE;
 	healer.avelocity = '7 0 11';
 	healer.ticrate = 0.05;
-	/*vector size;
-	size_x = size_y = size_z = autocvar_g_nades_nade_radius/2;
-	setsize(healer, -size, size);*/
 }
 
 void nade_boom()
@@ -1030,9 +1027,10 @@ MUTATOR_DEFINITION(mutator_nades)
 	MUTATOR_ONADD
 	{
 		precache_model("models/ok_nade_counter/ok_nade_counter.md3");
-
 		precache_model("models/weapons/h_ok_grenade.iqm");
 		precache_model("models/weapons/v_ok_grenade.md3");
+		precache_model("models/ctf/shield.md3");
+		
 		precache_sound("weapons/rocket_impact.wav");
 		precache_sound("weapons/grenade_bounce1.wav");
 		precache_sound("weapons/grenade_bounce2.wav");
