@@ -369,7 +369,7 @@ string autocvar_menu_skin;
 float autocvar_r_fakelight;
 float autocvar_r_fullbright;
 float autocvar_r_letterbox;
-float autocvar_scoreboard_accuracy;
+var float autocvar_scoreboard_accuracy = 1;
 float autocvar_scoreboard_accuracy_nocolors;
 float autocvar_scoreboard_alpha_bg;
 var float autocvar_scoreboard_extras = 1;
