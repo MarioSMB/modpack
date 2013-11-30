@@ -305,7 +305,7 @@ string getwelcomemessage(void)
 	}
 	if(autocvar_g_start_weapon_laser == 0)
 		modifications = strcat(modifications, ", No start weapons");
-	if(autocvar_sv_gravity < 800)
+	if(autocvar_sv_gravity < stof(cvar_defstring("sv_gravity")))
 		modifications = strcat(modifications, ", Low gravity");
 	if(g_cloaked && !g_cts)
 		modifications = strcat(modifications, ", Cloaked");
