@@ -27,6 +27,7 @@ sys-post.qh
 ../common/command/shared_defs.qh
 ../common/net_notice.qh
 ../common/animdecide.qh
+../common/status_effects.qh
 
 autocvars.qh
 constants.qh
@@ -222,6 +223,8 @@ target_music.qc
 
 ../common/items.qc
 
+../common/status_effects.qc
+
 ../common/vehicles/vehicles_include.qc
 
 accuracy.qc
@@ -287,6 +290,7 @@ mutators/mutator_campcheck.qc
 mutators/mutator_zombie_apocalypse.qc
 mutators/mutator_walljump.qc
 mutators/mutator_hats.qc
+mutators/mutator_status_effects.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc

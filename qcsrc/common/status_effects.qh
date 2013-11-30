@@ -1,0 +1,69 @@
+#define STATUS_EFFECT_FIRST 1
+#define STATUS_EFFECT_MAXCOUNT 24
+float STATUS_EFFECT_COUNT;
+float STATUS_EFFECT_LAST;
+
+// stat types
+const float STAT_TYPE_NEGATIVE = 1;
+const float STAT_TYPE_POSITIVE = 2;
+const float STAT_TYPE_NOTIMER = 4;
+
+// entity properties of status effect info:
+.float status_effect[STATUS_EFFECT_MAXCOUNT]; // STATUS_EFFECT_...
+.string netname; // short name
+.string message; // human readable name
+.float spawnflags; // status effect type (negative, positive etc)
+entity status_effect_info[STATUS_EFFECT_MAXCOUNT];
+
+.entity status_effect_inflictor; // attacker that gave us effect
+
+.float status_effects_delay; // prevent instant killing
+
+entity dummy_statuseffects_info;
+
+#ifdef CSQC
+// CSQC function hooks
+void StatusEffects_Hook_View();
+
+#endif
+
+// dynamic status effect adding
+void register_status_effect(float id, float type, string shortname, string name);
+void register_status_effects_done();
+
+#define STATUS_EFFECT_2(id,type,shortname,name) \
+	float id; \
+	.float stat_statuseffect_##id; \
+	void RegisterStatusEffects_##id() \
+	{ \
+		STATUS_EFFECT_LAST = (id = STATUS_EFFECT_FIRST + STATUS_EFFECT_COUNT); \
+		++STATUS_EFFECT_COUNT; \
+		register_status_effect(id,type,shortname,name); \
+	} \
+	ACCUMULATE_FUNCTION(RegisterStatusEffects, RegisterStatusEffects_##id)
+#define STATUS_EFFECT(id,type,shortname,name) \
+	STATUS_EFFECT_2(STATUS_EFFECT_##id,type,shortname,name)
+
+#include "status_effects.qc"
+
+#undef STATUS_EFFECT
+ACCUMULATE_FUNCTION(RegisterStatusEffects, register_status_effects_done);
+
+
+#ifdef SVQC
+
+#define StatusEffect(ent,id) ent.stat_statuseffect_##id
+#define StatusEffectInfo(id) (get_statuseffectinfo(id))
+
+#define StatusEffect_Timed(ent,id) (time < StatusEffect(ent,id) && time >= ent.status_effects_delay)
+
+void ResetStatusEffects(entity ent);
+void StatusEffects_AddStats();
+
+#endif
+
+#ifdef CSQC
+
+#define StatusEffect(id) getstatf(STAT_STATUSEFFECT_##id)
+
+#endif

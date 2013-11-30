@@ -9,6 +9,8 @@
 	DEATHTYPE(DEATH_CRUSH,                  NO_MSG,                             DEATH_MURDER_CRUSH,            NORMAL_POS) \
 	DEATHTYPE(DEATH_CUSTOM,                 DEATH_SELF_CUSTOM,                  NO_MSG,                        NORMAL_POS) \
 	DEATHTYPE(DEATH_DROWN,                  DEATH_SELF_DROWN,                   DEATH_MURDER_DROWN,            NORMAL_POS) \
+	DEATHTYPE(DEATH_EFFECT_BURN,            DEATH_SELF_FIRE,                    DEATH_MURDER_FIRE,             DEATH_EFFECT_FIRST) \
+	DEATHTYPE(DEATH_EFFECT_DROWN,           DEATH_SELF_DROWN,                   DEATH_MURDER_DROWN,            DEATH_EFFECT_LAST) \
 	DEATHTYPE(DEATH_FALL,                   DEATH_SELF_FALL,                    DEATH_MURDER_FALL,             NORMAL_POS) \
 	DEATHTYPE(DEATH_FIRE,                   DEATH_SELF_FIRE,                    DEATH_MURDER_FIRE,             NORMAL_POS) \
 	DEATHTYPE(DEATH_GENERIC,                DEATH_SELF_GENERIC,                 NO_MSG,                        NORMAL_POS) \
@@ -99,6 +101,7 @@ DEATHTYPES
 #define DEATH_ISVEHICLE(t)            ((t) >= DEATH_VHFIRST && (t) <= DEATH_VHLAST)
 #define DEATH_ISTURRET(t)             ((t) >= DEATH_TURRET_FIRST && (t) <= DEATH_TURRET_LAST)
 #define DEATH_ISMONSTER(t)            ((t) >= DEATH_MONSTER_FIRST && (t) <= DEATH_MONSTER_LAST)
+#define DEATH_ISSTATUSEFFECT(t)       ((t) >= DEATH_EFFECT_FIRST && (t) <= DEATH_EFFECT_LAST)
 #define DEATH_WEAPONOFWEAPONDEATH(t)  ((t) & DEATH_WEAPONMASK)
 #define DEATH_ISWEAPON(t,w)           (!DEATH_ISSPECIAL(t) && DEATH_WEAPONOFWEAPONDEATH(t) == (w))
 #define DEATH_WEAPONOF(t)             (DEATH_ISSPECIAL(t) ? 0 : DEATH_WEAPONOFWEAPONDEATH(t))

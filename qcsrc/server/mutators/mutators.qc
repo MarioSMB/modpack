@@ -29,6 +29,7 @@ void mutators_add()
 	CHECK_MUTATOR_ADD("g_za", mutator_zombie_apocalypse, cvar("g_monsters"));
 	CHECK_MUTATOR_ADD("g_walljump", mutator_walljump, 1);
 	CHECK_MUTATOR_ADD("g_hats", mutator_hats, !cvar("g_overkill"));
+	CHECK_MUTATOR_ADD("g_status_effects", mutator_status_effects, !cvar("g_minstagib"));
 
 	#undef CHECK_MUTATOR_ADD
 }
