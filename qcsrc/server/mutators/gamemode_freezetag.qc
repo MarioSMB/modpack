@@ -410,6 +410,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 
 	entity o;
 	o = world;
+	if(self.frozen)
 	if(self.freezetag_frozen_timeout > 0 && time < self.freezetag_frozen_timeout)
 		self.iceblock.alpha = ICE_MIN_ALPHA + (ICE_MAX_ALPHA - ICE_MIN_ALPHA) * (self.freezetag_frozen_timeout - time) / (self.freezetag_frozen_timeout - self.freezetag_frozen_time);
 
