@@ -252,12 +252,17 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 
 	if(IS_PLAYER(frag_target))
 	{
-		if ((frag_deathtype == DEATH_FALL)  ||
-			(frag_deathtype == DEATH_DROWN) ||
-			(frag_deathtype == DEATH_SLIME) ||
-			(frag_deathtype == DEATH_LAVA))
-		{
+		if(frag_deathtype == DEATH_FALL)
 			frag_damage = 0;
+
+		if(!autocvar_g_minstagib_damagedbycontents)
+		switch(frag_deathtype)
+		{
+			case DEATH_DROWN:
+			case DEATH_SLIME:
+			case DEATH_LAVA:
+					frag_damage = 0;
+				break;
 		}
 
 		if(IS_PLAYER(frag_attacker))
