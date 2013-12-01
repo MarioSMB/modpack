@@ -4,6 +4,18 @@ float object_count;
 .entity object_attach;
 .string material;
 
+void sandbox_FixSize(entity e)
+{
+	e.mins_x = rint(e.mins_x);
+	e.mins_y = rint(e.mins_y);
+	e.mins_z = rint(e.mins_z);
+	
+	e.maxs_x = rint(e.maxs_x);
+	e.maxs_y = rint(e.maxs_y);
+	e.maxs_z = rint(e.maxs_z);
+}
+	
+
 .float touch_timer;
 void sandbox_ObjectFunction_Touch()
 {
@@ -89,6 +101,7 @@ void sandbox_ObjectEdit_Scale(entity e, float f)
 		e.scale = bound(autocvar_g_sandbox_object_scale_min, e.scale, autocvar_g_sandbox_object_scale_max);
 		setmodel(e, e.model); // reset mins and maxs based on mesh
 		setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
+		sandbox_FixSize(e);
 	}
 }
 
@@ -323,7 +336,7 @@ entity sandbox_ObjectPort_Load(string s, float database)
 			parent = e; // mark parent objects as such
 		}
 		// properties stored for all objects
-		setmodel(e, argv(argv_num));	++argv_num;
+		setmodel(e, argv(argv_num)); sandbox_FixSize(e);	++argv_num;
 		e.skin = stof(argv(argv_num));	++argv_num;
 		e.alpha = stof(argv(argv_num));	++argv_num;
 		e.colormod = stov(argv(argv_num));	++argv_num;
@@ -499,6 +512,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 
 				e = sandbox_ObjectSpawn(FALSE);
 				setmodel(e, argv(2));
+				sandbox_FixSize(e);
 
 				if(autocvar_g_sandbox_info > 0)
 					print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " spawned an object at origin ^3", vtos(e.origin), "\n"));
