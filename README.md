@@ -9,7 +9,7 @@ Requirements
 
 GMQCC (git://git.xonotic.org/xonotic/gmqcc.git)  
 Xonotic (http://xonotic.org/download or git://git.xonotic.org/xonotic/xonotic.git)  
-Content packs (https://dl.dropboxusercontent.com/u/91010597/zzz-misc_017.pk3 https://dl.dropboxusercontent.com/u/91010597/zzz-monsters_007.pk3 https://dl.dropboxusercontent.com/u/18995126/maps/zzz-quickmenu_001.pk3)
+Content packs (https://dl.dropboxusercontent.com/u/91010597/zzz-misc_017.pk3 https://dl.dropboxusercontent.com/u/91010597/zzz-monsters_007.pk3 https://dl.dropboxusercontent.com/u/18995126/maps/zzz-quickmenu_003.pk3)
 
 
 Usage
