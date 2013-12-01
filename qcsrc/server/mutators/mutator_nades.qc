@@ -381,33 +381,36 @@ void nade_heal_think()
 	float max_radius = autocvar_g_nades_nade_radius/self.maxs_x;
 	self.scale = min((1 - (self.ltime-time)/autocvar_g_nades_heal_time)*autocvar_g_nades_heal_time*4,1)*max_radius;
 
+}
+
+void nade_heal_touch()
+{
+	
 	float maxhealth;
 	float health_factor;
-	entity e;
-	for(e = findradius(self.origin, autocvar_g_nades_nade_radius); e; e = e.chain)
-		if(IS_PLAYER(e) || IS_MONSTER(e))
-		if(e.deadflag == DEAD_NO)
-		if(!e.frozen)
+	if(IS_PLAYER(other) || IS_MONSTER(other))
+	if(other.deadflag == DEAD_NO)
+	if(!other.frozen)
+	{
+		health_factor = autocvar_g_nades_heal_rate*self.ticrate;
+		if ( other != self.realowner )
 		{
-			health_factor = autocvar_g_nades_heal_rate*self.ticrate;
-			if ( e != self.realowner )
-			{
-				if ( SAME_TEAM(e,self) )
-					health_factor *= autocvar_g_nades_heal_friend;
-				else
-					health_factor *= autocvar_g_nades_heal_foe;
-			}
-			if ( health_factor > 0 )
-			{
-				pointparticles(particleeffectnum("healing_fx"), e.origin, '0 0 0', 1);
-				maxhealth = (IS_MONSTER(e)) ? e.max_health : autocvar_g_balance_health_start;
-				e.health = min(e.health+health_factor, maxhealth);
-			}
-			else if ( health_factor < 0 )
-			{
-				Damage(e,self,self.realowner,-health_factor,DEATH_NADE_HEAL,e.origin,'0 0 0');
-			}
+			if ( SAME_TEAM(other,self) )
+				health_factor *= autocvar_g_nades_heal_friend;
+			else
+				health_factor *= autocvar_g_nades_heal_foe;
 		}
+		if ( health_factor > 0 )
+		{
+			pointparticles(particleeffectnum("healing_fx"), other.origin, '0 0 0', 1);
+			maxhealth = (IS_MONSTER(other)) ? other.max_health : autocvar_g_balance_health_start;
+			other.health = min(other.health+health_factor, maxhealth);
+		}
+		else if ( health_factor < 0 )
+		{
+			Damage(other,self,self.realowner,-health_factor,DEATH_NADE_HEAL,other.origin,'0 0 0');
+		}
+	}
 }
 
 void nade_heal_boom()
@@ -421,17 +424,30 @@ void nade_heal_boom()
 	healer.think = nade_heal_think;
 	healer.nextthink = time;
 	healer.ltime = time + autocvar_g_nades_heal_time;
-	healer.pushltime = healer.wait = healer.ltime;
 	healer.team = self.realowner.team;
-	//healer.movetype = MOVETYPE_TOSS;
 	healer.bot_dodge = FALSE;
-	healer.solid = SOLID_NOT;
+	healer.solid = SOLID_TRIGGER;
+	healer.touch = nade_heal_touch;
+	
 	healer.colormod = '1 0 0';
 	setmodel(healer, "models/ctf/shield.md3");
+	//healer.scale = autocvar_g_nades_nade_radius/healer.maxs_x;
 	healer.scale = 0.01;
 	healer.effects = EF_ADDITIVE;
 	healer.avelocity = '7 0 11';
+	vector size = '1 1 1' * autocvar_g_nades_nade_radius / 2;
+	setsize(healer,-size,size);
 	healer.ticrate = 0.05;
+	
+	
+	/*WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
+	WriteByte(MSG_BROADCAST, TE_CSQC_HEALING_ORB);
+	WriteCoord(MSG_BROADCAST, healer.origin_x);
+	WriteCoord(MSG_BROADCAST, healer.origin_y);
+	WriteCoord(MSG_BROADCAST, healer.origin_z);
+	WriteByte(MSG_BROADCAST, autocvar_g_nades_nade_radius );
+	WriteByte(MSG_BROADCAST, autocvar_g_nades_heal_time );
+	WriteByte(MSG_BROADCAST, num_for_edict(healer));*/
 }
 
 void nade_boom()
@@ -1029,7 +1045,7 @@ MUTATOR_DEFINITION(mutator_nades)
 		precache_model("models/ok_nade_counter/ok_nade_counter.md3");
 		precache_model("models/weapons/h_ok_grenade.iqm");
 		precache_model("models/weapons/v_ok_grenade.md3");
-		precache_model("models/ctf/shield.md3");
+		//precache_model("models/ctf/shield.md3");
 		
 		precache_sound("weapons/rocket_impact.wav");
 		precache_sound("weapons/grenade_bounce1.wav");

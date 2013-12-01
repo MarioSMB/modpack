@@ -44,6 +44,7 @@ const float TE_CSQC_SVNOTICE = 113;
 const float TE_CSQC_MORNINGRESCUE = 114;
 const float TE_CSQC_SHOCKWAVEPARTICLE = 115;
 const float TE_CSQC_SPECINFO = 116;
+const float TE_CSQC_HEALING_ORB = 117;
 
 const float RACE_NET_CHECKPOINT_HIT_QUALIFYING = 0; // byte checkpoint, short time, short recordtime, string recordholder
 const float RACE_NET_CHECKPOINT_CLEAR = 1;
