@@ -101,6 +101,11 @@ MUTATOR_HOOKABLE(SpectateCopy);
 
 MUTATOR_HOOKABLE(ForbidThrowCurrentWeapon);
 	// returns 1 if throwing the current weapon shall not be allowed
+	
+MUTATOR_HOOKABLE(WeaponRateFactor);
+	// allows changing attack rate
+	// INPUT, OUTPUT:
+		float weapon_rate;
 
 MUTATOR_HOOKABLE(SetStartItems);
 	// adjusts {warmup_}start_{items,weapons,ammo_{cells,rockets,nails,shells,fuel}}

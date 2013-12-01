@@ -2,6 +2,7 @@
 STATUS_EFFECT(BURNING,STAT_TYPE_NEGATIVE,"burning","Burning");
 STATUS_EFFECT(DROWNING,STAT_TYPE_NEGATIVE | STAT_TYPE_NOTIMER,"drowning","Drowning");
 STATUS_EFFECT(SPAWNSHIELD,STAT_TYPE_POSITIVE,"spawnshield","Spawn shielded");
+STATUS_EFFECT(COLD,STAT_TYPE_NEGATIVE,"cold","Cold");
 #else
 
 // unfortunately, these can't be dynamic
@@ -9,6 +10,7 @@ STATUS_EFFECT(SPAWNSHIELD,STAT_TYPE_POSITIVE,"spawnshield","Spawn shielded");
 const float STAT_STATUSEFFECT_BURNING = 190;
 const float STAT_STATUSEFFECT_DROWNING = 191;
 const float STAT_STATUSEFFECT_SPAWNSHIELD = 192;
+const float STAT_STATUSEFFECT_COLD = 193;
 
 #ifdef SVQC
 
@@ -17,17 +19,18 @@ void ResetStatusEffects(entity ent)
 	StatusEffect(ent, STATUS_EFFECT_BURNING) = 0;
 	StatusEffect(ent, STATUS_EFFECT_DROWNING) = 0;
 	StatusEffect(ent, STATUS_EFFECT_SPAWNSHIELD) = time + autocvar_g_spawnshieldtime; // hax
+	StatusEffect(ent, STATUS_EFFECT_COLD) = 0;
 }
 
 void StatusEffects_AddStats()
 {
-	addstat(STAT_STATUSEFFECT_BURNING, AS_FLOAT, stat_statuseffect_STATUS_EFFECT_BURNING);
-	addstat(STAT_STATUSEFFECT_DROWNING, AS_FLOAT, stat_statuseffect_STATUS_EFFECT_DROWNING);
-	addstat(STAT_STATUSEFFECT_SPAWNSHIELD, AS_FLOAT, stat_statuseffect_STATUS_EFFECT_SPAWNSHIELD);
+	addstat(STAT_STATUSEFFECT_BURNING, AS_FLOAT, stat_STATUS_EFFECT_BURNING);
+	addstat(STAT_STATUSEFFECT_DROWNING, AS_FLOAT, stat_STATUS_EFFECT_DROWNING);
+	addstat(STAT_STATUSEFFECT_SPAWNSHIELD, AS_FLOAT, stat_STATUS_EFFECT_SPAWNSHIELD);
+	addstat(STAT_STATUSEFFECT_COLD, AS_FLOAT, stat_STATUS_EFFECT_COLD);
 }
 
 #endif
-
 #ifdef CSQC
 
 float StatusEffect_Stat(float id)
@@ -37,6 +40,7 @@ float StatusEffect_Stat(float id)
 		case STATUS_EFFECT_BURNING: return STAT_STATUSEFFECT_BURNING;
 		case STATUS_EFFECT_DROWNING: return STAT_STATUSEFFECT_DROWNING;
 		case STATUS_EFFECT_SPAWNSHIELD: return STAT_STATUSEFFECT_SPAWNSHIELD;
+		case STATUS_EFFECT_COLD: return STAT_STATUSEFFECT_COLD;
 	}
 	
 	return 0;
