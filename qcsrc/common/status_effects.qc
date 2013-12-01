@@ -6,11 +6,11 @@ STATUS_EFFECT(COLD,STAT_TYPE_NEGATIVE,"cold","Cold");
 #else
 
 // unfortunately, these can't be dynamic
-// use stats 190-214
-const float STAT_STATUSEFFECT_BURNING = 190;
-const float STAT_STATUSEFFECT_DROWNING = 191;
-const float STAT_STATUSEFFECT_SPAWNSHIELD = 192;
-const float STAT_STATUSEFFECT_COLD = 193;
+// use stats 180-214
+const float STAT_STATUSEFFECT_BURNING = 180;
+const float STAT_STATUSEFFECT_DROWNING = 181;
+const float STAT_STATUSEFFECT_SPAWNSHIELD = 182;
+const float STAT_STATUSEFFECT_COLD = 183;
 
 #ifdef SVQC
 
