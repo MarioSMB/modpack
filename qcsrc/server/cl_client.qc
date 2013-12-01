@@ -537,7 +537,8 @@ void PutClientInServer (void)
 
 		self.items = start_items;
 
-		self.spawnshieldtime = time + autocvar_g_spawnshieldtime;
+		if(!cvar("g_status_effects"))
+			self.spawnshieldtime = time + autocvar_g_spawnshieldtime;
 		self.pauserotarmor_finished = time + autocvar_g_balance_pause_armor_rot_spawn;
 		self.pauserothealth_finished = time + autocvar_g_balance_pause_health_rot_spawn;
 		self.pauserotfuel_finished = time + autocvar_g_balance_pause_fuel_rot_spawn;
@@ -649,8 +650,6 @@ void PutClientInServer (void)
 			if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
 				self.(weapon_load[j]) = cvar(strcat("g_balance_", e.netname, "_reload_ammo"));
 		}
-		
-		ResetStatusEffects(self);
 
 		oldself = self;
 		self = spot;
