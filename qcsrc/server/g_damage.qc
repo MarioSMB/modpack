@@ -784,6 +784,15 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			damage = 0;
 			force *= autocvar_g_freeze_frozen_force;
 		}
+		
+		if(targ.frozen && deathtype == DEATH_HURTTRIGGER && !autocvar_g_freeze_frozen_damage_trigger)
+		{
+			damage = 0;
+			entity oldself = self;
+			self = targ;
+			PutClientInServer();
+			self = oldself;
+		}
 
 		if(!g_minstagib)
 		{
