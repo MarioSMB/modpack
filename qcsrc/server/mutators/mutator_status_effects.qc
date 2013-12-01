@@ -19,6 +19,9 @@ MUTATOR_HOOKFUNCTION(effects_PlayerPhysics)
 
 MUTATOR_HOOKFUNCTION(effects_PlayerSpawn)
 {
+	if(!autocvar_g_status_effects)
+		return FALSE;
+
 	ResetStatusEffects(self);
 
 	if(time < game_starttime)
@@ -37,7 +40,7 @@ MUTATOR_HOOKFUNCTION(effects_PlayerDamage)
 
 MUTATOR_HOOKFUNCTION(effects_PlayerPowerups)
 {
-	if(self.deadflag || gameover || !IS_PLAYER(self) || time < game_starttime)
+	if(self.deadflag || gameover || !IS_PLAYER(self) || time < game_starttime || !autocvar_g_status_effects)
 		return FALSE;
 
 	if (self.waterlevel != WATERLEVEL_SUBMERGED)

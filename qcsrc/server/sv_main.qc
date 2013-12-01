@@ -20,7 +20,7 @@ void CreatureFrame (void)
 				self.dmgtime = 0;
 			}
 
-			if(!vehic && !projectile && !monster && (!IS_PLAYER(self) || !cvar("g_status_effects"))) // vehicles, monsters and projectiles don't drown
+			if(!vehic && !projectile && !monster && (!IS_PLAYER(self) || !autocvar_g_status_effects)) // vehicles, monsters and projectiles don't drown
 			{
 				if (self.waterlevel != WATERLEVEL_SUBMERGED)
 				{
