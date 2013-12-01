@@ -379,7 +379,16 @@ void Monster_Fade ()
 		setmodel(self, "null");
 	}
 	else
+	{
+		// number of monsters spawned with mobspawn command
+		totalspawned -= 1;
+
+		if(IS_CLIENT(self.realowner))
+		if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
+				self.realowner.monstercount -= 1;
+
 		SUB_SetFade(self, time + 3, 1);
+	}
 }
 
 float Monster_CanJump (vector vel)
@@ -854,7 +863,7 @@ void monster_die(entity attacker, float gibbed)
 	if(autocvar_g_monsters_score_spawned || !((self.spawnflags & MONSTERFLAG_SPAWNED) || (self.spawnflags & MONSTERFLAG_RESPAWNED)))
 		PlayerScore_Add(attacker, SP_SCORE, +autocvar_g_monsters_score_kill);
 
-	if(!Monster_CanRespawn(self) || gibbed)
+	if(!Monster_CanRespawn(self) && gibbed)
 	{
 		// number of monsters spawned with mobspawn command
 		totalspawned -= 1;
