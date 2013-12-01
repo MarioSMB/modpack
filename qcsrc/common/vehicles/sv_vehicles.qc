@@ -852,6 +852,9 @@ void vehicles_exit(float eject)
 	vehicles_setreturn(_vehicle);
 	vehicles_reset_colors();
 	_vehicle.owner = world;
+
+	CSQCMODEL_AUTOINIT();
+	
 	self = _oldself;
 
 	vehicles_exit_running = FALSE;
@@ -941,6 +944,14 @@ void vehicles_enter(entity pl, entity veh)
 	//veh.vehicle_hudmodel.drawonlytoclient = veh.owner;
 
 	veh.vehicle_hudmodel.viewmodelforclient = pl;
+	
+	tracebox(pl.origin, PL_MIN, PL_MAX, pl.origin, FALSE, pl);
+	if(!trace_startsolid)
+	{
+		pl.crouch = FALSE;
+		pl.view_ofs = PL_VIEW_OFS;
+		setsize (pl, PL_MIN, PL_MAX);
+	}
 
 	veh.event_damage	= vehicles_damage;
 	veh.nextthink		= 0;
@@ -1009,6 +1020,7 @@ void vehicles_enter(entity pl, entity veh)
 
 	entity oldself = self;
 	self = veh;
+	CSQCModel_UnlinkEntity();
 	VEH_ACTION(veh.vehicleid, VR_ENTER);
 	self = oldself;
 
@@ -1023,6 +1035,8 @@ void vehicles_think()
 		self.owner.vehicle_weapon2mode = self.vehicle_weapon2mode;
 	
 	VEH_ACTION(self.vehicleid, VR_THINK);
+	
+	CSQCMODEL_AUTOUPDATE();
 }
 
 // initialization
@@ -1057,16 +1071,23 @@ void vehicles_spawn()
 
 	// Return to spawn
 	self.angles = self.pos2;
-	setorigin(self, self.pos1 + '0 0 0');
+	setorigin(self, self.pos1);
 	// Show it
 	pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
 
 	if(self.vehicle_controller)
 		self.team = self.vehicle_controller.team;
 
+	entity head; // remove hooks (if any)
+	FOR_EACH_PLAYER(head)
+	if(head.hook.aiment == self)
+		RemoveGrapplingHook(head);
+
 	vehicles_reset_colors();
 
 	VEH_ACTION(self.vehicleid, VR_SPAWN);
+	
+	CSQCMODEL_AUTOINIT();
 }
 
 float vehicle_initialize(float vehicle_id, float nodrop)

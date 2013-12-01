@@ -31,12 +31,12 @@
 	CSQCMODEL_PROPERTY(64, float, ReadByte, WriteByte, solid) \
 	CSQCMODEL_IF(!isplayer) \
 		CSQCMODEL_PROPERTY(128, TAG_ENTITY_TYPE, ReadShort, WriteEntity, TAG_ENTITY_NAME) \
-		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, glowmod_x, 255, 0, 255) \
-		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, glowmod_y, 255, 0, 255) \
-		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, glowmod_z, 255, 0, 255) \
-		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, colormod_x, 255, 0, 255) \
-		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, colormod_y, 255, 0, 255) \
-		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, colormod_z, 255, 0, 255) \
+		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, glowmod_x, 254, -1, 254) \
+		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, glowmod_y, 254, -1, 254) \
+		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, glowmod_z, 254, -1, 254) \
+		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, colormod_x, 254, -1, 254) \
+		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, colormod_y, 254, -1, 254) \
+		CSQCMODEL_PROPERTY_SCALED(256, float, ReadByte, WriteByte, colormod_z, 254, -1, 254) \
 	CSQCMODEL_ENDIF \
 	CSQCMODEL_IF(isplayer) \
 		CSQCMODEL_PROPERTY(128, float, ReadByte, WriteByte, anim_state) \

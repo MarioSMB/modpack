@@ -784,6 +784,8 @@ float v_spiderbot(float req)
 			self.colormod			= self.tur_head.colormod = '-1 -1 -1';
 			self.frame				= 10;
 			self.movetype			= MOVETYPE_TOSS;
+			
+			CSQCModel_UnlinkEntity(); // networking the death scene would be a nightmare
 
 			return TRUE;
 		}

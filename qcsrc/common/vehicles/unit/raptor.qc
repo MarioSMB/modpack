@@ -219,6 +219,8 @@ void raptor_land()
 	}
 
 	self.nextthink  = time;
+	
+	CSQCMODEL_AUTOUPDATE();
 }
 
 void raptor_exit(float eject)
@@ -309,6 +311,7 @@ float raptor_frame()
 	player = self;
 	raptor = self.vehicle;
 	self   = raptor;
+	
 	vehicles_painframe();
 	/*
 	ftmp = vlen(self.velocity);
@@ -625,6 +628,11 @@ float raptor_takeoff()
 	player = self;
 	raptor = self.vehicle;
 	self   = raptor;
+	
+	self.nextthink = time;
+	CSQCMODEL_AUTOUPDATE();
+	self.nextthink = 0; // will this work?
+	
 	if(self.sound_nexttime < time)
 	{
 		self.sound_nexttime = time + 7.955812; //soundlength("vehicles/raptor_fly.wav");
@@ -691,12 +699,14 @@ void raptor_diethink()
 	if(time >= self.wait)
 		self.think = raptor_blowup;
 
-	if(random() < 0.1)
+	if(random() < 0.05)
 	{
 		sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 		pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	}
-	self.nextthink = time + 0.1;
+	self.nextthink = time;
+	
+	CSQCMODEL_AUTOUPDATE();
 }
 
 // If we dont do this ever now and then, the raptors rotors

@@ -464,7 +464,7 @@ void racer_think()
 	self.lastpushtime = time;
 	if(!pushdeltatime) return;
 
-	tracebox(self.origin, self.mins, self.maxs, self.origin - ('0 0 1' * autocvar_g_vehicle_racer_springlength), MOVE_NORMAL, self);
+	tracebox(self.origin, self.mins, self.maxs, self.origin - ('0 0 1' * autocvar_g_vehicle_racer_springlength), MOVE_NOMONSTERS, self);
 
 	vector df = self.velocity * -autocvar_g_vehicle_racer_friction;
 	df_z += (1 - trace_fraction) * autocvar_g_vehicle_racer_hoverpower + sin(time * 2) * (autocvar_g_vehicle_racer_springlength * 2);
@@ -475,6 +475,8 @@ void racer_think()
 
 	self.angles_x *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * pushdeltatime);
 	self.angles_z *= 1 - (autocvar_g_vehicle_racer_anglestabilizer * pushdeltatime);
+	
+	CSQCMODEL_AUTOUPDATE();
 }
 
 void racer_exit(float eject)
@@ -544,6 +546,16 @@ void racer_blowup()
 	setorigin(self, self.pos1);
 }
 
+void racer_blowup_think()
+{
+	self.nextthink = time;
+	
+	if(time >= self.delay)
+		racer_blowup();
+	
+	CSQCMODEL_AUTOUPDATE();
+}
+
 void racer_deadtouch()
 {
 	self.avelocity_x *= 0.7;
@@ -593,6 +605,7 @@ float v_racer(float req)
 			self.deadflag		= DEAD_DYING;
 			self.movetype		= MOVETYPE_BOUNCE;
 			self.wait			= time;
+			self.delay			= 2 + time + random() * 3;
 			self.cnt			= 1 + random() * 2;
 			self.touch			= racer_deadtouch;
 
@@ -607,8 +620,8 @@ float v_racer(float req)
 			self.velocity += '0 0 700';
 			self.colormod = '-0.5 -0.5 -0.5';
 
-			self.think = racer_blowup;
-			self.nextthink = 2 + time + random() * 3;
+			self.think = racer_blowup_think;
+			self.nextthink = time;
 	
 			return TRUE;
 		}
@@ -634,7 +647,7 @@ float v_racer(float req)
 			self.vehicle_health = autocvar_g_vehicle_racer_health;
 			self.vehicle_shield = autocvar_g_vehicle_racer_shield;
 
-			self.movetype	   = MOVETYPE_TOSS;
+			self.movetype	  = MOVETYPE_TOSS;
 			self.solid		  = SOLID_SLIDEBOX;
 			self.delay		  = time;
 			self.scale		  = 0.5;

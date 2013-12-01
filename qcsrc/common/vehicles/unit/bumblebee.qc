@@ -3,7 +3,7 @@ REGISTER_VEHICLE(
 /* VEH_##id   */ BUMBLEBEE,
 /* function   */ v_bumblebee,
 /* spawnflags */ VHF_DMGSHAKE,
-/* mins,maxs  */ '-130 -130 -130', '130 130 130',
+/* mins,maxs  */ '-245 -130 -130', '230 130 130',
 /* model	  */ "models/vehicles/bumblebee_body.dpm",
 /* head_model */ "",
 /* hud_model  */ "models/vehicles/spiderbot_cockpit.dpm",
@@ -419,7 +419,6 @@ float bumblebee_pilot_frame()
 	vehic = self.vehicle;
 	self   = vehic;
 
-
 	if(vehic.deadflag != DEAD_NO)
 	{
 		self = pilot;
@@ -625,11 +624,34 @@ float bumblebee_pilot_frame()
 	return 1;
 }
 
+void bumblebee_land()
+{
+	float hgt;
+
+	hgt = raptor_altitude(512);
+	self.velocity = (self.velocity * 0.9) + ('0 0 -1800' * (hgt / 256) * sys_frametime);
+	self.angles_x *= 0.95;
+	self.angles_z *= 0.95;
+
+	if(hgt < 16)
+		self.think	= vehicles_think;
+
+	self.nextthink = time;
+	
+	CSQCMODEL_AUTOUPDATE();
+}
+
 void bumblebee_exit(float eject)
 {
 	self.touch = vehicles_touch;
-	self.think = vehicles_think;
-	self.nextthink = time;
+
+	if(self.deadflag == DEAD_NO)
+	{
+		self.think = bumblebee_land;
+		self.nextthink  = time;
+	}
+	
+	self.movetype = MOVETYPE_TOSS;
 
 	if(!self.owner)
 		return;
@@ -637,9 +659,9 @@ void bumblebee_exit(float eject)
 	fixedmakevectors(self.angles);
 	vector spot;
 	if(vlen(self.velocity) > autocvar_g_vehicle_bumblebee_speed_forward * 0.5)
-		spot = self.origin + v_up * 128 + v_forward * 200;
+		spot = self.origin + v_up * 128 + v_forward * 300;
 	else
-		spot = self.origin + v_up * 128 - v_forward * 200;
+		spot = self.origin + v_up * 128 - v_forward * 300;
 
 	spot = vehicles_findgoodexit(spot);
 
@@ -665,7 +687,7 @@ void bumblebee_blowup()
 				 DEATH_VH_BUMB_DEATH, world);
 
 	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
-	pointparticles(particleeffectnum("explosion_large"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+	pointparticles(particleeffectnum("explosion_big"), (self.origin + '0 0 100') + (randomvec() * 80), '0 0 0', 1);
 
 	if(self.owner.deadflag == DEAD_DYING)
 		self.owner.deadflag = DEAD_DEAD;
@@ -742,12 +764,10 @@ float v_bumblebee(float req)
 		}
 		case VR_THINK:
 		{
-			self.movetype = MOVETYPE_TOSS;
-			
 			self.angles_z *= 0.8;
 			self.angles_x *= 0.8;
 			
-			self.nextthink = time + 0.05;
+			self.nextthink = time;
 			
 			if(!self.owner)
 			{
@@ -784,6 +804,8 @@ float v_bumblebee(float req)
 		case VR_DEATH:
 		{
 			entity oldself = self;
+			
+			CSQCModel_UnlinkEntity();
 	
 			// Hide beam
 			if(self.gun3.enemy || !wasfreed(self.gun3.enemy))
@@ -822,12 +844,14 @@ float v_bumblebee(float req)
 			_body.wait = time + 2 + (random() * 8);
 			_body.owner = self;
 			_body.enemy = self.enemy;
+			_body.scale = 1.5;
+			_body.angles = self.angles;
 			
 			pointparticles(particleeffectnum("explosion_medium"), findbetterlocation(self.origin, 16), '0 0 0', 1);
 			
 			self.health			= 0;
 			self.event_damage	= func_null;
-			self.solid			= SOLID_CORPSE;
+			self.solid			= SOLID_NOT;
 			self.takedamage		= DAMAGE_NO;
 			self.deadflag		= DEAD_DYING;
 			self.movetype		= MOVETYPE_NONE;

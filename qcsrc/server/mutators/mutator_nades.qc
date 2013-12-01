@@ -708,8 +708,8 @@ MUTATOR_HOOKFUNCTION(nades_CheckThrow)
 
 MUTATOR_HOOKFUNCTION(nades_VehicleEnter)
 {
-	if(other.nade)
-		toss_nade(other, '0 0 100', max(other.nade.wait, time + 0.05));
+	if(vh_player.nade)
+		toss_nade(vh_player, '0 0 100', max(vh_player.nade.wait, time + 0.05));
 
 	return FALSE;
 }
