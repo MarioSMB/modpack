@@ -787,10 +787,39 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		
 		if(targ.frozen && deathtype == DEATH_HURTTRIGGER && !autocvar_g_freeze_frozen_damage_trigger)
 		{
-			damage = 0;
+			pointparticles(particleeffectnum("teleport"), targ.origin, '0 0 0', 1);
+		
 			entity oldself = self;
 			self = targ;
-			PutClientInServer();
+			entity spot = SelectSpawnPoint (FALSE);
+			
+			if(spot)
+			{
+				damage = 0;
+				self.deadflag = DEAD_NO;
+
+				self.angles = spot.angles;
+				
+				self.effects = 0;
+				self.effects |= EF_TELEPORT_BIT;
+
+				self.angles_z = 0; // never spawn tilted even if the spot says to
+				self.fixangle = TRUE; // turn this way immediately
+				self.velocity = '0 0 0';
+				self.avelocity = '0 0 0';
+				self.punchangle = '0 0 0';
+				self.punchvector = '0 0 0';
+				self.oldvelocity = self.velocity;
+				
+				self.spawnorigin = spot.origin;
+				setorigin (self, spot.origin + '0 0 1' * (1 - self.mins_z - 24));
+				// don't reset back to last position, even if new position is stuck in solid
+				self.oldorigin = self.origin;
+				self.prevorigin = self.origin;
+				
+				pointparticles(particleeffectnum("teleport"), self.origin, '0 0 0', 1);
+			}
+			
 			self = oldself;
 		}
 
