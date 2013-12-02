@@ -157,7 +157,6 @@ void CSQC_Init(void)
 	DamageInfo_Precache();
 	Tuba_Precache();
 	CSQCPlayer_Precache();
-	HealingNade_Precache();
 
 	if(autocvar_cl_reticle)
 	{
@@ -1344,10 +1343,6 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_SHOCKWAVEPARTICLE:
 			Net_ReadShockwaveParticle();
-			bHandled = true;
-			break;
-		case TE_CSQC_HEALING_ORB:
-			Net_ReadHealingOrb();
 			bHandled = true;
 			break;
 		default:

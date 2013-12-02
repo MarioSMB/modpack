@@ -1045,7 +1045,7 @@ MUTATOR_DEFINITION(mutator_nades)
 		precache_model("models/ok_nade_counter/ok_nade_counter.md3");
 		precache_model("models/weapons/h_ok_grenade.iqm");
 		precache_model("models/weapons/v_ok_grenade.md3");
-		//precache_model("models/ctf/shield.md3");
+		precache_model("models/ctf/shield.md3");
 		
 		precache_sound("weapons/rocket_impact.wav");
 		precache_sound("weapons/grenade_bounce1.wav");
