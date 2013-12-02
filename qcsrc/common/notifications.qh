@@ -586,7 +586,8 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_CTF_PASS_REQUESTING,         1, 0, "s1",           CPID_CTF_PASS,       "0 0", _("^BGRequesting %s^BG to pass you the flag"), "") \
 	MULTITEAM_CENTER(1, CENTER_CTF_PASS_SENT_, 4,           1, 0, "s1",           CPID_CTF_PASS,       "0 0", _("^BGYou passed the ^TC^TT^BG flag to %s"), "") \
 	MULTITEAM_CENTER(1, CENTER_CTF_PICKUP_, 4,              0, 0, "",             CPID_CTF_LOWPRIO,    "0 0", _("^BGYou got the ^TC^TT^BG flag!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_TEAM,             0, 0, "",             CPID_CTF_LOWPRIO,    "0 0", _("^BGYou got your team's flag, return it!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_TEAM,             1, 0, "s1",           CPID_CTF_LOWPRIO,    "0 0", _("^BGYou got your %steam^BG's flag, return it!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_TEAM_ENEMY,       1, 0, "s1",           CPID_CTF_LOWPRIO,    "0 0", _("^BGYou got the %senemy^BG's flag, return it!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_ENEMY,            1, 0, "s1",           CPID_CTF_LOWPRIO,    "0 0", _("^BGThe %senemy^BG got your flag! Retrieve it!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_ENEMY_VERBOSE,    2, 0, "s1 s2 s1",     CPID_CTF_LOWPRIO,    "0 0", _("^BGThe %senemy (^BG%s%s)^BG got your flag! Retrieve it!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_ENEMY_TEAM,        1, 0, "s1",          CPID_CTF_LOWPRIO,    "0 0", _("^BGThe %senemy^BG got their flag! Retrieve it!"), "") \
