@@ -6,7 +6,7 @@ REGISTER_WEAPON(
 /* impulse   */ 7,
 /* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
 /* rating    */ BOT_PICKUP_RATING_MID,
-/* model     */ "campingrifle",
+/* model     */ "sniperrifle",
 /* shortname */ "rifle",
 /* fullname  */ _("Rifle")
 );
@@ -177,9 +177,9 @@ float w_rifle(float req)
 	}
 	else if (req == WR_PRECACHE)
 	{
-		precache_model ("models/weapons/g_campingrifle.md3");
-		precache_model ("models/weapons/v_campingrifle.md3");
-		precache_model ("models/weapons/h_campingrifle.iqm");
+		precache_model ("models/weapons/g_sniperrifle.md3");
+		precache_model ("models/weapons/v_sniperrifle.md3");
+		precache_model ("models/weapons/h_sniperrifle.iqm");
 		precache_sound ("weapons/campingrifle_fire.wav");
 		precache_sound ("weapons/campingrifle_fire2.wav");
 		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
