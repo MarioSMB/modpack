@@ -4,6 +4,8 @@ const float NADE_TYPE_ICE = 3;
 const float NADE_TYPE_TRANSLOCATE = 4;
 const float NADE_TYPE_SPAWN = 5;
 
+const float NADE_TYPE_LAST = 5; // a check to prevent using higher values & crashing
+
 vector Nade_Color(float nadeid)
 {
 	switch(nadeid)

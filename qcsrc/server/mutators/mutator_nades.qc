@@ -615,6 +615,8 @@ void nade_prime()
 	}
 	else
 		 n.nade_type = ((autocvar_g_nades_client_select) ? self.cvar_cl_nade_type : autocvar_g_nades_nade_type);
+		 
+	n.nade_type = bound(1, n.nade_type, NADE_TYPE_LAST);
 
 	setmodel(n, "null");
 	setattachment(n, self, "bip01 l hand");
@@ -762,6 +764,8 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 				self.nade_type = self.cvar_cl_nade_type;
 			else
 				self.nade_type = autocvar_g_nades_bonus_type;
+				
+			self.nade_type = bound(1, self.nade_type, NADE_TYPE_LAST);
 
 			if(self.bonus_nade_score >= 0 && autocvar_g_nades_bonus_score_max)
 				nades_GiveBonus(self, time_score / autocvar_g_nades_bonus_score_max);
