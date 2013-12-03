@@ -375,7 +375,6 @@ void nade_heal_think()
 	}
 	
 	self.nextthink = time;
-	//self.healer_lifetime = self.ltime - time;
 }
 
 void nade_heal_touch()

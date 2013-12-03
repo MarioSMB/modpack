@@ -14,7 +14,9 @@ float healer_send(entity to, float sf)
 		WriteCoord(MSG_ENTITY, self.origin_z);
 
 		WriteByte(MSG_ENTITY, self.healer_lifetime);
+		//WriteByte(MSG_ENTITY, self.ltime - time + 1);
 		WriteByte(MSG_ENTITY, self.healer_radius);
+		WriteByte(MSG_ENTITY, self.ltime - time + 1);
 	}
 
 	return TRUE;
@@ -32,7 +34,8 @@ void healer_draw()
 
 	self.alpha = (self.ltime - time) / self.healer_lifetime;
 	float max_radius = self.healer_radius/self.maxs_x;
-	self.scale = min((1 - (self.ltime-time)/self.healer_lifetime)*self.healer_lifetime*4,1)*max_radius;
+	self.scale = min((1 - self.alpha)*self.healer_lifetime*4,1)*max_radius;
+
 }
 
 void healer_setup()
@@ -54,7 +57,6 @@ void healer_setup()
 	self.avelocity = self.move_avelocity = '7 0 11';
 	self.colormod = '1 0 0';
 	self.renderflags |= RF_ADDITIVE;
-	self.ltime = time + self.healer_lifetime;
 }
 
 void ent_healer()
@@ -70,6 +72,8 @@ void ent_healer()
 
 		self.healer_lifetime = ReadByte();
 		self.healer_radius = ReadByte();
+		//self.ltime = time + self.healer_lifetime;
+		self.ltime = time + ReadByte();
 		
 		healer_setup();
 	}
