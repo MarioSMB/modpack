@@ -375,6 +375,7 @@ void nade_heal_think()
 	}
 	
 	self.nextthink = time;
+	//self.healer_lifetime = self.ltime - time;
 }
 
 void nade_heal_touch()
@@ -385,7 +386,7 @@ void nade_heal_touch()
 	if(other.deadflag == DEAD_NO)
 	if(!other.frozen)
 	{
-		health_factor = autocvar_g_nades_heal_rate*self.ticrate;
+		health_factor = autocvar_g_nades_heal_rate*frametime/2;
 		if ( other != self.realowner )
 		{
 			if ( SAME_TEAM(other,self) )
@@ -396,8 +397,9 @@ void nade_heal_touch()
 		if ( health_factor > 0 )
 		{
 			pointparticles(particleeffectnum("healing_fx"), other.origin, '0 0 0', 1);
-			maxhealth = (IS_MONSTER(other)) ? other.max_health : autocvar_g_balance_health_start;
+			maxhealth = (IS_MONSTER(other)) ? other.max_health : autocvar_g_pickup_healthmega_max;
 			other.health = min(other.health+health_factor, maxhealth);
+			other.pauserothealth_finished = max(other.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);  
 		}
 		else if ( health_factor < 0 )
 		{
@@ -424,7 +426,6 @@ void nade_heal_boom()
 	healer.healer_radius = autocvar_g_nades_nade_radius;
 	vector size = '1 1 1' * healer.healer_radius / 2;
 	setsize(healer,-size,size);
-	healer.ticrate = 0.05;
 	
 	Net_LinkEntity(healer, TRUE, 0, healer_send);
 	
@@ -567,7 +568,9 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 	}
 
 	self.health	  -= damage;
-	self.realowner = attacker;
+	
+	if ( self.nade_type != NADE_TYPE_HEAL || IS_PLAYER(attacker) )
+		self.realowner = attacker;
 
 	if(self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, nade_boom);

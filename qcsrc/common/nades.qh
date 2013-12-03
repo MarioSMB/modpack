@@ -56,5 +56,7 @@ float Nade_ProjectileFromID(float proj, float burn)
 	return 0;
 }
 
+#ifdef CSQC
 // misc functions
 void ent_healer();
+#endif // CSQC
