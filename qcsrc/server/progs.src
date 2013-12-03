@@ -227,6 +227,8 @@ target_music.qc
 
 ../common/vehicles/vehicles_include.qc
 
+../common/nades.qc
+
 accuracy.qc
 ../csqcmodellib/sv_model.qc
 csqcprojectile.qc

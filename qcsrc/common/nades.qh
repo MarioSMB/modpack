@@ -55,3 +55,6 @@ float Nade_ProjectileFromID(float proj, float burn)
 
 	return 0;
 }
+
+// misc functions
+void ent_healer();

@@ -1,0 +1,77 @@
+.float healer_lifetime;
+.float healer_radius;
+
+#ifdef SVQC
+float healer_send(entity to, float sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_HEALING_ORB);
+	WriteByte(MSG_ENTITY, sf);
+
+	if(sf & 1)
+	{
+		WriteCoord(MSG_ENTITY, self.origin_x);
+		WriteCoord(MSG_ENTITY, self.origin_y);
+		WriteCoord(MSG_ENTITY, self.origin_z);
+
+		WriteByte(MSG_ENTITY, self.healer_lifetime);
+		WriteByte(MSG_ENTITY, self.healer_radius);
+	}
+
+	return TRUE;
+}
+#endif // SVQC
+
+#ifdef CSQC
+.float ltime;
+void healer_draw()
+{
+	float dt = time - self.move_time;
+	self.move_time = time;
+	if(dt <= 0)
+		return;
+
+	self.alpha = (self.ltime - time) / self.healer_lifetime;
+	float max_radius = self.healer_radius/self.maxs_x;
+	self.scale = min((1 - (self.ltime-time)/self.healer_lifetime)*self.healer_lifetime*4,1)*max_radius;
+}
+
+void healer_setup()
+{
+	setmodel(self, "models/ctf/shield.md3");
+
+	setorigin(self, self.origin);
+	
+	
+	vector size = '1 1 1' * self.healer_radius / 2;
+	setsize(self,-size,size);
+
+	self.draw = healer_draw;
+	self.health = 255;
+	self.movetype = MOVETYPE_NONE;
+	self.solid = SOLID_NOT;
+	self.drawmask = MASK_NORMAL;
+	self.scale = 0.01;
+	self.avelocity = self.move_avelocity = '7 0 11';
+	self.colormod = '1 0 0';
+	self.renderflags |= RF_ADDITIVE;
+	self.ltime = time + self.healer_lifetime;
+}
+
+void ent_healer()
+{
+	float sf = ReadByte();
+
+	if(sf & TNSF_SETUP)
+	{
+		self.origin_x = ReadCoord();
+		self.origin_y = ReadCoord();
+		self.origin_z = ReadCoord();
+		setorigin(self, self.origin);
+
+		self.healer_lifetime = ReadByte();
+		self.healer_radius = ReadByte();
+		
+		healer_setup();
+	}
+}
+#endif // CSQC

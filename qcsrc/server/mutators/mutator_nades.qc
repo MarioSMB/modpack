@@ -368,24 +368,17 @@ void nade_spawn_boom()
 
 void nade_heal_think()
 {
-	
 	if(time >= self.ltime)
 	{
 		remove(self);
 		return;
 	}
 	
-	self.nextthink = time+self.ticrate;
-	
-	self.alpha = (self.ltime - time) / autocvar_g_nades_heal_time;
-	float max_radius = autocvar_g_nades_nade_radius/self.maxs_x;
-	self.scale = min((1 - (self.ltime-time)/autocvar_g_nades_heal_time)*autocvar_g_nades_heal_time*4,1)*max_radius;
-
+	self.nextthink = time;
 }
 
 void nade_heal_touch()
 {
-	
 	float maxhealth;
 	float health_factor;
 	if(IS_PLAYER(other) || IS_MONSTER(other))
@@ -419,35 +412,25 @@ void nade_heal_boom()
 	healer = spawn();
 	healer.owner = self.owner;
 	healer.realowner = self.realowner;
-	healer.origin = self.origin;
-	setorigin(healer, healer.origin);
-	healer.think = nade_heal_think;
-	healer.nextthink = time;
-	healer.ltime = time + autocvar_g_nades_heal_time;
+	setorigin(healer, self.origin);
+	healer.healer_lifetime = autocvar_g_nades_heal_time; // save the cvar
+	healer.ltime = time + healer.healer_lifetime;
 	healer.team = self.realowner.team;
 	healer.bot_dodge = FALSE;
 	healer.solid = SOLID_TRIGGER;
 	healer.touch = nade_heal_touch;
-	
-	healer.colormod = '1 0 0';
+
 	setmodel(healer, "models/ctf/shield.md3");
-	//healer.scale = autocvar_g_nades_nade_radius/healer.maxs_x;
-	healer.scale = 0.01;
-	healer.effects = EF_ADDITIVE;
-	healer.avelocity = '7 0 11';
-	vector size = '1 1 1' * autocvar_g_nades_nade_radius / 2;
+	healer.healer_radius = autocvar_g_nades_nade_radius;
+	vector size = '1 1 1' * healer.healer_radius / 2;
 	setsize(healer,-size,size);
 	healer.ticrate = 0.05;
 	
+	Net_LinkEntity(healer, TRUE, 0, healer_send);
 	
-	/*WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_CSQC_HEALING_ORB);
-	WriteCoord(MSG_BROADCAST, healer.origin_x);
-	WriteCoord(MSG_BROADCAST, healer.origin_y);
-	WriteCoord(MSG_BROADCAST, healer.origin_z);
-	WriteByte(MSG_BROADCAST, autocvar_g_nades_nade_radius );
-	WriteByte(MSG_BROADCAST, autocvar_g_nades_heal_time );
-	WriteByte(MSG_BROADCAST, num_for_edict(healer));*/
+	healer.think = nade_heal_think;
+	healer.nextthink = time;
+	healer.SendFlags |= 1;
 }
 
 void nade_boom()
