@@ -290,8 +290,17 @@ void ctf_Handle_Retrieve(entity flag, entity player)
 	flag.owner.flagcarried = flag;
 
 	// reset flag
-	setattachment(flag, player, "");
-	setorigin(flag, FLAG_CARRY_OFFSET);
+	if(player.vehicle)
+	{
+		setattachment(flag, player.vehicle, "");
+		setorigin(flag, VEHICLE_FLAG_OFFSET);
+		flag.scale = VEHICLE_FLAG_SCALE;
+	}
+	else
+	{
+		setattachment(flag, player, "");
+		setorigin(flag, FLAG_CARRY_OFFSET);
+	}
 	flag.movetype = MOVETYPE_NONE;
 	flag.takedamage = DAMAGE_NO;
 	flag.solid = SOLID_NOT;
@@ -512,8 +521,17 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	// attach the flag to the player
 	flag.owner = player;
 	player.flagcarried = flag;
-	setattachment(flag, player, "");
-	setorigin(flag, FLAG_CARRY_OFFSET);
+	if(player.vehicle)
+	{
+		setattachment(flag, player.vehicle, "");
+		setorigin(flag, VEHICLE_FLAG_OFFSET);
+		flag.scale = VEHICLE_FLAG_SCALE;
+	}
+	else
+	{
+		setattachment(flag, player, "");
+		setorigin(flag, FLAG_CARRY_OFFSET);
+	}
 
 	// flag setup
 	flag.movetype = MOVETYPE_NONE;

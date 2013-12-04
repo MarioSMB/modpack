@@ -944,14 +944,11 @@ void vehicles_enter(entity pl, entity veh)
 	//veh.vehicle_hudmodel.drawonlytoclient = veh.owner;
 
 	veh.vehicle_hudmodel.viewmodelforclient = pl;
-	
+
 	tracebox(pl.origin, PL_MIN, PL_MAX, pl.origin, FALSE, pl);
-	if(!trace_startsolid)
-	{
-		pl.crouch = FALSE;
-		pl.view_ofs = PL_VIEW_OFS;
-		setsize (pl, PL_MIN, PL_MAX);
-	}
+	pl.crouch = FALSE;
+	pl.view_ofs = PL_VIEW_OFS;
+	setsize (pl, PL_MIN, PL_MAX);
 
 	veh.event_damage	= vehicles_damage;
 	veh.nextthink		= 0;
@@ -960,7 +957,6 @@ void vehicles_enter(entity pl, entity veh)
 	pl.solid			= SOLID_NOT;
 	pl.movetype			= MOVETYPE_NOCLIP;
 	pl.alpha			= -1;
-	pl.vehicle			= veh;
 	pl.event_damage		= func_null;
 	pl.view_ofs			= '0 0 0';
 	veh.colormap		= pl.colormap;
@@ -1015,8 +1011,6 @@ void vehicles_enter(entity pl, entity veh)
 	vh_player = pl;
 	vh_vehicle = veh;
 	MUTATOR_CALLHOOK(VehicleEnter);
-	pl = vh_player;
-	veh = vh_vehicle;
 
 	entity oldself = self;
 	self = veh;
