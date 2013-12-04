@@ -25,6 +25,8 @@ MUTATOR_HOOKFUNCTION(campcheck_PlayerThink)
 {
 	if(IS_PLAYER(self))
 	if(self.deadflag == DEAD_NO)
+	if(!self.frozen)
+	if(!self.BUTTON_CHAT)
 	if(autocvar_g_campcheck_interval)
 	{
 		vector dist;
