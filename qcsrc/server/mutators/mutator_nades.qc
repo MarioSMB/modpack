@@ -379,6 +379,16 @@ void nade_heal_think()
 
 void nade_heal_touch()
 {
+	float particles;
+	
+	if(time >= self.nade_special_time)
+	{
+		self.nade_special_time = time+0.1;
+		particles = 1;
+	}
+	else
+		particles = 0;
+	
 	float maxhealth;
 	float health_factor;
 	if(IS_PLAYER(other) || IS_MONSTER(other))
@@ -395,7 +405,8 @@ void nade_heal_touch()
 		}
 		if ( health_factor > 0 )
 		{
-			pointparticles(particleeffectnum("healing_fx"), other.origin, '0 0 0', 1);
+			if ( particles )
+				pointparticles(particleeffectnum("healing_fx"), other.origin, '0 0 0', 1);
 			maxhealth = (IS_MONSTER(other)) ? other.max_health : autocvar_g_pickup_healthmega_max;
 			other.health = min(other.health+health_factor, maxhealth);
 			other.pauserothealth_finished = max(other.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);  
@@ -407,10 +418,11 @@ void nade_heal_touch()
 		
 	}
 	
-	if ( IS_REAL_CLIENT(other) )
+	if ( IS_REAL_CLIENT(other) || IS_VEHICLE(other) )
 	{
-		other.stat_healing_orb = time+0.1;
-		other.stat_healing_orb_alpha = 0.75 * (self.ltime - time) / self.healer_lifetime;
+		entity show_red = IS_VEHICLE(other) ? other.owner : other;
+		show_red.stat_healing_orb = time+0.1;
+		show_red.stat_healing_orb_alpha = 0.75 * (self.ltime - time) / self.healer_lifetime;
 	}
 }
 
