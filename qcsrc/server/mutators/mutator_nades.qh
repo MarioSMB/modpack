@@ -7,6 +7,7 @@
 .float nade_type;
 .entity nade_damage_target;
 .float cvar_cl_nade_type;
+.float toss_time;
 
 void toss_nade(entity e, vector _velocity, float _time);
 

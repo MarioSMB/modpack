@@ -553,6 +553,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 	_nade.angles = vectoangles(_nade.velocity);
 	_nade.flags = FL_PROJECTILE;
 	_nade.projectiledeathtype = DEATH_NADE;
+	_nade.toss_time = time;
 
 	nade_spawn(_nade);
 
@@ -727,8 +728,8 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 		key_pressed = self.button16; // if hook/jetpack is enabled, use an alternate key
 
 	if(self.nade)
-		if(self.nade.wait - 0.1 <= time)
-			toss_nade(self, '0 0 0', time + 0.05);
+	if(self.nade.wait - 0.1 <= time)
+		toss_nade(self, '0 0 0', time + 0.05);
 
 	if(CanThrowNade())
 	if(self.nade_refire < time)
@@ -846,6 +847,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerSpawn)
 MUTATOR_HOOKFUNCTION(nades_PlayerDies)
 {
 	if(frag_target.nade)
+	if(!frag_target.frozen || !autocvar_g_freeze_revive_nade)
 		toss_nade(frag_target, '0 0 100', max(frag_target.nade.wait, time + 0.05));
 
 	float killcount_bonus = ((frag_attacker.killcount >= 1) ? bound(0, autocvar_g_nades_bonus_score_minor * frag_attacker.killcount, autocvar_g_nades_bonus_score_medium) : autocvar_g_nades_bonus_score_minor);
@@ -862,6 +864,26 @@ MUTATOR_HOOKFUNCTION(nades_PlayerDies)
 
 	nades_RemoveBonus(frag_target);
 
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(nades_PlayerDamage)
+{
+	if(frag_target.frozen)
+	if(autocvar_g_freeze_revive_nade)
+	if(frag_attacker == frag_target)
+	if(frag_deathtype == DEATH_NADE)
+	if(time - frag_inflictor.toss_time <= 0.1)
+	{
+		Unfreeze(frag_target);
+		frag_target.health = autocvar_g_freeze_revive_nade_health;
+		pointparticles(particleeffectnum("iceorglass"), frag_target.origin, '0 0 0', 3);
+		frag_damage = 0;
+		frag_force = '0 0 0';
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_NADE, frag_target.netname);
+		Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_FREEZETAG_REVIVE_SELF);
+	}
+	
 	return FALSE;
 }
 
@@ -915,7 +937,8 @@ MUTATOR_DEFINITION(mutator_nades)
 	MUTATOR_HOOK(VehicleEnter, nades_VehicleEnter, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, nades_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, nades_PlayerSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDies, nades_PlayerDies, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDies, nades_PlayerDies, CBC_ORDER_LAST);
+	MUTATOR_HOOK(PlayerDamage_Calculate, nades_PlayerDamage, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(MonsterDies, nades_MonsterDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, nades_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, nades_RemovePlayer, CBC_ORDER_ANY);

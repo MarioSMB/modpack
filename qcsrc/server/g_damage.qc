@@ -555,6 +555,11 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 
 void Ice_Think()
 {
+	if(!self.owner.frozen || self.owner.iceblock != self)
+	{
+		remove(self);
+		return;
+	}
 	setorigin(self, self.owner.origin - '0 0 16');
 	self.nextthink = time;
 }
@@ -757,6 +762,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 		// should this be changed at all? If so, in what way?
 		frag_attacker = attacker;
+		frag_inflictor = inflictor;
 		frag_target = targ;
 		frag_damage = damage;
 		frag_force = force;
@@ -778,7 +784,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				targ.health = autocvar_g_freeze_revive_falldamage_health;
 				pointparticles(particleeffectnum("iceorglass"), targ.origin, '0 0 0', 3);
 				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, targ.netname);
-				Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_FREEZETAG_REVIVE_FALL);
+				Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_FREEZETAG_REVIVE_SELF);
 			}
 
 			damage = 0;

@@ -1301,6 +1301,8 @@ float autocvar_g_freeze_norespawn;
 float autocvar_g_freeze_revive_minhealth;
 float autocvar_g_freeze_revive_falldamage;
 float autocvar_g_freeze_revive_falldamage_health;
+float autocvar_g_freeze_revive_nade;
+float autocvar_g_freeze_revive_nade_health;
 float autocvar_g_freeze_frozen_force;
 float autocvar_g_freeze_frozen_damage_trigger;
 float autocvar_g_freeze_respawn_time;
