@@ -837,6 +837,7 @@ float v_spiderbot(float req)
 			self.vehicle_health = autocvar_g_vehicle_spiderbot_health;
 			self.vehicle_shield = autocvar_g_vehicle_spiderbot_shield;
 			self.max_health = self.vehicle_health;
+			self.pushable = TRUE; // spiderbot can use jumppads
 
 			return TRUE;
 		}

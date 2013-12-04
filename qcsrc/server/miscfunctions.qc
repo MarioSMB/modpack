@@ -2469,12 +2469,11 @@ float LostMovetypeFollow(entity ent)
 
 float isPushable(entity e)
 {
-	if(IS_VEHICLE(e))
-	if(e.vehicleid != VEH_SPIDERBOT)
-		return FALSE; // no pushing vehicles
-	if(e.iscreature)
-		return TRUE;
 	if(e.pushable)
+		return TRUE;
+	if(IS_VEHICLE(e))
+		return FALSE;
+	if(e.iscreature)
 		return TRUE;
 	switch(e.classname)
 	{
