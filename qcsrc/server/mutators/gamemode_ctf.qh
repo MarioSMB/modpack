@@ -134,8 +134,6 @@ float havocbot_ctf_middlepoint_radius;
 
 void havocbot_role_ctf_setrole(entity bot, float role);
 
-.float fc_waskilled;
-
 // team checking
 #define CTF_SAMETEAM(a,b) (autocvar_g_ctf_reverse ? DIFF_TEAM(a,b) : SAME_TEAM(a,b))
 #define CTF_DIFFTEAM(a,b) (autocvar_g_ctf_reverse ? SAME_TEAM(a,b) : DIFF_TEAM(a,b))

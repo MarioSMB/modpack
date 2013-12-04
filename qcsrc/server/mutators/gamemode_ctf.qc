@@ -420,7 +420,6 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 	float old_time, new_time;
 
 	if(!player) { return; } // without someone to give the reward to, we can't possibly cap
-	if(player.fc_waskilled) { return; } // player died, so don't cap
 	if(CTF_DIFFTEAM(player, flag)) { return; }
 
 	nades_GiveBonus(player, autocvar_g_nades_bonus_score_high );
@@ -511,7 +510,6 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	entity tmp_entity; // temporary entity
 
 	// attach the flag to the player
-	player.fc_waskilled = FALSE;
 	flag.owner = player;
 	player.flagcarried = flag;
 	setattachment(flag, player, "");
@@ -1874,7 +1872,11 @@ MUTATOR_HOOKFUNCTION(ctf_PlayerDies)
 	}
 
 	if(frag_target.flagcarried)
-		{ ctf_Handle_Throw(frag_target, world, DROP_NORMAL); frag_target.fc_waskilled = TRUE; }
+	{
+		entity tmp_entity = frag_target.flagcarried;
+		ctf_Handle_Throw(frag_target, world, DROP_NORMAL);
+		tmp_entity.ctf_dropper = world;
+	}
 
 	return FALSE;
 }
