@@ -15,8 +15,9 @@ float healer_send(entity to, float sf)
 
 		WriteByte(MSG_ENTITY, self.healer_lifetime);
 		//WriteByte(MSG_ENTITY, self.ltime - time + 1);
-		WriteByte(MSG_ENTITY, self.healer_radius);
-		WriteByte(MSG_ENTITY, self.ltime - time + 1);
+		WriteShort(MSG_ENTITY, self.healer_radius);
+		// round time delta to a 1/10th of a second
+		WriteByte(MSG_ENTITY, (self.ltime - time)*10.0+0.5);
 	}
 
 	return TRUE;
@@ -71,10 +72,10 @@ void ent_healer()
 		setorigin(self, self.origin);
 
 		self.healer_lifetime = ReadByte();
-		self.healer_radius = ReadByte();
+		self.healer_radius = ReadShort();
+		self.ltime = time + ReadByte()/10.0;
 		//self.ltime = time + self.healer_lifetime;
-		self.ltime = time + ReadByte();
-		
+
 		healer_setup();
 	}
 }
