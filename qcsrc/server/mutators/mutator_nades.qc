@@ -404,6 +404,13 @@ void nade_heal_touch()
 		{
 			Damage(other,self,self.realowner,-health_factor,DEATH_NADE_HEAL,other.origin,'0 0 0');
 		}
+		
+	}
+	
+	if ( IS_REAL_CLIENT(other) )
+	{
+		other.stat_healing_orb = time+0.1;
+		other.stat_healing_orb_alpha = 0.75 * (self.ltime - time) / self.healer_lifetime;
 	}
 }
 
@@ -986,6 +993,8 @@ MUTATOR_HOOKFUNCTION(nades_SpectateCopy)
 	self.nade_type = other.nade_type;
 	self.bonus_nades = other.bonus_nades;
 	self.bonus_nade_score = other.bonus_nade_score;
+	self.stat_healing_orb = other.stat_healing_orb;
+	self.stat_healing_orb_alpha = other.stat_healing_orb_alpha;
 	return FALSE;
 }
 

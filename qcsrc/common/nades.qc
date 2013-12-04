@@ -34,8 +34,7 @@ void healer_draw()
 		return;
 
 	self.alpha = (self.ltime - time) / self.healer_lifetime;
-	float max_radius = self.healer_radius/self.maxs_x;
-	self.scale = min((1 - self.alpha)*self.healer_lifetime*4,1)*max_radius;
+	self.scale = min((1 - self.alpha)*self.healer_lifetime*4,1)*self.healer_radius;
 
 }
 
@@ -45,9 +44,10 @@ void healer_setup()
 
 	setorigin(self, self.origin);
 	
-	
+	float model_radius = self.maxs_x;
 	vector size = '1 1 1' * self.healer_radius / 2;
 	setsize(self,-size,size);
+	self.healer_radius = self.healer_radius/model_radius*0.6;
 
 	self.draw = healer_draw;
 	self.health = 255;
