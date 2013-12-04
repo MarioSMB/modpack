@@ -403,10 +403,13 @@ void nade_heal_touch()
 		}
 		if ( health_factor > 0 )
 		{
-			if ( self.nade_show_particles )
-				pointparticles(particleeffectnum("healing_fx"), other.origin, '0 0 0', 1);
 			maxhealth = (IS_MONSTER(other)) ? other.max_health : autocvar_g_pickup_healthmega_max;
-			other.health = min(other.health+health_factor, maxhealth);
+			if ( other.health < maxhealth )
+			{
+				if ( self.nade_show_particles )
+					pointparticles(particleeffectnum("healing_fx"), other.origin, '0 0 0', 1);
+				other.health = min(other.health+health_factor, maxhealth);
+			}
 			other.pauserothealth_finished = max(other.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);  
 		}
 		else if ( health_factor < 0 )
