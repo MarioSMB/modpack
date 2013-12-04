@@ -375,20 +375,18 @@ void nade_heal_think()
 	}
 	
 	self.nextthink = time;
+	
+	if(time >= self.nade_special_time)
+	{
+		self.nade_special_time = time+0.25;
+		self.nade_show_particles = 1;
+	}
+	else
+		self.nade_show_particles = 0;
 }
 
 void nade_heal_touch()
 {
-	float particles;
-	
-	if(time >= self.nade_special_time)
-	{
-		self.nade_special_time = time+0.1;
-		particles = 1;
-	}
-	else
-		particles = 0;
-	
 	float maxhealth;
 	float health_factor;
 	if(IS_PLAYER(other) || IS_MONSTER(other))
@@ -405,7 +403,7 @@ void nade_heal_touch()
 		}
 		if ( health_factor > 0 )
 		{
-			if ( particles )
+			if ( self.nade_show_particles )
 				pointparticles(particleeffectnum("healing_fx"), other.origin, '0 0 0', 1);
 			maxhealth = (IS_MONSTER(other)) ? other.max_health : autocvar_g_pickup_healthmega_max;
 			other.health = min(other.health+health_factor, maxhealth);
