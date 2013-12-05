@@ -820,8 +820,8 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 				FOR_EACH_REALCLIENT(tmp_player)
 				switch(tmp_player.cvar_cl_autovote)
 				{
-					case "yes": tmp_player.vote_selection = VOTE_SELECT_ACCEPT; print_to(tmp_player, "You automatically voted yes\n"); break;
-					case "no": tmp_player.vote_selection = VOTE_SELECT_REJECT; print_to(tmp_player, "You automatically voted no\n"); break;
+					case "yes": tmp_player.vote_selection = VOTE_SELECT_ACCEPT; print_to(tmp_player, "You automatically accepted the vote\n"); break;
+					case "no": tmp_player.vote_selection = VOTE_SELECT_REJECT; print_to(tmp_player, "You automatically rejected the vote\n"); break;
 					case "abstain": tmp_player.vote_selection = VOTE_SELECT_ABSTAIN; print_to(tmp_player, "You automatically abstained from the vote\n"); break;
 					default: break;
 				}
