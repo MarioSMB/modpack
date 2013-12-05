@@ -4,7 +4,7 @@ void ok_DecreaseCharge(entity ent, float wep)
 
 	entity wepent = get_weaponinfo(wep);
 
-	if(wepent.netname == "")
+	if(wepent.weapon == 0)
 		return; // dummy
 
 	ent.ammo_charge[wep] -= cvar(sprintf("g_overkill_ammo_decharge_%s", wepent.netname));
@@ -14,12 +14,11 @@ void ok_IncreaseCharge(entity ent, float wep)
 {
 	entity wepent = get_weaponinfo(wep);
 
-	if(wepent.netname == "")
+	if(wepent.weapon == 0)
 		return; // dummy
 
 	if(ent.ok_use_ammocharge)
-	if(!ent.BUTTON_ATCK)
-	if(ent.ammo_charge[wep] <= autocvar_g_overkill_ammo_charge_limit)
+	if(!ent.BUTTON_ATCK) // not while attacking?
 		ent.ammo_charge[wep] = min(autocvar_g_overkill_ammo_charge_limit, ent.ammo_charge[wep] + cvar(sprintf("g_overkill_ammo_charge_rate_%s", wepent.netname)) * frametime / W_TICSPERFRAME);
 }
 
@@ -29,10 +28,10 @@ float ok_CheckWeaponCharge(entity ent, float wep)
 
 	entity wepent = get_weaponinfo(wep);
 
-	if(wepent.netname == "")
+	if(wepent.weapon == 0)
 		return 0; // dummy
 
-	return !(ent.ammo_charge[wep] < cvar(sprintf("g_overkill_ammo_decharge_%s", wepent.netname)));
+	return (ent.ammo_charge[wep] >= cvar(sprintf("g_overkill_ammo_decharge_%s", wepent.netname)));
 }
 
 void start_hmg()
@@ -132,7 +131,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 
 	if(self.BUTTON_ATCK2)
 	if(!forbidWeaponUse() || self.weapon_blocked) // allow if weapon is blocked
-	if(self.jump_interval <= time)
+	if(time >= self.jump_interval)
 	{
 		self.jump_interval = time + autocvar_g_balance_laser_primary_refire * W_WeaponRateFactor();
 		makevectors(self.v_angle);

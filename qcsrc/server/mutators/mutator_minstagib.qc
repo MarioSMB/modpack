@@ -256,7 +256,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 	if(IS_PLAYER(frag_target))
 	{
 		if(frag_deathtype == DEATH_FALL)
-			frag_damage = 0;
+			frag_damage = 0; // never count fall damage
 
 		if(!autocvar_g_minstagib_damagedbycontents)
 		switch(frag_deathtype)
@@ -264,33 +264,34 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 			case DEATH_DROWN:
 			case DEATH_SLIME:
 			case DEATH_LAVA:
-					frag_damage = 0;
+				frag_damage = 0;
 				break;
 		}
 
 		if(IS_PLAYER(frag_attacker))
-		if(DEATH_ISWEAPON(frag_deathtype, WEP_MINSTANEX))
-		if(frag_target.armorvalue)
 		{
-			frag_target.armorvalue -= 1;
-			Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_MINSTA_LIVES_REMAINING, frag_target.armorvalue);
-			frag_damage = 0;
-			frag_target.hitsound += 1;
-			frag_attacker.hitsound += 1; // TODO change this to a future specific hitsound for armor hit
-		}
-
-		if(IS_PLAYER(frag_attacker))
-		if (DEATH_ISWEAPON(frag_deathtype, WEP_LASER))
-		{
-			frag_damage = 0;
-			frag_mirrordamage = 0;
-			if (frag_target != frag_attacker)
+			if(DEATH_ISWEAPON(frag_deathtype, WEP_MINSTANEX))
+			if(frag_target.armorvalue)
 			{
-				if (frag_target.health >= 1 && !frag_target.frozen)
-					Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_LASER_NODAMAGE);
-				frag_force = '0 0 0';
-				// keep mirrorfrag_force
-				//frag_attacker = frag_target;
+				frag_target.armorvalue -= 1;
+				Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_MINSTA_LIVES_REMAINING, frag_target.armorvalue);
+				frag_damage = 0;
+				frag_target.hitsound += 1;
+				frag_attacker.hitsound += 1; // TODO change this to a future specific hitsound for armor hit
+			}
+
+			if(DEATH_ISWEAPON(frag_deathtype, WEP_LASER))
+			{
+				frag_damage = 0;
+				frag_mirrordamage = 0;
+				if (frag_target != frag_attacker)
+				{
+					if (frag_target.health >= 1 && !frag_target.frozen)
+						Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_LASER_NODAMAGE);
+					frag_force = '0 0 0';
+					// keep mirrorfrag_force
+					//frag_attacker = frag_target;
+				}
 			}
 		}
 	}
@@ -336,9 +337,9 @@ MUTATOR_HOOKFUNCTION(minstagib_FilterItem)
 
 	if(self.weapon == WEP_ROCKET_LAUNCHER || self.weapon == WEP_NEX)
 	{
-		entity e = spawn();
+		entity e = spawn(), oldself;
+		
 		setorigin(e, self.origin);
-		entity oldself;
 		oldself = self;
 		self = e;
 		spawnfunc_item_minst_cells();
@@ -384,8 +385,8 @@ MUTATOR_HOOKFUNCTION(minstagib_ItemCountdown)
 
 MUTATOR_HOOKFUNCTION(minstagib_PlayerDies)
 {	
-	if(DEATH_ISWEAPON(frag_deathtype, WEP_MINSTANEX) || (autocvar_g_rm && DEATH_ISWEAPON(frag_deathtype, WEP_ROCKET_LAUNCHER)) || ((autocvar_g_rm || autocvar_g_rm_laser == 2) && DEATH_ISWEAPON(frag_deathtype, WEP_ELECTRO)))
-		frag_damage = 1000;
+	if(DEATH_ISWEAPON(frag_deathtype, WEP_MINSTANEX) || (autocvar_g_rm && DEATH_ISWEAPON(frag_deathtype, WEP_ROCKET_LAUNCHER)) || (((autocvar_g_rm && autocvar_g_rm_laser == 1) || autocvar_g_rm_laser == 2) && DEATH_ISWEAPON(frag_deathtype, WEP_ELECTRO)))
+		frag_damage = 1000; // always gib if it was a minstanex death
 
 	return FALSE;
 }
