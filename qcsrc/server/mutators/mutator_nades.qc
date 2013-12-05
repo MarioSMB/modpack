@@ -648,9 +648,6 @@ void toss_nade(entity e, vector _velocity, float _time)
 	_nade.flags = FL_PROJECTILE;
 	_nade.projectiledeathtype = DEATH_NADE;
 	_nade.toss_time = time;
-	
-	if(autocvar_g_playerclip_collisions)
-		_nade.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
 
 	nade_spawn(_nade);
 
