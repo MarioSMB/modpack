@@ -222,7 +222,10 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerPowerups)
 MUTATOR_HOOKFUNCTION(minstagib_PlayerPhysics)
 {
 	if(self.items & IT_INVINCIBLE)
-		self.stat_sv_maxspeed = self.stat_sv_maxspeed * autocvar_g_minstagib_speed_highspeed;
+	{
+		self.stat_sv_maxspeed *= autocvar_g_minstagib_speed_highspeed;
+		self.stat_sv_airspeedlimit_nonqw *= autocvar_g_minstagib_speed_highspeed;
+	}
 
 	return FALSE;
 }
