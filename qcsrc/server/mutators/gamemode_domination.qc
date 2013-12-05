@@ -299,12 +299,11 @@ void Domination_count_controlpoints()
 	total_controlpoints = redowned = blueowned = yellowowned = pinkowned = 0;
 	for(e = world; (e = find(e, classname, "dom_controlpoint")) != world; )
 	{
-		if(e.goalentity.team == NUM_TEAM_1) ++redowned;
-		else if(e.goalentity.team == NUM_TEAM_2) ++blueowned;
-		else if(e.goalentity.team == NUM_TEAM_3) ++yellowowned;
-		else if(e.goalentity.team == NUM_TEAM_4) ++pinkowned;
-		
 		++total_controlpoints;
+		redowned += (e.goalentity.team == NUM_TEAM_1);
+		blueowned += (e.goalentity.team == NUM_TEAM_2);
+		yellowowned += (e.goalentity.team == NUM_TEAM_3);
+		pinkowned += (e.goalentity.team == NUM_TEAM_4);
 	}
 }
 
