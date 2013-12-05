@@ -633,6 +633,8 @@ string modname;
 .float cvar_cl_robot;
 .float cvar_cl_charge;
 
+.string cvar_cl_autovote;
+
 .entity lastkiller;
 .entity lastkilled;
 

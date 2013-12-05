@@ -103,6 +103,7 @@ void CSQC_Init(void)
 	registercvar("cl_charge", "0");
 	registercvar("cl_magical_hax", "");
 	registercvar("cl_nade_type", "3");
+	registercvar("cl_autovote", "");
 
 	// these need to be defined for quickmenu to work
 	registercvar("hud_panel_quickmenu_pos", "0.010000 0.410000");

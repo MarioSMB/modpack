@@ -538,6 +538,7 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, autoswitch, "cl_autoswitch");
 	GetCvars_handleFloat(s, f, cvar_cl_autoscreenshot, "cl_autoscreenshot");
 	GetCvars_handleString(s, f, cvar_g_xonoticversion, "g_xonoticversion");
+	GetCvars_handleString(s, f, cvar_cl_autovote, "cl_autovote");
 	GetCvars_handleFloat(s, f, cvar_cl_sparkle, "cl_sparkle");
 	GetCvars_handleFloat(s, f, cvar_cl_pony, "cl_pony");
 	GetCvars_handleFloat(s, f, cvar_cl_pony_skin, "cl_pony_skin");
