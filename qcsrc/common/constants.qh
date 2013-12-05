@@ -104,6 +104,8 @@ const float ENT_CLIENT_AUXILIARYXHAIR = 50;
 const float ENT_CLIENT_VEHICLE = 60;
 const float ENT_CLIENT_GENERATOR = 70;
 
+const float ENT_CLIENT_HEALING_ORB = 80;
+
 const float SPRITERULE_DEFAULT = 0;
 const float SPRITERULE_TEAMPLAY = 1;
 
@@ -195,6 +197,8 @@ const float STAT_OK_AMMO_CHARGEPOOl = 79;
 const float STAT_GRENADE_BONUS = 80;
 const float STAT_GRENADE_BONUS_TYPE = 81;
 const float STAT_GRENADE_BONUS_SCORE = 82;
+const float STAT_HEALING_ORB = 83;
+const float STAT_HEALING_ORB_ALPHA = 84;
 
 const float STAT_WEAPONSINMAP = 90;
 const float STAT_WEAPONSINMAP2 = 91;
@@ -389,7 +393,8 @@ const float PROJECTILE_NADE_ICE = 64;
 const float PROJECTILE_NADE_ICE_BURN = 65;
 const float PROJECTILE_NADE_TRANSLOCATE = 66;
 const float PROJECTILE_NADE_SPAWN = 67;
-
+const float PROJECTILE_NADE_HEAL = 68;
+const float PROJECTILE_NADE_HEAL_BURN = 69;
 
 const float SPECIES_HUMAN = 0;
 const float SPECIES_ROBOT_SOLID = 1;

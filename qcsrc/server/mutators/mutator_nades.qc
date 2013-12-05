@@ -366,6 +366,93 @@ void nade_spawn_boom()
 	self.realowner.nade_spawnloc = spawnloc;
 }
 
+void nade_heal_think()
+{
+	if(time >= self.ltime)
+	{
+		remove(self);
+		return;
+	}
+	
+	self.nextthink = time;
+	
+	if(time >= self.nade_special_time)
+	{
+		self.nade_special_time = time+0.25;
+		self.nade_show_particles = 1;
+	}
+	else
+		self.nade_show_particles = 0;
+}
+
+void nade_heal_touch()
+{
+	float maxhealth;
+	float health_factor;
+	if(IS_PLAYER(other) || IS_MONSTER(other))
+	if(other.deadflag == DEAD_NO)
+	if(!other.frozen)
+	{
+		health_factor = autocvar_g_nades_heal_rate*frametime/2;
+		if ( other != self.realowner )
+		{
+			if ( SAME_TEAM(other,self) )
+				health_factor *= autocvar_g_nades_heal_friend;
+			else
+				health_factor *= autocvar_g_nades_heal_foe;
+		}
+		if ( health_factor > 0 )
+		{
+			maxhealth = (IS_MONSTER(other)) ? other.max_health : autocvar_g_pickup_healthmega_max;
+			if ( other.health < maxhealth )
+			{
+				if ( self.nade_show_particles )
+					pointparticles(particleeffectnum("healing_fx"), other.origin, '0 0 0', 1);
+				other.health = min(other.health+health_factor, maxhealth);
+			}
+			other.pauserothealth_finished = max(other.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);  
+		}
+		else if ( health_factor < 0 )
+		{
+			Damage(other,self,self.realowner,-health_factor,DEATH_NADE_HEAL,other.origin,'0 0 0');
+		}
+		
+	}
+	
+	if ( IS_REAL_CLIENT(other) || IS_VEHICLE(other) )
+	{
+		entity show_red = IS_VEHICLE(other) ? other.owner : other;
+		show_red.stat_healing_orb = time+0.1;
+		show_red.stat_healing_orb_alpha = 0.75 * (self.ltime - time) / self.healer_lifetime;
+	}
+}
+
+void nade_heal_boom()
+{
+	entity healer;
+	healer = spawn();
+	healer.owner = self.owner;
+	healer.realowner = self.realowner;
+	setorigin(healer, self.origin);
+	healer.healer_lifetime = autocvar_g_nades_heal_time; // save the cvar
+	healer.ltime = time + healer.healer_lifetime;
+	healer.team = self.realowner.team;
+	healer.bot_dodge = FALSE;
+	healer.solid = SOLID_TRIGGER;
+	healer.touch = nade_heal_touch;
+
+	setmodel(healer, "models/ctf/shield.md3");
+	healer.healer_radius = autocvar_g_nades_nade_radius;
+	vector size = '1 1 1' * healer.healer_radius / 2;
+	setsize(healer,-size,size);
+	
+	Net_LinkEntity(healer, TRUE, 0, healer_send);
+	
+	healer.think = nade_heal_think;
+	healer.nextthink = time;
+	healer.SendFlags |= 1;
+}
+
 void nade_boom()
 {
 	string expef;
@@ -395,6 +482,10 @@ void nade_boom()
 				case NUM_TEAM_4: expef = "spawn_event_pink"; break;
 				default: expef = "spawn_event_neutral"; break;
 			}
+			break;
+		case NADE_TYPE_HEAL:
+			nade_blast = 0;
+			expef = "spawn_event_red";
 			break;
 
 		default:
@@ -429,6 +520,7 @@ void nade_boom()
 		case NADE_TYPE_ICE: nade_ice_boom(); break;
 		case NADE_TYPE_TRANSLOCATE: nade_translocate_boom(); break;
 		case NADE_TYPE_SPAWN: nade_spawn_boom(); break;
+		case NADE_TYPE_HEAL: nade_heal_boom(); break;
 	}
 
 	remove(self);
@@ -495,7 +587,9 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 	}
 
 	self.health	  -= damage;
-	self.realowner = attacker;
+	
+	if ( self.nade_type != NADE_TYPE_HEAL || IS_PLAYER(attacker) )
+		self.realowner = attacker;
 
 	if(self.health <= 0)
 		W_PrepareExplosionByDamage(attacker, nade_boom);
@@ -912,6 +1006,8 @@ MUTATOR_HOOKFUNCTION(nades_SpectateCopy)
 	self.nade_type = other.nade_type;
 	self.bonus_nades = other.bonus_nades;
 	self.bonus_nade_score = other.bonus_nade_score;
+	self.stat_healing_orb = other.stat_healing_orb;
+	self.stat_healing_orb_alpha = other.stat_healing_orb_alpha;
 	return FALSE;
 }
 
@@ -954,9 +1050,10 @@ MUTATOR_DEFINITION(mutator_nades)
 	MUTATOR_ONADD
 	{
 		precache_model("models/ok_nade_counter/ok_nade_counter.md3");
-
 		precache_model("models/weapons/h_ok_grenade.iqm");
 		precache_model("models/weapons/v_ok_grenade.md3");
+		precache_model("models/ctf/shield.md3");
+		
 		precache_sound("weapons/rocket_impact.wav");
 		precache_sound("weapons/grenade_bounce1.wav");
 		precache_sound("weapons/grenade_bounce2.wav");

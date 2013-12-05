@@ -124,6 +124,8 @@ command/cl_cmd.qc
 ../common/turrets/cl_turrets.qc
 ../common/turrets/turrets.qc
 
+../common/nades.qc
+
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc
 ../warpzonelib/common.qc

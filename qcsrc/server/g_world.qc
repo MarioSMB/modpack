@@ -827,6 +827,8 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_GRENADE_BONUS, AS_FLOAT, bonus_nades);
 	addstat(STAT_GRENADE_BONUS_TYPE, AS_INT, nade_type);
 	addstat(STAT_GRENADE_BONUS_SCORE, AS_FLOAT, bonus_nade_score);
+	addstat(STAT_HEALING_ORB, AS_FLOAT, stat_healing_orb);
+	addstat(STAT_HEALING_ORB_ALPHA, AS_FLOAT, stat_healing_orb_alpha);
 
 	next_pingtime = time + 5;
 
