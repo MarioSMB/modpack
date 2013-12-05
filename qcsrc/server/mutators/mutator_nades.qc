@@ -403,7 +403,7 @@ void nade_heal_touch()
 		}
 		if ( health_factor > 0 )
 		{
-			maxhealth = (IS_MONSTER(other)) ? other.max_health : autocvar_g_pickup_healthmega_max;
+			maxhealth = (IS_MONSTER(other)) ? other.max_health : g_pickup_healthmega_max;
 			if ( other.health < maxhealth )
 			{
 				if ( self.nade_show_particles )
