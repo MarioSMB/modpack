@@ -123,17 +123,6 @@ float INF_CheckTeams()
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(inf_PutClientInServer)
-{
-	if(!self.inf_realteam) // assume spectator
-	if(round_handler_IsRoundStarted())
-	{
-		Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_INFECTION_JOIN_PREVENT);
-		self.classname = "observer";
-	}
-	return FALSE;
-}
-
 MUTATOR_HOOKFUNCTION(inf_RemovePlayer)
 {
 	self.inf_realteam = 0;
@@ -219,7 +208,6 @@ void inf_Initialize()
 
 MUTATOR_DEFINITION(gamemode_infection)
 {
-	MUTATOR_HOOK(PutClientInServer, inf_PutClientInServer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, inf_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, inf_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, inf_RemovePlayer, CBC_ORDER_ANY);
