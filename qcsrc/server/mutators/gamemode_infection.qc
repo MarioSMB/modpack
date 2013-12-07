@@ -3,6 +3,7 @@ float redalive, bluealive, yellowalive, pinkalive;
 float inf_teams;
 float allowed_to_spawn;
 .float inf_realteam;
+.float inf_nextteam;
 
 void INF_count_alive_players()
 {
@@ -127,7 +128,7 @@ MUTATOR_HOOKFUNCTION(inf_PutClientInServer)
 	if(!self.inf_realteam) // assume spectator
 	if(round_handler_IsRoundStarted())
 	{
-		sprint(self, "You cannot join after the round has started.\n");
+		Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_INFECTION_JOIN_PREVENT);
 		self.classname = "observer";
 	}
 	return FALSE;
@@ -136,6 +137,18 @@ MUTATOR_HOOKFUNCTION(inf_PutClientInServer)
 MUTATOR_HOOKFUNCTION(inf_RemovePlayer)
 {
 	self.inf_realteam = 0;
+	self.inf_nextteam = 0;
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(inf_PlayerSpawn)
+{
+	if(self.inf_nextteam)
+	{
+		MoveToTeam(self, self.inf_nextteam, 8);
+		self.inf_nextteam = 0;
+	}
+
 	return FALSE;
 }
 
@@ -145,7 +158,10 @@ MUTATOR_HOOKFUNCTION(inf_PlayerDies)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(frag_attacker.team, INFO_INFECTION_INFECTED), frag_target.netname);
 		Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, APP_TEAM_NUM_4(frag_attacker.team, CENTER_INFECTION_INFECTED));
-		MoveToTeam(frag_target, frag_attacker.team, 8);
+		frag_target.inf_nextteam = frag_attacker.team;
+		frag_target.respawn_flags |= RESPAWN_FORCE;
+		
+		PlayerScore_Add(frag_target, SP_SCORE, -1);
 	}
 
 	return FALSE;
@@ -153,8 +169,29 @@ MUTATOR_HOOKFUNCTION(inf_PlayerDies)
 
 MUTATOR_HOOKFUNCTION(inf_ResetMap)
 {
-	FOR_EACH_PLAYER(self) if(self.inf_realteam && self.inf_realteam != self.team)
-		MoveToTeam(self, self.inf_realteam, 8);
+	FOR_EACH_PLAYER(self)
+	{
+		if(self.inf_realteam && self.inf_realteam != self.team)
+			MoveToTeam(self, self.inf_realteam, 8);
+		PutClientInServer(); // player re-spawns on new team?
+	}
+	
+	FOR_EACH_SPEC(self) if(IS_BOT_CLIENT(self))
+	{
+		if(self.bot_forced_team==1)
+			self.team = NUM_TEAM_1;
+		else if(self.bot_forced_team==2)
+			self.team = NUM_TEAM_2;
+		else if(self.bot_forced_team==3)
+			self.team = NUM_TEAM_3;
+		else if(self.bot_forced_team==4)
+			self.team = NUM_TEAM_4;
+		else
+			JoinBestTeam(self, FALSE, TRUE);
+			
+		PutClientInServer();
+	}
+	
 	return TRUE;
 }
 
@@ -175,8 +212,6 @@ void inf_Initialize()
 
 	inf_teams = bound(2, autocvar_g_infection_teams, 4);
 	ScoreRules_inf(inf_teams);
-	
-	lockteams = 1;
 
 	round_handler_Spawn(INF_CheckTeams, INF_CheckWinner, INF_RoundStart);
 	round_handler_Init(5, autocvar_g_infection_warmup, autocvar_g_infection_round_timelimit);
@@ -186,6 +221,7 @@ MUTATOR_DEFINITION(gamemode_infection)
 {
 	MUTATOR_HOOK(PutClientInServer, inf_PutClientInServer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, inf_RemovePlayer, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerSpawn, inf_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, inf_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, inf_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(reset_map_players, inf_ResetMap, CBC_ORDER_ANY);

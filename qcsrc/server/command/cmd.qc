@@ -435,7 +435,7 @@ void ClientCommand_selectteam(float request, float argc)
 				{
 					if(teamplay)
 						if(self.team_forced <= 0)
-							if (!lockteams)
+							if (!lockteams && !g_infection)
 							{
 								float selection;
 
