@@ -123,3 +123,13 @@ void ScoreRules_ca(float teams)
 	ScoreInfo_SetLabel_TeamScore(ST_CA_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
 	ScoreRules_basics_end();
 }
+
+// Infection (TODO: move to infection gamemode file?)
+#define ST_INF_ROUNDS 1
+void ScoreRules_inf(float teams)
+{
+	CheckAllowedTeams(world);
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+	ScoreInfo_SetLabel_TeamScore(ST_INF_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
+	ScoreRules_basics_end();
+}

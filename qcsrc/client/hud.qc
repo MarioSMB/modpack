@@ -4319,7 +4319,7 @@ void HUD_InfoMessages(void)
 			drawInfoMessage(s)
 		}
 
-		if(teamplay && !intermission && !spectatee_status && gametype != MAPINFO_TYPE_CA && teamnagger)
+		if(teamplay && !intermission && !spectatee_status && gametype != MAPINFO_TYPE_CA && gametype != MAPINFO_TYPE_INFECTION && teamnagger)
 		{
 			float ts_min = 0, ts_max = 0;
 			tm = teams.sort_next;

@@ -216,6 +216,16 @@ void InitGameplayMode()
 		fraglimit_override = autocvar_g_invasion_round_limit;
 		MUTATOR_ADD(gamemode_invasion);
 	}
+	
+	if(g_infection)
+	{
+		fraglimit_override = autocvar_g_infection_point_limit;
+		leadlimit_override = autocvar_g_infection_point_leadlimit;
+		ActivateTeamplay();
+		if(autocvar_g_infection_team_spawns)
+			have_team_spawns = -1; // request team spawns
+		MUTATOR_ADD(gamemode_infection);
+	}
 
 	if(teamplay)
 		entcs_init();
