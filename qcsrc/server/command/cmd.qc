@@ -157,6 +157,8 @@ void ClientCommand_join(float request)
 						if(autocvar_g_campaign) { campaign_bots_may_start = 1; }
 
 						self.classname = "player";
+						self.bonus_nades = 0;
+						self.bonus_nade_score = 0;
 						PlayerScore_Clear(self);
 						Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_PREVENT_JOIN);
 						Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JOIN_PLAY, self.netname);
