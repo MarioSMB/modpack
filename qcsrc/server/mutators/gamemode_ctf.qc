@@ -112,26 +112,6 @@ float ctf_CheckPassDirection(vector head_center, vector passer_center, vector pa
 	else { return TRUE; }
 }
 
-float ctf_Stalemate_customizeentityforclient()
-{
-	// make spectators see what the player would see
-	entity e, wp_owner;
-	e = WaypointSprite_getviewentity(other);
-	wp_owner = self.owner;
-
-	// team waypoints
-	if(CTF_SAMETEAM(wp_owner.flagcarried, wp_owner))
-		return FALSE;
-
-	if(SAME_TEAM(wp_owner, e))
-		return FALSE;
-
-	if(!IS_PLAYER(e))
-		return FALSE;
-
-	return TRUE;
-}
-
 
 // =======================
 // CaptureShield Functions
@@ -638,6 +618,21 @@ void ctf_CheckFlagReturn(entity flag, float returntype)
 	}
 }
 
+float ctf_Stalemate_Customize()
+{
+	// make spectators see what the player would see
+	entity e, wp_owner;
+	e = WaypointSprite_getviewentity(other);
+	wp_owner = self.owner;
+
+	// team waypoints
+	if(CTF_SAMETEAM(wp_owner.flagcarried, wp_owner)) { return FALSE; }
+	if(SAME_TEAM(wp_owner, e)) { return FALSE; }
+	if(!IS_PLAYER(e)) { return FALSE; }
+
+	return TRUE;
+}
+
 void ctf_CheckStalemate(void)
 {
 	// declarations
@@ -683,7 +678,7 @@ void ctf_CheckStalemate(void)
 			if((tmp_entity.owner) && (!tmp_entity.owner.wps_enemyflagcarrier))
 			{
 				WaypointSprite_Spawn("enemyflagcarrier", 0, 0, tmp_entity.owner, FLAG_WAYPOINT_OFFSET, world, 0, tmp_entity.owner, wps_enemyflagcarrier, TRUE, RADARICON_FLAG, WPCOLOR_ENEMYFC(tmp_entity.owner.team));
-				tmp_entity.owner.wps_enemyflagcarrier.customizeentityforclient = ctf_Stalemate_customizeentityforclient;
+				tmp_entity.owner.wps_enemyflagcarrier.customizeentityforclient = ctf_Stalemate_Customize;
 			}
 		}
 
