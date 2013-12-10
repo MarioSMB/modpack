@@ -455,7 +455,7 @@ void nade_heal_boom()
 
 void nade_monster_boom()
 {
-	entity e = spawnmonster(autocvar_g_nades_pokenade_monster_type, 0, self.realowner, self.realowner, self.origin, FALSE, 1);
+	entity e = spawnmonster(self.pokenade_type, 0, self.realowner, self.realowner, self.origin, FALSE, 1);
 	
 	e.ltime = time + autocvar_g_nades_pokenade_monster_lifetime;
 	e.spawnshieldtime = e.ltime;
@@ -716,11 +716,15 @@ void nade_prime()
 	else if (self.bonus_nades >= 1)
 	{
 		n.nade_type = self.nade_type;
+		n.pokenade_type = self.pokenade_type;
 		self.bonus_nades -= 1;
 	}
 	else
-		 n.nade_type = ((autocvar_g_nades_client_select) ? self.cvar_cl_nade_type : autocvar_g_nades_nade_type);
-		 
+	{
+		n.nade_type = ((autocvar_g_nades_client_select) ? self.cvar_cl_nade_type : autocvar_g_nades_nade_type);
+		n.pokenade_type = ((autocvar_g_nades_client_select) ? self.cvar_cl_pokenade_type : autocvar_g_nades_pokenade_monster_type);
+	}
+	
 	n.nade_type = bound(1, n.nade_type, NADE_TYPE_LAST);
 
 	setmodel(n, "null");
@@ -866,9 +870,15 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 				time_score = autocvar_g_nades_bonus_score_time;
 
 			if(autocvar_g_nades_bonus_client_select)
+			{
 				self.nade_type = self.cvar_cl_nade_type;
+				self.pokenade_type = self.cvar_cl_pokenade_type;
+			}
 			else
+			{
 				self.nade_type = autocvar_g_nades_bonus_type;
+				self.pokenade_type = autocvar_g_nades_pokenade_monster_type;
+			}
 				
 			self.nade_type = bound(1, self.nade_type, NADE_TYPE_LAST);
 
@@ -1011,6 +1021,7 @@ MUTATOR_HOOKFUNCTION(nades_RemovePlayer)
 MUTATOR_HOOKFUNCTION(nades_SpectateCopy)
 {
 	self.nade_type = other.nade_type;
+	self.pokenade_type = other.pokenade_type;
 	self.bonus_nades = other.bonus_nades;
 	self.bonus_nade_score = other.bonus_nade_score;
 	self.stat_healing_orb = other.stat_healing_orb;
@@ -1021,6 +1032,7 @@ MUTATOR_HOOKFUNCTION(nades_SpectateCopy)
 MUTATOR_HOOKFUNCTION(nades_GetCvars)
 {
 	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_nade_type, "cl_nade_type");
+	GetCvars_handleString(get_cvars_s, get_cvars_f, cvar_cl_pokenade_type, "cl_pokenade_type");
 
 	return FALSE;
 }
