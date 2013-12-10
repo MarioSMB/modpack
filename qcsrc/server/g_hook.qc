@@ -386,7 +386,7 @@ void FireGrapplingHook (void)
 	missile.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(missile);
 
-	//setmodel (missile, "models/hook.md3"); // precision set below
+	//SETMODEL(missile, "models/hook.md3"); // precision set below
 	setsize (missile, '-3 -3 -3', '3 3 3');
 	setorigin (missile, org);
 

@@ -16,7 +16,7 @@ void nade_burn_spawn(entity _nade)
 void nade_spawn(entity _nade)
 {
 	entity timer = spawn();
-	setmodel(timer, "models/ok_nade_counter/ok_nade_counter.md3");
+	SETMODEL(timer, "models/ok_nade_counter/ok_nade_counter.md3");
 	setattachment(timer, _nade, "");
 	timer.classname = "nade_timer";
 	timer.colormap = _nade.colormap;
@@ -120,7 +120,7 @@ void nade_napalm_ball()
 	proj.movetype = MOVETYPE_BOUNCE;
 	proj.projectiledeathtype = DEATH_NADE_NAPALM;
 	PROJECTILE_MAKETRIGGER(proj);
-	setmodel(proj, "null");
+	SETMODEL(proj, "null");
 	proj.scale = 1;//0.5;
 	setsize(proj, '-4 -4 -4', '4 4 4');
 	setorigin(proj, self.origin);
@@ -315,9 +315,9 @@ void nade_ice_boom()
 
 	if ( autocvar_g_nades_ice_explode )
 	{
-		setmodel(fountain, "models/grenademodel.md3");
+		SETMODEL(fountain, "models/grenademodel.md3");
 		entity timer = spawn();
-		setmodel(timer, "models/ok_nade_counter/ok_nade_counter.md3");
+		SETMODEL(timer, "models/ok_nade_counter/ok_nade_counter.md3");
 		setattachment(timer, fountain, "");
 		timer.classname = "nade_timer";
 		timer.colormap = self.colormap;
@@ -329,7 +329,7 @@ void nade_ice_boom()
 		timer.skin = 10;
 	}
 	else
-		setmodel(fountain, "null");
+		SETMODEL(fountain, "null");
 }
 
 void nade_translocate_boom()
@@ -441,7 +441,7 @@ void nade_heal_boom()
 	healer.solid = SOLID_TRIGGER;
 	healer.touch = nade_heal_touch;
 
-	setmodel(healer, "models/ctf/shield.md3");
+	SETMODEL(healer, "models/ctf/shield.md3");
 	healer.healer_radius = autocvar_g_nades_nade_radius;
 	vector size = '1 1 1' * healer.healer_radius / 2;
 	setsize(healer,-size,size);
@@ -624,7 +624,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_NADES);
 
 	setorigin(_nade, w_shotorg + (v_right * 25) * -1);
-	setmodel(_nade, "models/weapons/v_ok_grenade.md3");
+	SETMODEL(_nade, "models/weapons/v_ok_grenade.md3");
 	setattachment(_nade, world, "");
 	PROJECTILE_MAKETRIGGER(_nade);
 	setsize(_nade, '-16 -16 -16', '16 16 16');
@@ -726,7 +726,7 @@ void nade_prime()
 	
 	n.nade_type = bound(1, n.nade_type, NADE_TYPE_LAST);
 
-	setmodel(n, "null");
+	SETMODEL(n, "null");
 	setattachment(n, self, "bip01 l hand");
 	n.realowner = self;
 	n.colormap = self.colormap;
@@ -737,7 +737,7 @@ void nade_prime()
 	n.nextthink = max(n.wait - 3, time);
 	n.projectiledeathtype = DEATH_NADE;
 
-	setmodel(fn, "models/weapons/h_ok_grenade.iqm");
+	SETMODEL(fn, "models/weapons/h_ok_grenade.iqm");
 	setattachment(fn, self.weaponentity, "");
 	fn.realowner = fn.owner = self;
 	fn.colormod = Nade_Color(n.nade_type);

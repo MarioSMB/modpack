@@ -283,7 +283,7 @@ void vehicles_gib_think()
 entity vehicle_tossgib(entity _template, vector _vel, string _tag, float _burn, float _explode, float _maxtime, vector _rot)
 {
 	entity _gib = spawn();
-	setmodel(_gib, _template.model);
+	SETMODEL(_gib, _template.model);
 	setorigin(_gib, gettaginfo(self, gettagindex(self, _tag)));
 	_gib.velocity = _vel;
 	_gib.movetype = MOVETYPE_TOSS;
@@ -330,8 +330,8 @@ float vehicle_addplayerslot(	entity _owner,
 	_slot.vehicle_hudmodel.viewmodelforclient = _slot;
 	_slot.vehicle_viewport.effects = (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NOGUNBOB | EF_NOSHADOW | EF_LOWPRECISION | EF_SELECTABLE | EF_TELEPORT_BIT);
 
-	setmodel(_slot.vehicle_hudmodel, _hud_model);
-	setmodel(_slot.vehicle_viewport, "null");
+	SETMODEL(_slot.vehicle_hudmodel, _hud_model);
+	SETMODEL(_slot.vehicle_viewport, "null");
 
 	setattachment(_slot.vehicle_hudmodel, _slot, "");
 	setattachment(_slot.vehicle_viewport, _slot.vehicle_hudmodel, "");
@@ -464,7 +464,7 @@ void vehicles_showwp()
 
 		oldself = self;
 		self = spawn();
-		setmodel(self, "null");
+		SETMODEL(self, "null");
 		self.team = oldself.wp00.team;
 		self.wp00 = oldself.wp00;
 		setorigin(self, oldself.wp00.pos1);
@@ -512,7 +512,7 @@ void vehicles_setreturn(entity veh)
 		ret.nextthink   = min(time + veh.respawntime, time + veh.respawntime - 1);
 	}
 
-	setmodel(ret, "null");
+	SETMODEL(ret, "null");
 	setorigin(ret, veh.pos1 + '0 0 96');
 
 }
@@ -556,7 +556,7 @@ void shieldhit_think()
 	self.alpha -= 0.1;
 	if (self.alpha <= 0)
 	{
-		//setmodel(self, "");
+		//SETMODEL(self, "");
 		self.alpha = -1;
 		self.effects |= EF_NODRAW;
 	}
@@ -616,7 +616,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 			self.vehicle_shieldent = spawn();
 			self.vehicle_shieldent.effects = EF_LOWPRECISION;
 
-			setmodel(self.vehicle_shieldent, "models/vhshield.md3");
+			SETMODEL(self.vehicle_shieldent, "models/vhshield.md3");
 			setattachment(self.vehicle_shieldent, self, "");
 			setorigin(self.vehicle_shieldent, real_origin(self) - self.origin);
 			self.vehicle_shieldent.scale	   = 256 / vlen(self.maxs - self.mins);
@@ -1118,7 +1118,7 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 
 	self.vehicle_flags |= VHF_ISVEHICLE;
 
-	setmodel(self, veh.model);
+	SETMODEL(self, veh.model);
 
 	self.vehicle_viewport		= spawn();
 	self.vehicle_hudmodel		= spawn();
@@ -1147,12 +1147,12 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 	if(autocvar_g_fullbrightplayers)
 		self.effects |= EF_FULLBRIGHT;
 
-	setmodel(self.vehicle_hudmodel, veh.hud_model);
-	setmodel(self.vehicle_viewport, "null");
+	SETMODEL(self.vehicle_hudmodel, veh.hud_model);
+	SETMODEL(self.vehicle_viewport, "null");
 
 	if(veh.head_model != "")
 	{
-		setmodel(self.tur_head, veh.head_model);
+		SETMODEL(self.tur_head, veh.head_model);
 		setattachment(self.tur_head, self, veh.tag_head);
 		setattachment(self.vehicle_hudmodel, self.tur_head, veh.tag_hud);
 		setattachment(self.vehicle_viewport, self.vehicle_hudmodel, veh.tag_view);

@@ -851,11 +851,11 @@ void GameCommand_gettaginfo(float request, float argc)
 			{
 				tmp_entity = spawn();
 				if(argv(1) == "w")
-					setmodel(tmp_entity, (nextent(world)).weaponentity.model);
+					SETMODEL(tmp_entity, (nextent(world)).weaponentity.model);
 				else
 				{
 					precache_model(argv(1));
-					setmodel(tmp_entity, argv(1));
+					SETMODEL(tmp_entity, argv(1));
 				}
 				tmp_entity.frame = stof(argv(2));
 				if(substring(argv(3), 0, 1) == "#")
@@ -909,11 +909,11 @@ void GameCommand_animbench(float request, float argc)
 			{
 				tmp_entity = spawn();
 				if(argv(1) == "w")
-					setmodel(tmp_entity, (nextent(world)).weaponentity.model);
+					SETMODEL(tmp_entity, (nextent(world)).weaponentity.model);
 				else
 				{
 					precache_model(argv(1));
-					setmodel(tmp_entity, argv(1));
+					SETMODEL(tmp_entity, argv(1));
 				}
 				float f1 = stof(argv(2));
 				float f2 = stof(argv(3));

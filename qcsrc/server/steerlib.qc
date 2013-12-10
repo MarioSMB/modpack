@@ -548,7 +548,7 @@ void spawn_flocker()
     flocker = spawn ();
 
     setorigin(flocker, self.origin + '0 0 32');
-    setmodel (flocker, "models/turrets/rocket.md3");
+    SETMODEL(flocker, "models/turrets/rocket.md3");
     setsize (flocker, '-3 -3 -3', '3 3 3');
 
     flocker.flock_id   = self.flock_id;
@@ -649,7 +649,7 @@ void spawnfunc_flockerspawn()
 
     self.enemy = spawn();
 
-    setmodel(self.enemy, "models/turrets/rocket.md3");
+    SETMODEL(self.enemy, "models/turrets/rocket.md3");
     setorigin(self.enemy,self.origin + '0 0 768' + (randomvec() * 128));
 
     self.enemy.classname = "FLock Hunter";

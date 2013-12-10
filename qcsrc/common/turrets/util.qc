@@ -229,7 +229,7 @@ void mark_error(vector where,float lifetime)
 
 	err = spawn();
 	err.classname = "error_marker";
-	setmodel(err,"models/marker.md3");
+	SETMODEL(err,"models/marker.md3");
 	setorigin(err,where);
 	err.movetype = MOVETYPE_NONE;
 	err.think = marker_think;
@@ -245,7 +245,7 @@ void mark_info(vector where,float lifetime)
 
 	err = spawn();
 	err.classname = "info_marker";
-	setmodel(err,"models/marker.md3");
+	SETMODEL(err,"models/marker.md3");
 	setorigin(err,where);
 	err.movetype = MOVETYPE_NONE;
 	err.think = marker_think;
@@ -261,7 +261,7 @@ entity mark_misc(vector where,float lifetime)
 
 	err = spawn();
 	err.classname = "mark_misc";
-	setmodel(err,"models/marker.md3");
+	SETMODEL(err,"models/marker.md3");
 	setorigin(err,where);
 	err.movetype = MOVETYPE_NONE;
 	err.think = marker_think;
@@ -281,7 +281,7 @@ void paint_target(entity onwho, float f_size, vector v_color, float f_time)
 	entity e;
 
 	e = spawn();
-	setmodel(e, "models/turrets/c512.md3"); // precision set above
+	SETMODEL(e, "models/turrets/c512.md3"); // precision set above
 	e.scale = (f_size/512);
 	//setsize(e, '0 0 0', '0 0 0');
 	//setattachment(e,onwho,"");
@@ -300,7 +300,7 @@ void paint_target2(entity onwho, float f_size, vector v_color, float f_time)
 	entity e;
 
 	e = spawn();
-	setmodel(e, "models/turrets/c512.md3"); // precision set above
+	SETMODEL(e, "models/turrets/c512.md3"); // precision set above
 	e.scale = (f_size/512);
 	setsize(e, '0 0 0', '0 0 0');
 
@@ -319,7 +319,7 @@ void paint_target3(vector where, float f_size, vector v_color, float f_time)
 {
 	entity e;
 	e = spawn();
-	setmodel(e, "models/turrets/c512.md3"); // precision set above
+	SETMODEL(e, "models/turrets/c512.md3"); // precision set above
 	e.scale = (f_size/512);
 	setsize(e, '0 0 0', '0 0 0');
 	setorigin(e,where+ '0 0 1');

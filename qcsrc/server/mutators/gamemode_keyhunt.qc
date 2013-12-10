@@ -972,7 +972,7 @@ void kh_Initialize()  // sets up th KH environment
 	kh_controller.think = kh_Controller_Think;
 	kh_Controller_SetThink(0, kh_WaitForPlayers);
 
-	setmodel(kh_controller, "models/keyhunt/key.md3");
+	SETMODEL(kh_controller, "models/keyhunt/key.md3");
 	kh_key_dropped = kh_controller.modelindex;
 	/*
 	dprint(vtos(kh_controller.mins));
@@ -980,7 +980,7 @@ void kh_Initialize()  // sets up th KH environment
 	dprint("\n");
 	*/
 #ifdef KH_PLAYER_USE_CARRIEDMODEL
-	setmodel(kh_controller, "models/keyhunt/key-carried.md3");
+	SETMODEL(kh_controller, "models/keyhunt/key-carried.md3");
 	kh_key_carried = kh_controller.modelindex;
 #else
 	kh_key_carried = kh_key_dropped;

@@ -122,7 +122,7 @@ void playerdemo_read_modelstring(.string f, string name)
 	string s;
 	s = fgets(self.playerdemo_fh);
 	if(s != self.f)
-		setmodel(self, s);
+		SETMODEL(self, s);
 }
 void playerdemo_read_float(.float f, string name)
 {

@@ -486,7 +486,7 @@ void SpawnBall(void)
 	}
 
 	precache_model(self.model);
-	setmodel(self, self.model);
+	SETMODEL(self, self.model);
 	setsize(self, BALL_MINS, BALL_MAXS);
 	ball_scale = self.scale;
 
@@ -760,7 +760,7 @@ void W_Nexball_Attack2(void)
 	missile.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(missile);
 
-	setmodel(missile, "models/elaser.mdl");  // precision set below
+	SETMODEL(missile, "models/elaser.mdl");  // precision set below
 	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, w_shotorg);
 

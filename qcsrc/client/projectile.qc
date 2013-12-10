@@ -277,59 +277,59 @@ void Ent_Projectile()
 		self.traileffect = 0;
 		switch(self.cnt)
 		{
-			case PROJECTILE_ELECTRO: setmodel(self, "models/ebomb.mdl");self.traileffect = particleeffectnum(rm_suffix); break;
-			case PROJECTILE_ROCKET: setmodel(self, "models/rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); self.scale = 2; break;
-			case PROJECTILE_SUPERROCKET: setmodel(self, "models/rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); self.scale = 15; break;
-			case PROJECTILE_ROCKETMINSTA_LASER: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum(rm_suffix); break;
-			case PROJECTILE_CRYLINK: setmodel(self, "models/plasmatrail.mdl");self.traileffect = particleeffectnum("TR_CRYLINKPLASMA"); break;
-			case PROJECTILE_CRYLINK_BOUNCING: setmodel(self, "models/plasmatrail.mdl");self.traileffect = particleeffectnum("TR_CRYLINKPLASMA"); break;
-			case PROJECTILE_ELECTRO_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum(rm_suffix); break;
-			case PROJECTILE_GRENADE: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_GRENADE"); break;
-			case PROJECTILE_GRENADE_BOUNCING: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_GRENADE"); break;
-			case PROJECTILE_MINE: setmodel(self, "models/mine.md3");self.traileffect = particleeffectnum("TR_GRENADE"); break;
-			case PROJECTILE_LASER: setmodel(self, "models/laser.mdl");self.traileffect = particleeffectnum(""); break;
-			case PROJECTILE_HLAC: setmodel(self, "models/hlac_bullet.md3");self.traileffect = particleeffectnum(""); break;
-			case PROJECTILE_PORTO_RED: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_WIZSPIKE"); self.scale = 4; break;
-			case PROJECTILE_PORTO_BLUE: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_WIZSPIKE"); self.scale = 4; break;
-			case PROJECTILE_HOOKBOMB: setmodel(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_KNIGHTSPIKE"); break;
-			case PROJECTILE_HAGAR: setmodel(self, "models/hagarmissile.mdl");self.traileffect = particleeffectnum("tr_hagar"); self.scale = 0.75; break;
-			case PROJECTILE_HAGAR_BOUNCING: setmodel(self, "models/hagarmissile.mdl");self.traileffect = particleeffectnum("tr_hagar"); self.scale = 0.75; break;
+			case PROJECTILE_ELECTRO: SETMODEL(self, "models/ebomb.mdl");self.traileffect = particleeffectnum(rm_suffix); break;
+			case PROJECTILE_ROCKET: SETMODEL(self, "models/rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); self.scale = 2; break;
+			case PROJECTILE_SUPERROCKET: SETMODEL(self, "models/rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); self.scale = 15; break;
+			case PROJECTILE_ROCKETMINSTA_LASER: SETMODEL(self, "models/elaser.mdl");self.traileffect = particleeffectnum(rm_suffix); break;
+			case PROJECTILE_CRYLINK: SETMODEL(self, "models/plasmatrail.mdl");self.traileffect = particleeffectnum("TR_CRYLINKPLASMA"); break;
+			case PROJECTILE_CRYLINK_BOUNCING: SETMODEL(self, "models/plasmatrail.mdl");self.traileffect = particleeffectnum("TR_CRYLINKPLASMA"); break;
+			case PROJECTILE_ELECTRO_BEAM: SETMODEL(self, "models/elaser.mdl");self.traileffect = particleeffectnum(rm_suffix); break;
+			case PROJECTILE_GRENADE: SETMODEL(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_GRENADE"); break;
+			case PROJECTILE_GRENADE_BOUNCING: SETMODEL(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_GRENADE"); break;
+			case PROJECTILE_MINE: SETMODEL(self, "models/mine.md3");self.traileffect = particleeffectnum("TR_GRENADE"); break;
+			case PROJECTILE_LASER: SETMODEL(self, "models/laser.mdl");self.traileffect = particleeffectnum(""); break;
+			case PROJECTILE_HLAC: SETMODEL(self, "models/hlac_bullet.md3");self.traileffect = particleeffectnum(""); break;
+			case PROJECTILE_PORTO_RED: SETMODEL(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_WIZSPIKE"); self.scale = 4; break;
+			case PROJECTILE_PORTO_BLUE: SETMODEL(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_WIZSPIKE"); self.scale = 4; break;
+			case PROJECTILE_HOOKBOMB: SETMODEL(self, "models/grenademodel.md3");self.traileffect = particleeffectnum("TR_KNIGHTSPIKE"); break;
+			case PROJECTILE_HAGAR: SETMODEL(self, "models/hagarmissile.mdl");self.traileffect = particleeffectnum("tr_hagar"); self.scale = 0.75; break;
+			case PROJECTILE_HAGAR_BOUNCING: SETMODEL(self, "models/hagarmissile.mdl");self.traileffect = particleeffectnum("tr_hagar"); self.scale = 0.75; break;
 			case PROJECTILE_NAPALM_FOUNTAIN: //self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum("torch_small"); break;
 			case PROJECTILE_FIREBALL: self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum("fireball"); break; // particle effect is good enough
 			case PROJECTILE_FIREMINE: self.model = ""; self.modelindex = 0; self.traileffect = particleeffectnum("firemine"); break; // particle effect is good enough
-			case PROJECTILE_TAG: setmodel(self, "models/laser.mdl"); self.traileffect = particleeffectnum("TR_ROCKET"); break;
-			case PROJECTILE_FLAC: setmodel(self, "models/hagarmissile.mdl"); self.scale = 0.4; self.traileffect = particleeffectnum("TR_SEEKER"); break;
-			case PROJECTILE_SEEKER: setmodel(self, "models/tagrocket.md3"); self.traileffect = particleeffectnum("TR_SEEKER"); break;
+			case PROJECTILE_TAG: SETMODEL(self, "models/laser.mdl"); self.traileffect = particleeffectnum("TR_ROCKET"); break;
+			case PROJECTILE_FLAC: SETMODEL(self, "models/hagarmissile.mdl"); self.scale = 0.4; self.traileffect = particleeffectnum("TR_SEEKER"); break;
+			case PROJECTILE_SEEKER: SETMODEL(self, "models/tagrocket.md3"); self.traileffect = particleeffectnum("TR_SEEKER"); break;
 
-			case PROJECTILE_MAGE_SPIKE: setmodel(self, "models/ebomb.mdl"); self.traileffect = particleeffectnum("TR_VORESPIKE"); break;
-			case PROJECTILE_SHAMBLER_LIGHTNING: setmodel(self, "models/ebomb.mdl"); self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
+			case PROJECTILE_MAGE_SPIKE: SETMODEL(self, "models/ebomb.mdl"); self.traileffect = particleeffectnum("TR_VORESPIKE"); break;
+			case PROJECTILE_SHAMBLER_LIGHTNING: SETMODEL(self, "models/ebomb.mdl"); self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
 
-			case PROJECTILE_RAPTORBOMB:    setmodel(self, "models/vehicles/clusterbomb.md3"); self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = particleeffectnum(""); break;
-			case PROJECTILE_RAPTORBOMBLET: setmodel(self, "models/vehicles/bomblet.md3");     self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = particleeffectnum(""); break;
-			case PROJECTILE_RAPTORCANNON:  setmodel(self, "models/plasmatrail.mdl"); self.traileffect = particleeffectnum("TR_CRYLINKPLASMA"); break;
+			case PROJECTILE_RAPTORBOMB:    SETMODEL(self, "models/vehicles/clusterbomb.md3"); self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = particleeffectnum(""); break;
+			case PROJECTILE_RAPTORBOMBLET: SETMODEL(self, "models/vehicles/bomblet.md3");     self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = particleeffectnum(""); break;
+			case PROJECTILE_RAPTORCANNON:  SETMODEL(self, "models/plasmatrail.mdl"); self.traileffect = particleeffectnum("TR_CRYLINKPLASMA"); break;
 
-			case PROJECTILE_SPIDERROCKET: setmodel(self, "models/vehicles/rocket02.md3"); self.traileffect = particleeffectnum("spiderbot_rocket_thrust"); break;
-			case PROJECTILE_WAKIROCKET:   setmodel(self, "models/vehicles/rocket01.md3");  self.traileffect = particleeffectnum("wakizashi_rocket_thrust"); break;
-			case PROJECTILE_WAKICANNON:   setmodel(self, "models/laser.mdl");  self.traileffect = particleeffectnum(""); break;
+			case PROJECTILE_SPIDERROCKET: SETMODEL(self, "models/vehicles/rocket02.md3"); self.traileffect = particleeffectnum("spiderbot_rocket_thrust"); break;
+			case PROJECTILE_WAKIROCKET:   SETMODEL(self, "models/vehicles/rocket01.md3");  self.traileffect = particleeffectnum("wakizashi_rocket_thrust"); break;
+			case PROJECTILE_WAKICANNON:   SETMODEL(self, "models/laser.mdl");  self.traileffect = particleeffectnum(""); break;
 
-			case PROJECTILE_BUMBLE_GUN: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("rocketminsta_laser_neutral"); break;
-			case PROJECTILE_BUMBLE_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("rocketminsta_laser_neutral"); break;
+			case PROJECTILE_BUMBLE_GUN: SETMODEL(self, "models/elaser.mdl");self.traileffect = particleeffectnum("rocketminsta_laser_neutral"); break;
+			case PROJECTILE_BUMBLE_BEAM: SETMODEL(self, "models/elaser.mdl");self.traileffect = particleeffectnum("rocketminsta_laser_neutral"); break;
 
-			case PROJECTILE_NADE: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum(nade_suffix); break;
-			case PROJECTILE_NADE_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum(strcat(nade_suffix, "_burn")); break;
-			case PROJECTILE_NADE_NAPALM: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
-			case PROJECTILE_NADE_NAPALM_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3"); self.traileffect = particleeffectnum("spiderbot_rocket_thrust"); break;
-			case PROJECTILE_NADE_ICE: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
-			case PROJECTILE_NADE_ICE_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("wakizashi_rocket_thrust"); break;
-			case PROJECTILE_NADE_TRANSLOCATE: setmodel(self, "models/runematch/rune.mdl"); self.traileffect = particleeffectnum("TR_CRYLINKPLASMA"); break;
-			case PROJECTILE_NADE_SPAWN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_yellow"); break;
-			case PROJECTILE_NADE_HEAL: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red"); break;
-			case PROJECTILE_NADE_HEAL_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red_burn"); break;
-			case PROJECTILE_NADE_MONSTER: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red"); break;
-			case PROJECTILE_NADE_MONSTER_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red_burn"); break;
+			case PROJECTILE_NADE: SETMODEL(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum(nade_suffix); break;
+			case PROJECTILE_NADE_BURN: SETMODEL(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum(strcat(nade_suffix, "_burn")); break;
+			case PROJECTILE_NADE_NAPALM: SETMODEL(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
+			case PROJECTILE_NADE_NAPALM_BURN: SETMODEL(self, "models/weapons/v_ok_grenade.md3"); self.traileffect = particleeffectnum("spiderbot_rocket_thrust"); break;
+			case PROJECTILE_NADE_ICE: SETMODEL(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
+			case PROJECTILE_NADE_ICE_BURN: SETMODEL(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("wakizashi_rocket_thrust"); break;
+			case PROJECTILE_NADE_TRANSLOCATE: SETMODEL(self, "models/runematch/rune.mdl"); self.traileffect = particleeffectnum("TR_CRYLINKPLASMA"); break;
+			case PROJECTILE_NADE_SPAWN: SETMODEL(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_yellow"); break;
+			case PROJECTILE_NADE_HEAL: SETMODEL(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red"); break;
+			case PROJECTILE_NADE_HEAL_BURN: SETMODEL(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red_burn"); break;
+			case PROJECTILE_NADE_MONSTER: SETMODEL(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red"); break;
+			case PROJECTILE_NADE_MONSTER_BURN: SETMODEL(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red_burn"); break;
             
             
-			case PROJECTILE_RPC: setmodel(self, "models/weapons/ok_rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
+			case PROJECTILE_RPC: SETMODEL(self, "models/weapons/ok_rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
 
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");

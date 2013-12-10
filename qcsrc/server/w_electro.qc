@@ -202,7 +202,7 @@ void W_Electro_Attack2()
 	entity p2;
 	p2 = spawn();
 	copyentity(proj, p2);
-	setmodel(p2, "models/ebomb.mdl");
+	SETMODEL(p2, "models/ebomb.mdl");
 	setsize(p2, proj.mins, proj.maxs);
 #endif
 

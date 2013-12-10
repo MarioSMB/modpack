@@ -542,7 +542,7 @@ float MOVETYPE_FLY_WORLDONLY = 33;
 //definitions:
 //string dp_null_model = "null";
 //description:
-//setmodel(e, "null"); makes an entity invisible, have a zero bbox, but
+//SETMODEL(e, "null"); makes an entity invisible, have a zero bbox, but
 //networked. useful for shared CSQC entities.
 
 //DP_MOVETYPEFOLLOW

@@ -249,7 +249,7 @@ void dom_controlpoint_setup()
 
 	// copy important properties from spawnfunc_dom_team entity
 	self.goalentity = head;
-	setmodel(self, head.mdl); // precision already set
+	SETMODEL(self, head.mdl); // precision already set
 	self.skin = head.skin;
 
 	self.cnt = -1;
@@ -498,7 +498,7 @@ void spawnfunc_dom_team()
 	if (self.noise1 != "")
 		precache_sound(self.noise1);
 	self.classname = "dom_team";
-	setmodel(self, self.model); // precision not needed
+	SETMODEL(self, self.model); // precision not needed
 	self.mdl = self.model;
 	self.dmg = self.modelindex;
 	self.model = "";
@@ -551,7 +551,7 @@ void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float p
 	self.message = capmessage;
 
 	// this code is identical to spawnfunc_dom_team
-	setmodel(self, self.model); // precision not needed
+	SETMODEL(self, self.model); // precision not needed
 	self.mdl = self.model;
 	self.dmg = self.modelindex;
 	self.model = "";

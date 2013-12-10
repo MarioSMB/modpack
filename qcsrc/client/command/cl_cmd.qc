@@ -158,7 +158,7 @@ void LocalCommand_debugmodel(float request, float argc)
 
 			debugmodel_entity = spawn();
 			precache_model(modelname);
-			setmodel(debugmodel_entity, modelname);
+			SETMODEL(debugmodel_entity, modelname);
 			setorigin(debugmodel_entity, view_origin);
 			debugmodel_entity.angles = view_angles;
 			debugmodel_entity.draw = DrawDebugModel;

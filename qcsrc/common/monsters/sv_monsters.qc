@@ -376,7 +376,7 @@ void Monster_Fade ()
 		setorigin(self, self.pos1);
 		self.angles = self.pos2;
 		self.health = self.max_health;
-		setmodel(self, "null");
+		SETMODEL(self, "null");
 	}
 	else
 	{
@@ -1075,7 +1075,7 @@ float monster_initialize(float mon_id, float nodrop)
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 		monsters_total += 1;
 
-	setmodel(self, mon.model);
+	SETMODEL(self, mon.model);
 	setsize(self, mon.mins, mon.maxs);
 	self.flags				= FL_MONSTER;
 	self.takedamage			= DAMAGE_AIM;

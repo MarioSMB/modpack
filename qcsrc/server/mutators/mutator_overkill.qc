@@ -39,7 +39,7 @@ void start_hmg()
 	self.classname = "weapon_hmg";
 	self.respawntime = autocvar_g_overkill_superguns_respawn_time;
 	self.ok_item = TRUE;
-	setmodel(self, "models/weapons/g_ok_hmg.md3");
+	SETMODEL(self, "models/weapons/g_ok_hmg.md3");
 	self.pickup_anyway = TRUE;
 	spawnfunc_weapon_hmg();
 }
@@ -50,7 +50,7 @@ void start_rpc()
 	self.respawntime = autocvar_g_overkill_superguns_respawn_time;
 	self.ok_item = TRUE;
 	self.pickup_anyway = TRUE;
-	setmodel(self, "models/weapons/g_ok_rl.md3");
+	SETMODEL(self, "models/weapons/g_ok_rl.md3");
 	spawnfunc_weapon_rpc();
 }
 

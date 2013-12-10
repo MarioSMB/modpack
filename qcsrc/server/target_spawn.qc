@@ -14,7 +14,7 @@ float target_spawn_count;
 
 void target_spawn_helper_setmodel()
 {
-	setmodel(self, self.model);
+	SETMODEL(self, self.model);
 }
 
 void target_spawn_helper_setsize()

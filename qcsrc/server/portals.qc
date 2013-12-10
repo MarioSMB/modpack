@@ -620,7 +620,7 @@ entity Portal_Spawn(entity own, vector org, vector ang)
 	portal.event_damage = Portal_Damage;
 	portal.fade_time = time + autocvar_g_balance_portal_lifetime;
 	portal.health = autocvar_g_balance_portal_health;
-	setmodel(portal, "models/portal.md3");
+	SETMODEL(portal, "models/portal.md3");
 	portal.savemodelindex = portal.modelindex;
 	portal.customizeentityforclient = Portal_Customize;
 

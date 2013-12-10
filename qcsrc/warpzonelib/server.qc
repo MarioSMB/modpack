@@ -122,7 +122,7 @@ float WarpZone_Teleport(entity wz, entity player, float f0, float f1)
 		player.fixangle = FALSE;
 
 		entity ts = spawn();
-		setmodel(ts, "null");
+		SETMODEL(ts, "null");
 		ts.SendEntity = WarpZone_Teleported_Send;
 		ts.SendFlags = 0xFFFFFF;
 		ts.drawonlytoclient = player;
@@ -707,7 +707,7 @@ void spawnfunc_trigger_warpzone(void)
  	if(m != "")
  	{
  		precache_model(m);
- 		setmodel(self, m); // no precision needed
+ 		SETMODEL(self, m); // no precision needed
 	}
 	setorigin(self, self.origin);
 	if(self.scale)
@@ -729,7 +729,7 @@ void spawnfunc_func_camera(void)
  	if(self.model != "")
  	{
  		precache_model(self.model);
- 		setmodel(self, self.model); // no precision needed
+ 		SETMODEL(self, self.model); // no precision needed
 	}
 	setorigin(self, self.origin);
 	if(self.scale)

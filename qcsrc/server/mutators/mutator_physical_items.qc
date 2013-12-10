@@ -66,7 +66,7 @@ MUTATOR_HOOKFUNCTION(item_spawning)
 	// Ugly hack, but unless SOLID_TRIGGER is gotten to work with MOVETYPE_PHYSICS in the engine it can't be fixed.
 	entity wep;
 	wep = spawn();
-	setmodel(wep, self.model);
+	SETMODEL(wep, self.model);
 	setsize(wep, self.mins, self.maxs);
 	setorigin(wep, self.origin);
 	wep.angles = self.angles;

@@ -62,7 +62,7 @@ void hat_Think()
 		self.dmg = self.owner.modelindex;
 		self.deadflag = self.owner.deadflag;
 		if (self.owner.hatname != "" && fexists(strcat("models/hats/", self.owner.hatname, ".md3")))
-			setmodel(self, strcat("models/hats/", self.owner.hatname, ".md3")); // precision set below
+			SETMODEL(self, strcat("models/hats/", self.owner.hatname, ".md3")); // precision set below
 		else
 			self.model = "";
 

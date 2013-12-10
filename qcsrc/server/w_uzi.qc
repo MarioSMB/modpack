@@ -37,7 +37,7 @@ void UziFlash()
 		self.muzzle_flash = spawn();
 
 	// muzzle flash for 1st person view
-	setmodel(self.muzzle_flash, "models/uziflash.md3"); // precision set below
+	SETMODEL(self.muzzle_flash, "models/uziflash.md3"); // precision set below
 
 	self.muzzle_flash.scale = 0.75;
 	self.muzzle_flash.think = UZI_Flash_Go;

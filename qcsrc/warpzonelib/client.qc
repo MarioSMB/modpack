@@ -78,7 +78,7 @@ void WarpZone_Read(float isnew)
 	WarpZone_SetUp(self, self.enemy.oldorigin, self.enemy.avelocity, self.oldorigin, self.avelocity);
 
 	// link me
-	//setmodel(self, self.model);
+	//SETMODEL(self, self.model);
 	setorigin(self, self.origin);
 	setsize(self, self.mins, self.maxs);
 
@@ -135,7 +135,7 @@ void WarpZone_Camera_Read(float isnew)
 	self.drawmask = MASK_NORMAL;
 
 	// link me
-	//setmodel(self, self.model);
+	//SETMODEL(self, self.model);
 	setorigin(self, self.origin);
 	setsize(self, self.mins, self.maxs);
 

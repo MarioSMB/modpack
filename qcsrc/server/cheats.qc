@@ -392,7 +392,7 @@ float CheatCommand(float argc)
 			e.think = DragBox_Think;
 			e.nextthink = time;
 			e.solid = -1; // black
-			setmodel(e, "null"); // network it
+			SETMODEL(e, "null"); // network it
 			if(argc == 4)
 				e.cnt = stof(argv(1));
 			else
@@ -401,7 +401,7 @@ float CheatCommand(float argc)
 			e.aiment = spawn();
 			e.aiment.classname = "dragbox_corner_1";
 			e.aiment.owner = e;
-			setmodel(e.aiment, "models/marker.md3");
+			SETMODEL(e.aiment, "models/marker.md3");
 			e.aiment.skin = 0;
 			setsize(e.aiment, '0 0 0', '0 0 0');
 			if(argc == 4)
@@ -415,7 +415,7 @@ float CheatCommand(float argc)
 			e.enemy = spawn();
 			e.enemy.classname = "dragbox_corner_2";
 			e.enemy.owner = e;
-			setmodel(e.enemy, "models/marker.md3");
+			SETMODEL(e.enemy, "models/marker.md3");
 			e.enemy.skin = 1;
 			setsize(e.enemy, '0 0 0', '0 0 0');
 			end = normalize(self.origin + self.view_ofs - e.aiment.origin);
@@ -446,7 +446,7 @@ float CheatCommand(float argc)
 			e.think = DragBox_Think;
 			e.nextthink = time;
 			e.solid = 0; // nothing special
-			setmodel(e, "models/marker.md3");
+			SETMODEL(e, "models/marker.md3");
 			setsize(e, PL_MIN, PL_MAX);
 			e.skin = 2;
 			if(argc == 3)
@@ -1063,19 +1063,19 @@ void DragBox_Think()
 	if(self.cnt == -1) // actually race_place -1
 	{
 		// show "10 10" for qualifying spawns
-		setmodel(self.killindicator, "models/sprites/10.spr32");
-		setmodel(self.killindicator.killindicator, "models/sprites/10.spr32");
+		SETMODEL(self.killindicator, "models/sprites/10.spr32");
+		SETMODEL(self.killindicator.killindicator, "models/sprites/10.spr32");
 	}
 	else if(self.cnt == -2) // actually race_place 0
 	{
 		// show "10 0" for loser spawns
-		setmodel(self.killindicator, "models/sprites/10.spr32");
-		setmodel(self.killindicator.killindicator, "models/sprites/0.spr32");
+		SETMODEL(self.killindicator, "models/sprites/10.spr32");
+		SETMODEL(self.killindicator.killindicator, "models/sprites/0.spr32");
 	}
 	else
 	{
-		setmodel(self.killindicator, strcat("models/sprites/", ftos(mod(self.cnt, 10)), ".spr32"));
-		setmodel(self.killindicator.killindicator, strcat("models/sprites/", ftos(floor(self.cnt / 10)), ".spr32"));
+		SETMODEL(self.killindicator, strcat("models/sprites/", ftos(mod(self.cnt, 10)), ".spr32"));
+		SETMODEL(self.killindicator.killindicator, strcat("models/sprites/", ftos(floor(self.cnt / 10)), ".spr32"));
 	}
 
 	self.nextthink = time;

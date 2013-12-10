@@ -1318,7 +1318,7 @@ float turret_initialize(float tur_id)
 		
 	++turret_count;
 		
-	setmodel(self, tur.model);
+	SETMODEL(self, tur.model);
 	setsize(self, tur.mins, tur.maxs);
 	
 	self.turretid				= tur_id;
@@ -1343,7 +1343,7 @@ float turret_initialize(float tur_id)
 	self.nextthink			   += turret_count * sys_frametime;
 	
 	self.tur_head = spawn();
-	setmodel(self.tur_head, tur.head_model);
+	SETMODEL(self.tur_head, tur.head_model);
 	setsize(self.tur_head, '0 0 0', '0 0 0');
 	setorigin(self.tur_head, '0 0 0');
 	setattachment(self.tur_head, self, "tag_head");

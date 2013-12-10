@@ -86,7 +86,7 @@ void ons_throwgib(vector v_from, vector v_to, string smodel, float f_lifetime, f
 
 	gib = spawn();
 
-	setmodel(gib, smodel);
+	SETMODEL(gib, smodel);
 	setorigin(gib, v_from);
 	gib.solid = SOLID_CORPSE;
 	gib.move_movetype = MOVETYPE_BOUNCE;
@@ -128,7 +128,7 @@ void onslaught_generator_ray_spawn(vector org)
 {
 	entity e;
 	e = spawn();
-	setmodel(e, "models/onslaught/ons_ray.md3");
+	SETMODEL(e, "models/onslaught/ons_ray.md3");
 	setorigin(e, org);
 	e.angles = randomvec() * 360;
 	e.alpha = 0;
@@ -211,27 +211,27 @@ void generator_draw()
 void generator_damage(float hp)
 {
 	if(hp <= 0)
-		setmodel(self, "models/onslaught/generator_dead.md3");
+		SETMODEL(self, "models/onslaught/generator_dead.md3");
 	else if(hp < self.max_health * 0.10)
-		setmodel(self, "models/onslaught/generator_dmg9.md3");
+		SETMODEL(self, "models/onslaught/generator_dmg9.md3");
 	else if(hp < self.max_health * 0.20)
-		setmodel(self, "models/onslaught/generator_dmg8.md3");
+		SETMODEL(self, "models/onslaught/generator_dmg8.md3");
 	else if(hp < self.max_health * 0.30)
-		setmodel(self, "models/onslaught/generator_dmg7.md3");
+		SETMODEL(self, "models/onslaught/generator_dmg7.md3");
 	else if(hp < self.max_health * 0.40)
-		setmodel(self, "models/onslaught/generator_dmg6.md3");
+		SETMODEL(self, "models/onslaught/generator_dmg6.md3");
 	else if(hp < self.max_health * 0.50)
-		setmodel(self, "models/onslaught/generator_dmg5.md3");
+		SETMODEL(self, "models/onslaught/generator_dmg5.md3");
 	else if(hp < self.max_health * 0.60)
-		setmodel(self, "models/onslaught/generator_dmg4.md3");
+		SETMODEL(self, "models/onslaught/generator_dmg4.md3");
 	else if(hp < self.max_health * 0.70)
-		setmodel(self, "models/onslaught/generator_dmg3.md3");
+		SETMODEL(self, "models/onslaught/generator_dmg3.md3");
 	else if(hp < self.max_health * 0.80)
-		setmodel(self, "models/onslaught/generator_dmg2.md3");
+		SETMODEL(self, "models/onslaught/generator_dmg2.md3");
 	else if(hp < self.max_health * 0.90)
-		setmodel(self, "models/onslaught/generator_dmg1.md3");
+		SETMODEL(self, "models/onslaught/generator_dmg1.md3");
 	else if(hp <= self.max_health || hp >= self.max_health)
-		setmodel(self, "models/onslaught/generator.md3");
+		SETMODEL(self, "models/onslaught/generator.md3");
 
 	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
 }
@@ -241,7 +241,7 @@ void generator_construct()
 	self.netname = "Generator";
 
 	setorigin(self, self.origin);
-	setmodel(self, "models/onslaught/generator.md3");
+	SETMODEL(self, "models/onslaught/generator.md3");
 	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
 
 	self.move_movetype	= MOVETYPE_NOCLIP;
