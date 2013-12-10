@@ -1,6 +1,3 @@
-#define VEHICLES_ENABLED
-
-#ifdef VEHICLES_ENABLED
 #ifdef CSQC
 #include "vehicles.qh"
 #include "cl_vehicles.qh"
@@ -9,4 +6,3 @@
 #include "vehicles.qh"
 #include "sv_vehicles.qh"
 #endif // SVQC
-#endif // VEHICLES_ENABLED
