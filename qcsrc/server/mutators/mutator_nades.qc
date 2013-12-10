@@ -453,6 +453,14 @@ void nade_heal_boom()
 	healer.SendFlags |= 1;
 }
 
+void nade_monster_boom()
+{
+	entity e = spawnmonster(autocvar_g_nades_pokenade_monster_type, 0, self.realowner, self.realowner, self.origin, FALSE, 1);
+	
+	e.ltime = time + autocvar_g_nades_pokenade_monster_lifetime;
+	e.spawnshieldtime = e.ltime;
+}
+
 void nade_boom()
 {
 	string expef;
@@ -472,6 +480,7 @@ void nade_boom()
 			nade_blast = 0;
 			expef = "";
 			break;
+		case NADE_TYPE_MONSTER:
 		case NADE_TYPE_SPAWN:
 			nade_blast = 0;
 			switch(self.realowner.team)
@@ -521,6 +530,7 @@ void nade_boom()
 		case NADE_TYPE_TRANSLOCATE: nade_translocate_boom(); break;
 		case NADE_TYPE_SPAWN: nade_spawn_boom(); break;
 		case NADE_TYPE_HEAL: nade_heal_boom(); break;
+		case NADE_TYPE_MONSTER: nade_monster_boom(); break;
 	}
 
 	remove(self);
