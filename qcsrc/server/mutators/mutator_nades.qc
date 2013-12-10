@@ -455,10 +455,9 @@ void nade_heal_boom()
 
 void nade_monster_boom()
 {
-	entity e = spawnmonster(self.pokenade_type, 0, self.realowner, self.realowner, self.origin, FALSE, 1);
+	entity e = spawnmonster(self.pokenade_type, 0, self.realowner, self.realowner, self.origin, FALSE, TRUE, 1);
 	
 	e.ltime = time + autocvar_g_nades_pokenade_monster_lifetime;
-	e.spawnshieldtime = e.ltime;
 }
 
 void nade_boom()

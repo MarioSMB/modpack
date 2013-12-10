@@ -544,7 +544,8 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.health = max(1, self.revive_progress * self.max_health);
 		self.iceblock.alpha = bound(0.2, 1 - self.revive_progress, 1);
 
-		WaypointSprite_UpdateHealth(self.sprite, self.health);
+		if(!(self.spawnflags & MONSTERFLAG_INVINCIBLE))
+			WaypointSprite_UpdateHealth(self.sprite, self.health);
 
 		movelib_beak_simple(stopspeed);
 		self.frame = manim_idle;
@@ -562,7 +563,8 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.revive_progress = bound(0, self.revive_progress - self.ticrate * self.revive_speed, 1);
 		self.health = max(0, autocvar_g_nades_ice_health + (self.max_health-autocvar_g_nades_ice_health) * self.revive_progress );
 
-		WaypointSprite_UpdateHealth(self.sprite, self.health);
+		if(!(self.spawnflags & MONSTERFLAG_INVINCIBLE))
+			WaypointSprite_UpdateHealth(self.sprite, self.health);
 
 		movelib_beak_simple(stopspeed);
 		self.frame = manim_idle;
@@ -896,6 +898,8 @@ void monster_die(entity attacker, float gibbed)
 
 void monsters_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
+	if((self.spawnflags & MONSTERFLAG_INVINCIBLE) && deathtype != DEATH_KILL)
+		return;
 
 	if(self.frozen && deathtype != DEATH_KILL && deathtype != DEATH_NADE_ICE_FREEZE)
 		return;
@@ -1034,8 +1038,11 @@ float monster_spawn()
 	MonsterSound(monstersound_spawn, 0, FALSE, CH_VOICE);
 
 	WaypointSprite_Spawn(M_NAME(self.monsterid), 0, 1024, self, '0 0 1' * (self.maxs_z + 15), world, self.team, self, sprite, TRUE, RADARICON_DANGER, ((self.team) ? Team_ColorRGB(self.team) : '1 0 0'));
-	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
-	WaypointSprite_UpdateHealth(self.sprite, self.health);
+	if(!(self.spawnflags & MONSTERFLAG_INVINCIBLE))
+	{
+		WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
+		WaypointSprite_UpdateHealth(self.sprite, self.health);
+	}
 
 	self.think = monster_think;
 	self.nextthink = time + self.ticrate;

@@ -1,4 +1,4 @@
-entity spawnmonster (string monster, float monster_id, entity spawnedby, entity own, vector orig, float respwn, float moveflag)
+entity spawnmonster (string monster, float monster_id, entity spawnedby, entity own, vector orig, float respwn, float invincible, float moveflag)
 {
 	// ensure spawnfunc database is initialized
 	initialize_field_db();
@@ -10,6 +10,9 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 
 	if(!respwn)
 		e.spawnflags |= MONSTERFLAG_NORESPAWN;
+
+	if(invincible)
+		e.spawnflags |= MONSTERFLAG_INVINCIBLE;
 
 	setorigin(e, orig);
 

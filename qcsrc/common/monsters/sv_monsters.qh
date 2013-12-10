@@ -69,6 +69,7 @@ const float MONSTERFLAG_NORESPAWN = 4;
 const float MONSTERFLAG_FLY_VERTICAL = 8; // fly/swim vertically
 const float MONSTERFLAG_INFRONT = 32; // only check for enemies infront of us
 const float MONSTERFLAG_MINIBOSS = 64;	// monster spawns as mini-boss (also has a chance of naturally becoming one)
+const float MONSTERFLAG_INVINCIBLE = 128; // monster doesn't take damage (may be used for map objects & temporary monsters)
 const float MONSTERFLAG_SPAWNED = 16384; // flag for spawned monsters
 const float MONSTERFLAG_RESPAWNED = 32768; // flag for re-spawned monsters
 
