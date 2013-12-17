@@ -88,11 +88,8 @@ float INF_CheckWinner()
 
 void INF_RoundStart()
 {
-	if(warmup_stage)
-		allowed_to_spawn = TRUE;
-	else
-		allowed_to_spawn = FALSE;
-		
+	allowed_to_spawn = warmup_stage;
+
 	entity head;
 	FOR_EACH_PLAYER(head)
 		head.inf_realteam = head.team;
@@ -160,6 +157,7 @@ MUTATOR_HOOKFUNCTION(inf_ResetMap)
 {
 	FOR_EACH_PLAYER(self)
 	{
+		self.inf_nextteam = 0; // just incase
 		if(self.inf_realteam && self.inf_realteam != self.team)
 			MoveToTeam(self, self.inf_realteam, 8);
 		PutClientInServer(); // player re-spawns on new team?
