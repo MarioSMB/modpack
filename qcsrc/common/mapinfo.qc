@@ -691,6 +691,12 @@ float MapInfo_Type_FromString(string t)
 		t = "ka";
 		print("'. Should use '", t, "'.\n");
 	}
+	if(t == "invasion")
+	{
+		print("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
+		t = "inv";
+		print("'. Should use '", t, "'.\n");
+	}
 	if(t == "all")
 		return MAPINFO_TYPE_ALL;
 	for(e = MapInfo_Type_first; e; e = e.enemy)
