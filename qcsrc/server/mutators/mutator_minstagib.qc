@@ -59,58 +59,58 @@ void minstagib_ammocheck()
 	else
 	{
 		self.minstagib_needammo = TRUE;
-		if (self.health == 5)
+		if (self.health <= 5)
 		{
 			Damage(self, self, self, 5, DEATH_NOAMMO, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_MINSTAGIB_TERMINATED);
 		}
-		else if (self.health == 10)
+		else if (self.health <= 10)
 		{
 			Damage(self, self, self, 5, DEATH_NOAMMO, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_1);
 		}
-		else if (self.health == 20)
+		else if (self.health <= 20)
 		{
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_2);
 		}
-		else if (self.health == 30)
+		else if (self.health <= 30)
 		{
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_3);
 		}
-		else if (self.health == 40)
+		else if (self.health <= 40)
 		{
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_4);
 		}
-		else if (self.health == 50)
+		else if (self.health <= 50)
 		{
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_5);
 		}
-		else if (self.health == 60)
+		else if (self.health <= 60)
 		{
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_6);
 		}
-		else if (self.health == 70)
+		else if (self.health <= 70)
 		{
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_7);
 		}
-		else if (self.health == 80)
+		else if (self.health <= 80)
 		{
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_8);
 		}
-		else if (self.health == 90)
+		else if (self.health <= 90)
 		{
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER, CENTER_MINSTA_FINDAMMO);
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_NUM_9);
 		}
-		else if (self.health == 100)
+		else if (self.health >= 100 || self.health <= 100)
 		{
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_MULTI, MULTI_MINSTA_FINDAMMO);
 			Damage(self, self, self, 10, DEATH_NOAMMO, self.origin, '0 0 0');
