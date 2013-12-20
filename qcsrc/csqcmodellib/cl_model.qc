@@ -203,7 +203,7 @@ void CSQCModel_Draw()
 void CSQCModel_Read(float isnew)
 {
 	float sf;
-	sf = ReadShort();
+	sf = ReadInt24_t();
 
 	// some nice flags for CSQCMODEL_IF and the hooks
 	local noref float isplayer = (self.entnum >= 1 && self.entnum <= maxclients);

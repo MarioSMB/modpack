@@ -98,10 +98,10 @@ float CA_CheckWinner()
 
 	allowed_to_spawn = FALSE;
 	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
-	
+
 	FOR_EACH_PLAYER(e)
 		nades_Clear(e);
-		
+
 	return 1;
 }
 
@@ -148,7 +148,7 @@ MUTATOR_HOOKFUNCTION(ca_PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(ca_PutClientInServer)
 {
-	if(!allowed_to_spawn && self.classname != "observer")
+	if(!allowed_to_spawn && !IS_OBSERVER(self))
 	{
 		self.classname = "observer";
 		if(!self.caplayer)

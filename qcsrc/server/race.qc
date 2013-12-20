@@ -71,7 +71,7 @@ void race_SendNextCheckpoint(entity e, float spec) // qualifying only
 	recordholder = race_checkpoint_recordholders[cp];
 	if(recordholder == e.netname)
 		recordholder = "";
-		
+
 	if(!IS_REAL_CLIENT(e))
 		return;
 
@@ -126,7 +126,7 @@ void race_SendStatus(float id, entity e)
 {
 	if(!IS_REAL_CLIENT(e))
 		return;
-		
+
 	float msg;
 	if (id == 0)
 		msg = MSG_ONE;
@@ -422,7 +422,7 @@ void race_ClearTime(entity e)
 	e.race_movetime = e.race_movetime_frac = e.race_movetime_count = 0;
 	e.race_penalty_accumulator = 0;
 	e.race_lastpenalty = world;
-	
+
 	if(!IS_REAL_CLIENT(e))
 		return;
 

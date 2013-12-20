@@ -216,7 +216,7 @@ void InitGameplayMode()
 		fraglimit_override = autocvar_g_invasion_round_limit;
 		MUTATOR_ADD(gamemode_invasion);
 	}
-	
+
 	if(g_infection)
 	{
 		fraglimit_override = autocvar_g_infection_point_limit;

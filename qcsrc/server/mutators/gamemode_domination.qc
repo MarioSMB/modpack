@@ -44,7 +44,7 @@ void dompoint_captured ()
 		wait_time = autocvar_g_domination_point_rate;
 	else
 		wait_time = self.wait;
-		
+
 	if(domination_roundbased)
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_DOMINATION_CAPTURE, head.netname, self.message);
 	else
@@ -187,7 +187,7 @@ void dompointtouch()
 		return;
 	if (other.health < 1)
 		return;
-		
+
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
 		return;
 
@@ -200,7 +200,7 @@ void dompointtouch()
 		head = find(head, classname, "dom_team");
 	if (!head || head.netname == "" || head == self.goalentity)
 		return;
-		
+
 	nades_GiveBonus(other, autocvar_g_nades_bonus_score_medium);
 
 	// delay capture
@@ -616,9 +616,8 @@ void dom_Initialize()
 	precache_model("models/domination/dom_pink.md3");
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_sound("domination/claim.wav");
-	
+
 	domination_teams = ((autocvar_g_domination_teams_override < 2) ? autocvar_g_domination_default_teams : autocvar_g_domination_teams_override);
-	
 	domination_teams = ((c4>=0) ? 4 : (c3>=0) ? 3 : 2);
 
 	addstat(STAT_DOM_TOTAL_PPS, AS_FLOAT, dom_total_pps);

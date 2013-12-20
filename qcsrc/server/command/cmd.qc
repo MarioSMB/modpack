@@ -363,16 +363,16 @@ void ClientCommand_report(float request, float argc)
 			if(IS_PLAYER(self))
 			if(self.scorekeeper)
 				PlayerScore_Set(self, SP_FPS, stof(argv(2)));
-				
+
 			if(argv(1) == "fov")
 			{
 				self.clientfov = stof(argv(2));
 				UpdateSpectators(world, world);
 			}
-			
+
 			return; // never fall through to usage
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{

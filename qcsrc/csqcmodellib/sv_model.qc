@@ -34,7 +34,7 @@ float CSQCModel_Send(entity to, float sf)
 	unused_float = isnolocalplayer;
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MODEL);
-	WriteShort(MSG_ENTITY, sf);
+	WriteInt24_t(MSG_ENTITY, sf);
 
 #define CSQCMODEL_IF(cond) if(cond) {
 #define CSQCMODEL_ENDIF }

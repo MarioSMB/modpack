@@ -816,7 +816,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 				bprint("\{1}^2* ^3", GetCallerName(vote_caller), "^2 calls a vote for ", vote_called_display, "\n");
 				if(autocvar_sv_eventlog) { GameLogEcho(strcat(":vote:vcall:", ftos(vote_caller.playerid), ":", vote_called_display)); }
 				Nagger_VoteChanged();
-				
+
 				FOR_EACH_REALCLIENT(tmp_player)
 				switch(tmp_player.cvar_cl_autovote)
 				{
@@ -825,7 +825,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 					case "abstain": tmp_player.vote_selection = VOTE_SELECT_ABSTAIN; print_to(tmp_player, "You automatically abstained from the vote\n"); break;
 					default: break;
 				}
-				
+
 				VoteCount(TRUE); // needed if you are the only one
 			}
 

@@ -84,4 +84,3 @@ const float MONSTER_MOVE_ENEMY = 5; // used only as a movestate
 
 const float MONSTER_STATE_ATTACK_LEAP = 1;
 const float MONSTER_STATE_ATTACK_MELEE = 2;
-

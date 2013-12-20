@@ -714,7 +714,7 @@ void CSQC_UpdateView(float w, float h)
 	vid_conwidth = autocvar_vid_conwidth;
 	vid_conheight = autocvar_vid_conheight;
 	vid_pixelheight = autocvar_vid_pixelheight;
-	
+
 	if(spectatee_status == -1 || !spectatee_status)
 	if(fovlock >= 0)
 		fovlock = -1;

@@ -95,7 +95,7 @@ void ItemRead(float _IsNew)
         self.angles_z = ReadCoord();
         self.move_angles = self.angles;
     }
-	
+
 	if(sf & ISF_SIZE)
 	{
 		self.mins_x = ReadCoord();
@@ -253,7 +253,7 @@ float ItemSend(entity to, float sf)
         WriteCoord(MSG_ENTITY, self.angles_y);
         WriteCoord(MSG_ENTITY, self.angles_z);
     }
-	
+
 	if(sf & ISF_SIZE)
 	{
 		WriteCoord(MSG_ENTITY, self.mins_x);
@@ -1166,7 +1166,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
         self.pos2 = '16 16 32';
     }
     setsize (self, self.pos1, self.pos2);
-	
+
 	self.SendFlags |= ISF_SIZE;
 
     if(itemflags & FL_POWERUP)

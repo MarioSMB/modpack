@@ -630,7 +630,22 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 		CSQCPlayer_ModelAppearance_Apply(self.entnum == player_localnum + 1);
 		CSQCPlayer_LOD_Apply();
 		if(!isplayer)
+		{
+			skeleton_loadinfo(self);
+			float doblend = (self.bone_upperbody >= 0);
 			CSQCPlayer_FallbackFrame_Apply();
+			if(doblend)
+			{
+				skeleton_from_frames(self, self.csqcmodel_isdead);
+			}
+			else
+			{
+				free_skeleton_from_frames(self);
+				// just in case, clear these (we're animating in frame and frame3)
+				self.lerpfrac = 0;
+				self.lerpfrac4 = 0;
+			}
+		}
 		else
 		{
 			// we know that frame3 and frame4 fields, used by InterpolateAnimation, are left alone - but that is all we know!

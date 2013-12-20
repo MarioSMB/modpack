@@ -483,7 +483,7 @@ void ctf_Handle_Return(entity flag, entity player)
 		ctf_CaptureShield_Update(flag.ctf_dropper, 0); // shield player from picking up flag
 		flag.ctf_dropper.next_take_time = time + autocvar_g_ctf_flag_collect_delay; // set next take time
 	}
-	
+
 	// other
 	if(player.flagcarried == flag)
 		WaypointSprite_Kill(player.wps_flagcarrier);

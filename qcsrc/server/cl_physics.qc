@@ -804,12 +804,12 @@ void SV_PlayerPhysics()
 		else
 			self.movement = '0 0 0';
 		self.disableclientprediction = 1;
-	
+
 		vector midpoint = ((self.absmin + self.absmax) * 0.5);
 		if(pointcontents(midpoint) == CONTENT_WATER)
 		{
 			self.velocity = self.velocity * 0.5;
-					
+
 			if(pointcontents(midpoint + '0 0 16') == CONTENT_WATER)
 				{ self.velocity_z = 200; }
 		}
