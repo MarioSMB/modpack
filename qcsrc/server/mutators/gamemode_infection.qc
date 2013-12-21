@@ -1,10 +1,3 @@
-float total_players;
-float redalive, bluealive, yellowalive, pinkalive;
-float inf_teams;
-float allowed_to_spawn;
-.float inf_realteam;
-.float inf_nextteam;
-
 void INF_count_alive_players()
 {
 	entity e;
@@ -100,7 +93,6 @@ void INF_RoundStart()
 		head.inf_realteam = head.team;
 }
 
-float prev_total_players;
 float INF_CheckTeams()
 {
 	allowed_to_spawn = TRUE;
@@ -117,8 +109,10 @@ float INF_CheckTeams()
 		float p1 = 0, p2 = 0, p3 = 0, p4 = 0;
 		if(!redalive) p1 = NUM_TEAM_1;
 		if(!bluealive) p2 = NUM_TEAM_2;
-		if(inf_teams >= 3) { if(!yellowalive) p3 = NUM_TEAM_3; } else p3 = 1;
-		if(inf_teams >= 4) { if(!pinkalive) p4 = NUM_TEAM_4; } else p4 = 1;
+		if(!yellowalive) p3 = NUM_TEAM_3;
+		if(!pinkalive) p4 = NUM_TEAM_4;
+		if(inf_teams < 3) p3 = 1;
+		if(inf_teams < 4) p4 = 1;
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, p1, p2, p3, p4);
 		prev_total_players = total_players;
 	}

@@ -58,6 +58,7 @@ mutators/gamemode_nexball.qh
 mutators/gamemode_lms.qh
 mutators/gamemode_vip.qh
 mutators/gamemode_invasion.qh
+mutators/gamemode_infection.qh
 mutators/mutator_dodging.qh
 mutators/mutator_overkill.qh
 mutators/mutator_freeze.qh
