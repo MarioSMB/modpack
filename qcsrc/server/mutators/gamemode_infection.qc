@@ -134,6 +134,10 @@ MUTATOR_HOOKFUNCTION(inf_PlayerSpawn)
 		MoveToTeam(self, self.inf_nextteam, 8);
 		self.inf_nextteam = 0;
 	}
+	
+	if(!self.inf_realteam)
+	if(round_handler_IsRoundStarted())
+		self.inf_realteam = self.team;
 
 	return FALSE;
 }
