@@ -933,7 +933,7 @@ void ClientKill_TeamChange (float targetteam) // 0 = don't change, -1 = auto, -2
 	if (gameover)
 		return;
 
-	if(g_infection && self.deadflag == DEAD_NO && round_handler_IsRoundStarted())
+	if(g_infection && IS_PLAYER(self) && targetteam > 0 && round_handler_IsRoundStarted())
 	{
 		sprint(self, "You cannot change teams after the round has started.\n");
 		return;
