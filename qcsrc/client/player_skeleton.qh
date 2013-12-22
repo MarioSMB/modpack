@@ -8,3 +8,5 @@ void skeleton_loadinfo(entity e);
 .float bone_aimweight[MAX_AIM_BONES];
 .float fixbone;
 .float bone_hat;
+.vector hat_height;
+.float hat_scale;

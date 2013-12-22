@@ -42,6 +42,26 @@ void hats_Precache(string pattern)
 	search_end(globhandle);
 }
 
+float hats_getscale(entity e)
+{
+	float s;
+	get_model_parameters(e.model, e.skin);
+	s = get_model_parameters_hat_scale;
+	get_model_parameters(string_null, 0);
+	
+	return s;
+}
+
+vector hats_getheight(entity e)
+{
+	vector s;
+	get_model_parameters(e.model, e.skin);
+	s = get_model_parameters_hat_height;
+	get_model_parameters(string_null, 0);
+	
+	return s;
+}
+
 void hat_Think()
 {
 	float tag_found;
@@ -70,14 +90,22 @@ void hat_Think()
 		{
 			self.tag_index = tag_found;
 			self.tag_entity = self.owner;
+			setorigin(self, hats_getheight(self.owner));
+			self.scale = hats_getscale(self.owner);
 		}
 		else
+		{
 			setattachment(self, self.owner, "head");
+			setorigin(self, hats_getheight(self.owner));
+			self.scale = hats_getscale(self.owner);
+		}
 	}
 	self.effects = self.owner.effects;
 	self.effects |= EF_LOWPRECISION;
 	self.effects = self.effects & EFMASK_CHEAP; // eat performance
-	if(self.owner.alpha == default_player_alpha)
+	if(self.scale < -1)
+		self.alpha = -1;
+	else if(self.owner.alpha == default_player_alpha)
 		self.alpha = default_weapon_alpha;
 	else if(self.owner.alpha != 0)
 		self.alpha = self.owner.alpha;

@@ -36,6 +36,8 @@ void skeleton_loadinfo(entity e)
 			e.fixbone = get_model_parameters_fixbone;
 		if(get_model_parameters_bone_weapon)
 			e.bone_weapon = gettagindex(e, get_model_parameters_bone_weapon);
+		if(get_model_parameters_bone_head)
+			e.bone_hat = gettagindex(e, get_model_parameters_bone_head);
 		for(i = 0; i < MAX_AIM_BONES; ++i)
 		{
 			if(get_model_parameters_bone_aim[i])
