@@ -405,6 +405,12 @@ void havocbot_role_dom()
 	}
 }
 
+MUTATOR_HOOKFUNCTION(dom_GetTeamCount)
+{
+	ret_float = domination_teams;
+	return 0;
+}
+
 MUTATOR_HOOKFUNCTION(dom_ResetMap)
 {
 	FOR_EACH_PLAYER(self)
@@ -526,7 +532,6 @@ void ScoreRules_dom()
 			sp_domticks = SFL_SORT_PRIO_PRIMARY;
 		else
 			sp_score = SFL_SORT_PRIO_PRIMARY;
-		CheckAllowedTeams(world);
 		ScoreRules_basics(domination_teams, sp_score, sp_score, TRUE);
 		ScoreInfo_SetLabel_TeamScore  (ST_DOM_TICKS,    "ticks",     sp_domticks);
 		ScoreInfo_SetLabel_PlayerScore(SP_DOM_TICKS,    "ticks",     sp_domticks);
@@ -590,6 +595,16 @@ void dom_spawnteams()
 
 void dom_DelayedInit() // Do this check with a delay so we can wait for teams to be set up.
 {
+	CheckAllowedTeams(world);
+	domination_teams = ((autocvar_g_domination_teams_override < 2) ? autocvar_g_domination_default_teams : autocvar_g_domination_teams_override);
+	domination_teams = ((c4>=0) ? 4 : (c3>=0) ? 3 : 2);
+
+	addstat(STAT_DOM_TOTAL_PPS, AS_FLOAT, dom_total_pps);
+	addstat(STAT_DOM_PPS_RED, AS_FLOAT, dom_pps_red);
+	addstat(STAT_DOM_PPS_BLUE, AS_FLOAT, dom_pps_blue);
+	if(domination_teams >= 3) addstat(STAT_DOM_PPS_YELLOW, AS_FLOAT, dom_pps_yellow);
+	if(domination_teams >= 4) addstat(STAT_DOM_PPS_PINK, AS_FLOAT, dom_pps_pink);
+
 	// if no teams are found, spawn defaults
 	if(find(world, classname, "dom_team") == world || autocvar_g_domination_teams_override >= 2)
 	{
@@ -617,21 +632,13 @@ void dom_Initialize()
 	precache_model("models/domination/dom_unclaimed.md3");
 	precache_sound("domination/claim.wav");
 
-	domination_teams = ((autocvar_g_domination_teams_override < 2) ? autocvar_g_domination_default_teams : autocvar_g_domination_teams_override);
-	domination_teams = ((c4>=0) ? 4 : (c3>=0) ? 3 : 2);
-
-	addstat(STAT_DOM_TOTAL_PPS, AS_FLOAT, dom_total_pps);
-	addstat(STAT_DOM_PPS_RED, AS_FLOAT, dom_pps_red);
-	addstat(STAT_DOM_PPS_BLUE, AS_FLOAT, dom_pps_blue);
-	if(domination_teams >= 3) addstat(STAT_DOM_PPS_YELLOW, AS_FLOAT, dom_pps_yellow);
-	if(domination_teams >= 4) addstat(STAT_DOM_PPS_PINK, AS_FLOAT, dom_pps_pink);
-
 	InitializeEntity(world, dom_DelayedInit, INITPRIO_GAMETYPE);
 }
 
 
 MUTATOR_DEFINITION(gamemode_domination)
 {
+	MUTATOR_HOOK(GetTeamCount, dom_GetTeamCount, CBC_ORDER_ANY);
 	MUTATOR_HOOK(reset_map_players, dom_ResetMap, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, dom_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientConnect, dom_ClientConnect, CBC_ORDER_ANY);
