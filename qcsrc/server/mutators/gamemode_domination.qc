@@ -413,10 +413,13 @@ MUTATOR_HOOKFUNCTION(dom_GetTeamCount)
 
 MUTATOR_HOOKFUNCTION(dom_ResetMap)
 {
+	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
 	FOR_EACH_PLAYER(self)
 	{
 		PutClientInServer();
 		self.player_blocked = 1;
+		if(IS_REAL_CLIENT(self))
+			set_dom_state(self);
 	}
 	return 1;
 }
