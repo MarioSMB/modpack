@@ -2,29 +2,6 @@
 .string cvar_cl_hat;
 .string hatname; // only update when the player spawns
 
-float is_customplayermodel(entity ent)
-{
-	if(!autocvar_sv_allow_customplayermodels)
-		return FALSE;
-
-	if(ent.cvar_cl_damnfurries > 1)
-		return TRUE;
-
-	if(ent.cvar_cl_robot)
-		return TRUE;
-
-	if(ent.cvar_cl_bikini)
-		return TRUE;
-
-	if(ent.cvar_cl_sparkle > 2)
-		return TRUE;
-
-	if(ent.cvar_cl_pony)
-		return TRUE;
-
-	return FALSE;
-}
-
 void hats_Precache(string pattern)
 {
 	float globhandle, i, n;
@@ -66,7 +43,7 @@ void hat_Think()
 {
 	float tag_found;
 	self.nextthink = time;
-	if (self.owner.hatentity != self || is_customplayermodel(self.owner))
+	if (self.owner.hatentity != self)
 	{
 		remove(self);
 		return;
@@ -140,12 +117,9 @@ void hats_SpawnHat()
 
 MUTATOR_HOOKFUNCTION(hats_PlayerSpawn)
 {
-	if(!is_customplayermodel(self))
-	{
-		hats_SpawnHat();
-		self.hatentity.alpha = default_weapon_alpha;
-		self.hatname = strzone(self.cvar_cl_hat);
-	}
+	hats_SpawnHat();
+	self.hatentity.alpha = default_weapon_alpha;
+	self.hatname = strzone(self.cvar_cl_hat);
 
 	return FALSE;
 }
