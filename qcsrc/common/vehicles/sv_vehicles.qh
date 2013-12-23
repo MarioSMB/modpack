@@ -89,7 +89,7 @@ void vehicles_enter(entity pl, entity veh);
 .void(float exit_flags) vehicle_exit;
 const float VHEF_NORMAL = 0;  /// User pressed exit key
 const float VHEF_EJECT  = 1;  /// User pressed exit key 3 times fast (not implemented) or vehile is dying
-const float VHEF_RELESE = 2;  /// Release ownership, client possibly allready dissconnected / went spec / changed team / used "kill" (not implemented)
+const float VHEF_RELEASE = 2;  /// Release ownership, client possibly allready dissconnected / went spec / changed team / used "kill" (not implemented)
 
 // macros
 #define VEHICLE_UPDATE_PLAYER(ply,fld,vhname) \

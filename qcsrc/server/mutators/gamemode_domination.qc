@@ -421,6 +421,8 @@ MUTATOR_HOOKFUNCTION(dom_ResetMap)
 	{
 		if(IS_PLAYER(self))
 		{
+			if(self.vehicle)
+				vehicles_exit(VHEF_RELEASE);
 			PutClientInServer();
 			self.player_blocked = 1;
 		}

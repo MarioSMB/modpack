@@ -665,7 +665,7 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 			if(self.vehicle_flags & VHF_DEATHEJECT)
 				vehicles_exit(VHEF_EJECT);
 			else
-				vehicles_exit(VHEF_RELESE);
+				vehicles_exit(VHEF_RELEASE);
 
 
 		antilag_clear(self);

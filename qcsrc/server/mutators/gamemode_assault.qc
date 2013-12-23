@@ -222,7 +222,7 @@ void assault_new_round()
     FOR_EACH_PLAYER(self)
     {
         if(self.vehicle)
-            vehicles_exit(VHEF_RELESE);
+            vehicles_exit(VHEF_RELEASE);
     }
 
     self = findchainflags(vehicle_flags, VHF_ISVEHICLE);

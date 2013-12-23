@@ -181,7 +181,7 @@ void PutObserverInServer (void)
 	}
 
 	if(self.vehicle)
-		vehicles_exit(VHEF_RELESE);
+		vehicles_exit(VHEF_RELEASE);
 
 	WaypointSprite_PlayerDead();
 
@@ -861,7 +861,7 @@ void ClientKill_Now()
 {
 	if(self.vehicle)
 	{
-	    vehicles_exit(VHEF_RELESE);
+	    vehicles_exit(VHEF_RELEASE);
 	    if(!self.killindicator_teamchange)
 	    {
             self.vehicle_health = -1;
@@ -1357,7 +1357,7 @@ void ClientDisconnect (void)
 	UpdateSpectators(self, world);
 
 	if(self.vehicle)
-	    vehicles_exit(VHEF_RELESE);
+	    vehicles_exit(VHEF_RELEASE);
 
 	if (!IS_CLIENT(self))
 	{
@@ -1737,7 +1737,7 @@ void player_regen (void)
 	if(self.health < 1)
 	{
 		if(self.vehicle)
-			vehicles_exit(VHEF_RELESE);
+			vehicles_exit(VHEF_RELEASE);
 		self.event_damage(self, self, 1, DEATH_ROT, self.origin, '0 0 0');
 	}
 
@@ -2455,7 +2455,7 @@ void PlayerPreThink (void)
 		if(self.health < 1)
 		{
 			if(self.vehicle)
-				vehicles_exit(VHEF_RELESE);
+				vehicles_exit(VHEF_RELEASE);
 			self.event_damage(self, self.frozen_by, 1, DEATH_NADE_ICE_FREEZE, self.origin, '0 0 0');
 		}
 		else if ( self.revive_progress <= 0 )
