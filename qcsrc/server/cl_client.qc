@@ -333,6 +333,8 @@ void FixPlayermodel()
 		// special hax
 		if(checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist) || IS_BOT_CLIENT(self))
 		{
+			if(self.cvar_cl_thestars == 1)
+				defaultmodel = "models/player/rosalina.dpm";
 			if(self.cvar_cl_damnfurries == 1)
 				defaultmodel = "models/player/renamon.iqm";
 			if(self.cvar_cl_damnfurries == 2)

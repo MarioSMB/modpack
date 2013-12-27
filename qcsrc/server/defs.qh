@@ -630,6 +630,7 @@ string modname;
 .float cvar_cl_bikini;
 .float cvar_cl_bikini_skin;
 .float cvar_cl_damnfurries;
+.float cvar_cl_thestars;
 .float cvar_cl_robot;
 .float cvar_cl_charge;
 
