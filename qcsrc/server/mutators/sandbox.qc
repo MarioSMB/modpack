@@ -324,7 +324,7 @@ entity sandbox_ObjectPort_Load(string s, float database)
 			parent = e; // mark parent objects as such
 		}
 		// properties stored for all objects
-		SETMODEL(e, argv(argv_num));	++argv_num;
+		setmodel_fixsize(e, argv(argv_num));	++argv_num;
 		e.skin = stof(argv(argv_num));	++argv_num;
 		e.alpha = stof(argv(argv_num));	++argv_num;
 		e.colormod = stov(argv(argv_num));	++argv_num;
@@ -499,7 +499,7 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 				}
 
 				e = sandbox_ObjectSpawn(FALSE);
-				SETMODEL(e, argv(2));
+				setmodel_fixsize(e, argv(2));
 
 				if(autocvar_g_sandbox_info > 0)
 					print(strcat("^3SANDBOX - SERVER: ^7", self.netname, " spawned an object at origin ^3", vtos(e.origin), "\n"));

@@ -640,10 +640,10 @@ void spiderbot_blowup()
 	g1 = spawn();
 	g2 = spawn();
 
-	SETMODEL(b, "models/vehicles/spiderbot.dpm");
-	SETMODEL(h, "models/vehicles/spiderbot_top.dpm");
-	SETMODEL(g1, "models/vehicles/spiderbot_barrels.dpm");
-	SETMODEL(g2, "models/vehicles/spiderbot_barrels.dpm");
+	setmodel(b, "models/vehicles/spiderbot.dpm");
+	setmodel(h, "models/vehicles/spiderbot_top.dpm");
+	setmodel(g1, "models/vehicles/spiderbot_barrels.dpm");
+	setmodel(g2, "models/vehicles/spiderbot_barrels.dpm");
 
 	setorigin(b, self.origin);
 	b.frame = 11;
@@ -796,8 +796,8 @@ float v_spiderbot(float req)
 				self.vehicles_impulse = spiderbot_impulse;
 				self.gun1 = spawn();
 				self.gun2 = spawn();
-				SETMODEL(self.gun1, "models/vehicles/spiderbot_barrels.dpm");
-				SETMODEL(self.gun2, "models/vehicles/spiderbot_barrels.dpm");
+				setmodel(self.gun1, "models/vehicles/spiderbot_barrels.dpm");
+				setmodel(self.gun2, "models/vehicles/spiderbot_barrels.dpm");
 				setattachment(self.gun1, self.tur_head, "tag_hardpoint01");
 				setattachment(self.gun2, self.tur_head, "tag_hardpoint02");
 				self.gravity = 2;

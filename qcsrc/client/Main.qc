@@ -720,7 +720,7 @@ void Ent_ReadSpawnPoint(float is_new) // entity for spawnpoint
 			self.mdl = "models/spawnpoint.md3";
 			self.colormod = Team_ColorRGB(teamnum);
 			precache_model(self.mdl);
-			SETMODEL(self, self.mdl);
+			setmodel(self, self.mdl);
 			self.drawmask = MASK_NORMAL;
 			//self.movetype = MOVETYPE_NOCLIP;
 			//self.draw = Spawn_Draw;

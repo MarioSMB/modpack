@@ -587,7 +587,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	ice.think = Ice_Think;
 	ice.nextthink = time;
 	ice.frame = floor(random() * 21); // ice model has 20 different looking frames
-	SETMODEL(ice, "models/ice/ice.md3");
+	setmodel(ice, "models/ice/ice.md3");
 	ice.alpha = 1;
 	ice.colormod = Team_ColorRGB(targ.team);
 	ice.glowmod = ice.colormod;

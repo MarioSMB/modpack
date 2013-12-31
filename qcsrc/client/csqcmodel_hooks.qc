@@ -27,7 +27,7 @@ void CSQCPlayer_LOD_Apply(void)
 		if(fexists(s))
 		{
 			precache_model(s);
-			SETMODEL(self, s);
+			setmodel(self, s);
 			if(self.modelindex)
 				self.lodmodelindex1 = self.modelindex;
 		}
@@ -36,12 +36,12 @@ void CSQCPlayer_LOD_Apply(void)
 		if(fexists(s))
 		{
 			precache_model(s);
-			SETMODEL(self, s);
+			setmodel(self, s);
 			if(self.modelindex)
 				self.lodmodelindex2 = self.modelindex;
 		}
 
-		SETMODEL(self, modelname); // make everything normal again
+		setmodel(self, modelname); // make everything normal again
 		setsize(self, mi, ma);
 	}
 
@@ -126,7 +126,7 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 		entity e;
 		e = spawn();
 		precache_model(cvar_defstring("_cl_playermodel"));
-		SETMODEL(e, cvar_defstring("_cl_playermodel"));
+		setmodel(e, cvar_defstring("_cl_playermodel"));
 		forceplayermodels_goodmodel = e.model;
 		forceplayermodels_goodmodelindex = e.modelindex;
 		remove(e);
@@ -157,7 +157,7 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 		// only if this failed, find it out on our own
 		entity e;
 		e = spawn();
-		SETMODEL(e, autocvar__cl_playermodel); // this is harmless, see below
+		setmodel(e, autocvar__cl_playermodel); // this is harmless, see below
 		forceplayermodels_modelisgoodmodel = fexists(e.model);
 		forceplayermodels_model = e.model;
 		forceplayermodels_modelindex = e.modelindex;
@@ -169,7 +169,7 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 	{
 		entity e;
 		e = spawn();
-		SETMODEL(e, autocvar_cl_forcemyplayermodel); // this is harmless, see below
+		setmodel(e, autocvar_cl_forcemyplayermodel); // this is harmless, see below
 		forceplayermodels_myisgoodmodel = fexists(e.model);
 		forceplayermodels_mymodel = e.model;
 		forceplayermodels_mymodelindex = e.modelindex;

@@ -106,11 +106,11 @@ void Ent_Casing(float isNew)
 		switch(casing.state)
 		{
 			case 1:
-				SETMODEL(casing, "models/casing_shell.mdl");
+				setmodel(casing, "models/casing_shell.mdl");
 				casing.cnt = time + autocvar_cl_casings_shell_time;
 				break;
 			default:
-				SETMODEL(casing, "models/casing_bronze.iqm");
+				setmodel(casing, "models/casing_bronze.iqm");
 				casing.cnt = time + autocvar_cl_casings_bronze_time;
 				break;
 		}

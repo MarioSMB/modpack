@@ -40,7 +40,7 @@ void healer_draw()
 
 void healer_setup()
 {
-	SETMODEL(self, "models/ctf/shield.md3");
+	setmodel(self, "models/ctf/shield.md3");
 
 	setorigin(self, self.origin);
 	

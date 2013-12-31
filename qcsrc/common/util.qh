@@ -9,7 +9,7 @@ void FixSize(entity e)
 	e.maxs_z = rint(e.maxs_z);
 }
 
-void SETMODEL(entity e, string m)
+void setmodel_fixsize(entity e, string m)
 {
 	setmodel(e, m);
 	FixSize(e);

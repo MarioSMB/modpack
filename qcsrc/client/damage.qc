@@ -100,7 +100,7 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 	}
 
 	e = spawn();
-	SETMODEL(e, "null"); // necessary to attach and read origin // samual: FIXME: this is weird, is there some better way to do this?
+	setmodel(e, "null"); // necessary to attach and read origin // samual: FIXME: this is weird, is there some better way to do this?
 	setattachment(e, self, gettaginfo_name); // attach to the given bone
 	e.classname = "damage";
 	e.owner = self;

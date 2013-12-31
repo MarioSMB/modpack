@@ -275,7 +275,7 @@ void Ent_ReadHook(float bIsNew, float type)
 			default:
 			case ENT_CLIENT_HOOK:
 				// for the model
-				SETMODEL(self, "models/hook.md3");
+				setmodel(self, "models/hook.md3");
 				self.drawmask = MASK_NORMAL;
 				break;
 			case ENT_CLIENT_LGBEAM:

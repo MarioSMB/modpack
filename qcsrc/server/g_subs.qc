@@ -784,13 +784,13 @@ void LODmodel_attach()
 		ma = self.maxs;
 
 		precache_model(self.lodmodel1);
-		SETMODEL(self, self.lodmodel1);
+		setmodel(self, self.lodmodel1);
 		self.lodmodelindex1 = self.modelindex;
 
 		if(self.lodmodel2 != "")
 		{
 			precache_model(self.lodmodel2);
-			SETMODEL(self, self.lodmodel2);
+			setmodel(self, self.lodmodel2);
 			self.lodmodelindex2 = self.modelindex;
 		}
 
@@ -839,11 +839,11 @@ void SetBrushEntityModel()
 		{
 			vector mi = self.mins;
 			vector ma = self.maxs;
-			SETMODEL(self, self.model); // no precision needed
+			setmodel(self, self.model); // no precision needed
 			setsize(self, mi, ma);
 		}
 		else
-			SETMODEL(self, self.model); // no precision needed
+			setmodel(self, self.model); // no precision needed
 		InitializeEntity(self, LODmodel_attach, INITPRIO_FINDTARGET);
  	}
 	setorigin(self, self.origin);
@@ -859,11 +859,11 @@ void SetBrushEntityModelNoLOD()
 		{
 			vector mi = self.mins;
 			vector ma = self.maxs;
-			SETMODEL(self, self.model); // no precision needed
+			setmodel(self, self.model); // no precision needed
 			setsize(self, mi, ma);
 		}
 		else
-			SETMODEL(self, self.model); // no precision needed
+			setmodel(self, self.model); // no precision needed
  	}
 	setorigin(self, self.origin);
 	ApplyMinMaxScaleAngles(self);

@@ -564,7 +564,7 @@ float raptor_frame()
 			for(i = 0; i < 3; ++i)
 			{
 			_flare = spawn();
-			SETMODEL(_flare, "models/runematch/rune.mdl");
+			setmodel(_flare, "models/runematch/rune.mdl");
 			_flare.effects = EF_LOWPRECISION | EF_FLAME;
 			_flare.scale = 0.5;
 			setorigin(_flare, self.origin - '0 0 16');
@@ -834,11 +834,11 @@ float v_raptor(float req)
 				self.gun1  = spawn();
 				self.gun2  = spawn();
 
-				SETMODEL(self.bomb1,"models/vehicles/clusterbomb_folded.md3");
-				SETMODEL(self.bomb2,"models/vehicles/clusterbomb_folded.md3");
-				SETMODEL(self.gun1, "models/vehicles/raptor_gun.dpm");
-				SETMODEL(self.gun2, "models/vehicles/raptor_gun.dpm");
-				SETMODEL(self.tur_head, "models/vehicles/raptor_body.dpm");
+				setmodel(self.bomb1,"models/vehicles/clusterbomb_folded.md3");
+				setmodel(self.bomb2,"models/vehicles/clusterbomb_folded.md3");
+				setmodel(self.gun1, "models/vehicles/raptor_gun.dpm");
+				setmodel(self.gun2, "models/vehicles/raptor_gun.dpm");
+				setmodel(self.tur_head, "models/vehicles/raptor_body.dpm");
 
 				setattachment(self.bomb1, self, "bombmount_left");
 				setattachment(self.bomb2, self, "bombmount_right");
@@ -865,7 +865,7 @@ float v_raptor(float req)
 
 				spinner = spawn();
 				spinner.owner = self;
-				SETMODEL(spinner,"models/vehicles/spinner.dpm");
+				setmodel(spinner,"models/vehicles/spinner.dpm");
 				setattachment(spinner, self, "engine_left");
 				spinner.movetype = MOVETYPE_NOCLIP;
 				spinner.avelocity = '0 90 0';
@@ -873,7 +873,7 @@ float v_raptor(float req)
 
 				spinner = spawn();
 				spinner.owner = self;
-				SETMODEL(spinner,"models/vehicles/spinner.dpm");
+				setmodel(spinner,"models/vehicles/spinner.dpm");
 				setattachment(spinner, self, "engine_right");
 				spinner.movetype = MOVETYPE_NOCLIP;
 				spinner.avelocity = '0 -90 0';

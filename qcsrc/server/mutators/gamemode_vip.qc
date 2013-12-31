@@ -528,7 +528,7 @@ void vip_SpawnSoulGem(vector orig, float theteam)
 	e.solid = SOLID_TRIGGER;
 	e.flags = FL_ITEM;
 	e.reset = vip_SoulGem_reset;
-	SETMODEL(e, "models/runematch/rune.mdl");
+	setmodel(e, "models/runematch/rune.mdl");
 	setsize(e, '0 0 -35', '0 0 0');
 
 	e.glow_size = 256;
@@ -538,7 +538,7 @@ void vip_SpawnSoulGem(vector orig, float theteam)
 	e.enemy = spawn();
 	e.enemy.enemy = e;
 	e.enemy.classname = "vip_soulgem_effect";
-	SETMODEL(e.enemy, "models/runematch/curse.mdl");
+	setmodel(e.enemy, "models/runematch/curse.mdl");
 	e.origin = orig;
 	e.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP;
 	setorigin (e, e.origin);

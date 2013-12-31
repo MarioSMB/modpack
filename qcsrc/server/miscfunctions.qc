@@ -1651,7 +1651,7 @@ void Net_LinkEntity(entity e, float docull, float dt, float(entity, float) sendf
     {
         mi = e.mins;
         ma = e.maxs;
-        SETMODEL(e, "null");
+        setmodel(e, "null");
         setsize(e, mi, ma);
     }
 
@@ -2293,7 +2293,7 @@ void modeleffect_spawn(string m, float s, float f, vector o, vector v, vector an
 	float sz;
 	e = spawn();
 	e.classname = "modeleffect";
-	SETMODEL(e, m);
+	setmodel(e, m);
 	e.frame = f;
 	setorigin(e, o);
 	e.velocity = v;

@@ -46,7 +46,7 @@ void W_Shotgun_Attack (float deathtype)
 
 	// muzzle flash for 1st person view
 	flash = spawn();
-	SETMODEL(flash, "models/uziflash.md3"); // precision set below
+	setmodel(flash, "models/uziflash.md3"); // precision set below
 	flash.think = SUB_Remove;
 	flash.nextthink = time + 0.06;
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;

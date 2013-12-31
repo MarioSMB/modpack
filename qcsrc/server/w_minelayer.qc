@@ -39,7 +39,7 @@ void W_Mine_Stick (entity to)
 	newmine.realowner = self.realowner;
 	setsize(newmine, '-4 -4 -4', '4 4 4');
 	setorigin(newmine, self.origin);
-	SETMODEL(newmine, "models/mine.md3");
+	setmodel(newmine, "models/mine.md3");
 	newmine.angles = vectoangles(-trace_plane_normal); // face against the surface
 
 	newmine.mine_orientation = -trace_plane_normal;
@@ -329,7 +329,7 @@ void W_Mine_Attack (void)
 
 	// muzzle flash for 1st person view
 	flash = spawn ();
-	SETMODEL(flash, "models/flash.md3"); // precision set below
+	setmodel(flash, "models/flash.md3"); // precision set below
 	SUB_SetFade (flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	W_AttachToShotorg(flash, '5 0 0');

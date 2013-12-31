@@ -324,12 +324,12 @@ void CL_WeaponEntity_SetModel(string name)
 		// if there is a child entity, hide it until we're sure we use it
 		if (self.weaponentity)
 			self.weaponentity.model = "";
-		SETMODEL(self, strcat("models/weapons/v_", name, ".md3")); // precision set below
+		setmodel(self, strcat("models/weapons/v_", name, ".md3")); // precision set below
 		v_shot_idx = gettagindex(self, "shot"); // used later
 		if(!v_shot_idx)
 			v_shot_idx = gettagindex(self, "tag_shot");
 
-		SETMODEL(self, strcat("models/weapons/h_", name, ".iqm")); // precision set below
+		setmodel(self, strcat("models/weapons/h_", name, ".iqm")); // precision set below
 		// preset some defaults that work great for renamed zym files (which don't need an animinfo)
 		self.anim_fire1  = animfixfps(self, '0 1 0.01', '0 0 0');
 		self.anim_fire2  = animfixfps(self, '1 1 0.01', '0 0 0');
@@ -342,14 +342,14 @@ void CL_WeaponEntity_SetModel(string name)
 		{
 			if (!self.weaponentity)
 				self.weaponentity = spawn();
-			SETMODEL(self.weaponentity, strcat("models/weapons/v_", name, ".md3")); // precision does not matter
+			setmodel(self.weaponentity, strcat("models/weapons/v_", name, ".md3")); // precision does not matter
 			setattachment(self.weaponentity, self, "weapon");
 		}
 		else if(gettagindex(self, "tag_weapon"))
 		{
 			if (!self.weaponentity)
 				self.weaponentity = spawn();
-			SETMODEL(self.weaponentity, strcat("models/weapons/v_", name, ".md3")); // precision does not matter
+			setmodel(self.weaponentity, strcat("models/weapons/v_", name, ".md3")); // precision does not matter
 			setattachment(self.weaponentity, self, "tag_weapon");
 		}
 		else
@@ -588,7 +588,7 @@ void CL_ExteriorWeaponentity_Think()
 		self.dmg = self.owner.modelindex;
 		self.deadflag = self.owner.deadflag;
 		if (self.owner.weaponname != "")
-			SETMODEL(self, strcat("models/weapons/v_", self.owner.weaponname, ".md3")); // precision set below
+			setmodel(self, strcat("models/weapons/v_", self.owner.weaponname, ".md3")); // precision set below
 		else
 			self.model = "";
 
@@ -623,7 +623,7 @@ void CL_SpawnWeaponentity()
 	self.weaponentity.classname = "weaponentity";
 	self.weaponentity.solid = SOLID_NOT;
 	self.weaponentity.owner = self;
-	SETMODEL(self.weaponentity, ""); // precision set when changed
+	setmodel(self.weaponentity, ""); // precision set when changed
 	setorigin(self.weaponentity, '0 0 0');
 	self.weaponentity.angles = '0 0 0';
 	self.weaponentity.viewmodelforclient = self;

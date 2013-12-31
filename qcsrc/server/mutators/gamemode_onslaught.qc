@@ -58,7 +58,7 @@ void ons_throwgib(vector v_from, vector v_to, string smodel, float f_lifetime, f
 
 	gib = spawn();
 
-	SETMODEL(gib, smodel);
+	setmodel(gib, smodel);
 	setorigin(gib, v_from);
 	gib.solid = SOLID_BBOX;
 	gib.movetype = MOVETYPE_BOUNCE;
@@ -459,7 +459,7 @@ void onslaught_generator_ray_spawn(vector org)
 {
 	entity e;
 	e = spawn();
-	SETMODEL(e, "models/onslaught/ons_ray.md3");
+	setmodel(e, "models/onslaught/ons_ray.md3");
 	setorigin(e, org);
 	e.angles = randomvec() * 360;
 	e.alpha = 0;
@@ -831,7 +831,7 @@ void onslaught_generator_reset()
 	self.enemy.solid = SOLID_NOT;
 	self.think = onslaught_generator_delayed;
 	self.nextthink = time + 0.2;
-	SETMODEL(self, "models/onslaught/generator.md3");
+	setmodel(self, "models/onslaught/generator.md3");
 	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
 
 	self.SendFlags |= GSF_STATUS;
@@ -895,7 +895,7 @@ void spawnfunc_onslaught_generator()
 	self.solid = SOLID_BBOX;
 	self.movetype = MOVETYPE_NONE;
 	self.lasthealth = self.max_health = self.health = autocvar_g_onslaught_gen_health;
-	SETMODEL(self, "models/onslaught/generator.md3");
+	setmodel(self, "models/onslaught/generator.md3");
 	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
 	setorigin(self, self.origin);
 	self.takedamage = DAMAGE_AIM;
@@ -913,7 +913,7 @@ void spawnfunc_onslaught_generator()
 	self.enemy.solid = SOLID_NOT;
 	self.enemy.movetype = MOVETYPE_NONE;
 	self.enemy.effects = EF_ADDITIVE;
-	SETMODEL(self.enemy, "models/onslaught/generator_shield.md3");
+	setmodel(self.enemy, "models/onslaught/generator_shield.md3");
 	//setorigin(e, self.origin);
 	self.enemy.colormap = self.colormap;
 	self.enemy.team = self.team;
@@ -1039,7 +1039,7 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 
 		self.owner.waslinked = self.owner.islinked;
 		if(self.owner.model != "models/onslaught/controlpoint_pad.md3")
-			SETMODEL(self.owner, "models/onslaught/controlpoint_pad.md3");
+			setmodel(self.owner, "models/onslaught/controlpoint_pad.md3");
 		//setsize(self, '-32 -32 0', '32 32 8');
 
 		remove(self);
@@ -1095,13 +1095,13 @@ void onslaught_controlpoint_icon_think()
 		}
 	}
 	if (self.health < self.max_health * 0.25)
-		SETMODEL(self, "models/onslaught/controlpoint_icon_dmg3.md3");
+		setmodel(self, "models/onslaught/controlpoint_icon_dmg3.md3");
 	else if (self.health < self.max_health * 0.50)
-		SETMODEL(self, "models/onslaught/controlpoint_icon_dmg2.md3");
+		setmodel(self, "models/onslaught/controlpoint_icon_dmg2.md3");
 	else if (self.health < self.max_health * 0.75)
-		SETMODEL(self, "models/onslaught/controlpoint_icon_dmg1.md3");
+		setmodel(self, "models/onslaught/controlpoint_icon_dmg1.md3");
 	else if (self.health < self.max_health * 0.90)
-		SETMODEL(self, "models/onslaught/controlpoint_icon.md3");
+		setmodel(self, "models/onslaught/controlpoint_icon.md3");
 	// colormod flash when shot
 	self.colormod = '1 1 1' * (2 - bound(0, (self.pain_finished - time) / 10, 1));
 
@@ -1230,7 +1230,7 @@ void onslaught_controlpoint_icon_buildthink()
 	// colormod flash when shot
 	self.colormod = '1 1 1' * (2 - bound(0, (self.pain_finished - time) / 10, 1));
 	if(self.owner.model != "models/onslaught/controlpoint_pad2.md3")
-		SETMODEL(self.owner, "models/onslaught/controlpoint_pad2.md3");
+		setmodel(self.owner, "models/onslaught/controlpoint_pad2.md3");
 	//setsize(self, '-32 -32 0', '32 32 8');
 
 	if(random() < 0.9 - self.health / self.max_health)
@@ -1259,7 +1259,7 @@ void onslaught_controlpoint_touch()
 	e.health = autocvar_g_onslaught_cp_buildhealth;
 	e.solid = SOLID_BBOX;
 	e.movetype = MOVETYPE_NONE;
-	SETMODEL(e, "models/onslaught/controlpoint_icon.md3");
+	setmodel(e, "models/onslaught/controlpoint_icon.md3");
 	setsize(e, '-32 -32 -32', '32 32 32');
 	setorigin(e, self.origin + '0 0 96');
 	e.takedamage = DAMAGE_AIM;
@@ -1298,7 +1298,7 @@ void onslaught_controlpoint_reset()
 	self.think = onslaught_controlpoint_think;
 	self.enemy.think = func_null;
 	self.nextthink = time; // don't like func_null :P
-	SETMODEL(self, "models/onslaught/controlpoint_pad.md3");
+	setmodel(self, "models/onslaught/controlpoint_pad.md3");
 	//setsize(self, '-32 -32 0', '32 32 8');
 
 	WaypointSprite_UpdateMaxHealth(self.sprite, 0);
@@ -1350,7 +1350,7 @@ void spawnfunc_onslaught_controlpoint()
 
 	self.solid = SOLID_BBOX;
 	self.movetype = MOVETYPE_NONE;
-	SETMODEL(self, "models/onslaught/controlpoint_pad.md3");
+	setmodel(self, "models/onslaught/controlpoint_pad.md3");
 	//setsize(self, '-32 -32 0', '32 32 8');
 	if(!self.noalign)
 	{
@@ -1370,7 +1370,7 @@ void spawnfunc_onslaught_controlpoint()
 	self.enemy.solid = SOLID_NOT;
 	self.enemy.movetype = MOVETYPE_NONE;
 	self.enemy.effects = EF_ADDITIVE;
-	SETMODEL(self.enemy , "models/onslaught/controlpoint_shield.md3");
+	setmodel(self.enemy , "models/onslaught/controlpoint_shield.md3");
 
 	setattachment(self.enemy , self, "");
 	//setsize(e, '-32 -32 0', '32 32 128');

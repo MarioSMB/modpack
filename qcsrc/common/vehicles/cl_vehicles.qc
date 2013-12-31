@@ -276,7 +276,7 @@ void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
 	entity sfrag;
 
 	sfrag = spawn();
-	SETMODEL(sfrag, "models/vehicles/clusterbomb_fragment.md3");
+	setmodel(sfrag, "models/vehicles/clusterbomb_fragment.md3");
 	setorigin(sfrag, _org);
 
 	sfrag.move_movetype = MOVETYPE_BOUNCE;

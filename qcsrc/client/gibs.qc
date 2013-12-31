@@ -30,9 +30,9 @@ void Gib_setmodel(entity gib, string mdlname, float specnum)
 			if(specnum != SPECIES_ROBOT_SOLID || mdlname == "models/gibs/chunk.mdl")
 			{
 				if(mdlname == "models/gibs/bloodyskull.md3")
-					SETMODEL(gib, "models/gibs/robo.md3");
+					setmodel(gib, "models/gibs/robo.md3");
 				else
-					SETMODEL(gib, strcat("models/gibs/robo", ftos(floor(random() * 8) + 1), ".md3"));
+					setmodel(gib, strcat("models/gibs/robo", ftos(floor(random() * 8) + 1), ".md3"));
 				if(specnum == SPECIES_ROBOT_SHINY)
 				{
 					gib.skin = 1;
@@ -42,7 +42,7 @@ void Gib_setmodel(entity gib, string mdlname, float specnum)
 				break;
 			}
 		default:
-			SETMODEL(gib, mdlname);
+			setmodel(gib, mdlname);
 			gib.skin = specnum;
 			break;
 	}

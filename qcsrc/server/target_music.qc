@@ -112,7 +112,7 @@ void trigger_music_use()
 void spawnfunc_trigger_music()
 {
 	if(self.model != "")
-		SETMODEL(self, self.model);
+		setmodel(self, self.model);
 	if(!self.volume)
 		self.volume = 1;
 	if(!self.modelindex)

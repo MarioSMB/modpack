@@ -266,7 +266,7 @@ void W_Rocket_Attack (float deathtype)
 
 	// muzzle flash for 1st person view
 	flash = spawn ();
-	SETMODEL(flash, "models/flash.md3"); // precision set below
+	setmodel(flash, "models/flash.md3"); // precision set below
 	SUB_SetFade (flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	W_AttachToShotorg(flash, '5 0 0');

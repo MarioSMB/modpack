@@ -872,7 +872,7 @@ float v_bumblebee(float req)
 				// for some reason, autosizing of the shield entity refuses to work for this one so set it up in advance.
 				self.vehicle_shieldent = spawn();
 				self.vehicle_shieldent.effects = EF_LOWPRECISION;
-				SETMODEL(self.vehicle_shieldent, "models/vhshield.md3");
+				setmodel(self.vehicle_shieldent, "models/vhshield.md3");
 				setattachment(self.vehicle_shieldent, self, "");
 				setorigin(self.vehicle_shieldent, real_origin(self) - self.origin);
 				self.vehicle_shieldent.scale       = 512 / vlen(self.maxs - self.mins);
@@ -890,9 +890,9 @@ float v_bumblebee(float req)
 				self.gun2.owner = self;
 				self.gun3.owner = self;
 
-				SETMODEL(self.gun1, "models/vehicles/bumblebee_plasma_right.dpm");
-				SETMODEL(self.gun2, "models/vehicles/bumblebee_plasma_left.dpm");
-				SETMODEL(self.gun3, "models/vehicles/bumblebee_ray.dpm");
+				setmodel(self.gun1, "models/vehicles/bumblebee_plasma_right.dpm");
+				setmodel(self.gun2, "models/vehicles/bumblebee_plasma_left.dpm");
+				setmodel(self.gun3, "models/vehicles/bumblebee_ray.dpm");
 
 				setattachment(self.gun1, self, "cannon_right");
 				setattachment(self.gun2, self, "cannon_left");

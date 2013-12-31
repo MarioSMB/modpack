@@ -94,7 +94,7 @@ void spawn_item_key() {
 
 	self.mdl = self.model;
 	self.effects = EF_LOWPRECISION;
-	SETMODEL(self, self.model);
+	setmodel(self, self.model);
 	//setsize(self, '-16 -16 -24', '16 16 32');
 	setorigin(self, self.origin + '0 0 32');
 	setsize(self, '-16 -16 -56', '16 16 0');

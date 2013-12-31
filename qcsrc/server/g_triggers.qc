@@ -932,7 +932,7 @@ void pointparticles_reset()
 void spawnfunc_func_pointparticles()
 {
 	if(self.model != "")
-		SETMODEL(self, self.model);
+		setmodel(self, self.model);
 	if(self.noise != "")
 		precache_sound (self.noise);
 

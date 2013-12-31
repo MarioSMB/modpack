@@ -208,7 +208,7 @@ void ctf_CaptureShield_Spawn(entity flag)
 	shield.scale = 0.5;
 
 	setorigin(shield, self.origin);
-	SETMODEL(shield, "models/ctf/shield.md3");
+	setmodel(shield, "models/ctf/shield.md3");
 	setsize(shield, shield.scale * shield.mins, shield.scale * shield.maxs);
 }
 
@@ -1093,7 +1093,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	precache_model("models/ctf/shockwavetransring.md3");
 
 	// appearence
-	SETMODEL(flag, flag.model); // precision set below
+	setmodel(flag, flag.model); // precision set below
 	setsize(flag, FLAG_MIN, FLAG_MAX);
 	setorigin(flag, (flag.origin + FLAG_SPAWN_OFFSET));
 

@@ -110,7 +110,7 @@ void W_RPC_Attack (void)
 	CSQCProjectile(missile, TRUE, PROJECTILE_RPC, FALSE);
 	//CSQCProjectile(missile, TRUE, PROJECTILE_ROCKET, FALSE);
 
-	SETMODEL(flash, "models/flash.md3"); // precision set below
+	setmodel(flash, "models/flash.md3"); // precision set below
 	SUB_SetFade (flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	W_AttachToShotorg(flash, '5 0 0');

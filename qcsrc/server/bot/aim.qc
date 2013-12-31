@@ -35,7 +35,7 @@ float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, f
 		tracetossfaketarget = spawn();
 	tracetossfaketarget.solid = savesolid;
 	tracetossfaketarget.movetype = targ.movetype;
-	SETMODEL(tracetossfaketarget, targ.model); // no low precision
+	setmodel(tracetossfaketarget, targ.model); // no low precision
 	tracetossfaketarget.model = targ.model;
 	tracetossfaketarget.modelindex = targ.modelindex;
 	setsize(tracetossfaketarget, targ.mins, targ.maxs);

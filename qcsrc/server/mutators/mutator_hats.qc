@@ -59,7 +59,7 @@ void hat_Think()
 		self.dmg = self.owner.modelindex;
 		self.deadflag = self.owner.deadflag;
 		if (self.owner.hatname != "" && fexists(strcat("models/hats/", self.owner.hatname, ".md3")))
-			SETMODEL(self, strcat("models/hats/", self.owner.hatname, ".md3")); // precision set below
+			setmodel(self, strcat("models/hats/", self.owner.hatname, ".md3")); // precision set below
 		else
 			self.model = "";
 
@@ -127,9 +127,6 @@ MUTATOR_HOOKFUNCTION(hats_PlayerSpawn)
 MUTATOR_HOOKFUNCTION(hats_GetCvars)
 {
 	GetCvars_handleString(get_cvars_s, get_cvars_f, cvar_cl_hat, "cl_magical_hax");
-	if(self.cvar_cl_hat)
-		strunzone(self.cvar_cl_hat);
-	self.cvar_cl_hat = strzone("santa");
 	return FALSE;
 }
 

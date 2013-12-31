@@ -71,7 +71,7 @@ float t_phaser(float req)
 
 			beam = spawn();
 			beam.ticrate = 0.1; //autocvar_sys_ticrate;
-			SETMODEL(beam,"models/turrets/phaser_beam.md3");
+			setmodel(beam,"models/turrets/phaser_beam.md3");
 			beam.effects = EF_LOWPRECISION;
 			beam.solid = SOLID_NOT;
 			beam.think = beam_think;
