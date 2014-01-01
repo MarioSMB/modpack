@@ -1354,7 +1354,7 @@ void HUD_DrawScoreboard()
 		}
 		pos = HUD_DrawScoreboardRankings(pos, playerslots[player_localnum], rgb, bg_size);
 	}
-	else if(autocvar_scoreboard_accuracy && spectatee_status != -1 && !warmup_stage) {
+	else if(autocvar_scoreboard_accuracy && spectatee_status == 0 && !warmup_stage) {
 		if(teamplay)
 			pos = HUD_DrawScoreboardAccuracyStats(pos, Team_ColorRGB(myteam), bg_size);
 		else
