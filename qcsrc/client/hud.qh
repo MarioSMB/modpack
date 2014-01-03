@@ -99,6 +99,8 @@ var string panel_bg_padding_str;
 
 float current_player;
 
+float mv_active;
+
 
 #define HUD_PANELS \
 	HUD_PANEL(WEAPONS      , HUD_Weapons      , weapons) \
