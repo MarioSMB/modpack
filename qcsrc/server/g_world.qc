@@ -1286,6 +1286,8 @@ void IntermissionThink()
 
 	float server_screenshot = (autocvar_sv_autoscreenshot && self.cvar_cl_autoscreenshot);
 	float client_screenshot = (self.cvar_cl_autoscreenshot == 2);
+	
+	CSQCMODEL_AUTOUPDATE(); // we don't need to keep checking this after mapvote has started, as by then nothing can happen
 
 	if( (server_screenshot || client_screenshot)
 		&& ((self.autoscreenshot > 0) && (time > self.autoscreenshot)) )
