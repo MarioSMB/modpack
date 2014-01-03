@@ -4964,7 +4964,7 @@ float QuickMenu_CurrentPage_FirstEntry;
 var float QuickMenu_Entries;
 void HUD_QuickMenu_load_entry(float i, string s, string s1)
 {
-	//print(sprintf("^xc80 entry %d: %s, %s\n", i, s, s1));
+	//printf("^xc80 entry %d: %s, %s\n", i, s, s1);
 	if (QuickMenu_Description[i])
 		strunzone(QuickMenu_Description[i]);
 	QuickMenu_Description[i] = strzone(s);
@@ -4989,7 +4989,7 @@ float HUD_QuickMenu_Buffer_Init()
 	fh = fopen(autocvar_hud_panel_quickmenu_file, FILE_READ);
 	if(fh < 0)
 	{
-		print(sprintf(_("Error: Couldn't open file %s!\n"), autocvar_hud_panel_quickmenu_file));
+		printf(_("Error: Couldn't open file %s!\n"), autocvar_hud_panel_quickmenu_file);
 		return false;
 	}
 
@@ -5106,11 +5106,11 @@ float HUD_QuickMenu_Page(string target_submenu, float new_page)
 			s = bufstr_get(QuickMenu_Buffer, QuickMenu_Buffer_Index);
 			if (tokenize_console(s) == 1 && argv(0) == z_submenu)
 			{
-				// print(sprintf("^3 beginning of %s\n", z_submenu));
+				// printf("^3 beginning of %s\n", z_submenu);
 				++QuickMenu_Buffer_Index;
 				break;
 			}
-			// print(sprintf("^1 skipping %s\n", s));
+			// printf("^1 skipping %s\n", s);
 		}
 	}
 	float total = 0;
@@ -5122,7 +5122,7 @@ float HUD_QuickMenu_Page(string target_submenu, float new_page)
 
 		if (z_submenu != "" && z_submenu == argv(0))
 		{
-			// print(sprintf("^3 end of %s\n", z_submenu));
+			// printf("^3 end of %s\n", z_submenu);
 			break;
 		}
 

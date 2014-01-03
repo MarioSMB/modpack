@@ -130,7 +130,7 @@ void turret_draw2d()
 	if(rgb == '0 0 0')
 	{
 		self.teamradar_color = '1 0 1';
-		print(sprintf("WARNING: sprite of name %s has no color, using pink so you notice it\n", spriteimage));
+		printf("WARNING: sprite of name %s has no color, using pink so you notice it\n", spriteimage);
 	}
 
 	txt = self.netname;
