@@ -346,7 +346,7 @@ if(panel.update_time <= time) { \
 		strunzone(panel.current_panel_bg); \
 	if(panel_bg == "")\
 	{\
-		/*print(sprintf("^xf08 %s panel: panel_bg is empty\n", panel.panel_name));*/\
+		/*printf("^xf08 %s panel: panel_bg is empty\n", panel.panel_name);*/\
 		panel_bg = "0";\
 	}\
 	panel.current_panel_bg = strzone(panel_bg); \
@@ -363,7 +363,7 @@ if(panel.update_time <= time) { \
 	panel_bg = panel.current_panel_bg; \
 	if(panel.current_panel_bg == "")\
 	{\
-		/*print(sprintf("^xf08 %s panel: panel.current_panel_bg is empty\n", panel.panel_name));*/\
+		/*printf("^xf08 %s panel: panel.current_panel_bg is empty\n", panel.panel_name);*/\
 		panel_bg = "0";\
 	}\
 	panel_bg_alpha = panel.current_panel_bg_alpha; \

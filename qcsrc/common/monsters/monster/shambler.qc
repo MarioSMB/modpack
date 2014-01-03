@@ -1,12 +1,12 @@
 #ifdef REGISTER_MONSTER
 REGISTER_MONSTER(
-/* MON_##id	  */ SHAMBLER,
-/* function	  */ m_shambler,
+/* MON_##id   */ SHAMBLER,
+/* function   */ m_shambler,
 /* spawnflags */ MONSTER_SIZE_BROKEN | MON_FLAG_SUPERMONSTER | MON_FLAG_MELEE | MON_FLAG_RANGED,
 /* mins,maxs  */ '-41 -41 -31', '41 41 65',
-/* model	  */ "shambler.mdl",
-/* netname	  */ "shambler",
-/* fullname	  */ _("Shambler")
+/* model      */ "shambler.mdl",
+/* netname    */ "shambler",
+/* fullname   */ _("Shambler")
 );
 
 #else

@@ -163,11 +163,13 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 }
 
 float fireBullet_trace_callback_eff;
+entity fireBullet_last_hit;
 void fireBullet_trace_callback(vector start, vector hit, vector end)
 {
 	if(vlen(hit - start) > 16)
 		trailparticles(world, fireBullet_trace_callback_eff, start, hit);
 	WarpZone_trace_forent = world;
+	fireBullet_last_hit = world;
 }
 
 void fireBullet(vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, float tracereffects)
@@ -179,7 +181,7 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 	end = start + dir * MAX_SHOT_DISTANCE;
 
 	entity pl;
-	entity last_hit = world;
+	fireBullet_last_hit = world;
 	float solid_penetration_left = 1;
 	float total_damage = 0;
 
@@ -202,10 +204,12 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 			if(pl != self)
 				antilag_takeback(pl, time - lag);
 
+	WarpZone_trace_forent = self;
+
 	for (;;)
 	{
 		// TODO also show effect while tracing
-		WarpZone_TraceBox_ThroughZone(start, '0 0 0', '0 0 0', end, FALSE, self, world, fireBullet_trace_callback);
+		WarpZone_TraceBox_ThroughZone(start, '0 0 0', '0 0 0', end, FALSE, WarpZone_trace_forent, world, fireBullet_trace_callback);
 		dir = WarpZone_TransformVelocity(WarpZone_trace_transform, dir);
 		end = WarpZone_TransformOrigin(WarpZone_trace_transform, end);
 		start = trace_endpos;
@@ -236,29 +240,23 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 		if (!(trace_dphitcontents & DPCONTENTS_OPAQUE))
 			is_weapclip = 1;
 
-		// Avoid self-damage // FIXME can this happen?
-		if (hit != self)
+		if(!hit || hit.solid == SOLID_BSP || hit.solid == SOLID_SLIDEBOX)
+			Damage_DamageInfo(start, damage * solid_penetration_left, 0, 0, max(1, force) * dir * solid_penetration_left, dtype, hit.species, self);
+
+		if (hit && hit != WarpZone_trace_forent && hit != fireBullet_last_hit)  // Avoid self-damage (except after going through a warp); avoid hitting the same entity twice (engine bug).
 		{
-			if(!hit || hit.solid == SOLID_BSP || hit.solid == SOLID_SLIDEBOX)
-				Damage_DamageInfo(start, damage * solid_penetration_left, 0, 0, max(1, force) * dir * solid_penetration_left, dtype, hit.species, self);
-
-			if(hit && hit != last_hit)
+			fireBullet_last_hit = hit;
+			yoda = 0;
+			float g = accuracy_isgooddamage(self, hit);
+			Damage(hit, self, self, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);
+			// calculate hits for ballistic weapons
+			if(g)
 			{
-				yoda = 0;
-				float g = accuracy_isgooddamage(self, hit);
-				// FIXME preserve trace stuff
-				Damage(hit, self, self, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);
-				// calculate hits for ballistic weapons
-				if(g)
-				{
-					// do not exceed 100%
-					float added_damage = min(damage - total_damage, damage * solid_penetration_left);
-					total_damage += damage * solid_penetration_left;
-					accuracy_add(self, self.weapon, 0, added_damage);
-				}
+				// do not exceed 100%
+				float added_damage = min(damage - total_damage, damage * solid_penetration_left);
+				total_damage += damage * solid_penetration_left;
+				accuracy_add(self, self.weapon, 0, added_damage);
 			}
-
-			last_hit = hit; // don't hit the same player twice with the same bullet
 		}
 
 		if (is_weapclip)
@@ -285,7 +283,8 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 			break;
 
 		// move the entity along its velocity until it's out of solid, then let it resume
-		traceline_inverted (start, start + dir * maxdist, MOVE_NORMAL, self, TRUE);
+		// The previously hit entity is ignored here!
+		traceline_inverted (start, start + dir * maxdist, MOVE_NORMAL, WarpZone_trace_forent, TRUE, hit);
 		if(trace_fraction == 1) // 1: we never got out of solid
 			break;
 

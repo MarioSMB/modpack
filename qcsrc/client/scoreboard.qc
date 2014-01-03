@@ -413,7 +413,7 @@ void Cmd_HUD_SetFields(float argc)
 			else
 			{
 				if (!nocomplain)
-					print(sprintf("^1Error:^7 Unknown score field: '%s'\n", str));
+					printf("^1Error:^7 Unknown score field: '%s'\n", str);
 				continue;
 			}
 :found
@@ -484,7 +484,7 @@ void Cmd_HUD_SetFields(float argc)
 			hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], FALSE, hud_fontsize);
 			hud_field[hud_num_fields] = ps_secondary;
 			++hud_num_fields;
-			print(sprintf("fixed missing field '%s'\n", scores_label[ps_secondary]));
+			printf("fixed missing field '%s'\n", scores_label[ps_secondary]);
 		}
 		if(!have_primary)
 		{
@@ -493,7 +493,7 @@ void Cmd_HUD_SetFields(float argc)
 			hud_size[hud_num_fields] = stringwidth(hud_title[hud_num_fields], FALSE, hud_fontsize);
 			hud_field[hud_num_fields] = ps_primary;
 			++hud_num_fields;
-			print(sprintf("fixed missing field '%s'\n", scores_label[ps_primary]));
+			printf("fixed missing field '%s'\n", scores_label[ps_primary]);
 		}
 	}
 
@@ -1051,7 +1051,6 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		self = get_weaponinfo(i);
 		if (!self.weapon)
 			continue;
-		//if (i == WEP_RPC || i == WEP_HMG || (i == WEP_NEX && g_minstagib) || i == WEP_PORTO || (i == WEP_MINSTANEX && !g_minstagib) || i == WEP_TUBA) // skip port-o-launch, nex || minstanex and tuba
 		weapon_stats = weapon_accuracy[i-WEP_FIRST];
 
 		if(weapon_stats < 0 && !(weapons_stat & WepSet_FromWeapon(i) || weapons_inmap & WepSet_FromWeapon(i)))

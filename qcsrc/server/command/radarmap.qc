@@ -28,7 +28,7 @@ float FullTraceFraction(vector a, vector mi, vector ma, vector b)
 			c = trace_endpos;
 		}
 
-		n += tracebox_inverted(c, mi, ma, b, MOVE_WORLDONLY, world, FALSE);
+		n += tracebox_inverted(c, mi, ma, b, MOVE_WORLDONLY, world, FALSE, world);
 
 		white += vlen(trace_endpos - c);
 		c = trace_endpos;

@@ -28,7 +28,7 @@ void Curl_URI_Get_Callback(float id, float status, string data)
 	do_cvar = curl_uri_get_cvar[i];
 	if(status != 0)
 	{
-		print(sprintf(_("error: status is %d\n"), status));
+		printf(_("error: status is %d\n"), status);
 		if(do_cvar)
 			strunzone(do_cvar);
 		return;
@@ -252,12 +252,12 @@ void GenericCommand_dumpnotifs(float request)
 			if(fh >= 0)
 			{
 				Dump_Notifications(fh, alsoprint);
-				print(sprintf("Dumping notifications... File located in ^2data/data/%s^7.\n", filename));
+				printf("Dumping notifications... File located in ^2data/data/%s^7.\n", filename);
 				fclose(fh);
 			}
 			else
 			{
-				print(sprintf("^1Error: ^7Could not open file '%s'!\n", filename));
+				printf("^1Error: ^7Could not open file '%s'!\n", filename);
 			}
 			#else
 			print(_("Notification dump command only works with cl_cmd and sv_cmd.\n"));
@@ -433,7 +433,7 @@ void GenericCommand_restartnotifs(float request)
 		case CMD_REQUEST_COMMAND:
 		{
 			#ifndef MENUQC
-			print(sprintf(
+			printf(
 				strcat(
 					"Restart_Notifications(): Restarting %d notifications... ",
 					"Counts: MSG_ANNCE = %d, MSG_INFO = %d, MSG_CENTER = %d, MSG_MULTI = %d, MSG_CHOICE = %d\n"
@@ -450,7 +450,7 @@ void GenericCommand_restartnotifs(float request)
 				NOTIF_CENTER_COUNT,
 				NOTIF_MULTI_COUNT,
 				NOTIF_CHOICE_COUNT
-			));
+			);
 			Destroy_All_Notifications();
 			CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 			#else

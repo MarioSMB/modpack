@@ -199,6 +199,17 @@ vector GetCurrentFov(float fov)
 	return '1 0 0' * fovx + '0 1 0' * fovy;
 }
 
+vector GetOrthoviewFOV(vector ov_worldmin, vector ov_worldmax, vector ov_mid, vector ov_org)
+{
+	float fovx, fovy;
+	float width = (ov_worldmax_x - ov_worldmin_x);
+	float height = (ov_worldmax_y - ov_worldmin_y);
+	float distance_to_middle_of_world = vlen(ov_mid - ov_org);
+	fovx = atan2(width/2, distance_to_middle_of_world) / M_PI * 360.0;
+	fovy = atan2(height/2, distance_to_middle_of_world) / M_PI * 360.0;
+	return '1 0 0' * fovx + '0 1 0' * fovy;
+}
+
 // this function must match W_SetupShot!
 float zoomscript_caught;
 
@@ -307,13 +318,15 @@ float TrueAimCheck()
 			break;
 	}
 
+	vector traceorigin = getplayerorigin(player_localentnum-1) + (eZ * getstati(STAT_VIEWHEIGHT));
+
 	vecs = decompressShotOrigin(getstati(STAT_SHOTORG));
 
-	traceline(view_origin, view_origin + view_forward * MAX_SHOT_DISTANCE, mv, ta);
+	traceline(traceorigin, traceorigin + view_forward * MAX_SHOT_DISTANCE, mv, ta);
 	trueaimpoint = trace_endpos;
 
-	if(vlen(trueaimpoint - view_origin) < g_trueaim_minrange)
-		trueaimpoint = view_origin + view_forward * g_trueaim_minrange;
+	if(vlen(trueaimpoint - traceorigin) < g_trueaim_minrange)
+		trueaimpoint = traceorigin + view_forward * g_trueaim_minrange;
 
 	if(vecs_x > 0)
 		vecs_y = -vecs_y;
@@ -321,7 +334,7 @@ float TrueAimCheck()
 		vecs = '0 0 0';
 
 	dv = view_right * vecs_y + view_up * vecs_z;
-	w_shotorg = view_origin + dv;
+	w_shotorg = traceorigin + dv;
 
 	// now move the vecs forward as much as requested if possible
 	tracebox(w_shotorg, mi, ma, w_shotorg + view_forward * (vecs_x + nudge), MOVE_NORMAL, ta); // FIXME this MOVE_NORMAL part will misbehave a little in csqc
@@ -498,7 +511,7 @@ void CSQC_UpdateView(float w, float h)
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
-		if((spectatee_status >= 0 && (autocvar_cl_eventchase_death && is_dead)) || intermission || (hud != HUD_NORMAL && autocvar_cl_eventchase_vehicle))
+		if(((spectatee_status >= 0 && (autocvar_cl_eventchase_death && is_dead)) || intermission || (hud != HUD_NORMAL && autocvar_cl_eventchase_vehicle)) && !autocvar_cl_orthoview)
 		{
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = (csqcplayer ? csqcplayer.origin : pmove_org);
@@ -566,6 +579,60 @@ void CSQC_UpdateView(float w, float h)
 
 	WarpZone_FixView();
 	//WarpZone_FixPMove();
+
+	vector ov_org = '0 0 0';
+	vector ov_mid = '0 0 0';
+	vector ov_worldmin = '0 0 0';
+	vector ov_worldmax = '0 0 0';
+	if(autocvar_cl_orthoview)
+	{
+		ov_worldmin = mi_picmin;
+		ov_worldmax = mi_picmax;
+
+		float ov_width = (ov_worldmax_x - ov_worldmin_x);
+		float ov_height = (ov_worldmax_y - ov_worldmin_y);
+		float ov_distance = (autocvar_cl_orthoview_resolution * max(ov_width, ov_height));
+
+		ov_mid = ((ov_worldmax + ov_worldmin) * 0.5);
+		ov_org = vec3(ov_mid_x, ov_mid_y, (ov_mid_z + ov_distance));
+
+		float ov_nearest = vlen(ov_org - vec3(
+			bound(ov_worldmin_x, ov_org_x, ov_worldmax_x),
+			bound(ov_worldmin_y, ov_org_y, ov_worldmax_y),
+			bound(ov_worldmin_z, ov_org_z, ov_worldmax_z)
+		));
+
+		float ov_furthest = 0;
+		float dist = 0;
+
+		if((dist = vlen(vec3(ov_worldmin_x, ov_worldmin_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmax_x, ov_worldmin_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmin_x, ov_worldmax_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmin_x, ov_worldmin_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmax_x, ov_worldmax_y, ov_worldmin_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmin_x, ov_worldmax_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmax_x, ov_worldmin_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+		if((dist = vlen(vec3(ov_worldmax_x, ov_worldmax_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
+
+		cvar_set("r_nearclip", ftos(ov_nearest));
+		cvar_set("r_farclip_base", ftos(ov_furthest));
+		cvar_set("r_farclip_world", "0");
+		cvar_set("r_novis", "1");
+		cvar_set("r_useportalculling", "0");
+		cvar_set("r_useinfinitefarclip", "0");
+
+		setproperty(VF_ORIGIN, ov_org);
+		setproperty(VF_ANGLES, '90 0 0');
+
+		#if 0
+		printf("OrthoView: org = %s, angles = %s, distance = %f, nearest = %f, furthest = %f\n",
+			vtos(ov_org),
+			vtos(getpropertyvec(VF_ANGLES)),
+			ov_distance,
+			ov_nearest,
+			ov_furthest);
+		#endif
+	}
 
 	// Render the Scene
 	view_origin = getpropertyvec(VF_ORIGIN);
@@ -719,10 +786,9 @@ void CSQC_UpdateView(float w, float h)
 	if(fovlock >= 0)
 		fovlock = -1;
 
-	if(fovlock > -1)
-		setproperty(VF_FOV, GetCurrentFov(fovlock));
-	else
-		setproperty(VF_FOV, GetCurrentFov(fov));
+	if(autocvar_cl_orthoview) { setproperty(VF_FOV, GetOrthoviewFOV(ov_worldmin, ov_worldmax, ov_mid, ov_org)); }
+	else if(fovlock > -1) { setproperty(VF_FOV, GetCurrentFov(fovlock)); }
+	else { setproperty(VF_FOV, GetCurrentFov(fov)); }
 
 	// Camera for demo playback
 	if(camera_active)
@@ -1214,7 +1280,7 @@ void CSQC_UpdateView(float w, float h)
 				}
 			}
 
-			//print(sprintf("crosshair style: %s\n", wcross_style));
+			//printf("crosshair style: %s\n", wcross_style);
 			wcross_name = strcat("gfx/crosshair", wcross_style);
 
 			// MAIN CROSSHAIR COLOR DECISION

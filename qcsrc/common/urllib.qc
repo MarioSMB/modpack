@@ -33,7 +33,7 @@ float url_URI_Get_Callback(float id, float status, string data)
 		return 0;
 	if(e.url_rbuf >= 0 || e.url_wbuf >= 0)
 	{
-		print(sprintf("WARNING: handle %d (%s) has already received data?!?\n", id + NUM_URL_ID, e.url_url));
+		printf("WARNING: handle %d (%s) has already received data?!?\n", id + NUM_URL_ID, e.url_url);
 		return 0;
 	}
 

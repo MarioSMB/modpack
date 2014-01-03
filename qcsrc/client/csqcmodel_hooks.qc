@@ -114,7 +114,7 @@ void CSQCPlayer_ModelAppearance_PostUpdate(void)
 		self.forceplayermodels_isgoodmodel = fexists(self.forceplayermodels_savemodel);
 		self.forceplayermodels_isgoodmodel_mdl = self.forceplayermodels_savemodel;
 		if(!self.forceplayermodels_isgoodmodel)
-			print(sprintf("Warning: missing model %s has been used\n", self.forceplayermodels_savemodel));
+			printf("Warning: missing model %s has been used\n", self.forceplayermodels_savemodel);
 	}
 }
 void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
@@ -292,7 +292,7 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 		else if(self.old_glowmod != '0 0 0') { self.old_glowmod = '0 0 0'; }
 	}
 
-	//print(sprintf("CSQCPlayer_ModelAppearance_Apply(): state = %s, colormap = %f, glowmod = %s\n", (self.csqcmodel_isdead ? "DEAD" : "ALIVE"), self.colormap, vtos(self.glowmod)));
+	//printf("CSQCPlayer_ModelAppearance_Apply(): state = %s, colormap = %f, glowmod = %s\n", (self.csqcmodel_isdead ? "DEAD" : "ALIVE"), self.colormap, vtos(self.glowmod));
 }
 
 // FEATURE: fallback frames
@@ -362,7 +362,7 @@ float CSQCPlayer_FallbackFrame(float f)
 		case 29: return 4; // anim_duckwalkbackright -> anim_duckwalk
 		case 30: return 4; // anim_duckwalkbackleft -> anim_duckwalk
 	}
-	print(sprintf("Frame %d missing in model %s, and we have no fallback - FAIL!\n", f, self.model));
+	printf("Frame %d missing in model %s, and we have no fallback - FAIL!\n", f, self.model);
 	return f;
 }
 void CSQCPlayer_FallbackFrame_Apply(void)

@@ -191,6 +191,10 @@ MUTATOR_HOOKABLE(MonsterFindTarget);
 MUTATOR_HOOKABLE(MonsterCheckBossFlag);
     // called to change a random monster to a miniboss
 
+MUTATOR_HOOKABLE(AllowMobSpawning);
+	// called when a player tries to spawn a monster
+	// return 1 to prevent spawning
+
 MUTATOR_HOOKABLE(PlayerDamage_SplitHealthArmor);
 	// called when a player gets damaged to e.g. remove stuff he was carrying.
 	// INPUT:
@@ -220,6 +224,10 @@ MUTATOR_HOOKABLE(PlayerPowerups);
 	// INPUT
 	entity self;
 	float olditems; // also technically output, but since it is at the end of the function it's useless for that :P
+
+MUTATOR_HOOKABLE(PlayerRegen);
+	// called every player think frame
+	// return 1 to disable regen
 
 MUTATOR_HOOKABLE(PlayerUseKey);
 	// called when the use key is pressed
@@ -353,3 +361,11 @@ MUTATOR_HOOKABLE(ClientConnect);
 
 MUTATOR_HOOKABLE(HavocBot_ChooseRule);
 	entity self;
+
+MUTATOR_HOOKABLE(AccuracyTargetValid);
+	// called when a target is checked for accuracy
+	entity frag_attacker; // attacker
+	entity frag_target; // target
+	#define MUT_ACCADD_VALID 0 // return this flag to make the function continue if target is a client
+	#define MUT_ACCADD_INVALID 1 // return this flag to make the function always continue
+	#define MUT_ACCADD_INDIFFERENT 2 // return this flag to make the function always return

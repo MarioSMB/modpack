@@ -281,7 +281,7 @@ string Process_Notif_Line(
 	// done to both MSG_INFO and MSG_CENTER
 	if(substring(input, (strlen(input) - 1), 1) == "\n")
 	{
-		print(sprintf(
+		printf(
 			strcat(
 				"^1TRAILING NEW LINE AT END OF NOTIFICATION: ",
 				"^7net_type = %s, net_name = %s, string = %s.\n"
@@ -289,7 +289,7 @@ string Process_Notif_Line(
 			notiftype,
 			notifname,
 			stringtype
-		));
+		);
 		notif_error = TRUE;
 		input = substring(input, 1, (strlen(input) - 1));
 	}
@@ -316,7 +316,7 @@ string Process_Notif_Args(
 			{
 				if(sel_num == NOTIF_MAX_ARGS)
 				{
-					print(sprintf(
+					printf(
 						strcat(
 							"^1NOTIFICATION HAS TOO MANY ARGUMENTS: ",
 							"^7net_type = %s, net_name = %s, max args = %d.\n"
@@ -324,7 +324,7 @@ string Process_Notif_Args(
 						notiftype,
 						notifname,
 						NOTIF_MAX_ARGS
-					));
+					);
 					notif_error = TRUE;
 					break;
 				}
@@ -348,7 +348,7 @@ string Process_Notif_Args(
 					#undef ARG_CASE_ARG_CS_SV_HA
 					default:
 					{
-						print(sprintf(
+						printf(
 							strcat(
 								"^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ",
 								"^7net_type = %s, net_name = %s, args arg = '%s'.\n"
@@ -356,7 +356,7 @@ string Process_Notif_Args(
 							notiftype,
 							notifname,
 							selected
-						));
+						);
 						notif_error = TRUE;
 						break;
 					}
@@ -367,7 +367,7 @@ string Process_Notif_Args(
 			{
 				if(sel_num == NOTIF_MAX_HUDARGS)
 				{
-					print(sprintf(
+					printf(
 						strcat(
 							"^1NOTIFICATION HAS TOO MANY ARGUMENTS: ",
 							"^7net_type = %s, net_name = %s, max hudargs = %d.\n"
@@ -375,7 +375,7 @@ string Process_Notif_Args(
 						notiftype,
 						notifname,
 						NOTIF_MAX_HUDARGS
-					));
+					);
 					notif_error = TRUE;
 					break;
 				}
@@ -399,7 +399,7 @@ string Process_Notif_Args(
 					#undef ARG_CASE_ARG_CS_SV_HA
 					default:
 					{
-						print(sprintf(
+						printf(
 							strcat(
 								"^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ",
 								"^7net_type = %s, net_name = %s, hudargs arg = '%s'.\n"
@@ -407,7 +407,7 @@ string Process_Notif_Args(
 							notiftype,
 							notifname,
 							selected
-						));
+						);
 						notif_error = TRUE;
 						break;
 					}
@@ -418,7 +418,7 @@ string Process_Notif_Args(
 			{
 				if(sel_num == NOTIF_MAX_DURCNT)
 				{
-					print(sprintf(
+					printf(
 						strcat(
 							"^1NOTIFICATION HAS TOO MANY ARGUMENTS: ",
 							"^7net_type = %s, net_name = %s, max durcnt = %d.\n"
@@ -426,7 +426,7 @@ string Process_Notif_Args(
 						notiftype,
 						notifname,
 						NOTIF_MAX_DURCNT
-					));
+					);
 					notif_error = TRUE;
 					break;
 				}
@@ -453,7 +453,7 @@ string Process_Notif_Args(
 						if(ftos(stof(selected)) != "") { ++sel_num; }
 						else
 						{
-							print(sprintf(
+							printf(
 								strcat(
 									"^1NOTIFICATION WITH UNKNOWN TOKEN IN ARGUMENT STRING: ",
 									"^7net_type = %s, net_name = %s, durcnt arg = '%s'.\n"
@@ -461,7 +461,7 @@ string Process_Notif_Args(
 								notiftype,
 								notifname,
 								selected
-							));
+							);
 							notif_error = TRUE;
 						}
 						break;
@@ -591,14 +591,14 @@ void Create_Notification_Entity(
 				}
 				else
 				{
-					print(sprintf(
+					printf(
 						strcat(
 							"^1NOTIFICATION WITH NO SOUND: ",
 							"^7net_type = %s, net_name = %s.\n"
 						),
 						typestring,
 						namestring
-					));
+					);
 					notif_error = TRUE;
 				}
 			}
@@ -638,7 +638,7 @@ void Create_Notification_Entity(
 					}
 					else if((hudargs == "") && (durcnt ==""))
 					{
-						print(sprintf(
+						printf(
 							strcat(
 								"^1NOTIFICATION HAS ARG COUNTS BUT NO ARGS OR HUDARGS OR DURCNT: ",
 								"^7net_type = %s, net_name = %s, strnum = %d, flnum = %d\n"
@@ -647,7 +647,7 @@ void Create_Notification_Entity(
 							namestring,
 							strnum,
 							flnum
-						));
+						);
 						notif_error = TRUE;
 					}
 				}
@@ -672,27 +672,27 @@ void Create_Notification_Entity(
 					if(icon != "") { notif.nent_icon = strzone(icon); }
 					else
 					{
-						print(sprintf(
+						printf(
 							strcat(
 								"^1NOTIFICATION HAS HUDARGS BUT NO ICON: ",
 								"^7net_type = %s, net_name = %s.\n"
 							),
 							typestring,
 							namestring
-						));
+						);
 						notif_error = TRUE;
 					}
 				}
 				else if(icon != "")
 				{
-					print(sprintf(
+					printf(
 						strcat(
 							"^1NOTIFICATION HAS ICON BUT NO HUDARGS: ",
 							"^7net_type = %s, net_name = %s.\n"
 						),
 						typestring,
 						namestring
-					));
+					);
 					notif_error = TRUE;
 				}
 
@@ -704,14 +704,14 @@ void Create_Notification_Entity(
 					if(cpid != NO_MSG) { notif.nent_cpid = cpid; }
 					else
 					{
-						print(sprintf(
+						printf(
 							strcat(
 								"^1NOTIFICATION HAS DURCNT BUT NO CPID: ",
 								"^7net_type = %s, net_name = %s.\n"
 							),
 							typestring,
 							namestring
-						));
+						);
 						notif_error = TRUE;
 					}
 				}
@@ -746,14 +746,14 @@ void Create_Notification_Entity(
 				// Check to make sure a string was chosen
 				if(notif.nent_string == "")
 				{
-					print(sprintf(
+					printf(
 						strcat(
 							"^1EMPTY NOTIFICATION: ",
 							"^7net_type = %s, net_name = %s.\n"
 						),
 						typestring,
 						namestring
-					));
+					);
 					notif_error = TRUE;
 				}
 			}
@@ -766,14 +766,14 @@ void Create_Notification_Entity(
 			// Set MSG_MULTI string/float counts
 			if((anncename == NO_MSG) && (infoname == NO_MSG) && (centername == NO_MSG))
 			{
-				print(sprintf(
+				printf(
 					strcat(
 						"^1NOTIFICATION WITH NO SUBCALLS: ",
 						"^7net_type = %s, net_name = %s.\n"
 					),
 					typestring,
 					namestring
-				));
+				);
 				notif_error = TRUE;
 			}
 			else
@@ -810,14 +810,14 @@ void Create_Notification_Entity(
 		{
 			if((chtype == NO_MSG) || (optiona == NO_MSG) || (optionb == NO_MSG))
 			{
-				print(sprintf(
+				printf(
 					strcat(
 						"^1NOTIFICATION IS MISSING CHOICE PARAMS: ",
 						"^7net_type = %s, net_name = %s.\n"
 					),
 					typestring,
 					namestring
-				));
+				);
 				notif_error = TRUE;
 			}
 			else
@@ -857,14 +857,14 @@ void Create_Notification_Entity(
 
 					default:
 					{
-						print(sprintf(
+						printf(
 							strcat(
 								"^1NOTIFICATION WITH IMPROPER TYPE: ",
 								"^7net_type = %d, net_name = %s.\n"
 							),
 							typeid,
 							namestring
-						));
+						);
 						notif_error = TRUE;
 						break;
 					}
@@ -900,14 +900,14 @@ void Create_Notification_Entity(
 
 		default:
 		{
-			print(sprintf(
+			printf(
 				strcat(
 					"^1NOTIFICATION WITH IMPROPER TYPE: ",
 					"^7net_type = %d, net_name = %s.\n"
 				),
 				typeid,
 				namestring
-			));
+			);
 			notif_error = TRUE;
 			break;
 		}

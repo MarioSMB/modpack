@@ -1,12 +1,12 @@
 #ifdef REGISTER_MONSTER
 REGISTER_MONSTER(
-/* MON_##id	  */ MAGE,
-/* function	  */ m_mage,
+/* MON_##id   */ MAGE,
+/* function   */ m_mage,
 /* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RANGED,
 /* mins,maxs  */ '-36 -36 -24', '36 36 50',
-/* model	  */ "mage.dpm",
-/* netname	  */ "mage",
-/* fullname	  */ _("Mage")
+/* model      */ "mage.dpm",
+/* netname    */ "mage",
+/* fullname   */ _("Mage")
 );
 
 #else

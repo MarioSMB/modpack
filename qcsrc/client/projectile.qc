@@ -465,7 +465,7 @@ void Ent_Projectile()
 			default:
 				break;
 		}
-		
+
 		if(Nade_IDFromProjectile(self.cnt) != 0)
 		{
 			self.mins = '-16 -16 -16';
@@ -476,7 +476,7 @@ void Ent_Projectile()
 			self.scale = 1.5;
 			self.avelocity = randomvec() * 720;
 		}
-		
+
 		setsize(self, self.mins, self.maxs);
 	}
 

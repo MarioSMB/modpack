@@ -194,9 +194,9 @@ const float STAT_MONSTERS_KILLED = 77;
 const float STAT_OK_AMMO_CHARGE = 78;
 const float STAT_OK_AMMO_CHARGEPOOl = 79;
 
-const float STAT_GRENADE_BONUS = 80;
-const float STAT_GRENADE_BONUS_TYPE = 81;
-const float STAT_GRENADE_BONUS_SCORE = 82;
+const float STAT_NADE_BONUS = 80;
+const float STAT_NADE_BONUS_TYPE = 81;
+const float STAT_NADE_BONUS_SCORE = 82;
 const float STAT_HEALING_ORB = 83;
 const float STAT_HEALING_ORB_ALPHA = 84;
 

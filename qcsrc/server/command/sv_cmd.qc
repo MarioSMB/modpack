@@ -166,7 +166,7 @@ void GameCommand_adminmsg(float request, float argc)
 	}
 }
 
-void GameCommand_butcher(float request)
+void GameCommand_mobbutcher(float request)
 {
 	switch(request)
 	{
@@ -174,36 +174,36 @@ void GameCommand_butcher(float request)
 		{
 			if(autocvar_g_campaign) { print("This command doesn't work in campaign mode.\n"); return; }
 			if(g_invasion) { print("This command doesn't work during an invasion.\n"); return; }
-		
-            float removed_count = 0;
+
+			float removed_count = 0;
 			entity head;
-			
+
 			FOR_EACH_MONSTER(head)
 			{
 				monster_remove(head);
 				++removed_count;
 			}
-			
+
 			FOR_EACH_PLAYER(head)
 				head.monstercount = 0;
-				
+
 			monsters_total = 0; // reset stats?
 			monsters_killed = 0;
-				
+
 			totalspawned = 0;
-			
+
 			if(removed_count <= 0)
 				print("No monsters to kill\n");
 			else
-				print(sprintf("Killed %d monster%s\n", removed_count, ((removed_count == 1) ? "" : "s")));
-				
+				printf("Killed %d monster%s\n", removed_count, ((removed_count == 1) ? "" : "s"));
+
 			return; // never fall through to usage
 		}
-			
+
 		default:
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd butcher\n");
+			print("\nUsage:^3 sv_cmd mobbutcher\n");
 			print("  No arguments required.\n");
 			return;
 		}
@@ -1912,7 +1912,7 @@ void GameCommand_(float request)
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define SERVER_COMMANDS(request,arguments,command) \
 	SERVER_COMMAND("adminmsg", GameCommand_adminmsg(request, arguments), "Send an admin message to a client directly") \
-	SERVER_COMMAND("butcher", GameCommand_butcher(request), "Instantly removes all monsters on the map") \
+	SERVER_COMMAND("mobbutcher", GameCommand_mobbutcher(request), "Instantly removes all monsters on the map") \
 	SERVER_COMMAND("allready", GameCommand_allready(request), "Restart the server and reset the players") \
 	SERVER_COMMAND("allspec", GameCommand_allspec(request, arguments), "Force all players to spectate") \
 	SERVER_COMMAND("anticheat", GameCommand_anticheat(request, arguments), "Create an anticheat report for a client") \

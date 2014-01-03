@@ -391,6 +391,12 @@ vector get_corner_position(entity box, float corner);
 // expand multiple arguments into one argument by stripping parenthesis
 #define XPD(...) __VA_ARGS__
 
+// Some common varargs functions. Lowercase as they match C.
+#define printf(...) print(sprintf(__VA_ARGS__))
+#define dprintf(...) dprint(sprintf(__VA_ARGS__))
+#define fprintf(file, ...) fputs(file, sprintf(__VA_ARGS__))
+#define bprintf(...) bprint(sprintf(__VA_ARGS__))
+
 #ifndef MENUQC
 void backtrace(string msg);
 #endif

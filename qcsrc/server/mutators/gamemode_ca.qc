@@ -275,6 +275,12 @@ MUTATOR_HOOKFUNCTION(ca_PlayerDamage_SplitHealthArmor)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(ca_PlayerRegen)
+{
+	// no regeneration in CA
+	return TRUE;
+}
+
 void ca_Initialize()
 {
 	allowed_to_spawn = TRUE;
@@ -312,6 +318,7 @@ MUTATOR_DEFINITION(gamemode_ca)
 	MUTATOR_HOOK(PlayerDamage_Calculate, ca_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, ca_FilterItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, ca_PlayerDamage_SplitHealthArmor, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerRegen, ca_PlayerRegen, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

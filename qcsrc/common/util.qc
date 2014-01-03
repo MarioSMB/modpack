@@ -874,7 +874,7 @@ float cvar_settemp(string tmp_cvar, string tmp_value)
 
 	if(!cvar_type(tmp_cvar))
 	{
-		print(sprintf("Error: cvar %s doesn't exist!\n", tmp_cvar));
+		printf("Error: cvar %s doesn't exist!\n", tmp_cvar);
 		return 0;
 	}
 
@@ -911,7 +911,7 @@ float cvar_settemp_restore()
 			++i;
 		}
 		else
-			print(sprintf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname));
+			printf("Error: cvar %s doesn't exist anymore! It can still be restored once it's manually recreated.\n", e.netname);
 	}
 
 	return i;
@@ -1312,7 +1312,7 @@ string find_last_color_code(string s)
 			++carets;
 
 		// check if carets aren't all escaped
-		if (carets == 1 || mod(carets, 2) == 1) // first check is just an optimization
+		if (carets & 1)
 		{
 			if(i+1 <= len)
 			if(strstrofs("0123456789", substring(s, i+1, 1), 0) >= 0)

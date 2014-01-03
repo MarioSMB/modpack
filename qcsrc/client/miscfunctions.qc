@@ -573,6 +573,17 @@ vector getplayerorigin(float pl)
 	return GETPLAYERORIGIN_ERROR;
 }
 
+float getplayeralpha(float pl)
+{
+	entity e;
+
+	e = CSQCModel_server2csqc(pl + 1);
+	if(e)
+		return e.alpha;
+
+	return 1;
+}
+
 vector getcsqcplayercolor(float pl)
 {
 	entity e;
@@ -615,7 +626,7 @@ void URI_Get_Callback(float id, float status, string data)
 	}
 	else
 	{
-		print(sprintf("Received HTTP request data for an invalid id %d.\n", id));
+		printf("Received HTTP request data for an invalid id %d.\n", id);
 	}
 }
 

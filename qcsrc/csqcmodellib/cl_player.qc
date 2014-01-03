@@ -60,13 +60,13 @@ void CSQCPlayer_SetPredictionError(vector o, vector v, float onground_diff)
 	// commented out as this one did not help
 	if(onground_diff)
 	{
-		print(sprintf("ONGROUND MISMATCH: %d x=%v v=%v\n", onground_diff, o, v));
+		printf("ONGROUND MISMATCH: %d x=%v v=%v\n", onground_diff, o, v);
 		return;
 	}
 	*/
 	if(vlen(o) > 32 || vlen(v) > 192)
 	{
-		//print(sprintf("TOO BIG: x=%v v=%v\n", o, v));
+		//printf("TOO BIG: x=%v v=%v\n", o, v);
 		return;
 	}
 

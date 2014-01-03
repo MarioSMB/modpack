@@ -51,11 +51,11 @@ vector damage_explosion_calcpush(vector explosion_f, vector target_v, float spee
 	v = explosion_calcpush(explosion_f * speedfactor, m, target_v, 1, 0);
 	// the factor we then get is:
 	//   1
-	print(sprintf("MASS: %f\nv: %v -> %v\nENERGY BEFORE == %f + %f = %f\nENERGY AFTER >= %f\n",
+	printf("MASS: %f\nv: %v -> %v\nENERGY BEFORE == %f + %f = %f\nENERGY AFTER >= %f\n",
 		m,
 		target_v, target_v + v,
 		target_v * target_v, m * explosion_f * speedfactor * explosion_f * speedfactor, target_v * target_v + m * explosion_f * speedfactor * explosion_f * speedfactor,
-		(target_v + v) * (target_v + v)));
+		(target_v + v) * (target_v + v));
 	return v;
 #endif
 	return explosion_f * explosion_calcpush_getmultiplier(explosion_f * speedfactor, target_v);

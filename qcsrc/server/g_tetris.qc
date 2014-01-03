@@ -262,7 +262,7 @@ void PieceMinsMaxs(float rot, float pc)
 		tet_piecemins_y = 1;
 		tet_piecemaxs_y = sz_y;
 	}
-	//print(sprintf("ce%v sz%v mi%v ma%v\n", ce, sz, tet_piecemins, tet_piecemaxs));
+	//printf("ce%v sz%v mi%v ma%v\n", ce, sz, tet_piecemins, tet_piecemaxs);
 	if (rot == 1) // 90 degrees
 	{
 		t = tet_piecemins_y;
@@ -653,7 +653,7 @@ float BastetSearch(float buf, float pc, float x, float y, float rot, float move_
 		s = BastetSearch(buf, pc, x, y+1, rot, move_bias + 2); if(s > sm) sm = s;
 		if(s < 0)
 		{
-			//print(sprintf("MAY CEMENT AT: %d %d %d\n", x, y, rot));
+			//printf("MAY CEMENT AT: %d %d %d\n", x, y, rot);
 			// moving down did not work - that means we can fixate the block here
 			t1 = gettime(GETTIME_HIRES);
 
@@ -699,7 +699,7 @@ float BastetPiece()
 	b = buf_create(); bastet_piece[6] = 7; bastet_score[6] = BastetSearch(b, 7, TET_START_PIECE_POS_x, 1+TET_START_PIECE_POS_y, TET_START_PIECE_POS_y, TET_WIDTH) + 100 * random() + bastet_piecetime[6]; buf_del(b);
 
 	var float t2 = gettime(GETTIME_HIRES);
-	dprint(sprintf("Time taken: %.6f seconds (of this, ev = %.2f%%, cm = %.2f%%)\n", t2 - t1, 100 * bastet_profile_evaluate_time / (t2 - t1), 100 * bastet_profile_checkmetrics_time / (t2 - t1)));
+	dprintf("Time taken: %.6f seconds (of this, ev = %.2f%%, cm = %.2f%%)\n", t2 - t1, 100 * bastet_profile_evaluate_time / (t2 - t1), 100 * bastet_profile_checkmetrics_time / (t2 - t1));
 
 	// sort
 	float i, j, k, p, s;
@@ -707,7 +707,7 @@ float BastetPiece()
 /*
 	for(i = 0; i < 7; ++i)
 	{
-		print(sprintf("piece %s value = %d\n", substring("OJLIZST", bastet_piece[i]-1, 1), bastet_score[i]));
+		printf("piece %s value = %d\n", substring("OJLIZST", bastet_piece[i]-1, 1), bastet_score[i]);
 	}
 */
 

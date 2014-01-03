@@ -131,7 +131,7 @@ void BGMScript_InitEntity(entity e)
 		e.bgmscriptline = e.bgmscriptline0 = i;
 		if(i >= bgmscriptbufsize)
 		{
-			print(sprintf("ERROR: bgmscript does not define %s\n", e.bgmscript));
+			printf("ERROR: bgmscript does not define %s\n", e.bgmscript);
 			strunzone(e.bgmscript);
 			e.bgmscript = string_null;
 		}

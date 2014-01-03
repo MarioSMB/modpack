@@ -13,7 +13,7 @@ void WarpZone_Fade_PreDraw()
 		self.alpha = bound(0, (self.warpzone_fadeend - vlen(org - self.origin - 0.5 * (self.mins + self.maxs))) / (self.warpzone_fadeend - self.warpzone_fadestart), 1);
 	else
 		self.alpha = 1;
-	//print(sprintf("%v <-> %v\n", view_origin, self.origin + 0.5 * (self.mins + self.maxs)));
+	//printf("%v <-> %v\n", view_origin, self.origin + 0.5 * (self.mins + self.maxs));
 	if(self.alpha <= 0)
 		self.drawmask = 0;
 	else

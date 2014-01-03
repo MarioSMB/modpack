@@ -216,8 +216,7 @@ void target_spawn_edit_entity(entity e, string msg, entity kt, entity t2, entity
 			self = e;
 			activator = act;
 
-			if(self.target_spawn_spawnfunc)
-				self.target_spawn_spawnfunc();
+			self.target_spawn_spawnfunc();
 
 			self = oldself;
 			activator = oldactivator;

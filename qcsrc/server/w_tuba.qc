@@ -72,7 +72,7 @@ float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorep
 			mmax = 240 / mintempo; // 60 = "0.25 means 1 sec", at 120 0.5 means 1 sec, at 240 1 means 1 sec
 		else
 			mmax = 240; // you won't try THAT hard... (tempo 1)
-		//print(sprintf("initial tempo rules: %f %f\n", mmin, mmax));
+		//printf("initial tempo rules: %f %f\n", mmin, mmax);
 
 		for(i = 0; i < n; ++i)
 		{
@@ -96,10 +96,10 @@ float W_Tuba_HasPlayed(entity pl, string melody, float instrument, float ignorep
 
 				// vi_x <= vi_y <= vj_x <= vj_y
 				// ti <= tj
-				//print(sprintf("first note: %f to %f, should be %f\n", vi_x, vi_y, ti));
-				//print(sprintf("second note: %f to %f, should be %f\n", vj_x, vj_y, tj));
-				//print(sprintf("m1 = %f\n", (vi_x - vj_y) / (ti - tj)));
-				//print(sprintf("m2 = %f\n", (vi_y - vj_x) / (ti - tj)));
+				//printf("first note: %f to %f, should be %f\n", vi_x, vi_y, ti);
+				//printf("second note: %f to %f, should be %f\n", vj_x, vj_y, tj);
+				//printf("m1 = %f\n", (vi_x - vj_y) / (ti - tj));
+				//printf("m2 = %f\n", (vi_y - vj_x) / (ti - tj));
 				mmin = max(mmin, (vi_x - vj_y) / (ti - tj)); // lower bound
 				mmax = min(mmax, (vi_y - vj_x) / (ti - tj)); // upper bound
 			}

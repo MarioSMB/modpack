@@ -1372,17 +1372,17 @@ void precache()
             precache_playermodel(s);
     }
 
-	if(autocvar_sv_allow_customplayermodels)
-	{
-		precache_playermodel("models/player/pony.iqm");
-		precache_playermodel("models/player/mario.dpm");
-		precache_playermodel("models/player/abyss.zym");
-		precache_playermodel("models/player/renamon.iqm");
-		precache_playermodel("models/player/terminusmale.iqm");
-		precache_playermodel("models/player/yoshi.dpm");
-		precache_playermodel("models/player/ubot.iqm");
-		precache_playermodel("models/player/rosalina.dpm");
-	}
+    if(autocvar_sv_allow_customplayermodels)
+    {
+        precache_playermodel("models/player/pony.iqm");
+        precache_playermodel("models/player/mario.dpm");
+        precache_playermodel("models/player/abyss.zym");
+        precache_playermodel("models/player/renamon.iqm");
+        precache_playermodel("models/player/terminusmale.iqm");
+        precache_playermodel("models/player/yoshi.dpm");
+        precache_playermodel("models/player/ubot.iqm");
+        precache_playermodel("models/player/rosalina.dpm");
+    }
 
     if (g_footsteps)
     {
@@ -1768,7 +1768,7 @@ float SUB_NoImpactCheck()
 	if(trace_dphitcontents == 0)
 	{
 		//dprint("A hit happened with zero hit contents... DEBUG THIS, this should never happen for projectiles! Projectile will self-destruct.\n");
-		dprint(sprintf("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Profectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n", num_for_edict(self), self.classname, vtos(self.origin)));
+		dprintf("A hit from a projectile happened with no hit contents! DEBUG THIS, this should never happen for projectiles! Profectile will self-destruct. (edict: %d, classname: %s, origin: %s)\n", num_for_edict(self), self.classname, vtos(self.origin));
 		checkclient();
 	}
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT)

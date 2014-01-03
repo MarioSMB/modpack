@@ -238,6 +238,12 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerThink)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(invasion_PlayerRegen)
+{
+	// no regeneration in invasion
+	return TRUE;
+}
+
 MUTATOR_HOOKFUNCTION(invasion_PlayerSpawn)
 {
 	self.bot_attack = FALSE;
@@ -284,6 +290,19 @@ MUTATOR_HOOKFUNCTION(invasion_SetStartItems)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(invasion_AccuracyTargetValid)
+{
+	if(frag_target.flags & FL_MONSTER)
+		return MUT_ACCADD_INVALID;
+	return MUT_ACCADD_INDIFFERENT;
+}
+
+MUTATOR_HOOKFUNCTION(invasion_AllowMobSpawning)
+{
+	// monster spawning disabled during an invasion
+	return TRUE;
+}
+
 void invasion_ScoreRules()
 {
 	ScoreRules_basics(0, 0, 0, FALSE);
@@ -312,10 +331,13 @@ MUTATOR_DEFINITION(gamemode_invasion)
 	MUTATOR_HOOK(MonsterDies, invasion_MonsterDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterSpawn, invasion_MonsterSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, invasion_PlayerThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerRegen, invasion_PlayerRegen, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, invasion_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, invasion_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SV_ParseClientCommand, invasion_PlayerCommand, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, invasion_SetStartItems, CBC_ORDER_ANY);
+	MUTATOR_HOOK(AccuracyTargetValid, invasion_AccuracyTargetValid, CBC_ORDER_ANY);
+	MUTATOR_HOOK(AllowMobSpawning, invasion_AllowMobSpawning, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

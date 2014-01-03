@@ -355,13 +355,14 @@ void Send_Notification_WOCOVA(
 	MULTITEAM_INFO(1, INFO_CTF_LOST_, 4,                   1, 0, "s1", "s1",                        "notify_%s_lost",       _("^BG%s^BG lost the ^TC^TT^BG flag"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_PICKUP_, 4,                 1, 0, "s1", "s1",                        "notify_%s_taken",      _("^BG%s^BG got the ^TC^TT^BG flag"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_RETURN_, 4,                 1, 0, "s1", "s1",                        "notify_%s_returned",   _("^BG%s^BG returned the ^TC^TT^BG flag"), "") \
+        MULTITEAM_INFO(1, INFO_CTF_RETURN_MONSTER_, 4,         1, 0, "s1", "s1",                        "notify_%s_returned",   _("^BG%s^BG returned the ^TC^TT^BG flag"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_CHEAT,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was unfairly eliminated by ^BG%s^K1%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_CRUSH,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_crush",         _("^BG%s%s^K1 was crushed by ^BG%s^K1%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_DROWN,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_water",         _("^BG%s%s^K1 was drowned by ^BG%s^K1%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_FALL,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_fall",          _("^BG%s%s^K1 was grounded by ^BG%s^K1%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_FIRE,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was burnt up into a crisp by ^BG%s^K1%s%s"), _("^BG%s%s^K1 felt a little hot from ^BG%s^K1's fire^K1%s%s")) \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_LAVA,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_lava",          _("^BG%s%s^K1 was cooked by ^BG%s^K1%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_MONSTER,           3, 2, "spree_inf s1 s2 s3loc spree_end", "",  	  "",          			  _("^BG%s%s^K1 was pushed infront of a monster by ^BG%s^K1%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_MONSTER,           3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was pushed infront of a monster by ^BG%s^K1%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_NADE,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_nade",          _("^BG%s%s^K1 was blown up by ^BG%s^K1's Nade%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_NADE_NAPALM,       3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_nade_napalm",   _("^BG%s%s^K1 was burned to death by ^BG%s^K1's Napalm Nade%s%s"), _("^BG%s%s^K1 got too close to a napalm explosion%s%s")) \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_NADE_ICE,          3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_nade_ice",      _("^BG%s%s^K1 was blown up by ^BG%s^K1's Ice Nade%s%s"), "") \
@@ -1569,7 +1570,7 @@ void RegisterNotifications_First()
 	#define dedi ""
 	#endif
 
-	print(sprintf("Beginning notification initialization on %s%s program...\n", dedi, PROGNAME));
+	printf("Beginning notification initialization on %s%s program...\n", dedi, PROGNAME);
 
 	// maybe do another implementation of this with checksums? for now, we don't need versioning
 	/*if(autocvar_notification_version != NOTIF_VERSION)
@@ -1581,8 +1582,8 @@ void RegisterNotifications_First()
 		#endif
 			notif_global_error = TRUE;
 
-		print(sprintf("^1NOTIFICATION VERSION MISMATCH: ^7program = %s, config = %d, code = %d.\n",
-			PROGNAME, autocvar_notification_version, NOTIF_VERSION));
+		printf("^1NOTIFICATION VERSION MISMATCH: ^7program = %s, config = %d, code = %d.\n",
+			PROGNAME, autocvar_notification_version, NOTIF_VERSION);
 	}*/
 }
 

@@ -170,6 +170,12 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerPreThink)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(minstagib_PlayerRegen)
+{
+	// no regeneration in minstagib
+	return TRUE;
+}
+
 MUTATOR_HOOKFUNCTION(minstagib_PlayerPowerups)
 {
 	if (!(self.effects & EF_FULLBRIGHT))
@@ -486,6 +492,7 @@ MUTATOR_DEFINITION(mutator_minstagib)
 	MUTATOR_HOOK(PlayerPowerups, minstagib_PlayerPowerups, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, minstagib_ForbidThrowing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, minstagib_PlayerPreThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerRegen, minstagib_PlayerRegen, CBC_ORDER_ANY);
 	MUTATOR_HOOK(OnEntityPreSpawn, minstagib_OnEntityPreSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, minstagib_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, minstagib_BuildMutatorsPrettyString, CBC_ORDER_ANY);

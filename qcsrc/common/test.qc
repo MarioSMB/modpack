@@ -3,7 +3,7 @@ float TEST_ok;
 
 void TEST_Fail(string cond)
 {
-	print(sprintf("Assertion failed: ", cond));
+	printf("Assertion failed: ", cond);
 	//backtrace();
 	++TEST_failed;
 }
@@ -27,29 +27,29 @@ float TEST_RunAll()
 	}
 	if(f)
 	{
-		print(sprintf("%d tests failed\n", f));
+		printf("%d tests failed\n", f);
 		return 1;
 	}
 	else
 	{
-		print(sprintf("All tests OK\n", f));
+		printf("All tests OK\n", f);
 		return 0;
 	}
 }
 
 float TEST_Run(string s)
 {
-	print(sprintf("%s: testing...\n", s));
+	printf("%s: testing...\n", s);
 	TEST_failed = TEST_ok = 0;
 	callfunction(strcat("_TEST_", s));
 	if(TEST_failed > 0)
 	{
-		print(sprintf("%s: %d items failed.\n", s, TEST_failed));
+		printf("%s: %d items failed.\n", s, TEST_failed);
 		return 0;
 	}
 	else if(!TEST_ok)
 	{
-		print(sprintf("%s: did not complete.\n", s));
+		printf("%s: did not complete.\n", s);
 		return 0;
 	}
 	return 1;

@@ -57,7 +57,7 @@ void ClientCommand_checkfail(float request, string command) // internal command,
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			print(sprintf("CHECKFAIL: %s (%s) epically failed check %s\n", self.netname, self.netaddress, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1))));
+			printf("CHECKFAIL: %s (%s) epically failed check %s\n", self.netname, self.netaddress, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
 			self.checkfail = 1;
 			return; // never fall through to usage
 		}
@@ -189,16 +189,33 @@ void ClientCommand_mobedit(float request, float argc)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			makevectors(self.v_angle);
-			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
-			
-			if(!IS_MONSTER(trace_ent)) { sprint(self, "You need to aim at your monster to edit its properties.\n"); return; }
-			if(trace_ent.realowner != self) { sprint(self, "That monster does not belong to you.\n"); return; }
-			
-			switch(argv(1))
+			if(argv(1) && argv(2))
 			{
-				case "skin": if(trace_ent.monsterid != MON_MAGE) { trace_ent.skin = stof(argv(2)); } return;
-				case "movetarget": trace_ent.monster_moveflags = stof(argv(2)); return;
+				makevectors(self.v_angle);
+				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
+				
+				if(!autocvar_g_monsters_edit) { sprint(self, "Monster property editing is not enabled.\n"); }
+				if(!(trace_ent.flags & FL_MONSTER)) { sprint(self, "You need to aim at your monster to edit its properties.\n"); }
+				else if(trace_ent.realowner != self) { sprint(self, "That monster does not belong to you.\n"); }
+				else // all went well, continue
+				{
+					switch(argv(1))
+					{
+						case "skin":
+						{
+							if(trace_ent.monsterid != MON_MAGE)
+								trace_ent.skin = stof(argv(2));
+							break;
+						}
+						case "movetarget":
+						{
+							trace_ent.monster_moveflags = stof(argv(2));
+							break;
+						}
+					}
+				}
+				
+				return;
 			}
 		}
 		default:
@@ -211,7 +228,7 @@ void ClientCommand_mobedit(float request, float argc)
 		}
 	}
 }
-	
+
 void ClientCommand_mobkill(float request)
 {
 	switch(request)
@@ -270,7 +287,8 @@ void ClientCommand_mobspawn(float request, float argc)
 			
 			if(autocvar_g_monsters_max <= 0 || autocvar_g_monsters_max_perplayer <= 0) { sprint(self, "Monster spawning is disabled.\n"); }
 			else if(!IS_PLAYER(self)) { sprint(self, "You can't spawn monsters while spectating.\n"); }
-			else if(g_invasion) { sprint(self, "You can't spawn monsters during an invasion!\n"); }
+			else if(tospawn == "") { sprint(self, "No argument specified.\n"); }
+			else if(MUTATOR_CALLHOOK(AllowMobSpawning)) { sprint(self, "Monster spawning is currently disabled by a mutator.\n"); }
 			else if(!autocvar_g_monsters) { Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_MONSTERS_DISABLED); }
 			else if(self.vehicle) { sprint(self, "You can't spawn monsters while driving a vehicle.\n"); }
 			else if(autocvar_g_campaign) { sprint(self, "You can't spawn monsters in campaign mode.\n"); }
@@ -298,9 +316,10 @@ void ClientCommand_mobspawn(float request, float argc)
 			sprint(self, "Incorrect parameters for ^2mobspawn^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			sprint(self, "\nUsage:^3 cmd mobspawn monster\n");
+			sprint(self, "\nUsage:^3 cmd mobspawn <random> <monster> [movetype]\n");
 			sprint(self, "  See 'cmd mobspawn list' for available arguments.\n");
-			sprint(self, "  Argument 'random' spawns a randomly selected monster.\n");
+			sprint(self, "  Argument 'random' spawns a random monster.\n");
+			sprint(self, "  Monster will follow the owner if second argument is not defined.\n");
 			return;
 		}
 	}

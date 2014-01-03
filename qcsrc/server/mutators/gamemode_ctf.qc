@@ -459,10 +459,15 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 void ctf_Handle_Return(entity flag, entity player)
 {
 	// messages and sounds
-	if(IS_PLAYER(player))
+	if(IS_MONSTER(player))
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_RETURN_MONSTER_), player.monster_name);
+	}
+	else
+	{
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_4(flag, CENTER_CTF_RETURN_));
-
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_RETURN_), (IS_MONSTER(player)) ? player.monster_name : player.netname);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(flag, INFO_CTF_RETURN_), player.netname);
+	}
 	sound(player, CH_TRIGGER, flag.snd_flag_returned, VOL_BASE, ATTEN_NONE);
 	ctf_EventLog("return", flag.team, player);
 
@@ -804,7 +809,7 @@ void ctf_FlagThink()
 
 		case FLAG_CARRY:
 		{
-			if(self.speedrunning && ctf_captimerecord && (time >= self.ctf_pickuptime + ctf_captimerecord)) 
+			if(self.speedrunning && ctf_captimerecord && (time >= self.ctf_pickuptime + ctf_captimerecord))
 			{
 				self.health = 0;
 				ctf_CheckFlagReturn(self, RETURN_SPEEDRUN);
@@ -870,6 +875,7 @@ void ctf_FlagTouch()
 	if(gameover) { return; }
 
 	entity toucher = other;
+	float is_not_monster = (!(toucher.flags & FL_MONSTER));
 
 	// automatically kill the flag and return it if it touched lava/slime/nodrop surfaces
 	if(ITEM_TOUCH_NEEDKILL())
@@ -912,9 +918,9 @@ void ctf_FlagTouch()
 	{
 		case FLAG_BASE:
 		{
-			if(CTF_SAMETEAM(toucher, self) && (toucher.flagcarried) && DIFF_TEAM(toucher.flagcarried, self) && !IS_MONSTER(toucher))
+			if(CTF_SAMETEAM(toucher, self) && (toucher.flagcarried) && DIFF_TEAM(toucher.flagcarried, self) && is_not_monster)
 				ctf_Handle_Capture(self, toucher, CAPTURE_NORMAL); // toucher just captured the enemies flag to his base
-			else if(CTF_DIFFTEAM(toucher, self) && (!toucher.flagcarried) && (!toucher.ctf_captureshielded) && (time > toucher.next_take_time) && !IS_MONSTER(toucher))
+			else if(CTF_DIFFTEAM(toucher, self) && (!toucher.flagcarried) && (!toucher.ctf_captureshielded) && (time > toucher.next_take_time) && is_not_monster)
 				ctf_Handle_Pickup(self, toucher, PICKUP_BASE); // toucher just stole the enemies flag
 			break;
 		}
@@ -923,7 +929,7 @@ void ctf_FlagTouch()
 		{
 			if(CTF_SAMETEAM(toucher, self) && autocvar_g_ctf_flag_return)
 				ctf_Handle_Return(self, toucher); // toucher just returned his own flag
-			else if(!IS_MONSTER(toucher) && (!toucher.flagcarried) && ((toucher != self.ctf_dropper) || (time > self.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
+			else if(is_not_monster && (!toucher.flagcarried) && ((toucher != self.ctf_dropper) || (time > self.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
 				ctf_Handle_Pickup(self, toucher, PICKUP_DROPPED); // toucher just picked up a dropped enemy flag
 			break;
 		}

@@ -1691,51 +1691,43 @@ float CalcRotRegen(float current, float regenstable, float regenfactor, float re
 
 void player_regen (void)
 {
-	float minh, mina, minf, maxh, maxa, maxf, limith, limita, limitf, max_mod, regen_mod, rot_mod, limit_mod;
-	maxh = autocvar_g_balance_health_rotstable;
-	maxa = autocvar_g_balance_armor_rotstable;
-	maxf = autocvar_g_balance_fuel_rotstable;
-	minh = autocvar_g_balance_health_regenstable;
-	mina = autocvar_g_balance_armor_regenstable;
-	minf = autocvar_g_balance_fuel_regenstable;
-	limith = autocvar_g_balance_health_limit;
-	limita = autocvar_g_balance_armor_limit;
-	limitf = autocvar_g_balance_fuel_limit;
-
-	max_mod = regen_mod = rot_mod = limit_mod = 1;
-
-	maxh = maxh * max_mod;
-	//maxa = maxa * max_mod;
-	//maxf = maxf * max_mod;
-	minh = minh * max_mod;
-	//mina = mina * max_mod;
-	//minf = minf * max_mod;
-	limith = limith * limit_mod;
-	limita = limita * limit_mod;
-	//limitf = limitf * limit_mod;
-
-	if(g_ca || g_invasion)
-		rot_mod = 0;
-	if(g_vip)
+	if(!MUTATOR_CALLHOOK(PlayerRegen))
+	if(!self.frozen)
 	{
-		// VIP regens to 200
-		if(self.isvip)
+		float minh, mina, maxh, maxa, limith, limita, max_mod, regen_mod, rot_mod, limit_mod;
+		maxh = autocvar_g_balance_health_rotstable;
+		maxa = autocvar_g_balance_armor_rotstable;
+		minh = autocvar_g_balance_health_regenstable;
+		mina = autocvar_g_balance_armor_regenstable;
+		limith = autocvar_g_balance_health_limit;
+		limita = autocvar_g_balance_armor_limit;
+
+		max_mod = regen_mod = rot_mod = limit_mod = 1;
+
+		maxh = maxh * max_mod;
+		minh = minh * max_mod;
+		limith = limith * limit_mod;
+		limita = limita * limit_mod;
+
+		if(g_vip)
 		{
-			maxh = 200;
-			maxa = 200;
-			minh = 200;
-			mina = 200;
-			regen_mod = 0.5; // half regen speed
+			// VIP regens to 200
+			if(self.isvip)
+			{
+				maxh = 200;
+				maxa = 200;
+				minh = 200;
+				mina = 200;
+				regen_mod = 0.5; // half regen speed
+			}
 		}
-	}
 
-	if (!g_minstagib && !g_ca && !g_invasion && !self.frozen && (!g_lms || autocvar_g_lms_regenerate))
-	{
 		self.armorvalue = CalcRotRegen(self.armorvalue, mina, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished), maxa, autocvar_g_balance_armor_rot, autocvar_g_balance_armor_rotlinear, rot_mod * frametime * (time > self.pauserotarmor_finished), limita);
 		self.health = CalcRotRegen(self.health, minh, autocvar_g_balance_health_regen, autocvar_g_balance_health_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished), maxh, autocvar_g_balance_health_rot, autocvar_g_balance_health_rotlinear, rot_mod * frametime * (time > self.pauserothealth_finished), limith);
 	}
 
 	// if player rotted to death...  die!
+	// check this outside above checks, as player may still be able to rot to death
 	if(self.health < 1)
 	{
 		if(self.vehicle)
@@ -1744,7 +1736,15 @@ void player_regen (void)
 	}
 
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
-		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, rot_mod * frametime * (time > self.pauserotfuel_finished), limitf);
+	{
+		float minf, maxf, limitf;
+
+		maxf = autocvar_g_balance_fuel_rotstable;
+		minf = autocvar_g_balance_fuel_regenstable;
+		limitf = autocvar_g_balance_fuel_limit;
+
+		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > self.pauserotfuel_finished), limitf);
+	}
 }
 
 float zoomstate_set;
@@ -2873,7 +2873,7 @@ void PlayerPostThink (void)
 
 	/*
 	if(g_race)
-		dprint(sprintf("%f %.6f\n", time, race_GetFractionalLapCount(self)));
+		dprintf("%f %.6f\n", time, race_GetFractionalLapCount(self));
 	*/
 
 	CSQCMODEL_AUTOUPDATE();

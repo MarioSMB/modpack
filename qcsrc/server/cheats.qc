@@ -66,13 +66,13 @@ float CheatsAllowed(float i, float argc, float fr) // the cheat gets passed as a
 
 	// if we get here, player is not allowed to cheat. Log it.
 	if(i)
-		bprint(sprintf("Player %s^7 tried to use cheat 'impulse %d'\n", self.netname, i));
+		bprintf("Player %s^7 tried to use cheat 'impulse %d'\n", self.netname, i);
 	else if(argc)
-		bprint(sprintf("Player %s^7 tried to use cheat '%s'\n", self.netname, argv(0)));
+		bprintf("Player %s^7 tried to use cheat '%s'\n", self.netname, argv(0));
 	else if(fr)
-		bprint(sprintf("Player %s^7 tried to use cheat frame %d\n", self.netname, fr));
+		bprintf("Player %s^7 tried to use cheat frame %d\n", self.netname, fr);
 	else
-		bprint(sprintf("Player %s^7 tried to use an unknown cheat\n", self.netname));
+		bprintf("Player %s^7 tried to use an unknown cheat\n", self.netname);
 
 	return 0;
 }

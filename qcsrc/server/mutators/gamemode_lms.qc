@@ -92,6 +92,13 @@ MUTATOR_HOOKFUNCTION(lms_PlayerThink)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(lms_PlayerRegen)
+{
+	if(autocvar_g_lms_regenerate)
+		return FALSE;
+	return TRUE;
+}
+
 MUTATOR_HOOKFUNCTION(lms_ForbidThrowing)
 {
 	// forbode!
@@ -189,6 +196,7 @@ MUTATOR_DEFINITION(gamemode_lms)
 	MUTATOR_HOOK(MakePlayerObserver, lms_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientConnect, lms_ClientConnect, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, lms_PlayerThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerRegen, lms_PlayerRegen, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, lms_ForbidThrowing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, lms_GiveFragsForKill, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, lms_SetStartItems, CBC_ORDER_ANY);

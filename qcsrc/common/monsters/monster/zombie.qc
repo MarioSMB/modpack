@@ -1,12 +1,12 @@
 #ifdef REGISTER_MONSTER
 REGISTER_MONSTER(
-/* MON_##id	  */ ZOMBIE,
-/* function	  */ m_zombie,
+/* MON_##id   */ ZOMBIE,
+/* function   */ m_zombie,
 /* spawnflags */ MON_FLAG_MELEE,
 /* mins,maxs  */ '-18 -18 -25', '18 18 47',
-/* model	  */ "zombie.dpm",
-/* netname	  */ "zombie",
-/* fullname	  */ _("Zombie")
+/* model      */ "zombie.dpm",
+/* netname    */ "zombie",
+/* fullname   */ _("Zombie")
 );
 
 #else

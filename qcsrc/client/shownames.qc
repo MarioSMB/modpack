@@ -100,7 +100,11 @@ void Draw_ShowNames(entity ent)
 		else if(time > ent.fadedelay) // fade in for enemies
 			ent.alpha = min(1, ent.alpha + SHOWNAMES_FADESPEED * frametime);
 
-		if(!ent.alpha)
+		// multiply by player alpha
+		if(!ent.sameteam || (ent.sv_entnum == player_localentnum))
+			ent.alpha *= getplayeralpha(ent.sv_entnum-1);
+
+		if(ent.alpha < ALPHA_MIN_VISIBLE)
 			return;
 
 		float dist;

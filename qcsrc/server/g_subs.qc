@@ -534,7 +534,7 @@ void WarpZone_tracebox_antilag (entity source, vector v1, vector mi, vector ma, 
 	tracebox_antilag_force_wz(source, v1, mi, ma, v2, nomonst, forent, lag, TRUE);
 }
 
-float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomonsters, entity forent, float stopatentity) // returns the number of traces done, for benchmarking
+float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomonsters, entity forent, float stopatentity, entity ignorestopatentity) // returns the number of traces done, for benchmarking
 {
 	vector pos, dir, t;
 	float nudge;
@@ -552,7 +552,7 @@ float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomon
 
 	for(;;)
 	{
-		if((pos - v1) * dir >= (v2 - v1) * dir)
+		if(pos * dir >= v2 * dir)
 		{
 			// went too far
 			trace_fraction = 1;
@@ -587,7 +587,7 @@ float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomon
 				pos = t + dir * nudge;
 
 				// but if we hit an entity, stop RIGHT before it
-				if(stopatentity && stopentity)
+				if(stopatentity && stopentity && stopentity != ignorestopatentity)
 				{
 					trace_ent = stopentity;
 					trace_endpos = t;
@@ -612,9 +612,9 @@ float tracebox_inverted (vector v1, vector mi, vector ma, vector v2, float nomon
 	}
 }
 
-void traceline_inverted (vector v1, vector v2, float nomonsters, entity forent, float stopatentity)
+void traceline_inverted (vector v1, vector v2, float nomonsters, entity forent, float stopatentity, entity ignorestopatentity)
 {
-	tracebox_inverted(v1, '0 0 0', '0 0 0', v2, nomonsters, forent, stopatentity);
+	tracebox_inverted(v1, '0 0 0', '0 0 0', v2, nomonsters, forent, stopatentity, ignorestopatentity);
 }
 
 /*

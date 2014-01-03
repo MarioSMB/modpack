@@ -668,10 +668,10 @@ float VoteCommand_parse(entity caller, string vote_command, string vote_list, fl
 
 	first_command = argv(startpos);
 
-	/*dprint(sprintf("VoteCommand_parse(): Command: '%s', Length: %f.\n",
+	/*dprintf("VoteCommand_parse(): Command: '%s', Length: %f.\n",
 		substring(vote_command, argv_start_index(startpos), strlen(vote_command) - argv_start_index(startpos)),
 		strlen(substring(vote_command, argv_start_index(startpos), strlen(vote_command) - argv_start_index(startpos)))
-	));*/
+	);*/
 
 	if(
 		(autocvar_sv_vote_limit > 0)

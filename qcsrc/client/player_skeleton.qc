@@ -91,8 +91,8 @@ void skel_set_boneabs(float s, float bone, vector absorg)
 
 	/*
 	vector neworg = skel_get_boneabs(s, bone);
-	print(sprintf("ANG: want: %v, got: %v\n", absang, fixedvectoangles2(v_forward, v_up)));
-	print(sprintf("ORG: want: %v, got: %v\n", absorg, neworg));
+	printf("ANG: want: %v, got: %v\n", absang, fixedvectoangles2(v_forward, v_up));
+	printf("ORG: want: %v, got: %v\n", absorg, neworg);
 	*/
 }
 
@@ -157,8 +157,8 @@ void skeleton_from_frames(entity e, float is_dead)
 			e.lerpfrac3 = 0;
 			e.lerpfrac4 = savelerpfrac4 * 2;
 		}
-		//print(sprintf("Run: bone %d to %d, type %d\n", firstbone + 1, bone, bonetype));
-		//print(sprintf("frame %d %d %d %d lerpfrac * %d %d %d\n", e.frame, e.frame2, e.frame3, e.frame4, e.lerpfrac, e.lerpfrac3, e.lerpfrac4));
+		//printf("Run: bone %d to %d, type %d\n", firstbone + 1, bone, bonetype);
+		//printf("frame %d %d %d %d lerpfrac * %d %d %d\n", e.frame, e.frame2, e.frame3, e.frame4, e.lerpfrac, e.lerpfrac3, e.lerpfrac4);
 		skel_build(s, e, m, 0, firstbone + 1, bone);
 	}
 	e.lerpfrac = savelerpfrac;

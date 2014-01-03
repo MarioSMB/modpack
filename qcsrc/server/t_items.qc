@@ -96,16 +96,16 @@ void ItemRead(float _IsNew)
         self.move_angles = self.angles;
     }
 
-	if(sf & ISF_SIZE)
-	{
-		self.mins_x = ReadCoord();
-		self.mins_y = ReadCoord();
-		self.mins_z = ReadCoord();
-		self.maxs_x = ReadCoord();
-		self.maxs_y = ReadCoord();
-		self.maxs_z = ReadCoord();
-		setsize(self, self.mins, self.maxs);
-	}
+    if(sf & ISF_SIZE)
+    {
+        self.mins_x = ReadCoord();
+        self.mins_y = ReadCoord();
+        self.mins_z = ReadCoord();
+        self.maxs_x = ReadCoord();
+        self.maxs_y = ReadCoord();
+        self.maxs_z = ReadCoord();
+        setsize(self, self.mins, self.maxs);
+    }
 
     if(sf & ISF_STATUS) // need to read/write status frist so model can handle simple, fb etc.
     {
@@ -254,15 +254,15 @@ float ItemSend(entity to, float sf)
         WriteCoord(MSG_ENTITY, self.angles_z);
     }
 
-	if(sf & ISF_SIZE)
-	{
-		WriteCoord(MSG_ENTITY, self.mins_x);
-		WriteCoord(MSG_ENTITY, self.mins_y);
-		WriteCoord(MSG_ENTITY, self.mins_z);
-		WriteCoord(MSG_ENTITY, self.maxs_x);
-		WriteCoord(MSG_ENTITY, self.maxs_y);
-		WriteCoord(MSG_ENTITY, self.maxs_z);
-	}
+    if(sf & ISF_SIZE)
+    {
+        WriteCoord(MSG_ENTITY, self.mins_x);
+        WriteCoord(MSG_ENTITY, self.mins_y);
+        WriteCoord(MSG_ENTITY, self.mins_z);
+        WriteCoord(MSG_ENTITY, self.maxs_x);
+        WriteCoord(MSG_ENTITY, self.maxs_y);
+        WriteCoord(MSG_ENTITY, self.maxs_z);
+    }
 
     if(sf & ISF_STATUS)
         WriteByte(MSG_ENTITY, self.ItemStatus);
@@ -1167,7 +1167,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
     }
     setsize (self, self.pos1, self.pos2);
 
-	self.SendFlags |= ISF_SIZE;
+    self.SendFlags |= ISF_SIZE;
 
     if(itemflags & FL_POWERUP)
         self.ItemStatus |= ITS_ANIMATE1;
