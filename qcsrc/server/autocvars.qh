@@ -1435,3 +1435,7 @@ float autocvar_g_infection_round_timelimit;
 float autocvar_g_infection_point_limit;
 float autocvar_g_infection_point_leadlimit;
 float autocvar_g_infection_team_spawns;
+float autocvar_g_jailbreak_warmup;
+float autocvar_g_jailbreak_round_timelimit;
+float autocvar_g_jailbreak_point_limit;
+float autocvar_g_jailbreak_point_leadlimit;

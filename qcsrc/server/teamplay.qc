@@ -227,6 +227,15 @@ void InitGameplayMode()
 		MUTATOR_ADD(gamemode_infection);
 	}
 
+	if(g_jailbreak)
+	{
+		fraglimit_override = autocvar_g_jailbreak_point_limit;
+		leadlimit_override = autocvar_g_jailbreak_point_leadlimit;
+		ActivateTeamplay();
+		have_team_spawns = -1; // request team spawns
+		MUTATOR_ADD(gamemode_jailbreak);
+	}
+
 	if(teamplay)
 		entcs_init();
 
