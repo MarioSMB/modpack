@@ -968,6 +968,8 @@ float HUD_WouldDrawScoreboard() {
 		return 0;
 	else if (HUD_QuickMenu_IsOpened())
 		return 0;
+	else if (morningrescue)
+		return 0;
 	else if (scoreboard_showscores)
 		return 1;
 	else if (intermission == 1)

@@ -296,7 +296,7 @@ MUTATOR_HOOKFUNCTION(jb_PlayerSpawn)
 	if(self.imprisoned)
 	{
 		entity head;
-		if(self.jail_ent == world || wasfreed(self.jail_ent))
+		if(self.jail_ent == world || !self.jail_ent || wasfreed(self.jail_ent))
 		{
 			RandomSelection_Init();
 			
