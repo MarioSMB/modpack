@@ -1531,7 +1531,7 @@ void player_powerups (void)
 	// add a way to see what the items were BEFORE all of these checks for the mutator hook
 	olditems = self.items;
 
-	if((self.items & IT_USING_JETPACK) && !self.deadflag)
+	if((self.items & IT_USING_JETPACK) && !self.deadflag && !gameover)
 		self.modelflags |= MF_ROCKET;
 	else
 		self.modelflags &= ~MF_ROCKET;
