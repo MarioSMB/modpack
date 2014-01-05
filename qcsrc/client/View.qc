@@ -405,12 +405,14 @@ float wcross_lastcheck;
 float fps_start;
 float fps_frames;
 
-// FIXME: make it unaffected by slowmo
-void FPSCounter_Update() {
-	if(time - fps_start >= 1) {
+
+void FPSCounter_Update()
+{
+	float thetime = gettime(GETTIME_REALTIME);
+	if(thetime - fps_start >= 1) {
 		cl_fps = fps_frames;
 		fps_frames = 0;
-		fps_start = time;
+		fps_start = thetime;
 	}
 
 	fps_frames++;
