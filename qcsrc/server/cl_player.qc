@@ -619,15 +619,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		Portal_ClearAllLater(self);
 
-		if(IS_REAL_CLIENT(self))
-		{
-			self.fixangle = TRUE;
-			//msg_entity = self;
-			//WriteByte (MSG_ONE, SVC_SETANGLE);
-			//WriteAngle (MSG_ONE, self.v_angle_x);
-			//WriteAngle (MSG_ONE, self.v_angle_y);
-			//WriteAngle (MSG_ONE, 80);
-		}
+		self.fixangle = TRUE;
 
 		if(defer_ClientKill_Now_TeamChange)
 			ClientKill_Now_TeamChange(); // can turn player into spectator

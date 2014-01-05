@@ -33,7 +33,7 @@ void W_Shotgun_Attack (float deathtype)
 
 	W_DecreaseAmmo(ammo_shells, ammoamount, autocvar_g_balance_shotgun_reload_ammo);
 
-	W_SetupShot (self, TRUE, 5, "weapons/shotgun_fire.wav", CH_WEAPON_A, d * bullets, self.weapon);
+	W_SetupShot (self, TRUE, 5, "weapons/shotgun_fire.wav", CH_WEAPON_SINGLE, d * bullets, self.weapon);
 	for (sc = 0;sc < bullets;sc = sc + 1)
 		fireBullet(w_shotorg, w_shotdir, spread, solidpenetration, d, f, WEP_SHOTGUN, 0);
 
@@ -155,8 +155,8 @@ void shotgun_meleethink (void)
 // alternate secondary weapon frames
 void shotgun_fire2_04()
 {
-	if (!weapon_action(self.weapon, WR_CHECKAMMO2))
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
+	if (!weapon_action(self.weapon, WR_CHECKAMMO2))
 	{
 		W_SwitchWeapon_Force(self, w_getbestweapon(self));
 		w_ready();
@@ -168,8 +168,8 @@ void shotgun_fire2_04()
 }
 void shotgun_fire2_03()
 {
-	if (!weapon_action(self.weapon, WR_CHECKAMMO2))
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
+	if (!weapon_action(self.weapon, WR_CHECKAMMO2))
 	{
 		W_SwitchWeapon_Force(self, w_getbestweapon(self));
 		w_ready();
@@ -177,10 +177,18 @@ void shotgun_fire2_03()
 	}
 
 	W_Shotgun_Attack(WEP_SHOTGUN);
-	weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_shotgun_secondary_alt_animtime,shotgun_fire2_04);
+	weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_shotgun_secondary_alt_animtime, shotgun_fire2_04);
 }
 void shotgun_fire2_02()
 {
+	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
+	if (!weapon_action(self.weapon, WR_CHECKAMMO2))
+	{
+		W_SwitchWeapon_Force(self, w_getbestweapon(self));
+		w_ready();
+		return;
+	}
+
 	W_Shotgun_Attack(WEP_SHOTGUN);
 	weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_shotgun_secondary_alt_animtime, shotgun_fire2_03);
 }
