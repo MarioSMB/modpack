@@ -408,11 +408,10 @@ float fps_frames;
 
 void FPSCounter_Update()
 {
-	float thetime = gettime(GETTIME_REALTIME);
-	if(thetime - fps_start >= 1) {
+	if(time - fps_start >= 1) {
 		cl_fps = fps_frames;
 		fps_frames = 0;
-		fps_start = thetime;
+		fps_start = time;
 	}
 
 	fps_frames++;
