@@ -806,6 +806,11 @@ MUTATOR_HOOKFUNCTION(sandbox_StartFrame)
 	return TRUE;
 }
 
+void sandbox_DelayedInit()
+{
+	sandbox_Database_Load();
+}
+
 MUTATOR_DEFINITION(sandbox)
 {
 	MUTATOR_HOOK(SV_ParseClientCommand, sandbox_PlayerCommand, CBC_ORDER_ANY);
@@ -815,7 +820,7 @@ MUTATOR_DEFINITION(sandbox)
 	{
 		autosave_time = time + autocvar_g_sandbox_storage_autosave; // don't save the first server frame
 		if(autocvar_g_sandbox_storage_autoload)
-			sandbox_Database_Load();
+			InitializeEntity(world, sandbox_DelayedInit, INITPRIO_LAST);
 	}
 
 	return FALSE;
