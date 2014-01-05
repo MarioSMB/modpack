@@ -324,10 +324,11 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 MUTATOR_HOOKFUNCTION(minstagib_SetStartItems)
 {
 	start_ammo_cells = warmup_start_ammo_cells = cvar("g_minstagib_ammo_start");
+	start_ammo_rockets = warmup_start_ammo_rockets = cvar("g_minstagib_withmines_ammo_start");
 
 	start_health = warmup_start_health = 100;
 	start_armorvalue = warmup_start_armorvalue = 0;
-	start_weapons = warmup_start_weapons = WEPSET_MINSTANEX;
+	start_weapons = warmup_start_weapons = ((cvar("g_minstagib_withmines")) ? (WEPSET_MINSTANEX | WEPSET_MINE_LAYER) : WEPSET_MINSTANEX);
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;
 
 	return FALSE;
@@ -501,6 +502,15 @@ MUTATOR_DEFINITION(mutator_minstagib)
 	MUTATOR_ONADD
 	{
 		precache_sound("weapons/rocket_impact.wav");
+		
+		if(cvar("g_minstagib_withmines"))
+			(get_weaponinfo(WEP_MINE_LAYER)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+	}
+	
+	MUTATOR_ONREMOVE
+	{
+		if(cvar("g_minstagib_withmines"))
+			(get_weaponinfo(WEP_MINE_LAYER)).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
 	}
 
 	return FALSE;
