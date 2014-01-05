@@ -156,7 +156,7 @@ void shotgun_meleethink (void)
 void shotgun_fire2_04()
 {
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
-	if (!weapon_action(self.weapon, WR_CHECKAMMO2))
+	if (!weapon_prepareattack_checkammo(TRUE))
 	{
 		W_SwitchWeapon_Force(self, w_getbestweapon(self));
 		w_ready();
@@ -169,7 +169,7 @@ void shotgun_fire2_04()
 void shotgun_fire2_03()
 {
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
-	if (!weapon_action(self.weapon, WR_CHECKAMMO2))
+	if (!weapon_prepareattack_checkammo(TRUE))
 	{
 		W_SwitchWeapon_Force(self, w_getbestweapon(self));
 		w_ready();
@@ -182,7 +182,7 @@ void shotgun_fire2_03()
 void shotgun_fire2_02()
 {
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
-	if (!weapon_action(self.weapon, WR_CHECKAMMO2))
+	if (!weapon_prepareattack_checkammo(TRUE))
 	{
 		W_SwitchWeapon_Force(self, w_getbestweapon(self));
 		w_ready();
