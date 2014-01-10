@@ -592,7 +592,7 @@ void CSQC_UpdateView(float w, float h)
 
 		float ov_width = (ov_worldmax_x - ov_worldmin_x);
 		float ov_height = (ov_worldmax_y - ov_worldmin_y);
-		float ov_distance = (autocvar_cl_orthoview_resolution * max(ov_width, ov_height));
+		float ov_distance = (max(vid_width, vid_height) * max(ov_width, ov_height));
 
 		ov_mid = ((ov_worldmax + ov_worldmin) * 0.5);
 		ov_org = vec3(ov_mid_x, ov_mid_y, (ov_mid_z + ov_distance));
@@ -615,12 +615,12 @@ void CSQC_UpdateView(float w, float h)
 		if((dist = vlen(vec3(ov_worldmax_x, ov_worldmin_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
 		if((dist = vlen(vec3(ov_worldmax_x, ov_worldmax_y, ov_worldmax_z) - ov_org)) > ov_furthest) { ov_furthest = dist; }
 
-		cvar_set("r_nearclip", ftos(ov_nearest));
-		cvar_set("r_farclip_base", ftos(ov_furthest));
-		cvar_set("r_farclip_world", "0");
-		cvar_set("r_novis", "1");
-		cvar_set("r_useportalculling", "0");
-		cvar_set("r_useinfinitefarclip", "0");
+		cvar_settemp("r_nearclip", ftos(ov_nearest));
+		cvar_settemp("r_farclip_base", ftos(ov_furthest));
+		cvar_settemp("r_farclip_world", "0");
+		cvar_settemp("r_novis", "1");
+		cvar_settemp("r_useportalculling", "0");
+		cvar_settemp("r_useinfinitefarclip", "0");
 
 		setproperty(VF_ORIGIN, ov_org);
 		setproperty(VF_ANGLES, '90 0 0');
@@ -1753,16 +1753,16 @@ void CSQC_common_hud(void)
 	if(!(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS))
 		Accuracy_LoadLevels();
 
-    HUD_Main(); // always run these functions for alpha checks
-    HUD_DrawScoreboard();
+	HUD_Main(); // always run these functions for alpha checks
+	HUD_DrawScoreboard();
 
-    if (scoreboard_active) // scoreboard/accuracy
-        HUD_Reset();
-    else if (intermission == 2) // map voting screen
-    {
-        HUD_FinaleOverlay();
-        HUD_Reset();
-    }
+	if (scoreboard_active) // scoreboard/accuracy
+		HUD_Reset();
+	else if (intermission == 2) // map voting screen
+	{
+		MapVote_Draw();
+		HUD_Reset();
+	}
 }
 
 

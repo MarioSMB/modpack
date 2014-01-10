@@ -1312,7 +1312,8 @@ void Local_Notification_sound(
 
 void Local_Notification_HUD_Notify_Push(
 	string icon, string hudargs,
-	string s1, string s2, string s3, string s4)
+	string s1, string s2, string s3, string s4,
+	float f1, float f2, float f3, float f4)
 {
 	string selected;
 	float sel_num;
@@ -1344,10 +1345,11 @@ void Local_Notification_HUD_Notify_Push(
 	}
 	#ifdef NOTIFICATIONS_DEBUG
 	Debug_Notification(sprintf(
-		"Local_Notification_HUD_Notify_Push('%s^7', '%s', %s, %s);\n",
+		"Local_Notification_HUD_Notify_Push('%s^7', '%s', %s, %s, %s);\n",
 		icon,
 		hudargs,
 		MakeConsoleSafe(sprintf("'%s^7', '%s^7', '%s^7', '%s^7'", s1, s2, s3, s4)),
+		sprintf("%d, %d, %d, %d", f1, f2, f3, f4),
 		MakeConsoleSafe(sprintf("'%s^7', '%s^7'", stof(arg_slot[0]), stof(arg_slot[1])))
 	));
 	#endif
@@ -1547,7 +1549,8 @@ void Local_Notification(float net_type, float net_name, ...count)
 				Local_Notification_HUD_Notify_Push(
 					notif.nent_icon,
 					notif.nent_hudargs,
-					s1, s2, s3, s4);
+					s1, s2, s3, s4,
+					f1, f2, f3, f4);
 			}
 			#endif
 			break;

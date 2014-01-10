@@ -1,9 +1,9 @@
-float numspawned;
-float maxspawned;
-float roundcnt;
-float maxrounds;
-float numkilled;
-float last_check;
-float maxcurrent;
+float inv_numspawned;
+float inv_maxspawned;
+float inv_roundcnt;
+float inv_maxrounds;
+float inv_numkilled;
+float inv_lastcheck;
+float inv_maxcurrent;
 
-float invasion_monsterskill;
+float inv_monsterskill;

@@ -724,7 +724,6 @@ float HUD_Panel_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		if (bInputType == 1)
 			return true;
 		menu_enabled = 1;
-		menu_enabled_time = time;
 		localcmd("menu_showhudexit\n");
 	}
 	else if(nPrimary == K_BACKSPACE && hudShiftState & S_CTRL)
@@ -1071,22 +1070,11 @@ void HUD_Panel_Highlight(float allow_move)
 void HUD_Panel_EnableMenu()
 {
 	menu_enabled = 2;
-	menu_enabled_time = time;
 	localcmd("menu_showhudoptions ", highlightedPanel.panel_name, "\n");
 }
 float mouse_over_panel;
 void HUD_Panel_Mouse()
 {
-	// TODO: needs better check... is there any float that contains the current state of the menu? _menu_alpha isn't apparently updated the frame the menu gets enabled
-	if (autocvar__menu_alpha == 0 && time - menu_enabled_time > 0.5)
-		menu_enabled = 0;
-
-	/*
-	print("menu_enabled: ", ftos(menu_enabled), "\n");
-	print("Highlighted: ", ftos(highlightedPanel), "\n");
-	print("Menu theAlpha: ", ftos(autocvar__menu_alpha), "\n");
-	*/
-
 	if(autocvar__menu_alpha == 1)
 		return;
 
@@ -1200,6 +1188,66 @@ void HUD_Panel_Mouse()
 
 	prevMouseClicked = mouseClicked;
 }
+void HUD_Configure_DrawGrid()
+{
+	float i;
+	if(autocvar_hud_configure_grid && autocvar_hud_configure_grid_alpha)
+	{
+		hud_configure_gridSize_x = bound(0.005, cvar("hud_configure_grid_xsize"), 0.2);
+		hud_configure_gridSize_y = bound(0.005, cvar("hud_configure_grid_ysize"), 0.2);
+		hud_configure_realGridSize_x = hud_configure_gridSize_x * vid_conwidth;
+		hud_configure_realGridSize_y = hud_configure_gridSize_y * vid_conheight;
+		vector s;
+		// x-axis
+		s = eX + eY * vid_conheight;
+		for(i = 1; i < 1/hud_configure_gridSize_x; ++i)
+			drawfill(eX * i * hud_configure_realGridSize_x, s, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
+		// y-axis
+		s = eY + eX * vid_conwidth;
+		for(i = 1; i < 1/hud_configure_gridSize_y; ++i)
+			drawfill(eY * i * hud_configure_realGridSize_y, s, '0.5 0.5 0.5', autocvar_hud_configure_grid_alpha, DRAWFLAG_NORMAL);
+	}
+}
+
+float _menu_alpha_prev;
+void HUD_Configure_Frame()
+{
+	float i;
+	if(autocvar__hud_configure)
+	{
+		if(isdemo() || intermission == 2)
+		{
+			HUD_Configure_Exit_Force();
+			return;
+		}
+
+		if(!hud_configure_prev || hud_configure_prev == -1)
+		{
+			if(autocvar_hud_cursormode)
+				setcursormode(1);
+			hudShiftState = 0;
+			for(i = HUD_PANEL_NUM - 1; i >= 0; --i)
+				hud_panel[panel_order[i]].update_time = time;
+		}
+
+		// NOTE this check is necessary because _menu_alpha isn't updated the frame the menu gets enabled
+		if(autocvar__menu_alpha != _menu_alpha_prev)
+		{
+			if(autocvar__menu_alpha == 0)
+				menu_enabled = 0;
+			_menu_alpha_prev = autocvar__menu_alpha;
+		}
+
+		HUD_Configure_DrawGrid();
+	}
+	else if(hud_configure_prev)
+	{
+		if(menu_enabled)
+			menu_enabled = 0;
+		if(autocvar_hud_cursormode)
+			setcursormode(0);
+	}
+}
 
 const float hlBorderSize = 4;
 const string hlBorder = "gfx/hud/default/border_highlighted";
@@ -1211,4 +1259,23 @@ void HUD_Panel_HlBorder(float myBorder, vector color, float theAlpha)
 	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * (panel_size_y + 2 * myBorder - hlBorderSize), hlBorder, '8 1 0' * hlBorderSize, eX * (panel_size_x + 2 * myBorder) + eY * hlBorderSize, color, theAlpha, DRAWFLAG_NORMAL);
 	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * hlBorderSize, hlBorder2, '1 8 0' * hlBorderSize, eY * (panel_size_y + 2 * myBorder - 2 * hlBorderSize) + eX * hlBorderSize, color, theAlpha, DRAWFLAG_NORMAL);
 	drawpic_tiled(panel_pos - '1 1 0' * myBorder + eY * hlBorderSize + eX * (panel_size_x + 2 * myBorder - hlBorderSize), hlBorder2, '1 8 0' * hlBorderSize, eY * (panel_size_y + 2 * myBorder - 2 * hlBorderSize) + eX * hlBorderSize, color, theAlpha, DRAWFLAG_NORMAL);
+}
+
+void HUD_Configure_PostDraw()
+{
+	if(autocvar__hud_configure)
+	{
+		if(tab_panel)
+		{
+			panel = tab_panel;
+			HUD_Panel_UpdatePosSize()
+			drawfill(panel_pos - '1 1 0' * panel_bg_border, panel_size + '2 2 0' * panel_bg_border, '1 1 1', .2, DRAWFLAG_NORMAL);
+		}
+		if(highlightedPanel)
+		{
+			panel = highlightedPanel;
+			HUD_Panel_UpdatePosSize()
+			HUD_Panel_HlBorder(panel_bg_border + 1.5 * hlBorderSize, '0 0.5 1', 0.25 * (1 - autocvar__menu_alpha));
+		}
+	}
 }

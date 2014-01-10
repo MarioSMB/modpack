@@ -278,7 +278,7 @@ void InitGameplayMode()
 
 	if(g_invasion)
 	{
-		maxrounds = cvar("fraglimit");
+		inv_maxrounds = cvar("fraglimit");
 		cvar_set("fraglimit", "0");
 	}
 

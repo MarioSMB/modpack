@@ -218,16 +218,11 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 		// own team's color is never forced
 		float forcecolor_friend = 0;
 		float forcecolor_enemy = 0;
-		float teams_count = 0;
 		entity tm;
-
-		for(tm = teams.sort_next; tm; tm = tm.sort_next)
-			if(tm.team != NUM_SPECTATOR)
-				++teams_count;
 
 		if(autocvar_cl_forcemyplayercolors)
 			forcecolor_friend = 1024 + autocvar_cl_forcemyplayercolors;
-		if(autocvar_cl_forceplayercolors && teams_count == 2)
+		if(autocvar_cl_forceplayercolors && team_count == 2)
 			forcecolor_enemy = 1024 + autocvar__cl_color;
 
 		if(forcecolor_enemy && !forcecolor_friend)

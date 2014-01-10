@@ -480,14 +480,14 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(2, INFO_QUIT_KICK_IDLING,               1, 0, "s1", "",                          "",                     _("^BG%s^F3 was kicked for idling"), "") \
 	MSG_INFO_NOTIF(1, INFO_QUIT_KICK_SPECTATING,           0, 0, "", "",                            "",                     _("^F2You were kicked from the server because you are a spectator and spectators aren't allowed at the moment."), "") \
 	MSG_INFO_NOTIF(1, INFO_QUIT_SPECTATE,                  1, 0, "s1", "",                          "",                     _("^BG%s^F3 is now spectating"), "") \
-	MSG_INFO_NOTIF(1, INFO_RACE_ABANDONED,                 1, 0, "s1", "",                                                        "",                      _("^BG%s^BG has abandoned the race"), "") \
-	MSG_INFO_NOTIF(1, INFO_RACE_FAIL_RANKED,               1, 3, "s1 race_col f1ord race_col f3race_time race_diff", "s1",        "race_newfail",          _("^BG%s^BG couldn't break their %s%s^BG place record of %s%s %s"), "") \
-	MSG_INFO_NOTIF(1, INFO_RACE_FAIL_UNRANKED,             1, 3, "s1 race_col f1ord race_col f3race_time race_diff", "s1",        "race_newfail",          _("^BG%s^BG couldn't break the %s%s^BG place record of %s%s %s"), "") \
-	MSG_INFO_NOTIF(1, INFO_RACE_FINISHED,                  1, 0, "s1", "",                                                        "",                      _("^BG%s^BG has finished the race"), "") \
-	MSG_INFO_NOTIF(1, INFO_RACE_NEW_BROKEN,                2, 3, "s1 s2 race_col f1ord race_col f2race_time race_diff", "s1 s2",  "race_newrankyellow",    _("^BG%s^BG broke %s^BG's %s%s^BG place record with %s%s %s"), "") \
-	MSG_INFO_NOTIF(1, INFO_RACE_NEW_IMPROVED,              1, 3, "s1 race_col f1ord race_col f2race_time race_diff", "s1",        "race_newtime",          _("^BG%s^BG improved their %s%s^BG place record with %s%s %s"), "") \
-	MSG_INFO_NOTIF(1, INFO_RACE_NEW_MISSING_UID,           1, 1, "s1 f1race_time", "s1",                                          "race_newfail",          _("^BG%s^BG scored a new record with ^F2%s^BG, but unfortunately lacks a UID and will be lost."), "") \
-	MSG_INFO_NOTIF(1, INFO_RACE_NEW_SET,                   1, 2, "s1 race_col f1ord race_col f2race_time", "s1",                  "race_newrecordserver",  _("^BG%s^BG set the %s%s^BG place record with %s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_RACE_ABANDONED,                 1, 0, "s1", "",                                                                    "",                      _("^BG%s^BG has abandoned the race"), "") \
+	MSG_INFO_NOTIF(1, INFO_RACE_FAIL_RANKED,               1, 3, "s1 race_col f1ord race_col f3race_time race_diff", "s1 f3race_time",        "race_newfail",          _("^BG%s^BG couldn't break their %s%s^BG place record of %s%s %s"), "") \
+	MSG_INFO_NOTIF(1, INFO_RACE_FAIL_UNRANKED,             1, 3, "s1 race_col f1ord race_col f3race_time race_diff", "s1 f3race_time",        "race_newfail",          _("^BG%s^BG couldn't break the %s%s^BG place record of %s%s %s"), "") \
+	MSG_INFO_NOTIF(1, INFO_RACE_FINISHED,                  1, 0, "s1", "",                                                                    "",                      _("^BG%s^BG has finished the race"), "") \
+	MSG_INFO_NOTIF(1, INFO_RACE_NEW_BROKEN,                2, 3, "s1 s2 race_col f1ord race_col f2race_time race_diff", "s1 f2race_time",     "race_newrankyellow",    _("^BG%s^BG broke %s^BG's %s%s^BG place record with %s%s %s"), "") \
+	MSG_INFO_NOTIF(1, INFO_RACE_NEW_IMPROVED,              1, 3, "s1 race_col f1ord race_col f2race_time race_diff", "s1 f2race_time",        "race_newtime",          _("^BG%s^BG improved their %s%s^BG place record with %s%s %s"), "") \
+	MSG_INFO_NOTIF(1, INFO_RACE_NEW_MISSING_UID,           1, 1, "s1 f1race_time", "s1 f1race_time",                                          "race_newfail",          _("^BG%s^BG scored a new record with ^F2%s^BG, but unfortunately lacks a UID and will be lost."), "") \
+	MSG_INFO_NOTIF(1, INFO_RACE_NEW_SET,                   1, 2, "s1 race_col f1ord race_col f2race_time", "s1 f2race_time",                  "race_newrecordserver",  _("^BG%s^BG set the %s%s^BG place record with %s%s"), "") \
 	MULTITEAM_INFO(1, INFO_SCORES_, 4,                     0, 0, "", "",                            "",                     _("^TC^TT ^BGteam scores!"), "") \
 	MSG_INFO_NOTIF(1, INFO_SPECTATE_WARNING,               0, 1, "f1secs", "",                      "",                     _("^F2You have to become a player within the next %s, otherwise you will be kicked, because spectating isn't allowed at this time!"), "") \
 	MSG_INFO_NOTIF(1, INFO_SUPERWEAPON_PICKUP,             1, 0, "s1", "s1",                        "strength",             _("^BG%s^K1 picked up a Superweapon"), "") \
@@ -1052,9 +1052,9 @@ string arg_slot[NOTIF_MAX_ARGS];
     ARG_CASE(ARG_CS,        "f1secs",        count_seconds(f1)) \
     ARG_CASE(ARG_CS_SV,     "f1ord",         count_ordinal(f1)) \
     ARG_CASE(ARG_CS,        "f1time",        process_time(2, f1)) \
-    ARG_CASE(ARG_CS_SV,     "f1race_time",   mmssss(f1)) \
-    ARG_CASE(ARG_CS_SV,     "f2race_time",   mmssss(f2)) \
-    ARG_CASE(ARG_CS_SV,     "f3race_time",   mmssss(f3)) \
+    ARG_CASE(ARG_CS_SV_HA,  "f1race_time",   mmssss(f1)) \
+    ARG_CASE(ARG_CS_SV_HA,  "f2race_time",   mmssss(f2)) \
+    ARG_CASE(ARG_CS_SV_HA,  "f3race_time",   mmssss(f3)) \
     ARG_CASE(ARG_CS_SV,     "race_col",      CCR(((f1 == 1) ? "^F1" : "^F2"))) \
     ARG_CASE(ARG_CS_SV,     "race_diff",     ((f2 > f3) ? sprintf(CCR("^1[+%s]"), mmssss(f2 - f3)) : sprintf(CCR("^2[-%s]"), mmssss(f3 - f2)))) \
     ARG_CASE(ARG_CS,        "missing_teams", notif_arg_missing_teams(f1, f2, f3, f4)) \

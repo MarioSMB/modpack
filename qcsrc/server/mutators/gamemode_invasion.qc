@@ -53,8 +53,8 @@ void invasion_SpawnChosenMonster(float mon)
 
 	monster = spawnmonster("", mon, spawn_point, spawn_point, spawn_point.origin, FALSE, FALSE, 2);
 
-	if(roundcnt >= maxrounds)
-		monster.spawnflags |= MONSTERFLAG_MINIBOSS;
+	if(inv_roundcnt >= inv_maxrounds)
+		monster.spawnflags |= MONSTERFLAG_MINIBOSS; // last round spawns minibosses
 }
 
 void invasion_SpawnMonsters(float supermonster_count)
@@ -72,7 +72,7 @@ float Invasion_CheckWinner()
 		FOR_EACH_MONSTER(head)
 			monster_remove(head);
 
-		if(roundcnt >= maxrounds)
+		if(inv_roundcnt >= inv_maxrounds)
 		{
 			NextLevel();
 			return 1;
@@ -88,42 +88,30 @@ float Invasion_CheckWinner()
 		return 1;
 	}
 
-	// boss round
-	if(roundcnt >= maxrounds)
+	float total_alive_monsters = 0, supermonster_count = 0;
+
+	FOR_EACH_MONSTER(head) if(head.health > 0)
 	{
-		if(numspawned < 1)
-		{
-			maxspawned = 1;
-			invasion_SpawnMonsters(0);
-		}
-	}
-	else
-	{
-		float total_alive_monsters = 0, supermonster_count = 0;
-
-		FOR_EACH_MONSTER(head) if(head.health > 0)
-		{
-			if((get_monsterinfo(head.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
-				++supermonster_count;
-			++total_alive_monsters;
-		}
-
-		if((total_alive_monsters + numkilled) < maxspawned && maxcurrent < 10) // 10 at a time should be plenty
-		{
-			if(time >= last_check)
-			{
-				invasion_SpawnMonsters(supermonster_count);
-				last_check = time + 2;
-			}
-
-			return 0;
-		}
+		if((get_monsterinfo(head.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
+			++supermonster_count;
+		++total_alive_monsters;
 	}
 
-	if(numspawned < 1 || numkilled < maxspawned)
+	if((total_alive_monsters + inv_numkilled) < inv_maxspawned && inv_maxcurrent < 10) // 10 at a time should be plenty
+	{
+		if(time >= inv_lastcheck)
+		{
+			invasion_SpawnMonsters(supermonster_count);
+			inv_lastcheck = time + autocvar_g_invasion_spawn_delay;
+		}
+
+		return 0;
+	}
+
+	if(inv_numspawned < 1 || inv_numkilled < inv_maxspawned)
 		return 0; // nothing has spawned yet, or there are still alive monsters
 
-	if(roundcnt >= maxrounds)
+	if(inv_roundcnt >= inv_maxrounds)
 	{
 		NextLevel();
 		return 1;
@@ -175,26 +163,23 @@ void Invasion_RoundStart()
 		++numplayers;
 	}
 
-	roundcnt += 1;
+	inv_roundcnt += 1;
 
-	invasion_monsterskill = roundcnt + (numplayers * 0.3);
+	inv_monsterskill = inv_roundcnt + (numplayers * 0.3);
 
-	maxcurrent = 0;
-	numspawned = 0;
-	numkilled = 0;
+	inv_maxcurrent = 0;
+	inv_numspawned = 0;
+	inv_numkilled = 0;
 
-	if(roundcnt > 1)
-		maxspawned = rint(autocvar_g_invasion_monster_count * (roundcnt * 0.5));
-	else
-		maxspawned = autocvar_g_invasion_monster_count;
+	inv_maxspawned = rint(min(autocvar_g_invasion_monster_count, autocvar_g_invasion_monster_count * (inv_roundcnt * 0.5)));
 }
 
 MUTATOR_HOOKFUNCTION(invasion_MonsterDies)
 {
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
-		numkilled += 1;
-		maxcurrent -= 1;
+		inv_numkilled += 1;
+		inv_maxcurrent -= 1;
 
 		if(IS_PLAYER(frag_attacker))
 			PlayerScore_Add(frag_attacker, SP_KILLS, +1);
@@ -211,16 +196,13 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
 		return FALSE;
 	}
 
-	if(roundcnt < maxrounds && self.spawnflags & MONSTERFLAG_MINIBOSS)
-		self.spawnflags &= ~MONSTERFLAG_MINIBOSS;
-
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
-		numspawned += 1;
-		maxcurrent += 1;
+		inv_numspawned += 1;
+		inv_maxcurrent += 1;
 	}
 
-	self.monster_skill = invasion_monsterskill;
+	self.monster_skill = inv_monsterskill;
 
 	if((get_monsterinfo(self.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_INVASION_SUPERMONSTER, M_NAME(self.monsterid));
@@ -232,8 +214,8 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
 
 MUTATOR_HOOKFUNCTION(invasion_PlayerThink)
 {
-	monsters_total = maxspawned; // TODO: make sure numspawned never exceeds maxspawned
-	monsters_killed = numkilled;
+	monsters_total = inv_maxspawned; // TODO: make sure numspawned never exceeds maxspawned
+	monsters_killed = inv_numkilled;
 
 	return FALSE;
 }
@@ -268,13 +250,13 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerCommand)
 
 	if(cmd_name == "debuginvasion")
 	{
-		sprint(self, strcat("maxspawned = ", ftos(maxspawned), "\n"));
-		sprint(self, strcat("numspawned = ", ftos(numspawned), "\n"));
-		sprint(self, strcat("numkilled = ", ftos(numkilled), "\n"));
-		sprint(self, strcat("roundcnt = ", ftos(roundcnt), "\n"));
+		sprint(self, strcat("inv_maxspawned = ", ftos(inv_maxspawned), "\n"));
+		sprint(self, strcat("inv_numspawned = ", ftos(inv_numspawned), "\n"));
+		sprint(self, strcat("inv_numkilled = ", ftos(inv_numkilled), "\n"));
+		sprint(self, strcat("inv_roundcnt = ", ftos(inv_roundcnt), "\n"));
 		sprint(self, strcat("monsters_total = ", ftos(monsters_total), "\n"));
 		sprint(self, strcat("monsters_killed = ", ftos(monsters_killed), "\n"));
-		sprint(self, strcat("invasion_monsterskill = ", ftos(invasion_monsterskill), "\n"));
+		sprint(self, strcat("inv_monsterskill = ", ftos(inv_monsterskill), "\n"));
 
 		return TRUE;
 	}
@@ -323,7 +305,7 @@ void invasion_Initialize()
 
 	allowed_to_spawn = TRUE;
 
-	roundcnt = 0;
+	inv_roundcnt = 0;
 }
 
 MUTATOR_DEFINITION(gamemode_invasion)

@@ -194,28 +194,25 @@ void ClientCommand_mobedit(float request, float argc)
 				makevectors(self.v_angle);
 				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
 				
-				if(!autocvar_g_monsters_edit) { sprint(self, "Monster property editing is not enabled.\n"); }
-				if(!(trace_ent.flags & FL_MONSTER)) { sprint(self, "You need to aim at your monster to edit its properties.\n"); }
-				else if(trace_ent.realowner != self) { sprint(self, "That monster does not belong to you.\n"); }
-				else // all went well, continue
+				if(!autocvar_g_monsters_edit) { sprint(self, "Monster property editing is not enabled.\n"); return; }
+				if(trace_ent.flags & FL_MONSTER)
 				{
+					if(trace_ent.realowner != self) { sprint(self, "That monster does not belong to you.\n"); return; }
 					switch(argv(1))
 					{
 						case "skin":
 						{
 							if(trace_ent.monsterid != MON_MAGE)
 								trace_ent.skin = stof(argv(2));
-							break;
+							return;
 						}
 						case "movetarget":
 						{
 							trace_ent.monster_moveflags = stof(argv(2));
-							break;
+							return;
 						}
 					}
 				}
-				
-				return;
 			}
 		}
 		default:
@@ -224,6 +221,7 @@ void ClientCommand_mobedit(float request, float argc)
 		{
 			sprint(self, "\nUsage:^3 cmd mobedit [argument]\n");
 			sprint(self, "  Where 'argument' can be skin or movetarget.\n");
+			sprint(self, "  Aim at your monster to edit its properties.\n");
 			return;
 		}
 	}
@@ -249,10 +247,6 @@ void ClientCommand_mobkill(float request)
 				Damage (trace_ent, world, world, trace_ent.health + trace_ent.max_health + 200, DEATH_KILL, trace_ent.origin, '0 0 0');
 				return;
 			}
-			else
-				sprint(self, "You need to aim at your monster to kill it.\n");
-			
-			return;
 		}
 	
 		default:
@@ -285,31 +279,46 @@ void ClientCommand_mobspawn(float request, float argc)
 				return;
 			}
 			
-			if(autocvar_g_monsters_max <= 0 || autocvar_g_monsters_max_perplayer <= 0) { sprint(self, "Monster spawning is disabled.\n"); }
-			else if(!IS_PLAYER(self)) { sprint(self, "You can't spawn monsters while spectating.\n"); }
-			else if(tospawn == "") { sprint(self, "No argument specified.\n"); }
-			else if(MUTATOR_CALLHOOK(AllowMobSpawning)) { sprint(self, "Monster spawning is currently disabled by a mutator.\n"); }
-			else if(!autocvar_g_monsters) { Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_MONSTERS_DISABLED); }
-			else if(self.vehicle) { sprint(self, "You can't spawn monsters while driving a vehicle.\n"); }
-			else if(autocvar_g_campaign) { sprint(self, "You can't spawn monsters in campaign mode.\n"); }
-			else if(self.deadflag != DEAD_NO) { sprint(self, "You can't spawn monsters while dead.\n"); }
-			else if(self.monstercount >= autocvar_g_monsters_max_perplayer) { sprint(self, "You have spawned too many monsters, kill some before trying to spawn any more.\n"); }
-			else if(totalspawned >= autocvar_g_monsters_max) { sprint(self, "The global maximum monster count has been reached, kill some before trying to spawn any more.\n"); }
-			else // all worked out, so continue
+			if(autocvar_g_monsters_max <= 0 || autocvar_g_monsters_max_perplayer <= 0) { sprint(self, "Monster spawning is disabled.\n"); return; }
+			else if(!IS_PLAYER(self)) { sprint(self, "You can't spawn monsters while spectating.\n"); return; }
+			else if(MUTATOR_CALLHOOK(AllowMobSpawning)) { sprint(self, "Monster spawning is currently disabled by a mutator.\n"); return; }
+			else if(!autocvar_g_monsters) { Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_MONSTERS_DISABLED); return; }
+			else if(self.vehicle) { sprint(self, "You can't spawn monsters while driving a vehicle.\n"); return; }
+			else if(autocvar_g_campaign) { sprint(self, "You can't spawn monsters in campaign mode.\n"); return; }
+			else if(self.deadflag != DEAD_NO) { sprint(self, "You can't spawn monsters while dead.\n"); return; }
+			else if(self.monstercount >= autocvar_g_monsters_max_perplayer) { sprint(self, "You have spawned too many monsters, kill some before trying to spawn any more.\n"); return; }
+			else if(totalspawned >= autocvar_g_monsters_max) { sprint(self, "The global maximum monster count has been reached, kill some before trying to spawn any more.\n"); return; }
+			else if(tospawn != "")
 			{
-				self.monstercount += 1;
-				totalspawned += 1;
-			
-				makevectors(self.v_angle);
-				WarpZone_TraceBox (CENTER_OR_VIEWOFS(self), PL_MIN, PL_MAX, CENTER_OR_VIEWOFS(self) + v_forward * 150, TRUE, self);
-				//WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 150, MOVE_NORMAL, self);
-			
-				e = spawnmonster(tospawn, 0, self, self, trace_endpos, FALSE, FALSE, moveflag);
+				float found = 0, i;
+				entity mon;
 				
-				sprint(self, strcat("Spawned ", e.monster_name, "\n"));
+				for(i = MON_FIRST; i <= MON_LAST; ++i)
+				{
+					mon = get_monsterinfo(i);
+					if(mon.netname == tospawn)
+					{
+						found = TRUE;
+						break;
+					}
+				}
+
+				if(found)
+				{
+					self.monstercount += 1;
+					totalspawned += 1;
+				
+					makevectors(self.v_angle);
+					WarpZone_TraceBox (CENTER_OR_VIEWOFS(self), PL_MIN, PL_MAX, CENTER_OR_VIEWOFS(self) + v_forward * 150, TRUE, self);
+					//WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 150, MOVE_NORMAL, self);
+				
+					e = spawnmonster(tospawn, 0, self, self, trace_endpos, FALSE, FALSE, moveflag);
+					
+					sprint(self, strcat("Spawned ", e.monster_name, "\n"));
+					
+					return;
+				}
 			}
-			
-			return;
 		}
 	
 		default:
@@ -317,7 +326,7 @@ void ClientCommand_mobspawn(float request, float argc)
 		case CMD_REQUEST_USAGE:
 		{
 			sprint(self, "\nUsage:^3 cmd mobspawn <random> <monster> [movetype]\n");
-			sprint(self, "  See 'cmd mobspawn list' for available arguments.\n");
+			sprint(self, "  See 'cmd mobspawn list' for available monsters.\n");
 			sprint(self, "  Argument 'random' spawns a random monster.\n");
 			sprint(self, "  Monster will follow the owner if second argument is not defined.\n");
 			return;

@@ -48,7 +48,6 @@ const float S_CTRL = 2;
 const float S_ALT = 4;
 
 float menu_enabled; // 1 showing the entire HUD, 2 showing only the clicked panel
-float menu_enabled_time;
 
 float hud_fade_alpha;
 
@@ -56,8 +55,6 @@ string hud_skin_path;
 string hud_skin_prev;
 
 vector myteamcolors;
-
-var vector progressbar_color;
 
 entity highlightedPanel_backup;
 var vector panel_pos_backup;
@@ -81,7 +78,6 @@ entity panel;
 var float panel_enabled;
 var vector panel_pos;
 var vector panel_size;
-var string panel_bg;
 var string panel_bg_str; // "_str" vars contain the raw value of the cvar, non-"_str" contains what hud.qc code should use
 var vector panel_bg_color;
 var string panel_bg_color_str;
@@ -150,24 +146,10 @@ HUD_PANELS
 // ----------------------
 // Little help for the poor people who have to make sense of this: Start from the bottom ;)
 
-#define HUD_Panel_GetProgressBarColor(item) \
-		progressbar_color = stov(cvar_string("hud_progressbar_" #item "_color"))
-#define HUD_Panel_GetProgressBarColorForString(item) \
-switch(item) {\
-	case "health": HUD_Panel_GetProgressBarColor(health); break;\
-	case "armor": HUD_Panel_GetProgressBarColor(armor); break;\
-	case "strength": HUD_Panel_GetProgressBarColor(strength); break;\
-	case "shield": HUD_Panel_GetProgressBarColor(shield); break;\
-	case "fuel": HUD_Panel_GetProgressBarColor(fuel); break;\
-	case "nexball": HUD_Panel_GetProgressBarColor(nexball); break;\
-	case "speed": HUD_Panel_GetProgressBarColor(speed); break;\
-	case "acceleration": HUD_Panel_GetProgressBarColor(acceleration); break;\
-	case "acceleration_neg": HUD_Panel_GetProgressBarColor(acceleration_neg); break;\
-} ENDS_WITH_CURLY_BRACE
-
-// Get value for panel_bg: if "" fetch default, else use panel_bg_str
+// Get value for panel.current_panel_bg: if "" fetch default, else use panel_bg_str
 // comment on last line of macro: // we probably want to see a background in config mode at all times...
 #define HUD_Panel_GetBg()\
+string panel_bg;\
 if(!autocvar__hud_configure && panel_bg_str == "0") {\
 	panel_bg = "0";\
 } else {\
@@ -187,7 +169,10 @@ if(!autocvar__hud_configure && panel_bg_str == "0") {\
 			}\
 		}\
 	}\
-}
+}\
+if(panel.current_panel_bg)\
+	strunzone(panel.current_panel_bg);\
+panel.current_panel_bg = strzone(panel_bg);
 
 // Get value for panel_bg_color: if "" fetch default, else use panel_bg_color. Convert pants, shirt or teamcolor into a vector.
 #define HUD_Panel_GetColor()\
@@ -220,14 +205,6 @@ if(panel_bg_color_team_str == "") {\
 	panel_bg_color_team = stof(panel_bg_color_team_str);\
 }
 
-// the check doesn't allow to fade this panel when showing the panel-specific menu dialog
-#define HUD_Panel_ApplyFadeAlpha()\
-if(!(menu_enabled == 2 && panel == highlightedPanel))\
-{\
-	panel_bg_alpha *= hud_fade_alpha;\
-	panel_fg_alpha *= hud_fade_alpha;\
-} ENDS_WITH_CURLY_BRACE
-
 // Get value for panel_bg_alpha: if "" fetch default, else use panel_bg_alpha. Also do various menu dialog fadeout/in checks, and minalpha checks
 // comment on line 3 of macro: // do not set a minalpha cap when showing the config dialog for this panel
 #define HUD_Panel_GetBgAlpha()\
@@ -259,13 +236,6 @@ if(panel_bg_border_str == "") {\
 	panel_bg_border = stof(panel_bg_border_str);\
 } ENDS_WITH_CURLY_BRACE
 
-// Scale the pos and size vectors to absolute coordinates
-#define HUD_Panel_GetScaledVectors()\
-panel_pos_x *= vid_conwidth;\
-panel_pos_y *= vid_conheight;\
-panel_size_x *= vid_conwidth;\
-panel_size_y *= vid_conheight;
-
 // Get padding. See comments above, it's similar.
 // last line is a port of the old function, basically always make sure the panel contents are at least 5 pixels tall/wide, to disallow extreme padding values
 #define HUD_Panel_GetPadding()\
@@ -276,36 +246,12 @@ if(panel_bg_padding_str == "") {\
 }\
 panel_bg_padding = min(min(panel_size_x, panel_size_y)/2 - 5, panel_bg_padding);
 
-// Point to the macros above (stupid max macro length)
-#define HUD_Panel_GetStringVars()\
-HUD_Panel_GetBg()\
-if (panel_bg != "0") {\
-	HUD_Panel_GetColorTeam()\
-	HUD_Panel_GetColor()\
-	HUD_Panel_GetBgAlpha()\
-	HUD_Panel_GetBorder()\
-}\
-HUD_Panel_GetFgAlpha()\
-HUD_Panel_GetScaledVectors()\
-HUD_Panel_GetPadding()
-
-// return smoothly faded pos of given panel when a dialog is active
-var vector menu_enable_panelpos;
-#define HUD_Panel_GetMenuPos() \
-if(panel_size_x > panel_size_y)\
-	menu_enable_panelpos = eX * 0.5 * vid_conwidth - eX * 0.5 * panel_size_x + eY * 0.82 * vid_conheight;\
-else\
-	menu_enable_panelpos = eY * 0.5 * vid_conheight - eY * 0.5 * panel_size_y + eX * 0.7 * vid_conwidth;\
-panel_pos = (1 - autocvar__menu_alpha) * panel_pos + (autocvar__menu_alpha) * menu_enable_panelpos;
-
-// return smoothly faded size of given panel when a dialog is active
-//var vector menu_enable_maxsize;
-var float menu_enable_maxsize_x;
-var float menu_enable_maxsize_y;
-var vector menu_enable_size;
-#define HUD_Panel_GetMenuSize()\
-menu_enable_maxsize_x = 0.3 * vid_conwidth;\
-menu_enable_maxsize_y = 0.18 * vid_conheight;\
+// return smoothly faded pos and size of given panel when a dialog is active
+#define HUD_Panel_UpdatePosSize_ForMenu()\
+vector menu_enable_pos;\
+vector menu_enable_size = '0 0 0';\
+float menu_enable_maxsize_x = 0.3 * vid_conwidth;\
+float menu_enable_maxsize_y = 0.18 * vid_conheight;\
 if(panel_size_x > panel_size_y)\
 {\
 	if(panel_size_y > menu_enable_maxsize_y)\
@@ -314,6 +260,7 @@ if(panel_size_x > panel_size_y)\
 		menu_enable_size_x = panel_size_x * (menu_enable_maxsize_y/panel_size_y);\
 		panel_size = (1 - autocvar__menu_alpha) * panel_size + (autocvar__menu_alpha) * menu_enable_size;\
 	}\
+	menu_enable_pos = eX * 0.5 * vid_conwidth - eX * 0.5 * panel_size_x + eY * (vid_conheight - menu_enable_maxsize_y);\
 }\
 else\
 {\
@@ -323,7 +270,14 @@ else\
 		menu_enable_size_y = panel_size_y * (menu_enable_maxsize_x/panel_size_x);\
 		panel_size = (1 - autocvar__menu_alpha) * panel_size + (autocvar__menu_alpha) * menu_enable_size;\
 	}\
-}
+	menu_enable_pos = eY * 0.5 * vid_conheight - eY * 0.5 * panel_size_y + eX * (vid_conwidth - menu_enable_maxsize_x);\
+}\
+panel_pos = (1 - autocvar__menu_alpha) * panel_pos + (autocvar__menu_alpha) * menu_enable_pos;
+
+// Scale the pos and size vectors to absolute coordinates
+#define HUD_Panel_ScalePosSize()\
+panel_pos_x *= vid_conwidth; panel_pos_y *= vid_conheight;\
+panel_size_x *= vid_conwidth; panel_size_y *= vid_conheight;
 
 // NOTE: in hud_configure mode cvars must be reloaded every frame
 #define HUD_Panel_UpdateCvars() \
@@ -331,59 +285,55 @@ if(panel.update_time <= time) { \
 	if(autocvar__hud_configure) panel_enabled = cvar(strcat("hud_panel_", panel.panel_name)); \
 	panel_pos = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_pos"))); \
 	panel_size = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_size"))); \
+	HUD_Panel_ScalePosSize() \
 	panel_bg_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg")); \
 	panel_bg_color_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_color")); \
 	panel_bg_color_team_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_color_team")); \
 	panel_bg_alpha_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_alpha")); \
 	panel_bg_border_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_border")); \
 	panel_bg_padding_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_padding")); \
-	HUD_Panel_GetStringVars()\
+	HUD_Panel_GetBg()\
+	if (panel.current_panel_bg != "0") {\
+		HUD_Panel_GetColorTeam()\
+		HUD_Panel_GetColor()\
+		HUD_Panel_GetBgAlpha()\
+		HUD_Panel_GetBorder()\
+	}\
+	HUD_Panel_GetFgAlpha()\
+	HUD_Panel_GetPadding()\
+	panel.current_panel_bg_alpha = panel_bg_alpha; \
+	panel.current_panel_fg_alpha = panel_fg_alpha; \
 	if(menu_enabled == 2 && panel == highlightedPanel) {\
-		HUD_Panel_GetMenuSize()\
-		HUD_Panel_GetMenuPos()\
-	} \
+		HUD_Panel_UpdatePosSize_ForMenu()\
+	} else {\
+		panel_bg_alpha *= hud_fade_alpha;\
+		panel_fg_alpha *= hud_fade_alpha;\
+	}\
 	panel.current_panel_pos = panel_pos; \
 	panel.current_panel_size = panel_size; \
-	if(panel.current_panel_bg) \
-		strunzone(panel.current_panel_bg); \
-	if(panel_bg == "")\
-	{\
-		/*printf("^xf08 %s panel: panel_bg is empty\n", panel.panel_name);*/\
-		panel_bg = "0";\
-	}\
-	panel.current_panel_bg = strzone(panel_bg); \
-	panel.current_panel_bg_alpha = panel_bg_alpha; \
 	panel.current_panel_bg_border = panel_bg_border; \
 	panel.current_panel_bg_color = panel_bg_color; \
 	panel.current_panel_bg_color_team = panel_bg_color_team; \
 	panel.current_panel_bg_padding = panel_bg_padding; \
-	panel.current_panel_fg_alpha = panel_fg_alpha; \
 	panel.update_time = (autocvar__hud_configure) ? time : time + autocvar_hud_panel_update_interval; \
 } else { \
 	panel_pos = panel.current_panel_pos; \
 	panel_size = panel.current_panel_size; \
-	panel_bg = panel.current_panel_bg; \
-	if(panel.current_panel_bg == "")\
-	{\
-		/*printf("^xf08 %s panel: panel.current_panel_bg is empty\n", panel.panel_name);*/\
-		panel_bg = "0";\
-	}\
-	panel_bg_alpha = panel.current_panel_bg_alpha; \
+	panel_bg_alpha = panel.current_panel_bg_alpha * hud_fade_alpha; \
 	panel_bg_border = panel.current_panel_bg_border; \
 	panel_bg_color = panel.current_panel_bg_color; \
 	panel_bg_color_team = panel.current_panel_bg_color_team; \
 	panel_bg_padding = panel.current_panel_bg_padding; \
-	panel_fg_alpha = panel.current_panel_fg_alpha; \
+	panel_fg_alpha = panel.current_panel_fg_alpha * hud_fade_alpha; \
 } ENDS_WITH_CURLY_BRACE
 
 #define HUD_Panel_UpdatePosSize() {\
 panel_enabled = cvar(strcat("hud_panel_", panel.panel_name)); \
 panel_pos = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_pos"))); \
 panel_size = stov(cvar_string(strcat("hud_panel_", panel.panel_name, "_size"))); \
-HUD_Panel_GetScaledVectors()\
+HUD_Panel_ScalePosSize()\
 if(menu_enabled == 2 && panel == highlightedPanel) {\
-	HUD_Panel_GetMenuSize()\
-	HUD_Panel_GetMenuPos()\
+	HUD_Panel_UpdatePosSize_ForMenu()\
 }\
 panel_bg_border_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_border")); \
 HUD_Panel_GetBorder() \
@@ -398,3 +348,6 @@ string notify_icon[KN_MAX_ENTRIES];
 string notify_attackers[KN_MAX_ENTRIES];
 string notify_victims[KN_MAX_ENTRIES];
 void HUD_Notify_Push(string icon, string attacker, string victim);
+
+var void HUD_ModIcons_GameType(vector pos, vector size);
+void HUD_ModIcons_SetFunc();

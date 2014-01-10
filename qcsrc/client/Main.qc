@@ -992,6 +992,7 @@ void Ent_ScoresInfo()
 	float i;
 	self.classname = "ent_client_scores_info";
 	gametype = ReadInt24_t();
+	HUD_ModIcons_SetFunc();
 	for(i = 0; i < MAX_SCORE; ++i)
 	{
 		scores_label[i] = strzone(ReadString());

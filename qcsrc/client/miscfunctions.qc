@@ -1,5 +1,6 @@
 entity players;
 entity teams;
+var float team_count; // real teams
 
 void AuditLists()
 {
@@ -81,6 +82,8 @@ float RegisterTeam(entity Team)
 	if(teams.sort_next)
 		teams.sort_next.sort_prev = Team;
 	teams.sort_next = Team;
+	if(Team.team && Team.team != NUM_SPECTATOR)
+		++team_count;
 	AuditLists();
 	return true;
 }
@@ -101,6 +104,8 @@ void RemoveTeam(entity Team)
 	parent.sort_next = Team.sort_next;
 	if(Team.sort_next)
 		Team.sort_next.sort_prev = parent;
+	if(Team.team && Team.team != NUM_SPECTATOR)
+		--team_count;
 	AuditLists();
 }
 

@@ -54,20 +54,6 @@ string TranslateScoresLabel(string l)
 	}
 }
 
-void MapVote_Draw();
-void HUD_FinaleOverlay()
-{
-	/*vector pos;
-	pos_x = (vid_conwidth - 1)/2;
-	pos_y = 16;
-	pos_z = 0;*/
-
-	//drawpic(pos, "gfx/finale", '0 0 0', '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
-
-	//drawstring(pos, "END", hud_fontsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-	MapVote_Draw();
-}
-
 void Cmd_HUD_SetFields(float argc);
 void HUD_InitScores()
 {

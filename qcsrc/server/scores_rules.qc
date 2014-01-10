@@ -106,19 +106,17 @@ void ScoreRules_nexball(float teams)
 	ScoreRules_basics_end();
 }
 
-// FreezeTag stuff
 #define SP_FREEZETAG_REVIVALS 4
 void ScoreRules_freezetag(float teams)
 {
-	CheckAllowedTeams(world);
 	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // SFL_SORT_PRIO_PRIMARY
 	ScoreInfo_SetLabel_PlayerScore(SP_FREEZETAG_REVIVALS,		"revivals",		0);
 	ScoreRules_basics_end();
 }
+
 #define ST_CA_ROUNDS 1
 void ScoreRules_ca(float teams)
 {
-	CheckAllowedTeams(world);
 	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
 	ScoreInfo_SetLabel_TeamScore(ST_CA_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
 	ScoreRules_basics_end();

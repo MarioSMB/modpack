@@ -723,7 +723,6 @@ float autocvar_g_banned_list_idmode;
 float autocvar_g_bastet;
 float autocvar_g_botclip_collisions;
 float autocvar_g_bugrigs;
-float autocvar_g_ca_team_spawns;
 float autocvar_g_ca_damage2score_multiplier;
 float autocvar_g_ca_point_leadlimit;
 float autocvar_g_ca_point_limit;
@@ -731,6 +730,7 @@ float autocvar_g_ca_round_timelimit;
 float autocvar_g_ca_spectate_enemies;
 float autocvar_g_ca_teams;
 float autocvar_g_ca_teams_override;
+float autocvar_g_ca_team_spawns;
 float autocvar_g_ca_warmup;
 float autocvar_g_campaign;
 #define autocvar_g_campaign_forceteam cvar("g_campaign_forceteam")
@@ -1343,6 +1343,7 @@ float autocvar_g_invasion_round_timelimit;
 float autocvar_g_invasion_warmup;
 float autocvar_g_invasion_monster_count;
 float autocvar_g_invasion_zombies_only;
+float autocvar_g_invasion_spawn_delay;
 float autocvar_sv_showspectators;
 #define autocvar_g_bloodloss cvar("g_bloodloss")
 float autocvar_g_random_gravity_negative_chance;
