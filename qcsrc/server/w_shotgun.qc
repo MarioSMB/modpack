@@ -33,7 +33,7 @@ void W_Shotgun_Attack (float deathtype)
 
 	W_DecreaseAmmo(ammo_shells, ammoamount, autocvar_g_balance_shotgun_reload_ammo);
 
-	W_SetupShot (self, TRUE, 5, "weapons/shotgun_fire.wav", ((self.clip_load >= 0) ? CH_WEAPON_SINGLE : CH_WEAPON_A), d * bullets, self.weapon);
+	W_SetupShot (self, TRUE, 5, "weapons/shotgun_fire.wav", ((self.clip_load > 0) ? CH_WEAPON_SINGLE : CH_WEAPON_A), d * bullets, self.weapon);
 	for (sc = 0;sc < bullets;sc = sc + 1)
 		fireBullet(w_shotorg, w_shotdir, spread, solidpenetration, d, f, WEP_SHOTGUN, 0);
 
