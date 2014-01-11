@@ -436,7 +436,7 @@ void Item_Show (entity e, float mode)
 		e.ItemStatus &= ~ITS_AVAILABLE;
 	}
 
-	if (e.items & IT_STRENGTH || e.items & IT_INVINCIBLE)
+	if (e.items & IT_INVINCIBLE)
 	    e.ItemStatus |= ITS_POWERUP;
 
 	if (autocvar_g_nodepthtestitems)
@@ -1529,7 +1529,7 @@ void spawnfunc_item_strength (void) {
 		precache_sound("weapons/strength_fire.wav");
 		if(!self.strength_finished)
 			self.strength_finished = autocvar_g_balance_powerup_strength_time;
-		StartItem ("models/items/g_strength.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Strength Powerup", IT_STRENGTH, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
+		StartItem ("models/items/xonoticStrength.md3", "misc/powerup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Strength Powerup", IT_STRENGTH, 0, FL_POWERUP, generic_pickupevalfunc, 100000);
 }
 
 void spawnfunc_item_invincible (void) {
