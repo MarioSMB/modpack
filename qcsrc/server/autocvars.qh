@@ -1239,6 +1239,7 @@ float autocvar_g_balance_rpc_reload_ammo;
 float autocvar_g_balance_rpc_reload_time;
 float autocvar_g_grab_range;
 float autocvar_g_sandbox_info;
+float autocvar_g_sandbox_snaptogrid;
 float autocvar_g_sandbox_readonly;
 string autocvar_g_sandbox_storage_name;
 float autocvar_g_sandbox_storage_autosave;

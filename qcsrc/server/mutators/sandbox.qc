@@ -4,6 +4,16 @@ float object_count;
 .entity object_attach;
 .string material;
 
+void sandbox_SnapToGrid(entity e, float amnt)
+{
+	vector orig = e.origin;
+	orig_x = rint(orig_x / amnt) * amnt;
+	orig_y = rint(orig_y / amnt) * amnt;
+	orig_z = rint(orig_z / amnt) * amnt;
+	setorigin(e, orig);
+	e.prevorigin = orig;
+}
+
 .float touch_timer;
 void sandbox_ObjectFunction_Touch()
 {
@@ -33,6 +43,18 @@ void sandbox_ObjectFunction_Touch()
 void sandbox_ObjectFunction_Think()
 {
 	entity e;
+	
+	if(autocvar_g_sandbox_snaptogrid && self.origin != self.prevorigin)
+	{
+		sandbox_SnapToGrid(self, autocvar_g_sandbox_snaptogrid);
+		
+		if(self.angles_y > 45)
+			self.angles_y = 90;
+		else if(self.angles_y < -45)
+			self.angles_y = -90;
+		else if(self.angles_y < 45 || self.angles_y > -45)
+			self.angles_y = 0;
+	}
 
 	// decide if and how this object can be grabbed
 	if(autocvar_g_sandbox_readonly)
