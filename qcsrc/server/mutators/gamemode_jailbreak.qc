@@ -1031,17 +1031,14 @@ entity JB_JailSpec_CreateProxy()
 // mutator hooks
 MUTATOR_HOOKFUNCTION(jb_OnEntityPreSpawn)
 {
-	if(self.classname == "item_flag_team1")
-		return TRUE;
-
-	if(self.classname == "item_flag_team2")
-		return TRUE;
-	
-	if(self.classname == "item_flag_team3")
-		return TRUE;
-	
-	if(self.classname == "item_flag_team4")
-		return TRUE;
+	switch(self.classname)
+	{
+		case "item_flag_team1":
+		case "item_flag_team2":
+		case "item_flag_team3":
+		case "item_flag_team4":
+			return TRUE;
+	}
 
 	return FALSE;
 }
@@ -1293,7 +1290,7 @@ void jb_Initialize()
 
 MUTATOR_DEFINITION(gamemode_jailbreak)
 {
-	MUTATOR_HOOK(OnEntityPreSpawn, jb_OnEntityPreSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(OnEntityPreSpawn, jb_OnEntityPreSpawn, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(reset_map_global, jb_ResetMap, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, jb_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, jb_PlayerSpawn, CBC_ORDER_ANY);
