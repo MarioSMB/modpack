@@ -422,6 +422,9 @@ void JB_Torture_Think()
 	self.jb_torture_suggestedforce = JITTER(self.jb_torture_force, self.jb_torture_force_jitter);
 
 	pointparticles(particleeffectnum("poisonfield"), self.origin, '0 0 0', 2);
+	
+	entity head;
+	FOR_EACH_PLAYER(head) if(DIFF_TEAM(head, self)) if(head.jb_isprisoned) { Damage(head, self, self, 2, DEATH_POISONFIELD, head.origin, '0 0 0'); }
 }
 
 void JB_Torture_Start(entity spot)
@@ -1087,7 +1090,10 @@ MUTATOR_HOOKFUNCTION(jb_ResetMap)
 
 MUTATOR_HOOKFUNCTION(jb_PlayerDies)
 {
-	if(!round_handler_IsRoundStarted())
+	if(jb_roundover && frag_deathtype == DEATH_POISONFIELD)
+		PlayerScore_Add(frag_target, SP_KILLS, +1); // dying negates 1, so we bring it back up
+
+	if(!round_handler_IsRoundStarted() || jb_roundover)
 		return FALSE;
 
 	if(!self.jb_isprisoned)
@@ -1231,7 +1237,7 @@ MUTATOR_HOOKFUNCTION(jb_PlayerPreThink)
 
 MUTATOR_HOOKFUNCTION(jb_PlayerDamage)
 {
-	if(self.jb_isprisoned && jb_roundover)
+	if(self.jb_isprisoned && frag_deathtype != DEATH_POISONFIELD)
 		frag_damage = 0;
 
 	entity e;
@@ -1242,6 +1248,16 @@ MUTATOR_HOOKFUNCTION(jb_PlayerDamage)
 			e.jb_unlock_progress = bound(0, e.jb_unlock_progress - autocvar_g_jailbreak_controlpoint_unlock_damage_pushback, 1);
 	}
 	
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(jb_GiveFrags)
+{
+	if(jb_roundover)
+	{
+		frag_score = 0;
+		return TRUE;
+	}
 	return FALSE;
 }
 
@@ -1323,6 +1339,7 @@ MUTATOR_DEFINITION(gamemode_jailbreak)
 	MUTATOR_HOOK(MakePlayerObserver, jb_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, jb_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, jb_PlayerDamage, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GiveFragsForKill, jb_GiveFrags, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, jb_GetTeamCount, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD

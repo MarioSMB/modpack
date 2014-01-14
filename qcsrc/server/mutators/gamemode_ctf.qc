@@ -2200,7 +2200,7 @@ void spawnfunc_item_flag_team1()
 {
 	if(!g_ctf)
 	{
-		if(autocvar_g_ctf_powerups_replace_flags)
+		if(autocvar_g_ctf_powerups_replace_flags && !g_jailbreak)
 			spawnfunc_item_invincible();
 		else
 			remove(self);
@@ -2226,7 +2226,7 @@ void spawnfunc_item_flag_team2()
 {
 	if(!g_ctf)
 	{
-		if(autocvar_g_ctf_powerups_replace_flags)
+		if(autocvar_g_ctf_powerups_replace_flags && !g_jailbreak)
 			spawnfunc_item_strength();
 		else
 			remove(self);
@@ -2252,7 +2252,7 @@ void spawnfunc_item_flag_team3()
 {
 	if(!g_ctf)
 	{
-		if(autocvar_g_ctf_powerups_replace_flags)
+		if(autocvar_g_ctf_powerups_replace_flags && !g_jailbreak)
 			spawnfunc_item_invincible();
 		else
 			remove(self);
@@ -2278,7 +2278,7 @@ void spawnfunc_item_flag_team4()
 {
 	if(!g_ctf)
 	{
-		if(autocvar_g_ctf_powerups_replace_flags)
+		if(autocvar_g_ctf_powerups_replace_flags && !g_jailbreak)
 			spawnfunc_item_strength();
 		else
 			remove(self);
