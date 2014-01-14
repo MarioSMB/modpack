@@ -1,0 +1,10 @@
+// =========================================================
+//  Declarations for RPN command code, written by divVerent
+//  Last updated: December 28th, 2011
+// =========================================================
+
+#define MAX_RPN_STACK 16
+float rpn_db;
+float rpn_error;
+float rpn_sp;
+string rpn_stack[MAX_RPN_STACK];

@@ -1,0 +1,469 @@
+// COMMIT-TODO: Update if necessary before committing
+// Revision 1: additional statistics sent (flag caps, returns, deaths)
+// Revision 2: Mapvote preview pictures
+// Revision 3: optimized map vote protocol
+// Revision 4: CSQC config var system
+// Revision 5: mapvote time fix
+// Revision 6: more robust against packet loss/delays, also show not yet connected clients
+// Revision 7: packet loss column
+// Revision 8: race
+// Revision 9: race delta
+// Revision 10: scoreboard force
+// Revision 11: scoreboard unforce; spectator support beginning
+// Revision 12: smaller scores updates (SERVER: requires new engine)
+// Revision 13: pointparticles
+// Revision 14: laser
+// Revision 15: zoom
+// Revision 16: multi-weapons
+// Revision 17: multi-weaponimpulses
+// Revision 18: warmup
+// Revision 19: fog
+// Revision 20: naggers
+// Revision 21: entcs for players optimized (position data down from 12 to 7 bytes); waypointsprites in csqc for team radar
+// Revision 22: hook shot origin
+#define CSQC_REVISION 22
+
+const float AS_STRING = 1;
+const float AS_INT = 2;
+const float AS_FLOAT_TRUNCATED = 2;
+const float AS_FLOAT = 8;
+
+const float TE_CSQC_PICTURE = 100;
+const float TE_CSQC_RACE = 101;
+const float TE_CSQC_NEXGUNBEAMPARTICLE = 103;
+const float TE_CSQC_LIGHTNINGARC = 104;
+const float TE_CSQC_TEAMNAGGER = 105;
+const float TE_CSQC_PINGPLREPORT = 106;
+const float TE_CSQC_TARGET_MUSIC = 107;
+const float TE_CSQC_WEAPONCOMPLAIN = 108;
+const float TE_CSQC_NEX_SCOPE = 109;
+const float TE_CSQC_MINELAYER_MAXMINES = 110;
+const float TE_CSQC_HAGAR_MAXROCKETS = 111;
+const float TE_CSQC_VEHICLESETUP = 112;
+const float TE_CSQC_SVNOTICE = 113;
+const float TE_CSQC_MORNINGRESCUE = 114;
+const float TE_CSQC_SHOCKWAVEPARTICLE = 115;
+const float TE_CSQC_SPECINFO = 116;
+
+const float RACE_NET_CHECKPOINT_HIT_QUALIFYING = 0; // byte checkpoint, short time, short recordtime, string recordholder
+const float RACE_NET_CHECKPOINT_CLEAR = 1;
+const float RACE_NET_CHECKPOINT_NEXT_QUALIFYING = 2; // byte nextcheckpoint, short recordtime, string recordholder
+const float RACE_NET_CHECKPOINT_HIT_RACE = 3; // byte checkpoint, short delta, byte lapsdelta, string opponent
+const float RACE_NET_CHECKPOINT_HIT_RACE_BY_OPPONENT = 4; // byte checkpoint, short delta, byte lapsdelta, string opponent
+const float RACE_NET_CHECKPOINT_NEXT_SPEC_QUALIFYING = 5; // byte nextcheckpoint, float laptime, short recordtime, string recordholder
+const float RACE_NET_PENALTY_RACE = 6; // byte penaltytime, string reason
+const float RACE_NET_PENALTY_QUALIFYING = 7; // byte penaltytime, string reason
+const float RACE_NET_SERVER_RECORD = 8; // server record, sent to client
+const float RACE_NET_SPEED_AWARD = 9; // speed award, sent to client
+const float RACE_NET_SPEED_AWARD_BEST = 10; // all time best speed award, sent to client
+const float RACE_NET_SERVER_RANKINGS = 11;
+const float RACE_NET_SERVER_STATUS = 12;
+const float RANKINGS_CNT = 15;
+
+const float ENT_CLIENT = 0;
+const float ENT_CLIENT_DEAD = 1;
+const float ENT_CLIENT_ENTCS = 2;
+const float ENT_CLIENT_SCORES_INFO = 3;
+const float ENT_CLIENT_SCORES = 4;
+const float ENT_CLIENT_TEAMSCORES = 5;
+const float ENT_CLIENT_POINTPARTICLES = 6;
+const float ENT_CLIENT_RAINSNOW = 7;
+const float ENT_CLIENT_LASER = 8;
+const float ENT_CLIENT_NAGGER = 9; // flags [votecalledvote]
+const float ENT_CLIENT_WAYPOINT = 10; // flags origin [team displayrule] [spritename] [spritename2] [spritename3] [lifetime maxdistance hideable]
+const float ENT_CLIENT_RADARLINK = 11; // flags [startorigin] [endorigin] [startcolor+16*endcolor]
+const float ENT_CLIENT_PROJECTILE = 12;
+const float ENT_CLIENT_GIBSPLASH = 13;
+const float ENT_CLIENT_DAMAGEINFO = 14;
+const float ENT_CLIENT_CASING = 15;
+const float ENT_CLIENT_INIT = 16;
+const float ENT_CLIENT_MAPVOTE = 17;
+const float ENT_CLIENT_CLIENTDATA = 18;
+const float ENT_CLIENT_RANDOMSEED = 19;
+const float ENT_CLIENT_WALL = 20;
+const float ENT_CLIENT_MODELEFFECT = 22;
+const float ENT_CLIENT_TUBANOTE = 23;
+const float ENT_CLIENT_WARPZONE = 24;
+const float ENT_CLIENT_WARPZONE_CAMERA = 25;
+const float ENT_CLIENT_TRIGGER_MUSIC = 26;
+const float ENT_CLIENT_HOOK = 27;
+const float ENT_CLIENT_LGBEAM = 28;
+const float ENT_CLIENT_GAUNTLET = 29;
+const float ENT_CLIENT_ACCURACY = 30;
+const float ENT_CLIENT_SHOWNAMES = 31;
+const float ENT_CLIENT_WARPZONE_TELEPORTED = 32;
+const float ENT_CLIENT_MODEL = 33;
+const float ENT_CLIENT_ITEM = 34;
+const float ENT_CLIENT_BUMBLE_RAYGUN = 35;
+const float ENT_CLIENT_SPAWNPOINT = 36;
+const float ENT_CLIENT_SPAWNEVENT = 37;
+const float ENT_CLIENT_NOTIFICATION = 38;
+
+const float ENT_CLIENT_TURRET = 40;
+const float ENT_CLIENT_AUXILIARYXHAIR = 50;
+const float ENT_CLIENT_VEHICLE = 60;
+const float ENT_CLIENT_GENERATOR = 70;
+
+const float ENT_CLIENT_HEALING_ORB = 80;
+
+const float SPRITERULE_DEFAULT = 0;
+const float SPRITERULE_TEAMPLAY = 1;
+
+const float RADARICON_NONE = 0;
+const float RADARICON_FLAG = 1;
+const float RADARICON_FLAGCARRIER = 1;
+const float RADARICON_HERE = 1; // TODO make these 3 and 4, and make images for them
+const float RADARICON_DANGER = 1;
+const float RADARICON_WAYPOINT = 1;
+const float RADARICON_HELPME = 1;
+const float RADARICON_CONTROLPOINT = 1;
+const float RADARICON_GENERATOR = 1;
+const float RADARICON_OBJECTIVE = 1;
+const float RADARICON_DOMPOINT = 1;
+const float RADARICON_POWERUP = 1;
+const float RADARICON_TAGGED = 1;
+
+///////////////////////////
+// keys pressed
+const float KEY_FORWARD = 1;
+const float KEY_BACKWARD = 2;
+const float KEY_LEFT = 4;
+const float KEY_RIGHT = 8;
+const float KEY_JUMP = 16;
+const float KEY_CROUCH = 32;
+const float KEY_ATCK = 64;
+const float KEY_ATCK2 = 128;
+
+///////////////////////////
+// cvar constants
+
+const float CVAR_SAVE = 1;
+const float CVAR_NOTIFY = 2;
+const float CVAR_READONLY = 4;
+
+///////////////////////////
+// csqc communication stuff
+
+const float STAT_KH_KEYS = 32;
+const float STAT_CTF_STATE = 33;
+const float STAT_WEAPONS = 35;
+const float STAT_SWITCHWEAPON = 36;
+const float STAT_GAMESTARTTIME = 37;
+const float STAT_STRENGTH_FINISHED = 38;
+const float STAT_INVINCIBLE_FINISHED = 39;
+const float STAT_PRESSED_KEYS = 42;
+const float STAT_ALLOW_OLDNEXBEAM = 43; // this stat could later contain some other bits of info, like, more server-side particle config
+const float STAT_FUEL = 44;
+const float STAT_NB_METERSTART = 45;
+const float STAT_SHOTORG = 46; // compressShotOrigin
+const float STAT_LEADLIMIT = 47;
+const float STAT_WEAPON_CLIPLOAD = 48;
+const float STAT_WEAPON_CLIPSIZE = 49;
+const float STAT_NEX_CHARGE = 50;
+const float STAT_LAST_PICKUP = 51;
+const float STAT_HUD = 52;
+const float STAT_NEX_CHARGEPOOL = 53;
+const float STAT_HIT_TIME = 54;
+const float STAT_TYPEHIT_TIME = 55;
+const float STAT_LAYED_MINES = 56;
+const float STAT_HAGAR_LOAD = 57;
+const float STAT_SWITCHINGWEAPON = 58;
+const float STAT_SUPERWEAPONS_FINISHED = 59;
+
+const float STAT_VEHICLESTAT_HEALTH = 60;
+const float STAT_VEHICLESTAT_SHIELD = 61;
+const float STAT_VEHICLESTAT_ENERGY = 62;
+const float STAT_VEHICLESTAT_AMMO1 = 63;
+const float STAT_VEHICLESTAT_RELOAD1 = 64;
+const float STAT_VEHICLESTAT_AMMO2 = 65;
+const float STAT_VEHICLESTAT_RELOAD2 = 66;
+const float STAT_VEHICLESTAT_W2MODE = 67;
+
+const float STAT_SECRETS_TOTAL = 70;
+const float STAT_SECRETS_FOUND = 71;
+
+const float STAT_RESPAWN_TIME = 72;
+const float STAT_ROUNDSTARTTIME = 73;
+
+const float STAT_WEAPONS2 = 74;
+const float STAT_WEAPONS3 = 75;
+
+const float STAT_MONSTERS_TOTAL = 76;
+const float STAT_MONSTERS_KILLED = 77;
+
+const float STAT_OK_AMMO_CHARGE = 78;
+const float STAT_OK_AMMO_CHARGEPOOl = 79;
+
+const float STAT_NADE_BONUS = 80;
+const float STAT_NADE_BONUS_TYPE = 81;
+const float STAT_NADE_BONUS_SCORE = 82;
+const float STAT_HEALING_ORB = 83;
+const float STAT_HEALING_ORB_ALPHA = 84;
+
+const float STAT_WEAPONSINMAP = 90;
+const float STAT_WEAPONSINMAP2 = 91;
+const float STAT_WEAPONSINMAP3 = 92;
+
+const float STAT_SUPERCELLS = 93;
+
+// mod stats (1xx)
+const float STAT_REDALIVE = 100;
+const float STAT_BLUEALIVE = 101;
+const float STAT_YELLOWALIVE = 102;
+const float STAT_PINKALIVE = 103;
+
+// freeze tag
+const float STAT_FROZEN = 104;
+const float STAT_REVIVE_PROGRESS = 105;
+
+// domination
+const float STAT_DOM_TOTAL_PPS = 99;
+const float STAT_DOM_PPS_RED = 100;
+const float STAT_DOM_PPS_BLUE = 101;
+const float STAT_DOM_PPS_YELLOW = 102;
+const float STAT_DOM_PPS_PINK = 103;
+
+// vip
+const float STAT_VIP_RED = 100;
+const float STAT_VIP_BLUE = 101;
+const float STAT_VIP_YELLOW = 102;
+const float STAT_VIP_PINK = 103;
+
+
+// see DP source, quakedef.h
+const float STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW = 222;
+const float STAT_MOVEVARS_AIRSTRAFEACCEL_QW = 223;
+const float STAT_MOVEVARS_MAXSPEED = 244;
+const float STAT_MOVEVARS_AIRACCEL_QW = 254;
+
+const float CTF_STATE_ATTACK = 1;
+const float CTF_STATE_DEFEND = 2;
+const float CTF_STATE_COMMANDER = 3;
+
+const float HUD_NORMAL = 0;
+const float HUD_BUMBLEBEE_GUN = 25;
+
+const vector eX = '1 0 0';
+const vector eY = '0 1 0';
+const vector eZ = '0 0 1';
+
+// moved that here so the client knows the max.
+// # of maps, I'll use arrays for them :P
+#define MAPVOTE_COUNT 10
+
+/**
+ * Lower scores are better (e.g. suicides)
+ */
+#define SFL_LOWER_IS_BETTER 1
+
+/**
+ * Don't show zero values as scores
+ */
+#define SFL_HIDE_ZERO 2
+
+/**
+ * Allow a column to be hidden (do not automatically add it even if it is a sorting key)
+ */
+#define SFL_ALLOW_HIDE 16
+
+/**
+ * Display as a rank (with st, nd, rd, th suffix)
+ */
+#define SFL_RANK 32
+
+/**
+ * Display as mm:ss.s, value is stored as 10ths of a second (AND 0 is the worst possible value!)
+ */
+#define SFL_TIME 64
+
+// not an extra constant yet
+#define SFL_ZERO_IS_WORST SFL_TIME
+
+/**
+ * Scoring priority (NOTE: PRIMARY is used for fraglimit)
+ */
+#define SFL_SORT_PRIO_SECONDARY 4
+#define SFL_SORT_PRIO_PRIMARY 8
+#define SFL_SORT_PRIO_MASK 12
+
+/**
+ * Score indices
+ */
+#define MAX_SCORE 11
+#define MAX_TEAMSCORE 2
+
+#define ST_SCORE 0
+#define SP_KILLS 0
+#define SP_DEATHS 1
+#define SP_SUICIDES 2
+#define SP_SCORE 3
+#define SP_FPS 10
+// game mode specific indices are not in common/, but in server/scores_rules.qc!
+
+#ifdef COMPAT_XON010_CHANNELS
+const float CH_INFO = 0; // only on world and csqc
+const float CH_TRIGGER = 0; // only on players; compat: FALSELY CONTROLLED BY "Info"
+const float CH_WEAPON_A = 1; // only on players and entities
+const float CH_WEAPON_SINGLE = 5; // only on players and entities
+const float CH_VOICE = 2; // only on players
+const float CH_BGM_SINGLE = 2; // only on csqc; compat: FALSELY CONTROLLED BY "Voice"
+const float CH_AMBIENT = 2; // only on csqc; compat: FALSELY CONTROLLED BY "Voice"
+const float CH_TRIGGER_SINGLE = 3; // only on players, entities, csqc
+const float CH_SHOTS = 4; // only on players, entities, csqc
+const float CH_SHOTS_SINGLE = 4; // only on players, entities, csqc
+const float CH_WEAPON_B = 5; // only on players and entities
+const float CH_PAIN = 6; // only on players and csqc
+const float CH_PAIN_SINGLE = 6; // only on players and csqc
+const float CH_PLAYER = 7; // only on players and entities
+const float CH_TUBA = 5; // only on csqc
+#else
+const float CH_INFO = 0;
+const float CH_TRIGGER = -3;
+const float CH_WEAPON_A = -1;
+const float CH_WEAPON_SINGLE = 1;
+const float CH_VOICE = -2;
+const float CH_BGM_SINGLE = 8;
+const float CH_AMBIENT = -9;
+const float CH_TRIGGER_SINGLE = 3;
+const float CH_SHOTS = -4;
+const float CH_SHOTS_SINGLE = 4;
+const float CH_WEAPON_B = -1;
+const float CH_PAIN = -6;
+const float CH_PAIN_SINGLE = 6;
+const float CH_PLAYER = -7;
+const float CH_TUBA = 5;
+#endif
+
+const float ATTEN_NONE = 0;
+const float ATTEN_MIN = 0.015625;
+const float ATTEN_NORM = 0.5;
+const float ATTEN_LARGE = 1;
+const float ATTEN_IDLE = 2;
+const float ATTEN_STATIC = 3;
+const float ATTEN_MAX = 3.984375;
+
+#define VOL_BASE 0.7
+#define VOL_BASEVOICE 1.0
+
+// this sets sounds and other properties of the projectiles in csqc
+const float PROJECTILE_ELECTRO = 1;
+const float PROJECTILE_ROCKET = 2;
+const float PROJECTILE_TAG = 3;
+const float PROJECTILE_CRYLINK = 5;
+const float PROJECTILE_ELECTRO_BEAM = 6;
+const float PROJECTILE_GRENADE = 7;
+const float PROJECTILE_GRENADE_BOUNCING = 8;
+const float PROJECTILE_MINE = 9;
+const float PROJECTILE_LASER = 10;
+const float PROJECTILE_HLAC = 11;
+const float PROJECTILE_SEEKER = 12;
+const float PROJECTILE_FLAC = 13;
+const float PROJECTILE_PORTO_RED = 14;
+const float PROJECTILE_PORTO_BLUE = 15;
+const float PROJECTILE_HOOKBOMB = 16;
+const float PROJECTILE_HAGAR = 17;
+const float PROJECTILE_HAGAR_BOUNCING = 18;
+const float PROJECTILE_CRYLINK_BOUNCING = 20;
+const float PROJECTILE_FIREBALL = 21;
+const float PROJECTILE_FIREMINE = 22;
+
+const float PROJECTILE_RAPTORCANNON = 24;
+const float PROJECTILE_RAPTORBOMB = 25;
+const float PROJECTILE_RAPTORBOMBLET = 26;
+const float PROJECTILE_SPIDERROCKET = 27;
+const float PROJECTILE_WAKIROCKET = 28;
+const float PROJECTILE_WAKICANNON = 29;
+
+const float PROJECTILE_BUMBLE_GUN = 30;
+const float PROJECTILE_BUMBLE_BEAM = 31;
+
+const float PROJECTILE_MAGE_SPIKE = 32;
+const float PROJECTILE_SHAMBLER_LIGHTNING = 33;
+
+const float PROJECTILE_ROCKETMINSTA_LASER = 35;
+const float PROJECTILE_SUPERROCKET = 36;
+
+const float SPECIES_HUMAN = 0;
+const float SPECIES_ROBOT_SOLID = 1;
+const float SPECIES_ALIEN = 2;
+const float SPECIES_ANIMAL = 3;
+const float SPECIES_ROBOT_RUSTY = 4;
+const float SPECIES_ROBOT_SHINY = 5;
+const float SPECIES_RESERVED = 15;
+
+#define FRAGS_PLAYER 0
+#define FRAGS_SPECTATOR -666
+#define FRAGS_LMS_LOSER -616
+#define FRAGS_PLAYER_NONSOLID -616
+// we can use this frags value for both
+
+// water levels
+const float WATERLEVEL_NONE = 0;
+const float WATERLEVEL_WETFEET = 1;
+const float WATERLEVEL_SWIMMING = 2;
+const float WATERLEVEL_SUBMERGED = 3;
+
+const float MAX_SHOT_DISTANCE = 32768;
+
+// weapon requests
+const float WR_SETUP = 1; // (SVQC) setup weapon data
+const float WR_THINK = 2; // (SVQC) logic to run every frame
+const float WR_CHECKAMMO1 = 3; // (SVQC) checks ammo for weapon
+const float WR_CHECKAMMO2 = 4; // (SVQC) checks ammo for weapon
+const float WR_AIM = 5; // (SVQC) runs bot aiming code for this weapon
+const float WR_PRECACHE = 6; // (CSQC and SVQC) precaches models/sounds used by this weapon
+const float WR_SUICIDEMESSAGE = 7; // (SVQC) notification number for suicide message (may inspect w_deathtype for details)
+const float WR_KILLMESSAGE = 8; // (SVQC) notification number for kill message (may inspect w_deathtype for details)
+const float WR_RELOAD = 9; // (SVQC) does not need to do anything
+const float WR_RESETPLAYER = 10; // (SVQC) does not need to do anything
+const float WR_IMPACTEFFECT = 11; // (CSQC) impact effect
+const float WR_SWITCHABLE = 12; // (CSQC) impact effect
+const float WR_PLAYERDEATH = 13; // (SVQC) does not need to do anything
+const float WR_GONETHINK = 14; // (SVQC) logic to run every frame, also if no longer having the weapon as long as the switch away has not been performed
+
+#define SERVERFLAG_ALLOW_FULLBRIGHT 1
+#define SERVERFLAG_TEAMPLAY 2
+#define SERVERFLAG_PLAYERSTATS 4
+
+// FIXME/EXPLAINME: why?
+noref var vector autocvar_sv_player_maxs = '16 16 45';
+noref var vector autocvar_sv_player_mins = '-16 -16 -24';
+noref var vector autocvar_sv_player_viewoffset = '0 0 20';
+noref var vector autocvar_sv_player_crouch_maxs = '16 16 25';
+noref var vector autocvar_sv_player_crouch_mins = '-16 -16 -24';
+noref var vector autocvar_sv_player_crouch_viewoffset = '0 0 20';
+noref var vector autocvar_sv_player_headsize = '24 24 12';
+
+#define PL_VIEW_OFS autocvar_sv_player_viewoffset
+#define PL_MIN autocvar_sv_player_mins
+#define PL_MAX autocvar_sv_player_maxs
+#define PL_CROUCH_VIEW_OFS autocvar_sv_player_crouch_viewoffset
+#define PL_CROUCH_MIN autocvar_sv_player_crouch_mins
+#define PL_CROUCH_MAX autocvar_sv_player_crouch_maxs
+#define PL_HEAD autocvar_sv_player_headsize
+
+// helpers
+#define PL_VIEW_OFS_z autocvar_sv_player_viewoffset_z
+#define PL_MIN_z autocvar_sv_player_mins_z
+#define PL_MAX_z autocvar_sv_player_maxs_z
+#define PL_CROUCH_VIEW_OFS_z autocvar_sv_player_crouch_viewoffset_z
+#define PL_CROUCH_MIN_z autocvar_sv_player_mins_z
+#define PL_HEAD_x autocvar_sv_player_headsize_x
+#define PL_HEAD_y autocvar_sv_player_headsize_y
+#define PL_HEAD_z autocvar_sv_player_headsize_z
+
+// spawnpoint prios
+#define SPAWN_PRIO_NEAR_TEAMMATE_FOUND 200
+#define SPAWN_PRIO_NEAR_TEAMMATE_SAMETEAM 100
+#define SPAWN_PRIO_RACE_PREVIOUS_SPAWN 50
+#define SPAWN_PRIO_GOOD_DISTANCE 10
+
+// URI handles
+#define URI_GET_DISCARD 0
+#define URI_GET_IPBAN 1
+#define URI_GET_IPBAN_END 16
+#define URI_GET_CURL 17
+#define URI_GET_CURL_END 32
+#define URI_GET_UPDATENOTIFICATION 33
+#define URI_GET_URLLIB 128
+#define URI_GET_URLLIB_END 191

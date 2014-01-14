@@ -1,0 +1,9 @@
+void antilag_record(entity e, float t);
+vector antilag_takebackorigin(entity e, float t);
+vector antilag_takebackavgvelocity(entity e, float t0, float t1);
+void antilag_takeback(entity e, float t);
+void antilag_restore(entity e);
+void antilag_clear(entity e);
+
+#define ANTILAG_LATENCY(e) min(0.4, e.ping * 0.001)
+// add one ticrate?

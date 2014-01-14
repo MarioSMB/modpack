@@ -1,0 +1,97 @@
+/*
+ * Globals and Fields
+ */
+
+entity tracetossent;
+entity tracetossfaketarget;
+vector findtrajectory_velocity;
+
+
+
+vector shotorg;
+vector shotdir;
+
+// lag simulation
+// upto 5 queued messages
+.float lag1_time;
+.float lag1_float1;
+.float lag1_float2;
+.entity lag1_entity1;
+.vector lag1_vec1;
+.vector lag1_vec2;
+.vector lag1_vec3;
+.vector lag1_vec4;
+
+.float lag2_time;
+.float lag2_float1;
+.float lag2_float2;
+.entity lag2_entity1;
+.vector lag2_vec1;
+.vector lag2_vec2;
+.vector lag2_vec3;
+.vector lag2_vec4;
+
+.float lag3_time;
+.float lag3_float1;
+.float lag3_float2;
+.entity lag3_entity1;
+.vector lag3_vec1;
+.vector lag3_vec2;
+.vector lag3_vec3;
+.vector lag3_vec4;
+
+.float lag4_time;
+.float lag4_float1;
+.float lag4_float2;
+.entity lag4_entity1;
+.vector lag4_vec1;
+.vector lag4_vec2;
+.vector lag4_vec3;
+.vector lag4_vec4;
+
+.float lag5_time;
+.float lag5_float1;
+.float lag5_float2;
+.entity lag5_entity1;
+.vector lag5_vec1;
+.vector lag5_vec2;
+.vector lag5_vec3;
+.vector lag5_vec4;
+
+.float bot_badaimtime;
+.float bot_aimthinktime;
+.float bot_prevaimtime;
+.float bot_firetimer;
+.float bot_aimlatency;
+
+.vector bot_mouseaim;
+.vector bot_badaimoffset;
+.vector bot_1st_order_aimfilter;
+.vector bot_2nd_order_aimfilter;
+.vector bot_3th_order_aimfilter;
+.vector bot_4th_order_aimfilter;
+.vector bot_5th_order_aimfilter;
+.vector bot_olddesiredang;
+
+.vector bot_aimselforigin;
+.vector bot_aimselfvelocity;
+.vector bot_aimtargorigin;
+.vector bot_aimtargvelocity;
+
+.entity bot_aimtarg;
+
+/*
+ * Functions
+ */
+
+void lag_update();
+void bot_lagfunc(float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4);
+
+float bot_shouldattack(entity e);
+float bot_aimdir(vector v, float maxfiredeviation);
+float bot_aim(float shotspeed, float shotspeedupward, float maxshottime, float applygravity);
+float findtrajectorywithleading(vector org, vector m1, vector m2, entity targ, float shotspeed, float shotspeedupward, float maxtime, float shotdelay, entity ignore);
+
+vector bot_shotlead(vector targorigin, vector targvelocity, float shotspeed, float shotdelay);
+
+.void(float t, float f1, float f2, entity e1, vector v1, vector v2, vector v3, vector v4) lag_func;

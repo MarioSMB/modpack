@@ -1,0 +1,23 @@
+const float FL_WEAPON = 8192;
+const float FL_POWERUP = 16384;
+const float FL_PROJECTILE = 32768;
+const float FL_TOSSED = 65536;
+const float FL_NO_WEAPON_STAY = 131072;
+const float FL_SPAWNING = 262144;
+
+const float SVC_SOUND = 6;
+const float SVC_STOPSOUND = 16;
+const float SVC_SETVIEW = 5;
+
+const float RESPAWN_FORCE = 1;
+const float RESPAWN_SILENT = 2;
+
+#define EFMASK_CHEAP (EF_ADDITIVE | EF_DOUBLESIDED | EF_FULLBRIGHT | EF_NODEPTHTEST | EF_NODRAW | EF_NOGUNBOB | EF_NOSHADOW | EF_LOWPRECISION | EF_SELECTABLE | EF_TELEPORT_BIT)
+
+const float MSG_ENTITY = 5; // csqc
+
+const float NUM_PLAYERSKINS_TEAMPLAY = 3;
+
+const float ASSAULT_VALUE_INACTIVE = 1000;
+
+const float DOOR_NOSPLASH = 256; // generic anti-splashdamage spawnflag

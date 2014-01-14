@@ -1,0 +1,5 @@
+// noises "usually" start in the range -1..1
+float Noise_Brown(entity e, float dt);
+float Noise_Pink(entity e, float dt);
+float Noise_White(entity e, float dt);
+float Noise_Burst(entity e, float dt, float p); // +1 or -1

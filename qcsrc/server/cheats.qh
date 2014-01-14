@@ -1,0 +1,13 @@
+float autocvar_sv_cheats; // must... declare... global
+
+float cheatcount_total;
+.float cheatcount;
+void CheatInit();
+void CheatShutdown();
+void CheatInitClient();
+void CheatShutdownClient();
+float CheatImpulse(float i);
+float CheatCommand(float argc);
+float CheatFrame();
+
+void Drag_MoveDrag(entity from, entity to); // call this from CopyBody

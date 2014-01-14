@@ -1,0 +1,9 @@
+void anticheat_init();
+void anticheat_report();
+void anticheat_shutdown();
+
+void anticheat_physics();
+void anticheat_spectatecopy(entity spectatee);
+void anticheat_prethink();
+
+void anticheat_serverframe();

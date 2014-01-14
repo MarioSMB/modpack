@@ -1,0 +1,25 @@
+.entity nade;
+.entity fake_nade;
+.float nade_refire;
+.float bonus_nades;
+.float nade_special_time;
+.float bonus_nade_score;
+.float nade_type;
+.string pokenade_type;
+.entity nade_damage_target;
+.float cvar_cl_nade_type;
+.string cvar_cl_pokenade_type;
+.float toss_time;
+.float stat_healing_orb;
+.float stat_healing_orb_alpha;
+.float nade_show_particles;
+
+void toss_nade(entity e, vector _velocity, float _time);
+
+// Remove nades that are being thrown
+void(entity player) nades_Clear;
+
+// Give a bonus grenade to a player
+void(entity player, float score) nades_GiveBonus;
+// Remove all bonus nades from a player
+void(entity player) nades_RemoveBonus;

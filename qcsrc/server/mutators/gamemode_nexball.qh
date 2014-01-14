@@ -1,0 +1,33 @@
+//EF_BRIGHTFIELD|EF_BRIGHTLIGHT|EF_DIMLIGHT|EF_BLUE|EF_RED|EF_FLAME
+#define BALL_EFFECTMASK 1229
+#define BALL_MINS '-16 -16 -16'  // The model is 24*24*24
+#define BALL_MAXS '16 16 16'
+#define BALL_ATTACHORG '3 0 16'
+#define BALL_SPRITECOLOR '.91 .85 .62'
+#define BALL_FOOT   1
+#define BALL_BASKET 2
+//spawnflags
+#define GOAL_TOUCHPLAYER 1
+//goal types
+#define GOAL_FAULT -1
+#define GOAL_OUT -2
+
+void DropBall(entity ball, vector org, vector vel);
+float autocvar_g_nexball_football_boost_forward;
+float autocvar_g_nexball_football_boost_up;
+float autocvar_g_nexball_football_physics;
+float autocvar_g_nexball_delay_idle;
+float autocvar_g_nexball_basketball_delay_hold;
+float autocvar_g_nexball_basketball_delay_hold_forteam;
+float autocvar_g_nexball_basketball_effects_default;
+float autocvar_g_nexball_basketball_teamsteal;
+float autocvar_g_nexball_meter_period;
+
+float balls;
+float ball_scale;
+float nb_teams;
+
+.entity nb_dropper;
+.float nb_droptime;
+
+.float teamtime;

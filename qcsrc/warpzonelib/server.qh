@@ -1,0 +1,14 @@
+void WarpZone_StartFrame();
+float WarpZone_Projectile_Touch();
+
+// THESE must be defined by calling QC code:
+void WarpZone_PostTeleportPlayer_Callback(entity pl);
+float WarpZone_Projectile_Touch_ImpactFilter_Callback();
+
+// server must also define a float called ENT_CLIENT_WARPZONE for the initial byte of WarpZone entities
+const float ENT_CLIENT_WARPZONE;
+const float ENT_CLIENT_WARPZONE_CAMERA;
+
+void WarpZone_PlayerPhysics_FixVAngle(void);
+
+void WarpZone_PostInitialize_Callback(void);
