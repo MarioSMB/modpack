@@ -355,7 +355,7 @@ void Send_Notification_WOCOVA(
 	MULTITEAM_INFO(1, INFO_CTF_LOST_, 4,                   1, 0, "s1", "s1",                        "notify_%s_lost",       _("^BG%s^BG lost the ^TC^TT^BG flag"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_PICKUP_, 4,                 1, 0, "s1", "s1",                        "notify_%s_taken",      _("^BG%s^BG got the ^TC^TT^BG flag"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_RETURN_, 4,                 1, 0, "s1", "s1",                        "notify_%s_returned",   _("^BG%s^BG returned the ^TC^TT^BG flag"), "") \
-        MULTITEAM_INFO(1, INFO_CTF_RETURN_MONSTER_, 4,         1, 0, "s1", "s1",                        "notify_%s_returned",   _("^BG%s^BG returned the ^TC^TT^BG flag"), "") \
+    MULTITEAM_INFO(1, INFO_CTF_RETURN_MONSTER_, 4,         1, 0, "s1", "s1",                        "notify_%s_returned",   _("^BG%s^BG returned the ^TC^TT^BG flag"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_CHEAT,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was unfairly eliminated by ^BG%s^K1%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_CRUSH,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_crush",         _("^BG%s%s^K1 was crushed by ^BG%s^K1%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_DROWN,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_water",         _("^BG%s%s^K1 was drowned by ^BG%s^K1%s%s"), "") \
@@ -460,6 +460,8 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_NOAMMO,             0, 1, "item_wepname", "",                      "",               _("^BGYou don't have enough ammo for the ^F1%s"), "") \
 	MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_PRIMORSEC,          0, 3, "item_wepname f2primsec f3primsec", "",  "",               _("^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"), "") \
 	MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_UNAVAILABLE,        0, 1, "item_wepname", "",                      "",               _("^F1%s^BG is ^F4not available^BG on this map"), "") \
+	MSG_INFO_NOTIF(1, INFO_JAILBREAK_CAPTURE,              2, 0, "s1 s2", "",                       "",                     _("^BG%s^BG captured %s"), "") \
+	MSG_INFO_NOTIF(1, INFO_JAILBREAK_FREE,                 1, 0, "s1", "",                          "",                     _("^BG%s^3 has broken free!"), "") \
 	MSG_INFO_NOTIF(2, INFO_JOIN_CONNECT,                   1, 0, "s1", "",                          "",                     _("^BG%s^F3 connected%s"), "") \
 	MULTITEAM_INFO(2, INFO_JOIN_CONNECT_TEAM_, 4,          1, 0, "s1", "",                          "",                     _("^BG%s^F3 connected and joined the ^TC^TT team"), "") \
 	MSG_INFO_NOTIF(1, INFO_JOIN_PLAY,                      1, 0, "s1", "",                          "",                     _("^BG%s^F3 is now playing"), "") \
@@ -673,6 +675,16 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_NOAMMO,          0, 1, "item_wepname",                      CPID_ITEM, "item_centime 0", _("^BGYou don't have enough ammo for the ^F1%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_PRIMORSEC,       0, 3, "item_wepname f2primsec f3primsec",  CPID_ITEM, "item_centime 0", _("^F1%s %s^BG is unable to fire, but its ^F1%s^BG can"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_UNAVAILABLE,     0, 1, "item_wepname",                      CPID_ITEM, "item_centime 0", _("^F1%s^BG is ^F4not available^BG on this map"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_JAILBREAK_DEFENSE,           0, 0, "",              CPID_JAILBREAK,        "0 0", _("^F2You gained some bonus score for defending the control point!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_JAILBREAK_ESCAPE,            0, 1, "death_team",    CPID_JAILBREAK,        "0 0", _("^K1The %s^K1 is escaping!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_JAILBREAK_FREE,              0, 0, "",              CPID_JAILBREAK,        "0 0", _("^F2Youre free! Run away!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_JAILBREAK_FREED,             0, 0, "",              CPID_JAILBREAK,        "0 0", _("^K3You bailed your teammates out of jail!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_JAILBREAK_IMPRISON,          0, 0, "",              CPID_JAILBREAK,        "0 0", _("^K1You're in jail, prisoner!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_JAILBREAK_NOENTRY,           0, 0, "",              CPID_JAILBREAK,        "0 0", _("^K1No sneaking into jail!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_JAILBREAK_NOTREADY,          0, 0, "",              CPID_JAILBREAK,        "0 0", _("^BGThis control point is not ready yet"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_JAILBREAK_TEAMALIVE,         0, 0, "",              CPID_JAILBREAK,        "0 0", _("^BGYour team is already free"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_JAILBREAK_TOOLATE,           0, 0, "",              CPID_JAILBREAK,        "0 0", _("^BGSomeone is already capturing this control point"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_JAILBREAK_WRONGTEAM,         0, 0, "",              CPID_JAILBREAK,        "0 0", _("^BGYou can't capture your team's control points"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_JOIN_NOSPAWNS,               0, 0, "",              CPID_PREVENT_JOIN,     "0 0", _("^K1No spawnpoints available!\nHope your team can fix it..."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_JOIN_PREVENT,                0, 0, "",              CPID_PREVENT_JOIN,     "0 0", _("^K1You may not join the game at this time.\nThe player limit reached maximum capacity."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_DROPPED,            1, 0, "s1",            CPID_KEEPAWAY,         "0 0", _("^BG%s^BG has dropped the ball!"), "") \

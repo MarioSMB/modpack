@@ -41,10 +41,10 @@ void JB_JailSpec_Proxy_CopyFields(entity, entity);
 .float jb_proj_ownerstate;
 .float jb_team_initial;
 .float jb_defendthink_next;
-//.float jb_message;
 .float jb_jaildm_aggressive;
 .float jb_had_unlimited_ammo;
 .float jb_specteam;
+.float jb_lastmessage;
 
 .entity jb_prisonedby;
 .entity jb_prisoned_by;
