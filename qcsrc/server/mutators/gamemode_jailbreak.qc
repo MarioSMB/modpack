@@ -841,6 +841,9 @@ void JB_ControlPoint_Touch()
 
 	if(other.health < 1 || other.frozen)
 		return;
+		
+	if(gameover)
+		return;
 
 	if(!IS_PLAYER(other))
 		return;
