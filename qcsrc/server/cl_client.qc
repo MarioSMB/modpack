@@ -1956,7 +1956,8 @@ float SpectateSet()
 	accuracy_resend(self);
 	
 	if(g_jailbreak)
-	if(!round_handler_IsRoundStarted())
+	if(jb_roundover)
+	if(jb_activecamera)
 		JB_SetCameraWithAngles(self, jb_activecamera, JB_TORTURE_DURATION);
 
 	if(!SpectateUpdate())

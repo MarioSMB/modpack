@@ -1181,11 +1181,6 @@ MUTATOR_HOOKFUNCTION(jb_PlayerPreThink)
 		return FALSE;
 	}
 
-	if(self.BUTTON_HOOK && !self.BUTTON_JUMP && self.jb_isprisoned)
-	if(JB_AlivePlayersOnTeam(self.team))
-	if(!JB_JailIsOpen(JB_GetEnemyTeamOf(self.team)))
-		JB_JailSpectate();
-
 	float ps = min(1, self.jb_isprisoned);
 	if(ps != self.jb_isprisoned_prev)
 	{
