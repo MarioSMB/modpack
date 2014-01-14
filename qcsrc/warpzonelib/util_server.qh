@@ -1,3 +1,0 @@
-float WarpZoneLib_MoveOutOfSolid(entity e);
-float WarpZoneLib_ExactTrigger_Touch();
-void WarpZoneLib_ExactTrigger_Init();

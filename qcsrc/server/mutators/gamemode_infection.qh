@@ -1,8 +1,0 @@
-float total_players;
-float redalive, bluealive, yellowalive, pinkalive;
-float inf_teams;
-float allowed_to_spawn;
-.float inf_realteam;
-.float inf_nextteam;
-
-float prev_total_players;

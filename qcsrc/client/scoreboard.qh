@@ -1,3 +1,0 @@
-float HUD_WouldDrawScoreboard(void);
-float scoreboard_active;
-float scoreboard_fade_alpha;

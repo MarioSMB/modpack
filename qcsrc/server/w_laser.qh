@@ -1,2 +1,0 @@
-void LaserInit();
-vector gauntlet_shotorigin[4];

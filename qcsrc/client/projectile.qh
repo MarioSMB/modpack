@@ -1,3 +1,0 @@
-.float traileffect;
-void Projectile_ResetTrail(vector to);
-void Projectile_DrawTrail(vector to);
