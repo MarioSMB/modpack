@@ -790,9 +790,33 @@ void CSQC_UpdateView(float w, float h)
 	if(autocvar_cl_orthoview) { setproperty(VF_FOV, GetOrthoviewFOV(ov_worldmin, ov_worldmax, ov_mid, ov_org)); }
 	else if(fovlock > -1) { setproperty(VF_FOV, GetCurrentFov(fovlock)); }
 	else { setproperty(VF_FOV, GetCurrentFov(fov)); }
+	
+	if(spectatee_status < 0)
+		camera_expiretime = -1;
+		
+	float tempcamera = (time < camera_expiretime || camera_expiretime < -1);
+	
+	if(getstati(STAT_ROUNDLOST))
+	if(getstati(STAT_HEALTH) > 0)
+		tempcamera = FALSE;
+		
+	if(tempcamera)
+	{
+		if(!camera_drawviewmodel_locked)
+		{
+			camera_drawviewmodel_locked = TRUE;
+			camera_drawviewmodel_backup = autocvar_r_drawviewmodel;
+		}
 
-	// Camera for demo playback
-	if(camera_active)
+		setproperty(VF_ORIGIN, camera_origin);
+		cvar_settemp("r_drawviewmodel", "0");
+	}
+	else if(camera_drawviewmodel_locked)
+	{
+		camera_drawviewmodel_locked = FALSE;
+		cvar_set("r_drawviewmodel", ftos(camera_drawviewmodel_backup));
+	}
+	else if(camera_active) // Camera for demo playback
 	{
 		if(autocvar_camera_enable)
 			CSQC_Demo_Camera();
@@ -1190,7 +1214,12 @@ void CSQC_UpdateView(float w, float h)
 			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
 		else if (getstatf(STAT_HEALING_ORB)>time)
 			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, Nade_Color(NADE_TYPE_HEAL), autocvar_hud_colorflash_alpha*getstatf(STAT_HEALING_ORB_ALPHA), DRAWFLAG_ADDITIVE);
-		if(getstatf(STAT_REVIVE_PROGRESS))
+		if(getstatf(STAT_CAPTURE_PROGRESS))
+		{
+			DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_CAPTURE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+			drawstring_aspect(eY * 0.64 * vid_conheight, _("Capture progress"), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
+		}
+		else if(getstatf(STAT_REVIVE_PROGRESS))
 		{
 			DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_REVIVE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
 			drawstring_aspect(eY * 0.64 * vid_conheight, _("Revival progress"), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);

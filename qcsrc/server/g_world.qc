@@ -845,6 +845,9 @@ void spawnfunc_worldspawn (void)
 	ClientInit_Spawn();
 	RandomSeed_Spawn();
 	PingPLReport_Spawn();
+	
+	if(!g_jailbreak)
+		InitializeEntity(world, JB_NonJBInit, INITPRIO_LAST);
 
 	CheatInit();
 

@@ -44,6 +44,7 @@ const float TE_CSQC_SVNOTICE = 113;
 const float TE_CSQC_MORNINGRESCUE = 114;
 const float TE_CSQC_SHOCKWAVEPARTICLE = 115;
 const float TE_CSQC_SPECINFO = 116;
+const float TE_CSQC_CAMERA = 117;
 
 const float RACE_NET_CHECKPOINT_HIT_QUALIFYING = 0; // byte checkpoint, short time, short recordtime, string recordholder
 const float RACE_NET_CHECKPOINT_CLEAR = 1;
@@ -205,6 +206,10 @@ const float STAT_WEAPONSINMAP2 = 91;
 const float STAT_WEAPONSINMAP3 = 92;
 
 const float STAT_SUPERCELLS = 93;
+
+const float STAT_CAPTURE_PROGRESS = 94;
+const float STAT_PRISONED = 95;
+const float STAT_ROUNDLOST = 96;
 
 // mod stats (1xx)
 const float STAT_REDALIVE = 100;

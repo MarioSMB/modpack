@@ -696,6 +696,31 @@ void Ent_ReadAccuracy(void)
 	}
 }
 
+void Net_Camera()
+{
+	if(!ReadByte())
+	{
+		camera_expiretime = -1;
+		return;
+	}
+	
+	camera_origin_x = ReadShort();
+	camera_origin_y = ReadShort();
+	camera_origin_z = ReadShort();
+	
+	if(time <= camera_expiretime || camera_drawviewmodel_locked)
+		dprint("Warning: Net_Camera while a camera is still active\n");
+	else {
+		camera_drawviewmodel_backup = autocvar_r_drawviewmodel;
+		camera_drawviewmodel_locked = TRUE;
+	}
+	
+	camera_expiretime = time + ReadShort();
+    
+    if(camera_expiretime < time)
+        camera_expiretime = -2;
+}
+
 void Spawn_Draw(void)
 {
 	pointparticles(self.cnt, self.origin + '0 0 28', '0 0 2', bound(0, frametime, 0.1));
@@ -1350,6 +1375,10 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_SHOCKWAVEPARTICLE:
 			Net_ReadShockwaveParticle();
+			bHandled = true;
+			break;
+		case TE_CSQC_CAMERA:
+			Net_Camera();
 			bHandled = true;
 			break;
 		default:

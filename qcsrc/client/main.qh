@@ -165,3 +165,7 @@ float num_spectators;
 #define MAX_SPECTATORS 7
 float spectatorlist[MAX_SPECTATORS];
 
+vector camera_origin;
+float camera_expiretime;
+float camera_drawviewmodel_locked;
+float camera_drawviewmodel_backup;

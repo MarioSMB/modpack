@@ -1947,29 +1947,21 @@ float SpectateSet()
 {
 	if(!IS_PLAYER(self.enemy))
 		return FALSE;
-	/*if(self.enemy.vehicle)
-	{
 
-		msg_entity = self;
-		WriteByte(MSG_ONE, SVC_SETVIEW);
-		WriteEntity(MSG_ONE, self.enemy);
-		//stuffcmd(self, "set viewsize $tmpviewsize \n");
+	msg_entity = self;
+	WriteByte(MSG_ONE, SVC_SETVIEW);
+	WriteEntity(MSG_ONE, self.enemy);
+	//stuffcmd(self, "set viewsize $tmpviewsize \n");
+	self.movetype = MOVETYPE_NONE;
+	accuracy_resend(self);
+	
+	if(g_jailbreak)
+	if(!round_handler_IsRoundStarted())
+		JB_SetCameraWithAngles(self, jb_activecamera, JB_TORTURE_DURATION);
 
-		self.movetype = MOVETYPE_NONE;
-		accuracy_resend(self);
-	}
-	else
-	{*/
-		msg_entity = self;
-		WriteByte(MSG_ONE, SVC_SETVIEW);
-		WriteEntity(MSG_ONE, self.enemy);
-		//stuffcmd(self, "set viewsize $tmpviewsize \n");
-		self.movetype = MOVETYPE_NONE;
-		accuracy_resend(self);
+	if(!SpectateUpdate())
+		PutObserverInServer();
 
-		if(!SpectateUpdate())
-			PutObserverInServer();
-	//}
 	return TRUE;
 }
 

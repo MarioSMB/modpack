@@ -452,3 +452,4 @@ var string autocvar_crosshair_rpc = "";
 var vector autocvar_crosshair_rpc_color = '0.2 1.0 0.2';
 var float autocvar_crosshair_rpc_alpha = 1;
 var float autocvar_crosshair_rpc_size = 1;
+float autocvar_r_drawviewmodel;

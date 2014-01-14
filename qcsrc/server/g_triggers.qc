@@ -12,6 +12,37 @@ void DelayThink()
 	remove(self);
 }
 
+float foreachtarget_callid;
+.float targethandled;
+void SUB_ForEachTarget(entity s, void(entity, float, vector, string, entity) cback, float recursive, float fdata, vector vdata, string sdata, entity edata)
+{
+    float i;
+    string targname = "";
+    entity targ;
+    
+    for(i = 0; i < 4; ++i) {
+        switch(i) {
+            case 0: targname = s.target ; break;
+            case 1: targname = s.target2; break;
+            case 2: targname = s.target3; break;
+            case 3: targname = s.target4; break;
+        }
+        
+        if(targname != "") {
+            for(targ = world; (targ = find(targ, targetname, targname));)
+            if(targ && targ.use && targ.targethandled != foreachtarget_callid) {
+                cback(targ, fdata, vdata, sdata, edata);
+                targ.targethandled = foreachtarget_callid;
+                
+                if(recursive)
+                    SUB_ForEachTarget(targ, cback, recursive, fdata, vdata, sdata, edata);
+            }
+        }
+    }
+}
+
+void SUB_ForEachTarget_Init() { ++foreachtarget_callid; }
+
 /*
 ==============================
 SUB_UseTargets
@@ -31,7 +62,7 @@ match (string)self.target and call their .use function
 
 ==============================
 */
-void SUB_UseTargets()
+void SUB_UseTargets_Ex(float preventReuse)
 {
 	entity t, stemp, otemp, act;
 	string s;
@@ -103,7 +134,7 @@ void SUB_UseTargets()
 		if (s != "")
 		{
 			for(t = world; (t = find(t, targetname, s)); )
-			if(t.use)
+			if(t.use && (t.sub_target_used != time || !preventReuse))
 			{
 				if(stemp.target_random)
 				{
@@ -115,6 +146,8 @@ void SUB_UseTargets()
 					other = stemp;
 					activator = act;
 					self.use();
+					if(preventReuse)
+						self.sub_target_used = time;
 				}
 			}
 		}
@@ -126,12 +159,17 @@ void SUB_UseTargets()
 		other = stemp;
 		activator = act;
 		self.use();
+		if(preventReuse)
+			self.sub_target_used = time;
 	}
 
 	activator = act;
 	self = stemp;
 	other = otemp;
 }
+
+void SUB_UseTargets() { SUB_UseTargets_Ex(FALSE); }
+void SUB_UseTargets_PreventReuse() { SUB_UseTargets_Ex(TRUE); }
 
 
 //=============================================================================
