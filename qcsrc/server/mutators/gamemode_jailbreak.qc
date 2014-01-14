@@ -46,7 +46,7 @@ float JB_GetWinnerTeam()
 #define JB_ALIVE_TEAMS_OK() (JB_ALIVE_TEAMS() == 2)
 float JB_CheckWinner()
 {
-	entity e;
+	entity e, oldself;
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
@@ -54,7 +54,18 @@ float JB_CheckWinner()
 		allowed_to_spawn = FALSE;
 		round_handler_Init(5, autocvar_g_jailbreak_warmup, autocvar_g_jailbreak_round_timelimit);
 		FOR_EACH_PLAYER(e)
+		{
+			if(!e.jb_isprisoned)
+			{
+				oldself = self;
+				self = e;
+				if(!e.jb_isprisoned)
+					e.player_blocked = 1;
+				PutClientInServer();
+				self = oldself;
+			}
 			nades_Clear(e);
+		}
 		jb_roundover = TRUE;
 		return 1;
 	}
@@ -89,7 +100,18 @@ float JB_CheckWinner()
 	round_handler_Init(JB_TORTURE_DURATION, autocvar_g_jailbreak_warmup, autocvar_g_jailbreak_round_timelimit);
 
 	FOR_EACH_PLAYER(e)
+	{
+		if(!e.jb_isprisoned)
+		{
+			oldself = self;
+			self = e;
+			if(!e.jb_isprisoned)
+				e.player_blocked = 1;
+			PutClientInServer();
+			self = oldself;
+		}
 		nades_Clear(e);
+	}
 
 	return 1;
 }
@@ -1050,13 +1072,13 @@ MUTATOR_HOOKFUNCTION(jb_ResetMap)
 {
 	jb_activecamera = world;
 
-	entity oldself = self;
 	FOR_EACH_PLAYER(self)
 	{
 		JB_Release(world);
 		PutClientInServer();
+		self.player_blocked = 0;
+		self.weapon_blocked = FALSE;
 	}
-	self = oldself;
 
 	jb_roundover = FALSE;
 	
@@ -1294,7 +1316,7 @@ void jb_Initialize()
 MUTATOR_DEFINITION(gamemode_jailbreak)
 {
 	MUTATOR_HOOK(OnEntityPreSpawn, jb_OnEntityPreSpawn, CBC_ORDER_FIRST);
-	MUTATOR_HOOK(reset_map_global, jb_ResetMap, CBC_ORDER_ANY);
+	MUTATOR_HOOK(reset_map_players, jb_ResetMap, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, jb_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, jb_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, jb_RemovePlayer, CBC_ORDER_ANY);
