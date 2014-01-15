@@ -330,7 +330,6 @@ void JB_Imprison(entity attacker)
 	self.health = autocvar_g_jailbreak_prisoner_health;
 	self.armorvalue = autocvar_g_jailbreak_prisoner_armor;
 
-
 	self.jb_had_unlimited_ammo = (self.items & IT_UNLIMITED_WEAPON_AMMO);
 
 	if(!self.jb_had_unlimited_ammo)

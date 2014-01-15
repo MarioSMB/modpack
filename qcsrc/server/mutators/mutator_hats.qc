@@ -48,7 +48,7 @@ void hat_Think()
 		remove(self);
 		return;
 	}
-	if (self.owner.deadflag != DEAD_NO)
+	if (self.owner.deadflag != DEAD_NO || self.owner.jb_isprisoned || self.owner.frozen)
 	{
 		self.model = "";
 		return;
