@@ -1250,6 +1250,14 @@ MUTATOR_HOOKFUNCTION(jb_PlayerDamage)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(jb_ForbidThrowing)
+{
+	if(self.jb_isprisoned)
+		return TRUE;
+	
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(jb_GiveFrags)
 {
 	if(jb_roundover)
@@ -1339,6 +1347,7 @@ MUTATOR_DEFINITION(gamemode_jailbreak)
 	MUTATOR_HOOK(PlayerPreThink, jb_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, jb_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, jb_GiveFrags, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ForbidThrowCurrentWeapon, jb_ForbidThrowing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, jb_GetTeamCount, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
