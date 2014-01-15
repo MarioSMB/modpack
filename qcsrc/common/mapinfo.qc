@@ -317,7 +317,7 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_INVASION;
 				else if(v == "target_assault_roundend")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ASSAULT;
-				else if(v == "jailbreak_jail")
+				else if(startsWith(v, "jailbreak_"))
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_JAILBREAK;
 				else if(v == "onslaught_generator")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_ONSLAUGHT;
