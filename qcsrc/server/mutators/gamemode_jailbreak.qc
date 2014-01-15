@@ -1193,6 +1193,9 @@ MUTATOR_HOOKFUNCTION(jb_RemovePlayer)
 
 MUTATOR_HOOKFUNCTION(jb_PlayerPreThink)
 {
+	if(gameover)
+		return FALSE;
+
 	if(self.jb_specteam && IS_PLAYER(self))
 	{
 		JB_JailSpec_CreateProxy();
