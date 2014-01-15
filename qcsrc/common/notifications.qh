@@ -678,7 +678,7 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_UNAVAILABLE,     0, 1, "item_wepname",                      CPID_ITEM, "item_centime 0", _("^F1%s^BG is ^F4not available^BG on this map"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_JAILBREAK_DEFENSE,           0, 0, "",              CPID_JAILBREAK,        "0 0", _("^F2You gained some bonus score for defending the control point!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_JAILBREAK_ESCAPE,            0, 1, "death_team",    CPID_JAILBREAK,        "0 0", _("^K1The %s^K1 is escaping!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_JAILBREAK_FREE,              0, 0, "",              CPID_JAILBREAK,        "0 0", _("^F2Youre free! Run away!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_JAILBREAK_FREE,              0, 0, "",              CPID_JAILBREAK,        "0 0", _("^F2You're free! Run away!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_JAILBREAK_FREED,             0, 0, "",              CPID_JAILBREAK,        "0 0", _("^K3You bailed your teammates out of jail!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_JAILBREAK_IMPRISON,          0, 0, "",              CPID_JAILBREAK,        "0 0", _("^K1You're in jail, prisoner!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_JAILBREAK_NOENTRY,           0, 0, "",              CPID_JAILBREAK,        "0 0", _("^K1No sneaking into jail!"), "") \
