@@ -817,6 +817,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 				if(autocvar_sv_eventlog) { GameLogEcho(strcat(":vote:vcall:", ftos(vote_caller.playerid), ":", vote_called_display)); }
 				Nagger_VoteChanged();
 
+				if(autocvar_sv_vote_auto)
 				FOR_EACH_REALCLIENT(tmp_player)
 				switch(tmp_player.cvar_cl_autovote)
 				{

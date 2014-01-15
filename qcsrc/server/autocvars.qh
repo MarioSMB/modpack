@@ -1166,6 +1166,7 @@ float autocvar_sv_timeout_length;
 float autocvar_sv_timeout_number;
 float autocvar_sv_timeout_resumetime;
 float autocvar_sv_vote_call;
+float autocvar_sv_vote_auto;
 float autocvar_sv_vote_change;
 string autocvar_sv_vote_commands;
 float autocvar_sv_vote_limit;
