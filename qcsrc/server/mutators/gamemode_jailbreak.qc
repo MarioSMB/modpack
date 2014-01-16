@@ -519,7 +519,8 @@ void JB_ActivateCamera(float theteam, float timeout)
 {
 	entity cam = JB_FindCamera(theteam);
 
-	if(!cam) {
+	if(!cam)
+	{
 		JB_Log(FALSE, strcat("JB_ActivateCamera: the ", Team_ColoredFullName(theteam), "^7 has no camera entities, mapper sucks!"));
 		return;
 	}
@@ -535,17 +536,24 @@ void JB_ActivateCamera(float theteam, float timeout)
 	e.think = JB_RestoreCullEntities;
 	e.nextthink = time + timeout;
 
-	entity p; FOR_EACH_PLAYER(p) {
-		if(clienttype(p) == CLIENTTYPE_REAL) {
-			if(p.team == theteam) {
+	entity p;
+	FOR_EACH_PLAYER(p)
+	{
+		if(IS_REAL_CLIENT(p))
+		{
+			if(p.team == theteam)
+			{
 				p.angles = cam.angles;
 				p.angles_z = 0;
 				p.fixangle = TRUE;
 				p.jb_roundlost = FALSE;
-			} else p.jb_roundlost = TRUE;
+			}
+			else
+				p.jb_roundlost = TRUE;
 		}
 
-		entity s; FOR_EACH_REALCLIENT(s) if(s == p || (s.classname == "spectator" && s.enemy == p))
+		entity s;
+		FOR_EACH_REALCLIENT(s) if(s == p || (IS_SPEC(s) && s.enemy == p))
 			JB_SetCamera(s, cam, timeout);
 	}
 
@@ -1072,6 +1080,8 @@ MUTATOR_HOOKFUNCTION(jb_ResetMap)
 {
 	jb_activecamera = world;
 	jb_roundover = FALSE;
+	
+	JB_ClearCameraForAll();
 
 	FOR_EACH_CLIENT(self)
 	{
@@ -1145,7 +1155,7 @@ MUTATOR_HOOKFUNCTION(jb_PlayerSpawn)
 
 	self.jb_fragrow = 0;
 
-	if(jb_activecamera)
+	if(jb_activecamera && jb_roundover)
 		JB_SetCameraWithAngles(self, jb_activecamera, JB_TORTURE_DURATION);
 
 	if(!round_handler_IsRoundStarted())
