@@ -472,3 +472,8 @@ noref var vector autocvar_sv_player_headsize = '24 24 12';
 #define URI_GET_UPDATENOTIFICATION 33
 #define URI_GET_URLLIB 128
 #define URI_GET_URLLIB_END 191
+
+// gametype votes
+#define GTV_AVAILABLE 0
+// for later use in per-map gametype filtering
+#define GTV_FORBIDDEN 2

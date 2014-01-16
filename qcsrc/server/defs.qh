@@ -647,3 +647,5 @@ float sv_showfps;
 .float clientfov;
 
 .float sub_target_used;
+
+float gametypetoset;

@@ -289,6 +289,8 @@ void InitGameplayMode()
 
 		ScoreRules_race();
 	}
+	
+	gametypetoset = MapInfo_CurrentGametype();
 
 	InitializeEntity(world, default_delayedinit, INITPRIO_GAMETYPE_FALLBACK);
 }
