@@ -23,9 +23,6 @@ void JB_ControlPoint_Deactivate(entity, float);
 void JB_ControlPoint_UpdateCooldownProgress(entity);
 string JB_ControlPoint_Name(entity);
 float JB_JailIsOpen(float);
-void JB_JailSpectate();
-entity JB_JailSpec_CreateProxy();
-void JB_JailSpec_Proxy_CopyFields(entity, entity);
 
 .float jb_unlock_progress;
 .float jb_isprisoned;
@@ -51,7 +48,6 @@ void JB_JailSpec_Proxy_CopyFields(entity, entity);
 .entity jb_saviour;
 .entity jb_waypoint;
 .entity jb_capturingplayer;
-.entity jb_jailspec_proxy;
 .entity jb_imprisoner;
 
 float jb_roundover;

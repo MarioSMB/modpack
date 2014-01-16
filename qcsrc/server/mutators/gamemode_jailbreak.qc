@@ -1021,46 +1021,6 @@ void JB_SetupControlPoint()
 	++jb_cp_num;
 }
 
-//
-//	Jail-spectating
-//
-
-void JB_JailSpectate()
-{
-	self.jb_specteam = self.team;
-}
-
-void JB_JailSpec_Proxy_CopyFields(entity to, entity from)
-{
-	entity o = self;
-	self = to;
-	SpectateCopy(from);
-	self = o;
-
-	to.jb_isprisoned = from.jb_isprisoned;
-	to.velocity = '0 0 0';
-
-	if(!to.iscreature)
-		setmodel(to, from.model);
-}
-
-void JB_JailSpec_Proxy_Think()
-{
-	player_regen();
-	self.nextthink = time;
-}
-
-entity JB_JailSpec_CreateProxy()
-{
-	entity p = spawn();
-	JB_JailSpec_Proxy_CopyFields(p, self);
-	p.think = JB_JailSpec_Proxy_Think;
-	p.nextthink = time;
-	p.owner = self;
-	self.jb_jailspec_proxy = p;
-	return p;
-}
-
 // mutator hooks
 MUTATOR_HOOKFUNCTION(jb_OnEntityPreSpawn)
 {
@@ -1180,13 +1140,6 @@ MUTATOR_HOOKFUNCTION(jb_PlayerSpawn)
 	self.jb_roundlost = FALSE;
 	
 	self.jb_specteam = 0;
-	
-	if(self.jb_jailspec_proxy)
-	{
-		JB_JailSpec_Proxy_CopyFields(self, self.jb_jailspec_proxy);
-		remove(self.jb_jailspec_proxy);
-		self.jb_jailspec_proxy = world;
-	}
 
 	return FALSE;
 }
@@ -1208,7 +1161,6 @@ MUTATOR_HOOKFUNCTION(jb_PlayerPreThink)
 
 	if(self.jb_specteam && IS_PLAYER(self))
 	{
-		JB_JailSpec_CreateProxy();
 		self.classname = "observer";
 		PutObserverInServer();
 		return FALSE;
