@@ -31,7 +31,7 @@ float GametypeVote_Selection()
 		float sz;
 		sz = hud_fontsize_y * 1.4 + tokenizebyseparator(GameTypeVote_DescriptionByID(i), "\n") * hud_fontsize_y;
 
-		if(mv_mousepos_y >= offset && mv_mousepos_y <= offset + sz)
+		if(mv_mousepos_y >= offset && mv_mousepos_y <= offset + sz && mv_avail[i] == GTV_AVAILABLE)
 			r = i;
 
 		offset += sz + hud_fontsize_y;
@@ -88,34 +88,46 @@ vector MapVote_RGB(float id, float count)
 		return '1 1 1';
 }
 
+
+
+
 #define drawGameTypeLine(s,c,sc,a) \
-drawstring(o, (s), hud_fontsize * (sc), (c), a * alpha, DRAWFLAG_NORMAL); \
-o_y += hud_fontsize_y * sc *  (1 - pow(alpha - 1, 2))
+drawstring(o, (s), hud_fontsize * (sc), (c), a * alpha, DRAWFLAG_NORMAL);
 
 vector GameTypeVote_DrawGametypeItem(vector o, string gtype, float count, float id)
 {
 	string thelabel;
-	thelabel = "Cool Gametype."; //GameTypeVote_DescriptionByID(id);
+	thelabel = GameTypeVote_DescriptionByID(id);
 
 	float a;
 	float alpha = 1;
 	
 	if(mv_avail[id] != GTV_AVAILABLE)
-		a = 0.3; //0.5
+		a = 0.2;
+	else  if (count < 0 && mv_top2_alpha)
+		a = mv_top2_alpha;
 	else
 		a = 1;
 
-	float oldx = o_x;
-	o_x -= 10 * 0.5;
-	
 	drawGameTypeLine(MapVote_FormatMapItem(id, MapInfo_Type_ToText(MapInfo_Type_FromString(gtype)), count, 500, hud_fontsize), MapVote_RGB(id, count), 1.4, a); // 1.2
-	/*if(thelabel != "") for(i = 0; i < n; ++i)
+	
+	o_y += hud_fontsize_y;
+	o_y += hud_fontsize_y * 0.7;
+	
+	float oldx = o_x;
+	o_x += hud_fontsize_x * 3;
+	string s;
+	s = GameTypeVote_DescriptionByID(id);
+	float i,n = tokenizebyseparator(s, "\n");
+	if(thelabel != "") for(i = 0; i < n; ++i)
 	{
 		drawGameTypeLine(argv(i), '1 1 1', 1, a);
+		o_y += hud_fontsize_y;
 	}
-
-	drawGameTypeLine("", '1 1 1', 01, 1); */
+	
+	o_y += hud_fontsize_y * 0.7;
 	o_x = oldx;
+	
 	return o;
 }
 
@@ -305,33 +317,30 @@ void MapVote_Draw()
 	vector o = '0 0 0';
 	if(gametypevote)
 	{
-		// draws the picked map
 		float alpha = 1;
-		float txtoffset = max(vid_conwidth * 0.5 - (hud_fontsize_x * gametypevote_longest) * 0.5, hud_fontsize_x);
+		float textlen = hud_fontsize_x * ( gametypevote_longest + 4 );
+		float txtoffset = max(vid_conwidth * 0.5 - textlen, 0);
 
 		vector img_size = '0 0 0';
-		vector img_fullsize = '0 0 0';
 
 		img_size_y = isize;
 		img_size_x = isize / 0.75;
-		img_fullsize = img_size;
 		img_size *= alpha;
         
-        o_x = vid_conwidth - txtoffset - img_fullsize_x;
+        o_x = txtoffset;
 		o_y = hud_fontsize_y * 10;
-
-        vector o2 = o + 0.5 * (img_fullsize - img_size);
+		
+        vector o2 = o;
+        o2_x += textlen;
         drawborderlines(autocvar_scoreboard_border_thickness, o2, img_size, '0 0 0', 1, DRAWFLAG_NORMAL);
         if(mapvote_choosenmappic != "")
             drawpic(o2, mapvote_choosenmappic, img_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
-
-		img_size = img_fullsize;
 		
-		o_y += img_size_y + 10;
-		o_x += img_size_x / 2 - ((stringwidth_nocolors(mapvote_choosenmap, hud_fontsize) / 2) * hud_fontsize_x);
+		o2_y += img_size_y + 10;
+		o2_x += img_size_x / 2 - stringwidth_nocolors(mapvote_choosenmap, hud_fontsize) / 2;
 		
 		draw_beginBoldFont();
-		drawstring(o, mapvote_choosenmap, hud_fontsize, '1 1 1' * alpha, alpha, DRAWFLAG_NORMAL);
+		drawstring(o2, mapvote_choosenmap, hud_fontsize, '1 1 1' * alpha, alpha, DRAWFLAG_NORMAL);
 		draw_endBoldFont();
 	}
 
