@@ -1954,11 +1954,6 @@ float SpectateSet()
 	//stuffcmd(self, "set viewsize $tmpviewsize \n");
 	self.movetype = MOVETYPE_NONE;
 	accuracy_resend(self);
-	
-	if(g_jailbreak)
-	if(jb_roundover)
-	if(jb_activecamera)
-		JB_SetCameraWithAngles(self, jb_activecamera, JB_TORTURE_DURATION);
 
 	if(!SpectateUpdate())
 		PutObserverInServer();

@@ -368,7 +368,8 @@ void JB_TorturePrisonersLater(float theteam, float thedelay)
 
 void JB_Release(entity saviour)
 {
-	if(!self.jb_isprisoned) {
+	if(!self.jb_isprisoned)
+	{
 		JB_Log(FALSE, strcat("Tried to release a free player (", self.netname, ")"));
 		return;
 	}
@@ -376,11 +377,13 @@ void JB_Release(entity saviour)
 	self.jb_isprisoned = FALSE;
 	self.jb_imprisoner = world;
 	self.weapon_blocked = FALSE;
+	self.player_blocked = FALSE; // just incase
 
 	if(!self.jb_had_unlimited_ammo)
 		self.items &= ~IT_UNLIMITED_WEAPON_AMMO;
 
-	if(g_jailbreak_jail_deathmatch) {
+	if(g_jailbreak_jail_deathmatch)
+	{
 		self.health = max(self.health, autocvar_g_jailbreak_prisoner_health);
 		self.armorvalue = max(self.armorvalue, autocvar_g_jailbreak_prisoner_armor);
 	}
@@ -783,11 +786,6 @@ void JB_TriggerTeamControlPoints(float t)
 		if(self.jb_team_initial == t)
 			SUB_UseTargets_PreventReuse();
 
-	FOR_EACH_CLIENT(self) if(self.jb_specteam && self.jb_specteam != t) {
-		self.classname = "player";
-		PutClientInServer();
-	}
-
 	self = o;
 }
 
@@ -824,7 +822,7 @@ void JB_ControlPoint_Capture(entity player)
 	{
 		if(DIFF_TEAM(e, player))
 			Send_Notification(NOTIF_ONE, e, MSG_CENTER, CENTER_JAILBREAK_ESCAPE, player.team);
-		else
+		else if(e == player)
 			Send_Notification(NOTIF_ONE, e, MSG_CENTER, CENTER_JAILBREAK_FREED);
 
 		if(e.jb_isprisoned && SAME_TEAM(e, player))
@@ -1073,17 +1071,19 @@ MUTATOR_HOOKFUNCTION(jb_OnEntityPreSpawn)
 MUTATOR_HOOKFUNCTION(jb_ResetMap)
 {
 	jb_activecamera = world;
+	jb_roundover = FALSE;
 
-	FOR_EACH_PLAYER(self)
+	FOR_EACH_CLIENT(self)
 	{
-		JB_Release(world);
-		PutClientInServer();
+		if(IS_PLAYER(self))
+		{
+			JB_Release(world);
+			PutClientInServer();
+		}
 		self.player_blocked = 0;
 		self.weapon_blocked = FALSE;
 	}
 
-	jb_roundover = FALSE;
-	
 	return TRUE;
 }
 
@@ -1323,7 +1323,7 @@ void jb_Initialize()
 	precache_sound("kh/alarm.wav");
 
 	ScoreRules_JB();
-	
+
 	round_handler_Spawn(JB_CheckTeams, JB_CheckWinner, JB_RoundStart);
 	round_handler_Init(5, autocvar_g_jailbreak_warmup, autocvar_g_jailbreak_round_timelimit);
 
