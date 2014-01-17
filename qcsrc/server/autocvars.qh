@@ -876,6 +876,7 @@ float autocvar_g_jetpack_antigravity;
 float autocvar_g_jetpack_fuel;
 float autocvar_g_jetpack_maxspeed_side;
 float autocvar_g_jetpack_maxspeed_up;
+float autocvar_g_keepaway_point_limit;
 float autocvar_g_keepaway_ballcarrier_effects;
 float autocvar_g_keepaway_ballcarrier_damage;
 float autocvar_g_keepaway_ballcarrier_force;
