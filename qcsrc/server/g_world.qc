@@ -2814,7 +2814,7 @@ void GameTypeVote_AddVotable(string nextMode)
 	mapvote_maps_suggested[mapvote_count] = FALSE;
 
 	mapvote_maps_screenshot_dir[mapvote_count] = 0;
-	mapvote_maps_pakfile[mapvote_count] = "";
+	mapvote_maps_pakfile[mapvote_count] = strzone("");
 
 	mapvote_count += 1;
 }
