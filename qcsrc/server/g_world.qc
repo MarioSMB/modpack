@@ -2833,7 +2833,7 @@ void GameTypeVote_Start()
 	mapvote_timeout = time + autocvar_sv_vote_gametype_timeout;
 	mapvote_abstain = 0;
 	
-	float n = tokenizebyseparator(GameTypeVote_GetOptions(), " ");
+	float n = tokenizebyseparator(autocvar_sv_vote_gametype_options, " ");
 	
 	for(j = 0; j < n; ++j)
 	{
