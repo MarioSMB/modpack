@@ -2787,11 +2787,6 @@ void MapVote_Think()
 	MapVote_Tick();
 }
 
-string GameTypeVote_GetOptions()
-{
-	return autocvar_sv_vote_gametype_options;
-}
-
 float GameTypeVote_Finished(float pos)
 {
 	if(!gametypevote)
