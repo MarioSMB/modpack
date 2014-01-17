@@ -356,8 +356,8 @@ void FireGrapplingHook (void)
 	float s;
 	vector vs;
 
-	if(forbidWeaponUse()) return;
-	if(self.vehicle) return;
+	if((time < game_starttime && !autocvar_sv_ready_restart_after_countdown) || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || self.frozen || self.vehicle)
+		return;
 
 	makevectors(self.v_angle);
 

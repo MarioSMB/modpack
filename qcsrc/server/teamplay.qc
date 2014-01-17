@@ -198,6 +198,7 @@ void InitGameplayMode()
 
 	if(g_keepaway)
 	{
+		fraglimit_override = autocvar_g_keepaway_point_limit;
 		MUTATOR_ADD(gamemode_keepaway);
 	}
 
