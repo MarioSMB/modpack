@@ -171,7 +171,6 @@ float camera_drawviewmodel_locked;
 float camera_drawviewmodel_backup;
 
 float gametypevote;
-float gametypevote_longest;
 
 string mapvote_choosenmap;
 string mapvote_choosenmappic;

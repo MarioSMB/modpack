@@ -66,7 +66,7 @@ string GameTypeVote_DescriptionByID(float id)
 	{
 		case GTV_FORBIDDEN:
 		case GTV_AVAILABLE:
-			return MapInfo_Type_Description(id);
+			return MapInfo_Type_Description(MapInfo_Type_FromString(mv_maps[id]));
 /*
 		case GTV_FORBIDDEN:
 			return "This gametype is forbidden on this map.";
@@ -89,17 +89,10 @@ vector MapVote_RGB(float id, float count)
 }
 
 
-
-
-#define drawGameTypeLine(s,c,sc,a) \
-drawstring(o, (s), hud_fontsize * (sc), (c), a * alpha, DRAWFLAG_NORMAL);
-
-vector GameTypeVote_DrawGametypeItem(vector o, string gtype, float count, float id)
+vector GameTypeVote_DrawGametypeItem(vector o, string gtype, float count, float id, float maxlen)
 {
-	string thelabel = GameTypeVote_DescriptionByID(id);
 
 	float a;
-	float alpha = 1;
 	
 	if(mv_avail[id] != GTV_AVAILABLE)
 		a = 0.2;
@@ -107,21 +100,28 @@ vector GameTypeVote_DrawGametypeItem(vector o, string gtype, float count, float 
 		a = mv_top2_alpha;
 	else
 		a = 1;
-
-	drawGameTypeLine(MapVote_FormatMapItem(id, MapInfo_Type_ToText(MapInfo_Type_FromString(gtype)), count, 500, hud_fontsize), MapVote_RGB(id, count), 1.4, a); // 1.2
+	
+	drawstring(o, MapVote_FormatMapItem(id, MapInfo_Type_ToText(MapInfo_Type_FromString(gtype)), count, maxlen, hud_fontsize*1.4), 
+			   hud_fontsize*1.4, MapVote_RGB(id, count), a, DRAWFLAG_NORMAL); 
 	
 	o_y += hud_fontsize_y;
 	o_y += hud_fontsize_y * 0.7;
 	
 	float oldx = o_x;
 	o_x += hud_fontsize_x * 3;
-	string s;
-	s = GameTypeVote_DescriptionByID(id);
-	float i,n = tokenizebyseparator(s, "\n");
+	
+	string thelabel = GameTypeVote_DescriptionByID(id), ts;
+	float i,n = tokenizebyseparator(thelabel, "\n");
 	if(thelabel || thelabel != "") for(i = 0; i < n; ++i)
 	{
-		drawGameTypeLine(argv(i), '1 1 1', 1, a);
-		o_y += hud_fontsize_y;
+		getWrappedLine_remaining = argv(i);
+		while(getWrappedLine_remaining)
+		{
+			ts = getWrappedLine(maxlen, hud_fontsize, stringwidth_colors);
+			drawstring(o, ts, hud_fontsize, '1 1 1', a, DRAWFLAG_NORMAL);
+			if (ts != "")
+				o_y += hud_fontsize_y;
+		}
 	}
 	
 	o_y += hud_fontsize_y * 0.7;
@@ -314,23 +314,23 @@ void MapVote_Draw()
 	mv_selection = (gametypevote) ? GametypeVote_Selection() : MapVote_Selection(pos, dist, rows, columns);
 	
 	vector o = '0 0 0';
+	float textpad = hud_fontsize_x * 4;
+	float textlen = vid_conwidth/2 - textpad;
 	if(gametypevote)
 	{
 		float alpha = 1;
-		float textlen = hud_fontsize_x * ( gametypevote_longest + 4 );
-		float txtoffset = max(vid_conwidth * 0.5 - textlen, 0);
-
+		
 		vector img_size = '0 0 0';
 
 		img_size_y = isize;
 		img_size_x = isize / 0.75;
 		img_size *= alpha;
         
-        o_x = txtoffset;
+        o_x = textpad;
 		o_y = hud_fontsize_y * 10;
 		
         vector o2 = o;
-        o2_x += textlen;
+        o2_x += vid_conwidth/2;
         drawborderlines(autocvar_scoreboard_border_thickness, o2, img_size, '0 0 0', 1, DRAWFLAG_NORMAL);
 
 		if(mapvote_choosenmappic == "")
@@ -367,7 +367,7 @@ void MapVote_Draw()
 		map = mv_maps[i];
 		
 		if(gametypevote)
-			o = GameTypeVote_DrawGametypeItem(o, map, tmp, i);
+			o = GameTypeVote_DrawGametypeItem(o, map, tmp, i,textlen);
 		else
 		{
 			if(mv_preview[i])
@@ -461,7 +461,7 @@ string ssdirs[NUM_SSDIRS];
 float n_ssdirs;
 void MapVote_Init()
 {
-	float i, n, j, power, tmp, oldnum = 0;
+	float i, j, power, oldnum = 0;
 	string map, pk3, s;
 
 	precache_sound ("misc/invshot.wav");
@@ -540,13 +540,6 @@ void MapVote_Init()
 			{
 				mv_avail[i] = ReadByte();
 				map = mv_maps[i];
-				n = tokenizebyseparator(GameTypeVote_DescriptionByID(i), "\n");
-				for(j = 0; j < n; ++j)
-				{
-					tmp = strlen(argv(j));
-					if(tmp > gametypevote_longest)
-						gametypevote_longest = tmp;
-				}
 			}
 			else
 			{
