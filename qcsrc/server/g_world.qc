@@ -2572,6 +2572,19 @@ float MapVote_Finished(float mappos)
 				choosenmap = strzone(mapvote_maps[mappos]);
 			}
 			GameTypeVote_Start();
+			
+			float really_available;
+			really_available = 0;
+			for(i = 0; i < mapvote_count; ++i)
+			{
+				if ( mapvote_maps_availability[i] == GTV_AVAILABLE )
+					really_available++;
+			}
+			
+			if ( really_available == 1 )
+			{
+				return MapVote_Finished(0);
+			}
 			return FALSE;
 		}
 		
@@ -2815,6 +2828,7 @@ void GameTypeVote_AddVotable(string nextMode)
 
 	mapvote_maps_screenshot_dir[mapvote_count] = 0;
 	mapvote_maps_pakfile[mapvote_count] = strzone("");
+	mapvote_maps_availability[j] = GameTypeVote_AvailabilityStatus(nextMode);
 
 	mapvote_count += 1;
 }
@@ -2838,7 +2852,6 @@ void GameTypeVote_Start()
 	for(j = 0; j < n; ++j)
 	{
 		GameTypeVote_AddVotable(argv(j));
-		mapvote_maps_availability[j] = GameTypeVote_AvailabilityStatus(argv(j));
 	}
 
 	// Chaiomanot: Jan 9th 2012: Bug fix: Not all gametype options will speed-vote (+1 line)
