@@ -2867,6 +2867,7 @@ void GameTypeVote_Start()
 	}
 	
 	mapvote_count_real = mapvote_count;
+	mapvote_keeptwotime = time + autocvar_sv_vote_gametype_keeptwotime;
 	gametypevote = 1;
 	MapVote_Spawn();
 }
