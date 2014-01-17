@@ -2825,9 +2825,8 @@ void GameTypeVote_Start()
 	MapVote_ClearAllVotes();
 
 	for(j = 0; j < mapvote_count; ++j)
-		if(mapvote_maps[j])
-			if(mapvote_maps[j] != "")
-				strunzone(mapvote_maps[j]);
+	if(mapvote_maps[j])
+		strunzone(mapvote_maps[j]);
 	
 	mapvote_count = 0;
 	mapvote_timeout = time + autocvar_sv_vote_gametype_timeout;
