@@ -48,7 +48,7 @@ string MapVote_FormatMapItem(float id, string map, float count, float maxwidth, 
 	{
 		if(count == 1)
 			post = _(" (1 vote)");
-		else if(count >= 0)
+		else if(count >= 0 && mv_avail[id] == GTV_AVAILABLE)
 			post = sprintf(_(" (%d votes)"), count);
 		else
 			post = "";
