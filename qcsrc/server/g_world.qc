@@ -2800,6 +2800,25 @@ float GameTypeVote_Finished(float pos)
 	return TRUE;
 }
 
+void GameTypeVote_AddVotable(string nextMode)
+{
+	float j;
+
+	if(nextMode == "")
+		return;
+	for(j = 0; j < mapvote_count; ++j)
+		if(mapvote_maps[j] == nextMode)
+			return;
+	
+	mapvote_maps[mapvote_count] = strzone(nextMode);
+	mapvote_maps_suggested[mapvote_count] = FALSE;
+
+	mapvote_maps_screenshot_dir[mapvote_count] = 0;
+	mapvote_maps_pakfile[mapvote_count] = "";
+
+	mapvote_count += 1;
+}
+
 void GameTypeVote_Start()
 {
 	float j;
@@ -2818,10 +2837,7 @@ void GameTypeVote_Start()
 	
 	for(j = 0; j < n; ++j)
 	{
-		// If we don't spam tokenizebyseparator, shit fucks up
-		tokenizebyseparator(autocvar_sv_vote_gametype_options, " ");
-		MapVote_AddVotable(argv(j), 0);
-		tokenizebyseparator(autocvar_sv_vote_gametype_options, " ");
+		GameTypeVote_AddVotable(argv(j));
 		mapvote_maps_availability[j] = GameTypeVote_AvailabilityStatus(argv(j));
 	}
 
