@@ -2724,7 +2724,7 @@ void MapVote_Tick()
 			other.mapvote = 0;
 		// use impulses as new vote
 		if(other.impulse >= 1 && other.impulse <= mapvote_count)
-			if(mapvote_maps[other.impulse - 1] != "")
+			if(mapvote_maps[other.impulse - 1] != "" && mapvote_maps_availability[other.impulse-1] == GTV_AVAILABLE )
 			{
 				other.mapvote = other.impulse;
 				MapVote_TouchVotes(other);
