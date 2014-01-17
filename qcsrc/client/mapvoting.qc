@@ -66,7 +66,7 @@ string GameTypeVote_DescriptionByID(float id)
 	{
 		case GTV_FORBIDDEN:
 		case GTV_AVAILABLE:
-			return "Fun gametype."; //gametype_Name_to_Description(mv_maps[id]);
+			return MapInfo_Type_Description(id);
 /*
 		case GTV_FORBIDDEN:
 			return "This gametype is forbidden on this map.";
@@ -96,8 +96,7 @@ drawstring(o, (s), hud_fontsize * (sc), (c), a * alpha, DRAWFLAG_NORMAL);
 
 vector GameTypeVote_DrawGametypeItem(vector o, string gtype, float count, float id)
 {
-	string thelabel;
-	thelabel = GameTypeVote_DescriptionByID(id);
+	string thelabel = GameTypeVote_DescriptionByID(id);
 
 	float a;
 	float alpha = 1;
@@ -119,7 +118,7 @@ vector GameTypeVote_DrawGametypeItem(vector o, string gtype, float count, float 
 	string s;
 	s = GameTypeVote_DescriptionByID(id);
 	float i,n = tokenizebyseparator(s, "\n");
-	if(thelabel != "") for(i = 0; i < n; ++i)
+	if(thelabel || thelabel != "") for(i = 0; i < n; ++i)
 	{
 		drawGameTypeLine(argv(i), '1 1 1', 1, a);
 		o_y += hud_fontsize_y;
@@ -333,8 +332,18 @@ void MapVote_Draw()
         vector o2 = o;
         o2_x += textlen;
         drawborderlines(autocvar_scoreboard_border_thickness, o2, img_size, '0 0 0', 1, DRAWFLAG_NORMAL);
-        if(mapvote_choosenmappic != "")
-            drawpic(o2, mapvote_choosenmappic, img_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
+
+		if(mapvote_choosenmappic == "")
+		{
+			drawfill(o2, img_size, '.5 .5 .5', .7 * alpha, DRAWFLAG_NORMAL);
+		}
+		else
+		{
+			if(drawgetimagesize(mapvote_choosenmappic) == '0 0 0')
+				drawpic(o2, draw_UseSkinFor("nopreview_map"), img_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
+			else
+				drawpic(o2, mapvote_choosenmappic, img_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
+		}
 		
 		o2_y += img_size_y + 10;
 		o2_x += img_size_x / 2 - stringwidth_nocolors(mapvote_choosenmap, hud_fontsize) / 2;
@@ -493,7 +502,10 @@ void MapVote_Init()
 		{
             if(mv_maps[i] == cmap)
 			{
-                cpic = mv_pics[i];
+                if(mv_preview[i])
+					cpic = mv_pics[i];
+				else
+					cpic = "";
                 break;
             }
         }

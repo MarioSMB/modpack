@@ -707,6 +707,15 @@ float MapInfo_Type_FromString(string t)
 	return 0;
 }
 
+string MapInfo_Type_Description(float t)
+{
+	entity e;
+	for(e = MapInfo_Type_first; e; e = e.enemy)
+		if(t == e.items)
+			return e.gametype_description;
+	return "";
+}
+
 string MapInfo_Type_ToString(float t)
 {
 	entity e;
