@@ -4,7 +4,8 @@ string getmapname_stored;
 
 float GameTypeVote_AvailabilityStatus_ForMap(string gtname, string map_name)
 {
-	if(!MapInfo_Get_ByName(map_name, FALSE, MapInfo_Type_FromString(gtname)))
+	float type = MapInfo_Type_FromString(gtname);
+	if( type == 0 || !MapInfo_Get_ByName(map_name, FALSE, type))
 		return GTV_FORBIDDEN;
 	
 	return GTV_AVAILABLE;
@@ -2803,8 +2804,7 @@ float GameTypeVote_Finished(float pos)
 void GameTypeVote_AddVotable(string nextMode)
 {
 	float j;
-
-	if(nextMode == "")
+	if ( nextMode == "" || MapInfo_Type_FromString(nextMode) == 0 )
 		return;
 	for(j = 0; j < mapvote_count; ++j)
 		if(mapvote_maps[j] == nextMode)
@@ -2814,7 +2814,7 @@ void GameTypeVote_AddVotable(string nextMode)
 	mapvote_maps_suggested[mapvote_count] = FALSE;
 
 	mapvote_maps_screenshot_dir[mapvote_count] = 0;
-	mapvote_maps_pakfile[mapvote_count] = "";
+	mapvote_maps_pakfile[mapvote_count] = strzone("");
 
 	mapvote_count += 1;
 }
@@ -2833,6 +2833,7 @@ void GameTypeVote_Start()
 	mapvote_abstain = 0;
 	
 	float n = tokenizebyseparator(autocvar_sv_vote_gametype_options, " ");
+	n = min(MAPVOTE_COUNT, n);
 	
 	for(j = 0; j < n; ++j)
 	{
@@ -2867,6 +2868,11 @@ void GameTypeVote_Start()
 	}
 	
 	mapvote_count_real = mapvote_count;
+
+	mapvote_keeptwotime = time + autocvar_sv_vote_gametype_keeptwotime;
+	if(mapvote_count_real < 3 || mapvote_keeptwotime <= time)
+		mapvote_keeptwotime = 0;
+	
 	gametypevote = 1;
 	MapVote_Spawn();
 }

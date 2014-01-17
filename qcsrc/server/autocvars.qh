@@ -1173,6 +1173,7 @@ float autocvar_sv_vote_gametype;
 float autocvar_sv_vote_gametype_shuffle;
 float autocvar_sv_vote_gametype_timeout;
 string autocvar_sv_vote_gametype_options;
+float autocvar_sv_vote_gametype_keeptwotime;
 float autocvar_sv_vote_limit;
 float autocvar_sv_vote_majority_factor;
 float autocvar_sv_vote_majority_factor_of_voted;
