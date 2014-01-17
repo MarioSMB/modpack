@@ -2787,11 +2787,6 @@ void MapVote_Think()
 	MapVote_Tick();
 }
 
-string GameTypeVote_GetOptions()
-{
-	return autocvar_sv_vote_gametype_options;
-}
-
 float GameTypeVote_Finished(float pos)
 {
 	if(!gametypevote)
@@ -2819,14 +2814,14 @@ void GameTypeVote_Start()
 	mapvote_timeout = time + autocvar_sv_vote_gametype_timeout;
 	mapvote_abstain = 0;
 	
-	float n = tokenizebyseparator(GameTypeVote_GetOptions(), " ");
+	float n = tokenizebyseparator(autocvar_sv_vote_gametype_options, " ");
 	
 	for(j = 0; j < n; ++j)
 	{
 		// If we don't spam tokenizebyseparator, shit fucks up
-		tokenizebyseparator( GameTypeVote_GetOptions (), " ");
+		tokenizebyseparator(autocvar_sv_vote_gametype_options, " ");
 		MapVote_AddVotable(argv(j), 0);
-		tokenizebyseparator( GameTypeVote_GetOptions (), " ");
+		tokenizebyseparator(autocvar_sv_vote_gametype_options, " ");
 		mapvote_maps_availability[j] = GameTypeVote_AvailabilityStatus(argv(j));
 	}
 
