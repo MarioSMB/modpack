@@ -2638,7 +2638,7 @@ float MapVote_CheckRules_2()
 		if ( !gametypevote || mapvote_maps_availability[i] == GTV_AVAILABLE )
 		{
 			RandomSelection_Add(world, i, string_null, 1, mapvote_selections[i]);
-			if ( mapvote_maps[i] == MapInfo_Type_ToString(MapInfo_CurrentGametype()) )
+			if ( gametypevote &&  mapvote_maps[i] == MapInfo_Type_ToString(MapInfo_CurrentGametype()) )
 			{
 				currentVotes = mapvote_selections[i];
 				currentPlace = i;
