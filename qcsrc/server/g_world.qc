@@ -1254,18 +1254,6 @@ float DoNextMapOverride(float reinit)
 	if(autocvar_nextmap != "")
 		if(MapInfo_CheckMap(autocvar_nextmap))
 		{
-			if(gametypevote)
-				return FALSE;
-			if(autocvar_sv_vote_gametype)
-			{
-				if(GameTypeVote_AvailabilityStatus(MapInfo_Type_ToString(gametypetoset)) != GTV_AVAILABLE)
-				{
-					choosenmap = strzone(cvar_string("nextmap"));
-					//GameTypeVote_Start();
-					return FALSE;
-				}
-			}
-				
 			Map_Goto_SetStr(autocvar_nextmap);
 			Map_Goto(reinit);
 			alreadychangedlevel = TRUE;
