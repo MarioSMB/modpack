@@ -2618,8 +2618,8 @@ void MapVote_CheckRules_1()
 float MapVote_CheckRules_2()
 {
 	float i;
-	float firstPlace, secondPlace;
-	float firstPlaceVotes, secondPlaceVotes;
+	float firstPlace, secondPlace, currentPlace;
+	float firstPlaceVotes, secondPlaceVotes, currentVotes;
 	float mapvote_voters_real;
 	string result;
 
@@ -2631,12 +2631,25 @@ float MapVote_CheckRules_2()
 		mapvote_voters_real -= mapvote_selections[mapvote_count - 1];
 
 	RandomSelection_Init();
+	currentPlace = 0;
+	currentVotes = -1;
 	for(i = 0; i < mapvote_count_real; ++i) 
 		if(mapvote_maps[i] != "" )
 		if ( !gametypevote || mapvote_maps_availability[i] == GTV_AVAILABLE )
+		{
 			RandomSelection_Add(world, i, string_null, 1, mapvote_selections[i]);
-	firstPlace = RandomSelection_chosen_float;
+			if ( mapvote_maps[i] == MapInfo_Type_ToString(MapInfo_CurrentGametype()) )
+			{
+				currentVotes = mapvote_selections[i];
+				currentPlace = i;
+			}
+		}
 	firstPlaceVotes = RandomSelection_best_priority;
+	if ( autocvar_sv_vote_gametype_default_current && currentVotes == firstPlaceVotes )
+		firstPlace = currentPlace;
+	else
+		firstPlace = RandomSelection_chosen_float;
+	
 	//dprint("First place: ", ftos(firstPlace), "\n");
 	//dprint("First place votes: ", ftos(firstPlaceVotes), "\n");
 
