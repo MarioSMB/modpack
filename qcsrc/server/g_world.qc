@@ -2806,7 +2806,8 @@ float GameTypeVote_Finished(float pos)
 {
 	if(!gametypevote)
 		return FALSE;
-	
+	localcmd("sv_vote_gametype_hook_all\n");
+	localcmd("sv_vote_gametype_hook_", mapvote_maps[pos], "\n");
 	localcmd("gametype ", mapvote_maps[pos], "\n");
 	if(autocvar_nextmap != "")
 		Map_Goto_SetStr(autocvar_nextmap);
