@@ -6,6 +6,11 @@ MUTATOR_HOOKFUNCTION(melee_SetStartItems)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(melee_ForbidThrowing)
+{
+	return TRUE;
+}
+
 MUTATOR_HOOKFUNCTION(melee_FilterItem)
 {
 	switch (self.items)
@@ -33,6 +38,7 @@ MUTATOR_HOOKFUNCTION(melee_BuildMutatorsPrettyString)
 MUTATOR_DEFINITION(mutator_melee_only)
 {
 	MUTATOR_HOOK(SetStartItems, melee_SetStartItems, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ForbidThrowCurrentWeapon, melee_ForbidThrowing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, melee_FilterItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, melee_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, melee_BuildMutatorsPrettyString, CBC_ORDER_ANY);
