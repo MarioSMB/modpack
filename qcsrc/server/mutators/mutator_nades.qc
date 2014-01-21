@@ -214,10 +214,9 @@ void nade_ice_freeze(entity freezefield, entity frost_target, float freeze_time)
 	frost_target.frozen_by = freezefield.realowner;
 	pointparticles(particleeffectnum("electro_impact"), frost_target.origin, '0 0 0', 1);
 	Freeze(frost_target, 1/freeze_time, 3, FALSE);
-	if ( frost_target.flagcarried )
-		ctf_Handle_Throw(frost_target, world, DROP_THROW);
-	if(frost_target.nade)
-		toss_nade(frost_target, '0 0 0', time + 0.05);
+	if(frost_target.ballcarried) { ka_DropEvent(frost_target); }
+	if(frost_target.flagcarried) { ctf_Handle_Throw(frost_target, world, DROP_THROW); }
+	if(frost_target.nade) { toss_nade(frost_target, '0 0 0', time + 0.05); }
 }
 
 void nade_ice_think()
