@@ -240,7 +240,7 @@ void LocalCommand_hud(float request, float argc)
 
 				case "quickmenu":
 				{
-					if(argc == 2 && HUD_QuickMenu_IsOpened())
+					if(HUD_QuickMenu_IsOpened())
 						HUD_QuickMenu_Close();
 					else
 						HUD_QuickMenu_Open();

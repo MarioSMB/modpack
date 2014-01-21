@@ -490,7 +490,7 @@ void MapVote_Init()
 
 	mv_ownvote = -1;
 	mv_timeout = ReadCoord();
-	
+
 	gametypevote = ReadByte();
 
     if(gametypevote)
