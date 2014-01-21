@@ -290,6 +290,7 @@ void nade_ice_think()
 	if(e.takedamage && e.deadflag == DEAD_NO)
 	if(e.health > 0)
 	if(!e.jb_isprisoned)
+	if(!e.revival_time || ((time - e.revival_time) >= 1.5))
 	if(!e.frozen)
 	if(current_freeze_time > 0)
 		nade_ice_freeze(self, e, current_freeze_time);

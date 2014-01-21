@@ -242,6 +242,7 @@ void PutObserverInServer (void)
 	self.angles_z = 0;
 	self.fixangle = TRUE;
 	self.crouch = FALSE;
+	self.revival_time = 0;
 
 	setorigin (self, (spot.origin + PL_VIEW_OFS)); // offset it so that the spectator spawns higher off the ground, looks better this way
 	self.prevorigin = self.origin;
@@ -585,6 +586,7 @@ void PutClientInServer (void)
 		self.punchvector = '0 0 0';
 		self.oldvelocity = self.velocity;
 		self.fire_endtime = -1;
+		self.revival_time = 0;
 
 		entity spawnevent = spawn();
 		spawnevent.owner = self;

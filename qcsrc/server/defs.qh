@@ -589,6 +589,7 @@ float serverflags;
 
 .float frozen; // for freeze attacks
 .float revive_progress;
+.float revival_time; // time at which player was last revived
 .float revive_speed; // NOTE: multiplier (anything above 1 is instaheal)
 .entity iceblock;
 .entity frozen_by; // for ice fields

@@ -592,6 +592,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	ice.colormod = Team_ColorRGB(targ.team);
 	ice.glowmod = ice.colormod;
 	targ.iceblock = ice;
+	targ.revival_time = 0;
 
 	entity oldself;
 	oldself = self;
@@ -618,6 +619,7 @@ void Unfreeze (entity targ)
 	entity head;
 	targ.frozen = 0;
 	targ.revive_progress = 0;
+	targ.revival_time = time;
 	
 	WaypointSprite_Kill(targ.waypointsprite_attached);
 	
