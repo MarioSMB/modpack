@@ -2423,6 +2423,18 @@ float MapVote_GetMapMask()
 	return mask;
 }
 
+
+void MapVote_WriteMask()
+{
+	float mask = MapVote_GetMapMask();
+	if(mapvote_count <= 8)
+		WriteByte(MSG_ENTITY, mask);
+	else if (mapvote_count <= 16)
+		WriteShort(MSG_ENTITY,mask);
+	else
+		WriteLong(MSG_ENTITY, mask);
+}
+
 entity mapvote_ent;
 float MapVote_SendEntity(entity to, float sf)
 {
@@ -2450,10 +2462,8 @@ float MapVote_SendEntity(entity to, float sf)
 		if(gametypevote)
 			WriteString(MSG_ENTITY, choosenmap);
 		
-		if(mapvote_count <= 8)
-			WriteByte(MSG_ENTITY, MapVote_GetMapMask());
-		else
-			WriteShort(MSG_ENTITY, MapVote_GetMapMask());
+		MapVote_WriteMask();
+				
 		for(i = 0; i < mapvote_count; ++i)
 			if(mapvote_maps[i] != "")
 			{
@@ -2478,10 +2488,7 @@ float MapVote_SendEntity(entity to, float sf)
 	if(sf & 2)
 	{
 		// flag 2 == update of mask
-		if(mapvote_count <= 8)
-			WriteByte(MSG_ENTITY, MapVote_GetMapMask());
-		else
-			WriteShort(MSG_ENTITY, MapVote_GetMapMask());
+		MapVote_WriteMask();
 	}
 
 	if(sf & 4)

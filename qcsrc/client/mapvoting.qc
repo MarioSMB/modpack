@@ -298,12 +298,15 @@ void MapVote_Draw()
 	if(mv_abstain)
 		mv_num_maps -= 1;
 
-	if(mv_num_maps > 3)
-	{
+	if ( mv_num_maps > 16 )
+		columns = 5;
+	else if ( mv_num_maps > 6 )
+		columns = 4;
+	else if(mv_num_maps > 3)
 		columns = 3;
-	} else {
+	else
 		columns = mv_num_maps;
-	}
+
 	rows = ceil(mv_num_maps / columns);
 
 	dist_x = (xmax - xmin) / columns;
@@ -456,6 +459,16 @@ void MapVote_CheckPic(string pic, string pk3, float id)
 	MapVote_CheckPK3(pic, pk3, id);
 }
 
+void MapVote_ReadMask()
+{
+	if(mv_num_maps <= 8)
+		mv_maps_mask = ReadByte();
+	else if(mv_num_maps <= 16)
+		mv_maps_mask = ReadShort();
+	else
+		mv_maps_mask = ReadLong();
+}
+
 #define NUM_SSDIRS 4
 string ssdirs[NUM_SSDIRS];
 float n_ssdirs;
@@ -516,10 +529,7 @@ void MapVote_Init()
 		print("^5Now decide the GAMETYPE!\n");
     }
 
-	if(mv_num_maps <= 8)
-		mv_maps_mask = ReadByte();
-	else
-		mv_maps_mask = ReadShort();
+    MapVote_ReadMask();
 
 	// Assume mv_pk3list is world, there should only be 1 mapvote per round
 	mv_pk3list = world; // I'm still paranoid!
@@ -621,10 +631,7 @@ void MapVote_UpdateMask()
 	float oldmask;
 
 	oldmask = mv_maps_mask;
-	if(mv_num_maps <= 8)
-		mv_maps_mask = ReadByte();
-	else
-		mv_maps_mask = ReadShort();
+	MapVote_ReadMask();
 
 	if((oldmask & mv_maps_mask) != oldmask)
 		if((oldmask & mv_maps_mask) == mv_maps_mask)
