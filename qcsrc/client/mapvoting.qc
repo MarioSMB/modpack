@@ -465,6 +465,29 @@ void MapVote_CheckPic(string pic, string pk3, float id)
 	MapVote_CheckPK3(pic, pk3, id);
 }
 
+void MapVote_ReadMask()
+{
+	float i;
+	if ( mv_num_maps < 24 )
+	{
+		float mask, power;
+		if(mv_num_maps <= 8)
+			mask = ReadByte();
+		else if(mv_num_maps <= 16)
+			mask = ReadShort();
+		else
+			mask = ReadLong();
+		
+		for(i = 0, power = 1; i < mv_num_maps; ++i, power *= 2)
+			mv_avail[i] = (mask & power) ? GTV_AVAILABLE : GTV_FORBIDDEN;
+	}
+	else
+	{
+		for(i = 0; i < mv_num_maps; ++i )
+			mv_avail[i] = ReadByte();
+	}
+}
+
 #define NUM_SSDIRS 4
 string ssdirs[NUM_SSDIRS];
 float n_ssdirs;
@@ -538,8 +561,9 @@ void MapVote_Init()
 		print("^5Now decide the GAMETYPE!\n");
     }
 
+    MapVote_ReadMask();
 	for(i = 0; i < mv_num_maps; ++i )
-		mv_avail[i] = mv_avail_start[i] = ReadByte();
+		mv_avail_start[i] = mv_avail[i];
 
 	// Assume mv_pk3list is world, there should only be 1 mapvote per round
 	mv_pk3list = world; // I'm still paranoid!
@@ -626,11 +650,7 @@ float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 void MapVote_UpdateMask()
 {
-
-	float i;
-	for(i = 0; i < mv_num_maps; ++i )
-		mv_avail[i] = ReadByte();
-
+	MapVote_ReadMask();
 	mv_top2_time = time;
 }
 

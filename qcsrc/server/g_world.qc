@@ -2418,8 +2418,26 @@ void MapVote_SendPicture(float id)
 void MapVote_WriteMask()
 {
 	float i;
-	for ( i = 0; i < mapvote_count; ++i )
-		WriteByte(MSG_ENTITY, mapvote_maps_availability[i]);
+	if ( mapvote_count < 24 )
+	{
+		float mask,power;
+		mask = 0;
+		for(i = 0, power = 1; i < mapvote_count; ++i, power *= 2)
+			if(mapvote_maps_availability[i] == GTV_AVAILABLE )
+				mask |= power;
+			
+		if(mapvote_count < 8)
+			WriteByte(MSG_ENTITY, mask);
+		else if (mapvote_count < 16)
+			WriteShort(MSG_ENTITY,mask);
+		else
+			WriteLong(MSG_ENTITY, mask);
+	}
+	else
+	{
+		for ( i = 0; i < mapvote_count; ++i )
+			WriteByte(MSG_ENTITY, mapvote_maps_availability[i]);
+	}
 }
 
 entity mapvote_ent;
