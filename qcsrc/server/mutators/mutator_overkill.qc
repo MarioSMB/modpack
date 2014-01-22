@@ -375,7 +375,7 @@ MUTATOR_DEFINITION(mutator_overkill)
 {
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, ok_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, ok_PlayerPreThink, CBC_ORDER_LAST);
-	MUTATOR_HOOK(PlayerSpawn, ok_PlayerSpawn, CBC_ORDER_LAST);
+	MUTATOR_HOOK(PlayerSpawn, ok_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, ok_PlayerDamage_Calculate, CBC_ORDER_LAST);
 	MUTATOR_HOOK(PlayerDies, ok_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(OnEntityPreSpawn, ok_OnEntityPreSpawn, CBC_ORDER_ANY);
