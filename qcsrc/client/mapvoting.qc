@@ -18,23 +18,27 @@ float mv_top2_alpha;
 vector mv_mousepos;
 float mv_selection;
 
+vector gtv_text_size;
+vector gtv_text_size_small;
+float gtv_start_y;
+
 string GameTypeVote_DescriptionByID(float id);
 
 float GametypeVote_Selection()
 {
 	float r;
-	float offset = hud_fontsize_y * 10;
+	float offset = gtv_start_y;
 	float i;
 	r = -1;
 
 	for(i = 0; i < mv_num_maps; ++i) {
 		float sz;
-		sz = hud_fontsize_y * 1.4 + tokenizebyseparator(GameTypeVote_DescriptionByID(i), "\n") * hud_fontsize_y;
+		sz = gtv_text_size_y + tokenizebyseparator(GameTypeVote_DescriptionByID(i), "\n") * gtv_text_size_small_y;
 
 		if(mv_mousepos_y >= offset && mv_mousepos_y <= offset + sz && mv_avail[i] == GTV_AVAILABLE)
 			r = i;
 
-		offset += sz + hud_fontsize_y;
+		offset += sz + gtv_text_size_small_y;
 	}
 
 	return r;
@@ -101,14 +105,14 @@ vector GameTypeVote_DrawGametypeItem(vector o, string gtype, float count, float 
 	else
 		a = 1;
 	
-	drawstring(o, MapVote_FormatMapItem(id, MapInfo_Type_ToText(MapInfo_Type_FromString(gtype)), count, maxlen, hud_fontsize*1.4), 
-			   hud_fontsize*1.4, MapVote_RGB(id), a, DRAWFLAG_NORMAL); 
+	drawstring(o, MapVote_FormatMapItem(id, MapInfo_Type_ToText(MapInfo_Type_FromString(gtype)), count, maxlen, gtv_text_size), 
+			   gtv_text_size, MapVote_RGB(id), a, DRAWFLAG_NORMAL); 
 	
-	o_y += hud_fontsize_y;
-	o_y += hud_fontsize_y * 0.7;
+	o_y += gtv_text_size_small_y;
+	o_y += gtv_text_size_y/2;
 	
 	float oldx = o_x;
-	o_x += hud_fontsize_x * 3;
+	o_x += gtv_text_size_x * 3;
 	
 	string thelabel = GameTypeVote_DescriptionByID(id), ts;
 	float i,n = tokenizebyseparator(thelabel, "\n");
@@ -117,14 +121,14 @@ vector GameTypeVote_DrawGametypeItem(vector o, string gtype, float count, float 
 		getWrappedLine_remaining = argv(i);
 		while(getWrappedLine_remaining)
 		{
-			ts = getWrappedLine(maxlen, hud_fontsize, stringwidth_colors);
-			drawstring(o, ts, hud_fontsize, '1 1 1', a, DRAWFLAG_NORMAL);
+			ts = getWrappedLine(maxlen, gtv_text_size_small, stringwidth_colors);
+			drawstring(o, ts, gtv_text_size_small, '1 1 1', a, DRAWFLAG_NORMAL);
 			if (ts != "")
-				o_y += hud_fontsize_y;
+				o_y += gtv_text_size_small_y;
 		}
 	}
 	
-	o_y += hud_fontsize_y * 0.7;
+	o_y += gtv_text_size_y/2;
 	o_x = oldx;
 	
 	return o;
@@ -325,15 +329,17 @@ void MapVote_Draw()
 		
 		vector img_size = '0 0 0';
 
+		isize = textlen / 2;
 		img_size_y = isize;
 		img_size_x = isize / 0.75;
 		img_size *= alpha;
         
         o_x = textpad;
-		o_y = hud_fontsize_y * 10;
+		o_y = gtv_start_y;
 		
-        vector o2 = o;
-        o2_x += vid_conwidth/2;
+        vector o2 = '0 0 0';
+        o2_x = textpad + vid_conwidth/2;
+		o2_y = (vid_conheight-(img_size_y+10+hud_fontsize_y))/2;
         drawborderlines(autocvar_scoreboard_border_thickness, o2, img_size, '0 0 0', 1, DRAWFLAG_NORMAL);
 
 		if(mapvote_choosenmappic == "")
@@ -512,6 +518,19 @@ void MapVote_Init()
                 break;
             }
         }
+        
+        if ( mv_num_maps < 9 )
+		{
+			gtv_start_y = hud_fontsize_y * 10;
+			gtv_text_size = hud_fontsize*1.4;
+			gtv_text_size_small = hud_fontsize;
+		}
+		else
+		{
+			gtv_start_y = hud_fontsize_y * 6;
+			gtv_text_size = hud_fontsize*1;
+			gtv_text_size_small = hud_fontsize*0.8;
+		}
         
         mapvote_choosenmap 		= strzone(cmap);
         mapvote_choosenmappic 	= strzone(cpic);
