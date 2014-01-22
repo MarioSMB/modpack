@@ -2276,6 +2276,18 @@ void MapVote_ClearAllVotes()
 		other.mapvote = 0;
 }
 
+void MapVote_UnzoneStrings()
+{
+	float j;
+	for(j = 0; j < mapvote_count; ++j)
+	{
+		if ( mapvote_maps[j] )
+			strunzone(mapvote_maps[j]);
+		if ( mapvote_maps_pakfile[j] )
+			strunzone(mapvote_maps_pakfile[j]);
+	}
+}
+
 string MapVote_Suggest(string m)
 {
 	float i;
@@ -2362,6 +2374,7 @@ void MapVote_Init()
 	float nmax, smax;
 
 	MapVote_ClearAllVotes();
+	MapVote_UnzoneStrings();
 
 	mapvote_count = 0;
 	mapvote_detail = !autocvar_g_maplist_votable_nodetail;
@@ -2856,9 +2869,7 @@ void GameTypeVote_Start()
 {
 	float j;
 	MapVote_ClearAllVotes();
-
-	for(j = 0; j < mapvote_count; ++j)
-		strunzone(mapvote_maps[j]);
+	MapVote_UnzoneStrings();
 	
 	mapvote_count = 0;
 	mapvote_timeout = time + autocvar_sv_vote_gametype_timeout;
