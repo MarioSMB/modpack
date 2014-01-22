@@ -11,7 +11,7 @@ float mv_abstain;
 float mv_ownvote;
 float mv_detail;
 float mv_timeout;
-float mv_maps_mask;
+//float mv_maps_mask;
 float mv_top2_time;
 float mv_top2_alpha;
 
@@ -461,12 +461,15 @@ void MapVote_CheckPic(string pic, string pk3, float id)
 
 void MapVote_ReadMask()
 {
-	if(mv_num_maps <= 8)
+	float i;
+	for(i = 0; i < mv_num_maps; ++i )
+		mv_avail[i] = ReadByte();
+	/*if(mv_num_maps <= 8)
 		mv_maps_mask = ReadByte();
 	else if(mv_num_maps <= 16)
 		mv_maps_mask = ReadShort();
 	else
-		mv_maps_mask = ReadLong();
+		mv_maps_mask = ReadLong();*/
 }
 
 #define NUM_SSDIRS 4
@@ -538,7 +541,7 @@ void MapVote_Init()
 	{
 		mv_votes[i] = 0;
 
-		if(mv_maps_mask & power)
+		//if(mv_maps_mask & power)
 		{
 			map = strzone(ReadString());
 			pk3 = strzone(ReadString());
@@ -546,9 +549,9 @@ void MapVote_Init()
 
 			mv_maps[i] = map;
 			mv_pk3[i] = pk3;
+			mv_avail[i] = ReadByte();
 			if(gametypevote)
 			{
-				mv_avail[i] = ReadByte();
 				map = mv_maps[i];
 			}
 			else
@@ -561,14 +564,14 @@ void MapVote_Init()
 				MapVote_CheckPic(map, pk3, i);
 			}
 		}
-		else
+		/*else
 		{
 			mv_maps[i] = strzone("if-you-see-this-the-code-is-broken");
 			mv_pk3[i] = strzone("if-you-see-this-the-code-is-broken");
 			mv_pics[i] = strzone("if-you-see-this-the-code-is-broken");
 			mv_preview[i] = false;
 			mv_avail[i] = false;
-		}
+		}*/
 	}
 
 	for(i = 0; i < n_ssdirs; ++i)
@@ -627,19 +630,13 @@ float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 void MapVote_UpdateMask()
 {
-	float i, power;
-	float oldmask;
+	float i;
 
-	oldmask = mv_maps_mask;
 	MapVote_ReadMask();
 
-	if((oldmask & mv_maps_mask) != oldmask)
-		if((oldmask & mv_maps_mask) == mv_maps_mask)
-			 sound(world, CH_INFO, "misc_invshot.wav", VOL_BASE, ATTEN_NONE);
-
 	// remove votes that no longer apply
-	for(i = 0, power = 1; i < mv_num_maps; ++i, power *= 2)
-		if (!(mv_maps_mask & power))
+	for(i = 0; i < mv_num_maps; ++i)
+		if ( mv_avail[i] != GTV_AVAILABLE )
 			mv_votes[i] = -1;
 
 	mv_top2_time = time;
@@ -650,7 +647,7 @@ void MapVote_UpdateVotes()
 	float i, power;
 	for(i = 0, power = 1; i < mv_num_maps; ++i, power *= 2)
 	{
-		if(mv_maps_mask & power)
+		if(mv_avail[i] == GTV_AVAILABLE)//mv_maps_mask & power)
 		{
 			if(mv_detail)
 				mv_votes[i] = ReadByte();
