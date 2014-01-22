@@ -17,6 +17,7 @@ float mv_top2_alpha;
 
 vector mv_mousepos;
 float mv_selection;
+float mv_columns;
 
 vector gtv_text_size;
 vector gtv_text_size_small;
@@ -253,7 +254,7 @@ void MapVote_Draw()
 	vector pos;
 	float isize;
 	float center;
-	float columns, rows;
+	float rows;
 	float tsize;
 	vector dist = '0 0 0';
 
@@ -303,28 +304,29 @@ void MapVote_Draw()
 		mv_num_maps -= 1;
 
 	if ( mv_num_maps > 16 )
-		columns = 5;
+		mv_columns = 5;
 	else if ( mv_num_maps > 6 )
-		columns = 4;
+		mv_columns = 4;
 	else if(mv_num_maps > 3)
-		columns = 3;
+		mv_columns = 3;
 	else
-		columns = mv_num_maps;
+		mv_columns = mv_num_maps;
 
-	rows = ceil(mv_num_maps / columns);
+	rows = ceil(mv_num_maps / mv_columns);
 
-	dist_x = (xmax - xmin) / columns;
+	dist_x = (xmax - xmin) / mv_columns;
 	dist_y = (ymax - pos_y) / rows;
 	tsize = dist_x - 10;
 	isize = min(dist_y - 10, 0.75 * tsize);
 
-	mv_selection = (gametypevote) ? GametypeVote_Selection() : MapVote_Selection(pos, dist, rows, columns);
+	mv_selection = (gametypevote) ? GametypeVote_Selection() : MapVote_Selection(pos, dist, rows, mv_columns);
 	
 	vector o = '0 0 0';
 	float textpad = hud_fontsize_x * 4;
 	float textlen = vid_conwidth/2 - textpad;
 	if(gametypevote)
 	{
+		mv_columns = 1;
 		float alpha = 1;
 		
 		vector img_size = '0 0 0';
@@ -362,7 +364,7 @@ void MapVote_Draw()
 		draw_endBoldFont();
 	}
 
-	pos_x += (xmax - xmin) / (2 * columns);
+	pos_x += (xmax - xmin) / (2 * mv_columns);
 	pos_y += (dist_y - isize) / 2;
 	ymax -= isize;
 
@@ -380,9 +382,9 @@ void MapVote_Draw()
 		else
 		{
 			if(mv_preview[i])
-				MapVote_DrawMapItem(pos + MapVote_GridVec(dist, i, columns), isize, tsize, map, mv_pics[i], tmp, i);
+				MapVote_DrawMapItem(pos + MapVote_GridVec(dist, i, mv_columns), isize, tsize, map, mv_pics[i], tmp, i);
 			else
-				MapVote_DrawMapItem(pos + MapVote_GridVec(dist, i, columns), isize, tsize, map, "", tmp, i);
+				MapVote_DrawMapItem(pos + MapVote_GridVec(dist, i, mv_columns), isize, tsize, map, "", tmp, i);
 		}
 	}
 
@@ -599,6 +601,68 @@ void MapVote_Init()
 	n_ssdirs = 0;
 }
 
+void MapVote_SendChoice(float index)
+{
+	localcmd(strcat("\nimpulse ", ftos(index+1), "\n"));
+}
+
+float MapVote_MoveLeft(float pos)
+{
+	float imp;
+	if ( pos < 0 ) 
+		imp = mv_num_maps - 1;
+	else
+		imp = pos < 1 ? mv_num_maps - 1 : pos - 1;
+	if ( mv_avail[imp] != GTV_AVAILABLE && imp != mv_ownvote )
+		imp = MapVote_MoveLeft(imp);
+	return imp;
+}
+float MapVote_MoveRight(float pos)
+{
+	float imp;
+	if ( pos < 0 ) 
+		imp = 0;
+	else
+		imp = pos >= mv_num_maps - 1 ? 0 : pos + 1;
+	if ( mv_avail[imp] != GTV_AVAILABLE && imp != mv_ownvote )
+		imp = MapVote_MoveRight(imp);
+	return imp;
+}
+float MapVote_MoveUp(float pos)
+{
+	float imp;
+	if ( pos < 0 ) 
+		imp = mv_num_maps - 1;
+	else
+	{
+		imp = pos - mv_columns;
+		if ( imp < 0 )
+		{
+			imp = floor(mv_num_maps/mv_columns)*mv_columns + pos % mv_columns;
+			if ( imp >= mv_num_maps )
+				imp -= mv_columns;
+		}
+	}
+	if ( mv_avail[imp] != GTV_AVAILABLE && imp != mv_ownvote )
+		imp = MapVote_MoveUp(imp);
+	return imp;
+}
+float MapVote_MoveDown(float pos)
+{
+	float imp;
+	if ( pos < 0 ) 
+		imp = 0;
+	else
+	{
+		imp = pos + mv_columns;
+		if ( imp >= mv_num_maps )
+			imp = imp % mv_columns;
+	}
+	if ( mv_avail[imp] != GTV_AVAILABLE && imp != mv_ownvote )
+		imp = MapVote_MoveDown(imp);
+	return imp;
+}
+
 float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 	float imp;
@@ -623,6 +687,7 @@ float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		localcmd(strcat("\nimpulse ", ftos(imp), "\n"));
 		return true;
 	}
+	
 	switch(nPrimary)
 	{
 		case K_KP_1: localcmd("\nimpulse 1\n"); return true;
@@ -635,6 +700,21 @@ float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		case K_KP_8: localcmd("\nimpulse 8\n"); return true;
 		case K_KP_9: localcmd("\nimpulse 9\n"); return true;
 		case K_KP_0: localcmd("\nimpulse 10\n"); return true;
+		
+		case K_RIGHTARROW:
+			MapVote_SendChoice(MapVote_MoveRight(mv_ownvote));
+			return true;
+		case K_LEFTARROW:
+			MapVote_SendChoice(MapVote_MoveLeft(mv_ownvote));
+			return true;
+		case K_DOWNARROW:
+			MapVote_SendChoice(MapVote_MoveDown(mv_ownvote));
+			return true;
+		case K_UPARROW:
+			MapVote_SendChoice(MapVote_MoveUp(mv_ownvote));
+			return true;
+			
+			
 	}
 
 	if (nPrimary == K_MOUSE1)
