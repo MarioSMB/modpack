@@ -21,11 +21,13 @@ float mv_columns;
 
 vector gtv_text_size;
 vector gtv_text_size_small;
-float gtv_start_y;
+vector gtv_start;
 
 string GameTypeVote_DescriptionByID(float id);
 
-float GametypeVote_Selection()
+
+
+float GameTypeVote_Selection()
 {
 	float r;
 	float offset = gtv_start_y;
@@ -319,11 +321,10 @@ void MapVote_Draw()
 	tsize = dist_x - 10;
 	isize = min(dist_y - 10, 0.75 * tsize);
 
-	mv_selection = (gametypevote) ? GametypeVote_Selection() : MapVote_Selection(pos, dist, rows, mv_columns);
+	mv_selection = (gametypevote) ? GameTypeVote_Selection() : MapVote_Selection(pos, dist, rows, mv_columns);
 	
-	vector o = '0 0 0';
-	float textpad = hud_fontsize_x * 4;
-	float textlen = vid_conwidth/2 - textpad;
+	vector o = gtv_start;
+	float textlen = vid_conwidth/2 - gtv_start_x;
 	if(gametypevote)
 	{
 		mv_columns = 1;
@@ -335,12 +336,9 @@ void MapVote_Draw()
 		img_size_y = isize;
 		img_size_x = isize / 0.75;
 		img_size *= alpha;
-        
-        o_x = textpad;
-		o_y = gtv_start_y;
 		
         vector o2 = '0 0 0';
-        o2_x = textpad + vid_conwidth/2;
+        o2_x = gtv_start_x + vid_conwidth/2;
 		o2_y = (vid_conheight-(img_size_y+10+hud_fontsize_y))/2;
         drawborderlines(autocvar_scoreboard_border_thickness, o2, img_size, '0 0 0', 1, DRAWFLAG_NORMAL);
 
@@ -527,43 +525,53 @@ void MapVote_Init()
 
 	gametypevote = ReadByte();
 
-    if(gametypevote)
-    {
-        string cmap = ReadString();
-        string cpic = "";
+	if(gametypevote)
+	{
+		string cmap = ReadString();
+		string cpic = "";
         
-        for(i = 0; i < oldnum; ++i)
+		for(i = 0; i < oldnum; ++i)
 		{
-            if(mv_maps[i] == cmap)
+			if(mv_maps[i] == cmap)
 			{
-                if(mv_preview[i])
+				if(mv_preview[i])
 					cpic = mv_pics[i];
 				else
 					cpic = "";
-                break;
-            }
-        }
+				break;
+			}
+		}
         
         if ( mv_num_maps < 9 )
 		{
-			gtv_start_y = hud_fontsize_y * 10;
 			gtv_text_size = hud_fontsize*1.4;
 			gtv_text_size_small = hud_fontsize;
+			gtv_start_x = hud_fontsize_x * 4;
 		}
 		else
 		{
-			gtv_start_y = hud_fontsize_y * 6;
 			gtv_text_size = hud_fontsize*1;
 			gtv_text_size_small = hud_fontsize*0.8;
+			gtv_start_x = hud_fontsize_x * 6;
 		}
-        
-        mapvote_choosenmap 		= strzone(cmap);
-        mapvote_choosenmappic 	= strzone(cpic);
+		
+		float height;
+		height = 0;
+		for(i = 0; i < mv_num_maps; ++i)
+		{
+			height += gtv_text_size_y + tokenizebyseparator(GameTypeVote_DescriptionByID(i), "\n") * gtv_text_size_small_y
+					+ gtv_text_size_small_y;
+		}
+		
+		gtv_start_y = max (hud_fontsize_y * 6,(vid_conheight-height)/2);
+
+		mapvote_choosenmap    = strzone(cmap);
+		mapvote_choosenmappic = strzone(cpic);
         
 		print("^5Now decide the GAMETYPE!\n");
     }
 
-    MapVote_ReadMask();
+	MapVote_ReadMask();
 	for(i = 0; i < mv_num_maps; ++i )
 		mv_avail_start[i] = mv_avail[i];
 
