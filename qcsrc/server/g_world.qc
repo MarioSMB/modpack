@@ -2414,29 +2414,12 @@ void MapVote_SendPicture(float id)
 	WritePicture(MSG_ONE, strcat(mapvote_screenshot_dirs[mapvote_maps_screenshot_dir[id]], "/", mapvote_maps[id]), 3072);
 }
 
-float MapVote_GetMapMask()
-{
-	float mask, i, power;
-	mask = 0;
-	for(i = 0, power = 1; i < mapvote_count; ++i, power *= 2)
-		if(mapvote_maps[i] != "")
-			mask |= power;
-	return mask;
-}
-
 
 void MapVote_WriteMask()
 {
 	float i;
 	for ( i = 0; i < mapvote_count; ++i )
 		WriteByte(MSG_ENTITY, mapvote_maps_availability[i]);
-	/*float mask = MapVote_GetMapMask();
-	if(mapvote_count <= 8)
-		WriteByte(MSG_ENTITY, mask);
-	else if (mapvote_count <= 16)
-		WriteShort(MSG_ENTITY,mask);
-	else
-		WriteLong(MSG_ENTITY, mask);*/
 }
 
 entity mapvote_ent;
@@ -2469,25 +2452,22 @@ float MapVote_SendEntity(entity to, float sf)
 		MapVote_WriteMask();
 				
 		for(i = 0; i < mapvote_count; ++i)
-			//if(mapvote_maps[i] != "")
+		{
+			if(mapvote_abstain && i == mapvote_count - 1)
 			{
-				if(mapvote_abstain && i == mapvote_count - 1)
-				{
-					WriteString(MSG_ENTITY, ""); // abstain needs no text
-					WriteString(MSG_ENTITY, ""); // abstain needs no pack
-					WriteByte(MSG_ENTITY, 0); // abstain needs no screenshot dir
-					WriteByte(MSG_ENTITY, GTV_AVAILABLE);
-				}
-				else
-				{
-					WriteString(MSG_ENTITY, mapvote_maps[i]);
-					WriteString(MSG_ENTITY, mapvote_maps_pakfile[i]);
-					WriteByte(MSG_ENTITY, mapvote_maps_screenshot_dir[i]);
-					
-					//if(gametypevote)
-						WriteByte(MSG_ENTITY, mapvote_maps_availability[i]);
-				}
+				WriteString(MSG_ENTITY, ""); // abstain needs no text
+				WriteString(MSG_ENTITY, ""); // abstain needs no pack
+				WriteByte(MSG_ENTITY, 0); // abstain needs no screenshot dir
+				WriteByte(MSG_ENTITY, GTV_AVAILABLE);
 			}
+			else
+			{
+				WriteString(MSG_ENTITY, mapvote_maps[i]);
+				WriteString(MSG_ENTITY, mapvote_maps_pakfile[i]);
+				WriteByte(MSG_ENTITY, mapvote_maps_screenshot_dir[i]);
+				WriteByte(MSG_ENTITY, mapvote_maps_availability[i]);
+			}
+		}
 	}
 
 	if(sf & 2)
@@ -2500,7 +2480,7 @@ float MapVote_SendEntity(entity to, float sf)
 	{
 		if(mapvote_detail)
 			for(i = 0; i < mapvote_count; ++i)
-				if(mapvote_maps[i] != "")
+				if ( mapvote_maps_availability[i] == GTV_AVAILABLE )
 					WriteByte(MSG_ENTITY, mapvote_selections[i]);
 
 		WriteByte(MSG_ENTITY, to.mapvote);
@@ -2537,7 +2517,7 @@ float MapVote_Finished(float mappos)
 		result = strcat(result, ":", ftos(mapvote_selections[mappos]), "::");
 		didntvote = mapvote_voters;
 		for(i = 0; i < mapvote_count; ++i)
-			if(mapvote_maps[i] != "")
+			if(mapvote_maps_availability[i] == GTV_AVAILABLE )
 			{
 				didntvote -= mapvote_selections[i];
 				if(i != mappos)
@@ -2596,11 +2576,12 @@ void MapVote_CheckRules_1()
 {
 	float i;
 
-	for(i = 0; i < mapvote_count; ++i) if(mapvote_maps[i] != "")
-	{
-		//dprint("Map ", ftos(i), ": "); dprint(mapvote_maps[i], "\n");
-		mapvote_selections[i] = 0;
-	}
+	for(i = 0; i < mapvote_count; ++i) 
+		if( mapvote_maps_availability[i] == GTV_AVAILABLE )
+		{
+			//dprint("Map ", ftos(i), ": "); dprint(mapvote_maps[i], "\n");
+			mapvote_selections[i] = 0;
+		}
 
 	mapvote_voters = 0;
 	FOR_EACH_REALCLIENT(other)
@@ -2634,8 +2615,7 @@ float MapVote_CheckRules_2()
 	currentPlace = 0;
 	currentVotes = -1;
 	for(i = 0; i < mapvote_count_real; ++i) 
-		//if(mapvote_maps[i] != "" )
-		if ( /*!gametypevote ||*/ mapvote_maps_availability[i] == GTV_AVAILABLE )
+		if ( mapvote_maps_availability[i] == GTV_AVAILABLE )
 		{
 			RandomSelection_Add(world, i, string_null, 1, mapvote_selections[i]);
 			if ( gametypevote &&  mapvote_maps[i] == MapInfo_Type_ToString(MapInfo_CurrentGametype()) )
@@ -2654,9 +2634,9 @@ float MapVote_CheckRules_2()
 	//dprint("First place votes: ", ftos(firstPlaceVotes), "\n");
 
 	RandomSelection_Init();
-	for(i = 0; i < mapvote_count_real; ++i) if(mapvote_maps[i] != "")
+	for(i = 0; i < mapvote_count_real; ++i)
 		if(i != firstPlace)
-		if ( /*!gametypevote ||*/ mapvote_maps_availability[i] == GTV_AVAILABLE )
+		if ( mapvote_maps_availability[i] == GTV_AVAILABLE )
 			RandomSelection_Add(world, i, string_null, 1, mapvote_selections[i]);
 	secondPlace = RandomSelection_chosen_float;
 	secondPlaceVotes = RandomSelection_best_priority;
@@ -2682,24 +2662,19 @@ float MapVote_CheckRules_2()
 			result = strcat(result, ":", ftos(secondPlaceVotes), "::");
 			didntvote = mapvote_voters;
 			for(i = 0; i < mapvote_count; ++i)
-				if(mapvote_maps[i] != "")
-				{
-					didntvote -= mapvote_selections[i];
-					if(i != firstPlace)
-						if(i != secondPlace)
+			{
+				didntvote -= mapvote_selections[i];
+				if(i != firstPlace)
+					if(i != secondPlace)
+					{
+						result = strcat(result, ":", mapvote_maps[i]);
+						result = strcat(result, ":", ftos(mapvote_selections[i]));
+						if(i < mapvote_count_real)
 						{
-							result = strcat(result, ":", mapvote_maps[i]);
-							result = strcat(result, ":", ftos(mapvote_selections[i]));
-							if(i < mapvote_count_real)
-							{
-								//strunzone(mapvote_maps[i]);
-								//mapvote_maps[i] = "";
-								//strunzone(mapvote_maps_pakfile[i]);
-								//mapvote_maps_pakfile[i] = "";
-								mapvote_maps_availability[i] = GTV_FORBIDDEN;
-							}
+							mapvote_maps_availability[i] = GTV_FORBIDDEN;
 						}
-				}
+					}
+			}
 			result = strcat(result, ":didn't vote:", ftos(didntvote));
 			if(autocvar_sv_eventlog)
 				GameLogEcho(result);
@@ -2734,11 +2709,11 @@ void MapVote_Tick()
 		}
 
 		// clear possibly invalid votes
-		if(mapvote_maps[other.mapvote - 1] == "")
+		if ( mapvote_maps_availability[other.mapvote-1] != GTV_AVAILABLE )
 			other.mapvote = 0;
 		// use impulses as new vote
 		if(other.impulse >= 1 && other.impulse <= mapvote_count)
-			if(mapvote_maps[other.impulse - 1] != "" && mapvote_maps_availability[other.impulse-1] == GTV_AVAILABLE )
+			if( mapvote_maps_availability[other.impulse-1] == GTV_AVAILABLE )
 			{
 				other.mapvote = other.impulse;
 				MapVote_TouchVotes(other);
@@ -2854,7 +2829,6 @@ void GameTypeVote_Start()
 	MapVote_ClearAllVotes();
 
 	for(j = 0; j < mapvote_count; ++j)
-	if(mapvote_maps[j] != "")
 		strunzone(mapvote_maps[j]);
 	
 	mapvote_count = 0;
