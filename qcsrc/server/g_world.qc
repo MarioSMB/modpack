@@ -1,5 +1,4 @@
 float gametypevote;
-string choosenmap;
 string getmapname_stored;
 
 float GameTypeVote_AvailabilityStatus_ForMap(string gtname, string map_name)
@@ -1254,6 +1253,16 @@ float DoNextMapOverride(float reinit)
 	if(autocvar_nextmap != "")
 		if(MapInfo_CheckMap(autocvar_nextmap))
 		{
+			if(gametypevote)
+				return FALSE;
+			if(autocvar_sv_vote_gametype)
+			{
+				if(GameTypeVote_AvailabilityStatus(MapInfo_Type_ToString(gametypetoset)) != GTV_AVAILABLE)
+				{
+					Map_Goto_SetStr(autocvar_nextmap);
+					return FALSE;
+				}
+			}
 			Map_Goto_SetStr(autocvar_nextmap);
 			Map_Goto(reinit);
 			alreadychangedlevel = TRUE;
@@ -2465,7 +2474,7 @@ float MapVote_SendEntity(entity to, float sf)
 		WriteByte(MSG_ENTITY, gametypevote);
 
 		if(gametypevote)
-			WriteString(MSG_ENTITY, choosenmap);
+			WriteString(MSG_ENTITY, getmapname_stored);
 		
 		MapVote_WriteMask();
 				
@@ -2567,7 +2576,6 @@ float MapVote_Finished(float mappos)
 			if(cvar_string("nextmap") == "")
 			{
 				Map_Goto_SetStr(mapvote_maps[mappos]);
-				choosenmap = strzone(mapvote_maps[mappos]);
 			}
 			GameTypeVote_Start();
 			
@@ -2802,7 +2810,10 @@ void MapVote_Think()
 			GotoNextMap(0);
 			return;
 		}
-		MapVote_Init();
+		if (autocvar_nextmap != "")
+			GameTypeVote_Start();
+		else
+			MapVote_Init();
 	}
 
 	MapVote_Tick();
