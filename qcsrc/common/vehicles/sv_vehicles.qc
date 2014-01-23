@@ -1037,7 +1037,7 @@ void vehicles_think()
 // initialization
 void vehicles_spawn()
 {
-	dprint("Spawning vehicle: ", self.netname, "\n");
+	dprint("Spawning vehicle: ", self.classname, "\n");
 
 	// disown & reset
 	self.vehicle_hudmodel.viewmodelforclient = self;
