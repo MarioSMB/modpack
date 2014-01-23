@@ -307,7 +307,7 @@ void MapVote_Draw()
 
 	if ( mv_num_maps > 16 )
 		mv_columns = 5;
-	else if ( mv_num_maps > 6 )
+	else if ( mv_num_maps > 9 )
 		mv_columns = 4;
 	else if(mv_num_maps > 3)
 		mv_columns = 3;
@@ -471,9 +471,9 @@ void MapVote_ReadMask()
 	if ( mv_num_maps < 24 )
 	{
 		float mask, power;
-		if(mv_num_maps <= 8)
+		if(mv_num_maps < 8)
 			mask = ReadByte();
-		else if(mv_num_maps <= 16)
+		else if(mv_num_maps < 16)
 			mask = ReadShort();
 		else
 			mask = ReadLong();
@@ -542,18 +542,9 @@ void MapVote_Init()
 			}
 		}
         
-        if ( mv_num_maps < 9 )
-		{
-			gtv_text_size = hud_fontsize*1.4;
-			gtv_text_size_small = hud_fontsize;
-			gtv_start_x = hud_fontsize_x * 4;
-		}
-		else
-		{
-			gtv_text_size = hud_fontsize*1;
-			gtv_text_size_small = hud_fontsize*0.8;
-			gtv_start_x = hud_fontsize_x * 6;
-		}
+		gtv_text_size = hud_fontsize*1.4;
+		gtv_text_size_small = hud_fontsize*1.1;
+		gtv_start_x = hud_fontsize_x * 4;
 		
 		float height;
 		height = 0;
@@ -562,8 +553,16 @@ void MapVote_Init()
 			height += gtv_text_size_y + tokenizebyseparator(GameTypeVote_DescriptionByID(i), "\n") * gtv_text_size_small_y
 					+ gtv_text_size_small_y;
 		}
-		
-		gtv_start_y = max (hud_fontsize_y * 6,(vid_conheight-height)/2);
+		float min_starty = hud_fontsize_y * 6;
+		if ( height > vid_conheight-min_starty )
+		{
+			float scale;
+			scale = (vid_conheight-min_starty)/height;
+			gtv_text_size *= scale;
+			gtv_text_size_small *= scale;
+			height *= scale;
+		}
+		gtv_start_y = max (min_starty,(vid_conheight-height)/2);
 
 		mapvote_choosenmap    = strzone(cmap);
 		mapvote_choosenmappic = strzone(cpic);
