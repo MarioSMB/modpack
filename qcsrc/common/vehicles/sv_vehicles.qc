@@ -869,6 +869,7 @@ void vehicles_touch()
 	if(self.owner)
 	{
 		if(other != world)
+		if((self.origin_z + self.maxs_z) > (other.origin_z))
 		if(vehicles_crushable(other))
 		{
 			if(vlen(self.velocity) != 0)
