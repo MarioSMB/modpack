@@ -254,7 +254,7 @@ const vector eZ = '0 0 1';
 
 // moved that here so the client knows the max.
 // # of maps, I'll use arrays for them :P
-#define MAPVOTE_COUNT 10
+#define MAPVOTE_COUNT 30
 
 /**
  * Lower scores are better (e.g. suicides)
