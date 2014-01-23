@@ -2282,9 +2282,15 @@ void MapVote_UnzoneStrings()
 	for(j = 0; j < mapvote_count; ++j)
 	{
 		if ( mapvote_maps[j] )
+		{
 			strunzone(mapvote_maps[j]);
+			mapvote_maps[j] = string_null;
+		}
 		if ( mapvote_maps_pakfile[j] )
+		{
 			strunzone(mapvote_maps_pakfile[j]);
+			mapvote_maps_pakfile[j] = string_null;
+		}
 	}
 }
 
