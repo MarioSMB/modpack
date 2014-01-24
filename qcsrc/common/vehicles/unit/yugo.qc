@@ -167,7 +167,7 @@ float yugo_frame()
 		{
 			self.sounds = 1;
 			self.sound_nexttime = time + 10.922667; //soundlength("vehicles/yugo_move.wav");
-			sound (self, CH_TRIGGER_SINGLE, "vehicles/yugo_move.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
+			sound (self, CH_TRIGGER_SINGLE, "vehicles/racer_move.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
 		}
 	}
 	else
@@ -176,7 +176,7 @@ float yugo_frame()
 		{
 			self.sounds = 0;
 			self.sound_nexttime = time + 11.888604; //soundlength("vehicles/yugo_idle.wav");
-			sound (self, CH_TRIGGER_SINGLE, "vehicles/yugo_idle.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
+			sound (self, CH_TRIGGER_SINGLE, "vehicles/racer_idle.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
 		}
 	}
 
@@ -202,7 +202,7 @@ float yugo_frame()
 		if(yugo.strength_finished < time)
 		{
 			yugo.strength_finished = time + 10.922667; //soundlength("vehicles/yugo_boost.wav");
-			sound (yugo.tur_head, CH_TRIGGER_SINGLE, "vehicles/yugo_boost.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
+			sound (yugo.tur_head, CH_TRIGGER_SINGLE, "vehicles/racer_boost.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
 		}
 	}
 	else
@@ -475,9 +475,9 @@ float v_yugo(float req)
 			precache_sound ("weapons/lasergun_fire.wav");
 			precache_sound ("weapons/rocket_fire.wav");
 
-			precache_sound ("vehicles/yugo_idle.wav");
-			precache_sound ("vehicles/yugo_move.wav");
-			precache_sound ("vehicles/yugo_boost.wav");
+			precache_sound ("vehicles/racer_idle.wav");
+			precache_sound ("vehicles/racer_move.wav");
+			precache_sound ("vehicles/racer_boost.wav");
 
 			precache_model ("models/vhshield.md3");
 			precache_model ("models/vehicles/yugo.dpm");
