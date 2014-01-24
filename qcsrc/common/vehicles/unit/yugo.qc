@@ -494,7 +494,6 @@ float v_yugo(float req)
 #define yugo_ico "gfx/vehicles/waki.tga"
 #define yugo_eng "gfx/vehicles/waki_e.tga"
 #define yugo_gun "gfx/vehicles/waki_guns.tga"
-#define yugo_xhair "gfx/vehicles/axh-special1.tga"
 
 float v_yugo(float req)
 {
@@ -605,15 +604,6 @@ float v_yugo(float req)
 
 			if (scoreboard_showscores)
 				HUD_DrawScoreboard();
-			else
-			{
-				picsize = draw_getimagesize(yugo_xhair);
-				picsize_x *= 0.5;
-				picsize_y *= 0.5;
-
-
-				drawpic('0.5 0 0' * (vid_conwidth - picsize_x) + '0 0.5 0' * (vid_conheight - picsize_y), yugo_xhair, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
-			}
 			return TRUE;
 		}
 		case VR_SETUP:

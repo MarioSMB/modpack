@@ -1091,6 +1091,9 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 		return FALSE;
 
 	entity veh = get_vehicleinfo(vehicle_id);
+	
+	if(!veh.vehicleid)
+		return FALSE;
 
 	if(self.targetname)
 	{

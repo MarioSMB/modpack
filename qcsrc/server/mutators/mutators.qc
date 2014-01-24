@@ -30,6 +30,7 @@ void mutators_add()
 	CHECK_MUTATOR_ADD("g_walljump", mutator_walljump, 1);
 	CHECK_MUTATOR_ADD("g_hats", mutator_hats, !cvar("g_overkill"));
 	CHECK_MUTATOR_ADD("g_status_effects", mutator_status_effects, !cvar("g_minstagib"));
+	CHECK_MUTATOR_ADD("g_random_vehicles", mutator_random_vehicles, cvar("g_vehicles"));
 
 	#undef CHECK_MUTATOR_ADD
 }

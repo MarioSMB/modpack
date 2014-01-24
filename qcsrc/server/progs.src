@@ -297,6 +297,7 @@ mutators/mutator_zombie_apocalypse.qc
 mutators/mutator_walljump.qc
 mutators/mutator_hats.qc
 mutators/mutator_status_effects.qc
+mutators/mutator_random_vehicles.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc
