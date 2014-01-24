@@ -868,6 +868,8 @@ float v_spiderbot(float req)
 
 #endif // SVQC
 #ifdef CSQC
+var float autocvar_cl_vehicle_spiderbot_cross_alpha = 0.6;
+var float autocvar_cl_vehicle_spiderbot_cross_size = 1;
 
 #define spider_ico  "gfx/vehicles/sbot.tga"
 #define spider_rkt  "gfx/vehicles/sbot_rpods.tga"

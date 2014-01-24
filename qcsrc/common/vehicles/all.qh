@@ -4,4 +4,5 @@
 #ifndef VEHICLES_NO_UNSTABLE
 #include "unit/bumblebee.qc"
 #include "unit/yugo.qc"
+#include "unit/tankll48.qc"
 #endif

@@ -1,7 +1,6 @@
 // use slots 70-100
-const float PROJECTILE_NADE = 70;
-const float PROJECTILE_NADE_BURN = 71;
-const float PROJECTILE_RPC = 72;
+const float PROJECTILE_NADE = 71;
+const float PROJECTILE_NADE_BURN = 72;
 const float PROJECTILE_NADE_NAPALM = 73;
 const float PROJECTILE_NADE_NAPALM_BURN = 74;
 const float PROJECTILE_NAPALM_FOUNTAIN = 75;

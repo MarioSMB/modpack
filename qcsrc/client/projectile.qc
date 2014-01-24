@@ -330,6 +330,7 @@ void Ent_Projectile()
             
             
 			case PROJECTILE_RPC: setmodel(self, "models/weapons/ok_rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
+			case PROJECTILE_CANNONBALL: setmodel(self, "models/sphere/sphere.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
 
 			default:
 				error("Received invalid CSQC projectile, can't work with this!");
@@ -358,6 +359,13 @@ void Ent_Projectile()
 			case PROJECTILE_RPC:
 			case PROJECTILE_ROCKET:
 				loopsound(self, CH_SHOTS_SINGLE, "weapons/rocket_fly.wav", VOL_BASE, ATTEN_NORM);
+				self.mins = '-3 -3 -3';
+				self.maxs = '3 3 3';
+				break;
+			case PROJECTILE_CANNONBALL:
+				self.colormod = '1 1 1';
+				self.scale = 0.4;
+				loopsound(self, CH_SHOTS_SINGLE, "weapons/fireball_fly2.wav", VOL_BASE, ATTEN_NORM);
 				self.mins = '-3 -3 -3';
 				self.maxs = '3 3 3';
 				break;
@@ -516,6 +524,7 @@ void Projectile_Precache()
 	precache_model("models/tagrocket.md3");
 	precache_model("models/tracer.mdl");
 	precache_model("models/runematch/rune.mdl");
+	precache_model("models/sphere/sphere.md3");
 
 	precache_model("models/weapons/v_ok_grenade.md3");
 	precache_model("models/weapons/ok_rocket.md3");

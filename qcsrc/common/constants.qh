@@ -388,6 +388,9 @@ const float PROJECTILE_SHAMBLER_LIGHTNING = 33;
 const float PROJECTILE_ROCKETMINSTA_LASER = 35;
 const float PROJECTILE_SUPERROCKET = 36;
 
+const float PROJECTILE_RPC = 37;
+const float PROJECTILE_CANNONBALL = 38;
+
 const float SPECIES_HUMAN = 0;
 const float SPECIES_ROBOT_SOLID = 1;
 const float SPECIES_ALIEN = 2;
