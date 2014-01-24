@@ -4,7 +4,7 @@ REGISTER_VEHICLE(
 /* function   */ v_tankll48,
 /* spawnflags */ VHF_DMGSHAKE,
 /* mins,maxs  */ '-185 -185 2', '185 185 136',
-/* model	  */ "models/vehicles/tankll48.dpm",
+/* model	  */ "models/vehicles/tankll48.iqm",
 /* head_model */ "models/vehicles/tankll48_turret.iqm",
 /* hud_model  */ "null",
 /* tags	   	  */ "tag_turret", "tag_camera", "",
@@ -430,7 +430,7 @@ void tankll48_blowup()
 	g1 = spawn();
 	g2 = spawn();
 
-	setmodel(b, "models/vehicles/tankll48.dpm");
+	setmodel(b, "models/vehicles/tankll48.iqm");
 	setmodel(h, "models/vehicles/tankll48_turret.iqm");
 	setmodel(g1, "models/vehicles/tankll48_cannon.iqm");
 	setmodel(g2, "models/vehicles/tankt27_gear.iqm");
@@ -647,7 +647,7 @@ float v_tankll48(float req)
 		case VR_PRECACHE:
 		{
 			precache_model ("models/vhshield.md3");
-			precache_model ("models/vehicles/tankll48.dpm");
+			precache_model ("models/vehicles/tankll48.iqm");
 			precache_model ("models/vehicles/tankll48_turret.iqm");
 			precache_model ( "models/uziflash.md3");
 			
@@ -806,7 +806,7 @@ float v_tankll48(float req)
 		case VR_PRECACHE:
 		{
 			precache_model ("models/vhshield.md3");
-			precache_model ("models/vehicles/tankll48.dpm");
+			precache_model ("models/vehicles/tankll48.iqm");
 			precache_model ("models/vehicles/tankll48_turret.iqm");
 			precache_model ("models/vehicles/tankll48_cannon.iqm");
 			return TRUE;
