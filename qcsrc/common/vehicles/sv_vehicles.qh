@@ -4,6 +4,7 @@
 float autocvar_g_vehicles;
 float autocvar_g_vehicles_enter;
 float autocvar_g_vehicles_enter_radius;
+float autocvar_g_vehicles_extra;
 float autocvar_g_vehicles_steal;
 float autocvar_g_vehicles_steal_show_waypoint;
 float autocvar_g_vehicles_crush_dmg;

@@ -468,6 +468,7 @@ void tankll48_blowup()
 
 void spawnfunc_vehicle_tankll48()
 {
+	if(!autocvar_g_vehicles_extra) { remove(self); return; }
 	if(!autocvar_g_vehicle_tankll48) { remove(self); return; }
 	if(!vehicle_initialize(VEH_TANKLL48, FALSE)) { remove(self); return; }
 }

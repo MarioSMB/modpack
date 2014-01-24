@@ -351,6 +351,7 @@ void yugo_deadtouch()
 
 void spawnfunc_vehicle_yugo()
 {
+	if(!autocvar_g_vehicles_extra) { remove(self); return; }
 	if(!autocvar_g_vehicle_yugo) { remove(self); return; }
 	if(!vehicle_initialize(VEH_YUGO, FALSE)) { remove(self); return; }
 }
