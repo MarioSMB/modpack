@@ -4,8 +4,8 @@ REGISTER_VEHICLE(
 /* function   */ v_tankll48,
 /* spawnflags */ VHF_DMGSHAKE,
 /* mins,maxs  */ '-185 -185 2', '185 185 136',
-/* model	  */ "models/vehicles/tankll48.iqm",
-/* head_model */ "models/vehicles/tankll48_turret.iqm",
+/* model	  */ "models/vehicles/tankll48.md3",
+/* head_model */ "models/vehicles/tankll48_turret.md3",
 /* hud_model  */ "null",
 /* tags	   	  */ "tag_turret", "tag_camera", "",
 /* netname	  */ "tankll48",
@@ -220,10 +220,6 @@ float tankll48_frame()
 					sound (self, CH_TRIGGER_SINGLE, "machines/generator_loop_speedup_pitchdown.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
 					//dprint("tankll48_walk:", ftos(soundlength("vehicles/tankll48_walk.wav")), "\n");
 				}
-				self.bomb1.gun1.avelocity_y = 75 * player.movement_x; //gear
-				self.bomb1.gun2.avelocity_y = 90 * player.movement_x; //wheel
-				self.bomb2.gun1.avelocity_y = 75 * player.movement_x; //gear
-				self.bomb2.gun2.avelocity_y = 90 * player.movement_x; //wheel
 			}
 			else if(player.movement_y != 0)
 			{
@@ -245,20 +241,6 @@ float tankll48_frame()
 					self.sound_nexttime = time + 6.486500; //soundlength("vehicles/tankll48_strafe.wav");
 					sound (self, CH_TRIGGER_SINGLE, "machines/generator_loop_speedup_pitchdown.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
 					//dprint("tankll48_strafe:", ftos(soundlength("vehicles/tankll48_strafe.wav")), "\n");
-				}
-				if (player.movement_y > 0)
-				{
-					self.bomb1.gun1.avelocity_y = 75; //gear
-					self.bomb1.gun2.avelocity_y = 90; //wheel
-					self.bomb2.gun1.avelocity_y = -75; //gear
-					self.bomb2.gun2.avelocity_y = -90; //wheel
-				}
-				else
-				{
-					self.bomb1.gun1.avelocity_y = -75; //gear
-					self.bomb1.gun2.avelocity_y = -90; //wheel
-					self.bomb2.gun1.avelocity_y = 75; //gear
-					self.bomb2.gun2.avelocity_y = 90; //wheel
 				}
 			}
 		}
@@ -430,9 +412,9 @@ void tankll48_blowup()
 	g1 = spawn();
 	g2 = spawn();
 
-	setmodel(b, "models/vehicles/tankll48.iqm");
-	setmodel(h, "models/vehicles/tankll48_turret.iqm");
-	setmodel(g1, "models/vehicles/tankll48_cannon.iqm");
+	setmodel(b, "models/vehicles/tankll48.md3");
+	setmodel(h, "models/vehicles/tankll48_turret.md3");
+	setmodel(g1, "models/vehicles/tankll48_cannon.md3");
 	setmodel(g2, "models/vehicles/tankt27_gear.iqm");
 
 	setorigin(b, self.origin);
@@ -476,7 +458,7 @@ void tankll48_blowup()
 
 	RadiusDamage (self, self.enemy, 250, 15, 250, world, 250, DEATH_VH_SPID_DEATH, world);
 
-	self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = self.bomb1.gun1.alpha = self.bomb1.gun2.alpha = self.bomb2.gun1.alpha = self.bomb2.gun2.alpha = -1;
+	self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = -1;
 	self.movetype = MOVETYPE_NONE;
 	self.deadflag = DEAD_DEAD;
 	self.solid = SOLID_NOT;
@@ -535,7 +517,7 @@ float v_tankll48(float req)
 			self.deadflag			= DEAD_DYING;
 			self.frame				= 5;
 			self.tur_head.effects  |= EF_FLAME;
-			self.colormod			= self.tur_head.colormod = self.gun1.colormod = self.gun2.colormod = self.bomb1.gun1.colormod = self.bomb1.gun2.colormod = self.bomb2.gun1.colormod = self.bomb2.gun2.colormod = '-1 -1 -1';
+			self.colormod			= self.tur_head.colormod = self.gun1.colormod = self.gun2.colormod = '-1 -1 -1';
 			self.frame				= 10;
 			self.movetype			= MOVETYPE_TOSS;
 			
@@ -547,9 +529,6 @@ float v_tankll48(float req)
 		{
 			if(!self.gun1)
 			{
-				entity spinner;
-				self.bomb1 = spawn();
-				self.bomb2 = spawn();
 				self.gun3 = spawn(); // Will be an angle stabilizer for the rotating turret
 				self.gun3.alpha = -1;
 				setmodel(self.gun3, "models/vehicles/anglestabilizer.iqm");
@@ -558,62 +537,22 @@ float v_tankll48(float req)
 				self.gun1 = spawn();
 				self.gun2 = spawn();
 				setmodel(self.gun1, "models/mountedguns/shlacgun.iqm");
-				setmodel(self.gun2, "models/vehicles/tankll48_cannon.iqm");
+				setmodel(self.gun2, "models/vehicles/tankll48_cannon.md3");
 				setattachment(self.gun1, self.tur_head, "tag_gunpivot2");
 				setattachment(self.gun2, self.tur_head, "tag_cannon_pivot");
 				self.gravity = 2;
 				self.mass = 5000;
-				
-				spinner = spawn();
-					spinner.owner = self;
-					setmodel(spinner,"models/vehicles/tankt27_gear.iqm");
-					setattachment(spinner, self, "tag_gear_left");
-					spinner.movetype = MOVETYPE_NOCLIP;
-					spinner.avelocity = '0 90 0';
-					self.bomb1.gun1 = spinner;
-	
-				spinner = spawn();
-					spinner.owner = self;
-					setmodel(spinner,"models/vehicles/tankt27_wheel.iqm");
-					setattachment(spinner, self, "tag_wheel_left");
-					spinner.movetype = MOVETYPE_NOCLIP;
-					spinner.avelocity = '0 90 0';
-					self.bomb1.gun2 = spinner;
-	
-				spinner = spawn();
-					spinner.owner = self;
-					setmodel(spinner,"models/vehicles/tankt27_gear.iqm");
-					setattachment(spinner, self, "tag_gear_right");
-					spinner.movetype = MOVETYPE_NOCLIP;
-					spinner.avelocity = '0 90 0';
-					self.bomb2.gun1 = spinner;
-	
-				spinner = spawn();
-					spinner.owner = self;
-					setmodel(spinner,"models/vehicles/tankt27_wheel.iqm");
-					setattachment(spinner, self, "tag_wheel_right");
-					spinner.movetype = MOVETYPE_NOCLIP;
-					spinner.avelocity = '0 90 0';
-					self.bomb2.gun2 = spinner;
-					
-				self.bomb1.think = raptor_rotor_anglefix;
-				self.bomb1.nextthink = time;
 			}
 
 			self.frame = 5;
 			self.tur_head.frame = 1;
 			self.movetype = MOVETYPE_WALK;
 			self.solid = SOLID_SLIDEBOX;
-			self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = self.bomb1.gun1.alpha = self.bomb1.gun2.alpha = self.bomb2.gun1.alpha = self.bomb2.gun2.alpha = 1;
-			self.colormod = self.tur_head.colormod = self.gun1.colormod = self.gun2.colormod = self.bomb1.gun1.colormod = self.bomb1.gun2.colormod = self.bomb2.gun1.colormod = self.bomb2.gun2.colormod = '1 1 1';
-			self.gun2.colormap = self.bomb1.gun1.colormap = self.bomb1.gun2.colormap = self.bomb2.gun1.colormap = self.bomb2.gun2.colormap = self.colormap;
+			self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = 1;
+			self.colormod = self.tur_head.colormod = self.gun1.colormod = self.gun2.colormod = '1 1 1';
+			self.gun2.colormap = self.colormap;
 			self.tur_head.angles = '0 0 0';
 			self.vehicle_exit = tankll48_exit;
-			
-			self.bomb1.gun1.avelocity_y = 0;
-			self.bomb1.gun2.avelocity_y = 0;
-			self.bomb2.gun1.avelocity_y = 0;
-			self.bomb2.gun2.avelocity_y = 0;
 
 			setorigin(self, self.pos1 + '0 0 128');
 			self.angles = self.pos2;
@@ -641,20 +580,22 @@ float v_tankll48(float req)
 			self.vehicle_shield = autocvar_g_vehicle_tankll48_shield;
 			self.max_health = self.vehicle_health;
 			self.pushable = TRUE; // tankll48 can use jumppads
+			setorigin(self.tur_head, '0 0 110');
+			setorigin(self.vehicle_hudmodel, '0 0 50');
 
 			return TRUE;
 		}
 		case VR_PRECACHE:
 		{
 			precache_model ("models/vhshield.md3");
-			precache_model ("models/vehicles/tankll48.iqm");
-			precache_model ("models/vehicles/tankll48_turret.iqm");
+			precache_model ("models/vehicles/tankll48.md3");
+			precache_model ("models/vehicles/tankll48_turret.md3");
 			precache_model ( "models/uziflash.md3");
 			
 			precache_model ( "models/sphere/sphexp.md3");
 			precache_model ( "models/vehicles/tankt27_wheel.iqm");
 			precache_model ( "models/vehicles/tankt27_gear.iqm");
-			precache_model ( "models/vehicles/tankll48_cannon.iqm");
+			precache_model ( "models/vehicles/tankll48_cannon.md3");
 			precache_model ( "models/vehicles/anglestabilizer.iqm");
 			precache_model ( "models/mountedguns/shlacgun.iqm");
 
@@ -806,9 +747,9 @@ float v_tankll48(float req)
 		case VR_PRECACHE:
 		{
 			precache_model ("models/vhshield.md3");
-			precache_model ("models/vehicles/tankll48.iqm");
-			precache_model ("models/vehicles/tankll48_turret.iqm");
-			precache_model ("models/vehicles/tankll48_cannon.iqm");
+			precache_model ("models/vehicles/tankll48.md3");
+			precache_model ("models/vehicles/tankll48_turret.md3");
+			precache_model ("models/vehicles/tankll48_cannon.md3");
 			return TRUE;
 		}
 	}
