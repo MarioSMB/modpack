@@ -4,7 +4,7 @@ REGISTER_VEHICLE(
 /* function   */ v_tankll48,
 /* spawnflags */ VHF_DMGSHAKE,
 /* mins,maxs  */ '-185 -185 2', '185 185 136',
-/* model	  */ "models/vehicles/tankll48.iqm",
+/* model	  */ "models/vehicles/tankll48.dpm",
 /* head_model */ "models/vehicles/tankll48_turret.iqm",
 /* hud_model  */ "null",
 /* tags	   	  */ "tag_turret", "tag_camera", "",
@@ -12,13 +12,6 @@ REGISTER_VEHICLE(
 /* fullname   */ _("LL48")
 );
 #else
-
-const float T48RM_FIRST = 1;
-const float T48RM_VOLLY = 1;
-const float T48RM_GUIDE = 2;
-const float T48RM_ARTILLERY = 3;
-const float T48RM_LAST = 3;
-
 #ifdef SVQC
 float autocvar_g_vehicle_tankll48;
 
@@ -132,9 +125,9 @@ float tankll48_frame()
 
 #if 1 // 0 to enable per-gun impact aux crosshairs
 	// Avarage gun impact point's -> aux cross
-	ad = gettaginfo(tank.tur_head, gettagindex(tank.tur_head, "tag_hardpoint01"));
+	ad = gettaginfo(tank.tur_head, gettagindex(tank.tur_head, "tag_cannon_pivot"));
 	vf = v_forward;
-	ad += gettaginfo(tank.tur_head, gettagindex(tank.tur_head, "tag_hardpoint02"));
+	ad += gettaginfo(tank.tur_head, gettagindex(tank.tur_head, "tag_cannon_pivot_0"));
 	vf += v_forward;
 	ad = ad * 0.5;
 	v_forward = vf * 0.5;
@@ -437,7 +430,7 @@ void tankll48_blowup()
 	g1 = spawn();
 	g2 = spawn();
 
-	setmodel(b, "models/vehicles/tankll48.iqm");
+	setmodel(b, "models/vehicles/tankll48.dpm");
 	setmodel(h, "models/vehicles/tankll48_turret.iqm");
 	setmodel(g1, "models/vehicles/tankll48_cannon.iqm");
 	setmodel(g2, "models/vehicles/tankt27_gear.iqm");
@@ -491,41 +484,6 @@ void tankll48_blowup()
 	self.vehicle_hudmodel.viewmodelforclient = self;
 }
 
-float tankll48_impulse(float _imp)
-{
-	switch(_imp)
-	{
-		case 10:
-		case 15:
-		case 18:
-			self.vehicle.vehicle_weapon2mode += 1;
-			if(self.vehicle.vehicle_weapon2mode > T48RM_LAST)
-				self.vehicle.vehicle_weapon2mode = T48RM_FIRST;
-
-			//centerprint(self, strcat("Rocket mode is ", ftos(self.vehicle.vehicle_weapon2mode)));
-			CSQCVehicleSetup(self, 0);
-			return TRUE;
-		case 12:
-		case 16:
-		case 19:
-			self.vehicle.vehicle_weapon2mode -= 1;
-			if(self.vehicle.vehicle_weapon2mode < T48RM_FIRST)
-				self.vehicle.vehicle_weapon2mode = T48RM_LAST;
-
-			//centerprint(self, strcat("Rocket mode is ", ftos(self.vehicle.vehicle_weapon2mode)));
-			CSQCVehicleSetup(self, 0);
-			return TRUE;
-
-		/*
-		case 17: // toss gun, could be used to exit?
-			break;
-		case 20: // Manual minigun reload?
-			break;
-		*/
-	}
-	return FALSE;
-}
-
 void spawnfunc_vehicle_tankll48()
 {
 	if(!autocvar_g_vehicle_tankll48) { remove(self); return; }
@@ -545,7 +503,6 @@ float v_tankll48(float req)
 		}
 		case VR_ENTER:
 		{
-			self.vehicle_weapon2mode = T48RM_GUIDE;
 			self.movetype = MOVETYPE_WALK;
 			CSQCVehicleSetup(self.owner, 0);
 			self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_tankll48_health) * 100;
@@ -597,14 +554,13 @@ float v_tankll48(float req)
 				self.gun3.alpha = -1;
 				setmodel(self.gun3, "models/vehicles/anglestabilizer.iqm");
 				setattachment(self.gun3, self.tur_head, "tag_cannon_pivot");
-			
-				self.vehicles_impulse = tankll48_impulse;
+
 				self.gun1 = spawn();
 				self.gun2 = spawn();
 				setmodel(self.gun1, "models/mountedguns/shlacgun.iqm");
 				setmodel(self.gun2, "models/vehicles/tankll48_cannon.iqm");
-				setattachment(self.gun1, self.tur_head, "tag_hardpoint01");
-				setattachment(self.gun2, self.tur_head, "tag_hardpoint02");
+				setattachment(self.gun1, self.tur_head, "tag_gunpivot2");
+				setattachment(self.gun2, self.tur_head, "tag_cannon_pivot");
 				self.gravity = 2;
 				self.mass = 5000;
 				
@@ -691,7 +647,7 @@ float v_tankll48(float req)
 		case VR_PRECACHE:
 		{
 			precache_model ("models/vhshield.md3");
-			precache_model ("models/vehicles/tankll48.iqm");
+			precache_model ("models/vehicles/tankll48.dpm");
 			precache_model ("models/vehicles/tankll48_turret.iqm");
 			precache_model ( "models/uziflash.md3");
 			
@@ -850,7 +806,7 @@ float v_tankll48(float req)
 		case VR_PRECACHE:
 		{
 			precache_model ("models/vhshield.md3");
-			precache_model ("models/vehicles/tankll48.iqm");
+			precache_model ("models/vehicles/tankll48.dpm");
 			precache_model ("models/vehicles/tankll48_turret.iqm");
 			precache_model ("models/vehicles/tankll48_cannon.iqm");
 			return TRUE;
