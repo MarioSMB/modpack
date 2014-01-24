@@ -3,7 +3,7 @@ REGISTER_VEHICLE(
 /* VEH_##id   */ YUGO,
 /* function   */ v_yugo,
 /* spawnflags */ 0,
-/* mins,maxs  */ '-120 -120 -40' * 0.5, '120 120 40' * 0.5,
+/* mins,maxs  */ '-50 -50 -50', '50 50 50',
 /* model	  */ "models/vehicles/yugo.dpm",
 /* head_model */ "null",
 /* hud_model  */ "null",
