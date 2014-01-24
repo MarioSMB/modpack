@@ -671,7 +671,7 @@ float v_tankll48(float req)
 				if(alarm1time < time)
 				{
 					alarm1time = time + 2;
-					sound(self, CH_PAIN_SINGLE, "vehicles/alarm.wav", VOL_BASEVOICE, ATTEN_NONE);
+					vehicle_alarm(self, CH_PAIN_SINGLE, "vehicles/alarm.wav");
 				}
 				drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
 			}
@@ -680,7 +680,7 @@ float v_tankll48(float req)
 				drawpic(hudloc + picloc, hud_hp_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
 				if(alarm1time)
 				{
-					sound(self, CH_PAIN_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
+					vehicle_alarm(self, CH_PAIN_SINGLE, "misc/null.wav");
 					alarm1time = 0;
 				}
 			}
@@ -698,7 +698,7 @@ float v_tankll48(float req)
 				if(alarm2time < time)
 				{
 					alarm2time = time + 1;
-					sound(self, CH_TRIGGER_SINGLE, "vehicles/alarm_shield.wav", VOL_BASEVOICE, ATTEN_NONE);
+					vehicle_alarm(self, CH_PAIN_SINGLE, "vehicles/alarm_shield.wav");
 				}
 				drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 0 0' + '0 1 1' * sin(time * 8), 1, DRAWFLAG_NORMAL);
 			}
@@ -707,7 +707,7 @@ float v_tankll48(float req)
 				drawpic(hudloc + picloc, hud_sh_ico, picsize, '1 1 1', 1, DRAWFLAG_NORMAL);
 				if(alarm2time)
 				{
-					sound(self, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_BASEVOICE, ATTEN_NONE);
+					vehicle_alarm(self, CH_PAIN_SINGLE, "misc/null.wav");
 					alarm2time = 0;
 				}
 			}
