@@ -4,7 +4,7 @@ REGISTER_VEHICLE(
 /* function   */ v_yugo,
 /* spawnflags */ 0,
 /* mins,maxs  */ '-120 -120 -40' * 0.5, '120 120 40' * 0.5,
-/* model	  */ "models/vehicles/yugo.iqm",
+/* model	  */ "models/vehicles/yugo.dpm",
 /* head_model */ "null",
 /* hud_model  */ "null",
 /* tags	   	  */ "", "", "tag_viewport",
@@ -367,7 +367,7 @@ float v_yugo(float req)
 		}
 		case VR_ENTER:
 		{
-			self.movetype = MOVETYPE_BOUNCE;
+			self.movetype = MOVETYPE_WALK;
 			self.owner.vehicle_health = (self.vehicle_health / autocvar_g_vehicle_yugo_health)  * 100;
 			self.owner.vehicle_shield = (self.vehicle_shield / autocvar_g_vehicle_yugo_shield)  * 100;
 
@@ -414,7 +414,7 @@ float v_yugo(float req)
 		{
 			if(self.scale != 0.5)
 			{
-				if(autocvar_g_vehicle_yugo_hovertype != 0)
+				if(autocvar_g_vehicle_yugo_hovertype)
 					yugo_force_from_tag = vehicles_force_fromtag_maglev;
 				else
 					yugo_force_from_tag = vehicles_force_fromtag_hover;
@@ -480,7 +480,7 @@ float v_yugo(float req)
 			precache_sound ("vehicles/yugo_boost.wav");
 
 			precache_model ("models/vhshield.md3");
-			precache_model ("models/vehicles/yugo.iqm");
+			precache_model ("models/vehicles/yugo.dpm");
 			return TRUE;
 		}
 	}
@@ -625,8 +625,7 @@ float v_yugo(float req)
 		case VR_PRECACHE:
 		{
 			precache_model ("models/vhshield.md3");
-			precache_model ("models/vehicles/yugo.iqm");
-			precache_model ("models/vehicles/yugo_cockpit.dpm");
+			precache_model ("models/vehicles/yugo.dpm");
 			return TRUE;
 		}
 	}

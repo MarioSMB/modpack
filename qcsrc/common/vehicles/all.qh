@@ -3,7 +3,5 @@
 #include "unit/racer.qc"
 #ifndef VEHICLES_NO_UNSTABLE
 #include "unit/bumblebee.qc"
-#endif
-#ifdef NEW_VEHICLES
 #include "unit/yugo.qc"
 #endif
