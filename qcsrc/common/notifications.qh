@@ -382,6 +382,8 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_SPID_DEATH,     3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Spiderbot exploded%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_SPID_MINIGUN,   3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 got shredded by ^BG%s^K1's Spiderbot%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_SPID_ROCKET,    3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was blasted to bits by ^BG%s^K1's Spiderbot%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_TANK_DEATH,     3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was caught in the blast when ^BG%s^K1's Tank exploded%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_TANKLL48,       3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was obliterated by ^BG%s^K1's LL48 Tank%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_WAKI_DEATH,     3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Racer exploded%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_WAKI_GUN,       3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was bolted down by ^BG%s^K1's Racer%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_WAKI_ROCKET,    3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 couldn't find shelter from ^BG%s^K1's Racer%s%s"), "") \
@@ -437,6 +439,7 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_RAPT_DEATH,       2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 got caught in the blast of a Raptor explosion%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_SPID_DEATH,       2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 got caught in the blast of a Spiderbot explosion%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_SPID_ROCKET,      2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 was blasted to bits by a Spiderbot rocket%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_TANK_DEATH,       2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 was caught in the blast of a Tank explosion%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_WAKI_DEATH,       2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 got caught in the blast of a Racer explosion%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_WAKI_ROCKET,      2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 couldn't find shelter from a Racer rocket%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VOID,                3, 1, "s1 s2 s3loc spree_lost", "s1",    "notify_void",          _("^BG%s^K1 %s^K1%s%s"), "") \
@@ -647,6 +650,7 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_RAPT_DEATH,    0, 0, "",             NO_CPID,             "0 0", _("^K1You got caught in the blast of a Raptor explosion!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_SPID_DEATH,    0, 0, "",             NO_CPID,             "0 0", _("^K1You got caught in the blast of a Spiderbot explosion!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_SPID_ROCKET,   0, 0, "",             NO_CPID,             "0 0", _("^K1You were blasted to bits by a Spiderbot rocket!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_TANK_DEATH,    0, 0, "",             NO_CPID,             "0 0", _("^K1You were caught in the blast of a Tank explosion!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_WAKI_DEATH,    0, 0, "",             NO_CPID,             "0 0", _("^K1You got caught in the blast of a Racer explosion!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VH_WAKI_ROCKET,   0, 0, "",             NO_CPID,             "0 0", _("^K1You couldn't find shelter from a Racer rocket!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_DEATH_SELF_VOID,             0, 0, "",             NO_CPID,             "0 0", _("^K1Watch your step!"), "") \
@@ -793,6 +797,8 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_SPID_DEATH,           NO_MSG,        INFO_DEATH_MURDER_VH_SPID_DEATH,           NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_SPID_MINIGUN,         NO_MSG,        INFO_DEATH_MURDER_VH_SPID_MINIGUN,         NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_SPID_ROCKET,          NO_MSG,        INFO_DEATH_MURDER_VH_SPID_ROCKET,          NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_TANK_DEATH,           NO_MSG,        INFO_DEATH_MURDER_VH_TANK_DEATH,           NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_TANKLL48,             NO_MSG,        INFO_DEATH_MURDER_VH_TANKLL48,             NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_WAKI_DEATH,           NO_MSG,        INFO_DEATH_MURDER_VH_WAKI_DEATH,           NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_WAKI_GUN,             NO_MSG,        INFO_DEATH_MURDER_VH_WAKI_GUN,             NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_WAKI_ROCKET,          NO_MSG,        INFO_DEATH_MURDER_VH_WAKI_ROCKET,          NO_MSG) \
@@ -848,6 +854,7 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_RAPT_DEATH,             NO_MSG,        INFO_DEATH_SELF_VH_RAPT_DEATH,             CENTER_DEATH_SELF_VH_RAPT_DEATH) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_SPID_DEATH,             NO_MSG,        INFO_DEATH_SELF_VH_SPID_DEATH,             CENTER_DEATH_SELF_VH_SPID_DEATH) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_SPID_ROCKET,            NO_MSG,        INFO_DEATH_SELF_VH_SPID_ROCKET,            CENTER_DEATH_SELF_VH_SPID_ROCKET) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_TANK_DEATH,             NO_MSG,        INFO_DEATH_SELF_VH_TANK_DEATH,             CENTER_DEATH_SELF_VH_TANK_DEATH) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_WAKI_DEATH,             NO_MSG,        INFO_DEATH_SELF_VH_WAKI_DEATH,             CENTER_DEATH_SELF_VH_WAKI_DEATH) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_WAKI_ROCKET,            NO_MSG,        INFO_DEATH_SELF_VH_WAKI_ROCKET,            CENTER_DEATH_SELF_VH_WAKI_ROCKET) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_VOID,                      NO_MSG,        INFO_DEATH_SELF_VOID,                      CENTER_DEATH_SELF_VOID) \

@@ -2320,6 +2320,7 @@ void PlayerUseKey()
 				if(IS_VEHICLE(head))
 				if(head.deadflag == DEAD_NO)
 				if(!head.owner)
+				if(head.takedamage != DAMAGE_NO)
 				{
 					if(closest_target)
 					{
@@ -2468,6 +2469,7 @@ void PlayerPreThink (void)
 		for(veh = world; (veh = findflags(veh, vehicle_flags, VHF_ISVEHICLE)); )
 		if(vlen(veh.origin - self.origin) < autocvar_g_vehicles_enter_radius)
 		if(veh.deadflag == DEAD_NO)
+		if(veh.takedamage != DAMAGE_NO)
 		if(!veh.owner)
 		if(!veh.team || SAME_TEAM(self, veh))
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_VEHICLE_ENTER);

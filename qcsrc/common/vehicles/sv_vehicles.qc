@@ -1128,7 +1128,7 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 	self.vehicle_hudmodel		= spawn();
 	self.tur_head				= spawn();
 	self.tur_head.owner			= self;
-	self.takedamage				= DAMAGE_AIM;
+	self.takedamage				= DAMAGE_NO;
 	self.bot_attack				= TRUE;
 	self.iscreature				= TRUE;
 	self.teleportable			= FALSE; // no teleporting for vehicles, too buggy

@@ -242,6 +242,11 @@ void Ent_DamageInfo(float isNew)
 				sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_MIN);
 				pointparticles(particleeffectnum("explosion_big"), self.origin, w_backoff * 1000, 1);
 				break;
+			case DEATH_VH_TANK_DEATH:
+			case DEATH_VH_TANKLL48:
+				sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_MIN);
+				pointparticles(particleeffectnum("explosion_big"), self.origin, w_backoff * 1000, 1);
+				break;
 
 			case DEATH_VH_RAPT_CANNON:
 				sound(self, CH_SHOTS, "weapons/laserimpact.wav", VOL_BASE, ATTEN_NORM);
