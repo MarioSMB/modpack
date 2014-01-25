@@ -338,6 +338,8 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 		return; // just in case
 	if(self.frozen)
 		return;
+	if(self.vehicle)
+		return;
 	if(MUTATOR_CALLHOOK(ForbidThrowCurrentWeapon))
 		return;
 	if(!autocvar_g_weapon_throwable)
