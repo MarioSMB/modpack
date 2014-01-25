@@ -390,6 +390,19 @@ void vehicles_reset_colors()
 		}
 		e = e.chain;
 	}
+	// Also check head tags
+	e = findchainentity(tag_entity, self.tur_head);
+	while(e)
+	{
+		if(e != self.vehicle_shieldent)
+		{
+			e.effects   = _effects; //  | EF_LOWPRECISION;
+			e.colormod  = _colormod;
+			e.colormap  = _colormap;
+			e.alpha	 = 1;
+		}
+		e = e.chain;
+	}
 
 	self.vehicle_hudmodel.effects  = self.effects  = _effects; // | EF_LOWPRECISION;
 	self.vehicle_hudmodel.colormod = self.colormod = _colormod;
