@@ -1251,23 +1251,30 @@ float DoNextMapOverride(float reinit)
 		return TRUE;
 	}
 	if(autocvar_nextmap != "")
-		if(MapInfo_CheckMap(autocvar_nextmap))
+	{
+		string m;
+		m = MapInfo_FixName(autocvar_nextmap);
+		cvar_set("nextmap",m);
+	
+		if(!m || gametypevote)
+			return FALSE;
+		if(autocvar_sv_vote_gametype)
 		{
-			if(gametypevote)
-				return FALSE;
-			if(autocvar_sv_vote_gametype)
+			if(GameTypeVote_AvailabilityStatus(MapInfo_Type_ToString(gametypetoset)) != GTV_AVAILABLE)
 			{
-				if(GameTypeVote_AvailabilityStatus(MapInfo_Type_ToString(gametypetoset)) != GTV_AVAILABLE)
-				{
-					Map_Goto_SetStr(autocvar_nextmap);
-					return FALSE;
-				}
+				Map_Goto_SetStr(m);
+				return FALSE;
 			}
-			Map_Goto_SetStr(autocvar_nextmap);
+		}
+		
+		if(MapInfo_CheckMap(m))
+		{
+			Map_Goto_SetStr(m);
 			Map_Goto(reinit);
 			alreadychangedlevel = TRUE;
 			return TRUE;
 		}
+	}
 	if(!reinit && autocvar_lastlevel)
 	{
 		cvar_settemp_restore();
@@ -2927,6 +2934,7 @@ void GameTypeVote_Start()
 
 string GotoMap(string m)
 {
+	m = MapInfo_FixName(m);
 	if(!MapInfo_CheckMap(m))
 		return "The map you chose is not available on this server.";
 	cvar_set("nextmap", m);
