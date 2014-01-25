@@ -243,6 +243,7 @@ vector spritelookupcolor(string s, vector def)
 		case "wpn-fireball":      return '1 0.5 0';
 		case "wpn-hlac":          return '0 1 0';
 		case "wpn-campingrifle":  return '0.5 1 0';
+		case "wpn-sniperrifle":   return '0.5 1 0';
 		case "wpn-minelayer":     return '0.75 1 0';
 		default:                  return def;
 	}
@@ -305,6 +306,7 @@ string spritelookuptext(string s)
 		case "wpn-fireball": return _("Fireball");
 		case "wpn-hlac": return _("HLAC");
 		case "wpn-campingrifle": return _("Rifle");
+		case "wpn-sniperrifle": return _("Rifle");
 		case "wpn-minelayer": return _("Mine Layer");
 		case "wpn-ok_hmg": return _("Heavy Machine Gun");
 		case "wpn-ok_rl": return _("Rocket-Propelled Chainsaw");
