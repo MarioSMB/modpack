@@ -40,7 +40,7 @@ float Headshot(entity targ, vector hitloc)
 	{
 		gettaginfo(targ, nearestbone);
 		tag_lower = strtolower(gettaginfo_name);
-		print(gettaginfo_name, "\n");
+		//print(gettaginfo_name, "\n");
 		if(tag_lower == "head" || tag_lower == "tag_head" || tag_lower == "bip01 head" || strstrofs(tag_lower, "head", 0) >= 0)
 			return TRUE;
 	}
