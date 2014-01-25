@@ -306,7 +306,10 @@ float raptor_frame()
 	vector df;
 
 	if(intermission_running)
+	{
+		self.vehicle.velocity = '0 0 0';
 		return 1;
+	}
 
 	player = self;
 	raptor = self.vehicle;

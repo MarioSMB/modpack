@@ -83,6 +83,9 @@ void yugo_align4point(float _delta)
 	//vehicles_sweap_collision(force_fromtag_origin, self.velocity, _delta, v_add, autocvar_g_vehicle_yugo_collision_multiplier);
 
    self.velocity += push_vector * _delta;
+   
+   if(pointcontents(self.origin - '0 0 64') == CONTENT_WATER)
+		self.velocity_z += 200;
 
 	// Anti ocilation
 	if(self.velocity_z > 0)
@@ -112,7 +115,10 @@ float yugo_frame()
 	float ftmp;
 
 	if(intermission_running)
+	{
+		self.vehicle.velocity = '0 0 0';
 		return 1;
+	}
 
 	player  = self;
 	yugo   = self.vehicle;

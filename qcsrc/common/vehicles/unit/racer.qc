@@ -103,7 +103,10 @@ void racer_align4point(float _delta)
 	bl_push	  = force_fromtag_normpower;
 	//vehicles_sweap_collision(force_fromtag_origin, self.velocity, _delta, v_add, autocvar_g_vehicle_racer_collision_multiplier);
 
-   self.velocity += push_vector * _delta;
+	self.velocity += push_vector * _delta;
+	
+	if(pointcontents(self.origin - '0 0 64') == CONTENT_WATER)
+		self.velocity_z += 200;
 
 	// Anti ocilation
 	if(self.velocity_z > 0)
@@ -186,6 +189,9 @@ void racer_rocket_groundhugger()
 		self.velocity = olddir * newvel;
 		self.velocity_z -= 1600 * sys_frametime; // 2x grav looks better for this one
 	}
+	
+	if(pointcontents(self.origin - '0 0 32') == CONTENT_WATER)
+		self.velocity_z += 200;
 
 	UpdateCSQCProjectile(self);
 	return;
@@ -270,7 +276,10 @@ float racer_frame()
 	float ftmp;
 
 	if(intermission_running)
+	{
+		self.vehicle.velocity = '0 0 0';
 		return 1;
+	}
 
 	player  = self;
 	racer   = self.vehicle;

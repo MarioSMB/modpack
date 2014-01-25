@@ -109,7 +109,10 @@ float tankll48_frame()
 	float ftmp;
 
 	if(intermission_running)
+	{
+		self.vehicle.velocity = '0 0 0';
 		return 1;
+	}
 
 	player = self;
 	tank = self.vehicle;
