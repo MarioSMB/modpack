@@ -17,8 +17,10 @@ void W_GiveWeapon (entity e, float wep)
 	self = oldself;
 }
 
-float Headshot(entity targ, vector hitloc)
+float Headshot(entity targ, entity ent, vector hitloc)
 {
+	if(ent.weapon != WEP_RIFLE && ent.weapon != WEP_MINSTANEX && ent.weapon != WEP_NEX)
+		return FALSE;
 	float nearestbone = 0;
 	string tag_lower = "";
 	FOR_EACH_TAG(targ)
@@ -171,7 +173,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		if (ent.takedamage)
 			Damage (ent, self, self, bdamage * f, deathtype, hitloc, ent.railgunforce * ffs);
 
-		if(Headshot(ent, hitloc))
+		if(Headshot(ent, self, hitloc))
 			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_HEADSHOT);
 
 		// create a small explosion to throw gibs around (if applicable)
@@ -283,7 +285,7 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 			float g = accuracy_isgooddamage(self, hit);
 			Damage(hit, self, self, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);
 			
-			if(Headshot(hit, end))
+			if(Headshot(hit, self, end))
 				Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_HEADSHOT);
 				
 			// calculate hits for ballistic weapons
