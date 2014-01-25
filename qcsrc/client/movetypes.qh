@@ -5,10 +5,16 @@
 .vector move_velocity;
 .vector move_avelocity;
 .float move_flags;
+.float move_watertype;
+.float move_waterlevel;
 .void(void) move_touch;
+.void(float, float) contentstransition;
 .float move_bounce_factor;
 .float move_bounce_stopspeed;
 .float move_nomonsters; // -1 for MOVE_NORMAL, otherwise a MOVE_ constant
+
+// should match sv_gameplayfix_fixedcheckwatertransition
+var float autocvar_cl_gameplayfix_fixedcheckwatertransition = 1;
 
 void Movetype_Physics_MatchTicrate(float tr, float sloppy);
 void Movetype_Physics_MatchServer(float sloppy);

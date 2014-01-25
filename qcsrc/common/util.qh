@@ -460,3 +460,8 @@ void dedicated_print(string input);
 #define CNT_ROUNDSTART 6
 float Announcer_PickNumber(float type, float num);
 #endif
+
+#ifndef MENUQC
+float Mod_Q1BSP_SuperContentsFromNativeContents(float nativecontents);
+float Mod_Q1BSP_NativeContentsFromSuperContents(float supercontents);
+#endif
