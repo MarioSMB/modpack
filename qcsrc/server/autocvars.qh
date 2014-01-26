@@ -1478,3 +1478,4 @@ float autocvar_g_jailbreak_controlpoint_idletime_factor;
 float autocvar_g_jailbreak_controlpoint_detect_enemies;
 float autocvar_g_jailbreak_defense_range;
 float autocvar_g_jailbreak_log;
+float autocvar_sv_headshot;

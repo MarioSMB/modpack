@@ -19,6 +19,8 @@ void W_GiveWeapon (entity e, float wep)
 
 float Headshot(entity targ, entity ent, vector hitloc)
 {
+	if(!autocvar_sv_headshot)
+		return FALSE;
 	if(ent.weapon != WEP_RIFLE && ent.weapon != WEP_MINSTANEX && ent.weapon != WEP_NEX)
 		return FALSE;
 	float nearestbone = 0;
