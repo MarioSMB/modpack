@@ -56,9 +56,11 @@ void ImpulseCommands (void)
 
 	if(self.vehicle)
 	if(self.vehicle.deadflag == DEAD_NO)
-	if(self.vehicle.vehicles_impulse)
-	if(self.vehicle.vehicles_impulse(imp))
+	{
+		if(self.vehicle.vehicles_impulse)
+			self.vehicle.vehicles_impulse(imp);
 		return;
+	}
 
 	if(CheatImpulse(imp))
 	{
