@@ -1220,7 +1220,7 @@ string GetNextMap()
 	return "";
 }
 
-void GameTypeVote_Start();
+float GameTypeVote_Start();
 float DoNextMapOverride(float reinit)
 {
 	if(autocvar_g_campaign)
@@ -2603,21 +2603,8 @@ float MapVote_Finished(float mappos)
 			{
 				Map_Goto_SetStr(mapvote_maps[mappos]);
 			}
-			GameTypeVote_Start();
 			
-			float really_available;
-			really_available = 0;
-			for(i = 0; i < mapvote_count; ++i)
-			{
-				if ( mapvote_maps_availability[i] == GTV_AVAILABLE )
-					really_available++;
-			}
-			
-			if ( really_available == 1 )
-			{
-				return MapVote_Finished(0);
-			}
-			return FALSE;
+			return !GameTypeVote_Start();
 		}
 		
 		return GameTypeVote_Finished(mappos);
@@ -2849,6 +2836,7 @@ float GameTypeVote_Finished(float pos)
 {
 	if(!gametypevote)
 		return FALSE;
+	
 	localcmd("sv_vote_gametype_hook_all\n");
 	localcmd("sv_vote_gametype_hook_", mapvote_maps[pos], "\n");
 	localcmd("gametype ", mapvote_maps[pos], "\n");
@@ -2859,26 +2847,29 @@ float GameTypeVote_Finished(float pos)
 	return TRUE;
 }
 
-void GameTypeVote_AddVotable(string nextMode)
+float GameTypeVote_AddVotable(string nextMode)
 {
 	float j;
 	if ( nextMode == "" || MapInfo_Type_FromString(nextMode) == 0 )
-		return;
+		return FALSE;
 	for(j = 0; j < mapvote_count; ++j)
 		if(mapvote_maps[j] == nextMode)
-			return;
+			return FALSE;
 	
 	mapvote_maps[mapvote_count] = strzone(nextMode);
 	mapvote_maps_suggested[mapvote_count] = FALSE;
 
 	mapvote_maps_screenshot_dir[mapvote_count] = 0;
 	mapvote_maps_pakfile[mapvote_count] = strzone("");
-	mapvote_maps_availability[j] = GameTypeVote_AvailabilityStatus(nextMode);
+	mapvote_maps_availability[mapvote_count] = GameTypeVote_AvailabilityStatus(nextMode);
 
 	mapvote_count += 1;
+	
+	return TRUE;
+	
 }
 
-void GameTypeVote_Start()
+float GameTypeVote_Start()
 {
 	float j;
 	MapVote_ClearAllVotes();
@@ -2891,13 +2882,38 @@ void GameTypeVote_Start()
 	float n = tokenizebyseparator(autocvar_sv_vote_gametype_options, " ");
 	n = min(MAPVOTE_COUNT, n);
 	
+	float really_available, which_available;
+	really_available = 0;
+	which_available = -1;
 	for(j = 0; j < n; ++j)
 	{
-		GameTypeVote_AddVotable(argv(j));
+		if ( GameTypeVote_AddVotable(argv(j)) )
+		if ( mapvote_maps_availability[j] == GTV_AVAILABLE )
+		{
+			really_available++;
+			which_available = j;
+		}
 	}
 
 	// Chaiomanot: Jan 9th 2012: Bug fix: Not all gametype options will speed-vote (+1 line)
 	mapvote_count_real = mapvote_count;
+	
+	gametypevote = 1;
+	
+	if ( really_available == 0 )
+	{
+		if ( mapvote_count > 0 )
+			strunzone(mapvote_maps[0]);
+		mapvote_maps[0] = strzone(MapInfo_Type_ToString(MapInfo_CurrentGametype()));
+		GameTypeVote_Finished(0);
+		return FALSE;
+	}
+	if ( really_available == 1 )
+	{
+		GameTypeVote_Finished(which_available);
+		return FALSE;
+	}
+			
 
 	if(autocvar_sv_vote_gametype_shuffle)
 	{
@@ -2928,8 +2944,9 @@ void GameTypeVote_Start()
 	if(mapvote_count_real < 3 || mapvote_keeptwotime <= time)
 		mapvote_keeptwotime = 0;
 	
-	gametypevote = 1;
 	MapVote_Spawn();
+	
+	return TRUE;
 }
 
 string GotoMap(string m)
