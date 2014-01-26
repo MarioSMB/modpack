@@ -974,6 +974,9 @@ void ctf_RespawnFlag(entity flag)
 		if(flag.speedrunning)
 			ctf_FakeTimeLimit(flag.owner, -1);
 	}
+	
+	if((flag.owner) && (flag.owner.vehicle))
+		flag.scale = FLAG_SCALE;
 
 	if(flag.ctf_status == FLAG_DROPPED)
 		{ WaypointSprite_Kill(flag.wps_flagdropped); }
