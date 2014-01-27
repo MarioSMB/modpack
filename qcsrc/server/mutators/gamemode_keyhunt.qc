@@ -471,8 +471,11 @@ void kh_FinishRound()  // runs when a team captures the keys
 		kh_Key_Remove(key);
 	kh_no_radar_circles = FALSE;
 
-	Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
-	kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
+	if(!gameover)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_ROUNDSTART, autocvar_g_balance_keyhunt_delay_round);
+		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round, kh_StartRound);
+	}
 }
 
 void kh_WinnerTeam(float teem)  // runs when a team wins // Samual: Teem?.... TEEM?!?! what the fuck is wrong with you people
