@@ -1330,7 +1330,7 @@ void VoiceMessage(string type, string msg)
 
 	if (flood > 0 && IS_PLAYER(self))
 		GlobalSound(self.sample, CH_VOICE, voicetype);
-	else if (flood < 0)
+	else if (flood < 0 || IS_SPEC(self))
 		FakeGlobalSound(self.sample, CH_VOICE, voicetype);
 }
 
