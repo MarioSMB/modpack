@@ -1328,9 +1328,11 @@ void VoiceMessage(string type, string msg)
 
 	flood = Say(self, ownteam, world, msg, 1);
 
-	if (flood > 0 && IS_PLAYER(self))
+	if(IS_SPEC(self) || IS_OBSERVER(self))
+		FakeGlobalSound(self.sample, CH_VOICE, voicetype);
+	else if (flood > 0)
 		GlobalSound(self.sample, CH_VOICE, voicetype);
-	else if (flood < 0 || IS_SPEC(self))
+	else if (flood < 0)
 		FakeGlobalSound(self.sample, CH_VOICE, voicetype);
 }
 
