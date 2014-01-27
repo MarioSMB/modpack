@@ -1307,10 +1307,7 @@ void GlobalSound(string sample, float chan, float voicetype)
 
 void PlayerSound(.string samplefield, float chan, float voicetype)
 {
-	if(IS_PLAYER(self))
-		GlobalSound(self.samplefield, chan, voicetype);
-	else
-		FakeGlobalSound(self.samplefield, chan, voicetype);
+	GlobalSound(self.samplefield, chan, voicetype);
 }
 
 void VoiceMessage(string type, string msg)
@@ -1331,7 +1328,7 @@ void VoiceMessage(string type, string msg)
 
 	flood = Say(self, ownteam, world, msg, 1);
 
-	if (flood > 0)
+	if (flood > 0 && IS_PLAYER(self))
 		GlobalSound(self.sample, CH_VOICE, voicetype);
 	else if (flood < 0)
 		FakeGlobalSound(self.sample, CH_VOICE, voicetype);
