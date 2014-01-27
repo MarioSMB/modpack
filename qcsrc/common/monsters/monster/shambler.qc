@@ -168,6 +168,7 @@ float shambler_attack(float attack_type)
 		case MONSTER_ATTACK_RANGED:
 		{
 			if(time >= self.shambler_lastattack) // shambler doesn't attack much
+			if(self.flags & FL_ONGROUND)
 			if(random() <= 0.5 && vlen(self.enemy.origin - self.origin) <= 500)
 			{
 				self.frame = shambler_anim_smash;
