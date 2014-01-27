@@ -401,6 +401,7 @@ void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped ke
 	kh_Key_AssignTo(key, player); // this also updates .kh_state
 }
 
+void kh_FinishRound();
 void kh_Key_Touch()  // runs many, many times when a key has been dropped and can be picked up
 {
 	if(intermission_running)
@@ -411,10 +412,8 @@ void kh_Key_Touch()  // runs many, many times when a key has been dropped and ca
 
 	if(ITEM_TOUCH_NEEDKILL())
 	{
-		// touching sky, or nodrop
-		// what shall we do?
-		// immediately return is bad
-		// maybe start a shorter countdown?
+		kh_FinishRound();
+		return;
 	}
 
 	if(!IS_PLAYER(other))
