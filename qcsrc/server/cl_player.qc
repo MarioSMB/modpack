@@ -1307,7 +1307,10 @@ void GlobalSound(string sample, float chan, float voicetype)
 
 void PlayerSound(.string samplefield, float chan, float voicetype)
 {
-	GlobalSound(self.samplefield, chan, voicetype);
+	if(IS_PLAYER(self))
+		GlobalSound(self.samplefield, chan, voicetype);
+	else
+		FakeGlobalSound(self.samplefield, chan, voicetype);
 }
 
 void VoiceMessage(string type, string msg)
