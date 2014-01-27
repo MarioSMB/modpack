@@ -489,6 +489,7 @@ void ClientCommand_selectteam(float request, float argc)
 									{
 										if(autocvar_g_balance_teams && autocvar_g_balance_teams_prevent_imbalance)
 										{
+											CheckAllowedTeams(self);
 											GetTeamCounts(self);
 											if(!TeamSmallerEqThanTeam(Team_TeamToNumber(selection), Team_TeamToNumber(self.team), self))
 											{
