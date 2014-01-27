@@ -840,6 +840,7 @@ void monsters_corpse_damage (entity inflictor, entity attacker, float damage, fl
 
 		self.think = SUB_Remove;
 		self.nextthink = time + 0.1;
+		self.event_damage = func_null;
 	}
 }
 
@@ -878,7 +879,7 @@ void monster_die(entity attacker, float gibbed)
 	if(self.candrop && self.weapon)
 		W_ThrowNewWeapon(self, self.weapon, 0, self.origin, randomvec() * 150 + '0 0 325');
 
-	self.event_damage	= monsters_corpse_damage;
+	self.event_damage	= ((gibbed) ? func_null : monsters_corpse_damage);
 	self.solid			= SOLID_CORPSE;
 	self.takedamage		= DAMAGE_AIM;
 	self.deadflag		= DEAD_DEAD;
