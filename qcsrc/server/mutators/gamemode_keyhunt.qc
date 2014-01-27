@@ -37,15 +37,6 @@ float kh_keystatus[17];
 //for(i = 0; i < maxplayers; ++i)
 //	kh_keystatus[i] = "0";
 
-float kh_Team_ByID(float t)
-{
-	if(t == 0) return NUM_TEAM_1;
-	if(t == 1) return NUM_TEAM_2;
-	if(t == 2) return NUM_TEAM_3;
-	if(t == 3) return NUM_TEAM_4;
-	return 0;
-}
-
 entity kh_worldkeylist;
 .entity kh_worldkeynext;
 entity kh_controller;
@@ -501,8 +492,10 @@ void kh_WinnerTeam(float teem)  // runs when a team wins // Samual: Teem?.... TE
 		float f;
 		f = DistributeEvenly_Get(1);
 		kh_Scores_Event(key.owner, key, "capture", f, 0);
-		PlayerTeamScore_Add(key.owner, SP_KH_CAPS, ST_KH_CAPS, 1);
+		PlayerScore_Add(key.owner, SP_KH_CAPS, +1);
 	}
+	
+	TeamScore_AddToTeam(teem, ST_KH_CAPS, +1);
 
 	first = TRUE;
 	string keyowner = "";
@@ -606,7 +599,7 @@ void kh_LoserTeam(float teem, entity lostkey)  // runs when a player pushes a fl
 		j = kh_teams - 1;
 		for(i = 0; i < kh_teams; ++i)
 		{
-			thisteam = kh_Team_ByID(i);
+			thisteam = Team_NumberToTeam(i + 1);
 			if(thisteam == teem) // bad boy, no cookie - this WILL happen
 				continue;
 
@@ -834,7 +827,7 @@ float kh_CheckPlayers(float num)
 {
 	if(num < kh_teams)
 	{
-		float t_team = kh_Team_ByID(num);
+		float t_team = Team_NumberToTeam(num + 1);
 		float players = 0;
 		entity tmp_player;
 		FOR_EACH_PLAYER(tmp_player)
@@ -864,7 +857,7 @@ void kh_WaitForPlayers()  // delay start of the round until enough players are p
 	}
 	else
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_WAIT, p1, p2, p3, p4);
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, p1, p2, p3, p4);
 		kh_Controller_SetThink(1, kh_WaitForPlayers);
 	}
 }
@@ -873,6 +866,7 @@ void kh_EnableTrackingDevice()  // runs after each round
 {
 	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT);
 	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT_OTHER);
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
 
 	kh_tracking_enabled = TRUE;
 }
@@ -892,16 +886,17 @@ void kh_StartRound()  // runs at the start of each round
 	if(p1 || p2 || p3 || p4)
 	{
 		kh_Controller_SetThink(1, kh_WaitForPlayers);
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_KEYHUNT_WAIT, p1, p2, p3, p4);
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, p1, p2, p3, p4);
 		return;
 	}
 
 	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT);
+	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
 	Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_KEYHUNT_OTHER);
 
 	for(i = 0; i < kh_teams; ++i)
 	{
-		teem = kh_Team_ByID(i);
+		teem = Team_NumberToTeam(i + 1);
 		players = 0;
 		entity my_player = world;
 		FOR_EACH_PLAYER(player)

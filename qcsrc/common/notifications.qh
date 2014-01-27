@@ -702,7 +702,6 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_ROUNDSTART,          0, 1, "",              CPID_KEYHUNT_OTHER,    "1 f1", _("^F4Round will start in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_SCAN,                0, 1, "",              CPID_KEYHUNT_OTHER,    "f1 0", _("^BGScanning frequency range..."), "") \
 	MULTITEAM_CENTER(1, CENTER_KEYHUNT_START_, 4,           0, 0, "",              CPID_KEYHUNT,          "0 0", _("^BGYou are starting with the ^TC^TT Key"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_WAIT,                0, 4, "missing_teams", CPID_KEYHUNT_OTHER,    "0 0", _("^BGWaiting for players to join...\nNeed active players for: %s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MISSING_TEAMS,               0, 4, "missing_teams", CPID_MISSING_TEAMS,    "-1 0", _("^BGWaiting for players to join...\nNeed active players for: %s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MISSING_PLAYERS,             0, 1, "f1",            CPID_MISSING_PLAYERS,  "-1 0", _("^BGWaiting for %s player(s) to join..."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MINSTA_DOWNGRADE,            0, 0, "",              CPID_MINSTA_FINDAMMO,  "5 0", _("^BGYour weapon has been downgraded until you find some ammo!"), "") \

@@ -59,7 +59,7 @@ REGISTER_GAMETYPE(_("Clan Arena"),ca,g_ca,CA,"timelimit=20 pointlimit=10 leadlim
 REGISTER_GAMETYPE(_("Domination"),dom,g_domination,DOMINATION,"timelimit=20 pointlimit=200 teams=2 leadlimit=0",_("Capture all the control points to win"));
 #define g_domination IS_GAMETYPE(DOMINATION)
 
-REGISTER_GAMETYPE(_("Key Hunt"),kh,g_keyhunt,KEYHUNT,"timelimit=20 pointlimit=1000 teams=3 leadlimit=0",_("Gather all the keys to win the round"));
+REGISTER_GAMETYPE(_("Key Hunt"),kh,g_keyhunt,KEYHUNT,"timelimit=20 pointlimit=10 teams=3 leadlimit=0",_("Gather all the keys to win the round"));
 #define g_keyhunt IS_GAMETYPE(KEYHUNT)
 
 REGISTER_GAMETYPE(_("Assault"),as,g_assault,ASSAULT,"timelimit=20",_("Destroy obstacles to find and destroy the enemy power core before time runs out"));
