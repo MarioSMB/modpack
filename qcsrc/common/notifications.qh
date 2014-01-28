@@ -708,7 +708,6 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_MINSTA_FINDAMMO,             0, 0, "",              CPID_MINSTA_FINDAMMO,  "1 9", _("^F4^COUNT^BG left to find some ammo!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MINSTA_FINDAMMO_FIRST,       0, 0, "",              CPID_MINSTA_FINDAMMO,  "1 10", _("^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"), _("^BGGet some ammo! ^F4^COUNT^BG left!")) \
 	MSG_CENTER_NOTIF(1, CENTER_MINSTA_LIVES_REMAINING,      0, 1, "f1",            NO_CPID,  			  "0 0", _("^F2Extra lives remaining: ^K1%s"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_LASER_NODAMAGE,              0, 0, "",              NO_CPID,  			  "0 0", _("^BGSecondary fire inflicts no damage!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MOTD,                        1, 0, "s1",            CPID_MOTD,             "5 0", _("^BG%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_NIX_COUNTDOWN,               0, 2, "item_wepname",  CPID_NIX,              "1 f2", _("^F2^COUNT^BG until weapon change...\nNext weapon: ^F1%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_NIX_NEWWEAPON,               0, 1, "item_wepname",  CPID_NIX,              "0 0", _("^F2Active weapon: ^F1%s"), "") \
@@ -730,6 +729,7 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_POWERUP_SPEED,               0, 0, "",              CPID_POWERUP,          "0 0", _("^F2You are on speed"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_POWERUP_STRENGTH,            0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Strength infuses your weapons with devastating power"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_RACE_FINISHLAP,              0, 0, "",              CPID_RACE_FINISHLAP,   "0 0", _("^F2The race is over, finish your lap!"), "") \
+    MSG_CENTER_NOTIF(1, CENTER_SECONDARY_NODAMAGE,          0, 0, "",              NO_CPID,               "0 0", _("^BGSecondary fire inflicts no damage!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SEQUENCE_COMPLETED,          0, 0, "",              NO_CPID,               "0 0", _("^BGSequence completed!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SEQUENCE_COUNTER,            0, 0, "",              NO_CPID,               "0 0", _("^BGThere are more to go..."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SEQUENCE_COUNTER_FEWMORE,    0, 1, "f1",            NO_CPID,               "0 0", _("^BGOnly %s^BG more to go..."), "") \

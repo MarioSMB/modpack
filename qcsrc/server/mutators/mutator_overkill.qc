@@ -80,7 +80,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 		if(frag_attacker != frag_target)
 		{
 			if(frag_target.health >= 1 && !frag_target.frozen && frag_target.deadflag == DEAD_NO)
-				Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_LASER_NODAMAGE);
+				Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE);
 			frag_force = '0 0 0';
 		}
 	}

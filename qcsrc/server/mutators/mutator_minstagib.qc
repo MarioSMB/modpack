@@ -292,8 +292,8 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 				frag_mirrordamage = 0;
 				if (frag_target != frag_attacker)
 				{
-					if (frag_target.health >= 1 && !frag_target.frozen)
-						Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_LASER_NODAMAGE);
+					if (frag_target.health >= 1 && !frag_target.frozen && frag_target.deadflag == DEAD_NO)
+						Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE);
 					frag_force = '0 0 0';
 					// keep mirrorfrag_force
 					//frag_attacker = frag_target;
