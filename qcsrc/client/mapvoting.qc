@@ -259,7 +259,9 @@ void MapVote_Draw()
 	float rows;
 	float tsize;
 	vector dist = '0 0 0';
-
+	vector gametype_pos = gtv_start;
+	float textlen = vid_conwidth - gtv_start_x * 2;
+	
 	if(!mv_active)
 		return;
 
@@ -291,12 +293,21 @@ void MapVote_Draw()
 	pos_x = center - stringwidth(map, false, '12 0 0');
 	drawstring(pos, map, '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 	pos_y += 26;
+	
+	if(gametypevote)
+	{
+		map = mapvote_choosenmap;
+		pos_x = center - stringwidth(map, false, hud_fontsize);
+		drawstring(pos, map, hud_fontsize*2, '1 1 1', 1, DRAWFLAG_NORMAL);
+		pos_y += hud_fontsize_y*2;
+	}
 
 	i = ceil(max(0, mv_timeout - time));
 	map = sprintf(_("%d seconds left"), i);
 	pos_x = center - stringwidth(map, false, '8 0 0');
 	drawstring(pos, map, '16 16 0', '0 1 0', 1, DRAWFLAG_NORMAL);
 	pos_y += 22;
+	
 	pos_x = xmin;
 	draw_endBoldFont();
 
@@ -305,7 +316,9 @@ void MapVote_Draw()
 	if(mv_abstain)
 		mv_num_maps -= 1;
 
-	if ( mv_num_maps > 16 )
+	if(gametypevote)
+		mv_columns = 1;
+	else if ( mv_num_maps > 16 )
 		mv_columns = 5;
 	else if ( mv_num_maps > 9 )
 		mv_columns = 4;
@@ -322,45 +335,6 @@ void MapVote_Draw()
 	isize = min(dist_y - 10, 0.75 * tsize);
 
 	mv_selection = (gametypevote) ? GameTypeVote_Selection() : MapVote_Selection(pos, dist, rows, mv_columns);
-	
-	vector o = gtv_start;
-	float textlen = vid_conwidth/2 - gtv_start_x;
-	if(gametypevote)
-	{
-		mv_columns = 1;
-		float alpha = 1;
-		
-		vector img_size = '0 0 0';
-
-		isize = textlen / 2;
-		img_size_y = isize;
-		img_size_x = isize / 0.75;
-		img_size *= alpha;
-		
-        vector o2 = '0 0 0';
-        o2_x = gtv_start_x + vid_conwidth/2;
-		o2_y = (vid_conheight-(img_size_y+10+hud_fontsize_y))/2;
-        drawborderlines(autocvar_scoreboard_border_thickness, o2, img_size, '0 0 0', 1, DRAWFLAG_NORMAL);
-
-		if(mapvote_choosenmappic == "")
-		{
-			drawfill(o2, img_size, '.5 .5 .5', .7 * alpha, DRAWFLAG_NORMAL);
-		}
-		else
-		{
-			if(drawgetimagesize(mapvote_choosenmappic) == '0 0 0')
-				drawpic(o2, draw_UseSkinFor("nopreview_map"), img_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
-			else
-				drawpic(o2, mapvote_choosenmappic, img_size, '1 1 1', alpha, DRAWFLAG_NORMAL);
-		}
-		
-		o2_y += img_size_y + 10;
-		o2_x += img_size_x / 2 - stringwidth_nocolors(mapvote_choosenmap, hud_fontsize) / 2;
-		
-		draw_beginBoldFont();
-		drawstring(o2, mapvote_choosenmap, hud_fontsize, '1 1 1' * alpha, alpha, DRAWFLAG_NORMAL);
-		draw_endBoldFont();
-	}
 
 	pos_x += (xmax - xmin) / (2 * mv_columns);
 	pos_y += (dist_y - isize) / 2;
@@ -376,7 +350,7 @@ void MapVote_Draw()
 		map = mv_maps[i];
 		
 		if(gametypevote)
-			o = GameTypeVote_DrawGametypeItem(o, map, tmp, i,textlen);
+			gametype_pos = GameTypeVote_DrawGametypeItem(gametype_pos, map, tmp, i,textlen);
 		else
 		{
 			if(mv_preview[i])
@@ -565,7 +539,6 @@ void MapVote_Init()
 		gtv_start_y = max (min_starty,(vid_conheight-height)/2);
 
 		mapvote_choosenmap    = strzone(cmap);
-		mapvote_choosenmappic = strzone(cpic);
         
 		print("^5Now decide the GAMETYPE!\n");
     }

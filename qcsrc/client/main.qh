@@ -173,4 +173,3 @@ float camera_drawviewmodel_backup;
 float gametypevote;
 
 string mapvote_choosenmap;
-string mapvote_choosenmappic;
