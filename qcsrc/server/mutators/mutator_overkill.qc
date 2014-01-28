@@ -79,7 +79,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 
 		if(frag_attacker != frag_target)
 		{
-			if(frag_target.health >= 1 && !frag_target.frozen)
+			if(frag_target.health >= 1 && !frag_target.frozen && frag_target.deadflag == DEAD_NO)
 				Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_LASER_NODAMAGE);
 			frag_force = '0 0 0';
 		}
@@ -93,7 +93,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 	entity oldself = self;
 
 	if(IS_MONSTER(other))
-		other.monster_loot = func_null; // ?!
+		other.monster_loot = func_null; // this hook is shared with monsters
 
 	self.ok_lastwep = self.weapon;
 	self.ok_deathloc = self.origin;
