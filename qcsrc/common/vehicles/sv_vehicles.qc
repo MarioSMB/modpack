@@ -693,7 +693,7 @@ float vehicles_crushable(entity e)
 	if(IS_PLAYER(e))
 		return TRUE;
 
-	if(e.flags & FL_MONSTER)
+	if(IS_MONSTER(e))
 		return TRUE;
 
 	return FALSE;
