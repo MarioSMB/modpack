@@ -541,7 +541,7 @@ void vehicle_use()
 	else
 		self.active = ACTIVE_ACTIVE;
 
-	if(self.active == ACTIVE_ACTIVE && self.deadflag == DEAD_NO)
+	if(self.active == ACTIVE_ACTIVE && self.deadflag == DEAD_NO && !gameover)
 	{
 		dprint("Respawning vehicle: ", self.netname, "\n");
 		vehicles_setreturn(self);
