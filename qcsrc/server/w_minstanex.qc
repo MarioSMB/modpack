@@ -225,6 +225,7 @@ void W_MinstaNex_Attack (void)
 	s = strcat("TE_TEI_G3", Static_Team_ColorName_Upper(self.team), ((damage_goodhits) ? "_HIT" : ""));
 	
 	if(autocvar_g_rm)
+	if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
 		W_RocketMinsta_Explosion(trace_endpos);
 		
 	WarpZone_TrailParticles(world, particleeffectnum(s), w_shotorg, v);
