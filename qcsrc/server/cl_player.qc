@@ -1328,12 +1328,10 @@ void VoiceMessage(string type, string msg)
 
 	flood = Say(self, ownteam, world, msg, 1);
 
-	if(IS_SPEC(self) || IS_OBSERVER(self))
+	if(IS_SPEC(self) || IS_OBSERVER(self) || flood < 0)
 		FakeGlobalSound(self.sample, CH_VOICE, voicetype);
 	else if (flood > 0)
 		GlobalSound(self.sample, CH_VOICE, voicetype);
-	else if (flood < 0)
-		FakeGlobalSound(self.sample, CH_VOICE, voicetype);
 }
 
 void MoveToTeam(entity client, float team_colour, float type)
