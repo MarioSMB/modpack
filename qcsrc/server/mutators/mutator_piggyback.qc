@@ -72,6 +72,13 @@ void pb_FixPBEnt(entity p)
 
 #define BROKEN_PBREF(e) ((e).piggybacker && ((e).piggybacker.pbhost != (e) || (e).piggybacker.movetype != MOVETYPE_FOLLOW))
 
+MUTATOR_HOOKFUNCTION(pb_MatchEnd)
+{
+	entity head;
+	FOR_EACH_PLAYER(head) { pb_Detach(head); }
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(pb_PlayerUseKey)
 {
 	if(MUTATOR_RETURNVALUE || gameover) { return FALSE; }
@@ -169,6 +176,7 @@ MUTATOR_HOOKFUNCTION(pb_PlayerDies)
 
 MUTATOR_DEFINITION(mutator_piggyback)
 {
+	MUTATOR_HOOK(MatchEnd, pb_MatchEnd, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerUseKey, pb_PlayerUseKey, CBC_ORDER_LAST);
 	MUTATOR_HOOK(PlayerPreThink, pb_PlayerThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(reset_map_players, pb_ResetMap, CBC_ORDER_ANY);
