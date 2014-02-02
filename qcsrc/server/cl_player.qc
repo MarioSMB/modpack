@@ -248,6 +248,8 @@ void player_anim (void)
 	float animbits = deadbits;
 	if(self.frozen)
 		animbits |= ANIMSTATE_FROZEN;
+	if(self.movetype == MOVETYPE_FOLLOW)
+		animbits |= ANIMSTATE_FOLLOW;
 	if(self.crouch)
 		animbits |= ANIMSTATE_DUCK;
 	animdecide_setstate(self, animbits, FALSE);

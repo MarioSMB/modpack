@@ -619,9 +619,6 @@ float v_tankll48(float req)
 
 #endif // SVQC
 #ifdef CSQC
-var float autocvar_cl_vehicle_tankll48_cross_alpha = 0.6;
-var float autocvar_cl_vehicle_tankll48_cross_size = 1;
-
 #define tank_ico  "gfx/vehicles/sbot.tga"
 #define tank_rkt  "gfx/vehicles/sbot_rpods.tga"
 #define tank_mgun "gfx/vehicles/sbot_mguns.tga"

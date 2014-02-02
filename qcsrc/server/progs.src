@@ -65,6 +65,7 @@ mutators/mutator_overkill.qh
 mutators/mutator_freeze.qh
 mutators/mutator_minstagib.qh
 mutators/mutator_nades.qh
+mutators/mutator_piggyback.qh
 
 generator.qh
 
@@ -298,6 +299,7 @@ mutators/mutator_walljump.qc
 mutators/mutator_hats.qc
 mutators/mutator_status_effects.qc
 mutators/mutator_random_vehicles.qc
+mutators/mutator_piggyback.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc
