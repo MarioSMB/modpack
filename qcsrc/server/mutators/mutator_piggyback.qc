@@ -46,7 +46,8 @@ void pb_Detach(entity host)
 	{
 		// this doesn't happen when we're fixing a broken reference
 		
-		slave.movetype = MOVETYPE_WALK;
+		if(slave.movetype == MOVETYPE_FOLLOW) // don't reset if player was killed or somehting
+			slave.movetype = MOVETYPE_WALK;
 		slave.velocity = '0 0 0';
 		slave.solid = slave.oldsolid;
 	}
@@ -148,10 +149,11 @@ MUTATOR_HOOKFUNCTION(pb_RemovePlayer)
 	if(self.piggybacker)
 	{
 		self.piggybacker.pb_canattach = 1;
-		pb_Detach(self.piggybacker);
+		pb_Detach(self);
 	}
 	
-	pb_Detach(self);
+	if(self.pbhost)
+		pb_Detach(self.pbhost);
 	self.pb_canattach = 0;
 
 	return FALSE;
@@ -165,10 +167,11 @@ MUTATOR_HOOKFUNCTION(pb_PlayerDies)
 	if(self.piggybacker)
 	{
 		self.piggybacker.pb_canattach = 1;
-		pb_Detach(self.piggybacker);
+		pb_Detach(self);
 	}
 	
-	pb_Detach(self);
+	if(self.pbhost)
+		pb_Detach(self.pbhost);
 	self.pb_canattach = 0;
 	
 	return FALSE;
