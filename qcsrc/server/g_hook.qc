@@ -300,6 +300,8 @@ void GrapplingHookThink()
 
 void GrapplingHookTouch (void)
 {
+	if(other.movetype == MOVETYPE_FOLLOW)
+		return;
 	PROJECTILE_TOUCH;
 
 	GrapplingHook_Stop();
