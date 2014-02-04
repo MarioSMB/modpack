@@ -347,7 +347,7 @@ void tankll48_exit(float eject)
 	makevectors(self.angles);
 	if(eject)
 	{
-		spot = self.origin + v_forward * 100 + '0 0 64';
+		spot = self.origin + v_forward * 300 + '0 0 64';
 		spot = vehicles_findgoodexit(spot);
 		setorigin(self.owner , spot);
 		self.owner.velocity = (v_up + v_forward * 0.25) * 750;
@@ -359,14 +359,14 @@ void tankll48_exit(float eject)
 		{
 			self.owner.velocity = normalize(self.velocity) * vlen(self.velocity);
 			self.owner.velocity_z += 200;
-			spot = self.origin + v_forward * 128 + '0 0 64';
+			spot = self.origin + v_forward * 328 + '0 0 64';
 			spot = vehicles_findgoodexit(spot);
 		}
 		else
 		{
 			self.owner.velocity = self.velocity * 0.5;
 			self.owner.velocity_z += 10;
-			spot = self.origin + v_forward * 256 + '0 0 64';
+			spot = self.origin + v_forward * 356 + '0 0 64';
 			spot = vehicles_findgoodexit(spot);
 		}
 		self.owner.oldvelocity = self.owner.velocity;
@@ -617,9 +617,7 @@ float v_tankll48(float req)
 
 #endif // SVQC
 #ifdef CSQC
-#define tank_ico  "gfx/vehicles/sbot.tga"
-#define tank_rkt  "gfx/vehicles/sbot_rpods.tga"
-#define tank_mgun "gfx/vehicles/sbot_mguns.tga"
+#define tank_ico  "gfx/vehicles/tankll48.tga"
 
 float v_tankll48(float req)
 {
@@ -652,8 +650,8 @@ float v_tankll48(float req)
 				drawpic(hudloc + picloc, tank_ico, pic2size,  '1 0 0' + '0 1 1' * sin(time * 8),  1, DRAWFLAG_NORMAL);
 			else
 				drawpic(hudloc + picloc, tank_ico, pic2size,  '1 1 1' * vh_health  + '1 0 0' * (1 - vh_health),  1, DRAWFLAG_NORMAL);
-			drawpic(hudloc + picloc, tank_rkt, pic2size,  '1 1 1' * reload2 + '1 0 0' * (1 - reload2), 1, DRAWFLAG_NORMAL);
-			drawpic(hudloc + picloc, tank_mgun, pic2size, '1 1 1' * ammo1   + '1 0 0' * (1 - ammo1),   1, DRAWFLAG_NORMAL);
+			//drawpic(hudloc + picloc, tank_rkt, pic2size,  '1 1 1' * reload2 + '1 0 0' * (1 - reload2), 1, DRAWFLAG_NORMAL);
+			//drawpic(hudloc + picloc, tank_mgun, pic2size, '1 1 1' * ammo1   + '1 0 0' * (1 - ammo1),   1, DRAWFLAG_NORMAL);
 			drawpic(hudloc + picloc, hud_sh, pic2size,  '1 1 1', shield, DRAWFLAG_NORMAL);
 
 		// Health bar
