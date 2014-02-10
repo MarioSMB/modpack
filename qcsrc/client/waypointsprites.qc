@@ -230,6 +230,7 @@ vector spritelookupcolor(string s, vector def)
 		case "keycarrier-friend": return '0 1 0';
 		case "wpn-laser":         return '1 0.5 0.5';
 		case "wpn-shotgun":       return '0.5 0.25 0';
+		case "wpn-shotguncannon": return '0.5 0.25 0';
 		case "wpn-uzi":           return '1 1 0';
 		case "wpn-gl":            return '1 0 0';
 		case "wpn-electro":       return '0 0.5 1';
@@ -293,6 +294,7 @@ string spritelookuptext(string s)
 		case "ka-ballcarrier": return _("Ball carrier");
 		case "wpn-laser": return _("Laser");
 		case "wpn-shotgun": return _("Shotgun");
+		case "wpn-shotguncannon": return _("Shotgun");
 		case "wpn-uzi": return _("Machine Gun");
 		case "wpn-gl": return _("Mortar");
 		case "wpn-electro": return _("Electro");
