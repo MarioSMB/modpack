@@ -88,6 +88,7 @@ void vehicles_enter(entity pl, entity veh);
 .float(float _imp) vehicles_impulse;
 .float vehicle_weapon2mode;
 .void(float exit_flags) vehicle_exit;
+.float() vehicle_enter;
 const float VHEF_NORMAL = 0;  /// User pressed exit key
 const float VHEF_EJECT  = 1;  /// User pressed exit key 3 times fast (not implemented) or vehile is dying
 const float VHEF_RELEASE = 2;  /// Release ownership, client possibly allready dissconnected / went spec / changed team / used "kill" (not implemented)

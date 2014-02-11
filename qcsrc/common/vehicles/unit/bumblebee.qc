@@ -369,6 +369,8 @@ float vehicles_valid_pilot()
 
 void bumblebee_touch()
 {
+	if(autocvar_g_vehicles_enter) { return; }
+
 	if(self.gunner1 != world && self.gunner2 != world)
 	{
 		vehicles_touch();
@@ -643,6 +645,12 @@ void bumblebee_land()
 
 void bumblebee_exit(float eject)
 {
+	if(self.owner.vehicleid == VEH_BUMBLEBEE)
+	{
+		bumblebee_gunner_exit(eject);
+		return;
+	}
+
 	self.touch = vehicles_touch;
 
 	if(self.deadflag == DEAD_NO)
@@ -906,8 +914,8 @@ float v_bumblebee(float req)
 				setorigin(self.gun3, ofs);
 				self.angles = self.gun3.pos1;
 
-				vehicle_addplayerslot(self, self.gun1, HUD_BUMBLEBEE_GUN, "models/vehicles/wakizashi_cockpit.dpm", bumblebee_gunner_frame, bumblebee_gunner_exit);
-				vehicle_addplayerslot(self, self.gun2, HUD_BUMBLEBEE_GUN, "models/vehicles/wakizashi_cockpit.dpm", bumblebee_gunner_frame, bumblebee_gunner_exit);
+				vehicle_addplayerslot(self, self.gun1, HUD_BUMBLEBEE_GUN, "models/vehicles/wakizashi_cockpit.dpm", bumblebee_gunner_frame, bumblebee_gunner_exit, bumblebee_gunner_enter);
+				vehicle_addplayerslot(self, self.gun2, HUD_BUMBLEBEE_GUN, "models/vehicles/wakizashi_cockpit.dpm", bumblebee_gunner_frame, bumblebee_gunner_exit, bumblebee_gunner_enter);
 
 				setorigin(self.vehicle_hudmodel, '50 0 -5');    // Move cockpit forward - down.
 				setorigin(self.vehicle_viewport, '5 0 2');    // Move camera forward up
