@@ -3,30 +3,13 @@
 // =========================
 
 
-void monster_item_spawn()
-{
-	if(self.monster_loot)
-		self.monster_loot();
-
-	self.gravity = 1;
-	self.reset = SUB_Remove;
-	self.noalign = TRUE;
-	self.velocity = randomvec() * 175 + '0 0 325';
-	self.classname = "droppedweapon"; // hax
-	self.item_spawnshieldtime = time + 0.7;
-
-	SUB_SetFade(self, time + autocvar_g_monsters_drop_time, 1);
-}
-
 void monster_dropitem()
 {
 	if(!self.candrop || !self.monster_loot)
 		return;
 
 	vector org = self.origin + ((self.mins + self.maxs) * 0.5);
-	entity e = spawn();
-
-	setorigin(e, org);
+	entity e = spawn(), oldself = self;
 
 	e.monster_loot = self.monster_loot;
 
@@ -34,10 +17,20 @@ void monster_dropitem()
 	MUTATOR_CALLHOOK(MonsterDropItem);
 	e = other;
 
-	if(e)
+	if(e && e.monster_loot)
 	{
-		e.think = monster_item_spawn;
-		e.nextthink = time + 0.3;
+		self = e;
+		e.noalign = TRUE;
+		e.monster_loot();
+		e.gravity = 1;
+		e.movetype = MOVETYPE_TOSS;
+		e.reset = SUB_Remove;
+		setorigin(e, org);
+		e.velocity = randomvec() * 175 + '0 0 325';
+		e.item_spawnshieldtime = time + 0.7;
+		e.classname = "droppedweapon"; // use weapon handling to remove it on touch
+		SUB_SetFade(e, time + autocvar_g_monsters_drop_time, 1);
+		self = oldself;
 	}
 }
 
