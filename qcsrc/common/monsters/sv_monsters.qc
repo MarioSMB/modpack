@@ -357,7 +357,7 @@ void Monster_Fade ()
 		self.spawnflags |= MONSTERFLAG_RESPAWNED;
 		self.think = self.monster_spawnfunc;
 		self.nextthink = time + self.respawntime;
-		self.ltime = 0;
+		self.monster_lifetime = 0;
 		self.deadflag = DEAD_RESPAWNING;
 		if(self.spawnflags & MONSTER_RESPAWN_DEATHPOINT)
 		{
@@ -621,7 +621,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	monster_speed_run = runspeed;
 	monster_speed_walk = walkspeed;
 
-	if(MUTATOR_CALLHOOK(MonsterMove) || gameover || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start) || time < self.spawn_time)
+	if(MUTATOR_CALLHOOK(MonsterMove) || gameover || self.draggedby != world || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start) || time < self.spawn_time)
 	{
 		runspeed = walkspeed = 0;
 		if(time >= self.spawn_time)
@@ -766,8 +766,8 @@ void monster_dead_think()
 
 	CSQCMODEL_AUTOUPDATE();
 
-	if(self.ltime != 0)
-	if(time >= self.ltime)
+	if(self.monster_lifetime != 0)
+	if(time >= self.monster_lifetime)
 	{
 		Monster_Fade();
 		return;
@@ -841,7 +841,7 @@ void monster_die(entity attacker, float gibbed)
 {
 	self.think = monster_dead_think;
 	self.nextthink = time;
-	self.ltime = time + 5;
+	self.monster_lifetime = time + 5;
 
 	if(self.frozen)
 	{
@@ -902,6 +902,9 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 		return;
 
 	if(time < self.spawnshieldtime && deathtype != DEATH_KILL)
+		return;
+		
+	if(deathtype == DEATH_FALL && self.draggedby != world)
 		return;
 
 	vector v;
@@ -988,8 +991,8 @@ void monster_think()
 	self.think = monster_think;
 	self.nextthink = self.ticrate;
 
-	if(self.ltime)
-	if(time >= self.ltime)
+	if(self.monster_lifetime)
+	if(time >= self.monster_lifetime)
 	{
 		Damage(self, self, self, self.health + self.max_health, DEATH_KILL, self.origin, self.origin);
 		return;
@@ -1103,6 +1106,9 @@ float monster_initialize(float mon_id, float nodrop)
 	self.spider_slowness	= 0;
 	self.gravity			= 1;
 	self.dphitcontentsmask	= DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
+	
+	if(autocvar_g_monsters_edit)
+		self.grab = 1; // owner may carry their monster
 
 	if(autocvar_g_fullbrightplayers)
 		self.effects |= EF_FULLBRIGHT;
