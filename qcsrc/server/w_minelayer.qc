@@ -195,7 +195,7 @@ void W_Mine_Think (void)
 
 	// a player's mines shall explode if he disconnects or dies
 	// TODO: Do this on team change too -- Samual: But isn't a player killed when they switch teams?
-	if(!IS_PLAYER(self.realowner) || self.realowner.deadflag != DEAD_NO)
+	if(!IS_PLAYER(self.realowner) || self.realowner.deadflag != DEAD_NO || self.realowner.frozen)
 	{
 		other = world;
 		self.projectiledeathtype |= HITTYPE_BOUNCE;

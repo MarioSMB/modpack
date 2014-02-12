@@ -743,6 +743,7 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_BEGINNING,           0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout begins in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_TIMEOUT_ENDING,              0, 1, "",              CPID_TIMEOUT,          "1 f1", _("^F4Timeout ends in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VEHICLE_ENTER,         	    0, 0, "pass_key",      CPID_VEHICLES,         "0 0",  _("^BGPress ^F2DROPFLAG%s^BG to enter/exit the vehicle"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_VEHICLE_ENTER_GUNNER,        0, 0, "pass_key",      CPID_VEHICLES,         "0 0",  _("^BGPress ^F2DROPFLAG%s^BG to enter the vehicle gunner"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VEHICLE_ENTER_STEAL,         0, 0, "pass_key",      CPID_VEHICLES,         "0 0",  _("^BGPress ^F2DROPFLAG%s^BG to steal this vehicle"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VEHICLE_STEAL,         	    0, 0, "",              CPID_VEHICLES_OTHER,   "0 0",  _("^F2The enemy is stealing one of your vehicles!\n^F4Stop them!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VEHICLE_STEAL_SELF,         	0, 0, "",              CPID_VEHICLES_OTHER,   "4 0",  _("^F2You have stolen the enemy's vehicle, you are now visible on their radar!"), "") \

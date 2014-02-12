@@ -36,6 +36,13 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerDies)
 
 	if(cvar("g_freeze") == 3)
 		can_freeze = FALSE; // force off (easier than disabling & restarting, will fix later)
+		
+	if(ITEM_DAMAGE_NEEDKILL(frag_deathtype))
+	{
+		if(self.frozen)
+			self.freeze_flag = FROZEN_RESPAWNING;
+		return TRUE;
+	}
 
 	if(can_freeze)
 	if(!frag_target.frozen)
@@ -48,8 +55,7 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerDies)
 		if(g_minstagib)
 			frag_target.ammo_cells = start_ammo_cells; // we need more ammo in minstagib, otherwise the player will defrost & die again
 
-		if(ITEM_DAMAGE_NEEDKILL(frag_deathtype)
-			|| frag_deathtype == DEATH_TEAMCHANGE || frag_deathtype == DEATH_AUTOTEAMCHANGE)
+		if(frag_deathtype == DEATH_TEAMCHANGE || frag_deathtype == DEATH_AUTOTEAMCHANGE)
 		{
 			// let the player die, he will be automatically frozen when he respawns
 			if(self.frozen == 1)

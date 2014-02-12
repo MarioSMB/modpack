@@ -165,13 +165,13 @@ void Invasion_RoundStart()
 
 	inv_roundcnt += 1;
 
-	inv_monsterskill = inv_roundcnt + (numplayers * 0.3);
+	inv_monsterskill = inv_roundcnt + max(1, numplayers * 0.3);
 
 	inv_maxcurrent = 0;
 	inv_numspawned = 0;
 	inv_numkilled = 0;
 
-	inv_maxspawned = rint(min(autocvar_g_invasion_monster_count, autocvar_g_invasion_monster_count * (inv_roundcnt * 0.5)));
+	inv_maxspawned = rint(max(autocvar_g_invasion_monster_count, autocvar_g_invasion_monster_count * (inv_roundcnt * 0.5)));
 }
 
 MUTATOR_HOOKFUNCTION(invasion_MonsterDies)

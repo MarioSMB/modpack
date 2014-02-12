@@ -460,7 +460,7 @@ void nade_monster_boom()
 {
 	entity e = spawnmonster(self.pokenade_type, 0, self.realowner, self.realowner, self.origin, FALSE, TRUE, 1);
 	
-	e.ltime = time + autocvar_g_nades_pokenade_monster_lifetime;
+	e.monster_lifetime = time + autocvar_g_nades_pokenade_monster_lifetime;
 	e.monster_skill = MONSTER_SKILL_INSANE;
 }
 

@@ -26,6 +26,7 @@ void animdecide_setstate(entity e, float newstate, float restart);
 #define ANIMSTATE_DEAD2 2 // base frames: die2
 #define ANIMSTATE_DUCK 4 // turns walk into duckwalk, jump into duckjump, etc.
 #define ANIMSTATE_FROZEN 8 // force idle
+#define ANIMSTATE_FOLLOW 16 // also force idle
 
 // implicit anim states (inferred from velocity, etc.)
 #define ANIMIMPLICITSTATE_INAIR 1

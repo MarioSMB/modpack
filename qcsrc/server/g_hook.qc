@@ -300,6 +300,8 @@ void GrapplingHookThink()
 
 void GrapplingHookTouch (void)
 {
+	if(other.movetype == MOVETYPE_FOLLOW)
+		return;
 	PROJECTILE_TOUCH;
 
 	GrapplingHook_Stop();
@@ -356,7 +358,7 @@ void FireGrapplingHook (void)
 	float s;
 	vector vs;
 
-	if((time < game_starttime && !autocvar_sv_ready_restart_after_countdown) || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || self.frozen || self.vehicle)
+	if((time < game_starttime && !autocvar_sv_ready_restart_after_countdown) || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || self.frozen || self.vehicle || self.pbhost)
 		return;
 
 	makevectors(self.v_angle);

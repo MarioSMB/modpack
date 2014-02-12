@@ -303,7 +303,7 @@ void ClientCommand_mobspawn(float request, float argc)
 					}
 				}
 
-				if(found)
+				if(found || tospawn == "random")
 				{
 					self.monstercount += 1;
 					totalspawned += 1;

@@ -252,45 +252,43 @@ float tankll48_frame()
 	self.angles_x = bound(-autocvar_g_vehicle_tankll48_tiltlimit, self.angles_x, autocvar_g_vehicle_tankll48_tiltlimit);
 	self.angles_z = bound(-autocvar_g_vehicle_tankll48_tiltlimit, self.angles_z, autocvar_g_vehicle_tankll48_tiltlimit);
 
-	if(player.BUTTON_ATCK)
+
+	if(player.BUTTON_ATCK && tank.vehicle_ammo1 >= autocvar_g_vehicle_tankll48_cannon_ammo && tank.tur_head.attack_finished_single <= time)
 	{
 		tank.cnt = time;
-		if(tank.vehicle_ammo1 >= autocvar_g_vehicle_tankll48_cannon_ammo && tank.tur_head.attack_finished_single <= time)
-		{
-			entity missile = spawn();
-			vector v = gettaginfo(self.gun1, gettagindex(self.gun1, "barrels"));
-			W_SetupShot_ProjectileSize (player, '-3 -3 -3', '3 3 3', FALSE, 5, "weapons/campingrifle_fire_morebass.wav", CH_WEAPON_A, autocvar_g_vehicle_tankll48_cannon_damage, DEATH_VH_TANKLL48);
-			tank.vehicle_ammo1 -= autocvar_g_vehicle_tankll48_cannon_ammo;
-			w_shotorg = v;
+		entity missile = spawn();
+		vector v = gettaginfo(self.gun1, gettagindex(self.gun1, "barrels"));
+		W_SetupShot_ProjectileSize (player, '-3 -3 -3', '3 3 3', FALSE, 5, "weapons/campingrifle_fire_morebass.wav", CH_WEAPON_A, autocvar_g_vehicle_tankll48_cannon_damage, DEATH_VH_TANKLL48);
+		tank.vehicle_ammo1 -= autocvar_g_vehicle_tankll48_cannon_ammo;
+		w_shotorg = v;
 
-			pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
-			PROJECTILE_MAKETRIGGER(missile);
+		pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+		PROJECTILE_MAKETRIGGER(missile);
 
-			missile.owner = missile.realowner = player;
-			missile.bot_dodge = TRUE;
-			missile.bot_dodgerating = autocvar_g_vehicle_tankll48_cannon_damage * 2;
+		missile.owner = missile.realowner = player;
+		missile.bot_dodge = TRUE;
+		missile.bot_dodgerating = autocvar_g_vehicle_tankll48_cannon_damage * 2;
 
-			missile.takedamage = DAMAGE_NO;
-			missile.event_damage = func_null;
-			missile.damagedbycontents = TRUE;
-			missile.movetype = MOVETYPE_FLY;
+		missile.takedamage = DAMAGE_NO;
+		missile.event_damage = func_null;
+		missile.damagedbycontents = TRUE;
+		missile.movetype = MOVETYPE_FLY;
 
-			missile.projectiledeathtype = DEATH_VH_TANKLL48;
-			setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
+		missile.projectiledeathtype = DEATH_VH_TANKLL48;
+		setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
-			setorigin (missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
-			W_SetupProjectileVelocity(missile, autocvar_g_vehicle_tankll48_cannon_speed, 0);
+		setorigin (missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
+		W_SetupProjectileVelocity(missile, autocvar_g_vehicle_tankll48_cannon_speed, 0);
 
-			missile.touch = tankll48_cannon_touch;
+		missile.touch = tankll48_cannon_touch;
 
-			missile.think = tankll48_cannon_think;
-			missile.cnt = time + 15;
-			missile.nextthink = time;
-			missile.flags = FL_PROJECTILE;
-			missile.pos1 = missile.velocity;
+		missile.think = tankll48_cannon_think;
+		missile.cnt = time + 15;
+		missile.nextthink = time;
+		missile.flags = FL_PROJECTILE;
+		missile.pos1 = missile.velocity;
 			
-			CSQCProjectile(missile, TRUE, PROJECTILE_CANNONBALL, FALSE);
-		}
+		CSQCProjectile(missile, TRUE, PROJECTILE_CANNONBALL, FALSE);
 	}
 	else
 		vehicles_regen(tank.cnt, vehicle_ammo1, autocvar_g_vehicle_tankll48_cannon_ammo_max,
@@ -349,7 +347,7 @@ void tankll48_exit(float eject)
 	makevectors(self.angles);
 	if(eject)
 	{
-		spot = self.origin + v_forward * 100 + '0 0 64';
+		spot = self.origin + v_forward * 300 + '0 0 64';
 		spot = vehicles_findgoodexit(spot);
 		setorigin(self.owner , spot);
 		self.owner.velocity = (v_up + v_forward * 0.25) * 750;
@@ -361,14 +359,14 @@ void tankll48_exit(float eject)
 		{
 			self.owner.velocity = normalize(self.velocity) * vlen(self.velocity);
 			self.owner.velocity_z += 200;
-			spot = self.origin + v_forward * 128 + '0 0 64';
+			spot = self.origin + v_forward * 328 + '0 0 64';
 			spot = vehicles_findgoodexit(spot);
 		}
 		else
 		{
 			self.owner.velocity = self.velocity * 0.5;
 			self.owner.velocity_z += 10;
-			spot = self.origin + v_forward * 256 + '0 0 64';
+			spot = self.origin + v_forward * 356 + '0 0 64';
 			spot = vehicles_findgoodexit(spot);
 		}
 		self.owner.oldvelocity = self.owner.velocity;
@@ -619,12 +617,7 @@ float v_tankll48(float req)
 
 #endif // SVQC
 #ifdef CSQC
-var float autocvar_cl_vehicle_tankll48_cross_alpha = 0.6;
-var float autocvar_cl_vehicle_tankll48_cross_size = 1;
-
-#define tank_ico  "gfx/vehicles/sbot.tga"
-#define tank_rkt  "gfx/vehicles/sbot_rpods.tga"
-#define tank_mgun "gfx/vehicles/sbot_mguns.tga"
+#define tank_ico  "gfx/vehicles/tankll48.tga"
 
 float v_tankll48(float req)
 {
@@ -657,8 +650,8 @@ float v_tankll48(float req)
 				drawpic(hudloc + picloc, tank_ico, pic2size,  '1 0 0' + '0 1 1' * sin(time * 8),  1, DRAWFLAG_NORMAL);
 			else
 				drawpic(hudloc + picloc, tank_ico, pic2size,  '1 1 1' * vh_health  + '1 0 0' * (1 - vh_health),  1, DRAWFLAG_NORMAL);
-			drawpic(hudloc + picloc, tank_rkt, pic2size,  '1 1 1' * reload2 + '1 0 0' * (1 - reload2), 1, DRAWFLAG_NORMAL);
-			drawpic(hudloc + picloc, tank_mgun, pic2size, '1 1 1' * ammo1   + '1 0 0' * (1 - ammo1),   1, DRAWFLAG_NORMAL);
+			//drawpic(hudloc + picloc, tank_rkt, pic2size,  '1 1 1' * reload2 + '1 0 0' * (1 - reload2), 1, DRAWFLAG_NORMAL);
+			//drawpic(hudloc + picloc, tank_mgun, pic2size, '1 1 1' * ammo1   + '1 0 0' * (1 - ammo1),   1, DRAWFLAG_NORMAL);
 			drawpic(hudloc + picloc, hud_sh, pic2size,  '1 1 1', shield, DRAWFLAG_NORMAL);
 
 		// Health bar

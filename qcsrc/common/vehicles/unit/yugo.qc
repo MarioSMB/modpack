@@ -498,9 +498,7 @@ float v_yugo(float req)
 #endif // SVQC
 #ifdef CSQC
 
-#define yugo_ico "gfx/vehicles/waki.tga"
-#define yugo_eng "gfx/vehicles/waki_e.tga"
-#define yugo_gun "gfx/vehicles/waki_guns.tga"
+#define yugo_ico "gfx/vehicles/yugo.tga"
 
 float v_yugo(float req)
 {
@@ -533,8 +531,8 @@ float v_yugo(float req)
 				drawpic(hudloc + picloc, yugo_ico, pic2size,  '1 0 0' + '0 1 1' * sin(time * 8),  1, DRAWFLAG_NORMAL);
 			else
 				drawpic(hudloc + picloc, yugo_ico, pic2size,  '1 1 1' * vh_health  + '1 0 0' * (1 - vh_health),  1, DRAWFLAG_NORMAL);
-			drawpic(hudloc + picloc, yugo_eng, pic2size, '1 1 1' * energy   + '1 0 0' * (1 - energy),   1, DRAWFLAG_NORMAL);
-			drawpic(hudloc + picloc, yugo_gun, pic2size, '1 1 1' * energy   + '1 0 0' * (1 - energy),   1, DRAWFLAG_NORMAL);
+			//drawpic(hudloc + picloc, yugo_eng, pic2size, '1 1 1' * energy   + '1 0 0' * (1 - energy),   1, DRAWFLAG_NORMAL);
+			//drawpic(hudloc + picloc, yugo_gun, pic2size, '1 1 1' * energy   + '1 0 0' * (1 - energy),   1, DRAWFLAG_NORMAL);
 			drawpic(hudloc + picloc, hud_sh, pic2size,  '1 1 1', shield, DRAWFLAG_NORMAL);
 
 		// Health bar

@@ -2319,7 +2319,7 @@ void PlayerUseKey()
 			{
 				if(IS_VEHICLE(head))
 				if(head.deadflag == DEAD_NO)
-				if(!head.owner)
+				if(!head.owner || ((head.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(head.owner, self)))
 				if(head.takedamage != DAMAGE_NO)
 				{
 					if(closest_target)
@@ -2470,7 +2470,9 @@ void PlayerPreThink (void)
 		if(vlen(veh.origin - self.origin) < autocvar_g_vehicles_enter_radius)
 		if(veh.deadflag == DEAD_NO)
 		if(veh.takedamage != DAMAGE_NO)
-		if(!veh.owner)
+		if((veh.vehicle_flags & VHF_MULTISLOT) && SAME_TEAM(veh.owner, self))
+			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_VEHICLE_ENTER_GUNNER);
+		else if(!veh.owner)
 		if(!veh.team || SAME_TEAM(self, veh))
 			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_VEHICLE_ENTER);
 		else if(autocvar_g_vehicles_steal)
@@ -2621,7 +2623,7 @@ void PlayerPreThink (void)
 			if (self.crouch)
 			{
 				tracebox(self.origin, PL_MIN, PL_MAX, self.origin, FALSE, self);
-				if (!trace_startsolid)
+				if (!trace_startsolid || self.pbhost)
 				{
 					self.crouch = FALSE;
 					self.view_ofs = PL_VIEW_OFS;

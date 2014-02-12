@@ -129,6 +129,8 @@ vector animdecide_getupperanim(entity e)
 vector animdecide_getloweranim(entity e)
 {
 	// death etc.
+	if(e.anim_state & ANIMSTATE_FOLLOW)
+		return vec3(((e.anim_state & ANIMSTATE_DUCK) ? e.anim_duckidle_x : e.anim_idle_x), e.anim_time, ANIMPRIO_DEAD); // dead priority so it's above all
 	if(e.anim_state & ANIMSTATE_FROZEN)
 		return vec3(e.anim_idle_x, e.anim_time, ANIMPRIO_DEAD);
 	if(e.anim_state & ANIMSTATE_DEAD1)

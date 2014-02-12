@@ -7,7 +7,7 @@ void ok_DecreaseCharge(entity ent, float wep)
 	if(wepent.weapon == 0)
 		return; // dummy
 
-	ent.ammo_charge[wep] -= cvar(sprintf("g_overkill_ammo_decharge_%s", wepent.netname));
+	ent.ammo_charge[wep] -= max(0, cvar(sprintf("g_overkill_ammo_decharge_%s", wepent.netname)));
 }
 
 void ok_IncreaseCharge(entity ent, float wep)
@@ -78,9 +78,11 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 		frag_damage = 0;
 
 		if(frag_attacker != frag_target)
+		if(frag_target.health > 0)
+		if(frag_target.frozen == 0)
+		if(frag_target.deadflag == DEAD_NO)
 		{
-			if(frag_target.health >= 1 && !frag_target.frozen && frag_target.deadflag == DEAD_NO)
-				Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE);
+			Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE);
 			frag_force = '0 0 0';
 		}
 	}
@@ -92,8 +94,11 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 {
 	entity oldself = self;
 
-	if(IS_MONSTER(other))
-		other.monster_loot = func_null; // this hook is shared with monsters
+	if(IS_MONSTER(self))
+	{
+		remove(other); // remove default item
+		other = world;
+	}
 
 	self.ok_lastwep = self.weapon;
 	self.ok_deathloc = self.origin;
@@ -239,7 +244,7 @@ MUTATOR_HOOKFUNCTION(ok_StartItems)
 	start_weapons = warmup_start_weapons = (WEPSET_UZI | WEPSET_NEX | WEPSET_SHOTGUN);
 
 	start_ammo_nails = start_ammo_cells = start_ammo_shells = start_ammo_rockets =
-	warmup_start_ammo_nails = warmup_start_ammo_cells = warmup_start_ammo_shells = warmup_start_ammo_rockets = autocvar_g_overkill_ammo_start;
+	warmup_start_ammo_nails = warmup_start_ammo_cells = warmup_start_ammo_shells = warmup_start_ammo_rockets = autocvar_g_overkill_ammo_start; // is this really needed? ammo isn't used anymore, but should default above 0
 
 	return FALSE;
 }

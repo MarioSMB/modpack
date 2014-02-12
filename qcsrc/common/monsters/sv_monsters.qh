@@ -11,6 +11,8 @@ float monsters_killed;
 void monsters_setstatus(); // monsters.qc
 .float monster_moveflags; // checks where to move when not attacking
 
+.float monster_lifetime;
+
 .float spider_slowness; // special spider timer
 
 void monster_remove(entity mon); // removes a monster

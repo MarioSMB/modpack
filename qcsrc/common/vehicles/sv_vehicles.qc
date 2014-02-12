@@ -316,13 +316,14 @@ float vehicle_addplayerslot(	entity _owner,
 								float _hud,
 								string _hud_model,
 								float() _framefunc,
-								void(float) _exitfunc)
+								void(float) _exitfunc, float() _enterfunc)
 {
 	if(!(_owner.vehicle_flags & VHF_MULTISLOT))
 		_owner.vehicle_flags |= VHF_MULTISLOT;
 
 	_slot.PlayerPhysplug = _framefunc;
 	_slot.vehicle_exit = _exitfunc;
+	_slot.vehicle_enter = _enterfunc;
 	_slot.hud = _hud;
 	_slot.vehicle_flags = VHF_PLAYERSLOT;
 	_slot.vehicle_viewport = spawn();
@@ -926,6 +927,35 @@ void vehicles_enter(entity pl, entity veh)
 
 	if(pl.vehicle)
 		return;
+
+	if(autocvar_g_vehicles_enter) // skip if we're using regular touch code
+	if(veh.vehicle_flags & VHF_MULTISLOT)
+	if(veh.owner)
+	{
+		entity oldself = self;
+		self = veh;
+		other = pl; // TODO: fix
+
+		if(!veh.gunner1)
+		if(veh.gun1.phase <= time)
+		if(veh.gun1.vehicle_enter)
+		if(veh.gun1.vehicle_enter())
+		{
+			self = oldself;
+			return;
+		}
+
+		if(!veh.gunner2)
+		if(veh.gun2.phase <= time)
+		if(veh.gun2.vehicle_enter)
+		if(veh.gun2.vehicle_enter())
+		{
+			self = oldself;
+			return;
+		}
+
+		self = oldself;
+	}
 
 	if(teamplay)
 	if(veh.team)
