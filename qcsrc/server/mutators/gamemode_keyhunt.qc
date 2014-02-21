@@ -496,7 +496,7 @@ void kh_WinnerTeam(float teem)  // runs when a team wins // Samual: Teem?.... TE
 		kh_Scores_Event(key.owner, key, "capture", f, 0);
 		PlayerScore_Add(key.owner, SP_KH_CAPS, +1);
 	}
-	
+
 	TeamScore_AddToTeam(teem, ST_KH_CAPS, +1);
 
 	first = TRUE;

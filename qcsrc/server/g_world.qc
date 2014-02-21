@@ -859,7 +859,7 @@ void spawnfunc_worldspawn (void)
 	ClientInit_Spawn();
 	RandomSeed_Spawn();
 	PingPLReport_Spawn();
-	
+
 	if(!g_jailbreak)
 		InitializeEntity(world, JB_NonJBInit, INITPRIO_LAST);
 
@@ -2501,9 +2501,9 @@ float MapVote_SendEntity(entity to, float sf)
 
 		if(gametypevote)
 			WriteString(MSG_ENTITY, getmapname_stored);
-		
+
 		MapVote_WriteMask();
-				
+
 		for(i = 0; i < mapvote_count; ++i)
 		{
 			if(mapvote_abstain && i == mapvote_count - 1)
@@ -2752,7 +2752,7 @@ void MapVote_Tick()
 			other.mapvote = 0;
 		// use impulses as new vote
 		if(other.impulse >= 1 && other.impulse <= mapvote_count)
-			if( mapvote_maps_availability[other.impulse-1] == GTV_AVAILABLE )
+			if( mapvote_maps_availability[other.impulse - 1] == GTV_AVAILABLE )
 			{
 				other.mapvote = other.impulse;
 				MapVote_TouchVotes(other);
@@ -2778,7 +2778,6 @@ void MapVote_Start()
 	if(MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1))
 		mapvote_run = TRUE;
 }
-
 void MapVote_Think()
 {
 	if(!mapvote_run)

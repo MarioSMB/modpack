@@ -290,7 +290,7 @@ void InitGameplayMode()
 
 		ScoreRules_race();
 	}
-	
+
 	gametypetoset = MapInfo_CurrentGametype();
 
 	InitializeEntity(world, default_delayedinit, INITPRIO_GAMETYPE_FALLBACK);
@@ -327,7 +327,7 @@ string getwelcomemessage(void)
 	}
 	if(autocvar_g_start_weapon_laser == 0)
 		modifications = strcat(modifications, ", No start weapons");
-	if(autocvar_sv_gravity < stof(cvar_defstring("sv_gravity")))
+	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		modifications = strcat(modifications, ", Low gravity");
 	if(g_cloaked && !g_cts)
 		modifications = strcat(modifications, ", Cloaked");

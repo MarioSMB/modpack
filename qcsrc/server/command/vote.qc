@@ -356,7 +356,7 @@ void reset_map(float dorespawn)
 			continue;
 		}
 	}
-	
+
 	FOR_EACH_PLAYER(self)
 	if(self.frozen)
 		Unfreeze(self);
@@ -822,7 +822,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 				Nagger_VoteChanged();
 
 				if(autocvar_sv_vote_auto)
-				FOR_EACH_REALCLIENT(tmp_player)
+				FOR_EACH_REALCLIENT(tmp_player) if(tmp_player != vote_caller)
 				switch(tmp_player.cvar_cl_autovote)
 				{
 					case "yes": tmp_player.vote_selection = VOTE_SELECT_ACCEPT; print_to(tmp_player, "You automatically accepted the vote\n"); break;

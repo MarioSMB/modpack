@@ -903,7 +903,7 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 
 	if(time < self.spawnshieldtime && deathtype != DEATH_KILL)
 		return;
-		
+
 	if(deathtype == DEATH_FALL && self.draggedby != world)
 		return;
 
@@ -1106,7 +1106,7 @@ float monster_initialize(float mon_id, float nodrop)
 	self.spider_slowness	= 0;
 	self.gravity			= 1;
 	self.dphitcontentsmask	= DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
-	
+
 	if(autocvar_g_monsters_edit)
 		self.grab = 1; // owner may carry their monster
 

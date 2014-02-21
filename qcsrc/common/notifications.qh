@@ -340,6 +340,7 @@ void Send_Notification_WOCOVA(
 	MULTITEAM_INFO##teams(default,prefix,strnum,flnum,args,hudargs,icon,normal,gentle)
 
 #define MSG_INFO_NOTIFICATIONS \
+	MSG_INFO_NOTIF(2, INFO_CHAT_NOSPECTATORS,              0, 0, "", "",                            "",                     _("^F4NOTE: ^BGSpectator chat is not sent to players during the match"), "") \
 	MSG_INFO_NOTIF(2, INFO_COINTOSS,                       1, 0, "s1", "",                          "",                     _("^F2Throwing coin... Result: %s^F2!"), "") \
 	MSG_INFO_NOTIF(1, INFO_JETPACK_NOFUEL,                 0, 0, "", "",                            "",                     _("^BGYou don't have any fuel for the ^F1Jetpack"), "") \
 	MSG_INFO_NOTIF(2, INFO_SUPERSPEC_MISSING_UID,          0, 0, "", "",                            "",                     _("^F2You lack a UID, superspec options will not be saved/restored"), "") \

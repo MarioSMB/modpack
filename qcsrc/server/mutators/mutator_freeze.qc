@@ -23,7 +23,7 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerDies)
 	if(frag_deathtype == DEATH_HURTTRIGGER)
 		return FALSE;
 
-	SetRespawnDelays(); // player doesn't actually die
+	calculate_player_respawn_time(); // player doesn't actually die
 
 	float can_freeze = FALSE;
 
