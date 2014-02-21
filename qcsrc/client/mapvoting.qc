@@ -178,9 +178,9 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 	else
 	{
 		if(drawgetimagesize(pic) == '0 0 0')
-			drawpic(pos, draw_UseSkinFor("nopreview_map"), img_size, '1 1 1', theAlpha, DRAWFLAG_NORMAL);
+			drawpic_rotated(pos, draw_UseSkinFor("nopreview_map"), img_size, '1 1 1', M_PI, theAlpha, DRAWFLAG_NORMAL);
 		else
-			drawpic(pos, pic, img_size, '1 1 1', theAlpha, DRAWFLAG_NORMAL);
+			drawpic_rotated(pos, pic, img_size, '1 1 1', M_PI, theAlpha, DRAWFLAG_NORMAL);
 	}
 
 	if(id == mv_ownvote)
