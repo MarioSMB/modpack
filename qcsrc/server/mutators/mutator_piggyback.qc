@@ -28,6 +28,8 @@ void pb_Attach(entity host, entity slave)
 	slave.solid = SOLID_CORPSE;
 	slave.pb_canattach = 0;
 	
+	RemoveGrapplingHook(slave);
+	
 	centerprint(slave, sprintf("You are now %s^7's piggybacker!", host.netname));
 	centerprint(host, sprintf("%s^7 is now your piggybacker!", slave.netname));
 }
