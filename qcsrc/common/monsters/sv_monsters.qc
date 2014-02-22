@@ -350,12 +350,21 @@ float Monster_CanRespawn(entity ent)
 	return TRUE;
 }
 
+float Monster_CheckAppearFlags(entity ent);
+float monster_initialize(float mon_id);
+void monster_respawn()
+{
+	// is this function really needed?
+	if(!Monster_CheckAppearFlags(self))
+		monster_initialize(self.monsterid);
+}
+
 void Monster_Fade ()
 {
 	if(Monster_CanRespawn(self))
 	{
 		self.spawnflags |= MONSTERFLAG_RESPAWNED;
-		self.think = self.monster_spawnfunc;
+		self.think = monster_respawn;
 		self.nextthink = time + self.respawntime;
 		self.monster_lifetime = 0;
 		self.deadflag = DEAD_RESPAWNING;
@@ -784,7 +793,7 @@ void Monster_Appear()
 {
 	self.enemy = activator;
 	self.spawnflags &= ~MONSTERFLAG_APPEAR;
-	self.monster_spawnfunc();
+	monster_initialize(self.monsterid);
 }
 
 float Monster_CheckAppearFlags(entity ent)
@@ -1050,7 +1059,7 @@ float monster_spawn()
 	return TRUE;
 }
 
-float monster_initialize(float mon_id, float nodrop)
+float monster_initialize(float mon_id)
 {
 	if(!autocvar_g_monsters)
 		return FALSE;
@@ -1069,7 +1078,7 @@ float monster_initialize(float mon_id, float nodrop)
 		self.team = 0;
 
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED)) // naturally spawned monster
-	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
+	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED)) // don't count re-spawning monsters either
 		monsters_total += 1;
 
 	setmodel(self, mon.model);
@@ -1101,7 +1110,7 @@ float monster_initialize(float mon_id, float nodrop)
 	self.oldtarget2			= self.target2;
 	self.deadflag			= DEAD_NO;
 	self.scale				= 1;
-	self.noalign			= nodrop;
+	self.noalign			= (mon.spawnflags & MONSTER_TYPE_FLY);
 	self.spawn_time			= time;
 	self.spider_slowness	= 0;
 	self.gravity			= 1;
@@ -1127,6 +1136,9 @@ float monster_initialize(float mon_id, float nodrop)
 
 	if(mon.spawnflags & MONSTER_SIZE_BROKEN)
 		self.scale = 1.3;
+		
+	if(mon.spawnflags & MONSTER_RESPAWN_DEATHPOINT)
+		self.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
 
 	if(!self.ticrate)
 		self.ticrate = autocvar_g_monsters_think_delay;

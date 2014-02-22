@@ -197,12 +197,10 @@ void spawnfunc_monster_shambler()
 {
 	self.classname = "monster_shambler";
 
-	self.monster_spawnfunc = spawnfunc_monster_shambler;
-
 	if(Monster_CheckAppearFlags(self))
 		return;
 
-	if(!monster_initialize(MON_SHAMBLER, FALSE)) { remove(self); return; }
+	if(!monster_initialize(MON_SHAMBLER)) { remove(self); return; }
 }
 
 float m_shambler(float req)
