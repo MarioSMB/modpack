@@ -30,8 +30,8 @@ void pb_Attach(entity host, entity slave)
 	
 	RemoveGrapplingHook(slave);
 	
-	centerprint(slave, sprintf("You are now %s^7's piggybacker!", host.netname));
-	centerprint(host, sprintf("%s^7 is now your piggybacker!", slave.netname));
+	Send_Notification(NOTIF_ONE, slave, MSG_CENTER, CENTER_PIGGYBACK_RIDING, host.netname);
+	Send_Notification(NOTIF_ONE, host, MSG_CENTER, CENTER_PIGGYBACK_CARRYING, slave.netname);
 }
 
 void pb_Detach(entity host)
@@ -48,10 +48,13 @@ void pb_Detach(entity host)
 	{
 		// this doesn't happen when we're fixing a broken reference
 		
-		if(slave.movetype == MOVETYPE_FOLLOW) // don't reset if player was killed or somehting
+		if(slave.movetype == MOVETYPE_FOLLOW) // don't reset if player was killed
 			slave.movetype = MOVETYPE_WALK;
 		slave.velocity = '0 0 0';
 		slave.solid = slave.oldsolid;
+		
+		Kill_Notification(NOTIF_ONE, slave, MSG_CENTER_CPID, CPID_PIGGYBACK);
+		Kill_Notification(NOTIF_ONE, host, MSG_CENTER_CPID, CPID_PIGGYBACK);
 	}
 	
 	host.piggybacker = world;
