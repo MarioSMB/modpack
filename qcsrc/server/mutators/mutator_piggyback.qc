@@ -110,7 +110,7 @@ MUTATOR_HOOKFUNCTION(pb_PlayerUseKey)
 		while(head)
 		{
 			if(IS_PLAYER(head))
-			if(SAME_TEAM(head, self))
+			if(SAME_TEAM(head, self) || autocvar_g_piggyback_ride_enemies)
 			if(head != self)
 			if(head.deadflag == DEAD_NO)
 			if(!head.vehicle)
@@ -139,6 +139,14 @@ MUTATOR_HOOKFUNCTION(pb_PlayerThink)
 	
 	if(!self.pbent)
 		pb_FixPBEnt(self);
+		
+	if(IS_BOT_CLIENT(self.pbhost))
+	{
+		self.pbhost.movement = self.movement; // hehe
+		self.pbhost.BUTTON_JUMP = self.BUTTON_JUMP;
+		self.pbhost.BUTTON_CROUCH = self.BUTTON_CROUCH;
+		self.pbhost.angles = self.angles;
+	}
 
 	return FALSE;
 }
