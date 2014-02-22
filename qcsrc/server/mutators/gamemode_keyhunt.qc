@@ -396,7 +396,17 @@ void kh_Key_Collect(entity key, entity player)  //a player picks up a dropped ke
 		PlayerScore_Add(player, SP_KH_PICKUPS, 1);
 	}
 	key.kh_dropperteam = 0;
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_PICKUP_), player.netname);
+	
+	float keyteam = 0;
+	switch(key.netname)
+	{
+		case "^1red key": keyteam = NUM_TEAM_1; break;
+		case "^4blue key": keyteam = NUM_TEAM_2; break;
+		case "^3yellow key": keyteam = NUM_TEAM_3; break;
+		case "^6pink key": keyteam = NUM_TEAM_4; break;
+	}
+
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(keyteam, INFO_KEYHUNT_PICKUP_), player.netname);
 
 	kh_Key_AssignTo(key, player); // this also updates .kh_state
 }
@@ -786,7 +796,17 @@ void kh_Key_DropOne(entity key)
 
 	kh_Scores_Event(player, key, "dropkey", 0, 0);
 	PlayerScore_Add(player, SP_KH_LOSSES, 1);
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_DROP_), player.netname);
+	
+	float keyteam = 0;
+	switch(key.netname)
+	{
+		case "^1red key": keyteam = NUM_TEAM_1; break;
+		case "^4blue key": keyteam = NUM_TEAM_2; break;
+		case "^3yellow key": keyteam = NUM_TEAM_3; break;
+		case "^6pink key": keyteam = NUM_TEAM_4; break;
+	}
+	
+	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(keyteam, INFO_KEYHUNT_DROP_), player.netname);
 
 	kh_Key_AssignTo(key, world);
 	makevectors(player.v_angle);
