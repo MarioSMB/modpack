@@ -127,7 +127,9 @@ MUTATOR_HOOKFUNCTION(pb_PlayerUseKey)
 			head = head.chain;
 		}
 
-		if(closest_target) { pb_Attach(closest_target, self); return TRUE; }
+		if(closest_target)
+		if(IS_BOT_CLIENT(closest_target)) { pb_Attach(self, closest_target); return TRUE; }
+		else { pb_Attach(closest_target, self); return TRUE; }
 	}
 	
 	return FALSE;
@@ -139,14 +141,6 @@ MUTATOR_HOOKFUNCTION(pb_PlayerThink)
 	
 	if(!self.pbent)
 		pb_FixPBEnt(self);
-		
-	if(IS_BOT_CLIENT(self.pbhost))
-	{
-		self.pbhost.movement = self.movement; // hehe
-		self.pbhost.BUTTON_JUMP = self.BUTTON_JUMP;
-		self.pbhost.BUTTON_CROUCH = self.BUTTON_CROUCH;
-		self.pbhost.angles = self.angles;
-	}
 
 	return FALSE;
 }
@@ -190,6 +184,17 @@ MUTATOR_HOOKFUNCTION(pb_PlayerDies)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(pb_ItemTouch)
+{
+	if(self.weapon)
+	if(other.piggybacker)
+	if(other.weapons & self.weapons)
+	if(!(other.piggybacker.weapons & self.weapons))
+		other = other.piggybacker;
+
+	return FALSE;
+}
+
 MUTATOR_DEFINITION(mutator_piggyback)
 {
 	MUTATOR_HOOK(MatchEnd, pb_MatchEnd, CBC_ORDER_ANY);
@@ -199,6 +204,7 @@ MUTATOR_DEFINITION(mutator_piggyback)
 	MUTATOR_HOOK(MakePlayerObserver, pb_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, pb_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, pb_PlayerDies, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ItemTouch, pb_ItemTouch, CBC_ORDER_ANY);
 
 	return FALSE;
 }
