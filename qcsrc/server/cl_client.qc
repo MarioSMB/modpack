@@ -2305,6 +2305,7 @@ void PlayerUseKey()
 		return;
 
 	if(self.vehicle)
+	if(!gameover)
 	{
         vehicles_exit(VHEF_NORMAL);
         return;
