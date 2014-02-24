@@ -223,6 +223,7 @@ void GrapplingHookThink()
 						entity aim_ent = ((IS_VEHICLE(self.aiment) && self.aiment.owner) ? self.aiment.owner : self.aiment);
 						v = v - dv * 0.5;
 						if((frozen_pulling && self.aiment.frozen) || !frozen_pulling)
+						if(self.aiment.vehicleid != VEH_TANKLL48)
 						{
 							self.aiment.velocity = self.aiment.velocity - dv * 0.5;
 							self.aiment.flags &= ~FL_ONGROUND;
