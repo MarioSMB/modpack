@@ -1136,9 +1136,6 @@ float monster_initialize(float mon_id)
 
 	if(mon.spawnflags & MONSTER_SIZE_BROKEN)
 		self.scale = 1.3;
-		
-	if(mon.spawnflags & MONSTER_RESPAWN_DEATHPOINT)
-		self.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
 
 	if(!self.ticrate)
 		self.ticrate = autocvar_g_monsters_think_delay;

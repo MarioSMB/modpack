@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ ZOMBIE,
 /* function   */ m_zombie,
-/* spawnflags */ MON_FLAG_MELEE | MONSTER_RESPAWN_DEATHPOINT,
+/* spawnflags */ MON_FLAG_MELEE,
 /* mins,maxs  */ '-18 -18 -25', '18 18 47',
 /* model      */ "zombie.dpm",
 /* netname    */ "zombie",
@@ -158,6 +158,8 @@ float m_zombie(float req)
 
 			if(self.spawnflags & MONSTERFLAG_NORESPAWN)
 				self.spawnflags &= ~MONSTERFLAG_NORESPAWN; // zombies always respawn
+
+			self.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
 
 			self.monster_loot = spawnfunc_item_health_medium;
 			self.monster_attackfunc	= zombie_attack;
