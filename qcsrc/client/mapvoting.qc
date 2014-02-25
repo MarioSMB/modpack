@@ -178,9 +178,11 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 	else
 	{
 		if(drawgetimagesize(pic) == '0 0 0')
+			//drawpic_rotated(pos, draw_UseSkinFor("nopreview_map"), img_size, '1 1 1', M_PI, theAlpha, DRAWFLAG_NORMAL);
 			drawpic(pos, draw_UseSkinFor("nopreview_map"), img_size, '1 1 1', theAlpha, DRAWFLAG_NORMAL);
 		else
 			drawpic(pos, pic, img_size, '1 1 1', theAlpha, DRAWFLAG_NORMAL);
+			//drawpic_rotated(pos, pic, img_size, '1 1 1', M_PI, theAlpha, DRAWFLAG_NORMAL);
 	}
 
 	if(id == mv_ownvote)
@@ -667,7 +669,6 @@ float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		localcmd(strcat("\nimpulse ", ftos(imp), "\n"));
 		return true;
 	}
-	
 	switch(nPrimary)
 	{
 		case K_KP_1: localcmd("\nimpulse 1\n"); return true;
@@ -680,7 +681,7 @@ float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		case K_KP_8: localcmd("\nimpulse 8\n"); return true;
 		case K_KP_9: localcmd("\nimpulse 9\n"); return true;
 		case K_KP_0: localcmd("\nimpulse 10\n"); return true;
-		
+
 		case K_RIGHTARROW:
 			MapVote_SendChoice(MapVote_MoveRight(mv_ownvote));
 			return true;
@@ -693,8 +694,6 @@ float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		case K_UPARROW:
 			MapVote_SendChoice(MapVote_MoveUp(mv_ownvote));
 			return true;
-			
-			
 	}
 
 	if (nPrimary == K_MOUSE1)

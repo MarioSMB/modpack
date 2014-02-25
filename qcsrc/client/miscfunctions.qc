@@ -382,6 +382,16 @@ void drawcolorcodedstring_aspect_expanding(vector pos, string text, vector sz, f
 	drawcolorcodedstring_expanding(pos, text, '1 1 0' * sz_y, theAlpha, drawflag, fadelerp);
 }
 
+void drawrotpic(vector org, float rot, string pic, vector sz, vector hotspot, vector rgb, float a, float f);       
+
+void drawpic_rotated(vector position, string pic, vector sz, vector rgb, float angle, float theAlpha, float flag) {
+	drawrotpic(position + sz * 0.5, angle, pic, sz, sz * 0.5, rgb, theAlpha, flag);
+}
+
+void drawpic_rotated_ex(vector position, string pic, vector sz, vector rgb, float angle, vector hotspot, float theAlpha, float flag) {
+	drawrotpic(position + hotspot, angle, pic, sz, hotspot, rgb, theAlpha, flag);
+}
+
 // this draws the triangles of a model DIRECTLY. Don't expect high performance, really...
 float PolyDrawModelSurface(entity e, float i_s)
 {

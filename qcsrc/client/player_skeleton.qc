@@ -187,7 +187,7 @@ void skeleton_from_frames(entity e, float is_dead)
 				skel_set_boneabs(s, e.(bone_aim[i]), org);
 			}
 		}
-		
+
 		e.angles_x = e.angles_z = 0; // bad hax, fix later
 	}
 }

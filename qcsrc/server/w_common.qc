@@ -286,7 +286,7 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 			yoda = 0;
 			float g = accuracy_isgooddamage(self, hit);
 			Damage(hit, self, self, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);
-			
+
 			if(Headshot(hit, self, end))
 				Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_HEADSHOT);
 				

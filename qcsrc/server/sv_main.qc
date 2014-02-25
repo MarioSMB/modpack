@@ -219,18 +219,18 @@ void StartFrame (void)
 
 	game_delay_last = game_delay;
 
+	CreatureFrame ();
+	CheckRules_World ();
+
 	// if in warmup stage and limit for warmup is hit start match
-	if (warmup_stage)
-	if (!gameover && autocvar_timelimit != -1)
-	if ((g_warmup_limit > 0 && time >= g_warmup_limit)
+	if(warmup_stage)
+	if(!gameover)
+	if((g_warmup_limit > 0 && time >= g_warmup_limit)
 	 || (g_warmup_limit == 0 && autocvar_timelimit != 0 && time >= autocvar_timelimit * 60))
 	{
 		ReadyRestart();
 		return;
 	}
-
-	CreatureFrame ();
-	CheckRules_World ();
 
 	bot_serverframe();
 

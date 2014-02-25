@@ -790,16 +790,16 @@ void CSQC_UpdateView(float w, float h)
 	if(autocvar_cl_orthoview) { setproperty(VF_FOV, GetOrthoviewFOV(ov_worldmin, ov_worldmax, ov_mid, ov_org)); }
 	else if(fovlock > -1) { setproperty(VF_FOV, GetCurrentFov(fovlock)); }
 	else { setproperty(VF_FOV, GetCurrentFov(fov)); }
-	
+
 	if(spectatee_status < 0)
 		camera_expiretime = -1;
-		
+
 	float tempcamera = (time < camera_expiretime || camera_expiretime < -1);
-	
+
 	if(getstati(STAT_ROUNDLOST))
 	if(getstati(STAT_HEALTH) > 0)
 		tempcamera = FALSE;
-		
+
 	if(tempcamera)
 	{
 		if(!camera_drawviewmodel_locked)

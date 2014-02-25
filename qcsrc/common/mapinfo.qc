@@ -613,14 +613,11 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 		p = strstrofs(sa, "=", 0);
 		if(p < 0)
 		{
-			k = "timelimit";
-			v = s;
+			print("Invalid gametype setting in mapinfo for gametype ", MapInfo_Type_ToString(pWantedType), ": ", sa, "\n");
+			continue;
 		}
-		else
-		{
-			k = substring(sa, 0, p);
-			v = substring(sa, p+1, -1);
-		}
+		k = substring(sa, 0, p);
+		v = substring(sa, p+1, -1);
 
 		if(k == "timelimit")
 		{
@@ -656,7 +653,7 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 		}
 		else
 		{
-			print("Invalid gametype key in mapinfo: ", k, "\n");
+			print("Invalid gametype setting in mapinfo for gametype ", MapInfo_Type_ToString(pWantedType), ": ", sa, "\n");
 		}
 	}
 

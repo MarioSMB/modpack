@@ -885,7 +885,7 @@ void spawnfunc_worldspawn (void)
 	ClientInit_Spawn();
 	RandomSeed_Spawn();
 	PingPLReport_Spawn();
-	
+
 	if(!g_jailbreak)
 		InitializeEntity(world, JB_NonJBInit, INITPRIO_LAST);
 
@@ -1284,7 +1284,6 @@ float DoNextMapOverride(float reinit)
 	
 		if(!m || gametypevote)
 			return FALSE;
-		
 		if(autocvar_sv_vote_gametype)
 		{
 			Map_Goto_SetStr(m);
@@ -2340,7 +2339,7 @@ string MapVote_Suggest(string m)
 	if(!autocvar_g_maplist_votable_suggestions_override_mostrecent)
 		if(Map_IsRecent(m))
 			return "This server does not allow for recent maps to be played again. Please be patient for some rounds.";
-		
+
 	if (!autocvar_sv_vote_gametype)
 	if(!MapInfo_CheckMap(m))
 		return "The map you suggested does not support the current game mode.";
@@ -2526,9 +2525,9 @@ float MapVote_SendEntity(entity to, float sf)
 
 		if(gametypevote)
 			WriteString(MSG_ENTITY, autocvar_nextmap);
-		
+
 		MapVote_WriteMask();
-				
+
 		for(i = 0; i < mapvote_count; ++i)
 		{
 			if(mapvote_abstain && i == mapvote_count - 1)
@@ -2779,7 +2778,7 @@ void MapVote_Tick()
 			other.mapvote = 0;
 		// use impulses as new vote
 		if(other.impulse >= 1 && other.impulse <= mapvote_count)
-			if( mapvote_maps_availability[other.impulse-1] == GTV_AVAILABLE )
+			if( mapvote_maps_availability[other.impulse - 1] == GTV_AVAILABLE )
 			{
 				other.mapvote = other.impulse;
 				MapVote_TouchVotes(other);
@@ -2805,7 +2804,6 @@ void MapVote_Start()
 	if(MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 1))
 		mapvote_run = TRUE;
 }
-
 void MapVote_Think()
 {
 	if(!mapvote_run)

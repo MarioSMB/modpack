@@ -119,12 +119,10 @@ void spawnfunc_monster_spider()
 {
 	self.classname = "monster_spider";
 
-	self.monster_spawnfunc = spawnfunc_monster_spider;
-
 	if(Monster_CheckAppearFlags(self))
 		return;
 
-	if(!monster_initialize(MON_SPIDER, FALSE)) { remove(self); return; }
+	if(!monster_initialize(MON_SPIDER)) { remove(self); return; }
 }
 
 float m_spider(float req)

@@ -1,7 +1,7 @@
 entity spawnmonster (string monster, float monster_id, entity spawnedby, entity own, vector orig, float respwn, float invincible, float moveflag)
 {
 	// ensure spawnfunc database is initialized
-	initialize_field_db();
+	//initialize_field_db();
 
 	entity e = spawn();
 	float i;
@@ -35,6 +35,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 			if(mon.netname == monster)
 			{
 				found = TRUE;
+				monster_id = mon.monsterid; // we have the monster, old monster id is no longer required
 				break;
 			}
 		}
@@ -62,9 +63,14 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 		e.angles = spawnedby.angles;
 	}
 
-	monster = strcat("$ spawnfunc_monster_", monster);
+	//monster = strcat("$ spawnfunc_monster_", monster);
+	
+	entity oldself = self;
+	self = e;
+	monster_initialize(monster_id);
+	self = oldself;
 
-	target_spawn_edit_entity(e, monster, world, world, world, world, world);
+	//target_spawn_edit_entity(e, monster, world, world, world, world, world);
 
 	return e;
 }

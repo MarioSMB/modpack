@@ -28,8 +28,10 @@ void pb_Attach(entity host, entity slave)
 	slave.solid = SOLID_CORPSE;
 	slave.pb_canattach = 0;
 	
-	centerprint(slave, sprintf("You are now %s^7's piggybacker!", host.netname));
-	centerprint(host, sprintf("%s^7 is now your piggybacker!", slave.netname));
+	RemoveGrapplingHook(slave);
+	
+	Send_Notification(NOTIF_ONE, slave, MSG_CENTER, CENTER_PIGGYBACK_RIDING, host.netname);
+	Send_Notification(NOTIF_ONE, host, MSG_CENTER, CENTER_PIGGYBACK_CARRYING, slave.netname);
 }
 
 void pb_Detach(entity host)
@@ -46,10 +48,13 @@ void pb_Detach(entity host)
 	{
 		// this doesn't happen when we're fixing a broken reference
 		
-		if(slave.movetype == MOVETYPE_FOLLOW) // don't reset if player was killed or somehting
+		if(slave.movetype == MOVETYPE_FOLLOW) // don't reset if player was killed
 			slave.movetype = MOVETYPE_WALK;
 		slave.velocity = '0 0 0';
 		slave.solid = slave.oldsolid;
+		
+		Kill_Notification(NOTIF_ONE, slave, MSG_CENTER_CPID, CPID_PIGGYBACK);
+		Kill_Notification(NOTIF_ONE, host, MSG_CENTER_CPID, CPID_PIGGYBACK);
 	}
 	
 	host.piggybacker = world;
@@ -105,7 +110,7 @@ MUTATOR_HOOKFUNCTION(pb_PlayerUseKey)
 		while(head)
 		{
 			if(IS_PLAYER(head))
-			if(SAME_TEAM(head, self))
+			if(SAME_TEAM(head, self) || autocvar_g_piggyback_ride_enemies)
 			if(head != self)
 			if(head.deadflag == DEAD_NO)
 			if(!head.vehicle)
@@ -122,7 +127,9 @@ MUTATOR_HOOKFUNCTION(pb_PlayerUseKey)
 			head = head.chain;
 		}
 
-		if(closest_target) { pb_Attach(closest_target, self); return TRUE; }
+		if(closest_target)
+		if(IS_BOT_CLIENT(closest_target)) { pb_Attach(self, closest_target); return TRUE; }
+		else { pb_Attach(closest_target, self); return TRUE; }
 	}
 	
 	return FALSE;
@@ -177,6 +184,17 @@ MUTATOR_HOOKFUNCTION(pb_PlayerDies)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(pb_ItemTouch)
+{
+	if(self.weapon)
+	if(other.piggybacker)
+	if(other.weapons & self.weapons)
+	if(!(other.piggybacker.weapons & self.weapons))
+		other = other.piggybacker;
+
+	return FALSE;
+}
+
 MUTATOR_DEFINITION(mutator_piggyback)
 {
 	MUTATOR_HOOK(MatchEnd, pb_MatchEnd, CBC_ORDER_ANY);
@@ -186,6 +204,7 @@ MUTATOR_DEFINITION(mutator_piggyback)
 	MUTATOR_HOOK(MakePlayerObserver, pb_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, pb_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, pb_PlayerDies, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ItemTouch, pb_ItemTouch, CBC_ORDER_ANY);
 
 	return FALSE;
 }

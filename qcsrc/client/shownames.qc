@@ -104,7 +104,7 @@ void Draw_ShowNames(entity ent)
 		if(!ent.sameteam || (ent.sv_entnum == player_localentnum))
 			ent.alpha *= getplayeralpha(ent.sv_entnum-1);
 
-		if(ent.alpha < ALPHA_MIN_VISIBLE)
+		if(ent.alpha < ALPHA_MIN_VISIBLE && gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE)
 			return;
 
 		float dist;

@@ -336,12 +336,10 @@ void spawnfunc_monster_mage()
 {
 	self.classname = "monster_mage";
 
-	self.monster_spawnfunc = spawnfunc_monster_mage;
-
 	if(Monster_CheckAppearFlags(self))
 		return;
 
-	if(!monster_initialize(MON_MAGE, FALSE)) { remove(self); return; }
+	if(!monster_initialize(MON_MAGE)) { remove(self); return; }
 }
 
 // compatibility with old spawns
