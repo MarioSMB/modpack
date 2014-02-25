@@ -2441,7 +2441,7 @@ void MapVote_Init()
 	if(mapvote_count == 0)
 	{
 		bprint( "Maplist contains no single playable map!  Resetting it to default map list.\n" );
-		cvar_set("g_maplist", MapInfo_ListAllAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
+		cvar_set("g_maplist", MapInfo_ListAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
 		if(autocvar_g_maplist_shuffle)
 			ShuffleMaplist();
 		localcmd("\nmenu_cmd sync\n");
@@ -2875,9 +2875,15 @@ float GameTypeVote_Finished(float pos)
 	
 	localcmd("sv_vote_gametype_hook_all\n");
 	localcmd("sv_vote_gametype_hook_", mapvote_maps[pos], "\n");
-	localcmd("gametype ", mapvote_maps[pos], "\n");
 	
-	MapInfo_LoadMapSettings_SaveGameType(MapInfo_Type_FromString(mapvote_maps[pos]));
+	if ( MapInfo_CurrentGametype() != MapInfo_Type_FromString(mapvote_maps[pos]) )
+	{
+		localcmd("gametype ", mapvote_maps[pos], "\n");
+		MapInfo_LoadMapSettings_SaveGameType(MapInfo_Type_FromString(mapvote_maps[pos]));
+		cvar_set("g_maplist", MapInfo_ListAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
+		if(autocvar_g_maplist_shuffle)
+			ShuffleMaplist();
+	}
 	
 	gametypevote = 0;
 	
