@@ -290,9 +290,9 @@ void GrapplingHookThink()
 		self.owner.hitsound += 1;
 		Damage(dmgent, self, self.owner, autocvar_g_rm_hook_damage, WEP_HOOK, self.origin, '0 0 0');
 		if(teamplay && SAME_TEAM(self.owner, self.aiment))
-			self.aiment.health = bound(1, self.aiment.health + autocvar_g_rm_hook_damage_health, 200);
+			self.aiment.health = min(self.aiment.health + autocvar_g_rm_hook_damage_health, g_pickup_healthsmall_max);
 		else
-			self.owner.health = bound(1, self.owner.health + autocvar_g_rm_hook_damage_health, 200);
+			self.owner.health = min(self.owner.health + autocvar_g_rm_hook_damage_health, g_pickup_healthsmall_max);
 
 		if(dmgent == self.owner)
 			dmgent.health -= autocvar_g_rm_hook_damage; // FIXME: friendly fire?!
