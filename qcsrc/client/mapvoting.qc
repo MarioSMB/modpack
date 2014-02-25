@@ -21,31 +21,8 @@ float mv_columns;
 
 vector gtv_text_size;
 vector gtv_text_size_small;
-vector gtv_start;
 
 string GameTypeVote_DescriptionByID(float id);
-
-
-
-float GameTypeVote_Selection()
-{
-	float r;
-	float offset = gtv_start_y;
-	float i;
-	r = -1;
-
-	for(i = 0; i < mv_num_maps; ++i) {
-		float sz;
-		sz = gtv_text_size_y + tokenizebyseparator(GameTypeVote_DescriptionByID(i), "\n") * gtv_text_size_small_y;
-
-		if(mv_mousepos_y >= offset && mv_mousepos_y <= offset + sz && mv_avail[i] == GTV_AVAILABLE)
-			r = i;
-
-		offset += sz + gtv_text_size_small_y;
-	}
-
-	return r;
-}
 
 string MapVote_FormatMapItem(float id, string map, float count, float maxwidth, vector fontsize)
 {
@@ -96,7 +73,7 @@ vector MapVote_RGB(float id)
 }
 
 
-vector GameTypeVote_DrawGametypeItem(vector o, string gtype, float count, float id, float maxlen)
+void GameTypeVote_DrawGametypeItem(vector o, string gtype, float count, float id, float maxlen)
 {
 
 	float a;
@@ -114,7 +91,7 @@ vector GameTypeVote_DrawGametypeItem(vector o, string gtype, float count, float 
 	o_y += gtv_text_size_small_y;
 	o_y += gtv_text_size_y/2;
 	
-	float oldx = o_x;
+	//float olx = o_x;
 	o_x += gtv_text_size_x * 3;
 	
 	string thelabel = GameTypeVote_DescriptionByID(id), ts;
@@ -131,10 +108,10 @@ vector GameTypeVote_DrawGametypeItem(vector o, string gtype, float count, float 
 		}
 	}
 	
-	o_y += gtv_text_size_y/2;
+	/*o_y += gtv_text_size_y/2;
 	o_x = oldx;
 	
-	return o;
+	return o;*/
 }
 
 void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, string pic, float count, float id)
@@ -261,8 +238,8 @@ void MapVote_Draw()
 	float rows;
 	float tsize;
 	vector dist = '0 0 0';
-	vector gametype_pos = gtv_start;
-	float textlen = vid_conwidth - gtv_start_x * 2;
+	float textlen = 0 ;
+	float textpad = hud_fontsize_y * 2;
 	
 	if(!mv_active)
 		return;
@@ -318,32 +295,35 @@ void MapVote_Draw()
 	if(mv_abstain)
 		mv_num_maps -= 1;
 
-	if(gametypevote)
-		mv_columns = 1;
-	else if ( mv_num_maps > 16 )
-		mv_columns = 5;
-	else if ( mv_num_maps > 9 )
-		mv_columns = 4;
-	else if(mv_num_maps > 3)
-		mv_columns = 3;
-	else
-		mv_columns = mv_num_maps;
-
 	rows = ceil(mv_num_maps / mv_columns);
 
 	dist_x = (xmax - xmin) / mv_columns;
 	dist_y = (ymax - pos_y) / rows;
+	
+	if ( gametypevote )
+	{
+		textlen = vid_conwidth/2 - pos_x - textpad;
+		//dist_x = vid_conwidth/2 - pos_x + textpad;
+		dist_y = gtv_text_size_y + 3 * gtv_text_size_small_y;
+		dist_x += textpad;
+	}
+	
 	tsize = dist_x - 10;
 	isize = min(dist_y - 10, 0.75 * tsize);
 
-	mv_selection = (gametypevote) ? GameTypeVote_Selection() : MapVote_Selection(pos, dist, rows, mv_columns);
+	mv_selection = /*(gametypevote) ? GameTypeVote_Selection() :*/ MapVote_Selection(pos, dist, rows, mv_columns);
 
-	pos_x += (xmax - xmin) / (2 * mv_columns);
+	
+	if ( !gametypevote )
+	{
+		pos_x += (xmax - xmin) / (2 * mv_columns);
+	}
 	pos_y += (dist_y - isize) / 2;
 	ymax -= isize;
 
 	if (mv_top2_time)
 		mv_top2_alpha = max(0.2, 1 - (time - mv_top2_time)*(time - mv_top2_time));
+	
 
 	
 	for(i = 0; i < mv_num_maps; ++i)
@@ -352,7 +332,7 @@ void MapVote_Draw()
 		map = mv_maps[i];
 		
 		if(gametypevote)
-			gametype_pos = GameTypeVote_DrawGametypeItem(gametype_pos, map, tmp, i,textlen);
+			GameTypeVote_DrawGametypeItem(pos+MapVote_GridVec(dist, i, mv_columns), map, tmp, i,textlen);
 		else
 		{
 			if(mv_preview[i])
@@ -520,30 +500,27 @@ void MapVote_Init()
         
 		gtv_text_size = hud_fontsize*1.4;
 		gtv_text_size_small = hud_fontsize*1.1;
-		gtv_start_x = hud_fontsize_x * 4;
 		
-		float height;
-		height = 0;
-		for(i = 0; i < mv_num_maps; ++i)
-		{
-			height += gtv_text_size_y + tokenizebyseparator(GameTypeVote_DescriptionByID(i), "\n") * gtv_text_size_small_y
-					+ gtv_text_size_small_y;
-		}
-		float min_starty = hud_fontsize_y * 6;
-		if ( height > vid_conheight-min_starty )
-		{
-			float scale;
-			scale = (vid_conheight-min_starty)/height;
-			gtv_text_size *= scale;
-			gtv_text_size_small *= scale;
-			height *= scale;
-		}
-		gtv_start_y = max (min_starty,(vid_conheight-height)/2);
+		if ( mv_num_maps < 9 )
+			mv_columns = 1;
+		else
+			mv_columns = 2;
 
 		mapvote_choosenmap    = strzone(cmap);
         
 		print("^5Now decide the GAMETYPE!\n");
     }
+    else
+	{
+		if ( mv_num_maps > 16 )
+			mv_columns = 5;
+		else if ( mv_num_maps > 9 )
+			mv_columns = 4;
+		else if(mv_num_maps > 3)
+			mv_columns = 3;
+		else
+			mv_columns = mv_num_maps;
+	}
 
 	MapVote_ReadMask();
 	for(i = 0; i < mv_num_maps; ++i )
