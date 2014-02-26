@@ -512,7 +512,7 @@ void kh_Handle_Pickup(entity key, entity player, float pickuptype)
 		setattachment(key, player.vehicle, "");
 		//setorigin(key, VEHICLE_KEY_OFFSET);
 		key.scale = VEHICLE_KEY_SCALE;
-		setorigin(key, '0 0 1' * KH_KEY_ZSHIFT); // fixing x, y in think
+		setorigin(key, '0 0 1' * KH_VEHICLE_KEY_ZSHIFT); // fixing x, y in think
 		key.angles_y -= player.angles_y;
 	}
 	else
@@ -661,7 +661,7 @@ void kh_KeyThink()
 		case KEY_CARRY:
 		{
 			makevectors('0 1 0' * (self.cnt + mod(time, 360) * KH_KEY_XYSPEED));
-			setorigin(self, v_forward * KH_KEY_XYDIST + '0 0 1' * self.origin_z);
+			setorigin(self, v_forward * ((self.owner.vehicle) ? KH_VEHICLE_KEY_XYDIST : KH_KEY_XYDIST) + '0 0 1' * self.origin_z);
 			return;
 		}
 
