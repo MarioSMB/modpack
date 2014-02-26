@@ -1,11 +1,106 @@
-// ALL OF THESE should be removed in the future, as other code should not have
-// to care
+// these are needed since mutators are compiled last
 
-// used by bots:
-float kh_tracking_enabled;
-.entity kh_next;
-float kh_Key_AllOwnedByWhichTeam();
+#ifdef SVQC
 
-typedef void(void) kh_Think_t;
-void kh_StartRound();
-void kh_Controller_SetThink(float t, kh_Think_t func);
+// score rule declarations
+#define ST_KH_CAPS 1
+#define SP_KH_CAPS 4
+#define SP_KH_CAPTIME 5
+#define SP_KH_PICKUPS 6
+#define SP_KH_DROPS 7
+#define SP_KH_KCKILLS 8
+
+// key constants // for most of these, there is just one question to be asked: WHYYYYY?
+#define KEY_MIN ('-10 -10 -46')
+#define KEY_MAX ('10 10 3')
+
+#define KH_KEY_ZSHIFT 22
+#define KH_KEY_XYDIST 24
+#define KH_KEY_XYSPEED 45
+
+#define KEY_SCALE 1
+
+#define KEY_BRIGHTNESS 2
+
+#define KEY_THINKRATE 0.1
+#define KEY_TOUCHRATE 0.5
+
+#define KEY_DROP_OFFSET ('0 0 16')
+#define KEY_CARRY_OFFSET ('-16 0 8')
+#define KEY_SPAWN_OFFSET ('0 0 1' * (PL_MAX_z - 13))
+#define KEY_WAYPOINT_OFFSET ('0 0 64')
+#define KEY_FLOAT_OFFSET ('0 0 16')
+#define KEY_PASS_ARC_OFFSET ('0 0 -10')
+
+#define VEHICLE_KEY_OFFSET ('0 0 96')
+#define VEHICLE_KEY_SCALE 2
+
+// waypoint colors
+#define WPCOLOR_ENEMYKC(t) (colormapPaletteColor(t - 1, FALSE) * 0.75)
+#define WPCOLOR_KEYCARRIER(t) ('0.8 0.8 0')
+#define WPCOLOR_DROPPEDKEY(t) (('0.25 0.25 0.25' + colormapPaletteColor(t - 1, FALSE)) * 0.5)
+
+// sounds
+#define snd_key_taken noise
+#define snd_key_returned noise1
+#define snd_key_capture noise2
+#define snd_key_respawn noise3
+.string snd_key_dropped;
+.string snd_key_touch;
+.string snd_key_pass;
+
+// effects
+.string toucheffect;
+.string passeffect;
+.string capeffect;
+
+// list of keys on the map
+entity kh_worldkeylist;
+.entity kh_worldkeynext;
+.entity kh_stalekeynext;
+
+// waypoint sprites
+.entity wps_helpme;
+.entity wps_keycarrier;
+.entity wps_keydropped;
+.entity wps_enemykeycarrier;
+.float wps_helpme_time;
+float wpforenemy_announced;
+float wpforenemy_nextthink;
+
+// statuses
+#define KEY_DROPPED 2
+#define KEY_CARRY 3
+#define KEY_PASSING 4
+
+// others defined in CTF code (TODO: separate?)
+#define PICKUP_START 3
+
+// carrier stats
+.float stat_kh_redkey_team;
+.float stat_kh_bluekey_team;
+.float stat_kh_yellowkey_team;
+.float stat_kh_pinkkey_team;
+
+// key properties
+.float kh_pickuptime;
+.float kh_droptime;
+.float kh_status; // status of the key (KEY_DROPPED, KEY_CARRY declared globally)
+.entity kh_dropper; // don't allow spam of dropping the key
+.float max_key_health;
+.float next_take_time;
+float kh_teams;
+
+// passing/throwing properties
+.float pass_distance;
+.entity pass_sender;
+.entity pass_target;
+.float throw_antispam;
+.float throw_prevtime;
+.float throw_count;
+
+// alarms
+float kh_alarm_time;
+float kh_siren_time;
+
+#endif

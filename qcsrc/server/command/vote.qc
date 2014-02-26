@@ -388,9 +388,6 @@ void reset_map(float dorespawn)
 		}
 	}
 
-	if(g_keyhunt)
-		kh_Controller_SetThink(autocvar_g_balance_keyhunt_delay_round + (game_starttime - time), kh_StartRound);
-
 	self = oldself;
 }
 

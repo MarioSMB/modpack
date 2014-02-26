@@ -261,6 +261,8 @@ string spritelookuptext(string s)
 		case "enemyflagcarrier": return _("Enemy carrier");
 		case "flagcarrier": return _("Flag carrier");
 		case "flagdropped": return _("Dropped flag");
+		case "keycarrier": return _("Key carrier");
+		case "keydropped": return _("Dropped key");
 		case "helpme": return _("Help me!");
 		case "here": return _("Here");
 		case "key-dropped": return _("Dropped key");

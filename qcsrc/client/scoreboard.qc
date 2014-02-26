@@ -25,6 +25,7 @@ string TranslateScoresLabel(string l)
 		case "drops": return CTX(_("SCO^drops"));
 		case "faults": return CTX(_("SCO^faults"));
 		case "fckills": return CTX(_("SCO^fckills"));
+		case "kckills": return CTX(_("SCO^kckills"));
 		case "goals": return CTX(_("SCO^goals"));
 		case "kckills": return CTX(_("SCO^kckills"));
 		case "kdratio": return CTX(_("SCO^kdratio"));
@@ -296,7 +297,7 @@ string HUD_DefaultColumnLayout()
 		"+tdm/kills +tdm/deaths +tdm/suicides ",
 		((ex) ? "+ctf/deaths +ctf/suicides " : ""), "+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns ",
 		"+lms/lives +lms/rank ",
-		"+kh/caps +kh/pushes +kh/destroyed ",
+		"+kh/caps +kh/pickups +kh/kckills ",
 		"?+race/laps ?+race/time ?+race/fastest ",
 		"+as/objectives +nexball/faults +nexball/goals +ka/pickups +ka/bckills +ka/bctime +freezetag/revivals +vip/survivals +vip/vipkills ?+dom/caps ",
 		"-lms,race,nexball/score");
