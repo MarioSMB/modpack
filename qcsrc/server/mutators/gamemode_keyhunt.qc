@@ -817,28 +817,18 @@ void kh_KeySetup(float teamnumber, entity key, entity player) // called when spa
 	key.colormod = Team_ColorRGB(teamnumber) * KEY_BRIGHTNESS;
 
 	// appearence
-	if(key.model == "")       { key.model = "models/keyhunt/key.md3"; }
-	if(!key.scale)            { key.scale = KEY_SCALE; }
-	if(key.toucheffect == "") { key.toucheffect = ((teamnumber == NUM_TEAM_1) ? "redkey_touch" : ((teamnumber == NUM_TEAM_2) ? "bluekey_touch" : ((teamnumber == NUM_TEAM_3) ? "yellowkey_touch" : "pinkkey_touch"))); }
-	if(key.passeffect == "")  { key.passeffect = ((teamnumber == NUM_TEAM_1) ? "red_pass" : ((teamnumber == NUM_TEAM_2) ? "blue_pass" : ((teamnumber == NUM_TEAM_3) ? "yellow_pass" : "pink_pass"))); }
-	if(key.capeffect == "")   { key.capeffect = ((teamnumber == NUM_TEAM_1) ? "red_cap" : ((teamnumber == NUM_TEAM_2) ? "blue_cap" : ((teamnumber == NUM_TEAM_3) ? "yellow_cap" : "pink_cap"))); }
+	key.model = "models/keyhunt/key.md3";
+	key.scale = KEY_SCALE;
+	key.toucheffect = ((teamnumber == NUM_TEAM_1) ? "redkey_touch" : ((teamnumber == NUM_TEAM_2) ? "bluekey_touch" : ((teamnumber == NUM_TEAM_3) ? "yellowkey_touch" : "pinkkey_touch")));
+	key.passeffect = ((teamnumber == NUM_TEAM_1) ? "red_pass" : ((teamnumber == NUM_TEAM_2) ? "blue_pass" : ((teamnumber == NUM_TEAM_3) ? "yellow_pass" : "pink_pass")));
+	key.capeffect = ((teamnumber == NUM_TEAM_1) ? "red_cap" : ((teamnumber == NUM_TEAM_2) ? "blue_cap" : ((teamnumber == NUM_TEAM_3) ? "yellow_cap" : "pink_cap")));
 
 	// sound
-	if(key.snd_key_taken == "")    { key.snd_key_taken = "kh/collect.wav"; }
-	if(key.snd_key_capture == "")  { key.snd_key_capture = "kh/capture.wav"; }
-	if(key.snd_key_dropped == "")  { key.snd_key_dropped = "kh/drop.wav"; }
-	if(key.snd_key_touch == "")    { key.snd_key_touch = "ctf/touch.wav"; }
-	if(key.snd_key_pass == "")     { key.snd_key_pass = "ctf/pass.wav"; }
-
-	// precache
-	precache_sound(key.snd_key_taken);
-	precache_sound(key.snd_key_returned);
-	precache_sound(key.snd_key_capture);
-	precache_sound(key.snd_key_respawn);
-	precache_sound(key.snd_key_dropped);
-	precache_sound(key.snd_key_touch);
-	precache_sound(key.snd_key_pass);
-	precache_model(key.model);
+	key.snd_key_taken = "kh/collect.wav";
+	key.snd_key_capture = "kh/capture.wav";
+	key.snd_key_dropped = "kh/drop.wav";
+	key.snd_key_touch = "ctf/touch.wav";
+	key.snd_key_pass = "ctf/pass.wav";
 
 	// appearence
 	setmodel(key, key.model); // precision set below
@@ -1487,6 +1477,14 @@ void kh_DelayedInit() // Do this check with a delay so we can wait for teams to 
 
 void kh_Initialize()
 {
+	precache_model("models/keyhunt/key.md3");
+	
+	precache_sound("kh/collect.wav");
+	precache_sound("kh/capture.wav");
+	precache_sound("kh/drop.wav");
+	precache_sound("ctf/touch.wav");
+	precache_sound("ctf/pass.wav");
+
 	addstat(STAT_KH_REDKEY_TEAM, AS_INT, stat_kh_redkey_team);
 	addstat(STAT_KH_BLUEKEY_TEAM, AS_INT, stat_kh_bluekey_team);
 	addstat(STAT_KH_YELLOWKEY_TEAM, AS_INT, stat_kh_yellowkey_team);
