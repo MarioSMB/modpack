@@ -115,39 +115,31 @@ void drawhealthbar(vector org, float rot, float h, vector sz, vector hotspot, fl
 // returns location of sprite text
 vector drawspritearrow(vector o, float ang, vector rgb, float a, float t)
 {
-	float SQRT2 = 1.414;
-	float BORDER; BORDER = 1.5 * t;
-	float TSIZE; TSIZE = 8 * t;
-	float RLENGTH; RLENGTH = 8 * t;
-	float RWIDTH; RWIDTH = 4 * t;
-	float MLENGTH; MLENGTH = 4 * t;
+	float size   = 9.0 * t;
+	float border = 1.5 * t;
+	float margin = 4.0 * t;
+
+	float borderDiag = border * 1.414;
+	vector arrowX  = eX * size;
+	vector arrowY  = eY * (size+borderDiag);
+	vector borderX = eX * (size+borderDiag);
+	vector borderY = eY * (size+borderDiag+border);
 
 	R_BeginPolygon("", DRAWFLAG_NORMAL);
-	R_PolygonVertex(o + rotate(eX * -(TSIZE + BORDER * (1 + SQRT2)) + eY * (TSIZE + BORDER), ang), '0 0 0', '0 0 0', a);
-	R_PolygonVertex(o + rotate(eX *  (TSIZE + BORDER * (1 + SQRT2)) + eY * (TSIZE + BORDER), ang), '0 0 0', '0 0 0', a);
-	R_PolygonVertex(o + rotate(eY * -(        BORDER *      SQRT2),                          ang), '0 0 0', '0 0 0', a);
-	R_EndPolygon();
-	R_BeginPolygon("", DRAWFLAG_NORMAL);
-	R_PolygonVertex(o + rotate(eX * -(RWIDTH + BORDER) + eY * (TSIZE           + BORDER), ang), '0 0 0', '0 0 0', a);
-	R_PolygonVertex(o + rotate(eX * -(RWIDTH + BORDER) + eY * (TSIZE + RLENGTH + BORDER), ang), '0 0 0', '0 0 0', a);
-	R_PolygonVertex(o + rotate(eX *  (RWIDTH + BORDER) + eY * (TSIZE + RLENGTH + BORDER), ang), '0 0 0', '0 0 0', a);
-	R_PolygonVertex(o + rotate(eX *  (RWIDTH + BORDER) + eY * (TSIZE           + BORDER), ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o,                                  '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(arrowY  - borderX, ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(borderY - borderX, ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(borderY + borderX, ang), '0 0 0', '0 0 0', a);
+	R_PolygonVertex(o + rotate(arrowY  + borderX, ang), '0 0 0', '0 0 0', a);
 	R_EndPolygon();
 
 	R_BeginPolygon("", DRAWFLAG_ADDITIVE);
-	R_PolygonVertex(o + rotate(eX * -TSIZE + eY * TSIZE, ang), '0 0 0', rgb, a);
-	R_PolygonVertex(o + rotate(eX *  TSIZE + eY * TSIZE, ang), '0 0 0', rgb, a);
-	R_PolygonVertex(o + rotate('0 0 0',                  ang), '0 0 0', rgb, a);
-	R_EndPolygon();
-	R_BeginPolygon("", DRAWFLAG_ADDITIVE);
-	R_PolygonVertex(o + rotate(eX * -RWIDTH + eY *  TSIZE,            ang), '0 0 0', rgb, a);
-	R_PolygonVertex(o + rotate(eX * -RWIDTH + eY * (TSIZE + RLENGTH), ang), '0 0 0', rgb, a);
-	R_PolygonVertex(o + rotate(eX *  RWIDTH + eY * (TSIZE + RLENGTH), ang), '0 0 0', rgb, a);
-	R_PolygonVertex(o + rotate(eX *  RWIDTH + eY *  TSIZE,            ang), '0 0 0', rgb, a);
+	R_PolygonVertex(o + rotate(eY * borderDiag, ang), '0 0 0', rgb, a);
+	R_PolygonVertex(o + rotate(arrowY - arrowX, ang), '0 0 0', rgb, a);
+	R_PolygonVertex(o + rotate(arrowY + arrowX, ang), '0 0 0', rgb, a);
 	R_EndPolygon();
 
-	return
-		o + rotate(eY * (TSIZE + RLENGTH + MLENGTH), ang);
+	return o + rotate(eY * (borderDiag+size+margin), ang);
 }
 
 // returns location of sprite healthbar

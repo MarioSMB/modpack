@@ -568,7 +568,7 @@ void HUD_Weapons(void)
 		weapon_size_y = old_panel_size_y / rows;
 
 		// change table values to include only the owned weapons
-		// weapon_size won't be changed
+		float columns_save = columns;
 		if(weapon_count <= rows)
 		{
 			rows = weapon_count;
@@ -576,6 +576,10 @@ void HUD_Weapons(void)
 		}
 		else
 			columns = ceil(weapon_count / rows);
+
+		// enlarge weapon_size to match desired aspect ratio in order to capitalize on panel space
+		if(columns < columns_save)
+			weapon_size_x = min(old_panel_size_x / columns, aspect * weapon_size_y);
 
 		// reduce size of the panel
 		panel_size_x = columns * weapon_size_x;
@@ -3248,7 +3252,7 @@ void HUD_Mod_CTF(vector pos, vector mySize)
 		drawpic_aspect_skin_expanding(blueflag_pos, blue_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * blue_alpha_prevstatus, DRAWFLAG_NORMAL, f);
 	if(blue_icon)
 		drawpic_aspect_skin(blueflag_pos, blue_icon, flag_size, '1 1 1', panel_fg_alpha * blue_alpha * f, DRAWFLAG_NORMAL);
-		
+
 	f = bound(0, yellowflag_statuschange_elapsedtime*2, 1);
 	if(yellow_icon_prevstatus && f < 1)
 		drawpic_aspect_skin_expanding(yellowflag_pos, yellow_icon_prevstatus, flag_size, '1 1 1', panel_fg_alpha * yellow_alpha_prevstatus, DRAWFLAG_NORMAL, f);

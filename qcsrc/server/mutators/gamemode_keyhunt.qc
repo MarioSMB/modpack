@@ -101,6 +101,7 @@ float KH_GetWinnerTeam()
 	
 	for(key = kh_worldkeylist; key; key = key.kh_worldkeynext)
 	{
+		if(!key.owner) { return 0; } // no carriers, no winners
 		if(winner_team && winner_team != key.owner.team) { return 0; }
 		winner_team = key.owner.team;
 	}

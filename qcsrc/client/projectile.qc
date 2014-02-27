@@ -327,8 +327,7 @@ void Ent_Projectile()
 			case PROJECTILE_NADE_HEAL_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red_burn"); break;
 			case PROJECTILE_NADE_MONSTER: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red"); break;
 			case PROJECTILE_NADE_MONSTER_BURN: setmodel(self, "models/weapons/v_ok_grenade.md3");self.traileffect = particleeffectnum("nade_red_burn"); break;
-            
-            
+
 			case PROJECTILE_RPC: setmodel(self, "models/weapons/ok_rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
 			case PROJECTILE_CANNONBALL: setmodel(self, "models/sphere/sphere.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
 

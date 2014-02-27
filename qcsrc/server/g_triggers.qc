@@ -472,7 +472,7 @@ void trigger_hurt_use()
 .float triggerhurttime;
 void trigger_hurt_touch()
 {
-	if (self.active != ACTIVE_ACTIVE) 
+	if (self.active != ACTIVE_ACTIVE)
 		return;
 
 	if(self.team)

@@ -371,7 +371,7 @@ void MapVote_Draw()
 	if (mv_top2_time)
 		mv_top2_alpha = max(0.2, 1 - (time - mv_top2_time)*(time - mv_top2_time));
 
-	
+
 	for(i = 0; i < mv_num_maps; ++i)
 	{
 		tmp = mv_votes[i]; // FTEQCC bug: too many array accesses in the function call screw it up
@@ -582,7 +582,7 @@ void MapVote_Init()
 	for(i = 0; i < mv_num_maps; ++i)
 	{
 		mv_votes[i] = 0;
-		
+
 		map = strzone(ReadString());
 		pk3 = strzone(ReadString());
 		j = bound(0, ReadByte(), n_ssdirs - 1);
