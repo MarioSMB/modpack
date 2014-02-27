@@ -99,7 +99,7 @@ float KH_GetWinnerTeam()
 	float winner_team = 0;
 	entity key;
 	
-	for(key = kh_worldkeylist; key; key = key.kh_worldkeynext)
+	KH_FOR_EACH_KEY(key)
 	{
 		if(!key.owner) { return 0; } // no carriers, no winners
 		if(winner_team && winner_team != key.owner.team) { return 0; }
@@ -126,7 +126,7 @@ float KH_CheckWinner()
 			nades_Clear(e);
 			e.stat_kh_redkey_team = e.stat_kh_bluekey_team = e.stat_kh_yellowkey_team = e.stat_kh_pinkkey_team = 0;
 		}
-		for(key = kh_worldkeylist; key; key = key.kh_worldkeynext) { if(!wasfreed(key)) kh_RemoveKey(key); }
+		KH_FOR_EACH_KEY(key) { if(!wasfreed(key)) kh_RemoveKey(key); }
 		kh_worldkeylist = world; // reset key list
 		return 1;
 	}
@@ -134,13 +134,13 @@ float KH_CheckWinner()
 	float winner_team = KH_GetWinnerTeam();
 
 	float key_count = 0;
-	for(key = kh_worldkeylist; key; key = key.kh_worldkeynext) { if(!wasfreed(key)) ++key_count; }
+	KH_FOR_EACH_KEY(key) { if(!wasfreed(key)) ++key_count; }
 	if(key_count >= kh_teams && winner_team == 0) { return 0; }
 	
 	if(winner_team > 0)
 	{
 		float largest_dist = 0;
-		for(key = kh_worldkeylist; key; key = key.kh_worldkeynext)
+		KH_FOR_EACH_KEY(key)
 		{
 			if(!key.owner) { return 0; }
 			if(key.kh_worldkeynext)
@@ -154,7 +154,7 @@ float KH_CheckWinner()
 			FOR_EACH_PLAYER(head)
 			{
 				float head_iscarrier = FALSE;
-				for(key = kh_worldkeylist; key; key = key.kh_worldkeynext)
+				KH_FOR_EACH_KEY(key)
 				if(key.owner == head)
 				{
 					head_iscarrier = TRUE;
@@ -169,7 +169,7 @@ float KH_CheckWinner()
 			}
 			if(time >= kh_siren_time)
 			{
-				for(key = kh_worldkeylist; key; key = key.kh_worldkeynext)
+				KH_FOR_EACH_KEY(key)
 					sound(key.owner, CH_TRIGGER, "kh/alarm.wav", VOL_BASE, ATTEN_NORM);
 				kh_siren_time = time + 3;
 			}
@@ -188,7 +188,7 @@ float KH_CheckWinner()
 		e.stat_kh_redkey_team = e.stat_kh_bluekey_team = e.stat_kh_yellowkey_team = e.stat_kh_pinkkey_team = 0;
 	}
 
-	for(key = kh_worldkeylist; key; key = key.kh_worldkeynext) { if(!wasfreed(key)) kh_RemoveKey(key); }
+	KH_FOR_EACH_KEY(key) { if(!wasfreed(key)) kh_RemoveKey(key); }
 	kh_worldkeylist = world; // reset key list
 
 	return 1;
@@ -456,7 +456,7 @@ void kh_RemoveKey(entity key);
 void kh_Handle_Capture(float capturetype)
 {
 	entity key;
-	for(key = kh_worldkeylist; key; key = key.kh_worldkeynext)
+	KH_FOR_EACH_KEY(key)
 	{
 		entity player = key.owner;
 		
@@ -893,7 +893,7 @@ void havocbot_role_kh_carrier()
 		
 	entity key;
 	float is_carrier = FALSE;
-	for(key = kh_worldkeylist; key; key = key.kh_worldkeynext)
+	KH_FOR_EACH_KEY(key)
 	if(key.owner == self)
 	{
 		is_carrier = TRUE;
@@ -914,7 +914,7 @@ void havocbot_role_kh_carrier()
 		navigation_goalrating_start();
 		
 		float key_count = 0;
-		for(key = kh_worldkeylist; key; key = key.kh_worldkeynext) { if(!wasfreed(key) && SAME_TEAM(key, self)) ++key_count; }
+		KH_FOR_EACH_KEY(key) { if(!wasfreed(key) && SAME_TEAM(key, self)) ++key_count; }
 		
 		if(key_count >= kh_teams)
 			havocbot_goalrating_kh(10, 0.1, 0.1); // bring home
@@ -932,7 +932,7 @@ void havocbot_role_kh_defense()
 		
 	entity key;
 	float is_carrier = FALSE;
-	for(key = kh_worldkeylist; key; key = key.kh_worldkeynext)
+	KH_FOR_EACH_KEY(key)
 	if(key.owner == self)
 	{
 		is_carrier = TRUE;
@@ -963,7 +963,7 @@ void havocbot_role_kh_defense()
 		navigation_goalrating_start();
 		
 		float key_count = 0;
-		for(key = kh_worldkeylist; key; key = key.kh_worldkeynext) { if(!wasfreed(key) && SAME_TEAM(key, self)) ++key_count; }
+		KH_FOR_EACH_KEY(key) { if(!wasfreed(key) && SAME_TEAM(key, self)) ++key_count; }
 		
 		if(key_count >= kh_teams)
 			havocbot_goalrating_kh(10, 0.1, 0.1); // defend key carriers
@@ -983,7 +983,7 @@ void havocbot_role_kh_offense()
 		
 	entity key;
 	float is_carrier = FALSE;
-	for(key = kh_worldkeylist; key; key = key.kh_worldkeynext)
+	KH_FOR_EACH_KEY(key)
 	if(key.owner == self)
 	{
 		is_carrier = TRUE;
@@ -1014,7 +1014,7 @@ void havocbot_role_kh_offense()
 		navigation_goalrating_start();
 		
 		float key_count = 0;
-		for(key = kh_worldkeylist; key; key = key.kh_worldkeynext) { if(!wasfreed(key) && SAME_TEAM(key, self)) ++key_count; }
+		KH_FOR_EACH_KEY(key) { if(!wasfreed(key) && SAME_TEAM(key, self)) ++key_count; }
 		
 		if(key_count >= kh_teams)
 			havocbot_goalrating_kh(10, 0.1, 0.1); // defend key carriers
@@ -1034,7 +1034,7 @@ void havocbot_role_kh_freelancer()
 		
 	entity key;
 	float is_carrier = FALSE;
-	for(key = kh_worldkeylist; key; key = key.kh_worldkeynext)
+	KH_FOR_EACH_KEY(key)
 	if(key.owner == self)
 	{
 		is_carrier = TRUE;
@@ -1073,7 +1073,7 @@ void havocbot_role_kh_freelancer()
 		navigation_goalrating_start();
 
 		float key_count = 0;
-		for(key = kh_worldkeylist; key; key = key.kh_worldkeynext) { if(!wasfreed(key) && SAME_TEAM(key, self)) ++key_count; }
+		KH_FOR_EACH_KEY(key) { if(!wasfreed(key) && SAME_TEAM(key, self)) ++key_count; }
 		
 		if(key_count >= kh_teams)
 			havocbot_goalrating_kh(10, 0.1, 0.1); // defend key carriers
@@ -1104,7 +1104,7 @@ MUTATOR_HOOKFUNCTION(kh_PlayerPreThink)
 				  | IT_PINK_FLAG_CARRYING 	| IT_PINK_FLAG_TAKEN 	| IT_PINK_FLAG_LOST);
 
 	// scan through all the keys and notify the client about them
-	for(key = kh_worldkeylist; key; key = key.kh_worldkeynext)
+	KH_FOR_EACH_KEY(key)
 	{
 		if(key.team == NUM_TEAM_1) { t = IT_RED_FLAG_CARRYING;		t2 = IT_RED_FLAG_TAKEN;		t3 = IT_RED_FLAG_LOST; }
 		if(key.team == NUM_TEAM_2) { t = IT_BLUE_FLAG_CARRYING;		t2 = IT_BLUE_FLAG_TAKEN;		t3 = IT_BLUE_FLAG_LOST; }
@@ -1149,7 +1149,7 @@ MUTATOR_HOOKFUNCTION(kh_PlayerDamage) // for changing damage and force values th
 {
 	entity key;
 	float targ_iscarrier = FALSE, attacker_iscarrier = FALSE;
-	for(key = kh_worldkeylist; key; key = key.kh_worldkeynext)
+	KH_FOR_EACH_KEY(key)
 	{
 		if(key.owner == frag_attacker) { attacker_iscarrier = TRUE; }
 		if(key.owner == frag_target) { targ_iscarrier = TRUE; }
@@ -1186,7 +1186,7 @@ MUTATOR_HOOKFUNCTION(kh_PlayerDies)
 	entity key;
 	float targ_iscarrier = FALSE;
 
-	for(key = kh_worldkeylist; key; key = key.kh_worldkeynext)
+	KH_FOR_EACH_KEY(key)
 	if(key.owner == frag_target) { targ_iscarrier = TRUE; }
 
 	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)) && targ_iscarrier)
@@ -1195,7 +1195,7 @@ MUTATOR_HOOKFUNCTION(kh_PlayerDies)
 		PlayerScore_Add(frag_attacker, SP_KH_KCKILLS, 1);
 	}
 
-	for(key = kh_worldkeylist; key; key = key.kh_worldkeynext)
+	KH_FOR_EACH_KEY(key)
 	if(key.owner == frag_target) { kh_Handle_Throw(frag_target, world, key, DROP_NORMAL); }
 
 	return FALSE;
@@ -1211,7 +1211,7 @@ MUTATOR_HOOKFUNCTION(kh_RemovePlayer)
 {
 	entity key; // temporary entity for the search method
 
-	for(key = kh_worldkeylist; key; key = key.kh_worldkeynext)
+	KH_FOR_EACH_KEY(key)
 	{
 		if(key.pass_sender == self) { key.pass_sender = world; }
 		if(key.pass_target == self) { key.pass_target = world; }
@@ -1227,7 +1227,7 @@ MUTATOR_HOOKFUNCTION(kh_PortalTeleport)
 	entity key;
 
 	if(!autocvar_g_keyhunt_portalteleport)
-	for(key = kh_worldkeylist; key; key = key.kh_worldkeynext)
+	KH_FOR_EACH_KEY(key)
 	if(key.owner == self) { kh_Handle_Throw(self, world, key, DROP_NORMAL); }
 
 	return FALSE;
@@ -1239,7 +1239,7 @@ MUTATOR_HOOKFUNCTION(kh_PlayerUseKey)
 
 	entity player = self, key, player_key = world;
 	
-	for(key = kh_worldkeylist; key; key = key.kh_worldkeynext)
+	KH_FOR_EACH_KEY(key)
 	if(key.owner == player) { player_key = key; }
 
 	if((time > player.throw_antispam) && (player.deadflag == DEAD_NO) && (!player.vehicle || autocvar_g_keyhunt_allow_vehicle_touch))
@@ -1261,7 +1261,7 @@ MUTATOR_HOOKFUNCTION(kh_PlayerUseKey)
 					vector passer_center = CENTER_OR_VIEWOFS(player);
 					entity head_key = world;
 					
-					for(key = kh_worldkeylist; key; key = key.kh_worldkeynext)
+					KH_FOR_EACH_KEY(key)
 					if(key.owner == head) { head_key = key; break; }
 
 					if(kh_CheckPassDirection(head_center, passer_center, player.v_angle, head.WarpZone_findradius_nearest))
@@ -1360,12 +1360,12 @@ MUTATOR_HOOKFUNCTION(kh_VehicleEnter)
 	entity key;
 	if(!autocvar_g_keyhunt_allow_vehicle_carry && !autocvar_g_keyhunt_allow_vehicle_touch)
 	{
-		for(key = kh_worldkeylist; key; key = key.kh_worldkeynext)
+		KH_FOR_EACH_KEY(key)
 		if(key.owner == vh_player) { kh_Handle_Throw(vh_player, world, key, DROP_NORMAL); }
 	}
 	else
 	{
-		for(key = kh_worldkeylist; key; key = key.kh_worldkeynext)
+		KH_FOR_EACH_KEY(key)
 		if(key.owner == vh_player)
 		{
 			setattachment(key, vh_vehicle, "");
@@ -1381,7 +1381,7 @@ MUTATOR_HOOKFUNCTION(kh_VehicleEnter)
 MUTATOR_HOOKFUNCTION(kh_VehicleExit)
 {
 	entity key;
-	for(key = kh_worldkeylist; key; key = key.kh_worldkeynext)
+	KH_FOR_EACH_KEY(key)
 	if(key.owner == vh_player)
 	{
 		setattachment(key, vh_player, "");
@@ -1397,7 +1397,7 @@ MUTATOR_HOOKFUNCTION(kh_MatchEnd)
 {
 	entity key; // temporary entity for the search method
 
-	for(key = kh_worldkeylist; key; key = key.kh_worldkeynext)
+	KH_FOR_EACH_KEY(key)
 	{
 		switch(key.kh_status)
 		{

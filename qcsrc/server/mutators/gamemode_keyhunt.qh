@@ -106,4 +106,7 @@ float kh_teams;
 float kh_alarm_time;
 float kh_siren_time;
 
+// macro for checking all keys
+#define KH_FOR_EACH_KEY(v) for(v = kh_worldkeylist; v; v = v.kh_worldkeynext)
+
 #endif
