@@ -484,27 +484,11 @@ void MapVote_Init()
 	if(gametypevote)
 	{
 		string cmap = ReadString();
-		string cpic = "";
-        
-		for(i = 0; i < oldnum; ++i)
-		{
-			if(mv_maps[i] == cmap)
-			{
-				if(mv_preview[i])
-					cpic = mv_pics[i];
-				else
-					cpic = "";
-				break;
-			}
-		}
         
 		gtv_text_size = hud_fontsize*1.4;
 		gtv_text_size_small = hud_fontsize*1.1;
 		
-		if ( mv_num_maps < 9 )
-			mv_columns = 1;
-		else
-			mv_columns = 2;
+		mv_columns = min(2,mv_num_maps);
 
 		mapvote_choosenmap    = strzone(cmap);
         

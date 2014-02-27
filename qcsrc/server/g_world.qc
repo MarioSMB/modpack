@@ -2921,6 +2921,7 @@ float GameTypeVote_Start()
 	mapvote_count = 0;
 	mapvote_timeout = time + autocvar_sv_vote_gametype_timeout;
 	mapvote_abstain = 0;
+	mapvote_detail = !autocvar_g_maplist_votable_nodetail;
 	
 	float n = tokenizebyseparator(autocvar_sv_vote_gametype_options, " ");
 	n = min(MAPVOTE_COUNT, n);
