@@ -811,6 +811,9 @@ float Monster_CheckAppearFlags(entity ent)
 
 void monsters_reset()
 {
+	if(self.health < 1)
+		monster_respawn();
+
 	setorigin(self, self.pos1);
 	self.angles = self.pos2;
 
