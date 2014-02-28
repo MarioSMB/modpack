@@ -1,20 +1,17 @@
 float gametypevote;
 string getmapname_stored;
 
-float GameTypeVote_AvailabilityStatus_ForMap(string gtname, string map_name)
-{
+float GameTypeVote_AvailabilityStatus(string gtname) 
+{ 
 	float type = MapInfo_Type_FromString(gtname);
-	if( type == 0 || !MapInfo_Get_ByName(map_name, FALSE, type))
+	if( type == 0 )
+		return GTV_FORBIDDEN;
+	
+	if ( autocvar_nextmap != "" )
+	if ( !MapInfo_Get_ByName(autocvar_nextmap, FALSE, type) )
 		return GTV_FORBIDDEN;
 	
 	return GTV_AVAILABLE;
-}
-
-float GameTypeVote_AvailabilityStatus(string gtname) 
-{ 
-	if ( autocvar_nextmap == "" )
-		return GTV_AVAILABLE;
-	return GameTypeVote_AvailabilityStatus_ForMap(gtname, autocvar_nextmap);
 }
 
 float GameTypeVote_GetMask()

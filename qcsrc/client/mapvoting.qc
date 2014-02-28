@@ -19,10 +19,10 @@ vector mv_mousepos;
 float mv_selection;
 float mv_columns;
 
+float gametypevote;
+string mapvote_choosenmap;
 vector gtv_text_size;
 vector gtv_text_size_small;
-
-string GameTypeVote_DescriptionByID(float id);
 
 string MapVote_FormatMapItem(float id, string map, float count, float maxwidth, vector fontsize)
 {
@@ -46,18 +46,7 @@ string MapVote_FormatMapItem(float id, string map, float count, float maxwidth, 
 
 string GameTypeVote_DescriptionByID(float id)
 {
-	switch(mv_avail[id])
-	{
-		case GTV_FORBIDDEN:
-		case GTV_AVAILABLE:
-			return MapInfo_Type_Description(MapInfo_Type_FromString(mv_maps[id]));
-/*
-		case GTV_FORBIDDEN:
-			return "This gametype is forbidden on this map.";
-*/
-		default:
-			return "wtf?";
-	}
+	return MapInfo_Type_Description(MapInfo_Type_FromString(mv_maps[id]));
 }
 
 vector MapVote_RGB(float id)
@@ -76,42 +65,39 @@ vector MapVote_RGB(float id)
 void GameTypeVote_DrawGametypeItem(vector o, string gtype, float count, float id, float maxlen)
 {
 
-	float a;
+	float alpha;
 	
 	if(mv_avail_start[id] != GTV_AVAILABLE)
-		a = 0.2;
+		alpha = 0.2;
 	else if ( mv_avail[id] != GTV_AVAILABLE && mv_top2_alpha)
-			a = mv_top2_alpha;
+		alpha = mv_top2_alpha;
 	else
-		a = 1;
+		alpha = 1;
 	
 	drawstring(o, MapVote_FormatMapItem(id, MapInfo_Type_ToText(MapInfo_Type_FromString(gtype)), count, maxlen, gtv_text_size), 
-			   gtv_text_size, MapVote_RGB(id), a, DRAWFLAG_NORMAL); 
+			   gtv_text_size, MapVote_RGB(id), alpha, DRAWFLAG_NORMAL); 
 	
 	o_y += gtv_text_size_small_y;
 	o_y += gtv_text_size_y/2;
 	
-	//float olx = o_x;
 	o_x += gtv_text_size_x * 3;
 	
 	string thelabel = GameTypeVote_DescriptionByID(id), ts;
-	float i,n = tokenizebyseparator(thelabel, "\n");
-	if(thelabel || thelabel != "") for(i = 0; i < n; ++i)
+	if( thelabel != "") 
 	{
-		getWrappedLine_remaining = argv(i);
-		while(getWrappedLine_remaining)
+		float i,n = tokenizebyseparator(thelabel, "\n");
+		for(i = 0; i < n; ++i)
 		{
-			ts = getWrappedLine(maxlen, gtv_text_size_small, stringwidth_colors);
-			drawstring(o, ts, gtv_text_size_small, '1 1 1', a, DRAWFLAG_NORMAL);
-			if (ts != "")
-				o_y += gtv_text_size_small_y;
+			getWrappedLine_remaining = argv(i);
+			while(getWrappedLine_remaining)
+			{
+				ts = getWrappedLine(maxlen, gtv_text_size_small, stringwidth_colors);
+				drawstring(o, ts, gtv_text_size_small, '1 1 1', alpha, DRAWFLAG_NORMAL);
+				if (ts != "")
+					o_y += gtv_text_size_small_y;
+			}
 		}
 	}
-	
-	/*o_y += gtv_text_size_y/2;
-	o_x = oldx;
-	
-	return o;*/
 }
 
 void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, string pic, float count, float id)
@@ -482,16 +468,13 @@ void MapVote_Init()
 
 	if(gametypevote)
 	{
-		string cmap = ReadString();
+		// read map name in case we have nextmap set
+		mapvote_choosenmap = strzone(ReadString());
         
 		gtv_text_size = hud_fontsize*1.4;
 		gtv_text_size_small = hud_fontsize*1.1;
 		
 		mv_columns = min(2,mv_num_maps);
-
-		mapvote_choosenmap    = strzone(cmap);
-        
-		print("^5Now decide the GAMETYPE!\n");
     }
     else
 	{
@@ -523,11 +506,7 @@ void MapVote_Init()
 		mv_maps[i] = map;
 		mv_pk3[i] = pk3;
 		mv_avail[i] = ReadByte();
-		if(gametypevote)
-		{
-			map = mv_maps[i];
-		}
-		else
+		if(!gametypevote)
 		{
 			map = strzone(strcat(ssdirs[j], "/", map));
 			mv_pics[i] = map;

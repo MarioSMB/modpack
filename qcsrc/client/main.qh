@@ -169,7 +169,3 @@ vector camera_origin;
 float camera_expiretime;
 float camera_drawviewmodel_locked;
 float camera_drawviewmodel_backup;
-
-float gametypevote;
-
-string mapvote_choosenmap;
