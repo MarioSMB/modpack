@@ -3358,20 +3358,20 @@ void HUD_Mod_KH(vector pos, vector mySize)
 	float red_alpha, red_alpha_prevstatus;
 	red_alpha = red_alpha_prevstatus = 1;
 	switch(redkey) {
-		case 1: red_icon = "kh_red"; break;
+		case 1: red_icon = "kh_red_key"; break;
 		case 2: red_icon = string_null; break;
-		case 3: red_icon = "kh_red"; red_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+		case 3: red_icon = "kh_red_key"; red_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
 			red_icon = string_null;
 			break;
 	}
 	switch(redkey_prevstatus) {
-		case 1: red_icon_prevstatus = "kh_red"; break;
+		case 1: red_icon_prevstatus = "kh_red_key"; break;
 		case 2: red_icon_prevstatus = string_null; break;
-		case 3: red_icon_prevstatus = "kh_red"; red_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+		case 3: red_icon_prevstatus = "kh_red_key"; red_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
 			if(redkey == 3)
-				red_icon_prevstatus = "kh_red"; // make it more visible
+				red_icon_prevstatus = "kh_red_key"; // make it more visible
 			else
 				red_icon_prevstatus = string_null;
 			break;
@@ -3381,20 +3381,20 @@ void HUD_Mod_KH(vector pos, vector mySize)
 	float blue_alpha, blue_alpha_prevstatus;
 	blue_alpha = blue_alpha_prevstatus = 1;
 	switch(bluekey) {
-		case 1: blue_icon = "kh_blue"; break;
+		case 1: blue_icon = "kh_blue_key"; break;
 		case 2: blue_icon = string_null; break;
-		case 3: blue_icon = "kh_blue"; blue_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+		case 3: blue_icon = "kh_blue_key"; blue_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
 			blue_icon = string_null;
 			break;
 	}
 	switch(bluekey_prevstatus) {
-		case 1: blue_icon_prevstatus = "kh_blue"; break;
+		case 1: blue_icon_prevstatus = "kh_blue_key"; break;
 		case 2: blue_icon_prevstatus = string_null; break;
-		case 3: blue_icon_prevstatus = "kh_blue"; blue_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+		case 3: blue_icon_prevstatus = "kh_blue_key"; blue_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
 			if(bluekey == 3)
-				blue_icon_prevstatus = "kh_blue"; // make it more visible
+				blue_icon_prevstatus = "kh_blue_key"; // make it more visible
 			else
 				blue_icon_prevstatus = string_null;
 			break;
@@ -3427,20 +3427,20 @@ void HUD_Mod_KH(vector pos, vector mySize)
 	float pink_alpha, pink_alpha_prevstatus;
 	pink_alpha = pink_alpha_prevstatus = 1;
 	switch(pinkkey) {
-		case 1: pink_icon = "kh_pink"; break;
+		case 1: pink_icon = "kh_pink_key"; break;
 		case 2: pink_icon = string_null; break;
-		case 3: pink_icon = "kh_pink"; pink_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+		case 3: pink_icon = "kh_pink_key"; pink_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
 			pink_icon = string_null;
 			break;
 	}
 	switch(pinkkey_prevstatus) {
-		case 1: pink_icon_prevstatus = "kh_pink"; break;
+		case 1: pink_icon_prevstatus = "kh_pink_key"; break;
 		case 2: pink_icon_prevstatus = string_null; break;
-		case 3: pink_icon_prevstatus = "kh_pink"; pink_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+		case 3: pink_icon_prevstatus = "kh_pink_key"; pink_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
 			if(pinkkey == 3)
-				pink_icon_prevstatus = "kh_pink"; // make it more visible
+				pink_icon_prevstatus = "kh_pink_key"; // make it more visible
 			else
 				pink_icon_prevstatus = string_null;
 			break;
