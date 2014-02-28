@@ -604,7 +604,20 @@ void kh_CheckKeyReturn(entity key, float returntype)
 			switch(returntype)
 			{
 				case RETURN_DAMAGE: Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_KEYRETURN_DAMAGED_)); break;
-				case RETURN_NEEDKILL: Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_KEYRETURN_NEEDKILL_)); break;
+				case RETURN_NEEDKILL:
+				{
+					entity killer = self.kh_dropper.kh_lastkiller;
+					if(autocvar_g_keyhunt_key_return_tokiller && IS_PLAYER(killer) && killer.health > 0 && !killer.frozen)
+					{
+						kh_Handle_Pickup(self, killer, PICKUP_KILLED);
+						return;
+					}
+					else
+					{
+						Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_KEYRETURN_NEEDKILL_));
+						break;
+					}
+				}
 
 				default:
 				case RETURN_TIMEOUT:
@@ -621,25 +634,15 @@ void kh_KeyDamage(entity inflictor, entity attacker, float damage, float deathty
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
-		entity killer = self.kh_dropper.kh_lastkiller;
-		if(autocvar_g_keyhunt_key_return_tokiller && IS_PLAYER(killer) && killer.health > 0 && !killer.frozen) { kh_Handle_Pickup(self, killer, PICKUP_KILLED); }
-		else
-		{
-			self.health = 0;
-			kh_CheckKeyReturn(self, RETURN_NEEDKILL);
-		}
+		self.health = 0;
+		kh_CheckKeyReturn(self, RETURN_NEEDKILL);
 		return;
 	}
 	if(autocvar_g_keyhunt_key_return_damage)
 	{
-		entity killer = self.kh_dropper.kh_lastkiller;
-		if(autocvar_g_keyhunt_key_return_tokiller && IS_PLAYER(killer) && killer.health > 0 && !killer.frozen) { kh_Handle_Pickup(self, killer, PICKUP_KILLED); }
-		else
-		{
-			// reduce health and check if it should be returned
-			self.health = self.health - damage;
-			kh_CheckKeyReturn(self, RETURN_DAMAGE);
-		}
+		// reduce health and check if it should be returned
+		self.health = self.health - damage;
+		kh_CheckKeyReturn(self, RETURN_DAMAGE);
 		return;
 	}
 }
@@ -741,13 +744,8 @@ void kh_KeyTouch()
 	// automatically kill the key and return it if it touched lava/slime/nodrop surfaces
 	if(ITEM_TOUCH_NEEDKILL())
 	{
-		entity killer = self.kh_dropper.kh_lastkiller;
-		if(autocvar_g_keyhunt_key_return_tokiller && IS_PLAYER(killer) && killer.health > 0 && !killer.frozen) { kh_Handle_Pickup(self, killer, PICKUP_KILLED); }
-		else
-		{
-			self.health = 0;
-			kh_CheckKeyReturn(self, RETURN_NEEDKILL);
-		}
+		self.health = 0;
+		kh_CheckKeyReturn(self, RETURN_NEEDKILL);
 		return;
 	}
 
