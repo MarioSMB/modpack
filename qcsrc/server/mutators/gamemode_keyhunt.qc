@@ -1227,13 +1227,14 @@ MUTATOR_HOOKFUNCTION(kh_GiveFragsForKill)
 MUTATOR_HOOKFUNCTION(kh_RemovePlayer)
 {
 	entity key; // temporary entity for the search method
+	
+	KH_FOR_EACH_KEY(key) if(key.owner == self) { kh_Handle_Throw(self, world, key, DROP_NORMAL); }
 
-	KH_FOR_EACH_KEY(key)
+	KH_FOR_EACH_KEY(key) // handle this separately, as the above may reset them
 	{
 		if(key.pass_sender == self) { key.pass_sender = world; }
 		if(key.pass_target == self) { key.pass_target = world; }
 		if(key.kh_dropper == self) { key.kh_dropper = world; }
-		if(key.owner == self) { kh_Handle_Throw(self, world, key, DROP_NORMAL); }
 	}
 
 	return FALSE;
