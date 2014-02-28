@@ -61,10 +61,8 @@ vector MapVote_RGB(float id)
 		return '1 1 1';
 }
 
-
 void GameTypeVote_DrawGametypeItem(vector o, string gtype, float count, float id, float maxlen)
 {
-
 	float alpha;
 	
 	if(mv_avail_start[id] != GTV_AVAILABLE)
@@ -296,9 +294,8 @@ void MapVote_Draw()
 	tsize = dist_x - 10;
 	isize = min(dist_y - 10, 0.75 * tsize);
 
-	mv_selection = /*(gametypevote) ? GameTypeVote_Selection() :*/ MapVote_Selection(pos, dist, rows, mv_columns);
+	mv_selection = MapVote_Selection(pos, dist, rows, mv_columns);
 
-	
 	if ( !gametypevote )
 	{
 		pos_x += (xmax - xmin) / (2 * mv_columns);
@@ -308,8 +305,6 @@ void MapVote_Draw()
 
 	if (mv_top2_time)
 		mv_top2_alpha = max(0.2, 1 - (time - mv_top2_time)*(time - mv_top2_time));
-	
-
 	
 	for(i = 0; i < mv_num_maps; ++i)
 	{
@@ -434,7 +429,7 @@ string ssdirs[NUM_SSDIRS];
 float n_ssdirs;
 void MapVote_Init()
 {
-	float i, j, oldnum = 0;
+	float i, j;
 	string map, pk3, s;
 
 	precache_sound ("misc/invshot.wav");
@@ -454,7 +449,6 @@ void MapVote_Init()
 	}
 	n_ssdirs = min(n_ssdirs, NUM_SSDIRS);
 
-	oldnum = mv_num_maps;
 	mv_num_maps = min(MAPVOTE_COUNT, ReadByte());
 	mv_abstain = ReadByte();
 	if(mv_abstain)

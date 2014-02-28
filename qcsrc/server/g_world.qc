@@ -2865,22 +2865,41 @@ void MapVote_Think()
 	MapVote_Tick();
 }
 void MapInfo_LoadMapSettings_SaveGameType(float t);
+
+float GameTypeVote_SetGametype(float type)
+{
+	
+	if ( MapInfo_CurrentGametype() == type )
+		return TRUE;
+	
+	MapInfo_Enumerate();
+	MapInfo_FilterGametype(type, MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
+	if ( MapInfo_count == 0 )
+		return FALSE;
+	
+	localcmd("gametype ",MapInfo_Type_ToString(type),"\n");
+	MapInfo_LoadMapSettings_SaveGameType(type);
+	
+	cvar_set("g_maplist", MapInfo_ListAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()) );
+	if(autocvar_g_maplist_shuffle)
+		ShuffleMaplist();
+	
+	return TRUE;
+		
+}
+
 float GameTypeVote_Finished(float pos)
 {
 	if(!gametypevote)
 		return FALSE;
 	
+	if ( !GameTypeVote_SetGametype(MapInfo_Type_FromString(mapvote_maps[pos])) )
+	{
+		dprint("Selected gametype is not supported by any map");
+	}
+	
 	localcmd("sv_vote_gametype_hook_all\n");
 	localcmd("sv_vote_gametype_hook_", mapvote_maps[pos], "\n");
-	
-	if ( MapInfo_CurrentGametype() != MapInfo_Type_FromString(mapvote_maps[pos]) )
-	{
-		localcmd("gametype ", mapvote_maps[pos], "\n");
-		MapInfo_LoadMapSettings_SaveGameType(MapInfo_Type_FromString(mapvote_maps[pos]));
-		cvar_set("g_maplist", MapInfo_ListAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()));
-		if(autocvar_g_maplist_shuffle)
-			ShuffleMaplist();
-	}
 	
 	gametypevote = 0;
 	
