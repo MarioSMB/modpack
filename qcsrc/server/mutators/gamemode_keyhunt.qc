@@ -125,6 +125,7 @@ float KH_CheckWinner()
 		{
 			nades_Clear(e);
 			e.stat_kh_redkey_team = e.stat_kh_bluekey_team = e.stat_kh_yellowkey_team = e.stat_kh_pinkkey_team = 0;
+			e.kh_lastkiller = world;
 		}
 		KH_FOR_EACH_KEY(key) { if(!wasfreed(key)) kh_RemoveKey(key); }
 		kh_worldkeylist = world; // reset key list
@@ -186,6 +187,7 @@ float KH_CheckWinner()
 	{
 		nades_Clear(e);
 		e.stat_kh_redkey_team = e.stat_kh_bluekey_team = e.stat_kh_yellowkey_team = e.stat_kh_pinkkey_team = 0;
+		e.kh_lastkiller = world;
 	}
 
 	KH_FOR_EACH_KEY(key) { if(!wasfreed(key)) kh_RemoveKey(key); }
