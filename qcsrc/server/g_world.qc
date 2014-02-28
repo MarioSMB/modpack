@@ -2972,29 +2972,6 @@ float GameTypeVote_Start()
 		GameTypeVote_Finished(which_available);
 		return FALSE;
 	}
-
-	if(autocvar_sv_vote_gametype_shuffle)
-	{
-		for(j = 0; j < mapvote_count * 3; ++j)
-		{
-			float idx1, idx2;
-			idx1 = min(mapvote_count-1, floor(random() * mapvote_count));
-			idx2 = min(mapvote_count-1, floor(random() * mapvote_count));
-			
-			string temp1, temp2;
-			float atemp1, atemp2;
-			
-			temp1 = mapvote_maps[idx1];
-			temp2 = mapvote_maps[idx2];
-			atemp1 = mapvote_maps_availability[idx1];
-			atemp2 = mapvote_maps_availability[idx2];
-			
-			mapvote_maps[idx1] = temp2;
-			mapvote_maps[idx2] = temp1;
-			mapvote_maps_availability[idx2] = atemp1;
-			mapvote_maps_availability[idx1] = atemp2;
-		}
-	}
 	
 	mapvote_count_real = mapvote_count;
 
