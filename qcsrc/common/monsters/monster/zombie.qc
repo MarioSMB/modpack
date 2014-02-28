@@ -130,7 +130,7 @@ void spawnfunc_monster_zombie()
 {
 	self.classname = "monster_zombie";
 
-	if(Monster_CheckAppearFlags(self))
+	if(Monster_CheckAppearFlags(self, MON_ZOMBIE))
 		return;
 
 	if(!monster_initialize(MON_ZOMBIE)) { remove(self); return; }

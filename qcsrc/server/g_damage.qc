@@ -191,8 +191,6 @@ string AppendItemcodes(string s, entity player)
 		s = strcat(s, "F");
 	if(player.BUTTON_CHAT)
 		s = strcat(s, "T");
-	if(player.kh_next)
-		s = strcat(s, "K");
 	return s;
 }
 

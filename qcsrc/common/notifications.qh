@@ -473,10 +473,14 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_JOIN_PLAY,                      1, 0, "s1", "",                          "",                     _("^BG%s^F3 is now playing"), "") \
 	MSG_INFO_NOTIF(1, INFO_KEEPAWAY_DROPPED,               1, 0, "s1", "s1",                        "notify_balldropped",   _("^BG%s^BG has dropped the ball!"), "") \
 	MSG_INFO_NOTIF(1, INFO_KEEPAWAY_PICKUP,                1, 0, "s1", "s1",                        "notify_ballpickedup",  _("^BG%s^BG has picked up the ball!"), "") \
-	MULTITEAM_INFO(1, INFO_KEYHUNT_CAPTURE_, 4,            1, 0, "s1", "",                          "",                     _("^BG%s^BG captured the keys for the ^TC^TT team"), "") \
+	MULTITEAM_INFO(1, INFO_KEYHUNT_CAPTURE_, 4,            1, 0, "s1", "",                          "",                     _("^BG%s^BG captured the ^TC^TT key"), "") \
 	MULTITEAM_INFO(1, INFO_KEYHUNT_DROP_, 4,               1, 0, "s1", "",                          "",                     _("^BG%s^BG dropped the ^TC^TT Key"), "") \
+	MULTITEAM_INFO(1, INFO_KEYHUNT_KEYRETURN_DAMAGED_, 4,  0, 0, "", "",                            "",                     _("^BGThe ^TC^TT^BG key was destroyed"), "") \
+	MULTITEAM_INFO(1, INFO_KEYHUNT_KEYRETURN_NEEDKILL_, 4, 0, 0, "", "",                            "",                     _("^BGThe ^TC^TT^BG key fell somewhere it couldn't be reached"), "") \
+	MULTITEAM_INFO(1, INFO_KEYHUNT_KEYRETURN_TIMEOUT_, 4,  0, 0, "", "",                            "",                     _("^BGThe ^TC^TT^BG key was lost"), "") \
 	MULTITEAM_INFO(1, INFO_KEYHUNT_LOST_, 4,               1, 0, "s1", "",                          "",                     _("^BG%s^BG lost the ^TC^TT Key"), "") \
 	MULTITEAM_INFO(1, INFO_KEYHUNT_PICKUP_, 4,             1, 0, "s1", "",                          "",                     _("^BG%s^BG picked up the ^TC^TT Key"), "") \
+	MULTITEAM_INFO(1, INFO_KEYHUNT_START_, 4,              1, 0, "s1", "",                          "",                     _("^BG%s^BG is starting with the ^TC^TT Key"), "") \
 	MSG_INFO_NOTIF(1, INFO_LMS_FORFEIT,                    1, 0, "s1", "",                          "",                     _("^BG%s^F3 forfeited"), "") \
 	MSG_INFO_NOTIF(1, INFO_LMS_NOLIVES,                    1, 0, "s1", "",                          "",                     _("^BG%s^F3 has no more lives left"), "") \
 	MSG_INFO_NOTIF(1, INFO_MONSTERS_DISABLED,              0, 0, "", "",                            "",                     _("^BGMonsters are currently disabled"), "") \
@@ -697,12 +701,22 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_DROPPED,            1, 0, "s1",            CPID_KEEPAWAY,         "0 0", _("^BG%s^BG has dropped the ball!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_PICKUP,             1, 0, "s1",            CPID_KEEPAWAY,         "0 0", _("^BG%s^BG has picked up the ball!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_WARN,               0, 0, "",              CPID_KEEPAWAY_WARN,    "0 0", _("^BGKilling people while you don't have the ball gives no points!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_CAPTURE,             0, 0, "",              CPID_KEYHUNT_LOWPRIO,  "0 0", _("^BGYou captured the keys!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_HELP,                0, 0, "",              CPID_KEYHUNT,          "0 0", _("^BGAll keys are in your team's hands!\nHelp the key carriers to meet!"), "") \
 	MULTITEAM_CENTER(1, CENTER_KEYHUNT_INTERFERE_, 4,       0, 0, "",              CPID_KEYHUNT,          "0 0", _("^BGAll keys are in ^TC^TT team^BG's hands!\nInterfere ^F4NOW^BG!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_MEET,                0, 0, "",              CPID_KEYHUNT,          "0 0", _("^BGAll keys are in your team's hands!\nMeet the other key carriers ^F4NOW^BG!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_ROUNDSTART,          0, 1, "",              CPID_KEYHUNT_OTHER,    "1 f1", _("^F4Round will start in ^COUNT"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_SCAN,                0, 1, "",              CPID_KEYHUNT_OTHER,    "f1 0", _("^BGScanning frequency range..."), "") \
+	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_KEY_THROW_PUNISH,    0, 1, "f1secs",        CPID_KEYHUNT_LOWPRIO,  "0 0", _("^BGToo many key throws! Throwing disabled for %s."), "") \
+	MULTITEAM_CENTER(1, CENTER_KEYHUNT_PASS_OTHER_, 4,      2, 0, "s1 s2",         CPID_KEYHUNT_PASS,     "0 0", _("^BG%s^BG passed the ^TC^TT^BG key to %s"), "") \
+	MULTITEAM_CENTER(1, CENTER_KEYHUNT_PASS_RECEIVED_, 4,   1, 0, "s1",            CPID_KEYHUNT_PASS,     "0 0", _("^BGYou received the ^TC^TT^BG key from %s"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_PASS_REQUESTED,      1, 0, "s1 pass_key",   CPID_KEYHUNT_PASS,     "0 0", _("^BG%s^BG requests you to pass the key%s"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_PASS_REQUESTING,     1, 0, "s1",            CPID_KEYHUNT_PASS,     "0 0", _("^BGRequesting %s^BG to pass you the key"), "") \
+	MULTITEAM_CENTER(1, CENTER_KEYHUNT_PASS_SENT_, 4,       1, 0, "s1",            CPID_KEYHUNT_PASS,     "0 0", _("^BGYou passed the ^TC^TT^BG key to %s"), "") \
+	MULTITEAM_CENTER(1, CENTER_KEYHUNT_PICKUP_, 4,          0, 0, "",              CPID_KEYHUNT_LOWPRIO,  "0 0", _("^BGYou got the ^TC^TT^BG key!"), "") \
+	MULTITEAM_CENTER(1, CENTER_KEYHUNT_PICKUP_TEAM_, 4,     1, 0, "s1",            CPID_KEYHUNT_LOWPRIO,  "0 0", _("^BGYour %steam mate^BG got the ^TC^TT^BG key! Protect them!"), "") \
+	MULTITEAM_CENTER(1, CENTER_KEYHUNT_PICKUP_TEAM_VERBOSE_,4, 2, 0, "s1 s2 s1",   CPID_KEYHUNT_LOWPRIO,  "0 0", _("^BGYour %steam mate (^BG%s%s)^BG got the ^TC^TT^BG key! Protect them!"), "") \
 	MULTITEAM_CENTER(1, CENTER_KEYHUNT_START_, 4,           0, 0, "",              CPID_KEYHUNT,          "0 0", _("^BGYou are starting with the ^TC^TT Key"), "") \
+    MULTITEAM_CENTER(1, CENTER_KEYHUNT_START_TEAM_, 4,      1, 0, "s1",            CPID_KEYHUNT_LOWPRIO,  "0 0", _("^BGYour %steam mate^BG is starting with the ^TC^TT^BG key!\nProtect them!"), "") \
+    MULTITEAM_CENTER(1, CENTER_KEYHUNT_START_TEAM_VERBOSE_, 4, 2, 0, "s1 s2 s1",   CPID_KEYHUNT_LOWPRIO,  "0 0", _("^BGYour %steam mate (^BG%s%s)^BG is starting with the ^TC^TT^BG key!\nProtect them!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MISSING_TEAMS,               0, 4, "missing_teams", CPID_MISSING_TEAMS,    "-1 0", _("^BGWaiting for players to join...\nNeed active players for: %s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MISSING_PLAYERS,             0, 1, "f1",            CPID_MISSING_PLAYERS,  "-1 0", _("^BGWaiting for %s player(s) to join..."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MINSTA_DOWNGRADE,            0, 0, "",              CPID_MINSTA_FINDAMMO,  "5 0", _("^BGYour weapon has been downgraded until you find some ammo!"), "") \
@@ -718,8 +732,8 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_FRAG,               0, 0, "",              CPID_OVERTIME,         "0 0", _("^F2Now playing ^F4OVERTIME^F2!\nKeep fragging until we have a winner!"), _("^F2Now playing ^F4OVERTIME^F2!\nKeep scoring until we have a winner!")) \
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_CONTROLPOINT,       0, 0, "",              CPID_OVERTIME,         "3 0", _("^F2Now playing ^F4OVERTIME^F2!\n\nGenerators start now to decay.\nThe more control points your team holds,\nthe faster the enemy generator decays"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_TIME,               0, 1, "f1time",        CPID_OVERTIME,         "0 0", _("^F2Now playing ^F4OVERTIME^F2!\n^BGAdded ^F4%s^BG to the game!"), "") \
-    MSG_CENTER_NOTIF(1, CENTER_PIGGYBACK_CARRYING,          1, 0, "s1",            CPID_PIGGYBACK,        "0 0", _("^BGYou are now carrying %s^BG!"), "") \
-    MSG_CENTER_NOTIF(1, CENTER_PIGGYBACK_RIDING,            1, 0, "s1",            CPID_PIGGYBACK,        "0 0", _("^BGYou are now riding %s^BG!"), "") \
+        MSG_CENTER_NOTIF(1, CENTER_PIGGYBACK_CARRYING,          1, 0, "s1",            CPID_PIGGYBACK,        "0 0", _("^BGYou are now carrying %s^BG!"), "") \
+        MSG_CENTER_NOTIF(1, CENTER_PIGGYBACK_RIDING,            1, 0, "s1",            CPID_PIGGYBACK,        "0 0", _("^BGYou are now riding %s^BG!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_PORTO_FAILED,                0, 0, "",              NO_CPID,               "0 0", _("^K1Portal deployment failed.\n\n^F2Catch it to try again!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_PORTO_CREATED_IN,            0, 0, "",              NO_CPID,               "0 0", _("^K1In^BG-portal created"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_PORTO_CREATED_OUT,           0, 0, "",              NO_CPID,               "0 0", _("^F3Out^BG-portal created"), "") \
@@ -732,7 +746,7 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_POWERUP_SPEED,               0, 0, "",              CPID_POWERUP,          "0 0", _("^F2You are on speed"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_POWERUP_STRENGTH,            0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Strength infuses your weapons with devastating power"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_RACE_FINISHLAP,              0, 0, "",              CPID_RACE_FINISHLAP,   "0 0", _("^F2The race is over, finish your lap!"), "") \
-    MSG_CENTER_NOTIF(1, CENTER_SECONDARY_NODAMAGE,          0, 0, "",              NO_CPID,               "0 0", _("^BGSecondary fire inflicts no damage!"), "") \
+        MSG_CENTER_NOTIF(1, CENTER_SECONDARY_NODAMAGE,          0, 0, "",              NO_CPID,               "0 0", _("^BGSecondary fire inflicts no damage!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SEQUENCE_COMPLETED,          0, 0, "",              NO_CPID,               "0 0", _("^BGSequence completed!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SEQUENCE_COUNTER,            0, 0, "",              NO_CPID,               "0 0", _("^BGThere are more to go..."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SEQUENCE_COUNTER_FEWMORE,    0, 1, "f1",            NO_CPID,               "0 0", _("^BGOnly %s^BG more to go..."), "") \
@@ -953,6 +967,8 @@ void Send_Notification_WOCOVA(
 	MSG_CHOICE_NOTIF(1, 2, CHOICE_CTF_PICKUP_ENEMY_TEAM,     MSG_CENTER,  CENTER_CTF_PICKUP_ENEMY_TEAM,     CENTER_CTF_PICKUP_ENEMY_TEAM_VERBOSE) \
 	MSG_CHOICE_NOTIF(1, 1, CHOICE_FRAG,                      MSG_CENTER,  CENTER_DEATH_MURDER_FRAG,         CENTER_DEATH_MURDER_FRAG_VERBOSE) \
 	MSG_CHOICE_NOTIF(1, 1, CHOICE_FRAGGED,                   MSG_CENTER,  CENTER_DEATH_MURDER_FRAGGED,      CENTER_DEATH_MURDER_FRAGGED_VERBOSE) \
+	MULTITEAM_CHOICE(1, 2, CHOICE_KEYHUNT_PICKUP_TEAM_, 4,   MSG_CENTER,  CENTER_KEYHUNT_PICKUP_TEAM_,      CENTER_KEYHUNT_PICKUP_TEAM_VERBOSE_) \
+	MULTITEAM_CHOICE(1, 2, CHOICE_KEYHUNT_START_TEAM_, 4,    MSG_CENTER,  CENTER_KEYHUNT_START_TEAM_,       CENTER_KEYHUNT_START_TEAM_VERBOSE_) \
 	MSG_CHOICE_NOTIF(1, 1, CHOICE_TYPEFRAG,                  MSG_CENTER,  CENTER_DEATH_MURDER_TYPEFRAG,     CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE) \
 	MSG_CHOICE_NOTIF(1, 1, CHOICE_TYPEFRAGGED,               MSG_CENTER,  CENTER_DEATH_MURDER_TYPEFRAGGED,  CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE)
 	//MSG_CHOICE_NOTIF(2, CHOICE_)
@@ -1309,8 +1325,8 @@ float NOTIF_CPID_COUNT;
 
 // notification limits -- INCREASE AS NECESSARY
 #define NOTIF_ANNCE_MAX   100
-#define NOTIF_INFO_MAX    300
-#define NOTIF_CENTER_MAX  250
+#define NOTIF_INFO_MAX    350
+#define NOTIF_CENTER_MAX  300
 #define NOTIF_MULTI_MAX   200
 #define NOTIF_CHOICE_MAX  30
 

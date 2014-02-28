@@ -234,6 +234,12 @@ const float STAT_VIP_BLUE = 101;
 const float STAT_VIP_YELLOW = 102;
 const float STAT_VIP_PINK = 103;
 
+// key hunt
+const float STAT_KH_REDKEY_TEAM = 100;
+const float STAT_KH_BLUEKEY_TEAM = 101;
+const float STAT_KH_YELLOWKEY_TEAM = 102;
+const float STAT_KH_PINKKEY_TEAM = 103;
+
 
 // see DP source, quakedef.h
 const float STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW = 222;

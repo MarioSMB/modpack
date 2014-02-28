@@ -2305,15 +2305,18 @@ void PlayerUseKey()
 		return;
 
 	if(self.vehicle)
-	if(!gameover)
 	{
-        vehicles_exit(VHEF_NORMAL);
-        return;
+		if(!gameover)
+		{
+			vehicles_exit(VHEF_NORMAL);
+			return;
+		}
 	}
 	else if(autocvar_g_vehicles_enter)
 	{
 		if(!self.frozen)
 		if(self.deadflag == DEAD_NO)
+		if(!gameover)
 		{
 			entity head, closest_target = world;
 			head = WarpZone_FindRadius(self.origin, autocvar_g_vehicles_enter_radius, TRUE);
