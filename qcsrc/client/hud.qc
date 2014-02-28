@@ -3404,20 +3404,20 @@ void HUD_Mod_KH(vector pos, vector mySize)
 	float yellow_alpha, yellow_alpha_prevstatus;
 	yellow_alpha = yellow_alpha_prevstatus = 1;
 	switch(yellowkey) {
-		case 1: yellow_icon = "kh_yellow"; break;
+		case 1: yellow_icon = "kh_yellow_key"; break;
 		case 2: yellow_icon = string_null; break;
-		case 3: yellow_icon = "kh_yellow"; yellow_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+		case 3: yellow_icon = "kh_yellow_key"; yellow_alpha = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
 			yellow_icon = string_null;
 			break;
 	}
 	switch(yellowkey_prevstatus) {
-		case 1: yellow_icon_prevstatus = "kh_yellow"; break;
+		case 1: yellow_icon_prevstatus = "kh_yellow_key"; break;
 		case 2: yellow_icon_prevstatus = string_null; break;
-		case 3: yellow_icon_prevstatus = "kh_yellow"; yellow_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
+		case 3: yellow_icon_prevstatus = "kh_yellow_key"; yellow_alpha_prevstatus = BLINK_BASE + BLINK_FACTOR * cos(time * BLINK_FREQ); break;
 		default:
 			if(yellowkey == 3)
-				yellow_icon_prevstatus = "kh_yellow"; // make it more visible
+				yellow_icon_prevstatus = "kh_yellow_key"; // make it more visible
 			else
 				yellow_icon_prevstatus = string_null;
 			break;
@@ -3509,68 +3509,68 @@ void HUD_Mod_KH(vector pos, vector mySize)
 
 	f = bound(0, redkey_statuschange_elapsedtime*2, 1);
 	if(red_icon_prevstatus && f < 1)
-		drawpic_aspect_skin_expanding(redkey_pos, red_icon_prevstatus, key_size, '1 1 1', panel_fg_alpha * red_alpha_prevstatus, DRAWFLAG_NORMAL, f);
+		drawpic_aspect_skin_expanding(redkey_pos + '0 0.3 0' * key_size_y, red_icon_prevstatus, key_size, '1 1 1', panel_fg_alpha * red_alpha_prevstatus, DRAWFLAG_NORMAL, f);
 	if(red_icon)
-		drawpic_aspect_skin(redkey_pos, red_icon, key_size, '1 1 1', panel_fg_alpha * red_alpha * f, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(redkey_pos + '0 0.3 0' * key_size_y, red_icon, key_size, '1 1 1', panel_fg_alpha * red_alpha * f, DRAWFLAG_NORMAL);
 		
 	string carrier_icon = string_null;
 	switch(getstati(STAT_KH_REDKEY_TEAM))
 	{
-		case 1: carrier_icon = "kh_redarrow"; break;
-		case 2: carrier_icon = "kh_bluearrow"; break;
-		case 3: carrier_icon = "kh_yellowarrow"; break;
-		case 4: carrier_icon = "kh_pinkarrow"; break;
+		case 1: carrier_icon = "kh_red_arrow"; break;
+		case 2: carrier_icon = "kh_blue_arrow"; break;
+		case 3: carrier_icon = "kh_yellow_arrow"; break;
+		case 4: carrier_icon = "kh_pink_arrow"; break;
 	}
 	if(carrier_icon)
 		drawpic_aspect_skin(redkey_pos, carrier_icon, ('1 0 0' * key_size_x) + ('0 0.3 0' * key_size_y) + ('0 0 1' * key_size_z), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 	f = bound(0, bluekey_statuschange_elapsedtime*2, 1);
 	if(blue_icon_prevstatus && f < 1)
-		drawpic_aspect_skin_expanding(bluekey_pos, blue_icon_prevstatus, key_size, '1 1 1', panel_fg_alpha * blue_alpha_prevstatus, DRAWFLAG_NORMAL, f);
+		drawpic_aspect_skin_expanding(bluekey_pos + '0 0.3 0' * key_size_y, blue_icon_prevstatus, key_size, '1 1 1', panel_fg_alpha * blue_alpha_prevstatus, DRAWFLAG_NORMAL, f);
 	if(blue_icon)
-		drawpic_aspect_skin(bluekey_pos, blue_icon, key_size, '1 1 1', panel_fg_alpha * blue_alpha * f, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(bluekey_pos + '0 0.3 0' * key_size_y, blue_icon, key_size, '1 1 1', panel_fg_alpha * blue_alpha * f, DRAWFLAG_NORMAL);
 		
 	carrier_icon = string_null;
 	switch(getstati(STAT_KH_BLUEKEY_TEAM))
 	{
-		case 1: carrier_icon = "kh_redarrow"; break;
-		case 2: carrier_icon = "kh_bluearrow"; break;
-		case 3: carrier_icon = "kh_yellowarrow"; break;
-		case 4: carrier_icon = "kh_pinkarrow"; break;
+		case 1: carrier_icon = "kh_red_arrow"; break;
+		case 2: carrier_icon = "kh_blue_arrow"; break;
+		case 3: carrier_icon = "kh_yellow_arrow"; break;
+		case 4: carrier_icon = "kh_pink_arrow"; break;
 	}
 	if(carrier_icon)
 		drawpic_aspect_skin(bluekey_pos, carrier_icon, ('1 0 0' * key_size_x) + ('0 0.3 0' * key_size_y) + ('0 0 1' * key_size_z), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		
 	f = bound(0, yellowkey_statuschange_elapsedtime*2, 1);
 	if(yellow_icon_prevstatus && f < 1)
-		drawpic_aspect_skin_expanding(yellowkey_pos, yellow_icon_prevstatus, key_size, '1 1 1', panel_fg_alpha * yellow_alpha_prevstatus, DRAWFLAG_NORMAL, f);
+		drawpic_aspect_skin_expanding(yellowkey_pos + '0 0.3 0' * key_size_y, yellow_icon_prevstatus, key_size, '1 1 1', panel_fg_alpha * yellow_alpha_prevstatus, DRAWFLAG_NORMAL, f);
 	if(yellow_icon)
-		drawpic_aspect_skin(yellowkey_pos, yellow_icon, key_size, '1 1 1', panel_fg_alpha * yellow_alpha * f, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(yellowkey_pos + '0 0.3 0' * key_size_y, yellow_icon, key_size, '1 1 1', panel_fg_alpha * yellow_alpha * f, DRAWFLAG_NORMAL);
 		
 	carrier_icon = string_null;
 	switch(getstati(STAT_KH_YELLOWKEY_TEAM))
 	{
-		case 1: carrier_icon = "kh_redarrow"; break;
-		case 2: carrier_icon = "kh_bluearrow"; break;
-		case 3: carrier_icon = "kh_yellowarrow"; break;
-		case 4: carrier_icon = "kh_pinkarrow"; break;
+		case 1: carrier_icon = "kh_red_arrow"; break;
+		case 2: carrier_icon = "kh_blue_arrow"; break;
+		case 3: carrier_icon = "kh_yellow_arrow"; break;
+		case 4: carrier_icon = "kh_pink_arrow"; break;
 	}
 	if(carrier_icon)
 		drawpic_aspect_skin(yellowkey_pos, carrier_icon, ('1 0 0' * key_size_x) + ('0 0.3 0' * key_size_y) + ('0 0 1' * key_size_z), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		
 	f = bound(0, pinkkey_statuschange_elapsedtime*2, 1);
 	if(pink_icon_prevstatus && f < 1)
-		drawpic_aspect_skin_expanding(pinkkey_pos, pink_icon_prevstatus, key_size, '1 1 1', panel_fg_alpha * pink_alpha_prevstatus, DRAWFLAG_NORMAL, f);
+		drawpic_aspect_skin_expanding(pinkkey_pos + '0 0.3 0' * key_size_y, pink_icon_prevstatus, key_size, '1 1 1', panel_fg_alpha * pink_alpha_prevstatus, DRAWFLAG_NORMAL, f);
 	if(pink_icon)
-		drawpic_aspect_skin(pinkkey_pos, pink_icon, key_size, '1 1 1', panel_fg_alpha * pink_alpha * f, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(pinkkey_pos + '0 0.3 0' * key_size_y, pink_icon, key_size, '1 1 1', panel_fg_alpha * pink_alpha * f, DRAWFLAG_NORMAL);
 		
 	carrier_icon = string_null;
 	switch(getstati(STAT_KH_PINKKEY_TEAM))
 	{
-		case 1: carrier_icon = "kh_redarrow"; break;
-		case 2: carrier_icon = "kh_bluearrow"; break;
-		case 3: carrier_icon = "kh_yellowarrow"; break;
-		case 4: carrier_icon = "kh_pinkarrow"; break;
+		case 1: carrier_icon = "kh_red_arrow"; break;
+		case 2: carrier_icon = "kh_blue_arrow"; break;
+		case 3: carrier_icon = "kh_yellow_arrow"; break;
+		case 4: carrier_icon = "kh_pink_arrow"; break;
 	}
 	if(carrier_icon)
 		drawpic_aspect_skin(pinkkey_pos, carrier_icon, ('1 0 0' * key_size_x) + ('0 0.3 0' * key_size_y) + ('0 0 1' * key_size_z), '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);

@@ -477,8 +477,10 @@ void Send_Notification_WOCOVA(
 	MULTITEAM_INFO(1, INFO_KEYHUNT_DROP_, 4,               1, 0, "s1", "",                          "",                     _("^BG%s^BG dropped the ^TC^TT Key"), "") \
 	MULTITEAM_INFO(1, INFO_KEYHUNT_KEYRETURN_DAMAGED_, 4,  0, 0, "", "",                            "",                     _("^BGThe ^TC^TT^BG key was destroyed"), "") \
 	MULTITEAM_INFO(1, INFO_KEYHUNT_KEYRETURN_NEEDKILL_, 4, 0, 0, "", "",                            "",                     _("^BGThe ^TC^TT^BG key fell somewhere it couldn't be reached"), "") \
+	MULTITEAM_INFO(1, INFO_KEYHUNT_KEYRETURN_TIMEOUT_, 4,  0, 0, "", "",                            "",                     _("^BGThe ^TC^TT^BG key was lost"), "") \
 	MULTITEAM_INFO(1, INFO_KEYHUNT_LOST_, 4,               1, 0, "s1", "",                          "",                     _("^BG%s^BG lost the ^TC^TT Key"), "") \
 	MULTITEAM_INFO(1, INFO_KEYHUNT_PICKUP_, 4,             1, 0, "s1", "",                          "",                     _("^BG%s^BG picked up the ^TC^TT Key"), "") \
+	MULTITEAM_INFO(1, INFO_KEYHUNT_START_, 4,              1, 0, "s1", "",                          "",                     _("^BG%s^BG is starting with the ^TC^TT Key"), "") \
 	MSG_INFO_NOTIF(1, INFO_LMS_FORFEIT,                    1, 0, "s1", "",                          "",                     _("^BG%s^F3 forfeited"), "") \
 	MSG_INFO_NOTIF(1, INFO_LMS_NOLIVES,                    1, 0, "s1", "",                          "",                     _("^BG%s^F3 has no more lives left"), "") \
 	MSG_INFO_NOTIF(1, INFO_MONSTERS_DISABLED,              0, 0, "", "",                            "",                     _("^BGMonsters are currently disabled"), "") \
@@ -713,6 +715,8 @@ void Send_Notification_WOCOVA(
 	MULTITEAM_CENTER(1, CENTER_KEYHUNT_PICKUP_TEAM_, 4,     1, 0, "s1",            CPID_KEYHUNT_LOWPRIO,  "0 0", _("^BGYour %steam mate^BG got the ^TC^TT^BG key! Protect them!"), "") \
 	MULTITEAM_CENTER(1, CENTER_KEYHUNT_PICKUP_TEAM_VERBOSE_,4, 2, 0, "s1 s2 s1",   CPID_KEYHUNT_LOWPRIO,  "0 0", _("^BGYour %steam mate (^BG%s%s)^BG got the ^TC^TT^BG key! Protect them!"), "") \
 	MULTITEAM_CENTER(1, CENTER_KEYHUNT_START_, 4,           0, 0, "",              CPID_KEYHUNT,          "0 0", _("^BGYou are starting with the ^TC^TT Key"), "") \
+    MULTITEAM_CENTER(1, CENTER_KEYHUNT_START_TEAM_, 4,      1, 0, "s1",            CPID_KEYHUNT_LOWPRIO,  "0 0", _("^BGYour %steam mate^BG is starting with the ^TC^TT^BG key!\nProtect them!"), "") \
+    MULTITEAM_CENTER(1, CENTER_KEYHUNT_START_TEAM_VERBOSE_, 4, 2, 0, "s1 s2 s1",   CPID_KEYHUNT_LOWPRIO,  "0 0", _("^BGYour %steam mate (^BG%s%s)^BG is starting with the ^TC^TT^BG key!\nProtect them!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MISSING_TEAMS,               0, 4, "missing_teams", CPID_MISSING_TEAMS,    "-1 0", _("^BGWaiting for players to join...\nNeed active players for: %s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MISSING_PLAYERS,             0, 1, "f1",            CPID_MISSING_PLAYERS,  "-1 0", _("^BGWaiting for %s player(s) to join..."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MINSTA_DOWNGRADE,            0, 0, "",              CPID_MINSTA_FINDAMMO,  "5 0", _("^BGYour weapon has been downgraded until you find some ammo!"), "") \
@@ -964,6 +968,7 @@ void Send_Notification_WOCOVA(
 	MSG_CHOICE_NOTIF(1, 1, CHOICE_FRAG,                      MSG_CENTER,  CENTER_DEATH_MURDER_FRAG,         CENTER_DEATH_MURDER_FRAG_VERBOSE) \
 	MSG_CHOICE_NOTIF(1, 1, CHOICE_FRAGGED,                   MSG_CENTER,  CENTER_DEATH_MURDER_FRAGGED,      CENTER_DEATH_MURDER_FRAGGED_VERBOSE) \
 	MULTITEAM_CHOICE(1, 2, CHOICE_KEYHUNT_PICKUP_TEAM_, 4,   MSG_CENTER,  CENTER_KEYHUNT_PICKUP_TEAM_,      CENTER_KEYHUNT_PICKUP_TEAM_VERBOSE_) \
+	MULTITEAM_CHOICE(1, 2, CHOICE_KEYHUNT_START_TEAM_, 4,    MSG_CENTER,  CENTER_KEYHUNT_START_TEAM_,       CENTER_KEYHUNT_START_TEAM_VERBOSE_) \
 	MSG_CHOICE_NOTIF(1, 1, CHOICE_TYPEFRAG,                  MSG_CENTER,  CENTER_DEATH_MURDER_TYPEFRAG,     CENTER_DEATH_MURDER_TYPEFRAG_VERBOSE) \
 	MSG_CHOICE_NOTIF(1, 1, CHOICE_TYPEFRAGGED,               MSG_CENTER,  CENTER_DEATH_MURDER_TYPEFRAGGED,  CENTER_DEATH_MURDER_TYPEFRAGGED_VERBOSE)
 	//MSG_CHOICE_NOTIF(2, CHOICE_)
@@ -1320,8 +1325,8 @@ float NOTIF_CPID_COUNT;
 
 // notification limits -- INCREASE AS NECESSARY
 #define NOTIF_ANNCE_MAX   100
-#define NOTIF_INFO_MAX    300
-#define NOTIF_CENTER_MAX  250
+#define NOTIF_INFO_MAX    350
+#define NOTIF_CENTER_MAX  300
 #define NOTIF_MULTI_MAX   200
 #define NOTIF_CHOICE_MAX  30
 

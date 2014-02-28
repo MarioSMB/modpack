@@ -298,7 +298,7 @@ void kh_Handle_Drop(entity key, entity player, float droptype)
 	if(autocvar_g_keyhunt_key_dropped_waypoint)
 		WaypointSprite_Spawn("keydropped", 0, 0, key, KEY_DROP_OFFSET, world, ((autocvar_g_keyhunt_key_dropped_waypoint == 2) ? 0 : player.team), key, wps_keydropped, TRUE, RADARICON_FLAG, WPCOLOR_DROPPEDKEY(key.team));
 
-	if(autocvar_g_keyhunt_key_return_damage && autocvar_g_keyhunt_key_health)
+	if(autocvar_g_keyhunt_key_return_time || (autocvar_g_keyhunt_key_return_damage && autocvar_g_keyhunt_key_health))
 	{
 		WaypointSprite_UpdateMaxHealth(key.wps_keydropped, key.max_key_health);
 		WaypointSprite_UpdateHealth(key.wps_keydropped, key.health);
@@ -538,12 +538,20 @@ void kh_Handle_Pickup(entity key, entity player, float pickuptype)
 	}
 
 	// messages and sounds
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_PICKUP_), player.netname);
-	if(pickuptype == PICKUP_START) { Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_4(key, CENTER_KEYHUNT_START_)); }
-	else { Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_4(key, CENTER_KEYHUNT_PICKUP_)); }
-	Send_Notification(NOTIF_TEAM_EXCEPT, player, MSG_CHOICE, APP_TEAM_ENT_4(key, CHOICE_KEYHUNT_PICKUP_TEAM_), Team_ColorCode(player.team), player.netname);
+	if(pickuptype == PICKUP_START)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_START_), player.netname);
+		Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_4(key, CENTER_KEYHUNT_START_));
+		Send_Notification(NOTIF_TEAM_EXCEPT, player, MSG_CHOICE, APP_TEAM_ENT_4(key, CHOICE_KEYHUNT_START_TEAM_), Team_ColorCode(player.team), player.netname);
+	}
+	else
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_PICKUP_), player.netname);
+		Send_Notification(NOTIF_ONE, player, MSG_CENTER, APP_TEAM_ENT_4(key, CENTER_KEYHUNT_PICKUP_));
+		Send_Notification(NOTIF_TEAM_EXCEPT, player, MSG_CHOICE, APP_TEAM_ENT_4(key, CHOICE_KEYHUNT_PICKUP_TEAM_), Team_ColorCode(player.team), player.netname);
 
-	if(pickuptype != PICKUP_START) { sound(player, CH_TRIGGER, key.snd_key_taken, VOL_BASE, ATTEN_NONE); }
+		sound(player, CH_TRIGGER, key.snd_key_taken, VOL_BASE, ATTEN_NONE);
+	}
 
 	// scoring
 	PlayerScore_Add(player, SP_KH_PICKUPS, 1);
@@ -552,7 +560,7 @@ void kh_Handle_Pickup(entity key, entity player, float pickuptype)
 	{
 		case PICKUP_DROPPED:
 		{
-			pickup_dropped_score = 1;
+			pickup_dropped_score = (autocvar_g_keyhunt_key_return_time ? bound(0, ((key.kh_droptime + autocvar_g_keyhunt_key_return_time) - time) / autocvar_g_keyhunt_key_return_time, 1) : 1);
 			pickup_dropped_score = floor((autocvar_g_keyhunt_score_pickup_dropped_late * (1 - pickup_dropped_score) + autocvar_g_keyhunt_score_pickup_dropped_early * pickup_dropped_score) + 0.5);
 			dprint("pickup_dropped_score is ", ftos(pickup_dropped_score), "\n");
 			PlayerTeamScore_AddScore(player, pickup_dropped_score);
@@ -583,13 +591,16 @@ void kh_CheckKeyReturn(entity key, float returntype)
 	{
 		if(key.wps_keydropped) { WaypointSprite_UpdateHealth(key.wps_keydropped, key.health); }
 
-		if(key.health <= 0)
+		if((key.health <= 0) || (time >= key.kh_droptime + autocvar_g_keyhunt_key_return_time))
 		{
 			switch(returntype)
 			{
-				default:
 				case RETURN_DAMAGE: Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_KEYRETURN_DAMAGED_)); break;
 				case RETURN_NEEDKILL: Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_KEYRETURN_NEEDKILL_)); break;
+
+				default:
+				case RETURN_TIMEOUT:
+					{ Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_KEYRETURN_TIMEOUT_)); break; }
 			}
 			sound(key, CH_TRIGGER, key.snd_key_respawn, VOL_BASE, ATTEN_NONE);
 			kh_EventLog("returned", key.team, world);
@@ -655,6 +666,12 @@ void kh_KeyThink()
 						{ self.movetype = MOVETYPE_FLY; }
 				}
 				else if(self.movetype == MOVETYPE_FLY) { self.movetype = MOVETYPE_TOSS; }
+			}
+			if(autocvar_g_keyhunt_key_return_time)
+			{
+				self.health -= ((self.max_key_health / autocvar_g_keyhunt_key_return_time) * KEY_THINKRATE);
+				kh_CheckKeyReturn(self, RETURN_TIMEOUT);
+				return;
 			}
 			return;
 		}
