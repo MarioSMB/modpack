@@ -915,6 +915,7 @@ float autocvar_g_keyhunt_key_dropped_floatinwater;
 float autocvar_g_keyhunt_key_glowtrails;
 float autocvar_g_keyhunt_key_health;
 float autocvar_g_keyhunt_key_return_time;
+float autocvar_g_keyhunt_key_return_tokiller;
 float autocvar_g_keyhunt_key_return_when_unreachable;
 float autocvar_g_keyhunt_key_return_damage;
 float autocvar_g_keyhunt_keycarrier_auto_helpme_damage;

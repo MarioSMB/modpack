@@ -90,6 +90,7 @@ float wpforenemy_nextthink;
 .float kh_droptime;
 .float kh_status; // status of the key (KEY_DROPPED, KEY_CARRY declared globally)
 .entity kh_dropper; // don't allow spam of dropping the key
+.entity kh_lastkiller;
 .float max_key_health;
 .float next_take_time;
 float kh_teams;

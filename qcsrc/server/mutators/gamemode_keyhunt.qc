@@ -530,6 +530,9 @@ void kh_Handle_Pickup(entity key, entity player, float pickuptype)
 	key.solid = SOLID_NOT;
 	key.angles = '0 0 0';
 	key.kh_status = KEY_CARRY;
+	
+	if(key.kh_dropper)
+		key.kh_dropper.kh_lastkiller = world; // reset when picked up
 
 	switch(pickuptype)
 	{
@@ -613,15 +616,25 @@ void kh_KeyDamage(entity inflictor, entity attacker, float damage, float deathty
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
-		self.health = 0;
-		kh_CheckKeyReturn(self, RETURN_NEEDKILL);
+		entity killer = self.kh_dropper.kh_lastkiller;
+		if(autocvar_g_keyhunt_key_return_tokiller && IS_PLAYER(killer)) { kh_Handle_Pickup(self, killer, PICKUP_DROPPED); }
+		else
+		{
+			self.health = 0;
+			kh_CheckKeyReturn(self, RETURN_NEEDKILL);
+		}
 		return;
 	}
 	if(autocvar_g_keyhunt_key_return_damage)
 	{
-		// reduce health and check if it should be returned
-		self.health = self.health - damage;
-		kh_CheckKeyReturn(self, RETURN_DAMAGE);
+		entity killer = self.kh_dropper.kh_lastkiller;
+		if(autocvar_g_keyhunt_key_return_tokiller && IS_PLAYER(killer)) { kh_Handle_Pickup(self, killer, PICKUP_DROPPED); }
+		else
+		{
+			// reduce health and check if it should be returned
+			self.health = self.health - damage;
+			kh_CheckKeyReturn(self, RETURN_DAMAGE);
+		}
 		return;
 	}
 }
@@ -723,8 +736,13 @@ void kh_KeyTouch()
 	// automatically kill the key and return it if it touched lava/slime/nodrop surfaces
 	if(ITEM_TOUCH_NEEDKILL())
 	{
-		self.health = 0;
-		kh_CheckKeyReturn(self, RETURN_NEEDKILL);
+		entity killer = self.kh_dropper.kh_lastkiller;
+		if(autocvar_g_keyhunt_key_return_tokiller && IS_PLAYER(killer)) { kh_Handle_Pickup(self, killer, PICKUP_DROPPED); }
+		else
+		{
+			self.health = 0;
+			kh_CheckKeyReturn(self, RETURN_NEEDKILL);
+		}
 		return;
 	}
 
@@ -1203,8 +1221,7 @@ MUTATOR_HOOKFUNCTION(kh_PlayerDies)
 	entity key;
 	float targ_iscarrier = FALSE;
 
-	KH_FOR_EACH_KEY(key)
-	if(key.owner == frag_target) { targ_iscarrier = TRUE; }
+	KH_FOR_EACH_KEY(key) if(key.owner == frag_target) { targ_iscarrier = TRUE; }
 
 	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)) && targ_iscarrier)
 	{
@@ -1212,8 +1229,13 @@ MUTATOR_HOOKFUNCTION(kh_PlayerDies)
 		PlayerScore_Add(frag_attacker, SP_KH_KCKILLS, 1);
 	}
 
-	KH_FOR_EACH_KEY(key)
-	if(key.owner == frag_target) { kh_Handle_Throw(frag_target, world, key, DROP_NORMAL); }
+	KH_FOR_EACH_KEY(key) if(key.owner == frag_target)
+	{
+		if(IS_PLAYER(frag_attacker))
+		if(frag_attacker != frag_target)
+			frag_target.kh_lastkiller = frag_attacker;
+		kh_Handle_Throw(frag_target, world, key, DROP_NORMAL);
+	}
 
 	return FALSE;
 }
@@ -1227,7 +1249,7 @@ MUTATOR_HOOKFUNCTION(kh_GiveFragsForKill)
 MUTATOR_HOOKFUNCTION(kh_RemovePlayer)
 {
 	entity key; // temporary entity for the search method
-	
+
 	KH_FOR_EACH_KEY(key) if(key.owner == self) { kh_Handle_Throw(self, world, key, DROP_NORMAL); }
 
 	KH_FOR_EACH_KEY(key) // handle this separately, as the above may reset them
