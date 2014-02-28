@@ -1229,13 +1229,12 @@ MUTATOR_HOOKFUNCTION(kh_PlayerDies)
 		PlayerScore_Add(frag_attacker, SP_KH_KCKILLS, 1);
 	}
 
-	KH_FOR_EACH_KEY(key) if(key.owner == frag_target)
-	{
-		if(IS_PLAYER(frag_attacker))
-		if(frag_attacker != frag_target)
-			frag_target.kh_lastkiller = frag_attacker;
-		kh_Handle_Throw(frag_target, world, key, DROP_NORMAL);
-	}
+	KH_FOR_EACH_KEY(key) if(key.owner == frag_target) { kh_Handle_Throw(frag_target, world, key, DROP_NORMAL); }
+	
+	if(targ_iscarrier)
+	if(IS_PLAYER(frag_attacker))
+	if(frag_attacker != frag_target)
+		frag_target.kh_lastkiller = frag_attacker;
 
 	return FALSE;
 }
