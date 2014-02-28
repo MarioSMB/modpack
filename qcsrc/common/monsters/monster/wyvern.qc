@@ -96,7 +96,7 @@ void spawnfunc_monster_wyvern()
 {
 	self.classname = "monster_wyvern";
 
-	if(Monster_CheckAppearFlags(self))
+	if(Monster_CheckAppearFlags(self, MON_WYVERN))
 		return;
 
 	if(!monster_initialize(MON_WYVERN)) { remove(self); return; }

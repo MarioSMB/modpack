@@ -119,7 +119,7 @@ void spawnfunc_monster_spider()
 {
 	self.classname = "monster_spider";
 
-	if(Monster_CheckAppearFlags(self))
+	if(Monster_CheckAppearFlags(self, MON_SPIDER))
 		return;
 
 	if(!monster_initialize(MON_SPIDER)) { remove(self); return; }

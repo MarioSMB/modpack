@@ -336,7 +336,7 @@ void spawnfunc_monster_mage()
 {
 	self.classname = "monster_mage";
 
-	if(Monster_CheckAppearFlags(self))
+	if(Monster_CheckAppearFlags(self, MON_MAGE))
 		return;
 
 	if(!monster_initialize(MON_MAGE)) { remove(self); return; }

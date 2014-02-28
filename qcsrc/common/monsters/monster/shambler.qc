@@ -197,7 +197,7 @@ void spawnfunc_monster_shambler()
 {
 	self.classname = "monster_shambler";
 
-	if(Monster_CheckAppearFlags(self))
+	if(Monster_CheckAppearFlags(self, MON_SHAMBLER))
 		return;
 
 	if(!monster_initialize(MON_SHAMBLER)) { remove(self); return; }

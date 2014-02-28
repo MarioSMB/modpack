@@ -350,12 +350,12 @@ float Monster_CanRespawn(entity ent)
 	return TRUE;
 }
 
-float Monster_CheckAppearFlags(entity ent);
+float Monster_CheckAppearFlags(entity ent, float monster_id);
 float monster_initialize(float mon_id);
 void monster_respawn()
 {
 	// is this function really needed?
-	if(!Monster_CheckAppearFlags(self))
+	if(!Monster_CheckAppearFlags(self, self.monsterid))
 		monster_initialize(self.monsterid);
 }
 
@@ -796,12 +796,13 @@ void Monster_Appear()
 	monster_initialize(self.monsterid);
 }
 
-float Monster_CheckAppearFlags(entity ent)
+float Monster_CheckAppearFlags(entity ent, float monster_id)
 {
 	if(!(ent.spawnflags & MONSTERFLAG_APPEAR))
 		return FALSE;
 
 	ent.think = func_null;
+	ent.monsterid = monster_id; // set so this monster is properly registered (otherwise, normal initialization is used)
 	ent.nextthink = 0;
 	ent.use = Monster_Appear;
 	ent.flags = FL_MONSTER; // set so this monster can get butchered
