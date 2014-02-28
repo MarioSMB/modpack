@@ -792,7 +792,7 @@ void monsters_setstatus()
 void Monster_Appear()
 {
 	self.enemy = activator;
-	self.spawnflags &= ~MONSTERFLAG_APPEAR;
+	//self.spawnflags &= ~MONSTERFLAG_APPEAR;
 	monster_initialize(self.monsterid);
 }
 
