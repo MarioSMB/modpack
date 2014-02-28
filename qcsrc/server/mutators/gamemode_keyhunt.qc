@@ -531,11 +531,13 @@ void kh_Handle_Pickup(entity key, entity player, float pickuptype)
 	key.angles = '0 0 0';
 	key.kh_status = KEY_CARRY;
 	
+	if(pickuptype != PICKUP_KILLED)
 	if(key.kh_dropper)
 		key.kh_dropper.kh_lastkiller = world; // reset when picked up
 
 	switch(pickuptype)
 	{
+		case PICKUP_KILLED:
 		case PICKUP_DROPPED: key.health = key.max_key_health; break; // reset health/return timelimit
 		default: break;
 	}
@@ -561,6 +563,7 @@ void kh_Handle_Pickup(entity key, entity player, float pickuptype)
 	nades_GiveBonus(player, autocvar_g_nades_bonus_score_minor);
 	switch(pickuptype)
 	{
+		case PICKUP_KILLED:
 		case PICKUP_DROPPED:
 		{
 			pickup_dropped_score = (autocvar_g_keyhunt_key_return_time ? bound(0, ((key.kh_droptime + autocvar_g_keyhunt_key_return_time) - time) / autocvar_g_keyhunt_key_return_time, 1) : 1);
@@ -578,7 +581,7 @@ void kh_Handle_Pickup(entity key, entity player, float pickuptype)
 	pointparticles(particleeffectnum(key.toucheffect), player.origin, '0 0 0', 1);
 
 	// waypoints
-	if(pickuptype == PICKUP_DROPPED) { WaypointSprite_Kill(key.wps_keydropped); }
+	if(pickuptype == PICKUP_DROPPED || pickuptype == PICKUP_KILLED) { WaypointSprite_Kill(key.wps_keydropped); }
 	kh_KeycarrierWaypoints(player);
 	WaypointSprite_Ping(player.wps_keycarrier);
 }
@@ -617,7 +620,7 @@ void kh_KeyDamage(entity inflictor, entity attacker, float damage, float deathty
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
 	{
 		entity killer = self.kh_dropper.kh_lastkiller;
-		if(autocvar_g_keyhunt_key_return_tokiller && IS_PLAYER(killer)) { kh_Handle_Pickup(self, killer, PICKUP_DROPPED); }
+		if(autocvar_g_keyhunt_key_return_tokiller && IS_PLAYER(killer)) { kh_Handle_Pickup(self, killer, PICKUP_KILLED); }
 		else
 		{
 			self.health = 0;
@@ -628,7 +631,7 @@ void kh_KeyDamage(entity inflictor, entity attacker, float damage, float deathty
 	if(autocvar_g_keyhunt_key_return_damage)
 	{
 		entity killer = self.kh_dropper.kh_lastkiller;
-		if(autocvar_g_keyhunt_key_return_tokiller && IS_PLAYER(killer)) { kh_Handle_Pickup(self, killer, PICKUP_DROPPED); }
+		if(autocvar_g_keyhunt_key_return_tokiller && IS_PLAYER(killer)) { kh_Handle_Pickup(self, killer, PICKUP_KILLED); }
 		else
 		{
 			// reduce health and check if it should be returned
@@ -737,7 +740,7 @@ void kh_KeyTouch()
 	if(ITEM_TOUCH_NEEDKILL())
 	{
 		entity killer = self.kh_dropper.kh_lastkiller;
-		if(autocvar_g_keyhunt_key_return_tokiller && IS_PLAYER(killer)) { kh_Handle_Pickup(self, killer, PICKUP_DROPPED); }
+		if(autocvar_g_keyhunt_key_return_tokiller && IS_PLAYER(killer)) { kh_Handle_Pickup(self, killer, PICKUP_KILLED); }
 		else
 		{
 			self.health = 0;

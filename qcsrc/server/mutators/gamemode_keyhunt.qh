@@ -78,6 +78,7 @@ float wpforenemy_nextthink;
 
 // others defined in CTF code (TODO: separate?)
 #define PICKUP_START 3
+#define PICKUP_KILLED 4
 
 // carrier stats
 .float stat_kh_redkey_team;
