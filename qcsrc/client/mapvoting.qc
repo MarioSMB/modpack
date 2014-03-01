@@ -65,7 +65,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 {
 	float alpha;
 	float desc_padding = gtv_text_size_x * 3;
-	float rect_margin = hud_fontsize_y;
+	float rect_margin = hud_fontsize_y / 2;
 	vector rect_pos = pos - '0.5 0.5 0' * rect_margin;
 	vector rect_size = '1 1 0';
 	rect_size_x = tsize + rect_margin;
@@ -86,7 +86,7 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	if(id == mv_ownvote)
 	{
 		drawfill(rect_pos, rect_size, rgb, 0.1*alpha, DRAWFLAG_NORMAL);
-		drawborderlines(autocvar_scoreboard_border_thickness, rect_pos, rect_size, MapVote_RGB(id), alpha, DRAWFLAG_NORMAL);
+		drawborderlines(autocvar_scoreboard_border_thickness, rect_pos, rect_size, rgb, alpha, DRAWFLAG_NORMAL);
 	}
 	
 	drawstring(pos, MapVote_FormatMapItem(id, MapInfo_Type_ToText(MapInfo_Type_FromString(gtype)), count, tsize, gtv_text_size), 
@@ -313,7 +313,7 @@ void MapVote_Draw()
 	
 	if ( gametypevote )
 	{
-		tsize = dist_x - hud_fontsize_y * 2;
+		tsize = dist_x - hud_fontsize_y;
 		isize = dist_y;
 		dist_y += hud_fontsize_y;
 		pos_x = ( vid_conwidth - dist_x * mv_columns ) / 2;
