@@ -121,9 +121,10 @@ float KH_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
 		round_handler_Init(5, autocvar_g_keyhunt_warmup, autocvar_g_keyhunt_round_timelimit);
-		FOR_EACH_PLAYER(e)
+		FOR_EACH_CLIENT(e)
 		{
-			nades_Clear(e);
+			if(IS_PLAYER(e))
+				nades_Clear(e);
 			e.stat_kh_redkey_team = e.stat_kh_bluekey_team = e.stat_kh_yellowkey_team = e.stat_kh_pinkkey_team = 0;
 			e.kh_lastkiller = world;
 		}
@@ -183,9 +184,10 @@ float KH_CheckWinner()
 
 	round_handler_Init(5, autocvar_g_keyhunt_warmup, autocvar_g_keyhunt_round_timelimit);
 
-	FOR_EACH_PLAYER(e)
+	FOR_EACH_CLIENT(e)
 	{
-		nades_Clear(e);
+		if(IS_PLAYER(e))
+			nades_Clear(e);
 		e.stat_kh_redkey_team = e.stat_kh_bluekey_team = e.stat_kh_yellowkey_team = e.stat_kh_pinkkey_team = 0;
 		e.kh_lastkiller = world;
 	}
