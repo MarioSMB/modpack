@@ -271,6 +271,21 @@ float KH_CheckTeams()
 	return 0;
 }
 
+entity kh_ChooseNewCarrier(entity key)
+{
+	entity tmp_entity, player = key.owner;
+
+	RandomSelection_Init();
+	FOR_EACH_PLAYER(tmp_entity)
+	if(tmp_entity != player)
+	if(!tmp_entity.frozen)
+	if(tmp_entity.health > 0)
+	if(DIFF_TEAM(tmp_entity, player))
+		RandomSelection_Add(tmp_entity, 0, string_null, 1, ((IS_REAL_CLIENT(tmp_entity)) ? 1 : 0.5));
+
+	return RandomSelection_chosen_ent;
+}
+
 
 // ====================
 // Drop/Pass/Throw Code
@@ -604,14 +619,20 @@ void kh_CheckKeyReturn(entity key, float returntype)
 				case RETURN_DAMAGE: Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_KEYRETURN_DAMAGED_)); break;
 				case RETURN_NEEDKILL:
 				{
-					entity killer = self.kh_dropper.kh_lastkiller;
+					entity killer = key.kh_dropper.kh_lastkiller;
 					if(autocvar_g_keyhunt_key_return_tokiller && IS_PLAYER(killer) && killer.health > 0 && !killer.frozen)
 					{
-						kh_Handle_Pickup(self, killer, PICKUP_KILLED);
+						kh_Handle_Pickup(key, killer, PICKUP_KILLED);
 						return;
 					}
 					else
 					{
+						entity newcarrier = kh_ChooseNewCarrier(key);
+						if(autocvar_g_keyhunt_key_return_tokiller && newcarrier)
+						{
+							kh_Handle_Pickup(key, newcarrier, PICKUP_KILLED);
+							return;
+						}
 						Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_KEYRETURN_NEEDKILL_));
 						break;
 					}
@@ -1219,10 +1240,10 @@ MUTATOR_HOOKFUNCTION(kh_PlayerDamage) // for changing damage and force values th
 
 MUTATOR_HOOKFUNCTION(kh_PlayerDies)
 {
-	entity key;
+	entity tmp_entity;
 	float targ_iscarrier = FALSE;
 
-	KH_FOR_EACH_KEY(key) if(key.owner == frag_target) { targ_iscarrier = TRUE; }
+	KH_FOR_EACH_KEY(tmp_entity) if(tmp_entity.owner == frag_target) { targ_iscarrier = TRUE; break; }
 
 	if((frag_attacker != frag_target) && (IS_PLAYER(frag_attacker)) && targ_iscarrier)
 	{
@@ -1230,12 +1251,14 @@ MUTATOR_HOOKFUNCTION(kh_PlayerDies)
 		PlayerScore_Add(frag_attacker, SP_KH_KCKILLS, 1);
 	}
 
-	KH_FOR_EACH_KEY(key) if(key.owner == frag_target) { kh_Handle_Throw(frag_target, world, key, DROP_NORMAL); }
+	KH_FOR_EACH_KEY(tmp_entity) if(tmp_entity.owner == frag_target) { kh_Handle_Throw(frag_target, world, tmp_entity, DROP_NORMAL); }
 	
 	if(targ_iscarrier)
 	if(IS_PLAYER(frag_attacker))
 	if(frag_attacker != frag_target)
 		frag_target.kh_lastkiller = frag_attacker;
+
+	FOR_EACH_PLAYER(tmp_entity) if(tmp_entity.kh_lastkiller == frag_target) { tmp_entity.kh_lastkiller = frag_attacker; }
 
 	return FALSE;
 }
