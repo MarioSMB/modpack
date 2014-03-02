@@ -622,6 +622,7 @@ void kh_CheckKeyReturn(entity key, float returntype)
 					entity killer = key.kh_dropper.kh_lastkiller;
 					if(autocvar_g_keyhunt_key_return_tokiller && IS_PLAYER(killer) && killer.health > 0 && !killer.frozen)
 					{
+						key.kh_dropper.kh_lastkiller = world;
 						kh_Handle_Pickup(key, killer, PICKUP_KILLED);
 						return;
 					}
