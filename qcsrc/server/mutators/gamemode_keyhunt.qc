@@ -180,6 +180,8 @@ float KH_CheckWinner()
 
 		kh_Handle_Capture(CAPTURE_NORMAL);
 		TeamScore_AddToTeam(winner_team, ST_KH_CAPS, 1);
+		
+		kh_EventLog("capture", winner_team, world);
 	}
 
 	round_handler_Init(5, autocvar_g_keyhunt_warmup, autocvar_g_keyhunt_round_timelimit);
@@ -473,13 +475,6 @@ void kh_Handle_Capture(float capturetype)
 		
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_KEYHUNT_CAPTURE);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT_4(key, INFO_KEYHUNT_CAPTURE_), player.netname);
-		
-		switch(capturetype)
-		{
-			case CAPTURE_NORMAL: kh_EventLog("capture", key.team, player); break;
-			case CAPTURE_DROPPED: kh_EventLog("droppedcapture", key.team, player); break;
-			default: break;
-		}
 
 		PlayerTeamScore_AddScore(player, autocvar_g_keyhunt_score_capture);
 		PlayerScore_Add(player, SP_KH_CAPS, 1);
@@ -502,6 +497,7 @@ void kh_Handle_Capture(float capturetype)
 		player.next_take_time = time + autocvar_g_keyhunt_key_collect_delay;
 		kh_RemoveKey(key); // when all is done, it should be safe to kill the key here
 	}
+	
 	play2all("kh/capture.wav");
 }
 
