@@ -71,6 +71,8 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 	rect_size_x = tsize + rect_margin;
 	rect_size_y = maxh + rect_margin;
 	vector rgb = MapVote_RGB(id);
+	vector offset = pos;
+	float nlines = 0;
 	
 	if(mv_avail_start[id] != GTV_AVAILABLE)
 		alpha = 0.2;
@@ -89,43 +91,68 @@ void GameTypeVote_DrawGameTypeItem(vector pos, float maxh, float tsize, string g
 		drawborderlines(autocvar_scoreboard_border_thickness, rect_pos, rect_size, rgb, alpha, DRAWFLAG_NORMAL);
 	}
 	
-	drawstring(pos, MapVote_FormatMapItem(id, MapInfo_Type_ToText(MapInfo_Type_FromString(gtype)), count, tsize, gtv_text_size), 
-			   gtv_text_size, rgb, alpha, DRAWFLAG_NORMAL); 
+	entity title;
+	title = spawn();
+	title.message = MapVote_FormatMapItem(id, MapInfo_Type_ToText(MapInfo_Type_FromString(gtype)), 
+										  count, tsize, gtv_text_size);
+	title.origin = pos-offset;
 	
 	pos_y += gtv_text_size_small_y;
 	pos_y += gtv_text_size_y/2;
 	
 	maxh -= gtv_text_size_y;
-	if(pic != "")
-	{
-		vector img_size = '1 1 0 ';
-		float isz = min(maxh, desc_padding) * 0.8;
-		drawpic(pos, pic, img_size*isz, '1 1 1', alpha, DRAWFLAG_NORMAL);
-	}
+	
+	entity picent = spawn();
+	picent.origin = pos-offset;
+	picent.maxs = '1 1 0 ' * min(maxh, desc_padding) * 0.8;
 	
 	pos_x += desc_padding;
 	tsize -= desc_padding;
 	
 	string thelabel = GameTypeVote_DescriptionByID(id), ts;
-	maxh -= gtv_text_size_small_y;
+	entity last = title;
+	entity next = world;
 	if( thelabel != "") 
 	{
 		float i,n = tokenizebyseparator(thelabel, "\n");
-		for(i = 0; i < n && maxh > 0; ++i)
+		for(i = 0; i < n && maxh > (nlines+1)*gtv_text_size_small_y; ++i)
 		{
 			getWrappedLine_remaining = argv(i);
-			while(getWrappedLine_remaining && maxh > 0)
+			while(getWrappedLine_remaining && maxh > (nlines+1)*gtv_text_size_small_y)
 			{
 				ts = getWrappedLine(tsize, gtv_text_size_small, stringwidth_colors);
-				drawstring(pos, ts, gtv_text_size_small, '1 1 1', alpha, DRAWFLAG_NORMAL);
 				if (ts != "")
 				{
+					next = spawn();
+					next.message = ts;
+					next.origin = pos-offset;
+					last.chain = next;
+					last = next;
 					pos_y += gtv_text_size_small_y;
-					maxh -= gtv_text_size_small_y;
+					nlines++;
 				}
 			}
 		}
 	}
+	
+	maxh -= max(nlines*gtv_text_size_small_y,picent.maxs_y);
+	if ( maxh > 0 )
+		offset_y += maxh/2;
+	drawstring(title.origin+offset, title.message, gtv_text_size, rgb, alpha, DRAWFLAG_NORMAL); 
+	
+	if(pic != "")
+		drawpic(picent.origin+offset, pic, picent.maxs, '1 1 1', alpha, DRAWFLAG_NORMAL);
+	
+	for ( last = title.chain; last ; )
+	{
+		drawstring(last.origin+offset, last.message, gtv_text_size_small, '1 1 1', alpha, DRAWFLAG_NORMAL);
+		next = last;
+		last = last.chain;
+		remove(next);
+	}
+	
+	remove(picent);
+	remove(title);
 }
 
 void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, string pic, float count, float id)
