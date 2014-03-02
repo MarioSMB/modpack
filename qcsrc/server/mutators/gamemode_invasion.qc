@@ -52,6 +52,8 @@ void invasion_SpawnChosenMonster(float mon)
 	}
 
 	monster = spawnmonster("", mon, spawn_point, spawn_point, spawn_point.origin, FALSE, FALSE, 2);
+	
+	monster.target2 = spawn_point.target2;
 
 	if(inv_roundcnt >= inv_maxrounds)
 		monster.spawnflags |= MONSTERFLAG_MINIBOSS; // last round spawns minibosses
