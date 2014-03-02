@@ -629,7 +629,7 @@ void kh_CheckKeyReturn(entity key, float returntype)
 					else
 					{
 						entity newcarrier = kh_ChooseNewCarrier(key);
-						if(autocvar_g_keyhunt_key_return_tokiller && newcarrier)
+						if(autocvar_g_keyhunt_key_return_toenemy && newcarrier)
 						{
 							kh_Handle_Pickup(key, newcarrier, PICKUP_KILLED);
 							return;
