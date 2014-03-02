@@ -273,7 +273,7 @@ float KH_CheckTeams()
 
 entity kh_ChooseNewCarrier(entity key)
 {
-	entity tmp_entity, player = key.owner;
+	entity tmp_entity, player = key.kh_dropper;
 
 	RandomSelection_Init();
 	FOR_EACH_PLAYER(tmp_entity)
