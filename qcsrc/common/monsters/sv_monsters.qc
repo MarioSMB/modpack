@@ -50,11 +50,8 @@ float monster_isvalidtarget (entity targ, entity ent)
 		return FALSE; // don't attack ourselves
 
 	traceline(ent.origin, targ.origin, MOVE_NORMAL, ent);
-	
-	while(ent.tag_entity)
-		ent = ent.tag_entity; // find the root of the tag
 
-	if(trace_startsolid || trace_fraction < 1)
+	if(trace_ent != ent)
 		return FALSE;
 
 	if(IS_VEHICLE(targ))
