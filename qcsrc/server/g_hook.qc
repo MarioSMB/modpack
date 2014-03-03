@@ -65,6 +65,7 @@ void RemoveGrapplingHook(entity pl)
 
 void GrapplingHookReset(void)
 {
+	if(g_keyhunt) { return; }
 	if(self.realowner.hook == self)
 		RemoveGrapplingHook(self.owner);
 	else // in any case:
