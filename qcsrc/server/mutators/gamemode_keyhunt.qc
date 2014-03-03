@@ -236,10 +236,10 @@ void KH_count_alive_players()
 	{
 		switch(e.team)
 		{
-			case NUM_TEAM_1: ++total_players; if(e.health > 0) ++redalive; break;
-			case NUM_TEAM_2: ++total_players; if(e.health > 0) ++bluealive; break;
-			case NUM_TEAM_3: ++total_players; if(e.health > 0) ++yellowalive; break;
-			case NUM_TEAM_4: ++total_players; if(e.health > 0) ++pinkalive; break;
+			case NUM_TEAM_1: ++total_players; if(e.health > 0 && e.frozen == 0 && (!e.vehicle || autocvar_g_keyhunt_allow_vehicle_carry)) ++redalive; break;
+			case NUM_TEAM_2: ++total_players; if(e.health > 0 && e.frozen == 0 && (!e.vehicle || autocvar_g_keyhunt_allow_vehicle_carry)) ++bluealive; break;
+			case NUM_TEAM_3: ++total_players; if(e.health > 0 && e.frozen == 0 && (!e.vehicle || autocvar_g_keyhunt_allow_vehicle_carry)) ++yellowalive; break;
+			case NUM_TEAM_4: ++total_players; if(e.health > 0 && e.frozen == 0 && (!e.vehicle || autocvar_g_keyhunt_allow_vehicle_carry)) ++pinkalive; break;
 		}
 	}
 }
@@ -250,7 +250,6 @@ void KH_count_alive_players()
 float prev_total_players;
 float KH_CheckTeams()
 {
-	allowed_to_spawn = TRUE;
 	KH_count_alive_players();
 	if(KH_ALIVE_TEAMS_OK())
 	{
@@ -282,7 +281,7 @@ entity kh_ChooseNewCarrier(entity key)
 	FOR_EACH_PLAYER(tmp_entity)
 	if(tmp_entity != player)
 	if(!tmp_entity.frozen)
-	if(!head.vehicle || autocvar_g_keyhunt_allow_vehicle_carry)
+	if(!tmp_entity.vehicle || autocvar_g_keyhunt_allow_vehicle_carry)
 	if(tmp_entity.health > 0)
 	if(DIFF_TEAM(tmp_entity, player))
 		RandomSelection_Add(tmp_entity, 0, string_null, 1, ((IS_REAL_CLIENT(tmp_entity)) ? 1 : 0.5));
