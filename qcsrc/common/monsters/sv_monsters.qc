@@ -50,8 +50,11 @@ float monster_isvalidtarget (entity targ, entity ent)
 		return FALSE; // don't attack ourselves
 
 	traceline(ent.origin, targ.origin, MOVE_NORMAL, ent);
+	
+	while(ent.tag_entity)
+		ent = ent.tag_entity; // find the root of the tag
 
-	if(trace_ent != targ)
+	if(trace_startsolid || trace_fraction < 1)
 		return FALSE;
 
 	if(IS_VEHICLE(targ))
@@ -100,7 +103,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if (targ.frozen)
 		return FALSE; // ignore frozen
 
-	if(autocvar_g_monsters_target_infront || ent.spawnflags & MONSTERFLAG_INFRONT)
+	if(autocvar_g_monsters_target_infront || (ent.spawnflags & MONSTERFLAG_INFRONT))
 	if(ent.enemy != targ)
 	{
 		float dot;
