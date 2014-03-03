@@ -342,10 +342,11 @@ void MapVote_Draw()
 	{
 		tsize = dist_x - hud_fontsize_y;
 		isize = dist_y;
-		if ( isize > 128 )
+		float maxheight = (ymax - pos_y) / 3;
+		if ( isize > maxheight )
 		{
-			pos_x += (isize - 128)/2;
-			isize = 128;
+			pos_x += (isize - maxheight)/2;
+			isize = maxheight;
 		}
 		else
 			dist_y += hud_fontsize_y;
