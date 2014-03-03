@@ -186,7 +186,7 @@ float bumblebee_gunner_frame()
 						  autocvar_g_vehicle_bumblebee_cannon_pitchlimit_down * -1, autocvar_g_vehicle_bumblebee_cannon_pitchlimit_up,
 						  _out * -1,  _in,  autocvar_g_vehicle_bumblebee_cannon_turnspeed);
 
-	if(!forbidWeaponUse())
+	if(!forbidWeaponUse(gunner))
 	if(gunner.BUTTON_ATCK)
 		if(time > gun.attack_finished_single)
 			if(gun.vehicle_energy >= autocvar_g_vehicle_bumblebee_cannon_cost)
@@ -538,7 +538,7 @@ float bumblebee_pilot_frame()
 					  autocvar_g_vehicle_bumblebee_raygun_pitchlimit_down * -1,  autocvar_g_vehicle_bumblebee_raygun_pitchlimit_up,
 					  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides * -1,  autocvar_g_vehicle_bumblebee_raygun_turnlimit_sides,  autocvar_g_vehicle_bumblebee_raygun_turnspeed);
 
-	if(!forbidWeaponUse())
+	if(!forbidWeaponUse(pilot))
 	if((pilot.BUTTON_ATCK || pilot.BUTTON_ATCK2) && (vehic.vehicle_energy > autocvar_g_vehicle_bumblebee_raygun_dps * sys_frametime || autocvar_g_vehicle_bumblebee_raygun == 0))
 	{
 		vehic.gun3.enemy.realowner = pilot;

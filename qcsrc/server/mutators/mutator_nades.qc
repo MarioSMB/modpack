@@ -771,7 +771,7 @@ float CanThrowNade()
 	if (!autocvar_g_nades)
 		return FALSE; // allow turning them off mid match
 
-	if(forbidWeaponUse())
+	if(forbidWeaponUse(self))
 		return FALSE;
 
 	if (!IS_PLAYER(self))

@@ -411,7 +411,7 @@ void PlayerTouch (void)
 	if(other.deadflag != DEAD_NO)
 		return;
 
-	if(forbidWeaponUse())
+	if(forbidWeaponUse(self))
 		return;
 
 	vector vdir = normalize(other.origin - self.origin);

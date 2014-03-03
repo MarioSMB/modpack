@@ -360,17 +360,17 @@ void W_ThrowWeapon(vector velo, vector delta, float doreduce)
 	Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_WEAPON_DROP, a, w);
 }
 
-float forbidWeaponUse()
+float forbidWeaponUse(entity player)
 {
 	if(time < game_starttime && !autocvar_sv_ready_restart_after_countdown)
 		return 1;
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
 		return 2;
-	if(self.player_blocked)
+	if(player.player_blocked)
 		return 3;
-	if(self.weapon_blocked)
+	if(player.weapon_blocked)
 		return 4;
-	if(self.frozen)
+	if(player.frozen)
 		return 5;
 	return 0;
 }
@@ -385,7 +385,7 @@ void W_WeaponFrame()
 	if (!self.weaponentity || self.health < 1)
 		return; // Dead player can't use weapons and injure impulse commands
 
-	float forbid_weaponuse = forbidWeaponUse();
+	float forbid_weaponuse = forbidWeaponUse(self);
 
 	if(forbid_weaponuse && (!g_minstagib || forbid_weaponuse != 2))
 	if(self.weaponentity.state != WS_CLEAR)

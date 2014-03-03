@@ -381,7 +381,7 @@ float racer_frame()
 	df -= v_up * (vlen(racer.velocity) * autocvar_g_vehicle_racer_downforce);
 	player.movement = racer.velocity += df * frametime;
 
-	if(!forbidWeaponUse())
+	if(!forbidWeaponUse(player))
 	if(player.BUTTON_ATCK)
 	if(time > racer.attack_finished_single)
 	if(racer.vehicle_energy >= autocvar_g_vehicle_racer_cannon_cost)
@@ -420,7 +420,7 @@ float racer_frame()
 		}
 	}
 
-	if(!forbidWeaponUse())
+	if(!forbidWeaponUse(player))
 	if(time > racer.delay)
 	if(player.BUTTON_ATCK2)
 	{

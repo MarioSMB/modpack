@@ -517,7 +517,7 @@ float raptor_frame()
 	UpdateAuxiliaryXhair(player, trace_endpos, '0 1 0', 0);
 	*/
 
-	if(!forbidWeaponUse())
+	if(!forbidWeaponUse(player))
 	if(player.BUTTON_ATCK)
 	if(raptor.attack_finished_single <= time)
 	if(raptor.vehicle_energy > autocvar_g_vehicle_raptor_cannon_cost)
@@ -547,7 +547,7 @@ float raptor_frame()
 	if(self.vehicle_flags  & VHF_ENERGYREGEN)
 		vehicles_regen(raptor.cnt, vehicle_energy, autocvar_g_vehicle_raptor_energy, autocvar_g_vehicle_raptor_energy_regen_pause, autocvar_g_vehicle_raptor_energy_regen, frametime, FALSE);
 
-	if(!forbidWeaponUse())
+	if(!forbidWeaponUse(player))
 	if(raptor.vehicle_weapon2mode == RSM_BOMB)
 	{
 		if(time > raptor.lip + autocvar_g_vehicle_raptor_bombs_refire)
