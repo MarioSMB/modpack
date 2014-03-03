@@ -549,7 +549,7 @@ void kh_Handle_Pickup(entity key, entity player, float pickuptype)
 	key.angles = '0 0 0';
 	key.kh_status = KEY_CARRY;
 	
-	if(pickuptype != PICKUP_KILLED)
+	//if(pickuptype != PICKUP_KILLED)
 	if(key.kh_dropper)
 	{
 		entity tmp_entity;
@@ -631,7 +631,6 @@ void kh_CheckKeyReturn(entity key, float returntype)
 					entity killer = key.kh_dropper.kh_lastkiller;
 					if(autocvar_g_keyhunt_key_return_tokiller && IS_PLAYER(killer) && killer.health > 0 && !killer.frozen)
 					{
-						key.kh_dropper.kh_lastkiller = world;
 						kh_Handle_Pickup(key, killer, PICKUP_KILLED);
 						return;
 					}
