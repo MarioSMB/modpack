@@ -206,6 +206,7 @@ entity KH_ChooseCarrier(float teamnumber)
 	RandomSelection_Init();
 	FOR_EACH_PLAYER(head)
 	if(head.health > 0)
+	if(!head.vehicle || autocvar_g_keyhunt_allow_vehicle_carry)
 	if(head.frozen == 0)
 	if(head.team == teamnumber)
 		RandomSelection_Add(head, 0, string_null, 1, ((IS_REAL_CLIENT(head)) ? 1 : 0.5));
@@ -281,6 +282,7 @@ entity kh_ChooseNewCarrier(entity key)
 	FOR_EACH_PLAYER(tmp_entity)
 	if(tmp_entity != player)
 	if(!tmp_entity.frozen)
+	if(!head.vehicle || autocvar_g_keyhunt_allow_vehicle_carry)
 	if(tmp_entity.health > 0)
 	if(DIFF_TEAM(tmp_entity, player))
 		RandomSelection_Add(tmp_entity, 0, string_null, 1, ((IS_REAL_CLIENT(tmp_entity)) ? 1 : 0.5));
@@ -550,7 +552,13 @@ void kh_Handle_Pickup(entity key, entity player, float pickuptype)
 	
 	if(pickuptype != PICKUP_KILLED)
 	if(key.kh_dropper)
-		key.kh_dropper.kh_lastkiller = world; // reset when picked up
+	{
+		entity tmp_entity;
+		float key_count = 0;
+		KH_FOR_EACH_KEY(tmp_entity) if(tmp_entity.owner == key.kh_dropper && tmp_entity != key) { ++key_count; }
+		if(key_count < 1) // carrier is holding no other keys, so reset
+			key.kh_dropper.kh_lastkiller = world; // reset when picked up
+	}
 
 	switch(pickuptype)
 	{
