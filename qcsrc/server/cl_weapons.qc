@@ -384,10 +384,10 @@ void W_WeaponFrame()
 
 	if (!self.weaponentity || self.health < 1)
 		return; // Dead player can't use weapons and injure impulse commands
-		
+
 	float forbid_weaponuse = forbidWeaponUse();
 
-	if((forbid_weaponuse && !g_minstagib) || (forbid_weaponuse != 2 && forbid_weaponuse))
+	if(forbid_weaponuse && (!g_minstagib || forbid_weaponuse != 2))
 	if(self.weaponentity.state != WS_CLEAR)
 	{
 		w_ready();
