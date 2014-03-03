@@ -252,7 +252,7 @@ float tankll48_frame()
 	self.angles_x = bound(-autocvar_g_vehicle_tankll48_tiltlimit, self.angles_x, autocvar_g_vehicle_tankll48_tiltlimit);
 	self.angles_z = bound(-autocvar_g_vehicle_tankll48_tiltlimit, self.angles_z, autocvar_g_vehicle_tankll48_tiltlimit);
 
-
+	if(!forbidWeaponUse())
 	if(player.BUTTON_ATCK && tank.vehicle_ammo1 >= autocvar_g_vehicle_tankll48_cannon_ammo && tank.tur_head.attack_finished_single <= time)
 	{
 		tank.cnt = time;

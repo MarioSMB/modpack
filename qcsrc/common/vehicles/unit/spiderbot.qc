@@ -249,6 +249,9 @@ void spiderbot_rocket_do()
 	if(self.wait != -10)
 	if(!self.owner.BUTTON_ATCK2)
 		return;
+		
+	if(forbidWeaponUse())
+		return;
 
 	v = gettaginfo(self.tur_head,gettagindex(self.tur_head,"tag_fire"));
 
@@ -479,6 +482,7 @@ float spiderbot_frame()
 	self.angles_x = bound(-autocvar_g_vehicle_spiderbot_tiltlimit, self.angles_x, autocvar_g_vehicle_spiderbot_tiltlimit);
 	self.angles_z = bound(-autocvar_g_vehicle_spiderbot_tiltlimit, self.angles_z, autocvar_g_vehicle_spiderbot_tiltlimit);
 
+	if(!forbidWeaponUse())
 	if(player.BUTTON_ATCK)
 	{
 		spider.cnt = time;
