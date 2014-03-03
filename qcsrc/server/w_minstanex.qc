@@ -598,7 +598,6 @@ void W_RocketMinsta_Attack3 (void)
 }
 
 void spawnfunc_weapon_minstanex (void); // defined in t_items.qc
-float forbidWeaponUse(); // defined in cl_weapons.qc
 
 float w_minstanex(float req)
 {
@@ -623,7 +622,7 @@ float w_minstanex(float req)
 			weapon_action(self.weapon, WR_RELOAD);
 		else if(autocvar_g_balance_minstanex_reload_ammo && self.clip_load < minstanex_ammo) // forced reload
 			weapon_action(self.weapon, WR_RELOAD);
-		if (self.BUTTON_ATCK && ((self.ammo_cells && autocvar_g_rm) || !autocvar_g_rm) && !forbidWeaponUse())
+		if (self.BUTTON_ATCK && ((self.ammo_cells && autocvar_g_rm) || !autocvar_g_rm))
 		{
 			if (!self.minstanex_held_down)
 			{

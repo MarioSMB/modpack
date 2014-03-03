@@ -365,13 +365,13 @@ float forbidWeaponUse()
 	if(time < game_starttime && !autocvar_sv_ready_restart_after_countdown)
 		return 1;
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
-		return 1;
+		return 2;
 	if(self.player_blocked)
-		return 1;
+		return 3;
 	if(self.weapon_blocked)
-		return 1;
+		return 4;
 	if(self.frozen)
-		return 1;
+		return 5;
 	return 0;
 }
 
@@ -384,9 +384,10 @@ void W_WeaponFrame()
 
 	if (!self.weaponentity || self.health < 1)
 		return; // Dead player can't use weapons and injure impulse commands
+		
+	float forbid_weaponuse = forbidWeaponUse();
 
-	if(forbidWeaponUse())
-	if(!g_minstagib)
+	if((forbid_weaponuse && !g_minstagib) || (forbid_weaponuse != 2 && forbid_weaponuse))
 	if(self.weaponentity.state != WS_CLEAR)
 	{
 		w_ready();
