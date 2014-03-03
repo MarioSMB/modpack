@@ -219,6 +219,9 @@ void nade_ice_freeze(entity freezefield, entity frost_target, float freeze_time)
 	else { DropBall(frost_target.ballcarried, frost_target.origin, frost_target.velocity);}
 	if(frost_target.flagcarried) { ctf_Handle_Throw(frost_target, world, DROP_THROW); }
 	if(frost_target.nade) { toss_nade(frost_target, '0 0 0', time + 0.05); }
+	
+	entity key;
+	KH_FOR_EACH_KEY(key) if(key.owner == frost_target) { kh_Handle_Throw(frost_target, world, key, DROP_THROW); }
 }
 
 void nade_ice_think()
