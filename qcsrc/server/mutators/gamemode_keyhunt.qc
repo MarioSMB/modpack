@@ -216,11 +216,13 @@ entity KH_ChooseCarrier(float teamnumber)
 void kh_KeySetup(float teamnumber, entity key, entity player);
 void KH_RoundStart()
 {
-	entity key;
-	kh_KeySetup(NUM_TEAM_1, (key = spawn()), KH_ChooseCarrier(NUM_TEAM_1));
-	kh_KeySetup(NUM_TEAM_2, (key = spawn()), KH_ChooseCarrier(NUM_TEAM_2));
-	if(kh_teams >= 3) { kh_KeySetup(NUM_TEAM_3, (key = spawn()), KH_ChooseCarrier(NUM_TEAM_3)); }
-	if(kh_teams >= 4) { kh_KeySetup(NUM_TEAM_4, (key = spawn()), KH_ChooseCarrier(NUM_TEAM_4)); }
+	entity tmp_entity;
+	kh_KeySetup(NUM_TEAM_1, (tmp_entity = spawn()), KH_ChooseCarrier(NUM_TEAM_1));
+	kh_KeySetup(NUM_TEAM_2, (tmp_entity = spawn()), KH_ChooseCarrier(NUM_TEAM_2));
+	if(kh_teams >= 3) { kh_KeySetup(NUM_TEAM_3, (tmp_entity = spawn()), KH_ChooseCarrier(NUM_TEAM_3)); }
+	if(kh_teams >= 4) { kh_KeySetup(NUM_TEAM_4, (tmp_entity = spawn()), KH_ChooseCarrier(NUM_TEAM_4)); }
+	
+	FOR_EACH_PLAYER(tmp_entity) { tmp_entity.spawnshieldtime = time + autocvar_g_spawnshieldtime; }
 }
 
 float total_players;
