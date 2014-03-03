@@ -342,7 +342,13 @@ void MapVote_Draw()
 	{
 		tsize = dist_x - hud_fontsize_y;
 		isize = dist_y;
-		dist_y += hud_fontsize_y;
+		if ( isize > 128 )
+		{
+			pos_x += (isize - 128)/2;
+			isize = 128;
+		}
+		else
+			dist_y += hud_fontsize_y;
 		pos_x = ( vid_conwidth - dist_x * mv_columns ) / 2;
 	}
 	else
