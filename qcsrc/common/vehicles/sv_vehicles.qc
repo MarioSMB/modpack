@@ -882,6 +882,7 @@ void vehicles_touch()
 	// Vehicle currently in use
 	if(self.owner)
 	{
+		if(!forbidWeaponUse(self.owner))
 		if(other != world)
 		if((self.origin_z + self.maxs_z) > (other.origin_z))
 		if(vehicles_crushable(other))
