@@ -2849,10 +2849,8 @@ void MapVote_Think()
 			return;
 		}
 		
-		if ( autocvar_sv_vote_gametype )
-			GameTypeVote_Start();
-		else if ( autocvar_nextmap == "")
-			MapVote_Init();
+		if(autocvar_sv_vote_gametype) { GameTypeVote_Start(); }
+		else if(autocvar_nextmap == "") { MapVote_Init(); }
 	}
 
 	MapVote_Tick();
