@@ -2581,6 +2581,9 @@ void MapVote_TouchVotes(entity voter)
 float GameTypeVote_Finished(float pos);
 float MapVote_Finished(float mappos)
 {
+	if(alreadychangedlevel)
+		return FALSE;
+
 	string result;
 	float i;
 	float didntvote;
@@ -2847,19 +2850,9 @@ void MapVote_Think()
 		}
 		
 		if ( autocvar_sv_vote_gametype )
-		{
-			if ( !GameTypeVote_Start() )
-			{
-				if ( autocvar_nextmap == "" )
-					MapVote_Init();
-				else
-					MapVote_Finished(0);
-			}
-		}
+			GameTypeVote_Start();
 		else if ( autocvar_nextmap == "")
-		{
 			MapVote_Init();
-		}
 	}
 
 	MapVote_Tick();
@@ -2888,9 +2881,10 @@ float GameTypeVote_SetGametype(float type)
 		
 }
 
+float gametypevote_finished;
 float GameTypeVote_Finished(float pos)
 {
-	if(!gametypevote)
+	if(!gametypevote || gametypevote_finished)
 		return FALSE;
 	
 	if ( !GameTypeVote_SetGametype(MapInfo_Type_FromString(mapvote_maps[pos])) )
@@ -2901,7 +2895,7 @@ float GameTypeVote_Finished(float pos)
 	localcmd("sv_vote_gametype_hook_all\n");
 	localcmd("sv_vote_gametype_hook_", MapInfo_Type_ToString(MapInfo_CurrentGametype()), "\n");
 	
-	gametypevote = 0;
+	gametypevote_finished = TRUE;
 	
 	return TRUE;
 }
@@ -2964,12 +2958,14 @@ float GameTypeVote_Start()
 		if ( mapvote_count > 0 )
 			strunzone(mapvote_maps[0]);
 		mapvote_maps[0] = strzone(MapInfo_Type_ToString(MapInfo_CurrentGametype()));
-		GameTypeVote_Finished(0);
+		//GameTypeVote_Finished(0);
+		MapVote_Finished(0);
 		return FALSE;
 	}
 	if ( really_available == 1 )
 	{
-		GameTypeVote_Finished(which_available);
+		//GameTypeVote_Finished(which_available);
+		MapVote_Finished(which_available);
 		return FALSE;
 	}
 	
