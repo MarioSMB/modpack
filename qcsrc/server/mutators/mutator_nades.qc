@@ -870,6 +870,8 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 	{
 		if ( autocvar_g_nades_bonus && autocvar_g_nades )
 		{
+			entity key;
+			KH_FOR_EACH_KEY(key) if(key.owner == self) { time_score = autocvar_g_nades_bonus_score_time_flagcarrier; break; }
 			if(self.flagcarried || self.isvip || self.ballcarried) // this player is important
 				time_score = autocvar_g_nades_bonus_score_time_flagcarrier;
 			else
