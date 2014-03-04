@@ -554,8 +554,8 @@ void kh_Handle_Pickup(entity key, entity player, float pickuptype)
 	{
 		entity tmp_entity;
 		float key_count = 0;
-		KH_FOR_EACH_KEY(tmp_entity) if(tmp_entity.owner == key.kh_dropper && tmp_entity != key) { ++key_count; }
-		if(key_count < 1) // carrier is holding no other keys, so reset
+		KH_FOR_EACH_KEY(tmp_entity) if(tmp_entity.kh_dropper == key.kh_dropper && tmp_entity != key) { ++key_count; }
+		if(key_count < 1) // player dropped no other keys
 			key.kh_dropper.kh_lastkiller = world; // reset when picked up
 	}
 
