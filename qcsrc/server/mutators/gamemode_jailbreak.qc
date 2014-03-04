@@ -2,26 +2,22 @@
 float total_players;
 float redalive, bluealive;
 .float redalive_stat, bluealive_stat;
-float ca_teams;
 float allowed_to_spawn;
 
 void JB_count_alive_players()
 {
 	entity e;
 	total_players = redalive = bluealive = 0;
-	FOR_EACH_PLAYER(e) {
-		if(e.team == NUM_TEAM_1)
+	FOR_EACH_PLAYER(e)
+	{
+		switch(e.team)
 		{
-			++total_players;
-			if (!e.jb_isprisoned) ++redalive;
-		}
-		else if(e.team == NUM_TEAM_2)
-		{
-			++total_players;
-			if (!e.jb_isprisoned) ++bluealive;
+			case NUM_TEAM_1: ++total_players; if(!e.jb_isprisoned) ++redalive; break;
+			case NUM_TEAM_2: ++total_players; if(!e.jb_isprisoned) ++bluealive; break;
 		}
 	}
-	FOR_EACH_REALCLIENT(e) {
+	FOR_EACH_REALCLIENT(e)
+	{
 		e.redalive_stat = redalive;
 		e.bluealive_stat = bluealive;
 	}
@@ -198,8 +194,10 @@ void SetCameraWithAngles(entity player, entity cam, float timeout)
 // to cleanup
 void JB_ClearCameraForAll() { entity p; FOR_EACH_REALCLIENT(p) JB_ClearCamera(p); }
 
-void JB_AddDoor(entity door, float theteam, vector vdata, string sdata, entity cpoint) {
-	if(door.classname != "door" && door.classname != "door_rotating") {
+void JB_AddDoor(entity door, float theteam, vector vdata, string sdata, entity cpoint)
+{
+	if(door.classname != "door" && door.classname != "door_rotating")
+	{
 		JB_Log(TRUE, strcat("Warning: ^3", JB_ControlPoint_Name(cpoint), "^7 at ", vtos(cpoint.origin), " is linked with an entity of unhandled class (^3", door.classname, "^7)!"));
 		return;
 	}
@@ -229,7 +227,8 @@ void JB_MaybeOpenDoor(entity door, float openjails, vector vdata, string sdata, 
 	self = door;
 	float opened = TRUE;
 
-	switch(door.classname) {
+	switch(door.classname)
+	{
 		case "door":
 			door_init_startopen();
 			break;
@@ -247,7 +246,8 @@ void JB_MaybeOpenDoor(entity door, float openjails, vector vdata, string sdata, 
 
 	self = oldself;
 
-	if(opened) {
+	if(opened)
+	{
 		float idx = Team_TeamToNumber(cpoint.team);
 		jb_doors_opened[idx] = jb_doors_opened[idx] + 1;
 	}
@@ -260,7 +260,8 @@ void JB_NonJBInit()
 	float openjails = autocvar_g_jailbreak_nonjb_openjails;
 
 	SUB_ForEachTarget_Init();
-	FOR_EACH_JB_CONTROLPOINT(e) if(e.team != JB_TEAM_NEUTRAL) {
+	FOR_EACH_JB_CONTROLPOINT(e) if(e.team != JB_TEAM_NEUTRAL)
+	{
 		if(openjails != OPENJAILS_LOCKED_FORCE)
 			SUB_ForEachTarget(e, JB_MaybeOpenDoor, TRUE, openjails, '0 0 0', string_null, e);
 		e.think = SUB_Remove;
@@ -271,9 +272,11 @@ void JB_NonJBInit()
 	// We have to keep the jail sectors then to ensure it's not possible to get in with translocator (or something more evil to be added in the future).
 	// Otherwise, they have to be removed. TODO: do something about maps with multiple jails (if we ever get any).
 
-	for(e = findchain(classname, "jailbreak_jail"); e; e = e.chain) {
+	for(e = findchain(classname, "jailbreak_jail"); e; e = e.chain)
+	{
 		float idx = Team_TeamToNumber(e.team);
-		if(!autocvar_g_nades || jb_doors_opened[idx]) {
+		if(!autocvar_g_nades || jb_doors_opened[idx])
+		{
 			e.think = SUB_Remove;
 			e.nextthink = time;
 		}
@@ -304,12 +307,14 @@ void JB_TeleportToJail(entity p)
 	float tries;
 	tries = 3;
 
-	while(!spot && tries) {
+	while(!spot && tries)
+	{
 		spot = JB_ChooseJailSpawnpoint(et);
 		tries--;
 	}
 
-	if(!spot) {
+	if(!spot)
+	{
 		JB_Log(TRUE, strcat("Failed to pick a jail spawnpoint for ", self.netname, "^7, cannot imprison!"));
 		return;
 	}
@@ -676,11 +681,14 @@ float JB_ControlPoint_Cooldown(entity e)
 
 	c = e.jb_capturecount;
 
-	if(e.team == JB_TEAM_NEUTRAL) {
+	if(e.team == JB_TEAM_NEUTRAL)
+	{
 		base = autocvar_g_jailbreak_controlpoint_idletime_neutral;
 		pw	 = autocvar_g_jailbreak_controlpoint_idletime_neutral_power;
 		f	 = autocvar_g_jailbreak_controlpoint_idletime_neutral_factor;
-	} else {
+	}
+	else
+	{
 		base = autocvar_g_jailbreak_controlpoint_idletime;
 		pw	 = autocvar_g_jailbreak_controlpoint_idletime_power;
 		f	 = autocvar_g_jailbreak_controlpoint_idletime_factor;
@@ -708,7 +716,8 @@ void JB_ControlPoint_Deactivate(entity e, float cooldown)
 
 	JB_Log(FALSE, strcat(etos(e), ": ", ftos(e.jb_cooldown), "s cooldown. Team: ", ftos(e.team), ", Caps: ", ftos(e.jb_capturecount)));
 
-	if(e.jb_active && e.jb_cooldown > 0) {
+	if(e.jb_active && e.jb_cooldown > 0)
+	{
 		setmodel(e, "models/domination/dom_unclaimed.md3");
 		e.jb_active = FALSE;
 	}
@@ -731,12 +740,14 @@ void JB_ControlPoint_DefendWaypoint()
 
 	rng = autocvar_g_jailbreak_controlpoint_detect_enemies;
 
-	FOR_EACH_PLAYER(plr) if(DIFF_TEAM(plr, self)) if(!plr.jb_isprisoned) {
-		if(vlen(self.origin - plr.origin) < rng)
-		if(checkpvs(self.origin, plr)) {
-			detected = TRUE;
-			break;
-		}
+	FOR_EACH_PLAYER(plr)
+	if(DIFF_TEAM(plr, self))
+	if(!plr.jb_isprisoned)
+	if(vlen(self.origin - plr.origin) < rng)
+	if(checkpvs(self.origin, plr))
+	{
+		detected = TRUE;
+		break;
 	}
 
 	//if(detected)
@@ -756,13 +767,11 @@ void JB_ControlPoint_Think()
 	if(time < game_starttime || jb_roundover)
 		return;
 
-	if(self.jb_cooldown) {
-		JB_ControlPoint_UpdateCooldownProgress(self);
-	} else if(!self.jb_active) {
-		JB_ControlPoint_Activate(self);
-	}
+	if(self.jb_cooldown) { JB_ControlPoint_UpdateCooldownProgress(self); }
+	else if(!self.jb_active) { JB_ControlPoint_Activate(self); }
 
-	if(time - self.pointupdatetime >= 0.1) {
+	if(time - self.pointupdatetime >= 0.1)
+	{
 		self.jb_unlock_progress = 0;
 		self.jb_capturingplayer = world;
 	}
@@ -965,9 +974,7 @@ void JB_ControlPoint_Reset()
 
 void JB_SetupControlPoint()
 {
-	if(!jb_cp_first) {
-		jb_cp_first = self;
-	}
+	if(!jb_cp_first) { jb_cp_first = self; }
 
 	if(jb_cp_last)
 		jb_cp_last.jb_cp_next = self;
@@ -1071,7 +1078,8 @@ MUTATOR_HOOKFUNCTION(jb_PlayerDies)
 			PlayerScore_Add(self, SP_SCORE, -autocvar_g_jailbreak_penalty_death);
 		else if(IS_PLAYER(frag_attacker))
 		{
-			if(frag_attacker.team != self.team) {
+			if(frag_attacker.team != self.team)
+			{
 				PlayerScore_Add(self, SP_SCORE, -autocvar_g_jailbreak_penalty_death);
 				PlayerScore_Add(frag_attacker, SP_SCORE, autocvar_g_jailbreak_score_imprison);
 
@@ -1131,9 +1139,8 @@ MUTATOR_HOOKFUNCTION(jb_PlayerSpawn)
 		self.jb_imprisoner = world;
 	}
 
-	if(JB_TotalPlayersOnTeam(self.team) - 1 > 0 || self.jb_specteam) {	// allow to spawn non-prisoned if there are no players on that team
+	if(JB_TotalPlayersOnTeam(self.team) - 1 > 0 || self.jb_specteam) // allow to spawn non-prisoned if there are no players on that team
 		JB_Imprison(world);
-	}
 	
 	ClearCamera(self);
 
