@@ -1214,7 +1214,6 @@ float autocvar_sv_vote_auto;
 float autocvar_sv_vote_change;
 string autocvar_sv_vote_commands;
 float autocvar_sv_vote_gametype;
-float autocvar_sv_vote_gametype_shuffle;
 float autocvar_sv_vote_gametype_timeout;
 string autocvar_sv_vote_gametype_options;
 float autocvar_sv_vote_gametype_keeptwotime;
