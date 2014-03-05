@@ -244,6 +244,7 @@ void bumblebee_gunner_exit(float _exitflag)
 	self.view_ofs       = PL_VIEW_OFS;
 	self.event_damage   = PlayerDamage;
 	self.hud            = HUD_NORMAL;
+	self.teleportable	= TELEPORT_NORMAL;
 	self.switchweapon   = self.vehicle.switchweapon;
 
     vh_player = self;
@@ -314,6 +315,7 @@ float bumblebee_gunner_enter()
 	other.event_damage      = func_null;
 	other.view_ofs          = '0 0 0';
 	other.hud               = _gun.hud;
+	other.teleportable		= FALSE;
 	other.PlayerPhysplug    = _gun.PlayerPhysplug;
 	other.vehicle_ammo1     = self.vehicle_ammo1;
 	other.vehicle_ammo2     = self.vehicle_ammo2;

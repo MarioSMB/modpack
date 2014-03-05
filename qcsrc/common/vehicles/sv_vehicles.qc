@@ -823,6 +823,7 @@ void vehicles_exit(float eject)
 		_player.solid			= SOLID_SLIDEBOX;
 		_player.movetype		= MOVETYPE_WALK;
 		_player.effects		   &= ~EF_NODRAW;
+		_player.teleportable	= TELEPORT_NORMAL;
 		_player.alpha			= 1;
 		_player.PlayerPhysplug	= func_null;
 		_player.vehicle			= world;
@@ -1001,6 +1002,7 @@ void vehicles_enter(entity pl, entity veh)
 	pl.takedamage		= DAMAGE_NO;
 	pl.solid			= SOLID_NOT;
 	pl.movetype			= MOVETYPE_NOCLIP;
+	pl.teleportable		= FALSE;
 	pl.alpha			= -1;
 	pl.event_damage		= func_null;
 	pl.view_ofs			= '0 0 0';
