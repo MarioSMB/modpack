@@ -18,6 +18,12 @@ float autocvar_g_vehicle_racer;
 float autocvar_g_vehicle_racer_speed_afterburn;
 float autocvar_g_vehicle_racer_afterburn_cost;
 
+float autocvar_g_vehicle_racer_waterburn_cost;
+float autocvar_g_vehicle_racer_waterburn_speed;
+
+float autocvar_g_vehicle_racer_water_speed_forward;
+float autocvar_g_vehicle_racer_water_speed_strafe;
+
 float autocvar_g_vehicle_racer_anglestabilizer;
 float autocvar_g_vehicle_racer_downforce;
 
@@ -106,6 +112,9 @@ void racer_align4point(float _delta)
 	self.velocity += push_vector * _delta;
 	
 	if(pointcontents(self.origin - '0 0 64') == CONTENT_WATER)
+	if(self.owner.BUTTON_CROUCH && time < self.air_finished)
+		self.velocity_z += 30;
+	else
 		self.velocity_z += 200;
 
 	// Anti ocilation
@@ -285,9 +294,10 @@ float racer_frame()
 	racer   = self.vehicle;
 	self	= racer;
 
-	player.BUTTON_ZOOM = player.BUTTON_CROUCH = 0;
-
 	vehicles_painframe();
+
+	if(pointcontents(racer.origin) != CONTENT_WATER)
+		racer.air_finished = time + 5;
 
 	if(racer.deadflag != DEAD_NO)
 	{
@@ -297,6 +307,8 @@ float racer_frame()
 	}
 
 	racer_align4point(frametime);
+
+	player.BUTTON_ZOOM = player.BUTTON_CROUCH = 0;
 
 	crosshair_trace(player);
 
@@ -324,11 +336,16 @@ float racer_frame()
 
 	if(vlen(player.movement) != 0)
 	{
-		if(player.movement_x)
-			df += v_forward * ((player.movement_x > 0) ? autocvar_g_vehicle_racer_speed_forward : -autocvar_g_vehicle_racer_speed_forward);
-
-		if(player.movement_y)
-			df += v_right * ((player.movement_y > 0) ? autocvar_g_vehicle_racer_speed_strafe : -autocvar_g_vehicle_racer_speed_strafe);
+		if(pointcontents(racer.origin) == CONTENT_WATER)
+		{
+			if(player.movement_x) { df += v_forward * ((player.movement_x > 0) ? autocvar_g_vehicle_racer_water_speed_forward : -autocvar_g_vehicle_racer_water_speed_forward); }
+			if(player.movement_y) { df += v_right * ((player.movement_y > 0) ? autocvar_g_vehicle_racer_water_speed_strafe : -autocvar_g_vehicle_racer_water_speed_strafe); }
+		}
+		else
+		{
+			if(player.movement_x) { df += v_forward * ((player.movement_x > 0) ? autocvar_g_vehicle_racer_speed_forward : -autocvar_g_vehicle_racer_speed_forward); }
+			if(player.movement_y) { df += v_right * ((player.movement_y > 0) ? autocvar_g_vehicle_racer_speed_strafe : -autocvar_g_vehicle_racer_speed_strafe); }
+		}
 
 		if(self.sound_nexttime < time || self.sounds != 1)
 		{
@@ -354,8 +371,17 @@ float racer_frame()
 			pointparticles(particleeffectnum("wakizashi_booster_smoke"), self.origin - v_forward * 32, v_forward  * vlen(self.velocity), 1);
 
 		racer.wait = time;
-		racer.vehicle_energy -= autocvar_g_vehicle_racer_afterburn_cost * frametime;
-		df += (v_forward * autocvar_g_vehicle_racer_speed_afterburn);
+		
+		if(pointcontents(racer.origin) == CONTENT_WATER)
+		{
+			racer.vehicle_energy -= autocvar_g_vehicle_racer_waterburn_cost * frametime;
+			df += (v_forward * autocvar_g_vehicle_racer_waterburn_speed);
+		}
+		else
+		{
+			racer.vehicle_energy -= autocvar_g_vehicle_racer_afterburn_cost * frametime;
+			df += (v_forward * autocvar_g_vehicle_racer_speed_afterburn);
+		}
 
 		if(racer.invincible_finished < time)
 		{
