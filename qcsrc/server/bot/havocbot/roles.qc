@@ -254,11 +254,6 @@ void havocbot_role_race()
 	}
 }
 
-void havocbot_chooserole_dm()
-{
-	self.havocbot_role = havocbot_role_dm;
-}
-
 void havocbot_chooserole()
 {
 	dprint("choosing a role...\n");
@@ -266,5 +261,5 @@ void havocbot_chooserole()
 	if (MUTATOR_CALLHOOK(HavocBot_ChooseRole))
 		return;
 	else // assume anything else is deathmatch
-		havocbot_chooserole_dm();
+		self.havocbot_role = havocbot_role_dm;
 }
