@@ -196,12 +196,21 @@ MUTATOR_HOOKFUNCTION(inf_ForbidPlayerScore_Clear)
 	return TRUE;
 }
 
+// scoreboard stuff
+void inf_ScoreRules(float teams)
+{
+	CheckAllowedTeams(world);
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+	ScoreInfo_SetLabel_TeamScore(ST_INF_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
+	ScoreRules_basics_end();
+}
+
 void inf_Initialize()
 {
 	allowed_to_spawn = TRUE;
 
 	inf_teams = bound(2, autocvar_g_infection_teams, 4);
-	ScoreRules_inf(inf_teams);
+	inf_ScoreRules(inf_teams);
 
 	round_handler_Spawn(INF_CheckTeams, INF_CheckWinner, INF_RoundStart);
 	round_handler_Init(5, autocvar_g_infection_warmup, autocvar_g_infection_round_timelimit);

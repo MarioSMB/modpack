@@ -281,6 +281,14 @@ MUTATOR_HOOKFUNCTION(ca_PlayerRegen)
 	return TRUE;
 }
 
+// scoreboard setup
+void ca_ScoreRules(float teams)
+{
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+	ScoreInfo_SetLabel_TeamScore(ST_CA_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
+	ScoreRules_basics_end();
+}
+
 void ca_Initialize()
 {
 	allowed_to_spawn = TRUE;
@@ -290,7 +298,7 @@ void ca_Initialize()
 		ca_teams = autocvar_g_ca_teams;
 	ca_teams = bound(2, ca_teams, 4);
 	ret_float = ca_teams;
-	ScoreRules_ca(ca_teams);
+	ca_ScoreRules(ca_teams);
 
 	round_handler_Spawn(CA_CheckTeams, CA_CheckWinner, CA_RoundStart);
 	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);

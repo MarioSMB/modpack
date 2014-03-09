@@ -512,6 +512,14 @@ MUTATOR_HOOKFUNCTION(freezetag_GetTeamCount)
 	return 0;
 }
 
+// scoreboard setup
+void ft_ScoreRules(float teams)
+{
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE); // SFL_SORT_PRIO_PRIMARY
+	ScoreInfo_SetLabel_PlayerScore(SP_FREEZETAG_REVIVALS,		"revivals",		0);
+	ScoreRules_basics_end();
+}
+
 void freezetag_Initialize()
 {
 	precache_model("models/ice/ice.md3");
@@ -520,7 +528,7 @@ void freezetag_Initialize()
 	if(freezetag_teams < 2)
 		freezetag_teams = autocvar_g_freezetag_teams;
 	freezetag_teams = bound(2, freezetag_teams, 4);
-	ScoreRules_freezetag(freezetag_teams);
+	ft_ScoreRules(freezetag_teams);
 
 	round_handler_Spawn(freezetag_CheckTeams, freezetag_CheckWinner, func_null);
 	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);

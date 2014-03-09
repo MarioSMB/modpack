@@ -4,6 +4,7 @@
 #include "gamemode_ca.qh"
 #include "gamemode_ctf.qh"
 #include "gamemode_domination.qh"
+#include "gamemode_freezetag.qh"
 #include "gamemode_keyhunt.qh"
 #include "gamemode_keepaway.qh"
 #include "gamemode_nexball.qh"

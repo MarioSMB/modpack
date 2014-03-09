@@ -457,11 +457,21 @@ void nb_spawnteams(void)
 	}
 }
 
+// scoreboard setup
+void nb_ScoreRules(float teams)
+{
+	ScoreRules_basics(teams, 0, 0, TRUE);
+	ScoreInfo_SetLabel_TeamScore(   ST_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
+	ScoreInfo_SetLabel_PlayerScore( SP_NEXBALL_GOALS,  "goals", SFL_SORT_PRIO_PRIMARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_NEXBALL_FAULTS, "faults", SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER);
+	ScoreRules_basics_end();
+}
+
 void nb_delayedinit(void)
 {
 	if(find(world, classname, "nexball_team") == world)
 		nb_spawnteams();
-	ScoreRules_nexball(nb_teams);
+	nb_ScoreRules(nb_teams);
 }
 
 

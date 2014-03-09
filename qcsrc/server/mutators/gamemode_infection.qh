@@ -6,3 +6,6 @@ float allowed_to_spawn;
 .float inf_nextteam;
 
 float prev_total_players;
+
+// scores
+#define ST_INF_ROUNDS 1

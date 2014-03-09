@@ -12,6 +12,11 @@
 #define GOAL_FAULT -1
 #define GOAL_OUT -2
 
+// scores
+#define ST_NEXBALL_GOALS 1
+#define SP_NEXBALL_GOALS 4
+#define SP_NEXBALL_FAULTS 5
+
 void DropBall(entity ball, vector org, vector vel);
 float autocvar_g_nexball_football_boost_forward;
 float autocvar_g_nexball_football_boost_up;
