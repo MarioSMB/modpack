@@ -1,3 +1,32 @@
+// legacy bot roles
+.float race_checkpoint;
+void havocbot_role_cts()
+{
+	if(self.deadflag != DEAD_NO)
+		return;
+
+	entity e;
+	if (self.bot_strategytime < time)
+	{
+		self.bot_strategytime = time + autocvar_bot_ai_strategyinterval;
+		navigation_goalrating_start();
+
+		for(e = world; (e = find(e, classname, "trigger_race_checkpoint")) != world; )
+		{
+			if(e.cnt == self.race_checkpoint)
+			{
+				navigation_routerating(e, 1000000, 5000);
+			}
+			else if(self.race_checkpoint == -1)
+			{
+				navigation_routerating(e, 1000000, 5000);
+			}
+		}
+
+		navigation_goalrating_end();
+	}
+}
+
 void cts_ScoreRules()
 {
 	ScoreRules_basics(0, 0, 0, FALSE);
@@ -186,7 +215,7 @@ MUTATOR_HOOKFUNCTION(cts_PlayerDies)
 
 MUTATOR_HOOKFUNCTION(cts_BotRoles)
 {
-	self.havocbot_role = havocbot_role_race;
+	self.havocbot_role = havocbot_role_cts;
 	return TRUE;
 }
 
