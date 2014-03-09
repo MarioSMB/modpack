@@ -111,8 +111,4 @@ void bot_serverframe();
 
 void() havocbot_setupbot;
 
-float c1, c2, c3, c4;
-void CheckAllowedTeams(entity for_whom); void GetTeamCounts(entity other);
-float JoinBestTeam(entity pl, float only_return_best, float forcebestteam);
-
 void bot_calculate_stepheightvec(void);

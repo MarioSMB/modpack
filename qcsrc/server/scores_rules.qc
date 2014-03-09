@@ -1,6 +1,3 @@
-float c1, c2, c3, c4;
-void CheckAllowedTeams (entity for_whom);
-
 // NOTE: SP_ constants may not be >= MAX_SCORE; ST_constants may not be >= MAX_TEAMSCORE
 // scores that should be in all modes:
 float ScoreRules_teams;

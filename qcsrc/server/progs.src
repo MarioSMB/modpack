@@ -50,6 +50,8 @@ mutators/mutators_include.qh
 
 generator.qh
 
+teamplay.qh
+
 campaign.qh
 ../common/campaign_common.qh
 ../common/mapinfo.qh
