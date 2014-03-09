@@ -2889,7 +2889,7 @@ float GameTypeVote_Finished(float pos)
 	}
 	
 	localcmd("sv_vote_gametype_hook_all\n");
-	localcmd("sv_vote_gametype_hook_", MapInfo_Type_ToString(MapInfo_CurrentGametype()), "\n");
+	localcmd("sv_vote_gametype_hook_", mapvote_maps[pos], "\n");
 	
 	gametypevote_finished = TRUE;
 	
