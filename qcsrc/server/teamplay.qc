@@ -1,13 +1,6 @@
 string cache_mutatormsg;
 string cache_lastmutatormsg;
 
-// client counts for each team
-float c1, c2, c3, c4;
-// # of bots on those teams
-float cb1, cb2, cb3, cb4;
-
-//float audit_teams_time;
-
 void TeamchangeFrags(entity e)
 {
 	PlayerScore_Clear(e);

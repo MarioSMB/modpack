@@ -1,5 +1,6 @@
 // team definitions
-float c1, c2, c3, c4;
+float c1, c2, c3, c4; // client counts for each team
+float cb1, cb2, cb3, cb4; // # of bots on those teams
 
 // definitions for functions used outside teamplay.qc
 void CheckAllowedTeams(entity for_whom);
