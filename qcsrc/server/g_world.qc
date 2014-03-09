@@ -2855,7 +2855,6 @@ void MapVote_Think()
 
 	MapVote_Tick();
 }
-void MapInfo_LoadMapSettings_SaveGameType(float t);
 
 float GameTypeVote_SetGametype(float type)
 {
@@ -2868,8 +2867,7 @@ float GameTypeVote_SetGametype(float type)
 	if ( MapInfo_count == 0 )
 		return FALSE;
 	
-	localcmd("gametype ",MapInfo_Type_ToString(type),"\n");
-	MapInfo_LoadMapSettings_SaveGameType(type);
+	localcmd("gametype ", MapInfo_Type_ToString(type), "\n");
 	
 	cvar_set("g_maplist", MapInfo_ListAllowedMaps(MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()) );
 	if(autocvar_g_maplist_shuffle)
