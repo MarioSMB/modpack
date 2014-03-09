@@ -53,7 +53,7 @@ prandom.qh
 bgmscript.qh
 noise.qh
 ../server/movelib.qc
-../server/generator.qh
+generator.qh
 main.qh
 ../common/vehicles/vehicles_include.qh
 ../common/csqcmodel_settings.qh
@@ -131,7 +131,7 @@ command/cl_cmd.qc
 ../warpzonelib/common.qc
 ../warpzonelib/client.qc
 
-../server/generator.qc
+generator.qc
 
 player_skeleton.qc
 ../common/animdecide.qc

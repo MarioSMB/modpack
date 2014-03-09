@@ -3,3 +3,6 @@ const vector GENERATOR_MAX = '52 52 75';
 
 float GSF_STATUS = 4;
 float GSF_SETUP = 8;
+
+void ent_generator();
+void generator_precache();
