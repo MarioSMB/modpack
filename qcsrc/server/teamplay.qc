@@ -6,7 +6,6 @@ void TeamchangeFrags(entity e)
 	PlayerScore_Clear(e);
 }
 
-void tdm_init();
 void entcs_init();
 
 void LogTeamchange(float player_id, float team_number, float type)
@@ -76,7 +75,8 @@ void InitGameplayMode()
 	if(g_tdm)
 	{
 		ActivateTeamplay();
-		tdm_init();
+		MUTATOR_ADD(gamemode_tdm);
+
 		if(autocvar_g_tdm_team_spawns)
 			have_team_spawns = -1; // request team spawns
 	}
@@ -428,9 +428,6 @@ void CheckAllowedTeams (entity for_whom)
 	float mutator_value = MUTATOR_CALLHOOK(GetTeamCount);
 	teament_name = ret_string;
 	dm = ret_float;
-
-	if(g_tdm)
-		teament_name = "tdm_team";
 
 	if(!mutator_value)
 	{
@@ -1009,45 +1006,4 @@ void ShufflePlayerOutOfTeam (float source_team)
 	if(selected.deadflag == DEAD_NO)
 		Damage(selected, selected, selected, 100000, DEATH_AUTOTEAMCHANGE, selected.origin, '0 0 0');
 	Send_Notification(NOTIF_ONE, selected, MSG_CENTER, CENTER_DEATH_SELF_AUTOTEAMCHANGE, selected.team);
-}
-
-// code from here on is just to support maps that don't have team entities
-void tdm_spawnteam (string teamname, float teamcolor)
-{
-	entity e;
-	e = spawn();
-	e.classname = "tdm_team";
-	e.netname = teamname;
-	e.cnt = teamcolor;
-	e.team = e.cnt + 1;
-}
-
-// spawn some default teams if the map is not set up for tdm
-void tdm_spawnteams()
-{
-	float numteams;
-
-	numteams = autocvar_g_tdm_teams_override;
-	if(numteams < 2)
-		numteams = autocvar_g_tdm_teams;
-	numteams = bound(2, numteams, 4);
-
-	tdm_spawnteam("Red", NUM_TEAM_1-1);
-	tdm_spawnteam("Blue", NUM_TEAM_2-1);
-	if(numteams >= 3)
-		tdm_spawnteam("Yellow", NUM_TEAM_3-1);
-	if(numteams >= 4)
-		tdm_spawnteam("Pink", NUM_TEAM_4-1);
-}
-
-void tdm_delayedinit()
-{
-	// if no teams are found, spawn defaults
-	if (find(world, classname, "tdm_team") == world)
-		tdm_spawnteams();
-}
-
-void tdm_init()
-{
-	InitializeEntity(world, tdm_delayedinit, INITPRIO_GAMETYPE);
 }
