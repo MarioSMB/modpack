@@ -1,5 +1,4 @@
 #include "havocbot.qh"
-#include "role_onslaught.qc"
 #include "roles.qc"
 
 void havocbot_ai()

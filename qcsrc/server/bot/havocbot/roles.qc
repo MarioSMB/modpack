@@ -1,4 +1,3 @@
-
 .float max_armorvalue;
 .float havocbot_role_timeout;
 
@@ -266,8 +265,6 @@ void havocbot_chooserole()
 	self.bot_strategytime = 0;
 	if (MUTATOR_CALLHOOK(HavocBot_ChooseRole))
 		return;
-	else if (g_onslaught)
-		havocbot_chooserole_ons();
 	else // assume anything else is deathmatch
 		havocbot_chooserole_dm();
 }
