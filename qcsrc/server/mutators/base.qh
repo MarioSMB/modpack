@@ -93,6 +93,7 @@ MUTATOR_HOOKABLE(GetTeamCount);
 	// should adjust ret_float to contain the team count
 	// INPUT, OUTPUT:
 		float ret_float;
+		string ret_string;
 
 MUTATOR_HOOKABLE(SpectateCopy);
 	// copies variables for spectating "other" to "self"

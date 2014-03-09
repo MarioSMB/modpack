@@ -410,8 +410,9 @@ void havocbot_role_dom()
 
 MUTATOR_HOOKFUNCTION(dom_GetTeamCount)
 {
-	ret_float = domination_teams;
-	return 0;
+	//ret_float = domination_teams;
+	ret_string = "dom_team";
+	return TRUE;
 }
 
 MUTATOR_HOOKFUNCTION(dom_ResetMap)

@@ -964,6 +964,12 @@ MUTATOR_HOOKFUNCTION(nexball_SetStartItems)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(nexball_GetTeamCount)
+{
+	ret_string = "nexball_team";
+	return TRUE;
+}
+
 MUTATOR_DEFINITION(gamemode_nexball)
 {
 	MUTATOR_HOOK(PlayerDies, nexball_BallDrop, CBC_ORDER_ANY);
@@ -974,6 +980,7 @@ MUTATOR_DEFINITION(gamemode_nexball)
 	MUTATOR_HOOK(PlayerSpawn, nexball_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, nexball_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, nexball_SetStartItems, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GetTeamCount, nexball_GetTeamCount, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

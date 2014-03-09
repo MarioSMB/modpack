@@ -2133,8 +2133,9 @@ MUTATOR_HOOKFUNCTION(ctf_BotRoles)
 
 MUTATOR_HOOKFUNCTION(ctf_GetTeamCount)
 {
-	ret_float = ctf_teams;
-	return 0;
+	//ret_float = ctf_teams;
+	ret_string = "ctf_team";
+	return TRUE;
 }
 
 

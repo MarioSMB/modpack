@@ -2058,6 +2058,22 @@ MUTATOR_HOOKFUNCTION(ons_BotRoles)
 	return TRUE;
 }
 
+MUTATOR_HOOKFUNCTION(ons_GetTeamCount)
+{
+	// onslaught is special
+	entity head = findchain(classname, "onslaught_generator");
+	while (head)
+	{
+		if (head.team == NUM_TEAM_1) c1 = 0;
+		if (head.team == NUM_TEAM_2) c2 = 0;
+		if (head.team == NUM_TEAM_3) c3 = 0;
+		if (head.team == NUM_TEAM_4) c4 = 0;
+		head = head.chain;
+	}
+
+	return TRUE;
+}
+
 MUTATOR_DEFINITION(gamemode_onslaught)
 {
 	MUTATOR_HOOK(BuildMutatorsPrettyString, ons_BuildMutatorsPrettyString, CBC_ORDER_ANY);
@@ -2067,6 +2083,7 @@ MUTATOR_DEFINITION(gamemode_onslaught)
 	MUTATOR_HOOK(MonsterSpawn, ons_MonsterSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(TurretSpawn, ons_TurretSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRole, ons_BotRoles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GetTeamCount, ons_GetTeamCount, CBC_ORDER_ANY);
 	//MUTATOR_HOOK(Spawn_Score, ons_Spawn_Score, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD

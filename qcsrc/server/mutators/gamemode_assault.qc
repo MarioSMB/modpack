@@ -572,6 +572,12 @@ MUTATOR_HOOKFUNCTION(assault_BotRoles)
 	return TRUE;
 }
 
+MUTATOR_HOOKFUNCTION(assault_GetTeamCount)
+{
+	c1 = c2 = 0; // assault always has 2 teams
+	return TRUE;
+}
+
 // scoreboard setup
 void assault_ScoreRules()
 {
@@ -587,6 +593,7 @@ MUTATOR_DEFINITION(gamemode_assault)
 	MUTATOR_HOOK(TurretSpawn, assault_TurretSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleSpawn, assault_VehicleSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRole, assault_BotRoles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GetTeamCount, assault_GetTeamCount, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
