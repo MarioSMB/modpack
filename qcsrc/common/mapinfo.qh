@@ -144,7 +144,7 @@ float MapInfo_CheckMap(string s); // returns 0 if the map can't be played with t
 void MapInfo_LoadMap(string s, float reinit);
 
 // list all maps for the current game type
-string MapInfo_ListAllowedMaps(float pFlagsRequired, float pFlagsForbidden);
+string MapInfo_ListAllowedMaps(float type, float pFlagsRequired, float pFlagsForbidden);
 // list all allowed maps (for any game type)
 string MapInfo_ListAllAllowedMaps(float pFlagsRequired, float pFlagsForbidden);
 

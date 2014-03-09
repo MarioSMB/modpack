@@ -1282,14 +1282,14 @@ void MapInfo_LoadMap(string s, float reinit)
 		localcmd(strcat("\nchangelevel ", s, "\n"));
 }
 
-string MapInfo_ListAllowedMaps(float pRequiredFlags, float pForbiddenFlags)
+string MapInfo_ListAllowedMaps(float type, float pRequiredFlags, float pForbiddenFlags)
 {
 	string out;
 	float i;
 
 	// to make absolutely sure:
 	MapInfo_Enumerate();
-	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), pRequiredFlags, pForbiddenFlags, 0);
+	MapInfo_FilterGametype(type, MapInfo_CurrentFeatures(), pRequiredFlags, pForbiddenFlags, 0);
 
 	out = "";
 	for(i = 0; i < MapInfo_count; ++i)
