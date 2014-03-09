@@ -1,0 +1,103 @@
+// #define VEHICLES_USE_ODE
+
+// vehicle cvars
+float autocvar_g_vehicles;
+float autocvar_g_vehicles_enter;
+float autocvar_g_vehicles_enter_radius;
+float autocvar_g_vehicles_extra;
+float autocvar_g_vehicles_steal;
+float autocvar_g_vehicles_steal_show_waypoint;
+float autocvar_g_vehicles_crush_dmg;
+float autocvar_g_vehicles_crush_force;
+float autocvar_g_vehicles_delayspawn;
+float autocvar_g_vehicles_delayspawn_jitter;
+float autocvar_g_vehicles_allow_bots;
+float autocvar_g_vehicles_teams;
+var float autocvar_g_vehicles_nex_damagerate = 0.5;
+var float autocvar_g_vehicles_uzi_damagerate = 0.5;
+var float autocvar_g_vehicles_rifle_damagerate = 0.75;
+var float autocvar_g_vehicles_minstanex_damagerate = 0.001;
+var float autocvar_g_vehicles_tag_damagerate = 5;
+
+// vehicle definitions
+.entity gun1;
+.entity gun2;
+.entity gun3;
+.entity vehicle_shieldent;  /// Entity to disply the shild effect on damage
+.entity vehicle;
+.entity vehicle_viewport;
+.entity vehicle_hudmodel;
+.entity vehicle_controller;
+
+.entity gunner1;
+.entity gunner2;
+
+.float vehicle_health;      /// If self is player this is 0..100 indicating precentage of health left on vehicle. If self is vehile, this is the real health value.
+.float vehicle_energy;      /// If self is player this is 0..100 indicating precentage of energy left on vehicle. If self is vehile, this is the real energy value.
+.float vehicle_shield;      /// If self is player this is 0..100 indicating precentage of shield left on vehicle. If self is vehile, this is the real shield value.
+
+.float vehicle_ammo1;   /// If self is player this field's use depends on the individual vehile. If self is vehile, this is the real ammo1 value.
+.float vehicle_reload1; /// If self is player this field's use depends on the individual vehile. If self is vehile, this is the real reload1 value.
+.float vehicle_ammo2;   /// If self is player this field's use depends on the individual vehile. If self is vehile, this is the real ammo2 value.
+.float vehicle_reload2; /// If self is player this field's use depends on the individual vehile. If self is vehile, this is the real reload2 value.
+
+.float sound_nexttime;
+#define VOL_VEHICLEENGINE 1
+
+const float SVC_SETVIEWPORT   = 5;   // Net.Protocol 0x05
+const float SVC_SETVIEWANGLES = 10;  // Net.Protocol 0x0A
+const float SVC_UPDATEENTITY  = 128; // Net.Protocol 0x80
+
+#define VHSF_NORMAL 0
+#define VHSF_FACTORY 2
+
+.float hud;
+.float dmg_time;
+
+.float volly_counter;
+
+const float MAX_AXH = 4;
+.entity AuxiliaryXhair[MAX_AXH];
+
+.entity wps_intruder;
+
+.entity lock_target;
+.float  lock_strength;
+.float  lock_time;
+.float  lock_soundtime;
+const float	DAMAGE_TARGETDRONE = 10;
+
+float  force_fromtag_power;
+float  force_fromtag_normpower;
+vector force_fromtag_origin;
+
+float vehicles_exit_running;
+
+#ifdef VEHICLES_USE_ODE
+void(entity e, float physics_enabled) physics_enable = #540; // enable or disable physics on object
+void(entity e, vector force, vector force_pos) physics_addforce = #541; // apply a force from certain origin, length of force vector is power of force
+void(entity e, vector torque) physics_addtorque = #542; // add relative torque
+#endif  // VEHICLES_USE_ODE
+
+// functions used outside the vehicle code
+void vehicles_exit(float eject);
+void vehicles_enter(entity pl, entity veh);
+
+// vehicle functions
+.void(float _spawnflag) vehicle_spawn;  /// Vehicles custom fucntion to be efecuted when vehicle (re)spawns
+.float(float _imp) vehicles_impulse;
+.float vehicle_weapon2mode;
+.void(float exit_flags) vehicle_exit;
+.float() vehicle_enter;
+const float VHEF_NORMAL = 0;  /// User pressed exit key
+const float VHEF_EJECT  = 1;  /// User pressed exit key 3 times fast (not implemented) or vehile is dying
+const float VHEF_RELEASE = 2;  /// Release ownership, client possibly allready dissconnected / went spec / changed team / used "kill" (not implemented)
+
+// macros
+#define VEHICLE_UPDATE_PLAYER(ply,fld,vhname) \
+	ply.vehicle_##fld = (self.vehicle_##fld / autocvar_g_vehicle_##vhname##_##fld) * 100
+
+#define vehicles_sweap_collision(orig,vel,dt,acm,mult) \
+	traceline(orig, orig + vel * dt, MOVE_NORMAL, self); \
+	if(trace_fraction != 1) \
+		acm += normalize(self.origin - trace_endpos) * (vlen(vel) * mult)

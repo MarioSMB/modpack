@@ -1,0 +1,167 @@
+#ifdef TEAMNUMBERS_THAT_ARENT_STUPID
+const float NUM_TEAM_1 = 1;  // red
+const float NUM_TEAM_2 = 2; // blue
+const float NUM_TEAM_3 = 3; // yellow
+const float NUM_TEAM_4 = 4; // pink
+const float NUM_SPECTATOR = 5;
+#else
+#ifdef CSQC
+const float NUM_TEAM_1 = 4;  // red
+const float NUM_TEAM_2 = 13; // blue
+const float NUM_TEAM_3 = 12; // yellow
+const float NUM_TEAM_4 = 9; // pink
+#else
+const float NUM_TEAM_1 = 5;  // red
+const float NUM_TEAM_2 = 14; // blue
+const float NUM_TEAM_3 = 13; // yellow
+const float NUM_TEAM_4 = 10; // pink
+#endif
+const float NUM_SPECTATOR = 1337;
+#endif
+
+const string COL_TEAM_1 = "^1";
+const string COL_TEAM_2 = "^4";
+const string COL_TEAM_3 = "^3";
+const string COL_TEAM_4 = "^6";
+const string NAME_TEAM_1 = _("Red");
+const string NAME_TEAM_2 = _("Blue");
+const string NAME_TEAM_3 = _("Yellow");
+const string NAME_TEAM_4 = _("Pink");
+const string NAME_TEAM = _("Team");
+const string NAME_NEUTRAL = _("Neutral");
+
+// used for replacement in filenames or such where the name CANNOT be allowed to be translated
+const string STATIC_NAME_TEAM_1 = "Red";
+const string STATIC_NAME_TEAM_2 = "Blue";
+const string STATIC_NAME_TEAM_3 = "Yellow";
+const string STATIC_NAME_TEAM_4 = "Pink";
+
+#ifdef CSQC
+float teamplay;
+float myteam;
+#endif
+
+string Team_ColorCode(float teamid)
+{
+    switch(teamid)
+    {
+		case NUM_TEAM_1: return COL_TEAM_1;
+    	case NUM_TEAM_2: return COL_TEAM_2;
+    	case NUM_TEAM_3: return COL_TEAM_3;
+    	case NUM_TEAM_4: return COL_TEAM_4;
+	}
+
+	return "^7";
+}
+
+vector Team_ColorRGB(float teamid)
+{
+	switch(teamid)
+	{
+		case NUM_TEAM_1: return '1 0.0625 0.0625'; // 0xFF0F0F
+		case NUM_TEAM_2: return '0.0625 0.0625 1'; // 0x0F0FFF
+		case NUM_TEAM_3: return '1 1 0.0625'; // 0xFFFF0F
+		case NUM_TEAM_4: return '1 0.0625 1'; // 0xFF0FFF
+	}
+
+    return '0 0 0';
+}
+
+string Team_ColorName(float teamid)
+{
+    switch(teamid)
+    {
+		case NUM_TEAM_1: return NAME_TEAM_1;
+    	case NUM_TEAM_2: return NAME_TEAM_2;
+    	case NUM_TEAM_3: return NAME_TEAM_3;
+    	case NUM_TEAM_4: return NAME_TEAM_4;
+	}
+
+    return NAME_NEUTRAL;
+}
+
+// used for replacement in filenames or such where the name CANNOT be allowed to be translated
+string Static_Team_ColorName(float teamid)
+{
+    switch(teamid)
+    {
+		case NUM_TEAM_1: return STATIC_NAME_TEAM_1;
+    	case NUM_TEAM_2: return STATIC_NAME_TEAM_2;
+    	case NUM_TEAM_3: return STATIC_NAME_TEAM_3;
+    	case NUM_TEAM_4: return STATIC_NAME_TEAM_4;
+	}
+
+    return NAME_NEUTRAL;
+}
+
+float Team_ColorToTeam(string team_color)
+{
+	switch(strtolower(team_color))
+	{
+		case "red": return NUM_TEAM_1;
+    	case "blue": return NUM_TEAM_2;
+    	case "yellow": return NUM_TEAM_3;
+    	case "pink": return NUM_TEAM_4;
+    	case "auto": return 0;
+	}
+
+	return -1;
+}
+
+float Team_NumberToTeam(float number)
+{
+	switch(number)
+	{
+		case 1: return NUM_TEAM_1;
+		case 2: return NUM_TEAM_2;
+		case 3: return NUM_TEAM_3;
+		case 4: return NUM_TEAM_4;
+	}
+
+	return -1;
+}
+
+float Team_TeamToNumber(float teamid)
+{
+	switch(teamid)
+	{
+		case NUM_TEAM_1: return 1;
+		case NUM_TEAM_2: return 2;
+		case NUM_TEAM_3: return 3;
+		case NUM_TEAM_4: return 4;
+	}
+
+	return -1;
+}
+
+
+// legacy aliases for shitty code
+#define TeamByColor(teamid) (Team_TeamToNumber(teamid) - 1)
+#define ColorByTeam(number) Team_NumberToTeam(number + 1)
+
+// useful aliases
+#define Team_ColorName_Lower(teamid) strtolower(Team_ColorName(teamid))
+#define Team_ColorName_Upper(teamid) strtoupper(Team_ColorName(teamid))
+
+// used for replacement in filenames or such where the name CANNOT be allowed to be translated
+#define Static_Team_ColorName_Lower(teamid) strtolower(Static_Team_ColorName(teamid))
+#define Static_Team_ColorName_Upper(teamid) strtoupper(Static_Team_ColorName(teamid))
+
+#define Team_FullName(teamid) strcat(Team_ColorName(teamid), " ", NAME_TEAM, "^7")
+#define Team_ColoredFullName(teamid) strcat(Team_ColorCode(teamid), Team_ColorName(teamid), " ", NAME_TEAM, "^7")
+
+#define Team_NumberToFullName(number) Team_FullName(Team_NumberToTeam(number))
+#define Team_NumberToColoredFullName(number) Team_ColoredFullName(Team_NumberToTeam(number))
+
+// replace these flags in a string with the strings provided
+#define TCR(input,teamcolor,teamtext) strreplace("^TC", teamcolor, strreplace("^TT", teamtext, input))
+
+// safe team comparisons
+#define SAME_TEAM(a,b) (teamplay ? ((a.team == b.team) ? 1 : 0) : ((a == b) ? 1 : 0))
+#define DIFF_TEAM(a,b) (teamplay ? ((a.team != b.team) ? 1 : 0) : ((a != b) ? 1 : 0))
+
+// used for notification system multi-team identifiers
+#define APP_TEAM_NUM_2(num,prefix) ((num == NUM_TEAM_1) ? prefix##RED : prefix##BLUE)
+#define APP_TEAM_NUM_4(num,prefix) ((num == NUM_TEAM_1) ? prefix##RED : ((num == NUM_TEAM_2) ? prefix##BLUE : ((num == NUM_TEAM_3) ? prefix##YELLOW : prefix##PINK)))
+#define APP_TEAM_ENT_2(ent,prefix) ((ent.team == NUM_TEAM_1) ? prefix##RED : prefix##BLUE)
+#define APP_TEAM_ENT_4(ent,prefix) ((ent.team == NUM_TEAM_1) ? prefix##RED : ((ent.team == NUM_TEAM_2) ? prefix##BLUE : ((ent.team == NUM_TEAM_3) ? prefix##YELLOW : prefix##PINK)))

@@ -1,0 +1,8 @@
+#ifdef CSQC
+#include "vehicles.qh"
+#include "cl_vehicles.qh"
+#endif // CSQC
+#ifdef SVQC
+#include "vehicles.qh"
+#include "sv_vehicles.qh"
+#endif // SVQC

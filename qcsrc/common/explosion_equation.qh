@@ -1,0 +1,1 @@
+vector damage_explosion_calcpush(vector explosion_f, vector target_v, float speedfactor);

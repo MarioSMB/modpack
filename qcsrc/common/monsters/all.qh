@@ -1,0 +1,5 @@
+#include "monster/zombie.qc"
+#include "monster/spider.qc"
+#include "monster/mage.qc"
+#include "monster/wyvern.qc"
+#include "monster/shambler.qc"

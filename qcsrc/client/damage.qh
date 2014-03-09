@@ -1,0 +1,1 @@
+.float total_damages; // number of effects which currently are attached to a player
