@@ -260,6 +260,7 @@ void havocbot_chooserole()
 	self.bot_strategytime = 0;
 	if (MUTATOR_CALLHOOK(HavocBot_ChooseRole))
 		return;
-	else // assume anything else is deathmatch
-		self.havocbot_role = havocbot_role_dm;
+
+	// assume anything else is deathmatch
+	self.havocbot_role = havocbot_role_dm;
 }
