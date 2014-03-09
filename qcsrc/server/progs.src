@@ -46,26 +46,7 @@ defs.qh		// Should rename this, it has fields and globals
 
 ../common/vehicles/vehicles_include.qh
 
-mutators/base.qh
-mutators/mutators.qh
-mutators/gamemode_assault.qh
-mutators/gamemode_ca.qh
-mutators/gamemode_ctf.qh
-mutators/gamemode_domination.qh
-mutators/gamemode_keyhunt.qh // TODO fix this
-mutators/gamemode_keepaway.qh
-mutators/gamemode_nexball.qh 
-mutators/gamemode_lms.qh
-mutators/gamemode_vip.qh
-mutators/gamemode_invasion.qh
-mutators/gamemode_infection.qh
-mutators/gamemode_jailbreak.qh
-mutators/mutator_dodging.qh
-mutators/mutator_overkill.qh
-mutators/mutator_freeze.qh
-mutators/mutator_minstagib.qh
-mutators/mutator_nades.qh
-mutators/mutator_piggyback.qh
+mutators/mutators_include.qh
 
 generator.qh
 
@@ -260,50 +241,7 @@ round_handler.qc
 ../common/turrets/checkpoint.qc
 ../common/turrets/targettrigger.qc
 
-mutators/base.qc
-mutators/gamemode_assault.qc
-mutators/gamemode_ca.qc
-mutators/gamemode_ctf.qc
-mutators/gamemode_domination.qc
-mutators/gamemode_freezetag.qc
-mutators/gamemode_keyhunt.qc
-mutators/gamemode_keepaway.qc
-mutators/gamemode_nexball.qc
-mutators/gamemode_onslaught.qc
-mutators/gamemode_lms.qc
-mutators/gamemode_vip.qc
-mutators/gamemode_invasion.qc
-mutators/gamemode_infection.qc
-mutators/gamemode_jailbreak.qc
-mutators/mutator_invincibleproj.qc
-mutators/mutator_new_toys.qc
-mutators/mutator_nix.qc
-mutators/mutator_dodging.qc
-mutators/mutator_rocketflying.qc
-mutators/mutator_vampire.qc
-mutators/mutator_spawn_near_teammate.qc
-mutators/mutator_physical_items.qc
-mutators/sandbox.qc
-mutators/mutator_superspec.qc
-mutators/mutator_freeze.qc
-mutators/mutator_overkill.qc
-mutators/mutator_minstagib.qc
-mutators/mutator_touchexplode.qc
-mutators/mutator_pinata.qc
-mutators/mutator_midair.qc
-mutators/mutator_bloodloss.qc
-mutators/mutator_random_gravity.qc
-mutators/mutator_multijump.qc
-mutators/mutator_melee_only.qc
-mutators/mutator_nades.qc
-mutators/mutator_riflearena.qc
-mutators/mutator_campcheck.qc
-mutators/mutator_zombie_apocalypse.qc
-mutators/mutator_walljump.qc
-mutators/mutator_hats.qc
-mutators/mutator_status_effects.qc
-mutators/mutator_random_vehicles.qc
-mutators/mutator_piggyback.qc
+mutators/mutators_include.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc
