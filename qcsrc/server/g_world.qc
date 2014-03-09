@@ -907,15 +907,9 @@ void spawnfunc_light (void)
 	remove(self);
 }
 
-string GetGametype()
-{
-	return MapInfo_Type_ToString(MapInfo_LoadedGametype);
-}
+string GetGametype() { return MapInfo_Type_ToString(MapInfo_LoadedGametype); }
 
-string GetMapname()
-{
-	return mapname;
-}
+string GetMapname() { return mapname; }
 
 float Map_Count, Map_Current;
 string Map_Current_Name;

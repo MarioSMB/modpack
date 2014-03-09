@@ -39,15 +39,9 @@ void WarpZone_crosshair_trace(entity pl)
 	WarpZone_traceline_antilag(pl, pl.cursor_trace_start, pl.cursor_trace_start + normalize(pl.cursor_trace_endpos - pl.cursor_trace_start) * MAX_SHOT_DISTANCE, MOVE_NORMAL, pl, ANTILAG_LATENCY(pl));
 }
 
-string GetMapname();
+string GetMapname(); // why...
 
-string admin_name(void)
-{
-	if(autocvar_sv_adminnick != "")
-		return autocvar_sv_adminnick;
-	else
-		return "SERVER ADMIN";
-}
+string admin_name() { return (autocvar_sv_adminnick != "") ? autocvar_sv_adminnick : "SERVER ADMIN"; }
 
 float DistributeEvenly_amount;
 float DistributeEvenly_totalweight;
