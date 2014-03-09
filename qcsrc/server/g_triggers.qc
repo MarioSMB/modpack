@@ -20,17 +20,21 @@ void SUB_ForEachTarget(entity s, void(entity, float, vector, string, entity) cba
     string targname = "";
     entity targ;
     
-    for(i = 0; i < 4; ++i) {
-        switch(i) {
+    for(i = 0; i < 4; ++i)
+    {
+        switch(i)
+        {
             case 0: targname = s.target ; break;
             case 1: targname = s.target2; break;
             case 2: targname = s.target3; break;
             case 3: targname = s.target4; break;
         }
         
-        if(targname != "") {
+        if(targname != "")
+        {
             for(targ = world; (targ = find(targ, targetname, targname));)
-            if(targ && targ.use && targ.targethandled != foreachtarget_callid) {
+            if(targ && targ.use && targ.targethandled != foreachtarget_callid)
+            {
                 cback(targ, fdata, vdata, sdata, edata);
                 targ.targethandled = foreachtarget_callid;
                 

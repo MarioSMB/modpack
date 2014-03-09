@@ -165,7 +165,6 @@ void InitGameplayMode()
 
 	if(g_race)
 	{
-
 		if(autocvar_g_race_teams)
 		{
 			ActivateTeamplay();
@@ -178,6 +177,8 @@ void InitGameplayMode()
 		qualifying_override = autocvar_g_race_qualifying_timelimit_override;
 		fraglimit_override = autocvar_g_race_laps_limit;
 		leadlimit_override = 0; // currently not supported by race
+
+		MUTATOR_ADD(gamemode_race);
 	}
 
 	if(g_cts)
@@ -185,6 +186,7 @@ void InitGameplayMode()
 		g_race_qualifying = 1;
 		fraglimit_override = 0;
 		leadlimit_override = 0;
+		MUTATOR_ADD(gamemode_cts);
 	}
 
 	if(g_nexball)
@@ -284,14 +286,8 @@ void InitGameplayMode()
 	}
 
 	if(g_race || g_cts)
-	{
-		if(g_race_qualifying)
-			independent_players = 1;
-
-		ScoreRules_race();
-	}
-
-	gametypetoset = MapInfo_CurrentGametype();
+	if(g_race_qualifying)
+		independent_players = 1;
 
 	InitializeEntity(world, default_delayedinit, INITPRIO_GAMETYPE_FALLBACK);
 }
@@ -461,10 +457,7 @@ void CheckAllowedTeams (entity for_whom)
 	else
 	{
 		// cover anything else by treating it like tdm with no teams spawned
-		if(g_race)
-			dm = race_teams;
-		else
-			dm = 2;
+		dm = 2;
 
 		ret_float = dm;
 		MUTATOR_CALLHOOK(GetTeamCount);

@@ -652,7 +652,7 @@ MUTATOR_DEFINITION(gamemode_domination)
 	MUTATOR_HOOK(reset_map_players, dom_ResetMap, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, dom_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientConnect, dom_ClientConnect, CBC_ORDER_ANY);
-	MUTATOR_HOOK(HavocBot_ChooseRule, dom_BotRoles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(HavocBot_ChooseRole, dom_BotRoles, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

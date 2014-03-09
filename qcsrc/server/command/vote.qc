@@ -326,9 +326,7 @@ void reset_map(float dorespawn)
 	if(time <= game_starttime && round_handler_IsActive())
 		round_handler_Reset(game_starttime);
 
-	if(g_race || g_cts)
-		race_ReadyRestart();
-	else MUTATOR_CALLHOOK(reset_map_global);
+	MUTATOR_CALLHOOK(reset_map_global);
 
 	for(self = world; (self = nextent(self)); )
 	if(IS_NOT_A_CLIENT(self))

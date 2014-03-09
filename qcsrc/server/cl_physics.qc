@@ -1273,22 +1273,22 @@ void SV_PlayerPhysics()
 		}
 	}
 
-	if((g_cts || g_race) && !IS_OBSERVER(self)) {
-		if(vlen(self.velocity - self.velocity_z * '0 0 1') > speedaward_speed) {
+	if((g_cts || g_race) && !IS_OBSERVER(self))
+	{
+		if(vlen(self.velocity - self.velocity_z * '0 0 1') > speedaward_speed)
+		{
 			speedaward_speed = vlen(self.velocity - self.velocity_z * '0 0 1');
 			speedaward_holder = self.netname;
 			speedaward_uid = self.crypto_idfp;
 			speedaward_lastupdate = time;
 		}
-		if(speedaward_speed > speedaward_lastsent && time - speedaward_lastupdate > 1) {
-			string rr;
-			if(g_cts)
-				rr = CTS_RECORD;
-			else
-				rr = RACE_RECORD;
+		if(speedaward_speed > speedaward_lastsent && time - speedaward_lastupdate > 1)
+		{
+			string rr = (g_cts) ? CTS_RECORD : RACE_RECORD;
 			race_send_speedaward(MSG_ALL);
 			speedaward_lastsent = speedaward_speed;
-			if (speedaward_speed > speedaward_alltimebest && speedaward_uid != "") {
+			if (speedaward_speed > speedaward_alltimebest && speedaward_uid != "")
+			{
 				speedaward_alltimebest = speedaward_speed;
 				speedaward_alltimebest_holder = speedaward_holder;
 				speedaward_alltimebest_uid = speedaward_uid;

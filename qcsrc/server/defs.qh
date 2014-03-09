@@ -20,7 +20,6 @@ float g_cloaked, g_footsteps, g_grappling_hook, g_minstagib;
 float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
-float g_race_qualifying;
 float warmup_stage;
 float g_pickup_respawntime_weapon;
 float g_pickup_respawntime_superweapon;
@@ -648,5 +647,3 @@ float sv_showfps;
 .float clientfov;
 
 .float sub_target_used;
-
-float gametypetoset;

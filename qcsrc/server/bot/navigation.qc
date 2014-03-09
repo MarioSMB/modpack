@@ -366,7 +366,7 @@ float navigation_waypoint_will_link(vector v, vector org, entity ent, float walk
 }
 
 // find the spawnfunc_waypoint near a dynamic goal such as a dropped weapon
-entity navigation_findnearestwaypoint_withdist(entity ent, float walkfromwp, float bestdist)
+entity navigation_findnearestwaypoint_withdist_except(entity ent, float walkfromwp, float bestdist, entity except)
 {
 	entity waylist, w, best;
 	vector v, org, pm1, pm2;
@@ -380,7 +380,7 @@ entity navigation_findnearestwaypoint_withdist(entity ent, float walkfromwp, flo
 	while (w)
 	{
 		// if object is touching spawnfunc_waypoint
-		if(w != ent)
+		if(w != ent && w != except)
 			if (boxesoverlap(pm1, pm2, w.absmin, w.absmax))
 				return w;
 		w = w.chain;
@@ -426,7 +426,14 @@ entity navigation_findnearestwaypoint_withdist(entity ent, float walkfromwp, flo
 }
 entity navigation_findnearestwaypoint(entity ent, float walkfromwp)
 {
-	return navigation_findnearestwaypoint_withdist(ent, walkfromwp, 1050);
+	entity wp = navigation_findnearestwaypoint_withdist_except(ent, walkfromwp, 1050, world);
+	if (autocvar_g_waypointeditor_auto)
+	{
+		entity wp2 = navigation_findnearestwaypoint_withdist_except(ent, walkfromwp, 1050, wp);
+		if (!wp2)
+			wp.wpflags |= WAYPOINTFLAG_PROTECTED;
+	}
+	return wp;
 }
 
 // finds the waypoints near the bot initiating a navigation query

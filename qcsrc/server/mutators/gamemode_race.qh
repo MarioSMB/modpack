@@ -1,0 +1,8 @@
+float g_race_qualifying;
+float race_teams;
+
+// scores
+#define ST_RACE_LAPS 1
+#define SP_RACE_LAPS 4
+#define SP_RACE_TIME 5
+#define SP_RACE_FASTEST 6

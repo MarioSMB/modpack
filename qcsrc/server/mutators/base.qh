@@ -359,7 +359,7 @@ MUTATOR_HOOKABLE(ClientConnect);
 	// called at when a player connect
 	entity self;	// player
 
-MUTATOR_HOOKABLE(HavocBot_ChooseRule);
+MUTATOR_HOOKABLE(HavocBot_ChooseRole);
 	entity self;
 
 MUTATOR_HOOKABLE(AccuracyTargetValid);

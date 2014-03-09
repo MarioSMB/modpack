@@ -12,6 +12,9 @@
 #include "gamemode_invasion.qh"
 #include "gamemode_infection.qh"
 #include "gamemode_jailbreak.qh"
+#include "gamemode_cts.qh"
+#include "gamemode_race.qh"
+
 #include "mutator_dodging.qh"
 #include "mutator_overkill.qh"
 #include "mutator_freeze.qh"

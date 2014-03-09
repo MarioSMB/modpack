@@ -1582,7 +1582,7 @@ MUTATOR_DEFINITION(gamemode_keyhunt)
 	MUTATOR_HOOK(HelpMePing, kh_HelpMePing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleEnter, kh_VehicleEnter, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleExit, kh_VehicleExit, CBC_ORDER_ANY);
-	MUTATOR_HOOK(HavocBot_ChooseRule, kh_BotRoles, CBC_ORDER_ANY);
+	MUTATOR_HOOK(HavocBot_ChooseRole, kh_BotRoles, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, kh_GetTeamCount, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD

@@ -12,6 +12,8 @@ MUTATOR_DECLARATION(gamemode_invasion);
 MUTATOR_DECLARATION(gamemode_vip);
 MUTATOR_DECLARATION(gamemode_infection);
 MUTATOR_DECLARATION(gamemode_jailbreak);
+MUTATOR_DECLARATION(gamemode_cts);
+MUTATOR_DECLARATION(gamemode_race);
 
 MUTATOR_DECLARATION(mutator_dodging);
 MUTATOR_DECLARATION(mutator_invincibleprojectiles);

@@ -13,6 +13,9 @@
 #include "gamemode_invasion.qc"
 #include "gamemode_infection.qc"
 #include "gamemode_jailbreak.qc"
+#include "gamemode_cts.qc"
+#include "gamemode_race.qc"
+
 #include "mutator_invincibleproj.qc"
 #include "mutator_new_toys.qc"
 #include "mutator_nix.qc"

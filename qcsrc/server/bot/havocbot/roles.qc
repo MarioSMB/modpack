@@ -260,19 +260,12 @@ void havocbot_chooserole_dm()
 	self.havocbot_role = havocbot_role_dm;
 }
 
-void havocbot_chooserole_race()
-{
-	self.havocbot_role = havocbot_role_race;
-}
-
 void havocbot_chooserole()
 {
 	dprint("choosing a role...\n");
 	self.bot_strategytime = 0;
-	if (MUTATOR_CALLHOOK(HavocBot_ChooseRule))
+	if (MUTATOR_CALLHOOK(HavocBot_ChooseRole))
 		return;
-	else if (g_race || g_cts)
-		havocbot_chooserole_race();
 	else if (g_onslaught)
 		havocbot_chooserole_ons();
 	else // assume anything else is deathmatch

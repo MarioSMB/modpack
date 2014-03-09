@@ -52,8 +52,7 @@ float movement_oddity(vector m0, vector m1)
 
 void anticheat_physics()
 {
-	float f, wishspeed;
-	vector wishvel;
+	float f;
 
 	// div0_evade -> SPECTATORS
 	makevectors(self.v_angle);
@@ -92,52 +91,6 @@ void anticheat_physics()
 	{
 		MEAN_ACCUMULATE(anticheat_speedhack, max(0, f - self.anticheat_speedhack_offset), 1);
 		self.anticheat_speedhack_offset += (f - self.anticheat_speedhack_offset) * frametime * 0.1;
-	}
-
-	// race/CTS: force kbd movement for fairness
-	if(g_race || g_cts)
-	{
-		// if record times matter
-		// ensure nothing EVIL is being done (i.e. div0_evade)
-		// this hinders joystick users though
-		// but it still gives SOME analog control
-		wishvel_x = fabs(self.movement_x);
-		wishvel_y = fabs(self.movement_y);
-		if(wishvel_x != 0 && wishvel_y != 0 && wishvel_x != wishvel_y)
-		{
-			wishvel_z = 0;
-			wishspeed = vlen(wishvel);
-			if(wishvel_x >= 2 * wishvel_y)
-			{
-				// pure X motion
-				if(self.movement_x > 0)
-					self.movement_x = wishspeed;
-				else
-					self.movement_x = -wishspeed;
-				self.movement_y = 0;
-			}
-			else if(wishvel_y >= 2 * wishvel_x)
-			{
-				// pure Y motion
-				self.movement_x = 0;
-				if(self.movement_y > 0)
-					self.movement_y = wishspeed;
-				else
-					self.movement_y = -wishspeed;
-			}
-			else
-			{
-				// diagonal
-				if(self.movement_x > 0)
-					self.movement_x = M_SQRT1_2 * wishspeed;
-				else
-					self.movement_x = -M_SQRT1_2 * wishspeed;
-				if(self.movement_y > 0)
-					self.movement_y = M_SQRT1_2 * wishspeed;
-				else
-					self.movement_y = -M_SQRT1_2 * wishspeed;
-			}
-		}
 	}
 }
 

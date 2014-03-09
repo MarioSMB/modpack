@@ -262,9 +262,6 @@ float PlayerScore_Clear(entity player)
 
 	if(MUTATOR_CALLHOOK(ForbidPlayerScore_Clear)) return 0;
 
-	if(g_cts) return 0; // in CTS, you don't lose score by observing
-	if(g_race && g_race_qualifying) return 0; // in qualifying, you don't lose score by observing
-
 	sk = player.scorekeeper;
 	for(i = 0; i < MAX_SCORE; ++i)
 	{

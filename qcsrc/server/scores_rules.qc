@@ -44,34 +44,6 @@ void ScoreRules_generic()
 	ScoreRules_basics_end();
 }
 
-// Race stuff
-#define ST_RACE_LAPS 1
-#define SP_RACE_LAPS 4
-#define SP_RACE_TIME 5
-#define SP_RACE_FASTEST 6
-void ScoreRules_race()
-{
-	ScoreRules_basics(race_teams, 0, 0, FALSE);
-	if(race_teams)
-	{
-		ScoreInfo_SetLabel_TeamScore(  ST_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_TIME,    "time",      SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_LOWER_IS_BETTER | SFL_TIME);
-	}
-	else if(g_race_qualifying)
-	{
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_SORT_PRIO_PRIMARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-	}
-	else
-	{
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_LAPS,    "laps",      SFL_SORT_PRIO_PRIMARY);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_TIME,    "time",      SFL_SORT_PRIO_SECONDARY | SFL_LOWER_IS_BETTER | SFL_TIME);
-		ScoreInfo_SetLabel_PlayerScore(SP_RACE_FASTEST, "fastest",   SFL_LOWER_IS_BETTER | SFL_TIME);
-	}
-	ScoreRules_basics_end();
-}
-
 // Nexball stuff
 #define ST_NEXBALL_GOALS 1
 #define SP_NEXBALL_GOALS 4

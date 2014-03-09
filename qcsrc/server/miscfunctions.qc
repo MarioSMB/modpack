@@ -988,8 +988,6 @@ void readlevelcvars(void)
 	sv_clones = cvar("sv_clones");
 	sv_foginterval = cvar("sv_foginterval");
 	g_cloaked = cvar("g_cloaked");
-    if(g_cts)
-        g_cloaked = 1; // always enable cloak in CTS
 	g_footsteps = cvar("g_footsteps");
 	g_grappling_hook = cvar("g_grappling_hook");
 	g_jetpack = cvar("g_jetpack");
@@ -1862,82 +1860,6 @@ string uid2name(string myuid) {
 	if(s == "")
 		s = "^1Unregistered Player";
 	return s;
-}
-
-float race_readTime(string map, float pos)
-{
-	string rr;
-	if(g_cts)
-		rr = CTS_RECORD;
-	else
-		rr = RACE_RECORD;
-
-	return stof(db_get(ServerProgsDB, strcat(map, rr, "time", ftos(pos))));
-}
-
-string race_readUID(string map, float pos)
-{
-	string rr;
-	if(g_cts)
-		rr = CTS_RECORD;
-	else
-		rr = RACE_RECORD;
-
-	return db_get(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(pos)));
-}
-
-float race_readPos(string map, float t) {
-	float i;
-	for (i = 1; i <= RANKINGS_CNT; ++i)
-		if (race_readTime(map, i) == 0 || race_readTime(map, i) > t)
-			return i;
-
-	return 0; // pos is zero if unranked
-}
-
-void race_writeTime(string map, float t, string myuid)
-{
-	string rr;
-	if(g_cts)
-		rr = CTS_RECORD;
-	else
-		rr = RACE_RECORD;
-
-	float newpos;
-	newpos = race_readPos(map, t);
-
-	float i, prevpos = 0;
-	for(i = 1; i <= RANKINGS_CNT; ++i)
-	{
-		if(race_readUID(map, i) == myuid)
-			prevpos = i;
-	}
-	if (prevpos) { // player improved his existing record, only have to iterate on ranks between new and old recs
-		for (i = prevpos; i > newpos; --i) {
-			db_put(ServerProgsDB, strcat(map, rr, "time", ftos(i)), ftos(race_readTime(map, i - 1)));
-			db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(i)), race_readUID(map, i - 1));
-		}
-	} else { // player has no ranked record yet
-		for (i = RANKINGS_CNT; i > newpos; --i) {
-			db_put(ServerProgsDB, strcat(map, rr, "time", ftos(i)), ftos(race_readTime(map, i - 1)));
-			db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(i)), race_readUID(map, i - 1));
-		}
-	}
-
-	// store new time itself
-	db_put(ServerProgsDB, strcat(map, rr, "time", ftos(newpos)), ftos(t));
-	db_put(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(newpos)), myuid);
-}
-
-string race_readName(string map, float pos)
-{
-	string rr;
-	if(g_cts)
-		rr = CTS_RECORD;
-	else
-		rr = RACE_RECORD;
-
-	return uid2name(db_get(ServerProgsDB, strcat(map, rr, "crypto_idfp", ftos(pos))));
 }
 
 float MoveToRandomMapLocation(entity e, float goodcontents, float badcontents, float badsurfaceflags, float attempts, float maxaboveground, float minviewdistance)
