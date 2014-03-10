@@ -18,6 +18,8 @@ float autocvar_g_vehicle_yugo;
 float autocvar_g_vehicle_yugo_speed_afterburn;
 float autocvar_g_vehicle_yugo_afterburn_cost;
 
+var float autocvar_g_vehicle_yugo_cloak_cost = 20;
+
 float autocvar_g_vehicle_yugo_anglestabilizer;
 float autocvar_g_vehicle_yugo_downforce;
 
@@ -216,6 +218,21 @@ float yugo_frame()
 		yugo.strength_finished = 0;
 		sound (yugo.tur_head, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
 	}
+	
+	if(player.BUTTON_ATCK && time - yugo.pain_finished >= 0.5 && yugo.vehicle_energy >= (autocvar_g_vehicle_yugo_cloak_cost * frametime))
+	{
+		yugo.wait = time;
+		yugo.vehicle_energy -= autocvar_g_vehicle_yugo_cloak_cost * frametime;
+
+		if(yugo.vehicle_energy <= 50)
+			yugo.alpha = 0.5;
+		else if(yugo.vehicle_energy <= 100)
+			yugo.alpha = 0.3;
+		else
+			yugo.alpha = 0.1;
+	}
+	else
+		yugo.alpha = 1;
 
 	df -= v_up * (vlen(yugo.velocity) * autocvar_g_vehicle_yugo_downforce);
 	player.movement = yugo.velocity += df * frametime;
@@ -280,6 +297,7 @@ void yugo_exit(float eject)
 	self.think	  = yugo_think;
 	self.nextthink  = time;
 	self.movetype   = MOVETYPE_BOUNCE;
+	self.alpha = 1;
 	sound (self.tur_head, CH_TRIGGER_SINGLE, "misc/null.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
 
 	if(!self.owner)
@@ -446,6 +464,7 @@ float v_yugo(float req)
 			self.solid		  = SOLID_SLIDEBOX;
 			self.delay		  = time;
 			self.scale		  = 0.5;
+			self.alpha = 1;
 			
 			self.PlayerPhysplug = yugo_frame;
 			

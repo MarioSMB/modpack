@@ -622,6 +622,8 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 		damage *= autocvar_g_vehicles_tag_damagerate;
 
 	self.enemy = attacker;
+	
+	self.pain_finished = time;
 
 	if((self.vehicle_flags & VHF_HASSHIELD) && (self.vehicle_shield > 0))
 	{
