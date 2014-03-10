@@ -587,6 +587,12 @@ void assault_ScoreRules()
 	ScoreRules_basics_end();
 }
 
+void assault_Initialize()
+{
+	assault_ScoreRules();
+	warmup_stage = 0;
+}
+
 MUTATOR_DEFINITION(gamemode_assault)
 {
 	MUTATOR_HOOK(PlayerSpawn, assault_PlayerSpawn, CBC_ORDER_ANY);
@@ -599,7 +605,7 @@ MUTATOR_DEFINITION(gamemode_assault)
 	{
 		if(time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
-		assault_ScoreRules();
+		assault_Initialize();
 	}
 
 	MUTATOR_ONROLLBACK_OR_REMOVE

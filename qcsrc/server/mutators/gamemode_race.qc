@@ -260,6 +260,8 @@ MUTATOR_HOOKFUNCTION(race_GetTeamCount)
 void race_Initialize()
 {
 	race_ScoreRules();
+	if(g_race_qualifying == 2)
+		warmup_stage = 0;
 }
 
 MUTATOR_DEFINITION(gamemode_race)
