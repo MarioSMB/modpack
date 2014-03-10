@@ -957,6 +957,16 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerSpawn)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(nexball_PlayerPhysics)
+{
+	if(self.ballcarried)
+	{
+		self.stat_sv_airspeedlimit_nonqw *= autocvar_g_nexball_basketball_carrier_highspeed;
+		self.stat_sv_maxspeed *= autocvar_g_nexball_basketball_carrier_highspeed;
+	}
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(nexball_SetStartItems)
 {
 	start_items |= IT_UNLIMITED_SUPERWEAPONS; // FIXME BAD BAD BAD BAD HACK, NEXBALL SHOULDN'T ABUSE PORTO'S WEAPON SLOT
@@ -979,6 +989,7 @@ MUTATOR_DEFINITION(gamemode_nexball)
 	MUTATOR_HOOK(BuildMutatorsString, nexball_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, nexball_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, nexball_PlayerPreThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerPhysics, nexball_PlayerPhysics, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, nexball_SetStartItems, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, nexball_GetTeamCount, CBC_ORDER_ANY);
 

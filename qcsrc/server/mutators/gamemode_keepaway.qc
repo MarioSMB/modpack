@@ -342,6 +342,16 @@ MUTATOR_HOOKFUNCTION(ka_PlayerPowerups)
 	return 0;
 }
 
+MUTATOR_HOOKFUNCTION(ka_PlayerPhysics)
+{
+	if(self.ballcarried)
+	{
+		self.stat_sv_airspeedlimit_nonqw *= autocvar_g_keepaway_ballcarrier_highspeed;
+		self.stat_sv_maxspeed *= autocvar_g_keepaway_ballcarrier_highspeed;
+	}
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(ka_BotRoles)
 {
 	if (self.ballcarried)
@@ -424,6 +434,7 @@ MUTATOR_DEFINITION(gamemode_keepaway)
 	MUTATOR_HOOK(PlayerDamage_Calculate, ka_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPowerups, ka_PlayerPowerups, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerUseKey, ka_PlayerUseKey, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerPhysics, ka_PlayerPhysics, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRole, ka_BotRoles, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BotShouldAttack, ka_BotShouldAttack, CBC_ORDER_ANY);
 
