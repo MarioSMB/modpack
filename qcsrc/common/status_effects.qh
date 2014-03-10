@@ -23,7 +23,7 @@ entity status_effect_info[STATUS_EFFECT_MAXCOUNT];
 
 entity dummy_statuseffects_info;
 
-float StatusEffect_Stat(float id);
+float StatusEffect_IDToStat(float id);
 entity get_statuseffectinfo(float id);
 
 // dynamic status effect adding
@@ -64,6 +64,6 @@ void StatusEffects_AddStats();
 
 #ifdef CSQC
 
-#define StatusEffect(id) getstatf(StatusEffect_Stat(id))
+#define StatusEffect(id) getstatf(StatusEffect_IDToStat(id))
 
 #endif // CSQC
