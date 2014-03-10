@@ -5648,13 +5648,14 @@ QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")))
 //
 void DrawStatusEffectItem(vector myPos, vector mySize, float itemcode)
 {
-	float a;
+	float a, show_timer;
+	show_timer = !(StatusEffectInfo(itemcode).spawnflags & STAT_TYPE_NOTIMER);
 	if(autocvar__hud_configure)
 	{
 		a = 31 + mod(itemcode*93, 128);
 	}
 	else
-		a = ((StatusEffectInfo(itemcode).spawnflags & STAT_TYPE_NOTIMER) ? StatusEffect(itemcode) : StatusEffect(itemcode) - time);
+		a = ((show_timer) ? StatusEffect(itemcode) - time : StatusEffect(itemcode));
 
 	vector color = (StatusEffectInfo(itemcode)).colormod;
 
@@ -5680,12 +5681,13 @@ void DrawStatusEffectItem(vector myPos, vector mySize, float itemcode)
 	if(a > 0)
 	{
 		if(autocvar_hud_panel_statuseffects_progressbar)
-		if(!(StatusEffectInfo(itemcode).spawnflags & STAT_TYPE_NOTIMER))
+		if(show_timer)
 			HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_statuseffects_progressbar_xoffset * mySize_x, mySize - eX * autocvar_hud_panel_statuseffects_progressbar_xoffset * mySize_x, autocvar_hud_panel_statuseffects_progressbar_name, ceil(a)/10, 0, 0, color, autocvar_hud_progressbar_alpha * panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 	
 		if(autocvar_hud_panel_statuseffects_text)
 		{
-			drawstring_aspect(myPos + eX * autocvar_hud_panel_statuseffects_progressbar_xoffset * mySize_x, ftos(ceil(a)), mySize - eX * autocvar_hud_panel_statuseffects_progressbar_xoffset * mySize_x, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+			if(show_timer)
+				drawstring_aspect(myPos + eX * autocvar_hud_panel_statuseffects_progressbar_xoffset * mySize_x, ftos(ceil(a)), mySize - eX * autocvar_hud_panel_statuseffects_progressbar_xoffset * mySize_x, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 			if(autocvar_hud_panel_statuseffects_text == 2)
 				drawstring_aspect(numpos, StatusEffectInfo(itemcode).message, eX * (2/3) * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 		}
