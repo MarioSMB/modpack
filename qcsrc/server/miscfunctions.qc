@@ -762,7 +762,7 @@ void readplayerstartcvars()
 	{
 		// forcibly turn off weaponarena
 	}
-	else if (s == "all")
+	else if (s == "all" || s == "1")
 	{
 		g_weaponarena = 1;
 		g_weaponarena_list = "All Weapons";
