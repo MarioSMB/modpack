@@ -51,7 +51,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 
 	traceline(ent.origin, targ.origin, MOVE_NORMAL, ent);
 
-	if(trace_ent != ent)
+	if(trace_ent != targ)
 		return FALSE;
 
 	if(IS_VEHICLE(targ))
