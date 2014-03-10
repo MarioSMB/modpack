@@ -96,6 +96,7 @@ void CSQC_Init(void)
 	registercvar("cl_sparkle", "0");
 	registercvar("cl_multijump", "0");
 	registercvar("cl_dodging", "0");
+	registercvar("cl_spawn_near_teammate", "1");
 	registercvar("cl_bikini", "0");
 	registercvar("cl_bikini_skin", "0");
 	registercvar("cl_damnfurries", "0");
