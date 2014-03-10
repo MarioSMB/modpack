@@ -1,9 +1,9 @@
 #ifdef STATUS_EFFECT
-STATUS_EFFECT(BURNING, STAT_TYPE_NEGATIVE, stat_effect_burning, '1 0.1 0', "burning", _("Burning"));
-STATUS_EFFECT(DROWNING, STAT_TYPE_NEGATIVE | STAT_TYPE_NOTIMER, stat_effect_drowning, '0 0.5 1', "drowning", _("Drowning"));
-STATUS_EFFECT(SPAWNSHIELD, STAT_TYPE_POSITIVE, stat_effect_spawnshield, '0.5 0.5 0.5', "spawnshield", _("Shielded"));
-STATUS_EFFECT(COLD, STAT_TYPE_NEGATIVE, stat_effect_cold, '0 0.75 1', "cold", _("Cold"));
-STATUS_EFFECT(FROZEN, STAT_TYPE_NEGATIVE | STAT_TYPE_NOTIMER, stat_effect_frozen, '0 0.6 1', "frozen", _("Frozen"));
+STATUS_EFFECT(BURNING,		STAT_TYPE_NEGATIVE, 					stat_effect_burning, 		'1 0.1 0', 		"burning", 		_("Burning"));
+STATUS_EFFECT(DROWNING, 	STAT_TYPE_NEGATIVE | STAT_TYPE_NOTIMER, stat_effect_drowning, 		'0 0.5 1', 		"drowning", 	_("Drowning"));
+STATUS_EFFECT(SPAWNSHIELD, 	STAT_TYPE_POSITIVE, 					stat_effect_spawnshield, 	'0.5 0.5 0.5', 	"spawnshield", 	_("Shielded"));
+STATUS_EFFECT(COLD, 		STAT_TYPE_NEGATIVE, 					stat_effect_cold, 			'0 0.75 1', 	"cold", 		_("Cold"));
+STATUS_EFFECT(FROZEN, 		STAT_TYPE_NEGATIVE | STAT_TYPE_NOTIMER, stat_effect_frozen, 		'0 0.6 1', 		"frozen", 		_("Frozen"));
 #else
 
 #ifdef SVQC
