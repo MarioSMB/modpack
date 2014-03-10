@@ -291,6 +291,12 @@ MUTATOR_HOOKFUNCTION(ca_WantWeapon)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(ca_CountFrags)
+{
+	// announce remaining frags
+	return TRUE;
+}
+
 // scoreboard setup
 void ca_ScoreRules(float teams)
 {
@@ -338,6 +344,7 @@ MUTATOR_DEFINITION(gamemode_ca)
 	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, ca_PlayerDamage_SplitHealthArmor, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerRegen, ca_PlayerRegen, CBC_ORDER_ANY);
 	MUTATOR_HOOK(WantWeapon, ca_WantWeapon, CBC_ORDER_ANY);
+	MUTATOR_HOOK(Scores_CountFragsRemaining, ca_CountFrags, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

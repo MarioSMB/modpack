@@ -279,6 +279,9 @@ MUTATOR_HOOKABLE(Spawn_Score);
 	// IN+OUT
 	vector spawn_score; // _x is priority, _y is "distance"
 
+MUTATOR_HOOKABLE(Scores_CountFragsRemaining);
+	// allows a mutator to count the last remaining frags
+
 MUTATOR_HOOKABLE(SV_StartFrame);
 	// runs globally each server frame
 
