@@ -26,7 +26,6 @@ float STAT_STATUS_EFFECT_LAST;
 
 entity dummy_statuseffects_info;
 
-float StatusEffect_IDToStat(float id);
 entity get_statuseffectinfo(float id);
 
 // dynamic status effect adding
@@ -66,6 +65,8 @@ void ResetStatusEffects(entity ent);
 void StatusEffects_AddStats();
 
 #endif // SVQC
+
+#define StatusEffect_IDToStat(id) (STAT_STATUS_EFFECT_FIRST + id)
 
 #ifdef CSQC
 

@@ -10,6 +10,7 @@ STATUS_EFFECT(FROZEN, STAT_TYPE_NEGATIVE | STAT_TYPE_NOTIMER, stat_effect_frozen
 
 void ResetStatusEffects(entity ent)
 {
+	// should be called when a player spawns
 	float i;
 	for(i = STATUS_EFFECT_FIRST; i <= STATUS_EFFECT_LAST; ++i)
 	if(i == STATUS_EFFECT_SPAWNSHIELD)
@@ -32,20 +33,6 @@ void ApplyStatusEffect(entity ent, float id, float dur, float dam)
 }
 
 #endif
-
-float StatusEffect_IDToStat(float id)
-{
-	switch(id)
-	{
-		case STATUS_EFFECT_BURNING: return STAT_STATUS_EFFECT_BURNING;
-		case STATUS_EFFECT_DROWNING: return STAT_STATUS_EFFECT_DROWNING;
-		case STATUS_EFFECT_SPAWNSHIELD: return STAT_STATUS_EFFECT_SPAWNSHIELD;
-		case STATUS_EFFECT_COLD: return STAT_STATUS_EFFECT_COLD;
-		case STATUS_EFFECT_FROZEN: return STAT_STATUS_EFFECT_FROZEN;
-	}
-	
-	return 0;
-}
 
 void register_status_effect(float id, float type, .float thestat, vector clr, string shortname, string name)
 {
