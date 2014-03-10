@@ -272,7 +272,8 @@ void UpdateMonsterSounds()
 
 void MonsterSound(.string samplefield, float sound_delay, float delaytoo, float chan)
 {
-	if(delaytoo && time < self.msound_delay)
+	if(delaytoo)
+	if(time < self.msound_delay)
 		return; // too early
 	GlobalSound(self.samplefield, chan, VOICETYPE_PLAYERSOUND);
 
@@ -505,11 +506,11 @@ vector monster_pickmovetarget(entity targ)
 		{
 			vector pos;
 			self.monster_movestate = MONSTER_MOVE_WANDER;
-			self.last_trace = time + 2;
+			self.last_trace = time + self.wander_delay;
 
 			self.angles_y = rint(random() * 500);
 			makevectors(self.angles);
-			pos = self.origin + v_forward * 600;
+			pos = self.origin + v_forward * self.wander_distance;
 
 			if(self.flags & FL_FLY || self.flags & FL_SWIM)
 			if(self.spawnflags & MONSTERFLAG_FLY_VERTICAL)
@@ -1035,6 +1036,9 @@ float monster_spawn()
 
 	if(!self.attack_range)
 		self.attack_range = autocvar_g_monsters_attack_range;
+		
+	if(!self.wander_delay) { self.wander_delay = 2; }
+	if(!self.wander_distance) { self.wander_distance = 600; }
 
 	precache_monstersounds();
 	UpdateMonsterSounds();

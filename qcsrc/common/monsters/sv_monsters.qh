@@ -11,6 +11,9 @@ float monsters_killed;
 void monsters_setstatus(); // monsters.qc
 .float monster_moveflags; // checks where to move when not attacking
 
+.float wander_delay;
+.float wander_distance;
+
 .float monster_lifetime;
 
 .float spider_slowness; // special spider timer
@@ -53,7 +56,8 @@ const float MONSTER_SKILL_NIGHTMARE = 10;
 		_MSOUND(melee) \
 		_MSOUND(pain) \
 		_MSOUND(spawn) \
-		_MSOUND(idle)
+		_MSOUND(idle) \
+		_MSOUND(attack)
 
 #define _MSOUND(m) .string monstersound_##m;
 ALLMONSTERSOUNDS

@@ -3,3 +3,4 @@
 #include "monster/mage.qc"
 #include "monster/wyvern.qc"
 #include "monster/shambler.qc"
+#include "monster/creeper.qc"
