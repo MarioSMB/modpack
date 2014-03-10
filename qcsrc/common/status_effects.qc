@@ -28,15 +28,9 @@ void ResetStatusEffects(entity ent)
 
 void StatusEffects_AddStats()
 {
-	/*float i;
+	float i;
 	for(i = STATUS_EFFECT_FIRST; i <= STATUS_EFFECT_LAST; ++i)
-		StatusEffects_AddStat(i, (StatusEffectInfo(i)).effect_stat); */
-		
-	addstat(STAT_STATUS_EFFECT_BURNING, AS_FLOAT, stat_effect_burning);
-	addstat(STAT_STATUS_EFFECT_DROWNING, AS_FLOAT, stat_effect_drowning);
-	addstat(STAT_STATUS_EFFECT_SPAWNSHIELD, AS_FLOAT, stat_effect_spawnshield);
-	addstat(STAT_STATUS_EFFECT_COLD, AS_FLOAT, stat_effect_cold);
-	addstat(STAT_STATUS_EFFECT_FROZEN, AS_FLOAT, stat_effect_frozen);
+		addstat(StatusEffect_IDToStat(i), AS_FLOAT, ((StatusEffectInfo(i)).effect_stat));
 }
 
 void ApplyStatusEffect(entity ent, float id, float dur, float dam)
