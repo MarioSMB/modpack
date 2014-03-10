@@ -670,16 +670,8 @@ float FindSmallestTeam(entity pl, float ignore_pl)
 	{
 		if(autocvar_g_campaign && pl && IS_REAL_CLIENT(pl))
 			return 1; // special case for campaign and player joining
-		else if(g_domination)
-			error("Too few teams available for domination\n");
-		else if(g_ctf)
-			error("Too few teams available for ctf\n");
-		else if(g_keyhunt)
-			error("Too few teams available for key hunt\n");
-		else if(g_freezetag)
-			error("Too few teams available for freeze tag\n");
 		else
-			error("Too few teams available for team deathmatch\n");
+			error(sprintf("Too few teams available for %s\n", MapInfo_Type_ToString(MapInfo_CurrentGametype())));
 	}
 
 	// count how many players are in each team
