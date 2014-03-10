@@ -94,6 +94,13 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_progressbar_xoffset");
 					HUD_Write_PanelCvar_q("_text");
 					break;
+				case HUD_PANEL_STATUSEFFECTS:
+					HUD_Write_PanelCvar_q("_iconalign");
+					HUD_Write_PanelCvar_q("_progressbar");
+					HUD_Write_PanelCvar_q("_progressbar_name");
+					HUD_Write_PanelCvar_q("_progressbar_xoffset");
+					HUD_Write_PanelCvar_q("_text");
+					break;
 				case HUD_PANEL_POWERUPS:
 					HUD_Write_PanelCvar_q("_flip");
 					HUD_Write_PanelCvar_q("_iconalign");

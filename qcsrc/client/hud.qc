@@ -5644,6 +5644,134 @@ QUICKMENU_SMENU(CTX(_("QMCMD^Call a vote")))
 #undef QUICKMENU_ENTRY
 
 
+// Status Effects (#18)
+//
+void DrawStatusEffectItem(vector myPos, vector mySize, float itemcode)
+{
+	float a;
+	if(autocvar__hud_configure)
+	{
+		a = 31 + mod(itemcode*93, 128);
+	}
+	else
+		a = ((StatusEffectInfo(itemcode).spawnflags & STAT_TYPE_NOTIMER) ? StatusEffect(itemcode) : StatusEffect(itemcode) - time);
+
+	vector color = (StatusEffectInfo(itemcode)).colormod;
+
+	float theAlpha = 1;
+
+	vector picpos, numpos;
+	if(autocvar_hud_panel_statuseffects_iconalign == 1)
+	{
+		numpos = myPos;
+		picpos = myPos + eX * 2 * mySize_y;
+	}
+	else if(autocvar_hud_panel_statuseffects_iconalign == 2)
+	{
+		numpos = myPos + eY * mySize_y;
+		picpos = myPos;
+	}
+	else
+	{
+		numpos = myPos + eX * mySize_y;
+		picpos = myPos;
+	}
+
+	if(a > 0)
+	{
+		if(autocvar_hud_panel_statuseffects_progressbar)
+		if(!(StatusEffectInfo(itemcode).spawnflags & STAT_TYPE_NOTIMER))
+			HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_statuseffects_progressbar_xoffset * mySize_x, mySize - eX * autocvar_hud_panel_statuseffects_progressbar_xoffset * mySize_x, autocvar_hud_panel_statuseffects_progressbar_name, ceil(a)/10, 0, 0, color, autocvar_hud_progressbar_alpha * panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+	
+		if(autocvar_hud_panel_statuseffects_text)
+		{
+			drawstring_aspect(myPos + eX * autocvar_hud_panel_statuseffects_progressbar_xoffset * mySize_x, ftos(ceil(a)), mySize - eX * autocvar_hud_panel_statuseffects_progressbar_xoffset * mySize_x, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+			if(autocvar_hud_panel_statuseffects_text == 2)
+				drawstring_aspect(numpos, StatusEffectInfo(itemcode).message, eX * (2/3) * mySize_x + eY * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+		}
+
+		drawpic_aspect_skin(picpos, strcat("effect_", StatusEffectInfo(itemcode).netname), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+	}
+}
+
+void HUD_StatusEffects(void)
+{
+	if(hud != HUD_NORMAL) return;
+	if(!autocvar__hud_configure)
+	{
+		if(!autocvar_hud_panel_statuseffects) return;
+		if(spectatee_status == -1) return;
+	}
+
+	HUD_Panel_UpdateCvars();
+
+	draw_beginBoldFont();
+
+	vector pos, mySize;
+	pos = panel_pos;
+	mySize = panel_size;
+
+	HUD_Panel_DrawBg(1);
+	if(panel_bg_padding)
+	{
+		pos += '1 1 0' * panel_bg_padding;
+		mySize -= '2 2 0' * panel_bg_padding;
+	}
+
+	float rows = 0, columns, row, column;
+	float total_effect_count = 0;
+	
+	float i;
+	for(i = STATUS_EFFECT_FIRST; i <= STATUS_EFFECT_LAST; ++i)
+	if(StatusEffect(i))
+		++total_effect_count;
+
+	vector effect_size;
+
+	rows = mySize_y/mySize_x;
+	rows = bound(1, floor((sqrt(4 * (3/1) * rows * (total_effect_count) + rows * rows) + rows + 0.5) / 2), (total_effect_count));
+	//                               ^^^ effect item aspect goes here
+
+	columns = ceil((total_effect_count)/rows);
+
+	effect_size = eX * mySize_x*(1/columns) + eY * mySize_y*(1/rows);
+	
+
+	local vector offset = '0 0 0'; // fteqcc sucks
+	float newSize;
+	if(effect_size_x/effect_size_y > 3)
+	{
+		newSize = 3 * effect_size_y;
+		offset_x = effect_size_x - newSize;
+		pos_x += offset_x/2;
+		effect_size_x = newSize;
+	}
+	else
+	{
+		newSize = 1/3 * effect_size_x;
+		offset_y = effect_size_y - newSize;
+		pos_y += offset_y/2;
+		effect_size_y = newSize;
+	}
+
+	row = column = 0;
+
+	for(i = STATUS_EFFECT_FIRST; i <= STATUS_EFFECT_LAST; ++i)
+	if(StatusEffect(i))
+	{
+		DrawStatusEffectItem(pos + eX * column * (effect_size_x + offset_x) + eY * row * (effect_size_y + offset_y), effect_size, i);
+		++row;
+		if(row >= rows)
+		{
+			row = 0;
+			column = column + 1;
+		}
+	}
+
+	draw_endBoldFont();
+}
+
+
 /*
 ==================
 Main HUD system

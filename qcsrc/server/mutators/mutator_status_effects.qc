@@ -1,7 +1,7 @@
 MUTATOR_HOOKFUNCTION(effects_WeaponRateFactor)
 {
 	if(StatusEffect_Timed(self, STATUS_EFFECT_COLD))
-		weapon_rate *= 1.3;
+		weapon_rate *= StatusEffectDamage(self, STATUS_EFFECT_COLD);
 
 	return FALSE;
 }
@@ -10,8 +10,8 @@ MUTATOR_HOOKFUNCTION(effects_PlayerPhysics)
 {
 	if(StatusEffect_Timed(self, STATUS_EFFECT_COLD))
 	{
-		self.stat_sv_maxspeed *= 0.7;
-		self.stat_sv_airspeedlimit_nonqw *= 0.7;
+		self.stat_sv_maxspeed /= StatusEffectDamage(self, STATUS_EFFECT_COLD);
+		self.stat_sv_airspeedlimit_nonqw /= StatusEffectDamage(self, STATUS_EFFECT_COLD);
 	}
 
 	return FALSE;
@@ -32,7 +32,8 @@ MUTATOR_HOOKFUNCTION(effects_PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(effects_PlayerDamage)
 {
-	if(IS_PLAYER(frag_attacker) && StatusEffect_Timed(frag_target, STATUS_EFFECT_SPAWNSHIELD))
+	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
+	if(StatusEffect_Timed(frag_target, STATUS_EFFECT_SPAWNSHIELD))
 		frag_damage = 0;
 
 	return FALSE;
@@ -53,23 +54,23 @@ MUTATOR_HOOKFUNCTION(effects_PlayerPowerups)
 	}
 	else if(self.air_finished < time && time >= self.status_effects_delay)
 	{
-		StatusEffect(self, STATUS_EFFECT_DROWNING) = 1;
-		Damage(self, self, self.status_effect_inflictor, 1, DEATH_EFFECT_DROWN, self.origin, '0 0 0');
+		ApplyStatusEffect(self, STATUS_EFFECT_DROWNING, 1, 1);
+		Damage(self, self, self.status_effect_inflictor, StatusEffectDamage(self, STATUS_EFFECT_DROWNING), DEATH_EFFECT_DROWN, self.origin, '0 0 0');
 		self.status_effects_delay = time + autocvar_g_status_effects_delay;
 	}
 
 	if(self.watertype == CONTENT_LAVA)
-		StatusEffect(self, STATUS_EFFECT_BURNING) = time + 3;
+		ApplyStatusEffect(self, STATUS_EFFECT_BURNING, time + 3, 1);
 
 	if(self.frozen)
-		StatusEffect(self, STATUS_EFFECT_COLD) = time + 6;
+		ApplyStatusEffect(self, STATUS_EFFECT_COLD, time + 6, 1.3);
 
 	if(self.waterlevel >= WATERLEVEL_SWIMMING || self.frozen)
 		StatusEffect(self, STATUS_EFFECT_BURNING) = 0;
 
 	if(StatusEffect_Timed(self, STATUS_EFFECT_BURNING))
 	{
-		Damage(self, self, self.status_effect_inflictor, 1, DEATH_EFFECT_BURN, self.origin, '0 0 0');
+		Damage(self, self, self.status_effect_inflictor, StatusEffectDamage(self, STATUS_EFFECT_BURNING), DEATH_EFFECT_BURN, self.origin, '0 0 0');
 		self.effects |= EF_FLAME;
 		self.status_effects_delay = time + autocvar_g_status_effects_delay;
 	}

@@ -13,6 +13,9 @@ const float STAT_TYPE_NOTIMER = 4;
 .string message; // human readable name
 .float spawnflags; // status effect type (negative, positive etc)
 entity status_effect_info[STATUS_EFFECT_MAXCOUNT];
+.float status_effect_damage[STATUS_EFFECT_MAXCOUNT];
+
+.float status_dummy;
 
 .entity status_effect_inflictor; // attacker that gave us effect
 
@@ -20,33 +23,41 @@ entity status_effect_info[STATUS_EFFECT_MAXCOUNT];
 
 entity dummy_statuseffects_info;
 
+float StatusEffect_Stat(float id);
+.float StatusEffects_GetStat(float id);
+entity get_statuseffectinfo(float id);
+
 // dynamic status effect adding
-void register_status_effect(float id, float type, string shortname, string name);
+void register_status_effect(float id, float type, vector clr, string shortname, string name);
 void register_status_effects_done();
 
-#define STATUS_EFFECT_2(id,type,shortname,name) \
+#define STATUS_EFFECT_2(id,type,clr,shortname,name) \
 	float id; \
 	.float stat_##id; \
 	void RegisterStatusEffects_##id() \
 	{ \
 		STATUS_EFFECT_LAST = (id = STATUS_EFFECT_FIRST + STATUS_EFFECT_COUNT); \
 		++STATUS_EFFECT_COUNT; \
-		register_status_effect(id,type,shortname,name); \
+		register_status_effect(id,type,clr,shortname,name); \
 	} \
 	ACCUMULATE_FUNCTION(RegisterStatusEffects, RegisterStatusEffects_##id)
-#define STATUS_EFFECT(id,type,shortname,name) \
-	STATUS_EFFECT_2(STATUS_EFFECT_##id,type,shortname,name)
+#define STATUS_EFFECT(id,type,clr,shortname,name) \
+	STATUS_EFFECT_2(STATUS_EFFECT_##id,type,clr,shortname,name)
 
 #include "status_effects.qc"
 
 #undef STATUS_EFFECT
 ACCUMULATE_FUNCTION(RegisterStatusEffects, register_status_effects_done);
 
+#define StatusEffectInfo(id) (get_statuseffectinfo(id))
 
 #ifdef SVQC
 
-#define StatusEffect(ent,id) ent.stat_##id
-#define StatusEffectInfo(id) (get_statuseffectinfo(id))
+#define StatusEffect(ent,id) ent.(StatusEffects_GetStat(##id))
+//ent.stat_##id
+#define ApplyStatusEffect(ent,id,dur,dam) StatusEffect(ent,id) = dur; ent.status_effect_damage[##id] = dam
+// don't apply damage if player doesn't have the status effect?
+#define StatusEffectDamage(ent,id) ((StatusEffect(ent,id)) ? ent.status_effect_damage[##id] : 0)
 
 #define StatusEffect_Timed(ent,id) (time < StatusEffect(ent,id) && time >= ent.status_effects_delay)
 
@@ -57,6 +68,6 @@ void StatusEffects_AddStats();
 
 #ifdef CSQC
 
-#define StatusEffect(id) getstatf(STAT_STATUSEFFECT_##id)
+#define StatusEffect(id) getstatf(StatusEffect_Stat(id))
 
 #endif

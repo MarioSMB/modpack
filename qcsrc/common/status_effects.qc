@@ -1,8 +1,8 @@
 #ifdef STATUS_EFFECT
-STATUS_EFFECT(BURNING,STAT_TYPE_NEGATIVE,"burning","Burning");
-STATUS_EFFECT(DROWNING,STAT_TYPE_NEGATIVE | STAT_TYPE_NOTIMER,"drowning","Drowning");
-STATUS_EFFECT(SPAWNSHIELD,STAT_TYPE_POSITIVE,"spawnshield","Spawn shielded");
-STATUS_EFFECT(COLD,STAT_TYPE_NEGATIVE,"cold","Cold");
+STATUS_EFFECT(BURNING,STAT_TYPE_NEGATIVE,'1 0.1 0',"burning",_("Burning"));
+STATUS_EFFECT(DROWNING,STAT_TYPE_NEGATIVE | STAT_TYPE_NOTIMER,'0 0.5 1',"drowning",_("Drowning"));
+STATUS_EFFECT(SPAWNSHIELD,STAT_TYPE_POSITIVE,'0.5 0.5 0.5',"spawnshield",_("Shielded"));
+STATUS_EFFECT(COLD,STAT_TYPE_NEGATIVE,'0 0.75 1',"cold",_("Cold"));
 #else
 
 // unfortunately, these can't be dynamic
@@ -30,8 +30,20 @@ void StatusEffects_AddStats()
 	addstat(STAT_STATUSEFFECT_COLD, AS_FLOAT, stat_STATUS_EFFECT_COLD);
 }
 
+.float StatusEffects_GetStat(float id)
+{
+	switch(id)
+	{
+		case STATUS_EFFECT_BURNING: return stat_STATUS_EFFECT_BURNING;
+		case STATUS_EFFECT_DROWNING: return stat_STATUS_EFFECT_DROWNING;
+		case STATUS_EFFECT_SPAWNSHIELD: return stat_STATUS_EFFECT_SPAWNSHIELD;
+		case STATUS_EFFECT_COLD: return stat_STATUS_EFFECT_COLD;
+	}
+	
+	return status_dummy;
+}
+
 #endif
-#ifdef CSQC
 
 float StatusEffect_Stat(float id)
 {
@@ -46,9 +58,7 @@ float StatusEffect_Stat(float id)
 	return 0;
 }
 
-#endif
-
-void register_status_effect(float id, float type, string shortname, string name)
+void register_status_effect(float id, float type, vector clr, string shortname, string name)
 {
 	entity e;
 	status_effect_info[id - 1] = e = spawn();
@@ -56,6 +66,7 @@ void register_status_effect(float id, float type, string shortname, string name)
 	e.netname = shortname;
 	e.message = name;
 	e.spawnflags = type;
+	e.colormod = clr;
 }
 void register_status_effects_done()
 {
