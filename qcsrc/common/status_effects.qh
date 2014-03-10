@@ -19,6 +19,9 @@ entity status_effect_info[STATUS_EFFECT_MAXCOUNT];
 
 .entity status_effect_inflictor; // attacker that gave us effect
 
+#define STAT_STATUS_EFFECT_FIRST 180
+float STAT_STATUS_EFFECT_LAST;
+
 .float status_effects_delay; // prevent instant killing
 
 entity dummy_statuseffects_info;
@@ -33,8 +36,10 @@ void register_status_effects_done();
 #define STATUS_EFFECT_2(id,type,thestat,clr,shortname,name) \
 	float id; \
 	.float ##thestat; \
+	float STAT_##id; \
 	void RegisterStatusEffects_##id() \
 	{ \
+		STAT_STATUS_EFFECT_LAST = (STAT_##id = STAT_STATUS_EFFECT_FIRST + STATUS_EFFECT_COUNT); \
 		STATUS_EFFECT_LAST = (id = STATUS_EFFECT_FIRST + STATUS_EFFECT_COUNT); \
 		++STATUS_EFFECT_COUNT; \
 		register_status_effect(id,type,thestat,clr,shortname,name); \
