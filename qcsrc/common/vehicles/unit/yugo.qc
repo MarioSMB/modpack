@@ -19,6 +19,7 @@ float autocvar_g_vehicle_yugo_speed_afterburn;
 float autocvar_g_vehicle_yugo_afterburn_cost;
 
 var float autocvar_g_vehicle_yugo_cloak_cost = 20;
+var float autocvar_g_vehicle_yugo_supercloak_cost = 1000;
 
 float autocvar_g_vehicle_yugo_anglestabilizer;
 float autocvar_g_vehicle_yugo_downforce;
@@ -230,6 +231,13 @@ float yugo_frame()
 			yugo.alpha = 0.3;
 		else
 			yugo.alpha = 0.1;
+	}
+	else if(player.BUTTON_ATCK2 && time - yugo.pain_finished >= 0.5 && yugo.vehicle_energy >= (autocvar_g_vehicle_yugo_supercloak_cost * frametime))
+	{
+		yugo.wait = time;
+		yugo.vehicle_energy -= autocvar_g_vehicle_yugo_supercloak_cost * frametime;
+
+		yugo.alpha = -1;
 	}
 	else
 		yugo.alpha = 1;
