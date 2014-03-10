@@ -170,6 +170,16 @@ MUTATOR_HOOKFUNCTION(lms_ItemTouch)
 	return MUT_ITEMTOUCH_CONTINUE;
 }
 
+MUTATOR_HOOKFUNCTION(lms_WantWeapon)
+{
+	if(other.spawnflags & WEP_FLAG_NORMAL)
+		ret_float = TRUE;
+	else
+		ret_float = FALSE;
+
+	return FALSE;
+}
+
 // scoreboard stuff
 void lms_ScoreRules()
 {
@@ -203,6 +213,7 @@ MUTATOR_DEFINITION(gamemode_lms)
 	MUTATOR_HOOK(ForbidPlayerScore_Clear, lms_KeepScore, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, lms_FilterItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ItemTouch, lms_ItemTouch, CBC_ORDER_ANY);
+	MUTATOR_HOOK(WantWeapon, lms_WantWeapon, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

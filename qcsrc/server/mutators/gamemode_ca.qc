@@ -281,6 +281,16 @@ MUTATOR_HOOKFUNCTION(ca_PlayerRegen)
 	return TRUE;
 }
 
+MUTATOR_HOOKFUNCTION(ca_WantWeapon)
+{
+	if(other.spawnflags & WEP_FLAG_NORMAL)
+		ret_float = TRUE;
+	else
+		ret_float = FALSE;
+
+	return FALSE;
+}
+
 // scoreboard setup
 void ca_ScoreRules(float teams)
 {
@@ -327,6 +337,7 @@ MUTATOR_DEFINITION(gamemode_ca)
 	MUTATOR_HOOK(FilterItem, ca_FilterItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, ca_PlayerDamage_SplitHealthArmor, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerRegen, ca_PlayerRegen, CBC_ORDER_ANY);
+	MUTATOR_HOOK(WantWeapon, ca_WantWeapon, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

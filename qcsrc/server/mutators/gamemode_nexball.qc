@@ -980,6 +980,29 @@ MUTATOR_HOOKFUNCTION(nexball_GetTeamCount)
 	return TRUE;
 }
 
+MUTATOR_HOOKFUNCTION(nexball_ForbidThrowing)
+{
+	if(self.weapon == WEP_GRENADE_LAUNCHER)
+		return TRUE;
+
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(nexball_FilterItem)
+{
+	if(self.classname == "droppedweapon")
+	if(self.weapon == WEP_GRENADE_LAUNCHER)
+		return TRUE;
+
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(nexball_WantWeapon)
+{
+	ret_float = 0; // weapon is set a few lines later
+	return FALSE;
+}
+
 MUTATOR_DEFINITION(gamemode_nexball)
 {
 	MUTATOR_HOOK(PlayerDies, nexball_BallDrop, CBC_ORDER_ANY);
@@ -992,6 +1015,9 @@ MUTATOR_DEFINITION(gamemode_nexball)
 	MUTATOR_HOOK(PlayerPhysics, nexball_PlayerPhysics, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, nexball_SetStartItems, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, nexball_GetTeamCount, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ForbidThrowCurrentWeapon, nexball_ForbidThrowing, CBC_ORDER_ANY);
+	MUTATOR_HOOK(FilterItem, nexball_FilterItem, CBC_ORDER_ANY);
+	MUTATOR_HOOK(WantWeapon, nexball_WantWeapon, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

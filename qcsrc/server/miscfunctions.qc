@@ -689,19 +689,21 @@ float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 	if (!i)
 		return 0;
 
-	if (g_lms || g_ca || allguns)
+	if (allguns)
 	{
 		if(weaponinfo.spawnflags & WEP_FLAG_NORMAL)
 			d = TRUE;
 		else
 			d = FALSE;
 	}
-	else if (g_cts)
-		d = (i == WEP_SHOTGUN);
-	else if (g_nexball)
-		d = 0; // weapon is set a few lines later
 	else
 		d = (i == WEP_LASER || i == WEP_SHOTGUN);
+
+	ret_float = d;
+	other = weaponinfo;
+	MUTATOR_CALLHOOK(WantWeapon);
+	d = ret_float;
+	weaponinfo = other;
 
 	if(g_grappling_hook) // if possible, redirect off-hand hook to on-hand hook
 		d |= (i == WEP_HOOK);
