@@ -114,12 +114,6 @@ float bot_shouldattack(entity e)
 	if(e.frozen)
 		return FALSE;
 
-	// If neither player has ball then don't attack unless the ball is on the
-	// ground.
-	if (g_keepaway)
-		if (!e.ballcarried && !self.ballcarried && ka_ball.owner)
-			return FALSE;
-
 	if(teamplay)
 	{
 		if(e.team==0)
