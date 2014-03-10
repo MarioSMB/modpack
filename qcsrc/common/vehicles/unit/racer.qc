@@ -506,6 +506,9 @@ void racer_think()
 	vector df = self.velocity * -autocvar_g_vehicle_racer_friction;
 	df_z += (1 - trace_fraction) * autocvar_g_vehicle_racer_hoverpower + sin(time * 2) * (autocvar_g_vehicle_racer_springlength * 2);
 
+	if(pointcontents(self.origin - '0 0 64') == CONTENT_WATER)
+		self.velocity_z += 200;
+
 	self.velocity += df * pushdeltatime;
 	if(self.velocity_z > 0)
 		self.velocity_z *= 1 - autocvar_g_vehicle_racer_upforcedamper * pushdeltatime;
@@ -630,7 +633,6 @@ float v_racer(float req)
 		}
 		case VR_THINK:
 		{
-
 			return TRUE;
 		}
 		case VR_DEATH:
