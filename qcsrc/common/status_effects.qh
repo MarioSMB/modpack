@@ -53,11 +53,8 @@ ACCUMULATE_FUNCTION(RegisterStatusEffects, register_status_effects_done);
 
 #ifdef SVQC
 
-#define StatusEffect(ent,id) ent.(StatusEffects_GetStat(##id))
-//ent.stat_##id
-#define ApplyStatusEffect(ent,id,dur,dam) StatusEffect(ent,id) = dur; ent.status_effect_damage[##id] = dam
-// don't apply damage if player doesn't have the status effect?
-#define StatusEffectDamage(ent,id) ((StatusEffect(ent,id)) ? ent.status_effect_damage[##id] : 0)
+#define StatusEffect(ent,id) ent.(StatusEffects_GetStat(id))
+#define StatusEffectDamage(ent,id) ent.status_effect_damage[id]
 
 #define StatusEffect_Timed(ent,id) (time < StatusEffect(ent,id) && time >= ent.status_effects_delay)
 

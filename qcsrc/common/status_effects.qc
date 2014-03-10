@@ -3,6 +3,7 @@ STATUS_EFFECT(BURNING,STAT_TYPE_NEGATIVE,'1 0.1 0',"burning",_("Burning"));
 STATUS_EFFECT(DROWNING,STAT_TYPE_NEGATIVE | STAT_TYPE_NOTIMER,'0 0.5 1',"drowning",_("Drowning"));
 STATUS_EFFECT(SPAWNSHIELD,STAT_TYPE_POSITIVE,'0.5 0.5 0.5',"spawnshield",_("Shielded"));
 STATUS_EFFECT(COLD,STAT_TYPE_NEGATIVE,'0 0.75 1',"cold",_("Cold"));
+STATUS_EFFECT(FROZEN,STAT_TYPE_NEGATIVE | STAT_TYPE_NOTIMER,'0 0.6 1',"frozen",_("Frozen"));
 #else
 
 // unfortunately, these can't be dynamic
@@ -11,15 +12,18 @@ const float STAT_STATUSEFFECT_BURNING = 180;
 const float STAT_STATUSEFFECT_DROWNING = 181;
 const float STAT_STATUSEFFECT_SPAWNSHIELD = 182;
 const float STAT_STATUSEFFECT_COLD = 183;
+const float STAT_STATUSEFFECT_FROZEN = 184;
 
 #ifdef SVQC
 
 void ResetStatusEffects(entity ent)
 {
-	StatusEffect(ent, STATUS_EFFECT_BURNING) = 0;
-	StatusEffect(ent, STATUS_EFFECT_DROWNING) = 0;
-	StatusEffect(ent, STATUS_EFFECT_SPAWNSHIELD) = time + autocvar_g_spawnshieldtime; // hax
-	StatusEffect(ent, STATUS_EFFECT_COLD) = 0;
+	float i;
+	for(i = STATUS_EFFECT_FIRST; i <= STATUS_EFFECT_LAST; ++i)
+	if(i == STATUS_EFFECT_SPAWNSHIELD)
+		StatusEffect(ent, i) = time + autocvar_g_spawnshieldtime; // hax
+	else
+		StatusEffect(ent, i) = 0;
 }
 
 void StatusEffects_AddStats()
@@ -28,6 +32,7 @@ void StatusEffects_AddStats()
 	addstat(STAT_STATUSEFFECT_DROWNING, AS_FLOAT, stat_STATUS_EFFECT_DROWNING);
 	addstat(STAT_STATUSEFFECT_SPAWNSHIELD, AS_FLOAT, stat_STATUS_EFFECT_SPAWNSHIELD);
 	addstat(STAT_STATUSEFFECT_COLD, AS_FLOAT, stat_STATUS_EFFECT_COLD);
+	addstat(STAT_STATUSEFFECT_FROZEN, AS_FLOAT, stat_STATUS_EFFECT_FROZEN);
 }
 
 .float StatusEffects_GetStat(float id)
@@ -38,9 +43,16 @@ void StatusEffects_AddStats()
 		case STATUS_EFFECT_DROWNING: return stat_STATUS_EFFECT_DROWNING;
 		case STATUS_EFFECT_SPAWNSHIELD: return stat_STATUS_EFFECT_SPAWNSHIELD;
 		case STATUS_EFFECT_COLD: return stat_STATUS_EFFECT_COLD;
+		case STATUS_EFFECT_FROZEN: return stat_STATUS_EFFECT_FROZEN;
 	}
 	
 	return status_dummy;
+}
+
+void ApplyStatusEffect(entity ent, float id, float dur, float dam)
+{
+	StatusEffect(ent, id) = dur;
+	ent.status_effect_damage[id] = dam;
 }
 
 #endif
@@ -53,6 +65,7 @@ float StatusEffect_Stat(float id)
 		case STATUS_EFFECT_DROWNING: return STAT_STATUSEFFECT_DROWNING;
 		case STATUS_EFFECT_SPAWNSHIELD: return STAT_STATUSEFFECT_SPAWNSHIELD;
 		case STATUS_EFFECT_COLD: return STAT_STATUSEFFECT_COLD;
+		case STATUS_EFFECT_FROZEN: return STAT_STATUSEFFECT_FROZEN;
 	}
 	
 	return 0;

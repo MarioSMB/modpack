@@ -1,4 +1,4 @@
-MUTATOR_HOOKFUNCTION(effects_WeaponRateFactor)
+MUTATOR_HOOKFUNCTION(se_WeaponRateFactor)
 {
 	if(StatusEffect_Timed(self, STATUS_EFFECT_COLD))
 		weapon_rate *= StatusEffectDamage(self, STATUS_EFFECT_COLD);
@@ -6,7 +6,7 @@ MUTATOR_HOOKFUNCTION(effects_WeaponRateFactor)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(effects_PlayerPhysics)
+MUTATOR_HOOKFUNCTION(se_PlayerPhysics)
 {
 	if(StatusEffect_Timed(self, STATUS_EFFECT_COLD))
 	{
@@ -17,7 +17,7 @@ MUTATOR_HOOKFUNCTION(effects_PlayerPhysics)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(effects_PlayerSpawn)
+MUTATOR_HOOKFUNCTION(se_PlayerSpawn)
 {
 	if(!autocvar_g_status_effects)
 		return FALSE;
@@ -30,7 +30,7 @@ MUTATOR_HOOKFUNCTION(effects_PlayerSpawn)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(effects_PlayerDamage)
+MUTATOR_HOOKFUNCTION(se_PlayerDamage)
 {
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(StatusEffect_Timed(frag_target, STATUS_EFFECT_SPAWNSHIELD))
@@ -39,7 +39,7 @@ MUTATOR_HOOKFUNCTION(effects_PlayerDamage)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(effects_PlayerPowerups)
+MUTATOR_HOOKFUNCTION(se_PlayerPowerups)
 {
 	if(self.deadflag || gameover || !IS_PLAYER(self) || time < game_starttime || !autocvar_g_status_effects)
 		return FALSE;
@@ -56,23 +56,34 @@ MUTATOR_HOOKFUNCTION(effects_PlayerPowerups)
 	{
 		ApplyStatusEffect(self, STATUS_EFFECT_DROWNING, 1, 1);
 		Damage(self, self, self.status_effect_inflictor, StatusEffectDamage(self, STATUS_EFFECT_DROWNING), DEATH_EFFECT_DROWN, self.origin, '0 0 0');
-		self.status_effects_delay = time + autocvar_g_status_effects_delay;
+		self.status_effects_delay = time + autocvar_g_status_effects_delay_small;
 	}
 
 	if(self.watertype == CONTENT_LAVA)
 		ApplyStatusEffect(self, STATUS_EFFECT_BURNING, time + 3, 1);
 
 	if(self.frozen)
-		ApplyStatusEffect(self, STATUS_EFFECT_COLD, time + 6, 1.3);
+	{
+		ApplyStatusEffect(self, STATUS_EFFECT_FROZEN, 1, 0);
+		ApplyStatusEffect(self, STATUS_EFFECT_COLD, time + 6, 2);
+	}
+	else
+		StatusEffect(self, STATUS_EFFECT_FROZEN) = 0;
 
 	if(self.waterlevel >= WATERLEVEL_SWIMMING || self.frozen)
 		StatusEffect(self, STATUS_EFFECT_BURNING) = 0;
+		
+	if(StatusEffect_Timed(self, STATUS_EFFECT_COLD) && !self.frozen)
+	{
+		pointparticles(particleeffectnum("blue_flare"), self.origin, '0 0 0', 1);
+		self.status_effects_delay = time + autocvar_g_status_effects_delay_medium;
+	}
 
 	if(StatusEffect_Timed(self, STATUS_EFFECT_BURNING))
 	{
 		Damage(self, self, self.status_effect_inflictor, StatusEffectDamage(self, STATUS_EFFECT_BURNING), DEATH_EFFECT_BURN, self.origin, '0 0 0');
 		self.effects |= EF_FLAME;
-		self.status_effects_delay = time + autocvar_g_status_effects_delay;
+		self.status_effects_delay = time + autocvar_g_status_effects_delay_small;
 	}
 
 	if(StatusEffect_Timed(self, STATUS_EFFECT_SPAWNSHIELD))
@@ -83,11 +94,11 @@ MUTATOR_HOOKFUNCTION(effects_PlayerPowerups)
 
 MUTATOR_DEFINITION(mutator_status_effects)
 {
-	MUTATOR_HOOK(WeaponRateFactor, effects_WeaponRateFactor, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPhysics, effects_PlayerPhysics, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerSpawn, effects_PlayerSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDamage_Calculate, effects_PlayerDamage, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPowerups, effects_PlayerPowerups, CBC_ORDER_ANY);
+	MUTATOR_HOOK(WeaponRateFactor, se_WeaponRateFactor, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerPhysics, se_PlayerPhysics, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerSpawn, se_PlayerSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDamage_Calculate, se_PlayerDamage, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerPowerups, se_PlayerPowerups, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

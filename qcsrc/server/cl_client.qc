@@ -1674,6 +1674,10 @@ void player_regen (void)
 		minh = minh * max_mod;
 		limith = limith * limit_mod;
 		limita = limita * limit_mod;
+		
+		if(autocvar_g_status_effects)
+		if(StatusEffect_Timed(self, STATUS_EFFECT_COLD) && !self.frozen)
+			regen_mod = 0.3; // slow regen speed for cold players
 
 		if(g_vip)
 		{
