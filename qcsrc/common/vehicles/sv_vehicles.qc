@@ -95,7 +95,7 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
 
 	if(trace_ent != world)
 	{
-		if(teamplay && trace_ent.team == self.team)
+		if(SAME_TEAM(trace_ent, self))
 			trace_ent = world;
 
 		if(trace_ent.deadflag != DEAD_NO)
