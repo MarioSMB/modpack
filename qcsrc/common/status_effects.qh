@@ -15,7 +15,7 @@ const float STAT_TYPE_NOTIMER = 4;
 entity status_effect_info[STATUS_EFFECT_MAXCOUNT];
 .float status_effect_damage[STATUS_EFFECT_MAXCOUNT];
 
-.float status_dummy;
+..float effect_stat;
 
 .entity status_effect_inflictor; // attacker that gave us effect
 
@@ -24,25 +24,24 @@ entity status_effect_info[STATUS_EFFECT_MAXCOUNT];
 entity dummy_statuseffects_info;
 
 float StatusEffect_Stat(float id);
-.float StatusEffects_GetStat(float id);
 entity get_statuseffectinfo(float id);
 
 // dynamic status effect adding
-void register_status_effect(float id, float type, vector clr, string shortname, string name);
+void register_status_effect(float id, float type, .float thestat, vector clr, string shortname, string name);
 void register_status_effects_done();
 
-#define STATUS_EFFECT_2(id,type,clr,shortname,name) \
+#define STATUS_EFFECT_2(id,type,thestat,clr,shortname,name) \
 	float id; \
-	.float stat_##id; \
+	.float ##thestat; \
 	void RegisterStatusEffects_##id() \
 	{ \
 		STATUS_EFFECT_LAST = (id = STATUS_EFFECT_FIRST + STATUS_EFFECT_COUNT); \
 		++STATUS_EFFECT_COUNT; \
-		register_status_effect(id,type,clr,shortname,name); \
+		register_status_effect(id,type,thestat,clr,shortname,name); \
 	} \
 	ACCUMULATE_FUNCTION(RegisterStatusEffects, RegisterStatusEffects_##id)
-#define STATUS_EFFECT(id,type,clr,shortname,name) \
-	STATUS_EFFECT_2(STATUS_EFFECT_##id,type,clr,shortname,name)
+#define STATUS_EFFECT(id,type,thestat,clr,shortname,name) \
+	STATUS_EFFECT_2(STATUS_EFFECT_##id,type,thestat,clr,shortname,name)
 
 #include "status_effects.qc"
 
@@ -53,7 +52,7 @@ ACCUMULATE_FUNCTION(RegisterStatusEffects, register_status_effects_done);
 
 #ifdef SVQC
 
-#define StatusEffect(ent,id) ent.(StatusEffects_GetStat(id))
+#define StatusEffect(ent,id) ent.(StatusEffectInfo(id).effect_stat)
 #define StatusEffectDamage(ent,id) ent.status_effect_damage[id]
 
 #define StatusEffect_Timed(ent,id) (time < StatusEffect(ent,id) && time >= ent.status_effects_delay)
@@ -61,10 +60,10 @@ ACCUMULATE_FUNCTION(RegisterStatusEffects, register_status_effects_done);
 void ResetStatusEffects(entity ent);
 void StatusEffects_AddStats();
 
-#endif
+#endif // SVQC
 
 #ifdef CSQC
 
 #define StatusEffect(id) getstatf(StatusEffect_Stat(id))
 
-#endif
+#endif // CSQC

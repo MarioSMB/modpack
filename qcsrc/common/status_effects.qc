@@ -1,18 +1,18 @@
 #ifdef STATUS_EFFECT
-STATUS_EFFECT(BURNING,STAT_TYPE_NEGATIVE,'1 0.1 0',"burning",_("Burning"));
-STATUS_EFFECT(DROWNING,STAT_TYPE_NEGATIVE | STAT_TYPE_NOTIMER,'0 0.5 1',"drowning",_("Drowning"));
-STATUS_EFFECT(SPAWNSHIELD,STAT_TYPE_POSITIVE,'0.5 0.5 0.5',"spawnshield",_("Shielded"));
-STATUS_EFFECT(COLD,STAT_TYPE_NEGATIVE,'0 0.75 1',"cold",_("Cold"));
-STATUS_EFFECT(FROZEN,STAT_TYPE_NEGATIVE | STAT_TYPE_NOTIMER,'0 0.6 1',"frozen",_("Frozen"));
+STATUS_EFFECT(BURNING, STAT_TYPE_NEGATIVE, stat_effect_burning, '1 0.1 0', "burning", _("Burning"));
+STATUS_EFFECT(DROWNING, STAT_TYPE_NEGATIVE | STAT_TYPE_NOTIMER, stat_effect_drowning, '0 0.5 1', "drowning", _("Drowning"));
+STATUS_EFFECT(SPAWNSHIELD, STAT_TYPE_POSITIVE, stat_effect_spawnshield, '0.5 0.5 0.5', "spawnshield", _("Shielded"));
+STATUS_EFFECT(COLD, STAT_TYPE_NEGATIVE,stat_effect_cold, '0 0.75 1', "cold", _("Cold"));
+STATUS_EFFECT(FROZEN, STAT_TYPE_NEGATIVE | STAT_TYPE_NOTIMER, stat_effect_frozen, '0 0.6 1', "frozen", _("Frozen"));
 #else
 
 // unfortunately, these can't be dynamic
 // use stats 180-214
-const float STAT_STATUSEFFECT_BURNING = 180;
-const float STAT_STATUSEFFECT_DROWNING = 181;
-const float STAT_STATUSEFFECT_SPAWNSHIELD = 182;
-const float STAT_STATUSEFFECT_COLD = 183;
-const float STAT_STATUSEFFECT_FROZEN = 184;
+const float STAT_STATUS_EFFECT_BURNING = 180;
+const float STAT_STATUS_EFFECT_DROWNING = 181;
+const float STAT_STATUS_EFFECT_SPAWNSHIELD = 182;
+const float STAT_STATUS_EFFECT_COLD = 183;
+const float STAT_STATUS_EFFECT_FROZEN = 184;
 
 #ifdef SVQC
 
@@ -28,25 +28,15 @@ void ResetStatusEffects(entity ent)
 
 void StatusEffects_AddStats()
 {
-	addstat(STAT_STATUSEFFECT_BURNING, AS_FLOAT, stat_STATUS_EFFECT_BURNING);
-	addstat(STAT_STATUSEFFECT_DROWNING, AS_FLOAT, stat_STATUS_EFFECT_DROWNING);
-	addstat(STAT_STATUSEFFECT_SPAWNSHIELD, AS_FLOAT, stat_STATUS_EFFECT_SPAWNSHIELD);
-	addstat(STAT_STATUSEFFECT_COLD, AS_FLOAT, stat_STATUS_EFFECT_COLD);
-	addstat(STAT_STATUSEFFECT_FROZEN, AS_FLOAT, stat_STATUS_EFFECT_FROZEN);
-}
-
-.float StatusEffects_GetStat(float id)
-{
-	switch(id)
-	{
-		case STATUS_EFFECT_BURNING: return stat_STATUS_EFFECT_BURNING;
-		case STATUS_EFFECT_DROWNING: return stat_STATUS_EFFECT_DROWNING;
-		case STATUS_EFFECT_SPAWNSHIELD: return stat_STATUS_EFFECT_SPAWNSHIELD;
-		case STATUS_EFFECT_COLD: return stat_STATUS_EFFECT_COLD;
-		case STATUS_EFFECT_FROZEN: return stat_STATUS_EFFECT_FROZEN;
-	}
-	
-	return status_dummy;
+	/*float i;
+	for(i = STATUS_EFFECT_FIRST; i <= STATUS_EFFECT_LAST; ++i)
+		StatusEffects_AddStat(i, (StatusEffectInfo(i)).effect_stat); */
+		
+	addstat(STAT_STATUS_EFFECT_BURNING, AS_FLOAT, stat_effect_burning);
+	addstat(STAT_STATUS_EFFECT_DROWNING, AS_FLOAT, stat_effect_drowning);
+	addstat(STAT_STATUS_EFFECT_SPAWNSHIELD, AS_FLOAT, stat_effect_spawnshield);
+	addstat(STAT_STATUS_EFFECT_COLD, AS_FLOAT, stat_effect_cold);
+	addstat(STAT_STATUS_EFFECT_FROZEN, AS_FLOAT, stat_effect_frozen);
 }
 
 void ApplyStatusEffect(entity ent, float id, float dur, float dam)
@@ -61,17 +51,17 @@ float StatusEffect_Stat(float id)
 {
 	switch(id)
 	{
-		case STATUS_EFFECT_BURNING: return STAT_STATUSEFFECT_BURNING;
-		case STATUS_EFFECT_DROWNING: return STAT_STATUSEFFECT_DROWNING;
-		case STATUS_EFFECT_SPAWNSHIELD: return STAT_STATUSEFFECT_SPAWNSHIELD;
-		case STATUS_EFFECT_COLD: return STAT_STATUSEFFECT_COLD;
-		case STATUS_EFFECT_FROZEN: return STAT_STATUSEFFECT_FROZEN;
+		case STATUS_EFFECT_BURNING: return STAT_STATUS_EFFECT_BURNING;
+		case STATUS_EFFECT_DROWNING: return STAT_STATUS_EFFECT_DROWNING;
+		case STATUS_EFFECT_SPAWNSHIELD: return STAT_STATUS_EFFECT_SPAWNSHIELD;
+		case STATUS_EFFECT_COLD: return STAT_STATUS_EFFECT_COLD;
+		case STATUS_EFFECT_FROZEN: return STAT_STATUS_EFFECT_FROZEN;
 	}
 	
 	return 0;
 }
 
-void register_status_effect(float id, float type, vector clr, string shortname, string name)
+void register_status_effect(float id, float type, .float thestat, vector clr, string shortname, string name)
 {
 	entity e;
 	status_effect_info[id - 1] = e = spawn();
@@ -80,6 +70,7 @@ void register_status_effect(float id, float type, vector clr, string shortname, 
 	e.message = name;
 	e.spawnflags = type;
 	e.colormod = clr;
+	e.effect_stat = thestat;
 }
 void register_status_effects_done()
 {
