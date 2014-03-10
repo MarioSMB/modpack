@@ -137,6 +137,8 @@ float bot_shouldattack(entity e)
 		return FALSE;
 	if(e.flags & FL_NOTARGET)
 		return FALSE;
+	if(e.alpha <= 0.5)
+		return FALSE; // invisible
 
 	checkentity = e;
 	if(MUTATOR_CALLHOOK(BotShouldAttack))
