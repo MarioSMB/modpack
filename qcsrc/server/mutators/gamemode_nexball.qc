@@ -1012,6 +1012,8 @@ MUTATOR_DEFINITION(gamemode_nexball)
 			g_nexball_meter_period = 2; // avoid division by zero etc. due to silly users
 		g_nexball_meter_period = rint(g_nexball_meter_period * 32) / 32; //Round to 1/32ths to send as a byte multiplied by 32
 		addstat(STAT_NB_METERSTART, AS_FLOAT, metertime);
+		
+		w_porto(WR_PRECACHE); // abuse
 
 		// General settings
 		/*
