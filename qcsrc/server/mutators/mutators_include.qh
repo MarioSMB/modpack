@@ -15,6 +15,7 @@
 #include "gamemode_jailbreak.qh"
 #include "gamemode_cts.qh"
 #include "gamemode_race.qh"
+#include "gamemode_onslaught.qh"
 
 #include "mutator_dodging.qh"
 #include "mutator_overkill.qh"

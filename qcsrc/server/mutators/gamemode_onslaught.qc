@@ -1019,6 +1019,9 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 			ons_throwgib(self.origin, (2 * randomvec() - '1 1 1') * 75, "models/onslaught/controlpoint_icon_gib4.md3", 3, FALSE);
 			ons_throwgib(self.origin, (2 * randomvec() - '1 1 1') * 75, "models/onslaught/controlpoint_icon_gib4.md3", 3, FALSE);
 		}
+		
+		PlayerScore_Add(attacker, SP_ONS_TAKES, 1);
+		
 		self.owner.goalentity = world;
 		self.owner.islinked = FALSE;
 		self.owner.iscaptured = FALSE;
@@ -1208,11 +1211,16 @@ void onslaught_controlpoint_icon_buildthink()
 		self.count = autocvar_g_onslaught_cp_regen * sys_frametime; // slow repair rate from now on
 		self.think = onslaught_controlpoint_icon_think;
 		sound(self, CH_TRIGGER, "onslaught/controlpoint_built.wav", VOL_BASE, ATTEN_NORM);
-		bprint(Team_ColoredFullName(self.team), " captured ", self.owner.message, " control point\n");
+		//bprint(Team_ColoredFullName(self.team), " captured ", self.owner.message, " control point\n");
 		self.owner.iscaptured = TRUE;
 
 		WaypointSprite_UpdateMaxHealth(self.owner.sprite, self.max_health);
 		WaypointSprite_UpdateHealth(self.owner.sprite, self.health);
+		
+		bprint(playername(self.owner.ons_toucher), " ^7captured ", self.owner.message, " control point\n");
+		PlayerTeamScore_Add(self.owner.ons_toucher, SP_ONS_CAPS, ST_ONS_CAPS, 1);
+		
+		self.owner.ons_toucher = world;
 
 		onslaught_updatelinks();
 
@@ -1236,8 +1244,6 @@ void onslaught_controlpoint_icon_buildthink()
 	if(random() < 0.9 - self.health / self.max_health)
 		pointparticles(particleeffectnum("rage"), self.origin + 10 * randomvec(), '0 0 -1', 1);
 }
-
-
 
 
 void onslaught_controlpoint_touch()
@@ -1274,6 +1280,7 @@ void onslaught_controlpoint_touch()
 	self.team = e.team;
 	self.colormap = e.colormap;
 	WaypointSprite_UpdateBuildFinished(self.sprite, time + (e.max_health - e.health) / (e.count / sys_frametime));
+	self.ons_toucher = other;
 	onslaught_updatelinks();
 }
 
@@ -1297,6 +1304,7 @@ void onslaught_controlpoint_reset()
 	self.enemy.colormap = self.colormap;
 	self.think = onslaught_controlpoint_think;
 	self.enemy.think = func_null;
+	self.ons_toucher = world;
 	self.nextthink = time; // don't like func_null :P
 	setmodel(self, "models/onslaught/controlpoint_pad.md3");
 	//setsize(self, '-32 -32 0', '32 32 8');
@@ -2052,14 +2060,38 @@ MUTATOR_HOOKFUNCTION(ons_GetTeamCount)
 	entity head = findchain(classname, "onslaught_generator");
 	while (head)
 	{
-		if (head.team == NUM_TEAM_1) c1 = 0;
-		if (head.team == NUM_TEAM_2) c2 = 0;
-		if (head.team == NUM_TEAM_3) c3 = 0;
-		if (head.team == NUM_TEAM_4) c4 = 0;
+		switch(head.team)
+		{
+			case NUM_TEAM_1: c1 = 0; break;
+			case NUM_TEAM_2: c2 = 0; break;
+			case NUM_TEAM_3: c3 = 0; break;
+			case NUM_TEAM_4: c4 = 0; break;
+		}
 		head = head.chain;
 	}
 
 	return TRUE;
+}
+
+// scoreboard setup
+void ons_ScoreRules()
+{
+	CheckAllowedTeams(world);
+	ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+	ScoreInfo_SetLabel_TeamScore  (ST_ONS_CAPS,     "caps",      SFL_SORT_PRIO_PRIMARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_ONS_CAPS,     "caps",      SFL_SORT_PRIO_SECONDARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_ONS_TAKES,	"takes",     0);
+	ScoreRules_basics_end();
+}
+
+void ons_DelayedInit() // Do this check with a delay so we can wait for teams to be set up
+{
+	ons_ScoreRules();
+}
+
+void ons_Initialize()
+{
+	InitializeEntity(world, ons_DelayedInit, INITPRIO_GAMETYPE);
 }
 
 MUTATOR_DEFINITION(gamemode_onslaught)
@@ -2076,6 +2108,14 @@ MUTATOR_DEFINITION(gamemode_onslaught)
 	{
 		if(time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
+		ons_Initialize();
+	}
+
+	MUTATOR_ONROLLBACK_OR_REMOVE
+	{
+		// we actually cannot roll back ons_Initialize here
+		// BUT: we don't need to! If this gets called, adding always
+		// succeeds.
 	}
 
 	MUTATOR_ONREMOVE

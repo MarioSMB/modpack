@@ -1,0 +1,12 @@
+// these are needed since mutators are compiled last
+
+#ifdef SVQC
+
+.entity ons_toucher; // player who touched the control point
+
+// score rule declarations
+#define ST_ONS_CAPS 1
+#define SP_ONS_CAPS 4
+#define SP_ONS_TAKES 6
+
+#endif

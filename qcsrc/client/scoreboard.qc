@@ -295,7 +295,7 @@ string HUD_DefaultColumnLayout()
 		strcat("ping pl ", ((sv_showfps && ex) ? "fps " : ""), "name | "),
 		"-teams,race,lms/kills +freezetag/kills -teams,lms/deaths +freezetag/deaths -teams,lms,race,ka/suicides +freezetag/suicides -race,dm,tdm,ka,freezetag/frags ", // tdm already has this in "score"
 		"+tdm/kills +tdm/deaths +tdm/suicides ",
-		((ex) ? "+ctf/deaths +ctf/suicides " : ""), "+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns ",
+		((ex) ? "+ctf/deaths +ctf/suicides " : ""), "+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns +ons/caps +ons/takes ",
 		"+lms/lives +lms/rank ",
 		((ex) ? "+kh/deaths +kh/suicides" : ""), "+kh/caps +kh/pickups +kh/kckills ",
 		"?+race/laps ?+race/time ?+race/fastest ",
