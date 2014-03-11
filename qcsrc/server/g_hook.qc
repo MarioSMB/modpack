@@ -439,8 +439,7 @@ void FireGrapplingHook (void)
 
 void GrapplingHookFrame()
 {
-	float forbid_weaponuse = forbidWeaponUse(self);
-	if(g_grappling_hook && timeout_status != TIMEOUT_ACTIVE && self.weapon != WEP_HOOK && !self.vehicle && (!forbid_weaponuse || forbid_weaponuse != 2))
+	if(g_grappling_hook && timeout_status != TIMEOUT_ACTIVE && self.weapon != WEP_HOOK && !self.vehicle)
 	{
 		// offhand hook controls
 		if(self.BUTTON_HOOK)
@@ -469,7 +468,7 @@ void GrapplingHookFrame()
 			//self.hook_state &= ~HOOK_RELEASING;
 		}
 	}
-	else if(!(self.items & IT_JETPACK) && !g_grappling_hook && self.switchweapon != WEP_HOOK && !self.vehicle && (!forbid_weaponuse || forbid_weaponuse != 2))
+	else if(!(self.items & IT_JETPACK) && !g_grappling_hook && self.switchweapon != WEP_HOOK && !self.vehicle)
 	{
 		if(self.BUTTON_HOOK && !self.hook_switchweapon)
 			W_SwitchWeapon(WEP_HOOK);
