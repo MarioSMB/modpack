@@ -15,7 +15,7 @@ void za_SpawnMonster()
 
 MUTATOR_HOOKFUNCTION(za_StartFrame)
 {
-	if(time < za_spawn_delay || autocvar_g_za_max_monsters <= 0 || !cvar("g_za"))
+	if(time < za_spawn_delay || autocvar_g_za_max_monsters <= 0 || !autocvar_g_za)
 		return FALSE;
 
 	float n_monsters = 0, maxmon = autocvar_g_za_max_monsters;
