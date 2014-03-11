@@ -869,18 +869,6 @@ MUTATOR_HOOKFUNCTION(nexball_BallDrop)
 	return 0;
 }
 
-MUTATOR_HOOKFUNCTION(nexball_BuildMutatorsString)
-{
-	ret_string = strcat(ret_string, ":NB");
-	return 0;
-}
-
-MUTATOR_HOOKFUNCTION(nexball_BuildMutatorsPrettyString)
-{
-	ret_string = strcat(ret_string, ", NexBall");
-	return 0;
-}
-
 MUTATOR_HOOKFUNCTION(nexball_PlayerPreThink)
 {
 	makevectors(self.v_angle);
@@ -1008,8 +996,6 @@ MUTATOR_DEFINITION(gamemode_nexball)
 	MUTATOR_HOOK(PlayerDies, nexball_BallDrop, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, nexball_BallDrop, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, nexball_BallDrop, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsPrettyString, nexball_BuildMutatorsPrettyString, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsString, nexball_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, nexball_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, nexball_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPhysics, nexball_PlayerPhysics, CBC_ORDER_ANY);

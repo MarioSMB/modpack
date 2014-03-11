@@ -1864,18 +1864,6 @@ void havocbot_ons_reset_role(entity bot)
 }
 
 // mutator hooks
-MUTATOR_HOOKFUNCTION(ons_BuildMutatorsString)
-{
-	ret_string = strcat(ret_string, ":ONS");
-	return 0;
-}
-
-MUTATOR_HOOKFUNCTION(ons_BuildMutatorsPrettyString)
-{
-	ret_string = strcat(ret_string, ", Onslaught");
-	return 0;
-}
-
 MUTATOR_HOOKFUNCTION(ons_Spawn_Score)
 {
 
@@ -2076,8 +2064,6 @@ MUTATOR_HOOKFUNCTION(ons_GetTeamCount)
 
 MUTATOR_DEFINITION(gamemode_onslaught)
 {
-	MUTATOR_HOOK(BuildMutatorsPrettyString, ons_BuildMutatorsPrettyString, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BuildMutatorsString, ons_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, ons_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterMove, ons_MonsterThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterSpawn, ons_MonsterSpawn, CBC_ORDER_ANY);
