@@ -1021,6 +1021,7 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 		}
 		
 		PlayerScore_Add(attacker, SP_ONS_TAKES, 1);
+		PlayerScore_Add(attacker, SP_SCORE, 10);
 		
 		self.owner.goalentity = world;
 		self.owner.islinked = FALSE;
@@ -1219,6 +1220,7 @@ void onslaught_controlpoint_icon_buildthink()
 		
 		bprint(playername(self.owner.ons_toucher), " ^7captured ", self.owner.message, " control point\n");
 		PlayerTeamScore_Add(self.owner.ons_toucher, SP_ONS_CAPS, ST_ONS_CAPS, 1);
+		PlayerTeamScore_AddScore(self.owner.ons_toucher, 10);
 		
 		self.owner.ons_toucher = world;
 
