@@ -152,18 +152,21 @@ MUTATOR_HOOKFUNCTION(race_ClientConnect)
 
 	string rr = RACE_RECORD;
 
-	msg_entity = self;
-	race_send_recordtime(MSG_ONE);
-	race_send_speedaward(MSG_ONE);
-
-	speedaward_alltimebest = stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/speed")));
-	speedaward_alltimebest_holder = uid2name(db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/crypto_idfp")));
-	race_send_speedaward_alltimebest(MSG_ONE);
-
-	float i;
-	for (i = 1; i <= RANKINGS_CNT; ++i)
+	if(IS_REAL_CLIENT(self))
 	{
-		race_SendRankings(i, 0, 0, MSG_ONE);
+		msg_entity = self;
+		race_send_recordtime(MSG_ONE);
+		race_send_speedaward(MSG_ONE);
+
+		speedaward_alltimebest = stof(db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/speed")));
+		speedaward_alltimebest_holder = uid2name(db_get(ServerProgsDB, strcat(GetMapname(), rr, "speed/crypto_idfp")));
+		race_send_speedaward_alltimebest(MSG_ONE);
+
+		float i;
+		for (i = 1; i <= RANKINGS_CNT; ++i)
+		{
+			race_SendRankings(i, 0, 0, MSG_ONE);
+		}
 	}
 
 	return FALSE;
