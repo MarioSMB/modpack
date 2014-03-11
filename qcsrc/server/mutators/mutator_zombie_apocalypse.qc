@@ -1,3 +1,5 @@
+float za_spawn_delay;
+
 void za_SpawnMonster()
 {
 	if(gameover) { return; }
@@ -11,38 +13,35 @@ void za_SpawnMonster()
 	e.nextthink = time + 0.1;
 }
 
-void za_SpawnerThink()
+MUTATOR_HOOKFUNCTION(za_StartFrame)
 {
-	float maxmon, n_monsters = 0;
+	if(time < za_spawn_delay || autocvar_g_za_max_monsters <= 0 || !cvar("g_za"))
+		return FALSE;
+
+	float n_monsters = 0, maxmon = autocvar_g_za_max_monsters;
 	entity head;
-	maxmon = autocvar_g_za_max_monsters;
 
 	// count dead monsters too (zombies)
 	FOR_EACH_MONSTER(head) ++n_monsters;
-
-	self.nextthink = time + autocvar_g_za_spawn_delay;
 
 	while(n_monsters < maxmon)
 	{
 		++n_monsters;
 		za_SpawnMonster();
 	}
-}
 
-void za_Initialize()
-{
-	entity e = spawn();
+	za_spawn_delay = time + autocvar_g_za_spawn_delay;
 
-	e.classname = "za_spawner";
-	e.think = za_SpawnerThink;
-	e.nextthink = time + game_starttime + autocvar_g_za_spawn_delay;
+	return FALSE;
 }
 
 MUTATOR_DEFINITION(mutator_zombie_apocalypse)
 {
+	MUTATOR_HOOK(SV_StartFrame, za_StartFrame, CBC_ORDER_ANY);
+
 	MUTATOR_ONADD
 	{
-		za_Initialize();
+		za_spawn_delay = time + game_starttime;
 	}
 
 	return FALSE;
