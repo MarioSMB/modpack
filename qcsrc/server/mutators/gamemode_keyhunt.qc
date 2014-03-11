@@ -1513,7 +1513,7 @@ MUTATOR_HOOKFUNCTION(kh_BotRoles)
 MUTATOR_HOOKFUNCTION(kh_GetTeamCount)
 {
 	ret_float = kh_teams;
-	return 0;
+	return FALSE;
 }
 
 

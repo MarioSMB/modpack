@@ -392,7 +392,7 @@ MUTATOR_HOOKFUNCTION(vip_OnEntityPreSpawn)
 MUTATOR_HOOKFUNCTION(vip_GetTeamCount)
 {
 	ret_float = vip_teams;
-	return 0;
+	return FALSE;
 }
 
 vector vip_SoulGemColormod(float theteam, float iseffect)

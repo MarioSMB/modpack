@@ -1243,7 +1243,7 @@ MUTATOR_HOOKFUNCTION(jb_GiveFrags)
 MUTATOR_HOOKFUNCTION(jb_GetTeamCount)
 {
 	ret_float = 2;
-	return TRUE;
+	return FALSE;
 }
 
 // spawn functions
@@ -1268,7 +1268,6 @@ JB_SPAWNFUNC(jailbreak_controlpoint_neutral, JB_SetupControlPoint, JB_TEAM_NEUTR
 // scores
 void ScoreRules_JB()
 {
-	CheckAllowedTeams(world);
 	ScoreRules_basics(2, SFL_SORT_PRIO_PRIMARY, 0, TRUE); // SFL_SORT_PRIO_PRIMARY
 	ScoreInfo_SetLabel_TeamScore(ST_JB_ROUNDS,			"rounds",		SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_JB_JBREAKS,		"jbs",		0);

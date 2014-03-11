@@ -509,7 +509,7 @@ MUTATOR_HOOKFUNCTION(freezetag_GetTeamCount)
 		freezetag_teams = autocvar_g_freezetag_teams;
 	freezetag_teams = bound(2, freezetag_teams, 4);
 	ret_float = freezetag_teams;
-	return 0;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(freezetag_CountFrags)
