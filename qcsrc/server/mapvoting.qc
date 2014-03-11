@@ -594,23 +594,37 @@ void MapVote_Think()
 
 float GameTypeVote_SetGametype(float type)
 {
-	
-	if ( MapInfo_CurrentGametype() == type )
+	if (MapInfo_CurrentGametype() == type)
 		return TRUE;
-	
+		
+	float tsave = MapInfo_CurrentGametype();
+
+	MapInfo_SwitchGameType(type);
+
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(type, MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
-	if ( MapInfo_count == 0 )
+	if(MapInfo_count > 0)
+	{
+		// update lsmaps in case the gametype changed, this way people can easily list maps for it
+		if(lsmaps_reply != "") { strunzone(lsmaps_reply); }
+		lsmaps_reply = strzone(getlsmaps());
+		bprint("Game type successfully switched to ", MapInfo_Type_ToString(type), "\n");
+	}
+	else
+	{
+		bprint("Cannot use this game type: no map for it found\n");
+		MapInfo_SwitchGameType(tsave);
+		MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 		return FALSE;
-	
-	localcmd("gametype ", MapInfo_Type_ToString(type), "\n");
-	
+	}
+
+	//localcmd("gametype ", MapInfo_Type_ToString(type), "\n");
+
 	cvar_set("g_maplist", MapInfo_ListAllowedMaps(type, MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags()) );
 	if(autocvar_g_maplist_shuffle)
 		ShuffleMaplist();
-	
+
 	return TRUE;
-		
 }
 
 float gametypevote_finished;
