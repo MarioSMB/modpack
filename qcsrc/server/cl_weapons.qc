@@ -360,14 +360,14 @@ float forbidWeaponUse(entity player)
 {
 	if(time < game_starttime && !autocvar_sv_ready_restart_after_countdown)
 		return 1;
-	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
-		return 2;
 	if(player.player_blocked)
 		return 3;
 	if(player.weapon_blocked)
 		return 4;
 	if(player.frozen)
 		return 5;
+	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
+		return 2;
 	return 0;
 }
 
