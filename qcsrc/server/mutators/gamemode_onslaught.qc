@@ -8,20 +8,6 @@ void onslaught_generator_updatesprite(entity e);
 void onslaught_controlpoint_updatesprite(entity e);
 void onslaught_link_checkupdate();
 
-.entity sprite;
-.string target2;
-.float iscaptured;
-.float islinked;
-.float isgenneighbor_red;
-.float isgenneighbor_blue;
-.float iscpneighbor_red;
-.float iscpneighbor_blue;
-.float isshielded;
-.float lasthealth;
-.float lastteam;
-.float lastshielded;
-.float lastcaptured;
-
 entity ons_red_generator;
 entity ons_blue_generator;
 
