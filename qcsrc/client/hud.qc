@@ -2817,13 +2817,14 @@ void HUD_Mod_VIP(vector pos, vector mySize)
 	float fs, fs2, fs3;
 	float f; // every function should have that
 
-	float redvip, bluevip, yellowvip, pinkvip; // current status
+	float redvip, bluevip, yellowvip, pinkvip, is_vip; // current status
 	float redvip_statuschange_elapsedtime, bluevip_statuschange_elapsedtime, yellowvip_statuschange_elapsedtime, pinkvip_statuschange_elapsedtime; // time since the status changed
 	
 	redvip = (getstatf(STAT_VIP_RED) != 0);
 	bluevip = (getstatf(STAT_VIP_BLUE) != 0);
 	yellowvip = (getstatf(STAT_VIP_YELLOW) != 0);
 	pinkvip = (getstatf(STAT_VIP_PINK) != 0);
+	is_vip = (getstati(STAT_VIP) != 0);
 	
 	if(redvip || bluevip || yellowvip || pinkvip)
 		mod_active = 1;
@@ -2930,30 +2931,24 @@ void HUD_Mod_VIP(vector pos, vector mySize)
 	string yellow_icon = "", yellow_icon_prevstatus = "";
 	string pink_icon = "", pink_icon_prevstatus = "";
 	
-	if(redvip)
-		red_icon = "player_red";
+	if(redvip) { red_icon = "player_red"; }
+	if(bluevip) { blue_icon = "player_blue"; }
+	if(yellowvip) { yellow_icon = "player_yellow"; }
+	if(pinkvip) { pink_icon = "player_pink"; }
 
-	if(bluevip)
-		blue_icon = "player_blue";
+	if(redvip_prevframe) { red_icon_prevstatus = "player_red"; }
+	if(bluevip_prevframe) { blue_icon_prevstatus = "player_blue"; }
+	if(yellowvip_prevframe) { yellow_icon_prevstatus = "player_yellow"; }
+	if(pinkvip_prevframe) { pink_icon_prevstatus = "player_pink"; }
 
-	if(yellowvip)
-		yellow_icon = "player_yellow";
-
-	if(pinkvip)
-		pink_icon = "player_pink";
-
-	if(redvip_prevframe)
-		red_icon_prevstatus = "player_red";
-
-	if(bluevip_prevframe)
-		blue_icon_prevstatus = "player_blue";
-
-	if(yellowvip_prevframe)
-		yellow_icon_prevstatus = "player_yellow";
-
-	if(pinkvip_prevframe)
-		pink_icon_prevstatus = "player_pink";
-
+	if(is_vip)
+	switch(myteam)
+	{
+		case NUM_TEAM_1: red_icon = "notify_balldropped"; break;
+		case NUM_TEAM_2: blue_icon = "notify_balldropped"; break;
+		case NUM_TEAM_3: yellow_icon = "notify_balldropped"; break;
+		case NUM_TEAM_4: pink_icon = "notify_balldropped"; break;
+	}
 
 	f = bound(0, redvip_statuschange_elapsedtime*2, 1);
 	if(red_icon_prevstatus && f < 1)

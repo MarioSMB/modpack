@@ -657,6 +657,7 @@ void vip_Initialize()
 	precache_model("models/runematch/rune.mdl");
 	precache_model("models/runematch/curse.mdl");
 
+	addstat(STAT_VIP, AS_INT, isvip);
 	addstat(STAT_VIP_RED, AS_FLOAT, stat_vip_red);
 	addstat(STAT_VIP_BLUE, AS_FLOAT, stat_vip_blue);
 	addstat(STAT_VIP_YELLOW, AS_FLOAT, stat_vip_yellow);
