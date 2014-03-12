@@ -1359,6 +1359,8 @@ void spawnfunc_onslaught_controlpoint()
 	self.iscaptured = FALSE;
 	self.islinked = FALSE;
 	self.isshielded = TRUE;
+	
+	if(self.message == "") { self.message = "a"; }
 
 	// spawn shield model which indicates whether this can be damaged
 	self.enemy = spawn();
