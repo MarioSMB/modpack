@@ -283,6 +283,7 @@ string spritelookuptext(string s)
 		case "race-finish": return _("Finish");
 		case "race-start": return _("Start");
 		case "race-start-finish": return (race_checkpointtime || race_mycheckpointtime) ? _("Finish") : _("Start");
+		case "goal": return _("Goal");
 		case "nb-ball": return _("Ball");
 		case "ka-ball": return _("Ball");
 		case "ka-ballcarrier": return _("Ball carrier");

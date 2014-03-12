@@ -571,12 +571,13 @@ void spawnfunc_nexball_football(void)
 
 void SpawnGoal(void)
 {
-	if(!g_nexball)
-	{
-		remove(self);
-		return;
-	}
+	if(!g_nexball) { remove(self); return; }
+
 	EXACTTRIGGER_INIT;
+
+	vector o = (self.absmin + self.absmax) * 0.5;
+	WaypointSprite_SpawnFixed("goal", o, self, sprite, RADARICON_NONE, '1 0.5 0');
+
 	self.classname = "nexball_goal";
 	if(self.noise == "")
 		self.noise = "ctf/respawn.wav";
