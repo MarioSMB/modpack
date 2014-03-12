@@ -1204,7 +1204,8 @@ void onslaught_controlpoint_icon_buildthink()
 		WaypointSprite_UpdateMaxHealth(self.owner.sprite, self.max_health);
 		WaypointSprite_UpdateHealth(self.owner.sprite, self.health);
 		
-		bprint(playername(self.owner.ons_toucher), " ^7captured ", self.owner.message, " control point\n");
+		//bprint(playername(self.owner.ons_toucher), " ^7captured ", self.owner.message, " control point\n");
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ONSLAUGHT_CAPTURE, self.owner.ons_toucher.netname, self.owner.message);
 		PlayerTeamScore_Add(self.owner.ons_toucher, SP_ONS_CAPS, ST_ONS_CAPS, 1);
 		PlayerTeamScore_AddScore(self.owner.ons_toucher, 10);
 		

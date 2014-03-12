@@ -485,6 +485,7 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_LMS_FORFEIT,                    1, 0, "s1", "",                          "",                     _("^BG%s^F3 forfeited"), "") \
 	MSG_INFO_NOTIF(1, INFO_LMS_NOLIVES,                    1, 0, "s1", "",                          "",                     _("^BG%s^F3 has no more lives left"), "") \
 	MSG_INFO_NOTIF(1, INFO_MONSTERS_DISABLED,              0, 0, "", "",                            "",                     _("^BGMonsters are currently disabled"), "") \
+	MSG_INFO_NOTIF(1, INFO_ONSLAUGHT_CAPTURE,              2, 0, "s1 s2", "",                       "",                     _("^BG%s^BG captured %s^BG control point"), "") \
 	MSG_INFO_NOTIF(1, INFO_POWERUP_INVISIBILITY,           1, 0, "s1", "s1",                        "strength",             _("^BG%s^K1 picked up Invisibility"), "") \
 	MSG_INFO_NOTIF(1, INFO_POWERUP_SHIELD,                 1, 0, "s1", "s1",                        "shield",               _("^BG%s^K1 picked up Shield"), "") \
 	MSG_INFO_NOTIF(1, INFO_POWERUP_SPEED,                  1, 0, "s1", "s1",                        "shield",               _("^BG%s^K1 picked up Speed"), "") \
