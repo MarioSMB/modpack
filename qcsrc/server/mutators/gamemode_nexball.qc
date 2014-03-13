@@ -774,7 +774,7 @@ void W_Nexball_Attack2(void)
 	missile.movetype = MOVETYPE_FLY;
 	PROJECTILE_MAKETRIGGER(missile);
 
-	setmodel(missile, "models/elaser.mdl");  // precision set below
+	//setmodel(missile, "models/elaser.mdl");  // precision set below
 	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, w_shotorg);
 
@@ -786,6 +786,8 @@ void W_Nexball_Attack2(void)
 
 	missile.effects = EF_BRIGHTFIELD | EF_LOWPRECISION;
 	missile.flags = FL_PROJECTILE;
+	
+	CSQCProjectile(missile, TRUE, PROJECTILE_ELECTRO, TRUE);
 }
 
 float ball_customize()
