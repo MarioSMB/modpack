@@ -575,11 +575,8 @@ void SpawnGoal(void)
 
 	EXACTTRIGGER_INIT;
 
-	if(self.team != GOAL_OUT)
-	{
-		vector o = (self.absmin + self.absmax) * 0.5;
-		WaypointSprite_SpawnFixed("goal", o, self, sprite, RADARICON_NONE, ((self.team) ? Team_ColorRGB(self.team) : '1 0.5 0'));
-	}
+	if(self.team != GOAL_OUT && Team_TeamToNumber(self.team) != -1)
+		WaypointSprite_SpawnFixed("goal", (self.absmin + self.absmax) * 0.5, self, sprite, RADARICON_NONE, ((self.team) ? Team_ColorRGB(self.team) : '1 0.5 0'));
 
 	self.classname = "nexball_goal";
 	if(self.noise == "")
