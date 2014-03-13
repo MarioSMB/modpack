@@ -582,6 +582,7 @@ MUTATOR_HOOKFUNCTION(assault_GetTeamCount)
 MUTATOR_HOOKFUNCTION(assault_PlayerThink)
 {
 	if(self.team == assault_attacker_team) { return FALSE; }
+	if(autocvar_g_assault_repair_amount <= 0) { return FALSE; }
 	if(time < self.assault_repair_delay) { return FALSE; }
 	if(gameover || self.frozen || self.deadflag != DEAD_NO || self.vehicle)
 		return FALSE;
