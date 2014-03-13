@@ -54,12 +54,12 @@ void assault_objective_decrease_use()
 	{
 		if(self.enemy.health - self.dmg > 0.5)
 		{
-			PlayerTeamScore_Add(activator, SP_SCORE, ST_SCORE, self.dmg);
+			PlayerScore_Add(activator, SP_SCORE, self.dmg);
 			self.enemy.health = self.enemy.health - self.dmg;
 		}
 		else
 		{
-			PlayerTeamScore_Add(activator, SP_SCORE, ST_SCORE, self.enemy.health);
+			PlayerScore_Add(activator, SP_SCORE, self.enemy.health);
 			PlayerTeamScore_Add(activator, SP_ASSAULT_OBJECTIVES, ST_ASSAULT_OBJECTIVES, 1);
 			self.enemy.health = -1;
 
@@ -578,12 +578,40 @@ MUTATOR_HOOKFUNCTION(assault_GetTeamCount)
 	return TRUE;
 }
 
+.float assault_repair_delay;
+MUTATOR_HOOKFUNCTION(assault_PlayerThink)
+{
+	if(self.team == assault_attacker_team) { return FALSE; }
+	if(time < self.assault_repair_delay) { return FALSE; }
+	if(gameover || self.frozen || self.deadflag != DEAD_NO || self.vehicle)
+		return FALSE;
+
+	float n_players = 0;
+	entity cp = findchain(classname, "func_assault_destructible"), head;
+	self.assault_repair_delay = time + 0.5;
+	
+	FOR_EACH_PLAYER(head) if(SAME_TEAM(head, self)) { ++n_players; }
+
+	for(; cp; cp = cp.chain)
+	if(vlen((cp.origin + 0.5 * (cp.absmin + cp.absmax)) - self.origin) < 300)
+	if(cp.health > 0)
+	if(cp.health < cp.max_health)
+	if(cp.target != "")
+	if(time - cp.pain_finished > 3)
+	{
+		cp.health += autocvar_g_assault_repair_amount / n_players;
+		if(cp.sprite) { WaypointSprite_UpdateHealth(cp.sprite, cp.health); }
+	}
+	return FALSE;
+}
+
 // scoreboard setup
 void assault_ScoreRules()
 {
-	ScoreRules_basics(2, SFL_SORT_PRIO_SECONDARY, SFL_SORT_PRIO_SECONDARY, TRUE);
-	ScoreInfo_SetLabel_TeamScore(  ST_ASSAULT_OBJECTIVES,    "objectives",      SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_ASSAULT_OBJECTIVES,    "objectives",      SFL_SORT_PRIO_PRIMARY);
+	ScoreRules_basics(2, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+	ScoreInfo_SetLabel_TeamScore(  ST_ASSAULT_DESTROYED,     "destroyed",       SFL_SORT_PRIO_PRIMARY);
+	ScoreInfo_SetLabel_TeamScore(  ST_ASSAULT_OBJECTIVES,    "objectives",      0);
+	ScoreInfo_SetLabel_PlayerScore(SP_ASSAULT_OBJECTIVES,    "objectives",      0);
 	ScoreRules_basics_end();
 }
 
@@ -600,6 +628,7 @@ MUTATOR_DEFINITION(gamemode_assault)
 	MUTATOR_HOOK(VehicleSpawn, assault_VehicleSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRole, assault_BotRoles, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, assault_GetTeamCount, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerPreThink, assault_PlayerThink, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

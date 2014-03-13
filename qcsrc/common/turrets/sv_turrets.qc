@@ -1246,7 +1246,7 @@ float turret_initialize(float tur_id)
 	self.cvar_basename = tur.cvar_basename;
 	load_unit_settings(self, self.cvar_basename, 0);
 	
-	if(!(self.team || teamplay))	{ self.team = MAX_SHOT_DISTANCE; }
+	if(!self.team || !teamplay)		{ self.team = MAX_SHOT_DISTANCE; }
 	if(!self.ticrate)				{ self.ticrate = ((self.turret_flags & TUR_FLAG_SUPPORT) ? 0.2 : 0.1); }
 	if(!self.health)				{ self.health = 1000; }
 	if(!self.shot_refire)			{ self.shot_refire = 1; }

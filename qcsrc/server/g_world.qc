@@ -1745,11 +1745,13 @@ float WinningCondition_Assault()
 		{
 			bprint("ASSAULT: round completed...\n");
 			SetWinners(team, assault_attacker_team);
+			
+			TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_DESTROYED, 1);
 
 			// why...
 			//TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 666 - TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_OBJECTIVES, 0));
 
-			if(ent.cnt == 1 || autocvar_g_campaign) // this was the second round
+			if(ent.cnt >= autocvar_g_assault_round_limit || autocvar_g_campaign) // this was the second round
 			{
 				status = WINNING_YES;
 			}

@@ -200,6 +200,7 @@ void func_breakable_damage(entity inflictor, entity attacker, float damage, floa
 	if(self.team)
 		if(attacker.team == self.team)
 			return;
+	self.pain_finished = time;
 	self.health = self.health - damage;
 	if(self.sprite)
 	{

@@ -23,7 +23,8 @@ void(float ratingscale, vector org, float sradius) havocbot_goalrating_items;
 void(float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplayers;
 
 // scoreboard stuff
-#define ST_ASSAULT_OBJECTIVES 1
+#define ST_ASSAULT_DESTROYED 1
+#define ST_ASSAULT_OBJECTIVES -1
 #define SP_ASSAULT_OBJECTIVES 4
 
 // predefined spawnfuncs
