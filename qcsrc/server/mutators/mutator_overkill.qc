@@ -137,7 +137,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 	float weaponuse_forbidden = forbidWeaponUse(self);
 
 	if(self.BUTTON_ATCK2)
-	if(!weaponuse_forbidden || weaponuse_forbidden == 4) // allow if weapon is blocked
+	if(!weaponuse_forbidden || (weaponuse_forbidden == 4 || weaponuse_forbidden == 2)) // allow if weapon is blocked
 	if(time >= self.jump_interval)
 	{
 		self.jump_interval = time + autocvar_g_balance_laser_primary_refire * W_WeaponRateFactor();
