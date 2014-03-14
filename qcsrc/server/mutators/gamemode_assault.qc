@@ -142,6 +142,7 @@ void target_objective_decrease_activate()
 			WaypointSprite_UpdateMaxHealth(spr, ent.max_health);
 			WaypointSprite_UpdateHealth(spr, ent.health);
 			ent.sprite = spr;
+			ent.colormod = '2 2 2';
 		}
 		else
 			WaypointSprite_UpdateSprites(spr, "as-defend", "as-push", "as-push");

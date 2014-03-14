@@ -56,6 +56,7 @@ MUTATOR_HOOKFUNCTION(lms_PlayerDies)
 MUTATOR_HOOKFUNCTION(lms_RemovePlayer)
 {
 	// Only if the player cannot play at all
+	if(!self.alivetime) { return FALSE; }
 	if(PlayerScore_Add(self, SP_LMS_RANK, 0) == 666)
 		self.frags = FRAGS_SPECTATOR;
 	else
@@ -72,7 +73,11 @@ MUTATOR_HOOKFUNCTION(lms_RemovePlayer)
 
 MUTATOR_HOOKFUNCTION(lms_ClientConnect)
 {
-	//self.classname = "player"; // don't force everyone to play
+	if(autocvar_g_lms_join_anytime)
+		self.frags = FRAGS_SPECTATOR;
+	else
+		self.classname = "player";
+
 	campaign_bots_may_start = 1;
 
 	if(PlayerScore_Add(self, SP_LMS_LIVES, LMS_NewPlayerLives()) <= 0)
@@ -142,7 +147,6 @@ MUTATOR_HOOKFUNCTION(lms_SetStartItems)
 
 MUTATOR_HOOKFUNCTION(lms_KeepScore)
 {
-	// don't clear player score
 	return TRUE;
 }
 
