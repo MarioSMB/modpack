@@ -14,7 +14,7 @@ MUTATOR_HOOKFUNCTION(rvehicles_OnEntityPreSpawn)
 		RandomSelection_Init();
 		for(i = VEH_FIRST; i <= VEH_LAST; ++i)
 		{
-			tracebox(self.origin, (get_vehicleinfo(i)).mins, (get_vehicleinfo(i)).mins, self.origin, MOVE_NORMAL, self);
+			tracebox(self.origin, (get_vehicleinfo(i)).mins * 1.2, (get_vehicleinfo(i)).maxs * 1.2, self.origin, MOVE_NORMAL, self);
 			if(trace_fraction == 1.0 && !trace_startsolid)
 				RandomSelection_Add(world, i, string_null, 1, 1);
 		}

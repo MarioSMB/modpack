@@ -182,7 +182,7 @@ float tankll48_frame()
 			if(self.sound_nexttime < time || self.delay != 3)
 			{
 				self.delay = 3;
-				self.sound_nexttime = time + 6.486500; //soundlength("vehicles/tankll48_idle.wav");
+				self.sound_nexttime = time + 6.009; //soundlength("vehicles/tankll48_idle.wav");
 				//dprint("tankll48_idle:", ftos(soundlength("vehicles/tankll48_idle.wav")), "\n");
 				sound (self, CH_TRIGGER_SINGLE, "machines/generator_loop_pitchdown.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
 			}
@@ -219,7 +219,7 @@ float tankll48_frame()
 				if(self.sound_nexttime < time || self.delay != 1)
 				{
 					self.delay = 1;
-					self.sound_nexttime = time + 6.486500; //soundlength("vehicles/tankll48_walk.wav");
+					self.sound_nexttime = time + 3.991; //soundlength("vehicles/tankll48_walk.wav");
 					sound (self, CH_TRIGGER_SINGLE, "machines/generator_loop_speedup_pitchdown.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
 					//dprint("tankll48_walk:", ftos(soundlength("vehicles/tankll48_walk.wav")), "\n");
 				}
@@ -241,7 +241,7 @@ float tankll48_frame()
 				if(self.sound_nexttime < time || self.delay != 2)
 				{
 					self.delay = 2;
-					self.sound_nexttime = time + 6.486500; //soundlength("vehicles/tankll48_strafe.wav");
+					self.sound_nexttime = time + 3.991; //soundlength("vehicles/tankll48_strafe.wav");
 					sound (self, CH_TRIGGER_SINGLE, "machines/generator_loop_speedup_pitchdown.wav", VOL_VEHICLEENGINE, ATTEN_NORM);
 					//dprint("tankll48_strafe:", ftos(soundlength("vehicles/tankll48_strafe.wav")), "\n");
 				}
