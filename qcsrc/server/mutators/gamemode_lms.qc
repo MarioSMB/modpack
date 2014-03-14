@@ -56,8 +56,7 @@ MUTATOR_HOOKFUNCTION(lms_PlayerDies)
 MUTATOR_HOOKFUNCTION(lms_RemovePlayer)
 {
 	// Only if the player cannot play at all
-	if(!self.alivetime) { return FALSE; }
-	if(PlayerScore_Add(self, SP_LMS_RANK, 0) == 666)
+	if(PlayerScore_Add(self, SP_LMS_RANK, 0) == 666 || PlayerScore_Add(self, SP_LMS_LIVES, 0) > 0)
 		self.frags = FRAGS_SPECTATOR;
 	else
 		self.frags = FRAGS_LMS_LOSER;
