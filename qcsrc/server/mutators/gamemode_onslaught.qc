@@ -20,6 +20,8 @@ void ons_CaptureShield_Touch()
 	vector othermid = (other.absmin + other.absmax) * 0.5;
 
 	Damage(other, self, self, 0, DEATH_HURTTRIGGER, mymid, normalize(othermid - mymid) * ons_captureshield_force);
+
+	play2(other, "onslaught/damageblockedbyshield.wav");
 	
 	if(self.enemy.classname == "onslaught_generator")
 		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_GENERATOR_SHIELDED);
@@ -308,7 +310,7 @@ float onslaught_controlpoint_attackable(entity cp, float t)
 		// if there's already an icon built, nothing happens
 		if(cp.team == t)
 		{
-			a = onslaught_controlpoint_can_be_linked(cp, NUM_TEAM_1 + NUM_TEAM_2 - t);
+			a = onslaught_controlpoint_can_be_linked(cp, t);
 			if(a) // attackable by enemy?
 				return -2; // EMERGENCY!
 			return -1;
@@ -325,7 +327,7 @@ float onslaught_controlpoint_attackable(entity cp, float t)
 		// free point
 		if(onslaught_controlpoint_can_be_linked(cp, t))
 		{
-			a = onslaught_controlpoint_can_be_linked(cp, NUM_TEAM_1 + NUM_TEAM_2 - t);
+			a = onslaught_controlpoint_can_be_linked(cp, t); // why was this here NUM_TEAM_1 + NUM_TEAM_2 - t
 			if(a == 2)
 				return 4; // GET THIS ONE NOW!
 			else
@@ -378,11 +380,13 @@ void onslaught_generator_think()
             self.wait = time + 5;
             FOR_EACH_REALPLAYER(e)
             {
-		if(SAME_TEAM(e, self))
-                {
-					Send_Notification(NOTIF_ONE, e, MSG_CENTER, CENTER_ONS_NOTSHIELDED);
-                    soundto(MSG_ONE, e, CHAN_AUTO, "kh/alarm.wav", VOL_BASE, ATTEN_NONE);    // FIXME: Uniqe sound?
+				if(SAME_TEAM(e, self))
+				{
+					Send_Notification(NOTIF_ONE, e, MSG_CENTER, CENTER_ONS_NOTSHIELDED_TEAM);
+                    soundto(MSG_ONE, e, CHAN_AUTO, "kh/alarm.wav", VOL_BASE, ATTEN_NONE);    // FIXME: unique sound?
                 }
+				else
+					Send_Notification(NOTIF_ONE, e, MSG_CENTER, APP_TEAM_NUM_4(self.team, CENTER_ONS_NOTSHIELDED_));
             }
         }
 	}
@@ -566,10 +570,10 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 	else if (!warmup_stage)
 	{
 		if (attacker == self)
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_2(self.team, INFO_ONSLAUGHT_GENDESTROYED_OVERTIME_));
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(self.team, INFO_ONSLAUGHT_GENDESTROYED_OVERTIME_));
 		else
 		{
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_2(self.team, INFO_ONSLAUGHT_GENDESTROYED_));
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(self.team, INFO_ONSLAUGHT_GENDESTROYED_));
 			PlayerScore_Add(attacker, SP_SCORE, 100);
 		}
 		self.iscaptured = FALSE;
@@ -631,16 +635,7 @@ void onslaught_generator_delayed()
 
 string onslaught_generator_waypointsprite_for_team(entity e, float t)
 {
-	if(t == e.team)
-	{
-		switch(e.team)
-		{
-			case NUM_TEAM_1: return "ons-gen-red";
-			case NUM_TEAM_2: return "ons-gen-blue";
-			case NUM_TEAM_3: return "ons-gen-yellow";
-			case NUM_TEAM_4: return "ons-gen-pink";
-		}
-	}
+	if(t != e.team)
 	if(e.isshielded)
 		return "ons-gen-shielded";
 	switch(e.team)
@@ -667,14 +662,14 @@ void onslaught_generator_updatesprite(entity e)
 		e.lastshielded = e.isshielded;
 		if(e.lastshielded)
 		{
-			if(e.team == NUM_TEAM_1 || e.team == NUM_TEAM_2)
+			if(e.team == NUM_TEAM_1 || e.team == NUM_TEAM_2 || e.team == NUM_TEAM_3 || e.team == NUM_TEAM_4)
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, 0.5 * colormapPaletteColor(e.team - 1, FALSE));
 			else
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, '0.5 0.5 0.5');
 		}
 		else
 		{
-			if(e.team == NUM_TEAM_1 || e.team == NUM_TEAM_2)
+			if(e.team == NUM_TEAM_1 || e.team == NUM_TEAM_2 || e.team == NUM_TEAM_3 || e.team == NUM_TEAM_4)
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, colormapPaletteColor(e.team - 1, FALSE));
 			else
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, '0.75 0.75 0.75');
@@ -924,7 +919,7 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 		sound(self, CH_TRIGGER, "weapons/grenade_impact.wav", VOL_BASE, ATTEN_NORM);
 		pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
 		{
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_2(self.team, INFO_ONSLAUGHT_CPDESTROYED_), self.owner.message, attacker.netname);
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(self.team, INFO_ONSLAUGHT_CPDESTROYED_), self.owner.message, attacker.netname);
 			ons_throwgib(self.origin, (2 * randomvec() - '1 1 1') * 25, "models/onslaught/controlpoint_icon_gib1.md3", 3, FALSE);
 			ons_throwgib(self.origin, (2 * randomvec() - '1 1 1') * 45, "models/onslaught/controlpoint_icon_gib2.md3", 3, FALSE);
 			ons_throwgib(self.origin, (2 * randomvec() - '1 1 1') * 45, "models/onslaught/controlpoint_icon_gib2.md3", 3, FALSE);
@@ -1075,7 +1070,7 @@ void onslaught_controlpoint_icon_buildthink()
 		WaypointSprite_UpdateHealth(self.owner.sprite, self.health);
 
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ONSLAUGHT_CAPTURE, self.owner.ons_toucher.netname, self.owner.message);
-		Send_Notification(NOTIF_ALL_EXCEPT, self.owner.ons_toucher, MSG_CENTER, APP_TEAM_ENT_2(self.owner.ons_toucher, CENTER_ONS_CAPTURE_), self.owner.message);
+		Send_Notification(NOTIF_ALL_EXCEPT, self.owner.ons_toucher, MSG_CENTER, APP_TEAM_ENT_4(self.owner.ons_toucher, CENTER_ONS_CAPTURE_), self.owner.message);
 		Send_Notification(NOTIF_ONE, self.owner.ons_toucher, MSG_CENTER, CENTER_ONS_CAPTURE, self.owner.message);
 		PlayerTeamScore_Add(self.owner.ons_toucher, SP_ONS_CAPS, ST_ONS_CAPS, 1);
 		PlayerTeamScore_AddScore(self.owner.ons_toucher, 10);

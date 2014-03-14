@@ -352,6 +352,9 @@ MUTATOR_HOOKFUNCTION(minstagib_FilterItem)
 		setorigin(e, self.origin);
 		oldself = self;
 		self = e;
+		self.noalign = oldself.noalign;
+		self.cnt = oldself.cnt;
+		self.team = oldself.team;
 		spawnfunc_item_minst_cells();
 		self = oldself;
 		return TRUE;

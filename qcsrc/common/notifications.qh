@@ -486,9 +486,9 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_LMS_NOLIVES,                    1, 0, "s1", "",                          "",                     _("^BG%s^F3 has no more lives left"), "") \
 	MSG_INFO_NOTIF(1, INFO_MONSTERS_DISABLED,              0, 0, "", "",                            "",                     _("^BGMonsters are currently disabled"), "") \
 	MSG_INFO_NOTIF(1, INFO_ONSLAUGHT_CAPTURE,              2, 0, "s1 s2", "",                       "",                     _("^BG%s^BG captured %s^BG control point"), "") \
-	MULTITEAM_INFO(1, INFO_ONSLAUGHT_CPDESTROYED_, 2,      2, 0, "s1 s2", "",                       "",                     _("^TC^TT^BG team %s^BG control point has been destroyed by %s"), "") \
-	MULTITEAM_INFO(1, INFO_ONSLAUGHT_GENDESTROYED_, 2,     0, 0, "", "",                            "",                     _("^TC^TT^BG generator has been destroyed"), "") \
-	MULTITEAM_INFO(1, INFO_ONSLAUGHT_GENDESTROYED_OVERTIME_, 2,  0, 0, "", "",                      "",                     _("^TC^TT^BG generator spontaneously combusted due to overtime!"), "") \
+	MULTITEAM_INFO(1, INFO_ONSLAUGHT_CPDESTROYED_, 4,      2, 0, "s1 s2", "",                       "",                     _("^TC^TT^BG team %s^BG control point has been destroyed by %s"), "") \
+	MULTITEAM_INFO(1, INFO_ONSLAUGHT_GENDESTROYED_, 4,     0, 0, "", "",                            "",                     _("^TC^TT^BG generator has been destroyed"), "") \
+	MULTITEAM_INFO(1, INFO_ONSLAUGHT_GENDESTROYED_OVERTIME_, 4,  0, 0, "", "",                      "",                     _("^TC^TT^BG generator spontaneously combusted due to overtime!"), "") \
 	MSG_INFO_NOTIF(1, INFO_POWERUP_INVISIBILITY,           1, 0, "s1", "s1",                        "strength",             _("^BG%s^K1 picked up Invisibility"), "") \
 	MSG_INFO_NOTIF(1, INFO_POWERUP_SHIELD,                 1, 0, "s1", "s1",                        "shield",               _("^BG%s^K1 picked up Shield"), "") \
 	MSG_INFO_NOTIF(1, INFO_POWERUP_SPEED,                  1, 0, "s1", "s1",                        "shield",               _("^BG%s^K1 picked up Speed"), "") \
@@ -734,10 +734,11 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_NIX_NEWWEAPON,               0, 1, "item_wepname",  CPID_NIX,              "0 0", _("^F2Active weapon: ^F1%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_NADE,            			0, 0, "",              NO_CPID,		          "0 0", _("^BGPress ^F2DROPWEAPON^BG again to toss the grenade!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ONS_CAPTURE,                 1, 0, "s1",            CPID_ONSLAUGHT,        "0 0", _("^BGYou captured %s^BG control point"), "") \
-	MULTITEAM_CENTER(1, CENTER_ONS_CAPTURE_, 2,             1, 0, "s1",            CPID_ONSLAUGHT,        "0 0", _("^TC^TT^BG team captured %s^BG control point"), "") \
+	MULTITEAM_CENTER(1, CENTER_ONS_CAPTURE_, 4,             1, 0, "s1",            CPID_ONSLAUGHT,        "0 0", _("^TC^TT^BG team captured %s^BG control point"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ONS_CONTROLPOINT_SHIELDED,   0, 0, "",              CPID_ONS_CAPSHIELD,    "0 0", _("^BGThis control point currently cannot be captured"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ONS_GENERATOR_SHIELDED,      0, 0, "",              CPID_ONS_CAPSHIELD,    "0 0", _("^BGThe enemy generator cannot be destroyed yet\n^F2Capture some control points to unshield it"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_ONS_NOTSHIELDED,             0, 0, "",              CPID_ONSLAUGHT,        "0 0", _("^K1Your generator is NOT shielded!\n^BGRe-capture control points to shield it!"), "") \
+	MULTITEAM_CENTER(1, CENTER_ONS_NOTSHIELDED_, 4,         0, 0, "",              CPID_ONSLAUGHT,        "0 0", _("^BGThe ^TCenemy^BG generator is no longer shielded!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_ONS_NOTSHIELDED_TEAM,        0, 0, "",              CPID_ONSLAUGHT,        "0 0", _("^K1Your generator is NOT shielded!\n^BGRe-capture control points to shield it!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_OVERKILL_CHARGE,             0, 0, "",              CPID_OVERKILL,         "0 0", _("^BGYour weapon's charge is too low, release the attack button & wait for it to charge"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_FRAG,               0, 0, "",              CPID_OVERTIME,         "0 0", _("^F2Now playing ^F4OVERTIME^F2!\nKeep fragging until we have a winner!"), _("^F2Now playing ^F4OVERTIME^F2!\nKeep scoring until we have a winner!")) \
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_CONTROLPOINT,       0, 0, "",              CPID_OVERTIME,         "3 0", _("^F2Now playing ^F4OVERTIME^F2!\n\nGenerators start now to decay.\nThe more control points your team holds,\nthe faster the enemy generator decays"), "") \
