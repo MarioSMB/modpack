@@ -54,6 +54,7 @@ bgmscript.qh
 noise.qh
 ../server/movelib.qc
 generator.qh
+controlpoint.qh
 main.qh
 ../common/vehicles/vehicles_include.qh
 ../common/csqcmodel_settings.qh
@@ -132,6 +133,7 @@ command/cl_cmd.qc
 ../warpzonelib/client.qc
 
 generator.qc
+controlpoint.qc
 
 player_skeleton.qc
 ../common/animdecide.qc

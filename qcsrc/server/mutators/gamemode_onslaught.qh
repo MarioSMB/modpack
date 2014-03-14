@@ -4,6 +4,9 @@
 
 .entity ons_toucher; // player who touched the control point
 
+// control point / generator constants
+#define CP_THINKRATE 0.2
+
 // definitions
 .entity sprite;
 .string target2;
@@ -18,6 +21,22 @@
 .float lastteam;
 .float lastshielded;
 .float lastcaptured;
+
+entity ons_generator[17];
+.float isgenneighbor[17];
+.float iscpneighbor[17];
+float ons_notification_time[17];
+
+.vector ons_deathloc;
+
+// declarations for functions used outside gamemode_onslaught.qc
+void onslaught_generator_updatesprite(entity e);
+void onslaught_controlpoint_updatesprite(entity e);
+void onslaught_link_checkupdate();
+float onslaught_controlpoint_attackable(entity cp, float t);
+
+// CaptureShield: Prevent capturing or destroying control point/generator if it is not available yet
+float ons_captureshield_force; // push force of the shield
 
 // score rule declarations
 #define ST_ONS_CAPS 1

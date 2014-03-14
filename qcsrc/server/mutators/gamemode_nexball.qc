@@ -481,11 +481,7 @@ void nb_delayedinit(void)
 
 void SpawnBall(void)
 {
-	if(!g_nexball)
-	{
-		remove(self);
-		return;
-	}
+	if(!g_nexball) { remove(self); return; }
 
 //	balls += 4; // using the remaining bits to count balls will leave more than the max edict count, so it's fine
 

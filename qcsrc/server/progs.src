@@ -49,6 +49,7 @@ defs.qh		// Should rename this, it has fields and globals
 mutators/mutators_include.qh
 
 generator.qh
+controlpoint.qh
 
 teamplay.qh
 
@@ -206,6 +207,7 @@ spawnpoints.qc
 portals.qc
 
 generator.qc
+controlpoint.qc
 
 target_spawn.qc
 func_breakable.qc
