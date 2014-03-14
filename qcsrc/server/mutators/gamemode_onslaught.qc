@@ -1100,13 +1100,19 @@ void onslaught_controlpoint_icon_buildthink()
 		pointparticles(particleeffectnum("rage"), self.origin + 10 * randomvec(), '0 0 -1', 1);
 }
 
-
 void onslaught_controlpoint_touch()
 {
-	entity e;
+	entity e, toucher = other;
 	float a;
-	if (!IS_PLAYER(other))
+	
+	if(IS_VEHICLE(toucher) && toucher.owner)
+	if(autocvar_g_onslaught_allow_vehicle_touch)
+		toucher = toucher.owner;
+	else
 		return;
+		
+	if(!IS_PLAYER(toucher)) { return; }
+		
 	a = onslaught_controlpoint_attackable(self, other.team);
 	if(a != 2 && a != 4)
 		return;
