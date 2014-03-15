@@ -45,7 +45,10 @@ MUTATOR_HOOKFUNCTION(lms_PlayerPreSpawn)
 	// player is dead and becomes observer
 	// FIXME fix LMS scoring for new system
 	if(PlayerScore_Add(self, SP_LMS_RANK, 0) > 0)
+	{
 		self.classname = "observer";
+		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_LMS_NOLIVES);
+	}
 
 	return FALSE;
 }

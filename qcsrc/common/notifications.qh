@@ -723,6 +723,7 @@ void Send_Notification_WOCOVA(
 	MULTITEAM_CENTER(1, CENTER_KEYHUNT_START_, 4,           0, 0, "",              CPID_KEYHUNT,          "0 0", _("^BGYou are starting with the ^TC^TT Key"), "") \
     MULTITEAM_CENTER(1, CENTER_KEYHUNT_START_TEAM_, 4,      1, 0, "s1",            CPID_KEYHUNT_LOWPRIO,  "0 0", _("^BGYour %steam mate^BG is starting with the ^TC^TT^BG key!\nProtect them!"), "") \
     MULTITEAM_CENTER(1, CENTER_KEYHUNT_START_TEAM_VERBOSE_, 4, 2, 0, "s1 s2 s1",   CPID_KEYHUNT_LOWPRIO,  "0 0", _("^BGYour %steam mate (^BG%s%s)^BG is starting with the ^TC^TT^BG key!\nProtect them!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_LMS_NOLIVES,                 0, 0, "",              CPID_LMS,              "0 0", _("^BGYou have no lives left, you must wait until the next match"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MISSING_TEAMS,               0, 4, "missing_teams", CPID_MISSING_TEAMS,    "-1 0", _("^BGWaiting for players to join...\nNeed active players for: %s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MISSING_PLAYERS,             0, 1, "f1",            CPID_MISSING_PLAYERS,  "-1 0", _("^BGWaiting for %s player(s) to join..."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_MINSTA_DOWNGRADE,            0, 0, "",              CPID_MINSTA_FINDAMMO,  "5 0", _("^BGYour weapon has been downgraded until you find some ammo!"), "") \
