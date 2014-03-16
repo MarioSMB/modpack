@@ -1027,6 +1027,7 @@ float autocvar_g_projectiles_spread_style;
 float autocvar_g_race_qualifying_timelimit;
 float autocvar_g_race_qualifying_timelimit_override;
 float autocvar_g_race_teams;
+var float autocvar_g_race_team_spawns = 1;
 var float autocvar_g_respawn_delay_small = 2;
 float autocvar_g_respawn_delay_small_count;
 var float autocvar_g_respawn_delay_large = 2;

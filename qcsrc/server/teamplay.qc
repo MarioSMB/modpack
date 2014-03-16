@@ -164,7 +164,8 @@ void InitGameplayMode()
 		{
 			ActivateTeamplay();
 			race_teams = bound(2, autocvar_g_race_teams, 4);
-			have_team_spawns = -1; // request team spawns
+			if(autocvar_g_race_team_spawns)
+				have_team_spawns = -1; // request team spawns
 		}
 		else
 			race_teams = 0;
