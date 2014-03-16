@@ -1,6 +1,3 @@
-void race_send_recordtime(float msg);
-void race_SendRankings(float pos, float prevpos, float del, float msg);
-
 void send_CSQC_teamnagger() {
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
@@ -141,6 +138,9 @@ void PutObserverInServer (void)
 {
 	entity spot;
     self.hud = HUD_NORMAL;
+	
+	if(autocvar_g_observer_glowtrails)
+		CSQCModel_UnlinkEntity();
 
 	spot = SelectSpawnPoint (TRUE);
 	if(!spot)
@@ -244,7 +244,7 @@ void PutObserverInServer (void)
 	self.model = "";
 	FixPlayermodel();
 	setmodel(self, "null");
-	self.drawonlytoclient = self;
+	if(!autocvar_g_observer_glowtrails) { self.drawonlytoclient = self; }
 
 	setsize (self, PL_CROUCH_MIN, PL_CROUCH_MAX); // give the spectator some space between walls for MOVETYPE_FLY_WORLDONLY
 	self.view_ofs = '0 0 0'; // so that your view doesn't go into the ceiling with MOVETYPE_FLY_WORLDONLY, previously "PL_VIEW_OFS"
@@ -262,6 +262,14 @@ void PutObserverInServer (void)
 	self.punchvector = '0 0 0';
 	self.oldvelocity = self.velocity;
 	self.fire_endtime = -1;
+	
+	if(autocvar_g_observer_glowtrails)
+	{
+		//self.glow_color = 254;
+		self.glow_color = ((self.team == NUM_TEAM_1) ? 251 : ((self.team == NUM_TEAM_2) ? 210 : ((self.team == NUM_TEAM_3) ? 110 : ((self.team == NUM_TEAM_4) ? 145 : 254))));
+		self.glow_size = 25;
+		self.glow_trail = 1;
+	}
 }
 
 .float model_randomizer;
@@ -459,6 +467,9 @@ void PutClientInServer (void)
 		}
 
 		RemoveGrapplingHook(self); // Wazat's Grappling Hook
+		
+		if(autocvar_g_observer_glowtrails)
+			CSQCMODEL_AUTOINIT();
 
 		self.classname = "player";
 		self.wasplayer = TRUE;
@@ -483,6 +494,9 @@ void PutClientInServer (void)
 		self.effects |= EF_TELEPORT_BIT | EF_RESTARTANIM_BIT;
 		self.air_finished = time + 12;
 		self.dmg = 2;
+		self.glow_trail = 0;
+		self.glow_color = 0;
+		self.glow_size = 0;
 		if(autocvar_g_balance_nex_charge)
 		{
 			if(autocvar_g_balance_nex_secondary_chargepool)
@@ -1414,7 +1428,7 @@ void ChatBubbleThink()
 		remove(self);
 		return;
 	}
-	if ((self.owner.BUTTON_CHAT && !self.owner.deadflag)
+	if ((self.owner.BUTTON_CHAT && !self.owner.deadflag && IS_PLAYER(self.owner))
 #ifdef TETRIS
 		|| self.owner.tetris_on
 #endif
@@ -1979,6 +1993,11 @@ float SpectateNext()
 
 	if (other)
 	{
+		if(autocvar_g_observer_glowtrails)
+			CSQCMODEL_AUTOINIT(); // reinitialize csqc models, so we see animations properly
+		self.glow_trail = 0;
+		self.glow_color = 0;
+		self.glow_size = 0;
 		self.enemy = other;
 		UpdateSpectators(world, world);
 	}
