@@ -64,6 +64,7 @@ string MapVote_Suggest(string m)
 	if(!autocvar_g_maplist_votable_suggestions)
 		return "Suggestions are not accepted on this server.";
 	if(mapvote_initialized)
+	if(!gametypevote)
 		return "Can't suggest - voting is already in progress!";
 	m = GameTypeVote_MapInfo_FixName(m);
 	if (!m)

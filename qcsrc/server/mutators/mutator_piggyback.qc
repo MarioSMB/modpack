@@ -1,3 +1,5 @@
+.float cvar_cl_nocarry;
+
 entity pb_TailOf(entity p)
 {
 	while(p.piggybacker)
@@ -112,6 +114,7 @@ MUTATOR_HOOKFUNCTION(pb_PlayerUseKey)
 			if(IS_PLAYER(head))
 			if(SAME_TEAM(head, self) || autocvar_g_piggyback_ride_enemies)
 			if(head != self)
+			if(!head.cvar_cl_nocarry)
 			if(head.deadflag == DEAD_NO)
 			if(!head.vehicle)
 			if(!head.frozen)
@@ -195,6 +198,12 @@ MUTATOR_HOOKFUNCTION(pb_ItemTouch)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(pb_GetCvars)
+{
+	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_nocarry, "cl_nocarry");
+	return FALSE;
+}
+
 MUTATOR_DEFINITION(mutator_piggyback)
 {
 	MUTATOR_HOOK(MatchEnd, pb_MatchEnd, CBC_ORDER_ANY);
@@ -205,6 +214,7 @@ MUTATOR_DEFINITION(mutator_piggyback)
 	MUTATOR_HOOK(ClientDisconnect, pb_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, pb_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ItemTouch, pb_ItemTouch, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GetCvars, pb_GetCvars, CBC_ORDER_ANY);
 
 	return FALSE;
 }
