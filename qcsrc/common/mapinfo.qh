@@ -92,6 +92,7 @@ REGISTER_GAMETYPE(_("Jailbreak"),jb,g_jailbreak,JAILBREAK,"timelimit=20 pointlim
 const float MAPINFO_FEATURE_WEAPONS       = 1; // not defined for minstagib-only maps
 const float MAPINFO_FEATURE_VEHICLES      = 2;
 const float MAPINFO_FEATURE_TURRETS       = 4;
+const float MAPINFO_FEATURE_MONSTERS      = 8;
 
 const float MAPINFO_FLAG_HIDDEN           = 1; // not in lsmaps/menu/vcall/etc., can just be changed to manually
 const float MAPINFO_FLAG_FORBIDDEN        = 2; // don't even allow the map by a cvar setting that allows hidden maps
