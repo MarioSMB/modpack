@@ -966,6 +966,7 @@ float autocvar_g_maxpushtime;
 float autocvar_g_maxspeed;
 float autocvar_g_midair_shieldtime;
 #define autocvar_g_minstagib cvar("g_minstagib")
+float autocvar_g_minstagib_use_normal_cells;
 float autocvar_g_minstagib_ammo_drop;
 float autocvar_g_minstagib_extralives;
 float autocvar_g_minstagib_speed_highspeed;

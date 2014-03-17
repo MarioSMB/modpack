@@ -339,6 +339,10 @@ MUTATOR_HOOKFUNCTION(minstagib_SetStartItems)
 
 MUTATOR_HOOKFUNCTION(minstagib_FilterItem)
 {
+	if(self.classname == "item_cells")
+	if(!autocvar_g_minstagib_use_normal_cells)
+		return TRUE;
+
 	if(self.weapon == WEP_MINSTANEX && self.classname == "droppedweapon")
 	{
 		self.ammo_cells = autocvar_g_minstagib_ammo_drop;
