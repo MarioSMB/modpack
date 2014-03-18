@@ -49,10 +49,10 @@ float monster_isvalidtarget (entity targ, entity ent)
 	if(targ == ent)
 		return FALSE; // don't attack ourselves
 
-	traceline(ent.origin, targ.origin, MOVE_NORMAL, ent);
+	//traceline(ent.origin, targ.origin, MOVE_NORMAL, ent);
 
-	if(trace_ent != targ)
-		return FALSE;
+	//if(trace_ent != targ)
+		//return FALSE;
 
 	if(IS_VEHICLE(targ))
 	if(!((get_monsterinfo(ent.monsterid)).spawnflags & MON_FLAG_RANGED))
@@ -60,9 +60,6 @@ float monster_isvalidtarget (entity targ, entity ent)
 
 	if(time < game_starttime)
 		return FALSE; // monsters do nothing before the match has started
-
-	if(vlen(targ.origin - ent.origin) >= ent.target_range)
-		return FALSE; // enemy is too far away
 
 	if(targ.takedamage == DAMAGE_NO)
 		return FALSE; // enemy can't be damaged
@@ -121,6 +118,7 @@ entity FindTarget (entity ent)
 
 	entity head, closest_target = world;
 	head = findradius(ent.origin, ent.target_range);
+	//head = WarpZone_FindRadius(ent.origin, ent.target_range, TRUE);
 
 	while(head) // find the closest acceptable target to pass to
 	{
@@ -129,12 +127,16 @@ entity FindTarget (entity ent)
 		{
 			// if it's a player, use the view origin as reference (stolen from RadiusDamage functions in g_damage.qc)
 			vector head_center = CENTER_OR_VIEWOFS(head);
+			//vector head_center = WarpZone_UnTransformOrigin(head, CENTER_OR_VIEWOFS(head));
 			vector ent_center = CENTER_OR_VIEWOFS(ent);
+			
+			traceline(ent_center, head_center, MOVE_NORMAL, ent);
 
-			//if(ctf_CheckPassDirection(head_center, ent_center, ent.v_angle, head.WarpZone_findradius_nearest))
+			if(trace_ent == head)
 			if(closest_target)
 			{
 				vector closest_target_center = CENTER_OR_VIEWOFS(closest_target);
+				//vector closest_target_center = WarpZone_UnTransformOrigin(closest_target, CENTER_OR_VIEWOFS(closest_target));
 				if(vlen(ent_center - head_center) < vlen(ent_center - closest_target_center))
 					{ closest_target = head; }
 			}
@@ -475,10 +477,38 @@ vector monster_pickmovetarget(entity targ)
 	// enemy is always preferred target
 	if(self.enemy)
 	{
-		makevectors(self.angles);
+		vector targ_origin = ((self.enemy.absmin + self.enemy.absmax) * 0.5);
+		targ_origin = WarpZone_RefSys_TransformOrigin(self.enemy, self, targ_origin); // origin of target as seen by the monster (us)
+		WarpZone_TraceLine(self.origin, targ_origin, MOVE_NOMONSTERS, self);
+		
+		if((self.enemy == world)
+			|| (self.enemy.deadflag != DEAD_NO || self.enemy.health < 1)
+			|| (self.enemy.frozen)
+			|| (self.enemy.jb_isprisoned)
+			|| (self.enemy.flags & FL_NOTARGET)
+			|| (self.enemy.alpha < 0.5)
+			|| (self.enemy.takedamage == DAMAGE_NO)
+			|| (vlen(self.origin - targ_origin) > self.target_range)
+			|| ((trace_fraction < 1) && (trace_ent != self.enemy)))
+			//|| (time > self.ctf_droptime + autocvar_g_ctf_pass_timelimit)) // TODO: chase timelimit?
+		{
+			self.enemy = world;
+			self.pass_distance = 0;
+		}
+		
+		if(self.enemy)
+		{
+			/*WarpZone_TrailParticles(world, particleeffectnum("red_pass"), self.origin, targ_origin);
+			print("Trace origin: ", vtos(targ_origin), "\n");
+			print("Target origin: ", vtos(self.enemy.origin), "\n");
+			print("My origin: ", vtos(self.origin), "\n"); */
+			return targ_origin;
+		}
+	
+		/*makevectors(self.angles);
 		self.monster_movestate = MONSTER_MOVE_ENEMY;
 		self.last_trace = time + 1.2;
-		return self.enemy.origin;
+		return self.enemy.origin; */
 	}
 
 	switch(self.monster_moveflags)
@@ -531,9 +561,42 @@ vector monster_pickmovetarget(entity targ)
 	}
 }
 
+void monster_CalculateVelocity(entity mon, vector to, vector from, float turnrate, float movespeed)
+{
+	float current_distance = vlen((('1 0 0' * to_x) + ('0 1 0' * to_y)) - (('1 0 0' * from_x) + ('0 1 0' * from_y))); // for the sake of this check, exclude Z axis
+	float initial_height = 0; //min(50, (targ_distance * tanh(20)));
+	float current_height = (initial_height * min(1, (current_distance / self.pass_distance)));
+	//print("current_height = ", ftos(current_height), ", initial_height = ", ftos(initial_height), ".\n");
+
+	vector targpos;
+	if(current_height) // make sure we can actually do this arcing path
+	{
+		targpos = (to + ('0 0 1' * current_height));
+		WarpZone_TraceLine(mon.origin, targpos, MOVE_NOMONSTERS, mon);
+		if(trace_fraction < 1)
+		{
+			//print("normal arc line failed, trying to find new pos...");
+			WarpZone_TraceLine(to, targpos, MOVE_NOMONSTERS, mon);
+			targpos = (trace_endpos + '0 0 -10');
+			WarpZone_TraceLine(mon.origin, targpos, MOVE_NOMONSTERS, mon);
+			if(trace_fraction < 1) { targpos = to; /* print(" ^1FAILURE^7, reverting to original direction.\n"); */ }
+			/*else { print(" ^3SUCCESS^7, using new arc line.\n"); } */
+		}
+	}
+	else { targpos = to; }
+
+	//mon.angles = normalize(('0 1 0' * to_y) - ('0 1 0' * from_y));
+
+	vector desired_direction = normalize(targpos - from);
+	if(turnrate) { mon.velocity = (normalize(normalize(mon.velocity) + (desired_direction * 50)) * movespeed); }
+	else { mon.velocity = (desired_direction * movespeed); }
+	
+	mon.angles = vectoangles(mon.velocity);
+}
+
 void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_run, float manim_walk, float manim_idle)
 {
-	fixedmakevectors(self.angles);
+	//fixedmakevectors(self.angles);
 
 	if(self.target2)
 		self.goalentity = find(world, targetname, self.target2);
@@ -655,22 +718,23 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(DIFF_TEAM(self.monster_owner, self))
 		self.monster_owner = world;
 
-	if(self.enemy && self.enemy.health < 1)
-		self.enemy = world; // enough!
-
 	if(time >= self.last_enemycheck)
 	{
-		if(!monster_isvalidtarget(self.enemy, self))
-			self.enemy = world;
-
 		if(!self.enemy)
 		{
 			self.enemy = FindTarget(self);
 			if(self.enemy)
+			{
+				WarpZone_RefSys_Copy(self.enemy, self);
+				WarpZone_RefSys_AddInverse(self.enemy, self); // wz1^-1 ... wzn^-1 receiver
+				self.moveto = WarpZone_RefSys_TransformOrigin(self.enemy, self, (0.5 * (self.enemy.absmin + self.enemy.absmax)));
+				
+				self.pass_distance = vlen((('1 0 0' * self.enemy.origin_x) + ('0 1 0' * self.enemy.origin_y)) - (('1 0 0' *  self.origin_x) + ('0 1 0' *  self.origin_y)));
 				MonsterSound(monstersound_sight, 0, FALSE, CH_VOICE);
+			}
 		}
 
-		self.last_enemycheck = time + 0.5;
+		self.last_enemycheck = time + 1; // check for enemies every second
 	}
 
 	if(self.state == MONSTER_STATE_ATTACK_MELEE && time >= self.attack_finished_single)
@@ -683,30 +747,10 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(!self.enemy)
 		MonsterSound(monstersound_idle, 7, TRUE, CH_VOICE);
 
-	if(self.state != MONSTER_STATE_ATTACK_LEAP && self.state != MONSTER_STATE_ATTACK_MELEE)
-		self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
-
 	if(self.state == MONSTER_STATE_ATTACK_LEAP && (self.flags & FL_ONGROUND))
 	{
 		self.state = 0;
 		self.touch = MonsterTouch;
-	}
-
-	//self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
-
-	float turny = 0;
-	vector real_angle = vectoangles(self.steerto) - self.angles;
-
-	if(self.state != MONSTER_STATE_ATTACK_LEAP && self.state != MONSTER_STATE_ATTACK_MELEE)
-		turny = 20;
-
-	if(self.flags & FL_SWIM)
-		turny = vlen(self.angles - self.moveto);
-
-	if(turny)
-	{
-		turny = bound(turny * -1, shortangle_f(real_angle_y, self.angles_y), turny);
-		self.angles_y += turny;
 	}
 
 	if(self.state == MONSTER_STATE_ATTACK_MELEE)
@@ -715,17 +759,20 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(self.enemy && self.enemy.vehicle)
 		runspeed = 0;
 
-	if(((self.flags & FL_FLY) || (self.flags & FL_SWIM)) && self.spawnflags & MONSTERFLAG_FLY_VERTICAL)
+	if(((self.flags & FL_FLY) || (self.flags & FL_SWIM)) && (self.spawnflags & MONSTERFLAG_FLY_VERTICAL))
 		v_forward = normalize(self.moveto - self.origin);
 	else
 		self.moveto_z = self.origin_z;
 
 	if(vlen(self.origin - self.moveto) > 64)
 	{
-		if(self.flags & FL_FLY || self.flags & FL_SWIM)
+		if((self.flags & FL_ONGROUND) || ((self.flags & FL_FLY) || (self.flags & FL_SWIM)))
+			monster_CalculateVelocity(self, self.moveto, self.origin, TRUE, ((self.enemy) ? runspeed : walkspeed));
+		
+		/*&if(self.flags & FL_FLY || self.flags & FL_SWIM)
 			movelib_move_simple(v_forward, ((self.enemy) ? runspeed : walkspeed), 0.6);
 		else
-			movelib_move_simple_gravity(v_forward, ((self.enemy) ? runspeed : walkspeed), 0.6);
+			movelib_move_simple_gravity(v_forward, ((self.enemy) ? runspeed : walkspeed), 0.6); */
 
 		if(time > self.pain_finished)
 		if(time > self.attack_finished_single)
@@ -1113,6 +1160,7 @@ float monster_initialize(float mon_id)
 	self.candrop			= TRUE;
 	self.view_ofs			= '0 0 1' * (self.maxs_z * 0.5);
 	self.oldtarget2			= self.target2;
+	self.pass_distance		= 0;
 	self.deadflag			= DEAD_NO;
 	self.scale				= 1;
 	self.noalign			= (mon.spawnflags & MONSTER_TYPE_FLY);
