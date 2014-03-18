@@ -44,6 +44,7 @@ MUTATOR_HOOKFUNCTION(msnt_Spawn_Score)
 MUTATOR_HOOKFUNCTION(msnt_PlayerSpawn)
 {
 	if(autocvar_g_spawn_near_teammate_ignore_spawnpoint || self.cvar_cl_spawn_near_teammate)
+	if(!self.jb_isprisoned)
 	{
 		if(autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death)
 			self.msnt_timer = time + autocvar_g_spawn_near_teammate_ignore_spawnpoint_delay_death;
@@ -57,6 +58,7 @@ MUTATOR_HOOKFUNCTION(msnt_PlayerSpawn)
 			if(team_mate.deadflag == DEAD_NO)
 			if(team_mate.msnt_timer < time)
 			if(SAME_TEAM(self, team_mate))
+			if(team_mate.jb_isprisoned == 0)
 			if(time > team_mate.spawnshieldtime) // spawn shielding
 			if(team_mate.frozen == 0)
 			if(team_mate != self)
