@@ -56,11 +56,9 @@ void ImpulseCommands (void)
 
 	if(self.vehicle)
 	if(self.vehicle.deadflag == DEAD_NO)
-	{
-		if(self.vehicle.vehicles_impulse)
-			self.vehicle.vehicles_impulse(imp);
+	if(self.vehicle.vehicles_impulse)
+	if(self.vehicle.vehicles_impulse(imp))
 		return;
-	}
 
 	if(CheatImpulse(imp))
 	{
@@ -75,7 +73,7 @@ void ImpulseCommands (void)
 	}
 	else if(imp >= 10 && imp <= 20)
 	{
-		if(self.deadflag == DEAD_NO)
+		if(self.deadflag == DEAD_NO && !self.vehicle)
 		{
 			switch(imp)
 			{
@@ -123,6 +121,7 @@ void ImpulseCommands (void)
 	}
 	else if(imp >= 200 && imp <= 229)
 	{
+		if(!self.vehicle)
 		if(self.deadflag == DEAD_NO)
 		{
 			// custom order weapon cycling
@@ -135,6 +134,7 @@ void ImpulseCommands (void)
 	}
 	else if(imp >= 230 && imp <= 253)
 	{
+		if(!self.vehicle)
 		if(self.deadflag == DEAD_NO)
 			W_SwitchWeapon (imp - 230 + WEP_FIRST);
 		else
