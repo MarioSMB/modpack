@@ -55,6 +55,11 @@ void pb_Detach(entity host)
 		slave.velocity = '0 0 0';
 		slave.solid = slave.oldsolid;
 		
+		tracebox(host.origin, slave.mins, slave.maxs, slave.origin, MOVE_NOMONSTERS, slave);
+		
+		if(trace_fraction < 1)
+			setorigin(slave, trace_endpos); // fix player glitching out of the world
+		
 		Kill_Notification(NOTIF_ONE, slave, MSG_CENTER_CPID, CPID_PIGGYBACK);
 		Kill_Notification(NOTIF_ONE, host, MSG_CENTER_CPID, CPID_PIGGYBACK);
 	}
