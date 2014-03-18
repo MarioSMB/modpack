@@ -274,6 +274,8 @@ void UpdateMonsterSounds()
 
 void MonsterSound(.string samplefield, float sound_delay, float delaytoo, float chan)
 {
+	if(!autocvar_g_monsters_sounds) { return; }
+
 	if(delaytoo)
 	if(time < self.msound_delay)
 		return; // too early

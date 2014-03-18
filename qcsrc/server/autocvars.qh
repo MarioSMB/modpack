@@ -1336,6 +1336,7 @@ float autocvar_g_rm_hook_breakable_owner;
 float autocvar_g_rm_hook_damage_health;
 float autocvar_g_monsters;
 float autocvar_g_monsters_edit;
+float autocvar_g_monsters_sounds;
 float autocvar_g_monsters_think_delay;
 float autocvar_g_monsters_max;
 float autocvar_g_monsters_max_perplayer;
