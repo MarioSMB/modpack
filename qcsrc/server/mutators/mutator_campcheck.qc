@@ -24,6 +24,7 @@ MUTATOR_HOOKFUNCTION(campcheck_PlayerDamage)
 MUTATOR_HOOKFUNCTION(campcheck_PlayerThink)
 {
 	if(IS_PLAYER(self))
+	if(IS_REAL_CLIENT(self)) // bots may camp, but that's no reason to constantly kill them
 	if(self.deadflag == DEAD_NO)
 	if(!self.frozen)
 	if(!self.jb_isprisoned)
