@@ -493,6 +493,16 @@ vector monster_pickmovetarget(entity targ)
 			//|| (time > self.ctf_droptime + autocvar_g_ctf_pass_timelimit)) // TODO: chase timelimit?
 		{
 			self.enemy = world;
+			if(self.monster_owner)
+			{
+				WarpZone_RefSys_Copy(self.monster_owner, self);
+				WarpZone_RefSys_AddInverse(self.monster_owner, self); // wz1^-1 ... wzn^-1 receiver
+			}
+			else if(targ)
+			{
+				WarpZone_RefSys_Copy(targ, self);
+				WarpZone_RefSys_AddInverse(targ, self); // wz1^-1 ... wzn^-1 receiver
+			}
 			self.pass_distance = 0;
 		}
 		
@@ -502,6 +512,8 @@ vector monster_pickmovetarget(entity targ)
 			print("Trace origin: ", vtos(targ_origin), "\n");
 			print("Target origin: ", vtos(self.enemy.origin), "\n");
 			print("My origin: ", vtos(self.origin), "\n"); */
+			self.monster_movestate = MONSTER_MOVE_ENEMY;
+			self.last_trace = time + 1.2;
 			return targ_origin;
 		}
 	
@@ -515,9 +527,27 @@ vector monster_pickmovetarget(entity targ)
 	{
 		case MONSTER_MOVE_OWNER:
 		{
+			vector targ_origin = ((self.monster_owner.absmin + self.monster_owner.absmax) * 0.5);
+			targ_origin = WarpZone_RefSys_TransformOrigin(self.monster_owner, self, targ_origin); // origin of target as seen by the monster (us)
+			WarpZone_TraceLine(self.origin, targ_origin, MOVE_NOMONSTERS, self);
+			
+			if((self.monster_owner == world)
+				|| (self.monster_owner.deadflag != DEAD_NO || self.monster_owner.health < 1)
+				|| (self.monster_owner.frozen)
+				|| (self.monster_owner.jb_isprisoned)
+				|| (self.monster_owner.flags & FL_NOTARGET)
+				|| (self.monster_owner.alpha < 0.5)
+				|| (self.monster_owner.takedamage == DAMAGE_NO)
+				|| (vlen(self.origin - targ_origin) > self.target_range)
+				|| ((trace_fraction < 1) && (trace_ent != self.monster_owner)))
+				//|| (time > self.ctf_droptime + autocvar_g_ctf_pass_timelimit)) // TODO: chase timelimit?
+			{
+				return self.origin;
+			}
+			
 			self.monster_movestate = MONSTER_MOVE_OWNER;
 			self.last_trace = time + 0.3;
-			return (self.monster_owner) ? self.monster_owner.origin : self.origin;
+			return targ_origin;
 		}
 		case MONSTER_MOVE_SPAWNLOC:
 		{
@@ -552,8 +582,27 @@ vector monster_pickmovetarget(entity targ)
 
 			if(targ)
 			{
-				self.last_trace = time + 0.5;
-				pos = targ.origin;
+				WarpZone_RefSys_Copy(targ, self);
+				WarpZone_RefSys_AddInverse(targ, self); // wz1^-1 ... wzn^-1 receiver
+
+				vector targ_origin = ((targ.absmin + targ.absmax) * 0.5);
+				targ_origin = WarpZone_RefSys_TransformOrigin(targ, self, targ_origin); // origin of target as seen by the monster (us)
+				WarpZone_TraceLine(self.origin, targ_origin, MOVE_NOMONSTERS, self);
+				
+				if(!((targ == world)
+					|| (targ.deadflag != DEAD_NO || targ.health < 1)
+					|| (targ.frozen)
+					|| (targ.jb_isprisoned)
+					|| (targ.flags & FL_NOTARGET)
+					|| (targ.alpha < 0.5)
+					|| (targ.takedamage == DAMAGE_NO)
+					|| (vlen(self.origin - targ_origin) > self.target_range)
+					|| ((trace_fraction < 1) && (trace_ent != targ))))
+					//|| (time > self.ctf_droptime + autocvar_g_ctf_pass_timelimit)) // TODO: chase timelimit?
+				{
+					self.last_trace = time + 0.5;
+					pos = targ_origin;
+				}
 			}
 
 			return pos;
@@ -1104,6 +1153,12 @@ float monster_spawn()
 
 	self.think = monster_think;
 	self.nextthink = time + self.ticrate;
+	
+	if(self.monster_owner)
+	{
+		WarpZone_RefSys_Copy(self.monster_owner, self);
+		WarpZone_RefSys_AddInverse(self.monster_owner, self); // wz1^-1 ... wzn^-1 receiver
+	}
 
 	if(MUTATOR_CALLHOOK(MonsterSpawn))
 		return FALSE;
