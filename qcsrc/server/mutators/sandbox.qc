@@ -503,6 +503,11 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 					print_to(self, strcat("^1SANDBOX - WARNING: ^7Flood protection active. Please wait ^3", ftos(self.object_flood - time), " ^7seconds beofore spawning another object"));
 					return TRUE;
 				}
+				if(IS_SPEC(self) || IS_OBSERVER(self))
+				{
+					print_to(self, "^1SANDBOX - WARNING: ^7Cannot spawn objects while spectating");
+					return TRUE;
+				}
 				self.object_flood = time + autocvar_g_sandbox_editor_flood;
 				if(object_count >= autocvar_g_sandbox_editor_maxobjects)
 				{
