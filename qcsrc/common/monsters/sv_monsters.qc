@@ -539,24 +539,27 @@ vector monster_pickmovetarget(entity targ)
 		{
 			vector pos;
 			self.monster_movestate = MONSTER_MOVE_WANDER;
-			self.last_trace = time + self.wander_delay;
-
-			self.angles_y = rint(random() * 500);
-			makevectors(self.angles);
-			pos = self.origin + v_forward * self.wander_distance;
-
-			if(self.flags & FL_FLY || self.flags & FL_SWIM)
-			if(self.spawnflags & MONSTERFLAG_FLY_VERTICAL)
-			{
-				pos_z = random() * 200;
-				if(random() >= 0.5)
-					pos_z *= -1;
-			}
-
+			
 			if(targ)
 			{
 				self.last_trace = time + 0.5;
 				pos = targ.origin;
+			}
+			else
+			{
+				self.last_trace = time + self.wander_delay;
+
+				self.angles_y = rint(random() * 500);
+				makevectors(self.angles);
+				pos = self.origin + v_forward * self.wander_distance;
+
+				if((self.flags & FL_FLY) || (self.flags & FL_SWIM))
+				if(self.spawnflags & MONSTERFLAG_FLY_VERTICAL)
+				{
+					pos_z = random() * 200;
+					if(random() >= 0.5)
+						pos_z *= -1;
+				}
 			}
 
 			return pos;
