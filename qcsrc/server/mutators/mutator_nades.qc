@@ -362,6 +362,7 @@ void nade_spawn_boom()
 	spawnloc.solid = SOLID_NOT;
 	spawnloc.drawonlytoclient = self.realowner;
 	spawnloc.effects = EF_STARDUST;
+	spawnloc.cnt = autocvar_g_nades_spawn_count;
 
 	if(self.realowner.nade_spawnloc)
 	{
@@ -813,6 +814,8 @@ void nades_Clear(entity player)
 		remove(player.nade);
 	if(player.fake_nade)
 		remove(player.fake_nade);
+	if(player.nade_spawnloc)
+		remove(player.nade_spawnloc);
 
 	player.nade = player.fake_nade = world;
 }
@@ -962,10 +965,16 @@ MUTATOR_HOOKFUNCTION(nades_PlayerSpawn)
 		self.nade_type = self.cvar_cl_nade_type;
 
 	if(self.nade_spawnloc)
+	if(!self.jb_isprisoned)
 	{
 		setorigin(self, self.nade_spawnloc.origin);
-		remove(self.nade_spawnloc);
-		self.nade_spawnloc = world;
+		self.nade_spawnloc.cnt -= 1;
+		
+		if(self.nade_spawnloc.cnt <= 0)
+		{
+			remove(self.nade_spawnloc);
+			self.nade_spawnloc = world;
+		}
 	}
 
 	return FALSE;
