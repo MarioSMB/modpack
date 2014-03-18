@@ -521,6 +521,8 @@ void MapVote_Init()
 	mv_timeout = ReadCoord();
 
 	gametypevote = ReadByte();
+	
+	float real_mapcount = mv_num_maps - mv_abstain;
 
 	if(gametypevote)
 	{
@@ -530,21 +532,21 @@ void MapVote_Init()
 		gtv_text_size = hud_fontsize*1.4;
 		gtv_text_size_small = hud_fontsize*1.1;
 		
-		if ( mv_num_maps > 8 )
+		if (real_mapcount > 8 )
 			mv_columns = 3;
 		else
-			mv_columns = min(2,mv_num_maps);
+			mv_columns = min(2, real_mapcount);
     }
     else
 	{
-		if ( mv_num_maps > 16 )
+		if (real_mapcount > 16)
 			mv_columns = 5;
-		else if ( mv_num_maps > 9 )
+		else if (real_mapcount > 9)
 			mv_columns = 4;
-		else if(mv_num_maps > 3)
+		else if(real_mapcount > 3)
 			mv_columns = 3;
 		else
-			mv_columns = mv_num_maps;
+			mv_columns = real_mapcount;
 	}
 
 	MapVote_ReadMask();
