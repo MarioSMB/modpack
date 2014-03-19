@@ -1072,15 +1072,15 @@ MUTATOR_HOOKFUNCTION(jb_PlayerDies)
 	if(!round_handler_IsRoundStarted() || jb_roundover)
 		return FALSE;
 
-	if(!self.jb_isprisoned)
+	if(!frag_target.jb_isprisoned)
 	{
-		if(frag_attacker == self || !frag_attacker)
-			PlayerScore_Add(self, SP_SCORE, -autocvar_g_jailbreak_penalty_death);
+		if(frag_attacker == frag_target || !frag_attacker)
+			PlayerScore_Add(frag_target, SP_SCORE, -autocvar_g_jailbreak_penalty_death);
 		else if(IS_PLAYER(frag_attacker))
 		{
-			if(frag_attacker.team != self.team)
+			if(DIFF_TEAM(frag_attacker, frag_target))
 			{
-				PlayerScore_Add(self, SP_SCORE, -autocvar_g_jailbreak_penalty_death);
+				PlayerScore_Add(frag_target, SP_SCORE, -autocvar_g_jailbreak_penalty_death);
 				PlayerScore_Add(frag_attacker, SP_SCORE, autocvar_g_jailbreak_score_imprison);
 
 				float rng = autocvar_g_jailbreak_defense_range;
@@ -1091,7 +1091,7 @@ MUTATOR_HOOKFUNCTION(jb_PlayerDies)
 					{
 						// Rewards control point defense if fragging nearby your team's or neutral cp.
 						// In case of neutral cp, it has to be active (no defense farming in the beginning of the round)
-						if(vlen(cp.origin - self.origin) < rng)
+						if(vlen(cp.origin - frag_target.origin) < rng)
 						{
 							Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_JAILBREAK_DEFENSE);
 							PlayerScore_Add(frag_attacker, SP_SCORE, autocvar_g_jailbreak_score_defense);
@@ -1110,7 +1110,7 @@ MUTATOR_HOOKFUNCTION(jb_PlayerDies)
 	}
 	else
 	{
-		JB_Log(FALSE, strcat("Prisoned player ", self.netname, " ^7just died. Should this really happen?"));
+		JB_Log(FALSE, strcat("Prisoned player ", frag_target.netname, " ^7just died. Should this really happen?"));
 		PutClientInServer();
 	}
 
