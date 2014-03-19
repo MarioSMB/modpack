@@ -420,6 +420,7 @@ float autocvar_viewsize;
 float autocvar_cl_hitsound;
 float autocvar_cl_hitsound_antispam_time;
 var float autocvar_cl_eventchase_death = 1;
+var float autocvar_cl_eventchase_nexball = 1;
 float autocvar_cl_eventchase_vehicle;
 var float autocvar_cl_eventchase_distance = 140;
 var float autocvar_cl_eventchase_speed = 1.3;
