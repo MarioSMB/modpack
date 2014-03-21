@@ -1361,9 +1361,8 @@ void precache()
         precache_playermodel("models/player/pony.iqm");
         precache_playermodel("models/player/mario.dpm");
         precache_playermodel("models/player/abyss.zym");
-        precache_playermodel("models/player/renamon.iqm");
+        precache_playermodel("models/player/foxy.iqm");
         precache_playermodel("models/player/terminusmale.iqm");
-        precache_playermodel("models/player/yoshi.dpm");
         precache_playermodel("models/player/ubot.iqm");
         precache_playermodel("models/player/rosalina.dpm");
     }
