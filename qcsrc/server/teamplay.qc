@@ -75,6 +75,8 @@ void InitGameplayMode()
 	if(g_tdm)
 	{
 		ActivateTeamplay();
+		fraglimit_override = autocvar_g_tdm_point_limit;
+		leadlimit_override = autocvar_g_tdm_point_leadlimit;
 		MUTATOR_ADD(gamemode_tdm);
 
 		if(autocvar_g_tdm_team_spawns)
