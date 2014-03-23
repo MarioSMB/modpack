@@ -9,6 +9,18 @@ void spawnfunc_item_minst_cells (void)
 			   "MinstaNex Ammo", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
 }
 
+void spawnfunc_item_minst_rockets (void)
+{
+	if (!g_minstagib) { remove(self); return; }
+	if(!cvar("g_minstagib_withmines")) { remove(self); return; }
+	if (!self.ammo_rockets)
+		self.ammo_rockets = autocvar_g_minstagib_ammo_rockets;
+
+	StartItem ("models/items/a_rockets.md3",
+			   "misc/itempickup.wav", 45, 0,
+			   "MinstaNex Ammo", IT_ROCKETS, 0, 0, generic_pickupevalfunc, 100);
+}
+
 void minstagib_item_supercells() 
 {
 	if(!g_minstagib) { remove(self); return; }
@@ -130,7 +142,7 @@ MUTATOR_HOOKFUNCTION(minstagib_MatchEnd)
 
 MUTATOR_HOOKFUNCTION(minstagib_MonsterLoot)
 {
-	other.monster_loot = spawnfunc_item_minst_cells;
+	other.monster_loot = ((random() > 0.5) ? spawnfunc_item_minst_rockets : spawnfunc_item_minst_cells);
 
 	return FALSE;
 }
@@ -340,7 +352,11 @@ MUTATOR_HOOKFUNCTION(minstagib_SetStartItems)
 MUTATOR_HOOKFUNCTION(minstagib_FilterItem)
 {
 	if(self.classname == "item_cells")
-	if(!autocvar_g_minstagib_use_normal_cells)
+	if(!autocvar_g_minstagib_use_normal_ammo)
+		return TRUE;
+		
+	if(self.classname == "item_rockets")
+	if(!autocvar_g_minstagib_use_normal_ammo || !cvar("g_minstagib_withmines"))
 		return TRUE;
 
 	if(self.weapon == WEP_MINSTANEX && self.classname == "droppedweapon")
@@ -369,8 +385,14 @@ MUTATOR_HOOKFUNCTION(minstagib_FilterItem)
 
 	if(self.ammo_cells > autocvar_g_minstagib_ammo_drop && self.classname != "item_minst_cells")
 		self.ammo_cells = autocvar_g_minstagib_ammo_drop;
+		
+	if(self.classname != "item_minst_rockets")
+		self.ammo_rockets = bound(0, self.ammo_rockets, autocvar_g_minstagib_ammo_rockets);
 
 	if((self.ammo_cells || self.ammo_supercells) && !self.weapon)
+		return FALSE;
+		
+	if(self.ammo_rockets && !self.weapon)
 		return FALSE;
 
 	return TRUE;
