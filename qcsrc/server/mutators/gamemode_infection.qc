@@ -74,8 +74,8 @@ float Infection_CheckWinner()
 
 	if(champion)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_PLAYER_WIN, champion.netname);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_PLAYER_WIN, champion.netname);
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_INFECTION_WIN, champion.netname);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_INFECTION_WIN, champion.netname);
 		FOR_EACH_CLIENT(e)
 		{
 			if(e.inf_team == e.inf_realteam)

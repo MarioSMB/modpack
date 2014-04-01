@@ -454,6 +454,7 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_FREEZETAG_REVIVED_FALL,         1, 0, "s1", "",                          "",                     _("^BG%s^K3 was revived by falling"), "") \
 	MSG_INFO_NOTIF(1, INFO_FREEZETAG_REVIVED_NADE,         1, 0, "s1", "",                          "",                     _("^BG%s^K3 was revived by their Nade explosion"), "") \
 	MSG_INFO_NOTIF(1, INFO_FREEZETAG_AUTO_REVIVED,         1, 1, "s1 f1", "",                       "",                     _("^BG%s^K3 was automatically revived after %s second(s)"), "") \
+    MSG_INFO_NOTIF(1, INFO_ROUND_INFECTION_WIN,            0, 0, "", "",                            "",                     _("^BGRound over, all players have been infected"), "") \
 	MULTITEAM_INFO(1, INFO_ROUND_TEAM_WIN_, 4,             0, 0, "", "",                            "",                     _("^TC^TT^BG team wins the round"), "") \
 	MSG_INFO_NOTIF(1, INFO_ROUND_PLAYER_WIN,               1, 0, "s1", "",                          "",                     _("^BG%s^BG wins the round"), "") \
 	MSG_INFO_NOTIF(1, INFO_ROUND_TIED,                     0, 0, "", "",                            "",                     _("^BGRound tied"), "") \
@@ -680,6 +681,7 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_REVIVED,           1, 0, "s1",           NO_CPID,             "0 0", _("^K3You were revived by ^BG%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_AUTO_REVIVED,      0, 1, "f1",           NO_CPID,             "0 0", _("^K3You were automatically revived after %s second(s)"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_GENERATOR_UNDERATTACK,       0, 0, "",             NO_CPID,             "0 0", _("^BGThe generator is under attack!"), "") \
+    MSG_CENTER_NOTIF(1, CENTER_ROUND_INFECTION_WIN,         0, 0, "",             CPID_ROUND,          "0 0", _("^BGRound over, all players have been infected"), "") \
 	MULTITEAM_CENTER(1, CENTER_ROUND_TEAM_WIN_, 4,          0, 0, "",             CPID_ROUND,          "0 0", _("^TC^TT^BG team wins the round"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ROUND_PLAYER_WIN,            1, 0, "s1",           CPID_ROUND,          "0 0", _("^BG%s^BG wins the round"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_SELF,              0, 0, "",             NO_CPID,             "0 0", _("^K1You froze yourself"), "") \
