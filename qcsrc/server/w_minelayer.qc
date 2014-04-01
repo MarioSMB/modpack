@@ -168,6 +168,7 @@ float W_Mine_Count(entity e)
 	return minecount;
 }
 
+float forbidWeaponUse(entity player); // defined in cl_weapons.qc
 void W_Mine_Think (void)
 {
 	entity head;

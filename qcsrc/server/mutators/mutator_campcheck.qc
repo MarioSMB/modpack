@@ -57,7 +57,11 @@ MUTATOR_HOOKFUNCTION(campcheck_PlayerThink)
 			self.campcheck_nextcheck = time + autocvar_g_campcheck_interval;
 			self.campcheck_traveled_distance = 0;
 		}
+		
+		return FALSE;
 	}
+	
+	self.campcheck_nextcheck = time + autocvar_g_campcheck_interval; // one of the above checks failed, so keep the timer up to date
 
 	return FALSE;
 }
