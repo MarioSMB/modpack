@@ -189,7 +189,7 @@ MUTATOR_HOOKFUNCTION(inf_PlayerSpawn)
 				head = head.chain;
 			}
 			
-			self.inf_team = self.inf_realteam = best.inf_team;
+			self.inf_team = self.inf_realteam = best.inf_realteam;
 		}
 	}
 
