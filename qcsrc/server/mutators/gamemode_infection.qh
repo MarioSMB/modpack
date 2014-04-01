@@ -1,11 +1,13 @@
 float total_players;
-float redalive, bluealive, yellowalive, pinkalive;
-float inf_teams;
+float infection_teams;
+float aliveplayers[17];
 float allowed_to_spawn;
-.float inf_realteam;
+
+.float inf_team;
 .float inf_nextteam;
+.float inf_realteam;
 
 float prev_total_players;
 
 // scores
-#define ST_INF_ROUNDS 1
+#define SP_INF_ROUNDS 4

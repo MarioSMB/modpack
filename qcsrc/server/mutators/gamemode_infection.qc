@@ -1,47 +1,47 @@
 void INF_count_alive_players()
 {
 	entity e;
-	total_players = redalive = bluealive = yellowalive = pinkalive = 0;
+    float i;
+	for(i = 1; i <= infection_teams; ++i) { aliveplayers[i] = 0; }
 	FOR_EACH_PLAYER(e)
 	{
 		++total_players;
-		redalive += (e.team == NUM_TEAM_1);
-		bluealive += (e.team == NUM_TEAM_2);
-		yellowalive += (e.team == NUM_TEAM_3);
-		pinkalive += (e.team == NUM_TEAM_4);
+
+		if(e.health > 0)
+			aliveplayers[e.inf_team] += 1;
 	}
 }
 
-float INF_GetWinnerTeam()
-{
-	float winner_team = 0;
-	if(redalive >= 1)
-		winner_team = NUM_TEAM_1;
-	if(bluealive >= 1)
-	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_2;
-	}
-	if(yellowalive >= 1)
-	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_3;
-	}
-	if(pinkalive >= 1)
-	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_4;
-	}
-	if(winner_team)
-		return winner_team;
-	return -1; // no player left
-}
-
-#define INF_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0) + (yellowalive > 0) + (pinkalive > 0))
-#define INF_ALIVE_TEAMS_OK() (INF_ALIVE_TEAMS() == inf_teams)
-float INF_CheckWinner()
+void INF_count_survivors()
 {
 	entity e;
+    float i;
+	for(i = 1; i <= infection_teams; ++i) { aliveplayers[i] = 0; }
+	FOR_EACH_PLAYER(e)
+	{
+		++total_players;
+		if(e.inf_realteam == e.inf_team)
+		//if(e.health > 0) // TODO: check if this is needed?
+			aliveplayers[e.inf_realteam] += 1;
+	}
+}
+
+float inf_alive_teams()
+{
+	float total_alive = 0;
+	float i;
+	for(i = 1; i <= infection_teams; ++i)
+	if(aliveplayers[i] >= 1)
+		total_alive += 1;
+		
+	return total_alive;
+}
+#define INF_ALIVE_TEAMS_OK() (inf_alive_teams() == infection_teams)
+
+float Infection_CheckWinner()
+{
+	entity e;
+
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
@@ -52,35 +52,49 @@ float INF_CheckWinner()
 			nades_Clear(e);
 		return 1;
 	}
-
-	INF_count_alive_players();
-	if(INF_ALIVE_TEAMS() > 1)
-		return 0;
-
-	float winner_team = INF_GetWinnerTeam();
-	if(winner_team > 0)
-	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner_team, CENTER_ROUND_TEAM_WIN_));
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(winner_team, INFO_ROUND_TEAM_WIN_));
 	
-		if(TeamScore_AddToTeam(winner_team, ST_INF_ROUNDS, 0) + 1 >= autocvar_fraglimit)
-		FOR_EACH_PLAYER(e) 
-			MoveToTeam(e, e.inf_realteam, 8);
+	INF_count_survivors();
+	if(inf_alive_teams() > 1)
+		return 0;
+		
+	float winner_team = 0;
 
-		TeamScore_AddToTeam(winner_team, ST_INF_ROUNDS, +1);
+	entity champion;
+	champion = world;
+	FOR_EACH_CLIENT(e)
+	{
+		if(e.inf_realteam == e.inf_team)
+		if(IS_PLAYER(e))
+		if(e.inf_nextteam == 0)
+		{
+			champion = e; // the message can only show 1 player, but scores go to all
+			winner_team = e.inf_realteam;
+		}
 	}
-	else if(winner_team == -1)
+
+	if(champion)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_PLAYER_WIN, champion.netname);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_PLAYER_WIN, champion.netname);
+		FOR_EACH_CLIENT(e)
+		{
+			if(e.inf_realteam == winner_team)
+			{
+				PlayerScore_Add(e, SP_INF_ROUNDS, +1);
+				UpdateFrags(e, +1);
+			}
+		}
+	}
+	else
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_TIED);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
 	}
 
-	allowed_to_spawn = FALSE;
 	round_handler_Init(5, autocvar_g_infection_warmup, autocvar_g_infection_round_timelimit);
 	
 	FOR_EACH_PLAYER(e)
 		nades_Clear(e);
-
 	return 1;
 }
 
@@ -90,7 +104,10 @@ void INF_RoundStart()
 
 	entity head;
 	FOR_EACH_PLAYER(head)
-		head.inf_realteam = head.team;
+	{
+		head.inf_realteam = head.inf_team;
+		head.inf_nextteam = 0;
+	}
 }
 
 float INF_CheckTeams()
@@ -100,55 +117,97 @@ float INF_CheckTeams()
 	if(INF_ALIVE_TEAMS_OK())
 	{
 		if(prev_total_players > 0)
-			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_PLAYERS);
 		prev_total_players = -1;
 		return 1;
 	}
 	if(prev_total_players != total_players)
 	{
-		float p1 = 0, p2 = 0, p3 = 0, p4 = 0;
-		if(!redalive) p1 = NUM_TEAM_1;
-		if(!bluealive) p2 = NUM_TEAM_2;
-		if(!yellowalive) p3 = NUM_TEAM_3;
-		if(!pinkalive) p4 = NUM_TEAM_4;
-		if(inf_teams < 3) p3 = 1;
-		if(inf_teams < 4) p4 = 1;
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, p1, p2, p3, p4);
+		float plcnt = 0, i;
+		for(i = 1; i <= infection_teams; ++i)
+		{
+			if(aliveplayers[i] < 1)
+				++plcnt;
+		}
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_PLAYERS, plcnt);
 		prev_total_players = total_players;
 	}
 	return 0;
 }
 
+float inf_PickSmallestTeam()
+{
+	INF_count_alive_players();
+	float i, smallest_team = 0;
+
+	for(i = 1; i <= infection_teams; ++i)
+	{
+		if(aliveplayers[i] <= aliveplayers[smallest_team])
+			smallest_team = i;
+	}
+
+	return smallest_team;
+}
+
 MUTATOR_HOOKFUNCTION(inf_RemovePlayer)
 {
+	self.inf_team = 0;
 	self.inf_realteam = 0;
 	self.inf_nextteam = 0;
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(inf_BotAttack)
+{
+	if(self.inf_team == checkentity.inf_team)
+		return TRUE;
+
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(inf_PlayerThink)
+{
+	// temporary hack to fix colors
+	setcolor(self, 16 * self.inf_team + self.inf_team);
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(inf_PlayerSpawn)
 {
-	if(self.inf_nextteam)
+	if(self.inf_nextteam) // respawning player
 	{
-		MoveToTeam(self, self.inf_nextteam, 8);
+		self.inf_team = self.inf_nextteam;
 		self.inf_nextteam = 0;
 	}
-	
-	if(!self.inf_realteam)
-	if(round_handler_IsRoundStarted())
-		self.inf_realteam = self.team;
+	else if(!self.inf_team) // new joining player
+		self.inf_realteam = self.inf_team = inf_PickSmallestTeam();
+		
+	setcolor(self, 16 * self.inf_team + self.inf_team);
 
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(inf_PlayerDamage)
+{
+	if(IS_PLAYER(frag_target))
+	if(IS_PLAYER(frag_attacker))
+	if(frag_attacker != frag_target)
+	if(frag_target.inf_team == frag_attacker.inf_team)
+	{
+		frag_damage = 0;
+		frag_attacker.typehitsound += 1;
+	}
+	
 	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(inf_PlayerDies)
 {
-	if(IS_PLAYER(frag_attacker) && DIFF_TEAM(frag_attacker, frag_target))
+	if(IS_PLAYER(frag_attacker) && frag_attacker.inf_team != frag_target.inf_team)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(frag_attacker.team, INFO_INFECTION_INFECTED), frag_target.netname);
-		Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, APP_TEAM_NUM_4(frag_attacker.team, CENTER_INFECTION_INFECTED));
-		frag_target.inf_nextteam = frag_attacker.team;
-		frag_target.respawn_flags |= RESPAWN_FORCE;
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_INFECTION_INFECTED, frag_target.netname, frag_attacker.netname);
+		Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_INFECTION_INFECTED, frag_attacker.netname);
+		frag_target.inf_nextteam = frag_attacker.inf_team;
 		
 		PlayerScore_Add(frag_target, SP_SCORE, -1);
 	}
@@ -160,34 +219,20 @@ MUTATOR_HOOKFUNCTION(inf_ResetMap)
 {
 	FOR_EACH_PLAYER(self)
 	{
-		self.inf_nextteam = 0; // just incase
-		if(self.inf_realteam && self.inf_realteam != self.team)
-			MoveToTeam(self, self.inf_realteam, 8);
+		if(self.inf_realteam && self.inf_realteam != self.inf_team)
+			self.inf_team = self.inf_realteam;
+		self.inf_nextteam = 0;
 		PutClientInServer(); // player re-spawns on new team?
 	}
 	
 	FOR_EACH_SPEC(self) if(IS_BOT_CLIENT(self))
 	{
-		if(self.bot_forced_team==1)
-			self.team = NUM_TEAM_1;
-		else if(self.bot_forced_team==2)
-			self.team = NUM_TEAM_2;
-		else if(self.bot_forced_team==3)
-			self.team = NUM_TEAM_3;
-		else if(self.bot_forced_team==4)
-			self.team = NUM_TEAM_4;
-		else
-			JoinBestTeam(self, FALSE, TRUE);
-			
+		self.inf_realteam = self.inf_team = inf_PickSmallestTeam();
+		self.inf_nextteam = 0;
+
 		PutClientInServer();
 	}
 	
-	return TRUE;
-}
-
-MUTATOR_HOOKFUNCTION(inf_GetTeamCount)
-{
-	ret_float = inf_teams;
 	return TRUE;
 }
 
@@ -197,33 +242,35 @@ MUTATOR_HOOKFUNCTION(inf_ForbidPlayerScore_Clear)
 }
 
 // scoreboard stuff
-void inf_ScoreRules(float teams)
+void inf_ScoreRules()
 {
-	CheckAllowedTeams(world);
-	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
-	ScoreInfo_SetLabel_TeamScore(ST_INF_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
+	ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+	ScoreInfo_SetLabel_PlayerScore(SP_INF_ROUNDS, "survivals", SFL_SORT_PRIO_PRIMARY);
 	ScoreRules_basics_end();
 }
 
 void inf_Initialize()
 {
 	allowed_to_spawn = TRUE;
+	
+	infection_teams = autocvar_g_infection_teams;
 
-	inf_teams = bound(2, autocvar_g_infection_teams, 4);
-	inf_ScoreRules(inf_teams);
+	inf_ScoreRules();
 
-	round_handler_Spawn(INF_CheckTeams, INF_CheckWinner, INF_RoundStart);
+	round_handler_Spawn(INF_CheckTeams, Infection_CheckWinner, INF_RoundStart);
 	round_handler_Init(5, autocvar_g_infection_warmup, autocvar_g_infection_round_timelimit);
 }
 
 MUTATOR_DEFINITION(gamemode_infection)
 {
 	MUTATOR_HOOK(MakePlayerObserver, inf_RemovePlayer, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerPreThink, inf_PlayerThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, inf_PlayerSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDamage_Calculate, inf_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, inf_RemovePlayer, CBC_ORDER_ANY);
+	MUTATOR_HOOK(BotShouldAttack, inf_BotAttack, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, inf_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(reset_map_players, inf_ResetMap, CBC_ORDER_ANY);
-	MUTATOR_HOOK(GetTeamCount, inf_GetTeamCount, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidPlayerScore_Clear, inf_ForbidPlayerScore_Clear, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD

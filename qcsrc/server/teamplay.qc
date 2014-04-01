@@ -222,9 +222,6 @@ void InitGameplayMode()
 	{
 		fraglimit_override = autocvar_g_infection_point_limit;
 		leadlimit_override = autocvar_g_infection_point_leadlimit;
-		ActivateTeamplay();
-		if(autocvar_g_infection_team_spawns)
-			have_team_spawns = -1; // request team spawns
 		MUTATOR_ADD(gamemode_infection);
 	}
 
@@ -517,15 +514,7 @@ void GetTeamCounts(entity ignore)
 	FOR_EACH_CLIENT(head)
 	{
 		float t;
-		if(g_infection && head.inf_realteam)
-		{	
-			if(IS_PLAYER(head))
-				t = head.inf_realteam;
-			else if(head.team_forced > 0)
-				t = head.team_forced; // reserved
-			else continue;
-		}
-		else if(IS_PLAYER(head))
+		if(IS_PLAYER(head))
 			t = head.team;
 		else if(head.team_forced > 0)
 			t = head.team_forced; // reserve the spot
