@@ -213,6 +213,7 @@ MUTATOR_HOOKFUNCTION(inf_PlayerDies)
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_INFECTION_INFECTED, frag_target.netname, frag_attacker.netname);
 		Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_INFECTION_INFECTED, frag_attacker.netname);
 		frag_target.inf_nextteam = frag_attacker.inf_team;
+		frag_target.respawn_flags |= RESPAWN_FORCE;
 		
 		PlayerScore_Add(frag_target, SP_SCORE, -1);
 	}
