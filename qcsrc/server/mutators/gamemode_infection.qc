@@ -170,6 +170,29 @@ MUTATOR_HOOKFUNCTION(inf_PlayerThink)
 
 MUTATOR_HOOKFUNCTION(inf_PlayerSpawn)
 {
+	if(IS_REAL_CLIENT(self))
+	if(!self.inf_team)
+	if(bots_would_leave)
+	{
+		entity head = findchainfloat(isbot, TRUE);
+		if(head)
+		{
+			entity best = head;
+			float besttime = head.createdtime;
+			while (head)
+			{
+				if (besttime < head.createdtime)
+				{
+					besttime = head.createdtime;
+					best = head;
+				}
+				head = head.chain;
+			}
+			
+			self.inf_team = self.inf_realteam = best.inf_team;
+		}
+	}
+
 	if(self.inf_nextteam) // respawning player
 	{
 		self.inf_team = self.inf_nextteam;
