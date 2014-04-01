@@ -173,6 +173,8 @@ void W_Mine_Think (void)
 	entity head;
 
 	self.nextthink = time;
+	
+	if(forbidWeaponUse(self.realowner)) { return; }
 
 	if(self.movetype == MOVETYPE_FOLLOW)
 	{
