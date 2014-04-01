@@ -59,23 +59,18 @@ float Infection_CheckWinner()
 		
 	float winner_team = 0;
 
-	entity champion;
-	champion = world;
 	FOR_EACH_CLIENT(e)
 	{
 		if(e.inf_realteam == e.inf_team)
 		if(IS_PLAYER(e))
 		if(e.inf_nextteam == 0)
-		{
-			champion = e; // the message can only show 1 player, but scores go to all
 			winner_team = e.inf_realteam;
-		}
 	}
 
-	if(champion)
+	if(winner_team)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_INFECTION_WIN, champion.netname);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_INFECTION_WIN, champion.netname);
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_INFECTION_WIN);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_INFECTION_WIN);
 		FOR_EACH_CLIENT(e)
 		{
 			if(e.inf_team == e.inf_realteam)
