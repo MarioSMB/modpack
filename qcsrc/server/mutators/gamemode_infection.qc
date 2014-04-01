@@ -78,6 +78,7 @@ float Infection_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_PLAYER_WIN, champion.netname);
 		FOR_EACH_CLIENT(e)
 		{
+			if(e.inf_team == e.inf_realteam)
 			if(e.inf_realteam == winner_team)
 			{
 				PlayerScore_Add(e, SP_INF_ROUNDS, +1);
