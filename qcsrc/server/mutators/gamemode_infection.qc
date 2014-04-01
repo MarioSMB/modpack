@@ -249,7 +249,7 @@ void inf_Initialize()
 {
 	allowed_to_spawn = TRUE;
 	
-	infection_teams = autocvar_g_infection_teams;
+	infection_teams = bound(2, autocvar_g_infection_teams, cvar("maxplayers"));
 
 	inf_ScoreRules();
 
