@@ -157,8 +157,8 @@ float Team_TeamToNumber(float teamid)
 #define TCR(input,teamcolor,teamtext) strreplace("^TC", teamcolor, strreplace("^TT", teamtext, input))
 
 // safe team comparisons
-#define SAME_TEAM(a,b) (teamplay ? ((a.team == b.team) ? 1 : 0) : ((a == b) ? 1 : 0))
-#define DIFF_TEAM(a,b) (teamplay ? ((a.team != b.team) ? 1 : 0) : ((a != b) ? 1 : 0))
+#define SAME_TEAM(a,b) (g_infection ? ((a.inf_team == b.inf_team) ? 1 : 0) : (teamplay ? ((a.team == b.team) ? 1 : 0) : ((a == b) ? 1 : 0)))
+#define DIFF_TEAM(a,b) (g_infection ? ((a.inf_team != b.inf_team) ? 1 : 0) : (teamplay ? ((a.team != b.team) ? 1 : 0) : ((a != b) ? 1 : 0)))
 
 // used for notification system multi-team identifiers
 #define APP_TEAM_NUM_2(num,prefix) ((num == NUM_TEAM_1) ? prefix##RED : prefix##BLUE)

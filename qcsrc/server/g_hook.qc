@@ -290,7 +290,7 @@ void GrapplingHookThink()
 		self.last_dmg = time + autocvar_g_rm_hook_damagefactor;
 		self.owner.hitsound += 1;
 		Damage(dmgent, self, self.owner, autocvar_g_rm_hook_damage, WEP_HOOK, self.origin, '0 0 0');
-		if(teamplay && SAME_TEAM(self.owner, self.aiment))
+		if(SAME_TEAM(self.owner, self.aiment))
 			self.aiment.health = min(self.aiment.health + autocvar_g_rm_hook_damage_health, g_pickup_healthsmall_max);
 		else
 			self.owner.health = min(self.owner.health + autocvar_g_rm_hook_damage_health, g_pickup_healthsmall_max);

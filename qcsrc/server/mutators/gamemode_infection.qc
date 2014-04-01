@@ -206,20 +206,6 @@ MUTATOR_HOOKFUNCTION(inf_PlayerSpawn)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(inf_PlayerDamage)
-{
-	if(IS_PLAYER(frag_target))
-	if(IS_PLAYER(frag_attacker))
-	if(frag_attacker != frag_target)
-	if(frag_target.inf_team == frag_attacker.inf_team)
-	{
-		frag_damage = 0;
-		frag_attacker.typehitsound += 1;
-	}
-	
-	return FALSE;
-}
-
 MUTATOR_HOOKFUNCTION(inf_PlayerDies)
 {
 	if(IS_PLAYER(frag_attacker) && frag_attacker.inf_team != frag_target.inf_team)
@@ -285,7 +271,6 @@ MUTATOR_DEFINITION(gamemode_infection)
 	MUTATOR_HOOK(MakePlayerObserver, inf_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, inf_PlayerThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, inf_PlayerSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDamage_Calculate, inf_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, inf_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BotShouldAttack, inf_BotAttack, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, inf_PlayerDies, CBC_ORDER_ANY);
