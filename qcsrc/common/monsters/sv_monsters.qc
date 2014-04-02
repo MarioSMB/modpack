@@ -597,7 +597,7 @@ void monster_CalculateVelocity(entity mon, vector to, vector from, float turnrat
 	if(turnrate) { mon.velocity = (normalize(normalize(mon.velocity) + (desired_direction * 50)) * movespeed); }
 	else { mon.velocity = (desired_direction * movespeed); }
 
-	mon.steerto = steerlib_attract2(targpos, 0.5, 500, 0.95);
+	//mon.steerto = steerlib_attract2(targpos, 0.5, 500, 0.95);
 	//mon.angles = vectoangles(mon.velocity);
 }
 
@@ -802,6 +802,8 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		if (vlen(self.velocity) <= 30)
 			self.frame = manim_idle;
 	}
+	
+	self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
 	
 	vector real_angle = vectoangles(self.steerto) - self.angles;
 	float turny = 50;
