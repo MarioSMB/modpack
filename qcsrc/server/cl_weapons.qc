@@ -488,7 +488,7 @@ void W_WeaponFrame()
 		v_right = ri;
 		v_up = up;
 
-		if(w)
+		if(w && self.weapon == self.switchweapon)
 			weapon_action(self.weapon, WR_THINK);
 		else
 			weapon_action(self.weapon, WR_GONETHINK);

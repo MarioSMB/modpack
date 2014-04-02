@@ -197,9 +197,6 @@ void spawnfunc_monster_shambler()
 {
 	self.classname = "monster_shambler";
 
-	if(Monster_CheckAppearFlags(self, MON_SHAMBLER))
-		return;
-
 	if(!monster_initialize(MON_SHAMBLER)) { remove(self); return; }
 }
 
@@ -231,7 +228,6 @@ float m_shambler(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/shambler.mdl");
 			return TRUE;
 		}
 	}
@@ -247,7 +243,6 @@ float m_shambler(float req)
 	{
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/shambler.mdl");
 			return TRUE;
 		}
 	}

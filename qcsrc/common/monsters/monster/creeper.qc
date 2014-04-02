@@ -73,9 +73,6 @@ void spawnfunc_monster_creeper()
 {
 	self.classname = "monster_creeper";
 
-	if(Monster_CheckAppearFlags(self, MON_CREEPER))
-		return;
-
 	if(!monster_initialize(MON_CREEPER)) { remove(self); return; }
 }
 
@@ -112,7 +109,6 @@ float m_creeper(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/creeper.dpm");
 			return TRUE;
 		}
 	}
@@ -128,7 +124,6 @@ float m_creeper(float req)
 	{
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/creeper.dpm");
 			return TRUE;
 		}
 	}

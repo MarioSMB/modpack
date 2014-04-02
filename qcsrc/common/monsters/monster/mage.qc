@@ -336,9 +336,6 @@ void spawnfunc_monster_mage()
 {
 	self.classname = "monster_mage";
 
-	if(Monster_CheckAppearFlags(self, MON_MAGE))
-		return;
-
 	if(!monster_initialize(MON_MAGE)) { remove(self); return; }
 }
 
@@ -396,7 +393,6 @@ float m_mage(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/mage.dpm");
 			precache_sound ("weapons/grenade_impact.wav");
 			precache_sound ("weapons/tagexp1.wav");
 			return TRUE;
@@ -414,7 +410,6 @@ float m_mage(float req)
 	{
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/mage.dpm");
 			return TRUE;
 		}
 	}

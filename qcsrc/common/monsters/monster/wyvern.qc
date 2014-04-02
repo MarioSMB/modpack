@@ -96,9 +96,6 @@ void spawnfunc_monster_wyvern()
 {
 	self.classname = "monster_wyvern";
 
-	if(Monster_CheckAppearFlags(self, MON_WYVERN))
-		return;
-
 	if(!monster_initialize(MON_WYVERN)) { remove(self); return; }
 }
 
@@ -134,7 +131,6 @@ float m_wyvern(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/wizard.mdl");
 			return TRUE;
 		}
 	}
@@ -150,7 +146,6 @@ float m_wyvern(float req)
 	{
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/wizard.mdl");
 			return TRUE;
 		}
 	}

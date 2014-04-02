@@ -130,9 +130,6 @@ void spawnfunc_monster_zombie()
 {
 	self.classname = "monster_zombie";
 
-	if(Monster_CheckAppearFlags(self, MON_ZOMBIE))
-		return;
-
 	if(!monster_initialize(MON_ZOMBIE)) { remove(self); return; }
 }
 
@@ -172,7 +169,6 @@ float m_zombie(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/zombie.dpm");
 			return TRUE;
 		}
 	}
@@ -188,7 +184,6 @@ float m_zombie(float req)
 	{
 		case MR_PRECACHE:
 		{
-			precache_model ("models/monsters/zombie.dpm");
 			return TRUE;
 		}
 	}

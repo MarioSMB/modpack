@@ -555,8 +555,7 @@ vector monster_pickmovetarget(entity targ)
 				makevectors(self.angles);
 				pos = self.origin + v_forward * self.wander_distance;
 
-				if((self.flags & FL_FLY) || (self.flags & FL_SWIM))
-				if(self.spawnflags & MONSTERFLAG_FLY_VERTICAL)
+				if(((self.flags & FL_FLY) && (self.spawnflags & MONSTERFLAG_FLY_VERTICAL)) || (self.flags & FL_SWIM))
 				{
 					pos_z = random() * 200;
 					if(random() >= 0.5)
@@ -767,9 +766,9 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	if(self.enemy && self.enemy.vehicle)
 		runspeed = 0;
 
-	if(((self.flags & FL_FLY) || (self.flags & FL_SWIM)) && (self.spawnflags & MONSTERFLAG_FLY_VERTICAL))
-		v_forward = normalize(self.moveto - self.origin);
-	else
+	if(!(((self.flags & FL_FLY) && (self.spawnflags & MONSTERFLAG_FLY_VERTICAL)) || (self.flags & FL_SWIM)))
+		//v_forward = normalize(self.moveto - self.origin);
+	//else
 		self.moveto_z = self.origin_z;
 
 	if(vlen(self.origin - self.moveto) > 64)
@@ -950,7 +949,7 @@ void monster_die(entity attacker, float gibbed)
 	self.state			= 0;
 	self.attack_finished_single = 0;
 
-	if(!(self.flags & FL_FLY))
+	if(!((self.flags & FL_FLY) || (self.flags & FL_SWIM)))
 		self.velocity = '0 0 0';
 
 	MON_ACTION(self.monsterid, MR_DEATH);
@@ -1121,8 +1120,9 @@ float monster_spawn()
 
 float monster_initialize(float mon_id)
 {
-	if(!autocvar_g_monsters)
-		return FALSE;
+	if(!autocvar_g_monsters) { return FALSE; }
+		
+	if(Monster_CheckAppearFlags(self, mon_id)) { return TRUE; } // return true so the monster isn't removed
 
 	entity mon = get_monsterinfo(mon_id);
 
@@ -1171,7 +1171,7 @@ float monster_initialize(float mon_id)
 	self.pass_distance		= 0;
 	self.deadflag			= DEAD_NO;
 	self.scale				= 1;
-	self.noalign			= (mon.spawnflags & MONSTER_TYPE_FLY);
+	self.noalign			= ((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM));
 	self.spawn_time			= time;
 	self.spider_slowness	= 0;
 	self.gravity			= 1;
