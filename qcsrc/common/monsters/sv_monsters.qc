@@ -360,8 +360,7 @@ float monster_initialize(float mon_id);
 void monster_respawn()
 {
 	// is this function really needed?
-	if(!Monster_CheckAppearFlags(self, self.monsterid))
-		monster_initialize(self.monsterid);
+	monster_initialize(self.monsterid);
 }
 
 void Monster_Fade ()
@@ -597,8 +596,9 @@ void monster_CalculateVelocity(entity mon, vector to, vector from, float turnrat
 	vector desired_direction = normalize(targpos - from);
 	if(turnrate) { mon.velocity = (normalize(normalize(mon.velocity) + (desired_direction * 50)) * movespeed); }
 	else { mon.velocity = (desired_direction * movespeed); }
-	
-	mon.angles = vectoangles(mon.velocity);
+
+	mon.steerto = steerlib_attract2(targpos, 0.5, 500, 0.95);
+	//mon.angles = vectoangles(mon.velocity);
 }
 
 void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_run, float manim_walk, float manim_idle)
@@ -801,6 +801,14 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		if(time > self.pain_finished)
 		if (vlen(self.velocity) <= 30)
 			self.frame = manim_idle;
+	}
+	
+	vector real_angle = vectoangles(self.steerto) - self.angles;
+	float turny = 50;
+	if(turny)
+	{
+		turny = bound(turny * -1, shortangle_f(real_angle_y, self.angles_y), turny);
+		self.angles_y += turny;
 	}
 
 	monster_checkattack(self, self.enemy);
