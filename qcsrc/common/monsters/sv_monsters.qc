@@ -806,7 +806,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
 	
 	vector real_angle = vectoangles(self.steerto) - self.angles;
-	float turny = 50;
+	float turny = 25;
 	if(turny)
 	{
 		turny = bound(turny * -1, shortangle_f(real_angle_y, self.angles_y), turny);
