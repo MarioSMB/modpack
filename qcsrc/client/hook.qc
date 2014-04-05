@@ -132,30 +132,13 @@ void Draw_GrapplingHook()
 				suffix = "_nexuiz";
 			intensity = 1;
 			offset = 0;
-			if(t == NUM_TEAM_1)
+			switch(t)
 			{
-				tex = "particles/hook_red";
-				rgb = '1 .3 .3';
-			}
-			else if(t == NUM_TEAM_2)
-			{
-				tex = "particles/hook_blue";
-				rgb = '.3 .3 1';
-			}
-			else if(t == NUM_TEAM_3)
-			{
-				tex = "particles/hook_yellow";
-				rgb = '1 1 .3';
-			}
-			else if(t == NUM_TEAM_4)
-			{
-				tex = "particles/hook_pink";
-				rgb = '1 .3 1';
-			}
-			else
-			{
-				tex = "particles/hook_green";
-				rgb = '.3 1 .3';
+				case NUM_TEAM_1: tex = "particles/hook_red"; rgb = '1 0.3 0.3'; break;
+				case NUM_TEAM_2: tex = "particles/hook_blue"; rgb = '0.3 0.3 1'; break;
+				case NUM_TEAM_3: tex = "particles/hook_yellow"; rgb = '1 1 0.3'; break;
+				case NUM_TEAM_4: tex = "particles/hook_pink"; rgb = '1 0.3 1'; break;
+				default: tex = "particles/hook_white"; rgb = getcsqcplayercolor(self.sv_entnum); break;
 			}
 			tex = strcat(tex, suffix);
 			break;
@@ -236,7 +219,9 @@ void Ent_ReadHook(float bIsNew, float type)
 
 	if(sf & 1)
 	{
-		self.owner = playerslots[ReadByte() - 1];
+		float myowner = ReadByte();
+		self.owner = playerslots[myowner - 1];
+		self.sv_entnum = myowner;
 		switch(self.HookType)
 		{
 			default:
