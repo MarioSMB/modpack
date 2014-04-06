@@ -298,8 +298,6 @@ void JB_Imprison(entity attacker)
 
 	if(!self.jb_had_unlimited_ammo)
 		self.items |= IT_UNLIMITED_WEAPON_AMMO;
-
-	self.jb_fragrow = 0;
 	
 	self.weapon_blocked = TRUE;
 	
@@ -310,7 +308,6 @@ void JB_Imprison(entity attacker)
 
 	self.jb_isprisoned = TRUE;
 	self.jb_prisontime = time;
-	self.jb_jaildm_aggressive = FALSE;
 
 	if(!self.jb_specteam)
 		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_JAILBREAK_IMPRISON);
@@ -1088,8 +1085,6 @@ MUTATOR_HOOKFUNCTION(jb_PlayerSpawn)
 {
 	self.jb_isprisoned = FALSE;
 
-	self.jb_fragrow = 0;
-
 	if(!round_handler_IsRoundStarted())
 	{
 		if(self.jb_specteam)
@@ -1170,9 +1165,6 @@ MUTATOR_HOOKFUNCTION(jb_PlayerPreThink)
 		JB_Log(FALSE, strcat("^1BUG: ^7", self.netname, " ^7somehow got out of jail without touching the jail sector! Trying to put him back in.\n"));
 		JB_TeleportToJail(self);
 	}
-	else if(self.jb_isprisoned)
-	if(time > self.jb_jail_resettime)
-		JB_Release(self.jb_saviour);
 
 	return FALSE;
 }

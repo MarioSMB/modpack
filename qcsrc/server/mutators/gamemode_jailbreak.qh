@@ -31,18 +31,12 @@ float JB_JailIsOpen(float);
 .float jb_active;
 .float jb_capturecount;
 .float jb_roundlost;
-.float jb_fragrow;
-.float jb_proj_ownerstate;
 .float jb_team_initial;
 .float jb_defendthink_next;
-.float jb_jaildm_aggressive;
 .float jb_had_unlimited_ammo;
 .float jb_specteam;
 .float jb_lastmessage;
 
-.entity jb_prisonedby;
-.entity jb_prisoned_by;
-.entity jb_saviour;
 .entity jb_waypoint;
 .entity jb_capturingplayer;
 .entity jb_imprisoner;
