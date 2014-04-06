@@ -862,7 +862,9 @@ void JB_ControlPoint_Touch()
 	entity cp;
 	float capping_neutral = FALSE;
 	if(self.team != JB_TEAM_NEUTRAL) FOR_EACH_JB_CONTROLPOINT(cp)
-	if(cp.team == JB_TEAM_NEUTRAL) if(cp.jb_unlock_progress) if(cp.jb_capturingplayer.team == other.team)
+	if(cp.team == JB_TEAM_NEUTRAL)
+	if(cp.jb_unlock_progress)
+	if(SAME_TEAM(cp.jb_capturingplayer, other))
 	{
 		capping_neutral = TRUE;
 		break;
@@ -880,11 +882,13 @@ void JB_ControlPoint_Touch()
 		JB_ControlPoint_Capture(other);
 
 		JB_ControlPoint_Deactivate(self, JB_ControlPoint_Cooldown(self));
-		entity e; FOR_EACH_JB_CONTROLPOINT(e) if(e != self)
-			if(e.team == other.team)
-				JB_ControlPoint_Deactivate(e, autocvar_g_jailbreak_controlpoint_idletime_global_own);
-			else if(e.team == JB_TEAM_NEUTRAL || e.team == JB_GetEnemyTeamOf(other.team))
-				JB_ControlPoint_Deactivate(e, autocvar_g_jailbreak_controlpoint_idletime_global);
+		entity e;
+		FOR_EACH_JB_CONTROLPOINT(e)
+		if(e != self)
+		if(SAME_TEAM(e, other))
+			JB_ControlPoint_Deactivate(e, autocvar_g_jailbreak_controlpoint_idletime_global_own);
+		else if(e.team == JB_TEAM_NEUTRAL || e.team == JB_GetEnemyTeamOf(other.team))
+			JB_ControlPoint_Deactivate(e, autocvar_g_jailbreak_controlpoint_idletime_global);
 
 		self.jb_capturecount += 1;
 	}
