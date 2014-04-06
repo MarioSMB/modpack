@@ -814,8 +814,6 @@ void nades_Clear(entity player)
 		remove(player.nade);
 	if(player.fake_nade)
 		remove(player.fake_nade);
-	if(player.nade_spawnloc)
-		remove(player.nade_spawnloc);
 
 	player.nade = player.fake_nade = world;
 }
