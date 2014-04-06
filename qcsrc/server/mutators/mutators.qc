@@ -8,7 +8,7 @@ void mutators_add()
 	CHECK_MUTATOR_ADD("g_physical_items", mutator_physical_items, 1);
 	CHECK_MUTATOR_ADD("g_touchexplode", mutator_touchexplode, 1);
 	CHECK_MUTATOR_ADD("g_minstagib", mutator_minstagib, !g_nexball);
-	CHECK_MUTATOR_ADD("g_invincible_projectiles", mutator_invincibleprojectiles, !cvar("g_minstagib"));
+	CHECK_MUTATOR_ADD("g_invincible_projectiles", mutator_invincibleprojectiles, 1);
 	CHECK_MUTATOR_ADD("g_new_toys", mutator_new_toys, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_nix", mutator_nix, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_rocket_flying", mutator_rocketflying, !cvar("g_minstagib"));
