@@ -87,8 +87,6 @@ entity jb_door_blue_last;
 .float jb_torture_delay_jitter;
 .float jb_torture_suggestedforce;
 
-#define JB_GAME_ACTIVE (roundstate == ROUNDSTATE_GAME) //(warmup < time && !jb_roundover)
-
 #define JB_PROJ_OWNERSTATE_UNDEFINED 0
 #define JB_PROJ_OWNERSTATE_IMPRISONED 1
 #define JB_PROJ_OWNERSTATE_FREE 2
