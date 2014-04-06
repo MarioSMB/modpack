@@ -1139,6 +1139,9 @@ MUTATOR_HOOKFUNCTION(jb_PlayerPreThink)
 		JB_Log(FALSE, strcat("^1BUG: ^7", self.netname, " ^7somehow got out of jail without touching the jail sector! Trying to put him back in.\n"));
 		JB_TeleportToJail(self);
 	}
+	else if(self.jb_isprisoned)
+	if(time > self.jb_jail_resettime)
+		JB_Release(world);
 
 	return FALSE;
 }
