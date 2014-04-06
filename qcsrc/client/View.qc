@@ -792,14 +792,12 @@ void CSQC_UpdateView(float w, float h)
 	else if(fovlock > -1) { setproperty(VF_FOV, GetCurrentFov(fovlock)); }
 	else { setproperty(VF_FOV, GetCurrentFov(fov)); }
 
-	if(spectatee_status < 0)
-		camera_expiretime = -1;
+	float tempcamera = FALSE;
 
-	float tempcamera = (time < camera_expiretime || camera_expiretime < -1);
-
+	if(spectatee_status >= 0)
 	if(getstati(STAT_ROUNDLOST))
-	if(getstati(STAT_HEALTH) > 0)
-		tempcamera = FALSE;
+	if(!getstati(STAT_PRISONED))
+		tempcamera = TRUE;
 
 	if(tempcamera)
 	{
@@ -808,9 +806,21 @@ void CSQC_UpdateView(float w, float h)
 			camera_drawviewmodel_locked = TRUE;
 			camera_drawviewmodel_backup = autocvar_r_drawviewmodel;
 		}
-
-		setproperty(VF_ORIGIN, camera_origin);
-		cvar_settemp("r_drawviewmodel", "0");
+		
+		entity cam = world, e;
+		for(e = world; (e = find(e, classname, "jailcamera")); )
+		if(e.jb_camera_active)
+		{
+			cam = e;
+			break; // found our camera
+		}
+		
+		if(cam)
+		{
+			setproperty(VF_ORIGIN, cam.origin);
+			setproperty(VF_ANGLES, cam.angles);
+			cvar_settemp("r_drawviewmodel", "0");
+		}
 	}
 	else if(camera_drawviewmodel_locked)
 	{
@@ -1231,7 +1241,7 @@ void CSQC_UpdateView(float w, float h)
 				CSQC_common_hud();
 
 		// crosshair goes VERY LAST
-		if(!scoreboard_active && !camera_active && intermission != 2 && spectatee_status != -1 && hud == HUD_NORMAL && autocvar_chase_active >= 0 && !HUD_QuickMenu_IsOpened())
+		if(!scoreboard_active && !camera_active && intermission != 2 && spectatee_status != -1 && hud == HUD_NORMAL && autocvar_chase_active >= 0 && !HUD_QuickMenu_IsOpened() && !tempcamera)
 		{
 			if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
 				return;

@@ -1,8 +1,3 @@
-
-void SetCamera(entity player, entity cam, float timeout);
-void ClearCamera(entity player);
-void SetCameraWithAngles(entity player, entity cam, float timeout);
-
 float g_jailbreak_claim;
 float g_jailbreak_jail_deathmatch;
 
@@ -11,7 +6,7 @@ entity JB_ChooseJailSpawnpoint(float);
 float JB_GetEnemyTeamOf(float);
 float JB_TotalPlayersOnTeam(float);
 float JB_AlivePlayersOnTeam(float);
-void JB_ActivateCamera(float, float);
+void JB_ActivateCamera(float);
 void JB_TorturePrisoners(float);
 void JB_TorturePrisonersLater(float, float);
 void JB_Torture_Start(entity);
@@ -23,6 +18,8 @@ void JB_ControlPoint_Deactivate(entity, float);
 void JB_ControlPoint_UpdateCooldownProgress(entity);
 string JB_ControlPoint_Name(entity);
 float JB_JailIsOpen(float);
+
+.float stat_jb_isprisoned;
 
 .float jb_unlock_progress;
 .float jb_isprisoned;
@@ -52,7 +49,6 @@ float JB_JailIsOpen(float);
 
 float jb_roundover;
 
-entity jb_activecamera;
 entity jb_cp_first;
 entity jb_cp_last;
 .entity jb_cp_next;
@@ -101,10 +97,6 @@ entity jb_door_blue_last;
 
 #define FOR_EACH_JB_CONTROLPOINT(e) for(e = jb_cp_first; e; e = e.jb_cp_next)
 #define FOR_EACH_JB_DOOR(e,t) for(e = JB_FIRSTDOOR(t); e; e = JB_NEXTDOOR(e))
-#define JB_SetCamera SetCamera
-#define JB_SetCameraWithAngles SetCameraWithAngles
-#define JB_ClearCamera ClearCamera
-#define JB_ClearCameraForAll ClearCameraForAll
 
 // TODO: cvar this
 #define JB_TORTURE_DURATION 15

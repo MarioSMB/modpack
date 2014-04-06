@@ -714,29 +714,30 @@ void Ent_ReadAccuracy(void)
 	}
 }
 
-void Net_Camera()
+.float jb_camera_active;
+void ent_jailcamera()
 {
-	if(!ReadByte())
+	float sf = ReadByte();
+	
+	if(sf & 1)
 	{
-		camera_expiretime = -1;
-		return;
+		self.origin_x = ReadCoord();
+		self.origin_y = ReadCoord();
+		self.origin_z = ReadCoord();
+		setorigin(self, self.origin);
+		
+		self.angles_x = ReadAngle();
+		self.angles_y = ReadAngle();
+		self.angles_z = 0;
+		
+		self.classname = "jailcamera";
+		self.jb_camera_active = FALSE;
 	}
 	
-	camera_origin_x = ReadShort();
-	camera_origin_y = ReadShort();
-	camera_origin_z = ReadShort();
-	
-	if(time <= camera_expiretime || camera_drawviewmodel_locked)
-		dprint("Warning: Net_Camera while a camera is still active\n");
-	else {
-		camera_drawviewmodel_backup = autocvar_r_drawviewmodel;
-		camera_drawviewmodel_locked = TRUE;
+	if(sf & 2)
+	{
+		self.jb_camera_active = ReadByte();
 	}
-	
-	camera_expiretime = time + ReadShort();
-    
-    if(camera_expiretime < time)
-        camera_expiretime = -2;
 }
 
 void Spawn_Draw(void)
@@ -932,6 +933,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_SPAWNEVENT: Ent_ReadSpawnEvent(bIsNewEntity); break;
 		case ENT_CLIENT_NOTIFICATION: Read_Notification(bIsNewEntity); break;
 		case ENT_CLIENT_HEALING_ORB: ent_healer(); break;
+		case ENT_CLIENT_JAILCAMERA: ent_jailcamera(); break;
 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
@@ -1394,10 +1396,6 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_SHOCKWAVEPARTICLE:
 			Net_ReadShockwaveParticle();
-			bHandled = true;
-			break;
-		case TE_CSQC_CAMERA:
-			Net_Camera();
 			bHandled = true;
 			break;
 		default:

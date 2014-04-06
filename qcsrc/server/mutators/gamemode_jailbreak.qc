@@ -81,7 +81,7 @@ float JB_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(winner_team, INFO_ROUND_TEAM_WIN_));
 		TeamScore_AddToTeam(winner_team, ST_JB_ROUNDS, +1);
 		
-		JB_ActivateCamera(winner_team, JB_TORTURE_DURATION);
+		JB_ActivateCamera(winner_team);
 		JB_TorturePrisonersLater(winner_team, 3);
 	}
 	else if(winner_team == -1)
@@ -152,47 +152,6 @@ void JB_Log(float backlog, string s)
 	else
 		print(sprintf("Jailbreak: %s\n", s));
 }
-
-// camera
-void SetCamera(entity player, entity cam, float timeout)
-{
-	if(IS_REAL_CLIENT(player))
-	{
-		msg_entity = player;
-		WriteByte(MSG_ONE, SVC_TEMPENTITY);
-		WriteByte(MSG_ONE, TE_CSQC_CAMERA);
-		WriteByte(MSG_ONE, TRUE);
-		WriteShort(MSG_ONE, cam.origin_x);
-		WriteShort(MSG_ONE, cam.origin_y);
-		WriteShort(MSG_ONE, cam.origin_z);
-		WriteShort(MSG_ONE, timeout);
-	}
-}
-
-void ClearCamera(entity player)
-{
-	if(IS_REAL_CLIENT(player))
-	{
-		msg_entity = player;
-		WriteByte(MSG_ONE, SVC_TEMPENTITY);
-		WriteByte(MSG_ONE, TE_CSQC_CAMERA);
-		WriteByte(MSG_ONE, FALSE);
-	}
-}
-
-void SetCameraWithAngles(entity player, entity cam, float timeout)
-{
-	if(IS_REAL_CLIENT(player))
-	{
-		SetCamera(player, cam, timeout);
-		player.angles = cam.angles;
-		player.angles_z = 0;
-		player.fixangle = TRUE;
-	}
-}
-
-// to cleanup
-void JB_ClearCameraForAll() { entity p; FOR_EACH_REALCLIENT(p) JB_ClearCamera(p); }
 
 void JB_AddDoor(entity door, float theteam, vector vdata, string sdata, entity cpoint)
 {
@@ -508,19 +467,9 @@ entity JB_FindCamera(float theteam)
 	return RandomSelection_chosen_ent;
 }
 
-//float SVC_SETVIEWPORT = 5;
-//float SVC_SETVIEWANGLES = 10;
-
 float jb_ce_pvs, jb_ce_trace;
 
-void JB_RestoreCullEntities()
-{
-	cvar_set("sv_cullentities_pvs", ftos(jb_ce_pvs));
-	cvar_set("sv_cullentities_trace", ftos(jb_ce_trace));
-	remove(self);
-}
-
-void JB_ActivateCamera(float theteam, float timeout)
+void JB_ActivateCamera(float theteam)
 {
 	entity cam = JB_FindCamera(theteam);
 
@@ -537,32 +486,20 @@ void JB_ActivateCamera(float theteam, float timeout)
 	cvar_settemp("sv_cullentities_pvs", "0");
 	cvar_settemp("sv_cullentities_trace", "0");
 
-	entity e = spawn();
-	e.think = JB_RestoreCullEntities;
-	e.nextthink = time + timeout;
-
 	entity p;
-	FOR_EACH_PLAYER(p)
+	FOR_EACH_REALCLIENT(p)
+		p.jb_roundlost = TRUE;
+
+	cam.active = TRUE;
+	cam.SendFlags |= 2;
+	
+	entity e;
+	for(e = world; (e = find(e, classname, "info_jailbreak_jailcamera")); )
+	if(e != cam)
 	{
-		if(IS_REAL_CLIENT(p))
-		{
-			if(p.team == theteam)
-			{
-				p.angles = cam.angles;
-				p.angles_z = 0;
-				p.fixangle = TRUE;
-				p.jb_roundlost = FALSE;
-			}
-			else
-				p.jb_roundlost = TRUE;
-		}
-
-		entity s;
-		FOR_EACH_REALCLIENT(s) if(s == p || (IS_SPEC(s) && s.enemy == p))
-			JB_SetCamera(s, cam, timeout);
+		e.active = FALSE;
+		e.SendFlags |= 2;
 	}
-
-	jb_activecamera = cam;
 }
 
 //
@@ -626,11 +563,37 @@ void JB_SetupJail()
 	EXACTTRIGGER_INIT;
 }
 
+float jailcamera_send(entity to, float sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_JAILCAMERA);
+	WriteByte(MSG_ENTITY, sf);
+	
+	if(sf & 1)
+	{
+		WriteCoord(MSG_ENTITY, self.origin_x);
+		WriteCoord(MSG_ENTITY, self.origin_y);
+		WriteCoord(MSG_ENTITY, self.origin_z);
+		
+		WriteAngle(MSG_ENTITY, self.angles_x);
+		WriteAngle(MSG_ENTITY, self.angles_y);
+	}
+	
+	if(sf & 2)
+	{
+		WriteByte(MSG_ENTITY, self.active);
+	}
+	
+	return TRUE;
+}
+	
+
 void JB_SetupJailCamera()
 {
 	if(!g_jailbreak) { remove(self); return; }
 
 	self.classname = "info_jailbreak_jailcamera";
+	
+	Net_LinkEntity(self, FALSE, 0, jailcamera_send);
 }
 
 void JB_SetupTortureSpawnpoint()
@@ -1045,10 +1008,13 @@ MUTATOR_HOOKFUNCTION(jb_OnEntityPreSpawn)
 
 MUTATOR_HOOKFUNCTION(jb_ResetMap)
 {
-	jb_activecamera = world;
 	jb_roundover = FALSE;
 	
-	JB_ClearCameraForAll();
+	cvar_set("sv_cullentities_pvs", ftos(jb_ce_pvs));
+	cvar_set("sv_cullentities_trace", ftos(jb_ce_trace));
+	
+	for(self = world; (self = find(self, classname, "info_jailbreak_jailcamera")); )
+		self.active = FALSE;
 
 	FOR_EACH_CLIENT(self)
 	{
@@ -1059,6 +1025,7 @@ MUTATOR_HOOKFUNCTION(jb_ResetMap)
 		}
 		self.player_blocked = 0;
 		self.weapon_blocked = FALSE;
+		self.jb_roundlost = FALSE;
 	}
 
 	return TRUE;
@@ -1123,9 +1090,6 @@ MUTATOR_HOOKFUNCTION(jb_PlayerSpawn)
 
 	self.jb_fragrow = 0;
 
-	if(jb_activecamera && jb_roundover)
-		JB_SetCameraWithAngles(self, jb_activecamera, JB_TORTURE_DURATION);
-
 	if(!round_handler_IsRoundStarted())
 	{
 		if(self.jb_specteam)
@@ -1142,12 +1106,14 @@ MUTATOR_HOOKFUNCTION(jb_PlayerSpawn)
 	if(JB_TotalPlayersOnTeam(self.team) - 1 > 0 || self.jb_specteam) // allow to spawn non-prisoned if there are no players on that team
 		JB_Imprison(world);
 	
-	ClearCamera(self);
-
-	self.jb_roundlost = FALSE;
-	
 	self.jb_specteam = 0;
 
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(jb_SpectateCopy)
+{
+	self.stat_jb_isprisoned = other.jb_isprisoned;
 	return FALSE;
 }
 
@@ -1164,7 +1130,12 @@ MUTATOR_HOOKFUNCTION(jb_RemovePlayer)
 MUTATOR_HOOKFUNCTION(jb_PlayerPreThink)
 {
 	if(gameover)
+	{
+		self.stat_jb_isprisoned = FALSE;
 		return FALSE;
+	}
+
+	self.stat_jb_isprisoned = self.jb_isprisoned; // these are different to allow spectating
 
 	if(self.jb_specteam && IS_PLAYER(self))
 	{
@@ -1300,7 +1271,7 @@ void jb_Initialize()
 	addstat(STAT_REDALIVE, AS_INT, redalive_stat);
 	addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
 	addstat(STAT_CAPTURE_PROGRESS, AS_FLOAT, jb_unlock_progress);
-	addstat(STAT_PRISONED, AS_INT, jb_isprisoned);
+	addstat(STAT_PRISONED, AS_INT, stat_jb_isprisoned);
 	addstat(STAT_ROUNDLOST, AS_INT, jb_roundlost);
 
 	g_jailbreak_jail_deathmatch = autocvar_g_jailbreak_jail_deathmatch;
@@ -1313,6 +1284,7 @@ MUTATOR_DEFINITION(gamemode_jailbreak)
 	MUTATOR_HOOK(reset_map_players, jb_ResetMap, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, jb_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, jb_PlayerSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SpectateCopy, jb_SpectateCopy, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, jb_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, jb_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, jb_PlayerPreThink, CBC_ORDER_ANY);
