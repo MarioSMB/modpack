@@ -689,40 +689,10 @@ void JB_ControlPoint_UpdateCooldownProgress(entity e)
 	WaypointSprite_UpdateHealth(e.jb_waypoint, e.jb_cooldown_max - e.jb_cooldown);
 }
 
-void JB_ControlPoint_DefendWaypoint()
-{
-	entity plr;
-	float detected = FALSE;
-	float rng;
-
-	if(time < self.jb_defendthink_next)
-		return;
-
-	rng = autocvar_g_jailbreak_controlpoint_detect_enemies;
-
-	FOR_EACH_PLAYER(plr)
-	if(DIFF_TEAM(plr, self))
-	if(!plr.jb_isprisoned)
-	if(vlen(self.origin - plr.origin) < rng)
-	if(checkpvs(self.origin, plr))
-	{
-		detected = TRUE;
-		break;
-	}
-
-	//if(detected)
-		//WaypointSprite_UpdateSprites(self.jb_waypoint, self.jb_waypoint.model1, "DEFEND!", self.jb_waypoint.model3);
-	//else
-		//WaypointSprite_UpdateSprites(self.jb_waypoint, self.jb_waypoint.model1, "", self.jb_waypoint.model3);
-
-	self.jb_defendthink_next = time + 0.1;
-}
-
 void JB_ControlPoint_Think()
 {
 	self.nextthink = time;
 	AnimateDomPoint();
-	JB_ControlPoint_DefendWaypoint();
 
 	if(time < game_starttime || jb_roundover)
 		return;
