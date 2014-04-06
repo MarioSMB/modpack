@@ -355,7 +355,6 @@ float Monster_CanRespawn(entity ent)
 	return TRUE;
 }
 
-float Monster_CheckAppearFlags(entity ent, float monster_id);
 float monster_initialize(float mon_id);
 void monster_respawn()
 {
@@ -857,7 +856,7 @@ void monsters_setstatus()
 void Monster_Appear()
 {
 	self.enemy = activator;
-	//self.spawnflags &= ~MONSTERFLAG_APPEAR;
+	self.spawnflags &= ~MONSTERFLAG_APPEAR; // otherwise, we get an endless loop
 	monster_initialize(self.monsterid);
 }
 
