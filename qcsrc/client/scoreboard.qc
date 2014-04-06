@@ -1380,7 +1380,7 @@ void HUD_DrawScoreboard()
 
 	// Print info string
 	float tl, fl, ll;
-	str = sprintf(_("playing on ^2%s^7"), shortmapname);
+	str = sprintf(_("playing ^3%s^7 on ^2%s^7"), MapInfo_Type_ToText(gametype), shortmapname);
 	tl = getstatf(STAT_TIMELIMIT);
 	fl = getstatf(STAT_FRAGLIMIT);
 	ll = getstatf(STAT_LEADLIMIT);
@@ -1438,6 +1438,7 @@ void HUD_DrawScoreboard()
 
 	// print information about respawn status
 	float respawn_time = getstatf(STAT_RESPAWN_TIME);
+	if(!intermission)
 	if(respawn_time)
 	{
 		if(respawn_time < 0)
