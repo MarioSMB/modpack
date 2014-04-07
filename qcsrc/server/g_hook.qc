@@ -360,7 +360,7 @@ void FireGrapplingHook (void)
 	float s;
 	vector vs;
 
-	if((time < game_starttime && !autocvar_sv_ready_restart_after_countdown) || self.frozen || self.vehicle || self.pbhost)
+	if((time < game_starttime && !autocvar_sv_ready_restart_after_countdown) || self.frozen || self.vehicle || self.pbhost || self.jb_isprisoned)
 		return;
 
 	makevectors(self.v_angle);

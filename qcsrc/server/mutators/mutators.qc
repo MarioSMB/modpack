@@ -14,7 +14,7 @@ void mutators_add()
 	CHECK_MUTATOR_ADD("g_rocket_flying", mutator_rocketflying, 1);
 	CHECK_MUTATOR_ADD("g_vampire", mutator_vampire, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_superspectate", mutator_superspec, 1);
-	CHECK_MUTATOR_ADD("g_freeze", mutator_freeze, !g_freezetag && !g_ca && !g_jailbreak && !g_cts && !g_race);
+	CHECK_MUTATOR_ADD("g_freeze", mutator_freeze, !g_freezetag && !g_ca && !g_jailbreak && !g_cts && !g_race && !g_infection);
 	CHECK_MUTATOR_ADD("g_pinata", mutator_pinata, !cvar("g_melee_only"));
 	CHECK_MUTATOR_ADD("g_midair", mutator_midair, 1);
 	CHECK_MUTATOR_ADD("g_bloodloss", mutator_bloodloss, 1);
