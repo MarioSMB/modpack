@@ -150,7 +150,7 @@ void ClientCommand_join(float request)
 		{
 			if(IS_CLIENT(self))
 			{
-				if(!IS_PLAYER(self) && !lockteams)
+				if(!IS_PLAYER(self) && !lockteams && !gameover)
 				{
 					if(nJoinAllowed(self))
 					{
