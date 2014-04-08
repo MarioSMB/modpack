@@ -76,6 +76,27 @@ float Nade_ProjectileFromID(float proj, float burn)
 	return 0;
 }
 
+string Nade_TrailEffect(float proj, float nade_team)
+{
+	switch(proj)
+	{
+		case PROJECTILE_NADE: return strcat("nade_", Static_Team_ColorName_Lower(nade_team));
+		case PROJECTILE_NADE_BURN: return strcat("nade_", Static_Team_ColorName_Lower(nade_team), "_burn");
+		case PROJECTILE_NADE_NAPALM: return "TR_ROCKET";
+		case PROJECTILE_NADE_NAPALM_BURN: return "spiderbot_rocket_thrust";
+		case PROJECTILE_NADE_ICE: return "TR_NEXUIZPLASMA";
+		case PROJECTILE_NADE_ICE_BURN: return "wakizashi_rocket_thrust";
+		case PROJECTILE_NADE_TRANSLOCATE: return "TR_CRYLINKPLASMA";
+		case PROJECTILE_NADE_SPAWN: return "nade_yellow";
+        case PROJECTILE_NADE_HEAL: return "nade_red";
+        case PROJECTILE_NADE_HEAL_BURN: return "nade_red_burn";
+		case PROJECTILE_NADE_MONSTER: return "nade_red";
+		case PROJECTILE_NADE_MONSTER_BURN: return "nade_red_burn";
+	}
+	
+	return "";
+}
+
 #ifdef CSQC
 // misc functions
 void ent_healer();

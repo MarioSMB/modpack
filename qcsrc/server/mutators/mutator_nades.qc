@@ -632,8 +632,8 @@ void toss_nade(entity e, vector _velocity, float _time)
 	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_NADES);
 
 	setorigin(_nade, w_shotorg + (v_right * 25) * -1);
-	setmodel(_nade, "models/weapons/v_ok_grenade.md3");
-	setattachment(_nade, world, "");
+	//setmodel(_nade, "models/weapons/v_ok_grenade.md3");
+	//setattachment(_nade, world, "");
 	PROJECTILE_MAKETRIGGER(_nade);
 	setsize(_nade, '-16 -16 -16', '16 16 16');
 	_nade.movetype = MOVETYPE_BOUNCE;
@@ -656,6 +656,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 	_nade.max_health = _nade.health;
 	_nade.takedamage = DAMAGE_AIM;
 	_nade.event_damage = nade_damage;
+	_nade.traileffectnum = 0;
 	_nade.teleportable = TRUE;
 	_nade.pushable = TRUE;
 	_nade.gravity = 1;
@@ -734,8 +735,11 @@ void nade_prime()
 	
 	n.nade_type = bound(1, n.nade_type, NADE_TYPE_LAST);
 
-	setmodel(n, "null");
-	setattachment(n, self, "bip01 l hand");
+	setmodel(n, "models/weapons/v_ok_grenade.md3");
+	//setattachment(n, self, "bip01 l hand");
+	n.exteriormodeltoclient = self;
+	n.traileffectnum = particleeffectnum(Nade_TrailEffect(Nade_ProjectileFromID(n.nade_type, FALSE), self.team));
+	n.colormod = Nade_Color(n.nade_type);
 	n.realowner = self;
 	n.colormap = self.colormap;
 	n.glowmod = self.glowmod;
@@ -841,6 +845,15 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 
 	if(g_grappling_hook || client_hasweapon(self, WEP_HOOK, FALSE, FALSE) || (weaponsInMap & WEPSET_HOOK) || g_jetpack || self.items & IT_JETPACK)
 		key_pressed = self.button16; // if hook/jetpack is enabled, use an alternate key
+		
+	if(self.nade)
+	{
+		makevectors(self.angles);
+		self.nade.velocity = self.velocity;
+
+		setorigin(self.nade, self.origin + self.view_ofs + v_forward * 8 + v_right * -8 + v_up * 0);
+		self.nade.angles_y = self.angles_y;
+	}
 
 	if(self.nade)
 	if(self.nade.wait - 0.1 <= time)

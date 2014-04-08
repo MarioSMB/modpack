@@ -565,6 +565,16 @@ void spawnfunc_nexball_football(void)
 	SpawnBall();
 }
 
+float nb_Goal_Customize()
+{
+	entity e, wp_owner;
+	e = WaypointSprite_getviewentity(other);
+	wp_owner = self.owner;
+	if(SAME_TEAM(e, wp_owner)) { return FALSE; }
+
+	return TRUE;
+}
+
 void SpawnGoal(void)
 {
 	if(!g_nexball) { remove(self); return; }
@@ -572,7 +582,10 @@ void SpawnGoal(void)
 	EXACTTRIGGER_INIT;
 
 	if(self.team != GOAL_OUT && Team_TeamToNumber(self.team) != -1)
+	{
 		WaypointSprite_SpawnFixed("goal", (self.absmin + self.absmax) * 0.5, self, sprite, RADARICON_NONE, ((self.team) ? Team_ColorRGB(self.team) : '1 0.5 0'));
+		self.sprite.customizeentityforclient = nb_Goal_Customize;
+	}
 
 	self.classname = "nexball_goal";
 	if(self.noise == "")
