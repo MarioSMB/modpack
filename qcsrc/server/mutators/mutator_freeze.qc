@@ -64,8 +64,8 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerDies)
 		}
 
 		Freeze(frag_target, 0, 1, (teamplay && autocvar_g_freeze_noauto));
-		if(autocvar_g_freezetag_frozen_maxtime > 0)
-			self.freezetag_frozen_timeout = time + autocvar_g_freezetag_frozen_maxtime;
+		if(autocvar_g_freeze_frozen_maxtime > 0)
+			self.freezetag_frozen_timeout = time + autocvar_g_freeze_frozen_maxtime;
 		self.freezetag_frozen_time = time;
 	}
 
@@ -184,8 +184,8 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 
 				if(n == -1)
 				{
-					Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_FREEZETAG_AUTO_REVIVED, autocvar_g_freezetag_frozen_maxtime);
-					Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_AUTO_REVIVED, self.netname, autocvar_g_freezetag_frozen_maxtime);
+					Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_FREEZETAG_AUTO_REVIVED, autocvar_g_freeze_frozen_maxtime);
+					Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_AUTO_REVIVED, self.netname, autocvar_g_freeze_frozen_maxtime);
 					return 1;
 				}
 

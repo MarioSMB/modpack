@@ -1358,6 +1358,7 @@ float autocvar_g_freeze_revive_nade;
 float autocvar_g_freeze_revive_nade_health;
 float autocvar_g_freeze_frozen_force;
 float autocvar_g_freeze_frozen_damage_trigger;
+float autocvar_g_freeze_frozen_maxtime;
 float autocvar_g_freeze_respawn_time;
 float autocvar_g_monsters_target_range;
 float autocvar_g_monsters_target_infront;
