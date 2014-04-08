@@ -512,12 +512,6 @@ MUTATOR_HOOKFUNCTION(freezetag_GetTeamCount)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(freezetag_CountFrags)
-{
-	// announce remaining frags?
-	return TRUE;
-}
-
 // scoreboard setup
 void ft_ScoreRules(float teams)
 {
@@ -556,7 +550,6 @@ MUTATOR_DEFINITION(gamemode_freezetag)
 	MUTATOR_HOOK(PlayerPreThink, freezetag_PlayerPreThink, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(HavocBot_ChooseRole, freezetag_BotRoles, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, freezetag_GetTeamCount, CBC_ORDER_EXCLUSIVE);
-	MUTATOR_HOOK(Scores_CountFragsRemaining, freezetag_CountFrags, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
