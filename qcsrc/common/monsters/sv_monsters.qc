@@ -1151,7 +1151,7 @@ float monster_initialize(float mon_id)
 		monsters_total += 1;
 
 	setmodel(self, mon.model);
-	setsize(self, mon.mins, mon.maxs);
+	//setsize(self, mon.mins, mon.maxs);
 	self.flags				= FL_MONSTER;
 	self.takedamage			= DAMAGE_AIM;
 	self.bot_attack			= TRUE;
@@ -1179,12 +1179,14 @@ float monster_initialize(float mon_id)
 	self.oldtarget2			= self.target2;
 	self.pass_distance		= 0;
 	self.deadflag			= DEAD_NO;
-	self.scale				= 1;
 	self.noalign			= ((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM));
 	self.spawn_time			= time;
 	self.spider_slowness	= 0;
 	self.gravity			= 1;
 	self.dphitcontentsmask	= DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
+	
+	if(!self.scale)
+		self.scale = 1;
 
 	if(autocvar_g_monsters_edit)
 		self.grab = 1; // owner may carry their monster
@@ -1205,7 +1207,9 @@ float monster_initialize(float mon_id)
 	}
 
 	if(mon.spawnflags & MONSTER_SIZE_BROKEN)
-		self.scale = 1.3;
+		self.scale *= 1.3;
+		
+	setsize(self, mon.mins * self.scale, mon.maxs * self.scale);
 
 	if(!self.ticrate)
 		self.ticrate = autocvar_g_monsters_think_delay;

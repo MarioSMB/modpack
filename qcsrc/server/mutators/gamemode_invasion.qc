@@ -51,7 +51,7 @@ void invasion_SpawnChosenMonster(float mon)
 		return;
 	}
 
-	monster = spawnmonster("", mon, spawn_point, spawn_point, spawn_point.origin, FALSE, FALSE, 2);
+	monster = spawnmonster("", ((spawn_point.monsterid) ? spawn_point.monsterid : mon), spawn_point, spawn_point, spawn_point.origin, FALSE, FALSE, 2);
 	
 	monster.target2 = spawn_point.target2;
 
@@ -193,10 +193,7 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterDies)
 MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
 {
 	if(!(self.spawnflags & MONSTERFLAG_SPAWNED))
-	{
-		monster_remove(self);
-		return FALSE;
-	}
+		return TRUE;
 
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
@@ -211,6 +208,15 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
 
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(invasion_OnEntityPreSpawn)
+{
+	if(startsWith(self.classname, "monster_"))
+	if(!(self.spawnflags & MONSTERFLAG_SPAWNED))
+		return TRUE;
+	
 	return FALSE;
 }
 
@@ -314,6 +320,7 @@ MUTATOR_DEFINITION(gamemode_invasion)
 {
 	MUTATOR_HOOK(MonsterDies, invasion_MonsterDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterSpawn, invasion_MonsterSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(OnEntityPreSpawn, invasion_OnEntityPreSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, invasion_PlayerThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerRegen, invasion_PlayerRegen, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, invasion_PlayerSpawn, CBC_ORDER_ANY);
