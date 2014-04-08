@@ -297,7 +297,7 @@ string HUD_DefaultColumnLayout()
 		"+tdm/kills +tdm/deaths +tdm/suicides ",
 		((ex) ? "+ctf/deaths +ctf/suicides " : ""), "+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns +ons/caps +ons/takes +as/objectives +inf/survivals ",
 		"+lms/lives +lms/rank ",
-		((ex) ? "+kh/deaths +kh/suicides" : ""), "+kh/caps +kh/pickups +kh/kckills ",
+		((ex) ? "+kh/deaths +kh/suicides " : ""), "+kh/caps +kh/pickups +kh/kckills ",
 		"?+race/laps ?+race/time ?+race/fastest ",
 		"+nexball/faults +nexball/goals +ka/pickups +ka/bckills +ka/bctime +freezetag/revivals +vip/survivals +vip/vipkills ?+dom/caps ",
 		"-lms,race,nexball/score");
