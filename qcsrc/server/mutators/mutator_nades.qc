@@ -656,6 +656,8 @@ void toss_nade(entity e, vector _velocity, float _time)
 	_nade.max_health = _nade.health;
 	_nade.takedamage = DAMAGE_AIM;
 	_nade.event_damage = nade_damage;
+	_nade.customizeentityforclient = func_null;
+	_nade.exteriormodeltoclient = world;
 	_nade.traileffectnum = 0;
 	_nade.teleportable = TRUE;
 	_nade.pushable = TRUE;
@@ -705,6 +707,12 @@ void nades_RemoveBonus(entity player)
 	player.bonus_nades = player.bonus_nade_score = 0;
 }
 
+float nade_customize()
+{
+	if(IS_SPEC(other)) { return FALSE; }
+	
+	return TRUE;
+}
 
 void nade_prime()
 {
@@ -738,6 +746,7 @@ void nade_prime()
 	setmodel(n, "models/weapons/v_ok_grenade.md3");
 	//setattachment(n, self, "bip01 l hand");
 	n.exteriormodeltoclient = self;
+	n.customizeentityforclient = nade_customize;
 	n.traileffectnum = particleeffectnum(Nade_TrailEffect(Nade_ProjectileFromID(n.nade_type, FALSE), self.team));
 	n.colormod = Nade_Color(n.nade_type);
 	n.realowner = self;
