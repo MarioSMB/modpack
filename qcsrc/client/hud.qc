@@ -5812,7 +5812,12 @@ void HUD_Main (void)
 	}
 
 	if(!autocvar__hud_configure && !hud_fade_alpha)
+	{
+		hud_fade_alpha = 1;
+		(panel = HUD_PANEL(VOTE)).panel_draw();
+		hud_fade_alpha = 0;
 		return;
+	}
 
 	// Drawing stuff
 	if (hud_skin_prev != autocvar_hud_skin)

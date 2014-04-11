@@ -1207,6 +1207,7 @@ float monster_initialize(float mon_id)
 	}
 
 	if(mon.spawnflags & MONSTER_SIZE_BROKEN)
+	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 		self.scale *= 1.3;
 		
 	setsize(self, mon.mins * self.scale, mon.maxs * self.scale);
