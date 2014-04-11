@@ -8,29 +8,18 @@ void CA_count_alive_players()
 {
 	entity e;
 	total_players = redalive = bluealive = yellowalive = pinkalive = 0;
-	FOR_EACH_PLAYER(e) {
-		if(e.team == NUM_TEAM_1)
+	FOR_EACH_PLAYER(e)
+	{
+		switch(e.team)
 		{
-			++total_players;
-			if (e.health >= 1) ++redalive;
-		}
-		else if(e.team == NUM_TEAM_2)
-		{
-			++total_players;
-			if (e.health >= 1) ++bluealive;
-		}
-		else if(e.team == NUM_TEAM_3)
-		{
-			++total_players;
-			if (e.health >= 1) ++yellowalive;
-		}
-		else if(e.team == NUM_TEAM_4)
-		{
-			++total_players;
-			if (e.health >= 1) ++pinkalive;
+			case NUM_TEAM_1: if(e.health >= 1) ++redalive; ++total_players; break;
+			case NUM_TEAM_2: if(e.health >= 1) ++bluealive; ++total_players; break;
+			case NUM_TEAM_3: if(e.health >= 1) ++yellowalive; ++total_players; break;
+			case NUM_TEAM_4: if(e.health >= 1) ++pinkalive; ++total_players; break;
 		}
 	}
-	FOR_EACH_REALCLIENT(e) {
+	FOR_EACH_REALCLIENT(e)
+	{
 		e.redalive_stat = redalive;
 		e.bluealive_stat = bluealive;
 		e.yellowalive_stat = yellowalive;
