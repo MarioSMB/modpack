@@ -37,7 +37,7 @@ void spider_web_explode()
 		pointparticles(particleeffectnum("electro_impact"), self.origin, '0 0 0', 1);
 		RadiusDamage(self, self.realowner, 0, 0, 25, world, 25, self.projectiledeathtype, world);
 
-		for(e = findradius(self.origin, 25); e; e = e.chain) if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0)
+		for(e = findradius(self.origin, 25); e; e = e.chain) if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0) if(e.monsterid != MON_SPIDER)
 			e.spider_slowness = time + (autocvar_g_monster_spider_attack_web_damagetime);
 
 		remove(self);

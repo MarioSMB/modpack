@@ -806,6 +806,8 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 	
 	vector real_angle = vectoangles(self.steerto) - self.angles;
 	float turny = 25;
+	if(self.state == MONSTER_STATE_ATTACK_MELEE)
+		turny = 0;
 	if(turny)
 	{
 		turny = bound(turny * -1, shortangle_f(real_angle_y, self.angles_y), turny);
