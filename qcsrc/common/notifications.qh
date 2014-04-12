@@ -709,6 +709,7 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_JOIN_PREVENT,                0, 0, "",              CPID_PREVENT_JOIN,     "0 0", _("^K1You may not join the game at this time.\nThe player limit reached maximum capacity."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_DROPPED,            1, 0, "s1",            CPID_KEEPAWAY,         "0 0", _("^BG%s^BG has dropped the ball!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_PICKUP,             1, 0, "s1",            CPID_KEEPAWAY,         "0 0", _("^BG%s^BG has picked up the ball!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_PICKUP_SELF,        0, 0, "",              CPID_KEEPAWAY,         "0 0", _("^BGYou picked up the ball"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEEPAWAY_WARN,               0, 0, "",              CPID_KEEPAWAY_WARN,    "0 0", _("^BGKilling people while you don't have the ball gives no points!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_CAPTURE,             0, 0, "",              CPID_KEYHUNT_LOWPRIO,  "0 0", _("^BGYou captured the keys!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_KEYHUNT_HELP,                0, 0, "",              CPID_KEYHUNT,          "0 0", _("^BGAll keys are in your team's hands!\nHelp the key carriers to meet!"), "") \
