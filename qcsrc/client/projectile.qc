@@ -508,7 +508,6 @@ void Projectile_Precache()
 	precache_model("models/rocket.md3");
 	precache_model("models/tagrocket.md3");
 	precache_model("models/tracer.mdl");
-	precache_model("models/runematch/rune.mdl");
 	precache_model("models/sphere/sphere.md3");
 
 	precache_model("models/weapons/v_ok_grenade.md3");

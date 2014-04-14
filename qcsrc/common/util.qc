@@ -2822,3 +2822,18 @@ float Mod_Q1BSP_NativeContentsFromSuperContents(float supercontents)
 	return CONTENT_EMPTY;
 }
 #endif
+
+vector bezier_quadratic_getpoint(vector a, vector b, vector c, float t)
+{
+	return
+		(c - 2 * b + a) * (t * t) +
+		(b - a) * (2 * t) +
+		a;
+}
+
+vector bezier_quadratic_getderivative(vector a, vector b, vector c, float t)
+{
+	return
+		(c - 2 * b + a) * (2 * t) +
+		(b - a) * 2;
+}

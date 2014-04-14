@@ -34,7 +34,7 @@ void register_status_effects_done();
 
 #define STATUS_EFFECT_2(id,type,thestat,clr,shortname,name) \
 	float id; \
-	.float ##thestat; \
+	.float thestat; \
 	float STAT_##id; \
 	void RegisterStatusEffects_##id() \
 	{ \

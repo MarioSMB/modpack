@@ -475,3 +475,7 @@ float Announcer_PickNumber(float type, float num);
 float Mod_Q1BSP_SuperContentsFromNativeContents(float nativecontents);
 float Mod_Q1BSP_NativeContentsFromSuperContents(float supercontents);
 #endif
+
+// Quadratic splines (bezier)
+vector bezier_quadratic_getpoint(vector a, vector p, vector b, float t);
+vector bezier_quadratic_getderivative(vector a, vector p, vector b, float t);

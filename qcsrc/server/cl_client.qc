@@ -262,7 +262,7 @@ void PutObserverInServer (void)
 	self.punchvector = '0 0 0';
 	self.oldvelocity = self.velocity;
 	self.fire_endtime = -1;
-	
+
 	if(autocvar_g_observer_glowtrails)
 	{
 		//self.glow_color = 254;
@@ -465,7 +465,10 @@ void PutClientInServer (void)
 		}
 
 		RemoveGrapplingHook(self); // Wazat's Grappling Hook
-		
+
+		if(self.vehicle)
+			vehicles_exit(VHEF_RELEASE);
+
 		if(autocvar_g_observer_glowtrails)
 			CSQCMODEL_AUTOINIT();
 
