@@ -2,7 +2,6 @@
 .float monster_attack;
 
 .entity monster_owner; // new monster owner entity, fixes non-solid monsters
-.float monstercount; // per player monster count
 
 .float stat_monsters_killed; // stats
 .float stat_monsters_total;

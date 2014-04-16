@@ -268,7 +268,7 @@ void ClientCommand_mobspawn(float request, float argc)
 		{
 			entity e;
 			string tospawn;
-			float moveflag;
+			float moveflag, monstercount = 0;
 			
 			moveflag = (argv(2) ? stof(argv(2)) : 1); // follow owner if not defined
 			tospawn = strtolower(argv(1));
@@ -277,6 +277,12 @@ void ClientCommand_mobspawn(float request, float argc)
 			{
 				sprint(self, monsterlist_reply);
 				return;
+			}
+			
+			FOR_EACH_MONSTER(e)
+			{
+				if(e.realowner == self)
+					++monstercount;
 			}
 			
 			if(autocvar_g_monsters_max <= 0 || autocvar_g_monsters_max_perplayer <= 0) { sprint(self, "Monster spawning is disabled.\n"); return; }
@@ -288,7 +294,7 @@ void ClientCommand_mobspawn(float request, float argc)
 			else if(self.frozen) { sprint(self, "You can't spawn monsters while frozen.\n"); return; }
 			else if(autocvar_g_campaign) { sprint(self, "You can't spawn monsters in campaign mode.\n"); return; }
 			else if(self.deadflag != DEAD_NO) { sprint(self, "You can't spawn monsters while dead.\n"); return; }
-			else if(self.monstercount >= autocvar_g_monsters_max_perplayer) { sprint(self, "You have spawned too many monsters, kill some before trying to spawn any more.\n"); return; }
+			else if(monstercount >= autocvar_g_monsters_max_perplayer) { sprint(self, "You have spawned too many monsters, kill some before trying to spawn any more.\n"); return; }
 			else if(totalspawned >= autocvar_g_monsters_max) { sprint(self, "The global maximum monster count has been reached, kill some before trying to spawn any more.\n"); return; }
 			else if(tospawn != "")
 			{
@@ -307,7 +313,6 @@ void ClientCommand_mobspawn(float request, float argc)
 
 				if(found || tospawn == "random")
 				{
-					self.monstercount += 1;
 					totalspawned += 1;
 				
 					makevectors(self.v_angle);

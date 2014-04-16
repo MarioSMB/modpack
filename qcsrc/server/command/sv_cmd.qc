@@ -184,9 +184,6 @@ void GameCommand_mobbutcher(float request)
 				++removed_count;
 			}
 
-			FOR_EACH_PLAYER(head)
-				head.monstercount = 0;
-
 			monsters_total = 0; // reset stats?
 			monsters_killed = 0;
 

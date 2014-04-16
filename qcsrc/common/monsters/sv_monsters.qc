@@ -388,9 +388,6 @@ void Monster_Fade ()
 		// number of monsters spawned with mobspawn command
 		totalspawned -= 1;
 
-		if(IS_CLIENT(self.realowner))
-			self.realowner.monstercount -= 1;
-
 		SUB_SetFade(self, time + 3, 1);
 	}
 }
@@ -904,9 +901,6 @@ void monsters_corpse_damage (entity inflictor, entity attacker, float damage, fl
 		// number of monsters spawned with mobspawn command
 		totalspawned -= 1;
 
-		if(IS_CLIENT(self.realowner))
-			self.realowner.monstercount -= 1;
-
 		self.think = SUB_Remove;
 		self.nextthink = time + 0.1;
 		self.event_damage = func_null;
@@ -940,9 +934,6 @@ void monster_die(entity attacker, float gibbed)
 	{
 		// number of monsters spawned with mobspawn command
 		totalspawned -= 1;
-
-		if(IS_CLIENT(self.realowner))
-			self.realowner.monstercount -= 1;
 	}
 
 	if(self.candrop && self.weapon)
