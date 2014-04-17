@@ -340,6 +340,9 @@ void nade_ice_boom()
 
 void nade_translocate_boom()
 {
+	if(self.realowner.vehicle)
+		return;
+
 	vector locout = self.origin + '0 0 1' * (1 - self.realowner.mins_z - 24);
 
 	makevectors(self.realowner.angles);
@@ -668,6 +671,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 	_nade.flags = FL_PROJECTILE;
 	_nade.projectiledeathtype = DEATH_NADE;
 	_nade.toss_time = time;
+	_nade.solid = ((_nade.nade_type == NADE_TYPE_TRANSLOCATE) ? SOLID_CORPSE : SOLID_BBOX);
 
 	nade_spawn(_nade);
 

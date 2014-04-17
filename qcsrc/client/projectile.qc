@@ -468,6 +468,9 @@ void Ent_Projectile()
 			self.move_touch = func_null;
 			self.scale = 1.5;
 			self.avelocity = randomvec() * 720;
+			
+			if(Nade_IDFromProjectile(self.cnt) == NADE_TYPE_TRANSLOCATE)
+				self.solid = SOLID_TRIGGER;
 		}
 
 		setsize(self, self.mins, self.maxs);

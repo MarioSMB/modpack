@@ -219,13 +219,8 @@ void turret_damage (entity inflictor, entity attacker, float damage, float death
 	if(!self.active)
 		return;
 
-	if (teamplay)
-	if (self.team == attacker.team)
+	if(SAME_TEAM(self, attacker))
 	{
-		// This does not happen anymore. Re-enable if you fix that.
-		if(IS_REAL_CLIENT(attacker))
-			sprint(attacker, "\{1}Turret tells you: I'm on your team!\n");
-
 		if(autocvar_g_friendlyfire)
 			damage = damage * autocvar_g_friendlyfire;
 		else
