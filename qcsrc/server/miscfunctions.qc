@@ -1353,7 +1353,20 @@ void precache()
             precache_playermodel(s);
         s = autocvar_sv_defaultplayermodel;
         if (s != "")
-            precache_playermodel(s);
+		{
+			float n = tokenize_console(s);
+			if(n > 0)
+			{
+				float i;
+				for (i = 0; i < n; ++i)
+				{
+					print("Precaching: ", argv(i), "\n");
+					precache_model(argv(i));
+				}
+			}
+			
+			precache_playermodel(s);
+		}
     }
 
     if(autocvar_sv_allow_customplayermodels)
