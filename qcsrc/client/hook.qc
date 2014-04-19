@@ -83,7 +83,7 @@ void Draw_GrapplingHook()
 			break;
 	}
 
-	if((self.owner.sv_entnum == player_localentnum - 1))
+	if((self.owner.sv_entnum == player_localentnum - 1) && autocvar_chase_active <= 0)
 	{
 		switch(self.HookType)
 		{

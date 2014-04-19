@@ -139,10 +139,7 @@ MUTATOR_HOOKFUNCTION(ca_PutClientInServer)
 {
 	if(!allowed_to_spawn && !IS_OBSERVER(self))
 	{
-		if(self.enemy)
-			self.classname = "spectator";
-		else
-			self.classname = "observer";
+		self.classname = "observer";
 		if(self.jointime != time) //not when connecting
 		if(!self.caplayer)
 		{
