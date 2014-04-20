@@ -658,8 +658,6 @@ void spawnfunc_worldspawn (void)
 	InitGameplayMode();
 	readlevelcvars();
 	GrappleHookInit();
-	ElectroInit();
-	LaserInit();
 
 	player_count = 0;
 	bot_waypoints_for_items = autocvar_g_waypoints_for_items;
@@ -796,8 +794,8 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_TYPEHIT_TIME, AS_FLOAT, typehit_time);
 	addstat(STAT_LAYED_MINES, AS_INT, minelayer_mines);
 
-	addstat(STAT_NEX_CHARGE, AS_FLOAT, nex_charge);
-	addstat(STAT_NEX_CHARGEPOOL, AS_FLOAT, nex_chargepool_ammo);
+	addstat(STAT_VORTEX_CHARGE, AS_FLOAT, vortex_charge);
+	addstat(STAT_VORTEX_CHARGEPOOL, AS_FLOAT, vortex_chargepool_ammo);
 
 	addstat(STAT_HAGAR_LOAD, AS_INT, hagar_load);
 
@@ -1745,7 +1743,7 @@ float WinningCondition_Assault()
 		{
 			bprint("ASSAULT: round completed...\n");
 			SetWinners(team, assault_attacker_team);
-			
+
 			TeamScore_AddToTeam(assault_attacker_team, ST_ASSAULT_DESTROYED, 1);
 
 			// why...

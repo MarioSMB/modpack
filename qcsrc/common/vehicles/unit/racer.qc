@@ -570,7 +570,7 @@ void racer_blowup()
 
 	RadiusDamage (self, self.enemy, autocvar_g_vehicle_racer_blowup_coredamage,
 					autocvar_g_vehicle_racer_blowup_edgedamage,
-					autocvar_g_vehicle_racer_blowup_radius, world,
+					autocvar_g_vehicle_racer_blowup_radius, world, world,
 					autocvar_g_vehicle_racer_blowup_forceintensity,
 					DEATH_VH_WAKI_DEATH, world);
 

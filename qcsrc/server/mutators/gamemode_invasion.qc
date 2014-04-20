@@ -58,7 +58,7 @@ void invasion_SpawnChosenMonster(float mon)
 	}
 
 	monster = spawnmonster("", ((spawn_point.monsterid) ? spawn_point.monsterid : mon), spawn_point, spawn_point, spawn_point.origin, FALSE, FALSE, 2);
-	
+
 	monster.target2 = spawn_point.target2;
 	monster.spawnshieldtime = time;
 

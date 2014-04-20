@@ -396,7 +396,7 @@ string formatmessage(string msg)
 				wep = self.switchweapon;
 			if (!wep)
 				wep = self.cnt;
-			replacement = W_Name(wep);
+			replacement = WEP_NAME(wep);
 		} else if (escape == "W") {
 			if (self.items & IT_SHELLS) replacement = "shells";
 			else if (self.items & IT_NAILS) replacement = "bullets";
@@ -502,7 +502,6 @@ void GetCvars_handleFloatOnce(string thisname, float f, .float field, string nam
 			stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
 	}
 }
-float w_getbestweapon(entity e);
 string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(string wo)
 {
 	string o;
@@ -669,9 +668,7 @@ float warmup_start_health;
 float warmup_start_armorvalue;
 float g_weapon_stay;
 
-entity get_weaponinfo(float w);
-
-float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
+float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still needs done? 
 {
 	var float i = weaponinfo.weapon;
 	var float d = 0;
@@ -687,7 +684,7 @@ float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 			d = FALSE;
 	}
 	else
-		d = (i == WEP_LASER || i == WEP_SHOTGUN);
+		d = !(!weaponinfo.weaponstart);
 
 	ret_float = d;
 	other = weaponinfo;
@@ -700,7 +697,7 @@ float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 	if(weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED) // never default mutator blocked guns
 		d = 0;
 
-	var float t = cvar(strcat(cvarprefix, weaponinfo.netname));
+	var float t = weaponinfo.weaponstartoverride;
 
 	//print(strcat("want_weapon: ", weaponinfo.netname, " - d: ", ftos(d), ", t: ", ftos(t), ". \n"));
 
@@ -823,7 +820,7 @@ void readplayerstartcvars()
 		for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
 			e = get_weaponinfo(i);
-			float w = want_weapon("g_start_weapon_", e, FALSE);
+			float w = want_weapon(e, FALSE);
 			if(w & 1)
 				start_weapons |= WepSet_FromWeapon(i);
 			if(w & 2)
@@ -881,7 +878,7 @@ void readplayerstartcvars()
 			for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
-				float w = want_weapon("g_start_weapon_", e, g_warmup_allguns);
+				float w = want_weapon(e, g_warmup_allguns);
 				if(w & 1)
 					warmup_start_weapons |= WepSet_FromWeapon(i);
 				if(w & 2)
@@ -912,7 +909,7 @@ void readplayerstartcvars()
 	{
 		e = get_weaponinfo(i);
 		if(precache_weapons & WepSet_FromWeapon(i))
-			weapon_action(i, WR_PRECACHE);
+			WEP_ACTION(i, WR_INIT);
 	}
 
 	start_ammo_shells = max(0, start_ammo_shells);
@@ -1429,18 +1426,6 @@ void precache()
     {
         precache_sound ("weapons/hook_fire.wav"); // hook
         precache_sound ("weapons/hook_impact.wav"); // hook
-    }
-
-    if(autocvar_sv_precacheweapons)
-    {
-        //precache weapon models/sounds
-        float wep;
-        wep = WEP_FIRST;
-        while (wep <= WEP_LAST)
-        {
-            weapon_action(wep, WR_PRECACHE);
-            wep = wep + 1;
-        }
     }
 
     precache_model("models/elaser.mdl");

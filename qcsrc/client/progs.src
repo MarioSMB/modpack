@@ -19,8 +19,7 @@ Defs.qc
 ../common/util.qh
 ../common/test.qh
 ../common/counting.qh
-../common/items.qh
-../common/explosion_equation.qh
+../common/weapons/weapons.qh // TODO
 ../common/mapinfo.qh
 ../common/command/markup.qh
 ../common/command/rpn.qh
@@ -61,11 +60,12 @@ main.qh
 ../csqcmodellib/common.qh
 ../csqcmodellib/cl_model.qh
 ../csqcmodellib/cl_player.qh
-projectile.qh
+weapons/projectile.qh // TODO
 player_skeleton.qh
 
 sortlist.qc
 miscfunctions.qc
+../server/t_items.qh
 ../server/t_items.qc
 
 teamradar.qc
@@ -80,7 +80,7 @@ rubble.qc
 hook.qc
 particles.qc
 laser.qc
-projectile.qc
+weapons/projectile.qc // TODO
 gibs.qc
 damage.qc
 casings.qc
@@ -113,9 +113,7 @@ noise.qc
 ../common/command/rpn.qc
 ../common/command/generic.qc
 ../common/mapinfo.qc
-../common/items.qc
-../server/w_all.qc
-../common/explosion_equation.qc
+../common/weapons/weapons.qc // TODO
 ../common/urllib.qc
 ../common/status_effects.qc
 command/cl_cmd.qc

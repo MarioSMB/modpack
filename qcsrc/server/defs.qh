@@ -172,7 +172,7 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 .string item_pickupsound;
 
 // definitions for weaponsystem
-
+// more WEAPONTODO: move these to their proper files
 .entity weaponentity;
 .entity exteriorweaponentity;
 .vector weaponentity_glowmod;
@@ -182,8 +182,9 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 .float switchingweapon; // weapon currently being switched to (is copied from switchweapon once switch is possible)
 .string weaponname; // name of .weapon
 
+// WEAPONTODO
 .float autoswitch;
-float weapon_action(float wpn, float wrequest);
+//float WEP_ACTION(float wpn, float wrequest);
 float client_hasweapon(entity cl, float wpn, float andammo, float complain);
 void w_clear();
 void w_ready();
@@ -191,9 +192,6 @@ void w_ready();
 .float weapon_nextthink;
 .void() weapon_think;
 
-//float	PLAYER_WEAPONSELECTION_DELAY = );
-const float	PLAYER_WEAPONSELECTION_SPEED = 18;
-const vector	PLAYER_WEAPONSELECTION_RANGE = '0 20 -40';
 
 // weapon states (self.weaponentity.state)
 const float WS_CLEAR			= 0; // no weapon selected
@@ -288,16 +286,12 @@ string gamemode_name;
 
 float startitem_failed;
 
-typedef .float floatfield;
-floatfield Item_CounterField(float it);
-
-float W_AmmoItemCode(float wpn);
-string W_Name(float weaponid);
 string W_Apply_Weaponreplace(string in);
 
 void FixIntermissionClient(entity e);
 void FixClientCvars(entity e);
 
+// WEAPONTODO: remove this
 WepSet weaponsInMap;
 
 .WepSet weaponsinmap;
@@ -514,7 +508,6 @@ float servertime, serverprevtime, serverframetime;
 .float stat_shotorg; // networked stat for trueaim HUD
 
 string matchid;
-.float hitplotfh;
 
 .float last_pickup;
 
@@ -530,8 +523,6 @@ float client_cefc_accumulator;
 float client_cefc_accumulatortime;
 #endif
 
-..float current_ammo;
-
 .float weapon_load[WEP_MAXCOUNT];
 .float ammo_none; // used by the reloading system, must always be 0
 .float clip_load;
@@ -540,9 +531,9 @@ float client_cefc_accumulatortime;
 
 .entity lastrocket;
 .float minelayer_mines;
-.float nex_charge;
-.float nex_charge_rottime;
-.float nex_chargepool_ammo;
+.float vortex_charge;
+.float vortex_charge_rottime;
+.float vortex_chargepool_ammo;
 .float hagar_load;
 
 .float grab; // 0 = can't grab, 1 = owner can grab, 2 = owner and team mates can grab, 3 = anyone can grab
@@ -561,9 +552,6 @@ float client_cefc_accumulatortime;
 string deathmessage;
 
 .float just_joined;
-
-.float cvar_cl_accuracy_data_share;
-.float cvar_cl_accuracy_data_receive;
 
 .float cvar_cl_weaponimpulsemode;
 .float selectweapon; // last selected weapon of the player

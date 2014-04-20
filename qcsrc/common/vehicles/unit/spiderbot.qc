@@ -691,7 +691,7 @@ void spiderbot_blowup()
 	SUB_SetFade(g1, time, min(self.respawntime, 10));
 	SUB_SetFade(g2, time, min(self.respawntime, 10));
 
-	RadiusDamage (self, self.enemy, 250, 15, 250, world, 250, DEATH_VH_SPID_DEATH, world);
+	RadiusDamage (self, self.enemy, 250, 15, 250, world, world, 250, DEATH_VH_SPID_DEATH, world);
 
 	self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = -1;
 	self.movetype = MOVETYPE_NONE;

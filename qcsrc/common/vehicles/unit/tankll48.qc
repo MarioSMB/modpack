@@ -63,7 +63,7 @@ void tankll48_cannon_explode()
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
-	RadiusDamage (self, self.realowner, autocvar_g_vehicle_tankll48_cannon_damage, autocvar_g_vehicle_tankll48_cannon_edgedamage, autocvar_g_vehicle_tankll48_cannon_radius, world, autocvar_g_vehicle_tankll48_cannon_force, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, autocvar_g_vehicle_tankll48_cannon_damage, autocvar_g_vehicle_tankll48_cannon_edgedamage, autocvar_g_vehicle_tankll48_cannon_radius, world, world, autocvar_g_vehicle_tankll48_cannon_force, self.projectiledeathtype, other);
 
 	remove (self);
 }
@@ -258,7 +258,7 @@ float tankll48_frame()
 		tank.cnt = time;
 		entity missile = spawn();
 		vector v = gettaginfo(self.gun1, gettagindex(self.gun1, "barrels"));
-		W_SetupShot_ProjectileSize (player, '-3 -3 -3', '3 3 3', FALSE, 5, "weapons/campingrifle_fire_morebass.wav", CH_WEAPON_A, autocvar_g_vehicle_tankll48_cannon_damage, DEATH_VH_TANKLL48);
+		W_SetupShot_ProjectileSize (player, '-3 -3 -3', '3 3 3', FALSE, 5, "weapons/campingrifle_fire_morebass.wav", CH_WEAPON_A, autocvar_g_vehicle_tankll48_cannon_damage);
 		tank.vehicle_ammo1 -= autocvar_g_vehicle_tankll48_cannon_ammo;
 		w_shotorg = v;
 
@@ -278,7 +278,7 @@ float tankll48_frame()
 		setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
 
 		setorigin (missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
-		W_SetupProjectileVelocity(missile, autocvar_g_vehicle_tankll48_cannon_speed, 0);
+		W_SetupProjVelocity_Basic(missile, autocvar_g_vehicle_tankll48_cannon_speed, 0);
 
 		missile.touch = tankll48_cannon_touch;
 
@@ -457,7 +457,7 @@ void tankll48_blowup()
 	SUB_SetFade(g1, time, min(self.respawntime, 10));
 	SUB_SetFade(g2, time, min(self.respawntime, 10));
 
-	RadiusDamage (self, self.enemy, 250, 15, 250, world, 250, DEATH_VH_TANK_DEATH, world);
+	RadiusDamage (self, self.enemy, 250, 15, 250, world, world, 250, DEATH_VH_TANK_DEATH, world);
 
 	self.alpha = self.tur_head.alpha = self.gun1.alpha = self.gun2.alpha = -1;
 	self.movetype = MOVETYPE_NONE;

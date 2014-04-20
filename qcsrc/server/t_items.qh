@@ -1,0 +1,175 @@
+// constants
+#define WANT_CONST /* we WANT these to be constant, but it conflicts with the declaration in dpdefs/progsdefs.qc */
+const      float IT_UNLIMITED_WEAPON_AMMO     =       1; // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
+const      float IT_UNLIMITED_SUPERWEAPONS    =       2; // when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
+const      float IT_CTF_SHIELDED              =       4; // set for the flag shield
+const      float IT_USING_JETPACK             =       8; // confirmation that button is pressed
+const      float IT_JETPACK                   =      16; // actual item
+const      float IT_FUEL_REGEN                =      32; // fuel regeneration trigger
+// where is 64... ?
+const      float IT_FUEL                      =     128;
+WANT_CONST float IT_SHELLS                    =     256;
+WANT_CONST float IT_NAILS                     =     512;
+WANT_CONST float IT_ROCKETS                   =    1024;
+WANT_CONST float IT_CELLS                     =    2048;
+const      float IT_SUPERWEAPON               =    4096;
+const      float IT_STRENGTH                  =    8192;
+const      float IT_INVINCIBLE                =   16384;
+const      float IT_HEALTH                    =   32768;
+const      float IT_SUPERCELLS                =   8388608;
+
+// shared value space (union):
+	// for items:
+	WANT_CONST float IT_KEY1                  =  131072;
+	WANT_CONST float IT_KEY2                  =  262144;
+	// for players:
+	const      float IT_RED_FLAG_TAKEN        =   32768;
+	const      float IT_RED_FLAG_LOST         =   65536;
+	const      float IT_RED_FLAG_CARRYING     =   98304;
+	const      float IT_BLUE_FLAG_TAKEN       =  131072;
+	const      float IT_BLUE_FLAG_LOST        =  262144;
+	const      float IT_BLUE_FLAG_CARRYING    =  393216;
+	const      float IT_YELLOW_FLAG_TAKEN     = 524288;
+	const      float IT_YELLOW_FLAG_LOST      = 1048576;
+	const      float IT_YELLOW_FLAG_CARRYING  = 1572864;
+	const      float IT_PINK_FLAG_TAKEN       = 2097152;
+	const      float IT_PINK_FLAG_LOST        = 4194304;
+	const      float IT_PINK_FLAG_CARRYING    = 6291456;
+// end
+
+const      float IT_5HP                       =  524288;
+const      float IT_25HP                      = 1048576;
+const      float IT_ARMOR_SHARD               = 2097152;
+const      float IT_ARMOR                     = 4194304;
+
+// item masks
+const      float IT_AMMO                      =    3968; // IT_FUEL | IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS;
+const      float IT_PICKUPMASK                =      51; // IT_FUEL_REGEN | IT_JETPACK | IT_UNLIMITED_AMMO; // strength and invincible are handled separately
+const      float IT_UNLIMITED_AMMO            =       3; // IT_UNLIMITED_SUPERWEAPONS | IT_UNLIMITED_WEAPON_AMMO;
+
+const float AMMO_COUNT = 6; // amount of ammo types to show in the inventory panel
+
+// item networking
+#define ISF_LOCATION 2
+#define ISF_MODEL    4
+#define ISF_STATUS   8
+    #define ITS_STAYWEP   1
+    #define ITS_ANIMATE1  2
+    #define ITS_ANIMATE2  4
+    #define ITS_AVAILABLE 8
+    #define ITS_ALLOWFB   16
+    #define ITS_ALLOWSI   32
+    #define ITS_POWERUP   64
+#define ISF_COLORMAP 16
+#define ISF_DROP 32
+#define ISF_ANGLES 64
+#define ISF_SIZE 128
+
+.float ItemStatus;
+
+#ifdef CSQC
+
+var float  autocvar_cl_animate_items = 1;
+var float  autocvar_cl_ghost_items = 0.45;
+var vector autocvar_cl_ghost_items_color = '-1 -1 -1';
+var float  autocvar_cl_fullbright_items = 0;
+var vector autocvar_cl_weapon_stay_color = '2 0.5 0.5';
+var float  autocvar_cl_weapon_stay_alpha = 0.75;
+var float  autocvar_cl_simple_items = 0;
+var string autocvr_cl_simpleitems_postfix = "_simple";
+.float  spawntime;
+.float  gravity;
+.vector colormod;
+void ItemDraw();
+
+void ItemDrawSimple();
+
+void ItemRead(float _IsNew);
+
+#endif
+#ifdef SVQC
+float autocvar_sv_simple_items;
+float ItemSend(entity to, float sf);
+
+
+float have_pickup_item(void);
+
+#define ITEM_RESPAWN_TICKS 10
+
+#define ITEM_RESPAWNTIME(i)         ((i).respawntime + crandom() * (i).respawntimejitter)
+	// range: respawntime - respawntimejitter .. respawntime + respawntimejitter
+#define ITEM_RESPAWNTIME_INITIAL(i) (ITEM_RESPAWN_TICKS + random() * ((i).respawntime + (i).respawntimejitter - ITEM_RESPAWN_TICKS))
+	// range: 10 .. respawntime + respawntimejitter
+
+.float max_armorvalue;
+.float pickup_anyway;
+
+void Item_Show (entity e, float mode);
+
+void Item_Respawn (void);
+
+void Item_RespawnCountdown (void);
+void Item_ScheduleRespawnIn(entity e, float t);
+
+void Item_ScheduleRespawn(entity e);
+
+void Item_ScheduleInitialRespawn(entity e);
+float ITEM_MODE_NONE = 0;
+float ITEM_MODE_HEALTH = 1;
+float ITEM_MODE_ARMOR = 2;
+float ITEM_MODE_FUEL = 3;
+float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax, float mode);
+
+float Item_GiveTo(entity item, entity player);
+
+void Item_Touch (void);
+
+void Item_Reset();
+
+void Item_FindTeam();
+// Savage: used for item garbage-collection
+// TODO: perhaps nice special effect?
+
+float ItemSend(entity to, float sf);
+void ItemUpdate(entity item);
+
+// pickup evaluation functions
+// these functions decide how desirable an item is to the bots
+
+float generic_pickupevalfunc(entity player, entity item);// {return item.bot_pickupbasevalue;} // WEAPONTODO
+
+float weapon_pickupevalfunc(entity player, entity item);
+
+float commodity_pickupevalfunc(entity player, entity item);
+
+.float is_item;
+void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue);
+
+
+void target_items_use (void);
+
+#define OP_SET 0
+#define OP_MIN 1
+#define OP_MAX 2
+#define OP_PLUS 3
+#define OP_MINUS 4
+
+float GiveWeapon(entity e, float wpn, float op, float val);
+
+float GiveBit(entity e, .float fld, float bit, float op, float val);
+
+float GiveValue(entity e, .float fld, float op, float val);
+
+void GiveSound(entity e, float v0, float v1, float t, string snd_incr, string snd_decr);
+
+void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .float regenfield, float regentime);
+
+#define PREGIVE_WEAPONS(e) WepSet save_weapons; save_weapons = e.weapons
+#define PREGIVE(e,f) float save_##f; save_##f = (e).f
+#define POSTGIVE_WEAPON(e,b,snd_incr,snd_decr) GiveSound((e), !!(save_weapons & WepSet_FromWeapon(b)), !!(e.weapons & WepSet_FromWeapon(b)), 0, snd_incr, snd_decr)
+#define POSTGIVE_BIT(e,f,b,snd_incr,snd_decr) GiveSound((e), save_##f & (b), (e).f & (b), 0, snd_incr, snd_decr)
+#define POSTGIVE_VALUE(e,f,t,snd_incr,snd_decr) GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
+#define POSTGIVE_VALUE_ROT(e,f,t,rotfield,rottime,regenfield,regentime,snd_incr,snd_decr) GiveRot((e), save_##f, (e).f, rotfield, rottime, regenfield, regentime); GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
+
+float GiveItems(entity e, float beginarg, float endarg);
+#endif

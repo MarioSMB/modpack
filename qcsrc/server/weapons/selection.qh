@@ -1,0 +1,29 @@
+// switch between weapons
+void Send_WeaponComplain(entity e, float wpn, float type);
+
+.float hasweapon_complain_spam;
+float client_hasweapon(entity cl, float wpn, float andammo, float complain);
+
+.float weaponcomplainindex;
+float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, float complain, float skipmissing);
+
+#define w_getbestweapon(ent) W_GetCycleWeapon(ent, ent.cvar_cl_weaponpriority, 0, -1, FALSE, TRUE)
+
+void W_SwitchWeapon_Force(entity e, float w);
+
+// perform weapon to attack (weaponstate and attack_finished check is here)
+void W_SwitchToOtherWeapon(entity pl);
+void W_SwitchWeapon(float imp);
+
+void W_CycleWeapon(string weaponorder, float dir);
+
+void W_NextWeaponOnImpulse(float imp);
+
+// next weapon
+void W_NextWeapon(float list);
+
+// prev weapon
+void W_PreviousWeapon(float list);
+
+// previously used if exists and has ammo, (second) best otherwise
+void W_LastWeapon(void);

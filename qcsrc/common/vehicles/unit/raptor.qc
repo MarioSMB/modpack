@@ -99,7 +99,7 @@ void raptor_bomblet_boom()
 {
 	RadiusDamage (self, self.realowner, autocvar_g_vehicle_raptor_bomblet_damage,
 									autocvar_g_vehicle_raptor_bomblet_edgedamage,
-									autocvar_g_vehicle_raptor_bomblet_radius, world,
+									autocvar_g_vehicle_raptor_bomblet_radius, world, world,
 									autocvar_g_vehicle_raptor_bomblet_force, DEATH_VH_RAPT_BOMB, world);
 	remove(self);
 }
@@ -685,7 +685,7 @@ void raptor_blowup()
 {
 	self.deadflag	= DEAD_DEAD;
 	self.vehicle_exit(VHEF_NORMAL);
-	RadiusDamage (self, self.enemy, 250, 15, 250, world, 250, DEATH_VH_RAPT_DEATH, world);
+	RadiusDamage (self, self.enemy, 250, 15, 250, world, world, 250, DEATH_VH_RAPT_DEATH, world);
 
 	self.alpha		  = -1;
 	self.movetype	   = MOVETYPE_NONE;

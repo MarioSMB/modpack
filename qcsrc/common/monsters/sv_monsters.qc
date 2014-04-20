@@ -335,7 +335,7 @@ void Monster_CheckMinibossFlag ()
 		self.health += autocvar_g_monsters_miniboss_healthboost;
 		self.effects |= EF_RED;
 		if(!self.weapon)
-			self.weapon = WEP_NEX;
+			self.weapon = WEP_VORTEX;
 	}
 }
 
@@ -798,9 +798,9 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		if (vlen(self.velocity) <= 30)
 			self.frame = manim_idle;
 	}
-	
+
 	self.steerto = steerlib_attract2(self.moveto, 0.5, 500, 0.95);
-	
+
 	vector real_angle = vectoangles(self.steerto) - self.angles;
 	float turny = 25;
 	if(self.state == MONSTER_STATE_ATTACK_MELEE)
@@ -1092,7 +1092,7 @@ float monster_spawn()
 
 	if(!self.attack_range)
 		self.attack_range = autocvar_g_monsters_attack_range;
-		
+
 	if(!self.wander_delay) { self.wander_delay = 2; }
 	if(!self.wander_distance) { self.wander_distance = 600; }
 
@@ -1177,7 +1177,7 @@ float monster_initialize(float mon_id)
 	self.spider_slowness	= 0;
 	self.gravity			= 1;
 	self.dphitcontentsmask	= DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
-	
+
 	if(!self.scale)
 		self.scale = 1;
 
@@ -1202,7 +1202,7 @@ float monster_initialize(float mon_id)
 	if(mon.spawnflags & MONSTER_SIZE_BROKEN)
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 		self.scale *= 1.3;
-		
+
 	setsize(self, mon.mins * self.scale, mon.maxs * self.scale);
 
 	if(!self.ticrate)

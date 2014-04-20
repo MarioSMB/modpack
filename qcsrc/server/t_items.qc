@@ -1,33 +1,4 @@
-#define ISF_LOCATION 2
-#define ISF_MODEL    4
-#define ISF_STATUS   8
-    #define ITS_STAYWEP   1
-    #define ITS_ANIMATE1  2
-    #define ITS_ANIMATE2  4
-    #define ITS_AVAILABLE 8
-    #define ITS_ALLOWFB   16
-    #define ITS_ALLOWSI   32
-    #define ITS_POWERUP   64
-#define ISF_COLORMAP 16
-#define ISF_DROP 32
-#define ISF_ANGLES 64
-#define ISF_SIZE 128
-
-.float ItemStatus;
-
 #ifdef CSQC
-
-var float  autocvar_cl_animate_items = 1;
-var float  autocvar_cl_ghost_items = 0.45;
-var vector autocvar_cl_ghost_items_color = '-1 -1 -1';
-var float  autocvar_cl_fullbright_items = 0;
-var vector autocvar_cl_weapon_stay_color = '2 0.5 0.5';
-var float  autocvar_cl_weapon_stay_alpha = 0.75;
-var float  autocvar_cl_simple_items = 0;
-var string autocvr_cl_simpleitems_postfix = "_simple";
-.float  spawntime;
-.float  gravity;
-.vector colormod;
 void ItemDraw()
 {
     if(self.gravity)
@@ -228,7 +199,6 @@ void ItemRead(float _IsNew)
 #endif
 
 #ifdef SVQC
-float autocvar_sv_simple_items;
 float ItemSend(entity to, float sf)
 {
     if(self.gravity)
@@ -311,65 +281,12 @@ float have_pickup_item(void)
 		if(autocvar_g_pickup_items == 0)
 			return FALSE;
 		if(g_weaponarena)
-			if(self.weapons || (self.items & IT_AMMO))
+			if(self.weapons || (self.items & IT_AMMO)) // no item or ammo pickups in weaponarena
 				return FALSE;
 	}
 	return TRUE;
 }
 
-#define ITEM_RESPAWN_TICKS 10
-
-#define ITEM_RESPAWNTIME(i)         ((i).respawntime + crandom() * (i).respawntimejitter)
-	// range: respawntime - respawntimejitter .. respawntime + respawntimejitter
-#define ITEM_RESPAWNTIME_INITIAL(i) (ITEM_RESPAWN_TICKS + random() * ((i).respawntime + (i).respawntimejitter - ITEM_RESPAWN_TICKS))
-	// range: 10 .. respawntime + respawntimejitter
-
-floatfield Item_CounterField(float it)
-{
-	switch(it)
-	{
-		case IT_SHELLS:      return ammo_shells;
-		case IT_NAILS:       return ammo_nails;
-		case IT_ROCKETS:     return ammo_rockets;
-		case IT_CELLS:       return ammo_cells;
-		case IT_SUPERCELLS:  return ammo_supercells;
-		case IT_FUEL:        return ammo_fuel;
-		case IT_5HP:         return health;
-		case IT_25HP:        return health;
-		case IT_HEALTH:      return health;
-		case IT_ARMOR_SHARD: return armorvalue;
-		case IT_ARMOR:       return armorvalue;
-		// add more things here (health, armor)
-		default:             error("requested item has no counter field");
-	}
-#ifdef GMQCC
-	// should never happen
-	return health;
-#endif
-}
-
-string Item_CounterFieldName(float it)
-{
-	switch(it)
-	{
-		case IT_SHELLS:      return "shells";
-		case IT_NAILS:       return "nails";
-		case IT_ROCKETS:     return "rockets";
-		case IT_CELLS:       return "cells";
-		case IT_FUEL:        return "fuel";
-		case IT_SUPERCELLS:  return "supercells";
-
-		// add more things here (health, armor)
-		default:             error("requested item has no counter field name");
-	}
-#ifdef GMQCC
-	// should never happen
-	return string_null;
-#endif
-}
-
-.float max_armorvalue;
-.float pickup_anyway;
 /*
 float Item_Customize()
 {
@@ -588,29 +505,25 @@ void Item_ScheduleInitialRespawn(entity e)
 	Item_ScheduleRespawnIn(e, game_starttime - time + ITEM_RESPAWNTIME_INITIAL(e));
 }
 
-const float ITEM_MODE_NONE = 0;
-const float ITEM_MODE_HEALTH = 1;
-const float ITEM_MODE_ARMOR = 2;
-const float ITEM_MODE_FUEL = 3;
-float Item_GiveAmmoTo(entity item, entity player, .float ammofield, float ammomax, float mode)
+float Item_GiveAmmoTo(entity item, entity player, .float ammotype, float ammomax, float mode)
 {
-	if (!item.ammofield)
+	if (!item.ammotype)
 		return FALSE;
 
 	if (item.spawnshieldtime)
 	{
-		if ((player.ammofield < ammomax) || item.pickup_anyway)
+		if ((player.ammotype < ammomax) || item.pickup_anyway)
 		{
-			player.ammofield = bound(player.ammofield, ammomax, player.ammofield + item.ammofield);
+			player.ammotype = bound(player.ammotype, ammomax, player.ammotype + item.ammotype);
 			goto YEAH;
 		}
 	}
 	else if(g_weapon_stay == 2)
 	{
-		float mi = min(item.ammofield, ammomax);
-		if (player.ammofield < mi)
+		float mi = min(item.ammotype, ammomax);
+		if (player.ammotype < mi)
 		{
-			player.ammofield = mi;
+			player.ammotype = mi;
 			goto YEAH;
 		}
 	}
@@ -985,7 +898,6 @@ void Item_Damage(entity inflictor, entity attacker, float damage, float deathtyp
 		RemoveItem();
 }
 
-.float is_item;
 void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue)
 {
 	startitem_failed = FALSE;
@@ -1208,183 +1120,6 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		return;
 	}
 }
-
-float weaponswapping;
-float internalteam;
-
-void weapon_defaultspawnfunc(float wpn)
-{
-	entity e;
-	float t;
-	var .float ammofield;
-	string s;
-	entity oldself;
-	float i, j;
-	float f;
-
-	if(self.classname != "droppedweapon" && self.classname != "replacedweapon")
-	{
-		e = get_weaponinfo(wpn);
-
-		if(e.spawnflags & WEP_FLAG_MUTATORBLOCKED)
-		{
-			objerror("Attempted to spawn a mutator-blocked weapon rejected");
-			startitem_failed = TRUE;
-			return;
-		}
-
-		s = W_Apply_Weaponreplace(e.netname);
-		ret_string = s;
-		other = e;
-		MUTATOR_CALLHOOK(SetWeaponreplace);
-		s = ret_string;
-		if(s == "")
-		{
-			remove(self);
-			startitem_failed = TRUE;
-			return;
-		}
-		t = tokenize_console(s);
-		if(t >= 2)
-		{
-			self.team = --internalteam;
-			oldself = self;
-			for(i = 1; i < t; ++i)
-			{
-				s = argv(i);
-				for(j = WEP_FIRST; j <= WEP_LAST; ++j)
-				{
-					e = get_weaponinfo(j);
-					if(e.netname == s)
-					{
-						self = spawn();
-						copyentity(oldself, self);
-						self.classname = "replacedweapon";
-						weapon_defaultspawnfunc(j);
-						break;
-					}
-				}
-				if(j > WEP_LAST)
-				{
-					print("The weapon replace list for ", oldself.classname, " contains an unknown weapon ", s, ". Skipped.\n");
-				}
-			}
-			self = oldself;
-		}
-		if(t >= 1) // always the case!
-		{
-			s = argv(0);
-			wpn = 0;
-			for(j = WEP_FIRST; j <= WEP_LAST; ++j)
-			{
-				e = get_weaponinfo(j);
-				if(e.netname == s)
-				{
-					wpn = j;
-					break;
-				}
-			}
-			if(j > WEP_LAST)
-			{
-				print("The weapon replace list for ", self.classname, " contains an unknown weapon ", s, ". Skipped.\n");
-			}
-		}
-		if(wpn == 0)
-		{
-			remove(self);
-			startitem_failed = TRUE;
-			return;
-		}
-	}
-
-	e = get_weaponinfo(wpn);
-
-	if(!self.respawntime)
-	{
-		if(e.weapons & WEPSET_SUPERWEAPONS)
-		{
-			self.respawntime = g_pickup_respawntime_superweapon;
-			self.respawntimejitter = g_pickup_respawntimejitter_superweapon;
-		}
-		else
-		{
-			self.respawntime = g_pickup_respawntime_weapon;
-			self.respawntimejitter = g_pickup_respawntimejitter_weapon;
-		}
-	}
-
-	if(e.weapons & WEPSET_SUPERWEAPONS)
-		if(!self.superweapons_finished)
-			self.superweapons_finished = autocvar_g_balance_superweapons_time;
-
-	if(e.items)
-	{
-		for(i = 0, j = 1; i < 24; ++i, j *= 2)
-		{
-			if(e.items & j)
-			{
-				ammofield = Item_CounterField(j);
-				if(!self.ammofield)
-					self.ammofield = cvar(strcat("g_pickup_", Item_CounterFieldName(j), "_weapon"));
-			}
-		}
-	}
-
-	// pickup anyway
-	if(g_pickup_weapons_anyway)
-		self.pickup_anyway = TRUE;
-
-	f = FL_WEAPON;
-
-	// no weapon-stay on superweapons
-	if(e.weapons & WEPSET_SUPERWEAPONS)
-		f |= FL_NO_WEAPON_STAY;
-
-	// weapon stay isn't supported for teamed weapons
-	if(self.team)
-		f |= FL_NO_WEAPON_STAY;
-
-	StartItem(e.model, "weapons/weaponpickup.wav", self.respawntime, self.respawntimejitter, e.message, 0, e.weapon, f, weapon_pickupevalfunc, e.bot_pickupbasevalue);
-	if (self.modelindex) // don't precache if self was removed
-		weapon_action(e.weapon, WR_PRECACHE);
-}
-
-void spawnfunc_weapon_shotgun (void);
-void spawnfunc_weapon_uzi (void) {
-	if(autocvar_sv_q3acompat_machineshotgunswap)
-	if(self.classname != "droppedweapon")
-	{
-		weapon_defaultspawnfunc(WEP_SHOTGUN);
-		return;
-	}
-	weapon_defaultspawnfunc(WEP_UZI);
-}
-
-void spawnfunc_weapon_shotgun (void) {
-	if(autocvar_sv_q3acompat_machineshotgunswap)
-	if(self.classname != "droppedweapon")
-	{
-		weapon_defaultspawnfunc(WEP_UZI);
-		return;
-	}
-	weapon_defaultspawnfunc(WEP_SHOTGUN);
-}
-
-void spawnfunc_weapon_nex (void)
-{
-	weapon_defaultspawnfunc(WEP_NEX);
-}
-
-void spawnfunc_weapon_minstanex (void)
-{
-	weapon_defaultspawnfunc(WEP_MINSTANEX);
-}
-
-void spawnfunc_weapon_rocketlauncher (void)
-{
-	weapon_defaultspawnfunc(WEP_ROCKET_LAUNCHER);
-}
-
 void spawnfunc_item_rockets (void) {
 	if(!self.ammo_rockets)
 		self.ammo_rockets = g_pickup_rockets;
@@ -1541,7 +1276,6 @@ void spawnfunc_item_invincible (void) {
 // compatibility:
 void spawnfunc_item_quad (void) {self.classname = "item_strength";spawnfunc_item_strength();}
 
-float GiveItems(entity e, float beginarg, float endarg);
 void target_items_use (void)
 {
 	if(activator.classname == "droppedweapon")
@@ -1612,7 +1346,7 @@ void spawnfunc_target_items (void)
 					{
 						self.weapons |= WepSet_FromWeapon(j);
 						if(self.spawnflags == 0 || self.spawnflags == 2)
-							weapon_action(e.weapon, WR_PRECACHE);
+							WEP_ACTION(e.weapon, WR_INIT);
 						break;
 					}
 				}
@@ -1685,7 +1419,7 @@ void spawnfunc_target_items (void)
 			e = get_weaponinfo(j);
 			if(argv(i) == e.netname)
 			{
-				weapon_action(e.weapon, WR_PRECACHE);
+				WEP_ACTION(e.weapon, WR_INIT);
 				break;
 			}
 		}
@@ -1724,13 +1458,6 @@ void spawnfunc_item_jetpack(void)
 	}
 	StartItem ("models/items/g_jetpack.md3", "misc/itempickup.wav", g_pickup_respawntime_powerup, g_pickup_respawntimejitter_powerup, "Jet pack", IT_JETPACK, 0, FL_POWERUP, commodity_pickupevalfunc, BOT_PICKUP_RATING_LOW);
 }
-
-
-#define OP_SET 0
-#define OP_MIN 1
-#define OP_MAX 2
-#define OP_PLUS 3
-#define OP_MINUS 4
 
 float GiveWeapon(entity e, float wpn, float op, float val)
 {
@@ -1841,14 +1568,6 @@ void GiveRot(entity e, float v0, float v1, .float rotfield, float rottime, .floa
 	else if(v0 > v1)
 		e.regenfield = max(e.regenfield, time + regentime);
 }
-
-#define PREGIVE_WEAPONS(e) WepSet save_weapons; save_weapons = e.weapons
-#define PREGIVE(e,f) float save_##f; save_##f = (e).f
-#define POSTGIVE_WEAPON(e,b,snd_incr,snd_decr) GiveSound((e), !!(save_weapons & WepSet_FromWeapon(b)), !!(e.weapons & WepSet_FromWeapon(b)), 0, snd_incr, snd_decr)
-#define POSTGIVE_BIT(e,f,b,snd_incr,snd_decr) GiveSound((e), save_##f & (b), (e).f & (b), 0, snd_incr, snd_decr)
-#define POSTGIVE_VALUE(e,f,t,snd_incr,snd_decr) GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
-#define POSTGIVE_VALUE_ROT(e,f,t,rotfield,rottime,regenfield,regentime,snd_incr,snd_decr) GiveRot((e), save_##f, (e).f, rotfield, rottime, regenfield, regentime); GiveSound((e), save_##f, (e).f, t, snd_incr, snd_decr)
-
 float GiveItems(entity e, float beginarg, float endarg)
 {
 	float got, i, j, val, op;
@@ -2016,7 +1735,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 			POSTGIVE_WEAPON(e, j, "weapons/weaponpickup.wav", string_null);
 			if (!(save_weapons & WepSet_FromWeapon(j)))
 				if(e.weapons & WepSet_FromWeapon(j))
-					weapon_action(wi.weapon, WR_PRECACHE);
+					WEP_ACTION(wi.weapon, WR_INIT);
 		}
 	}
 	POSTGIVE_VALUE(e, strength_finished, 1, "misc/powerup.wav", "misc/poweroff.wav");

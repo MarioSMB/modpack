@@ -78,37 +78,37 @@ void ImpulseCommands (void)
 			switch(imp)
 			{
 				case 10:
-					W_NextWeapon (0);
+					W_NextWeapon(0);
 					break;
 				case 11:
 					W_LastWeapon();
 					break;
 				case 12:
-					W_PreviousWeapon (0);
+					W_PreviousWeapon(0);
 					break;
 				case 13:
-					W_SwitchWeapon (w_getbestweapon(self));
+					W_SwitchWeapon(w_getbestweapon(self));
 					break;
 				case 14:
 					W_NextWeaponOnImpulse(0);
 					break;
 				case 15:
-					W_NextWeapon (2);
+					W_NextWeapon(2);
 					break;
 				case 16:
-					W_PreviousWeapon (2);
+					W_PreviousWeapon(2);
 					break;
 				case 17:
 					W_ThrowWeapon(W_CalculateProjectileVelocity(self.velocity, v_forward * 750, FALSE), '0 0 0', TRUE);
 					break;
 				case 18:
-					W_NextWeapon (1);
+					W_NextWeapon(1);
 					break;
 				case 19:
-					W_PreviousWeapon (1);
+					W_PreviousWeapon(1);
 					break;
 				case 20:
-					W_TriggerReload ();
+					WEP_ACTION(self.weapon, WR_RELOAD);
 					break;
 			}
 		}

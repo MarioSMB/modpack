@@ -142,7 +142,7 @@ void GiveBall(entity plyr, entity ball)
 	self.weaponentity.weapons = self.weapons;
 	self.weaponentity.switchweapon = self.weapon;
 	self.weapons = WEPSET_PORTO;
-	weapon_action(WEP_PORTO, WR_RESETPLAYER);
+	WEP_ACTION(WEP_PORTO, WR_RESETPLAYER);
 	self.switchweapon = WEP_PORTO;
 	W_SwitchWeapon(WEP_PORTO);
 	self = ownr;
@@ -723,7 +723,7 @@ void W_Nexball_Attack(float t)
 	if(!(ball = self.ballcarried))
 		return;
 
-	W_SetupShot(self, FALSE, 4, "nexball/shoot1.wav", CH_WEAPON_A, 0, self.weapon);
+	W_SetupShot(self, FALSE, 4, "nexball/shoot1.wav", CH_WEAPON_A, 0);
 	tracebox(w_shotorg, BALL_MINS, BALL_MAXS, w_shotorg, MOVE_WORLDONLY, world);
 	if(trace_startsolid)
 	{
@@ -757,7 +757,7 @@ void W_Nexball_Attack2(void)
 	if(self.ballcarried.enemy)
 	{
 		entity _ball = self.ballcarried;
-		W_SetupShot(self, FALSE, 4, "nexball/shoot1.wav", CH_WEAPON_A, 0, self.weapon);
+		W_SetupShot(self, FALSE, 4, "nexball/shoot1.wav", CH_WEAPON_A, 0);
 		DropBall(_ball, w_shotorg, trigger_push_calculatevelocity(_ball.origin, _ball.enemy, 32));
 		_ball.think = W_Nexball_Think;
 		_ball.nextthink = time;
@@ -770,7 +770,7 @@ void W_Nexball_Attack2(void)
 	entity missile;
 	if(!(balls & BALL_BASKET))
 		return;
-	W_SetupShot(self, FALSE, 2, "nexball/shoot2.wav", CH_WEAPON_A, 0, self.weapon);
+	W_SetupShot(self, FALSE, 2, "nexball/shoot2.wav", CH_WEAPON_A, 0);
 //	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 	missile = spawn();
 
@@ -784,7 +784,7 @@ void W_Nexball_Attack2(void)
 	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, w_shotorg);
 
-	W_SetupProjectileVelocity(missile, autocvar_g_balance_nexball_secondary_speed, 0);
+	W_SetupProjVelocity_Basic(missile, autocvar_g_balance_nexball_secondary_speed, 0);
 	missile.angles = vectoangles(missile.velocity);
 	missile.touch = W_Nexball_Touch;
 	missile.think = SUB_Remove;
@@ -792,7 +792,7 @@ void W_Nexball_Attack2(void)
 
 	missile.effects = EF_BRIGHTFIELD | EF_LOWPRECISION;
 	missile.flags = FL_PROJECTILE;
-	
+
 	CSQCProjectile(missile, TRUE, PROJECTILE_ELECTRO, TRUE);
 }
 
@@ -855,7 +855,7 @@ float w_nexball_weapon(float req)
 			weapon_thinkf(WFRAME_FIRE1, autocvar_g_balance_nexball_primary_animtime, w_ready);
 		}
 	}
-	else if(req == WR_PRECACHE)
+	else if(req == WR_INIT)
 	{
 		precache_model("models/weapons/g_porto.md3");
 		precache_model("models/weapons/v_porto.md3");
@@ -867,7 +867,7 @@ float w_nexball_weapon(float req)
 	}
 	else if(req == WR_SETUP)
 	{
-		weapon_setup(WEP_PORTO);
+		//weapon_setup(WEP_PORTO);
 	}
 	// No need to check WR_CHECKAMMO* or WR_AIM, it should always return TRUE
 	return TRUE;
@@ -930,7 +930,7 @@ MUTATOR_HOOKFUNCTION(nexball_PlayerPreThink)
 			if(self.weaponentity.weapons)
 			{
 				self.weapons = self.weaponentity.weapons;
-				weapon_action(WEP_PORTO, WR_RESETPLAYER);
+				WEP_ACTION(WEP_PORTO, WR_RESETPLAYER);
 				self.switchweapon = self.weaponentity.switchweapon;
 				W_SwitchWeapon(self.switchweapon);
 
@@ -982,7 +982,7 @@ MUTATOR_HOOKFUNCTION(nexball_GetTeamCount)
 
 MUTATOR_HOOKFUNCTION(nexball_ForbidThrowing)
 {
-	if(self.weapon == WEP_GRENADE_LAUNCHER)
+	if(self.weapon == WEP_MORTAR)
 		return TRUE;
 
 	return FALSE;
@@ -991,7 +991,7 @@ MUTATOR_HOOKFUNCTION(nexball_ForbidThrowing)
 MUTATOR_HOOKFUNCTION(nexball_FilterItem)
 {
 	if(self.classname == "droppedweapon")
-	if(self.weapon == WEP_GRENADE_LAUNCHER)
+	if(self.weapon == WEP_MORTAR)
 		return TRUE;
 
 	return FALSE;
@@ -1024,8 +1024,6 @@ MUTATOR_DEFINITION(gamemode_nexball)
 			g_nexball_meter_period = 2; // avoid division by zero etc. due to silly users
 		g_nexball_meter_period = rint(g_nexball_meter_period * 32) / 32; //Round to 1/32ths to send as a byte multiplied by 32
 		addstat(STAT_NB_METERSTART, AS_FLOAT, metertime);
-		
-		w_porto(WR_PRECACHE); // abuse
 
 		// General settings
 		/*

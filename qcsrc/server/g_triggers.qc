@@ -205,7 +205,7 @@ void multi_trigger()
 
 	if (self.classname == "trigger_secret")
 	{
-		if(!IS_PLAYER(self.enemy))
+		if (!IS_PLAYER(self.enemy))
 			return;
 		found_secrets = found_secrets + 1;
 		WriteByte (MSG_ALL, SVC_FOUNDSECRET);
@@ -494,7 +494,7 @@ void trigger_hurt_touch()
 
 			entity own;
 			own = self.enemy;
-			if(!IS_PLAYER(own))
+			if (!IS_PLAYER(own))
 			{
 				own = self;
 				self.enemy = world; // I still hate you all
@@ -663,7 +663,7 @@ void trigger_gravity_touch()
 
 	g = self.gravity;
 
-	if(!(self.spawnflags & 1))
+	if (!(self.spawnflags & 1))
 	{
 		if(other.trigger_gravity_check)
 		{
@@ -726,7 +726,7 @@ void spawnfunc_trigger_gravity()
 void target_speaker_use_off();
 void target_speaker_use_activator()
 {
-	if(!IS_REAL_CLIENT(activator))
+	if (!IS_REAL_CLIENT(activator))
 		return;
 	string snd;
 	if(substring(self.noise, 0, 1) == "*")
@@ -1199,7 +1199,7 @@ void misc_laser_think()
 	if(self.enemy)
 	{
 		o = self.enemy.origin;
-		if(!(self.spawnflags & 2))
+		if (!(self.spawnflags & 2))
 			o = self.origin + normalize(o - self.origin) * 32768;
 	}
 	else
@@ -1801,7 +1801,7 @@ void target_voicescript_next(entity pl)
 		return;
 	if(vs.message == "")
 		return;
-	if(!IS_PLAYER(pl))
+	if (!IS_PLAYER(pl))
 		return;
 	if(gameover)
 		return;
@@ -1953,13 +1953,13 @@ string trigger_magicear_processmessage(entity ear, entity source, float teamsay,
 	dotrigger = ((IS_PLAYER(source)) && (source.deadflag == DEAD_NO) && ((ear.radius == 0) || (vlen(source.origin - ear.origin) <= ear.radius)));
 	domatch = ((ear.spawnflags & 32) || dotrigger);
 
-	if(!domatch)
+	if (!domatch)
 		return msgin;
 
-	if(!msgin)
+	if (!msgin)
 	{
 		// we are in TUBA mode!
-		if(!(ear.spawnflags & 256))
+		if (!(ear.spawnflags & 256))
 			return msgin;
 
 		if(!W_Tuba_HasPlayed(source, ear.message, ear.movedir_x, !(ear.spawnflags & 512), ear.movedir_y, ear.movedir_z))

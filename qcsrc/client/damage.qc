@@ -80,27 +80,22 @@ void DamageEffect(vector hitorg, float dmg, float type, float specnum)
 	}
 
 	life = bound(autocvar_cl_damageeffect_lifetime_min, dmg * autocvar_cl_damageeffect_lifetime, autocvar_cl_damageeffect_lifetime_max);
-	specstr = species_prefix(specnum);
-	type = DEATH_WEAPONOF(type);
-	e = get_weaponinfo(type);
 
-	effectname = strcat("damage_", e.netname);
+	effectname = get_weaponinfo(DEATH_WEAPONOF(type)).netname;
 
-	// if damage was dealt with a bullet weapon, our effect is blood
-	// since blood is species dependent, include the species tag
-	if(type == WEP_SHOTGUN || type == WEP_UZI || type == WEP_RIFLE)
+	if(substring(effectname, strlen(effectname) - 5, 5) == "BLOOD")
 	{
 		if(self.isplayermodel)
 		{
-			effectname = strcat(effectname, "_", specstr);
-			effectname = substring(effectname, 0, strlen(effectname) - 1); // remove the _ symbol at the end of the species tag
+			specstr = species_prefix(specnum);
+			specstr = substring(specstr, 0, strlen(specstr) - 1);
+			effectname = strreplace("BLOOD", specstr, effectname); 
 		}
-		else
-			return; // objects don't bleed
+		else { return; } // objects don't bleed
 	}
 
 	e = spawn();
-	setmodel(e, "null"); // necessary to attach and read origin // samual: FIXME: this is weird, is there some better way to do this?
+	setmodel(e, "null"); // necessary to attach and read origin
 	setattachment(e, self, gettaginfo_name); // attach to the given bone
 	e.classname = "damage";
 	e.owner = self;
@@ -349,19 +344,12 @@ void Ent_DamageInfo(float isNew)
 		w_random = prandom();
 
 		traceline(w_org - normalize(force) * 16, w_org + normalize(force) * 16, MOVE_NOMONSTERS, world);
-		if(trace_fraction < 1 && hitwep != WEP_NEX && hitwep != WEP_MINSTANEX)
+		if(trace_fraction < 1 && hitwep != WEP_VORTEX && hitwep != WEP_VAPORIZER)
 			w_backoff = trace_plane_normal;
 		else
 			w_backoff = -1 * normalize(force);
 		setorigin(self, w_org + w_backoff * 2); // for sound() calls
 
-		(get_weaponinfo(hitwep)).weapon_func(WR_IMPACTEFFECT);
+		WEP_ACTION(hitwep, WR_IMPACTEFFECT);
 	}
-}
-
-void DamageInfo_Precache()
-{
-	float i;
-	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-		(get_weaponinfo(i)).weapon_func(WR_PRECACHE);
 }

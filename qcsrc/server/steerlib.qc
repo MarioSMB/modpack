@@ -548,7 +548,7 @@ void spawn_flocker()
     flocker = spawn ();
 
     setorigin(flocker, self.origin + '0 0 32');
-    setmodel(flocker, "models/turrets/rocket.md3");
+    setmodel (flocker, "models/turrets/rocket.md3");
     setsize (flocker, '-3 -3 -3', '3 3 3');
 
     flocker.flock_id   = self.flock_id;

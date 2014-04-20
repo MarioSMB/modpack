@@ -1,7 +1,7 @@
 void te_csqc_lightningarc(vector from,vector to)
 {
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_CSQC_LIGHTNINGARC);
+	WriteByte(MSG_BROADCAST, TE_CSQC_ARC);
 
 	WriteCoord(MSG_BROADCAST, from_x);
 	WriteCoord(MSG_BROADCAST, from_y);

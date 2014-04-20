@@ -12,7 +12,7 @@ MUTATOR_HOOKFUNCTION(ra_PlayerDamage)
 	if(IS_PLAYER(frag_attacker))
 	if(IS_PLAYER(frag_target))
 	{
-		if (DEATH_ISWEAPON(frag_deathtype, WEP_LASER))
+		if (DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER))
 		{
 			if(frag_attacker == frag_target)
 				frag_damage = 5;
@@ -47,7 +47,7 @@ MUTATOR_HOOKFUNCTION(ra_StartItems)
 {
 	start_items |= IT_UNLIMITED_AMMO;
 	start_ammo_nails = warmup_start_ammo_nails = 100;
-	warmup_start_weapons = start_weapons = (WEPSET_RIFLE | WEPSET_LASER);
+	warmup_start_weapons = start_weapons = (WEPSET_RIFLE | WEPSET_BLASTER);
 
 	return FALSE;
 }
@@ -89,8 +89,8 @@ MUTATOR_DEFINITION(mutator_riflearena)
 	{
 		ra_SetCvars();
 
-		weapon_action(WEP_LASER, WR_PRECACHE);
-		weapon_action(WEP_RIFLE, WR_PRECACHE);
+		WEP_ACTION(WEP_BLASTER, WR_INIT);
+		WEP_ACTION(WEP_RIFLE, WR_INIT);
 	}
 	MUTATOR_ONREMOVE
 	{

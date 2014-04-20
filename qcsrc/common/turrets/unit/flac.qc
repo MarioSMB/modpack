@@ -19,11 +19,11 @@ void turret_flac_projectile_think_explode()
 
 #ifdef TURRET_DEBUG
 	float d;
-	d = RadiusDamage (self, self.owner, self.owner.shot_dmg, self.owner.shot_dmg, self.owner.shot_radius, self, self.owner.shot_force, self.totalfrags, world);
+	d = RadiusDamage (self, self.owner, self.owner.shot_dmg, self.owner.shot_dmg, self.owner.shot_radius, self, world, self.owner.shot_force, self.totalfrags, world);
 	self.owner.tur_dbg_dmg_t_h = self.owner.tur_dbg_dmg_t_h + d;
 	self.owner.tur_dbg_dmg_t_f = self.owner.tur_dbg_dmg_t_f + self.owner.shot_dmg;
 #else
-	RadiusDamage (self, self.realowner, self.owner.shot_dmg, self.owner.shot_dmg, self.owner.shot_radius, self, self.owner.shot_force, self.totalfrags, world);
+	RadiusDamage (self, self.realowner, self.owner.shot_dmg, self.owner.shot_dmg, self.owner.shot_radius, self, world, self.owner.shot_force, self.totalfrags, world);
 #endif
 	remove(self);
 }

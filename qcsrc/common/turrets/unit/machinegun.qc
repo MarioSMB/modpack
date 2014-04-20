@@ -21,7 +21,7 @@ float t_machinegun(float req)
 		{
 			fireBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, 0, self.shot_dmg, self.shot_force, DEATH_TURRET_MACHINEGUN, 0);
 
-			UziFlash();
+			W_MachineGun_MuzzleFlash();
 			setattachment(self.muzzle_flash, self.tur_head, "tag_fire");
 
 			return TRUE;
