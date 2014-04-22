@@ -299,7 +299,7 @@ string HUD_DefaultColumnLayout()
 		"+lms/lives +lms/rank ",
 		((ex) ? "+kh/deaths +kh/suicides " : ""), "+kh/caps +kh/pickups +kh/kckills ",
 		"?+race/laps ?+race/time ?+race/fastest ",
-		"+nexball/faults +nexball/goals +ka/pickups +ka/bckills +ka/bctime +freezetag/revivals +vip/survivals +vip/vipkills ?+dom/caps ",
+		"+nexball/faults +nexball/goals +ka/pickups +ka/bckills +ka/bctime +freezetag/revivals +vip/survivals +vip/vipkills +dom/caps ",
 		"-lms,race,nexball/score");
 }
 

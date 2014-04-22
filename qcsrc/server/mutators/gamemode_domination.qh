@@ -24,6 +24,16 @@ float pps_pink;
 .entity sprite;
 .float captime;
 
+.float dom_unlock_progress;
+.float dom_cooldown;
+.float dom_cooldown_max;
+.float dom_active;
+.float dom_lastmessage;
+
+.entity dom_capturingplayer;
+
+.float pointupdatetime;
+
 // misc globals
 float domination_roundbased;
 float domination_teams;
