@@ -37,7 +37,7 @@ entity invasion_PickSpawn()
 	{
 		if(time >= e.spawnshieldtime)
 		{
-			e.spawnshieldtime = time + 2;
+			e.spawnshieldtime = time + autocvar_g_invasion_spawnpoint_spawn_delay;
 			RandomSelection_Add(e, 0, string_null, 1, 1);
 		}
 	}
