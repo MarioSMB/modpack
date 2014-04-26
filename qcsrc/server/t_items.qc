@@ -90,9 +90,9 @@ void ItemRead(float _IsNew)
 
     if(sf & ISF_ANGLES)
     {
-        self.angles_x = ReadCoord();
-        self.angles_y = ReadCoord();
-        self.angles_z = ReadCoord();
+        self.angles_x = ReadAngle();
+        self.angles_y = ReadAngle();
+        self.angles_z = ReadAngle();
         self.move_angles = self.angles;
     }
 
@@ -249,9 +249,9 @@ float ItemSend(entity to, float sf)
 
     if(sf & ISF_ANGLES)
     {
-        WriteCoord(MSG_ENTITY, self.angles_x);
-        WriteCoord(MSG_ENTITY, self.angles_y);
-        WriteCoord(MSG_ENTITY, self.angles_z);
+        WriteAngle(MSG_ENTITY, self.angles_x);
+        WriteAngle(MSG_ENTITY, self.angles_y);
+        WriteAngle(MSG_ENTITY, self.angles_z);
     }
 
     if(sf & ISF_SIZE)
