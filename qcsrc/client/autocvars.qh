@@ -444,6 +444,7 @@ float autocvar_cl_loddistance2 = 2048;
 float autocvar_cl_forceplayermodels;
 float autocvar_cl_forceplayercolors;
 string autocvar_cl_forcemyplayermodel;
+float autocvar_cl_forcemyplayermodel_always;
 float autocvar_cl_forcemyplayerskin;
 float autocvar_cl_forcemyplayercolors;
 float autocvar__cl_color;

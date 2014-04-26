@@ -187,7 +187,7 @@ void CSQCPlayer_ModelAppearance_Apply(float islocalplayer)
 	else
 		isfriend = islocalplayer;
 
-	if(autocvar_cl_forcemyplayermodel != "" && forceplayermodels_myisgoodmodel && isfriend)
+	if(autocvar_cl_forcemyplayermodel != "" && forceplayermodels_myisgoodmodel && (isfriend || autocvar_cl_forcemyplayermodel_always))
 	{
 		self.model = forceplayermodels_mymodel;
 		self.modelindex = forceplayermodels_mymodelindex;

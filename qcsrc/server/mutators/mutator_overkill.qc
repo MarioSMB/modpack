@@ -301,7 +301,7 @@ void ok_SetCvars()
 	cvar_settemp("g_balance_armor_rot", "0");
 	cvar_settemp("g_balance_pause_health_regen", "2");
 
-	// shockwave
+	// shotgun
 	cvar_settemp("g_balance_shotgun_primary_damage", "17");
 	cvar_settemp("g_balance_shotgun_primary_bullets", "10");
 	cvar_settemp("g_balance_shotgun_primary_force", "80");

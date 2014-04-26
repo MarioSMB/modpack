@@ -512,9 +512,16 @@ float Domination_CheckPlayers()
 
 void Domination_RoundStart()
 {
-	entity e;
-	FOR_EACH_PLAYER(e)
-		e.player_blocked = 0;
+	entity oldself;
+	oldself = self;
+	FOR_EACH_PLAYER(self)
+	{
+		if(self.vehicle)
+			vehicles_exit(VHEF_RELEASE);
+		PutClientInServer();
+	}
+	
+	self = oldself;
 }
 
 //go to best items, or control points you don't own
@@ -547,13 +554,6 @@ MUTATOR_HOOKFUNCTION(dom_ResetMap)
 	total_pps = 0, pps_red = 0, pps_blue = 0, pps_yellow = 0, pps_pink = 0;
 	FOR_EACH_REALCLIENT(self)
 	{
-		if(IS_PLAYER(self))
-		{
-			if(self.vehicle)
-				vehicles_exit(VHEF_RELEASE);
-			PutClientInServer();
-			self.player_blocked = 1;
-		}
 		set_dom_state(self);
 	}
 	return 1;
@@ -575,11 +575,6 @@ MUTATOR_HOOKFUNCTION(dom_PlayerThink)
 
 MUTATOR_HOOKFUNCTION(dom_PlayerSpawn)
 {
-	if(domination_roundbased)
-	if(!round_handler_IsRoundStarted())
-		self.player_blocked = 1;
-	else
-		self.player_blocked = 0;
 	return FALSE;
 }
 

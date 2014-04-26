@@ -7,7 +7,7 @@ REGISTER_WEAPON(
 /* flags     */ WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN,
 /* rating    */ BOT_PICKUP_RATING_LOW,
 /* color     */ '0.5 0.25 0',
-/* modelname */ "shotgun",
+/* modelname */ "shotguncannon",
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairshotgun 0.7",
 /* wepimg    */ "weaponshotgun",
@@ -94,7 +94,7 @@ void spawnfunc_weapon_shockwave(void)
 }
 
 #define MAX_SHOCKWAVE_HITS 10
-#define DEBUG_SHOCKWAVE
+//#define DEBUG_SHOCKWAVE
 
 .float swing_prev;
 .entity swing_alreadyhit;
@@ -708,9 +708,9 @@ float W_Shockwave(float req)
 		case WR_INIT:
 		{
 			precache_model("models/uziflash.md3");
-			precache_model("models/weapons/g_shockwave.md3");
-			precache_model("models/weapons/v_shockwave.md3");
-			precache_model("models/weapons/h_shockwave.iqm");
+			precache_model("models/weapons/g_shotguncannon.md3");
+			precache_model("models/weapons/v_shotguncannon.md3");
+			precache_model("models/weapons/h_shotguncannon.iqm");
 			precache_sound("misc/itempickup.wav");
 			precache_sound("weapons/shockwave_fire.wav");
 			precache_sound("weapons/shockwave_melee.wav");
