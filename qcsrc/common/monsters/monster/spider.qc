@@ -149,6 +149,7 @@ float m_spider(float req)
 		}
 		case MR_PRECACHE:
 		{
+			precache_model("models/monsters/spider.dpm");
 			precache_sound ("weapons/electro_fire2.wav");
 			return TRUE;
 		}

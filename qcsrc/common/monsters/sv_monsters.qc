@@ -1123,7 +1123,7 @@ float monster_spawn()
 float monster_initialize(float mon_id)
 {
 	if(!autocvar_g_monsters) { return FALSE; }
-		
+	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED)) { MON_ACTION(mon_id, MR_PRECACHE); }
 	if(Monster_CheckAppearFlags(self, mon_id)) { return TRUE; } // return true so the monster isn't removed
 
 	entity mon = get_monsterinfo(mon_id);

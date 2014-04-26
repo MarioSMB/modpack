@@ -68,8 +68,6 @@ float t_machinegun(float req)
 		}
 		case TR_PRECACHE:
 		{
-			precache_model ("models/turrets/base.md3");
-			precache_model ("models/turrets/machinegun.md3");
 			return TRUE;
 		}
 	}

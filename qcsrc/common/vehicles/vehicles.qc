@@ -57,7 +57,6 @@ void register_vehicle(float id, float(float) func, float vehicleflags, vector mi
 	
 	#ifndef MENUQC
 	vehicles_common_initialize();
-	func(VR_PRECACHE);
 	#endif
 }
 float v_null(float dummy) { return 0; }

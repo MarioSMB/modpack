@@ -50,7 +50,6 @@ void register_turret(float id, float(float) func, float turretflags, vector min_
 	
 	#ifndef MENUQC
 	turrets_common_precache();
-	func(TR_PRECACHE);
 	#endif
 }
 float t_null(float dummy) { return 0; }

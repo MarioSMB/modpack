@@ -79,8 +79,6 @@ float t_mlrs(float req)
 		}
 		case TR_PRECACHE:
 		{
-			precache_model ("models/turrets/base.md3");
-			precache_model ("models/turrets/mlrs.md3");
 			return TRUE;
 		}
 	}

@@ -109,6 +109,7 @@ float m_creeper(float req)
 		}
 		case MR_PRECACHE:
 		{
+			precache_model("models/monsters/creeper.dpm");
 			return TRUE;
 		}
 	}

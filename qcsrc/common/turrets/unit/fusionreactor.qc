@@ -105,8 +105,6 @@ float t_fusionreactor(float req)
 		}
 		case TR_PRECACHE:
 		{
-			precache_model ("models/turrets/base.md3");
-			precache_model ("models/turrets/reactor.md3");
 			return TRUE;
 		}
 	}

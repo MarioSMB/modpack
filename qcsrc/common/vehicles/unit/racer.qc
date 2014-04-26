@@ -895,9 +895,6 @@ float v_racer(float req)
 		}
 		case VR_PRECACHE:
 		{
-			precache_model ("models/vhshield.md3");
-			precache_model ("models/vehicles/wakizashi.dpm");
-			precache_model ("models/vehicles/wakizashi_cockpit.dpm");
 			return TRUE;
 		}
 	}

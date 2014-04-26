@@ -1145,6 +1145,8 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 	
 	if(!veh.vehicleid)
 		return FALSE;
+	
+	if(!veh.tur_head) { VEH_ACTION(vehicle_id, VR_PRECACHE); }
 
 	if(self.targetname)
 	{

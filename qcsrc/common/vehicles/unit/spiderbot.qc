@@ -1067,11 +1067,6 @@ float v_spiderbot(float req)
 		}
 		case VR_PRECACHE:
 		{
-			precache_model ("models/vhshield.md3");
-			precache_model ("models/vehicles/spiderbot.dpm");
-			precache_model ("models/vehicles/spiderbot_top.dpm");
-			precache_model ("models/vehicles/spiderbot_barrels.dpm");
-			precache_model ("models/vehicles/spiderbot_cockpit.dpm");
 			return TRUE;
 		}
 	}

@@ -1229,6 +1229,8 @@ float turret_initialize(float tur_id)
 	entity tur = get_turretinfo(tur_id);
 	if(tur.turretid == 0)
 		return FALSE; // invalid turret
+		
+	if(!self.tur_head) { TUR_ACTION(tur_id, TR_PRECACHE); } // if tur_head exists, we can assume this turret re-spawned
 
 	e = find(world, classname, "turret_manager");
 	if(!e)
