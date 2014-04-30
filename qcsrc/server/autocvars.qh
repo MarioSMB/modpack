@@ -1402,6 +1402,8 @@ float autocvar_g_vip_pickup_wait;
 float autocvar_sv_allow_customplayermodels;
 string autocvar_sv_allow_customplayermodels_idlist;
 float autocvar_g_invasion_round_timelimit;
+float autocvar_g_invasion_teams;
+float autocvar_g_invasion_team_spawns;
 float autocvar_g_invasion_spawnpoint_spawn_delay;
 #define autocvar_g_invasion_point_limit cvar("g_invasion_point_limit")
 float autocvar_g_invasion_warmup;

@@ -80,7 +80,7 @@ REGISTER_GAMETYPE(_("Keepaway"),ka,g_keepaway,KEEPAWAY,"timelimit=20 pointlimit=
 REGISTER_GAMETYPE(_("VIP"),vip,g_vip,VIP,"timelimit=20 pointlimit=10 leadlimit=0",_("A VIP is chosen on each team, when a VIP dies, the round is over"));
 #define g_vip IS_GAMETYPE(VIP)
 
-REGISTER_GAMETYPE(_("Invasion"),inv,g_invasion,INVASION,"pointlimit=50",_("Survive against waves of monsters"));
+REGISTER_GAMETYPE(_("Invasion"),inv,g_invasion,INVASION,"pointlimit=50 teams=0",_("Survive against waves of monsters"));
 #define g_invasion IS_GAMETYPE(INVASION)
 
 REGISTER_GAMETYPE(_("Infection"),inf,g_infection,INFECTION,"timelimit=20 pointlimit=10 leadlimit=0",_("Kill enemies to 'infect' them with your team color"));

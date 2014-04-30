@@ -214,6 +214,12 @@ void InitGameplayMode()
 	if(g_invasion)
 	{
 		fraglimit_override = autocvar_g_invasion_point_limit;
+		if(autocvar_g_invasion_teams >= 2)
+		{
+			ActivateTeamplay();
+			if(autocvar_g_invasion_team_spawns)
+				have_team_spawns = -1; // request team spawns
+		}
 		MUTATOR_ADD(gamemode_invasion);
 	}
 

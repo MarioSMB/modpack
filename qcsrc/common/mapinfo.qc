@@ -644,6 +644,7 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 			cvar_set("g_freezetag_teams", v);
 			cvar_set("g_keyhunt_teams", v);
 			cvar_set("g_domination_default_teams", v);
+			cvar_set("g_invasion_teams", v);
 		}
 		else if(k == "qualifying_timelimit")
 		{

@@ -25,7 +25,7 @@ float invasion_PickMonster(float supermonster_count)
 		if((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM) || ((mon.spawnflags & MON_FLAG_SUPERMONSTER) && supermonster_count >= 1))
 			continue; // flying/swimming monsters not yet supported
 
-		RandomSelection_Add(world, i, "", 1, 1);
+		RandomSelection_Add(world, i, string_null, 1, 1);
 	}
 
 	return RandomSelection_chosen_float;
@@ -66,6 +66,24 @@ void invasion_SpawnChosenMonster(float mon)
 	monster.target2 = spawn_point.target2;
 	monster.spawnshieldtime = time;
 	if(spawn_point.target_range) monster.target_range = spawn_point.target_range;
+	
+	if(teamplay)
+	if(spawn_point.team)
+		monster.team = spawn_point.team;
+	else
+	{
+		RandomSelection_Init();
+		RandomSelection_Add(world, NUM_TEAM_1, string_null, 1, 1);
+		RandomSelection_Add(world, NUM_TEAM_2, string_null, 1, 1);
+		if(invasion_teams >= 3) { RandomSelection_Add(world, NUM_TEAM_3, string_null, 1, 1); }
+		if(invasion_teams >= 4) { RandomSelection_Add(world, NUM_TEAM_4, string_null, 1, 1); }
+		
+		monster.team = RandomSelection_chosen_float;
+	}
+	
+	monster_changeteam(monster, monster.team);
+	
+	monster.monster_attack = FALSE; // it's the player's job to kill all the monsters
 
 	if(inv_roundcnt >= inv_maxrounds)
 		monster.spawnflags |= MONSTERFLAG_MINIBOSS; // last round spawns minibosses
@@ -96,13 +114,22 @@ float Invasion_CheckWinner()
 		return 1;
 	}
 
-	float total_alive_monsters = 0, supermonster_count = 0;
+	float total_alive_monsters = 0, supermonster_count = 0, red_alive = 0, blue_alive = 0, yellow_alive = 0, pink_alive = 0;;
 
 	FOR_EACH_MONSTER(head) if(head.health > 0)
 	{
 		if((get_monsterinfo(head.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
 			++supermonster_count;
 		++total_alive_monsters;
+		
+		if(teamplay)
+		switch(head.team)
+		{
+			case NUM_TEAM_1: ++red_alive; break;
+			case NUM_TEAM_2: ++blue_alive; break;
+			case NUM_TEAM_3: ++yellow_alive; break;
+			case NUM_TEAM_4: ++pink_alive; break;
+		}
 	}
 
 	if((total_alive_monsters + inv_numkilled) < inv_maxspawned && inv_maxcurrent < inv_maxspawned) // 10 at a time should be plenty
@@ -116,12 +143,35 @@ float Invasion_CheckWinner()
 		return 0;
 	}
 
-	if(inv_numspawned < 1 || inv_numkilled < inv_maxspawned)
-		return 0; // nothing has spawned yet, or there are still alive monsters
+	if(inv_numspawned < 1)
+		return 0; // nothing has spawned yet
+		
+	if(teamplay)
+	{
+		if(((red_alive > 0) + (blue_alive > 0) + (yellow_alive > 0) + (pink_alive > 0)) > 1)
+			return 0;
+	}
+	else if(inv_numkilled < inv_maxspawned)
+		return 0;
 
 	entity winner = world;
-	float winning_score = 0;
-
+	float winning_score = 0, winner_team = 0;
+	
+	
+	if(teamplay)
+	{
+		if(red_alive > 0) { winner_team = NUM_TEAM_1; }
+		if(blue_alive > 0)
+		if(winner_team) { winner_team = 0; }
+		else { winner_team = NUM_TEAM_2; }
+		if(yellow_alive > 0)
+		if(winner_team) { winner_team = 0; }
+		else { winner_team = NUM_TEAM_3; }
+		if(pink_alive > 0)
+		if(winner_team) { winner_team = 0; }
+		else { winner_team = NUM_TEAM_4; }
+	}	
+	else
 	FOR_EACH_PLAYER(head)
 	{
 		float cs = PlayerScore_Add(head, SP_KILLS, 0);
@@ -135,7 +185,15 @@ float Invasion_CheckWinner()
 	FOR_EACH_MONSTER(head)
 		monster_remove(head);
 
-	if(winner)
+	if(teamplay)
+	{
+		if(winner_team)
+		{
+			Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner_team, CENTER_ROUND_TEAM_WIN_));
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(winner_team, INFO_ROUND_TEAM_WIN_));
+		}
+	}
+	else if(winner)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_PLAYER_WIN, winner.netname);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_PLAYER_WIN, winner.netname);
@@ -184,7 +242,14 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterDies)
 		inv_maxcurrent -= 1;
 
 		if(IS_PLAYER(frag_attacker))
+		if(SAME_TEAM(frag_attacker, self)) // in non-teamplay modes, same team = same player, so this works
+			PlayerScore_Add(frag_attacker, SP_KILLS, -1);
+		else
+		{
 			PlayerScore_Add(frag_attacker, SP_KILLS, +1);
+			if(teamplay)
+				TeamScore_AddToTeam(frag_attacker.team, ST_INV_KILLS, +1);
+		}
 	}
 
 	return FALSE;
@@ -293,10 +358,11 @@ MUTATOR_HOOKFUNCTION(invasion_AllowMobSpawning)
 	return TRUE;
 }
 
-void invasion_ScoreRules()
+void invasion_ScoreRules(float inv_teams)
 {
-	ScoreRules_basics(0, 0, 0, FALSE);
-	ScoreInfo_SetLabel_PlayerScore(SP_KILLS, "frags", SFL_SORT_PRIO_PRIMARY);
+	ScoreRules_basics(inv_teams, 0, 0, FALSE);
+	if(inv_teams) ScoreInfo_SetLabel_TeamScore(ST_INV_KILLS, "frags", SFL_SORT_PRIO_PRIMARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_KILLS, "frags", ((inv_teams) ? SFL_SORT_PRIO_SECONDARY : SFL_SORT_PRIO_PRIMARY));
 	ScoreRules_basics_end();
 }
 
@@ -318,9 +384,14 @@ void invasion_Initialize()
 		}
 	}
 	
+	if(autocvar_g_invasion_teams >= 2)
+		invasion_teams = bound(2, autocvar_g_invasion_teams, 4);
+	else
+		invasion_teams = 0;
+	
 	independent_players = 1; // to disable extra useless scores
 
-	invasion_ScoreRules();
+	invasion_ScoreRules(invasion_teams);
 
 	independent_players = 0;
 
