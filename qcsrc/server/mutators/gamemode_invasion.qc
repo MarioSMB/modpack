@@ -403,7 +403,7 @@ MUTATOR_HOOKFUNCTION(invasion_GetTeamCount)
 
 void invasion_ScoreRules(float inv_teams)
 {
-	CheckAllowedTeams(world);
+	if(inv_teams) { CheckAllowedTeams(world); }
 	ScoreRules_basics(inv_teams, 0, 0, FALSE);
 	if(inv_teams) ScoreInfo_SetLabel_TeamScore(ST_INV_KILLS, "frags", SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_KILLS, "frags", ((inv_teams) ? SFL_SORT_PRIO_SECONDARY : SFL_SORT_PRIO_PRIMARY));
