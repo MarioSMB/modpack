@@ -481,6 +481,8 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 		FOR_EACH_PLAYER(player)
 			if(player != forent)
 				antilag_takeback(player, time - lag);
+		FOR_EACH_MONSTER(player)
+			antilag_takeback(player, time - lag);
 	}
 
 	// do the trace
@@ -495,6 +497,8 @@ void tracebox_antilag_force_wz (entity source, vector v1, vector mi, vector ma, 
 		FOR_EACH_PLAYER(player)
 			if(player != forent)
 				antilag_restore(player);
+		FOR_EACH_MONSTER(player)
+			antilag_restore(player);
 	}
 
 	// restore shooter solid type

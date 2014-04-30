@@ -237,9 +237,13 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 	if(autocvar_g_antilag == 0 || self.cvar_cl_noantilag)
 		lag = 0; // only do hitscan, but no antilag
 	if(lag)
+	{
 		FOR_EACH_PLAYER(pl)
 			if(pl != self)
 				antilag_takeback(pl, time - lag);
+		FOR_EACH_MONSTER(pl)
+			antilag_takeback(pl, time - lag);
+	}
 
 	WarpZone_trace_forent = self;
 
@@ -344,9 +348,13 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 	}
 
 	if(lag)
+	{
 		FOR_EACH_PLAYER(pl)
 			if(pl != self)
 				antilag_restore(pl);
+		FOR_EACH_MONSTER(pl)
+			antilag_restore(pl);
+	}
 }
 
 float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtype, float exception)

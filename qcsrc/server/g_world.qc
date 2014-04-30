@@ -2271,6 +2271,8 @@ void EndFrame()
 		self.typehitsound = FALSE;
 		antilag_record(self, altime);
 	}
+	FOR_EACH_MONSTER(self)
+		antilag_record(self, altime);
 }
 
 
