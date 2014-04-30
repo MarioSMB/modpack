@@ -366,6 +366,14 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerCommand)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(invasion_BotShouldAttack)
+{
+	if(!IS_MONSTER(checkentity))
+		return TRUE;
+	
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(invasion_SetStartItems)
 {
 	start_health = 200;
@@ -376,7 +384,7 @@ MUTATOR_HOOKFUNCTION(invasion_SetStartItems)
 
 MUTATOR_HOOKFUNCTION(invasion_AccuracyTargetValid)
 {
-	if(frag_target.flags & FL_MONSTER)
+	if(IS_MONSTER(frag_target))
 		return MUT_ACCADD_INVALID;
 	return MUT_ACCADD_INDIFFERENT;
 }
@@ -455,6 +463,7 @@ MUTATOR_DEFINITION(gamemode_invasion)
 	MUTATOR_HOOK(PlayerSpawn, invasion_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, invasion_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SV_ParseClientCommand, invasion_PlayerCommand, CBC_ORDER_ANY);
+	MUTATOR_HOOK(BotShouldAttack, invasion_BotShouldAttack, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, invasion_SetStartItems, CBC_ORDER_ANY);
 	MUTATOR_HOOK(AccuracyTargetValid, invasion_AccuracyTargetValid, CBC_ORDER_ANY);
 	MUTATOR_HOOK(AllowMobSpawning, invasion_AllowMobSpawning, CBC_ORDER_ANY);

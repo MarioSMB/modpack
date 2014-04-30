@@ -131,7 +131,7 @@ float bot_shouldattack(entity e)
 		return FALSE;
 	if(e.flags & FL_NOTARGET)
 		return FALSE;
-	if(e.alpha <= 0.5)
+	if(e.alpha <= 0.5 && e.alpha != 0)
 		return FALSE; // invisible
 
 	checkentity = e;

@@ -875,7 +875,7 @@ void ctf_FlagTouch()
 	if(gameover) { return; }
 
 	entity toucher = other, tmp_entity;
-	float is_not_monster = (!(toucher.flags & FL_MONSTER)), num_perteam = 0;
+	float is_not_monster = (!IS_MONSTER(toucher)), num_perteam = 0;
 
 	// automatically kill the flag and return it if it touched lava/slime/nodrop surfaces
 	if(ITEM_TOUCH_NEEDKILL())
