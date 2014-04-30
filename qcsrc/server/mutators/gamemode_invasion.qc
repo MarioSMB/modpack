@@ -57,18 +57,25 @@ void invasion_SpawnChosenMonster(float mon)
 
 	if(spawn_point == world)
 	{
-		dprint("Warning: couldn't find any invasion_spawnpoint spawnpoints, no monsters will spawn!\n");
-		return;
-	}
+		dprint("Warning: couldn't find any invasion_spawnpoint spawnpoints, attempting to spawn monsters in random locations\n");
+		entity e = spawn();
 
-	monster = spawnmonster("", ((spawn_point.monsterid) ? spawn_point.monsterid : mon), spawn_point, spawn_point, spawn_point.origin, FALSE, FALSE, 2);
+		if(MoveToRandomMapLocation(e, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
+			monster = spawnmonster("", mon, world, world, e.origin, FALSE, FALSE, 2);
+		else return;
+
+		e.think = SUB_Remove;
+		e.nextthink = time + 0.1;
+	}
+	else
+		monster = spawnmonster("", ((spawn_point.monsterid) ? spawn_point.monsterid : mon), spawn_point, spawn_point, spawn_point.origin, FALSE, FALSE, 2);
 	
-	monster.target2 = spawn_point.target2;
+	if(spawn_point) monster.target2 = spawn_point.target2;
 	monster.spawnshieldtime = time;
-	if(spawn_point.target_range) monster.target_range = spawn_point.target_range;
+	if(spawn_point && spawn_point.target_range) monster.target_range = spawn_point.target_range;
 	
 	if(teamplay)
-	if(spawn_point.team && inv_monsters_perteam[spawn_point.team] > 0)
+	if(spawn_point && spawn_point.team && inv_monsters_perteam[spawn_point.team] > 0)
 		monster.team = spawn_point.team;
 	else
 	{
