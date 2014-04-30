@@ -314,7 +314,7 @@ MUTATOR_HOOKFUNCTION(invasion_OnEntityPreSpawn)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(invasion_PlayerThink)
+MUTATOR_HOOKFUNCTION(invasion_StartFrame)
 {
 	monsters_total = inv_maxspawned; // TODO: make sure numspawned never exceeds maxspawned
 	monsters_killed = inv_numkilled;
@@ -450,7 +450,7 @@ MUTATOR_DEFINITION(gamemode_invasion)
 	MUTATOR_HOOK(MonsterDies, invasion_MonsterDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterSpawn, invasion_MonsterSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(OnEntityPreSpawn, invasion_OnEntityPreSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPreThink, invasion_PlayerThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SV_StartFrame, invasion_StartFrame, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerRegen, invasion_PlayerRegen, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, invasion_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, invasion_PlayerDamage, CBC_ORDER_ANY);
