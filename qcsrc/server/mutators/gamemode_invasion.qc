@@ -68,15 +68,15 @@ void invasion_SpawnChosenMonster(float mon)
 	if(spawn_point.target_range) monster.target_range = spawn_point.target_range;
 	
 	if(teamplay)
-	if(spawn_point.team)
+	if(spawn_point.team && inv_monsters_perteam[spawn_point.team] > 0)
 		monster.team = spawn_point.team;
 	else
 	{
 		RandomSelection_Init();
-		RandomSelection_Add(world, NUM_TEAM_1, string_null, 1, 1);
-		RandomSelection_Add(world, NUM_TEAM_2, string_null, 1, 1);
-		if(invasion_teams >= 3) { RandomSelection_Add(world, NUM_TEAM_3, string_null, 1, 1); }
-		if(invasion_teams >= 4) { RandomSelection_Add(world, NUM_TEAM_4, string_null, 1, 1); }
+		if(inv_monsters_perteam[NUM_TEAM_1] > 0) RandomSelection_Add(world, NUM_TEAM_1, string_null, 1, 1);
+		if(inv_monsters_perteam[NUM_TEAM_2] > 0) RandomSelection_Add(world, NUM_TEAM_2, string_null, 1, 1);
+		if(invasion_teams >= 3) if(inv_monsters_perteam[NUM_TEAM_3] > 0) { RandomSelection_Add(world, NUM_TEAM_3, string_null, 1, 1); }
+		if(invasion_teams >= 4) if(inv_monsters_perteam[NUM_TEAM_4] > 0) { RandomSelection_Add(world, NUM_TEAM_4, string_null, 1, 1); }
 		
 		monster.team = RandomSelection_chosen_float;
 	}
@@ -232,6 +232,15 @@ void Invasion_RoundStart()
 	inv_numkilled = 0;
 
 	inv_maxspawned = rint(max(autocvar_g_invasion_monster_count, autocvar_g_invasion_monster_count * (inv_roundcnt * 0.5)));
+	
+	if(teamplay)
+	{
+		DistributeEvenly_Init(inv_maxspawned, invasion_teams);
+		inv_monsters_perteam[NUM_TEAM_1] = DistributeEvenly_Get(1);
+		inv_monsters_perteam[NUM_TEAM_2] = DistributeEvenly_Get(1);
+		if(invasion_teams >= 3) inv_monsters_perteam[NUM_TEAM_3] = DistributeEvenly_Get(1);
+		if(invasion_teams >= 4) inv_monsters_perteam[NUM_TEAM_4] = DistributeEvenly_Get(1);
+	}
 }
 
 MUTATOR_HOOKFUNCTION(invasion_MonsterDies)
@@ -240,6 +249,7 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterDies)
 	{
 		inv_numkilled += 1;
 		inv_maxcurrent -= 1;
+		if(teamplay) { inv_monsters_perteam[self.team] -= 1; }
 
 		if(IS_PLAYER(frag_attacker))
 		if(SAME_TEAM(frag_attacker, self)) // in non-teamplay modes, same team = same player, so this works

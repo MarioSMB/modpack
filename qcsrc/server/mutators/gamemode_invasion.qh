@@ -7,6 +7,7 @@ float inv_lastcheck;
 float inv_maxcurrent;
 
 float invasion_teams;
+float inv_monsters_perteam[17];
 
 float inv_monsterskill;
 
