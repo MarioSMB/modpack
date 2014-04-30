@@ -34,9 +34,9 @@ void ctf_RespawnFlag(entity flag);
 #define VEHICLE_FLAG_SCALE 1.0
 
 // waypoint colors
-#define WPCOLOR_ENEMYFC(t) (colormapPaletteColor(t - 1, FALSE) * 0.75)
+#define WPCOLOR_ENEMYFC(t) ((t) ? colormapPaletteColor(t - 1, FALSE) * 0.75 : '1 1 1')
 #define WPCOLOR_FLAGCARRIER(t) ('0.8 0.8 0')
-#define WPCOLOR_DROPPEDFLAG(t) (('0.25 0.25 0.25' + colormapPaletteColor(t - 1, FALSE)) * 0.5)
+#define WPCOLOR_DROPPEDFLAG(t) ((t) ? ('0.25 0.25 0.25' + colormapPaletteColor(t - 1, FALSE)) * 0.5 : '1 1 1')
 
 // sounds
 #define snd_flag_taken noise
@@ -118,6 +118,9 @@ float ctf_captureshield_min_negscore; // punish at -20 points
 float ctf_captureshield_max_ratio; // punish at most 30% of each team
 float ctf_captureshield_force; // push force of the shield
 
+// 1 flag ctf
+float ctf_oneflag; // indicates whether or not a neutral flag has been found
+
 // bot player logic
 #define HAVOCBOT_CTF_ROLE_NONE 0
 #define HAVOCBOT_CTF_ROLE_DEFENSE 2
@@ -138,4 +141,50 @@ void havocbot_role_ctf_setrole(entity bot, float role);
 #define CTF_SAMETEAM(a,b) (autocvar_g_ctf_reverse ? DIFF_TEAM(a,b) : SAME_TEAM(a,b))
 #define CTF_DIFFTEAM(a,b) (autocvar_g_ctf_reverse ? SAME_TEAM(a,b) : DIFF_TEAM(a,b))
 
+#endif
+
+// networked flag statuses
+const float	CTF_RED_FLAG_TAKEN			= 1;
+const float	CTF_RED_FLAG_LOST			= 2;
+const float	CTF_RED_FLAG_CARRYING		= 3;
+const float	CTF_BLUE_FLAG_TAKEN			= 4;
+const float	CTF_BLUE_FLAG_LOST			= 8;
+const float	CTF_BLUE_FLAG_CARRYING		= 12;
+const float	CTF_YELLOW_FLAG_TAKEN		= 16;
+const float	CTF_YELLOW_FLAG_LOST		= 32;
+const float	CTF_YELLOW_FLAG_CARRYING	= 48;
+const float	CTF_PINK_FLAG_TAKEN			= 64;
+const float	CTF_PINK_FLAG_LOST			= 128;
+const float	CTF_PINK_FLAG_CARRYING		= 192;
+const float	CTF_NEUTRAL_FLAG_TAKEN		= 256;
+const float	CTF_NEUTRAL_FLAG_LOST		= 512;
+const float	CTF_NEUTRAL_FLAG_CARRYING	= 768;
+const float CTF_FLAG_NEUTRAL			= 2048;
+const float CTF_SHIELDED				= 4096;
+
+typedef float FlagStatus;
+
+.FlagStatus ctf_flagstatus;
+
+#ifdef SVQC
+void FlagStatus_AddStat()
+{
+	addstat(STAT_CTF_FLAGSTATUS, AS_INT, ctf_flagstatus);
+}
+void WriteFlagStatus(float dst, FlagStatus w)
+{
+	WriteInt24_t(dst, w);
+}
+#endif
+#ifdef CSQC
+FlagStatus FlagStatus_GetFromStat()
+{
+	FlagStatus w = 0;
+	w = getstati(STAT_CTF_FLAGSTATUS);
+	return w;
+}
+FlagStatus ReadFlagStatus()
+{
+	return ReadInt24_t();
+}
 #endif

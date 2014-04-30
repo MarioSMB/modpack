@@ -267,6 +267,7 @@ string spritelookuptext(string s)
 		case "keycarrier-yellow": return _("Key carrier");
 		case "redbase": return _("Red base");
 		case "yellowbase": return _("Yellow base");
+		case "neutralbase": return _("White base");
 		case "pinkbase": return _("Pink base");
 		case "waypoint": return _("Waypoint");
 		case "ons-gen-red": return _("Generator");
