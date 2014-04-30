@@ -89,7 +89,18 @@ void invasion_SpawnChosenMonster(float mon)
 		monster.team = RandomSelection_chosen_float;
 	}
 	
-	monster_changeteam(monster, monster.team);
+	if(teamplay)
+	{
+		monster_setupcolors(monster);
+	
+		if(monster.sprite)
+		{
+			WaypointSprite_UpdateTeamRadar(monster.sprite, RADARICON_DANGER, ((monster.team) ? Team_ColorRGB(monster.team) : '1 0 0'));
+
+			monster.sprite.team = 0;
+			monster.sprite.SendFlags |= 1;
+		}
+	}
 	
 	monster.monster_attack = FALSE; // it's the player's job to kill all the monsters
 
@@ -376,12 +387,41 @@ MUTATOR_HOOKFUNCTION(invasion_AllowMobSpawning)
 	return TRUE;
 }
 
+MUTATOR_HOOKFUNCTION(invasion_GetTeamCount)
+{
+	ret_float = invasion_teams;
+	return FALSE;
+}
+
 void invasion_ScoreRules(float inv_teams)
 {
+	CheckAllowedTeams(world);
 	ScoreRules_basics(inv_teams, 0, 0, FALSE);
 	if(inv_teams) ScoreInfo_SetLabel_TeamScore(ST_INV_KILLS, "frags", SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_KILLS, "frags", ((inv_teams) ? SFL_SORT_PRIO_SECONDARY : SFL_SORT_PRIO_PRIMARY));
 	ScoreRules_basics_end();
+}
+
+void invasion_DelayedInit() // Do this check with a delay so we can wait for teams to be set up.
+{
+	if(autocvar_g_invasion_teams)
+		invasion_teams = bound(2, autocvar_g_invasion_teams, 4);
+	else
+		invasion_teams = 0;
+	
+	independent_players = 1; // to disable extra useless scores
+
+	invasion_ScoreRules(invasion_teams);
+
+	independent_players = 0;
+
+	round_handler_Spawn(Invasion_CheckPlayers, Invasion_CheckWinner, Invasion_RoundStart);
+	round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
+
+	allowed_to_spawn = TRUE;
+
+	inv_roundcnt = 0;
+	inv_maxrounds = 15; // 15?
 }
 
 void invasion_Initialize()
@@ -402,24 +442,7 @@ void invasion_Initialize()
 		}
 	}
 	
-	if(autocvar_g_invasion_teams >= 2)
-		invasion_teams = bound(2, autocvar_g_invasion_teams, 4);
-	else
-		invasion_teams = 0;
-	
-	independent_players = 1; // to disable extra useless scores
-
-	invasion_ScoreRules(invasion_teams);
-
-	independent_players = 0;
-
-	round_handler_Spawn(Invasion_CheckPlayers, Invasion_CheckWinner, Invasion_RoundStart);
-	round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
-
-	allowed_to_spawn = TRUE;
-
-	inv_roundcnt = 0;
-	inv_maxrounds = 15; // 15?
+	InitializeEntity(world, invasion_DelayedInit, INITPRIO_GAMETYPE);
 }
 
 MUTATOR_DEFINITION(gamemode_invasion)
@@ -435,6 +458,7 @@ MUTATOR_DEFINITION(gamemode_invasion)
 	MUTATOR_HOOK(SetStartItems, invasion_SetStartItems, CBC_ORDER_ANY);
 	MUTATOR_HOOK(AccuracyTargetValid, invasion_AccuracyTargetValid, CBC_ORDER_ANY);
 	MUTATOR_HOOK(AllowMobSpawning, invasion_AllowMobSpawning, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GetTeamCount, invasion_GetTeamCount, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
