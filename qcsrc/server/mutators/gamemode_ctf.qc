@@ -874,8 +874,8 @@ void ctf_FlagTouch()
 {
 	if(gameover) { return; }
 
-	entity toucher = other;
-	float is_not_monster = (!(toucher.flags & FL_MONSTER));
+	entity toucher = other, tmp_entity;
+	float is_not_monster = (!(toucher.flags & FL_MONSTER)), num_perteam = 0;
 
 	// automatically kill the flag and return it if it touched lava/slime/nodrop surfaces
 	if(ITEM_TOUCH_NEEDKILL())
@@ -887,6 +887,8 @@ void ctf_FlagTouch()
 		}
 		return;
 	}
+
+	FOR_EACH_PLAYER(tmp_entity) if(SAME_TEAM(toucher, tmp_entity)) { ++num_perteam; }
 
 	// special touch behaviors
 	if(toucher.frozen) { return; }
@@ -927,7 +929,7 @@ void ctf_FlagTouch()
 
 		case FLAG_DROPPED:
 		{
-			if(CTF_SAMETEAM(toucher, self) && autocvar_g_ctf_flag_return)
+			if(CTF_SAMETEAM(toucher, self) && (autocvar_g_ctf_flag_return || num_perteam <= 1)) // automatically return if there's only 1 player on the team
 				ctf_Handle_Return(self, toucher); // toucher just returned his own flag
 			else if(is_not_monster && (!toucher.flagcarried) && ((toucher != self.ctf_dropper) || (time > self.ctf_droptime + autocvar_g_ctf_flag_collect_delay)))
 				ctf_Handle_Pickup(self, toucher, PICKUP_DROPPED); // toucher just picked up a dropped enemy flag
