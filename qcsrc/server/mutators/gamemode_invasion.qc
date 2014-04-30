@@ -59,6 +59,7 @@ void invasion_SpawnChosenMonster(float mon)
 	{
 		dprint("Warning: couldn't find any invasion_spawnpoint spawnpoints, attempting to spawn monsters in random locations\n");
 		entity e = spawn();
+		setsize(e, (get_monsterinfo(mon)).mins, (get_monsterinfo(mon)).maxs);
 
 		if(MoveToRandomMapLocation(e, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
 			monster = spawnmonster("", mon, world, world, e.origin, FALSE, FALSE, 2);
