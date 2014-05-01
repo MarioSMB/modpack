@@ -15,8 +15,9 @@ Defs.qc
 ../warpzonelib/client.qh
 
 ../common/teams.qh
-../common/nades.qh
 ../common/util.qh
+../common/nades.qh
+../common/buffs.qh
 ../common/test.qh
 ../common/counting.qh
 ../common/items.qh
@@ -128,6 +129,7 @@ command/cl_cmd.qc
 ../common/turrets/turrets.qc
 
 ../common/nades.qc
+../common/buffs.qc
 
 ../warpzonelib/anglestransform.qc
 ../warpzonelib/mathlib.qc

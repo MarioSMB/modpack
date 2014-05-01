@@ -14,8 +14,9 @@ sys-post.qh
 
 ../common/constants.qh
 ../common/teams.qh
-../common/nades.qh
 ../common/util.qh
+../common/nades.qh
+../common/buffs.qh
 ../common/test.qh
 ../common/counting.qh
 ../common/items.qh
@@ -220,6 +221,8 @@ target_music.qc
 ../common/vehicles/vehicles_include.qc
 
 ../common/nades.qc
+
+../common/buffs.qc
 
 accuracy.qc
 ../csqcmodellib/sv_model.qc
