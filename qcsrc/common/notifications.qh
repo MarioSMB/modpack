@@ -700,6 +700,7 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_REVIVED,           1, 0, "s1",           NO_CPID,             "0 0", _("^K3You were revived by ^BG%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_AUTO_REVIVED,      0, 1, "f1",           NO_CPID,             "0 0", _("^K3You were automatically revived after %s second(s)"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_GENERATOR_UNDERATTACK,       0, 0, "",             NO_CPID,             "0 0", _("^BGThe generator is under attack!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_HEADSHOT,                    0, 0, "",             NO_CPID,             "0 0", _("^F2Headshot!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ROUND_INFECTION_WIN,         0, 0, "",             CPID_ROUND,          "0 0", _("^BGRound over, all players have been infected"), "") \
 	MULTITEAM_CENTER(1, CENTER_ROUND_TEAM_WIN_, 4,          0, 0, "",             CPID_ROUND,          "0 0", _("^TC^TT^BG team wins the round"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ROUND_PLAYER_WIN,            1, 0, "s1",           CPID_ROUND,          "0 0", _("^BG%s^BG wins the round"), "") \
@@ -920,6 +921,7 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_UNAVAILABLE,              NO_MSG,        INFO_ITEM_WEAPON_UNAVAILABLE,              CENTER_ITEM_WEAPON_UNAVAILABLE) \
 	MSG_MULTI_NOTIF(1, MULTI_COINTOSS,                       NO_MSG,        INFO_COINTOSS,                             CENTER_COINTOSS) \
 	MSG_MULTI_NOTIF(1, MULTI_COUNTDOWN_BEGIN,                ANNCE_BEGIN,   NO_MSG,                                    CENTER_COUNTDOWN_BEGIN) \
+	MSG_MULTI_NOTIF(1, MULTI_HEADSHOT,                       ANNCE_HEADSHOT,NO_MSG,                                    CENTER_HEADSHOT) \
 	MSG_MULTI_NOTIF(1, MULTI_MINSTA_FINDAMMO,                ANNCE_NUM_10,  NO_MSG,                                    CENTER_MINSTA_FINDAMMO_FIRST) \
 	MSG_MULTI_NOTIF(1, WEAPON_ACCORDEON_MURDER,              NO_MSG,        INFO_WEAPON_ACCORDEON_MURDER,              NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_ACCORDEON_SUICIDE,             NO_MSG,        INFO_WEAPON_ACCORDEON_SUICIDE,             CENTER_DEATH_SELF_GENERIC) \

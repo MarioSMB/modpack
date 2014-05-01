@@ -160,7 +160,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 			if(deathtype == WEP_RIFLE)
 				bdamage *= 1.5; // 50% more damage if a headshot
 				
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_HEADSHOT);
+			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_HEADSHOT);
 		}
 
 		if(accuracy_isgooddamage(self.realowner, ent))
@@ -283,7 +283,7 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 			if(Headshot(hit, self, end, start, end))
 			{
 				damage *= 1.5; // 50% more damage
-				Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_HEADSHOT);
+				Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_HEADSHOT);
 			}
 			float g = accuracy_isgooddamage(self, hit);
 			Damage(hit, self, self, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);
