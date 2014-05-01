@@ -170,7 +170,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 	if(self.ok_use_ammocharge)
 	if(!ok_CheckWeaponCharge(self, self.weapon))
 	{
-		if(autocvar_g_overkill_ammo_charge_notice && time > self.ok_notice_time && self.BUTTON_ATCK && IS_REAL_CLIENT(self))
+		if(autocvar_g_overkill_ammo_charge_notice && time > self.ok_notice_time && self.BUTTON_ATCK && IS_REAL_CLIENT(self) && self.weapon == self.switchweapon)
 		{
 			//Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_OVERKILL_CHARGE);
 			self.ok_notice_time = time + 2;
