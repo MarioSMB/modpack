@@ -3,7 +3,7 @@
 .entity pbhost;
 .float pb_canattach;
 //.float pb_attachblock;
-.float oldsolid;
+.float pb_oldsolid;
 
 void pb_Attach(entity host, entity slave);
 void pb_Detach(entity host);
