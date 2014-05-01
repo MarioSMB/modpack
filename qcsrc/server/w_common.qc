@@ -17,36 +17,21 @@ void W_GiveWeapon (entity e, float wep)
 	self = oldself;
 }
 
-float Headshot(entity targ, entity ent, vector hitloc)
+float Headshot(entity targ, entity ent, vector hitloc, vector start, vector end)
 {
 	if(!autocvar_sv_headshot)
 		return FALSE;
 	if(ent.weapon != WEP_RIFLE && ent.weapon != WEP_MINSTANEX && ent.weapon != WEP_NEX)
 		return FALSE;
-	float nearestbone = 0;
-	string tag_lower = "";
-	FOR_EACH_TAG(targ)
+	vector headmins, headmaxs, org;
+	org = antilag_takebackorigin(targ, time - ANTILAG_LATENCY(ent));
+	headmins = org + '0.6 0 0' * targ.mins_x + '0 0.6 0' * targ.mins_y + '0 0 1' * (1.3 * targ.view_ofs_z - 0.3 * targ.maxs_z);
+	headmaxs = org + '0.6 0 0' * targ.maxs_x + '0 0.6 0' * targ.maxs_y + '0 0 1' * targ.maxs_z;
+	te_lightning2(world, start, end);
+	te_lightning2(world,headmins, headmaxs);
+	if(trace_hits_box(start, end, headmins, headmaxs))
 	{
-		if(!tagnum)
-			continue; // skip empty bones
-			
-		tag_lower = strtolower(gettaginfo_name);
-			
-		if(tag_lower == "master" || tag_lower == "leg_l" || tag_lower == "bip01 r hand" || tag_lower == "leg_r" || startsWith(gettaginfo_name, "dummy") || startsWith(tag_lower, "bone") || startsWith(gettaginfo_name, "forearm") || startsWith(gettaginfo_name, "knee") || startsWith(gettaginfo_name, "foot") || startsWith(gettaginfo_name, "upperarm") || startsWith(gettaginfo_name, "toe") || startsWith(gettaginfo_name, "hand"))
-			continue; // player model bone blacklist
-
-		// now choose the bone closest to impact origin
-		if(nearestbone == 0 || vlen(hitloc - gettaginfo(targ, tagnum)) <= vlen(hitloc - gettaginfo(targ, nearestbone)))
-			nearestbone = tagnum;
-	}
-	
-	if(nearestbone)
-	{
-		gettaginfo(targ, nearestbone);
-		tag_lower = strtolower(gettaginfo_name);
-		//print(gettaginfo_name, "\n");
-		if(tag_lower == "head" || tag_lower == "tag_head" || tag_lower == "bip01 head" || strstrofs(tag_lower, "head", 0) >= 0)
-			return TRUE;
+		return TRUE;
 	}
 	return FALSE;
 }
@@ -167,6 +152,14 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 
 		f = ExponentialFalloff(mindist, maxdist, halflifedist, ent.railgundistance);
 		ffs = ExponentialFalloff(mindist, maxdist, forcehalflifedist, ent.railgundistance);
+		
+		if(Headshot(ent, self, hitloc, start, end))
+		{
+			if(deathtype == WEP_RIFLE)
+				bdamage *= 1.5; // 50% more damage if a headshot
+				
+			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_HEADSHOT);
+		}
 
 		if(accuracy_isgooddamage(self.realowner, ent))
 			totaldmg += bdamage * f;
@@ -174,9 +167,6 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		// apply the damage
 		if (ent.takedamage)
 			Damage (ent, self, self, bdamage * f, deathtype, hitloc, ent.railgunforce * ffs);
-
-		if(Headshot(ent, self, hitloc))
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_HEADSHOT);
 
 		// create a small explosion to throw gibs around (if applicable)
 		//setorigin (explosion, hitloc);
@@ -288,11 +278,13 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 		{
 			fireBullet_last_hit = hit;
 			yoda = 0;
+			if(Headshot(hit, self, end, start, end))
+			{
+				damage *= 1.5; // 50% more damage
+				Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_HEADSHOT);
+			}
 			float g = accuracy_isgooddamage(self, hit);
 			Damage(hit, self, self, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);
-
-			if(Headshot(hit, self, end))
-				Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_HEADSHOT);
 
 			// calculate hits for ballistic weapons
 			if(g)
