@@ -387,7 +387,7 @@ void FireGrapplingHook (void)
 	missile.classname = "grapplinghook";
 	missile.flags = FL_PROJECTILE;
 
-	missile.movetype = MOVETYPE_FLY;
+	missile.movetype = ((autocvar_g_balance_grapplehook_gravity) ? MOVETYPE_TOSS : MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(missile);
 
 	//setmodel(missile, "models/hook.md3"); // precision set below
@@ -457,7 +457,7 @@ void GrapplingHookFrame()
 		}
 
 		self.hook_state &= ~HOOK_RELEASING;
-		if(self.BUTTON_CROUCH)
+		if(self.BUTTON_CROUCH && autocvar_g_balance_grapplehook_crouchslide)
 		{
 			self.hook_state &= ~HOOK_PULLING;
 			//self.hook_state |= HOOK_RELEASING;

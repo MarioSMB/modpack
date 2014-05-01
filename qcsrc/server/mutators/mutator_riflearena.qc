@@ -47,7 +47,13 @@ MUTATOR_HOOKFUNCTION(ra_StartItems)
 {
 	start_items |= IT_UNLIMITED_AMMO;
 	start_ammo_nails = warmup_start_ammo_nails = 100;
-	warmup_start_weapons = start_weapons = (WEPSET_RIFLE | WEPSET_LASER);
+	warmup_start_weapons = start_weapons = WEPSET_RIFLE;
+	
+	if(autocvar_g_riflearena_withlaser)
+	{
+		start_weapons |= WEPSET_LASER;
+		warmup_start_weapons |= WEPSET_LASER;
+	}
 
 	return FALSE;
 }

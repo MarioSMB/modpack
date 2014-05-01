@@ -23,12 +23,14 @@ float Headshot(entity targ, entity ent, vector hitloc, vector start, vector end)
 		return FALSE;
 	if(ent.weapon != WEP_RIFLE && ent.weapon != WEP_MINSTANEX && ent.weapon != WEP_NEX)
 		return FALSE;
+	if(!IS_PLAYER(targ))
+		return FALSE;
+	if(targ.frozen || !targ.takedamage || targ.jb_isprisoned || targ.deadflag != DEAD_NO)
+		return FALSE;
 	vector headmins, headmaxs, org;
 	org = antilag_takebackorigin(targ, time - ANTILAG_LATENCY(ent));
 	headmins = org + '0.6 0 0' * targ.mins_x + '0 0.6 0' * targ.mins_y + '0 0 1' * (1.3 * targ.view_ofs_z - 0.3 * targ.maxs_z);
 	headmaxs = org + '0.6 0 0' * targ.maxs_x + '0 0.6 0' * targ.maxs_y + '0 0 1' * targ.maxs_z;
-	te_lightning2(world, start, end);
-	te_lightning2(world,headmins, headmaxs);
 	if(trace_hits_box(start, end, headmins, headmaxs))
 	{
 		return TRUE;
