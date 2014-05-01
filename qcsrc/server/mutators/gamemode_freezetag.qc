@@ -173,6 +173,8 @@ void freezetag_Unfreeze(entity attacker)
 	self.freezetag_frozen_timeout = 0;
 
 	Unfreeze(self);
+	
+	self.health = autocvar_g_freezetag_revive_health;
 }
 
 
@@ -436,7 +438,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	if(n && self.frozen == 1) // OK, there is at least one teammate reviving us
 	{
 		self.revive_progress = bound(0, self.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
-		self.health = max(1, self.revive_progress * ((warmup_stage) ? warmup_start_health : start_health));
+		self.health = max(1, self.revive_progress * ((warmup_stage) ? warmup_start_health : autocvar_g_freezetag_revive_health));
 
 		if(self.revive_progress >= 1)
 		{
@@ -479,7 +481,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	else if(!n && self.frozen == 1) // only if no teammate is nearby will we reset
 	{
 		self.revive_progress = bound(0, self.revive_progress - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
-		self.health = max(1, self.revive_progress * ((warmup_stage) ? warmup_start_health : start_health));
+		self.health = max(1, self.revive_progress * ((warmup_stage) ? warmup_start_health : autocvar_g_freezetag_revive_health));
 	}
 	else if(!n && !self.frozen)
 	{
