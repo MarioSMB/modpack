@@ -475,6 +475,8 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_GODMODE_OFF,                    0, 1, "f1", "",                          "",                     _("^BGGodmode saved you %s units of damage, cheater!"), "") \
 	MSG_INFO_NOTIF(1, INFO_INFECTION_INFECTED,             2, 0, "s1 s2", "",                       "",                     _("^BG%s^BG was infected by ^BG%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_ITEM_BUFF,                      1, 1, "s1 item_buffname", "",            "",                     _("^BG%s^BG got the %s^BG Buff!"), "") \
+	MSG_INFO_NOTIF(1, INFO_ITEM_BUFF_LOST,                 1, 1, "s1 item_buffname", "",            "",                     _("^BG%s^BG lost the %s^BG Buff!"), "") \
+	MSG_INFO_NOTIF(1, INFO_ITEM_BUFF_DROP,                 0, 1, "item_buffname", "",               "",                     _("^BGYou dropped the %s^BG Buff!"), "") \
 	MSG_INFO_NOTIF(1, INFO_ITEM_BUFF_GOT,                  0, 1, "item_buffname", "",               "",                     _("^BGYou got the %s^BG Buff!"), "") \
 	MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_DONTHAVE,           0, 1, "item_wepname", "",                      "",               _("^BGYou do not have the ^F1%s"), "") \
 	MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_DROP,               1, 1, "item_wepname item_wepammo", "",         "",               _("^BGYou dropped the ^F1%s^BG%s"), "") \
@@ -712,6 +714,7 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_SPAWN_LATE,        0, 0, "",             NO_CPID,             "0 0", _("^K1Round already started, you spawn as frozen"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_INFECTION_INFECTED,          1, 0, "s1",           NO_CPID,             "0 0", _("^BGYou have been infected by ^BG%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_INVASION_SUPERMONSTER,       1, 0, "s1",           NO_CPID,             "0 0", _("^K1A %s has arrived!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_ITEM_BUFF_DROP,              0, 1, "item_buffname",                     CPID_ITEM, "item_centime 0", _("^BGYou dropped the %s^BG Buff!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ITEM_BUFF_GOT,               0, 1, "item_buffname",                     CPID_ITEM, "item_centime 0", _("^BGYou got the %s^BG Buff!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_DONTHAVE,        0, 1, "item_wepname",                      CPID_ITEM, "item_centime 0", _("^BGYou do not have the ^F1%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_DROP,            1, 1, "item_wepname item_wepammo",         CPID_ITEM, "item_centime 0", _("^BGYou dropped the ^F1%s^BG%s"), "") \
@@ -920,6 +923,7 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_WAKI_DEATH,             NO_MSG,        INFO_DEATH_SELF_VH_WAKI_DEATH,             CENTER_DEATH_SELF_VH_WAKI_DEATH) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_WAKI_ROCKET,            NO_MSG,        INFO_DEATH_SELF_VH_WAKI_ROCKET,            CENTER_DEATH_SELF_VH_WAKI_ROCKET) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_VOID,                      NO_MSG,        INFO_DEATH_SELF_VOID,                      CENTER_DEATH_SELF_VOID) \
+	MSG_MULTI_NOTIF(1, ITEM_BUFF_DROP,                       NO_MSG,        INFO_ITEM_BUFF_DROP,                       CENTER_ITEM_BUFF_DROP) \
 	MSG_MULTI_NOTIF(1, ITEM_BUFF_GOT,                        NO_MSG,        INFO_ITEM_BUFF_GOT,                        CENTER_ITEM_BUFF_GOT) \
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_DONTHAVE,                 NO_MSG,        INFO_ITEM_WEAPON_DONTHAVE,                 CENTER_ITEM_WEAPON_DONTHAVE) \
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_DROP,                     NO_MSG,        INFO_ITEM_WEAPON_DROP,                     CENTER_ITEM_WEAPON_DROP) \

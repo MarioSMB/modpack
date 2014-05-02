@@ -248,6 +248,18 @@ void buff_Init(entity ent)
 	self = oldself;
 }
 
+void buff_Init_Compat(entity ent, float replacement)
+{
+	if(ent.spawnflags & 2)
+		ent.team = NUM_TEAM_1;
+	else if(ent.spawnflags & 4)
+		ent.team = NUM_TEAM_2;
+
+	ent.buffs = replacement;
+
+	buff_Init(ent);
+}
+
 void buff_SpawnReplacement(entity ent, entity old)
 {
 	setorigin(ent, old.origin);
@@ -375,7 +387,11 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerPhysics)
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerDies)
 {
-	self.buffs = 0;
+	if(self.buffs)
+	{
+		Send_Notification(NOTIF_ALL_EXCEPT, self, MSG_INFO, INFO_ITEM_BUFF_LOST, self.netname, self.buffs);
+		self.buffs = 0;
+	}
 	return FALSE;
 }
 
@@ -384,6 +400,9 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerUseKey)
 	if(MUTATOR_RETURNVALUE || gameover) { return FALSE; }
 	if(self.buffs)
 	{
+		Send_Notification(NOTIF_ONE, self, MSG_MULTI, ITEM_BUFF_DROP, self.buffs);
+		Send_Notification(NOTIF_ALL_EXCEPT, self, MSG_INFO, INFO_ITEM_BUFF_LOST, self.netname, self.buffs);
+
 		self.buffs = 0;
 		sound(self, CH_TRIGGER, "misc/poweroff.wav", VOL_BASE, ATTN_NORM);
 		return TRUE;

@@ -44,8 +44,10 @@ REGISTER_BUFF(_("Wrath"),wrath,WRATH,"wrath",'0.55 0.5 1');
 #ifdef SVQC
 .float buffs;
 void buff_Init(entity ent);
+void buff_Init_Compat(entity ent, float replacement);
 
 #define BUFF_SPAWNFUNC(e,b,t) void spawnfunc_item_buff_##e() { self.buffs = b; self.team = t; buff_Init(self); }
+#define BUFF_SPAWNFUNC_Q3TA_COMPAT(o,r) void spawnfunc_##o() { buff_Init_Compat(self,r); }
 #define BUFF_SPAWNFUNCS(e,b)                         \
         BUFF_SPAWNFUNC(e,           b,  0)           \
         BUFF_SPAWNFUNC(e##_team1,   b,  NUM_TEAM_1) \
@@ -63,6 +65,11 @@ BUFF_SPAWNFUNCS(vampire,    BUFF_VAMPIRE)
 BUFF_SPAWNFUNCS(tenacity,   BUFF_TENACITY)
 BUFF_SPAWNFUNCS(wrath,      BUFF_WRATH)
 BUFF_SPAWNFUNCS(random,     0)
+
+BUFF_SPAWNFUNC_Q3TA_COMPAT(item_doubler,    BUFF_MEDIC)
+BUFF_SPAWNFUNC_Q3TA_COMPAT(item_guard,      BUFF_GUARD)
+BUFF_SPAWNFUNC_Q3TA_COMPAT(item_scout,      BUFF_HASTE)
+BUFF_SPAWNFUNC_Q3TA_COMPAT(item_ammoregen,  BUFF_SUPPLY)
 #endif
 
 vector Buff_Color(float buff_id);
