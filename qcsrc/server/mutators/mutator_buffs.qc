@@ -103,6 +103,7 @@ void buff_Touch()
 	self.buff_active = FALSE;
 	
 	Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_BUFF_GOT, self.buffs);
+	Send_Notification(NOTIF_ALL_EXCEPT, other, MSG_INFO, INFO_ITEM_BUFF, other.netname, self.buffs);
 		
 	sound(other, CH_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTN_NORM);
 	other.buffs |= (self.buffs);
@@ -378,6 +379,18 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDies)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(buffs_PlayerUseKey)
+{
+	if(MUTATOR_RETURNVALUE || gameover) { return FALSE; }
+	if(self.buffs)
+	{
+		self.buffs = 0;
+		sound(self, CH_TRIGGER, "misc/poweroff.wav", VOL_BASE, ATTN_NORM);
+		return TRUE;
+	}
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(buffs_RemovePlayer)
 {
 	if(self.buff_model)
@@ -517,6 +530,7 @@ void buffs_Initialize()
 	precache_model("models/buffs/buff.md3");
 	precache_sound("misc/strength_respawn.wav");
 	precache_sound("misc/shield_respawn.wav");
+	precache_sound("misc/poweroff.wav");
 
 	addstat(STAT_BUFFS, AS_INT, buffs);
 }
@@ -532,6 +546,7 @@ MUTATOR_DEFINITION(mutator_buffs)
 	MUTATOR_HOOK(VehicleExit, buffs_VehicleExit, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerRegen, buffs_PlayerRegen, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, buffs_PlayerDies, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerUseKey, buffs_PlayerUseKey, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, buffs_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, buffs_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(OnEntityPreSpawn, buffs_OnEntityPreSpawn, CBC_ORDER_ANY);

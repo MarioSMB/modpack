@@ -474,7 +474,8 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_FREEZETAG_SELF,                 1, 0, "s1", "",                          "",                     _("^BG%s^K1 froze themself"), "") \
 	MSG_INFO_NOTIF(1, INFO_GODMODE_OFF,                    0, 1, "f1", "",                          "",                     _("^BGGodmode saved you %s units of damage, cheater!"), "") \
 	MSG_INFO_NOTIF(1, INFO_INFECTION_INFECTED,             2, 0, "s1 s2", "",                       "",                     _("^BG%s^BG was infected by ^BG%s"), "") \
-	MSG_INFO_NOTIF(0, INFO_ITEM_BUFF_GOT,                  0, 1, "item_buffname", "",               "",                     _("^BGYou got the %s^BG Buff!"), "") \
+	MSG_INFO_NOTIF(1, INFO_ITEM_BUFF,                      1, 1, "s1 item_buffname", "",            "",                     _("^BG%s^BG got the %s^BG Buff!"), "") \
+	MSG_INFO_NOTIF(1, INFO_ITEM_BUFF_GOT,                  0, 1, "item_buffname", "",               "",                     _("^BGYou got the %s^BG Buff!"), "") \
 	MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_DONTHAVE,           0, 1, "item_wepname", "",                      "",               _("^BGYou do not have the ^F1%s"), "") \
 	MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_DROP,               1, 1, "item_wepname item_wepammo", "",         "",               _("^BGYou dropped the ^F1%s^BG%s"), "") \
 	MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_GOT,                0, 1, "item_wepname", "",                      "",               _("^BGYou got the ^F1%s"), "") \
@@ -785,7 +786,7 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_POWERUP_SPEED,               0, 0, "",              CPID_POWERUP,          "0 0", _("^F2You are on speed"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_POWERUP_STRENGTH,            0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Strength infuses your weapons with devastating power"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_RACE_FINISHLAP,              0, 0, "",              CPID_RACE_FINISHLAP,   "0 0", _("^F2The race is over, finish your lap!"), "") \
-        MSG_CENTER_NOTIF(1, CENTER_SECONDARY_NODAMAGE,          0, 0, "",              NO_CPID,               "0 0", _("^BGSecondary fire inflicts no damage!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_SECONDARY_NODAMAGE,          0, 0, "",              NO_CPID,               "0 0", _("^BGSecondary fire inflicts no damage!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SEQUENCE_COMPLETED,          0, 0, "",              NO_CPID,               "0 0", _("^BGSequence completed!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SEQUENCE_COUNTER,            0, 0, "",              NO_CPID,               "0 0", _("^BGThere are more to go..."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SEQUENCE_COUNTER_FEWMORE,    0, 1, "f1",            NO_CPID,               "0 0", _("^BGOnly %s^BG more to go..."), "") \
