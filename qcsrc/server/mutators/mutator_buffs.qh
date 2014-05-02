@@ -7,6 +7,8 @@
 .float buff_wrath_damage_time;
 // arc
 .float buff_arc_lastzap;
+// supply
+.float buff_supply_prev_infitems;
 
 .float buff_active;
 .float buff_activetime;

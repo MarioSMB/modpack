@@ -113,10 +113,10 @@ void buff_NewType(entity ent, float cb)
 {
 	entity e;
 	RandomSelection_Init();
-	for(e = Buff_Type_first; e; e = e.enemy) if(!(cb & e.items) || !cb)
+	for(e = Buff_Type_first; e; e = e.enemy)
 	{
-		RandomSelection_Add(world, e.items, string_null, 1, ((e.count) ? 0.5 : 1)); // if it's already been chosen, give it a lower count
-		++e.count;
+		RandomSelection_Add(world, e.items, string_null, 1, 1 / e.count); // if it's already been chosen, give it a lower priority
+		e.count += 1;
 	}
 	ent.buffs = RandomSelection_chosen_float;
 }
@@ -460,6 +460,23 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 		
 	if(self.buffs != self.oldbuffs)
 	{
+		if(self.oldbuffs & BUFF_SUPPLY)
+		{
+			if(self.buff_supply_prev_infitems)
+				self.items |= IT_UNLIMITED_WEAPON_AMMO;
+			else
+				self.items &= ~IT_UNLIMITED_WEAPON_AMMO;
+		}
+		else if(self.buffs & BUFF_SUPPLY)
+		{
+			self.buff_supply_prev_infitems = (self.items & IT_UNLIMITED_WEAPON_AMMO);
+			if(!self.ammo_shells) { self.ammo_shells = 20; }
+			if(!self.ammo_cells) { self.ammo_cells = 20; }
+			if(!self.ammo_rockets) { self.ammo_rockets = 20; }
+			if(!self.ammo_nails) { self.ammo_nails = 20; }
+			if(!self.ammo_fuel) { self.ammo_fuel = 20; }
+		}
+
 		self.oldbuffs = self.buffs;
 		if(self.buffs)
 		{
@@ -487,9 +504,6 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 		setorigin(self.buff_model, self.origin + '0 0 70');
         self.buff_model.angles_y = 200 * time;
 	}
-	
-	if(self.buffs & BUFF_SUPPLY && !(self.items & IT_UNLIMITED_WEAPON_AMMO))
-		self.items |= IT_UNLIMITED_WEAPON_AMMO;
 	
 	return FALSE;
 }
