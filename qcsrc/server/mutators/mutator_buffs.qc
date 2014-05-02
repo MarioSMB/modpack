@@ -104,6 +104,13 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		frag_force_x *= 2;
 		frag_force_y *= 2;
 	}
+	
+	if(frag_target.buffs & BUFF_TENACITY)
+	if(frag_target != frag_attacker)
+	{
+		frag_damage *= 0.7;
+		frag_force *= 0.7;
+	}
 
 	return FALSE;
 }
