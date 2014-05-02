@@ -23,7 +23,8 @@ vector buffs_MergedColor(float b)
 
 float buffs_BuffModel_Customize()
 {
-	if(SAME_TEAM(other, self.owner) || (IS_SPEC(other) && SAME_TEAM(other.enemy, self.owner)))
+	float same_team = (SAME_TEAM(other, self.owner) || (IS_SPEC(other) && SAME_TEAM(other.enemy, self.owner)));
+	if(other.alpha <= 0.5 && !same_team)
 		return FALSE;
 		
 	if(other == self.owner || (IS_SPEC(other) && other.enemy == self.owner))
@@ -161,6 +162,17 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDies)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(buffs_RemovePlayer)
+{
+	if(self.buff_model)
+	{
+		remove(self.buff_model);
+		self.buff_model = world;
+	}
+
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(buffs_WeaponRate)
 {
 	if(self.buffs & BUFF_WRATH)
@@ -287,6 +299,8 @@ MUTATOR_DEFINITION(mutator_buffs)
 	MUTATOR_HOOK(VehicleExit, buffs_VehicleExit, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerRegen, buffs_PlayerRegen, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, buffs_PlayerDies, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MakePlayerObserver, buffs_RemovePlayer, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ClientDisconnect, buffs_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(WeaponRateFactor, buffs_WeaponRate, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, buffs_PlayerThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, buffs_BuildMutatorsString, CBC_ORDER_ANY);
