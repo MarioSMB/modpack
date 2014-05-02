@@ -69,9 +69,20 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(frag_attacker)
 	if(random() <= 0.4) // 40% chance?
-	{
 		frag_damage = frag_target.health - 5; // 5 health recovery
+		
+	if(frag_target.buffs & BUFF_WRATH)
+	if(frag_attacker)
+	if(frag_attacker != frag_target)
+	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
+	{
+		if(time < frag_target.buff_wrath_damage_time)
+			frag_damage *= 1.2;
+		frag_target.buff_wrath_damage_time = time + 3;
 	}
+		
+	if(frag_attacker.buffs & BUFF_WRATH)
+		frag_damage *= 0.7;
 
 	return FALSE;
 }
@@ -96,6 +107,15 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerPhysics)
 MUTATOR_HOOKFUNCTION(buffs_PlayerDies)
 {
 	self.buffs = 0;
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(buffs_WeaponRate)
+{
+	if(self.buffs & BUFF_WRATH)
+	if(time < self.buff_wrath_damage_time)
+		weapon_rate *= 0.7;
+	
 	return FALSE;
 }
 
@@ -216,6 +236,7 @@ MUTATOR_DEFINITION(mutator_buffs)
 	MUTATOR_HOOK(VehicleExit, buffs_VehicleExit, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerRegen, buffs_PlayerRegen, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, buffs_PlayerDies, CBC_ORDER_ANY);
+	MUTATOR_HOOK(WeaponRateFactor, buffs_WeaponRate, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, buffs_PlayerThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, buffs_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, buffs_BuildMutatorsPrettyString, CBC_ORDER_ANY);
