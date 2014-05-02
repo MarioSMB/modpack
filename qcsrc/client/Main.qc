@@ -135,6 +135,18 @@ void CSQC_Init(void)
 	registercvar("hud_panel_statuseffects_progressbar_name", "progressbar");
 	registercvar("hud_panel_statuseffects_progressbar_xoffset", "0");
 	registercvar("hud_panel_statuseffects_text", "0");
+	
+	// these need to be defined for buffs to work
+	registercvar("hud_panel_buffs", "0");
+	registercvar("hud_panel_buffs_pos", "0.45 0.855");
+	registercvar("hud_panel_buffs_size", "0.1 0.07");
+	registercvar("hud_panel_buffs_bg", "");
+	registercvar("hud_panel_buffs_bg_color", "");
+	registercvar("hud_panel_buffs_bg_color_team", "");
+	registercvar("hud_panel_buffs_bg_alpha", "");
+	registercvar("hud_panel_buffs_bg_border", "");
+	registercvar("hud_panel_buffs_bg_padding", "");
+	//registercvar("hud_panel_buffs_iconalign", "0");
 
 	gametype = 0;
 

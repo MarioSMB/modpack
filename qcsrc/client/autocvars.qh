@@ -295,6 +295,8 @@ float autocvar_hud_panel_powerups_baralign;
 float autocvar_hud_panel_powerups_flip;
 float autocvar_hud_panel_powerups_iconalign;
 float autocvar_hud_panel_powerups_progressbar;
+float autocvar_hud_panel_buffs;
+//float autocvar_hud_panel_buffs_iconalign;
 string autocvar_hud_panel_powerups_progressbar_shield;
 string autocvar_hud_panel_powerups_progressbar_strength;
 string autocvar_hud_panel_powerups_progressbar_superweapons;

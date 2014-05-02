@@ -5822,6 +5822,66 @@ void HUD_StatusEffects(void)
 }
 
 
+// Buffs (#19)
+//
+void HUD_Buffs(void)
+{
+	float buffs = getstati(STAT_BUFFS, 0, 24);
+	if(!autocvar__hud_configure)
+	{
+		if(!autocvar_hud_panel_buffs) return;
+		if(spectatee_status == -1) return;
+		if(getstati(STAT_HEALTH) <= 0) return;
+		if(!buffs) return;
+	}
+	else
+	{
+		buffs = Buff_Type_first.items; // force first buff
+	}
+	
+	float b = 0; // counter to tell other functions that we have buffs
+	entity e;
+	string s = "";
+	for(e = Buff_Type_first; e; e = e.enemy) if(buffs & e.items)
+	{
+		++b;
+		string o = strcat(rgb_to_hexcolor(Buff_Color(e.items)), Buff_PrettyName(e.items));
+		if(s == "")
+			s = o;
+		else
+			s = strcat(s, " ", o);
+	}
+
+	HUD_Panel_UpdateCvars();
+
+	draw_beginBoldFont();
+
+	vector pos, mySize;
+	pos = panel_pos;
+	mySize = panel_size;
+
+	HUD_Panel_DrawBg(bound(0, b, 1));
+	if(panel_bg_padding)
+	{
+		pos += '1 1 0' * panel_bg_padding;
+		mySize -= '2 2 0' * panel_bg_padding;
+	}
+
+	//float panel_ar = mySize_x/mySize_y;
+	//float is_vertical = (panel_ar < 1);
+	//float buff_iconalign = autocvar_hud_panel_buffs_iconalign;
+	vector buff_offset = '0 0 0';
+	
+	for(e = Buff_Type_first; e; e = e.enemy) if(buffs & e.items)
+	{
+		//DrawNumIcon(pos + buff_offset, mySize, shield, "shield", is_vertical, buff_iconalign, '1 1 1', 1);
+		drawcolorcodedstring_aspect(pos + buff_offset, s, mySize, panel_fg_alpha * 0.2, DRAWFLAG_NORMAL);
+	}
+
+	draw_endBoldFont();
+}
+
+
 /*
 ==================
 Main HUD system
