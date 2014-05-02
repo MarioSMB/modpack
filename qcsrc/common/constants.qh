@@ -214,6 +214,8 @@ const float STAT_ROUNDLOST = 96;
 
 const float STAT_CTF_FLAGSTATUS = 97;
 
+const float STAT_BUFFS = 98;
+
 // mod stats (1xx)
 const float STAT_REDALIVE = 100;
 const float STAT_BLUEALIVE = 101;

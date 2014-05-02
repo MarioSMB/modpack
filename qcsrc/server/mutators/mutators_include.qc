@@ -46,3 +46,4 @@
 #include "mutator_status_effects.qc"
 #include "mutator_random_vehicles.qc"
 #include "mutator_piggyback.qc"
+#include "mutator_buffs.qc"

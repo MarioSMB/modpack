@@ -398,6 +398,7 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_WAKI_DEATH,     3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Racer exploded%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_WAKI_GUN,       3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was bolted down by ^BG%s^K1's Racer%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_WAKI_ROCKET,    3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 couldn't find shelter from ^BG%s^K1's Racer%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VAMPIRE,           3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1's blood was sucked by ^BG%s^K1%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VOID,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_void",          _("^BG%s%s^K1 was thrown into a world of hurt by ^BG%s^K1%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_AUTOTEAMCHANGE,      2, 1, "s1 s2loc death_team", "",         "",                     _("^BG%s^K1 was moved into the %s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_BETRAYAL,            2, 1, "s1 s2loc spree_lost", "s1",       "notify_teamkill_red",  _("^BG%s^K1 became enemies with the Lord of Teamplay%s%s"), "") \
@@ -855,6 +856,7 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_WAKI_DEATH,           NO_MSG,        INFO_DEATH_MURDER_VH_WAKI_DEATH,           NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_WAKI_GUN,             NO_MSG,        INFO_DEATH_MURDER_VH_WAKI_GUN,             NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_WAKI_ROCKET,          NO_MSG,        INFO_DEATH_MURDER_VH_WAKI_ROCKET,          NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_VAMPIRE,                 NO_MSG,        INFO_DEATH_MURDER_VAMPIRE,                 NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_VOID,                    NO_MSG,        INFO_DEATH_MURDER_VOID,                    NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_AUTOTEAMCHANGE,            NO_MSG,        INFO_DEATH_SELF_AUTOTEAMCHANGE,            CENTER_DEATH_SELF_AUTOTEAMCHANGE) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_BETRAYAL,                  NO_MSG,        INFO_DEATH_SELF_BETRAYAL,                  CENTER_DEATH_SELF_BETRAYAL) \

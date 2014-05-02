@@ -133,8 +133,16 @@ MUTATOR_HOOKFUNCTION(ok_PlayerRegen)
 	{
 		self.armorvalue = CalcRotRegen(self.armorvalue, autocvar_g_balance_armor_regenstable, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, 1 * frametime * (time > self.ok_pauseregen_finished), 0, 0, 1, 1 * frametime * (time > self.pauserotarmor_finished), autocvar_g_balance_armor_limit);
 		self.health = CalcRotRegen(self.health, autocvar_g_balance_health_regenstable, 0, 100, 1 * frametime * (time > self.ok_pauseregen_finished), 200, 0, autocvar_g_balance_health_rotlinear, 1 * frametime * (time > self.pauserothealth_finished), autocvar_g_balance_health_limit);
+		
+		float minf, maxf, limitf;
+
+		maxf = autocvar_g_balance_fuel_rotstable;
+		minf = autocvar_g_balance_fuel_regenstable;
+		limitf = autocvar_g_balance_fuel_limit;
+
+		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > self.pauserotfuel_finished), limitf);
 	}
-	return TRUE;
+	return TRUE; // return TRUE anyway, as frozen uses no regen
 }
 
 MUTATOR_HOOKFUNCTION(ok_ForbidThrowCurrentWeapon)
