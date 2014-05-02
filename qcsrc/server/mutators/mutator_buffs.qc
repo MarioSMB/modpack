@@ -124,6 +124,9 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
         self.buff_model.angles_y = 200 * time;
 	}
 	
+	if(self.buffs & BUFF_SUPPLY && !(self.items & IT_UNLIMITED_WEAPON_AMMO))
+		self.items |= IT_UNLIMITED_WEAPON_AMMO;
+	
 	return FALSE;
 }
 
