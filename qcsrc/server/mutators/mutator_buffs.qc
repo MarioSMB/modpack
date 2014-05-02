@@ -73,16 +73,23 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		
 	if(frag_target.buffs & BUFF_WRATH)
 	if(frag_attacker)
-	if(frag_attacker != frag_target)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	{
-		if(time < frag_target.buff_wrath_damage_time)
-			frag_damage *= 1.2;
-		frag_target.buff_wrath_damage_time = time + 3;
+		if(frag_attacker == frag_target)
+		{
+			if(time < frag_target.buff_wrath_damage_time)
+				frag_damage *= 0.6;
+		}
+		else
+		{
+			if(time < frag_target.buff_wrath_damage_time)
+				frag_damage *= 1.1;
+			frag_target.buff_wrath_damage_time = time + 3;
+		}
 	}
 		
 	if(frag_attacker.buffs & BUFF_WRATH)
-		frag_damage *= 0.7;
+		frag_damage *= 0.9;
 
 	return FALSE;
 }
