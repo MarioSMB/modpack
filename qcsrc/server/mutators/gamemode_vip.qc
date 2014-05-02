@@ -688,7 +688,7 @@ MUTATOR_DEFINITION(gamemode_vip)
 	MUTATOR_HOOK(PlayerSpawn, vip_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerRegen, vip_PlayerRegen, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerUseKey, vip_PlayerUseKey, CBC_ORDER_ANY);
-	MUTATOR_HOOK(OnEntityPreSpawn, vip_OnEntityPreSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(OnEntityPreSpawn, vip_OnEntityPreSpawn, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(GetTeamCount, vip_GetTeamCount, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
