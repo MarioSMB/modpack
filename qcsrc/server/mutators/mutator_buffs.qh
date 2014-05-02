@@ -5,3 +5,5 @@
 .float buff_vampire_lastdamage;
 
 .float buffs;
+.float oldbuffs; // for updating effects
+.entity buff_model; // controls effects (TODO: make csqc)

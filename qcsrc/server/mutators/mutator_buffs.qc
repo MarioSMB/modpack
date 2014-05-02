@@ -1,3 +1,45 @@
+vector buffs_MergedColor(float b)
+{
+    vector c;
+	entity e;
+    float n = 0;
+   
+    c = Buff_Color(b);
+    
+    if(c != '0 0 0')
+        return c;
+
+	for(e = Buff_Type_first; e; e = e.enemy)
+	{
+		if(b & e.items)
+		{
+            c += Buff_Color(e.items);
+            ++n;
+        }
+	}
+
+    return c * (1/n);
+}
+
+float buffs_BuffModel_Customize()
+{
+	if(SAME_TEAM(other, self.owner) || (IS_SPEC(other) && SAME_TEAM(other.enemy, self.owner)))
+		return FALSE;
+		
+	if(other == self.owner || (IS_SPEC(other) && other.enemy == self.owner))
+	{
+		// somewhat hide the model, but keep the glow
+		self.effects = 0;
+		self.alpha = -1;
+	}
+	else
+	{
+		self.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+		self.alpha = 1;
+	}
+	return TRUE;
+}
+
 MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 {
 	if(frag_target.buffs & BUFF_GUARD)
@@ -41,16 +83,67 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerPhysics)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(buffs_PlayerDies)
+{
+	self.buffs = 0;
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 {
 	if(time >= self.buff_vampire_lasttarget_time || self.buff_vampire_lasttarget.deadflag != DEAD_NO) // target has died of our sucking
 		self.buff_vampire_lasttarget = world;
+		
+	if(self.buffs != self.oldbuffs)
+	{
+		self.oldbuffs = self.buffs;
+		if(self.buffs)
+		{
+			if(!self.buff_model)
+			{
+				self.buff_model = spawn();
+				setmodel(self.buff_model, "models/buffs/buff.md3");
+				setsize(self.buff_model, '0 0 -40', '0 0 40');
+				self.buff_model.owner = self;
+				self.buff_model.pflags = PFLAGS_FULLDYNAMIC;
+				self.buff_model.light_lev = 200;
+				self.buff_model.customizeentityforclient = buffs_BuffModel_Customize;
+			}
+			self.buff_model.color = self.buff_model.colormod = buffs_MergedColor(self.buffs);
+		}
+		else
+		{
+			remove(self.buff_model);
+			self.buff_model = world;
+		}
+	}
+	
+	if(self.buff_model)
+	{
+		setorigin(self.buff_model, self.origin + '0 0 70');
+        self.buff_model.angles_y = 200 * time;
+	}
+	
 	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(buffs_SpectateCopy)
 {
 	self.buffs = other.buffs;
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(buffs_VehicleEnter)
+{
+	vh_vehicle.buffs = vh_player.buffs;
+	vh_player.buffs = 0;
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(buffs_VehicleExit)
+{
+	vh_player.buffs = vh_vehicle.buffs;
+	vh_vehicle.buffs = 0;
 	return FALSE;
 }
 
@@ -86,6 +179,8 @@ MUTATOR_HOOKFUNCTION(buffs_BuildMutatorsPrettyString)
 
 void buffs_Initialize()
 {
+	precache_model("models/buffs/buff.md3");
+
 	addstat(STAT_BUFFS, AS_INT, buffs);
 }
 
@@ -96,7 +191,10 @@ MUTATOR_DEFINITION(mutator_buffs)
 	MUTATOR_HOOK(PlayerSpawn, buffs_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPhysics, buffs_PlayerPhysics, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SpectateCopy, buffs_SpectateCopy, CBC_ORDER_ANY);
+	MUTATOR_HOOK(VehicleEnter, buffs_VehicleEnter, CBC_ORDER_ANY);
+	MUTATOR_HOOK(VehicleExit, buffs_VehicleExit, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerRegen, buffs_PlayerRegen, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDies, buffs_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, buffs_PlayerThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, buffs_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, buffs_BuildMutatorsPrettyString, CBC_ORDER_ANY);

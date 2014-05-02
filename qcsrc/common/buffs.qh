@@ -17,7 +17,6 @@ var float BUFF_LAST = 1;
 	{ \
 		BUFF_##NAME = BUFF_LAST * 2; \
 		BUFF_LAST = BUFF_##NAME; \
-		print(sprintf("^6BUFF NAME: %d BUFF ALL: %d\n", BUFF_##NAME, BUFF_LAST)); \
 		Buff_Type##sname = spawn(); \
 		Buff_Type##sname.items = BUFF_##NAME; \
 		Buff_Type##sname.netname = #sname; \
