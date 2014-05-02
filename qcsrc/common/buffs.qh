@@ -41,6 +41,30 @@ REGISTER_BUFF(_("Vampire"),vampire,VAMPIRE,"vampire",'1 0.15 0');
 REGISTER_BUFF(_("Tenacity"),tenacity,TENACITY,"tenacity",'0.66 0.66 0.73');
 REGISTER_BUFF(_("Wrath"),wrath,WRATH,"wrath",'0.55 0.5 1');
 
+#ifdef SVQC
+.float buffs;
+void buff_Init(entity ent);
+
+#define BUFF_SPAWNFUNC(e,b,t) void spawnfunc_item_buff_##e() { self.buffs = b; self.team = t; buff_Init(self); }
+#define BUFF_SPAWNFUNCS(e,b)                         \
+        BUFF_SPAWNFUNC(e,           b,  0)           \
+        BUFF_SPAWNFUNC(e##_team1,   b,  NUM_TEAM_1) \
+        BUFF_SPAWNFUNC(e##_team2,   b,  NUM_TEAM_2) \
+        BUFF_SPAWNFUNC(e##_team3,   b,  NUM_TEAM_3) \
+        BUFF_SPAWNFUNC(e##_team4,   b,  NUM_TEAM_4) 
+		
+BUFF_SPAWNFUNCS(arc,        BUFF_ARC)
+BUFF_SPAWNFUNCS(guard,      BUFF_GUARD)
+BUFF_SPAWNFUNCS(supply,     BUFF_SUPPLY)
+BUFF_SPAWNFUNCS(haste,      BUFF_HASTE)
+BUFF_SPAWNFUNCS(medic,      BUFF_MEDIC)
+BUFF_SPAWNFUNCS(bash,       BUFF_BASH)
+BUFF_SPAWNFUNCS(vampire,    BUFF_VAMPIRE)
+BUFF_SPAWNFUNCS(tenacity,   BUFF_TENACITY)
+BUFF_SPAWNFUNCS(wrath,      BUFF_WRATH)
+BUFF_SPAWNFUNCS(random,     0)
+#endif
+
 vector Buff_Color(float buff_id);
 string Buff_PrettyName(float buff_id);
 string Buff_Name(float buff_id);

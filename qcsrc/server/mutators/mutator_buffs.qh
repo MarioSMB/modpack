@@ -8,6 +8,9 @@
 // arc
 .float buff_arc_lastzap;
 
-.float buffs;
+.float buff_active;
+.float buff_activetime;
+.float buff_activetime_updated;
+.entity buff_waypoint;
 .float oldbuffs; // for updating effects
 .entity buff_model; // controls effects (TODO: make csqc)

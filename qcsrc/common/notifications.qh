@@ -474,6 +474,7 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_FREEZETAG_SELF,                 1, 0, "s1", "",                          "",                     _("^BG%s^K1 froze themself"), "") \
 	MSG_INFO_NOTIF(1, INFO_GODMODE_OFF,                    0, 1, "f1", "",                          "",                     _("^BGGodmode saved you %s units of damage, cheater!"), "") \
 	MSG_INFO_NOTIF(1, INFO_INFECTION_INFECTED,             2, 0, "s1 s2", "",                       "",                     _("^BG%s^BG was infected by ^BG%s"), "") \
+	MSG_INFO_NOTIF(0, INFO_ITEM_BUFF_GOT,                  0, 1, "item_buffname", "",               "",                     _("^BGYou got the %s^BG Buff!"), "") \
 	MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_DONTHAVE,           0, 1, "item_wepname", "",                      "",               _("^BGYou do not have the ^F1%s"), "") \
 	MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_DROP,               1, 1, "item_wepname item_wepammo", "",         "",               _("^BGYou dropped the ^F1%s^BG%s"), "") \
 	MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_GOT,                0, 1, "item_wepname", "",                      "",               _("^BGYou got the ^F1%s"), "") \
@@ -710,6 +711,7 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_SPAWN_LATE,        0, 0, "",             NO_CPID,             "0 0", _("^K1Round already started, you spawn as frozen"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_INFECTION_INFECTED,          1, 0, "s1",           NO_CPID,             "0 0", _("^BGYou have been infected by ^BG%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_INVASION_SUPERMONSTER,       1, 0, "s1",           NO_CPID,             "0 0", _("^K1A %s has arrived!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_ITEM_BUFF_GOT,               0, 1, "item_buffname",                     CPID_ITEM, "item_centime 0", _("^BGYou got the %s^BG Buff!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_DONTHAVE,        0, 1, "item_wepname",                      CPID_ITEM, "item_centime 0", _("^BGYou do not have the ^F1%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_DROP,            1, 1, "item_wepname item_wepammo",         CPID_ITEM, "item_centime 0", _("^BGYou dropped the ^F1%s^BG%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_GOT,             0, 1, "item_wepname",                      CPID_ITEM, "item_centime 0", _("^BGYou got the ^F1%s"), "") \
@@ -917,6 +919,7 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_WAKI_DEATH,             NO_MSG,        INFO_DEATH_SELF_VH_WAKI_DEATH,             CENTER_DEATH_SELF_VH_WAKI_DEATH) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_WAKI_ROCKET,            NO_MSG,        INFO_DEATH_SELF_VH_WAKI_ROCKET,            CENTER_DEATH_SELF_VH_WAKI_ROCKET) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_VOID,                      NO_MSG,        INFO_DEATH_SELF_VOID,                      CENTER_DEATH_SELF_VOID) \
+	MSG_MULTI_NOTIF(1, ITEM_BUFF_GOT,                        NO_MSG,        INFO_ITEM_BUFF_GOT,                        CENTER_ITEM_BUFF_GOT) \
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_DONTHAVE,                 NO_MSG,        INFO_ITEM_WEAPON_DONTHAVE,                 CENTER_ITEM_WEAPON_DONTHAVE) \
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_DROP,                     NO_MSG,        INFO_ITEM_WEAPON_DROP,                     CENTER_ITEM_WEAPON_DROP) \
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_GOT,                      NO_MSG,        INFO_ITEM_WEAPON_GOT,                      CENTER_ITEM_WEAPON_GOT) \
@@ -1100,6 +1103,7 @@ var float autocvar_notification_show_sprees_center_specialonly = TRUE;
     item_wepname: return full name of a weapon from weaponid
     item_wepammo: ammo display for weapon from string
     item_centime: amount of time to display weapon message in centerprint
+	item_buffname: return full name of a buff from buffid
     death_team: show the full name of the team a player is switching from
 */
 
@@ -1152,6 +1156,7 @@ string arg_slot[NOTIF_MAX_ARGS];
     ARG_CASE(ARG_CS_SV,     "spree_end",     (autocvar_notification_show_sprees ? notif_arg_spree_inf(-1, "", "", f1) : "")) \
     ARG_CASE(ARG_CS_SV,     "spree_lost",    (autocvar_notification_show_sprees ? notif_arg_spree_inf(-2, "", "", f1) : "")) \
     ARG_CASE(ARG_CS_SV,     "item_wepname",  W_Name(f1)) \
+    ARG_CASE(ARG_CS_SV,     "item_buffname", sprintf("%s%s", rgb_to_hexcolor(Buff_Color(f1)), Buff_PrettyName(f1))) \
     ARG_CASE(ARG_CS_SV,     "item_wepammo",  (s1 != "" ? sprintf(_(" with %s"), s1) : "")) \
     ARG_CASE(ARG_DC,        "item_centime",  ftos(autocvar_notification_item_centerprinttime)) \
     ARG_CASE(ARG_SV,        "death_team",    Team_ColoredFullName(f1)) \
