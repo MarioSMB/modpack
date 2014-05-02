@@ -63,6 +63,16 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		frag_attacker.buff_vampire_lasttarget = frag_target;
 		frag_attacker.buff_vampire_lasttarget_time = time + 5;
 	}
+
+	if(frag_target.buffs & BUFF_MEDIC)
+	if((frag_target.health - frag_damage) <= 0)
+	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
+	if(frag_attacker)
+	if(random() <= 0.4) // 40% chance?
+	{
+		frag_damage = frag_target.health - 5; // 5 health recovery
+	}
+
 	return FALSE;
 }
 
@@ -164,6 +174,13 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerRegen)
 		if(self.buff_vampire_lasttarget.health <= 0)
 			Damage(self.buff_vampire_lasttarget, self, self, 1, DEATH_BUFF_VAMPIRE, self.buff_vampire_lasttarget.origin, '0 0 0');
 		self.buff_vampire_lastdamage = time + 0.5;
+	}
+	
+	if(self.buffs & BUFF_MEDIC)
+	{
+		regen_mod_rot = 0.3;
+		regen_mod_limit = regen_mod_max = 1.5;
+		regen_mod_regen = 2;
 	}
 
 	return FALSE;

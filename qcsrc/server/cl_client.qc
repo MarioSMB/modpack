@@ -1672,47 +1672,32 @@ float CalcRotRegen(float current, float regenstable, float regenfactor, float re
 
 void player_regen (void)
 {
+	float max_mod, regen_mod, rot_mod, limit_mod;
+	max_mod = regen_mod = rot_mod = limit_mod = 1;
+	regen_mod_max = max_mod;
+	regen_mod_regen = regen_mod;
+	regen_mod_rot = rot_mod;
+	regen_mod_limit = limit_mod;
 	if(!MUTATOR_CALLHOOK(PlayerRegen))
 	if(!self.frozen)
 	{
-		float minh, mina, maxh, maxa, limith, limita, max_mod, regen_mod, rot_mod, limit_mod;
+		float minh, mina, maxh, maxa, limith, limita;
 		maxh = autocvar_g_balance_health_rotstable;
 		maxa = autocvar_g_balance_armor_rotstable;
 		minh = autocvar_g_balance_health_regenstable;
 		mina = autocvar_g_balance_armor_regenstable;
 		limith = autocvar_g_balance_health_limit;
 		limita = autocvar_g_balance_armor_limit;
-
-		max_mod = regen_mod = rot_mod = limit_mod = 1;
-
-		if(self.buffs & BUFF_MEDIC)
-		{
-			rot_mod = 0.3;
-			limit_mod = max_mod = 1.5;
-			regen_mod = 2;
-		}
+		
+		max_mod = regen_mod_max;
+		regen_mod = regen_mod_regen;
+		rot_mod = regen_mod_rot;
+		limit_mod = regen_mod_limit;
 
 		maxh = maxh * max_mod;
 		minh = minh * max_mod;
 		limith = limith * limit_mod;
 		limita = limita * limit_mod;
-		
-		if(autocvar_g_status_effects)
-		if(StatusEffect_Timed(self, STATUS_EFFECT_COLD) && !self.frozen)
-			regen_mod = 0.3; // slow regen speed for cold players
-
-		if(g_vip)
-		{
-			// VIP regens to 200
-			if(self.isvip)
-			{
-				maxh = 200;
-				maxa = 200;
-				minh = 200;
-				mina = 200;
-				regen_mod = 0.5; // half regen speed
-			}
-		}
 
 		self.armorvalue = CalcRotRegen(self.armorvalue, mina, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished), maxa, autocvar_g_balance_armor_rot, autocvar_g_balance_armor_rotlinear, rot_mod * frametime * (time > self.pauserotarmor_finished), limita);
 		self.health = CalcRotRegen(self.health, minh, autocvar_g_balance_health_regen, autocvar_g_balance_health_regenlinear, regen_mod * frametime * (time > self.pauseregen_finished), maxh, autocvar_g_balance_health_rot, autocvar_g_balance_health_rotlinear, rot_mod * frametime * (time > self.pauserothealth_finished), limith);
