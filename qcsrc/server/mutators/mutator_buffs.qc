@@ -95,9 +95,15 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	if(frag_attacker != frag_target)
 	if(vlen(frag_force))
 	if((get_weaponinfo(DEATH_WEAPONOF(frag_deathtype)).spawnflags & WEP_TYPE_HITSCAN))
-		frag_force *= 3; // funner
+	{
+		frag_force_x *= 3;
+		frag_force_y *= 3;
+	}
 	else
-		frag_force *= 2; // fun
+	{
+		frag_force_x *= 2;
+		frag_force_y *= 2;
+	}
 
 	return FALSE;
 }
