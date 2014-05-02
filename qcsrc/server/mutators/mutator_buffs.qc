@@ -111,6 +111,29 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		frag_damage *= 0.7;
 		frag_force *= 0.7;
 	}
+	
+	if(frag_attacker.buffs & BUFF_ARC)
+	if(frag_target != frag_attacker)
+	if(frag_deathtype != DEATH_BUFF_ARC)
+	{
+		entity head;
+		//RadiusDamage (frag_target, frag_attacker, 50, 50, 250, frag_attacker, 0, DEATH_BUFF_ARC, other);
+
+		for(head = findradius(frag_target.origin, 250); head; head = head.chain)
+		if(head.takedamage)
+		if(head != frag_attacker)
+		if(head != frag_target)
+		if(head.health > 0)
+		if(!head.frozen)
+		if(!head.jb_isprisoned)
+		if(!head.vehicle)
+		if(time >= head.buff_arc_lastzap)
+		{
+			head.buff_arc_lastzap = time + 1;
+			te_csqc_lightningarc(frag_target.origin, head.origin);
+			Damage(head, frag_inflictor, frag_attacker, 50, DEATH_BUFF_ARC, head.origin, '0 0 0');
+		}
+	}
 
 	return FALSE;
 }

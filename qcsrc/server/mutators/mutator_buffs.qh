@@ -5,6 +5,8 @@
 .float buff_vampire_lastdamage;
 // wrath
 .float buff_wrath_damage_time;
+// arc
+.float buff_arc_lastzap;
 
 .float buffs;
 .float oldbuffs; // for updating effects
