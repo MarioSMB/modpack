@@ -3,6 +3,8 @@
 .entity buff_vampire_lasttarget;
 .float buff_vampire_lasttarget_time;
 .float buff_vampire_lastdamage;
+// supply
+.float buff_supply_regen_pause;
 
 .float buffs;
 .float oldbuffs; // for updating effects
