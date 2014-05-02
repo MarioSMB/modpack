@@ -357,7 +357,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerSpawn)
 {
-	self.buffs = BUFF_MEDIC;
+	self.buffs = 0;
 	return FALSE;
 }
 
