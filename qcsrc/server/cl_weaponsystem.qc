@@ -1290,6 +1290,9 @@ void W_DecreaseAmmo(.float ammo_type, float ammo_use, float ammo_reload)
 		ok_DecreaseCharge(self, self.weapon);
 		return; // TODO
 	}
+	
+	if((self.items & IT_UNLIMITED_WEAPON_AMMO) && !ammo_reload)
+		return;
 
 	// if this weapon is reloadable, decrease its load. Else decrease the player's ammo
 	if(ammo_reload)

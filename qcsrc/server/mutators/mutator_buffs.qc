@@ -515,6 +515,8 @@ MUTATOR_HOOKFUNCTION(buffs_BuildMutatorsPrettyString)
 void buffs_Initialize()
 {
 	precache_model("models/buffs/buff.md3");
+	precache_sound("misc/strength_respawn.wav");
+	precache_sound("misc/shield_respawn.wav");
 
 	addstat(STAT_BUFFS, AS_INT, buffs);
 }
