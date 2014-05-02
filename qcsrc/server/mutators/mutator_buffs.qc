@@ -470,6 +470,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 		else if(self.buffs & BUFF_SUPPLY)
 		{
 			self.buff_supply_prev_infitems = (self.items & IT_UNLIMITED_WEAPON_AMMO);
+			self.items |= IT_UNLIMITED_WEAPON_AMMO;
 			if(!self.ammo_shells) { self.ammo_shells = 20; }
 			if(!self.ammo_cells) { self.ammo_cells = 20; }
 			if(!self.ammo_rockets) { self.ammo_rockets = 20; }
