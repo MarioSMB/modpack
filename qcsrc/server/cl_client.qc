@@ -1686,7 +1686,11 @@ void player_regen (void)
 		max_mod = regen_mod = rot_mod = limit_mod = 1;
 
 		if(self.buffs & BUFF_MEDIC)
-			max_mod = regen_mod = limit_mod = 2;
+		{
+			rot_mod = 0.3;
+			limit_mod = max_mod = 1.5;
+			regen_mod = 2;
+		}
 
 		maxh = maxh * max_mod;
 		minh = minh * max_mod;

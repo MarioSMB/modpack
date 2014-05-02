@@ -27,8 +27,6 @@ string Buff_Name(float buff_id)
 
 float Buff_Type_FromName(string buff_name)
 {
-	if(buff_name == "all") { return BUFF_ALL; }
-
 	entity e;
 	for(e = Buff_Type_first; e; e = e.enemy)
 		if(buff_name == e.netname)

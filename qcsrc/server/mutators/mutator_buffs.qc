@@ -1,14 +1,18 @@
 MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 {
-	vector v = healtharmor_applydamage(50, 0.8, frag_deathtype, frag_damage);
-	damage_take = v_x;
-	damage_save = v_y;
+	if(frag_target.buffs & BUFF_GUARD)
+	{
+		vector v = healtharmor_applydamage(50, 0.8, frag_deathtype, frag_damage);
+		damage_take = v_x;
+		damage_save = v_y;
+	}
 	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 {
 	if(frag_attacker.buffs & BUFF_VAMPIRE)
+	if(frag_attacker != frag_target)
 	if(!frag_target.frozen)
 	if(frag_target.takedamage)
 	if(!frag_target.jb_isprisoned)
@@ -22,13 +26,13 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerSpawn)
 {
-	self.buffs = 0;
+	self.buffs = BUFF_MEDIC;
 	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 {
-	if(time >= self.buff_vampire_lasttarget_time)
+	if(time >= self.buff_vampire_lasttarget_time || self.buff_vampire_lasttarget.deadflag != DEAD_NO) // target has died of our sucking
 		self.buff_vampire_lasttarget = world;
 	return FALSE;
 }
@@ -43,10 +47,15 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerRegen)
 {
 	if(self.buffs & BUFF_VAMPIRE)
 	if(self.buff_vampire_lasttarget)
+	if(self.buff_vampire_lasttarget.deadflag == DEAD_NO)
+	if(!self.buff_vampire_lasttarget.frozen)
+	if(!self.buff_vampire_lasttarget.jb_isprisoned)
 	if(time >= self.buff_vampire_lastdamage)
 	{
-		self.health = max(g_pickup_healthmega_max, self.health + 5);
-		Damage(self.buff_vampire_lasttarget, self, self, 5, DEATH_BUFF_VAMPIRE, self.buff_vampire_lasttarget.origin, '0 0 0');
+		self.health = min(g_pickup_healthmega_max, self.health + 5);
+		self.buff_vampire_lasttarget.health -= 5;
+		if(self.buff_vampire_lasttarget.health <= 0)
+			Damage(self.buff_vampire_lasttarget, self, self, 1, DEATH_BUFF_VAMPIRE, self.buff_vampire_lasttarget.origin, '0 0 0');
 		self.buff_vampire_lastdamage = time + 0.5;
 	}
 	return FALSE;
