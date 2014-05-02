@@ -700,9 +700,9 @@ void ctf_CheckStalemate(void)
 	else if(stale_flags == ctf_teams)
 		ctf_stalemate = TRUE;
 	else if(stale_flags == 0 && autocvar_g_ctf_stalemate_endcondition == 2)
-		{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_STALEMATE); }
+		{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; }
 	else if(stale_flags < ctf_teams && autocvar_g_ctf_stalemate_endcondition == 1)
-		{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_STALEMATE); }
+		{ ctf_stalemate = FALSE; wpforenemy_announced = FALSE; }
 
 	// if sufficient stalemate, then set up the waypointsprite and announce the stalemate if necessary
 	if(ctf_stalemate)
