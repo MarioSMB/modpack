@@ -163,16 +163,6 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerRegen)
 		self.buff_vampire_lastdamage = time + 0.5;
 	}
 
-	if(self.buffs & BUFF_SUPPLY)
-	{
-		if(self.BUTTON_ATCK || self.BUTTON_ATCK2)
-			self.buff_supply_regen_pause = time + 3;
-
-		self.ammo_cells = CalcRotRegen(self.ammo_cells, 60, 0.015, 0, frametime * (time > self.buff_supply_regen_pause) * 1, g_pickup_cells_max, 0.05, 0, frametime * (time > self.pauserotfuel_finished), g_pickup_cells_max);
-		self.ammo_rockets = CalcRotRegen(self.ammo_rockets, 40, 0.015, 0, frametime * (time > self.buff_supply_regen_pause) * 1, g_pickup_rockets_max, 0.05, 0, frametime * (time > self.pauserotfuel_finished), g_pickup_rockets_max);
-		self.ammo_shells = CalcRotRegen(self.ammo_shells, 20, 0.015, 0, frametime * (time > self.buff_supply_regen_pause) * 1, g_pickup_shells_max, 0.05, 0, frametime * (time > self.pauserotfuel_finished), g_pickup_shells_max);
-		self.ammo_nails = CalcRotRegen(self.ammo_nails, 80, 0.015, 0, frametime * (time > self.buff_supply_regen_pause) * 1, g_pickup_nails_max, 0.05, 0, frametime * (time > self.pauserotfuel_finished), g_pickup_nails_max);
-	}
 	return FALSE;
 }
 
