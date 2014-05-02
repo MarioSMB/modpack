@@ -66,7 +66,7 @@ float buff_Waypoint_visible_for_player(entity plr)
 void buff_Waypoint_Spawn(entity e)
 {
     WaypointSprite_Spawn(Buff_PrettyName(e.buffs), 0, 2048, e, '0 0 40', world, e.team, e, buff_waypoint, TRUE, RADARICON_POWERUP, e.colormod);
-    WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_POWERUP, Buff_Color(e.buffs));
+    WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_POWERUP, e.colormod);
     e.buff_waypoint.waypointsprite_visible_for_player = buff_Waypoint_visible_for_player;
 }
 
@@ -109,8 +109,37 @@ void buff_Touch()
 	other.buffs |= (self.buffs);
 }
 
+void buff_NewType(entity ent, float cb)
+{
+	entity e;
+	RandomSelection_Init();
+	for(e = Buff_Type_first; e; e = e.enemy) if(!(cb & e.items) || !cb)
+	{
+		RandomSelection_Add(world, e.items, string_null, 1, ((e.count) ? 0.5 : 1)); // if it's already been chosen, give it a lower count
+		++e.count;
+	}
+	ent.buffs = RandomSelection_chosen_float;
+}
+
 void buff_Think()
 {
+	if(self.buffs != self.oldbuffs)
+	{
+		self.color = self.colormod = Buff_Color(self.buffs);
+		self.enemy.colormod = ((self.team) ? Team_ColorRGB(self.team) + '0.1 0.1 0.1' : self.colormod);
+
+		if(self.buff_waypoint)
+		{
+			//WaypointSprite_Disown(self.buff_waypoint, 1);
+			WaypointSprite_Kill(self.buff_waypoint);
+			buff_Waypoint_Spawn(self);
+			if(self.buff_activetime)
+				WaypointSprite_UpdateBuildFinished(self.buff_waypoint, time + self.buff_activetime - frametime);
+		}
+
+		self.oldbuffs = self.buffs;
+	}
+
 	if(!gameover)
 	if((round_handler_IsActive() && !round_handler_IsRoundStarted()) || time >= game_starttime)
 	if(!self.buff_activetime_updated)
@@ -119,25 +148,12 @@ void buff_Think()
 		self.buff_activetime_updated = TRUE;
     }
 
-	if(self.buffs != self.oldbuffs)
-	{
-		self.color = self.colormod = Buff_Color(self.buffs);
-		self.enemy.colormod = ((self.team) ? Team_ColorRGB(self.team) + '0.1 0.1 0.1' : self.colormod);
-
-		if(self.buff_waypoint)
-		{
-			WaypointSprite_Disown(self.buff_waypoint, 1);
-			buff_Waypoint_Spawn(self);
-		}
-
-		self.oldbuffs = self.buffs;
-	}
-	
 	if(!self.buff_active && !self.buff_activetime)
 	if(!self.owner || self.owner.frozen || self.owner.jb_isprisoned || self.owner.deadflag != DEAD_NO || !self.owner.iscreature || !(self.owner.buffs & self.buffs))
 	{
 		buff_SetCooldown(5 + frametime);
 		self.owner = world;
+		buff_NewType(self, self.buffs);
 	}
 	
 	if(self.buff_activetime)
@@ -185,6 +201,7 @@ void buff_Waypoint_Reset()
 
 void buff_Reset()
 {
+	buff_NewType(self, self.buffs);
 	self.owner = world;
 	buff_SetCooldown(5);
 	buff_Waypoint_Reset();
@@ -196,16 +213,7 @@ void buff_Init(entity ent)
 	entity oldself = self;
 	self = ent;
 	if(!self.buffs)
-	{
-		entity e;
-		RandomSelection_Init();
-		for(e = Buff_Type_first; e; e = e.enemy)
-		{
-			RandomSelection_Add(world, e.items, string_null, 1, ((e.count) ? 0.5 : 1)); // if it's already been chosen, give it a lower count
-			++e.count;
-		}
-		self.buffs = RandomSelection_chosen_float;
-	}
+		buff_NewType(self, 0);
 	
 	self.classname = "item_buff";
 	self.solid = SOLID_TRIGGER;
