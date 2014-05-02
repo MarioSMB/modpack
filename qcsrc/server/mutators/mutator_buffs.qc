@@ -30,6 +30,17 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerSpawn)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(buffs_PlayerPhysics)
+{
+	if(self.buffs & BUFF_HASTE)
+	{
+		self.stat_sv_maxspeed *= 2;
+		self.stat_sv_airspeedlimit_nonqw *= 2;
+	}
+
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 {
 	if(time >= self.buff_vampire_lasttarget_time || self.buff_vampire_lasttarget.deadflag != DEAD_NO) // target has died of our sucking
@@ -83,6 +94,7 @@ MUTATOR_DEFINITION(mutator_buffs)
 	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, buffs_PlayerDamage_SplitHealthArmor, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, buffs_PlayerDamage_Calculate, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, buffs_PlayerSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerPhysics, buffs_PlayerPhysics, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SpectateCopy, buffs_SpectateCopy, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerRegen, buffs_PlayerRegen, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, buffs_PlayerThink, CBC_ORDER_ANY);

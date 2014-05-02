@@ -5875,7 +5875,7 @@ void HUD_Buffs(void)
 	for(e = Buff_Type_first; e; e = e.enemy) if(buffs & e.items)
 	{
 		//DrawNumIcon(pos + buff_offset, mySize, shield, "shield", is_vertical, buff_iconalign, '1 1 1', 1);
-		drawcolorcodedstring_aspect(pos + buff_offset, s, mySize, panel_fg_alpha * 0.2, DRAWFLAG_NORMAL);
+		drawcolorcodedstring_aspect(pos + buff_offset, s, mySize, panel_fg_alpha * 0.5, DRAWFLAG_NORMAL);
 	}
 
 	draw_endBoldFont();
