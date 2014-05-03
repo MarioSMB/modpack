@@ -211,6 +211,8 @@ void buff_Reset()
 
 void buff_Init(entity ent)
 {
+	if(!cvar("g_buffs")) { remove(self); return; }
+
 	entity oldself = self;
 	self = ent;
 	if(!self.buffs)
