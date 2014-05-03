@@ -228,7 +228,7 @@ void buff_Init(entity ent)
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
 	self.gravity = 100;
 	self.color = self.colormod = buffs_MergedColor(self.buffs);
-	buff_SetCooldown(autocvar_g_buffs_cooldown_activate);
+	buff_SetCooldown(autocvar_g_buffs_cooldown_activate + game_starttime);
 	self.buff_active = !self.buff_activetime;
 	self.pflags = PFLAGS_FULLDYNAMIC;
 
