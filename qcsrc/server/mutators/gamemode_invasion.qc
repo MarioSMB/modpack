@@ -39,11 +39,8 @@ entity invasion_PickSpawn()
 
 	for(e = world;(e = find(e, classname, "invasion_spawnpoint")); )
 	{
-		if(time >= e.spawnshieldtime)
-		{
-			e.spawnshieldtime = time + autocvar_g_invasion_spawnpoint_spawn_delay;
-			RandomSelection_Add(e, 0, string_null, 1, 1);
-		}
+		RandomSelection_Add(e, 0, string_null, 1, ((time >= e.spawnshieldtime) ? 0.2 : 1)); // give recently used spawnpoints a very low rating
+		e.spawnshieldtime = time + autocvar_g_invasion_spawnpoint_spawn_delay;
 	}
 
 	return RandomSelection_chosen_ent;
