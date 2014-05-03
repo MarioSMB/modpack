@@ -1566,6 +1566,7 @@ float autocvar_g_observer_glowtrails;
 float autocvar_g_riflearena_withlaser;
 float autocvar_g_buffs_waypoint_distance;
 float autocvar_g_buffs_randomize;
+float autocvar_g_buffs_replace_powerups;
 float autocvar_g_buffs_cooldown_activate;
 float autocvar_g_buffs_cooldown_respawn;
 float autocvar_g_buffs_guard_blockpercent;

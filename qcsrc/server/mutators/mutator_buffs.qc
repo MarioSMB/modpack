@@ -433,6 +433,7 @@ MUTATOR_HOOKFUNCTION(buffs_RemovePlayer)
 
 MUTATOR_HOOKFUNCTION(buffs_OnEntityPreSpawn)
 {
+	if(autocvar_g_buffs_replace_powerups)
 	switch(self.classname)
 	{
 		case "item_strength":
