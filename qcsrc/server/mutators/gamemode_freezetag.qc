@@ -11,28 +11,16 @@ void freezetag_count_alive_players()
 	total_players = redalive = bluealive = yellowalive = pinkalive = 0;
 	FOR_EACH_PLAYER(e)
 	{
-		if(e.team == NUM_TEAM_1 && e.health >= 1)
+		switch(e.team)
 		{
-			++total_players;
-			if (e.frozen != 1) ++redalive;
-		}
-		else if(e.team == NUM_TEAM_2 && e.health >= 1)
-		{
-			++total_players;
-			if (e.frozen != 1) ++bluealive;
-		}
-		else if(e.team == NUM_TEAM_3 && e.health >= 1)
-		{
-			++total_players;
-			if (e.frozen != 1) ++yellowalive;
-		}
-		else if(e.team == NUM_TEAM_4 && e.health >= 1)
-		{
-			++total_players;
-			if (e.frozen != 1) ++pinkalive;
+			case NUM_TEAM_1: ++total_players; if(e.health >= 1 && e.frozen != 1) ++redalive; break;
+			case NUM_TEAM_2: ++total_players; if(e.health >= 1 && e.frozen != 1) ++bluealive; break;
+			case NUM_TEAM_3: ++total_players; if(e.health >= 1 && e.frozen != 1) ++yellowalive; break;
+			case NUM_TEAM_4: ++total_players; if(e.health >= 1 && e.frozen != 1) ++pinkalive; break;
 		}
 	}
-	FOR_EACH_REALCLIENT(e) {
+	FOR_EACH_REALCLIENT(e)
+	{
 		e.redalive_stat = redalive;
 		e.bluealive_stat = bluealive;
 		e.yellowalive_stat = yellowalive;
