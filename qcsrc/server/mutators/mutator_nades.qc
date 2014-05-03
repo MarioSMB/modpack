@@ -1025,7 +1025,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerDies)
 			switch(frag_attacker.killcount)
 			{
 				KILL_SPREE_LIST
-				default: nades_GiveBonus(frag_attacker, killcount_bonus); break;
+				default: nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_minor); break;
 			}
 			#undef SPREE_ITEM
 		}
