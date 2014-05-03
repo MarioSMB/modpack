@@ -65,7 +65,7 @@ float buff_Waypoint_visible_for_player(entity plr)
 
 void buff_Waypoint_Spawn(entity e)
 {
-    WaypointSprite_Spawn(Buff_PrettyName(e.buffs), 0, 2048, e, '0 0 40', world, e.team, e, buff_waypoint, TRUE, RADARICON_POWERUP, e.colormod);
+    WaypointSprite_Spawn(Buff_PrettyName(e.buffs), 0, autocvar_g_buffs_waypoint_distance, e, '0 0 40', world, e.team, e, buff_waypoint, TRUE, RADARICON_POWERUP, e.colormod);
     WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_POWERUP, e.colormod);
     e.buff_waypoint.waypointsprite_visible_for_player = buff_Waypoint_visible_for_player;
 }
@@ -151,9 +151,10 @@ void buff_Think()
 	if(!self.buff_active && !self.buff_activetime)
 	if(!self.owner || self.owner.frozen || self.owner.jb_isprisoned || self.owner.deadflag != DEAD_NO || !self.owner.iscreature || !(self.owner.buffs & self.buffs))
 	{
-		buff_SetCooldown(5 + frametime);
+		buff_SetCooldown(autocvar_g_buffs_cooldown_respawn + frametime);
 		self.owner = world;
-		buff_NewType(self, self.buffs);
+		if(autocvar_g_buffs_randomize)
+			buff_NewType(self, self.buffs);
 	}
 	
 	if(self.buff_activetime)
@@ -203,7 +204,7 @@ void buff_Reset()
 {
 	buff_NewType(self, self.buffs);
 	self.owner = world;
-	buff_SetCooldown(5);
+	buff_SetCooldown(autocvar_g_buffs_cooldown_activate);
 	buff_Waypoint_Reset();
 	self.buff_activetime_updated = FALSE;
 }
@@ -227,11 +228,10 @@ void buff_Init(entity ent)
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
 	self.gravity = 100;
 	self.color = self.colormod = buffs_MergedColor(self.buffs);
-	buff_SetCooldown(5);
+	buff_SetCooldown(autocvar_g_buffs_cooldown_activate);
 	self.buff_active = !self.buff_activetime;
 	self.pflags = PFLAGS_FULLDYNAMIC;
-	
-	precache_model("models/buffs/buff.md3");
+
 	setmodel(self, "models/buffs/buff.md3");
 	setsize(self, '-15 -15 -40', '15 15 40');
 	
@@ -282,7 +282,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 {
 	if(frag_target.buffs & BUFF_GUARD)
 	{
-		vector v = healtharmor_applydamage(50, 0.8, frag_deathtype, frag_damage);
+		vector v = healtharmor_applydamage(50, autocvar_g_buffs_guard_blockpercent, frag_deathtype, frag_damage);
 		damage_take = v_x;
 		damage_save = v_y;
 	}
@@ -299,15 +299,15 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	if(DIFF_TEAM(frag_attacker, frag_target))
 	{
 		frag_attacker.buff_vampire_lasttarget = frag_target;
-		frag_attacker.buff_vampire_lasttarget_time = time + 5;
+		frag_attacker.buff_vampire_lasttarget_time = time + autocvar_g_buffs_vampire_time;
 	}
 
 	if(frag_target.buffs & BUFF_MEDIC)
 	if((frag_target.health - frag_damage) <= 0)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(frag_attacker)
-	if(random() <= 0.4) // 40% chance?
-		frag_damage = frag_target.health - 5; // 5 health recovery
+	if(random() <= autocvar_g_buffs_medic_survive_chance) // 40% chance?
+		frag_damage = frag_target.health - autocvar_g_buffs_medic_survive_health; // 5 health recovery
 		
 	if(frag_target.buffs & BUFF_WRATH)
 	if(frag_attacker)
@@ -316,38 +316,40 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		if(frag_attacker == frag_target)
 		{
 			if(time < frag_target.buff_wrath_damage_time)
-				frag_damage *= 0.6;
+				frag_damage *= autocvar_g_buffs_wrath_damage_self;
 		}
 		else
 		{
 			if(time < frag_target.buff_wrath_damage_time)
-				frag_damage *= 1.1;
-			frag_target.buff_wrath_damage_time = time + 3;
+				frag_damage *= autocvar_g_buffs_wrath_damage_take;
+			frag_target.buff_wrath_damage_time = time + autocvar_g_buffs_wrath_time;
 		}
 	}
 		
 	if(frag_attacker.buffs & BUFF_WRATH)
-		frag_damage *= 0.9;
+		frag_damage *= autocvar_g_buffs_wrath_damage;
 		
 	if(frag_attacker.buffs & BUFF_BASH)
 	if(frag_attacker != frag_target)
 	if(vlen(frag_force))
 	if((get_weaponinfo(DEATH_WEAPONOF(frag_deathtype)).spawnflags & WEP_TYPE_HITSCAN))
 	{
-		frag_force_x *= 3;
-		frag_force_y *= 3;
+		frag_force_x *= autocvar_g_buffs_bash_force_hitscan_x;
+		frag_force_y *= autocvar_g_buffs_bash_force_hitscan_y;
+		frag_force_z *= autocvar_g_buffs_bash_force_hitscan_z;
 	}
 	else
 	{
-		frag_force_x *= 2;
-		frag_force_y *= 2;
+		frag_force_x *= autocvar_g_buffs_bash_force_x;
+		frag_force_y *= autocvar_g_buffs_bash_force_y;
+		frag_force_z *= autocvar_g_buffs_bash_force_z;
 	}
 	
 	if(frag_target.buffs & BUFF_TENACITY)
 	if(frag_target != frag_attacker)
 	{
-		frag_damage *= 0.7;
-		frag_force *= 0.7;
+		frag_damage *= autocvar_g_buffs_tenacity_damage_take;
+		frag_force *= autocvar_g_buffs_tenacity_force_take;
 	}
 	
 	if(frag_attacker.buffs & BUFF_ARC)
@@ -357,7 +359,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		entity head;
 		//RadiusDamage (frag_target, frag_attacker, 50, 50, 250, frag_attacker, 0, DEATH_BUFF_ARC, other);
 
-		for(head = findradius(frag_target.origin, 250); head; head = head.chain)
+		for(head = findradius(frag_target.origin, autocvar_g_buffs_arc_radius); head; head = head.chain)
 		if(head.takedamage)
 		if(head != frag_attacker)
 		if(head != frag_target)
@@ -367,9 +369,9 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		if(!head.vehicle)
 		if(time >= head.buff_arc_lastzap)
 		{
-			head.buff_arc_lastzap = time + 1;
+			head.buff_arc_lastzap = time + 1; // no cvar needed for this, just a preventative for multiple zaps
 			te_csqc_lightningarc(frag_target.origin, head.origin);
-			Damage(head, frag_inflictor, frag_attacker, 50, DEATH_BUFF_ARC, head.origin, '0 0 0');
+			Damage(head, frag_inflictor, frag_attacker, autocvar_g_buffs_arc_damage, DEATH_BUFF_ARC, head.origin, '0 0 0');
 		}
 	}
 
@@ -386,8 +388,8 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerPhysics)
 {
 	if(self.buffs & BUFF_HASTE)
 	{
-		self.stat_sv_maxspeed *= 2;
-		self.stat_sv_airspeedlimit_nonqw *= 2;
+		self.stat_sv_maxspeed *= autocvar_g_buffs_haste_speed;
+		self.stat_sv_airspeedlimit_nonqw *= autocvar_g_buffs_haste_speed;
 	}
 
 	return FALSE;
@@ -448,7 +450,7 @@ MUTATOR_HOOKFUNCTION(buffs_WeaponRate)
 {
 	if(self.buffs & BUFF_WRATH)
 	if(time < self.buff_wrath_damage_time)
-		weapon_rate *= 0.7;
+		weapon_rate *= autocvar_g_buffs_wrath_rate;
 	
 	return FALSE;
 }
@@ -538,18 +540,18 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerRegen)
 	if(!self.buff_vampire_lasttarget.jb_isprisoned)
 	if(time >= self.buff_vampire_lastdamage)
 	{
-		self.health = min(g_pickup_healthmega_max, self.health + 5);
-		self.buff_vampire_lasttarget.health -= 5;
-		if(self.buff_vampire_lasttarget.health <= 0)
-			Damage(self.buff_vampire_lasttarget, self, self, 1, DEATH_BUFF_VAMPIRE, self.buff_vampire_lasttarget.origin, '0 0 0');
-		self.buff_vampire_lastdamage = time + 0.5;
+		self.health = min(g_pickup_healthmega_max, self.health + autocvar_g_buffs_vampire_damage);
+		self.buff_vampire_lasttarget.health -= autocvar_g_buffs_vampire_damage;
+		if(self.buff_vampire_lasttarget.health <= 1)
+			Damage(self.buff_vampire_lasttarget, self, self, 2, DEATH_BUFF_VAMPIRE, self.buff_vampire_lasttarget.origin, '0 0 0'); // put them out of their misery
+		self.buff_vampire_lastdamage = time + autocvar_g_buffs_vampire_delay;
 	}
 	
 	if(self.buffs & BUFF_MEDIC)
 	{
-		regen_mod_rot = 0.3;
-		regen_mod_limit = regen_mod_max = 1.5;
-		regen_mod_regen = 2;
+		regen_mod_rot = autocvar_g_buffs_medic_rot;
+		regen_mod_limit = regen_mod_max = autocvar_g_buffs_medic_max;
+		regen_mod_regen = autocvar_g_buffs_medic_regen;
 	}
 
 	return FALSE;
