@@ -33,6 +33,8 @@ void freezetag_count_alive_players()
 float prev_total_players;
 float freezetag_CheckTeams()
 {
+	freezetag_count_alive_players();
+
 	if(FREEZETAG_ALIVE_TEAMS_OK())
 	{
 		if(prev_total_players > 0)
@@ -95,6 +97,8 @@ float freezetag_CheckWinner()
 		round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 		return 1;
 	}
+	
+	freezetag_count_alive_players();
 
 	if(FREEZETAG_ALIVE_TEAMS() > 1)
 		return 0;
@@ -278,7 +282,6 @@ MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 {
 	self.health = 0; // neccessary to update correctly alive stats
 	freezetag_Unfreeze(world);
-	freezetag_count_alive_players();
 	return 1;
 }
 
@@ -289,7 +292,6 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 	{
 		if(self.frozen)
 			freezetag_Unfreeze(world);
-		freezetag_count_alive_players();
 		return 1; // let the player die so that he can respawn whenever he wants
 	}
 
@@ -300,10 +302,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 	{
 		// let the player die, he will be automatically frozen when he respawns
 		if(self.frozen != 1)
-		{
 			freezetag_Add_Score(frag_attacker);
-			freezetag_count_alive_players();
-		}
 		else
 			freezetag_Unfreeze(world); // remove ice
 		self.health = 0; // Unfreeze resets health
@@ -348,8 +347,6 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 		return 1;
 	}
 
-	freezetag_count_alive_players();
-
 	if(round_handler_IsActive())
 	if(round_handler_IsRoundStarted())
 	{
@@ -368,7 +365,6 @@ MUTATOR_HOOKFUNCTION(freezetag_reset_map_players)
 		PutClientInServer();
 		self.freezetag_frozen_timeout = 0;
 	}
-	freezetag_count_alive_players();
 	return 1;
 }
 
@@ -431,7 +427,6 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 		if(self.revive_progress >= 1)
 		{
 			freezetag_Unfreeze(self);
-			freezetag_count_alive_players();
 
 			if(n == -1)
 			{
