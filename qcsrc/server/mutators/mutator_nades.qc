@@ -1018,6 +1018,17 @@ MUTATOR_HOOKFUNCTION(nades_PlayerDies)
 			nades_RemoveBonus(frag_attacker);
 		else if(frag_target.flagcarried)
 			nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_medium);
+		else if(autocvar_g_nades_bonus_score_spree && frag_attacker.killcount > 1)
+		{
+			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
+				case counta: { nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_spree); break; }
+			switch(frag_attacker.killcount)
+			{
+				KILL_SPREE_LIST
+				default: nades_GiveBonus(frag_attacker, killcount_bonus); break;
+			}
+			#undef SPREE_ITEM
+		}
 		else
 			nades_GiveBonus(frag_attacker, killcount_bonus);
 	}
