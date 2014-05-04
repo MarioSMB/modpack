@@ -185,14 +185,25 @@ float ctf_CaptureShield_Customize()
 
 void ctf_CaptureShield_Touch()
 {
-	if(!other.ctf_captureshielded && self.enemy.active) { return; }
+	if(!self.enemy.active)
+	{
+		vector mymid = (self.absmin + self.absmax) * 0.5;
+		vector othermid = (other.absmin + other.absmax) * 0.5;
+
+		Damage(other, self, self, 0, DEATH_HURTTRIGGER, mymid, normalize(othermid - mymid) * ctf_captureshield_force);
+		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_INACTIVE);
+
+		return;
+	}
+
+	if(!other.ctf_captureshielded) { return; }
 	if(CTF_SAMETEAM(self, other)) { return; }
 
 	vector mymid = (self.absmin + self.absmax) * 0.5;
 	vector othermid = (other.absmin + other.absmax) * 0.5;
 
 	Damage(other, self, self, 0, DEATH_HURTTRIGGER, mymid, normalize(othermid - mymid) * ctf_captureshield_force);
-	Send_Notification(NOTIF_ONE, other, MSG_CENTER, ((self.enemy.active) ? CENTER_CTF_CAPTURESHIELD_SHIELDED : CENTER_CTF_CAPTURESHIELD_INACTIVE));
+	Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_SHIELDED);
 }
 
 void ctf_CaptureShield_Spawn(entity flag)
