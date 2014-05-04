@@ -376,6 +376,14 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 			Damage(head, frag_inflictor, frag_attacker, autocvar_g_buffs_arc_damage, DEATH_BUFF_ARC, head.origin, '0 0 0');
 		}
 	}
+	
+	if(frag_attacker.buffs & BUFF_MEDIC)
+	if(SAME_TEAM(frag_attacker, frag_target))
+	if(frag_attacker != frag_target)
+	{
+		frag_target.health = min(g_pickup_healthmega_max, frag_target.health + frag_damage);
+		frag_damage = 0;
+	}
 
 	return FALSE;
 }
