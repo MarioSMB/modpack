@@ -345,7 +345,8 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		entity e = spawn();
 		setorigin(e, frag_target.origin);
 		RadiusDamage(e, frag_attacker, autocvar_g_buffs_bash_damage, autocvar_g_buffs_bash_damage, autocvar_g_buffs_bash_radius, world, vlen(frag_force * autocvar_g_buffs_bash_force), DEATH_BUFF_BASH, world);
-		pointparticles(particleeffectnum("explosion_medium"), frag_target.origin, '0 0 0', 1);
+		pointparticles(particleeffectnum("explosion_small"), frag_target.origin, '0 0 0', 1);
+		sound (e, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
 		remove(e);
 	}
 	
@@ -595,6 +596,7 @@ void buffs_Initialize()
 	precache_sound("misc/strength_respawn.wav");
 	precache_sound("misc/shield_respawn.wav");
 	precache_sound("misc/poweroff.wav");
+	precache_sound("weapons/rocket_impact.wav");
 
 	addstat(STAT_BUFFS, AS_INT, buffs);
 }
