@@ -1590,6 +1590,7 @@ float autocvar_g_buffs_arc_damage;
 float autocvar_g_buffs_haste_speed;
 float autocvar_g_buffs_haste_rate;
 float autocvar_g_buffs_haste_damage_take;
+float autocvar_g_buffs_haste_regen;
 float autocvar_g_buffs_vampire_damage;
 float autocvar_g_buffs_vampire_time;
 float autocvar_g_buffs_vampire_delay;

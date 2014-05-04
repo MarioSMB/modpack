@@ -573,6 +573,9 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerRegen)
 		regen_mod_limit = regen_mod_max = autocvar_g_buffs_medic_max;
 		regen_mod_regen = autocvar_g_buffs_medic_regen;
 	}
+	
+	if(self.buffs & BUFF_HASTE)
+		regen_mod_regen = autocvar_g_buffs_haste_regen;
 
 	return FALSE;
 }
