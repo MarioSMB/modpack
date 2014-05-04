@@ -176,7 +176,7 @@ void ctf_CaptureShield_Update(entity player, float wanted_status)
 
 float ctf_CaptureShield_Customize()
 {
-	if(!self.enemy.active) { return TRUE; }
+	if(self.enemy.active != ACTIVE_ACTIVE) { return TRUE; }
 	if(!other.ctf_captureshielded) { return FALSE; }
 	if(CTF_SAMETEAM(self, other)) { return FALSE; }
 
@@ -185,13 +185,13 @@ float ctf_CaptureShield_Customize()
 
 void ctf_CaptureShield_Touch()
 {
-	if(!self.enemy.active)
+	if(self.enemy.active != ACTIVE_ACTIVE)
 	{
 		vector mymid = (self.absmin + self.absmax) * 0.5;
 		vector othermid = (other.absmin + other.absmax) * 0.5;
 
 		Damage(other, self, self, 0, DEATH_HURTTRIGGER, mymid, normalize(othermid - mymid) * ctf_captureshield_force);
-		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_INACTIVE);
+		if(IS_REAL_CLIENT(other)) { Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_INACTIVE); }
 
 		return;
 	}
@@ -203,7 +203,7 @@ void ctf_CaptureShield_Touch()
 	vector othermid = (other.absmin + other.absmax) * 0.5;
 
 	Damage(other, self, self, 0, DEATH_HURTTRIGGER, mymid, normalize(othermid - mymid) * ctf_captureshield_force);
-	Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_SHIELDED);
+	if(IS_REAL_CLIENT(other)) { Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_SHIELDED); }
 }
 
 void ctf_CaptureShield_Spawn(entity flag)
@@ -914,7 +914,7 @@ void ctf_FlagThink()
 void ctf_FlagTouch()
 {
 	if(gameover) { return; }
-	if(!self.active) { return; }
+	if(self.active != ACTIVE_ACTIVE) { return; }
 
 	entity toucher = other, tmp_entity;
 	float is_not_monster = (!IS_MONSTER(toucher)), num_perteam = 0;
@@ -1077,26 +1077,26 @@ void ctf_Use()
 	{
 		if(flag != self)
 		if(SAME_TEAM(flag, self))
-		if(flag.active)
+		if(flag.active == ACTIVE_ACTIVE)
 			++flag_cnt;
 	}
 
-	if(self.active)
+	if(self.active == ACTIVE_ACTIVE)
 	if(flag_cnt < 1)
 	{
 		dprint("ctf_Use: Unable to deactivate flag (not enough active flags on the map)\n");
 		return;
 	}
 
-	self.active = ((self.active) ? 0 : 1);
+	self.active = ((self.active) ? ACTIVE_NOT : ACTIVE_ACTIVE);
 	
-	if(self.active)
+	if(self.active == ACTIVE_ACTIVE)
 		WaypointSprite_Ping(self.wps_flagbase);
 }
 
 float ctf_FlagWaypoint_Customize()
 {
-	if(!self.owner.active) { return FALSE; }
+	if(self.owner.active != ACTIVE_ACTIVE) { return FALSE; }
 	return TRUE;
 }
 
@@ -1155,8 +1155,8 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	flag.damagedbycontents = autocvar_g_ctf_flag_return_when_unreachable;
 	flag.velocity = '0 0 0';
 	flag.mangle = flag.angles;
-	flag.active = TRUE;
 	flag.reset = ctf_Reset;
+	flag.use = ctf_Use;
 	flag.touch = ctf_FlagTouch;
 	flag.think = ctf_FlagThink;
 	flag.nextthink = time + FLAG_THINKRATE;
@@ -1169,6 +1169,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	if(flag.toucheffect == "") { flag.toucheffect = ((teamnumber == NUM_TEAM_1) ? "redflag_touch" : ((teamnumber == NUM_TEAM_2) ? "blueflag_touch" : ((teamnumber == NUM_TEAM_3) ? "yellowflag_touch" : ((teamnumber == NUM_TEAM_4) ? "pinkflag_touch" : "neutralflag_touch")))); }
 	if(flag.passeffect == "")  { flag.passeffect = ((teamnumber == NUM_TEAM_1) ? "red_pass" : ((teamnumber == NUM_TEAM_2) ? "blue_pass" : ((teamnumber == NUM_TEAM_3) ? "yellow_pass" : ((teamnumber == NUM_TEAM_4) ? "pink_pass" : "neutral_pass")))); }
 	if(flag.capeffect == "")   { flag.capeffect = ((teamnumber == NUM_TEAM_1) ? "red_cap" : ((teamnumber == NUM_TEAM_2) ? "blue_cap" : ((teamnumber == NUM_TEAM_3) ? "yellow_cap" : ((teamnumber == NUM_TEAM_4) ? "pink_cap" : "")))); } // neutral flag cant be capped itself
+	if(!flag.active)           { flag.active = ACTIVE_ACTIVE; }
 
 	// sound
 	if(flag.snd_flag_taken == "")    { flag.snd_flag_taken = ((teamnumber == NUM_TEAM_1) ? "ctf/red_taken.wav" : ((teamnumber == NUM_TEAM_2) ? "ctf/blue_taken.wav" : ((teamnumber == NUM_TEAM_3) ? "ctf/yellow_taken.wav" : ((teamnumber == NUM_TEAM_4) ? "ctf/pink_taken.wav" : "ctf/neutral_taken.wav")))); }
