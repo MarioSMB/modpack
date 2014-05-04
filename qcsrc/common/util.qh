@@ -256,7 +256,7 @@ void RandomSelection_Add(entity e, float f, string s, float weight, float priori
 
 #ifndef MENUQC
 vector healtharmor_maxdamage(float h, float a, float armorblock, float deathtype); // returns vector: maxdamage, armorideal, 1 if fully armored
-vector healtharmor_applydamage(float a, float armorblock, float deathtype, float damage); // returns vector: take, save, 0
+vector healtharmor_applydamage(float a, float armorblock, float deathtype, float damage, float bycount); // returns vector: take, save, 0
 #endif
 
 string getcurrentmod();
