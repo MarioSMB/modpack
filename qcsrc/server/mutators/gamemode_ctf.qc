@@ -176,7 +176,7 @@ void ctf_CaptureShield_Update(entity player, float wanted_status)
 
 float ctf_CaptureShield_Customize()
 {
-	if(!self.enemy.active) { return TRUE; } // TODO: different message
+	if(!self.enemy.active) { return TRUE; }
 	if(!other.ctf_captureshielded) { return FALSE; }
 	if(CTF_SAMETEAM(self, other)) { return FALSE; }
 
@@ -185,7 +185,7 @@ float ctf_CaptureShield_Customize()
 
 void ctf_CaptureShield_Touch()
 {
-	if(!other.ctf_captureshielded) { return; }
+	if(!other.ctf_captureshielded && self.enemy.active) { return; }
 	if(CTF_SAMETEAM(self, other)) { return; }
 
 	vector mymid = (self.absmin + self.absmax) * 0.5;
@@ -1144,6 +1144,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	flag.damagedbycontents = autocvar_g_ctf_flag_return_when_unreachable;
 	flag.velocity = '0 0 0';
 	flag.mangle = flag.angles;
+	flag.active = TRUE;
 	flag.reset = ctf_Reset;
 	flag.touch = ctf_FlagTouch;
 	flag.think = ctf_FlagThink;
