@@ -340,17 +340,13 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	if(frag_attacker.buffs & BUFF_BASH)
 	if(frag_attacker != frag_target)
 	if(vlen(frag_force))
-	if((get_weaponinfo(DEATH_WEAPONOF(frag_deathtype)).spawnflags & WEP_TYPE_HITSCAN))
+	if(!((get_weaponinfo(DEATH_WEAPONOF(frag_deathtype))).spawnflags & WEP_TYPE_SPLASH))
 	{
-		frag_force_x *= autocvar_g_buffs_bash_force_hitscan_x;
-		frag_force_y *= autocvar_g_buffs_bash_force_hitscan_y;
-		frag_force_z *= autocvar_g_buffs_bash_force_hitscan_z;
-	}
-	else
-	{
-		frag_force_x *= autocvar_g_buffs_bash_force_x;
-		frag_force_y *= autocvar_g_buffs_bash_force_y;
-		frag_force_z *= autocvar_g_buffs_bash_force_z;
+		entity e = spawn();
+		setorigin(e, frag_target.origin);
+		RadiusDamage(e, frag_attacker, autocvar_g_buffs_bash_damage, autocvar_g_buffs_bash_damage, autocvar_g_buffs_bash_radius, world, vlen(frag_force * autocvar_g_buffs_bash_force), DEATH_BUFF_BASH, world);
+		pointparticles(particleeffectnum("explosion_medium"), frag_target.origin, '0 0 0', 1);
+		remove(e);
 	}
 	
 	if(frag_target.buffs & BUFF_TENACITY)

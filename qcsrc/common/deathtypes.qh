@@ -5,6 +5,7 @@
 #define DEATHTYPES \
 	DEATHTYPE(DEATH_AUTOTEAMCHANGE,         DEATH_SELF_AUTOTEAMCHANGE,          NO_MSG,                        DEATH_SPECIAL_START) \
 	DEATHTYPE(DEATH_BUFF_ARC,               NO_MSG,                             DEATH_MURDER_ARC,              DEATH_BUFF_FIRST) \
+	DEATHTYPE(DEATH_BUFF_BASH,              NO_MSG,                             DEATH_MURDER_BASH,             NORMAL_POS) \
 	DEATHTYPE(DEATH_BUFF_VAMPIRE,           NO_MSG,                             DEATH_MURDER_VAMPIRE,          DEATH_BUFF_LAST) \
 	DEATHTYPE(DEATH_CAMP,                   DEATH_SELF_CAMP,                    NO_MSG,                        NORMAL_POS) \
 	DEATHTYPE(DEATH_CHEAT,                  DEATH_SELF_CHEAT,                   DEATH_MURDER_CHEAT,            NORMAL_POS) \
