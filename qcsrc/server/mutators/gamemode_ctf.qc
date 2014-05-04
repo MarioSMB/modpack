@@ -176,6 +176,7 @@ void ctf_CaptureShield_Update(entity player, float wanted_status)
 
 float ctf_CaptureShield_Customize()
 {
+	if(!self.enemy.active) { return TRUE; } // TODO: different message
 	if(!other.ctf_captureshielded) { return FALSE; }
 	if(CTF_SAMETEAM(self, other)) { return FALSE; }
 
@@ -191,7 +192,7 @@ void ctf_CaptureShield_Touch()
 	vector othermid = (other.absmin + other.absmax) * 0.5;
 
 	Damage(other, self, self, 0, DEATH_HURTTRIGGER, mymid, normalize(othermid - mymid) * ctf_captureshield_force);
-	Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_CTF_CAPTURESHIELD_SHIELDED);
+	Send_Notification(NOTIF_ONE, other, MSG_CENTER, ((self.enemy.active) ? CENTER_CTF_CAPTURESHIELD_SHIELDED : CENTER_CTF_CAPTURESHIELD_INACTIVE));
 }
 
 void ctf_CaptureShield_Spawn(entity flag)
@@ -902,6 +903,7 @@ void ctf_FlagThink()
 void ctf_FlagTouch()
 {
 	if(gameover) { return; }
+	if(!self.active) { return; }
 
 	entity toucher = other, tmp_entity;
 	float is_not_monster = (!IS_MONSTER(toucher)), num_perteam = 0;
@@ -1053,6 +1055,40 @@ void ctf_Reset()
 	ctf_RespawnFlag(self);
 }
 
+void ctf_Use()
+{
+	if(self.ctf_status != FLAG_BASE) { return; }
+	
+	entity flag;
+	float flag_cnt = 0;
+	
+	for(flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
+	{
+		if(flag != self)
+		if(SAME_TEAM(flag, self))
+		if(flag.active)
+			++flag_cnt;
+	}
+
+	if(self.active)
+	if(flag_cnt < 1)
+	{
+		dprint("ctf_Use: Unable to deactivate flag (not enough active flags on the map)\n");
+		return;
+	}
+
+	self.active = ((self.active) ? 0 : 1);
+	
+	if(self.active)
+		WaypointSprite_Ping(self.wps_flagbase);
+}
+
+float ctf_FlagWaypoint_Customize()
+{
+	if(!self.owner.active) { return FALSE; }
+	return TRUE;
+}
+
 void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf_FlagSetup()
 {
 	// bot waypoints
@@ -1074,6 +1110,7 @@ void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf
 
 	WaypointSprite_SpawnFixed(basename, self.origin + FLAG_WAYPOINT_OFFSET, self, wps_flagbase, RADARICON_FLAG, ((self.team) ? Team_ColorRGB(self.team) : '1 1 1'));
 	WaypointSprite_UpdateTeamRadar(self.wps_flagbase, RADARICON_FLAG, ((self.team) ? colormapPaletteColor(self.team - 1, FALSE) : '1 1 1'));
+	self.wps_flagbase.customizeentityforclient = ctf_FlagWaypoint_Customize;
 
 	// captureshield setup
 	ctf_CaptureShield_Spawn(self);

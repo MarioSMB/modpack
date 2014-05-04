@@ -305,6 +305,10 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		frag_attacker.buff_vampire_lasttarget = frag_target;
 		frag_attacker.buff_vampire_lasttarget_time = time + autocvar_g_buffs_vampire_time;
 	}
+	
+	if(frag_target.buffs & BUFF_HASTE)
+	if(frag_target != frag_attacker)
+		frag_damage *= autocvar_g_buffs_haste_damage_take;
 
 	if(frag_target.buffs & BUFF_MEDIC)
 	if((frag_target.health - frag_damage) <= 0)
@@ -464,6 +468,9 @@ MUTATOR_HOOKFUNCTION(buffs_WeaponRate)
 	if(self.buffs & BUFF_WRATH)
 	if(time < self.buff_wrath_damage_time)
 		weapon_rate *= autocvar_g_buffs_wrath_rate;
+		
+	if(self.buffs & BUFF_HASTE)
+		weapon_rate *= autocvar_g_buffs_haste_rate;
 	
 	return FALSE;
 }

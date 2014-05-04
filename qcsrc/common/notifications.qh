@@ -616,6 +616,7 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_CAMPCHECK,                   0, 0, "",             CPID_CAMPCHECK,      "0 0", _("^F2Don't camp!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_COINTOSS,                    1, 0, "s1",           NO_CPID,             "0 0", _("^F2Throwing coin... Result: %s^F2!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_CAPTURESHIELD_FREE,      0, 0, "",             CPID_CTF_CAPSHIELD,  "0 0", _("^BGYou are now free.\n^BGFeel free to ^F2try to capture^BG the flag again\n^BGif you think you will succeed."), "") \
+	MSG_CENTER_NOTIF(1, CENTER_CTF_CAPTURESHIELD_INACTIVE,  0, 0, "",             CPID_CTF_CAPSHIELD,  "0 0", _("^BGThis flag is currently inactive"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_CAPTURESHIELD_SHIELDED,  0, 0, "",             CPID_CTF_CAPSHIELD,  "0 0", _("^BGYou are now ^F1shielded^BG from the flag(s)\n^BGfor ^F2too many unsuccessful attempts^BG to capture.\n^BGMake some defensive scores before trying again."), "") \
 	MULTITEAM_CENTER(1, CENTER_CTF_CAPTURE_, 4,             0, 0, "",             CPID_CTF_LOWPRIO,    "0 0", _("^BGYou captured the ^TC^TT^BG flag!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_CAPTURE_NEUTRAL,         0, 0, "",             CPID_CTF_LOWPRIO,    "0 0", _("^BGYou captured the flag!"), "") \
