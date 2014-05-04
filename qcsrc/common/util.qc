@@ -2058,6 +2058,7 @@ float get_model_parameters(string m, float sk)
 	get_model_parameters_bone_head = string_null;
 	get_model_parameters_hat_height = '0 0 0';
 	get_model_parameters_hat_scale = 0;
+	get_model_parameters_hat_angles = '0 0 0';
 
 	if (!m)
 		return 1;
@@ -2131,6 +2132,8 @@ float get_model_parameters(string m, float sk)
 			get_model_parameters_hat_height = stov(s);
 		if(c == "hat_scale")
 			get_model_parameters_hat_scale = stof(s);
+		if(c == "hat_angles")
+			get_model_parameters_hat_angles = stov(s);
 	}
 
 	while((s = fgets(fh)))

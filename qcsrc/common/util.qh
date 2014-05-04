@@ -309,6 +309,7 @@ float get_model_parameters_fixbone;
 string get_model_parameters_bone_head;
 vector get_model_parameters_hat_height;
 float get_model_parameters_hat_scale;
+vector get_model_parameters_hat_angles;
 string get_model_parameters_desc;
 float get_model_parameters(string mod, float skn); // call with string_null to clear; skin -1 means mod is the filename of the txt file and is to be split
 
