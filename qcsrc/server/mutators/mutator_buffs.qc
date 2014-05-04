@@ -24,7 +24,7 @@ vector buffs_MergedColor(float b)
 float buffs_BuffModel_Customize()
 {
 	float same_team = (SAME_TEAM(other, self.owner) || (IS_SPEC(other) && SAME_TEAM(other.enemy, self.owner)));
-	if(other.alpha <= 0.5 && !same_team)
+	if(other.alpha <= 0.5 && !same_team && other.alpha != 0)
 		return FALSE;
 		
 	if(other == self.owner || (IS_SPEC(other) && other.enemy == self.owner))
