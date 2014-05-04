@@ -633,28 +633,18 @@ void onslaught_generator_delayed()
 	self.SendFlags = GSF_SETUP;
 }
 
-string onslaught_generator_waypointsprite_for_team(entity e, float t)
+string onslaught_generator_waypointsprite(entity e)
 {
-	if(t != e.team)
 	if(e.isshielded)
 		return "ons-gen-shielded";
-	switch(e.team)
-	{
-		case NUM_TEAM_1: return "ons-gen-red";
-		case NUM_TEAM_2: return "ons-gen-blue";
-		case NUM_TEAM_3: return "ons-gen-yellow";
-		case NUM_TEAM_4: return "ons-gen-pink";
-	}
-	return "";
+	return "ons-gen";
 }
 
 void onslaught_generator_updatesprite(entity e)
 {
-	string s1, s2, s3;
-	s1 = onslaught_generator_waypointsprite_for_team(e, NUM_TEAM_1);
-	s2 = onslaught_generator_waypointsprite_for_team(e, NUM_TEAM_2);
-	s3 = onslaught_generator_waypointsprite_for_team(e, -1);
-	WaypointSprite_UpdateSprites(e.sprite, s1, s2, s3);
+	string s1;
+	s1 = onslaught_generator_waypointsprite(e);
+	WaypointSprite_UpdateSprites(e.sprite, s1, s1, s1);
 
 	if(e.lastteam != e.team + 2 || e.lastshielded != e.isshielded)
 	{
@@ -662,14 +652,14 @@ void onslaught_generator_updatesprite(entity e)
 		e.lastshielded = e.isshielded;
 		if(e.lastshielded)
 		{
-			if(e.team == NUM_TEAM_1 || e.team == NUM_TEAM_2 || e.team == NUM_TEAM_3 || e.team == NUM_TEAM_4)
+			if(e.team)
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, 0.5 * colormapPaletteColor(e.team - 1, FALSE));
 			else
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, '0.5 0.5 0.5');
 		}
 		else
 		{
-			if(e.team == NUM_TEAM_1 || e.team == NUM_TEAM_2 || e.team == NUM_TEAM_3 || e.team == NUM_TEAM_4)
+			if(e.team)
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, colormapPaletteColor(e.team - 1, FALSE));
 			else
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, '0.75 0.75 0.75');
@@ -678,12 +668,12 @@ void onslaught_generator_updatesprite(entity e)
 	}
 }
 
-string onslaught_controlpoint_waypointsprite_for_team(entity e, float t)
+string onslaught_controlpoint_waypointsprite(entity e)
 {
 	float a;
-	if(t != -1)
+	if(e.team)
 	{
-		a = onslaught_controlpoint_attackable(e, t);
+		a = onslaught_controlpoint_attackable(e, e.team);
 		if(a == 3 || a == 4) // ATTACK/TOUCH THIS ONE NOW
 		{
 			switch(e.team)
@@ -705,7 +695,7 @@ string onslaught_controlpoint_waypointsprite_for_team(entity e, float t)
 				case NUM_TEAM_4: return "ons-cp-dfnd-pink";
 			}
 		}
-		else if(e.team == t || a == -1 || a == 1) // own point, or fire at it
+		else if(a == -1 || a == 1) // own point, or fire at it
 		{
 			switch(e.team)
 			{
@@ -734,14 +724,12 @@ string onslaught_controlpoint_waypointsprite_for_team(entity e, float t)
 
 void onslaught_controlpoint_updatesprite(entity e)
 {
-	string s1, s2, s3;
-	s1 = onslaught_controlpoint_waypointsprite_for_team(e, NUM_TEAM_1);
-	s2 = onslaught_controlpoint_waypointsprite_for_team(e, NUM_TEAM_2);
-	s3 = onslaught_controlpoint_waypointsprite_for_team(e, -1);
-	WaypointSprite_UpdateSprites(e.sprite, s1, s2, s3);
+	string s1;
+	s1 = onslaught_controlpoint_waypointsprite(e);
+	WaypointSprite_UpdateSprites(e.sprite, s1, s1, s1);
 
 	float sh;
-	sh = !(onslaught_controlpoint_can_be_linked(e, NUM_TEAM_1) || onslaught_controlpoint_can_be_linked(e, NUM_TEAM_2));
+	sh = !(onslaught_controlpoint_can_be_linked(e, NUM_TEAM_1) || onslaught_controlpoint_can_be_linked(e, NUM_TEAM_2) || onslaught_controlpoint_can_be_linked(e, NUM_TEAM_3) || onslaught_controlpoint_can_be_linked(e, NUM_TEAM_4));
 
 	if(e.lastteam != e.team + 2 || e.lastshielded != sh || e.iscaptured != e.lastcaptured)
 	{
@@ -759,14 +747,14 @@ void onslaught_controlpoint_updatesprite(entity e)
 		}
 		if(e.lastshielded)
 		{
-			if(e.team == NUM_TEAM_1 || e.team == NUM_TEAM_2 || e.team == NUM_TEAM_3 || e.team == NUM_TEAM_4)
+			if(e.team)
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_CONTROLPOINT, 0.5 * colormapPaletteColor(e.team - 1, FALSE));
 			else
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_CONTROLPOINT, '0.5 0.5 0.5');
 		}
 		else
 		{
-			if(e.team == NUM_TEAM_1 || e.team == NUM_TEAM_2 || e.team == NUM_TEAM_3 || e.team == NUM_TEAM_4)
+			if(e.team)
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_CONTROLPOINT, colormapPaletteColor(e.team - 1, FALSE));
 			else
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_CONTROLPOINT, '0.75 0.75 0.75');
@@ -1266,15 +1254,17 @@ float onslaught_link_send(entity to, float sendflags)
 void onslaught_link_checkupdate()
 {
 	// TODO check if the two sides have moved (currently they won't move anyway)
-	float redpower, bluepower;
+	float redpower, bluepower, yellowpower, pinkpower;
 
-	redpower = bluepower = 0;
+	redpower = bluepower = yellowpower = pinkpower = 0;
 	if(self.goalentity.islinked)
 	{
 		switch(self.goalentity.team)
 		{
 			case NUM_TEAM_1: redpower = 1; break;
 			case NUM_TEAM_2: bluepower = 1; break;
+			case NUM_TEAM_3: yellowpower = 1; break;
+			case NUM_TEAM_4: pinkpower = 1; break;
 		}
 	}
 	if(self.enemy.islinked)
@@ -1283,20 +1273,25 @@ void onslaught_link_checkupdate()
 		{
 			case NUM_TEAM_1: redpower = 2; break;
 			case NUM_TEAM_2: bluepower = 2; break;
+			case NUM_TEAM_3: yellowpower = 2; break;
+			case NUM_TEAM_4: pinkpower = 2; break;
 		}
 	}
 
-	float cc;
-	if(redpower == 1 && bluepower == 2)
-		cc = (NUM_TEAM_1 - 1) * 0x01 + (NUM_TEAM_2 - 1) * 0x10;
-	else if(redpower == 2 && bluepower == 1)
-		cc = (NUM_TEAM_1 - 1) * 0x10 + (NUM_TEAM_2 - 1) * 0x01;
-	else if(redpower)
-		cc = (NUM_TEAM_1 - 1) * 0x11;
-	else if(bluepower)
-		cc = (NUM_TEAM_2 - 1) * 0x11;
-	else
-		cc = 0;
+	float cc = 0;
+	// this sucks... TODO: fix!
+	if(redpower == 1) { cc = (NUM_TEAM_1 - 1) * 0x01; }
+	else if(redpower == 2) { cc = (NUM_TEAM_1 - 1) * 0x10; }
+	else if(redpower) { cc = (NUM_TEAM_1 - 1) * 0x11; }
+	if(bluepower == 1) { cc += (NUM_TEAM_2 - 1) * 0x01; }
+	else if(bluepower == 2) { cc += (NUM_TEAM_2 - 1) * 0x10; }
+	else if(bluepower) { cc += (NUM_TEAM_2 - 1) * 0x11; }
+	if(yellowpower == 1) { cc += (NUM_TEAM_3 - 1) * 0x01; }
+	else if(yellowpower == 2) { cc += (NUM_TEAM_3 - 1) * 0x10; }
+	else if(yellowpower) { cc += (NUM_TEAM_3 - 1) * 0x11; }
+	if(pinkpower == 1) { cc += (NUM_TEAM_4 - 1) * 0x01; }
+	else if(pinkpower == 2) { cc += (NUM_TEAM_4 - 1) * 0x10; }
+	else if(pinkpower) { cc += (NUM_TEAM_4 - 1) * 0x11; }
 
 	//print(etos(self), " rp=", ftos(redpower), " bp=", ftos(bluepower), " ");
 	//print("cc=", ftos(cc), "\n");
@@ -1470,16 +1465,8 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 			continue;
 
 		// Ignore owned controlpoints
-		if(self.team == NUM_TEAM_1)
-		{
-			if( (cp2.isgenneighbor[NUM_TEAM_2] || cp2.iscpneighbor[NUM_TEAM_2]) && !(cp2.isgenneighbor[NUM_TEAM_1] || cp2.iscpneighbor[NUM_TEAM_1]) )
-				continue;
-		}
-		else if(self.team == NUM_TEAM_2)
-		{
-			if( (cp2.isgenneighbor[NUM_TEAM_1] || cp2.iscpneighbor[NUM_TEAM_1]) && !(cp2.isgenneighbor[NUM_TEAM_2] || cp2.iscpneighbor[NUM_TEAM_2]) )
-				continue;
-		}
+		if(!(cp2.isgenneighbor[self.team] || cp2.iscpneighbor[self.team]))
+			continue;
 
 		// Count team mates interested in this control point
 		// (easier and cleaner than keeping counters per cp and teams)
