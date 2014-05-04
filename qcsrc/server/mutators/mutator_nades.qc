@@ -713,7 +713,18 @@ void nades_RemoveBonus(entity player)
 
 float nade_customize()
 {
-	if(IS_SPEC(other)) { return FALSE; }
+	//if(IS_SPEC(other)) { return FALSE; }
+	if(other == self.realowner || (IS_SPEC(other) && other.enemy == self.realowner))
+	{
+		// somewhat hide the model, but keep the glow
+		//self.effects = 0;
+		self.alpha = -1;
+	}
+	else
+	{
+		//self.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+		self.alpha = 1;
+	}
 	
 	return TRUE;
 }
