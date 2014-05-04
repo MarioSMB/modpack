@@ -115,6 +115,8 @@ void buff_NewType(entity ent, float cb)
 	RandomSelection_Init();
 	for(e = Buff_Type_first; e; e = e.enemy)
 	{
+		if(e.items == BUFF_SUPPLY && ((start_items & IT_UNLIMITED_WEAPON_AMMO) || (start_items & IT_UNLIMITED_AMMO)))
+			continue;
 		RandomSelection_Add(world, e.items, string_null, 1, 1 / e.count); // if it's already been chosen, give it a lower priority
 		e.count += 1;
 	}
