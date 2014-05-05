@@ -726,6 +726,7 @@ void dom_spawnteams()
 void dom_DelayedInit() // Do this check with a delay so we can wait for teams to be set up.
 {
 	CheckAllowedTeams(world);
+	// TODO: fix this!
 	domination_teams = ((autocvar_g_domination_teams_override < 2) ? autocvar_g_domination_default_teams : autocvar_g_domination_teams_override);
 	domination_teams = ((c4>=0) ? 4 : (c3>=0) ? 3 : 2);
 
