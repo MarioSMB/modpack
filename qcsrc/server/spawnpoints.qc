@@ -42,7 +42,7 @@ void spawnpoint_use()
 		self.team = activator.team;
 		some_spawn_has_been_used = 1;
 	}
-	print("spawnpoint was used!\n");
+	//print("spawnpoint was used!\n");
 }
 
 void relocate_spawnpoint()

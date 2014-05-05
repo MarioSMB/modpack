@@ -1360,7 +1360,7 @@ void precache()
 				float i;
 				for (i = 0; i < n; ++i)
 				{
-					print("Precaching: ", argv(i), "\n");
+					//print("Precaching: ", argv(i), "\n");
 					precache_model(argv(i));
 				}
 			}
