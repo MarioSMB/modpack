@@ -144,6 +144,8 @@ void havocbot_role_ctf_setrole(entity bot, float role);
 #endif
 
 // networked flag statuses
+.float ctf_flagstatus;
+
 const float	CTF_RED_FLAG_TAKEN			= 1;
 const float	CTF_RED_FLAG_LOST			= 2;
 const float	CTF_RED_FLAG_CARRYING		= 3;
@@ -161,30 +163,3 @@ const float	CTF_NEUTRAL_FLAG_LOST		= 512;
 const float	CTF_NEUTRAL_FLAG_CARRYING	= 768;
 const float CTF_FLAG_NEUTRAL			= 2048;
 const float CTF_SHIELDED				= 4096;
-
-typedef float FlagStatus;
-
-.FlagStatus ctf_flagstatus;
-
-#ifdef SVQC
-void FlagStatus_AddStat()
-{
-	addstat(STAT_CTF_FLAGSTATUS, AS_INT, ctf_flagstatus);
-}
-void WriteFlagStatus(float dst, FlagStatus w)
-{
-	WriteInt24_t(dst, w);
-}
-#endif
-#ifdef CSQC
-FlagStatus FlagStatus_GetFromStat()
-{
-	FlagStatus w = 0;
-	w = getstati(STAT_CTF_FLAGSTATUS);
-	return w;
-}
-FlagStatus ReadFlagStatus()
-{
-	return ReadInt24_t();
-}
-#endif
