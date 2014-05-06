@@ -3338,11 +3338,11 @@ void HUD_Mod_KH(vector pos, vector mySize)
 	float fs, fs2, fs3, size1, size2;
 	vector e1, e2;
 
-	stat_items = getstati(STAT_ITEMS, 0, 24);
-	redkey = (stat_items/IT_RED_FLAG_TAKEN) & 3;
-	bluekey = (stat_items/IT_BLUE_FLAG_TAKEN) & 3;
-	yellowkey = (stat_items/IT_YELLOW_FLAG_TAKEN) & 3;
-	pinkkey = (stat_items/IT_PINK_FLAG_TAKEN) & 3;
+	stat_items = getstati(STAT_KH_KEYSTATUS, 0, 24);
+	redkey = (stat_items/KH_RED_KEY_TAKEN) & 3;
+	bluekey = (stat_items/KH_BLUE_KEY_TAKEN) & 3;
+	yellowkey = (stat_items/KH_YELLOW_KEY_TAKEN) & 3;
+	pinkkey = (stat_items/KH_PINK_KEY_TAKEN) & 3;
 
 	if(redkey || bluekey || yellowkey || pinkkey)
 		mod_active = 1;

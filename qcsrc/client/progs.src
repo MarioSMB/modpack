@@ -66,6 +66,7 @@ projectile.qh
 player_skeleton.qh
 
 ../server/mutators/gamemode_ctf.qh
+../server/mutators/gamemode_keyhunt.qh
 
 sortlist.qc
 miscfunctions.qc

@@ -35,19 +35,7 @@ const float   IT_HEALTH                    = 32768;
 	// for items:
 	WANT_CONST float	IT_KEY1					= 131072;
 	WANT_CONST float	IT_KEY2					= 262144;
-	// for players:
-	const float	IT_RED_FLAG_TAKEN		= 32768;
-	const float	IT_RED_FLAG_LOST		= 65536;
-	const float	IT_RED_FLAG_CARRYING		= 98304;
-	const float	IT_BLUE_FLAG_TAKEN		= 131072;
-	const float	IT_BLUE_FLAG_LOST		= 262144;
-	const float	IT_BLUE_FLAG_CARRYING		= 393216;
-	const float	IT_YELLOW_FLAG_TAKEN		= 524288;
-	const float	IT_YELLOW_FLAG_LOST		= 1048576;
-	const float	IT_YELLOW_FLAG_CARRYING		= 1572864;
-	const float	IT_PINK_FLAG_TAKEN		= 2097152;
-	const float	IT_PINK_FLAG_LOST		= 4194304;
-	const float	IT_PINK_FLAG_CARRYING		= 6291456;
+
 // end
 const float   IT_5HP                       = 524288;
 const float   IT_25HP                      = 1048576;

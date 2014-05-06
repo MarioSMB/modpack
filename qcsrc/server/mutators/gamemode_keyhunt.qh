@@ -112,3 +112,20 @@ float kh_siren_time;
 #define KH_FOR_EACH_KEY(v) for(v = kh_worldkeylist; v; v = v.kh_worldkeynext)
 
 #endif
+
+
+// networked key statuses
+.float kh_keystatus;
+
+const float	KH_RED_KEY_TAKEN			= 1;
+const float	KH_RED_KEY_LOST				= 2;
+const float	KH_RED_KEY_CARRYING			= 3;
+const float	KH_BLUE_KEY_TAKEN			= 4;
+const float	KH_BLUE_KEY_LOST			= 8;
+const float	KH_BLUE_KEY_CARRYING		= 12;
+const float	KH_YELLOW_KEY_TAKEN			= 16;
+const float	KH_YELLOW_KEY_LOST			= 32;
+const float	KH_YELLOW_KEY_CARRYING		= 48;
+const float	KH_PINK_KEY_TAKEN			= 64;
+const float	KH_PINK_KEY_LOST			= 128;
+const float	KH_PINK_KEY_CARRYING		= 192;

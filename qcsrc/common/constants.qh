@@ -213,6 +213,7 @@ const float STAT_PRISONED = 95;
 const float STAT_ROUNDLOST = 96;
 
 const float STAT_CTF_FLAGSTATUS = 97;
+const float STAT_KH_KEYSTATUS = 97;
 
 const float STAT_BUFFS = 98;
 
