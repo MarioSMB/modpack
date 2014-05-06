@@ -123,7 +123,7 @@ MUTATOR_HOOKFUNCTION(pb_PlayerUseKey)
 			if(head.deadflag == DEAD_NO)
 			if(!head.vehicle)
 			if(!head.frozen)
-			if(!head.jb_isprisoned && !self.jb_isprisoned)
+			if((!head.jb_isprisoned && !self.jb_isprisoned) || (head.jb_isprisoned && self.jb_isprisoned))
 			{
 				if(closest_target)
 				{
