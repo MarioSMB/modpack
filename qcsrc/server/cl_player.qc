@@ -1042,10 +1042,6 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 void IRCSay(string sourcename, string msgin)
 {
 	entity head;
-	
-	if(!intermission_running)
-	if((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || gameover)))
-		return;
 
 	if(substring(msgin, 0, 1) == " ")
 		msgin = substring(msgin, 1, strlen(msgin) - 1); // work around DP say bug (say_team does not have this!)
@@ -1059,7 +1055,15 @@ void IRCSay(string sourcename, string msgin)
 
 	msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
 
-	FOR_EACH_REALCLIENT(head) { sprint(head, msgstr); }
+	FOR_EACH_REALCLIENT(head)
+	{
+		if(!intermission_running)
+		if((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || gameover)))
+		if(IS_PLAYER(head))
+			continue;
+
+		sprint(head, msgstr);
+	}
 }
 
 float GetVoiceMessageVoiceType(string type)

@@ -6,7 +6,7 @@ REGISTER_WEAPON(
 /* impulse   */ 2,
 /* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
 /* rating    */ BOT_PICKUP_RATING_LOW,
-/* model     */ "shotguncannon",
+/* model     */ "shotgun",
 /* shortname */ "shotgun",
 /* fullname  */ _("Shotgun")
 );
@@ -263,9 +263,9 @@ float w_shotgun(float req)
 	else if (req == WR_PRECACHE)
 	{
 		precache_model ("models/uziflash.md3");
-		precache_model ("models/weapons/g_shotguncannon.md3");
-		precache_model ("models/weapons/v_shotguncannon.md3");
-		precache_model ("models/weapons/h_shotguncannon.iqm");
+		precache_model ("models/weapons/g_shotgun.md3");
+		precache_model ("models/weapons/v_shotgun.md3");
+		precache_model ("models/weapons/h_shotgun.iqm");
 		precache_sound ("misc/itempickup.wav");
 		precache_sound ("weapons/shotgun_fire.wav");
 		precache_sound ("weapons/shotgun_melee.wav");
