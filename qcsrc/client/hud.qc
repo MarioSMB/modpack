@@ -2416,6 +2416,13 @@ void HUD_RaceTimer (void)
 		if(!autocvar_hud_panel_racetimer) return;
 		if(!(gametype == MAPINFO_TYPE_RACE || gametype == MAPINFO_TYPE_CTS)) return;
 		if(spectatee_status == -1) return;
+		if(getstati(STAT_HEALTH) <= 0)
+		{
+			// reset timers if player died (double check in the case that serverside command fails)
+			race_laptime = 0;
+			race_checkpointtime = 0;
+			return;
+		}
 	}
 
 	HUD_Panel_UpdateCvars();
