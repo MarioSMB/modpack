@@ -593,6 +593,8 @@ void CSQCModel_Effects_Apply(void)
 void CSQCPlayer_Precache()
 {
 	precache_sound("misc/jetpack_fly.wav");
+	if(autocvar_cl_forcemyplayermodel != "")
+		precache_model(autocvar_cl_forcemyplayermodel);
 }
 
 // general functions
