@@ -230,7 +230,7 @@ void buff_Init(entity ent)
 	self.reset = buff_Reset;
 	self.nextthink = time;
 	self.scale = 1.5;
-	self.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_STARDUST;
+	self.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_STARDUST | EF_NOSHADOW;
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
 	self.gravity = 100;
 	self.color = self.colormod = buffs_MergedColor(self.buffs);
