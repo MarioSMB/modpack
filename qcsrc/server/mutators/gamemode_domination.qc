@@ -647,11 +647,11 @@ void spawnfunc_dom_team()
 }
 
 // scoreboard setup
-void ScoreRules_dom()
+void ScoreRules_dom(float teams)
 {
 	if(domination_roundbased)
 	{
-		ScoreRules_basics(domination_teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+		ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
 		ScoreInfo_SetLabel_TeamScore  (ST_DOM_CAPS, "caps", SFL_SORT_PRIO_PRIMARY);
 		ScoreInfo_SetLabel_PlayerScore(SP_DOM_TAKES, "takes", 0);
 		ScoreRules_basics_end();
@@ -664,7 +664,7 @@ void ScoreRules_dom()
 			sp_domticks = SFL_SORT_PRIO_PRIMARY;
 		else
 			sp_score = SFL_SORT_PRIO_PRIMARY;
-		ScoreRules_basics(domination_teams, sp_score, sp_score, TRUE);
+		ScoreRules_basics(teams, sp_score, sp_score, TRUE);
 		ScoreInfo_SetLabel_TeamScore  (ST_DOM_TICKS,    "ticks",     sp_domticks);
 		ScoreInfo_SetLabel_PlayerScore(SP_DOM_TICKS,    "ticks",     sp_domticks);
 		ScoreInfo_SetLabel_PlayerScore(SP_DOM_TAKES,    "takes",     0);
@@ -712,22 +712,28 @@ void dom_spawnpoint(vector org)
 }
 
 // spawn some default teams if the map is not set up for domination
-void dom_spawnteams()
+void dom_spawnteams(float teams)
 {
 	dom_spawnteam("Red", NUM_TEAM_1-1, "models/domination/dom_red.md3", 0, "domination/claim.wav", "", "Red team has captured a control point");
 	dom_spawnteam("Blue", NUM_TEAM_2-1, "models/domination/dom_blue.md3", 0, "domination/claim.wav", "", "Blue team has captured a control point");
-	if(domination_teams >= 3)
+	if(teams >= 3)
 		dom_spawnteam("Yellow", NUM_TEAM_3-1, "models/domination/dom_yellow.md3", 0, "domination/claim.wav", "", "Yellow team has captured a control point");
-	if(domination_teams >= 4)
+	if(teams >= 4)
 		dom_spawnteam("Pink", NUM_TEAM_4-1, "models/domination/dom_pink.md3", 0, "domination/claim.wav", "", "Pink team has captured a control point");
 	dom_spawnteam("", 0, "models/domination/dom_unclaimed.md3", 0, "", "", "");
 }
 
 void dom_DelayedInit() // Do this check with a delay so we can wait for teams to be set up.
 {
+	// if no teams are found, spawn defaults
+	if(find(world, classname, "dom_team") == world || autocvar_g_domination_teams_override >= 2)
+	{
+		print("No ""dom_team"" entities found on this map, creating them anyway.\n");
+		domination_teams = ((autocvar_g_domination_teams_override < 2) ? autocvar_g_domination_default_teams : autocvar_g_domination_teams_override);
+		dom_spawnteams(domination_teams);
+	}
+	
 	CheckAllowedTeams(world);
-	// TODO: fix this!
-	domination_teams = ((autocvar_g_domination_teams_override < 2) ? autocvar_g_domination_default_teams : autocvar_g_domination_teams_override);
 	domination_teams = ((c4>=0) ? 4 : (c3>=0) ? 3 : 2);
 
 	addstat(STAT_CAPTURE_PROGRESS, AS_FLOAT, dom_unlock_progress);
@@ -737,16 +743,9 @@ void dom_DelayedInit() // Do this check with a delay so we can wait for teams to
 	if(domination_teams >= 3) addstat(STAT_DOM_PPS_YELLOW, AS_FLOAT, dom_pps_yellow);
 	if(domination_teams >= 4) addstat(STAT_DOM_PPS_PINK, AS_FLOAT, dom_pps_pink);
 
-	// if no teams are found, spawn defaults
-	if(find(world, classname, "dom_team") == world || autocvar_g_domination_teams_override >= 2)
-	{
-		print("No ""dom_team"" entities found on this map, creating them anyway.\n");
-		dom_spawnteams();
-	}
-
 	domination_roundbased = autocvar_g_domination_roundbased;
 
-	ScoreRules_dom();
+	ScoreRules_dom(domination_teams);
 
 	if(domination_roundbased)
 	{
