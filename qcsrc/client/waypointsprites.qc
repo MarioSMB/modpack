@@ -333,6 +333,7 @@ string spritelookuptext(string s)
 		case "item-fuelregen": return _("Fuel regen");
 		case "item-jetpack": return _("Jet Pack");
 		case "frozen": return _("Frozen!");
+		case "enemy": return _("Enemy");
 		case "tagged-target": return _("Tagged");
 		case "vehicle": return _("Vehicle");
 		case "survivals": return _("Survivals");

@@ -706,6 +706,7 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_REVIVE_SELF,       0, 0, "",             NO_CPID,             "0 0", _("^K3You revived yourself"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_REVIVED,           1, 0, "s1",           NO_CPID,             "0 0", _("^K3You were revived by ^BG%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_AUTO_REVIVED,      0, 1, "f1",           NO_CPID,             "0 0", _("^K3You were automatically revived after %s second(s)"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_STALEMATE,         0, 0, "",             CPID_STALEMATE,      "0 0", _("^BGStalemate! Enemies can now be seen on the radar!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_GENERATOR_UNDERATTACK,       0, 0, "",             NO_CPID,             "0 0", _("^BGThe generator is under attack!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_HEADSHOT,                    0, 0, "",             NO_CPID,             "0 0", _("^F2Headshot!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ROUND_INFECTION_WIN,         0, 0, "",             CPID_ROUND,          "0 0", _("^BGRound over, all players have been infected"), "") \

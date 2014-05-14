@@ -82,20 +82,40 @@ float freezetag_getWinnerTeam()
 	return -1; // no player left
 }
 
+float ft_EnemyWaypoint_Customize()
+{
+	if(self.owner.frozen || self.owner.deadflag) { return FALSE; }
+	
+	entity e = WaypointSprite_getviewentity(other);
+	
+	if(SAME_TEAM(self.owner, e)) { return FALSE; }
+
+	return TRUE;
+}
+
+void ft_EnemyWaypoints(entity player)
+{
+	WaypointSprite_Spawn("enemy", 0, 0, player, ENEMY_WAYPOINT_OFFSET, world, 0, player, wps_enemy, TRUE, RADARICON_FLAG, WPCOLOR_ENEMY(player.team));
+	WaypointSprite_UpdateMaxHealth(player.wps_enemy, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON) * 2);
+	WaypointSprite_UpdateHealth(player.wps_enemy, '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON));
+	WaypointSprite_UpdateTeamRadar(player.wps_enemy, RADARICON_FLAGCARRIER, WPCOLOR_ENEMY(player.team));
+	
+	player.wps_enemy.customizeentityforclient = ft_EnemyWaypoint_Customize;
+}
+
 float freezetag_CheckWinner()
 {
 	entity e;
+
+	if(!ft_stalemate)
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
+		ft_stalemate = TRUE;
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_FREEZETAG_STALEMATE);
 		FOR_EACH_PLAYER(e)
 		{
-			e.freezetag_frozen_timeout = 0;
-			nades_Clear(e);
+			ft_EnemyWaypoints(e);
 		}
-		round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
-		return 1;
 	}
 	
 	freezetag_count_alive_players();
@@ -117,11 +137,14 @@ float freezetag_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
 	}
 
+	ft_stalemate = FALSE;
 	FOR_EACH_PLAYER(e)
 	{
 		e.freezetag_frozen_timeout = 0;
 		nades_Clear(e);
+		WaypointSprite_Kill(e.wps_enemy);
 	}
+
 	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 	return 1;
 }
@@ -341,6 +364,10 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 	if(self.freezetag_frozen_timeout == -1) // if PlayerSpawn is called by reset_map_players
 		return 1; // do nothing, round is starting right now
 
+	if(ft_stalemate)
+	if(!self.wps_enemy)
+		ft_EnemyWaypoints(self);
+
 	if(self.freezetag_frozen_timeout == -2) // player was dead
 	{
 		freezetag_Freeze(world);
@@ -364,8 +391,15 @@ MUTATOR_HOOKFUNCTION(freezetag_reset_map_players)
 		self.freezetag_frozen_timeout = -1;
 		PutClientInServer();
 		self.freezetag_frozen_timeout = 0;
+		WaypointSprite_Kill(self.wps_enemy);
 	}
 	return 1;
+}
+
+MUTATOR_HOOKFUNCTION(freezetag_ResetMap)
+{
+	ft_stalemate = FALSE;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(freezetag_GiveFragsForKill)
@@ -470,6 +504,9 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	{
 		self.revive_progress = 0; // thawing nobody
 	}
+	
+	if(self.wps_enemy)
+		WaypointSprite_UpdateHealth(self.wps_enemy, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON));
 
 	return 1;
 }
