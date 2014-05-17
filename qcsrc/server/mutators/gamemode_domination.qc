@@ -348,10 +348,11 @@ void dom_Reset()
 	
 	// model setup
 	self.model = dom_model[self.team];
+	self.modelindex = dom_modelindex[self.team];
 	self.noise = dom_noise[self.team]; // capture sound
 	self.noise1 = dom_noise1[self.team]; // global capture sound
 	self.skin = dom_skin[self.team];
-	
+
 	// main setup
 	self.think = dom_ControlPointThink;
 	self.nextthink = time;
@@ -379,7 +380,7 @@ void dom_ControlPointSetup(entity cp)
 
 	// main setup
 	cp.think = dom_ControlPointThink;
-	cp.nextthink = time;
+	cp.nextthink = time + 0.5;
 	cp.touch = dom_ControlPointTouch;
 	cp.solid = SOLID_TRIGGER;
 	cp.dom_capturingplayer = world;
@@ -625,19 +626,21 @@ void spawnfunc_dom_team()
 {
 	if(!g_domination || autocvar_g_domination_teams_override >= 2) { remove(self); return; }
 
-	precache_model(self.model);
-	
 	self.classname = "dom_team";
 	// this would have to be changed if used in quakeworld
 	if(self.cnt)
 		self.team = self.cnt + 1; // WHY are these different anyway?
 
+	precache_model(self.model);
 	setmodel(self, self.model);
 	dom_model[self.team] = self.model;
 	dom_modelindex[self.team] = self.modelindex;
 	
 	self.model = "";
 	self.modelindex = 0;
+	
+	if(self.noise != "") { precache_sound(self.noise); }
+	if(self.noise1 != "") { precache_sound(self.noise1); }
 
 	dom_noise[self.team] = self.noise;
 	dom_noise1[self.team] = self.noise1;
@@ -679,21 +682,29 @@ void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float p
 	oldself = self;
 	self = spawn();
 	self.classname = "dom_team";
-	// this would have to be changed if used in quakeworld
-	self.team = teamcolor + 1;
+	self.model = pointmodel;
+	self.skin = pointskin;
+	self.netname = teamname; // needed for team counting
+	self.team = teamcolor;
 	
+	precache_model(self.model);
 	setmodel(self, self.model);
 	dom_model[self.team] = self.model;
 	dom_modelindex[self.team] = self.modelindex;
 	
 	self.model = "";
 	self.modelindex = 0;
+	
+	if(capsound != "") { precache_sound(capsound); }
+	if(capnarration != "") { precache_sound(capnarration); }
 
 	dom_noise[self.team] = capsound;
 	dom_noise1[self.team] = capnarration;
 	dom_message[self.team] = capmessage;
 	dom_skin[self.team] = pointskin;
 	dom_teamname[self.team] = teamname;
+	
+	printf("%d %s %d\n", self.team, dom_model[self.team], dom_modelindex[self.team]);
 
 	self = oldself;
 }
@@ -714,12 +725,12 @@ void dom_spawnpoint(vector org)
 // spawn some default teams if the map is not set up for domination
 void dom_spawnteams(float teams)
 {
-	dom_spawnteam("Red", NUM_TEAM_1-1, "models/domination/dom_red.md3", 0, "domination/claim.wav", "", "Red team has captured a control point");
-	dom_spawnteam("Blue", NUM_TEAM_2-1, "models/domination/dom_blue.md3", 0, "domination/claim.wav", "", "Blue team has captured a control point");
+	dom_spawnteam("Red", NUM_TEAM_1, "models/domination/dom_red.md3", 0, "domination/claim.wav", "", "Red team has captured a control point");
+	dom_spawnteam("Blue", NUM_TEAM_2, "models/domination/dom_blue.md3", 0, "domination/claim.wav", "", "Blue team has captured a control point");
 	if(teams >= 3)
-		dom_spawnteam("Yellow", NUM_TEAM_3-1, "models/domination/dom_yellow.md3", 0, "domination/claim.wav", "", "Yellow team has captured a control point");
+		dom_spawnteam("Yellow", NUM_TEAM_3, "models/domination/dom_yellow.md3", 0, "domination/claim.wav", "", "Yellow team has captured a control point");
 	if(teams >= 4)
-		dom_spawnteam("Pink", NUM_TEAM_4-1, "models/domination/dom_pink.md3", 0, "domination/claim.wav", "", "Pink team has captured a control point");
+		dom_spawnteam("Pink", NUM_TEAM_4, "models/domination/dom_pink.md3", 0, "domination/claim.wav", "", "Pink team has captured a control point");
 	dom_spawnteam("", 0, "models/domination/dom_unclaimed.md3", 0, "", "", "");
 }
 
@@ -729,7 +740,7 @@ void dom_DelayedInit() // Do this check with a delay so we can wait for teams to
 	if(find(world, classname, "dom_team") == world || autocvar_g_domination_teams_override >= 2)
 	{
 		print("No ""dom_team"" entities found on this map, creating them anyway.\n");
-		domination_teams = ((autocvar_g_domination_teams_override < 2) ? autocvar_g_domination_default_teams : autocvar_g_domination_teams_override);
+		domination_teams = bound(2, ((autocvar_g_domination_teams_override < 2) ? autocvar_g_domination_default_teams : autocvar_g_domination_teams_override), 4);
 		dom_spawnteams(domination_teams);
 	}
 	
