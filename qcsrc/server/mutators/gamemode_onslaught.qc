@@ -24,7 +24,8 @@ void ons_CaptureShield_Touch()
 	Damage(other, self, self, 0, DEATH_HURTTRIGGER, mymid, normalize(othermid - mymid) * ons_captureshield_force);
 
 	play2(other, "onslaught/damageblockedbyshield.wav");
-	
+
+	if(IS_REAL_CLIENT(other))
 	if(self.enemy.classname == "onslaught_generator")
 		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_GENERATOR_SHIELDED);
 	else
