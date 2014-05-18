@@ -4,8 +4,10 @@
 
 float ons_CaptureShield_Customize()
 {
-	if(!self.enemy.isshielded && (onslaught_controlpoint_attackable(self.enemy, other.team) > 0 || self.enemy.classname != "onslaught_controlpoint")) { return FALSE; }
-	if(SAME_TEAM(self, other)) { return FALSE; }
+	entity e = WaypointSprite_getviewentity(other);
+
+	if(!self.enemy.isshielded && (onslaught_controlpoint_attackable(self.enemy, e.team) > 0 || self.enemy.classname != "onslaught_controlpoint")) { return FALSE; }
+	if(SAME_TEAM(self, e)) { return FALSE; }
 
 	return TRUE;
 }
@@ -158,7 +160,7 @@ void onslaught_updatelinks()
 			// them is powered, mark the other one as powered as well
 			if (l.enemy.iscaptured && l.goalentity.iscaptured)
 				if (l.enemy.islinked != l.goalentity.islinked)
-					if (l.enemy.team == l.goalentity.team)
+					if(SAME_TEAM(l.enemy, l.goalentity))
 					{
 						if (!l.goalentity.islinked)
 						{
@@ -359,7 +361,7 @@ void onslaught_generator_think()
 			e = findchain(classname, "onslaught_controlpoint");
 			while (e)
 			{
-				if (e.team != self.team)
+				if(DIFF_TEAM(e, self))
 					if (e.islinked)
 						d = d + 1;
 				e = e.chain;
@@ -778,19 +780,22 @@ void onslaught_generator_reset()
 	self.isshielded = TRUE;
 	self.think = onslaught_generator_delayed;
 	self.nextthink = time + 0.2;
-	setmodel(self, "models/onslaught/generator.md3");
-	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
 
 	self.SendFlags |= GSF_STATUS;
 
-	if(!self.noalign)
-	{
-		setorigin(self, self.origin + '0 0 20');
-		droptofloor();
-	}
-
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
+}
+
+float ons_Generator_Customize()
+{
+	entity e, wp_owner;
+	e = WaypointSprite_getviewentity(other);
+	wp_owner = self.owner;
+	//if(wp_owner.health >= wp_owner.max_health) { return FALSE; }
+	if(wp_owner.isshielded) { return FALSE; }
+
+	return TRUE;
 }
 
 /*QUAKED spawnfunc_onslaught_generator (0 .5 .8) (-32 -32 -24) (32 32 64)
@@ -833,7 +838,6 @@ void spawnfunc_onslaught_generator()
 	self.solid = SOLID_BBOX;
 	self.movetype = MOVETYPE_NONE;
 	self.lasthealth = self.max_health = self.health = autocvar_g_onslaught_gen_health;
-	setmodel(self, "models/onslaught/generator.md3");
 	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
 	setorigin(self, self.origin);
 	self.takedamage = DAMAGE_AIM;
@@ -853,6 +857,7 @@ void spawnfunc_onslaught_generator()
 	WaypointSprite_UpdateRule(self.sprite, NUM_TEAM_2, SPRITERULE_TEAMPLAY);
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
+	self.sprite.customizeentityforclient = ons_Generator_Customize;
 
 	waypoint_spawnforitem(self);
 
@@ -1160,6 +1165,17 @@ void onslaught_controlpoint_reset()
 	CSQCMODEL_AUTOUPDATE();
 }
 
+float ons_ControlPoint_Customize()
+{
+	entity e, wp_owner;
+	e = WaypointSprite_getviewentity(other);
+	wp_owner = self.owner;
+	if(SAME_TEAM(e, wp_owner) && wp_owner.goalentity.health >= wp_owner.goalentity.max_health) { return FALSE; }
+	if(!onslaught_controlpoint_attackable(wp_owner, e.team)) { return FALSE; }
+
+	return TRUE;
+}
+
 /*QUAKED spawnfunc_onslaught_controlpoint (0 .5 .8) (-32 -32 0) (32 32 128)
   Control point. Be sure to give this enough clearance so that the shootable part has room to exist
 
@@ -1220,6 +1236,7 @@ void spawnfunc_onslaught_controlpoint()
 
 	WaypointSprite_SpawnFixed(string_null, self.origin + '0 0 128', self, sprite, RADARICON_NONE, '0 0 0');
 	WaypointSprite_UpdateRule(self.sprite, NUM_TEAM_2, SPRITERULE_TEAMPLAY);
+	self.sprite.customizeentityforclient = ons_ControlPoint_Customize;
 
 	onslaught_updatelinks();
 	
@@ -1573,7 +1590,7 @@ float havocbot_goalrating_ons_generator_attack(float ratingscale)
 
 	for (g = findchain(classname, "onslaught_generator"); g; g = g.chain)
 	{
-		if(g.team == self.team || g.isshielded)
+		if(SAME_TEAM(g, self) || g.isshielded)
 			continue;
 
 		// Should be attacked
