@@ -812,8 +812,6 @@ void spawnfunc_onslaught_generator()
 {
 	if(!g_onslaught) { remove(self); return; }
 
-	//entity e;
-	precache_model("models/onslaught/generator.md3");
 	precache_model("models/onslaught/generator_shield.md3");
 	precache_model("models/onslaught/shockwave.md3");
 	precache_model("models/onslaught/shockwavetransring.md3");
