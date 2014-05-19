@@ -46,6 +46,34 @@ vector teamradar_texcoord_to_2dcoord(vector in)
 	return out;
 }
 
+
+vector teamradar_2dcoord_to_texcoord(vector in)
+{
+	vector out;
+	out = in;
+	
+	out -= teamradar_origin2d;
+	if(v_flipped)
+		out_x = -out_x;
+	out = out / teamradar_size;
+	
+	out_y = - out_y; // screen space is reversed
+	out = rotate(out, -teamradar_angle * DEG2RAD);
+	
+	out += teamradar_origin3d_in_texcoord;
+
+	return out;
+}
+
+vector teamradar_texcoord_to_3dcoord(vector in,float z)
+{
+	vector out;
+	out_x = in_x * (mi_picmax_x - mi_picmin_x) + mi_picmin_x;
+	out_y = in_y * (mi_picmax_y - mi_picmin_y) + mi_picmin_y;
+	out_z = z;
+	return out;
+}
+
 vector yinvert(vector v)
 {
 	v_y = 1 - v_y;

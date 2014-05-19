@@ -1976,6 +1976,17 @@ void HUD_Radar_Mouse()
 		return;
 	}
 	
+	if(!autocvar_hud_cursormode)
+	{
+		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
+
+		mousepos_x = bound(0, mousepos_x, vid_conwidth);
+		mousepos_y = bound(0, mousepos_y, vid_conheight);
+	}
+
+	HUD_Panel_UpdateCvars();
+	
+	
 	panel_size = autocvar_hud_panel_radar_maximized_size;
 	panel_size_x = bound(0.2, panel_size_x, 1) * vid_conwidth;
 	panel_size_y = bound(0.2, panel_size_y, 1) * vid_conheight;
@@ -1991,19 +2002,10 @@ void HUD_Radar_Mouse()
 			HUD_Radar_Show_Maximized(false);
 			return;
 		}
+		vector pos = teamradar_texcoord_to_3dcoord(teamradar_2dcoord_to_texcoord(mousepos+'8 4 0'),0);
+		localcmd(sprintf("cmd ons_spawn %f %f %f",pos_x,pos_y,pos_z));
 	}
 	
-	
-	
-	if(!autocvar_hud_cursormode)
-	{
-		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
-
-		mousepos_x = bound(0, mousepos_x, vid_conwidth);
-		mousepos_y = bound(0, mousepos_y, vid_conheight);
-	}
-
-	HUD_Panel_UpdateCvars();
 
 	const vector cursorsize = '32 32 0';
 	drawpic(mousepos, strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', 0.8, DRAWFLAG_NORMAL);
