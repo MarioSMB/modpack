@@ -1564,6 +1564,8 @@ float autocvar_g_onslaught_cp_regen;
 float autocvar_g_onslaught_gen_health;
 var float autocvar_g_onslaught_shield_force = 100;
 float autocvar_g_onslaught_allow_vehicle_touch;
+float autocvar_g_onslaught_teleport_radius;
+float autocvar_g_onslaught_click_radius;
 float autocvar_g_observer_glowtrails;
 float autocvar_g_riflearena_withlaser;
 float autocvar_g_buffs_waypoint_distance;

@@ -731,70 +731,6 @@ void ClientCommand_voice(float request, float argc, string command)
 	}
 }
 
-void ClientCommand_ons_spawn(float request, float argc, string command)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			if ( MapInfo_LoadedGametype != MAPINFO_TYPE_ONSLAUGHT )
-			{
-				sprint(self, "\nOnly available when playing onslaught\n");
-				return;
-			}
-			
-			vector pos = self.origin;
-			if(argc > 1)
-				pos_x = stof(argv(1));
-			if(argc > 2)
-				pos_y = stof(argv(2));
-			if(argc > 3)
-				pos_z = stof(argv(3));
-			
-			entity tmp_entity, closest_target = world;
-			tmp_entity = findchain(classname, "onslaught_controlpoint");
-			while(tmp_entity)
-			{
-				if(SAME_TEAM(tmp_entity, self))
-				if(tmp_entity.iscaptured)
-				if(vlen(tmp_entity.origin - pos) <= vlen(closest_target.origin - pos) || closest_target == world)
-					closest_target = tmp_entity;
-				tmp_entity = tmp_entity.chain;
-			}
-			tmp_entity = findchain(classname, "onslaught_generator");
-			while(tmp_entity)
-			{
-				if(SAME_TEAM(tmp_entity, self))
-				if(vlen(tmp_entity.origin - pos) <= vlen(closest_target.origin - pos) || closest_target == world)
-					closest_target = tmp_entity;
-				tmp_entity = tmp_entity.chain;
-			}
-		
-			if ( closest_target == world )
-			{
-				sprint(self, "\nNo control point found\n");
-				return;
-			}
-				
-			pos = closest_target.origin;
-		
-			entity wp = WaypointSprite_DeployPersonal("click", pos, RADARICON_WAYPOINT, '1 0 1');
-			if(wp)
-				WaypointSprite_Ping(wp);
-			sprint(self, sprintf("test waypoint @ %f %f %f\n",pos_x,pos_y,pos_z));
-			return; // never fall through to usage
-		}
-
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			sprint(self, "\nUsage:^3 cmd ons_spawn <x> <y> <z>\n");
-			sprint(self, "  Spawn near the closest control point (when allowed).\n");
-			return;
-		}
-	}
-}
-
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
 void ClientCommand_(float request)
@@ -833,7 +769,6 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("mobedit", ClientCommand_mobedit(request, arguments), "Edit your monster's properties") \
 	CLIENT_COMMAND("mobkill", ClientCommand_mobkill(request), "Kills your monster") \
 	CLIENT_COMMAND("mobspawn", ClientCommand_mobspawn(request, arguments), "Spawn monsters infront of yourself") \
-	CLIENT_COMMAND("ons_spawn", ClientCommand_ons_spawn(request, arguments, command), "Spawn at a control point") \
 	CLIENT_COMMAND("ready", ClientCommand_ready(request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
 	CLIENT_COMMAND("report", ClientCommand_report(request, arguments), "Retrieve values from the client") \
 	CLIENT_COMMAND("say", ClientCommand_say(request, arguments, command), "Print a message to chat to all players") \

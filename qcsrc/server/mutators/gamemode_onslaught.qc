@@ -1945,6 +1945,119 @@ void ons_Initialize()
 	InitializeEntity(world, ons_DelayedInit, INITPRIO_GAMETYPE);
 }
 
+/*
+ * Find control point or generator owned by the same team self which is nearest to pos
+ * if max_dist is positive, only control points within this range will be considered
+ */
+entity ons_Nearest_ControlPoint(vector pos, float max_dist)
+{
+	entity tmp_entity, closest_target = world;
+	tmp_entity = findchain(classname, "onslaught_controlpoint");
+	while(tmp_entity)
+	{
+		if(SAME_TEAM(tmp_entity, self))
+		if(tmp_entity.iscaptured)
+		if(max_dist <= 0 || vlen(tmp_entity.origin - pos) <= max_dist)
+		if(vlen(tmp_entity.origin - pos) <= vlen(closest_target.origin - pos) || closest_target == world)
+			closest_target = tmp_entity;
+		tmp_entity = tmp_entity.chain;
+	}
+	tmp_entity = findchain(classname, "onslaught_generator");
+	while(tmp_entity)
+	{
+		if(SAME_TEAM(tmp_entity, self))
+		if(max_dist <= 0 || vlen(tmp_entity.origin - pos) < max_dist)
+		if(vlen(tmp_entity.origin - pos) <= vlen(closest_target.origin - pos) || closest_target == world)
+			closest_target = tmp_entity;
+		tmp_entity = tmp_entity.chain;
+	}
+	
+	return closest_target;
+}
+
+MUTATOR_HOOKFUNCTION(ons_SV_ParseClientCommand)
+{
+	if ( cmd_name == "ons_spawn" )
+	{
+		vector pos = self.origin;
+		if(cmd_argc > 1)
+			pos_x = stof(argv(1));
+		if(cmd_argc > 2)
+			pos_y = stof(argv(2));
+		if(cmd_argc > 3)
+			pos_z = stof(argv(3));
+		
+		entity closest_target = ons_Nearest_ControlPoint(pos, autocvar_g_onslaught_click_radius);
+	
+		if ( closest_target == world )
+		{
+			sprint(self, "\nNo control point found\n");
+			return 0;
+		}
+			
+		pos = closest_target.origin;
+		
+		if ( IS_PLAYER(self) )
+		if ( self.health > 0 )
+		if ( !self.frozen )
+		{
+			entity source_point = ons_Nearest_ControlPoint(self.origin, autocvar_g_onslaught_teleport_radius);
+			
+			if ( source_point == world )
+			{
+				sprint(self, "\nYou need to be next to a control point\n");
+				return 0;
+			}
+			
+			if ( source_point == closest_target )
+			{
+				sprint(self, "\nTeleporting to the same point\n");
+				return 0;
+			}
+			
+			
+			float i;
+			vector loc;
+			for(i = 0; i < 10; ++i)
+			{
+				loc = closest_target.origin + '0 0 128';
+				loc += ('0 1 0' * random()) * 256;
+				tracebox(loc, PL_MIN, PL_MAX, loc, MOVE_NORMAL, self);
+				if(trace_fraction == 1.0 && !trace_startsolid)
+				{
+					traceline(closest_target.origin, loc, MOVE_NOMONSTERS, closest_target); // double check to make sure we're not spawning outside the world
+					if(trace_fraction == 1.0 && !trace_startsolid)
+					{
+						setorigin(self, loc);
+						self.angles = normalize(loc - closest_target.origin) * RAD2DEG;
+						return 0;
+					}
+				}
+			}
+		}
+	
+		entity wp = WaypointSprite_DeployPersonal("click", pos, RADARICON_WAYPOINT, '1 0 1');
+		if(wp)
+			WaypointSprite_Ping(wp);
+		sprint(self, sprintf("test waypoint @ %f %f %f\n",pos_x,pos_y,pos_z));
+		
+		
+		
+		return 1;
+	}
+	return 0;
+}
+
+MUTATOR_HOOKFUNCTION(ons_PlayerUseKey)
+{
+	entity source_point = ons_Nearest_ControlPoint(self.origin, autocvar_g_onslaught_teleport_radius);
+			
+	if ( source_point != world )
+		stuffcmd(self, "qc_cmd_cl hud clickradar\n");
+	
+	return TRUE;
+}
+
 MUTATOR_DEFINITION(gamemode_onslaught)
 {
 	MUTATOR_HOOK(reset_map_global, ons_ResetMap, CBC_ORDER_ANY);
@@ -1957,6 +2070,8 @@ MUTATOR_DEFINITION(gamemode_onslaught)
 	MUTATOR_HOOK(TurretSpawn, ons_TurretSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRole, ons_BotRoles, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, ons_GetTeamCount, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SV_ParseClientCommand, ons_SV_ParseClientCommand, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerUseKey, ons_PlayerUseKey, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

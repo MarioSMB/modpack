@@ -1910,18 +1910,20 @@ void HUD_Timer(void)
 //
 
 
-void HUD_Radar_Show_Maximized(float show)
+void HUD_Radar_Show_Maximized(float show,float clickable)
 {
 	hud_panel_radar_maximized = show;
 	
 	if ( show )
 	{
-		if(autocvar_hud_cursormode)
-			setcursormode(1);
-		
-		hud_panel_radar_mouse = 1; 
+		if (clickable)
+		{
+			if(autocvar_hud_cursormode)
+				setcursormode(1);
+			hud_panel_radar_mouse = 1; 
+		}
 	}
-	else
+	else if ( hud_panel_radar_mouse )
 	{
 		hud_panel_radar_mouse = 0;
 		mouseClicked = 0;
@@ -1929,6 +1931,10 @@ void HUD_Radar_Show_Maximized(float show)
 		if(!mv_active)
 			setcursormode(0);
 	}
+}
+void HUD_Radar_Hide_Maximized()
+{
+	HUD_Radar_Show_Maximized(false,false);
 }
 
 
@@ -1972,7 +1978,7 @@ void HUD_Radar_Mouse()
 	
 	if(mouseClicked & S_MOUSE2)
 	{
-		HUD_Radar_Show_Maximized(false);
+		HUD_Radar_Hide_Maximized();
 		return;
 	}
 	
@@ -1999,11 +2005,14 @@ void HUD_Radar_Mouse()
 		if ( mousepos_x < panel_pos_x || mousepos_x > panel_pos_x + panel_size_x ||
 			 mousepos_y < panel_pos_y || mousepos_y > panel_pos_y + panel_size_y )
 		{
-			HUD_Radar_Show_Maximized(false);
+			HUD_Radar_Hide_Maximized();
 			return;
 		}
 		vector pos = teamradar_texcoord_to_3dcoord(teamradar_2dcoord_to_texcoord(mousepos+'8 4 0'),view_origin_z);
 		localcmd(sprintf("cmd ons_spawn %f %f %f",pos_x,pos_y,pos_z));
+		
+		HUD_Radar_Hide_Maximized();
+		return;
 	}
 	
 
