@@ -347,42 +347,10 @@ float onslaught_controlpoint_attackable(entity cp, float t)
 float overtime_msg_time[17];
 void onslaught_generator_think()
 {
-	float d;
 	entity e;
 	self.nextthink = ceil(time + 1);
 	if (!gameover)
 	{
-		if ((autocvar_timelimit && time > game_starttime + autocvar_timelimit * 60) || (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0))
-		{
-			if(time >= overtime_msg_time[self.team])
-			{
-				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_OVERTIME_CONTROLPOINT);
-				//sound(self, CH_TRIGGER, "onslaught/generator_decay.wav", VOL_BASE, ATTEN_NORM);
-				play2team(self.team, "onslaught/generator_decay.wav");
-				overtime_msg_time[self.team] = time + 10;
-			}
-			// self.max_health / 300 gives 5 minutes of overtime.
-			// control points reduce the overtime duration.
-			d = 1;
-			e = findchain(classname, "onslaught_controlpoint");
-			while (e)
-			{
-				if(DIFF_TEAM(e, self))
-					if (e.islinked)
-						d = d + 1;
-				e = e.chain;
-			}
-
-			if(autocvar_g_campaign && autocvar__campaign_testrun)
-				d = d * self.max_health;
-			else
-				d = d * self.max_health / max(30, 60 * autocvar_timelimit_suddendeath);
-
-			Damage(self, self, self, d, DEATH_HURTTRIGGER, self.origin, '0 0 0');
-		}
-		else if (overtime_msg_time[self.team])
-			overtime_msg_time[self.team] = time;
-
         if(!self.isshielded && self.wait < time)
         {
             self.wait = time + 5;
@@ -1762,7 +1730,43 @@ float Onslaught_CheckWinner()
 {
 	entity e;
 	
-	// overtime handled elsewhere
+	if ((autocvar_timelimit && time > game_starttime + autocvar_timelimit * 60) || (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0))
+	{
+		entity oldself = self;
+		float d;
+		for(self = findchain(classname, "onslaught_generator"); self; self = self.chain) if(time >= self.ons_overtime_damagedelay)
+		{
+			if(time >= overtime_msg_time[self.team])
+			{
+				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_OVERTIME_CONTROLPOINT);
+				//sound(self, CH_TRIGGER, "onslaught/generator_decay.wav", VOL_BASE, ATTEN_NORM);
+				play2team(self.team, "onslaught/generator_decay.wav");
+				overtime_msg_time[self.team] = time + 10;
+			}
+			// self.max_health / 300 gives 5 minutes of overtime.
+			// control points reduce the overtime duration.
+			d = 1;
+			e = findchain(classname, "onslaught_controlpoint");
+			while (e)
+			{
+				if(DIFF_TEAM(e, self))
+					if (e.islinked)
+						d = d + 1;
+				e = e.chain;
+			}
+
+			if(autocvar_g_campaign && autocvar__campaign_testrun)
+				d = d * self.max_health;
+			else
+				d = d * self.max_health / max(30, 60 * autocvar_timelimit_suddendeath);
+
+			Damage(self, self, self, d, DEATH_HURTTRIGGER, self.origin, '0 0 0');
+			
+			self.ons_overtime_damagedelay = ceil(time + 1);
+		}
+		
+		self = oldself;
+	}
 
 	Onslaught_count_generators();
 	

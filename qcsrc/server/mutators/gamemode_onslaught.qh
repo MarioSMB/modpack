@@ -22,6 +22,8 @@
 .float iscpneighbor[17];
 float ons_notification_time[17];
 
+.float ons_overtime_damagedelay;
+
 .vector ons_deathloc;
 
 // declarations for functions used outside gamemode_onslaught.qc
