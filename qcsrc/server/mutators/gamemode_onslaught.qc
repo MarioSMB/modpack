@@ -1714,6 +1714,61 @@ void havocbot_ons_reset_role(entity bot)
 }
 
 
+/*
+ * Find control point or generator owned by the same team self which is nearest to pos
+ * if max_dist is positive, only control points within this range will be considered
+ */
+entity ons_Nearest_ControlPoint(vector pos, float max_dist)
+{
+	entity tmp_entity, closest_target = world;
+	tmp_entity = findchain(classname, "onslaught_controlpoint");
+	while(tmp_entity)
+	{
+		if(SAME_TEAM(tmp_entity, self))
+		if(tmp_entity.iscaptured)
+		if(max_dist <= 0 || vlen(tmp_entity.origin - pos) <= max_dist)
+		if(vlen(tmp_entity.origin - pos) <= vlen(closest_target.origin - pos) || closest_target == world)
+			closest_target = tmp_entity;
+		tmp_entity = tmp_entity.chain;
+	}
+	tmp_entity = findchain(classname, "onslaught_generator");
+	while(tmp_entity)
+	{
+		if(SAME_TEAM(tmp_entity, self))
+		if(max_dist <= 0 || vlen(tmp_entity.origin - pos) < max_dist)
+		if(vlen(tmp_entity.origin - pos) <= vlen(closest_target.origin - pos) || closest_target == world)
+			closest_target = tmp_entity;
+		tmp_entity = tmp_entity.chain;
+	}
+	
+	return closest_target;
+}
+
+/**
+ * find the number of control points and generators in the same team as self
+ */
+float ons_Count_SelfControlPoints()
+{
+	entity tmp_entity;
+	tmp_entity = findchain(classname, "onslaught_controlpoint");
+	float n = 0;
+	while(tmp_entity)
+	{
+		if(SAME_TEAM(tmp_entity, self))
+		if(tmp_entity.iscaptured)
+			n++;
+		tmp_entity = tmp_entity.chain;
+	}
+	tmp_entity = findchain(classname, "onslaught_generator");
+	while(tmp_entity)
+	{
+		if(SAME_TEAM(tmp_entity, self))
+			n++;
+		tmp_entity = tmp_entity.chain;
+	}
+	return n;
+}
+
 // ==============
 // Hook Functions
 // ==============
@@ -1732,6 +1787,7 @@ MUTATOR_HOOKFUNCTION(ons_RemovePlayer)
 
 MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
 {
+	if ( !autocvar_g_onslaught_spawn_choose )
 	if(autocvar_g_onslaught_spawn_at_controlpoints)
 	if(random() <= autocvar_g_onslaught_spawn_at_controlpoints_chance)
 	{
@@ -1781,16 +1837,13 @@ MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
 			}
 		}
 	}
-	
-	if(autocvar_g_onslaught_spawn_at_generator)
-	if(random() <= autocvar_g_onslaught_spawn_at_generator_chance)
+	if ( autocvar_g_onslaught_spawn_choose || (
+		autocvar_g_onslaught_spawn_at_generator && 
+		random() <= autocvar_g_onslaught_spawn_at_generator_chance ) )
 	{
 		float random_target = autocvar_g_onslaught_spawn_at_generator_random;
 		entity tmp_entity, closest_target = world;
 		vector spawn_loc = self.ons_deathloc;
-		
-		// new joining player or round reset, don't bother checking
-		if(spawn_loc == '0 0 0') { return FALSE; }
 		
 		tmp_entity = findchain(classname, "onslaught_generator");
 		
@@ -1828,6 +1881,11 @@ MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
 					{
 						setorigin(self, loc);
 						self.angles = normalize(loc - closest_target.origin) * RAD2DEG;
+						if ( autocvar_g_onslaught_spawn_choose )
+						if ( ons_Count_SelfControlPoints() > 1 )
+						{
+							stuffcmd(self, "qc_cmd_cl hud clickradar\n");
+						}
 						return FALSE;
 					}
 				}
@@ -1923,57 +1981,6 @@ MUTATOR_HOOKFUNCTION(ons_GetTeamCount)
 	return TRUE;
 }
 
-// scoreboard setup
-void ons_ScoreRules()
-{
-	CheckAllowedTeams(world);
-	ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), SFL_SORT_PRIO_PRIMARY, 0, TRUE);
-	ScoreInfo_SetLabel_TeamScore  (ST_ONS_CAPS,     "caps",      SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_ONS_CAPS,     "caps",      SFL_SORT_PRIO_SECONDARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_ONS_TAKES,	"takes",     0);
-	ScoreRules_basics_end();
-}
-
-void ons_DelayedInit() // Do this check with a delay so we can wait for teams to be set up
-{
-	ons_ScoreRules();
-}
-
-void ons_Initialize()
-{
-	ons_captureshield_force = autocvar_g_onslaught_shield_force;
-	InitializeEntity(world, ons_DelayedInit, INITPRIO_GAMETYPE);
-}
-
-/*
- * Find control point or generator owned by the same team self which is nearest to pos
- * if max_dist is positive, only control points within this range will be considered
- */
-entity ons_Nearest_ControlPoint(vector pos, float max_dist)
-{
-	entity tmp_entity, closest_target = world;
-	tmp_entity = findchain(classname, "onslaught_controlpoint");
-	while(tmp_entity)
-	{
-		if(SAME_TEAM(tmp_entity, self))
-		if(tmp_entity.iscaptured)
-		if(max_dist <= 0 || vlen(tmp_entity.origin - pos) <= max_dist)
-		if(vlen(tmp_entity.origin - pos) <= vlen(closest_target.origin - pos) || closest_target == world)
-			closest_target = tmp_entity;
-		tmp_entity = tmp_entity.chain;
-	}
-	tmp_entity = findchain(classname, "onslaught_generator");
-	while(tmp_entity)
-	{
-		if(SAME_TEAM(tmp_entity, self))
-		if(max_dist <= 0 || vlen(tmp_entity.origin - pos) < max_dist)
-		if(vlen(tmp_entity.origin - pos) <= vlen(closest_target.origin - pos) || closest_target == world)
-			closest_target = tmp_entity;
-		tmp_entity = tmp_entity.chain;
-	}
-	
-	return closest_target;
-}
 
 MUTATOR_HOOKFUNCTION(ons_SV_ParseClientCommand)
 {
@@ -2051,11 +2058,32 @@ MUTATOR_HOOKFUNCTION(ons_SV_ParseClientCommand)
 MUTATOR_HOOKFUNCTION(ons_PlayerUseKey)
 {
 	entity source_point = ons_Nearest_ControlPoint(self.origin, autocvar_g_onslaught_teleport_radius);
-			
 	if ( source_point != world )
 		stuffcmd(self, "qc_cmd_cl hud clickradar\n");
 	
 	return TRUE;
+}
+
+// scoreboard setup
+void ons_ScoreRules()
+{
+	CheckAllowedTeams(world);
+	ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+	ScoreInfo_SetLabel_TeamScore  (ST_ONS_CAPS,     "caps",      SFL_SORT_PRIO_PRIMARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_ONS_CAPS,     "caps",      SFL_SORT_PRIO_SECONDARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_ONS_TAKES,	"takes",     0);
+	ScoreRules_basics_end();
+}
+
+void ons_DelayedInit() // Do this check with a delay so we can wait for teams to be set up
+{
+	ons_ScoreRules();
+}
+
+void ons_Initialize()
+{
+	ons_captureshield_force = autocvar_g_onslaught_shield_force;
+	InitializeEntity(world, ons_DelayedInit, INITPRIO_GAMETYPE);
 }
 
 MUTATOR_DEFINITION(gamemode_onslaught)
