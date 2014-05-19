@@ -352,16 +352,17 @@ void onslaught_generator_think()
 	self.nextthink = ceil(time + 1);
 	if (!gameover)
 	{
-		if (autocvar_timelimit && time > game_starttime + autocvar_timelimit * 60)
+		if ((autocvar_timelimit && time > game_starttime + autocvar_timelimit * 60) || (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0))
 		{
-			if (!overtime_msg_time)
+			if(time >= overtime_msg_time)
 			{
 				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_OVERTIME_CONTROLPOINT);
-				overtime_msg_time = time;
+				//sound(self, CH_TRIGGER, "onslaught/generator_decay.wav", VOL_BASE, ATTEN_NORM);
+				play2team(self.team, "onslaught/generator_decay.wav");
+				overtime_msg_time = time + 10;
 			}
 			// self.max_health / 300 gives 5 minutes of overtime.
 			// control points reduce the overtime duration.
-			sound(self, CH_TRIGGER, "onslaught/generator_decay.wav", VOL_BASE, ATTEN_NORM);
 			d = 1;
 			e = findchain(classname, "onslaught_controlpoint");
 			while (e)
@@ -595,6 +596,8 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 		self.think(); // do the first explosion now
 
 		WaypointSprite_UpdateMaxHealth(self.sprite, 0);
+		WaypointSprite_Ping(self.sprite);
+		//WaypointSprite_Kill(self.sprite); // can't do this yet, code too poor
 
 		onslaught_updatelinks();
 	}
@@ -799,7 +802,7 @@ float ons_Generator_Customize()
 	e = WaypointSprite_getviewentity(other);
 	wp_owner = self.owner;
 	//if(wp_owner.health >= wp_owner.max_health) { return FALSE; }
-	if(wp_owner.isshielded) { return FALSE; }
+	if(wp_owner.isshielded && wp_owner.health >= wp_owner.max_health) { return FALSE; }
 
 	return TRUE;
 }
@@ -1068,7 +1071,7 @@ void onslaught_controlpoint_icon_buildthink()
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ONSLAUGHT_CAPTURE, self.owner.ons_toucher.netname, self.owner.message);
 		Send_Notification(NOTIF_ALL_EXCEPT, self.owner.ons_toucher, MSG_CENTER, APP_TEAM_ENT_4(self.owner.ons_toucher, CENTER_ONS_CAPTURE_), self.owner.message);
 		Send_Notification(NOTIF_ONE, self.owner.ons_toucher, MSG_CENTER, CENTER_ONS_CAPTURE, self.owner.message);
-		PlayerTeamScore_Add(self.owner.ons_toucher, SP_ONS_CAPS, ST_ONS_CAPS, 1);
+		PlayerScore_Add(self.owner.ons_toucher, SP_ONS_CAPS, 1);
 		PlayerTeamScore_AddScore(self.owner.ons_toucher, 10);
 		
 		self.owner.ons_toucher = world;
@@ -1350,11 +1353,8 @@ keys:
  */
 void spawnfunc_onslaught_link()
 {
-	if (!g_onslaught)
-	{
-		remove(self);
-		return;
-	}
+	if(!g_onslaught) { remove(self); return; }
+
 	if (self.target == "" || self.target2 == "")
 		objerror("target and target2 must be set\n");
 	InitializeEntity(self, onslaught_link_delayed, INITPRIO_FINDTARGET);
@@ -1713,6 +1713,98 @@ void havocbot_ons_reset_role(entity bot)
 	havocbot_role_ons_setrole(bot, HAVOCBOT_ONS_ROLE_OFFENSE);
 }
 
+// ===============
+//  Round Handler
+// ===============
+float total_generators, redowned, blueowned, yellowowned, pinkowned;
+void Onslaught_count_generators()
+{
+	entity e;
+	total_generators = redowned = blueowned = yellowowned = pinkowned = 0;
+	for(e = world; (e = find(e, classname, "onslaught_generator")) != world; )
+	{
+		++total_generators;
+		redowned += (e.team == NUM_TEAM_1 && e.health > 0);
+		blueowned += (e.team == NUM_TEAM_2 && e.health > 0);
+		yellowowned += (e.team == NUM_TEAM_3 && e.health > 0);
+		pinkowned += (e.team == NUM_TEAM_4 && e.health > 0);
+	}
+}
+
+float Onslaught_GetWinnerTeam()
+{
+	float winner_team = 0;
+	if(redowned > 0)
+		winner_team = NUM_TEAM_1;
+	if(blueowned > 0)
+	{
+		if(winner_team) return 0;
+		winner_team = NUM_TEAM_2;
+	}
+	if(yellowowned > 0)
+	{
+		if(winner_team) return 0;
+		winner_team = NUM_TEAM_3;
+	}
+	if(pinkowned > 0)
+	{
+		if(winner_team) return 0;
+		winner_team = NUM_TEAM_4;
+	}
+	if(winner_team)
+		return winner_team;
+	return -1; // no generators left?
+}
+
+#define ONS_OWNED_GENERATORS() ((redowned > 0) + (blueowned > 0) + (yellowowned > 0) + (pinkowned > 0))
+#define ONS_OWNED_GENERATORS_OK() (ONS_OWNED_GENERATORS() > 1)
+float Onslaught_CheckWinner()
+{
+	entity e;
+	
+	// overtime handled elsewhere
+
+	Onslaught_count_generators();
+	
+	if(ONS_OWNED_GENERATORS_OK())
+		return 0;
+
+	float winner_team = Onslaught_GetWinnerTeam();
+
+	if(winner_team > 0)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner_team, CENTER_ROUND_TEAM_WIN_));
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(winner_team, INFO_ROUND_TEAM_WIN_));
+		TeamScore_AddToTeam(winner_team, ST_ONS_CAPS, +1);
+	}
+	else if(winner_team == -1)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
+	}
+	
+	round_handler_Init(7, autocvar_g_onslaught_warmup, autocvar_g_onslaught_round_timelimit);
+	
+	FOR_EACH_PLAYER(e)
+	{
+		e.player_blocked = TRUE;
+		nades_Clear(e);
+	}
+	
+	return 1;
+}
+
+float Onslaught_CheckPlayers()
+{
+	return 1;
+}
+
+void Onslaught_RoundStart()
+{
+	entity e;
+	FOR_EACH_PLAYER(e) { e.player_blocked = FALSE; }
+}
+
 
 // ==============
 // Hook Functions
@@ -1720,7 +1812,7 @@ void havocbot_ons_reset_role(entity bot)
 
 MUTATOR_HOOKFUNCTION(ons_ResetMap)
 {
-	FOR_EACH_PLAYER(self) { self.ons_deathloc = '0 0 0'; }
+	FOR_EACH_PLAYER(self) { self.ons_deathloc = '0 0 0'; PutClientInServer(); }
 	return FALSE;
 }
 
@@ -1732,6 +1824,12 @@ MUTATOR_HOOKFUNCTION(ons_RemovePlayer)
 
 MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
 {
+	if(!round_handler_IsRoundStarted())
+	{
+		self.player_blocked = TRUE;
+		return FALSE;
+	}
+
 	if(autocvar_g_onslaught_spawn_at_controlpoints)
 	if(random() <= autocvar_g_onslaught_spawn_at_controlpoints_chance)
 	{
@@ -1928,7 +2026,7 @@ void ons_ScoreRules()
 {
 	CheckAllowedTeams(world);
 	ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), SFL_SORT_PRIO_PRIMARY, 0, TRUE);
-	ScoreInfo_SetLabel_TeamScore  (ST_ONS_CAPS,     "caps",      SFL_SORT_PRIO_PRIMARY);
+	ScoreInfo_SetLabel_TeamScore  (ST_ONS_CAPS,     "destroyed", SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_ONS_CAPS,     "caps",      SFL_SORT_PRIO_SECONDARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_ONS_TAKES,	"takes",     0);
 	ScoreRules_basics_end();
@@ -1937,6 +2035,9 @@ void ons_ScoreRules()
 void ons_DelayedInit() // Do this check with a delay so we can wait for teams to be set up
 {
 	ons_ScoreRules();
+	
+	round_handler_Spawn(Onslaught_CheckPlayers, Onslaught_CheckWinner, Onslaught_RoundStart);
+	round_handler_Init(5, autocvar_g_onslaught_warmup, autocvar_g_onslaught_round_timelimit);
 }
 
 void ons_Initialize()

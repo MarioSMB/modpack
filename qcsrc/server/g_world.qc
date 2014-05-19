@@ -1677,48 +1677,6 @@ void ClearWinners(void)
 		head.winning = 0;
 }
 
-// Onslaught winning condition:
-// game terminates if only one team has a working generator (or none)
-float WinningCondition_Onslaught()
-{
-	entity head;
-	float t1, t2, t3, t4;
-
-	WinningConditionHelper(); // set worldstatus
-
-	if(warmup_stage)
-		return WINNING_NO;
-
-	// first check if the game has ended
-	t1 = t2 = t3 = t4 = 0;
-	head = find(world, classname, "onslaught_generator");
-	while (head)
-	{
-		if (head.health > 0)
-		{
-			if (head.team == NUM_TEAM_1) t1 = 1;
-			if (head.team == NUM_TEAM_2) t2 = 1;
-			if (head.team == NUM_TEAM_3) t3 = 1;
-			if (head.team == NUM_TEAM_4) t4 = 1;
-		}
-		head = find(head, classname, "onslaught_generator");
-	}
-	if (t1 + t2 + t3 + t4 < 2)
-	{
-		// game over, only one team remains (or none)
-		ClearWinners();
-		if (t1) SetWinners(team, NUM_TEAM_1);
-		if (t2) SetWinners(team, NUM_TEAM_2);
-		if (t3) SetWinners(team, NUM_TEAM_3);
-		if (t4) SetWinners(team, NUM_TEAM_4);
-		dprint("Have a winner, ending game.\n");
-		return WINNING_YES;
-	}
-
-	// Two or more teams remain
-	return WINNING_NO;
-}
-
 // Assault winning condition: If the attackers triggered a round end (by fulfilling all objectives)
 // they win. Otherwise the defending team wins once the timelimit passes.
 void assault_new_round();
@@ -2091,9 +2049,6 @@ void CheckRules_World()
 		return;
 	}
 
-	if(g_onslaught)
-		timelimit = 0; // ONS has its own overtime rule
-
 	float wantovertime;
 	wantovertime = 0;
 
@@ -2178,10 +2133,6 @@ void CheckRules_World()
 	else if(g_lms)
 	{
 		checkrules_status = WinningCondition_LMS();
-	}
-	else if (g_onslaught)
-	{
-		checkrules_status = WinningCondition_Onslaught(); // TODO remove this?
 	}
 	else
 	{
