@@ -275,9 +275,9 @@ void LocalCommand_hud(float request, float argc)
 				case "radar":
 				{
 					if(argv(2))
-						hud_panel_radar_maximized = InterpretBoolean(argv(2));
+						HUD_Radar_Show_Maximized(InterpretBoolean(argv(2)));
 					else
-						hud_panel_radar_maximized = !hud_panel_radar_maximized;
+						HUD_Radar_Show_Maximized(!hud_panel_radar_maximized);
 					return;
 				}
 			}

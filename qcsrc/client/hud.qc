@@ -1908,6 +1908,107 @@ void HUD_Timer(void)
 
 // Radar (#6)
 //
+
+
+void HUD_Radar_Show_Maximized(float show)
+{
+	hud_panel_radar_maximized = show;
+	
+	if ( show )
+	{
+		if(autocvar_hud_cursormode)
+			setcursormode(1);
+		
+		hud_panel_radar_mouse = 1; 
+	}
+	else
+	{
+		hud_panel_radar_mouse = 0;
+		mouseClicked = 0;
+		if(autocvar_hud_cursormode)
+		if(!mv_active)
+			setcursormode(0);
+	}
+}
+
+
+float HUD_Radar_InputEvent(float bInputType, float nPrimary, float nSecondary)
+{
+	if(!hud_panel_radar_maximized || !hud_panel_radar_mouse || 
+		autocvar__hud_configure || mv_active)
+		return false;
+
+	if(bInputType == 3)
+	{
+		mousepos_x = nPrimary;
+		mousepos_y = nSecondary;
+		return true;
+	}
+
+	if(nPrimary == K_MOUSE1)
+	{
+		if(bInputType == 0) // key pressed
+			mouseClicked |= S_MOUSE1;
+		else if(bInputType == 1) // key released
+			mouseClicked -= (mouseClicked & S_MOUSE1);
+	}
+	else if(nPrimary == K_MOUSE2)
+	{
+		if(bInputType == 0) // key pressed
+			mouseClicked |= S_MOUSE2;
+		else if(bInputType == 1) // key released
+			mouseClicked -= (mouseClicked & S_MOUSE2);
+	}
+	else
+		return false;
+
+	return true;
+}
+
+void HUD_Radar_Mouse()
+{
+	if ( !hud_panel_radar_mouse ) return;
+	if(mv_active) return;
+	
+	if(mouseClicked & S_MOUSE2)
+	{
+		HUD_Radar_Show_Maximized(false);
+		return;
+	}
+	
+	panel_size = autocvar_hud_panel_radar_maximized_size;
+	panel_size_x = bound(0.2, panel_size_x, 1) * vid_conwidth;
+	panel_size_y = bound(0.2, panel_size_y, 1) * vid_conheight;
+	panel_pos_x = (vid_conwidth - panel_size_x) / 2;
+	panel_pos_y = (vid_conheight - panel_size_y) / 2;
+		
+	if(mouseClicked & S_MOUSE1)
+	{
+		// click outside
+		if ( mousepos_x < panel_pos_x || mousepos_x > panel_pos_x + panel_size_x ||
+			 mousepos_y < panel_pos_y || mousepos_y > panel_pos_y + panel_size_y )
+		{
+			HUD_Radar_Show_Maximized(false);
+			return;
+		}
+	}
+	
+	
+	
+	if(!autocvar_hud_cursormode)
+	{
+		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
+
+		mousepos_x = bound(0, mousepos_x, vid_conwidth);
+		mousepos_y = bound(0, mousepos_y, vid_conheight);
+	}
+
+	HUD_Panel_UpdateCvars();
+
+	const vector cursorsize = '32 32 0';
+	drawpic(mousepos, strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', 0.8, DRAWFLAG_NORMAL);
+}
+
 void HUD_Radar(void)
 {
 	if (!autocvar__hud_configure)

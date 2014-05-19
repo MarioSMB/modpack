@@ -9,6 +9,7 @@ string hud_panelorder_prev;
 
 float hud_draw_maximized;
 float hud_panel_radar_maximized;
+float hud_panel_radar_mouse;
 float hud_panel_quickmenu;
 float chat_panel_modified;
 float radar_panel_modified;
