@@ -831,7 +831,6 @@ void spawnfunc_onslaught_generator()
 	if (!self.team)
 		objerror("team must be set");
 
-	ons_generator[self.team] = self;
 	self.team_saved = self.team;
 	self.colormap = 1024 + (self.team - 1) * 17;
 	self.solid = SOLID_BBOX;
@@ -1457,7 +1456,7 @@ float havocbot_ons_teamcount(entity bot, float role)
 	entity head;
 
 	FOR_EACH_PLAYER(head)
-	if(head.team==self.team)
+	if(SAME_TEAM(head, self))
 	if(head.havocbot_role_flags & role)
 		++c;
 
@@ -1487,7 +1486,7 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 		// Count team mates interested in this control point
 		// (easier and cleaner than keeping counters per cp and teams)
 		FOR_EACH_PLAYER(pl)
-		if(pl.team==self.team)
+		if(SAME_TEAM(pl, self))
 		if(pl.havocbot_role_flags & HAVOCBOT_ONS_ROLE_OFFENSE)
 		if(pl.havocbot_ons_target==cp2)
 			++c;
@@ -1697,7 +1696,7 @@ void havocbot_ons_reset_role(entity bot)
 	// if there is only me on the team switch to offense
 	c = 0;
 	FOR_EACH_PLAYER(head)
-	if(head.team==self.team)
+	if(SAME_TEAM(head, self))
 		++c;
 
 	if(c==1)
