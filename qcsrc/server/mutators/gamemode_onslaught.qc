@@ -344,7 +344,7 @@ float onslaught_controlpoint_attackable(entity cp, float t)
 	return 0;
 }
 
-float overtime_msg_time;
+float overtime_msg_time[17];
 void onslaught_generator_think()
 {
 	float d;
@@ -354,12 +354,12 @@ void onslaught_generator_think()
 	{
 		if ((autocvar_timelimit && time > game_starttime + autocvar_timelimit * 60) || (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0))
 		{
-			if(time >= overtime_msg_time)
+			if(time >= overtime_msg_time[self.team])
 			{
 				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_OVERTIME_CONTROLPOINT);
 				//sound(self, CH_TRIGGER, "onslaught/generator_decay.wav", VOL_BASE, ATTEN_NORM);
 				play2team(self.team, "onslaught/generator_decay.wav");
-				overtime_msg_time = time + 10;
+				overtime_msg_time[self.team] = time + 10;
 			}
 			// self.max_health / 300 gives 5 minutes of overtime.
 			// control points reduce the overtime duration.
@@ -380,8 +380,8 @@ void onslaught_generator_think()
 
 			Damage(self, self, self, d, DEATH_HURTTRIGGER, self.origin, '0 0 0');
 		}
-		else if (overtime_msg_time)
-			overtime_msg_time = 0;
+		else if (overtime_msg_time[self.team])
+			overtime_msg_time[self.team] = time;
 
         if(!self.isshielded && self.wait < time)
         {
