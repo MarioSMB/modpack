@@ -2037,20 +2037,13 @@ MUTATOR_HOOKFUNCTION(ons_SV_ParseClientCommand)
 					{
 						setorigin(self, loc);
 						self.angles = normalize(loc - closest_target.origin) * RAD2DEG;
-						return 0;
+						return 1;
 					}
 				}
 			}
 		}
-	
-		entity wp = WaypointSprite_DeployPersonal("click", pos, RADARICON_WAYPOINT, '1 0 1');
-		if(wp)
-			WaypointSprite_Ping(wp);
-		sprint(self, sprintf("test waypoint @ %f %f %f\n",pos_x,pos_y,pos_z));
 		
-		
-		
-		return 1;
+		return 0;
 	}
 	return 0;
 }
