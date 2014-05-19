@@ -23,13 +23,15 @@ void ons_CaptureShield_Touch()
 
 	Damage(other, self, self, 0, DEATH_HURTTRIGGER, mymid, normalize(othermid - mymid) * ons_captureshield_force);
 
-	play2(other, "onslaught/damageblockedbyshield.wav");
-
 	if(IS_REAL_CLIENT(other))
-	if(self.enemy.classname == "onslaught_generator")
-		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_GENERATOR_SHIELDED);
-	else
-		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_CONTROLPOINT_SHIELDED);
+	{
+		play2(other, "onslaught/damageblockedbyshield.wav");
+
+		if(self.enemy.classname == "onslaught_generator")
+			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_GENERATOR_SHIELDED);
+		else
+			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_CONTROLPOINT_SHIELDED);
+	}
 }
 
 void ons_CaptureShield_Reset()
@@ -38,7 +40,7 @@ void ons_CaptureShield_Reset()
 	self.team = self.enemy.team;
 }
 
-void ons_CaptureShield_Spawn(entity generator, string themodel)
+void ons_CaptureShield_Spawn(entity generator, float is_generator)
 {
 	entity shield = spawn();
 
@@ -54,9 +56,11 @@ void ons_CaptureShield_Spawn(entity generator, string themodel)
 	shield.solid = SOLID_TRIGGER;
 	shield.avelocity = '7 0 11';
 	shield.scale = 1;
-
+	shield.model = ((is_generator) ? "models/onslaught/generator_shield.md3" : "models/onslaught/controlpoint_shield.md3");
+	
+	precache_model(shield.model);
 	setorigin(shield, generator.origin);
-	setmodel(shield, themodel);
+	setmodel(shield, shield.model);
 	setsize(shield, shield.scale * shield.mins, shield.scale * shield.maxs);
 }
 
@@ -549,6 +553,7 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 				if (IS_PLAYER(attacker))
 				{
 					play2(attacker, "onslaught/damageblockedbyshield.wav");
+					attacker.typehitsound += 1;
 					self.pain_finished = time + 1;
 				}
 			return;
@@ -847,7 +852,7 @@ void spawnfunc_onslaught_generator()
 	// helper entity that create fx when generator is damaged
 	onslaught_generator_damage_spawn(self);
 
-	ons_CaptureShield_Spawn(self, "models/onslaught/generator_shield.md3");
+	ons_CaptureShield_Spawn(self, TRUE);
 	
 	InitializeEntity(self, onslaught_generator_delayed, INITPRIO_LAST);
 
@@ -1238,7 +1243,7 @@ void spawnfunc_onslaught_controlpoint()
 
 	onslaught_updatelinks();
 	
-	ons_CaptureShield_Spawn(self, "models/onslaught/controlpoint_shield.md3");
+	ons_CaptureShield_Spawn(self, FALSE);
 
 	CSQCMODEL_AUTOINIT();
 }

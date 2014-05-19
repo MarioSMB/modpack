@@ -275,10 +275,6 @@ string spritelookuptext(string s)
 		case "pinkbase": return _("Pink base");
 		case "waypoint": return _("Waypoint");
 		case "ons-gen": return _("Generator");
-		case "ons-gen-red": return _("Generator");
-		case "ons-gen-blue": return _("Generator");
-		case "ons-gen-yellow": return _("Generator");
-		case "ons-gen-pink": return _("Generator");
 		case "ons-gen-shielded": return _("Generator");
 		case "ons-cp-neut": return _("Control point");
 		case "ons-cp-red": return _("Control point");

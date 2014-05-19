@@ -3959,13 +3959,13 @@ void HUD_ModIcons_SetFunc()
 		case MAPINFO_TYPE_CTF:			HUD_ModIcons_GameType = HUD_Mod_CTF; break;
 		case MAPINFO_TYPE_NEXBALL:		HUD_ModIcons_GameType = HUD_Mod_NexBall; break;
 		case MAPINFO_TYPE_CTS:
-		case MAPINFO_TYPE_RACE:		HUD_ModIcons_GameType = HUD_Mod_Race; break;
+		case MAPINFO_TYPE_RACE:			HUD_ModIcons_GameType = HUD_Mod_Race; break;
 		case MAPINFO_TYPE_CA:
 		case MAPINFO_TYPE_JAILBREAK:
 		case MAPINFO_TYPE_FREEZETAG:	HUD_ModIcons_GameType = HUD_Mod_CA; break;
 		case MAPINFO_TYPE_DOMINATION:	HUD_ModIcons_GameType = HUD_Mod_Dom; break;
-		case MAPINFO_TYPE_KEEPAWAY:	HUD_ModIcons_GameType = HUD_Mod_Keepaway; break;
-		case MAPINFO_TYPE_VIP:         HUD_ModIcons_GameType = HUD_Mod_VIP; break;
+		case MAPINFO_TYPE_KEEPAWAY:		HUD_ModIcons_GameType = HUD_Mod_Keepaway; break;
+		case MAPINFO_TYPE_VIP:         	HUD_ModIcons_GameType = HUD_Mod_VIP; break;
 	}
 }
 
