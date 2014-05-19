@@ -2035,8 +2035,11 @@ MUTATOR_HOOKFUNCTION(ons_SV_ParseClientCommand)
 					traceline(closest_target.origin, loc, MOVE_NOMONSTERS, closest_target); // double check to make sure we're not spawning outside the world
 					if(trace_fraction == 1.0 && !trace_startsolid)
 					{
+						pointparticles(particleeffectnum("teleport"), self.origin, '0 0 0', 1);
+						sound (self, CH_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTEN_NORM);
 						setorigin(self, loc);
 						self.angles = normalize(loc - closest_target.origin) * RAD2DEG;
+						pointparticles(particleeffectnum("teleport"), self.origin + v_forward * 32, '0 0 0', 1);
 						return 1;
 					}
 				}
