@@ -737,7 +737,12 @@ void ClientCommand_ons_spawn(float request, float argc, string command)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			// todo check gametype
+			if ( MapInfo_LoadedGametype != MAPINFO_TYPE_ONSLAUGHT )
+			{
+				sprint(self, "\nOnly available when playing onslaught\n");
+				return;
+			}
+			
 			vector pos = self.origin;
 			if(argc > 1)
 				pos_x = stof(argv(1));
@@ -745,6 +750,34 @@ void ClientCommand_ons_spawn(float request, float argc, string command)
 				pos_y = stof(argv(2));
 			if(argc > 3)
 				pos_z = stof(argv(3));
+			
+			entity tmp_entity, closest_target = world;
+			tmp_entity = findchain(classname, "onslaught_controlpoint");
+			while(tmp_entity)
+			{
+				if(SAME_TEAM(tmp_entity, self))
+				if(tmp_entity.iscaptured)
+				if(vlen(tmp_entity.origin - pos) <= vlen(closest_target.origin - pos) || closest_target == world)
+					closest_target = tmp_entity;
+				tmp_entity = tmp_entity.chain;
+			}
+			tmp_entity = findchain(classname, "onslaught_generator");
+			while(tmp_entity)
+			{
+				if(SAME_TEAM(tmp_entity, self))
+				if(vlen(tmp_entity.origin - pos) <= vlen(closest_target.origin - pos) || closest_target == world)
+					closest_target = tmp_entity;
+				tmp_entity = tmp_entity.chain;
+			}
+		
+			if ( closest_target == world )
+			{
+				sprint(self, "\nNo control point found\n");
+				return;
+			}
+				
+			pos = closest_target.origin;
+		
 			entity wp = WaypointSprite_DeployPersonal("click", pos, RADARICON_WAYPOINT, '1 0 1');
 			if(wp)
 				WaypointSprite_Ping(wp);

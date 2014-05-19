@@ -2002,7 +2002,7 @@ void HUD_Radar_Mouse()
 			HUD_Radar_Show_Maximized(false);
 			return;
 		}
-		vector pos = teamradar_texcoord_to_3dcoord(teamradar_2dcoord_to_texcoord(mousepos+'8 4 0'),0);
+		vector pos = teamradar_texcoord_to_3dcoord(teamradar_2dcoord_to_texcoord(mousepos+'8 4 0'),view_origin_z);
 		localcmd(sprintf("cmd ons_spawn %f %f %f",pos_x,pos_y,pos_z));
 	}
 	
