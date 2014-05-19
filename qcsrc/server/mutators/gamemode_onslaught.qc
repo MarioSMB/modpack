@@ -755,6 +755,7 @@ void onslaught_generator_reset()
 	self.iscaptured = TRUE;
 	self.islinked = TRUE;
 	self.isshielded = TRUE;
+	self.event_damage = onslaught_generator_damage;
 	self.think = onslaught_generator_delayed;
 	self.nextthink = time + 0.2;
 
@@ -1750,8 +1751,8 @@ float Onslaught_CheckWinner()
 			while (e)
 			{
 				if(DIFF_TEAM(e, self))
-					if (e.islinked)
-						d = d + 1;
+				if(e.islinked)
+					d = d + 1;
 				e = e.chain;
 			}
 
