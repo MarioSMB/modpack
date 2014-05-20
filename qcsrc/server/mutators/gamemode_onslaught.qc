@@ -1744,6 +1744,55 @@ entity ons_Nearest_ControlPoint(vector pos, float max_dist)
 	return closest_target;
 }
 
+/*
+ * Find control point or generator owned by the same team self which is nearest to pos
+ * if max_dist is positive, only control points within this range will be considered
+ * This function only check distances on the XY plane, disregarding Z
+ */
+entity ons_Nearest_ControlPoint_2D(vector pos, float max_dist)
+{
+	entity tmp_entity, closest_target = world;
+	vector delta;
+	float smallest_distance = 0, distance;
+	
+	tmp_entity = findchain(classname, "onslaught_controlpoint");
+	while(tmp_entity)
+	{
+		delta = tmp_entity.origin - pos;
+		delta_z = 0;
+		distance = vlen(delta);
+		
+		if(SAME_TEAM(tmp_entity, self))
+		if(tmp_entity.iscaptured)
+		if(max_dist <= 0 || distance <= max_dist)
+		if(closest_target == world || distance <= smallest_distance )
+		{
+			closest_target = tmp_entity;
+			smallest_distance = distance;
+		}
+		
+		tmp_entity = tmp_entity.chain;
+	}
+	tmp_entity = findchain(classname, "onslaught_generator");
+	while(tmp_entity)
+	{
+		delta = tmp_entity.origin - pos;
+		delta_z = 0;
+		distance = vlen(delta);
+		
+		if(SAME_TEAM(tmp_entity, self))
+		if(max_dist <= 0 || distance <= max_dist)
+		if(closest_target == world || distance <= smallest_distance )
+		{
+			closest_target = tmp_entity;
+			smallest_distance = distance;
+		}
+		
+		tmp_entity = tmp_entity.chain;
+	}
+	
+	return closest_target;
+}
 /**
  * find the number of control points and generators in the same team as self
  */
@@ -1994,12 +2043,12 @@ MUTATOR_HOOKFUNCTION(ons_SV_ParseClientCommand)
 		if(cmd_argc > 3)
 			pos_z = stof(argv(3));
 		
-		entity closest_target = ons_Nearest_ControlPoint(pos, autocvar_g_onslaught_click_radius);
+		entity closest_target = ons_Nearest_ControlPoint_2D(pos, autocvar_g_onslaught_click_radius);
 	
 		if ( closest_target == world )
 		{
 			sprint(self, "\nNo control point found\n");
-			return 0;
+			return 1;
 		}
 			
 		pos = closest_target.origin;
@@ -2013,22 +2062,24 @@ MUTATOR_HOOKFUNCTION(ons_SV_ParseClientCommand)
 			if ( source_point == world )
 			{
 				sprint(self, "\nYou need to be next to a control point\n");
-				return 0;
+				return 1;
 			}
 			
 			if ( source_point == closest_target )
 			{
 				sprint(self, "\nTeleporting to the same point\n");
-				return 0;
+				return 1;
 			}
 			
 			
 			float i;
 			vector loc;
-			for(i = 0; i < 10; ++i)
+			for(i = 0; i < 16; ++i)
 			{
 				loc = closest_target.origin + '0 0 128';
-				loc += ('0 1 0' * random()) * 256;
+				loc += ('0 1 0' * random() * autocvar_g_onslaught_teleport_radius * 2) + 
+				       ('1 0 0' * random() * autocvar_g_onslaught_teleport_radius * 2) -  
+				       '1 1 0' * autocvar_g_onslaught_teleport_radius;
 				tracebox(loc, PL_MIN, PL_MAX, loc, MOVE_NORMAL, self);
 				if(trace_fraction == 1.0 && !trace_startsolid)
 				{
@@ -2044,9 +2095,15 @@ MUTATOR_HOOKFUNCTION(ons_SV_ParseClientCommand)
 					}
 				}
 			}
+			
+			
+			sprint(self, "\nUnable to teleport there\n");
+			return 1;
 		}
 		
-		return 0;
+		sprint(self, "\nNo teleportation for you\n");
+		
+		return 1;
 	}
 	return 0;
 }
