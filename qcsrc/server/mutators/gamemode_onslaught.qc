@@ -1271,19 +1271,34 @@ void onslaught_link_checkupdate()
 	}
 
 	float cc = 0;
-	// this sucks... TODO: fix!
+	
+	/*if(redpower == 1 && bluepower == 2)
+		cc = (NUM_TEAM_1 - 1) * 0x01 + (NUM_TEAM_2 - 1) * 0x10;
+	else if(redpower == 2 && bluepower == 1)
+		cc = (NUM_TEAM_1 - 1) * 0x10 + (NUM_TEAM_2 - 1) * 0x01;
+	else if(redpower)
+		cc = (NUM_TEAM_1 - 1) * 0x11;
+	else if(bluepower)
+		cc = (NUM_TEAM_2 - 1) * 0x11;
+	else
+		cc = 0;*/
+
 	if(redpower == 1) { cc = (NUM_TEAM_1 - 1) * 0x01; }
-	else if(redpower == 2) { cc = (NUM_TEAM_1 - 1) * 0x10; }
-	else if(redpower) { cc = (NUM_TEAM_1 - 1) * 0x11; }
-	if(bluepower == 1) { cc += (NUM_TEAM_2 - 1) * 0x01; }
+	else if(bluepower == 1) { cc = (NUM_TEAM_2 - 1) * 0x01; }
+	else if(yellowpower == 1) { cc = (NUM_TEAM_3 - 1) * 0x01; }
+	else if(pinkpower == 1) { cc = (NUM_TEAM_4 - 1) * 0x01; }
+	else if(redpower) { cc = (NUM_TEAM_1 - 1) * 0x11; goto skip; }
+	else if(bluepower) { cc = (NUM_TEAM_2 - 1) * 0x11; goto skip; }
+	else if(yellowpower) { cc = (NUM_TEAM_3 - 1) * 0x11; goto skip; }
+	else if(pinkpower) { cc = (NUM_TEAM_4 - 1) * 0x11; goto skip; }
+	else { cc = 0; }
+	
+	if(redpower == 2) { cc += (NUM_TEAM_1 - 1) * 0x10; }
 	else if(bluepower == 2) { cc += (NUM_TEAM_2 - 1) * 0x10; }
-	else if(bluepower) { cc += (NUM_TEAM_2 - 1) * 0x11; }
-	if(yellowpower == 1) { cc += (NUM_TEAM_3 - 1) * 0x01; }
 	else if(yellowpower == 2) { cc += (NUM_TEAM_3 - 1) * 0x10; }
-	else if(yellowpower) { cc += (NUM_TEAM_3 - 1) * 0x11; }
-	if(pinkpower == 1) { cc += (NUM_TEAM_4 - 1) * 0x01; }
 	else if(pinkpower == 2) { cc += (NUM_TEAM_4 - 1) * 0x10; }
-	else if(pinkpower) { cc += (NUM_TEAM_4 - 1) * 0x11; }
+	
+	:skip
 
 	//print(etos(self), " rp=", ftos(redpower), " bp=", ftos(bluepower), " ");
 	//print("cc=", ftos(cc), "\n");
