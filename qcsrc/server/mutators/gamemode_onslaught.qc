@@ -1994,24 +1994,35 @@ MUTATOR_HOOKFUNCTION(ons_MonsterSpawn)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(ons_TurretSpawn)
+void ons_TurretSpawn_Delayed()
 {
 	entity e, ee = world;
-	if(self.targetname)
+	entity own = self.owner;
+	if(own.targetname)
 	{
-		e = find(world, target, self.targetname);
+		e = find(world, target, own.targetname);
 		if(e != world)
 		{
-			self.team = e.team;
+			own.team = e.team;
 			ee = e;
+			own.active = ACTIVE_NOT;
 		}
 	}
 
 	if(ee)
 	{
 		activator = ee;
-		self.use();
+		own.use();
 	}
+	
+	remove(self);
+}
+
+MUTATOR_HOOKFUNCTION(ons_TurretSpawn)
+{
+	entity e = spawn();
+	e.owner = self;
+	InitializeEntity(e, ons_TurretSpawn_Delayed, INITPRIO_FINDTARGET);
 
 	return FALSE;
 }
