@@ -804,6 +804,17 @@ float ons_Generator_Customize()
 	return TRUE;
 }
 
+
+void onslaught_generator_touch()
+{
+	if ( IS_PLAYER(other) )
+	if ( SAME_TEAM(self,other) )
+	if ( self.iscaptured )
+	{
+		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_TELEPORT);
+	}
+}
+
 /*QUAKED spawnfunc_onslaught_generator (0 .5 .8) (-32 -32 -24) (32 32 64)
   Base generator.
 
@@ -849,6 +860,7 @@ void spawnfunc_onslaught_generator()
 	self.iscaptured = TRUE;
 	self.islinked = TRUE;
 	self.isshielded = TRUE;
+	self.touch = onslaught_generator_touch;
 	// helper entity that create fx when generator is damaged
 	onslaught_generator_damage_spawn(self);
 
