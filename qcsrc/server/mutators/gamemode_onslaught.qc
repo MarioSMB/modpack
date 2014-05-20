@@ -134,6 +134,7 @@ void onslaught_updatelinks()
 			dprint(etos(l), " (generator) is destroyed\n");
 		l.islinked = l.iscaptured;
 		l.isshielded = l.iscaptured;
+		l.sprite.SendFlags |= 16;
 		l = l.chain;
 	}
 	// mark points as shielded and not networked
@@ -145,6 +146,7 @@ void onslaught_updatelinks()
 		float i;
 		for(i = 0; i < 17; ++i) { l.isgenneighbor[i] = FALSE; l.iscpneighbor[i] = FALSE; }
 		dprint(etos(l), " (point) belongs to team ", ftos(l.team), "\n");
+		l.sprite.SendFlags |= 16;
 		l = l.chain;
 	}
 	// flow power outward from the generators through the network
@@ -832,7 +834,7 @@ void spawnfunc_onslaught_generator()
 	WaypointSprite_UpdateRule(self.sprite, NUM_TEAM_2, SPRITERULE_TEAMPLAY);
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
-	self.sprite.customizeentityforclient = ons_Generator_Customize;
+	//self.sprite.customizeentityforclient = ons_Generator_Customize;
 
 	waypoint_spawnforitem(self);
 
@@ -1211,7 +1213,7 @@ void spawnfunc_onslaught_controlpoint()
 
 	WaypointSprite_SpawnFixed(string_null, self.origin + '0 0 128', self, sprite, RADARICON_NONE, '0 0 0');
 	WaypointSprite_UpdateRule(self.sprite, NUM_TEAM_2, SPRITERULE_TEAMPLAY);
-	self.sprite.customizeentityforclient = ons_ControlPoint_Customize;
+	//self.sprite.customizeentityforclient = ons_ControlPoint_Customize;
 
 	onslaught_updatelinks();
 	
@@ -1778,9 +1780,11 @@ float Onslaught_CheckWinner()
 
 			Damage(self, self, self, d, DEATH_HURTTRIGGER, self.origin, '0 0 0');
 			
+			self.sprite.SendFlags |= 16;
+
 			self.ons_overtime_damagedelay = ceil(time + 1);
 		}
-		
+
 		self = oldself;
 	}
 
@@ -1823,6 +1827,10 @@ void Onslaught_RoundStart()
 {
 	entity e;
 	FOR_EACH_PLAYER(e) { e.player_blocked = FALSE; }
+	e = findchain(classname, "onslaught_controlpoint");
+	while(e) { e.sprite.SendFlags |= 16; e = e.chain; }
+	e = findchain(classname, "onslaught_generator");
+	while(e) { e.sprite.SendFlags |= 16; e = e.chain; }
 }
 
 
@@ -1996,25 +2004,20 @@ MUTATOR_HOOKFUNCTION(ons_MonsterSpawn)
 
 void ons_TurretSpawn_Delayed()
 {
-	entity e, ee = world;
-	entity own = self.owner;
+	entity e, own = self.owner;
 	if(own.targetname)
 	{
 		e = find(world, target, own.targetname);
 		if(e != world)
 		{
 			own.team = e.team;
-			ee = e;
 			own.active = ACTIVE_NOT;
+			
+			activator = e;
+			own.use();
 		}
 	}
 
-	if(ee)
-	{
-		activator = ee;
-		own.use();
-	}
-	
 	remove(self);
 }
 
