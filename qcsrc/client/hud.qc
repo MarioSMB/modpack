@@ -1970,7 +1970,25 @@ float HUD_Radar_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		HUD_Radar_Hide_Maximized();
 	}
 	else
+	{
+		// allow console/use binds to work without hiding the map
+		string con_keys;
+		float keys;
+		con_keys = strcat(findkeysforcommand("toggleconsole", 0)," ",findkeysforcommand("+use", 0)) ;
+		keys = tokenize(con_keys); // findkeysforcommand returns data for this
+
+		float i;
+		for (i = 0; i < keys; ++i)
+		{
+			if(nPrimary == stof(argv(i)))
+				return false;
+		}
+		
+		if ( bInputType == 0 )
+			HUD_Radar_Hide_Maximized();
+		
 		return false;
+	}
 
 	return true;
 }
