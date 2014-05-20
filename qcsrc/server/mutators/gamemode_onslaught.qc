@@ -1818,6 +1818,54 @@ float ons_Count_SelfControlPoints()
 	return n;
 }
 
+/**
+ * Teleport player to a random position near tele_target
+ * if tele_effects is true, teleport sound+particles are created
+ * return FALSE on failure
+ */
+float ons_Teleport(entity player, entity tele_target, float range, float tele_effects)
+{
+	if ( !tele_target )
+		return FALSE;
+	
+	float i;
+	vector loc;
+	float theta;
+	for(i = 0; i < 16; ++i)
+	{
+		theta = random() * 2 * M_PI;
+		loc_y = sin(theta);
+		loc_x = cos(theta);
+		loc_z = 0;
+		loc *= random() * range;
+		
+		loc += tele_target.origin + '0 0 128';
+		
+		tracebox(loc, PL_MIN, PL_MAX, loc, MOVE_NORMAL, player);
+		if(trace_fraction == 1.0 && !trace_startsolid)
+		{
+			traceline(tele_target.origin, loc, MOVE_NOMONSTERS, tele_target); // double check to make sure we're not spawning outside the world
+			if(trace_fraction == 1.0 && !trace_startsolid)
+			{
+				if ( tele_effects )
+				{
+					pointparticles(particleeffectnum("teleport"), player.origin, '0 0 0', 1);
+					sound (player, CH_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTEN_NORM);
+				}
+				setorigin(player, loc);
+				player.angles = '0 1 0' * ( theta * RAD2DEG + 180 );
+				makevectors(player.angles);
+				player.fixangle = TRUE;
+				if ( tele_effects )
+					pointparticles(particleeffectnum("teleport"), player.origin + v_forward * 32, '0 0 0', 1);
+				return TRUE;
+			}
+		}
+	}
+	
+	return FALSE;
+}
+
 // ==============
 // Hook Functions
 // ==============
@@ -1836,7 +1884,28 @@ MUTATOR_HOOKFUNCTION(ons_RemovePlayer)
 
 MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
 {
-	if ( !autocvar_g_onslaught_spawn_choose )
+	if ( autocvar_g_onslaught_spawn_choose )
+	{
+		entity tmp_entity, closest_target = world;
+		vector spawn_loc = self.ons_deathloc;
+		
+		tmp_entity = findchain(classname, "onslaught_generator");
+
+		while(tmp_entity)
+		{
+			if(SAME_TEAM(tmp_entity, self))
+			if(vlen(tmp_entity.origin - spawn_loc) <= vlen(closest_target.origin - spawn_loc) || closest_target == world)
+				closest_target = tmp_entity;
+			tmp_entity = tmp_entity.chain;
+		}
+		
+		if ( ons_Teleport(self,closest_target,autocvar_g_onslaught_teleport_radius,FALSE) )
+		if ( ons_Count_SelfControlPoints() > 1 )
+			stuffcmd(self, "qc_cmd_cl hud clickradar\n");
+
+		return FALSE;
+	}
+	
 	if(autocvar_g_onslaught_spawn_at_controlpoints)
 	if(random() <= autocvar_g_onslaught_spawn_at_controlpoints_chance)
 	{
@@ -1886,9 +1955,8 @@ MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
 			}
 		}
 	}
-	if ( autocvar_g_onslaught_spawn_choose || (
-		autocvar_g_onslaught_spawn_at_generator && 
-		random() <= autocvar_g_onslaught_spawn_at_generator_chance ) )
+	if ( autocvar_g_onslaught_spawn_at_generator )
+	if ( random() <= autocvar_g_onslaught_spawn_at_generator_chance )
 	{
 		float random_target = autocvar_g_onslaught_spawn_at_generator_random;
 		entity tmp_entity, closest_target = world;
@@ -1930,11 +1998,6 @@ MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
 					{
 						setorigin(self, loc);
 						self.angles = normalize(loc - closest_target.origin) * RAD2DEG;
-						if ( autocvar_g_onslaught_spawn_choose )
-						if ( ons_Count_SelfControlPoints() > 1 )
-						{
-							stuffcmd(self, "qc_cmd_cl hud clickradar\n");
-						}
 						return FALSE;
 					}
 				}
@@ -2071,33 +2134,9 @@ MUTATOR_HOOKFUNCTION(ons_SV_ParseClientCommand)
 				return 1;
 			}
 			
+			if ( !ons_Teleport(self,closest_target,autocvar_g_onslaught_teleport_radius,TRUE) )
+				sprint(self, "\nUnable to teleport there\n");
 			
-			float i;
-			vector loc;
-			for(i = 0; i < 16; ++i)
-			{
-				loc = closest_target.origin + '0 0 128';
-				loc += ('0 1 0' * random() * autocvar_g_onslaught_teleport_radius * 2) + 
-				       ('1 0 0' * random() * autocvar_g_onslaught_teleport_radius * 2) -  
-				       '1 1 0' * autocvar_g_onslaught_teleport_radius;
-				tracebox(loc, PL_MIN, PL_MAX, loc, MOVE_NORMAL, self);
-				if(trace_fraction == 1.0 && !trace_startsolid)
-				{
-					traceline(closest_target.origin, loc, MOVE_NOMONSTERS, closest_target); // double check to make sure we're not spawning outside the world
-					if(trace_fraction == 1.0 && !trace_startsolid)
-					{
-						pointparticles(particleeffectnum("teleport"), self.origin, '0 0 0', 1);
-						sound (self, CH_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTEN_NORM);
-						setorigin(self, loc);
-						self.angles = normalize(loc - closest_target.origin) * RAD2DEG;
-						pointparticles(particleeffectnum("teleport"), self.origin + v_forward * 32, '0 0 0', 1);
-						return 1;
-					}
-				}
-			}
-			
-			
-			sprint(self, "\nUnable to teleport there\n");
 			return 1;
 		}
 		
