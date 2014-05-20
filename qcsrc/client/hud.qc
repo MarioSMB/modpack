@@ -1965,6 +1965,10 @@ float HUD_Radar_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		else if(bInputType == 1) // key released
 			mouseClicked -= (mouseClicked & S_MOUSE2);
 	}
+	else if ( nPrimary == K_ESCAPE && bInputType == 0 )
+	{
+		HUD_Radar_Hide_Maximized();
+	}
 	else
 		return false;
 

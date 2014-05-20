@@ -1103,6 +1103,12 @@ void onslaught_controlpoint_touch()
 		return;
 		
 	if(!IS_PLAYER(toucher)) { return; }
+	
+	if ( SAME_TEAM(self,other) )
+	if ( self.iscaptured )
+	{
+		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_TELEPORT);
+	}
 		
 	a = onslaught_controlpoint_attackable(self, other.team);
 	if(a != 2 && a != 4)
@@ -1955,12 +1961,15 @@ MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
 			}
 		}
 	}
-	if ( autocvar_g_onslaught_spawn_at_generator )
-	if ( random() <= autocvar_g_onslaught_spawn_at_generator_chance )
+	if(autocvar_g_onslaught_spawn_at_generator)
+	if(random() <= autocvar_g_onslaught_spawn_at_generator_chance)
 	{
 		float random_target = autocvar_g_onslaught_spawn_at_generator_random;
 		entity tmp_entity, closest_target = world;
 		vector spawn_loc = self.ons_deathloc;
+		
+		// new joining player or round reset, don't bother checking
+		if(spawn_loc == '0 0 0') { return FALSE; }
 		
 		tmp_entity = findchain(classname, "onslaught_generator");
 		
@@ -2150,10 +2159,13 @@ MUTATOR_HOOKFUNCTION(ons_SV_ParseClientCommand)
 MUTATOR_HOOKFUNCTION(ons_PlayerUseKey)
 {
 	entity source_point = ons_Nearest_ControlPoint(self.origin, autocvar_g_onslaught_teleport_radius);
-	if ( source_point != world )
+	if ( source_point )
+	{
 		stuffcmd(self, "qc_cmd_cl hud clickradar\n");
+		return TRUE;
+	}
 	
-	return TRUE;
+	return FALSE;
 }
 
 // scoreboard setup
