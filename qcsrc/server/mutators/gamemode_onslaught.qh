@@ -24,6 +24,8 @@ float ons_notification_time[17];
 
 .vector ons_deathloc;
 
+.entity ons_spawn_by;
+
 // declarations for functions used outside gamemode_onslaught.qc
 void onslaught_generator_updatesprite(entity e);
 void onslaught_controlpoint_updatesprite(entity e);

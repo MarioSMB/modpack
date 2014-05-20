@@ -1903,24 +1903,10 @@ MUTATOR_HOOKFUNCTION(ons_RemovePlayer)
 MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
 {
 	if ( autocvar_g_onslaught_spawn_choose )
+	if ( self.ons_spawn_by )
+	if ( ons_Teleport(self,self.ons_spawn_by,autocvar_g_onslaught_teleport_radius,FALSE) )
 	{
-		entity tmp_entity, closest_target = world;
-		vector spawn_loc = self.ons_deathloc;
-		
-		tmp_entity = findchain(classname, "onslaught_generator");
-
-		while(tmp_entity)
-		{
-			if(SAME_TEAM(tmp_entity, self))
-			if(vlen(tmp_entity.origin - spawn_loc) <= vlen(closest_target.origin - spawn_loc) || closest_target == world)
-				closest_target = tmp_entity;
-			tmp_entity = tmp_entity.chain;
-		}
-		
-		if ( ons_Teleport(self,closest_target,autocvar_g_onslaught_teleport_radius,FALSE) )
-		if ( ons_Count_SelfControlPoints() > 1 )
-			stuffcmd(self, "qc_cmd_cl hud clickradar\n");
-
+		self.ons_spawn_by = world;
 		return FALSE;
 	}
 	
@@ -2032,6 +2018,11 @@ MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
 MUTATOR_HOOKFUNCTION(ons_PlayerDies)
 {
 	frag_target.ons_deathloc = frag_target.origin;
+	
+	if ( autocvar_g_onslaught_spawn_choose )
+	if ( ons_Count_SelfControlPoints() > 1 )
+		stuffcmd(self, "qc_cmd_cl hud clickradar\n");
+	
 	return FALSE;
 }
 
@@ -2127,41 +2118,49 @@ MUTATOR_HOOKFUNCTION(ons_SV_ParseClientCommand)
 		if(cmd_argc > 3)
 			pos_z = stof(argv(3));
 		
-		entity closest_target = ons_Nearest_ControlPoint_2D(pos, autocvar_g_onslaught_click_radius);
-	
-		if ( closest_target == world )
-		{
-			sprint(self, "\nNo control point found\n");
-			return 1;
-		}
-			
-		pos = closest_target.origin;
-		
 		if ( IS_PLAYER(self) )
-		if ( self.health > 0 )
-		if ( !self.frozen )
 		{
-			entity source_point = ons_Nearest_ControlPoint(self.origin, autocvar_g_onslaught_teleport_radius);
-			
-			if ( source_point == world )
+			if ( !self.frozen )
 			{
-				sprint(self, "\nYou need to be next to a control point\n");
+				entity source_point = ons_Nearest_ControlPoint(self.origin, autocvar_g_onslaught_teleport_radius);
+				
+				if ( !source_point && self.health > 0 )
+				{
+					sprint(self, "\nYou need to be next to a control point\n");
+					return 1;
+				}
+				
+				
+				entity closest_target = ons_Nearest_ControlPoint_2D(pos, autocvar_g_onslaught_click_radius);
+			
+				if ( closest_target == world )
+				{
+					sprint(self, "\nNo control point found\n");
+					return 1;
+				}
+				
+				if ( self.health <= 0 )
+				{
+					self.ons_spawn_by = closest_target;
+					self.respawn_flags = self.respawn_flags | RESPAWN_FORCE;
+				}
+				else
+				{
+					if ( source_point == closest_target )
+					{
+						sprint(self, "\nTeleporting to the same point\n");
+						return 1;
+					}
+					
+					if ( !ons_Teleport(self,closest_target,autocvar_g_onslaught_teleport_radius,TRUE) )
+						sprint(self, "\nUnable to teleport there\n");
+				}
+				
 				return 1;
 			}
 			
-			if ( source_point == closest_target )
-			{
-				sprint(self, "\nTeleporting to the same point\n");
-				return 1;
-			}
-			
-			if ( !ons_Teleport(self,closest_target,autocvar_g_onslaught_teleport_radius,TRUE) )
-				sprint(self, "\nUnable to teleport there\n");
-			
-			return 1;
+			sprint(self, "\nNo teleportation for you\n");
 		}
-		
-		sprint(self, "\nNo teleportation for you\n");
 		
 		return 1;
 	}

@@ -1909,6 +1909,10 @@ void HUD_Timer(void)
 // Radar (#6)
 //
 
+float HUD_Radar_Clickable()
+{
+	return hud_panel_radar_mouse;
+}
 
 void HUD_Radar_Show_Maximized(float show,float clickable)
 {
