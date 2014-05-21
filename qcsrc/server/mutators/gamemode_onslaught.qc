@@ -1034,7 +1034,7 @@ void onslaught_controlpoint_icon_buildthink()
 		self.think = onslaught_controlpoint_icon_think;
 		sound(self, CH_TRIGGER, "onslaught/controlpoint_built.wav", VOL_BASE, ATTEN_NORM);
 		self.owner.iscaptured = TRUE;
-		self.solid = SOLID_BBOX;
+		//self.solid = SOLID_BBOX;
 
 		WaypointSprite_UpdateMaxHealth(self.owner.sprite, self.max_health);
 		WaypointSprite_UpdateHealth(self.owner.sprite, self.health);
@@ -1089,7 +1089,7 @@ void onslaught_controlpoint_touch()
 	e.owner = self;
 	e.max_health = autocvar_g_onslaught_cp_health;
 	e.health = autocvar_g_onslaught_cp_buildhealth;
-	e.solid = SOLID_NOT;
+	e.solid = SOLID_CORPSE;
 	e.movetype = MOVETYPE_NONE;
 	//setmodel(e, "models/onslaught/controlpoint_icon.md3");
 	setsize(e, CPICON_MIN, CPICON_MAX);
@@ -1754,12 +1754,12 @@ float Onslaught_CheckWinner()
 		float d;
 		for(self = findchain(classname, "onslaught_generator"); self; self = self.chain) if(time >= self.ons_overtime_damagedelay)
 		{
-			if(time >= overtime_msg_time[self.team])
+			if(!overtime_msg_time[self.team])
 			{
 				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_OVERTIME_CONTROLPOINT);
 				//sound(self, CH_TRIGGER, "onslaught/generator_decay.wav", VOL_BASE, ATTEN_NORM);
 				play2team(self.team, "onslaught/generator_decay.wav");
-				overtime_msg_time[self.team] = time + 10;
+				overtime_msg_time[self.team] = 1;
 			}
 			// self.max_health / 300 gives 5 minutes of overtime.
 			// control points reduce the overtime duration.
@@ -1786,6 +1786,12 @@ float Onslaught_CheckWinner()
 		}
 
 		self = oldself;
+	}
+	else
+	{
+		float i;
+		for(i = 0; i < 17; ++i)
+			overtime_msg_time[i] = 0;
 	}
 
 	Onslaught_count_generators();

@@ -313,7 +313,7 @@ float WaypointSprite_SendEntity(entity to, float sendflags)
 			{
 				entity wp_owner = self.owner;
 				entity e = WaypointSprite_getviewentity(to);
-				if(SAME_TEAM(e, wp_owner) && wp_owner.goalentity.health >= wp_owner.goalentity.max_health) { f |= 2; }
+				if(SAME_TEAM(e, wp_owner) && wp_owner.goalentity.health >= wp_owner.goalentity.max_health && time >= self.pain_finished) { f |= 2; }
 				if(!onslaught_controlpoint_attackable(wp_owner, e.team)) { f |= 2; }
 			}
 			if(self.owner.classname == "onslaught_generator")
