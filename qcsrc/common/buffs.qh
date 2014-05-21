@@ -1,0 +1,78 @@
+entity Buff_Type_first;
+entity Buff_Type_last;
+.entity enemy; // internal next pointer
+
+var float BUFF_LAST = 1;
+
+.float items; // buff ID
+.string netname; // buff name
+.string message; // human readable name
+.string model2; // buff icon
+.vector colormod; // buff color
+
+#define REGISTER_BUFF(hname,sname,NAME,bicon,bcolor) \
+	var float BUFF_##NAME; \
+	var entity Buff_Type##sname; \
+	void RegisterBuffs_##sname() \
+	{ \
+		BUFF_##NAME = BUFF_LAST * 2; \
+		BUFF_LAST = BUFF_##NAME; \
+		Buff_Type##sname = spawn(); \
+		Buff_Type##sname.items = BUFF_##NAME; \
+		Buff_Type##sname.netname = #sname; \
+		Buff_Type##sname.message = hname; \
+		Buff_Type##sname.model2 = bicon; \
+		Buff_Type##sname.colormod = bcolor; \
+		if(!Buff_Type_first) \
+			Buff_Type_first = Buff_Type##sname; \
+		if(Buff_Type_last) \
+			Buff_Type_last.enemy = Buff_Type##sname; \
+		Buff_Type_last = Buff_Type##sname; \
+	} \
+	ACCUMULATE_FUNCTION(RegisterBuffs, RegisterBuffs_##sname)
+	
+REGISTER_BUFF(_("Arc"),arc,ARC,"arc",'0.2 0.7 1');
+REGISTER_BUFF(_("Supply"),supply,SUPPLY,"supply",'0.2 1 0.2');
+REGISTER_BUFF(_("Guard"),guard,GUARD,"guard",'0.3 0.2 1');
+REGISTER_BUFF(_("Haste"),haste,HASTE,"haste",'1 1 0.2');
+REGISTER_BUFF(_("Medic"),medic,MEDIC,"medic",'1 0.3 1');
+REGISTER_BUFF(_("Bash"),bash,BASH,"bash",'1 0.4 0');
+REGISTER_BUFF(_("Vampire"),vampire,VAMPIRE,"vampire",'1 0.15 0');
+REGISTER_BUFF(_("Tenacity"),tenacity,TENACITY,"tenacity",'0.66 0.66 0.73');
+REGISTER_BUFF(_("Wrath"),wrath,WRATH,"wrath",'0.55 0.5 1');
+
+#ifdef SVQC
+.float buffs;
+void buff_Init(entity ent);
+void buff_Init_Compat(entity ent, float replacement);
+
+#define BUFF_SPAWNFUNC(e,b,t) void spawnfunc_item_buff_##e() { self.buffs = b; self.team = t; buff_Init(self); }
+#define BUFF_SPAWNFUNC_Q3TA_COMPAT(o,r) void spawnfunc_##o() { buff_Init_Compat(self,r); }
+#define BUFF_SPAWNFUNCS(e,b)                         \
+        BUFF_SPAWNFUNC(e,           b,  0)           \
+        BUFF_SPAWNFUNC(e##_team1,   b,  NUM_TEAM_1) \
+        BUFF_SPAWNFUNC(e##_team2,   b,  NUM_TEAM_2) \
+        BUFF_SPAWNFUNC(e##_team3,   b,  NUM_TEAM_3) \
+        BUFF_SPAWNFUNC(e##_team4,   b,  NUM_TEAM_4) 
+		
+BUFF_SPAWNFUNCS(arc,        BUFF_ARC)
+BUFF_SPAWNFUNCS(guard,      BUFF_GUARD)
+BUFF_SPAWNFUNCS(supply,     BUFF_SUPPLY)
+BUFF_SPAWNFUNCS(haste,      BUFF_HASTE)
+BUFF_SPAWNFUNCS(medic,      BUFF_MEDIC)
+BUFF_SPAWNFUNCS(bash,       BUFF_BASH)
+BUFF_SPAWNFUNCS(vampire,    BUFF_VAMPIRE)
+BUFF_SPAWNFUNCS(tenacity,   BUFF_TENACITY)
+BUFF_SPAWNFUNCS(wrath,      BUFF_WRATH)
+BUFF_SPAWNFUNCS(random,     0)
+
+BUFF_SPAWNFUNC_Q3TA_COMPAT(item_doubler,    BUFF_MEDIC)
+BUFF_SPAWNFUNC_Q3TA_COMPAT(item_guard,      BUFF_GUARD)
+BUFF_SPAWNFUNC_Q3TA_COMPAT(item_scout,      BUFF_HASTE)
+BUFF_SPAWNFUNC_Q3TA_COMPAT(item_ammoregen,  BUFF_SUPPLY)
+#endif
+
+vector Buff_Color(float buff_id);
+string Buff_PrettyName(float buff_id);
+string Buff_Name(float buff_id);
+float Buff_Type_FromName(string buff_name);

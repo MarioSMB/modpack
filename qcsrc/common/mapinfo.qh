@@ -65,7 +65,7 @@ REGISTER_GAMETYPE(_("Key Hunt"),kh,g_keyhunt,KEYHUNT,"timelimit=20 pointlimit=10
 REGISTER_GAMETYPE(_("Assault"),as,g_assault,ASSAULT,"timelimit=20",_("Destroy obstacles to find and destroy the enemy power core before time runs out"));
 #define g_assault IS_GAMETYPE(ASSAULT)
 
-REGISTER_GAMETYPE(_("Onslaught"),ons,g_onslaught,ONSLAUGHT,"timelimit=20",_("Capture control points to reach and destroy the enemy generator"));
+REGISTER_GAMETYPE(_("Onslaught"),ons,g_onslaught,ONSLAUGHT,"pointlimit=1 timelimit=30",_("Capture control points to reach and destroy the enemy generator"));
 #define g_onslaught IS_GAMETYPE(ONSLAUGHT)
 
 REGISTER_GAMETYPE(_("Nexball"),nb,g_nexball,NEXBALL,"timelimit=20 pointlimit=5 leadlimit=0",_("XonSports"));
@@ -80,7 +80,7 @@ REGISTER_GAMETYPE(_("Keepaway"),ka,g_keepaway,KEEPAWAY,"timelimit=20 pointlimit=
 REGISTER_GAMETYPE(_("VIP"),vip,g_vip,VIP,"timelimit=20 pointlimit=10 leadlimit=0",_("A VIP is chosen on each team, when a VIP dies, the round is over"));
 #define g_vip IS_GAMETYPE(VIP)
 
-REGISTER_GAMETYPE(_("Invasion"),inv,g_invasion,INVASION,"pointlimit=50",_("Survive against waves of monsters"));
+REGISTER_GAMETYPE(_("Invasion"),inv,g_invasion,INVASION,"pointlimit=50 teams=0",_("Survive against waves of monsters"));
 #define g_invasion IS_GAMETYPE(INVASION)
 
 REGISTER_GAMETYPE(_("Infection"),inf,g_infection,INFECTION,"timelimit=20 pointlimit=10 leadlimit=0",_("Kill enemies to 'infect' them with your team color"));

@@ -649,8 +649,6 @@ float v_yugo(float req)
 		}
 		case VR_PRECACHE:
 		{
-			precache_model ("models/vhshield.md3");
-			precache_model ("models/vehicles/yugo.dpm");
 			return TRUE;
 		}
 	}

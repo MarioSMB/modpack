@@ -81,6 +81,7 @@ ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float beam_prev;
 .float beam_initialized;
 .float beam_bursting;
+.float beam_teleporttime;
 #endif
 #ifdef CSQC
 void Ent_ReadArcBeam(float isnew);
@@ -166,6 +167,15 @@ float W_Arc_Beam_Send(entity to, float sf)
 	return TRUE;
 }
 
+void Reset_ArcBeam(entity player, vector forward)
+{
+	if (!player.arc_beam) {
+		return;
+	}
+	player.arc_beam.beam_dir = forward;
+	player.arc_beam.beam_teleporttime = time;
+}
+
 void W_Arc_Beam_Think(void)
 {
 	if(self != self.owner.arc_beam)
@@ -179,7 +189,7 @@ void W_Arc_Beam_Think(void)
 		||
 		self.owner.deadflag != DEAD_NO
 		||
-		(!self.owner.BUTTON_ATCK && !self.beam_bursting)
+		(!self.owner.BUTTON_ATCK /* FIXME(Samual): && !self.beam_bursting */)
 		||
 		self.owner.frozen
 	)
@@ -233,6 +243,11 @@ void W_Arc_Beam_Think(void)
 		WEP_CVAR(arc, beam_damage) * coefficient,
 		WEP_CVAR(arc, beam_range)
 	);
+
+	// After teleport, "lock" the beam until the teleport is confirmed.
+	if (time < self.beam_teleporttime + ANTILAG_LATENCY(self.owner)) {
+		w_shotdir = self.beam_dir;
+	}
 
 	// network information: shot origin and want/aim direction
 	if(self.beam_start != w_shotorg)
@@ -472,6 +487,8 @@ void W_Arc_Beam_Think(void)
 		}
 	}
 
+	// te_explosion(trace_endpos);
+
 	// if we're bursting, use burst visual effects
 	new_beam_type += burst;
 
@@ -488,6 +505,12 @@ void W_Arc_Beam_Think(void)
 
 void W_Arc_Beam(float burst)
 {
+	// FIXME(Samual): remove this when overheat and burst work.
+	if (burst)
+	{
+		centerprint(self, "^4NOTE:^7 Arc burst (secondary) is not implemented yet.");
+	}
+
 	// only play fire sound if 1 sec has passed since player let go the fire button
 	if(time - self.beam_prev > 1)
 	{
@@ -547,7 +570,7 @@ float W_Arc(float req)
 			}
 			#endif
 
-			if(self.BUTTON_ATCK || self.BUTTON_ATCK2 || self.arc_beam.beam_bursting)
+			if(self.BUTTON_ATCK || self.BUTTON_ATCK2 /* FIXME(Samual): || self.arc_beam.beam_bursting */)
 			{
 				if(self.BUTTON_ATCK_prev)
 				{
@@ -724,6 +747,17 @@ void Draw_ArcBeam_callback(vector start, vector hit, vector end)
 	Draw_ArcBeam_callback_last_bottom = WarpZone_UnTransformOrigin(WarpZone_trace_transform, bottom);
 }
 
+void Reset_ArcBeam(void)
+{
+	entity e;
+	for (e = world; (e = findfloat(e, beam_usevieworigin, 1)); ) {
+		e.beam_initialized = FALSE;
+	}
+	for (e = world; (e = findfloat(e, beam_usevieworigin, 2)); ) {
+		e.beam_initialized = FALSE;
+	}
+}
+
 void Draw_ArcBeam(void)
 {
 	if(!self.beam_usevieworigin)
@@ -749,43 +783,42 @@ void Draw_ArcBeam(void)
 		// into a weapon system for client code. 
 
 		// find where we are aiming
-		makevectors(view_angles);
+		makevectors(warpzone_save_view_angles);
+		vector forward = v_forward;
+		vector right = v_right;
+		vector up = v_up;
 
 		// decide upon start position
 		if(self.beam_usevieworigin == 2)
-			{ start_pos = view_origin; }
+			{ start_pos = warpzone_save_view_origin; }
 		else
 			{ start_pos = self.origin; }
 
 		// trace forward with an estimation
 		WarpZone_TraceLine(
 			start_pos,
-			start_pos + view_forward * self.beam_range,
+			start_pos + forward * self.beam_range,
 			MOVE_NOMONSTERS,
 			self
 		);
 
 		// untransform in case our trace went through a warpzone
-		vector vf, vr, vu;
-		vf = view_forward;
-		vr = view_right;
-		vu = view_up;
 		vector end_pos = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-		view_forward = vf;
-		view_right = vr;
-		view_up = vu;
 
 		// un-adjust trueaim if shotend is too close
-		if(vlen(end_pos - view_origin) < g_trueaim_minrange)
-			end_pos = view_origin + (view_forward * g_trueaim_minrange);
+		if(vlen(end_pos - start_pos) < g_trueaim_minrange)
+			end_pos = start_pos + (forward * g_trueaim_minrange);
 
 		// move shot origin to the actual gun muzzle origin
 		vector origin_offset =
-			view_forward * self.beam_shotorigin_x
-			+ view_right * -self.beam_shotorigin_y 
-			+ view_up * self.beam_shotorigin_z;
+			  right * -self.beam_shotorigin_y 
+			+ up * self.beam_shotorigin_z;
 
 		start_pos = start_pos + origin_offset;
+
+		// Move it also forward, but only as far as possible without hitting anything. Don't poke into walls!
+		traceline(start_pos, start_pos + forward * self.beam_shotorigin_x, MOVE_NORMAL, self);
+		start_pos = trace_endpos;
 
 		// calculate the aim direction now
 		wantdir = normalize(end_pos - start_pos);
@@ -861,7 +894,7 @@ void Draw_ArcBeam(void)
 		beamdir = self.beam_dir;
 
 		// finally, set self.angles to the proper direction so that muzzle attachment points in proper direction
-		self.angles = fixedvectoangles2(view_forward, view_up);
+		self.angles = fixedvectoangles2(forward, up); // TODO(Samual): is this == warpzone_save_view_angles?
 	}
 	else
 	{
@@ -962,6 +995,9 @@ void Draw_ArcBeam(void)
 	// visual effects for startpoint and endpoint
 	if(self.beam_hiteffect)
 	{
+		// FIXME we really should do this on the server so it actually
+		// matches gameplay. What this client side stuff is doing is no
+		// more than guesswork.
 		pointparticles(
 			self.beam_hiteffect,
 			last_origin,

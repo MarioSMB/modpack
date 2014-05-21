@@ -142,7 +142,7 @@ MUTATOR_HOOKFUNCTION(minstagib_MatchEnd)
 
 MUTATOR_HOOKFUNCTION(minstagib_MonsterLoot)
 {
-	other.monster_loot = ((random() > 0.5) ? spawnfunc_item_minst_rockets : spawnfunc_item_minst_cells);
+	other.monster_loot = ((random() > 0.5 && autocvar_g_minstagib_use_normal_ammo && cvar("g_minstagib_withmines")) ? spawnfunc_item_minst_rockets : spawnfunc_item_minst_cells);
 
 	return FALSE;
 }

@@ -12,20 +12,17 @@
 .string target2;
 .float iscaptured;
 .float islinked;
-.float isgenneighbor_red;
-.float isgenneighbor_blue;
-.float iscpneighbor_red;
-.float iscpneighbor_blue;
 .float isshielded;
 .float lasthealth;
 .float lastteam;
 .float lastshielded;
 .float lastcaptured;
 
-entity ons_generator[17];
 .float isgenneighbor[17];
 .float iscpneighbor[17];
 float ons_notification_time[17];
+
+.float ons_overtime_damagedelay;
 
 .vector ons_deathloc;
 

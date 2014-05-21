@@ -316,6 +316,18 @@ MUTATOR_HOOKFUNCTION(vip_PlayerSpawn)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(vip_PlayerRegen)
+{
+	// VIP regens to 200
+	if(self.isvip)
+	{
+		regen_mod_max *= 2;
+		regen_mod_regen = 0.7; // but with slower regen speed
+	}
+
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(vip_PlayerUseKey)
 {
 	if(MUTATOR_RETURNVALUE || gameover || round_handler_IsRoundStarted()) { return FALSE; }
@@ -674,8 +686,9 @@ MUTATOR_DEFINITION(gamemode_vip)
 	MUTATOR_HOOK(PlayerPreThink, vip_PlayerThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(reset_map_players, vip_ResetMap, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, vip_PlayerSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerRegen, vip_PlayerRegen, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerUseKey, vip_PlayerUseKey, CBC_ORDER_ANY);
-	MUTATOR_HOOK(OnEntityPreSpawn, vip_OnEntityPreSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(OnEntityPreSpawn, vip_OnEntityPreSpawn, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(GetTeamCount, vip_GetTeamCount, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD

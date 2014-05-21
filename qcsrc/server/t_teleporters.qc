@@ -80,6 +80,7 @@ void spawn_tdeath(vector v0, entity e, vector v)
 #define TELEPORT_NORMAL 1 // play sounds/effects etc
 #define TELEPORT_SIMPLE 2 // only do teleport, nothing special
 
+void Reset_ArcBeam(entity player, vector forward);
 void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angles, vector to_velocity, vector telefragmin, vector telefragmax, float tflags)
 {
 	entity telefragger;
@@ -117,6 +118,8 @@ void TeleportPlayer(entity teleporter, entity player, vector to, vector to_angle
 	player.velocity = to_velocity;
 	BITXOR_ASSIGN(player.effects, EF_TELEPORT_BIT);
 
+	makevectors(player.angles);
+	Reset_ArcBeam(player, v_forward);
 	UpdateCSQCProjectileAfterTeleport(player);
 
 	if(IS_PLAYER(player))
@@ -337,6 +340,8 @@ void spawnfunc_trigger_teleport (void)
 
 void WarpZone_PostTeleportPlayer_Callback(entity pl)
 {
+	makevectors(pl.angles);
+	Reset_ArcBeam(pl, v_forward);
 	UpdateCSQCProjectileAfterTeleport(pl);
 	// "disown" projectiles after teleport
 	if(pl.owner)

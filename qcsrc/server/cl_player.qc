@@ -149,7 +149,7 @@ void PlayerCorpseDamage (entity inflictor, entity attacker, float damage, float 
 	// damage resistance (ignore most of the damage from a bullet or similar)
 	damage = max(damage - 5, 1);
 
-	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
+	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage, FALSE);
 	take = v_x;
 	save = v_y;
 
@@ -344,7 +344,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 16, self, attacker);
 
 
-	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage);
+	v = healtharmor_applydamage(self.armorvalue, autocvar_g_balance_armor_blockpercent, deathtype, damage, autocvar_g_balance_armor_block_bycount);
 	take = v_x;
 	save = v_y;
 
@@ -911,7 +911,6 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 
 void IRCSay(string sourcename, string msgin)
 {
-	string msgstr, cmsgstr, fullmsgstr, fullcmsgstr;
 	entity head;
 
 	if(substring(msgin, 0, 1) == " ")
@@ -922,15 +921,19 @@ void IRCSay(string sourcename, string msgin)
 	if(msgin == "")
 		return;
 
-    msgstr = strcat("\{1}[IRC] ", sourcename, "^7", msgin);
-	cmsgstr = "";
+    string msgstr = strcat("\{1}[IRC] ", sourcename, "^7", msgin);
 
 	msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
-	fullmsgstr = msgstr;
-	fullcmsgstr = cmsgstr;
 
 	FOR_EACH_REALCLIENT(head)
+	{
+		if(!intermission_running)
+		if((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || gameover)))
+		if(IS_PLAYER(head))
+			continue;
+
 		sprint(head, msgstr);
+	}
 }
 
 float GetVoiceMessageVoiceType(string type)

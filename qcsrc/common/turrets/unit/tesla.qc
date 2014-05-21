@@ -206,8 +206,6 @@ float t_tesla(float req)
 		}
 		case TR_PRECACHE:
 		{
-			precache_model ("models/turrets/tesla_base.md3");
-			precache_model ("models/turrets/tesla_head.md3");
 			return TRUE;
 		}
 	}

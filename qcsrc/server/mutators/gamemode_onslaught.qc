@@ -4,8 +4,10 @@
 
 float ons_CaptureShield_Customize()
 {
-	if(!self.enemy.isshielded && (onslaught_controlpoint_attackable(self.enemy, other.team) > 0 || self.enemy.classname != "onslaught_controlpoint")) { return FALSE; }
-	if(SAME_TEAM(self, other)) { return FALSE; }
+	entity e = WaypointSprite_getviewentity(other);
+
+	if(!self.enemy.isshielded && (onslaught_controlpoint_attackable(self.enemy, e.team) > 0 || self.enemy.classname != "onslaught_controlpoint")) { return FALSE; }
+	if(SAME_TEAM(self, e)) { return FALSE; }
 
 	return TRUE;
 }
@@ -21,12 +23,15 @@ void ons_CaptureShield_Touch()
 
 	Damage(other, self, self, 0, DEATH_HURTTRIGGER, mymid, normalize(othermid - mymid) * ons_captureshield_force);
 
-	play2(other, "onslaught/damageblockedbyshield.wav");
-	
-	if(self.enemy.classname == "onslaught_generator")
-		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_GENERATOR_SHIELDED);
-	else
-		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_CONTROLPOINT_SHIELDED);
+	if(IS_REAL_CLIENT(other))
+	{
+		play2(other, "onslaught/damageblockedbyshield.wav");
+
+		if(self.enemy.classname == "onslaught_generator")
+			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_GENERATOR_SHIELDED);
+		else
+			Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_CONTROLPOINT_SHIELDED);
+	}
 }
 
 void ons_CaptureShield_Reset()
@@ -35,7 +40,7 @@ void ons_CaptureShield_Reset()
 	self.team = self.enemy.team;
 }
 
-void ons_CaptureShield_Spawn(entity generator, string themodel)
+void ons_CaptureShield_Spawn(entity generator, float is_generator)
 {
 	entity shield = spawn();
 
@@ -51,9 +56,11 @@ void ons_CaptureShield_Spawn(entity generator, string themodel)
 	shield.solid = SOLID_TRIGGER;
 	shield.avelocity = '7 0 11';
 	shield.scale = 1;
-
+	shield.model = ((is_generator) ? "models/onslaught/generator_shield.md3" : "models/onslaught/controlpoint_shield.md3");
+	
+	precache_model(shield.model);
 	setorigin(shield, generator.origin);
-	setmodel(shield, themodel);
+	setmodel(shield, shield.model);
 	setsize(shield, shield.scale * shield.mins, shield.scale * shield.maxs);
 }
 
@@ -127,6 +134,7 @@ void onslaught_updatelinks()
 			dprint(etos(l), " (generator) is destroyed\n");
 		l.islinked = l.iscaptured;
 		l.isshielded = l.iscaptured;
+		l.sprite.SendFlags |= 16;
 		l = l.chain;
 	}
 	// mark points as shielded and not networked
@@ -138,6 +146,7 @@ void onslaught_updatelinks()
 		float i;
 		for(i = 0; i < 17; ++i) { l.isgenneighbor[i] = FALSE; l.iscpneighbor[i] = FALSE; }
 		dprint(etos(l), " (point) belongs to team ", ftos(l.team), "\n");
+		l.sprite.SendFlags |= 16;
 		l = l.chain;
 	}
 	// flow power outward from the generators through the network
@@ -158,7 +167,7 @@ void onslaught_updatelinks()
 			// them is powered, mark the other one as powered as well
 			if (l.enemy.iscaptured && l.goalentity.iscaptured)
 				if (l.enemy.islinked != l.goalentity.islinked)
-					if (l.enemy.team == l.goalentity.team)
+					if(SAME_TEAM(l.enemy, l.goalentity))
 					{
 						if (!l.goalentity.islinked)
 						{
@@ -337,44 +346,13 @@ float onslaught_controlpoint_attackable(entity cp, float t)
 	return 0;
 }
 
-float overtime_msg_time;
+float overtime_msg_time[17];
 void onslaught_generator_think()
 {
-	float d;
 	entity e;
 	self.nextthink = ceil(time + 1);
 	if (!gameover)
 	{
-		if (autocvar_timelimit && time > game_starttime + autocvar_timelimit * 60)
-		{
-			if (!overtime_msg_time)
-			{
-				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_OVERTIME_CONTROLPOINT);
-				overtime_msg_time = time;
-			}
-			// self.max_health / 300 gives 5 minutes of overtime.
-			// control points reduce the overtime duration.
-			sound(self, CH_TRIGGER, "onslaught/generator_decay.wav", VOL_BASE, ATTEN_NORM);
-			d = 1;
-			e = findchain(classname, "onslaught_controlpoint");
-			while (e)
-			{
-				if (e.team != self.team)
-					if (e.islinked)
-						d = d + 1;
-				e = e.chain;
-			}
-
-			if(autocvar_g_campaign && autocvar__campaign_testrun)
-				d = d * self.max_health;
-			else
-				d = d * self.max_health / max(30, 60 * autocvar_timelimit_suddendeath);
-
-			Damage(self, self, self, d, DEATH_HURTTRIGGER, self.origin, '0 0 0');
-		}
-		else if (overtime_msg_time)
-			overtime_msg_time = 0;
-
         if(!self.isshielded && self.wait < time)
         {
             self.wait = time + 5;
@@ -546,6 +524,7 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 				if (IS_PLAYER(attacker))
 				{
 					play2(attacker, "onslaught/damageblockedbyshield.wav");
+					attacker.typehitsound += 1;
 					self.pain_finished = time + 1;
 				}
 			return;
@@ -587,6 +566,8 @@ void onslaught_generator_damage(entity inflictor, entity attacker, float damage,
 		self.think(); // do the first explosion now
 
 		WaypointSprite_UpdateMaxHealth(self.sprite, 0);
+		WaypointSprite_Ping(self.sprite);
+		//WaypointSprite_Kill(self.sprite); // can't do this yet, code too poor
 
 		onslaught_updatelinks();
 	}
@@ -633,28 +614,18 @@ void onslaught_generator_delayed()
 	self.SendFlags = GSF_SETUP;
 }
 
-string onslaught_generator_waypointsprite_for_team(entity e, float t)
+string onslaught_generator_waypointsprite(entity e)
 {
-	if(t != e.team)
 	if(e.isshielded)
 		return "ons-gen-shielded";
-	switch(e.team)
-	{
-		case NUM_TEAM_1: return "ons-gen-red";
-		case NUM_TEAM_2: return "ons-gen-blue";
-		case NUM_TEAM_3: return "ons-gen-yellow";
-		case NUM_TEAM_4: return "ons-gen-pink";
-	}
-	return "";
+	return "ons-gen";
 }
 
 void onslaught_generator_updatesprite(entity e)
 {
-	string s1, s2, s3;
-	s1 = onslaught_generator_waypointsprite_for_team(e, NUM_TEAM_1);
-	s2 = onslaught_generator_waypointsprite_for_team(e, NUM_TEAM_2);
-	s3 = onslaught_generator_waypointsprite_for_team(e, -1);
-	WaypointSprite_UpdateSprites(e.sprite, s1, s2, s3);
+	string s1;
+	s1 = onslaught_generator_waypointsprite(e);
+	WaypointSprite_UpdateSprites(e.sprite, s1, s1, s1);
 
 	if(e.lastteam != e.team + 2 || e.lastshielded != e.isshielded)
 	{
@@ -662,14 +633,14 @@ void onslaught_generator_updatesprite(entity e)
 		e.lastshielded = e.isshielded;
 		if(e.lastshielded)
 		{
-			if(e.team == NUM_TEAM_1 || e.team == NUM_TEAM_2 || e.team == NUM_TEAM_3 || e.team == NUM_TEAM_4)
+			if(e.team)
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, 0.5 * colormapPaletteColor(e.team - 1, FALSE));
 			else
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, '0.5 0.5 0.5');
 		}
 		else
 		{
-			if(e.team == NUM_TEAM_1 || e.team == NUM_TEAM_2 || e.team == NUM_TEAM_3 || e.team == NUM_TEAM_4)
+			if(e.team)
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, colormapPaletteColor(e.team - 1, FALSE));
 			else
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_GENERATOR, '0.75 0.75 0.75');
@@ -678,12 +649,12 @@ void onslaught_generator_updatesprite(entity e)
 	}
 }
 
-string onslaught_controlpoint_waypointsprite_for_team(entity e, float t)
+string onslaught_controlpoint_waypointsprite(entity e)
 {
 	float a;
-	if(t != -1)
+	if(e.team)
 	{
-		a = onslaught_controlpoint_attackable(e, t);
+		a = onslaught_controlpoint_attackable(e, e.team);
 		if(a == 3 || a == 4) // ATTACK/TOUCH THIS ONE NOW
 		{
 			switch(e.team)
@@ -705,7 +676,7 @@ string onslaught_controlpoint_waypointsprite_for_team(entity e, float t)
 				case NUM_TEAM_4: return "ons-cp-dfnd-pink";
 			}
 		}
-		else if(e.team == t || a == -1 || a == 1) // own point, or fire at it
+		else if(a == -1 || a == 1) // own point, or fire at it
 		{
 			switch(e.team)
 			{
@@ -734,14 +705,12 @@ string onslaught_controlpoint_waypointsprite_for_team(entity e, float t)
 
 void onslaught_controlpoint_updatesprite(entity e)
 {
-	string s1, s2, s3;
-	s1 = onslaught_controlpoint_waypointsprite_for_team(e, NUM_TEAM_1);
-	s2 = onslaught_controlpoint_waypointsprite_for_team(e, NUM_TEAM_2);
-	s3 = onslaught_controlpoint_waypointsprite_for_team(e, -1);
-	WaypointSprite_UpdateSprites(e.sprite, s1, s2, s3);
+	string s1;
+	s1 = onslaught_controlpoint_waypointsprite(e);
+	WaypointSprite_UpdateSprites(e.sprite, s1, s1, s1);
 
 	float sh;
-	sh = !(onslaught_controlpoint_can_be_linked(e, NUM_TEAM_1) || onslaught_controlpoint_can_be_linked(e, NUM_TEAM_2));
+	sh = !(onslaught_controlpoint_can_be_linked(e, NUM_TEAM_1) || onslaught_controlpoint_can_be_linked(e, NUM_TEAM_2) || onslaught_controlpoint_can_be_linked(e, NUM_TEAM_3) || onslaught_controlpoint_can_be_linked(e, NUM_TEAM_4));
 
 	if(e.lastteam != e.team + 2 || e.lastshielded != sh || e.iscaptured != e.lastcaptured)
 	{
@@ -759,14 +728,14 @@ void onslaught_controlpoint_updatesprite(entity e)
 		}
 		if(e.lastshielded)
 		{
-			if(e.team == NUM_TEAM_1 || e.team == NUM_TEAM_2 || e.team == NUM_TEAM_3 || e.team == NUM_TEAM_4)
+			if(e.team)
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_CONTROLPOINT, 0.5 * colormapPaletteColor(e.team - 1, FALSE));
 			else
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_CONTROLPOINT, '0.5 0.5 0.5');
 		}
 		else
 		{
-			if(e.team == NUM_TEAM_1 || e.team == NUM_TEAM_2 || e.team == NUM_TEAM_3 || e.team == NUM_TEAM_4)
+			if(e.team)
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_CONTROLPOINT, colormapPaletteColor(e.team - 1, FALSE));
 			else
 				WaypointSprite_UpdateTeamRadar(e.sprite, RADARICON_CONTROLPOINT, '0.75 0.75 0.75');
@@ -788,21 +757,25 @@ void onslaught_generator_reset()
 	self.iscaptured = TRUE;
 	self.islinked = TRUE;
 	self.isshielded = TRUE;
+	self.event_damage = onslaught_generator_damage;
 	self.think = onslaught_generator_delayed;
 	self.nextthink = time + 0.2;
-	setmodel(self, "models/onslaught/generator.md3");
-	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
 
 	self.SendFlags |= GSF_STATUS;
 
-	if(!self.noalign)
-	{
-		setorigin(self, self.origin + '0 0 20');
-		droptofloor();
-	}
-
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
+}
+
+float ons_Generator_Customize()
+{
+	entity e, wp_owner;
+	e = WaypointSprite_getviewentity(other);
+	wp_owner = self.owner;
+	//if(wp_owner.health >= wp_owner.max_health) { return FALSE; }
+	if(wp_owner.isshielded && wp_owner.health >= wp_owner.max_health) { return FALSE; }
+
+	return TRUE;
 }
 
 /*QUAKED spawnfunc_onslaught_generator (0 .5 .8) (-32 -32 -24) (32 32 64)
@@ -818,8 +791,6 @@ void spawnfunc_onslaught_generator()
 {
 	if(!g_onslaught) { remove(self); return; }
 
-	//entity e;
-	precache_model("models/onslaught/generator.md3");
 	precache_model("models/onslaught/generator_shield.md3");
 	precache_model("models/onslaught/shockwave.md3");
 	precache_model("models/onslaught/shockwavetransring.md3");
@@ -839,13 +810,11 @@ void spawnfunc_onslaught_generator()
 	if (!self.team)
 		objerror("team must be set");
 
-	ons_generator[self.team] = self;
 	self.team_saved = self.team;
 	self.colormap = 1024 + (self.team - 1) * 17;
 	self.solid = SOLID_BBOX;
 	self.movetype = MOVETYPE_NONE;
 	self.lasthealth = self.max_health = self.health = autocvar_g_onslaught_gen_health;
-	setmodel(self, "models/onslaught/generator.md3");
 	setsize(self, GENERATOR_MIN, GENERATOR_MAX);
 	setorigin(self, self.origin);
 	self.takedamage = DAMAGE_AIM;
@@ -857,7 +826,7 @@ void spawnfunc_onslaught_generator()
 	// helper entity that create fx when generator is damaged
 	onslaught_generator_damage_spawn(self);
 
-	ons_CaptureShield_Spawn(self, "models/onslaught/generator_shield.md3");
+	ons_CaptureShield_Spawn(self, TRUE);
 	
 	InitializeEntity(self, onslaught_generator_delayed, INITPRIO_LAST);
 
@@ -865,6 +834,7 @@ void spawnfunc_onslaught_generator()
 	WaypointSprite_UpdateRule(self.sprite, NUM_TEAM_2, SPRITERULE_TEAMPLAY);
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
+	//self.sprite.customizeentityforclient = ons_Generator_Customize;
 
 	waypoint_spawnforitem(self);
 
@@ -1072,7 +1042,7 @@ void onslaught_controlpoint_icon_buildthink()
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ONSLAUGHT_CAPTURE, self.owner.ons_toucher.netname, self.owner.message);
 		Send_Notification(NOTIF_ALL_EXCEPT, self.owner.ons_toucher, MSG_CENTER, APP_TEAM_ENT_4(self.owner.ons_toucher, CENTER_ONS_CAPTURE_), self.owner.message);
 		Send_Notification(NOTIF_ONE, self.owner.ons_toucher, MSG_CENTER, CENTER_ONS_CAPTURE, self.owner.message);
-		PlayerTeamScore_Add(self.owner.ons_toucher, SP_ONS_CAPS, ST_ONS_CAPS, 1);
+		PlayerScore_Add(self.owner.ons_toucher, SP_ONS_CAPS, 1);
 		PlayerTeamScore_AddScore(self.owner.ons_toucher, 10);
 		
 		self.owner.ons_toucher = world;
@@ -1172,6 +1142,17 @@ void onslaught_controlpoint_reset()
 	CSQCMODEL_AUTOUPDATE();
 }
 
+float ons_ControlPoint_Customize()
+{
+	entity e, wp_owner;
+	e = WaypointSprite_getviewentity(other);
+	wp_owner = self.owner;
+	if(SAME_TEAM(e, wp_owner) && wp_owner.goalentity.health >= wp_owner.goalentity.max_health) { return FALSE; }
+	if(!onslaught_controlpoint_attackable(wp_owner, e.team)) { return FALSE; }
+
+	return TRUE;
+}
+
 /*QUAKED spawnfunc_onslaught_controlpoint (0 .5 .8) (-32 -32 0) (32 32 128)
   Control point. Be sure to give this enough clearance so that the shootable part has room to exist
 
@@ -1232,10 +1213,11 @@ void spawnfunc_onslaught_controlpoint()
 
 	WaypointSprite_SpawnFixed(string_null, self.origin + '0 0 128', self, sprite, RADARICON_NONE, '0 0 0');
 	WaypointSprite_UpdateRule(self.sprite, NUM_TEAM_2, SPRITERULE_TEAMPLAY);
+	//self.sprite.customizeentityforclient = ons_ControlPoint_Customize;
 
 	onslaught_updatelinks();
 	
-	ons_CaptureShield_Spawn(self, "models/onslaught/controlpoint_shield.md3");
+	ons_CaptureShield_Spawn(self, FALSE);
 
 	CSQCMODEL_AUTOINIT();
 }
@@ -1266,15 +1248,17 @@ float onslaught_link_send(entity to, float sendflags)
 void onslaught_link_checkupdate()
 {
 	// TODO check if the two sides have moved (currently they won't move anyway)
-	float redpower, bluepower;
+	float redpower, bluepower, yellowpower, pinkpower;
 
-	redpower = bluepower = 0;
+	redpower = bluepower = yellowpower = pinkpower = 0;
 	if(self.goalentity.islinked)
 	{
 		switch(self.goalentity.team)
 		{
 			case NUM_TEAM_1: redpower = 1; break;
 			case NUM_TEAM_2: bluepower = 1; break;
+			case NUM_TEAM_3: yellowpower = 1; break;
+			case NUM_TEAM_4: pinkpower = 1; break;
 		}
 	}
 	if(self.enemy.islinked)
@@ -1283,11 +1267,14 @@ void onslaught_link_checkupdate()
 		{
 			case NUM_TEAM_1: redpower = 2; break;
 			case NUM_TEAM_2: bluepower = 2; break;
+			case NUM_TEAM_3: yellowpower = 2; break;
+			case NUM_TEAM_4: pinkpower = 2; break;
 		}
 	}
 
-	float cc;
-	if(redpower == 1 && bluepower == 2)
+	float cc = 0;
+	
+	/*if(redpower == 1 && bluepower == 2)
 		cc = (NUM_TEAM_1 - 1) * 0x01 + (NUM_TEAM_2 - 1) * 0x10;
 	else if(redpower == 2 && bluepower == 1)
 		cc = (NUM_TEAM_1 - 1) * 0x10 + (NUM_TEAM_2 - 1) * 0x01;
@@ -1296,7 +1283,24 @@ void onslaught_link_checkupdate()
 	else if(bluepower)
 		cc = (NUM_TEAM_2 - 1) * 0x11;
 	else
-		cc = 0;
+		cc = 0;*/
+
+	if(redpower == 1) { cc = (NUM_TEAM_1 - 1) * 0x01; }
+	else if(bluepower == 1) { cc = (NUM_TEAM_2 - 1) * 0x01; }
+	else if(yellowpower == 1) { cc = (NUM_TEAM_3 - 1) * 0x01; }
+	else if(pinkpower == 1) { cc = (NUM_TEAM_4 - 1) * 0x01; }
+	else if(redpower) { cc = (NUM_TEAM_1 - 1) * 0x11; goto skip; }
+	else if(bluepower) { cc = (NUM_TEAM_2 - 1) * 0x11; goto skip; }
+	else if(yellowpower) { cc = (NUM_TEAM_3 - 1) * 0x11; goto skip; }
+	else if(pinkpower) { cc = (NUM_TEAM_4 - 1) * 0x11; goto skip; }
+	else { cc = 0; }
+	
+	if(redpower == 2) { cc += (NUM_TEAM_1 - 1) * 0x10; }
+	else if(bluepower == 2) { cc += (NUM_TEAM_2 - 1) * 0x10; }
+	else if(yellowpower == 2) { cc += (NUM_TEAM_3 - 1) * 0x10; }
+	else if(pinkpower == 2) { cc += (NUM_TEAM_4 - 1) * 0x10; }
+	
+	:skip
 
 	//print(etos(self), " rp=", ftos(redpower), " bp=", ftos(bluepower), " ");
 	//print("cc=", ftos(cc), "\n");
@@ -1335,11 +1339,8 @@ keys:
  */
 void spawnfunc_onslaught_link()
 {
-	if (!g_onslaught)
-	{
-		remove(self);
-		return;
-	}
+	if(!g_onslaught) { remove(self); return; }
+
 	if (self.target == "" || self.target2 == "")
 		objerror("target and target2 must be set\n");
 	InitializeEntity(self, onslaught_link_delayed, INITPRIO_FINDTARGET);
@@ -1446,7 +1447,7 @@ float havocbot_ons_teamcount(entity bot, float role)
 	entity head;
 
 	FOR_EACH_PLAYER(head)
-	if(head.team==self.team)
+	if(SAME_TEAM(head, self))
 	if(head.havocbot_role_flags & role)
 		++c;
 
@@ -1470,21 +1471,13 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 			continue;
 
 		// Ignore owned controlpoints
-		if(self.team == NUM_TEAM_1)
-		{
-			if( (cp2.isgenneighbor[NUM_TEAM_2] || cp2.iscpneighbor[NUM_TEAM_2]) && !(cp2.isgenneighbor[NUM_TEAM_1] || cp2.iscpneighbor[NUM_TEAM_1]) )
-				continue;
-		}
-		else if(self.team == NUM_TEAM_2)
-		{
-			if( (cp2.isgenneighbor[NUM_TEAM_1] || cp2.iscpneighbor[NUM_TEAM_1]) && !(cp2.isgenneighbor[NUM_TEAM_2] || cp2.iscpneighbor[NUM_TEAM_2]) )
-				continue;
-		}
+		if(!(cp2.isgenneighbor[self.team] || cp2.iscpneighbor[self.team]))
+			continue;
 
 		// Count team mates interested in this control point
 		// (easier and cleaner than keeping counters per cp and teams)
 		FOR_EACH_PLAYER(pl)
-		if(pl.team==self.team)
+		if(SAME_TEAM(pl, self))
 		if(pl.havocbot_role_flags & HAVOCBOT_ONS_ROLE_OFFENSE)
 		if(pl.havocbot_ons_target==cp2)
 			++c;
@@ -1586,7 +1579,7 @@ float havocbot_goalrating_ons_generator_attack(float ratingscale)
 
 	for (g = findchain(classname, "onslaught_generator"); g; g = g.chain)
 	{
-		if(g.team == self.team || g.isshielded)
+		if(SAME_TEAM(g, self) || g.isshielded)
 			continue;
 
 		// Should be attacked
@@ -1694,7 +1687,7 @@ void havocbot_ons_reset_role(entity bot)
 	// if there is only me on the team switch to offense
 	c = 0;
 	FOR_EACH_PLAYER(head)
-	if(head.team==self.team)
+	if(SAME_TEAM(head, self))
 		++c;
 
 	if(c==1)
@@ -1706,6 +1699,140 @@ void havocbot_ons_reset_role(entity bot)
 	havocbot_role_ons_setrole(bot, HAVOCBOT_ONS_ROLE_OFFENSE);
 }
 
+// ===============
+//  Round Handler
+// ===============
+float total_generators, redowned, blueowned, yellowowned, pinkowned;
+void Onslaught_count_generators()
+{
+	entity e;
+	total_generators = redowned = blueowned = yellowowned = pinkowned = 0;
+	for(e = world; (e = find(e, classname, "onslaught_generator")) != world; )
+	{
+		++total_generators;
+		redowned += (e.team == NUM_TEAM_1 && e.health > 0);
+		blueowned += (e.team == NUM_TEAM_2 && e.health > 0);
+		yellowowned += (e.team == NUM_TEAM_3 && e.health > 0);
+		pinkowned += (e.team == NUM_TEAM_4 && e.health > 0);
+	}
+}
+
+float Onslaught_GetWinnerTeam()
+{
+	float winner_team = 0;
+	if(redowned > 0)
+		winner_team = NUM_TEAM_1;
+	if(blueowned > 0)
+	{
+		if(winner_team) return 0;
+		winner_team = NUM_TEAM_2;
+	}
+	if(yellowowned > 0)
+	{
+		if(winner_team) return 0;
+		winner_team = NUM_TEAM_3;
+	}
+	if(pinkowned > 0)
+	{
+		if(winner_team) return 0;
+		winner_team = NUM_TEAM_4;
+	}
+	if(winner_team)
+		return winner_team;
+	return -1; // no generators left?
+}
+
+#define ONS_OWNED_GENERATORS() ((redowned > 0) + (blueowned > 0) + (yellowowned > 0) + (pinkowned > 0))
+#define ONS_OWNED_GENERATORS_OK() (ONS_OWNED_GENERATORS() > 1)
+float Onslaught_CheckWinner()
+{
+	entity e;
+	
+	if ((autocvar_timelimit && time > game_starttime + autocvar_timelimit * 60) || (round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0))
+	{
+		entity oldself = self;
+		float d;
+		for(self = findchain(classname, "onslaught_generator"); self; self = self.chain) if(time >= self.ons_overtime_damagedelay)
+		{
+			if(time >= overtime_msg_time[self.team])
+			{
+				Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_OVERTIME_CONTROLPOINT);
+				//sound(self, CH_TRIGGER, "onslaught/generator_decay.wav", VOL_BASE, ATTEN_NORM);
+				play2team(self.team, "onslaught/generator_decay.wav");
+				overtime_msg_time[self.team] = time + 10;
+			}
+			// self.max_health / 300 gives 5 minutes of overtime.
+			// control points reduce the overtime duration.
+			d = 1;
+			e = findchain(classname, "onslaught_controlpoint");
+			while (e)
+			{
+				if(DIFF_TEAM(e, self))
+				if(e.islinked)
+					d = d + 1;
+				e = e.chain;
+			}
+
+			if(autocvar_g_campaign && autocvar__campaign_testrun)
+				d = d * self.max_health;
+			else
+				d = d * self.max_health / max(30, 60 * autocvar_timelimit_suddendeath);
+
+			Damage(self, self, self, d, DEATH_HURTTRIGGER, self.origin, '0 0 0');
+			
+			self.sprite.SendFlags |= 16;
+
+			self.ons_overtime_damagedelay = ceil(time + 1);
+		}
+
+		self = oldself;
+	}
+
+	Onslaught_count_generators();
+	
+	if(ONS_OWNED_GENERATORS_OK())
+		return 0;
+
+	float winner_team = Onslaught_GetWinnerTeam();
+
+	if(winner_team > 0)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner_team, CENTER_ROUND_TEAM_WIN_));
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(winner_team, INFO_ROUND_TEAM_WIN_));
+		TeamScore_AddToTeam(winner_team, ST_ONS_CAPS, +1);
+	}
+	else if(winner_team == -1)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
+	}
+	
+	round_handler_Init(7, autocvar_g_onslaught_warmup, autocvar_g_onslaught_round_timelimit);
+	
+	FOR_EACH_PLAYER(e)
+	{
+		e.player_blocked = TRUE;
+		nades_Clear(e);
+	}
+	
+	return 1;
+}
+
+float Onslaught_CheckPlayers()
+{
+	return 1;
+}
+
+void Onslaught_RoundStart()
+{
+	entity e;
+	FOR_EACH_PLAYER(e) { e.player_blocked = FALSE; }
+	e = findchain(classname, "onslaught_controlpoint");
+	while(e) { e.sprite.SendFlags |= 16; e = e.chain; }
+	e = findchain(classname, "onslaught_generator");
+	while(e) { e.sprite.SendFlags |= 16; e = e.chain; }
+}
+
 
 // ==============
 // Hook Functions
@@ -1713,7 +1840,7 @@ void havocbot_ons_reset_role(entity bot)
 
 MUTATOR_HOOKFUNCTION(ons_ResetMap)
 {
-	FOR_EACH_PLAYER(self) { self.ons_deathloc = '0 0 0'; }
+	FOR_EACH_PLAYER(self) { self.ons_deathloc = '0 0 0'; PutClientInServer(); }
 	return FALSE;
 }
 
@@ -1725,6 +1852,12 @@ MUTATOR_HOOKFUNCTION(ons_RemovePlayer)
 
 MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
 {
+	if(!round_handler_IsRoundStarted())
+	{
+		self.player_blocked = TRUE;
+		return FALSE;
+	}
+
 	if(autocvar_g_onslaught_spawn_at_controlpoints)
 	if(random() <= autocvar_g_onslaught_spawn_at_controlpoints_chance)
 	{
@@ -1846,47 +1979,56 @@ MUTATOR_HOOKFUNCTION(ons_MonsterThink)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(ons_MonsterSpawn)
+void ons_MonsterSpawn_Delayed()
 {
-	entity e, ee = world;
+	entity e, own = self.owner;
 	
-	if(self.targetname)
+	if(own.targetname)
 	{
-		e = find(world,target,self.targetname);
+		e = find(world, target, own.targetname);
 		if(e != world)
 		{
-			self.team = e.team;
-			ee = e;
+			own.team = e.team;
+			
+			activator = e;
+			own.use();
 		}
 	}
-	
-	if(ee)
-	{
-        activator = ee;
-        self.use();
-    }
+}
+
+MUTATOR_HOOKFUNCTION(ons_MonsterSpawn)
+{
+	entity e = spawn();
+	e.owner = self;
+	InitializeEntity(e, ons_MonsterSpawn_Delayed, INITPRIO_FINDTARGET);
 
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(ons_TurretSpawn)
+void ons_TurretSpawn_Delayed()
 {
-	entity e, ee = world;
-	if(self.targetname)
+	entity e, own = self.owner;
+	if(own.targetname)
 	{
-		e = find(world, target, self.targetname);
+		e = find(world, target, own.targetname);
 		if(e != world)
 		{
-			self.team = e.team;
-			ee = e;
+			own.team = e.team;
+			own.active = ACTIVE_NOT;
+			
+			activator = e;
+			own.use();
 		}
 	}
 
-	if(ee)
-	{
-		activator = ee;
-		self.use();
-	}
+	remove(self);
+}
+
+MUTATOR_HOOKFUNCTION(ons_TurretSpawn)
+{
+	entity e = spawn();
+	e.owner = self;
+	InitializeEntity(e, ons_TurretSpawn_Delayed, INITPRIO_FINDTARGET);
 
 	return FALSE;
 }
@@ -1921,7 +2063,7 @@ void ons_ScoreRules()
 {
 	CheckAllowedTeams(world);
 	ScoreRules_basics(((c4>=0) ? 4 : (c3>=0) ? 3 : 2), SFL_SORT_PRIO_PRIMARY, 0, TRUE);
-	ScoreInfo_SetLabel_TeamScore  (ST_ONS_CAPS,     "caps",      SFL_SORT_PRIO_PRIMARY);
+	ScoreInfo_SetLabel_TeamScore  (ST_ONS_CAPS,     "destroyed", SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_ONS_CAPS,     "caps",      SFL_SORT_PRIO_SECONDARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_ONS_TAKES,	"takes",     0);
 	ScoreRules_basics_end();
@@ -1930,6 +2072,9 @@ void ons_ScoreRules()
 void ons_DelayedInit() // Do this check with a delay so we can wait for teams to be set up
 {
 	ons_ScoreRules();
+	
+	round_handler_Spawn(Onslaught_CheckPlayers, Onslaught_CheckWinner, Onslaught_RoundStart);
+	round_handler_Init(5, autocvar_g_onslaught_warmup, autocvar_g_onslaught_round_timelimit);
 }
 
 void ons_Initialize()

@@ -104,7 +104,7 @@ void vehicles_locktarget(float incr, float decr, float _lock_time)
 		if(!(IS_VEHICLE(trace_ent) || IS_TURRET(trace_ent)))
 			trace_ent = world;
 			
-		if(trace_ent.alpha <= 0.5)
+		if(trace_ent.alpha <= 0.5 && trace_ent.alpha != 0)
 			trace_ent = world; // invisible
 	}
 
@@ -1145,6 +1145,8 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 	
 	if(!veh.vehicleid)
 		return FALSE;
+	
+	if(!veh.tur_head) { VEH_ACTION(vehicle_id, VR_PRECACHE); }
 
 	if(self.targetname)
 	{

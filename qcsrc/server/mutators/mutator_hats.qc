@@ -38,6 +38,15 @@ vector hats_getheight(entity e)
 	
 	return s;
 }
+vector hats_getangles(entity e)
+{
+	vector s;
+	get_model_parameters(e.model, e.skin);
+	s = get_model_parameters_hat_angles;
+	get_model_parameters(string_null, 0);
+	
+	return s;
+}
 
 void hat_Think()
 {
@@ -69,12 +78,14 @@ void hat_Think()
 			self.tag_entity = self.owner;
 			setorigin(self, hats_getheight(self.owner));
 			self.scale = hats_getscale(self.owner);
+			self.angles = hats_getangles(self.owner);
 		}
 		else
 		{
 			setattachment(self, self.owner, "head");
 			setorigin(self, hats_getheight(self.owner));
 			self.scale = hats_getscale(self.owner);
+			self.angles = hats_getangles(self.owner);
 		}
 	}
 	self.effects = self.owner.effects;

@@ -1243,13 +1243,6 @@ float v_bumblebee(float req)
 		}
 		case VR_PRECACHE:
 		{
-			precache_model("models/vehicles/bumblebee_body.dpm");
-			precache_model("models/vehicles/bumblebee_plasma_left.dpm");
-			precache_model("models/vehicles/bumblebee_plasma_right.dpm");
-			precache_model("models/vehicles/bumblebee_ray.dpm");
-			precache_model("models/vehicles/wakizashi_cockpit.dpm");
-			precache_model("models/vehicles/spiderbot_cockpit.dpm");
-			precache_model("models/vehicles/raptor_cockpit.dpm");
 			return TRUE;
 		}
 	}

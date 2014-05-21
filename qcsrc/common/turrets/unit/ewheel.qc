@@ -300,8 +300,6 @@ float t_ewheel(float req)
 		}
 		case TR_PRECACHE:
 		{
-			precache_model ("models/turrets/ewheel-base2.md3");
-			precache_model ("models/turrets/ewheel-gun1.md3");
 			return TRUE;
 		}
 	}

@@ -3,7 +3,7 @@
 // make sure you call makevectors first (FIXME?)
 void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float chan, float maxdamage, float range)
 {
-	float nudge = 1; // added to traceline target and subtracted from result
+	float nudge = 1; // added to traceline target and subtracted from result  TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
 	float oldsolid;
 	vector vecs, dv;
 	oldsolid = ent.dphitcontentsmask;
@@ -170,6 +170,27 @@ void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float p
 	proj.velocity = W_CalculateProjectileVelocity(proj.owner.velocity, pSpeed * dir, forceAbsolute);
 }
 
+float Headshot(entity targ, entity ent, vector hitloc, vector start, vector end)
+{
+	if(!autocvar_sv_headshot)
+		return FALSE;
+	if(ent.weapon != WEP_RIFLE && ent.weapon != WEP_VAPORIZER && ent.weapon != WEP_VORTEX)
+		return FALSE;
+	if(!IS_PLAYER(targ))
+		return FALSE;
+	if(targ.frozen || !targ.takedamage || targ.jb_isprisoned || targ.deadflag != DEAD_NO)
+		return FALSE;
+	vector headmins, headmaxs, org;
+	org = antilag_takebackorigin(targ, time - ANTILAG_LATENCY(ent));
+	headmins = org + '0.6 0 0' * targ.mins_x + '0 0.6 0' * targ.mins_y + '0 0 1' * (1.3 * targ.view_ofs_z - 0.3 * targ.maxs_z);
+	headmaxs = org + '0.6 0 0' * targ.maxs_x + '0 0.6 0' * targ.maxs_y + '0 0 1' * targ.maxs_z;
+	if(trace_hits_box(start, end, headmins, headmaxs))
+	{
+		return TRUE;
+	}
+	return FALSE;
+}
+
 
 // ====================
 //  Ballistics Tracing
@@ -290,6 +311,14 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		f = ExponentialFalloff(mindist, maxdist, halflifedist, ent.railgundistance);
 		ffs = ExponentialFalloff(mindist, maxdist, forcehalflifedist, ent.railgundistance);
 
+		if(Headshot(ent, self, hitloc, start, end))
+		{
+			if(deathtype == WEP_RIFLE)
+				bdamage *= 1.5; // 50% more damage if a headshot
+				
+			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_HEADSHOT);
+		}
+
 		if(accuracy_isgooddamage(self.realowner, ent))
 			totaldmg += bdamage * f;
 
@@ -353,9 +382,13 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 	if(autocvar_g_antilag == 0 || self.cvar_cl_noantilag)
 		lag = 0; // only do hitscan, but no antilag
 	if(lag)
+	{
 		FOR_EACH_PLAYER(pl)
 			if(pl != self)
 				antilag_takeback(pl, time - lag);
+		FOR_EACH_MONSTER(pl)
+			antilag_takeback(pl, time - lag);
+	}
 
 	WarpZone_trace_forent = self;
 
@@ -400,8 +433,14 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 		{
 			fireBullet_last_hit = hit;
 			yoda = 0;
+			if(Headshot(hit, self, end, start, end))
+			{
+				damage *= 1.5; // 50% more damage
+				Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_HEADSHOT);
+			}
 			float g = accuracy_isgooddamage(self, hit);
 			Damage(hit, self, self, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);
+
 			// calculate hits for ballistic weapons
 			if(g)
 			{
@@ -456,7 +495,11 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 	}
 
 	if(lag)
+	{
 		FOR_EACH_PLAYER(pl)
 			if(pl != self)
 				antilag_restore(pl);
+		FOR_EACH_MONSTER(pl)
+			antilag_restore(pl);
+	}
 }

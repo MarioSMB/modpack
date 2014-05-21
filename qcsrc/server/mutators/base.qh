@@ -235,6 +235,11 @@ MUTATOR_HOOKABLE(PlayerPowerups);
 MUTATOR_HOOKABLE(PlayerRegen);
 	// called every player think frame
 	// return 1 to disable regen
+	// INPUT, OUTPUT:
+		float regen_mod_max;
+		float regen_mod_regen;
+		float regen_mod_rot;
+		float regen_mod_limit;
 
 MUTATOR_HOOKABLE(PlayerUseKey);
 	// called when the use key is pressed

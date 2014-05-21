@@ -34,6 +34,21 @@ float pps_pink;
 
 .float pointupdatetime;
 
+// control point properties
+#define CP_MIN '-32 -32 -32'
+#define CP_MAX '32 32 32'
+#define CP_SCALE 0.6
+#define CP_TICRATE 0.02
+#define CP_MAXFRAMES 239
+
+string dom_model[17];
+float dom_modelindex[17];
+string dom_noise[17];
+string dom_noise1[17];
+string dom_message[17];
+string dom_teamname[17];
+float dom_skin[17];
+
 // misc globals
 float domination_roundbased;
 float domination_teams;

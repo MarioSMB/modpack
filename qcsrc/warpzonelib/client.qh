@@ -7,3 +7,6 @@ void WarpZone_FixView();
 
 void WarpZone_Init();
 void WarpZone_Shutdown();
+
+vector warpzone_save_view_origin;
+vector warpzone_save_view_angles;

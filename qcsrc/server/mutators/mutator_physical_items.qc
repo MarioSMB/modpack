@@ -16,15 +16,17 @@ void physical_item_think()
 		// if the item is not spawned, make sure the invisible / ghost item returns to its origin and stays there
 		if(autocvar_g_physical_items_reset)
 		{
-			if(self.owner.nextthink > time) // awaiting respawn
+			if(self.owner.wait > time) // awaiting respawn
 			{
 				setorigin(self, self.spawn_origin);
 				self.angles = self.spawn_angles;
 				self.solid = SOLID_NOT;
+				self.alpha = -1;
 				self.movetype = MOVETYPE_NONE;
 			}
 			else
 			{
+				self.alpha = 1;
 				self.solid = SOLID_CORPSE;
 				self.movetype = MOVETYPE_PHYSICS;
 			}
@@ -87,13 +89,25 @@ MUTATOR_HOOKFUNCTION(item_spawning)
 	wep.nextthink = time;
 	wep.touch = physical_item_touch;
 	wep.event_damage = physical_item_damage;
+	
+	if(!wep.cnt)
+	{
+		// fix the spawn origin
+		setorigin(wep, wep.origin + '0 0 1');
+		entity oldself;
+		oldself = self;
+		self = wep;
+		builtin_droptofloor();
+		self = oldself;
+	}
 
-	wep.spawn_origin = self.origin;
+	wep.spawn_origin = wep.origin;
 	wep.spawn_angles = self.angles;
 
 	self.effects |= EF_NODRAW; // hide the original weapon
 	self.movetype = MOVETYPE_FOLLOW;
 	self.aiment = wep; // attach the original weapon
+	self.SendEntity = func_null;
 
 	return FALSE;
 }

@@ -90,6 +90,13 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(ok_PlayerDamage_SplitHealthArmor)
+{
+	if(damage_take)
+		self.ok_pauseregen_finished = max(self.ok_pauseregen_finished, time + 2);
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 {
 	entity oldself = self;
@@ -117,6 +124,25 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 	self = oldself;
 
 	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(ok_PlayerRegen)
+{
+	// overkill's values are different, so use custom regen
+	if(!self.frozen)
+	{
+		self.armorvalue = CalcRotRegen(self.armorvalue, autocvar_g_balance_armor_regenstable, autocvar_g_balance_armor_regen, autocvar_g_balance_armor_regenlinear, 1 * frametime * (time > self.ok_pauseregen_finished), 0, 0, 1, 1 * frametime * (time > self.pauserotarmor_finished), autocvar_g_balance_armor_limit);
+		self.health = CalcRotRegen(self.health, autocvar_g_balance_health_regenstable, 0, 100, 1 * frametime * (time > self.ok_pauseregen_finished), 200, 0, autocvar_g_balance_health_rotlinear, 1 * frametime * (time > self.pauserothealth_finished), autocvar_g_balance_health_limit);
+		
+		float minf, maxf, limitf;
+
+		maxf = autocvar_g_balance_fuel_rotstable;
+		minf = autocvar_g_balance_fuel_regenstable;
+		limitf = autocvar_g_balance_fuel_limit;
+
+		self.ammo_fuel = CalcRotRegen(self.ammo_fuel, minf, autocvar_g_balance_fuel_regen, autocvar_g_balance_fuel_regenlinear, frametime * (time > self.pauseregen_finished) * ((self.items & IT_FUEL_REGEN) != 0), maxf, autocvar_g_balance_fuel_rot, autocvar_g_balance_fuel_rotlinear, frametime * (time > self.pauserotfuel_finished), limitf);
+	}
+	return TRUE; // return TRUE anyway, as frozen uses no regen
 }
 
 MUTATOR_HOOKFUNCTION(ok_ForbidThrowCurrentWeapon)
@@ -164,7 +190,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 	if(self.ok_use_ammocharge)
 	if(!ok_CheckWeaponCharge(self, self.weapon))
 	{
-		if(autocvar_g_overkill_ammo_charge_notice && time > self.ok_notice_time && self.BUTTON_ATCK && IS_REAL_CLIENT(self))
+		if(autocvar_g_overkill_ammo_charge_notice && time > self.ok_notice_time && self.BUTTON_ATCK && IS_REAL_CLIENT(self) && self.weapon == self.switchweapon)
 		{
 			//Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_OVERKILL_CHARGE);
 			self.ok_notice_time = time + 2;
@@ -195,6 +221,8 @@ MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
 	}
 	else
 		self.ok_use_ammocharge = 0;
+		
+	self.ok_pauseregen_finished = time + 2;
 
 	return FALSE;
 }
@@ -290,16 +318,6 @@ void ok_SetCvars()
 	cvar_settemp("sv_defaultplayermodel", "models/ok_player/okrobot1.dpm models/ok_player/okrobot2.dpm models/ok_player/okrobot3.dpm models/ok_player/okrobot4.dpm models/ok_player/okmale1.dpm models/ok_player/okmale2.dpm models/ok_player/okmale3.dpm models/ok_player/okmale4.dpm");
 	cvar_settemp("sv_defaultplayermodel_red", "models/ok_player/okrobot1.dpm models/ok_player/okrobot2.dpm models/ok_player/okrobot3.dpm models/ok_player/okrobot4.dpm");
 	cvar_settemp("sv_defaultplayermodel_blue", "models/ok_player/okmale1.dpm models/ok_player/okmale2.dpm models/ok_player/okmale3.dpm models/ok_player/okmale4.dpm");
-
-	// health/armor
-	cvar_settemp("g_balance_health_regen", "0");
-	cvar_settemp("g_balance_health_regenlinear", "100");
-	cvar_settemp("g_balance_health_rot", "0");
-	cvar_settemp("g_balance_health_rotstable", "200");
-	cvar_settemp("g_balance_armor_rotstable", "0");
-	cvar_settemp("g_balance_armor_rotlinear", "1");
-	cvar_settemp("g_balance_armor_rot", "0");
-	cvar_settemp("g_balance_pause_health_regen", "2");
 
 	// shotgun
 	cvar_settemp("g_balance_shotgun_primary_damage", "17");
@@ -397,7 +415,9 @@ MUTATOR_DEFINITION(mutator_overkill)
 	MUTATOR_HOOK(PlayerPreThink, ok_PlayerPreThink, CBC_ORDER_LAST);
 	MUTATOR_HOOK(PlayerSpawn, ok_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, ok_PlayerDamage_Calculate, CBC_ORDER_LAST);
+	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, ok_PlayerDamage_SplitHealthArmor, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, ok_PlayerDies, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerRegen, ok_PlayerRegen, CBC_ORDER_ANY);
 	MUTATOR_HOOK(OnEntityPreSpawn, ok_OnEntityPreSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, ok_ItemRemove, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterDropItem, ok_PlayerDies, CBC_ORDER_ANY);

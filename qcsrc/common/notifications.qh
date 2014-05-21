@@ -346,18 +346,29 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(2, INFO_SUPERSPEC_MISSING_UID,          0, 0, "", "",                            "",                     _("^F2You lack a UID, superspec options will not be saved/restored"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_CAPTURE_, 4,                1, 0, "s1", "s1",                        "notify_%s_captured",   _("^BG%s^BG captured the ^TC^TT^BG flag"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_CAPTURE_BROKEN_, 4,         2, 2, "s1 f1p2dec s2 f2p2dec", "s1",     "notify_%s_captured",   _("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds, breaking ^BG%s^BG's previous record of ^F2%s^BG seconds"), "") \
+	MSG_INFO_NOTIF(1, INFO_CTF_CAPTURE_NEUTRAL,            1, 0, "s1", "s1",                        "notify_%s_captured",   _("^BG%s^BG captured the flag"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_CAPTURE_TIME_, 4,           1, 1, "s1 f1p2dec", "s1",                "notify_%s_captured",   _("^BG%s^BG captured the ^TC^TT^BG flag in ^F1%s^BG seconds"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_CAPTURE_UNBROKEN_, 4,       2, 2, "s1 f1p2dec s2 f2p2dec", "s1",     "notify_%s_captured",   _("^BG%s^BG captured the ^TC^TT^BG flag in ^F2%s^BG seconds, failing to break ^BG%s^BG's previous record of ^F1%s^BG seconds"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_FLAGRETURN_ABORTRUN_, 4,    0, 0, "", "",                            "",                     _("^BGThe ^TC^TT^BG flag was returned to base by its owner"), "") \
+	MSG_INFO_NOTIF(1, INFO_CTF_FLAGRETURN_ABORTRUN_NEUTRAL,0, 0, "", "",                            "",                     _("^BGThe flag was returned by its owner"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_FLAGRETURN_DAMAGED_, 4,     0, 0, "", "",                            "",                     _("^BGThe ^TC^TT^BG flag was destroyed and returned to base"), "") \
+	MSG_INFO_NOTIF(1, INFO_CTF_FLAGRETURN_DAMAGED_NEUTRAL, 0, 0, "", "",                            "",                     _("^BGThe flag was destroyed and returned to base"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_FLAGRETURN_DROPPED_, 4,     0, 0, "", "",                            "",                     _("^BGThe ^TC^TT^BG flag was dropped in the base and returned itself"), "") \
+	MSG_INFO_NOTIF(1, INFO_CTF_FLAGRETURN_DROPPED_NEUTRAL, 0, 0, "", "",                            "",                     _("^BGThe flag was dropped in the base and returned itself"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_FLAGRETURN_NEEDKILL_, 4,    0, 0, "", "",                            "",                     _("^BGThe ^TC^TT^BG flag fell somewhere it couldn't be reached and returned to base"), "") \
+	MSG_INFO_NOTIF(1, INFO_CTF_FLAGRETURN_NEEDKILL_NEUTRAL,0, 0, "", "",                            "",                     _("^BGThe flag fell somewhere it couldn't be reached and returned to base"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_FLAGRETURN_SPEEDRUN_, 4,    0, 1, "f1p2dec", "",                     "",                     _("^BGThe ^TC^TT^BG flag became impatient after ^F1%.2f^BG seconds and returned itself"), "") \
+	MSG_INFO_NOTIF(1, INFO_CTF_FLAGRETURN_SPEEDRUN_NEUTRAL,0, 1, "f1p2dec", "",                     "",                     _("^BGThe flag became impatient after ^F1%.2f^BG seconds and returned itself"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_FLAGRETURN_TIMEOUT_, 4,     0, 0, "", "",                            "",                     _("^BGThe ^TC^TT^BG flag has returned to the base"), "") \
+	MSG_INFO_NOTIF(1, INFO_CTF_FLAGRETURN_TIMEOUT_NEUTRAL, 0, 0, "", "",                            "",                     _("^BGThe flag has returned to the base"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_LOST_, 4,                   1, 0, "s1", "s1",                        "notify_%s_lost",       _("^BG%s^BG lost the ^TC^TT^BG flag"), "") \
+	MSG_INFO_NOTIF(1, INFO_CTF_LOST_NEUTRAL,               1, 0, "s1", "s1",                        "notify_%s_lost",       _("^BG%s^BG lost the flag"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_PICKUP_, 4,                 1, 0, "s1", "s1",                        "notify_%s_taken",      _("^BG%s^BG got the ^TC^TT^BG flag"), "") \
+	MSG_INFO_NOTIF(1, INFO_CTF_PICKUP_NEUTRAL,             1, 0, "s1", "s1",                        "notify_%s_taken",      _("^BG%s^BG got the flag"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_RETURN_, 4,                 1, 0, "s1", "s1",                        "notify_%s_returned",   _("^BG%s^BG returned the ^TC^TT^BG flag"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_RETURN_MONSTER_, 4,         1, 0, "s1", "s1",                        "notify_%s_returned",   _("^BG%s^BG returned the ^TC^TT^BG flag"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_ARC,               3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was zapped by ^BG%s^K1's arc%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_BASH,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was bashed by ^BG%s^K1%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_CHEAT,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was unfairly eliminated by ^BG%s^K1%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_CRUSH,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_crush",         _("^BG%s%s^K1 was crushed by ^BG%s^K1%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_DROWN,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_water",         _("^BG%s%s^K1 was drowned by ^BG%s^K1%s%s"), "") \
@@ -389,6 +400,7 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_WAKI_DEATH,     3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Racer exploded%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_WAKI_GUN,       3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was bolted down by ^BG%s^K1's Racer%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_WAKI_ROCKET,    3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 couldn't find shelter from ^BG%s^K1's Racer%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VAMPIRE,           3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1's blood was sucked by ^BG%s^K1%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VOID,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_void",          _("^BG%s%s^K1 was thrown into a world of hurt by ^BG%s^K1%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_AUTOTEAMCHANGE,      2, 1, "s1 s2loc death_team", "",         "",                     _("^BG%s^K1 was moved into the %s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_BETRAYAL,            2, 1, "s1 s2loc spree_lost", "s1",       "notify_teamkill_red",  _("^BG%s^K1 became enemies with the Lord of Teamplay%s%s"), "") \
@@ -448,8 +460,7 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_WAKI_ROCKET,      2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 couldn't find shelter from a Racer rocket%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VOID,                3, 1, "s1 s2 s3loc spree_lost", "s1",    "notify_void",          _("^BG%s^K1 %s^K1%s%s"), "") \
 	MULTITEAM_INFO(1, INFO_DEATH_TEAMKILL_, 4,             3, 1, "s1 s2 s3loc spree_end", "s2 s1",  "notify_teamkill_%s",   _("^BG%s^K1 was betrayed by ^BG%s^K1%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_DOMINATION_CAPTURE,             2, 0, "s1 s2", "",                       "",                     _("^BG%s^BG%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_DOMINATION_CAPTURE_TIME,        2, 2, "s1 s2 f1 f2", "",                 "",                     _("^BG%s^BG%s^BG (%s points every %s seconds)"), "") \
+	MSG_INFO_NOTIF(1, INFO_DOMINATION_CAPTURE_TIME,        1, 2, "s1 s2 f1 f2", "",                 "",                     _("^BG%s^BG (%s points every %s seconds)"), "") \
 	MSG_INFO_NOTIF(1, INFO_FREEZETAG_FREEZE,               2, 0, "s1 s2", "",                       "",                     _("^BG%s^K1 was frozen by ^BG%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_FREEZETAG_REVIVED,              2, 0, "s1 s2", "",                       "",                     _("^BG%s^K3 was revived by ^BG%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_FREEZETAG_REVIVED_FALL,         1, 0, "s1", "",                          "",                     _("^BG%s^K3 was revived by falling"), "") \
@@ -463,6 +474,10 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_FREEZETAG_SELF,                 1, 0, "s1", "",                          "",                     _("^BG%s^K1 froze themself"), "") \
 	MSG_INFO_NOTIF(1, INFO_GODMODE_OFF,                    0, 1, "f1", "",                          "",                     _("^BGGodmode saved you %s units of damage, cheater!"), "") \
 	MSG_INFO_NOTIF(1, INFO_INFECTION_INFECTED,             2, 0, "s1 s2", "",                       "",                     _("^BG%s^BG was infected by ^BG%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_ITEM_BUFF,                      1, 1, "s1 item_buffname", "",            "",                     _("^BG%s^BG got the %s^BG Buff!"), "") \
+	MSG_INFO_NOTIF(1, INFO_ITEM_BUFF_LOST,                 1, 1, "s1 item_buffname", "",            "",                     _("^BG%s^BG lost the %s^BG Buff!"), "") \
+	MSG_INFO_NOTIF(1, INFO_ITEM_BUFF_DROP,                 0, 1, "item_buffname", "",               "",                     _("^BGYou dropped the %s^BG Buff!"), "") \
+	MSG_INFO_NOTIF(1, INFO_ITEM_BUFF_GOT,                  0, 1, "item_buffname", "",               "",                     _("^BGYou got the %s^BG Buff!"), "") \
 	MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_DONTHAVE,           0, 1, "item_wepname", "",                      "",               _("^BGYou do not have the ^F1%s"), "") \
 	MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_DROP,               1, 1, "item_wepname item_wepammo", "",         "",               _("^BGYou dropped the ^F1%s^BG%s"), "") \
 	MSG_INFO_NOTIF(0, INFO_ITEM_WEAPON_GOT,                0, 1, "item_wepname", "",                      "",               _("^BGYou got the ^F1%s"), "") \
@@ -603,23 +618,33 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_CAMPCHECK,                   0, 0, "",             CPID_CAMPCHECK,      "0 0", _("^F2Don't camp!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_COINTOSS,                    1, 0, "s1",           NO_CPID,             "0 0", _("^F2Throwing coin... Result: %s^F2!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_CAPTURESHIELD_FREE,      0, 0, "",             CPID_CTF_CAPSHIELD,  "0 0", _("^BGYou are now free.\n^BGFeel free to ^F2try to capture^BG the flag again\n^BGif you think you will succeed."), "") \
+	MSG_CENTER_NOTIF(1, CENTER_CTF_CAPTURESHIELD_INACTIVE,  0, 0, "",             CPID_CTF_CAPSHIELD,  "0 0", _("^BGThis flag is currently inactive"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_CAPTURESHIELD_SHIELDED,  0, 0, "",             CPID_CTF_CAPSHIELD,  "0 0", _("^BGYou are now ^F1shielded^BG from the flag(s)\n^BGfor ^F2too many unsuccessful attempts^BG to capture.\n^BGMake some defensive scores before trying again."), "") \
 	MULTITEAM_CENTER(1, CENTER_CTF_CAPTURE_, 4,             0, 0, "",             CPID_CTF_LOWPRIO,    "0 0", _("^BGYou captured the ^TC^TT^BG flag!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_CTF_CAPTURE_NEUTRAL,         0, 0, "",             CPID_CTF_LOWPRIO,    "0 0", _("^BGYou captured the flag!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_FLAG_THROW_PUNISH,       0, 1, "f1secs",       CPID_CTF_LOWPRIO,    "0 0", _("^BGToo many flag throws! Throwing disabled for %s."), "") \
 	MULTITEAM_CENTER(1, CENTER_CTF_PASS_OTHER_, 4,          2, 0, "s1 s2",        CPID_CTF_PASS,       "0 0", _("^BG%s^BG passed the ^TC^TT^BG flag to %s"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_CTF_PASS_OTHER_NEUTRAL,      2, 0, "s1 s2",        CPID_CTF_PASS,       "0 0", _("^BG%s^BG passed the flag to %s"), "") \
 	MULTITEAM_CENTER(1, CENTER_CTF_PASS_RECEIVED_, 4,       1, 0, "s1",           CPID_CTF_PASS,       "0 0", _("^BGYou received the ^TC^TT^BG flag from %s"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_CTF_PASS_RECEIVED_NEUTRAL,   1, 0, "s1",           CPID_CTF_PASS,       "0 0", _("^BGYou received the flag from %s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_PASS_REQUESTED,          1, 0, "s1 pass_key",  CPID_CTF_PASS,       "0 0", _("^BG%s^BG requests you to pass the flag%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_PASS_REQUESTING,         1, 0, "s1",           CPID_CTF_PASS,       "0 0", _("^BGRequesting %s^BG to pass you the flag"), "") \
 	MULTITEAM_CENTER(1, CENTER_CTF_PASS_SENT_, 4,           1, 0, "s1",           CPID_CTF_PASS,       "0 0", _("^BGYou passed the ^TC^TT^BG flag to %s"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_CTF_PASS_SENT_NEUTRAL,       1, 0, "s1",           CPID_CTF_PASS,       "0 0", _("^BGYou passed the flag to %s"), "") \
 	MULTITEAM_CENTER(1, CENTER_CTF_PICKUP_, 4,              0, 0, "",             CPID_CTF_LOWPRIO,    "0 0", _("^BGYou got the ^TC^TT^BG flag!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_NEUTRAL,          0, 0, "",             CPID_CTF_LOWPRIO,    "0 0", _("^BGYou got the flag!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_TEAM,             1, 0, "s1",           CPID_CTF_LOWPRIO,    "0 0", _("^BGYou got your %steam^BG's flag, return it!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_TEAM_ENEMY,       1, 0, "s1",           CPID_CTF_LOWPRIO,    "0 0", _("^BGYou got the %senemy^BG's flag, return it!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_ENEMY,            1, 0, "s1",           CPID_CTF_LOWPRIO,    "0 0", _("^BGThe %senemy^BG got your flag! Retrieve it!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_ENEMY_VERBOSE,    2, 0, "s1 s2 s1",     CPID_CTF_LOWPRIO,    "0 0", _("^BGThe %senemy (^BG%s%s)^BG got your flag! Retrieve it!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_ENEMY_NEUTRAL,    1, 0, "s1",           CPID_CTF_LOWPRIO,    "0 0", _("^BGThe %senemy^BG got the flag! Retrieve it!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_ENEMY_NEUTRAL_VERBOSE, 2, 0, "s1 s2 s1",CPID_CTF_LOWPRIO,    "0 0", _("^BGThe %senemy (^BG%s%s)^BG got the flag! Retrieve it!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_ENEMY_TEAM,        1, 0, "s1",          CPID_CTF_LOWPRIO,    "0 0", _("^BGThe %senemy^BG got their flag! Retrieve it!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_ENEMY_TEAM_VERBOSE,2, 0, "s1 s2 s1",    CPID_CTF_LOWPRIO,    "0 0", _("^BGThe %senemy (^BG%s%s)^BG got their flag! Retrieve it!"), "") \
 	MULTITEAM_CENTER(1, CENTER_CTF_PICKUP_TEAM_, 4,         1, 0, "s1",           CPID_CTF_LOWPRIO,    "0 0", _("^BGYour %steam mate^BG got the ^TC^TT^BG flag! Protect them!"), "") \
-	MULTITEAM_CENTER(1, CENTER_CTF_PICKUP_TEAM_VERBOSE_, 4, 2, 0, "s1 s2 s1",     CPID_CTF_LOWPRIO,    "0 0", _("^BGYour %steam mate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"), "") \
+	MULTITEAM_CENTER(1, CENTER_CTF_PICKUP_TEAM_VERBOSE_,    4, 2, 0, "s1 s2 s1",  CPID_CTF_LOWPRIO,    "0 0", _("^BGYour %steam mate (^BG%s%s)^BG got the ^TC^TT^BG flag! Protect them!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_TEAM_NEUTRAL,         1, 0, "s1",       CPID_CTF_LOWPRIO,    "0 0", _("^BGYour %steam mate^BG got the flag! Protect them!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_CTF_PICKUP_TEAM_VERBOSE_NEUTRAL, 2, 0, "s1 s2 s1", CPID_CTF_LOWPRIO,    "0 0", _("^BGYour %steam mate (^BG%s%s)^BG got the flag! Protect them!"), "") \
 	MULTITEAM_CENTER(1, CENTER_CTF_RETURN_, 4,              0, 0, "",             CPID_CTF_LOWPRIO,    "0 0", _("^BGYou returned the ^TC^TT^BG flag!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_STALEMATE_CARRIER,       0, 0, "",             CPID_STALEMATE,      "0 0", _("^BGStalemate! Enemies can now see you on radar!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_CTF_STALEMATE_OTHER,         0, 0, "",             CPID_STALEMATE,      "0 0", _("^BGStalemate! Flag carriers can now be seen by enemies on radar!"), "") \
@@ -683,7 +708,9 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_REVIVE_SELF,       0, 0, "",             NO_CPID,             "0 0", _("^K3You revived yourself"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_REVIVED,           1, 0, "s1",           NO_CPID,             "0 0", _("^K3You were revived by ^BG%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_AUTO_REVIVED,      0, 1, "f1",           NO_CPID,             "0 0", _("^K3You were automatically revived after %s second(s)"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_STALEMATE,         0, 0, "",             CPID_STALEMATE,      "0 0", _("^BGStalemate! Enemies can now be seen on the radar!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_GENERATOR_UNDERATTACK,       0, 0, "",             NO_CPID,             "0 0", _("^BGThe generator is under attack!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_HEADSHOT,                    0, 0, "",             NO_CPID,             "0 0", _("^F2Headshot!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ROUND_INFECTION_WIN,         0, 0, "",             CPID_ROUND,          "0 0", _("^BGRound over, all players have been infected"), "") \
 	MULTITEAM_CENTER(1, CENTER_ROUND_TEAM_WIN_, 4,          0, 0, "",             CPID_ROUND,          "0 0", _("^TC^TT^BG team wins the round"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ROUND_PLAYER_WIN,            1, 0, "s1",           CPID_ROUND,          "0 0", _("^BG%s^BG wins the round"), "") \
@@ -691,6 +718,8 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_FREEZETAG_SPAWN_LATE,        0, 0, "",             NO_CPID,             "0 0", _("^K1Round already started, you spawn as frozen"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_INFECTION_INFECTED,          1, 0, "s1",           NO_CPID,             "0 0", _("^BGYou have been infected by ^BG%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_INVASION_SUPERMONSTER,       1, 0, "s1",           NO_CPID,             "0 0", _("^K1A %s has arrived!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_ITEM_BUFF_DROP,              0, 1, "item_buffname",                     CPID_ITEM, "item_centime 0", _("^BGYou dropped the %s^BG Buff!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_ITEM_BUFF_GOT,               0, 1, "item_buffname",                     CPID_ITEM, "item_centime 0", _("^BGYou got the %s^BG Buff!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_DONTHAVE,        0, 1, "item_wepname",                      CPID_ITEM, "item_centime 0", _("^BGYou do not have the ^F1%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_DROP,            1, 1, "item_wepname item_wepammo",         CPID_ITEM, "item_centime 0", _("^BGYou dropped the ^F1%s^BG%s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ITEM_WEAPON_GOT,             0, 1, "item_wepname",                      CPID_ITEM, "item_centime 0", _("^BGYou got the ^F1%s"), "") \
@@ -748,7 +777,7 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_ONS_NOTSHIELDED_TEAM,        0, 0, "",              CPID_ONSLAUGHT,        "0 0", _("^K1Your generator is NOT shielded!\n^BGRe-capture control points to shield it!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_OVERKILL_CHARGE,             0, 0, "",              CPID_OVERKILL,         "0 0", _("^BGYour weapon's charge is too low, release the attack button & wait for it to charge"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_FRAG,               0, 0, "",              CPID_OVERTIME,         "0 0", _("^F2Now playing ^F4OVERTIME^F2!\nKeep fragging until we have a winner!"), _("^F2Now playing ^F4OVERTIME^F2!\nKeep scoring until we have a winner!")) \
-	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_CONTROLPOINT,       0, 0, "",              CPID_OVERTIME,         "3 0", _("^F2Now playing ^F4OVERTIME^F2!\n\nGenerators start now to decay.\nThe more control points your team holds,\nthe faster the enemy generator decays"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_CONTROLPOINT,       0, 0, "",              CPID_OVERTIME,         "5 0", _("^F2Now playing ^F4OVERTIME^F2!\n\nGenerators start now to decay.\nThe more control points your team holds,\nthe faster the enemy generator decays"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_TIME,               0, 1, "f1time",        CPID_OVERTIME,         "0 0", _("^F2Now playing ^F4OVERTIME^F2!\n^BGAdded ^F4%s^BG to the game!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_PIGGYBACK_CARRYING,          1, 0, "s1",            CPID_PIGGYBACK,        "0 0", _("^BGYou are now carrying %s^BG!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_PIGGYBACK_RIDING,            1, 0, "s1",            CPID_PIGGYBACK,        "0 0", _("^BGYou are now riding %s^BG!"), "") \
@@ -761,7 +790,7 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_POWERUP_SPEED,               0, 0, "",              CPID_POWERUP,          "0 0", _("^F2You are on speed"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_POWERUP_STRENGTH,            0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Strength infuses your weapons with devastating power"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_RACE_FINISHLAP,              0, 0, "",              CPID_RACE_FINISHLAP,   "0 0", _("^F2The race is over, finish your lap!"), "") \
-        MSG_CENTER_NOTIF(1, CENTER_SECONDARY_NODAMAGE,          0, 0, "",              NO_CPID,               "0 0", _("^BGSecondary fire inflicts no damage!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_SECONDARY_NODAMAGE,          0, 0, "",              NO_CPID,               "0 0", _("^BGSecondary fire inflicts no damage!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SEQUENCE_COMPLETED,          0, 0, "",              NO_CPID,               "0 0", _("^BGSequence completed!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SEQUENCE_COUNTER,            0, 0, "",              NO_CPID,               "0 0", _("^BGThere are more to go..."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SEQUENCE_COUNTER_FEWMORE,    0, 1, "f1",            NO_CPID,               "0 0", _("^BGOnly %s^BG more to go..."), "") \
@@ -804,6 +833,8 @@ void Send_Notification_WOCOVA(
 	MULTITEAM_MULTI##teams(default,prefix,anncepre,infopre,centerpre)
 
 #define MSG_MULTI_NOTIFICATIONS \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_ARC,                     NO_MSG,        INFO_DEATH_MURDER_ARC,                     NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_BASH,                    NO_MSG,        INFO_DEATH_MURDER_BASH,                    NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_CHEAT,                   NO_MSG,        INFO_DEATH_MURDER_CHEAT,                   NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_CRUSH,                   NO_MSG,        INFO_DEATH_MURDER_CRUSH,                   NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_DROWN,                   NO_MSG,        INFO_DEATH_MURDER_DROWN,                   NO_MSG) \
@@ -835,6 +866,7 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_WAKI_DEATH,           NO_MSG,        INFO_DEATH_MURDER_VH_WAKI_DEATH,           NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_WAKI_GUN,             NO_MSG,        INFO_DEATH_MURDER_VH_WAKI_GUN,             NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_WAKI_ROCKET,          NO_MSG,        INFO_DEATH_MURDER_VH_WAKI_ROCKET,          NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_VAMPIRE,                 NO_MSG,        INFO_DEATH_MURDER_VAMPIRE,                 NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_VOID,                    NO_MSG,        INFO_DEATH_MURDER_VOID,                    NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_AUTOTEAMCHANGE,            NO_MSG,        INFO_DEATH_SELF_AUTOTEAMCHANGE,            CENTER_DEATH_SELF_AUTOTEAMCHANGE) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_BETRAYAL,                  NO_MSG,        INFO_DEATH_SELF_BETRAYAL,                  CENTER_DEATH_SELF_BETRAYAL) \
@@ -893,6 +925,8 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_WAKI_DEATH,             NO_MSG,        INFO_DEATH_SELF_VH_WAKI_DEATH,             CENTER_DEATH_SELF_VH_WAKI_DEATH) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_VH_WAKI_ROCKET,            NO_MSG,        INFO_DEATH_SELF_VH_WAKI_ROCKET,            CENTER_DEATH_SELF_VH_WAKI_ROCKET) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_VOID,                      NO_MSG,        INFO_DEATH_SELF_VOID,                      CENTER_DEATH_SELF_VOID) \
+	MSG_MULTI_NOTIF(1, ITEM_BUFF_DROP,                       NO_MSG,        INFO_ITEM_BUFF_DROP,                       CENTER_ITEM_BUFF_DROP) \
+	MSG_MULTI_NOTIF(1, ITEM_BUFF_GOT,                        NO_MSG,        INFO_ITEM_BUFF_GOT,                        CENTER_ITEM_BUFF_GOT) \
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_DONTHAVE,                 NO_MSG,        INFO_ITEM_WEAPON_DONTHAVE,                 CENTER_ITEM_WEAPON_DONTHAVE) \
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_DROP,                     NO_MSG,        INFO_ITEM_WEAPON_DROP,                     CENTER_ITEM_WEAPON_DROP) \
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_GOT,                      NO_MSG,        INFO_ITEM_WEAPON_GOT,                      CENTER_ITEM_WEAPON_GOT) \
@@ -901,6 +935,7 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, ITEM_WEAPON_UNAVAILABLE,              NO_MSG,        INFO_ITEM_WEAPON_UNAVAILABLE,              CENTER_ITEM_WEAPON_UNAVAILABLE) \
 	MSG_MULTI_NOTIF(1, MULTI_COINTOSS,                       NO_MSG,        INFO_COINTOSS,                             CENTER_COINTOSS) \
 	MSG_MULTI_NOTIF(1, MULTI_COUNTDOWN_BEGIN,                ANNCE_BEGIN,   NO_MSG,                                    CENTER_COUNTDOWN_BEGIN) \
+	MSG_MULTI_NOTIF(1, MULTI_HEADSHOT,                       ANNCE_HEADSHOT,NO_MSG,                                    CENTER_HEADSHOT) \
 	MSG_MULTI_NOTIF(1, MULTI_MINSTA_FINDAMMO,                ANNCE_NUM_10,  NO_MSG,                                    CENTER_MINSTA_FINDAMMO_FIRST) \
 	MSG_MULTI_NOTIF(1, WEAPON_ACCORDEON_MURDER,              NO_MSG,        INFO_WEAPON_ACCORDEON_MURDER,              NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_ACCORDEON_SUICIDE,             NO_MSG,        INFO_WEAPON_ACCORDEON_SUICIDE,             CENTER_DEATH_SELF_GENERIC) \
@@ -982,7 +1017,9 @@ void Send_Notification_WOCOVA(
 	MULTITEAM_CHOICE(1, 2, CHOICE_CTF_CAPTURE_TIME_, 4,      MSG_INFO,    INFO_CTF_CAPTURE_,                INFO_CTF_CAPTURE_TIME_) \
 	MULTITEAM_CHOICE(1, 2, CHOICE_CTF_CAPTURE_UNBROKEN_, 4,  MSG_INFO,    INFO_CTF_CAPTURE_,                INFO_CTF_CAPTURE_UNBROKEN_) \
 	MULTITEAM_CHOICE(1, 2, CHOICE_CTF_PICKUP_TEAM_, 4,       MSG_CENTER,  CENTER_CTF_PICKUP_TEAM_,          CENTER_CTF_PICKUP_TEAM_VERBOSE_) \
+	MSG_CHOICE_NOTIF(1, 2, CHOICE_CTF_PICKUP_TEAM_NEUTRAL,   MSG_CENTER,  CENTER_CTF_PICKUP_TEAM_NEUTRAL,   CENTER_CTF_PICKUP_TEAM_VERBOSE_NEUTRAL) \
 	MSG_CHOICE_NOTIF(1, 2, CHOICE_CTF_PICKUP_ENEMY,          MSG_CENTER,  CENTER_CTF_PICKUP_ENEMY,          CENTER_CTF_PICKUP_ENEMY_VERBOSE) \
+	MSG_CHOICE_NOTIF(1, 2, CHOICE_CTF_PICKUP_ENEMY_NEUTRAL,  MSG_CENTER,  CENTER_CTF_PICKUP_ENEMY_NEUTRAL,  CENTER_CTF_PICKUP_ENEMY_NEUTRAL_VERBOSE) \
 	MSG_CHOICE_NOTIF(1, 2, CHOICE_CTF_PICKUP_ENEMY_TEAM,     MSG_CENTER,  CENTER_CTF_PICKUP_ENEMY_TEAM,     CENTER_CTF_PICKUP_ENEMY_TEAM_VERBOSE) \
 	MSG_CHOICE_NOTIF(1, 1, CHOICE_FRAG,                      MSG_CENTER,  CENTER_DEATH_MURDER_FRAG,         CENTER_DEATH_MURDER_FRAG_VERBOSE) \
 	MSG_CHOICE_NOTIF(1, 1, CHOICE_FRAGGED,                   MSG_CENTER,  CENTER_DEATH_MURDER_FRAGGED,      CENTER_DEATH_MURDER_FRAGGED_VERBOSE) \
@@ -1075,6 +1112,7 @@ var float autocvar_notification_show_sprees_center_specialonly = TRUE;
     item_wepname: return full name of a weapon from weaponid
     item_wepammo: ammo display for weapon from string
     item_centime: amount of time to display weapon message in centerprint
+	item_buffname: return full name of a buff from buffid
     death_team: show the full name of the team a player is switching from
 */
 
@@ -1127,6 +1165,7 @@ string arg_slot[NOTIF_MAX_ARGS];
     ARG_CASE(ARG_CS_SV,     "spree_end",     (autocvar_notification_show_sprees ? notif_arg_spree_inf(-1, "", "", f1) : "")) \
     ARG_CASE(ARG_CS_SV,     "spree_lost",    (autocvar_notification_show_sprees ? notif_arg_spree_inf(-2, "", "", f1) : "")) \
     ARG_CASE(ARG_CS_SV,     "item_wepname",  WEP_NAME(f1)) \
+    ARG_CASE(ARG_CS_SV,     "item_buffname", sprintf("%s%s", rgb_to_hexcolor(Buff_Color(f1)), Buff_PrettyName(f1))) \
     ARG_CASE(ARG_CS_SV,     "item_wepammo",  (s1 != "" ? sprintf(_(" with %s"), s1) : "")) \
     ARG_CASE(ARG_DC,        "item_centime",  ftos(autocvar_notification_item_centerprinttime)) \
     ARG_CASE(ARG_SV,        "death_team",    Team_ColoredFullName(f1)) \
@@ -1347,7 +1386,7 @@ float NOTIF_CPID_COUNT;
 #define NOTIF_INFO_MAX    350
 #define NOTIF_CENTER_MAX  300
 #define NOTIF_MULTI_MAX   200
-#define NOTIF_CHOICE_MAX  30
+#define NOTIF_CHOICE_MAX  50
 
 // notification entities
 entity msg_annce_notifs[NOTIF_ANNCE_MAX];

@@ -3,7 +3,7 @@
 
 MUTATOR_HOOKFUNCTION(campcheck_PlayerDies)
 {
-	Kill_Notification(NOTIF_ONE_ONLY, self, MSG_CENTER_CPID, CPID_CAMPCHECK);
+	Kill_Notification(NOTIF_ONE, self, MSG_CENTER_CPID, CPID_CAMPCHECK);
 
 	return FALSE;
 }
@@ -23,6 +23,9 @@ MUTATOR_HOOKFUNCTION(campcheck_PlayerDamage)
 
 MUTATOR_HOOKFUNCTION(campcheck_PlayerThink)
 {
+	if(!gameover)
+	if(!warmup_stage) // don't consider it camping during warmup?
+	if(time >= game_starttime)
 	if(IS_PLAYER(self))
 	if(IS_REAL_CLIENT(self)) // bots may camp, but that's no reason to constantly kill them
 	if(self.deadflag == DEAD_NO)

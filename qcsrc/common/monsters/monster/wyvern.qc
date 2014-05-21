@@ -131,6 +131,7 @@ float m_wyvern(float req)
 		}
 		case MR_PRECACHE:
 		{
+			precache_model("models/monsters/wizard.mdl");
 			return TRUE;
 		}
 	}

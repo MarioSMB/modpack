@@ -23,3 +23,4 @@
 #include "mutator_minstagib.qh"
 #include "mutator_nades.qh"
 #include "mutator_piggyback.qh"
+#include "mutator_buffs.qh"

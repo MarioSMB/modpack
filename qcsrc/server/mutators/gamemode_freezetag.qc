@@ -11,28 +11,16 @@ void freezetag_count_alive_players()
 	total_players = redalive = bluealive = yellowalive = pinkalive = 0;
 	FOR_EACH_PLAYER(e)
 	{
-		if(e.team == NUM_TEAM_1 && e.health >= 1)
+		switch(e.team)
 		{
-			++total_players;
-			if (e.frozen != 1) ++redalive;
-		}
-		else if(e.team == NUM_TEAM_2 && e.health >= 1)
-		{
-			++total_players;
-			if (e.frozen != 1) ++bluealive;
-		}
-		else if(e.team == NUM_TEAM_3 && e.health >= 1)
-		{
-			++total_players;
-			if (e.frozen != 1) ++yellowalive;
-		}
-		else if(e.team == NUM_TEAM_4 && e.health >= 1)
-		{
-			++total_players;
-			if (e.frozen != 1) ++pinkalive;
+			case NUM_TEAM_1: ++total_players; if(e.health >= 1 && e.frozen != 1) ++redalive; break;
+			case NUM_TEAM_2: ++total_players; if(e.health >= 1 && e.frozen != 1) ++bluealive; break;
+			case NUM_TEAM_3: ++total_players; if(e.health >= 1 && e.frozen != 1) ++yellowalive; break;
+			case NUM_TEAM_4: ++total_players; if(e.health >= 1 && e.frozen != 1) ++pinkalive; break;
 		}
 	}
-	FOR_EACH_REALCLIENT(e) {
+	FOR_EACH_REALCLIENT(e)
+	{
 		e.redalive_stat = redalive;
 		e.bluealive_stat = bluealive;
 		e.yellowalive_stat = yellowalive;
@@ -45,6 +33,8 @@ void freezetag_count_alive_players()
 float prev_total_players;
 float freezetag_CheckTeams()
 {
+	freezetag_count_alive_players();
+
 	if(FREEZETAG_ALIVE_TEAMS_OK())
 	{
 		if(prev_total_players > 0)
@@ -92,21 +82,43 @@ float freezetag_getWinnerTeam()
 	return -1; // no player left
 }
 
+float ft_EnemyWaypoint_Customize()
+{
+	if(self.owner.frozen || self.owner.deadflag) { return FALSE; }
+	
+	entity e = WaypointSprite_getviewentity(other);
+	
+	if(SAME_TEAM(self.owner, e)) { return FALSE; }
+
+	return TRUE;
+}
+
+void ft_EnemyWaypoints(entity player)
+{
+	WaypointSprite_Spawn("enemy", 0, 0, player, ENEMY_WAYPOINT_OFFSET, world, 0, player, wps_enemy, TRUE, RADARICON_FLAG, WPCOLOR_ENEMY(player.team));
+	WaypointSprite_UpdateMaxHealth(player.wps_enemy, '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON) * 2);
+	WaypointSprite_UpdateHealth(player.wps_enemy, '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON));
+	WaypointSprite_UpdateTeamRadar(player.wps_enemy, RADARICON_FLAGCARRIER, WPCOLOR_ENEMY(player.team));
+	
+	player.wps_enemy.customizeentityforclient = ft_EnemyWaypoint_Customize;
+}
+
 float freezetag_CheckWinner()
 {
 	entity e;
+
+	if(!ft_stalemate)
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
+		ft_stalemate = TRUE;
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_FREEZETAG_STALEMATE);
 		FOR_EACH_PLAYER(e)
 		{
-			e.freezetag_frozen_timeout = 0;
-			nades_Clear(e);
+			ft_EnemyWaypoints(e);
 		}
-		round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
-		return 1;
 	}
+	
+	freezetag_count_alive_players();
 
 	if(FREEZETAG_ALIVE_TEAMS() > 1)
 		return 0;
@@ -125,11 +137,14 @@ float freezetag_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
 	}
 
+	ft_stalemate = FALSE;
 	FOR_EACH_PLAYER(e)
 	{
 		e.freezetag_frozen_timeout = 0;
 		nades_Clear(e);
+		WaypointSprite_Kill(e.wps_enemy);
 	}
+
 	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 	return 1;
 }
@@ -173,6 +188,8 @@ void freezetag_Unfreeze(entity attacker)
 	self.freezetag_frozen_timeout = 0;
 
 	Unfreeze(self);
+	
+	self.health = autocvar_g_freezetag_revive_health;
 }
 
 
@@ -288,7 +305,6 @@ MUTATOR_HOOKFUNCTION(freezetag_RemovePlayer)
 {
 	self.health = 0; // neccessary to update correctly alive stats
 	freezetag_Unfreeze(world);
-	freezetag_count_alive_players();
 	return 1;
 }
 
@@ -299,7 +315,6 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 	{
 		if(self.frozen)
 			freezetag_Unfreeze(world);
-		freezetag_count_alive_players();
 		return 1; // let the player die so that he can respawn whenever he wants
 	}
 
@@ -310,10 +325,7 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 	{
 		// let the player die, he will be automatically frozen when he respawns
 		if(self.frozen != 1)
-		{
 			freezetag_Add_Score(frag_attacker);
-			freezetag_count_alive_players();
-		}
 		else
 			freezetag_Unfreeze(world); // remove ice
 		self.health = 0; // Unfreeze resets health
@@ -352,13 +364,15 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerSpawn)
 	if(self.freezetag_frozen_timeout == -1) // if PlayerSpawn is called by reset_map_players
 		return 1; // do nothing, round is starting right now
 
+	if(ft_stalemate)
+	if(!self.wps_enemy)
+		ft_EnemyWaypoints(self);
+
 	if(self.freezetag_frozen_timeout == -2) // player was dead
 	{
 		freezetag_Freeze(world);
 		return 1;
 	}
-
-	freezetag_count_alive_players();
 
 	if(round_handler_IsActive())
 	if(round_handler_IsRoundStarted())
@@ -377,9 +391,15 @@ MUTATOR_HOOKFUNCTION(freezetag_reset_map_players)
 		self.freezetag_frozen_timeout = -1;
 		PutClientInServer();
 		self.freezetag_frozen_timeout = 0;
+		WaypointSprite_Kill(self.wps_enemy);
 	}
-	freezetag_count_alive_players();
 	return 1;
+}
+
+MUTATOR_HOOKFUNCTION(freezetag_ResetMap)
+{
+	ft_stalemate = FALSE;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(freezetag_GiveFragsForKill)
@@ -436,12 +456,11 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	if(n && self.frozen == 1) // OK, there is at least one teammate reviving us
 	{
 		self.revive_progress = bound(0, self.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
-		self.health = max(1, self.revive_progress * ((warmup_stage) ? warmup_start_health : start_health));
+		self.health = max(1, self.revive_progress * ((warmup_stage) ? warmup_start_health : autocvar_g_freezetag_revive_health));
 
 		if(self.revive_progress >= 1)
 		{
 			freezetag_Unfreeze(self);
-			freezetag_count_alive_players();
 
 			if(n == -1)
 			{
@@ -479,12 +498,15 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerPreThink)
 	else if(!n && self.frozen == 1) // only if no teammate is nearby will we reset
 	{
 		self.revive_progress = bound(0, self.revive_progress - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
-		self.health = max(1, self.revive_progress * ((warmup_stage) ? warmup_start_health : start_health));
+		self.health = max(1, self.revive_progress * ((warmup_stage) ? warmup_start_health : autocvar_g_freezetag_revive_health));
 	}
 	else if(!n && !self.frozen)
 	{
 		self.revive_progress = 0; // thawing nobody
 	}
+	
+	if(self.wps_enemy)
+		WaypointSprite_UpdateHealth(self.wps_enemy, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON));
 
 	return 1;
 }

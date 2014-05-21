@@ -26,7 +26,7 @@ void pb_Attach(entity host, entity slave)
 	slave.movetype = MOVETYPE_FOLLOW;
 	slave.aiment = host.pbent;
 	slave.pbhost = host;
-	slave.oldsolid = slave.solid;
+	slave.pb_oldsolid = slave.solid;
 	slave.solid = SOLID_CORPSE;
 	slave.pb_canattach = 0;
 	
@@ -53,7 +53,7 @@ void pb_Detach(entity host)
 		if(slave.movetype == MOVETYPE_FOLLOW) // don't reset if player was killed
 			slave.movetype = MOVETYPE_WALK;
 		slave.velocity = '0 0 0';
-		slave.solid = slave.oldsolid;
+		slave.solid = slave.pb_oldsolid;
 		
 		tracebox(host.origin, slave.mins, slave.maxs, slave.origin, MOVE_NOMONSTERS, slave);
 		
@@ -123,6 +123,7 @@ MUTATOR_HOOKFUNCTION(pb_PlayerUseKey)
 			if(head.deadflag == DEAD_NO)
 			if(!head.vehicle)
 			if(!head.frozen)
+			if((!head.jb_isprisoned && !self.jb_isprisoned) || (head.jb_isprisoned && self.jb_isprisoned))
 			{
 				if(closest_target)
 				{
@@ -139,7 +140,7 @@ MUTATOR_HOOKFUNCTION(pb_PlayerUseKey)
 		if(IS_BOT_CLIENT(closest_target)) { pb_Attach(self, closest_target); return TRUE; }
 		else { pb_Attach(closest_target, self); return TRUE; }
 	}
-	
+
 	return FALSE;
 }
 

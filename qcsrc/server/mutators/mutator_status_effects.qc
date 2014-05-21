@@ -30,6 +30,14 @@ MUTATOR_HOOKFUNCTION(se_PlayerSpawn)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(se_PlayerRegen)
+{
+	if(StatusEffect_Timed(self, STATUS_EFFECT_COLD) && !self.frozen)
+		regen_mod_regen = 0.3; // slow regen speed for cold players
+
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(se_PlayerDamage)
 {
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
@@ -97,6 +105,7 @@ MUTATOR_DEFINITION(mutator_status_effects)
 	MUTATOR_HOOK(WeaponRateFactor, se_WeaponRateFactor, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPhysics, se_PlayerPhysics, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, se_PlayerSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerRegen, se_PlayerRegen, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, se_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPowerups, se_PlayerPowerups, CBC_ORDER_ANY);
 

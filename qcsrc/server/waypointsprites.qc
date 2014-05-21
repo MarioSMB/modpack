@@ -307,6 +307,21 @@ float WaypointSprite_SendEntity(entity to, float sendflags)
 			f |= 1; // hideable
 		if(self.exteriormodeltoclient == to)
 			f |= 2; // my own
+		if(g_onslaught)
+		{
+			if(self.owner.classname == "onslaught_controlpoint")
+			{
+				entity wp_owner = self.owner;
+				entity e = WaypointSprite_getviewentity(to);
+				if(SAME_TEAM(e, wp_owner) && wp_owner.goalentity.health >= wp_owner.goalentity.max_health) { f |= 2; }
+				if(!onslaught_controlpoint_attackable(wp_owner, e.team)) { f |= 2; }
+			}
+			if(self.owner.classname == "onslaught_generator")
+			{
+				entity wp_owner = self.owner;
+				if(wp_owner.isshielded && wp_owner.health >= wp_owner.max_health) { f |= 2; }
+			}
+		}
 		WriteByte(MSG_ENTITY, f);
 	}
 

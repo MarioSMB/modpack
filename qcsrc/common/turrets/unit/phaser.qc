@@ -162,8 +162,6 @@ float t_phaser(float req)
 		}
 		case TR_PRECACHE:
 		{
-			precache_model ("models/turrets/base.md3");
-			precache_model ("models/turrets/phaser.md3");
 			return TRUE;
 		}
 	}

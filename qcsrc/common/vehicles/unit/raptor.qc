@@ -1166,13 +1166,6 @@ float v_raptor(float req)
 		}
 		case VR_PRECACHE:
 		{
-			precache_model ("models/vehicles/raptor.dpm");
-			precache_model ("models/vehicles/raptor_gun.dpm");
-			precache_model ("models/vehicles/spinner.dpm");
-			precache_model ("models/vehicles/raptor_cockpit.dpm");
-			precache_model ("models/vehicles/clusterbomb_folded.md3");
-			precache_model ("models/vehicles/raptor_body.dpm");
-			
 			return TRUE;
 		}
 	}

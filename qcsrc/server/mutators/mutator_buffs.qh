@@ -1,0 +1,18 @@
+// buff specific variables \\
+// vampire
+.entity buff_vampire_lasttarget;
+.float buff_vampire_lasttarget_time;
+.float buff_vampire_lastdamage;
+// wrath
+.float buff_wrath_damage_time;
+// arc
+.float buff_arc_lastzap;
+// supply
+.float buff_supply_prev_infitems;
+
+.float buff_active;
+.float buff_activetime;
+.float buff_activetime_updated;
+.entity buff_waypoint;
+.float oldbuffs; // for updating effects
+.entity buff_model; // controls effects (TODO: make csqc)

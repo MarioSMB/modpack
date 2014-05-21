@@ -713,7 +713,18 @@ void nades_RemoveBonus(entity player)
 
 float nade_customize()
 {
-	if(IS_SPEC(other)) { return FALSE; }
+	//if(IS_SPEC(other)) { return FALSE; }
+	if(other == self.realowner || (IS_SPEC(other) && other.enemy == self.realowner))
+	{
+		// somewhat hide the model, but keep the glow
+		//self.effects = 0;
+		self.alpha = -1;
+	}
+	else
+	{
+		//self.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+		self.alpha = 1;
+	}
 	
 	return TRUE;
 }
@@ -1018,6 +1029,17 @@ MUTATOR_HOOKFUNCTION(nades_PlayerDies)
 			nades_RemoveBonus(frag_attacker);
 		else if(frag_target.flagcarried)
 			nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_medium);
+		else if(autocvar_g_nades_bonus_score_spree && frag_attacker.killcount > 1)
+		{
+			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
+				case counta: { nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_spree); break; }
+			switch(frag_attacker.killcount)
+			{
+				KILL_SPREE_LIST
+				default: nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_minor); break;
+			}
+			#undef SPREE_ITEM
+		}
 		else
 			nades_GiveBonus(frag_attacker, killcount_bonus);
 	}

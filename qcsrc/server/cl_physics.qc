@@ -21,6 +21,9 @@ void PlayerJump (void)
 {
 	if(self.frozen)
 		return; // no jumping in freezetag when frozen
+		
+	if(self.player_blocked)
+		return; // no jumping while blocked
 
 	float doublejump = FALSE;
 
@@ -1091,7 +1094,7 @@ void SV_PlayerPhysics()
 		wishvel_z = (wishvel_z - autocvar_sv_gravity) * fz + autocvar_sv_gravity;
 
 		fvel = min(1, vlen(wishvel) / best);
-		if(autocvar_g_jetpack_fuel && !(self.items & IT_UNLIMITED_WEAPON_AMMO))
+		if(autocvar_g_jetpack_fuel && (!(self.items & IT_UNLIMITED_WEAPON_AMMO) || cvar("g_overkill")))
 			f = min(1, self.ammo_fuel / (autocvar_g_jetpack_fuel * frametime * fvel));
 		else
 			f = 1;
@@ -1101,7 +1104,7 @@ void SV_PlayerPhysics()
 		if (f > 0 && wishvel != '0 0 0')
 		{
 			self.velocity = self.velocity + wishvel * f * frametime;
-			if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
+			if ((!(self.items & IT_UNLIMITED_WEAPON_AMMO) || cvar("g_overkill")))
 				self.ammo_fuel -= autocvar_g_jetpack_fuel * frametime * fvel * f;
 			self.flags &= ~FL_ONGROUND;
 			self.items |= IT_USING_JETPACK;

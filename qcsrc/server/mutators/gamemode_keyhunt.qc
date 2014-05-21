@@ -1164,18 +1164,18 @@ MUTATOR_HOOKFUNCTION(kh_PlayerPreThink)
 	float t = 0, t2 = 0, t3 = 0;
 
 	// initially clear items so they can be set as necessary later.
-	self.items &= ~(IT_RED_FLAG_CARRYING 	| IT_RED_FLAG_TAKEN		| IT_RED_FLAG_LOST 
-				  | IT_BLUE_FLAG_CARRYING 	| IT_BLUE_FLAG_TAKEN 	| IT_BLUE_FLAG_LOST
-				  | IT_YELLOW_FLAG_CARRYING	| IT_YELLOW_FLAG_TAKEN 	| IT_YELLOW_FLAG_LOST
-				  | IT_PINK_FLAG_CARRYING 	| IT_PINK_FLAG_TAKEN 	| IT_PINK_FLAG_LOST);
+	self.kh_keystatus &= ~(KH_RED_KEY_CARRYING 		| KH_RED_KEY_TAKEN		| KH_RED_KEY_LOST 
+						 | KH_BLUE_KEY_CARRYING 	| KH_BLUE_KEY_TAKEN 	| KH_BLUE_KEY_LOST
+						 | KH_YELLOW_KEY_CARRYING	| KH_YELLOW_KEY_TAKEN 	| KH_YELLOW_KEY_LOST
+						 | KH_PINK_KEY_CARRYING 	| KH_PINK_KEY_TAKEN 	| KH_PINK_KEY_LOST);
 
 	// scan through all the keys and notify the client about them
 	KH_FOR_EACH_KEY(key)
 	{
-		if(key.team == NUM_TEAM_1) { t = IT_RED_FLAG_CARRYING;		t2 = IT_RED_FLAG_TAKEN;		t3 = IT_RED_FLAG_LOST; }
-		if(key.team == NUM_TEAM_2) { t = IT_BLUE_FLAG_CARRYING;		t2 = IT_BLUE_FLAG_TAKEN;		t3 = IT_BLUE_FLAG_LOST; }
-		if(key.team == NUM_TEAM_3) { t = IT_YELLOW_FLAG_CARRYING; 	t2 = IT_YELLOW_FLAG_TAKEN; 	t3 = IT_YELLOW_FLAG_LOST; }
-		if(key.team == NUM_TEAM_4) { t = IT_PINK_FLAG_CARRYING;		t2 = IT_PINK_FLAG_TAKEN;		t3 = IT_PINK_FLAG_LOST; }
+		if(key.team == NUM_TEAM_1) { t = KH_RED_KEY_CARRYING;		t2 = KH_RED_KEY_TAKEN;		t3 = KH_RED_KEY_LOST; }
+		if(key.team == NUM_TEAM_2) { t = KH_BLUE_KEY_CARRYING;		t2 = KH_BLUE_KEY_TAKEN;		t3 = KH_BLUE_KEY_LOST; }
+		if(key.team == NUM_TEAM_3) { t = KH_YELLOW_KEY_CARRYING; 	t2 = KH_YELLOW_KEY_TAKEN; 	t3 = KH_YELLOW_KEY_LOST; }
+		if(key.team == NUM_TEAM_4) { t = KH_PINK_KEY_CARRYING;		t2 = KH_PINK_KEY_TAKEN;		t3 = KH_PINK_KEY_LOST; }
 
 		switch(key.kh_status)
 		{
@@ -1183,14 +1183,14 @@ MUTATOR_HOOKFUNCTION(kh_PlayerPreThink)
 			case KEY_CARRY:
 			{
 				if((key.owner == self) || (key.pass_sender == self))
-					self.items |= t; // carrying: self is currently carrying the key
+					self.kh_keystatus |= t; // carrying: self is currently carrying the key
 				else 
-					self.items |= t2; // taken: someone else is carrying the key
+					self.kh_keystatus |= t2; // taken: someone else is carrying the key
 				break;
 			}
 			case KEY_DROPPED:
 			{
-				self.items |= t3; // lost: the key is dropped somewhere on the map
+				self.kh_keystatus |= t3; // lost: the key is dropped somewhere on the map
 				break;
 			}
 		}
@@ -1558,6 +1558,7 @@ void kh_Initialize()
 	precache_sound("ctf/touch.wav");
 	precache_sound("ctf/pass.wav");
 
+	addstat(STAT_KH_KEYSTATUS, AS_INT, kh_keystatus);
 	addstat(STAT_KH_REDKEY_TEAM, AS_INT, stat_kh_redkey_team);
 	addstat(STAT_KH_BLUEKEY_TEAM, AS_INT, stat_kh_bluekey_team);
 	addstat(STAT_KH_YELLOWKEY_TEAM, AS_INT, stat_kh_yellowkey_team);

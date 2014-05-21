@@ -26,12 +26,13 @@ void mutators_add()
 	CHECK_MUTATOR_ADD("g_riflearena", mutator_riflearena, !cvar("g_minstagib") && !g_nexball && !cvar("g_overkill"));
 	CHECK_MUTATOR_ADD("g_campcheck", mutator_campcheck, 1);
 	CHECK_MUTATOR_ADD("g_overkill", mutator_overkill, !cvar("g_minstagib") && !g_nexball);
-	CHECK_MUTATOR_ADD("g_za", mutator_zombie_apocalypse, cvar("g_monsters") && !g_nexball);
+	CHECK_MUTATOR_ADD("g_za", mutator_zombie_apocalypse, cvar("g_monsters") && !g_nexball && !g_invasion);
 	CHECK_MUTATOR_ADD("g_walljump", mutator_walljump, 1);
 	CHECK_MUTATOR_ADD("g_hats", mutator_hats, !cvar("g_overkill"));
 	CHECK_MUTATOR_ADD("g_status_effects", mutator_status_effects, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_random_vehicles", mutator_random_vehicles, cvar("g_vehicles"));
 	CHECK_MUTATOR_ADD("g_piggyback", mutator_piggyback, teamplay);
+	CHECK_MUTATOR_ADD("g_buffs", mutator_buffs, 1);
 
 	#undef CHECK_MUTATOR_ADD
 }

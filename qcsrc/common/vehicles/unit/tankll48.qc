@@ -744,10 +744,6 @@ float v_tankll48(float req)
 		}
 		case VR_PRECACHE:
 		{
-			precache_model ("models/vhshield.md3");
-			precache_model ("models/vehicles/tankll48.md3");
-			precache_model ("models/vehicles/tankll48_turret.md3");
-			precache_model ("models/vehicles/tankll48_cannon.md3");
 			return TRUE;
 		}
 	}

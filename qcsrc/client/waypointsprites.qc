@@ -202,8 +202,12 @@ float spritelookupblinkvalue(string s)
 		case "ons-cp-atck-neut": return 2;
 		case "ons-cp-atck-red":  return 2;
 		case "ons-cp-atck-blue": return 2;
+		case "ons-cp-atck-yellow": return 2;
+		case "ons-cp-atck-pink": return 2;
 		case "ons-cp-dfnd-red":  return 0.5;
 		case "ons-cp-dfnd-blue": return 0.5;
+		case "ons-cp-dfnd-yellow": return 0.5;
+		case "ons-cp-dfnd-pink": return 0.5;
 		case "item-invis":       return 2;
 		case "item-extralife":   return 2;
 		case "item-speed":       return 2;
@@ -254,12 +258,10 @@ string spritelookuptext(string s)
 		case "keycarrier-yellow": return _("Key carrier");
 		case "redbase": return _("Red base");
 		case "yellowbase": return _("Yellow base");
+		case "neutralbase": return _("White base");
 		case "pinkbase": return _("Pink base");
 		case "waypoint": return _("Waypoint");
-		case "ons-gen-red": return _("Generator");
-		case "ons-gen-blue": return _("Generator");
-		case "ons-gen-yellow": return _("Generator");
-		case "ons-gen-pink": return _("Generator");
+		case "ons-gen": return _("Generator");
 		case "ons-gen-shielded": return _("Generator");
 		case "ons-cp-neut": return _("Control point");
 		case "ons-cp-red": return _("Control point");
@@ -297,6 +299,7 @@ string spritelookuptext(string s)
 		case "item-fuelregen": return _("Fuel regen");
 		case "item-jetpack": return _("Jet Pack");
 		case "frozen": return _("Frozen!");
+		case "enemy": return _("Enemy");
 		case "tagged-target": return _("Tagged");
 		case "vehicle": return _("Vehicle");
 		case "survivals": return _("Survivals");
