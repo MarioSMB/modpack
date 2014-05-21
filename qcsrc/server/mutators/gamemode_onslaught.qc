@@ -644,6 +644,7 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 	cp.colormap = e.colormap;
 
 	WaypointSprite_UpdateBuildFinished(cp.sprite, time + (e.max_health - e.health) / (e.count / CP_THINKRATE));
+	WaypointSprite_UpdateRule(cp.sprite,cp.team,SPRITERULE_TEAMPLAY);
 
 	onslaught_controlpoint_icon_link(e, ons_ControlPoint_Icon_BuildThink);
 }
@@ -802,6 +803,7 @@ void ons_ControlPoint_Reset()
 	setmodel_fixsize(self, "models/onslaught/controlpoint_pad.md3");
 
 	WaypointSprite_UpdateMaxHealth(self.sprite, 0);
+	WaypointSprite_UpdateRule(self.sprite,self.team,SPRITERULE_TEAMPLAY);
 
 	onslaught_updatelinks();
 
@@ -1055,6 +1057,7 @@ void ons_GeneratorReset()
 
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
+	WaypointSprite_UpdateRule(self.sprite,self.team,SPRITERULE_TEAMPLAY);
 	
 	onslaught_updatelinks();
 }

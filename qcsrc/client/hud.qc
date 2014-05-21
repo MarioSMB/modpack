@@ -2057,7 +2057,7 @@ void HUD_Radar_Mouse()
 			HUD_Radar_Hide_Maximized();
 			return;
 		}
-		vector pos = teamradar_texcoord_to_3dcoord(teamradar_2dcoord_to_texcoord(mousepos+'8 4 0'),view_origin_z);
+		vector pos = teamradar_texcoord_to_3dcoord(teamradar_2dcoord_to_texcoord(mousepos),view_origin_z);
 		localcmd(sprintf("cmd ons_spawn %f %f %f",pos_x,pos_y,pos_z));
 		
 		HUD_Radar_Hide_Maximized();
@@ -2066,7 +2066,7 @@ void HUD_Radar_Mouse()
 	
 
 	const vector cursorsize = '32 32 0';
-	drawpic(mousepos, strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', 0.8, DRAWFLAG_NORMAL);
+	drawpic(mousepos-'8 4 0', strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', 0.8, DRAWFLAG_NORMAL);
 }
 
 void HUD_Radar(void)
@@ -2245,8 +2245,27 @@ void HUD_Radar(void)
 
 	for(tm = world; (tm = find(tm, classname, "radarlink")); )
 		draw_teamradar_link(tm.origin, tm.velocity, tm.team);
+	
+	vector coord;
+	vector brightcolor;
 	for(tm = world; (tm = findflags(tm, teamradar_icon, 0xFFFFFF)); )
+	{
+		if ( hud_panel_radar_mouse )
+		if ( tm.health > 0 )
+		if ( tm.team == myteam+1 )
+		{
+			coord = teamradar_texcoord_to_2dcoord(teamradar_3dcoord_to_texcoord(tm.origin));
+			if ( vlen(mousepos-coord) < 8 )
+			{
+				brightcolor_x = min(1,tm.teamradar_color_x*1.5);
+				brightcolor_y = min(1,tm.teamradar_color_y*1.5);
+				brightcolor_z = min(1,tm.teamradar_color_z*1.5);
+				drawpic(coord - '8 8 0', "gfx/teamradar_icon_glow", '16 16 0', brightcolor, panel_fg_alpha, 0);
+			}
+		}
+		
 		draw_teamradar_icon(tm.origin, tm.teamradar_icon, tm, tm.teamradar_color, panel_fg_alpha);
+	}
 	for(tm = world; (tm = find(tm, classname, "entcs_receiver")); )
 	{
 		color2 = GetPlayerColor(tm.sv_entnum);
