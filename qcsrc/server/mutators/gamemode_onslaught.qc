@@ -589,11 +589,14 @@ void ons_ControlPoint_Icon_BuildThink()
 		WaypointSprite_UpdateMaxHealth(self.owner.sprite, self.max_health);
 		WaypointSprite_UpdateHealth(self.owner.sprite, self.health);
 
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ONSLAUGHT_CAPTURE, self.owner.ons_toucher.netname, self.owner.message);
-		Send_Notification(NOTIF_ALL_EXCEPT, self.owner.ons_toucher, MSG_CENTER, APP_TEAM_ENT_4(self.owner.ons_toucher, CENTER_ONS_CAPTURE_), self.owner.message);
-		Send_Notification(NOTIF_ONE, self.owner.ons_toucher, MSG_CENTER, CENTER_ONS_CAPTURE, self.owner.message);
-		PlayerScore_Add(self.owner.ons_toucher, SP_ONS_CAPS, 1);
-		PlayerTeamScore_AddScore(self.owner.ons_toucher, 10);
+		if(IS_PLAYER(self.owner.ons_toucher))
+		{
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ONSLAUGHT_CAPTURE, self.owner.ons_toucher.netname, self.owner.message);
+			Send_Notification(NOTIF_ALL_EXCEPT, self.owner.ons_toucher, MSG_CENTER, APP_TEAM_ENT_4(self.owner.ons_toucher, CENTER_ONS_CAPTURE_), self.owner.message);
+			Send_Notification(NOTIF_ONE, self.owner.ons_toucher, MSG_CENTER, CENTER_ONS_CAPTURE, self.owner.message);
+			PlayerScore_Add(self.owner.ons_toucher, SP_ONS_CAPS, 1);
+			PlayerTeamScore_AddScore(self.owner.ons_toucher, 10);
+		}
 		
 		self.owner.ons_toucher = world;
 
@@ -1134,7 +1137,7 @@ void Onslaught_count_generators()
 {
 	entity e;
 	total_generators = redowned = blueowned = yellowowned = pinkowned = 0;
-	for(e = world; (e = find(e, classname, "onslaught_generator")) != world; )
+	for(e = ons_worldgeneratorlist; e; e = e.ons_worldgeneratornext)
 	{
 		++total_generators;
 		redowned += (e.team == NUM_TEAM_1 && e.health > 0);
