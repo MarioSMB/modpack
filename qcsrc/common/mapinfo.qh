@@ -65,7 +65,7 @@ REGISTER_GAMETYPE(_("Key Hunt"),kh,g_keyhunt,KEYHUNT,"timelimit=20 pointlimit=10
 REGISTER_GAMETYPE(_("Assault"),as,g_assault,ASSAULT,"timelimit=20",_("Destroy obstacles to find and destroy the enemy power core before time runs out"));
 #define g_assault IS_GAMETYPE(ASSAULT)
 
-REGISTER_GAMETYPE(_("Onslaught"),ons,g_onslaught,ONSLAUGHT,"timelimit=20",_("Capture control points to reach and destroy the enemy generator"));
+REGISTER_GAMETYPE(_("Onslaught"),ons,g_onslaught,ONSLAUGHT,"pointlimit=1 timelimit=30",_("Capture control points to reach and destroy the enemy generator"));
 #define g_onslaught IS_GAMETYPE(ONSLAUGHT)
 
 REGISTER_GAMETYPE(_("Nexball"),nb,g_nexball,NEXBALL,"timelimit=20 pointlimit=5 leadlimit=0",_("XonSports"));
