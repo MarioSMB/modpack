@@ -859,6 +859,7 @@ void onslaught_controlpoint_icon_damage(entity inflictor, entity attacker, float
 			{
 				play2(attacker, "onslaught/damageblockedbyshield.wav");
 				self.pain_finished = time + 1;
+				attacker.typehitsound += 1; // play both sounds (shield is way too quiet)
 			}
 		return;
 	}
