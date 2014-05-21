@@ -1911,12 +1911,13 @@ void HUD_Timer(void)
 
 float HUD_Radar_Clickable()
 {
-	return hud_panel_radar_mouse;
+	return hud_panel_radar_mouse && !hud_panel_radar_temp_hidden;
 }
 
 void HUD_Radar_Show_Maximized(float show,float clickable)
 {
 	hud_panel_radar_maximized = show;
+	hud_panel_radar_temp_hidden = 0;
 	
 	if ( show )
 	{
@@ -1978,17 +1979,33 @@ float HUD_Radar_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		// allow console/use binds to work without hiding the map
 		string con_keys;
 		float keys;
+		float i;
 		con_keys = strcat(findkeysforcommand("toggleconsole", 0)," ",findkeysforcommand("+use", 0)) ;
 		keys = tokenize(con_keys); // findkeysforcommand returns data for this
-
-		float i;
 		for (i = 0; i < keys; ++i)
 		{
 			if(nPrimary == stof(argv(i)))
 				return false;
 		}
 		
-		if ( bInputType == 0 )
+		if ( getstati(STAT_HEALTH) <= 0 )
+		{
+			// Show scoreboard
+			if ( bInputType < 2 )
+			{
+				con_keys = findkeysforcommand("+showscores", 0);
+				keys = tokenize(con_keys);
+				for (i = 0; i < keys; ++i)
+				{
+					if ( nPrimary == stof(argv(i)) )
+					{
+						hud_panel_radar_temp_hidden = bInputType == 0;
+						return false;
+					}
+				}
+			}
+		}
+		else if ( bInputType == 0 )
 			HUD_Radar_Hide_Maximized();
 		
 		return false;
@@ -2001,6 +2018,12 @@ void HUD_Radar_Mouse()
 {
 	if ( !hud_panel_radar_mouse ) return;
 	if(mv_active) return;
+	
+	if ( intermission )
+	{
+		HUD_Radar_Hide_Maximized();
+		return;
+	}
 	
 	if(mouseClicked & S_MOUSE2)
 	{
@@ -2065,6 +2088,9 @@ void HUD_Radar(void)
 			}
 		}
 	}
+	
+	if ( hud_panel_radar_temp_hidden )
+		return;
 
 	HUD_Panel_UpdateCvars();
 
@@ -2230,6 +2256,21 @@ void HUD_Radar(void)
 	draw_teamradar_player(view_origin, view_angles, '1 1 1');
 
 	drawresetcliparea();
+	
+	if ( hud_panel_radar_mouse )
+	{			
+		string message = "Click to select teleport destination";
+		
+		if ( getstati(STAT_HEALTH) <= 0 )
+		{
+			message = "Click to select spawn location";
+		}
+		
+		drawcolorcodedstring(pos + '0.5 0 0' * (mySize_x - stringwidth(message, TRUE, hud_fontsize)) - '0 1 0' * hud_fontsize_y * 2,
+							 message, hud_fontsize, hud_panel_radar_foreground_alpha, DRAWFLAG_NORMAL);
+		
+		hud_panel_radar_bottom = pos_y + mySize_y + hud_fontsize_y;
+	}
 }
 
 // Score (#7)
@@ -5073,8 +5114,16 @@ void HUD_CenterPrint (void)
 		hud_fade_alpha = 1 - autocvar__menu_alpha;
 	}
 	HUD_Panel_UpdateCvars();
-
-	if(scoreboard_fade_alpha)
+	
+	if ( HUD_Radar_Clickable() )
+	{
+		if (hud_panel_radar_bottom >= 0.96 * vid_conheight)
+			return;
+		
+		panel_pos = eY * hud_panel_radar_bottom + eX * 0.5 * (vid_conwidth - panel_size_x);
+		panel_size_y = min(panel_size_y, vid_conheight - hud_panel_radar_bottom);
+	}
+	else if(scoreboard_fade_alpha)
 	{
 		hud_fade_alpha = hud_fade_alpha_save;
 
