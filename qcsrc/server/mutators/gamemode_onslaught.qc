@@ -1034,7 +1034,7 @@ void onslaught_controlpoint_icon_buildthink()
 		self.think = onslaught_controlpoint_icon_think;
 		sound(self, CH_TRIGGER, "onslaught/controlpoint_built.wav", VOL_BASE, ATTEN_NORM);
 		self.owner.iscaptured = TRUE;
-		//self.solid = SOLID_BBOX;
+		self.solid = SOLID_BBOX;
 
 		WaypointSprite_UpdateMaxHealth(self.owner.sprite, self.max_health);
 		WaypointSprite_UpdateHealth(self.owner.sprite, self.health);
@@ -1089,7 +1089,7 @@ void onslaught_controlpoint_touch()
 	e.owner = self;
 	e.max_health = autocvar_g_onslaught_cp_health;
 	e.health = autocvar_g_onslaught_cp_buildhealth;
-	e.solid = SOLID_CORPSE;
+	e.solid = SOLID_NOT;
 	e.movetype = MOVETYPE_NONE;
 	//setmodel(e, "models/onslaught/controlpoint_icon.md3");
 	setsize(e, CPICON_MIN, CPICON_MAX);

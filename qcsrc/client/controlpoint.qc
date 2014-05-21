@@ -128,11 +128,11 @@ void cpicon_construct()
 		setorigin(self.icon_realmodel, self.origin);
 		setsize(self.icon_realmodel, CPICON_MIN, CPICON_MAX);
 		self.icon_realmodel.movetype = MOVETYPE_NOCLIP;
-		self.icon_realmodel.solid = SOLID_CORPSE;
+		self.icon_realmodel.solid = SOLID_NOT;
 		self.icon_realmodel.move_origin = self.icon_realmodel.origin;
 	}
 	
-	if(self.iscaptured) { self.icon_realmodel.solid = SOLID_CORPSE; }
+	if(self.iscaptured) { self.icon_realmodel.solid = SOLID_BBOX; }
 
 	self.move_movetype	= MOVETYPE_NOCLIP;
 	self.solid			= SOLID_NOT;
