@@ -1990,6 +1990,8 @@ void ons_MonsterSpawn_Delayed()
 {
 	entity e, own = self.owner;
 	
+	if(!own) { remove(self); return; }
+	
 	if(own.targetname)
 	{
 		e = find(world, target, own.targetname);
@@ -2001,6 +2003,8 @@ void ons_MonsterSpawn_Delayed()
 			own.use();
 		}
 	}
+	
+	remove(self);
 }
 
 MUTATOR_HOOKFUNCTION(ons_MonsterSpawn)
@@ -2015,6 +2019,9 @@ MUTATOR_HOOKFUNCTION(ons_MonsterSpawn)
 void ons_TurretSpawn_Delayed()
 {
 	entity e, own = self.owner;
+
+	if(!own) { remove(self); return; }
+
 	if(own.targetname)
 	{
 		e = find(world, target, own.targetname);
