@@ -1979,25 +1979,28 @@ MUTATOR_HOOKFUNCTION(ons_MonsterThink)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(ons_MonsterSpawn)
+void ons_MonsterSpawn_Delayed()
 {
-	entity e, ee = world;
+	entity e, own = self.owner;
 	
-	if(self.targetname)
+	if(own.targetname)
 	{
-		e = find(world,target,self.targetname);
+		e = find(world, target, own.targetname);
 		if(e != world)
 		{
-			self.team = e.team;
-			ee = e;
+			own.team = e.team;
+			
+			activator = e;
+			own.use();
 		}
 	}
-	
-	if(ee)
-	{
-        activator = ee;
-        self.use();
-    }
+}
+
+MUTATOR_HOOKFUNCTION(ons_MonsterSpawn)
+{
+	entity e = spawn();
+	e.owner = self;
+	InitializeEntity(e, ons_MonsterSpawn_Delayed, INITPRIO_FINDTARGET);
 
 	return FALSE;
 }
