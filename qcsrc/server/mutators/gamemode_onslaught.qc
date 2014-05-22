@@ -263,62 +263,12 @@ float ons_Link_Send(entity to, float sendflags)
 void ons_Link_CheckUpdate()
 {
 	// TODO check if the two sides have moved (currently they won't move anyway)
-	float redpower, bluepower, yellowpower, pinkpower;
-
-	redpower = bluepower = yellowpower = pinkpower = 0;
-	if(self.goalentity.islinked)
-	{
-		switch(self.goalentity.team)
-		{
-			case NUM_TEAM_1: redpower = 1; break;
-			case NUM_TEAM_2: bluepower = 1; break;
-			case NUM_TEAM_3: yellowpower = 1; break;
-			case NUM_TEAM_4: pinkpower = 1; break;
-		}
-	}
-	if(self.enemy.islinked)
-	{
-		switch(self.enemy.team)
-		{
-			case NUM_TEAM_1: redpower = 2; break;
-			case NUM_TEAM_2: bluepower = 2; break;
-			case NUM_TEAM_3: yellowpower = 2; break;
-			case NUM_TEAM_4: pinkpower = 2; break;
-		}
-	}
-
-	float cc = 0;
+	float cc = 0, cc1 = 0, cc2 = 0;
 	
-	/*if(redpower == 1 && bluepower == 2)
-		cc = (NUM_TEAM_1 - 1) * 0x01 + (NUM_TEAM_2 - 1) * 0x10;
-	else if(redpower == 2 && bluepower == 1)
-		cc = (NUM_TEAM_1 - 1) * 0x10 + (NUM_TEAM_2 - 1) * 0x01;
-	else if(redpower)
-		cc = (NUM_TEAM_1 - 1) * 0x11;
-	else if(bluepower)
-		cc = (NUM_TEAM_2 - 1) * 0x11;
-	else
-		cc = 0;*/
-
-	if(redpower == 1) { cc = (NUM_TEAM_1 - 1) * 0x01; }
-	else if(bluepower == 1) { cc = (NUM_TEAM_2 - 1) * 0x01; }
-	else if(yellowpower == 1) { cc = (NUM_TEAM_3 - 1) * 0x01; }
-	else if(pinkpower == 1) { cc = (NUM_TEAM_4 - 1) * 0x01; }
-	else if(redpower) { cc = (NUM_TEAM_1 - 1) * 0x11; goto skip; }
-	else if(bluepower) { cc = (NUM_TEAM_2 - 1) * 0x11; goto skip; }
-	else if(yellowpower) { cc = (NUM_TEAM_3 - 1) * 0x11; goto skip; }
-	else if(pinkpower) { cc = (NUM_TEAM_4 - 1) * 0x11; goto skip; }
-	else { cc = 0; }
+	if(self.goalentity.islinked) { cc1 = (self.goalentity.team - 1) * 0x01; }
+	if(self.enemy.islinked) { cc2 = (self.enemy.team - 1) * 0x10; }
 	
-	if(redpower == 2) { cc += (NUM_TEAM_1 - 1) * 0x10; }
-	else if(bluepower == 2) { cc += (NUM_TEAM_2 - 1) * 0x10; }
-	else if(yellowpower == 2) { cc += (NUM_TEAM_3 - 1) * 0x10; }
-	else if(pinkpower == 2) { cc += (NUM_TEAM_4 - 1) * 0x10; }
-	
-	:skip
-
-	//print(etos(self), " rp=", ftos(redpower), " bp=", ftos(bluepower), " ");
-	//print("cc=", ftos(cc), "\n");
+	cc = cc1 + cc2;
 
 	if(cc != self.clientcolors)
 	{
