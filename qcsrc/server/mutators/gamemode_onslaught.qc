@@ -514,18 +514,8 @@ void ons_ControlPoint_Icon_BuildThink()
 		sound(self, CH_TRIGGER, "onslaught/controlpoint_built.wav", VOL_BASE, ATTEN_NORM);
 		self.owner.iscaptured = TRUE;
 		self.solid = SOLID_BBOX;
-		
-		string cap_effect = string_null;
-		switch(self.owner.team)
-		{
-			case NUM_TEAM_1: cap_effect = "red_cap"; break;
-			case NUM_TEAM_2: cap_effect = "blue_cap"; break;
-			case NUM_TEAM_3: cap_effect = "yellow_cap"; break;
-			case NUM_TEAM_4: cap_effect = "pink_cap"; break;
-		}
-		
-		if(cap_effect)
-			pointparticles(particleeffectnum(cap_effect), self.owner.origin, '0 0 0', 1);
+
+		pointparticles(particleeffectnum(sprintf("%s_cap", Static_Team_ColorName_Lower(self.owner.team))), self.owner.origin, '0 0 0', 1);
 
 		WaypointSprite_UpdateMaxHealth(self.owner.sprite, self.max_health);
 		WaypointSprite_UpdateHealth(self.owner.sprite, self.health);
@@ -583,18 +573,8 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 	cp.goalentity = e;
 	cp.team = e.team;
 	cp.colormap = e.colormap;
-	
-	string cap_effect = string_null;
-	switch(player.team)
-	{
-		case NUM_TEAM_1: cap_effect = "redflag_touch"; break;
-		case NUM_TEAM_2: cap_effect = "blueflag_touch"; break;
-		case NUM_TEAM_3: cap_effect = "yellowflag_touch"; break;
-		case NUM_TEAM_4: cap_effect = "pinkflag_touch"; break;
-	}
-	
-	if(cap_effect)
-		pointparticles(particleeffectnum(cap_effect), e.origin, '0 0 0', 1);
+
+	pointparticles(particleeffectnum(sprintf("%sflag_touch", Static_Team_ColorName_Lower(player.team))), e.origin, '0 0 0', 1);
 
 	WaypointSprite_UpdateBuildFinished(cp.sprite, time + (e.max_health - e.health) / (e.count / CP_THINKRATE));
 	cp.sprite.SendFlags |= 16;
@@ -997,7 +977,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	gen.ons_worldgeneratornext = ons_worldgeneratorlist; // link generator into ons_worldgeneratorlist
 	ons_worldgeneratorlist = gen;
 	
-	gen.netname = ((teamnumber == NUM_TEAM_1) ? "^1RED^7 generator" : ((teamnumber == NUM_TEAM_2) ? "^4BLUE^7 generator" : ((teamnumber == NUM_TEAM_3) ? "^3YELLOW^7 generator" : "^6PINK^7 generator")));
+	gen.netname = sprintf("%s generator", Team_ColoredFullName(teamnumber));
 	gen.classname = "onslaught_generator";
 	gen.solid = SOLID_BBOX;
 	gen.team_saved = teamnumber;
@@ -1157,17 +1137,8 @@ float Onslaught_CheckWinner()
 	}
 	
 	ons_stalemate = FALSE;
-	
-	string snd = string_null;
-	switch(winner_team)
-	{
-		case NUM_TEAM_1: snd = "ctf/red_capture.wav"; break;
-		case NUM_TEAM_2: snd = "ctf/blue_capture.wav"; break;
-		case NUM_TEAM_3: snd = "ctf/yellow_capture.wav"; break;
-		case NUM_TEAM_4: snd = "ctf/pink_capture.wav"; break;
-	}
-	
-	if(snd) { play2all(snd); }
+
+	play2all(sprintf("ctf/%s_capture.wav", Static_Team_ColorName_Lower(winner_team)));
 	
 	round_handler_Init(7, autocvar_g_onslaught_warmup, autocvar_g_onslaught_round_timelimit);
 	
