@@ -528,6 +528,18 @@ void ons_ControlPoint_Icon_BuildThink()
 		sound(self, CH_TRIGGER, "onslaught/controlpoint_built.wav", VOL_BASE, ATTEN_NORM);
 		self.owner.iscaptured = TRUE;
 		self.solid = SOLID_BBOX;
+		
+		string cap_effect = string_null;
+		switch(self.owner.team)
+		{
+			case NUM_TEAM_1: cap_effect = "red_cap"; break;
+			case NUM_TEAM_2: cap_effect = "blue_cap"; break;
+			case NUM_TEAM_3: cap_effect = "yellow_cap"; break;
+			case NUM_TEAM_4: cap_effect = "pink_cap"; break;
+		}
+		
+		if(cap_effect)
+			pointparticles(particleeffectnum(cap_effect), self.owner.origin, '0 0 0', 1);
 
 		WaypointSprite_UpdateMaxHealth(self.owner.sprite, self.max_health);
 		WaypointSprite_UpdateHealth(self.owner.sprite, self.health);
@@ -585,8 +597,21 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 	cp.goalentity = e;
 	cp.team = e.team;
 	cp.colormap = e.colormap;
+	
+	string cap_effect = string_null;
+	switch(player.team)
+	{
+		case NUM_TEAM_1: cap_effect = "redflag_touch"; break;
+		case NUM_TEAM_2: cap_effect = "blueflag_touch"; break;
+		case NUM_TEAM_3: cap_effect = "yellowflag_touch"; break;
+		case NUM_TEAM_4: cap_effect = "pinkflag_touch"; break;
+	}
+	
+	if(cap_effect)
+		pointparticles(particleeffectnum(cap_effect), e.origin, '0 0 0', 1);
 
 	WaypointSprite_UpdateBuildFinished(cp.sprite, time + (e.max_health - e.health) / (e.count / CP_THINKRATE));
+	cp.sprite.SendFlags |= 16;
 
 	onslaught_controlpoint_icon_link(e, ons_ControlPoint_Icon_BuildThink);
 }
