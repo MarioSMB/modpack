@@ -676,6 +676,8 @@ void ons_ControlPoint_Touch()
 		return;
 		
 	if(!IS_PLAYER(toucher)) { return; }
+	if(toucher.frozen) { return; }
+	if(toucher.deadflag != DEAD_NO) { return; }
 		
 	attackable = ons_ControlPoint_Attackable(self, toucher.team);
 	if(attackable != 2 && attackable != 4)
