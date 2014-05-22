@@ -69,19 +69,28 @@ void ons_CaptureShield_Spawn(entity generator, float is_generator)
 // Junk Pile
 // ==========
 
+void ons_debug(string input)
+{
+	switch(autocvar_g_onslaught_debug)
+	{
+		case 1: dprint(input); break;
+		case 2: print(input); break;
+	}
+}
+
 void onslaught_updatelinks()
 {
 	entity l, links;
 	// first check if the game has ended
-	dprint("--- updatelinks ---\n");
+	ons_debug("--- updatelinks ---\n");
 	links = findchain(classname, "onslaught_link");
 	// mark generators as being shielded and networked
 	for(l = ons_worldgeneratorlist; l; l = l.ons_worldgeneratornext)
 	{
 		if (l.iscaptured)
-			dprint(etos(l), " (generator) belongs to team ", ftos(l.team), "\n");
+			ons_debug(strcat(etos(l), " (generator) belongs to team ", ftos(l.team), "\n"));
 		else
-			dprint(etos(l), " (generator) is destroyed\n");
+			ons_debug(strcat(etos(l), " (generator) is destroyed\n"));
 		l.islinked = l.iscaptured;
 		l.isshielded = l.iscaptured;
 		l.sprite.SendFlags |= 16;
@@ -93,14 +102,14 @@ void onslaught_updatelinks()
 		l.isshielded = TRUE;
 		float i;
 		for(i = 0; i < 17; ++i) { l.isgenneighbor[i] = FALSE; l.iscpneighbor[i] = FALSE; }
-		dprint(etos(l), " (point) belongs to team ", ftos(l.team), "\n");
+		ons_debug(strcat(etos(l), " (point) belongs to team ", ftos(l.team), "\n"));
 		l.sprite.SendFlags |= 16;
 	}
 	// flow power outward from the generators through the network
 	l = links;
 	while (l)
 	{
-		dprint(etos(l), " (link) connects ", etos(l.goalentity), " with ", etos(l.enemy), "\n");
+		ons_debug(strcat(etos(l), " (link) connects ", etos(l.goalentity), " with ", etos(l.enemy), "\n"));
 		l = l.chain;
 	}
 	float stop = FALSE;
@@ -120,13 +129,13 @@ void onslaught_updatelinks()
 						{
 							stop = FALSE;
 							l.goalentity.islinked = TRUE;
-							dprint(etos(l), " (link) is marking ", etos(l.goalentity), " (point) because its team matches ", etos(l.enemy), " (point)\n");
+							ons_debug(strcat(etos(l), " (link) is marking ", etos(l.goalentity), " (point) because its team matches ", etos(l.enemy), " (point)\n"));
 						}
 						else if (!l.enemy.islinked)
 						{
 							stop = FALSE;
 							l.enemy.islinked = TRUE;
-							dprint(etos(l), " (link) is marking ", etos(l.enemy), " (point) because its team matches ", etos(l.goalentity), " (point)\n");
+							ons_debug(strcat(etos(l), " (link) is marking ", etos(l.enemy), " (point) because its team matches ", etos(l.goalentity), " (point)\n"));
 						}
 					}
 			l = l.chain;
@@ -141,7 +150,7 @@ void onslaught_updatelinks()
 		{
 			if(DIFF_TEAM(l.goalentity, l.enemy))
 			{
-				dprint(etos(l), " (link) is unshielding ", etos(l.enemy), " (point) because its team does not match ", etos(l.goalentity), " (point)\n");
+				ons_debug(strcat(etos(l), " (link) is unshielding ", etos(l.enemy), " (point) because its team does not match ", etos(l.goalentity), " (point)\n"));
 				l.enemy.isshielded = FALSE;
 			}
 			if(l.goalentity.classname == "onslaught_generator")
@@ -153,7 +162,7 @@ void onslaught_updatelinks()
 		{
 			if(DIFF_TEAM(l.goalentity, l.enemy))
 			{
-				dprint(etos(l), " (link) is unshielding ", etos(l.goalentity), " (point) because its team does not match ", etos(l.enemy), " (point)\n");
+				ons_debug(strcat(etos(l), " (link) is unshielding ", etos(l.goalentity), " (point) because its team does not match ", etos(l.enemy), " (point)\n"));
 				l.goalentity.isshielded = FALSE;
 			}
 			if(l.enemy.classname == "onslaught_generator")
@@ -168,13 +177,13 @@ void onslaught_updatelinks()
 	{
 		if (l.isshielded)
 		{
-			dprint(etos(l), " (generator) is shielded\n");
+			ons_debug(strcat(etos(l), " (generator) is shielded\n"));
 			l.takedamage = DAMAGE_NO;
 			l.bot_attack = FALSE;
 		}
 		else
 		{
-			dprint(etos(l), " (generator) is not shielded\n");
+			ons_debug(strcat(etos(l), " (generator) is not shielded\n"));
 			l.takedamage = DAMAGE_AIM;
 			l.bot_attack = TRUE;
 		}
@@ -184,7 +193,7 @@ void onslaught_updatelinks()
 	{
 		if (l.isshielded)
 		{
-			dprint(etos(l), " (point) is shielded\n");
+			ons_debug(strcat(etos(l), " (point) is shielded\n"));
 			if (l.goalentity)
 			{
 				l.goalentity.takedamage = DAMAGE_NO;
@@ -193,7 +202,7 @@ void onslaught_updatelinks()
 		}
 		else
 		{
-			dprint(etos(l), " (point) is not shielded\n");
+			ons_debug(strcat(etos(l), " (point) is not shielded\n"));
 			if (l.goalentity)
 			{
 				l.goalentity.takedamage = DAMAGE_AIM;
@@ -270,7 +279,7 @@ void ons_DelayedLinkSetup()
 	if(!self.goalentity) { objerror("can not find target\n"); }
 	if(!self.enemy) { objerror("can not find target2\n"); }
 
-	dprint(etos(self.goalentity), " linked with ", etos(self.enemy), "\n");
+	ons_debug(strcat(etos(self.goalentity), " linked with ", etos(self.enemy), "\n"));
 	self.SendFlags |= 3;
 	self.think = ons_Link_CheckUpdate;
 	self.nextthink = time;
@@ -1245,8 +1254,8 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 	if(!needweapons && !needarmor)
 		return;
 
-//	dprint(self.netname, " needs weapons ", ftos(needweapons) , "\n");
-//	dprint(self.netname, " needs armor ", ftos(needarmor) , "\n");
+	ons_debug(strcat(self.netname, " needs weapons ", ftos(needweapons) , "\n"));
+	ons_debug(strcat(self.netname, " needs armor ", ftos(needarmor) , "\n"));
 
 	// See what is around
 	head = findchainfloat(bot_pickup, TRUE);
@@ -1267,29 +1276,29 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 
 void havocbot_role_ons_setrole(entity bot, float role)
 {
-	dprint(strcat(bot.netname," switched to "));
+	ons_debug(strcat(bot.netname," switched to "));
 	switch(role)
 	{
 		case HAVOCBOT_ONS_ROLE_DEFENSE:
-			dprint("defense");
+			ons_debug("defense");
 			bot.havocbot_role = havocbot_role_ons_defense;
 			bot.havocbot_role_flags = HAVOCBOT_ONS_ROLE_DEFENSE;
 			bot.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_ONS_ROLE_ASSISTANT:
-			dprint("assistant");
+			ons_debug("assistant");
 			bot.havocbot_role = havocbot_role_ons_assistant;
 			bot.havocbot_role_flags = HAVOCBOT_ONS_ROLE_ASSISTANT;
 			bot.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_ONS_ROLE_OFFENSE:
-			dprint("offense");
+			ons_debug("offense");
 			bot.havocbot_role = havocbot_role_ons_offense;
 			bot.havocbot_role_flags = HAVOCBOT_ONS_ROLE_OFFENSE;
 			bot.havocbot_role_timeout = 0;
 			break;
 	}
-	dprint("\n");
+	ons_debug("\n");
 }
 
 float havocbot_ons_teamcount(entity bot, float role)
@@ -1355,7 +1364,7 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 	if (!cp)
 		return;
 
-//	dprint(self.netname, " chose cp ranked ", ftos(bestvalue), "\n");
+	ons_debug(strcat(self.netname, " chose cp ranked ", ftos(bestvalue), "\n"));
 
 	if(cp.goalentity)
 	{
@@ -1396,12 +1405,12 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 		{
 			navigation_routerating(cp, ratingscale, 10000);
 		}
-	//	dprint(self.netname, " found an attackable controlpoint at ", vtos(cp.origin) ,"\n");
+		ons_debug(strcat(self.netname, " found an attackable controlpoint at ", vtos(cp.origin) ,"\n"));
 	}
 	else
 	{
 		// Should be touched
-		// dprint(self.netname, " found a touchable controlpoint at ", vtos(cp.origin) ,"\n");
+		ons_debug(strcat(self.netname, " found a touchable controlpoint at ", vtos(cp.origin) ,"\n"));
 		found = FALSE;
 
 		// Look for auto generated waypoint
@@ -1453,7 +1462,7 @@ float havocbot_goalrating_ons_generator_attack(float ratingscale)
 
 		if(bestwp)
 		{
-		//	dprint("waypoints found around generator\n");
+			ons_debug("waypoints found around generator\n");
 			navigation_routerating(bestwp, ratingscale, 10000);
 			bestwp.cnt += 1;
 
@@ -1466,7 +1475,7 @@ float havocbot_goalrating_ons_generator_attack(float ratingscale)
 		}
 		else
 		{
-		//	dprint("generator found without waypoints around\n");
+			ons_debug("generator found without waypoints around\n");
 			// if there aren't waypoints near the generator go straight to it
 			navigation_routerating(g, ratingscale, 10000);
 			self.havocbot_attack_time = 0;
