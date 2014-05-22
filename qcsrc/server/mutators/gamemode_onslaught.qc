@@ -985,7 +985,7 @@ void ons_GeneratorReset()
 	self.think = ons_GeneratorThink;
 	self.nextthink = time + GEN_THINKRATE;
 	
-	Net_LinkEntity(self, TRUE, 0, generator_send);
+	Net_LinkEntity(self, FALSE, 0, generator_send);
 	
 	self.SendFlags = GSF_SETUP; // just incase
 	self.SendFlags |= GSF_STATUS;
@@ -1008,7 +1008,7 @@ void ons_DelayedGeneratorSetup()
 	
 	onslaught_updatelinks();
 	
-	Net_LinkEntity(self, TRUE, 0, generator_send);
+	Net_LinkEntity(self, FALSE, 0, generator_send);
 }
 
 void ons_GeneratorSetup(entity gen) // called when spawning a generator entity on the map as a spawnfunc
