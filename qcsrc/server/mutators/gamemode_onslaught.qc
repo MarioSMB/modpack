@@ -80,10 +80,9 @@ void ons_debug(string input)
 
 void onslaught_updatelinks()
 {
-	entity l, links;
+	entity l;
 	// first check if the game has ended
 	ons_debug("--- updatelinks ---\n");
-	links = findchain(classname, "onslaught_link");
 	// mark generators as being shielded and networked
 	for(l = ons_worldgeneratorlist; l; l = l.ons_worldgeneratornext)
 	{
@@ -106,18 +105,11 @@ void onslaught_updatelinks()
 		l.sprite.SendFlags |= 16;
 	}
 	// flow power outward from the generators through the network
-	l = links;
-	while (l)
-	{
-		ons_debug(strcat(etos(l), " (link) connects ", etos(l.goalentity), " with ", etos(l.enemy), "\n"));
-		l = l.chain;
-	}
 	float stop = FALSE;
 	while (!stop)
 	{
 		stop = TRUE;
-		l = links;
-		while (l)
+		for(l = ons_worldlinklist; l; l = l.ons_worldlinknext)
 		{
 			// if both points are captured by the same team, and only one of
 			// them is powered, mark the other one as powered as well
@@ -138,13 +130,11 @@ void onslaught_updatelinks()
 							ons_debug(strcat(etos(l), " (link) is marking ", etos(l.enemy), " (point) because its team matches ", etos(l.goalentity), " (point)\n"));
 						}
 					}
-			l = l.chain;
 		}
 	}
 	// now that we know which points are powered we can mark their neighbors
 	// as unshielded if team differs
-	l = links;
-	while (l)
+	for(l = ons_worldlinklist; l; l = l.ons_worldlinknext)
 	{
 		if (l.goalentity.islinked)
 		{
@@ -170,7 +160,6 @@ void onslaught_updatelinks()
 			else
 				l.goalentity.iscpneighbor[l.enemy.team] = TRUE;
 		}
-		l = l.chain;
 	}
 	// now update the takedamage and alpha variables on generator shields
 	for(l = ons_worldgeneratorlist; l; l = l.ons_worldgeneratornext)
@@ -1857,6 +1846,9 @@ void spawnfunc_onslaught_link()
 
 	if (self.target == "" || self.target2 == "")
 		objerror("target and target2 must be set\n");
+
+	self.ons_worldlinknext = ons_worldlinklist; // link into ons_worldlinklist
+	ons_worldlinklist = self;
 
 	InitializeEntity(self, ons_DelayedLinkSetup, INITPRIO_FINDTARGET);
 	Net_LinkEntity(self, FALSE, 0, ons_Link_Send);
