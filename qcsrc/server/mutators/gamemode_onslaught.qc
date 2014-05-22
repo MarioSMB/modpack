@@ -265,8 +265,8 @@ void ons_Link_CheckUpdate()
 	// TODO check if the two sides have moved (currently they won't move anyway)
 	float cc = 0, cc1 = 0, cc2 = 0;
 	
-	if(self.goalentity.islinked) { cc1 = (self.goalentity.team - 1) * 0x01; }
-	if(self.enemy.islinked) { cc2 = (self.enemy.team - 1) * 0x10; }
+	if(self.goalentity.islinked || self.goalentity.iscaptured) { cc1 = (self.goalentity.team - 1) * 0x01; }
+	if(self.enemy.islinked || self.enemy.iscaptured) { cc2 = (self.enemy.team - 1) * 0x10; }
 	
 	cc = cc1 + cc2;
 
