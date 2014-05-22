@@ -161,7 +161,7 @@ void onslaught_updatelinks()
 				l.goalentity.iscpneighbor[l.enemy.team] = TRUE;
 		}
 	}
-	// now update the takedamage and alpha variables on generator shields
+	// now update the generators
 	for(l = ons_worldgeneratorlist; l; l = l.ons_worldgeneratornext)
 	{
 		if (l.isshielded)
@@ -176,6 +176,8 @@ void onslaught_updatelinks()
 			l.takedamage = DAMAGE_AIM;
 			l.bot_attack = TRUE;
 		}
+
+		ons_Generator_UpdateSprite(l);
 	}
 	// now update the takedamage and alpha variables on control point icons
 	for(l = ons_worldcplist; l; l = l.ons_worldcpnext)
@@ -199,11 +201,6 @@ void onslaught_updatelinks()
 			}
 		}
 		ons_ControlPoint_UpdateSprite(l);
-	}
-	// update generator sprites
-	for(l = ons_worldgeneratorlist; l; l = l.ons_worldgeneratornext)
-	{
-		ons_Generator_UpdateSprite(l);
 	}
 	l = findchain(classname, "ons_captureshield");
 	while(l)
@@ -611,51 +608,14 @@ string ons_ControlPoint_Waypoint(entity e)
 	if(e.team)
 	{
 		a = ons_ControlPoint_Attackable(e, e.team);
-		if(a == 3 || a == 4) // ATTACK/TOUCH THIS ONE NOW
-		{
-			switch(e.team)
-			{
-				case NUM_TEAM_1: return "ons-cp-atck-red";
-				case NUM_TEAM_2: return "ons-cp-atck-blue";
-				case NUM_TEAM_3: return "ons-cp-atck-yellow";
-				case NUM_TEAM_4: return "ons-cp-atck-pink";
-				default: return "ons-cp-atck-neut";
-			}
-		}
-		else if(a == -2) // DEFEND THIS ONE NOW
-		{
-			switch(e.team)
-			{
-				case NUM_TEAM_1: return "ons-cp-dfnd-red";
-				case NUM_TEAM_2: return "ons-cp-dfnd-blue";
-				case NUM_TEAM_3: return "ons-cp-dfnd-yellow";
-				case NUM_TEAM_4: return "ons-cp-dfnd-pink";
-			}
-		}
-		else if(a == -1 || a == 1) // own point, or fire at it
-		{
-			switch(e.team)
-			{
-				case NUM_TEAM_1: return "ons-cp-red";
-				case NUM_TEAM_2: return "ons-cp-blue";
-				case NUM_TEAM_3: return "ons-cp-yellow";
-				case NUM_TEAM_4: return "ons-cp-pink";
-			}
-		}
-		else if(a == 2) // touch it
-			return "ons-cp-neut";
+		
+		if(a == -2) { return "ons-cp-dfnd"; } // defend now
+		if(a == -1 || a == 1 || a == 2) { return "ons-cp"; } // touch
+		if(a == 3 || a == 4) { return "ons-cp-atck"; } // attack
 	}
 	else
-	{
-		switch(e.team)
-		{
-			case NUM_TEAM_1: return "ons-cp-red";
-			case NUM_TEAM_2: return "ons-cp-blue";
-			case NUM_TEAM_3: return "ons-cp-yellow";
-			case NUM_TEAM_4: return "ons-cp-pink";
-			default: return "ons-cp-neut";
-		}
-	}
+		return "ons-cp";
+
 	return "";
 }
 
