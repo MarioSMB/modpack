@@ -1806,6 +1806,12 @@ MUTATOR_HOOKFUNCTION(ons_GetTeamCount)
 	return TRUE;
 }
 
+MUTATOR_HOOKFUNCTION(ons_SpectateCopy)
+{
+	self.ons_roundlost = other.ons_roundlost; // make spectators see it too
+	return FALSE;
+}
+
 
 // ==========
 // Spawnfuncs
@@ -1912,6 +1918,7 @@ MUTATOR_DEFINITION(gamemode_onslaught)
 	MUTATOR_HOOK(TurretSpawn, ons_TurretSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRole, ons_BotRoles, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, ons_GetTeamCount, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SpectateCopy, ons_SpectateCopy, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
