@@ -202,20 +202,9 @@ void onslaught_updatelinks()
 		}
 		ons_ControlPoint_UpdateSprite(l);
 	}
-	// count generators owned by each team
-	float t1 = 0, t2 = 0, t3 = 0, t4 = 0;
+	// update generator sprites
 	for(l = ons_worldgeneratorlist; l; l = l.ons_worldgeneratornext)
 	{
-		if (l.iscaptured)
-		{
-			switch(l.team)
-			{
-				case NUM_TEAM_1: t1 = 1; break;
-				case NUM_TEAM_2: t2 = 1; break;
-				case NUM_TEAM_3: t3 = 1; break;
-				case NUM_TEAM_4: t4 = 1; break;
-			}
-		}
 		ons_Generator_UpdateSprite(l);
 	}
 	l = findchain(classname, "ons_captureshield");
@@ -225,11 +214,6 @@ void onslaught_updatelinks()
 		l.colormap = l.enemy.colormap;
 		l = l.chain;
 	}
-	// see if multiple teams remain (if not, it's game over)
-	if (t1 + t2 + t3 + t4 < 2)
-		dprint("--- game over ---\n");
-	else
-		dprint("--- done updating links ---\n");
 }
 
 
