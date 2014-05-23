@@ -129,6 +129,8 @@ void buff_Think()
 	{
 		self.color = self.colormod = Buff_Color(self.buffs);
 		self.enemy.colormod = ((self.team) ? Team_ColorRGB(self.team) + '0.1 0.1 0.1' : self.colormod);
+		
+		setmodel(self, Buff_Model(self.buffs));
 
 		if(self.buff_waypoint)
 		{
@@ -238,7 +240,7 @@ void buff_Init(entity ent)
 	self.buff_active = !self.buff_activetime;
 	self.pflags = PFLAGS_FULLDYNAMIC;
 
-	setmodel(self, "models/buffs/buff.md3");
+	setmodel(self, Buff_Model(self.buffs));
 	setsize(self, '-15 -15 -40', '15 15 40');
 	
 	self.enemy = spawn();
@@ -505,7 +507,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 			if(!self.buff_model)
 			{
 				self.buff_model = spawn();
-				setmodel(self.buff_model, "models/buffs/buff.md3");
+				setmodel(self.buff_model, Buff_Model(self.buffs));
 				setsize(self.buff_model, '0 0 -40', '0 0 40');
 				self.buff_model.owner = self;
 				self.buff_model.pflags = PFLAGS_FULLDYNAMIC;
@@ -599,6 +601,14 @@ void buffs_Initialize()
 	precache_sound("misc/shield_respawn.wav");
 	precache_sound("misc/poweroff.wav");
 	precache_sound("weapons/rocket_impact.wav");
+	
+	entity e;
+	for(e = Buff_Type_first; e; e = e.enemy)
+	{
+		string buffmodel = sprintf("models/buffs/buff_%s.md3", e.netname);
+		if(fexists(buffmodel))
+			precache_model(buffmodel);
+	}
 
 	addstat(STAT_BUFFS, AS_INT, buffs);
 }
