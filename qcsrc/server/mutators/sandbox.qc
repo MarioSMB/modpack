@@ -110,7 +110,7 @@ void sandbox_ObjectEdit_Scale(entity e, float f)
 	if(e.scale)
 	{
 		e.scale = bound(autocvar_g_sandbox_object_scale_min, e.scale, autocvar_g_sandbox_object_scale_max);
-		e.modelscale = e.scale;
+		e.modelscale = f;
 		setmodel(e, e.model); // reset mins and maxs based on mesh
 		setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
 		FixSize(e);
@@ -674,6 +674,11 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 							e.frame = stof(argv(3));
 							break;
 						case "scale":
+							if(e.solid == SOLID_BSP)
+							{
+								print_to(self, "^1SANDBOX - WARNING: ^7BSP solid objects cannot be resized");
+								return TRUE;
+							}
 							sandbox_ObjectEdit_Scale(e, stof(argv(3)));
 							break;
 						case "solidity":
