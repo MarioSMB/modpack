@@ -1313,7 +1313,7 @@ float havocbot_ctf_teamcount(entity bot, vector org, float tc_radius)
 
 	FOR_EACH_PLAYER(head)
 	{
-		if(head.team!=bot.team || head.deadflag != DEAD_NO || head == bot)
+		if(DIFF_TEAM(head, bot) || head.deadflag != DEAD_NO || head == bot)
 			continue;
 
 		if(vlen(head.origin - org) < tc_radius)
@@ -1494,7 +1494,7 @@ void havocbot_ctf_reset_role(entity bot)
 	// if there is only me on the team switch to offense
 	c = 0;
 	FOR_EACH_PLAYER(head)
-	if(head.team==bot.team)
+	if(SAME_TEAM(head, bot))
 		++c;
 
 	if(c==1)
@@ -1863,7 +1863,7 @@ void havocbot_role_ctf_defense()
 		}
 
 		if(closestplayer)
-		if(closestplayer.team!=self.team)
+		if(DIFF_TEAM(closestplayer, self))
 		if(vlen(org - self.origin)>1000)
 		if(checkpvs(self.origin,closestplayer)||random()<0.5)
 			havocbot_goalrating_ctf_ourbase(30000);
