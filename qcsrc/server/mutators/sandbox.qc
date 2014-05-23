@@ -169,7 +169,7 @@ entity sandbox_ObjectSpawn(float database)
 	e.classname = "object";
 	e.takedamage = DAMAGE_AIM;
 	e.damageforcescale = 1;
-	e.solid = ((autocvar_g_sandbox_object_solid_type == 0) ? SOLID_BBOX : SOLID_BSP); // SOLID_BSP would be best, but can lag the server badly
+	e.solid = SOLID_BBOX; // SOLID_BSP would be best, but can lag the server badly
 	e.movetype = MOVETYPE_TOSS;
 	e.frame = 0;
 	e.skin = 0;
@@ -690,6 +690,12 @@ MUTATOR_HOOKFUNCTION(sandbox_PlayerCommand)
 								case "1": // solid
 									e.solid = SOLID_BBOX;
 									break;
+								case "2": // bsp solid
+									if(autocvar_g_sandbox_allow_bspsolid)
+									{
+										e.solid = SOLID_BSP;
+										break;
+									}
 								default:
 									break;
 							}
