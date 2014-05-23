@@ -106,9 +106,11 @@ entity sandbox_ObjectEdit_Get(float permissions)
 void sandbox_ObjectEdit_Scale(entity e, float f)
 {
 	e.scale = f;
+	e.modelscale = f;
 	if(e.scale)
 	{
 		e.scale = bound(autocvar_g_sandbox_object_scale_min, e.scale, autocvar_g_sandbox_object_scale_max);
+		e.modelscale = e.scale;
 		setmodel(e, e.model); // reset mins and maxs based on mesh
 		setsize(e, e.mins * e.scale, e.maxs * e.scale); // adapt bounding box size to model size
 		FixSize(e);
@@ -167,7 +169,7 @@ entity sandbox_ObjectSpawn(float database)
 	e.classname = "object";
 	e.takedamage = DAMAGE_AIM;
 	e.damageforcescale = 1;
-	e.solid = SOLID_BBOX; // SOLID_BSP would be best, but can lag the server badly
+	e.solid = ((autocvar_g_sandbox_object_solid_type == 0) ? SOLID_BBOX : SOLID_BSP); // SOLID_BSP would be best, but can lag the server badly
 	e.movetype = MOVETYPE_TOSS;
 	e.frame = 0;
 	e.skin = 0;

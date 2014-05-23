@@ -1319,6 +1319,7 @@ float autocvar_g_sandbox_object_scale_min;
 float autocvar_g_sandbox_object_scale_max;
 float autocvar_g_sandbox_object_material_velocity_min;
 float autocvar_g_sandbox_object_material_velocity_factor;
+float autocvar_g_sandbox_object_solid_type;
 float autocvar_g_max_info_autoscreenshot;
 float autocvar_physics_ode;
 float autocvar_g_physical_items;
