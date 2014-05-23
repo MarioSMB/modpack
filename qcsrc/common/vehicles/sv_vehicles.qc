@@ -548,8 +548,16 @@ void vehicle_use()
 	if(self.active == ACTIVE_ACTIVE && self.deadflag == DEAD_NO && !gameover)
 	{
 		dprint("Respawning vehicle: ", self.netname, "\n");
-		vehicles_setreturn(self);
-		vehicles_reset_colors();
+		if(self.effects & EF_NODRAW)
+		{
+			self.think = vehicles_spawn;
+			self.nextthink = time + 3;
+		}
+		else
+		{
+			vehicles_setreturn(self);
+			vehicles_reset_colors();
+		}
 	}
 }
 
@@ -1236,7 +1244,9 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 
 	VEH_ACTION(vehicle_id, VR_SETUP);
 
-	if(autocvar_g_vehicles_delayspawn)
+	if(self.active == ACTIVE_NOT)
+		self.nextthink = 0; // wait until activated
+	else if(autocvar_g_vehicles_delayspawn)
 		self.nextthink = time + self.respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter);
 	else
 		self.nextthink = time + game_starttime;
