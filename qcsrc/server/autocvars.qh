@@ -1550,6 +1550,7 @@ float autocvar_g_piggyback_ride_enemies;
 var float autocvar_g_assault_round_limit = 1;
 var float autocvar_g_assault_repair_amount = 40;
 float autocvar_g_onslaught_debug;
+float autocvar_g_onslaught_teleport_wait;
 float autocvar_g_onslaught_spawn_at_controlpoints;
 var float autocvar_g_onslaught_spawn_at_controlpoints_chance = 0.5;
 float autocvar_g_onslaught_spawn_at_controlpoints_random;

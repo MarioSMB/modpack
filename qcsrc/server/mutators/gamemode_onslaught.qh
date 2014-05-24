@@ -41,6 +41,8 @@ entity ons_worldlinklist;
 
 float ons_stalemate;
 
+.float teleport_antispam;
+
 .float ons_roundlost;
 
 // waypoint sprites

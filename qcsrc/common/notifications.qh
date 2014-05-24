@@ -774,6 +774,7 @@ void Send_Notification_WOCOVA(
 	MULTITEAM_CENTER(1, CENTER_ONS_NOTSHIELDED_, 4,         0, 0, "",              CPID_ONSLAUGHT,        "0 0", _("^BGThe ^TCenemy^BG generator is no longer shielded!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ONS_NOTSHIELDED_TEAM,        0, 0, "",              CPID_ONSLAUGHT,        "0 0", _("^K1Your generator is NOT shielded!\n^BGRe-capture control points to shield it!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ONS_TELEPORT,                0, 0, "pass_key",      CPID_ONSLAUGHT,        "0 0", _("^BGPress ^F2DROPFLAG%s^BG to teleport"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_ONS_TELEPORT_ANTISPAM,       0, 1, "f1secs",        CPID_ONSLAUGHT,        "0 0", _("^BGTeleporting disabled for %s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_OVERKILL_CHARGE,             0, 0, "",              CPID_OVERKILL,         "0 0", _("^BGYour weapon's charge is too low, release the attack button & wait for it to charge"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_FRAG,               0, 0, "",              CPID_OVERTIME,         "0 0", _("^F2Now playing ^F4OVERTIME^F2!\nKeep fragging until we have a winner!"), _("^F2Now playing ^F4OVERTIME^F2!\nKeep scoring until we have a winner!")) \
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_CONTROLPOINT,       0, 0, "",              CPID_OVERTIME,         "5 0", _("^F2Now playing ^F4OVERTIME^F2!\n\nGenerators are now decaying.\nThe more control points your team holds,\nthe faster the enemy generator decays"), "") \

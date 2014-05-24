@@ -660,10 +660,13 @@ void ons_ControlPoint_Touch()
 	if(toucher.frozen) { return; }
 	if(toucher.deadflag != DEAD_NO) { return; }
 	
-	if ( SAME_TEAM(self,other) )
+	if ( SAME_TEAM(self,toucher) )
 	if ( self.iscaptured )
 	{
-		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_TELEPORT);
+		if(time <= toucher.teleport_antispam)
+			Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_ONS_TELEPORT_ANTISPAM, rint(toucher.teleport_antispam - time));
+		else
+			Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_ONS_TELEPORT);
 	}
 		
 	attackable = ons_ControlPoint_Attackable(self, toucher.team);
@@ -1668,6 +1671,8 @@ float ons_Teleport(entity player, entity tele_target, float range, float tele_ef
 				player.angles = '0 1 0' * ( theta * RAD2DEG + 180 );
 				makevectors(player.angles);
 				player.fixangle = TRUE;
+				player.teleport_antispam = time + autocvar_g_onslaught_teleport_wait;
+
 				if ( tele_effects )
 					pointparticles(particleeffectnum("teleport"), player.origin + v_forward * 32, '0 0 0', 1);
 				return TRUE;
@@ -2012,12 +2017,15 @@ MUTATOR_HOOKFUNCTION(ons_SV_ParseClientCommand)
 MUTATOR_HOOKFUNCTION(ons_PlayerUseKey)
 {
 	if(MUTATOR_RETURNVALUE || gameover) { return FALSE; }
-
-	entity source_point = ons_Nearest_ControlPoint(self.origin, autocvar_g_onslaught_teleport_radius);
-	if ( source_point )
+	
+	if((time > self.teleport_antispam) && (self.deadflag == DEAD_NO) && !self.vehicle)
 	{
-		stuffcmd(self, "qc_cmd_cl hud clickradar\n");
-		return TRUE;
+		entity source_point = ons_Nearest_ControlPoint(self.origin, autocvar_g_onslaught_teleport_radius);
+		if ( source_point )
+		{
+			stuffcmd(self, "qc_cmd_cl hud clickradar\n");
+			return TRUE;
+		}
 	}
 	
 	return FALSE;
