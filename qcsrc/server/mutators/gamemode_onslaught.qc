@@ -577,6 +577,7 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 	pointparticles(particleeffectnum(sprintf("%sflag_touch", Static_Team_ColorName_Lower(player.team))), e.origin, '0 0 0', 1);
 
 	WaypointSprite_UpdateBuildFinished(cp.sprite, time + (e.max_health - e.health) / (e.count / CP_THINKRATE));
+	WaypointSprite_UpdateRule(cp.sprite,cp.team,SPRITERULE_TEAMPLAY);
 	cp.sprite.SendFlags |= 16;
 
 	onslaught_controlpoint_icon_link(e, ons_ControlPoint_Icon_BuildThink);
@@ -658,6 +659,12 @@ void ons_ControlPoint_Touch()
 	if(!IS_PLAYER(toucher)) { return; }
 	if(toucher.frozen) { return; }
 	if(toucher.deadflag != DEAD_NO) { return; }
+	
+	if ( SAME_TEAM(self,other) )
+	if ( self.iscaptured )
+	{
+		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_TELEPORT);
+	}
 		
 	attackable = ons_ControlPoint_Attackable(self, toucher.team);
 	if(attackable != 2 && attackable != 4)
@@ -695,6 +702,7 @@ void ons_ControlPoint_Reset()
 	setmodel_fixsize(self, "models/onslaught/controlpoint_pad.md3");
 
 	WaypointSprite_UpdateMaxHealth(self.sprite, 0);
+	WaypointSprite_UpdateRule(self.sprite,self.team,SPRITERULE_TEAMPLAY);
 
 	onslaught_updatelinks();
 
@@ -948,6 +956,7 @@ void ons_GeneratorReset()
 
 	WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
 	WaypointSprite_UpdateHealth(self.sprite, self.health);
+	WaypointSprite_UpdateRule(self.sprite,self.team,SPRITERULE_TEAMPLAY);
 	
 	onslaught_updatelinks();
 }
@@ -965,6 +974,17 @@ void ons_DelayedGeneratorSetup()
 	onslaught_updatelinks();
 	
 	Net_LinkEntity(self, FALSE, 0, generator_send);
+}
+
+
+void onslaught_generator_touch()
+{
+	if ( IS_PLAYER(other) )
+	if ( SAME_TEAM(self,other) )
+	if ( self.iscaptured )
+	{
+		Send_Notification(NOTIF_ONE, other, MSG_CENTER, CENTER_ONS_TELEPORT);
+	}
 }
 
 void ons_GeneratorSetup(entity gen) // called when spawning a generator entity on the map as a spawnfunc
@@ -992,6 +1012,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	gen.iscaptured = TRUE;
 	gen.islinked = TRUE;
 	gen.isshielded = TRUE;
+	gen.touch = onslaught_generator_touch;
 	
 	// precache - TODO: clean up!
 	precache_model("models/onslaught/generator_shield.md3");
@@ -1505,6 +1526,158 @@ void havocbot_ons_reset_role(entity bot)
 }
 
 
+/*
+ * Find control point or generator owned by the same team self which is nearest to pos
+ * if max_dist is positive, only control points within this range will be considered
+ */
+entity ons_Nearest_ControlPoint(vector pos, float max_dist)
+{
+	entity tmp_entity, closest_target = world;
+	tmp_entity = findchain(classname, "onslaught_controlpoint");
+	while(tmp_entity)
+	{
+		if(SAME_TEAM(tmp_entity, self))
+		if(tmp_entity.iscaptured)
+		if(max_dist <= 0 || vlen(tmp_entity.origin - pos) <= max_dist)
+		if(vlen(tmp_entity.origin - pos) <= vlen(closest_target.origin - pos) || closest_target == world)
+			closest_target = tmp_entity;
+		tmp_entity = tmp_entity.chain;
+	}
+	tmp_entity = findchain(classname, "onslaught_generator");
+	while(tmp_entity)
+	{
+		if(SAME_TEAM(tmp_entity, self))
+		if(max_dist <= 0 || vlen(tmp_entity.origin - pos) < max_dist)
+		if(vlen(tmp_entity.origin - pos) <= vlen(closest_target.origin - pos) || closest_target == world)
+			closest_target = tmp_entity;
+		tmp_entity = tmp_entity.chain;
+	}
+	
+	return closest_target;
+}
+
+/*
+ * Find control point or generator owned by the same team self which is nearest to pos
+ * if max_dist is positive, only control points within this range will be considered
+ * This function only check distances on the XY plane, disregarding Z
+ */
+entity ons_Nearest_ControlPoint_2D(vector pos, float max_dist)
+{
+	entity tmp_entity, closest_target = world;
+	vector delta;
+	float smallest_distance = 0, distance;
+	
+	tmp_entity = findchain(classname, "onslaught_controlpoint");
+	while(tmp_entity)
+	{
+		delta = tmp_entity.origin - pos;
+		delta_z = 0;
+		distance = vlen(delta);
+		
+		if(SAME_TEAM(tmp_entity, self))
+		if(tmp_entity.iscaptured)
+		if(max_dist <= 0 || distance <= max_dist)
+		if(closest_target == world || distance <= smallest_distance )
+		{
+			closest_target = tmp_entity;
+			smallest_distance = distance;
+		}
+		
+		tmp_entity = tmp_entity.chain;
+	}
+	tmp_entity = findchain(classname, "onslaught_generator");
+	while(tmp_entity)
+	{
+		delta = tmp_entity.origin - pos;
+		delta_z = 0;
+		distance = vlen(delta);
+		
+		if(SAME_TEAM(tmp_entity, self))
+		if(max_dist <= 0 || distance <= max_dist)
+		if(closest_target == world || distance <= smallest_distance )
+		{
+			closest_target = tmp_entity;
+			smallest_distance = distance;
+		}
+		
+		tmp_entity = tmp_entity.chain;
+	}
+	
+	return closest_target;
+}
+/**
+ * find the number of control points and generators in the same team as self
+ */
+float ons_Count_SelfControlPoints()
+{
+	entity tmp_entity;
+	tmp_entity = findchain(classname, "onslaught_controlpoint");
+	float n = 0;
+	while(tmp_entity)
+	{
+		if(SAME_TEAM(tmp_entity, self))
+		if(tmp_entity.iscaptured)
+			n++;
+		tmp_entity = tmp_entity.chain;
+	}
+	tmp_entity = findchain(classname, "onslaught_generator");
+	while(tmp_entity)
+	{
+		if(SAME_TEAM(tmp_entity, self))
+			n++;
+		tmp_entity = tmp_entity.chain;
+	}
+	return n;
+}
+
+/**
+ * Teleport player to a random position near tele_target
+ * if tele_effects is true, teleport sound+particles are created
+ * return FALSE on failure
+ */
+float ons_Teleport(entity player, entity tele_target, float range, float tele_effects)
+{
+	if ( !tele_target )
+		return FALSE;
+	
+	float i;
+	vector loc;
+	float theta;
+	for(i = 0; i < 16; ++i)
+	{
+		theta = random() * 2 * M_PI;
+		loc_y = sin(theta);
+		loc_x = cos(theta);
+		loc_z = 0;
+		loc *= random() * range;
+		
+		loc += tele_target.origin + '0 0 128';
+		
+		tracebox(loc, PL_MIN, PL_MAX, loc, MOVE_NORMAL, player);
+		if(trace_fraction == 1.0 && !trace_startsolid)
+		{
+			traceline(tele_target.origin, loc, MOVE_NOMONSTERS, tele_target); // double check to make sure we're not spawning outside the world
+			if(trace_fraction == 1.0 && !trace_startsolid)
+			{
+				if ( tele_effects )
+				{
+					pointparticles(particleeffectnum("teleport"), player.origin, '0 0 0', 1);
+					sound (player, CH_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTEN_NORM);
+				}
+				setorigin(player, loc);
+				player.angles = '0 1 0' * ( theta * RAD2DEG + 180 );
+				makevectors(player.angles);
+				player.fixangle = TRUE;
+				if ( tele_effects )
+					pointparticles(particleeffectnum("teleport"), player.origin + v_forward * 32, '0 0 0', 1);
+				return TRUE;
+			}
+		}
+	}
+	
+	return FALSE;
+}
+
 // ==============
 // Hook Functions
 // ==============
@@ -1546,6 +1719,14 @@ MUTATOR_HOOKFUNCTION(ons_PlayerSpawn)
 
 	if(ons_stalemate) { Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_OVERTIME_CONTROLPOINT); }
 
+	if ( autocvar_g_onslaught_spawn_choose )
+	if ( self.ons_spawn_by )
+	if ( ons_Teleport(self,self.ons_spawn_by,autocvar_g_onslaught_teleport_radius,FALSE) )
+	{
+		self.ons_spawn_by = world;
+		return FALSE;
+	}
+	
 	if(autocvar_g_onslaught_spawn_at_controlpoints)
 	if(random() <= autocvar_g_onslaught_spawn_at_controlpoints_chance)
 	{
@@ -1656,6 +1837,11 @@ MUTATOR_HOOKFUNCTION(ons_PlayerDies)
 	{
 		l.sprite.SendFlags |= 16;
 	}
+	
+	if ( autocvar_g_onslaught_spawn_choose )
+	if ( ons_Count_SelfControlPoints() > 1 )
+		stuffcmd(self, "qc_cmd_cl hud clickradar\n");
+	
 	return FALSE;
 }
 
@@ -1759,6 +1945,78 @@ MUTATOR_HOOKFUNCTION(ons_SpectateCopy)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(ons_SV_ParseClientCommand)
+{
+	if ( cmd_name == "ons_spawn" )
+	{
+		vector pos = self.origin;
+		if(cmd_argc > 1)
+			pos_x = stof(argv(1));
+		if(cmd_argc > 2)
+			pos_y = stof(argv(2));
+		if(cmd_argc > 3)
+			pos_z = stof(argv(3));
+		
+		if ( IS_PLAYER(self) )
+		{
+			if ( !self.frozen )
+			{
+				entity source_point = ons_Nearest_ControlPoint(self.origin, autocvar_g_onslaught_teleport_radius);
+				
+				if ( !source_point && self.health > 0 )
+				{
+					sprint(self, "\nYou need to be next to a control point\n");
+					return 1;
+				}
+				
+				
+				entity closest_target = ons_Nearest_ControlPoint_2D(pos, autocvar_g_onslaught_click_radius);
+			
+				if ( closest_target == world )
+				{
+					sprint(self, "\nNo control point found\n");
+					return 1;
+				}
+				
+				if ( self.health <= 0 )
+				{
+					self.ons_spawn_by = closest_target;
+					self.respawn_flags = self.respawn_flags | RESPAWN_FORCE;
+				}
+				else
+				{
+					if ( source_point == closest_target )
+					{
+						sprint(self, "\nTeleporting to the same point\n");
+						return 1;
+					}
+					
+					if ( !ons_Teleport(self,closest_target,autocvar_g_onslaught_teleport_radius,TRUE) )
+						sprint(self, "\nUnable to teleport there\n");
+				}
+				
+				return 1;
+			}
+			
+			sprint(self, "\nNo teleportation for you\n");
+		}
+		
+		return 1;
+	}
+	return 0;
+}
+
+MUTATOR_HOOKFUNCTION(ons_PlayerUseKey)
+{
+	entity source_point = ons_Nearest_ControlPoint(self.origin, autocvar_g_onslaught_teleport_radius);
+	if ( source_point )
+	{
+		stuffcmd(self, "qc_cmd_cl hud clickradar\n");
+		return TRUE;
+	}
+	
+	return FALSE;
+}
 
 // ==========
 // Spawnfuncs
@@ -1869,6 +2127,8 @@ MUTATOR_DEFINITION(gamemode_onslaught)
 	MUTATOR_HOOK(HavocBot_ChooseRole, ons_BotRoles, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, ons_GetTeamCount, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SpectateCopy, ons_SpectateCopy, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SV_ParseClientCommand, ons_SV_ParseClientCommand, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerUseKey, ons_PlayerUseKey, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
