@@ -1947,6 +1947,9 @@ MUTATOR_HOOKFUNCTION(ons_SpectateCopy)
 
 MUTATOR_HOOKFUNCTION(ons_SV_ParseClientCommand)
 {
+	if(MUTATOR_RETURNVALUE) // command was already handled?
+		return FALSE;
+
 	if ( cmd_name == "ons_spawn" )
 	{
 		vector pos = self.origin;
