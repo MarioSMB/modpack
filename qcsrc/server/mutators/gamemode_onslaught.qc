@@ -2011,6 +2011,8 @@ MUTATOR_HOOKFUNCTION(ons_SV_ParseClientCommand)
 
 MUTATOR_HOOKFUNCTION(ons_PlayerUseKey)
 {
+	if(MUTATOR_RETURNVALUE || gameover) { return FALSE; }
+
 	entity source_point = ons_Nearest_ControlPoint(self.origin, autocvar_g_onslaught_teleport_radius);
 	if ( source_point )
 	{
