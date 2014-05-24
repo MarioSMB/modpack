@@ -69,19 +69,27 @@ void ons_CaptureShield_Spawn(entity generator, float is_generator)
 // Junk Pile
 // ==========
 
+void ons_debug(string input)
+{
+	switch(autocvar_g_onslaught_debug)
+	{
+		case 1: dprint(input); break;
+		case 2: print(input); break;
+	}
+}
+
 void onslaught_updatelinks()
 {
-	entity l, links;
+	entity l;
 	// first check if the game has ended
-	dprint("--- updatelinks ---\n");
-	links = findchain(classname, "onslaught_link");
+	ons_debug("--- updatelinks ---\n");
 	// mark generators as being shielded and networked
 	for(l = ons_worldgeneratorlist; l; l = l.ons_worldgeneratornext)
 	{
 		if (l.iscaptured)
-			dprint(etos(l), " (generator) belongs to team ", ftos(l.team), "\n");
+			ons_debug(strcat(etos(l), " (generator) belongs to team ", ftos(l.team), "\n"));
 		else
-			dprint(etos(l), " (generator) is destroyed\n");
+			ons_debug(strcat(etos(l), " (generator) is destroyed\n"));
 		l.islinked = l.iscaptured;
 		l.isshielded = l.iscaptured;
 		l.sprite.SendFlags |= 16;
@@ -93,22 +101,15 @@ void onslaught_updatelinks()
 		l.isshielded = TRUE;
 		float i;
 		for(i = 0; i < 17; ++i) { l.isgenneighbor[i] = FALSE; l.iscpneighbor[i] = FALSE; }
-		dprint(etos(l), " (point) belongs to team ", ftos(l.team), "\n");
+		ons_debug(strcat(etos(l), " (point) belongs to team ", ftos(l.team), "\n"));
 		l.sprite.SendFlags |= 16;
 	}
 	// flow power outward from the generators through the network
-	l = links;
-	while (l)
-	{
-		dprint(etos(l), " (link) connects ", etos(l.goalentity), " with ", etos(l.enemy), "\n");
-		l = l.chain;
-	}
 	float stop = FALSE;
 	while (!stop)
 	{
 		stop = TRUE;
-		l = links;
-		while (l)
+		for(l = ons_worldlinklist; l; l = l.ons_worldlinknext)
 		{
 			// if both points are captured by the same team, and only one of
 			// them is powered, mark the other one as powered as well
@@ -120,28 +121,26 @@ void onslaught_updatelinks()
 						{
 							stop = FALSE;
 							l.goalentity.islinked = TRUE;
-							dprint(etos(l), " (link) is marking ", etos(l.goalentity), " (point) because its team matches ", etos(l.enemy), " (point)\n");
+							ons_debug(strcat(etos(l), " (link) is marking ", etos(l.goalentity), " (point) because its team matches ", etos(l.enemy), " (point)\n"));
 						}
 						else if (!l.enemy.islinked)
 						{
 							stop = FALSE;
 							l.enemy.islinked = TRUE;
-							dprint(etos(l), " (link) is marking ", etos(l.enemy), " (point) because its team matches ", etos(l.goalentity), " (point)\n");
+							ons_debug(strcat(etos(l), " (link) is marking ", etos(l.enemy), " (point) because its team matches ", etos(l.goalentity), " (point)\n"));
 						}
 					}
-			l = l.chain;
 		}
 	}
 	// now that we know which points are powered we can mark their neighbors
 	// as unshielded if team differs
-	l = links;
-	while (l)
+	for(l = ons_worldlinklist; l; l = l.ons_worldlinknext)
 	{
 		if (l.goalentity.islinked)
 		{
 			if(DIFF_TEAM(l.goalentity, l.enemy))
 			{
-				dprint(etos(l), " (link) is unshielding ", etos(l.enemy), " (point) because its team does not match ", etos(l.goalentity), " (point)\n");
+				ons_debug(strcat(etos(l), " (link) is unshielding ", etos(l.enemy), " (point) because its team does not match ", etos(l.goalentity), " (point)\n"));
 				l.enemy.isshielded = FALSE;
 			}
 			if(l.goalentity.classname == "onslaught_generator")
@@ -153,7 +152,7 @@ void onslaught_updatelinks()
 		{
 			if(DIFF_TEAM(l.goalentity, l.enemy))
 			{
-				dprint(etos(l), " (link) is unshielding ", etos(l.goalentity), " (point) because its team does not match ", etos(l.enemy), " (point)\n");
+				ons_debug(strcat(etos(l), " (link) is unshielding ", etos(l.goalentity), " (point) because its team does not match ", etos(l.enemy), " (point)\n"));
 				l.goalentity.isshielded = FALSE;
 			}
 			if(l.enemy.classname == "onslaught_generator")
@@ -161,30 +160,31 @@ void onslaught_updatelinks()
 			else
 				l.goalentity.iscpneighbor[l.enemy.team] = TRUE;
 		}
-		l = l.chain;
 	}
-	// now update the takedamage and alpha variables on generator shields
+	// now update the generators
 	for(l = ons_worldgeneratorlist; l; l = l.ons_worldgeneratornext)
 	{
 		if (l.isshielded)
 		{
-			dprint(etos(l), " (generator) is shielded\n");
+			ons_debug(strcat(etos(l), " (generator) is shielded\n"));
 			l.takedamage = DAMAGE_NO;
 			l.bot_attack = FALSE;
 		}
 		else
 		{
-			dprint(etos(l), " (generator) is not shielded\n");
+			ons_debug(strcat(etos(l), " (generator) is not shielded\n"));
 			l.takedamage = DAMAGE_AIM;
 			l.bot_attack = TRUE;
 		}
+
+		ons_Generator_UpdateSprite(l);
 	}
 	// now update the takedamage and alpha variables on control point icons
 	for(l = ons_worldcplist; l; l = l.ons_worldcpnext)
 	{
 		if (l.isshielded)
 		{
-			dprint(etos(l), " (point) is shielded\n");
+			ons_debug(strcat(etos(l), " (point) is shielded\n"));
 			if (l.goalentity)
 			{
 				l.goalentity.takedamage = DAMAGE_NO;
@@ -193,7 +193,7 @@ void onslaught_updatelinks()
 		}
 		else
 		{
-			dprint(etos(l), " (point) is not shielded\n");
+			ons_debug(strcat(etos(l), " (point) is not shielded\n"));
 			if (l.goalentity)
 			{
 				l.goalentity.takedamage = DAMAGE_AIM;
@@ -202,22 +202,6 @@ void onslaught_updatelinks()
 		}
 		ons_ControlPoint_UpdateSprite(l);
 	}
-	// count generators owned by each team
-	float t1 = 0, t2 = 0, t3 = 0, t4 = 0;
-	for(l = ons_worldgeneratorlist; l; l = l.ons_worldgeneratornext)
-	{
-		if (l.iscaptured)
-		{
-			switch(l.team)
-			{
-				case NUM_TEAM_1: t1 = 1; break;
-				case NUM_TEAM_2: t2 = 1; break;
-				case NUM_TEAM_3: t3 = 1; break;
-				case NUM_TEAM_4: t4 = 1; break;
-			}
-		}
-		ons_Generator_UpdateSprite(l);
-	}
 	l = findchain(classname, "ons_captureshield");
 	while(l)
 	{
@@ -225,11 +209,6 @@ void onslaught_updatelinks()
 		l.colormap = l.enemy.colormap;
 		l = l.chain;
 	}
-	// see if multiple teams remain (if not, it's game over)
-	if (t1 + t2 + t3 + t4 < 2)
-		dprint("--- game over ---\n");
-	else
-		dprint("--- done updating links ---\n");
 }
 
 
@@ -263,62 +242,12 @@ float ons_Link_Send(entity to, float sendflags)
 void ons_Link_CheckUpdate()
 {
 	// TODO check if the two sides have moved (currently they won't move anyway)
-	float redpower, bluepower, yellowpower, pinkpower;
-
-	redpower = bluepower = yellowpower = pinkpower = 0;
-	if(self.goalentity.islinked)
-	{
-		switch(self.goalentity.team)
-		{
-			case NUM_TEAM_1: redpower = 1; break;
-			case NUM_TEAM_2: bluepower = 1; break;
-			case NUM_TEAM_3: yellowpower = 1; break;
-			case NUM_TEAM_4: pinkpower = 1; break;
-		}
-	}
-	if(self.enemy.islinked)
-	{
-		switch(self.enemy.team)
-		{
-			case NUM_TEAM_1: redpower = 2; break;
-			case NUM_TEAM_2: bluepower = 2; break;
-			case NUM_TEAM_3: yellowpower = 2; break;
-			case NUM_TEAM_4: pinkpower = 2; break;
-		}
-	}
-
-	float cc = 0;
+	float cc = 0, cc1 = 0, cc2 = 0;
 	
-	/*if(redpower == 1 && bluepower == 2)
-		cc = (NUM_TEAM_1 - 1) * 0x01 + (NUM_TEAM_2 - 1) * 0x10;
-	else if(redpower == 2 && bluepower == 1)
-		cc = (NUM_TEAM_1 - 1) * 0x10 + (NUM_TEAM_2 - 1) * 0x01;
-	else if(redpower)
-		cc = (NUM_TEAM_1 - 1) * 0x11;
-	else if(bluepower)
-		cc = (NUM_TEAM_2 - 1) * 0x11;
-	else
-		cc = 0;*/
-
-	if(redpower == 1) { cc = (NUM_TEAM_1 - 1) * 0x01; }
-	else if(bluepower == 1) { cc = (NUM_TEAM_2 - 1) * 0x01; }
-	else if(yellowpower == 1) { cc = (NUM_TEAM_3 - 1) * 0x01; }
-	else if(pinkpower == 1) { cc = (NUM_TEAM_4 - 1) * 0x01; }
-	else if(redpower) { cc = (NUM_TEAM_1 - 1) * 0x11; goto skip; }
-	else if(bluepower) { cc = (NUM_TEAM_2 - 1) * 0x11; goto skip; }
-	else if(yellowpower) { cc = (NUM_TEAM_3 - 1) * 0x11; goto skip; }
-	else if(pinkpower) { cc = (NUM_TEAM_4 - 1) * 0x11; goto skip; }
-	else { cc = 0; }
+	if(self.goalentity.islinked || self.goalentity.iscaptured) { cc1 = (self.goalentity.team - 1) * 0x01; }
+	if(self.enemy.islinked || self.enemy.iscaptured) { cc2 = (self.enemy.team - 1) * 0x10; }
 	
-	if(redpower == 2) { cc += (NUM_TEAM_1 - 1) * 0x10; }
-	else if(bluepower == 2) { cc += (NUM_TEAM_2 - 1) * 0x10; }
-	else if(yellowpower == 2) { cc += (NUM_TEAM_3 - 1) * 0x10; }
-	else if(pinkpower == 2) { cc += (NUM_TEAM_4 - 1) * 0x10; }
-	
-	:skip
-
-	//print(etos(self), " rp=", ftos(redpower), " bp=", ftos(bluepower), " ");
-	//print("cc=", ftos(cc), "\n");
+	cc = cc1 + cc2;
 
 	if(cc != self.clientcolors)
 	{
@@ -336,7 +265,7 @@ void ons_DelayedLinkSetup()
 	if(!self.goalentity) { objerror("can not find target\n"); }
 	if(!self.enemy) { objerror("can not find target2\n"); }
 
-	dprint(etos(self.goalentity), " linked with ", etos(self.enemy), "\n");
+	ons_debug(strcat(etos(self.goalentity), " linked with ", etos(self.enemy), "\n"));
 	self.SendFlags |= 3;
 	self.think = ons_Link_CheckUpdate;
 	self.nextthink = time;
@@ -586,6 +515,8 @@ void ons_ControlPoint_Icon_BuildThink()
 		self.owner.iscaptured = TRUE;
 		self.solid = SOLID_BBOX;
 
+		pointparticles(particleeffectnum(sprintf("%s_cap", Static_Team_ColorName_Lower(self.owner.team))), self.owner.origin, '0 0 0', 1);
+
 		WaypointSprite_UpdateMaxHealth(self.owner.sprite, self.max_health);
 		WaypointSprite_UpdateHealth(self.owner.sprite, self.health);
 
@@ -643,8 +574,11 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 	cp.team = e.team;
 	cp.colormap = e.colormap;
 
+	pointparticles(particleeffectnum(sprintf("%sflag_touch", Static_Team_ColorName_Lower(player.team))), e.origin, '0 0 0', 1);
+
 	WaypointSprite_UpdateBuildFinished(cp.sprite, time + (e.max_health - e.health) / (e.count / CP_THINKRATE));
 	WaypointSprite_UpdateRule(cp.sprite,cp.team,SPRITERULE_TEAMPLAY);
+	cp.sprite.SendFlags |= 16;
 
 	onslaught_controlpoint_icon_link(e, ons_ControlPoint_Icon_BuildThink);
 }
@@ -655,51 +589,14 @@ string ons_ControlPoint_Waypoint(entity e)
 	if(e.team)
 	{
 		a = ons_ControlPoint_Attackable(e, e.team);
-		if(a == 3 || a == 4) // ATTACK/TOUCH THIS ONE NOW
-		{
-			switch(e.team)
-			{
-				case NUM_TEAM_1: return "ons-cp-atck-red";
-				case NUM_TEAM_2: return "ons-cp-atck-blue";
-				case NUM_TEAM_3: return "ons-cp-atck-yellow";
-				case NUM_TEAM_4: return "ons-cp-atck-pink";
-				default: return "ons-cp-atck-neut";
-			}
-		}
-		else if(a == -2) // DEFEND THIS ONE NOW
-		{
-			switch(e.team)
-			{
-				case NUM_TEAM_1: return "ons-cp-dfnd-red";
-				case NUM_TEAM_2: return "ons-cp-dfnd-blue";
-				case NUM_TEAM_3: return "ons-cp-dfnd-yellow";
-				case NUM_TEAM_4: return "ons-cp-dfnd-pink";
-			}
-		}
-		else if(a == -1 || a == 1) // own point, or fire at it
-		{
-			switch(e.team)
-			{
-				case NUM_TEAM_1: return "ons-cp-red";
-				case NUM_TEAM_2: return "ons-cp-blue";
-				case NUM_TEAM_3: return "ons-cp-yellow";
-				case NUM_TEAM_4: return "ons-cp-pink";
-			}
-		}
-		else if(a == 2) // touch it
-			return "ons-cp-neut";
+		
+		if(a == -2) { return "ons-cp-dfnd"; } // defend now
+		if(a == -1 || a == 1 || a == 2) { return "ons-cp"; } // touch
+		if(a == 3 || a == 4) { return "ons-cp-atck"; } // attack
 	}
 	else
-	{
-		switch(e.team)
-		{
-			case NUM_TEAM_1: return "ons-cp-red";
-			case NUM_TEAM_2: return "ons-cp-blue";
-			case NUM_TEAM_3: return "ons-cp-yellow";
-			case NUM_TEAM_4: return "ons-cp-pink";
-			default: return "ons-cp-neut";
-		}
-	}
+		return "ons-cp";
+
 	return "";
 }
 
@@ -760,6 +657,8 @@ void ons_ControlPoint_Touch()
 		return;
 		
 	if(!IS_PLAYER(toucher)) { return; }
+	if(toucher.frozen) { return; }
+	if(toucher.deadflag != DEAD_NO) { return; }
 	
 	if ( SAME_TEAM(self,other) )
 	if ( self.iscaptured )
@@ -1050,7 +949,7 @@ void ons_GeneratorReset()
 	self.think = ons_GeneratorThink;
 	self.nextthink = time + GEN_THINKRATE;
 	
-	Net_LinkEntity(self, TRUE, 0, generator_send);
+	Net_LinkEntity(self, FALSE, 0, generator_send);
 	
 	self.SendFlags = GSF_SETUP; // just incase
 	self.SendFlags |= GSF_STATUS;
@@ -1074,7 +973,7 @@ void ons_DelayedGeneratorSetup()
 	
 	onslaught_updatelinks();
 	
-	Net_LinkEntity(self, TRUE, 0, generator_send);
+	Net_LinkEntity(self, FALSE, 0, generator_send);
 }
 
 
@@ -1098,7 +997,7 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	gen.ons_worldgeneratornext = ons_worldgeneratorlist; // link generator into ons_worldgeneratorlist
 	ons_worldgeneratorlist = gen;
 	
-	gen.netname = ((teamnumber == NUM_TEAM_1) ? "^1RED^7 generator" : ((teamnumber == NUM_TEAM_2) ? "^4BLUE^7 generator" : ((teamnumber == NUM_TEAM_3) ? "^3YELLOW^7 generator" : "^6PINK^7 generator")));
+	gen.netname = sprintf("%s generator", Team_ColoredFullName(teamnumber));
 	gen.classname = "onslaught_generator";
 	gen.solid = SOLID_BBOX;
 	gen.team_saved = teamnumber;
@@ -1259,17 +1158,8 @@ float Onslaught_CheckWinner()
 	}
 	
 	ons_stalemate = FALSE;
-	
-	string snd = string_null;
-	switch(winner_team)
-	{
-		case NUM_TEAM_1: snd = "ctf/red_capture.wav"; break;
-		case NUM_TEAM_2: snd = "ctf/blue_capture.wav"; break;
-		case NUM_TEAM_3: snd = "ctf/yellow_capture.wav"; break;
-		case NUM_TEAM_4: snd = "ctf/pink_capture.wav"; break;
-	}
-	
-	if(snd) { play2all(snd); }
+
+	play2all(sprintf("ctf/%s_capture.wav", Static_Team_ColorName_Lower(winner_team)));
 	
 	round_handler_Init(7, autocvar_g_onslaught_warmup, autocvar_g_onslaught_round_timelimit);
 	
@@ -1332,8 +1222,8 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 	if(!needweapons && !needarmor)
 		return;
 
-//	dprint(self.netname, " needs weapons ", ftos(needweapons) , "\n");
-//	dprint(self.netname, " needs armor ", ftos(needarmor) , "\n");
+	ons_debug(strcat(self.netname, " needs weapons ", ftos(needweapons) , "\n"));
+	ons_debug(strcat(self.netname, " needs armor ", ftos(needarmor) , "\n"));
 
 	// See what is around
 	head = findchainfloat(bot_pickup, TRUE);
@@ -1354,29 +1244,29 @@ void havocbot_goalrating_ons_offenseitems(float ratingscale, vector org, float s
 
 void havocbot_role_ons_setrole(entity bot, float role)
 {
-	dprint(strcat(bot.netname," switched to "));
+	ons_debug(strcat(bot.netname," switched to "));
 	switch(role)
 	{
 		case HAVOCBOT_ONS_ROLE_DEFENSE:
-			dprint("defense");
+			ons_debug("defense");
 			bot.havocbot_role = havocbot_role_ons_defense;
 			bot.havocbot_role_flags = HAVOCBOT_ONS_ROLE_DEFENSE;
 			bot.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_ONS_ROLE_ASSISTANT:
-			dprint("assistant");
+			ons_debug("assistant");
 			bot.havocbot_role = havocbot_role_ons_assistant;
 			bot.havocbot_role_flags = HAVOCBOT_ONS_ROLE_ASSISTANT;
 			bot.havocbot_role_timeout = 0;
 			break;
 		case HAVOCBOT_ONS_ROLE_OFFENSE:
-			dprint("offense");
+			ons_debug("offense");
 			bot.havocbot_role = havocbot_role_ons_offense;
 			bot.havocbot_role_flags = HAVOCBOT_ONS_ROLE_OFFENSE;
 			bot.havocbot_role_timeout = 0;
 			break;
 	}
-	dprint("\n");
+	ons_debug("\n");
 }
 
 float havocbot_ons_teamcount(entity bot, float role)
@@ -1442,7 +1332,7 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 	if (!cp)
 		return;
 
-//	dprint(self.netname, " chose cp ranked ", ftos(bestvalue), "\n");
+	ons_debug(strcat(self.netname, " chose cp ranked ", ftos(bestvalue), "\n"));
 
 	if(cp.goalentity)
 	{
@@ -1483,12 +1373,12 @@ void havocbot_goalrating_ons_controlpoints_attack(float ratingscale)
 		{
 			navigation_routerating(cp, ratingscale, 10000);
 		}
-	//	dprint(self.netname, " found an attackable controlpoint at ", vtos(cp.origin) ,"\n");
+		ons_debug(strcat(self.netname, " found an attackable controlpoint at ", vtos(cp.origin) ,"\n"));
 	}
 	else
 	{
 		// Should be touched
-		// dprint(self.netname, " found a touchable controlpoint at ", vtos(cp.origin) ,"\n");
+		ons_debug(strcat(self.netname, " found a touchable controlpoint at ", vtos(cp.origin) ,"\n"));
 		found = FALSE;
 
 		// Look for auto generated waypoint
@@ -1540,7 +1430,7 @@ float havocbot_goalrating_ons_generator_attack(float ratingscale)
 
 		if(bestwp)
 		{
-		//	dprint("waypoints found around generator\n");
+			ons_debug("waypoints found around generator\n");
 			navigation_routerating(bestwp, ratingscale, 10000);
 			bestwp.cnt += 1;
 
@@ -1553,7 +1443,7 @@ float havocbot_goalrating_ons_generator_attack(float ratingscale)
 		}
 		else
 		{
-		//	dprint("generator found without waypoints around\n");
+			ons_debug("generator found without waypoints around\n");
 			// if there aren't waypoints near the generator go straight to it
 			navigation_routerating(g, ratingscale, 10000);
 			self.havocbot_attack_time = 0;
@@ -2049,6 +1939,12 @@ MUTATOR_HOOKFUNCTION(ons_GetTeamCount)
 	return TRUE;
 }
 
+MUTATOR_HOOKFUNCTION(ons_SpectateCopy)
+{
+	self.ons_roundlost = other.ons_roundlost; // make spectators see it too
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(ons_SV_ParseClientCommand)
 {
 	if ( cmd_name == "ons_spawn" )
@@ -2142,6 +2038,9 @@ void spawnfunc_onslaught_link()
 	if (self.target == "" || self.target2 == "")
 		objerror("target and target2 must be set\n");
 
+	self.ons_worldlinknext = ons_worldlinklist; // link into ons_worldlinklist
+	ons_worldlinklist = self;
+
 	InitializeEntity(self, ons_DelayedLinkSetup, INITPRIO_FINDTARGET);
 	Net_LinkEntity(self, FALSE, 0, ons_Link_Send);
 }
@@ -2227,6 +2126,7 @@ MUTATOR_DEFINITION(gamemode_onslaught)
 	MUTATOR_HOOK(TurretSpawn, ons_TurretSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRole, ons_BotRoles, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, ons_GetTeamCount, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SpectateCopy, ons_SpectateCopy, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SV_ParseClientCommand, ons_SV_ParseClientCommand, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerUseKey, ons_PlayerUseKey, CBC_ORDER_ANY);
 

@@ -298,10 +298,5 @@ MUTATOR_DEFINITION(mutator_freeze)
 	MUTATOR_HOOK(BuildMutatorsString, freeze_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, freeze_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 
-	MUTATOR_ONADD
-	{
-		precache_model("models/ice/ice.md3");
-	}
-
 	return FALSE;
 }

@@ -21,6 +21,11 @@ entity ons_worldcplist;
 .entity ons_worldcpnext;
 .entity ons_stalecpnext;
 
+// list of links on the map
+entity ons_worldlinklist;
+.entity ons_worldlinknext;
+.entity ons_stalelinknext;
+
 // definitions
 .entity sprite;
 .string target2;

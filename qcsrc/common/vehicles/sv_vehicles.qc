@@ -548,8 +548,16 @@ void vehicle_use()
 	if(self.active == ACTIVE_ACTIVE && self.deadflag == DEAD_NO && !gameover)
 	{
 		dprint("Respawning vehicle: ", self.netname, "\n");
-		vehicles_setreturn(self);
-		vehicles_reset_colors();
+		if(self.effects & EF_NODRAW)
+		{
+			self.think = vehicles_spawn;
+			self.nextthink = time + 3;
+		}
+		else
+		{
+			vehicles_setreturn(self);
+			vehicles_reset_colors();
+		}
 	}
 }
 
@@ -1148,12 +1156,13 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 	
 	if(!veh.tur_head) { VEH_ACTION(vehicle_id, VR_PRECACHE); }
 
-	if(self.targetname)
+	if(self.targetname && self.targetname != "")
 	{
 		self.vehicle_controller = find(world, target, self.targetname);
 		if(!self.vehicle_controller)
 		{
 			bprint("^1WARNING: ^7Vehicle with invalid .targetname\n");
+			self.active = ACTIVE_ACTIVE;
 		}
 		else
 		{
@@ -1169,6 +1178,7 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 			}
 		}
 	}
+	else { self.active = ACTIVE_ACTIVE; }
 
 	if(self.team && (!teamplay || !autocvar_g_vehicles_teams))
 		self.team = 0;
@@ -1236,7 +1246,9 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 
 	VEH_ACTION(vehicle_id, VR_SETUP);
 
-	if(autocvar_g_vehicles_delayspawn)
+	if(self.active == ACTIVE_NOT)
+		self.nextthink = 0; // wait until activated
+	else if(autocvar_g_vehicles_delayspawn)
 		self.nextthink = time + self.respawntime + (random() * autocvar_g_vehicles_delayspawn_jitter);
 	else
 		self.nextthink = time + game_starttime;

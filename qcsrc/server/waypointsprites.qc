@@ -279,7 +279,8 @@ float WaypointSprite_SendEntity(entity to, float sendflags)
 			if(wp_owner.health <= 0) { f |= 2; }
 		}
 	}
-		
+	
+	if(g_onslaught)
 	if(f == self.lastf)
 		sendflags &= ~16;
 

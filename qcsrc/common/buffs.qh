@@ -76,3 +76,4 @@ vector Buff_Color(float buff_id);
 string Buff_PrettyName(float buff_id);
 string Buff_Name(float buff_id);
 float Buff_Type_FromName(string buff_name);
+string Buff_Model(float buff_id);

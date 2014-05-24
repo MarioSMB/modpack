@@ -1324,6 +1324,7 @@ void precache()
 {
     // gamemode related things
     precache_model ("models/misc/chatbubble.spr");
+	precache_model("models/ice/ice.md3");
 
     // Precache all player models if desired
     if (autocvar_sv_precacheplayermodels)
