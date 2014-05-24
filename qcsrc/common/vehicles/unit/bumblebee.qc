@@ -419,6 +419,13 @@ float bumblebee_pilot_frame()
 {
 	entity pilot, vehic;
 	vector newvel;
+	
+	if(intermission_running)
+	{
+		self.vehicle.velocity = '0 0 0';
+		self.vehicle.avelocity = '0 0 0';
+		return 1;
+	}
 
 	pilot = self;
 	vehic = self.vehicle;
