@@ -1156,12 +1156,13 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 	
 	if(!veh.tur_head) { VEH_ACTION(vehicle_id, VR_PRECACHE); }
 
-	if(self.targetname)
+	if(self.targetname && self.targetname != "")
 	{
 		self.vehicle_controller = find(world, target, self.targetname);
 		if(!self.vehicle_controller)
 		{
 			bprint("^1WARNING: ^7Vehicle with invalid .targetname\n");
+			self.active = ACTIVE_ACTIVE;
 		}
 		else
 		{
@@ -1177,6 +1178,7 @@ float vehicle_initialize(float vehicle_id, float nodrop)
 			}
 		}
 	}
+	else { self.active = ACTIVE_ACTIVE; }
 
 	if(self.team && (!teamplay || !autocvar_g_vehicles_teams))
 		self.team = 0;

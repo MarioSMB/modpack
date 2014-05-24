@@ -408,16 +408,14 @@ void tankll48_blowup()
 		return;
 	}
 
-	entity h, g1, g2, b;
+	entity h, g1, b;
 	b = spawn();
 	h = spawn();
 	g1 = spawn();
-	g2 = spawn();
 
 	setmodel(b, "models/vehicles/tankll48.md3");
 	setmodel(h, "models/vehicles/tankll48_turret.md3");
 	setmodel(g1, "models/vehicles/tankll48_cannon.md3");
-	setmodel(g2, "models/vehicles/tankt27_gear.iqm");
 
 	setorigin(b, self.origin);
 	b.frame = 11;
@@ -445,18 +443,11 @@ void tankll48_blowup()
 	g1.velocity = v_forward * 700 + (randomvec() * 32);
 	g1.avelocity = randomvec() * 180;
 
-	setorigin(g2, gettaginfo(self.tur_head, gettagindex(self.tur_head, "tag_hardpoint02")));
-	g2.movetype = MOVETYPE_TOSS;
-	g2.solid = SOLID_CORPSE;
-	g2.velocity = v_forward * 700 + (randomvec() * 32);
-	g2.avelocity = randomvec() * 180;
-
-	h.colormod = b.colormod = g1.colormod = g2.colormod = '-2 -2 -2';
+	h.colormod = b.colormod = g1.colormod = '-2 -2 -2';
 
 	SUB_SetFade(b,  time + 5, min(self.respawntime, 1));
 	//SUB_SetFade(h,  time, min(self.respawntime, 10));
 	SUB_SetFade(g1, time, min(self.respawntime, 10));
-	SUB_SetFade(g2, time, min(self.respawntime, 10));
 
 	RadiusDamage (self, self.enemy, 250, 15, 250, world, 250, DEATH_VH_TANK_DEATH, world);
 
@@ -535,12 +526,12 @@ float v_tankll48(float req)
 			{
 				self.gun3 = spawn(); // Will be an angle stabilizer for the rotating turret
 				self.gun3.alpha = -1;
-				setmodel(self.gun3, "models/vehicles/anglestabilizer.iqm");
+				setmodel(self.gun3, "null");
 				setattachment(self.gun3, self.tur_head, "tag_cannon_pivot");
 
 				self.gun1 = spawn();
 				self.gun2 = spawn();
-				setmodel(self.gun1, "models/mountedguns/shlacgun.iqm");
+				setmodel(self.gun1, "null");
 				setmodel(self.gun2, "models/vehicles/tankll48_cannon.md3");
 				setattachment(self.gun1, self.tur_head, "tag_gunpivot2");
 				setattachment(self.gun2, self.tur_head, "tag_cannon_pivot");
@@ -595,13 +586,8 @@ float v_tankll48(float req)
 			precache_model ("models/vehicles/tankll48.md3");
 			precache_model ("models/vehicles/tankll48_turret.md3");
 			precache_model ( "models/uziflash.md3");
-			
-			precache_model ( "models/sphere/sphexp.md3");
-			precache_model ( "models/vehicles/tankt27_wheel.iqm");
-			precache_model ( "models/vehicles/tankt27_gear.iqm");
+
 			precache_model ( "models/vehicles/tankll48_cannon.md3");
-			precache_model ( "models/vehicles/anglestabilizer.iqm");
-			precache_model ( "models/mountedguns/shlacgun.iqm");
 
 			precache_sound ("weapons/rocket_impact.wav");
 			precache_sound ("weapons/campingrifle_fire_morebass.wav");
