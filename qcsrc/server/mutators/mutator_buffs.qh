@@ -3,12 +3,10 @@
 .entity buff_vampire_lasttarget;
 .float buff_vampire_lasttarget_time;
 .float buff_vampire_lastdamage;
-// wrath
-.float buff_wrath_damage_time;
-// arc
-.float buff_arc_lastzap;
-// supply
-.float buff_supply_prev_infitems;
+// ammo
+.float buff_ammo_prev_infitems;
+// invisible
+.float buff_invisible_prev_alpha;
 
 .float buff_active;
 .float buff_activetime;

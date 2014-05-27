@@ -147,7 +147,7 @@ void buff_NewType(entity ent, float cb)
 	RandomSelection_Init();
 	for(e = Buff_Type_first; e; e = e.enemy)
 	{
-		if(e.items == BUFF_SUPPLY && ((start_items & IT_UNLIMITED_WEAPON_AMMO) || (start_items & IT_UNLIMITED_AMMO)))
+		if(e.items == BUFF_AMMO && ((start_items & IT_UNLIMITED_WEAPON_AMMO) || (start_items & IT_UNLIMITED_AMMO)))
 			continue;
 		if(!cvar(strcat("g_buffs_", e.netname)))
 			continue;
@@ -320,9 +320,9 @@ void buff_SpawnReplacement(entity ent, entity old)
 // mutator hooks
 MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 {
-	if(frag_target.buffs & BUFF_GUARD)
+	if(frag_target.buffs & BUFF_RESISTANCE)
 	{
-		vector v = healtharmor_applydamage(50, autocvar_g_buffs_guard_blockpercent, frag_deathtype, frag_damage, autocvar_g_balance_armor_block_bycount);
+		vector v = healtharmor_applydamage(50, autocvar_g_buffs_resistance_blockpercent, frag_deathtype, frag_damage, autocvar_g_balance_armor_block_bycount);
 		damage_take = v_x;
 		damage_save = v_y;
 	}
@@ -342,37 +342,27 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		frag_attacker.buff_vampire_lasttarget_time = time + autocvar_g_buffs_vampire_time;
 	}
 	
-	if(frag_target.buffs & BUFF_HASTE)
+	if(frag_target.buffs & BUFF_SPEED)
 	if(frag_target != frag_attacker)
-		frag_damage *= autocvar_g_buffs_haste_damage_take;
+		frag_damage *= autocvar_g_buffs_speed_damage_take;
 
-	if(frag_target.buffs & BUFF_MEDIC)
+	if(frag_target.buffs & BUFF_REGENERATION)
 	if((frag_target.health - frag_damage) <= 0)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(frag_attacker)
-	if(random() <= autocvar_g_buffs_medic_survive_chance) // 40% chance?
-		frag_damage = frag_target.health - autocvar_g_buffs_medic_survive_health; // 5 health recovery
+	if(random() <= autocvar_g_buffs_regeneration_survive_chance) // 40% chance?
+		frag_damage = frag_target.health - autocvar_g_buffs_regeneration_survive_health; // 5 health recovery
 		
-	if(frag_target.buffs & BUFF_WRATH)
+	if(frag_target.buffs & BUFF_VENGEANCE)
 	if(frag_attacker)
+	if(frag_attacker != frag_target)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	{
-		if(frag_attacker == frag_target)
-		{
-			if(time < frag_target.buff_wrath_damage_time)
-				frag_damage *= autocvar_g_buffs_wrath_damage_self;
-		}
-		else
-		{
-			if(time < frag_target.buff_wrath_damage_time)
-				frag_damage *= autocvar_g_buffs_wrath_damage_take;
-			frag_target.buff_wrath_damage_time = time + autocvar_g_buffs_wrath_time;
-		}
+		vector v = healtharmor_applydamage(frag_attacker.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_BUFF_VENGEANCE, frag_damage * autocvar_g_buffs_vengeance_damage_multiplier, autocvar_g_balance_armor_block_bycount);
+		float take = v_x;
+		Damage(frag_attacker, frag_target, frag_target, take, DEATH_BUFF_VENGEANCE, frag_attacker.origin, '0 0 0');
 	}
-		
-	if(frag_attacker.buffs & BUFF_WRATH)
-		frag_damage *= autocvar_g_buffs_wrath_damage;
-		
+
 	if(frag_attacker.buffs & BUFF_BASH)
 	if(frag_attacker != frag_target)
 	if(vlen(frag_force))
@@ -386,14 +376,14 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		remove(e);
 	}
 	
-	if(frag_target.buffs & BUFF_TENACITY)
+	if(frag_target.buffs & BUFF_DISABILITY)
 	if(frag_target != frag_attacker)
 	{
-		frag_damage *= autocvar_g_buffs_tenacity_damage_take;
-		frag_force *= autocvar_g_buffs_tenacity_force_take;
+		frag_damage *= autocvar_g_buffs_disability_damage_take;
+		frag_force *= autocvar_g_buffs_disability_force_take;
 	}
 
-	if(frag_attacker.buffs & BUFF_MEDIC)
+	if(frag_attacker.buffs & BUFF_REGENERATION)
 	if(SAME_TEAM(frag_attacker, frag_target))
 	if(frag_attacker != frag_target)
 	{
@@ -412,10 +402,10 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerPhysics)
 {
-	if(self.buffs & BUFF_HASTE)
+	if(self.buffs & BUFF_SPEED)
 	{
-		self.stat_sv_maxspeed *= autocvar_g_buffs_haste_speed;
-		self.stat_sv_airspeedlimit_nonqw *= autocvar_g_buffs_haste_speed;
+		self.stat_sv_maxspeed *= autocvar_g_buffs_speed_speed;
+		self.stat_sv_airspeedlimit_nonqw *= autocvar_g_buffs_speed_speed;
 	}
 
 	return FALSE;
@@ -475,12 +465,8 @@ MUTATOR_HOOKFUNCTION(buffs_OnEntityPreSpawn)
 
 MUTATOR_HOOKFUNCTION(buffs_WeaponRate)
 {
-	if(self.buffs & BUFF_WRATH)
-	if(time < self.buff_wrath_damage_time)
-		weapon_rate *= autocvar_g_buffs_wrath_rate;
-		
-	if(self.buffs & BUFF_HASTE)
-		weapon_rate *= autocvar_g_buffs_haste_rate;
+	if(self.buffs & BUFF_SPEED)
+		weapon_rate *= autocvar_g_buffs_speed_rate;
 	
 	return FALSE;
 }
@@ -489,25 +475,33 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 {
 	if(time >= self.buff_vampire_lasttarget_time || self.buff_vampire_lasttarget.deadflag != DEAD_NO) // target has died of our sucking
 		self.buff_vampire_lasttarget = world;
-		
+
 	if(self.buffs != self.oldbuffs)
 	{
-		if(self.oldbuffs & BUFF_SUPPLY)
+		if(self.oldbuffs & BUFF_AMMO)
 		{
-			if(self.buff_supply_prev_infitems)
+			if(self.buff_ammo_prev_infitems)
 				self.items |= IT_UNLIMITED_WEAPON_AMMO;
 			else
 				self.items &= ~IT_UNLIMITED_WEAPON_AMMO;
 		}
-		else if(self.buffs & BUFF_SUPPLY)
+		else if(self.buffs & BUFF_AMMO)
 		{
-			self.buff_supply_prev_infitems = (self.items & IT_UNLIMITED_WEAPON_AMMO);
+			self.buff_ammo_prev_infitems = (self.items & IT_UNLIMITED_WEAPON_AMMO);
 			self.items |= IT_UNLIMITED_WEAPON_AMMO;
 			if(!self.ammo_shells) { self.ammo_shells = 20; }
 			if(!self.ammo_cells) { self.ammo_cells = 20; }
 			if(!self.ammo_rockets) { self.ammo_rockets = 20; }
 			if(!self.ammo_nails) { self.ammo_nails = 20; }
 			if(!self.ammo_fuel) { self.ammo_fuel = 20; }
+		}
+		
+		if(self.oldbuffs & BUFF_INVISIBLE)
+			self.alpha = self.buff_invisible_prev_alpha;
+		else if(self.buffs & BUFF_INVISIBLE)
+		{
+			self.buff_invisible_prev_alpha = self.alpha;
+			self.alpha = autocvar_g_buffs_invisible_alpha;
 		}
 
 		self.oldbuffs = self.buffs;
@@ -589,15 +583,15 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerRegen)
 		self.buff_vampire_lastdamage = time + autocvar_g_buffs_vampire_delay;
 	}
 	
-	if(self.buffs & BUFF_MEDIC)
+	if(self.buffs & BUFF_REGENERATION)
 	{
-		regen_mod_rot = autocvar_g_buffs_medic_rot;
-		regen_mod_limit = regen_mod_max = autocvar_g_buffs_medic_max;
-		regen_mod_regen = autocvar_g_buffs_medic_regen;
+		regen_mod_rot = autocvar_g_buffs_regeneration_rot;
+		regen_mod_limit = regen_mod_max = autocvar_g_buffs_regeneration_max;
+		regen_mod_regen = autocvar_g_buffs_regeneration_regen;
 	}
 	
-	if(self.buffs & BUFF_HASTE)
-		regen_mod_regen = autocvar_g_buffs_haste_regen;
+	if(self.buffs & BUFF_SPEED)
+		regen_mod_regen = autocvar_g_buffs_speed_regen;
 
 	return FALSE;
 }

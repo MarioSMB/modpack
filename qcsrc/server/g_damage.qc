@@ -857,6 +857,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		// count the damage
 		if(attacker)
 		if(!targ.deadflag)
+		if(!DEATH_ISBUFF(deathtype))
 		if(targ.takedamage == DAMAGE_AIM)
 		if(targ != attacker)
 		{

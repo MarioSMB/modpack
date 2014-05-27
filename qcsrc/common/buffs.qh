@@ -7,11 +7,10 @@ var float BUFF_LAST = 1;
 .float items; // buff ID
 .string netname; // buff name
 .string message; // human readable name
-.string model2; // buff icon
 .vector colormod; // buff color
 .float skin; // buff skin
 
-#define REGISTER_BUFF(hname,sname,NAME,bicon,bskin,bcolor) \
+#define REGISTER_BUFF(hname,sname,NAME,bskin,bcolor) \
 	var float BUFF_##NAME; \
 	var entity Buff_Type##sname; \
 	void RegisterBuffs_##sname() \
@@ -22,7 +21,6 @@ var float BUFF_LAST = 1;
 		Buff_Type##sname.items = BUFF_##NAME; \
 		Buff_Type##sname.netname = #sname; \
 		Buff_Type##sname.message = hname; \
-		Buff_Type##sname.model2 = bicon; \
 		Buff_Type##sname.skin = bskin; \
 		Buff_Type##sname.colormod = bcolor; \
 		if(!Buff_Type_first) \
@@ -33,14 +31,17 @@ var float BUFF_LAST = 1;
 	} \
 	ACCUMULATE_FUNCTION(RegisterBuffs, RegisterBuffs_##sname)
 
-REGISTER_BUFF(_("Supply"),supply,SUPPLY,"supply",3,'0.2 1 0.2');
-REGISTER_BUFF(_("Guard"),guard,GUARD,"guard",0,'0.3 0.2 1');
-REGISTER_BUFF(_("Haste"),haste,HASTE,"haste",9,'1 1 0.2');
-REGISTER_BUFF(_("Medic"),medic,MEDIC,"medic",1,'1 0.3 1');
-REGISTER_BUFF(_("Bash"),bash,BASH,"bash",5,'1 0.4 0');
-REGISTER_BUFF(_("Vampire"),vampire,VAMPIRE,"vampire",2,'1 0.15 0');
-REGISTER_BUFF(_("Tenacity"),tenacity,TENACITY,"tenacity",6,'0.66 0.66 0.73');
-REGISTER_BUFF(_("Wrath"),wrath,WRATH,"wrath",15,'0.55 0.5 1');
+REGISTER_BUFF(_("Ammo"),ammo,AMMO,3,'0.2 1 0.2');
+REGISTER_BUFF(_("Resistance"),resistance,RESISTANCE,0,'0.3 0.2 1');
+REGISTER_BUFF(_("Speed"),speed,SPEED,9,'1 1 0.2');
+REGISTER_BUFF(_("Regeneration"),regeneration,REGENERATION,1,'1 0.3 1');
+REGISTER_BUFF(_("Bash"),bash,BASH,5,'1 0.4 0');
+REGISTER_BUFF(_("Vampire"),vampire,VAMPIRE,2,'1 0.15 0');
+REGISTER_BUFF(_("Disability"),disability,DISABILITY,6,'0.66 0.66 0.73');
+REGISTER_BUFF(_("Vengeance"),vengeance,VENGEANCE,15,'0.55 0.5 1');
+REGISTER_BUFF(_("Jump"),jump,JUMP,10,'0.7 0.2 1');
+REGISTER_BUFF(_("Flight"),flight,FLIGHT,11,'1 0.2 0.5');
+REGISTER_BUFF(_("Invisible"),invisible,INVISIBLE,12,'0.9 0.9 0.9');
 
 #ifdef SVQC
 .float buffs;
@@ -56,20 +57,23 @@ void buff_Init_Compat(entity ent, float replacement);
         BUFF_SPAWNFUNC(e##_team3,   b,  NUM_TEAM_3) \
         BUFF_SPAWNFUNC(e##_team4,   b,  NUM_TEAM_4) 
 
-BUFF_SPAWNFUNCS(guard,      BUFF_GUARD)
-BUFF_SPAWNFUNCS(supply,     BUFF_SUPPLY)
-BUFF_SPAWNFUNCS(haste,      BUFF_HASTE)
-BUFF_SPAWNFUNCS(medic,      BUFF_MEDIC)
-BUFF_SPAWNFUNCS(bash,       BUFF_BASH)
-BUFF_SPAWNFUNCS(vampire,    BUFF_VAMPIRE)
-BUFF_SPAWNFUNCS(tenacity,   BUFF_TENACITY)
-BUFF_SPAWNFUNCS(wrath,      BUFF_WRATH)
-BUFF_SPAWNFUNCS(random,     0)
+BUFF_SPAWNFUNCS(resistance,		BUFF_RESISTANCE)
+BUFF_SPAWNFUNCS(ammo,			BUFF_AMMO)
+BUFF_SPAWNFUNCS(speed,			BUFF_SPEED)
+BUFF_SPAWNFUNCS(regeneration,	BUFF_REGENERATION)
+BUFF_SPAWNFUNCS(bash,			BUFF_BASH)
+BUFF_SPAWNFUNCS(vampire,		BUFF_VAMPIRE)
+BUFF_SPAWNFUNCS(disability,		BUFF_DISABILITY)
+BUFF_SPAWNFUNCS(vengeance,		BUFF_VENGEANCE)
+BUFF_SPAWNFUNCS(jump,			BUFF_JUMP)
+BUFF_SPAWNFUNCS(flight,			BUFF_FLIGHT)
+BUFF_SPAWNFUNCS(invisible,		BUFF_INVISIBLE)
+BUFF_SPAWNFUNCS(random,			0)
 
-BUFF_SPAWNFUNC_Q3TA_COMPAT(item_doubler,    BUFF_MEDIC)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(item_guard,      BUFF_GUARD)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(item_scout,      BUFF_HASTE)
-BUFF_SPAWNFUNC_Q3TA_COMPAT(item_ammoregen,  BUFF_SUPPLY)
+BUFF_SPAWNFUNC_Q3TA_COMPAT(item_doubler,    BUFF_REGENERATION)
+BUFF_SPAWNFUNC_Q3TA_COMPAT(item_resistance,      BUFF_RESISTANCE)
+BUFF_SPAWNFUNC_Q3TA_COMPAT(item_scout,      BUFF_SPEED)
+BUFF_SPAWNFUNC_Q3TA_COMPAT(item_ammoregen,  BUFF_AMMO)
 #endif
 
 vector Buff_Color(float buff_id);
