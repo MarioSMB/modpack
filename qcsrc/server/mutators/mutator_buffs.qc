@@ -326,13 +326,14 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 		damage_take = v_x;
 		damage_save = v_y;
 	}
+	// this... is ridiculous (TODO: fix!)
+	if(frag_attacker.buffs & BUFF_VAMPIRE)
 	if(frag_target.iscreature)
 	if(!frag_target.vehicle)
 	if(!IS_VEHICLE(frag_target))
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(frag_target.deadflag == DEAD_NO)
 	if(!IS_TURRET(frag_target)) // why can these have iscreature?
-	if(frag_attacker.buffs & BUFF_VAMPIRE)
 	if(frag_attacker != frag_target)
 	if(!frag_target.frozen)
 	if(frag_target.takedamage)
@@ -366,18 +367,15 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		Damage(frag_attacker, frag_target, frag_target, take, DEATH_BUFF_VENGEANCE, frag_attacker.origin, '0 0 0');
 	}
 
+	if(frag_target.buffs & BUFF_BASH)
+	if(frag_attacker != frag_target)
+	if(vlen(frag_force))
+		frag_force = '0 0 0';
+	
 	if(frag_attacker.buffs & BUFF_BASH)
 	if(frag_attacker != frag_target)
 	if(vlen(frag_force))
-	if(!((get_weaponinfo(DEATH_WEAPONOF(frag_deathtype))).spawnflags & WEP_TYPE_SPLASH))
-	{
-		entity e = spawn();
-		setorigin(e, frag_target.origin);
-		RadiusDamage(e, frag_attacker, autocvar_g_buffs_bash_damage, autocvar_g_buffs_bash_damage, autocvar_g_buffs_bash_radius, world, vlen(frag_force * autocvar_g_buffs_bash_force), DEATH_BUFF_BASH, world);
-		pointparticles(particleeffectnum("explosion_small"), frag_target.origin, '0 0 0', 1);
-		sound (e, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
-		remove(e);
-	}
+		frag_force *= autocvar_g_buffs_bash_force;
 	
 	if(frag_attacker.buffs & BUFF_DISABILITY)
 	if(frag_target != frag_attacker)

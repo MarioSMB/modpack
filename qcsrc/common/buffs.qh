@@ -34,7 +34,7 @@ var float BUFF_LAST = 1;
 REGISTER_BUFF(_("Ammo"),ammo,AMMO,3,'0.2 1 0.2');
 REGISTER_BUFF(_("Resistance"),resistance,RESISTANCE,0,'0.3 0.2 1');
 REGISTER_BUFF(_("Speed"),speed,SPEED,9,'1 1 0.2');
-REGISTER_BUFF(_("Regeneration"),medic,MEDIC,1,'1 0.3 1');
+REGISTER_BUFF(_("Medic"),medic,MEDIC,1,'1 0.3 1');
 REGISTER_BUFF(_("Bash"),bash,BASH,5,'1 0.4 0');
 REGISTER_BUFF(_("Vampire"),vampire,VAMPIRE,2,'1 0.15 0');
 REGISTER_BUFF(_("Disability"),disability,DISABILITY,7,'0.66 0.66 0.73');
