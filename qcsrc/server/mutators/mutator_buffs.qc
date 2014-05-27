@@ -21,16 +21,17 @@ vector buffs_MergedColor(float b)
     return c * (1/n);
 }
 
-float buff_Respawn(entity ent)
+void buff_Respawn(entity ent)
 {
-	if(gameover) { return FALSE; }
+	if(gameover) { return; }
 	
 	vector oldbufforigin = ent.origin;
 	
 	if(!MoveToRandomMapLocation(ent, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((autocvar_g_buffs_random_location_attempts > 0) ? autocvar_g_buffs_random_location_attempts : 20), 1024, 256))
 	{
-		setorigin(ent, oldbufforigin);
-		return FALSE; // just give up, if buff fell into void, it will attempt to do this again anyway
+		entity spot = SelectSpawnPoint(TRUE);
+		setorigin(self, spot.origin + (randomvec() * 300));
+		self.angles = spot.angles;
 	}
 	
 	makevectors(ent.angles);
@@ -43,8 +44,6 @@ float buff_Respawn(entity ent)
 	WaypointSprite_Ping(ent.buff_waypoint);
 	
 	sound(ent, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
-	
-	return TRUE;
 }
 
 float buffs_BuffModel_Customize()
