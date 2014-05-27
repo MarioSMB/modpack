@@ -85,7 +85,7 @@ void buff_Touch()
 		return;
 	if(other.buffs)
 	{
-		if(other.cvar_cl_buffs_autoreplace)
+		if(other.cvar_cl_buffs_autoreplace && other.buffs != self.buffs)
 		{
 			//Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_BUFF_DROP, other.buffs);
 			Send_Notification(NOTIF_ALL_EXCEPT, other, MSG_INFO, INFO_ITEM_BUFF_LOST, other.netname, other.buffs);
