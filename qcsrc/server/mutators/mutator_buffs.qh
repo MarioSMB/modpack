@@ -17,5 +17,8 @@
 .float oldbuffs; // for updating effects
 .entity buff_model; // controls effects (TODO: make csqc)
 
+#define BUFF_MIN ('-16 -16 -20')
+#define BUFF_MAX ('16 16 20')
+
 // client side options
 .float cvar_cl_buffs_autoreplace;

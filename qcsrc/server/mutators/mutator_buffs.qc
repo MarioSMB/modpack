@@ -21,6 +21,32 @@ vector buffs_MergedColor(float b)
     return c * (1/n);
 }
 
+float buff_Respawn(entity ent)
+{
+	if(gameover) { return FALSE; }
+	
+	vector oldbufforigin = ent.origin;
+	
+	if(!MoveToRandomMapLocation(ent, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 20, 1024, 256))
+	{
+		setorigin(ent, oldbufforigin);
+		return FALSE; // just give up, if buff fell into void, it will attempt to do this again anyway
+	}
+	
+	makevectors(ent.angles);
+	ent.velocity = '0 0 200';
+	ent.angles = '0 0 0';
+
+	pointparticles(particleeffectnum("electro_combo"), oldbufforigin + ((ent.mins + ent.maxs) * 0.5), '0 0 0', 1);
+	pointparticles(particleeffectnum("electro_combo"), CENTER_OR_VIEWOFS(ent), '0 0 0', 1);
+	
+	WaypointSprite_Ping(ent.buff_waypoint);
+	
+	sound(ent, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
+	
+	return TRUE;
+}
+
 float buffs_BuffModel_Customize()
 {
 	float same_team = (SAME_TEAM(other, self.owner) || (IS_SPEC(other) && SAME_TEAM(other.enemy, self.owner)));
@@ -52,7 +78,7 @@ float buff_Waypoint_visible_for_player(entity plr)
 
 void buff_Waypoint_Spawn(entity e)
 {
-    WaypointSprite_Spawn(Buff_PrettyName(e.buffs), 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * (e.maxs_z * 1.1), world, e.team, e, buff_waypoint, TRUE, RADARICON_POWERUP, e.glowmod);
+    WaypointSprite_Spawn(Buff_PrettyName(e.buffs), 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs_z, world, e.team, e, buff_waypoint, TRUE, RADARICON_POWERUP, e.glowmod);
     WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_POWERUP, e.glowmod);
     e.buff_waypoint.waypointsprite_visible_for_player = buff_Waypoint_visible_for_player;
 }
@@ -71,6 +97,15 @@ void buff_SetCooldown(float cd)
 
 void buff_Touch()
 {
+	if(gameover)
+		return;
+		
+	if(ITEM_TOUCH_NEEDKILL())
+	{
+		buff_Respawn(self);
+		return;
+	}
+		
 	if(self.team && DIFF_TEAM(other, self))
 		return;
 	if(other.frozen)
@@ -160,6 +195,9 @@ void buff_Think()
 		self.owner = world;
 		if(autocvar_g_buffs_randomize)
 			buff_NewType(self, self.buffs);
+			
+		if(autocvar_g_buffs_random_location || (self.spawnflags & 1))
+			buff_Respawn(self);
 	}
 	
 	if(self.buff_activetime)
@@ -214,6 +252,9 @@ void buff_Reset()
 	buff_SetCooldown(autocvar_g_buffs_cooldown_activate);
 	buff_Waypoint_Reset();
 	self.buff_activetime_updated = FALSE;
+	
+	if(autocvar_g_buffs_random_location || (self.spawnflags & 1))
+		buff_Respawn(self);
 }
 
 void buff_Init(entity ent)
@@ -233,12 +274,14 @@ void buff_Init(entity ent)
 	self.think = buff_Think;
 	self.touch = buff_Touch;
 	self.reset = buff_Reset;
-	self.nextthink = time;
+	self.nextthink = time + 0.1;
+	self.gravity = 1;
+	self.movetype = MOVETYPE_TOSS;
 	self.scale = 1;
 	self.skin = Buff_Skin(self.buffs);
 	self.effects = EF_FULLBRIGHT | EF_STARDUST | EF_NOSHADOW;
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
-	self.gravity = 100;
+	//self.gravity = 100;
 	self.color = buffs_MergedColor(self.buffs);
 	self.glowmod = ((self.team) ? Team_ColorRGB(self.team) + '0.1 0.1 0.1' : self.color);
 	buff_SetCooldown(autocvar_g_buffs_cooldown_activate + game_starttime);
@@ -246,7 +289,10 @@ void buff_Init(entity ent)
 	self.pflags = PFLAGS_FULLDYNAMIC;
 
 	setmodel(self, "models/relics/relic.md3");
-	setsize(self, '-15 -15 -40', '15 15 40');
+	setsize(self, BUFF_MIN, BUFF_MAX);
+	
+	if(cvar("g_buffs_random_location") || (self.spawnflags & 1))
+		buff_Respawn(self);
 	
 	self = oldself;
 }
@@ -562,6 +608,22 @@ MUTATOR_HOOKFUNCTION(buffs_BuildMutatorsPrettyString)
 	return FALSE;
 }
 
+void buffs_DelayedInit()
+{
+	if(autocvar_g_buffs_spawn_count > 0)
+	if(find(world, classname, "item_buff") == world)
+	{
+		float i;
+		for(i = 0; i < autocvar_g_buffs_spawn_count; ++i)
+		{
+			entity e = spawn();
+			e.spawnflags |= 1; // always randomize
+			e.velocity = randomvec() * 250; // this gets reset anyway if random location works
+			buff_Init(e);
+		}
+	}
+}
+
 void buffs_Initialize()
 {
 	precache_model("models/relics/relic.md3");
@@ -569,8 +631,11 @@ void buffs_Initialize()
 	precache_sound("misc/shield_respawn.wav");
 	precache_sound("relics/relic_effect.wav");
 	precache_sound("weapons/rocket_impact.wav");
+	precache_sound("keepaway/respawn.wav");
 
 	addstat(STAT_BUFFS, AS_INT, buffs);
+	
+	InitializeEntity(world, buffs_DelayedInit, INITPRIO_FINDTARGET);
 }
 
 MUTATOR_DEFINITION(mutator_buffs)
