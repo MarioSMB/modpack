@@ -838,6 +838,18 @@ void nades_CheckThrow()
 
 void nades_Clear(entity player)
 {
+	if(player == world)
+	{
+		FOR_EACH_PLAYER(player)
+		{
+			if(player.nade) { remove(player.nade); }
+			if(player.fake_nade) { remove(player.fake_nade); }
+			player.nade = player.fake_nade = world;
+		}
+
+		return;
+	}
+
 	if(player.nade)
 		remove(player.nade);
 	if(player.fake_nade)

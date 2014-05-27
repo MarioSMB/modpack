@@ -60,8 +60,8 @@ float JB_CheckWinner()
 				PutClientInServer();
 				self = oldself;
 			}
-			nades_Clear(e);
 		}
+		nades_Clear(world);
 		jb_roundover = TRUE;
 		return 1;
 	}
@@ -106,8 +106,9 @@ float JB_CheckWinner()
 			PutClientInServer();
 			self = oldself;
 		}
-		nades_Clear(e);
 	}
+	
+	nades_Clear(world);
 
 	return 1;
 }

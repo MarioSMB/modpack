@@ -124,8 +124,7 @@ float Invasion_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
 		round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
 
-		FOR_EACH_PLAYER(head)
-			nades_Clear(head);
+		nades_Clear(world);
 
 		return 1;
 	}
@@ -217,8 +216,7 @@ float Invasion_CheckWinner()
 
 	round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
 
-	FOR_EACH_PLAYER(head)
-		nades_Clear(head);
+	nades_Clear(world);
 
 	return 1;
 }

@@ -1170,8 +1170,9 @@ float Onslaught_CheckWinner()
 	{
 		e.ons_roundlost = TRUE;
 		e.player_blocked = TRUE;
-		nades_Clear(e);
 	}
+	
+	nades_Clear(world);
 	
 	return 1;
 }

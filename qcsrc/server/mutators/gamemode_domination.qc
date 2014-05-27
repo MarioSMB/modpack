@@ -453,15 +453,12 @@ float Domination_GetWinnerTeam()
 #define DOM_OWNED_CONTROLPOINTS_OK() (DOM_OWNED_CONTROLPOINTS() < total_controlpoints)
 float Domination_CheckWinner()
 {
-	entity e;
-
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
 		round_handler_Init(5, autocvar_g_domination_warmup, autocvar_g_domination_round_timelimit);
-		FOR_EACH_CLIENT(e)
-			nades_Clear(e);
+		nades_Clear(world);
 		return 1;
 	}
 
@@ -485,9 +482,8 @@ float Domination_CheckWinner()
 	}
 	
 	round_handler_Init(5, autocvar_g_domination_warmup, autocvar_g_domination_round_timelimit);
-	
-	FOR_EACH_PLAYER(e)
-		nades_Clear(e);
+
+	nades_Clear(world);
 	
 	return 1;
 }

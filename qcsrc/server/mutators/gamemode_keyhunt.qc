@@ -123,11 +123,10 @@ float KH_CheckWinner()
 		round_handler_Init(5, autocvar_g_keyhunt_warmup, autocvar_g_keyhunt_round_timelimit);
 		FOR_EACH_CLIENT(e)
 		{
-			if(IS_PLAYER(e))
-				nades_Clear(e);
 			e.stat_kh_redkey_team = e.stat_kh_bluekey_team = e.stat_kh_yellowkey_team = e.stat_kh_pinkkey_team = 0;
 			e.kh_lastkiller = world;
 		}
+		nades_Clear(world);
 		KH_FOR_EACH_KEY(key) { if(!wasfreed(key)) kh_RemoveKey(key); }
 		kh_worldkeylist = world; // reset key list
 		return 1;
@@ -188,11 +187,11 @@ float KH_CheckWinner()
 
 	FOR_EACH_CLIENT(e)
 	{
-		if(IS_PLAYER(e))
-			nades_Clear(e);
 		e.stat_kh_redkey_team = e.stat_kh_bluekey_team = e.stat_kh_yellowkey_team = e.stat_kh_pinkkey_team = 0;
 		e.kh_lastkiller = world;
 	}
+	
+	nades_Clear(world);
 
 	KH_FOR_EACH_KEY(key) { if(!wasfreed(key)) kh_RemoveKey(key); }
 	kh_worldkeylist = world; // reset key list
