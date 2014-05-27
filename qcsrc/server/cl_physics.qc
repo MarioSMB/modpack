@@ -26,14 +26,15 @@ void PlayerJump (void)
 		return; // no jumping while blocked
 
 	float doublejump = FALSE;
+	float mjumpheight = autocvar_sv_jumpvelocity;
 
 	player_multijump = doublejump;
+	player_jumpheight = mjumpheight;
 	if(MUTATOR_CALLHOOK(PlayerJump))
 		return;
 
 	doublejump = player_multijump;
-
-	float mjumpheight;
+	mjumpheight = player_jumpheight;
 
 	if (autocvar_sv_doublejump)
 	{
@@ -50,7 +51,6 @@ void PlayerJump (void)
 		}
 	}
 
-	mjumpheight = autocvar_sv_jumpvelocity;
 	if (self.waterlevel >= WATERLEVEL_SWIMMING)
 	{
 		self.velocity_z = self.stat_sv_maxspeed * 0.7;

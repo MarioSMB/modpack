@@ -411,6 +411,14 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerPhysics)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(buffs_PlayerJump)
+{
+	if(self.buffs & BUFF_JUMP)
+		player_jumpheight = autocvar_g_buffs_jump_height;
+
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(buffs_PlayerDies)
 {
 	if(self.buffs)
@@ -475,6 +483,9 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 {
 	if(time >= self.buff_vampire_lasttarget_time || self.buff_vampire_lasttarget.deadflag != DEAD_NO) // target has died of our sucking
 		self.buff_vampire_lasttarget = world;
+		
+	if(!(self.oldbuffs & BUFF_JUMP) && !(self.buffs & BUFF_JUMP))
+		self.stat_jumpheight = autocvar_sv_jumpvelocity; // reset so we don't break anything
 
 	if(self.buffs != self.oldbuffs)
 	{
@@ -496,12 +507,25 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 			if(!self.ammo_fuel) { self.ammo_fuel = 20; }
 		}
 		
+		if(self.oldbuffs & BUFF_JUMP)
+			self.stat_jumpheight = autocvar_sv_jumpvelocity;
+		else if(self.buffs & BUFF_JUMP)
+			self.stat_jumpheight = autocvar_g_buffs_jump_height;
+		
 		if(self.oldbuffs & BUFF_INVISIBLE)
 			self.alpha = self.buff_invisible_prev_alpha;
 		else if(self.buffs & BUFF_INVISIBLE)
 		{
 			self.buff_invisible_prev_alpha = self.alpha;
 			self.alpha = autocvar_g_buffs_invisible_alpha;
+		}
+		
+		if(self.oldbuffs & BUFF_FLIGHT)
+			self.gravity = self.buff_flight_prev_gravity;
+		else if(self.buffs & BUFF_FLIGHT)
+		{
+			self.buff_flight_prev_gravity = self.gravity;
+			self.gravity = autocvar_g_buffs_flight_gravity;
 		}
 
 		self.oldbuffs = self.buffs;
@@ -640,6 +664,7 @@ void buffs_Initialize()
 	precache_sound("keepaway/respawn.wav");
 
 	addstat(STAT_BUFFS, AS_INT, buffs);
+	addstat(STAT_MOVEVARS_JUMPVELOCITY, AS_FLOAT, stat_jumpheight);
 	
 	InitializeEntity(world, buffs_DelayedInit, INITPRIO_FINDTARGET);
 }
@@ -650,6 +675,7 @@ MUTATOR_DEFINITION(mutator_buffs)
 	MUTATOR_HOOK(PlayerDamage_Calculate, buffs_PlayerDamage_Calculate, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, buffs_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPhysics, buffs_PlayerPhysics, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerJump, buffs_PlayerJump, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SpectateCopy, buffs_SpectateCopy, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleEnter, buffs_VehicleEnter, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleExit, buffs_VehicleExit, CBC_ORDER_ANY);

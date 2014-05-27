@@ -1603,3 +1603,5 @@ float autocvar_g_buffs_vampire_damage;
 float autocvar_g_buffs_vampire_time;
 float autocvar_g_buffs_vampire_delay;
 float autocvar_g_buffs_invisible_alpha;
+float autocvar_g_buffs_flight_gravity;
+float autocvar_g_buffs_jump_height;
