@@ -5,6 +5,16 @@ string events_last;
 .float playerstats_addedglobalinfo;
 .string playerstats_id;
 
+#define ALL_ANTICHEATS \
+	ANTICHEAT("_time"); \
+	ANTICHEAT("speedhack"); \
+	ANTICHEAT("div0_strafebot_old"); \
+	ANTICHEAT("div0_strafebot_new"); \
+	ANTICHEAT("div0_evade"); \
+	ANTICHEAT("idle_snapaim"); \
+	ANTICHEAT("idle_snapaim_signal"); \
+	ANTICHEAT("idle_snapaim_noise");
+
 void PlayerStats_Init() // initiated before InitGameplayMode so that scores are added properly
 {
 	string uri;
@@ -43,6 +53,11 @@ void PlayerStats_Init() // initiated before InitGameplayMode so that scores are 
 
         PlayerStats_AddEvent(strcat("acc-", w.netname, "-frags"));
     }
+
+#define ANTICHEAT(name) \
+	PlayerStats_AddEvent("anticheat-" name)
+	ALL_ANTICHEATS
+#undef ANTICHEAT
 
 	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3);
 	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5);
@@ -356,6 +371,18 @@ void PlayerStats_Accuracy(entity p)
     //backtrace(strcat("adding player stat accuracy for ", p.netname, ".\n"));
 }
 
+void PlayerStats_Anticheat(entity p)
+{
+	entity oldself = self;
+	self = p;
+
+#define ANTICHEAT(name) \
+	PlayerStats_Event(p, "anticheat-" name, anticheat_getvalue(name))
+	ALL_ANTICHEATS
+#undef ANTICHEAT
+	self = oldself;
+}
+
 void PlayerStats_AddGlobalInfo(entity p)
 {
 	if(playerstats_db < 0)
@@ -383,6 +410,8 @@ void PlayerStats_AddGlobalInfo(entity p)
 		PlayerStats_Event(p, PLAYERSTATS_JOINS, 1);
 
 	PlayerStats_Accuracy(p);
+
+	PlayerStats_Anticheat(p);
 
 	if(IS_REAL_CLIENT(p))
 	{
@@ -430,3 +459,5 @@ void PlayerStats_EndMatch(float finished)
 		}
 	}
 }
+
+#undef ALL_ANTICHEATS

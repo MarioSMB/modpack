@@ -25,6 +25,8 @@ float mean_evaluate(entity e, .float a, .float c, float mean)
 #define MEAN_EVALUATE(prefix) mean_evaluate(self,prefix##_accumulator,prefix##_count,prefix##_mean)
 #define MEAN_DECLARE(prefix,m) float prefix##_mean = m; .float prefix##_count, prefix##_accumulator
 
+.float anticheat_fixangle_endtime;
+
 float anticheat_div0_evade_evasion_delta;
 .float anticheat_div0_evade_offset;
 .vector anticheat_div0_evade_v_angle;
@@ -36,6 +38,13 @@ MEAN_DECLARE(anticheat_div0_strafebot_old, 5);
 
 .vector anticheat_div0_strafebot_forward_prev;
 MEAN_DECLARE(anticheat_div0_strafebot_new, 5);
+
+// Snap-aim detection: we track the average angular speed of aiming over time, in "radians per second".
+// Signal: a high-power mean. Cheaters will have high "signal" here.
+// Noise: a low-power mean. Active/shivery players will have high "noise" here.
+// Note one can always artificially add noise - so very high values of both signal and noise need to be checked too.
+MEAN_DECLARE(anticheat_idle_snapaim_signal, 5);
+MEAN_DECLARE(anticheat_idle_snapaim_noise, 1);
 
 .float anticheat_speedhack_offset;
 .float anticheat_speedhack_movetime, anticheat_speedhack_movetime_count, anticheat_speedhack_movetime_frac;
@@ -74,8 +83,27 @@ void anticheat_physics()
 	MEAN_ACCUMULATE(anticheat_div0_strafebot_old, movement_oddity(self.movement, self.anticheat_div0_strafebot_movement_prev), 1);
 	self.anticheat_div0_strafebot_movement_prev = self.movement;
 
-	if(vlen(self.anticheat_div0_strafebot_forward_prev))
-		MEAN_ACCUMULATE(anticheat_div0_strafebot_new, 0.5 - 0.5 * (self.anticheat_div0_strafebot_forward_prev * v_forward), 1);
+	// Note: this actually tries to detect snap-aim.
+	if(vlen(self.anticheat_div0_strafebot_forward_prev) && time > self.anticheat_fixangle_endtime) {
+		float cosangle = self.anticheat_div0_strafebot_forward_prev * v_forward;
+		float angle = cosangle < -1 ? M_PI : cosangle > 1 ? 0 : acos(cosangle);
+		/*
+		if (angle >= 10 * M_PI / 180)
+			printf("SNAP %s: %f for %f, %f since fixangle\n", self.netname, angle * 180 / M_PI, cosangle, time - self.anticheat_fixangle_endtime);
+		*/
+		MEAN_ACCUMULATE(anticheat_div0_strafebot_new, angle / M_PI, 1);
+
+		if (autocvar_slowmo > 0) {
+			// Technically this is a NOP, as the engine should be ensuring
+			// this in the first place. Let's guard against dividing by
+			// zero anyway.
+			float dt = max(0.001, frametime) / autocvar_slowmo;
+
+			float anglespeed = angle / dt;
+			MEAN_ACCUMULATE(anticheat_idle_snapaim_signal, anglespeed, dt);
+			MEAN_ACCUMULATE(anticheat_idle_snapaim_noise, anglespeed, dt);
+		}
+	}
 	self.anticheat_div0_strafebot_forward_prev = v_forward;
 
 	// generic speedhack detection: correlate anticheat_speedhack_movetime (UPDATED BEFORE THIS) and server time
@@ -121,15 +149,49 @@ void anticheat_report()
 {
 	if(!autocvar_sv_eventlog)
 		return;
+	// TODO(divVerent): Use xonstat to acquire good thresholds.
 	GameLogEcho(strcat(":anticheat:_time:", ftos(self.playerid), ":", ftos(servertime - self.anticheat_jointime)));
 	GameLogEcho(strcat(":anticheat:speedhack:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_speedhack), 240, 0.1, 0.15)));
 	GameLogEcho(strcat(":anticheat:div0_strafebot_old:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_div0_strafebot_old), 120, 0.3, 0.4)));
 	GameLogEcho(strcat(":anticheat:div0_strafebot_new:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_div0_strafebot_new), 120, 0.3, 0.4)));
 	GameLogEcho(strcat(":anticheat:div0_evade:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_div0_evade), 120, 0.1, 0.2)));
+	GameLogEcho(strcat(":anticheat:idle_snapaim:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_idle_snapaim_signal) - MEAN_EVALUATE(anticheat_idle_snapaim_noise), 120, 0.1, 0.2)));
+	GameLogEcho(strcat(":anticheat:idle_snapaim_signal:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_idle_snapaim_signal), 120, 0.1, 0.2)));
+	GameLogEcho(strcat(":anticheat:idle_snapaim_noise:", ftos(self.playerid), ":", anticheat_display(MEAN_EVALUATE(anticheat_idle_snapaim_noise), 120, 0.1, 0.2)));
 }
 
-void anticheat_serverframe()
+float anticheat_getvalue(string id)
 {
+	switch(id) {
+		case "_time": return servertime - self.anticheat_jointime;
+		case "speedhack": return MEAN_EVALUATE(anticheat_speedhack);
+		case "div0_strafebot_old": return MEAN_EVALUATE(anticheat_div0_strafebot_old);
+		case "div0_strafebot_new": return MEAN_EVALUATE(anticheat_div0_strafebot_new);
+		case "div0_evade": return MEAN_EVALUATE(anticheat_div0_evade);
+		case "idle_snapaim": return MEAN_EVALUATE(anticheat_idle_snapaim_signal) - MEAN_EVALUATE(anticheat_idle_snapaim_noise);
+		case "idle_snapaim_signal": return MEAN_EVALUATE(anticheat_idle_snapaim_signal);
+		case "idle_snapaim_noise": return MEAN_EVALUATE(anticheat_idle_snapaim_noise);
+	}
+	return -1;
+}
+
+void anticheat_startframe()
+{
+	anticheat_div0_evade_evasion_delta += frametime * (0.5 + random());
+}
+
+void anticheat_fixangle()
+{
+	self.anticheat_fixangle_endtime = servertime + ANTILAG_LATENCY(self) + 0.2;
+}
+
+void anticheat_endframe()
+{
+	entity oldself = self;
+	FOR_EACH_CLIENT(self)
+		if (self.fixangle)
+			anticheat_fixangle();
+	self = oldself;
 	anticheat_div0_evade_evasion_delta += frametime * (0.5 + random());
 }
 

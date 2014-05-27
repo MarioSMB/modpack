@@ -338,6 +338,12 @@ void spawnfunc_trigger_teleport (void)
 void WarpZone_PostTeleportPlayer_Callback(entity pl)
 {
 	UpdateCSQCProjectileAfterTeleport(pl);
+	{
+		entity oldself = self;
+		self = pl;
+		anticheat_fixangle();
+		self = oldself;
+	}
 	// "disown" projectiles after teleport
 	if(pl.owner)
 	if(pl.owner == pl.realowner)

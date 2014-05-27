@@ -2194,6 +2194,8 @@ string GotoMap(string m)
 
 void EndFrame()
 {
+	anticheat_endframe();
+
 	float altime;
 	FOR_EACH_REALCLIENT(self)
 	{
