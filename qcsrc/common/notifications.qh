@@ -367,7 +367,6 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_CTF_PICKUP_NEUTRAL,             1, 0, "s1", "s1",                        "notify_%s_taken",      _("^BG%s^BG got the flag"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_RETURN_, 4,                 1, 0, "s1", "s1",                        "notify_%s_returned",   _("^BG%s^BG returned the ^TC^TT^BG flag"), "") \
     MULTITEAM_INFO(1, INFO_CTF_RETURN_MONSTER_, 4,         1, 0, "s1", "s1",                        "notify_%s_returned",   _("^BG%s^BG returned the ^TC^TT^BG flag"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_ARC,               3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was zapped by ^BG%s^K1's arc%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_BASH,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was bashed by ^BG%s^K1%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_CHEAT,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was unfairly eliminated by ^BG%s^K1%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_CRUSH,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_crush",         _("^BG%s%s^K1 was crushed by ^BG%s^K1%s%s"), "") \
@@ -836,7 +835,6 @@ void Send_Notification_WOCOVA(
 	MULTITEAM_MULTI##teams(default,prefix,anncepre,infopre,centerpre)
 
 #define MSG_MULTI_NOTIFICATIONS \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_ARC,                     NO_MSG,        INFO_DEATH_MURDER_ARC,                     NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_BASH,                    NO_MSG,        INFO_DEATH_MURDER_BASH,                    NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_CHEAT,                   NO_MSG,        INFO_DEATH_MURDER_CHEAT,                   NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_CRUSH,                   NO_MSG,        INFO_DEATH_MURDER_CRUSH,                   NO_MSG) \

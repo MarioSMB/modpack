@@ -35,26 +35,13 @@ float buffs_BuffModel_Customize()
 	}
 	else
 	{
-		self.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+		self.effects = EF_FULLBRIGHT | EF_LOWPRECISION;
 		self.alpha = 1;
 	}
 	return TRUE;
 }
 
 // buff item
-void buff_Ring_Think()
-{
-    self.nextthink = time;
-    self.angles_y = time * 157.1;
-    self.alpha = self.owner.alpha;
-    self.effects = self.owner.effects - EF_STARDUST;
-   
-    if(self.owner.team)
-        self.effects &= ~EF_ADDITIVE;
-    
-    setorigin(self, self.owner.origin + '0 0 15');
-}
-
 float buff_Waypoint_visible_for_player(entity plr)
 {
     if((!self.owner.buff_active && !self.owner.buff_activetime) || plr.buffs)
@@ -65,8 +52,8 @@ float buff_Waypoint_visible_for_player(entity plr)
 
 void buff_Waypoint_Spawn(entity e)
 {
-    WaypointSprite_Spawn(Buff_PrettyName(e.buffs), 0, autocvar_g_buffs_waypoint_distance, e, '0 0 40', world, e.team, e, buff_waypoint, TRUE, RADARICON_POWERUP, e.colormod);
-    WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_POWERUP, e.colormod);
+    WaypointSprite_Spawn(Buff_PrettyName(e.buffs), 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * (e.maxs_z * 1.5), world, e.team, e, buff_waypoint, TRUE, RADARICON_POWERUP, e.glowmod);
+    WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_POWERUP, e.glowmod);
     e.buff_waypoint.waypointsprite_visible_for_player = buff_Waypoint_visible_for_player;
 }
 
@@ -127,10 +114,11 @@ void buff_Think()
 {
 	if(self.buffs != self.oldbuffs)
 	{
-		self.color = self.colormod = Buff_Color(self.buffs);
-		self.enemy.colormod = ((self.team) ? Team_ColorRGB(self.team) + '0.1 0.1 0.1' : self.colormod);
+		self.color = Buff_Color(self.buffs);
+		self.glowmod = ((self.team) ? Team_ColorRGB(self.team) + '0.1 0.1 0.1' : self.color);
+		self.skin = Buff_Skin(self.buffs);
 		
-		setmodel(self, Buff_Model(self.buffs));
+		setmodel(self, "models/relics/relic.md3");
 
 		if(self.buff_waypoint)
 		{
@@ -177,13 +165,13 @@ void buff_Think()
 	if(!self.buff_active)
 	{
 		self.alpha = 0.3;
-		self.effects &= ~(EF_FULLBRIGHT | EF_ADDITIVE);
+		self.effects &= ~(EF_FULLBRIGHT);
 		self.pflags = 0;
 	}
 	else
 	{
 		self.alpha = 1;
-		self.effects |= EF_FULLBRIGHT | EF_ADDITIVE;
+		self.effects |= EF_FULLBRIGHT;
 		self.light_lev = 220 + 36 * sin(time);
 		self.pflags = PFLAGS_FULLDYNAMIC;
 
@@ -192,7 +180,7 @@ void buff_Think()
 	}
     
 	self.nextthink = time;
-	self.angles_y = time * 110.1;
+	//self.angles_y = time * 110.1;
 }
 
 void buff_Waypoint_Reset()
@@ -232,34 +220,18 @@ void buff_Init(entity ent)
 	self.reset = buff_Reset;
 	self.nextthink = time;
 	self.scale = 1.5;
-	self.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_STARDUST | EF_NOSHADOW;
+	self.skin = Buff_Skin(self.buffs);
+	self.effects = EF_FULLBRIGHT | EF_STARDUST | EF_NOSHADOW;
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
 	self.gravity = 100;
-	self.color = self.colormod = buffs_MergedColor(self.buffs);
+	self.color = buffs_MergedColor(self.buffs);
+	self.glowmod = ((self.team) ? Team_ColorRGB(self.team) + '0.1 0.1 0.1' : self.color);
 	buff_SetCooldown(autocvar_g_buffs_cooldown_activate + game_starttime);
 	self.buff_active = !self.buff_activetime;
 	self.pflags = PFLAGS_FULLDYNAMIC;
 
-	setmodel(self, Buff_Model(self.buffs));
+	setmodel(self, "models/relics/relic.md3");
 	setsize(self, '-15 -15 -40', '15 15 40');
-	
-	self.enemy = spawn();
-	self.enemy.owner = self;
-	self.enemy.think = buff_Ring_Think;
-	self.enemy.nextthink = time;
-	self.enemy.effects = self.effects;
-	self.enemy.alpha = self.alpha;
-	self.enemy.scale = self.scale * 1.2;
-	self.enemy.team = self.team;
-	self.enemy.gravity = self.gravity;
-	self.enemy.colormod = ((self.team) ? Team_ColorRGB(self.team) + '0.1 0.1 0.1' : self.colormod);
-
-	move_out_of_solid(self);
-	droptofloor();
-
-	setmodel(self.enemy, "models/buffs/buff_ring.md3");
-	setsize(self.enemy, self.mins, self.maxs);
-	setorigin(self.enemy, self.origin + self.maxs * 0.5 * self.scale);
 	
 	self = oldself;
 }
@@ -360,30 +332,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		frag_damage *= autocvar_g_buffs_tenacity_damage_take;
 		frag_force *= autocvar_g_buffs_tenacity_force_take;
 	}
-	
-	if(frag_attacker.buffs & BUFF_ARC)
-	if(frag_target != frag_attacker)
-	if(frag_deathtype != DEATH_BUFF_ARC)
-	{
-		entity head;
-		//RadiusDamage (frag_target, frag_attacker, 50, 50, 250, frag_attacker, 0, DEATH_BUFF_ARC, other);
 
-		for(head = findradius(frag_target.origin, autocvar_g_buffs_arc_radius); head; head = head.chain)
-		if(head.takedamage)
-		if(head != frag_attacker)
-		if(head != frag_target)
-		if(head.health > 0)
-		if(!head.frozen)
-		if(!head.jb_isprisoned)
-		if(!head.vehicle)
-		if(time >= head.buff_arc_lastzap)
-		{
-			head.buff_arc_lastzap = time + 1; // no cvar needed for this, just a preventative for multiple zaps
-			te_csqc_lightningarc(frag_target.origin, head.origin);
-			Damage(head, frag_inflictor, frag_attacker, autocvar_g_buffs_arc_damage, DEATH_BUFF_ARC, head.origin, '0 0 0');
-		}
-	}
-	
 	if(frag_attacker.buffs & BUFF_MEDIC)
 	if(SAME_TEAM(frag_attacker, frag_target))
 	if(frag_attacker != frag_target)
@@ -507,14 +456,16 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 			if(!self.buff_model)
 			{
 				self.buff_model = spawn();
-				setmodel(self.buff_model, Buff_Model(self.buffs));
+				setmodel(self.buff_model, "models/relics/relic.md3");
 				setsize(self.buff_model, '0 0 -40', '0 0 40');
 				self.buff_model.owner = self;
 				self.buff_model.pflags = PFLAGS_FULLDYNAMIC;
 				self.buff_model.light_lev = 200;
 				self.buff_model.customizeentityforclient = buffs_BuffModel_Customize;
 			}
-			self.buff_model.color = self.buff_model.colormod = buffs_MergedColor(self.buffs);
+			self.buff_model.color = buffs_MergedColor(self.buffs);
+			self.buff_model.glowmod = ((self.buff_model.team) ? Team_ColorRGB(self.buff_model.team) + '0.1 0.1 0.1' : self.buff_model.color);
+			self.buff_model.skin = Buff_Skin(self.buffs);
 		}
 		else
 		{
@@ -526,7 +477,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 	if(self.buff_model)
 	{
 		setorigin(self.buff_model, self.origin + '0 0 70');
-        self.buff_model.angles_y = 200 * time;
+        //self.buff_model.angles_y = 200 * time;
 	}
 	
 	return FALSE;
@@ -595,20 +546,11 @@ MUTATOR_HOOKFUNCTION(buffs_BuildMutatorsPrettyString)
 
 void buffs_Initialize()
 {
-	precache_model("models/buffs/buff.md3");
-	precache_model("models/buffs/buff_ring.md3");
+	precache_model("models/relics/relic.md3");
 	precache_sound("misc/strength_respawn.wav");
 	precache_sound("misc/shield_respawn.wav");
 	precache_sound("misc/poweroff.wav");
 	precache_sound("weapons/rocket_impact.wav");
-	
-	entity e;
-	for(e = Buff_Type_first; e; e = e.enemy)
-	{
-		string buffmodel = sprintf("models/buffs/buff_%s.md3", e.netname);
-		if(fexists(buffmodel))
-			precache_model(buffmodel);
-	}
 
 	addstat(STAT_BUFFS, AS_INT, buffs);
 }

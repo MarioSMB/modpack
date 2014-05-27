@@ -34,12 +34,11 @@ float Buff_Type_FromName(string buff_name)
 	return 0;
 }
 
-string Buff_Model(float buff_id)
+float Buff_Skin(float buff_id)
 {
-	string buffmodel = sprintf("models/buffs/buff_%s.md3", Buff_Name(buff_id));
-
-	if(!fexists(buffmodel))
-		buffmodel = "models/buffs/buff.md3";
-
-	return buffmodel;
+	entity e;
+	for(e = Buff_Type_first; e; e = e.enemy)
+		if(buff_id == e.items)
+			return e.skin;
+	return 0;
 }
