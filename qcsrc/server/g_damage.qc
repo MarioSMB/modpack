@@ -868,7 +868,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 			if(IS_PLAYER(victim) || IS_TURRET(victim) || IS_MONSTER(victim) || victim.classname == "func_assault_destructible" || (victim.classname == "onslaught_generator" && !victim.isshielded) || (victim.classname == "onslaught_controlpoint_icon" && !victim.owner.isshielded))
 			{
-				if(DIFF_TEAM(victim, attacker))
+				if(DIFF_TEAM(victim, attacker) && !victim.frozen)
 				{
 					if(damage > 0)
 					{
