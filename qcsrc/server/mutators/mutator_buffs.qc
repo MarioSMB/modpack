@@ -346,12 +346,12 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	if(frag_target != frag_attacker)
 		frag_damage *= autocvar_g_buffs_speed_damage_take;
 
-	if(frag_target.buffs & BUFF_REGENERATION)
+	if(frag_target.buffs & BUFF_MEDIC)
 	if((frag_target.health - frag_damage) <= 0)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(frag_attacker)
-	if(random() <= autocvar_g_buffs_regeneration_survive_chance) // 40% chance?
-		frag_damage = frag_target.health - autocvar_g_buffs_regeneration_survive_health; // 5 health recovery
+	if(random() <= autocvar_g_buffs_medic_survive_chance) // 40% chance?
+		frag_damage = frag_target.health - autocvar_g_buffs_medic_survive_health; // 5 health recovery
 		
 	if(frag_target.buffs & BUFF_VENGEANCE)
 	if(frag_attacker)
@@ -376,14 +376,11 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		remove(e);
 	}
 	
-	if(frag_target.buffs & BUFF_DISABILITY)
+	if(frag_attacker.buffs & BUFF_DISABILITY)
 	if(frag_target != frag_attacker)
-	{
-		frag_damage *= autocvar_g_buffs_disability_damage_take;
-		frag_force *= autocvar_g_buffs_disability_force_take;
-	}
+		frag_target.buff_disability_time = time + autocvar_g_buffs_disability_time;
 
-	if(frag_attacker.buffs & BUFF_REGENERATION)
+	if(frag_attacker.buffs & BUFF_MEDIC)
 	if(SAME_TEAM(frag_attacker, frag_target))
 	if(frag_attacker != frag_target)
 	{
@@ -406,6 +403,12 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerPhysics)
 	{
 		self.stat_sv_maxspeed *= autocvar_g_buffs_speed_speed;
 		self.stat_sv_airspeedlimit_nonqw *= autocvar_g_buffs_speed_speed;
+	}
+	
+	if(time < self.buff_disability_time)
+	{
+		self.stat_sv_maxspeed *= autocvar_g_buffs_disability_speed;
+		self.stat_sv_airspeedlimit_nonqw *= autocvar_g_buffs_disability_speed;
 	}
 
 	return FALSE;
@@ -475,12 +478,28 @@ MUTATOR_HOOKFUNCTION(buffs_WeaponRate)
 {
 	if(self.buffs & BUFF_SPEED)
 		weapon_rate *= autocvar_g_buffs_speed_rate;
+		
+	if(time < self.buff_disability_time)
+		weapon_rate *= autocvar_g_buffs_disability_rate;
 	
 	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 {
+	if(gameover || self.deadflag != DEAD_NO) { return FALSE; }
+	
+	if(self.frozen || self.jb_isprisoned)
+	{
+		if(self.buffs)
+		{
+			Send_Notification(NOTIF_ALL_EXCEPT, self, MSG_INFO, INFO_ITEM_BUFF_LOST, self.netname, self.buffs);
+			self.buffs = 0;
+		}
+
+		return FALSE;
+	}
+
 	if(time >= self.buff_vampire_lasttarget_time || self.buff_vampire_lasttarget.deadflag != DEAD_NO) // target has died of our sucking
 		self.buff_vampire_lasttarget = world;
 		
@@ -607,11 +626,11 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerRegen)
 		self.buff_vampire_lastdamage = time + autocvar_g_buffs_vampire_delay;
 	}
 	
-	if(self.buffs & BUFF_REGENERATION)
+	if(self.buffs & BUFF_MEDIC)
 	{
-		regen_mod_rot = autocvar_g_buffs_regeneration_rot;
-		regen_mod_limit = regen_mod_max = autocvar_g_buffs_regeneration_max;
-		regen_mod_regen = autocvar_g_buffs_regeneration_regen;
+		regen_mod_rot = autocvar_g_buffs_medic_rot;
+		regen_mod_limit = regen_mod_max = autocvar_g_buffs_medic_max;
+		regen_mod_regen = autocvar_g_buffs_medic_regen;
 	}
 	
 	if(self.buffs & BUFF_SPEED)

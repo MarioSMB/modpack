@@ -34,10 +34,10 @@ var float BUFF_LAST = 1;
 REGISTER_BUFF(_("Ammo"),ammo,AMMO,3,'0.2 1 0.2');
 REGISTER_BUFF(_("Resistance"),resistance,RESISTANCE,0,'0.3 0.2 1');
 REGISTER_BUFF(_("Speed"),speed,SPEED,9,'1 1 0.2');
-REGISTER_BUFF(_("Regeneration"),regeneration,REGENERATION,1,'1 0.3 1');
+REGISTER_BUFF(_("Regeneration"),medic,MEDIC,1,'1 0.3 1');
 REGISTER_BUFF(_("Bash"),bash,BASH,5,'1 0.4 0');
 REGISTER_BUFF(_("Vampire"),vampire,VAMPIRE,2,'1 0.15 0');
-REGISTER_BUFF(_("Disability"),disability,DISABILITY,6,'0.66 0.66 0.73');
+REGISTER_BUFF(_("Disability"),disability,DISABILITY,7,'0.66 0.66 0.73');
 REGISTER_BUFF(_("Vengeance"),vengeance,VENGEANCE,15,'0.55 0.5 1');
 REGISTER_BUFF(_("Jump"),jump,JUMP,10,'0.7 0.2 1');
 REGISTER_BUFF(_("Flight"),flight,FLIGHT,11,'1 0.2 0.5');
@@ -60,7 +60,7 @@ void buff_Init_Compat(entity ent, float replacement);
 BUFF_SPAWNFUNCS(resistance,		BUFF_RESISTANCE)
 BUFF_SPAWNFUNCS(ammo,			BUFF_AMMO)
 BUFF_SPAWNFUNCS(speed,			BUFF_SPEED)
-BUFF_SPAWNFUNCS(regeneration,	BUFF_REGENERATION)
+BUFF_SPAWNFUNCS(medic,	BUFF_MEDIC)
 BUFF_SPAWNFUNCS(bash,			BUFF_BASH)
 BUFF_SPAWNFUNCS(vampire,		BUFF_VAMPIRE)
 BUFF_SPAWNFUNCS(disability,		BUFF_DISABILITY)
@@ -70,7 +70,7 @@ BUFF_SPAWNFUNCS(flight,			BUFF_FLIGHT)
 BUFF_SPAWNFUNCS(invisible,		BUFF_INVISIBLE)
 BUFF_SPAWNFUNCS(random,			0)
 
-BUFF_SPAWNFUNC_Q3TA_COMPAT(item_doubler,    BUFF_REGENERATION)
+BUFF_SPAWNFUNC_Q3TA_COMPAT(item_doubler,    BUFF_MEDIC)
 BUFF_SPAWNFUNC_Q3TA_COMPAT(item_resistance,      BUFF_RESISTANCE)
 BUFF_SPAWNFUNC_Q3TA_COMPAT(item_scout,      BUFF_SPEED)
 BUFF_SPAWNFUNC_Q3TA_COMPAT(item_ammoregen,  BUFF_AMMO)
