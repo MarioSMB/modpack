@@ -30,7 +30,7 @@ void buff_Respawn(entity ent)
 	if(!MoveToRandomMapLocation(ent, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((autocvar_g_buffs_random_location_attempts > 0) ? autocvar_g_buffs_random_location_attempts : 20), 1024, 256))
 	{
 		entity spot = SelectSpawnPoint(TRUE);
-		setorigin(self, spot.origin + (randomvec() * 300));
+		setorigin(self, spot.origin + '0 0 70' + (randomvec() * 300));
 		self.angles = spot.angles;
 	}
 	
