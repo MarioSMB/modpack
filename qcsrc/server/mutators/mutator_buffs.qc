@@ -229,7 +229,7 @@ void buff_Init(entity ent)
 	self.touch = buff_Touch;
 	self.reset = buff_Reset;
 	self.nextthink = time;
-	self.scale = 1.5;
+	self.scale = 1;
 	self.skin = Buff_Skin(self.buffs);
 	self.effects = EF_FULLBRIGHT | EF_STARDUST | EF_NOSHADOW;
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
