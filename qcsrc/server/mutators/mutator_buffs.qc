@@ -27,7 +27,7 @@ float buff_Respawn(entity ent)
 	
 	vector oldbufforigin = ent.origin;
 	
-	if(!MoveToRandomMapLocation(ent, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 20, 1024, 256))
+	if(!MoveToRandomMapLocation(ent, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((autocvar_g_buffs_random_location_attempts > 0) ? autocvar_g_buffs_random_location_attempts : 20), 1024, 256))
 	{
 		setorigin(ent, oldbufforigin);
 		return FALSE; // just give up, if buff fell into void, it will attempt to do this again anyway
