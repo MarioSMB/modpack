@@ -326,22 +326,25 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 		damage_take = v_x;
 		damage_save = v_y;
 	}
-	return FALSE;
-}
-
-MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
-{
+	if(frag_target.iscreature)
+	if(!frag_target.vehicle)
+	if(!IS_VEHICLE(frag_target))
+	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
+	if(frag_target.deadflag == DEAD_NO)
+	if(!IS_TURRET(frag_target)) // why can these have iscreature?
 	if(frag_attacker.buffs & BUFF_VAMPIRE)
 	if(frag_attacker != frag_target)
 	if(!frag_target.frozen)
 	if(frag_target.takedamage)
 	if(!frag_target.jb_isprisoned)
 	if(DIFF_TEAM(frag_attacker, frag_target))
-	{
-		frag_attacker.buff_vampire_lasttarget = frag_target;
-		frag_attacker.buff_vampire_lasttarget_time = time + autocvar_g_buffs_vampire_time;
-	}
-	
+		frag_attacker.health = bound(0, frag_attacker.health + frag_damage * autocvar_g_buffs_vampire_damage_steal, g_pickup_healthsmall_max);
+
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
+{
 	if(frag_target.buffs & BUFF_SPEED)
 	if(frag_target != frag_attacker)
 		frag_damage *= autocvar_g_buffs_speed_damage_take;
@@ -500,9 +503,6 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 		return FALSE;
 	}
 
-	if(time >= self.buff_vampire_lasttarget_time || self.buff_vampire_lasttarget.deadflag != DEAD_NO) // target has died of our sucking
-		self.buff_vampire_lasttarget = world;
-		
 	if(!(self.oldbuffs & BUFF_JUMP) && !(self.buffs & BUFF_JUMP))
 		self.stat_jumpheight = autocvar_sv_jumpvelocity; // reset so we don't break anything
 
@@ -612,20 +612,6 @@ MUTATOR_HOOKFUNCTION(buffs_VehicleExit)
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerRegen)
 {
-	if(self.buffs & BUFF_VAMPIRE)
-	if(self.buff_vampire_lasttarget)
-	if(self.buff_vampire_lasttarget.deadflag == DEAD_NO)
-	if(!self.buff_vampire_lasttarget.frozen)
-	if(!self.buff_vampire_lasttarget.jb_isprisoned)
-	if(time >= self.buff_vampire_lastdamage)
-	{
-		self.health = min(g_pickup_healthmega_max, self.health + autocvar_g_buffs_vampire_damage);
-		self.buff_vampire_lasttarget.health -= autocvar_g_buffs_vampire_damage;
-		if(self.buff_vampire_lasttarget.health <= 1)
-			Damage(self.buff_vampire_lasttarget, self, self, 2, DEATH_BUFF_VAMPIRE, self.buff_vampire_lasttarget.origin, '0 0 0'); // put them out of their misery
-		self.buff_vampire_lastdamage = time + autocvar_g_buffs_vampire_delay;
-	}
-	
 	if(self.buffs & BUFF_MEDIC)
 	{
 		regen_mod_rot = autocvar_g_buffs_medic_rot;

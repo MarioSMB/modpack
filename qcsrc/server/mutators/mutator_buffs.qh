@@ -1,8 +1,5 @@
 // buff specific variables \\
-// vampire
-.entity buff_vampire_lasttarget;
-.float buff_vampire_lasttarget_time;
-.float buff_vampire_lastdamage;
+//
 // ammo
 .float buff_ammo_prev_infitems;
 // invisible
