@@ -52,7 +52,7 @@ float buff_Waypoint_visible_for_player(entity plr)
 
 void buff_Waypoint_Spawn(entity e)
 {
-    WaypointSprite_Spawn(Buff_PrettyName(e.buffs), 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * (e.maxs_z * 1.5), world, e.team, e, buff_waypoint, TRUE, RADARICON_POWERUP, e.glowmod);
+    WaypointSprite_Spawn(Buff_PrettyName(e.buffs), 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * (e.maxs_z * 1.1), world, e.team, e, buff_waypoint, TRUE, RADARICON_POWERUP, e.glowmod);
     WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_POWERUP, e.glowmod);
     e.buff_waypoint.waypointsprite_visible_for_player = buff_Waypoint_visible_for_player;
 }
@@ -101,7 +101,8 @@ void buff_Touch()
 	
 	Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_BUFF_GOT, self.buffs);
 	Send_Notification(NOTIF_ALL_EXCEPT, other, MSG_INFO, INFO_ITEM_BUFF, other.netname, self.buffs);
-		
+
+	pointparticles(particleeffectnum("item_pickup"), CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 	sound(other, CH_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTN_NORM);
 	other.buffs |= (self.buffs);
 }
@@ -113,6 +114,8 @@ void buff_NewType(entity ent, float cb)
 	for(e = Buff_Type_first; e; e = e.enemy)
 	{
 		if(e.items == BUFF_SUPPLY && ((start_items & IT_UNLIMITED_WEAPON_AMMO) || (start_items & IT_UNLIMITED_AMMO)))
+			continue;
+		if(!cvar(strcat("g_buffs_", e.netname)))
 			continue;
 		RandomSelection_Add(world, e.items, string_null, 1, 1 / e.count); // if it's already been chosen, give it a lower priority
 		e.count += 1;
@@ -168,7 +171,8 @@ void buff_Think()
 		if(!self.buff_activetime)
 		{
 			self.buff_active = TRUE;
-			sound(self, CH_TRIGGER, "misc/strength_respawn.wav", VOL_BASE, ATTN_NORM); 
+			sound(self, CH_TRIGGER, "misc/strength_respawn.wav", VOL_BASE, ATTN_NORM);
+			pointparticles(particleeffectnum("item_respawn"), CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 		}
 	}
 
