@@ -542,9 +542,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 		self.buff_model.effects = self.effects;
 		self.buff_model.effects |= EF_LOWPRECISION;
 		self.buff_model.effects = self.buff_model.effects & EFMASK_CHEAP; // eat performance
-		if(self.buff_model.scale < -1)
-			self.buff_model.alpha = -1;
-		else if(self.alpha == default_player_alpha)
+		if(self.alpha == default_player_alpha)
 			self.buff_model.alpha = default_weapon_alpha;
 		else if(self.alpha != 0)
 			self.buff_model.alpha = self.alpha;
