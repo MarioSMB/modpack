@@ -108,6 +108,7 @@ void CSQC_Init(void)
 	registercvar("cl_pokenade_type", "zombie");
 	registercvar("cl_autovote", "");
 	registercvar("cl_nocarry", "0");
+	registercvar("cl_buffs_autoreplace", "0");
 
 	// these need to be defined for quickmenu to work
 	registercvar("hud_panel_quickmenu_pos", "0.010000 0.410000");

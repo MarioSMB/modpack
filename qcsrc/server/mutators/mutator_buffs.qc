@@ -84,7 +84,17 @@ void buff_Touch()
 	if(!self.buff_active)
 		return;
 	if(other.buffs)
-		return;
+	{
+		if(other.cvar_cl_buffs_autoreplace)
+		{
+			//Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_BUFF_DROP, other.buffs);
+			Send_Notification(NOTIF_ALL_EXCEPT, other, MSG_INFO, INFO_ITEM_BUFF_LOST, other.netname, other.buffs);
+
+			other.buffs = 0;
+			//sound(other, CH_TRIGGER, "relics/relic_effect.wav", VOL_BASE, ATTN_NORM);
+		}
+		else { return; } // do nothing
+	}
 		
 	self.owner = other;
 	self.buff_active = FALSE;
@@ -380,7 +390,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerUseKey)
 		Send_Notification(NOTIF_ALL_EXCEPT, self, MSG_INFO, INFO_ITEM_BUFF_LOST, self.netname, self.buffs);
 
 		self.buffs = 0;
-		sound(self, CH_TRIGGER, "misc/poweroff.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_TRIGGER, "relics/relic_effect.wav", VOL_BASE, ATTN_NORM);
 		return TRUE;
 	}
 	return FALSE;
@@ -532,6 +542,12 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerRegen)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(buffs_GetCvars)
+{
+	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_buffs_autoreplace, "cl_buffs_autoreplace");
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(buffs_BuildMutatorsString)
 {
 	ret_string = strcat(ret_string, ":Buffs");
@@ -549,7 +565,7 @@ void buffs_Initialize()
 	precache_model("models/relics/relic.md3");
 	precache_sound("misc/strength_respawn.wav");
 	precache_sound("misc/shield_respawn.wav");
-	precache_sound("misc/poweroff.wav");
+	precache_sound("relics/relic_effect.wav");
 	precache_sound("weapons/rocket_impact.wav");
 
 	addstat(STAT_BUFFS, AS_INT, buffs);
@@ -572,6 +588,7 @@ MUTATOR_DEFINITION(mutator_buffs)
 	MUTATOR_HOOK(OnEntityPreSpawn, buffs_OnEntityPreSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(WeaponRateFactor, buffs_WeaponRate, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, buffs_PlayerThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GetCvars, buffs_GetCvars, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsString, buffs_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, buffs_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 
