@@ -468,7 +468,10 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 				self.buff_model = spawn();
 				setmodel(self.buff_model, "models/relics/relic.md3");
 				setsize(self.buff_model, '0 0 -40', '0 0 40');
+				setattachment(self.buff_model, self, "");
+				setorigin(self.buff_model, '0 0 1' * (self.buff_model.maxs_z * 1));
 				self.buff_model.owner = self;
+				self.buff_model.scale = 0.7;
 				self.buff_model.pflags = PFLAGS_FULLDYNAMIC;
 				self.buff_model.light_lev = 200;
 				self.buff_model.customizeentityforclient = buffs_BuffModel_Customize;
@@ -482,12 +485,6 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 			remove(self.buff_model);
 			self.buff_model = world;
 		}
-	}
-	
-	if(self.buff_model)
-	{
-		setorigin(self.buff_model, self.origin + '0 0 70');
-        //self.buff_model.angles_y = 200 * time;
 	}
 	
 	return FALSE;
