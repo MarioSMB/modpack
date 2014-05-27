@@ -208,7 +208,8 @@ void buff_Waypoint_Reset()
 
 void buff_Reset()
 {
-	buff_NewType(self, self.buffs);
+	if(autocvar_g_buffs_randomize)
+		buff_NewType(self, self.buffs);
 	self.owner = world;
 	buff_SetCooldown(autocvar_g_buffs_cooldown_activate);
 	buff_Waypoint_Reset();
@@ -223,7 +224,7 @@ void buff_Init(entity ent)
 
 	entity oldself = self;
 	self = ent;
-	if(!self.buffs)
+	if(!self.buffs || !cvar(strcat("g_buffs_", Buff_Name(self.buffs))))
 		buff_NewType(self, 0);
 	
 	self.classname = "item_buff";
