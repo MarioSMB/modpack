@@ -1172,7 +1172,7 @@ float Onslaught_CheckWinner()
 		e.player_blocked = TRUE;
 	}
 	
-	nades_Clear(world);
+	nades_Clear(world, TRUE);
 	
 	return 1;
 }

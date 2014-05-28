@@ -70,7 +70,7 @@ float VIP_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
 		
-		nades_Clear(world);
+		nades_Clear(world, TRUE);
 
 		FOR_EACH_PLAYER(head) if(head.isvip && head.health > 0)
 			PlayerScore_Add(head, SP_VIP_SURVIVALS, 1);
@@ -122,7 +122,7 @@ float VIP_CheckWinner()
 
 	round_handler_Init(5, autocvar_g_vip_warmup, autocvar_g_vip_round_timelimit);
 
-	nades_Clear(world);
+	nades_Clear(world, TRUE);
 
 	return 1;
 }

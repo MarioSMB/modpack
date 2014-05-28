@@ -144,7 +144,7 @@ float freezetag_CheckWinner()
 		WaypointSprite_Kill(e.wps_enemy);
 	}
 	
-	nades_Clear(world);
+	nades_Clear(world, TRUE);
 
 	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 	return 1;

@@ -16,8 +16,8 @@
 
 void toss_nade(entity e, vector _velocity, float _time);
 
-// Remove nades that are being thrown, if no client is specified, all players are checked
-void(entity player) nades_Clear;
+// Remove nades that are being thrown, if allplayers is TRUE, all clients are checked
+void(entity player, float allplayers) nades_Clear;
 
 // Give a bonus grenade to a player
 void(entity player, float score) nades_GiveBonus;

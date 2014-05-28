@@ -836,9 +836,9 @@ void nades_CheckThrow()
 	}
 }
 
-void nades_Clear(entity player)
+void nades_Clear(entity player, float allplayers)
 {
-	if(player == world)
+	if(allplayers)
 	{
 		FOR_EACH_PLAYER(player)
 		{
@@ -849,11 +849,11 @@ void nades_Clear(entity player)
 
 		return;
 	}
+	
+	if(!player) { return; }
 
-	if(player.nade)
-		remove(player.nade);
-	if(player.fake_nade)
-		remove(player.fake_nade);
+	if(player.nade) { remove(player.nade); }
+	if(player.fake_nade) { remove(player.fake_nade); }
 
 	player.nade = player.fake_nade = world;
 }
@@ -1093,7 +1093,7 @@ MUTATOR_HOOKFUNCTION(nades_MonsterDies)
 
 MUTATOR_HOOKFUNCTION(nades_RemovePlayer)
 {
-	nades_Clear(self);
+	nades_Clear(self, FALSE);
 	nades_RemoveBonus(self);
 	return FALSE;
 }

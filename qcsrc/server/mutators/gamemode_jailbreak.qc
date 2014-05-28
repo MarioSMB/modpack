@@ -61,7 +61,7 @@ float JB_CheckWinner()
 				self = oldself;
 			}
 		}
-		nades_Clear(world);
+		nades_Clear(world, TRUE);
 		jb_roundover = TRUE;
 		return 1;
 	}
@@ -108,7 +108,7 @@ float JB_CheckWinner()
 		}
 	}
 	
-	nades_Clear(world);
+	nades_Clear(world, TRUE);
 
 	return 1;
 }
@@ -302,7 +302,7 @@ void JB_Imprison(entity attacker)
 	
 	self.weapon_blocked = TRUE;
 	
-	nades_Clear(self);
+	nades_Clear(self, FALSE);
 
 	JB_Log(FALSE, strcat("Imprisoning ", self.netname, "^7, attacker: ", etos(attacker), " with netname: ", attacker.netname));
 	JB_TeleportToJail(self);
@@ -520,7 +520,7 @@ void JB_Jail_Touch()
 	{
 		entity own = other.realowner;
 		remove(other);
-		nades_Clear(own);
+		nades_Clear(own, FALSE);
 		return;
 	}
 	

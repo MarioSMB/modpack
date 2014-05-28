@@ -458,7 +458,7 @@ float Domination_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
 		round_handler_Init(5, autocvar_g_domination_warmup, autocvar_g_domination_round_timelimit);
-		nades_Clear(world);
+		nades_Clear(world, TRUE);
 		return 1;
 	}
 
@@ -483,7 +483,7 @@ float Domination_CheckWinner()
 	
 	round_handler_Init(5, autocvar_g_domination_warmup, autocvar_g_domination_round_timelimit);
 
-	nades_Clear(world);
+	nades_Clear(world, TRUE);
 	
 	return 1;
 }

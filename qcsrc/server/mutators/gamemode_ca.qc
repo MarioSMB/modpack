@@ -62,7 +62,7 @@ float CA_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
 		allowed_to_spawn = FALSE;
 		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
-		nades_Clear(world);
+		nades_Clear(world, TRUE);
 		return 1;
 	}
 
@@ -86,7 +86,7 @@ float CA_CheckWinner()
 	allowed_to_spawn = FALSE;
 	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 
-	nades_Clear(world);
+	nades_Clear(world, TRUE);
 
 	return 1;
 }
