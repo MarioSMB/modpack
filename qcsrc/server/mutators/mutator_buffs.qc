@@ -1,51 +1,3 @@
-vector buffs_MergedColor(float b)
-{
-    vector c;
-	entity e;
-    float n = 0;
-   
-    c = Buff_Color(b);
-    
-    if(c != '0 0 0')
-        return c;
-
-	for(e = Buff_Type_first; e; e = e.enemy)
-	{
-		if(b & e.items)
-		{
-            c += Buff_Color(e.items);
-            ++n;
-        }
-	}
-
-    return c * (1/n);
-}
-
-void buff_Respawn(entity ent)
-{
-	if(gameover) { return; }
-	
-	vector oldbufforigin = ent.origin;
-	
-	if(!MoveToRandomMapLocation(ent, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((autocvar_g_buffs_random_location_attempts > 0) ? autocvar_g_buffs_random_location_attempts : 10), 1024, 256))
-	{
-		entity spot = SelectSpawnPoint(TRUE);
-		setorigin(self, (spot.origin + '0 0 200') + (randomvec() * 300));
-		self.angles = spot.angles;
-	}
-	
-	makevectors(ent.angles);
-	ent.velocity = '0 0 200';
-	ent.angles = '0 0 0';
-
-	pointparticles(particleeffectnum("electro_combo"), oldbufforigin + ((ent.mins + ent.maxs) * 0.5), '0 0 0', 1);
-	pointparticles(particleeffectnum("electro_combo"), CENTER_OR_VIEWOFS(ent), '0 0 0', 1);
-	
-	WaypointSprite_Ping(ent.buff_waypoint);
-	
-	sound(ent, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
-}
-
 float buffs_BuffModel_Customize()
 {
 	float same_team = (SAME_TEAM(other, self.owner) || (IS_SPEC(other) && SAME_TEAM(other.enemy, self.owner)));
@@ -92,6 +44,31 @@ void buff_SetCooldown(float cd)
 	WaypointSprite_UpdateBuildFinished(self.buff_waypoint, time + cd);
 	self.buff_activetime = cd;
 	self.buff_active = !cd;
+}
+
+void buff_Respawn(entity ent)
+{
+	if(gameover) { return; }
+	
+	vector oldbufforigin = ent.origin;
+	
+	if(!MoveToRandomMapLocation(ent, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((autocvar_g_buffs_random_location_attempts > 0) ? autocvar_g_buffs_random_location_attempts : 10), 1024, 256))
+	{
+		entity spot = SelectSpawnPoint(TRUE);
+		setorigin(self, (spot.origin + '0 0 200') + (randomvec() * 300));
+		self.angles = spot.angles;
+	}
+	
+	makevectors(ent.angles);
+	ent.velocity = '0 0 200';
+	ent.angles = '0 0 0';
+
+	pointparticles(particleeffectnum("electro_combo"), oldbufforigin + ((ent.mins + ent.maxs) * 0.5), '0 0 0', 1);
+	pointparticles(particleeffectnum("electro_combo"), CENTER_OR_VIEWOFS(ent), '0 0 0', 1);
+	
+	WaypointSprite_Ping(ent.buff_waypoint);
+	
+	sound(ent, CH_TRIGGER, "keepaway/respawn.wav", VOL_BASE, ATTEN_NONE); // ATTEN_NONE (it's a sound intended to be heard anywhere)
 }
 
 void buff_Touch()
@@ -281,7 +258,7 @@ void buff_Init(entity ent)
 	self.effects = EF_FULLBRIGHT | EF_STARDUST | EF_NOSHADOW;
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
 	//self.gravity = 100;
-	self.color = buffs_MergedColor(self.buffs);
+	self.color = Buff_Color(self.buffs);
 	self.glowmod = ((self.team) ? Team_ColorRGB(self.team) + '0.1 0.1 0.1' : self.color);
 	buff_SetCooldown(autocvar_g_buffs_cooldown_activate + game_starttime);
 	self.buff_active = !self.buff_activetime;
@@ -561,7 +538,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 				self.buff_model.light_lev = 200;
 				self.buff_model.customizeentityforclient = buffs_BuffModel_Customize;
 			}
-			self.buff_model.color = buffs_MergedColor(self.buffs);
+			self.buff_model.color = Buff_Color(self.buffs);
 			self.buff_model.glowmod = ((self.buff_model.team) ? Team_ColorRGB(self.buff_model.team) + '0.1 0.1 0.1' : self.buff_model.color);
 			self.buff_model.skin = Buff_Skin(self.buffs);
 		}
