@@ -350,8 +350,10 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		frag_force = '0 0 0';
 	
 	if(frag_attacker.buffs & BUFF_BASH)
-	if(frag_attacker != frag_target)
 	if(vlen(frag_force))
+	if(frag_attacker == frag_target)
+		frag_force *= autocvar_g_buffs_bash_force_self;
+	else
 		frag_force *= autocvar_g_buffs_bash_force;
 	
 	if(frag_attacker.buffs & BUFF_DISABILITY)
