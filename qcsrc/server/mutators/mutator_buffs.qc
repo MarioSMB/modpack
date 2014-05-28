@@ -490,6 +490,13 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 {
 	if(gameover || self.deadflag != DEAD_NO) { return FALSE; }
 	
+	if(time < self.buff_disability_time)
+	if(time >= self.buff_disability_effect_time)
+	{
+		pointparticles(particleeffectnum("smoking"), self.origin + ((self.mins + self.maxs) * 0.5), '0 0 0', 1);
+		self.buff_disability_effect_time = time + 0.5;
+	}
+	
 	if(self.frozen || self.jb_isprisoned)
 	{
 		if(self.buffs)
