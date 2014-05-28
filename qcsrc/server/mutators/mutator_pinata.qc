@@ -1,5 +1,7 @@
 MUTATOR_HOOKFUNCTION(pinata_PlayerDies)
 {
+	if(self.frozen) { return FALSE; } // let's not drop weapons if player was only frozen
+
 	float j;
 	for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 	if(self.weapons & WepSet_FromWeapon(j))
