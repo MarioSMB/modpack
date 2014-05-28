@@ -1577,6 +1577,7 @@ float autocvar_g_observer_glowtrails;
 float autocvar_g_riflearena_withlaser;
 float autocvar_g_buffs_waypoint_distance;
 float autocvar_g_buffs_randomize;
+float autocvar_g_buffs_random_lifetime;
 float autocvar_g_buffs_random_location;
 float autocvar_g_buffs_random_location_attempts;
 float autocvar_g_buffs_spawn_count;

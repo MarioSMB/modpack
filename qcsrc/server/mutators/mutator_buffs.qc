@@ -73,6 +73,8 @@ void buff_Respawn(entity ent)
 	makevectors(ent.angles);
 	ent.velocity = '0 0 200';
 	ent.angles = '0 0 0';
+	if(autocvar_g_buffs_random_lifetime > 0)
+		ent.lifetime = time + autocvar_g_buffs_random_lifetime;
 
 	pointparticles(particleeffectnum("electro_combo"), oldbufforigin + ((ent.mins + ent.maxs) * 0.5), '0 0 0', 1);
 	pointparticles(particleeffectnum("electro_combo"), CENTER_OR_VIEWOFS(ent), '0 0 0', 1);
@@ -120,6 +122,7 @@ void buff_Touch()
 		
 	self.owner = other;
 	self.buff_active = FALSE;
+	self.lifetime = 0;
 	
 	Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_BUFF_GOT, self.buffs);
 	Send_Notification(NOTIF_ALL_EXCEPT, other, MSG_INFO, INFO_ITEM_BUFF, other.netname, self.buffs);
@@ -218,6 +221,10 @@ void buff_Think()
 
 		if(self.team && !self.buff_waypoint)
 			buff_Waypoint_Spawn(self);
+			
+		if(self.lifetime)
+		if(time >= self.lifetime)
+			buff_Respawn(self);
 	}
     
 	self.nextthink = time;
