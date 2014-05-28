@@ -399,6 +399,9 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 MUTATOR_HOOKFUNCTION(buffs_PlayerSpawn)
 {
 	self.buffs = 0;
+	// reset timers here to prevent them continuing after re-spawn
+	self.buff_disability_time = 0;
+	self.buff_disability_effect_time = 0;
 	return FALSE;
 }
 
