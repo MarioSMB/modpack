@@ -493,6 +493,8 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 
 	if(!(self.oldbuffs & BUFF_JUMP) && !(self.buffs & BUFF_JUMP))
 		self.stat_jumpheight = autocvar_sv_jumpvelocity; // reset so we don't break anything
+	else if(self.stat_jumpheight != autocvar_g_buffs_jump_height)
+		self.stat_jumpheight = autocvar_g_buffs_jump_height;
 
 	if(self.buffs != self.oldbuffs)
 	{
