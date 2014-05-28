@@ -1157,9 +1157,9 @@ MUTATOR_DEFINITION(mutator_nades)
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, nades_CheckThrow, CBC_ORDER_LAST);
 	MUTATOR_HOOK(VehicleEnter, nades_VehicleEnter, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, nades_PlayerPreThink, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerSpawn, nades_PlayerSpawn, CBC_ORDER_LAST);
+	MUTATOR_HOOK(PlayerSpawn, nades_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, nades_PlayerDies, CBC_ORDER_LAST);
-	MUTATOR_HOOK(PlayerDamage_Calculate, nades_PlayerDamage, CBC_ORDER_FIRST);
+	MUTATOR_HOOK(PlayerDamage_Calculate, nades_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterDies, nades_MonsterDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, nades_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, nades_RemovePlayer, CBC_ORDER_ANY);
