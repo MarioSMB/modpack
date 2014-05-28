@@ -137,6 +137,8 @@ void buff_NewType(entity ent, float cb)
 	{
 		if(e.items == BUFF_AMMO && ((start_items & IT_UNLIMITED_WEAPON_AMMO) || (start_items & IT_UNLIMITED_AMMO)))
 			continue;
+		if(e.items == BUFF_VAMPIRE && cvar("g_vampire"))
+			continue;
 		if(!cvar(strcat("g_buffs_", e.netname)))
 			continue;
 		RandomSelection_Add(world, e.items, string_null, 1, 1 / e.count); // if it's already been chosen, give it a lower priority
@@ -696,7 +698,7 @@ void buffs_Initialize()
 MUTATOR_DEFINITION(mutator_buffs)
 {
 	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, buffs_PlayerDamage_SplitHealthArmor, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDamage_Calculate, buffs_PlayerDamage_Calculate, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDamage_Calculate, buffs_PlayerDamage_Calculate, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(PlayerSpawn, buffs_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPhysics, buffs_PlayerPhysics, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerJump, buffs_PlayerJump, CBC_ORDER_ANY);
