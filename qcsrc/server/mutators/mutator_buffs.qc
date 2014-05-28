@@ -21,8 +21,19 @@ float buffs_BuffModel_Customize()
 // buff item
 float buff_Waypoint_visible_for_player(entity plr)
 {
-    if((!self.owner.buff_active && !self.owner.buff_activetime) || plr.buffs)
+    if(!self.owner.buff_active && !self.owner.buff_activetime)
         return FALSE;
+		
+	if(plr.buffs)
+	{
+		if(plr.cvar_cl_buffs_autoreplace)
+		{
+			if(plr.buffs == self.owner.buffs)
+				return FALSE;
+		}
+		else
+			return FALSE;
+	}
 
     return WaypointSprite_visible_for_player(plr);
 }
