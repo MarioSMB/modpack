@@ -1,7 +1,7 @@
 float buffs_BuffModel_Customize()
 {
 	float same_team = (SAME_TEAM(other, self.owner) || (IS_SPEC(other) && SAME_TEAM(other.enemy, self.owner)));
-	if(other.alpha <= 0.5 && !same_team && other.alpha != 0)
+	if(self.owner.alpha <= 0.5 && !same_team && self.owner.alpha != 0)
 		return FALSE;
 		
 	if(other == self.owner || (IS_SPEC(other) && other.enemy == self.owner))
@@ -308,6 +308,8 @@ void buff_SpawnReplacement(entity ent, entity old)
 // mutator hooks
 MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 {
+	if(DEATH_ISBUFF(frag_deathtype)) { return FALSE; } // oh no you don't
+
 	if(frag_target.buffs & BUFF_RESISTANCE)
 	{
 		vector v = healtharmor_applydamage(50, autocvar_g_buffs_resistance_blockpercent, frag_deathtype, frag_damage, autocvar_g_balance_armor_block_bycount);
@@ -334,6 +336,8 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 
 MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 {
+	if(DEATH_ISBUFF(frag_deathtype)) { return FALSE; } // oh no you don't
+
 	if(frag_target.buffs & BUFF_SPEED)
 	if(frag_target != frag_attacker)
 		frag_damage *= autocvar_g_buffs_speed_damage_take;
@@ -419,6 +423,12 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDies)
 	{
 		Send_Notification(NOTIF_ALL_EXCEPT, self, MSG_INFO, INFO_ITEM_BUFF_LOST, self.netname, self.buffs);
 		self.buffs = 0;
+		
+		if(self.buff_model)
+		{
+			remove(self.buff_model);
+			self.buff_model = world;
+		}
 	}
 	return FALSE;
 }
@@ -556,11 +566,15 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 			self.buff_model.color = Buff_Color(self.buffs);
 			self.buff_model.glowmod = ((self.buff_model.team) ? Team_ColorRGB(self.buff_model.team) + '0.1 0.1 0.1' : self.buff_model.color);
 			self.buff_model.skin = Buff_Skin(self.buffs);
+			
+			self.effects |= EF_NOSHADOW;
 		}
 		else
 		{
 			remove(self.buff_model);
 			self.buff_model = world;
+			
+			self.effects &= ~(EF_NOSHADOW);
 		}
 	}
 
@@ -569,12 +583,8 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 		self.buff_model.effects = self.effects;
 		self.buff_model.effects |= EF_LOWPRECISION;
 		self.buff_model.effects = self.buff_model.effects & EFMASK_CHEAP; // eat performance
-		if(self.alpha == default_player_alpha)
-			self.buff_model.alpha = default_weapon_alpha;
-		else if(self.alpha != 0)
-			self.buff_model.alpha = self.alpha;
-		else
-			self.buff_model.alpha = 1;
+		
+		self.buff_model.alpha = self.alpha;
 	}
 
 	return FALSE;
