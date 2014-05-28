@@ -26,7 +26,7 @@ MUTATOR_HOOKFUNCTION(pinata_BuildMutatorsPrettyString)
 
 MUTATOR_DEFINITION(mutator_pinata)
 {
-	MUTATOR_HOOK(PlayerDies, pinata_PlayerDies, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerDies, pinata_PlayerDies, CBC_ORDER_LAST);
 	MUTATOR_HOOK(BuildMutatorsString, pinata_BuildMutatorsString, CBC_ORDER_ANY);
 	MUTATOR_HOOK(BuildMutatorsPrettyString, pinata_BuildMutatorsPrettyString, CBC_ORDER_ANY);
 
