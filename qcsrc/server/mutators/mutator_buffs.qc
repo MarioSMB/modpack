@@ -318,20 +318,6 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 		damage_take = v_x;
 		damage_save = v_y;
 	}
-	// this... is ridiculous (TODO: fix!)
-	if(frag_attacker.buffs & BUFF_VAMPIRE)
-	if(frag_target.iscreature)
-	if(!frag_target.vehicle)
-	if(!IS_VEHICLE(frag_target))
-	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
-	if(frag_target.deadflag == DEAD_NO)
-	if(!IS_TURRET(frag_target)) // why can these have iscreature?
-	if(frag_attacker != frag_target)
-	if(!frag_target.frozen)
-	if(frag_target.takedamage)
-	if(!frag_target.jb_isprisoned)
-	if(DIFF_TEAM(frag_attacker, frag_target))
-		frag_attacker.health = bound(0, frag_attacker.health + bound(0, damage_take * autocvar_g_buffs_vampire_damage_steal, frag_target.health), g_pickup_healthsmall_max);
 
 	return FALSE;
 }
@@ -385,6 +371,21 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		frag_damage = 0;
 	}
 
+	// this... is ridiculous (TODO: fix!)
+	if(frag_attacker.buffs & BUFF_VAMPIRE)
+	if(frag_target.iscreature)
+	if(!frag_target.vehicle)
+	if(!IS_VEHICLE(frag_target))
+	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
+	if(frag_target.deadflag == DEAD_NO)
+	if(!IS_TURRET(frag_target)) // why can these have iscreature?
+	if(frag_attacker != frag_target)
+	if(!frag_target.frozen)
+	if(frag_target.takedamage)
+	if(!frag_target.jb_isprisoned)
+	if(DIFF_TEAM(frag_attacker, frag_target))
+		frag_attacker.health = bound(0, frag_attacker.health + bound(0, frag_damage * autocvar_g_buffs_vampire_damage_steal, frag_target.health), g_pickup_healthsmall_max);
+
 	return FALSE;
 }
 
@@ -415,6 +416,17 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerJump)
 {
 	if(self.buffs & BUFF_JUMP)
 		player_jumpheight = autocvar_g_buffs_jump_height;
+
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(buffs_MonsterMove)
+{
+	if(time < self.buff_disability_time)
+	{
+		monster_speed_walk *= autocvar_g_buffs_disability_speed;
+		monster_speed_run *= autocvar_g_buffs_disability_speed;
+	}
 
 	return FALSE;
 }
@@ -698,10 +710,11 @@ void buffs_Initialize()
 MUTATOR_DEFINITION(mutator_buffs)
 {
 	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, buffs_PlayerDamage_SplitHealthArmor, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDamage_Calculate, buffs_PlayerDamage_Calculate, CBC_ORDER_FIRST);
+	MUTATOR_HOOK(PlayerDamage_Calculate, buffs_PlayerDamage_Calculate, CBC_ORDER_LAST);
 	MUTATOR_HOOK(PlayerSpawn, buffs_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPhysics, buffs_PlayerPhysics, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerJump, buffs_PlayerJump, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MonsterMove, buffs_MonsterMove, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SpectateCopy, buffs_SpectateCopy, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleEnter, buffs_VehicleEnter, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleExit, buffs_VehicleExit, CBC_ORDER_ANY);
