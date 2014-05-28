@@ -329,7 +329,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 	if(frag_target.takedamage)
 	if(!frag_target.jb_isprisoned)
 	if(DIFF_TEAM(frag_attacker, frag_target))
-		frag_attacker.health = bound(0, frag_attacker.health + frag_damage * autocvar_g_buffs_vampire_damage_steal, g_pickup_healthsmall_max);
+		frag_attacker.health = bound(0, frag_attacker.health + bound(0, damage_take * autocvar_g_buffs_vampire_damage_steal, frag_target.health), g_pickup_healthsmall_max);
 
 	return FALSE;
 }
@@ -512,6 +512,10 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 		self.stat_jumpheight = autocvar_sv_jumpvelocity; // reset so we don't break anything
 	else if((self.buffs & BUFF_JUMP) && self.stat_jumpheight != autocvar_g_buffs_jump_height)
 		self.stat_jumpheight = autocvar_g_buffs_jump_height;
+		
+	if((self.buffs & BUFF_INVISIBLE) && (self.oldbuffs & BUFF_INVISIBLE))
+	if(self.alpha != autocvar_g_buffs_invisible_alpha)
+		self.alpha = autocvar_g_buffs_invisible_alpha;
 
 	if(self.buffs != self.oldbuffs)
 	{
@@ -539,10 +543,18 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 			self.stat_jumpheight = autocvar_g_buffs_jump_height;
 		
 		if(self.oldbuffs & BUFF_INVISIBLE)
-			self.alpha = self.buff_invisible_prev_alpha;
+		{
+			if(time < self.strength_finished && g_minstagib)
+				self.alpha = autocvar_g_minstagib_invis_alpha;
+			else
+				self.alpha = self.buff_invisible_prev_alpha;
+		}
 		else if(self.buffs & BUFF_INVISIBLE)
 		{
-			self.buff_invisible_prev_alpha = self.alpha;
+			if(time < self.strength_finished && g_minstagib)
+				self.buff_invisible_prev_alpha = default_player_alpha;
+			else
+				self.buff_invisible_prev_alpha = self.alpha;
 			self.alpha = autocvar_g_buffs_invisible_alpha;
 		}
 		
