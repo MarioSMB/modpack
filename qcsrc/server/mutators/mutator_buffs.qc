@@ -479,6 +479,10 @@ MUTATOR_HOOKFUNCTION(buffs_RemovePlayer)
 		remove(self.buff_model);
 		self.buff_model = world;
 	}
+	
+	// also reset timers here to prevent them continuing after spectating
+	self.buff_disability_time = 0;
+	self.buff_disability_effect_time = 0;
 
 	return FALSE;
 }
