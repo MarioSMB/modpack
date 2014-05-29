@@ -94,19 +94,19 @@ void buff_Touch()
 		buff_Respawn(self);
 		return;
 	}
-		
-	if(self.team && DIFF_TEAM(other, self))
+
+	if((self.team && DIFF_TEAM(other, self))
+	|| (other.frozen)
+	|| (other.jb_isprisoned)
+	|| (other.vehicle)
+	|| (!IS_PLAYER(other))
+	|| (!self.buff_active)
+	)
+	{
+		// can't touch this
 		return;
-	if(other.frozen)
-		return;
-	if(other.jb_isprisoned)
-		return;
-	if(other.vehicle)
-		return;
-	if(!IS_PLAYER(other))
-		return;
-	if(!self.buff_active)
-		return;
+	}
+
 	if(other.buffs)
 	{
 		if(other.cvar_cl_buffs_autoreplace && other.buffs != self.buffs)
@@ -341,8 +341,8 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	if((frag_target.health - frag_damage) <= 0)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(frag_attacker)
-	if(random() <= autocvar_g_buffs_medic_survive_chance) // 40% chance?
-		frag_damage = frag_target.health - autocvar_g_buffs_medic_survive_health; // 5 health recovery
+	if(random() <= autocvar_g_buffs_medic_survive_chance)
+		frag_damage = frag_target.health - autocvar_g_buffs_medic_survive_health;
 		
 	if(frag_target.buffs & BUFF_VENGEANCE)
 	if(frag_attacker)
