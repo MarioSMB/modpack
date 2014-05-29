@@ -528,8 +528,6 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 			Send_Notification(NOTIF_ALL_EXCEPT, self, MSG_INFO, INFO_ITEM_BUFF_LOST, self.netname, self.buffs);
 			self.buffs = 0;
 		}
-
-		return FALSE;
 	}
 
 	if(!(self.oldbuffs & BUFF_JUMP) && !(self.buffs & BUFF_JUMP))
