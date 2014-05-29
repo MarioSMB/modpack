@@ -86,9 +86,8 @@ void buff_Respawn(entity ent)
 
 void buff_Touch()
 {
-	if(gameover)
-		return;
-		
+	if(gameover) { return; }
+
 	if(ITEM_TOUCH_NEEDKILL())
 	{
 		buff_Respawn(self);
@@ -112,7 +111,7 @@ void buff_Touch()
 		if(other.cvar_cl_buffs_autoreplace && other.buffs != self.buffs)
 		{
 			//Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_BUFF_DROP, other.buffs);
-			Send_Notification(NOTIF_ALL_EXCEPT, other, MSG_INFO, INFO_ITEM_BUFF_LOST, other.netname, other.buffs);
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ITEM_BUFF_LOST, other.netname, other.buffs);
 
 			other.buffs = 0;
 			//sound(other, CH_TRIGGER, "relics/relic_effect.wav", VOL_BASE, ATTN_NORM);
@@ -233,11 +232,9 @@ void buff_Think()
 
 void buff_Waypoint_Reset()
 {
-    if(self.buff_waypoint)
-        WaypointSprite_Kill(self.buff_waypoint);
-    
-    if(self.buff_activetime)
-        buff_Waypoint_Spawn(self);
+	WaypointSprite_Kill(self.buff_waypoint);
+
+	if(self.buff_activetime) { buff_Waypoint_Spawn(self); }
 }
 
 void buff_Reset()
