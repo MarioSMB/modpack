@@ -32,7 +32,7 @@ void mutators_add()
 	CHECK_MUTATOR_ADD("g_status_effects", mutator_status_effects, !cvar("g_minstagib"));
 	CHECK_MUTATOR_ADD("g_random_vehicles", mutator_random_vehicles, cvar("g_vehicles"));
 	CHECK_MUTATOR_ADD("g_piggyback", mutator_piggyback, teamplay);
-	CHECK_MUTATOR_ADD("g_buffs", mutator_buffs, 1);
+	CHECK_MUTATOR_ADD("g_buffs", mutator_buffs, !cvar("g_overkill"));
 
 	#undef CHECK_MUTATOR_ADD
 }
