@@ -131,18 +131,27 @@ void buff_Touch()
 	other.buffs |= (self.buffs);
 }
 
+float buff_Available(float buffid)
+{
+	if(buffid == BUFF_AMMO && ((start_items & IT_UNLIMITED_WEAPON_AMMO) || (start_items & IT_UNLIMITED_AMMO) || (cvar("g_melee_only"))))
+		return FALSE;
+
+	if(buffid == BUFF_VAMPIRE && cvar("g_vampire"))
+		return FALSE;
+
+	if(!cvar(strcat("g_buffs_", Buff_Name(buffid))))
+		return FALSE;
+
+	return TRUE;
+}
+
 void buff_NewType(entity ent, float cb)
 {
 	entity e;
 	RandomSelection_Init();
 	for(e = Buff_Type_first; e; e = e.enemy)
+	if(buff_Available(e.items))
 	{
-		if(e.items == BUFF_AMMO && ((start_items & IT_UNLIMITED_WEAPON_AMMO) || (start_items & IT_UNLIMITED_AMMO)))
-			continue;
-		if(e.items == BUFF_VAMPIRE && cvar("g_vampire"))
-			continue;
-		if(!cvar(strcat("g_buffs_", e.netname)))
-			continue;
 		RandomSelection_Add(world, e.items, string_null, 1, 1 / e.count); // if it's already been chosen, give it a lower priority
 		e.count += 1;
 	}
@@ -258,7 +267,7 @@ void buff_Init(entity ent)
 
 	entity oldself = self;
 	self = ent;
-	if(!self.buffs || !cvar(strcat("g_buffs_", Buff_Name(self.buffs))))
+	if(!self.buffs || buff_Available(self.buffs))
 		buff_NewType(self, 0);
 	
 	self.classname = "item_buff";
