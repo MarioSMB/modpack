@@ -548,7 +548,6 @@ void spawnfunc___init_dedicated_server(void)
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
-	CALL_ACCUMULATED_FUNCTION(RegisterStatusEffects);
 	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
 
 	MapInfo_Enumerate();
@@ -601,7 +600,6 @@ void spawnfunc_worldspawn (void)
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
-	CALL_ACCUMULATED_FUNCTION(RegisterStatusEffects);
 	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
 
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));

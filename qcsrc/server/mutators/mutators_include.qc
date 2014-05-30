@@ -43,7 +43,6 @@
 #include "mutator_zombie_apocalypse.qc"
 #include "mutator_walljump.qc"
 #include "mutator_hats.qc"
-#include "mutator_status_effects.qc"
 #include "mutator_random_vehicles.qc"
 #include "mutator_piggyback.qc"
 #include "mutator_buffs.qc"

@@ -1836,7 +1836,7 @@ vector healtharmor_maxdamage(float h, float a, float armorblock, float deathtype
 {
 	// NOTE: we'll always choose the SMALLER value...
 	float healthdamage, armordamage, armorideal;
-	if (deathtype == DEATH_DROWN || DEATH_ISSTATUSEFFECT(deathtype))  // Why should armor help here...
+	if (deathtype == DEATH_DROWN)  // Why should armor help here...
 		armorblock = 0;
 	vector v;
 	healthdamage = (h - 1) / (1 - armorblock); // damage we can take if we could use more health
@@ -1859,7 +1859,7 @@ vector healtharmor_maxdamage(float h, float a, float armorblock, float deathtype
 vector healtharmor_applydamage(float a, float armorblock, float deathtype, float damage, float bycount)
 {
 	vector v;
-	if (deathtype == DEATH_DROWN || DEATH_ISSTATUSEFFECT(deathtype))  // Why should armor help here...
+	if (deathtype == DEATH_DROWN)  // Why should armor help here...
 		armorblock = 0;
 	// block based on amount of carried armor (idea: CUdyin)
 	if(bycount && armorblock >= 1)

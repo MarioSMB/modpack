@@ -28,7 +28,6 @@ sys-post.qh
 ../common/command/shared_defs.qh
 ../common/net_notice.qh
 ../common/animdecide.qh
-../common/status_effects.qh
 
 autocvars.qh
 constants.qh
@@ -215,8 +214,6 @@ func_breakable.qc
 target_music.qc
 
 ../common/items.qc
-
-../common/status_effects.qc
 
 ../common/vehicles/vehicles_include.qc
 

@@ -120,23 +120,7 @@ void CSQC_Init(void)
 	registercvar("hud_panel_quickmenu_bg_border", "");
 	registercvar("hud_panel_quickmenu_bg_padding", "");
 	registercvar("hud_panel_quickmenu_align", "0");
-	
-	// these need to be defined for status effects to work
-	registercvar("hud_panel_statuseffects", "0");
-	registercvar("hud_panel_statuseffects_pos", "0.360000 0.850000");
-	registercvar("hud_panel_statuseffects_size", "0.290000 0.030000");
-	registercvar("hud_panel_statuseffects_bg", "");
-	registercvar("hud_panel_statuseffects_bg_color", "");
-	registercvar("hud_panel_statuseffects_bg_color_team", "");
-	registercvar("hud_panel_statuseffects_bg_alpha", "");
-	registercvar("hud_panel_statuseffects_bg_border", "");
-	registercvar("hud_panel_statuseffects_bg_padding", "");
-	registercvar("hud_panel_statuseffects_iconalign", "0");
-	registercvar("hud_panel_statuseffects_progressbar", "1");
-	registercvar("hud_panel_statuseffects_progressbar_name", "progressbar");
-	registercvar("hud_panel_statuseffects_progressbar_xoffset", "0");
-	registercvar("hud_panel_statuseffects_text", "0");
-	
+
 	// these need to be defined for buffs to work
 	registercvar("hud_panel_buffs", "1");
 	registercvar("hud_panel_buffs_pos", "0.45 0.855");
@@ -173,7 +157,6 @@ void CSQC_Init(void)
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
-	CALL_ACCUMULATED_FUNCTION(RegisterStatusEffects);
 	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
 
 	WaypointSprite_Load();

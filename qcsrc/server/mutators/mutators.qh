@@ -41,7 +41,6 @@ MUTATOR_DECLARATION(mutator_campcheck);
 MUTATOR_DECLARATION(mutator_zombie_apocalypse);
 MUTATOR_DECLARATION(mutator_walljump);
 MUTATOR_DECLARATION(mutator_hats);
-MUTATOR_DECLARATION(mutator_status_effects);
 MUTATOR_DECLARATION(mutator_random_vehicles);
 MUTATOR_DECLARATION(mutator_piggyback);
 MUTATOR_DECLARATION(mutator_buffs);

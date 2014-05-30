@@ -29,7 +29,6 @@ Defs.qc
 ../common/command/shared_defs.qh
 ../common/urllib.qh
 ../common/animdecide.qh
-../common/status_effects.qh
 command/cl_cmd.qh
 
 ../common/monsters/monsters.qh
@@ -121,7 +120,6 @@ noise.qc
 ../server/w_all.qc
 ../common/explosion_equation.qc
 ../common/urllib.qc
-../common/status_effects.qc
 command/cl_cmd.qc
 
 ../common/monsters/monsters.qc
