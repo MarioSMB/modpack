@@ -570,7 +570,8 @@ void MapVote_Init()
 
 		if(gametypevote)
 		{
-			map = strzone(strcat("gfx/hud/default/gametype_", map));
+			//map = strzone(strcat("gfx/menu/default/gametype_", map));
+			map = strzone(sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, map));
 			mv_pics[i] = map;
 			mv_preview[i] = PreviewExists(map);
 		}
