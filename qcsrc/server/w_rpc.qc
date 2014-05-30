@@ -157,12 +157,11 @@ float w_rpc(float req)
 	else if (req == WR_PRECACHE)
 	{
 		precache_model ("models/flash.md3");
-		/*precache_model ("models/weapons/g_rl.md3");
-		precache_model ("models/weapons/v_rl.md3");
-		precache_model ("models/weapons/h_rl.iqm");*/
-		precache_sound ("weapons/rocket_det.wav");
+		precache_model("models/weapons/h_ok_rl.iqm");
+		precache_model("models/weapons/v_ok_rl.md3");
+		precache_model("models/weapons/g_ok_rl.md3");
+		precache_model("models/weapons/ok_rocket.md3");
 		precache_sound ("weapons/rocket_fire.wav");
-		precache_sound ("weapons/rocket_mode.wav");
 	}
 	else if (req == WR_SETUP)
 	{
