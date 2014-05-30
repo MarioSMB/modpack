@@ -280,9 +280,9 @@ float WaypointSprite_SendEntity(entity to, float sendflags)
 		}
 	}
 	
-	if(g_onslaught)
-	if(f == self.lastf)
-		sendflags &= ~16;
+	//if(g_onslaught)
+	//if(f == self.lastf)
+		//sendflags &= ~16;
 
 	WriteByte(MSG_ENTITY, sendflags);
 
