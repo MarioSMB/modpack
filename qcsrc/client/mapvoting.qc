@@ -571,7 +571,11 @@ void MapVote_Init()
 		if(gametypevote)
 		{
 			//map = strzone(strcat("gfx/menu/default/gametype_", map));
-			map = strzone(sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, map));
+			//map = strzone(sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, map));
+			string mv_picpath = sprintf("gfx/menu/%s/gametype_%s", autocvar_menu_skin, map);
+			if(precache_pic(mv_picpath) == "")
+				mv_picpath = strcat("gfx/menu/default/gametype_", map);
+			map = strzone(mv_picpath);
 			mv_pics[i] = map;
 			mv_preview[i] = PreviewExists(map);
 		}
