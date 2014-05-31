@@ -288,7 +288,7 @@ void FixPlayermodel()
 		if(teamplay)
 		{
 			string s;
-			s = Team_ColorName_Lower(self.team);
+			s = Static_Team_ColorName_Lower(self.team);
 			if(s != "neutral")
 			{
 				defaultmodel = cvar_string(strcat("sv_defaultplayermodel_", s));
