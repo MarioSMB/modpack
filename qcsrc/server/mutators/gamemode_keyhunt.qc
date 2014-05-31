@@ -1404,6 +1404,19 @@ MUTATOR_HOOKFUNCTION(kh_PlayerUseKey)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(kh_ResetMapGlobal)
+{
+	entity e, key;
+	FOR_EACH_CLIENT(e)
+	{
+		e.stat_kh_redkey_team = e.stat_kh_bluekey_team = e.stat_kh_yellowkey_team = e.stat_kh_pinkkey_team = 0;
+		e.kh_lastkiller = world;
+	}
+	KH_FOR_EACH_KEY(key) { if(!wasfreed(key)) kh_RemoveKey(key); }
+	kh_worldkeylist = world; // reset key list
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(kh_ResetMap)
 {
 	// don't reset players
@@ -1578,6 +1591,7 @@ MUTATOR_DEFINITION(gamemode_keyhunt)
 	MUTATOR_HOOK(PlayerPreThink, kh_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, kh_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerUseKey, kh_PlayerUseKey, CBC_ORDER_ANY);
+	MUTATOR_HOOK(reset_map_global, kh_ResetMapGlobal, CBC_ORDER_ANY);
 	MUTATOR_HOOK(reset_map_players, kh_ResetMap, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HelpMePing, kh_HelpMePing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleEnter, kh_VehicleEnter, CBC_ORDER_ANY);
