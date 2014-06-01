@@ -23,6 +23,10 @@ float buff_Waypoint_visible_for_player(entity plr)
 {
     if(!self.owner.buff_active && !self.owner.buff_activetime)
         return FALSE;
+
+	if(cvar("g_buffs"))
+	if(plr.pbhost)
+		return FALSE; // don't show to piggybacker's carrier
 		
 	if(plr.buffs)
 	{
@@ -108,9 +112,18 @@ void buff_Touch()
 	
 	if(cvar("g_buffs"))
 	if(other.buffs == self.buffs)
-	if(other.piggybacker)
-	if(!other.buffs)
-		other = other.piggybacker;
+	{
+		entity p = other;
+		while(p.piggybacker)
+		{
+			if(!p.buffs)
+			{
+				other = p;
+				break;
+			}
+			p = p.piggybacker;
+		}
+	}
 
 	if(other.buffs)
 	{
