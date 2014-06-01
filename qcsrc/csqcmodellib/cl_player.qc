@@ -245,13 +245,14 @@ void CSQCPlayer_SetCamera()
 			}
 			CSQCPlayer_PredictTo(clientcommandframe + 1, TRUE);
 
-#ifdef CSQCMODEL_SERVERSIDE_CROUCH
+//#ifdef CSQCMODEL_SERVERSIDE_CROUCH
 			// get crouch state from the server (LAG)
+			if(!autocvar_cl_crouch)
 			if(getstati(STAT_VIEWHEIGHT) == PL_VIEW_OFS_z)
 				self.pmove_flags &= ~PMF_DUCKED;
 			else if(getstati(STAT_VIEWHEIGHT) == PL_CROUCH_VIEW_OFS_z)
 				self.pmove_flags |= PMF_DUCKED;
-#endif
+//#endif
 
 			CSQCPlayer_SetMinsMaxs();
 
