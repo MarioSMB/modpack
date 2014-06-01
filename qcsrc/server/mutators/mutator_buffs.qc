@@ -10,7 +10,7 @@ float buffs_BuffModel_Customize()
 	if(myowner.alpha <= 0.5 && !same_team && myowner.alpha != 0)
 		return FALSE;
 
-	if(cvar("g_buffs"))
+	if(cvar("g_piggyback"))
 	if(player.pbhost == myowner || myowner.piggybacker)
 		return FALSE; // don't show to piggybacker's carrier, and don't show if carrier is carrying someone else
 		
@@ -116,13 +116,14 @@ void buff_Touch()
 		return;
 	}
 	
-	if(cvar("g_buffs"))
-	if(other.buffs == self.buffs)
+	if(cvar("g_piggyback"))
+	if(other.buffs)
+	if(other.buffs == self.buffs || !other.cvar_cl_buffs_autoreplace)
 	{
 		entity p = other;
 		while(p.piggybacker)
 		{
-			if(!p.buffs)
+			if(!p.buffs || (!p.piggybacker && (p.cvar_cl_buffs_autoreplace || p.buffs != self.buffs)))
 			{
 				other = p;
 				break;
