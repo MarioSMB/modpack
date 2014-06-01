@@ -1,10 +1,20 @@
 float buffs_BuffModel_Customize()
 {
-	float same_team = (SAME_TEAM(other, self.owner) || (IS_SPEC(other) && SAME_TEAM(other.enemy, self.owner)));
-	if(self.owner.alpha <= 0.5 && !same_team && self.owner.alpha != 0)
+	entity player, myowner;
+	float same_team;
+
+	player = WaypointSprite_getviewentity(other);
+	myowner = self.owner;
+	same_team = (SAME_TEAM(player, myowner) || SAME_TEAM(player, myowner));
+
+	if(myowner.alpha <= 0.5 && !same_team && myowner.alpha != 0)
 		return FALSE;
+
+	if(cvar("g_buffs"))
+	if(player.pbhost == myowner || myowner.piggybacker)
+		return FALSE; // don't show to piggybacker's carrier, and don't show if carrier is carrying someone else
 		
-	if(other == self.owner || (IS_SPEC(other) && other.enemy == self.owner))
+	if(player == myowner || (IS_SPEC(other) && other.enemy == myowner))
 	{
 		// somewhat hide the model, but keep the glow
 		self.effects = 0;
@@ -24,10 +34,6 @@ float buff_Waypoint_visible_for_player(entity plr)
     if(!self.owner.buff_active && !self.owner.buff_activetime)
         return FALSE;
 
-	if(cvar("g_buffs"))
-	if(plr.pbhost)
-		return FALSE; // don't show to piggybacker's carrier
-		
 	if(plr.buffs)
 	{
 		if(plr.cvar_cl_buffs_autoreplace)

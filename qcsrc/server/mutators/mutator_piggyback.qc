@@ -202,12 +202,12 @@ MUTATOR_HOOKFUNCTION(pb_ItemTouch)
 		entity p = other;
 		while(p.piggybacker)
 		{
+			p = p.piggybacker;
 			if(!(p.weapons & self.weapons))
 			{
 				other = p;
 				break;
 			}
-			p = p.piggybacker;
 		}
 	}
 
