@@ -198,8 +198,18 @@ MUTATOR_HOOKFUNCTION(pb_ItemTouch)
 	if(self.weapon)
 	if(other.piggybacker)
 	if(other.weapons & self.weapons)
-	if(!(other.piggybacker.weapons & self.weapons))
-		other = other.piggybacker;
+	{
+		entity p = other;
+		while(p.piggybacker)
+		{
+			if(!(p.weapons & self.weapons))
+			{
+				other = p;
+				break;
+			}
+			p = p.piggybacker;
+		}
+	}
 
 	return FALSE;
 }
