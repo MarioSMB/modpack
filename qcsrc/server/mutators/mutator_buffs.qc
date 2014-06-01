@@ -105,6 +105,12 @@ void buff_Touch()
 		// can't touch this
 		return;
 	}
+	
+	if(cvar("g_buffs"))
+	if(other.buffs == self.buffs)
+	if(other.piggybacker)
+	if(!other.buffs)
+		other = other.piggybacker;
 
 	if(other.buffs)
 	{
