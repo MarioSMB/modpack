@@ -428,14 +428,14 @@ void nb_spawnteams(void)
 		case NUM_TEAM_1:
 			if(!t_r)
 			{
-				nb_spawnteam(NAME_TEAM_1, e.team-1)   ;
+				nb_spawnteam(NAME_TEAM_1, e.team-1);
 				t_r = 1;
 			}
 			break;
 		case NUM_TEAM_2:
 			if(!t_b)
 			{
-				nb_spawnteam(NAME_TEAM_2, e.team-1)  ;
+				nb_spawnteam(NAME_TEAM_2, e.team-1);
 				t_b = 1;
 			}
 			break;
@@ -449,7 +449,7 @@ void nb_spawnteams(void)
 		case NUM_TEAM_4:
 			if(!t_p)
 			{
-				nb_spawnteam(NAME_TEAM_4, e.team-1)  ;
+				nb_spawnteam(NAME_TEAM_4, e.team-1);
 				t_p = 1;
 			}
 			break;
