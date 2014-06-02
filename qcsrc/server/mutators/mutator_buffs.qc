@@ -374,6 +374,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(frag_attacker)
 	if(random() <= autocvar_g_buffs_medic_survive_chance)
+	if(frag_target.health - autocvar_g_buffs_medic_survive_health > 0) // not if the final result would be less than 0, medic must get health
 		frag_damage = frag_target.health - autocvar_g_buffs_medic_survive_health;
 		
 	if(frag_target.buffs & BUFF_VENGEANCE)
