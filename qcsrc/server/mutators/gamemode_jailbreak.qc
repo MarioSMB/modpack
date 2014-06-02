@@ -107,7 +107,7 @@ float JB_CheckWinner()
 			self = oldself;
 		}
 	}
-	
+
 	nades_Clear(world, TRUE);
 
 	return 1;
@@ -299,9 +299,9 @@ void JB_Imprison(entity attacker)
 
 	if(!self.jb_had_unlimited_ammo)
 		self.items |= IT_UNLIMITED_WEAPON_AMMO;
-	
+
 	self.weapon_blocked = TRUE;
-	
+
 	nades_Clear(self, FALSE);
 
 	JB_Log(FALSE, strcat("Imprisoning ", self.netname, "^7, attacker: ", etos(attacker), " with netname: ", attacker.netname));
@@ -385,10 +385,14 @@ void JB_Torture_Think()
 	self.nextthink = time + max(0.1, self.jb_torture_delay + j);
 	self.jb_torture_suggestedforce = JITTER(self.jb_torture_force, self.jb_torture_force_jitter);
 
-	pointparticles(particleeffectnum("poisonfield"), self.origin, '0 0 0', 2);
+	pointparticles(particleeffectnum("firefield"), self.origin, '0 0 0', 2);
 	
 	entity head;
-	FOR_EACH_PLAYER(head) if(DIFF_TEAM(head, self)) if(head.jb_isprisoned) { Damage(head, self, self, 2, DEATH_POISONFIELD, head.origin, '0 0 0'); }
+	FOR_EACH_PLAYER(head)
+	if(DIFF_TEAM(head, self))
+	if(head.jb_isprisoned)
+	if(!Fire_IsBurning(head))
+		Fire_AddDamage(head, world, 100, 6, DEATH_FIRE);
 }
 
 void JB_Torture_Start(entity spot)
@@ -1005,7 +1009,7 @@ MUTATOR_HOOKFUNCTION(jb_ResetMap)
 
 MUTATOR_HOOKFUNCTION(jb_PlayerDies)
 {
-	if(jb_roundover && frag_deathtype == DEATH_POISONFIELD)
+	if(jb_roundover && frag_deathtype == DEATH_FIRE)
 		PlayerScore_Add(frag_target, SP_KILLS, +1); // dying negates 1, so we bring it back up
 
 	if(!round_handler_IsRoundStarted() || jb_roundover)
@@ -1149,7 +1153,7 @@ MUTATOR_HOOKFUNCTION(jb_PlayerPreThink)
 
 MUTATOR_HOOKFUNCTION(jb_PlayerDamage)
 {
-	if(self.jb_isprisoned && frag_deathtype != DEATH_POISONFIELD)
+	if(self.jb_isprisoned && frag_deathtype != DEATH_FIRE)
 		frag_damage = 0;
 
 	entity e;
