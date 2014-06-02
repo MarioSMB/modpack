@@ -1088,6 +1088,7 @@ MUTATOR_HOOKFUNCTION(jb_PlayerSpawn)
 MUTATOR_HOOKFUNCTION(jb_SpectateCopy)
 {
 	self.stat_jb_isprisoned = other.jb_isprisoned;
+	self.jb_unlock_progress = other.jb_unlock_progress;
 	return FALSE;
 }
 

@@ -563,6 +563,12 @@ MUTATOR_HOOKFUNCTION(dom_PlayerSpawn)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(dom_SpectateCopy)
+{
+	self.dom_unlock_progress = other.dom_unlock_progress;
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(dom_PlayerDamage)
 {
 	entity e;
@@ -780,6 +786,7 @@ MUTATOR_DEFINITION(gamemode_domination)
 	MUTATOR_HOOK(reset_map_players, dom_ResetMap, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, dom_PlayerThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, dom_PlayerSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SpectateCopy, dom_SpectateCopy, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, dom_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HavocBot_ChooseRole, dom_BotRoles, CBC_ORDER_ANY);
 
