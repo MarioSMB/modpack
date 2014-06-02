@@ -39,10 +39,10 @@ void tdm_DelayedInit()
 		if(numteams < 2 || numteams > 4) { numteams = autocvar_g_tdm_teams; }
 		numteams = bound(2, numteams, 4);
 
-		tdm_SpawnTeam("Red", NUM_TEAM_1 - 1);
-		tdm_SpawnTeam("Blue", NUM_TEAM_2 - 1);
-		if(numteams >= 3) { tdm_SpawnTeam("Yellow", NUM_TEAM_3 - 1); }
-		if(numteams >= 4) { tdm_SpawnTeam("Pink", NUM_TEAM_4 - 1); }
+		tdm_SpawnTeam(NAME_TEAM_1, NUM_TEAM_1 - 1);
+		tdm_SpawnTeam(NAME_TEAM_2, NUM_TEAM_2 - 1);
+		if(numteams >= 3) { tdm_SpawnTeam(NAME_TEAM_3, NUM_TEAM_3 - 1); }
+		if(numteams >= 4) { tdm_SpawnTeam(NAME_TEAM_4, NUM_TEAM_4 - 1); }
 	}
 }
 

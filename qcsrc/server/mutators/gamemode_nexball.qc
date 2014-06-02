@@ -428,28 +428,28 @@ void nb_spawnteams(void)
 		case NUM_TEAM_1:
 			if(!t_r)
 			{
-				nb_spawnteam("Red", e.team-1)   ;
+				nb_spawnteam(NAME_TEAM_1, e.team-1)   ;
 				t_r = 1;
 			}
 			break;
 		case NUM_TEAM_2:
 			if(!t_b)
 			{
-				nb_spawnteam("Blue", e.team-1)  ;
+				nb_spawnteam(NAME_TEAM_2, e.team-1)  ;
 				t_b = 1;
 			}
 			break;
 		case NUM_TEAM_3:
 			if(!t_y)
 			{
-				nb_spawnteam("Yellow", e.team-1);
+				nb_spawnteam(NAME_TEAM_3, e.team-1);
 				t_y = 1;
 			}
 			break;
 		case NUM_TEAM_4:
 			if(!t_p)
 			{
-				nb_spawnteam("Pink", e.team-1)  ;
+				nb_spawnteam(NAME_TEAM_4, e.team-1)  ;
 				t_p = 1;
 			}
 			break;

@@ -727,12 +727,12 @@ void dom_spawnpoint(vector org)
 // spawn some default teams if the map is not set up for domination
 void dom_spawnteams(float teams)
 {
-	dom_spawnteam("Red", NUM_TEAM_1, "models/domination/dom_red.md3", 0, "domination/claim.wav", "", "Red team has captured a control point");
-	dom_spawnteam("Blue", NUM_TEAM_2, "models/domination/dom_blue.md3", 0, "domination/claim.wav", "", "Blue team has captured a control point");
+	dom_spawnteam(NAME_TEAM_1, NUM_TEAM_1, "models/domination/dom_red.md3", 0, "domination/claim.wav", "", "Red team has captured a control point");
+	dom_spawnteam(NAME_TEAM_2, NUM_TEAM_2, "models/domination/dom_blue.md3", 0, "domination/claim.wav", "", "Blue team has captured a control point");
 	if(teams >= 3)
-		dom_spawnteam("Yellow", NUM_TEAM_3, "models/domination/dom_yellow.md3", 0, "domination/claim.wav", "", "Yellow team has captured a control point");
+		dom_spawnteam(NAME_TEAM_3, NUM_TEAM_3, "models/domination/dom_yellow.md3", 0, "domination/claim.wav", "", "Yellow team has captured a control point");
 	if(teams >= 4)
-		dom_spawnteam("Pink", NUM_TEAM_4, "models/domination/dom_pink.md3", 0, "domination/claim.wav", "", "Pink team has captured a control point");
+		dom_spawnteam(NAME_TEAM_4, NUM_TEAM_4, "models/domination/dom_pink.md3", 0, "domination/claim.wav", "", "Pink team has captured a control point");
 	dom_spawnteam("", 0, "models/domination/dom_unclaimed.md3", 0, "", "", "");
 }
 

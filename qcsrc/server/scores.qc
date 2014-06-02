@@ -208,13 +208,13 @@ void ScoreInfo_Init(float teams)
 		Net_LinkEntity(scores_initialized, FALSE, 0, ScoreInfo_SendEntity);
 	}
 	if(teams >= 1)
-		TeamScore_Spawn(NUM_TEAM_1, "Red");
+		TeamScore_Spawn(NUM_TEAM_1, NAME_TEAM_1);
 	if(teams >= 2)
-		TeamScore_Spawn(NUM_TEAM_2, "Blue");
+		TeamScore_Spawn(NUM_TEAM_2, NAME_TEAM_2);
 	if(teams >= 3)
-		TeamScore_Spawn(NUM_TEAM_3, "Yellow");
+		TeamScore_Spawn(NUM_TEAM_3, NAME_TEAM_3);
 	if(teams >= 4)
-		TeamScore_Spawn(NUM_TEAM_4, "Pink");
+		TeamScore_Spawn(NUM_TEAM_4, NAME_TEAM_4);
 }
 
 /*

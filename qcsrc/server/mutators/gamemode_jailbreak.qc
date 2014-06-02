@@ -747,9 +747,9 @@ string JB_ControlPoint_Name(entity p)
 
 	switch(p.team)
 	{
-		case NUM_TEAM_1:	clr = "^1"; tm = "Red"; break;
-		case NUM_TEAM_2:	clr = "^4"; tm = "Blue"; break;
-		default:			clr = "^3"; tm = "Neutral"; break;
+		case NUM_TEAM_1:	clr = COL_TEAM_1; tm = NAME_TEAM_1; break;
+		case NUM_TEAM_2:	clr = COL_TEAM_2; tm = NAME_TEAM_2; break;
+		default:			clr = "^3"; tm = NAME_NEUTRAL; break;
 	}
 
 	end = strcat(" (Point ", chr2str(str2chr("A", 0) + p.cnt), ")");
