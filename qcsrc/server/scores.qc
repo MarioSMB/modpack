@@ -209,12 +209,10 @@ void ScoreInfo_Init(float teams)
 	}
 	if(teams)
 	{
+		teams = min(4, teams);
 		float i;
 		for(i = 1; i <= teams; ++i)
-		{
-			if(i > 4) { break; } // just incase
 			TeamScore_Spawn(Team_NumberToTeam(i), Team_ColorName(Team_NumberToTeam(i)));
-		}
 	}
 }
 
