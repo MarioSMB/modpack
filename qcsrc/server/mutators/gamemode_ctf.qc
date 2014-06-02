@@ -1138,7 +1138,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 
 	setattachment(flag, world, "");
 
-	flag.netname = ((teamnumber == NUM_TEAM_1) ? "^1RED^7 flag" : ((teamnumber == NUM_TEAM_2) ? "^4BLUE^7 flag" : ((teamnumber == NUM_TEAM_3) ? "^3YELLOW^7 flag" : ((teamnumber == NUM_TEAM_4) ? "^6PINK^7 flag" : "^7NEUTRAL flag"))));
+	flag.netname = sprintf("%s%s^7 flag", Team_ColorCode(teamnumber), Team_ColorName_Upper(teamnumber));
 	flag.team = teamnumber;
 	flag.classname = "item_flag_team";
 	flag.target = "###item###"; // wut?

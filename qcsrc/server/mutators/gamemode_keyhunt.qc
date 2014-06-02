@@ -857,7 +857,7 @@ void kh_KeySetup(float teamnumber, entity key, entity player) // called when spa
 
 	setattachment(key, world, "");
 
-	key.netname = ((teamnumber == NUM_TEAM_1) ? "^1RED^7 key" : ((teamnumber == NUM_TEAM_2) ? "^4BLUE^7 key" : ((teamnumber == NUM_TEAM_3) ? "^3YELLOW^7 key" : "^6PINK^7 key")));
+	key.netname = sprintf("%s%s^7 key", Team_ColorCode(teamnumber), Team_ColorName_Upper(teamnumber));
 	key.team = teamnumber;
 	key.classname = "item_key_team";
 	key.target = "###item###"; // wut?
