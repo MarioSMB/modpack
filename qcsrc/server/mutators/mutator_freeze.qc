@@ -95,7 +95,7 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 		if(self.frozen == 1)
 		{
 			button_pressed = (!autocvar_g_freeze_norespawn && (self.BUTTON_JUMP || self.BUTTON_USE)); // only detect jumps
-			if(g_lms || g_ca) { self.freeze_flag = FROZEN_RESPAWNING; } // these modes require player to die
+			if(g_lms || g_ca || g_jailbreak) { self.freeze_flag = FROZEN_RESPAWNING; } // these modes require player to die
 			if(self.freeze_flag == FROZEN_THAWING)
 			{
 				if(!button_pressed)
