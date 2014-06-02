@@ -2515,12 +2515,9 @@ void ctf_DelayedInit() // Do this check with a delay so we can wait for teams to
 	if(find(world, classname, "ctf_team") == world)
 	{
 		print("No ""ctf_team"" entities found on this map, creating them anyway.\n");
-		ctf_SpawnTeam(NAME_TEAM_1, NUM_TEAM_1 - 1);
-		ctf_SpawnTeam(NAME_TEAM_2, NUM_TEAM_2 - 1);
-		if(ctf_teams >= 3)
-			ctf_SpawnTeam(NAME_TEAM_3, NUM_TEAM_3 - 1);
-		if(ctf_teams >= 4)
-			ctf_SpawnTeam(NAME_TEAM_4, NUM_TEAM_4 - 1);
+		float i;
+		for(i = 1; i <= ctf_teams; ++i)
+			ctf_SpawnTeam(Team_ColorName(Team_NumberToTeam(i)), Team_NumberToTeam(i) - 1);
 	}
 
 	ctf_ScoreRules(ctf_teams);

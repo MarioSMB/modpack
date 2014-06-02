@@ -33,10 +33,28 @@ void dompoint_captured ()
 	if(domination_roundbased)
 	{
 		PlayerScore_Add(self.enemy, SP_SCORE, +points);
-		bprint(strcat(dom_message[self.team], "\n"));
+		string msg = "";
+		if(dom_message[self.team] != "")
+			msg = dom_message[self.team];
+		if(self.message != "")
+			msg = self.message;
+		if(msg != "")
+			bprint(strcat(msg, "\n"));
+		else
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(self.team, INFO_DOMINATION_CAPTURE_));
 	}
 	else
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_DOMINATION_CAPTURE_TIME, dom_message[self.team], points, wait_time);
+	{
+		string msg = "";
+		if(dom_message[self.team] != "")
+			msg = dom_message[self.team];
+		if(self.message != "")
+			msg = self.message;
+		if(msg != "")
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(self.team, INFO_DOMINATION_CAPTURE_TIME_), msg, points, wait_time);
+		else
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(self.team, INFO_DOMINATION_CAPTURE_TIME_NOMSG_), points, wait_time);
+	}
 
 	if(self.enemy.playerid == self.enemy_playerid)
 		PlayerScore_Add(self.enemy, SP_DOM_TAKES, 1);
@@ -190,7 +208,7 @@ void dom_ControlPointThink()
 
 	// give points
 
-	if (gameover || self.delay > time || time < game_starttime)	// game has ended, don't keep giving points
+	if (gameover || self.delay > time || time < game_starttime) // game has ended, don't keep giving points
 		return;
 
 	if(self.dom_cooldown)
@@ -204,6 +222,7 @@ void dom_ControlPointThink()
 	// NOTE: this defaults to 0
 	if (!domination_roundbased)
 	if (self.team)
+	if (self.dom_active)
 	{
 		if(autocvar_g_domination_point_amt)
 			fragamt = autocvar_g_domination_point_amt;
@@ -372,9 +391,8 @@ void dom_ControlPointSetup(entity cp)
 	if(!cp.t_width)			{ cp.t_width = CP_TICRATE; }
 	if(!cp.t_length)		{ cp.t_length = CP_MAXFRAMES; }
 	if(!cp.scale)			{ cp.scale = CP_SCALE; }
-	if(cp.message == "")	{ cp.message = " has captured a control point"; }
-	if(cp.frags <= 0)		{ cp.frags = 1; }
-	if(cp.wait <= 0)		{ cp.wait = 5; }
+	if(!cp.frags)			{ cp.frags = 1; }
+	if(!cp.wait)			{ cp.wait = 5; }
 
 	total_pps += ((autocvar_g_domination_point_amt) ? autocvar_g_domination_point_amt : cp.frags) / ((autocvar_g_domination_point_rate) ? autocvar_g_domination_point_rate : cp.wait);
 
@@ -648,7 +666,6 @@ void spawnfunc_dom_team()
 	dom_noise1[self.team] = self.noise1;
 	dom_message[self.team] = self.message;
 	dom_skin[self.team] = self.skin;
-	dom_teamname[self.team] = self.netname;
 }
 
 // scoreboard setup
@@ -704,9 +721,8 @@ void dom_spawnteam (string teamname, float teamcolor, string pointmodel, float p
 	dom_noise1[self.team] = capnarration;
 	dom_message[self.team] = capmessage;
 	dom_skin[self.team] = pointskin;
-	dom_teamname[self.team] = teamname;
 	
-	printf("%d %s %d\n", self.team, dom_model[self.team], dom_modelindex[self.team]);
+	//printf("%d %s %d\n", self.team, dom_model[self.team], dom_modelindex[self.team]);
 
 	self = oldself;
 }
@@ -727,12 +743,14 @@ void dom_spawnpoint(vector org)
 // spawn some default teams if the map is not set up for domination
 void dom_spawnteams(float teams)
 {
-	dom_spawnteam(NAME_TEAM_1, NUM_TEAM_1, "models/domination/dom_red.md3", 0, "domination/claim.wav", "", "Red team has captured a control point");
-	dom_spawnteam(NAME_TEAM_2, NUM_TEAM_2, "models/domination/dom_blue.md3", 0, "domination/claim.wav", "", "Blue team has captured a control point");
-	if(teams >= 3)
-		dom_spawnteam(NAME_TEAM_3, NUM_TEAM_3, "models/domination/dom_yellow.md3", 0, "domination/claim.wav", "", "Yellow team has captured a control point");
-	if(teams >= 4)
-		dom_spawnteam(NAME_TEAM_4, NUM_TEAM_4, "models/domination/dom_pink.md3", 0, "domination/claim.wav", "", "Pink team has captured a control point");
+	float i, team_id;
+	for(i = 1; i <= teams; ++i)
+	{
+		team_id = Team_NumberToTeam(i);
+		
+		dom_spawnteam(Team_ColorName(team_id), team_id, sprintf("models/domination/dom_%s.md3", Static_Team_ColorName_Lower(team_id)), 0, "domination/claim.wav", "", "");
+	}
+
 	dom_spawnteam("", 0, "models/domination/dom_unclaimed.md3", 0, "", "", "");
 }
 

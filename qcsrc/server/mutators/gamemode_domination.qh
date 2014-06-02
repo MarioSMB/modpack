@@ -46,7 +46,6 @@ float dom_modelindex[17];
 string dom_noise[17];
 string dom_noise1[17];
 string dom_message[17];
-string dom_teamname[17];
 float dom_skin[17];
 
 // misc globals
