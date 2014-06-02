@@ -387,6 +387,7 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 		float found = FALSE;
 
 		if(cmd_argc == 2)
+		if(!ctf_oneflag) // no team flags in 1 flag CTF
 		{
 			switch(argv(1))
 			{
