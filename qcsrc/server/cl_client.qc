@@ -496,6 +496,7 @@ void PutClientInServer (void)
 		self.air_finished = time + 12;
 		self.dmg = 2;
 		self.glow_trail = 0;
+		self.taunt_soundtime = 0;
 		self.glow_color = 0;
 		self.glow_size = 0;
 		if(autocvar_g_balance_nex_charge)
