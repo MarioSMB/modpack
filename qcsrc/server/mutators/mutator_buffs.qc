@@ -361,6 +361,15 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_SplitHealthArmor)
 	return FALSE;
 }
 
+void buff_Vengeance_DamageThink()
+{
+	if(self.enemy)
+		Damage(self.enemy, self.owner, self.owner, self.dmg, DEATH_BUFF_VENGEANCE, self.enemy.origin, '0 0 0');
+	
+	remove(self);
+	return;
+}
+
 MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 {
 	if(DEATH_ISBUFF(frag_deathtype)) { return FALSE; } // oh no you don't
@@ -382,9 +391,15 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	if(frag_attacker != frag_target)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	{
+		entity dmgent = spawn();
 		vector v = healtharmor_applydamage(frag_attacker.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_BUFF_VENGEANCE, frag_damage * autocvar_g_buffs_vengeance_damage_multiplier, autocvar_g_balance_armor_block_bycount);
 		float take = v_x;
-		Damage(frag_attacker, frag_target, frag_target, take, DEATH_BUFF_VENGEANCE, frag_attacker.origin, '0 0 0');
+		
+		dmgent.dmg = take;
+		dmgent.enemy = frag_attacker;
+		dmgent.owner = frag_target;
+		dmgent.think = buff_Vengeance_DamageThink;
+		dmgent.nextthink = time + 0.1;
 	}
 
 	if(frag_target.buffs & BUFF_BASH)
