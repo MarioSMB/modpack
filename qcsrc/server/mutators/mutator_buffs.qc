@@ -80,6 +80,8 @@ void buff_Respawn(entity ent)
 		self.angles = spot.angles;
 	}
 	
+	ent.movetype = MOVETYPE_TOSS;
+	
 	makevectors(ent.angles);
 	ent.velocity = '0 0 200';
 	ent.angles = '0 0 0';
@@ -315,6 +317,9 @@ void buff_Init(entity ent)
 	buff_SetCooldown(autocvar_g_buffs_cooldown_activate + game_starttime);
 	self.buff_active = !self.buff_activetime;
 	self.pflags = PFLAGS_FULLDYNAMIC;
+	
+	if(self.noalign)
+		self.movetype = MOVETYPE_NONE; // reset by random location
 
 	setmodel(self, "models/relics/relic.md3");
 	setsize(self, BUFF_MIN, BUFF_MAX);
