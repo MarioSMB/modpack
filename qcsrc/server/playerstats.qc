@@ -8,12 +8,22 @@ string events_last;
 #define ALL_ANTICHEATS \
 	ANTICHEAT("_time"); \
 	ANTICHEAT("speedhack"); \
+	ANTICHEAT("speedhack_m1"); \
+	ANTICHEAT("speedhack_m2"); \
+	ANTICHEAT("speedhack_m3"); \
+	ANTICHEAT("speedhack_m4"); \
+	ANTICHEAT("speedhack_m5"); \
 	ANTICHEAT("div0_strafebot_old"); \
 	ANTICHEAT("div0_strafebot_new"); \
 	ANTICHEAT("div0_evade"); \
 	ANTICHEAT("idle_snapaim"); \
 	ANTICHEAT("idle_snapaim_signal"); \
-	ANTICHEAT("idle_snapaim_noise");
+	ANTICHEAT("idle_snapaim_noise"); \
+	ANTICHEAT("idle_snapaim_m2"); \
+	ANTICHEAT("idle_snapaim_m3"); \
+	ANTICHEAT("idle_snapaim_m4"); \
+	ANTICHEAT("idle_snapaim_m7"); \
+	ANTICHEAT("idle_snapaim_m10");
 
 void PlayerStats_Init() // initiated before InitGameplayMode so that scores are added properly
 {
