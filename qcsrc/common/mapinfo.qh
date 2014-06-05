@@ -1,0 +1,173 @@
+float MAPINFO_TYPE_ALL;
+entity MapInfo_Type_first;
+entity MapInfo_Type_last;
+.entity enemy; // internal next pointer
+
+.float items; // game type ID
+.string netname; // game type name as in cvar (with g_ prefix)
+.string mdl; // game type short name
+.string message; // human readable name
+.string model2; // game type defaults
+.string gametype_description; // game type description
+
+#define REGISTER_GAMETYPE(hname,sname,g_name,NAME,defaults,gdescription) \
+	var float MAPINFO_TYPE_##NAME; \
+	var entity MapInfo_Type##g_name; \
+	void RegisterGametypes_##g_name() \
+	{ \
+		MAPINFO_TYPE_##NAME = MAPINFO_TYPE_ALL + 1; \
+		MAPINFO_TYPE_ALL |= MAPINFO_TYPE_##NAME; \
+		MapInfo_Type##g_name = spawn(); \
+		MapInfo_Type##g_name.items = MAPINFO_TYPE_##NAME; \
+		MapInfo_Type##g_name.netname = #g_name; \
+		MapInfo_Type##g_name.mdl = #sname; \
+		MapInfo_Type##g_name.message = hname; \
+		MapInfo_Type##g_name.model2 = defaults; \
+		MapInfo_Type##g_name.gametype_description = gdescription; \
+		if(!MapInfo_Type_first) \
+			MapInfo_Type_first = MapInfo_Type##g_name; \
+		if(MapInfo_Type_last) \
+			MapInfo_Type_last.enemy = MapInfo_Type##g_name; \
+		MapInfo_Type_last = MapInfo_Type##g_name; \
+	} \
+	ACCUMULATE_FUNCTION(RegisterGametypes, RegisterGametypes_##g_name)
+
+#define IS_GAMETYPE(NAME) \
+	(MapInfo_LoadedGametype == MAPINFO_TYPE_##NAME)
+
+REGISTER_GAMETYPE(_("Deathmatch"),dm,g_dm,DEATHMATCH,"timelimit=20 pointlimit=30 leadlimit=0",_("Kill all enemies"));
+#define g_dm IS_GAMETYPE(DEATHMATCH)
+
+REGISTER_GAMETYPE(_("Last Man Standing"),lms,g_lms,LMS,"timelimit=20 lives=9 leadlimit=0",_("Survive and kill until the enemies have no lives left"));
+#define g_lms IS_GAMETYPE(LMS)
+
+REGISTER_GAMETYPE(_("Race"),rc,g_race,RACE,"timelimit=20 qualifying_timelimit=5 laplimit=7 teamlaplimit=15 leadlimit=0",_("Race against other players to the finish line"));
+#define g_race IS_GAMETYPE(RACE)
+
+REGISTER_GAMETYPE(_("Race CTS"),cts,g_cts,CTS,"timelimit=20 skill=-1",_("Race for fastest time"));
+#define g_cts IS_GAMETYPE(CTS)
+
+REGISTER_GAMETYPE(_("Team Deathmatch"),tdm,g_tdm,TEAM_DEATHMATCH,"timelimit=20 pointlimit=50 teams=2 leadlimit=0",_("Kill all enemy teammates"));
+#define g_tdm IS_GAMETYPE(TEAM_DEATHMATCH)
+
+REGISTER_GAMETYPE(_("Capture the Flag"),ctf,g_ctf,CTF,"timelimit=20 caplimit=10 leadlimit=0",_("Find and bring the enemy flag to your base to capture it"));
+#define g_ctf IS_GAMETYPE(CTF)
+
+REGISTER_GAMETYPE(_("Clan Arena"),ca,g_ca,CA,"timelimit=20 pointlimit=10 leadlimit=0",_("Kill all enemy teammates to win the round"));
+#define g_ca IS_GAMETYPE(CA)
+
+REGISTER_GAMETYPE(_("Domination"),dom,g_domination,DOMINATION,"timelimit=20 pointlimit=200 teams=2 leadlimit=0",_("Capture all the control points to win"));
+#define g_domination IS_GAMETYPE(DOMINATION)
+
+REGISTER_GAMETYPE(_("Key Hunt"),kh,g_keyhunt,KEYHUNT,"timelimit=20 pointlimit=10 teams=3 leadlimit=0",_("Gather all the keys to win the round"));
+#define g_keyhunt IS_GAMETYPE(KEYHUNT)
+
+REGISTER_GAMETYPE(_("Assault"),as,g_assault,ASSAULT,"timelimit=20",_("Destroy obstacles to find and destroy the enemy power core before time runs out"));
+#define g_assault IS_GAMETYPE(ASSAULT)
+
+REGISTER_GAMETYPE(_("Onslaught"),ons,g_onslaught,ONSLAUGHT,"pointlimit=1 timelimit=30",_("Capture control points to reach and destroy the enemy generator"));
+#define g_onslaught IS_GAMETYPE(ONSLAUGHT)
+
+REGISTER_GAMETYPE(_("Nexball"),nb,g_nexball,NEXBALL,"timelimit=20 pointlimit=5 leadlimit=0",_("XonSports"));
+#define g_nexball IS_GAMETYPE(NEXBALL)
+
+REGISTER_GAMETYPE(_("Freeze Tag"),ft,g_freezetag,FREEZETAG,"timelimit=20 pointlimit=10 teams=2 leadlimit=0",_("Kill enemies to freeze them, stand next to teammates to revive them"));
+#define g_freezetag IS_GAMETYPE(FREEZETAG)
+
+REGISTER_GAMETYPE(_("Keepaway"),ka,g_keepaway,KEEPAWAY,"timelimit=20 pointlimit=30",_("Hold the ball to get points for kills"));
+#define g_keepaway IS_GAMETYPE(KEEPAWAY)
+
+REGISTER_GAMETYPE(_("VIP"),vip,g_vip,VIP,"timelimit=20 pointlimit=10 leadlimit=0",_("A VIP is chosen on each team, when a VIP dies, the round is over"));
+#define g_vip IS_GAMETYPE(VIP)
+
+REGISTER_GAMETYPE(_("Invasion"),inv,g_invasion,INVASION,"pointlimit=50 teams=0",_("Survive against waves of monsters"));
+#define g_invasion IS_GAMETYPE(INVASION)
+
+REGISTER_GAMETYPE(_("Infection"),inf,g_infection,INFECTION,"timelimit=20 pointlimit=10 leadlimit=0",_("Kill enemies to 'infect' them with your team color"));
+#define g_infection IS_GAMETYPE(INFECTION)
+
+REGISTER_GAMETYPE(_("Jailbreak"),jb,g_jailbreak,JAILBREAK,"timelimit=20 pointlimit=5 leadlimit=0",_("Kill enemies to send them to jail, capture control points to release teammates"));
+#define g_jailbreak IS_GAMETYPE(JAILBREAK)
+
+const float MAPINFO_FEATURE_WEAPONS       = 1; // not defined for minstagib-only maps
+const float MAPINFO_FEATURE_VEHICLES      = 2;
+const float MAPINFO_FEATURE_TURRETS       = 4;
+const float MAPINFO_FEATURE_MONSTERS      = 8;
+
+const float MAPINFO_FLAG_HIDDEN           = 1; // not in lsmaps/menu/vcall/etc., can just be changed to manually
+const float MAPINFO_FLAG_FORBIDDEN        = 2; // don't even allow the map by a cvar setting that allows hidden maps
+const float MAPINFO_FLAG_FRUSTRATING      = 4; // this map is near impossible to play, enable at your own risk
+const float MAPINFO_FLAG_NOAUTOMAPLIST    = 8; // do not include when automatically building maplist (counts as hidden for maplist building purposes)
+
+float MapInfo_count;
+
+// info about a map that MapInfo loads
+string MapInfo_Map_bspname;
+string MapInfo_Map_title;
+string MapInfo_Map_titlestring; // either bspname: title or just title, depending on whether bspname is redundant
+string MapInfo_Map_description;
+string MapInfo_Map_author;
+string MapInfo_Map_clientstuff; // not in cache, only for map load
+string MapInfo_Map_fog; // not in cache, only for map load
+float MapInfo_Map_supportedGametypes;
+float MapInfo_Map_supportedFeatures;
+float MapInfo_Map_flags;
+vector MapInfo_Map_mins; // these are '0 0 0' if not supported!
+vector MapInfo_Map_maxs; // these are '0 0 0' if not specified!
+
+// load MapInfo_count; generate mapinfo for maps that miss them, and clear the
+// cache; you need to call MapInfo_FilterGametype afterwards!
+void MapInfo_Enumerate();
+
+// filter the info by game type mask (updates MapInfo_count)
+float MapInfo_progress;
+float MapInfo_FilterGametype(float gametype, float features, float pFlagsRequired, float pFlagsForbidden, float pAbortOnGenerate); // 1 on success, 0 on temporary failure (call it again next frame then; use MapInfo_progress as progress indicator)
+float MapInfo_CurrentFeatures(); // retrieves currently required features from cvars
+float MapInfo_CurrentGametype(); // retrieves current gametype from cvars
+float MapInfo_ForbiddenFlags(); // retrieves current flags from cvars
+float MapInfo_RequiredFlags(); // retrieves current flags from cvars
+
+// load info about the i-th map into the MapInfo_Map_* globals
+float MapInfo_Get_ByID(float i); // 1 on success, 0 on failure
+string MapInfo_BSPName_ByID(float i);
+
+// load info about a map by name into the MapInfo_Map_* globals
+float MapInfo_Get_ByName(string s, float allowGenerate, float gametypeToSet); // 1 on success, 0 on failure, 2 if it autogenerated a mapinfo file
+
+// look for a map by a prefix, returns the actual map name on success, string_null on failure or ambigous match
+string MapInfo_FindName_match; // the name of the map that was found
+float MapInfo_FindName_firstResult; // -1 if none were found, index of first one if not unique but found (FindName then returns -1)
+float MapInfo_FindName(string s);
+string MapInfo_FixName(string s);
+
+// play a map
+float MapInfo_CheckMap(string s); // returns 0 if the map can't be played with the current settings
+void MapInfo_LoadMap(string s, float reinit);
+
+// list all maps for the current game type
+string MapInfo_ListAllowedMaps(float type, float pFlagsRequired, float pFlagsForbidden);
+// list all allowed maps (for any game type)
+string MapInfo_ListAllAllowedMaps(float pFlagsRequired, float pFlagsForbidden);
+
+// gets a gametype from a string
+string _MapInfo_GetDefaultEx(float t);
+float MapInfo_Type_FromString(string t);
+string MapInfo_Type_Description(float t);
+string MapInfo_Type_ToString(float t);
+string MapInfo_Type_ToText(float t);
+void MapInfo_SwitchGameType(float t);
+
+// to be called from worldspawn to set up cvars
+void MapInfo_LoadMapSettings(string s);
+float MapInfo_LoadedGametype; // game type that was active during map load
+
+void MapInfo_Cache_Destroy(); // disable caching
+void MapInfo_Cache_Create(); // enable caching
+void MapInfo_Cache_Invalidate(); // delete cache if any, but keep enabled
+
+void MapInfo_ClearTemps(); // call this when done with mapinfo for this frame
+
+void MapInfo_Shutdown(); // call this in the shutdown handler
+
+#define MAPINFO_SETTEMP_ACL_USER cvar_string("g_mapinfo_settemp_acl")
+#define MAPINFO_SETTEMP_ACL_SYSTEM "-g_mapinfo_* -rcon_* -_* -g_ban* +*"

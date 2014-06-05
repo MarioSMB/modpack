@@ -1,0 +1,169 @@
+// --------------------------------------------------------------------------
+// MENU Functionality
+
+#define DATABUF_PING 0
+#define DATABUF_CAPTURES (1*maxclients)
+#define DATABUF_DEATHS (2*maxclients)
+#define DATABUF_RETURNS (3*maxclients)
+
+#define DATABUF_NEXT (5*maxclients)
+
+void() menu_show_error;
+void() menu_sub_null;
+
+float menu_visible;
+var void() menu_show;
+var float(float bInputType, float nPrimary, float nSecondary) menu_action;
+
+// --------------------------------------------------------------------------
+// Onslaught
+
+// Map coordinate base calculations need these
+vector mi_center;
+vector mi_scale;
+// Minimap
+string minimapname;
+
+// --------------------------------------------------------------------------
+// General stuff
+
+float drawfont;
+float postinit;
+float gametype;
+
+//float sorted_players;
+//float sorted_teams;
+
+// Defs
+//.float ctf_state;
+//.float health;
+
+#define FONT_DEFAULT 0
+#define FONT_USER 8
+
+// --------------------------------------------------------------------------
+// Scoreboard stuff
+
+#define MAX_HUD_FIELDS 16
+
+#define SP_END -1
+
+#define SP_PING -2
+#define SP_NAME -3
+#define SP_KDRATIO -4
+#define SP_CLRATIO -5
+#define SP_PL -6
+#define SP_FRAGS -7
+#define SP_SUM -8
+
+#define SP_SEPARATOR -100
+
+float hud_field[MAX_HUD_FIELDS + 1];
+float hud_size[MAX_HUD_FIELDS + 1];
+string hud_title[MAX_HUD_FIELDS + 1];
+float hud_num_fields;
+
+string scores_label[MAX_SCORE];
+float scores_flags[MAX_SCORE];
+string teamscores_label[MAX_SCORE];
+float teamscores_flags[MAX_SCORE];
+.float scores[MAX_SCORE];
+.float teamscores[MAX_TEAMSCORE];
+
+#define IS_INCREASING(x) ( (x)&SFL_LOWER_IS_BETTER )
+#define IS_DECREASING(x) ( !((x)&SFL_LOWER_IS_BETTER) )
+
+
+vector hud_fontsize;
+
+float RANKINGS_RECEIVED_CNT;
+string grecordholder[RANKINGS_CNT];
+float grecordtime[RANKINGS_CNT];
+//float csqc_flags;
+
+entity playerslots[255]; // 255 is engine limit on maxclients
+entity teamslots[17];    // 17 teams (including "spectator team")
+.float gotscores;
+.entity owner;
+.float ready;
+
+.void(void) draw;
+.void(void) draw2d;
+.void(void) entremove;
+float drawframetime;
+vector view_origin, view_angles, view_forward, view_right, view_up;
+
+float button_zoom;
+float spectatorbutton_zoom;
+float button_attack;
+float button_attack2;
+
+float activeweapon;
+float switchingweapon;
+float switchweapon;
+float current_viewzoom;
+float zoomin_effect;
+float warmup_stage;
+
+string getcommandkey(string text, string command);
+
+string vote_called_vote;
+float ready_waiting;
+float ready_waiting_for_me;
+float vote_waiting;
+float vote_waiting_for_me;
+
+float current_zoomfraction;
+
+float cs_project_is_b0rked;
+float vid_width, vid_height, vid_pixelheight;
+
+float camera_active;		// Demo camera is active if set to TRUE
+float chase_active_backup;
+float camera_roll;
+vector camera_direction;
+
+void centerprint_hud(string strMessage);
+void centerprint_generic(float new_id, string strMessage, float duration, float countdown_num);
+
+#define ALPHA_MIN_VISIBLE 0.003
+
+float armorblockpercent;
+
+//hooks
+float calledhooks;
+#define HOOK_START    1
+#define HOOK_END      2
+
+.float ping, ping_packetloss, ping_movementloss;
+
+float g_balance_grenadelauncher_bouncefactor;
+float g_balance_grenadelauncher_bouncestop;
+float g_balance_electro_secondary_bouncefactor;
+float g_balance_electro_secondary_bouncestop;
+float g_trueaim_minrange;
+
+entity entcs_receiver[255]; // 255 is the engine limit on maxclients
+
+float hud;
+float view_quality;
+float framecount;
+
+float minsta_delay;
+float minsta_range;
+
+float mr_appeartime;
+float mr_fadetime;
+float morningrescue;
+
+float fovlock;
+
+float cl_fps;
+float sv_showfps;
+
+float num_spectators;
+#define MAX_SPECTATORS 7
+float spectatorlist[MAX_SPECTATORS];
+
+float camera_drawviewmodel_locked;
+float camera_drawviewmodel_backup;

@@ -1,0 +1,53 @@
+// these are needed since mutators are compiled last
+
+// score rule declarations
+#define ST_DOM_TICKS 1
+#define SP_DOM_TICKS 4
+#define SP_DOM_TAKES 5
+#define ST_DOM_CAPS 1
+#define SP_DOM_CAPS 4
+
+// pps: points per second
+.float dom_total_pps;
+.float dom_pps_red;
+.float dom_pps_blue;
+.float dom_pps_yellow;
+.float dom_pps_pink;
+float total_pps;
+float pps_red;
+float pps_blue;
+float pps_yellow;
+float pps_pink;
+
+// capture declarations
+.float enemy_playerid;
+.entity sprite;
+.float captime;
+
+.float dom_unlock_progress;
+.float dom_cooldown;
+.float dom_cooldown_max;
+.float dom_active;
+.float dom_lastmessage;
+
+.entity dom_capturingplayer;
+
+.float pointupdatetime;
+
+// control point properties
+#define CP_MIN '-32 -32 -32'
+#define CP_MAX '32 32 32'
+#define CP_SCALE 0.6
+#define CP_TICRATE 0.02
+#define CP_MAXFRAMES 239
+
+string dom_model[17];
+float dom_modelindex[17];
+string dom_noise[17];
+string dom_noise1[17];
+string dom_message[17];
+float dom_skin[17];
+
+// misc globals
+float domination_roundbased;
+float domination_teams;

@@ -1,0 +1,9 @@
+void WarpZone_Read(float bIsNewEntity);
+void WarpZone_Camera_Read(float bIsNewEntity);
+void WarpZone_Teleported_Read(float bIsNewEntity);
+
+void WarpZone_FixPMove();
+void WarpZone_FixView();
+
+void WarpZone_Init();
+void WarpZone_Shutdown();

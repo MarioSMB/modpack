@@ -1,0 +1,38 @@
+// ============================================================
+//  Shared declarations for server commands, written by Samual
+//  Last updated: December 30th, 2011
+// ============================================================
+
+// client verification results
+#define CLIENT_ACCEPTABLE 1
+#define CLIENT_DOESNT_EXIST -1
+#define CLIENT_NOT_REAL -2
+#define CLIENT_NOT_BOT -3
+
+// definitions for timeouts
+#define TIMEOUT_INACTIVE 0
+#define TIMEOUT_LEADTIME 1
+#define TIMEOUT_ACTIVE 2
+
+// timeout which pauses the game by setting the slowmo value extremely low.
+#define TIMEOUT_SLOWMO_VALUE 0.0001
+
+// global timeout information declarations
+entity timeout_caller; // contains the entity of the player who started the last timeout
+entity timeout_handler; // responsible for centerprinting the timeout countdowns and playing sounds
+float sys_frametime; // gets initialised in worldspawn, saves the value from autocvar_sys_ticrate
+float orig_slowmo; // contains the value of autocvar_slowmo so that, after timeout finished, it isn't set to slowmo 1 necessarily
+float timeout_time; // contains the time in seconds that the active timeout has left
+float timeout_leadtime; // contains the number of seconds left of the leadtime (before the timeout starts)
+float timeout_status; // (values: 0, 1, 2) contains whether a timeout is not active (0), was called but still at leadtime (1) or is active (2)
+.float allowed_timeouts; // contains the number of allowed timeouts for each player
+.vector lastV_angle; //used when pausing the game in order to force the player to keep his old view angle fixed
+
+// allow functions to be used in other code like g_world.qc and teamplay.qc
+void timeout_handler_think();
+
+// used by common/command/generic.qc:GenericCommand_dumpcommands to list all commands into a .txt file
+void CommonCommand_macro_write_aliases(float fh);
+
+// keep track of the next token to use for argc
+float next_token;

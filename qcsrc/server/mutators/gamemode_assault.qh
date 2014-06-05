@@ -1,0 +1,32 @@
+// sprites
+.entity assault_decreaser;
+.entity assault_sprite;
+
+// legacy bot defs
+#define HAVOCBOT_AST_ROLE_NONE 		0
+#define HAVOCBOT_AST_ROLE_DEFENSE	2
+#define HAVOCBOT_AST_ROLE_OFFENSE	4
+
+.float havocbot_role_flags;
+.float havocbot_attack_time;
+
+.void() havocbot_role;
+.void() havocbot_previous_role;
+
+void() havocbot_role_ast_defense;
+void() havocbot_role_ast_offense;
+.entity havocbot_ast_target;
+
+void(entity bot) havocbot_ast_reset_role;
+
+void(float ratingscale, vector org, float sradius) havocbot_goalrating_items;
+void(float ratingscale, vector org, float sradius) havocbot_goalrating_enemyplayers;
+
+// scoreboard stuff
+#define ST_ASSAULT_DESTROYED 1
+#define ST_ASSAULT_OBJECTIVES -1
+#define SP_ASSAULT_OBJECTIVES 4
+
+// predefined spawnfuncs
+void spawnfunc_func_breakable();
+void target_objective_decrease_activate();

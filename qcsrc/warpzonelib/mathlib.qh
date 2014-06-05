@@ -1,0 +1,102 @@
+// <math.h>
+
+// The commented-out functions need no implementation because DarkPlaces offers
+// them as builtins. They are listed here anyway for completeness sake.
+
+#define int float
+
+#define FP_NAN 0
+#define FP_INFINITE 1
+#define FP_ZERO 2
+#define FP_SUBNORMAL 3
+#define FP_NORMAL 4
+int fpclassify(float x);
+int isfinite(float x);
+int isinf(float x);
+int isnan(float x);
+int isnormal(float x);
+int signbit(float x);
+
+//float acos(float x);
+//float asin(float x);
+//float atan(float x);
+//float atan2(float y, float x);
+//float cos(float x);
+//float sin(float x);
+//float tan(float x);
+
+float acosh(float x);
+float asinh(float x);
+float atanh(float x);
+float cosh(float x);
+float sinh(float x);
+float tanh(float x);
+
+float exp(float x);
+float exp2(float x);
+float expm1(float x);
+
+vector frexp(float x); // returns mantissa as _x, exponent as _y
+int ilogb(float x);
+float ldexp(float x, int e);
+//float log(float x);
+float log10(float x);
+float log1p(float x);
+float log2(float x);
+float logb(float x);
+vector modf(float f); // fraction as _x, integer as _y
+
+float scalbn(float x, int n);
+
+float cbrt(float x);
+//float fabs(float x);
+float hypot(float x, float y);
+//float pow(float x, float y);
+//float sqrt(float x, float y);
+
+float erf(float x);
+float erfc(float x);
+vector lgamma(float x); // value in _x, sign in _y
+float tgamma(float x);
+
+//float ceil(float x);
+//float floor(float x);
+float nearbyint(float x);
+//float rint(float x);
+//float round(float x);
+float trunc(float x);
+
+float fmod(float x, float y);
+float remainder(float x, float y);
+vector remquo(float x, float y);
+
+float copysign(float x, float y);
+float nan(string tag);
+float nextafter(float x, float y);
+float nexttoward(float x, float y);
+
+float fdim(float x, float y);
+float fmax(float x, float y);
+float fmin(float x, float y);
+float fma(float x, float y, float z);
+
+int isgreater(float x, float y);
+int isgreaterequal(float x, float y);
+int isless(float x, float y);
+int islessequal(float x, float y);
+int islessgreater(float x, float y);
+int isunordered(float x, float y);
+
+#define M_E        2.7182818284590452354   /* e */
+#define M_LOG2E    1.4426950408889634074   /* log_2 e */
+#define M_LOG10E   0.43429448190325182765  /* log_10 e */
+#define M_LN2      0.69314718055994530942  /* log_e 2 */
+#define M_LN10     2.30258509299404568402  /* log_e 10 */
+#define M_PI       3.14159265358979323846  /* pi */
+#define M_PI_2     1.57079632679489661923  /* pi/2 */
+#define M_PI_4     0.78539816339744830962  /* pi/4 */
+#define M_1_PI     0.31830988618379067154  /* 1/pi */
+#define M_2_PI     0.63661977236758134308  /* 2/pi */
+#define M_2_SQRTPI 1.12837916709551257390  /* 2/sqrt(pi) */
+#define M_SQRT2    1.41421356237309504880  /* sqrt(2) */
+#define M_SQRT1_2  0.70710678118654752440  /* 1/sqrt(2) */

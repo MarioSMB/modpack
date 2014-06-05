@@ -1,0 +1,7 @@
+#define TEST_Check(cond) do { if(!(cond)) TEST_Fail(#cond); } while(0)
+
+void TEST_OK();
+void TEST_Fail(string cond);
+
+float TEST_RunAll();
+float TEST_Run(string test);

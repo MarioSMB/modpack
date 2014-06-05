@@ -1,0 +1,39 @@
+// definitions for functions used outside mapvoting.qc
+void MapVote_Start();
+void MapVote_Spawn();
+void MapVote_Think();
+float GameTypeVote_Start();
+float GameTypeVote_Finished(float pos);
+string GameTypeVote_MapInfo_FixName(string m);
+
+// definitions
+float gametypevote;
+string getmapname_stored;
+float mapvote_initialized;
+
+float mapvote_nextthink;
+float mapvote_initialized;
+float mapvote_keeptwotime;
+float mapvote_timeout;
+string mapvote_message;
+#define MAPVOTE_SCREENSHOT_DIRS_COUNT 4
+string mapvote_screenshot_dirs[MAPVOTE_SCREENSHOT_DIRS_COUNT];
+float mapvote_screenshot_dirs_count;
+
+float mapvote_count;
+float mapvote_count_real;
+string mapvote_maps[MAPVOTE_COUNT];
+float mapvote_maps_screenshot_dir[MAPVOTE_COUNT];
+string mapvote_maps_pakfile[MAPVOTE_COUNT];
+float mapvote_maps_suggested[MAPVOTE_COUNT];
+string mapvote_suggestions[MAPVOTE_COUNT];
+float mapvote_suggestion_ptr;
+float mapvote_voters;
+float mapvote_selections[MAPVOTE_COUNT];
+float mapvote_maps_availability[MAPVOTE_COUNT];
+float mapvote_run;
+float mapvote_detail;
+float mapvote_abstain;
+.float mapvote;
+
+entity mapvote_ent;

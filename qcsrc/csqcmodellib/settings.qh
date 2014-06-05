@@ -1,0 +1,27 @@
+// define this if svqc code wants to use .frame2 and .lerpfrac
+//#define CSQCMODEL_HAVE_TWO_FRAMES
+
+// don't define this ever
+//#define CSQCMODEL_SUPPORT_GETTAGINFO_BEFORE_DRAW
+
+// add properties you want networked to CSQC here
+#define CSQCMODEL_EXTRAPROPERTIES \
+	/* CSQCMODEL_PROPERTY(1, float, ReadShort, WriteShort, colormap) */ \
+	/* CSQCMODEL_PROPERTY(2, float, ReadInt24_t, WriteInt24_t, effects) */
+
+// add hook function calls here
+#define CSQCMODEL_HOOK_PREUPDATE
+#define CSQCMODEL_HOOK_POSTUPDATE
+#define CSQCMODEL_HOOK_PREDRAW
+#define CSQCPLAYER_HOOK_POSTCAMERASETUP
+
+// force updates of player entities that often even if unchanged
+#define CSQCPLAYER_FORCE_UPDATES 0.25
+
+// mod must define:
+//vector PL_MIN  = ...;
+//vector PL_MAX  = ...;
+//vector PL_VIEW_OFS  = ...;
+//vector PL_CROUCH_MIN  = ...;
+//vector PL_CROUCH_MAX  = ...;
+//vector PL_CROUCH_VIEW_OFS  = ...;

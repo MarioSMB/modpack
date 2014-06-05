@@ -1,0 +1,8 @@
+// =========================================================
+//  Shared declarations for all commands, written by Samual
+//  Last updated: December 13th, 2011
+// =========================================================
+
+// identifiers for subfunction requests by the command code structure
+#define CMD_REQUEST_COMMAND 1
+#define CMD_REQUEST_USAGE 2

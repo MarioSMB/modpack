@@ -1,0 +1,102 @@
+// uncomment this if your mod uses the roll angle in fixangle
+// #define KEEP_ROLL
+
+float warpzone_warpzones_exist;
+float warpzone_cameras_exist;
+
+.float warpzone_isboxy;
+.vector warpzone_shift;
+.vector warpzone_origin;
+.vector warpzone_angles;
+.vector warpzone_forward;
+.vector warpzone_targetorigin;
+.vector warpzone_targetangles;
+.vector warpzone_targetforward;
+.vector warpzone_transform;
+.float warpzone_fadestart;
+.float warpzone_fadeend;
+void WarpZone_SetUp(entity e, vector my_org, vector my_ang, vector other_org, vector other_ang);
+
+float WarpZoneLib_BoxTouchesBrush(vector mi, vector ma, entity e, entity ig);
+vector WarpZoneLib_NearestPointOnBox(vector mi, vector ma, vector org);
+
+entity WarpZone_Find(vector mi, vector ma);
+void WarpZone_MakeAllSolid();
+void WarpZone_MakeAllOther();
+
+#define MOVE_NOTHING -1
+entity WarpZone_trace_forent; // temp, callback is allowed to change it
+typedef void(vector start, vector hit, vector end) WarpZone_trace_callback_t; // called on every elementary trace
+var WarpZone_trace_callback_t WarpZone_trace_callback_t_null;
+entity WarpZone_trace_transform; // transform accumulator during a trace
+entity WarpZone_trace_firstzone; // first warpzone hit by a trace (can differ from the requested zone in case of _ThroughZone, the trace is aborted then)
+entity WarpZone_trace_lastzone; // first warpzone hit by a trace (can differ from the requested zone in case of _ThroughZone, the trace is aborted then)
+vector WarpZone_tracetoss_velocity; // ending velocity of a tracetoss (post-transform)
+float WarpZone_tracetoss_time; // duration of toss (approximate)
+void WarpZone_TraceBox(vector org, vector min, vector max, vector end, float nomonsters, entity forent);
+void WarpZone_TraceBox_ThroughZone(vector org, vector min, vector max, vector end, float nomonsters, entity forent, entity zone, WarpZone_trace_callback_t cb);
+void WarpZone_TraceLine(vector org, vector end, float nomonsters, entity forent);
+void WarpZone_TraceToss(entity e, entity forent);
+void WarpZone_TraceToss_ThroughZone(entity e, entity forent, entity zone, WarpZone_trace_callback_t cb);
+void WarpZone_TrailParticles(entity own, float eff, vector org, vector end);
+#ifdef CSQC
+void WarpZone_TrailParticles_WithMultiplier(entity own, float eff, vector org, vector end, float f, float boxflags);
+#endif
+
+.vector WarpZone_findradius_dist;
+.vector WarpZone_findradius_nearest;
+// also set: warpzone parameters, so WarpZone_TransformOrigin can transform vectors from blast's to victim's system
+.vector WarpZone_findradius_findorigin;
+.float WarpZone_findradius_findradius;
+entity WarpZone_FindRadius(vector org, float radius, float needlineofsight);
+
+float WarpZone_PlaneDist(entity wz, vector v);
+float WarpZone_TargetPlaneDist(entity wz, vector v);
+vector WarpZone_TransformOrigin(entity wz, vector v);
+vector WarpZone_TransformVelocity(entity wz, vector v);
+vector WarpZone_TransformAngles(entity wz, vector v);
+vector WarpZone_TransformVAngles(entity wz, vector v);
+vector WarpZone_UnTransformOrigin(entity wz, vector v);
+vector WarpZone_UnTransformVelocity(entity wz, vector v);
+vector WarpZone_UnTransformAngles(entity wz, vector v);
+vector WarpZone_UnTransformVAngles(entity wz, vector v);
+
+// reference systems (chained warpzone transforms)
+void WarpZone_RefSys_Clear(entity me); // R := id
+void WarpZone_RefSys_Add(entity me, entity wz); // me.R := wz me.R
+void WarpZone_RefSys_AddInverse(entity me, entity wz); // me.R := wz^-1 me.R
+void WarpZone_RefSys_AddTransform(entity me, vector t, vector s); // me.R := [t s] me.R
+void WarpZone_RefSys_AddInverseTransform(entity me, vector t, vector s); // me.R := [t s]^-1 me.R
+
+// makes this reference system track ref's changes
+// NOTE: this is ONLY sensible if WarpZone_RefSys_Add is no longer called on "me" while doing this
+// To achieve this, make sure no touch events on warpzone are raised by this entity
+// or set a movetype that causes no warpzoning (e.g. MOVETYPE_NONE, MOVETYPE_FOLLOW)
+void WarpZone_RefSys_AddIncrementally(entity me, entity ref); // me.R := ref.R me.Rref^-1 me.R; me.Rref := ref.R
+void WarpZone_RefSys_BeginAddingIncrementally(entity me, entity ref); // me.Rref := ref.R
+
+vector WarpZone_RefSys_TransformOrigin(entity from, entity to, vector org); // return to.R from.R^-1 org
+vector WarpZone_RefSys_TransformVelocity(entity from, entity to, vector vel); // return to.R from.R^-1 vel
+vector WarpZone_RefSys_TransformAngles(entity from, entity to, vector ang); // return to.R from.R^-1 ang
+vector WarpZone_RefSys_TransformVAngles(entity from, entity to, vector ang); // return to.R from.R^-1 ang
+void WarpZone_RefSys_Copy(entity me, entity from); // to.R := from.R
+entity WarpZone_RefSys_SpawnSameRefSys(entity me); // spawn().R = me.R
+
+#ifndef BITCLR
+# define BITCLR(a,b) ((a) - ((a) & (b)))
+#endif
+#ifndef BITSET
+# define BITSET(a,b) ((a) | (b))
+#endif
+#ifndef BITXOR
+# define BITXOR(a,b) (((a) | (b)) - ((a) & (b)))
+#endif
+#ifndef BITCLR_ASSIGN
+# define BITCLR_ASSIGN(a,b) ((a) = (a) - ((a) & (b)))
+#endif
+#ifndef BITSET_ASSIGN
+# define BITSET_ASSIGN(a,b) ((a) |= (b))
+#endif
+#ifndef BITXOR_ASSIGN
+# define BITXOR_ASSIGN(a,b) ((a) = ((a) | (b)) - ((a) & (b)))
+#endif

@@ -1,0 +1,23 @@
+/**
+ * Returns the bit ID of a key
+ */
+#define ITEM_KEY_BIT(n)	( bitshift(1, n) )
+
+#define ITEM_KEY_MAX	24
+
+/**
+ * list of key names.
+ */
+string item_keys_names[ITEM_KEY_MAX];
+
+/**
+ * Use keys from p on l.
+ * Returns TRUE if any new keys were given, FALSE otherwise.
+ */
+float item_keys_usekey(entity l, entity p);
+
+/**
+ * Returns a string with a comma separated list of key names, as specified in keylist.
+ */
+string item_keys_keylist(float keylist);
+

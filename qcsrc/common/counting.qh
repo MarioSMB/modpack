@@ -1,0 +1,199 @@
+// ===============================================
+//  Time processing and counting functions/macros
+// ===============================================
+
+#define count_years_decs(time,decs) sprintf(ZCTX(_("CI_DEC^%s years")), ftos_decimals(time, decs))
+#define count_years(time) count_fill(time, \
+		ZCTX(_("CI_ZER^%d years")), /* zeroth */ \
+		ZCTX(_("CI_FIR^%d year")),  /* first */ \
+		ZCTX(_("CI_SEC^%d years")), /* year */ \
+		ZCTX(_("CI_THI^%d years")), /* third */ \
+		ZCTX(_("CI_MUL^%d years"))) /* multi */
+
+#define count_weeks_decs(time,decs) sprintf(ZCTX(_("CI_DEC^%s weeks")), ftos_decimals(time, decs))
+#define count_weeks(time) count_fill(time, \
+		ZCTX(_("CI_ZER^%d weeks")), /* zeroth */ \
+		ZCTX(_("CI_FIR^%d week")),  /* first */ \
+		ZCTX(_("CI_SEC^%d weeks")), /* week */ \
+		ZCTX(_("CI_THI^%d weeks")), /* third */ \
+		ZCTX(_("CI_MUL^%d weeks"))) /* multi */
+
+#define count_days_decs(time,decs) sprintf(ZCTX(_("CI_DEC^%s days")), ftos_decimals(time, decs))
+#define count_days(time) count_fill(time, \
+		ZCTX(_("CI_ZER^%d days")), /* zeroth */ \
+		ZCTX(_("CI_FIR^%d day")),  /* first */ \
+		ZCTX(_("CI_SEC^%d days")), /* day */ \
+		ZCTX(_("CI_THI^%d days")), /* third */ \
+		ZCTX(_("CI_MUL^%d days"))) /* multi */
+
+#define count_hours_decs(time,decs) sprintf(ZCTX(_("CI_DEC^%s hours")), ftos_decimals(time, decs))
+#define count_hours(time) count_fill(time, \
+		ZCTX(_("CI_ZER^%d hours")), /* zeroth */ \
+		ZCTX(_("CI_FIR^%d hour")),  /* first */ \
+		ZCTX(_("CI_SEC^%d hours")), /* hour */ \
+		ZCTX(_("CI_THI^%d hours")), /* third */ \
+		ZCTX(_("CI_MUL^%d hours"))) /* multi */
+
+
+#define count_minutes_decs(time,decs) sprintf(ZCTX(_("CI_DEC^%s minutes")), ftos_decimals(time, decs))
+#define count_minutes(time) count_fill(time, \
+		ZCTX(_("CI_ZER^%d minutes")), /* zeroth */ \
+		ZCTX(_("CI_FIR^%d minute")),  /* first */ \
+		ZCTX(_("CI_SEC^%d minutes")), /* minute */ \
+		ZCTX(_("CI_THI^%d minutes")), /* third */ \
+		ZCTX(_("CI_MUL^%d minutes"))) /* multi */
+
+#define count_seconds_decs(time,decs) sprintf(ZCTX(_("CI_DEC^%s seconds")), ftos_decimals(time, decs))
+#define count_seconds(time) count_fill(time, \
+		ZCTX(_("CI_ZER^%d seconds")), /* zeroth */ \
+		ZCTX(_("CI_FIR^%d second")),  /* first */ \
+		ZCTX(_("CI_SEC^%d seconds")), /* second */ \
+		ZCTX(_("CI_THI^%d seconds")), /* third */ \
+		ZCTX(_("CI_MUL^%d seconds"))) /* multi */
+
+string count_ordinal(float interval)
+{
+	// This function is designed primarily for the English language, it's impossible
+	// to accomodate all languages unless we do a specific function for each one...
+	// and since that's not technically feasible/practical, this is all we've got folks.
+
+	// Basically, it just allows you to represent a number or count in different ways
+	// depending on the number... like, with count_ordinal you can provide integers
+	// and retrieve 1st, 2nd, 3rd, nth ordinal numbers in a clean and simple way.
+	if(floor((mod(interval, 100))/10) * 10 != 10) // examples: 12th, 111th, 213th will not execute this block
+	{
+		// otherwise, check normally for 1st,2nd,3rd insertions
+		switch(mod(interval, 10))
+		{
+			case 1: return sprintf(_("%dst"), interval);
+			case 2: return sprintf(_("%dnd"), interval);
+			case 3: return sprintf(_("%drd"), interval);
+			default: return sprintf(_("%dth"), interval);
+		}
+	}
+	else { return sprintf(_("%dth"), interval); }
+
+	return "";
+}
+
+string count_fill(float interval, string zeroth, string first, string second, string third, string multi)
+{
+	// This function is designed primarily for the English language, it's impossible
+	// to accomodate all languages unless we do a specific function for each one...
+	// and since that's not technically feasible/practical, this is all we've got folks.
+
+	// Here you can insert specific strings based on the interval number, so you could do
+	// i.e. count_seconds which outputs like this:
+	//   0 seconds
+	//   1 second
+	//   2 seconds
+	//   3 seconds
+	//   etc... minutes, hours, days, etc.
+
+	switch(floor(interval))
+	{
+		case 0: return sprintf(zeroth, interval);
+		case 1:
+		{
+			if(interval == 1) // EXACTLY value of 1
+				return sprintf(first, interval);
+			else
+				return sprintf(multi, interval);
+		}
+		case 2: return sprintf(second, interval);
+		case 3: return sprintf(third, interval);
+		default: return sprintf(multi, interval);
+	}
+	return "";
+}
+
+string process_time(float outputtype, float seconds)
+{
+	float tmp_hours = 0, tmp_minutes = 0, tmp_seconds = 0;
+	float tmp_years = 0, tmp_weeks = 0, tmp_days = 0;
+
+	tmp_seconds = floor(seconds);
+
+	if(tmp_seconds)
+	{
+		tmp_minutes = floor(tmp_seconds / 60);
+
+		if(tmp_minutes)
+		{
+			tmp_seconds -= (tmp_minutes * 60);
+			tmp_hours = floor(tmp_minutes / 60);
+
+			if(tmp_hours)
+			{
+				tmp_minutes -= (tmp_hours * 60);
+				tmp_days = floor(tmp_hours / 24);
+
+				if(tmp_days)
+				{
+					tmp_hours -= (tmp_days * 24);
+					tmp_weeks = floor(tmp_days / 7);
+
+					if(tmp_weeks)
+					{
+						tmp_days -= (tmp_weeks * 7);
+						tmp_years = floor(tmp_weeks / 52);
+					}
+				}
+			}
+		}
+	}
+
+	switch(outputtype)
+	{
+		case 1: return sprintf("%02d:%02d:%02d", tmp_hours, tmp_minutes, tmp_seconds);
+		case 2:
+		{
+			string output = "";
+
+			output = count_seconds(tmp_seconds);
+
+			if(tmp_minutes)
+			{
+				output = sprintf(
+					"%s%s",
+					count_minutes(tmp_minutes),
+					((output != "") ? sprintf(", %s", output) : ""));
+			}
+
+			if(tmp_hours)
+			{
+				output = sprintf(
+					"%s%s",
+					count_hours(tmp_hours),
+					((output != "") ? sprintf(", %s", output) : ""));
+			}
+
+			if(tmp_days)
+			{
+				output = sprintf(
+					"%s%s",
+					count_days(tmp_days),
+					((output != "") ? sprintf(", %s", output) : ""));
+			}
+
+			if(tmp_weeks)
+			{
+				output = sprintf(
+					"%s%s",
+					count_weeks(tmp_weeks),
+					((output != "") ? sprintf(", %s", output) : ""));
+			}
+
+			if(tmp_years)
+			{
+				output = sprintf(
+					"%s%s",
+					count_years(tmp_years),
+					((output != "") ? sprintf(", %s", output) : ""));
+			}
+
+			return output;
+		}
+	}
+	return "";
+}

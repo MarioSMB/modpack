@@ -1,0 +1,94 @@
+float g_jailbreak_claim;
+float g_jailbreak_jail_deathmatch;
+
+void JB_NonJBInit();
+entity JB_ChooseJailSpawnpoint(float);
+float JB_GetEnemyTeamOf(float);
+float JB_TotalPlayersOnTeam(float);
+float JB_AlivePlayersOnTeam(float);
+void JB_ActivateCamera(float);
+void JB_TorturePrisoners(float);
+void JB_TorturePrisonersLater(float, float);
+void JB_Torture_Start(entity);
+// void JB_SetCamera(entity, entity, float);
+// void JB_ClearCamera(entity);
+// void JB_ClearCameraForAll();
+void JB_ControlPoint_Activate(entity);
+void JB_ControlPoint_Deactivate(entity, float);
+void JB_ControlPoint_UpdateCooldownProgress(entity);
+string JB_ControlPoint_Name(entity);
+float JB_JailIsOpen(float);
+
+.float stat_jb_isprisoned;
+
+.float jb_unlock_progress;
+.float jb_isprisoned;
+.float jb_isprisoned_prev;
+.float jb_jail_resettime;
+.float jb_prisontime;
+.float jb_cooldown;
+.float jb_cooldown_max;
+.float jb_active;
+.float jb_capturecount;
+.float jb_roundlost;
+.float jb_team_initial;
+.float jb_defendthink_next;
+.float jb_had_unlimited_ammo;
+.float jb_specteam;
+.float jb_lastmessage;
+
+.entity jb_waypoint;
+.entity jb_capturingplayer;
+.entity jb_imprisoner;
+
+float jb_roundover;
+
+entity jb_cp_first;
+entity jb_cp_last;
+.entity jb_cp_next;
+float jb_cp_num;
+
+entity jb_door_red_first;
+entity jb_door_red_last;
+entity jb_door_blue_first;
+entity jb_door_blue_last;
+.entity jb_door_next;
+
+#define ST_JB_ROUNDS 1
+#define SP_JB_JBREAKS 4
+#define SP_JB_FREED 5
+#define SP_JB_DEFENSE 6
+
+.float jaildoormode;
+#define JAILDOORMODE_DEFAULT 0
+#define JAILDOORMODE_OPEN 1
+#define JAILDOORMODE_CLOSED 2
+
+#define OPENJAILS_LOCKED 0
+#define OPENJAILS_OPEN 1
+#define OPENJAILS_LOCKED_FORCE 2
+#define OPENJAILS_OPEN_FORCE 3
+
+#define JB_FIRSTDOOR(t) (((t) == NUM_TEAM_1)? jb_door_red_first : jb_door_blue_first)
+#define JB_SETFIRSTDOOR(t,d) if(t == NUM_TEAM_1) jb_door_red_first = d; else jb_door_blue_first = d
+#define JB_LASTDOOR(t) (((t) == NUM_TEAM_1)? jb_door_red_last : jb_door_blue_last)
+#define JB_SETLASTDOOR(t,d) if(t == NUM_TEAM_1) jb_door_red_last = d; else jb_door_blue_last = d
+#define JB_NEXTDOOR(e) ((e).jb_door_next)
+
+.float jb_torture_force;
+.float jb_torture_force_jitter;
+.float jb_torture_delay;
+.float jb_torture_delay_jitter;
+.float jb_torture_suggestedforce;
+
+#define JB_PROJ_OWNERSTATE_UNDEFINED 0
+#define JB_PROJ_OWNERSTATE_IMPRISONED 1
+#define JB_PROJ_OWNERSTATE_FREE 2
+
+#define JB_TEAM_NEUTRAL NUM_TEAM_3
+
+#define FOR_EACH_JB_CONTROLPOINT(e) for(e = jb_cp_first; e; e = e.jb_cp_next)
+#define FOR_EACH_JB_DOOR(e,t) for(e = JB_FIRSTDOOR(t); e; e = JB_NEXTDOOR(e))
+
+// TODO: cvar this
+#define JB_TORTURE_DURATION 15

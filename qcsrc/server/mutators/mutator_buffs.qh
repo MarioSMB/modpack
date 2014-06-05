@@ -1,0 +1,28 @@
+// buff specific variables \\
+//
+// ammo
+.float buff_ammo_prev_infitems;
+// invisible
+.float buff_invisible_prev_alpha;
+// flight
+.float buff_flight_prev_gravity;
+// jump
+.float stat_jumpheight;
+const float STAT_MOVEVARS_JUMPVELOCITY = 250; // engine hack
+// disability
+.float buff_disability_time;
+.float buff_disability_effect_time;
+
+// buff definitions
+.float buff_active;
+.float buff_activetime;
+.float buff_activetime_updated;
+.entity buff_waypoint;
+.float oldbuffs; // for updating effects
+.entity buff_model; // controls effects (TODO: make csqc)
+
+#define BUFF_MIN ('-16 -16 -20')
+#define BUFF_MAX ('16 16 20')
+
+// client side options
+.float cvar_cl_buffs_autoreplace;

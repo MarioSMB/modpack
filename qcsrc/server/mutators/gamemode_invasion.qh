@@ -1,0 +1,14 @@
+float inv_numspawned;
+float inv_maxspawned;
+float inv_roundcnt;
+float inv_maxrounds;
+float inv_numkilled;
+float inv_lastcheck;
+float inv_maxcurrent;
+
+float invasion_teams;
+float inv_monsters_perteam[17];
+
+float inv_monsterskill;
+
+#define ST_INV_KILLS 1

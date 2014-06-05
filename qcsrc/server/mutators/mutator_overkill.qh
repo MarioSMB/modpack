@@ -1,0 +1,14 @@
+.vector ok_deathloc;
+.float ok_spawnsys_timer;
+.float ok_lastwep;
+.float ok_item;
+
+.float ok_notice_time;
+.float ammo_charge[WEP_MAXCOUNT];
+.float ok_use_ammocharge;
+.float ok_ammo_charge;
+
+.float ok_pauseregen_finished;
+
+void(entity ent, float wep) ok_DecreaseCharge;
+

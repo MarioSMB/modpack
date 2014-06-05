@@ -1,0 +1,31 @@
+How to make the .po template:
+
+find . -type f -not -name \*.po -not -name \*.txt | xgettext -LC -k_ -f- --from-code utf-8
+
+
+How to compare the .po template against a language file:
+
+msgcmp ../../menu.dat.de.po messages.po
+
+
+How to merge the .po template into a language file:
+
+msgmerge -U ../../menu.dat.de.po messages.po
+
+
+Guideline:
+- do NOT translate strings in error() messages, or in dprint()!
+- delete obviously useless developer prints while at it
+- change obvious developer prints from print to dprint (even in comments),
+  unless in developer-only functions (e.g. *dumptree*)
+- mark translatable strings with _()
+- if a translatable string is a strcat monster, change it to sprintf
+- if code loads files with text, use language_filename()
+- interesting vim macros:
+  :map # /"<return>
+  :map ' i_(<esc>2f"a)<esc>/"<return>
+  :map " F"isprintf(_(<esc>%i), )<esc>i
+
+Unresolved TODO:
+
+- translated campaigns

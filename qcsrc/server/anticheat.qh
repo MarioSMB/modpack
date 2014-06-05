@@ -1,0 +1,14 @@
+void anticheat_init();
+void anticheat_report();
+void anticheat_shutdown();
+
+void anticheat_physics();
+void anticheat_spectatecopy(entity spectatee);
+void anticheat_prethink();
+
+float anticheat_getvalue(string name);
+
+void anticheat_startframe();
+void anticheat_endframe();
+
+void anticheat_fixangle();

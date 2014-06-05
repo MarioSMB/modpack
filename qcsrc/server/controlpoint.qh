@@ -1,0 +1,5 @@
+const vector CPICON_MIN = '-32 -32 -9';
+const vector CPICON_MAX = '32 32 25';
+
+float CPSF_STATUS = 4;
+float CPSF_SETUP = 8;

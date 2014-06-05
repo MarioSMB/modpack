@@ -1,0 +1,11 @@
+// scores
+#define SP_FREEZETAG_REVIVALS 4
+
+// stalemate
+float ft_stalemate;
+
+// waypoint setup
+.entity wps_enemy;
+#define WPCOLOR_ENEMY(t) ((t) ? colormapPaletteColor(t - 1, FALSE) * 0.75 : '1 1 1')
+
+#define ENEMY_WAYPOINT_OFFSET ('0 0 64')
