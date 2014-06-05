@@ -17,10 +17,11 @@ REGISTER_WEAPON(
 
 void W_Plasma_Explode_Combo (void);
 
-void W_Plasma_TriggerCombo(vector org, float rad, entity own)
+void W_Plasma_TriggerCombo_Warpzone(vector org, float rad, entity own)
 {
 	entity e;
 	e = WarpZone_FindRadius(org, rad, TRUE);
+
 	while (e)
 	{
 		if (e.classname == "plasma")
@@ -34,6 +35,34 @@ void W_Plasma_TriggerCombo(vector org, float rad, entity own)
 		}
 		e = e.chain;
 	}
+}
+
+void W_Plasma_TriggerCombo_Simple(vector org, float rad, entity own)
+{
+	entity e;
+
+	for(e = world; (e = find(e, classname, "plasma")); )
+	{
+		if (vlen(e.origin - org) <= rad)
+		{
+			// change owner to whoever caused the combo explosion
+			e.realowner = own;
+			e.takedamage = DAMAGE_NO;
+			e.classname = "plasma_chain";
+			e.think = W_Plasma_Explode_Combo;
+			e.nextthink = time + vlen(e.WarpZone_findradius_dist) / autocvar_g_balance_electro_combo_speed; // delay combo chains, looks cooler
+		}
+	}
+}
+
+void W_Plasma_TriggerCombo(vector org, float rad, entity own)
+{
+	// TODO: remove when we have unlagged findradius!
+
+	if(autocvar_g_balance_electro_combo_simple)
+		W_Plasma_TriggerCombo_Simple(org, rad, own);
+	else
+		W_Plasma_TriggerCombo_Warpzone(org, rad, own);
 }
 
 void W_Plasma_Explode (void)
