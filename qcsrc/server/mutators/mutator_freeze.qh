@@ -1,6 +1,0 @@
-.float freeze_flag; // used to check if the player is going to respawn or thaw out
-const float FROZEN_THAWING = 0; // player is thawing, don't take any action
-const float FROZEN_WILLRESPAWN = 1; // waiting for player to release the trigger key
-const float FROZEN_RESPAWNING = 2; // player released the key, respawn when we can
-
-.float cvar_cl_freeze;

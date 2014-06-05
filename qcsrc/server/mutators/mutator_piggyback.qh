@@ -1,9 +1,0 @@
-.entity piggybacker;
-.entity pbent;
-.entity pbhost;
-.float pb_canattach;
-//.float pb_attachblock;
-.float pb_oldsolid;
-
-void pb_Attach(entity host, entity slave);
-void pb_Detach(entity host);
