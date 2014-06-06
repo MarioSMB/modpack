@@ -5,8 +5,8 @@ string events_last;
 .float playerstats_addedglobalinfo;
 .string playerstats_id;
 
+// Note that _time isn't mentioned here. That one is special.
 #define ALL_ANTICHEATS \
-	ANTICHEAT("_time"); \
 	ANTICHEAT("speedhack"); \
 	ANTICHEAT("speedhack_m1"); \
 	ANTICHEAT("speedhack_m2"); \
@@ -64,6 +64,7 @@ void PlayerStats_Init() // initiated before InitGameplayMode so that scores are 
         PlayerStats_AddEvent(strcat("acc-", w.netname, "-frags"));
     }
 
+	PlayerStats_AddEvent("anticheat-_time");
 #define ANTICHEAT(name) \
 	PlayerStats_AddEvent("anticheat-" name)
 	ALL_ANTICHEATS
@@ -386,8 +387,15 @@ void PlayerStats_Anticheat(entity p)
 	entity oldself = self;
 	self = p;
 
-#define ANTICHEAT(name) \
-	PlayerStats_Event(p, "anticheat-" name, anticheat_getvalue(name))
+	float t0 = PlayerStats_Event(p, "anticheat-_time", 0);
+	float dt = anticheat_getvalue("_time");
+	PlayerStats_Event(p, "anticheat-_time", dt);
+	float f = dt / (t0 + dt);
+#define ANTICHEAT(name) do { \
+		float prev = PlayerStats_Event(p, "anticheat-" name, 0); \
+		float change = (anticheat_getvalue(name) - prev) * f; \
+		PlayerStats_Event(p, "anticheat-" name, change); \
+	} while(0)
 	ALL_ANTICHEATS
 #undef ANTICHEAT
 	self = oldself;
