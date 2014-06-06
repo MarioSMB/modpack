@@ -104,7 +104,8 @@ vector GetCurrentFov(float fov)
 
 	zoomdir = button_zoom;
 	if(hud == HUD_NORMAL)
-	if((activeweapon == WEP_NEX && switchweapon == activeweapon && nex_scope) || (activeweapon == WEP_RIFLE && rifle_scope)) // do NOT use switchweapon here -- why not?
+	if(switchweapon == activeweapon)
+	if((activeweapon == WEP_NEX && nex_scope) || (activeweapon == WEP_RIFLE && rifle_scope)) // do NOT use switchweapon here
 		zoomdir += button_attack2;
 	if(spectatee_status > 0 || isdemo())
 	{
@@ -813,12 +814,11 @@ void CSQC_UpdateView(float w, float h)
 	vid_conheight = autocvar_vid_conheight;
 	vid_pixelheight = autocvar_vid_pixelheight;
 
-	if(spectatee_status == -1 || !spectatee_status)
-	if(fovlock >= 0)
+	if(spectatee_status <= 0)
 		fovlock = -1;
 
 	if(autocvar_cl_orthoview) { setproperty(VF_FOV, GetOrthoviewFOV(ov_worldmin, ov_worldmax, ov_mid, ov_org)); }
-	else if(fovlock > -1) { setproperty(VF_FOV, GetCurrentFov(fovlock)); }
+	else if(fovlock > 0) { setproperty(VF_FOV, GetCurrentFov(fovlock)); }
 	else { setproperty(VF_FOV, GetCurrentFov(fov)); }
 
 	float tempcamera = FALSE;

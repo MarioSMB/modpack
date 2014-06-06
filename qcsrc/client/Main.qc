@@ -1317,7 +1317,7 @@ void Net_ReadSpecInfo()
 
 	fovlock = ReadByte();
 
-	if(fovlock == 0)
+	if(fovlock <= 0)
 		fovlock = -1;
 
 	num_spectators = ReadByte();
