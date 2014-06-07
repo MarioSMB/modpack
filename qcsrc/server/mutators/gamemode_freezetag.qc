@@ -141,6 +141,7 @@ float freezetag_CheckWinner()
 	FOR_EACH_PLAYER(e)
 	{
 		e.freezetag_frozen_timeout = 0;
+		e.revive_progress = 0;
 		WaypointSprite_Kill(e.wps_enemy);
 	}
 	
