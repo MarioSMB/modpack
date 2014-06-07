@@ -2081,6 +2081,10 @@ void LeaveSpectatorMode()
 		{
 			self.classname = "player";
 			nades_RemoveBonus(self);
+			
+			entity oldenemy = self.enemy;
+			self.enemy = world;
+			if(oldenemy) { ClientData_Touch(oldenemy); }
 
 			if(autocvar_g_campaign || autocvar_g_balance_teams)
 				{ JoinBestTeam(self, FALSE, TRUE); }

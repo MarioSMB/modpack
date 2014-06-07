@@ -6,9 +6,6 @@
 .float buff_invisible_prev_alpha;
 // flight
 .float buff_flight_prev_gravity;
-// jump
-.float stat_jumpheight;
-const float STAT_MOVEVARS_JUMPVELOCITY = 250; // engine hack
 // disability
 .float buff_disability_time;
 .float buff_disability_effect_time;

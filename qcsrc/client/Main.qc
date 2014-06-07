@@ -80,6 +80,7 @@ void CSQC_Init(void)
 
 	localcmd("\nalias nobobbing \"cl_bob 0; cl_bob2 0; cl_followmodel 0; cl_leanmodel 0\"\n");
 	localcmd("\nalias quickmenu \"cl_cmd hud quickmenu\"\n");
+	localcmd("\nalias physics \"cmd physics ${* ?}\"\n");
 
 	//registercommand("hud_configure");
 	//registercommand("hud_save");
@@ -109,6 +110,7 @@ void CSQC_Init(void)
 	registercvar("cl_autovote", "");
 	registercvar("cl_nocarry", "0");
 	registercvar("cl_buffs_autoreplace", "1");
+	registercvar("cl_physics", "default"); // default is invalid, so it will be overridden by standard physics cvars
 
 	// these need to be defined for quickmenu to work
 	registercvar("hud_panel_quickmenu_pos", "0.010000 0.410000");

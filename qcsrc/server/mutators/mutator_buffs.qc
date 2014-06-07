@@ -468,6 +468,12 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerPhysics)
 		self.stat_sv_maxspeed *= autocvar_g_buffs_disability_speed;
 		self.stat_sv_airspeedlimit_nonqw *= autocvar_g_buffs_disability_speed;
 	}
+	
+	if(self.buffs & BUFF_JUMP)
+	{
+		// automatically reset, no need to worry
+		self.stat_sv_jumpvelocity = autocvar_g_buffs_jump_height;
+	}
 
 	return FALSE;
 }
@@ -584,11 +590,6 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 		}
 	}
 
-	if(!(self.oldbuffs & BUFF_JUMP) && !(self.buffs & BUFF_JUMP))
-		self.stat_jumpheight = autocvar_sv_jumpvelocity; // reset so we don't break anything
-	else if((self.buffs & BUFF_JUMP) && self.stat_jumpheight != autocvar_g_buffs_jump_height)
-		self.stat_jumpheight = autocvar_g_buffs_jump_height;
-		
 	if((self.buffs & BUFF_INVISIBLE) && (self.oldbuffs & BUFF_INVISIBLE))
 	if(self.alpha != autocvar_g_buffs_invisible_alpha)
 		self.alpha = autocvar_g_buffs_invisible_alpha;
@@ -612,12 +613,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 			if(!self.ammo_nails) { self.ammo_nails = 20; }
 			if(!self.ammo_fuel) { self.ammo_fuel = 20; }
 		}
-		
-		if(self.oldbuffs & BUFF_JUMP)
-			self.stat_jumpheight = autocvar_sv_jumpvelocity;
-		else if(self.buffs & BUFF_JUMP)
-			self.stat_jumpheight = autocvar_g_buffs_jump_height;
-		
+
 		if(self.oldbuffs & BUFF_INVISIBLE)
 		{
 			if(time < self.strength_finished && g_minstagib)
@@ -764,7 +760,6 @@ void buffs_Initialize()
 	precache_sound("keepaway/respawn.wav");
 
 	addstat(STAT_BUFFS, AS_INT, buffs);
-	addstat(STAT_MOVEVARS_JUMPVELOCITY, AS_FLOAT, stat_jumpheight);
 	
 	InitializeEntity(world, buffs_DelayedInit, INITPRIO_FINDTARGET);
 }
