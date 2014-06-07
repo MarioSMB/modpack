@@ -402,7 +402,7 @@ void ClientCommand_report(float request, float argc)
 			if(argv(1) == "fov")
 			{
 				self.clientfov = stof(argv(2));
-				UpdateSpectators(world, world);
+				ClientData_Touch(self);
 			}
 
 			return; // never fall through to usage

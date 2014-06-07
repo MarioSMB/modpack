@@ -600,6 +600,26 @@ void Ent_ClientData()
 	}
 	else
 		angles_held_status = 0;
+		
+	if(f & 16)
+	{
+		fovlock = ReadByte();
+		num_spectators = ReadByte();
+		
+		if(fovlock <= 0)
+			fovlock = -1;
+		
+		float i, slot;
+		
+		for(i = 0; i < MAX_SPECTATORS; ++i)
+			spectatorlist[i] = 0; // reset list first
+		
+		for(i = 0; i < num_spectators; ++i)
+		{
+			slot = ReadByte();
+			spectatorlist[i] = slot - 1;
+		}
+	}
 
 	if(newspectatee_status != spectatee_status)
 	{
@@ -1311,24 +1331,6 @@ void Net_ReadMorningRescue()
 	mr_fadetime   = time + 9;
 }
 
-void Net_ReadSpecInfo()
-{
-	float i;
-
-	fovlock = ReadByte();
-
-	if(fovlock <= 0)
-		fovlock = -1;
-
-	num_spectators = ReadByte();
-	for(i = 0; i < num_spectators; ++i)
-	{
-		local float slot = ReadByte();
-		if(i < MAX_SPECTATORS)
-			spectatorlist[i] = slot - 1;
-	}
-}
-
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
 // You must ALWAYS first acquire the temporary ID, which is sent as a byte.
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
@@ -1388,10 +1390,6 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_MORNINGRESCUE:
 			Net_ReadMorningRescue();
-			bHandled = true;
-			break;
-		case TE_CSQC_SPECINFO:
-			Net_ReadSpecInfo();
 			bHandled = true;
 			break;
 		case TE_CSQC_SHOCKWAVEPARTICLE:

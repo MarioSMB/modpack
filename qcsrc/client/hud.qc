@@ -4637,16 +4637,19 @@ void HUD_InfoMessages(void)
 
 		if(autocvar_cl_showspectators)
 		if(num_spectators)
-		if(!spectatee_status)
+		//if(spectatee_status != -1)
 		{
-			s = _("^1Spectating you:");
-			drawInfoMessage(s)
+			s = ((spectatee_status) ? _("^1Spectating this player:") : _("^1Spectating you:"));
+			//drawInfoMessage(s)
 			float limit = min(num_spectators, MAX_SPECTATORS);
 			float i;
 			for(i = 0; i < limit; ++i)
 			{
 				float slot = spectatorlist[i];
-				s = strcat("^3", GetPlayerName(slot));
+				if(i == 0)
+					s = strcat(s, " ^3", GetPlayerName(slot));
+				else
+					s = strcat("^3", GetPlayerName(slot));
 				drawInfoMessage(s)
 			}
 		}
