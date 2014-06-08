@@ -76,10 +76,13 @@ void buff_Respawn(entity ent)
 	if(!MoveToRandomMapLocation(ent, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, ((autocvar_g_buffs_random_location_attempts > 0) ? autocvar_g_buffs_random_location_attempts : 10), 1024, 256))
 	{
 		entity spot = SelectSpawnPoint(TRUE);
-		tracebox(((spot.origin + '0 0 200') + (randomvec() * 300)), ent.mins, self.maxs, spot.origin, MOVE_NOMONSTERS, ent);
-		setorigin(ent, trace_endpos);
+		setorigin(ent, ((spot.origin + '0 0 200') + (randomvec() * 300)));
 		ent.angles = spot.angles;
 	}
+	
+	tracebox(ent.origin, ent.mins * 1.5, self.maxs * 1.5, ent.origin, MOVE_NOMONSTERS, ent);
+	
+	setorigin(ent, trace_endpos); // attempt to unstick
 	
 	ent.movetype = MOVETYPE_TOSS;
 	
