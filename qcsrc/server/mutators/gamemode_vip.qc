@@ -470,6 +470,9 @@ void vip_SoulGem_touch()
 	if(other.isvip)
 		return;
 
+	if(other.frozen)
+		return;
+
 	if(!allowed_to_spawn)
 		return;
 
