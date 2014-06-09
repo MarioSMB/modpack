@@ -660,6 +660,9 @@ void SV_PlayerPhysics()
 
 	maxspd_mod *= autocvar_g_movement_highspeed;
 
+	if(time < self.spider_slowness)
+		maxspd_mod *= 0.5; // half speed while slow - TODO: add a cvar!
+
 	// fix physics stats for g_movement_highspeed
 	// TODO maybe rather use maxairspeed? needs testing
 	self.stat_sv_airaccel_qw = AdjustAirAccelQW(Physics_ClientOption(self, "airaccel_qw"), maxspd_mod);
@@ -822,12 +825,6 @@ void SV_PlayerPhysics()
 	self.disableclientprediction = 0;
 	if(time < self.ladder_time)
 		self.disableclientprediction = 1;
-
-	if(time < self.spider_slowness)
-	{
-		self.stat_sv_maxspeed *= 0.5; // half speed while slow from spider
-		self.stat_sv_airspeedlimit_nonqw *= 0.5;
-	}
 
 	if(self.frozen)
 	{
