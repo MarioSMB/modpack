@@ -13,20 +13,18 @@
 // client side physics
 float Physics_Valid(string thecvar)
 {
-	if(!autocvar_g_physics_clientselect) { return FALSE; }
-
-	if(checkinlist(thecvar, autocvar_g_physics_clientselect_options))
-		return TRUE;
-
-	return FALSE;
+	return autocvar_g_physics_clientselect && checkinlist(thecvar, autocvar_g_physics_clientselect_options);
 }
 
 float Physics_ClientOption(entity pl, string option)
 {
-	if(Physics_Valid(pl.cvar_cl_physics) && (cvar_type(sprintf("g_physics_%s_%s", pl.cvar_cl_physics, option)) & 1))
-		return cvar(sprintf("g_physics_%s_%s", pl.cvar_cl_physics, option));
-	else
-		return cvar(strcat("sv_", option));
+	if (Physics_Valid(pl.cvar_cl_physics))
+	{
+		string var = sprintf("g_physics_%s_%s", pl.cvar_cl_physics, option);
+		if (cvar_type(var) & 1)
+			return cvar(var);
+	}
+	return cvar(strcat("sv_", option));
 }
 
 /*
