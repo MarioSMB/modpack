@@ -719,8 +719,7 @@ float nade_customize()
 	{
 		// somewhat hide the model, but keep the glow
 		//self.effects = 0;
-		//self.alpha = -1;
-		return FALSE; // or not
+		self.alpha = -1;
 	}
 	else
 	{
