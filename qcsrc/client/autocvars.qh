@@ -464,3 +464,4 @@ var float autocvar_crosshair_rpc_alpha = 1;
 var float autocvar_crosshair_rpc_size = 1;
 float autocvar_r_drawviewmodel;
 float autocvar_cl_crouch;
+var float autocvar_cl_nade_timer = 1;

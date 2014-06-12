@@ -682,6 +682,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 	}
 
 	e.nade_refire = time + autocvar_g_nades_nade_refire;
+	e.nade_timer = 0;
 }
 
 void nades_GiveBonus(entity player, float score)
@@ -845,6 +846,7 @@ void nades_Clear(entity player, float allplayers)
 			if(player.nade) { remove(player.nade); }
 			if(player.fake_nade) { remove(player.fake_nade); }
 			player.nade = player.fake_nade = world;
+			player.nade_timer = 0;
 		}
 
 		return;
@@ -856,6 +858,7 @@ void nades_Clear(entity player, float allplayers)
 	if(player.fake_nade) { remove(player.fake_nade); }
 
 	player.nade = player.fake_nade = world;
+	player.nade_timer = 0;
 }
 
 MUTATOR_HOOKFUNCTION(nades_CheckThrow)
@@ -884,6 +887,8 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 		
 	if(self.nade)
 	{
+		self.nade_timer = bound(0, (time - self.nade.lifetime) / autocvar_g_nades_nade_lifetime, 1);
+		//print(sprintf("%d %d\n", self.nade_timer, time - self.nade.lifetime));
 		makevectors(self.angles);
 		self.nade.velocity = self.velocity;
 
@@ -1010,6 +1015,8 @@ MUTATOR_HOOKFUNCTION(nades_PlayerSpawn)
 
 	if(autocvar_g_nades_bonus_client_select)
 		self.nade_type = self.cvar_cl_nade_type;
+		
+	self.nade_timer = 0;
 
 	if(self.nade_spawnloc)
 	if(!self.jb_isprisoned)
@@ -1100,6 +1107,7 @@ MUTATOR_HOOKFUNCTION(nades_RemovePlayer)
 
 MUTATOR_HOOKFUNCTION(nades_SpectateCopy)
 {
+	self.nade_timer = other.nade_timer;
 	self.nade_type = other.nade_type;
 	self.pokenade_type = other.pokenade_type;
 	self.bonus_nades = other.bonus_nades;
@@ -1131,6 +1139,7 @@ MUTATOR_HOOKFUNCTION(nades_BuildMutatorsPrettyString)
 
 void nades_Initialize()
 {
+	addstat(STAT_NADE_TIMER, AS_FLOAT, nade_timer);
 	addstat(STAT_NADE_BONUS, AS_FLOAT, bonus_nades);
 	addstat(STAT_NADE_BONUS_TYPE, AS_INT, nade_type);
 	addstat(STAT_NADE_BONUS_SCORE, AS_FLOAT, bonus_nade_score);
