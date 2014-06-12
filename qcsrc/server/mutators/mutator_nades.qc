@@ -413,7 +413,7 @@ void nade_heal_touch()
 		}
 		if ( health_factor > 0 )
 		{
-			maxhealth = (IS_MONSTER(other)) ? other.max_health : g_pickup_healthmega_max;
+			maxhealth = (IS_MONSTER(other)) ? other.max_health : 200; // TODO: find a good limiter that works across all modes and mutators
 			if ( other.health < maxhealth )
 			{
 				if ( self.nade_show_particles )
