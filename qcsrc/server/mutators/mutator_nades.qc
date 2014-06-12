@@ -671,7 +671,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 	_nade.flags = FL_PROJECTILE;
 	_nade.projectiledeathtype = DEATH_NADE;
 	_nade.toss_time = time;
-	_nade.solid = ((_nade.nade_type == NADE_TYPE_TRANSLOCATE) ? SOLID_CORPSE : SOLID_BBOX);
+	_nade.solid = SOLID_CORPSE; //((_nade.nade_type == NADE_TYPE_TRANSLOCATE) ? SOLID_CORPSE : SOLID_BBOX);
 
 	nade_spawn(_nade);
 
@@ -719,7 +719,8 @@ float nade_customize()
 	{
 		// somewhat hide the model, but keep the glow
 		//self.effects = 0;
-		self.alpha = -1;
+		//self.alpha = -1;
+		return FALSE; // or not
 	}
 	else
 	{
