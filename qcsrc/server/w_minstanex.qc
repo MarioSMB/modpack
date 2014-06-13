@@ -198,7 +198,10 @@ void W_MinstaNex_Attack (void)
 	float minstanex_ammo = ((g_minstagib) ? 1 : autocvar_g_balance_minstanex_ammo);
 	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
 
-	W_SetupShot (self, TRUE, 0, "weapons/minstanexfire.wav", CH_WEAPON_A, minstanex_damage, self.weapon);
+	W_SetupShot (self, TRUE, 0, "", CH_WEAPON_A, minstanex_damage, self.weapon);
+
+	sound (self, CH_WEAPON_A, "weapons/minstanexfire.wav", VOL_BASE * 0.8, ATTEN_NORM);
+	W_PlayStrengthSound(self);
 	
 	self.projectiledeathtype = WEP_MINSTANEX;
 
