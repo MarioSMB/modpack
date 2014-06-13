@@ -165,7 +165,7 @@ const float STAT_NEX_CHARGE = 50;
 const float STAT_LAST_PICKUP = 51;
 const float STAT_HUD = 52;
 const float STAT_NEX_CHARGEPOOL = 53;
-const float STAT_HIT_TIME = 54;
+const float STAT_DAMAGE_DEALT_TOTAL = 54;
 const float STAT_TYPEHIT_TIME = 55;
 const float STAT_LAYED_MINES = 56;
 const float STAT_HAGAR_LOAD = 57;
@@ -180,8 +180,6 @@ const float STAT_VEHICLESTAT_RELOAD1 = 64;
 const float STAT_VEHICLESTAT_AMMO2 = 65;
 const float STAT_VEHICLESTAT_RELOAD2 = 66;
 const float STAT_VEHICLESTAT_W2MODE = 67;
-
-const float STAT_DAMAGE_DEALT_TOTAL = 68;
 
 const float STAT_NADE_TIMER = 69;
 

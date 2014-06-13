@@ -1852,7 +1852,6 @@ void SpectateCopy(entity spectatee) {
 	self.impulse = 0;
 	self.items = spectatee.items;
 	self.last_pickup = spectatee.last_pickup;
-	self.hit_time = spectatee.hit_time;
 	self.damage_dealt_total = spectatee.damage_dealt_total;
 	self.metertime = spectatee.metertime;
 	self.strength_finished = spectatee.strength_finished;

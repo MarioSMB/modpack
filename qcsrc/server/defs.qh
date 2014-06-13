@@ -539,7 +539,6 @@ string matchid;
 
 .float last_pickup;
 
-.float hit_time;
 .float typehit_time;
 
 #define DAMAGE_DEALT_TOTAL_ROLLOVER_POINT 500000.0f
