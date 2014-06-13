@@ -21,7 +21,8 @@
 // Revision 20: naggers
 // Revision 21: entcs for players optimized (position data down from 12 to 7 bytes); waypointsprites in csqc for team radar
 // Revision 22: hook shot origin
-#define CSQC_REVISION 22
+// Revision 23: variable hit sound
+#define CSQC_REVISION 23
 
 const float AS_STRING = 1;
 const float AS_INT = 2;
@@ -179,6 +180,8 @@ const float STAT_VEHICLESTAT_RELOAD1 = 64;
 const float STAT_VEHICLESTAT_AMMO2 = 65;
 const float STAT_VEHICLESTAT_RELOAD2 = 66;
 const float STAT_VEHICLESTAT_W2MODE = 67;
+
+const float STAT_DAMAGE_DEALT_TOTAL = 68;
 
 const float STAT_NADE_TIMER = 69;
 

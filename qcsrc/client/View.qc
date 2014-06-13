@@ -374,7 +374,9 @@ entity nightvision_noise, nightvision_noise2;
 #define MAX_TIME_DIFF 5
 float pickup_crosshair_time, pickup_crosshair_size;
 float hit_time, typehit_time;
-float nextsound_hit_time, nextsound_typehit_time;
+float nextsound_typehit_time;
+float spectatee_status_prev; // for preventing hitsound when switching spectatee
+float damage_dealt_total, damage_dealt_total_prev;
 float hitindication_crosshair_time, hitindication_crosshair_size;
 float use_nex_chargepool;
 
@@ -431,7 +433,7 @@ void CSQC_UpdateView(float w, float h)
 	float f, i, j;
 	vector v;
 	vector vf_size, vf_min;
-	float a;
+	float pink_noise;
 
 	execute_next_frame();
 
@@ -934,7 +936,7 @@ void CSQC_UpdateView(float w, float h)
 		drawfill('0 0 0', autocvar_vid_conwidth * '1 0 0' + autocvar_vid_conheight * '0 1 0', '0.5 1 0.3', 1, DRAWFLAG_MODULATE);
 
 		// draw BG
-		a = Noise_Pink(nightvision_noise, frametime * 1.5) * 0.05 + 0.15;
+		pink_noise = Noise_Pink(nightvision_noise, frametime * 1.5) * 0.05 + 0.15;
 		rgb = '1 1 1';
 		tc_00 = '0 0 0' + '0.2 0 0' * sin(time * 0.3) + '0 0.3 0' * cos(time * 0.7);
 		tc_01 = '0 2.25 0' + '0.6 0 0' * cos(time * 1.2) - '0 0.3 0' * sin(time * 2.2);
@@ -942,24 +944,24 @@ void CSQC_UpdateView(float w, float h)
 		//tc_11 = '1 1 0' + '0.6 0 0' * sin(time * 0.6) + '0 0.3 0' * cos(time * 0.1);
 		tc_11 = tc_01 + tc_10 - tc_00;
 		R_BeginPolygon("gfx/nightvision-bg.tga", DRAWFLAG_ADDITIVE);
-		R_PolygonVertex('0 0 0', tc_00, rgb, a);
-		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0', tc_10, rgb, a);
-		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0' + autocvar_vid_conheight * '0 1 0', tc_11, rgb, a);
-		R_PolygonVertex(autocvar_vid_conheight * '0 1 0', tc_01, rgb, a);
+		R_PolygonVertex('0 0 0', tc_00, rgb, pink_noise);
+		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0', tc_10, rgb, pink_noise);
+		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0' + autocvar_vid_conheight * '0 1 0', tc_11, rgb, pink_noise);
+		R_PolygonVertex(autocvar_vid_conheight * '0 1 0', tc_01, rgb, pink_noise);
 		R_EndPolygon();
 
 		// draw FG
-		a = Noise_Pink(nightvision_noise2, frametime * 0.1) * 0.05 + 0.12;
+		pink_noise = Noise_Pink(nightvision_noise2, frametime * 0.1) * 0.05 + 0.12;
 		rgb = '0.3 0.6 0.4' + '0.1 0.4 0.2' * Noise_White(nightvision_noise2, frametime);
 		tc_00 = '0 0 0' + '1 0 0' * Noise_White(nightvision_noise2, frametime) + '0 1 0' * Noise_White(nightvision_noise2, frametime);
 		tc_01 = tc_00 + '0 3 0' * (1 + Noise_White(nightvision_noise2, frametime) * 0.2);
 		tc_10 = tc_00 + '2 0 0' * (1 + Noise_White(nightvision_noise2, frametime) * 0.3);
 		tc_11 = tc_01 + tc_10 - tc_00;
 		R_BeginPolygon("gfx/nightvision-fg.tga", DRAWFLAG_ADDITIVE);
-		R_PolygonVertex('0 0 0', tc_00, rgb, a);
-		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0', tc_10, rgb, a);
-		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0' + autocvar_vid_conheight * '0 1 0', tc_11, rgb, a);
-		R_PolygonVertex(autocvar_vid_conheight * '0 1 0', tc_01, rgb, a);
+		R_PolygonVertex('0 0 0', tc_00, rgb, pink_noise);
+		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0', tc_10, rgb, pink_noise);
+		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0' + autocvar_vid_conheight * '0 1 0', tc_11, rgb, pink_noise);
+		R_PolygonVertex(autocvar_vid_conheight * '0 1 0', tc_01, rgb, pink_noise);
 		R_EndPolygon();
 	}
 
@@ -1232,20 +1234,76 @@ void CSQC_UpdateView(float w, float h)
 
 	scoreboard_active = HUD_WouldDrawScoreboard();
 
+	// varying sound pitch
+	damage_dealt_total = getstati(STAT_DAMAGE_DEALT_TOTAL);
 	hit_time = getstatf(STAT_HIT_TIME);
-	if(hit_time > nextsound_hit_time && autocvar_cl_hitsound)
+	// detect overflow on server side
+	if (damage_dealt_total < damage_dealt_total_prev)
 	{
-		if(time - hit_time < MAX_TIME_DIFF) // don't play the sound if it's too old.
-			sound(world, CH_INFO, "misc/hit.wav", VOL_BASE, ATTEN_NONE);
-
-		nextsound_hit_time = time + autocvar_cl_hitsound_antispam_time;
+		dprint("resetting dmg total: ", ftos(damage_dealt_total), " prev: ", ftos(damage_dealt_total_prev), "\n");
+		damage_dealt_total_prev = 0;
 	}
+
+	// prevent hitsound when switching spectatee
+	if (spectatee_status != spectatee_status_prev)
+	{
+		damage_dealt_total_prev = damage_dealt_total;
+	}
+	spectatee_status_prev = spectatee_status;
+	typehit_time = getstatf(STAT_TYPEHIT_TIME);
+
+	// amount of damage since last hit sound
+	float unaccounted_damage = damage_dealt_total - damage_dealt_total_prev;
+
+	if (unaccounted_damage > 0 && autocvar_cl_hitsound > 0 && time - hit_time > autocvar_cl_hitsound_antispam_time)
+	{
+		// customizable gradient function that crosses (0,a), (c,1) and asymptotically approaches b
+		float a, b, c, x;
+		a = autocvar_cl_hitsound_max_pitch;
+		b = autocvar_cl_hitsound_min_pitch;
+		c = autocvar_cl_hitsound_nom_damage;
+		x = unaccounted_damage;
+		float pitch_shift = (b*x*(a-1) + a*c*(1-b)) / (x*(a-1) + c*(1-b));
+		
+		// if sound variation is disabled, set pitch_shift to 1
+		if (autocvar_cl_hitsound == 1)
+		{
+			pitch_shift = 1;
+		}
+		
+		// if pitch shift is reversed, mirror in (max-min)/2 + min
+		if (autocvar_cl_hitsound == 3)
+		{
+			float mirror_value = (a-b)/2 + b;
+			pitch_shift = mirror_value + (mirror_value - pitch_shift);
+		}
+		
+		dprint("dmg total (dmg): ", ftos(damage_dealt_total), " (+", ftos(unaccounted_damage), "), pitch shift: ", ftos(pitch_shift), "\n");
+		
+		// todo: avoid very long and very short sounds from wave stretching using different sound files? seems unnecessary
+		// todo: normalize sound pressure levels? seems unnecessary
+		
+		// scale to fit function interface
+		float param_pitch_shift = pitch_shift * 100;
+		
+		// play sound
+		if(time - hit_time < MAX_TIME_DIFF) // don't play the sound if it's too old.
+			sound7(world, CH_INFO, "misc/hit.wav", VOL_BASE, ATTN_NONE, param_pitch_shift, 0);
+		
+		// track damage accounted for
+		damage_dealt_total_prev = damage_dealt_total;
+	}
+	else if (autocvar_cl_hitsound == 0)
+	{
+		// forget the damage to prevent hitsound when enabling it
+		damage_dealt_total_prev = damage_dealt_total;
+	}
+	
 	typehit_time = getstatf(STAT_TYPEHIT_TIME);
 	if(typehit_time > nextsound_typehit_time)
 	{
 		if(time - typehit_time < MAX_TIME_DIFF) // don't play the sound if it's too old.
 			sound(world, CH_INFO, "misc/typehit.wav", VOL_BASE, ATTEN_NONE);
-
 		nextsound_typehit_time = time + autocvar_cl_hitsound_antispam_time;
 	}
 
@@ -1463,10 +1521,12 @@ void CSQC_UpdateView(float w, float h)
 				wcross_scale += sin(pickup_crosshair_size) * autocvar_crosshair_pickup;
 			}
 
+			// todo: make crosshair hit indication dependent on damage dealt
 			if(autocvar_crosshair_hitindication)
 			{
 				vector hitindication_color = ((autocvar_crosshair_color_special == 1) ? stov(autocvar_crosshair_hitindication_per_weapon_color) : stov(autocvar_crosshair_hitindication_color));
 
+				if(unaccounted_damage)
 				if(hitindication_crosshair_time < hit_time)
 				{
 					if(time - hit_time < MAX_TIME_DIFF) // don't trigger the animation if it's too old

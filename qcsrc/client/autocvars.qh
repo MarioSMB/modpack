@@ -414,6 +414,9 @@ float autocvar_vid_conwidth;
 float autocvar_vid_pixelheight;
 float autocvar_viewsize;
 float autocvar_cl_hitsound;
+var float autocvar_cl_hitsound_min_pitch = 0.95; // minimal difference in minsta
+var float autocvar_cl_hitsound_max_pitch = 2;
+var float autocvar_cl_hitsound_nom_damage = 80;
 float autocvar_cl_hitsound_antispam_time;
 var float autocvar_cl_eventchase_death = 1;
 var float autocvar_cl_eventchase_nexball = 1;

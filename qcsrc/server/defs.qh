@@ -155,7 +155,7 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 .float		dmgtime;
 
 .float		killcount;
-.float hitsound, typehitsound;
+.float damage_dealt, typehitsound;
 
 .float watersound_finished;
 .float iscreature;
@@ -541,6 +541,9 @@ string matchid;
 
 .float hit_time;
 .float typehit_time;
+
+#define DAMAGE_DEALT_TOTAL_ROLLOVER_POINT 500000.0f
+.float damage_dealt_total; 
 
 .float stat_leadlimit;
 

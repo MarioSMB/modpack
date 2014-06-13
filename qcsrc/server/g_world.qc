@@ -793,6 +793,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_WEAPON_CLIPSIZE, AS_INT, clip_size);
 	addstat(STAT_LAST_PICKUP, AS_FLOAT, last_pickup);
 	addstat(STAT_HIT_TIME, AS_FLOAT, hit_time);
+	addstat(STAT_DAMAGE_DEALT_TOTAL, AS_INT, damage_dealt_total);
 	addstat(STAT_TYPEHIT_TIME, AS_FLOAT, typehit_time);
 	addstat(STAT_LAYED_MINES, AS_INT, minelayer_mines);
 
@@ -2222,16 +2223,37 @@ void EndFrame()
 		{
 			if(self.enemy.typehitsound)
 				self.typehit_time = time;
-			else if(self.enemy.hitsound)
+			else if(self.enemy.damage_dealt)
+			{
 				self.hit_time = time;
+				self.damage_dealt_total += self.enemy.damage_dealt;
+			}
 		}
 		else
 		{
 			if(self.typehitsound)
 				self.typehit_time = time;
-			else if(self.hitsound)
+			else if(self.damage_dealt)
+			{
 				self.hit_time = time;
+				self.damage_dealt_total += self.damage_dealt;
+			}
 		}
+
+		// prevent damage_dealt_total overflow and float inaccuaries
+		if (self.damage_dealt_total > DAMAGE_DEALT_TOTAL_ROLLOVER_POINT)
+		{
+			if(IS_SPEC(self))
+				self.damage_dealt_total = self.enemy.damage_dealt;
+			else
+				self.damage_dealt_total = self.damage_dealt;
+		}
+
+		// these only count damage from this frame, so reset
+		if(self.enemy.damage_dealt)
+			self.enemy.damage_dealt = 0;
+		if(self.damage_dealt)
+			self.damage_dealt = 0;
 	}
 	altime = time + frametime * (1 + autocvar_g_antilag_nudge);
 	// add 1 frametime because after this, engine SV_Physics
@@ -2241,7 +2263,6 @@ void EndFrame()
 	// needed!
 	FOR_EACH_CLIENT(self)
 	{
-		self.hitsound = FALSE;
 		self.typehitsound = FALSE;
 		antilag_record(self, altime);
 	}
