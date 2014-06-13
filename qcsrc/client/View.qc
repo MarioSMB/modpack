@@ -818,7 +818,7 @@ void CSQC_UpdateView(float w, float h)
 		fovlock = -1;
 
 	if(autocvar_cl_orthoview) { setproperty(VF_FOV, GetOrthoviewFOV(ov_worldmin, ov_worldmax, ov_mid, ov_org)); }
-	else if(fovlock > 0) { setproperty(VF_FOV, GetCurrentFov(fovlock)); }
+	else if(fovlock > 0 && autocvar_cl_specfov) { setproperty(VF_FOV, GetCurrentFov(fovlock)); }
 	else { setproperty(VF_FOV, GetCurrentFov(fov)); }
 
 	float tempcamera = FALSE;
