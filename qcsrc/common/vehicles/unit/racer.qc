@@ -33,6 +33,8 @@ float autocvar_g_vehicle_racer_springlength;
 float autocvar_g_vehicle_racer_upforcedamper;
 float autocvar_g_vehicle_racer_friction;
 
+var float autocvar_g_vehicle_racer_water_time = 5;
+
 float autocvar_g_vehicle_racer_hovertype;
 float autocvar_g_vehicle_racer_hoverpower;
 
@@ -298,7 +300,7 @@ float racer_frame()
 	vehicles_painframe();
 
 	if(pointcontents(racer.origin) != CONTENT_WATER)
-		racer.air_finished = time + 5;
+		racer.air_finished = time + autocvar_g_vehicle_racer_water_time;
 
 	if(racer.deadflag != DEAD_NO)
 	{
