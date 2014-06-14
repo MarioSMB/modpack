@@ -1069,27 +1069,9 @@ void ctf_Reset()
 void ctf_Use()
 {
 	if(self.ctf_status != FLAG_BASE) { return; }
-	
-	entity flag;
-	float flag_cnt = 0;
-	
-	for(flag = ctf_worldflaglist; flag; flag = flag.ctf_worldflagnext)
-	{
-		if(flag != self)
-		if(SAME_TEAM(flag, self))
-		if(flag.active == ACTIVE_ACTIVE)
-			++flag_cnt;
-	}
-
-	if(self.active == ACTIVE_ACTIVE)
-	if(flag_cnt < 1)
-	{
-		dprint("ctf_Use: Unable to deactivate flag (not enough active flags on the map)\n");
-		return;
-	}
 
 	self.active = ((self.active) ? ACTIVE_NOT : ACTIVE_ACTIVE);
-	
+
 	if(self.active == ACTIVE_ACTIVE)
 		WaypointSprite_Ping(self.wps_flagbase);
 }
