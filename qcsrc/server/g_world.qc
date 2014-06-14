@@ -2234,9 +2234,6 @@ void EndFrame()
 			else if(self.damage_dealt)
 				self.damage_dealt_total = self.damage_dealt;
 		}
-
-		// these only count damage from this frame, so reset
-		self.damage_dealt = 0;
 	}
 	altime = time + frametime * (1 + autocvar_g_antilag_nudge);
 	// add 1 frametime because after this, engine SV_Physics
@@ -2247,6 +2244,7 @@ void EndFrame()
 	FOR_EACH_CLIENT(self)
 	{
 		self.typehitsound = FALSE;
+		self.damage_dealt = 0;
 		antilag_record(self, altime);
 	}
 	FOR_EACH_MONSTER(self)
