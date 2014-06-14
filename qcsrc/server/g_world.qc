@@ -2218,35 +2218,25 @@ void EndFrame()
 	float altime;
 	FOR_EACH_REALCLIENT(self)
 	{
+		self.damage_dealt_total = 0;
+	
 		if(IS_SPEC(self))
 		{
 			if(self.enemy.typehitsound)
 				self.typehit_time = time;
 			else if(self.enemy.damage_dealt)
-				self.damage_dealt_total += self.enemy.damage_dealt;
+				self.damage_dealt_total = self.enemy.damage_dealt;
 		}
 		else
 		{
 			if(self.typehitsound)
 				self.typehit_time = time;
 			else if(self.damage_dealt)
-				self.damage_dealt_total += self.damage_dealt;
-		}
-
-		// prevent damage_dealt_total overflow and float inaccuaries
-		if (self.damage_dealt_total > DAMAGE_DEALT_TOTAL_ROLLOVER_POINT)
-		{
-			if(IS_SPEC(self))
-				self.damage_dealt_total = self.enemy.damage_dealt;
-			else
 				self.damage_dealt_total = self.damage_dealt;
 		}
 
 		// these only count damage from this frame, so reset
-		if(self.enemy.damage_dealt)
-			self.enemy.damage_dealt = 0;
-		if(self.damage_dealt)
-			self.damage_dealt = 0;
+		self.damage_dealt = 0;
 	}
 	altime = time + frametime * (1 + autocvar_g_antilag_nudge);
 	// add 1 frametime because after this, engine SV_Physics

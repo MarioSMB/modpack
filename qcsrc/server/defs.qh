@@ -541,7 +541,6 @@ string matchid;
 
 .float typehit_time;
 
-#define DAMAGE_DEALT_TOTAL_ROLLOVER_POINT 500000.0f
 .float damage_dealt_total; 
 
 .float stat_leadlimit;
