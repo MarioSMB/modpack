@@ -18,6 +18,8 @@ float mv_top2_alpha;
 vector mv_mousepos;
 float mv_selection;
 float mv_columns;
+float mv_mouse_selection;
+float mv_selection_keyboard;
 
 float gametypevote;
 string mapvote_choosenmap;
@@ -242,10 +244,10 @@ vector MapVote_GridVec(vector gridspec, float i, float m)
 
 float MapVote_Selection(vector topleft, vector cellsize, float rows, float columns)
 {
-	float cell;
+
 	float c, r;
 
-	cell = -1;
+	mv_mouse_selection = -1;
 
 	for (r = 0; r < rows; ++r)
 		for (c = 0; c < columns; ++c)
@@ -255,18 +257,21 @@ float MapVote_Selection(vector topleft, vector cellsize, float rows, float colum
 				mv_mousepos_y >= topleft_y + cellsize_y *  r &&
 				mv_mousepos_y <= topleft_y + cellsize_y * (r + 1))
 			{
-				cell = r * columns + c;
+				mv_mouse_selection = r * columns + c;
 				break;
 			}
 		}
 
-	if (cell >= mv_num_maps)
-		cell = -1;
+	if (mv_mouse_selection >= mv_num_maps)
+		mv_mouse_selection = -1;
 
-	if (mv_abstain && cell < 0)
-		return mv_num_maps;
+	if (mv_abstain && mv_mouse_selection < 0)
+		mv_mouse_selection = mv_num_maps;
 
-	return cell;
+	if ( mv_selection_keyboard )
+		return mv_selection;
+	
+	return mv_mouse_selection;
 }
 
 void MapVote_Draw()
@@ -285,10 +290,14 @@ void MapVote_Draw()
 
 	if (!autocvar_hud_cursormode)
 	{
-		mv_mousepos = mv_mousepos + getmousepos();
+		vector mpos = mv_mousepos + getmousepos();
+		mpos_x = bound(0, mpos_x, vid_conwidth);
+		mpos_y = bound(0, mpos_y, vid_conheight);
+		
+		if ( mpos_x != mv_mousepos_x || mpos_y != mv_mousepos_y )
+			mv_selection_keyboard = 0;
+		mv_mousepos = mpos;
 
-		mv_mousepos_x = bound(0, mv_mousepos_x, vid_conwidth);
-		mv_mousepos_y = bound(0, mv_mousepos_y, vid_conheight);
 	}
 
 	center = (vid_conwidth - 1)/2;
@@ -500,6 +509,7 @@ void MapVote_Init()
 	if(autocvar_hud_cursormode) { setcursormode(1); }
 	else { mv_mousepos = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight; }
 	mv_selection = -1;
+	mv_selection_keyboard = 0;
 
 	for(n_ssdirs = 0; ; ++n_ssdirs)
 	{
@@ -666,6 +676,7 @@ float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	{
 		mv_mousepos_x = nPrimary;
 		mv_mousepos_y = nSecondary;
+		mv_selection_keyboard = 0;
 		return true;
 	}
 
@@ -693,26 +704,40 @@ float MapVote_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		case K_KP_0: localcmd("\nimpulse 10\n"); return true;
 
 		case K_RIGHTARROW:
-			MapVote_SendChoice(MapVote_MoveRight(mv_ownvote));
+			mv_selection_keyboard = 1;
+			mv_selection = MapVote_MoveRight(mv_selection);
 			return true;
 		case K_LEFTARROW:
-			MapVote_SendChoice(MapVote_MoveLeft(mv_ownvote));
+			mv_selection_keyboard = 1;
+			mv_selection = MapVote_MoveLeft(mv_selection);
 			return true;
 		case K_DOWNARROW:
-			MapVote_SendChoice(MapVote_MoveDown(mv_ownvote));
+			mv_selection_keyboard = 1;
+			mv_selection = MapVote_MoveDown(mv_selection);
 			return true;
 		case K_UPARROW:
-			MapVote_SendChoice(MapVote_MoveUp(mv_ownvote));
+			mv_selection_keyboard = 1;
+			mv_selection = MapVote_MoveUp(mv_selection);
+			return true;
+		case K_KP_ENTER:
+		case K_ENTER:
+		case K_SPACE:
+			if ( mv_selection_keyboard )
+				MapVote_SendChoice(mv_selection);
 			return true;
 	}
 
 	if (nPrimary == K_MOUSE1)
+	{
+		mv_selection_keyboard = 0;
+		mv_selection = mv_mouse_selection;
 		if (mv_selection >= 0)
 		{
 			imp = min(mv_selection + 1, mv_num_maps);
 			localcmd(strcat("\nimpulse ", ftos(imp), "\n"));
 			return true;
 		}
+	}
 
 	return false;
 }
