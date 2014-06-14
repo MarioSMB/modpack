@@ -265,7 +265,7 @@ void Ent_Projectile()
 	if(f & 2)
 	{
 		string rm_suffix = strcat("rocketminsta_laser_", Static_Team_ColorName_Lower(self.team));
-		if(particleeffectnum(rm_suffix) < 0) { rm_suffix = "TR_NEXUIZPLASMA"; }
+		if(particleeffectnum(rm_suffix) < 0 || Team_TeamToNumber(self.team) == -1) { rm_suffix = "TR_NEXUIZPLASMA"; }
 
 		self.cnt = ReadByte();
 
@@ -311,8 +311,8 @@ void Ent_Projectile()
 			case PROJECTILE_WAKIROCKET:   setmodel(self, "models/vehicles/rocket01.md3");  self.traileffect = particleeffectnum("wakizashi_rocket_thrust"); break;
 			case PROJECTILE_WAKICANNON:   setmodel(self, "models/laser.mdl");  self.traileffect = particleeffectnum(""); break;
 
-			case PROJECTILE_BUMBLE_GUN: setmodel(self, "models/elaser.mdl");self.traileffect = ((particleeffectnum("rocketminsta_laser_neutral") >= 0) ? particleeffectnum("rocketminsta_laser_neutral") : particleeffectnum("TR_NEXUIZPLASMA")); break;
-			case PROJECTILE_BUMBLE_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = ((particleeffectnum("rocketminsta_laser_neutral") >= 0) ? particleeffectnum("rocketminsta_laser_neutral") : particleeffectnum("TR_NEXUIZPLASMA")); break;
+			case PROJECTILE_BUMBLE_GUN: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
+			case PROJECTILE_BUMBLE_BEAM: setmodel(self, "models/elaser.mdl");self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
 
 			case PROJECTILE_RPC: setmodel(self, "models/weapons/ok_rocket.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
 			case PROJECTILE_CANNONBALL: setmodel(self, "models/sphere/sphere.md3");self.traileffect = particleeffectnum("TR_ROCKET"); break;
