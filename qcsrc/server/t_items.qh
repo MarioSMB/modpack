@@ -17,24 +17,12 @@ const      float IT_STRENGTH                  =    8192;
 const      float IT_INVINCIBLE                =   16384;
 const      float IT_HEALTH                    =   32768;
 const      float IT_SUPERCELLS                =   8388608;
+const      float IT_PLASMA                   =   16777216;
 
 // shared value space (union):
 	// for items:
 	WANT_CONST float IT_KEY1                  =  131072;
 	WANT_CONST float IT_KEY2                  =  262144;
-	// for players:
-	const      float IT_RED_FLAG_TAKEN        =   32768;
-	const      float IT_RED_FLAG_LOST         =   65536;
-	const      float IT_RED_FLAG_CARRYING     =   98304;
-	const      float IT_BLUE_FLAG_TAKEN       =  131072;
-	const      float IT_BLUE_FLAG_LOST        =  262144;
-	const      float IT_BLUE_FLAG_CARRYING    =  393216;
-	const      float IT_YELLOW_FLAG_TAKEN     = 524288;
-	const      float IT_YELLOW_FLAG_LOST      = 1048576;
-	const      float IT_YELLOW_FLAG_CARRYING  = 1572864;
-	const      float IT_PINK_FLAG_TAKEN       = 2097152;
-	const      float IT_PINK_FLAG_LOST        = 4194304;
-	const      float IT_PINK_FLAG_CARRYING    = 6291456;
 // end
 
 const      float IT_5HP                       =  524288;
@@ -43,7 +31,7 @@ const      float IT_ARMOR_SHARD               = 2097152;
 const      float IT_ARMOR                     = 4194304;
 
 // item masks
-const      float IT_AMMO                      =    3968; // IT_FUEL | IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS;
+const      float IT_AMMO                      =    3968; // IT_FUEL | IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_PLASMA;
 const      float IT_PICKUPMASK                =      51; // IT_FUEL_REGEN | IT_JETPACK | IT_UNLIMITED_AMMO; // strength and invincible are handled separately
 const      float IT_UNLIMITED_AMMO            =       3; // IT_UNLIMITED_SUPERWEAPONS | IT_UNLIMITED_WEAPON_AMMO;
 

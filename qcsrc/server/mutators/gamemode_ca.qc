@@ -223,6 +223,7 @@ MUTATOR_HOOKFUNCTION(ca_SetStartItems)
 	start_ammo_nails   = warmup_start_ammo_nails   = cvar("g_lms_start_ammo_nails");
 	start_ammo_rockets = warmup_start_ammo_rockets = cvar("g_lms_start_ammo_rockets");
 	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_lms_start_ammo_cells");
+	start_ammo_plasma  = warmup_start_ammo_plasma  = cvar("g_lms_start_ammo_plasma");
 	start_ammo_fuel    = warmup_start_ammo_fuel    = cvar("g_lms_start_ammo_fuel");
 
 	return 0;

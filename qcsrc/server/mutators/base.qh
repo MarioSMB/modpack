@@ -116,7 +116,7 @@ MUTATOR_HOOKABLE(WantWeapon);
 		entity other;
 
 MUTATOR_HOOKABLE(SetStartItems);
-	// adjusts {warmup_}start_{items,weapons,ammo_{cells,rockets,nails,shells,fuel}}
+	// adjusts {warmup_}start_{items,weapons,ammo_{cells,plasma,rockets,nails,shells,fuel}}
 
 MUTATOR_HOOKABLE(BuildMutatorsString);
 	// appends ":mutatorname" to ret_string for logging

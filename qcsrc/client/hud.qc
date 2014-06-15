@@ -763,6 +763,7 @@ void HUD_Weapons(void)
 						case ammo_rockets: ammo_full = autocvar_hud_panel_weapons_ammo_full_rockets; break;
 						case ammo_supercells:
 						case ammo_cells:   ammo_full = autocvar_hud_panel_weapons_ammo_full_cells;   break;
+						case ammo_plasma:  ammo_full = autocvar_hud_panel_weapons_ammo_full_plasma;  break;
 						case ammo_fuel:    ammo_full = autocvar_hud_panel_weapons_ammo_full_fuel;    break;
 						default: ammo_full = 60;
 					}
@@ -2018,7 +2019,7 @@ void HUD_Radar_Mouse()
 		HUD_Radar_Hide_Maximized();
 		return;
 	}
-	
+
 
 	const vector cursorsize = '32 32 0';
 	drawpic(mousepos-'8 4 0', strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', 0.8, DRAWFLAG_NORMAL);
@@ -2043,7 +2044,7 @@ void HUD_Radar(void)
 			}
 		}
 	}
-	
+
 	if ( hud_panel_radar_temp_hidden )
 		return;
 
@@ -2200,7 +2201,7 @@ void HUD_Radar(void)
 
 	for(tm = world; (tm = find(tm, classname, "radarlink")); )
 		draw_teamradar_link(tm.origin, tm.velocity, tm.team);
-	
+
 	vector coord;
 	vector brightcolor;
 	for(tm = world; (tm = findflags(tm, teamradar_icon, 0xFFFFFF)); )
@@ -2218,7 +2219,7 @@ void HUD_Radar(void)
 				drawpic(coord - '8 8 0', "gfx/teamradar_icon_glow", '16 16 0', brightcolor, panel_fg_alpha, 0);
 			}
 		}
-		
+
 		draw_teamradar_icon(tm.origin, tm.teamradar_icon, tm, tm.teamradar_color, panel_fg_alpha);
 	}
 	for(tm = world; (tm = find(tm, classname, "entcs_receiver")); )
@@ -2230,19 +2231,19 @@ void HUD_Radar(void)
 	draw_teamradar_player(view_origin, view_angles, '1 1 1');
 
 	drawresetcliparea();
-	
+
 	if ( hud_panel_radar_mouse )
 	{			
 		string message = "Click to select teleport destination";
-		
+
 		if ( getstati(STAT_HEALTH) <= 0 )
 		{
 			message = "Click to select spawn location";
 		}
-		
+
 		drawcolorcodedstring(pos + '0.5 0 0' * (mySize_x - stringwidth(message, TRUE, hud_fontsize)) - '0 1 0' * hud_fontsize_y * 2,
 							 message, hud_fontsize, hud_panel_radar_foreground_alpha, DRAWFLAG_NORMAL);
-		
+
 		hud_panel_radar_bottom = pos_y + mySize_y + hud_fontsize_y;
 	}
 }
@@ -5091,12 +5092,12 @@ void HUD_CenterPrint (void)
 		hud_fade_alpha = 1 - autocvar__menu_alpha;
 	}
 	HUD_Panel_UpdateCvars();
-	
+
 	if ( HUD_Radar_Clickable() )
 	{
 		if (hud_panel_radar_bottom >= 0.96 * vid_conheight)
 			return;
-		
+
 		panel_pos = eY * hud_panel_radar_bottom + eX * 0.5 * (vid_conwidth - panel_size_x);
 		panel_size_y = min(panel_size_y, vid_conheight - hud_panel_radar_bottom);
 	}

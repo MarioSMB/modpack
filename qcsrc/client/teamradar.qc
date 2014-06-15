@@ -51,15 +51,15 @@ vector teamradar_2dcoord_to_texcoord(vector in)
 {
 	vector out;
 	out = in;
-	
+
 	out -= teamradar_origin2d;
 	if(v_flipped)
 		out_x = -out_x;
 	out = out / teamradar_size;
-	
+
 	out_y = - out_y; // screen space is reversed
 	out = rotate(out, -teamradar_angle * DEG2RAD);
-	
+
 	out += teamradar_origin3d_in_texcoord;
 
 	return out;

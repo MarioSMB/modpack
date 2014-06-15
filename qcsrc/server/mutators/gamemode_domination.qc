@@ -60,7 +60,7 @@ void dompoint_captured ()
 		PlayerScore_Add(self.enemy, SP_DOM_TAKES, 1);
 	else
 		self.enemy = world;
-		
+
 	if(dom_noise[self.team] != "")
 	if(self.enemy)
 		sound(self.enemy, CH_TRIGGER, dom_noise[self.team], VOL_BASE, ATTEN_NORM);
@@ -299,11 +299,11 @@ void dom_ControlPointTouch()
 	
 	//if(self.cnt == -1 && !self.team)
 		self.dom_unlock_progress = bound(0, self.dom_unlock_progress + frametime * autocvar_g_domination_controlpoint_unlock_speed, 1);
-		
+
 	self.pointupdatetime = time;
 	self.dom_capturingplayer = toucher;
 	toucher.dom_unlock_progress = self.dom_unlock_progress;
-	
+
 	if(self.dom_unlock_progress >= 1)
 	{
 		nades_GiveBonus(toucher, autocvar_g_nades_bonus_score_medium);
@@ -320,13 +320,13 @@ void dom_ControlPointTouch()
 		self.skin = dom_skin[self.team];
 		self.model = dom_model[self.team];
 		self.modelindex = dom_modelindex[self.team];
-		
+
 		self.dom_lastmessage = time + 2; // no spam
 
 		self.enemy = toucher; // individual player scoring
 		self.enemy_playerid = toucher.playerid;
 		dompoint_captured();
-		
+
 		dom_Deactivate(self, dom_Cooldown(self));
 		entity e;
 		for(e = world; (e = find(e, classname, "dom_controlpoint")) != world; )
@@ -346,7 +346,7 @@ void dom_DelayedControlPointSetup(void) // called after a control point is place
 	self.noise = dom_noise[self.team]; // capture sound
 	self.noise1 = dom_noise1[self.team]; // global capture sound
 	self.skin = dom_skin[self.team];
-	
+
 	// appearence
 	//setmodel(self, self.model);
 	self.effects = self.effects | EF_LOWPRECISION;
@@ -364,7 +364,7 @@ void dom_Reset()
 	// reset team
 	self.team = 0;
 	self.cnt = -1;
-	
+
 	// model setup
 	self.model = dom_model[self.team];
 	self.modelindex = dom_modelindex[self.team];
@@ -375,7 +375,7 @@ void dom_Reset()
 	// main setup
 	self.think = dom_ControlPointThink;
 	self.nextthink = time;
-	
+
 	// waypoint setup
 	WaypointSprite_UpdateSprites(self.sprite, "dom-neut", "", "");
 	WaypointSprite_UpdateTeamRadar(self.sprite, RADARICON_DOMPOINT, '0 1 1');
@@ -521,7 +521,7 @@ void Domination_RoundStart()
 			vehicles_exit(VHEF_RELEASE);
 		PutClientInServer();
 	}
-	
+
 	self = oldself;
 }
 

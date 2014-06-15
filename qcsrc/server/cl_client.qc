@@ -72,7 +72,7 @@ float ClientData_Send(entity to, float sf)
 		WriteAngle(MSG_ENTITY, e.v_angle_x);
 		WriteAngle(MSG_ENTITY, e.v_angle_y);
 	}
-	
+
 	if(sf & 16)
 	{
 		float specs = CountSpectators(e, to);
@@ -177,12 +177,12 @@ void FixPlayermodel();
 void PutObserverInServer (void)
 {
 	entity spot;
-	
+
 	entity oldenemy = self.enemy;
 	self.enemy = world;
 	if(oldenemy)
 		ClientData_Touch(oldenemy);
-	
+
     self.hud = HUD_NORMAL;
 	
 	if(autocvar_g_observer_glowtrails)
@@ -555,6 +555,7 @@ void PutClientInServer (void)
 			self.ammo_nails = warmup_start_ammo_nails;
 			self.ammo_rockets = warmup_start_ammo_rockets;
 			self.ammo_cells = warmup_start_ammo_cells;
+			self.ammo_plasma = warmup_start_ammo_plasma;
 			self.ammo_fuel = warmup_start_ammo_fuel;
 			self.ammo_supercells = 0; // never start with super cells
 			self.health = warmup_start_health;
@@ -567,6 +568,7 @@ void PutClientInServer (void)
 			self.ammo_nails = start_ammo_nails;
 			self.ammo_rockets = start_ammo_rockets;
 			self.ammo_cells = start_ammo_cells;
+			self.ammo_plasma = start_ammo_plasma;
 			self.ammo_fuel = start_ammo_fuel;
 			self.ammo_supercells = 0; // never start with super cells
 			self.health = start_health;
@@ -1363,7 +1365,7 @@ void ClientDisconnect (void)
 		print("Warning: ClientDisconnect without ClientConnect\n");
 		return;
 	}
-	
+
 	entity oldenemy = self.enemy;
 	self.enemy = world;
 	if(oldenemy) { ClientData_Touch(oldenemy); }
@@ -1704,7 +1706,7 @@ void player_regen (void)
 		mina = autocvar_g_balance_armor_regenstable;
 		limith = autocvar_g_balance_health_limit;
 		limita = autocvar_g_balance_armor_limit;
-		
+
 		max_mod = regen_mod_max;
 		regen_mod = regen_mod_regen;
 		rot_mod = regen_mod_rot;
@@ -1816,6 +1818,8 @@ void SpectateCopy(entity spectatee) {
 	self.armortype = spectatee.armortype;
 	self.armorvalue = spectatee.armorvalue;
 	self.ammo_cells = spectatee.ammo_cells;
+	self.ammo_plasma = spectatee.ammo_plasma;
+	self.ammo_supercells = spectatee.ammo_supercells;
 	self.ammo_shells = spectatee.ammo_shells;
 	self.ammo_nails = spectatee.ammo_nails;
 	self.ammo_rockets = spectatee.ammo_rockets;
@@ -2406,7 +2410,7 @@ void PlayerPreThink (void)
 	if(self.frozen == 2)
 	{
 		self.revive_progress = bound(0, self.revive_progress + frametime * self.revive_speed, 1);
-		self.health = max(1, self.revive_progress * autocvar_g_balance_health_start);
+		self.health = max(1, self.revive_progress * start_health);
 		self.iceblock.alpha = bound(0.2, 1 - self.revive_progress, 1);
 
 		if(self.revive_progress >= 1)
@@ -2415,7 +2419,7 @@ void PlayerPreThink (void)
 	else if(self.frozen == 3)
 	{
 		self.revive_progress = bound(0, self.revive_progress - frametime * self.revive_speed, 1);
-		self.health = max(0, autocvar_g_nades_ice_health + (autocvar_g_balance_health_start-autocvar_g_nades_ice_health) * self.revive_progress );
+		self.health = max(0, autocvar_g_nades_ice_health + (start_health-autocvar_g_nades_ice_health) * self.revive_progress );
 		
 		if(self.health < 1)
 		{

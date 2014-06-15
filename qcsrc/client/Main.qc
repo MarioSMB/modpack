@@ -601,20 +601,20 @@ void Ent_ClientData()
 	}
 	else
 		angles_held_status = 0;
-		
+
 	if(f & 16)
 	{
 		fovlock = ReadByte();
 		num_spectators = ReadByte();
-		
+
 		if(fovlock <= 0)
 			fovlock = -1;
-		
+
 		float i, slot;
-		
+
 		for(i = 0; i < MAX_SPECTATORS; ++i)
 			spectatorlist[i] = 0; // reset list first
-		
+
 		for(i = 0; i < num_spectators; ++i)
 		{
 			slot = ReadByte();
@@ -746,11 +746,11 @@ void ent_jailcamera()
 		self.origin_y = ReadCoord();
 		self.origin_z = ReadCoord();
 		setorigin(self, self.origin);
-		
+
 		self.angles_x = ReadAngle();
 		self.angles_y = ReadAngle();
 		self.angles_z = 0;
-		
+
 		self.classname = "jailcamera";
 		self.jb_camera_active = FALSE;
 	}

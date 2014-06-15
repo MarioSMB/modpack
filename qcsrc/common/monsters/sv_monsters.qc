@@ -96,7 +96,7 @@ float monster_isvalidtarget (entity targ, entity ent)
 
 	if (targ.frozen)
 		return FALSE; // ignore frozen
-		
+
 	if(targ.alpha != 0 && targ.alpha < 0.5)
 		return FALSE; // invisible
 
@@ -132,7 +132,7 @@ entity FindTarget (entity ent)
 			vector head_center = CENTER_OR_VIEWOFS(head);
 			//vector head_center = WarpZone_UnTransformOrigin(head, CENTER_OR_VIEWOFS(head));
 			vector ent_center = CENTER_OR_VIEWOFS(ent);
-			
+
 			traceline(ent_center, head_center, MOVE_NORMAL, ent);
 
 			if(trace_ent == head)
@@ -539,7 +539,7 @@ vector monster_pickmovetarget(entity targ)
 		{
 			vector pos;
 			self.monster_movestate = MONSTER_MOVE_WANDER;
-			
+
 			if(targ)
 			{
 				self.last_trace = time + 0.5;

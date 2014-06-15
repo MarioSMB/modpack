@@ -444,7 +444,7 @@ void GrapplingHookFrame()
 		// offhand hook controls
 		if(self.BUTTON_HOOK)
 		{
-			if (!(self.hook || (self.hook_state & HOOK_WAITING_FOR_RELEASE)))
+			if (!(self.hook || (self.hook_state & HOOK_WAITING_FOR_RELEASE)) && (time > self.hook_refire))
 			{
 				self.hook_state |= HOOK_FIRING;
 				self.hook_state |= HOOK_WAITING_FOR_RELEASE;
@@ -487,6 +487,7 @@ void GrapplingHookFrame()
 			RemoveGrapplingHook(self);
 		FireGrapplingHook();
 		self.hook_state &= ~HOOK_FIRING;
+		self.hook_refire = max(self.hook_refire, time + autocvar_g_balance_grapplehook_refire * W_WeaponRateFactor());
 	}
 	else if(self.hook_state & HOOK_REMOVING)
 	{

@@ -570,7 +570,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 	if(targ.frozen)
 		return;
 
-	float targ_maxhealth = ((IS_MONSTER(targ)) ? targ.max_health : autocvar_g_balance_health_start);
+	float targ_maxhealth = ((IS_MONSTER(targ)) ? targ.max_health : start_health);
 
 	targ.frozen = frozen_type;
 	targ.revive_progress = ((frozen_type == 3) ? 1 : 0);
@@ -612,7 +612,7 @@ void Freeze (entity targ, float freeze_time, float frozen_type, float show_waypo
 void Unfreeze (entity targ)
 {
 	if(targ.frozen && targ.frozen != 3) // only reset health if target was frozen
-		targ.health = ((IS_PLAYER(targ)) ? autocvar_g_balance_health_start : targ.max_health);
+		targ.health = ((IS_PLAYER(targ)) ? start_health : targ.max_health);
 
 	entity head;
 	targ.frozen = 0;

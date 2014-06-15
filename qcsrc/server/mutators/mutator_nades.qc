@@ -990,7 +990,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 	if(n && self.frozen == 3) // OK, there is at least one teammate reviving us
 	{
 		self.revive_progress = bound(0, self.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
-		self.health = max(1, self.revive_progress * autocvar_g_balance_health_start);
+		self.health = max(1, self.revive_progress * start_health);
 
 		if(self.revive_progress >= 1)
 		{

@@ -64,7 +64,7 @@ void NIX_GiveCurrentWeapon()
 
 	if(nix_nextchange != self.nix_lastchange_id) // this shall only be called once per round!
 	{
-		self.ammo_shells = self.ammo_nails = self.ammo_rockets = self.ammo_cells = self.ammo_fuel = 0;
+		self.ammo_shells = self.ammo_nails = self.ammo_rockets = self.ammo_cells = self.ammo_plasma = self.ammo_fuel = 0;
 		
 		if(self.items & IT_UNLIMITED_WEAPON_AMMO)
 		{
@@ -74,6 +74,7 @@ void NIX_GiveCurrentWeapon()
 				case ammo_nails:   self.ammo_nails   = autocvar_g_pickup_nails_max;   break;
 				case ammo_rockets: self.ammo_rockets = autocvar_g_pickup_rockets_max; break;
 				case ammo_cells:   self.ammo_cells   = autocvar_g_pickup_cells_max;   break;
+				case ammo_plasma:  self.ammo_plasma  = autocvar_g_pickup_plasma_max;   break;
 				case ammo_fuel:    self.ammo_fuel    = autocvar_g_pickup_fuel_max;    break;
 			}
 		}
@@ -85,6 +86,7 @@ void NIX_GiveCurrentWeapon()
 				case ammo_nails:   self.ammo_nails   = autocvar_g_balance_nix_ammo_nails;   break;
 				case ammo_rockets: self.ammo_rockets = autocvar_g_balance_nix_ammo_rockets; break;
 				case ammo_cells:   self.ammo_cells   = autocvar_g_balance_nix_ammo_cells;   break;
+				case ammo_plasma:  self.ammo_plasma  = autocvar_g_balance_nix_ammo_plasma;   break;
 				case ammo_fuel:    self.ammo_fuel    = autocvar_g_balance_nix_ammo_fuel;    break;
 			}
 		}
@@ -127,6 +129,7 @@ void NIX_GiveCurrentWeapon()
 			case ammo_nails:   self.ammo_nails   += autocvar_g_balance_nix_ammoincr_nails;   break;
 			case ammo_rockets: self.ammo_rockets += autocvar_g_balance_nix_ammoincr_rockets; break;
 			case ammo_cells:   self.ammo_cells   += autocvar_g_balance_nix_ammoincr_cells;   break;
+			case ammo_plasma:  self.ammo_plasma  += autocvar_g_balance_nix_ammoincr_plasma;   break;
 			case ammo_fuel:    self.ammo_fuel    += autocvar_g_balance_nix_ammoincr_fuel;    break;
 		}
 
@@ -256,6 +259,7 @@ MUTATOR_DEFINITION(mutator_nix)
 		FOR_EACH_PLAYER(e) if(e.deadflag == DEAD_NO)
 		{
 			e.ammo_cells = start_ammo_cells;
+			e.ammo_plasma = start_ammo_plasma;
 			e.ammo_shells = start_ammo_shells;
 			e.ammo_nails = start_ammo_nails;
 			e.ammo_rockets = start_ammo_rockets;

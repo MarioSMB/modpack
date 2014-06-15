@@ -139,6 +139,7 @@ void weapon_defaultspawnfunc(float wpn)
 			case ammo_nails:   self.ammo_nails   = cvar("g_pickup_nails_weapon");   break;
 			case ammo_rockets: self.ammo_rockets = cvar("g_pickup_rockets_weapon"); break;
 			case ammo_cells:   self.ammo_cells   = cvar("g_pickup_cells_weapon");   break;
+			case ammo_plasma:  self.ammo_plasma  = cvar("g_pickup_plasma_weapon");  break;
 			case ammo_fuel:    self.ammo_fuel    = cvar("g_pickup_fuel_weapon");    break;
 		}
 	}

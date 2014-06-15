@@ -2,7 +2,7 @@
 REGISTER_WEAPON(
 /* WEP_##id  */ CRYLINK,
 /* function  */ W_Crylink,
-/* ammotype  */ ammo_cells,
+/* ammotype  */ ammo_plasma,
 /* impulse   */ 6,
 /* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
 /* rating    */ BOT_PICKUP_RATING_MID,

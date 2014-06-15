@@ -402,6 +402,7 @@ string formatmessage(string msg)
 			else if (self.items & IT_NAILS) replacement = "bullets";
 			else if (self.items & IT_ROCKETS) replacement = "rockets";
 			else if (self.items & IT_CELLS) replacement = "cells";
+			else if (self.items & IT_PLASMA) replacement = "plasma";
 			else if (self.items & IT_SUPERCELLS) replacement = "supercells";
 			else replacement = "batteries"; // ;)
 		} else if (escape == "x") {
@@ -605,6 +606,8 @@ float g_pickup_rockets;
 float g_pickup_rockets_max;
 float g_pickup_cells;
 float g_pickup_cells_max;
+float g_pickup_plasma;
+float g_pickup_plasma_max;
 float g_pickup_fuel;
 float g_pickup_fuel_jetpack;
 float g_pickup_fuel_max;
@@ -653,6 +656,7 @@ float start_ammo_shells;
 float start_ammo_nails;
 float start_ammo_rockets;
 float start_ammo_cells;
+float start_ammo_plasma;
 float start_ammo_fuel;
 float start_health;
 float start_armorvalue;
@@ -664,6 +668,7 @@ float warmup_start_ammo_shells;
 float warmup_start_ammo_nails;
 float warmup_start_ammo_rockets;
 float warmup_start_ammo_cells;
+float warmup_start_ammo_plasma;
 float warmup_start_ammo_fuel;
 float warmup_start_health;
 float warmup_start_armorvalue;
@@ -729,6 +734,7 @@ void readplayerstartcvars()
 	start_ammo_nails = 0;
 	start_ammo_rockets = 0;
 	start_ammo_cells = 0;
+	start_ammo_plasma = 0;
 	start_health = cvar("g_balance_health_start");
 	start_armorvalue = cvar("g_balance_armor_start");
 
@@ -839,6 +845,7 @@ void readplayerstartcvars()
 		start_ammo_rockets = 999;
 		start_ammo_shells = 999;
 		start_ammo_cells = 999;
+		start_ammo_plasma = 999;
 		start_ammo_nails = 999;
 		start_ammo_fuel = 999;
 	}
@@ -848,6 +855,7 @@ void readplayerstartcvars()
 		start_ammo_nails = cvar("g_start_ammo_nails");
 		start_ammo_rockets = cvar("g_start_ammo_rockets");
 		start_ammo_cells = cvar("g_start_ammo_cells");
+		start_ammo_plasma = cvar("g_start_ammo_plasma");
 		start_ammo_fuel = cvar("g_start_ammo_fuel");
 	}
 
@@ -916,12 +924,14 @@ void readplayerstartcvars()
 	start_ammo_shells = max(0, start_ammo_shells);
 	start_ammo_nails = max(0, start_ammo_nails);
 	start_ammo_cells = max(0, start_ammo_cells);
+	start_ammo_plasma = max(0, start_ammo_plasma);
 	start_ammo_rockets = max(0, start_ammo_rockets);
 	start_ammo_fuel = max(0, start_ammo_fuel);
 
 	warmup_start_ammo_shells = max(0, warmup_start_ammo_shells);
 	warmup_start_ammo_nails = max(0, warmup_start_ammo_nails);
 	warmup_start_ammo_cells = max(0, warmup_start_ammo_cells);
+	warmup_start_ammo_plasma = max(0, warmup_start_ammo_plasma);
 	warmup_start_ammo_rockets = max(0, warmup_start_ammo_rockets);
 	warmup_start_ammo_fuel = max(0, warmup_start_ammo_fuel);
 }
@@ -1023,6 +1033,8 @@ void readlevelcvars(void)
 	g_pickup_rockets_max = cvar("g_pickup_rockets_max");
 	g_pickup_cells = cvar("g_pickup_cells");
 	g_pickup_cells_max = cvar("g_pickup_cells_max");
+	g_pickup_plasma = cvar("g_pickup_plasma");
+	g_pickup_plasma_max = cvar("g_pickup_plasma_max");
 	g_pickup_fuel = cvar("g_pickup_fuel");
 	g_pickup_fuel_jetpack = cvar("g_pickup_fuel_jetpack");
 	g_pickup_fuel_max = cvar("g_pickup_fuel_max");

@@ -2,7 +2,7 @@
 REGISTER_WEAPON(
 /* WEP_##id  */ VORTEX,
 /* function  */ W_Vortex,
-/* ammotype  */ ammo_cells,
+/* ammotype  */ ammo_plasma,
 /* impulse   */ 7,
 /* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
 /* rating    */ BOT_PICKUP_RATING_HIGH,

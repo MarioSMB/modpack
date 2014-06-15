@@ -4,7 +4,7 @@ REGISTER_WEAPON(
 /* function  */ W_Shockwave,
 /* ammotype  */ ammo_none,
 /* impulse   */ 2,
-/* flags     */ WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN,
+/* flags     */ WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN | WEP_FLAG_CANCLIMB,
 /* rating    */ BOT_PICKUP_RATING_LOW,
 /* color     */ '0.5 0.25 0',
 /* modelname */ "shotguncannon",
@@ -153,8 +153,10 @@ void W_Shockwave_Melee_Think(void)
 		);
 		
 		// draw lightning beams for debugging
-		//te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5); 
-		//te_customflash(targpos, 40,  2, '1 1 1');
+#ifdef DEBUG_SHOCKWAVE
+		te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5); 
+		te_customflash(targpos, 40,  2, '1 1 1');
+#endif
 		
 		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || (trace_ent.flags & FL_MONSTER));
 

@@ -144,7 +144,7 @@ float Invasion_CheckWinner()
 		}
 	}
 
-	if((total_alive_monsters + inv_numkilled) < inv_maxspawned && inv_maxcurrent < inv_maxspawned) // 10 at a time should be plenty
+	if((total_alive_monsters + inv_numkilled) < inv_maxspawned && inv_maxcurrent < inv_maxspawned)
 	{
 		if(time >= inv_lastcheck)
 		{

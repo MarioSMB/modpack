@@ -326,6 +326,7 @@ float autocvar_hud_panel_weapons_ammo;
 float autocvar_hud_panel_weapons_ammo_alpha;
 string autocvar_hud_panel_weapons_ammo_color;
 float autocvar_hud_panel_weapons_ammo_full_cells;
+float autocvar_hud_panel_weapons_ammo_full_plasma;
 float autocvar_hud_panel_weapons_ammo_full_fuel;
 float autocvar_hud_panel_weapons_ammo_full_nails;
 float autocvar_hud_panel_weapons_ammo_full_rockets;

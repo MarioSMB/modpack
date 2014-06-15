@@ -573,6 +573,7 @@ float Item_GiveTo(entity item, entity player)
 	pickedup |= Item_GiveAmmoTo(item, player, ammo_nails, g_pickup_nails_max, ITEM_MODE_NONE);
 	pickedup |= Item_GiveAmmoTo(item, player, ammo_rockets, g_pickup_rockets_max, ITEM_MODE_NONE);
 	pickedup |= Item_GiveAmmoTo(item, player, ammo_cells, g_pickup_cells_max, ITEM_MODE_NONE);
+	pickedup |= Item_GiveAmmoTo(item, player, ammo_plasma, g_pickup_plasma_max, ITEM_MODE_NONE);
 	pickedup |= Item_GiveAmmoTo(item, player, ammo_supercells, g_pickup_cells_max, ITEM_MODE_NONE);
 	pickedup |= Item_GiveAmmoTo(item, player, health, item.max_health, ITEM_MODE_HEALTH);
 	pickedup |= Item_GiveAmmoTo(item, player, armorvalue, item.max_armorvalue, ITEM_MODE_ARMOR);
@@ -786,7 +787,7 @@ float weapon_pickupevalfunc(entity player, entity item)
 		// If I can pick it up
 		if(!item.spawnshieldtime)
 			c = 0;
-		else if(player.ammo_cells || player.ammo_shells || player.ammo_nails || player.ammo_rockets)
+		else if(player.ammo_cells || player.ammo_shells || player.ammo_plasma || player.ammo_nails || player.ammo_rockets)
 		{
 			// Skilled bots will grab more
 			c = bound(0, skill / 10, 1) * 0.5;
@@ -829,7 +830,7 @@ float weapon_pickupevalfunc(entity player, entity item)
 float commodity_pickupevalfunc(entity player, entity item)
 {
 	float c, i;
-	float need_shells = FALSE, need_nails = FALSE, need_rockets = FALSE, need_cells = FALSE, need_fuel = FALSE, need_supercells = FALSE;
+	float need_shells = FALSE, need_nails = FALSE, need_rockets = FALSE, need_cells = FALSE, need_plasma = FALSE, need_fuel = FALSE, need_supercells = FALSE;
 	entity wi;
 	c = 0;
 
@@ -849,6 +850,8 @@ float commodity_pickupevalfunc(entity player, entity item)
 			need_rockets = TRUE;
 		else if(wi.items & IT_CELLS)
 			need_cells = TRUE;
+		else if(wi.items & IT_PLASMA)
+			need_plasma = TRUE;
 		else if(wi.items & IT_FUEL)
 			need_cells = TRUE;
 		else if(wi.items & IT_SUPERCELLS)
@@ -874,6 +877,10 @@ float commodity_pickupevalfunc(entity player, entity item)
 	if (item.ammo_cells)
 	if (player.ammo_cells < g_pickup_cells_max)
 		c = c + max(0, 1 - player.ammo_cells / g_pickup_cells_max);
+	if (need_plasma)
+	if (item.ammo_plasma)
+	if (player.ammo_plasma < g_pickup_plasma_max)
+		c = c + max(0, 1 - player.ammo_plasma / g_pickup_plasma_max);
 	if (need_supercells)
 	if (item.ammo_supercells)
 	if (player.ammo_supercells < g_pickup_cells_max)
@@ -1155,6 +1162,15 @@ void spawnfunc_item_cells (void) {
 	StartItem ("models/items/a_cells.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "cells", IT_CELLS, 0, 0, commodity_pickupevalfunc, 2000);
 }
 
+void spawnfunc_item_plasma()
+{
+	if(!self.ammo_plasma)
+		self.ammo_plasma = g_pickup_plasma;
+	if(!self.pickup_anyway)
+		self.pickup_anyway = g_pickup_ammo_anyway;
+	StartItem ("models/items/a_cells.md3", "misc/itempickup.wav", g_pickup_respawntime_ammo, g_pickup_respawntimejitter_ammo, "plasma", IT_PLASMA, 0, 0, commodity_pickupevalfunc, 2000);
+}
+
 void spawnfunc_item_shells (void) {
 	if(!weaponswapping)
 	if(autocvar_sv_q3acompat_machineshotgunswap)
@@ -1397,6 +1413,7 @@ void spawnfunc_target_items (void)
 		if(self.ammo_nails != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_nails), "nails");
 		if(self.ammo_rockets != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_rockets), "rockets");
 		if(self.ammo_cells != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_cells), "cells");
+		if(self.ammo_plasma != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_plasma), "plasma");
 		if(self.ammo_supercells != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_supercells), "supercells");
 		if(self.ammo_fuel != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.ammo_fuel), "fuel");
 		if(self.health != 0) self.netname = sprintf("%s %s%d %s", self.netname, valueprefix, max(0, self.health), "health");
@@ -1596,6 +1613,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	PREGIVE(e, superweapons_finished);
 	PREGIVE(e, ammo_nails);
 	PREGIVE(e, ammo_cells);
+	PREGIVE(e, ammo_plasma);
 	PREGIVE(e, ammo_supercells);
 	PREGIVE(e, ammo_shells);
 	PREGIVE(e, ammo_rockets);
@@ -1650,6 +1668,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				}
 			case "allammo":
 				got += GiveValue(e, ammo_cells, op, val);
+				got += GiveValue(e, ammo_plasma, op, val);
 				got += GiveValue(e, ammo_supercells, op, val);
 				got += GiveValue(e, ammo_shells, op, val);
 				got += GiveValue(e, ammo_nails, op, val);
@@ -1682,6 +1701,9 @@ float GiveItems(entity e, float beginarg, float endarg)
 				break;
 			case "cells":
 				got += GiveValue(e, ammo_cells, op, val);
+				break;
+			case "plasma":
+				got += GiveValue(e, ammo_plasma, op, val);
 				break;
 			case "supercells":
 				got += GiveValue(e, ammo_supercells, op, val);
@@ -1742,6 +1764,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 	POSTGIVE_VALUE(e, invincible_finished, 1, "misc/powerup_shield.wav", "misc/poweroff.wav");
 	POSTGIVE_VALUE(e, ammo_nails, 0, "misc/itempickup.wav", string_null);
 	POSTGIVE_VALUE(e, ammo_cells, 0, "misc/itempickup.wav", string_null);
+	POSTGIVE_VALUE(e, ammo_plasma, 0, "misc/itempickup.wav", string_null);
 	POSTGIVE_VALUE(e, ammo_supercells, 0, "misc/itempickup.wav", string_null);
 	POSTGIVE_VALUE(e, ammo_shells, 0, "misc/itempickup.wav", string_null);
 	POSTGIVE_VALUE(e, ammo_rockets, 0, "misc/itempickup.wav", string_null);

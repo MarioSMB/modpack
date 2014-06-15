@@ -427,7 +427,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 					}
 
 					if(sound_allowed(MSG_BROADCAST, attacker))
-					if(!(deathtype & WEP_BLASTER) || attacker != self || self.health < 2 * WEP_CVAR_PRI(blaster, damage) * autocvar_g_balance_selfdamagepercent + 1) // WEAPONTODO: create separate limit for pain notification with laser
+					if((self.health < 2 * WEP_CVAR_PRI(blaster, damage) * autocvar_g_balance_selfdamagepercent + 1) || !((get_weaponinfo(DEATH_WEAPONOF(deathtype))).spawnflags & WEP_FLAG_CANCLIMB) || attacker != self) // WEAPONTODO: create separate limit for pain notification with laser
 					if(self.health > 1)
 					// exclude pain sounds for laserjumps as long as you aren't REALLY low on health and would die of the next two
 					{
@@ -635,7 +635,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 //   0 = reject
 //  -1 = fake accept
 {
-	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr;
+	string msgstr, colorstr, cmsgstr, namestr, fullmsgstr, sourcemsgstr, fullcmsgstr, sourcecmsgstr, colorprefix;
 	float flood;
 	var .float flood_field;
 	entity head;
@@ -680,14 +680,19 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	else
 		namestr = source.netname;
 
+	if(strdecolorize(namestr) == namestr)
+		colorprefix = "^3";
+	else
+		colorprefix = "^7";
+
 	if(msgin != "")
 	{
 		if(privatesay)
 		{
-			msgstr = strcat("\{1}\{13}* ^3", namestr, "^3 tells you: ^7");
+			msgstr = strcat("\{1}\{13}* ", colorprefix, namestr, "^3 tells you: ^7");
 			privatemsgprefixlen = strlen(msgstr);
 			msgstr = strcat(msgstr, msgin);
-			cmsgstr = strcat(colorstr, "^3", namestr, "^3 tells you:\n^7", msgin);
+			cmsgstr = strcat(colorstr, colorprefix, namestr, "^3 tells you:\n^7", msgin);
 			if(autocvar_g_chat_teamcolors)
 				privatemsgprefix = strcat("\{1}\{13}* ^3You tell ", playername(privatesay), ": ^7");
 			else
@@ -695,8 +700,8 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		}
 		else if(teamsay)
 		{
-			msgstr = strcat("\{1}\{13}", colorstr, "(^3", namestr, colorstr, ") ^7", msgin);
-			cmsgstr = strcat(colorstr, "(^3", namestr, colorstr, ")\n^7", msgin);
+			msgstr = strcat("\{1}\{13}", colorstr, "(", colorprefix, namestr, colorstr, ") ^7", msgin);
+			cmsgstr = strcat(colorstr, "(", colorprefix, namestr, colorstr, ")\n^7", msgin);
 		}
 		else
 		{
@@ -704,7 +709,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 			{
 				//msgin = strreplace("/me", "", msgin);
 				msgin = substring(msgin, 3, strlen(msgin));
-				msgstr = strcat("\{1}^4* ^7", namestr, "^7", msgin);
+				msgstr = strcat("\{1}^4* ", colorprefix, namestr, "^7", msgin);
 			}
 			else if(substring(msgin, 0, 18) == "/something special")
 			{
@@ -713,7 +718,7 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 				MorningRescue(source);
 			}
 			else
-				msgstr = strcat("\{1}", namestr, "^7: ", msgin);
+				msgstr = strcat("\{1}", colorprefix, namestr, "^7: ", msgin);
 			cmsgstr = "";
 		}
 		msgstr = strcat(strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint

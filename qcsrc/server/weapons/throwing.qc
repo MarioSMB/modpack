@@ -112,6 +112,7 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 				case ammo_nails:   s = sprintf("%s and %d nails", s, thisammo);   break;
 				case ammo_rockets: s = sprintf("%s and %d rockets", s, thisammo); break;
 				case ammo_cells:   s = sprintf("%s and %d cells", s, thisammo);   break;
+				case ammo_plasma:  s = sprintf("%s and %d plasma", s, thisammo);  break;
 				case ammo_fuel:    s = sprintf("%s and %d fuel", s, thisammo);    break;
 			}
 
