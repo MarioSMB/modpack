@@ -80,6 +80,7 @@ void CSQC_Init(void)
 
 	localcmd("\nalias nobobbing \"cl_bob 0; cl_bob2 0; cl_followmodel 0; cl_leanmodel 0\"\n");
 	localcmd("\nalias quickmenu \"cl_cmd hud quickmenu\"\n");
+	localcmd("\nalias physics \"cmd physics ${* ?}\"\n");
 
 	//registercommand("hud_configure");
 	//registercommand("hud_save");
@@ -108,6 +109,8 @@ void CSQC_Init(void)
 	registercvar("cl_pokenade_type", "zombie");
 	registercvar("cl_autovote", "");
 	registercvar("cl_nocarry", "0");
+	registercvar("cl_buffs_autoreplace", "1");
+	registercvar("cl_physics", "default"); // default is invalid, so it will be overridden by standard physics cvars
 
 	// these need to be defined for quickmenu to work
 	registercvar("hud_panel_quickmenu_pos", "0.010000 0.410000");
@@ -119,23 +122,7 @@ void CSQC_Init(void)
 	registercvar("hud_panel_quickmenu_bg_border", "");
 	registercvar("hud_panel_quickmenu_bg_padding", "");
 	registercvar("hud_panel_quickmenu_align", "0");
-	
-	// these need to be defined for status effects to work
-	registercvar("hud_panel_statuseffects", "0");
-	registercvar("hud_panel_statuseffects_pos", "0.360000 0.850000");
-	registercvar("hud_panel_statuseffects_size", "0.290000 0.030000");
-	registercvar("hud_panel_statuseffects_bg", "");
-	registercvar("hud_panel_statuseffects_bg_color", "");
-	registercvar("hud_panel_statuseffects_bg_color_team", "");
-	registercvar("hud_panel_statuseffects_bg_alpha", "");
-	registercvar("hud_panel_statuseffects_bg_border", "");
-	registercvar("hud_panel_statuseffects_bg_padding", "");
-	registercvar("hud_panel_statuseffects_iconalign", "0");
-	registercvar("hud_panel_statuseffects_progressbar", "1");
-	registercvar("hud_panel_statuseffects_progressbar_name", "progressbar");
-	registercvar("hud_panel_statuseffects_progressbar_xoffset", "0");
-	registercvar("hud_panel_statuseffects_text", "0");
-	
+
 	// these need to be defined for buffs to work
 	registercvar("hud_panel_buffs", "1");
 	registercvar("hud_panel_buffs_pos", "0.45 0.855");
@@ -172,7 +159,6 @@ void CSQC_Init(void)
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
-	CALL_ACCUMULATED_FUNCTION(RegisterStatusEffects);
 	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
 
 	WaypointSprite_Load();
@@ -278,7 +264,7 @@ float SetTeam(entity o, float Team)
 			default:
 				if(GetTeam(Team, false) == world)
 				{
-					dprintf(_("trying to switch to unsupported team %d\n"), Team);
+					dprintf("trying to switch to unsupported team %d\n", Team);
 					Team = NUM_SPECTATOR;
 				}
 				break;
@@ -294,7 +280,7 @@ float SetTeam(entity o, float Team)
 			default:
 				if(GetTeam(Team, false) == world)
 				{
-					dprintf(_("trying to switch to unsupported team %d\n"), Team);
+					dprintf("trying to switch to unsupported team %d\n", Team);
 					Team = NUM_SPECTATOR;
 				}
 				break;
@@ -425,6 +411,9 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	if (HUD_Panel_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
+	if ( HUD_Radar_InputEvent(bInputType, nPrimary, nSecondary) )
+		return true;
+	
 	if (HUD_QuickMenu_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
@@ -612,6 +601,26 @@ void Ent_ClientData()
 	}
 	else
 		angles_held_status = 0;
+		
+	if(f & 16)
+	{
+		fovlock = ReadByte();
+		num_spectators = ReadByte();
+		
+		if(fovlock <= 0)
+			fovlock = -1;
+		
+		float i, slot;
+		
+		for(i = 0; i < MAX_SPECTATORS; ++i)
+			spectatorlist[i] = 0; // reset list first
+		
+		for(i = 0; i < num_spectators; ++i)
+		{
+			slot = ReadByte();
+			spectatorlist[i] = slot - 1;
+		}
+	}
 
 	if(newspectatee_status != spectatee_status)
 	{
@@ -850,7 +859,7 @@ void Ent_ReadSpawnEvent(float is_new)
 			button_zoom = FALSE;
 		}
 	}
-
+	HUD_Radar_Hide_Maximized();
 	//printf("Ent_ReadSpawnEvent(is_new = %d); origin = %s, entnum = %d, localentnum = %d\n", is_new, vtos(self.origin), entnum, player_localentnum);
 }
 
@@ -1317,24 +1326,6 @@ void Net_ReadMorningRescue()
 	mr_fadetime   = time + 9;
 }
 
-void Net_ReadSpecInfo()
-{
-	float i;
-
-	fovlock = ReadByte();
-
-	if(fovlock == 0)
-		fovlock = -1;
-
-	num_spectators = ReadByte();
-	for(i = 0; i < num_spectators; ++i)
-	{
-		local float slot = ReadByte();
-		if(i < MAX_SPECTATORS)
-			spectatorlist[i] = slot - 1;
-	}
-}
-
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
 // You must ALWAYS first acquire the temporary ID, which is sent as a byte.
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
@@ -1394,10 +1385,6 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_MORNINGRESCUE:
 			Net_ReadMorningRescue();
-			bHandled = true;
-			break;
-		case TE_CSQC_SPECINFO:
-			Net_ReadSpecInfo();
 			bHandled = true;
 			break;
 		case TE_CSQC_SHOCKWAVEPARTICLE:

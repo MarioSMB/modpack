@@ -20,7 +20,7 @@ void CreatureFrame (void)
 				self.dmgtime = 0;
 			}
 
-			if(!vehic && !projectile && !monster && (!IS_PLAYER(self) || !autocvar_g_status_effects)) // vehicles, monsters and projectiles don't drown
+			if(!vehic && !projectile && !monster && !IS_PLAYER(self)) // vehicles, monsters and projectiles don't drown
 			{
 				if (self.waterlevel != WATERLEVEL_SUBMERGED)
 				{
@@ -236,6 +236,8 @@ void StartFrame (void)
 
 	FOR_EACH_PLAYER(self)
 		self.porto_forbidden = max(0, self.porto_forbidden - 1);
+
+	anticheat_startframe();
 
 	MUTATOR_CALLHOOK(SV_StartFrame);
 }

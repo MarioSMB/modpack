@@ -343,6 +343,12 @@ void WarpZone_PostTeleportPlayer_Callback(entity pl)
 	makevectors(pl.angles);
 	Reset_ArcBeam(pl, v_forward);
 	UpdateCSQCProjectileAfterTeleport(pl);
+	{
+		entity oldself = self;
+		self = pl;
+		anticheat_fixangle();
+		self = oldself;
+	}
 	// "disown" projectiles after teleport
 	if(pl.owner)
 	if(pl.owner == pl.realowner)

@@ -18,7 +18,7 @@ void ok_IncreaseCharge(entity ent, float wep)
 		return; // dummy
 
 	if(ent.ok_use_ammocharge)
-	if(!ent.BUTTON_ATCK) // not while attacking?
+	if(!ent.BUTTON_ATCK || autocvar_g_overkill_ammo_charge_attack) // not while attacking?
 		ent.ammo_charge[wep] = min(autocvar_g_overkill_ammo_charge_limit, ent.ammo_charge[wep] + cvar(sprintf("g_overkill_ammo_charge_rate_%s", wepent.netname)) * frametime / W_TICSPERFRAME);
 }
 
@@ -369,18 +369,9 @@ void ok_Initialize()
 
 	precache_all_playermodels("models/ok_player/*.dpm");
 
-	precache_model("models/weapons/h_ok_rl.iqm");
-	precache_model("models/weapons/v_ok_rl.md3");
-	precache_model("models/weapons/g_ok_rl.md3");
-	precache_model("models/weapons/ok_rocket.md3");
-
 	precache_model("models/weapons/h_ok_mg.iqm");
 	precache_model("models/weapons/v_ok_mg.md3");
 	precache_model("models/weapons/g_ok_mg.md3");
-
-	precache_model("models/weapons/h_ok_hmg.iqm");
-	precache_model("models/weapons/v_ok_hmg.md3");
-	precache_model("models/weapons/g_ok_hmg.md3");
 
 	precache_model("models/weapons/h_ok_shotgun.iqm");
 	precache_model("models/weapons/v_ok_shotgun.md3");
@@ -399,6 +390,9 @@ void ok_Initialize()
 	WEP_ACTION(WEP_VORTEX, WR_INIT);
 	WEP_ACTION(WEP_SHOTGUN, WR_INIT);
 	WEP_ACTION(WEP_BLASTER, WR_INIT);
+	
+	WEP_ACTION(WEP_RPC, WR_INIT);
+	WEP_ACTION(WEP_HMG, WR_INIT);
 
 	(get_weaponinfo(WEP_RPC)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 	(get_weaponinfo(WEP_HMG)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;

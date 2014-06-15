@@ -532,6 +532,7 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, cvar_cl_autoscreenshot, "cl_autoscreenshot");
 	GetCvars_handleString(s, f, cvar_g_xonoticversion, "g_xonoticversion");
 	GetCvars_handleString(s, f, cvar_cl_autovote, "cl_autovote");
+	GetCvars_handleString(s, f, cvar_cl_physics, "cl_physics");
 	GetCvars_handleFloat(s, f, cvar_cl_sparkle, "cl_sparkle");
 	GetCvars_handleFloat(s, f, cvar_cl_pony, "cl_pony");
 	GetCvars_handleFloat(s, f, cvar_cl_pony_skin, "cl_pony_skin");
@@ -1321,6 +1322,7 @@ void precache()
 {
     // gamemode related things
     precache_model ("models/misc/chatbubble.spr");
+	precache_model("models/ice/ice.md3");
 
     // Precache all player models if desired
     if (autocvar_sv_precacheplayermodels)

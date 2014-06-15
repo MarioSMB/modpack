@@ -5,6 +5,26 @@ string events_last;
 .float playerstats_addedglobalinfo;
 .string playerstats_id;
 
+// Note that _time isn't mentioned here. That one is special.
+#define ALL_ANTICHEATS \
+	ANTICHEAT("speedhack"); \
+	ANTICHEAT("speedhack_m1"); \
+	ANTICHEAT("speedhack_m2"); \
+	ANTICHEAT("speedhack_m3"); \
+	ANTICHEAT("speedhack_m4"); \
+	ANTICHEAT("speedhack_m5"); \
+	ANTICHEAT("div0_strafebot_old"); \
+	ANTICHEAT("div0_strafebot_new"); \
+	ANTICHEAT("div0_evade"); \
+	ANTICHEAT("idle_snapaim"); \
+	ANTICHEAT("idle_snapaim_signal"); \
+	ANTICHEAT("idle_snapaim_noise"); \
+	ANTICHEAT("idle_snapaim_m2"); \
+	ANTICHEAT("idle_snapaim_m3"); \
+	ANTICHEAT("idle_snapaim_m4"); \
+	ANTICHEAT("idle_snapaim_m7"); \
+	ANTICHEAT("idle_snapaim_m10");
+
 void PlayerStats_Init() // initiated before InitGameplayMode so that scores are added properly
 {
 	string uri;
@@ -43,6 +63,12 @@ void PlayerStats_Init() // initiated before InitGameplayMode so that scores are 
 
         PlayerStats_AddEvent(strcat("acc-", w.netname, "-frags"));
     }
+
+	PlayerStats_AddEvent("anticheat-_time");
+#define ANTICHEAT(name) \
+	PlayerStats_AddEvent("anticheat-" name)
+	ALL_ANTICHEATS
+#undef ANTICHEAT
 
 	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3);
 	PlayerStats_AddEvent(PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5);
@@ -356,6 +382,25 @@ void PlayerStats_Accuracy(entity p)
     //backtrace(strcat("adding player stat accuracy for ", p.netname, ".\n"));
 }
 
+void PlayerStats_Anticheat(entity p)
+{
+	entity oldself = self;
+	self = p;
+
+	float t0 = PlayerStats_Event(p, "anticheat-_time", 0);
+	float dt = anticheat_getvalue("_time");
+	PlayerStats_Event(p, "anticheat-_time", dt);
+	float f = dt / (t0 + dt);
+#define ANTICHEAT(name) do { \
+		float prev = PlayerStats_Event(p, "anticheat-" name, 0); \
+		float change = (anticheat_getvalue(name) - prev) * f; \
+		PlayerStats_Event(p, "anticheat-" name, change); \
+	} while(0)
+	ALL_ANTICHEATS
+#undef ANTICHEAT
+	self = oldself;
+}
+
 void PlayerStats_AddGlobalInfo(entity p)
 {
 	if(playerstats_db < 0)
@@ -383,6 +428,8 @@ void PlayerStats_AddGlobalInfo(entity p)
 		PlayerStats_Event(p, PLAYERSTATS_JOINS, 1);
 
 	PlayerStats_Accuracy(p);
+
+	PlayerStats_Anticheat(p);
 
 	if(IS_REAL_CLIENT(p))
 	{
@@ -430,3 +477,5 @@ void PlayerStats_EndMatch(float finished)
 		}
 	}
 }
+
+#undef ALL_ANTICHEATS

@@ -516,7 +516,7 @@ void CSQCModel_Effects_Apply(void)
 	self.traileffect = 0;
 
 	if(eff & EF_BRIGHTFIELD)
-		self.traileffect = particleeffectnum("rocketminsta_laser_neutral");
+		self.traileffect = particleeffectnum("TR_NEXUIZPLASMA");
 	// ignoring EF_MUZZLEFLASH
 	if(eff & EF_BRIGHTLIGHT)
 		adddynamiclight(self.origin, 400, '3 3 3');

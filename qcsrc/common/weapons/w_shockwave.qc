@@ -153,10 +153,10 @@ void W_Shockwave_Melee_Think(void)
 		);
 		
 		// draw lightning beams for debugging
-		te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5); 
-		te_customflash(targpos, 40,  2, '1 1 1');
+		//te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5); 
+		//te_customflash(targpos, 40,  2, '1 1 1');
 		
-		is_player = (trace_ent.classname == "player" || trace_ent.classname == "body" || (trace_ent.flags & FL_MONSTER));
+		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || (trace_ent.flags & FL_MONSTER));
 
 		if((trace_fraction < 1) // if trace is good, apply the damage and remove self if necessary
 			&& (trace_ent.takedamage == DAMAGE_AIM)  

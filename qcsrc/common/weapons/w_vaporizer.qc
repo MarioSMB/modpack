@@ -257,7 +257,8 @@ void W_Vaporizer_Attack(void)
 	flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
 	vaporizer_damage = ((WEP_CVAR_PRI(vaporizer, damage) > 0) ? WEP_CVAR_PRI(vaporizer, damage) : 10000);
 
-	W_SetupShot(self, TRUE, 0, "weapons/minstanexfire.wav", CH_WEAPON_A, vaporizer_damage);
+	W_SetupShot(self, TRUE, 0, "", CH_WEAPON_A, vaporizer_damage);
+	sound (self, CH_WEAPON_A, "weapons/minstanexfire.wav", VOL_BASE * 0.8, ATTEN_NORM);
 
 	yoda = 0;
 	damage_goodhits = 0;

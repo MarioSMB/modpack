@@ -96,6 +96,9 @@ float monster_isvalidtarget (entity targ, entity ent)
 
 	if (targ.frozen)
 		return FALSE; // ignore frozen
+		
+	if(targ.alpha != 0 && targ.alpha < 0.5)
+		return FALSE; // invisible
 
 	if(autocvar_g_monsters_target_infront || (ent.spawnflags & MONSTERFLAG_INFRONT))
 	if(ent.enemy != targ)

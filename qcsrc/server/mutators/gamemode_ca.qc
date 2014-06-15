@@ -56,15 +56,13 @@ float CA_GetWinnerTeam()
 #define CA_ALIVE_TEAMS_OK() (CA_ALIVE_TEAMS() == ca_teams)
 float CA_CheckWinner()
 {
-	entity e;
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
 		allowed_to_spawn = FALSE;
 		round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
-		FOR_EACH_PLAYER(e)
-			nades_Clear(e);
+		nades_Clear(world, TRUE);
 		return 1;
 	}
 
@@ -88,8 +86,7 @@ float CA_CheckWinner()
 	allowed_to_spawn = FALSE;
 	round_handler_Init(5, autocvar_g_ca_warmup, autocvar_g_ca_round_timelimit);
 
-	FOR_EACH_PLAYER(e)
-		nades_Clear(e);
+	nades_Clear(world, TRUE);
 
 	return 1;
 }
@@ -298,12 +295,9 @@ void ca_ScoreRules(float teams)
 void ca_Initialize()
 {
 	allowed_to_spawn = TRUE;
+	
+	ca_teams = bound(2, ((autocvar_g_ca_teams_override < 2) ? autocvar_g_ca_teams : autocvar_g_ca_teams_override), 4);
 
-	ca_teams = autocvar_g_ca_teams_override;
-	if(ca_teams < 2)
-		ca_teams = autocvar_g_ca_teams;
-	ca_teams = bound(2, ca_teams, 4);
-	ret_float = ca_teams;
 	ca_ScoreRules(ca_teams);
 
 	round_handler_Spawn(CA_CheckTeams, CA_CheckWinner, CA_RoundStart);

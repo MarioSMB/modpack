@@ -3,6 +3,37 @@ void send_CSQC_teamnagger() {
 	WriteByte(MSG_BROADCAST, TE_CSQC_TEAMNAGGER);
 }
 
+float CountSpectators(entity player, entity to)
+{
+	if(!player) { return FALSE; } // not sure how, but best to be safe
+
+	entity head;
+	float spec_count = 0;
+	FOR_EACH_REALCLIENT(head)
+	{
+		if(IS_SPEC(head))
+		if(head != to)
+		if(head.enemy == player)
+			spec_count += 1;
+	}
+
+	return spec_count;
+}
+
+void WriteSpectators(entity player, entity to)
+{
+	if(!player) { return; } // not sure how, but best to be safe
+
+	entity head;
+	FOR_EACH_REALCLIENT(head)
+	{
+		if(IS_SPEC(head))
+		if(head != to)
+		if(head.enemy == player)
+			WriteByte(MSG_ENTITY, num_for_edict(head));
+	}
+}
+
 float ClientData_Send(entity to, float sf)
 {
 	if(to != self.owner)
@@ -27,6 +58,8 @@ float ClientData_Send(entity to, float sf)
 		sf |= 4; // zoomed
 	if(e.porto_v_angle_held)
 		sf |= 8; // angles held
+	// always check spectators
+	sf |= 16; // spectator handling?
 
 	WriteByte(MSG_ENTITY, ENT_CLIENT_CLIENTDATA);
 	WriteByte(MSG_ENTITY, sf);
@@ -38,6 +71,14 @@ float ClientData_Send(entity to, float sf)
 	{
 		WriteAngle(MSG_ENTITY, e.v_angle_x);
 		WriteAngle(MSG_ENTITY, e.v_angle_y);
+	}
+	
+	if(sf & 16)
+	{
+		float specs = CountSpectators(e, to);
+		WriteByte(MSG_ENTITY, e.clientfov);
+		WriteByte(MSG_ENTITY, specs);
+		WriteSpectators(e, to);
 	}
 
 	return TRUE;
@@ -133,10 +174,15 @@ putting a client as observer in the server
 =============
 */
 void FixPlayermodel();
-void UpdateSpectators(entity is_spec, entity is_player);
 void PutObserverInServer (void)
 {
 	entity spot;
+	
+	entity oldenemy = self.enemy;
+	self.enemy = world;
+	if(oldenemy)
+		ClientData_Touch(oldenemy);
+	
     self.hud = HUD_NORMAL;
 	
 	if(autocvar_g_observer_glowtrails)
@@ -153,8 +199,6 @@ void PutObserverInServer (void)
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, self);
 	}
-
-	UpdateSpectators(self, self); // don't update spectators or spectatees
 
 	self.frags = FRAGS_SPECTATOR;
 
@@ -288,7 +332,7 @@ void FixPlayermodel()
 		if(teamplay)
 		{
 			string s;
-			s = Team_ColorName_Lower(self.team);
+			s = Static_Team_ColorName_Lower(self.team);
 			if(s != "neutral")
 			{
 				defaultmodel = cvar_string(strcat("sv_defaultplayermodel_", s));
@@ -424,7 +468,6 @@ PutClientInServer
 Called when a client spawns in the server
 =============
 */
-void UpdateSpectators(entity is_spec, entity is_player);
 void PutClientInServer (void)
 {
 	if(IS_BOT_CLIENT(self))
@@ -496,6 +539,7 @@ void PutClientInServer (void)
 		self.air_finished = time + 12;
 		self.dmg = 2;
 		self.glow_trail = 0;
+		self.taunt_soundtime = 0;
 		self.glow_color = 0;
 		self.glow_size = 0;
 		if(WEP_CVAR(vortex, charge))
@@ -546,8 +590,7 @@ void PutClientInServer (void)
 
 		self.items = start_items;
 
-		if(!autocvar_g_status_effects)
-			self.spawnshieldtime = time + autocvar_g_spawnshieldtime;
+		self.spawnshieldtime = time + autocvar_g_spawnshieldtime;
 		self.pauserotarmor_finished = time + autocvar_g_balance_pause_armor_rot_spawn;
 		self.pauserothealth_finished = time + autocvar_g_balance_pause_health_rot_spawn;
 		self.pauserotfuel_finished = time + autocvar_g_balance_pause_fuel_rot_spawn;
@@ -700,8 +743,6 @@ void PutClientInServer (void)
 	{
 		PutObserverInServer ();
 	}
-
-	UpdateSpectators(((IS_PLAYER(self)) ? world : self), ((IS_SPEC(self) || IS_OBSERVER(self)) ? self : world));
 }
 
 .float ebouncefactor, ebouncestop; // electro's values
@@ -1314,8 +1355,6 @@ Called when a client disconnects from the server
 void ReadyCount();
 void ClientDisconnect (void)
 {
-	UpdateSpectators(self, world);
-
 	if(self.vehicle)
 	    vehicles_exit(VHEF_RELEASE);
 
@@ -1324,6 +1363,10 @@ void ClientDisconnect (void)
 		print("Warning: ClientDisconnect without ClientConnect\n");
 		return;
 	}
+	
+	entity oldenemy = self.enemy;
+	self.enemy = world;
+	if(oldenemy) { ClientData_Touch(oldenemy); }
 
 	PlayerStats_AddGlobalInfo(self);
 
@@ -1784,7 +1827,8 @@ void SpectateCopy(entity spectatee) {
 	self.impulse = 0;
 	self.items = spectatee.items;
 	self.last_pickup = spectatee.last_pickup;
-	self.hit_time = spectatee.hit_time;
+	//self.damage_dealt = spectatee.damage_dealt;
+	//self.damage_dealt_total = spectatee.damage_dealt_total;
 	self.metertime = spectatee.metertime;
 	self.strength_finished = spectatee.strength_finished;
 	self.invincible_finished = spectatee.invincible_finished;
@@ -1859,44 +1903,12 @@ float SpectateUpdate() {
 	return 1;
 }
 
-void UpdateSpectators(entity is_spec, entity is_player)
-{
-	entity head, spec;
-	float specs = 0;
-	FOR_EACH_REALCLIENT(head)
-	{
-		msg_entity = head;
-		WriteByte(MSG_ONE, SVC_TEMPENTITY);
-		WriteByte(MSG_ONE, TE_CSQC_SPECINFO);
-
-		if(IS_PLAYER(head))
-			WriteByte(MSG_ONE, head.clientfov);
-		else if(head.enemy)
-			WriteByte(MSG_ONE, head.enemy.clientfov);
-		else
-			WriteByte(MSG_ONE, 0);
-
-		specs = 0;
-
-		FOR_EACH_SPEC(spec) if(spec.enemy == head && is_player != spec && spec != is_player)
-			++specs;
-
-		if(IS_SPEC(head) || IS_OBSERVER(head) || head == is_spec || !autocvar_sv_showspectators)
-		{
-			WriteByte(MSG_ONE, 0);
-			continue;
-		}
-
-		WriteByte(MSG_ONE, specs);
-		FOR_EACH_SPEC(spec) if(spec.enemy == head && is_player != spec)
-			WriteByte(MSG_ONE, num_for_edict(spec));
-	}
-}
-
 float SpectateSet()
 {
 	if(!IS_PLAYER(self.enemy))
 		return FALSE;
+		
+	ClientData_Touch(self.enemy);
 
 	msg_entity = self;
 	WriteByte(MSG_ONE, SVC_SETVIEW);
@@ -1966,7 +1978,6 @@ float SpectateNext()
 		self.glow_color = 0;
 		self.glow_size = 0;
 		self.enemy = other;
-		UpdateSpectators(world, world);
 	}
 
 	return SpectateSet();
@@ -2007,7 +2018,6 @@ float SpectatePrev()
 			other = first;
 	}
 	self.enemy = other;
-	UpdateSpectators(world, world);
 	return SpectateSet();
 }
 
@@ -2047,6 +2057,10 @@ void LeaveSpectatorMode()
 		{
 			self.classname = "player";
 			nades_RemoveBonus(self);
+			
+			entity oldenemy = self.enemy;
+			self.enemy = world;
+			if(oldenemy) { ClientData_Touch(oldenemy); }
 
 			if(autocvar_g_campaign || autocvar_g_balance_teams)
 				{ JoinBestTeam(self, FALSE, TRUE); }

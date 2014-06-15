@@ -69,13 +69,12 @@ float VIP_CheckWinner()
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
+		
+		nades_Clear(world, TRUE);
 
-		FOR_EACH_PLAYER(head)
-		{
-			if(head.isvip && head.health > 0)
-				PlayerScore_Add(head, SP_VIP_SURVIVALS, 1);
-			nades_Clear(head);
-		}
+		FOR_EACH_PLAYER(head) if(head.isvip && head.health > 0)
+			PlayerScore_Add(head, SP_VIP_SURVIVALS, 1);
+
 		vip_ClearVIPs();
 		allowed_to_spawn = FALSE;
 		round_handler_Init(5, autocvar_g_vip_warmup, autocvar_g_vip_round_timelimit);
@@ -123,9 +122,7 @@ float VIP_CheckWinner()
 
 	round_handler_Init(5, autocvar_g_vip_warmup, autocvar_g_vip_round_timelimit);
 
-
-	FOR_EACH_PLAYER(head)
-		nades_Clear(head);
+	nades_Clear(world, TRUE);
 
 	return 1;
 }
@@ -471,6 +468,9 @@ void vip_SoulGem_touch()
 		return;
 
 	if(other.isvip)
+		return;
+
+	if(other.frozen)
 		return;
 
 	if(!allowed_to_spawn)

@@ -21,7 +21,8 @@
 // Revision 20: naggers
 // Revision 21: entcs for players optimized (position data down from 12 to 7 bytes); waypointsprites in csqc for team radar
 // Revision 22: hook shot origin
-#define CSQC_REVISION 22
+// Revision 23: variable hit sound
+#define CSQC_REVISION 23
 
 const float AS_STRING = 1;
 const float AS_INT = 2;
@@ -166,7 +167,7 @@ const float STAT_VORTEX_CHARGE = 50;
 const float STAT_LAST_PICKUP = 51;
 const float STAT_HUD = 52;
 const float STAT_VORTEX_CHARGEPOOL = 53;
-const float STAT_HIT_TIME = 54;
+const float STAT_DAMAGE_DEALT_TOTAL = 54;
 const float STAT_TYPEHIT_TIME = 55;
 const float STAT_LAYED_MINES = 56;
 const float STAT_HAGAR_LOAD = 57;
@@ -181,6 +182,8 @@ const float STAT_VEHICLESTAT_RELOAD1 = 64;
 const float STAT_VEHICLESTAT_AMMO2 = 65;
 const float STAT_VEHICLESTAT_RELOAD2 = 66;
 const float STAT_VEHICLESTAT_W2MODE = 67;
+
+const float STAT_NADE_TIMER = 69;
 
 const float STAT_SECRETS_TOTAL = 70;
 const float STAT_SECRETS_FOUND = 71;
@@ -254,6 +257,27 @@ const float STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW = 222;
 const float STAT_MOVEVARS_AIRSTRAFEACCEL_QW = 223;
 const float STAT_MOVEVARS_MAXSPEED = 244;
 const float STAT_MOVEVARS_AIRACCEL_QW = 254;
+
+// new properties
+const float STAT_MOVEVARS_JUMPVELOCITY = 250;
+const float STAT_MOVEVARS_AIRACCEL_QW_STRETCHFACTOR = 220;
+const float STAT_MOVEVARS_MAXAIRSTRAFESPEED = 233;
+const float STAT_MOVEVARS_MAXAIRSPEED = 252;
+const float STAT_MOVEVARS_AIRSTRAFEACCELERATE = 232;
+const float STAT_MOVEVARS_WARSOWBUNNY_TURNACCEL = 229;
+const float STAT_MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION = 255;
+const float STAT_MOVEVARS_AIRCONTROL = 234;
+const float STAT_MOVEVARS_AIRCONTROL_POWER = 224;
+const float STAT_MOVEVARS_AIRCONTROL_PENALTY = 221;
+const float STAT_MOVEVARS_WARSOWBUNNY_AIRFORWARDACCEL = 226;
+const float STAT_MOVEVARS_WARSOWBUNNY_TOPSPEED = 228;
+const float STAT_MOVEVARS_WARSOWBUNNY_ACCEL = 227;
+const float STAT_MOVEVARS_WARSOWBUNNY_BACKTOSIDERATIO = 230;
+const float STAT_MOVEVARS_FRICTION = 238;
+const float STAT_MOVEVARS_ACCELERATE = 246;
+const float STAT_MOVEVARS_STOPSPEED = 243;
+const float STAT_MOVEVARS_AIRACCELERATE = 247;
+const float STAT_MOVEVARS_AIRSTOPACCELERATE = 231;
 
 const float CTF_STATE_ATTACK = 1;
 const float CTF_STATE_DEFEND = 2;

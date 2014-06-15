@@ -207,14 +207,13 @@ void ScoreInfo_Init(float teams)
 		scores_initialized.classname = "ent_client_scoreinfo";
 		Net_LinkEntity(scores_initialized, FALSE, 0, ScoreInfo_SendEntity);
 	}
-	if(teams >= 1)
-		TeamScore_Spawn(NUM_TEAM_1, "Red");
-	if(teams >= 2)
-		TeamScore_Spawn(NUM_TEAM_2, "Blue");
-	if(teams >= 3)
-		TeamScore_Spawn(NUM_TEAM_3, "Yellow");
-	if(teams >= 4)
-		TeamScore_Spawn(NUM_TEAM_4, "Pink");
+	if(teams)
+	{
+		teams = min(4, teams);
+		float i;
+		for(i = 1; i <= teams; ++i)
+			TeamScore_Spawn(Team_NumberToTeam(i), Team_ColorName(Team_NumberToTeam(i)));
+	}
 }
 
 /*

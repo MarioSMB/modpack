@@ -563,8 +563,8 @@ float W_Devastator(float req)
 		}
 		case WR_INIT:
 		{
-			if(autocvar_sv_precacheweapons)
-			{
+			//if(autocvar_sv_precacheweapons)
+			//{
 				precache_model("models/flash.md3");
 				precache_model("models/weapons/g_rl.md3");
 				precache_model("models/weapons/v_rl.md3");
@@ -572,7 +572,7 @@ float W_Devastator(float req)
 				precache_sound("weapons/rocket_det.wav");
 				precache_sound("weapons/rocket_fire.wav");
 				precache_sound("weapons/rocket_mode.wav");
-			}
+			//}
 			DEVASTATOR_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}

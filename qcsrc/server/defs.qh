@@ -155,7 +155,7 @@ void setanim(entity e, vector anim, float looping, float override, float restart
 .float		dmgtime;
 
 .float		killcount;
-.float hitsound, typehitsound;
+.float damage_dealt, typehitsound;
 
 .float watersound_finished;
 .float iscreature;
@@ -449,6 +449,27 @@ float round_starttime; //point in time when the countdown to round start is over
 .float stat_sv_airspeedlimit_nonqw;
 .float stat_sv_maxspeed;
 
+// new properties
+.float stat_sv_jumpvelocity;
+.float stat_sv_airaccel_qw_stretchfactor;
+.float stat_sv_maxairstrafespeed;
+.float stat_sv_maxairspeed;
+.float stat_sv_airstrafeaccelerate;
+.float stat_sv_warsowbunny_turnaccel;
+.float stat_sv_airaccel_sideways_friction;
+.float stat_sv_aircontrol;
+.float stat_sv_aircontrol_power;
+.float stat_sv_aircontrol_penalty;
+.float stat_sv_warsowbunny_airforwardaccel;
+.float stat_sv_warsowbunny_topspeed;
+.float stat_sv_warsowbunny_accel;
+.float stat_sv_warsowbunny_backtosideratio;
+.float stat_sv_friction;
+.float stat_sv_accelerate;
+.float stat_sv_stopspeed;
+.float stat_sv_airaccelerate;
+.float stat_sv_airstopaccelerate;
+
 void W_Porto_Remove (entity p);
 
 .float projectiledeathtype;
@@ -511,8 +532,9 @@ string matchid;
 
 .float last_pickup;
 
-.float hit_time;
 .float typehit_time;
+
+.float damage_dealt_total; 
 
 .float stat_leadlimit;
 
@@ -635,3 +657,5 @@ float sv_showfps;
 .float clientfov;
 
 .float sub_target_used;
+
+.string cvar_cl_physics;

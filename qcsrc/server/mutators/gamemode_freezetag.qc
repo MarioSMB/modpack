@@ -141,9 +141,11 @@ float freezetag_CheckWinner()
 	FOR_EACH_PLAYER(e)
 	{
 		e.freezetag_frozen_timeout = 0;
-		nades_Clear(e);
+		e.revive_progress = 0;
 		WaypointSprite_Kill(e.wps_enemy);
 	}
+	
+	nades_Clear(world, TRUE);
 
 	round_handler_Init(5, autocvar_g_freezetag_warmup, autocvar_g_freezetag_round_timelimit);
 	return 1;
@@ -544,8 +546,6 @@ void ft_ScoreRules(float teams)
 
 void freezetag_Initialize()
 {
-	precache_model("models/ice/ice.md3");
-
 	freezetag_teams = autocvar_g_freezetag_teams_override;
 	if(freezetag_teams < 2)
 		freezetag_teams = autocvar_g_freezetag_teams;

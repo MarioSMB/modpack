@@ -33,3 +33,12 @@ float Buff_Type_FromName(string buff_name)
 			return e.items;
 	return 0;
 }
+
+float Buff_Skin(float buff_id)
+{
+	entity e;
+	for(e = Buff_Type_first; e; e = e.enemy)
+		if(buff_id == e.items)
+			return e.skin;
+	return 0;
+}

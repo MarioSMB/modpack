@@ -254,6 +254,10 @@ void Portal_Touch()
 	if(other.classname == "grapplinghook")
 		return; // handled by think
 
+	if(!autocvar_g_vehicles_teleportable)
+	if(IS_VEHICLE(other))
+		return; // no teleporting vehicles?
+
 	if(!self.enemy)
 		error("Portal_Touch called for a broken portal\n");
 

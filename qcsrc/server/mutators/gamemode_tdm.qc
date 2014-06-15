@@ -34,15 +34,14 @@ void tdm_DelayedInit()
 	{
 		print("No ""tdm_team"" entities found on this map, creating them anyway.\n");
 
-		float numteams = autocvar_g_tdm_teams_override;
+		float numteams = min(4, autocvar_g_tdm_teams_override);
 
-		if(numteams < 2 || numteams > 4) { numteams = autocvar_g_tdm_teams; }
+		if(numteams < 2) { numteams = autocvar_g_tdm_teams; }
 		numteams = bound(2, numteams, 4);
 
-		tdm_SpawnTeam("Red", NUM_TEAM_1 - 1);
-		tdm_SpawnTeam("Blue", NUM_TEAM_2 - 1);
-		if(numteams >= 3) { tdm_SpawnTeam("Yellow", NUM_TEAM_3 - 1); }
-		if(numteams >= 4) { tdm_SpawnTeam("Pink", NUM_TEAM_4 - 1); }
+		float i;
+		for(i = 1; i <= numteams; ++i)
+			tdm_SpawnTeam(Team_ColorName(Team_NumberToTeam(i)), Team_NumberToTeam(i) - 1);
 	}
 }
 

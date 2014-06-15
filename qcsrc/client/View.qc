@@ -104,7 +104,8 @@ vector GetCurrentFov(float fov)
 
 	zoomdir = button_zoom;
 	if(hud == HUD_NORMAL)
-	if((activeweapon == WEP_VORTEX && switchweapon == activeweapon && vortex_scope) || (activeweapon == WEP_RIFLE && rifle_scope)) // do NOT use switchweapon here
+	if(switchweapon == activeweapon)
+	if((activeweapon == WEP_VORTEX && vortex_scope) || (activeweapon == WEP_RIFLE && rifle_scope)) // do NOT use switchweapon here
 		zoomdir += button_attack2;
 	if(spectatee_status > 0 || isdemo())
 	{
@@ -373,9 +374,11 @@ entity nightvision_noise, nightvision_noise2;
 
 #define MAX_TIME_DIFF 5
 float pickup_crosshair_time, pickup_crosshair_size;
-float hit_time, typehit_time;
-float nextsound_hit_time, nextsound_typehit_time;
-float hitindication_crosshair_time, hitindication_crosshair_size;
+float hitsound_time_prev;
+float spectatee_status_prev; // for preventing hitsound when switching spectatee
+float damage_dealt_total, damage_dealt_total_prev;
+float typehit_time, typehit_time_prev;
+float hitindication_crosshair_size;
 float use_vortex_chargepool;
 
 float myhealth, myhealth_prev;
@@ -423,6 +426,7 @@ void FPSCounter_Update()
 float cl_notice_run();
 float prev_myteam;
 float oldfov;
+.float health;
 void CSQC_UpdateView(float w, float h)
 {
 	entity e;
@@ -430,7 +434,7 @@ void CSQC_UpdateView(float w, float h)
 	float f, i, j;
 	vector v;
 	vector vf_size, vf_min;
-	float a;
+	float pink_noise;
 
 	execute_next_frame();
 
@@ -514,15 +518,35 @@ void CSQC_UpdateView(float w, float h)
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
 		WepSet weapons_stat = WepSet_GetFromStat();
+		float ons_roundlost = (gametype == MAPINFO_TYPE_ONSLAUGHT && getstati(STAT_ROUNDLOST));
 		float vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
-		if(((spectatee_status >= 0 && (autocvar_cl_eventchase_death && is_dead)) || intermission || (autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(weapons_stat & WepSet_FromWeapon(WEP_PORTO))) || vehicle_chase) && !autocvar_cl_orthoview)
+		entity gen = world;
+		
+		if(ons_roundlost)
+		{
+			entity e;
+			for(e = world; (e = find(e, classname, "onslaught_generator")); )
+			{
+				if(e.health <= 0)
+				{
+					gen = e;
+					break;
+				}
+			}
+			if(!gen)
+				ons_roundlost = FALSE; // don't enforce the 3rd person camera if there is no dead generator to show
+		}
+
+		if(((spectatee_status >= 0 && (autocvar_cl_eventchase_death && is_dead)) || intermission || ons_roundlost || (autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(weapons_stat & WepSet_FromWeapon(WEP_PORTO))) || vehicle_chase) && !autocvar_cl_orthoview)
 		{
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = (csqcplayer ? csqcplayer.origin : pmove_org);
+			if(ons_roundlost) { current_view_origin = gen.origin; }
 
 			// detect maximum viewoffset and use it
 			vector view_offset = autocvar_cl_eventchase_viewoffset;
 			if(vehicle_chase && autocvar_cl_eventchase_vehicle_viewoffset) { view_offset = autocvar_cl_eventchase_vehicle_viewoffset; }
+			if(ons_roundlost) { view_offset = autocvar_cl_eventchase_generator_viewoffset; }
 
 			if(view_offset)
 			{
@@ -539,6 +563,7 @@ void CSQC_UpdateView(float w, float h)
 			// make the camera smooth back
 			float chase_distance = autocvar_cl_eventchase_distance;
 			if(vehicle_chase && autocvar_cl_eventchase_vehicle_distance) { chase_distance = autocvar_cl_eventchase_vehicle_distance; }
+			if(ons_roundlost) { chase_distance = autocvar_cl_eventchase_generator_distance; }
 
 			if(autocvar_cl_eventchase_speed && eventchase_current_distance < chase_distance)
 				eventchase_current_distance += autocvar_cl_eventchase_speed * (chase_distance - eventchase_current_distance) * frametime; // slow down the further we get
@@ -792,16 +817,16 @@ void CSQC_UpdateView(float w, float h)
 	vid_conheight = autocvar_vid_conheight;
 	vid_pixelheight = autocvar_vid_pixelheight;
 
-	if(spectatee_status == -1 || !spectatee_status)
-	if(fovlock >= 0)
+	if(spectatee_status <= 0)
 		fovlock = -1;
 
 	if(autocvar_cl_orthoview) { setproperty(VF_FOV, GetOrthoviewFOV(ov_worldmin, ov_worldmax, ov_mid, ov_org)); }
-	else if(fovlock > -1) { setproperty(VF_FOV, GetCurrentFov(fovlock)); }
+	else if(fovlock > 0 && autocvar_cl_specfov) { setproperty(VF_FOV, GetCurrentFov(fovlock)); }
 	else { setproperty(VF_FOV, GetCurrentFov(fov)); }
 
 	float tempcamera = FALSE;
 
+	if(gametype == MAPINFO_TYPE_JAILBREAK)
 	if(spectatee_status >= 0)
 	if(getstati(STAT_ROUNDLOST))
 	if(!getstati(STAT_PRISONED))
@@ -912,7 +937,7 @@ void CSQC_UpdateView(float w, float h)
 		drawfill('0 0 0', autocvar_vid_conwidth * '1 0 0' + autocvar_vid_conheight * '0 1 0', '0.5 1 0.3', 1, DRAWFLAG_MODULATE);
 
 		// draw BG
-		a = Noise_Pink(nightvision_noise, frametime * 1.5) * 0.05 + 0.15;
+		pink_noise = Noise_Pink(nightvision_noise, frametime * 1.5) * 0.05 + 0.15;
 		rgb = '1 1 1';
 		tc_00 = '0 0 0' + '0.2 0 0' * sin(time * 0.3) + '0 0.3 0' * cos(time * 0.7);
 		tc_01 = '0 2.25 0' + '0.6 0 0' * cos(time * 1.2) - '0 0.3 0' * sin(time * 2.2);
@@ -920,24 +945,24 @@ void CSQC_UpdateView(float w, float h)
 		//tc_11 = '1 1 0' + '0.6 0 0' * sin(time * 0.6) + '0 0.3 0' * cos(time * 0.1);
 		tc_11 = tc_01 + tc_10 - tc_00;
 		R_BeginPolygon("gfx/nightvision-bg.tga", DRAWFLAG_ADDITIVE);
-		R_PolygonVertex('0 0 0', tc_00, rgb, a);
-		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0', tc_10, rgb, a);
-		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0' + autocvar_vid_conheight * '0 1 0', tc_11, rgb, a);
-		R_PolygonVertex(autocvar_vid_conheight * '0 1 0', tc_01, rgb, a);
+		R_PolygonVertex('0 0 0', tc_00, rgb, pink_noise);
+		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0', tc_10, rgb, pink_noise);
+		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0' + autocvar_vid_conheight * '0 1 0', tc_11, rgb, pink_noise);
+		R_PolygonVertex(autocvar_vid_conheight * '0 1 0', tc_01, rgb, pink_noise);
 		R_EndPolygon();
 
 		// draw FG
-		a = Noise_Pink(nightvision_noise2, frametime * 0.1) * 0.05 + 0.12;
+		pink_noise = Noise_Pink(nightvision_noise2, frametime * 0.1) * 0.05 + 0.12;
 		rgb = '0.3 0.6 0.4' + '0.1 0.4 0.2' * Noise_White(nightvision_noise2, frametime);
 		tc_00 = '0 0 0' + '1 0 0' * Noise_White(nightvision_noise2, frametime) + '0 1 0' * Noise_White(nightvision_noise2, frametime);
 		tc_01 = tc_00 + '0 3 0' * (1 + Noise_White(nightvision_noise2, frametime) * 0.2);
 		tc_10 = tc_00 + '2 0 0' * (1 + Noise_White(nightvision_noise2, frametime) * 0.3);
 		tc_11 = tc_01 + tc_10 - tc_00;
 		R_BeginPolygon("gfx/nightvision-fg.tga", DRAWFLAG_ADDITIVE);
-		R_PolygonVertex('0 0 0', tc_00, rgb, a);
-		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0', tc_10, rgb, a);
-		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0' + autocvar_vid_conheight * '0 1 0', tc_11, rgb, a);
-		R_PolygonVertex(autocvar_vid_conheight * '0 1 0', tc_01, rgb, a);
+		R_PolygonVertex('0 0 0', tc_00, rgb, pink_noise);
+		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0', tc_10, rgb, pink_noise);
+		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0' + autocvar_vid_conheight * '0 1 0', tc_11, rgb, pink_noise);
+		R_PolygonVertex(autocvar_vid_conheight * '0 1 0', tc_01, rgb, pink_noise);
 		R_EndPolygon();
 	}
 
@@ -1224,21 +1249,77 @@ void CSQC_UpdateView(float w, float h)
 
 	scoreboard_active = HUD_WouldDrawScoreboard();
 
-	hit_time = getstatf(STAT_HIT_TIME);
-	if(hit_time > nextsound_hit_time && autocvar_cl_hitsound)
+	// varying sound pitch
+	damage_dealt_total = getstati(STAT_DAMAGE_DEALT_TOTAL);
+	
+	// detect overflow on server side
+	if (damage_dealt_total < damage_dealt_total_prev)
 	{
-		if(time - hit_time < MAX_TIME_DIFF) // don't play the sound if it's too old.
-			sound(world, CH_INFO, "misc/hit.wav", VOL_BASE, ATTEN_NONE);
-
-		nextsound_hit_time = time + autocvar_cl_hitsound_antispam_time;
+		dprint("resetting dmg total: ", ftos(damage_dealt_total), " prev: ", ftos(damage_dealt_total_prev), "\n");
+		damage_dealt_total_prev = 0;
 	}
-	typehit_time = getstatf(STAT_TYPEHIT_TIME);
-	if(typehit_time > nextsound_typehit_time)
-	{
-		if(time - typehit_time < MAX_TIME_DIFF) // don't play the sound if it's too old.
-			sound(world, CH_INFO, "misc/typehit.wav", VOL_BASE, ATTEN_NONE);
 
-		nextsound_typehit_time = time + autocvar_cl_hitsound_antispam_time;
+	// prevent hitsound when switching spectatee
+	if (spectatee_status != spectatee_status_prev)
+	{
+		damage_dealt_total_prev = damage_dealt_total;
+	}
+	spectatee_status_prev = spectatee_status;
+
+	// amount of damage since last hit sound
+	float unaccounted_damage = damage_dealt_total - damage_dealt_total_prev;
+
+	if (unaccounted_damage > 0 && autocvar_cl_hitsound > 0 && time - hitsound_time_prev > autocvar_cl_hitsound_antispam_time)
+	{
+		// customizable gradient function that crosses (0,a), (c,1) and asymptotically approaches b
+		float a, b, c, x;
+		a = autocvar_cl_hitsound_max_pitch;
+		b = autocvar_cl_hitsound_min_pitch;
+		c = autocvar_cl_hitsound_nom_damage;
+		x = unaccounted_damage;
+		float pitch_shift = (b*x*(a-1) + a*c*(1-b)) / (x*(a-1) + c*(1-b));
+		
+		// if sound variation is disabled, set pitch_shift to 1
+		if (autocvar_cl_hitsound == 1)
+		{
+			pitch_shift = 1;
+		}
+		
+		// if pitch shift is reversed, mirror in (max-min)/2 + min
+		if (autocvar_cl_hitsound == 3)
+		{
+			float mirror_value = (a-b)/2 + b;
+			pitch_shift = mirror_value + (mirror_value - pitch_shift);
+		}
+		
+		dprint("dmg total (dmg): ", ftos(damage_dealt_total), " (+", ftos(unaccounted_damage), "), pitch shift: ", ftos(pitch_shift), "\n");
+		
+		// todo: avoid very long and very short sounds from wave stretching using different sound files? seems unnecessary
+		// todo: normalize sound pressure levels? seems unnecessary
+		
+		// scale to fit function interface
+		float param_pitch_shift = pitch_shift * 100;
+		
+		// play sound
+		sound7(world, CH_INFO, "misc/hit.wav", VOL_BASE, ATTN_NONE, param_pitch_shift, 0);
+		
+		// track damage accounted for
+		damage_dealt_total_prev = damage_dealt_total;
+
+		// remember when this sound was played to prevent sound spam
+		hitsound_time_prev = time;
+	}
+	else if (autocvar_cl_hitsound == 0)
+	{
+		// forget the damage to prevent hitsound when enabling it
+		damage_dealt_total_prev = damage_dealt_total;
+	}
+	
+	typehit_time = getstatf(STAT_TYPEHIT_TIME);
+	if(typehit_time - typehit_time_prev > autocvar_cl_hitsound_antispam_time)
+	{
+		sound(world, CH_INFO, "misc/typehit.wav", VOL_BASE, ATTN_NONE);
+		typehit_time_prev = typehit_time;
 	}
 
 	//else
@@ -1247,7 +1328,13 @@ void CSQC_UpdateView(float w, float h)
 			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, ((getstatf(STAT_REVIVE_PROGRESS)) ? ('0.25 0.90 1' + ('1 0 0' * getstatf(STAT_REVIVE_PROGRESS)) + ('0 1 1' * getstatf(STAT_REVIVE_PROGRESS) * -1)) : '0.25 0.90 1'), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
 		else if (getstatf(STAT_HEALING_ORB)>time)
 			drawfill('0 0 0', eX * vid_conwidth + eY * vid_conheight, Nade_Color(NADE_TYPE_HEAL), autocvar_hud_colorflash_alpha*getstatf(STAT_HEALING_ORB_ALPHA), DRAWFLAG_ADDITIVE);
-		if(getstatf(STAT_CAPTURE_PROGRESS))
+		if(!intermission)
+		if(getstatf(STAT_NADE_TIMER) && autocvar_cl_nade_timer) // give nade top priority, as it's a matter of life and death
+		{
+			DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_NADE_TIMER), '0.25 0.90 1' + ('1 0 0' * getstatf(STAT_NADE_TIMER)) - ('0 1 1' * getstatf(STAT_NADE_TIMER)), autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
+			drawstring_aspect(eY * 0.64 * vid_conheight, ((autocvar_cl_nade_timer == 2) ? _("Nade timer") : ""), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
+		}
+		else if(getstatf(STAT_CAPTURE_PROGRESS))
 		{
 			DrawCircleClippedPic(eX * 0.5 * vid_conwidth + eY * 0.6 * vid_conheight, 0.1 * vid_conheight, "gfx/crosshair_ring.tga", getstatf(STAT_CAPTURE_PROGRESS), '0.25 0.90 1', autocvar_hud_colorflash_alpha, DRAWFLAG_ADDITIVE);
 			drawstring_aspect(eY * 0.64 * vid_conheight, _("Capture progress"), eX * vid_conwidth + eY * 0.025 * vid_conheight, '1 1 1', 1, DRAWFLAG_NORMAL);
@@ -1446,16 +1533,14 @@ void CSQC_UpdateView(float w, float h)
 				wcross_scale += sin(pickup_crosshair_size) * autocvar_crosshair_pickup;
 			}
 
+			// todo: make crosshair hit indication dependent on damage dealt
 			if(autocvar_crosshair_hitindication)
 			{
 				vector hitindication_color = ((autocvar_crosshair_color_special == 1) ? stov(autocvar_crosshair_hitindication_per_weapon_color) : stov(autocvar_crosshair_hitindication_color));
 
-				if(hitindication_crosshair_time < hit_time)
+				if(unaccounted_damage)
 				{
-					if(time - hit_time < MAX_TIME_DIFF) // don't trigger the animation if it's too old
-						hitindication_crosshair_size = 1;
-
-					hitindication_crosshair_time = hit_time;
+					hitindication_crosshair_size = 1;
 				}
 
 				if(hitindication_crosshair_size > 0)
@@ -1793,6 +1878,8 @@ void CSQC_UpdateView(float w, float h)
 		HUD_Panel_Mouse();
 	else if(HUD_QuickMenu_IsOpened())
 		HUD_QuickMenu_Mouse();
+	else 
+		HUD_Radar_Mouse();
 
     if(hud && !intermission)
 		VEH_ACTION(hud, VR_HUD);

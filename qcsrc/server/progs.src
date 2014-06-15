@@ -25,7 +25,6 @@ sys-post.qh
 ../common/command/shared_defs.qh
 ../common/net_notice.qh
 ../common/animdecide.qh
-../common/status_effects.qh
 
 ../common/weapons/config.qh
 ../common/weapons/weapons.qh // TODO
@@ -229,8 +228,6 @@ controlpoint.qc
 target_spawn.qc
 func_breakable.qc
 target_music.qc
-
-../common/status_effects.qc
 
 ../common/vehicles/vehicles_include.qc
 

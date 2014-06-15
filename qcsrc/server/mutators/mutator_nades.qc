@@ -413,7 +413,7 @@ void nade_heal_touch()
 		}
 		if ( health_factor > 0 )
 		{
-			maxhealth = (IS_MONSTER(other)) ? other.max_health : g_pickup_healthmega_max;
+			maxhealth = (IS_MONSTER(other)) ? other.max_health : 200; // TODO: find a good limiter that works across all modes and mutators
 			if ( other.health < maxhealth )
 			{
 				if ( self.nade_show_particles )
@@ -671,7 +671,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 	_nade.flags = FL_PROJECTILE;
 	_nade.projectiledeathtype = DEATH_NADE;
 	_nade.toss_time = time;
-	_nade.solid = ((_nade.nade_type == NADE_TYPE_TRANSLOCATE) ? SOLID_CORPSE : SOLID_BBOX);
+	_nade.solid = SOLID_CORPSE; //((_nade.nade_type == NADE_TYPE_TRANSLOCATE) ? SOLID_CORPSE : SOLID_BBOX);
 
 	nade_spawn(_nade);
 
@@ -682,6 +682,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 	}
 
 	e.nade_refire = time + autocvar_g_nades_nade_refire;
+	e.nade_timer = 0;
 }
 
 void nades_GiveBonus(entity player, float score)
@@ -718,11 +719,15 @@ float nade_customize()
 	{
 		// somewhat hide the model, but keep the glow
 		//self.effects = 0;
+		if(self.traileffectnum)
+			self.traileffectnum = 0;
 		self.alpha = -1;
 	}
 	else
 	{
 		//self.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+		if(!self.traileffectnum)
+			self.traileffectnum = particleeffectnum(Nade_TrailEffect(Nade_ProjectileFromID(self.nade_type, FALSE), self.team));
 		self.alpha = 1;
 	}
 	
@@ -836,14 +841,28 @@ void nades_CheckThrow()
 	}
 }
 
-void nades_Clear(entity player)
+void nades_Clear(entity player, float allplayers)
 {
-	if(player.nade)
-		remove(player.nade);
-	if(player.fake_nade)
-		remove(player.fake_nade);
+	if(allplayers)
+	{
+		FOR_EACH_PLAYER(player)
+		{
+			if(player.nade) { remove(player.nade); }
+			if(player.fake_nade) { remove(player.fake_nade); }
+			player.nade = player.fake_nade = world;
+			player.nade_timer = 0;
+		}
+
+		return;
+	}
+	
+	if(!player) { return; }
+
+	if(player.nade) { remove(player.nade); }
+	if(player.fake_nade) { remove(player.fake_nade); }
 
 	player.nade = player.fake_nade = world;
+	player.nade_timer = 0;
 }
 
 MUTATOR_HOOKFUNCTION(nades_CheckThrow)
@@ -872,6 +891,8 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 		
 	if(self.nade)
 	{
+		self.nade_timer = bound(0, (time - self.nade.lifetime) / autocvar_g_nades_nade_lifetime, 1);
+		//print(sprintf("%d %d\n", self.nade_timer, time - self.nade.lifetime));
 		makevectors(self.angles);
 		self.nade.velocity = self.velocity;
 
@@ -998,6 +1019,8 @@ MUTATOR_HOOKFUNCTION(nades_PlayerSpawn)
 
 	if(autocvar_g_nades_bonus_client_select)
 		self.nade_type = self.cvar_cl_nade_type;
+		
+	self.nade_timer = 0;
 
 	if(self.nade_spawnloc)
 	if(!self.jb_isprisoned)
@@ -1081,13 +1104,14 @@ MUTATOR_HOOKFUNCTION(nades_MonsterDies)
 
 MUTATOR_HOOKFUNCTION(nades_RemovePlayer)
 {
-	nades_Clear(self);
+	nades_Clear(self, FALSE);
 	nades_RemoveBonus(self);
 	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(nades_SpectateCopy)
 {
+	self.nade_timer = other.nade_timer;
 	self.nade_type = other.nade_type;
 	self.pokenade_type = other.pokenade_type;
 	self.bonus_nades = other.bonus_nades;
@@ -1119,6 +1143,7 @@ MUTATOR_HOOKFUNCTION(nades_BuildMutatorsPrettyString)
 
 void nades_Initialize()
 {
+	addstat(STAT_NADE_TIMER, AS_FLOAT, nade_timer);
 	addstat(STAT_NADE_BONUS, AS_FLOAT, bonus_nades);
 	addstat(STAT_NADE_BONUS_TYPE, AS_INT, nade_type);
 	addstat(STAT_NADE_BONUS_SCORE, AS_FLOAT, bonus_nade_score);
@@ -1145,9 +1170,9 @@ MUTATOR_DEFINITION(mutator_nades)
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, nades_CheckThrow, CBC_ORDER_LAST);
 	MUTATOR_HOOK(VehicleEnter, nades_VehicleEnter, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, nades_PlayerPreThink, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerSpawn, nades_PlayerSpawn, CBC_ORDER_LAST);
+	MUTATOR_HOOK(PlayerSpawn, nades_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, nades_PlayerDies, CBC_ORDER_LAST);
-	MUTATOR_HOOK(PlayerDamage_Calculate, nades_PlayerDamage, CBC_ORDER_FIRST);
+	MUTATOR_HOOK(PlayerDamage_Calculate, nades_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterDies, nades_MonsterDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, nades_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, nades_RemovePlayer, CBC_ORDER_ANY);

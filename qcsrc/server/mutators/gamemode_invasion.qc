@@ -3,7 +3,7 @@ void spawnfunc_invasion_spawnpoint()
 	if(!g_invasion) { remove(self); return; }
 
 	self.classname = "invasion_spawnpoint";
-	
+
 	if(autocvar_g_invasion_zombies_only) // precache only if it hasn't been already
 	if(self.monsterid)
 		MON_ACTION(self.monsterid, MR_PRECACHE);
@@ -123,10 +123,6 @@ float Invasion_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
 		round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
-
-		FOR_EACH_PLAYER(head)
-			nades_Clear(head);
-
 		return 1;
 	}
 
@@ -137,7 +133,7 @@ float Invasion_CheckWinner()
 		if((get_monsterinfo(head.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
 			++supermonster_count;
 		++total_alive_monsters;
-		
+
 		if(teamplay)
 		switch(head.team)
 		{
@@ -172,8 +168,8 @@ float Invasion_CheckWinner()
 
 	entity winner = world;
 	float winning_score = 0, winner_team = 0;
-	
-	
+
+
 	if(teamplay)
 	{
 		if(red_alive > 0) { winner_team = NUM_TEAM_1; }
@@ -217,8 +213,7 @@ float Invasion_CheckWinner()
 
 	round_handler_Init(5, autocvar_g_invasion_warmup, autocvar_g_invasion_round_timelimit);
 
-	FOR_EACH_PLAYER(head)
-		nades_Clear(head);
+	nades_Clear(world, TRUE);
 
 	return 1;
 }
@@ -248,7 +243,7 @@ void Invasion_RoundStart()
 	inv_numkilled = 0;
 
 	inv_maxspawned = rint(max(autocvar_g_invasion_monster_count, autocvar_g_invasion_monster_count * (inv_roundcnt * 0.5)));
-	
+
 	if(teamplay)
 	{
 		DistributeEvenly_Init(inv_maxspawned, invasion_teams);

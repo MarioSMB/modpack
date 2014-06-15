@@ -60,8 +60,8 @@ float JB_CheckWinner()
 				PutClientInServer();
 				self = oldself;
 			}
-			nades_Clear(e);
 		}
+		nades_Clear(world, TRUE);
 		jb_roundover = TRUE;
 		return 1;
 	}
@@ -106,8 +106,9 @@ float JB_CheckWinner()
 			PutClientInServer();
 			self = oldself;
 		}
-		nades_Clear(e);
 	}
+
+	nades_Clear(world, TRUE);
 
 	return 1;
 }
@@ -298,10 +299,10 @@ void JB_Imprison(entity attacker)
 
 	if(!self.jb_had_unlimited_ammo)
 		self.items |= IT_UNLIMITED_WEAPON_AMMO;
-	
+
 	self.weapon_blocked = TRUE;
-	
-	nades_Clear(self);
+
+	nades_Clear(self, FALSE);
 
 	JB_Log(FALSE, strcat("Imprisoning ", self.netname, "^7, attacker: ", etos(attacker), " with netname: ", attacker.netname));
 	JB_TeleportToJail(self);
@@ -384,10 +385,14 @@ void JB_Torture_Think()
 	self.nextthink = time + max(0.1, self.jb_torture_delay + j);
 	self.jb_torture_suggestedforce = JITTER(self.jb_torture_force, self.jb_torture_force_jitter);
 
-	pointparticles(particleeffectnum("poisonfield"), self.origin, '0 0 0', 2);
+	pointparticles(particleeffectnum("firefield"), self.origin, '0 0 0', 2);
 	
 	entity head;
-	FOR_EACH_PLAYER(head) if(DIFF_TEAM(head, self)) if(head.jb_isprisoned) { Damage(head, self, self, 2, DEATH_POISONFIELD, head.origin, '0 0 0'); }
+	FOR_EACH_PLAYER(head)
+	if(DIFF_TEAM(head, self))
+	if(head.jb_isprisoned)
+	if(!Fire_IsBurning(head))
+		Fire_AddDamage(head, world, 100, 6, DEATH_FIRE);
 }
 
 void JB_Torture_Start(entity spot)
@@ -519,7 +524,7 @@ void JB_Jail_Touch()
 	{
 		entity own = other.realowner;
 		remove(other);
-		nades_Clear(own);
+		nades_Clear(own, FALSE);
 		return;
 	}
 	
@@ -742,9 +747,9 @@ string JB_ControlPoint_Name(entity p)
 
 	switch(p.team)
 	{
-		case NUM_TEAM_1:	clr = "^1"; tm = "Red"; break;
-		case NUM_TEAM_2:	clr = "^4"; tm = "Blue"; break;
-		default:			clr = "^3"; tm = "Neutral"; break;
+		case NUM_TEAM_1:	clr = COL_TEAM_1; tm = NAME_TEAM_1; break;
+		case NUM_TEAM_2:	clr = COL_TEAM_2; tm = NAME_TEAM_2; break;
+		default:			clr = "^3"; tm = NAME_NEUTRAL; break;
 	}
 
 	end = strcat(" (Point ", chr2str(str2chr("A", 0) + p.cnt), ")");
@@ -1004,7 +1009,7 @@ MUTATOR_HOOKFUNCTION(jb_ResetMap)
 
 MUTATOR_HOOKFUNCTION(jb_PlayerDies)
 {
-	if(jb_roundover && frag_deathtype == DEATH_POISONFIELD)
+	if(jb_roundover && frag_deathtype == DEATH_FIRE)
 		PlayerScore_Add(frag_target, SP_KILLS, +1); // dying negates 1, so we bring it back up
 
 	if(!round_handler_IsRoundStarted() || jb_roundover)
@@ -1083,6 +1088,7 @@ MUTATOR_HOOKFUNCTION(jb_PlayerSpawn)
 MUTATOR_HOOKFUNCTION(jb_SpectateCopy)
 {
 	self.stat_jb_isprisoned = other.jb_isprisoned;
+	self.jb_unlock_progress = other.jb_unlock_progress;
 	return FALSE;
 }
 
@@ -1148,7 +1154,7 @@ MUTATOR_HOOKFUNCTION(jb_PlayerPreThink)
 
 MUTATOR_HOOKFUNCTION(jb_PlayerDamage)
 {
-	if(self.jb_isprisoned && frag_deathtype != DEATH_POISONFIELD)
+	if(self.jb_isprisoned && frag_deathtype != DEATH_FIRE)
 		frag_damage = 0;
 
 	entity e;

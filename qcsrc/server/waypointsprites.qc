@@ -301,8 +301,7 @@ float WaypointSprite_SendEntity(entity to, float sendflags)
 		WriteCoord(MSG_ENTITY, self.fade_time);
 		WriteCoord(MSG_ENTITY, self.teleport_time);
 		WriteShort(MSG_ENTITY, self.fade_rate); // maxdist
-		float f;
-		f = 0;
+		float f = 0;
 		if(self.currentammo)
 			f |= 1; // hideable
 		if(self.exteriormodeltoclient == to)
@@ -314,12 +313,13 @@ float WaypointSprite_SendEntity(entity to, float sendflags)
 				entity wp_owner = self.owner;
 				entity e = WaypointSprite_getviewentity(to);
 				if(SAME_TEAM(e, wp_owner) && wp_owner.goalentity.health >= wp_owner.goalentity.max_health) { f |= 2; }
-				if(!onslaught_controlpoint_attackable(wp_owner, e.team)) { f |= 2; }
+				if(!ons_ControlPoint_Attackable(wp_owner, e.team)) { f |= 2; }
 			}
 			if(self.owner.classname == "onslaught_generator")
 			{
 				entity wp_owner = self.owner;
 				if(wp_owner.isshielded && wp_owner.health >= wp_owner.max_health) { f |= 2; }
+				if(wp_owner.health <= 0) { f |= 2; }
 			}
 		}
 		WriteByte(MSG_ENTITY, f);

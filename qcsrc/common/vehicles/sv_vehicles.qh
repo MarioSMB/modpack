@@ -13,6 +13,7 @@ float autocvar_g_vehicles_delayspawn;
 float autocvar_g_vehicles_delayspawn_jitter;
 float autocvar_g_vehicles_allow_bots;
 float autocvar_g_vehicles_teams;
+float autocvar_g_vehicles_teleportable;
 var float autocvar_g_vehicles_nex_damagerate = 0.5;
 var float autocvar_g_vehicles_uzi_damagerate = 0.5;
 var float autocvar_g_vehicles_rifle_damagerate = 0.75;

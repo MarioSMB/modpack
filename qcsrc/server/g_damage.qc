@@ -857,6 +857,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		// count the damage
 		if(attacker)
 		if(!targ.deadflag)
+		if(!DEATH_ISBUFF(deathtype))
 		if(targ.takedamage == DAMAGE_AIM)
 		if(targ != attacker)
 		{
@@ -868,7 +869,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 
 			if(IS_PLAYER(victim) || IS_TURRET(victim) || IS_MONSTER(victim) || victim.classname == "func_assault_destructible" || (victim.classname == "onslaught_generator" && !victim.isshielded) || (victim.classname == "onslaught_controlpoint_icon" && !victim.owner.isshielded))
 			{
-				if(DIFF_TEAM(victim, attacker))
+				if(DIFF_TEAM(victim, attacker) && !victim.frozen)
 				{
 					if(damage > 0)
 					{
@@ -877,7 +878,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 							if(victim.BUTTON_CHAT)
 								attacker.typehitsound += 1;
 							else
-								attacker.hitsound += 1;
+								attacker.damage_dealt += damage;
 						}
 
 						damage_goodhits += 1;
@@ -1300,12 +1301,12 @@ void Fire_ApplyDamage(entity e)
 	t = min(frametime, e.fire_endtime - time);
 	d = e.fire_damagepersec * t;
 
-	hi = e.fire_owner.hitsound;
+	hi = e.fire_owner.damage_dealt;
 	ty = e.fire_owner.typehitsound;
 	Damage(e, e, e.fire_owner, d, e.fire_deathtype, e.origin, '0 0 0');
 	if(e.fire_hitsound && e.fire_owner)
 	{
-		e.fire_owner.hitsound = hi;
+		e.fire_owner.damage_dealt = hi;
 		e.fire_owner.typehitsound = ty;
 	}
 	e.fire_hitsound = TRUE;

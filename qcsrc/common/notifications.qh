@@ -366,7 +366,7 @@ void Send_Notification_WOCOVA(
 	MULTITEAM_INFO(1, INFO_CTF_PICKUP_, 4,                 1, 0, "s1", "s1",                        "notify_%s_taken",      _("^BG%s^BG got the ^TC^TT^BG flag"), "") \
 	MSG_INFO_NOTIF(1, INFO_CTF_PICKUP_NEUTRAL,             1, 0, "s1", "s1",                        "notify_%s_taken",      _("^BG%s^BG got the flag"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_RETURN_, 4,                 1, 0, "s1", "s1",                        "notify_%s_returned",   _("^BG%s^BG returned the ^TC^TT^BG flag"), "") \
-	MULTITEAM_INFO(1, INFO_CTF_RETURN_MONSTER_, 4,         1, 0, "s1", "s1",                        "notify_%s_returned",   _("^BG%s^BG returned the ^TC^TT^BG flag"), "") \
+    MULTITEAM_INFO(1, INFO_CTF_RETURN_MONSTER_, 4,         1, 0, "s1", "s1",                        "notify_%s_returned",   _("^BG%s^BG returned the ^TC^TT^BG flag"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_ARC,               3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was zapped by ^BG%s^K1's arc%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_BASH,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was bashed by ^BG%s^K1%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_CHEAT,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was unfairly eliminated by ^BG%s^K1%s%s"), "") \
@@ -401,6 +401,7 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_WAKI_GUN,       3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was bolted down by ^BG%s^K1's Racer%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VH_WAKI_ROCKET,    3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 couldn't find shelter from ^BG%s^K1's Racer%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VAMPIRE,           3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1's blood was sucked by ^BG%s^K1%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VENGEANCE,         3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_death",         _("^BG%s%s^K1 was destroyed by the vengeful ^BG%s^K1%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_MURDER_VOID,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "notify_void",          _("^BG%s%s^K1 was thrown into a world of hurt by ^BG%s^K1%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_AUTOTEAMCHANGE,      2, 1, "s1 s2loc death_team", "",         "",                     _("^BG%s^K1 was moved into the %s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_BETRAYAL,            2, 1, "s1 s2loc spree_lost", "s1",       "notify_teamkill_red",  _("^BG%s^K1 became enemies with the Lord of Teamplay%s%s"), "") \
@@ -428,7 +429,6 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_NADE_ICE_FREEZE,     2, 1, "s1 s2loc spree_lost", "s1",       "notify_nade_ice",      _("^BG%s^K1 was frozen to death by their own Ice Nade%s%s"), _("^BG%s^K1 felt a little chilly%s%s")) \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_NADE_HEAL,           2, 1, "s1 s2loc spree_lost", "s1",       "notify_nade_heal",     _("^BG%s^K1's Healing Nade didn't quite heal them%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_NOAMMO,              2, 1, "s1 s2loc spree_lost", "s1",       "notify_outofammo",     _("^BG%s^K1 died%s%s. What's the point of living without ammo?"), _("^BG%s^K1 ran out of ammo%s%s")) \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_POISONFIELD,         2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 was poisoned%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_ROT,                 2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 rotted away%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_SHOOTING_STAR,       2, 1, "s1 s2loc spree_lost", "s1",       "notify_shootingstar",  _("^BG%s^K1 became a shooting star%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_SLIME,               2, 1, "s1 s2loc spree_lost", "s1",       "notify_slime",         _("^BG%s^K1 was slimed%s%s"), "") \
@@ -460,7 +460,9 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VH_WAKI_ROCKET,      2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 couldn't find shelter from a Racer rocket%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_VOID,                3, 1, "s1 s2 s3loc spree_lost", "s1",    "notify_void",          _("^BG%s^K1 %s^K1%s%s"), "") \
 	MULTITEAM_INFO(1, INFO_DEATH_TEAMKILL_, 4,             3, 1, "s1 s2 s3loc spree_end", "s2 s1",  "notify_teamkill_%s",   _("^BG%s^K1 was betrayed by ^BG%s^K1%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_DOMINATION_CAPTURE_TIME,        1, 2, "s1 s2 f1 f2", "",                 "",                     _("^BG%s^BG (%s points every %s seconds)"), "") \
+	MULTITEAM_INFO(1, INFO_DOMINATION_CAPTURE_, 4,         0, 0, "", "",                            "",                     _("^TC^TT^BG team has captured a control point"), "") \
+	MULTITEAM_INFO(1, INFO_DOMINATION_CAPTURE_TIME_, 4,    1, 2, "s1 f1 f2", "",                    "",                     _("^TC^TT^BG team%s^BG (%s points every %s seconds)"), "") \
+	MULTITEAM_INFO(1, INFO_DOMINATION_CAPTURE_TIME_NOMSG_,4,0,2, "f1 f2", "",                       "",                     _("^TC^TT^BG team has captured a control point (%s points every %s seconds)"), "") \
 	MSG_INFO_NOTIF(1, INFO_FREEZETAG_FREEZE,               2, 0, "s1 s2", "",                       "",                     _("^BG%s^K1 was frozen by ^BG%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_FREEZETAG_REVIVED,              2, 0, "s1 s2", "",                       "",                     _("^BG%s^K3 was revived by ^BG%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_FREEZETAG_REVIVED_FALL,         1, 0, "s1", "",                          "",                     _("^BG%s^K3 was revived by falling"), "") \
@@ -775,9 +777,11 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_ONS_GENERATOR_SHIELDED,      0, 0, "",              CPID_ONS_CAPSHIELD,    "0 0", _("^BGThe enemy generator cannot be destroyed yet\n^F2Capture some control points to unshield it"), "") \
 	MULTITEAM_CENTER(1, CENTER_ONS_NOTSHIELDED_, 4,         0, 0, "",              CPID_ONSLAUGHT,        "0 0", _("^BGThe ^TCenemy^BG generator is no longer shielded!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ONS_NOTSHIELDED_TEAM,        0, 0, "",              CPID_ONSLAUGHT,        "0 0", _("^K1Your generator is NOT shielded!\n^BGRe-capture control points to shield it!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_ONS_TELEPORT,                0, 0, "pass_key",      CPID_ONSLAUGHT,        "0 0", _("^BGPress ^F2DROPFLAG%s^BG to teleport"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_ONS_TELEPORT_ANTISPAM,       0, 1, "f1secs",        CPID_ONSLAUGHT,        "0 0", _("^BGTeleporting disabled for %s"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_OVERKILL_CHARGE,             0, 0, "",              CPID_OVERKILL,         "0 0", _("^BGYour weapon's charge is too low, release the attack button & wait for it to charge"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_FRAG,               0, 0, "",              CPID_OVERTIME,         "0 0", _("^F2Now playing ^F4OVERTIME^F2!\nKeep fragging until we have a winner!"), _("^F2Now playing ^F4OVERTIME^F2!\nKeep scoring until we have a winner!")) \
-	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_CONTROLPOINT,       0, 0, "",              CPID_OVERTIME,         "5 0", _("^F2Now playing ^F4OVERTIME^F2!\n\nGenerators start now to decay.\nThe more control points your team holds,\nthe faster the enemy generator decays"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_CONTROLPOINT,       0, 0, "",              CPID_OVERTIME,         "5 0", _("^F2Now playing ^F4OVERTIME^F2!\n\nGenerators are now decaying.\nThe more control points your team holds,\nthe faster the enemy generator decays"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_TIME,               0, 1, "f1time",        CPID_OVERTIME,         "0 0", _("^F2Now playing ^F4OVERTIME^F2!\n^BGAdded ^F4%s^BG to the game!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_PIGGYBACK_CARRYING,          1, 0, "s1",            CPID_PIGGYBACK,        "0 0", _("^BGYou are now carrying %s^BG!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_PIGGYBACK_RIDING,            1, 0, "s1",            CPID_PIGGYBACK,        "0 0", _("^BGYou are now riding %s^BG!"), "") \
@@ -833,7 +837,6 @@ void Send_Notification_WOCOVA(
 	MULTITEAM_MULTI##teams(default,prefix,anncepre,infopre,centerpre)
 
 #define MSG_MULTI_NOTIFICATIONS \
-	MSG_MULTI_NOTIF(1, DEATH_MURDER_ARC,                     NO_MSG,        INFO_DEATH_MURDER_ARC,                     NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_BASH,                    NO_MSG,        INFO_DEATH_MURDER_BASH,                    NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_CHEAT,                   NO_MSG,        INFO_DEATH_MURDER_CHEAT,                   NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_CRUSH,                   NO_MSG,        INFO_DEATH_MURDER_CRUSH,                   NO_MSG) \
@@ -867,6 +870,7 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_WAKI_GUN,             NO_MSG,        INFO_DEATH_MURDER_VH_WAKI_GUN,             NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_VH_WAKI_ROCKET,          NO_MSG,        INFO_DEATH_MURDER_VH_WAKI_ROCKET,          NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_VAMPIRE,                 NO_MSG,        INFO_DEATH_MURDER_VAMPIRE,                 NO_MSG) \
+	MSG_MULTI_NOTIF(1, DEATH_MURDER_VENGEANCE,               NO_MSG,        INFO_DEATH_MURDER_VENGEANCE,               NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_MURDER_VOID,                    NO_MSG,        INFO_DEATH_MURDER_VOID,                    NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_AUTOTEAMCHANGE,            NO_MSG,        INFO_DEATH_SELF_AUTOTEAMCHANGE,            CENTER_DEATH_SELF_AUTOTEAMCHANGE) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_BETRAYAL,                  NO_MSG,        INFO_DEATH_SELF_BETRAYAL,                  CENTER_DEATH_SELF_BETRAYAL) \
@@ -894,7 +898,6 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, DEATH_SELF_NADE_ICE_FREEZE,           NO_MSG,		INFO_DEATH_SELF_NADE_ICE_FREEZE,           CENTER_DEATH_SELF_NADE_ICE_FREEZE) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_NADE_HEAL,                 NO_MSG,        INFO_DEATH_SELF_NADE_HEAL,                 CENTER_DEATH_SELF_NADE_HEAL) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_NOAMMO,                    NO_MSG,        INFO_DEATH_SELF_NOAMMO,                    CENTER_DEATH_SELF_NOAMMO) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_POISONFIELD,               NO_MSG,        INFO_DEATH_SELF_POISONFIELD,               NO_MSG) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_ROT,                       NO_MSG,        INFO_DEATH_SELF_ROT,                       CENTER_DEATH_SELF_ROT) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_SHOOTING_STAR,             NO_MSG,        INFO_DEATH_SELF_SHOOTING_STAR,             CENTER_DEATH_SELF_SHOOTING_STAR) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_SLIME,                     NO_MSG,        INFO_DEATH_SELF_SLIME,                     CENTER_DEATH_SELF_SLIME) \

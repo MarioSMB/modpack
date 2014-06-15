@@ -47,6 +47,7 @@ REGISTER_WEAPON(
 	w_cvar(id, sn, NONE, combo_edgedamage) \
 	w_cvar(id, sn, NONE, combo_force) \
 	w_cvar(id, sn, NONE, combo_radius) \
+	w_cvar(id, sn, NONE, combo_simple) \
 	w_cvar(id, sn, NONE, combo_speed) \
 	w_cvar(id, sn, NONE, combo_safeammocheck) \
 	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
@@ -68,7 +69,51 @@ void W_Electro_ExplodeCombo(void);
 #ifdef SVQC
 void spawnfunc_weapon_electro(void) { weapon_defaultspawnfunc(WEP_ELECTRO); }
 
-void W_Electro_TriggerCombo(vector org, float rad, entity own)
+void W_Electro_TriggerCombo_Simple(vector org, float rad, entity own)
+{
+	entity e;
+	for(e = world; (e = find(e, classname, "electro_orb")); )
+	{
+		if(vlen(e.origin - org) <= rad)
+		{
+			// do we allow thruwall triggering?
+			if(WEP_CVAR(electro, combo_comboradius_thruwall))
+			{
+				WarpZone_TraceLine(org, e.origin, MOVE_NOMONSTERS, e);
+				if(trace_fraction != 1)
+				{
+					if(vlen(e.origin - org) >= WEP_CVAR(electro, combo_comboradius_thruwall))
+					{
+						// trigger is through a wall and outside of thruwall range, abort
+						continue;
+					}
+				}
+			}
+			
+			// change owner to whoever caused the combo explosion
+			e.realowner = own;
+			e.takedamage = DAMAGE_NO;
+			e.classname = "electro_orb_chain";
+			
+			// now set the next one to trigger as well
+			e.think = W_Electro_ExplodeCombo;
+			
+			// delay combo chains, looks cooler
+			e.nextthink =
+				(
+					time
+					+
+					(WEP_CVAR(electro, combo_speed) ?
+						(vlen(e.origin - org) / WEP_CVAR(electro, combo_speed))
+						:
+						0
+					)
+				);
+		}
+	}
+}
+
+void W_Electro_TriggerCombo_WarpZone(vector org, float rad, entity own)
 {
 	entity e = WarpZone_FindRadius(org, rad, !WEP_CVAR(electro, combo_comboradius_thruwall));
 	while(e)
@@ -113,6 +158,16 @@ void W_Electro_TriggerCombo(vector org, float rad, entity own)
 		}
 		e = e.chain;
 	}
+}
+
+void W_Electro_TriggerCombo(vector org, float rad, entity own)
+{
+	// TODO: remove when we have unlagged findradius!
+
+	if(WEP_CVAR(electro, combo_simple))
+		W_Electro_TriggerCombo_Simple(org, rad, own);
+	else
+		W_Electro_TriggerCombo_WarpZone(org, rad, own);
 }
 
 void W_Electro_ExplodeCombo(void)

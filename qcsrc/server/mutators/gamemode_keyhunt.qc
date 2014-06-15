@@ -123,11 +123,10 @@ float KH_CheckWinner()
 		round_handler_Init(5, autocvar_g_keyhunt_warmup, autocvar_g_keyhunt_round_timelimit);
 		FOR_EACH_CLIENT(e)
 		{
-			if(IS_PLAYER(e))
-				nades_Clear(e);
 			e.stat_kh_redkey_team = e.stat_kh_bluekey_team = e.stat_kh_yellowkey_team = e.stat_kh_pinkkey_team = 0;
 			e.kh_lastkiller = world;
 		}
+		nades_Clear(world, TRUE);
 		KH_FOR_EACH_KEY(key) { if(!wasfreed(key)) kh_RemoveKey(key); }
 		kh_worldkeylist = world; // reset key list
 		return 1;
@@ -188,11 +187,11 @@ float KH_CheckWinner()
 
 	FOR_EACH_CLIENT(e)
 	{
-		if(IS_PLAYER(e))
-			nades_Clear(e);
 		e.stat_kh_redkey_team = e.stat_kh_bluekey_team = e.stat_kh_yellowkey_team = e.stat_kh_pinkkey_team = 0;
 		e.kh_lastkiller = world;
 	}
+	
+	nades_Clear(world, TRUE);
 
 	KH_FOR_EACH_KEY(key) { if(!wasfreed(key)) kh_RemoveKey(key); }
 	kh_worldkeylist = world; // reset key list
@@ -858,7 +857,7 @@ void kh_KeySetup(float teamnumber, entity key, entity player) // called when spa
 
 	setattachment(key, world, "");
 
-	key.netname = ((teamnumber == NUM_TEAM_1) ? "^1RED^7 key" : ((teamnumber == NUM_TEAM_2) ? "^4BLUE^7 key" : ((teamnumber == NUM_TEAM_3) ? "^3YELLOW^7 key" : "^6PINK^7 key")));
+	key.netname = sprintf("%s%s^7 key", Team_ColorCode(teamnumber), Team_ColorName_Upper(teamnumber));
 	key.team = teamnumber;
 	key.classname = "item_key_team";
 	key.target = "###item###"; // wut?
@@ -1405,6 +1404,19 @@ MUTATOR_HOOKFUNCTION(kh_PlayerUseKey)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(kh_ResetMapGlobal)
+{
+	entity e, key;
+	FOR_EACH_CLIENT(e)
+	{
+		e.stat_kh_redkey_team = e.stat_kh_bluekey_team = e.stat_kh_yellowkey_team = e.stat_kh_pinkkey_team = 0;
+		e.kh_lastkiller = world;
+	}
+	KH_FOR_EACH_KEY(key) { if(!wasfreed(key)) kh_RemoveKey(key); }
+	kh_worldkeylist = world; // reset key list
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(kh_ResetMap)
 {
 	// don't reset players
@@ -1579,6 +1591,7 @@ MUTATOR_DEFINITION(gamemode_keyhunt)
 	MUTATOR_HOOK(PlayerPreThink, kh_PlayerPreThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, kh_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerUseKey, kh_PlayerUseKey, CBC_ORDER_ANY);
+	MUTATOR_HOOK(reset_map_global, kh_ResetMapGlobal, CBC_ORDER_ANY);
 	MUTATOR_HOOK(reset_map_players, kh_ResetMap, CBC_ORDER_ANY);
 	MUTATOR_HOOK(HelpMePing, kh_HelpMePing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(VehicleEnter, kh_VehicleEnter, CBC_ORDER_ANY);

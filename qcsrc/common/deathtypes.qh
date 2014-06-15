@@ -4,16 +4,14 @@
 
 #define DEATHTYPES \
 	DEATHTYPE(DEATH_AUTOTEAMCHANGE,         DEATH_SELF_AUTOTEAMCHANGE,          NO_MSG,                        DEATH_SPECIAL_START) \
-	DEATHTYPE(DEATH_BUFF_ARC,               NO_MSG,                             DEATH_MURDER_ARC,              DEATH_BUFF_FIRST) \
-	DEATHTYPE(DEATH_BUFF_BASH,              NO_MSG,                             DEATH_MURDER_BASH,             NORMAL_POS) \
-	DEATHTYPE(DEATH_BUFF_VAMPIRE,           NO_MSG,                             DEATH_MURDER_VAMPIRE,          DEATH_BUFF_LAST) \
+	DEATHTYPE(DEATH_BUFF_BASH,              NO_MSG,                             DEATH_MURDER_BASH,             DEATH_BUFF_FIRST) \
+	DEATHTYPE(DEATH_BUFF_VAMPIRE,           NO_MSG,                             DEATH_MURDER_VAMPIRE,          NORMAL_POS) \
+	DEATHTYPE(DEATH_BUFF_VENGEANCE,         NO_MSG,                             DEATH_MURDER_VENGEANCE,        DEATH_BUFF_LAST) \
 	DEATHTYPE(DEATH_CAMP,                   DEATH_SELF_CAMP,                    NO_MSG,                        NORMAL_POS) \
 	DEATHTYPE(DEATH_CHEAT,                  DEATH_SELF_CHEAT,                   DEATH_MURDER_CHEAT,            NORMAL_POS) \
 	DEATHTYPE(DEATH_CRUSH,                  NO_MSG,                             DEATH_MURDER_CRUSH,            NORMAL_POS) \
 	DEATHTYPE(DEATH_CUSTOM,                 DEATH_SELF_CUSTOM,                  NO_MSG,                        NORMAL_POS) \
 	DEATHTYPE(DEATH_DROWN,                  DEATH_SELF_DROWN,                   DEATH_MURDER_DROWN,            NORMAL_POS) \
-	DEATHTYPE(DEATH_EFFECT_BURN,            DEATH_SELF_FIRE,                    DEATH_MURDER_FIRE,             DEATH_EFFECT_FIRST) \
-	DEATHTYPE(DEATH_EFFECT_DROWN,           DEATH_SELF_DROWN,                   DEATH_MURDER_DROWN,            DEATH_EFFECT_LAST) \
 	DEATHTYPE(DEATH_FALL,                   DEATH_SELF_FALL,                    DEATH_MURDER_FALL,             NORMAL_POS) \
 	DEATHTYPE(DEATH_FIRE,                   DEATH_SELF_FIRE,                    DEATH_MURDER_FIRE,             NORMAL_POS) \
 	DEATHTYPE(DEATH_GENERIC,                DEATH_SELF_GENERIC,                 NO_MSG,                        NORMAL_POS) \
@@ -37,7 +35,6 @@
 	DEATHTYPE(DEATH_NADE_ICE_FREEZE,        DEATH_SELF_NADE_ICE_FREEZE,         DEATH_MURDER_NADE_ICE_FREEZE,  NORMAL_POS) \
 	DEATHTYPE(DEATH_NADE_HEAL,              DEATH_SELF_NADE_HEAL,               DEATH_MURDER_NADE_HEAL,        NORMAL_POS) \
 	DEATHTYPE(DEATH_NOAMMO,                 DEATH_SELF_NOAMMO,                  NO_MSG,                        NORMAL_POS) \
-	DEATHTYPE(DEATH_POISONFIELD,            DEATH_SELF_POISONFIELD,             NO_MSG,                        NORMAL_POS) \
 	DEATHTYPE(DEATH_ROT,                    DEATH_SELF_ROT,                     NO_MSG,                        NORMAL_POS) \
 	DEATHTYPE(DEATH_SHOOTING_STAR,          DEATH_SELF_SHOOTING_STAR,           DEATH_MURDER_SHOOTING_STAR,    NORMAL_POS) \
 	DEATHTYPE(DEATH_SLIME,                  DEATH_SELF_SLIME,                   DEATH_MURDER_SLIME,            NORMAL_POS) \
@@ -110,7 +107,6 @@ DEATHTYPES
 #define DEATH_ISVEHICLE(t)            ((t) >= DEATH_VHFIRST && (t) <= DEATH_VHLAST)
 #define DEATH_ISTURRET(t)             ((t) >= DEATH_TURRET_FIRST && (t) <= DEATH_TURRET_LAST)
 #define DEATH_ISMONSTER(t)            ((t) >= DEATH_MONSTER_FIRST && (t) <= DEATH_MONSTER_LAST)
-#define DEATH_ISSTATUSEFFECT(t)       ((t) >= DEATH_EFFECT_FIRST && (t) <= DEATH_EFFECT_LAST)
 #define DEATH_ISBUFF(t)               ((t) >= DEATH_BUFF_FIRST && (t) <= DEATH_BUFF_LAST)
 #define DEATH_WEAPONOFWEAPONDEATH(t)  ((t) & DEATH_WEAPONMASK)
 #define DEATH_ISWEAPON(t,w)           (!DEATH_ISSPECIAL(t) && DEATH_WEAPONOFWEAPONDEATH(t) == (w))

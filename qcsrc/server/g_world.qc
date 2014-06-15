@@ -548,7 +548,6 @@ void spawnfunc___init_dedicated_server(void)
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
-	CALL_ACCUMULATED_FUNCTION(RegisterStatusEffects);
 	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
 
 	MapInfo_Enumerate();
@@ -601,7 +600,6 @@ void spawnfunc_worldspawn (void)
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterNotifications);
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
-	CALL_ACCUMULATED_FUNCTION(RegisterStatusEffects);
 	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
 
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
@@ -792,7 +790,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_WEAPON_CLIPLOAD, AS_INT, clip_load);
 	addstat(STAT_WEAPON_CLIPSIZE, AS_INT, clip_size);
 	addstat(STAT_LAST_PICKUP, AS_FLOAT, last_pickup);
-	addstat(STAT_HIT_TIME, AS_FLOAT, hit_time);
+	addstat(STAT_DAMAGE_DEALT_TOTAL, AS_INT, damage_dealt_total);
 	addstat(STAT_TYPEHIT_TIME, AS_FLOAT, typehit_time);
 	addstat(STAT_LAYED_MINES, AS_INT, minelayer_mines);
 
@@ -812,6 +810,27 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_MOVEVARS_MAXSPEED, AS_FLOAT, stat_sv_maxspeed);
 	addstat(STAT_MOVEVARS_AIRACCEL_QW, AS_FLOAT, stat_sv_airaccel_qw);
 	addstat(STAT_MOVEVARS_AIRSTRAFEACCEL_QW, AS_FLOAT, stat_sv_airstrafeaccel_qw);
+	
+	// new properties
+	addstat(STAT_MOVEVARS_JUMPVELOCITY, AS_FLOAT, stat_sv_jumpvelocity);
+	addstat(STAT_MOVEVARS_AIRACCEL_QW_STRETCHFACTOR, AS_FLOAT, stat_sv_airaccel_qw_stretchfactor);
+	addstat(STAT_MOVEVARS_MAXAIRSTRAFESPEED, AS_FLOAT, stat_sv_maxairstrafespeed);
+	addstat(STAT_MOVEVARS_MAXAIRSPEED, AS_FLOAT, stat_sv_maxairspeed);
+	addstat(STAT_MOVEVARS_AIRSTRAFEACCELERATE, AS_FLOAT, stat_sv_airstrafeaccelerate);
+	addstat(STAT_MOVEVARS_WARSOWBUNNY_TURNACCEL, AS_FLOAT, stat_sv_warsowbunny_turnaccel);
+	addstat(STAT_MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION, AS_FLOAT, stat_sv_airaccel_sideways_friction);
+	addstat(STAT_MOVEVARS_AIRCONTROL, AS_FLOAT, stat_sv_aircontrol);
+	addstat(STAT_MOVEVARS_AIRCONTROL_POWER, AS_FLOAT, stat_sv_aircontrol_power);
+	addstat(STAT_MOVEVARS_AIRCONTROL_PENALTY, AS_FLOAT, stat_sv_aircontrol_penalty);
+	addstat(STAT_MOVEVARS_WARSOWBUNNY_AIRFORWARDACCEL, AS_FLOAT, stat_sv_warsowbunny_airforwardaccel);
+	addstat(STAT_MOVEVARS_WARSOWBUNNY_TOPSPEED, AS_FLOAT, stat_sv_warsowbunny_topspeed);
+	addstat(STAT_MOVEVARS_WARSOWBUNNY_ACCEL, AS_FLOAT, stat_sv_warsowbunny_accel);
+	addstat(STAT_MOVEVARS_WARSOWBUNNY_BACKTOSIDERATIO, AS_FLOAT, stat_sv_warsowbunny_backtosideratio);
+	addstat(STAT_MOVEVARS_FRICTION, AS_FLOAT, stat_sv_friction);
+	addstat(STAT_MOVEVARS_ACCELERATE, AS_FLOAT, stat_sv_accelerate);
+	addstat(STAT_MOVEVARS_STOPSPEED, AS_FLOAT, stat_sv_stopspeed);
+	addstat(STAT_MOVEVARS_AIRACCELERATE, AS_FLOAT, stat_sv_airaccelerate);
+	addstat(STAT_MOVEVARS_AIRSTOPACCELERATE, AS_FLOAT, stat_sv_airstopaccelerate);
 
 	// secrets
 	addstat(STAT_SECRETS_TOTAL, AS_FLOAT, stat_secrets_total);
@@ -2192,22 +2211,26 @@ string GotoMap(string m)
 
 void EndFrame()
 {
+	anticheat_endframe();
+
 	float altime;
 	FOR_EACH_REALCLIENT(self)
 	{
+		self.damage_dealt_total = 0;
+	
 		if(IS_SPEC(self))
 		{
 			if(self.enemy.typehitsound)
 				self.typehit_time = time;
-			else if(self.enemy.hitsound)
-				self.hit_time = time;
+			else if(self.enemy.damage_dealt)
+				self.damage_dealt_total = self.enemy.damage_dealt;
 		}
 		else
 		{
 			if(self.typehitsound)
 				self.typehit_time = time;
-			else if(self.hitsound)
-				self.hit_time = time;
+			else if(self.damage_dealt)
+				self.damage_dealt_total = self.damage_dealt;
 		}
 	}
 	altime = time + frametime * (1 + autocvar_g_antilag_nudge);
@@ -2218,8 +2241,8 @@ void EndFrame()
 	// needed!
 	FOR_EACH_CLIENT(self)
 	{
-		self.hitsound = FALSE;
 		self.typehitsound = FALSE;
+		self.damage_dealt = 0;
 		antilag_record(self, altime);
 	}
 	FOR_EACH_MONSTER(self)

@@ -1,5 +1,6 @@
 float generator_precached;
 .float count;
+.float max_health;
 
 void generator_precache()
 {
@@ -23,84 +24,21 @@ void generator_precache()
 	precache_sound("onslaught/shockwave.wav");
 	precache_sound("weapons/grenade_impact.wav");
 	precache_sound("weapons/rocket_impact.wav");
-
-	precache_model("models/onslaught/gen_gib1.md3");
-	precache_model("models/onslaught/gen_gib2.md3");
-	precache_model("models/onslaught/gen_gib3.md3");
+	precache_sound("onslaught/electricity_explode.wav");
 
 	generator_precached = TRUE;
 }
 
-void ons_gib_damage (entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector vforce)
+void ons_generator_ray_draw()
 {
-	self.velocity = self.velocity + vforce;
-}
-
-.float giblifetime;
-
-void gib_draw_noburn()
-{
-	if(time >= self.giblifetime)
-		remove(self);
-}
-
-void gib_draw()
-{
-	if(time >= self.move_time)
+	if(time < self.move_time)
 		return;
-
+	
 	self.move_time = time + 0.05;
 
-	if(time > self.giblifetime)
-	{
-		remove(self);
-		return;
-	}
-
-	self.alpha -= 0.05;
-
-	if(self.alpha < 0.1)
-	{
-		remove(self);
-		return;
-	}
-
-	if(random()<0.6)
-		pointparticles(particleeffectnum("onslaught_generator_gib_flame"), self.origin, '0 0 0', 1);
-}
-
-void ons_throwgib(vector v_from, vector v_to, string smodel, float f_lifetime, float b_burn)
-{
-	entity gib;
-
-	gib = spawn();
-
-	setmodel(gib, smodel);
-	setorigin(gib, v_from);
-	gib.solid = SOLID_CORPSE;
-	gib.move_movetype = MOVETYPE_BOUNCE;
-	gib.movetype = MOVETYPE_BOUNCE;
-	gib.health = 255;
-	gib.move_velocity = v_to;
-	gib.move_origin = v_from;
-	gib.velocity = v_to;
-	gib.alpha = 1;
-	gib.move_time = time;
-	gib.drawmask = MASK_NORMAL;
-	gib.giblifetime	= time + f_lifetime;
-
-	if(b_burn)
-		gib.draw = gib_draw;
-	else
-		gib.draw = gib_draw_noburn;
-}
-
-void onslaught_generator_ray_think()
-{
-	self.nextthink = time + 0.05;
 	if(self.count > 10)
 	{
-		self.think = SUB_Remove;
+		remove(self);
 		return;
 	}
 
@@ -113,26 +51,45 @@ void onslaught_generator_ray_think()
 	self.count +=1;
 }
 
-void onslaught_generator_ray_spawn(vector org)
+void ons_generator_ray_spawn(vector org)
 {
 	entity e;
 	e = spawn();
+	e.classname = "ons_ray";
 	setmodel(e, "models/onslaught/ons_ray.md3");
 	setorigin(e, org);
 	e.angles = randomvec() * 360;
+	e.move_origin = org;
+	e.movetype = MOVETYPE_NONE;
 	e.alpha = 0;
 	e.scale = random() * 5 + 8;
-	e.think = onslaught_generator_ray_think;
-	e.nextthink = time + 0.05;
+	e.move_time = time + 0.05;
+	e.drawmask = MASK_NORMAL;
+	e.draw = ons_generator_ray_draw;
 }
 
 void generator_draw()
 {
-	if(self.health > 0)
-		return;
-
 	if(time < self.move_time)
 		return;
+
+	if(self.health > 0)
+	{
+		// damaged fx (less probable the more damaged is the generator)
+		if(random() < 0.9 - self.health / self.max_health)
+		if(random() < 0.01)
+		{
+			pointparticles(particleeffectnum("electro_ballexplode"), self.origin + randompos('-50 -50 -20', '50 50 50'), '0 0 0', 1);
+			sound(self, CH_TRIGGER, "onslaught/electricity_explode.wav", VOL_BASE, ATTEN_NORM);
+		}
+		else
+			pointparticles(particleeffectnum("torch_small"), self.origin + randompos('-60 -60 -20', '60 60 60'), '0 0 0', 1);
+	
+		self.move_time = time + 0.1;
+		
+		return;
+	}
+
 	if(self.count <= 0)
 		return;
 
@@ -145,17 +102,11 @@ void generator_draw()
 		sound(self, CH_TRIGGER, "onslaught/shockwave.wav", VOL_BASE, ATTEN_NORM);
 		pointparticles(particleeffectnum("electro_combo"), self.origin, '0 0 0', 6);
 	}
-
-	// Throw some gibs
-	if(random() < 0.3)
+	
+	// rays
+	if(random() > 0.25)
 	{
-		i = random();
-		if(i < 0.3)
-			ons_throwgib(self.origin + '0 0 40', (100 * randomvec() - '1 1 1') * 11 + '0 0 20', "models/onslaught/gen_gib1.md3", 6, TRUE);
-		else if(i > 0.7)
-			ons_throwgib(self.origin + '0 0 40', (100 * randomvec() - '1 1 1') * 12 + '0 0 20', "models/onslaught/gen_gib2.md3", 6, TRUE);
-		else
-			ons_throwgib(self.origin + '0 0 40', (100 * randomvec() - '1 1 1') * 13 + '0 0 20', "models/onslaught/gen_gib3.md3", 6, TRUE);
+		ons_generator_ray_spawn(self.origin);
 	}
 
 	// Spawn fire balls
@@ -176,12 +127,6 @@ void generator_draw()
 	org = self.origin + randompos(self.mins + '8 8 8', self.maxs + '-8 -8 -8');
 	pointparticles(particleeffectnum("onslaught_generator_smallexplosion"), org, '0 0 0', 1);
 
-	// rays
-	if(random() > 0.25 )
-	{
-		onslaught_generator_ray_spawn(self.origin);
-	}
-
 	// Final explosion
 	if(self.count==1)
 	{
@@ -196,7 +141,6 @@ void generator_draw()
 	self.count -= 1;
 }
 
-.float max_health;
 void generator_damage(float hp)
 {
 	if(hp <= 0)
@@ -228,6 +172,7 @@ void generator_damage(float hp)
 void generator_construct()
 {
 	self.netname = "Generator";
+	self.classname = "onslaught_generator";
 
 	setorigin(self, self.origin);
 	setmodel(self, "models/onslaught/generator.md3");

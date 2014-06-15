@@ -341,6 +341,46 @@ void ClientCommand_mobspawn(float request, float argc)
 	}
 }
 
+void ClientCommand_physics(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			string command = strtolower(argv(1));
+			
+			if(!autocvar_g_physics_clientselect)
+			{
+				sprint(self, "Client physics selection is currently disabled.\n");
+				return;
+			}
+
+			if(command == "list" || command == "help")
+			{
+				sprint(self, strcat("Available physics sets: \n\n", autocvar_g_physics_clientselect_options, " default\n"));
+				return;
+			}
+			
+			if(Physics_Valid(command) || command == "default")
+			{
+				stuffcmd(self, strcat("\nseta cl_physics ", command, "\nsendcvar cl_physics\n"));
+				sprint(self, strcat("^2Physics set successfully changed to ^3", command, "\n"));
+				return;
+			}
+		}
+	
+		default:
+			sprint(self, strcat("Current physics set: ^3", self.cvar_cl_physics, "\n"));
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(self, "\nUsage:^3 cmd physics <physics>\n");
+			sprint(self, "  See 'cmd physics list' for available physics sets.\n");
+			sprint(self, "  Argument 'default' resets to standard physics.\n");
+			return;
+		}
+	}
+}
+
 void ClientCommand_ready(float request) // todo: anti-spam for toggling readyness
 {
 	switch(request)
@@ -402,7 +442,7 @@ void ClientCommand_report(float request, float argc)
 			if(argv(1) == "fov")
 			{
 				self.clientfov = stof(argv(2));
-				UpdateSpectators(world, world);
+				ClientData_Touch(self);
 			}
 
 			return; // never fall through to usage
@@ -769,6 +809,7 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("mobedit", ClientCommand_mobedit(request, arguments), "Edit your monster's properties") \
 	CLIENT_COMMAND("mobkill", ClientCommand_mobkill(request), "Kills your monster") \
 	CLIENT_COMMAND("mobspawn", ClientCommand_mobspawn(request, arguments), "Spawn monsters infront of yourself") \
+	CLIENT_COMMAND("physics", ClientCommand_physics(request, arguments), "Change physics set") \
 	CLIENT_COMMAND("ready", ClientCommand_ready(request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
 	CLIENT_COMMAND("report", ClientCommand_report(request, arguments), "Retrieve values from the client") \
 	CLIENT_COMMAND("say", ClientCommand_say(request, arguments, command), "Print a message to chat to all players") \

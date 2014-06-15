@@ -8,28 +8,8 @@ void turret_remove()
 .vector glowmod;
 void turret_changeteam()
 {
-	switch(self.team - 1)
-	{
-		case NUM_TEAM_1: // Red
-			self.glowmod = '2 0 0';
-			self.teamradar_color = '1 0 0';
-			break;
-
-		case NUM_TEAM_2: // Blue
-			self.glowmod = '0 0 2';
-			self.teamradar_color = '0 0 1';
-			break;
-
-		case NUM_TEAM_3: // Yellow
-			self.glowmod = '1 1 0';
-			self.teamradar_color = '1 1 0';
-			break;
-
-		case NUM_TEAM_4: // Pink
-			self.glowmod = '1 0 1';
-			self.teamradar_color = '1 0 1';
-			break;
-	}
+	self.glowmod = Team_ColorRGB(self.team - 1) * 2;
+	self.teamradar_color = Team_ColorRGB(self.team - 1);
 
 	if(self.team)
 		self.colormap = 1024 + (self.team - 1) * 17;

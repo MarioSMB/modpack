@@ -5,7 +5,7 @@
 //#define CSQCMODEL_SUPPORT_GETTAGINFO_BEFORE_DRAW
 
 // server decides crouching, this lags, but so be it
-#define CSQCMODEL_SERVERSIDE_CROUCH
+//#define CSQCMODEL_SERVERSIDE_CROUCH
 
 // a hack for Xonotic
 #ifdef CSQC

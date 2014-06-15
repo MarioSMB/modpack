@@ -308,6 +308,7 @@ float raptor_frame()
 	if(intermission_running)
 	{
 		self.vehicle.velocity = '0 0 0';
+		self.vehicle.avelocity = '0 0 0';
 		return 1;
 	}
 

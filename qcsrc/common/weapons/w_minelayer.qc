@@ -231,7 +231,7 @@ void W_MineLayer_Think(void)
 
 	// a player's mines shall explode if he disconnects or dies
 	// TODO: Do this on team change too -- Samual: But isn't a player killed when they switch teams?
-	if(!IS_PLAYER(self.realowner) || self.realowner.deadflag != DEAD_NO)
+	if(!IS_PLAYER(self.realowner) || self.realowner.deadflag != DEAD_NO || self.realowner.frozen || self.realowner.jb_isprisoned)
 	{
 		other = world;
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
@@ -243,7 +243,7 @@ void W_MineLayer_Think(void)
 	head = findradius(self.origin, WEP_CVAR(minelayer, proximityradius));
 	while(head)
 	{
-		if(IS_PLAYER(head) && head.deadflag == DEAD_NO)
+		if(IS_PLAYER(head) && head.deadflag == DEAD_NO && !head.frozen && !head.jb_isprisoned)
 		if(head != self.realowner && DIFF_TEAM(head, self.realowner)) // don't trigger for team mates
 		if(!self.mine_time)
 		{
@@ -357,7 +357,7 @@ void W_MineLayer_Attack(void)
 	mine.touch = W_MineLayer_Touch;
 	mine.think = W_MineLayer_Think;
 	mine.nextthink = time;
-	if(WEP_CVAR(minelayer, lifetime) == -1)
+	if(WEP_CVAR(minelayer, lifetime) < 0)
 		mine.cnt = -1; // don't expire
 	else
 		mine.cnt = time + (WEP_CVAR(minelayer, lifetime) - WEP_CVAR(minelayer, lifetime_countdown));
