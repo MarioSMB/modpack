@@ -1168,8 +1168,7 @@ float MapInfo_Get_ByName(string pFilename, float pAllowGenerate, float pGametype
 	{
 		if(!(MapInfo_Map_supportedGametypes & pGametypeToSet))
 		{
-			//error("Can't select the requested game type. This should never happen as the caller should prevent it!\n");
-			return 0;
+			error("Can't select the requested game type. This should never happen as the caller should prevent it!\n");
 			//_MapInfo_Map_ApplyGametypeEx("", pGametypeToSet, MAPINFO_TYPE_DEATHMATCH);
 			//return;
 		}
