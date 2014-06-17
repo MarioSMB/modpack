@@ -98,13 +98,8 @@ void ItemRead(float _IsNew)
 
     if(sf & ISF_SIZE)
     {
-        self.mins_x = ReadCoord();
-        self.mins_y = ReadCoord();
-        self.mins_z = ReadCoord();
-        self.maxs_x = ReadCoord();
-        self.maxs_y = ReadCoord();
-        self.maxs_z = ReadCoord();
-        setsize(self, self.mins, self.maxs);
+        float use_bigsize = ReadByte();
+        setsize(self, '-16 -16 0', (use_bigsize) ? '16 16 48' : '16 16 32');
     }
 
     if(sf & ISF_STATUS) // need to read/write status frist so model can handle simple, fb etc.
@@ -256,12 +251,7 @@ float ItemSend(entity to, float sf)
 
     if(sf & ISF_SIZE)
     {
-        WriteCoord(MSG_ENTITY, self.mins_x);
-        WriteCoord(MSG_ENTITY, self.mins_y);
-        WriteCoord(MSG_ENTITY, self.mins_z);
-        WriteCoord(MSG_ENTITY, self.maxs_x);
-        WriteCoord(MSG_ENTITY, self.maxs_y);
-        WriteCoord(MSG_ENTITY, self.maxs_z);
+		WriteByte(MSG_ENTITY, ((self.flags & FL_POWERUP) || self.health || self.armorvalue));
     }
 
     if(sf & ISF_STATUS)
