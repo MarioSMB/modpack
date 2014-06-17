@@ -83,6 +83,9 @@ REGISTER_GAMETYPE(_("VIP"),vip,g_vip,VIP,"timelimit=20 pointlimit=10 leadlimit=0
 REGISTER_GAMETYPE(_("Invasion"),inv,g_invasion,INVASION,"pointlimit=50 teams=0",_("Survive against waves of monsters"));
 #define g_invasion IS_GAMETYPE(INVASION)
 
+REGISTER_GAMETYPE(_("Conquest"),cq,g_conquest,CONQUEST,"timelimit=20 pointlimit=1 teams=2",_("Capture all the spawnpoint control points to win"))
+#define g_conquest IS_GAMETYPE(CONQUEST)
+
 REGISTER_GAMETYPE(_("Infection"),inf,g_infection,INFECTION,"timelimit=20 pointlimit=10 leadlimit=0",_("Kill enemies to 'infect' them with your team color"));
 #define g_infection IS_GAMETYPE(INFECTION)
 

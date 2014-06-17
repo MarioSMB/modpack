@@ -1,0 +1,17 @@
+//csqc networking flags
+#define CQSF_SETUP 1    //! Initial setup, responsible for communicating location, y-angle and model
+#define CQSF_TEAM 2     //! What team point belong to
+#define CQSF_HEALTH 4   //! Capture progress. Networked as 0--255
+#define CQSF_STATE 8    //! Captured or not
+#define CQSF_NAME 16    //! Display name (can be defined by mapper)
+
+.float cq_status;
+#define CP_NEUTRAL 1
+#define CP_CAPTURED 2
+
+.float cq_capdistance;
+
+#define CQ_CP_MIN ('-35 -35 -3')
+#define CQ_CP_MAX ('35 35 195')
+
+.float health;

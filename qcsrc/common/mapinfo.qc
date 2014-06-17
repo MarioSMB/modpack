@@ -313,6 +313,8 @@ float _MapInfo_Generate(string pFilename) // 0: failure, 1: ok ent, 2: ok bsp
 					MapInfo_Map_supportedGametypes |= (MAPINFO_TYPE_CTF | MAPINFO_TYPE_VIP);
 				else if(v == "team_CTF_blueflag")
 					MapInfo_Map_supportedGametypes |= (MAPINFO_TYPE_CTF | MAPINFO_TYPE_VIP);
+				else if(v == "conquest_controlpoint")
+					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_CONQUEST;
 				else if(v == "invasion_spawnpoint")
 					MapInfo_Map_supportedGametypes |= MAPINFO_TYPE_INVASION;
 				else if(v == "target_assault_roundend")
@@ -512,6 +514,14 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 		s = cdr(s);
 	}
 
+	if(pWantedType == MAPINFO_TYPE_CONQUEST)
+	{
+		sa = car(s);
+		if(sa != "")
+			cvar_set("g_conquest_teams", sa);
+		s = cdr(s);
+	}
+
 	/* keepaway wuz here
 	if(pWantedType == MAPINFO_TYPE_KEEPAWAY)
 	{
@@ -596,6 +606,7 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 	cvar_set("g_tdm_teams", cvar_defstring("g_tdm_teams"));
 	cvar_set("g_ca_teams", cvar_defstring("g_ca_teams"));
 	cvar_set("g_freezetag_teams", cvar_defstring("g_freezetag_teams"));
+	cvar_set("g_conquest_teams", cvar_defstring("g_conquest_teams"));
 	cvar_set("g_keyhunt_teams", cvar_defstring("g_keyhunt_teams"));
 	cvar_set("g_domination_default_teams", cvar_defstring("g_domination_default_teams"));
 	cvar_set("g_race_qualifying_timelimit", cvar_defstring("g_race_qualifying_timelimit"));
@@ -645,6 +656,7 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 			cvar_set("g_keyhunt_teams", v);
 			cvar_set("g_domination_default_teams", v);
 			cvar_set("g_invasion_teams", v);
+			cvar_set("g_conquest_teams", v);
 		}
 		else if(k == "qualifying_timelimit")
 		{

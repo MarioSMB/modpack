@@ -64,8 +64,9 @@ main.qh
 projectile.qh
 player_skeleton.qh
 
-../server/mutators/gamemode_ctf.qh
+../server/mutators/gamemode_ctf.qh // TODO
 ../server/mutators/gamemode_keyhunt.qh
+conquest.qh
 
 sortlist.qc
 miscfunctions.qc
@@ -99,6 +100,7 @@ target_music.qc
 shownames.qh
 shownames.qc
 
+conquest.qc
 announcer.qc
 Main.qc
 View.qc

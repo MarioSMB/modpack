@@ -602,20 +602,20 @@ void Ent_ClientData()
 	}
 	else
 		angles_held_status = 0;
-		
+
 	if(f & 16)
 	{
 		fovlock = ReadByte();
 		num_spectators = ReadByte();
-		
+
 		if(fovlock <= 0)
 			fovlock = -1;
-		
+
 		float i, slot;
-		
+
 		for(i = 0; i < MAX_SPECTATORS; ++i)
 			spectatorlist[i] = 0; // reset list first
-		
+
 		for(i = 0; i < num_spectators; ++i)
 		{
 			slot = ReadByte();
@@ -951,6 +951,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_MODEL: CSQCModel_Read(bIsNewEntity); break;
 		case ENT_CLIENT_ITEM: ItemRead(bIsNewEntity); break;
 		case ENT_CLIENT_BUMBLE_RAYGUN: bumble_raygun_read(bIsNewEntity); break;
+		case ENT_CLIENT_CONQUEST_CONTROLPOINT: conquest_controlpoint_read(bIsNewEntity); break;
 		case ENT_CLIENT_SPAWNPOINT: Ent_ReadSpawnPoint(bIsNewEntity); break;
 		case ENT_CLIENT_SPAWNEVENT: Ent_ReadSpawnEvent(bIsNewEntity); break;
 		case ENT_CLIENT_NOTIFICATION: Read_Notification(bIsNewEntity); break;

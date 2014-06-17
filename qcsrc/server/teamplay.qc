@@ -201,6 +201,12 @@ void InitGameplayMode()
 		MUTATOR_ADD(gamemode_keepaway);
 	}
 
+	if(g_conquest)
+	{
+		ActivateTeamplay();
+		MUTATOR_ADD(gamemode_conquest);
+	}
+
 	if(g_vip)
 	{
 		fraglimit_override = autocvar_g_vip_point_limit;

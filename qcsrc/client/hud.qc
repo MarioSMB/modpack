@@ -2058,7 +2058,8 @@ void HUD_Radar_Mouse()
 			return;
 		}
 		vector pos = teamradar_texcoord_to_3dcoord(teamradar_2dcoord_to_texcoord(mousepos),view_origin_z);
-		localcmd(sprintf("cmd ons_spawn %f %f %f",pos_x,pos_y,pos_z));
+		string thecommand = ((gametype == MAPINFO_TYPE_CONQUEST) ? "cq_spawn" : "ons_spawn");
+		localcmd(sprintf("cmd %s %f %f %f",thecommand,pos_x,pos_y,pos_z));
 		
 		HUD_Radar_Hide_Maximized();
 		return;
