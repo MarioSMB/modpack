@@ -148,7 +148,7 @@ void W_Shockwave_Melee_Think(void)
 			(self.realowner.origin + self.realowner.view_ofs),
 			targpos,
 			FALSE,
-			self.realowner,
+			world, //self.realowner,
 			ANTILAG_LATENCY(self.realowner)
 		);
 		
