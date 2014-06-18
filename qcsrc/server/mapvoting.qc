@@ -5,8 +5,12 @@ float GameTypeVote_AvailabilityStatus(string gtname)
 		return GTV_FORBIDDEN;
 	
 	if ( autocvar_nextmap != "" )
-	if ( !MapInfo_Get_ByName(autocvar_nextmap, FALSE, type) )
-		return GTV_FORBIDDEN;
+	{
+		if ( !MapInfo_Get_ByName(autocvar_nextmap, FALSE, 0) )
+			return GTV_FORBIDDEN;
+		if (!(MapInfo_Map_supportedGametypes & type))
+			return GTV_FORBIDDEN;
+	}
 	
 	return GTV_AVAILABLE;
 }

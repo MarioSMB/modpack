@@ -35,8 +35,8 @@ float pps_pink;
 .float pointupdatetime;
 
 // control point properties
-#define CP_MIN '-32 -32 -32'
-#define CP_MAX '32 32 32'
+#define DOM_CP_MIN '-32 -32 -32'
+#define DOM_CP_MAX '32 32 32'
 #define CP_SCALE 0.6
 #define CP_TICRATE 0.02
 #define CP_MAXFRAMES 239

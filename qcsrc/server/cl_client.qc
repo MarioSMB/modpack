@@ -670,7 +670,7 @@ void PutClientInServer (void)
 			self.effects |= EF_STARDUST;
 
 		if(self.cvar_cl_sparkle == 2 && checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
-			self.colormap = 1039;
+			self.colormap = 4351;
 
 		self.statdraintime = time + 5;
 		self.BUTTON_ATCK = self.BUTTON_JUMP = self.BUTTON_ATCK2 = 0;

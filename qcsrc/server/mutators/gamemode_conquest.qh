@@ -1,0 +1,44 @@
+// these are needed since mutators are compiled last
+
+//csqc networking flags
+#define CQSF_SETUP 1    //! Initial setup, responsible for communicating location, y-angle and model
+#define CQSF_TEAM 2     //! What team point belong to
+#define CQSF_HEALTH 4   //! Capture progress. Networked as 0--255
+#define CQSF_STATE 8    //! Captured or not
+#define CQSF_NAME 16    //! Display name (can be defined by mapper)
+
+// score rule declarations
+#define ST_CONQUEST_ROUNDS 1
+#define SP_CONQUEST_LIBERATED 4
+#define SP_CONQUEST_CAPTURED 5
+
+// list of control points on the map
+entity cq_worldcplist;
+.entity cq_worldcpnext;
+
+// control point constants
+float cq_teams;
+#define CQ_CP_THINKRATE 0.15
+
+#define CQ_CP_MIN ('-35 -35 -3')
+#define CQ_CP_MAX ('35 35 195')
+
+// teleportation
+.float teleport_antispam;
+.vector cq_deathloc;
+.entity cq_spawn_by;
+
+// statuses
+#define CP_NEUTRAL 1
+#define CP_CAPTURED 2
+
+// control point properties
+.float cq_status; // status of the control point (CP_NEUTRAL, CP_CAPTURED declared globally)
+
+// compatibility with old maps
+#define COMPAT_DOM 1
+#define COMPAT_ONS 2
+.float cq_compat; // for checking if a map already has conquest support
+
+.float cq_capdistance;
+.float cq_originalteam; // stored spawn team for resetting

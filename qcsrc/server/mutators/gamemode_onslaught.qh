@@ -5,7 +5,7 @@
 .entity ons_toucher; // player who touched the control point
 
 // control point / generator constants
-#define CP_THINKRATE 0.2
+#define ONS_CP_THINKRATE 0.2
 #define GEN_THINKRATE 1
 #define CPGEN_SPAWN_OFFSET ('0 0 1' * (PL_MAX_z - 13))
 #define CPGEN_WAYPOINT_OFFSET ('0 0 128')

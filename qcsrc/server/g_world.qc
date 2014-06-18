@@ -263,6 +263,8 @@ void cvar_changes_init()
 		BADCVAR("g_domination_default_teams");
 		BADCVAR("g_freezetag");
 		BADCVAR("g_freezetag_teams");
+		BADCVAR("g_conquest");
+		BADCVAR("g_conquest_teams");
 		BADCVAR("g_keepaway");
 		BADCVAR("g_keyhunt");
 		BADCVAR("g_keyhunt_teams");
@@ -361,6 +363,7 @@ void cvar_changes_init()
 		BADCVAR("g_ctf_ignore_frags");
 		BADCVAR("g_domination_point_limit");
 		BADCVAR("g_freezetag_teams_override");
+		BADCVAR("g_conquest_teams_override");
 		BADCVAR("g_friendlyfire");
 		BADCVAR("g_fullbrightitems");
 		BADCVAR("g_fullbrightplayers");

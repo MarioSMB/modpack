@@ -342,6 +342,8 @@ void Send_Notification_WOCOVA(
 #define MSG_INFO_NOTIFICATIONS \
 	MSG_INFO_NOTIF(2, INFO_CHAT_NOSPECTATORS,              0, 0, "", "",                            "",                     _("^F4NOTE: ^BGSpectator chat is not sent to players during the match"), "") \
 	MSG_INFO_NOTIF(2, INFO_COINTOSS,                       1, 0, "s1", "",                          "",                     _("^F2Throwing coin... Result: %s^F2!"), "") \
+	MULTITEAM_INFO(1, INFO_CONQUEST_CAPTURE_, 4,           1, 0, "s1", "",                          "",                     _("^BG%s^BG was captured by the ^TC^TT^BG team"), "") \
+	MULTITEAM_INFO(1, INFO_CONQUEST_LIBERATE_, 4,          1, 0, "s1", "",                          "",                     _("^BG%s^BG was liberated from the ^TC^TT^BG team"), "") \
 	MSG_INFO_NOTIF(1, INFO_JETPACK_NOFUEL,                 0, 0, "", "",                            "",                     _("^BGYou don't have any fuel for the ^F1Jetpack"), "") \
 	MSG_INFO_NOTIF(2, INFO_SUPERSPEC_MISSING_UID,          0, 0, "", "",                            "",                     _("^F2You lack a UID, superspec options will not be saved/restored"), "") \
 	MULTITEAM_INFO(1, INFO_CTF_CAPTURE_, 4,                1, 0, "s1", "s1",                        "notify_%s_captured",   _("^BG%s^BG captured the ^TC^TT^BG flag"), "") \
@@ -610,6 +612,11 @@ void Send_Notification_WOCOVA(
 #define MSG_CENTER_NOTIFICATIONS \
 	MSG_CENTER_NOTIF(1, CENTER_ASSAULT_ATTACKING,           0, 0, "",             CPID_ASSAULT_ROLE,   "0 0", _("^BGYou are attacking!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_ASSAULT_DEFENDING,           0, 0, "",             CPID_ASSAULT_ROLE,   "0 0", _("^BGYou are defending!"), "") \
+	MULTITEAM_CENTER(1, CENTER_CONQUEST_CAPTURE_, 4,        1, 0, "s1",           CPID_CONQUEST,       "0 0", _("^BG%s^BG has been captured by the ^TC^TT^BG team"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_CONQUEST_CAPTURE_TEAM,       1, 0, "s1",           CPID_CONQUEST,       "0 0", _("^BGYour team has captured %s"), "") \
+	MULTITEAM_CENTER(1, CENTER_CONQUEST_LIBERATE_, 4,       1, 0, "s1",           CPID_CONQUEST,       "0 0", _("^BG%s^BG has been liberated from the ^TC^TT^BG team"), "") \
+	MULTITEAM_CENTER(1, CENTER_CONQUEST_LIBERATE_TEAM_, 4,  1, 0, "s1",           CPID_CONQUEST,       "0 0", _("^BGYour team has liberated %s^BG from the ^TC^TT^BG team"), "") \
+	MULTITEAM_CENTER(1, CENTER_CONQUEST_LOST_, 4,           1, 0, "s1",           CPID_CONQUEST,       "0 0", _("^BG%s^BG has been lost to the ^TC^TT^BG team"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_COUNTDOWN_BEGIN,             0, 0, "",             CPID_ROUND,          "2 0", _("^F4Begin!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_COUNTDOWN_GAMESTART,         0, 1, "",             CPID_ROUND,          "1 f1", _("^F4Game starts in ^COUNT"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_COUNTDOWN_ROUNDSTART,        0, 1, "",             CPID_ROUND,          "1 f1", _("^F4Round starts in ^COUNT"), "") \
@@ -1384,7 +1391,7 @@ float NOTIF_CPID_COUNT;
 
 // notification limits -- INCREASE AS NECESSARY
 #define NOTIF_ANNCE_MAX   100
-#define NOTIF_INFO_MAX    350
+#define NOTIF_INFO_MAX    400
 #define NOTIF_CENTER_MAX  300
 #define NOTIF_MULTI_MAX   200
 #define NOTIF_CHOICE_MAX  50

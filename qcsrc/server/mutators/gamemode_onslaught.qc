@@ -362,7 +362,7 @@ void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damag
 	if(self.owner.iscaptured)
 		WaypointSprite_UpdateHealth(self.owner.sprite, self.health);
 	else
-		WaypointSprite_UpdateBuildFinished(self.owner.sprite, time + (self.max_health - self.health) / (self.count / CP_THINKRATE));
+		WaypointSprite_UpdateBuildFinished(self.owner.sprite, time + (self.max_health - self.health) / (self.count / ONS_CP_THINKRATE));
 	self.pain_finished = time + 1;
 	// particles on every hit
 	pointparticles(particleeffectnum("sparks"), hitloc, force*-1, 1);
@@ -412,7 +412,7 @@ void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damag
 void ons_ControlPoint_Icon_Think()
 {
 	entity oself;
-	self.nextthink = time + CP_THINKRATE;
+	self.nextthink = time + ONS_CP_THINKRATE;
 
 	if(autocvar_g_onslaught_cp_proxydecap)
 	{
@@ -436,8 +436,8 @@ void ons_ControlPoint_Icon_Think()
             }
         }
 
-        _friendly_count = _friendly_count * (autocvar_g_onslaught_cp_proxydecap_dps * CP_THINKRATE);
-        _enemy_count = _enemy_count * (autocvar_g_onslaught_cp_proxydecap_dps * CP_THINKRATE);
+        _friendly_count = _friendly_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
+        _enemy_count = _enemy_count * (autocvar_g_onslaught_cp_proxydecap_dps * ONS_CP_THINKRATE);
 
         self.health = bound(0, self.health + (_friendly_count - _enemy_count), self.max_health);
 		self.SendFlags |= CPSF_STATUS;
@@ -495,7 +495,7 @@ void ons_ControlPoint_Icon_BuildThink()
 	entity oself;
 	float a;
 
-	self.nextthink = time + CP_THINKRATE;
+	self.nextthink = time + ONS_CP_THINKRATE;
 
 	// only do this if there is power
 	a = ons_ControlPoint_CanBeLinked(self.owner, self.owner.team);
@@ -509,7 +509,7 @@ void ons_ControlPoint_Icon_BuildThink()
 	if (self.health >= self.max_health)
 	{
 		self.health = self.max_health;
-		self.count = autocvar_g_onslaught_cp_regen * CP_THINKRATE; // slow repair rate from now on
+		self.count = autocvar_g_onslaught_cp_regen * ONS_CP_THINKRATE; // slow repair rate from now on
 		self.think = ons_ControlPoint_Icon_Think;
 		sound(self, CH_TRIGGER, "onslaught/controlpoint_built.wav", VOL_BASE, ATTEN_NORM);
 		self.owner.iscaptured = TRUE;
@@ -566,7 +566,7 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 	e.event_damage = ons_ControlPoint_Icon_Damage;
 	e.team = player.team;
 	e.colormap = 1024 + (e.team - 1) * 17;
-	e.count = (e.max_health - e.health) * CP_THINKRATE / autocvar_g_onslaught_cp_buildtime; // how long it takes to build
+	e.count = (e.max_health - e.health) * ONS_CP_THINKRATE / autocvar_g_onslaught_cp_buildtime; // how long it takes to build
 	
 	sound(e, CH_TRIGGER, "onslaught/controlpoint_build.wav", VOL_BASE, ATTEN_NORM);
 	
@@ -576,7 +576,7 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 
 	pointparticles(particleeffectnum(sprintf("%sflag_touch", Static_Team_ColorName_Lower(player.team))), e.origin, '0 0 0', 1);
 
-	WaypointSprite_UpdateBuildFinished(cp.sprite, time + (e.max_health - e.health) / (e.count / CP_THINKRATE));
+	WaypointSprite_UpdateBuildFinished(cp.sprite, time + (e.max_health - e.health) / (e.count / ONS_CP_THINKRATE));
 	WaypointSprite_UpdateRule(cp.sprite,cp.team,SPRITERULE_TEAMPLAY);
 	cp.sprite.SendFlags |= 16;
 
@@ -684,7 +684,7 @@ void ons_ControlPoint_Touch()
 
 void ons_ControlPoint_Think()
 {
-	self.nextthink = time + CP_THINKRATE;
+	self.nextthink = time + ONS_CP_THINKRATE;
 	CSQCMODEL_AUTOUPDATE();
 }
 
@@ -701,7 +701,7 @@ void ons_ControlPoint_Reset()
 	self.isshielded = TRUE;
 	self.think = ons_ControlPoint_Think;
 	self.ons_toucher = world;
-	self.nextthink = time + CP_THINKRATE;
+	self.nextthink = time + ONS_CP_THINKRATE;
 	setmodel_fixsize(self, "models/onslaught/controlpoint_pad.md3");
 
 	WaypointSprite_UpdateMaxHealth(self.sprite, 0);
@@ -740,7 +740,7 @@ void ons_ControlPoint_Setup(entity cp)
 	cp.movetype = MOVETYPE_NONE;
 	cp.touch = ons_ControlPoint_Touch;
 	cp.think = ons_ControlPoint_Think;
-	cp.nextthink = time + CP_THINKRATE;
+	cp.nextthink = time + ONS_CP_THINKRATE;
 	cp.reset = ons_ControlPoint_Reset;
 	cp.colormap = 1024;
 	cp.iscaptured = FALSE;

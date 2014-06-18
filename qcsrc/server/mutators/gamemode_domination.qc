@@ -170,7 +170,7 @@ void dom_Activate(entity e)
 	e.dom_active = TRUE;
 	e.dom_cooldown = 0;
 	//e.dom_cooldown_max = 0;
-	setsize(e, CP_MIN, CP_MAX);
+	setsize(e, DOM_CP_MIN, DOM_CP_MAX);
 	WaypointSprite_UpdateMaxHealth(e.sprite, 0);
 	WaypointSprite_UpdateHealth(e.sprite, 0);
 }
@@ -184,7 +184,7 @@ void dom_Deactivate(entity e, float cooldown)
 	{
 		e.model = dom_model[e.team];
 		e.modelindex = dom_modelindex[e.team];
-		setsize(e, CP_MIN, CP_MAX);
+		setsize(e, DOM_CP_MIN, DOM_CP_MAX);
 		e.dom_active = FALSE;
 	}
 }
@@ -407,7 +407,7 @@ void dom_ControlPointSetup(entity cp)
 	cp.dom_active = TRUE;
 	cp.cnt = -1;
 	cp.team = 0;
-	setsize(cp, CP_MIN, CP_MAX);
+	setsize(cp, DOM_CP_MIN, DOM_CP_MAX);
 	setorigin(cp, cp.origin + '0 0 20'); // move up so droptofloor doesn't put it in solid
 
 	// control point placement

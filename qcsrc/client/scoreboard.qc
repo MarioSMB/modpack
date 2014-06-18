@@ -51,6 +51,8 @@ string TranslateScoresLabel(string l)
 		case "suicides": return CTX(_("SCO^suicides"));
 		case "takes": return CTX(_("SCO^takes"));
 		case "ticks": return CTX(_("SCO^ticks"));
+		case "liberated": return CTX(_("SCO^liberated"));
+		case "captured": return CTX(_("SCO^captured"));
 		default: return l;
 	}
 }
@@ -295,7 +297,7 @@ string HUD_DefaultColumnLayout()
 		strcat("ping pl ", ((sv_showfps && ex) ? "fps " : ""), "name | "),
 		"-teams,race,lms/kills +freezetag/kills -teams,lms/deaths +freezetag/deaths -teams,lms,race,ka/suicides +freezetag/suicides -race,dm,tdm,ka,freezetag/frags ", // tdm already has this in "score"
 		"+tdm/kills +tdm/deaths +tdm/suicides ",
-		((ex) ? "+ctf/deaths +ctf/suicides " : ""), "+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns +ons/caps +ons/takes +as/objectives +inf/survivals ",
+		((ex) ? "+ctf/deaths +ctf/suicides " : ""), "+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns +cq/captured +cq/liberated +ons/caps +ons/takes +as/objectives +inf/survivals ",
 		"+lms/lives +lms/rank ",
 		((ex) ? "+kh/deaths +kh/suicides " : ""), "+kh/caps +kh/pickups +kh/kckills ",
 		"?+race/laps ?+race/time ?+race/fastest ",
