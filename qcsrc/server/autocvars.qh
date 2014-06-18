@@ -1492,6 +1492,7 @@ float autocvar_g_conquest_teams;
 float autocvar_g_conquest_teams_override;
 float autocvar_g_conquest_warmup;
 float autocvar_g_conquest_round_timelimit;
+float autocvar_g_conquest_point_limit;
 float autocvar_g_walljump;
 float autocvar_g_walljump_delay;
 float autocvar_g_walljump_force;

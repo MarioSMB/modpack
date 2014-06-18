@@ -203,6 +203,7 @@ void InitGameplayMode()
 
 	if(g_conquest)
 	{
+		fraglimit_override = autocvar_g_conquest_point_limit;
 		ActivateTeamplay();
 		MUTATOR_ADD(gamemode_conquest);
 	}
