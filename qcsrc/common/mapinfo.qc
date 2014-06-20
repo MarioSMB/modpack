@@ -616,6 +616,8 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 	cvar_set("g_freezetag_teams", cvar_defstring("g_freezetag_teams"));
 	cvar_set("g_conquest_teams", cvar_defstring("g_conquest_teams"));
 	cvar_set("g_jailbreak_teams", cvar_defstring("g_jailbreak_teams"));
+	cvar_set("g_infection_teams", cvar_defstring("g_infection_teams"));
+	cvar_set("g_invasion_teams", cvar_defstring("g_invasion_teams"));
 	cvar_set("g_keyhunt_teams", cvar_defstring("g_keyhunt_teams"));
 	cvar_set("g_domination_default_teams", cvar_defstring("g_domination_default_teams"));
 	cvar_set("g_race_qualifying_timelimit", cvar_defstring("g_race_qualifying_timelimit"));
@@ -667,6 +669,7 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 			cvar_set("g_invasion_teams", v);
 			cvar_set("g_conquest_teams", v);
 			cvar_set("g_jailbreak_teams", v);
+			cvar_set("g_infection_teams", v);
 		}
 		else if(k == "qualifying_timelimit")
 		{
