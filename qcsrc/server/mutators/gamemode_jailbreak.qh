@@ -48,6 +48,7 @@ float jb_cp_num;
 #define JB_CP_MIN ('-32 -32 -32')
 #define JB_CP_MAX ('32 32 32')
 #define JB_CP_SCALE 0.6
+#define JB_CP_WPOFFSET ('0 0 32')
 
 #define ST_JB_ROUNDS 1
 #define SP_JB_JBREAKS 4

@@ -988,7 +988,7 @@ void JB_SetupControlPoint()
 
 	waypoint_spawnforitem_force(self, self.origin);
 	self.nearestwaypointtimeout = 0; // activate waypointing again
-	WaypointSprite_SpawnFixed(strzone(strcat("Point ", chr2str(str2chr("A", 0) + jb_cp_num))), self.origin + '0 0 37', self, jb_waypoint, RADARICON_DOMPOINT, '0 1 1');
+	WaypointSprite_SpawnFixed(strzone(strcat("Point ", chr2str(str2chr("A", 0) + jb_cp_num))), self.origin + JB_CP_WPOFFSET, self, jb_waypoint, RADARICON_DOMPOINT, '0 1 1');
 	self.jb_waypoint.customizeentityforclient = jb_ControlPoint_Waypoint_Customize;
 	WaypointSprite_UpdateTeamRadar(self.jb_waypoint, RADARICON_FLAG, (self.team) ? colormapPaletteColor(self.team - 1, FALSE) : '0 1 1');
 	//WaypointSprite_UpdateTextColors(self.jb_waypoint, TeamColor(self.team), '1 0.5 0', '0 0 0');
