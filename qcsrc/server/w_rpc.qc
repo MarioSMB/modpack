@@ -191,7 +191,10 @@ float w_rpc(float req)
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{
-		return WEAPON_RPC_SUICIDE;
+		if(((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH)))
+			return WEAPON_RPC_SUICIDE_SPLASH;
+		else
+			return WEAPON_RPC_SUICIDE_DIRECT;
 	}
 	else if (req == WR_KILLMESSAGE)
 	{

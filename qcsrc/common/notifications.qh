@@ -578,9 +578,10 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_WEAPON_ROCKETLAUNCHER_MURDER_DIRECT,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrocketlauncher",   _("^BG%s%s^K1 ate ^BG%s^K1's rocket%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_ROCKETLAUNCHER_MURDER_SPLASH,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrocketlauncher",   _("^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_ROCKETLAUNCHER_SUICIDE,        2, 1, "s1 s2loc spree_lost", "s1",                 "weaponrocketlauncher",   _("^BG%s^K1 blew themself up with their Rocketlauncher%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_WEAPON_RPC_MURDER_DIRECT,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrpc",              _("^BG%s%s^K1 got sawn in half by ^BG%s^K1's Rocket Propelled Chainsaw%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_WEAPON_RPC_MURDER_DIRECT,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrpc",              _("^BG%s%s^K1 was sawn in half by ^BG%s^K1's Rocket Propelled Chainsaw%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_RPC_MURDER_SPLASH,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrpc",              _("^BG%s%s^K1 almost dodged ^BG%s^K1's Rocket Propelled Chainsaw%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_WEAPON_RPC_SUICIDE,                   2, 1, "s1 s2loc spree_lost", "s1",                 "weaponrpc",              _("^BG%s^K1 blew themself up with their Rocket Propelled Chainsaw%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_WEAPON_RPC_SUICIDE_DIRECT,            2, 1, "s1 s2loc spree_lost", "s1",                 "weaponrpc",              _("^BG%s^K1 was sawn in half by their own Rocket Propelled Chainsaw%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_WEAPON_RPC_SUICIDE_SPLASH,            2, 1, "s1 s2loc spree_lost", "s1",                 "weaponrpc",              _("^BG%s^K1 blew themself up with their Rocket Propelled Chainsaw%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_SEEKER_MURDER_SPRAY,           3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponseeker",           _("^BG%s%s^K1 was pummeled by ^BG%s^K1's Seeker rockets%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_SEEKER_MURDER_TAG,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponseeker",           _("^BG%s%s^K1 was tagged by ^BG%s^K1's Seeker%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_SEEKER_SUICIDE,                2, 1, "s1 s2loc spree_lost", "s1",                 "weaponseeker",           _("^BG%s^K1 played with tiny Seeker rockets%s%s"), "") \
@@ -978,7 +979,7 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, WEAPON_MINELAYER_SUICIDE,             NO_MSG,        INFO_WEAPON_MINELAYER_SUICIDE,             CENTER_DEATH_SELF_GENERIC) \
 	MSG_MULTI_NOTIF(1, WEAPON_MINSTANEX_MURDER,              NO_MSG,        INFO_WEAPON_MINSTANEX_MURDER,              NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_MINSTANEX_MURDER_CHARGE,       NO_MSG,        INFO_WEAPON_MINSTANEX_MURDER_CHARGE,       NO_MSG) \
-        MSG_MULTI_NOTIF(1, WEAPON_MINSTANEX_SUICIDE,             NO_MSG,        INFO_WEAPON_MINSTANEX_SUICIDE,             NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_MINSTANEX_SUICIDE,             NO_MSG,        INFO_WEAPON_MINSTANEX_SUICIDE,             NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_MORTAR_MURDER_BOUNCE,          NO_MSG,        INFO_WEAPON_MORTAR_MURDER_BOUNCE,          NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_MORTAR_MURDER_EXPLODE,         NO_MSG,        INFO_WEAPON_MORTAR_MURDER_EXPLODE,         NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_MORTAR_SUICIDE_BOUNCE,         NO_MSG,        INFO_WEAPON_MORTAR_SUICIDE_BOUNCE,         CENTER_DEATH_SELF_GENERIC) \
@@ -993,7 +994,8 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, WEAPON_ROCKETLAUNCHER_SUICIDE,        NO_MSG,        INFO_WEAPON_ROCKETLAUNCHER_SUICIDE,        CENTER_DEATH_SELF_GENERIC) \
 	MSG_MULTI_NOTIF(1, WEAPON_RPC_MURDER_DIRECT,             NO_MSG,        INFO_WEAPON_RPC_MURDER_DIRECT,             NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_RPC_MURDER_SPLASH,             NO_MSG,        INFO_WEAPON_RPC_MURDER_SPLASH,             NO_MSG) \
-	MSG_MULTI_NOTIF(1, WEAPON_RPC_SUICIDE,                   NO_MSG,        INFO_WEAPON_RPC_SUICIDE,                   NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_RPC_SUICIDE_DIRECT,            NO_MSG,        INFO_WEAPON_RPC_SUICIDE_DIRECT,            NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_RPC_SUICIDE_SPLASH,            NO_MSG,        INFO_WEAPON_RPC_SUICIDE_SPLASH,            CENTER_DEATH_SELF_GENERIC) \
 	MSG_MULTI_NOTIF(1, WEAPON_SEEKER_MURDER_SPRAY,           NO_MSG,        INFO_WEAPON_SEEKER_MURDER_SPRAY,           NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_SEEKER_MURDER_TAG,             NO_MSG,        INFO_WEAPON_SEEKER_MURDER_TAG,             NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_SEEKER_SUICIDE,                NO_MSG,        INFO_WEAPON_SEEKER_SUICIDE,                CENTER_DEATH_SELF_GENERIC) \
