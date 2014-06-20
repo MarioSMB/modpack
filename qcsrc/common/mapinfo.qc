@@ -521,6 +521,14 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 			cvar_set("g_conquest_teams", sa);
 		s = cdr(s);
 	}
+	
+	if(pWantedType == MAPINFO_TYPE_JAILBREAK)
+	{
+		sa = car(s);
+		if(sa != "")
+			cvar_set("g_jailbreak_teams", sa);
+		s = cdr(s);
+	}
 
 	/* keepaway wuz here
 	if(pWantedType == MAPINFO_TYPE_KEEPAWAY)
@@ -607,6 +615,7 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 	cvar_set("g_ca_teams", cvar_defstring("g_ca_teams"));
 	cvar_set("g_freezetag_teams", cvar_defstring("g_freezetag_teams"));
 	cvar_set("g_conquest_teams", cvar_defstring("g_conquest_teams"));
+	cvar_set("g_jailbreak_teams", cvar_defstring("g_jailbreak_teams"));
 	cvar_set("g_keyhunt_teams", cvar_defstring("g_keyhunt_teams"));
 	cvar_set("g_domination_default_teams", cvar_defstring("g_domination_default_teams"));
 	cvar_set("g_race_qualifying_timelimit", cvar_defstring("g_race_qualifying_timelimit"));
@@ -657,6 +666,7 @@ void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 			cvar_set("g_domination_default_teams", v);
 			cvar_set("g_invasion_teams", v);
 			cvar_set("g_conquest_teams", v);
+			cvar_set("g_jailbreak_teams", v);
 		}
 		else if(k == "qualifying_timelimit")
 		{
