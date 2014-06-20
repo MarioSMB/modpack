@@ -33,7 +33,6 @@ float JB_JailIsOpen(float);
 .float jb_team_initial;
 .float jb_defendthink_next;
 .float jb_had_unlimited_ammo;
-.float jb_specteam;
 .float jb_lastmessage;
 
 .entity jb_waypoint;

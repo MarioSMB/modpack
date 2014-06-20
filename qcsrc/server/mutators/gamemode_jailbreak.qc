@@ -275,9 +275,6 @@ float JB_JailIsOpen(float theteam)
 
 void JB_TeleportToJail(entity p, entity attacker)
 {
-	if(p.jb_specteam)
-		return;
-
 	vector a;
 	entity spot = jb_ChooseJailSpawn(p, attacker);
 
@@ -327,8 +324,7 @@ void JB_Imprison(entity attacker)
 	self.jb_isprisoned = TRUE;
 	self.jb_prisontime = time;
 
-	if(!self.jb_specteam)
-		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_JAILBREAK_IMPRISON);
+	Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_JAILBREAK_IMPRISON);
 }
 
 void JB_TorturePrisonersLater_Think()
@@ -819,11 +815,6 @@ void JB_ControlPoint_Capture(entity player)
 		e.jb_lastmessage = time + 3;
 	}
 
-	entity o = self;
-	FOR_EACH_CLIENT(self) if(!self.iscreature) if(self.jb_specteam == player.team)
-		LeaveSpectatorMode();
-	self = o;
-
 	PlayerScore_Add(player, SP_SCORE, ((self.team == 0)? autocvar_g_jailbreak_score_jbreak_neutralmultiplier : 1)
 									* (autocvar_g_jailbreak_score_jbreak + autocvar_g_jailbreak_score_jbreak_perplayer * pc));
 	PlayerScore_Add(player, SP_JB_JBREAKS, 1);
@@ -1105,8 +1096,6 @@ MUTATOR_HOOKFUNCTION(jb_PlayerSpawn)
 
 	if(!round_handler_IsRoundStarted())
 	{
-		if(self.jb_specteam)
-			JB_Imprison(world);
 		return FALSE;
 	}
 	
@@ -1116,10 +1105,8 @@ MUTATOR_HOOKFUNCTION(jb_PlayerSpawn)
 		self.jb_imprisoner = world;
 	}
 
-	if(JB_TotalPlayersOnTeam(self.team) - 1 > 0 || self.jb_specteam) // allow to spawn non-prisoned if there are no players on that team
+	if(JB_TotalPlayersOnTeam(self.team) - 1 > 0) // allow to spawn non-prisoned if there are no players on that team
 		JB_Imprison(world);
-	
-	self.jb_specteam = 0;
 
 	return FALSE;
 }
@@ -1133,7 +1120,7 @@ MUTATOR_HOOKFUNCTION(jb_SpectateCopy)
 
 MUTATOR_HOOKFUNCTION(jb_RemovePlayer)
 {
-	if(self.jb_isprisoned && !self.jb_specteam)
+	if(self.jb_isprisoned)
 		JB_Release(world);
 
 	self.jb_roundlost = FALSE;
@@ -1150,13 +1137,6 @@ MUTATOR_HOOKFUNCTION(jb_PlayerPreThink)
 	}
 
 	self.stat_jb_isprisoned = self.jb_isprisoned; // these are different to allow spectating
-
-	if(self.jb_specteam && IS_PLAYER(self))
-	{
-		self.classname = "observer";
-		PutObserverInServer();
-		return FALSE;
-	}
 
 	if(!round_handler_IsRoundStarted())
 	{
