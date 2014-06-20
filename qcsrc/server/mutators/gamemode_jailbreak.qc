@@ -750,18 +750,26 @@ void JB_ControlPoint_SwitchTeam(entity e, float t)
 	//WaypointSprite_UpdateTextColors(e.jb_waypoint, TeamColor(e.team), e.jb_waypoint.clr2, e.jb_waypoint.clr3);
 }
 
-void JB_TriggerTeamControlPoints(float t)
+void JB_TriggerTeamControlPoints(entity cp, entity player)
 {
-	entity o;
-	o = self;
+	entity oldself = self;
+	self = world;
 
 	for(self = jb_worldcplist; self; self = self.jb_worldcpnext)
 	{
-		if(self.jb_team_initial != t)
-			SUB_UseTargets_PreventReuse();
+		if(cp.team)
+		{
+			if(SAME_TEAM(self, cp))
+				SUB_UseTargets_PreventReuse();
+		}
+		else
+		{
+			if(self.jb_team_initial != player.team)
+				SUB_UseTargets_PreventReuse();
+		}
 	}
 
-	self = o;
+	self = oldself;
 }
 
 string JB_ControlPoint_Name(entity p)
@@ -786,7 +794,7 @@ void JB_ControlPoint_Capture(entity player)
 	activator = self;
 
 	if(!self.team || g_jailbreak_claim)
-		JB_TriggerTeamControlPoints(player.team);
+		JB_TriggerTeamControlPoints(self, player);
 	else SUB_UseTargets();
 	
 	FOR_EACH_PLAYER(e)
