@@ -442,7 +442,7 @@ entity jb_ChooseJailSpawn(entity player, entity attacker)
 	
 	for(spot = world; (spot = find(spot, classname, "info_jailbreak_jailspawn")); )
 	{
-		if(DIFF_TEAM(player, attacker)) // don't throw teammates in own jail?
+		if(attacker && DIFF_TEAM(player, attacker)) // don't throw teammates in own jail?
 		{
 			if(SAME_TEAM(spot, attacker))
 				RandomSelection_Add(spot, 0, string_null, 1, 1);
@@ -1092,12 +1092,9 @@ MUTATOR_HOOKFUNCTION(jb_PlayerDies)
 
 MUTATOR_HOOKFUNCTION(jb_PlayerSpawn)
 {
-	self.jb_isprisoned = FALSE;
+	//self.jb_isprisoned = FALSE;
 
-	if(!round_handler_IsRoundStarted())
-	{
-		return FALSE;
-	}
+	if(!round_handler_IsRoundStarted()) { return FALSE; }
 	
 	if(self.jb_imprisoner != world)
 	{
