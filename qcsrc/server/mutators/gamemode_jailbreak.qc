@@ -85,16 +85,16 @@ float JB_CheckWinner()
 		return 0;
 
 	float winner_team = JB_GetWinnerTeam();
-	
+
 	if(JB_JailIsOpen(winner_team))
 		return 0; // ???
-	
+
 	if(winner_team > 0)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner_team, CENTER_ROUND_TEAM_WIN_));
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(winner_team, INFO_ROUND_TEAM_WIN_));
 		TeamScore_AddToTeam(winner_team, ST_JB_ROUNDS, +1);
-		
+
 		JB_ActivateCamera(winner_team);
 		JB_TorturePrisonersLater(winner_team, 3);
 	}
@@ -103,7 +103,7 @@ float JB_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_TIED);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
 	}
-	
+
 	jb_roundover = TRUE;
 
 	allowed_to_spawn = FALSE;
@@ -373,7 +373,7 @@ void JB_Release(entity saviour)
 void JB_TorturePrisoners(float theteam)
 {
 	entity spot = world;
-	
+
 	for(;(spot = find(spot, classname, "info_jailbreak_torturespawn"));)
 		if(spot.team == theteam)
 			JB_Torture_Start(spot);
@@ -399,7 +399,7 @@ void JB_Torture_Think()
 	self.jb_torture_suggestedforce = JITTER(self.jb_torture_force, self.jb_torture_force_jitter);
 
 	pointparticles(particleeffectnum("firefield"), self.origin, '0 0 0', 2);
-	
+
 	entity head;
 	FOR_EACH_PLAYER(head)
 	if(DIFF_TEAM(head, self))
@@ -437,9 +437,9 @@ void JB_Torture_Start(entity spot)
 entity jb_ChooseJailSpawn(entity player, entity attacker)
 {
 	entity spot;
-	
+
 	RandomSelection_Init();
-	
+
 	for(spot = world; (spot = find(spot, classname, "info_jailbreak_jailspawn")); )
 	{
 		if(attacker && DIFF_TEAM(player, attacker)) // don't throw teammates in own jail?
@@ -465,7 +465,7 @@ float JB_TotalPlayersOnTeam(float theteam)
 	entity e;
 	float plcount = 0;
 	FOR_EACH_PLAYER(e) if(e.team == theteam) ++plcount;
-	
+
 	return plcount;
 }
 
@@ -474,7 +474,7 @@ float JB_AlivePlayersOnTeam(float theteam)
 	entity e;
 	float plcount = 0;
 	FOR_EACH_PLAYER(e) if(e.team == theteam) if(!e.jb_isprisoned) ++plcount;
-	
+
 	return plcount;
 }
 
@@ -514,7 +514,7 @@ void JB_ActivateCamera(float theteam)
 
 	cam.active = TRUE;
 	cam.SendFlags |= 2;
-	
+
 	entity e;
 	for(e = world; (e = find(e, classname, "info_jailbreak_jailcamera")); )
 	if(e != cam)
@@ -545,7 +545,7 @@ void JB_Jail_Touch()
 		nades_Clear(own, FALSE);
 		return;
 	}
-	
+
 	if(other.classname == "grapplinghook")
 	{
 		RemoveGrapplingHook(other.realowner);
@@ -587,32 +587,32 @@ float jailcamera_send(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_JAILCAMERA);
 	WriteByte(MSG_ENTITY, sf);
-	
+
 	if(sf & 1)
 	{
 		WriteCoord(MSG_ENTITY, self.origin_x);
 		WriteCoord(MSG_ENTITY, self.origin_y);
 		WriteCoord(MSG_ENTITY, self.origin_z);
-		
+
 		WriteAngle(MSG_ENTITY, self.angles_x);
 		WriteAngle(MSG_ENTITY, self.angles_y);
 	}
-	
+
 	if(sf & 2)
 	{
 		WriteByte(MSG_ENTITY, self.active);
 	}
-	
+
 	return TRUE;
 }
-	
+
 
 void JB_SetupJailCamera()
 {
 	if(!g_jailbreak) { remove(self); return; }
 
 	self.classname = "info_jailbreak_jailcamera";
-	
+
 	Net_LinkEntity(self, FALSE, 0, jailcamera_send);
 }
 
@@ -792,7 +792,7 @@ void JB_ControlPoint_Capture(entity player)
 	if(!self.team || g_jailbreak_claim)
 		JB_TriggerTeamControlPoints(self, player);
 	else SUB_UseTargets();
-	
+
 	FOR_EACH_PLAYER(e)
 	{
 		if(DIFF_TEAM(e, player))
@@ -809,7 +809,7 @@ void JB_ControlPoint_Capture(entity player)
 	}
 
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JAILBREAK_CAPTURE, player.netname, JB_ControlPoint_Name(self));
-	
+
 	for(e = jb_worldcplist; e; e = e.jb_worldcpnext)
 	{
 		e.jb_lastmessage = time + 3;
@@ -836,7 +836,7 @@ void JB_ControlPoint_Touch()
 
 	if(other.health < 1 || other.frozen)
 		return;
-		
+
 	if(gameover)
 		return;
 
@@ -911,7 +911,7 @@ void JB_ControlPoint_Touch()
 		JB_ControlPoint_Capture(other);
 
 		JB_ControlPoint_Deactivate(self, JB_ControlPoint_Cooldown(self));
-		
+
 		for(tmp_entity = jb_worldcplist; tmp_entity; tmp_entity = tmp_entity.jb_worldcpnext)
 		{
 			if(tmp_entity != self)
@@ -940,9 +940,9 @@ void JB_ControlPoint_Reset()
 float jb_ControlPoint_Waypoint_Customize()
 {
 	if(!self.owner.team) { return TRUE; }
-	
+
 	entity e = WaypointSprite_getviewentity(other);
-	
+
 	// hide from owner's team
 	if(SAME_TEAM(self.owner, e)) { return FALSE; }
 
@@ -1014,10 +1014,10 @@ MUTATOR_HOOKFUNCTION(jb_OnEntityPreSpawn)
 MUTATOR_HOOKFUNCTION(jb_ResetMap)
 {
 	jb_roundover = FALSE;
-	
+
 	cvar_set("sv_cullentities_pvs", ftos(jb_ce_pvs));
 	cvar_set("sv_cullentities_trace", ftos(jb_ce_trace));
-	
+
 	for(self = world; (self = find(self, classname, "info_jailbreak_jailcamera")); )
 		self.active = FALSE;
 
@@ -1095,7 +1095,7 @@ MUTATOR_HOOKFUNCTION(jb_PlayerSpawn)
 	//self.jb_isprisoned = FALSE;
 
 	if(!round_handler_IsRoundStarted()) { return FALSE; }
-	
+
 	if(self.jb_imprisoner != world)
 	{
 		JB_Imprison(self.jb_imprisoner);
@@ -1121,7 +1121,7 @@ MUTATOR_HOOKFUNCTION(jb_RemovePlayer)
 		JB_Release(world);
 
 	self.jb_roundlost = FALSE;
-	
+
 	return FALSE;
 }
 
@@ -1180,7 +1180,7 @@ MUTATOR_HOOKFUNCTION(jb_PlayerDamage)
 		if(tmp_entity.jb_capturingplayer == self)
 			tmp_entity.jb_unlock_progress = bound(0, tmp_entity.jb_unlock_progress - autocvar_g_jailbreak_controlpoint_unlock_damage_pushback, 1);
 	}
-	
+
 	return FALSE;
 }
 
@@ -1188,7 +1188,7 @@ MUTATOR_HOOKFUNCTION(jb_ForbidThrowing)
 {
 	if(self.jb_isprisoned)
 		return TRUE;
-	
+
 	return FALSE;
 }
 
@@ -1243,8 +1243,8 @@ void jb_ScoreRules(float teams)
 	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE); // SFL_SORT_PRIO_PRIMARY
 	ScoreInfo_SetLabel_TeamScore(ST_JB_ROUNDS,			"rounds",		SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_JB_JBREAKS,		"jbs",		0);
-    ScoreInfo_SetLabel_PlayerScore(SP_JB_FREED,		    "freed",		SFL_SORT_PRIO_SECONDARY);
-    ScoreInfo_SetLabel_PlayerScore(SP_JB_DEFENSE,		"def",		0);
+	ScoreInfo_SetLabel_PlayerScore(SP_JB_FREED,			"freed",		SFL_SORT_PRIO_SECONDARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_JB_DEFENSE,		"def",		0);
 	ScoreRules_basics_end();
 }
 
@@ -1261,12 +1261,12 @@ void jb_DelayedInit()
 void jb_Initialize()
 {
 	precache_sound("kh/alarm.wav");
-	
+
 	if(autocvar_g_jailbreak_teams_override >= 2)
 		jb_teams = autocvar_g_jailbreak_teams_override;
 	else
 		jb_teams = autocvar_g_jailbreak_teams;
-		
+
 	jb_teams = bound(2, jb_teams, 4);
 
 	jb_ScoreRules(jb_teams);

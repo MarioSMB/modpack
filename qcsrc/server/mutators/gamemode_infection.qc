@@ -1,7 +1,7 @@
 void INF_count_alive_players()
 {
 	entity e;
-    float i;
+	float i;
 	for(i = 1; i <= infection_teams; ++i) { aliveplayers[i] = 0; }
 	FOR_EACH_PLAYER(e)
 	{
@@ -15,7 +15,7 @@ void INF_count_alive_players()
 void INF_count_survivors()
 {
 	entity e;
-    float i;
+	float i;
 	for(i = 1; i <= infection_teams; ++i) { aliveplayers[i] = 0; }
 	FOR_EACH_PLAYER(e)
 	{
@@ -33,7 +33,7 @@ float inf_alive_teams()
 	for(i = 1; i <= infection_teams; ++i)
 	if(aliveplayers[i] >= 1)
 		total_alive += 1;
-		
+
 	return total_alive;
 }
 #define INF_ALIVE_TEAMS_OK() (inf_alive_teams() == infection_teams)
@@ -51,11 +51,11 @@ float Infection_CheckWinner()
 		nades_Clear(world, TRUE);
 		return 1;
 	}
-	
+
 	INF_count_survivors();
 	if(inf_alive_teams() > 1)
 		return 0;
-		
+
 	float winner_team = 0;
 
 	FOR_EACH_CLIENT(e)
@@ -187,7 +187,7 @@ MUTATOR_HOOKFUNCTION(inf_PlayerSpawn)
 				}
 				head = head.chain;
 			}
-			
+
 			self.inf_team = self.inf_realteam = best.inf_realteam;
 		}
 	}
@@ -199,7 +199,7 @@ MUTATOR_HOOKFUNCTION(inf_PlayerSpawn)
 	}
 	else if(!self.inf_team) // new joining player
 		self.inf_realteam = self.inf_team = inf_PickSmallestTeam();
-		
+
 	setcolor(self, 16 * self.inf_team + self.inf_team);
 
 	return FALSE;
@@ -213,7 +213,7 @@ MUTATOR_HOOKFUNCTION(inf_PlayerDies)
 		Send_Notification(NOTIF_ONE, frag_target, MSG_CENTER, CENTER_INFECTION_INFECTED, frag_attacker.netname);
 		frag_target.inf_nextteam = frag_attacker.inf_team;
 		frag_target.respawn_flags |= RESPAWN_FORCE;
-		
+
 		PlayerScore_Add(frag_target, SP_SCORE, -1);
 	}
 
@@ -229,7 +229,7 @@ MUTATOR_HOOKFUNCTION(inf_ResetMap)
 		self.inf_nextteam = 0;
 		PutClientInServer(); // player re-spawns on new team?
 	}
-	
+
 	FOR_EACH_SPEC(self) if(IS_BOT_CLIENT(self))
 	{
 		self.inf_realteam = self.inf_team = inf_PickSmallestTeam();
@@ -237,7 +237,7 @@ MUTATOR_HOOKFUNCTION(inf_ResetMap)
 
 		PutClientInServer();
 	}
-	
+
 	return TRUE;
 }
 
@@ -257,7 +257,7 @@ void inf_ScoreRules()
 void inf_Initialize()
 {
 	allowed_to_spawn = TRUE;
-	
+
 	infection_teams = autocvar_g_infection_teams;
 
 	inf_ScoreRules();
