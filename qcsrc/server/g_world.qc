@@ -265,6 +265,14 @@ void cvar_changes_init()
 		BADCVAR("g_freezetag_teams");
 		BADCVAR("g_conquest");
 		BADCVAR("g_conquest_teams");
+		BADCVAR("g_vip");
+		BADCVAR("g_vip_teams");
+		BADCVAR("g_jailbreak");
+		BADCVAR("g_jailbreak_teams");
+		BADCVAR("g_infection");
+		BADCVAR("g_infection_teams");
+		BADCVAR("g_invasion");
+		BADCVAR("g_invasion_teams");
 		BADCVAR("g_keepaway");
 		BADCVAR("g_keyhunt");
 		BADCVAR("g_keyhunt_teams");
@@ -364,6 +372,7 @@ void cvar_changes_init()
 		BADCVAR("g_domination_point_limit");
 		BADCVAR("g_freezetag_teams_override");
 		BADCVAR("g_conquest_teams_override");
+		BADCVAR("g_jailbreak_teams_override");
 		BADCVAR("g_friendlyfire");
 		BADCVAR("g_fullbrightitems");
 		BADCVAR("g_fullbrightplayers");

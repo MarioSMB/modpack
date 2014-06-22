@@ -1,25 +1,29 @@
 // round handling
 float total_players;
-float redalive, bluealive;
-.float redalive_stat, bluealive_stat;
+float redalive, bluealive, yellowalive, pinkalive;
+.float redalive_stat, bluealive_stat, yellowalive_stat, pinkalive_stat;
 float allowed_to_spawn;
 
 void JB_count_alive_players()
 {
 	entity e;
-	total_players = redalive = bluealive = 0;
+	total_players = redalive = bluealive = yellowalive = pinkalive = 0;
 	FOR_EACH_PLAYER(e)
 	{
 		switch(e.team)
 		{
 			case NUM_TEAM_1: ++total_players; if(!e.jb_isprisoned) ++redalive; break;
 			case NUM_TEAM_2: ++total_players; if(!e.jb_isprisoned) ++bluealive; break;
+			case NUM_TEAM_3: ++total_players; if(!e.jb_isprisoned) ++yellowalive; break;
+			case NUM_TEAM_4: ++total_players; if(!e.jb_isprisoned) ++pinkalive; break;
 		}
 	}
 	FOR_EACH_REALCLIENT(e)
 	{
 		e.redalive_stat = redalive;
 		e.bluealive_stat = bluealive;
+		e.yellowalive_stat = yellowalive;
+		e.pinkalive_stat = pinkalive;
 	}
 }
 
@@ -33,13 +37,23 @@ float JB_GetWinnerTeam()
 		if(winner_team) return 0;
 		winner_team = NUM_TEAM_2;
 	}
+	if(yellowalive >= 1)
+	{
+		if(winner_team) return 0;
+		winner_team = NUM_TEAM_3;
+	}
+	if(pinkalive >= 1)
+	{
+		if(winner_team) return 0;
+		winner_team = NUM_TEAM_4;
+	}
 	if(winner_team)
 		return winner_team;
 	return -1; // no player left
 }
 
-#define JB_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0))
-#define JB_ALIVE_TEAMS_OK() (JB_ALIVE_TEAMS() == 2)
+#define JB_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0) + (yellowalive > 0) + (pinkalive > 0))
+#define JB_ALIVE_TEAMS_OK() (JB_ALIVE_TEAMS() == jb_teams)
 float JB_CheckWinner()
 {
 	entity e, oldself;
@@ -67,20 +81,20 @@ float JB_CheckWinner()
 	}
 
 	JB_count_alive_players();
-	if(JB_ALIVE_TEAMS_OK())
+	if(JB_ALIVE_TEAMS() > 1)
 		return 0;
 
 	float winner_team = JB_GetWinnerTeam();
-	
+
 	if(JB_JailIsOpen(winner_team))
 		return 0; // ???
-	
+
 	if(winner_team > 0)
 	{
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner_team, CENTER_ROUND_TEAM_WIN_));
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(winner_team, INFO_ROUND_TEAM_WIN_));
 		TeamScore_AddToTeam(winner_team, ST_JB_ROUNDS, +1);
-		
+
 		JB_ActivateCamera(winner_team);
 		JB_TorturePrisonersLater(winner_team, 3);
 	}
@@ -89,7 +103,7 @@ float JB_CheckWinner()
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_TIED);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
 	}
-	
+
 	jb_roundover = TRUE;
 
 	allowed_to_spawn = FALSE;
@@ -101,8 +115,7 @@ float JB_CheckWinner()
 		{
 			oldself = self;
 			self = e;
-			if(!e.jb_isprisoned)
-				e.player_blocked = 1;
+			e.player_blocked = 1;
 			PutClientInServer();
 			self = oldself;
 		}
@@ -138,6 +151,8 @@ float JB_CheckTeams()
 		float p1 = 0, p2 = 0, p3 = 0, p4 = 0;
 		if(!redalive) p1 = NUM_TEAM_1;
 		if(!bluealive) p2 = NUM_TEAM_2;
+		if(jb_teams >= 3) if(!yellowalive) p3 = NUM_TEAM_3;
+		if(jb_teams >= 4) if(!pinkalive) p4 = NUM_TEAM_4;
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, p1, p2, p3, p4);
 		prev_total_players = total_players;
 	}
@@ -145,30 +160,26 @@ float JB_CheckTeams()
 }
 
 // logging
-void JB_Log(float backlog, string s)
+void jb_debug(string input)
 {
-	if(autocvar_g_jailbreak_log)
-	if(backlog)
-		bprint(sprintf("Jailbreak: %s\n", s));
-	else
-		print(sprintf("Jailbreak: %s\n", s));
+	switch(autocvar_g_jailbreak_debug)
+	{
+		case 1: dprint(input); break;
+		case 2: print(input); break;
+		case 3: bprint(input); break;
+	}
 }
 
 void JB_AddDoor(entity door, float theteam, vector vdata, string sdata, entity cpoint)
 {
 	if(door.classname != "door" && door.classname != "door_rotating")
 	{
-		JB_Log(TRUE, strcat("Warning: ^3", JB_ControlPoint_Name(cpoint), "^7 at ", vtos(cpoint.origin), " is linked with an entity of unhandled class (^3", door.classname, "^7)!"));
+		jb_debug(sprintf("Warning: %s^7 at %v is linked with an entity of unhandled class (%s^7)\n", JB_ControlPoint_Name(cpoint), cpoint.origin, door.classname));
 		return;
 	}
 
-	if(!JB_FIRSTDOOR(theteam))
-		JB_SETFIRSTDOOR(theteam, door);
-
-	if(JB_LASTDOOR(theteam))
-		JB_NEXTDOOR(JB_LASTDOOR(theteam)) = door;
-
-	JB_SETLASTDOOR(theteam, door);
+	door.jb_worlddoornext = jb_worlddoorlist; // link door into jb_worlddoorlist
+	jb_worlddoorlist = door;
 }
 
 float jb_doors_opened[2];
@@ -199,7 +210,7 @@ void JB_MaybeOpenDoor(entity door, float openjails, vector vdata, string sdata, 
 			break;
 
 		default:
-			JB_Log(TRUE, strcat("Warning: ^3", JB_ControlPoint_Name(cpoint), "^7 at ", vtos(cpoint.origin), " is linked with an entity of unhandled class (^3", door.classname, "^7)!"));
+			jb_debug(sprintf("Warning: %s^7 at %v is linked with an entity of unhandled class (%s^7)\n", JB_ControlPoint_Name(cpoint), cpoint.origin, door.classname));
 			opened = FALSE;
 			break;
 	}
@@ -216,22 +227,25 @@ void JB_MaybeOpenDoor(entity door, float openjails, vector vdata, string sdata, 
 // This is called for non-jailbreak modes only, to alter jb-specific entities on the map
 void JB_NonJBInit()
 {
-	entity e;
+	entity tmp_entity;
 	float openjails = autocvar_g_jailbreak_nonjb_openjails;
 
 	SUB_ForEachTarget_Init();
-	FOR_EACH_JB_CONTROLPOINT(e) if(e.team != JB_TEAM_NEUTRAL)
+	for(tmp_entity = jb_worldcplist; tmp_entity; tmp_entity = tmp_entity.jb_worldcpnext)
 	{
-		if(openjails != OPENJAILS_LOCKED_FORCE)
-			SUB_ForEachTarget(e, JB_MaybeOpenDoor, TRUE, openjails, '0 0 0', string_null, e);
-		e.think = SUB_Remove;
-		e.nextthink = time;
+		if(tmp_entity.team)
+		{
+			if(openjails != OPENJAILS_LOCKED_FORCE)
+				SUB_ForEachTarget(tmp_entity, JB_MaybeOpenDoor, TRUE, openjails, '0 0 0', string_null, tmp_entity);
+			tmp_entity.think = SUB_Remove;
+			tmp_entity.nextthink = time;
+		}
 	}
 
 	// If all jail doors are locked, it means that the jail is not intended to be accessible.
 	// We have to keep the jail sectors then to ensure it's not possible to get in with translocator (or something more evil to be added in the future).
 	// Otherwise, they have to be removed. TODO: do something about maps with multiple jails (if we ever get any).
-
+	entity e; // TODO
 	for(e = findchain(classname, "jailbreak_jail"); e; e = e.chain)
 	{
 		float idx = Team_TeamToNumber(e.team);
@@ -249,33 +263,33 @@ void JB_NonJBInit()
 
 float JB_JailIsOpen(float theteam)
 {
-	entity e;
-	FOR_EACH_JB_DOOR(e, theteam) if(e.state != STATE_BOTTOM)
-		return TRUE;
+	entity tmp_entity;
+	for(tmp_entity = jb_worlddoorlist; tmp_entity; tmp_entity = tmp_entity.jb_worlddoornext)
+	{
+		if(tmp_entity.team == theteam)
+		if(tmp_entity.state != STATE_BOTTOM)
+			return TRUE;
+	}
 	return FALSE;
 }
 
-void JB_TeleportToJail(entity p)
+void JB_TeleportToJail(entity p, entity attacker)
 {
-	if(p.jb_specteam)
-		return;
-
 	vector a;
-	float et = JB_GetEnemyTeamOf(p.team);
-	entity spot = JB_ChooseJailSpawnpoint(et);
+	entity spot = jb_ChooseJailSpawn(p, attacker);
 
 	float tries;
 	tries = 3;
 
-	while(!spot && tries)
+	while(!spot && tries > 0)
 	{
-		spot = JB_ChooseJailSpawnpoint(et);
+		spot = jb_ChooseJailSpawn(p, attacker);
 		tries--;
 	}
 
 	if(!spot)
 	{
-		JB_Log(TRUE, strcat("Failed to pick a jail spawnpoint for ", self.netname, "^7, cannot imprison!"));
+		jb_debug(strcat("Failed to pick a jail spawnpoint for ", self.netname, "^7, cannot imprison!\n"));
 		return;
 	}
 
@@ -288,7 +302,7 @@ void JB_Imprison(entity attacker)
 {
 	if(self.jb_isprisoned)
 	{
-		JB_Log(FALSE, strcat("Tried to imprison a prisoned player (", self.netname, ")"));
+		jb_debug(strcat("Tried to imprison a prisoned player (", self.netname, "^7)\n"));
 		return;
 	}
 
@@ -304,14 +318,13 @@ void JB_Imprison(entity attacker)
 
 	nades_Clear(self, FALSE);
 
-	JB_Log(FALSE, strcat("Imprisoning ", self.netname, "^7, attacker: ", etos(attacker), " with netname: ", attacker.netname));
-	JB_TeleportToJail(self);
+	jb_debug(sprintf("Imprisoning %s^7, attacker: %e with netname: %s\n", self.netname, attacker, attacker.netname));
+	JB_TeleportToJail(self, attacker);
 
 	self.jb_isprisoned = TRUE;
 	self.jb_prisontime = time;
 
-	if(!self.jb_specteam)
-		Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_JAILBREAK_IMPRISON);
+	Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_JAILBREAK_IMPRISON);
 }
 
 void JB_TorturePrisonersLater_Think()
@@ -332,7 +345,7 @@ void JB_Release(entity saviour)
 {
 	if(!self.jb_isprisoned)
 	{
-		JB_Log(FALSE, strcat("Tried to release a free player (", self.netname, ")"));
+		jb_debug(strcat("Tried to release a free player (", self.netname, "^7)\n"));
 		return;
 	}
 
@@ -360,7 +373,7 @@ void JB_Release(entity saviour)
 void JB_TorturePrisoners(float theteam)
 {
 	entity spot = world;
-	
+
 	for(;(spot = find(spot, classname, "info_jailbreak_torturespawn"));)
 		if(spot.team == theteam)
 			JB_Torture_Start(spot);
@@ -386,7 +399,7 @@ void JB_Torture_Think()
 	self.jb_torture_suggestedforce = JITTER(self.jb_torture_force, self.jb_torture_force_jitter);
 
 	pointparticles(particleeffectnum("firefield"), self.origin, '0 0 0', 2);
-	
+
 	entity head;
 	FOR_EACH_PLAYER(head)
 	if(DIFF_TEAM(head, self))
@@ -421,31 +434,38 @@ void JB_Torture_Start(entity spot)
 //	Utility functions
 //
 
-entity JB_ChooseJailSpawnpoint(float theteam)
+entity jb_ChooseJailSpawn(entity player, entity attacker)
 {
-	entity spot = world;
+	entity spot;
 
 	RandomSelection_Init();
-	for(;(spot = find(spot, classname, "info_jailbreak_jailspawn"));) if(spot.team == theteam)
+
+	for(spot = world; (spot = find(spot, classname, "info_jailbreak_jailspawn")); )
 	{
-		RandomSelection_Add(spot, 0, string_null, 1, 1);
+		if(attacker && DIFF_TEAM(player, attacker)) // don't throw teammates in own jail?
+		{
+			if(SAME_TEAM(spot, attacker))
+				RandomSelection_Add(spot, 0, string_null, 1, 1);
+		}
+		else
+		{
+			if(DIFF_TEAM(spot, player))
+				RandomSelection_Add(spot, 0, string_null, 1, 1);
+		}
 	}
 
-	spot = RandomSelection_chosen_ent;
-	if(!spot)
-		JB_Log(FALSE, strcat("JB_ChooseJailSpawnpoint(", ftos(theteam), ") failed!"));
+	if(!RandomSelection_chosen_ent)
+		jb_debug(strcat("Unable to find an enemy jail spawnpoint, player team: ", ftos(player.team), "\n"));
 
-	return spot;
+	return RandomSelection_chosen_ent;
 }
-
-float JB_GetEnemyTeamOf(float t) { return ((t == NUM_TEAM_1)? NUM_TEAM_2 : NUM_TEAM_1); }
 
 float JB_TotalPlayersOnTeam(float theteam)
 {
 	entity e;
 	float plcount = 0;
 	FOR_EACH_PLAYER(e) if(e.team == theteam) ++plcount;
-	
+
 	return plcount;
 }
 
@@ -454,7 +474,7 @@ float JB_AlivePlayersOnTeam(float theteam)
 	entity e;
 	float plcount = 0;
 	FOR_EACH_PLAYER(e) if(e.team == theteam) if(!e.jb_isprisoned) ++plcount;
-	
+
 	return plcount;
 }
 
@@ -477,7 +497,7 @@ void JB_ActivateCamera(float theteam)
 
 	if(!cam)
 	{
-		JB_Log(FALSE, strcat("JB_ActivateCamera: the ", Team_ColoredFullName(theteam), "^7 has no camera entities, mapper sucks!"));
+		jb_debug(strcat("Team ", ftos(theteam), " has no camera entities, fail!\n"));
 		return;
 	}
 
@@ -494,7 +514,7 @@ void JB_ActivateCamera(float theteam)
 
 	cam.active = TRUE;
 	cam.SendFlags |= 2;
-	
+
 	entity e;
 	for(e = world; (e = find(e, classname, "info_jailbreak_jailcamera")); )
 	if(e != cam)
@@ -517,8 +537,6 @@ void JB_SetupJailSpawnpoint()
 
 void JB_Jail_Touch()
 {
-	//JB_Log(FALSE, strcat(other.netname, "^7 is in the ", ColoredTeamName(self.team), " ^7jail"));
-
 	if(autocvar_g_nades)
 	if(other.classname == "nade")
 	{
@@ -527,7 +545,7 @@ void JB_Jail_Touch()
 		nades_Clear(own, FALSE);
 		return;
 	}
-	
+
 	if(other.classname == "grapplinghook")
 	{
 		RemoveGrapplingHook(other.realowner);
@@ -569,32 +587,32 @@ float jailcamera_send(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_JAILCAMERA);
 	WriteByte(MSG_ENTITY, sf);
-	
+
 	if(sf & 1)
 	{
 		WriteCoord(MSG_ENTITY, self.origin_x);
 		WriteCoord(MSG_ENTITY, self.origin_y);
 		WriteCoord(MSG_ENTITY, self.origin_z);
-		
+
 		WriteAngle(MSG_ENTITY, self.angles_x);
 		WriteAngle(MSG_ENTITY, self.angles_y);
 	}
-	
+
 	if(sf & 2)
 	{
 		WriteByte(MSG_ENTITY, self.active);
 	}
-	
+
 	return TRUE;
 }
-	
+
 
 void JB_SetupJailCamera()
 {
 	if(!g_jailbreak) { remove(self); return; }
 
 	self.classname = "info_jailbreak_jailcamera";
-	
+
 	Net_LinkEntity(self, FALSE, 0, jailcamera_send);
 }
 
@@ -626,7 +644,9 @@ string JB_ControlPoint_ModelForTeam(float t)
 	{
 		case NUM_TEAM_1:		return "models/domination/dom_red.md3";
 		case NUM_TEAM_2:		return "models/domination/dom_blue.md3";
-		default:				return "models/domination/dom_yellow.md3";
+		case NUM_TEAM_3:		return "models/domination/dom_yellow.md3";
+		case NUM_TEAM_4:		return "models/domination/dom_pink.md3";
+		default:				return "models/domination/dom_unclaimed.md3";
 	}
 }
 
@@ -636,7 +656,9 @@ string JB_ControlPoint_WaypointForTeam(float t)
 	{
 		case NUM_TEAM_1:		return "dom-red";
 		case NUM_TEAM_2:		return "dom-blue";
-		default:				return "dom-yellow";
+		case NUM_TEAM_3:		return "dom-yellow";
+		case NUM_TEAM_4:		return "dom-pink";
+		default:				return "dom-neut";
 	}
 }
 
@@ -646,7 +668,7 @@ float JB_ControlPoint_Cooldown(entity e)
 
 	c = e.jb_capturecount;
 
-	if(e.team == JB_TEAM_NEUTRAL)
+	if(e.team == 0)
 	{
 		base = autocvar_g_jailbreak_controlpoint_idletime_neutral;
 		pw	 = autocvar_g_jailbreak_controlpoint_idletime_neutral_power;
@@ -662,7 +684,7 @@ float JB_ControlPoint_Cooldown(entity e)
 	return base + pow(c, pw) * f * base;
 }
 
-float JB_ControlPoint_InitialCooldown(entity e) { return ((e.team == JB_TEAM_NEUTRAL) ? autocvar_g_jailbreak_controlpoint_idletime_neutral_initial : autocvar_g_jailbreak_controlpoint_idletime_initial); }
+float JB_ControlPoint_InitialCooldown(entity e) { return ((e.team == 0) ? autocvar_g_jailbreak_controlpoint_idletime_neutral_initial : autocvar_g_jailbreak_controlpoint_idletime_initial); }
 
 void JB_ControlPoint_Activate(entity e)
 {
@@ -670,6 +692,7 @@ void JB_ControlPoint_Activate(entity e)
 	e.jb_cooldown = 0;
 	//e.jb_cooldown_max = 0;
 	setmodel(e, JB_ControlPoint_ModelForTeam(e.team));
+	setsize(e, JB_CP_MIN, JB_CP_MAX);
 	WaypointSprite_UpdateMaxHealth(e.jb_waypoint, 0);
 	WaypointSprite_UpdateHealth(e.jb_waypoint, 0);
 }
@@ -679,11 +702,12 @@ void JB_ControlPoint_Deactivate(entity e, float cooldown)
 	e.jb_cooldown_max = max(e.jb_cooldown_max, cooldown);
 	e.jb_cooldown	  = max(e.jb_cooldown,	   cooldown);
 
-	JB_Log(FALSE, strcat(etos(e), ": ", ftos(e.jb_cooldown), "s cooldown. Team: ", ftos(e.team), ", Caps: ", ftos(e.jb_capturecount)));
+	jb_debug(sprintf("%e: %ds cooldown, team: %d, caps: %d\n", e, e.jb_cooldown, e.team, e.jb_capturecount));
 
 	if(e.jb_active && e.jb_cooldown > 0)
 	{
 		setmodel(e, "models/domination/dom_unclaimed.md3");
+		setsize(e, JB_CP_MIN, JB_CP_MAX);
 		e.jb_active = FALSE;
 	}
 }
@@ -718,39 +742,38 @@ void JB_ControlPoint_SwitchTeam(entity e, float t)
 {
 	e.team = t;
 	//WaypointSprite_UpdateSprites(e.jb_waypoint, e.jb_waypoint.model1, "", e.jb_waypoint.model3);
-	WaypointSprite_UpdateTeamRadar(e.jb_waypoint, RADARICON_FLAG, colormapPaletteColor(e.team - 1, FALSE));
+	WaypointSprite_UpdateTeamRadar(e.jb_waypoint, RADARICON_FLAG, (e.team) ? colormapPaletteColor(e.team - 1, FALSE) : '0 1 1');
 	//WaypointSprite_UpdateTextColors(e.jb_waypoint, TeamColor(e.team), e.jb_waypoint.clr2, e.jb_waypoint.clr3);
-	switch(e.team)
-	{
-		case NUM_TEAM_1: e.jb_waypoint.team = NUM_TEAM_2; break;
-		case NUM_TEAM_2: e.jb_waypoint.team = NUM_TEAM_1; break;
-		default: e.jb_waypoint.team = 0; break;
-	}
-	e.jb_waypoint.SendFlags |= 1;
 }
 
-void JB_TriggerTeamControlPoints(float t)
+void JB_TriggerTeamControlPoints(entity cp, entity player)
 {
-	entity o;
-	o = self;
+	entity oldself = self;
+	self = world;
 
-	FOR_EACH_JB_CONTROLPOINT(self)
-		if(self.jb_team_initial == t)
-			SUB_UseTargets_PreventReuse();
+	for(self = jb_worldcplist; self; self = self.jb_worldcpnext)
+	{
+		if(cp.team)
+		{
+			if(SAME_TEAM(self, cp))
+				SUB_UseTargets_PreventReuse();
+		}
+		else
+		{
+			if(self.jb_team_initial != player.team)
+				SUB_UseTargets_PreventReuse();
+		}
+	}
 
-	self = o;
+	self = oldself;
 }
 
 string JB_ControlPoint_Name(entity p)
 {
 	string clr, tm, end;
 
-	switch(p.team)
-	{
-		case NUM_TEAM_1:	clr = COL_TEAM_1; tm = NAME_TEAM_1; break;
-		case NUM_TEAM_2:	clr = COL_TEAM_2; tm = NAME_TEAM_2; break;
-		default:			clr = "^3"; tm = NAME_NEUTRAL; break;
-	}
+	clr = Team_ColorCode(p.team);
+	tm = Team_ColorName(p.team);
 
 	end = strcat(" (Point ", chr2str(str2chr("A", 0) + p.cnt), ")");
 
@@ -766,10 +789,10 @@ void JB_ControlPoint_Capture(entity player)
 
 	activator = self;
 
-	if(self.team == JB_TEAM_NEUTRAL || g_jailbreak_claim)
-		JB_TriggerTeamControlPoints(JB_GetEnemyTeamOf(player.team));
+	if(!self.team || g_jailbreak_claim)
+		JB_TriggerTeamControlPoints(self, player);
 	else SUB_UseTargets();
-	
+
 	FOR_EACH_PLAYER(e)
 	{
 		if(DIFF_TEAM(e, player))
@@ -786,15 +809,13 @@ void JB_ControlPoint_Capture(entity player)
 	}
 
 	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_JAILBREAK_CAPTURE, player.netname, JB_ControlPoint_Name(self));
-	
-	FOR_EACH_JB_CONTROLPOINT(e) { e.jb_lastmessage = time + 3; }
 
-	entity o = self;
-	FOR_EACH_CLIENT(self) if(!self.iscreature) if(self.jb_specteam == player.team)
-		LeaveSpectatorMode();
-	self = o;
+	for(e = jb_worldcplist; e; e = e.jb_worldcpnext)
+	{
+		e.jb_lastmessage = time + 3;
+	}
 
-	PlayerScore_Add(player, SP_SCORE, ((self.team == JB_TEAM_NEUTRAL)? autocvar_g_jailbreak_score_jbreak_neutralmultiplier : 1)
+	PlayerScore_Add(player, SP_SCORE, ((self.team == 0)? autocvar_g_jailbreak_score_jbreak_neutralmultiplier : 1)
 									* (autocvar_g_jailbreak_score_jbreak + autocvar_g_jailbreak_score_jbreak_perplayer * pc));
 	PlayerScore_Add(player, SP_JB_JBREAKS, 1);
 	PlayerScore_Add(player, SP_JB_FREED, pc);
@@ -802,7 +823,7 @@ void JB_ControlPoint_Capture(entity player)
 	play2all("kh/alarm.wav");
 
 	if(autocvar_g_jailbreak_controlpoint_claim_noneutral)
-	if(self.team == JB_TEAM_NEUTRAL)
+	if(self.team == 0)
 		return;
 
 	JB_ControlPoint_SwitchTeam(self, player.team);
@@ -815,7 +836,7 @@ void JB_ControlPoint_Touch()
 
 	if(other.health < 1 || other.frozen)
 		return;
-		
+
 	if(gameover)
 		return;
 
@@ -864,18 +885,21 @@ void JB_ControlPoint_Touch()
 		return;
 	}
 
-	entity cp;
+	entity tmp_entity;
 	float capping_neutral = FALSE;
-	if(self.team != JB_TEAM_NEUTRAL) FOR_EACH_JB_CONTROLPOINT(cp)
-	if(cp.team == JB_TEAM_NEUTRAL)
-	if(cp.jb_unlock_progress)
-	if(SAME_TEAM(cp.jb_capturingplayer, other))
+	if(self.team)
+	for(tmp_entity = jb_worldcplist; tmp_entity; tmp_entity = tmp_entity.jb_worldcpnext)
 	{
-		capping_neutral = TRUE;
-		break;
+		if(!tmp_entity.team)
+		if(tmp_entity.jb_unlock_progress)
+		if(SAME_TEAM(tmp_entity.jb_capturingplayer, other))
+		{
+			capping_neutral = TRUE;
+			break;
+		}
 	}
 
-	if(!capping_neutral || self.team == JB_TEAM_NEUTRAL)
+	if(!capping_neutral || !self.team)
 		self.jb_unlock_progress = bound(0, self.jb_unlock_progress + frametime * autocvar_g_jailbreak_controlpoint_unlock_speed, 1);
 
 	self.pointupdatetime = time;
@@ -887,13 +911,15 @@ void JB_ControlPoint_Touch()
 		JB_ControlPoint_Capture(other);
 
 		JB_ControlPoint_Deactivate(self, JB_ControlPoint_Cooldown(self));
-		entity e;
-		FOR_EACH_JB_CONTROLPOINT(e)
-		if(e != self)
-		if(SAME_TEAM(e, other))
-			JB_ControlPoint_Deactivate(e, autocvar_g_jailbreak_controlpoint_idletime_global_own);
-		else if(e.team == JB_TEAM_NEUTRAL || e.team == JB_GetEnemyTeamOf(other.team))
-			JB_ControlPoint_Deactivate(e, autocvar_g_jailbreak_controlpoint_idletime_global);
+
+		for(tmp_entity = jb_worldcplist; tmp_entity; tmp_entity = tmp_entity.jb_worldcpnext)
+		{
+			if(tmp_entity != self)
+			if(SAME_TEAM(tmp_entity, other))
+				JB_ControlPoint_Deactivate(tmp_entity, autocvar_g_jailbreak_controlpoint_idletime_global_own);
+			else if(!tmp_entity.team || DIFF_TEAM(tmp_entity, other))
+				JB_ControlPoint_Deactivate(tmp_entity, autocvar_g_jailbreak_controlpoint_idletime_global);
+		}
 
 		self.jb_capturecount += 1;
 	}
@@ -908,17 +934,25 @@ void JB_ControlPoint_Reset()
 	JB_ControlPoint_Deactivate(self, JB_ControlPoint_InitialCooldown(self));
 	WaypointSprite_UpdateMaxHealth(self.jb_waypoint, 0);
 	WaypointSprite_UpdateHealth(self.jb_waypoint, 0);
-	JB_ControlPoint_SwitchTeam(self, autocvar_g_jailbreak_controlpoint_claim_allneutral ? JB_TEAM_NEUTRAL : self.jb_team_initial);
+	JB_ControlPoint_SwitchTeam(self, autocvar_g_jailbreak_controlpoint_claim_allneutral ? 0 : self.jb_team_initial);
+}
+
+float jb_ControlPoint_Waypoint_Customize()
+{
+	if(!self.owner.team) { return TRUE; }
+
+	entity e = WaypointSprite_getviewentity(other);
+
+	// hide from owner's team
+	if(SAME_TEAM(self.owner, e)) { return FALSE; }
+
+	return TRUE;
 }
 
 void JB_SetupControlPoint()
 {
-	if(!jb_cp_first) { jb_cp_first = self; }
-
-	if(jb_cp_last)
-		jb_cp_last.jb_cp_next = self;
-
-	jb_cp_last = self;
+	self.jb_worldcpnext = jb_worldcplist; // link control point into jb_worldcplist
+	jb_worldcplist = self;
 
 	if(!g_jailbreak) { return; } // removal is done in JB_NonJBInit
 
@@ -926,7 +960,7 @@ void JB_SetupControlPoint()
 	self.jb_team_initial = self.team;
 
 	if(autocvar_g_jailbreak_controlpoint_claim_allneutral)
-		self.team = JB_TEAM_NEUTRAL;
+		self.team = 0;
 
 	setmodel(self, JB_ControlPoint_ModelForTeam(self.team));
 	self.skin = 0;
@@ -945,22 +979,17 @@ void JB_SetupControlPoint()
 	self.jb_capturecount = 0;
 	self.jb_active = TRUE;
 	self.cnt = jb_cp_num;
+	self.scale = JB_CP_SCALE;
 	JB_ControlPoint_Deactivate(self, JB_ControlPoint_InitialCooldown(self));
-	setsize(self, '-32 -32 -32', '32 32 32');
+	setsize(self, JB_CP_MIN, JB_CP_MAX);
 	setorigin(self, self.origin + '0 0 20');
 	droptofloor();
 
 	waypoint_spawnforitem_force(self, self.origin);
 	self.nearestwaypointtimeout = 0; // activate waypointing again
-	WaypointSprite_SpawnFixed(strzone(strcat("Point ", chr2str(str2chr("A", 0) + jb_cp_num))), self.origin + '0 0 37', self, jb_waypoint, RADARICON_DOMPOINT, '0 1 1');
-	switch(self.team)
-	{
-		case NUM_TEAM_1: self.jb_waypoint.team = NUM_TEAM_2; break;
-		case NUM_TEAM_2: self.jb_waypoint.team = NUM_TEAM_1; break;
-		default: self.jb_waypoint.team = 0; break;
-	}
-	self.jb_waypoint.SendFlags |= 1;
-	WaypointSprite_UpdateTeamRadar(self.jb_waypoint, RADARICON_FLAG, colormapPaletteColor(self.team - 1, FALSE));
+	WaypointSprite_SpawnFixed(strzone(strcat("Point ", chr2str(str2chr("A", 0) + jb_cp_num))), self.origin + JB_CP_WPOFFSET, self, jb_waypoint, RADARICON_DOMPOINT, '0 1 1');
+	self.jb_waypoint.customizeentityforclient = jb_ControlPoint_Waypoint_Customize;
+	WaypointSprite_UpdateTeamRadar(self.jb_waypoint, RADARICON_FLAG, (self.team) ? colormapPaletteColor(self.team - 1, FALSE) : '0 1 1');
 	//WaypointSprite_UpdateTextColors(self.jb_waypoint, TeamColor(self.team), '1 0.5 0', '0 0 0');
 	//WaypointSprite_UpdateSprites(self.jb_waypoint, self.jb_waypoint.model1, self.jb_waypoint.model2, "");
 
@@ -985,10 +1014,10 @@ MUTATOR_HOOKFUNCTION(jb_OnEntityPreSpawn)
 MUTATOR_HOOKFUNCTION(jb_ResetMap)
 {
 	jb_roundover = FALSE;
-	
+
 	cvar_set("sv_cullentities_pvs", ftos(jb_ce_pvs));
 	cvar_set("sv_cullentities_trace", ftos(jb_ce_trace));
-	
+
 	for(self = world; (self = find(self, classname, "info_jailbreak_jailcamera")); )
 		self.active = FALSE;
 
@@ -1028,9 +1057,10 @@ MUTATOR_HOOKFUNCTION(jb_PlayerDies)
 
 				float rng = autocvar_g_jailbreak_defense_range;
 				entity cp;
-				if(rng) FOR_EACH_JB_CONTROLPOINT(cp)
+				if(rng)
+				for(cp = jb_worldcplist; cp; cp = cp.jb_worldcpnext)
 				{
-					if(SAME_TEAM(cp, frag_attacker) || (cp.team == JB_TEAM_NEUTRAL && cp.jb_active))
+					if(SAME_TEAM(cp, frag_attacker) || (cp.team == 0 && cp.jb_active))
 					{
 						// Rewards control point defense if fragging nearby your team's or neutral cp.
 						// In case of neutral cp, it has to be active (no defense farming in the beginning of the round)
@@ -1053,7 +1083,7 @@ MUTATOR_HOOKFUNCTION(jb_PlayerDies)
 	}
 	else
 	{
-		JB_Log(FALSE, strcat("Prisoned player ", frag_target.netname, " ^7just died. Should this really happen?"));
+		jb_debug(strcat("Prisoned player ", frag_target.netname, "^7 just died, should this really happen?\n"));
 		PutClientInServer();
 	}
 
@@ -1062,25 +1092,18 @@ MUTATOR_HOOKFUNCTION(jb_PlayerDies)
 
 MUTATOR_HOOKFUNCTION(jb_PlayerSpawn)
 {
-	self.jb_isprisoned = FALSE;
+	//self.jb_isprisoned = FALSE;
 
-	if(!round_handler_IsRoundStarted())
-	{
-		if(self.jb_specteam)
-			JB_Imprison(world);
-		return FALSE;
-	}
-	
+	if(!round_handler_IsRoundStarted()) { return FALSE; }
+
 	if(self.jb_imprisoner != world)
 	{
 		JB_Imprison(self.jb_imprisoner);
 		self.jb_imprisoner = world;
 	}
 
-	if(JB_TotalPlayersOnTeam(self.team) - 1 > 0 || self.jb_specteam) // allow to spawn non-prisoned if there are no players on that team
+	if(JB_TotalPlayersOnTeam(self.team) - 1 > 0) // allow to spawn non-prisoned if there are no players on that team
 		JB_Imprison(world);
-	
-	self.jb_specteam = 0;
 
 	return FALSE;
 }
@@ -1094,11 +1117,11 @@ MUTATOR_HOOKFUNCTION(jb_SpectateCopy)
 
 MUTATOR_HOOKFUNCTION(jb_RemovePlayer)
 {
-	if(self.jb_isprisoned && !self.jb_specteam)
+	if(self.jb_isprisoned)
 		JB_Release(world);
 
 	self.jb_roundlost = FALSE;
-	
+
 	return FALSE;
 }
 
@@ -1111,13 +1134,6 @@ MUTATOR_HOOKFUNCTION(jb_PlayerPreThink)
 	}
 
 	self.stat_jb_isprisoned = self.jb_isprisoned; // these are different to allow spectating
-
-	if(self.jb_specteam && IS_PLAYER(self))
-	{
-		self.classname = "observer";
-		PutObserverInServer();
-		return FALSE;
-	}
 
 	if(!round_handler_IsRoundStarted())
 	{
@@ -1142,8 +1158,8 @@ MUTATOR_HOOKFUNCTION(jb_PlayerPreThink)
 
 	if(self.jb_isprisoned == 1)
 	{
-		JB_Log(FALSE, strcat("^1BUG: ^7", self.netname, " ^7somehow got out of jail without touching the jail sector! Trying to put him back in.\n"));
-		JB_TeleportToJail(self);
+		jb_debug(strcat("Warning: ", self.netname, "^7managed to leave the jail without touching the jail sector! Attempting to put them back in\n"));
+		JB_TeleportToJail(self, world);
 	}
 	else if(self.jb_isprisoned)
 	if(time > self.jb_jail_resettime)
@@ -1157,14 +1173,14 @@ MUTATOR_HOOKFUNCTION(jb_PlayerDamage)
 	if(self.jb_isprisoned && frag_deathtype != DEATH_FIRE)
 		frag_damage = 0;
 
-	entity e;
+	entity tmp_entity;
 	if(self.jb_unlock_progress)
+	for(tmp_entity = jb_worldcplist; tmp_entity; tmp_entity = tmp_entity.jb_worldcpnext)
 	{
-		FOR_EACH_JB_CONTROLPOINT(e)
-		if(e.jb_capturingplayer == self)
-			e.jb_unlock_progress = bound(0, e.jb_unlock_progress - autocvar_g_jailbreak_controlpoint_unlock_damage_pushback, 1);
+		if(tmp_entity.jb_capturingplayer == self)
+			tmp_entity.jb_unlock_progress = bound(0, tmp_entity.jb_unlock_progress - autocvar_g_jailbreak_controlpoint_unlock_damage_pushback, 1);
 	}
-	
+
 	return FALSE;
 }
 
@@ -1172,7 +1188,7 @@ MUTATOR_HOOKFUNCTION(jb_ForbidThrowing)
 {
 	if(self.jb_isprisoned)
 		return TRUE;
-	
+
 	return FALSE;
 }
 
@@ -1188,7 +1204,7 @@ MUTATOR_HOOKFUNCTION(jb_GiveFrags)
 
 MUTATOR_HOOKFUNCTION(jb_GetTeamCount)
 {
-	ret_float = 2;
+	ret_float = jb_teams;
 	return FALSE;
 }
 
@@ -1197,46 +1213,63 @@ MUTATOR_HOOKFUNCTION(jb_GetTeamCount)
 
 JB_SPAWNFUNC(info_jailbreak_jailspawn_red, JB_SetupJailSpawnpoint, NUM_TEAM_1)
 JB_SPAWNFUNC(info_jailbreak_jailspawn_blue, JB_SetupJailSpawnpoint, NUM_TEAM_2)
+JB_SPAWNFUNC(info_jailbreak_jailspawn_yellow, JB_SetupJailSpawnpoint, NUM_TEAM_3)
+JB_SPAWNFUNC(info_jailbreak_jailspawn_pink, JB_SetupJailSpawnpoint, NUM_TEAM_4)
 
 JB_SPAWNFUNC(func_jailbreak_jail_red, JB_SetupJail, NUM_TEAM_1)
 JB_SPAWNFUNC(func_jailbreak_jail_blue, JB_SetupJail, NUM_TEAM_2)
+JB_SPAWNFUNC(func_jailbreak_jail_yellow, JB_SetupJail, NUM_TEAM_3)
+JB_SPAWNFUNC(func_jailbreak_jail_pink, JB_SetupJail, NUM_TEAM_4)
 
 JB_SPAWNFUNC(info_jailbreak_jailcamera_red, JB_SetupJailCamera, NUM_TEAM_1)
 JB_SPAWNFUNC(info_jailbreak_jailcamera_blue, JB_SetupJailCamera, NUM_TEAM_2)
+JB_SPAWNFUNC(info_jailbreak_jailcamera_yellow, JB_SetupJailCamera, NUM_TEAM_3)
+JB_SPAWNFUNC(info_jailbreak_jailcamera_pink, JB_SetupJailCamera, NUM_TEAM_4)
 
 JB_SPAWNFUNC(info_jailbreak_torturespawn_red, JB_SetupTortureSpawnpoint, NUM_TEAM_1)
 JB_SPAWNFUNC(info_jailbreak_torturespawn_blue, JB_SetupTortureSpawnpoint, NUM_TEAM_2)
+JB_SPAWNFUNC(info_jailbreak_torturespawn_yellow, JB_SetupTortureSpawnpoint, NUM_TEAM_3)
+JB_SPAWNFUNC(info_jailbreak_torturespawn_pink, JB_SetupTortureSpawnpoint, NUM_TEAM_4)
 
 JB_SPAWNFUNC(jailbreak_controlpoint_red, JB_SetupControlPoint, NUM_TEAM_1)
 JB_SPAWNFUNC(jailbreak_controlpoint_blue, JB_SetupControlPoint, NUM_TEAM_2)
-JB_SPAWNFUNC(jailbreak_controlpoint_neutral, JB_SetupControlPoint, JB_TEAM_NEUTRAL)
+JB_SPAWNFUNC(jailbreak_controlpoint_yellow, JB_SetupControlPoint, NUM_TEAM_3)
+JB_SPAWNFUNC(jailbreak_controlpoint_pink, JB_SetupControlPoint, NUM_TEAM_4)
+JB_SPAWNFUNC(jailbreak_controlpoint_neutral, JB_SetupControlPoint, 0)
 
 // scores
-void ScoreRules_JB()
+void jb_ScoreRules(float teams)
 {
-	ScoreRules_basics(2, SFL_SORT_PRIO_PRIMARY, 0, TRUE); // SFL_SORT_PRIO_PRIMARY
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE); // SFL_SORT_PRIO_PRIMARY
 	ScoreInfo_SetLabel_TeamScore(ST_JB_ROUNDS,			"rounds",		SFL_SORT_PRIO_PRIMARY);
 	ScoreInfo_SetLabel_PlayerScore(SP_JB_JBREAKS,		"jbs",		0);
-    ScoreInfo_SetLabel_PlayerScore(SP_JB_FREED,		    "freed",		SFL_SORT_PRIO_SECONDARY);
-    ScoreInfo_SetLabel_PlayerScore(SP_JB_DEFENSE,		"def",		0);
+	ScoreInfo_SetLabel_PlayerScore(SP_JB_FREED,			"freed",		SFL_SORT_PRIO_SECONDARY);
+	ScoreInfo_SetLabel_PlayerScore(SP_JB_DEFENSE,		"def",		0);
 	ScoreRules_basics_end();
 }
 
 // initialization
 void jb_DelayedInit()
 {
-	entity e;
+	entity tmp_entity;
 
 	SUB_ForEachTarget_Init();
-	FOR_EACH_JB_CONTROLPOINT(e)
-		SUB_ForEachTarget(e, JB_AddDoor, TRUE, e.jb_team_initial, '0 0 0', string_null, e);
+	for(tmp_entity = jb_worldcplist; tmp_entity; tmp_entity = tmp_entity.jb_worldcpnext)
+		SUB_ForEachTarget(tmp_entity, JB_AddDoor, TRUE, tmp_entity.jb_team_initial, '0 0 0', string_null, tmp_entity);
 }
 
 void jb_Initialize()
 {
 	precache_sound("kh/alarm.wav");
 
-	ScoreRules_JB();
+	if(autocvar_g_jailbreak_teams_override >= 2)
+		jb_teams = autocvar_g_jailbreak_teams_override;
+	else
+		jb_teams = autocvar_g_jailbreak_teams;
+
+	jb_teams = bound(2, jb_teams, 4);
+
+	jb_ScoreRules(jb_teams);
 
 	round_handler_Spawn(JB_CheckTeams, JB_CheckWinner, JB_RoundStart);
 	round_handler_Init(5, autocvar_g_jailbreak_warmup, autocvar_g_jailbreak_round_timelimit);
@@ -1245,6 +1278,8 @@ void jb_Initialize()
 
 	addstat(STAT_REDALIVE, AS_INT, redalive_stat);
 	addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
+	addstat(STAT_YELLOWALIVE, AS_INT, yellowalive_stat);
+	addstat(STAT_PINKALIVE, AS_INT, pinkalive_stat);
 	addstat(STAT_CAPTURE_PROGRESS, AS_FLOAT, jb_unlock_progress);
 	addstat(STAT_PRISONED, AS_INT, stat_jb_isprisoned);
 	addstat(STAT_ROUNDLOST, AS_INT, jb_roundlost);

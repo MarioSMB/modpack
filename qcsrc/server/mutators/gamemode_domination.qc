@@ -356,7 +356,7 @@ void dom_DelayedControlPointSetup(void) // called after a control point is place
 	dom_Deactivate(self, dom_InitialCooldown(self));
 
 	waypoint_spawnforitem(self);
-	WaypointSprite_SpawnFixed("dom-neut", self.origin + '0 0 32', self, sprite, RADARICON_DOMPOINT, '0 1 1');
+	WaypointSprite_SpawnFixed("dom-neut", self.origin + DOM_CP_WPOFFSET, self, sprite, RADARICON_DOMPOINT, '0 1 1');
 }
 
 void dom_Reset()
