@@ -210,7 +210,7 @@ void W_Arc_Beam_Think(void)
 	}
 
 	float burst = 0;
-	if(self.owner.BUTTON_ATCK2 || self.beam_bursting)
+	if(/*self.owner.BUTTON_ATCK2 || */self.beam_bursting)
 	{
 		if(!self.beam_bursting)
 			self.beam_bursting = TRUE;

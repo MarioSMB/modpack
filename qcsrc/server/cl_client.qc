@@ -382,16 +382,9 @@ void FixPlayermodel()
 			if(self.cvar_cl_thestars == 1)
 				defaultmodel = "models/player/rosalina.dpm";
 			if(self.cvar_cl_damnfurries == 1)
-				defaultmodel = "models/player/foxy.iqm";
+				defaultmodel = "models/player/renamon.iqm";
 			if(self.cvar_cl_robot == 2)
 				defaultmodel = "models/player/ubot.iqm";
-			if(self.cvar_cl_bikini)
-			{
-				defaultmodel = "models/player/abyss.zym";
-				defaultskin = self.cvar_cl_bikini_skin;
-			}
-			if(self.cvar_cl_sparkle > 2)
-				defaultmodel = "models/player/mario.dpm";
 		}
 	}
 
