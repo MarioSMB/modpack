@@ -537,8 +537,6 @@ void GetCvars(float f)
 	GetCvars_handleFloat(s, f, cvar_cl_sparkle, "cl_sparkle");
 	GetCvars_handleFloat(s, f, cvar_cl_pony, "cl_pony");
 	GetCvars_handleFloat(s, f, cvar_cl_pony_skin, "cl_pony_skin");
-	GetCvars_handleFloat(s, f, cvar_cl_bikini, "cl_bikini");
-	GetCvars_handleFloat(s, f, cvar_cl_bikini_skin, "cl_bikini_skin");
 	GetCvars_handleFloat(s, f, cvar_cl_damnfurries, "cl_damnfurries");
 	GetCvars_handleFloat(s, f, cvar_cl_thestars, "cl_thestars");
 	GetCvars_handleFloat(s, f, cvar_cl_robot, "cl_robot");
@@ -1374,9 +1372,7 @@ void precache()
     if(autocvar_sv_allow_customplayermodels)
     {
         precache_playermodel("models/player/pony.iqm");
-        precache_playermodel("models/player/mario.dpm");
-        precache_playermodel("models/player/abyss.zym");
-        precache_playermodel("models/player/foxy.iqm");
+        precache_playermodel("models/player/renamon.iqm");
         precache_playermodel("models/player/terminusmale.iqm");
         precache_playermodel("models/player/ubot.iqm");
         precache_playermodel("models/player/rosalina.dpm");

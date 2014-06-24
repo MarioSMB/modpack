@@ -649,8 +649,6 @@ string modname;
 .float cvar_cl_sparkle;
 .float cvar_cl_pony;
 .float cvar_cl_pony_skin;
-.float cvar_cl_bikini;
-.float cvar_cl_bikini_skin;
 .float cvar_cl_damnfurries;
 .float cvar_cl_thestars;
 .float cvar_cl_robot;
