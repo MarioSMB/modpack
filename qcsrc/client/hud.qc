@@ -4380,7 +4380,9 @@ void HUD_DiscoMode(void)
 		offset_x -= discoball/2;
 		offset_y -= discoball/2;
 		
-		drawfill(dmpos + offset, discoball*'1 1 0', dmcolor, 1, DRAWFLAG_NORMAL);
+		dmalpha = 0.6 + cos(64*time+k)*0.3;
+		
+		drawfill(dmpos + offset, discoball*'1 1 0', dmcolor, dmalpha, DRAWFLAG_NORMAL);
 		
 	}
 	

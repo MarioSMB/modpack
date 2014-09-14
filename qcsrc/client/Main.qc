@@ -426,7 +426,7 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	if ( discomode )
 	if ( nPrimary >= K_MOUSE1 && nPrimary <= K_MOUSE16 )
 		return TRUE;
-
+	
 	return bSkipKey;
 }
 

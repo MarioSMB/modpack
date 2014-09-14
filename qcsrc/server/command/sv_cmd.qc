@@ -103,6 +103,7 @@ void DiscoMode(entity e, float enable)
 		WriteByte(MSG_ONE, SVC_TEMPENTITY);
 		WriteByte(MSG_ONE, TE_CSQC_DISCOMODE);
 		WriteByte(MSG_ONE, enable);
+		e.discomode = enable;
 	}
 }
 
@@ -1719,7 +1720,7 @@ void GameCommand_discomode(float request, float argc)
 		{
 			print("\nUsage:^3 sv_cmd discomode client [enable]\n");
 			print("  'client' is the entity number or name of the player,\n");
-			print("  'enable' can be 1 or 0. 1 by default.\n");
+			print("  'enable' 1 by default. 0 disable, 1 enable \n");
 			return;
 		}
 	}
