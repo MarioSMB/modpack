@@ -4305,6 +4305,123 @@ void HUD_MorningRescue(void)
 	draw_endBoldFont();
 }
 
+
+void HUD_DiscoMode(void)
+{
+	// vectors for top right, bottom right, bottom and bottom left corners
+
+	vector topright;
+	vector bottom;
+	vector bottomright;
+	vector bottomleft;
+
+	topright_x = vid_conwidth;
+	topright_y = 0;
+	topright_z = 0;
+
+	bottom_x = vid_conwidth/2;
+	bottom_y = vid_conheight;
+	bottom_z = 0;
+
+	bottomright_x = vid_conwidth;
+	bottomright_y = vid_conheight;
+	bottomright_z = 0;
+
+	bottomleft_x = 0;
+	bottomleft_y = vid_conheight;
+	bottomleft_z = 0;
+
+	local vector dmpos;
+	local float dmalpha;
+	dmpos = bottomleft;
+	local vector offset = '0 0 0';
+
+	dmalpha = 1;
+
+	local vector dmcolor = '0 0 1';
+	dmcolor_x = random();
+	
+	drawfill('0 0 0', bottomright, dmcolor, dmalpha * random(), DRAWFLAG_ADDITIVE);
+
+	/*mrpos_y -= 200 * mralpha;
+	drawpic (mrpos, "gfx/morningrescue", '57 200 0', '1 1 1', mralpha, DRAWFLAG_NORMAL);
+
+	mrpos = topright;
+	mrpos_y -= 500 * 0.5 * (1 - mralpha);
+	offset_y = 3 * cos(mrpos_y + 5 * time) - 5;
+	mrpos_x -= 513 * 0.5;
+	offset_x = 3 * cos(mrpos_x + 5 * time) + 5;
+	drawpic (mrpos + offset, "gfx/morningrescue2", '513 500 0' * 0.5, '1 1 1', mralpha, DRAWFLAG_NORMAL);*/
+
+	local string mycolor = "";
+	local string mychar;
+	local float j;
+	local string dmstring = _("^1D^2i^3s^4c^5o ^6Mode");
+
+	local float k;
+	
+	local float discoball;
+	local float discoballs = 8;
+	for ( k = 0; k < discoballs; ++k )
+	{
+		dmpos_y = vid_conheight / 2;
+		dmpos_x = vid_conwidth / 2;
+		
+		//offset_y = 32 * (k+1) * sin(3 * time) * (mod(k, 2)? 1 : -1)  * (mod(k, 3)? 1 : -1);
+		//offset_x = offset_y * (mod(k, 2)? -1 : 1);// * (mod(k, 3)? 0.5 : 1);
+		offset_x = 48 * (k+1) * sin(4*time+10*k) * cos(6.28*k/discoballs);
+		offset_y = 48 * (k+1) * sin(4*time+10*k) * sin(6.28*k/discoballs);
+		
+		dmcolor_x = 1;
+		dmcolor_y = cos(16*time+k)/2+0.5;
+		dmcolor_z = 0;
+		
+		discoball = 32 + (discoballs-k)*8 + 16*(cos(5*time+10*k));
+		offset_x -= discoball/2;
+		offset_y -= discoball/2;
+		
+		drawfill(dmpos + offset, discoball*'1 1 0', dmcolor, 1, DRAWFLAG_NORMAL);
+		
+	}
+	
+	draw_beginBoldFont();
+
+	for(k = 0; k < 2; ++k)
+	{
+		dmpos_y = vid_conheight / 2 - 12;
+		dmpos_x = 0.5 * (vid_conwidth - 0.6025 * strlennocol(dmstring) * 24);
+		for(j = 0; j < strlen(dmstring); ++j)
+		{
+			mychar = substring(dmstring, j, 1);
+
+			if(mychar == "^")
+			{
+				if(substring(dmstring, j+1, 1) == "x")
+				{
+					mycolor = substring(dmstring, j, 5);
+					j += 5;
+				}
+				else
+				{
+					mycolor = substring(dmstring, j, 2);
+					++j;
+				}
+				continue;
+			}
+
+			offset_y = 10 * ((k*10)+1) * cos(dmpos_x + 3 * time) * (mod(j, 2)? 1 : -1) * (k? 1 : -1);
+			offset_x = offset_y * (mod(j, 2)? -1 : 1);
+			local string resultstr = strcat(mycolor, mychar);
+
+			dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
+			dmpos_x += stringwidth(resultstr, TRUE, '24 24 0');
+			drawcolorcodedstring(dmpos + offset, resultstr, '24 24 0', dmalpha * 0.8, DRAWFLAG_ADDITIVE);
+		}
+	}
+	
+	draw_endBoldFont();
+}
+
 // Draw pressed keys (#11)
 //
 void HUD_PressedKeys(void)
@@ -4576,6 +4693,10 @@ void HUD_InfoMessages(void)
 			HUD_MorningRescue();
 		else
 			morningrescue = 0;
+		
+		if ( discomode )
+			HUD_DiscoMode();
+			
 
 		if(spectatee_status && !intermission)
 		{

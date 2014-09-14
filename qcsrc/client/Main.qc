@@ -1334,10 +1334,7 @@ void Net_ReadMorningRescue()
 
 void Net_ReadDiscoMode()
 {
-	localcmd("play2 sound/misc/morningrescue\n");
-	morningrescue = 1;
-	mr_appeartime = time;
-	mr_fadetime   = time + 60;
+	discomode = ReadByte();
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.

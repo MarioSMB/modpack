@@ -88,7 +88,7 @@ void MorningRescue(entity e)
 	}
 }
 
-void DiscoMode(entity e)
+void DiscoMode(entity e, float enable)
 {
 	if(e == world)
 		return;
@@ -102,6 +102,7 @@ void DiscoMode(entity e)
 		msg_entity = e;
 		WriteByte(MSG_ONE, SVC_TEMPENTITY);
 		WriteByte(MSG_ONE, TE_CSQC_DISCOMODE);
+		WriteByte(MSG_ONE, enable);
 	}
 }
 
@@ -1664,6 +1665,18 @@ void GameCommand_discomode(float request, float argc)
 		case CMD_REQUEST_COMMAND:
 		{
 			float accepted;
+			float enable;
+			string msg = "";
+			
+			if ( argv(2) )
+			{
+				enable = stof( argv(2) );
+				if ( !enable )
+					msg = " disabled";
+			}
+			else
+				enable = 1;
+			
 			if(argv(1) == "all")
 			{
 				entity head;
@@ -1673,8 +1686,8 @@ void GameCommand_discomode(float request, float argc)
 					accepted = VerifyClientEntity(head, TRUE, FALSE);
 					if(accepted > 0)
 					{
-						DiscoMode(head);
-						print(strcat("Disco Mode for ", GetCallerName(head), ".\n"));
+						DiscoMode(head,enable);
+						print(strcat("Disco Mode",msg," for ", GetCallerName(head), ".\n"));
 						continue;
 					}
 					else
@@ -1691,8 +1704,8 @@ void GameCommand_discomode(float request, float argc)
 
 			if(accepted > 0)
 			{
-				DiscoMode(client);
-				print(strcat("Disco Mode for ", GetCallerName(client), ".\n"));
+				DiscoMode(client,enable);
+				print(strcat("Disco Mode",msg," for ", GetCallerName(client), ".\n"));
 			}
 			else
 				print("Disco Mode: ", GetClientErrorString(accepted, argv(1)), ".\n");
@@ -1704,8 +1717,9 @@ void GameCommand_discomode(float request, float argc)
 			print("Incorrect parameters for ^2discomode^7\n");
 		case CMD_REQUEST_USAGE:
 		{
-			print("\nUsage:^3 sv_cmd discomode client \n");
+			print("\nUsage:^3 sv_cmd discomode client [enable]\n");
 			print("  'client' is the entity number or name of the player,\n");
+			print("  'enable' can be 1 or 0. 1 by default.\n");
 			return;
 		}
 	}
