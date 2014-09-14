@@ -4695,9 +4695,6 @@ void HUD_InfoMessages(void)
 			HUD_MorningRescue();
 		else
 			morningrescue = 0;
-		
-		if ( discomode )
-			HUD_DiscoMode();
 			
 
 		if(spectatee_status && !intermission)
@@ -6125,6 +6122,9 @@ void HUD_Main (void)
 
 	if(intermission == 2) // no hud during mapvote
 		hud_fade_alpha = 0;
+	
+	if ( discomode )
+		HUD_DiscoMode();
 
 	// panels that we want to be active together with the scoreboard
 	// they must fade only when the menu does

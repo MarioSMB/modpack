@@ -368,6 +368,8 @@ float forbidWeaponUse(entity player)
 		return 5;
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
 		return 2;
+	if ( player.discomode )
+		return 6;
 	return 0;
 }
 
