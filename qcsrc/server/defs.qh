@@ -653,6 +653,7 @@ string modname;
 .float cvar_cl_thestars;
 .float cvar_cl_robot;
 .float cvar_cl_charge;
+.float cvar_discomode;
 
 .string cvar_cl_autovote;
 

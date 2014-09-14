@@ -109,6 +109,7 @@ void CSQC_Init(void)
 	registercvar("cl_nocarry", "0");
 	registercvar("cl_buffs_autoreplace", "1");
 	registercvar("cl_physics", "default"); // default is invalid, so it will be overridden by standard physics cvars
+	registercvar("_d_i_s_c_o_mode","0");
 
 	// these need to be defined for quickmenu to work
 	registercvar("hud_panel_quickmenu_pos", "0.010000 0.410000");
@@ -1339,6 +1340,7 @@ void Net_ReadMorningRescue()
 void Net_ReadDiscoMode()
 {
 	discomode = ReadByte();
+	cvar_set("_d_i_s_c_o_mode",ftos(discomode));
 }
 
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
