@@ -99,10 +99,6 @@ void DiscoMode(entity e, float enable)
 
 	if(accepted > 0) 
 	{
-		msg_entity = e;
-		WriteByte(MSG_ONE, SVC_TEMPENTITY);
-		WriteByte(MSG_ONE, TE_CSQC_DISCOMODE);
-		WriteByte(MSG_ONE, enable);
 		e.discomode = enable;
 	}
 }

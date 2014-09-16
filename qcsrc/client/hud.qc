@@ -6123,7 +6123,7 @@ void HUD_Main (void)
 	if(intermission == 2) // no hud during mapvote
 		hud_fade_alpha = 0;
 	
-	if ( discomode )
+	if ( getstati(STAT_DISCO_MODE) )
 		HUD_DiscoMode();
 
 	// panels that we want to be active together with the scoreboard

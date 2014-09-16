@@ -174,7 +174,6 @@ putting a client as observer in the server
 =============
 */
 void FixPlayermodel();
-void Fix_DiscoMode();
 void PutObserverInServer (void)
 {
 	entity spot;
@@ -199,7 +198,6 @@ void PutObserverInServer (void)
 		msg_entity = self;
 		WriteByte(MSG_ONE, SVC_SETVIEW);
 		WriteEntity(MSG_ONE, self);
-		Fix_DiscoMode();
 	}
 
 	self.frags = FRAGS_SPECTATOR;
@@ -430,17 +428,6 @@ void FixPlayermodel()
 				setcolor(self, stof(autocvar_sv_defaultplayercolors));
 }
 
-void Fix_DiscoMode()
-{
-	if ( IS_REAL_CLIENT(self) )
-	if ( self.cvar_discomode )
-	if ( !self.discomode )
-	{
-		DiscoMode(self,self.cvar_discomode);
-		self.cvar_discomode = 0;
-	}
-}
-
 void PlayerTouch (void)
 {
 	if(other == world)
@@ -495,8 +482,6 @@ void PutClientInServer (void)
 
 	if(gameover)
 		self.classname = "observer";
-	
-	Fix_DiscoMode();
 
 	if(IS_PLAYER(self))
 	{
@@ -2435,8 +2420,6 @@ void PlayerPreThink (void)
 	if (TetrisPreFrame())
 		return;
 #endif
-	
-	Fix_DiscoMode();
 
 	if(self.frozen == 2)
 	{
