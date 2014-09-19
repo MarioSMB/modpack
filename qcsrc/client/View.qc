@@ -1253,8 +1253,18 @@ void CSQC_UpdateView(float w, float h)
 
 	// amount of damage since last hit sound
 	float unaccounted_damage = damage_dealt_total - damage_dealt_total_prev;
+	
 
-	if (unaccounted_damage > 0 && autocvar_cl_hitsound > 0 && time - hitsound_time_prev > autocvar_cl_hitsound_antispam_time)
+	if (autocvar_cl_hitsound == 1)
+	{
+		if ( time - hitsound_time_prev > autocvar_cl_hitsound_antispam_time )
+		if ( damage_dealt_total > 0 )
+		{
+			sound(world, CH_INFO, "misc/hit.wav", VOL_BASE, ATTEN_NONE);
+			hitsound_time_prev = time;
+		}
+	}
+	else if (unaccounted_damage > 0 && autocvar_cl_hitsound > 0 && time - hitsound_time_prev > autocvar_cl_hitsound_antispam_time)
 	{
 		// customizable gradient function that crosses (0,a), (c,1) and asymptotically approaches b
 		float a, b, c, x;
