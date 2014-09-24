@@ -264,7 +264,7 @@ float MapVote_SendEntity(entity to, float sf)
 		}
 		else if ( autocvar_sv_vote_gametype )
 		{
-			 // map vote but gametype has been choosen via voting screen
+			 // map vote but gametype has been chosen via voting screen
 			WriteByte(MSG_ENTITY, 2);
 			WriteString(MSG_ENTITY, MapInfo_Type_ToText(MapInfo_CurrentGametype()));
 		}
