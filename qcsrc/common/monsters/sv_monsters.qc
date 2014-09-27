@@ -1090,7 +1090,7 @@ void monster_think()
 	CSQCMODEL_AUTOUPDATE();
 }
 
-float monster_spawn()
+float monster_setup()
 {
 	MON_ACTION(self.monsterid, MR_SETUP);
 
@@ -1249,7 +1249,7 @@ float monster_initialize(float mon_id)
 		setorigin(self, trace_endpos);
 	}
 
-	if(!monster_spawn())
+	if(!monster_setup())
 		return FALSE;
 
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
