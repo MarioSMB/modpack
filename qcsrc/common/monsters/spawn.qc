@@ -1,10 +1,6 @@
 entity spawnmonster (string monster, float monster_id, entity spawnedby, entity own, vector orig, float respwn, float invincible, float moveflag)
 {
-	// ensure spawnfunc database is initialized
-	//initialize_field_db();
-
 	entity e = spawn();
-	float i;
 
 	e.spawnflags = MONSTERFLAG_SPAWNED;
 
@@ -26,7 +22,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 	}
 	else if(monster != "")
 	{
-		float found = 0;
+		float found = 0, i;
 		entity mon;
 		for(i = MON_FIRST; i <= MON_LAST; ++i)
 		{
@@ -58,6 +54,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 		e.angles = spawnedby.angles;
 	}
 	
+       // initialise checks if monster is valid
 	entity oldself = self;
 	self = e;
 	monster_initialize(monster_id);
