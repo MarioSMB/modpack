@@ -1,5 +1,6 @@
 entity spawnmonster (string monster, float monster_id, entity spawnedby, entity own, vector orig, float respwn, float invincible, float moveflag)
 {
+       float i;
 	entity e = spawn();
 
 	e.spawnflags = MONSTERFLAG_SPAWNED;
@@ -22,7 +23,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 	}
 	else if(monster != "")
 	{
-		float found = 0, i;
+		float found = 0;
 		entity mon;
 		for(i = MON_FIRST; i <= MON_LAST; ++i)
 		{
