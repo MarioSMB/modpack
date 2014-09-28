@@ -537,12 +537,16 @@ MUTATOR_DEFINITION(mutator_minstagib)
 		
 		if(cvar("g_minstagib_withmines"))
 			(get_weaponinfo(WEP_MINE_LAYER)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+
+            g_minstagib = cvar("g_minstagib");
 	}
 	
 	MUTATOR_ONREMOVE
 	{
 		if(cvar("g_minstagib_withmines"))
 			(get_weaponinfo(WEP_MINE_LAYER)).spawnflags |= WEP_FLAG_MUTATORBLOCKED;
+
+             g_minstagib = 0;
 	}
 
 	return FALSE;
