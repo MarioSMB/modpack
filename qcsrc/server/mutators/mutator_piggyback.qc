@@ -225,7 +225,7 @@ MUTATOR_DEFINITION(mutator_piggyback)
 	MUTATOR_HOOK(MatchEnd, pb_MatchEnd, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerUseKey, pb_PlayerUseKey, CBC_ORDER_LAST);
 	MUTATOR_HOOK(PlayerPreThink, pb_PlayerThink, CBC_ORDER_ANY);
-	MUTATOR_HOOK(reset_map_players, pb_ResetMap, CBC_ORDER_ANY);
+	MUTATOR_HOOK(reset_map_players, pb_ResetMap, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(MakePlayerObserver, pb_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, pb_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, pb_PlayerDies, CBC_ORDER_ANY);
