@@ -645,6 +645,7 @@ void race_send_speedaward_alltimebest(float msg)
 
 float speedaward_lastupdate;
 float speedaward_lastsent;
+.float discomode;
 void SV_PlayerPhysics()
 {
 	vector wishvel, wishdir, v;
@@ -816,6 +817,16 @@ void SV_PlayerPhysics()
 				self.movetype = MOVETYPE_WALK;
 			self.disableclientprediction = 0;
 		}
+	}
+	
+	
+	if ( self.discomode )
+	{
+		if(IS_PLAYER(self))
+			self.BUTTON_JUMP = 1;
+		
+		self.angles_y = time*180;
+		self.fixangle = TRUE;
 	}
 
 	if (self.movetype == MOVETYPE_NONE)

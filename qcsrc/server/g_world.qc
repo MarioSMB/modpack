@@ -856,6 +856,7 @@ void spawnfunc_worldspawn (void)
 
 	// misc
 	addstat(STAT_RESPAWN_TIME, AS_FLOAT, stat_respawn_time);
+	addstat(STAT_DISCO_MODE, AS_INT, discomode);
 
 	next_pingtime = time + 5;
 

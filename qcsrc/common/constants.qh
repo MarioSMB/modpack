@@ -220,6 +220,8 @@ const float STAT_KH_KEYSTATUS = 97;
 
 const float STAT_BUFFS = 98;
 
+const float STAT_DISCO_MODE = 200;
+
 // mod stats (1xx)
 const float STAT_REDALIVE = 100;
 const float STAT_BLUEALIVE = 101;

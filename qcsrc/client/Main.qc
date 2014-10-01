@@ -422,7 +422,7 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	if(menu_visible && menu_action)
 		if(menu_action(bInputType, nPrimary, nSecondary))
 			return TRUE;
-
+	
 	return bSkipKey;
 }
 
