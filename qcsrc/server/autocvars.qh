@@ -1538,7 +1538,7 @@ float autocvar_g_jailbreak_debug;
 float autocvar_g_jailbreak_teams;
 float autocvar_g_jailbreak_teams_override;
 float autocvar_sv_headshot;
-float autocvar_sv_headshot_damage = 1.5;
+var float autocvar_sv_headshot_damage = 1.5;
 float autocvar_g_piggyback_ride_enemies;
 var float autocvar_g_assault_round_limit = 1;
 var float autocvar_g_assault_repair_amount = 40;
