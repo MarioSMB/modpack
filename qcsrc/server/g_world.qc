@@ -2238,14 +2238,14 @@ void EndFrame()
 			if(self.enemy.typehitsound)
 				self.typehit_time = time;
 			else if(self.enemy.damage_dealt)
-				self.damage_dealt_total = self.enemy.damage_dealt;
+				self.damage_dealt_total = ceil(self.enemy.damage_dealt);
 		}
 		else
 		{
 			if(self.typehitsound)
 				self.typehit_time = time;
 			else if(self.damage_dealt)
-				self.damage_dealt_total = self.damage_dealt;
+				self.damage_dealt_total = ceil(self.damage_dealt);
 		}
 	}
 	altime = time + frametime * (1 + autocvar_g_antilag_nudge);
