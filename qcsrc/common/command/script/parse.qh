@@ -397,7 +397,7 @@ entity script_compile(string source)
 	lex_string = source;
 	lex_lookahead = lex_get_token();
 	entity ast = parse_block();
-	script_debug_ast(ast);
+	//script_debug_ast(ast);
 	return ast;
 }
  
