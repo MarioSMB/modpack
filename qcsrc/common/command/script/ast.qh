@@ -12,6 +12,11 @@ entity current_context;
 .entity context_variables;
 .entity context_functions;
 
+const float AST_TYPE_VALUE    = 0x00;
+const float AST_TYPE_BREAK    = 0x01;
+const float AST_TYPE_RETURN   = 0x02;
+const float AST_TYPE_CONTINUE = 0x04;
+
 // global function definitions
 
 #define SCRIPT_FLOAT_FUNCTION(name) \
@@ -35,7 +40,7 @@ entity current_context;
 	SCRIPT_STRING_FUNCTION(strtoupper) \
 	SCRIPT_STRING_FUNCTION(strdecolorize) \
 	SCRIPT_GLOBAL_FUNCTION(strlen,script_ftos(strlen(arg)) ) \
-	SCRIPT_GLOBAL_FUNCTION(print,(dprint(arg),"")) \
+	SCRIPT_GLOBAL_FUNCTION(print,(dprint(arg,"\n"),"")) \
 
 #define SCRIPT_GLOBAL_FUNCTION(name,code) \
 	entity script_global_function_##name () { \
@@ -179,11 +184,12 @@ void context_pop()
 }
 
 // recursive operations
+entity ast_null();
 
 entity script_evaluate(entity ast_root)
 {
 	if ( !ast_root )
-		return world;
+		return ast_null();
 	entity oldself = self;
 	self = ast_root;
 	entity result = self.ast_evaluate();
@@ -206,7 +212,7 @@ void script_cleanup(entity ast_root)
 
 void script_debug_ast_recursive(entity ast_root,string prefix)
 {
-	dprint(prefix,ast_root.netname,": ",ast_root.script_value,"\n");
+	dprint(prefix,"^3",ast_root.classname,"^7: ",ast_root.script_value,"\n");
 	if ( ast_root.ast_operand1 )
 		script_debug_ast_recursive(ast_root.ast_operand1,strcat(prefix," op1 "));
 	if ( ast_root.ast_operand2 )
@@ -226,7 +232,7 @@ void script_debug_ast(entity ast_root)
 		else
 		{
 			dprint("(ast begin)\n");
-			script_debug_ast_recursive(ast_root,"");
+			script_debug_ast_recursive(ast_root,"^8");
 			dprint("(ast end)\n");
 		}
 	}
@@ -242,7 +248,14 @@ entity ast_simplevalue(string value)
 	entity ast_temp = spawn();
 	ast_temp.script_value = value;
 	ast_temp.ast_evaluate = ast_simplevalue_evaluate;
-	ast_temp.netname="ast_simplevalue";
+	ast_temp.classname="ast_simplevalue";
+	return ast_temp;
+}
+entity ast_null()
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_evaluate = ast_simplevalue_evaluate;
+	ast_temp.classname="ast_null";
 	return ast_temp;
 }
 
@@ -256,7 +269,7 @@ entity ast_variable(string var_name)
 	entity ast_temp = spawn();
 	ast_temp.script_value = var_name;
 	ast_temp.ast_evaluate = ast_variable_evaluate;
-	ast_temp.netname="ast_variable";
+	ast_temp.classname="ast_variable";
 	return ast_temp;
 }
 
@@ -274,7 +287,7 @@ entity ast_assign(string var_name,entity value)
 	ast_temp.script_value = var_name;
 	ast_temp.ast_operand1 = value;
 	ast_temp.ast_evaluate = ast_assign_evaluate;
-	ast_temp.netname="ast_assign";
+	ast_temp.classname="ast_assign";
 	return ast_temp;
 }
 
@@ -303,30 +316,31 @@ entity ast_function_evaluate()
 		}
 		entity value = script_evaluate(function.ast_operand2);
 		context_pop();
+		value.script_type &= ~AST_TYPE_RETURN;
 		return value;
 	}
-	return ast_simplevalue("");
+	return ast_null();
 }
 entity ast_function(string name)
 {
 	entity ast_temp = spawn();
 	ast_temp.script_value = name;
 	ast_temp.ast_evaluate = ast_function_evaluate;
-	ast_temp.netname="ast_function";
+	ast_temp.classname="ast_function";
 	return ast_temp;
 }
 
 entity ast_function_declaration_evaluate()
 {
 	context_define_function(current_context,self.script_value,self.ast_operand2,self.ast_operand1);
-	return ast_simplevalue("");
+	return ast_null();
 }
 entity ast_function_declaration(string name)
 {
 	entity ast_temp = spawn();
 	ast_temp.script_value = name;
 	ast_temp.ast_evaluate = ast_function_declaration_evaluate;
-	ast_temp.netname="ast_function_declaration";
+	ast_temp.classname="ast_function_declaration";
 	return ast_temp;
 }
 
@@ -344,7 +358,7 @@ entity ast_if(entity condition, entity branch_true, entity branch_false)
 	ast_temp.ast_operand2 = branch_true;
 	ast_temp.ast_operand3 = branch_false;
 	ast_temp.ast_evaluate = ast_if_evaluate;
-	ast_temp.netname="ast_if";
+	ast_temp.classname="ast_if";
 	return ast_temp;
 }
 
@@ -356,6 +370,11 @@ entity ast_while_evaluate()
 		it < self.ast_max_iterations )
 	{
 		val = script_evaluate(self.ast_operand2);
+		if ( val.script_type & (AST_TYPE_BREAK|AST_TYPE_RETURN) )
+		{
+			val.script_type &= ~ AST_TYPE_BREAK;
+			break;
+		}
 		it++;
 	}
 	return val;
@@ -367,28 +386,72 @@ entity ast_while(entity condition, entity body)
 	ast_temp.ast_operand2 = body;
 	ast_temp.ast_evaluate = ast_while_evaluate;
 	ast_temp.ast_max_iterations = 1000; // TODO: cvar
-	ast_temp.netname="ast_while";
+	ast_temp.classname="ast_while";
 	return ast_temp;
 }
 
 entity ast_block_evaluate()
 {
-	entity value = self;
+	entity val = self;
 	entity next = self;
 	context_push();
 	while ( next.chain )
 	{
 		next = next.chain;
-		value = script_evaluate(next);
+		val = script_evaluate(next);
+		if ( val.script_type & (AST_TYPE_BREAK|AST_TYPE_RETURN|AST_TYPE_CONTINUE) )
+		{
+			val.script_type &= ~AST_TYPE_CONTINUE;
+			break;
+		}
 	}
 	context_pop();
-	return value;
+	return val;
 }
 entity ast_block()
 {
 	entity ast_temp = spawn();
 	ast_temp.ast_evaluate = ast_block_evaluate;
-	ast_temp.netname="ast_block";
+	ast_temp.classname="ast_block";
+	return ast_temp;
+}
+
+entity ast_break_evaluate()
+{
+	entity val = ast_simplevalue(self.script_value);
+	val.script_type = self.script_type;
+	return val;
+}
+entity ast_break()
+{
+	entity ast_temp = spawn();
+	ast_temp.script_type = AST_TYPE_BREAK;
+	ast_temp.classname="ast_break";
+	ast_temp.ast_evaluate = ast_break_evaluate;
+	return ast_temp;
+}
+entity ast_continue()
+{
+	entity ast_temp = spawn();
+	ast_temp.script_type = AST_TYPE_CONTINUE;
+	ast_temp.classname="ast_continue";
+	ast_temp.ast_evaluate = ast_break_evaluate;
+	return ast_temp;
+}
+
+entity ast_return_evaluate()
+{
+	entity val = script_evaluate(self.ast_operand1);
+	val.script_type = self.script_type;
+	return val;
+}
+entity ast_return(entity value)
+{
+	entity ast_temp = spawn();
+	ast_temp.script_type = AST_TYPE_RETURN;
+	ast_temp.classname="ast_return";
+	ast_temp.ast_evaluate = ast_return_evaluate;
+	ast_temp.ast_operand1 = value;
 	return ast_temp;
 }
 
@@ -404,7 +467,7 @@ entity ast_unaryminus(entity operand)
 	entity ast_temp = spawn();
 	ast_temp.ast_operand1 = operand;
 	ast_temp.ast_evaluate = ast_unaryminus_evaluate;
-	ast_temp.netname="ast_unaryminus";
+	ast_temp.classname="ast_unaryminus";
 	return ast_temp;
 }
 entity ast_bitnot_evaluate()
@@ -417,7 +480,7 @@ entity ast_bitnot(entity operand)
 	entity ast_temp = spawn();
 	ast_temp.ast_operand1 = operand;
 	ast_temp.ast_evaluate = ast_bitnot_evaluate;
-	ast_temp.netname="ast_bitnot";
+	ast_temp.classname="ast_bitnot";
 	return ast_temp;
 }
 entity ast_not_evaluate()
@@ -430,7 +493,7 @@ entity ast_not(entity operand)
 	entity ast_temp = spawn();
 	ast_temp.ast_operand1 = operand;
 	ast_temp.ast_evaluate = ast_not_evaluate;
-	ast_temp.netname="ast_not";
+	ast_temp.classname="ast_not";
 	return ast_temp;
 }
 
@@ -448,7 +511,7 @@ entity ast_mul(entity operand1, entity operand2)
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_mul_evaluate;
-	ast_temp.netname="ast_mul";
+	ast_temp.classname="ast_mul";
 	return ast_temp;
 }
 entity ast_div_evaluate()
@@ -464,7 +527,7 @@ entity ast_div(entity operand1, entity operand2)
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_div_evaluate;
-	ast_temp.netname="ast_div";
+	ast_temp.classname="ast_div";
 	return ast_temp;
 }
 entity ast_mod_evaluate()
@@ -480,7 +543,7 @@ entity ast_mod(entity operand1, entity operand2)
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_mod_evaluate;
-	ast_temp.netname="ast_mod";
+	ast_temp.classname="ast_mod";
 	return ast_temp;
 }
 entity ast_sum_evaluate()
@@ -499,7 +562,7 @@ entity ast_sum(entity operand1, entity operand2)
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_sum_evaluate;
-	ast_temp.netname="ast_sum";
+	ast_temp.classname="ast_sum";
 	return ast_temp;
 }
 entity ast_sub_evaluate()
@@ -515,7 +578,7 @@ entity ast_sub(entity operand1, entity operand2)
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_sub_evaluate;
-	ast_temp.netname="ast_sub";
+	ast_temp.classname="ast_sub";
 	return ast_temp;
 }
 entity ast_bitand_evaluate()
@@ -531,7 +594,7 @@ entity ast_bitand(entity operand1, entity operand2)
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_bitand_evaluate;
-	ast_temp.netname="ast_bitand";
+	ast_temp.classname="ast_bitand";
 	return ast_temp;
 }
 entity ast_bitor_evaluate()
@@ -547,7 +610,7 @@ entity ast_bitor(entity operand1, entity operand2)
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_bitor_evaluate;
-	ast_temp.netname="ast_bitor";
+	ast_temp.classname="ast_bitor";
 	return ast_temp;
 }
 entity ast_bitxor_evaluate()
@@ -563,7 +626,7 @@ entity ast_bitxor(entity operand1, entity operand2)
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_bitxor_evaluate;
-	ast_temp.netname="ast_bitxor";
+	ast_temp.classname="ast_bitxor";
 	return ast_temp;
 }
 entity ast_eq_evaluate()
@@ -579,7 +642,7 @@ entity ast_eq(entity operand1, entity operand2)
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_eq_evaluate;
-	ast_temp.netname="ast_eq";
+	ast_temp.classname="ast_eq";
 	return ast_temp;
 }
 entity ast_ne_evaluate()
@@ -598,7 +661,7 @@ entity ast_ne(entity operand1, entity operand2)
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_ne_evaluate;
-	ast_temp.netname="ast_ne";
+	ast_temp.classname="ast_ne";
 	return ast_temp;
 }
 entity ast_lt_evaluate()
@@ -617,7 +680,7 @@ entity ast_lt(entity operand1, entity operand2)
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_lt_evaluate;
-	ast_temp.netname="ast_lt";
+	ast_temp.classname="ast_lt";
 	return ast_temp;
 }
 entity ast_le_evaluate()
@@ -636,7 +699,7 @@ entity ast_le(entity operand1, entity operand2)
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_le_evaluate;
-	ast_temp.netname="ast_le";
+	ast_temp.classname="ast_le";
 	return ast_temp;
 }
 entity ast_gt_evaluate()
@@ -655,7 +718,7 @@ entity ast_gt(entity operand1, entity operand2)
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_gt_evaluate;
-	ast_temp.netname="ast_gt";
+	ast_temp.classname="ast_gt";
 	return ast_temp;
 }
 entity ast_ge_evaluate()
@@ -674,7 +737,7 @@ entity ast_ge(entity operand1, entity operand2)
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_ge_evaluate;
-	ast_temp.netname="ast_ge";
+	ast_temp.classname="ast_ge";
 	return ast_temp;
 }
 entity ast_and_evaluate()
@@ -690,7 +753,7 @@ entity ast_and(entity operand1, entity operand2)
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_and_evaluate;
-	ast_temp.netname="ast_and";
+	ast_temp.classname="ast_and";
 	return ast_temp;
 }
 entity ast_or_evaluate()
@@ -706,6 +769,6 @@ entity ast_or(entity operand1, entity operand2)
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_or_evaluate;
-	ast_temp.netname="ast_or";
+	ast_temp.classname="ast_or";
 	return ast_temp;
 }

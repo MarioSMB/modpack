@@ -16,6 +16,7 @@ const float LEX_OPERATOR_ASSIGN  = 103;
 const float LEX_OPERATOR_BIT     = 104;
 const float LEX_OPERATOR_LOGICAL = 105;
 const float LEX_OPERATOR_COMPARE = 106;
+const float LEX_OPERATOR_COMMA   = 107;
 
 float lex_string_index;
 float lex_string_end;
@@ -95,6 +96,11 @@ string lex_string_literal()
 			nextch = substring(lex_string,lex_string_index,1);
 			if ( nextch == "\\" || nextch == "\"" )
 				lex_string_index++;
+			else if ( nextch == "n" )
+			{
+				nextch = "\n";
+				lex_string_index++;
+			}
 			else
 				nextch = "\\";
 		}
@@ -120,7 +126,8 @@ entity lex_get_token()
 	if ( ctype_identifier(nextch) )
 	{
 		string id = lex_identifier();
-		if ( id == "if" || id == "else" || id == "while" || id == "for" || id == "function" )
+		if ( id == "if" || id == "else" || id == "while" || id == "for" || 
+			id == "function" || id == "return" || id == "break" || id == "continue" )
 			return lex_token(LEX_KEYWORD,id);
 		return lex_token(LEX_IDENTIFIER,id);
 	}
@@ -136,8 +143,10 @@ entity lex_get_token()
 		return lex_token(LEX_OPERATOR_OTHER,"(");
 	if (  nextch == ")" || nextch == "}" )
 		return lex_token(LEX_OPERATOR_OTHER,")");
-	if (  nextch == "?" || nextch == ":", nextch == "," || nextch == ";" )
+	if (  nextch == "?" || nextch == ":" )
 		return lex_token(LEX_OPERATOR_OTHER,nextch);
+	if ( nextch == "," || nextch == ";" )
+		return lex_token(LEX_OPERATOR_COMMA,nextch);
 	
 	if ( lex_string_index < lex_string_end && substring(lex_string,lex_string_index,1) == "=" )
 	{

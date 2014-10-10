@@ -63,7 +63,7 @@ entity parse_primary()
 			{
 				result = parse_block();
 				remove(lex_lookahead);
-				lex_lookahead = lex_get_token();
+				lex_lookahead = lex_get_token(); // remove )
 			}
 			break;
 		case LEX_OPERATOR_BIT:
@@ -78,6 +78,24 @@ entity parse_primary()
 			{
 				result = parse_primary();
 				result = ast_not(result);
+			}
+			break;
+		case LEX_KEYWORD:
+			if ( lex_prev.script_value == "return" )
+			{
+				if ( lex_lookahead.script_type == LEX_OPERATOR_COMMA )
+					lex_lookahead = lex_get_token(); // remove ,;
+				else
+					result = parse_expression();
+				result = ast_return(result);
+			}
+			else if ( lex_prev.script_value == "break" )
+			{
+				result = ast_break();
+			}
+			else if ( lex_prev.script_value == "continue" )
+			{
+				result = ast_continue();
 			}
 			break;
 	}
@@ -352,8 +370,7 @@ entity parse_statement()
 	
 	
 	entity val = parse_assignment();
-	if ( lex_lookahead.script_type == LEX_OPERATOR_OTHER && (
-			lex_lookahead.script_value == ";" || lex_lookahead.script_value == "," ) )
+	if ( lex_lookahead.script_type == LEX_OPERATOR_COMMA )
 		lex_lookahead = lex_get_token(); // skip ; and ,
 	return val;
 }
@@ -380,7 +397,7 @@ entity script_compile(string source)
 	lex_string = source;
 	lex_lookahead = lex_get_token();
 	entity ast = parse_block();
-	//script_debug_ast(ast);
+	script_debug_ast(ast);
 	return ast;
 }
  
