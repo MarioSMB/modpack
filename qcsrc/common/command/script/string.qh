@@ -1,0 +1,58 @@
+
+// ========================================================================
+//   String functions
+// ========================================================================
+
+float ctype_space(string char)
+{
+	return char == " " || char == "\n" || char == "\t";
+}
+
+float ctype_upper(string char)
+{
+	return char == "A" || char == "B" || char == "C" || char == "D" || 
+		char == "E" || char == "F" || char == "G" || char == "H" || 
+		char == "I" || char == "J" || char == "K" || char == "L" || 
+		char == "M" || char == "N" || char == "O" || char == "P" || 
+		char == "Q" || char == "R" || char == "S" || char == "T" ||
+		char == "U" || char == "V" || char == "W" || char == "X" || 
+		char == "Y" || char == "Z";
+}
+
+float ctype_lower(string char)
+{
+	return char == "a" || char == "b" || char == "c" || char == "d" || 
+		char == "e" || char == "f" || char == "g" || char == "h" || 
+		char == "i" || char == "j" || char == "k" || char == "l" || 
+		char == "m" || char == "n" || char == "o" || char == "p" || 
+		char == "q" || char == "r" || char == "s" || char == "t" || 
+		char == "u" || char == "v" || char == "w" || char == "x" || 
+		char == "y" || char == "z";
+}
+
+float ctype_alpha(string char)
+{
+	return ctype_upper(char) || ctype_lower(char);
+}
+
+float ctype_digit(string char)
+{
+	return char == "0" || char == "1" || char == "2" || char == "3" || 
+		char == "4" || char == "5" || char == "6" || char == "7" || 
+		char == "8" || char == "9";
+}
+
+float ctype_alnum(string char)
+{
+	return ctype_alpha(char) || ctype_digit(char);
+}
+
+float ctype_identifier(string char)
+{
+	return ctype_alnum(char) || char == "_";
+}
+
+string script_ftos(float f)
+{
+	return sprintf("%.9g", f);
+}

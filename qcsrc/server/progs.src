@@ -26,6 +26,7 @@ sys-post.qh
 ../common/command/rpn.qh
 ../common/command/generic.qh
 ../common/command/shared_defs.qh
+../common/command/script.qh
 ../common/net_notice.qh
 ../common/animdecide.qh
 
@@ -178,6 +179,7 @@ campaign.qc
 ../common/command/markup.qc
 ../common/command/rpn.qc
 ../common/command/generic.qc
+../common/command/script.qc
 ../common/net_notice.qc
 
 command/common.qc

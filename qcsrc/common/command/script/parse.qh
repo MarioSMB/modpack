@@ -1,0 +1,386 @@
+
+// ========================================================================
+//   Parser
+// ========================================================================
+entity parse_block();
+entity parse_expression();
+
+entity parse_identifier(string id)
+{
+	if ( lex_lookahead.script_type == LEX_OPERATOR_OTHER &&
+		lex_lookahead.script_value == "(" )
+	{
+		entity function_call = ast_function(id);
+		lex_lookahead = lex_get_token(); 
+		entity lex_prev = lex_lookahead;
+		if ( lex_prev.script_type == LEX_OPERATOR_OTHER && lex_prev.script_value == ")" )
+			lex_lookahead = lex_get_token(); 
+		else
+		{
+			entity param = world;
+			entity nextparam;
+			while ( lex_prev.script_type != LEX_EOF && 
+				( lex_prev.script_type != LEX_OPERATOR_OTHER || lex_prev.script_value != ")" ) )
+			{
+				nextparam = parse_expression();
+				if ( !nextparam )
+					break;
+				if ( !param )
+					function_call.ast_operand1 = nextparam;
+				else
+					param.chain = nextparam;
+				param = nextparam;
+				lex_prev = lex_lookahead;
+				lex_lookahead = lex_get_token(); 
+			}
+		}
+		return function_call;
+	}
+	return ast_variable(id);
+}
+
+entity parse_primary()
+{
+	entity lex_prev = lex_lookahead;
+	lex_lookahead = lex_get_token();
+	entity result = world;
+	switch(lex_prev.script_type)
+	{
+		case LEX_IDENTIFIER:
+			result = parse_identifier(lex_prev.script_value);
+			break;
+		case LEX_VALUE_NUMBER:
+		case LEX_VALUE_STRING:
+			result = ast_simplevalue(lex_prev.script_value);
+			break;
+		case LEX_OPERATOR_ARITH:
+			result = parse_primary();
+			if ( lex_prev.script_value == "-" )
+				result = ast_unaryminus(result);
+			break;
+		case LEX_OPERATOR_OTHER:
+			if ( lex_prev.script_value == "(" )
+			{
+				result = parse_block();
+				remove(lex_lookahead);
+				lex_lookahead = lex_get_token();
+			}
+			break;
+		case LEX_OPERATOR_BIT:
+			if ( lex_prev.script_value == "~" )
+			{
+				result = parse_primary();
+				result = ast_bitnot(result);
+			}
+			break;
+		case LEX_OPERATOR_LOGICAL:
+			if ( lex_prev.script_value == "!" )
+			{
+				result = parse_primary();
+				result = ast_not(result);
+			}
+			break;
+	}
+	
+	remove(lex_prev);
+	return result;
+}
+
+entity parse_multiplication()
+{
+	entity val = parse_primary();
+	entity lex_prev;
+	while(lex_lookahead.script_type == LEX_OPERATOR_MULT)
+	{
+		lex_prev = lex_lookahead;
+		lex_lookahead = lex_get_token();
+		if ( lex_prev.script_value == "/" )
+			val = ast_div(val,parse_primary());
+		else if ( lex_prev.script_value == "%" )
+			val = ast_mod(val,parse_primary());
+		else
+			val = ast_mul(val,parse_primary());
+		remove(lex_prev);
+	}
+	return val;
+}
+
+entity parse_arithmetic()
+{
+	entity val = parse_multiplication();
+	entity lex_prev;
+	while(lex_lookahead.script_type == LEX_OPERATOR_ARITH)
+	{
+		lex_prev = lex_lookahead;
+		lex_lookahead = lex_get_token();
+		if ( lex_prev.script_value == "-" )
+			val = ast_sub(val,parse_multiplication());
+		else
+			val = ast_sum(val,parse_multiplication());
+		remove(lex_prev);
+	}
+	return val;
+}
+
+entity parse_bitwise()
+{
+	entity val = parse_arithmetic();
+	entity lex_prev;
+	while(lex_lookahead.script_type == LEX_OPERATOR_BIT)
+	{
+		lex_prev = lex_lookahead;
+		lex_lookahead = lex_get_token();
+		if ( lex_prev.script_value == "&" )
+			val = ast_bitand(val,parse_arithmetic());
+		else if ( lex_prev.script_value == "^" )
+			val = ast_bitxor(val,parse_arithmetic());
+		else
+			val = ast_bitor(val,parse_arithmetic());
+		remove(lex_prev);
+	}
+	return val;
+}
+
+entity parse_comparison()
+{
+	entity val = parse_bitwise();
+	entity lex_prev;
+	while(lex_lookahead.script_type == LEX_OPERATOR_COMPARE)
+	{
+		lex_prev = lex_lookahead;
+		lex_lookahead = lex_get_token();
+		if ( lex_prev.script_value == "<" )
+			val = ast_lt(val,parse_bitwise());
+		else if ( lex_prev.script_value == "<=" )
+			val = ast_le(val,parse_bitwise());
+		else if ( lex_prev.script_value == "!=" )
+			val = ast_ne(val,parse_bitwise());
+		else if ( lex_prev.script_value == ">=" )
+			val = ast_ge(val,parse_bitwise());
+		else if ( lex_prev.script_value == ">" )
+			val = ast_gt(val,parse_bitwise());
+		else
+			val = ast_eq(val,parse_bitwise());
+		remove(lex_prev);
+	}
+	return val;
+}
+
+entity parse_boolean()
+{
+	entity val = parse_comparison();
+	entity lex_prev;
+	while(lex_lookahead.script_type == LEX_OPERATOR_LOGICAL)
+	{
+		lex_prev = lex_lookahead;
+		lex_lookahead = lex_get_token();
+		if ( lex_prev.script_value == "||" )
+			val = ast_or(val,parse_comparison());
+		else
+			val = ast_and(val,parse_comparison());
+		remove(lex_prev);
+	}
+	return val;
+}
+
+entity parse_expression()
+{
+	entity val = parse_boolean();
+	
+	if ( lex_lookahead.script_type == LEX_OPERATOR_OTHER && 
+		lex_lookahead.script_value == "?" )
+	{
+		lex_lookahead = lex_get_token();
+		entity branch_true = parse_boolean();
+		entity branch_false;
+		if ( lex_lookahead.script_type == LEX_OPERATOR_OTHER && 
+				lex_lookahead.script_value == ":" )
+		{
+			lex_lookahead = lex_get_token();
+			branch_false = parse_boolean();
+		}
+		else
+			branch_false = ast_simplevalue("");
+		
+		return ast_if(val,branch_true,branch_false);
+	}
+	
+    return val;
+}
+
+entity parse_assignment()
+{
+	if ( lex_lookahead.script_type == LEX_IDENTIFIER )
+	{
+		string id = lex_lookahead.script_value;
+		float oldindex = lex_string_index;
+		entity lex_prev = lex_lookahead;
+		lex_lookahead = lex_get_token();
+		
+		if ( lex_lookahead.script_type == LEX_OPERATOR_ASSIGN )
+		{
+			string oper = substring(lex_lookahead.script_value,0,1);
+			lex_lookahead = lex_get_token();
+			entity val = parse_expression();
+			
+			if ( oper == "+" )
+				val = ast_sum(ast_variable(id), val);
+			else if ( oper == "-" )
+				val = ast_sub(ast_variable(id), val);
+			else if ( oper == "*" )
+				val = ast_mul(ast_variable(id), val);
+			else if ( oper == "/" )
+				val = ast_div(ast_variable(id), val);
+			else if ( oper == "%" )
+				val = ast_mod(ast_variable(id), val);
+			else if ( oper == "^" )
+				val = ast_bitxor(ast_variable(id), val);
+			else if ( oper == "&" )
+				val = ast_bitand(ast_variable(id), val);
+			else if ( oper == "|" )
+				val = ast_bitor(ast_variable(id), val);
+			
+			return ast_assign(id,val);
+		}
+		
+		lex_string_index = oldindex;
+		lex_lookahead = lex_prev;
+	}
+	
+	return parse_expression();
+}
+
+entity parse_statement()
+{
+	if ( lex_lookahead.script_type == LEX_KEYWORD )
+	{
+		if ( lex_lookahead.script_value == "if" )
+		{
+			lex_get_token(); // remove if
+			lex_lookahead = lex_get_token(); // remove (
+			entity condition = parse_assignment();
+			lex_lookahead = lex_get_token(); // remove )
+			entity branch_true = parse_statement();
+			entity branch_false;
+			if ( lex_lookahead.script_type == LEX_KEYWORD && lex_lookahead.script_value == "else" )
+			{
+				lex_lookahead = lex_get_token(); // remove else
+				branch_false = parse_statement();
+			}
+			else
+				branch_false = ast_simplevalue("");
+			
+			return ast_if(condition,branch_true,branch_false);
+		}
+		else if ( lex_lookahead.script_value == "while" )
+		{
+			lex_get_token(); // remove while
+			lex_lookahead = lex_get_token(); // remove (
+			entity condition = parse_assignment();
+			lex_lookahead = lex_get_token(); // remove )
+			
+			return ast_while(condition,parse_statement());
+		}
+		else if ( lex_lookahead.script_value == "for" )
+		{
+			lex_get_token(); // remove for
+			lex_lookahead = lex_get_token(); // remove (
+			entity start = parse_assignment();
+			lex_lookahead = lex_get_token(); // remove ;
+			entity condition = parse_assignment();
+			lex_lookahead = lex_get_token(); // remove ;
+			entity increment = parse_assignment();
+			lex_lookahead = lex_get_token(); // remove )
+			
+			// { block; increment }
+			entity for_inner_block = ast_block();
+			for_inner_block.chain = parse_statement();
+			if ( for_inner_block.chain )
+				for_inner_block.chain.chain = increment;
+			else
+				for_inner_block.chain = increment;
+			
+			// { start; while ( condition ) inner_block }
+			entity for_outer_block = ast_block();
+			for_outer_block.chain = start;
+			start.chain = ast_while(condition,for_inner_block);
+			
+			return for_outer_block;
+		}
+		else if ( lex_lookahead.script_value == "function" )
+		{
+			lex_lookahead = lex_get_token(); // remove function
+			string id = lex_lookahead.script_value;
+			lex_get_token(); // remove id
+			lex_lookahead = lex_get_token(); // remove (
+			entity func_declaration = ast_function_declaration(id);
+			
+			entity lex_prev = lex_lookahead;
+			if ( lex_prev.script_type == LEX_OPERATOR_OTHER && lex_prev.script_value == ")" )
+				lex_lookahead = lex_get_token(); 
+			else
+			{
+				entity param = world;
+				entity nextparam;
+				while ( lex_prev.script_type != LEX_EOF && 
+					( lex_prev.script_type != LEX_OPERATOR_OTHER || lex_prev.script_value != ")" ) )
+				{
+					nextparam = spawn();
+					nextparam.script_value = lex_lookahead.script_value;
+					lex_lookahead = lex_get_token(); // remove param name
+					if ( lex_lookahead.script_type == LEX_OPERATOR_ASSIGN && 
+						lex_prev.script_value == "=" )
+					{
+						lex_lookahead = lex_get_token(); // remove =
+						nextparam.ast_operand1 = parse_expression();
+					}
+					if ( !param )
+						func_declaration.ast_operand1 = nextparam;
+					else
+						param.chain = nextparam;
+					param = nextparam;
+					lex_prev = lex_lookahead;
+					lex_lookahead = lex_get_token();
+				}
+			}
+			
+			func_declaration.ast_operand2 = parse_statement();
+			
+			return func_declaration;
+		}
+	}
+	
+	
+	entity val = parse_assignment();
+	if ( lex_lookahead.script_type == LEX_OPERATOR_OTHER && (
+			lex_lookahead.script_value == ";" || lex_lookahead.script_value == "," ) )
+		lex_lookahead = lex_get_token(); // skip ; and ,
+	return val;
+}
+
+entity parse_block()
+{
+	entity val = ast_block();
+	entity next = val;
+	while ( lex_lookahead.script_type != LEX_EOF && 
+		!( lex_lookahead.script_type == LEX_OPERATOR_OTHER && lex_lookahead.script_value == ")" ) )
+	{
+		next.chain = parse_statement();
+		next = next.chain;
+		if ( !next )
+			break;
+	}
+	return val;
+}
+
+entity script_compile(string source)
+{
+	lex_string_index = 0;
+	lex_string_end = strlen(source);
+	lex_string = source;
+	lex_lookahead = lex_get_token();
+	entity ast = parse_block();
+	//script_debug_ast(ast);
+	return ast;
+}
+ 

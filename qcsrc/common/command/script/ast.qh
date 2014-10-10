@@ -1,0 +1,711 @@
+
+// ========================================================================
+//   Abstract syntax Tree
+// ========================================================================
+
+.entity ast_operand1;
+.entity ast_operand2;
+.entity ast_operand3;
+.entity() ast_evaluate;
+.float ast_max_iterations;
+entity current_context;
+.entity context_variables;
+.entity context_functions;
+
+// global function definitions
+
+#define SCRIPT_FLOAT_FUNCTION(name) \
+	SCRIPT_GLOBAL_FUNCTION(name,script_ftos(name(stof(arg))) )
+	
+#define SCRIPT_STRING_FUNCTION(name) \
+	SCRIPT_GLOBAL_FUNCTION(name,name(arg) )
+	
+#define SCRIPT_GLOBAL_FUNCTIONS \
+	SCRIPT_FLOAT_FUNCTION(sin) \
+	SCRIPT_FLOAT_FUNCTION(cos) \
+	SCRIPT_FLOAT_FUNCTION(tan) \
+	SCRIPT_FLOAT_FUNCTION(asin) \
+	SCRIPT_FLOAT_FUNCTION(acos) \
+	SCRIPT_FLOAT_FUNCTION(atan) \
+	SCRIPT_FLOAT_FUNCTION(floor) \
+	SCRIPT_FLOAT_FUNCTION(ceil) \
+	SCRIPT_FLOAT_FUNCTION(sqrt) \
+	SCRIPT_FLOAT_FUNCTION(log) \
+	SCRIPT_STRING_FUNCTION(strtolower) \
+	SCRIPT_STRING_FUNCTION(strtoupper) \
+	SCRIPT_STRING_FUNCTION(strdecolorize) \
+	SCRIPT_GLOBAL_FUNCTION(strlen,script_ftos(strlen(arg)) ) \
+	SCRIPT_GLOBAL_FUNCTION(print,(dprint(arg),"")) \
+
+#define SCRIPT_GLOBAL_FUNCTION(name,code) \
+	entity script_global_function_##name () { \
+		string arg = context_get_variable(current_context,"arg"); \
+		return ast_simplevalue(code);  \
+	}
+string context_get_variable(entity context,string varname);
+entity ast_simplevalue(string value);
+SCRIPT_GLOBAL_FUNCTIONS
+#undef SCRIPT_GLOBAL_FUNCTION
+
+
+void context_define_function(entity context, string funcname, entity executor, entity param_chain);
+void script_init_global_functions(entity context)
+{
+	entity next_func;
+	entity param;
+	#define SCRIPT_GLOBAL_FUNCTION(name,code) \
+			next_func = spawn(); \
+			next_func.ast_evaluate = script_global_function_##name; \
+			param = spawn(); \
+			param.script_value = "arg"; \
+			context_define_function(context,#name,next_func,param);
+	SCRIPT_GLOBAL_FUNCTIONS
+	#undef SCRIPT_GLOBAL_FUNCTION
+}
+
+// Context stack operations
+
+string context_get_variable(entity context,string varname)
+{
+	if ( strlen(varname) > 5 )
+	if ( substring(varname,0,5) == "cvar_" )
+	{
+		varname = substring(varname,5,strlen(varname)-5);
+		if ( cvar_type(varname) & CVAR_TYPEFLAG_EXISTS )
+			return cvar_string(varname);
+		return "";
+	}
+	entity currentvar = context.context_variables;
+	while ( currentvar )
+	{
+		if ( currentvar.netname == varname )
+			return currentvar.script_value;
+		currentvar = currentvar.chain;
+	}
+	if ( context.owner )
+		return context_get_variable(context.owner,varname);
+	return "";
+}
+float context_set_variable(entity context,string varname, string value)
+{
+	if ( strlen(varname) > 5 )
+	if ( substring(varname,0,5) == "cvar_" )
+	{
+		varname = substring(varname,5,strlen(varname)-5);
+		if ( cvar_type(varname) & CVAR_TYPEFLAG_EXISTS )
+			cvar_set(varname,value);
+		else
+			localcmd(strcat("set ",varname, " \"",MakeConsoleSafe(value),"\"\n"));
+		return 1;
+	}
+	entity currentvar = context.context_variables;
+	while ( currentvar )
+	{
+		if ( currentvar.netname == varname )
+		{
+			currentvar.script_value = value;
+			return 1;
+		}
+		currentvar = currentvar.chain;
+	}
+	if ( context.owner )
+	if ( context_set_variable(context.owner,varname,value) )
+		return 1;
+	return 0;
+}
+void context_define_variable(entity context,string varname, string value)
+{
+	entity newvar = spawn();
+	newvar.script_value = value;
+	newvar.netname = varname;
+	newvar.chain = context.context_variables;
+	context.context_variables = newvar;
+}
+entity context_get_function(entity context, string funcname)
+{	
+	entity currentfunc = context.context_functions;
+	while ( currentfunc )
+	{
+		if ( currentfunc.netname == funcname )
+		{
+			return currentfunc;
+		}
+		currentfunc = currentfunc.chain;
+	}
+	if ( context.owner )
+		return context_get_function(context.owner,funcname);
+	dprint("Script: called undefined function: ",funcname,"\n");
+	return world;
+}
+void context_define_function(entity context, string funcname, entity executor, entity param_chain)
+{
+	entity function = spawn();
+	function.netname = funcname;
+	function.ast_operand1 = param_chain;
+	function.ast_operand2 = executor;
+	function.chain = context.context_functions;
+	context.context_functions = function;
+}
+void context_push()
+{
+	entity new_context = spawn();
+	new_context.owner = current_context;
+	if ( current_context )
+		new_context.ast_max_iterations = current_context.ast_max_iterations;
+	else
+	{
+		new_context.ast_max_iterations = 100; // max recursion depth TODO: cvar
+		script_init_global_functions(new_context);
+	}
+	current_context = new_context;
+}
+void context_pop()
+{
+	if ( current_context )
+	{
+		entity old_context = current_context;
+		current_context = current_context.owner;
+		
+		entity old_var = old_context.context_variables;
+		entity prev_var;
+		while(old_var)
+		{
+			prev_var = old_var;
+			old_var = old_var.chain;
+			remove(prev_var);
+		}
+		remove(old_context);
+	}
+}
+
+// recursive operations
+
+entity script_evaluate(entity ast_root)
+{
+	if ( !ast_root )
+		return world;
+	entity oldself = self;
+	self = ast_root;
+	entity result = self.ast_evaluate();
+	self = oldself;
+	return result;
+}
+
+void script_cleanup(entity ast_root)
+{
+	if ( ast_root.ast_operand1 )
+		script_cleanup(ast_root.ast_operand1);
+	if ( ast_root.ast_operand2 )
+		script_cleanup(ast_root.ast_operand2);
+	if ( ast_root.ast_operand3 )
+		script_cleanup(ast_root.ast_operand3);
+	if ( ast_root.chain )
+		script_cleanup(ast_root.chain);
+	remove(ast_root);
+}
+
+void script_debug_ast_recursive(entity ast_root,string prefix)
+{
+	dprint(prefix,ast_root.netname,": ",ast_root.script_value,"\n");
+	if ( ast_root.ast_operand1 )
+		script_debug_ast_recursive(ast_root.ast_operand1,strcat(prefix," op1 "));
+	if ( ast_root.ast_operand2 )
+		script_debug_ast_recursive(ast_root.ast_operand2,strcat(prefix," op2 "));
+	if ( ast_root.ast_operand3 )
+		script_debug_ast_recursive(ast_root.ast_operand3,strcat(prefix," op3 "));
+		
+	if ( ast_root.chain )
+		script_debug_ast_recursive(ast_root.chain,prefix);
+}
+void script_debug_ast(entity ast_root)
+{
+	if ( cvar("developer") )
+	{
+		if ( !ast_root )
+			dprint("Empty tree\n");
+		else
+		{
+			dprint("(ast begin)\n");
+			script_debug_ast_recursive(ast_root,"");
+			dprint("(ast end)\n");
+		}
+	}
+}
+
+// simple string value
+entity ast_simplevalue_evaluate()
+{
+	return self;
+}
+entity ast_simplevalue(string value)
+{
+	entity ast_temp = spawn();
+	ast_temp.script_value = value;
+	ast_temp.ast_evaluate = ast_simplevalue_evaluate;
+	ast_temp.netname="ast_simplevalue";
+	return ast_temp;
+}
+
+// variable reference
+entity ast_variable_evaluate()
+{
+	return ast_simplevalue(context_get_variable(current_context,self.script_value));
+}
+entity ast_variable(string var_name)
+{
+	entity ast_temp = spawn();
+	ast_temp.script_value = var_name;
+	ast_temp.ast_evaluate = ast_variable_evaluate;
+	ast_temp.netname="ast_variable";
+	return ast_temp;
+}
+
+// variable assignment
+entity ast_assign_evaluate()
+{
+	entity val = script_evaluate(self.ast_operand1);
+	if ( !context_set_variable(current_context,self.script_value,val.script_value) )
+		context_define_variable(current_context,self.script_value,val.script_value);
+	return val;
+}
+entity ast_assign(string var_name,entity value)
+{
+	entity ast_temp = spawn();
+	ast_temp.script_value = var_name;
+	ast_temp.ast_operand1 = value;
+	ast_temp.ast_evaluate = ast_assign_evaluate;
+	ast_temp.netname="ast_assign";
+	return ast_temp;
+}
+
+// function call
+entity ast_function_evaluate()
+{
+	entity function = context_get_function(current_context,self.script_value);
+	entity next_arg = self.ast_operand1;
+	entity next_param = function.ast_operand1;
+	if ( function && current_context.ast_max_iterations > 0 )
+	{
+		context_push();
+		current_context.ast_max_iterations -= 1;
+		
+		while ( next_arg && next_param)
+		{
+			context_define_variable(current_context,next_param.script_value,script_evaluate(next_arg).script_value);
+			next_arg = next_arg.chain;
+			next_param = next_param.chain;
+		}
+		while ( next_param )
+		{
+			context_define_variable(current_context,next_param.script_value,
+				script_evaluate(next_param.ast_operand1).script_value );
+			next_param = next_param.chain;
+		}
+		entity value = script_evaluate(function.ast_operand2);
+		context_pop();
+		return value;
+	}
+	return ast_simplevalue("");
+}
+entity ast_function(string name)
+{
+	entity ast_temp = spawn();
+	ast_temp.script_value = name;
+	ast_temp.ast_evaluate = ast_function_evaluate;
+	ast_temp.netname="ast_function";
+	return ast_temp;
+}
+
+entity ast_function_declaration_evaluate()
+{
+	context_define_function(current_context,self.script_value,self.ast_operand2,self.ast_operand1);
+	return ast_simplevalue("");
+}
+entity ast_function_declaration(string name)
+{
+	entity ast_temp = spawn();
+	ast_temp.script_value = name;
+	ast_temp.ast_evaluate = ast_function_declaration_evaluate;
+	ast_temp.netname="ast_function_declaration";
+	return ast_temp;
+}
+
+// control structure
+entity ast_if_evaluate()
+{
+	if ( stof(script_evaluate(self.ast_operand1).script_value) )
+		return script_evaluate(self.ast_operand2);
+	return script_evaluate(self.ast_operand3);
+}
+entity ast_if(entity condition, entity branch_true, entity branch_false)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = condition;
+	ast_temp.ast_operand2 = branch_true;
+	ast_temp.ast_operand3 = branch_false;
+	ast_temp.ast_evaluate = ast_if_evaluate;
+	ast_temp.netname="ast_if";
+	return ast_temp;
+}
+
+entity ast_while_evaluate()
+{
+	entity val = world;
+	float it = 0;
+	while ( stof(script_evaluate(self.ast_operand1).script_value) && 
+		it < self.ast_max_iterations )
+	{
+		val = script_evaluate(self.ast_operand2);
+		it++;
+	}
+	return val;
+}
+entity ast_while(entity condition, entity body)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = condition;
+	ast_temp.ast_operand2 = body;
+	ast_temp.ast_evaluate = ast_while_evaluate;
+	ast_temp.ast_max_iterations = 1000; // TODO: cvar
+	ast_temp.netname="ast_while";
+	return ast_temp;
+}
+
+entity ast_block_evaluate()
+{
+	entity value = self;
+	entity next = self;
+	context_push();
+	while ( next.chain )
+	{
+		next = next.chain;
+		value = script_evaluate(next);
+	}
+	context_pop();
+	return value;
+}
+entity ast_block()
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_evaluate = ast_block_evaluate;
+	ast_temp.netname="ast_block";
+	return ast_temp;
+}
+
+
+// Simple unary oprators
+entity ast_unaryminus_evaluate()
+{
+	return ast_simplevalue(script_ftos(-stof(
+		script_evaluate(self.ast_operand1).script_value )));
+}
+entity ast_unaryminus(entity operand)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = operand;
+	ast_temp.ast_evaluate = ast_unaryminus_evaluate;
+	ast_temp.netname="ast_unaryminus";
+	return ast_temp;
+}
+entity ast_bitnot_evaluate()
+{
+	return ast_simplevalue(script_ftos( ~ stof(
+		script_evaluate(self.ast_operand1).script_value )));
+}
+entity ast_bitnot(entity operand)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = operand;
+	ast_temp.ast_evaluate = ast_bitnot_evaluate;
+	ast_temp.netname="ast_bitnot";
+	return ast_temp;
+}
+entity ast_not_evaluate()
+{
+	return ast_simplevalue(script_ftos( ! stof(
+		script_evaluate(self.ast_operand1).script_value )));
+}
+entity ast_not(entity operand)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = operand;
+	ast_temp.ast_evaluate = ast_not_evaluate;
+	ast_temp.netname="ast_not";
+	return ast_temp;
+}
+
+// Simple binary operators
+entity ast_mul_evaluate()
+{
+	return ast_simplevalue(script_ftos(
+		stof(script_evaluate(self.ast_operand1).script_value) *
+		stof(script_evaluate(self.ast_operand2).script_value)
+	));
+}
+entity ast_mul(entity operand1, entity operand2)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = operand1;
+	ast_temp.ast_operand2 = operand2;
+	ast_temp.ast_evaluate = ast_mul_evaluate;
+	ast_temp.netname="ast_mul";
+	return ast_temp;
+}
+entity ast_div_evaluate()
+{
+	return ast_simplevalue(script_ftos(
+		stof(script_evaluate(self.ast_operand1).script_value) /
+		stof(script_evaluate(self.ast_operand2).script_value)
+	));
+}
+entity ast_div(entity operand1, entity operand2)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = operand1;
+	ast_temp.ast_operand2 = operand2;
+	ast_temp.ast_evaluate = ast_div_evaluate;
+	ast_temp.netname="ast_div";
+	return ast_temp;
+}
+entity ast_mod_evaluate()
+{
+	return ast_simplevalue(script_ftos(
+		stof(script_evaluate(self.ast_operand1).script_value) %
+		stof(script_evaluate(self.ast_operand2).script_value)
+	));
+}
+entity ast_mod(entity operand1, entity operand2)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = operand1;
+	ast_temp.ast_operand2 = operand2;
+	ast_temp.ast_evaluate = ast_mod_evaluate;
+	ast_temp.netname="ast_mod";
+	return ast_temp;
+}
+entity ast_sum_evaluate()
+{
+	string op1 = script_evaluate(self.ast_operand1).script_value;
+	string op2 = script_evaluate(self.ast_operand2).script_value;
+	float op1f = stof(op1);
+	float op2f = stof(op2);
+	if ( ( op1f != 0 || op1 == "0" ) && ( op2f != 0 || op2 == "0" ) )
+		return ast_simplevalue(script_ftos(op1f+op2f));
+	return ast_simplevalue(strcat(op1,op2));
+}
+entity ast_sum(entity operand1, entity operand2)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = operand1;
+	ast_temp.ast_operand2 = operand2;
+	ast_temp.ast_evaluate = ast_sum_evaluate;
+	ast_temp.netname="ast_sum";
+	return ast_temp;
+}
+entity ast_sub_evaluate()
+{
+	return ast_simplevalue(script_ftos(
+		stof(script_evaluate(self.ast_operand1).script_value) -
+		stof(script_evaluate(self.ast_operand2).script_value)
+	));
+}
+entity ast_sub(entity operand1, entity operand2)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = operand1;
+	ast_temp.ast_operand2 = operand2;
+	ast_temp.ast_evaluate = ast_sub_evaluate;
+	ast_temp.netname="ast_sub";
+	return ast_temp;
+}
+entity ast_bitand_evaluate()
+{
+	return ast_simplevalue(script_ftos(
+		stof(script_evaluate(self.ast_operand1).script_value) &
+		stof(script_evaluate(self.ast_operand2).script_value)
+	));
+}
+entity ast_bitand(entity operand1, entity operand2)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = operand1;
+	ast_temp.ast_operand2 = operand2;
+	ast_temp.ast_evaluate = ast_bitand_evaluate;
+	ast_temp.netname="ast_bitand";
+	return ast_temp;
+}
+entity ast_bitor_evaluate()
+{
+	return ast_simplevalue(script_ftos(
+		stof(script_evaluate(self.ast_operand1).script_value) |
+		stof(script_evaluate(self.ast_operand2).script_value)
+	));
+}
+entity ast_bitor(entity operand1, entity operand2)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = operand1;
+	ast_temp.ast_operand2 = operand2;
+	ast_temp.ast_evaluate = ast_bitor_evaluate;
+	ast_temp.netname="ast_bitor";
+	return ast_temp;
+}
+entity ast_bitxor_evaluate()
+{
+	return ast_simplevalue(script_ftos(
+		stof(script_evaluate(self.ast_operand1).script_value) ^
+		stof(script_evaluate(self.ast_operand2).script_value)
+	));
+}
+entity ast_bitxor(entity operand1, entity operand2)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = operand1;
+	ast_temp.ast_operand2 = operand2;
+	ast_temp.ast_evaluate = ast_bitxor_evaluate;
+	ast_temp.netname="ast_bitxor";
+	return ast_temp;
+}
+entity ast_eq_evaluate()
+{
+	return ast_simplevalue(script_ftos(
+		script_evaluate(self.ast_operand1).script_value ==
+		script_evaluate(self.ast_operand2).script_value
+	));
+}
+entity ast_eq(entity operand1, entity operand2)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = operand1;
+	ast_temp.ast_operand2 = operand2;
+	ast_temp.ast_evaluate = ast_eq_evaluate;
+	ast_temp.netname="ast_eq";
+	return ast_temp;
+}
+entity ast_ne_evaluate()
+{
+	string op1 = script_evaluate(self.ast_operand1).script_value;
+	string op2 = script_evaluate(self.ast_operand2).script_value;
+	float op1f = stof(op1);
+	float op2f = stof(op2);
+	if ( ( op1f != 0 || op1 == "0" ) && ( op2f != 0 || op2 == "0" ) )
+		return ast_simplevalue(script_ftos(op1f != op2f));
+	return ast_simplevalue(script_ftos(strcmp(op1,op2)!=0));
+}
+entity ast_ne(entity operand1, entity operand2)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = operand1;
+	ast_temp.ast_operand2 = operand2;
+	ast_temp.ast_evaluate = ast_ne_evaluate;
+	ast_temp.netname="ast_ne";
+	return ast_temp;
+}
+entity ast_lt_evaluate()
+{
+	string op1 = script_evaluate(self.ast_operand1).script_value;
+	string op2 = script_evaluate(self.ast_operand2).script_value;
+	float op1f = stof(op1);
+	float op2f = stof(op2);
+	if ( ( op1f != 0 || op1 == "0" ) && ( op2f != 0 || op2 == "0" ) )
+		return ast_simplevalue(script_ftos(op1f<op2f));
+	return ast_simplevalue(script_ftos(strcmp(op1,op2)<0));
+}
+entity ast_lt(entity operand1, entity operand2)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = operand1;
+	ast_temp.ast_operand2 = operand2;
+	ast_temp.ast_evaluate = ast_lt_evaluate;
+	ast_temp.netname="ast_lt";
+	return ast_temp;
+}
+entity ast_le_evaluate()
+{
+	string op1 = script_evaluate(self.ast_operand1).script_value;
+	string op2 = script_evaluate(self.ast_operand2).script_value;
+	float op1f = stof(op1);
+	float op2f = stof(op2);
+	if ( ( op1f != 0 || op1 == "0" ) && ( op2f != 0 || op2 == "0" ) )
+		return ast_simplevalue(script_ftos(op1f<=op2f));
+	return ast_simplevalue(script_ftos(strcmp(op1,op2)<=0));
+}
+entity ast_le(entity operand1, entity operand2)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = operand1;
+	ast_temp.ast_operand2 = operand2;
+	ast_temp.ast_evaluate = ast_le_evaluate;
+	ast_temp.netname="ast_le";
+	return ast_temp;
+}
+entity ast_gt_evaluate()
+{
+	string op1 = script_evaluate(self.ast_operand1).script_value;
+	string op2 = script_evaluate(self.ast_operand2).script_value;
+	float op1f = stof(op1);
+	float op2f = stof(op2);
+	if ( ( op1f != 0 || op1 == "0" ) && ( op2f != 0 || op2 == "0" ) )
+		return ast_simplevalue(script_ftos(op1f>op2f));
+	return ast_simplevalue(script_ftos(strcmp(op1,op2)>0));
+}
+entity ast_gt(entity operand1, entity operand2)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = operand1;
+	ast_temp.ast_operand2 = operand2;
+	ast_temp.ast_evaluate = ast_gt_evaluate;
+	ast_temp.netname="ast_gt";
+	return ast_temp;
+}
+entity ast_ge_evaluate()
+{
+	string op1 = script_evaluate(self.ast_operand1).script_value;
+	string op2 = script_evaluate(self.ast_operand2).script_value;
+	float op1f = stof(op1);
+	float op2f = stof(op2);
+	if ( ( op1f != 0 || op1 == "0" ) && ( op2f != 0 || op2 == "0" ) )
+		return ast_simplevalue(script_ftos(op1f>=op2f));
+	return ast_simplevalue(script_ftos(strcmp(op1,op2)>=0));
+}
+entity ast_ge(entity operand1, entity operand2)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = operand1;
+	ast_temp.ast_operand2 = operand2;
+	ast_temp.ast_evaluate = ast_ge_evaluate;
+	ast_temp.netname="ast_ge";
+	return ast_temp;
+}
+entity ast_and_evaluate()
+{
+	return ast_simplevalue(script_ftos(
+		stof(script_evaluate(self.ast_operand1).script_value) &&
+		stof(script_evaluate(self.ast_operand2).script_value)
+	));
+}
+entity ast_and(entity operand1, entity operand2)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = operand1;
+	ast_temp.ast_operand2 = operand2;
+	ast_temp.ast_evaluate = ast_and_evaluate;
+	ast_temp.netname="ast_and";
+	return ast_temp;
+}
+entity ast_or_evaluate()
+{
+	return ast_simplevalue(script_ftos(
+		stof(script_evaluate(self.ast_operand1).script_value) ||
+		stof(script_evaluate(self.ast_operand2).script_value)
+	));
+}
+entity ast_or(entity operand1, entity operand2)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = operand1;
+	ast_temp.ast_operand2 = operand2;
+	ast_temp.ast_evaluate = ast_or_evaluate;
+	ast_temp.netname="ast_or";
+	return ast_temp;
+}
