@@ -347,7 +347,7 @@ entity parse_statement()
 					nextparam.script_value = lex_lookahead.script_value;
 					lex_lookahead = lex_get_token(); // remove param name
 					if ( lex_lookahead.script_type == LEX_OPERATOR_ASSIGN && 
-						lex_prev.script_value == "=" )
+						lex_lookahead.script_value == "=" )
 					{
 						lex_lookahead = lex_get_token(); // remove =
 						nextparam.ast_operand1 = parse_expression();

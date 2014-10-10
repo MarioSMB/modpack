@@ -41,6 +41,9 @@ const float AST_TYPE_CONTINUE = 0x04;
 	SCRIPT_STRING_FUNCTION(strdecolorize) \
 	SCRIPT_GLOBAL_FUNCTION(strlen,script_ftos(strlen(arg)) ) \
 	SCRIPT_GLOBAL_FUNCTION(print,(dprint(arg,"\n"),"")) \
+	SCRIPT_GLOBAL_FUNCTION(localcmd,(localcmd("\n",arg,"\n"),"")) \
+	SCRIPT_GLOBAL_FUNCTION(random,(arg,script_ftos(random())) ) \
+	SCRIPT_GLOBAL_FUNCTION(round,script_ftos(rint(stof(arg))) )
 
 #define SCRIPT_GLOBAL_FUNCTION(name,code) \
 	entity script_global_function_##name () { \
