@@ -56,3 +56,30 @@ string script_ftos(float f)
 {
 	return sprintf("%.9g", f);
 }
+
+float is_numeric(string s)
+{
+	float candot = 1;
+	float canexp = 1;
+	float i;
+	string c;
+	for ( i = 0; i < strlen(s); i++ )
+	{
+		c = substring(s,i,1);
+		if ( !ctype_digit(c) )
+		{
+			if ( candot && c == "." )
+				candot = 0;
+			else if ( canexp == 1 && (c == "e" || c == "E") && i+1 < strlen(s) )
+			{
+				canexp = candot = 0;
+				c = substring(s,i+1,1);
+				if ( c == "+" || c == "-" )
+					i++;
+			}
+			else
+				return 0;
+		}
+	}
+	return 1;
+}
