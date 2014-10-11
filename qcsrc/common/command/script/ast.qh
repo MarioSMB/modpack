@@ -118,10 +118,8 @@ float context_set_variable(entity context,string varname, string value)
 	if ( substring(varname,0,5) == "cvar_" )
 	{
 		varname = substring(varname,5,strlen(varname)-5);
-		if ( cvar_type(varname) & CVAR_TYPEFLAG_EXISTS )
-			cvar_set(varname,value);
-		else
-			localcmd(strcat("set ",varname, " \"",MakeConsoleSafe(value),"\"\n"));
+		registercvar(varname, "");
+		cvar_set(varname,value);
 		return 1;
 	}
 	entity currentvar = context.context_variables;
