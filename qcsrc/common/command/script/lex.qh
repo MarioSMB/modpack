@@ -23,12 +23,20 @@ float lex_string_end;
 string lex_string;
 entity lex_lookahead;
 
-entity lex_token(float type, string lexeme)
+entity lex_move_lookahead()
 {
-	entity token = spawn();
-	token.script_value = lexeme;
-	token.script_type = type;
-	return token;
+	entity tmp = lex_lookahead;
+	lex_lookahead = world;
+	return tmp;
+}
+void lex_token(float type, string lexeme)
+{
+	if ( lex_lookahead )
+		remove(lex_lookahead);
+	lex_lookahead = spawn();
+	lex_lookahead.script_value = lexeme;
+	lex_lookahead.script_type = type;
+	lex_lookahead.classname = "lex_token";
 }
 
 void lex_skipws()
@@ -110,7 +118,7 @@ string lex_string_literal()
 	return lexeme;
 }
 
-entity lex_get_token()
+void lex_get_token()
 {
 	lex_skipws();
 	if ( lex_string_index >= lex_string_end )

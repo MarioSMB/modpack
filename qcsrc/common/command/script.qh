@@ -5,7 +5,7 @@ void GenericCommand_script(float request, float argc, string command);
 entity script_compile(string source);
 
 // Recursively evaluate an abstract syntax tree
-entity script_evaluate(entity ast_root);
+string script_evaluate(entity ast_root);
 
 // Recursively remove all the nodes in the abstract syntax tree
 void script_cleanup(entity ast_root);

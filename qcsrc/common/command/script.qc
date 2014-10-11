@@ -15,7 +15,6 @@ void GenericCommand_script(float request, float argc, string command)
 	{
 		case CMD_REQUEST_COMMAND:
 		{
-			string source = "";
 			if ( argc == 3 && argv(1) == "file" )
 			{
 				float file = fopen(argv(2),FILE_READ);
@@ -25,16 +24,22 @@ void GenericCommand_script(float request, float argc, string command)
 					return;
 				}
 				dprint("Script: executing ",argv(2),"\n");
+				string source = "";
 				string line;
 				while (( line = fgets(file) ))
 					source = strcat(source,line,"\n");
 				fclose(file);
+				
+				entity ast_root = script_compile(source);
+				script_evaluate(ast_root);
+				script_cleanup(ast_root);
 			}
 			else
-				source = substring(command, 7, strlen(command));
-			entity ast_root = script_compile(source);
-			print(strcat(script_evaluate(ast_root).script_value,"\n"));
-			script_cleanup(ast_root);
+			{
+				entity ast_root = script_compile(substring(command, 7, strlen(command)));
+				print(strcat(script_evaluate(ast_root),"\n"));
+				script_cleanup(ast_root);
+			}
 			return;
 		}
 		

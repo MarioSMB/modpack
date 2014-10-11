@@ -17,7 +17,9 @@ const float AST_TYPE_BREAK    = 0x01;
 const float AST_TYPE_RETURN   = 0x02;
 const float AST_TYPE_CONTINUE = 0x04;
 
-// global function definitions
+//---------------------------------------------------------------------
+// Global function definitions
+//---------------------------------------------------------------------
 
 #define SCRIPT_FLOAT_FUNCTION(name) \
 	SCRIPT_GLOBAL_FUNCTION(name,script_ftos(name(stof(arg))),1 )
@@ -54,22 +56,22 @@ const float AST_TYPE_CONTINUE = 0x04;
 
 #define SCRIPT_GLOBAL_FUNCTION(name,code,nargs) \
 	entity script_global_function_##name () { \
-		return ast_simplevalue(code);  \
+		return ast_tempvalue(code);  \
 	}
 #define arg \
 	context_get_variable(current_context,"arg")
 #define get_arg(n) \
 	context_get_variable(current_context,strcat("arg",#n)) 
 string context_get_variable(entity context,string varname);
-entity ast_simplevalue(string value);
+entity ast_tempvalue(string value);
 SCRIPT_GLOBAL_FUNCTIONS
 #undef get_arg
 #undef arg
 #undef SCRIPT_GLOBAL_FUNCTION
 
 
-void context_define_function(entity context, string funcname, entity executor, entity param_chain);
-void script_init_global_functions(entity context)
+entity context_define_function(entity context, string funcname, entity executor, entity param_chain);
+void script_global_functions_init(entity context)
 {
 	entity next_func;
 	entity param;
@@ -90,12 +92,14 @@ void script_init_global_functions(entity context)
 					param = nextparam; \
 				} \
 			} \
-			context_define_function(context,#name,next_func,param);
+			context_define_function(context,#name,next_func,param).classname = "script_global_function";
 	SCRIPT_GLOBAL_FUNCTIONS
 	#undef SCRIPT_GLOBAL_FUNCTION
 }
 
+//---------------------------------------------------------------------
 // Context stack operations
+//---------------------------------------------------------------------
 
 string context_get_variable(entity context,string varname)
 {
@@ -148,6 +152,7 @@ void context_define_variable(entity context,string varname, string value)
 	entity newvar = spawn();
 	newvar.script_value = value;
 	newvar.netname = varname;
+	newvar.classname = "script_variable";
 	newvar.chain = context.context_variables;
 	context.context_variables = newvar;
 }
@@ -167,25 +172,30 @@ entity context_get_function(entity context, string funcname)
 	dprint("Script: called undefined function: ",funcname,"\n");
 	return world;
 }
-void context_define_function(entity context, string funcname, entity executor, entity param_chain)
+entity context_define_function(entity context, string funcname, entity executor, entity param_chain)
 {
 	entity function = spawn();
 	function.netname = funcname;
 	function.ast_operand1 = param_chain;
 	function.ast_operand2 = executor;
 	function.chain = context.context_functions;
+	function.classname = "script_function";
 	context.context_functions = function;
+	return function;
 }
 void context_push()
 {
 	entity new_context = spawn();
+	new_context.classname = "script_context";
 	new_context.owner = current_context;
 	if ( current_context )
+	{
 		new_context.ast_max_iterations = current_context.ast_max_iterations;
+	}
 	else
 	{
 		new_context.ast_max_iterations = 100; // max recursion depth TODO: cvar
-		script_init_global_functions(new_context);
+		script_global_functions_init(new_context);
 	}
 	current_context = new_context;
 }
@@ -195,26 +205,38 @@ void context_pop()
 	{
 		entity old_context = current_context;
 		current_context = current_context.owner;
-		
-		entity old_var = old_context.context_variables;
-		entity prev_var;
-		while(old_var)
+		script_cleanup(old_context.context_variables);
+		entity func = old_context.context_functions;
+		entity func_old;
+		while(func)
 		{
-			prev_var = old_var;
-			old_var = old_var.chain;
-			remove(prev_var);
+			func_old = func;
+			func = func.chain;
+			if ( func_old.classname == "script_global_function" )
+			{
+				func_old.chain = world;
+				script_cleanup(func_old.ast_operand1);
+				remove(func_old.ast_operand2);
+			}
+			remove(func_old);
 		}
+		old_context.context_functions = world;
 		remove(old_context);
 	}
 }
 
-// recursive operations
-entity ast_null();
+//---------------------------------------------------------------------
+// Recursive operations
+//---------------------------------------------------------------------
 
-entity script_evaluate(entity ast_root)
+entity ast_tempnull();
+
+// Evaluate a tree and return the resulting entity
+// Use this when you need to forward the result
+entity script_evaluate_entity(entity ast_root)
 {
 	if ( !ast_root )
-		return ast_null();
+		return ast_tempnull();
 	entity oldself = self;
 	self = ast_root;
 	entity result = self.ast_evaluate();
@@ -222,8 +244,21 @@ entity script_evaluate(entity ast_root)
 	return result;
 }
 
+// Evaluate a tree and return the resulting value
+// Use this when you will use just the value for further operations
+string script_evaluate(entity ast_root)
+{
+	entity e = script_evaluate_entity(ast_root);
+	string result = e.script_value;
+	if ( e.classname == "ast_tempvalue" )
+		remove(e);
+	return result;
+}
+
 void script_cleanup(entity ast_root)
 {
+	if ( !ast_root || wasfreed(ast_root) )
+		return;
 	if ( ast_root.ast_operand1 )
 		script_cleanup(ast_root.ast_operand1);
 	if ( ast_root.ast_operand2 )
@@ -263,10 +298,31 @@ void script_debug_ast(entity ast_root)
 	}
 }
 
+//---------------------------------------------------------------------
+// Tree structure
+//---------------------------------------------------------------------
+
 // simple string value
-entity ast_simplevalue_evaluate()
+entity ast_tempvalue_evaluate()
 {
 	return self;
+}
+entity ast_tempvalue(string value)
+{
+	entity ast_temp = spawn();
+	ast_temp.script_value = value;
+	ast_temp.ast_evaluate = ast_tempvalue_evaluate;
+	ast_temp.classname="ast_tempvalue";
+	return ast_temp;
+}
+entity ast_tempnull()
+{
+	return ast_tempvalue("");
+}
+
+entity ast_simplevalue_evaluate()
+{
+	return ast_tempvalue(self.script_value);
 }
 entity ast_simplevalue(string value)
 {
@@ -276,18 +332,11 @@ entity ast_simplevalue(string value)
 	ast_temp.classname="ast_simplevalue";
 	return ast_temp;
 }
-entity ast_null()
-{
-	entity ast_temp = spawn();
-	ast_temp.ast_evaluate = ast_simplevalue_evaluate;
-	ast_temp.classname="ast_null";
-	return ast_temp;
-}
 
 // variable reference
 entity ast_variable_evaluate()
 {
-	return ast_simplevalue(context_get_variable(current_context,self.script_value));
+	return ast_tempvalue(context_get_variable(current_context,self.script_value));
 }
 entity ast_variable(string var_name)
 {
@@ -301,7 +350,7 @@ entity ast_variable(string var_name)
 // variable assignment
 entity ast_assign_evaluate()
 {
-	entity val = script_evaluate(self.ast_operand1);
+	entity val = script_evaluate_entity(self.ast_operand1);
 	if ( !context_set_variable(current_context,self.script_value,val.script_value) )
 		context_define_variable(current_context,self.script_value,val.script_value);
 	return val;
@@ -329,22 +378,22 @@ entity ast_function_evaluate()
 		
 		while ( next_arg && next_param)
 		{
-			context_define_variable(current_context,next_param.script_value,script_evaluate(next_arg).script_value);
+			context_define_variable(current_context,next_param.script_value,script_evaluate(next_arg));
 			next_arg = next_arg.chain;
 			next_param = next_param.chain;
 		}
 		while ( next_param )
 		{
 			context_define_variable(current_context,next_param.script_value,
-				script_evaluate(next_param.ast_operand1).script_value );
+				script_evaluate(next_param.ast_operand1) );
 			next_param = next_param.chain;
 		}
-		entity value = script_evaluate(function.ast_operand2);
+		entity value = script_evaluate_entity(function.ast_operand2);
 		context_pop();
 		value.script_type &= ~AST_TYPE_RETURN;
 		return value;
 	}
-	return ast_null();
+	return ast_tempnull();
 }
 entity ast_function(string name)
 {
@@ -358,7 +407,7 @@ entity ast_function(string name)
 entity ast_function_declaration_evaluate()
 {
 	context_define_function(current_context,self.script_value,self.ast_operand2,self.ast_operand1);
-	return ast_null();
+	return ast_tempnull();
 }
 entity ast_function_declaration(string name)
 {
@@ -372,9 +421,9 @@ entity ast_function_declaration(string name)
 // control structure
 entity ast_if_evaluate()
 {
-	if ( stof(script_evaluate(self.ast_operand1).script_value) )
-		return script_evaluate(self.ast_operand2);
-	return script_evaluate(self.ast_operand3);
+	if ( stof(script_evaluate(self.ast_operand1)) )
+		return script_evaluate_entity(self.ast_operand2);
+	return script_evaluate_entity(self.ast_operand3);
 }
 entity ast_if(entity condition, entity branch_true, entity branch_false)
 {
@@ -391,10 +440,12 @@ entity ast_while_evaluate()
 {
 	entity val = world;
 	float it = 0;
-	while ( stof(script_evaluate(self.ast_operand1).script_value) && 
+	while ( stof(script_evaluate(self.ast_operand1)) && 
 		it < self.ast_max_iterations )
 	{
-		val = script_evaluate(self.ast_operand2);
+		if ( val )
+			remove(val);
+		val = script_evaluate_entity(self.ast_operand2);
 		if ( val.script_type & (AST_TYPE_BREAK|AST_TYPE_RETURN) )
 		{
 			val.script_type &= ~ AST_TYPE_BREAK;
@@ -417,13 +468,15 @@ entity ast_while(entity condition, entity body)
 
 entity ast_block_evaluate()
 {
-	entity val = self;
+	entity val = world;
 	entity next = self;
 	context_push();
 	while ( next.chain )
 	{
 		next = next.chain;
-		val = script_evaluate(next);
+		if ( val )
+			remove(val);
+		val = script_evaluate_entity(next);
 		if ( val.script_type & (AST_TYPE_BREAK|AST_TYPE_RETURN|AST_TYPE_CONTINUE) )
 		{
 			val.script_type &= ~AST_TYPE_CONTINUE;
@@ -443,7 +496,7 @@ entity ast_block()
 
 entity ast_break_evaluate()
 {
-	entity val = ast_simplevalue(self.script_value);
+	entity val = ast_tempvalue(self.script_value);
 	val.script_type = self.script_type;
 	return val;
 }
@@ -466,7 +519,7 @@ entity ast_continue()
 
 entity ast_return_evaluate()
 {
-	entity val = script_evaluate(self.ast_operand1);
+	entity val = script_evaluate_entity(self.ast_operand1);
 	val.script_type = self.script_type;
 	return val;
 }
@@ -484,8 +537,7 @@ entity ast_return(entity value)
 // Simple unary oprators
 entity ast_unaryminus_evaluate()
 {
-	return ast_simplevalue(script_ftos(-stof(
-		script_evaluate(self.ast_operand1).script_value )));
+	return ast_tempvalue(script_ftos(-stof( script_evaluate(self.ast_operand1) )));
 }
 entity ast_unaryminus(entity operand)
 {
@@ -497,8 +549,8 @@ entity ast_unaryminus(entity operand)
 }
 entity ast_bitnot_evaluate()
 {
-	return ast_simplevalue(script_ftos( ~ stof(
-		script_evaluate(self.ast_operand1).script_value )));
+	return ast_tempvalue(script_ftos( ~ stof(
+		script_evaluate(self.ast_operand1) )));
 }
 entity ast_bitnot(entity operand)
 {
@@ -510,8 +562,8 @@ entity ast_bitnot(entity operand)
 }
 entity ast_not_evaluate()
 {
-	return ast_simplevalue(script_ftos( ! stof(
-		script_evaluate(self.ast_operand1).script_value )));
+	return ast_tempvalue(script_ftos( ! stof(
+		script_evaluate(self.ast_operand1) )));
 }
 entity ast_not(entity operand)
 {
@@ -525,9 +577,9 @@ entity ast_not(entity operand)
 // Simple binary operators
 entity ast_mul_evaluate()
 {
-	return ast_simplevalue(script_ftos(
-		stof(script_evaluate(self.ast_operand1).script_value) *
-		stof(script_evaluate(self.ast_operand2).script_value)
+	return ast_tempvalue(script_ftos(
+		stof(script_evaluate(self.ast_operand1)) *
+		stof(script_evaluate(self.ast_operand2))
 	));
 }
 entity ast_mul(entity operand1, entity operand2)
@@ -541,9 +593,9 @@ entity ast_mul(entity operand1, entity operand2)
 }
 entity ast_div_evaluate()
 {
-	return ast_simplevalue(script_ftos(
-		stof(script_evaluate(self.ast_operand1).script_value) /
-		stof(script_evaluate(self.ast_operand2).script_value)
+	return ast_tempvalue(script_ftos(
+		stof(script_evaluate(self.ast_operand1)) /
+		stof(script_evaluate(self.ast_operand2))
 	));
 }
 entity ast_div(entity operand1, entity operand2)
@@ -557,9 +609,9 @@ entity ast_div(entity operand1, entity operand2)
 }
 entity ast_mod_evaluate()
 {
-	return ast_simplevalue(script_ftos(
-		stof(script_evaluate(self.ast_operand1).script_value) %
-		stof(script_evaluate(self.ast_operand2).script_value)
+	return ast_tempvalue(script_ftos(
+		stof(script_evaluate(self.ast_operand1)) %
+		stof(script_evaluate(self.ast_operand2))
 	));
 }
 entity ast_mod(entity operand1, entity operand2)
@@ -573,11 +625,11 @@ entity ast_mod(entity operand1, entity operand2)
 }
 entity ast_sum_evaluate()
 {
-	string op1 = script_evaluate(self.ast_operand1).script_value;
-	string op2 = script_evaluate(self.ast_operand2).script_value;
+	string op1 = script_evaluate(self.ast_operand1);
+	string op2 = script_evaluate(self.ast_operand2);
 	if ( is_numeric(op1) && is_numeric(op2) )
-		return ast_simplevalue(script_ftos(stof(op1)+stof(op2)));
-	return ast_simplevalue(strcat(op1,op2));
+		return ast_tempvalue(script_ftos(stof(op1)+stof(op2)));
+	return ast_tempvalue(strcat(op1,op2));
 }
 entity ast_sum(entity operand1, entity operand2)
 {
@@ -590,9 +642,9 @@ entity ast_sum(entity operand1, entity operand2)
 }
 entity ast_sub_evaluate()
 {
-	return ast_simplevalue(script_ftos(
-		stof(script_evaluate(self.ast_operand1).script_value) -
-		stof(script_evaluate(self.ast_operand2).script_value)
+	return ast_tempvalue(script_ftos(
+		stof(script_evaluate(self.ast_operand1)) -
+		stof(script_evaluate(self.ast_operand2))
 	));
 }
 entity ast_sub(entity operand1, entity operand2)
@@ -606,9 +658,9 @@ entity ast_sub(entity operand1, entity operand2)
 }
 entity ast_bitand_evaluate()
 {
-	return ast_simplevalue(script_ftos(
-		stof(script_evaluate(self.ast_operand1).script_value) &
-		stof(script_evaluate(self.ast_operand2).script_value)
+	return ast_tempvalue(script_ftos(
+		stof(script_evaluate(self.ast_operand1)) &
+		stof(script_evaluate(self.ast_operand2))
 	));
 }
 entity ast_bitand(entity operand1, entity operand2)
@@ -622,9 +674,9 @@ entity ast_bitand(entity operand1, entity operand2)
 }
 entity ast_bitor_evaluate()
 {
-	return ast_simplevalue(script_ftos(
-		stof(script_evaluate(self.ast_operand1).script_value) |
-		stof(script_evaluate(self.ast_operand2).script_value)
+	return ast_tempvalue(script_ftos(
+		stof(script_evaluate(self.ast_operand1)) |
+		stof(script_evaluate(self.ast_operand2))
 	));
 }
 entity ast_bitor(entity operand1, entity operand2)
@@ -638,9 +690,9 @@ entity ast_bitor(entity operand1, entity operand2)
 }
 entity ast_bitxor_evaluate()
 {
-	return ast_simplevalue(script_ftos(
-		stof(script_evaluate(self.ast_operand1).script_value) ^
-		stof(script_evaluate(self.ast_operand2).script_value)
+	return ast_tempvalue(script_ftos(
+		stof(script_evaluate(self.ast_operand1)) ^
+		stof(script_evaluate(self.ast_operand2))
 	));
 }
 entity ast_bitxor(entity operand1, entity operand2)
@@ -654,9 +706,9 @@ entity ast_bitxor(entity operand1, entity operand2)
 }
 entity ast_eq_evaluate()
 {
-	return ast_simplevalue(script_ftos(
-		script_evaluate(self.ast_operand1).script_value ==
-		script_evaluate(self.ast_operand2).script_value
+	return ast_tempvalue(script_ftos(
+		script_evaluate(self.ast_operand1) ==
+		script_evaluate(self.ast_operand2)
 	));
 }
 entity ast_eq(entity operand1, entity operand2)
@@ -670,11 +722,11 @@ entity ast_eq(entity operand1, entity operand2)
 }
 entity ast_ne_evaluate()
 {
-	string op1 = script_evaluate(self.ast_operand1).script_value;
-	string op2 = script_evaluate(self.ast_operand2).script_value;
+	string op1 = script_evaluate(self.ast_operand1);
+	string op2 = script_evaluate(self.ast_operand2);
 	if ( is_numeric(op1) && is_numeric(op2) )
-		return ast_simplevalue(script_ftos(stof(op1) != stof(op2)));
-	return ast_simplevalue(script_ftos(strcmp(op1,op2)!=0));
+		return ast_tempvalue(script_ftos(stof(op1) != stof(op2)));
+	return ast_tempvalue(script_ftos(strcmp(op1,op2)!=0));
 }
 entity ast_ne(entity operand1, entity operand2)
 {
@@ -687,11 +739,11 @@ entity ast_ne(entity operand1, entity operand2)
 }
 entity ast_lt_evaluate()
 {
-	string op1 = script_evaluate(self.ast_operand1).script_value;
-	string op2 = script_evaluate(self.ast_operand2).script_value;
+	string op1 = script_evaluate(self.ast_operand1);
+	string op2 = script_evaluate(self.ast_operand2);
 	if ( is_numeric(op1) && is_numeric(op2) )
-		return ast_simplevalue(script_ftos(stof(op1)<stof(op2)));
-	return ast_simplevalue(script_ftos(strcmp(op1,op2)<0));
+		return ast_tempvalue(script_ftos(stof(op1)<stof(op2)));
+	return ast_tempvalue(script_ftos(strcmp(op1,op2)<0));
 }
 entity ast_lt(entity operand1, entity operand2)
 {
@@ -704,11 +756,11 @@ entity ast_lt(entity operand1, entity operand2)
 }
 entity ast_le_evaluate()
 {
-	string op1 = script_evaluate(self.ast_operand1).script_value;
-	string op2 = script_evaluate(self.ast_operand2).script_value;
+	string op1 = script_evaluate(self.ast_operand1);
+	string op2 = script_evaluate(self.ast_operand2);
 	if ( is_numeric(op1) && is_numeric(op2) )
-		return ast_simplevalue(script_ftos(stof(op1) <= stof(op2)));
-	return ast_simplevalue(script_ftos(strcmp(op1,op2)<=0));
+		return ast_tempvalue(script_ftos(stof(op1) <= stof(op2)));
+	return ast_tempvalue(script_ftos(strcmp(op1,op2)<=0));
 }
 entity ast_le(entity operand1, entity operand2)
 {
@@ -721,11 +773,11 @@ entity ast_le(entity operand1, entity operand2)
 }
 entity ast_gt_evaluate()
 {
-	string op1 = script_evaluate(self.ast_operand1).script_value;
-	string op2 = script_evaluate(self.ast_operand2).script_value;
+	string op1 = script_evaluate(self.ast_operand1);
+	string op2 = script_evaluate(self.ast_operand2);
 	if ( is_numeric(op1) && is_numeric(op2) )
-		return ast_simplevalue(script_ftos(stof(op1)>stof(op2)));
-	return ast_simplevalue(script_ftos(strcmp(op1,op2)>0));
+		return ast_tempvalue(script_ftos(stof(op1)>stof(op2)));
+	return ast_tempvalue(script_ftos(strcmp(op1,op2)>0));
 }
 entity ast_gt(entity operand1, entity operand2)
 {
@@ -738,11 +790,11 @@ entity ast_gt(entity operand1, entity operand2)
 }
 entity ast_ge_evaluate()
 {
-	string op1 = script_evaluate(self.ast_operand1).script_value;
-	string op2 = script_evaluate(self.ast_operand2).script_value;
+	string op1 = script_evaluate(self.ast_operand1);
+	string op2 = script_evaluate(self.ast_operand2);
 	if ( is_numeric(op1) && is_numeric(op2) )
-		return ast_simplevalue(script_ftos(stof(op1)>=stof(op2)));
-	return ast_simplevalue(script_ftos(strcmp(op1,op2)>=0));
+		return ast_tempvalue(script_ftos(stof(op1)>=stof(op2)));
+	return ast_tempvalue(script_ftos(strcmp(op1,op2)>=0));
 }
 entity ast_ge(entity operand1, entity operand2)
 {
@@ -755,9 +807,9 @@ entity ast_ge(entity operand1, entity operand2)
 }
 entity ast_and_evaluate()
 {
-	return ast_simplevalue(script_ftos(
-		stof(script_evaluate(self.ast_operand1).script_value) &&
-		stof(script_evaluate(self.ast_operand2).script_value)
+	return ast_tempvalue(script_ftos(
+		stof(script_evaluate(self.ast_operand1)) &&
+		stof(script_evaluate(self.ast_operand2))
 	));
 }
 entity ast_and(entity operand1, entity operand2)
@@ -771,9 +823,9 @@ entity ast_and(entity operand1, entity operand2)
 }
 entity ast_or_evaluate()
 {
-	return ast_simplevalue(script_ftos(
-		stof(script_evaluate(self.ast_operand1).script_value) ||
-		stof(script_evaluate(self.ast_operand2).script_value)
+	return ast_tempvalue(script_ftos(
+		stof(script_evaluate(self.ast_operand1)) ||
+		stof(script_evaluate(self.ast_operand2))
 	));
 }
 entity ast_or(entity operand1, entity operand2)
