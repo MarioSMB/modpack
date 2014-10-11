@@ -20,10 +20,10 @@ const float AST_TYPE_CONTINUE = 0x04;
 // global function definitions
 
 #define SCRIPT_FLOAT_FUNCTION(name) \
-	SCRIPT_GLOBAL_FUNCTION(name,script_ftos(name(stof(arg))) )
+	SCRIPT_GLOBAL_FUNCTION(name,script_ftos(name(stof(arg))),1 )
 	
 #define SCRIPT_STRING_FUNCTION(name) \
-	SCRIPT_GLOBAL_FUNCTION(name,name(arg) )
+	SCRIPT_GLOBAL_FUNCTION(name,name(arg),1 )
 	
 #define SCRIPT_GLOBAL_FUNCTIONS \
 	SCRIPT_FLOAT_FUNCTION(sin) \
@@ -39,20 +39,27 @@ const float AST_TYPE_CONTINUE = 0x04;
 	SCRIPT_STRING_FUNCTION(strtolower) \
 	SCRIPT_STRING_FUNCTION(strtoupper) \
 	SCRIPT_STRING_FUNCTION(strdecolorize) \
-	SCRIPT_GLOBAL_FUNCTION(strlen,script_ftos(strlen(arg)) ) \
-	SCRIPT_GLOBAL_FUNCTION(print,(dprint(arg,"\n"),"")) \
-	SCRIPT_GLOBAL_FUNCTION(localcmd,(localcmd("\n",arg,"\n"),"")) \
-	SCRIPT_GLOBAL_FUNCTION(random,(arg,script_ftos(random())) ) \
-	SCRIPT_GLOBAL_FUNCTION(round,script_ftos(rint(stof(arg))) )
+	SCRIPT_GLOBAL_FUNCTION(strlen,script_ftos(strlen(arg)),1 ) \
+	SCRIPT_GLOBAL_FUNCTION(print,(dprint(arg,"\n"),""),1) \
+	SCRIPT_GLOBAL_FUNCTION(localcmd,(localcmd("\n",arg,"\n"),""),1) \
+	SCRIPT_GLOBAL_FUNCTION(random,(arg,script_ftos(random())),0 ) \
+	SCRIPT_GLOBAL_FUNCTION(round,script_ftos(rint(stof(arg))),1 ) \
+	SCRIPT_GLOBAL_FUNCTION(substring,substring(get_arg(1),stof(get_arg(2)),stof(get_arg(3))),3 ) \
+	
 
-#define SCRIPT_GLOBAL_FUNCTION(name,code) \
+#define SCRIPT_GLOBAL_FUNCTION(name,code,nargs) \
 	entity script_global_function_##name () { \
-		string arg = context_get_variable(current_context,"arg"); \
 		return ast_simplevalue(code);  \
 	}
+#define arg \
+	context_get_variable(current_context,"arg")
+#define get_arg(n) \
+	context_get_variable(current_context,strcat("arg",#n)) 
 string context_get_variable(entity context,string varname);
 entity ast_simplevalue(string value);
 SCRIPT_GLOBAL_FUNCTIONS
+#undef get_arg
+#undef arg
 #undef SCRIPT_GLOBAL_FUNCTION
 
 
@@ -61,11 +68,22 @@ void script_init_global_functions(entity context)
 {
 	entity next_func;
 	entity param;
-	#define SCRIPT_GLOBAL_FUNCTION(name,code) \
+	#define SCRIPT_GLOBAL_FUNCTION(name,code,nargs) \
 			next_func = spawn(); \
 			next_func.ast_evaluate = script_global_function_##name; \
-			param = spawn(); \
-			param.script_value = "arg"; \
+			if ( nargs == 1 )  { \
+				param = spawn(); \
+				param.script_value = "arg"; \
+			} else { \
+				float i; \
+				entity nextparam; \
+				for ( i = nargs; i > 0; i-- ) { \
+					nextparam = spawn(); \
+					nextparam.script_value = strcat("arg",ftos(i));\
+					nextparam.chain = param; \
+					param = nextparam; \
+				} \
+			} \
 			context_define_function(context,#name,next_func,param);
 	SCRIPT_GLOBAL_FUNCTIONS
 	#undef SCRIPT_GLOBAL_FUNCTION
