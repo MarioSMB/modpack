@@ -24,7 +24,7 @@ const float AST_TYPE_CONTINUE = 0x04;
 	
 #define SCRIPT_STRING_FUNCTION(name) \
 	SCRIPT_GLOBAL_FUNCTION(name,name(arg),1 )
-	
+
 #define SCRIPT_GLOBAL_FUNCTIONS \
 	SCRIPT_FLOAT_FUNCTION(sin) \
 	SCRIPT_FLOAT_FUNCTION(cos) \
@@ -45,6 +45,11 @@ const float AST_TYPE_CONTINUE = 0x04;
 	SCRIPT_GLOBAL_FUNCTION(random,(arg,script_ftos(random())),0 ) \
 	SCRIPT_GLOBAL_FUNCTION(round,script_ftos(rint(stof(arg))),1 ) \
 	SCRIPT_GLOBAL_FUNCTION(substring,substring(get_arg(1),stof(get_arg(2)),stof(get_arg(3))),3 ) \
+	SCRIPT_GLOBAL_FUNCTION(spawn,script_ftos(num_for_edict(spawn())),0) \
+	SCRIPT_GLOBAL_FUNCTION(remove,(remove(string_to_entity(arg)),""), 1) \
+	SCRIPT_GLOBAL_FUNCTION(edict_get,entity_get(string_to_entity(get_arg(1)),get_arg(2)), 2 ) \
+	SCRIPT_GLOBAL_FUNCTION(edict_set, \
+		script_ftos(entity_set(string_to_entity(get_arg(1)),get_arg(2),get_arg(3))), 3 ) \
 	
 
 #define SCRIPT_GLOBAL_FUNCTION(name,code,nargs) \
@@ -77,6 +82,7 @@ void script_init_global_functions(entity context)
 			} else { \
 				float i; \
 				entity nextparam; \
+				param = world; \
 				for ( i = nargs; i > 0; i-- ) { \
 					nextparam = spawn(); \
 					nextparam.script_value = strcat("arg",ftos(i));\

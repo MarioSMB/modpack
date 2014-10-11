@@ -83,3 +83,46 @@ float is_numeric(string s)
 	}
 	return 1;
 }
+
+entity string_to_entity(string s)
+{
+	float n = stof(s);
+#ifdef SVQC 
+	if ( n ) return edict_num(n);
+#elif defined(CSQC)
+	if ( n ) return entitybyindex(n);
+#elif defined(MENUQC)
+	if ( n ) return ftoe(n);
+#endif
+	return world;
+}
+string entity_get(entity e, string field)
+{
+	float n = numentityfields();
+	float i;
+	for ( i = 0; i < n; i++ )
+	{
+		if ( entityfieldname(i) == field )
+		{
+			return getentityfieldstring(i,e);
+		}
+	}
+	return "";
+}
+
+float entity_set(entity e, string field, string value)
+{
+	if ( !e )
+		return 0;
+	float n = numentityfields();
+	float i;
+	for ( i = 0; i < n; i++ )
+	{
+		if ( entityfieldname(i) == field )
+		{
+			return putentityfieldstring(i,e,value);
+		}
+	}
+	return 0;
+}
+
