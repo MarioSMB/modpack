@@ -52,6 +52,7 @@ const float AST_TYPE_CONTINUE = 0x04;
 	SCRIPT_GLOBAL_FUNCTION(edict_get,entity_get(string_to_entity(get_arg(1)),get_arg(2)), 2 ) \
 	SCRIPT_GLOBAL_FUNCTION(edict_set, \
 		script_ftos(entity_set(string_to_entity(get_arg(1)),get_arg(2),get_arg(3))), 3 ) \
+	SCRIPT_GLOBAL_FUNCTION(get,context_get_variable(current_context,arg),1) \
 	
 
 #define SCRIPT_GLOBAL_FUNCTION(name,code,nargs) \
@@ -469,11 +470,10 @@ entity ast_while(entity condition, entity body)
 entity ast_block_evaluate()
 {
 	entity val = world;
-	entity next = self;
+	entity next = self.ast_operand1;
 	context_push();
-	while ( next.chain )
+	while ( next )
 	{
-		next = next.chain;
 		if ( val )
 			remove(val);
 		val = script_evaluate_entity(next);
@@ -482,6 +482,7 @@ entity ast_block_evaluate()
 			val.script_type &= ~AST_TYPE_CONTINUE;
 			break;
 		}
+		next = next.chain;
 	}
 	context_pop();
 	return val;

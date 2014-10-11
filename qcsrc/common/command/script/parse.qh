@@ -317,15 +317,15 @@ entity parse_statement()
 			
 			// { block; increment }
 			entity for_inner_block = ast_block();
-			for_inner_block.chain = parse_statement();
-			if ( for_inner_block.chain )
-				for_inner_block.chain.chain = increment;
+			for_inner_block.ast_operand1 = parse_statement();
+			if ( for_inner_block.ast_operand1 )
+				for_inner_block.ast_operand1.chain = increment;
 			else
-				for_inner_block.chain = increment;
+				for_inner_block.ast_operand1 = increment;
 			
 			// { start; while ( condition ) inner_block }
 			entity for_outer_block = ast_block();
-			for_outer_block.chain = start;
+			for_outer_block.ast_operand1 = start;
 			start.chain = ast_while(condition,for_inner_block);
 			
 			return for_outer_block;
@@ -388,14 +388,19 @@ entity parse_statement()
 entity parse_block()
 {
 	entity val = ast_block();
-	entity next = val;
+	entity prev = world;
+	entity next;
 	while ( lex_lookahead.script_type != LEX_EOF && 
 		!( lex_lookahead.script_type == LEX_OPERATOR_OTHER && lex_lookahead.script_value == ")" ) )
 	{
-		next.chain = parse_statement();
-		next = next.chain;
+		next = parse_statement();
 		if ( !next )
 			break;
+		if ( prev )
+			prev.chain = next;
+		else
+			val.ast_operand1 = next;
+		prev = next;
 	}
 	return val;
 }
