@@ -53,6 +53,11 @@ const float AST_TYPE_CONTINUE = 0x04;
 	SCRIPT_GLOBAL_FUNCTION(edict_set, \
 		script_ftos(entity_set(string_to_entity(get_arg(1)),get_arg(2),get_arg(3))), 3 ) \
 	SCRIPT_GLOBAL_FUNCTION(get,context_get_variable(current_context,arg),1) \
+	SCRIPT_GLOBAL_FUNCTION(rgb_to_hexcolor,rgb_to_hexcolor(stov(arg)),1) \
+	SCRIPT_GLOBAL_FUNCTION(vector,strcat("'",\
+		script_ftos(stof(get_arg(1)))," ",\
+		script_ftos(stof(get_arg(2)))," ",\
+		script_ftos(stof(get_arg(3))),"'" ), 3 ) \
 	
 
 #define SCRIPT_GLOBAL_FUNCTION(name,code,nargs) \
