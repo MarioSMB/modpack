@@ -17,6 +17,7 @@ const float LEX_OPERATOR_BIT     = 104;
 const float LEX_OPERATOR_LOGICAL = 105;
 const float LEX_OPERATOR_COMPARE = 106;
 const float LEX_OPERATOR_COMMA   = 107;
+const float LEX_OPERATOR_INCREMENT=108;
 
 float lex_string_index;
 float lex_string_end;
@@ -171,7 +172,14 @@ void lex_get_token()
 	}
 		
 	if ( nextch == "+" || nextch == "-" )
+	{
+		if ( substring(lex_string,lex_string_index,1) == nextch )
+		{
+			lex_string_index++;
+			return lex_token(LEX_OPERATOR_INCREMENT,strcat(nextch,nextch));
+		}
 		return lex_token(LEX_OPERATOR_ARITH,nextch);
+	}
 	if ( nextch == "*" || nextch == "/" || nextch == "%" )
 		return lex_token(LEX_OPERATOR_MULT,nextch);
 	if ( nextch == "^" || nextch == "~" )
@@ -186,7 +194,14 @@ void lex_get_token()
 		return lex_token(LEX_OPERATOR_BIT,nextch);
 	}
 	if ( nextch == "<" || nextch == ">" )
-			return lex_token(LEX_OPERATOR_COMPARE,nextch);
+	{
+		if ( substring(lex_string,lex_string_index,1) == nextch )
+		{
+			lex_string_index++;
+			return lex_token(LEX_OPERATOR_BIT,strcat(nextch,nextch));
+		}
+		return lex_token(LEX_OPERATOR_COMPARE,nextch);
+	}
 	if ( nextch == "!" )
 		return lex_token(LEX_OPERATOR_LOGICAL,nextch);
 	if ( nextch == "=" )

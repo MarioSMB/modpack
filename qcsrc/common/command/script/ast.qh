@@ -705,6 +705,38 @@ entity ast_bitxor(entity operand1, entity operand2)
 	ast_temp.classname="ast_bitxor";
 	return ast_temp;
 }
+entity ast_bitlshift_evaluate()
+{
+	return ast_tempvalue(script_ftos(
+		stof(script_evaluate(self.ast_operand1)) <<
+		stof(script_evaluate(self.ast_operand2))
+	));
+}
+entity ast_bitlshift(entity operand1, entity operand2)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = operand1;
+	ast_temp.ast_operand2 = operand2;
+	ast_temp.ast_evaluate = ast_bitlshift_evaluate;
+	ast_temp.classname="ast_bitlshift";
+	return ast_temp;
+}
+entity ast_bitrshift_evaluate()
+{
+	return ast_tempvalue(script_ftos(
+		stof(script_evaluate(self.ast_operand1)) >>
+		stof(script_evaluate(self.ast_operand2))
+	));
+}
+entity ast_bitrshift(entity operand1, entity operand2)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = operand1;
+	ast_temp.ast_operand2 = operand2;
+	ast_temp.ast_evaluate = ast_bitrshift_evaluate;
+	ast_temp.classname="ast_bitrshift";
+	return ast_temp;
+}
 entity ast_eq_evaluate()
 {
 	return ast_tempvalue(script_ftos(

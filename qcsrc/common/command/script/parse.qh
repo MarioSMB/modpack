@@ -84,6 +84,18 @@ entity parse_primary()
 				result = ast_not(result);
 			}
 			break;
+		case LEX_OPERATOR_INCREMENT:
+			if ( lex_lookahead.script_type == LEX_IDENTIFIER )
+			{
+				entity (entity, entity) operator = ast_sum;
+				if ( lex_prev.script_value == "--" )
+					operator = ast_sub;
+				result = ast_assign(lex_lookahead.script_value,
+					operator(ast_variable(lex_lookahead.script_value),
+						ast_simplevalue("1")));
+				lex_get_token();
+			}
+			break;
 		case LEX_KEYWORD:
 			if ( lex_prev.script_value == "return" )
 			{
@@ -151,7 +163,11 @@ entity parse_bitwise()
 	{
 		lex_prev = lex_move_lookahead();
 		lex_get_token();
-		if ( lex_prev.script_value == "&" )
+		if ( lex_prev.script_value == "<<" )
+			val = ast_bitlshift(val,parse_arithmetic());
+		else if ( lex_prev.script_value == ">>" )
+			val = ast_bitrshift(val,parse_arithmetic());
+		else if ( lex_prev.script_value == "&" )
 			val = ast_bitand(val,parse_arithmetic());
 		else if ( lex_prev.script_value == "^" )
 			val = ast_bitxor(val,parse_arithmetic());
@@ -263,6 +279,15 @@ entity parse_assignment()
 			
 			remove(lex_prev);
 			return ast_assign(id,val);
+		}
+		else if (lex_lookahead.script_type == LEX_OPERATOR_INCREMENT )
+		{
+			entity (entity, entity) operator = ast_sum;
+			if ( lex_lookahead.script_value == "--" )
+				operator = ast_sub;
+			lex_get_token();
+			remove(lex_prev);
+			return ast_assign(id,operator(ast_variable(id),ast_simplevalue("1")));
 		}
 		
 		remove(lex_lookahead);
