@@ -90,9 +90,8 @@ entity parse_primary()
 				entity (entity, entity) operator = ast_sum;
 				if ( lex_prev.script_value == "--" )
 					operator = ast_sub;
-				result = ast_assign(lex_lookahead.script_value,
-					operator(ast_variable(lex_lookahead.script_value),
-						ast_simplevalue("1")));
+				result = ast_assign_operator(ast_variable(lex_lookahead.script_value),
+					ast_simplevalue("1"),operator);
 				lex_get_token();
 			}
 			break;
@@ -119,20 +118,33 @@ entity parse_primary()
 	return result;
 }
 
-entity parse_multiplication()
+entity parse_field()
 {
 	entity val = parse_primary();
+	while(lex_lookahead.script_type == LEX_OPERATOR_OTHER && 
+		lex_lookahead.script_value == "." && val.ast_lvalue )
+	{
+		lex_get_token();
+		val = ast_field(val,lex_lookahead.script_value);
+		lex_get_token();
+	}
+	return val;
+}
+
+entity parse_multiplication()
+{
+	entity val = parse_field();
 	entity lex_prev;
 	while(lex_lookahead.script_type == LEX_OPERATOR_MULT)
 	{
 		lex_prev = lex_move_lookahead();
 		lex_get_token();
 		if ( lex_prev.script_value == "/" )
-			val = ast_div(val,parse_primary());
+			val = ast_div(val,parse_field());
 		else if ( lex_prev.script_value == "%" )
-			val = ast_mod(val,parse_primary());
+			val = ast_mod(val,parse_field());
 		else
-			val = ast_mul(val,parse_primary());
+			val = ast_mul(val,parse_field());
 		remove(lex_prev);
 	}
 	return val;
@@ -247,55 +259,43 @@ entity parse_expression()
 
 entity parse_assignment()
 {
-	if ( lex_lookahead.script_type == LEX_IDENTIFIER )
+	entity lval = parse_expression();
+	if ( lex_lookahead.script_type == LEX_OPERATOR_ASSIGN && lval.ast_lvalue )
 	{
-		string id = lex_lookahead.script_value;
-		float oldindex = lex_string_index;
-		entity lex_prev = lex_move_lookahead();
-		lex_get_token();
-		
-		if ( lex_lookahead.script_type == LEX_OPERATOR_ASSIGN )
-		{
 			string oper = substring(lex_lookahead.script_value,0,1);
 			lex_get_token();
-			entity val = parse_expression();
-			
+			entity rval = parse_expression();
+			entity(entity,entity) operator;
 			if ( oper == "+" )
-				val = ast_sum(ast_variable(id), val);
+				operator = ast_sum;
 			else if ( oper == "-" )
-				val = ast_sub(ast_variable(id), val);
-			else if ( oper == "*" )
-				val = ast_mul(ast_variable(id), val);
-			else if ( oper == "/" )
-				val = ast_div(ast_variable(id), val);
-			else if ( oper == "%" )
-				val = ast_mod(ast_variable(id), val);
-			else if ( oper == "^" )
-				val = ast_bitxor(ast_variable(id), val);
-			else if ( oper == "&" )
-				val = ast_bitand(ast_variable(id), val);
-			else if ( oper == "|" )
-				val = ast_bitor(ast_variable(id), val);
-			
-			remove(lex_prev);
-			return ast_assign(id,val);
-		}
-		else if (lex_lookahead.script_type == LEX_OPERATOR_INCREMENT )
-		{
-			entity (entity, entity) operator = ast_sum;
-			if ( lex_lookahead.script_value == "--" )
 				operator = ast_sub;
-			lex_get_token();
-			remove(lex_prev);
-			return ast_assign(id,operator(ast_variable(id),ast_simplevalue("1")));
-		}
-		
-		remove(lex_lookahead);
-		lex_string_index = oldindex;
-		lex_lookahead = lex_prev;
+			else if ( oper == "*" )
+				operator = ast_mul;
+			else if ( oper == "/" )
+				operator = ast_div;
+			else if ( oper == "%" )
+				operator = ast_mod;
+			else if ( oper == "^" )
+				operator = ast_bitxor;
+			else if ( oper == "&" )
+				operator = ast_bitand;
+			else if ( oper == "|" )
+				operator = ast_bitor;
+			else
+				return ast_assign(lval,rval);
+			return ast_assign_operator(lval,rval,operator);
+	}
+	else if ( lex_lookahead.script_type == LEX_OPERATOR_INCREMENT && lval.ast_lvalue )
+	{
+		entity (entity, entity) operator = ast_sum;
+		if ( lex_lookahead.script_value == "--" )
+			operator = ast_sub;
+		lex_get_token();
+		return ast_assign_operator(lval,ast_simplevalue("1"),operator);
 	}
 	
-	return parse_expression();
+	return lval;
 }
 
 entity parse_statement()

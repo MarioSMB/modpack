@@ -7,6 +7,8 @@
 .entity ast_operand2;
 .entity ast_operand3;
 .entity() ast_evaluate;
+.float  ast_lvalue;
+.string ast_lvalue_reference;
 .float ast_max_iterations;
 entity current_context;
 .entity context_variables;
@@ -342,7 +344,10 @@ entity ast_simplevalue(string value)
 // variable reference
 entity ast_variable_evaluate()
 {
-	return ast_tempvalue(context_get_variable(current_context,self.script_value));
+	entity val = ast_tempvalue(context_get_variable(current_context,self.script_value));
+	val.ast_lvalue = self.ast_lvalue;
+	val.ast_lvalue_reference = self.ast_lvalue_reference;
+	return val;
 }
 entity ast_variable(string var_name)
 {
@@ -350,24 +355,93 @@ entity ast_variable(string var_name)
 	ast_temp.script_value = var_name;
 	ast_temp.ast_evaluate = ast_variable_evaluate;
 	ast_temp.classname="ast_variable";
+	ast_temp.ast_lvalue = -1;
+	ast_temp.ast_lvalue_reference = var_name;
+	return ast_temp;
+}
+
+entity ast_field_evaluate()
+{
+	string entname = script_evaluate(self.ast_operand1);
+	entity ent = string_to_entity(entname);
+	if ( ent )
+	{
+		entity val = ast_tempvalue(entity_get(ent,self.ast_lvalue_reference));
+		val.ast_lvalue = stof(entname);
+		val.ast_lvalue_reference = self.ast_lvalue_reference;
+		return val;
+	}
+	
+	dprint("Access to invalid entity field: #",entname,".",self.ast_lvalue_reference,"\n");
+	return ast_tempnull();
+}
+
+// entity field access
+entity ast_field(entity operand,string field_name)
+{
+	entity ast_temp = spawn();
+	ast_temp.script_value = field_name;
+	ast_temp.ast_operand1 = operand;
+	ast_temp.ast_evaluate = ast_field_evaluate;
+	ast_temp.classname="ast_field";
+	ast_temp.ast_lvalue = -1;
+	ast_temp.ast_lvalue_reference = field_name;
 	return ast_temp;
 }
 
 // variable assignment
 entity ast_assign_evaluate()
 {
-	entity val = script_evaluate_entity(self.ast_operand1);
-	if ( !context_set_variable(current_context,self.script_value,val.script_value) )
-		context_define_variable(current_context,self.script_value,val.script_value);
-	return val;
+	entity lval = script_evaluate_entity(self.ast_operand1);
+	entity rval = script_evaluate_entity(self.ast_operand2);
+	
+	if ( lval.ast_lvalue < 0 )
+	{
+		if ( !context_set_variable(current_context,lval.ast_lvalue_reference,rval.script_value) )
+			context_define_variable(current_context,lval.ast_lvalue_reference,rval.script_value);
+	}
+	else if ( lval.ast_lvalue > 0 )
+	{
+		if ( !entity_set(float_to_entity(lval.ast_lvalue),lval.ast_lvalue_reference,rval.script_value) )
+			dprint("Assignment to invalid entity field: #",
+				   ftos(lval.ast_lvalue),".",lval.ast_lvalue_reference,"\n");
+	}
+	else
+		dprint("Assignment ro rvalue: ",lval.script_value," = ",rval.script_value,"\n");
+	rval.ast_lvalue = lval.ast_lvalue;
+	rval.ast_lvalue_reference = lval.ast_lvalue_reference;
+	remove(lval);
+	return rval;
 }
-entity ast_assign(string var_name,entity value)
+entity ast_assign(entity lvalue,entity rvalue)
 {
 	entity ast_temp = spawn();
-	ast_temp.script_value = var_name;
-	ast_temp.ast_operand1 = value;
+	ast_temp.ast_operand1 = lvalue;
+	ast_temp.ast_operand2 = rvalue;
 	ast_temp.ast_evaluate = ast_assign_evaluate;
+	ast_temp.ast_lvalue = -1;
 	ast_temp.classname="ast_assign";
+	return ast_temp;
+}
+entity ast_assign_operator_evaluate()
+{
+	entity lval_tree = self.ast_operand1;
+	self.ast_operand1 = script_evaluate_entity(lval_tree);
+	self.ast_operand1.classname = "ast_assign_operator_lval";
+	self.ast_operand2.ast_operand1 = self.ast_operand1;
+	entity result = ast_assign_evaluate();
+	self.ast_operand2.ast_operand1 = world;
+	self.ast_operand1 = lval_tree;
+	return result;
+}
+entity ast_assign_operator(entity lvalue,entity rvalue,entity(entity,entity) operator)
+{
+	entity ast_temp = spawn();
+	ast_temp.ast_operand1 = lvalue;
+	ast_temp.ast_operand2 = operator(world,rvalue);
+	ast_temp.ast_evaluate = ast_assign_operator_evaluate;
+	ast_temp.ast_lvalue = -1;
+	ast_temp.classname="ast_assign_operator";
 	return ast_temp;
 }
 

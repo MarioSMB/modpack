@@ -84,9 +84,8 @@ float is_numeric(string s)
 	return 1;
 }
 
-entity string_to_entity(string s)
+entity float_to_entity(float n)
 {
-	float n = stof(s);
 #ifdef SVQC 
 	if ( n ) return edict_num(n);
 #elif defined(CSQC)
@@ -95,6 +94,10 @@ entity string_to_entity(string s)
 	if ( n ) return ftoe(n);
 #endif
 	return world;
+}
+entity string_to_entity(string s)
+{
+	return float_to_entity(stof(s));
 }
 string entity_get(entity e, string field)
 {

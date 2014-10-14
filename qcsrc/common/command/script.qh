@@ -9,5 +9,3 @@ string script_evaluate(entity ast_root);
 
 // Recursively remove all the nodes in the abstract syntax tree
 void script_cleanup(entity ast_root);
-
-.string script_value;

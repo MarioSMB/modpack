@@ -1,4 +1,5 @@
 .float  script_type;
+.string script_value;
 
 #include "script/string.qh"
 #include "script/ast.qh"

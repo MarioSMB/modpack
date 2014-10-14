@@ -127,7 +127,8 @@ void lex_get_token()
 	
 	string nextch = substring(lex_string,lex_string_index,1);
 	
-	if ( ctype_digit(nextch) ||  nextch == "." )
+	if ( ctype_digit(nextch) || 
+		( nextch == "." && ctype_digit(substring(lex_string,lex_string_index+1,1)) ) )
 	{
 		return lex_token(LEX_VALUE_NUMBER,lex_number());
 	}
@@ -152,7 +153,7 @@ void lex_get_token()
 		return lex_token(LEX_OPERATOR_OTHER,"(");
 	if (  nextch == ")" || nextch == "}" )
 		return lex_token(LEX_OPERATOR_OTHER,")");
-	if (  nextch == "?" || nextch == ":" )
+	if (  nextch == "?" || nextch == ":" || nextch == "." )
 		return lex_token(LEX_OPERATOR_OTHER,nextch);
 	if ( nextch == "," || nextch == ";" )
 		return lex_token(LEX_OPERATOR_COMMA,nextch);
