@@ -115,12 +115,7 @@ float spider_attack(float attack_type)
 	return FALSE;
 }
 
-void spawnfunc_monster_spider()
-{
-	self.classname = "monster_spider";
-
-	if(!monster_initialize(MON_SPIDER)) { remove(self); return; }
-}
+void spawnfunc_monster_spider() { monster_initialize(MON_SPIDER); }
 
 float m_spider(float req)
 {
@@ -159,19 +154,4 @@ float m_spider(float req)
 }
 
 #endif // SVQC
-#ifdef CSQC
-float m_spider(float req)
-{
-	switch(req)
-	{
-		case MR_PRECACHE:
-		{
-			return TRUE;
-		}
-	}
-
-	return TRUE;
-}
-
-#endif // CSQC
 #endif // REGISTER_MONSTER

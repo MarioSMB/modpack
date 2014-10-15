@@ -126,12 +126,7 @@ float zombie_attack(float attack_type)
 	return FALSE;
 }
 
-void spawnfunc_monster_zombie()
-{
-	self.classname = "monster_zombie";
-
-	if(!monster_initialize(MON_ZOMBIE)) { remove(self); return; }
-}
+void spawnfunc_monster_zombie() { monster_initialize(MON_ZOMBIE); }
 
 float m_zombie(float req)
 {
@@ -178,19 +173,4 @@ float m_zombie(float req)
 }
 
 #endif // SVQC
-#ifdef CSQC
-float m_zombie(float req)
-{
-	switch(req)
-	{
-		case MR_PRECACHE:
-		{
-			return TRUE;
-		}
-	}
-
-	return TRUE;
-}
-
-#endif // CSQC
 #endif // REGISTER_MONSTER

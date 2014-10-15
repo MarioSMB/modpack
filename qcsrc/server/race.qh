@@ -9,6 +9,19 @@ float race_timelimit;
 .float race_completed;
 float race_completing;
 
+.float race_penalty;
+
+float speedaward_lastupdate;
+float speedaward_lastsent;
+
+float speedaward_speed;
+string speedaward_holder;
+string speedaward_uid;
+
+float speedaward_alltimebest;
+string speedaward_alltimebest_holder;
+string speedaward_alltimebest_uid;
+
 .float race_movetime; // for reading
 .float race_movetime_frac; // fractional accumulator for higher accuracy (helper for writing)
 .float race_movetime_count; // integer accumulator
@@ -26,3 +39,6 @@ float race_GetFractionalLapCount(entity e);
 float race_readTime(string map, float pos);
 string race_readUID(string map, float pos);
 string race_readName(string map, float pos);
+
+void race_send_speedaward(float msg);
+void race_send_speedaward_alltimebest(float msg);

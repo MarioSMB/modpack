@@ -233,7 +233,7 @@ void mage_heal()
 		{
 			pointparticles(particleeffectnum("healing_fx"), head.origin, '0 0 0', 1);
 			head.health = bound(0, head.health + (autocvar_g_monster_mage_heal_allies), head.max_health);
-			if(!(head.spawnflags & MONSTERFLAG_INVINCIBLE))
+			if(!(head.spawnflags & MONSTERFLAG_INVINCIBLE) && head.sprite)
 				WaypointSprite_UpdateHealth(head.sprite, head.health);
 		}
 	}
@@ -332,12 +332,7 @@ float mage_attack(float attack_type)
 	return FALSE;
 }
 
-void spawnfunc_monster_mage()
-{
-	self.classname = "monster_mage";
-
-	if(!monster_initialize(MON_MAGE)) { remove(self); return; }
-}
+void spawnfunc_monster_mage() { monster_initialize(MON_MAGE); }
 
 // compatibility with old spawns
 void spawnfunc_monster_shalrath() { spawnfunc_monster_mage(); }
@@ -404,19 +399,4 @@ float m_mage(float req)
 }
 
 #endif // SVQC
-#ifdef CSQC
-float m_mage(float req)
-{
-	switch(req)
-	{
-		case MR_PRECACHE:
-		{
-			return TRUE;
-		}
-	}
-
-	return TRUE;
-}
-
-#endif // CSQC
 #endif // REGISTER_MONSTER

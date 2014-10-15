@@ -69,12 +69,7 @@ float creeper_attack(float attack_type)
 	return FALSE;
 }
 
-void spawnfunc_monster_creeper()
-{
-	self.classname = "monster_creeper";
-
-	if(!monster_initialize(MON_CREEPER)) { remove(self); return; }
-}
+void spawnfunc_monster_creeper() { monster_initialize(MON_CREEPER); }
 
 float m_creeper(float req)
 {
@@ -118,19 +113,4 @@ float m_creeper(float req)
 }
 
 #endif // SVQC
-#ifdef CSQC
-float m_creeper(float req)
-{
-	switch(req)
-	{
-		case MR_PRECACHE:
-		{
-			return TRUE;
-		}
-	}
-
-	return TRUE;
-}
-
-#endif // CSQC
 #endif // REGISTER_MONSTER

@@ -962,6 +962,50 @@ float v_raptor(float req)
 #define raptor_bomb "gfx/vehicles/raptor_bombs.tga"
 #define raptor_drop "gfx/vehicles/axh-dropcross.tga"
 
+void RaptorCBShellfragDraw()
+{
+	if(wasfreed(self))
+		return;
+
+	Movetype_Physics_MatchTicrate(autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
+	self.move_avelocity += randomvec() * 15;
+	self.renderflags = 0;
+
+	if(self.cnt < time)
+		self.alpha = bound(0, self.nextthink - time, 1);
+
+	if(self.alpha < ALPHA_MIN_VISIBLE)
+		remove(self);
+}
+
+void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
+{
+	entity sfrag;
+
+	sfrag = spawn();
+	setmodel(sfrag, "models/vehicles/clusterbomb_fragment.md3");
+	setorigin(sfrag, _org);
+
+	sfrag.move_movetype = MOVETYPE_BOUNCE;
+	sfrag.gravity = 0.15;
+	sfrag.solid = SOLID_CORPSE;
+
+	sfrag.draw = RaptorCBShellfragDraw;
+
+	sfrag.move_origin = sfrag.origin = _org;
+	sfrag.move_velocity = _vel;
+	sfrag.move_avelocity = prandomvec() * vlen(sfrag.move_velocity);
+	sfrag.angles = self.move_angles = _ang;
+
+	sfrag.move_time = time;
+	sfrag.damageforcescale = 4;
+
+	sfrag.nextthink = time + 3;
+	sfrag.cnt = time + 2;
+	sfrag.alpha = 1;
+	sfrag.drawmask = MASK_NORMAL;
+}
+
 float v_raptor(float req)
 {
 	switch(req)

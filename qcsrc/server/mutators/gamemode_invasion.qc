@@ -383,7 +383,7 @@ MUTATOR_HOOKFUNCTION(invasion_AccuracyTargetValid)
 
 MUTATOR_HOOKFUNCTION(invasion_AllowMobSpawning)
 {
-	// monster spawning disabled during an invasion
+	ret_string = "You can't spawn monsters during an invasion!";
 	return TRUE;
 }
 

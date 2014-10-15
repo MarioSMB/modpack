@@ -193,12 +193,7 @@ float shambler_attack(float attack_type)
 	return FALSE;
 }
 
-void spawnfunc_monster_shambler()
-{
-	self.classname = "monster_shambler";
-
-	if(!monster_initialize(MON_SHAMBLER)) { remove(self); return; }
-}
+void spawnfunc_monster_shambler() { monster_initialize(MON_SHAMBLER); }
 
 float m_shambler(float req)
 {
@@ -237,19 +232,4 @@ float m_shambler(float req)
 }
 
 #endif // SVQC
-#ifdef CSQC
-float m_shambler(float req)
-{
-	switch(req)
-	{
-		case MR_PRECACHE:
-		{
-			return TRUE;
-		}
-	}
-
-	return TRUE;
-}
-
-#endif // CSQC
 #endif // REGISTER_MONSTER

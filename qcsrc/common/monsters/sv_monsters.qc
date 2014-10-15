@@ -615,7 +615,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.health = max(1, self.revive_progress * self.max_health);
 		self.iceblock.alpha = bound(0.2, 1 - self.revive_progress, 1);
 
-		if(!(self.spawnflags & MONSTERFLAG_INVINCIBLE))
+		if(!(self.spawnflags & MONSTERFLAG_INVINCIBLE) && self.sprite)
 			WaypointSprite_UpdateHealth(self.sprite, self.health);
 
 		movelib_beak_simple(stopspeed);
@@ -634,7 +634,7 @@ void monster_move(float runspeed, float walkspeed, float stopspeed, float manim_
 		self.revive_progress = bound(0, self.revive_progress - self.ticrate * self.revive_speed, 1);
 		self.health = max(0, autocvar_g_nades_ice_health + (self.max_health-autocvar_g_nades_ice_health) * self.revive_progress );
 
-		if(!(self.spawnflags & MONSTERFLAG_INVINCIBLE))
+		if(!(self.spawnflags & MONSTERFLAG_INVINCIBLE) && self.sprite)
 			WaypointSprite_UpdateHealth(self.sprite, self.health);
 
 		movelib_beak_simple(stopspeed);
@@ -986,7 +986,8 @@ void monsters_damage (entity inflictor, entity attacker, float damage, float dea
 
 	self.health -= take;
 
-	WaypointSprite_UpdateHealth(self.sprite, self.health);
+	if(self.sprite)
+		WaypointSprite_UpdateHealth(self.sprite, self.health);
 
 	self.dmg_time = time;
 
@@ -1124,11 +1125,15 @@ float monster_setup()
 
 	MonsterSound(monstersound_spawn, 0, FALSE, CH_VOICE);
 
-	WaypointSprite_Spawn(M_NAME(self.monsterid), 0, 1024, self, '0 0 1' * (self.maxs_z + 15), world, self.team, self, sprite, TRUE, RADARICON_DANGER, ((self.team) ? Team_ColorRGB(self.team) : '1 0 0'));
-	if(!(self.spawnflags & MONSTERFLAG_INVINCIBLE))
+	if(autocvar_g_monsters_healthbars)
 	{
-		WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
-		WaypointSprite_UpdateHealth(self.sprite, self.health);
+		WaypointSprite_Spawn(M_NAME(self.monsterid), 0, 1024, self, '0 0 1' * (self.maxs_z + 15), world, self.team, self, sprite, TRUE, RADARICON_DANGER, ((self.team) ? Team_ColorRGB(self.team) : '1 0 0'));
+
+		if(!(self.spawnflags & MONSTERFLAG_INVINCIBLE))
+		{
+			WaypointSprite_UpdateMaxHealth(self.sprite, self.max_health);
+			WaypointSprite_UpdateHealth(self.sprite, self.health);
+		}
 	}
 
 	self.think = monster_think;
@@ -1142,7 +1147,7 @@ float monster_setup()
 
 float monster_initialize(float mon_id)
 {
-	if(!autocvar_g_monsters) { return FALSE; }
+	if(!autocvar_g_monsters) { monster_remove(self); return FALSE; }
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED)) { MON_ACTION(mon_id, MR_PRECACHE); }
 	if(Monster_CheckAppearFlags(self, mon_id)) { return TRUE; } // return true so the monster isn't removed
 
@@ -1152,9 +1157,9 @@ float monster_initialize(float mon_id)
 		self.monster_skill = cvar("g_monsters_skill");
 
 	// support for quake style removing monsters based on skill
-	if(self.monster_skill == MONSTER_SKILL_EASY) if(self.spawnflags & MONSTERSKILL_NOTEASY) { return FALSE; }
-	if(self.monster_skill == MONSTER_SKILL_MEDIUM) if(self.spawnflags & MONSTERSKILL_NOTMEDIUM) { return FALSE; }
-	if(self.monster_skill == MONSTER_SKILL_HARD) if(self.spawnflags & MONSTERSKILL_NOTHARD) { return FALSE; }
+	if(self.monster_skill == MONSTER_SKILL_EASY) if(self.spawnflags & MONSTERSKILL_NOTEASY) { monster_remove(self); return FALSE; }
+	if(self.monster_skill == MONSTER_SKILL_MEDIUM) if(self.spawnflags & MONSTERSKILL_NOTMEDIUM) { monster_remove(self); return FALSE; }
+	if(self.monster_skill == MONSTER_SKILL_HARD) if(self.spawnflags & MONSTERSKILL_NOTHARD) { monster_remove(self); return FALSE; }
 
 	if(self.team && !teamplay)
 		self.team = 0;
@@ -1166,6 +1171,7 @@ float monster_initialize(float mon_id)
 	setmodel(self, mon.model);
 	//setsize(self, mon.mins, mon.maxs);
 	self.flags				= FL_MONSTER;
+	self.classname			= "monster";
 	self.takedamage			= DAMAGE_AIM;
 	self.bot_attack			= TRUE;
 	self.iscreature			= TRUE;
@@ -1250,7 +1256,10 @@ float monster_initialize(float mon_id)
 	}
 
 	if(!monster_setup())
+	{
+		monster_remove(self);
 		return FALSE;
+	}
 
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 		monster_setupcolors(self);

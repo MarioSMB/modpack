@@ -5,11 +5,8 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 
 	e.spawnflags = MONSTERFLAG_SPAWNED;
 
-	if(!respwn)
-		e.spawnflags |= MONSTERFLAG_NORESPAWN;
-
-	if(invincible)
-		e.spawnflags |= MONSTERFLAG_INVINCIBLE;
+	if(!respwn) { e.spawnflags |= MONSTERFLAG_NORESPAWN; }
+	if(invincible) { e.spawnflags |= MONSTERFLAG_INVINCIBLE; }
 
 	setorigin(e, orig);
 
@@ -36,7 +33,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 			}
 		}
 		if(!found)
-			monster_id = MON_FIRST;
+			monster_id = ((monster_id > 0) ? monster_id : MON_FIRST);
 	}
 
 	e.realowner = spawnedby;

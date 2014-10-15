@@ -203,6 +203,12 @@ MUTATOR_HOOKABLE(AllowMobSpawning);
 	// called when a player tries to spawn a monster
 	// return 1 to prevent spawning
 
+MUTATOR_HOOKABLE(FormatMessage);
+	// for replacing chat message commands
+	// INPUT, OUTPUT:
+		string format_escape;
+		string format_replacement;
+
 MUTATOR_HOOKABLE(PlayerDamage_SplitHealthArmor);
 	// called when a player gets damaged to e.g. remove stuff he was carrying.
 	// INPUT:

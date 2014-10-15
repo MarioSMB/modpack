@@ -92,12 +92,7 @@ float wyvern_attack(float attack_type)
 	return FALSE;
 }
 
-void spawnfunc_monster_wyvern()
-{
-	self.classname = "monster_wyvern";
-
-	if(!monster_initialize(MON_WYVERN)) { remove(self); return; }
-}
+void spawnfunc_monster_wyvern() { monster_initialize(MON_WYVERN); }
 
 // compatibility with old spawns
 void spawnfunc_monster_wizard() { spawnfunc_monster_wyvern(); }
@@ -140,19 +135,4 @@ float m_wyvern(float req)
 }
 
 #endif // SVQC
-#ifdef CSQC
-float m_wyvern(float req)
-{
-	switch(req)
-	{
-		case MR_PRECACHE:
-		{
-			return TRUE;
-		}
-	}
-
-	return TRUE;
-}
-
-#endif // CSQC
 #endif // REGISTER_MONSTER

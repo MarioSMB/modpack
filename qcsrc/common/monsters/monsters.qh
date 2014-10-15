@@ -2,7 +2,7 @@
 #define MR_SETUP		  1 // (SERVER) setup monster data
 #define MR_THINK		  2 // (SERVER) logic to run every frame
 #define MR_DEATH		  3 // (SERVER) called when monster dies
-#define MR_PRECACHE		  4 // (BOTH) precaches models/sounds used by this monster
+#define MR_PRECACHE		  4 // (SERVER) precaches models/sounds used by this monster
 
 // functions:
 entity get_monsterinfo(float id);
@@ -53,12 +53,12 @@ float MON_LAST;
 		register_monster(id,func,monsterflags,min_s,max_s,modelname,shortname,mname); \
 	} \
 	ACCUMULATE_FUNCTION(RegisterMonsters, RegisterMonsters_##id)
-#ifdef MENUQC
-#define REGISTER_MONSTER(id,func,monsterflags,min_s,max_s,modelname,shortname,mname) \
-	REGISTER_MONSTER_2(MON_##id,m_null,monsterflags,min_s,max_s,modelname,shortname,mname)
-#else
+#ifdef SVQC
 #define REGISTER_MONSTER(id,func,monsterflags,min_s,max_s,modelname,shortname,mname) \
 	REGISTER_MONSTER_2(MON_##id,func,monsterflags,min_s,max_s,modelname,shortname,mname)
+#else
+#define REGISTER_MONSTER(id,func,monsterflags,min_s,max_s,modelname,shortname,mname) \
+	REGISTER_MONSTER_2(MON_##id,m_null,monsterflags,min_s,max_s,modelname,shortname,mname)
 #endif
 
 #include "all.qh"

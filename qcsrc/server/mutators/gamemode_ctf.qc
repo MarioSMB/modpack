@@ -2249,56 +2249,44 @@ MUTATOR_HOOKFUNCTION(ctf_SpectateCopy)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(ctf_FormatMessage)
+{
+	entity bluefc = world, redfc = world, yellowfc = world, pinkfc = world, tmp_entity; // NOTE: blue = red player
+	entity tfc = world, sfc = world;
+
+	for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
+	{
+		if(tmp_entity.owner)
+		{
+			switch(tmp_entity.team)
+			{
+				case NUM_TEAM_1: redfc = tmp_entity.owner; break;
+				case NUM_TEAM_2: bluefc = tmp_entity.owner; break;
+				case NUM_TEAM_3: yellowfc = tmp_entity.owner; break;
+				case NUM_TEAM_4: pinkfc = tmp_entity.owner; break;
+			}
+
+			if(SAME_TEAM(tmp_entity.owner, self)) { tfc = tmp_entity.owner; }
+			if(SAME_TEAM(tmp_entity, self)) { sfc = tmp_entity.owner; }
+		}
+	}
+
+	switch(format_escape)
+	{
+		case "r": format_replacement = ((tfc) ? tfc.netname : "(nobody)"); break;
+		case "R": format_replacement = ((sfc) ? sfc.netname : "(nobody)"); break;
+		case "t": format_replacement = ((redfc) ? redfc.netname : "(nobody)"); break;
+		case "T": format_replacement = ((bluefc) ? bluefc.netname : "(nobody)"); break;
+		case "p": format_replacement = ((yellowfc) ? yellowfc.netname : "(nobody)"); break;
+		case "P": format_replacement = ((pinkfc) ? pinkfc.netname : "(nobody)"); break;
+	}
+
+	return FALSE;
+}
 
 // ==========
 // Spawnfuncs
 // ==========
-
-/*QUAKED spawnfunc_info_player_team1 (1 0 0) (-16 -16 -24) (16 16 24)
-CTF Starting point for a player in team one (Red).
-Keys: "angle" viewing angle when spawning. */
-void spawnfunc_info_player_team1()
-{
-	if(g_assault) { remove(self); return; }
-
-	self.team = NUM_TEAM_1; // red
-	spawnfunc_info_player_deathmatch();
-}
-
-
-/*QUAKED spawnfunc_info_player_team2 (1 0 0) (-16 -16 -24) (16 16 24)
-CTF Starting point for a player in team two (Blue).
-Keys: "angle" viewing angle when spawning. */
-void spawnfunc_info_player_team2()
-{
-	if(g_assault) { remove(self); return; }
-
-	self.team = NUM_TEAM_2; // blue
-	spawnfunc_info_player_deathmatch();
-}
-
-/*QUAKED spawnfunc_info_player_team3 (1 0 0) (-16 -16 -24) (16 16 24)
-CTF Starting point for a player in team three (Yellow).
-Keys: "angle" viewing angle when spawning. */
-void spawnfunc_info_player_team3()
-{
-	if(g_assault) { remove(self); return; }
-
-	self.team = NUM_TEAM_3; // yellow
-	spawnfunc_info_player_deathmatch();
-}
-
-
-/*QUAKED spawnfunc_info_player_team4 (1 0 0) (-16 -16 -24) (16 16 24)
-CTF Starting point for a player in team four (Purple).
-Keys: "angle" viewing angle when spawning. */
-void spawnfunc_info_player_team4()
-{
-	if(g_assault) { remove(self); return; }
-
-	self.team = NUM_TEAM_4; // purple
-	spawnfunc_info_player_deathmatch();
-}
 
 /*QUAKED spawnfunc_item_flag_team1 (0 0.5 0.8) (-48 -48 -37) (48 48 37)
 CTF flag for team one (Red).
@@ -2537,6 +2525,7 @@ MUTATOR_DEFINITION(gamemode_ctf)
 	MUTATOR_HOOK(HavocBot_ChooseRole, ctf_BotRoles, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, ctf_GetTeamCount, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SpectateCopy, ctf_SpectateCopy, CBC_ORDER_ANY);
+	MUTATOR_HOOK(FormatMessage, ctf_FormatMessage, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
