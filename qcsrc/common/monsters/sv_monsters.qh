@@ -30,8 +30,6 @@ const float MONSTER_SKILL_HARD = 5;
 const float MONSTER_SKILL_INSANE = 7;
 const float MONSTER_SKILL_NIGHTMARE = 10;
 
-.float fish_wasdrowning; // used to reset a drowning fish's angles if it reaches water again
-
 .float candrop;
 
 .float attack_range;
