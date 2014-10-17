@@ -28,7 +28,6 @@ const float MON_FLAG_MELEE = 1024;
 
 // other useful macros
 #define MON_ACTION(monstertype,mrequest) (get_monsterinfo(monstertype)).monster_func(mrequest)
-#define M_NAME(monstertype) (get_monsterinfo(monstertype)).monster_name
 
 // =====================
 //	Monster Registration

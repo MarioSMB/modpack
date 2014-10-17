@@ -290,7 +290,7 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
 	self.monster_skill = inv_monsterskill;
 
 	if((get_monsterinfo(self.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_INVASION_SUPERMONSTER, M_NAME(self.monsterid));
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_INVASION_SUPERMONSTER, self.monster_name);
 
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 

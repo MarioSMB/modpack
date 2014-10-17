@@ -1127,7 +1127,7 @@ float monster_setup()
 
 	if(autocvar_g_monsters_healthbars)
 	{
-		WaypointSprite_Spawn(M_NAME(self.monsterid), 0, 1024, self, '0 0 1' * (self.maxs_z + 15), world, self.team, self, sprite, TRUE, RADARICON_DANGER, ((self.team) ? Team_ColorRGB(self.team) : '1 0 0'));
+		WaypointSprite_Spawn(self.monster_name, 0, 1024, self, '0 0 1' * (self.maxs_z + 15), world, self.team, self, sprite, TRUE, RADARICON_DANGER, ((self.team) ? Team_ColorRGB(self.team) : '1 0 0'));
 
 		if(!(self.spawnflags & MONSTERFLAG_INVINCIBLE))
 		{
@@ -1192,7 +1192,7 @@ float monster_initialize(float mon_id)
 	self.pos2				= self.angles;
 	self.reset				= monsters_reset;
 	self.netname			= mon.netname;
-	self.monster_name		= M_NAME(mon_id);
+	self.monster_name		= mon.monster_name;
 	self.candrop			= TRUE;
 	self.view_ofs			= '0 0 1' * (self.maxs_z * 0.5);
 	self.oldtarget2			= self.target2;
