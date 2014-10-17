@@ -319,6 +319,7 @@ void CommonCommand_editmob(float request, entity caller, float argc)
 				{
 					if(!caller) { print_to(caller, "Only players can edit monsters"); return; }
 					if(!argument) { break; } // escape to usage
+					if(!autocvar_g_monsters_edit) { print_to(caller, "Monster editing is disabled"); return; }
 					if(mon.realowner != caller && autocvar_g_monsters_edit < 2) { print_to(caller, "This monster does not belong to you"); return; }
 					if(!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
 
