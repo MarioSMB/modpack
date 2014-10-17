@@ -736,6 +736,11 @@ float nade_customize()
 
 void nade_prime()
 {
+	if(autocvar_g_nades_bonus_only)
+	if(!self.bonus_nades)
+		return; // only allow bonus nades
+
+
 	if(self.nade)
 		remove(self.nade);
 

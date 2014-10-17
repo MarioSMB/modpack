@@ -1437,6 +1437,7 @@ float autocvar_g_nades_napalm_selfdamage;
 float autocvar_g_nades_nade_type;
 float autocvar_g_nades_bonus_type;
 float autocvar_g_nades_bonus;
+float autocvar_g_nades_bonus_only;
 float autocvar_g_nades_bonus_onstrength;
 float autocvar_g_nades_bonus_client_select;
 float autocvar_g_nades_bonus_max;
