@@ -927,7 +927,7 @@ void ctf_FlagTouch()
 			self.health = 0;
 			ctf_CheckFlagReturn(self, RETURN_NEEDKILL);
 		}
-		return;
+		if(!self.ctf_flagdamaged) { return; }
 	}
 
 	FOR_EACH_PLAYER(tmp_entity) if(SAME_TEAM(toucher, tmp_entity)) { ++num_perteam; }
