@@ -1051,11 +1051,14 @@ void SV_PlayerPhysics()
 		a_side = autocvar_g_jetpack_acceleration_side;
 		a_up = autocvar_g_jetpack_acceleration_up;
 		a_add = autocvar_g_jetpack_antigravity * autocvar_sv_gravity;
+		if(autocvar_g_jetpack_reverse_thrust && self.crouch) { a_up = autocvar_g_jetpack_reverse_thrust; }
 
 		wishvel_x *= a_side;
 		wishvel_y *= a_side;
 		wishvel_z *= a_up;
 		wishvel_z += a_add;
+
+		if(autocvar_g_jetpack_reverse_thrust && self.crouch) { wishvel_z *= -1; }
 
 		float best;
 		best = 0;

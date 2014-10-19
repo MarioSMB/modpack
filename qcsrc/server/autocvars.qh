@@ -872,6 +872,7 @@ float autocvar_g_fullbrightplayers;
 float autocvar_g_grappling_hook_tarzan;
 float autocvar_g_hitplots;
 string autocvar_g_hitplots_individuals;
+float autocvar_g_jetpack_reverse_thrust;
 float autocvar_g_jetpack_acceleration_side;
 float autocvar_g_jetpack_acceleration_up;
 float autocvar_g_jetpack_antigravity;
@@ -1601,4 +1602,9 @@ float autocvar_g_buffs_flight_gravity;
 float autocvar_g_buffs_jump_height;
 float autocvar_g_physics_clientselect;
 string autocvar_g_physics_clientselect_options;
+float autocvar_g_chess_point_limit;
+float autocvar_g_chess_point_leadlimit;
+float autocvar_g_chess_warmup;
+float autocvar_g_chess_round_timelimit;
+string autocvar_sv_announcer;
 

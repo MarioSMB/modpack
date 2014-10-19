@@ -842,9 +842,9 @@ void Item_FindTeam()
 }
 
 // Savage: used for item garbage-collection
-// TODO: perhaps nice special effect?
 void RemoveItem(void)
 {
+	pointparticles(particleeffectnum("item_pickup"), self.origin, '0 0 0', 1);
 	remove(self);
 }
 

@@ -1120,6 +1120,10 @@ void Ent_Init()
 
 	sv_showfps = ReadByte();
 
+	sv_announcer = strzone(ReadString());
+
+	if(sv_announcer != "") { Announcer_Precache(); }
+
 	if(!postinit)
 		PostInit();
 }

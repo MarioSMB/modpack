@@ -776,6 +776,7 @@ float ClientInit_SendEntity(entity to, float sf)
 	WriteByte(MSG_ENTITY, self.minsta_refire * 255.0);
 	WriteByte(MSG_ENTITY, self.minsta_range * 255.0);
 	WriteByte(MSG_ENTITY, sv_showfps);
+	WriteString(MSG_ENTITY, autocvar_sv_announcer);
 	return TRUE;
 }
 

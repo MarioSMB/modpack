@@ -42,6 +42,7 @@ REGISTER_BUFF(_("Vengeance"),vengeance,VENGEANCE,15,'0.55 0.5 1');
 REGISTER_BUFF(_("Jump"),jump,JUMP,10,'0.7 0.2 1');
 REGISTER_BUFF(_("Flight"),flight,FLIGHT,11,'1 0.2 0.5');
 REGISTER_BUFF(_("Invisible"),invisible,INVISIBLE,12,'0.9 0.9 0.9');
+#undef REGISTER_BUFF
 
 #ifdef SVQC
 .float buffs;

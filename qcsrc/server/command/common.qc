@@ -367,6 +367,7 @@ void CommonCommand_editmob(float request, entity caller, float argc)
 					WarpZone_TraceBox (CENTER_OR_VIEWOFS(caller), caller.mins, caller.maxs, CENTER_OR_VIEWOFS(caller) + v_forward * 150, TRUE, caller);
 					mon = spawnmonster(arg_lower, 0, caller, caller, trace_endpos, FALSE, FALSE, moveflag);
 					print_to(caller, strcat("Spawned ", mon.monster_name));
+					return;
 				}
 				case "kill":
 				{

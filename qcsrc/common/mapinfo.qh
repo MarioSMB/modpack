@@ -92,6 +92,9 @@ REGISTER_GAMETYPE(_("Infection"),inf,g_infection,INFECTION,"timelimit=20 pointli
 REGISTER_GAMETYPE(_("Jailbreak"),jb,g_jailbreak,JAILBREAK,"teams=2 timelimit=20 pointlimit=5 leadlimit=0",_("Kill enemies to send them to jail, capture control points to release teammates"));
 #define g_jailbreak IS_GAMETYPE(JAILBREAK)
 
+REGISTER_GAMETYPE(_("Chess"),chess,g_chess,CHESS,"teams=2 timelimit=30 pointlimit=1 leadlimit=0",_("The immortal game"));
+#define g_chess IS_GAMETYPE(CHESS)
+
 const float MAPINFO_FEATURE_WEAPONS       = 1; // not defined for minstagib-only maps
 const float MAPINFO_FEATURE_VEHICLES      = 2;
 const float MAPINFO_FEATURE_TURRETS       = 4;

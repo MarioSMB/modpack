@@ -17,6 +17,7 @@
 #include "gamemode_race.qh"
 #include "gamemode_onslaught.qh"
 #include "gamemode_conquest.qh"
+#include "gamemode_chess.qh"
 
 #include "mutator_dodging.qh"
 #include "mutator_overkill.qh"

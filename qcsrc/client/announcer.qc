@@ -1,5 +1,22 @@
 float announcer_1min;
 float announcer_5min;
+string AnnouncerOption()
+{
+	if(autocvar_cl_announcer_force || sv_announcer == "" || autocvar_cl_announcer != "default") { return autocvar_cl_announcer; }
+
+	return sv_announcer; // use server side announcer if available
+}
+
+void Announcer_Precache()
+{
+#define MSG_ANNCE_NOTIF(default,name,channel,sound,volume,position) \
+	precache_sound(sprintf("announcer/%s/%s.wav", AnnouncerOption(), sound));
+
+	MSG_ANNCE_NOTIFICATIONS
+
+#undef MSG_ANNCE_NOTIF
+}
+
 void Announcer_Countdown()
 {
 	float starttime = getstatf(STAT_GAMESTARTTIME);
