@@ -541,10 +541,10 @@ void GetTeamCounts(entity ignore)
 
 			switch(t)
 			{
-				case NUM_TEAM_1: if(c1 >= 0) { c1 += value; cb1 += bvalue; }
-				case NUM_TEAM_2: if(c2 >= 0) { c2 += value; cb2 += bvalue; }
-				case NUM_TEAM_3: if(c3 >= 0) { c3 += value; cb3 += bvalue; }
-				case NUM_TEAM_4: if(c4 >= 0) { c4 += value; cb4 += bvalue; }
+				case NUM_TEAM_1: if(c1 >= 0) { c1 += value; cb1 += bvalue; } break;
+				case NUM_TEAM_2: if(c2 >= 0) { c2 += value; cb2 += bvalue; } break;
+				case NUM_TEAM_3: if(c3 >= 0) { c3 += value; cb3 += bvalue; } break;
+				case NUM_TEAM_4: if(c4 >= 0) { c4 += value; cb4 += bvalue; } break;
 			}
 		}
 	}
