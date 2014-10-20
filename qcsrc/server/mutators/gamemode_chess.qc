@@ -74,29 +74,34 @@ void chess_Piece_Spawn(entity loc, float pid, float teamnumber)
 	loc.chess_piece = piece;
 }
 
+entity chess_board_base1(float index)
+{
+	return chess_board_base0[index-1];
+}
+
 void chess_SpawnPieces()
 {
-	chess_Piece_Spawn(chess_board[1], CHESS_PIECE_CASTLE, NUM_TEAM_1);
-	chess_Piece_Spawn(chess_board[2], CHESS_PIECE_KNIGHT, NUM_TEAM_1);
-	chess_Piece_Spawn(chess_board[3], CHESS_PIECE_BISHOP, NUM_TEAM_1);
-	chess_Piece_Spawn(chess_board[4], CHESS_PIECE_QUEEN, NUM_TEAM_1);
-	chess_Piece_Spawn(chess_board[5], CHESS_PIECE_KING, NUM_TEAM_1);
-	chess_Piece_Spawn(chess_board[6], CHESS_PIECE_BISHOP, NUM_TEAM_1);
-	chess_Piece_Spawn(chess_board[7], CHESS_PIECE_KNIGHT, NUM_TEAM_1);
-	chess_Piece_Spawn(chess_board[8], CHESS_PIECE_CASTLE, NUM_TEAM_1);
+	chess_Piece_Spawn(chess_board_base0[0], CHESS_PIECE_CASTLE, NUM_TEAM_1);
+	chess_Piece_Spawn(chess_board_base0[1], CHESS_PIECE_KNIGHT, NUM_TEAM_1);
+	chess_Piece_Spawn(chess_board_base0[2], CHESS_PIECE_BISHOP, NUM_TEAM_1);
+	chess_Piece_Spawn(chess_board_base0[3], CHESS_PIECE_QUEEN, NUM_TEAM_1);
+	chess_Piece_Spawn(chess_board_base0[4], CHESS_PIECE_KING, NUM_TEAM_1);
+	chess_Piece_Spawn(chess_board_base0[5], CHESS_PIECE_BISHOP, NUM_TEAM_1);
+	chess_Piece_Spawn(chess_board_base0[6], CHESS_PIECE_KNIGHT, NUM_TEAM_1);
+	chess_Piece_Spawn(chess_board_base0[7], CHESS_PIECE_CASTLE, NUM_TEAM_1);
 
-	chess_Piece_Spawn(chess_board[57], CHESS_PIECE_CASTLE, NUM_TEAM_2);
-	chess_Piece_Spawn(chess_board[58], CHESS_PIECE_KNIGHT, NUM_TEAM_2);
-	chess_Piece_Spawn(chess_board[59], CHESS_PIECE_BISHOP, NUM_TEAM_2);
-	chess_Piece_Spawn(chess_board[60], CHESS_PIECE_QUEEN, NUM_TEAM_2);
-	chess_Piece_Spawn(chess_board[61], CHESS_PIECE_KING, NUM_TEAM_2);
-	chess_Piece_Spawn(chess_board[62], CHESS_PIECE_BISHOP, NUM_TEAM_2);
-	chess_Piece_Spawn(chess_board[63], CHESS_PIECE_KNIGHT, NUM_TEAM_2);
-	chess_Piece_Spawn(chess_board[64], CHESS_PIECE_CASTLE, NUM_TEAM_2);
+	chess_Piece_Spawn(chess_board_base0[56], CHESS_PIECE_CASTLE, NUM_TEAM_2);
+	chess_Piece_Spawn(chess_board_base0[57], CHESS_PIECE_KNIGHT, NUM_TEAM_2);
+	chess_Piece_Spawn(chess_board_base0[58], CHESS_PIECE_BISHOP, NUM_TEAM_2);
+	chess_Piece_Spawn(chess_board_base0[59], CHESS_PIECE_QUEEN, NUM_TEAM_2);
+	chess_Piece_Spawn(chess_board_base0[60], CHESS_PIECE_KING, NUM_TEAM_2);
+	chess_Piece_Spawn(chess_board_base0[61], CHESS_PIECE_BISHOP, NUM_TEAM_2);
+	chess_Piece_Spawn(chess_board_base0[62], CHESS_PIECE_KNIGHT, NUM_TEAM_2);
+	chess_Piece_Spawn(chess_board_base0[63], CHESS_PIECE_CASTLE, NUM_TEAM_2);
 
 	float i;
-	for(i = 9; i <= 16; ++i) { chess_Piece_Spawn(chess_board[i], CHESS_PIECE_PAWN, NUM_TEAM_1); }
-	for(i = 49; i <= 56; ++i) { chess_Piece_Spawn(chess_board[i], CHESS_PIECE_PAWN, NUM_TEAM_2); }
+	for(i = 8; i < 16; ++i) { chess_Piece_Spawn(chess_board_base0[i], CHESS_PIECE_PAWN, NUM_TEAM_1); }
+	for(i = 48; i < 56; ++i) { chess_Piece_Spawn(chess_board_base0[i], CHESS_PIECE_PAWN, NUM_TEAM_2); }
 }
 
 void chess_Board_Spawn()
@@ -120,15 +125,25 @@ void chess_Board_Spawn()
 		error("Chess: board missing a corner piece! Make sure map has all 4 chess_board entities with message set to cornerX (X being 1-4");
 		return;
 	}
+	vector board_min;
+	board_min_x = min(c1.origin_x,c2.origin_x,c3.origin_x,c4.origin_x);
+	board_min_y = min(c1.origin_y,c2.origin_y,c3.origin_y,c4.origin_y);
+	board_min_z = min(c1.origin_z,c2.origin_z,c3.origin_z,c4.origin_z);
+	vector board_max;
+	board_max_x = max(c1.origin_x,c2.origin_x,c3.origin_x,c4.origin_x);
+	board_max_y = max(c1.origin_y,c2.origin_y,c3.origin_y,c4.origin_y);
+	board_max_z = max(c1.origin_z,c2.origin_z,c3.origin_z,c4.origin_z);
 
-	float pc, num = 0, ltrnum = 1;
+	float pc, num = 0, ltrnum = 0;
 	string ltr = "";
+	float cell_width = (board_max_x - board_min_x) / 8;
+	float cell_height = (board_max_y - board_min_y) / 8;
+	vector cell_offset = '1 0 0' * cell_width/2 + '0 1 0' * cell_height/2;
 
-	for(pc = 0; pc <= 64; ++pc)
+	for(pc = 0; pc < 64; ++pc)
 	{
 		if(pc == 8 || pc == 16 || pc == 24 || pc == 32 || pc == 40 || pc == 48 || pc == 56) { ++ltrnum; }
-		++num;
-		if(num > 8) { num = 1; }
+		num = pc % 8;
 
 		ltr = chr2str(str2chr("a", 0) + ltrnum);
 
@@ -136,15 +151,17 @@ void chess_Board_Spawn()
 		piece.cnt = num;
 		piece.count = ltrnum;
 		piece.netname = ltr;
-		piece.message = strcat(ltr, ftos(num));
+		piece.message = strcat(ltr, ftos(num+1));
 
-		vector stnthrt = (c1.origin - c2.origin) / 16, eighthrt = (c1.origin - c2.origin) / 8;
-		vector stnthup = (c1.origin - c3.origin) / 16, eighthup = (c1.origin - c3.origin) / 8;
-		setorigin(piece, ((stnthrt + eighthrt * num) + (stnthup + eighthup * ltrnum)));
+		vector pos;
+		pos_x = board_min_x + cell_width*num;
+		pos_y = board_min_y + cell_height*ltrnum;
+		pos_z = board_max_z;
+		setorigin(piece, pos+cell_offset );
 		setsize(piece, PL_MIN, PL_MAX);
 		//WaypointSprite_SpawnFixed(strzone(piece.message), piece.origin, piece, sprite, RADARICON_DANGER, '0 1 1');
 
-		chess_board[pc] = piece;
+		chess_board_base0[pc] = piece;
 	}
 
 	chess_SpawnPieces();
@@ -154,7 +171,7 @@ entity chess_Board(entity loc, float to)
 {
 	float newloc = loc.cnt + CHESS_MOVE(to);
 	if(newloc > 64 || newloc < 1) { return world; }
-	return chess_board[newloc];
+	return chess_board_base1(newloc);
 }
 
 float chess_Move_Valid(entity oldloc, entity loc);
@@ -164,10 +181,10 @@ entity chess_King_SafeMove(entity king, entity loc)
 	entity piece;
 	for(i = 1; i <= 64; ++i)
 	{
-		piece = (chess_board[i]).chess_piece;
+		piece = (chess_board_base1(i)).chess_piece;
 		if(piece)
 		if(DIFF_TEAM(king, piece))
-		if(chess_Move_Valid(chess_board[i], loc))
+		if(chess_Move_Valid(chess_board_base1(i), loc))
 			return piece;
 	}
 	return world;
@@ -188,11 +205,11 @@ float chess_KingWouldBeSafe(entity oldloc, entity loc)
 	float i;
 	for(i = 1; i <= 64; ++i)
 	{
-		if(chess_board[i].chess_piece)
-		if(chess_board[i].chess_piece.chess_id == CHESS_PIECE_KING)
-		if(SAME_TEAM(chess_board[i].chess_piece, piece))
+		if(chess_board_base1(i).chess_piece)
+		if(chess_board_base1(i).chess_piece.chess_id == CHESS_PIECE_KING)
+		if(SAME_TEAM(chess_board_base1(i).chess_piece, piece))
 		{
-			king = chess_board[i];
+			king = chess_board_base1(i);
 			break;
 		}
 	}
@@ -246,27 +263,27 @@ float chess_Move_Valid(entity oldloc, entity loc)
 			float i;
 			for(i = oldloc.cnt + 1; i <= 64; ++i)
 			{
-				if((chess_board[i]).count != oldloc.count) { break; }
-				if((chess_board[i]).chess_piece && (chess_board[i]).chess_piece != loc) { break; }
+				if((chess_board_base1(i)).count != oldloc.count) { break; }
+				if((chess_board_base1(i)).chess_piece && (chess_board_base1(i)).chess_piece != loc) { break; }
 				if(chess_Board(oldloc, i) == loc)
 					return spot_free;
 			}
 			for(i = oldloc.cnt - 1; i > 0; --i)
 			{
-				if((chess_board[i]).count != oldloc.count) { break; }
-				if((chess_board[i]).chess_piece && (chess_board[i]).chess_piece != loc) { break; }
+				if((chess_board_base1(i)).count != oldloc.count) { break; }
+				if((chess_board_base1(i)).chess_piece && (chess_board_base1(i)).chess_piece != loc) { break; }
 				if(chess_Board(oldloc, i) == loc)
 					return spot_free;
 			}
 			for(i = oldloc.cnt + 8; i <= 64; i += 8)
 			{
-				if((chess_board[i]).chess_piece && (chess_board[i]).chess_piece != loc) { break; }
+				if((chess_board_base1(i)).chess_piece && (chess_board_base1(i)).chess_piece != loc) { break; }
 				if(chess_Board(oldloc, i) == loc)
 					return spot_free;
 			}
 			for(i = oldloc.cnt - 8; i > 0; i -= 8)
 			{
-				if((chess_board[i]).chess_piece && (chess_board[i]).chess_piece != loc) { break; }
+				if((chess_board_base1(i)).chess_piece && (chess_board_base1(i)).chess_piece != loc) { break; }
 				if(chess_Board(oldloc, i) == loc)
 					return spot_free;
 			}
@@ -277,27 +294,27 @@ float chess_Move_Valid(entity oldloc, entity loc)
 			float i;
 			for(i = oldloc.cnt + 9; i <= 64; i += 9)
 			{
-				if((chess_board[i]).count != oldloc.count) { break; }
-				if((chess_board[i]).chess_piece && (chess_board[i]).chess_piece != loc) { break; }
+				if((chess_board_base1(i)).count != oldloc.count) { break; }
+				if((chess_board_base1(i)).chess_piece && (chess_board_base1(i)).chess_piece != loc) { break; }
 				if(chess_Board(oldloc, i) == loc)
 					return spot_free;
 			}
 			for(i = oldloc.cnt - 9; i > 0; i -= 9)
 			{
-				if((chess_board[i]).count != oldloc.count) { break; }
-				if((chess_board[i]).chess_piece && (chess_board[i]).chess_piece != loc) { break; }
+				if((chess_board_base1(i)).count != oldloc.count) { break; }
+				if((chess_board_base1(i)).chess_piece && (chess_board_base1(i)).chess_piece != loc) { break; }
 				if(chess_Board(oldloc, i) == loc)
 					return spot_free;
 			}
 			for(i = oldloc.cnt + 7; i <= 64; i += 7)
 			{
-				if((chess_board[i]).chess_piece && (chess_board[i]).chess_piece != loc) { break; }
+				if((chess_board_base1(i)).chess_piece && (chess_board_base1(i)).chess_piece != loc) { break; }
 				if(chess_Board(oldloc, i) == loc)
 					return spot_free;
 			}
 			for(i = oldloc.cnt - 7; i > 0; i -= 7)
 			{
-				if((chess_board[i]).chess_piece && (chess_board[i]).chess_piece != loc) { break; }
+				if((chess_board_base1(i)).chess_piece && (chess_board_base1(i)).chess_piece != loc) { break; }
 				if(chess_Board(oldloc, i) == loc)
 					return spot_free;
 			}
@@ -308,53 +325,53 @@ float chess_Move_Valid(entity oldloc, entity loc)
 			float i;
 			for(i = oldloc.cnt + 9; i <= 64; i += 9)
 			{
-				if((chess_board[i]).count != oldloc.count) { break; }
-				if((chess_board[i]).chess_piece && (chess_board[i]).chess_piece != loc) { break; }
+				if((chess_board_base1(i)).count != oldloc.count) { break; }
+				if((chess_board_base1(i)).chess_piece && (chess_board_base1(i)).chess_piece != loc) { break; }
 				if(chess_Board(oldloc, i) == loc)
 					return spot_free;
 			}
 			for(i = oldloc.cnt - 9; i > 0; i -= 9)
 			{
-				if((chess_board[i]).count != oldloc.count) { break; }
-				if((chess_board[i]).chess_piece && (chess_board[i]).chess_piece != loc) { break; }
+				if((chess_board_base1(i)).count != oldloc.count) { break; }
+				if((chess_board_base1(i)).chess_piece && (chess_board_base1(i)).chess_piece != loc) { break; }
 				if(chess_Board(oldloc, i) == loc)
 					return spot_free;
 			}
 			for(i = oldloc.cnt + 7; i <= 64; i += 7)
 			{
-				if((chess_board[i]).chess_piece && (chess_board[i]).chess_piece != loc) { break; }
+				if((chess_board_base1(i)).chess_piece && (chess_board_base1(i)).chess_piece != loc) { break; }
 				if(chess_Board(oldloc, i) == loc)
 					return spot_free;
 			}
 			for(i = oldloc.cnt - 7; i > 0; i -= 7)
 			{
-				if((chess_board[i]).chess_piece && (chess_board[i]).chess_piece != loc) { break; }
+				if((chess_board_base1(i)).chess_piece && (chess_board_base1(i)).chess_piece != loc) { break; }
 				if(chess_Board(oldloc, i) == loc)
 					return spot_free;
 			}
 			for(i = oldloc.cnt + 1; i <= 64; ++i)
 			{
-				if((chess_board[i]).count != oldloc.count) { break; }
-				if((chess_board[i]).chess_piece && (chess_board[i]).chess_piece != loc) { break; }
+				if((chess_board_base1(i)).count != oldloc.count) { break; }
+				if((chess_board_base1(i)).chess_piece && (chess_board_base1(i)).chess_piece != loc) { break; }
 				if(chess_Board(oldloc, i) == loc)
 					return spot_free;
 			}
 			for(i = oldloc.cnt - 1; i > 0; --i)
 			{
-				if((chess_board[i]).count != oldloc.count) { break; }
-				if((chess_board[i]).chess_piece && (chess_board[i]).chess_piece != loc) { break; }
+				if((chess_board_base1(i)).count != oldloc.count) { break; }
+				if((chess_board_base1(i)).chess_piece && (chess_board_base1(i)).chess_piece != loc) { break; }
 				if(chess_Board(oldloc, i) == loc)
 					return spot_free;
 			}
 			for(i = oldloc.cnt + 8; i <= 64; i += 8)
 			{
-				if((chess_board[i]).chess_piece && (chess_board[i]).chess_piece != loc) { break; }
+				if((chess_board_base1(i)).chess_piece && (chess_board_base1(i)).chess_piece != loc) { break; }
 				if(chess_Board(oldloc, i) == loc)
 					return spot_free;
 			}
 			for(i = oldloc.cnt - 8; i > 0; i -= 8)
 			{
-				if((chess_board[i]).chess_piece && (chess_board[i]).chess_piece != loc) { break; }
+				if((chess_board_base1(i)).chess_piece && (chess_board_base1(i)).chess_piece != loc) { break; }
 				if(chess_Board(oldloc, i) == loc)
 					return spot_free;
 			}
@@ -368,30 +385,30 @@ float chess_Move_Valid(entity oldloc, entity loc)
 				if(chess_current_team == NUM_TEAM_1)
 				{
 					if(loc.cnt == 7)
-					if(!(chess_board[8]).chess_moved)
-					if(!(chess_board[6]).chess_piece)
-					if(!(chess_board[7]).chess_piece)
+					if(!(chess_board_base1(8)).chess_moved)
+					if(!(chess_board_base1(6)).chess_piece)
+					if(!(chess_board_base1(7)).chess_piece)
 						return safe ? 2 : 0;
 					if(loc.cnt == 3)
-					if(!(chess_board[1]).chess_moved)
-					if(!(chess_board[2]).chess_piece)
-					if(!(chess_board[3]).chess_piece)
-					if(!(chess_board[4]).chess_piece)
+					if(!(chess_board_base1(1)).chess_moved)
+					if(!(chess_board_base1(2)).chess_piece)
+					if(!(chess_board_base1(3)).chess_piece)
+					if(!(chess_board_base1(4)).chess_piece)
 						return safe ? 3 : 0;
 
 				}
 				else
 				{
 					if(loc.cnt == 63)
-					if(!(chess_board[64]).chess_moved)
-					if(!(chess_board[63]).chess_piece)
-					if(!(chess_board[62]).chess_piece)
+					if(!(chess_board_base1(64)).chess_moved)
+					if(!(chess_board_base1(63)).chess_piece)
+					if(!(chess_board_base1(62)).chess_piece)
 						return safe ? 4 : 0;
 					if(loc.cnt == 59)
-					if(!(chess_board[57]).chess_moved)
-					if(!(chess_board[58]).chess_piece)
-					if(!(chess_board[59]).chess_piece)
-					if(!(chess_board[60]).chess_piece)
+					if(!(chess_board_base1(57)).chess_moved)
+					if(!(chess_board_base1(58)).chess_piece)
+					if(!(chess_board_base1(59)).chess_piece)
+					if(!(chess_board_base1(60)).chess_piece)
 						return safe ? 5 : 0;
 
 				}
@@ -448,10 +465,10 @@ float chess_Move(entity piece, entity loc)
 	// silly handling of castling
 	switch(valid_move)
 	{
-		case 2: { (chess_board[6]).chess_piece = (chess_board[8]).chess_piece; (chess_board[8]).chess_piece = world; break; }
-		case 3: { (chess_board[4]).chess_piece = (chess_board[1]).chess_piece; (chess_board[1]).chess_piece = world; break; }
-		case 4: { (chess_board[62]).chess_piece = (chess_board[64]).chess_piece; (chess_board[64]).chess_piece = world; break; }
-		case 5: { (chess_board[60]).chess_piece = (chess_board[57]).chess_piece; (chess_board[57]).chess_piece = world; break; }
+		case 2: { (chess_board_base1(6)).chess_piece = (chess_board_base1(8)).chess_piece; (chess_board_base1(8)).chess_piece = world; break; }
+		case 3: { (chess_board_base1(4)).chess_piece = (chess_board_base1(1)).chess_piece; (chess_board_base1(1)).chess_piece = world; break; }
+		case 4: { (chess_board_base1(62)).chess_piece = (chess_board_base1(64)).chess_piece; (chess_board_base1(64)).chess_piece = world; break; }
+		case 5: { (chess_board_base1(60)).chess_piece = (chess_board_base1(57)).chess_piece; (chess_board_base1(57)).chess_piece = world; break; }
 	}
 
 	return TRUE;
@@ -501,22 +518,22 @@ float chess_PieceCanMove(entity loc)
 			float i;
 			for(i = loc.cnt + 1; i <= 64; ++i)
 			{
-				if((chess_board[i]).count != loc.count) { break; }
-				if(chess_KingWouldBeSafe(loc, chess_board[i]))
-				if(DIFF_TEAM(piece, chess_board[i]) || !(chess_board[i]).chess_piece) { return TRUE; }
+				if((chess_board_base1(i)).count != loc.count) { break; }
+				if(chess_KingWouldBeSafe(loc, chess_board_base1(i)))
+				if(DIFF_TEAM(piece, chess_board_base1(i)) || !(chess_board_base1(i)).chess_piece) { return TRUE; }
 			}
 			for(i = loc.cnt - 1; i > 0; --i)
 			{
-				if((chess_board[i]).count != loc.count) { break; }
-				if(chess_KingWouldBeSafe(loc, chess_board[i]))
-				if(DIFF_TEAM(piece, chess_board[i]) || !(chess_board[i]).chess_piece) { return TRUE; }
+				if((chess_board_base1(i)).count != loc.count) { break; }
+				if(chess_KingWouldBeSafe(loc, chess_board_base1(i)))
+				if(DIFF_TEAM(piece, chess_board_base1(i)) || !(chess_board_base1(i)).chess_piece) { return TRUE; }
 			}
 			for(i = loc.cnt + 8; i <= 64; i += 8)
-				if(chess_KingWouldBeSafe(loc, chess_board[i]))
-				if(DIFF_TEAM(piece, chess_board[i]) || !(chess_board[i]).chess_piece) { return TRUE; }
+				if(chess_KingWouldBeSafe(loc, chess_board_base1(i)))
+				if(DIFF_TEAM(piece, chess_board_base1(i)) || !(chess_board_base1(i)).chess_piece) { return TRUE; }
 			for(i = loc.cnt - 8; i > 0; i -= 8)
-				if(chess_KingWouldBeSafe(loc, chess_board[i]))
-				if(DIFF_TEAM(piece, chess_board[i]) || !(chess_board[i]).chess_piece) { return TRUE; }
+				if(chess_KingWouldBeSafe(loc, chess_board_base1(i)))
+				if(DIFF_TEAM(piece, chess_board_base1(i)) || !(chess_board_base1(i)).chess_piece) { return TRUE; }
 			break;
 		}
 		case CHESS_PIECE_BISHOP:
@@ -524,22 +541,22 @@ float chess_PieceCanMove(entity loc)
 			float i;
 			for(i = loc.cnt + 9; i <= 64; i += 9)
 			{
-				if((chess_board[i]).count != loc.count) { break; }
-				if(chess_KingWouldBeSafe(loc, chess_board[i]))
-				if(DIFF_TEAM(piece, chess_board[i]) || !(chess_board[i]).chess_piece) { return TRUE; }
+				if((chess_board_base1(i)).count != loc.count) { break; }
+				if(chess_KingWouldBeSafe(loc, chess_board_base1(i)))
+				if(DIFF_TEAM(piece, chess_board_base1(i)) || !(chess_board_base1(i)).chess_piece) { return TRUE; }
 			}
 			for(i = loc.cnt - 9; i > 0; i -= 9)
 			{
-				if((chess_board[i]).count != loc.count) { break; }
-				if(chess_KingWouldBeSafe(loc, chess_board[i]))
-				if(DIFF_TEAM(piece, chess_board[i]) || !(chess_board[i]).chess_piece) { return TRUE; }
+				if((chess_board_base1(i)).count != loc.count) { break; }
+				if(chess_KingWouldBeSafe(loc, chess_board_base1(i)))
+				if(DIFF_TEAM(piece, chess_board_base1(i)) || !(chess_board_base1(i)).chess_piece) { return TRUE; }
 			}
 			for(i = loc.cnt + 7; i <= 64; i += 7)
-				if(chess_KingWouldBeSafe(loc, chess_board[i]))
-				if(DIFF_TEAM(piece, chess_board[i]) || !(chess_board[i]).chess_piece) { return TRUE; }
+				if(chess_KingWouldBeSafe(loc, chess_board_base1(i)))
+				if(DIFF_TEAM(piece, chess_board_base1(i)) || !(chess_board_base1(i)).chess_piece) { return TRUE; }
 			for(i = loc.cnt - 7; i > 0; i -= 7)
-				if(chess_KingWouldBeSafe(loc, chess_board[i]))
-				if(DIFF_TEAM(piece, chess_board[i]) || !(chess_board[i]).chess_piece) { return TRUE; }
+				if(chess_KingWouldBeSafe(loc, chess_board_base1(i)))
+				if(DIFF_TEAM(piece, chess_board_base1(i)) || !(chess_board_base1(i)).chess_piece) { return TRUE; }
 			break;
 		}
 		case CHESS_PIECE_QUEEN:
@@ -547,40 +564,40 @@ float chess_PieceCanMove(entity loc)
 			float i;
 			for(i = loc.cnt + 1; i <= 64; ++i)
 			{
-				if((chess_board[i]).count != loc.count) { break; }
-				if(chess_KingWouldBeSafe(loc, chess_board[i]))
-				if(DIFF_TEAM(piece, chess_board[i]) || !(chess_board[i]).chess_piece) { return TRUE; }
+				if((chess_board_base1(i)).count != loc.count) { break; }
+				if(chess_KingWouldBeSafe(loc, chess_board_base1(i)))
+				if(DIFF_TEAM(piece, chess_board_base1(i)) || !(chess_board_base1(i)).chess_piece) { return TRUE; }
 			}
 			for(i = loc.cnt - 1; i > 0; --i)
 			{
-				if((chess_board[i]).count != loc.count) { break; }
-				if(chess_KingWouldBeSafe(loc, chess_board[i]))
-				if(DIFF_TEAM(piece, chess_board[i]) || !(chess_board[i]).chess_piece) { return TRUE; }
+				if((chess_board_base1(i)).count != loc.count) { break; }
+				if(chess_KingWouldBeSafe(loc, chess_board_base1(i)))
+				if(DIFF_TEAM(piece, chess_board_base1(i)) || !(chess_board_base1(i)).chess_piece) { return TRUE; }
 			}
 			for(i = loc.cnt + 8; i <= 64; i += 8)
-				if(chess_KingWouldBeSafe(loc, chess_board[i]))
-				if(DIFF_TEAM(piece, chess_board[i]) || !(chess_board[i]).chess_piece) { return TRUE; }
+				if(chess_KingWouldBeSafe(loc, chess_board_base1(i)))
+				if(DIFF_TEAM(piece, chess_board_base1(i)) || !(chess_board_base1(i)).chess_piece) { return TRUE; }
 			for(i = loc.cnt - 8; i > 0; i -= 8)
-				if(chess_KingWouldBeSafe(loc, chess_board[i]))
-				if(DIFF_TEAM(piece, chess_board[i]) || !(chess_board[i]).chess_piece) { return TRUE; }
+				if(chess_KingWouldBeSafe(loc, chess_board_base1(i)))
+				if(DIFF_TEAM(piece, chess_board_base1(i)) || !(chess_board_base1(i)).chess_piece) { return TRUE; }
 			for(i = loc.cnt + 9; i <= 64; i += 9)
 			{
-				if((chess_board[i]).count != loc.count) { break; }
-				if(chess_KingWouldBeSafe(loc, chess_board[i]))
-				if(DIFF_TEAM(piece, chess_board[i]) || !(chess_board[i]).chess_piece) { return TRUE; }
+				if((chess_board_base1(i)).count != loc.count) { break; }
+				if(chess_KingWouldBeSafe(loc, chess_board_base1(i)))
+				if(DIFF_TEAM(piece, chess_board_base1(i)) || !(chess_board_base1(i)).chess_piece) { return TRUE; }
 			}
 			for(i = loc.cnt - 9; i > 0; i -= 9)
 			{
-				if((chess_board[i]).count != loc.count) { break; }
-				if(chess_KingWouldBeSafe(loc, chess_board[i]))
-				if(DIFF_TEAM(piece, chess_board[i]) || !(chess_board[i]).chess_piece) { return TRUE; }
+				if((chess_board_base1(i)).count != loc.count) { break; }
+				if(chess_KingWouldBeSafe(loc, chess_board_base1(i)))
+				if(DIFF_TEAM(piece, chess_board_base1(i)) || !(chess_board_base1(i)).chess_piece) { return TRUE; }
 			}
 			for(i = loc.cnt + 7; i <= 64; i += 7)
-				if(chess_KingWouldBeSafe(loc, chess_board[i]))
-				if(DIFF_TEAM(piece, chess_board[i]) || !(chess_board[i]).chess_piece) { return TRUE; }
+				if(chess_KingWouldBeSafe(loc, chess_board_base1(i)))
+				if(DIFF_TEAM(piece, chess_board_base1(i)) || !(chess_board_base1(i)).chess_piece) { return TRUE; }
 			for(i = loc.cnt - 7; i > 0; i -= 7)
-				if(chess_KingWouldBeSafe(loc, chess_board[i]))
-				if(DIFF_TEAM(piece, chess_board[i]) || !(chess_board[i]).chess_piece) { return TRUE; }
+				if(chess_KingWouldBeSafe(loc, chess_board_base1(i)))
+				if(DIFF_TEAM(piece, chess_board_base1(i)) || !(chess_board_base1(i)).chess_piece) { return TRUE; }
 			break;
 		}
 		case CHESS_PIECE_KING:
@@ -605,11 +622,11 @@ float chess_CheckMate()
 	float i;
 	for(i = 1; i <= 64; ++i)
 	{
-		if(chess_board[i].chess_piece.chess_id == CHESS_PIECE_KING)
-		if(chess_board[i].chess_piece.team == chess_current_team)
+		if(chess_board_base1(i).chess_piece.chess_id == CHESS_PIECE_KING)
+		if(chess_board_base1(i).chess_piece.team == chess_current_team)
 		{
-			king = chess_board[i].chess_piece;
-			piece = chess_board[i];
+			king = chess_board_base1(i).chess_piece;
+			piece = chess_board_base1(i);
 			break;
 		}
 	}
@@ -627,9 +644,9 @@ float chess_CheckMate()
 		// stalemate... or is it? check to see if another piece can move (starting to get into the resource intensive stuff)
 		for(i = 1; i <= 64; ++i)
 		{
-			if(chess_board[i].chess_piece.team == chess_current_team)
+			if(chess_board_base1(i).chess_piece.team == chess_current_team)
 			{
-				if(chess_PieceCanMove(chess_board[i]))
+				if(chess_PieceCanMove(chess_board_base1(i)))
 					return FALSE; // phew, someone can move!
 			}
 		}
@@ -739,8 +756,8 @@ void Chess_RoundStart()
 	float i;
 	for(i = 1; i <= 64; ++i)
 	{
-		if((chess_board[i]).chess_piece) { remove(chess_board[i].chess_piece.sprite); remove(chess_board[i].chess_piece); }
-		chess_board[i].chess_piece = world;
+		if((chess_board_base1(i)).chess_piece) { remove(chess_board_base1(i).chess_piece.sprite); remove(chess_board_base1(i).chess_piece); }
+		chess_board_base1(i).chess_piece = world;
 	}
 
 	chess_SpawnPieces();
@@ -760,8 +777,8 @@ MUTATOR_HOOKFUNCTION(chess_PlayerCommand)
 		float i;
 		for(i = 1; i <= 64; ++i)
 		{
-			if((chess_board[i]).message == argv(2)) { piece = chess_board[i]; }
-			if((chess_board[i]).message == argv(3)) { move_to = chess_board[i]; }
+			if((chess_board_base1(i)).message == argv(2)) { piece = chess_board_base1(i); }
+			if((chess_board_base1(i)).message == argv(3)) { move_to = chess_board_base1(i); }
 		}
 		if(chess_current_player != self) { sprint(self, "It is not your turn\n"); return TRUE; }
 		if(!argv(2) || !argv(3)) { sprint(self, "You must define a board square to move to. Example: cmd chess b2 b4\n"); return TRUE; }
