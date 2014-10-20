@@ -77,7 +77,7 @@ void W_RPC_Attack (void)
 	entity flash = spawn ();
 
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_rpc_ammo, autocvar_g_balance_rpc_reload_ammo);
-	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 5, "weapons/rocket_fire.wav", CH_WEAPON_A, autocvar_g_balance_rpc_damage, self.weapon);
+	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 5, W_Sound("rocket_fire"), CH_WEAPON_A, autocvar_g_balance_rpc_damage, self.weapon);
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 	PROJECTILE_MAKETRIGGER(missile);
 
@@ -161,7 +161,7 @@ float w_rpc(float req)
 		precache_model("models/weapons/v_ok_rl.md3");
 		precache_model("models/weapons/g_ok_rl.md3");
 		precache_model("models/weapons/ok_rocket.md3");
-		precache_sound ("weapons/rocket_fire.wav");
+		precache_sound (W_Sound("rocket_fire"));
 	}
 	else if (req == WR_SETUP)
 	{
@@ -187,7 +187,7 @@ float w_rpc(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Reload(autocvar_g_balance_rpc_ammo, autocvar_g_balance_rpc_reload_ammo, autocvar_g_balance_rpc_reload_time, "weapons/reload.wav");
+		W_Reload(autocvar_g_balance_rpc_ammo, autocvar_g_balance_rpc_reload_ammo, autocvar_g_balance_rpc_reload_time, W_Sound("reload"));
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{
@@ -218,11 +218,11 @@ float w_rpc(float req)
 		org2 = w_org + w_backoff * 12;
 		pointparticles(particleeffectnum("rocket_explode"), org2, '0 0 0', 1);
 		if(!w_issilent)
-			sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+			sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{
-		precache_sound("weapons/rocket_impact.wav");
+		precache_sound(W_Sound("rocket_impact"));
 	}
 	return TRUE;
 }

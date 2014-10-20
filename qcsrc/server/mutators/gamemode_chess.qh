@@ -32,6 +32,8 @@ entity chess_board[65];
 float chess_current_team; // this team's current turn
 entity chess_current_player; // this player's current turn
 
+.string cvar_cl_chess_selection;
+
 // score rule declarations
 #define ST_CHESS_CAPS 1
 #define SP_CHESS_CAPS 4

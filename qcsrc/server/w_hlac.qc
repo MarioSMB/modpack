@@ -39,7 +39,7 @@ void W_HLAC_Attack (void)
     if(self.crouch)
         spread = spread * autocvar_g_balance_hlac_primary_spread_crouchmod;
 
-	W_SetupShot (self, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_A, autocvar_g_balance_hlac_primary_damage, self.weapon);
+	W_SetupShot (self, FALSE, 3, W_Sound("lasergun_fire"), CH_WEAPON_A, autocvar_g_balance_hlac_primary_damage, self.weapon);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 	if (!autocvar_g_norecoil)
 	{
@@ -87,7 +87,7 @@ void W_HLAC_Attack2f (void)
     if(self.crouch)
         spread = spread * autocvar_g_balance_hlac_secondary_spread_crouchmod;
 
-	W_SetupShot (self, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_A, autocvar_g_balance_hlac_secondary_damage, self.weapon);
+	W_SetupShot (self, FALSE, 3, W_Sound("lasergun_fire"), CH_WEAPON_A, autocvar_g_balance_hlac_secondary_damage, self.weapon);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn ();
@@ -204,8 +204,8 @@ float w_hlac(float req)
         precache_model ("models/weapons/g_hlac.md3");
 		precache_model ("models/weapons/v_hlac.md3");
 		precache_model ("models/weapons/h_hlac.iqm");
-		precache_sound ("weapons/lasergun_fire.wav");
-		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
+		precache_sound (W_Sound("lasergun_fire"));
+		//precache_sound (W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound somewhere else
 
 	}
 	else if (req == WR_SETUP)
@@ -227,7 +227,7 @@ float w_hlac(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Reload(min(autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_secondary_ammo), autocvar_g_balance_hlac_reload_ammo, autocvar_g_balance_hlac_reload_time, "weapons/reload.wav");
+		W_Reload(min(autocvar_g_balance_hlac_primary_ammo, autocvar_g_balance_hlac_secondary_ammo), autocvar_g_balance_hlac_reload_ammo, autocvar_g_balance_hlac_reload_time, W_Sound("reload"));
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{

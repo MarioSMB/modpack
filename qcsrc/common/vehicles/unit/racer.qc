@@ -146,7 +146,7 @@ void racer_fire_cannon(string tagname)
 	entity bolt;
 
 	v = gettaginfo(self, gettagindex(self, tagname));
-	bolt = vehicles_projectile("wakizashi_gun_muzzleflash", "weapons/lasergun_fire.wav",
+	bolt = vehicles_projectile("wakizashi_gun_muzzleflash", W_Sound("lasergun_fire"),
 						   v, normalize(v_forward + randomvec() * autocvar_g_vehicle_racer_cannon_spread) * autocvar_g_vehicle_racer_cannon_speed,
 						   autocvar_g_vehicle_racer_cannon_damage, autocvar_g_vehicle_racer_cannon_radius, autocvar_g_vehicle_racer_cannon_force,  0,
 						   DEATH_VH_WAKI_GUN, PROJECTILE_WAKICANNON, 0, TRUE, TRUE, self.owner);
@@ -263,7 +263,7 @@ void racer_rocket_tracker()
 void racer_fire_rocket(string tagname, entity trg)
 {
 	vector v = gettaginfo(self, gettagindex(self, tagname));
-	entity rocket = rocket = vehicles_projectile("wakizashi_rocket_launch", "weapons/rocket_fire.wav",
+	entity rocket = rocket = vehicles_projectile("wakizashi_rocket_launch", W_Sound("rocket_fire"),
 						   v, v_forward * autocvar_g_vehicle_racer_rocket_speed,
 						   autocvar_g_vehicle_racer_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
 						   DEATH_VH_WAKI_ROCKET, PROJECTILE_WAKIROCKET, 20, FALSE, FALSE, self.owner);
@@ -729,8 +729,8 @@ float v_racer(float req)
 		}
 		case VR_PRECACHE:
 		{
-			precache_sound ("weapons/lasergun_fire.wav");
-			precache_sound ("weapons/rocket_fire.wav");
+			precache_sound (W_Sound("lasergun_fire"));
+			precache_sound (W_Sound("rocket_fire"));
 
 			precache_sound ("vehicles/racer_idle.wav");
 			precache_sound ("vehicles/racer_move.wav");

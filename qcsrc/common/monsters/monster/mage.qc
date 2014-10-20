@@ -82,7 +82,7 @@ void mage_spike_explode()
 {
 	self.event_damage = func_null;
 
-	sound(self, CH_SHOTS, "weapons/grenade_impact.wav", VOL_BASE, ATTEN_NORM);
+	sound(self, CH_SHOTS, W_Sound("grenade_impact"), VOL_BASE, ATTEN_NORM);
 
 	self.realowner.mage_spike = world;
 
@@ -247,7 +247,7 @@ void mage_heal()
 
 void mage_push()
 {
-	sound(self, CH_SHOTS, "weapons/tagexp1.wav", 1, ATTEN_NORM);
+	sound(self, CH_SHOTS, W_Sound("tagexp1"), 1, ATTEN_NORM);
 	RadiusDamage (self, self, (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_radius), world, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE, self.enemy);
 	pointparticles(particleeffectnum("TE_EXPLOSION"), self.origin, '0 0 0', 1);
 
@@ -389,8 +389,8 @@ float m_mage(float req)
 		case MR_PRECACHE:
 		{
 			precache_model("models/monsters/mage.dpm");
-			precache_sound ("weapons/grenade_impact.wav");
-			precache_sound ("weapons/tagexp1.wav");
+			precache_sound (W_Sound("grenade_impact"));
+			precache_sound (W_Sound("tagexp1"));
 			return TRUE;
 		}
 	}

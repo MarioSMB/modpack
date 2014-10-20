@@ -452,7 +452,7 @@ void W_WeaponFrame()
 			if(ATTACK_FINISHED(self) <= time + self.weapon_frametime * 0.5)
 			{
 #endif
-			sound (self, CH_WEAPON_SINGLE, "weapons/weapon_switch.wav", VOL_BASE, ATTEN_NORM);
+			sound (self, CH_WEAPON_SINGLE, W_Sound("weapon_switch"), VOL_BASE, ATTEN_NORM);
 			self.weaponentity.state = WS_DROP;
 			// set up weapon switch think in the future, and start drop anim
 			weapon_thinkf(WFRAME_DONTCHANGE, cvar(sprintf("g_balance_%s_switchdelay_drop", oldwep.netname)), w_clear);

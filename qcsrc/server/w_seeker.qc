@@ -181,7 +181,7 @@ void Seeker_Fire_Missile(vector f_diff, entity m_target)
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_reload_ammo);
 
 	makevectors(self.v_angle);
-	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, "weapons/seeker_fire.wav", CH_WEAPON_A, 0, self.weapon);
+	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, W_Sound("seeker_fire.wav"), CH_WEAPON_A, 0, self.weapon);
 	w_shotorg += f_diff;
 	pointparticles(particleeffectnum("seeker_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -272,7 +272,7 @@ void Seeker_Fire_Flac()
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, "weapons/flac_fire.wav", CH_WEAPON_A, autocvar_g_balance_seeker_flac_damage, self.weapon);
+	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, W_Sound("flac_fire"), CH_WEAPON_A, autocvar_g_balance_seeker_flac_damage, self.weapon);
 	w_shotorg += f_diff;
 
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
@@ -491,7 +491,7 @@ void Seeker_Fire_Tag()
 	entity missile;
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_seeker_tag_ammo, autocvar_g_balance_seeker_reload_ammo);
 
-	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, "weapons/tag_fire.wav", CH_WEAPON_A, autocvar_g_balance_seeker_missile_damage * autocvar_g_balance_seeker_missile_count, self.weapon);
+	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, W_Sound("tag_fire"), CH_WEAPON_A, autocvar_g_balance_seeker_missile_damage * autocvar_g_balance_seeker_missile_count, self.weapon);
 
 	missile                 = spawn();
 	missile.owner           = missile.realowner = self;
@@ -596,10 +596,10 @@ float w_seeker(float req)
 		precache_model ("models/weapons/g_seeker.md3");
 		precache_model ("models/weapons/v_seeker.md3");
 		precache_model ("models/weapons/h_seeker.iqm");
-		precache_sound ("weapons/tag_fire.wav");
-		precache_sound ("weapons/flac_fire.wav");
-		precache_sound ("weapons/seeker_fire.wav");
-		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
+		precache_sound (W_Sound("tag_fire"));
+		precache_sound (W_Sound("flac_fire"));
+		precache_sound (W_Sound("seeker_fire"));
+		//precache_sound (W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
 	{
@@ -638,7 +638,7 @@ float w_seeker(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Reload(min(autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_tag_ammo), autocvar_g_balance_seeker_reload_ammo, autocvar_g_balance_seeker_reload_time, "weapons/reload.wav");
+		W_Reload(min(autocvar_g_balance_seeker_missile_ammo, autocvar_g_balance_seeker_tag_ammo), autocvar_g_balance_seeker_reload_ammo, autocvar_g_balance_seeker_reload_time, W_Sound("reload"));
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{

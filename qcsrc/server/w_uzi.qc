@@ -51,7 +51,7 @@ void UziFlash()
 
 void W_UZI_Attack (float deathtype)
 {
-	W_SetupShot (self, TRUE, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, ((self.misc_bulletcounter == 1) ? autocvar_g_balance_uzi_first_damage : autocvar_g_balance_uzi_sustained_damage), self.weapon);
+	W_SetupShot (self, TRUE, 0, W_Sound("uzi_fire"), CH_WEAPON_A, ((self.misc_bulletcounter == 1) ? autocvar_g_balance_uzi_first_damage : autocvar_g_balance_uzi_sustained_damage), self.weapon);
 
 	if (!autocvar_g_norecoil)
 	{
@@ -128,7 +128,7 @@ void uzi_mode1_fire_auto()
 
 	W_DecreaseAmmo(ammo_nails, autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_reload_ammo);
 
-	W_SetupShot (self, TRUE, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, autocvar_g_balance_uzi_sustained_damage, self.weapon);
+	W_SetupShot (self, TRUE, 0, W_Sound("uzi_fire"), CH_WEAPON_A, autocvar_g_balance_uzi_sustained_damage, self.weapon);
 
 	if (!autocvar_g_norecoil)
 	{
@@ -155,7 +155,7 @@ void uzi_mode1_fire_auto()
 
 void uzi_mode1_fire_burst()
 {
-	W_SetupShot (self, TRUE, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, autocvar_g_balance_uzi_sustained_damage, self.weapon);
+	W_SetupShot (self, TRUE, 0, W_Sound("uzi_fire"), CH_WEAPON_A, autocvar_g_balance_uzi_sustained_damage, self.weapon);
 
 	if (!autocvar_g_norecoil)
 	{
@@ -254,8 +254,8 @@ float w_uzi(float req)
 		precache_model ("models/weapons/g_uzi.md3");
 		precache_model ("models/weapons/v_uzi.md3");
 		precache_model ("models/weapons/h_uzi.iqm");
-		precache_sound ("weapons/uzi_fire.wav");
-		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
+		precache_sound (W_Sound("uzi_fire"));
+		//precache_sound (W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
 	{
@@ -296,7 +296,7 @@ float w_uzi(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Reload(min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo), autocvar_g_balance_uzi_reload_ammo, autocvar_g_balance_uzi_reload_time, "weapons/reload.wav");
+		W_Reload(min(max(autocvar_g_balance_uzi_sustained_ammo, autocvar_g_balance_uzi_first_ammo), autocvar_g_balance_uzi_burst_ammo), autocvar_g_balance_uzi_reload_ammo, autocvar_g_balance_uzi_reload_time, W_Sound("reload"));
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{
@@ -322,17 +322,17 @@ float w_uzi(float req)
 		pointparticles(particleeffectnum("machinegun_impact"), org2, w_backoff * 1000, 1);
 		if(!w_issilent)
 			if(w_random < 0.05)
-				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, W_Sound("ric1"), VOL_BASE, ATTEN_NORM);
 			else if(w_random < 0.1)
-				sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, W_Sound("ric2"), VOL_BASE, ATTEN_NORM);
 			else if(w_random < 0.2)
-				sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, W_Sound("ric3"), VOL_BASE, ATTEN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{
-		precache_sound("weapons/ric1.wav");
-		precache_sound("weapons/ric2.wav");
-		precache_sound("weapons/ric3.wav");
+		precache_sound(W_Sound("ric1"));
+		precache_sound(W_Sound("ric2"));
+		precache_sound(W_Sound("ric3"));
 	}
 	return TRUE;
 }

@@ -533,7 +533,7 @@ MUTATOR_DEFINITION(mutator_minstagib)
 
 	MUTATOR_ONADD
 	{
-		precache_sound("weapons/rocket_impact.wav");
+		precache_sound(W_Sound("rocket_impact"));
 		
 		if(cvar("g_minstagib_withmines"))
 			(get_weaponinfo(WEP_MINE_LAYER)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;

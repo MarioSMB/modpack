@@ -182,7 +182,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 		{
 			//Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_OVERKILL_CHARGE);
 			self.ok_notice_time = time + 2;
-			play2(self, "weapons/dryfire.wav");
+			play2(self, W_Sound("dryfire"));
 		}
 		if(self.weaponentity.state != WS_CLEAR)
 			w_ready();
@@ -369,7 +369,7 @@ void ok_Initialize()
 	precache_model("models/weapons/v_ok_sniper.md3");
 	precache_model("models/weapons/g_ok_sniper.md3");
 
-	precache_sound("weapons/dryfire.wav");
+	precache_sound(W_Sound("dryfire"));
 
 	addstat(STAT_OK_AMMO_CHARGE, AS_FLOAT, ok_use_ammocharge);
 	addstat(STAT_OK_AMMO_CHARGEPOOl, AS_FLOAT, ok_ammo_charge);

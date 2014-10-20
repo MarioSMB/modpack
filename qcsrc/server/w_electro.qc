@@ -107,7 +107,7 @@ void W_Plasma_Touch (void)
 		W_Plasma_Explode ();
 	} else {
 		//UpdateCSQCProjectile(self);
-		spamsound (self, CH_SHOTS, "weapons/electro_bounce.wav", VOL_BASE, ATTEN_NORM);
+		spamsound (self, CH_SHOTS, W_Sound("electro_bounce"), VOL_BASE, ATTEN_NORM);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 	}
 }
@@ -157,7 +157,7 @@ void W_Electro_Attack(float deathtype)
 
 	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_electro_primary_ammo, autocvar_g_balance_electro_reload_ammo);
 
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/electro_fire.wav", CH_WEAPON_A, autocvar_g_balance_electro_primary_damage, self.weapon);
+	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, W_Sound("electro_fire"), CH_WEAPON_A, autocvar_g_balance_electro_primary_damage, self.weapon);
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -192,7 +192,7 @@ void W_Electro_Attack2()
 
 	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_electro_secondary_ammo, autocvar_g_balance_electro_reload_ammo);
 
-	W_SetupShot_ProjectileSize (self, '0 0 -4', '0 0 -4', FALSE, 2, "weapons/electro_fire2.wav", CH_WEAPON_A, autocvar_g_balance_electro_secondary_damage, self.weapon);
+	W_SetupShot_ProjectileSize (self, '0 0 -4', '0 0 -4', FALSE, 2, W_Sound("electro_fire2"), CH_WEAPON_A, autocvar_g_balance_electro_secondary_damage, self.weapon);
 
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
@@ -366,7 +366,7 @@ void W_Electro_Attack3 (void)
 {
 	// only play fire sound if 0.5 sec has passed since player let go the fire button
 	if(time - self.prevlgfire > 0.5)
-		sound (self, CH_WEAPON_A, "weapons/lgbeam_fire.wav", VOL_BASE, ATTEN_NORM);
+		sound (self, CH_WEAPON_A, W_Sound("lgbeam_fire"), VOL_BASE, ATTEN_NORM);
 
 	entity beam, oldself;
 
@@ -527,15 +527,15 @@ float w_electro(float req)
 		precache_model ("models/weapons/g_electro.md3");
 		precache_model ("models/weapons/v_electro.md3");
 		precache_model ("models/weapons/h_electro.iqm");
-		precache_sound ("weapons/electro_bounce.wav");
-		precache_sound ("weapons/electro_fire.wav");
-		precache_sound ("weapons/electro_fire2.wav");
-		precache_sound ("weapons/electro_impact.wav");
-		precache_sound ("weapons/electro_impact_combo.wav");
-		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
+		precache_sound (W_Sound("electro_bounce"));
+		precache_sound (W_Sound("electro_fire"));
+		precache_sound (W_Sound("electro_fire2"));
+		precache_sound (W_Sound("electro_impact"));
+		precache_sound (W_Sound("electro_impact_combo"));
+		//precache_sound (W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound somewhere else
 		if(autocvar_g_balance_electro_lightning)
 		{
-			precache_sound ("weapons/lgbeam_fire.wav");
+			precache_sound (W_Sound("lgbeam_fire"));
 		}
 	}
 	else if (req == WR_SETUP)
@@ -580,7 +580,7 @@ float w_electro(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Reload(min(autocvar_g_balance_electro_primary_ammo, autocvar_g_balance_electro_secondary_ammo), autocvar_g_balance_electro_reload_ammo, autocvar_g_balance_electro_reload_time, "weapons/reload.wav");
+		W_Reload(min(autocvar_g_balance_electro_primary_ammo, autocvar_g_balance_electro_secondary_ammo), autocvar_g_balance_electro_reload_ammo, autocvar_g_balance_electro_reload_time, W_Sound("reload"));
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{

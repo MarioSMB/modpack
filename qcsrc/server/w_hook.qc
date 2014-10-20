@@ -87,7 +87,7 @@ void W_Hook_Attack2()
 	entity gren;
 
 	W_DecreaseAmmo(ammo_cells, autocvar_g_balance_hook_secondary_ammo, FALSE);
-	W_SetupShot (self, FALSE, 4, "weapons/hookbomb_fire.wav", CH_WEAPON_A, autocvar_g_balance_hook_secondary_damage, self.weapon);
+	W_SetupShot (self, FALSE, 4, W_Sound("hookbomb_fire"), CH_WEAPON_A, autocvar_g_balance_hook_secondary_damage, self.weapon);
 
 	gren = spawn ();
 	gren.owner = gren.realowner = self;
@@ -250,9 +250,9 @@ float w_hook(float req)
 		precache_model ("models/weapons/g_hookgun.md3");
 		precache_model ("models/weapons/v_hookgun.md3");
 		precache_model ("models/weapons/h_hookgun.iqm");
-		precache_sound ("weapons/hook_impact.wav"); // done by g_hook.qc
-		precache_sound ("weapons/hook_fire.wav");
-		precache_sound ("weapons/hookbomb_fire.wav");
+		precache_sound (W_Sound("hook_impact")); // done by g_hook.qc
+		precache_sound (W_Sound("hook_fire"));
+		precache_sound (W_Sound("hookbomb_fire"));
 	}
 	else if (req == WR_SETUP)
 	{

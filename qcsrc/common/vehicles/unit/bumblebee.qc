@@ -94,7 +94,7 @@ float bumble_raygun_send(entity to, float sf);
 void bumblebee_fire_cannon(entity _gun, string _tagname, entity _owner)
 {
 	vector v = gettaginfo(_gun, gettagindex(_gun, _tagname));
-	vehicles_projectile("bigplasma_muzzleflash", "weapons/flacexp3.wav",
+	vehicles_projectile("bigplasma_muzzleflash", W_Sound("flacexp3"),
 						v, normalize(v_forward + randomvec() * autocvar_g_vehicle_bumblebee_cannon_spread) * autocvar_g_vehicle_bumblebee_cannon_speed,
 						autocvar_g_vehicle_bumblebee_cannon_damage, autocvar_g_vehicle_bumblebee_cannon_radius, autocvar_g_vehicle_bumblebee_cannon_force,  0,
 						DEATH_VH_BUMB_GUN, PROJECTILE_BUMBLE_GUN, 0, TRUE, TRUE, _owner);
@@ -705,7 +705,7 @@ void bumblebee_blowup()
 				 autocvar_g_vehicle_bumblebee_blowup_forceintensity,
 				 DEATH_VH_BUMB_DEATH, world);
 
-	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+	sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 	pointparticles(particleeffectnum("explosion_big"), (self.origin + '0 0 100') + (randomvec() * 80), '0 0 0', 1);
 
 	if(self.owner.deadflag == DEAD_DYING)
@@ -721,7 +721,7 @@ void bumblebee_diethink()
 
 	if(random() < 0.1)
 	{
-		sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+		sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 		pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	}
 

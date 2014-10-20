@@ -42,7 +42,7 @@ float t_plasma(float req)
 			}
 			else
 			{
-				entity missile = turret_projectile("weapons/hagar_fire.wav", 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE);
+				entity missile = turret_projectile(W_Sound("hagar_fire"), 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE);
 				missile.missile_flags = MIF_SPLASH;
 
 				pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);

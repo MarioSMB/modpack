@@ -6,7 +6,7 @@ entity dummy_turret_info;
 
 void turrets_common_precache()
 {
-	precache_sound ("weapons/rocket_impact.wav");
+	precache_sound (W_Sound("rocket_impact"));
 	precache_model ("models/turrets/base-gib1.md3");
 	precache_model ("models/turrets/base-gib2.md3");
 	precache_model ("models/turrets/base-gib3.md3");

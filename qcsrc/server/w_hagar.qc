@@ -81,7 +81,7 @@ void W_Hagar_Attack (void)
 
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_reload_ammo);
 
-	W_SetupShot (self, FALSE, 2, "weapons/hagar_fire.wav", CH_WEAPON_A, autocvar_g_balance_hagar_primary_damage, self.weapon);
+	W_SetupShot (self, FALSE, 2, W_Sound("hagar_fire"), CH_WEAPON_A, autocvar_g_balance_hagar_primary_damage, self.weapon);
 
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -124,7 +124,7 @@ void W_Hagar_Attack2 (void)
 
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo, autocvar_g_balance_hagar_reload_ammo);
 
-	W_SetupShot (self, FALSE, 2, "weapons/hagar_fire.wav", CH_WEAPON_A, autocvar_g_balance_hagar_secondary_damage, self.weapon);
+	W_SetupShot (self, FALSE, 2, W_Sound("hagar_fire"), CH_WEAPON_A, autocvar_g_balance_hagar_secondary_damage, self.weapon);
 
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -177,7 +177,7 @@ void W_Hagar_Attack2_Load_Release (void)
 
 	weapon_prepareattack_do(1, autocvar_g_balance_hagar_secondary_refire);
 
-	W_SetupShot (self, FALSE, 2, "weapons/hagar_fire.wav", CH_WEAPON_A, autocvar_g_balance_hagar_secondary_damage, self.weapon);
+	W_SetupShot (self, FALSE, 2, W_Sound("hagar_fire"), CH_WEAPON_A, autocvar_g_balance_hagar_secondary_damage, self.weapon);
 	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	forward = v_forward;
@@ -269,7 +269,7 @@ void W_Hagar_Attack2_Load (void)
 				self.weaponentity.state = WS_READY;
 				W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo * self.hagar_load * -1, autocvar_g_balance_hagar_reload_ammo); // give back ammo
 				self.hagar_load = 0;
-				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTEN_NORM);
+				sound(self, CH_WEAPON_A, W_Sound("hagar_beep"), VOL_BASE, ATTEN_NORM);
 
 				// pause until we can load rockets again, once we re-press the alt fire button
 				self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_speed * W_WeaponRateFactor();
@@ -288,7 +288,7 @@ void W_Hagar_Attack2_Load (void)
 					W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_hagar_secondary_ammo, autocvar_g_balance_hagar_reload_ammo);
 					self.weaponentity.state = WS_INUSE;
 					self.hagar_load += 1;
-					sound(self, CH_WEAPON_B, "weapons/hagar_load.wav", VOL_BASE * 0.8, ATTEN_NORM); // sound is too loud according to most
+					sound(self, CH_WEAPON_B, W_Sound("hagar_load"), VOL_BASE * 0.8, ATTEN_NORM); // sound is too loud according to most
 
 					if (self.hagar_load >= autocvar_g_balance_hagar_secondary_load_max)
 						self.hagar_loadstep = time + autocvar_g_balance_hagar_secondary_load_hold * W_WeaponRateFactor();
@@ -299,7 +299,7 @@ void W_Hagar_Attack2_Load (void)
 			else if(!self.hagar_loadbeep && self.hagar_load) // prevents the beep from playing each frame
 			{
 				// if this is the last rocket we can load, play a beep sound to notify the player
-				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTEN_NORM);
+				sound(self, CH_WEAPON_A, W_Sound("hagar_beep"), VOL_BASE, ATTEN_NORM);
 				self.hagar_loadbeep = TRUE;
 			}
 		}
@@ -318,7 +318,7 @@ void W_Hagar_Attack2_Load (void)
 			if(!self.hagar_warning && self.hagar_load) // prevents the beep from playing each frame
 			{
 				// we're about to automatically release after holding time, play a beep sound to notify the player
-				sound(self, CH_WEAPON_A, "weapons/hagar_beep.wav", VOL_BASE, ATTEN_NORM);
+				sound(self, CH_WEAPON_A, W_Sound("hagar_beep"), VOL_BASE, ATTEN_NORM);
 				self.hagar_warning = TRUE;
 			}
 		}
@@ -401,10 +401,10 @@ float w_hagar(float req)
 		precache_model ("models/weapons/g_hagar.md3");
 		precache_model ("models/weapons/v_hagar.md3");
 		precache_model ("models/weapons/h_hagar.iqm");
-		precache_sound ("weapons/hagar_fire.wav");
-		precache_sound ("weapons/hagar_load.wav");
-		precache_sound ("weapons/hagar_beep.wav");
-		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
+		precache_sound (W_Sound("hagar_fire"));
+		precache_sound (W_Sound("hagar_load"));
+		precache_sound (W_Sound("hagar_beep"));
+		//precache_sound (W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
 	{
@@ -443,7 +443,7 @@ float w_hagar(float req)
 	else if (req == WR_RELOAD)
 	{
 		if (!self.hagar_load) // require releasing loaded rockets first
-			W_Reload(min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo), autocvar_g_balance_hagar_reload_ammo, autocvar_g_balance_hagar_reload_time, "weapons/reload.wav");
+			W_Reload(min(autocvar_g_balance_hagar_primary_ammo, autocvar_g_balance_hagar_secondary_ammo), autocvar_g_balance_hagar_reload_ammo, autocvar_g_balance_hagar_reload_time, W_Sound("reload"));
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{

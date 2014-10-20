@@ -36,7 +36,7 @@ float creeper_attack(float attack_type)
 			if(self.creeper_primed)
 			{
 				pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
-				sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 
 				RadiusDamage (self, self, (autocvar_g_monster_creeper_attack_explode_damage), (autocvar_g_monster_creeper_attack_explode_edgedamage), (autocvar_g_monster_creeper_attack_explode_radius), world, (autocvar_g_monster_creeper_attack_explode_force), DEATH_MONSTER_CREEPER, other);
 

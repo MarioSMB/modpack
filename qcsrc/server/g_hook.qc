@@ -76,7 +76,7 @@ void GrapplingHookThink();
 void GrapplingHook_Stop()
 {
 	pointparticles(particleeffectnum("grapple_impact"), self.origin, '0 0 0', 1);
-	sound (self, CH_SHOTS, "weapons/hook_impact.wav", VOL_BASE, ATTEN_NORM);
+	sound (self, CH_SHOTS, W_Sound("hook_impact"), VOL_BASE, ATTEN_NORM);
 
 	self.state = 1;
 	self.think = GrapplingHookThink;
@@ -372,7 +372,7 @@ void FireGrapplingHook (void)
 	vs = hook_shotorigin[s];
 
 	// UGLY WORKAROUND: play this on CH_WEAPON_B so it can't cut off fire sounds
-	sound (self, CH_WEAPON_B, "weapons/hook_fire.wav", VOL_BASE, ATTEN_NORM);
+	sound (self, CH_WEAPON_B, W_Sound("hook_fire"), VOL_BASE, ATTEN_NORM);
 	org = self.origin + self.view_ofs + v_forward * vs_x + v_right * -vs_y + v_up * vs_z;
 
 	tracebox(self.origin + self.view_ofs, '-3 -3 -3', '3 3 3', org, MOVE_NORMAL, self);

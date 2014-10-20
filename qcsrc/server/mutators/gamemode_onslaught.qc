@@ -374,7 +374,7 @@ void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damag
 
 	if (self.health < 0)
 	{
-		sound(self, CH_TRIGGER, "weapons/grenade_impact.wav", VOL_BASE, ATTEN_NORM);
+		sound(self, CH_TRIGGER, W_Sound("grenade_impact"), VOL_BASE, ATTEN_NORM);
 		pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(self.team, INFO_ONSLAUGHT_CPDESTROYED_), self.owner.message, attacker.netname);
 		
@@ -762,7 +762,7 @@ void ons_ControlPoint_Setup(entity cp)
 	precache_model("models/onslaught/controlpoint_icon_gib4.md3");
 	precache_sound("onslaught/controlpoint_build.wav");
 	precache_sound("onslaught/controlpoint_built.wav");
-	precache_sound("weapons/grenade_impact.wav");
+	precache_sound(W_Sound("grenade_impact"));
 	precache_sound("onslaught/damageblockedbyshield.wav");
 	precache_sound("onslaught/controlpoint_underattack.wav");
 	precache_sound("onslaught/ons_spark1.wav");
@@ -899,7 +899,7 @@ void ons_GeneratorDamage(entity inflictor, entity attacker, float damage, float 
 	// Throw some flaming gibs on damage, more damage = more chance for gib
 	if(random() < damage/220)
 	{
-		sound(self, CH_TRIGGER, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+		sound(self, CH_TRIGGER, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 	}
 	else
 	{
@@ -1023,8 +1023,8 @@ void ons_GeneratorSetup(entity gen) // called when spawning a generator entity o
 	precache_model("models/onslaught/gen_gib2.md3");
 	precache_model("models/onslaught/gen_gib3.md3");
 	precache_sound("onslaught/generator_decay.wav");
-	precache_sound("weapons/grenade_impact.wav");
-	precache_sound("weapons/rocket_impact.wav");
+	precache_sound(W_Sound("grenade_impact"));
+	precache_sound(W_Sound("rocket_impact"));
 	precache_sound("onslaught/generator_underattack.wav");
 	precache_sound("onslaught/shockwave.wav");
 	precache_sound("onslaught/ons_hit1.wav");

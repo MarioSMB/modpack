@@ -254,3 +254,5 @@ void W_RandomWeapons(entity e, float n);
 string W_Name(float weaponid);
 
 float W_AmmoItemCode(float wpn);
+
+string W_Sound(string w_snd);

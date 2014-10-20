@@ -40,12 +40,12 @@ void W_Rifle_FireBullet(float pSpread, float pDamage, float pForce, float pSolid
 
 void W_Rifle_Attack()
 {
-	W_Rifle_FireBullet(autocvar_g_balance_rifle_primary_spread, autocvar_g_balance_rifle_primary_damage, autocvar_g_balance_rifle_primary_force, autocvar_g_balance_rifle_primary_solidpenetration, autocvar_g_balance_rifle_primary_ammo, WEP_RIFLE, autocvar_g_balance_rifle_primary_tracer, autocvar_g_balance_rifle_primary_shots, "weapons/campingrifle_fire.wav");
+	W_Rifle_FireBullet(autocvar_g_balance_rifle_primary_spread, autocvar_g_balance_rifle_primary_damage, autocvar_g_balance_rifle_primary_force, autocvar_g_balance_rifle_primary_solidpenetration, autocvar_g_balance_rifle_primary_ammo, WEP_RIFLE, autocvar_g_balance_rifle_primary_tracer, autocvar_g_balance_rifle_primary_shots, W_Sound("campingrifle_fire"));
 }
 
 void W_Rifle_Attack2()
 {
-	W_Rifle_FireBullet(autocvar_g_balance_rifle_secondary_spread, autocvar_g_balance_rifle_secondary_damage, autocvar_g_balance_rifle_secondary_force, autocvar_g_balance_rifle_secondary_solidpenetration, autocvar_g_balance_rifle_secondary_ammo, WEP_RIFLE | HITTYPE_SECONDARY, autocvar_g_balance_rifle_secondary_tracer, autocvar_g_balance_rifle_secondary_shots, "weapons/campingrifle_fire2.wav");
+	W_Rifle_FireBullet(autocvar_g_balance_rifle_secondary_spread, autocvar_g_balance_rifle_secondary_damage, autocvar_g_balance_rifle_secondary_force, autocvar_g_balance_rifle_secondary_solidpenetration, autocvar_g_balance_rifle_secondary_ammo, WEP_RIFLE | HITTYPE_SECONDARY, autocvar_g_balance_rifle_secondary_tracer, autocvar_g_balance_rifle_secondary_shots, W_Sound("campingrifle_fire2"));
 }
 
 void spawnfunc_weapon_rifle (void)
@@ -180,9 +180,9 @@ float w_rifle(float req)
 		precache_model ("models/weapons/g_sniperrifle.md3");
 		precache_model ("models/weapons/v_sniperrifle.md3");
 		precache_model ("models/weapons/h_sniperrifle.iqm");
-		precache_sound ("weapons/campingrifle_fire.wav");
-		precache_sound ("weapons/campingrifle_fire2.wav");
-		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
+		precache_sound (W_Sound("campingrifle_fire"));
+		precache_sound (W_Sound("campingrifle_fire2"));
+		//precache_sound (W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
 	{
@@ -207,7 +207,7 @@ float w_rifle(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Reload(min(autocvar_g_balance_rifle_primary_ammo, autocvar_g_balance_rifle_secondary_ammo), autocvar_g_balance_rifle_reload_ammo, autocvar_g_balance_rifle_reload_time, "weapons/reload.wav");
+		W_Reload(min(autocvar_g_balance_rifle_primary_ammo, autocvar_g_balance_rifle_secondary_ammo), autocvar_g_balance_rifle_reload_ammo, autocvar_g_balance_rifle_reload_time, W_Sound("reload"));
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{
@@ -244,18 +244,18 @@ float w_rifle(float req)
 		if(!w_issilent)
 		{
 			if(w_random < 0.2)
-				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, W_Sound("ric1"), VOL_BASE, ATTEN_NORM);
 			else if(w_random < 0.4)
-				sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, W_Sound("ric2"), VOL_BASE, ATTEN_NORM);
 			else if(w_random < 0.5)
-				sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, W_Sound("ric3"), VOL_BASE, ATTEN_NORM);
 		}
 	}
 	else if(req == WR_PRECACHE)
 	{
-		precache_sound("weapons/ric1.wav");
-		precache_sound("weapons/ric2.wav");
-		precache_sound("weapons/ric3.wav");
+		precache_sound(W_Sound("ric1"));
+		precache_sound(W_Sound("ric2"));
+		precache_sound(W_Sound("ric3"));
 	}
 
 	return TRUE;

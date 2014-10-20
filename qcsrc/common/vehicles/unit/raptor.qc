@@ -189,7 +189,7 @@ void raptor_bombdrop()
 
 void raptor_fire_cannon(entity gun, string tagname)
 {
-	vehicles_projectile("raptor_cannon_muzzleflash", "weapons/lasergun_fire.wav",
+	vehicles_projectile("raptor_cannon_muzzleflash", W_Sound("lasergun_fire"),
 						   gettaginfo(gun, gettagindex(gun, tagname)), normalize(v_forward + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
 						   autocvar_g_vehicle_raptor_cannon_damage, autocvar_g_vehicle_raptor_cannon_radius, autocvar_g_vehicle_raptor_cannon_force,  0,
 						   DEATH_VH_RAPT_CANNON, PROJECTILE_RAPTORCANNON, 0, TRUE, TRUE, self.owner);
@@ -707,7 +707,7 @@ void raptor_diethink()
 
 	if(random() < 0.05)
 	{
-		sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+		sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 		pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	}
 	self.nextthink = time;

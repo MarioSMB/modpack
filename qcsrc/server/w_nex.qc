@@ -66,10 +66,10 @@ void W_Nex_Attack (float issecondary)
 	mydmg *= charge;
 	myforce *= charge;
 
-	W_SetupShot (self, TRUE, 5, "weapons/nexfire.wav", CH_WEAPON_A, mydmg, self.weapon);
+	W_SetupShot (self, TRUE, 5, W_Sound("nexfire"), CH_WEAPON_A, mydmg, self.weapon);
 	if(charge > autocvar_g_balance_nex_charge_animlimit && autocvar_g_balance_nex_charge_animlimit) // if the Nex is overcharged, we play an extra sound
 	{
-		sound (self, CH_WEAPON_B, "weapons/nexcharge.wav", VOL_BASE * (charge - 0.5 * autocvar_g_balance_nex_charge_animlimit) / (1 - 0.5 * autocvar_g_balance_nex_charge_animlimit), ATTEN_NORM);
+		sound (self, CH_WEAPON_B, W_Sound("nexcharge"), VOL_BASE * (charge - 0.5 * autocvar_g_balance_nex_charge_animlimit) / (1 - 0.5 * autocvar_g_balance_nex_charge_animlimit), ATTEN_NORM);
 	}
 
 	yoda = 0;
@@ -207,12 +207,12 @@ float w_nex(float req)
 		precache_model ("models/weapons/g_nex.md3");
 		precache_model ("models/weapons/v_nex.md3");
 		precache_model ("models/weapons/h_nex.iqm");
-		precache_sound ("weapons/nexfire.wav");
-		precache_sound ("weapons/nexcharge.wav");
-		precache_sound ("weapons/nexwhoosh1.wav");
-		precache_sound ("weapons/nexwhoosh2.wav");
-		precache_sound ("weapons/nexwhoosh3.wav");
-		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
+		precache_sound (W_Sound("nexfire"));
+		precache_sound (W_Sound("nexcharge"));
+		precache_sound (W_Sound("nexwhoosh1"));
+		precache_sound (W_Sound("nexwhoosh2"));
+		precache_sound (W_Sound("nexwhoosh3"));
+		//precache_sound (W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
 	{
@@ -241,7 +241,7 @@ float w_nex(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Reload(min(autocvar_g_balance_nex_primary_ammo, autocvar_g_balance_nex_secondary_ammo), autocvar_g_balance_nex_reload_ammo, autocvar_g_balance_nex_reload_time, "weapons/reload.wav");
+		W_Reload(min(autocvar_g_balance_nex_primary_ammo, autocvar_g_balance_nex_secondary_ammo), autocvar_g_balance_nex_reload_ammo, autocvar_g_balance_nex_reload_time, W_Sound("reload"));
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{

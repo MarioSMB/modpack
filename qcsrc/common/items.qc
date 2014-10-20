@@ -259,3 +259,10 @@ float W_AmmoItemCode(float wpn)
 {
 	return (get_weaponinfo(wpn)).items & IT_AMMO;
 }
+
+string W_Sound(string w_snd)
+{
+	// TODO: CSQC?
+	if(cvar_string("sv_weapons_sounddir") == "") { return cvar_string(strcat("weapons/", w_snd, ".wav")); }
+	return sprintf("weapons_%s/%s.wav", cvar_string("sv_weapons_sounddir"), w_snd);
+}

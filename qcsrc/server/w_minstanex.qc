@@ -200,7 +200,7 @@ void W_MinstaNex_Attack (void)
 
 	W_SetupShot (self, TRUE, 0, "", CH_WEAPON_A, minstanex_damage, self.weapon);
 
-	sound (self, CH_WEAPON_A, "weapons/minstanexfire.wav", VOL_BASE * 0.8, ATTEN_NORM);
+	sound (self, CH_WEAPON_A, W_Sound("minstanexfire"), VOL_BASE * 0.8, ATTEN_NORM);
 	W_PlayStrengthSound(self);
 	
 	self.projectiledeathtype = WEP_MINSTANEX;
@@ -247,7 +247,7 @@ void W_MinstaNex_SuperBlast()
 	float i, queue = 0;
 	
 	// set up the shot direction
-	W_SetupShot(self, FALSE, 3, "weapons/minstanex_charge2.wav", CH_WEAPON_B, autocvar_g_balance_minstanex_damage, self.weapon);
+	W_SetupShot(self, FALSE, 3, W_Sound("minstanex_charge2"), CH_WEAPON_B, autocvar_g_balance_minstanex_damage, self.weapon);
 	vector attack_endpos = (w_shotorg + (w_shotdir * self.minsta_range));
 	WarpZone_TraceLine(w_shotorg, attack_endpos, MOVE_NOMONSTERS, self);
 	vector attack_hitpos = trace_endpos;
@@ -440,7 +440,7 @@ void W_RocketMinsta_SuperRocket()
 	
 	makevectors(self.angles);
 
-	W_SetupShot_ProjectileSize (self, '-32 -32 -32', '32 32 32', FALSE, 5, "weapons/minstanex_charge2.wav", CH_WEAPON_A, minstanex_damage, WEP_ROCKET_LAUNCHER);
+	W_SetupShot_ProjectileSize (self, '-32 -32 -32', '32 32 32', FALSE, 5, W_Sound("minstanex_charge2"), CH_WEAPON_A, minstanex_damage, WEP_ROCKET_LAUNCHER);
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	missile = WarpZone_RefSys_SpawnSameRefSys(self);
@@ -509,7 +509,7 @@ void W_RocketMinsta_Attack2(void)
 	float spread = autocvar_g_rm_laser_spread;
 	float rndspread = autocvar_g_rm_laser_spread_random;
 
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/crylink_fire.wav", CH_WEAPON_A, autocvar_g_rm_laser_damage, WEP_ELECTRO);
+	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, W_Sound("crylink_fire"), CH_WEAPON_A, autocvar_g_rm_laser_damage, WEP_ELECTRO);
 	
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -559,7 +559,7 @@ void W_RocketMinsta_Attack3 (void)
 	float counter = 0;
 	float total = 1;
 
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/electro_fire2.wav", CH_WEAPON_A, autocvar_g_rm_laser_damage, WEP_ELECTRO);
+	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, W_Sound("electro_fire2"), CH_WEAPON_A, autocvar_g_rm_laser_damage, WEP_ELECTRO);
 	
 	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
@@ -646,7 +646,7 @@ float w_minstanex(float req)
 			{
 				if(weapon_prepareattack(0, autocvar_g_balance_minstanex_refire))
 				{
-					sound(self, CH_SHOTS, "weapons/minstanex_charge_new.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_SHOTS, W_Sound("minstanex_charge_new"), VOL_BASE, ATTN_NORM);
 					self.minstanex_held_down = 2;
 					self.minstanex_jumpinterval = time + 1.822;
 					weapon_thinkf(WFRAME_DONTCHANGE, autocvar_g_balance_minstanex_refire, w_ready); // update frame so we dont get stuck
@@ -715,15 +715,15 @@ float w_minstanex(float req)
 		precache_model ("models/weapons/g_minstanex.md3");
 		precache_model ("models/weapons/v_minstanex.md3");
 		precache_model ("models/weapons/h_minstanex.iqm");
-		precache_sound ("weapons/minstanexfire.wav");
-		precache_sound ("weapons/minstanex_charge_new.wav");
-		precache_sound ("weapons/minstanex_charge2.wav");
-		precache_sound ("weapons/crylink_fire.wav");
-		precache_sound ("weapons/electro_fire2.wav");
-		precache_sound ("weapons/nexwhoosh1.wav");
-		precache_sound ("weapons/nexwhoosh2.wav");
-		precache_sound ("weapons/nexwhoosh3.wav");
-		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
+		precache_sound (W_Sound("minstanexfire"));
+		precache_sound (W_Sound("minstanex_charge_new"));
+		precache_sound (W_Sound("minstanex_charge2"));
+		precache_sound (W_Sound("crylink_fire"));
+		precache_sound (W_Sound("electro_fire2"));
+		precache_sound (W_Sound("nexwhoosh1"));
+		precache_sound (W_Sound("nexwhoosh2"));
+		precache_sound (W_Sound("nexwhoosh3"));
+		//precache_sound (W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound somewhere else
 		w_laser(WR_PRECACHE);
 	}
 	else if (req == WR_SETUP)
@@ -760,7 +760,7 @@ float w_minstanex(float req)
 		else
 			used_ammo = minstanex_ammo;
 
-		W_Reload(used_ammo, autocvar_g_balance_minstanex_reload_ammo, autocvar_g_balance_minstanex_reload_time, "weapons/reload.wav");
+		W_Reload(used_ammo, autocvar_g_balance_minstanex_reload_ammo, autocvar_g_balance_minstanex_reload_time, W_Sound("reload"));
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{

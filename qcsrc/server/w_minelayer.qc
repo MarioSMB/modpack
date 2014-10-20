@@ -24,7 +24,7 @@ void spawnfunc_weapon_minelayer (void)
 
 void W_Mine_Stick (entity to)
 {
-	spamsound (self, CH_SHOTS, "weapons/mine_stick.wav", VOL_BASE, ATTEN_NORM);
+	spamsound (self, CH_SHOTS, W_Sound("mine_stick"), VOL_BASE, ATTEN_NORM);
 
 	// in order for mines to face properly when sticking to the ground, they must be a server side entity rather than a csqc projectile
 
@@ -191,7 +191,7 @@ void W_Mine_Think (void)
 	if ((time > self.cnt) && (!self.mine_time) && (self.cnt != -1))
 	{
 		if(autocvar_g_balance_minelayer_lifetime_countdown > 0)
-			spamsound (self, CH_SHOTS, "weapons/mine_trigger.wav", VOL_BASE, ATTEN_NORM);
+			spamsound (self, CH_SHOTS, W_Sound("mine_trigger"), VOL_BASE, ATTEN_NORM);
 		self.mine_time = time + autocvar_g_balance_minelayer_lifetime_countdown;
 		self.mine_explodeanyway = 1; // make the mine super aggressive -- Samual: Rather, make it not care if a team mate is near.
 	}
@@ -214,7 +214,7 @@ void W_Mine_Think (void)
 		if(head != self.realowner && DIFF_TEAM(head, self.realowner)) // don't trigger for team mates
 		if(!self.mine_time)
 		{
-			spamsound (self, CH_SHOTS, "weapons/mine_trigger.wav", VOL_BASE, ATTEN_NORM);
+			spamsound (self, CH_SHOTS, W_Sound("mine_trigger"), VOL_BASE, ATTEN_NORM);
 			self.mine_time = time + autocvar_g_balance_minelayer_time;
 		}
 		head = head.chain;
@@ -286,14 +286,14 @@ void W_Mine_Attack (void)
 		{
 			// the refire delay keeps this message from being spammed
 			sprint(self, strcat("minelayer: You cannot place more than ^2", ftos(autocvar_g_balance_minelayer_limit), " ^7mines at a time\n") );
-			play2(self, "weapons/unavailable.wav");
+			play2(self, W_Sound("unavailable"));
 			return;
 		}
 	}
 
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_minelayer_ammo, autocvar_g_balance_minelayer_reload_ammo);
 
-	W_SetupShot_ProjectileSize (self, '-4 -4 -4', '4 4 4', FALSE, 5, "weapons/mine_fire.wav", CH_WEAPON_A, autocvar_g_balance_minelayer_damage, self.weapon);
+	W_SetupShot_ProjectileSize (self, '-4 -4 -4', '4 4 4', FALSE, 5, W_Sound("mine_fire"), CH_WEAPON_A, autocvar_g_balance_minelayer_damage, self.weapon);
 	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	mine = WarpZone_RefSys_SpawnSameRefSys(self);
@@ -491,7 +491,7 @@ float w_minelayer(float req)
 		if (self.BUTTON_ATCK2)
 		{
 			if(W_PlacedMines(TRUE))
-				sound (self, CH_WEAPON_B, "weapons/mine_det.wav", VOL_BASE, ATTEN_NORM);
+				sound (self, CH_WEAPON_B, W_Sound("mine_det"), VOL_BASE, ATTEN_NORM);
 		}
 	}
 	else if (req == WR_PRECACHE)
@@ -501,11 +501,11 @@ float w_minelayer(float req)
 		precache_model ("models/weapons/g_minelayer.md3");
 		precache_model ("models/weapons/v_minelayer.md3");
 		precache_model ("models/weapons/h_minelayer.iqm");
-		precache_sound ("weapons/mine_det.wav");
-		precache_sound ("weapons/mine_fire.wav");
-		precache_sound ("weapons/mine_stick.wav");
-		precache_sound ("weapons/mine_trigger.wav");
-		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
+		precache_sound (W_Sound("mine_det"));
+		precache_sound (W_Sound("mine_fire"));
+		precache_sound (W_Sound("mine_stick"));
+		precache_sound (W_Sound("mine_trigger"));
+		//precache_sound (W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
 	{
@@ -535,7 +535,7 @@ float w_minelayer(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Reload(autocvar_g_balance_minelayer_ammo, autocvar_g_balance_minelayer_reload_ammo, autocvar_g_balance_minelayer_reload_time, "weapons/reload.wav");
+		W_Reload(autocvar_g_balance_minelayer_ammo, autocvar_g_balance_minelayer_reload_ammo, autocvar_g_balance_minelayer_reload_time, W_Sound("reload"));
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{

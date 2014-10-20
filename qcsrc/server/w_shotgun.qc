@@ -33,7 +33,7 @@ void W_Shotgun_Attack (float deathtype)
 
 	W_DecreaseAmmo(ammo_shells, ammoamount, autocvar_g_balance_shotgun_reload_ammo);
 
-	W_SetupShot (self, TRUE, 5, "weapons/shotgun_fire.wav", ((autocvar_g_balance_shotgun_reload_ammo && self.clip_load < 1) ? CH_WEAPON_A : CH_WEAPON_SINGLE), d * bullets, self.weapon);
+	W_SetupShot (self, TRUE, 5, W_Sound("shotgun_fire"), ((autocvar_g_balance_shotgun_reload_ammo && self.clip_load < 1) ? CH_WEAPON_A : CH_WEAPON_SINGLE), d * bullets, self.weapon);
 	for (sc = 0;sc < bullets;sc = sc + 1)
 		fireBullet(w_shotorg, w_shotdir, spread, solidpenetration, d, f, WEP_SHOTGUN, 0);
 
@@ -195,7 +195,7 @@ void shotgun_fire2_02()
 
 void W_Shotgun_Attack2 (void)
 {
-	sound (self, CH_WEAPON_A, "weapons/shotgun_melee.wav", VOL_BASE, ATTEN_NORM);
+	sound (self, CH_WEAPON_A, W_Sound("shotgun_melee"), VOL_BASE, ATTEN_NORM);
 	weapon_thinkf(WFRAME_FIRE2, autocvar_g_balance_shotgun_secondary_animtime, w_ready);
 
 	entity meleetemp;
@@ -266,10 +266,9 @@ float w_shotgun(float req)
 		precache_model ("models/weapons/g_shotgun.md3");
 		precache_model ("models/weapons/v_shotgun.md3");
 		precache_model ("models/weapons/h_shotgun.iqm");
-		precache_sound ("misc/itempickup.wav");
-		precache_sound ("weapons/shotgun_fire.wav");
-		precache_sound ("weapons/shotgun_melee.wav");
-		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
+		precache_sound (W_Sound("shotgun_fire"));
+		precache_sound (W_Sound("shotgun_melee"));
+		//precache_sound (W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
 	{
@@ -295,7 +294,7 @@ float w_shotgun(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Reload(autocvar_g_balance_shotgun_primary_ammo, autocvar_g_balance_shotgun_reload_ammo, autocvar_g_balance_shotgun_reload_time, "weapons/reload.wav");
+		W_Reload(autocvar_g_balance_shotgun_primary_ammo, autocvar_g_balance_shotgun_reload_ammo, autocvar_g_balance_shotgun_reload_time, W_Sound("reload"));
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{
@@ -323,19 +322,19 @@ float w_shotgun(float req)
 		if(!w_issilent && time - self.prevric > 0.25)
 		{
 			if(w_random < 0.0165)
-				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, W_Sound("ric1"), VOL_BASE, ATTEN_NORM);
 			else if(w_random < 0.033)
-				sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, W_Sound("ric2"), VOL_BASE, ATTEN_NORM);
 			else if(w_random < 0.05)
-				sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, W_Sound("ric3"), VOL_BASE, ATTEN_NORM);
 			self.prevric = time;
 		}
 	}
 	else if(req == WR_PRECACHE)
 	{
-		precache_sound("weapons/ric1.wav");
-		precache_sound("weapons/ric2.wav");
-		precache_sound("weapons/ric3.wav");
+		precache_sound(W_Sound("ric1"));
+		precache_sound(W_Sound("ric2"));
+		precache_sound(W_Sound("ric3"));
 	}
 	return TRUE;
 }

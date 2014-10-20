@@ -283,7 +283,7 @@ float t_hk(float req)
 		{
 			entity missile;
 
-			missile = turret_projectile("weapons/rocket_fire.wav", 6, 10, DEATH_TURRET_HK, PROJECTILE_ROCKET, FALSE, FALSE);
+			missile = turret_projectile(W_Sound("rocket_fire"), 6, 10, DEATH_TURRET_HK, PROJECTILE_ROCKET, FALSE, FALSE);
 			te_explosion (missile.origin);
 
 			missile.think			= turret_hk_missile_think;

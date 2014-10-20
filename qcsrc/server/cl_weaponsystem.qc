@@ -125,7 +125,7 @@ void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
 		&& ((time > player.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
 		|| (time > player.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
 		{
-			sound(player, CH_TRIGGER, "weapons/strength_fire.wav", VOL_BASE, ATTEN_NORM);
+			sound(player, CH_TRIGGER, W_Sound("strength_fire"), VOL_BASE, ATTEN_NORM);
 			player.prevstrengthsound = time;
 		}
 		player.prevstrengthsoundattempt = time;
@@ -709,7 +709,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				if (complain)
 				if(IS_REAL_CLIENT(cl))
 				{
-					play2(cl, "weapons/unavailable.wav");
+					play2(cl, W_Sound("unavailable"));
 					Send_WeaponComplain (cl, wpn, W_Name(wpn), 0);
 				}
 				return FALSE;
@@ -756,7 +756,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			Send_WeaponComplain (cl, wpn, W_Name(wpn), 2);
 		}
 
-		play2(cl, "weapons/unavailable.wav");
+		play2(cl, W_Sound("unavailable"));
 	}
 	return FALSE;
 }
@@ -831,7 +831,7 @@ float weapon_prepareattack_checkammo(float secondary)
 
 		if(self.weapon == self.switchweapon && time - self.prevdryfire > 1) // only play once BEFORE starting to switch weapons
 		{
-			sound (self, CH_WEAPON_A, "weapons/dryfire.wav", VOL_BASE, ATTEN_NORM);
+			sound (self, CH_WEAPON_A, W_Sound("dryfire"), VOL_BASE, ATTEN_NORM);
 			self.prevdryfire = time;
 		}
 
@@ -1380,7 +1380,7 @@ void W_Reload(float sent_ammo_min, float sent_ammo_amount, float sent_time, stri
 	{
 		if(IS_REAL_CLIENT(self) && self.reload_complain < time)
 		{
-			play2(self, "weapons/unavailable.wav");
+			play2(self, W_Sound("unavailable"));
 			sprint(self, strcat("You don't have enough ammo to reload the ^2", W_Name(self.weapon), "\n"));
 			self.reload_complain = time + 1;
 		}

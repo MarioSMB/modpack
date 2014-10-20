@@ -36,7 +36,7 @@ void hmg_fire_auto()
 
 	W_DecreaseAmmo(ammo_nails, autocvar_g_balance_hmg_sustained_ammo, autocvar_g_balance_hmg_reload_ammo);
 
-	W_SetupShot (self, TRUE, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, autocvar_g_balance_hmg_sustained_damage, self.weapon);
+	W_SetupShot (self, TRUE, 0, W_Sound("uzi_fire"), CH_WEAPON_A, autocvar_g_balance_hmg_sustained_damage, self.weapon);
 
 	if(!autocvar_g_norecoil)
 	{
@@ -96,7 +96,7 @@ float w_hmg(float req)
 		precache_model ("models/weapons/g_ok_hmg.md3");
 		precache_model ("models/weapons/v_ok_hmg.md3");
 		precache_model ("models/weapons/h_ok_hmg.iqm");
-		precache_sound ("weapons/uzi_fire.wav");
+		precache_sound (W_Sound("uzi_fire"));
 	}
 	else if (req == WR_SETUP)
 	{
@@ -123,7 +123,7 @@ float w_hmg(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Reload(autocvar_g_balance_hmg_sustained_ammo, autocvar_g_balance_hmg_reload_ammo, autocvar_g_balance_hmg_reload_time, "weapons/reload.wav");
+		W_Reload(autocvar_g_balance_hmg_sustained_ammo, autocvar_g_balance_hmg_reload_ammo, autocvar_g_balance_hmg_reload_time, W_Sound("reload"));
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{
@@ -149,17 +149,17 @@ float w_hmg(float req)
 		pointparticles(particleeffectnum("machinegun_impact"), org2, w_backoff * 1000, 1);
 		if(!w_issilent)
 			if(w_random < 0.05)
-				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, W_Sound("ric1"), VOL_BASE, ATTEN_NORM);
 			else if(w_random < 0.1)
-				sound(self, CH_SHOTS, "weapons/ric2.wav", VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, W_Sound("ric2"), VOL_BASE, ATTEN_NORM);
 			else if(w_random < 0.2)
-				sound(self, CH_SHOTS, "weapons/ric3.wav", VOL_BASE, ATTEN_NORM);
+				sound(self, CH_SHOTS, W_Sound("ric3"), VOL_BASE, ATTEN_NORM);
 	}
 	else if(req == WR_PRECACHE)
 	{
-		precache_sound("weapons/ric1.wav");
-		precache_sound("weapons/ric2.wav");
-		precache_sound("weapons/ric3.wav");
+		precache_sound(W_Sound("ric1"));
+		precache_sound(W_Sound("ric2"));
+		precache_sound(W_Sound("ric3"));
 	}
 	return TRUE;
 }

@@ -759,7 +759,7 @@ void buffs_Initialize()
 	precache_sound("misc/strength_respawn.wav");
 	precache_sound("misc/shield_respawn.wav");
 	precache_sound("relics/relic_effect.wav");
-	precache_sound("weapons/rocket_impact.wav");
+	precache_sound(W_Sound("rocket_impact"));
 	precache_sound("keepaway/respawn.wav");
 
 	addstat(STAT_BUFFS, AS_INT, buffs);

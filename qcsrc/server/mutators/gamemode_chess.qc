@@ -3,6 +3,10 @@ void spawnfunc_chess_board()
 	if(!self.message) { error("Chess: board corner missing message string"); return; }
 
 	self.classname = "chess_board";
+
+	print(vtos(self.origin), self.message, "\n");
+
+	WaypointSprite_SpawnFixed(strzone(strcat("Board corner: ", self.message)), self.origin, self, sprite, RADARICON_DANGER, '0 1 1');
 }
 
 string chess_NameFromID(float pid)
@@ -18,6 +22,21 @@ string chess_NameFromID(float pid)
 	}
 
 	return "";
+}
+
+float chess_IDFromName(string myname)
+{
+	switch(myname)
+	{
+		case "pawn": return CHESS_PIECE_PAWN;
+		case "knight": return CHESS_PIECE_KNIGHT;
+		case "castle": return CHESS_PIECE_CASTLE;
+		case "bishop": return CHESS_PIECE_BISHOP;
+		case "queen": return CHESS_PIECE_QUEEN;
+		case "king": return CHESS_PIECE_KING;
+	}
+
+	return 0;
 }
 
 string chess_PrettyNameFromID(float pid)
@@ -49,6 +68,10 @@ void chess_Piece_Spawn(entity loc, float pid, float teamnumber)
 	setsize(piece, PL_MIN, PL_MAX);
 	precache_model(strcat("models/chess/", piece.netname, ".md3"));
 	setmodel(piece, strcat("models/chess/", piece.netname, ".md3"));
+
+	WaypointSprite_SpawnFixed(strzone(piece.message), piece.origin, piece, sprite, RADARICON_DANGER, '0 1 1');
+
+	loc.chess_piece = piece;
 }
 
 void chess_SpawnPieces()
@@ -103,7 +126,7 @@ void chess_Board_Spawn()
 
 	for(pc = 0; pc <= 64; ++pc)
 	{
-		if(pow(pc, 8)) { ++ltrnum; }
+		if(pc == 8 || pc == 16 || pc == 24 || pc == 32 || pc == 40 || pc == 48 || pc == 56) { ++ltrnum; }
 		++num;
 		if(num > 8) { num = 1; }
 
@@ -115,11 +138,11 @@ void chess_Board_Spawn()
 		piece.netname = ltr;
 		piece.message = strcat(ltr, ftos(num));
 
-		vector stnthrt = (c1.origin - c2.origin) / 16, eighthrt = stnthrt * 2;
-		vector stnthup = (c1.origin - c3.origin) / 16, eighthup = stnthup * 2;
+		vector stnthrt = (c1.origin - c2.origin) / 16, eighthrt = (c1.origin - c2.origin) / 8;
+		vector stnthup = (c1.origin - c3.origin) / 16, eighthup = (c1.origin - c3.origin) / 8;
 		setorigin(piece, ((stnthrt + eighthrt * num) + (stnthup + eighthup * ltrnum)));
 		setsize(piece, PL_MIN, PL_MAX);
-		WaypointSprite_SpawnFixed(strzone(piece.message), piece.origin, piece, sprite, RADARICON_DANGER, '0 1 1');
+		//WaypointSprite_SpawnFixed(strzone(piece.message), piece.origin, piece, sprite, RADARICON_DANGER, '0 1 1');
 
 		chess_board[pc] = piece;
 	}
@@ -152,7 +175,7 @@ entity chess_King_SafeMove(entity king, entity loc)
 
 float chess_KingWouldBeSafe(entity oldloc, entity loc)
 {
-	entity tmp_entity, piece, king = world;;
+	entity tmp_entity, piece, king = world;
 
 	piece = oldloc.chess_piece;
 	tmp_entity = loc.chess_piece;
@@ -162,12 +185,16 @@ float chess_KingWouldBeSafe(entity oldloc, entity loc)
 	oldloc.chess_piece = world;
 	loc.chess_piece = piece;
 
-	entity head;
-	for(head = world; (head = find(head, classname, "chess_board")); )
+	float i;
+	for(i = 1; i <= 64; ++i)
 	{
-		if(head.chess_piece.chess_id == CHESS_PIECE_KING)
-		if(SAME_TEAM(head.chess_piece, piece))
-			king = head;
+		if(chess_board[i].chess_piece)
+		if(chess_board[i].chess_piece.chess_id == CHESS_PIECE_KING)
+		if(SAME_TEAM(chess_board[i].chess_piece, piece))
+		{
+			king = chess_board[i];
+			break;
+		}
 	}
 
 	float safe = (chess_King_SafeMove(king.chess_piece, king) == world);
@@ -389,11 +416,12 @@ void chess_Piece_Taken(entity loc)
 {
 	entity piece = loc.chess_piece;
 	pointparticles(particleeffectnum("explosion_medium"), piece.origin, '0 0 0', 1);
-	sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+	sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 }
 
 float chess_Move(entity piece, entity loc)
 {
+	if(!piece || !loc || !piece.chess_piece) { return FALSE; }
 	if(!piece.cnt || !loc.cnt) { return FALSE; }
 
 	float valid_move = chess_Move_Valid(piece, loc);
@@ -402,6 +430,17 @@ float chess_Move(entity piece, entity loc)
 	entity realpiece = piece.chess_piece;
 
 	if(loc.chess_piece) { chess_Piece_Taken(loc); }
+
+	if(realpiece.chess_id == CHESS_PIECE_PAWN)
+	if((loc.count == 8 && realpiece.team == NUM_TEAM_1) || (loc.count == 1 && realpiece.team == NUM_TEAM_2))
+	{
+		float myteam = realpiece.team;
+		// a pawn made it to the end of the board!
+		remove(realpiece); // so kill it...
+
+		chess_Piece_Spawn(loc, ((chess_current_player.cvar_cl_chess_selection == "") ? CHESS_PIECE_QUEEN : chess_IDFromName(chess_current_player.cvar_cl_chess_selection)), myteam);
+		realpiece = loc.chess_piece; // the below check resets this, but oh well
+	}
 
 	piece.chess_piece = world;
 	loc.chess_piece = realpiece;
@@ -562,17 +601,20 @@ float chess_PieceCanMove(entity loc)
 
 float chess_CheckMate()
 {
-	entity head, king = world, piece = world;
-	for(head = world; (head = find(head, classname, "chess_board")); )
+	entity king = world, piece = world;
+	float i;
+	for(i = 1; i <= 64; ++i)
 	{
-		if(head.chess_piece.chess_id == CHESS_PIECE_KING)
-		if(head.chess_piece.team == chess_current_team)
+		if(chess_board[i].chess_piece.chess_id == CHESS_PIECE_KING)
+		if(chess_board[i].chess_piece.team == chess_current_team)
 		{
-			king = head.chess_piece;
-			piece = head;
+			king = chess_board[i].chess_piece;
+			piece = chess_board[i];
 			break;
 		}
 	}
+
+	if(!king) { print("WTF no king found?\n"); return FALSE; }
 
 	king.chess_checked = chess_King_SafeMove(king, piece);
 	king.chess_check = (king.chess_checked != world);
@@ -583,11 +625,11 @@ float chess_CheckMate()
 	else
 	{
 		// stalemate... or is it? check to see if another piece can move (starting to get into the resource intensive stuff)
-		for(head = world; (head = find(head, classname, "chess_board")); )
+		for(i = 1; i <= 64; ++i)
 		{
-			if(head.chess_piece.team == chess_current_team)
+			if(chess_board[i].chess_piece.team == chess_current_team)
 			{
-				if(chess_PieceCanMove(head))
+				if(chess_PieceCanMove(chess_board[i]))
 					return FALSE; // phew, someone can move!
 			}
 		}
@@ -620,10 +662,13 @@ void chess_count_alive_players()
 }
 #define CHESS_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0))
 #define CHESS_ALIVE_TEAMS_OK() (CHESS_ALIVE_TEAMS() == 2)
-
+.float chess_check_delay; // use a custom delay to prevent spam
 float Chess_CheckWinner()
 {
 	entity head;
+	if(time >= round_handler.chess_check_delay) { round_handler.chess_check_delay = time + 1; }
+	else { return 0; }
+
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
 		RandomSelection_Init();
@@ -639,7 +684,7 @@ float Chess_CheckWinner()
 			bprint("No other teammates found, switching teams\n");
 			chess_SwitchTeam();
 		}
-		round_handler.round_timelimit = ((autocvar_g_chess_round_timelimit > 0) ? autocvar_g_chess_round_timelimit : 20);
+		round_handler.round_endtime += round_handler.round_timelimit; // extend timelimit for new player
 		return 0;
 	}
 
@@ -659,6 +704,7 @@ float Chess_CheckWinner()
 	}
 
 	round_handler_Init(5, autocvar_g_chess_warmup, ((autocvar_g_chess_round_timelimit > 0) ? autocvar_g_chess_round_timelimit : 20));
+	chess_current_player = world;
 
 	nades_Clear(world, TRUE);
 
@@ -690,12 +736,16 @@ float Chess_CheckTeams()
 
 void Chess_RoundStart()
 {
-	entity head;
-	for(head = world; (head = find(head, classname, "chess_piece")); )
-		remove(head);
-	for(head = world; (head = find(head, classname, "chess_board")); )
-		head.chess_piece = world;
+	float i;
+	for(i = 1; i <= 64; ++i)
+	{
+		if((chess_board[i]).chess_piece) { remove(chess_board[i].chess_piece.sprite); remove(chess_board[i].chess_piece); }
+		chess_board[i].chess_piece = world;
+	}
+
 	chess_SpawnPieces();
+
+	chess_SwitchTeam();
 }
 
 // mutator hooks
@@ -706,11 +756,25 @@ MUTATOR_HOOKFUNCTION(chess_PlayerCommand)
 
 	if(cmd_name == "chess")
 	{
-		if(!argv(2) || !argv(3)) { sprint(self, "You must define a board square to move to. Example: cmd chess b2 b4\n"); }
-		if(!chess_Move(find(world, message, argv(2)), find(world, message, argv(3)))) { sprint(self, "Invalid move\n"); }
+		entity piece = world, move_to = world;
+		float i;
+		for(i = 1; i <= 64; ++i)
+		{
+			if((chess_board[i]).message == argv(2)) { piece = chess_board[i]; }
+			if((chess_board[i]).message == argv(3)) { move_to = chess_board[i]; }
+		}
+		if(chess_current_player != self) { sprint(self, "It is not your turn\n"); return TRUE; }
+		if(!argv(2) || !argv(3)) { sprint(self, "You must define a board square to move to. Example: cmd chess b2 b4\n"); return TRUE; }
+		if(!chess_Move(piece, move_to)) { sprint(self, "Invalid move\n"); return TRUE; }
 		return TRUE;
 	}
 
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(chess_GetCvars)
+{
+	GetCvars_handleString(get_cvars_s, get_cvars_f, cvar_cl_chess_selection, "cl_chess_selection");
 	return FALSE;
 }
 
@@ -748,13 +812,14 @@ void chess_DelayedInit() // Do this check with a delay so we can wait for teams 
 
 void chess_Initialize()
 {
-	precache_sound("weapons/rocket_impact.wav");
+	precache_sound(W_Sound("rocket_impact"));
 	InitializeEntity(world, chess_DelayedInit, INITPRIO_GAMETYPE);
 }
 
 MUTATOR_DEFINITION(gamemode_chess)
 {
 	MUTATOR_HOOK(SV_ParseClientCommand, chess_PlayerCommand, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GetCvars, chess_GetCvars, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, chess_GetTeamCount, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD

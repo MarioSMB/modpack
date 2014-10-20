@@ -51,9 +51,9 @@ void W_Laser_Attack (float issecondary, float deathtype, float wep)
 	s_forward = v_forward * cos(a * DEG2RAD) + v_up * sin(a * DEG2RAD);
 
 	if(issecondary == 1)
-		W_SetupShot_Dir (self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, autocvar_g_balance_laser_secondary_damage, wep);
+		W_SetupShot_Dir (self, s_forward, FALSE, 3, W_Sound("lasergun_fire"), CH_WEAPON_B, autocvar_g_balance_laser_secondary_damage, wep);
 	else
-		W_SetupShot_Dir (self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, autocvar_g_balance_laser_primary_damage, wep);
+		W_SetupShot_Dir (self, s_forward, FALSE, 3, W_Sound("lasergun_fire"), CH_WEAPON_B, autocvar_g_balance_laser_primary_damage, wep);
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn ();
@@ -180,7 +180,7 @@ void W_Laser_Attack2 ()
 	// only play fire sound if 0.5 sec has passed since player let go the fire button
 	if(time - self.prevgauntletfire > 0.5)
 	{
-		sound (self, CH_WEAPON_A, "weapons/gauntlet_fire.wav", VOL_BASE, ATTEN_NORM);
+		sound (self, CH_WEAPON_A, W_Sound("gauntlet_fire"), VOL_BASE, ATTEN_NORM);
 	}
 
 	entity beam, oldself;
@@ -271,9 +271,9 @@ float w_laser(float req)
 		precache_model ("models/weapons/g_laser.md3");
 		precache_model ("models/weapons/v_laser.md3");
 		precache_model ("models/weapons/h_laser.iqm");
-		precache_sound ("weapons/lasergun_fire.wav");
-		precache_sound ("weapons/gauntlet_fire.wav");
-		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
+		precache_sound (W_Sound("lasergun_fire"));
+		precache_sound (W_Sound("gauntlet_fire"));
+		//precache_sound (W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
 	{
@@ -290,7 +290,7 @@ float w_laser(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Reload(0, autocvar_g_balance_laser_reload_ammo, autocvar_g_balance_laser_reload_time, "weapons/reload.wav");
+		W_Reload(0, autocvar_g_balance_laser_reload_ammo, autocvar_g_balance_laser_reload_time, W_Sound("reload"));
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{

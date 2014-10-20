@@ -48,7 +48,7 @@ float t_machinegun(float req)
 		{
 			precache_model ("models/turrets/base.md3");
 			precache_model ("models/turrets/machinegun.md3");
-			precache_sound ("weapons/uzi_fire.wav");
+			precache_sound (W_Sound("uzi_fire"));
 			return TRUE;
 		}
 	}

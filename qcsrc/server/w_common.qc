@@ -134,7 +134,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 			if(f <= 0)
 				continue;
 
-			snd = strcat("weapons/nexwhoosh", ftos(floor(random() * 3) + 1), ".wav");
+			snd = W_Sound(strcat("nexwhoosh", ftos(floor(random() * 3) + 1)));
 
 			if(!pseudoprojectile)
 				pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume

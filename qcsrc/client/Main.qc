@@ -109,6 +109,7 @@ void CSQC_Init(void)
 	registercvar("cl_nocarry", "0");
 	registercvar("cl_buffs_autoreplace", "1");
 	registercvar("cl_physics", "default"); // default is invalid, so it will be overridden by standard physics cvars
+	registercvar("cl_chess_selection", "queen");
 
 	// these need to be defined for quickmenu to work
 	registercvar("hud_panel_quickmenu_pos", "0.010000 0.410000");

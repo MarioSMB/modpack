@@ -358,7 +358,7 @@ void W_Crylink_Attack (void)
 	if(autocvar_g_balance_crylink_primary_joinexplode)
 		maxdmg += autocvar_g_balance_crylink_primary_joinexplode_damage;
 
-	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire.wav", CH_WEAPON_A, maxdmg, self.weapon);
+	W_SetupShot (self, FALSE, 2, W_Sound("crylink_fire"), CH_WEAPON_A, maxdmg, self.weapon);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
@@ -467,7 +467,7 @@ void W_Crylink_Attack2 (void)
 	if(autocvar_g_balance_crylink_secondary_joinexplode)
 		maxdmg += autocvar_g_balance_crylink_secondary_joinexplode_damage;
 
-	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire2.wav", CH_WEAPON_A, maxdmg, self.weapon);
+	W_SetupShot (self, FALSE, 2, W_Sound("crylink_fire2"), CH_WEAPON_A, maxdmg, self.weapon);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
@@ -651,10 +651,10 @@ float w_crylink(float req)
 		precache_model ("models/weapons/g_crylink.md3");
 		precache_model ("models/weapons/v_crylink.md3");
 		precache_model ("models/weapons/h_crylink.iqm");
-		precache_sound ("weapons/crylink_fire.wav");
-		precache_sound ("weapons/crylink_fire2.wav");
-		precache_sound ("weapons/crylink_linkjoin.wav");
-		//precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound somewhere else
+		precache_sound (W_Sound("crylink_fire"));
+		precache_sound (W_Sound("crylink_fire2"));
+		precache_sound (W_Sound("crylink_linkjoin"));
+		//precache_sound (W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound somewhere else
 	}
 	else if (req == WR_SETUP)
 	{
@@ -683,7 +683,7 @@ float w_crylink(float req)
 	}
 	else if (req == WR_RELOAD)
 	{
-		W_Reload(min(autocvar_g_balance_crylink_primary_ammo, autocvar_g_balance_crylink_secondary_ammo), autocvar_g_balance_crylink_reload_ammo, autocvar_g_balance_crylink_reload_time, "weapons/reload.wav");
+		W_Reload(min(autocvar_g_balance_crylink_primary_ammo, autocvar_g_balance_crylink_secondary_ammo), autocvar_g_balance_crylink_reload_ammo, autocvar_g_balance_crylink_reload_time, W_Sound("reload"));
 	}
 	else if (req == WR_SUICIDEMESSAGE)
 	{

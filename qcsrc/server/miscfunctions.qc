@@ -1375,15 +1375,15 @@ void precache()
     precache_model ("models/sprites/10.spr32");
 
     // common weapon precaches
-	precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound here
-    precache_sound ("weapons/weapon_switch.wav");
-    precache_sound ("weapons/weaponpickup.wav");
-    precache_sound ("weapons/unavailable.wav");
-    precache_sound ("weapons/dryfire.wav");
+	precache_sound (W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound here
+    precache_sound (W_Sound("weapon_switch"));
+    precache_sound (W_Sound("weaponpickup"));
+    precache_sound (W_Sound("unavailable"));
+    precache_sound (W_Sound("dryfire"));
     if (g_grappling_hook)
     {
-        precache_sound ("weapons/hook_fire.wav"); // hook
-        precache_sound ("weapons/hook_impact.wav"); // hook
+        precache_sound (W_Sound("hook_fire")); // hook
+        precache_sound (W_Sound("hook_impact")); // hook
     }
 
     if(autocvar_sv_precacheweapons)

@@ -269,7 +269,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 
 void vehicles_gib_explode()
 {
-	sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+	sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 	pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	remove(self);
 }

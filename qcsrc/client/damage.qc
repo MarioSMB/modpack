@@ -217,7 +217,7 @@ void Ent_DamageInfo(float isNew)
 			// spiderbot
 			case DEATH_VH_SPID_MINIGUN:
 				string _snd;
-				_snd = strcat("weapons/ric", ftos(1 + rint(random() * 2)), ".waw");
+				_snd = strcat("ric", ftos(1 + rint(random() * 2)));
 				sound(self, CH_SHOTS, _snd, VOL_BASE, ATTEN_NORM);
 				pointparticles(particleeffectnum("spiderbot_minigun_impact"), self.origin, w_backoff * 1000, 1);
 				break;
@@ -325,7 +325,7 @@ void Ent_DamageInfo(float isNew)
 				break;
 
 			 case DEATH_TURRET_WALK_MELEE:
-				sound(self, CH_SHOTS, "weapons/ric1.wav", VOL_BASE, ATTEN_MIN);
+				sound(self, CH_SHOTS, W_Sound("ric1"), VOL_BASE, ATTEN_MIN);
 				pointparticles(particleeffectnum("TE_SPARK"), self.origin, w_backoff * 1000, 1);
 				break;
 
