@@ -412,7 +412,7 @@ void CommonCommand_editmob(float request, entity caller, float argc)
 					float tmp_remcount = 0;
 					entity tmp_entity;
 
-					FOR_EACH_MONSTER(tmp_entity) { monster_remove(tmp_entity); ++tmp_remcount; }
+					FOR_EACH_MONSTER(tmp_entity) { Monster_Remove(tmp_entity); ++tmp_remcount; }
 
 					monsters_total = monsters_killed = totalspawned = 0;
 

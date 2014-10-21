@@ -125,12 +125,12 @@ void havocbot_ai()
 		)
 			next = ((self.goalstack01.absmin + self.goalstack01.absmax) * 0.5) - (self.origin + self.view_ofs);
 
-		skillblend=bound(0,(skill+self.bot_moveskill-2.5)*0.5,1); //lower skill player can't preturn
+		skillblend=bound(0,(bot_skill+self.bot_moveskill-2.5)*0.5,1); //lower skill player can't preturn
 		distanceblend=bound(0,aimdistance/autocvar_bot_ai_keyboard_distance,1);
 		blend = skillblend * (1-distanceblend);
-		//v = (now * (distanceblend) + next * (1-distanceblend)) * (skillblend) + now * (1-skillblend);
-		//v = now * (distanceblend) * (skillblend) + next * (1-distanceblend) * (skillblend) + now * (1-skillblend);
-		//v = now * ((1-skillblend) + (distanceblend) * (skillblend)) + next * (1-distanceblend) * (skillblend);
+		//v = (now * (distanceblend) + next * (1-distanceblend)) * (bot_skillblend) + now * (1-skillblend);
+		//v = now * (distanceblend) * (bot_skillblend) + next * (1-distanceblend) * (bot_skillblend) + now * (1-skillblend);
+		//v = now * ((1-skillblend) + (distanceblend) * (bot_skillblend)) + next * (1-distanceblend) * (bot_skillblend);
 		v = now + blend * (next - now);
 		//dprint(etos(self), " ");
 		//dprint(vtos(now), ":", vtos(next), "=", vtos(v), " (blend ", ftos(blend), ")\n");
@@ -150,13 +150,13 @@ void havocbot_ai()
 		entity e;
 
 		// we are currently holding a weapon that's not fully loaded, reload it
-		if(skill >= 2) // bots can only reload the held weapon on purpose past this skill
+		if(bot_skill >= 2) // bots can only reload the held weapon on purpose past this skill
 		if(self.clip_load < self.clip_size)
 			self.impulse = 20; // "press" the reload button, not sure if this is done right
 
 		// if we're not reloading a weapon, switch to any weapon in our invnetory that's not fully loaded to reload it next
 		// the code above executes next frame, starting the reloading then
-		if(skill >= 5) // bots can only look for unloaded weapons past this skill
+		if(bot_skill >= 5) // bots can only look for unloaded weapons past this skill
 		if(self.clip_load >= 0) // only if we're not reloading a weapon already
 		{
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
@@ -175,7 +175,7 @@ void havocbot_keyboard_movement(vector destorg)
 	float blend, maxspeed;
 	float sk;
 
-	sk = skill + self.bot_moveskill;
+	sk = bot_skill + self.bot_moveskill;
 
 	maxspeed = autocvar_sv_maxspeed;
 
@@ -186,7 +186,7 @@ void havocbot_keyboard_movement(vector destorg)
 		max(
 			self.havocbot_keyboardtime
 				+ 0.05/max(1, sk+self.havocbot_keyboardskill)
-				+ random()*0.025/max(0.00025, skill+self.havocbot_keyboardskill)
+				+ random()*0.025/max(0.00025, bot_skill+self.havocbot_keyboardskill)
 		, time);
 	keyboard = self.movement * (1.0 / maxspeed);
 
@@ -543,7 +543,7 @@ void havocbot_movetogoal()
 		self.aistatus &= ~AI_STATUS_OUT_JUMPPAD;
 
 	// If there is a trigger_hurt right below try to use the jetpack or make a rocketjump
-	if(skill>6)
+	if(bot_skill>6)
 	if (!(self.flags & FL_ONGROUND))
 	{
 		tracebox(self.origin, self.mins, self.maxs, self.origin + '0 0 -65536', MOVE_NOMONSTERS, self);
@@ -579,7 +579,7 @@ void havocbot_movetogoal()
 				{
 					self.movement_x = dir * v_forward * maxspeed;
 					self.movement_y = dir * v_right * maxspeed;
-					if (skill < 10)
+					if (bot_skill < 10)
 						havocbot_keyboard_movement(self.origin + dir * 100);
 				}
 			}
@@ -797,11 +797,11 @@ void havocbot_movetogoal()
 		}
 
 		dodge = havocbot_dodge();
-		dodge = dodge * bound(0,0.5+(skill+self.bot_dodgeskill)*0.1,1);
-		evadelava = evadelava * bound(1,3-(skill+self.bot_dodgeskill),3); //Noobs fear lava a lot and take more distance from it
+		dodge = dodge * bound(0,0.5+(bot_skill+self.bot_dodgeskill)*0.1,1);
+		evadelava = evadelava * bound(1,3-(bot_skill+self.bot_dodgeskill),3); //Noobs fear lava a lot and take more distance from it
 		traceline(self.origin, ( ( self.enemy.absmin + self.enemy.absmax ) * 0.5 ), TRUE, world);
 		if(IS_PLAYER(trace_ent))
-			dir = dir * bound(0,(skill+self.bot_dodgeskill)/7,1);
+			dir = dir * bound(0,(bot_skill+self.bot_dodgeskill)/7,1);
 
 		dir = normalize(dir + dodge + evadeobstacle + evadelava);
 	//	self.bot_dodgevector = dir;
@@ -830,18 +830,18 @@ void havocbot_movetogoal()
 	self.movement_z = dir * v_up * maxspeed;
 
 	// Emulate keyboard interface
-	if (skill < 10)
+	if (bot_skill < 10)
 		havocbot_keyboard_movement(destorg);
 
 	// Bunnyhop!
 //	if(self.aistatus & AI_STATUS_ROAMING)
 	if(self.goalcurrent)
-	if(skill+self.bot_moveskill >= autocvar_bot_ai_bunnyhop_skilloffset)
+	if(bot_skill+self.bot_moveskill >= autocvar_bot_ai_bunnyhop_skilloffset)
 		havocbot_bunnyhop(dir);
 
 	if ((dir * v_up) >= autocvar_sv_jumpvelocity*0.5 && (self.flags & FL_ONGROUND)) self.BUTTON_JUMP=1;
-	if (((dodge * v_up) > 0) && random()*frametime >= 0.2*bound(0,(10-skill-self.bot_dodgeskill)*0.1,1)) self.BUTTON_JUMP=TRUE;
-	if (((dodge * v_up) < 0) && random()*frametime >= 0.5*bound(0,(10-skill-self.bot_dodgeskill)*0.1,1)) self.havocbot_ducktime=time+0.3/bound(0.1,skill+self.bot_dodgeskill,10);
+	if (((dodge * v_up) > 0) && random()*frametime >= 0.2*bound(0,(10-bot_skill-self.bot_dodgeskill)*0.1,1)) self.BUTTON_JUMP=TRUE;
+	if (((dodge * v_up) < 0) && random()*frametime >= 0.5*bound(0,(10-bot_skill-self.bot_dodgeskill)*0.1,1)) self.havocbot_ducktime=time+0.3/bound(0.1,bot_skill+self.bot_dodgeskill,10);
 }
 
 void havocbot_chooseenemy()
@@ -944,7 +944,7 @@ float havocbot_chooseweapon_checkreload(float new_weapon)
 	// bots under this skill cannot find unloaded weapons to reload idly when not in combat,
 	// so skip this for them, or they'll never get to reload their weapons at all.
 	// this also allows bots under this skill to be more stupid, and reload more often during combat :)
-	if(skill < 5)
+	if(bot_skill < 5)
 		return FALSE;
 
 	// if this weapon is scheduled for reloading, don't switch to it during combat
@@ -1007,7 +1007,7 @@ void havocbot_chooseweapon()
 
 	// Bots with no skill will be 4 times more slower than "godlike" bots when doing weapon combos
 	// Ideally this 4 should be calculated as longest_weapon_refire / bot_ai_weapon_combo_threshold
-	combo_time = time + ct + (ct * ((-0.3*(skill+self.bot_weaponskill))+3));
+	combo_time = time + ct + (ct * ((-0.3*(bot_skill+self.bot_weaponskill))+3));
 
 	combo = FALSE;
 

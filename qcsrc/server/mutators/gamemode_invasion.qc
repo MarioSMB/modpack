@@ -118,7 +118,7 @@ float Invasion_CheckWinner()
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
 		FOR_EACH_MONSTER(head)
-			monster_remove(head);
+			Monster_Remove(head);
 
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
@@ -195,7 +195,7 @@ float Invasion_CheckWinner()
 	}
 
 	FOR_EACH_MONSTER(head)
-		monster_remove(head);
+		Monster_Remove(head);
 
 	if(teamplay)
 	{

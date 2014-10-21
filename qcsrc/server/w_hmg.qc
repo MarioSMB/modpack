@@ -70,7 +70,7 @@ float w_hmg(float req)
 {
 	float ammo_amount;
 	if (req == WR_AIM)
-		if(vlen(self.origin-self.enemy.origin) < 3000 - bound(0, skill, 10) * 200)
+		if(vlen(self.origin-self.enemy.origin) < 3000 - bound(0, bot_skill, 10) * 200)
 			self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
 		else
 		{

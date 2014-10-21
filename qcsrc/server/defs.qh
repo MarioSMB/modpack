@@ -669,3 +669,5 @@ float sv_showfps;
 .float sub_target_used;
 
 .string cvar_cl_physics;
+
+.float skill;

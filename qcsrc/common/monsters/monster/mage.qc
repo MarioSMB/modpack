@@ -1,7 +1,7 @@
 #ifdef REGISTER_MONSTER
 REGISTER_MONSTER(
 /* MON_##id   */ MAGE,
-/* function   */ m_mage,
+/* functions  */ M_Mage, M_Mage_Attack,
 /* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RANGED,
 /* mins,maxs  */ '-36 -36 -24', '36 36 50',
 /* model      */ "mage.dpm",
@@ -46,19 +46,20 @@ const float mage_anim_pain		= 3;
 const float mage_anim_death		= 4;
 const float mage_anim_run		= 5;
 
-void() mage_heal;
-void() mage_shield;
+void() M_Mage_Defend_Heal;
+void() M_Mage_Defend_Shield;
 
 .entity mage_spike;
-.float shield_ltime;
+.float mage_shield_delay;
+.float mage_shield_time;
 
-float friend_needshelp(entity e)
+float M_Mage_Defend_Heal_Check(entity e)
 {
 	if(e == world)
 		return FALSE;
 	if(e.health <= 0)
 		return FALSE;
-	if(DIFF_TEAM(e, self) && e != self.monster_owner)
+	if(DIFF_TEAM(e, self) && e != self.monster_follow)
 		return FALSE;
 	if(e.frozen)
 		return FALSE;
@@ -78,7 +79,7 @@ float friend_needshelp(entity e)
 	return FALSE;
 }
 
-void mage_spike_explode()
+void M_Mage_Attack_Spike_Explode()
 {
 	self.event_damage = func_null;
 
@@ -92,15 +93,15 @@ void mage_spike_explode()
 	remove (self);
 }
 
-void mage_spike_touch()
+void M_Mage_Attack_Spike_Touch()
 {
 	PROJECTILE_TOUCH;
 
-	mage_spike_explode();
+	M_Mage_Attack_Spike_Explode();
 }
 
 // copied from W_Seeker_Think
-void mage_spike_think()
+void M_Mage_Attack_Spike_Think()
 {
 	entity e;
 	vector desireddir, olddir, newdir, eorg;
@@ -111,7 +112,7 @@ void mage_spike_think()
 	if (time > self.ltime || self.enemy.health <= 0 || self.owner.health <= 0)
 	{
 		self.projectiledeathtype |= HITTYPE_SPLASH;
-		mage_spike_explode();
+		M_Mage_Attack_Spike_Explode();
 	}
 
 	spd = vlen(self.velocity);
@@ -163,7 +164,7 @@ void mage_spike_think()
 	UpdateCSQCProjectile(self);
 }
 
-void mage_attack_spike()
+void M_Mage_Attack_Spike()
 {
 	entity missile;
 	vector dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
@@ -172,7 +173,7 @@ void mage_attack_spike()
 
 	missile = spawn ();
 	missile.owner = missile.realowner = self;
-	missile.think = mage_spike_think;
+	missile.think = M_Mage_Attack_Spike_Think;
 	missile.ltime = time + 7;
 	missile.nextthink = time;
 	missile.solid = SOLID_BBOX;
@@ -183,19 +184,19 @@ void mage_attack_spike()
 	missile.velocity = dir * 400;
 	missile.avelocity = '300 300 300';
 	missile.enemy = self.enemy;
-	missile.touch = mage_spike_touch;
+	missile.touch = M_Mage_Attack_Spike_Touch;
 
 	self.mage_spike = missile;
 
 	CSQCProjectile(missile, TRUE, PROJECTILE_MAGE_SPIKE, TRUE);
 }
 
-void mage_heal()
+void M_Mage_Defend_Heal()
 {
 	entity head;
 	float washealed = FALSE;
 
-	for(head = findradius(self.origin, (autocvar_g_monster_mage_heal_range)); head; head = head.chain) if(friend_needshelp(head))
+	for(head = findradius(self.origin, (autocvar_g_monster_mage_heal_range)); head; head = head.chain) if(M_Mage_Defend_Heal_Check(head))
 	{
 		washealed = TRUE;
 		string fx = "";
@@ -245,7 +246,7 @@ void mage_heal()
 	}
 }
 
-void mage_push()
+void M_Mage_Attack_Push()
 {
 	sound(self, CH_SHOTS, W_Sound("tagexp1"), 1, ATTEN_NORM);
 	RadiusDamage (self, self, (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_damage), (autocvar_g_monster_mage_attack_push_radius), world, (autocvar_g_monster_mage_attack_push_force), DEATH_MONSTER_MAGE, self.enemy);
@@ -255,7 +256,7 @@ void mage_push()
 	self.attack_finished_single = time + (autocvar_g_monster_mage_attack_push_delay);
 }
 
-void mage_teleport()
+void M_Mage_Attack_Teleport()
 {
 	if(vlen(self.enemy.origin - self.origin) >= 500)
 		return;
@@ -272,25 +273,23 @@ void mage_teleport()
 	self.attack_finished_single = time + 0.2;
 }
 
-void mage_shield_remove()
+void M_Mage_Defend_Shield_Remove()
 {
 	self.effects &= ~(EF_ADDITIVE | EF_BLUE);
-	self.armorvalue = 0;
-	self.m_armor_blockpercent = autocvar_g_monsters_armor_blockpercent;
+	self.armorvalue = autocvar_g_monsters_armor_blockpercent;
 }
 
-void mage_shield()
+void M_Mage_Defend_Shield()
 {
 	self.effects |= (EF_ADDITIVE | EF_BLUE);
-	self.lastshielded = time + (autocvar_g_monster_mage_shield_delay);
-	self.m_armor_blockpercent = (autocvar_g_monster_mage_shield_blockpercent);
-	self.armorvalue = self.health;
-	self.shield_ltime = time + (autocvar_g_monster_mage_shield_time);
+	self.mage_shield_delay = time + (autocvar_g_monster_mage_shield_delay);
+	self.armorvalue = (autocvar_g_monster_mage_shield_blockpercent);
+	self.mage_shield_time = time + (autocvar_g_monster_mage_shield_time);
 	self.frame = mage_anim_attack;
 	self.attack_finished_single = time + 1;
 }
 
-float mage_attack(float attack_type)
+float M_Mage_Attack(float attack_type)
 {
 	switch(attack_type)
 	{
@@ -298,7 +297,7 @@ float mage_attack(float attack_type)
 		{
 			if(random() <= 0.7)
 			{
-				mage_push();
+				M_Mage_Attack_Push();
 				return TRUE;
 			}
 
@@ -310,14 +309,14 @@ float mage_attack(float attack_type)
 			{
 				if(random() <= 0.4)
 				{
-					mage_teleport();
+					M_Mage_Attack_Teleport();
 					return TRUE;
 				}
 				else
 				{
 					self.frame = mage_anim_attack;
 					self.attack_finished_single = time + (autocvar_g_monster_mage_attack_spike_delay);
-					defer(0.2, mage_attack_spike);
+					defer(0.2, M_Mage_Attack_Spike);
 					return TRUE;
 				}
 			}
@@ -332,12 +331,12 @@ float mage_attack(float attack_type)
 	return FALSE;
 }
 
-void spawnfunc_monster_mage() { monster_initialize(MON_MAGE); }
+void spawnfunc_monster_mage() { Monster_Spawn(MON_MAGE); }
 
 // compatibility with old spawns
 void spawnfunc_monster_shalrath() { spawnfunc_monster_mage(); }
 
-float m_mage(float req)
+float M_Mage(float req)
 {
 	switch(req)
 	{
@@ -346,9 +345,10 @@ float m_mage(float req)
 			entity head;
 			float need_help = FALSE;
 
-			for(head = findradius(self.origin, (autocvar_g_monster_mage_heal_range)); head; head = head.chain)
+			for(head = world; (head = findfloat(head, iscreature, TRUE)); )
 			if(head != self)
-			if(friend_needshelp(head))
+			if(vlen(head.origin - self.origin) <= (autocvar_g_monster_mage_heal_range))
+			if(M_Mage_Defend_Heal_Check(head))
 			{
 				need_help = TRUE;
 				break;
@@ -357,18 +357,17 @@ float m_mage(float req)
 			if(self.health < (autocvar_g_monster_mage_heal_minhealth) || need_help)
 			if(time >= self.attack_finished_single)
 			if(random() < 0.5)
-				mage_heal();
+				M_Mage_Defend_Heal();
 
-			if(time >= self.shield_ltime && self.armorvalue)
-				mage_shield_remove();
+			if(time >= self.mage_shield_time && self.armorvalue)
+				M_Mage_Defend_Shield_Remove();
 
 			if(self.enemy)
 			if(self.health < self.max_health)
-			if(time >= self.lastshielded)
+			if(time >= self.mage_shield_delay)
 			if(random() < 0.5)
-				mage_shield();
+				M_Mage_Defend_Shield();
 
-			monster_move((autocvar_g_monster_mage_speed_run), (autocvar_g_monster_mage_speed_walk), (autocvar_g_monster_mage_speed_stop), mage_anim_walk, mage_anim_run, mage_anim_idle);
 			return TRUE;
 		}
 		case MR_DEATH:
@@ -379,9 +378,15 @@ float m_mage(float req)
 		case MR_SETUP:
 		{
 			if(!self.health) self.health = (autocvar_g_monster_mage_health);
+			if(!self.speed) { self.speed = (autocvar_g_monster_mage_speed_walk); }
+			if(!self.speed2) { self.speed2 = (autocvar_g_monster_mage_speed_run); }
+			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_mage_speed_stop); }
+
+			self.m_anim_walk = mage_anim_walk;
+			self.m_anim_run = mage_anim_run;
+			self.m_anim_idle = mage_anim_idle;
 
 			self.monster_loot = spawnfunc_item_health_large;
-			self.monster_attackfunc	= mage_attack;
 			self.frame = mage_anim_walk;
 
 			return TRUE;

@@ -287,7 +287,7 @@ float w_rlauncher(float req)
 	{
 		// aim and decide to fire if appropriate
 		self.BUTTON_ATCK = bot_aim(autocvar_g_balance_rocketlauncher_speed, 0, autocvar_g_balance_rocketlauncher_lifetime, FALSE);
-		if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
+		if(bot_skill >= 2) // skill 0 and 1 bots won't detonate rockets!
 		{
 			// decide whether to detonate rockets
 			entity missile, targetlist, targ;
@@ -342,7 +342,7 @@ float w_rlauncher(float req)
 				}
 				makevectors(missile.v_angle);
 				targ = targetlist;
-				if (skill > 9) // normal players only do this for the target they are tracking
+				if (bot_skill > 9) // normal players only do this for the target they are tracking
 				{
 					targ = targetlist;
 					while (targ)
@@ -360,7 +360,7 @@ float w_rlauncher(float req)
 					if(v_forward * normalize(missile.origin - self.enemy.origin)< 0.1)
 						if(IS_PLAYER(self.enemy))
 							if(desirabledamage >= 0.1*coredamage)
-								if(random()/distance*300 > frametime*bound(0,(10-skill)*0.2,1))
+								if(random()/distance*300 > frametime*bound(0,(10-bot_skill)*0.2,1))
 									self.BUTTON_ATCK2 = TRUE;
 				//	dprint(ftos(random()/distance*300),">");dprint(ftos(frametime*bound(0,(10-skill)*0.2,1)),"\n");
 				}
@@ -371,7 +371,7 @@ float w_rlauncher(float req)
 			// but don't fire a new shot at the same time!
 			if (desirabledamage >= 0.75 * coredamage) //this should do group damage in rare fortunate events
 				self.BUTTON_ATCK2 = TRUE;
-			if ((skill > 6.5) && (selfdamage > self.health))
+			if ((bot_skill > 6.5) && (selfdamage > self.health))
 				self.BUTTON_ATCK2 = FALSE;
 			//if(self.BUTTON_ATCK2 == TRUE)
 			//	dprint(ftos(desirabledamage),"\n");

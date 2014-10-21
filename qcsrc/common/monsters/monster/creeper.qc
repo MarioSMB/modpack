@@ -1,7 +1,7 @@
 #ifdef REGISTER_MONSTER
 REGISTER_MONSTER(
 /* MON_##id   */ CREEPER,
-/* function   */ m_creeper,
+/* functions  */ M_Creeper, M_Creeper_Attack,
 /* spawnflags */ MON_FLAG_MELEE,
 /* mins,maxs  */ '-18 -18 -25', '18 18 40',
 /* model      */ "creeper.dpm",
@@ -27,7 +27,7 @@ const float creeper_anim_die = 2;
 
 .float creeper_primed;
 
-float creeper_attack(float attack_type)
+float M_Creeper_Attack(float attack_type)
 {
 	switch(attack_type)
 	{
@@ -40,21 +40,21 @@ float creeper_attack(float attack_type)
 
 				RadiusDamage (self, self, (autocvar_g_monster_creeper_attack_explode_damage), (autocvar_g_monster_creeper_attack_explode_edgedamage), (autocvar_g_monster_creeper_attack_explode_radius), world, (autocvar_g_monster_creeper_attack_explode_force), DEATH_MONSTER_CREEPER, other);
 
-				//MonsterSound(monstersound_attack, 0, FALSE, CH_SHOTS);
+				//Monster_Sound(monstersound_attack, 0, FALSE, CH_SHOTS);
 				Damage (self, world, world, self.health + self.max_health + 200, DEATH_KILL, self.origin, '0 0 0'); // killing monster should be reliable enough
 				self.event_damage = func_null;
 				self.frame = creeper_anim_idle;
 			}
 			else
 			{
-				MonsterSound(monstersound_ranged, 0, FALSE, CH_VOICE);
+				Monster_Sound(monstersound_ranged, 0, FALSE, CH_VOICE);
 				self.creeper_primed = TRUE;
 
 				self.colormod = '1 0 0';
 				self.frame = creeper_anim_idle;
 				self.velocity_x = 0;
 				self.velocity_y = 0;
-				self.state = MONSTER_STATE_ATTACK_MELEE;
+				self.state = MONSTER_ATTACK_MELEE;
 				self.attack_finished_single = time + (autocvar_g_monster_creeper_attack_explode_prime_delay);
 			}
 			return TRUE;
@@ -69,9 +69,9 @@ float creeper_attack(float attack_type)
 	return FALSE;
 }
 
-void spawnfunc_monster_creeper() { monster_initialize(MON_CREEPER); }
+void spawnfunc_monster_creeper() { Monster_Spawn(MON_CREEPER); }
 
-float m_creeper(float req)
+float M_Creeper(float req)
 {
 	switch(req)
 	{
@@ -81,7 +81,6 @@ float m_creeper(float req)
 			if(vlen(self.origin - self.enemy.origin) >= self.attack_range * 2)
 				self.creeper_primed = FALSE;
 			if(self.health > 0 && time > self.attack_finished_single) { self.colormod = '1 1 1'; }
-			monster_move((autocvar_g_monster_creeper_speed_run), (autocvar_g_monster_creeper_speed_walk), (autocvar_g_monster_creeper_speed_stop), creeper_anim_walk, creeper_anim_walk, creeper_anim_idle);
 			return TRUE;
 		}
 		case MR_DEATH:
@@ -94,9 +93,14 @@ float m_creeper(float req)
 			if(!self.health) self.health = (autocvar_g_monster_creeper_health);
 			if(!self.wander_delay) self.wander_delay = 10;
 			if(!self.wander_distance) self.wander_distance = 200;
+			if(!self.speed) { self.speed = (autocvar_g_monster_creeper_speed_walk); }
+			if(!self.speed2) { self.speed2 = (autocvar_g_monster_creeper_speed_run); }
+			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_creeper_speed_stop); }
 
+			self.m_anim_walk = creeper_anim_walk;
+			self.m_anim_run = creeper_anim_walk;
+			self.m_anim_idle = creeper_anim_idle;
 			self.monster_loot = spawnfunc_ammo_rockets;
-			self.monster_attackfunc	= creeper_attack;
 			self.frame = creeper_anim_idle;
 			self.colormod = '1 1 1';
 

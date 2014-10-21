@@ -174,11 +174,6 @@ MUTATOR_HOOKABLE(MonsterDies);
 	// INPUT:
 		entity frag_attacker;
 
-MUTATOR_HOOKABLE(MonsterRespawn);
-	// called when a monster wants to respawn
-	// INPUT:
-		entity other;
-
 MUTATOR_HOOKABLE(MonsterDropItem);
 	// called when a monster is dropping loot
 	// INPUT, OUTPUT:

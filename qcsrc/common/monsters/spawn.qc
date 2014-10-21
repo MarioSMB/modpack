@@ -47,7 +47,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 			e.team = spawnedby.team; // colors handled in spawn code
 
 		if(autocvar_g_monsters_owners)
-			e.monster_owner = own; // using .owner makes the monster non-solid for its master
+			e.monster_follow = own; // using .owner makes the monster non-solid for its master
 
 		e.angles = spawnedby.angles;
 	}
@@ -55,7 +55,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
        // initialise checks if monster is valid
 	entity oldself = self;
 	self = e;
-	monster_initialize(monster_id);
+	Monster_Spawn(monster_id);
 	self = oldself;
 
 	return e;

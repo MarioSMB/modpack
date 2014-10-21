@@ -866,7 +866,7 @@ float weapon_pickupevalfunc(entity player, entity item)
 		else if(player.ammo_cells || player.ammo_shells || player.ammo_nails || player.ammo_rockets)
 		{
 			// Skilled bots will grab more
-			c = bound(0, skill / 10, 1) * 0.5;
+			c = bound(0, bot_skill / 10, 1) * 0.5;
 		}
 		else
 			c = 0;
