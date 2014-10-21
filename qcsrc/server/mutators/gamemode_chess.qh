@@ -28,7 +28,7 @@
 .entity chess_checked; // put in check by this piece
 //.float chess_checks; // counter holding how many teams the king has been put in check
 .float chess_moved; // counter holding how many times a piece has moved (for stats and first move identifiers)
-entity chess_board[65];
+entity chess_board_base0[64];
 float chess_current_team; // this team's current turn
 entity chess_current_player; // this player's current turn
 
