@@ -1464,11 +1464,7 @@ void ChatBubbleThink()
 		remove(self);
 		return;
 	}
-	if ((self.owner.BUTTON_CHAT && !self.owner.deadflag && IS_PLAYER(self.owner))
-#ifdef TETRIS
-		|| self.owner.tetris_on
-#endif
-	)
+	if ((self.owner.BUTTON_CHAT && !self.owner.deadflag && IS_PLAYER(self.owner)) )
 		self.model = self.mdl;
 	else
 		self.model = "";
@@ -2417,11 +2413,6 @@ void PlayerPreThink (void)
 		self.max_armorvalue = 0;
 	}
 
-#ifdef TETRIS
-	if (TetrisPreFrame())
-		return;
-#endif
-
 	if(self.frozen == 2)
 	{
 		self.revive_progress = bound(0, self.revive_progress + frametime * self.revive_speed, 1);
@@ -2794,13 +2785,6 @@ void PlayerPostThink (void)
 		}
 	}
 
-#ifdef TETRIS
-	if(self.impulse == 100)
-		ImpulseCommands();
-	if (!TetrisPostFrame())
-	{
-#endif
-
 	CheatFrame();
 
 	//CheckPlayerJump();
@@ -2814,10 +2798,6 @@ void PlayerPostThink (void)
 			return;		// intermission or finale
 		GetPressedKeys();
 	}
-
-#ifdef TETRIS
-	}
-#endif
 
 	/*
 	float i;

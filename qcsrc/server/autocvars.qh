@@ -709,7 +709,6 @@ float autocvar_g_ban_sync_trusted_servers_verify;
 string autocvar_g_ban_sync_uri;
 string autocvar_g_banned_list;
 float autocvar_g_banned_list_idmode;
-float autocvar_g_bastet;
 float autocvar_g_botclip_collisions;
 float autocvar_g_bugrigs;
 float autocvar_g_ca_damage2score_multiplier;
