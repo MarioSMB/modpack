@@ -245,15 +245,6 @@ void InitGameplayMode()
 		MUTATOR_ADD(gamemode_jailbreak);
 	}
 
-	if(g_chess)
-	{
-		fraglimit_override = autocvar_g_chess_point_limit;
-		leadlimit_override = autocvar_g_chess_point_leadlimit;
-		ActivateTeamplay();
-		have_team_spawns = -1; // request team spawns
-		MUTATOR_ADD(gamemode_chess);
-	}
-
 	if(teamplay)
 		entcs_init();
 

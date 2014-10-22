@@ -17,7 +17,6 @@
 #include "gamemode_race.qc"
 #include "gamemode_tdm.qc"
 #include "gamemode_conquest.qc"
-#include "gamemode_chess.qc"
 
 #include "mutator_invincibleproj.qc"
 #include "mutator_new_toys.qc"

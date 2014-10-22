@@ -1603,9 +1603,5 @@ float autocvar_g_buffs_flight_gravity;
 float autocvar_g_buffs_jump_height;
 float autocvar_g_physics_clientselect;
 string autocvar_g_physics_clientselect_options;
-float autocvar_g_chess_point_limit;
-float autocvar_g_chess_point_leadlimit;
-float autocvar_g_chess_warmup;
-float autocvar_g_chess_round_timelimit;
 string autocvar_sv_announcer;
 
