@@ -621,7 +621,7 @@ void ClientCommand_minigame(float request, float argc, string command)
 		{
 			if ( !autocvar_sv_minigames )
 			{
-				sprint(self,"Minigames are not enabled!");
+				sprint(self,"Minigames are not enabled!\n");
 				return;
 			}
 			string minig_cmd = argv(1);

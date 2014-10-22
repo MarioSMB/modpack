@@ -58,29 +58,26 @@ entity start_minigame(entity player, string minigame )
 	if ( !autocvar_sv_minigames || !IS_REAL_CLIENT(player) )
 		return world;
 	
-	entity e;
-	for ( e = minigame_descriptors; e != world; e = e.chain )
-		if ( e.netname == strtolower(minigame) )
+	entity e = minigame_get_descriptor(minigame);
+	if ( e ) 
+	{
+		entity minig = spawn();
+		minig.classname = "minigame";
+		minig.descriptor = e;
+		minig.minigame_event = e.minigame_event;
+		minig.minigame_event(minig,"start");
+		minigame_addplayer(minig,player);
+		
+		if ( !minigame_sessions )
+			minigame_sessions = minig;
+		else
 		{
-			entity minig = spawn();
-			minig.classname = "minigame";
-			minig.descriptor = e;
-			minig.minigame_event = e.minigame_event;
-			minig.minigame_event(minig,"start");
-			minigame_addplayer(minig,player);
-			
-			if ( !minigame_sessions )
-				minigame_sessions = minig;
-			else
-			{
-				entity p = world;
-				for ( e = minigame_sessions; e != world; e = e.chain )
-					p = e;
-				p.chain = minig;
-				minig.owner = p;
-			}
-			return minig;
+			minigame_sessions.owner = minig;
+			minig.chain = minigame_sessions;
+			minigame_sessions = minig;
 		}
+		return minig;
+	}
 		
 	return world;
 }
