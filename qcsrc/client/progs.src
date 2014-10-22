@@ -70,6 +70,7 @@ sortlist.qc
 miscfunctions.qc
 ../server/t_items.qc
 
+../common/minigames/cl_minigames.qh
 teamradar.qc
 hud_config.qc
 hud.qc
@@ -77,6 +78,7 @@ scoreboard.qc
 mapvoting.qc
 csqcmodel_hooks.qc
 ../common/net_notice.qc
+../common/minigames/cl_minigames.qc
 
 rubble.qc
 hook.qc

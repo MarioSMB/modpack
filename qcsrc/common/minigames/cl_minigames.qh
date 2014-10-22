@@ -1,0 +1,13 @@
+// Draw a square in the center of the avaliable area
+void HUD_MinigameBoard_Simpleboard(vector pos, vector mySize, string board);
+
+// For minigame descriptors: hud function for the game board
+.void(vector pos, vector size) minigame_hud_board;
+// For minigame descriptors: hud function for the game status
+.void(vector pos, vector size) minigame_hud_status;
+
+// register all minigames
+void initialize_minigames();
+
+//entity active_minigame;
+

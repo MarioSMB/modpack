@@ -138,10 +138,10 @@ void initialize_minigames()
 {
 	entity last_minig = world;
 	entity minig;
-	#define MINIGAME(name,event_handler) \
+	#define MINIGAME(name) \
 		minig = spawn(); \
-		minig.netname = strzone(strtolower(name)); \
-		minig.minigame_event = event_handler; \
+		minig.netname = strzone(strtolower(#name)); \
+		minig.minigame_event = minigame_event_##name; \
 		if ( !last_minig ) minigame_descriptors = minig; \
 		else last_minig.chain = minig; \
 		last_minig = minig;

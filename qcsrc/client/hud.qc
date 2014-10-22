@@ -6089,6 +6089,61 @@ void HUD_Buffs(void)
 }
 
 
+// Minigame
+//
+
+#include "../common/minigames/minigames.qh"
+
+void HUD_MinigameBoard ()
+{
+	entity hud_minigame;
+	
+	/*if(!autocvar__hud_configure)
+		hud_minigame = active_minigame;
+	else */
+		hud_minigame = minigame_get_descriptor("test");
+	
+	if ( !hud_minigame )
+		return;
+	
+	HUD_Panel_UpdateCvars();
+	
+	
+	vector pos, mySize;
+	pos = panel_pos;
+	mySize = panel_size;
+	
+	hud_minigame.minigame_hud_board(pos,mySize);
+}
+
+void HUD_MinigameStatus ()
+{
+	entity hud_minigame;
+	
+	/*if(!autocvar__hud_configure)
+		hud_minigame = active_minigame;
+	else */
+		hud_minigame = minigame_get_descriptor("test");
+	
+	if ( !hud_minigame )
+		return;
+	
+	HUD_Panel_UpdateCvars();
+	
+	
+	vector pos, mySize;
+	pos = panel_pos;
+	mySize = panel_size;
+	
+	if(panel_bg_padding)
+	{
+		pos += '1 1 0' * panel_bg_padding;
+		mySize -= '2 2 0' * panel_bg_padding;
+	}
+	
+	hud_minigame.minigame_hud_status(pos,mySize);
+}
+
 /*
 ==================
 Main HUD system

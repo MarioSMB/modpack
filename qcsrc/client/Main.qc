@@ -132,6 +132,27 @@ void CSQC_Init(void)
 	registercvar("hud_panel_buffs_bg_border", "");
 	registercvar("hud_panel_buffs_bg_padding", "");
 	//registercvar("hud_panel_buffs_iconalign", "0");
+	
+	
+	// these need to be defined for minigames to work
+	registercvar("hud_panel_minigameboard", "1");
+	registercvar("hud_panel_minigameboard_pos", "0.17 0.15");
+	registercvar("hud_panel_minigameboard_size", "0.55 0.60");
+	registercvar("hud_panel_minigameboard_bg", "border_small");
+	registercvar("hud_panel_minigameboard_bg_color", "");
+	registercvar("hud_panel_minigameboard_bg_color_team", "");
+	registercvar("hud_panel_minigameboard_bg_alpha", "");
+	registercvar("hud_panel_minigameboard_bg_border", "");
+	registercvar("hud_panel_minigameboard_bg_padding", "");
+	registercvar("hud_panel_minigamestatus", "1");
+	registercvar("hud_panel_minigamestatus_pos", "0.7 0.15");
+	registercvar("hud_panel_minigamestatus_size", "0.13 0.60");
+	registercvar("hud_panel_minigamestatus_bg", "border_small");
+	registercvar("hud_panel_minigamestatus_bg_color", "");
+	registercvar("hud_panel_minigamestatus_bg_color_team", "");
+	registercvar("hud_panel_minigamestatus_bg_alpha", "");
+	registercvar("hud_panel_minigamestatus_bg_border", "");
+	registercvar("hud_panel_minigamestatus_bg_padding", "");
 
 	gametype = 0;
 
@@ -157,6 +178,8 @@ void CSQC_Init(void)
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
 	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
+	
+	initialize_minigames();
 
 	WaypointSprite_Load();
 
