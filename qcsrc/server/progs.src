@@ -29,6 +29,8 @@ sys-post.qh
 ../common/net_notice.qh
 ../common/animdecide.qh
 
+../common/minigames/sv_minigames.qh
+
 autocvars.qh
 constants.qh
 defs.qh		// Should rename this, it has fields and globals
@@ -255,3 +257,5 @@ mutators/mutators_include.qc
 ../common/test.qc
 ../common/util.qc
 ../common/notifications.qc
+
+../common/minigames/sv_minigames.qc

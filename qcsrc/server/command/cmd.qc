@@ -613,6 +613,81 @@ void ClientCommand_voice(float request, float argc, string command)
 	}
 }
 
+void ClientCommand_minigame(float request, float argc, string command)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if ( !autocvar_sv_minigames )
+			{
+				sprint(self,"Minigames are not enabled!");
+				return;
+			}
+			string minig_cmd = argv(1);
+			if ( minig_cmd == "start" && argc > 2 )
+			{
+				entity minig = start_minigame(self, argv(2));
+				if ( minig )
+					sprint(self,"Created minigame session: ",ftos(num_for_edict(minig)),"\n");
+				else
+					sprint(self,"Cannot start minigame session!\n");
+				return;
+			}
+			else if ( minig_cmd == "start" && argc > 2 )
+			{
+				entity minig = join_minigame(self, stof(argv(2)));
+				if ( minig )
+					sprint(self,"Joined: ",ftos(num_for_edict(minig)),"\n");
+				else
+					sprint(self,"Cannot join given minigame session!\n");
+				return;
+			}
+			else if ( minig_cmd == "list" )
+			{
+				entity e;
+				for ( e = minigame_descriptors; e != world; e = e.chain )
+					sprint(self,e.netname,"\n");
+				return;
+			}
+			else if ( minig_cmd == "list-sessions" )
+			{
+				entity e;
+				for ( e = minigame_sessions; e != world; e = e.chain )
+					sprint(self,ftos(num_for_edict(e))," (",e.descriptor.netname,")\n");
+				return;
+			}
+			else if ( minig_cmd == "end" || minig_cmd == "part" )
+			{
+				if ( self.active_minigame )
+				{
+					part_minigame(self);
+					sprint(self,"Left minigame session\n");
+				}
+				else
+					sprint(self,"You aren't playing any minigame\n");
+				return;
+			}
+		}
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			sprint(self, "\nUsage:^3 cmd minigame start <minigame>\n");
+			sprint(self, "  Start a new minigame session\n");
+			sprint(self, "Usage:^3 cmd minigame join <session>\n");
+			sprint(self, "  Join an exising minigame session\n");
+			sprint(self, "Usage:^3 cmd minigame list\n");
+			sprint(self, "  List available minigames\n");
+			sprint(self, "Usage:^3 cmd minigame list-sessions\n");
+			sprint(self, "  List available minigames sessions\n");
+			sprint(self, "Usage:^3 cmd minigame part|end\n");
+			sprint(self, "  Leave the current minigame\n");
+			return;
+		}
+	}
+}
+
+
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
 void ClientCommand_(float request)
@@ -660,6 +735,7 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(request, arguments), "Suggest a map to the mapvote at match end") \
 	CLIENT_COMMAND("tell", ClientCommand_tell(request, arguments, command), "Send a message directly to a player") \
 	CLIENT_COMMAND("voice", ClientCommand_voice(request, arguments, command), "Send voice message via sound") \
+	CLIENT_COMMAND("minigame", ClientCommand_minigame(request, arguments, command), "Start a minigame") \
 	/* nothing */
 
 void ClientCommand_macro_help()

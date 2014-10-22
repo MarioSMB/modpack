@@ -1,0 +1,65 @@
+
+
+/// Initialize the minigame system
+void initialize_minigames();
+
+/// Create a new minigame session
+/// \return minigame session entity
+entity start_minigame(entity player, string minigame );
+
+/// Join an existing minigame session
+/// \return minigame session entity
+entity join_minigame(entity player, float game_id );
+
+/// Part minigame session
+void part_minigame(entity player );
+
+
+/// Ends a minigame session
+void end_minigame(entity minigame_session);
+
+/// Ends all minigame sessions
+void end_minigames();
+
+
+/// For minigame sessions/descriptors: execute the given event
+.float(entity,string,...)   minigame_event;
+/// For minigame sessions: minigame descriptor object
+.entity descriptor;
+/// For minigame sessions: chain of players
+.entity minigame_players;
+/// For players: Minigame being played
+.entity active_minigame;
+
+
+entity minigame_sessions;
+entity minigame_descriptors;
+
+float minigame_event_test(entity minigame, string event, ...count)
+{
+	if ( event == "start" )
+	{
+		dprint("Starting ",minigame.descriptor.netname,"\n");
+		return 1;
+	}
+	else if ( event == "join" && count > 0 )
+	{
+		dprint(...(0,entity).netname," joined ",minigame.descriptor.netname,"\n");
+		return 1;
+	}
+	else if ( event == "part" && count > 0 )
+	{
+		dprint(...(0,entity).netname," parted ",minigame.descriptor.netname,"\n");
+		return 1;
+	}
+	else if ( event == "end" )
+	{
+		dprint("Game ended ",minigame.descriptor.netname,"\n");
+		return 1;
+	}
+	dprint("Unhandled event: ",event,"\n");
+	return 0;
+}
+
+#define REGISTERED_MINIGAMES \
+	MINIGAME("test", minigame_event_test)

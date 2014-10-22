@@ -1603,4 +1603,4 @@ float autocvar_g_buffs_jump_height;
 float autocvar_g_physics_clientselect;
 string autocvar_g_physics_clientselect_options;
 string autocvar_sv_announcer;
-
+float autocvar_sv_minigames;
