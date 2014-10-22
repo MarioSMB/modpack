@@ -69,7 +69,7 @@ void chess_Piece_Spawn(entity loc, float pid, float teamnumber)
 	precache_model(strcat("models/chess/", piece.netname, ".md3"));
 	setmodel(piece, strcat("models/chess/", piece.netname, ".md3"));
 
-	WaypointSprite_SpawnFixed(strzone(piece.message), piece.origin, piece, sprite, RADARICON_DANGER, '0 1 1');
+	WaypointSprite_SpawnFixed(strzone(piece.message), piece.origin, piece, sprite, RADARICON_DANGER, Team_ColorRGB(piece.team));
 
 	loc.chess_piece = piece;
 }
@@ -151,7 +151,9 @@ void chess_Board_Spawn()
 		piece.cnt = num;
 		piece.count = ltrnum;
 		piece.netname = ltr;
-		piece.message = strcat(ltr, ftos(num+1));
+		piece.message = strzone(strcat(ltr, ftos(num+1)));
+
+		WaypointSprite_SpawnFixed(piece.message, piece.origin, piece, sprite, RADARICON_DANGER, '0 1 1');
 
 		vector pos;
 		pos_x = board_min_x + cell_width*num;
@@ -190,34 +192,33 @@ entity chess_King_SafeMove(entity king, entity loc)
 	return world;
 }
 
+.float chess_king_recurse; // prevent recursive loops
 float chess_KingWouldBeSafe(entity oldloc, entity loc)
 {
-	entity tmp_entity, piece, king = world;
+	entity tmp_entity, piece;
 
 	piece = oldloc.chess_piece;
 	tmp_entity = loc.chess_piece;
 
+	if(piece.chess_id != CHESS_PIECE_KING) { return TRUE; } // return TRUE so check succeeds (we dont care if another piece is unsafe)
 	if(SAME_TEAM(piece, tmp_entity)) { return FALSE; } // oops, let's fail here
+	if(piece.chess_king_recurse) { piece.chess_king_recurse = 0; return TRUE; } // TRUE?
+	if(tmp_entity)
+	if(tmp_entity.chess_king_recurse) { tmp_entity.chess_king_recurse = 0; return TRUE; }
 
 	oldloc.chess_piece = world;
 	loc.chess_piece = piece;
 
-	float i;
-	for(i = 1; i <= 64; ++i)
-	{
-		if(chess_board_base1(i).chess_piece)
-		if(chess_board_base1(i).chess_piece.chess_id == CHESS_PIECE_KING)
-		if(SAME_TEAM(chess_board_base1(i).chess_piece, piece))
-		{
-			king = chess_board_base1(i);
-			break;
-		}
-	}
+	piece.chess_king_recurse = 1;
+	if(tmp_entity) { tmp_entity.chess_king_recurse = 1; }
 
-	float safe = (chess_King_SafeMove(king.chess_piece, king) == world);
+	float safe = (chess_King_SafeMove(piece, loc) == world);
 
 	oldloc.chess_piece = piece;
 	loc.chess_piece = tmp_entity;
+
+	piece.chess_king_recurse = 0;
+	if(tmp_entity) { tmp_entity.chess_king_recurse = 0; }
 
 	return safe;
 }
@@ -380,6 +381,7 @@ float chess_Move_Valid(entity oldloc, entity loc)
 		case CHESS_PIECE_KING:
 		{
 			float safe = chess_King_SafeMove(piece, loc) == world;
+			if(!safe) { break; }
 			if(!piece.chess_moved && !piece.chess_check)
 			{
 				if(chess_current_team == NUM_TEAM_1)
@@ -388,13 +390,13 @@ float chess_Move_Valid(entity oldloc, entity loc)
 					if(!(chess_board_base1(8)).chess_moved)
 					if(!(chess_board_base1(6)).chess_piece)
 					if(!(chess_board_base1(7)).chess_piece)
-						return safe ? 2 : 0;
+						return 2;
 					if(loc.cnt == 3)
 					if(!(chess_board_base1(1)).chess_moved)
 					if(!(chess_board_base1(2)).chess_piece)
 					if(!(chess_board_base1(3)).chess_piece)
 					if(!(chess_board_base1(4)).chess_piece)
-						return safe ? 3 : 0;
+						return 3;
 
 				}
 				else
@@ -403,25 +405,25 @@ float chess_Move_Valid(entity oldloc, entity loc)
 					if(!(chess_board_base1(64)).chess_moved)
 					if(!(chess_board_base1(63)).chess_piece)
 					if(!(chess_board_base1(62)).chess_piece)
-						return safe ? 4 : 0;
+						return 4;
 					if(loc.cnt == 59)
 					if(!(chess_board_base1(57)).chess_moved)
 					if(!(chess_board_base1(58)).chess_piece)
 					if(!(chess_board_base1(59)).chess_piece)
 					if(!(chess_board_base1(60)).chess_piece)
-						return safe ? 5 : 0;
+						return 5;
 
 				}
 			}
 
-			if(chess_Board(oldloc, CHESS_MOVE_UP) == loc) { return safe; }
-			if(chess_Board(oldloc, CHESS_MOVE_DN) == loc) { return safe; }
-			if(chess_Board(oldloc, CHESS_MOVE_LEFT) == loc) { return safe; }
-			if(chess_Board(oldloc, CHESS_MOVE_RIGHT) == loc) { return safe; }
-			if(chess_Board(oldloc, CHESS_MOVE_UPRIGHT) == loc) { return safe; }
-			if(chess_Board(oldloc, CHESS_MOVE_UPLEFT) == loc) { return safe; }
-			if(chess_Board(oldloc, CHESS_MOVE_DNLEFT) == loc) { return safe; }
-			if(chess_Board(oldloc, CHESS_MOVE_DNRIGHT) == loc) { return safe; }
+			if(chess_Board(oldloc, CHESS_MOVE_UP) == loc) { return TRUE; }
+			if(chess_Board(oldloc, CHESS_MOVE_DN) == loc) { return TRUE; }
+			if(chess_Board(oldloc, CHESS_MOVE_LEFT) == loc) { return TRUE; }
+			if(chess_Board(oldloc, CHESS_MOVE_RIGHT) == loc) { return TRUE; }
+			if(chess_Board(oldloc, CHESS_MOVE_UPRIGHT) == loc) { return TRUE; }
+			if(chess_Board(oldloc, CHESS_MOVE_UPLEFT) == loc) { return TRUE; }
+			if(chess_Board(oldloc, CHESS_MOVE_DNLEFT) == loc) { return TRUE; }
+			if(chess_Board(oldloc, CHESS_MOVE_DNRIGHT) == loc) { return TRUE; }
 			break;
 		}
 	}
@@ -436,13 +438,29 @@ void chess_Piece_Taken(entity loc)
 	sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 }
 
+void chess_MovePiece(float idfrom, float idto)
+{
+	// WARNING: this function assumes idto has no piece occupying it
+	entity entfrom = chess_board_base1(idfrom), entto = chess_board_base1(idto);
+
+	if(!entfrom) { return; }
+
+	entto.chess_piece = entfrom.chess_piece;
+	entfrom.chess_piece = world;
+
+	setorigin(entto.chess_piece, entto.origin);
+}
+
+float chess_update_status;
 float chess_Move(entity piece, entity loc)
 {
-	if(!piece || !loc || !piece.chess_piece) { return FALSE; }
-	if(!piece.cnt || !loc.cnt) { return FALSE; }
+	print("What are we really doing... ", piece.message, " to ", loc.message, "\n");
+	print("Also, our pieces are: ", piece.chess_piece.message, " and ", loc.chess_piece.message, "\n");
+	if(!piece || !loc || !piece.chess_piece) { print("Piece or location doesn't exist\n"); return FALSE; }
+	if(!piece.cnt || !loc.cnt) { print("cnt check failed\n"); return FALSE; }
 
 	float valid_move = chess_Move_Valid(piece, loc);
-	if(!valid_move) { return FALSE; }
+	if(!valid_move) { print("Move is really invalid\n"); return FALSE; }
 
 	entity realpiece = piece.chess_piece;
 
@@ -461,15 +479,23 @@ float chess_Move(entity piece, entity loc)
 
 	piece.chess_piece = world;
 	loc.chess_piece = realpiece;
+	setorigin(realpiece, loc.origin);
 
 	// silly handling of castling
 	switch(valid_move)
 	{
+		case 2: { chess_MovePiece(8, 6); break; }
+		case 3: { chess_MovePiece(1, 4); break; }
+		case 4: { chess_MovePiece(64, 62); break; }
+		case 5: { chess_MovePiece(57, 60); break; }
+
 		case 2: { (chess_board_base1(6)).chess_piece = (chess_board_base1(8)).chess_piece; (chess_board_base1(8)).chess_piece = world; break; }
 		case 3: { (chess_board_base1(4)).chess_piece = (chess_board_base1(1)).chess_piece; (chess_board_base1(1)).chess_piece = world; break; }
 		case 4: { (chess_board_base1(62)).chess_piece = (chess_board_base1(64)).chess_piece; (chess_board_base1(64)).chess_piece = world; break; }
 		case 5: { (chess_board_base1(60)).chess_piece = (chess_board_base1(57)).chess_piece; (chess_board_base1(57)).chess_piece = world; break; }
 	}
+
+	chess_update_status = TRUE;
 
 	return TRUE;
 }
@@ -686,6 +712,11 @@ float Chess_CheckWinner()
 	if(time >= round_handler.chess_check_delay) { round_handler.chess_check_delay = time + 1; }
 	else { return 0; }
 
+	if(chess_update_status)
+		chess_update_status = FALSE;
+	else
+		return 0;
+
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
 		RandomSelection_Init();
@@ -773,16 +804,22 @@ MUTATOR_HOOKFUNCTION(chess_PlayerCommand)
 
 	if(cmd_name == "chess")
 	{
-		entity piece = world, move_to = world;
+		string move_from = argv(2), move_to = argv(3);
+		entity piece = world, newpiece = world;
 		float i;
+
+		print("WTF: ", move_from, " ", move_to, "\n");
+
+		if(chess_current_player != self) { sprint(self, "It is not your turn\n"); return TRUE; }
+		if(move_from == "" || move_to == "") { sprint(self, "You must define a board square to move to. Example: cmd chess b2 b4\n"); return TRUE; }
+
 		for(i = 1; i <= 64; ++i)
 		{
-			if((chess_board_base1(i)).message == argv(2)) { piece = chess_board_base1(i); }
-			if((chess_board_base1(i)).message == argv(3)) { move_to = chess_board_base1(i); }
+			if((chess_board_base1(i)).message == move_from) { piece = chess_board_base1(i); }
+			if((chess_board_base1(i)).message == move_to) { newpiece = chess_board_base1(i); }
 		}
-		if(chess_current_player != self) { sprint(self, "It is not your turn\n"); return TRUE; }
-		if(!argv(2) || !argv(3)) { sprint(self, "You must define a board square to move to. Example: cmd chess b2 b4\n"); return TRUE; }
-		if(!chess_Move(piece, move_to)) { sprint(self, "Invalid move\n"); return TRUE; }
+		if(!chess_Move(piece, newpiece)) { sprint(self, "Invalid move\n"); return TRUE; }
+
 		return TRUE;
 	}
 
