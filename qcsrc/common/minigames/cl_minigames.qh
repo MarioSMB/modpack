@@ -28,6 +28,9 @@ string minigame_texture(string name);
 // For minigame descriptors: hud function for the game status
 .void(vector pos, vector size) minigame_hud_status;
 
+// For minigame descriptors: Input handler
+.float(float bInputType, float nPrimary, float nSecondary) minigame_input;
+
 // register all minigames
 void initialize_minigames();
 

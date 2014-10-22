@@ -117,6 +117,7 @@ void end_minigame(entity minigame_session)
 	for ( e = minigame_session.minigame_players; e != world; e = p )
 	{
 		p = e.chain;
+		e.owner.active_minigame = world;
 		remove(e);
 	}
 	

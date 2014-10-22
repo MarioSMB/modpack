@@ -44,6 +44,11 @@ void minigame_hud_status_test(vector pos, vector mySize)
 	drawstring(titlepos, titletext, titlesize, '1 0 0', panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
+float minigame_input_test(float bInputType, float nPrimary, float nSecondary)
+{
+	return 0;
+}
+
 #endif
 
 entity minigame_descriptors;

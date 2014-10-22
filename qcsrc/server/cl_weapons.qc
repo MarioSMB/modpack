@@ -370,6 +370,8 @@ float forbidWeaponUse(entity player)
 		return 2;
 	if ( player.discomode )
 		return 6;
+	if ( player.active_minigame )
+		return 7;
 	return 0;
 }
 

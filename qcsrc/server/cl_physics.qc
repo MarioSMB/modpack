@@ -771,6 +771,8 @@ void SV_PlayerPhysics()
 		if(!autocvar_sv_ready_restart_after_countdown)
 		if(time < game_starttime)
 			not_allowed_to_move = 1;
+		if(self.active_minigame)
+			not_allowed_to_move = 1;
 
 		if(not_allowed_to_move)
 		{
