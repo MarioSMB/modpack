@@ -440,6 +440,9 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
+	
+	if (HUD_Minigame_InputEvent(bInputType, nPrimary, nSecondary))
+		return true;
 
 	if(menu_visible && menu_action)
 		if(menu_action(bInputType, nPrimary, nSecondary))

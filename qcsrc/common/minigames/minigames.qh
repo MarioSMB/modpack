@@ -30,7 +30,8 @@ float minigame_event_test(entity minigame, string event, ...count)
 
 void minigame_hud_board_test(vector pos, vector mySize)
 {
-	HUD_MinigameBoard_Simpleboard(pos,mySize,"test");
+	minigame_hud_fitsqare(pos, mySize);
+	minigame_hud_simpleboard(pos,mySize,minigame_texture("common/chessboard"));
 }
 
 void minigame_hud_status_test(vector pos, vector mySize)

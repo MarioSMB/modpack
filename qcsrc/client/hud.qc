@@ -486,6 +486,7 @@ void HUD_Weapons(void)
 			weaponprevtime = time;
 			return;
 		}
+		if ( minigame_isactive() ) return;
 	}
 
 	// update generic hud functions
@@ -1004,6 +1005,7 @@ void HUD_Ammo(void)
 	{
 		if(!autocvar_hud_panel_ammo) return;
 		if(spectatee_status == -1) return;
+		if ( minigame_isactive() ) return;
 	}
 
 	HUD_Panel_UpdateCvars();
@@ -1230,6 +1232,7 @@ void HUD_Powerups(void)
 		if(spectatee_status == -1) return;
 		if(!(getstati(STAT_ITEMS, 0, 24) & (IT_STRENGTH | IT_INVINCIBLE | IT_SUPERWEAPON))) return;
 		if (getstati(STAT_HEALTH) <= 0) return;
+		if ( minigame_isactive() ) return;
 
 		strength_time = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
 		shield_time = bound(0, getstatf(STAT_INVINCIBLE_FINISHED) - time, 99);
@@ -1437,6 +1440,7 @@ void HUD_HealthArmor(void)
 		if(!autocvar_hud_panel_healtharmor) return;
 		if(hud != HUD_NORMAL) return;
 		if(spectatee_status == -1) return;
+		if ( minigame_isactive() ) return;
 
 		health = getstati(STAT_HEALTH);
 		if(health <= 0)
@@ -2074,6 +2078,7 @@ void HUD_Radar(void)
 {
 	if (!autocvar__hud_configure)
 	{
+		if ( minigame_isactive() ) return;
 		if (hud_panel_radar_maximized)
 		{
 			if (!hud_draw_maximized) return;
@@ -2622,6 +2627,7 @@ void HUD_RaceTimer (void)
 			race_checkpointtime = 0;
 			return;
 		}
+		if ( minigame_isactive() ) return;
 	}
 
 	HUD_Panel_UpdateCvars();
@@ -4432,6 +4438,7 @@ void HUD_PressedKeys(void)
 	{
 		if(!autocvar_hud_panel_pressedkeys) return;
 		if(spectatee_status <= 0 && autocvar_hud_panel_pressedkeys < 2) return;
+		if ( minigame_isactive() ) return;
 	}
 
 	HUD_Panel_UpdateCvars();
@@ -6040,6 +6047,7 @@ void HUD_Buffs(void)
 		if(spectatee_status == -1) return;
 		if(getstati(STAT_HEALTH) <= 0) return;
 		if(!buffs) return;
+		if ( minigame_isactive() ) return;
 	}
 	else
 	{
@@ -6094,13 +6102,102 @@ void HUD_Buffs(void)
 
 #include "../common/minigames/minigames.qh"
 
+float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary)
+{
+	if( !minigame_isactive() || autocvar__hud_configure )
+		return false;
+
+	if(bInputType == 3)
+	{
+		mousepos_x = nPrimary;
+		mousepos_y = nSecondary;
+		return true;
+	}
+
+	if(nPrimary == K_MOUSE1)
+	{
+		if(bInputType == 0) // key pressed
+			mouseClicked |= S_MOUSE1;
+		else if(bInputType == 1) // key released
+			mouseClicked -= (mouseClicked & S_MOUSE1);
+	}
+	else if(nPrimary == K_MOUSE2)
+	{
+		if(bInputType == 0) // key pressed
+			mouseClicked |= S_MOUSE2;
+		else if(bInputType == 1) // key released
+			mouseClicked -= (mouseClicked & S_MOUSE2);
+	}
+	else if ( nPrimary == K_ESCAPE && bInputType == 0 )
+	{
+		localcmd ( "cmd minigame end" );
+	}
+	else
+	{
+		// allow console/use binds to work without hiding the map
+		string con_keys;
+		float keys;
+		float i;
+		con_keys = strcat(findkeysforcommand("toggleconsole", 0)," ",findkeysforcommand("+use", 0)) ;
+		keys = tokenize(con_keys); // findkeysforcommand returns data for this
+		for (i = 0; i < keys; ++i)
+		{
+			if(nPrimary == stof(argv(i)))
+				return false;
+		}
+		
+		// Show scoreboard
+		if ( bInputType < 2 )
+		{
+			con_keys = findkeysforcommand("+showscores", 0);
+			keys = tokenize(con_keys);
+			for (i = 0; i < keys; ++i)
+			{
+				if ( nPrimary == stof(argv(i)) )
+					return false;
+			}
+		}
+		
+		//TODO handle input
+	}
+
+	return true;
+}
+
+
+void HUD_Minigame_Mouse()
+{
+	if( !minigame_isactive() || autocvar__hud_configure )
+		return;
+	
+	if(!autocvar_hud_cursormode)
+	{
+		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
+
+		mousepos_x = bound(0, mousepos_x, vid_conwidth);
+		mousepos_y = bound(0, mousepos_y, vid_conheight);
+	}
+
+	HUD_Panel_UpdateCvars();
+	
+		
+	if(mouseClicked)
+	{
+		//TODO handle_click(mouseClicked,mousepos)
+	}
+	
+
+	const vector cursorsize = '32 32 0';
+	drawpic(mousepos-'8 4 0', strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', 0.8, DRAWFLAG_NORMAL);
+}
+
 void HUD_MinigameBoard ()
 {
 	entity hud_minigame;
 	
-	/*if(!autocvar__hud_configure)
+	if(!autocvar__hud_configure)
 		hud_minigame = active_minigame;
-	else */
+	else 
 		hud_minigame = minigame_get_descriptor("test");
 	
 	if ( !hud_minigame )
@@ -6120,9 +6217,9 @@ void HUD_MinigameStatus ()
 {
 	entity hud_minigame;
 	
-	/*if(!autocvar__hud_configure)
+	if(!autocvar__hud_configure)
 		hud_minigame = active_minigame;
-	else */
+	else
 		hud_minigame = minigame_get_descriptor("test");
 	
 	if ( !hud_minigame )

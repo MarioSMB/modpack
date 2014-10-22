@@ -1,5 +1,27 @@
-// Draw a square in the center of the avaliable area
-void HUD_MinigameBoard_Simpleboard(vector pos, vector mySize, string board);
+// Get a square in the center of the avaliable area
+// \note macro to pass by reference pos and mySize
+#define minigame_hud_fitsqare(pos, mySize) \
+	if ( mySize_x > mySize_y ) \
+	{ \
+		pos_x += (mySize_x-mySize_y)/2; \
+		mySize_x = mySize_y; \
+	} \
+	else \
+	{ \
+		pos_y += (mySize_y-mySize_x)/2; \
+		mySize_x = mySize_x; \
+	} \
+	if(panel_bg_padding) \
+	{ \
+		pos += '1 1 0' * panel_bg_padding; \
+		mySize -= '2 2 0' * panel_bg_padding; \
+	}
+
+// draw a panel border and the given texture
+void minigame_hud_simpleboard(vector pos, vector mySize, string board_texture);
+
+// Get full path of a minigame texture
+string minigame_texture(string name);
 
 // For minigame descriptors: hud function for the game board
 .void(vector pos, vector size) minigame_hud_board;
@@ -9,5 +31,14 @@ void HUD_MinigameBoard_Simpleboard(vector pos, vector mySize, string board);
 // register all minigames
 void initialize_minigames();
 
-//entity active_minigame;
+// Activate the minigame with the given name
+void activate_minigame(string name);
+
+entity active_minigame;
+
+// Whethere there's an active minigame
+float minigame_isactive()
+{
+	return active_minigame != world;
+}
 
