@@ -1878,6 +1878,8 @@ void CSQC_UpdateView(float w, float h)
 		HUD_Panel_Mouse();
 	else if(HUD_QuickMenu_IsOpened())
 		HUD_QuickMenu_Mouse();
+	else if ( HUD_MinigameCreate_IsOpened() )
+		HUD_MinigameCreate_Mouse();
 	else if ( minigame_isactive() )
 		HUD_Minigame_Mouse();
 	else 

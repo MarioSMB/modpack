@@ -63,8 +63,12 @@ void activate_minigame(string name)
 {
 	active_minigame = minigame_get_descriptor(name);
 	if ( !active_minigame )
+	{
 		dprint("Trying to activate unregistered minigame ",name," in client\n");
-	else if(autocvar_hud_cursormode)
+		return;
+	}
+	HUD_MinigameCreate_Close();
+	if(autocvar_hud_cursormode)
 		setcursormode(1);
 }
 

@@ -247,6 +247,15 @@ void LocalCommand_hud(float request, float argc)
 					return;
 				}
 
+				case "minigame":
+				{
+					if(HUD_MinigameCreate_IsOpened())
+						HUD_MinigameCreate_Close();
+					else
+						HUD_MinigameCreate_Open();
+					return;
+				}
+
 				case "save":
 				{
 					if(argv(2))

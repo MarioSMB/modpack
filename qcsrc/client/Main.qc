@@ -153,6 +153,15 @@ void CSQC_Init(void)
 	registercvar("hud_panel_minigamestatus_bg_alpha", "");
 	registercvar("hud_panel_minigamestatus_bg_border", "");
 	registercvar("hud_panel_minigamestatus_bg_padding", "");
+	registercvar("hud_panel_minigamecreate", "0");
+	registercvar("hud_panel_minigamecreate_pos", "0 0.26");
+	registercvar("hud_panel_minigamecreate_size", "0.15 0.49");
+	registercvar("hud_panel_minigamecreate_bg", "border_small");
+	registercvar("hud_panel_minigamecreate_bg_color", "");
+	registercvar("hud_panel_minigamecreate_bg_color_team", "");
+	registercvar("hud_panel_minigamecreate_bg_alpha", "");
+	registercvar("hud_panel_minigamecreate_bg_border", "");
+	registercvar("hud_panel_minigamecreate_bg_padding", "");
 
 	gametype = 0;
 
@@ -439,6 +448,9 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		return true;
 
 	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
+		return true;
+	
+	if (HUD_MinigameCreate_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 	
 	if (HUD_Minigame_InputEvent(bInputType, nPrimary, nSecondary))

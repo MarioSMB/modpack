@@ -44,3 +44,6 @@ float minigame_isactive()
 
 // Read a minigame entity from the server
 void ent_read_minigame();
+
+float HUD_MinigameCreate_IsOpened();
+void HUD_MinigameCreate_Close();
