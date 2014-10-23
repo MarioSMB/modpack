@@ -73,3 +73,38 @@ void deactivate_minigame()
 	active_minigame = world;
 	setcursormode(0);
 }
+
+void ent_read_minigame()
+{
+	float sf = ReadByte();
+	if ( sf & MINIG_SF_CREATE )
+	{
+		self.classname = strzone(ReadString());
+		self.netname = strzone(ReadString());
+	}
+	
+	if ( self.classname == "minigame" )
+	{
+		string s;
+		
+		if ( sf & MINIG_SF_CREATE )
+		{
+			self.descriptor = minigame_get_descriptor(ReadString());
+			if ( !self.descriptor )
+				dprint("Got a minigame without a client-side descriptor!\n");
+		}
+		
+		if ( sf & MINIG_SF_PLAYERS )
+		{
+			float n;
+			for ( n = ReadByte(); n > 0; n-- )
+			{
+				s = ReadString();
+				dprint("Player: ",s,"\n");
+			}
+		}
+	}
+	
+	dprint("\nCL Reading entity: ",ftos(num_for_edict(self))," classname:",
+		   self.classname," enttype:",ftos(self.enttype)," netname:",self.netname," sf:",ftos(sf),"\n");
+}

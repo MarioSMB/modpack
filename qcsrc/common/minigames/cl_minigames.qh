@@ -45,3 +45,5 @@ float minigame_isactive()
 	return active_minigame != world;
 }
 
+// Read a minigame entity from the server
+void ent_read_minigame();

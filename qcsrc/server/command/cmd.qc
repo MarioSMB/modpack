@@ -629,16 +629,16 @@ void ClientCommand_minigame(float request, float argc, string command)
 			{
 				entity minig = start_minigame(self, argv(2));
 				if ( minig )
-					sprint(self,"Created minigame session: ",ftos(num_for_edict(minig)),"\n");
+					sprint(self,"Created minigame session: ",minig.netname,"\n");
 				else
 					sprint(self,"Cannot start minigame session!\n");
 				return;
 			}
-			else if ( minig_cmd == "start" && argc > 2 )
+			else if ( minig_cmd == "join" && argc > 2 )
 			{
-				entity minig = join_minigame(self, stof(argv(2)));
+				entity minig = join_minigame(self, argv(2));
 				if ( minig )
-					sprint(self,"Joined: ",ftos(num_for_edict(minig)),"\n");
+					sprint(self,"Joined: ",minig.netname,"\n");
 				else
 					sprint(self,"Cannot join given minigame session!\n");
 				return;
@@ -654,7 +654,7 @@ void ClientCommand_minigame(float request, float argc, string command)
 			{
 				entity e;
 				for ( e = minigame_sessions; e != world; e = e.chain )
-					sprint(self,ftos(num_for_edict(e))," (",e.descriptor.netname,")\n");
+					sprint(self,e.netname,"\n");
 				return;
 			}
 			else if ( minig_cmd == "end" || minig_cmd == "part" )

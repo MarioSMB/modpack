@@ -23,6 +23,7 @@ void minigame_rmplayer(entity minigame_session, entity player)
 		minigame_session.minigame_players = p.chain;
 		remove ( p );
 		player_clear_minigame(player);
+		minigame_session.SendFlags |= MINIG_SF_PLAYERS;
 	}
 	else
 	{
@@ -34,11 +35,49 @@ void minigame_rmplayer(entity minigame_session, entity player)
 				p.chain = e.chain;
 				remove(e);
 				player_clear_minigame(player);
+				minigame_session.SendFlags |= MINIG_SF_PLAYERS;
 				return;
 			}
 			p = e;
 		}
 	}
+}
+
+
+float minigame_SendEntity(entity to, float sf)
+{
+	WriteByte(MSG_ENTITY, ENT_CLIENT_MINIGAME);
+	WriteByte(MSG_ENTITY, sf);
+	
+	if ( sf & MINIG_SF_CREATE )
+	{
+		WriteString(MSG_ENTITY,self.classname);
+		WriteString(MSG_ENTITY,self.netname);
+	}
+	
+	if ( self.classname == "minigame" )
+	{
+		if ( sf & MINIG_SF_CREATE )
+		{
+			WriteString(MSG_ENTITY,self.descriptor.netname);
+		}
+		
+		if ( sf & MINIG_SF_PLAYERS )
+		{
+			entity e;
+			float n = 0;
+			for ( e = self.minigame_players; e != world; e = e.chain )
+				n++;
+			WriteByte(MSG_ENTITY,n);
+			for ( e = self.minigame_players; e != world; e = e.chain )
+			{
+				WriteString(MSG_ENTITY,e.owner.netname);
+			}
+		}
+	}
+	
+	return 1;
+	
 }
 
 float minigame_addplayer(entity minigame_session, entity player)
@@ -57,6 +96,7 @@ float minigame_addplayer(entity minigame_session, entity player)
 		minigame_session.minigame_players = player_pointer;
 		player.active_minigame = minigame_session;
 		self.movetype = MOVETYPE_NONE;
+		minigame_session.SendFlags |= MINIG_SF_PLAYERS;
 	}
 	
 	return ok;
@@ -72,10 +112,12 @@ entity start_minigame(entity player, string minigame )
 	{
 		entity minig = spawn();
 		minig.classname = "minigame";
+		minig.netname = strzone(strcat(e.netname,"_",ftos(num_for_edict(minig))));
 		minig.descriptor = e;
 		minig.minigame_event = e.minigame_event;
 		minig.minigame_event(minig,"start");
 		minigame_addplayer(minig,player);
+		Net_LinkEntity(minig, FALSE, 0, minigame_SendEntity);
 		
 		if ( !minigame_sessions )
 			minigame_sessions = minig;
@@ -91,16 +133,18 @@ entity start_minigame(entity player, string minigame )
 	return world;
 }
 
-entity join_minigame(entity player, float game_id )
+entity join_minigame(entity player, string game_id )
 {
 	if ( !autocvar_sv_minigames || !IS_REAL_CLIENT(player) )
 		return world;
 	
-	entity minig = edict_num(game_id);
-	
-	if ( minig && minig.classname == "minigame" )
-	if ( minigame_addplayer(minig,player) )
-		return minig;
+	entity minig;
+	for ( minig = minigame_sessions; minig != world; minig = minig.chain )
+	{
+		if ( minig.netname == game_id )
+		if ( minigame_addplayer(minig,player) )
+			return minig;
+	}
 	
 	return world;
 }

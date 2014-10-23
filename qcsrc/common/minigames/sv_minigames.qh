@@ -9,7 +9,7 @@ entity start_minigame(entity player, string minigame );
 
 /// Join an existing minigame session
 /// \return minigame session entity
-entity join_minigame(entity player, float game_id );
+entity join_minigame(entity player, string game_id );
 
 /// Part minigame session
 void part_minigame(entity player );
@@ -24,8 +24,6 @@ void end_minigames();
 
 /// For minigame sessions/descriptors: execute the given event
 .float(entity,string,...)   minigame_event;
-/// For minigame sessions: minigame descriptor object
-.entity descriptor;
 /// For minigame sessions: chain of players
 .entity minigame_players;
 /// For players: Minigame being played

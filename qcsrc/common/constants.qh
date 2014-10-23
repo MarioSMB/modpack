@@ -109,6 +109,8 @@ const float ENT_CLIENT_JAILCAMERA = 72;
 
 const float ENT_CLIENT_HEALING_ORB = 80;
 
+const float ENT_CLIENT_MINIGAME = 81;
+
 const float SPRITERULE_DEFAULT = 0;
 const float SPRITERULE_TEAMPLAY = 1;
 

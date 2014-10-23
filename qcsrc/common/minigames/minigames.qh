@@ -1,3 +1,22 @@
+entity minigame_descriptors;
+
+entity minigame_get_descriptor(string id)
+{
+	entity e;
+	for ( e = minigame_descriptors; e != world; e = e.chain )
+		if ( e.netname == id )
+			return e;
+	return world;
+}
+
+/// For minigame sessions: minigame descriptor object
+.entity descriptor;
+
+
+const float MINIG_SF_CREATE = 1;
+const float MINIG_SF_PLAYERS = 2;
+
+
 #ifdef SVQC
 
 float minigame_event_test(entity minigame, string event, ...count)
@@ -50,17 +69,6 @@ float minigame_input_test(float bInputType, float nPrimary, float nSecondary)
 }
 
 #endif
-
-entity minigame_descriptors;
-
-entity minigame_get_descriptor(string id)
-{
-	entity e;
-	for ( e = minigame_descriptors; e != world; e = e.chain )
-		if ( e.netname == id )
-			return e;
-	return world;
-}
 
 #define REGISTERED_MINIGAMES \
 	MINIGAME(test)
