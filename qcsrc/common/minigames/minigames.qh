@@ -12,63 +12,24 @@ entity minigame_get_descriptor(string id)
 /// For minigame sessions: minigame descriptor object
 .entity descriptor;
 
+/// For minigame sessions/descriptors: execute the given event
+/// Client events:
+/// 	mouse_moved(vector mouse_pos) (return 1 to handle input, 0 to discard)
+/// 	key_pressed(float K_Keycode)  (return 1 to handle input, 0 to discard)
+/// 	key_released(float K_Keycode) (return 1 to handle input, 0 to discard)
+/// 		(note: see dpdefs/keycodes.qc for values)
+/// Server events:
+/// 	start()
+/// 	end()
+/// 	join(entity player) (return 1 to accept the new player, 0 to discard)
+/// 	part(entity player)
+.float(entity,string,...)   minigame_event;
+
 
 const float MINIG_SF_CREATE = 1;
 const float MINIG_SF_PLAYERS = 2;
 
-
-#ifdef SVQC
-
-float minigame_event_test(entity minigame, string event, ...count)
-{
-	if ( event == "start" )
-	{
-		dprint("Starting ",minigame.descriptor.netname,"\n");
-		return 1;
-	}
-	else if ( event == "join" && count > 0 )
-	{
-		dprint(...(0,entity).netname," joined ",minigame.descriptor.netname,"\n");
-		return 1;
-	}
-	else if ( event == "part" && count > 0 )
-	{
-		dprint(...(0,entity).netname," parted ",minigame.descriptor.netname,"\n");
-		return 1;
-	}
-	else if ( event == "end" )
-	{
-		dprint("Game ended ",minigame.descriptor.netname,"\n");
-		return 1;
-	}
-	dprint("Unhandled event: ",event,"\n");
-	return 0;
-}
-
-#elif defined(CSQC)
-
-void minigame_hud_board_test(vector pos, vector mySize)
-{
-	minigame_hud_fitsqare(pos, mySize);
-	minigame_hud_simpleboard(pos,mySize,minigame_texture("common/chessboard"));
-}
-
-void minigame_hud_status_test(vector pos, vector mySize)
-{
-	HUD_Panel_DrawBg(0.5);
-	vector titlepos = pos;
-	vector titlesize = hud_fontsize * 2;
-	string titletext = "Test!";
-	titlepos_x += stringwidth(titletext, FALSE, titlesize) / 2;
-	drawstring(titlepos, titletext, titlesize, '1 0 0', panel_fg_alpha, DRAWFLAG_NORMAL);
-}
-
-float minigame_input_test(float bInputType, float nPrimary, float nSecondary)
-{
-	return 0;
-}
-
-#endif
+#include "minigame_test.qc"
 
 #define REGISTERED_MINIGAMES \
 	MINIGAME(test)

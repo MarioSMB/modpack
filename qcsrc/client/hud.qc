@@ -6111,26 +6111,31 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 	{
 		mousepos_x = nPrimary;
 		mousepos_y = nSecondary;
+		active_minigame.minigame_event(active_minigame,"mouse_move",mousepos);
 	}
 	else
 	{
-		if(nPrimary == K_MOUSE1)
-		{
-			if(bInputType == 0) // key pressed
-				mouseClicked |= S_MOUSE1;
-			else if(bInputType == 1) // key released
-				mouseClicked -= (mouseClicked & S_MOUSE1);
+		
+		if(bInputType == 0) {
+			if(nPrimary == K_ALT) hudShiftState |= S_ALT;
+			if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
+			if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+			if(nPrimary == K_MOUSE1) mouseClicked |= S_MOUSE1;
+			if(nPrimary == K_MOUSE2) mouseClicked |= S_MOUSE2;
 		}
-		else if(nPrimary == K_MOUSE2)
-		{
-			if(bInputType == 0) // key pressed
-				mouseClicked |= S_MOUSE2;
-			else if(bInputType == 1) // key released
-				mouseClicked -= (mouseClicked & S_MOUSE2);
+		else if(bInputType == 1) {
+			if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
+			if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
+			if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
+			if(nPrimary == K_MOUSE1) mouseClicked -= (mouseClicked & S_MOUSE1);
+			if(nPrimary == K_MOUSE2) mouseClicked -= (mouseClicked & S_MOUSE2);
 		}
-		else if ( nPrimary == K_ESCAPE && bInputType == 0 )
+		
+		if ( nPrimary == K_ESCAPE && bInputType == 0 )
 		{
+			/// TODO: maybe show confirmation dialog
 			localcmd ( "cmd minigame end" );
+			return true;
 		}
 		else
 		{
@@ -6146,9 +6151,15 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 					return false;
 			}
 		}
+		
+		if ( bInputType == 0 )
+			return active_minigame.minigame_event(active_minigame,"key_pressed",nPrimary);
+		else if ( bInputType == 1 )
+			return active_minigame.minigame_event(active_minigame,"key_released",nPrimary);
+		/// TODO: bInputType == 2?
 	}
 	
-	return active_minigame.minigame_input(bInputType, nPrimary, nSecondary);
+	return false;
 
 }
 

@@ -21,9 +21,6 @@ void end_minigame(entity minigame_session);
 /// Ends all minigame sessions
 void end_minigames();
 
-
-/// For minigame sessions/descriptors: execute the given event
-.float(entity,string,...)   minigame_event;
 /// For minigame sessions: chain of players
 .entity minigame_players;
 /// For players: Minigame being played

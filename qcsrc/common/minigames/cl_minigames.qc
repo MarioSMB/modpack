@@ -37,7 +37,7 @@ void initialize_minigames()
 		minig.netname = strzone(strtolower(#name)); \
 		minig.minigame_hud_board = minigame_hud_board_##name; \
 		minig.minigame_hud_status = minigame_hud_status_##name; \
-		minig.minigame_input = minigame_input_##name; \
+		minig.minigame_event = minigame_event_##name; \
 		if ( !last_minig ) minigame_descriptors = minig; \
 		else last_minig.chain = minig; \
 		last_minig = minig;
