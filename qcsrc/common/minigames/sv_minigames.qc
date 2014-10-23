@@ -1,3 +1,11 @@
+void player_clear_minigame(entity player)
+{
+	player.active_minigame = world;
+	if ( IS_PLAYER(player) )
+		player.movetype = MOVETYPE_WALK;
+	else
+		player.movetype = MOVETYPE_FLY_WORLDONLY;
+}
 
 void minigame_rmplayer(entity minigame_session, entity player)
 {
@@ -14,7 +22,7 @@ void minigame_rmplayer(entity minigame_session, entity player)
 		minigame_session.minigame_event(minigame_session,"part",player);
 		minigame_session.minigame_players = p.chain;
 		remove ( p );
-		player.active_minigame = world;
+		player_clear_minigame(player);
 	}
 	else
 	{
@@ -25,7 +33,7 @@ void minigame_rmplayer(entity minigame_session, entity player)
 				minigame_session.minigame_event(minigame_session,"part",player);
 				p.chain = e.chain;
 				remove(e);
-				player.active_minigame = world;
+				player_clear_minigame(player);
 				return;
 			}
 			p = e;
@@ -48,6 +56,7 @@ float minigame_addplayer(entity minigame_session, entity player)
 		player_pointer.chain = minigame_session.minigame_players;
 		minigame_session.minigame_players = player_pointer;
 		player.active_minigame = minigame_session;
+		self.movetype = MOVETYPE_NONE;
 	}
 	
 	return ok;
@@ -117,7 +126,7 @@ void end_minigame(entity minigame_session)
 	for ( e = minigame_session.minigame_players; e != world; e = p )
 	{
 		p = e.chain;
-		e.owner.active_minigame = world;
+		player_clear_minigame(e.owner);
 		remove(e);
 	}
 	

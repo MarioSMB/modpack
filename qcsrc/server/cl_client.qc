@@ -1464,10 +1464,20 @@ void ChatBubbleThink()
 		remove(self);
 		return;
 	}
-	if ((self.owner.BUTTON_CHAT && !self.owner.deadflag && IS_PLAYER(self.owner)) )
-		self.model = self.mdl;
-	else
-		self.model = "";
+	
+	self.mdl = "";
+	
+	if ( !self.owner.deadflag && IS_PLAYER(self.owner) )
+	{
+		if ( self.owner.active_minigame )
+			self.mdl = "models/sprites/minigame_busy.iqm";
+		else if ( self.owner.BUTTON_CHAT )
+			self.mdl = "models/misc/chatbubble.spr";
+	}
+	
+	if ( self.model != self.mdl )
+		setmodel(self, self.mdl);
+
 }
 
 void UpdateChatBubble()
@@ -1487,7 +1497,7 @@ void UpdateChatBubble()
 		setorigin(self.chatbubbleentity, '0 0 15' + self.maxs_z * '0 0 1');
 		setattachment(self.chatbubbleentity, self, "");  // sticks to moving player better, also conserves bandwidth
 		self.chatbubbleentity.mdl = self.chatbubbleentity.model;
-		self.chatbubbleentity.model = "";
+		//self.chatbubbleentity.model = "";
 		self.chatbubbleentity.effects = EF_LOWPRECISION;
 	}
 }
@@ -2412,6 +2422,9 @@ void PlayerPreThink (void)
 		Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_GODMODE_OFF, self.max_armorvalue);
 		self.max_armorvalue = 0;
 	}
+	
+	if ( self.active_minigame )
+		return;
 
 	if(self.frozen == 2)
 	{
@@ -2796,7 +2809,8 @@ void PlayerPostThink (void)
 			ImpulseCommands();
 		if (intermission_running)
 			return;		// intermission or finale
-		GetPressedKeys();
+		if ( !self.active_minigame )
+			GetPressedKeys();
 	}
 
 	/*
