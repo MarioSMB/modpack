@@ -71,7 +71,7 @@ float minigame_SendEntity(entity to, float sf)
 			WriteByte(MSG_ENTITY,n);
 			for ( e = self.minigame_players; e != world; e = e.chain )
 			{
-				WriteString(MSG_ENTITY,e.owner.netname);
+				WriteLong(MSG_ENTITY,num_for_edict(e.owner));
 			}
 		}
 	}
@@ -83,7 +83,11 @@ float minigame_SendEntity(entity to, float sf)
 float minigame_addplayer(entity minigame_session, entity player)
 {
 	if ( player.active_minigame )
+	{
+		if ( player.active_minigame == minigame_session )
+			return 0;
 		minigame_rmplayer(player.active_minigame,player);
+	}
 	
 	float ok = minigame_session.minigame_event(minigame_session,"join",player);
 	
@@ -95,7 +99,7 @@ float minigame_addplayer(entity minigame_session, entity player)
 		player_pointer.chain = minigame_session.minigame_players;
 		minigame_session.minigame_players = player_pointer;
 		player.active_minigame = minigame_session;
-		self.movetype = MOVETYPE_NONE;
+		player.movetype = MOVETYPE_NONE;
 		minigame_session.SendFlags |= MINIG_SF_PLAYERS;
 	}
 	

@@ -394,28 +394,7 @@ void LocalCommand_sendcvar(float request, float argc)
 		}
 	}
 }
-void LocalCommand_minigamehack(float request)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			if ( minigame_isactive() )
-				deactivate_minigame();
-			else
-				activate_minigame("test");
-			return;
-		}
 
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			print("\nUsage:^3 cl_cmd \n");
-			print("  No arguments required.\n");
-			return;
-		}
-	}
-}
 /* use this when creating a new command, making sure to place it in alphabetical order... also,
 ** ADD ALL NEW COMMANDS TO commands.cfg WITH PROPER ALIASES IN THE SAME FASHION!
 void LocalCommand_(float request)
@@ -455,7 +434,6 @@ void LocalCommand_(float request)
 	CLIENT_COMMAND("localprint", LocalCommand_localprint(request, arguments), "Create your own centerprint sent to yourself") \
 	CLIENT_COMMAND("mv_download", LocalCommand_mv_download(request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("sendcvar", LocalCommand_sendcvar(request, arguments), "Send a cvar to the server (like weaponpriority)") \
-	CLIENT_COMMAND("minigamehack", LocalCommand_minigamehack(request), "Temp. hack") \
 	/* nothing */
 
 void LocalCommand_macro_help()

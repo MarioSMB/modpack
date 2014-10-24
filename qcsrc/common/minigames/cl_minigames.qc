@@ -59,23 +59,43 @@ string minigame_texture(string name)
 	return path;
 }
 
-void activate_minigame(string name)
-{
-	active_minigame = minigame_get_descriptor(name);
-	if ( !active_minigame )
-	{
-		dprint("Trying to activate unregistered minigame ",name," in client\n");
-		return;
-	}
-	HUD_MinigameCreate_Close();
-	if(autocvar_hud_cursormode)
-		setcursormode(1);
-}
-
+void HUD_MinigameCreate_CurrentButton();
 void deactivate_minigame()
 {
 	active_minigame = world;
-	setcursormode(0);
+	if ( !HUD_MinigameCreate_IsOpened() )
+		setcursormode(0);
+	else
+		HUD_MinigameCreate_CurrentButton();
+}
+
+void activate_minigame(entity minigame)
+{
+	if ( !minigame )
+	{
+		deactivate_minigame();
+		return;
+	}
+	
+	if ( !minigame.descriptor || minigame.classname != "minigame" )
+	{
+		dprint("Trying to activate unregistered minigame ",minigame.netname," in client\n");
+		return;
+	}
+	
+	if ( minigame == active_minigame )
+		return;
+	
+	if ( active_minigame )
+		deactivate_minigame();
+	
+	active_minigame = minigame;
+	
+	if(autocvar_hud_cursormode)
+		setcursormode(1);
+	
+	if ( HUD_MinigameCreate_IsOpened() )
+		HUD_MinigameCreate_CurrentButton();
 }
 
 void ent_read_minigame()
@@ -89,26 +109,41 @@ void ent_read_minigame()
 	
 	if ( self.classname == "minigame" )
 	{
-		string s;
-		
 		if ( sf & MINIG_SF_CREATE )
 		{
 			self.descriptor = minigame_get_descriptor(ReadString());
 			if ( !self.descriptor )
 				dprint("Got a minigame without a client-side descriptor!\n");
+			else
+				self.minigame_event = self.descriptor.minigame_event;
 		}
 		
 		if ( sf & MINIG_SF_PLAYERS )
 		{
+			float ent;
 			float n;
+			float foundself = 0;
 			for ( n = ReadByte(); n > 0; n-- )
 			{
-				s = ReadString();
-				dprint("Player: ",s,"\n");
+				ent = ReadLong();
+				dprint("Player: ",GetPlayerName(ent-1),"\n");
+				if ( ent == player_localentnum )
+					foundself = 1;
+			}
+			if ( foundself && self != active_minigame )
+			{
+				dprint("Found myself, CS activate!\n");
+				activate_minigame(self);
+			}
+			else if ( active_minigame == self && !foundself )
+			{
+				dprint("Didn't find myself, CS deactivate!\n");
+				deactivate_minigame();
 			}
 		}
 	}
 	
-	dprint("\nCL Reading entity: ",ftos(num_for_edict(self))," classname:",
-		   self.classname," enttype:",ftos(self.enttype)," netname:",self.netname," sf:",ftos(sf),"\n");
+	dprint("\nCL Reading entity: ",ftos(num_for_edict(self)),
+		" classname:",self.classname," enttype:",ftos(self.enttype),"\n");
+	dprint(" sf:",ftos(sf)," netname:",self.netname,"\n");
 }

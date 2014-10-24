@@ -31,8 +31,7 @@ string minigame_texture(string name);
 // register all minigames
 void initialize_minigames();
 
-// Activate the minigame with the given name
-void activate_minigame(string name);
+void deactivate_minigame();
 
 entity active_minigame;
 

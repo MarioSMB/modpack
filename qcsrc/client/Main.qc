@@ -275,6 +275,9 @@ void Shutdown(void)
 		if (!(calledhooks & HOOK_END))
 			localcmd("\ncl_hook_gameend\n");
 	}
+	
+	deactivate_minigame();
+	HUD_MinigameCreate_Close();
 }
 
 .float has_team;
@@ -448,9 +451,6 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		return true;
 
 	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
-		return true;
-	
-	if (HUD_MinigameCreate_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 	
 	if (HUD_Minigame_InputEvent(bInputType, nPrimary, nSecondary))
@@ -1039,6 +1039,10 @@ void CSQC_Ent_Remove()
 		print("WARNING: CSQC_Ent_Remove called for already removed entity. Packet loss?\n");
 		return;
 	}
+	
+	if ( self == active_minigame )
+		deactivate_minigame();
+		
 	if(self.enttype)
 		Ent_Remove();
 	remove(self);
