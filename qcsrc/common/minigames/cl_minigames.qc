@@ -1,23 +1,6 @@
 // Draw a square in the center of the avaliable area
 void minigame_hud_simpleboard(vector pos, vector mySize, string board_texture)
 {
-	if ( mySize_x > mySize_y )
-	{
-		pos_x += (mySize_x-mySize_y)/2;
-		mySize_x = mySize_y;
-	}
-	else
-	{
-		pos_y += (mySize_y-mySize_x)/2;
-		mySize_x = mySize_x;
-	}
-	
-	if(panel_bg_padding)
-	{
-		pos += '1 1 0' * panel_bg_padding;
-		mySize -= '2 2 0' * panel_bg_padding;
-	}
-	
 	if(panel.current_panel_bg != "0" && panel.current_panel_bg != "")
 		draw_BorderPicture(pos - '1 1 0' * panel_bg_border, 
 					panel.current_panel_bg, 
@@ -27,6 +10,35 @@ void minigame_hud_simpleboard(vector pos, vector mySize, string board_texture)
 	drawpic(pos, board_texture, mySize, '1 1 1', panel_bg_alpha, DRAWFLAG_NORMAL);
 }
 
+// De-normalize (2D vector) v from relative coordinate inside pos mySize
+vector minigame_hud_denormalize(vector v, vector pos, vector mySize)
+{
+	v_x = pos_x + v_x * mySize_x;
+	v_y = pos_y + v_y * mySize_y;
+	return v;
+}
+// De-normalize (2D vector) v from relative size inside pos mySize
+vector minigame_hud_denormalize_size(vector v, vector pos, vector mySize)
+{
+	v_x = v_x * mySize_x;
+	v_y = v_y * mySize_y;
+	return v;
+}
+
+// Normalize (2D vector) v to relative coordinate inside pos mySize
+vector minigame_hud_normalize(vector v, vector pos, vector mySize)
+{
+	v_x = ( v_x - pos_x ) / mySize_x;
+	v_y = ( v_y - pos_y ) / mySize_y;
+	return v;
+}
+
+// Check if the mouse is inside the given area
+float minigame_hud_mouse_in(vector pos, vector sz)
+{
+	return mousepos_x >= pos_x && mousepos_x < pos_x + sz_x &&
+	       mousepos_y >= pos_y && mousepos_y < pos_y + sz_y ;
+}
 
 void initialize_minigames()
 {
@@ -140,6 +152,21 @@ void ent_read_minigame()
 				dprint("Didn't find myself, CS deactivate!\n");
 				deactivate_minigame();
 			}
+		}
+	}
+	else if ( self.classname == "minigame_board_tile" )
+	{
+		if ( sf & MINIG_SF_CREATE )
+		{
+			string owner_name = ReadString();
+			self.owner = world;
+			do
+				self.owner = find(self.owner,netname,owner_name);
+			while ( self.owner && self.owner.classname != "minigame" );
+			if ( !self.owner )
+				dprint("Got a minigame tile without a minigame!\n");
+			self.origin_x = ReadCoord();
+			self.origin_y = ReadCoord();
 		}
 	}
 	

@@ -1,15 +1,15 @@
 // Get a square in the center of the avaliable area
 // \note macro to pass by reference pos and mySize
 #define minigame_hud_fitsqare(pos, mySize) \
-	if ( mySize_x > mySize_y ) \
+	if ( mySize##_x > mySize##_y ) \
 	{ \
-		pos_x += (mySize_x-mySize_y)/2; \
-		mySize_x = mySize_y; \
+		pos##_x += (mySize##_x-mySize##_y)/2; \
+		mySize##_x = mySize##_y; \
 	} \
 	else \
 	{ \
-		pos_y += (mySize_y-mySize_x)/2; \
-		mySize_x = mySize_x; \
+		pos##_y += (mySize##_y-mySize##_x)/2; \
+		mySize##_x = mySize##_x; \
 	} \
 	if(panel_bg_padding) \
 	{ \
@@ -17,8 +17,28 @@
 		mySize -= '2 2 0' * panel_bg_padding; \
 	}
 
+// Get position and size of a panel
+// \note macro to pass by reference pos and mySize
+#define minigame_hud_panelarea(pos, mySize, panelID) \
+	pos = stov(cvar_string(strcat("hud_panel_", HUD_PANEL(panelID).panel_name, "_pos"))); \
+	mySize = stov(cvar_string(strcat("hud_panel_", HUD_PANEL(panelID).panel_name, "_size"))); \
+	pos##_x *= vid_conwidth; pos##_y *= vid_conheight; \
+	mySize##_x *= vid_conwidth; mySize##_y *= vid_conheight;
+
 // draw a panel border and the given texture
 void minigame_hud_simpleboard(vector pos, vector mySize, string board_texture);
+
+// Normalize (2D vector) v to relative coordinate inside pos mySize
+vector minigame_hud_normalize(vector v, vector pos, vector mySize);
+
+// De-normalize (2D vector) v from relative coordinate inside pos mySize
+vector minigame_hud_denormalize(vector v, vector pos, vector mySize);
+
+// De-normalize (2D vector) v from relative size inside pos mySize
+vector minigame_hud_denormalize_size(vector v, vector pos, vector mySize);
+
+// Check if the mouse is inside the given area
+float minigame_hud_mouse_in(vector pos, vector sz);
 
 // Get full path of a minigame texture
 string minigame_texture(string name);

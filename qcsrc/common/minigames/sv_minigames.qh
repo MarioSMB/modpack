@@ -14,12 +14,14 @@ entity join_minigame(entity player, string game_id );
 /// Part minigame session
 void part_minigame(entity player );
 
-
 /// Ends a minigame session
 void end_minigame(entity minigame_session);
 
 /// Ends all minigame sessions
 void end_minigames();
+
+/// Spawn a networked board tile entity
+void minigame_spawn_board_tile(entity minigame_session, string id, vector pos);
 
 /// For minigame sessions: chain of players
 .entity minigame_players;

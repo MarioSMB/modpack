@@ -75,6 +75,12 @@ float minigame_SendEntity(entity to, float sf)
 			}
 		}
 	}
+	else if ( self.classname == "minigame_board_tile" )
+	{
+		WriteString(MSG_ENTITY,self.owner.netname);
+		WriteCoord(MSG_ENTITY,self.origin_x);
+		WriteCoord(MSG_ENTITY,self.origin_y);
+	}
 	
 	return 1;
 	
@@ -204,4 +210,14 @@ void initialize_minigames()
 	REGISTERED_MINIGAMES
 	
 	#undef MINIGAME
+}
+
+void minigame_spawn_board_tile(entity minigame_session, string id, vector pos)
+{
+	entity e = spawn();
+	e.origin = pos;
+	e.classname = "minigame_board_tile";
+	e.netname = id;
+	e.owner = minigame_session;
+	Net_LinkEntity(e, FALSE, 0, minigame_SendEntity);
 }

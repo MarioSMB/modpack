@@ -9,6 +9,25 @@ entity minigame_get_descriptor(string id)
 	return world;
 }
 
+// Get relative position of the center of a given tile
+vector minigame_tile_pos(string id, float rows, float columns)
+{
+	float letter = str2chr(substring(id,0,1),0)-'a';
+	float number = stof(substring(id,1,-1));
+	return eX*(letter+0.5)/columns + eY - eY*(number-0.5)/rows;
+}
+
+// Get tile name from a relative position (matches the tile covering a square area)
+string minigame_tile_name(vector pos, float rows, float columns)
+{
+	if ( pos_x < 0 || pos_x > 1 || pos_y < 0 || pos_y > 1 )
+		return ""; // no tile
+		
+	float letter = floor(pos_x * columns);
+	float number = floor((1-pos_y) * rows);
+	return strcat(chr2str('a'+letter),ftos(number+1));
+}
+
 /// For minigame sessions: minigame descriptor object
 .entity descriptor;
 
