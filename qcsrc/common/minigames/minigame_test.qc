@@ -47,12 +47,16 @@ void minigame_hud_status_test(vector pos, vector mySize)
 
 float minigame_event_test(entity minigame, string event, ...count)
 {
-	if ( event == "key_pressed" )
+	if ( event == "key_pressed" && count > 0 )
 	{
-		if ( count > 0 && ...(0,float) == K_SPACE )
-		{
+		if ( ...(0,float) == K_SPACE )
 			dprint("You Pressed Space!\n");
-		}
+		else 
+			dprint("You pressed ",ftos(...(0,float)),"\n");
+	}
+	else if ( event == "mouse_pressed" && count > 0 )
+	{
+		dprint("You clicked with ",ftos(...(0,float)),"\n");
 	}
 	
 	return 0;

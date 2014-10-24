@@ -1,113 +1,12 @@
 
 #include "minigames.qh"
 
-// ====================================================================
-// Minigame Panel Input
-// ====================================================================
-float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary)
+float HUD_mouse_over(entity somepanel)
 {
-		
-	if( !(minigame_isactive() || HUD_MinigameMenu_IsOpened()) || autocvar__hud_configure )
-		return false;
-
-	if(bInputType == 3)
-	{
-		mousepos_x = nPrimary;
-		mousepos_y = nSecondary;
-		// TODO check if it's over the board panel
-		if ( minigame_isactive() )
-				active_minigame.minigame_event(active_minigame,"mouse_move",mousepos);
-		return true;
-		
-	}
-	else
-	{
-		
-		if(bInputType == 0) {
-			if(nPrimary == K_ALT) hudShiftState |= S_ALT;
-			if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
-			if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
-			if(nPrimary == K_MOUSE1) mouseClicked |= S_MOUSE1;
-			if(nPrimary == K_MOUSE2) mouseClicked |= S_MOUSE2;
-		}
-		else if(bInputType == 1) {
-			if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
-			if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
-			if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
-			if(nPrimary == K_MOUSE1) mouseClicked -= (mouseClicked & S_MOUSE1);
-			if(nPrimary == K_MOUSE2) mouseClicked -= (mouseClicked & S_MOUSE2);
-		}
-		
-		if ( nPrimary == K_ESCAPE && bInputType == 0 )
-		{
-			if ( minigame_isactive() )
-			{
-				/// TODO: maybe show confirmation dialog
-				localcmd ( "cmd minigame end" );
-			}
-			else if ( HUD_MinigameMenu_IsOpened() )
-			{
-				HUD_MinigameMenu_Close();
-			}
-			return true;
-		}
-		else
-		{
-			// allow some binds binds
-			string con_keys;
-			float keys;
-			float i;
-			con_keys = findkeysforcommand("toggleconsole", 0);
-			keys = tokenize(con_keys); // findkeysforcommand returns data for this
-			for (i = 0; i < keys; ++i)
-			{
-				if(nPrimary == stof(argv(i)))
-					return false;
-			}
-		}
-		if ( minigame_isactive() )
-		{
-			/// TODO mouse click events (only if mouse is over the board)
-			if ( bInputType == 0 )
-				return active_minigame.minigame_event(active_minigame,"key_pressed",nPrimary);
-			else if ( bInputType == 1 )
-				return active_minigame.minigame_event(active_minigame,"key_released",nPrimary);
-			/// TODO: bInputType == 2?
-		}
-		
-		if ( HUD_MinigameMenu_IsOpened() )
-		{
-			/// TODO Check if mouse is over the right panel
-			if ( ( bInputType == 0 || bInputType == 1 ) && 
-				 ( nPrimary == K_MOUSE1 || nPrimary == K_MOUSE2 ) )
-				return true;
-			// TODO: Up/down keys
-		}
-	}
-	
-	return false;
-
-}
-
-void HUD_MinigameMenu_MouseInput();
-void HUD_Minigame_Mouse()
-{		
-	if( !(minigame_isactive() || HUD_MinigameMenu_IsOpened()) || autocvar__hud_configure )
-		return;
-	
-	if(!autocvar_hud_cursormode)
-	{
-		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
-
-		mousepos_x = bound(0, mousepos_x, vid_conwidth);
-		mousepos_y = bound(0, mousepos_y, vid_conheight);
-	}
-	
-	if ( HUD_MinigameMenu_IsOpened() )
-		HUD_MinigameMenu_MouseInput();
-	
-	const vector cursorsize = '32 32 0';
-	drawpic(mousepos-'8 4 0', strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', 0.8, DRAWFLAG_NORMAL);
+	vector pos = stov(cvar_string(strcat("hud_panel_", somepanel.panel_name, "_pos")));
+	vector sz = stov(cvar_string(strcat("hud_panel_", somepanel.panel_name, "_size")));
+	return mousepos_x >= pos_x*vid_conwidth  && mousepos_x <= (pos_x+sz_x)*vid_conwidth && 
+	       mousepos_y >= pos_y*vid_conheight && mousepos_y <= (pos_y+sz_y)*vid_conheight ;
 }
 
 // ====================================================================
@@ -168,7 +67,7 @@ void HUD_MinigameStatus ()
 }
 
 // ====================================================================
-// Minigame Create
+// Minigame Menu
 // ====================================================================
 
 // Minigame menu options: list head
@@ -196,6 +95,10 @@ void HUD_MinigameMenu_InsertEntry(entity new, entity prev)
 	
 }
 
+
+// minigame menu item uder the mouse
+entity HUD_MinigameMenu_activeitem;
+
 // Minigame menu options: Remove the given entry
 // Precondition: the given entry is actually in the list
 void HUD_MinigameMenu_EraseEntry ( entity e )
@@ -218,6 +121,9 @@ void HUD_MinigameMenu_EraseEntry ( entity e )
 		e.chain.owner = e.owner;
 	else
 		HUD_MinigameMenu_last_entry = e.owner;
+	
+	if ( HUD_MinigameMenu_activeitem == e )
+		HUD_MinigameMenu_activeitem = world;
 	
 	remove(e);
 }
@@ -260,6 +166,9 @@ float HUD_MinigameMenu_Click_ExpandCollapse(string collapse_classname)
 	entity e;
 	if ( self.flags & 2 )
 	{
+		if ( HUD_MinigameMenu_activeitem && 
+				HUD_MinigameMenu_activeitem.classname == collapse_classname )
+			HUD_MinigameMenu_activeitem = world;
 		self.flags &= ~2;
 		for ( e = self.chain; e != world && e.classname == collapse_classname; e = self.chain )
 		{
@@ -398,6 +307,7 @@ void HUD_MinigameMenu_Close()
 		}
 		HUD_MinigameMenu_entries = world;
 		HUD_MinigameMenu_last_entry = world;
+		HUD_MinigameMenu_activeitem = world;
 		if(autocvar_hud_cursormode)
 		if ( !active_minigame )
 			setcursormode(0);
@@ -449,16 +359,27 @@ void HUD_MinigameMenu_Open()
 		exit.classname = "hud_minigamemenu_exit";
 		HUD_MinigameMenu_InsertEntry ( exit, HUD_MinigameMenu_last_entry );
 		HUD_MinigameMenu_CurrentButton();
+		HUD_MinigameMenu_activeitem = world;
 		if(autocvar_hud_cursormode)
 			setcursormode(1);
-		mouseClicked =  0;
 	}
 }
 
+// Click the active item
+void HUD_MinigameMenu_Click()
+{
+	if ( HUD_MinigameMenu_activeitem )
+	{
+		entity e = self;
+		self = HUD_MinigameMenu_activeitem;
+		HUD_MinigameMenu_activeitem.use();
+		self = e;
+	}
+}
 // Handles mouse input on to minigame menu panel
 void HUD_MinigameMenu_MouseInput()
 {
-	panel = HUD_PANEL(MINIGAME_CREATE);
+	panel = HUD_PANEL(MINIGAME_MENU);
 
 	HUD_Panel_UpdateCvars()
 
@@ -470,35 +391,18 @@ void HUD_MinigameMenu_MouseInput()
 	
 	entity e;
 	
-	if ( mousepos_x < panel_pos_x || mousepos_x > panel_pos_x+panel_size_x ||
-		 mousepos_y < panel_pos_y || mousepos_y > panel_pos_y+panel_size_y )
-	{
-		for ( e = HUD_MinigameMenu_entries; e != world; e = e.chain )
-			e.flags &= ~1;
-	}
-	
 	panel_pos_y += hud_fontsize_y*2;
 	
-	entity active = world;
+	HUD_MinigameMenu_activeitem = world;
 	vector sz;
 	for ( e = HUD_MinigameMenu_entries; e != world; e = e.chain )
 	{
 		sz = eX*panel_size_x + eY*e.size_y;
-		e.flags &= ~1;
-		if ( !active && mousepos_y >= panel_pos_y && mousepos_y <= panel_pos_y + sz_y )
+		if ( !HUD_MinigameMenu_activeitem && mousepos_y >= panel_pos_y && mousepos_y <= panel_pos_y + sz_y )
 		{
-			active = e;
-			e.flags |= 1;
+			HUD_MinigameMenu_activeitem = e;
 		}
 		panel_pos_y += e.size_y;
-	}
-	if ( (mouseClicked & S_MOUSE1) && active )
-	{
-		e = self;
-		self = active;
-		active.use();
-		self = e;
-		mouseClicked = 0;
 	}
 }
 
@@ -538,8 +442,152 @@ void HUD_MinigameMenu ()
 			color = '0 0 0';
 		}
 		HUD_MinigameMenu_DrawEntry(panel_pos+e.origin,e.message,e.size,color);
-		if ( e.flags & 1 )
-			drawfill(panel_pos, eX*panel_size_x + eY*e.size_y,'1 1 1', 0.1, DRAWFLAG_ADDITIVE);
+		if ( e == HUD_MinigameMenu_activeitem )
+			drawfill(panel_pos, eX*panel_size_x + eY*e.size_y,'1 1 1', 0.25, DRAWFLAG_ADDITIVE);
 		panel_pos_y += e.size_y;
 	}
+}
+
+
+// ====================================================================
+// Minigame Panel Input
+// ====================================================================
+float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary)
+{
+		
+	if( !(minigame_isactive() || HUD_MinigameMenu_IsOpened()) || autocvar__hud_configure )
+		return false;
+
+	if(bInputType == 3)
+	{
+		mousepos_x = nPrimary;
+		mousepos_y = nSecondary;
+		if ( minigame_isactive() && HUD_mouse_over(HUD_PANEL(MINIGAME_BOARD)) )
+				active_minigame.minigame_event(active_minigame,"mouse_move",mousepos);
+		return true;
+		
+	}
+	else
+	{
+		
+		if(bInputType == 0) {
+			if(nPrimary == K_ALT) hudShiftState |= S_ALT;
+			if(nPrimary == K_CTRL) hudShiftState |= S_CTRL;
+			if(nPrimary == K_SHIFT) hudShiftState |= S_SHIFT;
+			if(nPrimary == K_MOUSE1) mouseClicked |= S_MOUSE1;
+			if(nPrimary == K_MOUSE2) mouseClicked |= S_MOUSE2;
+		}
+		else if(bInputType == 1) {
+			if(nPrimary == K_ALT) hudShiftState -= (hudShiftState & S_ALT);
+			if(nPrimary == K_CTRL) hudShiftState -= (hudShiftState & S_CTRL);
+			if(nPrimary == K_SHIFT) hudShiftState -= (hudShiftState & S_SHIFT);
+			if(nPrimary == K_MOUSE1) mouseClicked -= (mouseClicked & S_MOUSE1);
+			if(nPrimary == K_MOUSE2) mouseClicked -= (mouseClicked & S_MOUSE2);
+		}
+		
+		// allow some binds
+		string con_keys;
+		float keys;
+		float i;
+		con_keys = findkeysforcommand("toggleconsole", 0);
+		keys = tokenize(con_keys); // findkeysforcommand returns data for this
+		for (i = 0; i < keys; ++i)
+		{
+			if(nPrimary == stof(argv(i)))
+				return false;
+		}
+		
+		if ( minigame_isactive() && ( bInputType == 0 || bInputType == 1 ) )
+		{
+			string device = "";
+			string action = bInputType == 0 ? "pressed" : "released";
+			if ( nPrimary >= K_MOUSE1 && nPrimary <= K_MOUSE16 )
+			{
+				if ( HUD_mouse_over(HUD_PANEL(MINIGAME_BOARD)) )
+					device = "mouse";
+			}
+			else
+				device = "key";
+			
+			if ( device && active_minigame.minigame_event(
+					active_minigame,strcat(device,"_",action),nPrimary) )
+				return true;
+			
+			if ( nPrimary == K_ESCAPE && bInputType == 0 )
+			{
+				/// TODO: maybe show confirmation dialog
+				localcmd ( "cmd minigame end" );
+			}
+			/// TODO: bInputType == 2?
+		}
+		
+		if ( HUD_MinigameMenu_IsOpened() && bInputType == 0 )
+		{
+			if ( nPrimary == K_MOUSE1 && HUD_MinigameMenu_activeitem &&
+				HUD_mouse_over(HUD_PANEL(MINIGAME_MENU)) )
+			{
+				HUD_MinigameMenu_Click();
+				return true;
+			}
+			if ( nPrimary == K_UPARROW || nPrimary == K_KP_UPARROW )
+			{
+				if ( HUD_MinigameMenu_activeitem && HUD_MinigameMenu_activeitem.owner )
+					HUD_MinigameMenu_activeitem = HUD_MinigameMenu_activeitem.owner;
+				else
+					HUD_MinigameMenu_activeitem = HUD_MinigameMenu_last_entry;
+				return true;
+			}
+			else if ( nPrimary == K_DOWNARROW || nPrimary == K_KP_DOWNARROW )
+			{
+				if ( HUD_MinigameMenu_activeitem && HUD_MinigameMenu_activeitem.chain )
+					HUD_MinigameMenu_activeitem = HUD_MinigameMenu_activeitem.chain;
+				else
+					HUD_MinigameMenu_activeitem = HUD_MinigameMenu_entries;
+				return true;
+			}
+			else if ( nPrimary == K_HOME || nPrimary == K_KP_HOME )
+			{
+				HUD_MinigameMenu_activeitem = HUD_MinigameMenu_entries;
+				return true;
+			}
+			else if ( nPrimary == K_END || nPrimary == K_KP_END )
+			{
+				HUD_MinigameMenu_activeitem = HUD_MinigameMenu_entries;
+				return true;
+			}
+			else if ( nPrimary == K_KP_ENTER || nPrimary == K_ENTER || nPrimary == K_SPACE )
+			{
+				HUD_MinigameMenu_Click();
+				return true;
+			}
+			else if ( nPrimary == K_ESCAPE )
+			{
+				HUD_MinigameMenu_Close();
+				return true;
+			}
+		}
+	}
+	
+	return false;
+
+}
+
+void HUD_Minigame_Mouse()
+{		
+	if( !(minigame_isactive() || HUD_MinigameMenu_IsOpened()) || autocvar__hud_configure )
+		return;
+	
+	if(!autocvar_hud_cursormode)
+	{
+		mousepos = mousepos + getmousepos() * autocvar_menu_mouse_speed;
+
+		mousepos_x = bound(0, mousepos_x, vid_conwidth);
+		mousepos_y = bound(0, mousepos_y, vid_conheight);
+	}
+	
+	if ( HUD_MinigameMenu_IsOpened() && HUD_mouse_over(HUD_PANEL(MINIGAME_MENU)) )
+		HUD_MinigameMenu_MouseInput();
+	
+	const vector cursorsize = '32 32 0';
+	drawpic(mousepos-'8 4 0', strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', 0.8, DRAWFLAG_NORMAL);
 }
