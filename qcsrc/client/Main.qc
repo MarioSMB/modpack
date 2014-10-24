@@ -153,15 +153,15 @@ void CSQC_Init(void)
 	registercvar("hud_panel_minigamestatus_bg_alpha", "");
 	registercvar("hud_panel_minigamestatus_bg_border", "");
 	registercvar("hud_panel_minigamestatus_bg_padding", "");
-	registercvar("hud_panel_minigamecreate", "0");
-	registercvar("hud_panel_minigamecreate_pos", "0 0.26");
-	registercvar("hud_panel_minigamecreate_size", "0.15 0.49");
-	registercvar("hud_panel_minigamecreate_bg", "border_small");
-	registercvar("hud_panel_minigamecreate_bg_color", "");
-	registercvar("hud_panel_minigamecreate_bg_color_team", "");
-	registercvar("hud_panel_minigamecreate_bg_alpha", "");
-	registercvar("hud_panel_minigamecreate_bg_border", "");
-	registercvar("hud_panel_minigamecreate_bg_padding", "");
+	registercvar("hud_panel_minigamemenu", "0");
+	registercvar("hud_panel_minigamemenu_pos", "0 0.26");
+	registercvar("hud_panel_minigamemenu_size", "0.15 0.49");
+	registercvar("hud_panel_minigamemenu_bg", "border_small");
+	registercvar("hud_panel_minigamemenu_bg_color", "");
+	registercvar("hud_panel_minigamemenu_bg_color_team", "");
+	registercvar("hud_panel_minigamemenu_bg_alpha", "");
+	registercvar("hud_panel_minigamemenu_bg_border", "");
+	registercvar("hud_panel_minigamemenu_bg_padding", "");
 
 	gametype = 0;
 
@@ -277,7 +277,7 @@ void Shutdown(void)
 	}
 	
 	deactivate_minigame();
-	HUD_MinigameCreate_Close();
+	HUD_MinigameMenu_Close();
 }
 
 .float has_team;

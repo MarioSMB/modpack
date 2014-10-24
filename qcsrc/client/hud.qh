@@ -127,7 +127,7 @@ float mv_active;
 	HUD_PANEL(BUFFS        , HUD_Buffs        , buffs) \
 	HUD_PANEL(MINIGAME_BOARD, HUD_MinigameBoard , minigameboard) \
 	HUD_PANEL(MINIGAME_STATUS,HUD_MinigameStatus, minigamestatus) \
-	HUD_PANEL(MINIGAME_CREATE,HUD_MinigameCreate, minigamecreate) 
+	HUD_PANEL(MINIGAME_CREATE,HUD_MinigameMenu, minigamemenu) 
 
 #define HUD_PANEL(NAME,draw_func,name) \
 	float HUD_PANEL_##NAME; \

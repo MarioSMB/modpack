@@ -249,10 +249,10 @@ void LocalCommand_hud(float request, float argc)
 
 				case "minigame":
 				{
-					if(HUD_MinigameCreate_IsOpened())
-						HUD_MinigameCreate_Close();
+					if(HUD_MinigameMenu_IsOpened())
+						HUD_MinigameMenu_Close();
 					else
-						HUD_MinigameCreate_Open();
+						HUD_MinigameMenu_Open();
 					return;
 				}
 
