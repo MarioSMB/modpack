@@ -136,8 +136,8 @@ void CSQC_Init(void)
 	
 	// these need to be defined for minigames to work
 	registercvar("hud_panel_minigameboard", "1");
-	registercvar("hud_panel_minigameboard_pos", "0.17 0.15");
-	registercvar("hud_panel_minigameboard_size", "0.55 0.60");
+	registercvar("hud_panel_minigameboard_pos", "0.22 0.15");
+	registercvar("hud_panel_minigameboard_size", "0.50 0.60");
 	registercvar("hud_panel_minigameboard_bg", "border_small");
 	registercvar("hud_panel_minigameboard_bg_color", "");
 	registercvar("hud_panel_minigameboard_bg_color_team", "");
@@ -155,7 +155,7 @@ void CSQC_Init(void)
 	registercvar("hud_panel_minigamestatus_bg_padding", "");
 	registercvar("hud_panel_minigamemenu", "0");
 	registercvar("hud_panel_minigamemenu_pos", "0 0.26");
-	registercvar("hud_panel_minigamemenu_size", "0.15 0.49");
+	registercvar("hud_panel_minigamemenu_size", "0.2 0.49");
 	registercvar("hud_panel_minigamemenu_bg", "border_small");
 	registercvar("hud_panel_minigamemenu_bg_color", "");
 	registercvar("hud_panel_minigamemenu_bg_color_team", "");

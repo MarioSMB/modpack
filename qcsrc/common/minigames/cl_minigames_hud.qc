@@ -216,6 +216,7 @@ void HUD_MinigameMenu_ClickCreate()
 				e.message, HUD_MinigameMenu_ClickCreate_Entry,
 				"hud_minigamemenu_create_entry" );
 			curr.netname = e.netname;
+			curr.model = strzone(minigame_texture(strcat(e.netname,"/icon")));
 			HUD_MinigameMenu_InsertEntry( curr, prev );
 			prev = curr;
 		}
@@ -245,6 +246,7 @@ void HUD_MinigameMenu_ClickJoin()
 					e.netname, HUD_MinigameMenu_ClickJoin_Entry,
 					"hud_minigamemenu_join_entry" );
 				curr.netname = e.netname;
+				curr.model = strzone(minigame_texture(strcat(e.descriptor.netname,"/icon")));
 				HUD_MinigameMenu_InsertEntry( curr, prev );
 				prev = curr;
 			}
@@ -352,8 +354,10 @@ void HUD_MinigameMenu_CurrentButton()
 				entity currb = HUD_MinigameMenu_SpawnEntry(
 					"Current Game", '0 0 0', hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_ClickCurrentGame );
 				currb.classname = "hud_minigamemenu_current";
+				currb.model = strzone(minigame_texture(strcat(active_minigame.descriptor.netname,"/icon")));
 				HUD_MinigameMenu_InsertEntry(currb,e.owner);
 				HUD_MinigameMenu_Click(currb);
+				// TODO move this as a sub entry of Current game (need to make sure it looks nice)
 				currb = HUD_MinigameMenu_SpawnEntry(
 					"Invite", '0 0 0', hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_ClickInvite );
 				currb.classname = "hud_minigamemenu_current";
@@ -433,13 +437,13 @@ void HUD_MinigameMenu_MouseInput()
 // Draw a menu entry
 void HUD_MinigameMenu_DrawEntry(vector pos, string s, vector fontsize, vector color)
 {
-	string entry = textShortenToWidth(s, panel_size_x, fontsize, stringwidth_nocolors);
+	string entry = textShortenToWidth(s, panel_size_x-pos_x+panel_pos_x, fontsize, stringwidth_nocolors);
 	drawstring(pos, entry, fontsize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 // Draw a color-coded menu
 void HUD_MinigameMenu_DrawColoredEntry(vector pos, string s, vector fontsize)
 {
-	string entry = textShortenToWidth(s, panel_size_x, fontsize, stringwidth_colors);
+	string entry = textShortenToWidth(s, panel_size_x-pos_x+panel_pos_x, fontsize, stringwidth_colors);
 	drawcolorcodedstring(pos, entry, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
@@ -469,25 +473,43 @@ void HUD_MinigameMenu ()
 	
 	entity e;
 	vector color;
+	vector offset;
+	float itemh;
+	vector imgsz = '22 22 0';
 	for ( e = HUD_MinigameMenu_entries; e != world; e = e.chain )
 	{
 		color = e.colormod;
+		
+		offset = e.origin;
+		itemh = e.size_y;
+		
+		if ( e.model )
+		{
+			// NOTE this discards any previous indentation
+			offset_x = imgsz_x;
+			offset_y = (imgsz_y-e.size_y) / 2;
+			itemh = imgsz_y;
+		}
+		
 		if ( e.flags & 2 )
 		{
-			drawfill(panel_pos, eX*panel_size_x + eY*e.size_y, e.colormod, 
+			drawfill(panel_pos, eX*panel_size_x + eY*itemh, e.colormod, 
 					panel_fg_alpha, DRAWFLAG_NORMAL);
 			color = '0 0 0';
 		}
+
+		if ( e.model )
+			drawpic( panel_pos, e.model, imgsz, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
 		
 		if ( e.flags & 1 )
-			HUD_MinigameMenu_DrawColoredEntry(panel_pos+e.origin,e.message,e.size);
+			HUD_MinigameMenu_DrawColoredEntry(panel_pos+offset,e.message,e.size);
 		else
-			HUD_MinigameMenu_DrawEntry(panel_pos+e.origin,e.message,e.size,color);
+			HUD_MinigameMenu_DrawEntry(panel_pos+offset,e.message,e.size,color);
 		
 		if ( e == HUD_MinigameMenu_activeitem )
-			drawfill(panel_pos, eX*panel_size_x + eY*e.size_y,'1 1 1', 0.25, DRAWFLAG_ADDITIVE);
+			drawfill(panel_pos, eX*panel_size_x + eY*itemh,'1 1 1', 0.25, DRAWFLAG_ADDITIVE);
 		
-		panel_pos_y += e.size_y;
+		panel_pos_y += itemh;
 	}
 }
 

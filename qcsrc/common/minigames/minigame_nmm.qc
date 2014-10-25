@@ -75,7 +75,7 @@ void minigame_hud_board_nmm(vector pos, vector mySize)
 			tile_pos = minigame_hud_denormalize(e.origin,pos,mySize)-tile_size/2;
 			if ( minigame_hud_mouse_in(tile_pos, tile_size) )
 				drawpic( tile_pos, minigame_texture("nmm/tile_selected"),
-						tile_size, '1 1 1', panel_fg_alpha, BORDER_MULTIPLIER );
+						tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_ADDITIVE );
 		}
 	}
 }
