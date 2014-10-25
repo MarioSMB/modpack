@@ -1,7 +1,7 @@
 
 #ifdef SVQC
 
-float minigame_event_test(entity minigame, string event, ...count)
+float minigame_event_nmm(entity minigame, string event, ...count)
 {
 	if ( event == "start" )
 	{
@@ -60,7 +60,7 @@ float minigame_event_test(entity minigame, string event, ...count)
 
 #elif defined(CSQC)
 
-void minigame_hud_board_test(vector pos, vector mySize)
+void minigame_hud_board_nmm(vector pos, vector mySize)
 {
 	minigame_hud_fitsqare(pos, mySize);
 	minigame_hud_simpleboard(pos,mySize,minigame_texture("nmm/board"));
@@ -80,7 +80,7 @@ void minigame_hud_board_test(vector pos, vector mySize)
 	}
 }
 
-void minigame_hud_status_test(vector pos, vector mySize)
+void minigame_hud_status_nmm(vector pos, vector mySize)
 {
 	HUD_Panel_DrawBg(0.5);
 	vector titlepos = pos;
@@ -90,7 +90,7 @@ void minigame_hud_status_test(vector pos, vector mySize)
 	drawstring(titlepos, titletext, titlesize, '1 0 0', panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
-float minigame_event_test(entity minigame, string event, ...count)
+float minigame_event_nmm(entity minigame, string event, ...count)
 {
 	if ( event == "key_pressed" && count > 0 )
 	{

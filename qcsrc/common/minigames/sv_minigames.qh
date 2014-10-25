@@ -11,6 +11,10 @@ entity start_minigame(entity player, string minigame );
 /// \return minigame session entity
 entity join_minigame(entity player, string game_id );
 
+/// Invite a player to join in a minigame
+/// \return Error string
+string invite_minigame(entity inviter, entity player);
+
 /// Part minigame session
 void part_minigame(entity player );
 

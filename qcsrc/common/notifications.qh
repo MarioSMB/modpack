@@ -591,7 +591,8 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_WEAPON_TUBA_MURDER,                   3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weapontuba",             _("^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Tuba%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_TUBA_SUICIDE,                  2, 1, "s1 s2loc spree_lost", "s1",                 "weapontuba",             _("^BG%s^K1 hurt their own ears with the @!#%%'n Tuba%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_UZI_MURDER_SNIPE,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponuzi",              _("^BG%s%s^K1 was sniped by ^BG%s^K1's Machine Gun%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_WEAPON_UZI_MURDER_SPRAY,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponuzi",              _("^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"), "") 
+	MSG_INFO_NOTIF(1, INFO_WEAPON_UZI_MURDER_SPRAY,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponuzi",              _("^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"), "") \
+	MSG_INFO_NOTIF_MULTIICON(1, INFO_MINIGAME_INVITE, 2, 0, "s2 minigame1_name s1","s2 minigame1_name", "minigame1_d", "minigames/%s/icon_notif", _("^F4You have been invited by ^BG%s^F4 to join their game of ^F2%s^F4 (^F1%s^F4)"), "") 
 
 #define MULTITEAM_CENTER2(default,prefix,strnum,flnum,args,cpid,durcnt,normal,gentle) \
 	MSG_CENTER_NOTIF(default, prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_1, strtoupper(NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(NAME_TEAM_1))) \
@@ -1124,6 +1125,8 @@ var float autocvar_notification_show_sprees_center_specialonly = TRUE;
     item_centime: amount of time to display weapon message in centerprint
 	item_buffname: return full name of a buff from buffid
     death_team: show the full name of the team a player is switching from
+    minigame1_name: return human readable name of a minigame from its id(s1)
+    minigame1_d: return descriptor name of a minigame from its id(s1)
 */
 
 #define NOTIF_MAX_ARGS 7
@@ -1179,7 +1182,9 @@ string arg_slot[NOTIF_MAX_ARGS];
     ARG_CASE(ARG_CS_SV,     "item_wepammo",  (s1 != "" ? sprintf(_(" with %s"), s1) : "")) \
     ARG_CASE(ARG_DC,        "item_centime",  ftos(autocvar_notification_item_centerprinttime)) \
     ARG_CASE(ARG_SV,        "death_team",    Team_ColoredFullName(f1)) \
-    ARG_CASE(ARG_CS,        "death_team",    Team_ColoredFullName(f1 - 1))
+    ARG_CASE(ARG_CS,        "death_team",    Team_ColoredFullName(f1 - 1)) \
+    ARG_CASE(ARG_CS_SV_HA,  "minigame1_name",find(world,netname,s1).descriptor.message) \
+    ARG_CASE(ARG_CS_SV_HA,  "minigame1_d",   find(world,netname,s1).descriptor.netname)
 
 #define NOTIF_HIT_MAX(count,funcname) if(sel_num == count) { backtrace(sprintf("%s: Hit maximum arguments!\n", funcname)); break; }
 #define NOTIF_HIT_UNKNOWN(token,funcname) { backtrace(sprintf("%s: Hit unknown token in selected string! '%s'\n", funcname, selected)); break; }
@@ -1535,6 +1540,50 @@ float notif_global_error;
 			NO_MSG,   /* chtype      */ \
 			NO_MSG,   /* optiona     */ \
 			NO_MSG);  /* optionb     */ \
+	} \
+	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name);
+
+.string nent_iconargs;
+#define MSG_INFO_NOTIF_MULTIICON(default,name,strnum,flnum,args,hudargs,iconargs,icon,normal,gentle) \
+	NOTIF_ADD_AUTOCVAR(name, default) \
+	float name; \
+	void RegisterNotification_##name() \
+	{ \
+		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_INFO_COUNT) \
+		CHECK_MAX_COUNT(name, NOTIF_INFO_MAX, NOTIF_INFO_COUNT, "MSG_INFO") \
+		Create_Notification_Entity( \
+			/* COMMON ======================== */ \
+			default,            /* var_default */ \
+			ACVNN(name),        /* var_cvar    */ \
+			MSG_INFO,           /* typeid      */ \
+			name,               /* nameid      */ \
+			strtoupper(#name),  /* namestring  */ \
+			strnum,             /* strnum      */ \
+			flnum,              /* flnum       */ \
+			/* ANNCE =========== */ \
+			NO_MSG,  /* channel  */ \
+			"",      /* snd      */ \
+			NO_MSG,  /* vol      */ \
+			NO_MSG,  /* position */ \
+			/* INFO & CENTER === */ \
+			args,     /* args    */ \
+			hudargs,  /* hudargs */ \
+			icon,     /* icon    */ \
+			NO_MSG,   /* cpid    */ \
+			"",       /* durcnt  */ \
+			normal,   /* normal  */ \
+			gentle,   /* gentle  */ \
+			/* MULTI ============= */ \
+			NO_MSG,  /* anncename  */ \
+			NO_MSG,  /* infoname   */ \
+			NO_MSG,  /* centername */ \
+			/* CHOICE ============== */ \
+			NO_MSG,   /* challow_def */ \
+			NO_MSG,   /* challow_var */ \
+			NO_MSG,   /* chtype      */ \
+			NO_MSG,   /* optiona     */ \
+			NO_MSG);  /* optionb     */ \
+		msg_info_notifs[name - 1].nent_iconargs = iconargs; \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name);
 

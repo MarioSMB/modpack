@@ -1546,6 +1546,14 @@ void Local_Notification(float net_type, float net_name, ...count)
 			#ifdef CSQC
 			if(notif.nent_icon != "")
 			{
+				if ( notif.nent_iconargs != "" )
+				{
+					notif.nent_icon = Local_Notification_sprintf(
+						notif.nent_icon,notif.nent_iconargs,
+						s1, s2, s3, s4, f1, f2, f3, f4);
+					// remove the newline added by Local_Notification_sprintf
+					notif.nent_icon = strzone(substring(notif.nent_icon,0,strlen(notif.nent_icon)-1));
+				}
 				Local_Notification_HUD_Notify_Push(
 					notif.nent_icon,
 					notif.nent_hudargs,

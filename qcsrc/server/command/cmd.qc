@@ -615,76 +615,90 @@ void ClientCommand_voice(float request, float argc, string command)
 
 void ClientCommand_minigame(float request, float argc, string command)
 {
-	switch(request)
+	if ( !autocvar_sv_minigames )
 	{
-		case CMD_REQUEST_COMMAND:
+		sprint(self,"Minigames are not enabled!\n");
+		return;
+	}
+	
+	if (request == CMD_REQUEST_COMMAND )
+	{
+		string minig_cmd = argv(1);
+		if ( minig_cmd == "start" && argc > 2 )
 		{
-			if ( !autocvar_sv_minigames )
+			entity minig = start_minigame(self, argv(2));
+			if ( minig )
+				sprint(self,"Created minigame session: ",minig.netname,"\n");
+			else
+				sprint(self,"Cannot start minigame session!\n");
+			return;
+		}
+		else if ( minig_cmd == "join" && argc > 2 )
+		{
+			entity minig = join_minigame(self, argv(2));
+			if ( minig )
+				sprint(self,"Joined: ",minig.netname,"\n");
+			else
+				sprint(self,"Cannot join given minigame session!\n");
+			return;
+		}
+		else if ( minig_cmd == "list" )
+		{
+			entity e;
+			for ( e = minigame_descriptors; e != world; e = e.chain )
+				sprint(self,e.netname," (",e.message,") ","\n");
+			return;
+		}
+		else if ( minig_cmd == "list-sessions" )
+		{
+			entity e;
+			for ( e = minigame_sessions; e != world; e = e.chain )
+				sprint(self,e.netname,"\n");
+			return;
+		}
+		else if ( minig_cmd == "end" || minig_cmd == "part" )
+		{
+			if ( self.active_minigame )
 			{
-				sprint(self,"Minigames are not enabled!\n");
-				return;
+				part_minigame(self);
+				sprint(self,"Left minigame session\n");
 			}
-			string minig_cmd = argv(1);
-			if ( minig_cmd == "start" && argc > 2 )
+			else
+				sprint(self,"You aren't playing any minigame...\n");
+			return;
+		}
+		else if ( minig_cmd == "invite" && argc > 2 )
+		{
+			if ( self.active_minigame )
 			{
-				entity minig = start_minigame(self, argv(2));
-				if ( minig )
-					sprint(self,"Created minigame session: ",minig.netname,"\n");
-				else
-					sprint(self,"Cannot start minigame session!\n");
-				return;
-			}
-			else if ( minig_cmd == "join" && argc > 2 )
-			{
-				entity minig = join_minigame(self, argv(2));
-				if ( minig )
-					sprint(self,"Joined: ",minig.netname,"\n");
-				else
-					sprint(self,"Cannot join given minigame session!\n");
-				return;
-			}
-			else if ( minig_cmd == "list" )
-			{
-				entity e;
-				for ( e = minigame_descriptors; e != world; e = e.chain )
-					sprint(self,e.netname,"\n");
-				return;
-			}
-			else if ( minig_cmd == "list-sessions" )
-			{
-				entity e;
-				for ( e = minigame_sessions; e != world; e = e.chain )
-					sprint(self,e.netname,"\n");
-				return;
-			}
-			else if ( minig_cmd == "end" || minig_cmd == "part" )
-			{
-				if ( self.active_minigame )
+				entity client = GetIndexedEntity(argc, 2);
+				string error = invite_minigame(self,client);
+				if ( error == "" )
 				{
-					part_minigame(self);
-					sprint(self,"Left minigame session\n");
+					sprint(self,"You have invited ",client.netname,
+						" to join your game of ", self.active_minigame.descriptor.message, "\n");
 				}
 				else
-					sprint(self,"You aren't playing any minigame\n");
-				return;
+					sprint(self,"Could not invite: ", error, ".\n");
 			}
-		}
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			sprint(self, "\nUsage:^3 cmd minigame start <minigame>\n");
-			sprint(self, "  Start a new minigame session\n");
-			sprint(self, "Usage:^3 cmd minigame join <session>\n");
-			sprint(self, "  Join an exising minigame session\n");
-			sprint(self, "Usage:^3 cmd minigame list\n");
-			sprint(self, "  List available minigames\n");
-			sprint(self, "Usage:^3 cmd minigame list-sessions\n");
-			sprint(self, "  List available minigames sessions\n");
-			sprint(self, "Usage:^3 cmd minigame part|end\n");
-			sprint(self, "  Leave the current minigame\n");
+			else
+				sprint(self,"You aren't playing any minigame...\n");
 			return;
 		}
 	}
+	
+	sprint(self, "\nUsage:^3 cmd minigame start <minigame>\n");
+	sprint(self, "  Start a new minigame session\n");
+	sprint(self, "Usage:^3 cmd minigame join <session>\n");
+	sprint(self, "  Join an exising minigame session\n");
+	sprint(self, "Usage:^3 cmd minigame list\n");
+	sprint(self, "  List available minigames\n");
+	sprint(self, "Usage:^3 cmd minigame list-sessions\n");
+	sprint(self, "  List available minigames sessions\n");
+	sprint(self, "Usage:^3 cmd minigame part|end\n");
+	sprint(self, "  Leave the current minigame\n");
+	sprint(self, "Usage:^3 cmd minigame invite <player>\n");
+	sprint(self, "  Invite the given player to join you in a minigame\n");
 }
 
 

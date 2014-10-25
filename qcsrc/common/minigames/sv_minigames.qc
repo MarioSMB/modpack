@@ -222,3 +222,20 @@ void minigame_spawn_board_tile(entity minigame_session, string id, vector pos)
 	e.owner = minigame_session;
 	Net_LinkEntity(e, FALSE, 0, minigame_SendEntity);
 }
+
+string invite_minigame(entity inviter, entity player)
+{
+	if ( !inviter || !inviter.active_minigame )
+		return "Invalid minigame";
+	if ( !VerifyClientEntity(player, TRUE, FALSE) )
+		return "Invalid player";
+	if ( inviter == player )
+		return "You can't invite yourself";
+	if ( player.active_minigame == inviter.active_minigame )
+		return strcat(player.netname," is already playing");
+	
+	Send_Notification(NOTIF_ONE, player, MSG_INFO, INFO_MINIGAME_INVITE, 
+		inviter.active_minigame.netname, inviter.netname );
+	
+	return "";
+}

@@ -51,4 +51,4 @@ const float MINIG_SF_PLAYERS = 2;
 #include "minigame_test.qc"
 
 #define REGISTERED_MINIGAMES \
-	MINIGAME(test, "Testing")
+	MINIGAME(nmm, "Nine Men's Morris")

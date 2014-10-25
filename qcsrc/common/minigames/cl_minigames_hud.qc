@@ -20,7 +20,7 @@ void HUD_MinigameBoard ()
 	if(!autocvar__hud_configure)
 		hud_minigame = active_minigame.descriptor;
 	else 
-		hud_minigame = minigame_get_descriptor("test");
+		hud_minigame = minigame_get_descriptor("nmm");
 	
 	if ( !hud_minigame )
 		return;
@@ -45,7 +45,7 @@ void HUD_MinigameStatus ()
 	if(!autocvar__hud_configure)
 		hud_minigame = active_minigame.descriptor;
 	else
-		hud_minigame = minigame_get_descriptor("test");
+		hud_minigame = minigame_get_descriptor("nmm");
 	
 	if ( !hud_minigame )
 		return;
@@ -280,6 +280,13 @@ void HUD_MinigameMenu_ClickCurrentGame()
 			"hud_minigamemenu_current_entry"), self);
 	}
 }
+
+// Click action for Invite sub-entries
+void HUD_MinigameMenu_ClickInvite_Entry()
+{
+	localcmd(strcat("cmd minigame invite #",self.netname,"\n"));
+}
+
 // Click action for the Invite menu
 void HUD_MinigameMenu_ClickInvite()
 {
@@ -295,10 +302,10 @@ void HUD_MinigameMenu_ClickInvite()
 				// TODO skip all players in the current minigame
 				// TODO implement the invite message
 				e = HUD_MinigameMenu_SpawnSubEntry(
-					strzone(GetPlayerName(i)), HUD_MinigameMenu_ClickNoop,
+					strzone(GetPlayerName(i)), HUD_MinigameMenu_ClickInvite_Entry,
 					"hud_minigamemenu_invite_entry");
 				e.flags |= 1;
-				e.netname = ftos(i);
+				e.netname = strzone(ftos(i+1));
 				HUD_MinigameMenu_InsertEntry(e,prev);
 				prev = e;
 			}
