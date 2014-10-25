@@ -66,3 +66,10 @@ void ent_read_minigame();
 
 float HUD_MinigameMenu_IsOpened();
 void HUD_MinigameMenu_Close();
+
+
+
+#define FOREACH_MINIGAME_ENTITY(entityvar) \
+	entityvar=world; \
+	while( (entityvar = findentity(entityvar,owner,active_minigame)) ) 
+

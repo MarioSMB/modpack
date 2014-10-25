@@ -199,9 +199,10 @@ void initialize_minigames()
 {
 	entity last_minig = world;
 	entity minig;
-	#define MINIGAME(name) \
+	#define MINIGAME(name,nicename) \
 		minig = spawn(); \
 		minig.netname = strzone(strtolower(#name)); \
+		minig.message = nicename; \
 		minig.minigame_event = minigame_event_##name; \
 		if ( !last_minig ) minigame_descriptors = minig; \
 		else last_minig.chain = minig; \

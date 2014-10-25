@@ -44,9 +44,10 @@ void initialize_minigames()
 {
 	entity last_minig = world;
 	entity minig;
-	#define MINIGAME(name) \
+	#define MINIGAME(name,nicename) \
 		minig = spawn(); \
 		minig.netname = strzone(strtolower(#name)); \
+		minig.message = nicename; \
 		minig.minigame_hud_board = minigame_hud_board_##name; \
 		minig.minigame_hud_status = minigame_hud_status_##name; \
 		minig.minigame_event = minigame_event_##name; \

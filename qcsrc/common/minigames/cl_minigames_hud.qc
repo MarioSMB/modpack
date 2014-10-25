@@ -211,7 +211,7 @@ void HUD_MinigameMenu_ClickCreate()
 		for ( e = minigame_descriptors; e != world; e = e.chain )
 		{
 			curr = HUD_MinigameMenu_SpawnSubEntry(
-				e.netname, HUD_MinigameMenu_ClickCreate_Entry,
+				e.message, HUD_MinigameMenu_ClickCreate_Entry,
 				"hud_minigamemenu_create_entry" );
 			curr.netname = e.netname;
 			HUD_MinigameMenu_InsertEntry( curr, prev );
@@ -280,12 +280,30 @@ void HUD_MinigameMenu_ClickCurrentGame()
 			"hud_minigamemenu_current_entry"), self);
 	}
 }
-
-// Draw a menu entry
-void HUD_MinigameMenu_DrawEntry(vector pos, string s, vector fontsize, vector color)
+// Click action for the Invite menu
+void HUD_MinigameMenu_ClickInvite()
 {
-	string entry = textShortenToWidth(s, panel_size_x, fontsize, stringwidth_colors);
-	drawstring(pos, entry, fontsize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	if ( HUD_MinigameMenu_Click_ExpandCollapse("hud_minigamemenu_invite_entry") )
+	{
+		float i;
+		entity e;
+		entity prev = self;
+		for(i = 0; i < maxclients; ++i)
+		{
+			if(player_localnum != i && playerslots[i] )
+			{
+				// TODO skip all players in the current minigame
+				// TODO implement the invite message
+				e = HUD_MinigameMenu_SpawnSubEntry(
+					strzone(GetPlayerName(i)), HUD_MinigameMenu_ClickNoop,
+					"hud_minigamemenu_invite_entry");
+				e.flags |= 1;
+				e.netname = ftos(i);
+				HUD_MinigameMenu_InsertEntry(e,prev);
+				prev = e;
+			}
+		}
+	}
 }
 
 // Whether the minigame menu panel is open
@@ -327,17 +345,25 @@ void HUD_MinigameMenu_CurrentButton()
 					"Current Game", '0 0 0', hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_ClickCurrentGame );
 				currb.classname = "hud_minigamemenu_current";
 				HUD_MinigameMenu_InsertEntry(currb,e.owner);
+				currb = HUD_MinigameMenu_SpawnEntry(
+					"Invite", '0 0 0', hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_ClickInvite );
+				currb.classname = "hud_minigamemenu_current";
+				HUD_MinigameMenu_InsertEntry(currb,e.owner);
 				return;
 			}
 	}
 	else 
 	{
-		for ( e = HUD_MinigameMenu_last_entry; e != world; e = e.owner )
+		entity p;
+		for ( e = HUD_MinigameMenu_last_entry; e != world; e = p.owner )
 		{
+			p = e;
 			if ( e.classname == "hud_minigamemenu_current" )
 			{
+				p = e.chain;
+				if ( !p )
+					p = HUD_MinigameMenu_last_entry;
 				HUD_MinigameMenu_EraseEntry(e);
-				return;
 			}
 		}
 	}
@@ -406,6 +432,19 @@ void HUD_MinigameMenu_MouseInput()
 	}
 }
 
+// Draw a menu entry
+void HUD_MinigameMenu_DrawEntry(vector pos, string s, vector fontsize, vector color)
+{
+	string entry = textShortenToWidth(s, panel_size_x, fontsize, stringwidth_nocolors);
+	drawstring(pos, entry, fontsize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+}
+// Draw a color-coded menu
+void HUD_MinigameMenu_DrawColoredEntry(vector pos, string s, vector fontsize)
+{
+	string entry = textShortenToWidth(s, panel_size_x, fontsize, stringwidth_colors);
+	drawcolorcodedstring(pos, entry, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+}
+
 // minigame menu panel UI
 void HUD_MinigameMenu ()
 {
@@ -441,9 +480,15 @@ void HUD_MinigameMenu ()
 					panel_fg_alpha, DRAWFLAG_NORMAL);
 			color = '0 0 0';
 		}
-		HUD_MinigameMenu_DrawEntry(panel_pos+e.origin,e.message,e.size,color);
+		
+		if ( e.flags & 1 )
+			HUD_MinigameMenu_DrawColoredEntry(panel_pos+e.origin,e.message,e.size);
+		else
+			HUD_MinigameMenu_DrawEntry(panel_pos+e.origin,e.message,e.size,color);
+		
 		if ( e == HUD_MinigameMenu_activeitem )
 			drawfill(panel_pos, eX*panel_size_x + eY*e.size_y,'1 1 1', 0.25, DRAWFLAG_ADDITIVE);
+		
 		panel_pos_y += e.size_y;
 	}
 }

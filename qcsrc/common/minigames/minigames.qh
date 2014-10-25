@@ -34,8 +34,8 @@ string minigame_tile_name(vector pos, float rows, float columns)
 /// For minigame sessions/descriptors: execute the given event
 /// Client events:
 /// 	mouse_moved(vector mouse_pos) (return 1 to handle input, 0 to discard)
-/// 	key_pressed(float K_Keycode)  (return 1 to handle input, 0 to discard)
-/// 	key_released(float K_Keycode) (return 1 to handle input, 0 to discard)
+/// 	mouse_pressed/released(float K_Keycode)(return 1 to handle input, 0 to discard)
+/// 	key_pressed/released(float K_Keycode)  (return 1 to handle input, 0 to discard)
 /// 		(note: see dpdefs/keycodes.qc for values)
 /// Server events:
 /// 	start()
@@ -51,4 +51,4 @@ const float MINIG_SF_PLAYERS = 2;
 #include "minigame_test.qc"
 
 #define REGISTERED_MINIGAMES \
-	MINIGAME(test)
+	MINIGAME(test, "Testing")

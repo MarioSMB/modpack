@@ -64,13 +64,13 @@ void minigame_hud_board_test(vector pos, vector mySize)
 {
 	minigame_hud_fitsqare(pos, mySize);
 	minigame_hud_simpleboard(pos,mySize,minigame_texture("nmm/board"));
-	entity e = world;
 	
 	vector tile_pos;
 	vector tile_size = minigame_hud_denormalize_size('1 1 0'/7,pos,mySize);
-	while ( ( e = find(e,classname,"minigame_board_tile") ) )
+	entity e;
+	FOREACH_MINIGAME_ENTITY(e)
 	{
-		if ( e.owner == active_minigame )
+		if ( e.classname == "minigame_board_tile" )
 		{
 			tile_pos = minigame_hud_denormalize(e.origin,pos,mySize)-tile_size/2;
 			if ( minigame_hud_mouse_in(tile_pos, tile_size) )
