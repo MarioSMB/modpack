@@ -1128,7 +1128,7 @@ float Monster_Spawn(float mon_id)
 	self.pos2				= self.angles;
 	self.reset				= Monster_Reset;
 	self.netname			= mon.netname;
-       self.monster_attackfunc = mon.monster_attackfunc;
+	self.monster_attackfunc	= mon.monster_attackfunc;
 	self.monster_name		= mon.monster_name;
 	self.candrop			= TRUE;
 	self.view_ofs			= '0 0 1' * (self.maxs_z * 0.5);
