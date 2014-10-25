@@ -48,7 +48,28 @@ string minigame_tile_name(vector pos, float rows, float columns)
 const float MINIG_SF_CREATE = 1;
 const float MINIG_SF_PLAYERS = 2;
 
-#include "minigame_test.qc"
+#include "minigame_nmm.qc"
 
+
+/**
+ * Minigame requirements:
+ * SVQC:
+ * 	float minigame_event_<id>(entity minigame, string event, ...count)
+ * 		see above for an explanation
+ * CSQC:
+ * 	void minigame_hud_board_<id>(vector pos, vector mySize)
+ * 		draws the main game board inside the rectangle defined by pos and mySize
+ * 		(That rectangle is expressed in window coordinates)
+ * 	void minigame_hud_status_<id>(vector pos, vector mySize)
+ * 		draws the game status panel inside the rectangle defined by pos and mySize
+ * 		(That rectangle is expressed in window coordinates)
+ * 		This panel shows eg scores, captured pieces and so on
+ * 	float minigame_event_<id>(entity minigame, string event, ...count)
+ * 		see above for an explabation
+ * Registration:
+ * 	MINIGAME(id,"Name")
+ * 		id    (QuakeC symbol) Game identifier, used to find the functions explained above
+ * 		"Name"(String)        Human readable name for the game, shown in the UI
+ */
 #define REGISTERED_MINIGAMES \
 	MINIGAME(nmm, "Nine Men's Morris")

@@ -99,6 +99,18 @@ void HUD_MinigameMenu_InsertEntry(entity new, entity prev)
 // minigame menu item uder the mouse
 entity HUD_MinigameMenu_activeitem;
 
+// Click the given item
+void HUD_MinigameMenu_Click(entity menuitem)
+{
+	if ( menuitem )
+	{
+		entity e = self;
+		self = menuitem;
+		menuitem.use();
+		self = e;
+	}
+}
+
 // Minigame menu options: Remove the given entry
 // Precondition: the given entry is actually in the list
 void HUD_MinigameMenu_EraseEntry ( entity e )
@@ -106,10 +118,7 @@ void HUD_MinigameMenu_EraseEntry ( entity e )
 	// remove child items (if any)
 	if ( e.flags & 2 )
 	{
-		entity os = self;
-		self = e;
-		e.use();
-		self = os;
+		HUD_MinigameMenu_Click(e);
 	}
 	
 	if ( e.owner )
@@ -180,17 +189,10 @@ float HUD_MinigameMenu_Click_ExpandCollapse(string collapse_classname)
 	}
 	else
 	{
-		entity curr;
-		
 		for ( e = HUD_MinigameMenu_entries; e != world; e = e.chain )
 		{
 			if ( e.flags & 2 )
-			{
-				curr = self;
-				self = e;
-				e.use();
-				self = curr;
-			}
+				HUD_MinigameMenu_Click(e);
 		}
 		
 		self.flags |= 2;
@@ -300,7 +302,6 @@ void HUD_MinigameMenu_ClickInvite()
 			if(player_localnum != i && playerslots[i] )
 			{
 				// TODO skip all players in the current minigame
-				// TODO implement the invite message
 				e = HUD_MinigameMenu_SpawnSubEntry(
 					strzone(GetPlayerName(i)), HUD_MinigameMenu_ClickInvite_Entry,
 					"hud_minigamemenu_invite_entry");
@@ -352,6 +353,7 @@ void HUD_MinigameMenu_CurrentButton()
 					"Current Game", '0 0 0', hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_ClickCurrentGame );
 				currb.classname = "hud_minigamemenu_current";
 				HUD_MinigameMenu_InsertEntry(currb,e.owner);
+				HUD_MinigameMenu_Click(currb);
 				currb = HUD_MinigameMenu_SpawnEntry(
 					"Invite", '0 0 0', hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_ClickInvite );
 				currb.classname = "hud_minigamemenu_current";
@@ -398,17 +400,6 @@ void HUD_MinigameMenu_Open()
 	}
 }
 
-// Click the active item
-void HUD_MinigameMenu_Click()
-{
-	if ( HUD_MinigameMenu_activeitem )
-	{
-		entity e = self;
-		self = HUD_MinigameMenu_activeitem;
-		HUD_MinigameMenu_activeitem.use();
-		self = e;
-	}
-}
 // Handles mouse input on to minigame menu panel
 void HUD_MinigameMenu_MouseInput()
 {
@@ -578,7 +569,7 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 			if ( nPrimary == K_MOUSE1 && HUD_MinigameMenu_activeitem &&
 				HUD_mouse_over(HUD_PANEL(MINIGAME_MENU)) )
 			{
-				HUD_MinigameMenu_Click();
+				HUD_MinigameMenu_Click(HUD_MinigameMenu_activeitem);
 				return true;
 			}
 			if ( nPrimary == K_UPARROW || nPrimary == K_KP_UPARROW )
@@ -609,7 +600,7 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 			}
 			else if ( nPrimary == K_KP_ENTER || nPrimary == K_ENTER || nPrimary == K_SPACE )
 			{
-				HUD_MinigameMenu_Click();
+				HUD_MinigameMenu_Click(HUD_MinigameMenu_activeitem);
 				return true;
 			}
 			else if ( nPrimary == K_ESCAPE )

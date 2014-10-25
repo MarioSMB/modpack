@@ -73,11 +73,17 @@ string minigame_texture(string name)
 }
 
 void HUD_MinigameMenu_CurrentButton();
+float auto_close_minigamemenu;
 void deactivate_minigame()
 {
 	active_minigame = world;
 	if ( !HUD_MinigameMenu_IsOpened() )
 		setcursormode(0);
+	else if ( auto_close_minigamemenu )
+	{
+		HUD_MinigameMenu_Close();
+		auto_close_minigamemenu = 0;
+	}
 	else
 		HUD_MinigameMenu_CurrentButton();
 }
@@ -104,11 +110,13 @@ void activate_minigame(entity minigame)
 	
 	active_minigame = minigame;
 	
-	if(autocvar_hud_cursormode)
-		setcursormode(1);
-	
 	if ( HUD_MinigameMenu_IsOpened() )
 		HUD_MinigameMenu_CurrentButton();
+	else
+	{
+		auto_close_minigamemenu = 1;
+		HUD_MinigameMenu_Open();
+	}
 }
 
 void ent_read_minigame()

@@ -2212,6 +2212,11 @@ void PrintWelcomeMessage()
 
 void ObserverThink()
 {
+	if ( self.active_minigame )
+	{
+		self.movetype = MOVETYPE_NONE;
+		return;
+	}
 	float prefered_movetype;
 	if (self.flags & FL_JUMPRELEASED) {
 		if (self.BUTTON_JUMP && !self.version_mismatch) {
@@ -2422,9 +2427,6 @@ void PlayerPreThink (void)
 		Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_GODMODE_OFF, self.max_armorvalue);
 		self.max_armorvalue = 0;
 	}
-	
-	if ( self.active_minigame )
-		return;
 
 	if(self.frozen == 2)
 	{
@@ -2809,8 +2811,7 @@ void PlayerPostThink (void)
 			ImpulseCommands();
 		if (intermission_running)
 			return;		// intermission or finale
-		if ( !self.active_minigame )
-			GetPressedKeys();
+		GetPressedKeys();
 	}
 
 	/*
