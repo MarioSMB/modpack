@@ -4652,6 +4652,7 @@ void HUD_InfoMessages(void)
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_infomessages) return;
+		if ( minigame_isactive() ) return;
 	}
 
 	HUD_Panel_UpdateCvars();

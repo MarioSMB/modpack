@@ -141,8 +141,12 @@ void ent_read_minigame()
 		self.netname = strzone(ReadString());
 	}
 	
+	entity minigame_ent = world;
+	
 	if ( self.classname == "minigame" )
 	{
+		minigame_ent = self;
+		
 		if ( sf & MINIG_SF_CREATE )
 		{
 			self.descriptor = minigame_get_descriptor(ReadString());
@@ -192,7 +196,7 @@ void ent_read_minigame()
 			}
 		}
 	}
-	else if ( self.classname == "minigame_board_tile" )
+	else if ( self.classname == "minigame_board_piece" )
 	{
 		if ( sf & MINIG_SF_CREATE )
 		{
@@ -202,13 +206,22 @@ void ent_read_minigame()
 				self.owner = find(self.owner,netname,owner_name);
 			while ( self.owner && self.owner.classname != "minigame" );
 			if ( !self.owner )
-				dprint("Got a minigame tile without a minigame!\n");
+				dprint("Got a minigame piece without a minigame!\n");
+		}
+		
+		minigame_ent = self.owner;
+		
+		if ( sf & MINIG_SF_UPDATE )
+		{
 			self.origin_x = ReadCoord();
 			self.origin_y = ReadCoord();
 		}
 	}
 	
+	if ( minigame_ent )
+		minigame_ent.minigame_event(minigame_ent,"network_receive",self,sf);
+	
 	dprint("\nCL Reading entity: ",ftos(num_for_edict(self)),
-		" classname:",self.classname," enttype:",ftos(self.enttype),"\n");
+		" classname:",self.classname," enttype:",ftos(self.enttype) );
 	dprint(" sf:",ftos(sf)," netname:",self.netname,"\n");
 }

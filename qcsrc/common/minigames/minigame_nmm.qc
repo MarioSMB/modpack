@@ -5,47 +5,12 @@ const float NMM_TURN_FLY   = 0x04;
 const float NMM_TURN_P1    = 0x10;
 const float NMM_TURN_P2    = 0x20;
 
-.float nmm_turn_type;
-
-#ifdef SVQC
-
-float minigame_event_nmm(entity minigame, string event, ...count)
-{
-	if ( event == "start" )
-	{
-		minigame.nmm_turn_type = NMM_TURN_PLACE | NMM_TURN_P1;
-		dprint("Starting ",minigame.descriptor.netname,"\n");
-		return 1;
-	}
-	else if ( event == "join" && count > 0 )
-	{
-		dprint(...(0,entity).netname," joined ",minigame.descriptor.netname,"\n");
-		return 1;
-	}
-	else if ( event == "part" && count > 0 )
-	{
-		dprint(...(0,entity).netname," parted ",minigame.descriptor.netname,"\n");
-		return 1;
-	}
-	else if ( event == "end" )
-	{
-		dprint("Game ended ",minigame.descriptor.netname,"\n");
-		return 1;
-	}
-	dprint("Unhandled event: ",event,"\n");
-	return 0;
-}
-
-#elif defined(CSQC)
-
 const float NMM_TILE_FREE  = 0x00;
 const float NMM_TILE_P1    = 0x01;
 const float NMM_TILE_P2    = 0x02;
 
-entity nmm_currtile;
+.float nmm_turn_type;
 
-vector nmm_boardpos;
-vector nmm_boardsize;
 
 void nmm_spawn_tile(string id, entity minig)
 {
@@ -78,6 +43,44 @@ void nmm_init_tiles(entity minig)
 	   
 	#undef NMMT
 }
+
+#ifdef SVQC
+
+float minigame_event_nmm(entity minigame, string event, ...count)
+{
+	if ( event == "start" )
+	{
+		minigame.nmm_turn_type = NMM_TURN_PLACE | NMM_TURN_P1;
+		nmm_init_tiles(minigame);
+		dprint("Starting ",minigame.descriptor.netname,"\n");
+		return 1;
+	}
+	else if ( event == "join" && count > 0 )
+	{
+		dprint(...(0,entity).netname," joined ",minigame.descriptor.netname,"\n");
+		return 1;
+	}
+	else if ( event == "part" && count > 0 )
+	{
+		dprint(...(0,entity).netname," parted ",minigame.descriptor.netname,"\n");
+		return 1;
+	}
+	else if ( event == "end" )
+	{
+		dprint("Game ended ",minigame.descriptor.netname,"\n");
+		return 1;
+	}
+	dprint("Unhandled event: ",event,"\n");
+	return 0;
+}
+
+#elif defined(CSQC)
+
+entity nmm_currtile;
+
+vector nmm_boardpos;
+vector nmm_boardsize;
+
 
 entity nmm_get_tile(string id)
 {

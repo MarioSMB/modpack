@@ -40,6 +40,8 @@ void minigame_rmplayer(entity minigame_session, entity player)
 	}
 }
 
+// Send an entity to a client
+// only use on minigame entities or entities with a minigame owner
 float minigame_SendEntity(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MINIGAME);
@@ -51,8 +53,12 @@ float minigame_SendEntity(entity to, float sf)
 		WriteString(MSG_ENTITY,self.netname);
 	}
 	
+	entity minigame_ent = self.owner;
+	
 	if ( self.classname == "minigame" )
 	{
+		minigame_ent = self;
+		
 		if ( sf & MINIG_SF_CREATE )
 		{
 			WriteString(MSG_ENTITY,self.descriptor.netname);
@@ -71,12 +77,21 @@ float minigame_SendEntity(entity to, float sf)
 			}
 		}
 	}
-	else if ( self.classname == "minigame_board_tile" )
+	else if ( self.classname == "minigame_board_piece" )
 	{
-		WriteString(MSG_ENTITY,self.owner.netname);
-		WriteCoord(MSG_ENTITY,self.origin_x);
-		WriteCoord(MSG_ENTITY,self.origin_y);
+		if ( sf & MINIG_SF_CREATE )
+		{
+			WriteString(MSG_ENTITY,self.owner.netname);
+			// TODO: colormod, team
+		}
+		if ( sf & MINIG_SF_UPDATE )
+		{
+			WriteCoord(MSG_ENTITY,self.origin_x);
+			WriteCoord(MSG_ENTITY,self.origin_y);
+		}
 	}
+	
+	minigame_ent.minigame_event(minigame_ent,"network_send",self,sf);
 	
 	return 1;
 	
@@ -238,12 +253,12 @@ void initialize_minigames()
 	#undef MINIGAME
 }
 
-void minigame_spawn_board_tile(entity minigame_session, string id, vector pos)
+void minigame_spawn_board_piece(entity minigame_session, string name, vector pos)
 {
 	entity e = spawn();
 	e.origin = pos;
-	e.classname = "minigame_board_tile";
-	e.netname = id;
+	e.classname = "minigame_board_piece";
+	e.netname = name;
 	e.owner = minigame_session;
 	e.customizeentityforclient = minigame_CheckSend;
 	e.minigame_autoclean = 1;

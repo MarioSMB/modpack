@@ -15,17 +15,18 @@ entity join_minigame(entity player, string game_id );
 /// \return Error string
 string invite_minigame(entity inviter, entity player);
 
-/// Part minigame session
+// Part minigame session
 void part_minigame(entity player);
 
-/// Ends a minigame session
+// Ends a minigame session
 void end_minigame(entity minigame_session);
 
-/// Ends all minigame sessions
+// Ends all minigame sessions
 void end_minigames();
 
-/// Spawn a networked board tile entity
-void minigame_spawn_board_tile(entity minigame_session, string id, vector pos);
+// Spawn a networked board piece entity
+// TODO rework parameters once used
+void minigame_spawn_board_piece(entity minigame_session, string name, vector pos);
 
 // Only sends entities to players who joined the minigame
 // Use on customizeentityforclient for gameplay entities
