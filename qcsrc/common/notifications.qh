@@ -525,6 +525,7 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_RACE_NEW_IMPROVED,              1, 3, "s1 race_col f1ord race_col f2race_time race_diff", "s1 f2race_time",        "race_newtime",          _("^BG%s^BG improved their %s%s^BG place record with %s%s %s"), "") \
 	MSG_INFO_NOTIF(1, INFO_RACE_NEW_MISSING_UID,           1, 1, "s1 f1race_time", "s1 f1race_time",                                          "race_newfail",          _("^BG%s^BG scored a new record with ^F2%s^BG, but unfortunately lacks a UID and will be lost."), "") \
 	MSG_INFO_NOTIF(1, INFO_RACE_NEW_SET,                   1, 2, "s1 race_col f1ord race_col f2race_time", "s1 f2race_time",                  "race_newrecordserver",  _("^BG%s^BG set the %s%s^BG place record with %s%s"), "") \
+	MULTIICON_INFO(1, INFO_MINIGAME_INVITE,                2, 0, "s2 minigame1_name s1","s2 minigame1_name", "minigame1_d",                   "minigames/%s/icon_notif",_("^F4You have been invited by ^BG%s^F4 to join their game of ^F2%s^F4 (^F1%s^F4)"), "") \
 	MULTITEAM_INFO(1, INFO_SCORES_, 4,                     0, 0, "", "",                            "",                     _("^TC^TT ^BGteam scores!"), "") \
 	MSG_INFO_NOTIF(1, INFO_SPECTATE_WARNING,               0, 1, "f1secs", "",                      "",                     _("^F2You have to become a player within the next %s, otherwise you will be kicked, because spectating isn't allowed at this time!"), "") \
 	MSG_INFO_NOTIF(1, INFO_SUPERWEAPON_PICKUP,             1, 0, "s1", "s1",                        "superweapons",             _("^BG%s^K1 picked up a Superweapon"), "") \
@@ -592,7 +593,6 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_WEAPON_TUBA_SUICIDE,                  2, 1, "s1 s2loc spree_lost", "s1",                 "weapontuba",             _("^BG%s^K1 hurt their own ears with the @!#%%'n Tuba%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_UZI_MURDER_SNIPE,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponuzi",              _("^BG%s%s^K1 was sniped by ^BG%s^K1's Machine Gun%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_UZI_MURDER_SPRAY,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponuzi",              _("^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"), "") \
-	MSG_INFO_NOTIF_MULTIICON(1, INFO_MINIGAME_INVITE, 2, 0, "s2 minigame1_name s1","s2 minigame1_name", "minigame1_d", "minigames/%s/icon_notif", _("^F4You have been invited by ^BG%s^F4 to join their game of ^F2%s^F4 (^F1%s^F4)"), "") 
 
 #define MULTITEAM_CENTER2(default,prefix,strnum,flnum,args,cpid,durcnt,normal,gentle) \
 	MSG_CENTER_NOTIF(default, prefix##RED, strnum, flnum, args, cpid, durcnt, TCR(normal, COL_TEAM_1, strtoupper(NAME_TEAM_1)), TCR(gentle, COL_TEAM_1, strtoupper(NAME_TEAM_1))) \
@@ -1544,7 +1544,7 @@ float notif_global_error;
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name);
 
 .string nent_iconargs;
-#define MSG_INFO_NOTIF_MULTIICON(default,name,strnum,flnum,args,hudargs,iconargs,icon,normal,gentle) \
+#define MULTIICON_INFO(default,name,strnum,flnum,args,hudargs,iconargs,icon,normal,gentle) \
 	NOTIF_ADD_AUTOCVAR(name, default) \
 	float name; \
 	void RegisterNotification_##name() \

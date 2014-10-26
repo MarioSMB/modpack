@@ -16,7 +16,7 @@ entity join_minigame(entity player, string game_id );
 string invite_minigame(entity inviter, entity player);
 
 /// Part minigame session
-void part_minigame(entity player );
+void part_minigame(entity player);
 
 /// Ends a minigame session
 void end_minigame(entity minigame_session);
@@ -26,6 +26,10 @@ void end_minigames();
 
 /// Spawn a networked board tile entity
 void minigame_spawn_board_tile(entity minigame_session, string id, vector pos);
+
+// Only sends entities to players who joined the minigame
+// Use on customizeentityforclient for gameplay entities
+float minigame_CheckSend();
 
 /// For minigame sessions: chain of players
 .entity minigame_players;

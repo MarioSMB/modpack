@@ -1379,6 +1379,9 @@ void ClientDisconnect (void)
 		return;
 	}
 	
+	if ( self.active_minigame )
+		part_minigame(self);
+	
 	entity oldenemy = self.enemy;
 	self.enemy = world;
 	if(oldenemy) { ClientData_Touch(oldenemy); }

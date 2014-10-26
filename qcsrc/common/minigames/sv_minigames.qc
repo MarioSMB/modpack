@@ -83,6 +83,15 @@ float minigame_SendEntity(entity to, float sf)
 	
 }
 
+float minigame_CheckSend()
+{
+	entity e;
+	for ( e = self.owner.minigame_players; e != world; e = e.chain )
+		if ( e.owner == other )
+			return 1;
+	return 0;
+}
+
 float minigame_addplayer(entity minigame_session, entity player)
 {
 	if ( player.active_minigame )
@@ -190,6 +199,7 @@ void end_minigame(entity minigame_session)
 		remove(e);
 	}
 	
+	strunzone(minigame_session.netname);
 	remove(minigame_session);
 }
 
@@ -207,7 +217,7 @@ void initialize_minigames()
 	entity minig;
 	#define MINIGAME(name,nicename) \
 		minig = spawn(); \
-		minig.netname = strzone(strtolower(#name)); \
+		minig.netname = #name; \
 		minig.message = nicename; \
 		minig.minigame_event = minigame_event_##name; \
 		if ( !last_minig ) minigame_descriptors = minig; \
@@ -226,6 +236,7 @@ void minigame_spawn_board_tile(entity minigame_session, string id, vector pos)
 	e.classname = "minigame_board_tile";
 	e.netname = id;
 	e.owner = minigame_session;
+	e.customizeentityforclient = minigame_CheckSend;
 	Net_LinkEntity(e, FALSE, 0, minigame_SendEntity);
 }
 

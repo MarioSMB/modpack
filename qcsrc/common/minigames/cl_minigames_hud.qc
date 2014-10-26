@@ -301,7 +301,7 @@ void HUD_MinigameMenu_ClickInvite()
 		entity prev = self;
 		for(i = 0; i < maxclients; ++i)
 		{
-			if(player_localnum != i && playerslots[i] )
+			if(player_localnum != i && playerslots[i] && GetPlayerName(i) != "" )
 			{
 				// TODO skip all players in the current minigame
 				e = HUD_MinigameMenu_SpawnSubEntry(
