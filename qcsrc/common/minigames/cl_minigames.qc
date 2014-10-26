@@ -76,6 +76,18 @@ void HUD_MinigameMenu_CurrentButton();
 float auto_close_minigamemenu;
 void deactivate_minigame()
 {
+	if ( !active_minigame )
+		return;
+	
+	active_minigame.minigame_event(active_minigame,"deactivate");
+	entity e = world;
+	while( (e = findentity(e, owner, self)) )
+		if ( e.minigame_autoclean )
+		{
+			dprint("Auto-cleaned: ",ftos(num_for_edict(e)), " (",e.classname,") ");
+			remove(e);
+		}
+				
 	active_minigame = world;
 	if ( !HUD_MinigameMenu_IsOpened() )
 		setcursormode(0);
@@ -109,6 +121,7 @@ void activate_minigame(entity minigame)
 		deactivate_minigame();
 	
 	active_minigame = minigame;
+	active_minigame.minigame_event(active_minigame,"activate");
 	
 	if ( HUD_MinigameMenu_IsOpened() )
 		HUD_MinigameMenu_CurrentButton();
@@ -144,9 +157,25 @@ void ent_read_minigame()
 			float ent;
 			float n;
 			float foundself = 0;
+			
+			entity player_pointer = world;
+			while( (player_pointer = findentity(player_pointer, owner, self)) )
+				if ( player_pointer.classname == "minigame_player" )
+				{
+					remove(player_pointer);
+				}
+			
 			for ( n = ReadByte(); n > 0; n-- )
 			{
 				ent = ReadLong();
+				
+				player_pointer = spawn();
+				player_pointer.classname = "minigame_player";
+				player_pointer.owner = self;
+				player_pointer.minigame_playerslot = ent;
+				player_pointer.minigame_autoclean = 1;
+				
+				
 				dprint("Player: ",GetPlayerName(ent-1),"\n");
 				if ( ent == player_localentnum )
 					foundself = 1;

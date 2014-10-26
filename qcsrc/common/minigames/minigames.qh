@@ -37,6 +37,8 @@ string minigame_tile_name(vector pos, float rows, float columns)
 /// 	mouse_pressed/released(float K_Keycode)(return 1 to handle input, 0 to discard)
 /// 	key_pressed/released(float K_Keycode)  (return 1 to handle input, 0 to discard)
 /// 		(note: see dpdefs/keycodes.qc for values)
+/// 	activate()
+/// 	deactivate()
 /// Server events:
 /// 	start()
 /// 	end()

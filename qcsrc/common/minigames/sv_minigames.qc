@@ -106,6 +106,7 @@ float minigame_addplayer(entity minigame_session, entity player)
 	if ( ok )
 	{
 		entity player_pointer = spawn();
+		player_pointer.classname = "minigame_player";
 		player_pointer.owner = player;
 		//TODO append new player at the end of the list (?)
 		player_pointer.chain = minigame_session.minigame_players;

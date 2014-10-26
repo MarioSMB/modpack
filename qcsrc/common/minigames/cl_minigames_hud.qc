@@ -301,9 +301,9 @@ void HUD_MinigameMenu_ClickInvite()
 		entity prev = self;
 		for(i = 0; i < maxclients; ++i)
 		{
-			if(player_localnum != i && playerslots[i] && GetPlayerName(i) != "" )
+			if(player_localnum != i && playerslots[i] && GetPlayerName(i) != "" &&
+				!findfloat(world,minigame_playerslot,i+1) )
 			{
-				// TODO skip all players in the current minigame
 				e = HUD_MinigameMenu_SpawnSubEntry(
 					strzone(GetPlayerName(i)), HUD_MinigameMenu_ClickInvite_Entry,
 					"hud_minigamemenu_invite_entry");
@@ -394,7 +394,7 @@ void HUD_MinigameMenu_Open()
 			"Join",'0 0 0',hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_ClickJoin),
 			HUD_MinigameMenu_last_entry );
 		entity exit = HUD_MinigameMenu_SpawnEntry(
-			"Exit",'0 0 0',hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_Close);
+			"Exit Menu",'0 0 0',hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_Close);
 		exit.classname = "hud_minigamemenu_exit";
 		HUD_MinigameMenu_InsertEntry ( exit, HUD_MinigameMenu_last_entry );
 		HUD_MinigameMenu_CurrentButton();

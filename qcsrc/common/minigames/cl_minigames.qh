@@ -47,6 +47,10 @@ string minigame_texture(string name);
 .void(vector pos, vector size) minigame_hud_board;
 // For minigame descriptors: hud function for the game status
 .void(vector pos, vector size) minigame_hud_status;
+// For minigame_player: player server slot
+.float minigame_playerslot;
+// For run-time gameplay entities: Whether to be removed when the game is deactivated
+.float minigame_autoclean;
 
 // register all minigames
 void initialize_minigames();
