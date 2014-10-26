@@ -46,6 +46,8 @@ string minigame_tile_name(vector pos, float rows, float columns)
 /// 	part(entity player)
 .float(entity,string,...)   minigame_event;
 
+// For run-time gameplay entities: Whether to be removed when the game is deactivated
+.float minigame_autoclean;
 
 const float MINIG_SF_CREATE = 1;
 const float MINIG_SF_PLAYERS = 2;

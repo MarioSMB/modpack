@@ -84,7 +84,7 @@ void deactivate_minigame()
 	while( (e = findentity(e, owner, self)) )
 		if ( e.minigame_autoclean )
 		{
-			dprint("Auto-cleaned: ",ftos(num_for_edict(e)), " (",e.classname,") ");
+			dprint("CL Auto-cleaned: ",ftos(num_for_edict(e)), " (",e.classname,")\n");
 			remove(e);
 		}
 				

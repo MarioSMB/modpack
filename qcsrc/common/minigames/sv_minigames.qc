@@ -40,7 +40,6 @@ void minigame_rmplayer(entity minigame_session, entity player)
 	}
 }
 
-
 float minigame_SendEntity(entity to, float sf)
 {
 	WriteByte(MSG_ENTITY, ENT_CLIENT_MINIGAME);
@@ -192,7 +191,16 @@ void end_minigame(entity minigame_session)
 	
 	minigame_session.minigame_event(minigame_session,"end");
 	
-	entity e, p;
+	
+	entity e = world;
+	while( (e = findentity(e, owner, minigame_session)) )
+		if ( e.minigame_autoclean )
+		{
+			dprint("SV Auto-cleaned: ",ftos(num_for_edict(e)), " (",e.classname,")\n");
+			remove(e);
+		}
+	
+	entity p;
 	for ( e = minigame_session.minigame_players; e != world; e = p )
 	{
 		p = e.chain;
@@ -238,6 +246,7 @@ void minigame_spawn_board_tile(entity minigame_session, string id, vector pos)
 	e.netname = id;
 	e.owner = minigame_session;
 	e.customizeentityforclient = minigame_CheckSend;
+	e.minigame_autoclean = 1;
 	Net_LinkEntity(e, FALSE, 0, minigame_SendEntity);
 }
 
