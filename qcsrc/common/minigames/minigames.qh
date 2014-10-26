@@ -9,12 +9,40 @@ entity minigame_get_descriptor(string id)
 	return world;
 }
 
+// Get letter index of a tile name
+float minigame_tile_letter(string id)
+{
+	return str2chr(substring(id,0,1),0)-'a';
+}
+
+// Get number index of a tile name
+// Note: this is 0 based, useful for mathematical operations
+// Note: Since the tile notation starts from the bottom left, 
+//	you may want to do number_of_rows - what_this_function_returns or something
+float minigame_tile_number(string id)
+{
+	return stof(substring(id,1,-1)) -1 ;
+}
+
 // Get relative position of the center of a given tile
 vector minigame_tile_pos(string id, float rows, float columns)
 {
-	float letter = str2chr(substring(id,0,1),0)-'a';
-	float number = stof(substring(id,1,-1));
-	return eX*(letter+0.5)/columns + eY - eY*(number-0.5)/rows;
+	return eX*(minigame_tile_letter(id)+0.5)/columns + 
+	       eY - eY*(minigame_tile_number(id)+0.5)/rows;
+}
+
+// Get the id of a tile relative to the given one
+string minigame_relative_tile(string start_id, float dx, float dy, float rows, float columns)
+{
+	float letter = minigame_tile_letter(start_id);
+	float number = minigame_tile_number(start_id);
+	letter = (letter+dx) % columns;
+	number = (number+dy) % rows;
+	if ( letter < 0 )
+		letter = columns + letter;
+	if ( number < 0 )
+		number = rows + number;
+	return strcat(chr2str('a'+letter),ftos(number+1));
 }
 
 // Get tile name from a relative position (matches the tile covering a square area)
@@ -48,6 +76,9 @@ string minigame_tile_name(vector pos, float rows, float columns)
 
 // For run-time gameplay entities: Whether to be removed when the game is deactivated
 .float minigame_autoclean;
+
+// For run-time gameplay entities: some place to store flags safely
+.float minigame_flags;
 
 const float MINIG_SF_CREATE = 1;
 const float MINIG_SF_PLAYERS = 2;

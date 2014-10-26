@@ -528,7 +528,7 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 		mousepos_x = nPrimary;
 		mousepos_y = nSecondary;
 		if ( minigame_isactive() && HUD_mouse_over(HUD_PANEL(MINIGAME_BOARD)) )
-				active_minigame.minigame_event(active_minigame,"mouse_move",mousepos);
+			active_minigame.minigame_event(active_minigame,"mouse_moved",mousepos);
 		return true;
 		
 	}
