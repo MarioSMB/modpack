@@ -29,7 +29,6 @@ sys-post.qh
 ../common/net_notice.qh
 ../common/animdecide.qh
 
-../common/minigames/sv_minigames.qh
 
 autocvars.qh
 constants.qh
@@ -41,6 +40,8 @@ defs.qh		// Should rename this, it has fields and globals
 ../common/monsters/monsters.qh
 ../common/monsters/sv_monsters.qh
 ../common/monsters/spawn.qh
+
+../common/minigames/sv_minigames.qh
 
 ../common/turrets/turrets.qh
 ../common/turrets/sv_turrets.qh

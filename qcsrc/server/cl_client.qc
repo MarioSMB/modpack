@@ -2217,6 +2217,8 @@ void ObserverThink()
 {
 	if ( self.active_minigame )
 	{
+		if ( self.impulse )
+			MinigameImpulse();
 		self.movetype = MOVETYPE_NONE;
 		return;
 	}

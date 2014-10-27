@@ -296,3 +296,121 @@ string invite_minigame(entity inviter, entity player)
 	
 	return "";
 }
+
+entity minigame_find_player(entity client)
+{
+	if ( ! client.active_minigame )
+		return world;
+	entity e;
+	for ( e = client.active_minigame.minigame_players; e; e = e.chain )
+		if ( e.minigame_players == client )
+			return e;
+	return world;
+}
+void MinigameImpulse()
+{
+	entity e = minigame_find_player(self);
+	if ( self.impulse && self.active_minigame && e )
+	{
+		self.active_minigame.minigame_event(self.active_minigame,"impulse",e,self.impulse);
+	}
+	self.impulse = 0;
+}
+
+
+
+void ClientCommand_minigame(float request, float argc, string command)
+{
+	if ( !autocvar_sv_minigames )
+	{
+		sprint(self,"Minigames are not enabled!\n");
+		return;
+	}
+	
+	if (request == CMD_REQUEST_COMMAND )
+	{
+		string minig_cmd = argv(1);
+		if ( minig_cmd == "start" && argc > 2 )
+		{
+			entity minig = start_minigame(self, argv(2));
+			if ( minig )
+				sprint(self,"Created minigame session: ",minig.netname,"\n");
+			else
+				sprint(self,"Cannot start minigame session!\n");
+			return;
+		}
+		else if ( minig_cmd == "join" && argc > 2 )
+		{
+			entity minig = join_minigame(self, argv(2));
+			if ( minig )
+				sprint(self,"Joined: ",minig.netname,"\n");
+			else
+				sprint(self,"Cannot join given minigame session!\n");
+			return;
+		}
+		else if ( minig_cmd == "list" )
+		{
+			entity e;
+			for ( e = minigame_descriptors; e != world; e = e.chain )
+				sprint(self,e.netname," (",e.message,") ","\n");
+			return;
+		}
+		else if ( minig_cmd == "list-sessions" )
+		{
+			entity e;
+			for ( e = minigame_sessions; e != world; e = e.chain )
+				sprint(self,e.netname,"\n");
+			return;
+		}
+		else if ( minig_cmd == "end" || minig_cmd == "part" )
+		{
+			if ( self.active_minigame )
+			{
+				part_minigame(self);
+				sprint(self,"Left minigame session\n");
+			}
+			else
+				sprint(self,"You aren't playing any minigame...\n");
+			return;
+		}
+		else if ( minig_cmd == "invite" && argc > 2 )
+		{
+			if ( self.active_minigame )
+			{
+				entity client = GetIndexedEntity(argc, 2);
+				string error = invite_minigame(self,client);
+				if ( error == "" )
+				{
+					sprint(self,"You have invited ",client.netname,
+						" to join your game of ", self.active_minigame.descriptor.message, "\n");
+				}
+				else
+					sprint(self,"Could not invite: ", error, ".\n");
+			}
+			else
+				sprint(self,"You aren't playing any minigame...\n");
+			return;
+		}
+		else if ( self.active_minigame )
+		{
+			entity e = minigame_find_player(self);
+			float arg_c = tokenize_console(substring(command,argv_end_index(0),-1));
+			if ( self.active_minigame.minigame_event(self.active_minigame,"cmd",e,arg_c) )
+				return;
+				
+		}
+	}
+	
+	sprint(self, "\nUsage:^3 cmd minigame start <minigame>\n");
+	sprint(self, "  Start a new minigame session\n");
+	sprint(self, "Usage:^3 cmd minigame join <session>\n");
+	sprint(self, "  Join an exising minigame session\n");
+	sprint(self, "Usage:^3 cmd minigame list\n");
+	sprint(self, "  List available minigames\n");
+	sprint(self, "Usage:^3 cmd minigame list-sessions\n");
+	sprint(self, "  List available minigames sessions\n");
+	sprint(self, "Usage:^3 cmd minigame part|end\n");
+	sprint(self, "  Leave the current minigame\n");
+	sprint(self, "Usage:^3 cmd minigame invite <player>\n");
+	sprint(self, "  Invite the given player to join you in a minigame\n");
+}
