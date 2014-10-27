@@ -25,8 +25,7 @@ void end_minigame(entity minigame_session);
 void end_minigames();
 
 // Spawn a networked board piece entity
-// TODO rework parameters once used
-void minigame_spawn_board_piece(entity minigame_session, string name, vector pos);
+entity minigame_spawn_board_piece(entity minigame_session);
 
 // Only sends entities to players who joined the minigame
 // Use on customizeentityforclient for gameplay entities

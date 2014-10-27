@@ -1,15 +1,11 @@
 
-const float NMM_TURN_PLACE = 0x01;
-const float NMM_TURN_MOVE  = 0x02;
-const float NMM_TURN_FLY   = 0x04;
-const float NMM_TURN_P1    = 0x10;
-const float NMM_TURN_P2    = 0x20;
+const float NMM_TURN_PLACE = 0x10;
+const float NMM_TURN_MOVE  = 0x20;
+const float NMM_TURN_FLY   = 0x40;
 
-const float NMM_TILE_FREE  = 0x00;
-const float NMM_TILE_P1    = 0x01;
-const float NMM_TILE_P2    = 0x02;
-
-.float nmm_turn_type;
+const float NMM_PIECE_DEAD  = 0x0; // captured by the enemy
+const float NMM_PIECE_HOME  = 0x1; // not yet placed
+const float NMM_PIECE_BOARD = 0x2; // placed on the board
 
 
 void nmm_spawn_tile(string id, entity minig)
@@ -20,7 +16,7 @@ void nmm_spawn_tile(string id, entity minig)
 	e.netname = id;
 	e.owner = minig;
 	e.minigame_autoclean = 1;
-	e.minigame_flags = NMM_TILE_FREE;
+	e.team = 0;
 }
 
 void nmm_init_tiles(entity minig)
@@ -50,9 +46,20 @@ float minigame_event_nmm(entity minigame, string event, ...count)
 {
 	if ( event == "start" )
 	{
-		minigame.nmm_turn_type = NMM_TURN_PLACE | NMM_TURN_P1;
+		minigame.minigame_flags = NMM_TURN_PLACE; // TODO send it to client
 		nmm_init_tiles(minigame);
-		dprint("Starting ",minigame.descriptor.netname,"\n");
+		float i;
+		entity e;
+		for ( i = 0; i < 7; i++ )
+		{
+			e = minigame_spawn_board_piece(minigame);
+			e.team = 0;
+			e.minigame_flags = NMM_PIECE_HOME;
+			e = minigame_spawn_board_piece(minigame);
+			e.team = 1;
+			e.minigame_flags = NMM_PIECE_HOME;
+		}
+			
 		return 1;
 	}
 	else if ( event == "join" && count > 0 )
@@ -110,12 +117,15 @@ void minigame_hud_board_nmm(vector pos, vector mySize)
 
 void minigame_hud_status_nmm(vector pos, vector mySize)
 {
-	HUD_Panel_DrawBg(0.5);
-	vector titlepos = pos;
-	vector titlesize = hud_fontsize * 2;
-	string titletext = "Test!";
-	titlepos_x += stringwidth(titletext, FALSE, titlesize) / 2;
-	drawstring(titlepos, titletext, titlesize, '1 0 0', panel_fg_alpha, DRAWFLAG_NORMAL);
+	HUD_Panel_DrawBg(1);
+	vector ts;
+	
+	ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
+		hud_fontsize * 2, '0.25 0.47 0.72', panel_fg_alpha, DRAWFLAG_NORMAL,0.5);
+	pos_y += ts_y;
+	
+	minigame_drawcolorcodedstring_trunc(mySize_x,pos,GetPlayerName(player_localnum),
+		hud_fontsize * 1.75, panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
 void nmm_make_move()

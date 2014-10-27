@@ -146,7 +146,7 @@ void CSQC_Init(void)
 	registercvar("hud_panel_minigameboard_bg_padding", "");
 	registercvar("hud_panel_minigamestatus", "1");
 	registercvar("hud_panel_minigamestatus_pos", "0.7 0.15");
-	registercvar("hud_panel_minigamestatus_size", "0.13 0.60");
+	registercvar("hud_panel_minigamestatus_size", "0.2 0.60");
 	registercvar("hud_panel_minigamestatus_bg", "border_small");
 	registercvar("hud_panel_minigamestatus_bg_color", "");
 	registercvar("hud_panel_minigamestatus_bg_color_team", "");

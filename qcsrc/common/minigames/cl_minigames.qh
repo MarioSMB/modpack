@@ -40,6 +40,27 @@ vector minigame_hud_denormalize_size(vector v, vector pos, vector mySize);
 // Check if the mouse is inside the given area
 float minigame_hud_mouse_in(vector pos, vector sz);
 
+// Like drawstring, but wrapping words to fit maxwidth
+// returns the size of the drawn area
+// align selects the string alignment (0 = left, 0.5 = center, 1 = right)
+vector minigame_drawstring_wrapped( float maxwidth, vector pos, string text, 
+	vector fontsize, vector color, float theAlpha, float drawflags, float align );
+
+// Like drawcolorcodedstring, but wrapping words to fit maxwidth
+// returns the size of the drawn area
+// align selects the string alignment (0 = left, 0.5 = center, 1 = right)
+vector minigame_drawcolorcodedstring_wrapped( float maxwidth, vector pos, 
+	string text, vector fontsize, float theAlpha, float drawflags, float align );
+
+// Like drawstring but truncates the text to fit maxwidth
+void minigame_drawstring_trunc(float maxwidth, vector pos, string text, 
+	vector fontsize, vector color, float theAlpha, float drawflags );
+
+// Like drawcolorcodedstring but truncates the text to fit maxwidth
+void minigame_drawcolorcodedstring_trunc(float maxwidth, vector pos, string text, 
+	vector fontsize, float theAlpha, float drawflags );
+
+
 // Get full path of a minigame texture
 string minigame_texture(string name);
 

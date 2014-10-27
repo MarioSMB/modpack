@@ -301,6 +301,7 @@ void HUD_MinigameMenu_ClickInvite()
 		entity prev = self;
 		for(i = 0; i < maxclients; ++i)
 		{
+			//TODO findfloat may not be the best way to get the player
 			if(player_localnum != i && playerslots[i] && GetPlayerName(i) != "" &&
 				!findfloat(world,minigame_playerslot,i+1) )
 			{
@@ -437,14 +438,14 @@ void HUD_MinigameMenu_MouseInput()
 // Draw a menu entry
 void HUD_MinigameMenu_DrawEntry(vector pos, string s, vector fontsize, vector color)
 {
-	string entry = textShortenToWidth(s, panel_size_x-pos_x+panel_pos_x, fontsize, stringwidth_nocolors);
-	drawstring(pos, entry, fontsize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
+	minigame_drawstring_trunc(panel_size_x-pos_x+panel_pos_x, pos, s,
+							  fontsize, color, panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 // Draw a color-coded menu
 void HUD_MinigameMenu_DrawColoredEntry(vector pos, string s, vector fontsize)
 {
-	string entry = textShortenToWidth(s, panel_size_x-pos_x+panel_pos_x, fontsize, stringwidth_colors);
-	drawcolorcodedstring(pos, entry, fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+	minigame_drawcolorcodedstring_trunc(panel_size_x-pos_x+panel_pos_x, pos, s,
+							  fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
 // minigame menu panel UI

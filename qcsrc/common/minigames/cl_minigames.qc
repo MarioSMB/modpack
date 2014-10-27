@@ -46,6 +46,7 @@ void initialize_minigames()
 	entity minig;
 	#define MINIGAME(name,nicename) \
 		minig = spawn(); \
+		minig.classname = "minigame_descriptor"; \
 		minig.netname = strzone(strtolower(#name)); \
 		minig.message = nicename; \
 		minig.minigame_hud_board = minigame_hud_board_##name; \
@@ -207,12 +208,15 @@ void ent_read_minigame()
 			while ( self.owner && self.owner.classname != "minigame" );
 			if ( !self.owner )
 				dprint("Got a minigame piece without a minigame!\n");
+			
+			self.team = ReadByte();
 		}
 		
 		minigame_ent = self.owner;
 		
 		if ( sf & MINIG_SF_UPDATE )
 		{
+			self.minigame_flags = ReadShort();
 			self.origin_x = ReadCoord();
 			self.origin_y = ReadCoord();
 		}
@@ -224,4 +228,56 @@ void ent_read_minigame()
 	dprint("\nCL Reading entity: ",ftos(num_for_edict(self)),
 		" classname:",self.classname," enttype:",ftos(self.enttype) );
 	dprint(" sf:",ftos(sf)," netname:",self.netname,"\n");
+}
+
+vector minigame_drawstring_wrapped( float maxwidth, vector pos, string text, 
+	vector fontsize, vector color, float theAlpha, float drawflags, float align )
+{
+	getWrappedLine_remaining = text;
+	vector mypos = pos;
+	while ( getWrappedLine_remaining )
+	{
+		string line = getWrappedLine(maxwidth,fontsize,stringwidth_nocolors);
+		if ( line == "" )
+			break;
+		mypos_x = pos_x + (maxwidth - stringwidth_nocolors(line, fontsize)) * align;
+		drawstring(mypos, line, fontsize, color, theAlpha, drawflags);
+		mypos_y += fontsize_y;
+	}
+	mypos_x = maxwidth;
+	mypos_y -= pos_y;
+	return mypos;
+}
+
+vector minigame_drawcolorcodedstring_wrapped( float maxwidth, vector pos, 
+	string text, vector fontsize, float theAlpha, float drawflags, float align )
+{
+	getWrappedLine_remaining = text;
+	vector mypos = pos;
+	while ( getWrappedLine_remaining )
+	{
+		string line = getWrappedLine(maxwidth,fontsize,stringwidth_colors);
+		if ( line == "" )
+			break;
+		mypos_x = pos_x + (maxwidth - stringwidth_colors(line, fontsize)) * align;
+		drawcolorcodedstring(mypos, line, fontsize, theAlpha, drawflags);
+		mypos_y += fontsize_y;
+	}
+	mypos_x = maxwidth;
+	mypos_y -= pos_y;
+	return mypos;
+}
+
+void minigame_drawstring_trunc(float maxwidth, vector pos, string text, 
+	vector fontsize, vector color, float theAlpha, float drawflags )
+{
+	string line = textShortenToWidth(text,maxwidth,fontsize,stringwidth_nocolors);
+	drawstring(pos, line, fontsize, color, theAlpha, drawflags);
+}
+
+void minigame_drawcolorcodedstring_trunc(float maxwidth, vector pos, string text, 
+	vector fontsize, float theAlpha, float drawflags )
+{
+	string line = textShortenToWidth(text,maxwidth,fontsize,stringwidth_colors);
+	drawcolorcodedstring(pos, line, fontsize, theAlpha, drawflags);
 }

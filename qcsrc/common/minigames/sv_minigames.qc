@@ -82,10 +82,12 @@ float minigame_SendEntity(entity to, float sf)
 		if ( sf & MINIG_SF_CREATE )
 		{
 			WriteString(MSG_ENTITY,self.owner.netname);
-			// TODO: colormod, team
+			WriteByte(MSG_ENTITY,self.team);
+			// TODO: colormod
 		}
 		if ( sf & MINIG_SF_UPDATE )
 		{
+			WriteShort(MSG_ENTITY,self.minigame_flags);
 			WriteCoord(MSG_ENTITY,self.origin_x);
 			WriteCoord(MSG_ENTITY,self.origin_y);
 		}
@@ -122,7 +124,10 @@ float minigame_addplayer(entity minigame_session, entity player)
 		entity player_pointer = spawn();
 		player_pointer.classname = "minigame_player";
 		player_pointer.owner = player;
-		//TODO append new player at the end of the list (?)
+		if ( minigame_session.minigame_players )
+			player_pointer.team = minigame_session.minigame_players.team + 1;
+		else
+			player_pointer.team = 1;
 		player_pointer.chain = minigame_session.minigame_players;
 		minigame_session.minigame_players = player_pointer;
 		player.active_minigame = minigame_session;
@@ -241,6 +246,7 @@ void initialize_minigames()
 	entity minig;
 	#define MINIGAME(name,nicename) \
 		minig = spawn(); \
+		minig.classname = "minigame_descriptor"; \
 		minig.netname = #name; \
 		minig.message = nicename; \
 		minig.minigame_event = minigame_event_##name; \
@@ -253,16 +259,15 @@ void initialize_minigames()
 	#undef MINIGAME
 }
 
-void minigame_spawn_board_piece(entity minigame_session, string name, vector pos)
+entity minigame_spawn_board_piece(entity minigame_session)
 {
 	entity e = spawn();
-	e.origin = pos;
 	e.classname = "minigame_board_piece";
-	e.netname = name;
 	e.owner = minigame_session;
 	e.customizeentityforclient = minigame_CheckSend;
 	e.minigame_autoclean = 1;
 	Net_LinkEntity(e, FALSE, 0, minigame_SendEntity);
+	return e;
 }
 
 string invite_minigame(entity inviter, entity player)
