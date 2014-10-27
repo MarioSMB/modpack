@@ -1,7 +1,9 @@
 
-const float NMM_TURN_PLACE = 0x10;
-const float NMM_TURN_MOVE  = 0x20;
-const float NMM_TURN_FLY   = 0x40;
+const float NMM_TURN_PLACE = 0x0100;
+const float NMM_TURN_MOVE  = 0x0200;
+const float NMM_TURN_FLY   = 0x0400;
+const float NMM_TURN_TEAM1 = 0x0001;
+const float NMM_TURN_TEAM2 = 0x0002;
 
 const float NMM_PIECE_DEAD  = 0x0; // captured by the enemy
 const float NMM_PIECE_HOME  = 0x1; // not yet placed
@@ -46,17 +48,17 @@ float minigame_event_nmm(entity minigame, string event, ...count)
 {
 	if ( event == "start" )
 	{
-		minigame.minigame_flags = NMM_TURN_PLACE; // TODO send it to client
+		minigame.minigame_flags = NMM_TURN_PLACE|NMM_TURN_TEAM1;
 		nmm_init_tiles(minigame);
 		float i;
 		entity e;
 		for ( i = 0; i < 7; i++ )
 		{
 			e = minigame_spawn_board_piece(minigame);
-			e.team = 0;
+			e.team = 1;
 			e.minigame_flags = NMM_PIECE_HOME;
 			e = minigame_spawn_board_piece(minigame);
-			e.team = 1;
+			e.team = 2;
 			e.minigame_flags = NMM_PIECE_HOME;
 		}
 			
@@ -68,7 +70,11 @@ float minigame_event_nmm(entity minigame, string event, ...count)
 		entity e;
 		for ( e = minigame.minigame_players; e; e = e.chain )
 			n++;
-		return n < 2;
+		if ( n >= 2 )
+			return 0;
+		if ( minigame.minigame_players && minigame.minigame_players.team == 1 )
+			return 2;
+		return 1;
 	}
 	return 0;
 }
@@ -115,9 +121,49 @@ void minigame_hud_status_nmm(vector pos, vector mySize)
 	ts = minigame_drawstring_wrapped(mySize_x,pos,active_minigame.descriptor.message,
 		hud_fontsize * 2, '0.25 0.47 0.72', panel_fg_alpha, DRAWFLAG_NORMAL,0.5);
 	pos_y += ts_y;
+	mySize_y -= ts_y;
 	
-	minigame_drawcolorcodedstring_trunc(mySize_x,pos,GetPlayerName(player_localnum),
-		hud_fontsize * 1.75, panel_fg_alpha, DRAWFLAG_NORMAL);
+	vector player_fontsize = hud_fontsize * 1.75;
+	ts_y = ( mySize_y - 2*player_fontsize_y ) / 2;
+	ts_x = mySize_x;
+	
+	float player1x = 0;
+	float player2x = 0;
+	vector piece_sz = '32 32 0';
+	float piece_space = piece_sz_x + ( ts_x - 7 * piece_sz_x ) / 6;
+	vector mypos;
+	entity e = world;
+	FOREACH_MINIGAME_ENTITY(e)
+	{
+		if ( e.classname == "minigame_player" )
+		{
+			mypos = pos;
+			if ( e.team == 2 )
+				mypos_y  += player_fontsize_y + ts_y;
+			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
+				GetPlayerName(e.minigame_playerslot-1),
+				player_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+		}
+		else if ( e.classname == "minigame_board_piece" && e.minigame_flags == NMM_PIECE_HOME )
+		{
+			mypos = pos;
+			mypos_y += player_fontsize_y;
+			if ( e.team == 2 )
+			{
+				mypos_x += player2x;
+				player2x += piece_space;
+				mypos_y  += player_fontsize_y + ts_y;
+			}
+			else
+			{
+				mypos_x += player1x;
+				player1x += piece_space;
+			}
+			
+			drawpic(mypos, minigame_texture(strcat("nmm/piece",ftos(e.team))), piece_sz,
+				'1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
+		}
+	}
 }
 
 void nmm_make_move()

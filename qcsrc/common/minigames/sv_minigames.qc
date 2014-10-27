@@ -62,9 +62,10 @@ float minigame_SendEntity(entity to, float sf)
 		minigame_ent = self;
 		
 		if ( sf & MINIG_SF_CREATE )
-		{
 			WriteString(MSG_ENTITY,self.descriptor.netname);
-		}
+		
+		if ( sf & MINIG_SF_UPDATE )
+			WriteShort(MSG_ENTITY,self.minigame_flags);
 	}
 	else if ( self.classname == "minigame_board_piece" )
 	{
@@ -116,18 +117,15 @@ float minigame_addplayer(entity minigame_session, entity player)
 		minigame_rmplayer(player.active_minigame,player);
 	}
 	
-	float ok = minigame_session.minigame_event(minigame_session,"join",player);
+	float mgteam = minigame_session.minigame_event(minigame_session,"join",player);
 	
-	if ( ok )
+	if ( mgteam )
 	{
 		entity player_pointer = spawn();
 		player_pointer.classname = "minigame_player";
 		player_pointer.owner = minigame_session;
 		player_pointer.minigame_players = player;
-		if ( minigame_session.minigame_players )
-			player_pointer.team = minigame_session.minigame_players.team + 1;
-		else
-			player_pointer.team = 1;
+		player_pointer.team = mgteam;
 		player_pointer.chain = minigame_session.minigame_players;
 		minigame_session.minigame_players = player_pointer;
 		player.active_minigame = minigame_session;
@@ -143,10 +141,10 @@ float minigame_addplayer(entity minigame_session, entity player)
 			player.team_forced = -1;
 		}
 	}
-	GameLogEcho(strcat(":minigame:join",(ok?"":"fail"),":",minigame_session.netname,":",
+	GameLogEcho(strcat(":minigame:join",(mgteam?"":"fail"),":",minigame_session.netname,":",
 		ftos(num_for_edict(player)),":",player.netname));
 	
-	return ok;
+	return mgteam;
 }
 
 entity start_minigame(entity player, string minigame )

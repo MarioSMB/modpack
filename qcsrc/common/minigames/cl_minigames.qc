@@ -156,6 +156,8 @@ void ent_read_minigame()
 			else
 				self.minigame_event = self.descriptor.minigame_event;
 		}
+		if ( sf & MINIG_SF_UPDATE )
+			self.minigame_flags = ReadShort();
 	}
 	else if ( self.classname == "minigame_player" )
 	{

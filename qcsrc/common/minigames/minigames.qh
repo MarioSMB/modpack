@@ -85,7 +85,7 @@ string minigame_tile_name(vector pos, float rows, float columns)
 /// 		executed when the minigame session is shutting down
 /// 	join(entity player)
 /// 		executed when a player wants to join the session
-/// 		return 1 to accept the new player, 0 to discard
+/// 		return the player team number to accept the new player, 0 to discard
 /// 	part(entity player)
 /// 		executed when a player is going to leave the session
 /// 	network_send(entity sent,float flags)
