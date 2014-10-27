@@ -394,8 +394,9 @@ void ClientCommand_minigame(float request, float argc, string command)
 		else if ( self.active_minigame )
 		{
 			entity e = minigame_find_player(self);
-			float arg_c = tokenize_console(substring(command,argv_end_index(0),-1));
-			if ( self.active_minigame.minigame_event(self.active_minigame,"cmd",e,arg_c) )
+			string subcommand = substring(command,argv_end_index(0),-1);
+			float arg_c = tokenize_console(subcommand);
+			if ( self.active_minigame.minigame_event(self.active_minigame,"cmd",e,arg_c,subcommand) )
 				return;
 				
 		}

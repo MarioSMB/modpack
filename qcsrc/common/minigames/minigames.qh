@@ -93,6 +93,17 @@ string minigame_tile_name(vector pos, float rows, float columns)
 /// 		note: when this is called self == ...(0,entity)
 /// 		You can use the MINIG_SF_ constants to check the send flags
 /// 		IMPORTANT: always read in client everything you send from the server!
+/// 	cmd(entity minigame_player, float argc, string command)
+/// 		self = client entity triggering this
+/// 		argv(n) = console token 
+/// 		argc: number of console tokens
+/// 		command: full command string
+/// 		triggered when a player does "cmd minigame ..." with some unrecognized command
+/// 		return 1 if the minigame has handled the command
+/// 	impulse(entity minigame_player,float impulse)
+/// 		self = client entity triggering this
+/// 		triggered when a player does "impulse ..."
+/// 		return 1 if the minigame has handled the impulse
 .float(entity,string,...)   minigame_event;
 
 // For run-time gameplay entities: Whether to be removed when the game is deactivated
