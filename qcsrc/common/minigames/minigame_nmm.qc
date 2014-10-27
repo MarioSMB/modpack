@@ -129,9 +129,10 @@ void minigame_hud_status_nmm(vector pos, vector mySize)
 	
 	float player1x = 0;
 	float player2x = 0;
-	vector piece_sz = '32 32 0';
+	vector piece_sz = '48 48 0';
 	float piece_space = piece_sz_x + ( ts_x - 7 * piece_sz_x ) / 6;
 	vector mypos;
+	float piece_light = 1;
 	entity e = world;
 	FOREACH_MINIGAME_ENTITY(e)
 	{
@@ -144,7 +145,7 @@ void minigame_hud_status_nmm(vector pos, vector mySize)
 				GetPlayerName(e.minigame_playerslot-1),
 				player_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
-		else if ( e.classname == "minigame_board_piece" && e.minigame_flags == NMM_PIECE_HOME )
+		else if ( e.classname == "minigame_board_piece" )
 		{
 			mypos = pos;
 			mypos_y += player_fontsize_y;
@@ -159,9 +160,15 @@ void minigame_hud_status_nmm(vector pos, vector mySize)
 				mypos_x += player1x;
 				player1x += piece_space;
 			}
+			if ( e.minigame_flags == NMM_PIECE_HOME )
+				piece_light = 0.5;
+			else if ( e.minigame_flags == NMM_PIECE_BOARD )
+				piece_light = 1;
+			else
+				piece_light = 0.15;
 			
 			drawpic(mypos, minigame_texture(strcat("nmm/piece",ftos(e.team))), piece_sz,
-				'1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
+				'1 1 1'*piece_light, panel_fg_alpha, DRAWFLAG_NORMAL );
 		}
 	}
 }
