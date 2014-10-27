@@ -181,6 +181,8 @@ float HUD_MinigameMenu_Click_ExpandCollapse(string collapse_classname)
 		self.flags &= ~2;
 		for ( e = self.chain; e != world && e.classname == collapse_classname; e = self.chain )
 		{
+			if ( e.flags & 2 )
+				HUD_MinigameMenu_Click(e);
 			self.chain = e.chain;
 			remove(e);
 		}
@@ -191,7 +193,7 @@ float HUD_MinigameMenu_Click_ExpandCollapse(string collapse_classname)
 	{
 		for ( e = HUD_MinigameMenu_entries; e != world; e = e.chain )
 		{
-			if ( e.flags & 2 )
+			if ( e.flags & 2 && e.origin_x == self.origin_x)
 				HUD_MinigameMenu_Click(e);
 		}
 		
@@ -266,25 +268,6 @@ void HUD_MinigameMenu_ClickQuit()
 	localcmd("cmd minigame end\n");
 }
 
-// Click action for the Current Game menu
-void HUD_MinigameMenu_ClickCurrentGame()
-{
-	if ( HUD_MinigameMenu_Click_ExpandCollapse("hud_minigamemenu_current_entry") )
-	{
-		HUD_MinigameMenu_InsertEntry( HUD_MinigameMenu_SpawnSubEntry(
-			"Quit", HUD_MinigameMenu_ClickQuit,
-			"hud_minigamemenu_current_entry"), self);
-		
-		HUD_MinigameMenu_InsertEntry( HUD_MinigameMenu_SpawnSubEntry(
-			"Load", HUD_MinigameMenu_ClickNoop,
-			"hud_minigamemenu_current_entry"), self);
-		
-		HUD_MinigameMenu_InsertEntry( HUD_MinigameMenu_SpawnSubEntry(
-			"Save", HUD_MinigameMenu_ClickNoop,
-			"hud_minigamemenu_current_entry"), self);
-	}
-}
-
 // Click action for Invite sub-entries
 void HUD_MinigameMenu_ClickInvite_Entry()
 {
@@ -309,6 +292,7 @@ void HUD_MinigameMenu_ClickInvite()
 					"hud_minigamemenu_invite_entry");
 				e.flags |= 1;
 				e.netname = strzone(ftos(i+1));
+				e.origin_x *= 2;
 				HUD_MinigameMenu_InsertEntry(e,prev);
 				prev = e;
 			}
@@ -316,6 +300,28 @@ void HUD_MinigameMenu_ClickInvite()
 	}
 }
 
+// Click action for the Current Game menu
+void HUD_MinigameMenu_ClickCurrentGame()
+{
+	if ( HUD_MinigameMenu_Click_ExpandCollapse("hud_minigamemenu_current_entry") )
+	{
+		HUD_MinigameMenu_InsertEntry( HUD_MinigameMenu_SpawnSubEntry(
+			"Quit", HUD_MinigameMenu_ClickQuit,
+			"hud_minigamemenu_current_entry"), self);
+		
+		HUD_MinigameMenu_InsertEntry( HUD_MinigameMenu_SpawnSubEntry(
+			"Load", HUD_MinigameMenu_ClickNoop,
+			"hud_minigamemenu_current_entry"), self);
+		
+		HUD_MinigameMenu_InsertEntry( HUD_MinigameMenu_SpawnSubEntry(
+			"Save", HUD_MinigameMenu_ClickNoop,
+			"hud_minigamemenu_current_entry"), self);
+		
+		HUD_MinigameMenu_InsertEntry( HUD_MinigameMenu_SpawnSubEntry(
+			"Invite", HUD_MinigameMenu_ClickInvite,
+			"hud_minigamemenu_current_entry"), self);
+	}
+}
 // Whether the minigame menu panel is open
 float HUD_MinigameMenu_IsOpened()
 {
@@ -357,11 +363,6 @@ void HUD_MinigameMenu_CurrentButton()
 				currb.model = strzone(minigame_texture(strcat(active_minigame.descriptor.netname,"/icon")));
 				HUD_MinigameMenu_InsertEntry(currb,e.owner);
 				HUD_MinigameMenu_Click(currb);
-				// TODO move this as a sub entry of Current game (need to make sure it looks nice)
-				currb = HUD_MinigameMenu_SpawnEntry(
-					"Invite", '0 0 0', hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_ClickInvite );
-				currb.classname = "hud_minigamemenu_current";
-				HUD_MinigameMenu_InsertEntry(currb,e.owner);
 				return;
 			}
 	}
@@ -377,6 +378,7 @@ void HUD_MinigameMenu_CurrentButton()
 				if ( !p )
 					p = HUD_MinigameMenu_last_entry;
 				HUD_MinigameMenu_EraseEntry(e);
+				return;
 			}
 		}
 	}
@@ -486,12 +488,7 @@ void HUD_MinigameMenu ()
 		itemh = e.size_y;
 		
 		if ( e.model )
-		{
-			// NOTE this discards any previous indentation
-			offset_x = imgsz_x;
-			offset_y = (imgsz_y-e.size_y) / 2;
 			itemh = imgsz_y;
-		}
 		
 		if ( e.flags & 2 )
 		{
@@ -501,7 +498,11 @@ void HUD_MinigameMenu ()
 		}
 
 		if ( e.model )
-			drawpic( panel_pos, e.model, imgsz, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
+		{
+			drawpic( panel_pos+offset, e.model, imgsz, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
+			offset_x += imgsz_x;
+			offset_y = (imgsz_y-e.size_y) / 2;
+		}
 		
 		if ( e.flags & 1 )
 			HUD_MinigameMenu_DrawColoredEntry(panel_pos+offset,e.message,e.size);
