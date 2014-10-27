@@ -156,46 +156,33 @@ void ent_read_minigame()
 			else
 				self.minigame_event = self.descriptor.minigame_event;
 		}
-		
-		if ( sf & MINIG_SF_PLAYERS )
+	}
+	else if ( self.classname == "minigame_player" )
+	{
+		if ( sf & MINIG_SF_CREATE )
 		{
-			float ent;
-			float n;
-			float foundself = 0;
+			string owner_name = ReadString();
+			self.owner = world;
+			do
+				self.owner = find(self.owner,netname,owner_name);
+			while ( self.owner && self.owner.classname != "minigame" );
+			if ( !self.owner )
+				dprint("Got a minigame player without a minigame!\n");
+			minigame_ent = self.owner;
 			
-			entity player_pointer = world;
-			while( (player_pointer = findentity(player_pointer, owner, self)) )
-				if ( player_pointer.classname == "minigame_player" )
-				{
-					remove(player_pointer);
-				}
+			float ent = ReadLong();
+			self.minigame_playerslot = ent;
+			dprint("Player: ",GetPlayerName(ent-1),"\n");
 			
-			for ( n = ReadByte(); n > 0; n-- )
+			if ( ent == player_localentnum && self.owner && self.owner != active_minigame )
 			{
-				ent = ReadLong();
-				
-				player_pointer = spawn();
-				player_pointer.classname = "minigame_player";
-				player_pointer.owner = self;
-				player_pointer.minigame_playerslot = ent;
-				player_pointer.minigame_autoclean = 1;
-				
-				
-				dprint("Player: ",GetPlayerName(ent-1),"\n");
-				if ( ent == player_localentnum )
-					foundself = 1;
+				activate_minigame(self.owner);
 			}
-			if ( foundself && self != active_minigame )
-			{
-				dprint("Found myself, CS activate!\n");
-				activate_minigame(self);
-			}
-			else if ( active_minigame == self && !foundself )
-			{
-				dprint("Didn't find myself, CS deactivate!\n");
-				deactivate_minigame();
-			}
+			
 		}
+			
+		if ( sf & MINIG_SF_UPDATE )
+			self.team = ReadByte();
 	}
 	else if ( self.classname == "minigame_board_piece" )
 	{

@@ -64,20 +64,12 @@ float minigame_event_nmm(entity minigame, string event, ...count)
 	}
 	else if ( event == "join" && count > 0 )
 	{
-		dprint(...(0,entity).netname," joined ",minigame.descriptor.netname,"\n");
-		return 1;
+		float n = 0;
+		entity e;
+		for ( e = minigame.minigame_players; e; e = e.chain )
+			n++;
+		return n < 2;
 	}
-	else if ( event == "part" && count > 0 )
-	{
-		dprint(...(0,entity).netname," parted ",minigame.descriptor.netname,"\n");
-		return 1;
-	}
-	else if ( event == "end" )
-	{
-		dprint("Game ended ",minigame.descriptor.netname,"\n");
-		return 1;
-	}
-	dprint("Unhandled event: ",event,"\n");
 	return 0;
 }
 

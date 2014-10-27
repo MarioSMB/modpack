@@ -9,7 +9,7 @@ void minigame_rmplayer(entity minigame_session, entity player)
 	entity e;
 	entity p = minigame_session.minigame_players;
 	
-	if ( p.owner == player )
+	if ( p.minigame_players == player )
 	{
 		if ( p.chain == world )
 		{
@@ -17,22 +17,24 @@ void minigame_rmplayer(entity minigame_session, entity player)
 			return;
 		}
 		minigame_session.minigame_event(minigame_session,"part",player);
+		GameLogEcho(strcat(":minigame:part:",minigame_session.netname,":",
+			ftos(num_for_edict(player)),":",player.netname));
 		minigame_session.minigame_players = p.chain;
 		remove ( p );
 		player_clear_minigame(player);
-		minigame_session.SendFlags |= MINIG_SF_PLAYERS;
 	}
 	else
 	{
 		for ( e = p.chain; e != world; e = e.chain )
 		{
-			if ( e.owner == player )
+			if ( e.minigame_players == player )
 			{
 				minigame_session.minigame_event(minigame_session,"part",player);
+				GameLogEcho(strcat(":minigame:part:",minigame_session.netname,":",
+					ftos(num_for_edict(player)),":",player.netname));
 				p.chain = e.chain;
 				remove(e);
 				player_clear_minigame(player);
-				minigame_session.SendFlags |= MINIG_SF_PLAYERS;
 				return;
 			}
 			p = e;
@@ -63,19 +65,6 @@ float minigame_SendEntity(entity to, float sf)
 		{
 			WriteString(MSG_ENTITY,self.descriptor.netname);
 		}
-		
-		if ( sf & MINIG_SF_PLAYERS )
-		{
-			entity e;
-			float n = 0;
-			for ( e = self.minigame_players; e != world; e = e.chain )
-				n++;
-			WriteByte(MSG_ENTITY,n);
-			for ( e = self.minigame_players; e != world; e = e.chain )
-			{
-				WriteLong(MSG_ENTITY,num_for_edict(e.owner));
-			}
-		}
 	}
 	else if ( self.classname == "minigame_board_piece" )
 	{
@@ -92,6 +81,16 @@ float minigame_SendEntity(entity to, float sf)
 			WriteCoord(MSG_ENTITY,self.origin_y);
 		}
 	}
+	else if ( self.classname == "minigame_player" )
+	{
+		if ( sf & MINIG_SF_CREATE )
+		{
+			WriteString(MSG_ENTITY,self.owner.netname);
+			WriteLong(MSG_ENTITY,num_for_edict(self.minigame_players));
+		}
+		if ( sf & MINIG_SF_UPDATE )
+			WriteByte(MSG_ENTITY,self.team);
+	}
 	
 	minigame_ent.minigame_event(minigame_ent,"network_send",self,sf);
 	
@@ -103,7 +102,7 @@ float minigame_CheckSend()
 {
 	entity e;
 	for ( e = self.owner.minigame_players; e != world; e = e.chain )
-		if ( e.owner == other )
+		if ( e.minigame_players == other )
 			return 1;
 	return 0;
 }
@@ -123,7 +122,8 @@ float minigame_addplayer(entity minigame_session, entity player)
 	{
 		entity player_pointer = spawn();
 		player_pointer.classname = "minigame_player";
-		player_pointer.owner = player;
+		player_pointer.owner = minigame_session;
+		player_pointer.minigame_players = player;
 		if ( minigame_session.minigame_players )
 			player_pointer.team = minigame_session.minigame_players.team + 1;
 		else
@@ -131,6 +131,8 @@ float minigame_addplayer(entity minigame_session, entity player)
 		player_pointer.chain = minigame_session.minigame_players;
 		minigame_session.minigame_players = player_pointer;
 		player.active_minigame = minigame_session;
+		player_pointer.customizeentityforclient = minigame_CheckSend;
+		Net_LinkEntity(player_pointer, FALSE, 0, minigame_SendEntity);
 
 		if ( !IS_OBSERVER(player) )
 		{
@@ -140,9 +142,9 @@ float minigame_addplayer(entity minigame_session, entity player)
 			self = e;
 			player.team_forced = -1;
 		}
-		
-		minigame_session.SendFlags |= MINIG_SF_PLAYERS;
 	}
+	GameLogEcho(strcat(":minigame:join",(ok?"":"fail"),":",minigame_session.netname,":",
+		ftos(num_for_edict(player)),":",player.netname));
 	
 	return ok;
 }
@@ -161,7 +163,13 @@ entity start_minigame(entity player, string minigame )
 		minig.descriptor = e;
 		minig.minigame_event = e.minigame_event;
 		minig.minigame_event(minig,"start");
-		minigame_addplayer(minig,player);
+		GameLogEcho(strcat(":minigame:start:",minig.netname));
+		if ( ! minigame_addplayer(minig,player) )
+		{
+			dprint("Minigame ",minig.netname," rejected the first player join!\n");
+			end_minigame(minig);
+			return world;
+		}
 		Net_LinkEntity(minig, FALSE, 0, minigame_SendEntity);
 		
 		if ( !minigame_sessions )
@@ -210,6 +218,7 @@ void end_minigame(entity minigame_session)
 		minigame_sessions = minigame_session.chain;
 	
 	minigame_session.minigame_event(minigame_session,"end");
+	GameLogEcho(strcat(":minigame:end:",minigame_session.netname));
 	
 	
 	entity e = world;
@@ -224,7 +233,7 @@ void end_minigame(entity minigame_session)
 	for ( e = minigame_session.minigame_players; e != world; e = p )
 	{
 		p = e.chain;
-		player_clear_minigame(e.owner);
+		player_clear_minigame(e.minigame_players);
 		remove(e);
 	}
 	
@@ -283,6 +292,9 @@ string invite_minigame(entity inviter, entity player)
 	
 	Send_Notification(NOTIF_ONE, player, MSG_INFO, INFO_MINIGAME_INVITE, 
 		inviter.active_minigame.netname, inviter.netname );
+	
+	GameLogEcho(strcat(":minigame:invite:",inviter.active_minigame.netname,":",
+		ftos(num_for_edict(player)),":",player.netname));
 	
 	return "";
 }

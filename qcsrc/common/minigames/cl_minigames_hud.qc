@@ -301,7 +301,6 @@ void HUD_MinigameMenu_ClickInvite()
 		entity prev = self;
 		for(i = 0; i < maxclients; ++i)
 		{
-			//TODO findfloat may not be the best way to get the player
 			if(player_localnum != i && playerslots[i] && GetPlayerName(i) != "" &&
 				!findfloat(world,minigame_playerslot,i+1) )
 			{
@@ -427,11 +426,13 @@ void HUD_MinigameMenu_MouseInput()
 	for ( e = HUD_MinigameMenu_entries; e != world; e = e.chain )
 	{
 		sz = eX*panel_size_x + eY*e.size_y;
+		if ( e.model )
+			sz_y = 22;
 		if ( !HUD_MinigameMenu_activeitem && mousepos_y >= panel_pos_y && mousepos_y <= panel_pos_y + sz_y )
 		{
 			HUD_MinigameMenu_activeitem = e;
 		}
-		panel_pos_y += e.size_y;
+		panel_pos_y += sz_y;
 	}
 }
 
@@ -476,7 +477,7 @@ void HUD_MinigameMenu ()
 	vector color;
 	vector offset;
 	float itemh;
-	vector imgsz = '22 22 0';
+	vector imgsz = '22 22 0'; // NOTE: if changed, edit where HUD_MinigameMenu_activeitem is selected
 	for ( e = HUD_MinigameMenu_entries; e != world; e = e.chain )
 	{
 		color = e.colormod;

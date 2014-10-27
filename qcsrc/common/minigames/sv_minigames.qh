@@ -31,10 +31,12 @@ entity minigame_spawn_board_piece(entity minigame_session);
 // Use on customizeentityforclient for gameplay entities
 float minigame_CheckSend();
 
-/// For minigame sessions: chain of players
-.entity minigame_players;
 /// For players: Minigame being played
 .entity active_minigame;
+
+/// For minigame sessions: chain of players
+/// For minigame_player: client entity
+.entity minigame_players;
 
 
 entity minigame_sessions;

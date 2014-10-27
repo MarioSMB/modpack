@@ -105,8 +105,7 @@ string minigame_tile_name(vector pos, float rows, float columns)
 // Flag values for customized events must be powers of 2 in the range
 // [MINIG_SF_CUSTOM, MINIG_SF_MAX] (inclusive)
 const float MINIG_SF_CREATE  = 0x01; // Create a new object
-const float MINIG_SF_PLAYERS = 0x02; // minigame: Update players
-const float MINIG_SF_UPDATE  = 0x04; // miscellaneous entity update
+const float MINIG_SF_UPDATE  = 0x02; // miscellaneous entity update
 const float MINIG_SF_CUSTOM  = 0x10; // a customized networked event
 const float MINIG_SF_MAX     = 0x80; // maximum flag value sent over the network
 
