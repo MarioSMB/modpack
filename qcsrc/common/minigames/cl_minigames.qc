@@ -88,8 +88,10 @@ void deactivate_minigame()
 			dprint("CL Auto-cleaned: ",ftos(num_for_edict(e)), " (",e.classname,")\n");
 			remove(e);
 		}
-				
+
+	minigame_self = world;
 	active_minigame = world;
+	
 	if ( !HUD_MinigameMenu_IsOpened() )
 		setcursormode(0);
 	else if ( auto_close_minigamemenu )
@@ -121,6 +123,7 @@ void activate_minigame(entity minigame)
 	if ( active_minigame )
 		deactivate_minigame();
 	
+	minigame_self = world;
 	active_minigame = minigame;
 	active_minigame.minigame_event(active_minigame,"activate");
 	
@@ -170,7 +173,6 @@ void ent_read_minigame()
 			while ( self.owner && self.owner.classname != "minigame" );
 			if ( !self.owner )
 				dprint("Got a minigame player without a minigame!\n");
-			minigame_ent = self.owner;
 			
 			float ent = ReadLong();
 			self.minigame_playerslot = ent;
@@ -179,9 +181,11 @@ void ent_read_minigame()
 			if ( ent == player_localentnum && self.owner && self.owner != active_minigame )
 			{
 				activate_minigame(self.owner);
+				minigame_self = self;
 			}
 			
 		}
+		minigame_ent = self.owner;
 			
 		if ( sf & MINIG_SF_UPDATE )
 			self.team = ReadByte();

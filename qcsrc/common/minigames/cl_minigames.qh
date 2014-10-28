@@ -74,9 +74,13 @@ string minigame_texture(string name);
 // register all minigames
 void initialize_minigames();
 
+// client-side minigame session cleanup
 void deactivate_minigame();
 
+// Currently active minigame session
 entity active_minigame;
+// minigame_player representing this client
+entity minigame_self;
 
 // Whethere there's an active minigame
 float minigame_isactive()

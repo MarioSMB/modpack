@@ -2,6 +2,7 @@
 const float NMM_TURN_PLACE = 0x0100;
 const float NMM_TURN_MOVE  = 0x0200;
 const float NMM_TURN_FLY   = 0x0400;
+const float NMM_TURN_TAKE  = 0x0800;
 const float NMM_TURN_TYPE  = 0xff00;
 const float NMM_TURN_TEAM1 = 0x0001;
 const float NMM_TURN_TEAM2 = 0x0002;
@@ -57,12 +58,12 @@ entity nmm_find_tile(entity minig, string id)
 
 #ifdef SVQC
 
-entity nmm_find_free_piece(entity minigame, float teamn)
+entity nmm_find_piece(entity start, entity minigame, float teamn, float pieceflags)
 {
-	entity e = world;
+	entity e = start;
 	while ( ( e = findentity(e,owner,minigame) ) )
 		if ( e.classname == "minigame_board_piece" && 
-				e.minigame_flags == NMM_PIECE_HOME && e.team == teamn )
+				(e.minigame_flags & pieceflags) && e.team == teamn )
 			return e;
 	return world;
 }
@@ -105,6 +106,7 @@ float minigame_event_nmm(entity minigame, string event, ...count)
 		float argc = ...(1,float);
 		entity tile;
 		entity piece;
+		float move_ok = 0;
 		
 		if ( e && argc >= 2 && argv(0) == "move" && 
 			( minigame.minigame_flags & NMM_TURN_TEAM ) == e.team )
@@ -112,16 +114,30 @@ float minigame_event_nmm(entity minigame, string event, ...count)
 			if ( minigame.minigame_flags & NMM_TURN_PLACE )
 			{
 				tile = nmm_find_tile(minigame,argv(1));
-				piece = nmm_find_free_piece(minigame,e.team);
+				piece = nmm_find_piece(world,minigame,e.team,NMM_PIECE_HOME);
 				if ( tile && !tile.nmm_tile_piece && piece )
 				{
 					tile.nmm_tile_piece = piece;
 					piece.minigame_flags = NMM_PIECE_BOARD;
 					piece.origin = tile.origin;
 					piece.SendFlags |= MINIG_SF_UPDATE;
+					move_ok = 1;
 				}
-				//TODO check 3 in a row
-				//TODO change turn
+			}
+			
+			//TODO check 3 in a row
+			
+			if ( move_ok )
+			{
+				minigame.minigame_flags = 0;
+				float nextteam = e.team % 2 + 1;
+				if ( nmm_find_piece(world,minigame,nextteam,NMM_PIECE_HOME) )
+					minigame.minigame_flags |= NMM_TURN_PLACE;
+				else
+					minigame.minigame_flags |= NMM_TURN_MOVE;
+				
+				minigame.minigame_flags |= nextteam;
+				minigame.SendFlags |= MINIG_SF_UPDATE;
 			}
 			return 1;
 		}
@@ -132,6 +148,7 @@ float minigame_event_nmm(entity minigame, string event, ...count)
 #elif defined(CSQC)
 
 entity nmm_currtile;
+entity nmm_fromtile;
 
 vector nmm_boardpos;
 vector nmm_boardsize;
@@ -168,12 +185,18 @@ void minigame_hud_board_nmm(vector pos, vector mySize)
 	entity e;
 	FOREACH_MINIGAME_ENTITY(e)
 	{
-		if ( e.classname == "minigame_board_piece" && e.minigame_flags == NMM_PIECE_BOARD )
+		if ( e.classname == "minigame_nmm_tile" && e.nmm_tile_piece )
+		{
+			tile_pos = minigame_hud_denormalize(e.origin,pos,mySize)-tile_size/2;
+			drawpic( tile_pos,  minigame_texture(strcat("nmm/piece",ftos(e.nmm_tile_piece.team))),
+				tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
+		}
+		/*if ( e.classname == "minigame_board_piece" && e.minigame_flags == NMM_PIECE_BOARD )
 		{
 			tile_pos = minigame_hud_denormalize(e.origin,pos,mySize)-tile_size/2;
 			drawpic( tile_pos,  minigame_texture(strcat("nmm/piece",ftos(e.team))),
 				tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
-		}
+		}*/
 	}
 }
 
@@ -244,6 +267,24 @@ void nmm_make_move(entity minigame)
 		if ( minigame.minigame_flags & NMM_TURN_PLACE )
 			localcmd("cmd minigame move ",nmm_currtile.netname,"\n");
 	}
+}
+
+float nmm_valid_selection(entity tile)
+{
+	if ( ( tile.owner.minigame_flags & NMM_TURN_TEAM ) != minigame_self.team )
+		return 0; // not our turn
+	if ( tile.owner.minigame_flags & NMM_TURN_PLACE )
+		return !tile.nmm_tile_piece; // need to put a piece on an empty spot
+	if ( tile.owner.minigame_flags & (NMM_TURN_MOVE|NMM_TURN_FLY) )
+	{
+		if ( nmm_fromtile )
+			return !tile.nmm_tile_piece; // need to move a piece TODO on MOVE must be adjacent to the nmm_currtile
+		else
+			return tile.nmm_tile_piece && tile.nmm_tile_piece.team == minigame_self.team; // TODO maybe on MOVE check that it can be moved
+	}
+	if ( tile.owner.minigame_flags & NMM_TURN_TAKE )
+		return tile.nmm_tile_piece && tile.nmm_tile_piece.team != minigame_self.team;
+	return 1;
 }
 
 float minigame_event_nmm(entity minigame, string event, ...count)
@@ -338,7 +379,7 @@ float minigame_event_nmm(entity minigame, string event, ...count)
 			if ( e.classname == "minigame_nmm_tile" )
 			{
 				tile_pos = minigame_hud_denormalize(e.origin,nmm_boardpos,nmm_boardsize)-tile_size/2;
-				if ( minigame_hud_mouse_in(tile_pos, tile_size) )
+				if ( minigame_hud_mouse_in(tile_pos, tile_size) && nmm_valid_selection(e) )
 				{
 					nmm_currtile = e;
 					break;
@@ -346,6 +387,26 @@ float minigame_event_nmm(entity minigame, string event, ...count)
 			}
 		}
 		return 1;
+	}
+	else if ( event == "network_receive" )
+	{
+		if ( self.classname == "minigame_board_piece" && ( ...(1,float) & MINIG_SF_UPDATE ) )
+		{
+			entity e;
+			string tileid = "";
+			if ( self.minigame_flags & NMM_PIECE_BOARD )
+				tileid = minigame_tile_name(self.origin,7,7);
+			FOREACH_MINIGAME_ENTITY(e)
+			{
+				if ( e.classname == "minigame_nmm_tile" )
+				{
+					if ( e.nmm_tile_piece == self )
+						e.nmm_tile_piece = world;
+					if ( e.netname == tileid )
+						e.nmm_tile_piece = self;
+				}
+			}
+		}
 	}
 	
 	return 0;
