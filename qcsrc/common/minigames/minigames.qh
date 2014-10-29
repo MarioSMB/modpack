@@ -31,6 +31,12 @@ vector minigame_tile_pos(string id, float rows, float columns)
 	       eY - eY*(minigame_tile_number(id)+0.5)/rows;
 }
 
+// Get a tile name from indices
+string minigame_tile_buildname(float letter, float number)
+{
+	return strcat(chr2str('a'+letter),ftos(number+1));
+}
+
 // Get the id of a tile relative to the given one
 string minigame_relative_tile(string start_id, float dx, float dy, float rows, float columns)
 {
@@ -42,7 +48,7 @@ string minigame_relative_tile(string start_id, float dx, float dy, float rows, f
 		letter = columns + letter;
 	if ( number < 0 )
 		number = rows + number;
-	return strcat(chr2str('a'+letter),ftos(number+1));
+	return minigame_tile_buildname(letter, number);
 }
 
 // Get tile name from a relative position (matches the tile covering a square area)
@@ -53,7 +59,7 @@ string minigame_tile_name(vector pos, float rows, float columns)
 		
 	float letter = floor(pos_x * columns);
 	float number = floor((1-pos_y) * rows);
-	return strcat(chr2str('a'+letter),ftos(number+1));
+	return minigame_tile_buildname(letter, number);
 }
 
 /// For minigame sessions: minigame descriptor object

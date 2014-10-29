@@ -274,3 +274,9 @@ void minigame_drawcolorcodedstring_trunc(float maxwidth, vector pos, string text
 	string line = textShortenToWidth(text,maxwidth,fontsize,stringwidth_colors);
 	drawcolorcodedstring(pos, line, fontsize, theAlpha, drawflags);
 }
+
+void minigame_drawpic_centered( vector pos, string texture, vector sz, 
+	vector color, float thealpha, float drawflags )
+{
+	drawpic( pos-sz/2, texture, sz, color, thealpha, drawflags );
+}

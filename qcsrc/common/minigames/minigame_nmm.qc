@@ -12,37 +12,55 @@ const float NMM_PIECE_DEAD  = 0x0; // captured by the enemy
 const float NMM_PIECE_HOME  = 0x1; // not yet placed
 const float NMM_PIECE_BOARD = 0x2; // placed on the board
 
+.float  nmm_tile_distance;
+.entity nmm_tile_piece;
 
-void nmm_spawn_tile(string id, entity minig)
+void nmm_spawn_tile(string id, entity minig, float distance)
 {
 	entity e = spawn();
 	e.origin = minigame_tile_pos(id,7,7);
 	e.classname = "minigame_nmm_tile";
 	e.netname = id;
 	e.owner = minig;
-	e.minigame_autoclean = 1;
 	e.team = 0;
+	e.nmm_tile_distance = distance;
+}
+
+void nmm_spawn_tile_sqaure( entity minig, float offset, float skip )
+{
+	float letter = offset;
+	float number = offset;
+	float i, j;
+	for ( i = 0; i < 3; i++ )
+	{
+		number = offset;
+		for ( j = 0; j < 3; j++ )
+		{
+			if ( i != 1 || j != 1 )
+				nmm_spawn_tile(strzone(minigame_tile_buildname(letter,number)),minig, skip+1);
+			number += skip+1;
+		}
+		letter += skip+1;
+	}
+	
+	if ( skip > 0 )
+		nmm_spawn_tile_sqaure(minig,offset+1,skip-1);
+}
+
+void nmm_kill_tiles(entity minig)
+{
+	entity e = world;
+	while ( ( e = findentity(e,owner,minig) ) )
+		if ( e.classname == "minigame_nmm_tile" )
+		{
+			strunzone(e.netname);
+			remove(e);
+		}
 }
 
 void nmm_init_tiles(entity minig)
 {
-	#define NMMT(id) nmm_spawn_tile(#id,minig);
-	
-	NMMT(a7)/*----------------------*/NMMT(d7)/*----------------------*/NMMT(g7)
-	 /*|*/                             /*|*/                             /*|*/
-	 /*|*/       NMMT(b6)/*---------*/NMMT(d6)/*---------*/NMMT(f6)      /*|*/
-	 /*|*/        /*|*/                /*|*/                /*|*/        /*|*/
-	 /*|*/        /*|*/       NMMT(c5)NMMT(d5)NMMT(e5)      /*|*/        /*|*/  
-	 /*|*/        /*|*/        /*|*/           /*|*/        /*|*/        /*|*/
-	NMMT(a4)/*-*/NMMT(b4)/*-*/NMMT(c4)        NMMT(e4)/*-*/NMMT(f4)/*-*/NMMT(g4)  
-	 /*|*/        /*|*/        /*|*/           /*|*/        /*|*/        /*|*/
-	 /*|*/        /*|*/       NMMT(c3)NMMT(d3)NMMT(e3)      /*|*/        /*|*/
-	 /*|*/        /*|*/                /*|*/                /*|*/        /*|*/  
-	 /*|*/       NMMT(b2)/*---------*/NMMT(d2)/*---------*/NMMT(f2)      /*|*/  
-	 /*|*/                             /*|*/                             /*|*/
-	NMMT(a1)/*----------------------*/NMMT(d1)/*----------------------*/NMMT(g1)
-	   
-	#undef NMMT
+	nmm_spawn_tile_sqaure(minig,0,2);
 }
 
 entity nmm_find_tile(entity minig, string id)
@@ -54,7 +72,30 @@ entity nmm_find_tile(entity minig, string id)
 	return world;
 }
 
-.entity nmm_tile_piece;
+// check whether two tiles are adjacent
+float nmm_tile_adjacent(entity tile1, entity tile2)
+{
+		
+	float dnumber = fabs ( minigame_tile_number(tile1.netname) - minigame_tile_number(tile2.netname) );
+	float dletter = fabs ( minigame_tile_letter(tile1.netname) - minigame_tile_letter(tile2.netname) );
+	
+	return ( dnumber == 0 && ( dletter == 1 || dletter == tile1.nmm_tile_distance ) ) ||
+		( dletter == 0 && ( dnumber == 1 || dnumber == tile1.nmm_tile_distance ) );
+}
+
+// returns 1 if there is at least 1 free adjacent tile
+float nmm_tile_canmove(entity tile)
+{
+	entity e = world;
+	while ( ( e = findentity(e,owner,tile.owner) ) )
+		if ( e.classname == "minigame_nmm_tile" && !e.nmm_tile_piece 
+				&& nmm_tile_adjacent(e,tile) )
+		{
+			return 1;
+		}
+	return 0;
+}
+
 
 #ifdef SVQC
 
@@ -87,6 +128,10 @@ float minigame_event_nmm(entity minigame, string event, ...count)
 		}
 			
 		return 1;
+	}
+	else if ( event == "end" )
+	{
+		nmm_kill_tiles(minigame);
 	}
 	else if ( event == "join" )
 	{
@@ -124,8 +169,27 @@ float minigame_event_nmm(entity minigame, string event, ...count)
 					move_ok = 1;
 				}
 			}
+			else if ( minigame.minigame_flags & NMM_TURN_MOVE )
+			{
+				tile = nmm_find_tile(minigame,argv(1));
+				if ( tile && tile.nmm_tile_piece && tile.nmm_tile_piece.team == e.team )
+				{
+					piece = tile.nmm_tile_piece;
+					entity tile2 = nmm_find_tile(minigame,argv(2));
+					if ( tile2 && nmm_tile_adjacent(tile,tile2) && !tile2.nmm_tile_piece )
+					{
+						tile.nmm_tile_piece = world;
+						tile2.nmm_tile_piece = piece;
+						piece.origin = tile2.origin;
+						piece.SendFlags |= MINIG_SF_UPDATE;
+						move_ok = 1;
+					}
+				}
+				
+			}
 			
-			//TODO check 3 in a row
+			// TODO check mills
+			// TODO check win ( < 3 pieces or no valid moves )
 			
 			if ( move_ok )
 			{
@@ -173,30 +237,39 @@ void minigame_hud_board_nmm(vector pos, vector mySize)
 	
 	vector tile_size = minigame_hud_denormalize_size('1 1 0'/7,pos,mySize);
 	vector tile_pos;
-	
-	if ( nmm_currtile )
-	{
-		tile_pos = minigame_hud_denormalize(nmm_currtile.origin,pos,mySize)-tile_size/2;
-		drawpic( tile_pos, minigame_texture("nmm/tile_selected"),
-				tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_ADDITIVE );
-	}
-	
-	tile_size *= 0.8;
 	entity e;
 	FOREACH_MINIGAME_ENTITY(e)
 	{
-		if ( e.classname == "minigame_nmm_tile" && e.nmm_tile_piece )
+		if ( e.classname == "minigame_nmm_tile" )
 		{
-			tile_pos = minigame_hud_denormalize(e.origin,pos,mySize)-tile_size/2;
-			drawpic( tile_pos,  minigame_texture(strcat("nmm/piece",ftos(e.nmm_tile_piece.team))),
-				tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
+			tile_pos = minigame_hud_denormalize(e.origin,pos,mySize);
+			
+			if ( e == nmm_fromtile )
+			{
+				minigame_drawpic_centered( tile_pos, minigame_texture("nmm/tile_active"),
+					tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
+			}
+			else if ( nmm_fromtile && !e.nmm_tile_piece  )
+			{
+				if ( (e.owner.minigame_flags & NMM_TURN_FLY) || nmm_tile_adjacent(e,nmm_fromtile) )
+					minigame_drawpic_centered( tile_pos, minigame_texture("nmm/tile_available"),
+						tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
+			}
+			if ( e == nmm_currtile )
+			{
+				minigame_drawpic_centered( tile_pos, minigame_texture("nmm/tile_selected"),
+					tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_ADDITIVE );
+			}
+			
+			if ( e.nmm_tile_piece )
+			{
+				minigame_drawpic_centered( tile_pos,  
+					minigame_texture(strcat("nmm/piece",ftos(e.nmm_tile_piece.team))),
+					tile_size*0.8, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
+			}
+			
+			drawstring(tile_pos, e.netname, hud_fontsize, '1 0 0', 1, DRAWFLAG_NORMAL);
 		}
-		/*if ( e.classname == "minigame_board_piece" && e.minigame_flags == NMM_PIECE_BOARD )
-		{
-			tile_pos = minigame_hud_denormalize(e.origin,pos,mySize)-tile_size/2;
-			drawpic( tile_pos,  minigame_texture(strcat("nmm/piece",ftos(e.team))),
-				tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
-		}*/
 	}
 }
 
@@ -260,31 +333,61 @@ void minigame_hud_status_nmm(vector pos, vector mySize)
 	}
 }
 
-void nmm_make_move(entity minigame)
-{
-	if ( nmm_currtile )
-	{
-		if ( minigame.minigame_flags & NMM_TURN_PLACE )
-			localcmd("cmd minigame move ",nmm_currtile.netname,"\n");
-	}
-}
-
 float nmm_valid_selection(entity tile)
 {
 	if ( ( tile.owner.minigame_flags & NMM_TURN_TEAM ) != minigame_self.team )
 		return 0; // not our turn
 	if ( tile.owner.minigame_flags & NMM_TURN_PLACE )
 		return !tile.nmm_tile_piece; // need to put a piece on an empty spot
-	if ( tile.owner.minigame_flags & (NMM_TURN_MOVE|NMM_TURN_FLY) )
+	if ( tile.owner.minigame_flags & NMM_TURN_MOVE )
+	{
+		if ( tile.nmm_tile_piece && tile.nmm_tile_piece.team == minigame_self.team &&
+				nmm_tile_canmove(tile) )
+			return 1; //  movable tile
+		if ( nmm_fromtile ) // valid destination
+			return !tile.nmm_tile_piece && nmm_tile_adjacent(nmm_fromtile,tile);
+		return 0;
+	}
+	if ( tile.owner.minigame_flags & NMM_TURN_FLY )
 	{
 		if ( nmm_fromtile )
-			return !tile.nmm_tile_piece; // need to move a piece TODO on MOVE must be adjacent to the nmm_currtile
+			return !tile.nmm_tile_piece;
 		else
-			return tile.nmm_tile_piece && tile.nmm_tile_piece.team == minigame_self.team; // TODO maybe on MOVE check that it can be moved
+			return tile.nmm_tile_piece && tile.nmm_tile_piece.team == minigame_self.team;
 	}
 	if ( tile.owner.minigame_flags & NMM_TURN_TAKE )
 		return tile.nmm_tile_piece && tile.nmm_tile_piece.team != minigame_self.team;
 	return 1;
+}
+
+void nmm_make_move(entity minigame)
+{
+	if ( nmm_currtile )
+	{
+		if ( minigame.minigame_flags & (NMM_TURN_PLACE|NMM_TURN_TAKE) )
+		{
+			localcmd("cmd minigame move ",nmm_currtile.netname,"\n");
+			nmm_fromtile = world;
+		}
+		else if ( (minigame.minigame_flags & (NMM_TURN_MOVE|NMM_TURN_FLY)) )
+		{
+			if ( nmm_fromtile == nmm_currtile )
+			{
+				nmm_fromtile = world;
+			}
+			else if ( nmm_currtile.nmm_tile_piece && nmm_currtile.nmm_tile_piece.team == minigame_self.team )
+			{
+				nmm_fromtile = nmm_currtile;
+			}
+			else if ( nmm_fromtile )
+			{
+				localcmd("cmd minigame move ",nmm_fromtile.netname," ",nmm_currtile.netname,"\n");
+				nmm_fromtile = world;
+			}
+		}
+	}
+	else
+		nmm_fromtile = world;
 }
 
 float minigame_event_nmm(entity minigame, string event, ...count)
@@ -292,6 +395,10 @@ float minigame_event_nmm(entity minigame, string event, ...count)
 	if ( event == "activate" )
 	{
 		nmm_init_tiles(minigame);
+	}
+	else if ( event == "deactivate" )
+	{
+		nmm_kill_tiles(minigame);
 	}
 	else if ( event == "key_pressed" && count > 0 )
 	{

@@ -50,4 +50,5 @@ entity minigame_find_player(entity client);
 
 entity minigame_sessions;
 
+var void remove(entity e);
 #include "minigames.qh"

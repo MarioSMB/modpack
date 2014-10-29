@@ -60,6 +60,9 @@ void minigame_drawstring_trunc(float maxwidth, vector pos, string text,
 void minigame_drawcolorcodedstring_trunc(float maxwidth, vector pos, string text, 
 	vector fontsize, float theAlpha, float drawflags );
 
+// like drawpic but pos represent the center rather than the topleft corner
+void minigame_drawpic_centered( vector pos, string texture, vector sz, 
+	vector color, float thealpha, float drawflags );
 
 // Get full path of a minigame texture
 string minigame_texture(string name);
