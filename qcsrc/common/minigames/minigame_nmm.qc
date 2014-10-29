@@ -311,8 +311,6 @@ float minigame_event_nmm(entity minigame, string event, ...count)
 			
 			float npieces = nmm_count_pieces(minigame,e.team % 2 + 1,NMM_PIECE_HOME|NMM_PIECE_BOARD);
 			
-			// TODO check win ( no valid moves )
-			
 			if ( npieces < 3 )
 			{
 				minigame.minigame_flags = NMM_TURN_WIN | e.team;
@@ -320,22 +318,30 @@ float minigame_event_nmm(entity minigame, string event, ...count)
 			}
 			else if ( move_ok)
 			{
-				float nextteam = e.team;
 				if ( !(minigame.minigame_flags & NMM_TURN_TAKE) && nmm_in_mill(tile) )
 				{
-					minigame.minigame_flags = NMM_TURN_TAKE;
+					minigame.minigame_flags = NMM_TURN_TAKE|e.team;
 				}
 				else
 				{
-					nextteam = nextteam % 2 + 1;
+					float nextteam = e.team % 2 + 1;
 					if ( nmm_find_piece(world,minigame,nextteam,NMM_PIECE_HOME) )
-						minigame.minigame_flags = NMM_TURN_PLACE;
+						minigame.minigame_flags = NMM_TURN_PLACE|nextteam;
 					else if ( npieces == 3 )
-						minigame.minigame_flags = NMM_TURN_FLY;
+						minigame.minigame_flags = NMM_TURN_FLY|nextteam;
 					else
-						minigame.minigame_flags = NMM_TURN_MOVE;
+					{
+						minigame.minigame_flags = NMM_TURN_WIN|e.team;
+						entity f = world;
+						while ( ( f = findentity(f,owner,minigame) ) )
+							if ( f.classname == "minigame_nmm_tile" && f.nmm_tile_piece  &&
+								f.nmm_tile_piece.team == nextteam && nmm_tile_canmove(f) )
+							{
+								minigame.minigame_flags = NMM_TURN_MOVE|nextteam;
+								break;
+							}
+					}
 				}
-				minigame.minigame_flags |= nextteam;
 				minigame.SendFlags |= MINIG_SF_UPDATE;
 			}
 			else
