@@ -244,11 +244,15 @@ float minigame_event_nmm(entity minigame, string event, ...count)
 		if ( e && argc >= 2 && argv(0) == "move" && 
 			( minigame.minigame_flags & NMM_TURN_TEAM ) == e.team )
 		{
-			if ( minigame.minigame_flags & NMM_TURN_PLACE )
+			tile = nmm_find_tile(minigame,argv(1));
+			if ( !tile )
 			{
-				tile = nmm_find_tile(minigame,argv(1));
+				move_ok = 0;
+			}
+			else if ( minigame.minigame_flags & NMM_TURN_PLACE )
+			{
 				piece = nmm_find_piece(world,minigame,e.team,NMM_PIECE_HOME);
-				if ( tile && !tile.nmm_tile_piece && piece )
+				if ( !tile.nmm_tile_piece && piece )
 				{
 					tile.nmm_tile_piece = piece;
 					piece.minigame_flags = NMM_PIECE_BOARD;
@@ -259,8 +263,7 @@ float minigame_event_nmm(entity minigame, string event, ...count)
 			}
 			else if ( minigame.minigame_flags & NMM_TURN_MOVE )
 			{
-				tile = nmm_find_tile(minigame,argv(1));
-				if ( tile && tile.nmm_tile_piece && tile.nmm_tile_piece.team == e.team )
+				if ( tile.nmm_tile_piece && tile.nmm_tile_piece.team == e.team )
 				{
 					piece = tile.nmm_tile_piece;
 					entity tile2 = nmm_find_tile(minigame,argv(2));
@@ -276,9 +279,26 @@ float minigame_event_nmm(entity minigame, string event, ...count)
 				}
 				
 			}
+			else if ( minigame.minigame_flags & NMM_TURN_FLY )
+			{
+				if ( tile.nmm_tile_piece && tile.nmm_tile_piece.team == e.team )
+				{
+					piece = tile.nmm_tile_piece;
+					entity tile2 = nmm_find_tile(minigame,argv(2));
+					if ( tile2 && !tile2.nmm_tile_piece )
+					{
+						tile.nmm_tile_piece = world;
+						tile2.nmm_tile_piece = piece;
+						piece.origin = tile2.origin;
+						piece.SendFlags |= MINIG_SF_UPDATE;
+						tile = tile2;
+						move_ok = 1;
+					}
+				}
+				
+			}
 			else if ( minigame.minigame_flags & NMM_TURN_TAKE )
 			{
-				tile = nmm_find_tile(minigame,argv(1));
 				piece = tile.nmm_tile_piece;
 				if ( piece && piece.nmm_tile_piece.team != e.team )
 				{
@@ -286,15 +306,19 @@ float minigame_event_nmm(entity minigame, string event, ...count)
 					piece.minigame_flags = NMM_PIECE_DEAD;
 					piece.SendFlags |= MINIG_SF_UPDATE;
 					move_ok = 1;
-					
-					if ( nmm_count_pieces(minigame,e.team % 2 + 1,NMM_PIECE_HOME|NMM_PIECE_BOARD) < 3 )
-						move_ok = 2;
 				}
 			}
 			
+			float npieces = nmm_count_pieces(minigame,e.team % 2 + 1,NMM_PIECE_HOME|NMM_PIECE_BOARD);
+			
 			// TODO check win ( no valid moves )
 			
-			if ( move_ok == 1 )
+			if ( npieces < 3 )
+			{
+				minigame.minigame_flags = NMM_TURN_WIN | e.team;
+				minigame.SendFlags |= MINIG_SF_UPDATE;
+			}
+			else if ( move_ok)
 			{
 				float nextteam = e.team;
 				if ( !(minigame.minigame_flags & NMM_TURN_TAKE) && nmm_in_mill(tile) )
@@ -306,15 +330,12 @@ float minigame_event_nmm(entity minigame, string event, ...count)
 					nextteam = nextteam % 2 + 1;
 					if ( nmm_find_piece(world,minigame,nextteam,NMM_PIECE_HOME) )
 						minigame.minigame_flags = NMM_TURN_PLACE;
+					else if ( npieces == 3 )
+						minigame.minigame_flags = NMM_TURN_FLY;
 					else
-						minigame.minigame_flags = NMM_TURN_MOVE; // TODO check for flight
+						minigame.minigame_flags = NMM_TURN_MOVE;
 				}
 				minigame.minigame_flags |= nextteam;
-				minigame.SendFlags |= MINIG_SF_UPDATE;
-			}
-			else if ( move_ok == 2 )
-			{
-				minigame.minigame_flags = NMM_TURN_WIN | e.team;
 				minigame.SendFlags |= MINIG_SF_UPDATE;
 			}
 			else
@@ -392,7 +413,7 @@ void minigame_hud_board_nmm(vector pos, vector mySize)
 					tile_size*0.8, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
 			}
 			
-			drawstring(tile_pos, e.netname, hud_fontsize, '1 0 0', 1, DRAWFLAG_NORMAL);
+			//drawstring(tile_pos, e.netname, hud_fontsize, '1 0 0', 1, DRAWFLAG_NORMAL);
 		}
 	}
 	
