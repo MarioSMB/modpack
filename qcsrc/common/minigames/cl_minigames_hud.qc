@@ -581,11 +581,11 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 					active_minigame,strcat(device,"_",action),nPrimary) )
 				return true;
 			
-			if ( nPrimary == K_ESCAPE && bInputType == 0 )
+			/*if ( nPrimary == K_ESCAPE && bInputType == 0 )
 			{
 				/// TODO: maybe show confirmation dialog
 				localcmd ( "cmd minigame end" );
-			}
+			}*/
 			/// TODO: bInputType == 2?
 		}
 		
