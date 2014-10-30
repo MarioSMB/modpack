@@ -119,6 +119,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_fontsize");
 					HUD_Write_PanelCvar_q("_time");
 					HUD_Write_PanelCvar_q("_fadetime");
+					HUD_Write_PanelCvar_q("_icon_aspect");
 					break;
 				case HUD_PANEL_TIMER:
 					HUD_Write_PanelCvar_q("_increment");

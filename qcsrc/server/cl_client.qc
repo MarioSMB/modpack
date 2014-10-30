@@ -634,6 +634,9 @@ void PutClientInServer (void)
 		spawnevent.owner = self;
 		Net_LinkEntity(spawnevent, FALSE, 0.5, SpawnEvent_Send);
 
+		// Cut off any still running player sounds.
+		stopsound(self, CH_PLAYER_SINGLE);
+
 		self.model = "";
 		FixPlayermodel();
 		self.drawonlytoclient = world;
