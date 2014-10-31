@@ -13,6 +13,7 @@ REGISTER_MONSTER(
 #ifdef SVQC
 float autocvar_g_monster_shambler_health;
 float autocvar_g_monster_shambler_attack_smash_damage;
+float autocvar_g_monster_shambler_attack_smash_range;
 float autocvar_g_monster_shambler_attack_claw_damage;
 float autocvar_g_monster_shambler_attack_lightning_damage;
 float autocvar_g_monster_shambler_attack_lightning_force;
@@ -42,7 +43,9 @@ void M_Shambler_Attack_Smash()
 	pointparticles(particleeffectnum("explosion_medium"), (self.origin + (v_forward * 150)) - ('0 0 1' * self.maxs_z), '0 0 0', 1);
 	sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 
-	tracebox(self.origin + v_forward * 50, self.mins * 0.5, self.maxs * 0.5, self.origin + v_forward * 500, MOVE_NORMAL, self);
+	// TODO: WTF? RadiusDamage?!
+
+	tracebox(self.origin + v_forward * 50, self.mins * 0.5, self.maxs * 0.5, self.origin + v_forward * autocvar_g_monster_shambler_attack_smash_range, MOVE_NORMAL, self);
 
 	if(trace_ent.takedamage)
 		Damage(trace_ent, self, self, (autocvar_g_monster_shambler_attack_smash_damage) * MONSTER_SKILLMOD(self), DEATH_MONSTER_SHAMBLER_SMASH, trace_ent.origin, normalize(trace_ent.origin - self.origin));
@@ -54,7 +57,7 @@ void M_Shambler_Attack_Swing()
 	Monster_Attack_Melee(self.enemy, (autocvar_g_monster_shambler_attack_claw_damage), ((r) ? shambler_anim_swingr : shambler_anim_swingl), self.attack_range, 0.8, DEATH_MONSTER_SHAMBLER_CLAW, TRUE);
 	if(r)
 	{
-		defer(0.5, M_Shambler_Attack_Swing);
+		Monster_Delay(0.5, M_Shambler_Attack_Swing);
 		self.attack_finished_single += 0.5;
 	}
 }
@@ -64,7 +67,7 @@ void M_Shambler_Attack_Lightning_Explode()
 	entity head;
 
 	sound(self, CH_SHOTS, W_Sound("electro_impact"), VOL_BASE, ATTEN_NORM);
-	pointparticles(particleeffectnum("electro_impact"), '0 0 0', '0 0 0', 1);
+	pointparticles(particleeffectnum("electro_impact"), self.origin, '0 0 0', 1);
 
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
@@ -167,22 +170,26 @@ float M_Shambler_Attack(float attack_type)
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
+			float randomness = random(), enemy_len = vlen(self.enemy.origin - self.origin);
+
 			if(time >= self.shambler_lastattack) // shambler doesn't attack much
 			if(self.flags & FL_ONGROUND)
-			if(random() <= 0.5 && vlen(self.enemy.origin - self.origin) <= 500)
+			if(randomness <= 0.5 && enemy_len <= autocvar_g_monster_shambler_attack_smash_range)
 			{
 				self.frame = shambler_anim_smash;
-				defer(0.7, M_Shambler_Attack_Smash);
+				Monster_Delay(0.7, M_Shambler_Attack_Smash);
 				self.attack_finished_single = time + 1.1;
+				self.state = MONSTER_ATTACK_MELEE; // kinda a melee attack
 				self.shambler_lastattack = time + 3;
 				return TRUE;
 			}
-			else if(random() <= 0.1) // small chance, don't want this spammed
+			else if(randomness <= 0.1 && enemy_len >= autocvar_g_monster_shambler_attack_smash_range * 1.5) // small chance, don't want this spammed
 			{
 				self.frame = shambler_anim_magic;
+				self.state = MONSTER_ATTACK_MELEE; // maybe we should rename this to something more general
 				self.attack_finished_single = time + 1.1;
 				self.shambler_lastattack = time + 3;
-				defer(0.6, M_Shambler_Attack_Lightning);
+				Monster_Delay(0.6, M_Shambler_Attack_Lightning);
 				return TRUE;
 			}
 
@@ -222,7 +229,11 @@ float M_Shambler(float req)
 
 			self.monster_loot = spawnfunc_item_health_mega;
 			self.frame = shambler_anim_stand;
-			self.weapon = WEP_NEX;
+			self.weapon = WEP_ELECTRO; // matches attacks better than WEP_NEX
+
+			self.frame = shambler_anim_magic;
+			self.spawn_time = time + 1.1;
+			self.spawnshieldtime = self.spawn_time;
 
 			return TRUE;
 		}

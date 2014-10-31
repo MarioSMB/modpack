@@ -415,11 +415,13 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_GENERIC,             2, 1, "s1 s2loc spree_lost", "s1",       "notify_selfkill",      _("^BG%s^K1 died%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_LAVA,                2, 1, "s1 s2loc spree_lost", "s1",       "notify_lava",          _("^BG%s^K1 turned into hot slag%s%s"), _("^BG%s^K1 found a hot place%s%s")) \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_CREEPER,         2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 was blown up by Creeper%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_DEMON_JUMP,      2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was chopped in half by a pouncing Demon%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_DEMON_MELEE,     2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was eviscerated by a Demon%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_MAGE,    		   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was exploded by a Mage%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_ROTFISH_MELEE,   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was fed to the Rotfish%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_SHAMBLER_CLAW,   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1's innards became outwards by a Shambler%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_SHAMBLER_SMASH,  2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was smashed by a Shambler%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_SHAMBLER_ZAP,    2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was zapped to death by a Shambler%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_SHARK,      	   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was eaten by a Shark%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_SPIDER,      	   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was bitten by a Spider%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_WYVERN,          2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was fireballed by a Wyvern%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_ZOMBIE_JUMP,     2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 joins the Zombies%s%s"), "") \
@@ -891,11 +893,13 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, DEATH_SELF_GENERIC,                   NO_MSG,        INFO_DEATH_SELF_GENERIC,                   CENTER_DEATH_SELF_GENERIC) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_LAVA,                      NO_MSG,        INFO_DEATH_SELF_LAVA,                      CENTER_DEATH_SELF_LAVA) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_CREEPER,               NO_MSG,        INFO_DEATH_SELF_MON_CREEPER,               CENTER_DEATH_SELF_MONSTER) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_DEMON_JUMP,		 	 NO_MSG,        INFO_DEATH_SELF_MON_DEMON_JUMP,		       CENTER_DEATH_SELF_MONSTER) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_DEMON_MELEE,		 	 NO_MSG,        INFO_DEATH_SELF_MON_DEMON_MELEE,		   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_MAGE,				 	 NO_MSG,        INFO_DEATH_SELF_MON_MAGE,				   CENTER_DEATH_SELF_MONSTER) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_ROTFISH,				 NO_MSG,        INFO_DEATH_SELF_MON_ROTFISH_MELEE,		   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_SHAMBLER_CLAW,	 	 NO_MSG,        INFO_DEATH_SELF_MON_SHAMBLER_CLAW,		   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_SHAMBLER_SMASH,	 	 NO_MSG,        INFO_DEATH_SELF_MON_SHAMBLER_SMASH,		   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_SHAMBLER_ZAP,		 	 NO_MSG,        INFO_DEATH_SELF_MON_SHAMBLER_ZAP,		   CENTER_DEATH_SELF_MONSTER) \
-	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_SHARK,			 	 NO_MSG,        INFO_DEATH_SELF_MON_SHARK,				   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_SPIDER,			 	 NO_MSG,        INFO_DEATH_SELF_MON_SPIDER,				   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_WYVERN,			 	 NO_MSG,        INFO_DEATH_SELF_MON_WYVERN,				   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_ZOMBIE_JUMP,		 	 NO_MSG,        INFO_DEATH_SELF_MON_ZOMBIE_JUMP,		   CENTER_DEATH_SELF_MONSTER) \

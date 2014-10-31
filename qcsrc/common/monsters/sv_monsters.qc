@@ -165,6 +165,28 @@ void monster_changeteam(entity ent, float newteam)
 	}
 }
 
+void Monster_Delay_Action()
+{
+	entity oldself = self;
+	self = self.owner;
+	if(Monster_ValidTarget(self, self.enemy)) { oldself.use(); }
+
+	oldself.think = SUB_Remove;
+	oldself.nextthink = time;
+
+}
+
+void Monster_Delay(float defer_amnt, void() func)
+{
+	// deferred attacking, checks if monster is still alive and target is still valid before attacking
+	entity e = spawn();
+
+	e.think = Monster_Delay_Action;
+	e.nextthink = time + defer_amnt;
+	e.owner = self;
+	e.use = func;
+}
+
 
 // ==============
 // Monster sounds
@@ -724,8 +746,14 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed, float manim_r
 		self.last_enemycheck = time + 1; // check for enemies every second
 	}
 
-	if(self.state == MONSTER_ATTACK_MELEE && time >= self.attack_finished_single)
+	if(self.state == MONSTER_ATTACK_RANGED && (self.flags & FL_ONGROUND))
+	{
 		self.state = 0;
+		self.touch = Monster_Touch;
+	}
+
+	if(self.state && time >= self.attack_finished_single)
+		self.state = 0; // attack is over
 
 	if(self.state != MONSTER_ATTACK_MELEE) // don't move if set
 	if(time >= self.last_trace || self.enemy) // update enemy instantly
@@ -733,12 +761,6 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed, float manim_r
 
 	if(!self.enemy)
 		Monster_Sound(monstersound_idle, 7, TRUE, CH_VOICE);
-
-	if(self.state == MONSTER_ATTACK_RANGED && (self.flags & FL_ONGROUND))
-	{
-		self.state = 0;
-		self.touch = Monster_Touch;
-	}
 
 	if(self.state == MONSTER_ATTACK_MELEE)
 		self.moveto = self.origin;
@@ -755,14 +777,10 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed, float manim_r
 	{
 		if((self.flags & FL_ONGROUND) || ((self.flags & FL_FLY) || (self.flags & FL_SWIM)))
 			Monster_CalculateVelocity(self, self.moveto, self.origin, TRUE, ((self.enemy) ? runspeed : walkspeed));
-		
-		/*&if(self.flags & FL_FLY || self.flags & FL_SWIM)
-			movelib_move_simple(v_forward, ((self.enemy) ? runspeed : walkspeed), 0.6);
-		else
-			movelib_move_simple_gravity(v_forward, ((self.enemy) ? runspeed : walkspeed), 0.6); */
 
 		if(time > self.pain_finished)
-		if(time > self.attack_finished_single)
+		if(!self.state)
+		//if(time > self.attack_finished_single)
 		if(vlen(self.velocity) > 10)
 			self.frame = ((self.enemy) ? manim_run : manim_walk);
 		else
@@ -777,8 +795,9 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed, float manim_r
 			self.target2 = e.target;
 
 		movelib_beak_simple(stpspeed);
-		if(time > self.attack_finished_single)
+		//if(time > self.attack_finished_single)
 		if(time > self.pain_finished)
+		if(!self.state)
 		if (vlen(self.velocity) <= 30)
 			self.frame = manim_idle;
 	}
@@ -1061,7 +1080,8 @@ float Monster_Spawn_Setup()
 
 	if(autocvar_g_monsters_healthbars)
 	{
-		WaypointSprite_Spawn(self.monster_name, 0, 1024, self, '0 0 1' * (self.maxs_z + 15), world, self.team, self, sprite, TRUE, RADARICON_DANGER, ((self.team) ? Team_ColorRGB(self.team) : '1 0 0'));
+		WaypointSprite_Spawn(self.monster_name, 0, 1024, self, '0 0 1' * (self.maxs_z + 15), world, self.team, 
+							 self, sprite, TRUE, RADARICON_DANGER, ((self.team) ? Team_ColorRGB(self.team) : '1 0 0'));
 
 		if(!(self.spawnflags & MONSTERFLAG_INVINCIBLE))
 		{
@@ -1082,12 +1102,12 @@ float Monster_Spawn_Setup()
 float Monster_Spawn(float mon_id)
 {
 	// setup the basic required properties for a monster
+	entity mon = get_monsterinfo(mon_id);
+	if(!mon.monsterid) { return FALSE; } // invalid monster
 
 	if(!autocvar_g_monsters) { Monster_Remove(self); return FALSE; }
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED)) { MON_ACTION(mon_id, MR_PRECACHE); }
 	if(Monster_Appear_Check(self, mon_id)) { return TRUE; } // return true so the monster isn't removed
-
-	entity mon = get_monsterinfo(mon_id);
 
 	if(!self.monster_skill)
 		self.monster_skill = cvar("g_monsters_skill");
@@ -1131,7 +1151,7 @@ float Monster_Spawn(float mon_id)
 	self.monster_attackfunc	= mon.monster_attackfunc;
 	self.monster_name		= mon.monster_name;
 	self.candrop			= TRUE;
-	self.view_ofs			= '0 0 1' * (self.maxs_z * 0.5);
+	self.view_ofs			= '0 0 0.7' * (self.maxs_z * 0.5);
 	self.oldtarget2			= self.target2;
 	self.pass_distance		= 0;
 	self.deadflag			= DEAD_NO;
