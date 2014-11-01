@@ -197,7 +197,7 @@ float nmm_count_pieces(entity minigame, float teamn, float pieceflags)
 	return n;
 }
 
-float minigame_event_nmm(entity minigame, string event, ...count)
+float minigame_event_nmm(entity minigame, string event, ...)
 {
 	if ( event == "start" )
 	{
@@ -233,7 +233,7 @@ float minigame_event_nmm(entity minigame, string event, ...count)
 			return 2;
 		return 1;
 	}
-	else if ( event == "cmd" && count >= 2 )
+	else if ( event == "cmd" )
 	{
 		entity e = ...(0,entity);
 		float argc = ...(1,float);
@@ -555,17 +555,19 @@ void nmm_make_move(entity minigame)
 		nmm_fromtile = world;
 }
 
-float minigame_event_nmm(entity minigame, string event, ...count)
+float minigame_event_nmm(entity minigame, string event, ...)
 {
 	if ( event == "activate" )
 	{
+		nmm_fromtile = world;
 		nmm_init_tiles(minigame);
 	}
 	else if ( event == "deactivate" )
 	{
+		nmm_fromtile = world;
 		nmm_kill_tiles(minigame);
 	}
-	else if ( event == "key_pressed" && count > 0 )
+	else if ( event == "key_pressed" )
 	{
 		switch ( ...(0,float) )
 		{
@@ -636,7 +638,7 @@ float minigame_event_nmm(entity minigame, string event, ...count)
 		}
 		return 0;
 	}
-	else if ( event == "mouse_pressed" && count > 0 && ...(0,float) == K_MOUSE1 )
+	else if ( event == "mouse_pressed" && ...(0,float) == K_MOUSE1 )
 	{
 		nmm_make_move(minigame);
 	}

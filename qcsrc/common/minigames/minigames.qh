@@ -125,6 +125,7 @@ const float MINIG_SF_CREATE  = 0x01; // Create a new object
 const float MINIG_SF_UPDATE  = 0x02; // miscellaneous entity update
 const float MINIG_SF_CUSTOM  = 0x10; // a customized networked event
 const float MINIG_SF_MAX     = 0x80; // maximum flag value sent over the network
+const float MINIG_SF_ALL     = 0xff; // use to resend everything
 
 #include "minigame_nmm.qc"
 

@@ -99,6 +99,18 @@ float minigame_SendEntity(entity to, float sf)
 	
 }
 
+// Force resend all minigame entities
+void minigame_resend(entity minigame)
+{
+	minigame.SendFlags = MINIG_SF_ALL;
+	entity e = world;
+	while (( e = findentity(e,owner,minigame) ))
+	{
+		if ( e.classname != "minigame" )
+			e.SendFlags = MINIG_SF_ALL;
+	}
+}
+
 float minigame_CheckSend()
 {
 	entity e;
@@ -140,6 +152,8 @@ float minigame_addplayer(entity minigame_session, entity player)
 			self = e;
 			player.team_forced = -1;
 		}
+		
+		minigame_resend(minigame_session);
 	}
 	GameLogEcho(strcat(":minigame:join",(mgteam?"":"fail"),":",minigame_session.netname,":",
 		ftos(num_for_edict(player)),":",player.netname));

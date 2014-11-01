@@ -218,9 +218,9 @@ void ent_read_minigame()
 	if ( minigame_ent )
 		minigame_ent.minigame_event(minigame_ent,"network_receive",self,sf);
 	
-	dprint("\nCL Reading entity: ",ftos(num_for_edict(self)),
+	dprint("CL Reading entity: ",ftos(num_for_edict(self)),
 		" classname:",self.classname," enttype:",ftos(self.enttype) );
-	dprint(" sf:",ftos(sf)," netname:",self.netname,"\n");
+	dprint(" sf:",ftos(sf)," netname:",self.netname,"\n\n");
 }
 
 vector minigame_drawstring_wrapped( float maxwidth, vector pos, string text, 
