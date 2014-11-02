@@ -1071,10 +1071,6 @@ float Monster_Spawn_Setup()
 	if(IS_PLAYER(self.monster_follow))
 		self.effects |= EF_DIMLIGHT;
 
-	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
-	if(!self.skin)
-		self.skin = rint(random() * 4);
-
 	if(!self.attack_range)
 		self.attack_range = autocvar_g_monsters_attack_range;
 		
@@ -1120,6 +1116,22 @@ float Monster_Spawn(float mon_id)
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED)) { MON_ACTION(mon_id, MR_PRECACHE); }
 	if(Monster_Appear_Check(self, mon_id)) { return TRUE; } // return true so the monster isn't removed
 
+	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
+	{
+		if(!self.skin)
+			self.skin = rint(random() * 4);
+
+		string trymodel = sprintf("%s_%d.mdl", substring(mon.model, 0, strlen(mon.model) - 4), self.skin);
+
+		if(fexists(trymodel))
+		{
+			precache_model(trymodel);
+			setmodel(self, trymodel);
+		}
+		else // default model is precached anyway
+			setmodel(self, mon.model);
+	}
+
 	if(!self.monster_skill)
 		self.monster_skill = cvar("g_monsters_skill");
 
@@ -1135,8 +1147,6 @@ float Monster_Spawn(float mon_id)
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED)) // don't count re-spawning monsters either
 		monsters_total += 1;
 
-	setmodel(self, mon.model);
-	//setsize(self, mon.mins, mon.maxs);
 	self.flags				= FL_MONSTER;
 	self.classname			= "monster";
 	self.takedamage			= DAMAGE_AIM;
