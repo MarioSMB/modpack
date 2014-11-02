@@ -43,7 +43,7 @@ void M_Shambler_Attack_Smash()
 	pointparticles(particleeffectnum("explosion_medium"), (self.origin + (v_forward * 150)) - ('0 0 1' * self.maxs_z), '0 0 0', 1);
 	sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 
-	// TODO: WTF? RadiusDamage?!
+	// RadiusDamage does NOT support custom starting location, which means we must use this hack...
 
 	tracebox(self.origin + v_forward * 50, self.mins * 0.5, self.maxs * 0.5, self.origin + v_forward * autocvar_g_monster_shambler_attack_smash_range, MOVE_NORMAL, self);
 
@@ -57,7 +57,7 @@ void M_Shambler_Attack_Swing()
 	Monster_Attack_Melee(self.enemy, (autocvar_g_monster_shambler_attack_claw_damage), ((r) ? shambler_anim_swingr : shambler_anim_swingl), self.attack_range, 0.8, DEATH_MONSTER_SHAMBLER_CLAW, TRUE);
 	if(r)
 	{
-		Monster_Delay(0.5, M_Shambler_Attack_Swing);
+		Monster_Delay(1, 0, 0.5, M_Shambler_Attack_Swing);
 		self.attack_finished_single += 0.5;
 	}
 }
@@ -177,7 +177,7 @@ float M_Shambler_Attack(float attack_type)
 			if(randomness <= 0.5 && enemy_len <= autocvar_g_monster_shambler_attack_smash_range)
 			{
 				self.frame = shambler_anim_smash;
-				Monster_Delay(0.7, M_Shambler_Attack_Smash);
+				Monster_Delay(1, 0, 0.7, M_Shambler_Attack_Smash);
 				self.attack_finished_single = time + 1.1;
 				self.state = MONSTER_ATTACK_MELEE; // kinda a melee attack
 				self.shambler_lastattack = time + 3;
@@ -189,7 +189,7 @@ float M_Shambler_Attack(float attack_type)
 				self.state = MONSTER_ATTACK_MELEE; // maybe we should rename this to something more general
 				self.attack_finished_single = time + 1.1;
 				self.shambler_lastattack = time + 3;
-				Monster_Delay(0.6, M_Shambler_Attack_Lightning);
+				Monster_Delay(1, 0, 0.6, M_Shambler_Attack_Lightning);
 				return TRUE;
 			}
 

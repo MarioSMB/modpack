@@ -4,7 +4,7 @@
 #define MR_DEATH		  3 // (SERVER) called when monster dies
 #define MR_PRECACHE		  4 // (SERVER) precaches models/sounds used by this monster
 
-// functions:
+// functions
 entity get_monsterinfo(float id);
 
 // special spawn flags
@@ -16,7 +16,7 @@ const float MON_FLAG_SUPERMONSTER = 256; // incredibly powerful monster
 const float MON_FLAG_RANGED = 512; // monster shoots projectiles
 const float MON_FLAG_MELEE = 1024;
 
-// entity properties of monsterinfo:
+// entity properties of monsterinfo
 .float monsterid; // MON_...
 .string netname; // short name
 .string monster_name; // human readable name
@@ -34,14 +34,14 @@ const float MON_FLAG_MELEE = 1024;
 //	Monster Registration
 // =====================
 
-// enabled for testing
+// enable for testing
 #define MONSTERS_EXTRA
 
 float m_null(float dummy);
 void register_monster(float id, float(float) func, float(float) attackfunc, float monsterflags, vector min_s, vector max_s, string modelname, string shortname, string mname);
 void register_monsters_done();
 
-const float MON_MAXCOUNT = 24;
+const float MON_MAXCOUNT = 24; // increase as necessary, limit is infinite, but keep loops small!
 #define MON_FIRST 1
 float MON_COUNT;
 float MON_LAST;

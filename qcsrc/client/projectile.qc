@@ -302,6 +302,7 @@ void Ent_Projectile()
 
 			case PROJECTILE_MAGE_SPIKE: setmodel(self, "models/ebomb.mdl"); self.traileffect = particleeffectnum("TR_VORESPIKE"); break;
 			case PROJECTILE_SHAMBLER_LIGHTNING: setmodel(self, "models/ebomb.mdl"); self.traileffect = particleeffectnum("TR_NEXUIZPLASMA"); break;
+			case PROJECTILE_SCRAG_SPIKE: setmodel(self, "models/plasmatrail.mdl"); self.traileffect = particleeffectnum("TR_WIZSPIKE"); break;
 
 			case PROJECTILE_RAPTORBOMB:    setmodel(self, "models/vehicles/clusterbomb.md3"); self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = particleeffectnum(""); break;
 			case PROJECTILE_RAPTORBOMBLET: setmodel(self, "models/vehicles/bomblet.md3");     self.gravity = 1; self.avelocity = '0 0 180'; self.traileffect = particleeffectnum(""); break;

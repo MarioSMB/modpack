@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ OGRE,
 /* functions  */ M_Ogre, M_Ogre_Attack,
-/* spawnflags */ MON_FLAG_MELEE | MONSTER_SIZE_BROKEN,
+/* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RANGED | MONSTER_SIZE_BROKEN,
 /* mins,maxs  */ '-36 -36 -20', '36 36 50',
 /* model      */ "ogre.mdl",
 /* netname    */ "ogre",
@@ -12,6 +12,23 @@ REGISTER_MONSTER(
 #else
 #ifdef SVQC
 float autocvar_g_monster_ogre_health;
+float autocvar_g_monster_ogre_attack_machinegun_spread;
+float autocvar_g_monster_ogre_attack_machinegun_solidpenetration;
+float autocvar_g_monster_ogre_attack_machinegun_damage;
+float autocvar_g_monster_ogre_attack_machinegun_force;
+float autocvar_g_monster_ogre_attack_grenade_damage;
+float autocvar_g_monster_ogre_attack_grenade_edgedamage;
+float autocvar_g_monster_ogre_attack_grenade_radius;
+float autocvar_g_monster_ogre_attack_grenade_speed;
+float autocvar_g_monster_ogre_attack_grenade_speed_up;
+float autocvar_g_monster_ogre_attack_grenade_speed_z;
+float autocvar_g_monster_ogre_attack_grenade_spread;
+float autocvar_g_monster_ogre_attack_grenade_force;
+float autocvar_g_monster_ogre_attack_grenade_bouncefactor;
+float autocvar_g_monster_ogre_attack_grenade_bouncestop;
+float autocvar_g_monster_ogre_attack_grenade_lifetime;
+float autocvar_g_monster_ogre_attack_grenade_health;
+float autocvar_g_monster_ogre_attack_grenade_damageforcescale;
 float autocvar_g_monster_ogre_attack_melee_damage;
 float autocvar_g_monster_ogre_attack_melee_nonplayerdamage;
 float autocvar_g_monster_ogre_attack_melee_delay;
@@ -38,6 +55,127 @@ const float ogre_anim_pain5 		= 10;
 const float ogre_anim_death1 		= 11;
 const float ogre_anim_death2 		= 12;
 const float ogre_anim_pull 			= 13;
+
+void M_Ogre_Attack_MachineGun()
+{
+	vector dir = normalize(self.enemy.origin - self.origin);
+	vector org = self.origin + self.view_ofs + v_forward * 14;
+	sound (self, CH_WEAPON_A, W_Sound("uzi_fire"), VOL_BASE, ATTEN_NORM);
+
+	fireBullet(org, dir, autocvar_g_monster_ogre_attack_machinegun_spread, autocvar_g_monster_ogre_attack_machinegun_solidpenetration, autocvar_g_monster_ogre_attack_machinegun_damage, autocvar_g_monster_ogre_attack_machinegun_force, DEATH_MONSTER_OGRE_MACHINEGUN, 0);
+
+	pointparticles(particleeffectnum("uzi_muzzleflash"), org, dir * 1000, 1);
+
+	// casing code
+	if (autocvar_g_casings >= 2)
+		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
+}
+
+void M_Ogre_Attack_Grenade_Explode()
+{
+	self.event_damage = func_null;
+	self.takedamage = DAMAGE_NO;
+
+	if(self.movetype == MOVETYPE_NONE)
+		self.velocity = self.oldvelocity;
+
+	sound (self, CH_WEAPON_A, W_Sound("grenade_impact"), VOL_BASE, ATTEN_NORM);
+	pointparticles(particleeffectnum("grenade_explode"), self.origin, '0 0 0', 1);
+	RadiusDamage (self, self.realowner, autocvar_g_monster_ogre_attack_grenade_damage, autocvar_g_monster_ogre_attack_grenade_edgedamage, autocvar_g_monster_ogre_attack_grenade_radius, world, autocvar_g_monster_ogre_attack_grenade_force, self.projectiledeathtype, other);
+
+	remove (self);
+}
+
+void M_Ogre_Attack_Grenade_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+{
+	if (self.health <= 0)
+		return;
+
+	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+		return; // g_projectiles_damage says to halt
+
+	self.health -= damage;
+
+	if (self.health <= 0)
+		W_PrepareExplosionByDamage(attacker, self.use);
+}
+
+void M_Ogre_Attack_Grenade_Touch()
+{
+	PROJECTILE_TOUCH;
+
+	if (other.takedamage == DAMAGE_AIM)
+	{
+		self.use();
+		return;
+	}
+
+	float r;
+	r = random() * 6;
+	if(r < 1)
+		spamsound (self, CH_SHOTS, W_Sound("grenade_bounce1"), VOL_BASE, ATTEN_NORM);
+	else if(r < 2)
+		spamsound (self, CH_SHOTS, W_Sound("grenade_bounce2"), VOL_BASE, ATTEN_NORM);
+	else if(r < 3)
+		spamsound (self, CH_SHOTS, W_Sound("grenade_bounce3"), VOL_BASE, ATTEN_NORM);
+	else if(r < 4)
+		spamsound (self, CH_SHOTS, W_Sound("grenade_bounce4"), VOL_BASE, ATTEN_NORM);
+	else if(r < 5)
+		spamsound (self, CH_SHOTS, W_Sound("grenade_bounce5"), VOL_BASE, ATTEN_NORM);
+	else
+		spamsound (self, CH_SHOTS, W_Sound("grenade_bounce6"), VOL_BASE, ATTEN_NORM);
+	self.projectiledeathtype |= HITTYPE_BOUNCE;
+}
+
+void M_Ogre_Attack_Grenade()
+{
+	entity gren;
+
+	sound (self, CH_WEAPON_A, W_Sound("grenade_fire"), VOL_BASE, ATTEN_NORM);
+
+	vector dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
+	vector org = self.origin + v_forward * 14 + '0 0 30' + v_right * -14;
+
+	makevectors(self.angles);
+
+	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), org, dir * 1000, 1);
+
+	gren = spawn ();
+	gren.owner = gren.realowner = self;
+	gren.classname = "grenade";
+	gren.bot_dodge = TRUE;
+	gren.bot_dodgerating = autocvar_g_monster_ogre_attack_grenade_damage;
+	gren.movetype = MOVETYPE_BOUNCE;
+	gren.bouncefactor = autocvar_g_monster_ogre_attack_grenade_bouncefactor;
+	gren.bouncestop = autocvar_g_monster_ogre_attack_grenade_bouncestop;
+	PROJECTILE_MAKETRIGGER(gren);
+	gren.projectiledeathtype = DEATH_MONSTER_OGRE_GRENADE;
+	setorigin(gren, org);
+	setsize(gren, '-3 -3 -3', '3 3 3');
+
+	gren.nextthink = time + autocvar_g_monster_ogre_attack_grenade_lifetime;
+	gren.think = adaptor_think2use_hittype_splash;
+	gren.use = M_Ogre_Attack_Grenade_Explode;
+	gren.touch = M_Ogre_Attack_Grenade_Touch;
+
+	gren.takedamage = DAMAGE_YES;
+	gren.health = autocvar_g_monster_ogre_attack_grenade_health;
+	gren.damageforcescale = autocvar_g_monster_ogre_attack_grenade_damageforcescale;
+	gren.event_damage = M_Ogre_Attack_Grenade_Damage;
+	gren.damagedbycontents = TRUE;
+	gren.missile_flags = MIF_SPLASH | MIF_ARC;
+	W_SetupProjectileVelocityEx(gren, dir, v_up, autocvar_g_monster_ogre_attack_grenade_speed, autocvar_g_monster_ogre_attack_grenade_speed_up, autocvar_g_monster_ogre_attack_grenade_speed_z, autocvar_g_monster_ogre_attack_grenade_spread, FALSE);
+
+	gren.angles = vectoangles (gren.velocity);
+	gren.flags = FL_PROJECTILE;
+
+	CSQCProjectile(gren, TRUE, PROJECTILE_GRENADE_BOUNCING, TRUE);
+
+	other = gren; MUTATOR_CALLHOOK(EditProjectile);
+
+	self.attack_finished_single = time + 0.7;
+	self.state = 0;
+}
 
 .float ogre_swing_prev;
 .entity ogre_swing_alreadyhit;
@@ -101,7 +239,7 @@ void M_Ogre_Attack_Chainsaw()
 			//print(strcat(self.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
 
 			Damage(target_victim, self.realowner, self.realowner,
-				swing_damage, DEATH_MONSTER_ZOMBIE_MELEE,
+				swing_damage, DEATH_MONSTER_OGRE_MELEE,
 				self.realowner.origin + self.realowner.view_ofs,
 				v_forward * 1);
 
@@ -138,8 +276,11 @@ float M_Ogre_Attack(float attack_type)
 
 			if(vdir_z > 0.7)
 			{
-				// TODO: uzi?
-				return FALSE;
+				self.attack_finished_single = time + 1.2;
+				self.frame = ogre_anim_shoot;
+				self.state = MONSTER_ATTACK_RANGED;
+				Monster_Delay(2, 0.1, 0.4, M_Ogre_Attack_MachineGun);
+				return TRUE;
 			}
 			entity meleetemp;
 			meleetemp = spawn();
@@ -154,10 +295,11 @@ float M_Ogre_Attack(float attack_type)
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			// TODO
-			// makevectors(self.angles);
-			//return Monster_Projectile(self);
-			return FALSE;
+			Monster_Delay(0, 0, 0.5, M_Ogre_Attack_Grenade);
+			self.state = MONSTER_ATTACK_RANGED;
+			self.attack_finished_single = time + 0.5;
+			self.frame = ogre_anim_shoot;
+			return TRUE;
 		}
 	}
 
@@ -176,7 +318,7 @@ float M_Ogre(float req)
 		}
 		case MR_DEATH:
 		{
-			self.frame = ((random() > 0.5) ? ogre_anim_death1 : ogre_anim_death2);
+			self.frame = ((random() >= 0.5) ? ogre_anim_death1 : ogre_anim_death2);
 			return TRUE;
 		}
 		case MR_SETUP:

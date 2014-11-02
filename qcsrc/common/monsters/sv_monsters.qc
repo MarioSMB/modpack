@@ -171,20 +171,31 @@ void Monster_Delay_Action()
 	self = self.owner;
 	if(Monster_ValidTarget(self, self.enemy)) { oldself.use(); }
 
-	oldself.think = SUB_Remove;
-	oldself.nextthink = time;
-
+	if(oldself.cnt > 0)
+	{
+		oldself.cnt -= 1;
+		oldself.think = Monster_Delay_Action;
+		oldself.nextthink = time + oldself.respawn_time;
+	}
+	else
+	{
+		oldself.think = SUB_Remove;
+		oldself.nextthink = time;
+	}
 }
 
-void Monster_Delay(float defer_amnt, void() func)
+void Monster_Delay(float repeat_count, float repeat_defer, float defer_amnt, void() func)
 {
 	// deferred attacking, checks if monster is still alive and target is still valid before attacking
 	entity e = spawn();
 
 	e.think = Monster_Delay_Action;
 	e.nextthink = time + defer_amnt;
+	e.count = defer_amnt;
 	e.owner = self;
 	e.use = func;
+	e.cnt = repeat_count;
+	e.respawn_time = repeat_defer;
 }
 
 

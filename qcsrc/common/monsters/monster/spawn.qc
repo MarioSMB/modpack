@@ -3,8 +3,8 @@ REGISTER_MONSTER(
 /* MON_##id   */ SPAWN,
 /* functions  */ M_Spawn, M_Spawn_Attack,
 /* spawnflags */ MON_FLAG_MELEE,
-/* mins,maxs  */ '-18 -18 -25', '18 18 47',
-/* model      */ "spawn.dpm",
+/* mins,maxs  */ '-16 -16 -24', '16 16 16',
+/* model      */ "tarbaby.mdl",
 /* netname    */ "spawn",
 /* fullname   */ _("Spawn")
 );
@@ -12,94 +12,49 @@ REGISTER_MONSTER(
 #else
 #ifdef SVQC
 float autocvar_g_monster_spawn_health;
-float autocvar_g_monster_spawn_attack_melee_damage;
-float autocvar_g_monster_spawn_attack_melee_delay;
-float autocvar_g_monster_spawn_attack_leap_damage;
-float autocvar_g_monster_spawn_attack_leap_force;
+float autocvar_g_monster_spawn_attack_explode_damage;
+float autocvar_g_monster_spawn_attack_explode_edgedamage;
+float autocvar_g_monster_spawn_attack_explode_radius;
+float autocvar_g_monster_spawn_attack_explode_force;
 float autocvar_g_monster_spawn_attack_leap_speed;
 float autocvar_g_monster_spawn_attack_leap_delay;
 float autocvar_g_monster_spawn_speed_stop;
 float autocvar_g_monster_spawn_speed_run;
 float autocvar_g_monster_spawn_speed_walk;
 
-const float spawn_anim_attackleap			= 0;
-const float spawn_anim_attackrun1			= 1;
-const float spawn_anim_attackrun2			= 2;
-const float spawn_anim_attackrun3			= 3;
-const float spawn_anim_attackstanding1		= 4;
-const float spawn_anim_attackstanding2		= 5;
-const float spawn_anim_attackstanding3		= 6;
-const float spawn_anim_blockend			= 7;
-const float spawn_anim_blockstart			= 8;
-const float spawn_anim_deathback1			= 9;
-const float spawn_anim_deathback2			= 10;
-const float spawn_anim_deathback3			= 11;
-const float spawn_anim_deathfront1			= 12;
-const float spawn_anim_deathfront2			= 13;
-const float spawn_anim_deathfront3			= 14;
-const float spawn_anim_deathleft1			= 15;
-const float spawn_anim_deathleft2			= 16;
-const float spawn_anim_deathright1			= 17;
-const float spawn_anim_deathright2			= 18;
-const float spawn_anim_idle				= 19;
-const float spawn_anim_painback1			= 20;
-const float spawn_anim_painback2			= 21;
-const float spawn_anim_painfront1			= 22;
-const float spawn_anim_painfront2			= 23;
-const float spawn_anim_runbackwards		= 24;
-const float spawn_anim_runbackwardsleft	= 25;
-const float spawn_anim_runbackwardsright	= 26;
-const float spawn_anim_runforward			= 27;
-const float spawn_anim_runforwardleft		= 28;
-const float spawn_anim_runforwardright		= 29;
-const float spawn_anim_spawn				= 30;
+const float spawn_anim_walk 	= 0;
+const float spawn_anim_run  	= 1;
+const float spawn_anim_jump 	= 2;
+const float spawn_anim_fly  	= 3;
+const float spawn_anim_explode 	= 4;
 
 void M_Spawn_Attack_Explode()
 {
-	pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
+	pointparticles(particleeffectnum("grenade_explode"), self.origin, '0 0 0', 1);
 	sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 
 	RadiusDamage (self, self, (autocvar_g_monster_spawn_attack_explode_damage), (autocvar_g_monster_spawn_attack_explode_edgedamage), (autocvar_g_monster_spawn_attack_explode_radius), world, (autocvar_g_monster_spawn_attack_explode_force), DEATH_MONSTER_CREEPER, other);
+
+	self.think = SUB_Remove;
+	self.nextthink = time + 0.1;
 }
 
 void M_Spawn_Attack_Leap_Touch()
 {
-	if (self.health <= 0)
-		return;
-
-	vector angles_face;
+	if(self.health <= 0) { return; }
 
 	if(other.takedamage)
+	if(vlen(self.velocity) > 200)
 	{
-		angles_face = vectoangles(self.moveto - self.origin);
-		angles_face = normalize(angles_face) * (autocvar_g_monster_spawn_attack_leap_force);
-		Damage(other, self, self, (autocvar_g_monster_spawn_attack_leap_damage) * MONSTER_SKILLMOD(self), DEATH_MONSTER_SPAWN_JUMP, other.origin, angles_face);
+		Damage (self, world, world, self.health + self.max_health + 200, DEATH_KILL, self.origin, '0 0 0');
 		self.touch = Monster_Touch; // instantly turn it off to stop damage spam
 	}
 
 	if (trace_dphitcontents)
+	{
+		self.movetype = MOVETYPE_WALK;
 		self.touch = Monster_Touch;
-}
-
-void M_Spawn_Defend_Block_End()
-{
-	if(self.health <= 0)
-		return;
-
-	self.frame = spawn_anim_blockend;
-	self.armorvalue = autocvar_g_monsters_armor_blockpercent;
-}
-
-float M_Spawn_Defend_Block()
-{
-	self.frame = spawn_anim_blockstart;
-	self.armorvalue = 0.9;
-	self.state = MONSTER_ATTACK_MELEE; // freeze monster
-	self.attack_finished_single = time + 2.1;
-
-	defer(2, M_Spawn_Defend_Block_End);
-
-	return TRUE;
+	}
 }
 
 float M_Spawn_Attack(float attack_type)
@@ -108,24 +63,19 @@ float M_Spawn_Attack(float attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			float rand = random(), chosen_anim;
-
-			if(rand < 0.33)
-				chosen_anim = spawn_anim_attackstanding1;
-			else if(rand < 0.66)
-				chosen_anim = spawn_anim_attackstanding2;
-			else
-				chosen_anim = spawn_anim_attackstanding3;
-
-			if(random() < 0.3 && self.health < 75 && self.enemy.health > 10)
-				return M_Spawn_Defend_Block();
-
-			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_spawn_attack_melee_damage), chosen_anim, self.attack_range, (autocvar_g_monster_spawn_attack_melee_delay), DEATH_MONSTER_SPAWN_MELEE, TRUE);
+			// spawn has no melee attack
+			return FALSE;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
 			makevectors(self.angles);
-			return Monster_Attack_Leap(spawn_anim_attackleap, M_Spawn_Attack_Leap_Touch, v_forward * (autocvar_g_monster_spawn_attack_leap_speed) + '0 0 200', (autocvar_g_monster_spawn_attack_leap_delay));
+			float leap_success = Monster_Attack_Leap(spawn_anim_jump, M_Spawn_Attack_Leap_Touch, v_forward * (autocvar_g_monster_spawn_attack_leap_speed) + '0 0 200', (autocvar_g_monster_spawn_attack_leap_delay));
+			if(leap_success)
+			{
+				self.movetype = MOVETYPE_BOUNCE;
+				self.velocity_z += random() * 150;
+			}
+			return leap_success;
 		}
 	}
 
@@ -140,12 +90,18 @@ float M_Spawn(float req)
 	{
 		case MR_THINK:
 		{
+			// prevent standard code from breaking everything
+			if(self.flags & FL_ONGROUND)
+			if(self.movetype == MOVETYPE_BOUNCE)
+			if(time >= self.attack_finished_single)
+				self.movetype = MOVETYPE_WALK;
 			return TRUE;
 		}
 		case MR_DEATH:
 		{
 			// KABOOM!
 			self.frame = 0;
+			defer(0.05, M_Spawn_Attack_Explode); // simply defer to prevent recursion
 			return TRUE;
 		}
 		case MR_SETUP:
@@ -155,26 +111,18 @@ float M_Spawn(float req)
 			if(!self.speed2) { self.speed2 = (autocvar_g_monster_spawn_speed_run); }
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_spawn_speed_stop); }
 
-			self.m_anim_walk = spawn_anim_runforward;
-			self.m_anim_run = spawn_anim_runforward;
-			self.m_anim_idle = spawn_anim_idle;
+			self.m_anim_walk = spawn_anim_walk;
+			self.m_anim_run = spawn_anim_run;
+			self.m_anim_idle = spawn_anim_walk;
 
-			if(self.spawnflags & MONSTERFLAG_NORESPAWN)
-				self.spawnflags &= ~MONSTERFLAG_NORESPAWN; // spawns always respawn
-
-			self.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
-
-			self.monster_loot = spawnfunc_item_health_medium;
-			self.frame = spawn_anim_spawn;
-			self.spawn_time = time + 2.1;
-			self.spawnshieldtime = self.spawn_time;
-			self.respawntime = 0.2;
+			self.monster_loot = spawnfunc_item_rockets;
+			self.frame = spawn_anim_walk;
 
 			return TRUE;
 		}
 		case MR_PRECACHE:
 		{
-			precache_model("models/monsters/spawn.dpm");
+			precache_model("models/monsters/tarbaby.mdl");
 			return TRUE;
 		}
 	}

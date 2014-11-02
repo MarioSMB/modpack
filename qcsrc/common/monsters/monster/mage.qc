@@ -316,7 +316,7 @@ float M_Mage_Attack(float attack_type)
 				{
 					self.frame = mage_anim_attack;
 					self.attack_finished_single = time + (autocvar_g_monster_mage_attack_spike_delay);
-					Monster_Delay(0.2, M_Mage_Attack_Spike);
+					Monster_Delay(1, 0, 0.2, M_Mage_Attack_Spike);
 					return TRUE;
 				}
 			}

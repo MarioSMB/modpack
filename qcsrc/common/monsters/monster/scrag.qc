@@ -1,132 +1,110 @@
 #ifdef REGISTER_MONSTER
 REGISTER_MONSTER(
-/* MON_##id   */ ZOMBIE,
-/* functions  */ M_Zombie, M_Zombie_Attack,
-/* spawnflags */ MON_FLAG_MELEE,
-/* mins,maxs  */ '-18 -18 -25', '18 18 47',
-/* model      */ "zombie.dpm",
-/* netname    */ "zombie",
-/* fullname   */ _("Zombie")
+/* MON_##id   */ SCRAG,
+/* functions  */ M_Scrag, M_Scrag_Attack,
+/* spawnflags */ MONSTER_TYPE_FLY | MONSTER_SIZE_BROKEN | MON_FLAG_RANGED,
+/* mins,maxs  */ '-20 -20 -58', '20 20 20',
+/* model      */ "scrag.mdl",
+/* netname    */ "scrag",
+/* fullname   */ _("Scrag")
 );
 
 #else
 #ifdef SVQC
-float autocvar_g_monster_zombie_health;
-float autocvar_g_monster_zombie_attack_melee_damage;
-float autocvar_g_monster_zombie_attack_melee_delay;
-float autocvar_g_monster_zombie_attack_leap_damage;
-float autocvar_g_monster_zombie_attack_leap_force;
-float autocvar_g_monster_zombie_attack_leap_speed;
-float autocvar_g_monster_zombie_attack_leap_delay;
-float autocvar_g_monster_zombie_speed_stop;
-float autocvar_g_monster_zombie_speed_run;
-float autocvar_g_monster_zombie_speed_walk;
+float autocvar_g_monster_scrag_health;
+float autocvar_g_monster_scrag_attack_spike_damage;
+float autocvar_g_monster_scrag_attack_spike_edgedamage;
+float autocvar_g_monster_scrag_attack_spike_force;
+float autocvar_g_monster_scrag_attack_spike_radius;
+float autocvar_g_monster_scrag_attack_spike_speed;
+float autocvar_g_monster_scrag_speed_stop;
+float autocvar_g_monster_scrag_speed_run;
+float autocvar_g_monster_scrag_speed_walk;
 
-const float zombie_anim_attackleap			= 0;
-const float zombie_anim_attackrun1			= 1;
-const float zombie_anim_attackrun2			= 2;
-const float zombie_anim_attackrun3			= 3;
-const float zombie_anim_attackstanding1		= 4;
-const float zombie_anim_attackstanding2		= 5;
-const float zombie_anim_attackstanding3		= 6;
-const float zombie_anim_blockend			= 7;
-const float zombie_anim_blockstart			= 8;
-const float zombie_anim_deathback1			= 9;
-const float zombie_anim_deathback2			= 10;
-const float zombie_anim_deathback3			= 11;
-const float zombie_anim_deathfront1			= 12;
-const float zombie_anim_deathfront2			= 13;
-const float zombie_anim_deathfront3			= 14;
-const float zombie_anim_deathleft1			= 15;
-const float zombie_anim_deathleft2			= 16;
-const float zombie_anim_deathright1			= 17;
-const float zombie_anim_deathright2			= 18;
-const float zombie_anim_idle				= 19;
-const float zombie_anim_painback1			= 20;
-const float zombie_anim_painback2			= 21;
-const float zombie_anim_painfront1			= 22;
-const float zombie_anim_painfront2			= 23;
-const float zombie_anim_runbackwards		= 24;
-const float zombie_anim_runbackwardsleft	= 25;
-const float zombie_anim_runbackwardsright	= 26;
-const float zombie_anim_runforward			= 27;
-const float zombie_anim_runforwardleft		= 28;
-const float zombie_anim_runforwardright		= 29;
-const float zombie_anim_spawn				= 30;
+const float scrag_anim_hover	= 0;
+const float scrag_anim_fly		= 1;
+const float scrag_anim_magic	= 2;
+const float scrag_anim_pain		= 3;
+const float scrag_anim_death	= 4;
 
-void M_Zombie_Attack_Leap_Touch()
+void M_Scrag_Attack_Spike_Explode()
 {
-	if (self.health <= 0)
-		return;
-
-	vector angles_face;
-
-	if(other.takedamage)
+	if(self)
 	{
-		angles_face = vectoangles(self.moveto - self.origin);
-		angles_face = normalize(angles_face) * (autocvar_g_monster_zombie_attack_leap_force);
-		Damage(other, self, self, (autocvar_g_monster_zombie_attack_leap_damage) * MONSTER_SKILLMOD(self), DEATH_MONSTER_ZOMBIE_JUMP, other.origin, angles_face);
-		self.touch = Monster_Touch; // instantly turn it off to stop damage spam
+		pointparticles(particleeffectnum("TE_WIZSPIKE"), self.origin, '0 0 0', 1);
+
+		RadiusDamage(self, self.realowner, (autocvar_g_monster_scrag_attack_spike_damage), (autocvar_g_monster_scrag_attack_spike_edgedamage), (autocvar_g_monster_scrag_attack_spike_force), world, (autocvar_g_monster_scrag_attack_spike_radius), self.projectiledeathtype, world);
+
+		remove(self);
 	}
-
-	if (trace_dphitcontents)
-		self.touch = Monster_Touch;
 }
 
-void M_Zombie_Defend_Block_End()
+void M_Scrag_Attack_Spike_Touch()
 {
-	if(self.health <= 0)
-		return;
+	PROJECTILE_TOUCH;
 
-	self.frame = zombie_anim_blockend;
-	self.armorvalue = autocvar_g_monsters_armor_blockpercent;
+	M_Scrag_Attack_Spike_Explode();
 }
 
-float M_Zombie_Defend_Block()
+void M_Scrag_Attack_Spike()
 {
-	self.frame = zombie_anim_blockstart;
-	self.armorvalue = 0.9;
-	self.state = MONSTER_ATTACK_MELEE; // freeze monster
-	self.attack_finished_single = time + 2.1;
+	entity missile = spawn();
+	vector viewofs = self.view_ofs + '0 0 20';
+	vector dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
 
-	defer(2, M_Zombie_Defend_Block_End);
+	monster_makevectors(self.enemy);
 
-	return TRUE;
+	missile.owner = missile.realowner = self;
+	missile.solid = SOLID_TRIGGER;
+	missile.movetype = MOVETYPE_FLYMISSILE;
+	missile.projectiledeathtype = DEATH_MONSTER_SCRAG;
+	setsize(missile, '-6 -6 -6', '6 6 6');
+	setorigin(missile, self.origin + viewofs + v_forward * 14);
+	missile.flags = FL_PROJECTILE;
+	missile.velocity = dir * (autocvar_g_monster_scrag_attack_spike_speed);
+	missile.avelocity = '300 300 300';
+	missile.nextthink = time + 5;
+	missile.think = M_Scrag_Attack_Spike_Explode;
+	missile.enemy = self.enemy;
+	missile.touch = M_Scrag_Attack_Spike_Touch;
+	CSQCProjectile(missile, TRUE, PROJECTILE_SCRAG_SPIKE, TRUE);
 }
 
-float M_Zombie_Attack(float attack_type)
+float M_Scrag_Attack(float attack_type)
 {
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
-		{
-			float rand = random(), chosen_anim;
-
-			if(rand < 0.33)
-				chosen_anim = zombie_anim_attackstanding1;
-			else if(rand < 0.66)
-				chosen_anim = zombie_anim_attackstanding2;
-			else
-				chosen_anim = zombie_anim_attackstanding3;
-
-			if(random() < 0.3 && self.health < 75 && self.enemy.health > 10)
-				return M_Zombie_Defend_Block();
-
-			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_zombie_attack_melee_damage), chosen_anim, self.attack_range, (autocvar_g_monster_zombie_attack_melee_delay), DEATH_MONSTER_ZOMBIE_MELEE, TRUE);
-		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			makevectors(self.angles);
-			return Monster_Attack_Leap(zombie_anim_attackleap, M_Zombie_Attack_Leap_Touch, v_forward * (autocvar_g_monster_zombie_attack_leap_speed) + '0 0 200', (autocvar_g_monster_zombie_attack_leap_delay));
+			if(random() > 0.5)
+				self.attack_finished_single = time + 1.2;
+			else
+				self.attack_finished_single = time + 0.15;
+
+			self.frame = scrag_anim_magic;
+
+			M_Scrag_Attack_Spike();
+
+			/* TODO: add support for this! if(random() <= 0.1)
+			{
+				makevectors(self.angles);
+				self.velocity += (random() >= 0.5) ? (v_right * 300) : (v_right * -300;
+			} */
+
+			return TRUE;
 		}
 	}
 
 	return FALSE;
 }
 
-void spawnfunc_monster_zombie() { Monster_Spawn(MON_ZOMBIE); }
+void spawnfunc_monster_scrag() { Monster_Spawn(MON_SCRAG); }
 
-float M_Zombie(float req)
+// compatibility with old spawns
+void spawnfunc_monster_wizard() { spawnfunc_monster_scrag(); }
+
+float M_Scrag(float req)
 {
 	switch(req)
 	{
@@ -136,37 +114,31 @@ float M_Zombie(float req)
 		}
 		case MR_DEATH:
 		{
-			self.armorvalue = autocvar_g_monsters_armor_blockpercent;
-			self.frame = ((random() > 0.5) ? zombie_anim_deathback1 : zombie_anim_deathfront1);
+			self.frame = scrag_anim_death;
+			self.velocity_x = -200 + 400 * random();
+			self.velocity_y = -200 + 400 * random();
+			self.velocity_z = 100 + 100 * random();
 			return TRUE;
 		}
 		case MR_SETUP:
 		{
-			if(!self.health) self.health = (autocvar_g_monster_zombie_health);
-			if(!self.speed) { self.speed = (autocvar_g_monster_zombie_speed_walk); }
-			if(!self.speed2) { self.speed2 = (autocvar_g_monster_zombie_speed_run); }
-			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_zombie_speed_stop); }
+			if(!self.health) self.health = (autocvar_g_monster_scrag_health);
+			if(!self.speed) { self.speed = (autocvar_g_monster_scrag_speed_walk); }
+			if(!self.speed2) { self.speed2 = (autocvar_g_monster_scrag_speed_run); }
+			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_scrag_speed_stop); }
 
-			self.m_anim_walk = zombie_anim_runforward;
-			self.m_anim_run = zombie_anim_runforward;
-			self.m_anim_idle = zombie_anim_idle;
+			self.m_anim_walk = scrag_anim_hover;
+			self.m_anim_run = scrag_anim_fly;
+			self.m_anim_idle = scrag_anim_hover;
 
-			if(self.spawnflags & MONSTERFLAG_NORESPAWN)
-				self.spawnflags &= ~MONSTERFLAG_NORESPAWN; // zombies always respawn
-
-			self.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
-
-			self.monster_loot = spawnfunc_item_health_medium;
-			self.frame = zombie_anim_spawn;
-			self.spawn_time = time + 2.1;
-			self.spawnshieldtime = self.spawn_time;
-			self.respawntime = 0.2;
+			self.monster_loot = spawnfunc_item_shells;
+			self.frame = scrag_anim_hover;
 
 			return TRUE;
 		}
 		case MR_PRECACHE:
 		{
-			precache_model("models/monsters/zombie.dpm");
+			precache_model("models/monsters/scrag.mdl");
 			return TRUE;
 		}
 	}
