@@ -412,6 +412,22 @@ void Monster_Attack_Check(entity e, entity targ)
 // Main monster functions
 // ======================
 
+void Monster_Skin_Check()
+{
+	vector oldmin = self.mins, oldmax = self.maxs;
+	entity mon = get_monsterinfo(self.monsterid);
+	string trymodel = sprintf("%s_%d.mdl", substring(mon.model, 0, strlen(mon.model) - 4), self.skin);
+
+	if(fexists(trymodel))
+	{
+		precache_model(trymodel);
+		setmodel(self, trymodel);
+		setsize(self, oldmin, oldmax);
+	}
+
+	self.oldskin = self.skin;
+}
+
 void Monster_Touch()
 {
 	if(other == world) { return; }
@@ -1045,6 +1061,8 @@ void Monster_Think()
 		return;
 	}
 
+	if(self.skin != self.oldskin) { Monster_Skin_Check(); }
+
 	MON_ACTION(self.monsterid, MR_THINK);
 
 	Monster_Move(self.speed2, self.speed, self.stopspeed, self.m_anim_run, self.m_anim_walk, self.m_anim_idle);
@@ -1063,6 +1081,11 @@ float Monster_Spawn_Setup()
 	{
 		Monster_Miniboss_Check();
 		self.health *= MONSTER_SKILLMOD(self);
+
+		if(!self.skin)
+			self.skin = rint(random() * 4);
+
+		Monster_Skin_Check();
 	}
 
 	self.max_health = self.health;
@@ -1116,22 +1139,6 @@ float Monster_Spawn(float mon_id)
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED)) { MON_ACTION(mon_id, MR_PRECACHE); }
 	if(Monster_Appear_Check(self, mon_id)) { return TRUE; } // return true so the monster isn't removed
 
-	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
-	{
-		if(!self.skin)
-			self.skin = rint(random() * 4);
-
-		string trymodel = sprintf("%s_%d.mdl", substring(mon.model, 0, strlen(mon.model) - 4), self.skin);
-
-		if(fexists(trymodel))
-		{
-			precache_model(trymodel);
-			setmodel(self, trymodel);
-		}
-		else // default model is precached anyway
-			setmodel(self, mon.model);
-	}
-
 	if(!self.monster_skill)
 		self.monster_skill = cvar("g_monsters_skill");
 
@@ -1147,6 +1154,7 @@ float Monster_Spawn(float mon_id)
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED)) // don't count re-spawning monsters either
 		monsters_total += 1;
 
+	setmodel(self, mon.model);
 	self.flags				= FL_MONSTER;
 	self.classname			= "monster";
 	self.takedamage			= DAMAGE_AIM;

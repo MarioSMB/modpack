@@ -27,6 +27,7 @@ float monsters_killed;
 .float m_anim_run;
 .float m_anim_walk;
 .float m_anim_idle;
+.float oldskin;
 
 #define MONSTER_SKILLMOD(mon) (0.5 + mon.monster_skill * ((1.2 - 0.3) / 10))
 
