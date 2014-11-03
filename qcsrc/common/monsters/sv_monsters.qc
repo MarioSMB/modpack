@@ -423,6 +423,7 @@ void Monster_Skin_Check()
 		precache_model(trymodel);
 		setmodel(self, trymodel);
 		setsize(self, oldmin, oldmax);
+		CSQCMODEL_AUTOUPDATE(); // do a quick update
 	}
 
 	self.oldskin = self.skin;
@@ -954,9 +955,6 @@ void Monster_Dead(entity attacker, float gibbed)
 		totalspawned -= 1;
 	}
 
-	if(self.candrop && self.weapon)
-		W_ThrowNewWeapon(self, self.weapon, 0, self.origin, randomvec() * 150 + '0 0 325');
-
 	self.event_damage	= ((gibbed) ? func_null : Monster_Dead_Damage);
 	self.solid			= SOLID_CORPSE;
 	self.takedamage		= DAMAGE_AIM;
@@ -973,6 +971,9 @@ void Monster_Dead(entity attacker, float gibbed)
 		self.velocity = '0 0 0';
 
 	MON_ACTION(self.monsterid, MR_DEATH);
+
+	if(self.candrop && self.weapon)
+		W_ThrowNewWeapon(self, self.weapon, 0, self.origin, randomvec() * 150 + '0 0 325');
 }
 
 void Monster_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
@@ -999,7 +1000,14 @@ void Monster_Damage(entity inflictor, entity attacker, float damage, float death
 	take = v_x;
 	save = v_y;
 
-	self.health -= take;
+	damage_take = take;
+	frag_attacker = attacker;
+	frag_deathtype = deathtype;
+	MON_ACTION(self.monsterid, MR_PAIN);
+	take = damage_take;
+
+	if(take)
+		self.health -= take;
 
 	if(self.sprite)
 		WaypointSprite_UpdateHealth(self.sprite, self.health);
@@ -1011,7 +1019,7 @@ void Monster_Damage(entity inflictor, entity attacker, float damage, float death
 
 	self.velocity += force * self.damageforcescale;
 
-	if(deathtype != DEATH_DROWN)
+	if(deathtype != DEATH_DROWN && take)
 	{
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, take, 200) / 16, self, attacker);
 		if (take > 50)

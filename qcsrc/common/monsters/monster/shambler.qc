@@ -210,6 +210,10 @@ float M_Shambler(float req)
 		{
 			return TRUE;
 		}
+		case MR_PAIN:
+		{
+			return TRUE;
+		}
 		case MR_DEATH:
 		{
 			self.frame = shambler_anim_death;

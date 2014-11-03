@@ -112,6 +112,10 @@ float M_Scrag(float req)
 		{
 			return TRUE;
 		}
+		case MR_PAIN:
+		{
+			return TRUE;
+		}
 		case MR_DEATH:
 		{
 			self.frame = scrag_anim_death;

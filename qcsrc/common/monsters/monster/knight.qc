@@ -134,6 +134,10 @@ float M_Zombie(float req)
 		{
 			return TRUE;
 		}
+		case MR_PAIN:
+		{
+			return TRUE;
+		}
 		case MR_DEATH:
 		{
 			self.armorvalue = autocvar_g_monsters_armor_blockpercent;

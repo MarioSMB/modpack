@@ -56,6 +56,10 @@ float M_Rottweiler(float req)
 		{
 			return TRUE;
 		}
+		case MR_PAIN:
+		{
+			return TRUE;
+		}
 		case MR_DEATH:
 		{
 			self.frame = (random() >= 0.5) ? rottweiler_anim_death1 : rottweiler_anim_death2;

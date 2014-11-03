@@ -316,6 +316,10 @@ float M_Ogre(float req)
 		{
 			return TRUE;
 		}
+		case MR_PAIN:
+		{
+			return TRUE;
+		}
 		case MR_DEATH:
 		{
 			self.frame = ((random() >= 0.5) ? ogre_anim_death1 : ogre_anim_death2);

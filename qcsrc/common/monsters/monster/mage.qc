@@ -333,8 +333,11 @@ float M_Mage_Attack(float attack_type)
 
 void spawnfunc_monster_mage() { Monster_Spawn(MON_MAGE); }
 
+// extra monsters contains original shalrath
+#ifndef MONSTERS_EXTRA
 // compatibility with old spawns
 void spawnfunc_monster_shalrath() { spawnfunc_monster_mage(); }
+#endif
 
 float M_Mage(float req)
 {
@@ -368,6 +371,10 @@ float M_Mage(float req)
 			if(random() < 0.5)
 				M_Mage_Defend_Shield();
 
+			return TRUE;
+		}
+		case MR_PAIN:
+		{
 			return TRUE;
 		}
 		case MR_DEATH:

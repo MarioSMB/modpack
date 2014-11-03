@@ -11,4 +11,6 @@
 #include "monster/spawn.qc"
 #include "monster/scrag.qc"
 #include "monster/rottweiler.qc"
+#include "monster/vore.qc"
+#include "monster/afrit.qc"
 #endif

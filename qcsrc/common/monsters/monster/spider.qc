@@ -125,6 +125,10 @@ float M_Spider(float req)
 		{
 			return TRUE;
 		}
+		case MR_PAIN:
+		{
+			return TRUE;
+		}
 		case MR_DEATH:
 		{
 			self.frame = spider_anim_attack;

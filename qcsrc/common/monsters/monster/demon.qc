@@ -85,6 +85,10 @@ float M_Demon(float req)
 		{
 			return TRUE;
 		}
+		case MR_PAIN:
+		{
+			return TRUE;
+		}
 		case MR_DEATH:
 		{
 			self.frame = demon_anim_death;

@@ -54,6 +54,10 @@ float M_Rotfish(float req)
 		{
 			return TRUE;
 		}
+		case MR_PAIN:
+		{
+			return TRUE;
+		}
 		case MR_DEATH:
 		{
 			self.frame = rotfish_anim_death;

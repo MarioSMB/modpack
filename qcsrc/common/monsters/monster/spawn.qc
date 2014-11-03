@@ -97,6 +97,10 @@ float M_Spawn(float req)
 				self.movetype = MOVETYPE_WALK;
 			return TRUE;
 		}
+		case MR_PAIN:
+		{
+			return TRUE;
+		}
 		case MR_DEATH:
 		{
 			// KABOOM!

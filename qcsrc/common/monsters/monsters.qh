@@ -3,6 +3,7 @@
 #define MR_THINK		  2 // (SERVER) logic to run every frame
 #define MR_DEATH		  3 // (SERVER) called when monster dies
 #define MR_PRECACHE		  4 // (SERVER) precaches models/sounds used by this monster
+#define MR_PAIN           5 // (SERVER) called when monster is damaged
 
 // functions
 entity get_monsterinfo(float id);

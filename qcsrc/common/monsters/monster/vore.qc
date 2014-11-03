@@ -1,132 +1,184 @@
 #ifdef REGISTER_MONSTER
 REGISTER_MONSTER(
-/* MON_##id   */ ZOMBIE,
-/* functions  */ M_Zombie, M_Zombie_Attack,
-/* spawnflags */ MON_FLAG_MELEE,
-/* mins,maxs  */ '-18 -18 -25', '18 18 47',
-/* model      */ "zombie.dpm",
-/* netname    */ "zombie",
-/* fullname   */ _("Zombie")
+/* MON_##id   */ VORE,
+/* functions  */ M_Vore, M_Vore_Attack,
+/* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RANGED,
+/* mins,maxs  */ '-32 -32 -24', '32 32 32',
+/* model      */ "shalrath.mdl",
+/* netname    */ "vore",
+/* fullname   */ _("Vore")
 );
 
 #else
 #ifdef SVQC
-float autocvar_g_monster_zombie_health;
-float autocvar_g_monster_zombie_attack_melee_damage;
-float autocvar_g_monster_zombie_attack_melee_delay;
-float autocvar_g_monster_zombie_attack_leap_damage;
-float autocvar_g_monster_zombie_attack_leap_force;
-float autocvar_g_monster_zombie_attack_leap_speed;
-float autocvar_g_monster_zombie_attack_leap_delay;
-float autocvar_g_monster_zombie_speed_stop;
-float autocvar_g_monster_zombie_speed_run;
-float autocvar_g_monster_zombie_speed_walk;
+float autocvar_g_monster_vore_health;
+float autocvar_g_monster_vore_attack_spike_damage;
+float autocvar_g_monster_vore_attack_spike_radius;
+float autocvar_g_monster_vore_attack_spike_delay;
+float autocvar_g_monster_vore_attack_spike_accel;
+float autocvar_g_monster_vore_attack_spike_decel;
+float autocvar_g_monster_vore_attack_spike_turnrate;
+float autocvar_g_monster_vore_attack_spike_speed_max;
+float autocvar_g_monster_vore_attack_spike_smart;
+float autocvar_g_monster_vore_attack_spike_smart_trace_min;
+float autocvar_g_monster_vore_attack_spike_smart_trace_max;
+float autocvar_g_monster_vore_attack_spike_smart_mindist;
+float autocvar_g_monster_vore_attack_melee_damage;
+float autocvar_g_monster_vore_attack_melee_delay;
+float autocvar_g_monster_vore_speed_stop;
+float autocvar_g_monster_vore_speed_run;
+float autocvar_g_monster_vore_speed_walk;
 
-const float zombie_anim_attackleap			= 0;
-const float zombie_anim_attackrun1			= 1;
-const float zombie_anim_attackrun2			= 2;
-const float zombie_anim_attackrun3			= 3;
-const float zombie_anim_attackstanding1		= 4;
-const float zombie_anim_attackstanding2		= 5;
-const float zombie_anim_attackstanding3		= 6;
-const float zombie_anim_blockend			= 7;
-const float zombie_anim_blockstart			= 8;
-const float zombie_anim_deathback1			= 9;
-const float zombie_anim_deathback2			= 10;
-const float zombie_anim_deathback3			= 11;
-const float zombie_anim_deathfront1			= 12;
-const float zombie_anim_deathfront2			= 13;
-const float zombie_anim_deathfront3			= 14;
-const float zombie_anim_deathleft1			= 15;
-const float zombie_anim_deathleft2			= 16;
-const float zombie_anim_deathright1			= 17;
-const float zombie_anim_deathright2			= 18;
-const float zombie_anim_idle				= 19;
-const float zombie_anim_painback1			= 20;
-const float zombie_anim_painback2			= 21;
-const float zombie_anim_painfront1			= 22;
-const float zombie_anim_painfront2			= 23;
-const float zombie_anim_runbackwards		= 24;
-const float zombie_anim_runbackwardsleft	= 25;
-const float zombie_anim_runbackwardsright	= 26;
-const float zombie_anim_runforward			= 27;
-const float zombie_anim_runforwardleft		= 28;
-const float zombie_anim_runforwardright		= 29;
-const float zombie_anim_spawn				= 30;
+const float vore_anim_attack	= 0;
+const float vore_anim_pain		= 1;
+const float vore_anim_death		= 2;
+const float vore_anim_walk		= 3;
 
-void M_Zombie_Attack_Leap_Touch()
+.entity vore_spike;
+
+void M_Vore_Attack_Spike_Explode()
 {
-	if (self.health <= 0)
-		return;
+	self.event_damage = func_null;
 
-	vector angles_face;
+	sound(self, CH_SHOTS, W_Sound("grenade_impact"), VOL_BASE, ATTEN_NORM);
 
-	if(other.takedamage)
+	self.realowner.vore_spike = world;
+
+	pointparticles(particleeffectnum("explosion_small"), self.origin, '0 0 0', 1);
+	RadiusDamage (self, self.realowner, (autocvar_g_monster_vore_attack_spike_damage), (autocvar_g_monster_vore_attack_spike_damage) * 0.5, (autocvar_g_monster_vore_attack_spike_radius), world, 0, DEATH_MONSTER_VORE, other);
+
+	remove (self);
+}
+
+void M_Vore_Attack_Spike_Touch()
+{
+	PROJECTILE_TOUCH;
+
+	M_Vore_Attack_Spike_Explode();
+}
+
+// copied from W_Seeker_Think
+void M_Vore_Attack_Spike_Think()
+{
+	entity e;
+	vector desireddir, olddir, newdir, eorg;
+	float turnrate;
+	float dist;
+	float spd;
+
+	if (time > self.ltime || self.enemy.health <= 0 || self.owner.health <= 0)
 	{
-		angles_face = vectoangles(self.moveto - self.origin);
-		angles_face = normalize(angles_face) * (autocvar_g_monster_zombie_attack_leap_force);
-		Damage(other, self, self, (autocvar_g_monster_zombie_attack_leap_damage) * MONSTER_SKILLMOD(self), DEATH_MONSTER_ZOMBIE_JUMP, other.origin, angles_face);
-		self.touch = Monster_Touch; // instantly turn it off to stop damage spam
+		self.projectiledeathtype |= HITTYPE_SPLASH;
+		M_Vore_Attack_Spike_Explode();
 	}
 
-	if (trace_dphitcontents)
-		self.touch = Monster_Touch;
+	spd = vlen(self.velocity);
+	spd = bound(
+		spd - (autocvar_g_monster_vore_attack_spike_decel) * frametime,
+		(autocvar_g_monster_vore_attack_spike_speed_max),
+		spd + (autocvar_g_monster_vore_attack_spike_accel) * frametime
+	);
+
+	if (self.enemy != world)
+		if (self.enemy.takedamage != DAMAGE_AIM || self.enemy.deadflag != DEAD_NO)
+			self.enemy = world;
+
+	if (self.enemy != world)
+	{
+		e				= self.enemy;
+		eorg			= 0.5 * (e.absmin + e.absmax);
+		turnrate		= (autocvar_g_monster_vore_attack_spike_turnrate); // how fast to turn
+		desireddir		= normalize(eorg - self.origin);
+		olddir			= normalize(self.velocity); // get my current direction
+		dist			= vlen(eorg - self.origin);
+
+		// Do evasive maneuvers for world objects? ( this should be a cpu hog. :P )
+		if ((autocvar_g_monster_vore_attack_spike_smart) && (dist > (autocvar_g_monster_vore_attack_spike_smart_mindist)))
+		{
+			// Is it a better idea (shorter distance) to trace to the target itself?
+			if ( vlen(self.origin + olddir * self.wait) < dist)
+				traceline(self.origin, self.origin + olddir * self.wait, FALSE, self);
+			else
+				traceline(self.origin, eorg, FALSE, self);
+
+			// Setup adaptive tracelength
+			self.wait = bound((autocvar_g_monster_vore_attack_spike_smart_trace_min), vlen(self.origin - trace_endpos), self.wait = (autocvar_g_monster_vore_attack_spike_smart_trace_max));
+
+			// Calc how important it is that we turn and add this to the desierd (enemy) dir.
+			desireddir = normalize(((trace_plane_normal * (1 - trace_fraction)) + (desireddir * trace_fraction)) * 0.5);
+		}
+
+		newdir = normalize(olddir + desireddir * turnrate); // take the average of the 2 directions; not the best method but simple & easy
+		self.velocity = newdir * spd; // make me fly in the new direction at my flight speed
+	}
+	else
+		dist = 0;
+
+	///////////////
+
+	//self.angles = vectoangles(self.velocity);			// turn model in the new flight direction
+	self.nextthink = time;// + 0.05; // csqc projectiles
+	UpdateCSQCProjectile(self);
 }
 
-void M_Zombie_Defend_Block_End()
+void M_Vore_Attack_Spike()
 {
-	if(self.health <= 0)
-		return;
+	entity missile;
+	vector dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
 
-	self.frame = zombie_anim_blockend;
-	self.armorvalue = autocvar_g_monsters_armor_blockpercent;
+	makevectors(self.angles);
+
+	missile = spawn ();
+	missile.owner = missile.realowner = self;
+	missile.think = M_Vore_Attack_Spike_Think;
+	missile.ltime = time + 7;
+	missile.nextthink = time;
+	missile.solid = SOLID_BBOX;
+	missile.movetype = MOVETYPE_FLYMISSILE;
+	missile.flags = FL_PROJECTILE;
+	setorigin(missile, self.origin + v_forward * 14 + '0 0 30' + v_right * -14);
+	setsize (missile, '0 0 0', '0 0 0');
+	missile.velocity = dir * 400;
+	missile.avelocity = '300 300 300';
+	missile.enemy = self.enemy;
+	missile.touch = M_Vore_Attack_Spike_Touch;
+
+	self.vore_spike = missile;
+
+	CSQCProjectile(missile, TRUE, PROJECTILE_MAGE_SPIKE, TRUE);
 }
 
-float M_Zombie_Defend_Block()
-{
-	self.frame = zombie_anim_blockstart;
-	self.armorvalue = 0.9;
-	self.state = MONSTER_ATTACK_MELEE; // freeze monster
-	self.attack_finished_single = time + 2.1;
-
-	defer(2, M_Zombie_Defend_Block_End);
-
-	return TRUE;
-}
-
-float M_Zombie_Attack(float attack_type)
+float M_Vore_Attack(float attack_type)
 {
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			float rand = random(), chosen_anim;
-
-			if(rand < 0.33)
-				chosen_anim = zombie_anim_attackstanding1;
-			else if(rand < 0.66)
-				chosen_anim = zombie_anim_attackstanding2;
-			else
-				chosen_anim = zombie_anim_attackstanding3;
-
-			if(random() < 0.3 && self.health < 75 && self.enemy.health > 10)
-				return M_Zombie_Defend_Block();
-
-			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_zombie_attack_melee_damage), chosen_anim, self.attack_range, (autocvar_g_monster_zombie_attack_melee_delay), DEATH_MONSTER_ZOMBIE_MELEE, TRUE);
+			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_vore_attack_melee_damage), vore_anim_attack, self.attack_range, (autocvar_g_monster_vore_attack_melee_delay), DEATH_MONSTER_VORE_MELEE, TRUE);
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			makevectors(self.angles);
-			return Monster_Attack_Leap(zombie_anim_attackleap, M_Zombie_Attack_Leap_Touch, v_forward * (autocvar_g_monster_zombie_attack_leap_speed) + '0 0 200', (autocvar_g_monster_zombie_attack_leap_delay));
+			if(!self.vore_spike)
+			{
+				self.frame = vore_anim_attack;
+				self.attack_finished_single = time + (autocvar_g_monster_vore_attack_spike_delay);
+				Monster_Delay(1, 0, 0.2, M_Vore_Attack_Spike);
+				return TRUE;
+			}
+
+			return (self.vore_spike) ? TRUE : FALSE;
 		}
 	}
 
 	return FALSE;
 }
 
-void spawnfunc_monster_zombie() { Monster_Spawn(MON_ZOMBIE); }
+void spawnfunc_monster_vore() { Monster_Spawn(MON_VORE); }
 
-float M_Zombie(float req)
+// compatibility with old spawns
+void spawnfunc_monster_shalrath() { spawnfunc_monster_vore(); }
+
+float M_Vore(float req)
 {
 	switch(req)
 	{
@@ -134,39 +186,37 @@ float M_Zombie(float req)
 		{
 			return TRUE;
 		}
+		case MR_PAIN:
+		{
+			return TRUE;
+		}
 		case MR_DEATH:
 		{
-			self.armorvalue = autocvar_g_monsters_armor_blockpercent;
-			self.frame = ((random() > 0.5) ? zombie_anim_deathback1 : zombie_anim_deathfront1);
+			self.frame = vore_anim_death;
 			return TRUE;
 		}
 		case MR_SETUP:
 		{
-			if(!self.health) self.health = (autocvar_g_monster_zombie_health);
-			if(!self.speed) { self.speed = (autocvar_g_monster_zombie_speed_walk); }
-			if(!self.speed2) { self.speed2 = (autocvar_g_monster_zombie_speed_run); }
-			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_zombie_speed_stop); }
+			if(!self.health) self.health = (autocvar_g_monster_vore_health);
+			if(!self.speed) { self.speed = (autocvar_g_monster_vore_speed_walk); }
+			if(!self.speed2) { self.speed2 = (autocvar_g_monster_vore_speed_run); }
+			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_vore_speed_stop); }
 
-			self.m_anim_walk = zombie_anim_runforward;
-			self.m_anim_run = zombie_anim_runforward;
-			self.m_anim_idle = zombie_anim_idle;
+			self.m_anim_walk = vore_anim_walk;
+			self.m_anim_run = vore_anim_walk;
+			self.m_anim_idle = vore_anim_walk;
 
-			if(self.spawnflags & MONSTERFLAG_NORESPAWN)
-				self.spawnflags &= ~MONSTERFLAG_NORESPAWN; // zombies always respawn
-
-			self.spawnflags |= MONSTER_RESPAWN_DEATHPOINT;
-
-			self.monster_loot = spawnfunc_item_health_medium;
-			self.frame = zombie_anim_spawn;
-			self.spawn_time = time + 2.1;
-			self.spawnshieldtime = self.spawn_time;
-			self.respawntime = 0.2;
+			self.monster_loot = spawnfunc_ammo_cells;
+			self.weapon = WEP_UZI;
+			self.frame = vore_anim_walk;
 
 			return TRUE;
 		}
 		case MR_PRECACHE:
 		{
-			precache_model("models/monsters/zombie.dpm");
+			precache_model("models/monsters/shalrath.mdl");
+			precache_sound (W_Sound("grenade_impact"));
+			precache_sound (W_Sound("tagexp1"));
 			return TRUE;
 		}
 	}

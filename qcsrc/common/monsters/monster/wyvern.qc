@@ -107,6 +107,10 @@ float M_Wyvern(float req)
 		{
 			return TRUE;
 		}
+		case MR_PAIN:
+		{
+			return TRUE;
+		}
 		case MR_DEATH:
 		{
 			self.frame = wyvern_anim_death;
