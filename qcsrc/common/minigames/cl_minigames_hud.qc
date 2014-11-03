@@ -284,8 +284,8 @@ void HUD_MinigameMenu_ClickInvite()
 		entity prev = self;
 		for(i = 0; i < maxclients; ++i)
 		{
-			if(player_localnum != i && playerslots[i] && GetPlayerName(i) != "" &&
-				!findfloat(world,minigame_playerslot,i+1) )
+			if ( player_localnum != i && playerslots[i] && GetPlayerName(i) != "" &&
+				!findfloat(world,minigame_playerslot,i+1) && playerslots[i].ping )
 			{
 				e = HUD_MinigameMenu_SpawnSubEntry(
 					strzone(GetPlayerName(i)), HUD_MinigameMenu_ClickInvite_Entry,
