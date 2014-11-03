@@ -36,7 +36,7 @@ const float MON_FLAG_MELEE = 1024;
 // =====================
 
 // enable for testing
-//#define MONSTERS_EXTRA
+#define MONSTERS_EXTRA
 
 float m_null(float dummy);
 void register_monster(float id, float(float) func, float(float) attackfunc, float monsterflags, vector min_s, vector max_s, string modelname, string shortname, string mname);

@@ -13,4 +13,5 @@
 #include "monster/rottweiler.qc"
 #include "monster/vore.qc"
 #include "monster/afrit.qc"
+#include "monster/enforcer.qc"
 #endif
