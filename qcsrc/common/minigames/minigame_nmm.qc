@@ -1,9 +1,10 @@
 
-const float NMM_TURN_PLACE = 0x0100;
-const float NMM_TURN_MOVE  = 0x0200;
-const float NMM_TURN_FLY   = 0x0400;
-const float NMM_TURN_TAKE  = 0x0800;
-const float NMM_TURN_WIN   = 0x1000;
+const float NMM_TURN_PLACE = 0x0100; // player has to place a piece on the board
+const float NMM_TURN_MOVE  = 0x0200; // player has to move a piece by one tile
+const float NMM_TURN_FLY   = 0x0400; // player has to move a piece anywhere
+const float NMM_TURN_TAKE  = 0x0800; // player has to take a non-mill piece
+const float NMM_TURN_TAKEANY=0x1000; // combine with NMM_TURN_TAKE, can take mill pieces
+const float NMM_TURN_WIN   = 0x2000; // player has won
 const float NMM_TURN_TYPE  = 0xff00;
 const float NMM_TURN_TEAM1 = 0x0001;
 const float NMM_TURN_TEAM2 = 0x0002;
@@ -309,7 +310,8 @@ float minigame_event_nmm(entity minigame, string event, ...)
 				}
 			}
 			
-			float npieces = nmm_count_pieces(minigame,e.team % 2 + 1,NMM_PIECE_HOME|NMM_PIECE_BOARD);
+			float nextteam = e.team % 2 + 1;
+			float npieces = nmm_count_pieces(minigame,nextteam,NMM_PIECE_HOME|NMM_PIECE_BOARD);
 			
 			if ( npieces < 3 )
 			{
@@ -321,10 +323,19 @@ float minigame_event_nmm(entity minigame, string event, ...)
 				if ( !(minigame.minigame_flags & NMM_TURN_TAKE) && nmm_in_mill(tile) )
 				{
 					minigame.minigame_flags = NMM_TURN_TAKE|e.team;
+					float takemill = NMM_TURN_TAKEANY;
+					entity f = world;
+					while ( ( f = findentity(f,owner,minigame) ) )
+						if ( f.classname == "minigame_nmm_tile" && f.nmm_tile_piece  &&
+								f.nmm_tile_piece.team == nextteam && !nmm_in_mill(f) )
+						{
+							takemill = 0;
+							break;
+						}
+					minigame.minigame_flags |= takemill;
 				}
 				else
 				{
-					float nextteam = e.team % 2 + 1;
 					if ( nmm_find_piece(world,minigame,nextteam,NMM_PIECE_HOME) )
 						minigame.minigame_flags = NMM_TURN_PLACE|nextteam;
 					else if ( npieces == 3 )
@@ -370,6 +381,46 @@ entity nmm_get_tile(string id)
 	return world;
 }
 
+// whether the given tile is a valid selection
+float nmm_valid_selection(entity tile)
+{
+	if ( ( tile.owner.minigame_flags & NMM_TURN_TEAM ) != minigame_self.team )
+		return 0; // not our turn
+	if ( tile.owner.minigame_flags & NMM_TURN_PLACE )
+		return !tile.nmm_tile_piece; // need to put a piece on an empty spot
+	if ( tile.owner.minigame_flags & NMM_TURN_MOVE )
+	{
+		if ( tile.nmm_tile_piece && tile.nmm_tile_piece.team == minigame_self.team &&
+				nmm_tile_canmove(tile) )
+			return 1; //  movable tile
+		if ( nmm_fromtile ) // valid destination
+			return !tile.nmm_tile_piece && nmm_tile_adjacent(nmm_fromtile,tile);
+		return 0;
+	}
+	if ( tile.owner.minigame_flags & NMM_TURN_FLY )
+	{
+		if ( nmm_fromtile )
+			return !tile.nmm_tile_piece;
+		else
+			return tile.nmm_tile_piece && tile.nmm_tile_piece.team == minigame_self.team;
+	}
+	if ( tile.owner.minigame_flags & NMM_TURN_TAKE )
+		return tile.nmm_tile_piece && tile.nmm_tile_piece.team != minigame_self.team &&
+			( (tile.owner.minigame_flags & NMM_TURN_TAKEANY) || !nmm_in_mill(tile) );
+	return 0;
+}
+
+// whether it should highlight valid tile selections
+float nmm_draw_avaliable(entity tile)
+{
+	if ( ( tile.owner.minigame_flags & NMM_TURN_TEAM ) != minigame_self.team )
+		return 0;
+	if ( (tile.owner.minigame_flags & NMM_TURN_TAKE) )
+		return 1;
+	if ( (tile.owner.minigame_flags & (NMM_TURN_FLY|NMM_TURN_MOVE)) && nmm_fromtile )
+		return !tile.nmm_tile_piece;
+	return 0;
+}
 
 void minigame_hud_board_nmm(vector pos, vector mySize)
 {
@@ -392,15 +443,7 @@ void minigame_hud_board_nmm(vector pos, vector mySize)
 				minigame_drawpic_centered( tile_pos, minigame_texture("nmm/tile_active"),
 					tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
 			}
-			else if ( nmm_fromtile && !e.nmm_tile_piece  )
-			{
-				if ( (e.owner.minigame_flags & NMM_TURN_FLY) || nmm_tile_adjacent(e,nmm_fromtile) )
-					minigame_drawpic_centered( tile_pos, minigame_texture("nmm/tile_available"),
-						tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
-			}
-			else if ( e.owner.minigame_flags == (NMM_TURN_TAKE|minigame_self.team) && 
-				e.nmm_tile_piece &&
-				e.nmm_tile_piece.team != minigame_self.team && !nmm_in_mill(e) )
+			else if ( nmm_draw_avaliable(e) && nmm_valid_selection(e) )
 			{
 				minigame_drawpic_centered( tile_pos, minigame_texture("nmm/tile_available"),
 					tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
@@ -512,34 +555,6 @@ void minigame_hud_status_nmm(vector pos, vector mySize)
 				'1 1 1'*piece_light, panel_fg_alpha, DRAWFLAG_NORMAL );
 		}
 	}
-}
-
-float nmm_valid_selection(entity tile)
-{
-	if ( ( tile.owner.minigame_flags & NMM_TURN_TEAM ) != minigame_self.team )
-		return 0; // not our turn
-	if ( tile.owner.minigame_flags & NMM_TURN_PLACE )
-		return !tile.nmm_tile_piece; // need to put a piece on an empty spot
-	if ( tile.owner.minigame_flags & NMM_TURN_MOVE )
-	{
-		if ( tile.nmm_tile_piece && tile.nmm_tile_piece.team == minigame_self.team &&
-				nmm_tile_canmove(tile) )
-			return 1; //  movable tile
-		if ( nmm_fromtile ) // valid destination
-			return !tile.nmm_tile_piece && nmm_tile_adjacent(nmm_fromtile,tile);
-		return 0;
-	}
-	if ( tile.owner.minigame_flags & NMM_TURN_FLY )
-	{
-		if ( nmm_fromtile )
-			return !tile.nmm_tile_piece;
-		else
-			return tile.nmm_tile_piece && tile.nmm_tile_piece.team == minigame_self.team;
-	}
-	if ( tile.owner.minigame_flags & NMM_TURN_TAKE )
-		return tile.nmm_tile_piece && tile.nmm_tile_piece.team != minigame_self.team &&
-			!nmm_in_mill(tile);
-	return 0;
 }
 
 void nmm_make_move(entity minigame)
