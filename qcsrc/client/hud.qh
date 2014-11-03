@@ -350,14 +350,16 @@ panel_bg_border_str = cvar_string(strcat("hud_panel_", panel.panel_name, "_bg_bo
 HUD_Panel_GetBorder() \
 } ENDS_WITH_CURLY_BRACE
 
+#define NOTIFY_MAX_ENTRIES 10
+#define NOTIFY_ICON_MARGIN 0.02
 
-#define KN_MAX_ENTRIES 10
+float notify_index;
+float notify_count;
+float notify_times[NOTIFY_MAX_ENTRIES];
+string notify_attackers[NOTIFY_MAX_ENTRIES];
+string notify_victims[NOTIFY_MAX_ENTRIES];
+string notify_icons[NOTIFY_MAX_ENTRIES];
 
-float kn_index;
-float notify_times[KN_MAX_ENTRIES];
-string notify_icon[KN_MAX_ENTRIES];
-string notify_attackers[KN_MAX_ENTRIES];
-string notify_victims[KN_MAX_ENTRIES];
 void HUD_Notify_Push(string icon, string attacker, string victim);
 
 var void HUD_ModIcons_GameType(vector pos, vector size);

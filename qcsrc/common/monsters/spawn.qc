@@ -52,7 +52,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 		e.angles = spawnedby.angles;
 	}
 	
-       // initialise checks if monster is valid
+	// Monster_Spawn checks if monster is valid
 	entity oldself = self;
 	self = e;
 	Monster_Spawn(monster_id);

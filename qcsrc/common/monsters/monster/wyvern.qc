@@ -94,14 +94,20 @@ float M_Wyvern_Attack(float attack_type)
 
 void spawnfunc_monster_wyvern() { Monster_Spawn(MON_WYVERN); }
 
+#ifndef MONSTERS_EXTRA
 // compatibility with old spawns
 void spawnfunc_monster_wizard() { spawnfunc_monster_wyvern(); }
+#endif // extra monsters include original wizard
 
 float M_Wyvern(float req)
 {
 	switch(req)
 	{
 		case MR_THINK:
+		{
+			return TRUE;
+		}
+		case MR_PAIN:
 		{
 			return TRUE;
 		}

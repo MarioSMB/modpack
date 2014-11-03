@@ -184,6 +184,8 @@ void PutObserverInServer (void)
 		ClientData_Touch(oldenemy);
 	
     self.hud = HUD_NORMAL;
+
+    if(IS_PLAYER(self)) { pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1); }
 	
 	if(autocvar_g_observer_glowtrails)
 		CSQCModel_UnlinkEntity();
@@ -633,6 +635,9 @@ void PutClientInServer (void)
 		entity spawnevent = spawn();
 		spawnevent.owner = self;
 		Net_LinkEntity(spawnevent, FALSE, 0.5, SpawnEvent_Send);
+
+		// Cut off any still running player sounds.
+		stopsound(self, CH_PLAYER_SINGLE);
 
 		self.model = "";
 		FixPlayermodel();
@@ -1385,6 +1390,8 @@ void ClientDisconnect (void)
 	entity oldenemy = self.enemy;
 	self.enemy = world;
 	if(oldenemy) { ClientData_Touch(oldenemy); }
+
+	if(IS_PLAYER(self)) { pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1); }
 
 	PlayerStats_AddGlobalInfo(self);
 

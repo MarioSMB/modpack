@@ -4,3 +4,14 @@
 #include "monster/wyvern.qc"
 #include "monster/shambler.qc"
 #include "monster/creeper.qc"
+#ifdef MONSTERS_EXTRA
+#include "monster/demon.qc"
+#include "monster/rotfish.qc"
+#include "monster/ogre.qc"
+#include "monster/spawn.qc"
+#include "monster/scrag.qc"
+#include "monster/rottweiler.qc"
+#include "monster/vore.qc"
+#include "monster/afrit.qc"
+#include "monster/enforcer.qc"
+#endif

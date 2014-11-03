@@ -1697,148 +1697,154 @@ void HUD_HealthArmor(void)
 
 void HUD_Notify_Push(string icon, string attacker, string victim)
 {
-	if(icon != "")
+	if (icon == "")
+		return;
+
+	++notify_count;
+	--notify_index;
+
+	if (notify_index == -1)
+		notify_index = NOTIFY_MAX_ENTRIES-1;
+
+	// Free old strings
+	if (notify_attackers[notify_index])
+		strunzone(notify_attackers[notify_index]);
+
+	if (notify_victims[notify_index])
+		strunzone(notify_victims[notify_index]);
+
+	if (notify_icons[notify_index])
+		strunzone(notify_icons[notify_index]);
+
+	// Allocate new strings
+	if (victim != "")
 	{
-		--kn_index;
-		if (kn_index == -1) { kn_index = KN_MAX_ENTRIES-1; }
-		notify_times[kn_index] = time;
-
-		// icon
-		if(notify_icon[kn_index]) { strunzone(notify_icon[kn_index]); }
-		notify_icon[kn_index] = strzone(icon);
-
-		// attacker
-		if(notify_attackers[kn_index]) { strunzone(notify_attackers[kn_index]); }
-		notify_attackers[kn_index] = strzone(attacker);
-
-		// victim
-		if(notify_victims[kn_index]) { strunzone(notify_victims[kn_index]); }
-		notify_victims[kn_index] = strzone(victim);
+		notify_attackers[notify_index] = strzone(attacker);
+		notify_victims[notify_index] = strzone(victim);
 	}
+	else
+	{
+		// In case of a notification without a victim, the attacker
+		// is displayed on the victim's side. Instead of special
+		// treatment later on, we can simply switch them here.
+		notify_attackers[notify_index] = string_null;
+		notify_victims[notify_index] = strzone(attacker);
+	}
+
+	notify_icons[notify_index] = strzone(icon);
+	notify_times[notify_index] = time;
 }
 
 void HUD_Notify(void)
 {
-	if(!autocvar__hud_configure)
-	{
-		if(!autocvar_hud_panel_notify) return;
-	}
+	if (!autocvar__hud_configure)
+		if (!autocvar_hud_panel_notify)
+			return;
 
 	HUD_Panel_UpdateCvars();
-	vector pos, mySize;
-	pos = panel_pos;
-	mySize = panel_size;
-
 	HUD_Panel_DrawBg(1);
-	if(panel_bg_padding)
+
+	if (!autocvar__hud_configure)
+		if (notify_count == 0)
+			return;
+
+	vector pos, size;
+	pos  = panel_pos;
+	size = panel_size;
+
+	if (panel_bg_padding)
 	{
-		pos += '1 1 0' * panel_bg_padding;
-		mySize -= '2 2 0' * panel_bg_padding;
+		pos  += '1 1 0' * panel_bg_padding;
+		size -= '2 2 0' * panel_bg_padding;
 	}
 
-	float entries, height;
-	entries = bound(1, floor(KN_MAX_ENTRIES * mySize_y/mySize_x), KN_MAX_ENTRIES);
-	height = mySize_y/entries;
+	float fade_start = max(0, autocvar_hud_panel_notify_time);
+	float fade_time = max(0, autocvar_hud_panel_notify_fadetime);
+	float icon_aspect = max(1, autocvar_hud_panel_notify_icon_aspect);
 
-	vector fontsize;
-	float fontheight = height * autocvar_hud_panel_notify_fontsize;
-	fontsize = '0.5 0.5 0' * fontheight;
+	float entry_count = bound(1, floor(NOTIFY_MAX_ENTRIES * size_y / size_x), NOTIFY_MAX_ENTRIES);
+	float entry_height = size_y / entry_count;
 
-	float a;
-	float when;
-	when = autocvar_hud_panel_notify_time;
-	float fadetime;
-	fadetime = autocvar_hud_panel_notify_fadetime;
+	float panel_width_half = size_x * 0.5;
+	float icon_width_half = entry_height * icon_aspect / 2;
+	float name_maxwidth = panel_width_half - icon_width_half - size_x * NOTIFY_ICON_MARGIN;
 
-	vector pos_attacker, pos_victim, pos_icon;
-	float width_attacker;
+	vector font_size = '0.5 0.5 0' * entry_height * autocvar_hud_panel_notify_fontsize;
+	vector icon_size = (eX * icon_aspect + eY) * entry_height;
+	vector icon_left = eX * (panel_width_half - icon_width_half);
+	vector attacker_right = eX * name_maxwidth;
+	vector victim_left = eX * (size_x - name_maxwidth);
+
+	vector attacker_pos, victim_pos, icon_pos;
 	string attacker, victim, icon;
+	float i, j, count, step, limit, alpha;
 
-	float i, j, step, limit;
-	if(autocvar_hud_panel_notify_flip) //order items from the top down
+	if (autocvar_hud_panel_notify_flip)
 	{
+		// Order items from the top down
 		i = 0;
 		step = +1;
-		limit = entries;
+		limit = entry_count;
 	}
-	else //order items from the bottom up
+	else
 	{
-		i = entries - 1;
+		// Order items from the bottom up
+		i = entry_count - 1;
 		step = -1;
 		limit = -1;
 	}
 
-	for(j = kn_index;  i != limit;  i += step, ++j)
+	for (j = notify_index, count = 0; i != limit; i += step, ++j, ++count)
 	{
 		if(autocvar__hud_configure)
 		{
-			if (step == +1)
-				a = i;
-			else // inverse order
-				a = entries - 1 - i;
-			attacker = textShortenToWidth(sprintf(_("Player %d"), a+1), 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-			victim = textShortenToWidth(sprintf(_("Player %d"), a+2), 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-			icon = strcat("weapon", get_weaponinfo(WEP_FIRST + mod(floor(a*2.4), WEP_LAST)).netname);
-			a = bound(0, (when - a) / 4, 1);
-			goto hud_config_notifyprint;
+			attacker = sprintf(_("Player %d"), count + 1);
+			victim = sprintf(_("Player %d"), count + 2);
+			icon = strcat("weapon", get_weaponinfo(min(WEP_FIRST + count * 2, WEP_LAST)).netname);
+			alpha = bound(0, 1.2 - count / entry_count, 1);
 		}
 		else
 		{
-			if (j == KN_MAX_ENTRIES)
+			if (j == NOTIFY_MAX_ENTRIES)
 				j = 0;
 
-			if(notify_times[j] + when > time)
-				a = 1;
-			else if(fadetime)
+			if (notify_times[j] + fade_start > time)
+				alpha = 1;
+			else if (fade_time != 0)
 			{
-				a = bound(0, (notify_times[j] + when + fadetime - time) / fadetime, 1);
-				if(!a)
-				{
+				alpha = bound(0, (notify_times[j] + fade_start + fade_time - time) / fade_time, 1);
+				if (alpha == 0)
 					break;
-				}
 			}
 			else
-			{
 				break;
-			}
 
 			attacker = notify_attackers[j];
 			victim = notify_victims[j];
-			icon = notify_icon[j];
+			icon = notify_icons[j];
 		}
 
-		//type = notify_deathtype[j];
-		//w = DEATH_WEAPONOF(type);
-
-		if(icon != "")
+		if (icon != "" && victim != "")
 		{
-			if((attacker != "") && (victim == ""))
-			{
-				// Y [used by] X
-				attacker = textShortenToWidth(attacker, 0.73 * mySize_x - height, fontsize, stringwidth_colors);
-				pos_attacker = pos + eX * (0.27 * mySize_x + height) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
-				pos_icon = pos + eX * 0.25 * mySize_x - eX * height + eY * i * height;
+			vector name_top = eY * (i * entry_height + 0.5 * (entry_height - font_size_y));
 
-				drawpic_aspect_skin(pos_icon, icon, '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-			}
-			else if((attacker != "") && (victim != ""))
-			{
-				// X [did action to] Y
-				attacker = textShortenToWidth(attacker, 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-				victim = textShortenToWidth(victim, 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-:hud_config_notifyprint
-				width_attacker = stringwidth(attacker, TRUE, fontsize);
-				pos_attacker = pos + eX * (0.48 * mySize_x - height - width_attacker) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
-				pos_victim = pos + eX * (0.52 * mySize_x + height) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
-				pos_icon = pos + eX * 0.5 * mySize_x - eX * height + eY * i * height;
+			icon_pos = pos + icon_left + eY * i * entry_height;
+			drawpic_aspect_skin(icon_pos, icon, icon_size, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 
-				drawpic_aspect_skin(pos_icon, icon, '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_victim, victim, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			victim = textShortenToWidth(victim, name_maxwidth, font_size, stringwidth_colors);
+			victim_pos = pos + victim_left + name_top;
+			drawcolorcodedstring(victim_pos, victim, font_size, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+
+			if (attacker != "")
+			{
+				attacker = textShortenToWidth(attacker, name_maxwidth, font_size, stringwidth_colors);
+				attacker_pos = pos + attacker_right - eX * stringwidth(attacker, TRUE, font_size) + name_top;
+				drawcolorcodedstring(attacker_pos, attacker, font_size, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 			}
 		}
 	}
+
+	notify_count = count;
 }
 
 // Timer (#5)

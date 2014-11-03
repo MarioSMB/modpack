@@ -83,6 +83,10 @@ float M_Creeper(float req)
 			if(self.health > 0 && time > self.attack_finished_single) { self.colormod = '1 1 1'; }
 			return TRUE;
 		}
+		case MR_PAIN:
+		{
+			return TRUE;
+		}
 		case MR_DEATH:
 		{
 			self.frame = creeper_anim_die;
