@@ -431,9 +431,18 @@ void minigame_hud_board_nmm(vector pos, vector mySize)
 			if ( e.classname == "minigame_player" && 
 					e.team == (active_minigame.minigame_flags & NMM_TURN_TEAM) )
 				playername = GetPlayerName(e.minigame_playerslot-1);
-		minigame_drawcolorcodedstring_wrapped(mySize_x,pos+eY*(mySize_y-winfs_y)/2,
-			sprintf("%s^7 won the game!",playername), winfs, panel_fg_alpha, 
-			DRAWFLAG_NORMAL, 0.5);
+		
+		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
+		vector win_sz;
+		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
+			sprintf("%s^7 won the game!",playername), 
+			winfs, 0, DRAWFLAG_NORMAL, 0.5);
+		
+		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
+		
+		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
+			sprintf("%s^7 won the game!",playername), 
+			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
 }
 
@@ -458,6 +467,14 @@ void minigame_hud_status_nmm(vector pos, vector mySize)
 	vector mypos;
 	float piece_light = 1;
 	entity e = world;
+	
+	mypos = pos;
+	if ( (active_minigame.minigame_flags&NMM_TURN_TEAM) == 2 )
+		mypos_y  += player_fontsize_y + ts_y;
+	drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
+	mypos_y += player_fontsize_y;
+	drawfill(mypos,eX*mySize_x+eY*piece_sz_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
+	
 	FOREACH_MINIGAME_ENTITY(e)
 	{
 		if ( e.classname == "minigame_player" )
