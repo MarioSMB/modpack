@@ -53,7 +53,7 @@ void initialize_minigames()
 		minig.minigame_hud_status = minigame_hud_status_##name; \
 		minig.minigame_event = minigame_event_##name; \
 		if ( !last_minig ) minigame_descriptors = minig; \
-		else last_minig.chain = minig; \
+		else last_minig.list_next = minig; \
 		last_minig = minig;
 		
 	REGISTERED_MINIGAMES

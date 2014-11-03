@@ -85,13 +85,13 @@ void HUD_MinigameMenu_InsertEntry(entity new, entity prev)
 		return;
 	}
 	
-	new.owner = prev;
-	new.chain = prev.chain;
-	if ( prev.chain )
-		prev.chain.owner = new;
+	new.list_prev = prev;
+	new.list_next = prev.list_next;
+	if ( prev.list_next )
+		prev.list_next.list_prev = new;
 	else
 		HUD_MinigameMenu_last_entry = new;
-	prev.chain = new;
+	prev.list_next = new;
 	
 }
 
@@ -121,15 +121,15 @@ void HUD_MinigameMenu_EraseEntry ( entity e )
 		HUD_MinigameMenu_Click(e);
 	}
 	
-	if ( e.owner )
-		e.owner.chain = e.chain;
+	if ( e.list_prev )
+		e.list_prev.list_next = e.list_next;
 	else
-		HUD_MinigameMenu_entries = e.chain;
+		HUD_MinigameMenu_entries = e.list_next;
 				
-	if ( e.chain )
-		e.chain.owner = e.owner;
+	if ( e.list_next )
+		e.list_next.list_prev = e.list_prev;
 	else
-		HUD_MinigameMenu_last_entry = e.owner;
+		HUD_MinigameMenu_last_entry = e.list_prev;
 	
 	if ( HUD_MinigameMenu_activeitem == e )
 		HUD_MinigameMenu_activeitem = world;
@@ -179,19 +179,19 @@ float HUD_MinigameMenu_Click_ExpandCollapse(string collapse_classname)
 				HUD_MinigameMenu_activeitem.classname == collapse_classname )
 			HUD_MinigameMenu_activeitem = world;
 		self.flags &= ~2;
-		for ( e = self.chain; e != world && e.classname == collapse_classname; e = self.chain )
+		for ( e = self.list_next; e != world && e.classname == collapse_classname; e = self.list_next )
 		{
 			if ( e.flags & 2 )
 				HUD_MinigameMenu_Click(e);
-			self.chain = e.chain;
+			self.list_next = e.list_next;
 			remove(e);
 		}
-		if ( self.chain )
-			self.chain.owner = self;
+		if ( self.list_next )
+			self.list_next.list_prev = self;
 	}
 	else
 	{
-		for ( e = HUD_MinigameMenu_entries; e != world; e = e.chain )
+		for ( e = HUD_MinigameMenu_entries; e != world; e = e.list_next )
 		{
 			if ( e.flags & 2 && e.origin_x == self.origin_x)
 				HUD_MinigameMenu_Click(e);
@@ -212,7 +212,7 @@ void HUD_MinigameMenu_ClickCreate()
 		entity e;
 		entity curr;
 		entity prev = self;
-		for ( e = minigame_descriptors; e != world; e = e.chain )
+		for ( e = minigame_descriptors; e != world; e = e.list_next )
 		{
 			curr = HUD_MinigameMenu_SpawnSubEntry(
 				e.message, HUD_MinigameMenu_ClickCreate_Entry,
@@ -336,7 +336,7 @@ void HUD_MinigameMenu_Close()
 		entity e, p;
 		for ( e = HUD_MinigameMenu_entries; e != world; e = p )
 		{
-			p = e.chain;
+			p = e.list_next;
 			remove(e);
 		}
 		HUD_MinigameMenu_entries = world;
@@ -354,14 +354,14 @@ void HUD_MinigameMenu_CurrentButton()
 	entity e;
 	if ( active_minigame )
 	{
-		for ( e = HUD_MinigameMenu_last_entry; e != world; e = e.owner )
+		for ( e = HUD_MinigameMenu_last_entry; e != world; e = e.list_prev )
 			if ( e.classname == "hud_minigamemenu_exit" )
 			{
 				entity currb = HUD_MinigameMenu_SpawnEntry(
 					"Current Game", '0 0 0', hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_ClickCurrentGame );
 				currb.classname = "hud_minigamemenu_current";
 				currb.model = strzone(minigame_texture(strcat(active_minigame.descriptor.netname,"/icon")));
-				HUD_MinigameMenu_InsertEntry(currb,e.owner);
+				HUD_MinigameMenu_InsertEntry(currb,e.list_prev);
 				HUD_MinigameMenu_Click(currb);
 				return;
 			}
@@ -369,12 +369,12 @@ void HUD_MinigameMenu_CurrentButton()
 	else 
 	{
 		entity p;
-		for ( e = HUD_MinigameMenu_last_entry; e != world; e = p.owner )
+		for ( e = HUD_MinigameMenu_last_entry; e != world; e = p.list_prev )
 		{
 			p = e;
 			if ( e.classname == "hud_minigamemenu_current" )
 			{
-				p = e.chain;
+				p = e.list_next;
 				if ( !p )
 					p = HUD_MinigameMenu_last_entry;
 				HUD_MinigameMenu_EraseEntry(e);
@@ -425,7 +425,7 @@ void HUD_MinigameMenu_MouseInput()
 	
 	HUD_MinigameMenu_activeitem = world;
 	vector sz;
-	for ( e = HUD_MinigameMenu_entries; e != world; e = e.chain )
+	for ( e = HUD_MinigameMenu_entries; e != world; e = e.list_next )
 	{
 		sz = eX*panel_size_x + eY*e.size_y;
 		if ( e.model )
@@ -480,7 +480,7 @@ void HUD_MinigameMenu ()
 	vector offset;
 	float itemh;
 	vector imgsz = '22 22 0'; // NOTE: if changed, edit where HUD_MinigameMenu_activeitem is selected
-	for ( e = HUD_MinigameMenu_entries; e != world; e = e.chain )
+	for ( e = HUD_MinigameMenu_entries; e != world; e = e.list_next )
 	{
 		color = e.colormod;
 		
@@ -599,16 +599,16 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 			}
 			if ( nPrimary == K_UPARROW || nPrimary == K_KP_UPARROW )
 			{
-				if ( HUD_MinigameMenu_activeitem && HUD_MinigameMenu_activeitem.owner )
-					HUD_MinigameMenu_activeitem = HUD_MinigameMenu_activeitem.owner;
+				if ( HUD_MinigameMenu_activeitem && HUD_MinigameMenu_activeitem.list_prev )
+					HUD_MinigameMenu_activeitem = HUD_MinigameMenu_activeitem.list_prev;
 				else
 					HUD_MinigameMenu_activeitem = HUD_MinigameMenu_last_entry;
 				return true;
 			}
 			else if ( nPrimary == K_DOWNARROW || nPrimary == K_KP_DOWNARROW )
 			{
-				if ( HUD_MinigameMenu_activeitem && HUD_MinigameMenu_activeitem.chain )
-					HUD_MinigameMenu_activeitem = HUD_MinigameMenu_activeitem.chain;
+				if ( HUD_MinigameMenu_activeitem && HUD_MinigameMenu_activeitem.list_next )
+					HUD_MinigameMenu_activeitem = HUD_MinigameMenu_activeitem.list_next;
 				else
 					HUD_MinigameMenu_activeitem = HUD_MinigameMenu_entries;
 				return true;

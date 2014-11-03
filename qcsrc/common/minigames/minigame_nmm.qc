@@ -225,7 +225,7 @@ float minigame_event_nmm(entity minigame, string event, ...)
 	{
 		float n = 0;
 		entity e;
-		for ( e = minigame.minigame_players; e; e = e.chain )
+		for ( e = minigame.minigame_players; e; e = e.list_next )
 			n++;
 		if ( n >= 2 )
 			return 0;

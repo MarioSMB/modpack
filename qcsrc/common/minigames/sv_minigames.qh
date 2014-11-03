@@ -43,7 +43,7 @@ entity minigame_find_player(entity client);
 /// For players: Minigame being played
 .entity active_minigame;
 
-/// For minigame sessions: chain of players
+/// For minigame sessions: list of players
 /// For minigame_player: client entity
 .entity minigame_players;
 

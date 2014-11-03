@@ -1,9 +1,14 @@
 entity minigame_descriptors;
 
+// previous node in a doubly linked list
+.entity list_prev;
+// next node in a linked list
+.entity list_next;
+
 entity minigame_get_descriptor(string id)
 {
 	entity e;
-	for ( e = minigame_descriptors; e != world; e = e.chain )
+	for ( e = minigame_descriptors; e != world; e = e.list_next )
 		if ( e.netname == id )
 			return e;
 	return world;
