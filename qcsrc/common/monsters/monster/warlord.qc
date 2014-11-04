@@ -92,7 +92,6 @@ float M_Warlord(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model("models/monsters/warlord.mdl");
 			return TRUE;
 		}
 	}

@@ -126,7 +126,6 @@ float M_Spawn(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model("models/monsters/tarbaby.mdl");
 			return TRUE;
 		}
 	}

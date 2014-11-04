@@ -149,7 +149,6 @@ float M_Afrit(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model("models/monsters/afrit.mdl");
 			return TRUE;
 		}
 	}

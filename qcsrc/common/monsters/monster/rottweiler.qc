@@ -83,7 +83,6 @@ float M_Rottweiler(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model("models/monsters/dog.mdl");
 			return TRUE;
 		}
 	}

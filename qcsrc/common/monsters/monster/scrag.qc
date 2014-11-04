@@ -142,7 +142,6 @@ float M_Scrag(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model("models/monsters/scrag.mdl");
 			return TRUE;
 		}
 	}

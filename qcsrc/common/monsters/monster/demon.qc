@@ -112,7 +112,6 @@ float M_Demon(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model("models/monsters/demon.mdl");
 			return TRUE;
 		}
 	}

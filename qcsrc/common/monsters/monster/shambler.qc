@@ -243,7 +243,6 @@ float M_Shambler(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model("models/monsters/shambler.mdl");
 			return TRUE;
 		}
 	}

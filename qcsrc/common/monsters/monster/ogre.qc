@@ -346,7 +346,6 @@ float M_Ogre(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model("models/monsters/ogre.mdl");
 			return TRUE;
 		}
 	}

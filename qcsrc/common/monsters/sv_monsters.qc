@@ -1144,6 +1144,9 @@ float Monster_Spawn(float mon_id)
 	if(!mon.monsterid) { return FALSE; } // invalid monster
 
 	if(!autocvar_g_monsters) { Monster_Remove(self); return FALSE; }
+
+	self.mdl = mon.model;
+	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED)) { precache_model(self.mdl); }
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED)) { MON_ACTION(mon_id, MR_PRECACHE); }
 	if(Monster_Appear_Check(self, mon_id)) { return TRUE; } // return true so the monster isn't removed
 
@@ -1162,7 +1165,7 @@ float Monster_Spawn(float mon_id)
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED)) // don't count re-spawning monsters either
 		monsters_total += 1;
 
-	setmodel(self, mon.model);
+	setmodel(self, self.mdl);
 	self.flags				= FL_MONSTER;
 	self.classname			= "monster";
 	self.takedamage			= DAMAGE_AIM;

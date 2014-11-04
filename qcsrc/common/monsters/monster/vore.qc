@@ -214,7 +214,6 @@ float M_Vore(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model("models/monsters/shalrath.mdl");
 			precache_sound (W_Sound("grenade_impact"));
 			precache_sound (W_Sound("tagexp1"));
 			return TRUE;
