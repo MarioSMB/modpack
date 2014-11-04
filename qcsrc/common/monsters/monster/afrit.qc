@@ -84,7 +84,8 @@ float M_Afrit_Attack(float attack_type)
 		case MONSTER_ATTACK_MELEE:
 		case MONSTER_ATTACK_RANGED:
 		{
-			self.attack_finished_single = time + 1.3;
+			self.attack_finished_single = time + 2;
+			self.anim_finished = time + 1.3;
 			self.frame = afrit_anim_attack;
 
 			Monster_Delay(2, 0.3, 0.7, M_Afrit_Attack_Fireball);

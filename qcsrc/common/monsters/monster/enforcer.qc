@@ -108,6 +108,7 @@ float M_Enforcer_Attack(float attack_type)
 		{
 			self.frame = enforcer_anim_attack;
 			self.attack_finished_single = time + 0.7;
+			self.anim_finished = time + 0.7 * autocvar_g_monster_enforcer_attack_plasma_shots;
 			self.state = MONSTER_ATTACK_RANGED;
 			Monster_Delay(autocvar_g_monster_enforcer_attack_plasma_shots - 1, 0.3, 0.4, M_Enforcer_Attack_Plasma);
 			return TRUE;

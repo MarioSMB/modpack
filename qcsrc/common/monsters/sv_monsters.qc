@@ -333,13 +333,13 @@ void Monster_Sound(.string samplefield, float sound_delay, float delaytoo, float
 // Monster attack handlers
 // =======================
 
-float Monster_Attack_Melee(entity targ, float damg, float anim, float er, float anim_finished, float deathtype, float dostop)
+float Monster_Attack_Melee(entity targ, float damg, float anim, float er, float animtime, float deathtype, float dostop)
 {
 	if(dostop) { self.state = MONSTER_ATTACK_MELEE; }
 
 	self.frame = anim;
 
-	if(anim_finished > 0) { self.attack_finished_single = time + anim_finished; }
+	if(animtime > 0) { self.anim_finished = time + animtime; }
 
 	monster_makevectors(targ);
 
@@ -373,7 +373,7 @@ float Monster_Attack_Leap_Check(vector vel)
 	return TRUE;
 }
 
-float Monster_Attack_Leap(float anm, void() touchfunc, vector vel, float anim_finished)
+float Monster_Attack_Leap(float anm, void() touchfunc, vector vel, float animtime)
 {
 	if(!Monster_Attack_Leap_Check(vel))
 		return FALSE;
@@ -385,7 +385,8 @@ float Monster_Attack_Leap(float anm, void() touchfunc, vector vel, float anim_fi
 	self.velocity = vel;
 	self.flags &= ~FL_ONGROUND;
 
-	self.attack_finished_single = time + anim_finished;
+	self.attack_finished_single = time + animtime;
+	self.anim_finished = self.attack_finished_single; // TODO: make these frame based
 
 	return TRUE;
 }
@@ -811,9 +812,9 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed, float manim_r
 		if((self.flags & FL_ONGROUND) || ((self.flags & FL_FLY) || (self.flags & FL_SWIM)))
 			Monster_CalculateVelocity(self, self.moveto, self.origin, TRUE, ((self.enemy) ? runspeed : walkspeed));
 
-		if(time > self.pain_finished)
+		if(time > self.pain_finished) // TODO: use anim_finished instead!
 		if(!self.state)
-		//if(time > self.attack_finished_single)
+		if(time > self.anim_finished)
 		if(vlen(self.velocity) > 10)
 			self.frame = ((self.enemy) ? manim_run : manim_walk);
 		else
@@ -828,7 +829,7 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed, float manim_r
 			self.target2 = e.target;
 
 		movelib_beak_simple(stpspeed);
-		//if(time > self.attack_finished_single)
+		if(time > self.anim_finished)
 		if(time > self.pain_finished)
 		if(!self.state)
 		if (vlen(self.velocity) <= 30)

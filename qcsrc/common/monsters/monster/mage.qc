@@ -243,6 +243,7 @@ void M_Mage_Defend_Heal()
 	{
 		self.frame = mage_anim_attack;
 		self.attack_finished_single = time + (autocvar_g_monster_mage_heal_delay);
+		self.anim_finished = time + 1.5;
 	}
 }
 
@@ -287,6 +288,7 @@ void M_Mage_Defend_Shield()
 	self.mage_shield_time = time + (autocvar_g_monster_mage_shield_time);
 	self.frame = mage_anim_attack;
 	self.attack_finished_single = time + 1;
+	self.anim_finished = time + 1;
 }
 
 float M_Mage_Attack(float attack_type)
@@ -316,6 +318,7 @@ float M_Mage_Attack(float attack_type)
 				{
 					self.frame = mage_anim_attack;
 					self.attack_finished_single = time + (autocvar_g_monster_mage_attack_spike_delay);
+					self.anim_finished = time + 1;
 					Monster_Delay(1, 0, 0.2, M_Mage_Attack_Spike);
 					return TRUE;
 				}

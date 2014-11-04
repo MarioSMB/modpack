@@ -77,10 +77,8 @@ float M_Scrag_Attack(float attack_type)
 		case MONSTER_ATTACK_MELEE:
 		case MONSTER_ATTACK_RANGED:
 		{
-			if(random() > 0.5)
-				self.attack_finished_single = time + 1.2;
-			else
-				self.attack_finished_single = time + 0.15;
+			self.attack_finished_single = time + (random() >= 0.5) ? 1.3 : 0.15;
+			self.anim_finished = self.attack_finished_single;
 
 			self.frame = scrag_anim_magic;
 

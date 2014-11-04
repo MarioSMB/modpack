@@ -59,6 +59,7 @@ void M_Shambler_Attack_Swing()
 	{
 		Monster_Delay(1, 0, 0.5, M_Shambler_Attack_Swing);
 		self.attack_finished_single += 0.5;
+		self.anim_finished = self.attack_finished_single;
 	}
 }
 
@@ -179,8 +180,9 @@ float M_Shambler_Attack(float attack_type)
 				self.frame = shambler_anim_smash;
 				Monster_Delay(1, 0, 0.7, M_Shambler_Attack_Smash);
 				self.attack_finished_single = time + 1.1;
+				self.anim_finished = time + 1.1;
 				self.state = MONSTER_ATTACK_MELEE; // kinda a melee attack
-				self.shambler_lastattack = time + 3;
+				self.shambler_lastattack = time + 3 + random() * 1.5;
 				return TRUE;
 			}
 			else if(randomness <= 0.1 && enemy_len >= autocvar_g_monster_shambler_attack_smash_range * 1.5) // small chance, don't want this spammed
@@ -188,7 +190,8 @@ float M_Shambler_Attack(float attack_type)
 				self.frame = shambler_anim_magic;
 				self.state = MONSTER_ATTACK_MELEE; // maybe we should rename this to something more general
 				self.attack_finished_single = time + 1.1;
-				self.shambler_lastattack = time + 3;
+				self.anim_finished = 1.1;
+				self.shambler_lastattack = time + 3 + random() * 1.5;
 				Monster_Delay(1, 0, 0.6, M_Shambler_Attack_Lightning);
 				return TRUE;
 			}

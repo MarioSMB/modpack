@@ -24,6 +24,7 @@ float monsters_killed;
 .string oldtarget2; // a copy of the original follow target string
 .float last_trace; // logic delay between target tracing
 .float last_enemycheck; // for checking enemy
+.float anim_finished; // will be phased out when we have proper animations system
 .float speed2; // run speed
 .float stopspeed;
 .float m_anim_run;

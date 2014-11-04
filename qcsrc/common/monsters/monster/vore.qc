@@ -162,6 +162,7 @@ float M_Vore_Attack(float attack_type)
 			{
 				self.frame = vore_anim_attack;
 				self.attack_finished_single = time + (autocvar_g_monster_vore_attack_spike_delay);
+				self.anim_finished = time + 1;
 				Monster_Delay(1, 0, 0.2, M_Vore_Attack_Spike);
 				return TRUE;
 			}
