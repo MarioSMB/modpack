@@ -22,7 +22,7 @@ void register_monster(float id, float(float) func, float(float) attackfunc, floa
 	e.spawnflags = monsterflags;
 	e.mins = min_s;
 	e.maxs = max_s;
-	e.model = strzone(strcat("models/monsters/", modelname));
+	e.model = strzone(strcat("models/monsters/", e.mdl));
 	bprint(e.mdl, "\n");
 }
 float m_null(float dummy) { return 0; }
