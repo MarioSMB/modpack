@@ -120,7 +120,7 @@ MUTATOR_HOOKFUNCTION(pb_PlayerUseKey)
 		while(head)
 		{
 			if(IS_PLAYER(head) || (IS_MONSTER(head) && ((get_monsterinfo(head.monsterid)).spawnflags & MON_FLAG_RIDE)))
-			if(SAME_TEAM(head, self) || autocvar_g_piggyback_ride_enemies)
+			if(SAME_TEAM(head, self) || autocvar_g_piggyback_ride_enemies || (IS_MONSTER(head) && head.realowner == self))
 			if(head != self)
 			if(!head.cvar_cl_nocarry)
 			if(head.deadflag == DEAD_NO)

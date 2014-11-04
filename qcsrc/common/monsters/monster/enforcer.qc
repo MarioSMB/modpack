@@ -129,6 +129,14 @@ float M_Enforcer(float req)
 		}
 		case MR_PAIN:
 		{
+			switch(floor(random() * 5))
+			{
+				default:
+				case 1: self.frame = enforcer_anim_pain1; self.pain_finished = time + 0.3; break;
+				case 2: self.frame = enforcer_anim_pain2; self.pain_finished = time + 0.4; break;
+				case 3: self.frame = enforcer_anim_pain3; self.pain_finished = time + 0.7; break;
+				case 4: self.frame = enforcer_anim_pain4; self.pain_finished = time + 1; break;
+			}
 			return TRUE;
 		}
 		case MR_DEATH:

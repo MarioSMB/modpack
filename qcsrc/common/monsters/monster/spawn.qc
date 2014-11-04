@@ -62,10 +62,6 @@ float M_Spawn_Attack(float attack_type)
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
-		{
-			// spawn has no melee attack
-			return FALSE;
-		}
 		case MONSTER_ATTACK_RANGED:
 		{
 			makevectors(self.angles);
@@ -114,6 +110,7 @@ float M_Spawn(float req)
 			if(!self.speed) { self.speed = (autocvar_g_monster_spawn_speed_walk); }
 			if(!self.speed2) { self.speed2 = (autocvar_g_monster_spawn_speed_run); }
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_spawn_speed_stop); }
+			if(!self.attack_range) { self.attack_range = autocvar_g_monsters_target_range * 0.8; } // bounce from almost any distance
 
 			self.m_anim_walk = spawn_anim_walk;
 			self.m_anim_run = spawn_anim_run;

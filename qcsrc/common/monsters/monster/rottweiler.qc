@@ -58,6 +58,11 @@ float M_Rottweiler(float req)
 		}
 		case MR_PAIN:
 		{
+			if(random() <= 0.3)
+			{
+				self.pain_finished = time + 1.5;
+				self.frame = rottweiler_anim_pain;
+			}
 			return TRUE;
 		}
 		case MR_DEATH:

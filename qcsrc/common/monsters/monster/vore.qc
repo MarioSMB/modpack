@@ -166,7 +166,7 @@ float M_Vore_Attack(float attack_type)
 				return TRUE;
 			}
 
-			return (self.vore_spike) ? TRUE : FALSE;
+			return (self.vore_spike) ? 2 : FALSE;
 		}
 	}
 
@@ -188,6 +188,8 @@ float M_Vore(float req)
 		}
 		case MR_PAIN:
 		{
+			self.pain_finished = time + 0.4;
+			self.frame = vore_anim_pain;
 			return TRUE;
 		}
 		case MR_DEATH:

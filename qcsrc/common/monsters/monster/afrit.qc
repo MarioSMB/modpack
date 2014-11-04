@@ -25,11 +25,10 @@ float autocvar_g_monster_afrit_speed_walk;
 const float afrit_anim_sleep	= 0;
 const float afrit_anim_getup	= 1;
 const float afrit_anim_fly		= 2;
-const float afrit_anim_pain1	= 3;
-const float afrit_anim_pain2	= 4;
-const float afrit_anim_attack	= 5;
-const float afrit_anim_die1		= 6;
-const float afrit_anim_die2		= 7;
+const float afrit_anim_pain		= 3;
+const float afrit_anim_attack	= 4;
+const float afrit_anim_die1		= 5;
+const float afrit_anim_die2		= 6;
 
 void M_Afrit_Attack_Fireball_Explode()
 {
@@ -122,6 +121,11 @@ float M_Afrit(float req)
 		{
 			if(frag_deathtype == DEATH_FIRE || frag_deathtype == DEATH_LAVA)
 				frag_damage = 0; // afrit doesn't burn
+			else
+			{
+				self.pain_finished = time + 0.6;
+				self.frame = afrit_anim_pain;
+			}
 			return TRUE;
 		}
 		case MR_DEATH:

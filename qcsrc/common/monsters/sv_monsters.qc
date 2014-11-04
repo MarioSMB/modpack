@@ -80,6 +80,11 @@ float Monster_ValidTarget(entity mon, entity player)
 		return FALSE;
 	}
 
+	traceline(mon.origin + self.view_ofs, player.origin, 0, mon);
+
+	if((trace_fraction < 1) && (trace_ent != player))
+		return FALSE;
+
 	if(autocvar_g_monsters_target_infront || (mon.spawnflags & MONSTERFLAG_INFRONT))
 	if(mon.enemy != player)
 	{
@@ -393,14 +398,14 @@ void Monster_Attack_Check(entity e, entity targ)
 	) { return; }
 
 	if(vlen(targ.origin - e.origin) <= e.attack_range)
-	if(e.monster_attackfunc(MONSTER_ATTACK_MELEE))
+	if(e.monster_attackfunc(MONSTER_ATTACK_MELEE) == 1)
 	{
 		Monster_Sound(monstersound_melee, 0, FALSE, CH_VOICE);
 		return;
 	}
 
 	if(vlen(targ.origin - e.origin) > e.attack_range)
-	if(e.monster_attackfunc(MONSTER_ATTACK_RANGED))
+	if(e.monster_attackfunc(MONSTER_ATTACK_RANGED) == 1)
 	{
 		Monster_Sound(monstersound_ranged, 0, FALSE, CH_VOICE);
 		return;
@@ -986,8 +991,8 @@ void Monster_Damage(entity inflictor, entity attacker, float damage, float death
 	if(self.frozen && deathtype != DEATH_KILL && deathtype != DEATH_NADE_ICE_FREEZE)
 		return;
 
-	if(time < self.pain_finished && deathtype != DEATH_KILL)
-		return;
+	//if(time < self.pain_finished && deathtype != DEATH_KILL)
+		//return;
 
 	if(time < self.spawnshieldtime && deathtype != DEATH_KILL)
 		return;
@@ -1009,7 +1014,10 @@ void Monster_Damage(entity inflictor, entity attacker, float damage, float death
 	take = damage_take;
 
 	if(take)
+	{
 		self.health -= take;
+		Monster_Sound(monstersound_pain, 1.2, TRUE, CH_PAIN);
+	}
 
 	if(self.sprite)
 		WaypointSprite_UpdateHealth(self.sprite, self.health);
@@ -1086,6 +1094,11 @@ float Monster_Spawn_Setup()
 
 	// ensure some basic needs are met
 	if(!self.health) { self.health = 100; }
+	if(!self.armorvalue) { self.armorvalue = bound(0.2, 0.5 * MONSTER_SKILLMOD(self), 0.9); }
+	if(!self.target_range) { self.target_range = autocvar_g_monsters_target_range; }
+	if(!self.respawntime) { self.respawntime = autocvar_g_monsters_respawn_delay; }
+	if(!self.monster_moveflags) { self.monster_moveflags = MONSTER_MOVE_WANDER; }
+	if(!self.attack_range) { self.attack_range = autocvar_g_monsters_attack_range; }
 
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
@@ -1103,9 +1116,6 @@ float Monster_Spawn_Setup()
 
 	if(IS_PLAYER(self.monster_follow))
 		self.effects |= EF_DIMLIGHT;
-
-	if(!self.attack_range)
-		self.attack_range = autocvar_g_monsters_attack_range;
 		
 	if(!self.wander_delay) { self.wander_delay = 2; }
 	if(!self.wander_distance) { self.wander_distance = 600; }
@@ -1222,11 +1232,6 @@ float Monster_Spawn(float mon_id)
 	setsize(self, mon.mins * self.scale, mon.maxs * self.scale);
 
 	self.ticrate = bound(sys_frametime, ((!self.ticrate) ? autocvar_g_monsters_think_delay : self.ticrate), 60);
-
-	if(!self.armorvalue) { self.armorvalue = bound(0.2, 0.5 * MONSTER_SKILLMOD(self), 0.9); }
-	if(!self.target_range) { self.target_range = autocvar_g_monsters_target_range; }
-	if(!self.respawntime) { self.respawntime = autocvar_g_monsters_respawn_delay; }
-	if(!self.monster_moveflags) { self.monster_moveflags = MONSTER_MOVE_WANDER; }
 
 	if(!self.noalign)
 	{

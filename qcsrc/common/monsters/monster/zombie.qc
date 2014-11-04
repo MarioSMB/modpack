@@ -140,6 +140,8 @@ float M_Zombie(float req)
 		}
 		case MR_PAIN:
 		{
+			self.pain_finished = time + 0.34;
+			self.frame = (random() >= 0.5) ? zombie_anim_painfront1 : zombie_anim_painfront2;
 			return TRUE;
 		}
 		case MR_DEATH:

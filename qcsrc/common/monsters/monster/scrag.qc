@@ -114,6 +114,8 @@ float M_Scrag(float req)
 		}
 		case MR_PAIN:
 		{
+			self.pain_finished = time + 0.3;
+			self.frame = scrag_anim_pain;
 			return TRUE;
 		}
 		case MR_DEATH:

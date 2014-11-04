@@ -280,7 +280,7 @@ float M_Ogre_Attack(float attack_type)
 				self.frame = ogre_anim_shoot;
 				self.state = MONSTER_ATTACK_RANGED;
 				Monster_Delay(2, 0.1, 0.4, M_Ogre_Attack_MachineGun);
-				return TRUE;
+				return 2;
 			}
 			entity meleetemp;
 			meleetemp = spawn();
@@ -318,6 +318,15 @@ float M_Ogre(float req)
 		}
 		case MR_PAIN:
 		{
+			switch(floor(random() * 6))
+			{
+				default:
+				case 1: self.frame = ogre_anim_pain1; self.pain_finished = time + 0.4; break;
+				case 2: self.frame = ogre_anim_pain2; self.pain_finished = time + 0.2; break;
+				case 3: self.frame = ogre_anim_pain3; self.pain_finished = time + 0.5; break;
+				case 4: self.frame = ogre_anim_pain4; self.pain_finished = time + 1.5; break;
+				case 5: self.frame = ogre_anim_pain5; self.pain_finished = time + 1.4; break;
+			}
 			return TRUE;
 		}
 		case MR_DEATH:

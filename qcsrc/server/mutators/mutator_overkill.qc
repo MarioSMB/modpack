@@ -221,6 +221,7 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 	if(autocvar_g_overkill_powerups_replace)
 	if(self.classname == "item_strength")
 	{
+		self.classname = "item_removing"; // avoid letting other mutators use it
 		entity wep = spawn();
 		setorigin(wep, self.origin);
 		wep.ok_item = TRUE;
@@ -234,6 +235,7 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 	if(autocvar_g_overkill_powerups_replace)
 	if(self.classname == "item_invincible")
 	{
+		self.classname = "item_removing"; // avoid letting other mutators use it
 		entity wep = spawn();
 		setorigin(wep, self.origin);
 		wep.ok_item = TRUE;
