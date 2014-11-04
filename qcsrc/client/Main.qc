@@ -81,6 +81,7 @@ void CSQC_Init(void)
 	localcmd("\nalias nobobbing \"cl_bob 0; cl_bob2 0; cl_followmodel 0; cl_leanmodel 0\"\n");
 	localcmd("\nalias quickmenu \"cl_cmd hud quickmenu\"\n");
 	localcmd("\nalias physics \"cmd physics ${* ?}\"\n");
+	if(getkeybind(K_F9) == "") { localcmd("\nbind f9 \"cl_cmd hud minigame\"\n"); }
 
 	//registercommand("hud_configure");
 	//registercommand("hud_save");
