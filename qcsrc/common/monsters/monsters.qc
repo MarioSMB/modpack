@@ -7,6 +7,8 @@ entity dummy_monster_info;
 void register_monster(float id, float(float) func, float(float) attackfunc, float monsterflags, vector min_s, vector max_s, string modelname, string shortname, string mname)
 {
 	entity e;
+	string noext = substring(modelname, 0, strlen(modelname) - 4);
+	string ext = substring(modelname, strlen(modelname) - 4, strlen(modelname));
 	monster_info[id - 1] = e = spawn();
 	e.classname = "monster_info";
 	e.monsterid = id;
@@ -15,10 +17,13 @@ void register_monster(float id, float(float) func, float(float) attackfunc, floa
 	e.monster_func = func;
 	e.monster_attackfunc = attackfunc;
 	e.mdl = modelname;
+	if(fexists(strcat("models/monsters/", noext, "_new", ext)))
+		e.mdl = strcat(noext, "_new", ext);
 	e.spawnflags = monsterflags;
 	e.mins = min_s;
 	e.maxs = max_s;
 	e.model = strzone(strcat("models/monsters/", modelname));
+	bprint(e.mdl, "\n");
 }
 float m_null(float dummy) { return 0; }
 void register_monsters_done()

@@ -127,8 +127,8 @@ entity Monster_FindTarget(entity mon)
 
 void monster_setupcolors(entity mon)
 {
-	if(IS_PLAYER(mon.monster_follow))
-		mon.colormap = mon.monster_follow.colormap;
+	if(IS_PLAYER(mon.realowner))
+		mon.colormap = mon.realowner.colormap;
 	else if(teamplay && mon.team)
 		mon.colormap = 1024 + (mon.team - 1) * 17;
 	else
@@ -599,7 +599,7 @@ void Monster_CalculateVelocity(entity mon, vector to, vector from, float turnrat
 {
 	float current_distance = vlen((('1 0 0' * to_x) + ('0 1 0' * to_y)) - (('1 0 0' * from_x) + ('0 1 0' * from_y))); // for the sake of this check, exclude Z axis
 	float initial_height = 0; //min(50, (targ_distance * tanh(20)));
-	float current_height = (initial_height * min(1, (current_distance / self.pass_distance)));
+	float current_height = (initial_height * min(1, (self.pass_distance) ? (current_distance / self.pass_distance) : current_distance));
 	//print("current_height = ", ftos(current_height), ", initial_height = ", ftos(initial_height), ".\n");
 
 	vector targpos;
@@ -849,7 +849,8 @@ void Monster_Remove(entity mon)
 {
 	if(!mon) { return; }
 
-	pointparticles(particleeffectnum("spawn_event_neutral"), mon.origin, '0 0 0', 1);
+	if(!MUTATOR_CALLHOOK(MonsterRemove))
+		pointparticles(particleeffectnum("spawn_event_neutral"), mon.origin, '0 0 0', 1);
 
 	if(mon.weaponentity) { remove(mon.weaponentity); }
 	if(mon.iceblock) { remove(mon.iceblock); }
@@ -966,6 +967,7 @@ void Monster_Dead(entity attacker, float gibbed)
 	self.reset			= func_null;
 	self.state			= 0;
 	self.attack_finished_single = 0;
+	self.effects = 0;
 
 	if(!((self.flags & FL_FLY) || (self.flags & FL_SWIM)))
 		self.velocity = '0 0 0';
@@ -1144,6 +1146,9 @@ float Monster_Spawn(float mon_id)
 	if(!mon.monsterid) { return FALSE; } // invalid monster
 
 	if(!autocvar_g_monsters) { Monster_Remove(self); return FALSE; }
+
+	self.mdl = mon.model;
+	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED)) { precache_model(self.mdl); }
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED)) { MON_ACTION(mon_id, MR_PRECACHE); }
 	if(Monster_Appear_Check(self, mon_id)) { return TRUE; } // return true so the monster isn't removed
 
@@ -1162,7 +1167,7 @@ float Monster_Spawn(float mon_id)
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED)) // don't count re-spawning monsters either
 		monsters_total += 1;
 
-	setmodel(self, mon.model);
+	setmodel(self, self.mdl);
 	self.flags				= FL_MONSTER;
 	self.classname			= "monster";
 	self.takedamage			= DAMAGE_AIM;

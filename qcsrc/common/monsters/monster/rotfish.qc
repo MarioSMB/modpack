@@ -82,7 +82,6 @@ float M_Rotfish(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model("models/monsters/fish.mdl");
 			return TRUE;
 		}
 	}

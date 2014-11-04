@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ SPIDER,
 /* functions  */ M_Spider, M_Spider_Attack,
-/* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RANGED,
+/* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RANGED | MON_FLAG_RIDE,
 /* mins,maxs  */ '-18 -18 -25', '18 18 30',
 /* model      */ "spider.dpm",
 /* netname    */ "spider",
@@ -153,7 +153,6 @@ float M_Spider(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model("models/monsters/spider.dpm");
 			precache_sound (W_Sound("electro_fire2"));
 			return TRUE;
 		}

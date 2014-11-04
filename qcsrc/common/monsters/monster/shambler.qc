@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ SHAMBLER,
 /* functions  */ M_Shambler, M_Shambler_Attack,
-/* spawnflags */ MONSTER_SIZE_BROKEN | MON_FLAG_SUPERMONSTER | MON_FLAG_MELEE | MON_FLAG_RANGED,
+/* spawnflags */ MONSTER_SIZE_BROKEN | MON_FLAG_SUPERMONSTER | MON_FLAG_MELEE | MON_FLAG_RANGED | MON_FLAG_RIDE,
 /* mins,maxs  */ '-41 -41 -31', '41 41 65',
 /* model      */ "shambler.mdl",
 /* netname    */ "shambler",
@@ -243,7 +243,6 @@ float M_Shambler(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model("models/monsters/shambler.mdl");
 			return TRUE;
 		}
 	}

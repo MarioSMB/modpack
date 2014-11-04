@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ ENFORCER,
 /* functions  */ M_Enforcer, M_Enforcer_Attack,
-/* spawnflags */ MON_FLAG_MELEE,
+/* spawnflags */ MON_FLAG_MELEE | MONSTER_SIZE_BROKEN,
 /* mins,maxs  */ '-16 -16 -24', '16 16 24',
 /* model      */ "enforcer.mdl",
 /* netname    */ "enforcer",
@@ -154,7 +154,6 @@ float M_Enforcer(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model("models/monsters/enforcer.mdl");
 			precache_sound(W_Sound("tag_impact"));
 			precache_sound(W_Sound("lasergun_fire"));
 			return TRUE;

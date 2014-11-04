@@ -170,7 +170,6 @@ float M_Zombie(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model("models/monsters/zombie.dpm");
 			return TRUE;
 		}
 	}

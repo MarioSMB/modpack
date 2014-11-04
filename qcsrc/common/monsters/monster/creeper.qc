@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ CREEPER,
 /* functions  */ M_Creeper, M_Creeper_Attack,
-/* spawnflags */ MON_FLAG_MELEE,
+/* spawnflags */ MON_FLAG_MELEE | MON_FLAG_RIDE,
 /* mins,maxs  */ '-18 -18 -25', '18 18 40',
 /* model      */ "creeper.dpm",
 /* netname    */ "creeper",
@@ -112,7 +112,6 @@ float M_Creeper(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model("models/monsters/creeper.dpm");
 			return TRUE;
 		}
 	}

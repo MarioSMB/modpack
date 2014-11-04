@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ WYVERN,
 /* functions  */ M_Wyvern, M_Wyvern_Attack,
-/* spawnflags */ MONSTER_TYPE_FLY | MONSTER_SIZE_BROKEN | MON_FLAG_RANGED,
+/* spawnflags */ MONSTER_TYPE_FLY | MONSTER_SIZE_BROKEN | MON_FLAG_RANGED | MON_FLAG_RIDE,
 /* mins,maxs  */ '-20 -20 -58', '20 20 20',
 /* model      */ "wizard.mdl",
 /* netname    */ "wyvern",
@@ -137,7 +137,6 @@ float M_Wyvern(float req)
 		}
 		case MR_PRECACHE:
 		{
-			precache_model("models/monsters/wizard.mdl");
 			return TRUE;
 		}
 	}
