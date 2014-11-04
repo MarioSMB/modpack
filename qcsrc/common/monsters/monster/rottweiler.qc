@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ ROTTWEILER,
 /* functions  */ M_Rottweiler, M_Rottweiler_Attack,
-/* spawnflags */ MON_FLAG_MELEE | MONSTER_SIZE_BROKEN,
+/* spawnflags */ MON_FLAG_MELEE | MONSTER_SIZE_BROKEN | MON_FLAG_RIDE,
 /* mins,maxs  */ '-16 -16 -24', '16 16 12',
 /* model      */ "dog.mdl",
 /* netname    */ "rottweiler",

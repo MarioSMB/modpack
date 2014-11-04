@@ -16,6 +16,7 @@ const float MONSTER_SIZE_BROKEN = 128; // TODO: remove when bad models are repla
 const float MON_FLAG_SUPERMONSTER = 256; // incredibly powerful monster
 const float MON_FLAG_RANGED = 512; // monster shoots projectiles
 const float MON_FLAG_MELEE = 1024;
+const float MON_FLAG_RIDE = 2048; // monster can be mounted
 
 // entity properties of monsterinfo
 .float monsterid; // MON_...

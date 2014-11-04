@@ -127,8 +127,8 @@ entity Monster_FindTarget(entity mon)
 
 void monster_setupcolors(entity mon)
 {
-	if(IS_PLAYER(mon.monster_follow))
-		mon.colormap = mon.monster_follow.colormap;
+	if(IS_PLAYER(mon.realowner))
+		mon.colormap = mon.realowner.colormap;
 	else if(teamplay && mon.team)
 		mon.colormap = 1024 + (mon.team - 1) * 17;
 	else
@@ -849,7 +849,8 @@ void Monster_Remove(entity mon)
 {
 	if(!mon) { return; }
 
-	pointparticles(particleeffectnum("spawn_event_neutral"), mon.origin, '0 0 0', 1);
+	if(!MUTATOR_CALLHOOK(MonsterRemove))
+		pointparticles(particleeffectnum("spawn_event_neutral"), mon.origin, '0 0 0', 1);
 
 	if(mon.weaponentity) { remove(mon.weaponentity); }
 	if(mon.iceblock) { remove(mon.iceblock); }
@@ -966,6 +967,7 @@ void Monster_Dead(entity attacker, float gibbed)
 	self.reset			= func_null;
 	self.state			= 0;
 	self.attack_finished_single = 0;
+	self.effects = 0;
 
 	if(!((self.flags & FL_FLY) || (self.flags & FL_SWIM)))
 		self.velocity = '0 0 0';

@@ -32,8 +32,9 @@ void pb_Attach(entity host, entity slave)
 	
 	RemoveGrapplingHook(slave);
 	
-	Send_Notification(NOTIF_ONE, slave, MSG_CENTER, CENTER_PIGGYBACK_RIDING, host.netname);
-	Send_Notification(NOTIF_ONE, host, MSG_CENTER, CENTER_PIGGYBACK_CARRYING, slave.netname);
+	Send_Notification(NOTIF_ONE, slave, MSG_CENTER, CENTER_PIGGYBACK_RIDING, (IS_MONSTER(host)) ? host.monster_name : host.netname);
+	if(IS_PLAYER(host))
+		Send_Notification(NOTIF_ONE, host, MSG_CENTER, CENTER_PIGGYBACK_CARRYING, slave.netname);
 }
 
 void pb_Detach(entity host)
@@ -61,7 +62,8 @@ void pb_Detach(entity host)
 			setorigin(slave, trace_endpos); // fix player glitching out of the world
 		
 		Kill_Notification(NOTIF_ONE, slave, MSG_CENTER_CPID, CPID_PIGGYBACK);
-		Kill_Notification(NOTIF_ONE, host, MSG_CENTER_CPID, CPID_PIGGYBACK);
+		if(IS_PLAYER(host))
+			Kill_Notification(NOTIF_ONE, host, MSG_CENTER_CPID, CPID_PIGGYBACK);
 	}
 	
 	host.piggybacker = world;
@@ -89,6 +91,7 @@ MUTATOR_HOOKFUNCTION(pb_MatchEnd)
 {
 	entity head;
 	FOR_EACH_PLAYER(head) { pb_Detach(head); }
+	FOR_EACH_MONSTER(head) { pb_Detach(head); }
 	return FALSE;
 }
 
@@ -116,7 +119,7 @@ MUTATOR_HOOKFUNCTION(pb_PlayerUseKey)
 		head = WarpZone_FindRadius(self.origin, autocvar_g_vehicles_enter_radius, TRUE);
 		while(head)
 		{
-			if(IS_PLAYER(head))
+			if(IS_PLAYER(head) || (IS_MONSTER(head) && ((get_monsterinfo(head.monsterid)).spawnflags & MON_FLAG_RIDE)))
 			if(SAME_TEAM(head, self) || autocvar_g_piggyback_ride_enemies)
 			if(head != self)
 			if(!head.cvar_cl_nocarry)
@@ -145,6 +148,16 @@ MUTATOR_HOOKFUNCTION(pb_PlayerUseKey)
 }
 
 MUTATOR_HOOKFUNCTION(pb_PlayerThink)
+{
+	if(BROKEN_PBREF(self)) { pb_Detach(self); }
+	
+	if(!self.pbent)
+		pb_FixPBEnt(self);
+
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(pb_MonsterThink)
 {
 	if(BROKEN_PBREF(self)) { pb_Detach(self); }
 	
@@ -225,10 +238,13 @@ MUTATOR_DEFINITION(mutator_piggyback)
 	MUTATOR_HOOK(MatchEnd, pb_MatchEnd, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerUseKey, pb_PlayerUseKey, CBC_ORDER_LAST);
 	MUTATOR_HOOK(PlayerPreThink, pb_PlayerThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MonsterMove, pb_MonsterThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(reset_map_players, pb_ResetMap, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(MakePlayerObserver, pb_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, pb_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, pb_PlayerDies, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MonsterDies, pb_PlayerDies, CBC_ORDER_ANY);
+	MUTATOR_HOOK(MonsterRemove, pb_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ItemTouch, pb_ItemTouch, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetCvars, pb_GetCvars, CBC_ORDER_ANY);
 

@@ -19,6 +19,8 @@ float monsters_killed;
 .float attack_range; // melee attack if closer, ranged attack if further away (TODO: separate ranged attack range?)
 .float spawn_time; // delay monster thinking until spawn animation has completed
 .float candrop; // toggle to allow disabling monster item drops
+.float monster_movestate; // will be phased out
+.float monster_moveflags;
 .string oldtarget2; // a copy of the original follow target string
 .float last_trace; // logic delay between target tracing
 .float last_enemycheck; // for checking enemy
@@ -66,7 +68,6 @@ const float MONSTERFLAG_SPAWNED = 16384; // flag for spawned monsters
 const float MONSTERFLAG_RESPAWNED = 32768; // flag for re-spawned monsters
 
 // compatibility with old maps (soon to be removed)
-#define monster_moveflags monster_movestate
 #define monster_lifetime lifetime
 #define monster_skill skill
 

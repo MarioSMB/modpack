@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ DEMON,
 /* functions  */ M_Demon, M_Demon_Attack,
-/* spawnflags */ MON_FLAG_MELEE | MONSTER_SIZE_BROKEN,
+/* spawnflags */ MON_FLAG_MELEE | MONSTER_SIZE_BROKEN | MON_FLAG_RIDE,
 /* mins,maxs  */ '-32 -32 -24', '32 32 24',
 /* model      */ "demon.mdl",
 /* netname    */ "demon",

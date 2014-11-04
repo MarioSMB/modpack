@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ SPAWN,
 /* functions  */ M_Spawn, M_Spawn_Attack,
-/* spawnflags */ MON_FLAG_MELEE,
+/* spawnflags */ MON_FLAG_MELEE | MONSTER_SIZE_BROKEN,
 /* mins,maxs  */ '-16 -16 -24', '16 16 16',
 /* model      */ "tarbaby.mdl",
 /* netname    */ "spawn",
