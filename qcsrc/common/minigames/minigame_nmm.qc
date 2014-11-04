@@ -19,6 +19,7 @@ const float NMM_PIECE_BOARD = 0x2; // placed on the board
 .string nmm_tile_hmill;
 .string nmm_tile_vmill;
 
+// build a string containing the indices of the tile to check for a horizontal mill
 string nmm_tile_build_hmill(entity tile)
 {
 	float number = minigame_tile_number(tile.netname);
@@ -44,6 +45,7 @@ string nmm_tile_build_hmill(entity tile)
 			minigame_tile_buildname(6,number) );
 }
 
+// build a string containing the indices of the tile to check for a vertical mill
 string nmm_tile_build_vmill(entity tile)
 {
 	float letter = minigame_tile_letter(tile.netname);
@@ -69,7 +71,10 @@ string nmm_tile_build_vmill(entity tile)
 			minigame_tile_buildname(letter,6) );
 }
 
-
+// Create an new tile
+// \param id       Tile index (eg: a1)
+// \param minig    Owner minigame instance 
+// \param distance Distance from adjacent tiles
 void nmm_spawn_tile(string id, entity minig, float distance)
 {
 	// TODO global variable + list_next for simpler tile loops
@@ -84,7 +89,11 @@ void nmm_spawn_tile(string id, entity minig, float distance)
 	e.nmm_tile_vmill = strzone(nmm_tile_build_vmill(e));
 }
 
-void nmm_spawn_tile_sqaure( entity minig, float offset, float skip )
+// Create a tile square and recursively create inner squares
+// \param minig    Owner minigame instance 
+// \param offset   Index offset (eg: 1 to start the square at b2, 0 at a1 etc.)
+// \param skip     Number of indices to skip between tiles (eg 1: a1, a3)
+void nmm_spawn_tile_square( entity minig, float offset, float skip )
 {
 	float letter = offset;
 	float number = offset;
@@ -102,9 +111,10 @@ void nmm_spawn_tile_sqaure( entity minig, float offset, float skip )
 	}
 	
 	if ( skip > 0 )
-		nmm_spawn_tile_sqaure(minig,offset+1,skip-1);
+		nmm_spawn_tile_square(minig,offset+1,skip-1);
 }
 
+// Remove tiles of a NMM minigame
 void nmm_kill_tiles(entity minig)
 {
 	entity e = world;
@@ -118,11 +128,13 @@ void nmm_kill_tiles(entity minig)
 		}
 }
 
+// Create the tiles of a NMM minigame
 void nmm_init_tiles(entity minig)
 {
-	nmm_spawn_tile_sqaure(minig,0,2);
+	nmm_spawn_tile_square(minig,0,2);
 }
 
+// Find a tile by its id
 entity nmm_find_tile(entity minig, string id)
 {
 	entity e = world;
@@ -132,7 +144,7 @@ entity nmm_find_tile(entity minig, string id)
 	return world;
 }
 
-// check whether two tiles are adjacent
+// Check whether two tiles are adjacent
 float nmm_tile_adjacent(entity tile1, entity tile2)
 {
 		
@@ -143,7 +155,7 @@ float nmm_tile_adjacent(entity tile1, entity tile2)
 		( dletter == 0 && ( dnumber == 1 || dnumber == tile1.nmm_tile_distance ) );
 }
 
-// returns 1 if there is at least 1 free adjacent tile
+// Returns 1 if there is at least 1 free adjacent tile
 float nmm_tile_canmove(entity tile)
 {
 	entity e = world;
@@ -156,6 +168,7 @@ float nmm_tile_canmove(entity tile)
 	return 0;
 }
 
+// Check if the given tile id appears in the string
 float nmm_in_mill_string(entity tile, string s)
 {
 	float argc = tokenize(s);
@@ -179,7 +192,7 @@ float nmm_in_mill(entity tile)
 
 
 #ifdef SVQC
-
+// Find a NMM piece matching some of the given flags and team number
 entity nmm_find_piece(entity start, entity minigame, float teamn, float pieceflags)
 {
 	entity e = start;
@@ -190,6 +203,7 @@ entity nmm_find_piece(entity start, entity minigame, float teamn, float piecefla
 	return world;
 }
 
+// Count NMM pieces matching flags and team number
 float nmm_count_pieces(entity minigame, float teamn, float pieceflags)
 {
 	float n = 0;
@@ -199,6 +213,7 @@ float nmm_count_pieces(entity minigame, float teamn, float pieceflags)
 	return n;
 }
 
+// required function, handle server side events
 float minigame_event_nmm(entity minigame, string event, ...)
 {
 	if ( event == "start" )
@@ -372,16 +387,6 @@ entity nmm_fromtile;
 vector nmm_boardpos;
 vector nmm_boardsize;
 
-
-entity nmm_get_tile(string id)
-{
-	entity e;
-	FOREACH_MINIGAME_ENTITY(e)
-		if ( e.classname == "minigame_nmm_tile" && e.netname == id )
-			return e;
-	return world;
-}
-
 // whether the given tile is a valid selection
 float nmm_valid_selection(entity tile)
 {
@@ -423,6 +428,7 @@ float nmm_draw_avaliable(entity tile)
 	return 0;
 }
 
+// Required function, draw the game board
 void minigame_hud_board_nmm(vector pos, vector mySize)
 {
 	minigame_hud_fitsqare(pos, mySize);
@@ -490,6 +496,7 @@ void minigame_hud_board_nmm(vector pos, vector mySize)
 	}
 }
 
+// Required function, draw the game status panel
 void minigame_hud_status_nmm(vector pos, vector mySize)
 {
 	HUD_Panel_DrawBg(1);
@@ -558,6 +565,7 @@ void minigame_hud_status_nmm(vector pos, vector mySize)
 	}
 }
 
+// Make the correct move
 void nmm_make_move(entity minigame)
 {
 	if ( nmm_currtile )
@@ -588,6 +596,7 @@ void nmm_make_move(entity minigame)
 		nmm_fromtile = world;
 }
 
+// Required function, handle client events
 float minigame_event_nmm(entity minigame, string event, ...)
 {
 	if ( event == "activate" )
@@ -607,7 +616,7 @@ float minigame_event_nmm(entity minigame, string event, ...)
 			case K_RIGHTARROW:
 			case K_KP_RIGHTARROW:
 				if ( ! nmm_currtile )
-					nmm_currtile = nmm_get_tile("a7");
+					nmm_currtile = nmm_find_tile(active_minigame,"a7");
 				else
 				{
 					string tileid = nmm_currtile.netname;
@@ -615,14 +624,14 @@ float minigame_event_nmm(entity minigame, string event, ...)
 					while ( !nmm_currtile )
 					{
 						tileid = minigame_relative_tile(tileid,1,0,7,7);
-						nmm_currtile = nmm_get_tile(tileid);
+						nmm_currtile = nmm_find_tile(active_minigame,tileid);
 					}
 				}
 				return 1;
 			case K_LEFTARROW:
 			case K_KP_LEFTARROW:
 				if ( ! nmm_currtile )
-					nmm_currtile = nmm_get_tile("g7");
+					nmm_currtile = nmm_find_tile(active_minigame,"g7");
 				else
 				{
 					string tileid = nmm_currtile.netname;
@@ -630,14 +639,14 @@ float minigame_event_nmm(entity minigame, string event, ...)
 					while ( !nmm_currtile )
 					{
 						tileid = minigame_relative_tile(tileid,-1,0,7,7);
-						nmm_currtile = nmm_get_tile(tileid);
+						nmm_currtile = nmm_find_tile(active_minigame,tileid);
 					}
 				}
 				return 1;
 			case K_UPARROW:
 			case K_KP_UPARROW:
 				if ( ! nmm_currtile )
-					nmm_currtile = nmm_get_tile("a1");
+					nmm_currtile = nmm_find_tile(active_minigame,"a1");
 				else
 				{
 					string tileid = nmm_currtile.netname;
@@ -645,14 +654,14 @@ float minigame_event_nmm(entity minigame, string event, ...)
 					while ( !nmm_currtile )
 					{
 						tileid = minigame_relative_tile(tileid,0,1,7,7);
-						nmm_currtile = nmm_get_tile(tileid);
+						nmm_currtile = nmm_find_tile(active_minigame,tileid);
 					}
 				}
 				return 1;
 			case K_DOWNARROW:
 			case K_KP_DOWNARROW:
 				if ( ! nmm_currtile )
-					nmm_currtile = nmm_get_tile("a7");
+					nmm_currtile = nmm_find_tile(active_minigame,"a7");
 				else
 				{
 					string tileid = nmm_currtile.netname;
@@ -660,7 +669,7 @@ float minigame_event_nmm(entity minigame, string event, ...)
 					while ( !nmm_currtile )
 					{
 						tileid = minigame_relative_tile(tileid,0,-1,7,7);
-						nmm_currtile = nmm_get_tile(tileid);
+						nmm_currtile = nmm_find_tile(active_minigame,tileid);
 					}
 				}
 				return 1;
