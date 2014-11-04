@@ -2,6 +2,7 @@ void player_clear_minigame(entity player)
 {
 	player.active_minigame = world;
 	player.movetype = MOVETYPE_FLY_WORLDONLY;
+	player.team_forced = 0;
 }
 
 void minigame_rmplayer(entity minigame_session, entity player)
@@ -149,8 +150,8 @@ float minigame_addplayer(entity minigame_session, entity player)
 			self = player;
 			PutObserverInServer();
 			self = e;
-			player.team_forced = -1;
 		}
+		player.team_forced = -1;
 		
 		minigame_resend(minigame_session);
 	}
@@ -343,7 +344,7 @@ void ClientCommand_minigame(float request, float argc, string command)
 	if (request == CMD_REQUEST_COMMAND )
 	{
 		string minig_cmd = argv(1);
-		if ( minig_cmd == "start" && argc > 2 )
+		if ( minig_cmd == "create" && argc > 2 )
 		{
 			entity minig = start_minigame(self, argv(2));
 			if ( minig )
@@ -415,7 +416,7 @@ void ClientCommand_minigame(float request, float argc, string command)
 		}
 	}
 	
-	sprint(self, "\nUsage:^3 cmd minigame start <minigame>\n");
+	sprint(self, "\nUsage:^3 cmd minigame create <minigame>\n");
 	sprint(self, "  Start a new minigame session\n");
 	sprint(self, "Usage:^3 cmd minigame join <session>\n");
 	sprint(self, "  Join an exising minigame session\n");

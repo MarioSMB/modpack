@@ -165,7 +165,7 @@ entity HUD_MinigameMenu_SpawnSubEntry(string s, void() click, string it_classnam
 // Click action for Create sub-entries
 void HUD_MinigameMenu_ClickCreate_Entry()
 {
-	localcmd(strcat("cmd minigame start ",self.netname,"\n"));
+	localcmd(strcat("cmd minigame create ",self.netname,"\n"));
 }
 
 // Helper click action for collapsible entries
