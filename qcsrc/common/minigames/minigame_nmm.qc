@@ -72,6 +72,7 @@ string nmm_tile_build_vmill(entity tile)
 
 void nmm_spawn_tile(string id, entity minig, float distance)
 {
+	// TODO global variable + list_next for simpler tile loops
 	entity e = spawn();
 	e.origin = minigame_tile_pos(id,7,7);
 	e.classname = "minigame_nmm_tile";
@@ -599,7 +600,7 @@ float minigame_event_nmm(entity minigame, string event, ...)
 		nmm_fromtile = world;
 		nmm_kill_tiles(minigame);
 	}
-	else if ( event == "key_pressed" )
+	else if ( event == "key_pressed" && (minigame.minigame_flags&NMM_TURN_TEAM) == minigame_self.team )
 	{
 		switch ( ...(0,float) )
 		{
@@ -665,6 +666,7 @@ float minigame_event_nmm(entity minigame, string event, ...)
 				return 1;
 			case K_ENTER:
 			case K_KP_ENTER:
+			case K_SPACE:
 				nmm_make_move(minigame);
 				return 1;
 		}

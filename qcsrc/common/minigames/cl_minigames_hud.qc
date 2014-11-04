@@ -642,7 +642,7 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 
 void HUD_Minigame_Mouse()
 {		
-	if( !(minigame_isactive() || HUD_MinigameMenu_IsOpened()) || autocvar__hud_configure )
+	if( !(minigame_isactive() || HUD_MinigameMenu_IsOpened()) || autocvar__hud_configure || mv_active )
 		return;
 	
 	if(!autocvar_hud_cursormode)
