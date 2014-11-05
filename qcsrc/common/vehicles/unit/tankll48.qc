@@ -88,8 +88,8 @@ void tankll48_cannon_think()
 		return;
 	}
 
-	self.cnt = vlen(self.velocity);
-	self.wait = self.cnt * sys_frametime;
+	//self.cnt = vlen(self.velocity);
+	self.wait = vlen(self.velocity) * sys_frametime;
 	self.pos1 = normalize(self.velocity);
 
 	tracebox(self.origin, self.mins, self.maxs, self.origin + self.pos1 * (2 * self.wait), MOVE_NORMAL, self);
