@@ -285,7 +285,7 @@ void W_Mine_Attack (void)
 		if(self.minelayer_mines >= autocvar_g_balance_minelayer_limit)
 		{
 			// the refire delay keeps this message from being spammed
-			sprint(self, strcat("minelayer: You cannot place more than ^2", ftos(autocvar_g_balance_minelayer_limit), " ^7mines at a time\n") );
+			Send_Notification(NOTIF_ONE, self, MSG_MULTI, WEAPON_MINELAYER_LIMIT, autocvar_g_balance_minelayer_limit);
 			play2(self, W_Sound("unavailable"));
 			return;
 		}
