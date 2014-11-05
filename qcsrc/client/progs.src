@@ -27,6 +27,7 @@ Defs.qc
 ../common/command/rpn.qh
 ../common/command/generic.qh
 ../common/command/shared_defs.qh
+../common/command/script.qh
 ../common/urllib.qh
 ../common/animdecide.qh
 command/cl_cmd.qh
@@ -117,6 +118,7 @@ noise.qc
 ../common/command/markup.qc
 ../common/command/rpn.qc
 ../common/command/generic.qc
+../common/command/script.qc
 ../common/mapinfo.qc
 ../common/items.qc
 ../server/w_all.qc
