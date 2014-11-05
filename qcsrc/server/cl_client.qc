@@ -2259,6 +2259,12 @@ void ObserverThink()
 
 void SpectatorThink()
 {
+	if ( self.active_minigame )
+	{
+		if ( self.impulse )
+			MinigameImpulse();
+		return;
+	}
 	if (self.flags & FL_JUMPRELEASED) {
 		if (self.BUTTON_JUMP && !self.version_mismatch) {
 			self.flags &= ~FL_JUMPRELEASED;
@@ -2816,7 +2822,13 @@ void PlayerPostThink (void)
 
 	//CheckPlayerJump();
 
-	if(IS_PLAYER(self)) {
+	if ( self.active_minigame )
+	{
+		if ( self.impulse )
+			MinigameImpulse();
+		self.movetype = MOVETYPE_BOUNCE;
+	}
+	else if(IS_PLAYER(self)) {
 		CheckRules_Player();
 		UpdateChatBubble();
 		if (self.impulse)

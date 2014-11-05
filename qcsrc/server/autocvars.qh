@@ -1604,3 +1604,4 @@ float autocvar_g_physics_clientselect;
 string autocvar_g_physics_clientselect_options;
 string autocvar_sv_announcer;
 float autocvar_sv_minigames;
+float autocvar_sv_minigames_observer;

@@ -684,6 +684,7 @@ float minigame_event_nmm(entity minigame, string event, ...)
 	else if ( event == "mouse_pressed" && ...(0,float) == K_MOUSE1 )
 	{
 		nmm_make_move(minigame);
+		return 1;
 	}
 	else if ( event == "mouse_moved" )
 	{

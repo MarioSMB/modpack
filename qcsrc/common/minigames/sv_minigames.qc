@@ -1,7 +1,10 @@
 void player_clear_minigame(entity player)
 {
 	player.active_minigame = world;
-	player.movetype = MOVETYPE_FLY_WORLDONLY;
+	if ( IS_PLAYER(player) )
+		player.movetype = MOVETYPE_WALK;
+	else
+		player.movetype = MOVETYPE_FLY_WORLDONLY;
 	player.team_forced = 0;
 }
 
@@ -144,14 +147,15 @@ float minigame_addplayer(entity minigame_session, entity player)
 		player_pointer.customizeentityforclient = minigame_CheckSend;
 		Net_LinkEntity(player_pointer, FALSE, 0, minigame_SendEntity);
 
-		if ( !IS_OBSERVER(player) )
+		if ( !IS_OBSERVER(player) && autocvar_sv_minigames_observer )
 		{
 			entity e = self;
 			self = player;
 			PutObserverInServer();
 			self = e;
 		}
-		player.team_forced = -1;
+		if ( autocvar_sv_minigames_observer == 2 )
+			player.team_forced = -1;
 		
 		minigame_resend(minigame_session);
 	}
@@ -321,6 +325,8 @@ entity minigame_find_player(entity client)
 			return e;
 	return world;
 }
+
+// TODO: remove?
 void MinigameImpulse()
 {
 	entity e = minigame_find_player(self);
