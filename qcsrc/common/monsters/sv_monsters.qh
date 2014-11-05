@@ -25,6 +25,8 @@ float monsters_killed;
 .float last_trace; // logic delay between target tracing
 .float last_enemycheck; // for checking enemy
 .float anim_finished; // will be phased out when we have proper animations system
+.vector monster_moveto; // custom destination for monster (reset to '0 0 0' when you're done!)
+.vector monster_face; // custom looking direction for monster (reset to '0 0 0' when you're done!)
 .float speed2; // run speed
 .float stopspeed;
 .float m_anim_run;

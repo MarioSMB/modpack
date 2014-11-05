@@ -84,11 +84,14 @@ float M_Scrag_Attack(float attack_type)
 
 			M_Scrag_Attack_Spike();
 
-			/* TODO: add support for this! if(random() <= 0.1)
+			if(random() <= 0.1 || self.monster_moveto)
 			{
 				makevectors(self.angles);
-				self.velocity += (random() >= 0.5) ? (v_right * 300) : (v_right * -300;
-			} */
+				self.monster_moveto = self.origin + '1 1 0' * (random() >= 0.5) ? (v_right * 300) : (v_right * -300);
+				self.monster_face = self.enemy.origin; // but still look at enemy
+				if(random() <= 0.4)
+					self.monster_moveto = self.monster_face = '0 0 0';
+			}
 
 			return TRUE;
 		}
