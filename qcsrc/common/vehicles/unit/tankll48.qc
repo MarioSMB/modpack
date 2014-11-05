@@ -88,8 +88,8 @@ void tankll48_cannon_think()
 		return;
 	}
 
-	//self.cnt = vlen(self.velocity);
-	self.wait = vlen(self.velocity) * sys_frametime;
+	self.cnt = vlen(self.velocity);
+	self.wait = self.cnt * sys_frametime;
 	self.pos1 = normalize(self.velocity);
 
 	tracebox(self.origin, self.mins, self.maxs, self.origin + self.pos1 * (2 * self.wait), MOVE_NORMAL, self);
@@ -266,7 +266,8 @@ float tankll48_frame()
 		pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 		PROJECTILE_MAKETRIGGER(missile);
 
-		missile.owner = missile.realowner = player;
+		missile.owner = tank;
+		missile.realowner = player;
 		missile.bot_dodge = TRUE;
 		missile.bot_dodgerating = autocvar_g_vehicle_tankll48_cannon_damage * 2;
 
