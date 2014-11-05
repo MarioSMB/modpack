@@ -1,5 +1,6 @@
 .float  script_type;
 .string script_value;
+.entity script_next;
 
 #include "script/string.qh"
 #include "script/ast.qh"

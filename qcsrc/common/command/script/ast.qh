@@ -96,7 +96,7 @@ void script_global_functions_init(entity context)
 				for ( i = nargs; i > 0; i-- ) { \
 					nextparam = spawn(); \
 					nextparam.script_value = strcat("arg",ftos(i));\
-					nextparam.chain = param; \
+					nextparam.script_next = param; \
 					param = nextparam; \
 				} \
 			} \
@@ -124,7 +124,7 @@ string context_get_variable(entity context,string varname)
 	{
 		if ( currentvar.netname == varname )
 			return currentvar.script_value;
-		currentvar = currentvar.chain;
+		currentvar = currentvar.script_next;
 	}
 	if ( context.owner )
 		return context_get_variable(context.owner,varname);
@@ -148,7 +148,7 @@ float context_set_variable(entity context,string varname, string value)
 			currentvar.script_value = value;
 			return 1;
 		}
-		currentvar = currentvar.chain;
+		currentvar = currentvar.script_next;
 	}
 	if ( context.owner )
 	if ( context_set_variable(context.owner,varname,value) )
@@ -161,7 +161,7 @@ void context_define_variable(entity context,string varname, string value)
 	newvar.script_value = value;
 	newvar.netname = varname;
 	newvar.classname = "script_variable";
-	newvar.chain = context.context_variables;
+	newvar.script_next = context.context_variables;
 	context.context_variables = newvar;
 }
 entity context_get_function(entity context, string funcname)
@@ -173,7 +173,7 @@ entity context_get_function(entity context, string funcname)
 		{
 			return currentfunc;
 		}
-		currentfunc = currentfunc.chain;
+		currentfunc = currentfunc.script_next;
 	}
 	if ( context.owner )
 		return context_get_function(context.owner,funcname);
@@ -186,7 +186,7 @@ entity context_define_function(entity context, string funcname, entity executor,
 	function.netname = funcname;
 	function.ast_operand1 = param_chain;
 	function.ast_operand2 = executor;
-	function.chain = context.context_functions;
+	function.script_next = context.context_functions;
 	function.classname = "script_function";
 	context.context_functions = function;
 	return function;
@@ -219,10 +219,10 @@ void context_pop()
 		while(func)
 		{
 			func_old = func;
-			func = func.chain;
+			func = func.script_next;
 			if ( func_old.classname == "script_global_function" )
 			{
-				func_old.chain = world;
+				func_old.script_next = world;
 				script_cleanup(func_old.ast_operand1);
 				remove(func_old.ast_operand2);
 			}
@@ -273,8 +273,8 @@ void script_cleanup(entity ast_root)
 		script_cleanup(ast_root.ast_operand2);
 	if ( ast_root.ast_operand3 )
 		script_cleanup(ast_root.ast_operand3);
-	if ( ast_root.chain )
-		script_cleanup(ast_root.chain);
+	if ( ast_root.script_next )
+		script_cleanup(ast_root.script_next);
 	remove(ast_root);
 }
 
@@ -288,8 +288,8 @@ void script_debug_ast_recursive(entity ast_root,string prefix)
 	if ( ast_root.ast_operand3 )
 		script_debug_ast_recursive(ast_root.ast_operand3,strcat(prefix," op3 "));
 		
-	if ( ast_root.chain )
-		script_debug_ast_recursive(ast_root.chain,prefix);
+	if ( ast_root.script_next )
+		script_debug_ast_recursive(ast_root.script_next,prefix);
 }
 void script_debug_ast(entity ast_root)
 {
@@ -459,14 +459,14 @@ entity ast_function_evaluate()
 		while ( next_arg && next_param)
 		{
 			context_define_variable(current_context,next_param.script_value,script_evaluate(next_arg));
-			next_arg = next_arg.chain;
-			next_param = next_param.chain;
+			next_arg = next_arg.script_next;
+			next_param = next_param.script_next;
 		}
 		while ( next_param )
 		{
 			context_define_variable(current_context,next_param.script_value,
 				script_evaluate(next_param.ast_operand1) );
-			next_param = next_param.chain;
+			next_param = next_param.script_next;
 		}
 		entity value = script_evaluate_entity(function.ast_operand2);
 		context_pop();
@@ -561,7 +561,7 @@ entity ast_block_evaluate()
 			val.script_type &= ~AST_TYPE_CONTINUE;
 			break;
 		}
-		next = next.chain;
+		next = next.script_next;
 	}
 	context_pop();
 	return val;
