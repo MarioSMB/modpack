@@ -23,7 +23,21 @@ void register_monster(float id, float(float) func, float(float) attackfunc, floa
 	e.mins = min_s;
 	e.maxs = max_s;
 	e.model = strzone(strcat("models/monsters/", e.mdl));
-	bprint(e.mdl, "\n");
+
+	precache_model(e.model);
+	func(MR_PRECACHE); // it had to be done eventually
+
+	string trymodel; // check 5 skins
+	trymodel = sprintf("%s_%d.%s", noext, 1, ext);
+	if(fexists(trymodel)) { precache_model(trymodel); }
+	trymodel = sprintf("%s_%d.%s", noext, 2, ext);
+	if(fexists(trymodel)) { precache_model(trymodel); }
+	trymodel = sprintf("%s_%d.%s", noext, 3, ext);
+	if(fexists(trymodel)) { precache_model(trymodel); }
+	trymodel = sprintf("%s_%d.%s", noext, 4, ext);
+	if(fexists(trymodel)) { precache_model(trymodel); }
+	trymodel = sprintf("%s_%d.%s", noext, 5, ext);
+	if(fexists(trymodel)) { precache_model(trymodel); }
 }
 float m_null(float dummy) { return 0; }
 void register_monsters_done()

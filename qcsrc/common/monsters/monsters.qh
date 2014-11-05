@@ -2,7 +2,7 @@
 #define MR_SETUP		  1 // (SERVER) setup monster data
 #define MR_THINK		  2 // (SERVER) logic to run every frame
 #define MR_DEATH		  3 // (SERVER) called when monster dies
-#define MR_PRECACHE		  4 // (SERVER) precaches models/sounds used by this monster
+#define MR_PRECACHE		  4 // (BOTH) precaches models/sounds used by this monster
 #define MR_PAIN           5 // (SERVER) called when monster is damaged
 
 // functions
@@ -62,6 +62,9 @@ float MON_LAST;
 #ifdef SVQC
 #define REGISTER_MONSTER(id,func,attackfunc,monsterflags,min_s,max_s,modelname,shortname,mname) \
 	REGISTER_MONSTER_2(MON_##id,func,attackfunc,monsterflags,min_s,max_s,modelname,shortname,mname)
+#elif defined(CSQC)
+	#define REGISTER_MONSTER(id,func,attackfunc,monsterflags,min_s,max_s,modelname,shortname,mname) \
+	REGISTER_MONSTER_2(MON_##id,m_null,m_null,monsterflags,min_s,max_s,modelname,shortname,mname)
 #else
 #define REGISTER_MONSTER(id,func,attackfunc,monsterflags,min_s,max_s,modelname,shortname,mname) \
 	REGISTER_MONSTER_2(MON_##id,m_null,m_null,monsterflags,min_s,max_s,modelname,shortname,mname)
