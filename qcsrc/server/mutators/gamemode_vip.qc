@@ -556,8 +556,7 @@ void vip_SpawnSoulGem(vector orig, float theteam)
 	setorigin (e, e.origin);
 	setattachment(e.enemy, e, "");
 
-	if (!move_out_of_solid(e))
-		bprint("\x01^!WARNING: ^7failed to move soulgem out of solid\n");
+	move_out_of_solid(e);
 
 	entity oldself;
 	oldself = self;

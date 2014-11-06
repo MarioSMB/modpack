@@ -134,7 +134,7 @@ void cq_ControlPoint_Think()
 							if(self.health == 0)
 							{
 								PlayerScore_Add(player, SP_CONQUEST_LIBERATED, 1);
-								pointparticles(particleeffectnum("explosion_big"), findbetterlocation(self.origin, 16), '0 0 0', 1);
+								Send_Effect(EFFECT_EXPLOSION_BIG, findbetterlocation(self.origin, 16), '0 0 0', 1);
 								cq_ControlPoint_SwitchTeam(player.team, CP_NEUTRAL, TRUE);
 							}
 
@@ -449,14 +449,14 @@ float cq_Teleport(entity player, entity tele_target, float range, float tele_eff
 			{
 				if ( tele_effects )
 				{
-					pointparticles(particleeffectnum("teleport"), player.origin, '0 0 0', 1);
+					Send_Effect(EFFECT_TELEPORT, player.origin, '0 0 0', 1);
 					sound (player, CH_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTEN_NORM);
 				}
 				setorigin(player, loc);
 				player.teleport_antispam = time + autocvar_g_conquest_teleport_wait;
 
 				if ( tele_effects )
-					pointparticles(particleeffectnum("teleport"), player.origin + v_forward * 32, '0 0 0', 1);
+					Send_Effect(EFFECT_TELEPORT, player.origin + v_forward * 32, '0 0 0', 1);
 				return TRUE;
 			}
 		}

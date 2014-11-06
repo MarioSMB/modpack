@@ -259,14 +259,15 @@ float tankll48_frame()
 		tank.cnt = time;
 		entity missile = spawn();
 		vector v = gettaginfo(self.gun1, gettagindex(self.gun1, "barrels"));
-		W_SetupShot_ProjectileSize (player, '-3 -3 -3', '3 3 3', FALSE, 5, "weapons/campingrifle_fire_morebass.wav", CH_WEAPON_A, autocvar_g_vehicle_tankll48_cannon_damage);
+		W_SetupShot_ProjectileSize (player, '-3 -3 -3', '3 3 3', FALSE, 5, W_Sound("campingrifle_fire_morebass"), CH_WEAPON_A, autocvar_g_vehicle_tankll48_cannon_damage);
 		tank.vehicle_ammo1 -= autocvar_g_vehicle_tankll48_cannon_ammo;
 		w_shotorg = v;
 
 		pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 		PROJECTILE_MAKETRIGGER(missile);
 
-		missile.owner = missile.realowner = player;
+		missile.owner = tank;
+		missile.realowner = player;
 		missile.bot_dodge = TRUE;
 		missile.bot_dodgerating = autocvar_g_vehicle_tankll48_cannon_damage * 2;
 
@@ -388,7 +389,7 @@ void tankll48_headfade()
 	{
 		if(self.alpha > 0.1)
 		{
-			sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+			sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 			pointparticles(particleeffectnum("explosion_big"), self.origin + '0 0 100', '0 0 0', 1);
 		}
 		remove(self);
@@ -401,7 +402,7 @@ void tankll48_blowup()
 	{
 		if(random() < 0.1)
 		{
-			sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+			sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 			pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 		}
 		self.nextthink = time + 0.1;
@@ -589,8 +590,8 @@ float v_tankll48(float req)
 
 			precache_model ( "models/vehicles/tankll48_cannon.md3");
 
-			precache_sound ("weapons/rocket_impact.wav");
-			precache_sound ("weapons/campingrifle_fire_morebass.wav");
+			precache_sound (W_Sound("rocket_impact"));
+			precache_sound (W_Sound("campingrifle_fire_morebass"));
 			
 			precache_sound ( "machines/generator_loop_speedup_pitchdown.wav");
 			precache_sound ( "machines/generator_loop_pitchdown.wav");

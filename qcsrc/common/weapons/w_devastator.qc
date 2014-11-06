@@ -290,9 +290,9 @@ void W_Devastator_Think(void)
 
 			if(!self.count)
 			{
-				pointparticles(particleeffectnum("rocket_guide"), self.origin, self.velocity, 1);
+				Send_Effect(EFFECT_ROCKET_GUIDE, self.origin, self.velocity, 1);
 				// TODO add a better sound here
-				sound(self.realowner, CH_WEAPON_B, "weapons/rocket_mode.wav", VOL_BASE, ATTN_NORM);
+				sound(self.realowner, CH_WEAPON_B, W_Sound("rocket_mode"), VOL_BASE, ATTN_NORM);
 				self.count = 1;
 			}
 		}
@@ -339,8 +339,8 @@ void W_Devastator_Attack(void)
 
 	W_DecreaseAmmo(WEP_CVAR(devastator, ammo));
 
-	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', FALSE, 5, "weapons/rocket_fire.wav", CH_WEAPON_A, WEP_CVAR(devastator, damage));
-	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', FALSE, 5, W_Sound("rocket_fire"), CH_WEAPON_A, WEP_CVAR(devastator, damage));
+	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	missile = WarpZone_RefSys_SpawnSameRefSys(self);
 	missile.owner = missile.realowner = self;
@@ -430,7 +430,7 @@ float W_Devastator(float req)
 		{
 			// aim and decide to fire if appropriate
 			self.BUTTON_ATCK = bot_aim(WEP_CVAR(devastator, speed), 0, WEP_CVAR(devastator, lifetime), FALSE);
-			if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
+			if(bot_skill >= 2) // skill 0 and 1 bots won't detonate rockets!
 			{
 				// decide whether to detonate rockets
 				entity missile, targetlist, targ;
@@ -485,7 +485,7 @@ float W_Devastator(float req)
 					}
 					makevectors(missile.v_angle);
 					targ = targetlist;
-					if(skill > 9) // normal players only do this for the target they are tracking
+					if(bot_skill > 9) // normal players only do this for the target they are tracking
 					{
 						targ = targetlist;
 						while(targ)
@@ -503,7 +503,7 @@ float W_Devastator(float req)
 						if(v_forward * normalize(missile.origin - self.enemy.origin)< 0.1)
 							if(IS_PLAYER(self.enemy))
 								if(desirabledamage >= 0.1*coredamage)
-									if(random()/distance*300 > frametime*bound(0,(10-skill)*0.2,1))
+									if(random()/distance*300 > frametime*bound(0,(10-bot_skill)*0.2,1))
 										self.BUTTON_ATCK2 = TRUE;
 					//	dprint(ftos(random()/distance*300),">");dprint(ftos(frametime*bound(0,(10-skill)*0.2,1)),"\n");
 					}
@@ -514,7 +514,7 @@ float W_Devastator(float req)
 				// but don't fire a new shot at the same time!
 				if(desirabledamage >= 0.75 * coredamage) //this should do group damage in rare fortunate events
 					self.BUTTON_ATCK2 = TRUE;
-				if((skill > 6.5) && (selfdamage > self.health))
+				if((bot_skill > 6.5) && (selfdamage > self.health))
 					self.BUTTON_ATCK2 = FALSE;
 				//if(self.BUTTON_ATCK2 == TRUE)
 				//	dprint(ftos(desirabledamage),"\n");
@@ -555,7 +555,7 @@ float W_Devastator(float req)
 						}
 					}
 					if(rockfound)
-						sound(self, CH_WEAPON_B, "weapons/rocket_det.wav", VOL_BASE, ATTN_NORM);
+						sound(self, CH_WEAPON_B, W_Sound("rocket_det"), VOL_BASE, ATTN_NORM);
 				}
 			}
 			
@@ -569,9 +569,9 @@ float W_Devastator(float req)
 				precache_model("models/weapons/g_rl.md3");
 				precache_model("models/weapons/v_rl.md3");
 				precache_model("models/weapons/h_rl.iqm");
-				precache_sound("weapons/rocket_det.wav");
-				precache_sound("weapons/rocket_fire.wav");
-				precache_sound("weapons/rocket_mode.wav");
+				precache_sound(W_Sound("rocket_det"));
+				precache_sound(W_Sound("rocket_fire"));
+				precache_sound(W_Sound("rocket_mode"));
 			//}
 			DEVASTATOR_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
@@ -633,7 +633,7 @@ float W_Devastator(float req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(WEP_CVAR(devastator, ammo), "weapons/reload.wav");
+			W_Reload(WEP_CVAR(devastator, ammo), W_Sound("reload"));
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:

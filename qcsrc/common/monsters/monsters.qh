@@ -3,8 +3,9 @@
 #define MR_THINK		  2 // (SERVER) logic to run every frame
 #define MR_DEATH		  3 // (SERVER) called when monster dies
 #define MR_PRECACHE		  4 // (BOTH) precaches models/sounds used by this monster
+#define MR_PAIN           5 // (SERVER) called when monster is damaged
 
-// functions:
+// functions
 entity get_monsterinfo(float id);
 
 // special spawn flags
@@ -15,12 +16,14 @@ const float MONSTER_SIZE_BROKEN = 128; // TODO: remove when bad models are repla
 const float MON_FLAG_SUPERMONSTER = 256; // incredibly powerful monster
 const float MON_FLAG_RANGED = 512; // monster shoots projectiles
 const float MON_FLAG_MELEE = 1024;
+const float MON_FLAG_RIDE = 2048; // monster can be mounted
 
-// entity properties of monsterinfo:
+// entity properties of monsterinfo
 .float monsterid; // MON_...
 .string netname; // short name
 .string monster_name; // human readable name
-.float(float) monster_func; // m_...
+.float(float) monster_func; // M_...
+.float(float attack_type) monster_attackfunc; // attack function
 .string mdl; // currently a copy of the model
 .string model; // full name of model
 .float spawnflags;
@@ -28,37 +31,43 @@ const float MON_FLAG_MELEE = 1024;
 
 // other useful macros
 #define MON_ACTION(monstertype,mrequest) (get_monsterinfo(monstertype)).monster_func(mrequest)
-#define M_NAME(monstertype) (get_monsterinfo(monstertype)).monster_name
 
 // =====================
 //	Monster Registration
 // =====================
 
+// enable for testing
+//#define MONSTERS_EXTRA
+
 float m_null(float dummy);
-void register_monster(float id, float(float) func, float monsterflags, vector min_s, vector max_s, string modelname, string shortname, string mname);
+void register_monster(float id, float(float) func, float(float) attackfunc, float monsterflags, vector min_s, vector max_s, string modelname, string shortname, string mname);
 void register_monsters_done();
 
-const float MON_MAXCOUNT = 24;
+const float MON_MAXCOUNT = 24; // increase as necessary, limit is infinite, but keep loops small!
 #define MON_FIRST 1
 float MON_COUNT;
 float MON_LAST;
 
-#define REGISTER_MONSTER_2(id,func,monsterflags,min_s,max_s,modelname,shortname,mname) \
+#define REGISTER_MONSTER_2(id,func,attackfunc,monsterflags,min_s,max_s,modelname,shortname,mname) \
 	float id; \
 	float func(float); \
+	float attackfunc(float); \
 	void RegisterMonsters_##id() \
 	{ \
 		MON_LAST = (id = MON_FIRST + MON_COUNT); \
 		++MON_COUNT; \
-		register_monster(id,func,monsterflags,min_s,max_s,modelname,shortname,mname); \
+		register_monster(id,func,attackfunc,monsterflags,min_s,max_s,modelname,shortname,mname); \
 	} \
 	ACCUMULATE_FUNCTION(RegisterMonsters, RegisterMonsters_##id)
-#ifdef MENUQC
-#define REGISTER_MONSTER(id,func,monsterflags,min_s,max_s,modelname,shortname,mname) \
-	REGISTER_MONSTER_2(MON_##id,m_null,monsterflags,min_s,max_s,modelname,shortname,mname)
+#ifdef SVQC
+#define REGISTER_MONSTER(id,func,attackfunc,monsterflags,min_s,max_s,modelname,shortname,mname) \
+	REGISTER_MONSTER_2(MON_##id,func,attackfunc,monsterflags,min_s,max_s,modelname,shortname,mname)
+#elif defined(CSQC)
+	#define REGISTER_MONSTER(id,func,attackfunc,monsterflags,min_s,max_s,modelname,shortname,mname) \
+	REGISTER_MONSTER_2(MON_##id,m_null,m_null,monsterflags,min_s,max_s,modelname,shortname,mname)
 #else
-#define REGISTER_MONSTER(id,func,monsterflags,min_s,max_s,modelname,shortname,mname) \
-	REGISTER_MONSTER_2(MON_##id,func,monsterflags,min_s,max_s,modelname,shortname,mname)
+#define REGISTER_MONSTER(id,func,attackfunc,monsterflags,min_s,max_s,modelname,shortname,mname) \
+	REGISTER_MONSTER_2(MON_##id,m_null,m_null,monsterflags,min_s,max_s,modelname,shortname,mname)
 #endif
 
 #include "all.qh"

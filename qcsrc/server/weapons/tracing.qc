@@ -114,7 +114,6 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	if (snd != "")
 	{
 		sound (ent, chan, snd, VOL_BASE, ATTN_NORM);
-		W_PlayStrengthSound(ent);
 	}
 
 	// nudge w_shotend so a trace to w_shotend hits
@@ -290,7 +289,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 			if(f <= 0)
 				continue;
 
-			snd = strcat("weapons/nexwhoosh", ftos(floor(random() * 3) + 1), ".wav");
+			snd = W_Sound(strcat("nexwhoosh", ftos(floor(random() * 3) + 1)));
 
 			if(!pseudoprojectile)
 				pseudoprojectile = spawn(); // we need this so the sound uses the "entchannel4" volume
@@ -314,7 +313,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		if(Headshot(ent, self, hitloc, start, end))
 		{
 			if(deathtype == WEP_RIFLE)
-				bdamage *= 1.5; // 50% more damage if a headshot
+				bdamage *= autocvar_sv_headshot_damage; // more damage if a headshot
 				
 			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_HEADSHOT);
 		}
@@ -350,7 +349,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 void fireBullet_trace_callback(vector start, vector hit, vector end)
 {
 	if(vlen(hit - start) > 16)
-		trailparticles(world, fireBullet_trace_callback_eff, start, hit);
+		Send_Effect(fireBullet_trace_callback_eff, start, hit, 0);
 	WarpZone_trace_forent = world;
 	fireBullet_last_hit = world;
 }
@@ -368,11 +367,11 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 	float total_damage = 0;
 
 	if(tracereffects & EF_RED)
-		fireBullet_trace_callback_eff = particleeffectnum("tr_rifle");
+		fireBullet_trace_callback_eff = EFFECT_RIFLE;
 	else if(tracereffects & EF_BLUE)
-		fireBullet_trace_callback_eff = particleeffectnum("tr_rifle_weak");
+		fireBullet_trace_callback_eff = EFFECT_RIFLE_WEAK;
 	else
-		fireBullet_trace_callback_eff = particleeffectnum("tr_bullet");
+		fireBullet_trace_callback_eff = EFFECT_BULLET;
 
 	float lag = ANTILAG_LATENCY(self);
 	if(lag < 0.001)
@@ -435,7 +434,7 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 			yoda = 0;
 			if(Headshot(hit, self, end, start, end))
 			{
-				damage *= 1.5; // 50% more damage
+				damage *= autocvar_sv_headshot_damage; // more damage
 				Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_HEADSHOT);
 			}
 			float g = accuracy_isgooddamage(self, hit);
@@ -486,7 +485,7 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 		// Only show effect when going through a player (invisible otherwise)
 		if (hit && (hit.solid != SOLID_BSP))
 			if(vlen(trace_endpos - start) > 4)
-				trailparticles(self, fireBullet_trace_callback_eff, start, trace_endpos);
+				Send_Effect(fireBullet_trace_callback_eff, start, trace_endpos, 0); // TODO: check if we need check for self?
 
 		start = trace_endpos;
 

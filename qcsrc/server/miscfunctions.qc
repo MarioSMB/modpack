@@ -202,7 +202,7 @@ entity findnearest(vector point, .string field, string value, vector axismod)
     localhead = find(world, field, value);
     while (localhead)
     {
-        if ((localhead.items == IT_KEY1 || localhead.items == IT_KEY2) && localhead.target == "###item###")
+        if ((localhead.items == IT_KEY1 || localhead.items == IT_KEY2 || localhead.classname == "item_flag_team") && localhead.target == "###item###")
             dist = localhead.oldorigin;
         else
             dist = localhead.origin;
@@ -308,28 +308,16 @@ string formatmessage(string msg)
 	entity cursor_ent;
 	string escape;
 	string replacement;
-	entity bluefc = world, redfc = world, yellowfc = world, pinkfc = world, tmp_entity; // NOTE: blue = red player
-	entity tfc = world, sfc = world;
+	string ammoitems;
 	p = 0;
 	n = 7;
 
-	for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
-	{
-		if(tmp_entity.owner && tmp_entity.team == NUM_TEAM_1)
-			redfc = tmp_entity.owner;
-		if(tmp_entity.owner && tmp_entity.team == NUM_TEAM_2)
-			bluefc = tmp_entity.owner;
-		if(tmp_entity.owner && tmp_entity.team == NUM_TEAM_3)
-			yellowfc = tmp_entity.owner;
-		if(tmp_entity.owner && tmp_entity.team == NUM_TEAM_4)
-			pinkfc = tmp_entity.owner;
-
-		if(tmp_entity.owner && tmp_entity.owner.team == self.team)
-			tfc = tmp_entity.owner;
-		if(tmp_entity.owner && tmp_entity.team == self.team)
-			sfc = tmp_entity.owner;
-	}
-
+	ammoitems = "batteries";
+	if(self.items & IT_SUPERCELLS) ammoitems = "supercells";
+	if(self.items & IT_PLASMA) ammoitems = "plasma";
+	if(self.items & IT_CELLS) ammoitems = "cells";
+	if(self.items & IT_ROCKETS) ammoitems = "rockets";
+	if(self.items & IT_SHELLS) ammoitems = "shells";
 
 	WarpZone_crosshair_trace(self);
 	cursor = trace_endpos;
@@ -357,62 +345,33 @@ string formatmessage(string msg)
 		replacement = substring(msg, p, 2);
 		escape = substring(msg, p + 1, 1);
 
-		if (escape == "%")
-			replacement = "%";
-		else if (escape == "\\")
-			replacement = "\\";
-		else if (escape == "n")
-			replacement = "\n";
-		else if (escape == "a")
-			replacement = ftos(floor(self.armorvalue));
-		else if (escape == "h")
-			replacement = ftos(floor(self.health));
-		else if (escape == "j")
-			replacement = ((self.lastkilled) ? self.lastkilled.netname : "(nobody)");
-		else if (escape == "k")
-			replacement = ((self.lastkiller) ? self.lastkiller.netname : "(nobody)");
-		else if (escape == "l")
-			replacement = NearestLocation(self.origin);
-		else if (escape == "r")
-			replacement = ((tfc) ? tfc.netname : "(nobody)");
-		else if (escape == "R")
-			replacement = ((sfc) ? sfc.netname : "(nobody)");
-		else if (escape == "t")
-			replacement = ((redfc) ? redfc.netname : "(nobody)");
-		else if (escape == "T")
-			replacement = ((bluefc) ? bluefc.netname : "(nobody)");
-		else if (escape == "p")
-			replacement = ((yellowfc) ? yellowfc.netname : "(nobody)");
-		else if (escape == "P")
-			replacement = ((pinkfc) ? pinkfc.netname : "(nobody)");
-		else if (escape == "y")
-			replacement = NearestLocation(cursor);
-		else if (escape == "d")
-			replacement = NearestLocation(self.death_origin);
-		else if (escape == "w") {
-			float wep;
-			wep = self.weapon;
-			if (!wep)
-				wep = self.switchweapon;
-			if (!wep)
-				wep = self.cnt;
-			replacement = WEP_NAME(wep);
-		} else if (escape == "W") {
-			if (self.items & IT_SHELLS) replacement = "shells";
-			else if (self.items & IT_NAILS) replacement = "bullets";
-			else if (self.items & IT_ROCKETS) replacement = "rockets";
-			else if (self.items & IT_CELLS) replacement = "cells";
-			else if (self.items & IT_PLASMA) replacement = "plasma";
-			else if (self.items & IT_SUPERCELLS) replacement = "supercells";
-			else replacement = "batteries"; // ;)
-		} else if (escape == "x") {
-			replacement = cursor_ent.netname;
-			if (replacement == "" || !cursor_ent)
-				replacement = "nothing";
-		} else if (escape == "s")
-			replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1'));
-		else if (escape == "S")
-			replacement = ftos(vlen(self.velocity));
+		switch(escape)
+		{
+			case "%": replacement = "%"; break;
+			case "\\":replacement = "\\"; break;
+			case "n": replacement = "\n"; break;
+			case "a": replacement = ftos(floor(self.armorvalue)); break;
+			case "h": replacement = ftos(floor(self.health)); break;
+			case "j": replacement = ((self.lastkilled) ? self.lastkilled.netname : "(nobody)"); break;
+			case "k": replacement = ((self.lastkiller) ? self.lastkiller.netname : "(nobody)"); break;
+			case "l": replacement = NearestLocation(self.origin); break;
+			case "y": replacement = NearestLocation(cursor); break;
+			case "d": replacement = NearestLocation(self.death_origin); break;
+			case "w": replacement = WEP_NAME((!self.weapon) ? (!self.switchweapon ? self.cnt : self.switchweapon) : self.weapon); break;
+			case "W": replacement = ammoitems; break;
+			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
+			case "s": replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1')); break;
+			case "S": replacement = ftos(vlen(self.velocity)); break;
+			default:
+			{
+				format_escape = escape;
+				format_replacement = replacement;
+				MUTATOR_CALLHOOK(FormatMessage);
+				escape = format_escape;
+				replacement = format_replacement;
+				break;
+			}
+		}
 
 		msg = strcat(substring(msg, 0, p), replacement, substring(msg, p+2, strlen(msg) - (p+2)));
 		p = p + strlen(replacement);
@@ -979,8 +938,6 @@ void readlevelcvars(void)
     g_bugrigs_speed_pow = cvar("g_bugrigs_speed_pow");
     g_bugrigs_steer = cvar("g_bugrigs_steer");
 
-	g_minstagib = cvar("g_minstagib");
-
 	sv_showfps = cvar("sv_showfps");
 
 	sv_clones = cvar("sv_clones");
@@ -1111,15 +1068,6 @@ float sound_allowed(float dest, entity e)
     return TRUE;
 }
 
-#ifdef COMPAT_XON010_CHANNELS
-void(entity e, float chan, string samp, float vol, float atten) builtin_sound = #8;
-void sound(entity e, float chan, string samp, float vol, float atten)
-{
-    if (!sound_allowed(MSG_BROADCAST, e))
-        return;
-    builtin_sound(e, chan, samp, vol, atten);
-}
-#else
 #undef sound
 void sound(entity e, float chan, string samp, float vol, float atten)
 {
@@ -1127,7 +1075,6 @@ void sound(entity e, float chan, string samp, float vol, float atten)
         return;
     sound7(e, chan, samp, vol, atten, 0, 0);
 }
-#endif
 
 void soundtoat(float dest, entity e, vector o, float chan, string samp, float vol, float atten)
 {
@@ -1427,15 +1374,15 @@ void precache()
     precache_model ("models/sprites/10.spr32");
 
     // common weapon precaches
-	precache_sound ("weapons/reload.wav"); // until weapons have individual reload sounds, precache the reload sound here
-    precache_sound ("weapons/weapon_switch.wav");
-    precache_sound ("weapons/weaponpickup.wav");
-    precache_sound ("weapons/unavailable.wav");
-    precache_sound ("weapons/dryfire.wav");
+	precache_sound (W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound here
+    precache_sound (W_Sound("weapon_switch"));
+    precache_sound (W_Sound("weaponpickup"));
+    precache_sound (W_Sound("unavailable"));
+    precache_sound (W_Sound("dryfire"));
     if (g_grappling_hook)
     {
-        precache_sound ("weapons/hook_fire.wav"); // hook
-        precache_sound ("weapons/hook_impact.wav"); // hook
+        precache_sound (W_Sound("hook_fire")); // hook
+        precache_sound (W_Sound("hook_impact")); // hook
     }
 
     precache_model("models/elaser.mdl");

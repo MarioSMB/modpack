@@ -17,18 +17,6 @@ void W_GiveWeapon (entity e, float wep)
 	self = oldself;
 }
 
-void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
-{
-	if((player.items & IT_STRENGTH)
-		&& ((time > player.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
-		|| (time > player.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
-		{
-			sound(player, CH_TRIGGER, "weapons/strength_fire.wav", VOL_BASE, ATTEN_NORM);
-			player.prevstrengthsound = time;
-		}
-		player.prevstrengthsoundattempt = time;
-}
-
 float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtype, float exception)
 {
 	float is_from_contents = (deathtype == DEATH_SLIME || deathtype == DEATH_LAVA);

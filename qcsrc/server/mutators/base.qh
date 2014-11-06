@@ -174,10 +174,9 @@ MUTATOR_HOOKABLE(MonsterDies);
 	// INPUT:
 		entity frag_attacker;
 
-MUTATOR_HOOKABLE(MonsterRespawn);
-	// called when a monster wants to respawn
-	// INPUT:
-		entity other;
+MUTATOR_HOOKABLE(MonsterRemove);
+	// called when a monster is being removed
+	// returning TRUE hides removal effect
 
 MUTATOR_HOOKABLE(MonsterDropItem);
 	// called when a monster is dropping loot
@@ -202,6 +201,12 @@ MUTATOR_HOOKABLE(MonsterCheckBossFlag);
 MUTATOR_HOOKABLE(AllowMobSpawning);
 	// called when a player tries to spawn a monster
 	// return 1 to prevent spawning
+
+MUTATOR_HOOKABLE(FormatMessage);
+	// for replacing chat message commands
+	// INPUT, OUTPUT:
+		string format_escape;
+		string format_replacement;
 
 MUTATOR_HOOKABLE(PlayerDamage_SplitHealthArmor);
 	// called when a player gets damaged to e.g. remove stuff he was carrying.
@@ -317,7 +322,7 @@ MUTATOR_HOOKABLE(Item_RespawnCountdown);
 MUTATOR_HOOKABLE(BotShouldAttack);
 	// called when a bot checks a target to attack
 	// INPUT
-	entity checkentity;
+	entity other;
 
 MUTATOR_HOOKABLE(PortalTeleport);
 	// called whenever a player goes through a portal gun teleport

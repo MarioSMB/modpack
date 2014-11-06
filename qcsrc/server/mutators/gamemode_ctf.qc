@@ -370,7 +370,8 @@ void ctf_Handle_Throw(entity player, entity receiver, float droptype)
 
 			// other
 			sound(player, CH_TRIGGER, flag.snd_flag_touch, VOL_BASE, ATTEN_NORM);
-			WarpZone_TrailParticles(world, particleeffectnum(flag.passeffect), player.origin, targ_origin);
+			if(flag.passeffect == "") { Send_Effect(flag.passeffectnum, player.origin, targ_origin, 0); }
+			else { WarpZone_TrailParticles(world, particleeffectnum(flag.passeffect), player.origin, targ_origin); }
 			ctf_EventLog("pass", flag.team, player);
 			break;
 		}
@@ -379,7 +380,7 @@ void ctf_Handle_Throw(entity player, entity receiver, float droptype)
 		{
 			makevectors((player.v_angle_y * '0 1 0') + (bound(autocvar_g_ctf_throw_angle_min, player.v_angle_x, autocvar_g_ctf_throw_angle_max) * '1 0 0'));
 
-			flag_velocity = (('0 0 1' * autocvar_g_ctf_throw_velocity_up) + ((v_forward * autocvar_g_ctf_throw_velocity_forward) * ((player.items & IT_STRENGTH) ? autocvar_g_ctf_throw_strengthmultiplier : 1)));
+			flag_velocity = (('0 0 1' * autocvar_g_ctf_throw_velocity_up) + ((v_forward * autocvar_g_ctf_throw_velocity_forward)));
 			flag.velocity = W_CalculateProjectileVelocity(player.velocity, flag_velocity, FALSE);
 			ctf_Handle_Drop(flag, player, droptype);
 			break;
@@ -465,7 +466,8 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 		PlayerScore_Add(player, SP_CTF_CAPTIME, new_time - old_time);
 
 	// effects
-	pointparticles(particleeffectnum(flag.capeffect), flag.origin, '0 0 0', 1);
+	if(flag.capeffect == "") { Send_Effect(flag.capeffectnum, flag.origin, '0 0 0', 1); }
+	else { pointparticles(particleeffectnum(flag.capeffect), flag.origin, '0 0 0', 1); }
 	//shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
 
 	// other
@@ -619,7 +621,8 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	}
 
 	// effects
-	pointparticles(particleeffectnum(flag.toucheffect), player.origin, '0 0 0', 1);
+	if(flag.toucheffect == "") { Send_Effect(flag.toucheffectnum, player.origin, '0 0 0', 1); }
+	else { pointparticles(particleeffectnum(flag.toucheffect), player.origin, '0 0 0', 1); }
 
 	// waypoints
 	if(pickuptype == PICKUP_DROPPED) { WaypointSprite_Kill(flag.wps_flagdropped); }
@@ -927,7 +930,7 @@ void ctf_FlagTouch()
 			self.health = 0;
 			ctf_CheckFlagReturn(self, RETURN_NEEDKILL);
 		}
-		return;
+		if(!self.ctf_flagdamaged) { return; }
 	}
 
 	FOR_EACH_PLAYER(tmp_entity) if(SAME_TEAM(toucher, tmp_entity)) { ++num_perteam; }
@@ -950,7 +953,8 @@ void ctf_FlagTouch()
 	{
 		if(time > self.wait) // if we haven't in a while, play a sound/effect
 		{
-			pointparticles(particleeffectnum(self.toucheffect), self.origin, '0 0 0', 1);
+			if(self.toucheffect == "") { Send_Effect(self.toucheffectnum, self.origin, '0 0 0', 1); }
+			else { pointparticles(particleeffectnum(self.toucheffect), self.origin, '0 0 0', 1); }
 			sound(self, CH_TRIGGER, self.snd_flag_touch, VOL_BASE, ATTEN_NORM);
 			self.wait = time + FLAG_TOUCHRATE;
 		}
@@ -1148,9 +1152,9 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	if(flag.model == "")       { flag.model = ((teamnumber == NUM_TEAM_1) ? autocvar_g_ctf_flag_red_model : ((teamnumber == NUM_TEAM_2) ? autocvar_g_ctf_flag_blue_model : ((teamnumber == NUM_TEAM_3) ? autocvar_g_ctf_flag_yellow_model : ((teamnumber == NUM_TEAM_4) ? autocvar_g_ctf_flag_pink_model : autocvar_g_ctf_flag_neutral_model)))); }
 	if(!flag.scale)            { flag.scale = FLAG_SCALE; }
 	if(!flag.skin)             { flag.skin = ((teamnumber == NUM_TEAM_1) ? autocvar_g_ctf_flag_red_skin : ((teamnumber == NUM_TEAM_2) ? autocvar_g_ctf_flag_blue_skin : ((teamnumber == NUM_TEAM_3) ? autocvar_g_ctf_flag_yellow_skin : ((teamnumber == NUM_TEAM_4) ? autocvar_g_ctf_flag_pink_skin : autocvar_g_ctf_flag_neutral_skin)))); }
-	if(flag.toucheffect == "") { flag.toucheffect = ((teamnumber == NUM_TEAM_1) ? "redflag_touch" : ((teamnumber == NUM_TEAM_2) ? "blueflag_touch" : ((teamnumber == NUM_TEAM_3) ? "yellowflag_touch" : ((teamnumber == NUM_TEAM_4) ? "pinkflag_touch" : "neutralflag_touch")))); }
-	if(flag.passeffect == "")  { flag.passeffect = ((teamnumber == NUM_TEAM_1) ? "red_pass" : ((teamnumber == NUM_TEAM_2) ? "blue_pass" : ((teamnumber == NUM_TEAM_3) ? "yellow_pass" : ((teamnumber == NUM_TEAM_4) ? "pink_pass" : "neutral_pass")))); }
-	if(flag.capeffect == "")   { flag.capeffect = ((teamnumber == NUM_TEAM_1) ? "red_cap" : ((teamnumber == NUM_TEAM_2) ? "blue_cap" : ((teamnumber == NUM_TEAM_3) ? "yellow_cap" : ((teamnumber == NUM_TEAM_4) ? "pink_cap" : "")))); } // neutral flag cant be capped itself
+	if(flag.toucheffect == "") { flag.toucheffectnum = ((teamnumber == NUM_TEAM_1) ? EFFECT_FLAG_RED_TOUCH : ((teamnumber == NUM_TEAM_2) ? EFFECT_FLAG_BLUE_TOUCH : ((teamnumber == NUM_TEAM_3) ? EFFECT_FLAG_YELLOW_TOUCH : ((teamnumber == NUM_TEAM_4) ? EFFECT_FLAG_PINK_TOUCH : EFFECT_FLAG_NEUTRAL_TOUCH)))); }
+	if(flag.passeffect == "")  { flag.passeffectnum = ((teamnumber == NUM_TEAM_1) ? EFFECT_RED_PASS : ((teamnumber == NUM_TEAM_2) ? EFFECT_BLUE_PASS : ((teamnumber == NUM_TEAM_3) ? EFFECT_YELLOW_PASS : ((teamnumber == NUM_TEAM_4) ? EFFECT_PINK_PASS : EFFECT_NEUTRAL_PASS)))); }
+	if(flag.capeffect == "")   { flag.capeffectnum = ((teamnumber == NUM_TEAM_1) ? EFFECT_RED_CAP : ((teamnumber == NUM_TEAM_2) ? EFFECT_BLUE_CAP : ((teamnumber == NUM_TEAM_3) ? EFFECT_YELLOW_CAP : ((teamnumber == NUM_TEAM_4) ? EFFECT_PINK_CAP : 0)))); } // neutral flag cant be capped itself
 	if(!flag.active)           { flag.active = ACTIVE_ACTIVE; }
 
 	// sound
@@ -2249,56 +2253,44 @@ MUTATOR_HOOKFUNCTION(ctf_SpectateCopy)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(ctf_FormatMessage)
+{
+	entity bluefc = world, redfc = world, yellowfc = world, pinkfc = world, tmp_entity; // NOTE: blue = red player
+	entity tfc = world, sfc = world;
+
+	for(tmp_entity = ctf_worldflaglist; tmp_entity; tmp_entity = tmp_entity.ctf_worldflagnext)
+	{
+		if(tmp_entity.owner)
+		{
+			switch(tmp_entity.team)
+			{
+				case NUM_TEAM_1: redfc = tmp_entity.owner; break;
+				case NUM_TEAM_2: bluefc = tmp_entity.owner; break;
+				case NUM_TEAM_3: yellowfc = tmp_entity.owner; break;
+				case NUM_TEAM_4: pinkfc = tmp_entity.owner; break;
+			}
+
+			if(SAME_TEAM(tmp_entity.owner, self)) { tfc = tmp_entity.owner; }
+			if(SAME_TEAM(tmp_entity, self)) { sfc = tmp_entity.owner; }
+		}
+	}
+
+	switch(format_escape)
+	{
+		case "r": format_replacement = ((tfc) ? tfc.netname : "(nobody)"); break;
+		case "R": format_replacement = ((sfc) ? sfc.netname : "(nobody)"); break;
+		case "t": format_replacement = ((redfc) ? redfc.netname : "(nobody)"); break;
+		case "T": format_replacement = ((bluefc) ? bluefc.netname : "(nobody)"); break;
+		case "p": format_replacement = ((yellowfc) ? yellowfc.netname : "(nobody)"); break;
+		case "P": format_replacement = ((pinkfc) ? pinkfc.netname : "(nobody)"); break;
+	}
+
+	return FALSE;
+}
 
 // ==========
 // Spawnfuncs
 // ==========
-
-/*QUAKED spawnfunc_info_player_team1 (1 0 0) (-16 -16 -24) (16 16 24)
-CTF Starting point for a player in team one (Red).
-Keys: "angle" viewing angle when spawning. */
-void spawnfunc_info_player_team1()
-{
-	if(g_assault) { remove(self); return; }
-
-	self.team = NUM_TEAM_1; // red
-	spawnfunc_info_player_deathmatch();
-}
-
-
-/*QUAKED spawnfunc_info_player_team2 (1 0 0) (-16 -16 -24) (16 16 24)
-CTF Starting point for a player in team two (Blue).
-Keys: "angle" viewing angle when spawning. */
-void spawnfunc_info_player_team2()
-{
-	if(g_assault) { remove(self); return; }
-
-	self.team = NUM_TEAM_2; // blue
-	spawnfunc_info_player_deathmatch();
-}
-
-/*QUAKED spawnfunc_info_player_team3 (1 0 0) (-16 -16 -24) (16 16 24)
-CTF Starting point for a player in team three (Yellow).
-Keys: "angle" viewing angle when spawning. */
-void spawnfunc_info_player_team3()
-{
-	if(g_assault) { remove(self); return; }
-
-	self.team = NUM_TEAM_3; // yellow
-	spawnfunc_info_player_deathmatch();
-}
-
-
-/*QUAKED spawnfunc_info_player_team4 (1 0 0) (-16 -16 -24) (16 16 24)
-CTF Starting point for a player in team four (Purple).
-Keys: "angle" viewing angle when spawning. */
-void spawnfunc_info_player_team4()
-{
-	if(g_assault) { remove(self); return; }
-
-	self.team = NUM_TEAM_4; // purple
-	spawnfunc_info_player_deathmatch();
-}
 
 /*QUAKED spawnfunc_item_flag_team1 (0 0.5 0.8) (-48 -48 -37) (48 48 37)
 CTF flag for team one (Red).
@@ -2313,15 +2305,7 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_team1()
 {
-	if(!g_ctf)
-	{
-		if(autocvar_g_ctf_powerups_replace_flags && !g_jailbreak)
-			spawnfunc_item_invincible();
-		else
-			remove(self);
-
-		return;
-	}
+	if(!g_ctf) { remove(self); return; }
 
 	ctf_FlagSetup(NUM_TEAM_1, self);
 }
@@ -2339,15 +2323,7 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_team2()
 {
-	if(!g_ctf)
-	{
-		if(autocvar_g_ctf_powerups_replace_flags && !g_jailbreak)
-			spawnfunc_item_strength();
-		else
-			remove(self);
-
-		return;
-	}
+	if(!g_ctf) { remove(self); return; }
 
 	ctf_FlagSetup(NUM_TEAM_2, self);
 }
@@ -2365,15 +2341,7 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_team3()
 {
-	if(!g_ctf)
-	{
-		if(autocvar_g_ctf_powerups_replace_flags && !g_jailbreak)
-			spawnfunc_item_invincible();
-		else
-			remove(self);
-			
-		return;
-	}
+	if(!g_ctf) { remove(self); return; }
 
 	ctf_FlagSetup(NUM_TEAM_3, self);
 }
@@ -2391,15 +2359,7 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_team4()
 {
-	if(!g_ctf)
-	{
-		if(autocvar_g_ctf_powerups_replace_flags && !g_jailbreak)
-			spawnfunc_item_strength();
-		else
-			remove(self);
-			
-		return;
-	}
+	if(!g_ctf) { remove(self); return; }
 
 	ctf_FlagSetup(NUM_TEAM_4, self);
 }
@@ -2537,6 +2497,7 @@ MUTATOR_DEFINITION(gamemode_ctf)
 	MUTATOR_HOOK(HavocBot_ChooseRole, ctf_BotRoles, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, ctf_GetTeamCount, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SpectateCopy, ctf_SpectateCopy, CBC_ORDER_ANY);
+	MUTATOR_HOOK(FormatMessage, ctf_FormatMessage, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

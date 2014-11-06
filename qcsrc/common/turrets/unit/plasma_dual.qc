@@ -28,21 +28,28 @@ float t_plasma_dual(float req)
 								   800, 0, 0, 0, 0, DEATH_TURRET_PLASMA);
 
 
-				pointparticles(particleeffectnum("nex_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+				Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
 				// teamcolor / hit beam effect
 				vector v;
-				string s;
 				v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-				s = strcat("TE_TEI_G3", Static_Team_ColorName_Upper(self.team));
+				float f;
+				switch(self.team)
+				{
+					case NUM_TEAM_1: f = (damage_goodhits) ? EFFECT_MINSTANEX_RED_HIT : EFFECT_MINSTANEX_RED; break;
+					case NUM_TEAM_2: f = (damage_goodhits) ? EFFECT_MINSTANEX_BLUE_HIT : EFFECT_MINSTANEX_BLUE; break;
+					case NUM_TEAM_3: f = (damage_goodhits) ? EFFECT_MINSTANEX_YELLOW_HIT : EFFECT_MINSTANEX_YELLOW; break;
+					case NUM_TEAM_4: f = (damage_goodhits) ? EFFECT_MINSTANEX_PINK_HIT : EFFECT_MINSTANEX_PINK; break;
+					default:		 f = (damage_goodhits) ? EFFECT_MINSTANEX_NEUTRAL_HIT : EFFECT_MINSTANEX_NEUTRAL; break;
+				}
 				
-				WarpZone_TrailParticles(world, particleeffectnum(s), self.tur_shotorg, v);
+				Send_Effect(f, self.tur_shotorg, v, 0);
 					
 				self.tur_head.frame += 1;
 			}
 			else
 			{
-				entity missile = turret_projectile("weapons/hagar_fire.wav", 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE);
+				entity missile = turret_projectile(W_Sound("hagar_fire"), 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE);
 				missile.missile_flags = MIF_SPLASH;
 				pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 				self.tur_head.frame += 1;

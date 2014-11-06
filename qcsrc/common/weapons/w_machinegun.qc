@@ -103,7 +103,7 @@ void W_MachineGun_MuzzleFlash(void)
 
 void W_MachineGun_Attack(float deathtype)
 {
-	W_SetupShot(self, TRUE, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, ((self.misc_bulletcounter == 1) ? WEP_CVAR(machinegun, first_damage) : WEP_CVAR(machinegun, sustained_damage)));
+	W_SetupShot(self, TRUE, 0, W_Sound("uzi_fire"), CH_WEAPON_A, ((self.misc_bulletcounter == 1) ? WEP_CVAR(machinegun, first_damage) : WEP_CVAR(machinegun, sustained_damage)));
 	if(!autocvar_g_norecoil)
 	{
 		self.punchangle_x = random() - 0.5;
@@ -118,7 +118,7 @@ void W_MachineGun_Attack(float deathtype)
 	else
 		fireBullet(w_shotorg, w_shotdir, WEP_CVAR(machinegun, sustained_spread), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage), WEP_CVAR(machinegun, sustained_force), deathtype, 0);
 
-	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	W_MachineGun_MuzzleFlash();
 	W_AttachToShotorg(self.muzzle_flash, '5 0 0');
@@ -179,7 +179,7 @@ void W_MachineGun_Attack_Auto(void)
 
 	W_DecreaseAmmo(WEP_CVAR(machinegun, sustained_ammo));
 
-	W_SetupShot(self, TRUE, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, WEP_CVAR(machinegun, sustained_damage));
+	W_SetupShot(self, TRUE, 0, W_Sound("uzi_fire"), CH_WEAPON_A, WEP_CVAR(machinegun, sustained_damage));
 	if(!autocvar_g_norecoil)
 	{
 		self.punchangle_x = random() - 0.5;
@@ -191,7 +191,7 @@ void W_MachineGun_Attack_Auto(void)
 
 	self.misc_bulletcounter = self.misc_bulletcounter + 1;
 
-	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	W_MachineGun_MuzzleFlash();
 	W_AttachToShotorg(self.muzzle_flash, '5 0 0');
@@ -205,7 +205,7 @@ void W_MachineGun_Attack_Auto(void)
 
 void W_MachineGun_Attack_Burst(void)
 {
-	W_SetupShot(self, TRUE, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, WEP_CVAR(machinegun, sustained_damage));
+	W_SetupShot(self, TRUE, 0, W_Sound("uzi_fire"), CH_WEAPON_A, WEP_CVAR(machinegun, sustained_damage));
 	if(!autocvar_g_norecoil)
 	{
 		self.punchangle_x = random() - 0.5;
@@ -214,7 +214,7 @@ void W_MachineGun_Attack_Burst(void)
 
 	fireBullet(w_shotorg, w_shotdir, WEP_CVAR(machinegun, burst_speed), WEP_CVAR(machinegun, solidpenetration), WEP_CVAR(machinegun, sustained_damage), WEP_CVAR(machinegun, sustained_force), WEP_MACHINEGUN, 0);
 
-	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	W_MachineGun_MuzzleFlash();
 	W_AttachToShotorg(self.muzzle_flash, '5 0 0');
@@ -242,7 +242,7 @@ float W_MachineGun(float req)
 	{
 		case WR_AIM:
 		{
-			if(vlen(self.origin-self.enemy.origin) < 3000 - bound(0, skill, 10) * 200)
+			if(vlen(self.origin-self.enemy.origin) < 3000 - bound(0, bot_skill, 10) * 200)
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
 			else
 				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
@@ -307,7 +307,7 @@ float W_MachineGun(float req)
 			precache_model("models/weapons/g_uzi.md3");
 			precache_model("models/weapons/v_uzi.md3");
 			precache_model("models/weapons/h_uzi.iqm");
-			precache_sound("weapons/uzi_fire.wav");
+			precache_sound(W_Sound("uzi_fire"));
 			MACHINEGUN_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
@@ -350,7 +350,7 @@ float W_MachineGun(float req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo)), "weapons/reload.wav");
+			W_Reload(min(max(WEP_CVAR(machinegun, sustained_ammo), WEP_CVAR(machinegun, first_ammo)), WEP_CVAR(machinegun, burst_ammo)), W_Sound("reload"));
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:

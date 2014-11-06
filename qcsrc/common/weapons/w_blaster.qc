@@ -93,8 +93,8 @@ void W_Blaster_Attack(
 {
 	vector s_forward = v_forward * cos(atk_shotangle * DEG2RAD) + v_up * sin(atk_shotangle * DEG2RAD);
 
-	W_SetupShot_Dir(self, s_forward, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_B, atk_damage);
-	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	W_SetupShot_Dir(self, s_forward, FALSE, 3, W_Sound("lasergun_fire"), CH_WEAPON_B, atk_damage);
+	Send_Effect(EFFECT_LASER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	entity missile = spawn();
 	missile.owner = missile.realowner = self;
@@ -228,7 +228,7 @@ float W_Blaster(float request)
 			precache_model("models/weapons/g_laser.md3");
 			precache_model("models/weapons/v_laser.md3");
 			precache_model("models/weapons/h_laser.iqm");
-			precache_sound("weapons/lasergun_fire.wav");
+			precache_sound(W_Sound("lasergun_fire"));
 			BLASTER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}

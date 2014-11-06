@@ -29,8 +29,6 @@ void HUD_Panel_ExportCfg(string cfgname)
 		HUD_Write("\n");
 
 		HUD_Write_Cvar_q("hud_progressbar_alpha");
-		HUD_Write_Cvar_q("hud_progressbar_strength_color");
-		HUD_Write_Cvar_q("hud_progressbar_shield_color");
 		HUD_Write_Cvar_q("hud_progressbar_health_color");
 		HUD_Write_Cvar_q("hud_progressbar_armor_color");
 		HUD_Write_Cvar_q("hud_progressbar_fuel_color");
@@ -99,8 +97,6 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_iconalign");
 					HUD_Write_PanelCvar_q("_baralign");
 					HUD_Write_PanelCvar_q("_progressbar");
-					HUD_Write_PanelCvar_q("_progressbar_strength");
-					HUD_Write_PanelCvar_q("_progressbar_shield");
 					HUD_Write_PanelCvar_q("_text");
 					break;
 				case HUD_PANEL_HEALTHARMOR:
@@ -119,6 +115,7 @@ void HUD_Panel_ExportCfg(string cfgname)
 					HUD_Write_PanelCvar_q("_fontsize");
 					HUD_Write_PanelCvar_q("_time");
 					HUD_Write_PanelCvar_q("_fadetime");
+					HUD_Write_PanelCvar_q("_icon_aspect");
 					break;
 				case HUD_PANEL_TIMER:
 					HUD_Write_PanelCvar_q("_increment");

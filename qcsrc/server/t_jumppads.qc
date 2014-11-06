@@ -174,7 +174,7 @@ void trigger_push_touch()
 		if(self.pushltime < time)  // prevent "snorring" sound when a player hits the jumppad more than once
 		{
 			// flash when activated
-			pointparticles(particleeffectnum("jumppad_activate"), other.origin, other.velocity, 1);
+			Send_Effect(EFFECT_JUMPPAD, other.origin, other.velocity, 1);
 			sound (other, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 			self.pushltime = time + 0.2;
 		}

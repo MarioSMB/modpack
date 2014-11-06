@@ -269,7 +269,7 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 
 void vehicles_gib_explode()
 {
-	sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+	sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 	pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	remove(self);
 }
@@ -1127,7 +1127,7 @@ void vehicles_spawn()
 	self.angles = self.pos2;
 	setorigin(self, self.pos1);
 	// Show it
-	pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
+	Send_Effect(EFFECT_TELEPORT, self.origin + '0 0 64', '0 0 0', 1);
 
 	if(self.vehicle_controller)
 		self.team = self.vehicle_controller.team;

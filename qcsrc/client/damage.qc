@@ -212,7 +212,7 @@ void Ent_DamageInfo(float isNew)
 			// spiderbot
 			case DEATH_VH_SPID_MINIGUN:
 				string _snd;
-				_snd = strcat("weapons/ric", ftos(1 + rint(random() * 2)), ".waw");
+				_snd = strcat("ric", ftos(1 + rint(random() * 2)));
 				sound(self, CH_SHOTS, _snd, VOL_BASE, ATTEN_NORM);
 				pointparticles(particleeffectnum("spiderbot_minigun_impact"), self.origin, w_backoff * 1000, 1);
 				break;

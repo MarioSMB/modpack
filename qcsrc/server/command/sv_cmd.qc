@@ -88,6 +88,21 @@ void MorningRescue(entity e)
 	}
 }
 
+void DiscoMode(entity e, float enable)
+{
+	if(e == world)
+		return;
+
+	float accepted;
+
+	accepted = VerifyClientEntity(e, TRUE, FALSE);
+
+	if(accepted > 0) 
+	{
+		e.discomode = enable;
+	}
+}
+
 
 // =======================
 //  Command Sub-Functions
@@ -161,47 +176,6 @@ void GameCommand_adminmsg(float request, float argc)
 			print("  Otherwise, it will just be sent as a centerprint message.\n");
 			print("Examples: adminmsg 2,4 \"this infomessage will last for ten seconds\" 10\n");
 			print("          adminmsg 2,5 \"this message will be a centerprint\"\n");
-			return;
-		}
-	}
-}
-
-void GameCommand_mobbutcher(float request)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			if(autocvar_g_campaign) { print("This command doesn't work in campaign mode.\n"); return; }
-			if(g_invasion) { print("This command doesn't work during an invasion.\n"); return; }
-
-			float removed_count = 0;
-			entity head;
-
-			FOR_EACH_MONSTER(head)
-			{
-				monster_remove(head);
-				++removed_count;
-			}
-
-			monsters_total = 0; // reset stats?
-			monsters_killed = 0;
-
-			totalspawned = 0;
-
-			if(removed_count <= 0)
-				print("No monsters to kill\n");
-			else
-				printf("Killed %d monster%s\n", removed_count, ((removed_count == 1) ? "" : "s"));
-
-			return; // never fall through to usage
-		}
-
-		default:
-		case CMD_REQUEST_USAGE:
-		{
-			print("\nUsage:^3 sv_cmd mobbutcher\n");
-			print("  No arguments required.\n");
 			return;
 		}
 	}
@@ -1639,6 +1613,74 @@ void GameCommand_supermentalrescue(float request)
 	}
 }
 
+
+void GameCommand_discomode(float request, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			float accepted;
+			float enable;
+			string msg = "";
+			
+			if ( argv(2) )
+			{
+				enable = stof( argv(2) );
+				if ( !enable )
+					msg = " disabled";
+			}
+			else
+				enable = 1;
+			
+			if(argv(1) == "all")
+			{
+				entity head;
+				
+				FOR_EACH_REALCLIENT(head)
+				{
+					accepted = VerifyClientEntity(head, TRUE, FALSE);
+					if(accepted > 0)
+					{
+						DiscoMode(head,enable);
+						print(strcat("Disco Mode",msg," for ", GetCallerName(head), ".\n"));
+						continue;
+					}
+					else
+					{
+						print("Disco Mode failed on ", GetCallerName(head), ".\n");
+						continue;
+					}
+				}
+				return;
+			}
+
+			entity client = GetIndexedEntity(argc, 1);
+			accepted = VerifyClientEntity(client, TRUE, FALSE);
+
+			if(accepted > 0)
+			{
+				DiscoMode(client,enable);
+				print(strcat("Disco Mode",msg," for ", GetCallerName(client), ".\n"));
+			}
+			else
+				print("Disco Mode: ", GetClientErrorString(accepted, argv(1)), ".\n");
+
+			return;
+		}
+
+		default:
+			print("Incorrect parameters for ^2discomode^7\n");
+		case CMD_REQUEST_USAGE:
+		{
+			print("\nUsage:^3 sv_cmd discomode client [enable]\n");
+			print("  'client' is the entity number or name of the player,\n");
+			print("  'enable' 1 by default. 0 disable, 1 enable \n");
+			return;
+		}
+	}
+}
+
 void GameCommand_trace(float request, float argc)
 {
 	switch(request)
@@ -1914,7 +1956,6 @@ void GameCommand_(float request)
 // Do not hard code aliases for these, instead create them in commands.cfg... also: keep in alphabetical order, please ;)
 #define SERVER_COMMANDS(request,arguments,command) \
 	SERVER_COMMAND("adminmsg", GameCommand_adminmsg(request, arguments), "Send an admin message to a client directly") \
-	SERVER_COMMAND("mobbutcher", GameCommand_mobbutcher(request), "Instantly removes all monsters on the map") \
 	SERVER_COMMAND("allready", GameCommand_allready(request), "Restart the server and reset the players") \
 	SERVER_COMMAND("allspec", GameCommand_allspec(request, arguments), "Force all players to spectate") \
 	SERVER_COMMAND("anticheat", GameCommand_anticheat(request, arguments), "Create an anticheat report for a client") \
@@ -1926,6 +1967,7 @@ void GameCommand_(float request)
 	SERVER_COMMAND("defer_clear", GameCommand_defer_clear(request, arguments), "Clear all queued defer commands for a specific client") \
 	SERVER_COMMAND("defer_clear_all", GameCommand_defer_clear_all(request), "Clear all queued defer commands for all clients") \
 	SERVER_COMMAND("delrec", GameCommand_delrec(request, arguments), "Delete race time record for a map") \
+	SERVER_COMMAND("discomode", GameCommand_discomode(request, arguments), "Disco Mode!!") \
 	SERVER_COMMAND("effectindexdump", GameCommand_effectindexdump(request), "Dump list of effects from code and effectinfo.txt") \
 	SERVER_COMMAND("extendmatchtime", GameCommand_extendmatchtime(request), "Increase the timelimit value incrementally") \
 	SERVER_COMMAND("find", GameCommand_find(request, arguments), "Search through entities for matching classname") \

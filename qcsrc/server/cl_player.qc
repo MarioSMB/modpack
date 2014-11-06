@@ -446,7 +446,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 				// throw off bot aim temporarily
 				float shake;
-				shake = damage * 5 / (bound(0,skill,100) + 1);
+				shake = damage * 5 / (bound(0,bot_skill,100) + 1);
 				self.v_angle_x = self.v_angle_x + (random() * 2 - 1) * shake;
 				self.v_angle_y = self.v_angle_y + (random() * 2 - 1) * shake;
 			}
@@ -519,7 +519,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			if(deathtype == DEATH_KILL)
 			{
 				// for the lemmings fans, a small harmless explosion
-				pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
+				Send_Effect(EFFECT_ROCKET_EXPLODE, self.origin, '0 0 0', 1);
 			}
 		}
 

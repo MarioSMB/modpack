@@ -516,7 +516,7 @@ void W_Arc_Beam(float burst)
 	// only play fire sound if 1 sec has passed since player let go the fire button
 	if(time - self.beam_prev > 1)
 	{
-		sound(self, CH_WEAPON_A, "weapons/lgbeam_fire.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_WEAPON_A, W_Sound("lgbeam_fire"), VOL_BASE, ATTN_NORM);
 	}
 
 	entity beam = self.arc_beam = spawn();
@@ -623,10 +623,10 @@ float W_Arc(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/weapons/g_arc.md3");
-			precache_model("models/weapons/v_arc.md3");
-			precache_model("models/weapons/h_arc.iqm");
-			precache_sound("weapons/lgbeam_fire.wav");
+			precache_model("models/weapons/g_hlac.md3");
+			precache_model("models/weapons/v_hlac.md3");
+			precache_model("models/weapons/h_hlac.iqm");
+			precache_sound(W_Sound("lgbeam_fire"));
 			if(!arc_shotorigin[0])
 			{
 				arc_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 1);

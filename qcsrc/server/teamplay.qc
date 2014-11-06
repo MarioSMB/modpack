@@ -333,10 +333,6 @@ string getwelcomemessage(void)
 		modifications = strcat(modifications, ", Weapons stay");
 	if(g_jetpack)
 		modifications = strcat(modifications, ", Jet pack");
-	if(autocvar_g_powerups == 0)
-		modifications = strcat(modifications, ", No powerups");
-	if(autocvar_g_powerups > 0)
-		modifications = strcat(modifications, ", Powerups");
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
 	string versionmessage;
@@ -528,41 +524,14 @@ void GetTeamCounts(entity ignore)
 		if(head != ignore)// && head.netname != "")
 		{
 			value = PlayerValue(head);
-			if(IS_BOT_CLIENT(head))
-				bvalue = value;
-			else
-				bvalue = 0;
-			if(t == NUM_TEAM_1)
+			bvalue = (IS_BOT_CLIENT(head)) ? value : 0;
+
+			switch(t)
 			{
-				if(c1 >= 0)
-				{
-					c1 = c1 + value;
-					cb1 = cb1 + bvalue;
-				}
-			}
-			if(t == NUM_TEAM_2)
-			{
-				if(c2 >= 0)
-				{
-					c2 = c2 + value;
-					cb2 = cb2 + bvalue;
-				}
-			}
-			if(t == NUM_TEAM_3)
-			{
-				if(c3 >= 0)
-				{
-					c3 = c3 + value;
-					cb3 = cb3 + bvalue;
-				}
-			}
-			if(t == NUM_TEAM_4)
-			{
-				if(c4 >= 0)
-				{
-					c4 = c4 + value;
-					cb4 = cb4 + bvalue;
-				}
+				case NUM_TEAM_1: if(c1 >= 0) { c1 += value; cb1 += bvalue; } break;
+				case NUM_TEAM_2: if(c2 >= 0) { c2 += value; cb2 += bvalue; } break;
+				case NUM_TEAM_3: if(c3 >= 0) { c3 += value; cb3 += bvalue; } break;
+				case NUM_TEAM_4: if(c4 >= 0) { c4 += value; cb4 += bvalue; } break;
 			}
 		}
 	}
@@ -825,7 +794,7 @@ void SV_ChangeTeam(float _color)
 	}
 
 	if((autocvar_g_campaign) || (autocvar_g_changeteam_banned && self.wasplayer)) {
-		sprint(self, "Team changes not allowed\n");
+		Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
 		return; // changing teams is not allowed
 	}
 
@@ -835,7 +804,7 @@ void SV_ChangeTeam(float _color)
 		GetTeamCounts(self);
 		if(!TeamSmallerEqThanTeam(dteam, steam, self))
 		{
-			sprint(self, "Cannot change to a larger/better/shinier team\n");
+			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
 			return;
 		}
 	}

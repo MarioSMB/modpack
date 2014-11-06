@@ -60,7 +60,7 @@ void spawnfunc_weapon_minelayer(void) { weapon_defaultspawnfunc(WEP_MINE_LAYER);
 
 void W_MineLayer_Stick(entity to)
 {
-	spamsound(self, CH_SHOTS, "weapons/mine_stick.wav", VOL_BASE, ATTN_NORM);
+	spamsound(self, CH_SHOTS, W_Sound("mine_stick"), VOL_BASE, ATTN_NORM);
 
 	// in order for mines to face properly when sticking to the ground, they must be a server side entity rather than a csqc projectile
 
@@ -224,7 +224,7 @@ void W_MineLayer_Think(void)
 	if((time > self.cnt) && (!self.mine_time) && (self.cnt != -1))
 	{
 		if(WEP_CVAR(minelayer, lifetime_countdown) > 0)
-			spamsound(self, CH_SHOTS, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
+			spamsound(self, CH_SHOTS, W_Sound("mine_trigger"), VOL_BASE, ATTN_NORM);
 		self.mine_time = time + WEP_CVAR(minelayer, lifetime_countdown);
 		self.mine_explodeanyway = 1; // make the mine super aggressive -- Samual: Rather, make it not care if a team mate is near.
 	}
@@ -247,7 +247,7 @@ void W_MineLayer_Think(void)
 		if(head != self.realowner && DIFF_TEAM(head, self.realowner)) // don't trigger for team mates
 		if(!self.mine_time)
 		{
-			spamsound(self, CH_SHOTS, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
+			spamsound(self, CH_SHOTS, W_Sound("mine_trigger"), VOL_BASE, ATTN_NORM);
 			self.mine_time = time + WEP_CVAR(minelayer, time);
 		}
 		head = head.chain;
@@ -318,16 +318,16 @@ void W_MineLayer_Attack(void)
 		if(self.minelayer_mines >= WEP_CVAR(minelayer, limit))
 		{
 			// the refire delay keeps this message from being spammed
-			sprint(self, strcat("minelayer: You cannot place more than ^2", ftos(WEP_CVAR(minelayer, limit)), " ^7mines at a time\n") );
-			play2(self, "weapons/unavailable.wav");
+			Send_Notification(NOTIF_ONE, self, MSG_MULTI, WEAPON_MINELAYER_LIMIT, WEP_CVAR(minelayer, limit));
+			play2(self, W_Sound("unavailable"));
 			return;
 		}
 	}
 
 	W_DecreaseAmmo(WEP_CVAR(minelayer, ammo));
 
-	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', FALSE, 5, "weapons/mine_fire.wav", CH_WEAPON_A, WEP_CVAR(minelayer, damage));
-	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', FALSE, 5, W_Sound("mine_fire"), CH_WEAPON_A, WEP_CVAR(minelayer, damage));
+	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	mine = WarpZone_RefSys_SpawnSameRefSys(self);
 	mine.owner = mine.realowner = self;
@@ -414,7 +414,7 @@ float W_MineLayer(float req)
 				self.BUTTON_ATCK = FALSE;
 			else
 				self.BUTTON_ATCK = bot_aim(WEP_CVAR(minelayer, speed), 0, WEP_CVAR(minelayer, lifetime), FALSE);
-			if(skill >= 2) // skill 0 and 1 bots won't detonate mines!
+			if(bot_skill >= 2) // skill 0 and 1 bots won't detonate mines!
 			{
 				// decide whether to detonate mines
 				entity targetlist, targ;
@@ -469,7 +469,7 @@ float W_MineLayer(float req)
 					}
 					makevectors(mine.v_angle);
 					targ = targetlist;
-					if(skill > 9) // normal players only do this for the target they are tracking
+					if(bot_skill > 9) // normal players only do this for the target they are tracking
 					{
 						targ = targetlist;
 						while(targ)
@@ -487,7 +487,7 @@ float W_MineLayer(float req)
 						if(v_forward * normalize(mine.origin - self.enemy.origin)< 0.1)
 							if(IS_PLAYER(self.enemy))
 								if(desirabledamage >= 0.1*coredamage)
-									if(random()/distance*300 > frametime*bound(0,(10-skill)*0.2,1))
+									if(random()/distance*300 > frametime*bound(0,(10-bot_skill)*0.2,1))
 										self.BUTTON_ATCK2 = TRUE;
 					//	dprint(ftos(random()/distance*300),">");dprint(ftos(frametime*bound(0,(10-skill)*0.2,1)),"\n");
 					}
@@ -498,7 +498,7 @@ float W_MineLayer(float req)
 				// but don't fire a new shot at the same time!
 				if(desirabledamage >= 0.75 * coredamage) //this should do group damage in rare fortunate events
 					self.BUTTON_ATCK2 = TRUE;
-				if((skill > 6.5) && (selfdamage > self.health))
+				if((bot_skill > 6.5) && (selfdamage > self.health))
 					self.BUTTON_ATCK2 = FALSE;
 				//if(self.BUTTON_ATCK2 == TRUE)
 				//	dprint(ftos(desirabledamage),"\n");
@@ -527,7 +527,7 @@ float W_MineLayer(float req)
 			if(self.BUTTON_ATCK2)
 			{
 				if(W_MineLayer_PlacedMines(TRUE))
-					sound(self, CH_WEAPON_B, "weapons/mine_det.wav", VOL_BASE, ATTN_NORM);
+					sound(self, CH_WEAPON_B, W_Sound("mine_det"), VOL_BASE, ATTN_NORM);
 			}
 			
 			return TRUE;
@@ -539,10 +539,10 @@ float W_MineLayer(float req)
 			precache_model("models/weapons/g_minelayer.md3");
 			precache_model("models/weapons/v_minelayer.md3");
 			precache_model("models/weapons/h_minelayer.iqm");
-			precache_sound("weapons/mine_det.wav");
-			precache_sound("weapons/mine_fire.wav");
-			precache_sound("weapons/mine_stick.wav");
-			precache_sound("weapons/mine_trigger.wav");
+			precache_sound(W_Sound("mine_det"));
+			precache_sound(W_Sound("mine_fire"));
+			precache_sound(W_Sound("mine_stick"));
+			precache_sound(W_Sound("mine_trigger"));
 			MINELAYER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
@@ -576,7 +576,7 @@ float W_MineLayer(float req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(WEP_CVAR(minelayer, ammo), "weapons/reload.wav");
+			W_Reload(WEP_CVAR(minelayer, ammo), W_Sound("reload"));
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:

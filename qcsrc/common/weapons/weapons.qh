@@ -80,6 +80,10 @@ string GetAmmoPicture(.float ammotype);
 float GetAmmoStat(.float ammotype);
 #endif
 
+#ifdef SVQC
+string W_Sound(string w_snd);
+#endif
+
 // ammo types
 .float ammo_shells;
 .float ammo_nails;

@@ -1205,9 +1205,11 @@ void CSQC_UpdateView(float w, float h)
 		}
 
 		// edge detection postprocess handling done second (used by hud_powerup)
-		float sharpen_intensity = 0, strength_finished = getstatf(STAT_STRENGTH_FINISHED), invincible_finished = getstatf(STAT_INVINCIBLE_FINISHED);
-		if (strength_finished - time > 0) { sharpen_intensity += (strength_finished - time); }
-		if (invincible_finished - time > 0) { sharpen_intensity += (invincible_finished - time); }
+		float sharpen_intensity = 0, buffs = getstati(STAT_BUFFS, 0, 24);
+		entity e;
+		for(e = Buff_Type_first; e; e = e.enemy)
+		if(buffs & e.items)
+			++sharpen_intensity;
 
 		sharpen_intensity = bound(0, ((getstati(STAT_HEALTH) > 0) ? sharpen_intensity : 0), 5); // Check to see if player is alive (if not, set 0) - also bound to fade out starting at 5 seconds.
 
@@ -1268,8 +1270,18 @@ void CSQC_UpdateView(float w, float h)
 
 	// amount of damage since last hit sound
 	float unaccounted_damage = damage_dealt_total - damage_dealt_total_prev;
+	
 
-	if (unaccounted_damage > 0 && autocvar_cl_hitsound > 0 && time - hitsound_time_prev > autocvar_cl_hitsound_antispam_time)
+	if (autocvar_cl_hitsound == 1)
+	{
+		if ( time - hitsound_time_prev > autocvar_cl_hitsound_antispam_time )
+		if ( damage_dealt_total > 0 )
+		{
+			sound(world, CH_INFO, "misc/hit.wav", VOL_BASE, ATTEN_NONE);
+			hitsound_time_prev = time;
+		}
+	}
+	else if (unaccounted_damage > 0 && autocvar_cl_hitsound > 0 && time - hitsound_time_prev > autocvar_cl_hitsound_antispam_time)
 	{
 		// customizable gradient function that crosses (0,a), (c,1) and asymptotically approaches b
 		float a, b, c, x;

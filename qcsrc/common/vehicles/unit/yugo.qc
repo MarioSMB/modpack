@@ -510,8 +510,8 @@ float v_yugo(float req)
 		}
 		case VR_PRECACHE:
 		{
-			precache_sound ("weapons/lasergun_fire.wav");
-			precache_sound ("weapons/rocket_fire.wav");
+			precache_sound (W_Sound("lasergun_fire"));
+			precache_sound (W_Sound("rocket_fire"));
 
 			precache_sound ("vehicles/racer_idle.wav");
 			precache_sound ("vehicles/racer_move.wav");

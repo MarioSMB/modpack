@@ -257,7 +257,7 @@ void W_Crylink_LinkJoinEffect_Think(void)
 					e.projectiledeathtype,
 					other
 				);
-				pointparticles(particleeffectnum("crylink_joinexplode"), self.origin, '0 0 0', n);
+				Send_Effect(EFFECT_CRYLINK_JOINEXPLODE, self.origin, '0 0 0', n);
 			}
 		}
 	}
@@ -353,13 +353,13 @@ void W_Crylink_Attack(void)
 	if(WEP_CVAR_PRI(crylink, joinexplode))
 		maxdmg += WEP_CVAR_PRI(crylink, joinexplode_damage);
 
-	W_SetupShot(self, FALSE, 2, "weapons/crylink_fire.wav", CH_WEAPON_A, maxdmg);
+	W_SetupShot(self, FALSE, 2, W_Sound("crylink_fire"), CH_WEAPON_A, maxdmg);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
 
 	shots = WEP_CVAR_PRI(crylink, shots);
-	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
+	Send_Effect(EFFECT_CRYLINK_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, shots);
 	proj = prevproj = firstproj = world;
 	for(counter = 0; counter < shots; ++counter)
 	{
@@ -462,13 +462,13 @@ void W_Crylink_Attack2(void)
 	if(WEP_CVAR_SEC(crylink, joinexplode))
 		maxdmg += WEP_CVAR_SEC(crylink, joinexplode_damage);
 
-	W_SetupShot(self, FALSE, 2, "weapons/crylink_fire2.wav", CH_WEAPON_A, maxdmg);
+	W_SetupShot(self, FALSE, 2, W_Sound("crylink_fire2"), CH_WEAPON_A, maxdmg);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
 
 	shots = WEP_CVAR_SEC(crylink, shots);
-	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
+	Send_Effect(EFFECT_CRYLINK_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, shots);
 	proj = prevproj = firstproj = world;
 	for(counter = 0; counter < shots; ++counter)
 	{
@@ -640,9 +640,9 @@ float W_Crylink(float req)
 			precache_model("models/weapons/g_crylink.md3");
 			precache_model("models/weapons/v_crylink.md3");
 			precache_model("models/weapons/h_crylink.iqm");
-			precache_sound("weapons/crylink_fire.wav");
-			precache_sound("weapons/crylink_fire2.wav");
-			precache_sound("weapons/crylink_linkjoin.wav");
+			precache_sound(W_Sound("crylink_fire"));
+			precache_sound(W_Sound("crylink_fire2"));
+			precache_sound(W_Sound("crylink_linkjoin"));
 			CRYLINK_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
@@ -673,7 +673,7 @@ float W_Crylink(float req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo)), "weapons/reload.wav");
+			W_Reload(min(WEP_CVAR_PRI(crylink, ammo), WEP_CVAR_SEC(crylink, ammo)), W_Sound("reload"));
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:

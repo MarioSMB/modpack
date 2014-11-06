@@ -19,7 +19,7 @@ const float AI_STATUS_STUCK						= 2048; // Cannot reach any goal
 .float aistatus;
 
 // Skill system
-float skill;
+float bot_skill;
 float autoskill_nextthink;
 
 // havocbot_keyboardskill // keyboard movement
