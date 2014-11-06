@@ -49,7 +49,7 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 		if(autocvar_g_monsters_owners)
 			e.monster_follow = own; // using .owner makes the monster non-solid for its master
 
-		e.angles = spawnedby.angles;
+		e.angles_y = spawnedby.angles_y;
 	}
 	
 	// Monster_Spawn checks if monster is valid
