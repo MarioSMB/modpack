@@ -217,8 +217,7 @@ MUTATOR_HOOKFUNCTION(ok_PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 {
-	if(autocvar_g_powerups)
-	if(autocvar_g_overkill_powerups_replace)
+	// powerups don't actually exist, so we can abuse them as much as we want
 	if(self.classname == "item_strength")
 	{
 		self.classname = "item_removing"; // avoid letting other mutators use it
@@ -231,8 +230,6 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 		return TRUE;
 	}
 
-	if(autocvar_g_powerups)
-	if(autocvar_g_overkill_powerups_replace)
 	if(self.classname == "item_invincible")
 	{
 		self.classname = "item_removing"; // avoid letting other mutators use it

@@ -117,20 +117,6 @@ vector w_shotorg;
 vector w_shotdir;
 vector w_shotend;
 
-.float prevstrengthsound;
-.float prevstrengthsoundattempt;
-void W_PlayStrengthSound(entity player) // void W_PlayStrengthSound
-{
-	if((player.items & IT_STRENGTH)
-		&& ((time > player.prevstrengthsound + autocvar_sv_strengthsound_antispam_time) // prevent insane sound spam
-		|| (time > player.prevstrengthsoundattempt + autocvar_sv_strengthsound_antispam_refire_threshold)))
-		{
-			sound(player, CH_TRIGGER, W_Sound("strength_fire"), VOL_BASE, ATTEN_NORM);
-			player.prevstrengthsound = time;
-		}
-		player.prevstrengthsoundattempt = time;
-}
-
 // this function calculates w_shotorg and w_shotdir based on the weapon model
 // offset, trueaim and antilag, and won't put w_shotorg inside a wall.
 // make sure you call makevectors first (FIXME?)
@@ -243,7 +229,6 @@ void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector m
 	if (snd != "")
 	{
 		sound (ent, chan, snd, VOL_BASE, ATTEN_NORM);
-		W_PlayStrengthSound(ent);
 	}
 
 	// nudge w_shotend so a trace to w_shotend hits

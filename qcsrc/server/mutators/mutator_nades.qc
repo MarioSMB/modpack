@@ -750,9 +750,7 @@ void nade_prime()
 	n.classname = "nade";
 	fn.classname = "fake_nade";
 
-	if((self.items & IT_STRENGTH) && autocvar_g_nades_bonus_onstrength)
-		n.nade_type = self.nade_type;
-	else if (self.bonus_nades >= 1)
+	if (self.bonus_nades >= 1)
 	{
 		n.nade_type = self.nade_type;
 		n.pokenade_type = self.pokenade_type;

@@ -201,7 +201,6 @@ void W_MinstaNex_Attack (void)
 	W_SetupShot (self, TRUE, 0, "", CH_WEAPON_A, minstanex_damage, self.weapon);
 
 	sound (self, CH_WEAPON_A, W_Sound("minstanexfire"), VOL_BASE * 0.8, ATTEN_NORM);
-	W_PlayStrengthSound(self);
 	
 	self.projectiledeathtype = WEP_MINSTANEX;
 

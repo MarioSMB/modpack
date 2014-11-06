@@ -380,7 +380,7 @@ void ctf_Handle_Throw(entity player, entity receiver, float droptype)
 		{
 			makevectors((player.v_angle_y * '0 1 0') + (bound(autocvar_g_ctf_throw_angle_min, player.v_angle_x, autocvar_g_ctf_throw_angle_max) * '1 0 0'));
 
-			flag_velocity = (('0 0 1' * autocvar_g_ctf_throw_velocity_up) + ((v_forward * autocvar_g_ctf_throw_velocity_forward) * ((player.items & IT_STRENGTH) ? autocvar_g_ctf_throw_strengthmultiplier : 1)));
+			flag_velocity = (('0 0 1' * autocvar_g_ctf_throw_velocity_up) + ((v_forward * autocvar_g_ctf_throw_velocity_forward)));
 			flag.velocity = W_CalculateProjectileVelocity(player.velocity, flag_velocity, FALSE);
 			ctf_Handle_Drop(flag, player, droptype);
 			break;
@@ -2305,15 +2305,7 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_team1()
 {
-	if(!g_ctf)
-	{
-		if(autocvar_g_ctf_powerups_replace_flags && !g_jailbreak)
-			spawnfunc_item_invincible();
-		else
-			remove(self);
-
-		return;
-	}
+	if(!g_ctf) { remove(self); return; }
 
 	ctf_FlagSetup(NUM_TEAM_1, self);
 }
@@ -2331,15 +2323,7 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_team2()
 {
-	if(!g_ctf)
-	{
-		if(autocvar_g_ctf_powerups_replace_flags && !g_jailbreak)
-			spawnfunc_item_strength();
-		else
-			remove(self);
-
-		return;
-	}
+	if(!g_ctf) { remove(self); return; }
 
 	ctf_FlagSetup(NUM_TEAM_2, self);
 }
@@ -2357,15 +2341,7 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_team3()
 {
-	if(!g_ctf)
-	{
-		if(autocvar_g_ctf_powerups_replace_flags && !g_jailbreak)
-			spawnfunc_item_invincible();
-		else
-			remove(self);
-			
-		return;
-	}
+	if(!g_ctf) { remove(self); return; }
 
 	ctf_FlagSetup(NUM_TEAM_3, self);
 }
@@ -2383,15 +2359,7 @@ Keys:
 "noise5" sound played when flag touches the ground... */
 void spawnfunc_item_flag_team4()
 {
-	if(!g_ctf)
-	{
-		if(autocvar_g_ctf_powerups_replace_flags && !g_jailbreak)
-			spawnfunc_item_strength();
-		else
-			remove(self);
-			
-		return;
-	}
+	if(!g_ctf) { remove(self); return; }
 
 	ctf_FlagSetup(NUM_TEAM_4, self);
 }

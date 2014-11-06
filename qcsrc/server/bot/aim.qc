@@ -134,7 +134,7 @@ float bot_shouldattack(entity e)
 	if(e.alpha <= 0.5 && e.alpha != 0)
 		return FALSE; // invisible
 
-	checkentity = e;
+	other = e;
 	if(MUTATOR_CALLHOOK(BotShouldAttack))
 		return FALSE;
 

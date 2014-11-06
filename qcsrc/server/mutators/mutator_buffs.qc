@@ -50,7 +50,7 @@ float buff_Waypoint_visible_for_player(entity plr)
 
 void buff_Waypoint_Spawn(entity e)
 {
-    WaypointSprite_Spawn(Buff_PrettyName(e.buffs), 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs_z, world, e.team, e, buff_waypoint, TRUE, RADARICON_POWERUP, e.glowmod);
+    WaypointSprite_Spawn(strzone(strcat("buff-", Buff_Name(e.buffs))), 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs_z, world, e.team, e, buff_waypoint, TRUE, RADARICON_POWERUP, e.glowmod);
     WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_POWERUP, e.glowmod);
     e.buff_waypoint.waypointsprite_visible_for_player = buff_Waypoint_visible_for_player;
 }
@@ -546,6 +546,19 @@ MUTATOR_HOOKFUNCTION(buffs_RemovePlayer)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(buffs_CustomizeWaypoint)
+{
+	entity e = WaypointSprite_getviewentity(other);
+
+	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
+	// but only apply this to real players, not to spectators
+	if((self.owner.flags & FL_CLIENT) && (self.owner.buffs & BUFF_INVISIBLE) && (e == other))
+	if(DIFF_TEAM(self.owner, e))
+		return TRUE;
+
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(buffs_OnEntityPreSpawn)
 {
 	if(autocvar_g_buffs_replace_powerups)
@@ -620,17 +633,11 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 
 		if(self.oldbuffs & BUFF_INVISIBLE)
 		{
-			if(time < self.strength_finished && g_minstagib)
-				self.alpha = autocvar_g_minstagib_invis_alpha;
-			else
-				self.alpha = self.buff_invisible_prev_alpha;
+			self.alpha = self.buff_invisible_prev_alpha;
 		}
 		else if(self.buffs & BUFF_INVISIBLE)
 		{
-			if(time < self.strength_finished && g_minstagib)
-				self.buff_invisible_prev_alpha = default_player_alpha;
-			else
-				self.buff_invisible_prev_alpha = self.alpha;
+			self.buff_invisible_prev_alpha = self.alpha;
 			self.alpha = autocvar_g_buffs_invisible_alpha;
 		}
 		
@@ -784,7 +791,8 @@ MUTATOR_DEFINITION(mutator_buffs)
 	MUTATOR_HOOK(PlayerUseKey, buffs_PlayerUseKey, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, buffs_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, buffs_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(OnEntityPreSpawn, buffs_OnEntityPreSpawn, CBC_ORDER_FIRST);
+	MUTATOR_HOOK(OnEntityPreSpawn, buffs_OnEntityPreSpawn, CBC_ORDER_LAST);
+	MUTATOR_HOOK(CustomizeWaypoint, buffs_CustomizeWaypoint, CBC_ORDER_ANY);
 	MUTATOR_HOOK(WeaponRateFactor, buffs_WeaponRate, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, buffs_PlayerThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetCvars, buffs_GetCvars, CBC_ORDER_ANY);

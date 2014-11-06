@@ -28,8 +28,6 @@ WANT_CONST float   IT_CELLS                     = 2048;
 WANT_CONST float   IT_SUPERCELLS                = 8388608;
 const float   IT_SUPERWEAPON               = 4096;
 const float   IT_FUEL                      = 128;
-const float   IT_STRENGTH                  = 8192;
-const float   IT_INVINCIBLE                = 16384;
 const float   IT_HEALTH                    = 32768;
 // union:
 	// for items:
@@ -43,7 +41,7 @@ const float   IT_ARMOR_SHARD               = 2097152;
 const float   IT_ARMOR                     = 4194304;
 
 const float   IT_AMMO                      = 3968; // IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_FUEL;
-const float   IT_PICKUPMASK                = 51; // IT_FUEL_REGEN | IT_JETPACK | IT_UNLIMITED_AMMO; // strength and invincible are handled separately
+const float   IT_PICKUPMASK                = 51; // IT_FUEL_REGEN | IT_JETPACK | IT_UNLIMITED_AMMO;
 const float   IT_UNLIMITED_AMMO            = 3; // IT_UNLIMITED_SUPERWEAPONS | IT_UNLIMITED_WEAPON_AMMO;
 
 const float AMMO_COUNT = 6; // amount of ammo types to show in the inventory panel
@@ -56,112 +54,6 @@ const float AMMO_COUNT = 6; // amount of ammo types to show in the inventory pan
 .float ammo_fuel;
 .float ammo_supercells;
 .float ammo_batteries; // dummy
-
-#if 0
-// item plugin system
-entity Item_Type_first;
-entity Item_Type_last;
-.entity enemy; // internal next pointer
-
-var float ITEM_LAST = 1;
-
-.float newitems; // item ID
-.string netname; // item name
-.string message; // human readable name
-//.vector colormod; // item color
-..float item_value; // item value (ammo amount etc)
-.float skin; // item skin
-.float bot_pickupbasevalue; // bot item priority
-.string mdl; // item model
-.string item_sound; // pickup sound
-.float item_type; // item type (ammo, powerup etc)
-.float item_value_null; // null item value (for items without limitations)
-.float item_maxvalue_null; // null item value (for items without limitations)
-
-const float ITEM_TYPE_AMMO 		= 1;
-const float ITEM_TYPE_ARMOR 	= 2;
-const float ITEM_TYPE_HEALTH 	= 3;
-const float ITEM_TYPE_POWERUP 	= 4;
-
-#define REGISTER_ITEM(hname,sname,NAME,itemvalue,itemtype,pickupbasevalue,modelname,isound) \
-	var float ITEM_##NAME; \
-	var entity Item_Type##sname; \
-	.float itemvalue; \
-	void RegisterItems_##sname() \
-	{ \
-		ITEM_##NAME = ITEM_LAST * 2; \
-		ITEM_LAST = ITEM_##NAME; \
-		Item_Type##sname = spawn(); \
-		Item_Type##sname.newitems = ITEM_##NAME; \
-		Item_Type##sname.item_value = itemvalue; \
-		Item_Type##sname.netname = #sname; \
-		Item_Type##sname.message = hname; \
-		Item_Type##sname.item_type = itemtype; \
-		Item_Type##sname.bot_pickupbasevalue = pickupbasevalue; \
-		Item_Type##sname.mdl = modelname; \
-		Item_Type##sname.item_sound = isound; \
-		if(!Item_Type_first) \
-			Item_Type_first = Item_Type##sname; \
-		if(Item_Type_last) \
-			Item_Type_last.enemy = Item_Type##sname; \
-		Item_Type_last = Item_Type##sname; \
-	} \
-	ACCUMULATE_FUNCTION(RegisterItems, RegisterItems_##sname)
-
-
-// Ammo
-REGISTER_ITEM(_("Shells"),shells,AMMO_SHELLS,ammo_shells,ITEM_TYPE_AMMO,500,"a_shells.md3","itempickup");
-REGISTER_ITEM(_("Cells"),cells,AMMO_CELLS,ammo_cells,ITEM_TYPE_AMMO,2000,"a_cells.md3","itempickup");
-REGISTER_ITEM(_("Nails"),bullets,AMMO_NAILS,ammo_nails,ITEM_TYPE_AMMO,2000,"a_bullets.mdl","itempickup");
-REGISTER_ITEM(_("Rockets"),rockets,AMMO_ROCKETS,ammo_rockets,ITEM_TYPE_AMMO,2000,"a_rockets.md3","itempickup");
-REGISTER_ITEM(_("Fuel"),fuel,AMMO_FUEL,ammo_fuel,ITEM_TYPE_AMMO,2500,"g_fuel.md3","itempickup");
-// Armor
-REGISTER_ITEM(_("Armor shard"),armorsmall,ARMOR_SMALL,armorvalue,ITEM_TYPE_ARMOR,2000,"item_armor_small.md3","armor1");
-REGISTER_ITEM(_("Medium armor"),armormedium,ARMOR_MEDIUM,armorvalue,ITEM_TYPE_ARMOR,5000,"item_armor_medium.md3","armor10");
-REGISTER_ITEM(_("Large armor"),armorlarge,ARMOR_LARGE,armorvalue,ITEM_TYPE_ARMOR,5000,"item_armor_big.md3","armor17_5");
-REGISTER_ITEM(_("Mega armor"),armormega,ARMOR_MEGA,armorvalue,ITEM_TYPE_ARMOR,7500,"item_armor_large.md3","armor25");
-// Health
-REGISTER_ITEM(_("Health vial"),healthsmall,HEALTH_SMALL,health,ITEM_TYPE_HEALTH,2000,"g_h1.md3","minihealth");
-REGISTER_ITEM(_("Medium health"),healthmedium,HEALTH_MEDIUM,health,ITEM_TYPE_HEALTH,5000,"g_h25.md3","mediumhealth");
-REGISTER_ITEM(_("Large health"),healthlarge,HEALTH_LARGE,health,ITEM_TYPE_HEALTH,5000,"g_h50.md3","mediumhealth");
-REGISTER_ITEM(_("Mega health"),healthmega,HEALTH_MEGA,health,ITEM_TYPE_HEALTH,7500,"g_h100.md3","megahealth");
-// Powerups
-REGISTER_ITEM(_("Strength"),strength,POWERUP_STRENGTH,strength_finished,ITEM_TYPE_POWERUP,7500,"g_strength.md3","powerup");
-REGISTER_ITEM(_("Shield"),shield,POWERUP_SHIELD,invincible_finished,ITEM_TYPE_POWERUP,7500,"g_invincible.md3","powerup_shield");
-REGISTER_ITEM(_("Fuel regenerator"),fuelregen,POWERUP_FUELREGEN,item_value_null,ITEM_TYPE_POWERUP,2500,"g_fuel.md3","itempickup");
-REGISTER_ITEM(_("Jet pack"),jetpack,POWERUP_JETPACK,ammo_fuel,ITEM_TYPE_POWERUP,2500,"g_fuel.md3","itempickup");
-
-#undef REGISTER_ITEM
-#ifdef SVQC
-
-.float item_pickupanyway;
-.float item_pickupvalue;
-.float item_pickupmaxvalue;
-.float item_rspawntime;
-.float item_rspawnjitter;
-
-void Item_ApplyPostSetup(float itemid)
-{
-	entity e;
-
-#define ITEM_POSTSETUP(NAME,pickupanyway,pickupvalue,maxpickupvalue,rspawntime,rspawnjitter) \
-	for(e = Buff_Type_first; e; e = e.enemy) \
-		if(e.newitems == ITEM_##NAME) \
-		{ \
-			e.item_pickupanyway = pickupanyway; \
-			e.item_pickupvalue = pickupvalue; \
-			e.item_pickupmaxvalue = maxpickupvalue; \
-			e.item_rspawntime = rspawntime; \
-			e.item_rspawnjitter = rspawnjitter; \
-		}
-
-	ITEM_POSTSETUP(AMMO_SHELLS,g_pickup_ammo_anyway,g_pickup_shells,0,g_pickup_respawntime_ammo,g_pickup_respawntimejitter_ammo)
-
-#undef ITEM_POSTSETUP
-}
-
-#endif // SVQC
-#endif
 
 // variables:
 string weaponorder_byid;

@@ -203,8 +203,6 @@ float spritelookupblinkvalue(string s)
 		case "item-invis":       return 2;
 		case "item-extralife":   return 2;
 		case "item-speed":       return 2;
-		case "item-strength":    return 2;
-		case "item-shield":      return 2;
 		case "item-fuelregen":   return 2;
 		case "item-jetpack":     return 2;
 		case "tagged-target":    return 2;
@@ -240,6 +238,7 @@ vector spritelookupcolor(string s, vector def)
 }
 string spritelookuptext(string s)
 {
+	if(startsWith(s, "buff-")) { return Buff_PrettyName(Buff_Type_FromName(substring(s, 5, strlen(s)))); }
 	switch(s)
 	{
 		case "as-push": return _("Push");
@@ -308,8 +307,6 @@ string spritelookuptext(string s)
 		case "item-invis": return _("Invisibility");
 		case "item-extralife": return _("Extra life");
 		case "item-speed": return _("Speed");
-		case "item-strength": return _("Strength");
-		case "item-shield": return _("Shield");
 		case "item-fuelregen": return _("Fuel regen");
 		case "item-jetpack": return _("Jet Pack");
 		case "frozen": return _("Frozen!");

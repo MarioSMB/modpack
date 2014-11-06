@@ -365,7 +365,7 @@ MUTATOR_HOOKFUNCTION(ka_BotRoles)
 MUTATOR_HOOKFUNCTION(ka_BotShouldAttack)
 {
 	// if neither player has ball then don't attack unless the ball is on the ground
-	if(!checkentity.ballcarried && !self.ballcarried && ka_ball.owner)
+	if(!other.ballcarried && !self.ballcarried && ka_ball.owner)
 		return TRUE;
 	return FALSE;
 }

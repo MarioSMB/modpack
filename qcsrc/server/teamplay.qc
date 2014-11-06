@@ -333,10 +333,6 @@ string getwelcomemessage(void)
 		modifications = strcat(modifications, ", Weapons stay");
 	if(g_jetpack)
 		modifications = strcat(modifications, ", Jet pack");
-	if(autocvar_g_powerups == 0)
-		modifications = strcat(modifications, ", No powerups");
-	if(autocvar_g_powerups > 0)
-		modifications = strcat(modifications, ", Powerups");
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
 	string versionmessage;

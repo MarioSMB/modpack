@@ -327,7 +327,7 @@ float w_rlauncher(float req)
 			}
 			float desirabledamage;
 			desirabledamage = enemydamage;
-			if (time > self.invincible_finished && time > self.spawnshieldtime)
+			if (time > self.spawnshieldtime)
 				desirabledamage = desirabledamage - selfdamage * autocvar_g_balance_selfdamagepercent;
 			if (teamplay && self.team)
 				desirabledamage = desirabledamage - teamdamage;

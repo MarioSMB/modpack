@@ -119,8 +119,6 @@ g_subs.qc
 
 g_tetris.qc
 
-//runematch.qc
-
 g_violence.qc
 g_damage.qc
 
@@ -165,10 +163,6 @@ cl_client.qc
 t_plats.qc
 antilag.qc
 
-//ctf.qc
-//domination.qc
-//mode_onslaught.qc
-//nexball.qc
 g_hook.qc
 
 t_swamp.qc
@@ -191,8 +185,6 @@ command/vote.qc
 command/getreplies.qc
 command/cmd.qc
 command/sv_cmd.qc
-
-//assault.qc
 
 ipban.qc
 

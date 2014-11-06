@@ -519,10 +519,6 @@ void Send_Notification_WOCOVA(
 	MULTITEAM_INFO(1, INFO_ONSLAUGHT_CPDESTROYED_, 4,      2, 0, "s1 s2", "",                       "",                     _("^TC^TT^BG team %s^BG control point has been destroyed by %s"), "") \
 	MULTITEAM_INFO(1, INFO_ONSLAUGHT_GENDESTROYED_, 4,     0, 0, "", "",                            "",                     _("^TC^TT^BG generator has been destroyed"), "") \
 	MULTITEAM_INFO(1, INFO_ONSLAUGHT_GENDESTROYED_OVERTIME_, 4,  0, 0, "", "",                      "",                     _("^TC^TT^BG generator spontaneously combusted due to overtime!"), "") \
-	MSG_INFO_NOTIF(1, INFO_POWERUP_INVISIBILITY,           1, 0, "s1", "s1",                        "strength",             _("^BG%s^K1 picked up Invisibility"), "") \
-	MSG_INFO_NOTIF(1, INFO_POWERUP_SHIELD,                 1, 0, "s1", "s1",                        "shield",               _("^BG%s^K1 picked up Shield"), "") \
-	MSG_INFO_NOTIF(1, INFO_POWERUP_SPEED,                  1, 0, "s1", "s1",                        "shield",               _("^BG%s^K1 picked up Speed"), "") \
-	MSG_INFO_NOTIF(1, INFO_POWERUP_STRENGTH,               1, 0, "s1", "s1",                        "strength",             _("^BG%s^K1 picked up Strength"), "") \
 	MSG_INFO_NOTIF(2, INFO_QUIT_DISCONNECT,                1, 0, "s1", "",                          "",                     _("^BG%s^F3 disconnected"), "") \
 	MSG_INFO_NOTIF(2, INFO_QUIT_KICK_IDLING,               1, 0, "s1", "",                          "",                     _("^BG%s^F3 was kicked for idling"), "") \
 	MSG_INFO_NOTIF(1, INFO_QUIT_KICK_SPECTATING,           0, 0, "", "",                            "",                     _("^F2You were kicked from the server because you are a spectator and spectators aren't allowed at the moment."), "") \
@@ -806,14 +802,6 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_PORTO_FAILED,                0, 0, "",              NO_CPID,               "0 0", _("^K1Portal deployment failed.\n\n^F2Catch it to try again!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_PORTO_CREATED_IN,            0, 0, "",              NO_CPID,               "0 0", _("^K1In^BG-portal created"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_PORTO_CREATED_OUT,           0, 0, "",              NO_CPID,               "0 0", _("^F3Out^BG-portal created"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_INVISIBILITY,      0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Invisibility has worn off"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_SHIELD,            0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Shield has worn off"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_SPEED,             0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Speed has worn off"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_STRENGTH,          0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Strength has worn off"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_POWERUP_INVISIBILITY,        0, 0, "",              CPID_POWERUP,          "0 0", _("^F2You are invisible"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_POWERUP_SHIELD,              0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Shield surrounds you"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_POWERUP_SPEED,               0, 0, "",              CPID_POWERUP,          "0 0", _("^F2You are on speed"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_POWERUP_STRENGTH,            0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Strength infuses your weapons with devastating power"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_RACE_FINISHLAP,              0, 0, "",              CPID_RACE_FINISHLAP,   "0 0", _("^F2The race is over, finish your lap!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SECONDARY_NODAMAGE,          0, 0, "",              NO_CPID,               "0 0", _("^BGSecondary fire inflicts no damage!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SEQUENCE_COMPLETED,          0, 0, "",              NO_CPID,               "0 0", _("^BGSequence completed!"), "") \

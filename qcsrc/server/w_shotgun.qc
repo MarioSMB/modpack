@@ -65,7 +65,6 @@ void shotgun_meleethink (void)
 	if(!self.cnt) // set start time of melee
 	{
 		self.cnt = time;
-		W_PlayStrengthSound(self.realowner);
 	}
 
 	makevectors(self.realowner.v_angle); // update values for v_* vectors

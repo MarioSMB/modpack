@@ -356,7 +356,7 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerCommand)
 
 MUTATOR_HOOKFUNCTION(invasion_BotShouldAttack)
 {
-	if(!IS_MONSTER(checkentity))
+	if(!IS_MONSTER(other))
 		return TRUE;
 	
 	return FALSE;

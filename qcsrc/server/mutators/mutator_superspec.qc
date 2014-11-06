@@ -1,8 +1,6 @@
 #define _SSMAGIX "SUPERSPEC_OPTIONSFILE_V1"
 #define _ISLOCAL ((edict_num(1) == self) ? TRUE : FALSE)
 
-#define ASF_STRENGTH        1
-#define ASF_SHIELD          2
 #define ASF_MEGA_AR         4
 #define ASF_MEGA_HP         8
 #define ASF_FLAG_GRAB       16
@@ -117,9 +115,7 @@ MUTATOR_HOOKFUNCTION(superspec_ItemTouch)
 				}
 			}
 
-		if((self.autospec_flags & ASF_SHIELD && _item.invincible_finished) ||
-				(self.autospec_flags & ASF_STRENGTH && _item.strength_finished) ||
-				(self.autospec_flags & ASF_MEGA_AR && _item.classname == "item_armor_large") ||
+		if(		(self.autospec_flags & ASF_MEGA_AR && _item.classname == "item_armor_large") ||
 				(self.autospec_flags & ASF_MEGA_HP && _item.classname == "item_health_mega") ||
 				(self.autospec_flags & ASF_FLAG_GRAB && _item.classname == "item_flag_team"))
 		{
@@ -272,8 +268,6 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 			if(argv(1) == "help")
 			{
 				_aspeco = "use cmd autospec [option] [on|off] to set options\n\n";
-				_aspeco = strcat(_aspeco, "^3 strength ^7(short^5 st^7) for automatic spectate on strength powerup\n");
-				_aspeco = strcat(_aspeco, "^3 shield ^7(short^5 sh^7) for automatic spectate on shield powerup\n");
 				_aspeco = strcat(_aspeco, "^3 mega_health ^7(short^5 mh^7) for automatic spectate on mega health\n");
 				_aspeco = strcat(_aspeco, "^3 mega_armor ^7(short^5 ma^7) for automatic spectate on mega armor\n");
 				_aspeco = strcat(_aspeco, "^3 flag_grab ^7(short^5 fg^7) for automatic spectate on CTF flag grab\n");
@@ -309,8 +303,6 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 				}
 				else
 				{
-					if((argv(i) == "strength") || (argv(i) == "st")) _bits |= ASF_STRENGTH;
-					if((argv(i) == "shield") || (argv(i) == "sh")) _bits |= ASF_SHIELD;
 					if((argv(i) == "mega_health") || (argv(i) == "mh")) _bits |= ASF_MEGA_HP;
 					if((argv(i) == "mega_armor") || (argv(i) == "ma")) _bits |= ASF_MEGA_AR;
 					if((argv(i) == "flag_grab") || (argv(i) == "fg")) _bits |= ASF_FLAG_GRAB;
@@ -324,8 +316,6 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 		}
 
 		_aspeco = "";
-		OPTIONINFO(self.autospec_flags, _aspeco, ASF_STRENGTH, "Strength", "strength", "st");
-		OPTIONINFO(self.autospec_flags, _aspeco, ASF_SHIELD, "Shield", "shield", "sh");
 		OPTIONINFO(self.autospec_flags, _aspeco, ASF_MEGA_HP, "Mega Health", "mega_health", "mh");
 		OPTIONINFO(self.autospec_flags, _aspeco, ASF_MEGA_AR, "Mega Armor", "mega_armor", "ma");
 		OPTIONINFO(self.autospec_flags, _aspeco, ASF_FLAG_GRAB, "Flag grab", "flag_grab","fg");
@@ -343,37 +333,11 @@ MUTATOR_HOOKFUNCTION(superspec_SV_ParseClientCommand)
 		entity _player;
 		FOR_EACH_PLAYER(_player)
 		{
-			if(_player.strength_finished > time || _player.invincible_finished > time)
+			if(_player.buffs)
 				return _spectate(_player);
 		}
 
 		superspec_msg("", "", self, "No active powerup\n", 1);
-		return TRUE;
-	}
-
-	if(cmd_name == "followstrength")
-	{
-		entity _player;
-		FOR_EACH_PLAYER(_player)
-		{
-			if(_player.strength_finished > time)
-				return _spectate(_player);
-		}
-
-		superspec_msg("", "", self, "No active Strength\n", 1);
-		return TRUE;
-	}
-
-	if(cmd_name == "followshield")
-	{
-		entity _player;
-		FOR_EACH_PLAYER(_player)
-		{
-			if(_player.invincible_finished > time)
-				return _spectate(_player);
-		}
-
-		superspec_msg("", "", self, "No active Shield\n", 1);
 		return TRUE;
 	}
 

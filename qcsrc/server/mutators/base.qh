@@ -322,7 +322,7 @@ MUTATOR_HOOKABLE(Item_RespawnCountdown);
 MUTATOR_HOOKABLE(BotShouldAttack);
 	// called when a bot checks a target to attack
 	// INPUT
-	entity checkentity;
+	entity other;
 
 MUTATOR_HOOKABLE(PortalTeleport);
 	// called whenever a player goes through a portal gun teleport

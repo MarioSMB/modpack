@@ -438,7 +438,7 @@ void kh_Handle_Throw(entity player, entity receiver, entity key, float droptype)
 		{
 			makevectors((player.v_angle_y * '0 1 0') + (bound(autocvar_g_keyhunt_throw_angle_min, player.v_angle_x, autocvar_g_keyhunt_throw_angle_max) * '1 0 0'));
 
-			key_velocity = (('0 0 1' * autocvar_g_keyhunt_throw_velocity_up) + ((v_forward * autocvar_g_keyhunt_throw_velocity_forward) * ((player.items & IT_STRENGTH) ? autocvar_g_keyhunt_throw_strengthmultiplier : 1)));
+			key_velocity = (('0 0 1' * autocvar_g_keyhunt_throw_velocity_up) + ((v_forward * autocvar_g_keyhunt_throw_velocity_forward)));
 			key.velocity = W_CalculateProjectileVelocity(player.velocity, key_velocity, FALSE);
 			kh_Handle_Drop(key, player, droptype);
 			break;

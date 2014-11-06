@@ -65,8 +65,6 @@ float M_Mage_Defend_Heal_Check(entity e)
 		return FALSE;
 	if(!IS_PLAYER(e))
 		return (IS_MONSTER(e) && e.health < e.max_health);
-	if(e.items & IT_INVINCIBLE)
-		return FALSE;
 
 	switch(self.skin)
 	{
