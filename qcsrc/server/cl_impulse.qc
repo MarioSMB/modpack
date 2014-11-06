@@ -45,6 +45,10 @@ void ImpulseCommands (void)
 	if (!imp || gameover)
 		return;
 	self.impulse = 0;
+	
+	if ( self.active_minigame )
+	if ( MinigameImpulse(imp) )
+		return;
 
 	// allow only weapon change impulses when not in round time
 	if(round_handler_IsActive() && !round_handler_IsRoundStarted())

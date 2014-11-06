@@ -358,15 +358,15 @@ void HUD_MinigameMenu_CurrentButton()
 		for ( e = HUD_MinigameMenu_last_entry; e != world; e = e.list_prev )
 			if ( e.classname == "hud_minigamemenu_exit" )
 			{
-				entity currb = HUD_MinigameMenu_SpawnEntry(
-					"Current Game", '0 0 0', hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_ClickCurrentGame );
-				currb.classname = "hud_minigamemenu_current";
-				currb.model = strzone(minigame_texture(strcat(active_minigame.descriptor.netname,"/icon")));
-				HUD_MinigameMenu_InsertEntry(currb,e.list_prev);
 				HUD_MinigameMenu_EraseEntry(e);
-				HUD_MinigameMenu_Click(currb);
-				return;
+				break;
 			}
+		entity currb = HUD_MinigameMenu_SpawnEntry(
+			"Current Game", '0 0 0', hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_ClickCurrentGame );
+		currb.classname = "hud_minigamemenu_current";
+		currb.model = strzone(minigame_texture(strcat(active_minigame.descriptor.netname,"/icon")));
+		HUD_MinigameMenu_InsertEntry(currb,HUD_MinigameMenu_last_entry);
+		HUD_MinigameMenu_Click(currb);
 	}
 	else 
 	{

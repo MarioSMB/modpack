@@ -2222,12 +2222,10 @@ void PrintWelcomeMessage()
 
 void ObserverThink()
 {
-	if ( self.active_minigame )
+	if ( self.impulse )
 	{
-		if ( self.impulse )
-			MinigameImpulse();
-		self.movetype = MOVETYPE_NONE;
-		return;
+		MinigameImpulse(self.impulse);
+		self.impulse = 0;
 	}
 	float prefered_movetype;
 	if (self.flags & FL_JUMPRELEASED) {
@@ -2259,11 +2257,10 @@ void ObserverThink()
 
 void SpectatorThink()
 {
-	if ( self.active_minigame )
+	if ( self.impulse )
 	{
-		if ( self.impulse )
-			MinigameImpulse();
-		return;
+		MinigameImpulse(self.impulse);
+		self.impulse = 0;
 	}
 	if (self.flags & FL_JUMPRELEASED) {
 		if (self.BUTTON_JUMP && !self.version_mismatch) {
@@ -2822,13 +2819,7 @@ void PlayerPostThink (void)
 
 	//CheckPlayerJump();
 
-	if ( self.active_minigame )
-	{
-		if ( self.impulse )
-			MinigameImpulse();
-		self.movetype = MOVETYPE_BOUNCE;
-	}
-	else if(IS_PLAYER(self)) {
+	if(IS_PLAYER(self)) {
 		CheckRules_Player();
 		UpdateChatBubble();
 		if (self.impulse)

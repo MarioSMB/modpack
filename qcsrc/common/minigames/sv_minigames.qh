@@ -32,7 +32,7 @@ entity minigame_spawn_board_piece(entity minigame_session);
 float minigame_CheckSend();
 
 // Check for minigame impulses
-void MinigameImpulse();
+float MinigameImpulse(float imp);
 
 // Parse a client command ( cmd minigame ... )
 void ClientCommand_minigame(float request, float argc, string command);

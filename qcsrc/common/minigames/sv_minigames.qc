@@ -326,15 +326,14 @@ entity minigame_find_player(entity client)
 	return world;
 }
 
-// TODO: remove?
-void MinigameImpulse()
+float MinigameImpulse(float imp)
 {
 	entity e = minigame_find_player(self);
-	if ( self.impulse && self.active_minigame && e )
+	if ( imp && self.active_minigame && e )
 	{
-		self.active_minigame.minigame_event(self.active_minigame,"impulse",e,self.impulse);
+		return self.active_minigame.minigame_event(self.active_minigame,"impulse",e,imp);
 	}
-	self.impulse = 0;
+	return 0;
 }
 
 
