@@ -217,8 +217,6 @@ void W_Porto_Attack (float type)
 	w_shotdir = v_forward;
 	w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
 
-	//pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
-
 	gren = spawn ();
 	gren.cnt = type;
 	gren.owner = gren.realowner = self;

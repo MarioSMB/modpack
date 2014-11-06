@@ -121,7 +121,7 @@ float W_MinstaNex_SuperBlast_CheckHit(float queue, entity head, vector final_for
 
 void W_RocketMinsta_Explosion(vector loc)
 {
-	pointparticles(particleeffectnum("rocket_explode"), loc, '0 0 0', 1);
+	Send_Effect(EFFECT_ROCKET_EXPLODE, loc, '0 0 0', 1);
 	
 	if(accuracy_canbegooddamage(self))
 		accuracy_add(self, WEP_ROCKET_LAUNCHER, autocvar_g_rm_damage, 0);
@@ -219,19 +219,26 @@ void W_MinstaNex_Attack (void)
 
 	self.minstanex_lasthit = damage_goodhits;
 
-	pointparticles(particleeffectnum("nex_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_NEX_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	// teamcolor / hit beam effect
 	vector v;
-	string s;
 	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-	s = strcat("TE_TEI_G3", Static_Team_ColorName_Upper(self.team), ((damage_goodhits) ? "_HIT" : ""));
+	float f;
+	switch(self.team)
+	{
+		case NUM_TEAM_1: f = (damage_goodhits) ? EFFECT_MINSTANEX_RED_HIT : EFFECT_MINSTANEX_RED; break;
+		case NUM_TEAM_2: f = (damage_goodhits) ? EFFECT_MINSTANEX_BLUE_HIT : EFFECT_MINSTANEX_BLUE; break;
+		case NUM_TEAM_3: f = (damage_goodhits) ? EFFECT_MINSTANEX_YELLOW_HIT : EFFECT_MINSTANEX_YELLOW; break;
+		case NUM_TEAM_4: f = (damage_goodhits) ? EFFECT_MINSTANEX_PINK_HIT : EFFECT_MINSTANEX_PINK; break;
+		default:		 f = (damage_goodhits) ? EFFECT_MINSTANEX_NEUTRAL_HIT : EFFECT_MINSTANEX_NEUTRAL; break;
+	}
 	
 	if(autocvar_g_rm)
 	if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
 		W_RocketMinsta_Explosion(trace_endpos);
-		
-	WarpZone_TrailParticles(world, particleeffectnum(s), w_shotorg, v);
+
+	Send_Effect(f, w_shotorg, v, 0);
 	
 	W_DecreaseAmmo(ammo_cells, minstanex_ammo, autocvar_g_balance_minstanex_reload_ammo);
 }
@@ -441,7 +448,7 @@ void W_RocketMinsta_SuperRocket()
 	makevectors(self.angles);
 
 	W_SetupShot_ProjectileSize (self, '-32 -32 -32', '32 32 32', FALSE, 5, W_Sound("minstanex_charge2"), CH_WEAPON_A, minstanex_damage, WEP_ROCKET_LAUNCHER);
-	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	missile = WarpZone_RefSys_SpawnSameRefSys(self);
 	missile.owner = missile.realowner = self;
@@ -510,8 +517,8 @@ void W_RocketMinsta_Attack2(void)
 	float rndspread = autocvar_g_rm_laser_spread_random;
 
 	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, W_Sound("crylink_fire"), CH_WEAPON_A, autocvar_g_rm_laser_damage, WEP_ELECTRO);
-	
-	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+
+	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
     while(counter < total)
 	{
@@ -561,7 +568,7 @@ void W_RocketMinsta_Attack3 (void)
 
 	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, W_Sound("electro_fire2"), CH_WEAPON_A, autocvar_g_rm_laser_damage, WEP_ELECTRO);
 	
-	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
     while(counter < total)
 	{

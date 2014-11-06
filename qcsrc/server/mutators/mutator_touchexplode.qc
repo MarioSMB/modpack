@@ -7,7 +7,7 @@ void PlayerTouchExplode(entity p1, entity p2)
 	org_z += (p1.mins_z + p2.mins_z) * 0.5;
 
 	sound(self, CH_TRIGGER, W_Sound("grenade_impact"), VOL_BASE, ATTEN_NORM);
-	pointparticles(particleeffectnum("explosion_small"), org, '0 0 0', 1);
+	Send_Effect(EFFECT_EXPLOSION_SMALL, org, '0 0 0', 1);
 
 	entity e;
 	e = spawn();

@@ -1705,6 +1705,7 @@ void RegisterNotifications_First()
 	#endif
 
 	printf("Beginning notification initialization on %s%s program...\n", dedi, PROGNAME);
+	#undef dedi
 
 	// maybe do another implementation of this with checksums? for now, we don't need versioning
 	/*if(autocvar_notification_version != NOTIF_VERSION)

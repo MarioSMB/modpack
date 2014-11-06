@@ -469,8 +469,7 @@ void Item_Respawn (void)
 	self.think = Item_Think;
 	self.nextthink = time;
 
-	//pointparticles(particleeffectnum("item_respawn"), self.origin + self.mins_z * '0 0 1' + '0 0 48', '0 0 0', 1);
-	pointparticles(particleeffectnum("item_respawn"), self.origin + 0.5 * (self.mins + self.maxs), '0 0 0', 1);
+	Send_Effect(EFFECT_ITEM_RESPAWN, self.origin + 0.5 * (self.mins + self.maxs), '0 0 0', 1);
 }
 
 void Item_RespawnCountdown (void)
@@ -764,7 +763,7 @@ void Item_Touch (void)
 
 	other.last_pickup = time;
 
-	pointparticles(particleeffectnum("item_pickup"), self.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_ITEM_PICKUP, self.origin, '0 0 0', 1);
 	sound (other, CH_TRIGGER, self.item_pickupsound, VOL_BASE, ATTEN_NORM);
 
 	if (self.classname == "droppedweapon")
@@ -844,7 +843,7 @@ void Item_FindTeam()
 // Savage: used for item garbage-collection
 void RemoveItem(void)
 {
-	pointparticles(particleeffectnum("item_pickup"), self.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_ITEM_PICKUP, self.origin, '0 0 0', 1);
 	remove(self);
 }
 

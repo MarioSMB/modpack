@@ -106,6 +106,7 @@ const float ENT_CLIENT_VEHICLE = 60;
 const float ENT_CLIENT_GENERATOR = 70;
 const float ENT_CLIENT_CONTROLPOINT_ICON = 71;
 const float ENT_CLIENT_JAILCAMERA = 72;
+const float ENT_CLIENT_EFFECT = 73;
 
 const float ENT_CLIENT_HEALING_ORB = 80;
 

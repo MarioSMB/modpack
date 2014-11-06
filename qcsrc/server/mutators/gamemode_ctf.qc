@@ -370,7 +370,8 @@ void ctf_Handle_Throw(entity player, entity receiver, float droptype)
 
 			// other
 			sound(player, CH_TRIGGER, flag.snd_flag_touch, VOL_BASE, ATTEN_NORM);
-			WarpZone_TrailParticles(world, particleeffectnum(flag.passeffect), player.origin, targ_origin);
+			if(flag.passeffect == "") { Send_Effect(flag.passeffectnum, player.origin, targ_origin, 0); }
+			else { WarpZone_TrailParticles(world, particleeffectnum(flag.passeffect), player.origin, targ_origin); }
 			ctf_EventLog("pass", flag.team, player);
 			break;
 		}
@@ -465,7 +466,8 @@ void ctf_Handle_Capture(entity flag, entity toucher, float capturetype)
 		PlayerScore_Add(player, SP_CTF_CAPTIME, new_time - old_time);
 
 	// effects
-	pointparticles(particleeffectnum(flag.capeffect), flag.origin, '0 0 0', 1);
+	if(flag.capeffect == "") { Send_Effect(flag.capeffectnum, flag.origin, '0 0 0', 1); }
+	else { pointparticles(particleeffectnum(flag.capeffect), flag.origin, '0 0 0', 1); }
 	//shockwave_spawn("models/ctf/shockwavetransring.md3", flag.origin - '0 0 15', -0.8, 0, 1);
 
 	// other
@@ -619,7 +621,8 @@ void ctf_Handle_Pickup(entity flag, entity player, float pickuptype)
 	}
 
 	// effects
-	pointparticles(particleeffectnum(flag.toucheffect), player.origin, '0 0 0', 1);
+	if(flag.toucheffect == "") { Send_Effect(flag.toucheffectnum, player.origin, '0 0 0', 1); }
+	else { pointparticles(particleeffectnum(flag.toucheffect), player.origin, '0 0 0', 1); }
 
 	// waypoints
 	if(pickuptype == PICKUP_DROPPED) { WaypointSprite_Kill(flag.wps_flagdropped); }
@@ -950,7 +953,8 @@ void ctf_FlagTouch()
 	{
 		if(time > self.wait) // if we haven't in a while, play a sound/effect
 		{
-			pointparticles(particleeffectnum(self.toucheffect), self.origin, '0 0 0', 1);
+			if(self.toucheffect == "") { Send_Effect(self.toucheffectnum, self.origin, '0 0 0', 1); }
+			else { pointparticles(particleeffectnum(self.toucheffect), self.origin, '0 0 0', 1); }
 			sound(self, CH_TRIGGER, self.snd_flag_touch, VOL_BASE, ATTEN_NORM);
 			self.wait = time + FLAG_TOUCHRATE;
 		}
@@ -1148,9 +1152,9 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	if(flag.model == "")       { flag.model = ((teamnumber == NUM_TEAM_1) ? autocvar_g_ctf_flag_red_model : ((teamnumber == NUM_TEAM_2) ? autocvar_g_ctf_flag_blue_model : ((teamnumber == NUM_TEAM_3) ? autocvar_g_ctf_flag_yellow_model : ((teamnumber == NUM_TEAM_4) ? autocvar_g_ctf_flag_pink_model : autocvar_g_ctf_flag_neutral_model)))); }
 	if(!flag.scale)            { flag.scale = FLAG_SCALE; }
 	if(!flag.skin)             { flag.skin = ((teamnumber == NUM_TEAM_1) ? autocvar_g_ctf_flag_red_skin : ((teamnumber == NUM_TEAM_2) ? autocvar_g_ctf_flag_blue_skin : ((teamnumber == NUM_TEAM_3) ? autocvar_g_ctf_flag_yellow_skin : ((teamnumber == NUM_TEAM_4) ? autocvar_g_ctf_flag_pink_skin : autocvar_g_ctf_flag_neutral_skin)))); }
-	if(flag.toucheffect == "") { flag.toucheffect = ((teamnumber == NUM_TEAM_1) ? "redflag_touch" : ((teamnumber == NUM_TEAM_2) ? "blueflag_touch" : ((teamnumber == NUM_TEAM_3) ? "yellowflag_touch" : ((teamnumber == NUM_TEAM_4) ? "pinkflag_touch" : "neutralflag_touch")))); }
-	if(flag.passeffect == "")  { flag.passeffect = ((teamnumber == NUM_TEAM_1) ? "red_pass" : ((teamnumber == NUM_TEAM_2) ? "blue_pass" : ((teamnumber == NUM_TEAM_3) ? "yellow_pass" : ((teamnumber == NUM_TEAM_4) ? "pink_pass" : "neutral_pass")))); }
-	if(flag.capeffect == "")   { flag.capeffect = ((teamnumber == NUM_TEAM_1) ? "red_cap" : ((teamnumber == NUM_TEAM_2) ? "blue_cap" : ((teamnumber == NUM_TEAM_3) ? "yellow_cap" : ((teamnumber == NUM_TEAM_4) ? "pink_cap" : "")))); } // neutral flag cant be capped itself
+	if(flag.toucheffect == "") { flag.toucheffectnum = ((teamnumber == NUM_TEAM_1) ? EFFECT_FLAG_RED_TOUCH : ((teamnumber == NUM_TEAM_2) ? EFFECT_FLAG_BLUE_TOUCH : ((teamnumber == NUM_TEAM_3) ? EFFECT_FLAG_YELLOW_TOUCH : ((teamnumber == NUM_TEAM_4) ? EFFECT_FLAG_PINK_TOUCH : EFFECT_FLAG_NEUTRAL_TOUCH)))); }
+	if(flag.passeffect == "")  { flag.passeffectnum = ((teamnumber == NUM_TEAM_1) ? EFFECT_RED_PASS : ((teamnumber == NUM_TEAM_2) ? EFFECT_BLUE_PASS : ((teamnumber == NUM_TEAM_3) ? EFFECT_YELLOW_PASS : ((teamnumber == NUM_TEAM_4) ? EFFECT_PINK_PASS : EFFECT_NEUTRAL_PASS)))); }
+	if(flag.capeffect == "")   { flag.capeffectnum = ((teamnumber == NUM_TEAM_1) ? EFFECT_RED_CAP : ((teamnumber == NUM_TEAM_2) ? EFFECT_BLUE_CAP : ((teamnumber == NUM_TEAM_3) ? EFFECT_YELLOW_CAP : ((teamnumber == NUM_TEAM_4) ? EFFECT_PINK_CAP : 0)))); } // neutral flag cant be capped itself
 	if(!flag.active)           { flag.active = ACTIVE_ACTIVE; }
 
 	// sound

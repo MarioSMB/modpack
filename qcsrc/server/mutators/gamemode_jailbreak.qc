@@ -398,7 +398,7 @@ void JB_Torture_Think()
 	self.nextthink = time + max(0.1, self.jb_torture_delay + j);
 	self.jb_torture_suggestedforce = JITTER(self.jb_torture_force, self.jb_torture_force_jitter);
 
-	pointparticles(particleeffectnum("firefield"), self.origin, '0 0 0', 2);
+	Send_Effect(EFFECT_FIREFIELD, self.origin, '0 0 0', 2);
 
 	entity head;
 	FOR_EACH_PLAYER(head)

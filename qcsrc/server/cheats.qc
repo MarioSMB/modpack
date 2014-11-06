@@ -260,7 +260,7 @@ float CheatImpulse(float i)
 			else
 				e = self;
 
-			pointparticles(particleeffectnum("rocket_explode"), e.origin, '0 0 0', 1);
+			Send_Effect(EFFECT_ROCKET_EXPLODE, e.origin, '0 0 0', 1);
 			sound(e, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 
 			e2 = spawn();
@@ -1020,7 +1020,7 @@ void Drag_Update(entity dragger)
 		vecs = '0 0 0';
 
 	dv = v_right * -vecs_y + v_up * vecs_z;
-	trailparticles(world, particleeffectnum("nex242_misc_laser_beam_fast"), dragger.origin + dragger.view_ofs + dv, curorigin);
+	Send_Effect(EFFECT_LASER_BEAM_FAST, dragger.origin + dragger.view_ofs + dv, curorigin, 0);
 }
 
 float Drag_CanDrag(entity dragger)

@@ -771,7 +771,6 @@ void W_Nexball_Attack2(void)
 	if(!(balls & BALL_BASKET))
 		return;
 	W_SetupShot(self, FALSE, 2, "nexball/shoot2.wav", CH_WEAPON_A, 0, self.weapon);
-//	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 	missile = spawn();
 
 	missile.owner = self;

@@ -365,7 +365,7 @@ void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damag
 		WaypointSprite_UpdateBuildFinished(self.owner.sprite, time + (self.max_health - self.health) / (self.count / ONS_CP_THINKRATE));
 	self.pain_finished = time + 1;
 	// particles on every hit
-	pointparticles(particleeffectnum("sparks"), hitloc, force*-1, 1);
+	Send_Effect(EFFECT_SPARKS, hitloc, force * -1, 1);
 	//sound on every hit
 	if (random() < 0.5)
 		sound(self, CH_TRIGGER, "onslaught/ons_hit1.wav", VOL_BASE+0.3, ATTEN_NORM);
@@ -375,7 +375,7 @@ void ons_ControlPoint_Icon_Damage(entity inflictor, entity attacker, float damag
 	if (self.health < 0)
 	{
 		sound(self, CH_TRIGGER, W_Sound("grenade_impact"), VOL_BASE, ATTEN_NORM);
-		pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
+		Send_Effect(EFFECT_ROCKET_EXPLODE, self.origin, '0 0 0', 1);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(self.team, INFO_ONSLAUGHT_CPDESTROYED_), self.owner.message, attacker.netname);
 		
 		PlayerScore_Add(attacker, SP_ONS_TAKES, 1);
@@ -481,7 +481,7 @@ void ons_ControlPoint_Icon_Think()
 	// damaged fx
 	if(random() < 0.6 - self.health / self.max_health)
 	{
-		pointparticles(particleeffectnum("electricity_sparks"), self.origin + randompos('-10 -10 -20', '10 10 20'), '0 0 0', 1);
+		Send_Effect(EFFECT_ELECTRIC_SPARKS, self.origin + randompos('-10 -10 -20', '10 10 20'), '0 0 0', 1);
 
 		if(random() > 0.8)
 			sound(self, CH_PAIN, "onslaught/ons_spark1.wav", VOL_BASE, ATTEN_NORM);
@@ -515,7 +515,17 @@ void ons_ControlPoint_Icon_BuildThink()
 		self.owner.iscaptured = TRUE;
 		self.solid = SOLID_BBOX;
 
-		pointparticles(particleeffectnum(sprintf("%s_cap", Static_Team_ColorName_Lower(self.owner.team))), self.owner.origin, '0 0 0', 1);
+		float eff_team;
+		switch(self.owner.team)
+		{
+			case NUM_TEAM_1: eff_team = EFFECT_RED_CAP; break;
+			case NUM_TEAM_2: eff_team = EFFECT_BLUE_CAP; break;
+			case NUM_TEAM_3: eff_team = EFFECT_YELLOW_CAP; break;
+			case NUM_TEAM_4: eff_team = EFFECT_PINK_CAP; break;
+			default: 	 	 eff_team = EFFECT_SPAWN_NEUTRAL; break;
+		}
+
+		Send_Effect(eff_team, self.owner.origin, '0 0 0', 1);
 
 		WaypointSprite_UpdateMaxHealth(self.owner.sprite, self.max_health);
 		WaypointSprite_UpdateHealth(self.owner.sprite, self.health);
@@ -546,7 +556,7 @@ void ons_ControlPoint_Icon_BuildThink()
 		setmodel_fixsize(self.owner, "models/onslaught/controlpoint_pad2.md3");
 		
 	if(random() < 0.9 - self.health / self.max_health)
-		pointparticles(particleeffectnum("rage"), self.origin + 10 * randomvec(), '0 0 -1', 1);
+		Send_Effect(EFFECT_RAGE, self.origin + 10 * randomvec(), '0 0 -1', 1);
 }
 
 void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
@@ -574,7 +584,17 @@ void ons_ControlPoint_Icon_Spawn(entity cp, entity player)
 	cp.team = e.team;
 	cp.colormap = e.colormap;
 
-	pointparticles(particleeffectnum(sprintf("%sflag_touch", Static_Team_ColorName_Lower(player.team))), e.origin, '0 0 0', 1);
+	float eff_team;
+	switch(player.team)
+	{
+		case NUM_TEAM_1: eff_team = EFFECT_FLAG_RED_TOUCH; break;
+		case NUM_TEAM_2: eff_team = EFFECT_FLAG_BLUE_TOUCH; break;
+		case NUM_TEAM_3: eff_team = EFFECT_FLAG_YELLOW_TOUCH; break;
+		case NUM_TEAM_4: eff_team = EFFECT_FLAG_PINK_TOUCH; break;
+		default: 	 	 eff_team = EFFECT_FLAG_NEUTRAL_TOUCH; break;
+	}
+
+	Send_Effect(eff_team, self.owner.origin, '0 0 0', 1);
 
 	WaypointSprite_UpdateBuildFinished(cp.sprite, time + (e.max_health - e.health) / (e.count / ONS_CP_THINKRATE));
 	WaypointSprite_UpdateRule(cp.sprite,cp.team,SPRITERULE_TEAMPLAY);
@@ -904,7 +924,7 @@ void ons_GeneratorDamage(entity inflictor, entity attacker, float damage, float 
 	else
 	{
 		// particles on every hit
-		pointparticles(particleeffectnum("sparks"), hitloc, force * -1, 1);
+		Send_Effect(EFFECT_SPARKS, hitloc, force * -1, 1);
 
 		//sound on every hit
 		if (random() < 0.5)
@@ -1665,7 +1685,7 @@ float ons_Teleport(entity player, entity tele_target, float range, float tele_ef
 			{
 				if ( tele_effects )
 				{
-					pointparticles(particleeffectnum("teleport"), player.origin, '0 0 0', 1);
+					Send_Effect(EFFECT_TELEPORT, player.origin, '0 0 0', 1);
 					sound (player, CH_TRIGGER, "misc/teleport.wav", VOL_BASE, ATTEN_NORM);
 				}
 				setorigin(player, loc);
@@ -1675,7 +1695,7 @@ float ons_Teleport(entity player, entity tele_target, float range, float tele_ef
 				player.teleport_antispam = time + autocvar_g_onslaught_teleport_wait;
 
 				if ( tele_effects )
-					pointparticles(particleeffectnum("teleport"), player.origin + v_forward * 32, '0 0 0', 1);
+					Send_Effect(EFFECT_TELEPORT, player.origin + v_forward * 32, '0 0 0', 1);
 				return TRUE;
 			}
 		}

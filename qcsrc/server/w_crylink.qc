@@ -364,7 +364,7 @@ void W_Crylink_Attack (void)
 	up = v_up;
 
 	shots = autocvar_g_balance_crylink_primary_shots;
-	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
+	Send_Effect(EFFECT_CRYLINK_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, shots);
 	proj = prevproj = firstproj = world;
 	for(counter = 0; counter < shots; ++counter)
 	{
@@ -473,7 +473,7 @@ void W_Crylink_Attack2 (void)
 	up = v_up;
 
 	shots = autocvar_g_balance_crylink_secondary_shots;
-	pointparticles(particleeffectnum("crylink_muzzleflash"), w_shotorg, w_shotdir * 1000, shots);
+	Send_Effect(EFFECT_CRYLINK_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, shots);
 	proj = prevproj = firstproj = world;
 	for(counter = 0; counter < shots; ++counter)
 	{

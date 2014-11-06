@@ -183,7 +183,7 @@ void Seeker_Fire_Missile(vector f_diff, entity m_target)
 	makevectors(self.v_angle);
 	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, W_Sound("seeker_fire.wav"), CH_WEAPON_A, 0, self.weapon);
 	w_shotorg += f_diff;
-	pointparticles(particleeffectnum("seeker_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_SEEKER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	//self.detornator         = FALSE;
 
@@ -275,7 +275,7 @@ void Seeker_Fire_Flac()
 	W_SetupShot_ProjectileSize (self, '-2 -2 -2', '2 2 2', FALSE, 2, W_Sound("flac_fire"), CH_WEAPON_A, autocvar_g_balance_seeker_flac_damage, self.weapon);
 	w_shotorg += f_diff;
 
-	pointparticles(particleeffectnum("hagar_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_HAGAR_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	missile 				= spawn ();
 	missile.owner 			= missile.realowner = self;

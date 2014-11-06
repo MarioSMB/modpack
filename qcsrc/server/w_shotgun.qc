@@ -37,7 +37,7 @@ void W_Shotgun_Attack (float deathtype)
 	for (sc = 0;sc < bullets;sc = sc + 1)
 		fireBullet(w_shotorg, w_shotdir, spread, solidpenetration, d, f, WEP_SHOTGUN, 0);
 
-	pointparticles(particleeffectnum("shotgun_muzzleflash"), w_shotorg, w_shotdir * 1000, autocvar_g_balance_shotgun_primary_ammo);
+	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, autocvar_g_balance_shotgun_primary_ammo);
 
 	// casing code
 	if (autocvar_g_casings >= 1)

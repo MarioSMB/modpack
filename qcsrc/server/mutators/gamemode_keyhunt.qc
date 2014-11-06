@@ -429,7 +429,7 @@ void kh_Handle_Throw(entity player, entity receiver, entity key, float droptype)
 
 			// other
 			sound(player, CH_TRIGGER, key.snd_key_touch, VOL_BASE, ATTEN_NORM);
-			WarpZone_TrailParticles(world, particleeffectnum(key.passeffect), player.origin, targ_origin);
+			Send_Effect(key.passeffectnum, player.origin, targ_origin, 0);
 			kh_EventLog("pass", key.team, player);
 			break;
 		}
@@ -495,8 +495,6 @@ void kh_Handle_Capture(float capturetype)
 
 		PlayerTeamScore_AddScore(player, autocvar_g_keyhunt_score_capture);
 		PlayerScore_Add(player, SP_KH_CAPS, 1);
-		
-		//pointparticles(particleeffectnum(key.capeffect), kh_AttachedOrigin(key), '0 0 0', 1);
 		
 		if(key.kh_worldkeynext)
 			te_lightning2(world, kh_AttachedOrigin(key), kh_AttachedOrigin(key.kh_worldkeynext));
@@ -601,7 +599,7 @@ void kh_Handle_Pickup(entity key, entity player, float pickuptype)
 	}
 
 	// effects
-	pointparticles(particleeffectnum(key.toucheffect), player.origin, '0 0 0', 1);
+	Send_Effect(key.toucheffectnum, player.origin, '0 0 0', 1);
 
 	// waypoints
 	if(pickuptype == PICKUP_DROPPED || pickuptype == PICKUP_KILLED) { WaypointSprite_Kill(key.wps_keydropped); }
@@ -789,7 +787,7 @@ void kh_KeyTouch()
 	{
 		if(time > self.wait) // if we haven't in a while, play a sound/effect
 		{
-			pointparticles(particleeffectnum(self.toucheffect), self.origin, '0 0 0', 1);
+			Send_Effect(self.toucheffectnum, self.origin, '0 0 0', 1);
 			sound(self, CH_TRIGGER, self.snd_key_touch, VOL_BASE, ATTEN_NORM);
 			self.wait = time + KEY_TOUCHRATE;
 		}
@@ -885,9 +883,9 @@ void kh_KeySetup(float teamnumber, entity key, entity player) // called when spa
 	// appearence
 	key.model = "models/keyhunt/key.md3";
 	key.scale = KEY_SCALE;
-	key.toucheffect = ((teamnumber == NUM_TEAM_1) ? "redkey_touch" : ((teamnumber == NUM_TEAM_2) ? "bluekey_touch" : ((teamnumber == NUM_TEAM_3) ? "yellowkey_touch" : "pinkkey_touch")));
-	key.passeffect = ((teamnumber == NUM_TEAM_1) ? "red_pass" : ((teamnumber == NUM_TEAM_2) ? "blue_pass" : ((teamnumber == NUM_TEAM_3) ? "yellow_pass" : "pink_pass")));
-	key.capeffect = ((teamnumber == NUM_TEAM_1) ? "red_cap" : ((teamnumber == NUM_TEAM_2) ? "blue_cap" : ((teamnumber == NUM_TEAM_3) ? "yellow_cap" : "pink_cap")));
+	key.toucheffectnum = ((teamnumber == NUM_TEAM_1) ? EFFECT_FLAG_RED_TOUCH : ((teamnumber == NUM_TEAM_2) ? EFFECT_FLAG_BLUE_TOUCH : ((teamnumber == NUM_TEAM_3) ? EFFECT_FLAG_YELLOW_TOUCH : EFFECT_FLAG_PINK_TOUCH)));
+	key.passeffectnum = ((teamnumber == NUM_TEAM_1) ? EFFECT_RED_PASS : ((teamnumber == NUM_TEAM_2) ? EFFECT_BLUE_PASS : ((teamnumber == NUM_TEAM_3) ? EFFECT_YELLOW_PASS : EFFECT_PINK_PASS)));
+	key.capeffectnum = ((teamnumber == NUM_TEAM_1) ? EFFECT_RED_CAP : ((teamnumber == NUM_TEAM_2) ? EFFECT_BLUE_CAP : ((teamnumber == NUM_TEAM_3) ? EFFECT_YELLOW_CAP : EFFECT_PINK_CAP)));
 
 	// sound
 	key.snd_key_taken = "kh/collect.wav";

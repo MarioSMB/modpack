@@ -54,7 +54,7 @@ void W_Laser_Attack (float issecondary, float deathtype, float wep)
 		W_SetupShot_Dir (self, s_forward, FALSE, 3, W_Sound("lasergun_fire"), CH_WEAPON_B, autocvar_g_balance_laser_secondary_damage, wep);
 	else
 		W_SetupShot_Dir (self, s_forward, FALSE, 3, W_Sound("lasergun_fire"), CH_WEAPON_B, autocvar_g_balance_laser_primary_damage, wep);
-	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_LASER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn ();
 	missile.owner = missile.realowner = self;

@@ -37,6 +37,8 @@ defs.qh		// Should rename this, it has fields and globals
 ../common/notifications.qh // must be after autocvars
 ../common/deathtypes.qh // must be after notifications
 
+../common/effects.qh
+
 ../common/monsters/monsters.qh
 ../common/monsters/sv_monsters.qh
 ../common/monsters/spawn.qh
@@ -259,3 +261,4 @@ mutators/mutators_include.qc
 ../common/test.qc
 ../common/util.qc
 ../common/notifications.qc
+../common/effects.qc

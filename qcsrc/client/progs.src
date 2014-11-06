@@ -37,6 +37,8 @@ autocvars.qh
 ../common/notifications.qh // must be after autocvars
 ../common/deathtypes.qh // must be after notifications
 
+../common/effects.qh
+
 ../common/monsters/monsters.qh
 
 ../common/turrets/turrets.qh
@@ -125,6 +127,8 @@ noise.qc
 ../common/explosion_equation.qc
 ../common/urllib.qc
 command/cl_cmd.qc
+
+../common/effects.qc
 
 ../common/monsters/monsters.qc
 

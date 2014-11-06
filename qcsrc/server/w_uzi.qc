@@ -67,7 +67,7 @@ void W_UZI_Attack (float deathtype)
 	else
 		fireBullet(w_shotorg, w_shotdir, autocvar_g_balance_uzi_sustained_spread, autocvar_g_balance_uzi_solidpenetration, autocvar_g_balance_uzi_sustained_damage, autocvar_g_balance_uzi_sustained_force, deathtype, 0);
 
-	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	UziFlash();
 	W_AttachToShotorg(self.muzzle_flash, '5 0 0');
@@ -141,7 +141,7 @@ void uzi_mode1_fire_auto()
 
 	self.misc_bulletcounter = self.misc_bulletcounter + 1;
 
-	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	UziFlash();
 	W_AttachToShotorg(self.muzzle_flash, '5 0 0');
@@ -165,7 +165,7 @@ void uzi_mode1_fire_burst()
 
 	fireBullet(w_shotorg, w_shotdir, autocvar_g_balance_uzi_burst_spread, autocvar_g_balance_uzi_solidpenetration, autocvar_g_balance_uzi_sustained_damage, autocvar_g_balance_uzi_sustained_force, WEP_UZI, 0);
 
-	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	UziFlash();
 	W_AttachToShotorg(self.muzzle_flash, '5 0 0');
