@@ -763,7 +763,7 @@ void Item_Touch (void)
 
 	other.last_pickup = time;
 
-	Send_Effect(EFFECT_ITEM_PICKUP, self.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 	sound (other, CH_TRIGGER, self.item_pickupsound, VOL_BASE, ATTEN_NORM);
 
 	if (self.classname == "droppedweapon")
@@ -843,7 +843,7 @@ void Item_FindTeam()
 // Savage: used for item garbage-collection
 void RemoveItem(void)
 {
-	Send_Effect(EFFECT_ITEM_PICKUP, self.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 	remove(self);
 }
 
