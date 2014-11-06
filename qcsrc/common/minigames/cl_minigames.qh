@@ -96,7 +96,7 @@ void ent_read_minigame();
 
 float HUD_MinigameMenu_IsOpened();
 void HUD_MinigameMenu_Close();
-
+float HUD_Minigame_Hideothers();
 
 
 #define FOREACH_MINIGAME_ENTITY(entityvar) \

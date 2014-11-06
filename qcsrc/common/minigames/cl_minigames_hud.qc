@@ -15,11 +15,11 @@ float HUD_mouse_over(entity somepanel)
 
 void HUD_MinigameBoard ()
 {
-	entity hud_minigame;
+	entity hud_minigame = world;
 	
 	if(!autocvar__hud_configure)
 		hud_minigame = active_minigame.descriptor;
-	else 
+	else if ( HUD_MinigameMenu_IsOpened() )
 		hud_minigame = minigame_get_descriptor("nmm");
 	
 	if ( !hud_minigame )
@@ -40,11 +40,11 @@ void HUD_MinigameBoard ()
 // ====================================================================
 void HUD_MinigameStatus ()
 {
-	entity hud_minigame;
+	entity hud_minigame = world;
 	
 	if(!autocvar__hud_configure)
 		hud_minigame = active_minigame.descriptor;
-	else
+	else if ( HUD_MinigameMenu_IsOpened() )
 		hud_minigame = minigame_get_descriptor("nmm");
 	
 	if ( !hud_minigame )
@@ -344,6 +344,7 @@ void HUD_MinigameMenu_Close()
 		HUD_MinigameMenu_activeitem = world;
 		if(autocvar_hud_cursormode)
 		if ( !active_minigame )
+		if ( !autocvar__hud_configure )
 			setcursormode(0);
 	}
 }
@@ -453,12 +454,7 @@ void HUD_MinigameMenu_DrawColoredEntry(vector pos, string s, vector fontsize)
 
 // minigame menu panel UI
 void HUD_MinigameMenu ()
-{
-	if ( autocvar__hud_configure && !HUD_MinigameMenu_IsOpened() )
-	{
-		HUD_MinigameMenu_Open();
-	}
-	
+{	
 	if ( !HUD_MinigameMenu_IsOpened() )
 		return;
 	
@@ -658,4 +654,13 @@ void HUD_Minigame_Mouse()
 	
 	const vector cursorsize = '32 32 0';
 	drawpic(mousepos-'8 4 0', strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', 0.8, DRAWFLAG_NORMAL);
+}
+
+
+// whether to hide other panels
+float HUD_Minigame_Hideothers()
+{
+	if ( autocvar__hud_configure )
+		return HUD_MinigameMenu_IsOpened();
+	return minigame_isactive();
 }

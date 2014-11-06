@@ -475,7 +475,7 @@ void HUD_Weapons(void)
 
 	// check to see if we want to continue
 	if(hud != HUD_NORMAL) { return; }
-
+	
 	if(!autocvar__hud_configure)
 	{
 		if((!autocvar_hud_panel_weapons) || (spectatee_status == -1))
@@ -486,7 +486,6 @@ void HUD_Weapons(void)
 			weaponprevtime = time;
 			return;
 		}
-		if ( minigame_isactive() ) return;
 	}
 
 	// update generic hud functions
@@ -1005,7 +1004,6 @@ void HUD_Ammo(void)
 	{
 		if(!autocvar_hud_panel_ammo) return;
 		if(spectatee_status == -1) return;
-		if ( minigame_isactive() ) return;
 	}
 
 	HUD_Panel_UpdateCvars();
@@ -1232,7 +1230,6 @@ void HUD_Powerups(void)
 		if(spectatee_status == -1) return;
 		if(!(getstati(STAT_ITEMS, 0, 24) & (IT_STRENGTH | IT_INVINCIBLE | IT_SUPERWEAPON))) return;
 		if (getstati(STAT_HEALTH) <= 0) return;
-		if ( minigame_isactive() ) return;
 
 		strength_time = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
 		shield_time = bound(0, getstatf(STAT_INVINCIBLE_FINISHED) - time, 99);
@@ -1440,7 +1437,6 @@ void HUD_HealthArmor(void)
 		if(!autocvar_hud_panel_healtharmor) return;
 		if(hud != HUD_NORMAL) return;
 		if(spectatee_status == -1) return;
-		if ( minigame_isactive() ) return;
 
 		health = getstati(STAT_HEALTH);
 		if(health <= 0)
@@ -2084,7 +2080,6 @@ void HUD_Radar(void)
 {
 	if (!autocvar__hud_configure)
 	{
-		if ( minigame_isactive() ) return;
 		if (hud_panel_radar_maximized)
 		{
 			if (!hud_draw_maximized) return;
@@ -2633,7 +2628,6 @@ void HUD_RaceTimer (void)
 			race_checkpointtime = 0;
 			return;
 		}
-		if ( minigame_isactive() ) return;
 	}
 
 	HUD_Panel_UpdateCvars();
@@ -4444,7 +4438,6 @@ void HUD_PressedKeys(void)
 	{
 		if(!autocvar_hud_panel_pressedkeys) return;
 		if(spectatee_status <= 0 && autocvar_hud_panel_pressedkeys < 2) return;
-		if ( minigame_isactive() ) return;
 	}
 
 	HUD_Panel_UpdateCvars();
@@ -4658,7 +4651,6 @@ void HUD_InfoMessages(void)
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_infomessages) return;
-		if ( minigame_isactive() ) return;
 	}
 
 	HUD_Panel_UpdateCvars();
@@ -6054,7 +6046,6 @@ void HUD_Buffs(void)
 		if(spectatee_status == -1) return;
 		if(getstati(STAT_HEALTH) <= 0) return;
 		if(!buffs) return;
-		if ( minigame_isactive() ) return;
 	}
 	else
 	{
@@ -6108,6 +6099,20 @@ void HUD_Buffs(void)
 //
 #include "../common/minigames/cl_minigames_hud.qc"
 
+float HUD_Panel_CheckFlags(float showflags)
+{
+	if ( HUD_Minigame_Hideothers() )
+		return showflags & PANEL_SHOW_MINIGAME;
+	return showflags & PANEL_SHOW_MAINGAME;
+}
+
+void HUD_Panel_Draw(entity panent)
+{
+	panel = panent;
+	if ( HUD_Panel_CheckFlags(panel.panel_showflags) )
+		panel.panel_draw();
+}
+
 /*
 ==================
 Main HUD system
@@ -6149,14 +6154,14 @@ void HUD_Main (void)
 	// they must fade only when the menu does
 	if(scoreboard_fade_alpha == 1)
 	{
-		(panel = HUD_PANEL(CENTERPRINT)).panel_draw();
+		HUD_Panel_Draw(HUD_PANEL(CENTERPRINT));
 		return;
 	}
 
 	if(!autocvar__hud_configure && !hud_fade_alpha)
 	{
 		hud_fade_alpha = 1;
-		(panel = HUD_PANEL(VOTE)).panel_draw();
+		HUD_Panel_Draw(HUD_PANEL(VOTE));
 		hud_fade_alpha = 0;
 		return;
 	}
@@ -6263,16 +6268,16 @@ void HUD_Main (void)
 	hud_draw_maximized = 0;
 	// draw panels in order specified by panel_order array
 	for(i = HUD_PANEL_NUM - 1; i >= 0; --i)
-		(panel = hud_panel[panel_order[i]]).panel_draw();
+		HUD_Panel_Draw(hud_panel[panel_order[i]]);
 
 	hud_draw_maximized = 1; // panels that may be maximized must check this var
 	// draw maximized panels on top
 	if(hud_panel_radar_maximized)
-		(panel = HUD_PANEL(RADAR)).panel_draw();
+		HUD_Panel_Draw(HUD_PANEL(RADAR));
 	if(autocvar__con_chat_maximized)
-		(panel = HUD_PANEL(CHAT)).panel_draw();
+		HUD_Panel_Draw(HUD_PANEL(CHAT));
 	if(hud_panel_quickmenu)
-		(panel = HUD_PANEL(QUICKMENU)).panel_draw();
+		HUD_Panel_Draw(HUD_PANEL(QUICKMENU));
 
 	HUD_Configure_PostDraw();
 
