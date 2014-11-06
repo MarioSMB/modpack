@@ -19,7 +19,7 @@ void HUD_MinigameBoard ()
 	
 	if(!autocvar__hud_configure)
 		hud_minigame = active_minigame.descriptor;
-	else if ( HUD_MinigameMenu_IsOpened() )
+	else
 		hud_minigame = minigame_get_descriptor("nmm");
 	
 	if ( !hud_minigame )
@@ -44,7 +44,7 @@ void HUD_MinigameStatus ()
 	
 	if(!autocvar__hud_configure)
 		hud_minigame = active_minigame.descriptor;
-	else if ( HUD_MinigameMenu_IsOpened() )
+	else
 		hud_minigame = minigame_get_descriptor("nmm");
 	
 	if ( !hud_minigame )
@@ -363,6 +363,7 @@ void HUD_MinigameMenu_CurrentButton()
 				currb.classname = "hud_minigamemenu_current";
 				currb.model = strzone(minigame_texture(strcat(active_minigame.descriptor.netname,"/icon")));
 				HUD_MinigameMenu_InsertEntry(currb,e.list_prev);
+				HUD_MinigameMenu_EraseEntry(e);
 				HUD_MinigameMenu_Click(currb);
 				return;
 			}
@@ -379,9 +380,16 @@ void HUD_MinigameMenu_CurrentButton()
 				if ( !p )
 					p = HUD_MinigameMenu_last_entry;
 				HUD_MinigameMenu_EraseEntry(e);
-				return;
+				break;
 			}
 		}
+		for ( e = HUD_MinigameMenu_last_entry; e != world; e = e.list_prev )
+			if ( e.classname == "hud_minigamemenu_exit" )
+				return;
+		entity exit = HUD_MinigameMenu_SpawnEntry(
+			"Exit Menu",'0 0 0',hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_Close);
+		exit.classname = "hud_minigamemenu_exit";
+		HUD_MinigameMenu_InsertEntry ( exit, HUD_MinigameMenu_last_entry );
 	}
 }
 
@@ -396,10 +404,6 @@ void HUD_MinigameMenu_Open()
 		HUD_MinigameMenu_InsertEntry ( HUD_MinigameMenu_SpawnEntry(
 			"Join",'0 0 0',hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_ClickJoin),
 			HUD_MinigameMenu_last_entry );
-		entity exit = HUD_MinigameMenu_SpawnEntry(
-			"Exit Menu",'0 0 0',hud_fontsize*1.5,'0.7 0.84 1', HUD_MinigameMenu_Close);
-		exit.classname = "hud_minigamemenu_exit";
-		HUD_MinigameMenu_InsertEntry ( exit, HUD_MinigameMenu_last_entry );
 		HUD_MinigameMenu_CurrentButton();
 		HUD_MinigameMenu_activeitem = world;
 		if(autocvar_hud_cursormode)
@@ -656,9 +660,7 @@ void HUD_Minigame_Mouse()
 	drawpic(mousepos-'8 4 0', strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', 0.8, DRAWFLAG_NORMAL);
 }
 
-
-// whether to hide other panels
-float HUD_Minigame_Hideothers()
+float HUD_Minigame_Showpanels()
 {
 	if ( autocvar__hud_configure )
 		return HUD_MinigameMenu_IsOpened();

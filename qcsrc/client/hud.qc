@@ -6099,9 +6099,15 @@ void HUD_Buffs(void)
 //
 #include "../common/minigames/cl_minigames_hud.qc"
 
+/*
+==================
+Main HUD system
+==================
+*/
+
 float HUD_Panel_CheckFlags(float showflags)
 {
-	if ( HUD_Minigame_Hideothers() )
+	if ( HUD_Minigame_Showpanels() )
 		return showflags & PANEL_SHOW_MINIGAME;
 	return showflags & PANEL_SHOW_MAINGAME;
 }
@@ -6112,12 +6118,6 @@ void HUD_Panel_Draw(entity panent)
 	if ( HUD_Panel_CheckFlags(panel.panel_showflags) )
 		panel.panel_draw();
 }
-
-/*
-==================
-Main HUD system
-==================
-*/
 
 void HUD_Reset (void)
 {
