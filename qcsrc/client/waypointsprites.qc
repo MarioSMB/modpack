@@ -238,7 +238,7 @@ vector spritelookupcolor(string s, vector def)
 }
 string spritelookuptext(string s)
 {
-	if(startsWith(s, "buff-")) { return Buff_PrettyName(Buff_Type_FromName(substring(s, 5, strlen(s)))); }
+	if(startsWith(s, "buff-")) { return Buff_PrettyName(Buff_Type_FromSprite(s)); }
 	switch(s)
 	{
 		case "as-push": return _("Push");
