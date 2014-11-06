@@ -556,6 +556,7 @@ MUTATOR_HOOKFUNCTION(buffs_OnEntityPreSpawn)
 		{
 			entity e = spawn();
 			buff_SpawnReplacement(e, self);
+			self.classname = "item_removing";
 			return TRUE;
 		}
 	}
