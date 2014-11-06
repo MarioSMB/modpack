@@ -596,6 +596,29 @@ void nmm_make_move(entity minigame)
 		nmm_fromtile = world;
 }
 
+string nmm_turn_to_string(float turnflags)
+{
+	if ( turnflags & NMM_TURN_WIN )
+	{
+		if ( (turnflags&NMM_TURN_TEAM) != minigame_self.team )
+			return "You lost the game!";
+		return "You win!";
+	}
+	
+	if ( (turnflags&NMM_TURN_TEAM) != minigame_self.team )
+		return "Wait for your opponent to make their move";
+	if ( turnflags & NMM_TURN_PLACE )
+		return "Click on the game board to place your piece";
+	if ( turnflags & NMM_TURN_MOVE )
+		return "You can select one of your pieces to move it in one of the surrounding places";
+	if ( turnflags & NMM_TURN_FLY )
+		return "You can select one of your pieces to move it anywhere on the board";
+	if ( turnflags & NMM_TURN_TAKE )
+		return "You can take one of the opponent's pieces";
+	
+	return "";
+}
+
 // Required function, handle client events
 float minigame_event_nmm(entity minigame, string event, ...)
 {
@@ -603,6 +626,7 @@ float minigame_event_nmm(entity minigame, string event, ...)
 	{
 		nmm_fromtile = world;
 		nmm_init_tiles(minigame);
+		minigame.message = nmm_turn_to_string(minigame.minigame_flags);
 	}
 	else if ( event == "deactivate" )
 	{
@@ -724,6 +748,10 @@ float minigame_event_nmm(entity minigame, string event, ...)
 						e.nmm_tile_piece = self;
 				}
 			}
+		}
+		else if ( self.classname == "minigame" && ( ...(1,float) & MINIG_SF_UPDATE ) ) 
+		{
+			self.message = nmm_turn_to_string(self.minigame_flags);
 		}
 	}
 	

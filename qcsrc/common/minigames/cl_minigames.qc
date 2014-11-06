@@ -121,9 +121,14 @@ void activate_minigame(entity minigame)
 		return;
 	
 	if ( active_minigame )
+	{
+		entity olds = minigame_self;
 		deactivate_minigame();
+		minigame_self = olds;
+	}
 	
-	minigame_self = world;
+	if ( minigame_self.owner != minigame )
+		minigame_self = world;
 	active_minigame = minigame;
 	active_minigame.minigame_event(active_minigame,"activate");
 	
@@ -164,6 +169,7 @@ void ent_read_minigame()
 	}
 	else if ( self.classname == "minigame_player" )
 	{
+		float activate = 0;
 		if ( sf & MINIG_SF_CREATE )
 		{
 			string owner_name = ReadString();
@@ -178,17 +184,19 @@ void ent_read_minigame()
 			self.minigame_playerslot = ent;
 			dprint("Player: ",GetPlayerName(ent-1),"\n");
 			
-			if ( ent == player_localentnum && self.owner && self.owner != active_minigame )
-			{
-				activate_minigame(self.owner);
-				minigame_self = self;
-			}
+			activate = (ent == player_localentnum && self.owner && self.owner != active_minigame);
 			
 		}
 		minigame_ent = self.owner;
 			
 		if ( sf & MINIG_SF_UPDATE )
 			self.team = ReadByte();
+		
+		if ( activate )
+		{
+			minigame_self = self;
+			activate_minigame(self.owner);
+		}
 	}
 	else if ( self.classname == "minigame_board_piece" )
 	{

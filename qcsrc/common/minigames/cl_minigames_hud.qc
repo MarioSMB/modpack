@@ -516,6 +516,38 @@ void HUD_MinigameMenu ()
 	}
 }
 
+// ====================================================================
+// Minigame Help Panel
+// ====================================================================
+
+void HUD_MinigameHelp()
+{
+	string help_message;
+	
+	if(!autocvar__hud_configure)
+		help_message = active_minigame.message;
+	else
+		help_message = "Minigame message";
+	
+	if ( !help_message )
+		return;
+	
+	HUD_Panel_UpdateCvars();
+	
+	
+	vector pos, mySize;
+	pos = panel_pos;
+	mySize = panel_size;
+	
+	if(panel_bg_padding)
+	{
+		pos += '1 1 0' * panel_bg_padding;
+		mySize -= '2 2 0' * panel_bg_padding;
+	}
+	
+	minigame_drawcolorcodedstring_wrapped( mySize_x, pos, help_message, 
+		hud_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5 );
+}
 
 // ====================================================================
 // Minigame Panel Input
