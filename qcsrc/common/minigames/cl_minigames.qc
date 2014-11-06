@@ -92,9 +92,7 @@ void deactivate_minigame()
 	minigame_self = world;
 	active_minigame = world;
 	
-	if ( !HUD_MinigameMenu_IsOpened() )
-		setcursormode(0);
-	else if ( auto_close_minigamemenu )
+	if ( auto_close_minigamemenu )
 	{
 		HUD_MinigameMenu_Close();
 		auto_close_minigamemenu = 0;

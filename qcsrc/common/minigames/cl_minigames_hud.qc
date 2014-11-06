@@ -343,7 +343,6 @@ void HUD_MinigameMenu_Close()
 		HUD_MinigameMenu_last_entry = world;
 		HUD_MinigameMenu_activeitem = world;
 		if(autocvar_hud_cursormode)
-		if ( !active_minigame )
 		if ( !autocvar__hud_configure )
 			setcursormode(0);
 	}
@@ -555,7 +554,7 @@ void HUD_MinigameHelp()
 float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary)
 {
 		
-	if( !(minigame_isactive() || HUD_MinigameMenu_IsOpened()) || autocvar__hud_configure )
+	if( !HUD_MinigameMenu_IsOpened() || autocvar__hud_configure )
 		return false;
 
 	if(bInputType == 3)
@@ -621,7 +620,7 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 			/// TODO: bInputType == 2?
 		}
 		
-		if ( HUD_MinigameMenu_IsOpened() && bInputType == 0 )
+		if ( bInputType == 0 )
 		{
 			if ( nPrimary == K_MOUSE1 && HUD_MinigameMenu_activeitem &&
 				HUD_mouse_over(HUD_PANEL(MINIGAME_MENU)) )
@@ -674,7 +673,7 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 
 void HUD_Minigame_Mouse()
 {		
-	if( !(minigame_isactive() || HUD_MinigameMenu_IsOpened()) || autocvar__hud_configure || mv_active )
+	if( !HUD_MinigameMenu_IsOpened() || autocvar__hud_configure || mv_active )
 		return;
 	
 	if(!autocvar_hud_cursormode)
@@ -694,7 +693,5 @@ void HUD_Minigame_Mouse()
 
 float HUD_Minigame_Showpanels()
 {
-	if ( autocvar__hud_configure )
-		return HUD_MinigameMenu_IsOpened();
-	return minigame_isactive();
+	return HUD_MinigameMenu_IsOpened() && ( autocvar__hud_configure || minigame_isactive() );
 }
