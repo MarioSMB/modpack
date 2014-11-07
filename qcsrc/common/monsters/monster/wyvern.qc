@@ -82,6 +82,7 @@ float M_Wyvern_Attack(float attack_type)
 		case MONSTER_ATTACK_RANGED:
 		{
 			self.attack_finished_single = time + 1.2;
+			self.anim_finished = time + 1.2;
 
 			M_Wyvern_Attack_Fireball();
 

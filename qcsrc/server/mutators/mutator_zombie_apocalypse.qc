@@ -42,15 +42,6 @@ MUTATOR_DEFINITION(mutator_zombie_apocalypse)
 	MUTATOR_ONADD
 	{
 		za_spawn_delay = time + game_starttime;
-
-		float i;
-		entity mon;
-		for(i = MON_FIRST; i <= MON_LAST; ++i)
-		{
-			mon = get_monsterinfo(i);
-			if(mon.netname == autocvar_g_za_spawnmonster || autocvar_g_za_spawnmonster == "random")
-				MON_ACTION(i, MR_PRECACHE);
-		}
 	}
 
 	return FALSE;

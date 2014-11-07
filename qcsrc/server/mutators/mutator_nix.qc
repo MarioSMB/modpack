@@ -184,11 +184,6 @@ MUTATOR_HOOKFUNCTION(nix_FilterItem)
 			if (autocvar_g_nix_with_healtharmor)
 				return 0;
 			break;
-		case IT_STRENGTH:
-		case IT_INVINCIBLE:
-			if (autocvar_g_nix_with_powerups)
-				return 0;
-			break;
 	}
 
 	return 1; // delete all other items

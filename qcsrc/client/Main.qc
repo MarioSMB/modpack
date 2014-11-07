@@ -81,6 +81,9 @@ void CSQC_Init(void)
 	localcmd("\nalias nobobbing \"cl_bob 0; cl_bob2 0; cl_followmodel 0; cl_leanmodel 0\"\n");
 	localcmd("\nalias quickmenu \"cl_cmd hud quickmenu\"\n");
 	localcmd("\nalias physics \"cmd physics ${* ?}\"\n");
+	localcmd("\nalias editmob \"cmd editmob ${* ?}\"\n");
+	localcmd("\nalias spawnmob \"cmd editmob spawn ${* ?}\"\n");
+	localcmd("\nalias killmob \"cmd editmob kill ${* ?}\"\n");
 	if(getkeybind(K_F9) == "") { localcmd("\nbind f9 \"cl_cmd hud minigame\"\n"); }
 
 	//registercommand("hud_configure");
@@ -200,6 +203,7 @@ void CSQC_Init(void)
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
 	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
+	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
 	
 	initialize_minigames();
 
@@ -1006,6 +1010,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_HEALING_ORB: ent_healer(); break;
 		case ENT_CLIENT_JAILCAMERA: ent_jailcamera(); break;
 		case ENT_CLIENT_MINIGAME: ent_read_minigame(); break;
+		case ENT_CLIENT_EFFECT: Read_Effect(bIsNewEntity); break;
 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));

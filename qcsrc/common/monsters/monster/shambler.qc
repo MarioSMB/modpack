@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ SHAMBLER,
 /* functions  */ M_Shambler, M_Shambler_Attack,
-/* spawnflags */ MONSTER_SIZE_BROKEN | MON_FLAG_SUPERMONSTER | MON_FLAG_MELEE | MON_FLAG_RANGED | MON_FLAG_RIDE,
+/* spawnflags */ MONSTER_SIZE_BROKEN | MON_FLAG_SUPERMONSTER | MON_FLAG_MELEE | MON_FLAG_RANGED,
 /* mins,maxs  */ '-41 -41 -31', '41 41 65',
 /* model      */ "shambler.mdl",
 /* netname    */ "shambler",
@@ -40,7 +40,7 @@ const float shambler_anim_death		= 8;
 void M_Shambler_Attack_Smash()
 {
 	makevectors(self.angles);
-	pointparticles(particleeffectnum("explosion_medium"), (self.origin + (v_forward * 150)) - ('0 0 1' * self.maxs_z), '0 0 0', 1);
+	Send_Effect(EFFECT_EXPLOSION_MEDIUM, (self.origin + (v_forward * 150)) - ('0 0 1' * self.maxs_z), '0 0 0', 1);
 	sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 
 	// RadiusDamage does NOT support custom starting location, which means we must use this hack...
@@ -59,6 +59,7 @@ void M_Shambler_Attack_Swing()
 	{
 		Monster_Delay(1, 0, 0.5, M_Shambler_Attack_Swing);
 		self.attack_finished_single += 0.5;
+		self.anim_finished = self.attack_finished_single;
 	}
 }
 
@@ -179,8 +180,9 @@ float M_Shambler_Attack(float attack_type)
 				self.frame = shambler_anim_smash;
 				Monster_Delay(1, 0, 0.7, M_Shambler_Attack_Smash);
 				self.attack_finished_single = time + 1.1;
+				self.anim_finished = time + 1.1;
 				self.state = MONSTER_ATTACK_MELEE; // kinda a melee attack
-				self.shambler_lastattack = time + 3;
+				self.shambler_lastattack = time + 3 + random() * 1.5;
 				return TRUE;
 			}
 			else if(randomness <= 0.1 && enemy_len >= autocvar_g_monster_shambler_attack_smash_range * 1.5) // small chance, don't want this spammed
@@ -188,7 +190,8 @@ float M_Shambler_Attack(float attack_type)
 				self.frame = shambler_anim_magic;
 				self.state = MONSTER_ATTACK_MELEE; // maybe we should rename this to something more general
 				self.attack_finished_single = time + 1.1;
-				self.shambler_lastattack = time + 3;
+				self.anim_finished = 1.1;
+				self.shambler_lastattack = time + 3 + random() * 1.5;
 				Monster_Delay(1, 0, 0.6, M_Shambler_Attack_Lightning);
 				return TRUE;
 			}
@@ -212,6 +215,8 @@ float M_Shambler(float req)
 		}
 		case MR_PAIN:
 		{
+			self.pain_finished = time + 0.5;
+			self.frame = shambler_anim_pain;
 			return TRUE;
 		}
 		case MR_DEATH:

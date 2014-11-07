@@ -103,6 +103,7 @@ float M_Spider_Attack(float attack_type)
 			{
 				self.frame = spider_anim_attack2;
 				self.attack_finished_single = time + (autocvar_g_monster_spider_attack_web_delay);
+				self.anim_finished = time + 1;
 				M_Spider_Attack_Web();
 				self.spider_web_delay = time + 3;
 				return TRUE;

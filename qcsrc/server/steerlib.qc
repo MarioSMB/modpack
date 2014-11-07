@@ -493,7 +493,7 @@ vector steerlib_beamsteer(vector dir, float length, float step, float step_up, f
 #ifdef TLIBS_TETSLIBS
 void flocker_die()
 {
-	pointparticles(particleeffectnum("rocket_explode"), self.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_ROCKET_EXPLODE, self.origin, '0 0 0', 1);
 
     self.owner.cnt += 1;
     self.owner = world;

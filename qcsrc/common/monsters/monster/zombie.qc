@@ -92,6 +92,7 @@ float M_Zombie_Defend_Block()
 	self.armorvalue = 0.9;
 	self.state = MONSTER_ATTACK_MELEE; // freeze monster
 	self.attack_finished_single = time + 2.1;
+	self.anim_finished = self.attack_finished_single;
 
 	Monster_Delay(1, 0, 2, M_Zombie_Defend_Block_End);
 
@@ -140,6 +141,8 @@ float M_Zombie(float req)
 		}
 		case MR_PAIN:
 		{
+			self.pain_finished = time + 0.34;
+			self.frame = (random() >= 0.5) ? zombie_anim_painfront1 : zombie_anim_painfront2;
 			return TRUE;
 		}
 		case MR_DEATH:

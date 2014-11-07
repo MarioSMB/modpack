@@ -8,6 +8,7 @@ var float BUFF_LAST = 1;
 .string netname; // buff name
 .string message; // human readable name
 .vector colormod; // buff color
+.string model2; // buff sprite
 .float skin; // buff skin
 
 #define REGISTER_BUFF(hname,sname,NAME,bskin,bcolor) \
@@ -23,6 +24,7 @@ var float BUFF_LAST = 1;
 		Buff_Type##sname.message = hname; \
 		Buff_Type##sname.skin = bskin; \
 		Buff_Type##sname.colormod = bcolor; \
+		Buff_Type##sname.model2 = strzone(strcat("buff-", #sname)); \
 		if(!Buff_Type_first) \
 			Buff_Type_first = Buff_Type##sname; \
 		if(Buff_Type_last) \
@@ -87,4 +89,6 @@ vector Buff_Color(float buff_id);
 string Buff_PrettyName(float buff_id);
 string Buff_Name(float buff_id);
 float Buff_Type_FromName(string buff_name);
+float Buff_Type_FromSprite(string buff_sprite);
 float Buff_Skin(float buff_id);
+string Buff_Sprite(float buff_id);

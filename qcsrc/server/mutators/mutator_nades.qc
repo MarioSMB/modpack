@@ -64,8 +64,7 @@ void napalm_damage(float dist, float damage, float edgedamage, float burntime)
 		d = vlen(WarpZone_UnTransformOrigin(RandomSelection_chosen_ent, self.origin) - RandomSelection_chosen_ent.fireball_impactvec);
 		d = damage + (edgedamage - damage) * (d / dist);
 		Fire_AddDamage(RandomSelection_chosen_ent, self.realowner, d * burntime, burntime, self.projectiledeathtype | HITTYPE_BOUNCE);
-		//trailparticles(self, particleeffectnum("fireball_laser"), self.origin, RandomSelection_chosen_ent.fireball_impactvec);
-		pointparticles(particleeffectnum("fireball_laser"), self.origin, RandomSelection_chosen_ent.fireball_impactvec - self.origin, 1);
+		Send_Effect(EFFECT_FIREBALL_LASER, self.origin, RandomSelection_chosen_ent.fireball_impactvec - self.origin, 1);
 	}
 }
 
@@ -212,7 +211,7 @@ void nade_napalm_boom()
 void nade_ice_freeze(entity freezefield, entity frost_target, float freeze_time)
 {
 	frost_target.frozen_by = freezefield.realowner;
-	pointparticles(particleeffectnum("electro_impact"), frost_target.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_ELECTRO_IMPACT, frost_target.origin, '0 0 0', 1);
 	Freeze(frost_target, 1/freeze_time, 3, FALSE);
 	if(frost_target.ballcarried)
 	if(g_keepaway) { ka_DropEvent(frost_target); }
@@ -238,16 +237,16 @@ void nade_ice_think()
 	{
 		if ( autocvar_g_nades_ice_explode )
 		{
-			string expef;
+			float expef;
 			switch(self.realowner.team)
 			{
-				case NUM_TEAM_1: expef = "nade_red_explode"; break;
-				case NUM_TEAM_2: expef = "nade_blue_explode"; break;
-				case NUM_TEAM_3: expef = "nade_yellow_explode"; break;
-				case NUM_TEAM_4: expef = "nade_pink_explode"; break;
-				default:		 expef = "nade_neutral_explode"; break;
+				case NUM_TEAM_1: expef = EFFECT_NADE_RED_EXPLODE; break;
+				case NUM_TEAM_2: expef = EFFECT_NADE_BLUE_EXPLODE; break;
+				case NUM_TEAM_3: expef = EFFECT_NADE_YELLOW_EXPLODE; break;
+				case NUM_TEAM_4: expef = EFFECT_NADE_PINK_EXPLODE; break;
+				default:		 expef = EFFECT_NADE_NEUTRAL_EXPLODE; break;
 			}
-			pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
+			Send_Effect(expef, self.origin + '0 0 1', '0 0 0', 1);
 			sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 
 			RadiusDamage(self, self.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
@@ -272,15 +271,14 @@ void nade_ice_think()
 	randomp_x = randomr*cos(randomw);
 	randomp_y = randomr*sin(randomw);
 	randomp_z = 1;
-	pointparticles(particleeffectnum("electro_muzzleflash"), self.origin + randomp, '0 0 0', 1);
+	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, self.origin + randomp, '0 0 0', 1);
 
 	if(time >= self.nade_special_time)
 	{
 		self.nade_special_time = time+0.7;
 
-
-		pointparticles(particleeffectnum("electro_impact"), self.origin, '0 0 0', 1);
-		pointparticles(particleeffectnum("icefield"), self.origin, '0 0 0', 1);
+		Send_Effect(EFFECT_ELECTRO_IMPACT, self.origin, '0 0 0', 1);
+		Send_Effect(EFFECT_ICEFIELD, self.origin, '0 0 0', 1);
 	}
 
 
@@ -417,7 +415,7 @@ void nade_heal_touch()
 			if ( other.health < maxhealth )
 			{
 				if ( self.nade_show_particles )
-					pointparticles(particleeffectnum("healing_fx"), other.origin, '0 0 0', 1);
+					Send_Effect(EFFECT_HEALING, other.origin, '0 0 0', 1);
 				other.health = min(other.health+health_factor, maxhealth);
 			}
 			other.pauserothealth_finished = max(other.pauserothealth_finished, time + autocvar_g_balance_pause_health_rot);  
@@ -473,53 +471,53 @@ void nade_monster_boom()
 
 void nade_boom()
 {
-	string expef;
+	float expef;
 	float nade_blast = 1;
 
 	switch ( self.nade_type )
 	{
 		case NADE_TYPE_NAPALM:
 			nade_blast = autocvar_g_nades_napalm_blast;
-			expef = "explosion_medium";
+			expef = EFFECT_EXPLOSION_MEDIUM;
 			break;
 		case NADE_TYPE_ICE:
 			nade_blast = 0;
-			expef = "electro_combo"; // hookbomb_explode electro_combo bigplasma_impact
+			expef = EFFECT_ELECTRO_COMBO; // hookbomb_explode electro_combo bigplasma_impact
 			break;
 		case NADE_TYPE_TRANSLOCATE:
 			nade_blast = 0;
-			expef = "";
+			expef = 0;
 			break;
 		case NADE_TYPE_MONSTER:
 		case NADE_TYPE_SPAWN:
 			nade_blast = 0;
 			switch(self.realowner.team)
 			{
-				case NUM_TEAM_1: expef = "spawn_event_red"; break;
-				case NUM_TEAM_2: expef = "spawn_event_blue"; break;
-				case NUM_TEAM_3: expef = "spawn_event_yellow"; break;
-				case NUM_TEAM_4: expef = "spawn_event_pink"; break;
-				default: expef = "spawn_event_neutral"; break;
+				case NUM_TEAM_1: expef = EFFECT_SPAWN_RED; break;
+				case NUM_TEAM_2: expef = EFFECT_SPAWN_BLUE; break;
+				case NUM_TEAM_3: expef = EFFECT_SPAWN_YELLOW; break;
+				case NUM_TEAM_4: expef = EFFECT_SPAWN_PINK; break;
+				default: expef = EFFECT_SPAWN_NEUTRAL; break;
 			}
 			break;
 		case NADE_TYPE_HEAL:
 			nade_blast = 0;
-			expef = "spawn_event_red";
+			expef = EFFECT_SPAWN_RED;
 			break;
 
 		default:
 		case NADE_TYPE_NORMAL:
 			switch(self.realowner.team)
 			{
-				case NUM_TEAM_1: expef = "nade_red_explode"; break;
-				case NUM_TEAM_2: expef = "nade_blue_explode"; break;
-				case NUM_TEAM_3: expef = "nade_yellow_explode"; break;
-				case NUM_TEAM_4: expef = "nade_pink_explode"; break;
-				default:		 expef = "nade_neutral_explode"; break;
+				case NUM_TEAM_1: expef = EFFECT_NADE_RED_EXPLODE; break;
+				case NUM_TEAM_2: expef = EFFECT_NADE_BLUE_EXPLODE; break;
+				case NUM_TEAM_3: expef = EFFECT_NADE_YELLOW_EXPLODE; break;
+				case NUM_TEAM_4: expef = EFFECT_NADE_PINK_EXPLODE; break;
+				default:		 expef = EFFECT_NADE_NEUTRAL_EXPLODE; break;
 			}
 	}
 
-	pointparticles(particleeffectnum(expef), self.origin + '0 0 1', '0 0 0', 1);
+	if(expef) { Send_Effect(expef, self.origin + '0 0 1', '0 0 0', 1); }
 
 	sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
 	sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
@@ -752,9 +750,7 @@ void nade_prime()
 	n.classname = "nade";
 	fn.classname = "fake_nade";
 
-	if((self.items & IT_STRENGTH) && autocvar_g_nades_bonus_onstrength)
-		n.nade_type = self.nade_type;
-	else if (self.bonus_nades >= 1)
+	if (self.bonus_nades >= 1)
 	{
 		n.nade_type = self.nade_type;
 		n.pokenade_type = self.pokenade_type;
@@ -1087,7 +1083,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerDamage)
 	{
 		Unfreeze(frag_target);
 		frag_target.health = autocvar_g_freeze_revive_nade_health;
-		pointparticles(particleeffectnum("iceorglass"), frag_target.origin, '0 0 0', 3);
+		Send_Effect(EFFECT_ICEORGLASS, frag_target.origin, '0 0 0', 3);
 		frag_damage = 0;
 		frag_force = '0 0 0';
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_NADE, frag_target.netname);

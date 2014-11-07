@@ -50,7 +50,7 @@ float buff_Waypoint_visible_for_player(entity plr)
 
 void buff_Waypoint_Spawn(entity e)
 {
-    WaypointSprite_Spawn(Buff_PrettyName(e.buffs), 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs_z, world, e.team, e, buff_waypoint, TRUE, RADARICON_POWERUP, e.glowmod);
+    WaypointSprite_Spawn(Buff_Sprite(e.buffs), 0, autocvar_g_buffs_waypoint_distance, e, '0 0 1' * e.maxs_z, world, e.team, e, buff_waypoint, TRUE, RADARICON_POWERUP, e.glowmod);
     WaypointSprite_UpdateTeamRadar(e.buff_waypoint, RADARICON_POWERUP, e.glowmod);
     e.buff_waypoint.waypointsprite_visible_for_player = buff_Waypoint_visible_for_player;
 }
@@ -92,8 +92,8 @@ void buff_Respawn(entity ent)
 	if(autocvar_g_buffs_random_lifetime > 0)
 		ent.lifetime = time + autocvar_g_buffs_random_lifetime;
 
-	pointparticles(particleeffectnum("electro_combo"), oldbufforigin + ((ent.mins + ent.maxs) * 0.5), '0 0 0', 1);
-	pointparticles(particleeffectnum("electro_combo"), CENTER_OR_VIEWOFS(ent), '0 0 0', 1);
+	Send_Effect(EFFECT_ELECTRO_COMBO, oldbufforigin + ((ent.mins + ent.maxs) * 0.5), '0 0 0', 1);
+	Send_Effect(EFFECT_ELECTRO_COMBO, CENTER_OR_VIEWOFS(ent), '0 0 0', 1);
 	
 	WaypointSprite_Ping(ent.buff_waypoint);
 	
@@ -158,7 +158,7 @@ void buff_Touch()
 	Send_Notification(NOTIF_ONE, other, MSG_MULTI, ITEM_BUFF_GOT, self.buffs);
 	Send_Notification(NOTIF_ALL_EXCEPT, other, MSG_INFO, INFO_ITEM_BUFF, other.netname, self.buffs);
 
-	pointparticles(particleeffectnum("item_pickup"), CENTER_OR_VIEWOFS(self), '0 0 0', 1);
+	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 	sound(other, CH_TRIGGER, "misc/shield_respawn.wav", VOL_BASE, ATTN_NORM);
 	other.buffs |= (self.buffs);
 }
@@ -242,7 +242,7 @@ void buff_Think()
 		{
 			self.buff_active = TRUE;
 			sound(self, CH_TRIGGER, "misc/strength_respawn.wav", VOL_BASE, ATTN_NORM);
-			pointparticles(particleeffectnum("item_respawn"), CENTER_OR_VIEWOFS(self), '0 0 0', 1);
+			Send_Effect(EFFECT_ITEM_RESPAWN, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
 		}
 	}
 
@@ -546,6 +546,19 @@ MUTATOR_HOOKFUNCTION(buffs_RemovePlayer)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(buffs_CustomizeWaypoint)
+{
+	entity e = WaypointSprite_getviewentity(other);
+
+	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
+	// but only apply this to real players, not to spectators
+	if((self.owner.flags & FL_CLIENT) && (self.owner.buffs & BUFF_INVISIBLE) && (e == other))
+	if(DIFF_TEAM(self.owner, e))
+		return TRUE;
+
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(buffs_OnEntityPreSpawn)
 {
 	if(autocvar_g_buffs_replace_powerups)
@@ -556,6 +569,7 @@ MUTATOR_HOOKFUNCTION(buffs_OnEntityPreSpawn)
 		{
 			entity e = spawn();
 			buff_SpawnReplacement(e, self);
+			self.classname = "item_removing";
 			return TRUE;
 		}
 	}
@@ -580,7 +594,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 	if(time < self.buff_disability_time)
 	if(time >= self.buff_disability_effect_time)
 	{
-		pointparticles(particleeffectnum("smoking"), self.origin + ((self.mins + self.maxs) * 0.5), '0 0 0', 1);
+		Send_Effect(EFFECT_SMOKING, self.origin + ((self.mins + self.maxs) * 0.5), '0 0 0', 1);
 		self.buff_disability_effect_time = time + 0.5;
 	}
 	
@@ -619,17 +633,11 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 
 		if(self.oldbuffs & BUFF_INVISIBLE)
 		{
-			if(time < self.strength_finished && g_minstagib)
-				self.alpha = autocvar_g_minstagib_invis_alpha;
-			else
-				self.alpha = self.buff_invisible_prev_alpha;
+			self.alpha = self.buff_invisible_prev_alpha;
 		}
 		else if(self.buffs & BUFF_INVISIBLE)
 		{
-			if(time < self.strength_finished && g_minstagib)
-				self.buff_invisible_prev_alpha = default_player_alpha;
-			else
-				self.buff_invisible_prev_alpha = self.alpha;
+			self.buff_invisible_prev_alpha = self.alpha;
 			self.alpha = autocvar_g_buffs_invisible_alpha;
 		}
 		
@@ -770,7 +778,7 @@ void buffs_Initialize()
 MUTATOR_DEFINITION(mutator_buffs)
 {
 	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, buffs_PlayerDamage_SplitHealthArmor, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerDamage_Calculate, buffs_PlayerDamage_Calculate, CBC_ORDER_LAST);
+	MUTATOR_HOOK(PlayerDamage_Calculate, buffs_PlayerDamage_Calculate, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, buffs_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPhysics, buffs_PlayerPhysics, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerJump, buffs_PlayerJump, CBC_ORDER_ANY);
@@ -783,7 +791,8 @@ MUTATOR_DEFINITION(mutator_buffs)
 	MUTATOR_HOOK(PlayerUseKey, buffs_PlayerUseKey, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, buffs_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, buffs_RemovePlayer, CBC_ORDER_ANY);
-	MUTATOR_HOOK(OnEntityPreSpawn, buffs_OnEntityPreSpawn, CBC_ORDER_ANY);
+	MUTATOR_HOOK(OnEntityPreSpawn, buffs_OnEntityPreSpawn, CBC_ORDER_LAST);
+	MUTATOR_HOOK(CustomizeWaypoint, buffs_CustomizeWaypoint, CBC_ORDER_ANY);
 	MUTATOR_HOOK(WeaponRateFactor, buffs_WeaponRate, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, buffs_PlayerThink, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetCvars, buffs_GetCvars, CBC_ORDER_ANY);

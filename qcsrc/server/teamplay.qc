@@ -333,10 +333,6 @@ string getwelcomemessage(void)
 		modifications = strcat(modifications, ", Weapons stay");
 	if(g_jetpack)
 		modifications = strcat(modifications, ", Jet pack");
-	if(autocvar_g_powerups == 0)
-		modifications = strcat(modifications, ", No powerups");
-	if(autocvar_g_powerups > 0)
-		modifications = strcat(modifications, ", Powerups");
 	modifications = substring(modifications, 2, strlen(modifications) - 2);
 
 	string versionmessage;
@@ -798,7 +794,7 @@ void SV_ChangeTeam(float _color)
 	}
 
 	if((autocvar_g_campaign) || (autocvar_g_changeteam_banned && self.wasplayer)) {
-		sprint(self, "Team changes not allowed\n");
+		Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TEAMCHANGE_NOTALLOWED);
 		return; // changing teams is not allowed
 	}
 
@@ -808,7 +804,7 @@ void SV_ChangeTeam(float _color)
 		GetTeamCounts(self);
 		if(!TeamSmallerEqThanTeam(dteam, steam, self))
 		{
-			sprint(self, "Cannot change to a larger/better/shinier team\n");
+			Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
 			return;
 		}
 	}

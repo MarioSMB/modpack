@@ -266,7 +266,8 @@ float tankll48_frame()
 		pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 		PROJECTILE_MAKETRIGGER(missile);
 
-		missile.owner = missile.realowner = player;
+		missile.owner = tank;
+		missile.realowner = player;
 		missile.bot_dodge = TRUE;
 		missile.bot_dodgerating = autocvar_g_vehicle_tankll48_cannon_damage * 2;
 

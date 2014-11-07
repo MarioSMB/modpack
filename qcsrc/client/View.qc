@@ -1190,9 +1190,11 @@ void CSQC_UpdateView(float w, float h)
 		}
 
 		// edge detection postprocess handling done second (used by hud_powerup)
-		float sharpen_intensity = 0, strength_finished = getstatf(STAT_STRENGTH_FINISHED), invincible_finished = getstatf(STAT_INVINCIBLE_FINISHED);
-		if (strength_finished - time > 0) { sharpen_intensity += (strength_finished - time); }
-		if (invincible_finished - time > 0) { sharpen_intensity += (invincible_finished - time); }
+		float sharpen_intensity = 0, buffs = getstati(STAT_BUFFS, 0, 24);
+		entity e;
+		for(e = Buff_Type_first; e; e = e.enemy)
+		if(buffs & e.items)
+			++sharpen_intensity;
 
 		sharpen_intensity = bound(0, ((getstati(STAT_HEALTH) > 0) ? sharpen_intensity : 0), 5); // Check to see if player is alive (if not, set 0) - also bound to fade out starting at 5 seconds.
 

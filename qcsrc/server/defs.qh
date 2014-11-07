@@ -85,8 +85,7 @@ float server_is_dedicated;
 .float	statdraintime;			// record the one-second intervals between draining health and armour when they're over 100
 .float  crouch;	// Crouching or not?
 
-.float	strength_finished;
-.float	invincible_finished;
+.float	invincible_finished, strength_finished; // TODO: vehicles system abuses these
 .float	superweapons_finished;
 
 .vector		finaldest, finalangle; 		//plat.qc stuff

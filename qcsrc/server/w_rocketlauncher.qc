@@ -176,7 +176,7 @@ void W_Rocket_Think (void)
 
 			if(!self.count)
 			{
-				pointparticles(particleeffectnum("rocket_guide"), self.origin, self.velocity, 1);
+				Send_Effect(EFFECT_ROCKET_GUIDE, self.origin, self.velocity, 1);
 				// TODO add a better sound here
 				sound (self.realowner, CH_WEAPON_B, W_Sound("rocket_mode"), VOL_BASE, ATTEN_NORM);
 				self.count = 1;
@@ -226,7 +226,7 @@ void W_Rocket_Attack (float deathtype)
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_rocketlauncher_ammo, autocvar_g_balance_rocketlauncher_reload_ammo);
 
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 5, W_Sound("rocket_fire"), CH_WEAPON_A, autocvar_g_balance_rocketlauncher_damage, self.weapon);
-	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	missile = WarpZone_RefSys_SpawnSameRefSys(self);
 	missile.owner = missile.realowner = self;
@@ -327,7 +327,7 @@ float w_rlauncher(float req)
 			}
 			float desirabledamage;
 			desirabledamage = enemydamage;
-			if (time > self.invincible_finished && time > self.spawnshieldtime)
+			if (time > self.spawnshieldtime)
 				desirabledamage = desirabledamage - selfdamage * autocvar_g_balance_selfdamagepercent;
 			if (teamplay && self.team)
 				desirabledamage = desirabledamage - teamdamage;

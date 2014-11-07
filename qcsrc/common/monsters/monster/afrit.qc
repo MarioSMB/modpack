@@ -2,7 +2,7 @@
 REGISTER_MONSTER(
 /* MON_##id   */ AFRIT,
 /* functions  */ M_Afrit, M_Afrit_Attack,
-/* spawnflags */ MONSTER_SIZE_BROKEN | MON_FLAG_RANGED,
+/* spawnflags */ MONSTER_SIZE_BROKEN | MON_FLAG_RANGED | MONSTER_TYPE_FLY,
 /* mins,maxs  */ '-16 -16 -24', '16 16 24',
 /* model      */ "afrit.mdl",
 /* netname    */ "afrit",
@@ -25,11 +25,13 @@ float autocvar_g_monster_afrit_speed_walk;
 const float afrit_anim_sleep	= 0;
 const float afrit_anim_getup	= 1;
 const float afrit_anim_fly		= 2;
-const float afrit_anim_pain1	= 3;
-const float afrit_anim_pain2	= 4;
-const float afrit_anim_attack	= 5;
-const float afrit_anim_die1		= 6;
-const float afrit_anim_die2		= 7;
+const float afrit_anim_pain		= 3;
+const float afrit_anim_attack	= 4;
+const float afrit_anim_die1		= 5;
+const float afrit_anim_die2		= 6;
+
+.float afrit_targetrange_backup;
+.float afrit_targetcheck_delay;
 
 void M_Afrit_Attack_Fireball_Explode()
 {
@@ -85,7 +87,8 @@ float M_Afrit_Attack(float attack_type)
 		case MONSTER_ATTACK_MELEE:
 		case MONSTER_ATTACK_RANGED:
 		{
-			self.attack_finished_single = time + 1.3;
+			self.attack_finished_single = time + 2;
+			self.anim_finished = time + 1.3;
 			self.frame = afrit_anim_attack;
 
 			Monster_Delay(2, 0.3, 0.7, M_Afrit_Attack_Fireball);
@@ -105,6 +108,23 @@ float M_Afrit(float req)
 	{
 		case MR_THINK:
 		{
+			if(self.target_range < 0)
+			{
+				if(time >= self.afrit_targetcheck_delay)
+				{
+					self.target_range = self.afrit_targetrange_backup;
+					if(Monster_FindTarget(self) != world)
+					{
+						self.frame = afrit_anim_getup;
+						self.anim_finished = time + 2.3;
+					}
+					else
+					{
+						self.target_range = -1;
+						self.afrit_targetcheck_delay = time + 1;
+					}
+				}
+			}
 			self.fire_endtime = 0; // never burns
 
 			if(self.flags & FL_ONGROUND)
@@ -122,6 +142,11 @@ float M_Afrit(float req)
 		{
 			if(frag_deathtype == DEATH_FIRE || frag_deathtype == DEATH_LAVA)
 				frag_damage = 0; // afrit doesn't burn
+			else
+			{
+				self.pain_finished = time + 0.6;
+				self.frame = afrit_anim_pain;
+			}
 			return TRUE;
 		}
 		case MR_DEATH:
@@ -141,9 +166,14 @@ float M_Afrit(float req)
 			self.m_anim_run = afrit_anim_fly;
 			self.m_anim_idle = afrit_anim_fly;
 
+			if(!self.target_range) { self.afrit_targetrange_backup = autocvar_g_monsters_target_range; }
+			else { self.afrit_targetrange_backup = self.target_range; }
+			self.target_range = -1; // special handler
+
 			self.weapon = WEP_FIREBALL; // hehehe
 			self.effects |= EF_FLAME;
-			self.flags |= FL_FLY; // we set this now so monster starts on ground
+
+			self.noalign = FALSE; // starts on ground
 
 			return TRUE;
 		}

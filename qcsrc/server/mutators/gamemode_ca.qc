@@ -242,10 +242,6 @@ MUTATOR_HOOKFUNCTION(ca_PlayerDamage)
 
 MUTATOR_HOOKFUNCTION(ca_FilterItem)
 {
-	if(autocvar_g_powerups <= 0)
-	if(self.flags & FL_POWERUP)
-		return TRUE;
-
 	if(autocvar_g_pickup_items <= 0)
 		return TRUE;
 

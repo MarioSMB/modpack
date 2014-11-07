@@ -77,20 +77,21 @@ float M_Scrag_Attack(float attack_type)
 		case MONSTER_ATTACK_MELEE:
 		case MONSTER_ATTACK_RANGED:
 		{
-			if(random() > 0.5)
-				self.attack_finished_single = time + 1.2;
-			else
-				self.attack_finished_single = time + 0.15;
+			self.attack_finished_single = time + (random() >= 0.5) ? 1.3 : 0.15;
+			self.anim_finished = self.attack_finished_single;
 
 			self.frame = scrag_anim_magic;
 
 			M_Scrag_Attack_Spike();
 
-			/* TODO: add support for this! if(random() <= 0.1)
+			if(random() <= 0.1 || self.monster_moveto)
 			{
 				makevectors(self.angles);
-				self.velocity += (random() >= 0.5) ? (v_right * 300) : (v_right * -300;
-			} */
+				self.monster_moveto = self.origin + '1 1 0' * (random() >= 0.5) ? (v_right * 300) : (v_right * -300);
+				self.monster_face = self.enemy.origin; // but still look at enemy
+				if(random() <= 0.4)
+					self.monster_moveto = self.monster_face = '0 0 0';
+			}
 
 			return TRUE;
 		}
@@ -114,6 +115,8 @@ float M_Scrag(float req)
 		}
 		case MR_PAIN:
 		{
+			self.pain_finished = time + 0.3;
+			self.frame = scrag_anim_pain;
 			return TRUE;
 		}
 		case MR_DEATH:

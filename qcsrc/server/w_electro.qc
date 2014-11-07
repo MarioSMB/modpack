@@ -159,7 +159,7 @@ void W_Electro_Attack(float deathtype)
 
 	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, W_Sound("electro_fire"), CH_WEAPON_A, autocvar_g_balance_electro_primary_damage, self.weapon);
 
-	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	proj = spawn ();
 	proj.classname = "plasma_prim";
@@ -196,7 +196,7 @@ void W_Electro_Attack2()
 
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
-	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	proj = spawn ();
 	proj.classname = "plasma";

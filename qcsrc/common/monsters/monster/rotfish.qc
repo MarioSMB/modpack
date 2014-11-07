@@ -56,6 +56,8 @@ float M_Rotfish(float req)
 		}
 		case MR_PAIN:
 		{
+			self.pain_finished = 0.8;
+			self.frame = rotfish_anim_pain;
 			return TRUE;
 		}
 		case MR_DEATH:

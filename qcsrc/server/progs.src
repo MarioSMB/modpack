@@ -26,9 +26,9 @@ sys-post.qh
 ../common/command/rpn.qh
 ../common/command/generic.qh
 ../common/command/shared_defs.qh
+../common/command/script.qh
 ../common/net_notice.qh
 ../common/animdecide.qh
-
 
 autocvars.qh
 constants.qh
@@ -36,6 +36,8 @@ defs.qh		// Should rename this, it has fields and globals
 
 ../common/notifications.qh // must be after autocvars
 ../common/deathtypes.qh // must be after notifications
+
+../common/effects.qh
 
 ../common/monsters/monsters.qh
 ../common/monsters/sv_monsters.qh
@@ -163,10 +165,6 @@ cl_client.qc
 t_plats.qc
 antilag.qc
 
-//ctf.qc
-//domination.qc
-//mode_onslaught.qc
-//nexball.qc
 g_hook.qc
 
 t_swamp.qc
@@ -179,6 +177,7 @@ campaign.qc
 ../common/command/markup.qc
 ../common/command/rpn.qc
 ../common/command/generic.qc
+../common/command/script.qc
 ../common/net_notice.qc
 
 command/common.qc
@@ -188,8 +187,6 @@ command/vote.qc
 command/getreplies.qc
 command/cmd.qc
 command/sv_cmd.qc
-
-//assault.qc
 
 ipban.qc
 
@@ -258,5 +255,6 @@ mutators/mutators_include.qc
 ../common/test.qc
 ../common/util.qc
 ../common/notifications.qc
+../common/effects.qc
 
 ../common/minigames/sv_minigames.qc

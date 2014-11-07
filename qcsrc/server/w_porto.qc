@@ -217,8 +217,6 @@ void W_Porto_Attack (float type)
 	w_shotdir = v_forward;
 	w_shotorg = self.origin + self.view_ofs + ((w_shotorg - self.origin - self.view_ofs) * v_forward) * v_forward;
 
-	//pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
-
 	gren = spawn ();
 	gren.cnt = type;
 	gren.owner = gren.realowner = self;
@@ -242,17 +240,11 @@ void W_Porto_Attack (float type)
 
 	if(type > 0)
 	{
-		if(self.items & IT_STRENGTH)
-			W_SetupProjectileVelocity(gren, autocvar_g_balance_porto_secondary_speed * autocvar_g_balance_powerup_strength_force, 0);
-		else
-			W_SetupProjectileVelocity(gren, autocvar_g_balance_porto_secondary_speed, 0);
+		W_SetupProjectileVelocity(gren, autocvar_g_balance_porto_secondary_speed, 0);
 	}
 	else
 	{
-		if(self.items & IT_STRENGTH)
-			W_SetupProjectileVelocity(gren, autocvar_g_balance_porto_primary_speed * autocvar_g_balance_powerup_strength_force, 0);
-		else
-			W_SetupProjectileVelocity(gren, autocvar_g_balance_porto_primary_speed, 0);
+		W_SetupProjectileVelocity(gren, autocvar_g_balance_porto_primary_speed, 0);
 	}
 
 	gren.angles = vectoangles (gren.velocity);

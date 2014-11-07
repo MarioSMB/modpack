@@ -108,6 +108,7 @@ float M_Enforcer_Attack(float attack_type)
 		{
 			self.frame = enforcer_anim_attack;
 			self.attack_finished_single = time + 0.7;
+			self.anim_finished = time + 0.7 * autocvar_g_monster_enforcer_attack_plasma_shots;
 			self.state = MONSTER_ATTACK_RANGED;
 			Monster_Delay(autocvar_g_monster_enforcer_attack_plasma_shots - 1, 0.3, 0.4, M_Enforcer_Attack_Plasma);
 			return TRUE;
@@ -129,6 +130,14 @@ float M_Enforcer(float req)
 		}
 		case MR_PAIN:
 		{
+			switch(floor(random() * 5))
+			{
+				default:
+				case 1: self.frame = enforcer_anim_pain1; self.pain_finished = time + 0.3; break;
+				case 2: self.frame = enforcer_anim_pain2; self.pain_finished = time + 0.4; break;
+				case 3: self.frame = enforcer_anim_pain3; self.pain_finished = time + 0.7; break;
+				case 4: self.frame = enforcer_anim_pain4; self.pain_finished = time + 1; break;
+			}
 			return TRUE;
 		}
 		case MR_DEATH:

@@ -65,8 +65,6 @@ float M_Mage_Defend_Heal_Check(entity e)
 		return FALSE;
 	if(!IS_PLAYER(e))
 		return (IS_MONSTER(e) && e.health < e.max_health);
-	if(e.items & IT_INVINCIBLE)
-		return FALSE;
 
 	switch(self.skin)
 	{
@@ -87,7 +85,7 @@ void M_Mage_Attack_Spike_Explode()
 
 	self.realowner.mage_spike = world;
 
-	pointparticles(particleeffectnum("explosion_small"), self.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_EXPLOSION_SMALL, self.origin, '0 0 0', 1);
 	RadiusDamage (self, self.realowner, (autocvar_g_monster_mage_attack_spike_damage), (autocvar_g_monster_mage_attack_spike_damage) * 0.5, (autocvar_g_monster_mage_attack_spike_radius), world, 0, DEATH_MONSTER_MAGE, other);
 
 	remove (self);
@@ -243,6 +241,7 @@ void M_Mage_Defend_Heal()
 	{
 		self.frame = mage_anim_attack;
 		self.attack_finished_single = time + (autocvar_g_monster_mage_heal_delay);
+		self.anim_finished = time + 1.5;
 	}
 }
 
@@ -287,6 +286,7 @@ void M_Mage_Defend_Shield()
 	self.mage_shield_time = time + (autocvar_g_monster_mage_shield_time);
 	self.frame = mage_anim_attack;
 	self.attack_finished_single = time + 1;
+	self.anim_finished = time + 1;
 }
 
 float M_Mage_Attack(float attack_type)
@@ -316,6 +316,7 @@ float M_Mage_Attack(float attack_type)
 				{
 					self.frame = mage_anim_attack;
 					self.attack_finished_single = time + (autocvar_g_monster_mage_attack_spike_delay);
+					self.anim_finished = time + 1;
 					Monster_Delay(1, 0, 0.2, M_Mage_Attack_Spike);
 					return TRUE;
 				}

@@ -87,6 +87,8 @@ float M_Demon(float req)
 		}
 		case MR_PAIN:
 		{
+			self.pain_finished = time + 0.5;
+			self.frame = demon_anim_pain;
 			return TRUE;
 		}
 		case MR_DEATH:

@@ -49,7 +49,7 @@ void hmg_fire_auto()
 
 	self.misc_bulletcounter = self.misc_bulletcounter + 1;
 
-	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	UziFlash();
 	W_AttachToShotorg(self.muzzle_flash, '5 0 0');

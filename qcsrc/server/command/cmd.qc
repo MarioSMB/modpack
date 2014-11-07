@@ -382,7 +382,7 @@ void ClientCommand_selectteam(float request, float argc)
 											GetTeamCounts(self);
 											if(!TeamSmallerEqThanTeam(Team_TeamToNumber(selection), Team_TeamToNumber(self.team), self))
 											{
-												sprint(self, "Cannot change to a larger/better/shinier team\n");
+												Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
 												return;
 											}
 										}

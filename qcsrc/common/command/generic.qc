@@ -594,6 +594,7 @@ void GenericCommand_(float request)
 	GENERIC_COMMAND("settemp", GenericCommand_settemp(request, arguments), "Temporarily set a value to a cvar which is restored later") \
 	GENERIC_COMMAND("settemp_restore", GenericCommand_settemp_restore(request, arguments), "Restore all cvars set by settemp command") \
 	GENERIC_COMMAND("runtest", GenericCommand_runtest(request, arguments), "Run unit tests") \
+	GENERIC_COMMAND("script", GenericCommand_script(request, arguments, command), "Script interpreter") \
 	/* nothing */
 
 void GenericCommand_macro_help()

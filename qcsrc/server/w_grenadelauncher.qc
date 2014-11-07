@@ -184,7 +184,7 @@ void W_Grenade_Attack (void)
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 4, W_Sound("grenade_fire"), CH_WEAPON_A, autocvar_g_balance_grenadelauncher_primary_damage, self.weapon);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
-	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_GRENADE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	gren = spawn ();
 	gren.owner = gren.realowner = self;
@@ -233,7 +233,7 @@ void W_Grenade_Attack2 (float deathtype)
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 4, W_Sound("grenade_fire"), CH_WEAPON_A, autocvar_g_balance_grenadelauncher_secondary_damage, self.weapon);
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
-	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_GRENADE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	gren = spawn ();
 	gren.owner = gren.realowner = self;

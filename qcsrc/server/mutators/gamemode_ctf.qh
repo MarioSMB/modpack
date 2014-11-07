@@ -51,6 +51,10 @@ void ctf_RespawnFlag(entity flag);
 .string toucheffect;
 .string passeffect;
 .string capeffect;
+// backup default effects
+.float toucheffectnum;
+.float passeffectnum;
+.float capeffectnum;
 
 // list of flags on the map
 entity ctf_worldflaglist;

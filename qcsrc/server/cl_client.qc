@@ -185,7 +185,7 @@ void PutObserverInServer (void)
 	
     self.hud = HUD_NORMAL;
 
-    if(IS_PLAYER(self)) { pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1); }
+    if(IS_PLAYER(self)) { Send_Effect(EFFECT_SPAWN_NEUTRAL, self.origin, '0 0 0', 1); }
 	
 	if(autocvar_g_observer_glowtrails)
 		CSQCModel_UnlinkEntity();
@@ -268,8 +268,6 @@ void PutObserverInServer (void)
 	self.fade_time = 0;
 	self.pain_frame = 0;
 	self.pain_finished = 0;
-	self.strength_finished = 0;
-	self.invincible_finished = 0;
 	self.superweapons_finished = 0;
 	self.pushltime = 0;
 	self.istypefrag = 0;
@@ -606,8 +604,6 @@ void PutClientInServer (void)
 		self.fade_time = 0;
 		self.pain_frame = 0;
 		self.pain_finished = 0;
-		self.strength_finished = 0;
-		self.invincible_finished = 0;
 		self.pushltime = 0;
 		// players have no think function
 		self.think = func_null;
@@ -1391,7 +1387,7 @@ void ClientDisconnect (void)
 	self.enemy = world;
 	if(oldenemy) { ClientData_Touch(oldenemy); }
 
-	if(IS_PLAYER(self)) { pointparticles(particleeffectnum("spawn_event_neutral"), self.origin, '0 0 0', 1); }
+	if(IS_PLAYER(self)) { Send_Effect(EFFECT_SPAWN_NEUTRAL, self.origin, '0 0 0', 1); }
 
 	PlayerStats_AddGlobalInfo(self);
 
@@ -1539,7 +1535,7 @@ void respawn(void)
 		self.velocity = '0 0 1' * autocvar_g_respawn_ghosts_speed;
 		self.avelocity = randomvec() * autocvar_g_respawn_ghosts_speed * 3 - randomvec() * autocvar_g_respawn_ghosts_speed * 3;
 		self.effects |= CSQCMODEL_EF_RESPAWNGHOST;
-		pointparticles(particleeffectnum("respawn_ghost"), self.origin, '0 0 0', 1);
+		Send_Effect(EFFECT_RESPAWN_GHOST, self.origin, '0 0 0', 1);
 		if(autocvar_g_respawn_ghosts_maxtime)
 			SUB_SetFade (self, time + autocvar_g_respawn_ghosts_maxtime / 2 + random () * (autocvar_g_respawn_ghosts_maxtime - autocvar_g_respawn_ghosts_maxtime / 2), 1.5);
 	}
@@ -1578,46 +1574,6 @@ void player_powerups (void)
 
 	if (!g_minstagib)
 	{
-		if (self.items & IT_STRENGTH)
-		{
-			play_countdown(self.strength_finished, "misc/poweroff.wav");
-			self.effects = self.effects | (EF_BLUE | EF_ADDITIVE | EF_FULLBRIGHT);
-			if (time > self.strength_finished)
-			{
-				self.items = self.items - (self.items & IT_STRENGTH);
-				//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_STRENGTH, self.netname);
-				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_STRENGTH);
-			}
-		}
-		else
-		{
-			if (time < self.strength_finished)
-			{
-				self.items = self.items | IT_STRENGTH;
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_STRENGTH, self.netname);
-				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_STRENGTH);
-			}
-		}
-		if (self.items & IT_INVINCIBLE)
-		{
-			play_countdown(self.invincible_finished, "misc/poweroff.wav");
-			self.effects = self.effects | (EF_RED | EF_ADDITIVE | EF_FULLBRIGHT);
-			if (time > self.invincible_finished)
-			{
-				self.items = self.items - (self.items & IT_INVINCIBLE);
-				//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_SHIELD, self.netname);
-				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_SHIELD);
-			}
-		}
-		else
-		{
-			if (time < self.invincible_finished)
-			{
-				self.items = self.items | IT_INVINCIBLE;
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_SHIELD, self.netname);
-				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_SHIELD);
-			}
-		}
 		if (self.items & IT_SUPERWEAPON)
 		{
 			if (!(self.weapons & WEPSET_SUPERWEAPONS))
@@ -1865,8 +1821,6 @@ void SpectateCopy(entity spectatee) {
 	//self.damage_dealt = spectatee.damage_dealt;
 	//self.damage_dealt_total = spectatee.damage_dealt_total;
 	self.metertime = spectatee.metertime;
-	self.strength_finished = spectatee.strength_finished;
-	self.invincible_finished = spectatee.invincible_finished;
 	self.pressedkeys = spectatee.pressedkeys;
 	self.weapons = spectatee.weapons;
 	self.switchweapon = spectatee.switchweapon;
@@ -2844,8 +2798,6 @@ void PlayerPostThink (void)
 		}
 	}
 	*/
-
-	//pointparticles(particleeffectnum("machinegun_impact"), self.origin + self.view_ofs + '0 0 7', '0 0 0', 1);
 
 	if(self.waypointsprite_attachedforcarrier)
 		WaypointSprite_UpdateHealth(self.waypointsprite_attachedforcarrier, '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON));

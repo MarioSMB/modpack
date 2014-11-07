@@ -78,7 +78,7 @@ void W_RPC_Attack (void)
 
 	W_DecreaseAmmo(ammo_rockets, autocvar_g_balance_rpc_ammo, autocvar_g_balance_rpc_reload_ammo);
 	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 5, W_Sound("rocket_fire"), CH_WEAPON_A, autocvar_g_balance_rpc_damage, self.weapon);
-	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 	PROJECTILE_MAKETRIGGER(missile);
 
 	missile.owner = missile.realowner = self;

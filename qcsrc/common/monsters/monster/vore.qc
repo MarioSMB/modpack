@@ -44,7 +44,7 @@ void M_Vore_Attack_Spike_Explode()
 
 	self.realowner.vore_spike = world;
 
-	pointparticles(particleeffectnum("explosion_small"), self.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_EXPLOSION_SMALL, self.origin, '0 0 0', 1);
 	RadiusDamage (self, self.realowner, (autocvar_g_monster_vore_attack_spike_damage), (autocvar_g_monster_vore_attack_spike_damage) * 0.5, (autocvar_g_monster_vore_attack_spike_radius), world, 0, DEATH_MONSTER_VORE, other);
 
 	remove (self);
@@ -162,11 +162,12 @@ float M_Vore_Attack(float attack_type)
 			{
 				self.frame = vore_anim_attack;
 				self.attack_finished_single = time + (autocvar_g_monster_vore_attack_spike_delay);
+				self.anim_finished = time + 1;
 				Monster_Delay(1, 0, 0.2, M_Vore_Attack_Spike);
 				return TRUE;
 			}
 
-			return (self.vore_spike) ? TRUE : FALSE;
+			return (self.vore_spike) ? 2 : FALSE;
 		}
 	}
 
@@ -188,6 +189,8 @@ float M_Vore(float req)
 		}
 		case MR_PAIN:
 		{
+			self.pain_finished = time + 0.4;
+			self.frame = vore_anim_pain;
 			return TRUE;
 		}
 		case MR_DEATH:

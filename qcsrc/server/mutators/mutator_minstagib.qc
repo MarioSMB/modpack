@@ -156,14 +156,6 @@ MUTATOR_HOOKFUNCTION(minstagib_MonsterSpawn)
 	return FALSE;
 }
 
-MUTATOR_HOOKFUNCTION(minstagib_BotShouldAttack)
-{
-	if(checkentity.items & IT_STRENGTH)
-		return TRUE;
-
-	return FALSE;
-}
-
 MUTATOR_HOOKFUNCTION(minstagib_MakePlayerObserver)
 {
 	minstagib_stop_countdown(self);
@@ -192,59 +184,6 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerPowerups)
 {
 	if (!(self.effects & EF_FULLBRIGHT))
 		self.effects |= EF_FULLBRIGHT;
-
-	if (self.items & IT_STRENGTH)
-	{
-		play_countdown(self.strength_finished, "misc/poweroff.wav");
-		if (time > self.strength_finished)
-		{
-			self.alpha = default_player_alpha;
-			self.exteriorweaponentity.alpha = default_weapon_alpha;
-			self.items &= ~IT_STRENGTH;
-			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_INVISIBILITY);
-		}
-	}
-	else
-	{
-		if (time < self.strength_finished)
-		{
-			self.alpha = autocvar_g_minstagib_invis_alpha;
-			self.exteriorweaponentity.alpha = autocvar_g_minstagib_invis_alpha;
-			self.items |= IT_STRENGTH;
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_INVISIBILITY, self.netname);
-			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_INVISIBILITY);
-		}
-	}
-
-	if (self.items & IT_INVINCIBLE)
-	{
-		play_countdown(self.invincible_finished, "misc/poweroff.wav");
-		if (time > self.invincible_finished)
-		{
-			self.items &= ~IT_INVINCIBLE;
-			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERDOWN_SPEED);
-		}
-	}
-	else
-	{
-		if (time < self.invincible_finished)
-		{
-			self.items |= IT_INVINCIBLE;
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_SPEED, self.netname);
-			Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_POWERUP_SPEED);
-		}
-	}
-	return FALSE;
-}
-
-MUTATOR_HOOKFUNCTION(minstagib_PlayerPhysics)
-{
-	if(self.items & IT_INVINCIBLE)
-	{
-		self.stat_sv_maxspeed *= autocvar_g_minstagib_speed_highspeed;
-		self.stat_sv_airspeedlimit_nonqw *= autocvar_g_minstagib_speed_highspeed;
-	}
-
 	return FALSE;
 }
 
@@ -330,7 +269,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 		frag_mirrordamage = 0;
 	}
 
-	if(frag_target.items & IT_STRENGTH)
+	if(frag_target.buffs & BUFF_INVISIBLE)
 		yoda = 1;
 
 	return FALSE;
@@ -398,26 +337,11 @@ MUTATOR_HOOKFUNCTION(minstagib_FilterItem)
 	return TRUE;
 }
 
-MUTATOR_HOOKFUNCTION(minstagib_CustomizeWaypoint)
-{
-	entity e = WaypointSprite_getviewentity(other);
-
-	// if you have the invisibility powerup, sprites ALWAYS are restricted to your team
-	// but only apply this to real players, not to spectators
-	if((self.owner.flags & FL_CLIENT) && (self.owner.items & IT_STRENGTH) && (e == other))
-	if(DIFF_TEAM(self.owner, e))
-		return TRUE;
-
-	return FALSE;
-}
-
 MUTATOR_HOOKFUNCTION(minstagib_ItemCountdown)
 {
 	switch(self.items)
 	{
-		case IT_STRENGTH:   item_name = "item-invis"; item_color = '0 0 1'; break;
 		case IT_NAILS:      item_name = "item-extralife"; item_color = '1 0 0'; break;
-		case IT_INVINCIBLE: item_name = "item-speed"; item_color = '1 0 1'; break;
 	}
 	return FALSE;
 }
@@ -466,25 +390,7 @@ MUTATOR_HOOKFUNCTION(minstagib_OnEntityPreSpawn)
 	if(random() <= 0.5)
 		minstagib_item_supercells();
 
-	if(!autocvar_g_powerups) { return FALSE; }
-	if(!(self.classname == "item_strength" || self.classname == "item_invincible" || self.classname == "item_health_mega"))
-		return FALSE;
-
-	entity e = spawn();
-
-	if(random() < 0.3)
-		e.think = spawnfunc_item_strength;
-	else if(random() < 0.6)
-		e.think = minstagib_health_mega;
-	else
-		e.think = spawnfunc_item_invincible;
-
-	e.nextthink = time + 0.1;
-	e.spawnflags = self.spawnflags;
-	e.noalign = self.noalign;
-	setorigin(e, self.origin);
-
-	return TRUE;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(minstagib_BuildMutatorsString)
@@ -510,15 +416,12 @@ MUTATOR_DEFINITION(mutator_minstagib)
 	MUTATOR_HOOK(MatchEnd, minstagib_MatchEnd, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterDropItem, minstagib_MonsterLoot, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MonsterSpawn, minstagib_MonsterSpawn, CBC_ORDER_ANY);
-	MUTATOR_HOOK(BotShouldAttack, minstagib_BotShouldAttack, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerPhysics, minstagib_PlayerPhysics, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerSpawn, minstagib_PlayerSpawn, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, minstagib_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(MakePlayerObserver, minstagib_MakePlayerObserver, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SetStartItems, minstagib_SetStartItems, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ItemTouch, minstagib_ItemTouch, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, minstagib_FilterItem, CBC_ORDER_ANY);
-	MUTATOR_HOOK(CustomizeWaypoint, minstagib_CustomizeWaypoint, CBC_ORDER_ANY);
 	MUTATOR_HOOK(Item_RespawnCountdown, minstagib_ItemCountdown, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, minstagib_PlayerDies, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_SplitHealthArmor, minstagib_SplitHealthArmor, CBC_ORDER_ANY);
