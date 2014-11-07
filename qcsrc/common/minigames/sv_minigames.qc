@@ -364,7 +364,10 @@ void ClientCommand_minigame(float request, float argc, string command)
 			if ( minig )
 				sprint(self,"Joined: ",minig.netname,"\n");
 			else
+			{
+				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_JOIN_PREVENT_MINIGAME);
 				sprint(self,"Cannot join given minigame session!\n");
+			}
 			return;
 		}
 		else if ( minig_cmd == "list" )

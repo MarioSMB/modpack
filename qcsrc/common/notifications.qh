@@ -830,7 +830,8 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_VIP_DROP_SELF,               0, 0, "",              CPID_VIP,          	  "0 0",  _("^F2You are no longer a VIP!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VIP_PICKUP,              	1, 0, "s1",            CPID_VIP,          	  "0 0",  _("^BG%s^F2 is now a VIP!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VIP_PICKUP_SELF,             0, 0, "",              CPID_VIP,          	  "0 0",  _("^F2You are now a VIP!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_WEAPON_MINELAYER_LIMIT,      0, 1, "f1",            NO_CPID,          	  "0 0",  _("^BGYou cannot place more than ^F2%s^BG mines at a time"), "") 
+	MSG_CENTER_NOTIF(1, CENTER_WEAPON_MINELAYER_LIMIT,      0, 1, "f1",            NO_CPID,          	  "0 0",  _("^BGYou cannot place more than ^F2%s^BG mines at a time"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_JOIN_PREVENT_MINIGAME,       0, 0, "",              NO_CPID,               "0 0",  _("^K1Cannot join given minigame session!"), "" )
 
 #define MULTITEAM_MULTI2(default,prefix,anncepre,infopre,centerpre) \
 	MSG_MULTI_NOTIF(default, prefix##RED, anncepre##RED, infopre##RED, centerpre##RED) \
