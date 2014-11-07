@@ -46,6 +46,16 @@ void minigame_rmplayer(entity minigame_session, entity player)
 	}
 }
 
+
+#define FIELD(Flags, Type,Name) if ( sf & (Flags) ) Write##Type(MSG_ENTITY, self.Name);
+#define WriteVector(to,Name) WriteCoord(to,Name##_x); WriteCoord(to,Name##_y); WriteCoord(to,Name##_z)
+#define WriteVector2D(to,Name) WriteCoord(to,Name##_x); WriteCoord(to,Name##_y)
+#define WriteFloat WriteCoord
+#define MSLE(Name,Fields) \
+	else if ( self.classname == #Name ) { \
+		if ( sf & MINIG_SF_CREATE ) WriteString(MSG_ENTITY,self.owner.netname); \
+		Fields }
+
 // Send an entity to a client
 // only use on minigame entities or entities with a minigame owner
 float minigame_SendEntity(entity to, float sf)
@@ -71,21 +81,6 @@ float minigame_SendEntity(entity to, float sf)
 		if ( sf & MINIG_SF_UPDATE )
 			WriteShort(MSG_ENTITY,self.minigame_flags);
 	}
-	else if ( self.classname == "minigame_board_piece" )
-	{
-		if ( sf & MINIG_SF_CREATE )
-		{
-			WriteString(MSG_ENTITY,self.owner.netname);
-			WriteByte(MSG_ENTITY,self.team);
-			// TODO: colormod
-		}
-		if ( sf & MINIG_SF_UPDATE )
-		{
-			WriteShort(MSG_ENTITY,self.minigame_flags);
-			WriteCoord(MSG_ENTITY,self.origin_x);
-			WriteCoord(MSG_ENTITY,self.origin_y);
-		}
-	}
 	else if ( self.classname == "minigame_player" )
 	{
 		if ( sf & MINIG_SF_CREATE )
@@ -96,6 +91,7 @@ float minigame_SendEntity(entity to, float sf)
 		if ( sf & MINIG_SF_UPDATE )
 			WriteByte(MSG_ENTITY,self.team);
 	}
+	MINIGAME_SIMPLELINKED_ENTITIES
 	
 	minigame_ent.minigame_event(minigame_ent,"network_send",self,sf);
 	
@@ -284,10 +280,10 @@ void initialize_minigames()
 	#undef MINIGAME
 }
 
-entity minigame_spawn_board_piece(entity minigame_session)
+entity minigame_spawn_linked_entity(entity minigame_session, string class_name)
 {
 	entity e = spawn();
-	e.classname = "minigame_board_piece";
+	e.classname = class_name;
 	e.owner = minigame_session;
 	e.customizeentityforclient = minigame_CheckSend;
 	e.minigame_autoclean = 1;

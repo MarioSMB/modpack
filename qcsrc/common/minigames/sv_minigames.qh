@@ -24,8 +24,8 @@ void end_minigame(entity minigame_session);
 // Ends all minigame sessions
 void end_minigames();
 
-// Spawn a networked board piece entity
-entity minigame_spawn_board_piece(entity minigame_session);
+// Spawn a networked minigame entity
+entity minigame_spawn_linked_entity(entity minigame_session, string class_name);
 
 // Only sends entities to players who joined the minigame
 // Use on customizeentityforclient for gameplay entities
@@ -46,7 +46,6 @@ entity minigame_find_player(entity client);
 /// For minigame sessions: list of players
 /// For minigame_player: client entity
 .entity minigame_players;
-
 
 entity minigame_sessions;
 

@@ -139,13 +139,36 @@ void activate_minigame(entity minigame)
 	}
 }
 
+vector ReadVector2D() { vector v; v_x = ReadCoord(); v_y = ReadCoord(); v_z = 0; return v; }
+vector ReadVector() { vector v; v_x = ReadCoord(); v_y = ReadCoord(); v_z = ReadCoord(); return v; }
+string() ReadString_Raw = #366;
+string ReadString_Zoned() { return strzone(ReadString_Raw()); }
+#define ReadFloat ReadCoord
+#define ReadString ReadString_Zoned
+#define FIELD(Flags, Type,Name) if ( sf & (Flags) ) self.Name = Read##Type();
+#define MSLE(Name,Fields) \
+	else if ( self.classname == #Name ) { \
+		if ( sf & MINIG_SF_CREATE ) minigame_read_owner(); \
+		minigame_ent = self.owner; \
+		Fields \
+	}
+void minigame_read_owner()
+{
+	string owner_name = ReadString_Raw();
+	self.owner = world;
+	do
+		self.owner = find(self.owner,netname,owner_name);
+	while ( self.owner && self.owner.classname != "minigame" );
+	if ( !self.owner )
+		dprint("Got a minigame entity without a minigame!\n");
+}
 void ent_read_minigame()
 {
 	float sf = ReadByte();
 	if ( sf & MINIG_SF_CREATE )
 	{
-		self.classname = strzone(ReadString());
-		self.netname = strzone(ReadString());
+		self.classname = ReadString_Zoned();
+		self.netname = ReadString_Zoned();
 	}
 	
 	entity minigame_ent = world;
@@ -156,7 +179,7 @@ void ent_read_minigame()
 		
 		if ( sf & MINIG_SF_CREATE )
 		{
-			self.descriptor = minigame_get_descriptor(ReadString());
+			self.descriptor = minigame_get_descriptor(ReadString_Raw());
 			if ( !self.descriptor )
 				dprint("Got a minigame without a client-side descriptor!\n");
 			else
@@ -170,13 +193,7 @@ void ent_read_minigame()
 		float activate = 0;
 		if ( sf & MINIG_SF_CREATE )
 		{
-			string owner_name = ReadString();
-			self.owner = world;
-			do
-				self.owner = find(self.owner,netname,owner_name);
-			while ( self.owner && self.owner.classname != "minigame" );
-			if ( !self.owner )
-				dprint("Got a minigame player without a minigame!\n");
+			minigame_read_owner();
 			
 			float ent = ReadLong();
 			self.minigame_playerslot = ent;
@@ -196,30 +213,7 @@ void ent_read_minigame()
 			activate_minigame(self.owner);
 		}
 	}
-	else if ( self.classname == "minigame_board_piece" )
-	{
-		if ( sf & MINIG_SF_CREATE )
-		{
-			string owner_name = ReadString();
-			self.owner = world;
-			do
-				self.owner = find(self.owner,netname,owner_name);
-			while ( self.owner && self.owner.classname != "minigame" );
-			if ( !self.owner )
-				dprint("Got a minigame piece without a minigame!\n");
-			
-			self.team = ReadByte();
-		}
-		
-		minigame_ent = self.owner;
-		
-		if ( sf & MINIG_SF_UPDATE )
-		{
-			self.minigame_flags = ReadShort();
-			self.origin_x = ReadCoord();
-			self.origin_y = ReadCoord();
-		}
-	}
+	MINIGAME_SIMPLELINKED_ENTITIES
 	
 	if ( minigame_ent )
 		minigame_ent.minigame_event(minigame_ent,"network_receive",self,sf);
@@ -228,6 +222,8 @@ void ent_read_minigame()
 		" classname:",self.classname," enttype:",ftos(self.enttype) );
 	dprint(" sf:",ftos(sf)," netname:",self.netname,"\n\n");
 }
+#undef ReadFloat
+#undef ReadString
 
 vector minigame_drawstring_wrapped( float maxwidth, vector pos, string text, 
 	vector fontsize, vector color, float theAlpha, float drawflags, float align )
