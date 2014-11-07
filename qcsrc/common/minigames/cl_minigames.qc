@@ -182,7 +182,7 @@ void ent_read_minigame()
 			self.minigame_playerslot = ent;
 			dprint("Player: ",GetPlayerName(ent-1),"\n");
 			
-			activate = (ent == player_localentnum && self.owner && self.owner != active_minigame);
+			activate = (ent == player_localnum+1 && self.owner && self.owner != active_minigame);
 			
 		}
 		minigame_ent = self.owner;
