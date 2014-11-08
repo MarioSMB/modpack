@@ -402,7 +402,7 @@ void Item_RespawnCountdown (void)
 				entity wi = get_weaponinfo(self.weapon);
 				if(wi)
 				{
-					name = wi.model2;
+					name = wi.wpmodel;
 					rgb = '1 0 0';
 				}
 			}
