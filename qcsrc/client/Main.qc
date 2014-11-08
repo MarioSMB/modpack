@@ -81,6 +81,9 @@ void CSQC_Init(void)
 	localcmd("\nalias nobobbing \"cl_bob 0; cl_bob2 0; cl_followmodel 0; cl_leanmodel 0\"\n");
 	localcmd("\nalias quickmenu \"cl_cmd hud quickmenu\"\n");
 	localcmd("\nalias physics \"cmd physics ${* ?}\"\n");
+	localcmd("\nalias editmob \"cmd editmob ${* ?}\"\n");
+	localcmd("\nalias spawnmob \"cmd editmob spawn ${* ?}\"\n");
+	localcmd("\nalias killmob \"cmd editmob kill ${* ?}\"\n");
 
 	//registercommand("hud_configure");
 	//registercommand("hud_save");
@@ -150,7 +153,6 @@ void CSQC_Init(void)
 
 	// needs to be done so early because of the constants they create
 	CALL_ACCUMULATED_FUNCTION(RegisterWeapons);
-	CALL_ACCUMULATED_FUNCTION(RegisterMonsters);
 	CALL_ACCUMULATED_FUNCTION(RegisterTurrets);
 	CALL_ACCUMULATED_FUNCTION(RegisterVehicles);
 	CALL_ACCUMULATED_FUNCTION(RegisterGametypes);
@@ -158,6 +160,7 @@ void CSQC_Init(void)
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
 	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
+	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
 
 	WaypointSprite_Load();
 
@@ -421,7 +424,7 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 	if(menu_visible && menu_action)
 		if(menu_action(bInputType, nPrimary, nSecondary))
 			return TRUE;
-
+	
 	return bSkipKey;
 }
 
@@ -953,6 +956,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_NOTIFICATION: Read_Notification(bIsNewEntity); break;
 		case ENT_CLIENT_HEALING_ORB: ent_healer(); break;
 		case ENT_CLIENT_JAILCAMERA: ent_jailcamera(); break;
+		case ENT_CLIENT_EFFECT: Read_Effect(bIsNewEntity); break;
 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
@@ -1113,6 +1117,10 @@ void Ent_Init()
 	minsta_delay = ReadByte();
 
 	sv_showfps = ReadByte();
+
+	sv_announcer = strzone(ReadString());
+
+	if(sv_announcer != "") { Announcer_Precache(); }
 
 	if(!postinit)
 		PostInit();

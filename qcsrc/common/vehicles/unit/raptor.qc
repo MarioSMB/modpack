@@ -189,7 +189,7 @@ void raptor_bombdrop()
 
 void raptor_fire_cannon(entity gun, string tagname)
 {
-	vehicles_projectile("raptor_cannon_muzzleflash", "weapons/lasergun_fire.wav",
+	vehicles_projectile("raptor_cannon_muzzleflash", W_Sound("lasergun_fire"),
 						   gettaginfo(gun, gettagindex(gun, tagname)), normalize(v_forward + randomvec() * autocvar_g_vehicle_raptor_cannon_spread) * autocvar_g_vehicle_raptor_cannon_speed,
 						   autocvar_g_vehicle_raptor_cannon_damage, autocvar_g_vehicle_raptor_cannon_radius, autocvar_g_vehicle_raptor_cannon_force,  0,
 						   DEATH_VH_RAPT_CANNON, PROJECTILE_RAPTORCANNON, 0, TRUE, TRUE, self.owner);
@@ -707,7 +707,7 @@ void raptor_diethink()
 
 	if(random() < 0.05)
 	{
-		sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+		sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 		pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	}
 	self.nextthink = time;
@@ -961,6 +961,50 @@ float v_raptor(float req)
 #define raptor_gun  "gfx/vehicles/raptor_guns.tga"
 #define raptor_bomb "gfx/vehicles/raptor_bombs.tga"
 #define raptor_drop "gfx/vehicles/axh-dropcross.tga"
+
+void RaptorCBShellfragDraw()
+{
+	if(wasfreed(self))
+		return;
+
+	Movetype_Physics_MatchTicrate(autocvar_cl_gibs_ticrate, autocvar_cl_gibs_sloppy);
+	self.move_avelocity += randomvec() * 15;
+	self.renderflags = 0;
+
+	if(self.cnt < time)
+		self.alpha = bound(0, self.nextthink - time, 1);
+
+	if(self.alpha < ALPHA_MIN_VISIBLE)
+		remove(self);
+}
+
+void RaptorCBShellfragToss(vector _org, vector _vel, vector _ang)
+{
+	entity sfrag;
+
+	sfrag = spawn();
+	setmodel(sfrag, "models/vehicles/clusterbomb_fragment.md3");
+	setorigin(sfrag, _org);
+
+	sfrag.move_movetype = MOVETYPE_BOUNCE;
+	sfrag.gravity = 0.15;
+	sfrag.solid = SOLID_CORPSE;
+
+	sfrag.draw = RaptorCBShellfragDraw;
+
+	sfrag.move_origin = sfrag.origin = _org;
+	sfrag.move_velocity = _vel;
+	sfrag.move_avelocity = prandomvec() * vlen(sfrag.move_velocity);
+	sfrag.angles = self.move_angles = _ang;
+
+	sfrag.move_time = time;
+	sfrag.damageforcescale = 4;
+
+	sfrag.nextthink = time + 3;
+	sfrag.cnt = time + 2;
+	sfrag.alpha = 1;
+	sfrag.drawmask = MASK_NORMAL;
+}
 
 float v_raptor(float req)
 {

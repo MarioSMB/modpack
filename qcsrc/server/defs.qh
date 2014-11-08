@@ -16,7 +16,7 @@ noref float require_spawnfunc_prefix; // if this float exists, only functions wi
 
 // Globals
 
-float g_cloaked, g_footsteps, g_grappling_hook, g_minstagib;
+float g_cloaked, g_footsteps, g_grappling_hook;
 float g_warmup_limit;
 float g_warmup_allguns;
 float g_warmup_allow_timeout;
@@ -85,8 +85,7 @@ float server_is_dedicated;
 .float	statdraintime;			// record the one-second intervals between draining health and armour when they're over 100
 .float  crouch;	// Crouching or not?
 
-.float	strength_finished;
-.float	invincible_finished;
+.float	invincible_finished, strength_finished; // TODO: vehicles system abuses these
 .float	superweapons_finished;
 
 .vector		finaldest, finalangle; 		//plat.qc stuff
@@ -657,3 +656,5 @@ float sv_showfps;
 .float sub_target_used;
 
 .string cvar_cl_physics;
+
+.float skill;

@@ -415,12 +415,23 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_FIRE,                2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 became a bit too crispy%s%s"), _("^BG%s^K1 felt a little hot%s%s")) \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_GENERIC,             2, 1, "s1 s2loc spree_lost", "s1",       "notify_selfkill",      _("^BG%s^K1 died%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_LAVA,                2, 1, "s1 s2loc spree_lost", "s1",       "notify_lava",          _("^BG%s^K1 turned into hot slag%s%s"), _("^BG%s^K1 found a hot place%s%s")) \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_AFRIT,           2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 was turned to ash by an Afrit%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_CREEPER,         2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 was blown up by Creeper%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_DEMON_JUMP,      2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was chopped in half by a pouncing Demon%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_DEMON_MELEE,     2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was eviscerated by a Demon%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_MAGE,    		   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was exploded by a Mage%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_OGRE_GRENADE,    2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 couldn't dodge the Ogre grenade%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_OGRE_MACHINEGUN, 2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was riddled full of holes by an Ogre%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_OGRE_MELEE,      2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was chopped to bits by an Ogre%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_ROTFISH_MELEE,   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was fed to the Rotfish%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_ROTTWEILER,      2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was turned to dogmeat by a Rottweiler%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_SCRAG,           2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was bombed from above by a Scrag%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_SHAMBLER_CLAW,   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1's innards became outwards by a Shambler%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_SHAMBLER_SMASH,  2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was smashed by a Shambler%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_SHAMBLER_ZAP,    2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was zapped to death by a Shambler%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_SPIDER,      	   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was bitten by a Spider%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_VORE,      	   2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was exploded by a Vore%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_VORE_MELEE,      2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was ripped apart by a Vore%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_WYVERN,          2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was fireballed by a Wyvern%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_ZOMBIE_JUMP,     2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 joins the Zombies%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_ZOMBIE_MELEE,    2, 1, "s1 s2loc spree_lost", "s1",		"notify_death",			_("^BG%s^K1 was given kung fu lessons by a Zombie%s%s"), "") \
@@ -509,10 +520,6 @@ void Send_Notification_WOCOVA(
 	MULTITEAM_INFO(1, INFO_ONSLAUGHT_CPDESTROYED_, 4,      2, 0, "s1 s2", "",                       "",                     _("^TC^TT^BG team %s^BG control point has been destroyed by %s"), "") \
 	MULTITEAM_INFO(1, INFO_ONSLAUGHT_GENDESTROYED_, 4,     0, 0, "", "",                            "",                     _("^TC^TT^BG generator has been destroyed"), "") \
 	MULTITEAM_INFO(1, INFO_ONSLAUGHT_GENDESTROYED_OVERTIME_, 4,  0, 0, "", "",                      "",                     _("^TC^TT^BG generator spontaneously combusted due to overtime!"), "") \
-	MSG_INFO_NOTIF(1, INFO_POWERUP_INVISIBILITY,           1, 0, "s1", "s1",                        "strength",             _("^BG%s^K1 picked up Invisibility"), "") \
-	MSG_INFO_NOTIF(1, INFO_POWERUP_SHIELD,                 1, 0, "s1", "s1",                        "shield",               _("^BG%s^K1 picked up Shield"), "") \
-	MSG_INFO_NOTIF(1, INFO_POWERUP_SPEED,                  1, 0, "s1", "s1",                        "shield",               _("^BG%s^K1 picked up Speed"), "") \
-	MSG_INFO_NOTIF(1, INFO_POWERUP_STRENGTH,               1, 0, "s1", "s1",                        "strength",             _("^BG%s^K1 picked up Strength"), "") \
 	MSG_INFO_NOTIF(2, INFO_QUIT_DISCONNECT,                1, 0, "s1", "",                          "",                     _("^BG%s^F3 disconnected"), "") \
 	MSG_INFO_NOTIF(2, INFO_QUIT_KICK_IDLING,               1, 0, "s1", "",                          "",                     _("^BG%s^F3 was kicked for idling"), "") \
 	MSG_INFO_NOTIF(1, INFO_QUIT_KICK_SPECTATING,           0, 0, "", "",                            "",                     _("^F2You were kicked from the server because you are a spectator and spectators aren't allowed at the moment."), "") \
@@ -527,7 +534,9 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_RACE_NEW_SET,                   1, 2, "s1 race_col f1ord race_col f2race_time", "s1 f2race_time",                  "race_newrecordserver",  _("^BG%s^BG set the %s%s^BG place record with %s%s"), "") \
 	MULTITEAM_INFO(1, INFO_SCORES_, 4,                     0, 0, "", "",                            "",                     _("^TC^TT ^BGteam scores!"), "") \
 	MSG_INFO_NOTIF(1, INFO_SPECTATE_WARNING,               0, 1, "f1secs", "",                      "",                     _("^F2You have to become a player within the next %s, otherwise you will be kicked, because spectating isn't allowed at this time!"), "") \
-	MSG_INFO_NOTIF(1, INFO_SUPERWEAPON_PICKUP,             1, 0, "s1", "s1",                        "superweapons",             _("^BG%s^K1 picked up a Superweapon"), "") \
+	MSG_INFO_NOTIF(1, INFO_SUPERWEAPON_PICKUP,             1, 0, "s1", "s1",                        "superweapons",         _("^BG%s^K1 picked up a Superweapon"), "") \
+	MSG_INFO_NOTIF(1, INFO_TEAMCHANGE_LARGERTEAM,          0, 0, "", "",                            "",                     _("^BGYou cannot change to a larger team"), "") \
+	MSG_INFO_NOTIF(1, INFO_TEAMCHANGE_NOTALLOWED,          0, 0, "", "",                            "",                     _("^BGYou are not allowed to change teams"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_BETA,                   2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s (beta)^BG, you have ^F2Xonotic %s"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_OLD,                    2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^BGThe server is running ^F1Xonotic %s^BG, you have ^F2Xonotic %s"), "") \
 	MSG_INFO_NOTIF(2, INFO_VERSION_OUTDATED,               2, 0, "s1 s2", "",                       "",                     _("^F4NOTE: ^F1Xonotic %s^BG is out, and you still have ^F2Xonotic %s^BG - get the update from ^F3http://www.xonotic.org/^BG!"), "") \
@@ -566,6 +575,7 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_WEAPON_KLEINBOTTLE_SUICIDE,           2, 1, "s1 s2loc spree_lost", "s1",                 "weapontuba",             _("^BG%s^K1 hurt their own ears with the @!#%%'n Klein Bottle%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_MACHINEGUN_MURDER_SNIPE,       3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponuzi",              _("^BG%s%s^K1 was sniped by ^BG%s^K1's Machine Gun%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_MACHINEGUN_MURDER_SPRAY,       3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponuzi",              _("^BG%s%s^K1 was riddled full of holes by ^BG%s^K1's Machine Gun%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_WEAPON_MINELAYER_LIMIT,               0, 1, "f1", "",                                    "",                       _("^BGYou cannot place more than ^F2%s^BG mines at a time"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_MINELAYER_MURDER,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponminelayer",        _("^BG%s%s^K1 got too close to ^BG%s^K1's mine%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_MINELAYER_SUICIDE,             2, 1, "s1 s2loc spree_lost", "s1",                 "weaponminelayer",        _("^BG%s^K1 forgot about their mine%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_MORTAR_MURDER_BOUNCE,          3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weapongrenadelauncher",  _("^BG%s%s^K1 got too close to ^BG%s^K1's Mortar grenade%s%s"), "") \
@@ -795,14 +805,9 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_OVERTIME_TIME,               0, 1, "f1time",        CPID_OVERTIME,         "0 0", _("^F2Now playing ^F4OVERTIME^F2!\n^BGAdded ^F4%s^BG to the game!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_PIGGYBACK_CARRYING,          1, 0, "s1",            CPID_PIGGYBACK,        "0 0", _("^BGYou are now carrying %s^BG!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_PIGGYBACK_RIDING,            1, 0, "s1",            CPID_PIGGYBACK,        "0 0", _("^BGYou are now riding %s^BG!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_INVISIBILITY,      0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Invisibility has worn off"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_SHIELD,            0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Shield has worn off"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_SPEED,             0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Speed has worn off"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_POWERDOWN_STRENGTH,          0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Strength has worn off"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_POWERUP_INVISIBILITY,        0, 0, "",              CPID_POWERUP,          "0 0", _("^F2You are invisible"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_POWERUP_SHIELD,              0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Shield surrounds you"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_POWERUP_SPEED,               0, 0, "",              CPID_POWERUP,          "0 0", _("^F2You are on speed"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_POWERUP_STRENGTH,            0, 0, "",              CPID_POWERUP,          "0 0", _("^F2Strength infuses your weapons with devastating power"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_PORTO_FAILED,                0, 0, "",              NO_CPID,               "0 0", _("^K1Portal deployment failed.\n\n^F2Catch it to try again!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_PORTO_CREATED_IN,            0, 0, "",              NO_CPID,               "0 0", _("^K1In^BG-portal created"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_PORTO_CREATED_OUT,           0, 0, "",              NO_CPID,               "0 0", _("^F3Out^BG-portal created"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_RACE_FINISHLAP,              0, 0, "",              CPID_RACE_FINISHLAP,   "0 0", _("^F2The race is over, finish your lap!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SECONDARY_NODAMAGE,          0, 0, "",              NO_CPID,               "0 0", _("^BGSecondary fire inflicts no damage!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_SEQUENCE_COMPLETED,          0, 0, "",              NO_CPID,               "0 0", _("^BGSequence completed!"), "") \
@@ -829,7 +834,8 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_VIP_DROP_PUNISH,             0, 1, "f1secs",        CPID_VIP,              "0 0", _("^BGToo many dropped gems! Dropping disabled for %s."), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VIP_DROP_SELF,               0, 0, "",              CPID_VIP,          	  "0 0",  _("^F2You are no longer a VIP!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VIP_PICKUP,              	1, 0, "s1",            CPID_VIP,          	  "0 0",  _("^BG%s^F2 is now a VIP!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_VIP_PICKUP_SELF,             0, 0, "",              CPID_VIP,          	  "0 0",  _("^F2You are now a VIP!"), "") 
+	MSG_CENTER_NOTIF(1, CENTER_VIP_PICKUP_SELF,             0, 0, "",              CPID_VIP,          	  "0 0",  _("^F2You are now a VIP!"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_WEAPON_MINELAYER_LIMIT,      0, 1, "f1",            NO_CPID,          	  "0 0",  _("^BGYou cannot place more than ^F2%s^BG mines at a time"), "") 
 
 #define MULTITEAM_MULTI2(default,prefix,anncepre,infopre,centerpre) \
 	MSG_MULTI_NOTIF(default, prefix##RED, anncepre##RED, infopre##RED, centerpre##RED) \
@@ -892,12 +898,23 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, DEATH_SELF_FIRE,                      NO_MSG,        INFO_DEATH_SELF_FIRE,                      CENTER_DEATH_SELF_FIRE) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_GENERIC,                   NO_MSG,        INFO_DEATH_SELF_GENERIC,                   CENTER_DEATH_SELF_GENERIC) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_LAVA,                      NO_MSG,        INFO_DEATH_SELF_LAVA,                      CENTER_DEATH_SELF_LAVA) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_AFRIT,                 NO_MSG,        INFO_DEATH_SELF_MON_AFRIT,                 CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_CREEPER,               NO_MSG,        INFO_DEATH_SELF_MON_CREEPER,               CENTER_DEATH_SELF_MONSTER) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_DEMON_JUMP,		 	 NO_MSG,        INFO_DEATH_SELF_MON_DEMON_JUMP,		       CENTER_DEATH_SELF_MONSTER) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_DEMON_MELEE,		 	 NO_MSG,        INFO_DEATH_SELF_MON_DEMON_MELEE,		   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_MAGE,				 	 NO_MSG,        INFO_DEATH_SELF_MON_MAGE,				   CENTER_DEATH_SELF_MONSTER) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_OGRE_GRENADE,		     NO_MSG,        INFO_DEATH_SELF_MON_OGRE_GRENADE,		   CENTER_DEATH_SELF_MONSTER) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_OGRE_MACHINEGUN,	     NO_MSG,        INFO_DEATH_SELF_MON_OGRE_MACHINEGUN,	   CENTER_DEATH_SELF_MONSTER) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_OGRE_MELEE,			 NO_MSG,        INFO_DEATH_SELF_MON_OGRE_MELEE,			   CENTER_DEATH_SELF_MONSTER) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_ROTFISH,				 NO_MSG,        INFO_DEATH_SELF_MON_ROTFISH_MELEE,		   CENTER_DEATH_SELF_MONSTER) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_ROTTWEILER,			 NO_MSG,        INFO_DEATH_SELF_MON_ROTTWEILER,		       CENTER_DEATH_SELF_MONSTER) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_SCRAG,			 	 NO_MSG,        INFO_DEATH_SELF_MON_SCRAG,				   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_SHAMBLER_CLAW,	 	 NO_MSG,        INFO_DEATH_SELF_MON_SHAMBLER_CLAW,		   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_SHAMBLER_SMASH,	 	 NO_MSG,        INFO_DEATH_SELF_MON_SHAMBLER_SMASH,		   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_SHAMBLER_ZAP,		 	 NO_MSG,        INFO_DEATH_SELF_MON_SHAMBLER_ZAP,		   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_SPIDER,			 	 NO_MSG,        INFO_DEATH_SELF_MON_SPIDER,				   CENTER_DEATH_SELF_MONSTER) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_VORE,			 	     NO_MSG,        INFO_DEATH_SELF_MON_VORE,				   CENTER_DEATH_SELF_MONSTER) \
+	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_VORE_MELEE,			 NO_MSG,        INFO_DEATH_SELF_MON_VORE_MELEE,			   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_WYVERN,			 	 NO_MSG,        INFO_DEATH_SELF_MON_WYVERN,				   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_ZOMBIE_JUMP,		 	 NO_MSG,        INFO_DEATH_SELF_MON_ZOMBIE_JUMP,		   CENTER_DEATH_SELF_MONSTER) \
 	MSG_MULTI_NOTIF(1, DEATH_SELF_MON_ZOMBIE_MELEE,		 	 NO_MSG,        INFO_DEATH_SELF_MON_ZOMBIE_MELEE,		   CENTER_DEATH_SELF_MONSTER) \
@@ -981,6 +998,7 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, WEAPON_KLEINBOTTLE_SUICIDE,           NO_MSG,        INFO_WEAPON_KLEINBOTTLE_SUICIDE,           CENTER_DEATH_SELF_GENERIC) \
 	MSG_MULTI_NOTIF(1, WEAPON_MACHINEGUN_MURDER_SNIPE,       NO_MSG,        INFO_WEAPON_MACHINEGUN_MURDER_SNIPE,       NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_MACHINEGUN_MURDER_SPRAY,       NO_MSG,        INFO_WEAPON_MACHINEGUN_MURDER_SPRAY,       NO_MSG) \
+	MSG_MULTI_NOTIF(1, WEAPON_MINELAYER_LIMIT,               NO_MSG,        INFO_WEAPON_MINELAYER_LIMIT,               CENTER_WEAPON_MINELAYER_LIMIT) \
 	MSG_MULTI_NOTIF(1, WEAPON_MINELAYER_MURDER,              NO_MSG,        INFO_WEAPON_MINELAYER_MURDER,              NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_MINELAYER_SUICIDE,             NO_MSG,        INFO_WEAPON_MINELAYER_SUICIDE,             CENTER_DEATH_SELF_GENERIC) \
 	MSG_MULTI_NOTIF(1, WEAPON_MORTAR_MURDER_BOUNCE,          NO_MSG,        INFO_WEAPON_MORTAR_MURDER_BOUNCE,          NO_MSG) \
@@ -1397,7 +1415,7 @@ float NOTIF_CPID_COUNT;
 // notification limits -- INCREASE AS NECESSARY
 #define NOTIF_ANNCE_MAX   100
 #define NOTIF_INFO_MAX    400
-#define NOTIF_CENTER_MAX  300
+#define NOTIF_CENTER_MAX  350
 #define NOTIF_MULTI_MAX   200
 #define NOTIF_CHOICE_MAX  50
 
@@ -1683,6 +1701,7 @@ void RegisterNotifications_First()
 	#endif
 
 	printf("Beginning notification initialization on %s%s program...\n", dedi, PROGNAME);
+	#undef dedi
 
 	// maybe do another implementation of this with checksums? for now, we don't need versioning
 	/*if(autocvar_notification_version != NOTIF_VERSION)

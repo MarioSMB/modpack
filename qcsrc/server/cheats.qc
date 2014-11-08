@@ -152,8 +152,6 @@ float CheatImpulse(float i)
 			self.personal.pauserothealth_finished = self.pauserothealth_finished;
 			self.personal.pauserotfuel_finished = self.pauserotfuel_finished;
 			self.personal.pauseregen_finished = self.pauseregen_finished;
-			self.personal.strength_finished = self.strength_finished;
-			self.personal.invincible_finished = self.invincible_finished;
 			self.personal.teleport_time = time;
 			break; // this part itself doesn't cheat, so let's not count this
 		case CHIMPULSE_CLONE_MOVING:
@@ -211,8 +209,6 @@ float CheatImpulse(float i)
 				self.pauserothealth_finished = time + self.personal.pauserothealth_finished - self.personal.teleport_time;
 				self.pauserotfuel_finished = time + self.personal.pauserotfuel_finished - self.personal.teleport_time;
 				self.pauseregen_finished = time + self.personal.pauseregen_finished - self.personal.teleport_time;
-				self.strength_finished = time + self.personal.strength_finished - self.personal.teleport_time;
-				self.invincible_finished = time + self.personal.invincible_finished - self.personal.teleport_time;
 
 				DID_CHEAT();
 				break;
@@ -263,8 +259,8 @@ float CheatImpulse(float i)
 			else
 				e = self;
 
-			pointparticles(particleeffectnum("rocket_explode"), e.origin, '0 0 0', 1);
-			sound(e, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTEN_NORM);
+			Send_Effect(EFFECT_ROCKET_EXPLODE, e.origin, '0 0 0', 1);
+			sound(e, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 
 			e2 = spawn();
 			setorigin(e2, e.origin);
@@ -1014,7 +1010,16 @@ void Drag_Update(entity dragger)
 
 	draggee.ltime = max(servertime + serverframetime, draggee.ltime); // fixes func_train breakage
 
-	te_lightning1(dragger, dragger.origin + dragger.view_ofs, curorigin);
+	//te_lightning1(dragger, dragger.origin + dragger.view_ofs, curorigin);
+
+	vector vecs, dv = '0 0 0';
+	if(dragger.weaponentity.movedir_x > 0)
+		vecs = dragger.weaponentity.movedir;
+	else
+		vecs = '0 0 0';
+
+	dv = v_right * -vecs_y + v_up * vecs_z;
+	Send_Effect(EFFECT_LASER_BEAM_FAST, dragger.origin + dragger.view_ofs + dv, curorigin, 0);
 }
 
 float Drag_CanDrag(entity dragger)

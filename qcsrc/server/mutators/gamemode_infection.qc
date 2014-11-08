@@ -154,7 +154,7 @@ MUTATOR_HOOKFUNCTION(inf_RemovePlayer)
 
 MUTATOR_HOOKFUNCTION(inf_BotAttack)
 {
-	if(self.inf_team == checkentity.inf_team)
+	if(self.inf_team == other.inf_team)
 		return TRUE;
 
 	return FALSE;

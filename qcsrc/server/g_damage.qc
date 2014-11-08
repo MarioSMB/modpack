@@ -183,10 +183,6 @@ string AppendItemcodes(string s, entity player)
 	if(w == 0)
 		w = player.cnt; // previous weapon!
 	s = strcat(s, ftos(w));
-	if(time < player.strength_finished)
-		s = strcat(s, "S");
-	if(time < player.invincible_finished)
-		s = strcat(s, "I");
 	if(player.flagcarried != world)
 		s = strcat(s, "F");
 	if(player.BUTTON_CHAT)
@@ -782,7 +778,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 			{
 				Unfreeze(targ);
 				targ.health = autocvar_g_freeze_revive_falldamage_health;
-				pointparticles(particleeffectnum("iceorglass"), targ.origin, '0 0 0', 3);
+				Send_Effect(EFFECT_ICEORGLASS, targ.origin, '0 0 0', 3);
 				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED_FALL, targ.netname);
 				Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_FREEZETAG_REVIVE_SELF);
 			}
@@ -793,7 +789,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 		
 		if(targ.frozen && deathtype == DEATH_HURTTRIGGER && !autocvar_g_freeze_frozen_damage_trigger)
 		{
-			pointparticles(particleeffectnum("teleport"), targ.origin, '0 0 0', 1);
+			Send_Effect(EFFECT_TELEPORT, targ.origin, '0 0 0', 1);
 		
 			entity oldself = self;
 			self = targ;
@@ -822,33 +818,11 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 				// don't reset back to last position, even if new position is stuck in solid
 				self.oldorigin = self.origin;
 				self.prevorigin = self.origin;
-				
-				pointparticles(particleeffectnum("teleport"), self.origin, '0 0 0', 1);
+
+				Send_Effect(EFFECT_TELEPORT, self.origin, '0 0 0', 1);
 			}
 			
 			self = oldself;
-		}
-
-		if(!g_minstagib)
-		{
-			// apply strength multiplier
-			if (attacker.items & IT_STRENGTH)
-			{
-				if(targ == attacker)
-				{
-					damage = damage * autocvar_g_balance_powerup_strength_selfdamage;
-					force = force * autocvar_g_balance_powerup_strength_selfforce;
-				}
-				else
-				{
-					damage = damage * autocvar_g_balance_powerup_strength_damage;
-					force = force * autocvar_g_balance_powerup_strength_force;
-				}
-			}
-
-			// apply invincibility multiplier
-			if (targ.items & IT_INVINCIBLE)
-				damage = damage * autocvar_g_balance_powerup_invincible_takedamage;
 		}
 
 		if (targ == attacker)
@@ -1038,6 +1012,9 @@ float RadiusDamageForSource (entity inflictor, vector inflictororigin, vector in
 					force = normalize(center - myblastorigin);
 					force = force * (finaldmg / coredamage) * forceintensity;
 					hitloc = nearest;
+
+					if(deathtype & WEP_BLASTER)
+						force *= WEP_CVAR_BOTH(blaster, !(deathtype & HITTYPE_SECONDARY), force_zscale);
 
 					if(targ != directhitentity)
 					{

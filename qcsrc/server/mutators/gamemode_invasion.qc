@@ -3,10 +3,6 @@ void spawnfunc_invasion_spawnpoint()
 	if(!g_invasion) { remove(self); return; }
 
 	self.classname = "invasion_spawnpoint";
-
-	if(autocvar_g_invasion_zombies_only) // precache only if it hasn't been already
-	if(self.monsterid)
-		MON_ACTION(self.monsterid, MR_PRECACHE);
 }
 
 float invasion_PickMonster(float supermonster_count)
@@ -118,7 +114,7 @@ float Invasion_CheckWinner()
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
 		FOR_EACH_MONSTER(head)
-			monster_remove(head);
+			Monster_Remove(head);
 
 		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
 		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
@@ -195,7 +191,7 @@ float Invasion_CheckWinner()
 	}
 
 	FOR_EACH_MONSTER(head)
-		monster_remove(head);
+		Monster_Remove(head);
 
 	if(teamplay)
 	{
@@ -290,7 +286,7 @@ MUTATOR_HOOKFUNCTION(invasion_MonsterSpawn)
 	self.monster_skill = inv_monsterskill;
 
 	if((get_monsterinfo(self.monsterid)).spawnflags & MON_FLAG_SUPERMONSTER)
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_INVASION_SUPERMONSTER, M_NAME(self.monsterid));
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_INVASION_SUPERMONSTER, self.monster_name);
 
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_BOTCLIP | DPCONTENTS_MONSTERCLIP;
 
@@ -360,7 +356,7 @@ MUTATOR_HOOKFUNCTION(invasion_PlayerCommand)
 
 MUTATOR_HOOKFUNCTION(invasion_BotShouldAttack)
 {
-	if(!IS_MONSTER(checkentity))
+	if(!IS_MONSTER(other))
 		return TRUE;
 	
 	return FALSE;
@@ -383,7 +379,7 @@ MUTATOR_HOOKFUNCTION(invasion_AccuracyTargetValid)
 
 MUTATOR_HOOKFUNCTION(invasion_AllowMobSpawning)
 {
-	// monster spawning disabled during an invasion
+	ret_string = "You can't spawn monsters during an invasion!";
 	return TRUE;
 }
 
@@ -425,23 +421,7 @@ void invasion_DelayedInit() // Do this check with a delay so we can wait for tea
 }
 
 void invasion_Initialize()
-{
-	if(autocvar_g_invasion_zombies_only)
-		MON_ACTION(MON_ZOMBIE, MR_PRECACHE);
-	else
-	{
-		float i;
-		entity mon;
-		for(i = MON_FIRST; i <= MON_LAST; ++i)
-		{
-			mon = get_monsterinfo(i);
-			if((mon.spawnflags & MONSTER_TYPE_FLY) || (mon.spawnflags & MONSTER_TYPE_SWIM))
-				continue; // flying/swimming monsters not yet supported
-
-			MON_ACTION(i, MR_PRECACHE);
-		}
-	}
-	
+{	
 	InitializeEntity(world, invasion_DelayedInit, INITPRIO_GAMETYPE);
 }
 

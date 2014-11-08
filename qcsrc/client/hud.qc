@@ -1179,16 +1179,14 @@ void DrawNumIcon(vector myPos, vector mySize, float x, string icon, float vertic
 //
 void HUD_Powerups(void)
 {
-	float strength_time, shield_time, superweapons_time;
+	float superweapons_time;
 	if(!autocvar__hud_configure)
 	{
 		if(!autocvar_hud_panel_powerups) return;
 		if(spectatee_status == -1) return;
-		if(!(getstati(STAT_ITEMS, 0, 24) & (IT_STRENGTH | IT_INVINCIBLE | IT_SUPERWEAPON))) return;
+		if(!(getstati(STAT_ITEMS, 0, 24) & IT_SUPERWEAPON)) return;
 		if (getstati(STAT_HEALTH) <= 0) return;
 
-		strength_time = bound(0, getstatf(STAT_STRENGTH_FINISHED) - time, 99);
-		shield_time = bound(0, getstatf(STAT_INVINCIBLE_FINISHED) - time, 99);
 		superweapons_time = bound(0, getstatf(STAT_SUPERWEAPONS_FINISHED) - time, 99);
 
 		if (getstati(STAT_ITEMS, 0, 24) & IT_UNLIMITED_SUPERWEAPONS)
@@ -1200,8 +1198,6 @@ void HUD_Powerups(void)
 	}
 	else
 	{
-		strength_time = 15;
-		shield_time = 27;
 		superweapons_time = 13;
 	}
 
@@ -1213,7 +1209,7 @@ void HUD_Powerups(void)
 	pos = panel_pos;
 	mySize = panel_size;
 
-	HUD_Panel_DrawBg(bound(0, max(strength_time, shield_time, superweapons_time), 1));
+	HUD_Panel_DrawBg(bound(0, superweapons_time, 1));
 	if(panel_bg_padding)
 	{
 		pos += '1 1 0' * panel_bg_padding;
@@ -1222,134 +1218,34 @@ void HUD_Powerups(void)
 
 	float panel_ar = mySize_x/mySize_y;
 	float is_vertical = (panel_ar < 1);
-	vector shield_offset = '0 0 0', strength_offset = '0 0 0', superweapons_offset = '0 0 0';
+	vector superweapons_offset = '0 0 0';
 
 	float superweapons_is = -1;
 
-	if(superweapons_time)
-	{
-		if(strength_time)
-		{
-			if(shield_time)
-				superweapons_is = 0;
-			else
-				superweapons_is = 2;
-		}
-		else
-		{
-			if(shield_time)
-				superweapons_is = 1;
-			else
-				superweapons_is = 2;
-		}
-	}
+	if(superweapons_time) { superweapons_is = 2; }
 
 	// FIXME handle superweapons here
-	if(superweapons_is == 0)
+	if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
 	{
-		if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
-		{
-			mySize_x *= (1.0 / 3.0);
-			superweapons_offset_x = mySize_x;
-			if (autocvar_hud_panel_powerups_flip)
-				shield_offset_x = 2*mySize_x;
-			else
-				strength_offset_x = 2*mySize_x;
-		}
-		else
-		{
-			mySize_y *= (1.0 / 3.0);
-			superweapons_offset_y = mySize_y;
-			if (autocvar_hud_panel_powerups_flip)
-				shield_offset_y = 2*mySize_y;
-			else
-				strength_offset_y = 2*mySize_y;
-		}
+		mySize_x *= 0.5;
 	}
 	else
 	{
-		if (panel_ar >= 4 || (panel_ar >= 1/4 && panel_ar < 1))
-		{
-			mySize_x *= 0.5;
-			if (autocvar_hud_panel_powerups_flip)
-				shield_offset_x = mySize_x;
-			else
-				strength_offset_x = mySize_x;
-		}
-		else
-		{
-			mySize_y *= 0.5;
-			if (autocvar_hud_panel_powerups_flip)
-				shield_offset_y = mySize_y;
-			else
-				strength_offset_y = mySize_y;
-		}
+		mySize_y *= 0.5;
 	}
 
-	float shield_baralign, strength_baralign, superweapons_baralign;
-	float shield_iconalign, strength_iconalign, superweapons_iconalign;
+	float superweapons_baralign;
+	float superweapons_iconalign;
 
 	if (autocvar_hud_panel_powerups_flip)
 	{
-		strength_baralign = (autocvar_hud_panel_powerups_baralign == 2 || autocvar_hud_panel_powerups_baralign == 1);
-		shield_baralign = (autocvar_hud_panel_powerups_baralign == 3 || autocvar_hud_panel_powerups_baralign == 1);
-		strength_iconalign = (autocvar_hud_panel_powerups_iconalign == 2 || autocvar_hud_panel_powerups_iconalign == 1);
-		shield_iconalign = (autocvar_hud_panel_powerups_iconalign == 3 || autocvar_hud_panel_powerups_iconalign == 1);
+		superweapons_baralign = (autocvar_hud_panel_powerups_baralign == 3 || autocvar_hud_panel_powerups_baralign == 1);
+		superweapons_iconalign = (autocvar_hud_panel_powerups_iconalign == 3 || autocvar_hud_panel_powerups_iconalign == 1);
 	}
 	else
 	{
-		shield_baralign = (autocvar_hud_panel_powerups_baralign == 2 || autocvar_hud_panel_powerups_baralign == 1);
-		strength_baralign = (autocvar_hud_panel_powerups_baralign == 3 || autocvar_hud_panel_powerups_baralign == 1);
-		shield_iconalign = (autocvar_hud_panel_powerups_iconalign == 2 || autocvar_hud_panel_powerups_iconalign == 1);
-		strength_iconalign = (autocvar_hud_panel_powerups_iconalign == 3 || autocvar_hud_panel_powerups_iconalign == 1);
-	}
-
-	if(superweapons_is == 0)
-	{
-		superweapons_iconalign = strength_iconalign;
-		superweapons_baralign = 2;
-	}
-	else if(superweapons_is == 1)
-	{
-		superweapons_offset = strength_offset;
-		superweapons_iconalign = strength_iconalign;
-		superweapons_baralign = strength_baralign;
-	}
-	else // if(superweapons_is == 2)
-	{
-		superweapons_offset = shield_offset;
-		superweapons_iconalign = shield_iconalign;
-		superweapons_baralign = shield_baralign;
-	}
-
-	if(shield_time)
-	{
-		const float maxshield = 30;
-		float shield = ceil(shield_time);
-		if(autocvar_hud_panel_powerups_progressbar)
-			HUD_Panel_DrawProgressBar(pos + shield_offset, mySize, autocvar_hud_panel_powerups_progressbar_shield, shield/maxshield, is_vertical, shield_baralign, autocvar_hud_progressbar_shield_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-		if(autocvar_hud_panel_powerups_text)
-		{
-			if(shield > 1)
-				DrawNumIcon(pos + shield_offset, mySize, shield, "shield", is_vertical, shield_iconalign, '1 1 1', 1);
-			if(shield <= 5)
-				DrawNumIcon_expanding(pos + shield_offset, mySize, shield, "shield", is_vertical, shield_iconalign, '1 1 1', 1, bound(0, (shield - shield_time) / 0.5, 1));
-		}
-	}
-
-	if(strength_time)
-	{
-		const float maxstrength = 30;
-		float strength = ceil(strength_time);
-		if(autocvar_hud_panel_powerups_progressbar)
-			HUD_Panel_DrawProgressBar(pos + strength_offset, mySize, autocvar_hud_panel_powerups_progressbar_strength, strength/maxstrength, is_vertical, strength_baralign, autocvar_hud_progressbar_strength_color, autocvar_hud_progressbar_alpha * panel_fg_alpha, DRAWFLAG_NORMAL);
-		if(autocvar_hud_panel_powerups_text)
-		{
-			if(strength > 1)
-				DrawNumIcon(pos + strength_offset, mySize, strength, "strength", is_vertical, strength_iconalign, '1 1 1', 1);
-			if(strength <= 5)
-				DrawNumIcon_expanding(pos + strength_offset, mySize, strength, "strength", is_vertical, strength_iconalign, '1 1 1', 1, bound(0, (strength - strength_time) / 0.5, 1));
-		}
+		superweapons_baralign = (autocvar_hud_panel_powerups_baralign == 2 || autocvar_hud_panel_powerups_baralign == 1);
+		superweapons_iconalign = (autocvar_hud_panel_powerups_iconalign == 2 || autocvar_hud_panel_powerups_iconalign == 1);
 	}
 
 	if(superweapons_time)
@@ -1649,148 +1545,154 @@ void HUD_HealthArmor(void)
 
 void HUD_Notify_Push(string icon, string attacker, string victim)
 {
-	if(icon != "")
+	if (icon == "")
+		return;
+
+	++notify_count;
+	--notify_index;
+
+	if (notify_index == -1)
+		notify_index = NOTIFY_MAX_ENTRIES-1;
+
+	// Free old strings
+	if (notify_attackers[notify_index])
+		strunzone(notify_attackers[notify_index]);
+
+	if (notify_victims[notify_index])
+		strunzone(notify_victims[notify_index]);
+
+	if (notify_icons[notify_index])
+		strunzone(notify_icons[notify_index]);
+
+	// Allocate new strings
+	if (victim != "")
 	{
-		--kn_index;
-		if (kn_index == -1) { kn_index = KN_MAX_ENTRIES-1; }
-		notify_times[kn_index] = time;
-
-		// icon
-		if(notify_icon[kn_index]) { strunzone(notify_icon[kn_index]); }
-		notify_icon[kn_index] = strzone(icon);
-
-		// attacker
-		if(notify_attackers[kn_index]) { strunzone(notify_attackers[kn_index]); }
-		notify_attackers[kn_index] = strzone(attacker);
-
-		// victim
-		if(notify_victims[kn_index]) { strunzone(notify_victims[kn_index]); }
-		notify_victims[kn_index] = strzone(victim);
+		notify_attackers[notify_index] = strzone(attacker);
+		notify_victims[notify_index] = strzone(victim);
 	}
+	else
+	{
+		// In case of a notification without a victim, the attacker
+		// is displayed on the victim's side. Instead of special
+		// treatment later on, we can simply switch them here.
+		notify_attackers[notify_index] = string_null;
+		notify_victims[notify_index] = strzone(attacker);
+	}
+
+	notify_icons[notify_index] = strzone(icon);
+	notify_times[notify_index] = time;
 }
 
 void HUD_Notify(void)
 {
-	if(!autocvar__hud_configure)
-	{
-		if(!autocvar_hud_panel_notify) return;
-	}
+	if (!autocvar__hud_configure)
+		if (!autocvar_hud_panel_notify)
+			return;
 
 	HUD_Panel_UpdateCvars();
-	vector pos, mySize;
-	pos = panel_pos;
-	mySize = panel_size;
-
 	HUD_Panel_DrawBg(1);
-	if(panel_bg_padding)
+
+	if (!autocvar__hud_configure)
+		if (notify_count == 0)
+			return;
+
+	vector pos, size;
+	pos  = panel_pos;
+	size = panel_size;
+
+	if (panel_bg_padding)
 	{
-		pos += '1 1 0' * panel_bg_padding;
-		mySize -= '2 2 0' * panel_bg_padding;
+		pos  += '1 1 0' * panel_bg_padding;
+		size -= '2 2 0' * panel_bg_padding;
 	}
 
-	float entries, height;
-	entries = bound(1, floor(KN_MAX_ENTRIES * mySize_y/mySize_x), KN_MAX_ENTRIES);
-	height = mySize_y/entries;
+	float fade_start = max(0, autocvar_hud_panel_notify_time);
+	float fade_time = max(0, autocvar_hud_panel_notify_fadetime);
+	float icon_aspect = max(1, autocvar_hud_panel_notify_icon_aspect);
 
-	vector fontsize;
-	float fontheight = height * autocvar_hud_panel_notify_fontsize;
-	fontsize = '0.5 0.5 0' * fontheight;
+	float entry_count = bound(1, floor(NOTIFY_MAX_ENTRIES * size_y / size_x), NOTIFY_MAX_ENTRIES);
+	float entry_height = size_y / entry_count;
 
-	float a;
-	float when;
-	when = autocvar_hud_panel_notify_time;
-	float fadetime;
-	fadetime = autocvar_hud_panel_notify_fadetime;
+	float panel_width_half = size_x * 0.5;
+	float icon_width_half = entry_height * icon_aspect / 2;
+	float name_maxwidth = panel_width_half - icon_width_half - size_x * NOTIFY_ICON_MARGIN;
 
-	vector pos_attacker, pos_victim, pos_icon;
-	float width_attacker;
+	vector font_size = '0.5 0.5 0' * entry_height * autocvar_hud_panel_notify_fontsize;
+	vector icon_size = (eX * icon_aspect + eY) * entry_height;
+	vector icon_left = eX * (panel_width_half - icon_width_half);
+	vector attacker_right = eX * name_maxwidth;
+	vector victim_left = eX * (size_x - name_maxwidth);
+
+	vector attacker_pos, victim_pos, icon_pos;
 	string attacker, victim, icon;
+	float i, j, count, step, limit, alpha;
 
-	float i, j, step, limit;
-	if(autocvar_hud_panel_notify_flip) //order items from the top down
+	if (autocvar_hud_panel_notify_flip)
 	{
+		// Order items from the top down
 		i = 0;
 		step = +1;
-		limit = entries;
+		limit = entry_count;
 	}
-	else //order items from the bottom up
+	else
 	{
-		i = entries - 1;
+		// Order items from the bottom up
+		i = entry_count - 1;
 		step = -1;
 		limit = -1;
 	}
 
-	for(j = kn_index;  i != limit;  i += step, ++j)
+	for (j = notify_index, count = 0; i != limit; i += step, ++j, ++count)
 	{
 		if(autocvar__hud_configure)
 		{
-			if (step == +1)
-				a = i;
-			else // inverse order
-				a = entries - 1 - i;
-			attacker = textShortenToWidth(sprintf(_("Player %d"), a+1), 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-			victim = textShortenToWidth(sprintf(_("Player %d"), a+2), 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-			icon = get_weaponinfo(WEP_FIRST + mod(floor(a*2.4), WEP_LAST)).model2;
-			a = bound(0, (when - a) / 4, 1);
-			goto hud_config_notifyprint;
+			attacker = sprintf(_("Player %d"), count + 1);
+			victim = sprintf(_("Player %d"), count + 2);
+			icon = get_weaponinfo(WEP_FIRST + mod(floor(count*2.4), WEP_LAST)).model2;
+			alpha = bound(0, 1.2 - count / entry_count, 1);
 		}
 		else
 		{
-			if (j == KN_MAX_ENTRIES)
+			if (j == NOTIFY_MAX_ENTRIES)
 				j = 0;
 
-			if(notify_times[j] + when > time)
-				a = 1;
-			else if(fadetime)
+			if (notify_times[j] + fade_start > time)
+				alpha = 1;
+			else if (fade_time != 0)
 			{
-				a = bound(0, (notify_times[j] + when + fadetime - time) / fadetime, 1);
-				if(!a)
-				{
+				alpha = bound(0, (notify_times[j] + fade_start + fade_time - time) / fade_time, 1);
+				if (alpha == 0)
 					break;
-				}
 			}
 			else
-			{
 				break;
-			}
 
 			attacker = notify_attackers[j];
 			victim = notify_victims[j];
-			icon = notify_icon[j];
+			icon = notify_icons[j];
 		}
 
-		//type = notify_deathtype[j];
-		//w = DEATH_WEAPONOF(type);
-
-		if(icon != "")
+		if (icon != "" && victim != "")
 		{
-			if((attacker != "") && (victim == ""))
-			{
-				// Y [used by] X
-				attacker = textShortenToWidth(attacker, 0.73 * mySize_x - height, fontsize, stringwidth_colors);
-				pos_attacker = pos + eX * (0.27 * mySize_x + height) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
-				pos_icon = pos + eX * 0.25 * mySize_x - eX * height + eY * i * height;
+			vector name_top = eY * (i * entry_height + 0.5 * (entry_height - font_size_y));
 
-				drawpic_aspect_skin(pos_icon, icon, '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-			}
-			else if((attacker != "") && (victim != ""))
-			{
-				// X [did action to] Y
-				attacker = textShortenToWidth(attacker, 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-				victim = textShortenToWidth(victim, 0.48 * mySize_x - height, fontsize, stringwidth_colors);
-:hud_config_notifyprint
-				width_attacker = stringwidth(attacker, TRUE, fontsize);
-				pos_attacker = pos + eX * (0.48 * mySize_x - height - width_attacker) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
-				pos_victim = pos + eX * (0.52 * mySize_x + height) + eY * ((0.5 * fontsize_y + i * height) + (0.5 * (height - fontheight)));
-				pos_icon = pos + eX * 0.5 * mySize_x - eX * height + eY * i * height;
+			icon_pos = pos + icon_left + eY * i * entry_height;
+			drawpic_aspect_skin(icon_pos, icon, icon_size, '1 1 1', panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 
-				drawpic_aspect_skin(pos_icon, icon, '2 1 0' * height, '1 1 1', panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_attacker, attacker, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
-				drawcolorcodedstring(pos_victim, victim, fontsize, panel_fg_alpha * a, DRAWFLAG_NORMAL);
+			victim = textShortenToWidth(victim, name_maxwidth, font_size, stringwidth_colors);
+			victim_pos = pos + victim_left + name_top;
+			drawcolorcodedstring(victim_pos, victim, font_size, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
+
+			if (attacker != "")
+			{
+				attacker = textShortenToWidth(attacker, name_maxwidth, font_size, stringwidth_colors);
+				attacker_pos = pos + attacker_right - eX * stringwidth(attacker, TRUE, font_size) + name_top;
+				drawcolorcodedstring(attacker_pos, attacker, font_size, panel_fg_alpha * alpha, DRAWFLAG_NORMAL);
 			}
 		}
 	}
+
+	notify_count = count;
 }
 
 // Timer (#5)
@@ -4261,6 +4163,125 @@ void HUD_MorningRescue(void)
 	draw_endBoldFont();
 }
 
+
+void HUD_DiscoMode(void)
+{
+	// vectors for top right, bottom right, bottom and bottom left corners
+
+	vector topright;
+	vector bottom;
+	vector bottomright;
+	vector bottomleft;
+
+	topright_x = vid_conwidth;
+	topright_y = 0;
+	topright_z = 0;
+
+	bottom_x = vid_conwidth/2;
+	bottom_y = vid_conheight;
+	bottom_z = 0;
+
+	bottomright_x = vid_conwidth;
+	bottomright_y = vid_conheight;
+	bottomright_z = 0;
+
+	bottomleft_x = 0;
+	bottomleft_y = vid_conheight;
+	bottomleft_z = 0;
+
+	local vector dmpos;
+	local float dmalpha;
+	dmpos = bottomleft;
+	local vector offset = '0 0 0';
+
+	dmalpha = 1;
+
+	local vector dmcolor = '0 0 1';
+	dmcolor_x = random();
+	
+	drawfill('0 0 0', bottomright, dmcolor, dmalpha * random(), DRAWFLAG_ADDITIVE);
+
+	/*mrpos_y -= 200 * mralpha;
+	drawpic (mrpos, "gfx/morningrescue", '57 200 0', '1 1 1', mralpha, DRAWFLAG_NORMAL);
+
+	mrpos = topright;
+	mrpos_y -= 500 * 0.5 * (1 - mralpha);
+	offset_y = 3 * cos(mrpos_y + 5 * time) - 5;
+	mrpos_x -= 513 * 0.5;
+	offset_x = 3 * cos(mrpos_x + 5 * time) + 5;
+	drawpic (mrpos + offset, "gfx/morningrescue2", '513 500 0' * 0.5, '1 1 1', mralpha, DRAWFLAG_NORMAL);*/
+
+	local string mycolor = "";
+	local string mychar;
+	local float j;
+	local string dmstring = _("^1D^2i^3s^4c^5o ^6Mode");
+
+	local float k;
+	
+	local float discoball;
+	local float discoballs = 8;
+	for ( k = 0; k < discoballs; ++k )
+	{
+		dmpos_y = vid_conheight / 2;
+		dmpos_x = vid_conwidth / 2;
+		
+		//offset_y = 32 * (k+1) * sin(3 * time) * (mod(k, 2)? 1 : -1)  * (mod(k, 3)? 1 : -1);
+		//offset_x = offset_y * (mod(k, 2)? -1 : 1);// * (mod(k, 3)? 0.5 : 1);
+		offset_x = 48 * (k+1) * sin(4*time+10*k) * cos(6.28*k/discoballs);
+		offset_y = 48 * (k+1) * sin(4*time+10*k) * sin(6.28*k/discoballs);
+		
+		dmcolor_x = 1;
+		dmcolor_y = cos(16*time+k)/2+0.5;
+		dmcolor_z = 0;
+		
+		discoball = 32 + (discoballs-k)*8 + 16*(cos(5*time+10*k));
+		offset_x -= discoball/2;
+		offset_y -= discoball/2;
+		
+		dmalpha = 0.6 + cos(64*time+k)*0.3;
+		
+		drawfill(dmpos + offset, discoball*'1 1 0', dmcolor, dmalpha, DRAWFLAG_NORMAL);
+		
+	}
+	
+	draw_beginBoldFont();
+
+	for(k = 0; k < 2; ++k)
+	{
+		dmpos_y = vid_conheight / 2 - 12;
+		dmpos_x = 0.5 * (vid_conwidth - 0.6025 * strlennocol(dmstring) * 24);
+		for(j = 0; j < strlen(dmstring); ++j)
+		{
+			mychar = substring(dmstring, j, 1);
+
+			if(mychar == "^")
+			{
+				if(substring(dmstring, j+1, 1) == "x")
+				{
+					mycolor = substring(dmstring, j, 5);
+					j += 5;
+				}
+				else
+				{
+					mycolor = substring(dmstring, j, 2);
+					++j;
+				}
+				continue;
+			}
+
+			offset_y = 10 * ((k*10)+1) * cos(dmpos_x + 3 * time) * (mod(j, 2)? 1 : -1) * (k? 1 : -1);
+			offset_x = offset_y * (mod(j, 2)? -1 : 1);
+			local string resultstr = strcat(mycolor, mychar);
+
+			dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
+			dmpos_x += stringwidth(resultstr, TRUE, '24 24 0');
+			drawcolorcodedstring(dmpos + offset, resultstr, '24 24 0', dmalpha * 0.8, DRAWFLAG_ADDITIVE);
+		}
+	}
+	
+	draw_endBoldFont();
+}
+
 // Draw pressed keys (#11)
 //
 void HUD_PressedKeys(void)
@@ -4532,6 +4553,7 @@ void HUD_InfoMessages(void)
 			HUD_MorningRescue();
 		else
 			morningrescue = 0;
+			
 
 		if(spectatee_status && !intermission)
 		{
@@ -5958,6 +5980,9 @@ void HUD_Main (void)
 
 	if(intermission == 2) // no hud during mapvote
 		hud_fade_alpha = 0;
+	
+	if ( getstati(STAT_DISCO_MODE) )
+		HUD_DiscoMode();
 
 	// panels that we want to be active together with the scoreboard
 	// they must fade only when the menu does

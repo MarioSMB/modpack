@@ -1,4 +1,3 @@
-.float race_penalty;
 .float restart_jump;
 
 .float ladder_time;
@@ -617,34 +616,7 @@ void SpecialCommand()
 #endif
 }
 
-float speedaward_speed;
-string speedaward_holder;
-string speedaward_uid;
-void race_send_speedaward(float msg)
-{
-	// send the best speed of the round
-	WriteByte(msg, SVC_TEMPENTITY);
-	WriteByte(msg, TE_CSQC_RACE);
-	WriteByte(msg, RACE_NET_SPEED_AWARD);
-	WriteInt24_t(msg, floor(speedaward_speed+0.5));
-	WriteString(msg, speedaward_holder);
-}
-
-float speedaward_alltimebest;
-string speedaward_alltimebest_holder;
-string speedaward_alltimebest_uid;
-void race_send_speedaward_alltimebest(float msg)
-{
-	// send the best speed
-	WriteByte(msg, SVC_TEMPENTITY);
-	WriteByte(msg, TE_CSQC_RACE);
-	WriteByte(msg, RACE_NET_SPEED_AWARD_BEST);
-	WriteInt24_t(msg, floor(speedaward_alltimebest+0.5));
-	WriteString(msg, speedaward_alltimebest_holder);
-}
-
-float speedaward_lastupdate;
-float speedaward_lastsent;
+.float discomode;
 void SV_PlayerPhysics()
 {
 	vector wishvel, wishdir, v;
@@ -816,6 +788,16 @@ void SV_PlayerPhysics()
 				self.movetype = MOVETYPE_WALK;
 			self.disableclientprediction = 0;
 		}
+	}
+	
+	
+	if ( self.discomode )
+	{
+		if(IS_PLAYER(self))
+			self.BUTTON_JUMP = 1;
+		
+		self.angles_y = time*180;
+		self.fixangle = TRUE;
 	}
 
 	if (self.movetype == MOVETYPE_NONE)
@@ -1069,11 +1051,14 @@ void SV_PlayerPhysics()
 		a_side = autocvar_g_jetpack_acceleration_side;
 		a_up = autocvar_g_jetpack_acceleration_up;
 		a_add = autocvar_g_jetpack_antigravity * autocvar_sv_gravity;
+		if(autocvar_g_jetpack_reverse_thrust && self.crouch) { a_up = autocvar_g_jetpack_reverse_thrust; }
 
 		wishvel_x *= a_side;
 		wishvel_y *= a_side;
 		wishvel_z *= a_up;
 		wishvel_z += a_add;
+
+		if(autocvar_g_jetpack_reverse_thrust && self.crouch) { wishvel_z *= -1; }
 
 		float best;
 		best = 0;

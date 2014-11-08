@@ -294,6 +294,147 @@ void CommonCommand_cvar_purechanges(float request, entity caller)
 	}
 }
 
+void CommonCommand_editmob(float request, entity caller, float argc)
+{
+	switch(request)
+	{
+		case CMD_REQUEST_COMMAND:
+		{
+			if(autocvar_g_campaign) { print_to(caller, "Monster editing is disabled in singleplayer"); return; }
+			// no checks for g_monsters here, as it may be toggled mid match which existing monsters
+
+			if(caller)
+			{
+				makevectors(self.v_angle);
+				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
+			}
+
+			entity mon = trace_ent;
+			float is_visible = IS_MONSTER(mon);
+			string argument = argv(2);
+
+			switch(argv(1))
+			{
+				case "name":
+				{
+					if(!caller) { print_to(caller, "Only players can edit monsters"); return; }
+					if(!argument) { break; } // escape to usage
+					if(!autocvar_g_monsters_edit) { print_to(caller, "Monster editing is disabled"); return; }
+					if(mon.realowner != caller && autocvar_g_monsters_edit < 2) { print_to(caller, "This monster does not belong to you"); return; }
+					if(!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
+
+					string mon_oldname = mon.monster_name;
+
+					mon.monster_name = argument;
+					if(mon.sprite) { WaypointSprite_UpdateSprites(mon.sprite, strzone(mon.monster_name), string_null, string_null); }
+					print_to(caller, sprintf("Your pet '%s' is now known as '%s'", mon_oldname, mon.monster_name));
+					return;
+				}
+				case "spawn":
+				{
+					if(!caller) { print_to(caller, "Only players can spawn monsters"); return; }
+					if(!argv(2)) { break; } // escape to usage
+
+					float moveflag, tmp_moncount = 0;
+					string arg_lower = strtolower(argument);
+					moveflag = (argv(3)) ? stof(argv(3)) : 1; // follow owner if not defined
+					ret_string = "Monster spawning is currently disabled by a mutator";
+
+					if(arg_lower == "list") { print_to(caller, monsterlist_reply); return; }
+
+					FOR_EACH_MONSTER(mon) { if(mon.realowner == caller) ++tmp_moncount; }
+
+					if(!autocvar_g_monsters) { print_to(caller, "Monsters are disabled"); return; }
+					if(autocvar_g_monsters_max <= 0 || autocvar_g_monsters_max_perplayer <= 0) { print_to(caller, "Monster spawning is disabled"); return; }
+					if(!IS_PLAYER(caller)) { print_to(caller, "You must be playing to spawn a monster"); return; }
+					if(MUTATOR_CALLHOOK(AllowMobSpawning)) { print_to(caller, ret_string); return; }
+					if(caller.vehicle) { print_to(caller, "You can't spawn monsters while driving a vehicle"); return; }
+					if(caller.frozen) { print_to(caller, "You can't spawn monsters while frozen"); return; }
+					if(caller.deadflag != DEAD_NO) { print_to(caller, "You can't spawn monsters while dead"); return; }
+					if(tmp_moncount >= autocvar_g_monsters_max) { print_to(caller, "The maximum monster count has been reached"); return; }
+					if(tmp_moncount >= autocvar_g_monsters_max_perplayer) { print_to(caller, "You can't spawn any more monsters"); return; }
+
+					float i = 0, found = FALSE;
+					for(i = MON_FIRST; i <= MON_LAST; ++i)
+					{
+						mon = get_monsterinfo(i);
+						if(mon.netname == arg_lower) { found = TRUE; break; }
+					}
+
+					if(!found && arg_lower != "random") { print_to(caller, "Invalid monster"); return; }
+
+					totalspawned += 1;
+					WarpZone_TraceBox (CENTER_OR_VIEWOFS(caller), caller.mins, caller.maxs, CENTER_OR_VIEWOFS(caller) + v_forward * 150, TRUE, caller);
+					mon = spawnmonster(arg_lower, 0, caller, caller, trace_endpos, FALSE, FALSE, moveflag);
+					print_to(caller, strcat("Spawned ", mon.monster_name));
+					return;
+				}
+				case "kill":
+				{
+					if(!caller) { print_to(caller, "Only players can kill monsters"); return; }
+					if(mon.realowner != caller && autocvar_g_monsters_edit < 2) { print_to(caller, "This monster does not belong to you"); return; }
+					if(!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
+
+					Damage (mon, world, world, mon.health + mon.max_health + 200, DEATH_KILL, mon.origin, '0 0 0');
+					print_to(caller, strcat("Your pet '", mon.monster_name, "'' has been brutally mutilated"));
+					return;
+				}
+				case "skin":
+				{
+					if(!caller) { print_to(caller, "Only players can edit monsters"); return; }
+					if(!argument) { break; } // escape to usage
+					if(!autocvar_g_monsters_edit) { print_to(caller, "Monster editing is disabled"); return; }
+					if(!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
+					if(mon.realowner != caller && autocvar_g_monsters_edit < 2) { print_to(caller, "This monster does not belong to you"); return; }
+					if(mon.monsterid == MON_MAGE) { print_to(caller, "Mage skins can't be changed"); return; } // TODO
+
+					mon.skin = stof(argument);
+					print_to(caller, strcat("Monster skin successfully changed to ", ftos(mon.skin)));
+					return;
+				}
+				case "movetarget":
+				{
+					if(!caller) { print_to(caller, "Only players can edit monsters"); return; }
+					if(!argument) { break; } // escape to usage
+					if(!autocvar_g_monsters_edit) { print_to(caller, "Monster editing is disabled"); return; }
+					if(!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
+					if(mon.realowner != caller && autocvar_g_monsters_edit < 2) { print_to(caller, "This monster does not belong to you"); return; }
+
+					mon.monster_moveflags = stof(argument);
+					print_to(caller, strcat("Monster move target successfully changed to ", ftos(mon.monster_moveflags)));
+					return;
+				}
+				case "butcher":
+				{
+					if(caller) { print_to(caller, "This command is not available to players"); return; }
+					if(g_invasion) { print_to(caller, "This command does not work during an invasion!"); return; }
+
+					float tmp_remcount = 0;
+					entity tmp_entity;
+
+					FOR_EACH_MONSTER(tmp_entity) { Monster_Remove(tmp_entity); ++tmp_remcount; }
+
+					monsters_total = monsters_killed = totalspawned = 0;
+
+					print_to(caller, (tmp_remcount) ? sprintf("Killed %d monster%s", tmp_remcount, (tmp_remcount == 1) ? "" : "s") : "No monsters to kill");
+					return;
+				}
+			}
+		}
+
+		default:
+		case CMD_REQUEST_USAGE:
+		{
+			print_to(caller, strcat("\nUsage:^3 ", GetCommandPrefix(caller), " editmob command [arguments]"));
+			print_to(caller, "  Where 'command' can be butcher spawn skin movetarget kill name");
+			print_to(caller, "  spawn, skin, movetarget and name require 'arguments'");
+			print_to(caller, "  spawn also takes arguments list and random");
+			print_to(caller, "  Monster will follow owner if third argument of spawn command is not defined");
+			return;
+		}
+	}
+}
+
 void CommonCommand_info(float request, entity caller, float argc)
 {
 	switch(request)
@@ -544,7 +685,8 @@ void CommonCommand_timeout(float request, entity caller) // DEAR GOD THIS COMMAN
 				{
 					if(caller) { caller.allowed_timeouts -= 1; }
 
-					bprint(GetCallerName(caller), " ^7called a timeout", (caller ? strcat(" (", ftos(caller.allowed_timeouts), " timeout(s) left)") : ""), "!\n"); // write a bprint who started the timeout (and how many they have left)
+					// write a bprint who started the timeout (and how many they have left)
+					bprint(GetCallerName(caller), " ^7called a timeout", (caller ? strcat(" (", ftos(caller.allowed_timeouts), " timeout(s) left)") : ""), "!\n");
 
 					timeout_status = TIMEOUT_LEADTIME;
 					timeout_caller = caller;
@@ -670,6 +812,7 @@ void CommonCommand_(float request, entity caller)
 #define COMMON_COMMANDS(request,caller,arguments,command) \
 	COMMON_COMMAND("cvar_changes", CommonCommand_cvar_changes(request, caller), "Prints a list of all changed server cvars") \
 	COMMON_COMMAND("cvar_purechanges", CommonCommand_cvar_purechanges(request, caller), "Prints a list of all changed gameplay cvars") \
+	COMMON_COMMAND("editmob", CommonCommand_editmob(request, caller, arguments), "Modifies a monster or all monsters") \
 	COMMON_COMMAND("info", CommonCommand_info(request, caller, arguments), "Request for unique server information set up by admin") \
 	COMMON_COMMAND("ladder", CommonCommand_ladder(request, caller), "Get information about top players if supported") \
 	COMMON_COMMAND("lsmaps", CommonCommand_lsmaps(request, caller), "List maps which can be used with the current game mode") \

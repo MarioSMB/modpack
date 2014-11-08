@@ -1,8 +1,8 @@
 #ifdef REGISTER_MONSTER
 REGISTER_MONSTER(
 /* MON_##id   */ WYVERN,
-/* function   */ m_wyvern,
-/* spawnflags */ MONSTER_TYPE_FLY | MONSTER_SIZE_BROKEN | MON_FLAG_RANGED,
+/* functions  */ M_Wyvern, M_Wyvern_Attack,
+/* spawnflags */ MONSTER_TYPE_FLY | MONSTER_SIZE_BROKEN | MON_FLAG_RANGED | MON_FLAG_RIDE,
 /* mins,maxs  */ '-20 -20 -58', '20 20 20',
 /* model      */ "wizard.mdl",
 /* netname    */ "wyvern",
@@ -28,7 +28,7 @@ const float wyvern_anim_magic	= 2;
 const float wyvern_anim_pain	= 3;
 const float wyvern_anim_death	= 4;
 
-void wyvern_fireball_explode()
+void M_Wyvern_Attack_Fireball_Explode()
 {
 	entity e;
 	if(self)
@@ -38,20 +38,20 @@ void wyvern_fireball_explode()
 		RadiusDamage(self, self.realowner, (autocvar_g_monster_wyvern_attack_fireball_damage), (autocvar_g_monster_wyvern_attack_fireball_edgedamage), (autocvar_g_monster_wyvern_attack_fireball_force), world, world, (autocvar_g_monster_wyvern_attack_fireball_radius), self.projectiledeathtype, world);
 
 		for(e = world; (e = findfloat(e, takedamage, DAMAGE_AIM)); ) if(vlen(e.origin - self.origin) <= (autocvar_g_monster_wyvern_attack_fireball_radius))
-			Fire_AddDamage(e, self, 5 * Monster_SkillModifier(), (autocvar_g_monster_wyvern_attack_fireball_damagetime), self.projectiledeathtype);
+			Fire_AddDamage(e, self, 5 * MONSTER_SKILLMOD(self), (autocvar_g_monster_wyvern_attack_fireball_damagetime), self.projectiledeathtype);
 
 		remove(self);
 	}
 }
 
-void wyvern_fireball_touch()
+void M_Wyvern_Attack_Fireball_Touch()
 {
 	PROJECTILE_TOUCH;
 
-	wyvern_fireball_explode();
+	M_Wyvern_Attack_Fireball_Explode();
 }
 
-void wyvern_fireball()
+void M_Wyvern_Attack_Fireball()
 {
 	entity missile = spawn();
 	vector dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
@@ -68,13 +68,13 @@ void wyvern_fireball()
 	missile.velocity = dir * (autocvar_g_monster_wyvern_attack_fireball_speed);
 	missile.avelocity = '300 300 300';
 	missile.nextthink = time + 5;
-	missile.think = wyvern_fireball_explode;
+	missile.think = M_Wyvern_Attack_Fireball_Explode;
 	missile.enemy = self.enemy;
-	missile.touch = wyvern_fireball_touch;
+	missile.touch = M_Wyvern_Attack_Fireball_Touch;
 	CSQCProjectile(missile, TRUE, PROJECTILE_FIREMINE, TRUE);
 }
 
-float wyvern_attack(float attack_type)
+float M_Wyvern_Attack(float attack_type)
 {
 	switch(attack_type)
 	{
@@ -82,8 +82,9 @@ float wyvern_attack(float attack_type)
 		case MONSTER_ATTACK_RANGED:
 		{
 			self.attack_finished_single = time + 1.2;
+			self.anim_finished = time + 1.2;
 
-			wyvern_fireball();
+			M_Wyvern_Attack_Fireball();
 
 			return TRUE;
 		}
@@ -92,23 +93,23 @@ float wyvern_attack(float attack_type)
 	return FALSE;
 }
 
-void spawnfunc_monster_wyvern()
-{
-	self.classname = "monster_wyvern";
+void spawnfunc_monster_wyvern() { Monster_Spawn(MON_WYVERN); }
 
-	if(!monster_initialize(MON_WYVERN)) { remove(self); return; }
-}
-
+#ifndef MONSTERS_EXTRA
 // compatibility with old spawns
 void spawnfunc_monster_wizard() { spawnfunc_monster_wyvern(); }
+#endif // extra monsters include original wizard
 
-float m_wyvern(float req)
+float M_Wyvern(float req)
 {
 	switch(req)
 	{
 		case MR_THINK:
 		{
-			monster_move((autocvar_g_monster_wyvern_speed_run), (autocvar_g_monster_wyvern_speed_walk), (autocvar_g_monster_wyvern_speed_stop), wyvern_anim_fly, wyvern_anim_hover, wyvern_anim_hover);
+			return TRUE;
+		}
+		case MR_PAIN:
+		{
 			return TRUE;
 		}
 		case MR_DEATH:
@@ -122,16 +123,21 @@ float m_wyvern(float req)
 		case MR_SETUP:
 		{
 			if(!self.health) self.health = (autocvar_g_monster_wyvern_health);
+			if(!self.speed) { self.speed = (autocvar_g_monster_wyvern_speed_walk); }
+			if(!self.speed2) { self.speed2 = (autocvar_g_monster_wyvern_speed_run); }
+			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_wyvern_speed_stop); }
+
+			self.m_anim_walk = wyvern_anim_hover;
+			self.m_anim_run = wyvern_anim_fly;
+			self.m_anim_idle = wyvern_anim_hover;
 
 			self.monster_loot = spawnfunc_item_cells;
-			self.monster_attackfunc	= wyvern_attack;
 			self.frame = wyvern_anim_hover;
 
 			return TRUE;
 		}
 		case MR_PRECACHE:
 		{
-			precache_model("models/monsters/wizard.mdl");
 			return TRUE;
 		}
 	}
@@ -140,19 +146,4 @@ float m_wyvern(float req)
 }
 
 #endif // SVQC
-#ifdef CSQC
-float m_wyvern(float req)
-{
-	switch(req)
-	{
-		case MR_PRECACHE:
-		{
-			return TRUE;
-		}
-	}
-
-	return TRUE;
-}
-
-#endif // CSQC
 #endif // REGISTER_MONSTER

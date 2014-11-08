@@ -76,7 +76,7 @@ void W_HLAC_Attack(void)
     if(self.crouch)
         spread = spread * WEP_CVAR_PRI(hlac, spread_crouchmod);
 
-	W_SetupShot(self, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_A, WEP_CVAR_PRI(hlac, damage));
+	W_SetupShot(self, FALSE, 3, W_Sound("lasergun_fire"), CH_WEAPON_A, WEP_CVAR_PRI(hlac, damage));
 	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
 	if(!autocvar_g_norecoil)
 	{
@@ -124,8 +124,8 @@ void W_HLAC_Attack2(void)
     if(self.crouch)
         spread = spread * WEP_CVAR_SEC(hlac, spread_crouchmod);
 
-	W_SetupShot(self, FALSE, 3, "weapons/lasergun_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(hlac, damage));
-	pointparticles(particleeffectnum("laser_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	W_SetupShot(self, FALSE, 3, W_Sound("lasergun_fire"), CH_WEAPON_A, WEP_CVAR_SEC(hlac, damage));
+	Send_Effect(EFFECT_LASER_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	missile = spawn();
 	missile.owner = missile.realowner = self;
@@ -243,7 +243,7 @@ float W_HLAC(float req)
 			precache_model("models/weapons/g_hlac.md3");
 			precache_model("models/weapons/v_hlac.md3");
 			precache_model("models/weapons/h_hlac.iqm");
-			precache_sound("weapons/lasergun_fire.wav");
+			precache_sound(W_Sound("lasergun_fire"));
 			HLAC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
@@ -266,7 +266,7 @@ float W_HLAC(float req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo)), "weapons/reload.wav");
+			W_Reload(min(WEP_CVAR_PRI(hlac, ammo), WEP_CVAR_SEC(hlac, ammo)), W_Sound("reload"));
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:

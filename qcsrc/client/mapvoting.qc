@@ -22,7 +22,7 @@ float mv_mouse_selection;
 float mv_selection_keyboard;
 
 float gametypevote;
-string mapvote_choosenmap;
+string mapvote_chosenmap;
 vector gtv_text_size;
 vector gtv_text_size_small;
 
@@ -321,10 +321,10 @@ void MapVote_Draw()
 	drawstring(pos, map, '24 24 0', '1 1 1', 1, DRAWFLAG_NORMAL);
 	pos_y += 26;
 
-	if(gametypevote && mapvote_choosenmap != "" )
+	if( mapvote_chosenmap != "" )
 	{
-		pos_x = center - stringwidth(mapvote_choosenmap, false, hud_fontsize);
-		drawstring(pos, mapvote_choosenmap, hud_fontsize*2, '1 1 1', 1, DRAWFLAG_NORMAL);
+		pos_x = center - stringwidth(mapvote_chosenmap, false, hud_fontsize*1.5/2);
+		drawstring(pos, mapvote_chosenmap, hud_fontsize*1.5, '1 1 1', 1, DRAWFLAG_NORMAL);
 		pos_y += hud_fontsize_y*2;
 	}
 
@@ -533,12 +533,16 @@ void MapVote_Init()
 	gametypevote = ReadByte();
 	
 	float mv_real_num_maps = mv_num_maps - mv_abstain;
+	
+	if ( gametypevote )
+	{
+		mapvote_chosenmap = strzone(ReadString());
+		if ( gametypevote == 2 )
+			gametypevote = 0;
+	}
 
 	if(gametypevote)
 	{
-		// read map name in case we have nextmap set
-		mapvote_choosenmap = strzone(ReadString());
-        
 		gtv_text_size = hud_fontsize*1.4;
 		gtv_text_size_small = hud_fontsize*1.1;
 		

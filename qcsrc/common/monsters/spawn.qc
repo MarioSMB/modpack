@@ -1,18 +1,12 @@
 entity spawnmonster (string monster, float monster_id, entity spawnedby, entity own, vector orig, float respwn, float invincible, float moveflag)
 {
-	// ensure spawnfunc database is initialized
-	//initialize_field_db();
-
+       float i;
 	entity e = spawn();
-	float i;
 
 	e.spawnflags = MONSTERFLAG_SPAWNED;
 
-	if(!respwn)
-		e.spawnflags |= MONSTERFLAG_NORESPAWN;
-
-	if(invincible)
-		e.spawnflags |= MONSTERFLAG_INVINCIBLE;
+	if(!respwn) { e.spawnflags |= MONSTERFLAG_NORESPAWN; }
+	if(invincible) { e.spawnflags |= MONSTERFLAG_INVINCIBLE; }
 
 	setorigin(e, orig);
 
@@ -20,12 +14,11 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 	{
 		RandomSelection_Init();
 		for(i = MON_FIRST; i <= MON_LAST; ++i)
-			RandomSelection_Add(world, 0, (get_monsterinfo(i)).netname, 1, 1);
+			RandomSelection_Add(world, i, string_null, 1, 1);
 
-		monster = RandomSelection_chosen_string;
+           monster_id = RandomSelection_chosen_float;
 	}
-
-	if(monster != "")
+	else if(monster != "")
 	{
 		float found = 0;
 		entity mon;
@@ -40,12 +33,8 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 			}
 		}
 		if(!found)
-			monster = (get_monsterinfo(MON_FIRST)).netname;
+			monster_id = ((monster_id > 0) ? monster_id : MON_FIRST);
 	}
-
-	if(monster == "")
-	if(monster_id)
-		monster = (get_monsterinfo(monster_id)).netname;
 
 	e.realowner = spawnedby;
 
@@ -58,19 +47,16 @@ entity spawnmonster (string monster, float monster_id, entity spawnedby, entity 
 			e.team = spawnedby.team; // colors handled in spawn code
 
 		if(autocvar_g_monsters_owners)
-			e.monster_owner = own; // using .owner makes the monster non-solid for its master
+			e.monster_follow = own; // using .owner makes the monster non-solid for its master
 
-		e.angles = spawnedby.angles;
+		e.angles_y = spawnedby.angles_y;
 	}
-
-	//monster = strcat("$ spawnfunc_monster_", monster);
 	
+	// Monster_Spawn checks if monster is valid
 	entity oldself = self;
 	self = e;
-	monster_initialize(monster_id);
+	Monster_Spawn(monster_id);
 	self = oldself;
-
-	//target_spawn_edit_entity(e, monster, world, world, world, world, world);
 
 	return e;
 }

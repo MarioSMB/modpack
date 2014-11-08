@@ -60,7 +60,7 @@ void W_HeavyMachineGun_Attack_Auto()
 
 	W_DecreaseAmmo(WEP_CVAR(hmg, ammo));
 
-	W_SetupShot (self, TRUE, 0, "weapons/uzi_fire.wav", CH_WEAPON_A, WEP_CVAR(hmg, damage));
+	W_SetupShot (self, TRUE, 0, W_Sound("uzi_fire"), CH_WEAPON_A, WEP_CVAR(hmg, damage));
 
 	if(!autocvar_g_norecoil)
 	{
@@ -73,7 +73,7 @@ void W_HeavyMachineGun_Attack_Auto()
 
 	self.misc_bulletcounter = self.misc_bulletcounter + 1;
 
-	pointparticles(particleeffectnum("uzi_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	W_MachineGun_MuzzleFlash();
 	W_AttachToShotorg(self.muzzle_flash, '5 0 0');
@@ -92,7 +92,7 @@ float W_HeavyMachineGun(float req)
 	{
 		case WR_AIM:
 		{
-			if(vlen(self.origin-self.enemy.origin) < 3000 - bound(0, skill, 10) * 200)
+			if(vlen(self.origin-self.enemy.origin) < 3000 - bound(0, bot_skill, 10) * 200)
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, FALSE);
 			else
 				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, FALSE);
@@ -121,7 +121,7 @@ float W_HeavyMachineGun(float req)
 			precache_model ("models/weapons/g_ok_hmg.md3");
 			precache_model ("models/weapons/v_ok_hmg.md3");
 			precache_model ("models/weapons/h_ok_hmg.iqm");
-			precache_sound ("weapons/uzi_fire.wav");
+			precache_sound (W_Sound("uzi_fire"));
 			HMG_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
@@ -150,7 +150,7 @@ float W_HeavyMachineGun(float req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(WEP_CVAR(hmg, ammo), "weapons/reload.wav");
+			W_Reload(WEP_CVAR(hmg, ammo), W_Sound("reload"));
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:

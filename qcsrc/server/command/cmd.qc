@@ -183,164 +183,6 @@ void ClientCommand_join(float request)
 	}
 }
 
-void ClientCommand_mobedit(float request, float argc)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			if(argv(1) && argv(2))
-			{
-				makevectors(self.v_angle);
-				WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
-				
-				if(!autocvar_g_monsters_edit) { sprint(self, "Monster property editing is not enabled.\n"); return; }
-				if(trace_ent.flags & FL_MONSTER)
-				{
-					if(trace_ent.realowner != self) { sprint(self, "That monster does not belong to you.\n"); return; }
-					switch(argv(1))
-					{
-						case "skin":
-						{
-							if(trace_ent.monsterid != MON_MAGE)
-								trace_ent.skin = stof(argv(2));
-							return;
-						}
-						case "movetarget":
-						{
-							trace_ent.monster_moveflags = stof(argv(2));
-							return;
-						}
-					}
-				}
-			}
-		}
-		default:
-			sprint(self, "Incorrect parameters for ^2mobedit^7\n");
-		case CMD_REQUEST_USAGE:
-		{
-			sprint(self, "\nUsage:^3 cmd mobedit [argument]\n");
-			sprint(self, "  Where 'argument' can be skin or movetarget.\n");
-			sprint(self, "  Aim at your monster to edit its properties.\n");
-			return;
-		}
-	}
-}
-
-void ClientCommand_mobkill(float request)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			makevectors(self.v_angle);
-			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
-			
-			if(IS_MONSTER(trace_ent))
-			{
-				if(trace_ent.realowner != self)
-				{
-					sprint(self, "That monster does not belong to you.\n");
-					return;
-				}
-				sprint(self, strcat("Your pet '", trace_ent.monster_name, "' has been brutally mutilated.\n"));
-				Damage (trace_ent, world, world, trace_ent.health + trace_ent.max_health + 200, DEATH_KILL, trace_ent.origin, '0 0 0');
-				return;
-			}
-		}
-	
-		default:
-			sprint(self, "Incorrect parameters for ^2mobkill^7\n");
-		case CMD_REQUEST_USAGE:
-		{
-			sprint(self, "\nUsage:^3 cmd mobkill\n");
-			sprint(self, "  Aim at your monster to kill it.\n");
-			return;
-		}
-	}
-}
-
-void ClientCommand_mobspawn(float request, float argc)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			entity e;
-			string tospawn;
-			float moveflag, monstercount = 0;
-			
-			moveflag = (argv(2) ? stof(argv(2)) : 1); // follow owner if not defined
-			tospawn = strtolower(argv(1));
-			
-			if(tospawn == "list")
-			{
-				sprint(self, monsterlist_reply);
-				return;
-			}
-			
-			FOR_EACH_MONSTER(e)
-			{
-				if(e.realowner == self)
-					++monstercount;
-			}
-			
-			if(autocvar_g_monsters_max <= 0 || autocvar_g_monsters_max_perplayer <= 0) { sprint(self, "Monster spawning is disabled.\n"); return; }
-			else if(!IS_PLAYER(self)) { sprint(self, "You can't spawn monsters while spectating.\n"); return; }
-			else if(MUTATOR_CALLHOOK(AllowMobSpawning)) { sprint(self, "Monster spawning is currently disabled by a mutator.\n"); return; }
-			else if(!autocvar_g_monsters) { Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_MONSTERS_DISABLED); return; }
-			else if(self.vehicle) { sprint(self, "You can't spawn monsters while driving a vehicle.\n"); return; }
-			else if(self.jb_isprisoned) { sprint(self, "You can't spawn monsters in prison!\n"); return; }
-			else if(self.frozen) { sprint(self, "You can't spawn monsters while frozen.\n"); return; }
-			else if(autocvar_g_campaign) { sprint(self, "You can't spawn monsters in campaign mode.\n"); return; }
-			else if(self.deadflag != DEAD_NO) { sprint(self, "You can't spawn monsters while dead.\n"); return; }
-			else if(monstercount >= autocvar_g_monsters_max_perplayer) { sprint(self, "You have spawned too many monsters, kill some before trying to spawn any more.\n"); return; }
-			else if(totalspawned >= autocvar_g_monsters_max) { sprint(self, "The global maximum monster count has been reached, kill some before trying to spawn any more.\n"); return; }
-			else if(tospawn != "")
-			{
-				float found = 0, i;
-				entity mon;
-				
-				for(i = MON_FIRST; i <= MON_LAST; ++i)
-				{
-					mon = get_monsterinfo(i);
-					if(mon.netname == tospawn)
-					{
-						found = TRUE;
-						break;
-					}
-				}
-
-				if(found || tospawn == "random")
-				{
-					totalspawned += 1;
-				
-					makevectors(self.v_angle);
-					WarpZone_TraceBox (CENTER_OR_VIEWOFS(self), PL_MIN, PL_MAX, CENTER_OR_VIEWOFS(self) + v_forward * 150, TRUE, self);
-					//WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 150, MOVE_NORMAL, self);
-				
-					e = spawnmonster(tospawn, 0, self, self, trace_endpos, FALSE, FALSE, moveflag);
-					
-					sprint(self, strcat("Spawned ", e.monster_name, "\n"));
-					
-					return;
-				}
-			}
-		}
-	
-		default:
-			sprint(self, "Incorrect parameters for ^2mobspawn^7\n");
-		case CMD_REQUEST_USAGE:
-		{
-			sprint(self, "\nUsage:^3 cmd mobspawn <random> <monster> [movetype]\n");
-			sprint(self, "  See 'cmd mobspawn list' for available monsters.\n");
-			sprint(self, "  Argument 'random' spawns a random monster.\n");
-			sprint(self, "  Monster will follow the owner if second argument is not defined.\n");
-			return;
-		}
-	}
-}
-
 void ClientCommand_physics(float request, float argc)
 {
 	switch(request)
@@ -540,7 +382,7 @@ void ClientCommand_selectteam(float request, float argc)
 											GetTeamCounts(self);
 											if(!TeamSmallerEqThanTeam(Team_TeamToNumber(selection), Team_TeamToNumber(self.team), self))
 											{
-												sprint(self, "Cannot change to a larger/better/shinier team\n");
+												Send_Notification(NOTIF_ONE, self, MSG_INFO, INFO_TEAMCHANGE_LARGERTEAM);
 												return;
 											}
 										}
@@ -806,9 +648,6 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("clientversion", ClientCommand_clientversion(request, arguments), "Release version of the game") \
 	CLIENT_COMMAND("mv_getpicture", ClientCommand_mv_getpicture(request, arguments), "Retrieve mapshot picture from the server") \
 	CLIENT_COMMAND("join", ClientCommand_join(request), "Become a player in the game") \
-	CLIENT_COMMAND("mobedit", ClientCommand_mobedit(request, arguments), "Edit your monster's properties") \
-	CLIENT_COMMAND("mobkill", ClientCommand_mobkill(request), "Kills your monster") \
-	CLIENT_COMMAND("mobspawn", ClientCommand_mobspawn(request, arguments), "Spawn monsters infront of yourself") \
 	CLIENT_COMMAND("physics", ClientCommand_physics(request, arguments), "Change physics set") \
 	CLIENT_COMMAND("ready", ClientCommand_ready(request), "Qualify as ready to end warmup stage (or restart server if allowed)") \
 	CLIENT_COMMAND("report", ClientCommand_report(request, arguments), "Retrieve values from the client") \

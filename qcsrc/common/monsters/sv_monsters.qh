@@ -1,52 +1,85 @@
-.string spawnmob;
-.float monster_attack;
+// =====================
+//  Monster definitions
+//   For server (SVQC)
+// =====================
 
-.entity monster_owner; // new monster owner entity, fixes non-solid monsters
 
-.float stat_monsters_killed; // stats
+// stats networking
+.float stat_monsters_killed;
 .float stat_monsters_total;
 float monsters_total;
 float monsters_killed;
-void monsters_setstatus(); // monsters.qc
-.float monster_moveflags; // checks where to move when not attacking
 
-.float wander_delay;
-.float wander_distance;
+// monster properties
+.float monster_movestate; // move target priority
+.entity monster_follow; // follow target
+.float wander_delay; // logic delay between moving while idle
+.float wander_distance; // distance to move between wander delays
+.float monster_lifetime; // monster dies instantly after this delay, set from spawn
+.float attack_range; // melee attack if closer, ranged attack if further away (TODO: separate ranged attack range?)
+.float spawn_time; // delay monster thinking until spawn animation has completed
+.float candrop; // toggle to allow disabling monster item drops
+.float monster_movestate; // will be phased out
+.float monster_moveflags;
+.string oldtarget2; // a copy of the original follow target string
+.float last_trace; // logic delay between target tracing
+.float last_enemycheck; // for checking enemy
+.float anim_finished; // will be phased out when we have proper animations system
+.vector monster_moveto; // custom destination for monster (reset to '0 0 0' when you're done!)
+.vector monster_face; // custom looking direction for monster (reset to '0 0 0' when you're done!)
+.float speed2; // run speed
+.float stopspeed;
+.float m_anim_run;
+.float m_anim_walk;
+.float m_anim_idle;
+.float oldskin;
 
-.float monster_lifetime;
+#define MONSTER_SKILLMOD(mon) (0.5 + mon.monster_skill * ((1.2 - 0.3) / 10))
 
-.float spider_slowness; // special spider timer
+// other properties
+.float monster_attack; // indicates whether an entity can be attacked by monsters
+.float spider_slowness; // effect time of slowness inflicted by spiders
 
-void monster_remove(entity mon); // removes a monster
+// monster state declarations
+const float MONSTER_MOVE_FOLLOW = 1; // monster will follow if in range, or stand still
+const float MONSTER_MOVE_WANDER = 2; // monster will ignore owner & wander around
+const float MONSTER_MOVE_SPAWNLOC = 3; // monster will move to its spawn location when not attacking
+const float MONSTER_MOVE_NOMOVE = 4; // monster simply stands still
+const float MONSTER_MOVE_ENEMY = 5; // used only as a movestate
+const float MONSTER_ATTACK_MELEE = 6;
+const float MONSTER_ATTACK_RANGED = 7;
 
-.float(float attack_type) monster_attackfunc;
-const float MONSTER_ATTACK_MELEE = 1;
-const float MONSTER_ATTACK_RANGED = 2;
-
-.float monster_skill;
+// skill declarations
 const float MONSTER_SKILL_EASY = 1;
 const float MONSTER_SKILL_MEDIUM = 3;
 const float MONSTER_SKILL_HARD = 5;
 const float MONSTER_SKILL_INSANE = 7;
 const float MONSTER_SKILL_NIGHTMARE = 10;
 
-.float fish_wasdrowning; // used to reset a drowning fish's angles if it reaches water again
+const float MONSTERSKILL_NOTEASY = 256; // monster will not spawn on skill <= 1
+const float MONSTERSKILL_NOTMEDIUM = 512; // monster will not spawn on skill 2
+const float MONSTERSKILL_NOTHARD = 1024; // monster will not spawn on skill >= 3
 
-.float candrop;
+// spawn flags
+const float MONSTERFLAG_APPEAR = 2; // delay spawn until triggered
+const float MONSTERFLAG_NORESPAWN = 4;
+const float MONSTERFLAG_FLY_VERTICAL = 8; // fly/swim vertically
+const float MONSTERFLAG_INFRONT = 32; // only check for enemies infront of us
+const float MONSTERFLAG_MINIBOSS = 64;	// monster spawns as mini-boss (also has a chance of naturally becoming one)
+const float MONSTERFLAG_INVINCIBLE = 128; // monster doesn't take damage (may be used for map objects & temporary monsters)
+const float MONSTERFLAG_SPAWNED = 16384; // flag for spawned monsters
+const float MONSTERFLAG_RESPAWNED = 32768; // flag for re-spawned monsters
 
-.float attack_range;
+// compatibility with old maps (soon to be removed)
+#define monster_lifetime lifetime
+#define monster_skill skill
 
-.float spawn_time; // stop monster from moving around right after spawning
-
-.string oldtarget2;
-.float lastshielded;
-
-.vector oldangles;
-
-.float m_armor_blockpercent;
+// functions used elsewhere
+void Monster_Remove(entity mon); // removes a monster
+void monsters_setstatus();
+float Monster_Spawn(float mon_id);
 
 // monster sounds
-// copied from player sounds
 .float msound_delay; // temporary antilag system
 #define ALLMONSTERSOUNDS \
 		_MSOUND(death) \
@@ -63,27 +96,3 @@ ALLMONSTERSOUNDS
 #undef _MSOUND
 
 float GetMonsterSoundSampleField_notFound;
-
-const float MONSTERSKILL_NOTEASY = 256; // monster will not spawn on skill <= 1
-const float MONSTERSKILL_NOTMEDIUM = 512; // monster will not spawn on skill 2
-const float MONSTERSKILL_NOTHARD = 1024; // monster will not spawn on skill >= 3
-
-// new flags
-const float MONSTERFLAG_APPEAR = 2; // delay spawn until triggered
-const float MONSTERFLAG_NORESPAWN = 4;
-const float MONSTERFLAG_FLY_VERTICAL = 8; // fly/swim vertically
-const float MONSTERFLAG_INFRONT = 32; // only check for enemies infront of us
-const float MONSTERFLAG_MINIBOSS = 64;	// monster spawns as mini-boss (also has a chance of naturally becoming one)
-const float MONSTERFLAG_INVINCIBLE = 128; // monster doesn't take damage (may be used for map objects & temporary monsters)
-const float MONSTERFLAG_SPAWNED = 16384; // flag for spawned monsters
-const float MONSTERFLAG_RESPAWNED = 32768; // flag for re-spawned monsters
-
-.float monster_movestate; // used to tell what the monster is currently doing
-const float MONSTER_MOVE_OWNER = 1; // monster will move to owner if in range, or stand still
-const float MONSTER_MOVE_WANDER = 2; // monster will ignore owner & wander around
-const float MONSTER_MOVE_SPAWNLOC = 3; // monster will move to its spawn location when not attacking
-const float MONSTER_MOVE_NOMOVE = 4; // monster simply stands still
-const float MONSTER_MOVE_ENEMY = 5; // used only as a movestate
-
-const float MONSTER_STATE_ATTACK_LEAP = 1;
-const float MONSTER_STATE_ATTACK_MELEE = 2;

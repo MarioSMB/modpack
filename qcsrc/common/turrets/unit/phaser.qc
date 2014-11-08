@@ -93,7 +93,7 @@ float t_phaser(float req)
 
 			setattachment(beam,self.tur_head,"tag_fire");
 
-			soundat (self, trace_endpos, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTEN_NORM);
+			soundat (self, trace_endpos, CH_SHOTS, W_Sound("neximpact"), VOL_BASE, ATTEN_NORM);
 
 			if (self.tur_head.frame == 0)
 				self.tur_head.frame = 1;

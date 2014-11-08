@@ -607,6 +607,19 @@ MUTATOR_HOOKFUNCTION(assault_PlayerThink)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(assault_OnEntityPreSpawn)
+{
+	switch(self.classname)
+	{
+		case "info_player_team1": return TRUE;
+		case "info_player_team2": return TRUE;
+		case "info_player_team3": return TRUE;
+		case "info_player_team4": return TRUE;
+	}
+
+	return FALSE;
+}
+
 // scoreboard setup
 void assault_ScoreRules()
 {
@@ -631,6 +644,7 @@ MUTATOR_DEFINITION(gamemode_assault)
 	MUTATOR_HOOK(HavocBot_ChooseRole, assault_BotRoles, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, assault_GetTeamCount, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerPreThink, assault_PlayerThink, CBC_ORDER_ANY);
+	MUTATOR_HOOK(OnEntityPreSpawn, assault_OnEntityPreSpawn, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

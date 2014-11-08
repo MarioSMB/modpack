@@ -107,8 +107,8 @@ void W_RocketPropelledChainsaw_Attack (void)
 	entity flash = spawn ();
 
 	W_DecreaseAmmo(WEP_CVAR(rpc, ammo));
-	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 5, "weapons/rocket_fire.wav", CH_WEAPON_A, WEP_CVAR(rpc, damage));
-	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', FALSE, 5, W_Sound("rocket_fire"), CH_WEAPON_A, WEP_CVAR(rpc, damage));
+	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 	PROJECTILE_MAKETRIGGER(missile);
 
 	missile.owner = missile.realowner = self;
@@ -185,7 +185,7 @@ float W_RocketPropelledChainsaw(float req)
 			precache_model("models/weapons/h_ok_rl.iqm");
 			precache_model("models/weapons/v_ok_rl.md3");
 			precache_model("models/weapons/g_ok_rl.md3");
-			precache_sound ("weapons/rocket_fire.wav");
+			precache_sound (W_Sound("rocket_fire"));
 			RPC_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
@@ -206,7 +206,7 @@ float W_RocketPropelledChainsaw(float req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(WEP_CVAR(rpc, ammo), "weapons/reload.wav");
+			W_Reload(WEP_CVAR(rpc, ammo), W_Sound("reload"));
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:

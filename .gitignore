@@ -4,3 +4,4 @@ qccversion.*
 Thumbs.db
 
 /qcsrc/server/precache-for-csqc.inc
+*.DS_Store

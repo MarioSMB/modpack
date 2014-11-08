@@ -187,7 +187,7 @@ float W_Vaporizer_SuperBlast_CheckHit(float queue, entity head, vector final_for
 
 void W_RocketMinsta_Explosion(vector loc)
 {
-	pointparticles(particleeffectnum("rocket_explode"), loc, '0 0 0', 1);
+	Send_Effect(EFFECT_ROCKET_EXPLODE, loc, '0 0 0', 1);
 	
 	if(accuracy_canbegooddamage(self))
 		accuracy_add(self, WEP_DEVASTATOR, autocvar_g_rm_damage, 0);
@@ -258,7 +258,7 @@ void W_Vaporizer_Attack(void)
 	vaporizer_damage = ((WEP_CVAR_PRI(vaporizer, damage) > 0) ? WEP_CVAR_PRI(vaporizer, damage) : 10000);
 
 	W_SetupShot(self, TRUE, 0, "", CH_WEAPON_A, vaporizer_damage);
-	sound (self, CH_WEAPON_A, "weapons/minstanexfire.wav", VOL_BASE * 0.8, ATTEN_NORM);
+	sound (self, CH_WEAPON_A, W_Sound("minstanexfire"), VOL_BASE * 0.8, ATTEN_NORM);
 
 	yoda = 0;
 	damage_goodhits = 0;
@@ -274,19 +274,26 @@ void W_Vaporizer_Attack(void)
 
 	self.vaporizer_lasthit = damage_goodhits;
 
-	pointparticles(particleeffectnum("nex_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	// teamcolor / hit beam effect
 	vector v;
-	string s;
 	v = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
-	s = strcat("TE_TEI_G3", Static_Team_ColorName_Upper(self.team), ((damage_goodhits) ? "_HIT" : ""));
+	float f;
+	switch(self.team)
+	{
+		case NUM_TEAM_1: f = (damage_goodhits) ? EFFECT_MINSTANEX_RED_HIT : EFFECT_MINSTANEX_RED; break;
+		case NUM_TEAM_2: f = (damage_goodhits) ? EFFECT_MINSTANEX_BLUE_HIT : EFFECT_MINSTANEX_BLUE; break;
+		case NUM_TEAM_3: f = (damage_goodhits) ? EFFECT_MINSTANEX_YELLOW_HIT : EFFECT_MINSTANEX_YELLOW; break;
+		case NUM_TEAM_4: f = (damage_goodhits) ? EFFECT_MINSTANEX_PINK_HIT : EFFECT_MINSTANEX_PINK; break;
+		default:		 f = (damage_goodhits) ? EFFECT_MINSTANEX_NEUTRAL_HIT : EFFECT_MINSTANEX_NEUTRAL; break;
+	}
 	
 	if(autocvar_g_rm)
 	if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
 		W_RocketMinsta_Explosion(trace_endpos);
-		
-	WarpZone_TrailParticles(world, particleeffectnum(s), w_shotorg, v);
+
+	Send_Effect(f, w_shotorg, v, 0);
 	
 	W_DecreaseAmmo(((g_minstagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo)));
 }
@@ -302,7 +309,7 @@ void W_Vaporizer_SuperBlast()
 	float i, queue = 0;
 	
 	// set up the shot direction
-	W_SetupShot(self, FALSE, 3, "weapons/minstanex_charge2.wav", CH_WEAPON_B, WEP_CVAR_PRI(vaporizer, damage));
+	W_SetupShot(self, FALSE, 3, W_Sound("minstanex_charge2"), CH_WEAPON_B, WEP_CVAR_PRI(vaporizer, damage));
 	vector attack_endpos = (w_shotorg + (w_shotdir * WEP_CVAR(vaporizer, superblast_distance)));
 	WarpZone_TraceLine(w_shotorg, attack_endpos, MOVE_NOMONSTERS, self);
 	vector attack_hitpos = trace_endpos;
@@ -495,8 +502,8 @@ void W_RocketMinsta_SuperRocket()
 	
 	makevectors(self.angles);
 
-	W_SetupShot_ProjectileSize (self, '-32 -32 -32', '32 32 32', FALSE, 5, "weapons/minstanex_charge2.wav", CH_WEAPON_A, minstanex_damage);
-	pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	W_SetupShot_ProjectileSize (self, '-32 -32 -32', '32 32 32', FALSE, 5, W_Sound("minstanex_charge2"), CH_WEAPON_A, minstanex_damage);
+	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	missile = WarpZone_RefSys_SpawnSameRefSys(self);
 	missile.owner = missile.realowner = self;
@@ -566,10 +573,10 @@ void W_RocketMinsta_Attack2(void)
 
 	float w = self.weapon;
 	self.weapon = WEP_ELECTRO;
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/crylink_fire.wav", CH_WEAPON_A, autocvar_g_rm_laser_damage);
+	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, W_Sound("crylink_fire"), CH_WEAPON_A, autocvar_g_rm_laser_damage);
 	self.weapon = w;
-	
-	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+
+	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
     while(counter < total)
 	{
@@ -619,10 +626,10 @@ void W_RocketMinsta_Attack3 (void)
 
 	float w = self.weapon;
 	self.weapon = WEP_ELECTRO;
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/electro_fire2.wav", CH_WEAPON_A, autocvar_g_rm_laser_damage);
+	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, W_Sound("electro_fire2"), CH_WEAPON_A, autocvar_g_rm_laser_damage);
 	self.weapon = w;
-	
-	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+
+	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
     while(counter < total)
 	{
@@ -706,7 +713,7 @@ float W_Vaporizer(float req)
 				{
 					if(weapon_prepareattack(0, WEP_CVAR_PRI(vaporizer, refire)))
 					{
-						sound(self, CH_SHOTS, "weapons/minstanex_charge_new.wav", VOL_BASE, ATTN_NORM);
+						sound(self, CH_SHOTS, W_Sound("minstanex_charge_new"), VOL_BASE, ATTN_NORM);
 						self.vaporizer_held_down = 2;
 						self.vaporizer_jumpinterval = time + 1.822;
 						weapon_thinkf(WFRAME_DONTCHANGE, WEP_CVAR_PRI(vaporizer, refire), w_ready); // update frame so we dont get stuck
@@ -789,12 +796,12 @@ float W_Vaporizer(float req)
 			precache_model("models/weapons/g_minstanex.md3");
 			precache_model("models/weapons/v_minstanex.md3");
 			precache_model("models/weapons/h_minstanex.iqm");
-			precache_sound ("weapons/minstanex_charge_new.wav");
-			precache_sound ("weapons/minstanex_charge2.wav");
-			precache_sound("weapons/minstanexfire.wav");
-			precache_sound("weapons/nexwhoosh1.wav");
-			precache_sound("weapons/nexwhoosh2.wav");
-			precache_sound("weapons/nexwhoosh3.wav");
+			precache_sound (W_Sound("minstanex_charge_new"));
+			precache_sound (W_Sound("minstanex_charge2"));
+			precache_sound(W_Sound("minstanexfire"));
+			precache_sound(W_Sound("nexwhoosh1"));
+			precache_sound(W_Sound("nexwhoosh2"));
+			precache_sound(W_Sound("nexwhoosh3"));
 			//W_Blaster(WR_INIT); // Samual: Is this really the proper thing to do? Didn't we already run this previously?
 			VAPORIZER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
@@ -837,7 +844,7 @@ float W_Vaporizer(float req)
 			else
 				used_ammo = vaporizer_ammo;
 
-			W_Reload(used_ammo, "weapons/reload.wav");
+			W_Reload(used_ammo, W_Sound("reload"));
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:

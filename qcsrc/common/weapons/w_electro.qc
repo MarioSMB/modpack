@@ -309,12 +309,12 @@ void W_Electro_Attack_Bolt(void)
 		'0 0 -3',
 		FALSE,
 		2,
-		"weapons/electro_fire.wav",
+		W_Sound("electro_fire"),
 		CH_WEAPON_A,
 		WEP_CVAR_PRI(electro, damage)
 	);
 
-	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	proj = spawn();
 	proj.classname = "electro_bolt";
@@ -350,7 +350,7 @@ void W_Electro_Orb_Touch(void)
 	else
 	{
 		//UpdateCSQCProjectile(self);
-		spamsound(self, CH_SHOTS, "weapons/electro_bounce.wav", VOL_BASE, ATTEN_NORM);
+		spamsound(self, CH_SHOTS, W_Sound("electro_bounce"), VOL_BASE, ATTEN_NORM);
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
 	}
 }
@@ -407,14 +407,14 @@ void W_Electro_Attack_Orb(void)
 		'0 0 -4',
 		FALSE,
 		2,
-		"weapons/electro_fire2.wav",
+		W_Sound("electro_fire2"),
 		CH_WEAPON_A,
 		WEP_CVAR_SEC(electro, damage)
 	);
 
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
-	pointparticles(particleeffectnum("electro_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	entity proj = spawn();
 	proj.classname = "electro_orb";
@@ -555,11 +555,11 @@ float W_Electro(float req)
 			precache_model("models/weapons/g_electro.md3");
 			precache_model("models/weapons/v_electro.md3");
 			precache_model("models/weapons/h_electro.iqm");
-			precache_sound("weapons/electro_bounce.wav");
-			precache_sound("weapons/electro_fire.wav");
-			precache_sound("weapons/electro_fire2.wav");
-			precache_sound("weapons/electro_impact.wav");
-			precache_sound("weapons/electro_impact_combo.wav");
+			precache_sound(W_Sound("electro_bounce"));
+			precache_sound(W_Sound("electro_fire"));
+			precache_sound(W_Sound("electro_fire2"));
+			precache_sound(W_Sound("electro_impact"));
+			precache_sound(W_Sound("electro_impact_combo"));
 			ELECTRO_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}
@@ -595,7 +595,7 @@ float W_Electro(float req)
 		}
 		case WR_RELOAD:
 		{
-			W_Reload(min(WEP_CVAR_PRI(electro, ammo), WEP_CVAR_SEC(electro, ammo)), "weapons/reload.wav");
+			W_Reload(min(WEP_CVAR_PRI(electro, ammo), WEP_CVAR_SEC(electro, ammo)), W_Sound("reload"));
 			return TRUE;
 		}
 		case WR_SUICIDEMESSAGE:

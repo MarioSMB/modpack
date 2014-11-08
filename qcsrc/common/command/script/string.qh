@@ -1,0 +1,131 @@
+
+// ========================================================================
+//   String functions
+// ========================================================================
+
+float ctype_space(string char)
+{
+	return char == " " || char == "\n" || char == "\t";
+}
+
+float ctype_upper(string char)
+{
+	return char == "A" || char == "B" || char == "C" || char == "D" || 
+		char == "E" || char == "F" || char == "G" || char == "H" || 
+		char == "I" || char == "J" || char == "K" || char == "L" || 
+		char == "M" || char == "N" || char == "O" || char == "P" || 
+		char == "Q" || char == "R" || char == "S" || char == "T" ||
+		char == "U" || char == "V" || char == "W" || char == "X" || 
+		char == "Y" || char == "Z";
+}
+
+float ctype_lower(string char)
+{
+	return char == "a" || char == "b" || char == "c" || char == "d" || 
+		char == "e" || char == "f" || char == "g" || char == "h" || 
+		char == "i" || char == "j" || char == "k" || char == "l" || 
+		char == "m" || char == "n" || char == "o" || char == "p" || 
+		char == "q" || char == "r" || char == "s" || char == "t" || 
+		char == "u" || char == "v" || char == "w" || char == "x" || 
+		char == "y" || char == "z";
+}
+
+float ctype_alpha(string char)
+{
+	return ctype_upper(char) || ctype_lower(char);
+}
+
+float ctype_digit(string char)
+{
+	return char == "0" || char == "1" || char == "2" || char == "3" || 
+		char == "4" || char == "5" || char == "6" || char == "7" || 
+		char == "8" || char == "9";
+}
+
+float ctype_alnum(string char)
+{
+	return ctype_alpha(char) || ctype_digit(char);
+}
+
+float ctype_identifier(string char)
+{
+	return ctype_alnum(char) || char == "_";
+}
+
+string script_ftos(float f)
+{
+	return sprintf("%.9g", f);
+}
+
+float is_numeric(string s)
+{
+	float candot = 1;
+	float canexp = 1;
+	float i;
+	string c;
+	for ( i = 0; i < strlen(s); i++ )
+	{
+		c = substring(s,i,1);
+		if ( !ctype_digit(c) )
+		{
+			if ( candot && c == "." )
+				candot = 0;
+			else if ( canexp == 1 && (c == "e" || c == "E") && i+1 < strlen(s) )
+			{
+				canexp = candot = 0;
+				c = substring(s,i+1,1);
+				if ( c == "+" || c == "-" )
+					i++;
+			}
+			else
+				return 0;
+		}
+	}
+	return 1;
+}
+
+entity float_to_entity(float n)
+{
+#ifdef SVQC 
+	if ( n ) return edict_num(n);
+#elif defined(CSQC)
+	if ( n ) return entitybyindex(n);
+#elif defined(MENUQC)
+	if ( n ) return ftoe(n);
+#endif
+	return world;
+}
+entity string_to_entity(string s)
+{
+	return float_to_entity(stof(s));
+}
+string entity_get(entity e, string field)
+{
+	float n = numentityfields();
+	float i;
+	for ( i = 0; i < n; i++ )
+	{
+		if ( entityfieldname(i) == field )
+		{
+			return getentityfieldstring(i,e);
+		}
+	}
+	return "";
+}
+
+float entity_set(entity e, string field, string value)
+{
+	if ( !e )
+		return 0;
+	float n = numentityfields();
+	float i;
+	for ( i = 0; i < n; i++ )
+	{
+		if ( entityfieldname(i) == field )
+		{
+			return putentityfieldstring(i,e,value);
+		}
+	}
+	return 0;
+}
+

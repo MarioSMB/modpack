@@ -53,9 +53,9 @@
 .string snd_key_pass;
 
 // effects
-.string toucheffect;
-.string passeffect;
-.string capeffect;
+.float toucheffectnum;
+.float passeffectnum;
+.float capeffectnum;
 
 // list of keys on the map
 entity kh_worldkeylist;

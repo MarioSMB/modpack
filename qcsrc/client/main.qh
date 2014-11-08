@@ -161,6 +161,8 @@ float fovlock;
 float cl_fps;
 float sv_showfps;
 
+string sv_announcer;
+
 float num_spectators;
 #define MAX_SPECTATORS 7
 float spectatorlist[MAX_SPECTATORS];

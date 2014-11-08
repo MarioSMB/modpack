@@ -108,6 +108,7 @@ const float ENT_CLIENT_VEHICLE = 60;
 const float ENT_CLIENT_GENERATOR = 70;
 const float ENT_CLIENT_CONTROLPOINT_ICON = 71;
 const float ENT_CLIENT_JAILCAMERA = 72;
+const float ENT_CLIENT_EFFECT = 73;
 
 const float ENT_CLIENT_HEALING_ORB = 80;
 
@@ -154,8 +155,6 @@ const float STAT_CTF_STATE = 33;
 const float STAT_WEAPONS = 35;
 const float STAT_SWITCHWEAPON = 36;
 const float STAT_GAMESTARTTIME = 37;
-const float STAT_STRENGTH_FINISHED = 38;
-const float STAT_INVINCIBLE_FINISHED = 39;
 const float STAT_PRESSED_KEYS = 42;
 const float STAT_ALLOW_OLDNEXBEAM = 43; // this stat could later contain some other bits of info, like, more server-side particle config
 const float STAT_FUEL = 44;
@@ -223,6 +222,8 @@ const float STAT_CTF_FLAGSTATUS = 97;
 const float STAT_KH_KEYSTATUS = 97;
 
 const float STAT_BUFFS = 98;
+
+const float STAT_DISCO_MODE = 200;
 
 // mod stats (1xx)
 const float STAT_REDALIVE = 100;
@@ -346,23 +347,6 @@ const vector eZ = '0 0 1';
 #define SP_FPS 10
 // game mode specific indices are not in common/, but in server/scores_rules.qc!
 
-#ifdef COMPAT_XON010_CHANNELS
-const float CH_INFO = 0; // only on world and csqc
-const float CH_TRIGGER = 0; // only on players; compat: FALSELY CONTROLLED BY "Info"
-const float CH_WEAPON_A = 1; // only on players and entities
-const float CH_WEAPON_SINGLE = 5; // only on players and entities
-const float CH_VOICE = 2; // only on players
-const float CH_BGM_SINGLE = 2; // only on csqc; compat: FALSELY CONTROLLED BY "Voice"
-const float CH_AMBIENT = 2; // only on csqc; compat: FALSELY CONTROLLED BY "Voice"
-const float CH_TRIGGER_SINGLE = 3; // only on players, entities, csqc
-const float CH_SHOTS = 4; // only on players, entities, csqc
-const float CH_SHOTS_SINGLE = 4; // only on players, entities, csqc
-const float CH_WEAPON_B = 5; // only on players and entities
-const float CH_PAIN = 6; // only on players and csqc
-const float CH_PAIN_SINGLE = 6; // only on players and csqc
-const float CH_PLAYER = 7; // only on players and entities
-const float CH_TUBA = 5; // only on csqc
-#else
 const float CH_INFO = 0;
 const float CH_TRIGGER = -3;
 const float CH_WEAPON_A = -1;
@@ -377,8 +361,8 @@ const float CH_WEAPON_B = -1;
 const float CH_PAIN = -6;
 const float CH_PAIN_SINGLE = 6;
 const float CH_PLAYER = -7;
-const float CH_TUBA = 5;
-#endif
+const float CH_PLAYER_SINGLE = 7;
+const float CH_TUBA_SINGLE = 5;
 
 const float ATTEN_NONE = 0;
 const float ATTEN_MIN = 0.015625;
@@ -425,6 +409,7 @@ const float PROJECTILE_BUMBLE_BEAM = 31;
 
 const float PROJECTILE_MAGE_SPIKE = 32;
 const float PROJECTILE_SHAMBLER_LIGHTNING = 33;
+const float PROJECTILE_SCRAG_SPIKE = 34;
 
 const float PROJECTILE_ROCKETMINSTA_LASER = 35;
 const float PROJECTILE_SUPERROCKET = 36;

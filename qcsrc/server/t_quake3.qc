@@ -113,18 +113,18 @@ void spawnfunc_target_give()
 	InitializeEntity(self, target_give_init, INITPRIO_FINDTARGET);
 }
 
-//void spawnfunc_item_flight()       /* not supported */
-//void spawnfunc_item_haste()        /* not supported */
+//void spawnfunc_item_flight()       /* handled by buffs mutator */
+//void spawnfunc_item_haste()        /* handled by buffs mutator */
 //void spawnfunc_item_health()       /* handled in t_quake.qc */
 //void spawnfunc_item_health_large() /* handled in t_items.qc */
 //void spawnfunc_item_health_small() /* handled in t_items.qc */
 //void spawnfunc_item_health_mega()  /* handled in t_items.qc */
-//void spawnfunc_item_invis()        /* not supported */
-//void spawnfunc_item_regen()        /* not supported */
+//void spawnfunc_item_invis()        /* handled by buffs mutator */
+//void spawnfunc_item_regen()        /* handled by buffs mutator */
 
 // CTF spawnfuncs handled in mutators/gamemode_ctf.qc now
 
-void spawnfunc_item_flight()         { spawnfunc_item_jetpack();       }
+//void spawnfunc_item_flight()         { spawnfunc_item_jetpack();       }
 
 .float notteam;
 .float notsingle;
@@ -168,6 +168,7 @@ float DoesQ3ARemoveThisEntity()
 		if(maxclients == 1)
 			gametypename = "single";
 		// we do not have the other types (oneflag, obelisk, harvester, teamtournament)
+		// actually, we have oneflag, but it can't be detected this early (map based...)
 		if(strstrofs(self.gametype, gametypename, 0) < 0)
 			return 1;
 	}

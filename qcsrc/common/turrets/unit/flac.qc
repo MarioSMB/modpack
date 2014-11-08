@@ -40,7 +40,7 @@ float t_flac(float req)
 
 			turret_tag_fire_update();
 
-			proj = turret_projectile("weapons/hagar_fire.wav", 5, 0, DEATH_TURRET_FLAC, PROJECTILE_HAGAR, TRUE, TRUE);
+			proj = turret_projectile(W_Sound("hagar_fire"), 5, 0, DEATH_TURRET_FLAC, PROJECTILE_HAGAR, TRUE, TRUE);
 			pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 			proj.think	  = turret_flac_projectile_think_explode;
 			proj.nextthink  = time + self.tur_impacttime + (random() * 0.01 - random() * 0.01);

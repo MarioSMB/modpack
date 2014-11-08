@@ -99,7 +99,7 @@ void W_Fireball_Explode(void)
 				accuracy_add(self.realowner, WEP_FIREBALL, 0, WEP_CVAR_PRI(fireball, bfgdamage) * points);
 
 			Damage(e, self, self.realowner, WEP_CVAR_PRI(fireball, bfgdamage) * points, self.projectiledeathtype | HITTYPE_BOUNCE | HITTYPE_SPLASH, e.origin + e.view_ofs, WEP_CVAR_PRI(fireball, bfgforce) * dir);
-			pointparticles(particleeffectnum("fireball_bfgdamage"), e.origin, -1 * dir, 1);
+			Send_Effect(EFFECT_FIREBALL_BFGDAMAGE, e.origin, -1 * dir, 1);
 		}
 	}
 
@@ -141,8 +141,7 @@ void W_Fireball_LaserPlay(float dt, float dist, float damage, float edgedamage, 
 		d = vlen(WarpZone_UnTransformOrigin(RandomSelection_chosen_ent, self.origin) - RandomSelection_chosen_ent.fireball_impactvec);
 		d = damage + (edgedamage - damage) * (d / dist);
 		Fire_AddDamage(RandomSelection_chosen_ent, self.realowner, d * burntime, burntime, self.projectiledeathtype | HITTYPE_BOUNCE);
-		//trailparticles(self, particleeffectnum("fireball_laser"), self.origin, RandomSelection_chosen_ent.fireball_impactvec);
-		pointparticles(particleeffectnum("fireball_laser"), self.origin, RandomSelection_chosen_ent.fireball_impactvec - self.origin, 1);
+		Send_Effect(EFFECT_FIREBALL_LASER, self.origin, RandomSelection_chosen_ent.fireball_impactvec - self.origin, 1);
 	}
 }
 
@@ -181,9 +180,9 @@ void W_Fireball_Attack1(void)
 {
 	entity proj;
 
-	W_SetupShot_ProjectileSize(self, '-16 -16 -16', '16 16 16', FALSE, 2, "weapons/fireball_fire2.wav", CH_WEAPON_A, WEP_CVAR_PRI(fireball, damage) + WEP_CVAR_PRI(fireball, bfgdamage));
+	W_SetupShot_ProjectileSize(self, '-16 -16 -16', '16 16 16', FALSE, 2, W_Sound("fireball_fire2"), CH_WEAPON_A, WEP_CVAR_PRI(fireball, damage) + WEP_CVAR_PRI(fireball, bfgdamage));
 
-	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_FIREBALL_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	proj = spawn();
 	proj.classname = "plasma_prim";
@@ -220,7 +219,7 @@ void W_Fireball_AttackEffect(float i, vector f_diff)
 {
 	W_SetupShot_ProjectileSize(self, '-16 -16 -16', '16 16 16', FALSE, 0, "", 0, 0);
 	w_shotorg += f_diff_x * v_up + f_diff_y * v_right;
-	pointparticles(particleeffectnum("fireball_preattack_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_FIREBALL_PRE_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 }
 
 void W_Fireball_Attack1_Frame4(void)
@@ -250,7 +249,7 @@ void W_Fireball_Attack1_Frame1(void)
 void W_Fireball_Attack1_Frame0(void)
 {
 	W_Fireball_AttackEffect(0, '-1.25 -3.75 0');
-	sound(self, CH_WEAPON_SINGLE, "weapons/fireball_prefire2.wav", VOL_BASE, ATTEN_NORM);
+	sound(self, CH_WEAPON_SINGLE, W_Sound("fireball_prefire2"), VOL_BASE, ATTEN_NORM);
 	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(fireball, animtime), W_Fireball_Attack1_Frame1);
 }
 
@@ -315,11 +314,11 @@ void W_Fireball_Attack2(void)
 			f_diff = '+1.25 +3.75 0';
 			break;
 	}
-	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', FALSE, 2, "weapons/fireball_fire.wav", CH_WEAPON_A, WEP_CVAR_SEC(fireball, damage));
+	W_SetupShot_ProjectileSize(self, '-4 -4 -4', '4 4 4', FALSE, 2, W_Sound("fireball_fire"), CH_WEAPON_A, WEP_CVAR_SEC(fireball, damage));
 	traceline(w_shotorg, w_shotorg + f_diff_x * v_up + f_diff_y * v_right, MOVE_NORMAL, self);
 	w_shotorg = trace_endpos;
 
-	pointparticles(particleeffectnum("fireball_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+	Send_Effect(EFFECT_FIREBALL_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	proj = spawn();
 	proj.owner = proj.realowner = self;
@@ -402,9 +401,9 @@ float W_Fireball(float req)
 			precache_model("models/weapons/v_fireball.md3");
 			precache_model("models/weapons/h_fireball.iqm");
 			precache_model("models/sphere/sphere.md3");
-			precache_sound("weapons/fireball_fire.wav");
-			precache_sound("weapons/fireball_fire2.wav");
-			precache_sound("weapons/fireball_prefire2.wav");
+			precache_sound(W_Sound("fireball_fire"));
+			precache_sound(W_Sound("fireball_fire2"));
+			precache_sound(W_Sound("fireball_prefire2"));
 			FIREBALL_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}

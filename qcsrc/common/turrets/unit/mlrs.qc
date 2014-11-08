@@ -22,7 +22,7 @@ float t_mlrs(float req)
 			entity missile;
 
 			turret_tag_fire_update();
-			missile = turret_projectile("weapons/rocket_fire.wav", 6, 10, DEATH_TURRET_MLRS, PROJECTILE_ROCKET, TRUE, TRUE);
+			missile = turret_projectile(W_Sound("rocket_fire"), 6, 10, DEATH_TURRET_MLRS, PROJECTILE_ROCKET, TRUE, TRUE);
 			missile.nextthink = time + max(self.tur_impacttime,(self.shot_radius * 2) / self.shot_speed);
 			missile.missile_flags = MIF_SPLASH;
 			te_explosion (missile.origin);

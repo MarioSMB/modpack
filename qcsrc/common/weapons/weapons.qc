@@ -329,3 +329,12 @@ float GetAmmoStat(.float ammotype)
 	}
 }
 #endif
+
+#ifdef SVQC
+string W_Sound(string w_snd)
+{
+	// TODO: CSQC?
+	if(cvar_string("sv_weapons_sounddir") == "" || !cvar_type("sv_weapons_sounddir")) { return strcat("weapons/", w_snd, ".wav"); }
+	return sprintf("weapons_%s/%s.wav", cvar_string("sv_weapons_sounddir"), w_snd);
+}
+#endif
