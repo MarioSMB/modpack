@@ -99,7 +99,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 			Send_WeaponComplain (cl, wpn, 2);
 		}
 
-		play2(cl, W_Sound("unavailable.wav"));
+		play2(cl, W_Sound("unavailable"));
 	}
 	return FALSE;
 }
