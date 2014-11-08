@@ -570,8 +570,16 @@ vector Monster_Move_Target(entity targ)
 		}
 		case MONSTER_MOVE_NOMOVE:
 		{
-			self.monster_movestate = MONSTER_MOVE_NOMOVE;
-			self.last_trace = time + 2;
+			if(self.monster_moveto)
+			{
+				self.last_trace = time + 0.5;
+				return self.monster_moveto;
+			}
+			else
+			{
+				self.monster_movestate = MONSTER_MOVE_NOMOVE;
+				self.last_trace = time + 2;
+			}
 			return self.origin;
 		}
 		default:
