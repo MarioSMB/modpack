@@ -319,7 +319,7 @@ void W_MineLayer_Attack(void)
 		{
 			// the refire delay keeps this message from being spammed
 			Send_Notification(NOTIF_ONE, self, MSG_MULTI, WEAPON_MINELAYER_LIMIT, WEP_CVAR(minelayer, limit));
-			play2(self, W_Sound("unavailable"));
+			play2(self, "weapons/unavailable.wav");
 			return;
 		}
 	}
