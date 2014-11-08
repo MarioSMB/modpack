@@ -802,7 +802,7 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed, float manim_r
 		self.state = 0; // attack is over
 
 	if(self.state != MONSTER_ATTACK_MELEE) // don't move if set
-	if(time >= self.last_trace || self.enemy) // update enemy instantly
+	if(time >= self.last_trace || self.enemy || self.piggybacker) // update enemy or rider instantly
 		self.moveto = Monster_Move_Target(targ);
 
 	if(!self.enemy)

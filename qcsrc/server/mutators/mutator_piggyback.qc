@@ -37,7 +37,7 @@ void pb_Attach(entity host, entity slave)
 		host.pb_oldmoveflags = host.monster_moveflags;
 		host.pb_oldverticalfly = (host.spawnflags & MONSTERFLAG_FLY_VERTICAL);
 		host.spawnflags |= MONSTERFLAG_FLY_VERTICAL;
-		host.monster_moveflags = MONSTER_MOVE_WANDER;
+		host.monster_moveflags = MONSTER_MOVE_NOMOVE;
 	}
 	
 	RemoveGrapplingHook(slave);
