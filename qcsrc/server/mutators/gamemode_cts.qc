@@ -272,6 +272,12 @@ MUTATOR_HOOKFUNCTION(cts_WantWeapon)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(cts_AllowMobSpawning)
+{
+	ret_string = "You cannot spawn monsters in CTS";
+	return TRUE;
+}
+
 void cts_Initialize()
 {
 	g_cloaked = 1; // always enable cloak in CTS
@@ -296,6 +302,7 @@ MUTATOR_DEFINITION(gamemode_cts)
 	MUTATOR_HOOK(PlayerDamage_Calculate, cts_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidPlayerScore_Clear, cts_ForbidClearPlayerScore, CBC_ORDER_ANY);
 	MUTATOR_HOOK(WantWeapon, cts_WantWeapon, CBC_ORDER_ANY);
+	MUTATOR_HOOK(AllowMobSpawning, cts_AllowMobSpawning, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

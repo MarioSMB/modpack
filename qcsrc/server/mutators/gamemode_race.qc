@@ -269,6 +269,12 @@ MUTATOR_HOOKFUNCTION(race_CountFrags)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(race_AllowMobSpawning)
+{
+	ret_string = "No monsters in a race!";
+	return TRUE;
+}
+
 void race_Initialize()
 {
 	race_ScoreRules();
@@ -291,6 +297,7 @@ MUTATOR_DEFINITION(gamemode_race)
 	MUTATOR_HOOK(ForbidPlayerScore_Clear, race_ForbidClearPlayerScore, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, race_GetTeamCount, CBC_ORDER_ANY);
 	MUTATOR_HOOK(Scores_CountFragsRemaining, race_CountFrags, CBC_ORDER_ANY);
+	MUTATOR_HOOK(AllowMobSpawning, race_AllowMobSpawning, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
