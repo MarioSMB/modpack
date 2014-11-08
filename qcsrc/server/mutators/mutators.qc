@@ -4,7 +4,7 @@ void mutators_add()
 		{ if(cvar(mut_cvar) && dependence) { MUTATOR_ADD(mut_name); } }
 
 	CHECK_MUTATOR_ADD("g_dodging", mutator_dodging, 1);
-	CHECK_MUTATOR_ADD("g_spawn_near_teammate", mutator_spawn_near_teammate, teamplay);
+	CHECK_MUTATOR_ADD("g_spawn_near_teammate", mutator_spawn_near_teammate, teamplay && !g_assault);
 	CHECK_MUTATOR_ADD("g_physical_items", mutator_physical_items, 1);
 	CHECK_MUTATOR_ADD("g_touchexplode", mutator_touchexplode, 1);
 	CHECK_MUTATOR_ADD("g_minstagib", mutator_minstagib, !g_nexball);

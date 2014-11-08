@@ -1002,6 +1002,12 @@ MUTATOR_HOOKFUNCTION(nexball_WantWeapon)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(nexball_AllowMobSpawning)
+{
+	ret_string = "You cannot spawn monsters in nexball!";
+	return TRUE;
+}
+
 MUTATOR_DEFINITION(gamemode_nexball)
 {
 	MUTATOR_HOOK(PlayerDies, nexball_BallDrop, CBC_ORDER_ANY);
@@ -1015,6 +1021,7 @@ MUTATOR_DEFINITION(gamemode_nexball)
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, nexball_ForbidThrowing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, nexball_FilterItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(WantWeapon, nexball_WantWeapon, CBC_ORDER_ANY);
+	MUTATOR_HOOK(AllowMobSpawning, nexball_AllowMobSpawning, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
