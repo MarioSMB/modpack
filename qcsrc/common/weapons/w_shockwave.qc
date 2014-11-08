@@ -7,7 +7,7 @@ REGISTER_WEAPON(
 /* flags     */ WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN | WEP_FLAG_CANCLIMB | WEP_FLAG_MUTATORBLOCKED,
 /* rating    */ BOT_PICKUP_RATING_LOW,
 /* color     */ '0.5 0.25 0',
-/* modelname */ "shotguncannon",
+/* modelname */ "shotgun",
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairshotgun 0.7",
 /* wepimg    */ "weaponshotgun",
@@ -709,9 +709,9 @@ float W_Shockwave(float req)
 		case WR_INIT:
 		{
 			precache_model("models/uziflash.md3");
-			precache_model("models/weapons/g_shotguncannon.md3");
-			precache_model("models/weapons/v_shotguncannon.md3");
-			precache_model("models/weapons/h_shotguncannon.iqm");
+			precache_model("models/weapons/g_shotgun.md3");
+			precache_model("models/weapons/v_shotgun.md3");
+			precache_model("models/weapons/h_shotgun.iqm");
 			precache_sound("misc/itempickup.wav");
 			precache_sound(W_Sound("lasergun_fire"));
 			SHOCKWAVE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)

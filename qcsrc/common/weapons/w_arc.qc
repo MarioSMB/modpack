@@ -7,7 +7,7 @@ REGISTER_WEAPON(
 /* flags     */ WEP_FLAG_NORMAL,
 /* rating    */ BOT_PICKUP_RATING_HIGH,
 /* color     */ '1 1 1',
-/* modelname */ "hlac",
+/* modelname */ "shotguncannon",
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairhlac 0.7",
 /* wepimg    */ "weaponhlac",
@@ -623,9 +623,9 @@ float W_Arc(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/weapons/g_hlac.md3");
-			precache_model("models/weapons/v_hlac.md3");
-			precache_model("models/weapons/h_hlac.iqm");
+			precache_model("models/weapons/g_shotguncannon.md3");
+			precache_model("models/weapons/v_shotguncannon.md3");
+			precache_model("models/weapons/h_shotguncannon.iqm");
 			precache_sound(W_Sound("lgbeam_fire"));
 			if(!arc_shotorigin[0])
 			{
