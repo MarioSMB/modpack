@@ -460,7 +460,7 @@ void Monster_Miniboss_Check()
 		self.health += autocvar_g_monsters_miniboss_healthboost;
 		self.effects |= EF_RED;
 		if(!self.weapon)
-			self.weapon = WEP_NEX;
+			self.weapon = WEP_VORTEX;
 	}
 }
 
@@ -846,9 +846,9 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed, float manim_r
 		if(vlen(self.velocity) <= 30)
 			self.frame = manim_idle;
 	}
-	
+
 	self.steerto = steerlib_attract2(((self.monster_face) ? self.monster_face : self.moveto), 0.5, 500, 0.95);
-	
+
 	vector real_angle = vectoangles(self.steerto) - self.angles;
 	float turny = 25;
 	if(self.state == MONSTER_ATTACK_MELEE)
@@ -867,7 +867,7 @@ void Monster_Remove(entity mon)
 	if(!mon) { return; }
 
 	if(!MUTATOR_CALLHOOK(MonsterRemove))
-		pointparticles(particleeffectnum("spawn_event_neutral"), mon.origin, '0 0 0', 1);
+		Send_Effect(EFFECT_SPAWN_NEUTRAL, mon.origin, '0 0 0', 1);
 
 	if(mon.weaponentity) { remove(mon.weaponentity); }
 	if(mon.iceblock) { remove(mon.iceblock); }
@@ -1128,7 +1128,7 @@ float Monster_Spawn_Setup()
 
 	if(IS_PLAYER(self.monster_follow))
 		self.effects |= EF_DIMLIGHT;
-		
+
 	if(!self.wander_delay) { self.wander_delay = 2; }
 	if(!self.wander_distance) { self.wander_distance = 600; }
 
@@ -1242,7 +1242,7 @@ float Monster_Spawn(float mon_id)
 	if(mon.spawnflags & MONSTER_SIZE_BROKEN)
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 		self.scale *= 1.3;
-		
+
 	setsize(self, mon.mins * self.scale, mon.maxs * self.scale);
 
 	self.ticrate = bound(sys_frametime, ((!self.ticrate) ? autocvar_g_monsters_think_delay : self.ticrate), 60);

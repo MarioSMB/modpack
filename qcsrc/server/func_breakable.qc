@@ -46,7 +46,7 @@ void LaunchDebris (string debrisname, vector force)
 	           + '1 0 0' * random() * (self.absmax_x - self.absmin_x)
 	           + '0 1 0' * random() * (self.absmax_y - self.absmin_y)
 	           + '0 0 1' * random() * (self.absmax_z - self.absmin_z));
-	setmodel(dbr, debrisname );
+	setmodel (dbr, debrisname );
 	dbr.skin = self.debrisskin;
 	dbr.colormap = self.colormap; // inherit team colors
 	dbr.owner = self; // do not be affected by our own explosion
@@ -173,7 +173,7 @@ void func_breakable_destroy() {
 		sound (self, CH_TRIGGER, self.noise, VOL_BASE, ATTEN_NORM);
 
 	if(self.dmg)
-		RadiusDamage(self, activator, self.dmg, self.dmg_edge, self.dmg_radius, self, self.dmg_force, DEATH_HURTTRIGGER, world);
+		RadiusDamage(self, activator, self.dmg, self.dmg_edge, self.dmg_radius, self, world, self.dmg_force, DEATH_HURTTRIGGER, world);
 
 	if(self.cnt)
 		pointparticles(self.cnt, self.absmin * 0.5 + self.absmax * 0.5, '0 0 0', self.count);
@@ -277,7 +277,7 @@ void spawnfunc_func_breakable() {
 
 	self.reset = func_breakable_reset;
 	func_breakable_reset();
-
+	
 	CSQCMODEL_AUTOINIT();
 }
 

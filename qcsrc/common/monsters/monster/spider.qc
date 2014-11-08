@@ -34,10 +34,10 @@ void M_Spider_Attack_Web_Explode()
 	entity e;
 	if(self)
 	{
-		pointparticles(particleeffectnum("electro_impact"), self.origin, '0 0 0', 1);
-		RadiusDamage(self, self.realowner, 0, 0, 25, world, 25, self.projectiledeathtype, world);
+		Send_Effect(EFFECT_ELECTRO_IMPACT, self.origin, '0 0 0', 1);
+		RadiusDamage(self, self.realowner, 0, 0, 25, world, world, 25, self.projectiledeathtype, world);
 
-		for(e = findradius(self.origin, 25); e; e = e.chain) if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0) if(e.monsterid != MON_SPIDER)
+		for(e = findradius(self.origin, 25); e; e = e.chain) if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0) if(e.monsterid != self.realowner.monsterid)
 			e.spider_slowness = time + (autocvar_g_monster_spider_attack_web_damagetime);
 
 		remove(self);
@@ -72,7 +72,7 @@ void M_Spider_Attack_Web()
 	//proj.glow_size = 50;
 	//proj.glow_color = 45;
 	proj.movetype = MOVETYPE_BOUNCE;
-	W_SetupProjectileVelocityEx(proj, v_forward, v_up, (autocvar_g_monster_spider_attack_web_speed), (autocvar_g_monster_spider_attack_web_speed_up), 0, 0, FALSE);
+	W_SetupProjVelocity_Explicit(proj, v_forward, v_up, (autocvar_g_monster_spider_attack_web_speed), (autocvar_g_monster_spider_attack_web_speed_up), 0, 0, FALSE);
 	proj.touch = M_Spider_Attack_Web_Touch;
 	setsize(proj, '-4 -4 -4', '4 4 4');
 	proj.takedamage = DAMAGE_NO;

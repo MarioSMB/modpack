@@ -29,14 +29,16 @@
 	EFFECT(0, EFFECT_SEEKER_MUZZLEFLASH,		"seeker_muzzleflash") \
 	EFFECT(0, EFFECT_SHOTGUN_MUZZLEFLASH,		"shotgun_muzzleflash") \
 	EFFECT(0, EFFECT_GRENADE_MUZZLEFLASH,		"grenadelauncher_muzzleflash") \
+	EFFECT(0, EFFECT_CRYLINK_JOINEXPLODE,		"crylink_joinexplode") \
 	EFFECT(0, EFFECT_CRYLINK_MUZZLEFLASH,		"crylink_muzzleflash") \
-	EFFECT(0, EFFECT_NEX_MUZZLEFLASH,			"nex_muzzleflash") \
+	EFFECT(0, EFFECT_VORTEX_MUZZLEFLASH,		"nex_muzzleflash") \
 	EFFECT(0, EFFECT_HOOK_MUZZLEFLASH,			"grapple_muzzleflash") \
 	EFFECT(0, EFFECT_HOOK_IMPACT,				"grapple_impact") \
 	EFFECT(0, EFFECT_ROCKET_EXPLODE,			"rocket_explode") \
 	EFFECT(0, EFFECT_ROCKET_GUIDE,				"rocket_guide") \
 	EFFECT(0, EFFECT_ROCKET_MUZZLEFLASH,		"rocketlauncher_muzzleflash") \
 	EFFECT(0, EFFECT_FIREBALL_LASER,			"fireball_laser") \
+	EFFECT(0, EFFECT_FIREBALL_EXPLODE,			"fireball_explode") \
 	EFFECT(0, EFFECT_FIREBALL_BFGDAMAGE,		"fireball_bfgdamage") \
 	EFFECT(0, EFFECT_FIREBALL_MUZZLEFLASH,		"fireball_muzzleflash") \
 	EFFECT(0, EFFECT_FIREBALL_PRE_MUZZLEFLASH,	"fireball_preattack_muzzleflash") \

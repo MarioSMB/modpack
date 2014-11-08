@@ -6,7 +6,7 @@ void spawnfunc_item_minst_cells (void)
 
 	StartItem ("models/items/a_cells.md3",
 			   "misc/itempickup.wav", 45, 0,
-			   "MinstaNex Ammo", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
+			   "Vaporizer Ammo", IT_CELLS, 0, 0, generic_pickupevalfunc, 100);
 }
 
 void spawnfunc_item_minst_rockets (void)
@@ -18,7 +18,7 @@ void spawnfunc_item_minst_rockets (void)
 
 	StartItem ("models/items/a_rockets.md3",
 			   "misc/itempickup.wav", 45, 0,
-			   "MinstaNex Ammo", IT_ROCKETS, 0, 0, generic_pickupevalfunc, 100);
+			   "Vaporizer Ammo", IT_ROCKETS, 0, 0, generic_pickupevalfunc, 100);
 }
 
 void minstagib_item_supercells() 
@@ -152,7 +152,7 @@ MUTATOR_HOOKFUNCTION(minstagib_MonsterSpawn)
 	// always refill ammo
 	if(self.monsterid == MON_MAGE)
 		self.skin = 1;
-
+	
 	return FALSE;
 }
 
@@ -207,7 +207,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 	if(frag_deathtype == DEATH_NOAMMO)
 		return FALSE;
 
-	if((autocvar_g_rm || autocvar_g_rm_laser == 2) && (DEATH_ISWEAPON(frag_deathtype, WEP_ROCKET_LAUNCHER) || DEATH_ISWEAPON(frag_deathtype, WEP_ELECTRO)) && (frag_target == frag_attacker || frag_target.classname == "nade"))
+	if((autocvar_g_rm || autocvar_g_rm_laser == 2) && (DEATH_ISWEAPON(frag_deathtype, WEP_DEVASTATOR) || DEATH_ISWEAPON(frag_deathtype, WEP_ELECTRO)) && (frag_target == frag_attacker || frag_target.classname == "nade"))
 		frag_damage = 0; // no self/nade damage?
 		
 	if((autocvar_g_rm || autocvar_g_rm_laser == 2) && (DEATH_ISWEAPON(frag_deathtype, WEP_ELECTRO)) && forbidWeaponUse(frag_attacker) == 2)
@@ -230,7 +230,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 
 		if(IS_PLAYER(frag_attacker))
 		{
-			if(DEATH_ISWEAPON(frag_deathtype, WEP_MINSTANEX))
+			if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
 			if(frag_target.armorvalue)
 			{
 				frag_target.armorvalue -= 1;
@@ -240,7 +240,8 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 				frag_target.damage_dealt += 1; // TODO change this to a future specific hitsound for armor hit
 			}
 
-			if(DEATH_ISWEAPON(frag_deathtype, WEP_LASER))
+			if(frag_deathtype & WEP_BLASTER)
+			if(frag_deathtype & HITTYPE_SECONDARY)
 			{
 				frag_damage = 0;
 				frag_mirrordamage = 0;
@@ -282,7 +283,7 @@ MUTATOR_HOOKFUNCTION(minstagib_SetStartItems)
 
 	start_health = warmup_start_health = 100;
 	start_armorvalue = warmup_start_armorvalue = 0;
-	start_weapons = warmup_start_weapons = ((cvar("g_minstagib_withmines")) ? (WEPSET_MINSTANEX | WEPSET_MINE_LAYER) : WEPSET_MINSTANEX);
+	start_weapons = warmup_start_weapons = ((cvar("g_minstagib_withmines")) ? (WEPSET_VAPORIZER | WEPSET_MINE_LAYER) : WEPSET_VAPORIZER);
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;
 
 	return FALSE;
@@ -298,13 +299,13 @@ MUTATOR_HOOKFUNCTION(minstagib_FilterItem)
 	if(!autocvar_g_minstagib_use_normal_ammo || !cvar("g_minstagib_withmines"))
 		return TRUE;
 
-	if(self.weapon == WEP_MINSTANEX && self.classname == "droppedweapon")
+	if(self.weapon == WEP_VAPORIZER && self.classname == "droppedweapon")
 	{
 		self.ammo_cells = autocvar_g_minstagib_ammo_drop;
 		return FALSE;
 	}
 
-	if(self.weapon == WEP_ROCKET_LAUNCHER || self.weapon == WEP_NEX)
+	if(self.weapon == WEP_DEVASTATOR || self.weapon == WEP_VORTEX)
 	{
 		entity e = spawn(), oldself;
 		
@@ -348,7 +349,7 @@ MUTATOR_HOOKFUNCTION(minstagib_ItemCountdown)
 
 MUTATOR_HOOKFUNCTION(minstagib_PlayerDies)
 {	
-	if(DEATH_ISWEAPON(frag_deathtype, WEP_MINSTANEX) || (autocvar_g_rm && DEATH_ISWEAPON(frag_deathtype, WEP_ROCKET_LAUNCHER)) || (((autocvar_g_rm && autocvar_g_rm_laser == 1) || autocvar_g_rm_laser == 2) && DEATH_ISWEAPON(frag_deathtype, WEP_ELECTRO)))
+	if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER) || (autocvar_g_rm && DEATH_ISWEAPON(frag_deathtype, WEP_DEVASTATOR)) || (((autocvar_g_rm && autocvar_g_rm_laser == 1) || autocvar_g_rm_laser == 2) && DEATH_ISWEAPON(frag_deathtype, WEP_ELECTRO)))
 		frag_damage = 1000; // always gib if it was a minstanex death
 
 	return FALSE;
@@ -385,7 +386,7 @@ MUTATOR_HOOKFUNCTION(minstagib_ItemTouch)
 
 MUTATOR_HOOKFUNCTION(minstagib_OnEntityPreSpawn)
 {
-	if(autocvar_g_balance_minstanex_superblast)
+	if(WEP_CVAR(vaporizer, charge))
 	if(self.classname == "item_cells" || self.classname == "item_minst_cells")
 	if(random() <= 0.5)
 		minstagib_item_supercells();

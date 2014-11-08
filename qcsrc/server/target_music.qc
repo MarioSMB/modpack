@@ -28,10 +28,11 @@ void target_music_use()
 {
 	if(!activator)
 		return;
-	if(!IS_REAL_CLIENT(activator))
-		return;
-	msg_entity = activator;
-	target_music_sendto(MSG_ONE, 1);
+	if(IS_REAL_CLIENT(activator))
+	{
+		msg_entity = activator;
+		target_music_sendto(MSG_ONE, 1);
+	}
 	entity head;
 	FOR_EACH_SPEC(head) if(head.enemy == activator) { msg_entity = head; target_music_sendto(MSG_ONE, 1); }
 }

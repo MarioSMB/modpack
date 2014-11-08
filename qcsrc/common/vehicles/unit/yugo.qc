@@ -351,7 +351,7 @@ void yugo_blowup()
 
 	RadiusDamage (self, self.enemy, autocvar_g_vehicle_yugo_blowup_coredamage,
 					autocvar_g_vehicle_yugo_blowup_edgedamage,
-					autocvar_g_vehicle_yugo_blowup_radius, world,
+					autocvar_g_vehicle_yugo_blowup_radius, world, world,
 					autocvar_g_vehicle_yugo_blowup_forceintensity,
 					DEATH_VH_WAKI_DEATH, world);
 
@@ -431,7 +431,7 @@ float v_yugo(float req)
 			self.cnt			= 1 + random() * 2;
 			self.touch			= yugo_deadtouch;
 
-			pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
+			Send_Effect(EFFECT_EXPLOSION_MEDIUM, self.origin, '0 0 0', 1);
 
 			if(random() < 0.5)
 				self.avelocity_z = 32;

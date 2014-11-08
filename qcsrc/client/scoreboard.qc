@@ -1033,7 +1033,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 	if(rows == 2)
 		pos_x += weapon_width / 2;
 
-	if(switchweapon == WEP_MINSTANEX)
+	if(switchweapon == WEP_VAPORIZER)
 		g_minstagib = 1; // TODO: real detection for minstagib?
 
 	if(autocvar_scoreboard_accuracy_nocolors)
@@ -1058,7 +1058,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			weapon_alpha = 0.2 * scoreboard_alpha_fg;
 
 		// weapon icon
-		drawpic_aspect_skin(pos, strcat("weapon", self.netname), '1 0 0' * weapon_width + '0 1 0' * weapon_height, '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
+		drawpic_aspect_skin(pos, self.model2, '1 0 0' * weapon_width + '0 1 0' * weapon_height, '1 1 1', weapon_alpha, DRAWFLAG_NORMAL);
 		// the accuracy
 		if(weapon_stats >= 0) {
 			weapons_with_stats += 1;

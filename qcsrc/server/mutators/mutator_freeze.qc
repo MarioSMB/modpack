@@ -177,7 +177,7 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 		if(n && self.frozen == 1) // OK, there is at least one teammate reviving us
 		{
 			self.revive_progress = bound(0, self.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
-			self.health = max(1, self.revive_progress * autocvar_g_balance_health_start);
+			self.health = max(1, self.revive_progress * start_health);
 
 			if(self.revive_progress >= 1)
 			{
@@ -218,7 +218,7 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 		else if(!n && self.frozen == 1) // only if no teammate is nearby will we reset
 		{
 			self.revive_progress = bound(0, self.revive_progress - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
-			self.health = max(1, self.revive_progress * autocvar_g_balance_health_start);
+			self.health = max(1, self.revive_progress * start_health);
 		}
 		else if(!n && !self.frozen)
 		{
@@ -232,7 +232,7 @@ MUTATOR_HOOKFUNCTION(freeze_PlayerPreThink)
 			rspeed *= (random() * autocvar_g_freeze_revive_speed_random);
 
 		self.revive_progress = bound(0, self.revive_progress + frametime * rspeed, 1);
-		self.health = max(1, self.revive_progress * autocvar_g_balance_health_start);
+		self.health = max(1, self.revive_progress * start_health);
 
 		if(self.health >= autocvar_g_freeze_revive_minhealth)
 			button_pressed = (self.BUTTON_JUMP || self.BUTTON_USE); // we're about to defrost, only detect jumps

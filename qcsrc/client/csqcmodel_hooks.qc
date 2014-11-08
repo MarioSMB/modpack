@@ -490,8 +490,14 @@ void CSQCModel_Effects_PreUpdate(void)
 	self.effects = self.csqcmodel_effects;
 	self.modelflags = self.csqcmodel_modelflags;
 }
+void Reset_ArcBeam(void);
 void CSQCModel_Effects_PostUpdate(void)
 {
+	if (self == csqcplayer) {
+		if (self.csqcmodel_teleported) {
+			Reset_ArcBeam();
+		}
+	}
 	self.csqcmodel_effects = self.effects;
 	self.csqcmodel_modelflags = self.modelflags;
 	self.effects = 0;

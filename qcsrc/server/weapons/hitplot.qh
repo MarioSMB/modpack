@@ -1,0 +1,5 @@
+.float hitplotfh;
+
+void W_HitPlotAnalysis(entity player, vector screenforward, vector screenright, vector screenup);
+void W_HitPlotOpen(entity player);
+void W_HitPlotClose(entity player);

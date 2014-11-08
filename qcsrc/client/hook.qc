@@ -75,11 +75,8 @@ void Draw_GrapplingHook()
 		case ENT_CLIENT_HOOK:
 			vs = hook_shotorigin[s];
 			break;
-		case ENT_CLIENT_LGBEAM:
-			vs = electro_shotorigin[s];
-			break;
-		case ENT_CLIENT_GAUNTLET:
-			vs = gauntlet_shotorigin[s];
+		case ENT_CLIENT_ARC_BEAM:
+			vs = lightning_shotorigin[s];
 			break;
 	}
 
@@ -92,8 +89,7 @@ void Draw_GrapplingHook()
 				a = view_origin + view_forward * vs_x + view_right * -vs_y + view_up * vs_z;
 				b = self.origin;
 				break;
-			case ENT_CLIENT_LGBEAM:
-			case ENT_CLIENT_GAUNTLET:
+			case ENT_CLIENT_ARC_BEAM:
 				if(self.HookRange)
 					b = view_origin + view_forward * self.HookRange;
 				else
@@ -113,8 +109,7 @@ void Draw_GrapplingHook()
 				a = self.velocity;
 				b = self.origin;
 				break;
-			case ENT_CLIENT_LGBEAM:
-			case ENT_CLIENT_GAUNTLET:
+			case ENT_CLIENT_ARC_BEAM:
 				a = self.origin;
 				b = self.velocity;
 				break;
@@ -142,16 +137,10 @@ void Draw_GrapplingHook()
 			}
 			tex = strcat(tex, suffix);
 			break;
-		case ENT_CLIENT_LGBEAM:
+		case ENT_CLIENT_ARC_BEAM: // todo
 			intensity = bound(0.2, 1 + Noise_Pink(self, frametime) * 1 + Noise_Burst(self, frametime, 0.03) * 0.3, 2);
 			offset = Noise_Brown(self, frametime) * 10;
 			tex = "particles/lgbeam";
-			rgb = '1 1 1';
-			break;
-		case ENT_CLIENT_GAUNTLET:
-			intensity = 1;
-			offset = Noise_White(self, frametime);
-			tex = "particles/gauntletbeam";
 			rgb = '1 1 1';
 			break;
 	}
@@ -180,8 +169,7 @@ void Draw_GrapplingHook()
 				self.drawmask = 0;
 			}
 			break;
-		case ENT_CLIENT_LGBEAM:
-		case ENT_CLIENT_GAUNTLET:
+		case ENT_CLIENT_ARC_BEAM:
 			setorigin(self, a); // beam origin!
 			break;
 	}
@@ -191,11 +179,8 @@ void Draw_GrapplingHook()
 		default:
 		case ENT_CLIENT_HOOK:
 			break;
-		case ENT_CLIENT_LGBEAM:
-			pointparticles(particleeffectnum("electro_lightning"), trace_endpos, normalize(atrans - trace_endpos), frametime * intensity);
-			break;
-		case ENT_CLIENT_GAUNTLET:
-			pointparticles(particleeffectnum("gauntlet_lightning"), b, normalize(a - b), frametime * intensity);
+		case ENT_CLIENT_ARC_BEAM:
+			pointparticles(particleeffectnum("electro_lightning"), trace_endpos, normalize(atrans - trace_endpos), frametime * intensity); // todo: new effect
 			break;
 	}
 }
@@ -226,10 +211,9 @@ void Ent_ReadHook(float bIsNew, float type)
 		{
 			default:
 			case ENT_CLIENT_HOOK:
-			case ENT_CLIENT_GAUNTLET:
 				self.HookRange = 0;
 				break;
-			case ENT_CLIENT_LGBEAM:
+			case ENT_CLIENT_ARC_BEAM:
 				self.HookRange = ReadCoord();
 				break;
 		}
@@ -263,11 +247,8 @@ void Ent_ReadHook(float bIsNew, float type)
 				setmodel(self, "models/hook.md3");
 				self.drawmask = MASK_NORMAL;
 				break;
-			case ENT_CLIENT_LGBEAM:
+			case ENT_CLIENT_ARC_BEAM:
 				sound (self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTEN_NORM);
-				break;
-			case ENT_CLIENT_GAUNTLET:
-				sound (self, CH_SHOTS_SINGLE, "weapons/gauntletbeam_fly.wav", VOL_BASE, ATTEN_NORM);
 				break;
 		}
 	}
@@ -278,7 +259,6 @@ void Ent_ReadHook(float bIsNew, float type)
 void Hook_Precache()
 {
 	precache_sound("weapons/lgbeam_fly.wav");
-	precache_sound("weapons/gauntletbeam_fly.wav");
 	precache_model("models/hook.md3");
 }
 

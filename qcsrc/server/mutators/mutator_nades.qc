@@ -250,7 +250,7 @@ void nade_ice_think()
 			sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 
 			RadiusDamage(self, self.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
-				autocvar_g_nades_nade_radius, self, autocvar_g_nades_nade_force, self.projectiledeathtype, self.enemy);
+				autocvar_g_nades_nade_radius, self, world, autocvar_g_nades_nade_force, self.projectiledeathtype, self.enemy);
 			Damage_DamageInfo(self.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
 				autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, self.projectiledeathtype, 0, self);
 		}
@@ -527,7 +527,7 @@ void nade_boom()
 	if(nade_blast)
 	{
 		RadiusDamage(self, self.realowner, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage,
-				 autocvar_g_nades_nade_radius, self, autocvar_g_nades_nade_force, self.projectiledeathtype, self.enemy);
+				 autocvar_g_nades_nade_radius, self, world, autocvar_g_nades_nade_force, self.projectiledeathtype, self.enemy);
 		Damage_DamageInfo(self.origin, autocvar_g_nades_nade_damage, autocvar_g_nades_nade_edgedamage, autocvar_g_nades_nade_radius, '1 1 1' * autocvar_g_nades_nade_force, self.projectiledeathtype, 0, self);
 	}
 
@@ -571,16 +571,16 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 	if(self.nade_type == NADE_TYPE_TRANSLOCATE || self.nade_type == NADE_TYPE_SPAWN)
 		return;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_LASER))
+	if(DEATH_ISWEAPON(deathtype, WEP_BLASTER))
 		return;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_NEX) || DEATH_ISWEAPON(deathtype, WEP_MINSTANEX))
+	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
 	{
 		force *= 6;
 		damage = self.max_health * 0.55;
 	}
 
-	if(DEATH_ISWEAPON(deathtype, WEP_UZI) || DEATH_ISWEAPON(deathtype, WEP_HMG))
+	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN) || DEATH_ISWEAPON(deathtype, WEP_HMG))
 		damage = self.max_health * 0.1;
 
 	if(DEATH_ISWEAPON(deathtype, WEP_SHOTGUN))
@@ -628,7 +628,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 
 	makevectors(e.v_angle);
 
-	W_SetupShot(e, FALSE, FALSE, "", CH_WEAPON_A, 0, DEATH_NADE);
+	W_SetupShot(e, FALSE, FALSE, "", CH_WEAPON_A, 0);
 
 	Kill_Notification(NOTIF_ONE_ONLY, e, MSG_CENTER_CPID, CPID_NADES);
 
@@ -991,7 +991,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerPreThink)
 	if(n && self.frozen == 3) // OK, there is at least one teammate reviving us
 	{
 		self.revive_progress = bound(0, self.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
-		self.health = max(1, self.revive_progress * autocvar_g_balance_health_start);
+		self.health = max(1, self.revive_progress * start_health);
 
 		if(self.revive_progress >= 1)
 		{

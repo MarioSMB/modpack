@@ -105,7 +105,7 @@ vector GetCurrentFov(float fov)
 	zoomdir = button_zoom;
 	if(hud == HUD_NORMAL)
 	if(switchweapon == activeweapon)
-	if((activeweapon == WEP_NEX && nex_scope) || (activeweapon == WEP_RIFLE && rifle_scope)) // do NOT use switchweapon here
+	if((activeweapon == WEP_VORTEX && vortex_scope) || (activeweapon == WEP_RIFLE && rifle_scope)) // do NOT use switchweapon here
 		zoomdir += button_attack2;
 	if(spectatee_status > 0 || isdemo())
 	{
@@ -270,7 +270,7 @@ float EnemyHitCheck()
 
 float TrueAimCheck()
 {
-	float nudge = 1; // added to traceline target and subtracted from result
+	float nudge = 1; // added to traceline target and subtracted from result TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
 	vector vecs, trueaimpoint, w_shotorg;
 	vector mi, ma, dv;
 	float shottype;
@@ -281,15 +281,15 @@ float TrueAimCheck()
 	ta = trueaim;
 	mv = MOVE_NOMONSTERS;
 
-	switch(activeweapon)
+	switch(activeweapon) // WEAPONTODO
 	{
 		case WEP_TUBA: // no aim
 		case WEP_PORTO: // shoots from eye
 		case WEP_HOOK: // no trueaim
-		case WEP_GRENADE_LAUNCHER: // toss curve
+		case WEP_MORTAR: // toss curve
 			return SHOTTYPE_HITWORLD;
-		case WEP_NEX:
-		case WEP_MINSTANEX:
+		case WEP_VORTEX:
+		case WEP_VAPORIZER:
 			mv = MOVE_NORMAL;
 			break;
 		case WEP_RIFLE:
@@ -301,7 +301,7 @@ float TrueAimCheck()
 				return EnemyHitCheck();
 			}
 			break;
-		case WEP_ROCKET_LAUNCHER: // projectile has a size!
+		case WEP_DEVASTATOR: // projectile has a size!
 			mi = '-3 -3 -3';
 			ma = '3 3 3';
 			break;
@@ -366,6 +366,7 @@ float camera_mode;
 const float CAMERA_FREE = 1;
 const float CAMERA_CHASE = 2;
 float reticle_type;
+string reticle_image;
 string NextFrameCommand;
 
 vector freeze_org, freeze_ang;
@@ -378,7 +379,7 @@ float spectatee_status_prev; // for preventing hitsound when switching spectatee
 float damage_dealt_total, damage_dealt_total_prev;
 float typehit_time, typehit_time_prev;
 float hitindication_crosshair_size;
-float use_nex_chargepool;
+float use_vortex_chargepool;
 
 float myhealth, myhealth_prev;
 float myhealth_flash;
@@ -965,49 +966,63 @@ void CSQC_UpdateView(float w, float h)
 		R_EndPolygon();
 	}
 
-	// Draw the aiming reticle for weapons that use it
-	// reticle_type is changed to the item we are zooming / aiming with, to decide which reticle to use
-	// It must be a persisted float for fading out to work properly (you let go of the zoom button for
-	// the view to go back to normal, so reticle_type would become 0 as we fade out)
-	if(spectatee_status || is_dead || hud != HUD_NORMAL)
-		reticle_type = 0; // prevent reticle from showing during the respawn zoom effect or for spectators
-	else if((activeweapon == WEP_NEX || activeweapon == WEP_RIFLE || activeweapon == WEP_MINSTANEX) && (button_zoom || zoomscript_caught))
-		reticle_type = 2; // nex zoom
-	else if(button_zoom || zoomscript_caught)
-		reticle_type = 1; // normal zoom
-	else if((activeweapon == WEP_NEX) && button_attack2)
-		reticle_type = 2; // nex zoom
-
-	if(reticle_type && autocvar_cl_reticle)
+	if(autocvar_cl_reticle)
 	{
-		if(autocvar_cl_reticle_stretch)
+		// Draw the aiming reticle for weapons that use it
+		// reticle_type is changed to the item we are zooming / aiming with, to decide which reticle to use
+		// It must be a persisted float for fading out to work properly (you let go of the zoom button for
+		// the view to go back to normal, so reticle_type would become 0 as we fade out)
+		if(spectatee_status || is_dead || hud != HUD_NORMAL)
 		{
-			reticle_size_x = vid_conwidth;
-			reticle_size_y = vid_conheight;
-			reticle_pos_x = 0;
-			reticle_pos_y = 0;
+			// no zoom reticle while dead
+			reticle_type = 0;
 		}
-		else
+		else if(WEP_ACTION(activeweapon, WR_ZOOMRETICLE) && autocvar_cl_reticle_weapon)
 		{
-			reticle_size_x = max(vid_conwidth, vid_conheight);
-			reticle_size_y = max(vid_conwidth, vid_conheight);
-			reticle_pos_x = (vid_conwidth - reticle_size_x) / 2;
-			reticle_pos_y = (vid_conheight - reticle_size_y) / 2;
+			if(reticle_image != "") { reticle_type = 2; }
+			else { reticle_type = 0; }
+		}
+		else if(button_zoom || zoomscript_caught)
+		{
+			// normal zoom
+			reticle_type = 1;
 		}
 
-		f = current_zoomfraction;
-		if(zoomscript_caught)
-			f = 1;
-		if(autocvar_cl_reticle_item_normal)
+		if(reticle_type)
 		{
-			if(reticle_type == 1 && f)
-				drawpic(reticle_pos, "gfx/reticle_normal", reticle_size, '1 1 1', f * autocvar_cl_reticle_item_normal, DRAWFLAG_NORMAL);
+			if(autocvar_cl_reticle_stretch)
+			{
+				reticle_size_x = vid_conwidth;
+				reticle_size_y = vid_conheight;
+				reticle_pos_x = 0;
+				reticle_pos_y = 0;
+			}
+			else
+			{
+				reticle_size_x = max(vid_conwidth, vid_conheight);
+				reticle_size_y = max(vid_conwidth, vid_conheight);
+				reticle_pos_x = (vid_conwidth - reticle_size_x) / 2;
+				reticle_pos_y = (vid_conheight - reticle_size_y) / 2;
+			}
+
+			if(zoomscript_caught)
+				f = 1;
+			else 
+				f = current_zoomfraction;
+
+			if(f)
+			{
+				switch(reticle_type)
+				{
+					case 1: drawpic(reticle_pos, "gfx/reticle_normal", reticle_size, '1 1 1', f * autocvar_cl_reticle_normal_alpha, DRAWFLAG_NORMAL); break;
+					case 2: drawpic(reticle_pos, reticle_image, reticle_size, '1 1 1', f * autocvar_cl_reticle_weapon_alpha, DRAWFLAG_NORMAL); break;
+				}
+			}
 		}
-		if(autocvar_cl_reticle_item_nex)
-		{
-			if(reticle_type == 2 && f)
-				drawpic(reticle_pos, "gfx/reticle_nex", reticle_size, '1 1 1', f * autocvar_cl_reticle_item_nex, DRAWFLAG_NORMAL);
-		}
+	}
+	else
+	{
+		if(reticle_type != 0) { reticle_type = 0; }
 	}
 
 
@@ -1404,42 +1419,39 @@ void CSQC_UpdateView(float w, float h)
 				shottype = SHOTTYPE_HITWORLD;
 
 			vector wcross_color = '0 0 0', wcross_size = '0 0 0';
-			string wcross_wep = "", wcross_name;
+			string wcross_name = "";
 			float wcross_scale, wcross_blur;
 
-			if (autocvar_crosshair_per_weapon || (autocvar_crosshair_color_special == 1))
+			if(autocvar_crosshair_per_weapon || (autocvar_crosshair_color_special == 1))
 			{
 				e = get_weaponinfo(switchingweapon);
-				if (e && e.netname != "")
+				if(e)
 				{
-					wcross_wep = e.netname;
 					if(autocvar_crosshair_per_weapon)
 					{
-						wcross_resolution *= cvar(strcat("crosshair_", wcross_wep, "_size"));
-						if (wcross_resolution == 0)
-							return;
-						wcross_alpha *= cvar(strcat("crosshair_", wcross_wep, "_alpha"));
-						if (wcross_alpha == 0)
-							return;
+						// WEAPONTODO: access these through some general settings (with non-balance config settings)
+						//wcross_resolution *= cvar(strcat("crosshair_", wcross_wep, "_size"));
+						//if (wcross_resolution == 0)
+							//return;
 
-						wcross_style = cvar_string(strcat("crosshair_", wcross_wep));
-						if(wcross_style == "" || wcross_style == "0")
-							wcross_style = wcross_wep;
+						//wcross_style = cvar_string(strcat("crosshair_", wcross_wep));
+						wcross_resolution *= e.w_crosshair_size;
+						wcross_name = e.w_crosshair;
 					}
 				}
 			}
 
-			//printf("crosshair style: %s\n", wcross_style);
-			wcross_name = strcat("gfx/crosshair", wcross_style);
+			if(wcross_name == "")
+				wcross_name = strcat("gfx/crosshair", wcross_style);
 
 			// MAIN CROSSHAIR COLOR DECISION
 			switch(autocvar_crosshair_color_special)
 			{
 				case 1: // crosshair_color_per_weapon
 				{
-					if(wcross_wep != "")
+					if(e)
 					{
-						wcross_color = stov(cvar_string(sprintf("crosshair_%s_color", wcross_wep)));
+						wcross_color = e.wpcolor;
 						break;
 					}
 					else { goto normalcolor; }
@@ -1590,7 +1602,7 @@ void CSQC_UpdateView(float w, float h)
 
 			entity me = playerslots[player_localnum];
 
-			if(activeweapon == WEP_MINSTANEX)
+			if(activeweapon == WEP_VAPORIZER)
 			if(time >= getstatf(STAT_GAMESTARTTIME))
 			if(time >= getstatf(STAT_ROUNDSTARTTIME))
 			if(!autocvar_chase_active)
@@ -1672,36 +1684,36 @@ void CSQC_UpdateView(float w, float h)
 					weapon_clipload = getstati(STAT_WEAPON_CLIPLOAD);
 					weapon_clipsize = getstati(STAT_WEAPON_CLIPSIZE);
 
-					float nex_charge, nex_chargepool;
-					nex_charge = getstatf(STAT_NEX_CHARGE);
-					nex_chargepool = getstatf(STAT_NEX_CHARGEPOOL);
+					float vortex_charge, vortex_chargepool;
+					vortex_charge = getstatf(STAT_VORTEX_CHARGE);
+					vortex_chargepool = getstatf(STAT_VORTEX_CHARGEPOOL);
 
 					float ok_ammo_charge, ok_ammo_chargepool;
 					ok_ammo_charge = getstatf(STAT_OK_AMMO_CHARGE);
 					ok_ammo_chargepool = getstatf(STAT_OK_AMMO_CHARGEPOOl);
 
-					if(nex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
-						nex_charge_movingavg = nex_charge;
+					if(vortex_charge_movingavg == 0) // this should only happen if we have just loaded up the game
+						vortex_charge_movingavg = vortex_charge;
 
 
 					// handle the values
-					if (autocvar_crosshair_ring && activeweapon == WEP_NEX && nex_charge && autocvar_crosshair_ring_nex) // ring around crosshair representing velocity-dependent damage for the nex
+					if (autocvar_crosshair_ring && activeweapon == WEP_VORTEX && vortex_charge && autocvar_crosshair_ring_vortex) // ring around crosshair representing velocity-dependent damage for the vortex
 					{
-						if (nex_chargepool || use_nex_chargepool) {
-							use_nex_chargepool = 1;
-							ring_inner_value = nex_chargepool;
+						if (vortex_chargepool || use_vortex_chargepool) {
+							use_vortex_chargepool = 1;
+							ring_inner_value = vortex_chargepool;
 						} else {
-							nex_charge_movingavg = (1 - autocvar_crosshair_ring_nex_currentcharge_movingavg_rate) * nex_charge_movingavg + autocvar_crosshair_ring_nex_currentcharge_movingavg_rate * nex_charge;
-							ring_inner_value = bound(0, autocvar_crosshair_ring_nex_currentcharge_scale * (nex_charge - nex_charge_movingavg), 1);
+							vortex_charge_movingavg = (1 - autocvar_crosshair_ring_vortex_currentcharge_movingavg_rate) * vortex_charge_movingavg + autocvar_crosshair_ring_vortex_currentcharge_movingavg_rate * vortex_charge;
+							ring_inner_value = bound(0, autocvar_crosshair_ring_vortex_currentcharge_scale * (vortex_charge - vortex_charge_movingavg), 1);
 						}
 
-						ring_inner_alpha = autocvar_crosshair_ring_nex_inner_alpha;
-						ring_inner_rgb = eX * autocvar_crosshair_ring_nex_inner_color_red + eY * autocvar_crosshair_ring_nex_inner_color_green + eZ * autocvar_crosshair_ring_nex_inner_color_blue;
+						ring_inner_alpha = autocvar_crosshair_ring_vortex_inner_alpha;
+						ring_inner_rgb = eX * autocvar_crosshair_ring_vortex_inner_color_red + eY * autocvar_crosshair_ring_vortex_inner_color_green + eZ * autocvar_crosshair_ring_vortex_inner_color_blue;
 						ring_inner_image = "gfx/crosshair_ring_inner.tga";
 
 						// draw the outer ring to show the current charge of the weapon
-						ring_value = nex_charge;
-						ring_alpha = autocvar_crosshair_ring_nex_alpha;
+						ring_value = vortex_charge;
+						ring_alpha = autocvar_crosshair_ring_vortex_alpha;
 						ring_rgb = wcross_color;
 						ring_image = "gfx/crosshair_ring_nexgun.tga";
 					}
@@ -1726,7 +1738,7 @@ void CSQC_UpdateView(float w, float h)
 						ring_rgb = wcross_color;
 						ring_image = "gfx/crosshair_ring.tga";
 					}
-					else if(autocvar_crosshair_ring_reload && weapon_clipsize) // forces there to be only an ammo ring 
+					else if(autocvar_crosshair_ring_reload && weapon_clipsize) // forces there to be only an ammo ring
 					{
 						ring_value = bound(0, weapon_clipload / weapon_clipsize, 1);
 						ring_scale = autocvar_crosshair_ring_reload_size;

@@ -19,11 +19,11 @@ void turret_flac_projectile_think_explode()
 
 #ifdef TURRET_DEBUG
 	float d;
-	d = RadiusDamage (self, self.owner, self.owner.shot_dmg, self.owner.shot_dmg, self.owner.shot_radius, self, self.owner.shot_force, self.totalfrags, world);
+	d = RadiusDamage (self, self.owner, self.owner.shot_dmg, self.owner.shot_dmg, self.owner.shot_radius, self, world, self.owner.shot_force, self.totalfrags, world);
 	self.owner.tur_dbg_dmg_t_h = self.owner.tur_dbg_dmg_t_h + d;
 	self.owner.tur_dbg_dmg_t_f = self.owner.tur_dbg_dmg_t_f + self.owner.shot_dmg;
 #else
-	RadiusDamage (self, self.realowner, self.owner.shot_dmg, self.owner.shot_dmg, self.owner.shot_radius, self, self.owner.shot_force, self.totalfrags, world);
+	RadiusDamage (self, self.realowner, self.owner.shot_dmg, self.owner.shot_dmg, self.owner.shot_radius, self, world, self.owner.shot_force, self.totalfrags, world);
 #endif
 	remove(self);
 }
@@ -41,7 +41,7 @@ float t_flac(float req)
 			turret_tag_fire_update();
 
 			proj = turret_projectile(W_Sound("hagar_fire"), 5, 0, DEATH_TURRET_FLAC, PROJECTILE_HAGAR, TRUE, TRUE);
-			pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+			Send_Effect(EFFECT_LASER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 			proj.think	  = turret_flac_projectile_think_explode;
 			proj.nextthink  = time + self.tur_impacttime + (random() * 0.01 - random() * 0.01);
 			proj.missile_flags = MIF_SPLASH | MIF_PROXY;

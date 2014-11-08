@@ -25,7 +25,6 @@ void setmodel_fixsize(entity e, string m)
 	FixSize(e);
 }
 
-#define WANT_CONST
 // commonly used, but better make them macros
 #define TRUE 1
 #define FALSE 0
@@ -396,6 +395,7 @@ typedef float(entity a, entity b, entity pass) isConnectedFunction_t;
 void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t nxt, isConnectedFunction_t iscon, entity pass);
 
 #ifdef SVQC
+vector combine_to_vector(float x, float y, float z);
 vector get_corner_position(entity box, float corner);
 #endif
 
@@ -480,3 +480,5 @@ float Mod_Q1BSP_NativeContentsFromSuperContents(float supercontents);
 // Quadratic splines (bezier)
 vector bezier_quadratic_getpoint(vector a, vector p, vector b, float t);
 vector bezier_quadratic_getderivative(vector a, vector p, vector b, float t);
+
+#define APPEND_TO_STRING(list,sep,add) ((list) = (((list) != "") ? strcat(list, sep, add) : (add)))

@@ -1,0 +1,55 @@
+vector w_shotorg;
+vector w_shotdir;
+vector w_shotend;
+
+// this function calculates w_shotorg and w_shotdir based on the weapon model
+// offset, trueaim and antilag, and won't put w_shotorg inside a wall.
+// make sure you call makevectors first (FIXME?)
+void W_SetupShot_Dir_ProjectileSize_Range(entity ent, vector s_forward, vector mi, vector ma, float antilag, float recoil, string snd, float chan, float maxdamage, float range);
+
+#define W_SetupShot_Dir_ProjectileSize(ent,s_forward,mi,ma,antilag,recoil,snd,chan,maxdamage) W_SetupShot_Dir_ProjectileSize_Range(ent, s_forward, mi, ma, antilag, recoil, snd, chan, maxdamage, MAX_SHOT_DISTANCE)
+#define W_SetupShot_ProjectileSize(ent,mi,ma,antilag,recoil,snd,chan,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, v_forward, mi, ma, antilag, recoil, snd, chan, maxdamage)
+#define W_SetupShot_Dir(ent,s_forward,antilag,recoil,snd,chan,maxdamage) W_SetupShot_Dir_ProjectileSize(ent, s_forward, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage)
+#define W_SetupShot(ent,antilag,recoil,snd,chan,maxdamage) W_SetupShot_ProjectileSize(ent, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage)
+#define W_SetupShot_Range(ent,antilag,recoil,snd,chan,maxdamage,range) W_SetupShot_Dir_ProjectileSize_Range(ent, v_forward, '0 0 0', '0 0 0', antilag, recoil, snd, chan, maxdamage, range)
+
+vector W_CalculateProjectileVelocity(vector pvelocity, vector mvelocity, float forceAbsolute);
+
+#if 0
+float mspercallsum;
+float mspercallsstyle;
+float mspercallcount;
+#endif
+
+void W_SetupProjVelocity_Explicit(entity proj, vector dir, vector upDir, float pSpeed, float pUpSpeed, float pZSpeed, float spread, float forceAbsolute);
+
+#define W_SetupProjVelocity_Basic(ent,pspeed,pspread) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, pspeed, 0, 0, pspread, FALSE)
+
+#define W_SetupProjVelocity_UP_PRE(ent,wepname,prefix) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR(wepname, prefix##speed), WEP_CVAR(wepname, prefix##speed_up), WEP_CVAR(wepname, prefix##speed_z), WEP_CVAR(wepname, prefix##spread), FALSE)
+#define W_SetupProjVelocity_UP_PRI(ent,wepname) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR_PRI(wepname, speed), WEP_CVAR_PRI(wepname, speed_up), WEP_CVAR_PRI(wepname, speed_z), WEP_CVAR_PRI(wepname, spread), FALSE)
+#define W_SetupProjVelocity_UP_SEC(ent,wepname) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR_SEC(wepname, speed), WEP_CVAR_SEC(wepname, speed_up), WEP_CVAR_SEC(wepname, speed_z), WEP_CVAR_SEC(wepname, spread), FALSE)
+
+#define W_SetupProjVelocity_UP_BOTH(ent,wepname,isprimary) \
+	if(isprimary) { W_SetupProjVelocity_UP_PRI(ent, wepname); } \
+	else { W_SetupProjVelocity_UP_SEC(ent, wepname); }
+
+#define W_SetupProjVelocity_PRE(ent,wepname,prefix) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR(wepname, prefix##speed), 0, 0, WEP_CVAR(wepname, prefix##spread), FALSE)
+#define W_SetupProjVelocity_PRI(ent,wepname) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR_PRI(wepname, speed), 0, 0, WEP_CVAR_PRI(wepname, spread), FALSE)
+#define W_SetupProjVelocity_SEC(ent,wepname) W_SetupProjVelocity_Explicit(ent, w_shotdir, v_up, WEP_CVAR_SEC(wepname, speed), 0, 0, WEP_CVAR_SEC(wepname, spread), FALSE)
+
+#define W_SetupProjVelocity_BOTH(ent,wepname,isprimary) \
+	if(isprimary) { W_SetupProjVelocity_PRI(ent, wepname); } \
+	else { W_SetupProjVelocity_SEC(ent, wepname); }
+
+// ====================
+//  Ballistics Tracing
+// ====================
+
+.float railgundistance;
+.vector railgunforce;
+void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype);
+
+float fireBullet_trace_callback_eff;
+entity fireBullet_last_hit;
+void fireBullet_trace_callback(vector start, vector hit, vector end);
+void fireBullet(vector start, vector dir, float spread, float max_solid_penetration, float damage, float force, float dtype, float tracereffects);

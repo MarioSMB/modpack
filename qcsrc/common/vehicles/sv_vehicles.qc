@@ -209,7 +209,7 @@ void vehicles_projectile_explode()
 	PROJECTILE_TOUCH;
 
 	self.event_damage = func_null;
-	RadiusDamage (self, self.realowner, self.shot_dmg, 0, self.shot_radius, self, self.shot_force, self.totalfrags, other);
+	RadiusDamage (self, self.realowner, self.shot_dmg, 0, self.shot_radius, self, world, self.shot_force, self.totalfrags, other);
 
 	remove (self);
 }
@@ -270,7 +270,8 @@ entity vehicles_projectile(string _mzlfx, string _mzlsound,
 void vehicles_gib_explode()
 {
 	sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
-	pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+	Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+	Send_Effect(EFFECT_EXPLOSION_SMALL, self.wp00.origin + '0 0 64', '0 0 0', 1);
 	remove(self);
 }
 
@@ -444,7 +445,7 @@ void vehicles_clearreturn(entity veh)
 void vehicles_spawn();
 void vehicles_return()
 {
-	pointparticles(particleeffectnum("teleport"), self.wp00.origin + '0 0 64', '0 0 0', 1);
+	Send_Effect(EFFECT_TELEPORT, self.wp00.origin + '0 0 64', '0 0 0', 1);
 
 	self.wp00.think	 = vehicles_spawn;
 	self.wp00.nextthink = time;
@@ -617,16 +618,16 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 {
 	self.dmg_time = time;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_NEX))
+	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX))
 		damage *= autocvar_g_vehicles_nex_damagerate;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_UZI))
+	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN))
 		damage *= autocvar_g_vehicles_uzi_damagerate;
 
 	if(DEATH_ISWEAPON(deathtype, WEP_RIFLE))
 		damage *= autocvar_g_vehicles_rifle_damagerate;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_MINSTANEX))
+	if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
 		damage *= autocvar_g_vehicles_minstanex_damagerate;
 
 	if(DEATH_ISWEAPON(deathtype, WEP_SEEKER))
@@ -1127,7 +1128,7 @@ void vehicles_spawn()
 	self.angles = self.pos2;
 	setorigin(self, self.pos1);
 	// Show it
-	pointparticles(particleeffectnum("teleport"), self.origin + '0 0 64', '0 0 0', 1);
+	Send_Effect(EFFECT_TELEPORT, self.origin + '0 0 64', '0 0 0', 1);
 
 	if(self.vehicle_controller)
 		self.team = self.vehicle_controller.team;

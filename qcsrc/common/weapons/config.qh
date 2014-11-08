@@ -1,0 +1,44 @@
+// ==========================
+//  Balance Config Generator
+// ==========================
+
+void Dump_Weapon_Settings(void);
+float wep_config_file;
+float wep_config_alsoprint;
+
+#define MAX_WEP_CONFIG 256
+float WEP_CONFIG_COUNT;
+string wep_config_queue[MAX_WEP_CONFIG];
+
+#define WEP_CONFIG_QUEUE(a) { \
+	wep_config_queue[WEP_CONFIG_COUNT] = a; \
+	++WEP_CONFIG_COUNT; }
+
+#define WEP_CONFIG_WRITETOFILE(a) { \
+	fputs(wep_config_file, a); \
+	if(wep_config_alsoprint) { print(a); } }
+
+#define WEP_CONFIG_WRITE_CVARS_NONE(wepname,name) \
+	{ WEP_CONFIG_QUEUE( \
+		sprintf("set g_balance_%s_%s %g\n", #wepname, #name, \
+		cvar(sprintf("g_balance_%s_%s", #wepname, #name)))) }
+
+#define WEP_CONFIG_WRITE_CVARS_PRI(wepname,name) WEP_CONFIG_WRITE_CVARS_NONE(wepname, primary_##name)
+#define WEP_CONFIG_WRITE_CVARS_SEC(wepname,name) WEP_CONFIG_WRITE_CVARS_NONE(wepname, secondary_##name)
+#define WEP_CONFIG_WRITE_CVARS_BOTH(wepname,name) \
+	WEP_CONFIG_WRITE_CVARS_PRI(wepname, name) \
+	WEP_CONFIG_WRITE_CVARS_SEC(wepname, name)
+	
+#define WEP_CONFIG_WRITE_CVARS(wepid,wepname,mode,name) WEP_CONFIG_WRITE_CVARS_##mode(wepname, name)
+
+#define WEP_CONFIG_WRITE_PROPS_string(wepname,name) \
+	{ WEP_CONFIG_QUEUE( \
+		sprintf("set g_balance_%s_%s \"%s\"\n", #wepname, #name, \
+		cvar_string(sprintf("g_balance_%s_%s", #wepname, #name)))) }
+
+#define WEP_CONFIG_WRITE_PROPS_float(wepname,name) \
+	{ WEP_CONFIG_QUEUE( \
+		sprintf("set g_balance_%s_%s %g\n", #wepname, #name, \
+		cvar(sprintf("g_balance_%s_%s", #wepname, #name)))) }
+
+#define WEP_CONFIG_WRITE_PROPS(wepid,wepname,type,prop,name) WEP_CONFIG_WRITE_PROPS_##type(wepname,name)

@@ -140,6 +140,7 @@ float CheatImpulse(float i)
 			self.personal.ammo_rockets = self.ammo_rockets;
 			self.personal.ammo_nails = self.ammo_nails;
 			self.personal.ammo_cells = self.ammo_cells;
+			self.personal.ammo_plasma = self.ammo_plasma;
 			self.personal.ammo_supercells = self.ammo_supercells;
 			self.personal.ammo_shells = self.ammo_shells;
 			self.personal.ammo_fuel = self.ammo_fuel;
@@ -196,6 +197,8 @@ float CheatImpulse(float i)
 				self.ammo_rockets = self.personal.ammo_rockets;
 				self.ammo_nails = self.personal.ammo_nails;
 				self.ammo_cells = self.personal.ammo_cells;
+				self.ammo_plasma = self.personal.ammo_plasma;
+				self.ammo_supercells = self.personal.ammo_supercells;
 				self.ammo_shells = self.personal.ammo_shells;
 				self.ammo_fuel = self.personal.ammo_fuel;
 				self.health = self.personal.health;
@@ -261,7 +264,7 @@ float CheatImpulse(float i)
 
 			e2 = spawn();
 			setorigin(e2, e.origin);
-			RadiusDamage(e2, self, 1000, 0, 128, world, 500, DEATH_CHEAT, e);
+			RadiusDamage(e2, self, 1000, 0, 128, world, world, 500, DEATH_CHEAT, e);
 			remove(e2);
 
 			print("404 Sportsmanship not found.\n");
@@ -314,7 +317,7 @@ float CheatCommand(float argc)
 				// arguments:
 				//   effectname
 				effectnum = particleeffectnum(argv(1));
-				W_SetupShot(self, FALSE, FALSE, "", CH_WEAPON_A, 0, self.weapon);
+				W_SetupShot(self, FALSE, FALSE, "", CH_WEAPON_A, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * MAX_SHOT_DISTANCE, MOVE_NORMAL, self);
 				trailparticles(self, effectnum, w_shotorg, trace_endpos);
 				DID_CHEAT();
@@ -329,7 +332,7 @@ float CheatCommand(float argc)
 				// arguments:
 				//   modelname mode
 				f = stof(argv(2));
-				W_SetupShot(self, FALSE, FALSE, "", CH_WEAPON_A, 0, self.weapon);
+				W_SetupShot(self, FALSE, FALSE, "", CH_WEAPON_A, 0);
 				traceline(w_shotorg, w_shotorg + w_shotdir * 2048, MOVE_NORMAL, self);
 				if((trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT) || trace_fraction == 1)
 				{

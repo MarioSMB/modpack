@@ -1,0 +1,12 @@
+.float savenextthink;
+void thrown_wep_think();
+
+// returns amount of ammo used as string, or -1 for failure, or 0 for no ammo count
+string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vector velo);
+
+float W_IsWeaponThrowable(float w);
+
+// toss current weapon
+void W_ThrowWeapon(vector velo, vector delta, float doreduce);
+
+void SpawnThrownWeapon(vector org, float w);

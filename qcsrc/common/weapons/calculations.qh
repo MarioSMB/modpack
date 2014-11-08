@@ -1,0 +1,2 @@
+vector damage_explosion_calcpush(vector explosion_f, vector target_v, float speedfactor);
+vector W_CalculateSpread(vector forward, float spread, float spreadfactor, float spreadstyle);

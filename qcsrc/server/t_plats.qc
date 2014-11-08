@@ -1849,7 +1849,7 @@ void secret_touch()
 	if (self.message)
 	{
 		if (IS_CLIENT(other))
-			centerprint(other, self.message);
+			centerprint (other, self.message);
 		play2(other, "misc/talk.wav");
 	}
 }

@@ -86,7 +86,7 @@ void walker_setnoanim()
 }
 void walker_rocket_explode()
 {
-	RadiusDamage (self, self.owner, (autocvar_g_turrets_unit_walker_rocket_damage), 0, (autocvar_g_turrets_unit_walker_rocket_radius), self, (autocvar_g_turrets_unit_walker_rocket_force), DEATH_TURRET_WALK_ROCKET, world);
+	RadiusDamage (self, self.owner, (autocvar_g_turrets_unit_walker_rocket_damage), 0, (autocvar_g_turrets_unit_walker_rocket_radius), self, world, (autocvar_g_turrets_unit_walker_rocket_force), DEATH_TURRET_WALK_ROCKET, world);
 	remove (self);
 }
 
@@ -344,7 +344,7 @@ float t_walker(float req)
 		{
 			sound (self, CH_WEAPON_A, W_Sound("uzi_fire"), VOL_BASE, ATTEN_NORM);
 			fireBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, 0, self.shot_dmg, self.shot_force, DEATH_TURRET_WALK_GUN, 0);
-			pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+			Send_Effect(EFFECT_LASER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
 			return TRUE;
 		}

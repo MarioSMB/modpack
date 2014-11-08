@@ -28,7 +28,7 @@ float t_plasma_dual(float req)
 								   800, 0, 0, 0, 0, DEATH_TURRET_PLASMA);
 
 
-				pointparticles(particleeffectnum("nex_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+				Send_Effect(EFFECT_VORTEX_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
 				// teamcolor / hit beam effect
 				vector v;
@@ -51,7 +51,7 @@ float t_plasma_dual(float req)
 			{
 				entity missile = turret_projectile(W_Sound("hagar_fire"), 1, 0, DEATH_TURRET_PLASMA, PROJECTILE_ELECTRO_BEAM, TRUE, TRUE);
 				missile.missile_flags = MIF_SPLASH;
-				pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+				Send_Effect(EFFECT_LASER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 				self.tur_head.frame += 1;
 			}
 

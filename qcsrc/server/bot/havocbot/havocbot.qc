@@ -90,7 +90,7 @@ void havocbot_ai()
 
 		if(self.weapons)
 		{
-			weapon_action(self.weapon, WR_AIM);
+			WEP_ACTION(self.weapon, WR_AIM);
 			if (autocvar_bot_nofire || IS_INDEPENDENT_PLAYER(self))
 			{
 				self.BUTTON_ATCK = FALSE;
@@ -162,7 +162,7 @@ void havocbot_ai()
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
-				if ((self.weapons & WepSet_FromWeapon(i)) && (e.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[i] < cvar(strcat("g_balance_", e.netname, "_reload_ammo"))))
+				if ((self.weapons & WepSet_FromWeapon(i)) && (e.spawnflags & WEP_FLAG_RELOADABLE) && (self.weapon_load[i] < e.reloading_ammo))
 					self.switchweapon = i;
 			}
 		}
@@ -588,10 +588,10 @@ void havocbot_movetogoal()
 
 			return;
 		}
-		else if(self.health>autocvar_g_balance_rocketlauncher_damage*0.5)
+		else if(self.health>WEP_CVAR(devastator, damage)*0.5)
 		{
 			if(self.velocity_z < 0)
-			if(client_hasweapon(self, WEP_ROCKET_LAUNCHER, TRUE, FALSE))
+			if(client_hasweapon(self, WEP_DEVASTATOR, TRUE, FALSE))
 			{
 				self.movement_x = maxspeed;
 
@@ -605,10 +605,10 @@ void havocbot_movetogoal()
 					return;
 				}
 
-				self.switchweapon = WEP_ROCKET_LAUNCHER;
+				self.switchweapon = WEP_DEVASTATOR;
 				self.v_angle_x = 90;
 				self.BUTTON_ATCK = TRUE;
-				self.rocketjumptime = time + autocvar_g_balance_rocketlauncher_detonatedelay;
+				self.rocketjumptime = time + WEP_CVAR(devastator, detonatedelay);
 				return;
 			}
 		}
@@ -954,7 +954,7 @@ float havocbot_chooseweapon_checkreload(float new_weapon)
 		for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
 			// if we are out of ammo for all other weapons, it's an emergency to switch to anything else
-			if (weapon_action(i, WR_CHECKAMMO1) + weapon_action(i, WR_CHECKAMMO2))
+			if (WEP_ACTION(i, WR_CHECKAMMO1) + WEP_ACTION(i, WR_CHECKAMMO2))
 				other_weapon_available = TRUE;
 		}
 		if(other_weapon_available)
@@ -980,7 +980,7 @@ void havocbot_chooseweapon()
 	{
 		// If no weapon was chosen get the first available weapon
 		if(self.weapon==0)
-		for(i=WEP_LASER + 1; i < WEP_COUNT ; ++i)
+		for(i=WEP_BLASTER + 1; i < WEP_COUNT ; ++i) // Samual: This seems strange compared to other weapon loops...
 		{
 			if(client_hasweapon(self, i, TRUE, FALSE))
 			{

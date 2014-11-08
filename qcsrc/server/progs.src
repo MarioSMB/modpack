@@ -11,7 +11,6 @@ sys-post.qh
 ../warpzonelib/common.qh
 ../warpzonelib/util_server.qh
 ../warpzonelib/server.qh
-
 ../common/constants.qh
 ../common/teams.qh
 ../common/util.qh
@@ -19,8 +18,6 @@ sys-post.qh
 ../common/buffs.qh
 ../common/test.qh
 ../common/counting.qh
-../common/items.qh
-../common/explosion_equation.qh
 ../common/urllib.qh
 ../common/command/markup.qh
 ../common/command/rpn.qh
@@ -29,6 +26,21 @@ sys-post.qh
 ../common/command/script.qh
 ../common/net_notice.qh
 ../common/animdecide.qh
+
+../common/weapons/config.qh
+../common/weapons/weapons.qh // TODO
+weapons/accuracy.qh
+weapons/common.qh
+weapons/csqcprojectile.qh // TODO
+weapons/hitplot.qh
+weapons/selection.qh
+weapons/spawning.qh
+weapons/throwing.qh
+weapons/tracing.qh
+weapons/weaponstats.qh
+weapons/weaponsystem.qh
+
+t_items.qh
 
 autocvars.qh
 constants.qh
@@ -70,8 +82,7 @@ command/getreplies.qh
 command/cmd.qh
 command/sv_cmd.qh
 
-accuracy.qh
-csqcprojectile.qh
+
 ../common/csqcmodel_settings.qh
 ../csqcmodellib/common.qh
 ../csqcmodellib/sv_model.qh
@@ -83,9 +94,7 @@ playerstats.qh
 
 portals.qh
 
-g_hook.qh
-w_electro.qh
-w_laser.qh
+g_hook.qh // TODO
 
 scores.qh
 
@@ -149,13 +158,20 @@ g_models.qc
 item_key.qc
 secret.qc
 
-cl_weaponsystem.qc
-w_common.qc
-
-w_all.qc
+weapons/accuracy.qc
+weapons/common.qc
+weapons/csqcprojectile.qc // TODO
+weapons/hitplot.qc
+weapons/selection.qc
+weapons/spawning.qc
+weapons/throwing.qc
+weapons/tracing.qc
+weapons/weaponstats.qc
+weapons/weaponsystem.qc
+../common/weapons/config.qc
+../common/weapons/weapons.qc // TODO
 
 t_items.qc
-cl_weapons.qc
 cl_impulse.qc
 
 ent_cs.qc
@@ -211,17 +227,13 @@ target_spawn.qc
 func_breakable.qc
 target_music.qc
 
-../common/items.qc
-
 ../common/vehicles/vehicles_include.qc
 
 ../common/nades.qc
 
 ../common/buffs.qc
 
-accuracy.qc
 ../csqcmodellib/sv_model.qc
-csqcprojectile.qc
 
 playerdemo.qc
 
@@ -230,8 +242,6 @@ cheats.qc
 playerstats.qc
 
 round_handler.qc
-
-../common/explosion_equation.qc
 
 ../common/monsters/sv_monsters.qc
 ../common/monsters/monsters.qc

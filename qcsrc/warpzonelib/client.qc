@@ -239,8 +239,8 @@ void WarpZone_FixView()
 	vector org, ang, nearclip, corner0, corner1, corner2, corner3, o;
 	float f;
 
-	org = getpropertyvec(VF_ORIGIN);
-	ang = getpropertyvec(VF_ANGLES);
+	warpzone_save_view_origin = org = getpropertyvec(VF_ORIGIN);
+	warpzone_save_view_angles = ang = getpropertyvec(VF_ANGLES);
 #ifdef WORKAROUND_XON010
 	float dirty;
 	dirty = checkextension("DP_CSQC_ROTATEMOVES");

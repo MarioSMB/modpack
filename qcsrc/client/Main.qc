@@ -220,14 +220,13 @@ void CSQC_Init(void)
 	Hook_Precache();
 	GibSplash_Precache();
 	Casings_Precache();
-	DamageInfo_Precache();
 	Tuba_Precache();
 	CSQCPlayer_Precache();
 
 	if(autocvar_cl_reticle)
 	{
-		if(autocvar_cl_reticle_item_normal) { precache_pic("gfx/reticle_normal"); }
-		if(autocvar_cl_reticle_item_nex) { precache_pic("gfx/reticle_nex"); }
+		precache_pic("gfx/reticle_normal");
+		// weapon reticles are precached in weapon files
 	}
 
 	get_mi_min_max_texcoords(1); // try the CLEVER way first
@@ -799,11 +798,11 @@ void ent_jailcamera()
 		self.origin_y = ReadCoord();
 		self.origin_z = ReadCoord();
 		setorigin(self, self.origin);
-		
+
 		self.angles_x = ReadAngle();
 		self.angles_y = ReadAngle();
 		self.angles_z = 0;
-		
+
 		self.classname = "jailcamera";
 		self.jb_camera_active = FALSE;
 	}
@@ -993,8 +992,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_WARPZONE_TELEPORTED: WarpZone_Teleported_Read(bIsNewEntity); break;
 		case ENT_CLIENT_TRIGGER_MUSIC: Ent_ReadTriggerMusic(); break;
 		case ENT_CLIENT_HOOK: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_HOOK); break;
-		case ENT_CLIENT_LGBEAM: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_LGBEAM); break;
-		case ENT_CLIENT_GAUNTLET: Ent_ReadHook(bIsNewEntity, ENT_CLIENT_GAUNTLET); break;
+		case ENT_CLIENT_ARC_BEAM: Ent_ReadArcBeam(bIsNewEntity); break;
 		case ENT_CLIENT_ACCURACY: Ent_ReadAccuracy(); break;
 		case ENT_CLIENT_AUXILIARYXHAIR: Net_AuXair2(bIsNewEntity); break;
 		case ENT_CLIENT_TURRET: ent_turret(); break;
@@ -1147,14 +1145,10 @@ void Ent_Init()
 	hook_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
 	hook_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
 	hook_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
-	electro_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
-	electro_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
-	electro_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
-	electro_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
-	gauntlet_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
-	gauntlet_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
-	gauntlet_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
-	gauntlet_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
+	arc_shotorigin[0] = decompressShotOrigin(ReadInt24_t());
+	arc_shotorigin[1] = decompressShotOrigin(ReadInt24_t());
+	arc_shotorigin[2] = decompressShotOrigin(ReadInt24_t());
+	arc_shotorigin[3] = decompressShotOrigin(ReadInt24_t());
 
 	if(forcefog)
 		strunzone(forcefog);
@@ -1167,7 +1161,7 @@ void Ent_Init()
 	g_balance_electro_secondary_bouncefactor = ReadCoord();
 	g_balance_electro_secondary_bouncestop = ReadCoord();
 
-	nex_scope = !ReadByte();
+	vortex_scope = !ReadByte();
 	rifle_scope = !ReadByte();
 
 	serverflags = ReadByte();
@@ -1179,8 +1173,7 @@ void Ent_Init()
 	g_trueaim_minrange = ReadCoord();
 	g_balance_porto_secondary = ReadByte();
 
-	minsta_delay = ReadByte() / 255.0;
-	minsta_range = ReadByte() / 255.0;
+	minsta_delay = ReadByte();
 
 	sv_showfps = ReadByte();
 
@@ -1373,7 +1366,7 @@ void Net_WeaponComplain()
 
 	if(complain_weapon_name)
 		strunzone(complain_weapon_name);
-	complain_weapon_name = strzone(ReadString());
+	complain_weapon_name = strzone(WEP_NAME(complain_weapon));
 
 	complain_weapon_type = ReadByte();
 
@@ -1428,16 +1421,16 @@ float CSQC_Parse_TempEntity()
 			Net_ReadRace();
 			bHandled = true;
 			break;
-		case TE_CSQC_NEXGUNBEAMPARTICLE:
-			Net_ReadNexgunBeamParticle();
+		case TE_CSQC_VORTEXBEAMPARTICLE:
+			Net_ReadVortexBeamParticle();
 			bHandled = true;
 			break;
 		case TE_CSQC_TEAMNAGGER:
 			Net_TeamNagger();
 			bHandled = true;
 			break;
-		case TE_CSQC_LIGHTNINGARC:
-			Net_ReadLightningarc();
+		case TE_CSQC_ARC:
+			Net_ReadArc();
 			bHandled = true;
 			break;
 		case TE_CSQC_PINGPLREPORT:
@@ -1462,6 +1455,10 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_SHOCKWAVEPARTICLE:
 			Net_ReadShockwaveParticle();
+			bHandled = true;
+			break;
+		case TE_CSQC_SUPERBLASTPARTICLE:
+			Net_ReadSuperBlastParticle();
 			bHandled = true;
 			break;
 		default:

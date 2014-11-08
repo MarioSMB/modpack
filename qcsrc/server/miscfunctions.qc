@@ -314,6 +314,7 @@ string formatmessage(string msg)
 
 	ammoitems = "batteries";
 	if(self.items & IT_SUPERCELLS) ammoitems = "supercells";
+	if(self.items & IT_PLASMA) ammoitems = "plasma";
 	if(self.items & IT_CELLS) ammoitems = "cells";
 	if(self.items & IT_ROCKETS) ammoitems = "rockets";
 	if(self.items & IT_SHELLS) ammoitems = "shells";
@@ -347,7 +348,7 @@ string formatmessage(string msg)
 		switch(escape)
 		{
 			case "%": replacement = "%"; break;
-			case "\\": replacement = "\\"; break;
+			case "\\":replacement = "\\"; break;
 			case "n": replacement = "\n"; break;
 			case "a": replacement = ftos(floor(self.armorvalue)); break;
 			case "h": replacement = ftos(floor(self.health)); break;
@@ -356,7 +357,7 @@ string formatmessage(string msg)
 			case "l": replacement = NearestLocation(self.origin); break;
 			case "y": replacement = NearestLocation(cursor); break;
 			case "d": replacement = NearestLocation(self.death_origin); break;
-			case "w": replacement = W_Name((!self.weapon) ? (!self.switchweapon ? self.cnt : self.switchweapon) : self.weapon); break;
+			case "w": replacement = WEP_NAME((!self.weapon) ? (!self.switchweapon ? self.cnt : self.switchweapon) : self.weapon); break;
 			case "W": replacement = ammoitems; break;
 			case "x": replacement = ((cursor_ent.netname == "" || !cursor_ent) ? "nothing" : cursor_ent.netname); break;
 			case "s": replacement = ftos(vlen(self.velocity - self.velocity_z * '0 0 1')); break;
@@ -461,7 +462,6 @@ void GetCvars_handleFloatOnce(string thisname, float f, .float field, string nam
 			stuffcmd(self, strcat("cl_cmd sendcvar ", name, "\n"));
 	}
 }
-float w_getbestweapon(entity e);
 string W_FixWeaponOrder_ForceComplete_AndBuildImpulseList(string wo)
 {
 	string o;
@@ -563,6 +563,8 @@ float g_pickup_rockets;
 float g_pickup_rockets_max;
 float g_pickup_cells;
 float g_pickup_cells_max;
+float g_pickup_plasma;
+float g_pickup_plasma_max;
 float g_pickup_fuel;
 float g_pickup_fuel_jetpack;
 float g_pickup_fuel_max;
@@ -611,6 +613,7 @@ float start_ammo_shells;
 float start_ammo_nails;
 float start_ammo_rockets;
 float start_ammo_cells;
+float start_ammo_plasma;
 float start_ammo_fuel;
 float start_health;
 float start_armorvalue;
@@ -622,14 +625,13 @@ float warmup_start_ammo_shells;
 float warmup_start_ammo_nails;
 float warmup_start_ammo_rockets;
 float warmup_start_ammo_cells;
+float warmup_start_ammo_plasma;
 float warmup_start_ammo_fuel;
 float warmup_start_health;
 float warmup_start_armorvalue;
 float g_weapon_stay;
 
-entity get_weaponinfo(float w);
-
-float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
+float want_weapon(entity weaponinfo, float allguns) // WEAPONTODO: what still needs done? 
 {
 	var float i = weaponinfo.weapon;
 	var float d = 0;
@@ -645,7 +647,7 @@ float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 			d = FALSE;
 	}
 	else
-		d = (i == WEP_LASER || i == WEP_SHOTGUN);
+		d = !(!weaponinfo.weaponstart);
 
 	ret_float = d;
 	other = weaponinfo;
@@ -658,7 +660,7 @@ float want_weapon(string cvarprefix, entity weaponinfo, float allguns)
 	if(weaponinfo.spawnflags & WEP_FLAG_MUTATORBLOCKED) // never default mutator blocked guns
 		d = 0;
 
-	var float t = cvar(strcat(cvarprefix, weaponinfo.netname));
+	var float t = weaponinfo.weaponstartoverride;
 
 	//print(strcat("want_weapon: ", weaponinfo.netname, " - d: ", ftos(d), ", t: ", ftos(t), ". \n"));
 
@@ -689,6 +691,7 @@ void readplayerstartcvars()
 	start_ammo_nails = 0;
 	start_ammo_rockets = 0;
 	start_ammo_cells = 0;
+	start_ammo_plasma = 0;
 	start_health = cvar("g_balance_health_start");
 	start_armorvalue = cvar("g_balance_armor_start");
 
@@ -781,7 +784,7 @@ void readplayerstartcvars()
 		for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 		{
 			e = get_weaponinfo(i);
-			float w = want_weapon("g_start_weapon_", e, FALSE);
+			float w = want_weapon(e, FALSE);
 			if(w & 1)
 				start_weapons |= WepSet_FromWeapon(i);
 			if(w & 2)
@@ -799,6 +802,7 @@ void readplayerstartcvars()
 		start_ammo_rockets = 999;
 		start_ammo_shells = 999;
 		start_ammo_cells = 999;
+		start_ammo_plasma = 999;
 		start_ammo_nails = 999;
 		start_ammo_fuel = 999;
 	}
@@ -808,6 +812,7 @@ void readplayerstartcvars()
 		start_ammo_nails = cvar("g_start_ammo_nails");
 		start_ammo_rockets = cvar("g_start_ammo_rockets");
 		start_ammo_cells = cvar("g_start_ammo_cells");
+		start_ammo_plasma = cvar("g_start_ammo_plasma");
 		start_ammo_fuel = cvar("g_start_ammo_fuel");
 	}
 
@@ -839,7 +844,7 @@ void readplayerstartcvars()
 			for (i = WEP_FIRST; i <= WEP_LAST; ++i)
 			{
 				e = get_weaponinfo(i);
-				float w = want_weapon("g_start_weapon_", e, g_warmup_allguns);
+				float w = want_weapon(e, g_warmup_allguns);
 				if(w & 1)
 					warmup_start_weapons |= WepSet_FromWeapon(i);
 				if(w & 2)
@@ -870,18 +875,20 @@ void readplayerstartcvars()
 	{
 		e = get_weaponinfo(i);
 		if(precache_weapons & WepSet_FromWeapon(i))
-			weapon_action(i, WR_PRECACHE);
+			WEP_ACTION(i, WR_INIT);
 	}
 
 	start_ammo_shells = max(0, start_ammo_shells);
 	start_ammo_nails = max(0, start_ammo_nails);
 	start_ammo_cells = max(0, start_ammo_cells);
+	start_ammo_plasma = max(0, start_ammo_plasma);
 	start_ammo_rockets = max(0, start_ammo_rockets);
 	start_ammo_fuel = max(0, start_ammo_fuel);
 
 	warmup_start_ammo_shells = max(0, warmup_start_ammo_shells);
 	warmup_start_ammo_nails = max(0, warmup_start_ammo_nails);
 	warmup_start_ammo_cells = max(0, warmup_start_ammo_cells);
+	warmup_start_ammo_plasma = max(0, warmup_start_ammo_plasma);
 	warmup_start_ammo_rockets = max(0, warmup_start_ammo_rockets);
 	warmup_start_ammo_fuel = max(0, warmup_start_ammo_fuel);
 }
@@ -981,6 +988,8 @@ void readlevelcvars(void)
 	g_pickup_rockets_max = cvar("g_pickup_rockets_max");
 	g_pickup_cells = cvar("g_pickup_cells");
 	g_pickup_cells_max = cvar("g_pickup_cells_max");
+	g_pickup_plasma = cvar("g_pickup_plasma");
+	g_pickup_plasma_max = cvar("g_pickup_plasma_max");
 	g_pickup_fuel = cvar("g_pickup_fuel");
 	g_pickup_fuel_jetpack = cvar("g_pickup_fuel_jetpack");
 	g_pickup_fuel_max = cvar("g_pickup_fuel_max");
@@ -1374,18 +1383,6 @@ void precache()
     {
         precache_sound (W_Sound("hook_fire")); // hook
         precache_sound (W_Sound("hook_impact")); // hook
-    }
-
-    if(autocvar_sv_precacheweapons)
-    {
-        //precache weapon models/sounds
-        float wep;
-        wep = WEP_FIRST;
-        while (wep <= WEP_LAST)
-        {
-            weapon_action(wep, WR_PRECACHE);
-            wep = wep + 1;
-        }
     }
 
     precache_model("models/elaser.mdl");

@@ -121,7 +121,7 @@ MUTATOR_HOOKFUNCTION(lms_GiveFragsForKill)
 	// remove a life
 	float num_players = 0, player_lives = PlayerScore_Add(frag_target, SP_LMS_LIVES, -1);
 	entity tmp_entity;
-	
+
 	FOR_EACH_PLAYER(tmp_entity) { ++num_players; }
 
 	if(player_lives < lms_lowest_lives)
@@ -136,7 +136,6 @@ MUTATOR_HOOKFUNCTION(lms_GiveFragsForKill)
 		PlayerScore_Add(frag_target, SP_LMS_RANK, lms_next_place); // won't ever spawn again
 		--lms_next_place;
 	}
-
 	frag_score = 0;
 
 	return TRUE;
@@ -158,6 +157,7 @@ MUTATOR_HOOKFUNCTION(lms_SetStartItems)
 
 MUTATOR_HOOKFUNCTION(lms_KeepScore)
 {
+	// don't clear player score
 	return TRUE;
 }
 

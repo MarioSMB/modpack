@@ -701,12 +701,12 @@ void bumblebee_blowup()
 {
 	RadiusDamage(self, self.enemy, autocvar_g_vehicle_bumblebee_blowup_coredamage,
 				 autocvar_g_vehicle_bumblebee_blowup_edgedamage,
-				 autocvar_g_vehicle_bumblebee_blowup_radius, self,
+				 autocvar_g_vehicle_bumblebee_blowup_radius, self, world,
 				 autocvar_g_vehicle_bumblebee_blowup_forceintensity,
 				 DEATH_VH_BUMB_DEATH, world);
 
 	sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
-	pointparticles(particleeffectnum("explosion_big"), (self.origin + '0 0 100') + (randomvec() * 80), '0 0 0', 1);
+	Send_Effect(EFFECT_EXPLOSION_BIG, (self.origin + '0 0 100') + (randomvec() * 80), '0 0 0', 1);
 
 	if(self.owner.deadflag == DEAD_DYING)
 		self.owner.deadflag = DEAD_DEAD;
@@ -722,7 +722,7 @@ void bumblebee_diethink()
 	if(random() < 0.1)
 	{
 		sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
-		pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+		Send_Effect(EFFECT_EXPLOSION_SMALL, (self.origin + '0 0 100') + (randomvec() * 80), '0 0 0', 1);
 	}
 
 	self.nextthink = time + 0.1;
@@ -865,8 +865,8 @@ float v_bumblebee(float req)
 			_body.enemy = self.enemy;
 			_body.scale = 1.5;
 			_body.angles = self.angles;
-			
-			pointparticles(particleeffectnum("explosion_medium"), findbetterlocation(self.origin, 16), '0 0 0', 1);
+
+			Send_Effect(EFFECT_EXPLOSION_MEDIUM, findbetterlocation (self.origin, 16), '0 0 0', 1);
 			
 			self.health			= 0;
 			self.event_damage	= func_null;

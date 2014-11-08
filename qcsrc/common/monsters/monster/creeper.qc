@@ -38,7 +38,7 @@ float M_Creeper_Attack(float attack_type)
 				pointparticles(particleeffectnum("explosion_medium"), self.origin, '0 0 0', 1);
 				sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 
-				RadiusDamage (self, self, (autocvar_g_monster_creeper_attack_explode_damage), (autocvar_g_monster_creeper_attack_explode_edgedamage), (autocvar_g_monster_creeper_attack_explode_radius), world, (autocvar_g_monster_creeper_attack_explode_force), DEATH_MONSTER_CREEPER, other);
+				RadiusDamage (self, self, (autocvar_g_monster_creeper_attack_explode_damage), (autocvar_g_monster_creeper_attack_explode_edgedamage), (autocvar_g_monster_creeper_attack_explode_radius), world, world, (autocvar_g_monster_creeper_attack_explode_force), DEATH_MONSTER_CREEPER, other);
 
 				//Monster_Sound(monstersound_attack, 0, FALSE, CH_SHOTS);
 				Damage (self, world, world, self.health + self.max_health + 200, DEATH_KILL, self.origin, '0 0 0'); // killing monster should be reliable enough

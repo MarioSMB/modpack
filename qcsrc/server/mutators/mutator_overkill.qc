@@ -73,7 +73,7 @@ void start_ma_anyway()
 MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 {
 	if(IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target))
-	if(DEATH_ISWEAPON(frag_deathtype, WEP_LASER))
+	if(DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER))
 	{
 		frag_damage = 0;
 
@@ -166,9 +166,21 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 	if(!weaponuse_forbidden || (weaponuse_forbidden == 4 || weaponuse_forbidden == 2)) // allow if weapon is blocked
 	if(time >= self.jump_interval)
 	{
-		self.jump_interval = time + autocvar_g_balance_laser_primary_refire * W_WeaponRateFactor();
+		self.jump_interval = time + WEP_CVAR_PRI(blaster, refire) * W_WeaponRateFactor();
 		makevectors(self.v_angle);
-		W_Laser_Attack(3, WEP_LASER, WEP_LASER);
+		
+		W_Blaster_Attack(
+			WEP_BLASTER | HITTYPE_SECONDARY,
+			WEP_CVAR_SEC(vaporizer, shotangle),
+			WEP_CVAR_SEC(vaporizer, damage),
+			WEP_CVAR_SEC(vaporizer, edgedamage),
+			WEP_CVAR_SEC(vaporizer, radius),
+			WEP_CVAR_SEC(vaporizer, force),
+			WEP_CVAR_SEC(vaporizer, speed),
+			WEP_CVAR_SEC(vaporizer, spread),
+			WEP_CVAR_SEC(vaporizer, delay),
+			WEP_CVAR_SEC(vaporizer, lifetime)
+		);
 	}
 
 	self.weapon_blocked = FALSE;
@@ -270,7 +282,7 @@ MUTATOR_HOOKFUNCTION(ok_SpectateCopy)
 MUTATOR_HOOKFUNCTION(ok_StartItems)
 {
 	start_items |= IT_UNLIMITED_WEAPON_AMMO;
-	start_weapons = warmup_start_weapons = (WEPSET_UZI | WEPSET_NEX | WEPSET_SHOTGUN);
+	start_weapons = warmup_start_weapons = (WEPSET_MACHINEGUN | WEPSET_VORTEX | WEPSET_SHOTGUN);
 
 	start_ammo_nails = start_ammo_cells = start_ammo_shells = start_ammo_rockets =
 	warmup_start_ammo_nails = warmup_start_ammo_cells = warmup_start_ammo_shells = warmup_start_ammo_rockets = autocvar_g_overkill_ammo_start; // is this really needed? ammo isn't used anymore, but should default above 0
@@ -317,30 +329,30 @@ void ok_SetCvars()
 	cvar_settemp("g_balance_shotgun_reload_time", "2");
 	cvar_settemp("g_balance_shotgun_primary_bulletconstant", "3000");
 
-	// uzi
-	cvar_settemp("g_balance_uzi_mode", "1");
-	cvar_settemp("g_balance_uzi_sustained_damage", "25");
-	cvar_settemp("g_balance_uzi_sustained_refire", "0.1");
-	cvar_settemp("g_balance_uzi_sustained_spread", "0.01");
-	cvar_settemp("g_balance_uzi_sustained_force", "5");
-	cvar_settemp("g_balance_uzi_reload_ammo", "30");
-	cvar_settemp("g_balance_uzi_reload_time", "1.5");
-	cvar_settemp("g_balance_uzi_primary_bulletconstant", "3000");
+	// machinegun
+	cvar_settemp("g_balance_machinegun_mode", "1");
+	cvar_settemp("g_balance_machinegun_sustained_damage", "25");
+	cvar_settemp("g_balance_machinegun_sustained_refire", "0.1");
+	cvar_settemp("g_balance_machinegun_sustained_spread", "0.01");
+	cvar_settemp("g_balance_machinegun_sustained_force", "5");
+	cvar_settemp("g_balance_machinegun_reload_ammo", "30");
+	cvar_settemp("g_balance_machinegun_reload_time", "1.5");
+	cvar_settemp("g_balance_machinegun_primary_bulletconstant", "3000");
 
-	// nex
-	cvar_settemp("g_balance_nex_primary_damage", "100");
-	cvar_settemp("g_balance_nex_primary_force", "500");
-	cvar_settemp("g_balance_nex_primary_refire", "0.75");
-	cvar_settemp("g_balance_nex_primary_animtime", "0.75");
-	cvar_settemp("g_balance_nex_primary_ammo", "6");
-	cvar_settemp("g_balance_nex_primary_damagefalloff_mindist", "0");
-	cvar_settemp("g_balance_nex_primary_damagefalloff_maxdist", "0");
-	cvar_settemp("g_balance_nex_primary_damagefalloff_halflife", "0");
-	cvar_settemp("g_balance_nex_primary_damagefalloff_forcehalflife", "0");
-	cvar_settemp("g_balance_nex_secondary", "1");
-	cvar_settemp("g_balance_nex_charge", "0");
-	cvar_settemp("g_balance_nex_reload_ammo", "30");
-	cvar_settemp("g_balance_nex_reload_time", "2");
+	// vortex
+	cvar_settemp("g_balance_vortex_primary_damage", "100");
+	cvar_settemp("g_balance_vortex_primary_force", "500");
+	cvar_settemp("g_balance_vortex_primary_refire", "0.75");
+	cvar_settemp("g_balance_vortex_primary_animtime", "0.75");
+	cvar_settemp("g_balance_vortex_primary_ammo", "6");
+	cvar_settemp("g_balance_vortex_primary_damagefalloff_mindist", "0");
+	cvar_settemp("g_balance_vortex_primary_damagefalloff_maxdist", "0");
+	cvar_settemp("g_balance_vortex_primary_damagefalloff_halflife", "0");
+	cvar_settemp("g_balance_vortex_primary_damagefalloff_forcehalflife", "0");
+	cvar_settemp("g_balance_vortex_secondary", "1");
+	cvar_settemp("g_balance_vortex_charge", "0");
+	cvar_settemp("g_balance_vortex_reload_ammo", "30");
+	cvar_settemp("g_balance_vortex_reload_time", "2");
 
 	// misc
 	cvar_settemp("g_projectiles_newton_style_2_minfactor", "1");
@@ -373,20 +385,21 @@ void ok_Initialize()
 	addstat(STAT_OK_AMMO_CHARGE, AS_FLOAT, ok_use_ammocharge);
 	addstat(STAT_OK_AMMO_CHARGEPOOl, AS_FLOAT, ok_ammo_charge);
 
-	w_uzi(WR_PRECACHE);
-	w_nex(WR_PRECACHE);
-	w_shotgun(WR_PRECACHE);
-	w_laser(WR_PRECACHE);
+	WEP_ACTION(WEP_MACHINEGUN, WR_INIT);
+	WEP_ACTION(WEP_VORTEX, WR_INIT);
+	WEP_ACTION(WEP_SHOTGUN, WR_INIT);
+	WEP_ACTION(WEP_BLASTER, WR_INIT);
 	
-	w_rpc(WR_PRECACHE);
-	w_hmg(WR_PRECACHE);
+	WEP_ACTION(WEP_RPC, WR_INIT);
+	WEP_ACTION(WEP_HMG, WR_INIT);
 
 	(get_weaponinfo(WEP_RPC)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 	(get_weaponinfo(WEP_HMG)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
+	(get_weaponinfo(WEP_SHOTGUN)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 
 	(get_weaponinfo(WEP_SHOTGUN)).mdl = "ok_shotgun";
-	(get_weaponinfo(WEP_UZI)).mdl = "ok_mg";
-	(get_weaponinfo(WEP_NEX)).mdl = "ok_sniper";
+	(get_weaponinfo(WEP_MACHINEGUN)).mdl = "ok_mg";
+	(get_weaponinfo(WEP_VORTEX)).mdl = "ok_sniper";
 }
 
 MUTATOR_DEFINITION(mutator_overkill)

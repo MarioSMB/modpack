@@ -426,6 +426,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 		frag_target.buff_disability_time = time + autocvar_g_buffs_disability_time;
 
 	if(frag_attacker.buffs & BUFF_MEDIC)
+	if(DEATH_WEAPONOF(frag_deathtype) != WEP_ARC)
 	if(SAME_TEAM(frag_attacker, frag_target))
 	if(frag_attacker != frag_target)
 	{
@@ -436,6 +437,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerDamage_Calculate)
 	// this... is ridiculous (TODO: fix!)
 	if(frag_attacker.buffs & BUFF_VAMPIRE)
 	if(!frag_target.vehicle)
+	if(DEATH_WEAPONOF(frag_deathtype) != WEP_ARC)
 	if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	if(frag_target.deadflag == DEAD_NO)
 	if(IS_PLAYER(frag_target) || IS_MONSTER(frag_target))

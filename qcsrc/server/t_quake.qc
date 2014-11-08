@@ -3,7 +3,7 @@
 //***********************
 void spawnfunc_weapon_nailgun (void) {spawnfunc_weapon_uzi();} // was electro
 void spawnfunc_weapon_supernailgun (void) {spawnfunc_weapon_hagar();}
-void spawnfunc_weapon_supershotgun (void) {spawnfunc_weapon_crylink();} // was uzi
+void spawnfunc_weapon_supershotgun (void) {spawnfunc_weapon_crylink();} // was machinegun
 
 void spawnfunc_item_spikes (void) {spawnfunc_item_bullets();}
 //void spawnfunc_item_armor1 (void) {spawnfunc_item_armor_medium;}  // FIXME: in Quake this is green armor, in Xonotic maps it is an armor shard

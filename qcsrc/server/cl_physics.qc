@@ -1313,15 +1313,16 @@ void SV_PlayerPhysics()
 		}
 	}
 
+	// WEAPONTODO
 	float xyspeed;
 	xyspeed = vlen('1 0 0' * self.velocity_x + '0 1 0' * self.velocity_y);
-	if(self.weapon == WEP_NEX && autocvar_g_balance_nex_charge && autocvar_g_balance_nex_charge_velocity_rate && xyspeed > autocvar_g_balance_nex_charge_minspeed)
+	if(self.weapon == WEP_VORTEX && WEP_CVAR(vortex, charge) && WEP_CVAR(vortex, charge_velocity_rate) && xyspeed > WEP_CVAR(vortex, charge_minspeed))
 	{
 		// add a maximum of charge_velocity_rate when going fast (f = 1), gradually increasing from minspeed (f = 0) to maxspeed
-	        xyspeed = min(xyspeed, autocvar_g_balance_nex_charge_maxspeed);
-		f = (xyspeed - autocvar_g_balance_nex_charge_minspeed) / (autocvar_g_balance_nex_charge_maxspeed - autocvar_g_balance_nex_charge_minspeed);
+	        xyspeed = min(xyspeed, WEP_CVAR(vortex, charge_maxspeed));
+		f = (xyspeed - WEP_CVAR(vortex, charge_minspeed)) / (WEP_CVAR(vortex, charge_maxspeed) - WEP_CVAR(vortex, charge_minspeed));
 		// add the extra charge
-		self.nex_charge = min(1, self.nex_charge + autocvar_g_balance_nex_charge_velocity_rate * f * frametime);
+		self.vortex_charge = min(1, self.vortex_charge + WEP_CVAR(vortex, charge_velocity_rate) * f * frametime);
 	}
 :end
 	if(self.flags & FL_ONGROUND)
