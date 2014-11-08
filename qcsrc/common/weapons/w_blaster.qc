@@ -22,6 +22,7 @@ REGISTER_WEAPON(
 	w_cvar(id, sn, BOTH, delay) \
 	w_cvar(id, sn, BOTH, edgedamage) \
 	w_cvar(id, sn, BOTH, force) \
+	w_cvar(id, sn, BOTH, force_zscale) \
 	w_cvar(id, sn, BOTH, lifetime) \
 	w_cvar(id, sn, BOTH, radius) \
 	w_cvar(id, sn, BOTH, refire) \

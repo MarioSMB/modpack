@@ -4,7 +4,7 @@ REGISTER_WEAPON(
 /* function  */ W_Shockwave,
 /* ammotype  */ ammo_none,
 /* impulse   */ 2,
-/* flags     */ WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN | WEP_FLAG_CANCLIMB,
+/* flags     */ WEP_FLAG_NORMAL | WEP_TYPE_HITSCAN | WEP_FLAG_CANCLIMB | WEP_FLAG_MUTATORBLOCKED,
 /* rating    */ BOT_PICKUP_RATING_LOW,
 /* color     */ '0.5 0.25 0',
 /* modelname */ "shotguncannon",
@@ -714,8 +714,8 @@ float W_Shockwave(float req)
 			precache_model("models/weapons/v_shotguncannon.md3");
 			precache_model("models/weapons/h_shotguncannon.iqm");
 			precache_sound("misc/itempickup.wav");
-			precache_sound("weapons/shockwave_fire.wav");
-			precache_sound("weapons/shockwave_melee.wav");
+			precache_sound("weapons/lasergun_fire.wav");
+			precache_sound("weapons/shotgun_melee.wav");
 			SHOCKWAVE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)
 			return TRUE;
 		}

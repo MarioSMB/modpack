@@ -221,7 +221,7 @@ void W_MineLayer_Think(void)
 	
 	// our lifetime has expired, it's time to die - mine_time just allows us to play a sound for this
 	// TODO: replace this mine_trigger.wav sound with a real countdown
-	if((time > self.cnt) && (!self.mine_time) && (self.cnt != -1))
+	if((time > self.cnt) && (!self.mine_time) && (self.cnt > -1))
 	{
 		if(WEP_CVAR(minelayer, lifetime_countdown) > 0)
 			spamsound(self, CH_SHOTS, "weapons/mine_trigger.wav", VOL_BASE, ATTN_NORM);
@@ -357,10 +357,7 @@ void W_MineLayer_Attack(void)
 	mine.touch = W_MineLayer_Touch;
 	mine.think = W_MineLayer_Think;
 	mine.nextthink = time;
-	if(WEP_CVAR(minelayer, lifetime) < 0)
-		mine.cnt = -1; // don't expire
-	else
-		mine.cnt = time + (WEP_CVAR(minelayer, lifetime) - WEP_CVAR(minelayer, lifetime_countdown));
+	mine.cnt = time + (WEP_CVAR(minelayer, lifetime) - WEP_CVAR(minelayer, lifetime_countdown));
 	mine.flags = FL_PROJECTILE;
 	mine.missile_flags = MIF_SPLASH | MIF_ARC | MIF_PROXY;
 
