@@ -696,14 +696,17 @@ float turret_validate_target(entity e_turret, entity e_target, float validate_fl
 	//if(!validate_flags & TFL_TARGETSELECT_NOBUILTIN)
 	//	return -0.5;
 
+	if(!e_target)
+		return -2;
+
 	if(e_target.owner == e_turret)
 		return -0.5;
 
 	if(!checkpvs(e_target.origin, e_turret))
 		return -1;
 
-	if(!e_target)
-		return -2;
+	if(e_target.alpha <= 0.3)
+		return -1;
 
 	if(g_onslaught)
 		if (substring(e_target.classname, 0, 10) == "onslaught_") // don't attack onslaught targets, that's the player's job!
