@@ -530,7 +530,6 @@ float autocvar_g_spawn_useallspawns;
 float autocvar_g_spawnpoints_auto_move_out_of_solid;
 #define autocvar_g_spawnshieldtime cvar("g_spawnshieldtime")
 float autocvar_g_spawnshield_nodamage;
-#define autocvar_g_start_weapon_laser cvar("g_start_weapon_laser")
 float autocvar_g_tdm_team_spawns;
 float autocvar_g_tdm_point_limit;
 float autocvar_g_tdm_point_leadlimit;
