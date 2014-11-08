@@ -263,7 +263,7 @@ float tankll48_frame()
 		tank.vehicle_ammo1 -= autocvar_g_vehicle_tankll48_cannon_ammo;
 		w_shotorg = v;
 
-		pointparticles(particleeffectnum("rocketlauncher_muzzleflash"), w_shotorg, w_shotdir * 1000, 1);
+		Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 		PROJECTILE_MAKETRIGGER(missile);
 
 		missile.owner = tank;
@@ -390,7 +390,7 @@ void tankll48_headfade()
 		if(self.alpha > 0.1)
 		{
 			sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
-			pointparticles(particleeffectnum("explosion_big"), self.origin + '0 0 100', '0 0 0', 1);
+			Send_Effect(EFFECT_EXPLOSION_BIG, self.origin + '0 0 100', '0 0 0', 1);
 		}
 		remove(self);
 	}
@@ -403,7 +403,7 @@ void tankll48_blowup()
 		if(random() < 0.1)
 		{
 			sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
-			pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+			Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 		}
 		self.nextthink = time + 0.1;
 		return;

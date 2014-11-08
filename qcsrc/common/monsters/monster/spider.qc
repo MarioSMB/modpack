@@ -34,7 +34,7 @@ void M_Spider_Attack_Web_Explode()
 	entity e;
 	if(self)
 	{
-		pointparticles(particleeffectnum("electro_impact"), self.origin, '0 0 0', 1);
+		Send_Effect(EFFECT_ELECTRO_IMPACT, self.origin, '0 0 0', 1);
 		RadiusDamage(self, self.realowner, 0, 0, 25, world, world, 25, self.projectiledeathtype, world);
 
 		for(e = findradius(self.origin, 25); e; e = e.chain) if(e != self) if(e.takedamage && e.deadflag == DEAD_NO) if(e.health > 0) if(e.monsterid != self.realowner.monsterid)

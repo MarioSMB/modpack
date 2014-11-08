@@ -708,7 +708,7 @@ void raptor_diethink()
 	if(random() < 0.05)
 	{
 		sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
-		pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+		Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	}
 	self.nextthink = time;
 	
@@ -810,7 +810,7 @@ float v_raptor(float req)
 			self.nextthink			= time;
 			self.wait				= time + 5 + (random() * 5);
 
-			pointparticles(particleeffectnum("explosion_medium"), findbetterlocation (self.origin, 16), '0 0 0', 1);
+			Send_Effect(EFFECT_EXPLOSION_MEDIUM, findbetterlocation (self.origin, 16), '0 0 0', 1);
 
 			self.velocity_z += 600;
 

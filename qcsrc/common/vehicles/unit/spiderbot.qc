@@ -623,7 +623,7 @@ void spiderbot_headfade()
 		if(self.alpha > 0.1)
 		{
 			sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
-			pointparticles(particleeffectnum("explosion_big"), self.origin + '0 0 100', '0 0 0', 1);
+			Send_Effect(EFFECT_EXPLOSION_BIG, self.origin + '0 0 100', '0 0 0', 1);
 		}
 		remove(self);
 	}
@@ -636,7 +636,7 @@ void spiderbot_blowup()
 		if(random() < 0.1)
 		{
 			sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
-			pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+			Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 		}
 		self.nextthink = time + 0.1;
 		return;

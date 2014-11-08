@@ -38,6 +38,7 @@
 	EFFECT(0, EFFECT_ROCKET_GUIDE,				"rocket_guide") \
 	EFFECT(0, EFFECT_ROCKET_MUZZLEFLASH,		"rocketlauncher_muzzleflash") \
 	EFFECT(0, EFFECT_FIREBALL_LASER,			"fireball_laser") \
+	EFFECT(0, EFFECT_FIREBALL_EXPLODE,			"fireball_explode") \
 	EFFECT(0, EFFECT_FIREBALL_BFGDAMAGE,		"fireball_bfgdamage") \
 	EFFECT(0, EFFECT_FIREBALL_MUZZLEFLASH,		"fireball_muzzleflash") \
 	EFFECT(0, EFFECT_FIREBALL_PRE_MUZZLEFLASH,	"fireball_preattack_muzzleflash") \

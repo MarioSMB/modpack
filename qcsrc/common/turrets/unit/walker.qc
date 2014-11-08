@@ -344,7 +344,7 @@ float t_walker(float req)
 		{
 			sound (self, CH_WEAPON_A, W_Sound("uzi_fire"), VOL_BASE, ATTEN_NORM);
 			fireBullet (self.tur_shotorg, self.tur_shotdir_updated, self.shot_spread, 0, self.shot_dmg, self.shot_force, DEATH_TURRET_WALK_GUN, 0);
-			pointparticles(particleeffectnum("laser_muzzleflash"), self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
+			Send_Effect(EFFECT_LASER_MUZZLEFLASH, self.tur_shotorg, self.tur_shotdir_updated * 1000, 1);
 
 			return TRUE;
 		}

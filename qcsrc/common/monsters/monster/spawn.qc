@@ -30,7 +30,7 @@ const float spawn_anim_explode 	= 4;
 
 void M_Spawn_Attack_Explode()
 {
-	pointparticles(particleeffectnum("grenade_explode"), self.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_GRENADE_EXPLODE, self.origin, '0 0 0', 1);
 	sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 
 	RadiusDamage (self, self, (autocvar_g_monster_spawn_attack_explode_damage), (autocvar_g_monster_spawn_attack_explode_edgedamage), (autocvar_g_monster_spawn_attack_explode_radius), world, (autocvar_g_monster_spawn_attack_explode_force), DEATH_MONSTER_CREEPER, other);

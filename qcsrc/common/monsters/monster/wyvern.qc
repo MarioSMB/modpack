@@ -33,7 +33,7 @@ void M_Wyvern_Attack_Fireball_Explode()
 	entity e;
 	if(self)
 	{
-		pointparticles(particleeffectnum("fireball_explode"), self.origin, '0 0 0', 1);
+		Send_Effect(EFFECT_FIREBALL_EXPLODE, self.origin, '0 0 0', 1);
 
 		RadiusDamage(self, self.realowner, (autocvar_g_monster_wyvern_attack_fireball_damage), (autocvar_g_monster_wyvern_attack_fireball_edgedamage), (autocvar_g_monster_wyvern_attack_fireball_force), world, world, (autocvar_g_monster_wyvern_attack_fireball_radius), self.projectiledeathtype, world);
 

@@ -64,7 +64,7 @@ void M_Ogre_Attack_MachineGun()
 
 	fireBullet(org, dir, autocvar_g_monster_ogre_attack_machinegun_spread, autocvar_g_monster_ogre_attack_machinegun_solidpenetration, autocvar_g_monster_ogre_attack_machinegun_damage, autocvar_g_monster_ogre_attack_machinegun_force, DEATH_MONSTER_OGRE_MACHINEGUN, 0);
 
-	pointparticles(particleeffectnum("uzi_muzzleflash"), org, dir * 1000, 1);
+	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, org, dir * 1000, 1);
 
 	// casing code
 	if (autocvar_g_casings >= 2)
@@ -138,7 +138,7 @@ void M_Ogre_Attack_Grenade()
 
 	makevectors(self.angles);
 
-	pointparticles(particleeffectnum("grenadelauncher_muzzleflash"), org, dir * 1000, 1);
+	Send_Effect(EFFECT_GRENADE_MUZZLEFLASH, org, dir * 1000, 1);
 
 	gren = spawn ();
 	gren.owner = gren.realowner = self;

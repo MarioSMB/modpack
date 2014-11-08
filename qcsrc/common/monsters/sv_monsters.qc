@@ -867,7 +867,7 @@ void Monster_Remove(entity mon)
 	if(!mon) { return; }
 
 	if(!MUTATOR_CALLHOOK(MonsterRemove))
-		pointparticles(particleeffectnum("spawn_event_neutral"), mon.origin, '0 0 0', 1);
+		Send_Effect(EFFECT_SPAWN_NEUTRAL, mon.origin, '0 0 0', 1);
 
 	if(mon.weaponentity) { remove(mon.weaponentity); }
 	if(mon.iceblock) { remove(mon.iceblock); }

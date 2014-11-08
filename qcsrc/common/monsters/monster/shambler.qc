@@ -68,7 +68,7 @@ void M_Shambler_Attack_Lightning_Explode()
 	entity head;
 
 	sound(self, CH_SHOTS, W_Sound("electro_impact"), VOL_BASE, ATTEN_NORM);
-	pointparticles(particleeffectnum("electro_impact"), self.origin, '0 0 0', 1);
+	Send_Effect(EFFECT_ELECTRO_IMPACT, self.origin, '0 0 0', 1);
 
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
