@@ -386,7 +386,7 @@ MUTATOR_HOOKFUNCTION(minstagib_ItemTouch)
 
 MUTATOR_HOOKFUNCTION(minstagib_OnEntityPreSpawn)
 {
-	if(WEP_CVAR(vaporizer, superblast))
+	if(WEP_CVAR(vaporizer, charge))
 	if(self.classname == "item_cells" || self.classname == "item_minst_cells")
 	if(random() <= 0.5)
 		minstagib_item_supercells();

@@ -33,34 +33,34 @@ REGISTER_WEAPON(
 	w_cvar(id, sn, SEC,  shotangle) \
 	w_cvar(id, sn, SEC,  speed) \
 	w_cvar(id, sn, SEC,  spread) \
-	w_cvar(id, sn, NONE, superblast) \
-	w_cvar(id, sn, NONE, superblast_distance) \
-	w_cvar(id, sn, NONE, superblast_force) \
-	w_cvar(id, sn, NONE, superblast_force_forwardbias) \
-	w_cvar(id, sn, NONE, superblast_force_zscale) \
-	w_cvar(id, sn, NONE, superblast_multiplier_accuracy) \
-	w_cvar(id, sn, NONE, superblast_multiplier_distance) \
-	w_cvar(id, sn, NONE, superblast_multiplier_min) \
-	w_cvar(id, sn, NONE, superblast_jump_damage) \
-	w_cvar(id, sn, NONE, superblast_jump_edgedamage) \
-	w_cvar(id, sn, NONE, superblast_jump_force) \
-	w_cvar(id, sn, NONE, superblast_jump_force_velocitybias) \
-	w_cvar(id, sn, NONE, superblast_jump_force_zscale) \
-	w_cvar(id, sn, NONE, superblast_jump_multiplier_accuracy) \
-	w_cvar(id, sn, NONE, superblast_jump_multiplier_distance) \
-	w_cvar(id, sn, NONE, superblast_jump_multiplier_min) \
-	w_cvar(id, sn, NONE, superblast_jump_radius) \
-	w_cvar(id, sn, NONE, superblast_spread_max) \
-	w_cvar(id, sn, NONE, superblast_spread_min) \
-	w_cvar(id, sn, NONE, superblast_splash_damage) \
-	w_cvar(id, sn, NONE, superblast_splash_edgedamage) \
-	w_cvar(id, sn, NONE, superblast_splash_force) \
-	w_cvar(id, sn, NONE, superblast_splash_force_forwardbias) \
-	w_cvar(id, sn, NONE, superblast_splash_force_zscale) \
-	w_cvar(id, sn, NONE, superblast_splash_multiplier_accuracy) \
-	w_cvar(id, sn, NONE, superblast_splash_multiplier_distance) \
-	w_cvar(id, sn, NONE, superblast_splash_multiplier_min) \
-	w_cvar(id, sn, NONE, superblast_splash_radius) \
+	w_cvar(id, sn, NONE, charge) \
+	w_cvar(id, sn, NONE, charge_distance) \
+	w_cvar(id, sn, NONE, charge_force) \
+	w_cvar(id, sn, NONE, charge_force_forwardbias) \
+	w_cvar(id, sn, NONE, charge_force_zscale) \
+	w_cvar(id, sn, NONE, charge_multiplier_accuracy) \
+	w_cvar(id, sn, NONE, charge_multiplier_distance) \
+	w_cvar(id, sn, NONE, charge_multiplier_min) \
+	w_cvar(id, sn, NONE, charge_jump_damage) \
+	w_cvar(id, sn, NONE, charge_jump_edgedamage) \
+	w_cvar(id, sn, NONE, charge_jump_force) \
+	w_cvar(id, sn, NONE, charge_jump_force_velocitybias) \
+	w_cvar(id, sn, NONE, charge_jump_force_zscale) \
+	w_cvar(id, sn, NONE, charge_jump_multiplier_accuracy) \
+	w_cvar(id, sn, NONE, charge_jump_multiplier_distance) \
+	w_cvar(id, sn, NONE, charge_jump_multiplier_min) \
+	w_cvar(id, sn, NONE, charge_jump_radius) \
+	w_cvar(id, sn, NONE, charge_spread_max) \
+	w_cvar(id, sn, NONE, charge_spread_min) \
+	w_cvar(id, sn, NONE, charge_splash_damage) \
+	w_cvar(id, sn, NONE, charge_splash_edgedamage) \
+	w_cvar(id, sn, NONE, charge_splash_force) \
+	w_cvar(id, sn, NONE, charge_splash_force_forwardbias) \
+	w_cvar(id, sn, NONE, charge_splash_force_zscale) \
+	w_cvar(id, sn, NONE, charge_splash_multiplier_accuracy) \
+	w_cvar(id, sn, NONE, charge_splash_multiplier_distance) \
+	w_cvar(id, sn, NONE, charge_splash_multiplier_min) \
+	w_cvar(id, sn, NONE, charge_splash_radius) \
 	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
 	w_prop(id, sn, float,  reloading_time, reload_time) \
 	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
@@ -103,8 +103,8 @@ void SendCSQCSuperBlastParticle(vector endpos)
 	WriteCoord(MSG_BROADCAST, endpos_x);
 	WriteCoord(MSG_BROADCAST, endpos_y);
 	WriteCoord(MSG_BROADCAST, endpos_z);
-	WriteByte(MSG_BROADCAST, bound(0, WEP_CVAR(vaporizer, superblast_spread_max), 255));
-	WriteByte(MSG_BROADCAST, bound(0, WEP_CVAR(vaporizer, superblast_spread_min), 255));
+	WriteByte(MSG_BROADCAST, bound(0, WEP_CVAR(vaporizer, charge_spread_max), 255));
+	WriteByte(MSG_BROADCAST, bound(0, WEP_CVAR(vaporizer, charge_spread_min), 255));
 	WriteByte(MSG_BROADCAST, num_for_edict(self));
 }
 
@@ -115,7 +115,7 @@ float W_Vaporizer_SuperBlast_CheckSpread(vector targetorg, vector nearest_on_lin
 	float distance_from_line = vlen(targetorg - nearest_on_line);
 	
 	spreadlimit = (distance_of_attack ? min(1, (vlen(sw_shotorg - nearest_on_line) / distance_of_attack)) : 1);
-	spreadlimit = (WEP_CVAR(vaporizer, superblast_spread_min) * (1 - spreadlimit) + WEP_CVAR(vaporizer, superblast_spread_max) * spreadlimit);
+	spreadlimit = (WEP_CVAR(vaporizer, charge_spread_min) * (1 - spreadlimit) + WEP_CVAR(vaporizer, charge_spread_max) * spreadlimit);
 	
 	if(spreadlimit && (distance_from_line <= spreadlimit) && ((vlen(normalize(targetorg - sw_shotorg) - normalize(attack_endpos - sw_shotorg)) * RAD2DEG) <= 90))
 		return bound(0, (distance_from_line / spreadlimit), 1);
@@ -310,7 +310,7 @@ void W_Vaporizer_SuperBlast()
 	
 	// set up the shot direction
 	W_SetupShot(self, FALSE, 3, W_Sound("minstanex_charge2"), CH_WEAPON_B, WEP_CVAR_PRI(vaporizer, damage));
-	vector attack_endpos = (w_shotorg + (w_shotdir * WEP_CVAR(vaporizer, superblast_distance)));
+	vector attack_endpos = (w_shotorg + (w_shotdir * WEP_CVAR(vaporizer, charge_distance)));
 	WarpZone_TraceLine(w_shotorg, attack_endpos, MOVE_NOMONSTERS, self);
 	vector attack_hitpos = trace_endpos;
 	float distance_to_end = vlen(w_shotorg - attack_endpos);
@@ -319,10 +319,10 @@ void W_Vaporizer_SuperBlast()
 
 	// do the firing effect now
 	SendCSQCSuperBlastParticle(attack_endpos);
-	Damage_DamageInfo(attack_hitpos, WEP_CVAR(vaporizer, superblast_splash_damage), WEP_CVAR(vaporizer, superblast_splash_edgedamage), WEP_CVAR(vaporizer, superblast_splash_radius), w_shotdir * WEP_CVAR(vaporizer, superblast_splash_force), (WEP_VAPORIZER | HITTYPE_SPLASH), 0, self);
+	Damage_DamageInfo(attack_hitpos, WEP_CVAR(vaporizer, charge_splash_damage), WEP_CVAR(vaporizer, charge_splash_edgedamage), WEP_CVAR(vaporizer, charge_splash_radius), w_shotdir * WEP_CVAR(vaporizer, charge_splash_force), (WEP_VAPORIZER | HITTYPE_SPLASH), 0, self);
 
 	// splash damage/jumping trace
-	head = WarpZone_FindRadius(attack_hitpos, max(WEP_CVAR(vaporizer, superblast_splash_radius), WEP_CVAR(vaporizer, superblast_jump_radius)), FALSE);
+	head = WarpZone_FindRadius(attack_hitpos, max(WEP_CVAR(vaporizer, charge_splash_radius), WEP_CVAR(vaporizer, charge_jump_radius)), FALSE);
 	while(head)
 	{
 		next = head.chain;
@@ -334,33 +334,33 @@ void W_Vaporizer_SuperBlast()
 
 			float distance_to_head = vlen(attack_hitpos - head.WarpZone_findradius_nearest);
 			
-			if((head == self) && (distance_to_head <= WEP_CVAR(vaporizer, superblast_jump_radius)))
+			if((head == self) && (distance_to_head <= WEP_CVAR(vaporizer, charge_jump_radius)))
 			{
-				multiplier_from_accuracy = (1 - (distance_to_head ? min(1, (distance_to_head / WEP_CVAR(vaporizer, superblast_jump_radius))) : 0));
+				multiplier_from_accuracy = (1 - (distance_to_head ? min(1, (distance_to_head / WEP_CVAR(vaporizer, charge_jump_radius))) : 0));
 				multiplier_from_distance = (1 - (distance_to_hit ? min(1, (distance_to_hit / distance_to_end)) : 0));
-				multiplier = max(WEP_CVAR(vaporizer, superblast_jump_multiplier_min), ((multiplier_from_accuracy * WEP_CVAR(vaporizer, superblast_jump_multiplier_accuracy)) + (multiplier_from_distance * WEP_CVAR(vaporizer, superblast_jump_multiplier_distance))));
+				multiplier = max(WEP_CVAR(vaporizer, charge_jump_multiplier_min), ((multiplier_from_accuracy * WEP_CVAR(vaporizer, charge_jump_multiplier_accuracy)) + (multiplier_from_distance * WEP_CVAR(vaporizer, charge_jump_multiplier_distance))));
 
-				final_force = ((normalize(center - attack_hitpos) * WEP_CVAR(vaporizer, superblast_jump_force)) * multiplier);
+				final_force = ((normalize(center - attack_hitpos) * WEP_CVAR(vaporizer, charge_jump_force)) * multiplier);
 				vel = head.velocity; vel_z = 0;
-				vel = normalize(vel) * bound(0, vlen(vel) / autocvar_sv_maxspeed, 1) * WEP_CVAR(vaporizer, superblast_jump_force_velocitybias);
+				vel = normalize(vel) * bound(0, vlen(vel) / autocvar_sv_maxspeed, 1) * WEP_CVAR(vaporizer, charge_jump_force_velocitybias);
 				final_force = (vlen(final_force) * normalize(normalize(final_force) + vel));
-				final_force_z *= WEP_CVAR(vaporizer, superblast_jump_force_zscale);
-				final_damage = (WEP_CVAR(vaporizer, superblast_jump_damage) * multiplier + WEP_CVAR(vaporizer, superblast_jump_edgedamage) * (1 - multiplier));
+				final_force_z *= WEP_CVAR(vaporizer, charge_jump_force_zscale);
+				final_damage = (WEP_CVAR(vaporizer, charge_jump_damage) * multiplier + WEP_CVAR(vaporizer, charge_jump_edgedamage) * (1 - multiplier));
 
 				Damage(head, self, self, final_damage, (WEP_VAPORIZER | HITTYPE_SPLASH), head.origin, final_force);
 				//print("SELF HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
 			}
-			else if (distance_to_head <= WEP_CVAR(vaporizer, superblast_splash_radius))
+			else if (distance_to_head <= WEP_CVAR(vaporizer, charge_splash_radius))
 			{	
-				multiplier_from_accuracy = (1 - (distance_to_head ? min(1, (distance_to_head / WEP_CVAR(vaporizer, superblast_splash_radius))) : 0));
+				multiplier_from_accuracy = (1 - (distance_to_head ? min(1, (distance_to_head / WEP_CVAR(vaporizer, charge_splash_radius))) : 0));
 				multiplier_from_distance = (1 - (distance_to_hit ? min(1, (distance_to_hit / distance_to_end)) : 0));
-				multiplier = max(WEP_CVAR(vaporizer, superblast_splash_multiplier_min), ((multiplier_from_accuracy * WEP_CVAR(vaporizer, superblast_splash_multiplier_accuracy)) + (multiplier_from_distance * WEP_CVAR(vaporizer, superblast_splash_multiplier_distance))));
+				multiplier = max(WEP_CVAR(vaporizer, charge_splash_multiplier_min), ((multiplier_from_accuracy * WEP_CVAR(vaporizer, charge_splash_multiplier_accuracy)) + (multiplier_from_distance * WEP_CVAR(vaporizer, charge_splash_multiplier_distance))));
 
-				final_force = normalize(center - (attack_hitpos - (w_shotdir * WEP_CVAR(vaporizer, superblast_splash_force_forwardbias))));
+				final_force = normalize(center - (attack_hitpos - (w_shotdir * WEP_CVAR(vaporizer, charge_splash_force_forwardbias))));
 				//te_lightning2(world, attack_hitpos, (attack_hitpos + (final_force * 200)));
-				final_force = ((final_force * WEP_CVAR(vaporizer, superblast_splash_force)) * multiplier);
-				final_force_z *= WEP_CVAR(vaporizer, superblast_splash_force_zscale);
-				final_damage = (WEP_CVAR(vaporizer, superblast_splash_damage) * multiplier + WEP_CVAR(vaporizer, superblast_splash_edgedamage) * (1 - multiplier));
+				final_force = ((final_force * WEP_CVAR(vaporizer, charge_splash_force)) * multiplier);
+				final_force_z *= WEP_CVAR(vaporizer, charge_splash_force_zscale);
+				final_damage = (WEP_CVAR(vaporizer, charge_splash_damage) * multiplier + WEP_CVAR(vaporizer, charge_splash_edgedamage) * (1 - multiplier));
 
 				if(W_Vaporizer_SuperBlast_CheckHit(queue, head, final_force, final_damage)) { ++queue; }
 				//print("SPLASH HIT: multiplier = ", ftos(multiplier), strcat(", damage = ", ftos(final_damage), ", force = ", ftos(vlen(final_force))),"... multiplier_from_accuracy = ", ftos(multiplier_from_accuracy), ", multiplier_from_distance = ", ftos(multiplier_from_distance), ".\n");
@@ -370,7 +370,7 @@ void W_Vaporizer_SuperBlast()
 	}
 
 	// cone damage trace
-	head = WarpZone_FindRadius(w_shotorg, WEP_CVAR(vaporizer, superblast_distance), FALSE);
+	head = WarpZone_FindRadius(w_shotorg, WEP_CVAR(vaporizer, charge_distance), FALSE);
 	while(head)
 	{
 		next = head.chain;
@@ -393,17 +393,17 @@ void W_Vaporizer_SuperBlast()
 			vector nearest_to_attacker = WarpZoneLib_NearestPointOnBox(center + head.mins, center + head.maxs, nearest_on_line);
 			float distance_to_target = vlen(w_shotorg - nearest_to_attacker); // todo: use the findradius function for this
 
-			if((distance_to_target <= WEP_CVAR(vaporizer, superblast_distance)) 
+			if((distance_to_target <= WEP_CVAR(vaporizer, charge_distance)) 
 				&& (W_Vaporizer_SuperBlast_IsVisible(head, nearest_on_line, w_shotorg, attack_endpos)))
 			{
 				multiplier_from_accuracy = (1 - W_Vaporizer_SuperBlast_CheckSpread(nearest_to_attacker, nearest_on_line, w_shotorg, attack_endpos));
 				multiplier_from_distance = (1 - (distance_to_hit ? min(1, (distance_to_target / distance_to_end)) : 0));
-				multiplier = max(WEP_CVAR(vaporizer, superblast_multiplier_min), ((multiplier_from_accuracy * WEP_CVAR(vaporizer, superblast_multiplier_accuracy)) + (multiplier_from_distance * WEP_CVAR(vaporizer, superblast_multiplier_distance))));
+				multiplier = max(WEP_CVAR(vaporizer, charge_multiplier_min), ((multiplier_from_accuracy * WEP_CVAR(vaporizer, charge_multiplier_accuracy)) + (multiplier_from_distance * WEP_CVAR(vaporizer, charge_multiplier_distance))));
 
-				final_force = normalize(center - (nearest_on_line - (w_shotdir * WEP_CVAR(vaporizer, superblast_force_forwardbias))));
+				final_force = normalize(center - (nearest_on_line - (w_shotdir * WEP_CVAR(vaporizer, charge_force_forwardbias))));
 				//te_lightning2(world, nearest_on_line, (attack_hitpos + (final_force * 200)));
-				final_force = ((final_force * WEP_CVAR(vaporizer, superblast_force)) * multiplier);
-				final_force_z *= WEP_CVAR(vaporizer, superblast_force_zscale);
+				final_force = ((final_force * WEP_CVAR(vaporizer, charge_force)) * multiplier);
+				final_force_z *= WEP_CVAR(vaporizer, charge_force_zscale);
 				final_damage = (WEP_CVAR_PRI(vaporizer, damage) * multiplier + WEP_CVAR_PRI(vaporizer, damage) * (1 - multiplier));
 
 				if(W_Vaporizer_SuperBlast_CheckHit(queue, head, final_force, final_damage)) { ++queue; }
@@ -436,7 +436,7 @@ void W_Vaporizer_SuperBlast()
 
 float W_Vaporizer_SuperBlast_CheckAmmo()
 {
-	if(WEP_CVAR(vaporizer, superblast) == 3)
+	if(WEP_CVAR(vaporizer, charge) == 3)
 		return TRUE; // forced
 	float ammo_amount;
 	ammo_amount = self.ammo_supercells >= 1;
@@ -703,7 +703,7 @@ float W_Vaporizer(float req)
 					{
 						W_Vaporizer_Attack();
 						if(time >= self.vaporizer_jumpinterval)
-						if(WEP_CVAR(vaporizer, superblast) == 1 || (WEP_CVAR(vaporizer, superblast) == 2 && self.cvar_cl_charge) || WEP_CVAR(vaporizer, superblast) >= 3)
+						if(WEP_CVAR(vaporizer, charge) == 1 || (WEP_CVAR(vaporizer, charge) == 2 && self.cvar_cl_charge) || WEP_CVAR(vaporizer, charge) >= 3)
 						if(W_Vaporizer_SuperBlast_CheckAmmo())
 							self.vaporizer_held_down = 1;
 						weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(vaporizer, animtime), w_ready);
@@ -713,7 +713,7 @@ float W_Vaporizer(float req)
 				{
 					if(weapon_prepareattack(0, WEP_CVAR_PRI(vaporizer, refire)))
 					{
-						sound(self, CH_SHOTS, W_Sound("minstanex_charge_new"), VOL_BASE, ATTN_NORM);
+						sound(self, CH_SHOTS_SINGLE, W_Sound("minstanex_charge_new"), VOL_BASE, ATTN_NORM);
 						self.vaporizer_held_down = 2;
 						self.vaporizer_jumpinterval = time + 1.822;
 						weapon_thinkf(WFRAME_DONTCHANGE, WEP_CVAR_PRI(vaporizer, refire), w_ready); // update frame so we dont get stuck
@@ -723,6 +723,7 @@ float W_Vaporizer(float req)
 				{
 					if(weapon_prepareattack(0, WEP_CVAR_PRI(vaporizer, refire)))
 					{
+						stopsound(self, CH_SHOTS_SINGLE);
 						if((autocvar_g_rm && autocvar_g_rm_superrocket) || autocvar_g_rm_superrocket == 2)
 							W_RocketMinsta_SuperRocket();
 						else
@@ -734,7 +735,11 @@ float W_Vaporizer(float req)
 				}
 			}
 			else
+			{
+				if(self.vaporizer_held_down >= 2)
+					stopsound(self, CH_SHOTS_SINGLE);
 				self.vaporizer_held_down = FALSE;
+			}
 
 			if (self.BUTTON_ATCK2 || (self.BUTTON_ATCK && !self.ammo_cells && autocvar_g_rm))
 			{
