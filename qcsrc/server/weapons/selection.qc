@@ -56,7 +56,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				if (complain)
 				if(IS_REAL_CLIENT(cl))
 				{
-					play2(cl, "weapons/unavailable.wav");
+					play2(cl, W_Sound("unavailable"));
 					Send_WeaponComplain (cl, wpn, 0);
 				}
 				return FALSE;

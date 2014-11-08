@@ -1377,7 +1377,7 @@ void precache()
 	precache_sound (W_Sound("reload")); // until weapons have individual reload sounds, precache the reload sound here
     precache_sound (W_Sound("weapon_switch"));
     precache_sound (W_Sound("weaponpickup"));
-    precache_sound ("weapons/unavailable.wav");
+    precache_sound (W_Sound("unavailable"));
     precache_sound (W_Sound("dryfire"));
     if (g_grappling_hook)
     {

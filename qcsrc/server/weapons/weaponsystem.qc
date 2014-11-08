@@ -913,7 +913,7 @@ void W_Reload(float sent_ammo_min, string sent_sound)
 	{
 		if(IS_REAL_CLIENT(self) && self.reload_complain < time)
 		{
-			play2(self, "weapons/unavailable.wav");
+			play2(self, W_Sound("unavailable"));
 			sprint(self, strcat("You don't have enough ammo to reload the ^2", WEP_NAME(self.weapon), "\n"));
 			self.reload_complain = time + 1;
 		}
