@@ -183,7 +183,33 @@ const float MINIG_SF_ALL     = 0xff; // use to resend everything
  * 			Vector2D Note: implemented as Write/Read Coord on _x _y
  * Note:
  * 	classname and netname are always sent
+ * 	MSLE stands for Minigame Simple Linked Entity
  */
 #define MINIGAME_SIMPLELINKED_ENTITIES \
 	MSLE(minigame_board_piece,FIELD(MINIG_SF_CREATE,Byte,team) FIELD(MINIG_SF_UPDATE, Short, minigame_flags) FIELD(MINIG_SF_UPDATE, Vector2D,origin)) \
 	/*empty line*/
+
+
+const float msle_base_id = 2;
+float msle_id(string class_name)
+{
+	if ( class_name == "minigame" ) return 1;
+	if ( class_name == "minigame_player" ) return 2;
+	float i = msle_base_id;
+#define MSLE(Name, Fields) i++; if ( class_name == #Name ) return i;
+	MINIGAME_SIMPLELINKED_ENTITIES
+#undef MSLE
+	return 0;
+}
+
+string msle_classname(float id)
+{
+	if ( id == 1 ) return "minigame";
+	if ( id == 2 ) return "minigame_player";
+	float i = msle_base_id;
+#define MSLE(Name, Fields) i++; if ( id == i ) return #Name;
+	MINIGAME_SIMPLELINKED_ENTITIES
+#undef MSLE
+	return "";
+}
+

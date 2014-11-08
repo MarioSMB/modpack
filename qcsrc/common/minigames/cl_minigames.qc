@@ -73,6 +73,29 @@ string minigame_texture(string name)
 	return path;
 }
 
+#define MSLE(Name,Fields) \
+	else if ( self.classname == #Name ) { strunzone(e.netname); Fields }
+#define FIELD(Flags, Type, Name) MSLE_CLEAN_##Type(e.Name)
+#define MSLE_CLEAN_String(x) strunzone(x);
+#define MSLE_CLEAN_Byte(x)
+#define MSLE_CLEAN_Char(x)
+#define MSLE_CLEAN_Short(x)
+#define MSLE_CLEAN_Coord(x)
+#define MSLE_CLEAN_Angle(x)
+#define MSLE_CLEAN_Float(x)
+#define MSLE_CLEAN_Vector(x)
+#define MSLE_CLEAN_Vector2D(x)
+void minigame_autoclean_entity(entity e)
+{
+	if ( 0 ) {}
+	MINIGAME_SIMPLELINKED_ENTITIES
+	
+	dprint("CL Auto-cleaned: ",ftos(num_for_edict(e)), " (",e.classname,")\n");
+	remove(e);
+}
+#undef MSLE
+#undef FIELD
+
 void HUD_MinigameMenu_CurrentButton();
 float auto_close_minigamemenu;
 void deactivate_minigame()
@@ -85,8 +108,7 @@ void deactivate_minigame()
 	while( (e = findentity(e, owner, self)) )
 		if ( e.minigame_autoclean )
 		{
-			dprint("CL Auto-cleaned: ",ftos(num_for_edict(e)), " (",e.classname,")\n");
-			remove(e);
+			minigame_autoclean_entity(e);
 		}
 
 	minigame_self = world;
@@ -167,7 +189,7 @@ void ent_read_minigame()
 	float sf = ReadByte();
 	if ( sf & MINIG_SF_CREATE )
 	{
-		self.classname = ReadString_Zoned();
+		self.classname = msle_classname(ReadShort());
 		self.netname = ReadString_Zoned();
 	}
 	
@@ -224,6 +246,8 @@ void ent_read_minigame()
 }
 #undef ReadFloat
 #undef ReadString
+#undef FIELD
+#undef MSLE
 
 vector minigame_drawstring_wrapped( float maxwidth, vector pos, string text, 
 	vector fontsize, vector color, float theAlpha, float drawflags, float align )

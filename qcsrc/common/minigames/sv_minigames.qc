@@ -65,7 +65,7 @@ float minigame_SendEntity(entity to, float sf)
 	
 	if ( sf & MINIG_SF_CREATE )
 	{
-		WriteString(MSG_ENTITY,self.classname);
+		WriteShort(MSG_ENTITY,msle_id(self.classname));
 		WriteString(MSG_ENTITY,self.netname);
 	}
 	
@@ -98,6 +98,9 @@ float minigame_SendEntity(entity to, float sf)
 	return 1;
 	
 }
+#undef FIELD
+#undef MSLE
+#undef WriteFloat
 
 // Force resend all minigame entities
 void minigame_resend(entity minigame)
