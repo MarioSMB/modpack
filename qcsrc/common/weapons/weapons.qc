@@ -195,6 +195,20 @@ string W_NameWeaponOrder_MapFunc(string s)
 	}
 	return s;
 }
+
+string W_UndeprecateName(string s)
+{
+	switch ( s )
+	{
+		case "nex"            : return "vortex";
+		case "rocketlauncher" : return "devastator"; 
+		case "laser"          : return "blaster";
+		case "minstanex"      : return "vaporizer";
+		case "grenadelauncher": return "mortar";
+		case "uzi"            : return "machinegun";
+		default               : return s;
+	}
+}
 string W_NameWeaponOrder(string order)
 {
 	return mapPriorityList(order, W_NameWeaponOrder_MapFunc);
@@ -204,6 +218,7 @@ string W_NumberWeaponOrder_MapFunc(string s)
 	float i;
 	if(s == "0" || stof(s))
 		return s;
+	s = W_UndeprecateName(s);
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 		if(s == get_weaponinfo(i).netname)
 			return ftos(i);
