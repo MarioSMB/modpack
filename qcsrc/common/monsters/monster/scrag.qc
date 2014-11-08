@@ -33,7 +33,7 @@ void M_Scrag_Attack_Spike_Explode()
 	{
 		pointparticles(particleeffectnum("TE_WIZSPIKE"), self.origin, '0 0 0', 1);
 
-		RadiusDamage(self, self.realowner, (autocvar_g_monster_scrag_attack_spike_damage), (autocvar_g_monster_scrag_attack_spike_edgedamage), (autocvar_g_monster_scrag_attack_spike_force), world, (autocvar_g_monster_scrag_attack_spike_radius), self.projectiledeathtype, world);
+		RadiusDamage(self, self.realowner, (autocvar_g_monster_scrag_attack_spike_damage), (autocvar_g_monster_scrag_attack_spike_edgedamage), (autocvar_g_monster_scrag_attack_spike_force), world, world, (autocvar_g_monster_scrag_attack_spike_radius), self.projectiledeathtype, world);
 
 		remove(self);
 	}

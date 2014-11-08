@@ -45,7 +45,7 @@ void M_Vore_Attack_Spike_Explode()
 	self.realowner.vore_spike = world;
 
 	Send_Effect(EFFECT_EXPLOSION_SMALL, self.origin, '0 0 0', 1);
-	RadiusDamage (self, self.realowner, (autocvar_g_monster_vore_attack_spike_damage), (autocvar_g_monster_vore_attack_spike_damage) * 0.5, (autocvar_g_monster_vore_attack_spike_radius), world, 0, DEATH_MONSTER_VORE, other);
+	RadiusDamage (self, self.realowner, (autocvar_g_monster_vore_attack_spike_damage), (autocvar_g_monster_vore_attack_spike_damage) * 0.5, (autocvar_g_monster_vore_attack_spike_radius), world, world, 0, DEATH_MONSTER_VORE, other);
 
 	remove (self);
 }
@@ -210,7 +210,7 @@ float M_Vore(float req)
 			self.m_anim_idle = vore_anim_walk;
 
 			self.monster_loot = spawnfunc_ammo_cells;
-			self.weapon = WEP_UZI;
+			self.weapon = WEP_MACHINEGUN;
 			self.frame = vore_anim_walk;
 
 			return TRUE;

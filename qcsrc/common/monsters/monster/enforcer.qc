@@ -47,7 +47,7 @@ void M_Enforcer_Attack_Plasma_Explode()
 	sound (self, CH_WEAPON_A, W_Sound("tag_impact"), VOL_BASE, ATTEN_NORM);
 	pointparticles(particleeffectnum("electro_impact"), self.origin, '0 0 0', 1);
 	RadiusDamage (self, self.realowner, autocvar_g_monster_enforcer_attack_plasma_damage, autocvar_g_monster_enforcer_attack_plasma_edgedamage, 
-				  autocvar_g_monster_enforcer_attack_plasma_radius, world, autocvar_g_monster_enforcer_attack_plasma_force, self.projectiledeathtype, other);
+				  autocvar_g_monster_enforcer_attack_plasma_radius, world, world, autocvar_g_monster_enforcer_attack_plasma_force, self.projectiledeathtype, other);
 
 	remove (self);
 }
@@ -88,7 +88,7 @@ void M_Enforcer_Attack_Plasma()
 	gren.touch = M_Enforcer_Attack_Plasma_Touch;
 
 	gren.missile_flags = MIF_SPLASH;
-	W_SetupProjectileVelocityEx(gren, dir, v_up, autocvar_g_monster_enforcer_attack_plasma_speed, 0, 0, autocvar_g_monster_enforcer_attack_plasma_spread, FALSE);
+	W_SetupProjVelocity_Explicit(gren, dir, v_up, autocvar_g_monster_enforcer_attack_plasma_speed, 0, 0, autocvar_g_monster_enforcer_attack_plasma_spread, FALSE);
 
 	gren.flags = FL_PROJECTILE;
 
