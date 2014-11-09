@@ -1,4 +1,3 @@
-
 #ifdef FTEQCC
 #pragma flag enable subscope
 #pragma flag enable lo
