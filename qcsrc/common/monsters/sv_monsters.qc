@@ -401,17 +401,21 @@ void Monster_Attack_Check(entity e, entity targ)
 	float targ_vlen = vlen(targ.origin - e.origin);
 
 	if(targ_vlen <= e.attack_range)
-	if(e.monster_attackfunc(MONSTER_ATTACK_MELEE) == 1)
 	{
-		Monster_Sound(monstersound_melee, 0, FALSE, CH_VOICE);
-		return;
+		float attack_success = e.monster_attackfunc(MONSTER_ATTACK_MELEE);
+		if(attack_success == 1)
+			Monster_Sound(monstersound_melee, 0, FALSE, CH_VOICE);
+		else if(attack_success > 0)
+			return;
 	}
 
 	if(targ_vlen > e.attack_range)
-	if(e.monster_attackfunc(MONSTER_ATTACK_RANGED) == 1)
 	{
-		Monster_Sound(monstersound_ranged, 0, FALSE, CH_VOICE);
-		return;
+		float attack_success = e.monster_attackfunc(MONSTER_ATTACK_RANGED);
+		if(attack_success == 1)
+			Monster_Sound(monstersound_melee, 0, FALSE, CH_VOICE);
+		else if(attack_success > 0)
+			return;
 	}
 }
 
@@ -825,7 +829,7 @@ void Monster_Move(float runspeed, float walkspeed, float stpspeed, float manim_r
 	if(!(self.spawnflags & MONSTERFLAG_FLY_VERTICAL) && !(self.flags & FL_SWIM))
 		self.moveto_z = self.origin_z;
 
-	if(vlen(self.origin - self.moveto) > 64)
+	if(vlen(self.origin - self.moveto) > 100)
 	{
 		float do_run = (enemy || (self.piggybacker && self.monster_moveto));
 		if((self.flags & FL_ONGROUND) || ((self.flags & FL_FLY) || (self.flags & FL_SWIM)))

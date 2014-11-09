@@ -1,7 +1,9 @@
 #include "monster/zombie.qc"
 #include "monster/spider.qc"
 #include "monster/mage.qc"
+#ifndef MONSTERS_EXTRA
 #include "monster/wyvern.qc"
+#endif
 #include "monster/shambler.qc"
 #include "monster/creeper.qc"
 #ifdef MONSTERS_EXTRA
