@@ -424,7 +424,7 @@ void Monster_Skin_Check()
 {
 	vector oldmin = self.mins, oldmax = self.maxs;
 	entity mon = get_monsterinfo(self.monsterid);
-	string trymodel = sprintf("%s_%d.%s", substring(mon.model, 0, strlen(mon.model) - 4), self.skin, substring(mon.model, strlen(mon.model) - 4, strlen(mon.model)));
+	string trymodel = sprintf("%s_%d%s", substring(mon.model, 0, strlen(mon.model) - 4), self.skin, substring(mon.model, strlen(mon.model) - 4, strlen(mon.model)));
 
 	if(fexists(trymodel))
 	{
