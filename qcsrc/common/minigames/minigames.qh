@@ -67,6 +67,12 @@ string minigame_tile_name(vector pos, float rows, float columns)
 	return minigame_tile_buildname(letter, number);
 }
 
+// Get the next team number (note: team numbers are between 1 and n_teams, inclusive)
+float minigame_next_team(float curr_team, float n_teams)
+{
+	return curr_team % n_teams + 1;
+}
+
 /// For minigame sessions: minigame descriptor object
 .entity descriptor;
 
@@ -132,7 +138,8 @@ const float MINIG_SF_CUSTOM  = 0x10; // a customized networked event
 const float MINIG_SF_MAX     = 0x80; // maximum flag value sent over the network
 const float MINIG_SF_ALL     = 0xff; // use to resend everything
 
-#include "minigame_nmm.qc"
+#include "minigame/nmm.qc"
+#include "minigame/ttt.qc"
 
 
 /**
@@ -157,6 +164,7 @@ const float MINIG_SF_ALL     = 0xff; // use to resend everything
  */
 #define REGISTERED_MINIGAMES \
 	MINIGAME(nmm, "Nine Men's Morris") \
+	MINIGAME(ttt, "Tic Tac Toe") \
 	/*empty line*/
 
 /**
