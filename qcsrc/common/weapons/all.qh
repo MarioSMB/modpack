@@ -4,12 +4,11 @@
 
 // core weapons
 #include "w_blaster.qc"
-#include "w_shockwave.qc"
+#include "w_shotgun.qc"
 #include "w_machinegun.qc"
 #include "w_mortar.qc"
 #include "w_minelayer.qc"
 #include "w_electro.qc"
-#include "w_arc.qc"
 #include "w_crylink.qc"
 #include "w_vortex.qc"
 #include "w_hagar.qc"
@@ -24,6 +23,7 @@
 #include "w_rifle.qc"
 #include "w_fireball.qc"
 #include "w_seeker.qc"
-#include "w_shotgun.qc"
 #include "w_hmg.qc"
 #include "w_rpc.qc"
+#include "w_shockwave.qc"
+#include "w_arc.qc"

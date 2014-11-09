@@ -85,19 +85,6 @@ void CSQC_Init(void)
 	localcmd("\nalias spawnmob \"cmd editmob spawn ${* ?}\"\n");
 	localcmd("\nalias killmob \"cmd editmob kill ${* ?}\"\n");
 
-	localcmd("\nalias weapon_arc \"impulse 236\"\n");
-	localcmd("\nalias weapon_crylink \"impulse 237\"\n");
-	localcmd("\nalias weapon_nex \"impulse 238\"\n");
-	localcmd("\nalias weapon_hagar \"impulse 239\"\n");
-	localcmd("\nalias weapon_rocketlauncher \"impulse 240\"\n");
-	localcmd("\nalias weapon_hook \"impulse 243\"\n");
-	localcmd("\nalias weapon_hlac \"impulse 244\"\n");
-	localcmd("\nalias weapon_tuba \"impulse 245\"\n");
-	localcmd("\nalias weapon_rifle \"impulse 246\"\n");
-	localcmd("\nalias weapon_fireball \"impulse 247\"\n");
-	localcmd("\nalias weapon_seeker \"impulse 248\"\n");
-	localcmd("\nalias weapon_shotgun \"impulse 249\"\n");
-
 	//registercommand("hud_configure");
 	//registercommand("hud_save");
 	//registercommand("menu_action");
@@ -251,19 +238,6 @@ void Shutdown(void)
 	// unset the event chasecam's chase_active
 	if(autocvar_chase_active < 0)
 		cvar_set("chase_active", "0");
-
-	localcmd("\nunalias weapon_arc\n");
-	localcmd("\nalias weapon_crylink \"impulse 236\"\n");
-	localcmd("\nalias weapon_nex \"impulse 237\"\n");
-	localcmd("\nalias weapon_hagar \"impulse 238\"\n");
-	localcmd("\nalias weapon_rocketlauncher \"impulse 239\"\n");
-	localcmd("\nalias weapon_hook \"impulse 242\"\n");
-	localcmd("\nalias weapon_hlac \"impulse 243\"\n");
-	localcmd("\nalias weapon_tuba \"impulse 244\"\n");
-	localcmd("\nalias weapon_rifle \"impulse 245\"\n");
-	localcmd("\nalias weapon_fireball \"impulse 246\"\n");
-	localcmd("\nalias weapon_seeker \"impulse 247\"\n");
-	localcmd("\nalias weapon_shotgun \"impulse 231\"\n");
 
 	if (!isdemo())
 	{
