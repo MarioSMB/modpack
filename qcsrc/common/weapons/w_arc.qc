@@ -643,7 +643,9 @@ float W_Arc(float req)
 		}
 		case WR_CHECKAMMO2:
 		{
-			return ((!WEP_CVAR(arc, burst_ammo)) || (self.WEP_AMMO(ARC) > 0));
+			// arc currently has no secondary attack
+			return FALSE;
+			//return ((!WEP_CVAR(arc, burst_ammo)) || (self.WEP_AMMO(ARC) > 0));
 		}
 		case WR_CONFIG:
 		{
@@ -652,17 +654,7 @@ float W_Arc(float req)
 		}
 		case WR_KILLMESSAGE:
 		{
-			if(w_deathtype & HITTYPE_SECONDARY)
-			{
-				return WEAPON_ELECTRO_MURDER_ORBS;
-			}
-			else
-			{
-				if(w_deathtype & HITTYPE_BOUNCE)
-					return WEAPON_ELECTRO_MURDER_COMBO;
-				else
-					return WEAPON_ELECTRO_MURDER_BOLT;
-			}
+			return WEAPON_ARC_MURDER;
 		}
 	}
 	return FALSE;
