@@ -59,6 +59,7 @@ float autocvar_cl_orthoview;
 float autocvar_cl_orthoview_nofog;
 float autocvar_cl_particlegibs;
 float autocvar_cl_particles_oldnexbeam;
+float autocvar_cl_particles_newnexbeam;
 float autocvar_cl_particles_quality;
 float autocvar_cl_projectiles_sloppy;
 float autocvar_cl_readpicture_force;

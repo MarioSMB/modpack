@@ -307,7 +307,7 @@ float W_Vortex(float req)
 			vector org2;
 			org2 = w_org + w_backoff * 6;
 			if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
-				pointparticles(particleeffectnum("nex_impact"), org2, '0 0 0', 1);
+				pointparticles(particleeffectnum(((autocvar_cl_particles_newnexbeam && (getstati(STAT_ALLOW_OLDNEXBEAM) || isdemo())) ? "nex_impact_new" : "nex_impact")), org2, '0 0 0', 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, "weapons/neximpact.wav", VOL_BASE, ATTN_NORM);
 				

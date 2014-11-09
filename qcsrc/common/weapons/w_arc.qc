@@ -945,7 +945,7 @@ void Draw_ArcBeam(void)
 	Draw_ArcBeam_callback_last_bottom = start_pos;
 
 	vector last_origin = start_pos;
-	vector original_start_pos = start_pos;
+	//vector original_start_pos = start_pos;
 
 	float i;
 	for(i = 1; i <= segments; ++i)
@@ -1013,16 +1013,16 @@ void Draw_ArcBeam(void)
 	}
 	if(self.beam_muzzleeffect)
 	{
-		pointparticles(
+		/*pointparticles(
 			self.beam_muzzleeffect,
 			original_start_pos + wantdir * 20,
 			wantdir * 1000,
 			frametime * 0.1
-		);
+		);*/
 	}
 	if(self.beam_muzzlelight[0])
 	{
-		adddynamiclight(
+		/*adddynamiclight(
 			original_start_pos + wantdir * 20,
 			self.beam_muzzlelight[0],
 			vec3(
@@ -1030,7 +1030,7 @@ void Draw_ArcBeam(void)
 				self.beam_muzzlelight[2],
 				self.beam_muzzlelight[3]
 			)
-		);
+		);*/
 	}
 
 	// cleanup
