@@ -85,6 +85,11 @@ void CSQC_Init(void)
 	localcmd("\nalias spawnmob \"cmd editmob spawn ${* ?}\"\n");
 	localcmd("\nalias killmob \"cmd editmob kill ${* ?}\"\n");
 
+	localcmd("\nalias weapon_hmg \"impulse 248\"\n");
+	localcmd("\nalias weapon_hmg \"impulse 249\"\n");
+	localcmd("\nalias weapon_shockwave \"impulse 250\"\n");
+	localcmd("\nalias weapon_arc \"impulse 251\"\n");
+
 	//registercommand("hud_configure");
 	//registercommand("hud_save");
 	//registercommand("menu_action");
