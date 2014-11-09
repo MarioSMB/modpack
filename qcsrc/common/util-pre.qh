@@ -1,8 +1,8 @@
+
 #ifdef FTEQCC
 #pragma flag enable subscope
 #pragma flag enable lo
 #endif
-
 
 // FTEQCC can do this
 // #define HAVE_YO_DAWG_CPP
