@@ -1,6 +1,8 @@
 ESK modpack
 ===========
 
+NOTE ABOUT UPDATES: Please read this before updating to latest mod: https://github.com/MarioSMB/esk-modpack/wiki/(GUIDE)-Important-note-about-recent-updates
+
 QuakeC source for the ESK server mods
 
 
