@@ -18,7 +18,10 @@ void register_monster(float id, float(float) func, float(float) attackfunc, floa
 	e.monster_attackfunc = attackfunc;
 	e.mdl = modelname;
 	if(fexists(strcat("models/monsters/", noext, "_new", ext)))
+	{
 		e.mdl = strcat(noext, "_new", ext);
+		noext = strcat(noext, "_new");
+	}
 	e.spawnflags = monsterflags;
 	e.mins = min_s;
 	e.maxs = max_s;
@@ -28,15 +31,15 @@ void register_monster(float id, float(float) func, float(float) attackfunc, floa
 	func(MR_PRECACHE); // it had to be done eventually
 
 	string trymodel; // check 5 skins
-	trymodel = sprintf("%s_%d%s", noext, 1, ext);
+	trymodel = sprintf("models/monsters/%s_%d%s", noext, 1, ext);
 	if(fexists(trymodel)) { precache_model(trymodel); }
-	trymodel = sprintf("%s_%d%s", noext, 2, ext);
+	trymodel = sprintf("models/monsters/%s_%d%s", noext, 2, ext);
 	if(fexists(trymodel)) { precache_model(trymodel); }
-	trymodel = sprintf("%s_%d%s", noext, 3, ext);
+	trymodel = sprintf("models/monsters/%s_%d%s", noext, 3, ext);
 	if(fexists(trymodel)) { precache_model(trymodel); }
-	trymodel = sprintf("%s_%d%s", noext, 4, ext);
+	trymodel = sprintf("models/monsters/%s_%d%s", noext, 4, ext);
 	if(fexists(trymodel)) { precache_model(trymodel); }
-	trymodel = sprintf("%s_%d%s", noext, 5, ext);
+	trymodel = sprintf("models/monsters/%s_%d%s", noext, 5, ext);
 	if(fexists(trymodel)) { precache_model(trymodel); }
 }
 float m_null(float dummy) { return 0; }
