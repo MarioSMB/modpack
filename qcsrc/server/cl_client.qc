@@ -181,7 +181,10 @@ void PutObserverInServer (void)
 	entity oldenemy = self.enemy;
 	self.enemy = world;
 	if(oldenemy)
+	{
+		if(oldenemy.arc_beam) { oldenemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
 		ClientData_Touch(oldenemy);
+	}
 
     self.hud = HUD_NORMAL;
 
@@ -1363,7 +1366,11 @@ void ClientDisconnect (void)
 
 	entity oldenemy = self.enemy;
 	self.enemy = world;
-	if(oldenemy) { ClientData_Touch(oldenemy); }
+	if(oldenemy)
+	{
+		if(oldenemy.arc_beam) { oldenemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
+		ClientData_Touch(oldenemy);
+	}
 
 	if(IS_PLAYER(self)) { Send_Effect(EFFECT_SPAWN_NEUTRAL, self.origin, '0 0 0', 1); }
 
@@ -1853,7 +1860,10 @@ float SpectateUpdate() {
 
 	if(!IS_PLAYER(self.enemy))
 	{
+		entity oldenemy = self.enemy;
 		self.enemy = world;
+		if(oldenemy && oldenemy.arc_beam) { oldenemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
+		if(self.enemy.arc_beam) { self.enemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
 		return 0;
 	}
 
@@ -1888,7 +1898,10 @@ float Spectate(entity pl)
 	if(DIFF_TEAM(pl, self))
 		return 0;
 
+	entity oldenemy = self.enemy;
 	self.enemy = pl;
+	if(oldenemy && oldenemy.arc_beam) { oldenemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
+	if(self.enemy.arc_beam) { self.enemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
 	return SpectateSet();
 }
 
@@ -1936,7 +1949,10 @@ float SpectateNext()
 		self.glow_trail = 0;
 		self.glow_color = 0;
 		self.glow_size = 0;
+		entity oldenemy = self.enemy;
 		self.enemy = other;
+		if(oldenemy && oldenemy.arc_beam) { oldenemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
+		if(self.enemy.arc_beam) { self.enemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
 	}
 
 	return SpectateSet();
@@ -1976,7 +1992,10 @@ float SpectatePrev()
 		else
 			other = first;
 	}
+	entity oldenemy = self.enemy;
 	self.enemy = other;
+	if(oldenemy && oldenemy.arc_beam) { oldenemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
+	if(self.enemy.arc_beam) { self.enemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
 	return SpectateSet();
 }
 
@@ -2019,7 +2038,12 @@ void LeaveSpectatorMode()
 			
 			entity oldenemy = self.enemy;
 			self.enemy = world;
-			if(oldenemy) { ClientData_Touch(oldenemy); }
+			if(oldenemy)
+			{
+				if(oldenemy.arc_beam)
+					oldenemy.arc_beam.SendFlags |= ARC_SF_SETTINGS;
+				ClientData_Touch(oldenemy);
+			}
 
 			if(autocvar_g_campaign || autocvar_g_balance_teams)
 				{ JoinBestTeam(self, FALSE, TRUE); }
