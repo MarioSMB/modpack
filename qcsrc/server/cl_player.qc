@@ -931,15 +931,15 @@ void IRCSay(string sourcename, string msgin)
 
 	FOR_EACH_CLIENTSLOT(head)
 	{
-		if(head.netaddress)
-		if(head.netaddress != "")
-		if(head.netaddress != "null/botclient")
 		if(!intermission_running)
 		if((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || gameover)))
 		if(IS_PLAYER(head))
 			continue;
 
-		sprint(head, msgstr);
+		if(head.netaddress)
+		if(head.netaddress != "")
+		if(head.netaddress != "null/botclient")
+			sprint(head, msgstr);
 	}
 }
 
