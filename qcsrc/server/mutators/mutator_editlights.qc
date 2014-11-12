@@ -292,11 +292,11 @@ MUTATOR_HOOKFUNCTION(el_ClientCommand)
 			if(!self.el_editmode) { sprint(self, "You cannot spawn lights\n"); return TRUE; }
 			if(el_lightcount >= autocvar_g_editlights_max) { sprint(self, "Too many lights!\n"); return TRUE; }
 			WarpZone_TraceLine(self.origin + self.view_ofs, self.origin + self.view_ofs + v_forward * 100, MOVE_NORMAL, self);
-			vector cmod = ('1 0 0 ' * stof(argv(2))) + ('0 2 0' * stof(argv(3))) + ('0 0 1' * stof(argv(4)));
+			vector cmod = ('1 0 0 ' * stof(argv(2))) + ('0 1 0' * stof(argv(3))) + ('0 0 1' * stof(argv(4)));
 			entity e = el_SpawnLight(FALSE);
 			setorigin(e, trace_endpos);
-			e.colormod = cmod;
-			e.cnt = stof(argv(5));
+			e.colormod = ((cmod) ? cmod : '1 0 1');
+			e.cnt = ((argv(5)) ? stof(argv(5)) : 100);
 			return TRUE;
 		}
 
