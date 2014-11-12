@@ -920,7 +920,7 @@ void IRCSay(string sourcename, string msgin)
 	if(substring(msgin, 0, 1) == " ")
 		msgin = substring(msgin, 1, strlen(msgin) - 1); // work around DP say bug (say_team does not have this!)
 
-	msgin = formatmessage(msgin);
+	//msgin = formatmessage(msgin);
 
 	if(msgin == "")
 		return;
