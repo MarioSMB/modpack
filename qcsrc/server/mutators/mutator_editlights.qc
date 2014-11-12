@@ -305,7 +305,7 @@ MUTATOR_HOOKFUNCTION(el_ClientCommand)
 			if(!self.el_editmode) { sprint(self, "You cannot edit lights\n"); return TRUE; }
 
 			entity e, thelight = world;
-			for(e = WarpZone_FindRadius(self.origin + self.view_ofs + v_forward * 150, 50, FALSE); e; e = e.chain)
+			for(e = WarpZone_FindRadius(self.origin + self.view_ofs + v_forward * 100, 50, FALSE); e; e = e.chain)
 			if(e.classname == "editlights")
 			{
 				thelight = e;
@@ -339,7 +339,7 @@ MUTATOR_HOOKFUNCTION(el_ClientCommand)
 			if(!self.el_editmode) { sprint(self, "You cannot edit lights\n"); return TRUE; }
 
 			entity e, thelight = world;
-			for(e = WarpZone_FindRadius(self.origin + self.view_ofs + v_forward * 150, 50, FALSE); e; e = e.chain)
+			for(e = WarpZone_FindRadius(self.origin + self.view_ofs + v_forward * 100, 50, FALSE); e; e = e.chain)
 			if(e.classname == "editlights")
 			{
 				thelight = e;
