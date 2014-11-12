@@ -350,7 +350,7 @@ MUTATOR_HOOKFUNCTION(el_ClientCommand)
 			if(argv(3))
 			switch(argv(2))
 			{
-				case "brightness": thelight.cnt = stof(argv(3)); thelight.SendFlags |= 8; return TRUE;
+				case "brightness": thelight.cnt = bound(-1, stof(argv(3)), 2000); thelight.SendFlags |= 8; return TRUE;
 				case "color":
 				if(argv(5))
 				{
