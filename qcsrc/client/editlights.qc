@@ -4,7 +4,8 @@
 void Ent_EditLight_Draw()
 {
 	self.alpha = ((autocvar_cl_editlights) ? 1 : -1);
-	adddynamiclight(self.origin, self.cnt, self.colormod);
+	if(autocvar_cl_editlights >= 0)
+		adddynamiclight(self.origin, self.cnt, self.colormod);
 }
 
 void Ent_EditLight()
