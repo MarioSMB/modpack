@@ -1,6 +1,8 @@
 .float el_editmode;
 float el_lightcount;
 
+.float cvar_cl_editlights;
+
 string el_port_string;
 
 vector rintvec(vector vec)
@@ -223,20 +225,14 @@ void el_Think()
 	}
 }
 
-float el_Customize()
-{
-	entity e = WaypointSprite_getviewentity(other);
-	return (e.el_editmode);
-}
-
 entity el_SpawnLight(float database)
 {
 	entity e = spawn();
 
 	e.solid = SOLID_TRIGGER; // for grabbing (TODO: check if we need this)
 	e.classname = "editlights";
-	e.customizeentityforclient = el_Customize;
 	e.think = el_Think;
+	e.alpha = 1;
 	e.nextthink = time;
 
 	if(!database)
@@ -247,8 +243,6 @@ entity el_SpawnLight(float database)
 
 		// set public light information
 		e.netname = strzone(self.netname); // name of the owner
-		e.message = strzone(strftime(TRUE, "%d-%m-%Y %H:%M:%S")); // creation time
-		e.message2 = strzone(strftime(TRUE, "%d-%m-%Y %H:%M:%S")); // last editing time
 
 		// set origin and direction based on player position and view angle
 		makevectors(self.v_angle);
@@ -257,7 +251,7 @@ entity el_SpawnLight(float database)
 	}
 
 	setsize(e, '-10 -10 -10', '10 10 10');
-	Net_LinkEntity(e, TRUE, 0, el_SendEntity);
+	Net_LinkEntity(e, FALSE, 0, el_SendEntity);
 
 	if(IS_REAL_CLIENT(self)) { print_to(self, "Spawned new light entity"); }
 
@@ -390,6 +384,18 @@ MUTATOR_HOOKFUNCTION(el_StartFrame)
 	return TRUE;
 }
 
+MUTATOR_HOOKFUNCTION(el_GetCvars)
+{
+	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_editlights, "cl_editlights");
+	return FALSE;
+}
+
+MUTATOR_HOOKFUNCTION(el_PlayerThink)
+{
+	self.el_editmode = self.cvar_cl_editlights;
+	return FALSE;
+}
+
 void el_DelayedInit()
 {
 	el_Database_Load();
@@ -399,6 +405,8 @@ MUTATOR_DEFINITION(mutator_editlights)
 {
 	MUTATOR_HOOK(SV_ParseClientCommand, el_ClientCommand, CBC_ORDER_ANY);
 	MUTATOR_HOOK(SV_StartFrame, el_StartFrame, CBC_ORDER_ANY);
+	MUTATOR_HOOK(GetCvars, el_GetCvars, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerPreThink, el_PlayerThink, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{
