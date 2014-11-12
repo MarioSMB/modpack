@@ -1,10 +1,17 @@
 const float TTT_TURN_PLACE = 0x0100; // player has to place a piece on the board
-const float TTT_TURN_WIN   = 0x0200; // player has won
+const float TTT_TURN_WIN   = 0xf000; // player has won
 const float TTT_TURN_DRAW  = 0x0400; // no moves are possible
 const float TTT_TURN_TYPE  = 0xff00;
+
+const float TTT_TURN_WIN_V = 0x1000; // vertical 3 in a row
+const float TTT_TURN_WIN_H = 0x2000; // horizontal 3 in a row
+const float TTT_TURN_WIN_D1= 0x4000; // diagonal 3 in a row
+const float TTT_TURN_WIN_D2= 0x8000; // anti-diagonal 3 in a row
+const float TTT_TURN_WINFO = 0x00f0;
+
 const float TTT_TURN_TEAM1 = 0x0001;
 const float TTT_TURN_TEAM2 = 0x0002;
-const float TTT_TURN_TEAM  = 0x00ff; 
+const float TTT_TURN_TEAM  = 0x000f; 
 
 // find tic tac toe piece given its tile name
 entity ttt_find_piece(entity minig, string tile)
@@ -25,24 +32,24 @@ float ttt_winning_piece(entity piece)
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(0,number)).team == piece.team )
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(1,number)).team == piece.team )
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(2,number)).team == piece.team )
-		return 1;
+		return TTT_TURN_WIN_H|(number<<4);
 	
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(letter,0)).team == piece.team )
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(letter,1)).team == piece.team )
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(letter,2)).team == piece.team )
-		return 1;
+		return TTT_TURN_WIN_V|(letter<<4);
 	
 	if ( number == letter )
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(0,0)).team == piece.team )
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(1,1)).team == piece.team )
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(2,2)).team == piece.team )
-		return 1;
+		return TTT_TURN_WIN_D2;
 	
 	if ( number == 2-letter )
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(0,2)).team == piece.team )
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(1,1)).team == piece.team )
 	if ( ttt_find_piece(piece.owner,minigame_tile_buildname(2,0)).team == piece.team )
-		return 1;
+		return TTT_TURN_WIN_D1;
 	
 	return 0;
 }
@@ -110,8 +117,9 @@ float minigame_event_ttt(entity minigame, string event, ...)
 				piece.SendFlags = MINIG_SF_ALL;
 				minigame.SendFlags |= MINIG_SF_UPDATE;
 				minigame.ttt_npieces++;
-				if ( ttt_winning_piece(piece) )
-					minigame.minigame_flags = TTT_TURN_WIN | player.team;
+				float win = ttt_winning_piece(piece);
+				if ( win )
+					minigame.minigame_flags = player.team | win;
 				else if ( minigame.ttt_npieces >= 9 )
 					minigame.minigame_flags = TTT_TURN_DRAW;
 				else
@@ -166,6 +174,38 @@ void minigame_hud_board_ttt(vector pos, vector mySize)
 					tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
 		}
 	}
+	
+	float win = active_minigame.minigame_flags & TTT_TURN_WIN;
+	if ( win )
+	{
+		string wimg = string_null;
+		float win_info = (active_minigame.minigame_flags & TTT_TURN_WINFO) >> 4;
+		tile_pos = '0 0 0';
+		switch ( win )
+		{
+			case TTT_TURN_WIN_V:
+				wimg = "strike-v";
+				tile_pos_x = -1/3 + win_info/3;
+				break;
+			case TTT_TURN_WIN_H:
+				wimg = "strike-h";
+				tile_pos_y = 1/3 - win_info/3;
+				break;
+			case TTT_TURN_WIN_D1:
+				wimg = "strike-d1";
+				break;
+			case TTT_TURN_WIN_D2:
+				wimg = "strike-d2";
+				break;
+		}
+		if ( wimg )
+		{
+			tile_size = minigame_hud_denormalize_size('1 1 0',pos,mySize);
+			tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
+			drawpic(tile_pos,minigame_texture(strcat("ttt/",wimg)),
+				tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
+		}
+	}
 }
 
 
@@ -213,20 +253,20 @@ void ttt_make_move(entity minigame)
 string ttt_turn_to_string(float turnflags)
 {
 	if ( turnflags & TTT_TURN_DRAW )
-		return "Draw";
+		return _("Draw");
 	
 	if ( turnflags & TTT_TURN_WIN )
 	{
 		if ( (turnflags&TTT_TURN_TEAM) != minigame_self.team )
-			return "You lost the game!";
-		return "You win!";
+			return _("You lost the game!");
+		return _("You win!");
 	}
 	
 	if ( (turnflags & TTT_TURN_TEAM) != minigame_self.team )
-		return "Wait for your opponent to make their move";
+		return _("Wait for your opponent to make their move");
 	
 	if ( turnflags & TTT_TURN_PLACE )
-		return "Click on the game board to place your piece";
+		return _("Click on the game board to place your piece");
 	
 	return "";
 }
@@ -296,7 +336,8 @@ float minigame_event_ttt(entity minigame, string event, ...)
 	else if ( event == "mouse_moved" )
 	{
 		vector mouse_pos = minigame_hud_normalize(mousepos,ttt_boardpos,ttt_boardsize);
-		ttt_set_curr_pos(minigame_tile_name(mouse_pos,3,3));
+		if ( minigame.minigame_flags & (TTT_TURN_PLACE|minigame_self.team) )
+			ttt_set_curr_pos(minigame_tile_name(mouse_pos,3,3));
 		if ( ! ttt_valid_tile(ttt_curr_pos) )
 			ttt_set_curr_pos("");
 		return 1;

@@ -601,20 +601,20 @@ string nmm_turn_to_string(float turnflags)
 	if ( turnflags & NMM_TURN_WIN )
 	{
 		if ( (turnflags&NMM_TURN_TEAM) != minigame_self.team )
-			return "You lost the game!";
-		return "You win!";
+			return _("You lost the game!");
+		return _("You win!");
 	}
 	
 	if ( (turnflags&NMM_TURN_TEAM) != minigame_self.team )
-		return "Wait for your opponent to make their move";
+		return _("Wait for your opponent to make their move");
 	if ( turnflags & NMM_TURN_PLACE )
-		return "Click on the game board to place your piece";
+		return _("Click on the game board to place your piece");
 	if ( turnflags & NMM_TURN_MOVE )
-		return "You can select one of your pieces to move it in one of the surrounding places";
+		return _("You can select one of your pieces to move it in one of the surrounding places");
 	if ( turnflags & NMM_TURN_FLY )
-		return "You can select one of your pieces to move it anywhere on the board";
+		return _("You can select one of your pieces to move it anywhere on the board");
 	if ( turnflags & NMM_TURN_TAKE )
-		return "You can take one of the opponent's pieces";
+		return _("You can take one of the opponent's pieces");
 	
 	return "";
 }

@@ -79,7 +79,7 @@ float minigame_SendEntity(entity to, float sf)
 			WriteString(MSG_ENTITY,self.descriptor.netname);
 		
 		if ( sf & MINIG_SF_UPDATE )
-			WriteShort(MSG_ENTITY,self.minigame_flags);
+			WriteLong(MSG_ENTITY,self.minigame_flags);
 	}
 	else if ( self.classname == "minigame_player" )
 	{

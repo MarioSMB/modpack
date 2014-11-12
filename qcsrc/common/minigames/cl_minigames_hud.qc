@@ -688,7 +688,8 @@ void HUD_Minigame_Mouse()
 		HUD_MinigameMenu_MouseInput();
 	
 	const vector cursorsize = '32 32 0';
-	drawpic(mousepos-'8 4 0', strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), cursorsize, '1 1 1', 0.8, DRAWFLAG_NORMAL);
+	drawpic(mousepos-'8 4 0', strcat("gfx/menu/", autocvar_menu_skin, "/cursor.tga"), 
+			cursorsize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
 float HUD_Minigame_Showpanels()
