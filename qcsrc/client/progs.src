@@ -8,6 +8,7 @@ sys-post.qh
 Defs.qc
 ../dpdefs/keycodes.qc
 ../common/constants.qh
+../common/stats.qh
 
 ../warpzonelib/anglestransform.qh
 ../warpzonelib/mathlib.qh

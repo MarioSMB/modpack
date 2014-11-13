@@ -41,29 +41,6 @@ const float		VF_CL_VIEWANGLES_X				= 34;	//(float)
 const float		VF_CL_VIEWANGLES_Y				= 35;	//(float)
 const float		VF_CL_VIEWANGLES_Z				= 36;	//(float)
 
-// Server Autosent Stat Constants
-const float		STAT_HEALTH						= 0;
-const float		STAT_WEAPONMODEL				= 2;
-const float		STAT_AMMO						= 3;
-const float		STAT_ARMOR						= 4;
-const float		STAT_WEAPONFRAME				= 5;
-const float		STAT_SHELLS						= 6;
-const float		STAT_NAILS						= 7;
-const float		STAT_ROCKETS					= 8;
-const float		STAT_CELLS						= 9;
-const float		STAT_ACTIVEWEAPON				= 10;
-const float		STAT_TOTALSECRETS				= 11;
-const float		STAT_TOTALMONSTERS				= 12;
-const float		STAT_SECRETS					= 13;
-const float		STAT_MONSTERS					= 14;
-const float		STAT_ITEMS						= 15;
-const float		STAT_VIEWHEIGHT					= 16;
-const float		STAT_MOVEVARS_TICRATE           = 240;
-const float		STAT_MOVEVARS_TIMESCALE         = 241;
-const float		STAT_FRAGLIMIT					= 235;
-const float		STAT_TIMELIMIT					= 236;
-const float     STAT_MOVEVARS_GRAVITY           = 242;
-
 // Quake-style Point Contents
 const float		CONTENT_EMPTY					= -1;
 const float		CONTENT_SOLID					= -2;
