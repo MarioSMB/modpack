@@ -348,6 +348,23 @@ const vector eZ = '0 0 1';
 #define SP_FPS 10
 // game mode specific indices are not in common/, but in server/scores_rules.qc!
 
+#ifdef COMPAT_XON010_CHANNELS
+const float CH_INFO = 0; // only on world and csqc
+const float CH_TRIGGER = 0; // only on players; compat: FALSELY CONTROLLED BY "Info"
+const float CH_WEAPON_A = 1; // only on players and entities
+const float CH_WEAPON_SINGLE = 5; // only on players and entities
+const float CH_VOICE = 2; // only on players
+const float CH_BGM_SINGLE = 2; // only on csqc; compat: FALSELY CONTROLLED BY "Voice"
+const float CH_AMBIENT = 2; // only on csqc; compat: FALSELY CONTROLLED BY "Voice"
+const float CH_TRIGGER_SINGLE = 3; // only on players, entities, csqc
+const float CH_SHOTS = 4; // only on players, entities, csqc
+const float CH_SHOTS_SINGLE = 4; // only on players, entities, csqc
+const float CH_WEAPON_B = 5; // only on players and entities
+const float CH_PAIN = 6; // only on players and csqc
+const float CH_PAIN_SINGLE = 6; // only on players and csqc
+const float CH_PLAYER = 7; // only on players and entities
+const float CH_TUBA = 5; // only on csqc
+#else
 const float CH_INFO = 0;
 const float CH_TRIGGER = -3;
 const float CH_WEAPON_A = -1;
@@ -363,7 +380,8 @@ const float CH_PAIN = -6;
 const float CH_PAIN_SINGLE = 6;
 const float CH_PLAYER = -7;
 const float CH_PLAYER_SINGLE = 7;
-const float CH_TUBA_SINGLE = 5;
+const float CH_TUBA = 5;
+#endif
 
 const float ATTEN_NONE = 0;
 const float ATTEN_MIN = 0.015625;

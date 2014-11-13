@@ -63,15 +63,15 @@ void tubasound(entity e, float restart)
 				snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note);
 		}
 
-		sound7(e, CH_TUBA_SINGLE, snd1, e.cnt * f1, e.attenuate * autocvar_g_balance_tuba_attenuation, 100 * p1, 0);
+		sound7(e, CH_TUBA, snd1, e.cnt * f1, e.attenuate * autocvar_g_balance_tuba_attenuation, 100 * p1, 0);
 		if(f2)
-			sound7(e.enemy, CH_TUBA_SINGLE, snd2, e.cnt * f2, e.attenuate * autocvar_g_balance_tuba_attenuation, 100 * p2, 0);
+			sound7(e.enemy, CH_TUBA, snd2, e.cnt * f2, e.attenuate * autocvar_g_balance_tuba_attenuation, 100 * p2, 0);
 	}
 	else
 	{
 		if(restart)
 			snd1 = TUBA_STARTNOTE(e.tuba_instrument, e.note);
-		sound(e, CH_TUBA_SINGLE, snd1, e.cnt, e.attenuate * autocvar_g_balance_tuba_attenuation);
+		sound(e, CH_TUBA, snd1, e.cnt, e.attenuate * autocvar_g_balance_tuba_attenuation);
 	}
 }
 
@@ -86,10 +86,10 @@ void Ent_TubaNote_Think()
 	self.nextthink = time;
 	if(self.cnt <= 0)
 	{
-		sound(self, CH_TUBA_SINGLE, "misc/null.wav", 0, 0);
+		sound(self, CH_TUBA, "misc/null.wav", 0, 0);
 		if(self.enemy)
 		{
-			sound(self.enemy, CH_TUBA_SINGLE, "misc/null.wav", 0, 0);
+			sound(self.enemy, CH_TUBA, "misc/null.wav", 0, 0);
 			remove(self.enemy);
 		}
 		remove(self);
