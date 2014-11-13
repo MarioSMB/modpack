@@ -335,9 +335,9 @@ const float XENCODE_LEN = 5;
 string xencode(float f);
 float xdecode(string s);
 
-// Play all sounds via sound7, for access to the extra channels.
-// Otherwise, channels 8 to 15 would be blocked for a weird QW feature.
+#ifndef COMPAT_XON010_CHANNELS
 #define sound(e,c,s,v,a) sound7(e,c,s,v,a,0,0)
+#endif
 
 float lowestbit(float f);
 

@@ -1573,7 +1573,7 @@ float GiveItems(entity e, float beginarg, float endarg)
 				got += GiveValue(e, armorvalue, op, val);
 			case "allbuffs":
 				for(wi = Buff_Type_first; wi; wi = wi.enemy)
-					got += (e.items |= (wi.buffs));
+					got += (e.buffs |= (wi.buffs));
 			case "allweapons":
 				for(j = WEP_FIRST; j <= WEP_LAST; ++j)
 				{

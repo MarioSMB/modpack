@@ -1068,6 +1068,15 @@ float sound_allowed(float dest, entity e)
     return TRUE;
 }
 
+#ifdef COMPAT_XON010_CHANNELS
+void(entity e, float chan, string samp, float vol, float atten) builtin_sound = #8;
+void sound(entity e, float chan, string samp, float vol, float atten)
+{
+    if (!sound_allowed(MSG_BROADCAST, e))
+        return;
+    builtin_sound(e, chan, samp, vol, atten);
+}
+#else
 #undef sound
 void sound(entity e, float chan, string samp, float vol, float atten)
 {
@@ -1075,6 +1084,7 @@ void sound(entity e, float chan, string samp, float vol, float atten)
         return;
     sound7(e, chan, samp, vol, atten, 0, 0);
 }
+#endif
 
 void soundtoat(float dest, entity e, vector o, float chan, string samp, float vol, float atten)
 {
