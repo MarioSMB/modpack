@@ -240,7 +240,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 				frag_target.damage_dealt += 1; // TODO change this to a future specific hitsound for armor hit
 			}
 
-			if(frag_deathtype & WEP_BLASTER)
+			if(frag_deathtype & WEP_VAPORIZER)
 			if(frag_deathtype & HITTYPE_SECONDARY)
 			{
 				frag_damage = 0;
