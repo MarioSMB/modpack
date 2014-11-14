@@ -95,6 +95,11 @@ float minigame_next_team(float curr_team, float n_teams)
 /// 		note: when this is called self == ...(0,entity)
 /// 		You can use the MINIG_SF_ constants to check the send flags
 /// 		IMPORTANT: always read in client everything you send from the server!
+/// 	menu_show(entity parent_menu_item)
+/// 		executed when the Current Game menu is shown, used to add custom entries
+/// 		Call HUD_MinigameMenu_CustomEntry to do so (pass ...(0,entity) as first argument)
+/// 	menu_click(string arg)
+/// 		executed when a custom menu entry is clicked
 /// Server events:
 /// 	start()
 /// 		executed when the minigame session is starting

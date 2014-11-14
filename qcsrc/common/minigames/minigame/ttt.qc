@@ -8,6 +8,8 @@ const float TTT_TURN_TEAM1 = 0x0001;
 const float TTT_TURN_TEAM2 = 0x0002;
 const float TTT_TURN_TEAM  = 0x000f; 
 
+const float TTT_SF_PLAYERSCORE = MINIG_SF_CUSTOM;
+
 // find tic tac toe piece given its tile name
 entity ttt_find_piece(entity minig, string tile)
 {
@@ -80,7 +82,11 @@ void ttt_move(entity minigame, entity player, float argc )
 			minigame.ttt_npieces++;
 			minigame.ttt_nexteam = minigame_next_team(player.team,2);
 			if ( ttt_winning_piece(piece) )
+			{
+				player.minigame_flags++;
+				player.SendFlags |= TTT_SF_PLAYERSCORE;
 				minigame.minigame_flags = TTT_TURN_WIN | player.team;
+			}
 			else if ( minigame.ttt_npieces >= 9 )
 				minigame.minigame_flags = TTT_TURN_DRAW;
 			else
@@ -150,6 +156,15 @@ float minigame_event_ttt(entity minigame, string event, ...)
 						remove(e);
 			}
 			return 1;
+		}
+	}
+	else if ( event == "network_send" )
+	{
+		entity sent = ...(0,entity);
+		float sf = ...(1,float);
+		if ( sent.classname == "minigame_player" && (sf & TTT_SF_PLAYERSCORE ) )
+		{
+			WriteByte(MSG_ENTITY,sent.minigame_flags);
 		}
 	}
 	
@@ -231,6 +246,7 @@ void minigame_hud_status_ttt(vector pos, vector mySize)
 	ts_y = ( mySize_y - 2*player_fontsize_y ) / 2;
 	ts_x = mySize_x;
 	vector mypos;
+	vector tile_size = '48 48 0';
 
 	entity e;
 	FOREACH_MINIGAME_ENTITY(e)
@@ -243,6 +259,16 @@ void minigame_hud_status_ttt(vector pos, vector mySize)
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
 				GetPlayerName(e.minigame_playerslot-1),
 				player_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
+			
+			mypos_y += player_fontsize_y;
+			drawpic( mypos,  
+					minigame_texture(strcat("ttt/piece",ftos(e.team))),
+					tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
+			
+			mypos_x += tile_size_x;
+			
+			drawstring(mypos,ftos(e.minigame_flags),tile_size,
+					   '0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
 	}
 }
@@ -358,9 +384,15 @@ float minigame_event_ttt(entity minigame, string event, ...)
 	}
 	else if ( event == "network_receive" )
 	{
-		if ( self.classname == "minigame" && ( ...(1,float) & MINIG_SF_UPDATE ) )
+		entity sent = ...(0,entity);
+		float sf = ...(1,float);
+		if ( sent.classname == "minigame" && ( sf & MINIG_SF_UPDATE ) )
 		{
-			self.message = ttt_turn_to_string(self.minigame_flags);
+			sent.message = ttt_turn_to_string(sent.minigame_flags);
+		}
+		else if ( sent.classname == "minigame_player" && (sf & TTT_SF_PLAYERSCORE ) )
+		{
+			sent.minigame_flags = ReadByte();
 		}
 	}
 	else if ( event == "menu_show" )
