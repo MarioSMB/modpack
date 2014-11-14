@@ -1,6 +1,7 @@
 const float TTT_TURN_PLACE = 0x0100; // player has to place a piece on the board
 const float TTT_TURN_WIN   = 0x0200; // player has won
 const float TTT_TURN_DRAW  = 0x0400; // no moves are possible
+const float TTT_TURN_NEXT  = 0x0800; // a player wants to start a new match
 const float TTT_TURN_TYPE  = 0xff00;
 
 const float TTT_TURN_TEAM1 = 0x0001;
@@ -60,6 +61,33 @@ float ttt_valid_tile(string tile)
 #ifdef SVQC
 
 .float ttt_npieces;
+.float ttt_nexteam;
+
+void ttt_move(entity minigame, entity player, float argc )
+{
+	if ( minigame.minigame_flags & TTT_TURN_PLACE )
+	if ( argc == 2 && player.team == (minigame.minigame_flags & TTT_TURN_TEAM) )
+	{
+		string pos = argv(1);
+		if ( ttt_valid_tile(pos) )
+		if ( !ttt_find_piece(minigame,pos) )
+		{
+			entity piece = minigame_spawn_linked_entity(minigame,"minigame_board_piece");
+			piece.team = player.team;
+			piece.netname = strzone(pos);
+			piece.SendFlags = MINIG_SF_ALL;
+			minigame.SendFlags |= MINIG_SF_UPDATE;
+			minigame.ttt_npieces++;
+			minigame.ttt_nexteam = minigame_next_team(player.team,2);
+			if ( ttt_winning_piece(piece) )
+				minigame.minigame_flags = TTT_TURN_WIN | player.team;
+			else if ( minigame.ttt_npieces >= 9 )
+				minigame.minigame_flags = TTT_TURN_DRAW;
+			else
+				minigame.minigame_flags = TTT_TURN_PLACE | minigame.ttt_nexteam;
+		}
+	}
+}
 
 // required function, handle server side events
 float minigame_event_ttt(entity minigame, string event, ...)
@@ -95,32 +123,34 @@ float minigame_event_ttt(entity minigame, string event, ...)
 		// Team 1 by default
 		return 1;
 	}
-	else if ( event == "cmd" && argv(0) == "move" && (minigame.minigame_flags & TTT_TURN_PLACE) )
+	else if ( event == "cmd" )
 	{
-		entity player = ...(0,entity);
-		float argc = ...(1,float);
-		if ( argc == 2 && player.team == (minigame.minigame_flags & TTT_TURN_TEAM) )
+		if ( argv(0) == "move" )
 		{
-			string pos = argv(1);
-			if ( ttt_valid_tile(pos) )
-			if ( !ttt_find_piece(minigame,pos) )
-			{
-				entity piece = minigame_spawn_linked_entity(minigame,"minigame_board_piece");
-				piece.team = player.team;
-				piece.netname = strzone(pos);
-				piece.SendFlags = MINIG_SF_ALL;
-				minigame.SendFlags |= MINIG_SF_UPDATE;
-				minigame.ttt_npieces++;
-				if ( ttt_winning_piece(piece) )
-					minigame.minigame_flags = TTT_TURN_WIN | player.team;
-				else if ( minigame.ttt_npieces >= 9 )
-					minigame.minigame_flags = TTT_TURN_DRAW;
-				else
-					minigame.minigame_flags = TTT_TURN_PLACE | minigame_next_team(player.team,2);
-			}
-			
+			ttt_move(minigame, ...(0,entity), ...(1,float));
+			return 1;
 		}
-		return 1;
+		else if ( argv(0) == "next" )
+		{
+			entity player = ...(0,entity);
+			if ( minigame.minigame_flags & (TTT_TURN_WIN|TTT_TURN_DRAW) )
+			{
+				minigame.minigame_flags = TTT_TURN_NEXT | player.team;
+				minigame.SendFlags |= MINIG_SF_UPDATE;
+			}
+			else if ( (minigame.minigame_flags & TTT_TURN_NEXT) &&
+					!( minigame.minigame_flags & player.team ) )
+			{
+				minigame.minigame_flags = TTT_TURN_PLACE | minigame.ttt_nexteam;
+				minigame.SendFlags |= MINIG_SF_UPDATE;
+				minigame.ttt_npieces = 0;
+				entity e = world;
+				while ( ( e = findentity(e,owner,minigame) ) )
+					if ( e.classname == "minigame_board_piece" )
+						remove(e);
+			}
+			return 1;
+		}
 	}
 	
 	return 0;
@@ -239,6 +269,13 @@ string ttt_turn_to_string(float turnflags)
 		return _("You win!");
 	}
 	
+	if ( turnflags & TTT_TURN_NEXT )
+	{
+		if ( (turnflags&TTT_TURN_TEAM) != minigame_self.team )
+			return _("Select \"^1Next Match^7\" on the menu to start a new match!");
+		return _("Wait for your opponent to confirm the rematch");
+	}
+	
 	if ( (turnflags & TTT_TURN_TEAM) != minigame_self.team )
 		return _("Wait for your opponent to make their move");
 	
@@ -321,10 +358,18 @@ float minigame_event_ttt(entity minigame, string event, ...)
 	}
 	else if ( event == "network_receive" )
 	{
-		if ( self.classname == "minigame" && ( ...(1,float) & MINIG_SF_UPDATE ) ) 
+		if ( self.classname == "minigame" && ( ...(1,float) & MINIG_SF_UPDATE ) )
 		{
 			self.message = ttt_turn_to_string(self.minigame_flags);
 		}
+	}
+	else if ( event == "menu_show" )
+	{
+		HUD_MinigameMenu_CustomEntry(...(0,entity),_("Next Match"),"next");
+	}
+	else if ( event == "menu_click" && ...(0,string) == "next" )
+	{
+		localcmd("cmd minigame next\n");
 	}
 	
 	return 0;

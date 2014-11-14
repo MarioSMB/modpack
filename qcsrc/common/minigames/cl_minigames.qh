@@ -97,6 +97,8 @@ void ent_read_minigame();
 float HUD_MinigameMenu_IsOpened();
 void HUD_MinigameMenu_Close();
 float HUD_Minigame_Showpanels();
+// Adds a game-specific entry to the menu
+void HUD_MinigameMenu_CustomEntry(entity parent, string message, string event_arg);
 
 
 #define FOREACH_MINIGAME_ENTITY(entityvar) \
