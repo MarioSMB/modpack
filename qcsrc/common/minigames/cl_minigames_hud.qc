@@ -165,7 +165,7 @@ entity HUD_MinigameMenu_SpawnSubEntry(string s, void() click, entity parent)
 // Click action for Create sub-entries
 void HUD_MinigameMenu_ClickCreate_Entry()
 {
-	localcmd(strcat("cmd minigame create ",self.netname,"\n"));
+	minigame_cmd("create ",self.netname);
 }
 
 // Helper click action for collapsible entries
@@ -227,7 +227,7 @@ void HUD_MinigameMenu_ClickCreate()
 // Click action for Join sub-entries
 void HUD_MinigameMenu_ClickJoin_Entry()
 {
-	localcmd(strcat("cmd minigame join ",self.netname,"\n"));
+	minigame_cmd("join ",self.netname);
 	HUD_MinigameMenu_EraseEntry(self);
 }
 
@@ -263,13 +263,13 @@ void HUD_MinigameMenu_ClickNoop()
 // Click action for Quit
 void HUD_MinigameMenu_ClickQuit()
 {
-	localcmd("cmd minigame end\n");
+	minigame_cmd("end");
 }
 
 // Click action for Invite sub-entries
 void HUD_MinigameMenu_ClickInvite_Entry()
 {
-	localcmd(strcat("cmd minigame invite #",self.netname,"\n"));
+	minigame_cmd("invite #",self.netname);
 }
 
 // Click action for the Invite menu
@@ -618,11 +618,6 @@ float HUD_Minigame_InputEvent(float bInputType, float nPrimary, float nSecondary
 					active_minigame,strcat(device,"_",action),nPrimary) )
 				return true;
 			
-			/*if ( nPrimary == K_ESCAPE && bInputType == 0 )
-			{
-				/// TODO: maybe show confirmation dialog
-				localcmd ( "cmd minigame end" );
-			}*/
 			/// TODO: bInputType == 2?
 		}
 		

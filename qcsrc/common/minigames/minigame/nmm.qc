@@ -572,7 +572,7 @@ void nmm_make_move(entity minigame)
 	{
 		if ( minigame.minigame_flags & (NMM_TURN_PLACE|NMM_TURN_TAKE) )
 		{
-			localcmd("cmd minigame move ",nmm_currtile.netname,"\n");
+			minigame_cmd("move ",nmm_currtile.netname);
 			nmm_fromtile = world;
 		}
 		else if ( (minigame.minigame_flags & (NMM_TURN_MOVE|NMM_TURN_FLY)) )
@@ -587,7 +587,7 @@ void nmm_make_move(entity minigame)
 			}
 			else if ( nmm_fromtile )
 			{
-				localcmd("cmd minigame move ",nmm_fromtile.netname," ",nmm_currtile.netname,"\n");
+				minigame_cmd("move ",nmm_fromtile.netname," ",nmm_currtile.netname);
 				nmm_fromtile = world;
 			}
 		}

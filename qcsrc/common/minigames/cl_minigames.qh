@@ -91,6 +91,10 @@ float minigame_isactive()
 	return active_minigame != world;
 }
 
+// Execute a minigame command
+#define minigame_cmd(...) minigame_cmd_workaround(0,__VA_ARGS__)
+void minigame_cmd_workaround(float dummy, string...cmdargc);
+
 // Read a minigame entity from the server
 void ent_read_minigame();
 

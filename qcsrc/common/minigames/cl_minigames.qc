@@ -306,3 +306,15 @@ void minigame_drawpic_centered( vector pos, string texture, vector sz,
 {
 	drawpic( pos-sz/2, texture, sz, color, thealpha, drawflags );
 }
+
+// Workaround because otherwise variadic arguments won't work properly
+// It could be a bug in the compiler or in darkplaces
+void minigame_cmd_workaround(float dummy, string...cmdargc)
+{
+	string cmd;
+	cmd = "cmd minigame ";
+	float i;
+	for ( i = 0; i < cmdargc; i++ )
+		cmd = strcat(cmd,...(i,string));
+	localcmd(strcat(cmd,"\n"));
+}

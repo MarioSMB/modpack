@@ -421,6 +421,7 @@ void ClientCommand_minigame(float request, float argc, string command)
 				return;
 				
 		}
+		else sprint(self,strcat("Wrong command:^1 ",command,"\n"));
 	}
 	
 	sprint(self, "\nUsage:^3 cmd minigame create <minigame>\n");

@@ -252,7 +252,7 @@ void ttt_make_move(entity minigame)
 {
 	if ( minigame.minigame_flags == (TTT_TURN_PLACE|minigame_self.team) )
 	{
-		localcmd("cmd minigame move ",ttt_curr_pos,"\n");
+		minigame_cmd("move ",ttt_curr_pos);
 	}
 }
 
@@ -369,7 +369,7 @@ float minigame_event_ttt(entity minigame, string event, ...)
 	}
 	else if ( event == "menu_click" && ...(0,string) == "next" )
 	{
-		localcmd("cmd minigame next\n");
+		minigame_cmd("next");
 	}
 	
 	return 0;
