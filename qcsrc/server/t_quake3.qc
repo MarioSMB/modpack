@@ -113,7 +113,7 @@ void spawnfunc_target_give()
 	InitializeEntity(self, target_give_init, INITPRIO_FINDTARGET);
 }
 
-//void spawnfunc_item_flight()       /* handled by buffs mutator */
+//void spawnfunc_item_flight()       /* handled by buffs mutator or jetpack */
 //void spawnfunc_item_haste()        /* handled by buffs mutator */
 //void spawnfunc_item_health()       /* handled in t_quake.qc */
 //void spawnfunc_item_health_large() /* handled in t_items.qc */
@@ -124,7 +124,13 @@ void spawnfunc_target_give()
 
 // CTF spawnfuncs handled in mutators/gamemode_ctf.qc now
 
-//void spawnfunc_item_flight()         { spawnfunc_item_jetpack();       }
+void spawnfunc_item_flight()
+{
+	if(!cvar("g_buffs") || !cvar("g_buffs_flight"))
+		spawnfunc_item_jetpack();
+	else
+		buff_Init_Compat(self, BUFF_FLIGHT);
+}
 
 .float notteam;
 .float notsingle;

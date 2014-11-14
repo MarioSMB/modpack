@@ -368,6 +368,10 @@ string getwelcomemessage(void)
 	if (motd != "") {
 		s = strcat(s, "\n\n^8MOTD: ^7", strreplace("\\n", "\n", motd));
 	}
+
+	// branding for the win
+	s = strcat(s, "\n\n Running the SMB mod pack\nhttps://github.com/MarioSMB");
+
 	return s;
 }
 

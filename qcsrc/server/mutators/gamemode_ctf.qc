@@ -2378,6 +2378,7 @@ Keys:
 void spawnfunc_item_flag_neutral()
 {
 	if(!g_ctf) { remove(self); return; }
+	if(!cvar("g_ctf_oneflag")) { remove(self); return; }
 
 	ctf_FlagSetup(0, self);
 }

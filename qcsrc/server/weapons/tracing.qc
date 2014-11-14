@@ -439,7 +439,6 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 			}
 			float g = accuracy_isgooddamage(self, hit);
 			Damage(hit, self, self, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);
-
 			// calculate hits for ballistic weapons
 			if(g)
 			{
