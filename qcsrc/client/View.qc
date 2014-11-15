@@ -1631,6 +1631,9 @@ void CSQC_UpdateView(float w, float h)
 				//sound(self, CH_SHOTS, "weapons/minstanexfire.wav", VOL_BASE, ATTEN_LARGE);
 
 				if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
+				if(autocvar_cl_particles_newnexbeam && (getstati(STAT_ALLOW_OLDNEXBEAM) || isdemo()))
+					pointparticles(particleeffectnum("nex_impact_new"), trace_endpos, '0 0 0', 1);
+				else
 					pointparticles(particleeffectnum("nex_impact"), trace_endpos, '0 0 0', 1);
 
 				last_beam = time + minsta_delay;

@@ -117,6 +117,7 @@ void ItemRead(float _IsNew)
     {
         self.drawmask  = MASK_NORMAL;
 		self.move_movetype = self.movetype = MOVETYPE_TOSS;
+		//self.renderflags |= RF_DEPTHHACK;
         self.draw       = ItemDraw;
 
         if(self.mdl)
@@ -130,20 +131,18 @@ void ItemRead(float _IsNew)
             string _fn2 = substring(_fn, 0 , strlen(_fn) -4);
             self.draw = ItemDrawSimple;
 
-
-
             if(fexists(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix)))
                 self.mdl = strzone(sprintf("%s%s.md3", _fn2, autocvar_cl_simpleitems_postfix));
             else if(fexists(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix)))
                 self.mdl = strzone(sprintf("%s%s.dpm", _fn2, autocvar_cl_simpleitems_postfix));
             else if(fexists(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix)))
                 self.mdl = strzone(sprintf("%s%s.iqm", _fn2, autocvar_cl_simpleitems_postfix));
-            else if(fexists(sprintf("%s%s.obj", _fn2, autocvar_cl_simpleitems_postfix)))
-                self.mdl = strzone(sprintf("%s%s.obj", _fn2, autocvar_cl_simpleitems_postfix));
+            else if(fexists(sprintf("%s%s.mdl", _fn2, autocvar_cl_simpleitems_postfix)))
+                self.mdl = strzone(sprintf("%s%s.mdl", _fn2, autocvar_cl_simpleitems_postfix));
             else
             {
                 self.draw = ItemDraw;
-                dprint("Simple item requested for ", _fn, " but no model exsist for it\n");
+                dprint("Simple item requested for ", _fn, " but no model exists for it\n");
             }
         }
 
@@ -1053,7 +1052,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 	else
 		Item_Reset();
 
-    Net_LinkEntity(self, FALSE, 0, ItemSend);
+    Net_LinkEntity(self, !((itemflags & FL_POWERUP) || self.health || self.armorvalue), 0, ItemSend);
 
 	// call this hook after everything else has been done
 	if(MUTATOR_CALLHOOK(Item_Spawn))
