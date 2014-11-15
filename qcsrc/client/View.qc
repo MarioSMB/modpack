@@ -1756,11 +1756,12 @@ void CSQC_UpdateView(float w, float h)
 						else
 							ring_image = "gfx/crosshair_ring.tga";
 					}
-					else if ( arc_heat && activeweapon == WEP_ARC )
+					else if ( autocvar_crosshair_ring && autocvar_crosshair_ring_arc && arc_heat && activeweapon == WEP_ARC )
 					{
 						ring_value = arc_heat;
-						ring_alpha = autocvar_crosshair_ring_minelayer_alpha;
-						ring_rgb = wcross_color;
+						ring_alpha = (1-arc_heat)*autocvar_crosshair_ring_arc_cold_alpha +
+							arc_heat*autocvar_crosshair_ring_arc_hot_alpha;
+						ring_rgb = (1-arc_heat)*wcross_color + arc_heat*autocvar_crosshair_ring_arc_hot_color;
 						ring_image = "gfx/crosshair_ring.tga";
 					}
 
