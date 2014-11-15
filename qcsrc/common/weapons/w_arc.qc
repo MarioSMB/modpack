@@ -42,6 +42,11 @@ REGISTER_WEAPON(
 	w_cvar(id, sn, NONE, burst_damage) \
 	w_cvar(id, sn, NONE, burst_healing_aps) \
 	w_cvar(id, sn, NONE, burst_healing_hps) \
+	w_cvar(id, sn, NONE, overheat_max)/* maximum heat before jamming */ \
+	w_cvar(id, sn, NONE, overheat_min)/* minimum heat to wait for cooldown */ \
+	w_cvar(id, sn, NONE, beam_heat)   /* heat increase per second (primary) */ \
+	w_cvar(id, sn, NONE, burst_heat)  /* heat increase per second (secondary) */ \
+	w_cvar(id, sn, NONE, cooldown)    /* heat decrease per second when resting */ \
 	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
 	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
 	w_prop(id, sn, string, weaponreplace, weaponreplace) \
@@ -82,6 +87,8 @@ ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float beam_initialized;
 .float beam_bursting;
 .float beam_teleporttime;
+.float beam_heat; // (beam) amount of heat produced
+.float arc_overheat; // (player) time during which the arc is too hot
 #endif
 #ifdef CSQC
 void Ent_ReadArcBeam(float isnew);
@@ -196,8 +203,13 @@ void W_Arc_Beam_Think(void)
 		self.owner.frozen
 		||
 		self.owner.jb_isprisoned
+		||
+		self.beam_heat >= WEP_CVAR(arc, overheat_max)
 	)
 	{
+		if ( self.beam_heat > WEP_CVAR(arc, overheat_min) )
+			self.owner.arc_overheat = time + self.beam_heat * WEP_CVAR(arc, cooldown);
+		
 		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; }
 		entity oldself = self;
 		self = self.owner;
@@ -235,6 +247,10 @@ void W_Arc_Beam_Think(void)
 			self.owner.WEP_AMMO(ARC) = max(0, self.owner.WEP_AMMO(ARC) - (rootammo * frametime));
 		}
 	}
+	float heat_speed = burst ? WEP_CVAR(arc, burst_heat) : WEP_CVAR(arc, beam_heat);
+	self.beam_heat = min( WEP_CVAR(arc, overheat_max), self.beam_heat + heat_speed*frametime );
+	dprint("Heat++: ",ftos(self.beam_heat/WEP_CVAR(arc, overheat_max)*100),"%\n");
+	
 
 	makevectors(self.owner.v_angle);
 
@@ -566,16 +582,13 @@ float W_Arc(float req)
 		}
 		case WR_THINK:
 		{
-			#if 0
-			if(self.arc_beam.beam_heat > threshold)
-			{
-				stop the beam somehow
-				play overheat animation
-			}
-			#endif
-
+			if ( self.arc_overheat > time )
+				dprint("Heat--: ",ftos((self.arc_overheat-time) / 
+					(WEP_CVAR(arc, overheat_max)/WEP_CVAR(arc, cooldown))*100),"%\n");
+			if ( self.arc_overheat <= time )
 			if(self.BUTTON_ATCK || self.BUTTON_ATCK2 /* FIXME(Samual): || self.arc_beam.beam_bursting */)
 			{
+			
 				if(self.arc_BUTTON_ATCK_prev)
 				{
 					#if 0
@@ -599,16 +612,16 @@ float W_Arc(float req)
 						}
 					}
 				}
-			} 
-			else // todo
-			{
-				if(self.arc_BUTTON_ATCK_prev != 0)
-				{
-					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
-					ATTACK_FINISHED(self) = time + WEP_CVAR(arc, beam_refire) * W_WeaponRateFactor();
-				}
-				self.arc_BUTTON_ATCK_prev = 0;
+				
+				return TRUE;
 			}
+			
+			if(self.arc_BUTTON_ATCK_prev != 0)
+			{
+				weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
+				ATTACK_FINISHED(self) = time + WEP_CVAR(arc, beam_refire) * W_WeaponRateFactor();
+			}
+			self.arc_BUTTON_ATCK_prev = 0;
 
 			#if 0
 			if(self.BUTTON_ATCK2)
