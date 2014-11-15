@@ -62,15 +62,15 @@ vector arc_shotorigin[4];
 .vector beam_wantdir;
 .float beam_type;
 
-#define ARC_BT_MISS        0
-#define ARC_BT_WALL        1
-#define ARC_BT_HEAL        2
-#define ARC_BT_HIT         3
-#define ARC_BT_BURST_MISS  10
-#define ARC_BT_BURST_WALL  11
-#define ARC_BT_BURST_HEAL  12
-#define ARC_BT_BURST_HIT   13
-#define ARC_BT_BURSTMASK   10
+#define ARC_BT_MISS        0x00
+#define ARC_BT_WALL        0x01
+#define ARC_BT_HEAL        0x02
+#define ARC_BT_HIT         0x03
+#define ARC_BT_BURST_MISS  0x10
+#define ARC_BT_BURST_WALL  0x11
+#define ARC_BT_BURST_HEAL  0x12
+#define ARC_BT_BURST_HIT   0x13
+#define ARC_BT_BURSTMASK   0x10
 
 #define ARC_SF_SETTINGS    1
 #define ARC_SF_START       2
@@ -212,6 +212,15 @@ void W_Arc_Beam_Think(void)
 		remove(self);
 		return;
 	}
+	
+	
+	float burst = 0;
+	if( self.owner.BUTTON_ATCK2 || self.beam_bursting)
+	{
+		if(!self.beam_bursting)
+			self.beam_bursting = TRUE;
+		burst = ARC_BT_BURSTMASK;
+	}
 
 	if(
 		!IS_PLAYER(self.owner)
@@ -220,7 +229,7 @@ void W_Arc_Beam_Think(void)
 		||
 		self.owner.deadflag != DEAD_NO
 		||
-		(!self.owner.BUTTON_ATCK /* FIXME(Samual): && !self.beam_bursting */)
+		(!self.owner.BUTTON_ATCK && !burst )
 		||
 		self.owner.frozen
 		||
@@ -244,15 +253,7 @@ void W_Arc_Beam_Think(void)
 		remove(self);
 		return;
 	}
-
-	float burst = 0;
-	if(/*self.owner.BUTTON_ATCK2 || */self.beam_bursting)
-	{
-		if(!self.beam_bursting)
-			self.beam_bursting = TRUE;
-		burst = ARC_BT_BURSTMASK;
-	}
-
+	
 	// decrease ammo
 	float coefficient = frametime;
 	if(!(self.owner.items & IT_UNLIMITED_WEAPON_AMMO))
@@ -530,7 +531,7 @@ void W_Arc_Beam_Think(void)
 	// te_explosion(trace_endpos);
 
 	// if we're bursting, use burst visual effects
-	new_beam_type += burst;
+	new_beam_type |= burst;
 
 	// network information: beam type
 	if(new_beam_type != self.beam_type)
@@ -545,11 +546,6 @@ void W_Arc_Beam_Think(void)
 
 void W_Arc_Beam(float burst)
 {
-	// FIXME(Samual): remove this when overheat and burst work.
-	if (burst)
-	{
-		centerprint(self, "^4NOTE:^7 Arc burst (secondary) is not implemented yet.");
-	}
 
 	// only play fire sound if 1 sec has passed since player let go the fire button
 	if(time - self.beam_prev > 1)
@@ -603,10 +599,10 @@ float W_Arc(float req)
 		case WR_THINK:
 		{
 			Arc_Player_SetHeat(self);
-			dprint("Heat: ",ftos(self.arc_heat_percent*100),"%\n");
+			//dprint("Heat: ",ftos(self.arc_heat_percent*100),"%\n");
 			
 			if ( self.arc_overheat <= time )
-			if(self.BUTTON_ATCK || self.BUTTON_ATCK2 /* FIXME(Samual): || self.arc_beam.beam_bursting */)
+			if(self.BUTTON_ATCK || self.BUTTON_ATCK2 || self.arc_beam.beam_bursting )
 			{
 			
 				if(self.arc_BUTTON_ATCK_prev)
@@ -684,9 +680,7 @@ float W_Arc(float req)
 		}
 		case WR_CHECKAMMO2:
 		{
-			// arc currently has no secondary attack
-			return FALSE;
-			//return ((!WEP_CVAR(arc, burst_ammo)) || (self.WEP_AMMO(ARC) > 0));
+			return ((!WEP_CVAR(arc, burst_ammo)) || (self.WEP_AMMO(ARC) > 0));
 		}
 		case WR_CONFIG:
 		{
