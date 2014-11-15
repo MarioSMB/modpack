@@ -557,6 +557,8 @@ float Item_GiveTo(entity item, entity player)
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			if(it & WepSet_FromWeapon(i))
 				W_GiveWeapon(player, i);
+			player.arc_overheat = item.arc_overheat;
+			player.arc_cooldown = item.arc_cooldown;
 		}
 	}
 

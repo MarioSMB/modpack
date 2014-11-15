@@ -88,8 +88,8 @@ ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float beam_bursting;
 .float beam_teleporttime;
 .float beam_heat; // (beam) amount of heat produced
-.float arc_overheat; // (arc) time during which it's too hot
-.float arc_cooldown; // (arc) cooling speed
+.float arc_overheat; // (arc/player) time during which it's too hot
+.float arc_cooldown; // (arc/player) cooling speed
 .float arc_heat_percent; // (player) arc heat in [0,1] (stat)
 #endif
 #ifdef CSQC
@@ -197,12 +197,12 @@ float Arc_GetHeat_Percent(entity player)
 		return player.arc_beam.beam_heat/WEP_CVAR(arc, overheat_max);
 	}
 	
-	if ( player.weaponentity.arc_overheat > time )
+	if ( player.arc_overheat > time )
 	{
 		if ( WEP_CVAR(arc, overheat_max) <= 0 )
 			return 0;
-		return (player.weaponentity.arc_overheat-time) / WEP_CVAR(arc, overheat_max) 
-			* player.weaponentity.arc_cooldown;
+		return (player.arc_overheat-time) / WEP_CVAR(arc, overheat_max) 
+			* player.arc_cooldown;
 	}
 	return 0;
 }
@@ -259,8 +259,8 @@ void W_Arc_Beam_Think(void)
 			
 			if ( cooldown_speed )
 			{
-				self.owner.weaponentity.arc_overheat = time + self.beam_heat / cooldown_speed;
-				self.owner.weaponentity.arc_cooldown = cooldown_speed;
+				self.owner.arc_overheat = time + self.beam_heat / cooldown_speed;
+				self.owner.arc_cooldown = cooldown_speed;
 			}
 		}
 		
@@ -623,7 +623,7 @@ float W_Arc(float req)
 		{
 			Arc_Player_SetHeat(self);
 			
-			if ( self.weaponentity.arc_overheat <= time )
+			if ( self.arc_overheat <= time )
 			if(self.BUTTON_ATCK || self.BUTTON_ATCK2 || self.arc_beam.beam_bursting )
 			{
 			

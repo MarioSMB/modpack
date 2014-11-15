@@ -32,6 +32,11 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	wep.owner = wep.enemy = own;
 	wep.flags |= FL_TOSSED;
 	wep.colormap = own.colormap;
+	
+	wep.arc_overheat = own.arc_overheat;
+	wep.arc_cooldown = own.arc_cooldown;
+	own.arc_overheat = 0;
+	own.arc_cooldown = 0;
 
 	if(WepSet_FromWeapon(wpn) & WEPSET_SUPERWEAPONS)
 	{
