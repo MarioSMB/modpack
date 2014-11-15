@@ -806,6 +806,8 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_VORTEX_CHARGEPOOL, AS_FLOAT, vortex_chargepool_ammo);
 
 	addstat(STAT_HAGAR_LOAD, AS_INT, hagar_load);
+	
+	addstat(STAT_ARC_HEAT, AS_FLOAT, arc_heat_percent);
 
 	// freeze attacks
 	addstat(STAT_FROZEN, AS_INT, frozen);
