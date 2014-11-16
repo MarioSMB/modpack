@@ -88,8 +88,8 @@ ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float beam_bursting;
 .float beam_teleporttime;
 .float beam_heat; // (beam) amount of heat produced
-.float arc_overheat; // (arc/player) time during which it's too hot
-.float arc_cooldown; // (arc/player) cooling speed
+.float arc_overheat; // (dropped arc/player) time during which it's too hot
+.float arc_cooldown; // (dropped arc/player) cooling speed
 .float arc_heat_percent; // (player) arc heat in [0,1] (stat)
 #endif
 #ifdef CSQC
@@ -186,24 +186,22 @@ void Reset_ArcBeam(entity player, vector forward)
 }
 
 float Arc_GetHeat_Percent(entity player)
-{
-	if ( WEP_CVAR(arc, cooldown) <= 0 )
+{	
+	if ( WEP_CVAR(arc, overheat_max) <= 0 ||  WEP_CVAR(arc, overheat_max) <= 0 )
+	{
+		player.arc_overheat = 0;
 		return 0;
+	}
 	
 	if ( player.arc_beam )
-	{
-		if ( WEP_CVAR(arc, overheat_max) <= 0 )
-			return 1;
 		return player.arc_beam.beam_heat/WEP_CVAR(arc, overheat_max);
-	}
 	
 	if ( player.arc_overheat > time )
 	{
-		if ( WEP_CVAR(arc, overheat_max) <= 0 )
-			return 0;
 		return (player.arc_overheat-time) / WEP_CVAR(arc, overheat_max) 
 			* player.arc_cooldown;
 	}
+	
 	return 0;
 }
 void Arc_Player_SetHeat(entity player)
@@ -696,7 +694,8 @@ float W_Arc(float req)
 		}
 		case WR_CHECKAMMO2:
 		{
-			return ((!WEP_CVAR(arc, burst_ammo)) || (self.WEP_AMMO(ARC) > 0));
+			return WEP_CVAR(arc, overheat_max) > 0 &&
+				((!WEP_CVAR(arc, burst_ammo)) || (self.WEP_AMMO(ARC) > 0));
 		}
 		case WR_CONFIG:
 		{
@@ -706,6 +705,24 @@ float W_Arc(float req)
 		case WR_KILLMESSAGE:
 		{
 			return WEAPON_ARC_MURDER;
+		}
+		case WR_DROP:
+		{
+			weapon_dropevent_item.arc_overheat = self.arc_overheat;
+			weapon_dropevent_item.arc_cooldown = self.arc_cooldown;
+			self.arc_overheat = 0;
+			self.arc_cooldown = 0;
+			return TRUE;
+		}
+		case WR_PICKUP:
+		{
+			if ( !client_hasweapon(self, WEP_ARC, FALSE, FALSE) &&
+				weapon_dropevent_item.arc_overheat > time )
+			{
+				self.arc_overheat = weapon_dropevent_item.arc_overheat;
+				self.arc_cooldown = weapon_dropevent_item.arc_cooldown;
+			}
+			return TRUE;
 		}
 	}
 	return FALSE;

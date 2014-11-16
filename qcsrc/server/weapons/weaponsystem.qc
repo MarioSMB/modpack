@@ -952,3 +952,13 @@ void W_Reload(float sent_ammo_min, string sent_sound)
 	self.old_clip_load = self.clip_load;
 	self.clip_load = self.(weapon_load[self.weapon]) = -1;
 }
+
+entity weapon_dropevent_item;
+void W_DropEvent(float event, entity player, float weapon_type, entity weapon_item)
+{
+	entity oldself = self;
+	self = player;
+	weapon_dropevent_item = weapon_item;
+	WEP_ACTION(weapon_type, event);
+	self = oldself;
+}

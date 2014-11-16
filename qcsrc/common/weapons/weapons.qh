@@ -37,6 +37,8 @@ const float WR_PLAYERDEATH    = 12; // (SERVER) called whenever a player dies
 const float WR_GONETHINK      = 13; // (SERVER) logic to run when weapon is lost
 const float WR_CONFIG         = 14; // (ALL)    dump weapon cvars to config in data directory (see: sv_cmd dumpweapons)
 const float WR_ZOOMRETICLE    = 15; // (CLIENT) weapon specific zoom reticle
+const float WR_DROP           = 16; // (SERVER) the weapon is dropped
+const float WR_PICKUP         = 17; // (SERVER) a weapon is picked up
 
 // variables:
 string weaponorder_byid;

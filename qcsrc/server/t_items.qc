@@ -556,11 +556,9 @@ float Item_GiveTo(entity item, entity player)
 			pickedup = TRUE;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 			if(it & WepSet_FromWeapon(i))
-				W_GiveWeapon(player, i);
-			if ( item.arc_overheat > time )
 			{
-				player.arc_overheat = item.arc_overheat;
-				player.arc_cooldown = item.arc_cooldown;
+				W_DropEvent(WR_PICKUP, player, i, item);
+				W_GiveWeapon(player, i);
 			}
 		}
 	}
