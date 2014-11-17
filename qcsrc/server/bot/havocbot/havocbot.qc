@@ -980,7 +980,7 @@ void havocbot_chooseweapon()
 	{
 		// If no weapon was chosen get the first available weapon
 		if(self.weapon==0)
-		for(i=WEP_BLASTER + 1; i < WEP_COUNT ; ++i) // Samual: This seems strange compared to other weapon loops...
+		for(i = WEP_FIRST; i <= WEP_LAST; ++i) if(i != WEP_BLASTER)
 		{
 			if(client_hasweapon(self, i, TRUE, FALSE))
 			{

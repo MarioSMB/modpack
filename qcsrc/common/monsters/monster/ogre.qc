@@ -81,7 +81,7 @@ void M_Ogre_Attack_Grenade_Explode()
 
 	sound (self, CH_WEAPON_A, W_Sound("grenade_impact"), VOL_BASE, ATTEN_NORM);
 	pointparticles(particleeffectnum("grenade_explode"), self.origin, '0 0 0', 1);
-	RadiusDamage (self, self.realowner, autocvar_g_monster_ogre_attack_grenade_damage, autocvar_g_monster_ogre_attack_grenade_edgedamage, autocvar_g_monster_ogre_attack_grenade_radius, world, autocvar_g_monster_ogre_attack_grenade_force, self.projectiledeathtype, other);
+	RadiusDamage (self, self.realowner, autocvar_g_monster_ogre_attack_grenade_damage, autocvar_g_monster_ogre_attack_grenade_edgedamage, autocvar_g_monster_ogre_attack_grenade_radius, world, world, autocvar_g_monster_ogre_attack_grenade_force, self.projectiledeathtype, other);
 
 	remove (self);
 }
@@ -164,7 +164,7 @@ void M_Ogre_Attack_Grenade()
 	gren.event_damage = M_Ogre_Attack_Grenade_Damage;
 	gren.damagedbycontents = TRUE;
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
-	W_SetupProjectileVelocityEx(gren, dir, v_up, autocvar_g_monster_ogre_attack_grenade_speed, autocvar_g_monster_ogre_attack_grenade_speed_up, autocvar_g_monster_ogre_attack_grenade_speed_z, autocvar_g_monster_ogre_attack_grenade_spread, FALSE);
+	W_SetupProjVelocity_Explicit(gren, dir, v_up, autocvar_g_monster_ogre_attack_grenade_speed, autocvar_g_monster_ogre_attack_grenade_speed_up, autocvar_g_monster_ogre_attack_grenade_speed_z, autocvar_g_monster_ogre_attack_grenade_spread, FALSE);
 
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
@@ -348,7 +348,7 @@ float M_Ogre(float req)
 			self.m_anim_idle = ogre_anim_idle;
 
 			self.monster_loot = spawnfunc_item_rockets;
-			self.weapon = WEP_UZI;
+			self.weapon = WEP_MACHINEGUN;
 			self.frame = ogre_anim_pull;
 			self.spawn_time = time + 1;
 			self.spawnshieldtime = self.spawn_time;

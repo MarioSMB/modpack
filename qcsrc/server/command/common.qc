@@ -376,7 +376,7 @@ void CommonCommand_editmob(float request, entity caller, float argc)
 					if(!is_visible) { print_to(caller, "You must look at your monster to edit it"); return; }
 
 					Damage (mon, world, world, mon.health + mon.max_health + 200, DEATH_KILL, mon.origin, '0 0 0');
-					print_to(caller, strcat("Your pet '", mon.monster_name, "'' has been brutally mutilated"));
+					print_to(caller, strcat("Your pet '", mon.monster_name, "' has been brutally mutilated"));
 					return;
 				}
 				case "skin":

@@ -1,7 +1,7 @@
 MUTATOR_HOOKFUNCTION(melee_SetStartItems)
 {
 	start_ammo_shells = warmup_start_ammo_shells = 0;
-	start_weapons = warmup_start_weapons = WEPSET_SHOCKWAVE;
+	start_weapons = warmup_start_weapons = WEPSET_SHOTGUN;
 
 	return FALSE;
 }

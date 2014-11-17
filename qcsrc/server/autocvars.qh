@@ -1036,3 +1036,12 @@ string autocvar_g_physics_clientselect_options;
 string autocvar_sv_announcer;
 float autocvar_sv_minigames;
 float autocvar_sv_minigames_observer;
+float autocvar_g_editlights_spawn_distance;
+float autocvar_g_editlights_storage_autosave;
+float autocvar_g_editlights_storage_autoload;
+float autocvar_g_editlights_readonly;
+float autocvar_g_editlights_max;
+float autocvar_g_editlights_debug;
+var string autocvar_g_editlights_storage_name = "default";
+float autocvar_g_editlights_editor_free;
+

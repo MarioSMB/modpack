@@ -1,0 +1,286 @@
+// Full list of all stat constants, icnluded in a single location for easy reference
+// 255 is the current limit (MAX_CL_STATS - 1), engine will need to be modified if you wish to add more stats
+
+const float MAX_CL_STATS                = 256;
+const float STAT_HEALTH                 = 0;
+// 1 empty?
+const float STAT_WEAPON                 = 2;
+const float STAT_AMMO                   = 3;
+const float STAT_ARMOR                  = 4;
+const float STAT_WEAPONFRAME            = 5;
+const float STAT_SHELLS                 = 6;
+const float STAT_NAILS                  = 7;
+const float STAT_ROCKETS                = 8;
+const float STAT_CELLS                  = 9;
+const float STAT_ACTIVEWEAPON           = 10;
+const float STAT_TOTALSECRETS           = 11;
+const float STAT_TOTALMONSTERS          = 12;
+const float STAT_SECRETS                = 13;
+const float STAT_MONSTERS               = 14;
+const float STAT_ITEMS                  = 15;
+const float STAT_VIEWHEIGHT             = 16;
+// 17 empty?
+// 18 empty?
+// 19 empty?
+// 20 empty?
+const float STAT_VIEWZOOM               = 21;
+// 22 empty?
+// 23 empty?
+// 24 empty?
+// 25 empty?
+// 26 empty?
+// 27 empty?
+// 28 empty?
+// 29 empty?
+// 30 empty?
+// 31 empty?
+const float STAT_KH_KEYS                = 32;
+const float STAT_CTF_STATE              = 33;
+// 34 empty?
+const float STAT_WEAPONS                = 35;
+const float STAT_SWITCHWEAPON           = 36;
+const float STAT_GAMESTARTTIME          = 37;
+// 38 empty?
+// 39 empty?
+// 40 empty?
+const float STAT_ARC_HEAT               = 41;
+const float STAT_PRESSED_KEYS           = 42;
+const float STAT_ALLOW_OLDNEXBEAM       = 43; // this stat could later contain some other bits of info, like, more server-side particle config
+const float STAT_FUEL                   = 44;
+const float STAT_NB_METERSTART          = 45;
+const float STAT_SHOTORG                = 46; // compressShotOrigin
+const float STAT_LEADLIMIT              = 47;
+const float STAT_WEAPON_CLIPLOAD        = 48;
+const float STAT_WEAPON_CLIPSIZE        = 49;
+const float STAT_VORTEX_CHARGE          = 50;
+const float STAT_LAST_PICKUP            = 51;
+const float STAT_HUD                    = 52;
+const float STAT_VORTEX_CHARGEPOOL      = 53;
+const float STAT_DAMAGE_DEALT_TOTAL     = 54;
+const float STAT_TYPEHIT_TIME           = 55;
+const float STAT_LAYED_MINES            = 56;
+const float STAT_HAGAR_LOAD             = 57;
+const float STAT_SWITCHINGWEAPON        = 58;
+const float STAT_SUPERWEAPONS_FINISHED  = 59;
+const float STAT_VEHICLESTAT_HEALTH     = 60;
+const float STAT_VEHICLESTAT_SHIELD     = 61;
+const float STAT_VEHICLESTAT_ENERGY     = 62;
+const float STAT_VEHICLESTAT_AMMO1      = 63;
+const float STAT_VEHICLESTAT_RELOAD1    = 64;
+const float STAT_VEHICLESTAT_AMMO2      = 65;
+const float STAT_VEHICLESTAT_RELOAD2    = 66;
+const float STAT_VEHICLESTAT_W2MODE     = 67;
+const float STAT_PLASMA                 = 68;
+const float STAT_NADE_TIMER             = 69;
+const float STAT_SECRETS_TOTAL          = 70;
+const float STAT_SECRETS_FOUND          = 71;
+const float STAT_RESPAWN_TIME           = 72;
+const float STAT_ROUNDSTARTTIME         = 73;
+const float STAT_WEAPONS2               = 74;
+const float STAT_WEAPONS3               = 75;
+const float STAT_MONSTERS_TOTAL         = 76;
+const float STAT_MONSTERS_KILLED        = 77;
+const float STAT_OK_AMMO_CHARGE         = 78;
+const float STAT_OK_AMMO_CHARGEPOOl     = 79;
+const float STAT_NADE_BONUS             = 80;
+const float STAT_NADE_BONUS_TYPE        = 81;
+const float STAT_NADE_BONUS_SCORE       = 82;
+const float STAT_HEALING_ORB            = 83;
+const float STAT_HEALING_ORB_ALPHA      = 84;
+const float STAT_WEAPONSINMAP           = 90;
+const float STAT_WEAPONSINMAP2          = 91;
+const float STAT_WEAPONSINMAP3          = 92;
+const float STAT_SUPERCELLS             = 93;
+const float STAT_CAPTURE_PROGRESS       = 94;
+const float STAT_PRISONED               = 95;
+const float STAT_ROUNDLOST              = 96;
+const float STAT_CTF_FLAGSTATUS         = 97;
+const float STAT_KH_KEYSTATUS           = 97;
+const float STAT_BUFFS                  = 98;
+const float STAT_DISCO_MODE             = 99;
+
+
+/* The following stats change depending on the gamemode, so can share the same ID */
+// IDs 100 to 104 reserved for gamemodes
+
+// freeze tag, clan arena, jailbreak
+const float STAT_REDALIVE               = 100;
+const float STAT_BLUEALIVE              = 101;
+const float STAT_YELLOWALIVE            = 102;
+const float STAT_PINKALIVE              = 103;
+
+// domination
+const float STAT_DOM_TOTAL_PPS          = 100;
+const float STAT_DOM_PPS_RED            = 101;
+const float STAT_DOM_PPS_BLUE           = 102;
+const float STAT_DOM_PPS_YELLOW         = 103;
+const float STAT_DOM_PPS_PINK           = 104;
+
+// vip
+const float STAT_VIP                    = 100;
+const float STAT_VIP_RED                = 101;
+const float STAT_VIP_BLUE               = 102;
+const float STAT_VIP_YELLOW             = 103;
+const float STAT_VIP_PINK               = 104;
+
+// key hunt
+const float STAT_KH_REDKEY_TEAM         = 100;
+const float STAT_KH_BLUEKEY_TEAM        = 101;
+const float STAT_KH_YELLOWKEY_TEAM      = 102;
+const float STAT_KH_PINKKEY_TEAM        = 103;
+
+/* Gamemode-specific stats end here */
+
+
+const float STAT_FROZEN                 = 105;
+const float STAT_REVIVE_PROGRESS        = 106;
+// 107 empty?
+// 108 empty?
+// 109 empty?
+// 110 empty?
+// 111 empty?
+// 112 empty?
+// 113 empty?
+// 114 empty?
+// 115 empty?
+// 116 empty?
+// 117 empty?
+// 118 empty?
+// 119 empty?
+// 120 empty?
+// 121 empty?
+// 122 empty?
+// 123 empty?
+// 124 empty?
+// 125 empty?
+// 126 empty?
+// 127 empty?
+// 128 empty?
+// 129 empty?
+// 130 empty?
+// 131 empty?
+// 132 empty?
+// 133 empty?
+// 134 empty?
+// 135 empty?
+// 136 empty?
+// 137 empty?
+// 138 empty?
+// 139 empty?
+// 140 empty?
+// 141 empty?
+// 142 empty?
+// 143 empty?
+// 144 empty?
+// 145 empty?
+// 146 empty?
+// 147 empty?
+// 148 empty?
+// 149 empty?
+// 150 empty?
+// 151 empty?
+// 152 empty?
+// 153 empty?
+// 154 empty?
+// 155 empty?
+// 156 empty?
+// 157 empty?
+// 158 empty?
+// 159 empty?
+// 160 empty?
+// 161 empty?
+// 162 empty?
+// 162 empty?
+// 163 empty?
+// 164 empty?
+// 165 empty?
+// 166 empty?
+// 167 empty?
+// 168 empty?
+// 169 empty?
+// 170 empty?
+// 171 empty?
+// 172 empty?
+// 173 empty?
+// 174 empty?
+// 175 empty?
+// 176 empty?
+// 177 empty?
+// 178 empty?
+// 179 empty?
+// 180 empty?
+// 181 empty?
+// 182 empty?
+// 183 empty?
+// 184 empty?
+// 185 empty?
+// 186 empty?
+// 187 empty?
+// 188 empty?
+// 189 empty?
+// 190 empty?
+// 191 empty?
+// 192 empty?
+// 193 empty?
+// 194 empty?
+// 195 empty?
+// 196 empty?
+// 197 empty?
+// 198 empty?
+// 199 empty?
+// 200 empty?
+// 201 empty?
+// 202 empty?
+// 203 empty?
+// 204 empty?
+// 205 empty?
+// 206 empty?
+// 207 empty?
+// 208 empty?
+// 209 empty?
+// 210 empty?
+// 211 empty?
+// 212 empty?
+// 213 empty?
+// 214 empty?
+// 215 empty?
+// 216 empty?
+// 217 empty?
+// 218 empty?
+// 219 empty?
+const float STAT_MOVEVARS_AIRACCEL_QW_STRETCHFACTOR     = 220;
+const float STAT_MOVEVARS_AIRCONTROL_PENALTY            = 221;
+const float STAT_MOVEVARS_AIRSPEEDLIMIT_NONQW           = 222;
+const float STAT_MOVEVARS_AIRSTRAFEACCEL_QW             = 223;
+const float STAT_MOVEVARS_AIRCONTROL_POWER              = 224;
+const float STAT_MOVEFLAGS                              = 225;
+const float STAT_MOVEVARS_WARSOWBUNNY_AIRFORWARDACCEL   = 226;
+const float STAT_MOVEVARS_WARSOWBUNNY_ACCEL             = 227;
+const float STAT_MOVEVARS_WARSOWBUNNY_TOPSPEED          = 228;
+const float STAT_MOVEVARS_WARSOWBUNNY_TURNACCEL         = 229;
+const float STAT_MOVEVARS_WARSOWBUNNY_BACKTOSIDERATIO   = 230;
+const float STAT_MOVEVARS_AIRSTOPACCELERATE             = 231;
+const float STAT_MOVEVARS_AIRSTRAFEACCELERATE           = 232;
+const float STAT_MOVEVARS_MAXAIRSTRAFESPEED             = 233;
+const float STAT_MOVEVARS_AIRCONTROL                    = 234;
+const float STAT_FRAGLIMIT                              = 235;
+const float STAT_TIMELIMIT                              = 236;
+const float STAT_MOVEVARS_WALLFRICTION                  = 237;
+const float STAT_MOVEVARS_FRICTION                      = 238;
+const float STAT_MOVEVARS_WATERFRICTION                 = 239;
+const float STAT_MOVEVARS_TICRATE                       = 240;
+const float STAT_MOVEVARS_TIMESCALE                     = 241;
+const float STAT_MOVEVARS_GRAVITY                       = 242;
+const float STAT_MOVEVARS_STOPSPEED                     = 243;
+const float STAT_MOVEVARS_MAXSPEED                      = 244;
+const float STAT_MOVEVARS_SPECTATORMAXSPEED             = 245;
+const float STAT_MOVEVARS_ACCELERATE                    = 246;
+const float STAT_MOVEVARS_AIRACCELERATE                 = 247;
+const float STAT_MOVEVARS_WATERACCELERATE               = 248;
+const float STAT_MOVEVARS_ENTGRAVITY                    = 249;
+const float STAT_MOVEVARS_JUMPVELOCITY                  = 250;
+const float STAT_MOVEVARS_EDGEFRICTION                  = 251;
+const float STAT_MOVEVARS_MAXAIRSPEED                   = 252;
+const float STAT_MOVEVARS_STEPHEIGHT                    = 253;
+const float STAT_MOVEVARS_AIRACCEL_QW                   = 254;
+const float STAT_MOVEVARS_AIRACCEL_SIDEWAYS_FRICTION    = 255;

@@ -71,23 +71,6 @@ void changematchtime(float delta, float mi, float ma)
 	cvar_set("timelimit", ftos(new / 60));
 }
 
-void MorningRescue(entity e)
-{
-	if(e == world)
-		return;
-
-	float accepted;
-
-	accepted = VerifyClientEntity(e, TRUE, FALSE);
-
-	if(accepted > 0) 
-	{
-		msg_entity = e;
-		WriteByte(MSG_ONE, SVC_TEMPENTITY);
-		WriteByte(MSG_ONE, TE_CSQC_MORNINGRESCUE);
-	}
-}
-
 void DiscoMode(entity e, float enable)
 {
 	if(e == world)
@@ -1586,34 +1569,6 @@ void GameCommand_stuffto(float request, float argc)
 	#endif
 }
 
-void GameCommand_supermentalrescue(float request)
-{
-	switch(request)
-	{
-		case CMD_REQUEST_COMMAND:
-		{
-			entity head;
-
-			FOR_EACH_REALPLAYER(head)
-				MorningRescue(head);
-
-			FOR_EACH_PLAYER(head)
-				Unfreeze(head);
-
-			return; // never fall through to usage
-		}
-		
-		default:
-			print("Incorrect parameters for ^2supermentalrescue^7\n");
-		case CMD_REQUEST_USAGE:
-		{
-			print("\nUsage:^3 sv_cmd supermentalrescue\n");
-			return;
-		}
-	}
-}
-
-
 void GameCommand_discomode(float request, float argc)
 {
 	switch(request)
@@ -1987,7 +1942,6 @@ void GameCommand_(float request)
 	SERVER_COMMAND("setbots", GameCommand_setbots(request, arguments), "Adjust how many bots are in the match") \
 	SERVER_COMMAND("shuffleteams", GameCommand_shuffleteams(request), "Randomly move players to different teams") \
 	SERVER_COMMAND("stuffto", GameCommand_stuffto(request, arguments), "Send a command to be executed on a client") \
-	SERVER_COMMAND("supermentalrescue", GameCommand_supermentalrescue(request), "Moaning lescue") \
 	SERVER_COMMAND("trace", GameCommand_trace(request, arguments), "Various debugging tools with tracing") \
 	SERVER_COMMAND("unlockteams", GameCommand_unlockteams(request), "Enable the ability for players to switch or enter teams") \
 	SERVER_COMMAND("warp", GameCommand_warp(request, arguments), "Choose different level in campaign") \

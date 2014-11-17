@@ -4,7 +4,7 @@ void mutators_add()
 		{ if(cvar(mut_cvar) && dependence) { MUTATOR_ADD(mut_name); } }
 
 	CHECK_MUTATOR_ADD("g_dodging", mutator_dodging, 1);
-	CHECK_MUTATOR_ADD("g_spawn_near_teammate", mutator_spawn_near_teammate, teamplay);
+	CHECK_MUTATOR_ADD("g_spawn_near_teammate", mutator_spawn_near_teammate, teamplay && !g_assault);
 	CHECK_MUTATOR_ADD("g_physical_items", mutator_physical_items, 1);
 	CHECK_MUTATOR_ADD("g_touchexplode", mutator_touchexplode, 1);
 	CHECK_MUTATOR_ADD("g_minstagib", mutator_minstagib, !g_nexball);
@@ -26,12 +26,13 @@ void mutators_add()
 	CHECK_MUTATOR_ADD("g_riflearena", mutator_riflearena, !cvar("g_minstagib") && !g_nexball && !cvar("g_overkill"));
 	CHECK_MUTATOR_ADD("g_campcheck", mutator_campcheck, 1);
 	CHECK_MUTATOR_ADD("g_overkill", mutator_overkill, !cvar("g_minstagib") && !g_nexball);
-	CHECK_MUTATOR_ADD("g_za", mutator_zombie_apocalypse, cvar("g_monsters") && !g_nexball && !g_invasion);
+	CHECK_MUTATOR_ADD("g_za", mutator_zombie_apocalypse, cvar("g_monsters") && !g_nexball && !g_invasion && !g_cts && !g_race);
 	CHECK_MUTATOR_ADD("g_walljump", mutator_walljump, 1);
 	CHECK_MUTATOR_ADD("g_hats", mutator_hats, !cvar("g_overkill"));
 	CHECK_MUTATOR_ADD("g_random_vehicles", mutator_random_vehicles, cvar("g_vehicles"));
 	CHECK_MUTATOR_ADD("g_piggyback", mutator_piggyback, 1);
 	CHECK_MUTATOR_ADD("g_buffs", mutator_buffs, !g_nexball && !g_race && !g_cts);
+	CHECK_MUTATOR_ADD("g_editlights", mutator_editlights, 1);
 
 	#undef CHECK_MUTATOR_ADD
 }

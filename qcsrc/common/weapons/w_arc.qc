@@ -7,10 +7,10 @@ REGISTER_WEAPON(
 /* flags     */ WEP_FLAG_NORMAL,
 /* rating    */ BOT_PICKUP_RATING_HIGH,
 /* color     */ '1 1 1',
-/* modelname */ "shotguncannon",
+/* modelname */ "arc",
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairhlac 0.7",
-/* wepimg    */ "weaponhlac",
+/* wepimg    */ "weaponarc",
 /* refname   */ "arc",
 /* wepname   */ _("Arc")
 );
@@ -42,6 +42,11 @@ REGISTER_WEAPON(
 	w_cvar(id, sn, NONE, burst_damage) \
 	w_cvar(id, sn, NONE, burst_healing_aps) \
 	w_cvar(id, sn, NONE, burst_healing_hps) \
+	w_cvar(id, sn, NONE, overheat_max)/* maximum heat before jamming */ \
+	w_cvar(id, sn, NONE, overheat_min)/* minimum heat to wait for cooldown */ \
+	w_cvar(id, sn, NONE, beam_heat)   /* heat increase per second (primary) */ \
+	w_cvar(id, sn, NONE, burst_heat)  /* heat increase per second (secondary) */ \
+	w_cvar(id, sn, NONE, cooldown)    /* heat decrease per second when resting */ \
 	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
 	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
 	w_prop(id, sn, string, weaponreplace, weaponreplace) \
@@ -57,15 +62,15 @@ vector arc_shotorigin[4];
 .vector beam_wantdir;
 .float beam_type;
 
-#define ARC_BT_MISS        0
-#define ARC_BT_WALL        1
-#define ARC_BT_HEAL        2
-#define ARC_BT_HIT         3
-#define ARC_BT_BURST_MISS  10
-#define ARC_BT_BURST_WALL  11
-#define ARC_BT_BURST_HEAL  12
-#define ARC_BT_BURST_HIT   13
-#define ARC_BT_BURSTMASK   10
+#define ARC_BT_MISS        0x00
+#define ARC_BT_WALL        0x01
+#define ARC_BT_HEAL        0x02
+#define ARC_BT_HIT         0x03
+#define ARC_BT_BURST_MISS  0x10
+#define ARC_BT_BURST_WALL  0x11
+#define ARC_BT_BURST_HEAL  0x12
+#define ARC_BT_BURST_HIT   0x13
+#define ARC_BT_BURSTMASK   0x10
 
 #define ARC_SF_SETTINGS    1
 #define ARC_SF_START       2
@@ -77,11 +82,15 @@ vector arc_shotorigin[4];
 #ifdef SVQC
 ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .entity arc_beam;
-.float BUTTON_ATCK_prev; // for better animation control
+.float arc_BUTTON_ATCK_prev; // for better animation control
 .float beam_prev;
 .float beam_initialized;
 .float beam_bursting;
 .float beam_teleporttime;
+.float beam_heat; // (beam) amount of heat produced
+.float arc_overheat; // (dropped arc/player) time during which it's too hot
+.float arc_cooldown; // (dropped arc/player) cooling speed
+.float arc_heat_percent; // (player) arc heat in [0,1] (stat)
 #endif
 #ifdef CSQC
 void Ent_ReadArcBeam(float isnew);
@@ -176,6 +185,31 @@ void Reset_ArcBeam(entity player, vector forward)
 	player.arc_beam.beam_teleporttime = time;
 }
 
+float Arc_GetHeat_Percent(entity player)
+{	
+	if ( WEP_CVAR(arc, overheat_max) <= 0 ||  WEP_CVAR(arc, overheat_max) <= 0 )
+	{
+		player.arc_overheat = 0;
+		return 0;
+	}
+	
+	if ( player.arc_beam )
+		return player.arc_beam.beam_heat/WEP_CVAR(arc, overheat_max);
+	
+	if ( player.arc_overheat > time )
+	{
+		return (player.arc_overheat-time) / WEP_CVAR(arc, overheat_max) 
+			* player.arc_cooldown;
+	}
+	
+	return 0;
+}
+void Arc_Player_SetHeat(entity player)
+{
+	player.arc_heat_percent = Arc_GetHeat_Percent(player);
+	//dprint("Heat: ",ftos(player.arc_heat_percent*100),"%\n");
+}
+
 void W_Arc_Beam_Think(void)
 {
 	if(self != self.owner.arc_beam)
@@ -183,19 +217,55 @@ void W_Arc_Beam_Think(void)
 		remove(self);
 		return;
 	}
+	
+	
+	float burst = 0;
+	if( self.owner.BUTTON_ATCK2 || self.beam_bursting)
+	{
+		if(!self.beam_bursting)
+			self.beam_bursting = TRUE;
+		burst = ARC_BT_BURSTMASK;
+	}
 
 	if(
+		!IS_PLAYER(self.owner)
+		||
 		(self.owner.WEP_AMMO(ARC) <= 0 && !(self.owner.items & IT_UNLIMITED_WEAPON_AMMO))
 		||
 		self.owner.deadflag != DEAD_NO
 		||
-		(!self.owner.BUTTON_ATCK /* FIXME(Samual): && !self.beam_bursting */)
+		(!self.owner.BUTTON_ATCK && !burst )
+		||
+		self.owner.jb_isprisoned
 		||
 		self.owner.frozen
 		||
-		self.owner.jb_isprisoned
+		(WEP_CVAR(arc, overheat_max) > 0 && self.beam_heat >= WEP_CVAR(arc, overheat_max))
 	)
 	{
+		if ( WEP_CVAR(arc, cooldown) > 0 )
+		{
+			float cooldown_speed = 0;
+			if ( self.beam_heat > WEP_CVAR(arc, overheat_min) && WEP_CVAR(arc, cooldown) > 0 )
+			{
+				cooldown_speed = WEP_CVAR(arc, cooldown);
+			}
+			else if ( !burst )
+			{
+				cooldown_speed = self.beam_heat / WEP_CVAR(arc, beam_refire);
+			}
+			
+			if ( cooldown_speed )
+			{
+				self.owner.arc_overheat = time + self.beam_heat / cooldown_speed;
+				self.owner.arc_cooldown = cooldown_speed;
+			}
+		}
+
+		if ( WEP_CVAR(arc, overheat_max) > 0 && self.beam_heat >= WEP_CVAR(arc, overheat_max) )
+			pointparticles( particleeffectnum("TE_SPIKE"),
+				self.beam_start, self.beam_wantdir, 24 );
+		
 		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; }
 		entity oldself = self;
 		self = self.owner;
@@ -208,15 +278,7 @@ void W_Arc_Beam_Think(void)
 		remove(self);
 		return;
 	}
-
-	float burst = 0;
-	if(/*self.owner.BUTTON_ATCK2 || */self.beam_bursting)
-	{
-		if(!self.beam_bursting)
-			self.beam_bursting = TRUE;
-		burst = ARC_BT_BURSTMASK;
-	}
-
+	
 	// decrease ammo
 	float coefficient = frametime;
 	if(!(self.owner.items & IT_UNLIMITED_WEAPON_AMMO))
@@ -233,6 +295,8 @@ void W_Arc_Beam_Think(void)
 			self.owner.WEP_AMMO(ARC) = max(0, self.owner.WEP_AMMO(ARC) - (rootammo * frametime));
 		}
 	}
+	float heat_speed = burst ? WEP_CVAR(arc, burst_heat) : WEP_CVAR(arc, beam_heat);
+	self.beam_heat = min( WEP_CVAR(arc, overheat_max), self.beam_heat + heat_speed*frametime );
 
 	makevectors(self.owner.v_angle);
 
@@ -492,7 +556,7 @@ void W_Arc_Beam_Think(void)
 	// te_explosion(trace_endpos);
 
 	// if we're bursting, use burst visual effects
-	new_beam_type += burst;
+	new_beam_type |= burst;
 
 	// network information: beam type
 	if(new_beam_type != self.beam_type)
@@ -507,11 +571,6 @@ void W_Arc_Beam_Think(void)
 
 void W_Arc_Beam(float burst)
 {
-	// FIXME(Samual): remove this when overheat and burst work.
-	if (burst)
-	{
-		centerprint(self, "^4NOTE:^7 Arc burst (secondary) is not implemented yet.");
-	}
 
 	// only play fire sound if 1 sec has passed since player let go the fire button
 	if(time - self.beam_prev > 1)
@@ -535,6 +594,27 @@ void W_Arc_Beam(float burst)
 	self.think();
 	self = oldself;
 }
+
+void Arc_Smoke()
+{
+	makevectors(self.v_angle);
+	W_SetupShot_Range(self,TRUE,0,"",0,0,0);
+	if ( self.arc_overheat > time )
+	{
+		if ( self.arc_heat_percent > 0.75 )
+			pointparticles( particleeffectnum("morphed_damage_hit"), w_shotorg, '0 0 0', 1 );
+		if ( random() < self.arc_heat_percent )
+			pointparticles( particleeffectnum("pipe_smoke"), w_shotorg, '0 0 1', 1 );
+	}
+	else if ( self.arc_beam && WEP_CVAR(arc, overheat_max) > 0 &&
+			self.arc_beam.beam_heat > WEP_CVAR(arc, overheat_min) )
+	{
+		if ( random() < (self.arc_beam.beam_heat-WEP_CVAR(arc, overheat_min)) / 
+				( WEP_CVAR(arc, overheat_max)-WEP_CVAR(arc, overheat_min) ) )
+			pointparticles( particleeffectnum("pipe_smoke"), w_shotorg, '0 0 1', 1 );
+	}
+}
+
 
 float W_Arc(float req)
 {
@@ -564,17 +644,14 @@ float W_Arc(float req)
 		}
 		case WR_THINK:
 		{
-			#if 0
-			if(self.arc_beam.beam_heat > threshold)
+			Arc_Player_SetHeat(self);
+			Arc_Smoke();
+			
+			if ( self.arc_overheat <= time )
+			if(self.BUTTON_ATCK || self.BUTTON_ATCK2 || self.arc_beam.beam_bursting )
 			{
-				stop the beam somehow
-				play overheat animation
-			}
-			#endif
-
-			if(self.BUTTON_ATCK || self.BUTTON_ATCK2 /* FIXME(Samual): || self.arc_beam.beam_bursting */)
-			{
-				if(self.BUTTON_ATCK_prev)
+			
+				if(self.arc_BUTTON_ATCK_prev)
 				{
 					#if 0
 					if(self.animstate_startframe == self.anim_shoot_x && self.animstate_numframes == self.anim_shoot_y)
@@ -590,23 +667,23 @@ float W_Arc(float req)
 					{
 						W_Arc_Beam(!!self.BUTTON_ATCK2);
 						
-						if(!self.BUTTON_ATCK_prev)
+						if(!self.arc_BUTTON_ATCK_prev)
 						{
 							weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
-							self.BUTTON_ATCK_prev = 1;
+							self.arc_BUTTON_ATCK_prev = 1;
 						}
 					}
 				}
-			} 
-			else // todo
-			{
-				if(self.BUTTON_ATCK_prev != 0)
-				{
-					weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
-					ATTACK_FINISHED(self) = time + WEP_CVAR(arc, beam_refire) * W_WeaponRateFactor();
-				}
-				self.BUTTON_ATCK_prev = 0;
+				
+				return TRUE;
 			}
+			
+			if(self.arc_BUTTON_ATCK_prev != 0)
+			{
+				weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
+				ATTACK_FINISHED(self) = time + WEP_CVAR(arc, beam_refire) * W_WeaponRateFactor();
+			}
+			self.arc_BUTTON_ATCK_prev = 0;
 
 			#if 0
 			if(self.BUTTON_ATCK2)
@@ -623,9 +700,9 @@ float W_Arc(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/weapons/g_shotguncannon.md3");
-			precache_model("models/weapons/v_shotguncannon.md3");
-			precache_model("models/weapons/h_shotguncannon.iqm");
+			precache_model("models/weapons/g_arc.md3");
+			precache_model("models/weapons/v_arc.md3");
+			precache_model("models/weapons/h_arc.iqm");
 			precache_sound(W_Sound("lgbeam_fire"));
 			if(!arc_shotorigin[0])
 			{
@@ -643,7 +720,8 @@ float W_Arc(float req)
 		}
 		case WR_CHECKAMMO2:
 		{
-			return ((!WEP_CVAR(arc, burst_ammo)) || (self.WEP_AMMO(ARC) > 0));
+			return WEP_CVAR(arc, overheat_max) > 0 &&
+				((!WEP_CVAR(arc, burst_ammo)) || (self.WEP_AMMO(ARC) > 0));
 		}
 		case WR_CONFIG:
 		{
@@ -652,17 +730,25 @@ float W_Arc(float req)
 		}
 		case WR_KILLMESSAGE:
 		{
-			if(w_deathtype & HITTYPE_SECONDARY)
+			return WEAPON_ARC_MURDER;
+		}
+		case WR_DROP:
+		{
+			weapon_dropevent_item.arc_overheat = self.arc_overheat;
+			weapon_dropevent_item.arc_cooldown = self.arc_cooldown;
+			self.arc_overheat = 0;
+			self.arc_cooldown = 0;
+			return TRUE;
+		}
+		case WR_PICKUP:
+		{
+			if ( !client_hasweapon(self, WEP_ARC, FALSE, FALSE) &&
+				weapon_dropevent_item.arc_overheat > time )
 			{
-				return WEAPON_ELECTRO_MURDER_ORBS;
+				self.arc_overheat = weapon_dropevent_item.arc_overheat;
+				self.arc_cooldown = weapon_dropevent_item.arc_cooldown;
 			}
-			else
-			{
-				if(w_deathtype & HITTYPE_BOUNCE)
-					return WEAPON_ELECTRO_MURDER_COMBO;
-				else
-					return WEAPON_ELECTRO_MURDER_BOLT;
-			}
+			return TRUE;
 		}
 	}
 	return FALSE;
@@ -762,6 +848,10 @@ void Reset_ArcBeam(void)
 
 void Draw_ArcBeam(void)
 {
+	float dt = time - self.move_time;
+	self.move_time = time;
+	if(dt <= 0) { return; }
+
 	if(!self.beam_usevieworigin)
 	{
 		InterpolateOrigin_Do();
@@ -1000,6 +1090,7 @@ void Draw_ArcBeam(void)
 		// FIXME we really should do this on the server so it actually
 		// matches gameplay. What this client side stuff is doing is no
 		// more than guesswork.
+		if((trace_ent || trace_fraction < 1) && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		pointparticles(
 			self.beam_hiteffect,
 			last_origin,
@@ -1072,6 +1163,7 @@ void Ent_ReadArcBeam(float isnew)
 		// set other main attributes of the beam
 		self.draw = Draw_ArcBeam;
 		self.entremove = Remove_ArcBeam;
+		self.move_time = time;
 		sound(self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTEN_NORM);
 
 		flash = spawn();
@@ -1166,22 +1258,25 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '-1 -1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
-				self.beam_traileffect = FALSE;
-				self.beam_hiteffect = particleeffectnum("electro_lightning");
+				self.beam_traileffect = particleeffectnum("arc_beam");
+				self.beam_hiteffect = particleeffectnum("arc_lightning");
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzleeffect = -1; //particleeffectnum("nex_muzzleflash");
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;
 				self.beam_muzzlelight[3] = 1;
-				self.beam_image = "particles/lgbeam";
-				setmodel(flash, "models/flash.md3");
-				flash.alpha = self.beam_alpha;
-				flash.colormod = self.beam_color;
-				flash.scale = 0.5;
+				if(self.beam_muzzleeffect >= 0)
+				{
+					self.beam_image = "particles/lgbeam";
+					setmodel(flash, "models/flash.md3");
+					flash.alpha = self.beam_alpha;
+					flash.colormod = self.beam_color;
+					flash.scale = 0.5;
+				}
 				break;
 			}
 			case ARC_BT_WALL: // grenadelauncher_muzzleflash healray_muzzleflash
@@ -1189,22 +1284,25 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '0.5 0.5 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
-				self.beam_traileffect = FALSE;
-				self.beam_hiteffect = particleeffectnum("electro_lightning");
+				self.beam_traileffect = particleeffectnum("arc_beam");
+				self.beam_hiteffect = particleeffectnum("arc_lightning");
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = FALSE; // particleeffectnum("grenadelauncher_muzzleflash");
+				self.beam_muzzleeffect = -1; // particleeffectnum("grenadelauncher_muzzleflash");
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;
 				self.beam_muzzlelight[3] = 1;
 				self.beam_image = "particles/lgbeam";
-				setmodel(flash, "models/flash.md3");
-				flash.alpha = self.beam_alpha;
-				flash.colormod = self.beam_color;
-				flash.scale = 0.5;
+				if(self.beam_muzzleeffect >= 0)
+				{
+					setmodel(flash, "models/flash.md3");
+					flash.alpha = self.beam_alpha;
+					flash.colormod = self.beam_color;
+					flash.scale = 0.5;
+				}
 				break;
 			}
 			case ARC_BT_HEAL:
@@ -1212,22 +1310,26 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '0 1 0';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
-				self.beam_traileffect = FALSE;
-				self.beam_hiteffect = particleeffectnum("healray_impact"); 
+				self.beam_traileffect = particleeffectnum("arc_beam_heal");
+				self.beam_hiteffect = particleeffectnum("arc_beam_healimpact");
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzleeffect = -1; //particleeffectnum("nex_muzzleflash");
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;
 				self.beam_muzzlelight[3] = 1;
 				self.beam_image = "particles/lgbeam";
-				setmodel(flash, "models/flash.md3");
-				flash.alpha = self.beam_alpha;
-				flash.colormod = self.beam_color;
-				flash.scale = 0.5;
+				if(self.beam_muzzleeffect >= 0)
+				{
+					self.beam_image = "particles/lgbeam";
+					setmodel(flash, "models/flash.md3");
+					flash.alpha = self.beam_alpha;
+					flash.colormod = self.beam_color;
+					flash.scale = 0.5;
+				}
 				break;
 			}
 			case ARC_BT_HIT:
@@ -1235,22 +1337,26 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 0 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
-				self.beam_traileffect = FALSE;
-				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
+				self.beam_traileffect = particleeffectnum("arc_beam");
+				self.beam_hiteffect = particleeffectnum("arc_lightning");
 				self.beam_hitlight[0] = 20;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 0;
 				self.beam_hitlight[3] = 0;
-				self.beam_muzzleeffect = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzleeffect = -1; //particleeffectnum("nex_muzzleflash");
 				self.beam_muzzlelight[0] = 50;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 0;
 				self.beam_muzzlelight[3] = 0;
 				self.beam_image = "particles/lgbeam";
-				setmodel(flash, "models/flash.md3");
-				flash.alpha = self.beam_alpha;
-				flash.colormod = self.beam_color;
-				flash.scale = 0.5;
+				if(self.beam_muzzleeffect >= 0)
+				{
+					self.beam_image = "particles/lgbeam";
+					setmodel(flash, "models/flash.md3");
+					flash.alpha = self.beam_alpha;
+					flash.colormod = self.beam_color;
+					flash.scale = 0.5;
+				}
 				break;
 			}
 			case ARC_BT_BURST_MISS:
@@ -1259,12 +1365,12 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
 				self.beam_traileffect = FALSE;
-				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
+				self.beam_hiteffect = particleeffectnum("arc_lightning");
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzleeffect = -1; //particleeffectnum("nex_muzzleflash");
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;
@@ -1282,21 +1388,25 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
 				self.beam_traileffect = FALSE;
-				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
+				self.beam_hiteffect = particleeffectnum("arc_lightning");
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzleeffect = -1; //particleeffectnum("nex_muzzleflash");
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;
 				self.beam_muzzlelight[3] = 1;
 				self.beam_image = "particles/lgbeam";
-				setmodel(flash, "models/flash.md3");
-				flash.alpha = self.beam_alpha;
-				flash.colormod = self.beam_color;
-				flash.scale = 0.5;
+				if(self.beam_muzzleeffect >= 0)
+				{
+					self.beam_image = "particles/lgbeam";
+					setmodel(flash, "models/flash.md3");
+					flash.alpha = self.beam_alpha;
+					flash.colormod = self.beam_color;
+					flash.scale = 0.5;
+				}
 				break;
 			}
 			case ARC_BT_BURST_HEAL:
@@ -1305,21 +1415,25 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
 				self.beam_traileffect = FALSE;
-				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
+				self.beam_hiteffect = particleeffectnum("healray_impact");
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzleeffect = -1; //particleeffectnum("nex_muzzleflash");
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;
 				self.beam_muzzlelight[3] = 1;
 				self.beam_image = "particles/lgbeam";
-				setmodel(flash, "models/flash.md3");
-				flash.alpha = self.beam_alpha;
-				flash.colormod = self.beam_color;
-				flash.scale = 0.5;
+				if(self.beam_muzzleeffect >= 0)
+				{
+					self.beam_image = "particles/lgbeam";
+					setmodel(flash, "models/flash.md3");
+					flash.alpha = self.beam_alpha;
+					flash.colormod = self.beam_color;
+					flash.scale = 0.5;
+				}
 				break;
 			}
 			case ARC_BT_BURST_HIT:
@@ -1328,21 +1442,25 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
 				self.beam_traileffect = FALSE;
-				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
+				self.beam_hiteffect = particleeffectnum("arc_lightning");
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzleeffect = -1; //particleeffectnum("nex_muzzleflash");
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;
 				self.beam_muzzlelight[3] = 1;
 				self.beam_image = "particles/lgbeam";
-				setmodel(flash, "models/flash.md3");
-				flash.alpha = self.beam_alpha;
-				flash.colormod = self.beam_color;
-				flash.scale = 0.5;
+				if(self.beam_muzzleeffect >= 0)
+				{
+					self.beam_image = "particles/lgbeam";
+					setmodel(flash, "models/flash.md3");
+					flash.alpha = self.beam_alpha;
+					flash.colormod = self.beam_color;
+					flash.scale = 0.5;
+				}
 				break;
 			}
 
@@ -1353,21 +1471,25 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_alpha = 1;
 				self.beam_thickness = 8;
 				self.beam_traileffect = FALSE;
-				self.beam_hiteffect = FALSE; 
+				self.beam_hiteffect = FALSE;
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
 				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = FALSE; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzleeffect = -1; //particleeffectnum("nex_muzzleflash");
 				self.beam_muzzlelight[0] = 0;
 				self.beam_muzzlelight[1] = 1;
 				self.beam_muzzlelight[2] = 1;
 				self.beam_muzzlelight[3] = 1;
 				self.beam_image = "particles/lgbeam";
-				setmodel(flash, "models/flash.md3");
-				flash.alpha = self.beam_alpha;
-				flash.colormod = self.beam_color;
-				flash.scale = 0.5;
+				if(self.beam_muzzleeffect >= 0)
+				{
+					self.beam_image = "particles/lgbeam";
+					setmodel(flash, "models/flash.md3");
+					flash.alpha = self.beam_alpha;
+					flash.colormod = self.beam_color;
+					flash.scale = 0.5;
+				}
 				break;
 			}
 		}

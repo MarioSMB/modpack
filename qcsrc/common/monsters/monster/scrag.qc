@@ -33,7 +33,8 @@ void M_Scrag_Attack_Spike_Explode()
 	{
 		pointparticles(particleeffectnum("TE_WIZSPIKE"), self.origin, '0 0 0', 1);
 
-		RadiusDamage(self, self.realowner, (autocvar_g_monster_scrag_attack_spike_damage), (autocvar_g_monster_scrag_attack_spike_edgedamage), (autocvar_g_monster_scrag_attack_spike_force), world, (autocvar_g_monster_scrag_attack_spike_radius), self.projectiledeathtype, world);
+		RadiusDamage(self, self.realowner, (autocvar_g_monster_scrag_attack_spike_damage), (autocvar_g_monster_scrag_attack_spike_edgedamage), (autocvar_g_monster_scrag_attack_spike_force), 
+			self.owner, world, (autocvar_g_monster_scrag_attack_spike_radius), self.projectiledeathtype, world);
 
 		remove(self);
 	}
@@ -42,6 +43,7 @@ void M_Scrag_Attack_Spike_Explode()
 void M_Scrag_Attack_Spike_Touch()
 {
 	PROJECTILE_TOUCH;
+	if(other == self.owner) { return; }
 
 	M_Scrag_Attack_Spike_Explode();
 }
@@ -49,8 +51,8 @@ void M_Scrag_Attack_Spike_Touch()
 void M_Scrag_Attack_Spike()
 {
 	entity missile = spawn();
-	vector viewofs = self.view_ofs + '0 0 20';
-	vector dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
+	vector viewofs = self.view_ofs;
+	vector dir = normalize(self.enemy.origin - self.origin);
 
 	monster_makevectors(self.enemy);
 
@@ -77,7 +79,7 @@ float M_Scrag_Attack(float attack_type)
 		case MONSTER_ATTACK_MELEE:
 		case MONSTER_ATTACK_RANGED:
 		{
-			self.attack_finished_single = time + (random() >= 0.5) ? 1.3 : 0.15;
+			self.attack_finished_single = time + ((random() >= 0.8) ? 1.3 : 0.15);
 			self.anim_finished = self.attack_finished_single;
 
 			self.frame = scrag_anim_magic;
@@ -104,6 +106,7 @@ void spawnfunc_monster_scrag() { Monster_Spawn(MON_SCRAG); }
 
 // compatibility with old spawns
 void spawnfunc_monster_wizard() { spawnfunc_monster_scrag(); }
+void spawnfunc_monster_wyvern() { spawnfunc_monster_scrag(); }
 
 float M_Scrag(float req)
 {

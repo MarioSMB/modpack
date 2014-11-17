@@ -1,5 +1,6 @@
 .entity hatentity;
 .string cvar_cl_hat;
+.float cvar_cl_nohats;
 .string hatname; // only update when the player spawns
 
 void hats_Precache(string pattern)
@@ -106,6 +107,12 @@ void hat_Think()
 	CSQCMODEL_AUTOUPDATE();
 }
 
+float hats_Customize()
+{
+	if(other.cvar_cl_nohats) { return FALSE; }
+	return TRUE;
+}
+
 void hats_SpawnHat()
 {
 	self.hatentity = spawn();
@@ -117,6 +124,7 @@ void hats_SpawnHat()
 	self.hatentity.angles = '0 0 0';
 	self.hatentity.think = hat_Think;
 	self.hatentity.nextthink = time;
+	self.hatentity.customizeentityforclient = hats_Customize;
 
 	{
 		entity oldself = self;
@@ -138,6 +146,7 @@ MUTATOR_HOOKFUNCTION(hats_PlayerSpawn)
 MUTATOR_HOOKFUNCTION(hats_GetCvars)
 {
 	GetCvars_handleString(get_cvars_s, get_cvars_f, cvar_cl_hat, "cl_magical_hax");
+	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_nohats, "cl_nohats");
 	return FALSE;
 }
 

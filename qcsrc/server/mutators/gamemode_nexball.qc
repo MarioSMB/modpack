@@ -703,7 +703,7 @@ void W_Nexball_Touch(void)
 				LogNB("stole", attacker);
 				sound(other, CH_TRIGGER, ball.noise2, VOL_BASE, ATTEN_NORM);
 
-				if(attacker.team == other.team && time > attacker.teamkill_complain)
+				if(SAME_TEAM(attacker, other) && time > attacker.teamkill_complain)
 				{
 					attacker.teamkill_complain = time + 5;
 					attacker.teamkill_soundtime = time + 0.4;
@@ -1002,6 +1002,12 @@ MUTATOR_HOOKFUNCTION(nexball_WantWeapon)
 	return FALSE;
 }
 
+MUTATOR_HOOKFUNCTION(nexball_AllowMobSpawning)
+{
+	ret_string = "You cannot spawn monsters in nexball!";
+	return TRUE;
+}
+
 MUTATOR_DEFINITION(gamemode_nexball)
 {
 	MUTATOR_HOOK(PlayerDies, nexball_BallDrop, CBC_ORDER_ANY);
@@ -1015,6 +1021,7 @@ MUTATOR_DEFINITION(gamemode_nexball)
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, nexball_ForbidThrowing, CBC_ORDER_ANY);
 	MUTATOR_HOOK(FilterItem, nexball_FilterItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(WantWeapon, nexball_WantWeapon, CBC_ORDER_ANY);
+	MUTATOR_HOOK(AllowMobSpawning, nexball_AllowMobSpawning, CBC_ORDER_ANY);
 
 	MUTATOR_ONADD
 	{

@@ -342,6 +342,8 @@ void nade_translocate_boom()
 		return;
 
 	vector locout = self.origin + '0 0 1' * (1 - self.realowner.mins_z - 24);
+	tracebox(locout, self.realowner.mins, self.realowner.maxs, locout, MOVE_NOMONSTERS, self.realowner);
+	locout = trace_endpos;
 
 	makevectors(self.realowner.angles);
 
@@ -463,9 +465,10 @@ void nade_heal_boom()
 
 void nade_monster_boom()
 {
-	entity e = spawnmonster(self.pokenade_type, 0, self.realowner, self.realowner, self.origin, FALSE, TRUE, 1);
+	entity e = spawnmonster(self.pokenade_type, 0, self.realowner, self.realowner, self.origin, FALSE, FALSE, 1);
 	
-	e.monster_lifetime = time + autocvar_g_nades_pokenade_monster_lifetime;
+	if(autocvar_g_nades_pokenade_monster_lifetime > 0)
+		e.monster_lifetime = time + autocvar_g_nades_pokenade_monster_lifetime;
 	e.monster_skill = MONSTER_SKILL_INSANE;
 }
 
@@ -546,6 +549,7 @@ void nade_boom()
 
 void nade_touch()
 {
+	if(trace_dphitcontents & (DPCONTENTS_PLAYERCLIP | DPCONTENTS_MONSTERCLIP)) { return; }
 	PROJECTILE_TOUCH;
 	//setsize(self, '-2 -2 -2', '2 2 2');
 	//UpdateCSQCProjectile(self);
@@ -583,8 +587,7 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN) || DEATH_ISWEAPON(deathtype, WEP_HMG))
 		damage = self.max_health * 0.1;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_SHOTGUN))
-	if(deathtype & HITTYPE_SECONDARY)
+	if((DEATH_ISWEAPON(deathtype, WEP_SHOCKWAVE) || DEATH_ISWEAPON(deathtype, WEP_SHOTGUN)) && (deathtype & HITTYPE_SECONDARY)) // WEAPONTODO
 	{
 		damage = self.max_health * 0.1;
 		force *= 10;
@@ -659,6 +662,7 @@ void toss_nade(entity e, vector _velocity, float _time)
 	_nade.event_damage = nade_damage;
 	_nade.customizeentityforclient = func_null;
 	_nade.exteriormodeltoclient = world;
+	_nade.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	_nade.traileffectnum = 0;
 	_nade.teleportable = TRUE;
 	_nade.pushable = TRUE;
@@ -846,12 +850,13 @@ void nades_Clear(entity player, float allplayers)
 {
 	if(allplayers)
 	{
-		FOR_EACH_PLAYER(player)
+		entity head;
+		FOR_EACH_PLAYER(head) if(head != player)
 		{
-			if(player.nade) { remove(player.nade); }
-			if(player.fake_nade) { remove(player.fake_nade); }
-			player.nade = player.fake_nade = world;
-			player.nade_timer = 0;
+			if(head.nade) { remove(head.nade); }
+			if(head.fake_nade) { remove(head.fake_nade); }
+			head.nade = head.fake_nade = world;
+			head.nade_timer = 0;
 		}
 
 		return;
@@ -1020,7 +1025,7 @@ MUTATOR_HOOKFUNCTION(nades_PlayerSpawn)
 
 	if(autocvar_g_nades_bonus_client_select)
 		self.nade_type = self.cvar_cl_nade_type;
-		
+
 	self.nade_timer = 0;
 
 	if(self.nade_spawnloc)

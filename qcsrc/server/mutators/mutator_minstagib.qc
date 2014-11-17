@@ -207,11 +207,15 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 	if(frag_deathtype == DEATH_NOAMMO)
 		return FALSE;
 
-	if((autocvar_g_rm || autocvar_g_rm_laser == 2) && (DEATH_ISWEAPON(frag_deathtype, WEP_DEVASTATOR) || DEATH_ISWEAPON(frag_deathtype, WEP_ELECTRO)) && (frag_target == frag_attacker || frag_target.classname == "nade"))
-		frag_damage = 0; // no self/nade damage?
-		
-	if((autocvar_g_rm || autocvar_g_rm_laser == 2) && (DEATH_ISWEAPON(frag_deathtype, WEP_ELECTRO)) && forbidWeaponUse(frag_attacker) == 2)
-		frag_damage = 0; // no laser damage before round starts
+	if(autocvar_g_rm)
+	if(DEATH_ISWEAPON(frag_deathtype, WEP_DEVASTATOR))
+	if(frag_attacker == frag_target || frag_target.classname == "nade")
+		frag_damage = 0;
+
+	if((autocvar_g_rm && autocvar_g_rm_laser == 1) || autocvar_g_rm_laser == 2)
+	if(DEATH_ISWEAPON(frag_deathtype, WEP_ELECTRO))
+	if(frag_attacker == frag_target || forbidWeaponUse(frag_attacker) == 2)
+		frag_damage = 0;
 
 	if(IS_PLAYER(frag_target))
 	{
@@ -240,7 +244,7 @@ MUTATOR_HOOKFUNCTION(minstagib_PlayerDamage)
 				frag_target.damage_dealt += 1; // TODO change this to a future specific hitsound for armor hit
 			}
 
-			if(frag_deathtype & WEP_BLASTER)
+			if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
 			if(frag_deathtype & HITTYPE_SECONDARY)
 			{
 				frag_damage = 0;
@@ -349,7 +353,10 @@ MUTATOR_HOOKFUNCTION(minstagib_ItemCountdown)
 
 MUTATOR_HOOKFUNCTION(minstagib_PlayerDies)
 {	
-	if(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER) || (autocvar_g_rm && DEATH_ISWEAPON(frag_deathtype, WEP_DEVASTATOR)) || (((autocvar_g_rm && autocvar_g_rm_laser == 1) || autocvar_g_rm_laser == 2) && DEATH_ISWEAPON(frag_deathtype, WEP_ELECTRO)))
+	if(	(DEATH_ISWEAPON(frag_deathtype, WEP_VAPORIZER))
+	||	(autocvar_g_rm && DEATH_ISWEAPON(frag_deathtype, WEP_DEVASTATOR))
+	|| 	(((autocvar_g_rm && autocvar_g_rm_laser == 1) || autocvar_g_rm_laser == 2) && DEATH_ISWEAPON(frag_deathtype, WEP_ELECTRO))
+	)
 		frag_damage = 1000; // always gib if it was a minstanex death
 
 	return FALSE;

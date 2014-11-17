@@ -421,7 +421,7 @@ void invasion_DelayedInit() // Do this check with a delay so we can wait for tea
 }
 
 void invasion_Initialize()
-{	
+{
 	InitializeEntity(world, invasion_DelayedInit, INITPRIO_GAMETYPE);
 }
 

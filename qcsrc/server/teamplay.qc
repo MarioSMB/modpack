@@ -321,7 +321,7 @@ string getwelcomemessage(void)
 		else
 			modifications = strcat(modifications, ", ", g_weaponarena_list, " Arena");
 	}
-	if(cvar("g_balance_blaster_weaponstart") == 0)
+	else if(cvar("g_balance_blaster_weaponstart") == 0)
 		modifications = strcat(modifications, ", No start weapons");
 	if(cvar("sv_gravity") < stof(cvar_defstring("sv_gravity")))
 		modifications = strcat(modifications, ", Low gravity");
@@ -368,6 +368,10 @@ string getwelcomemessage(void)
 	if (motd != "") {
 		s = strcat(s, "\n\n^8MOTD: ^7", strreplace("\\n", "\n", motd));
 	}
+
+	// branding for the win
+	s = strcat(s, "\n\n Running the SMB mod pack\nhttps://github.com/MarioSMB/modpack");
+
 	return s;
 }
 

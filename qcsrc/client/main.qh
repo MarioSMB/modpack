@@ -152,10 +152,6 @@ float framecount;
 float minsta_delay;
 float minsta_range;
 
-float mr_appeartime;
-float mr_fadetime;
-float morningrescue;
-
 float fovlock;
 
 float cl_fps;

@@ -134,7 +134,7 @@ MUTATOR_HOOKFUNCTION(ca_PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(ca_PutClientInServer)
 {
-	if(!allowed_to_spawn && !IS_OBSERVER(self))
+	if(!allowed_to_spawn)
 	{
 		self.classname = "observer";
 		if(self.jointime != time) //not when connecting
@@ -152,8 +152,7 @@ MUTATOR_HOOKFUNCTION(ca_reset_map_players)
 {
 	FOR_EACH_CLIENT(self)
 	{
-		if(IS_PLAYER(self) || self.caplayer)
-			self.killcount = 0;
+		self.killcount = 0;
 		if(self.caplayer)
 		{
 			self.classname = "player";

@@ -546,6 +546,7 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_WATERMARK,                      1, 0, "s1", "",                          "",                     _("^F3SVQC Build information: ^F4%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_ACCORDEON_MURDER,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weapontuba",             _("^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Accordeon%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_ACCORDEON_SUICIDE,             2, 1, "s1 s2loc spree_lost", "s1",                 "weapontuba",             _("^BG%s^K1 hurt their own ears with the @!#%%'n Accordeon%s%s"), "") \
+	MSG_INFO_NOTIF(1, INFO_WEAPON_ARC_MURDER,                    3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponhlac",             _("^BG%s%s^K1 was electrocuted by ^BG%s^K1's Arc%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_BLASTER_MURDER,                3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponlaser",            _("^BG%s%s^K1 was shot to death by ^BG%s^K1's Blaster%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_BLASTER_SUICIDE,               2, 1, "s1 s2loc spree_lost", "s1",                 "weaponlaser",            _("^BG%s^K1 shot themself to hell with their Blaster%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_CRYLINK_MURDER,                3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponcrylink",          _("^BG%s%s^K1 felt the strong pull of ^BG%s^K1's Crylink%s%s"), "") \
@@ -587,9 +588,6 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_WEAPON_RIFLE_MURDER_HAIL,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrifle",            _("^BG%s%s^K1 died in ^BG%s^K1's Rifle bullet hail%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_RIFLE_MURDER_HAIL_PIERCING,    3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrifle",            _("^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle bullet hail%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_RIFLE_MURDER_PIERCING,         3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrifle",            _("^BG%s%s^K1 failed to hide from ^BG%s^K1's Rifle%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_WEAPON_ROCKETLAUNCHER_MURDER_DIRECT,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrocketlauncher",   _("^BG%s%s^K1 ate ^BG%s^K1's rocket%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_WEAPON_ROCKETLAUNCHER_MURDER_SPLASH,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrocketlauncher",   _("^BG%s%s^K1 got too close ^BG%s^K1's rocket%s%s"), "") \
-	MSG_INFO_NOTIF(1, INFO_WEAPON_ROCKETLAUNCHER_SUICIDE,        2, 1, "s1 s2loc spree_lost", "s1",                 "weaponrocketlauncher",   _("^BG%s^K1 blew themself up with their Rocketlauncher%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_RPC_MURDER_DIRECT,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrpc",              _("^BG%s%s^K1 was sawn in half by ^BG%s^K1's Rocket Propelled Chainsaw%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_RPC_MURDER_SPLASH,             3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrpc",              _("^BG%s%s^K1 almost dodged ^BG%s^K1's Rocket Propelled Chainsaw%s%s"), "") \
 	MSG_INFO_NOTIF(1, INFO_WEAPON_RPC_SUICIDE_DIRECT,            2, 1, "s1 s2loc spree_lost", "s1",                 "weaponrpc",              _("^BG%s^K1 was sawn in half by their own Rocket Propelled Chainsaw%s%s"), "") \
@@ -970,6 +968,7 @@ void Send_Notification_WOCOVA(
 	MSG_MULTI_NOTIF(1, MULTI_MINSTA_FINDAMMO,                ANNCE_NUM_10,  NO_MSG,                                    CENTER_MINSTA_FINDAMMO_FIRST) \
 	MSG_MULTI_NOTIF(1, WEAPON_ACCORDEON_MURDER,              NO_MSG,        INFO_WEAPON_ACCORDEON_MURDER,              NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_ACCORDEON_SUICIDE,             NO_MSG,        INFO_WEAPON_ACCORDEON_SUICIDE,             CENTER_DEATH_SELF_GENERIC) \
+	MSG_MULTI_NOTIF(1, WEAPON_ARC_MURDER,                    NO_MSG,        INFO_WEAPON_ARC_MURDER,                    NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_BLASTER_MURDER,                NO_MSG,        INFO_WEAPON_BLASTER_MURDER,                NO_MSG) \
 	MSG_MULTI_NOTIF(1, WEAPON_BLASTER_SUICIDE,               NO_MSG,        INFO_WEAPON_BLASTER_SUICIDE,               CENTER_DEATH_SELF_GENERIC) \
 	MSG_MULTI_NOTIF(1, WEAPON_CRYLINK_MURDER,                NO_MSG,        INFO_WEAPON_CRYLINK_MURDER,                NO_MSG) \

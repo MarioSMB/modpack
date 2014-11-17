@@ -7,7 +7,7 @@ REGISTER_WEAPON(
 /* flags     */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
 /* rating    */ BOT_PICKUP_RATING_MID,
 /* color     */ '0.5 1 0',
-/* modelname */ "campingrifle",
+/* modelname */ "sniperrifle",
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairrifle 0.5",
 /* wepimg    */ "weaponrifle",
@@ -203,9 +203,9 @@ float W_Rifle(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/weapons/g_campingrifle.md3");
-			precache_model("models/weapons/v_campingrifle.md3");
-			precache_model("models/weapons/h_campingrifle.iqm");
+			precache_model("models/weapons/g_sniperrifle.md3");
+			precache_model("models/weapons/v_sniperrifle.md3");
+			precache_model("models/weapons/h_sniperrifle.iqm");
 			precache_sound(W_Sound("campingrifle_fire"));
 			precache_sound(W_Sound("campingrifle_fire2"));
 			RIFLE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP)

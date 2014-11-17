@@ -286,6 +286,7 @@ void GrapplingHookThink()
 	if(DIFF_TEAM(self.owner, self.aiment) || autocvar_g_rm_hook_team)
 	if(self.aiment.health > 0)
 	if(autocvar_g_rm || autocvar_g_rm_hook_damage_always)
+	if(autocvar_g_rm_hook_damage)
 	{
 		self.last_dmg = time + autocvar_g_rm_hook_damagefactor;
 		self.owner.damage_dealt += autocvar_g_rm_hook_damage;
@@ -329,7 +330,7 @@ void GrapplingHook_Damage (entity inflictor, entity attacker, float damage, floa
 	if(!autocvar_g_rm_hook_breakable_owner && attacker == self.realowner)
 		return;
 
-	if((((autocvar_g_rm || autocvar_g_rm_laser == 2) && g_minstagib && (DEATH_ISWEAPON(deathtype, WEP_DEVASTATOR) || DEATH_ISWEAPON(deathtype, WEP_ELECTRO))) || DEATH_ISWEAPON(deathtype, WEP_BLASTER)) && DIFF_TEAM(attacker, self.realowner))
+	if(DIFF_TEAM(frag_attacker, self.realowner))
 	{
 		Damage (self.realowner, attacker, attacker, 5, WEP_HOOK | HITTYPE_SPLASH, self.realowner.origin, '0 0 0');
 		RemoveGrapplingHook(self.realowner);

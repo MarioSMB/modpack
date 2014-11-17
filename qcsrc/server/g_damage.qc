@@ -887,7 +887,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	// apply push
 	if (self.damageforcescale)
 	if (vlen(force))
-	if (!IS_PLAYER(self) || time >= self.spawnshieldtime || autocvar_g_balance_damagepush_spawnshield || deathtype & WEP_BLASTER || ((autocvar_g_rm || autocvar_g_rm_laser == 2) && g_minstagib && DEATH_ISWEAPON(deathtype, WEP_ELECTRO)))
+	if (!IS_PLAYER(self) || time >= self.spawnshieldtime || autocvar_g_balance_damagepush_spawnshield || DEATH_ISWEAPON(deathtype, WEP_BLASTER) || ((autocvar_g_rm || autocvar_g_rm_laser == 2) && g_minstagib && DEATH_ISWEAPON(deathtype, WEP_ELECTRO)))
 	{
 		vector farce = damage_explosion_calcpush(self.damageforcescale * force, self.velocity, autocvar_g_balance_damagepush_speedfactor);
 		if(self.movetype == MOVETYPE_PHYSICS)
