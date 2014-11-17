@@ -318,3 +318,14 @@ void minigame_cmd_workaround(float dummy, string...cmdargc)
 		cmd = strcat(cmd,...(i,string));
 	localcmd(strcat(cmd,"\n"));
 }
+
+// Prompt the player to play in the current minigame 
+// (ie: it's their turn and they should get back to the minigame)
+void minigame_prompt()
+{
+	if ( active_minigame && ! HUD_MinigameMenu_IsOpened() )
+	{
+		HUD_Notify_Push(sprintf("minigames/%s/icon_notif",active_minigame.descriptor.netname),
+			_("It's your turn"), "");
+	}
+}

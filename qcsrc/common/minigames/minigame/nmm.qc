@@ -752,6 +752,8 @@ float minigame_event_nmm(entity minigame, string event, ...)
 		else if ( self.classname == "minigame" && ( ...(1,float) & MINIG_SF_UPDATE ) ) 
 		{
 			self.message = nmm_turn_to_string(self.minigame_flags);
+			if ( self.minigame_flags & minigame_self.team )
+				minigame_prompt();
 		}
 	}
 	

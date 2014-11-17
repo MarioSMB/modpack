@@ -1,0 +1,99 @@
+/**
+
+How to create a minigame
+========================
+
+Create a file for your minigame in this directory and #include it here.
+(ttt.qc implements tic tac toe and can be used as an example)
+and add your minigame to REGISTERED_MINIGAMES (see below)
+
+Required functions
+------------------
+
+SVQC:
+	float minigame_event_<id>(entity minigame, string event, ...count)
+		see ../minigames.qh for a detailed explanation
+CSQC:
+	void minigame_hud_board_<id>(vector pos, vector mySize)
+		draws the main game board inside the rectangle defined by pos and mySize
+		(That rectangle is expressed in window coordinates)
+	void minigame_hud_status_<id>(vector pos, vector mySize)
+		draws the game status panel inside the rectangle defined by pos and mySize
+		(That rectangle is expressed in window coordinates)
+		This panel shows eg scores, captured pieces and so on
+	float minigame_event_<id>(entity minigame, string event, ...count)
+		see ../minigames.qh for a detailed explanation
+
+Managing entities
+-----------------
+
+You can link entities without having to worry about them if their classname
+has been defined in MINIGAME_SIMPLELINKED_ENTITIES (see below)
+Such entities can be spawned with minigame_spawn_linked_entity and the system
+will handle networking and cleanup automatically.
+You'll still need to set .SendFlags according to what you specified in FIELD
+in order for them to be sent, ../minigames.qh defines some constants to be
+used as send flags for minigame entities:
+
+* MINIG_SF_CREATE
+	Used when creating a new object, you can use this to define fields that don't change
+* MINIG_SF_UPDATE
+	A miscellaneous update, can be safely used if the entity has just a few fields
+* MINIG_SF_CUSTOM
+	Starting value for custom flags, since there are bit-wise flags, 
+	the following values shall be MINIG_SF_CUSTOM*2, MINIG_SF_CUSTOM*4 and MINIG_SF_CUSTOM*8.
+* MINIG_SF_MAX
+	Maximum flag value that will be networked
+* MINIG_SF_ALL
+	Mask matching all possible flags
+
+Note: As of now, flags are sent as a single byte
+
+Even for non-networked entities, the system provides a system to remove
+automatically unneeded entities when the minigame is over, the requirement is
+that .owner is set to the minigame session entity and .minigame_autoclean is true.
+*/
+
+#include "nmm.qc"
+#include "ttt.qc"
+
+/**
+ * Registration:
+ * 	MINIGAME(id,"Name")
+ * 		id    (QuakeC symbol) Game identifier, used to find the functions explained above
+ * 		"Name"(String)        Human readable name for the game, shown in the UI
+ */
+#define REGISTERED_MINIGAMES \
+	MINIGAME(nmm, "Nine Men's Morris") \
+	MINIGAME(ttt, "Tic Tac Toe") \
+	/*empty line*/
+
+/**
+ * Set up automatic entity read/write functionality
+ * To ensure that everything is handled automatically, spawn on the server using minigame_spawn_linked_entity
+ * Syntax:
+ * 	MSLE(classname,Field...) \ 
+ * 		classname: Identifier used to recognize the type of the entity
+ * 		           (must be set as .classname on the sent entities)
+ * 		Field... : List of FIELD calls
+ * 	FIELD(sendflags, Type, field)
+ * 		sendflags: Send flags that signal when this field has to be sent
+ * 		Type     : Type of the entity field. Used to determine WriteX/ReadX functions.
+ * 		           Follows a list of accepted values
+ * 			Byte
+ * 			Char
+ * 			Short
+ * 			Long
+ * 			Coord
+ * 			Angle
+ * 			String	 Note: strzoned on client
+ * 			Float	 Note: implemented as Write/Read Coord
+ * 			Vector	 Note: implemented as Write/Read Coord on _x _y _z
+ * 			Vector2D Note: implemented as Write/Read Coord on _x _y
+ * Note:
+ * 	classname and netname are always sent
+ * 	MSLE stands for Minigame Simple Linked Entity
+ */
+#define MINIGAME_SIMPLELINKED_ENTITIES \
+	MSLE(minigame_board_piece,FIELD(MINIG_SF_CREATE,Byte,team) FIELD(MINIG_SF_UPDATE, Short, minigame_flags) FIELD(MINIG_SF_UPDATE, Vector2D,origin)) \
+	/*empty line*/ 

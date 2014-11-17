@@ -98,6 +98,10 @@ void minigame_cmd_workaround(float dummy, string...cmdargc);
 // Read a minigame entity from the server
 void ent_read_minigame();
 
+// Prompt the player to play in the current minigame 
+// (ie: it's their turn and they should get back to the minigame)
+void minigame_prompt();
+
 float HUD_MinigameMenu_IsOpened();
 void HUD_MinigameMenu_Close();
 float HUD_Minigame_Showpanels();

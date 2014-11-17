@@ -389,6 +389,8 @@ float minigame_event_ttt(entity minigame, string event, ...)
 		if ( sent.classname == "minigame" && ( sf & MINIG_SF_UPDATE ) )
 		{
 			sent.message = ttt_turn_to_string(sent.minigame_flags);
+			if ( sent.minigame_flags & minigame_self.team )
+				minigame_prompt();
 		}
 		else if ( sent.classname == "minigame_player" && (sf & TTT_SF_PLAYERSCORE ) )
 		{
