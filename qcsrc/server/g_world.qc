@@ -215,7 +215,6 @@ void cvar_changes_init()
 		// private
 		BADCVAR("developer");
 		BADCVAR("log_dest_udp");
-		BADCVAR("log_file");
 		BADCVAR("net_address");
 		BADCVAR("net_address_ipv6");
 		BADCVAR("port");
@@ -236,6 +235,7 @@ void cvar_changes_init()
 		BADPREFIX("g_playerstats_");
 		BADPREFIX("g_respawn_ghosts");
 		BADPREFIX("g_voice_flood_");
+		BADPREFIX("log_file");
 		BADPREFIX("rcon_");
 		BADPREFIX("sv_allowdownloads");
 		BADPREFIX("sv_autodemo");
@@ -806,6 +806,8 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_VORTEX_CHARGEPOOL, AS_FLOAT, vortex_chargepool_ammo);
 
 	addstat(STAT_HAGAR_LOAD, AS_INT, hagar_load);
+	
+	addstat(STAT_ARC_HEAT, AS_FLOAT, arc_heat_percent);
 
 	// freeze attacks
 	addstat(STAT_FROZEN, AS_INT, frozen);

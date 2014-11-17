@@ -86,7 +86,6 @@ void CSQC_Init(void)
 	localcmd("\nalias killmob \"cmd editmob kill ${* ?}\"\n");
 
 	localcmd("\nalias weapon_hmg \"impulse 248\"\n");
-	localcmd("\nalias weapon_hmg \"impulse 249\"\n");
 	localcmd("\nalias weapon_shockwave \"impulse 250\"\n");
 	localcmd("\nalias weapon_arc \"impulse 251\"\n");
 

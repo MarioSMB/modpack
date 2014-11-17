@@ -50,6 +50,12 @@ void race_ScoreRules()
 	ScoreRules_basics_end();
 }
 
+void race_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
+{
+	if(autocvar_sv_eventlog)
+		GameLogEcho(strcat(":race:", mode, ":", ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
+}
+
 MUTATOR_HOOKFUNCTION(race_PlayerPhysics)
 {
 	// force kbd movement for fairness
@@ -119,7 +125,7 @@ MUTATOR_HOOKFUNCTION(race_ResetMap)
 			if(!s)
 				e.race_place = 0;
 		}
-		print(e.netname, " = ", ftos(e.race_place), "\n");
+		race_EventLog(ftos(e.race_place), e);
 	}
 
 	if(g_race_qualifying == 2)

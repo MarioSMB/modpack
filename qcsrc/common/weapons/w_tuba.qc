@@ -22,9 +22,12 @@ REGISTER_WEAPON(
 	w_cvar(id, sn, NONE, attenuation) \
 	w_cvar(id, sn, NONE, damage) \
 	w_cvar(id, sn, NONE, edgedamage) \
+	w_cvar(id, sn, NONE, fadetime) \
 	w_cvar(id, sn, NONE, force) \
+	w_cvar(id, sn, NONE, pitchstep) \
 	w_cvar(id, sn, NONE, radius) \
 	w_cvar(id, sn, NONE, refire) \
+	w_cvar(id, sn, NONE, volume) \
 	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
 	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
 	w_prop(id, sn, string, weaponreplace, weaponreplace) \
@@ -34,6 +37,11 @@ REGISTER_WEAPON(
 
 #ifdef SVQC
 TUBA_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
+float W_Tuba_MarkClientOnlyFieldsAsUsed() {
+	// These variables are only used by client/tuba.qc. TODO: move client/tuba.qc code here.
+	return WEP_CVAR(tuba, fadetime) + WEP_CVAR(tuba, pitchstep) + WEP_CVAR(tuba, volume);
+}
+
 .entity tuba_note;
 .float tuba_smoketime;
 .float tuba_instrument;

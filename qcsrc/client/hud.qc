@@ -1648,7 +1648,7 @@ void HUD_Notify(void)
 		{
 			attacker = sprintf(_("Player %d"), count + 1);
 			victim = sprintf(_("Player %d"), count + 2);
-			icon = get_weaponinfo(WEP_FIRST + mod(floor(count*2.4), WEP_LAST)).model2;
+			icon = get_weaponinfo(min(WEP_FIRST + count * 2, WEP_LAST)).model2;
 			alpha = bound(0, 1.2 - count / entry_count, 1);
 		}
 		else

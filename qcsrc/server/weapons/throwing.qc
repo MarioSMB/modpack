@@ -32,6 +32,8 @@ string W_ThrowNewWeapon(entity own, float wpn, float doreduce, vector org, vecto
 	wep.owner = wep.enemy = own;
 	wep.flags |= FL_TOSSED;
 	wep.colormap = own.colormap;
+	
+	W_DropEvent(WR_DROP,own,wpn,wep);
 
 	if(WepSet_FromWeapon(wpn) & WEPSET_SUPERWEAPONS)
 	{

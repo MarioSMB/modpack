@@ -37,7 +37,7 @@ void PlayerJump (void)
 {
 	if(self.frozen)
 		return; // no jumping in freezetag when frozen
-		
+
 	if(self.player_blocked)
 		return; // no jumping while blocked
 

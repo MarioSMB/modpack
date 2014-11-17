@@ -1806,6 +1806,7 @@ void SpectateCopy(entity spectatee) {
 	self.vortex_charge = spectatee.vortex_charge;
 	self.vortex_chargepool_ammo = spectatee.vortex_chargepool_ammo;
 	self.hagar_load = spectatee.hagar_load;
+	self.arc_heat_percent = spectatee.arc_heat_percent;
 	self.minelayer_mines = spectatee.minelayer_mines;
 	self.punchangle = spectatee.punchangle;
 	self.view_ofs = spectatee.view_ofs;

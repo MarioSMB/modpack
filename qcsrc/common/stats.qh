@@ -43,7 +43,7 @@ const float STAT_GAMESTARTTIME          = 37;
 // 38 empty?
 // 39 empty?
 // 40 empty?
-// 41 empty?
+const float STAT_ARC_HEAT               = 41;
 const float STAT_PRESSED_KEYS           = 42;
 const float STAT_ALLOW_OLDNEXBEAM       = 43; // this stat could later contain some other bits of info, like, more server-side particle config
 const float STAT_FUEL                   = 44;
