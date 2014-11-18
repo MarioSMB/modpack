@@ -760,6 +760,15 @@ void kh_KeyThink()
 	}
 }
 
+float kh_Customize()
+{
+	entity e = WaypointSprite_getviewentity(other);
+
+	if(self.owner == e)
+		return FALSE;
+	return TRUE;
+}
+
 void kh_KeyTouch()
 {
 	if(gameover) { return; }
@@ -862,6 +871,7 @@ void kh_KeySetup(float teamnumber, entity key, entity player) // called when spa
 	key.flags = FL_ITEM | FL_NOTARGET;
 	key.solid = SOLID_TRIGGER;
 	key.takedamage = DAMAGE_NO;
+	key.customizeentityforclient = kh_Customize;
 	key.damageforcescale = autocvar_g_keyhunt_key_damageforcescale;
 	key.max_key_health = ((autocvar_g_keyhunt_key_return_damage && autocvar_g_keyhunt_key_health) ? autocvar_g_keyhunt_key_health : 100);
 	key.health = key.max_key_health;
