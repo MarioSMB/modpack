@@ -16,6 +16,7 @@ MUTATOR_DECLARATION(gamemode_jailbreak);
 MUTATOR_DECLARATION(gamemode_cts);
 MUTATOR_DECLARATION(gamemode_race);
 MUTATOR_DECLARATION(gamemode_tdm);
+MUTATOR_DECLARATION(gamemode_deathmatch);
 
 MUTATOR_DECLARATION(mutator_dodging);
 MUTATOR_DECLARATION(mutator_invincibleprojectiles);

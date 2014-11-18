@@ -202,9 +202,9 @@ void havocbot_goalrating_enemyplayers(float ratingscale, vector org, float sradi
 	}
 }
 
-// legacy bot role for deathmatch
+// legacy bot role for standard gamemodes
 // go to best items
-void havocbot_role_dm()
+void havocbot_role_common()
 {
 	if(self.deadflag != DEAD_NO)
 		return;
@@ -228,5 +228,5 @@ void havocbot_chooserole()
 		return;
 
 	// assume anything else is deathmatch
-	self.havocbot_role = havocbot_role_dm;
+	self.havocbot_role = havocbot_role_common;
 }

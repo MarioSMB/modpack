@@ -1871,7 +1871,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	if(WinningConditionHelper_zeroisworst)
 		leadlimit = 0; // not supported in this mode
 
-	if(g_dm || MUTATOR_CALLHOOK(Scores_CountFragsRemaining))
+	if(MUTATOR_CALLHOOK(Scores_CountFragsRemaining))
 	// these modes always score in increments of 1, thus this makes sense
 	{
 		if(leaderfrags != WinningConditionHelper_topscore)
