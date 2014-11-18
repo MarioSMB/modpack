@@ -119,20 +119,16 @@ MUTATOR_HOOKFUNCTION(lms_ForbidThrowing)
 MUTATOR_HOOKFUNCTION(lms_GiveFragsForKill)
 {
 	// remove a life
-	float num_players = 0, player_lives = PlayerScore_Add(frag_target, SP_LMS_LIVES, -1);
-	entity tmp_entity;
-
-	FOR_EACH_PLAYER(tmp_entity) { ++num_players; }
-
-	if(player_lives < lms_lowest_lives)
-		lms_lowest_lives = player_lives;
-	if(player_lives <= 0)
+	float tl;
+	tl = PlayerScore_Add(frag_target, SP_LMS_LIVES, -1);
+	if(tl < lms_lowest_lives)
+		lms_lowest_lives = tl;
+	if(tl <= 0)
 	{
 		if(!lms_next_place)
-			lms_next_place = num_players;
+			lms_next_place = player_count;
 		else
-			lms_next_place = min(lms_next_place, num_players);
-
+			lms_next_place = min(lms_next_place, player_count);
 		PlayerScore_Add(frag_target, SP_LMS_RANK, lms_next_place); // won't ever spawn again
 		--lms_next_place;
 	}

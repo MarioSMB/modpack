@@ -10,7 +10,7 @@ REGISTER_WEAPON(
 /* modelname */ "arc",
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairhlac 0.7",
-/* wepimg    */ "weaponhlac",
+/* wepimg    */ "weaponarc",
 /* refname   */ "arc",
 /* wepname   */ _("Arc")
 );
@@ -237,9 +237,9 @@ void W_Arc_Beam_Think(void)
 		||
 		(!self.owner.BUTTON_ATCK && !burst )
 		||
-		self.owner.frozen
-		||
 		self.owner.jb_isprisoned
+		||
+		self.owner.frozen
 		||
 		(WEP_CVAR(arc, overheat_max) > 0 && self.beam_heat >= WEP_CVAR(arc, overheat_max))
 	)
@@ -603,8 +603,8 @@ void Arc_Smoke()
 {
 	makevectors(self.v_angle);
 	W_SetupShot_Range(self,TRUE,0,"",0,0,0);
+
 	vector smoke_origin = w_shotorg + self.velocity*frametime;
-	
 	if ( self.arc_overheat > time )
 	{
 		if ( random() < self.arc_heat_percent )
@@ -665,7 +665,7 @@ float W_Arc(float req)
 		{
 			Arc_Player_SetHeat(self);
 			Arc_Smoke();
-			
+
 			if ( self.arc_overheat <= time )
 			if(self.BUTTON_ATCK || self.BUTTON_ATCK2 || self.arc_beam.beam_bursting )
 			{
@@ -719,9 +719,9 @@ float W_Arc(float req)
 		}
 		case WR_INIT:
 		{
-			precache_model("models/weapons/g_shotguncannon.md3");
-			precache_model("models/weapons/v_shotguncannon.md3");
-			precache_model("models/weapons/h_shotguncannon.iqm");
+			precache_model("models/weapons/g_arc.md3");
+			precache_model("models/weapons/v_arc.md3");
+			precache_model("models/weapons/h_arc.iqm");
 			precache_sound(W_Sound("lgbeam_fire"));
 			precache_sound(W_Sound("gauntletbeam_fly"));
 			precache_sound(W_Sound("strength_fire"));
@@ -869,6 +869,10 @@ void Reset_ArcBeam(void)
 
 void Draw_ArcBeam(void)
 {
+	float dt = time - self.move_time;
+	self.move_time = time;
+	if(dt <= 0) { return; }
+
 	if(!self.beam_usevieworigin)
 	{
 		InterpolateOrigin_Do();
@@ -1107,6 +1111,7 @@ void Draw_ArcBeam(void)
 		// FIXME we really should do this on the server so it actually
 		// matches gameplay. What this client side stuff is doing is no
 		// more than guesswork.
+		if((trace_ent || trace_fraction < 1) && !(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		pointparticles(
 			self.beam_hiteffect,
 			last_origin,
@@ -1179,6 +1184,7 @@ void Ent_ReadArcBeam(float isnew)
 		// set other main attributes of the beam
 		self.draw = Draw_ArcBeam;
 		self.entremove = Remove_ArcBeam;
+		self.move_time = time;
 		sound(self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTEN_NORM);
 
 		flash = spawn();
@@ -1273,8 +1279,8 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '-1 -1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
-				self.beam_traileffect = FALSE;
-				self.beam_hiteffect = particleeffectnum("electro_lightning");
+				self.beam_traileffect = particleeffectnum("arc_beam");
+				self.beam_hiteffect = particleeffectnum("arc_lightning");
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
@@ -1299,8 +1305,8 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '0.5 0.5 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
-				self.beam_traileffect = FALSE;
-				self.beam_hiteffect = particleeffectnum("electro_lightning");
+				self.beam_traileffect = particleeffectnum("arc_beam");
+				self.beam_hiteffect = particleeffectnum("arc_lightning");
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
@@ -1325,8 +1331,8 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '0 1 0';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
-				self.beam_traileffect = FALSE;
-				self.beam_hiteffect = particleeffectnum("healray_impact"); 
+				self.beam_traileffect = particleeffectnum("arc_beam_heal");
+				self.beam_hiteffect = particleeffectnum("arc_beam_healimpact");
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
@@ -1352,8 +1358,8 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 0 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
-				self.beam_traileffect = FALSE;
-				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
+				self.beam_traileffect = particleeffectnum("arc_beam");
+				self.beam_hiteffect = particleeffectnum("arc_lightning");
 				self.beam_hitlight[0] = 20;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 0;
@@ -1380,7 +1386,8 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
 				self.beam_traileffect = FALSE;
-				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
+				self.beam_traileffect = particleeffectnum("arc_beam");
+				self.beam_hiteffect = particleeffectnum("arc_lightning");
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
@@ -1403,7 +1410,8 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
 				self.beam_traileffect = FALSE;
-				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
+				self.beam_traileffect = particleeffectnum("arc_beam");
+				self.beam_hiteffect = particleeffectnum("arc_lightning");
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
@@ -1430,7 +1438,8 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
 				self.beam_traileffect = FALSE;
-				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
+				self.beam_traileffect = particleeffectnum("arc_beam_heal");
+				self.beam_hiteffect = particleeffectnum("healray_impact");
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
@@ -1457,7 +1466,8 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
 				self.beam_traileffect = FALSE;
-				self.beam_hiteffect = particleeffectnum("electro_lightning"); 
+				self.beam_traileffect = particleeffectnum("arc_beam");
+				self.beam_hiteffect = particleeffectnum("arc_lightning");
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;
@@ -1486,7 +1496,7 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_alpha = 1;
 				self.beam_thickness = 8;
 				self.beam_traileffect = FALSE;
-				self.beam_hiteffect = FALSE; 
+				self.beam_hiteffect = FALSE;
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
 				self.beam_hitlight[2] = 1;

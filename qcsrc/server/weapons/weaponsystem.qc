@@ -14,6 +14,10 @@ float W_WeaponRateFactor()
 	float t;
 	t = 1.0 / g_weaponratefactor;
 
+	weapon_rate = t;
+	MUTATOR_CALLHOOK(WeaponRateFactor);
+	t = weapon_rate;
+
 	return t;
 }
 

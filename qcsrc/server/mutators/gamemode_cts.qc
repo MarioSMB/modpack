@@ -43,6 +43,12 @@ void cts_ScoreRules()
 	ScoreRules_basics_end();
 }
 
+void cts_EventLog(string mode, entity actor) // use an alias for easy changing and quick editing later
+{
+	if(autocvar_sv_eventlog)
+		GameLogEcho(strcat(":cts:", mode, ":", ((actor != world) ? (strcat(":", ftos(actor.playerid))) : "")));
+}
+
 MUTATOR_HOOKFUNCTION(cts_PlayerPhysics)
 {
 	// force kbd movement for fairness
@@ -112,7 +118,7 @@ MUTATOR_HOOKFUNCTION(cts_ResetMap)
 			if(!s)
 				e.race_place = 0;
 		}
-		print(e.netname, " = ", ftos(e.race_place), "\n");
+		cts_EventLog(ftos(e.race_place), e);
 	}
 
 	if(g_race_qualifying == 2)
@@ -266,6 +272,13 @@ MUTATOR_HOOKFUNCTION(cts_ForbidClearPlayerScore)
 	return TRUE; // in CTS, you don't lose score by observing
 }
 
+MUTATOR_HOOKFUNCTION(cts_SetMods)
+{
+	g_cloaked = 1; // always enable cloak in CTS
+
+	return FALSE;
+}
+
 MUTATOR_HOOKFUNCTION(cts_WantWeapon)
 {
 	ret_float = (other.weapon == WEP_SHOTGUN);
@@ -280,8 +293,6 @@ MUTATOR_HOOKFUNCTION(cts_AllowMobSpawning)
 
 void cts_Initialize()
 {
-	g_cloaked = 1; // always enable cloak in CTS
-
 	cts_ScoreRules();
 }
 
@@ -301,6 +312,7 @@ MUTATOR_DEFINITION(gamemode_cts)
 	MUTATOR_HOOK(FilterItem, cts_FilterItem, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDamage_Calculate, cts_PlayerDamage, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidPlayerScore_Clear, cts_ForbidClearPlayerScore, CBC_ORDER_ANY);
+	MUTATOR_HOOK(SetModname, cts_SetMods, CBC_ORDER_ANY);
 	MUTATOR_HOOK(WantWeapon, cts_WantWeapon, CBC_ORDER_ANY);
 	MUTATOR_HOOK(AllowMobSpawning, cts_AllowMobSpawning, CBC_ORDER_ANY);
 

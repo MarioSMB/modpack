@@ -215,7 +215,6 @@ void cvar_changes_init()
 		// private
 		BADCVAR("developer");
 		BADCVAR("log_dest_udp");
-		BADCVAR("log_file");
 		BADCVAR("net_address");
 		BADCVAR("net_address_ipv6");
 		BADCVAR("port");
@@ -236,6 +235,7 @@ void cvar_changes_init()
 		BADPREFIX("g_playerstats_");
 		BADPREFIX("g_respawn_ghosts");
 		BADPREFIX("g_voice_flood_");
+		BADPREFIX("log_file");
 		BADPREFIX("rcon_");
 		BADPREFIX("sv_allowdownloads");
 		BADPREFIX("sv_autodemo");

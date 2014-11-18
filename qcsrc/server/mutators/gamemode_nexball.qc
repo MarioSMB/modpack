@@ -703,7 +703,7 @@ void W_Nexball_Touch(void)
 				LogNB("stole", attacker);
 				sound(other, CH_TRIGGER, ball.noise2, VOL_BASE, ATTEN_NORM);
 
-				if(attacker.team == other.team && time > attacker.teamkill_complain)
+				if(SAME_TEAM(attacker, other) && time > attacker.teamkill_complain)
 				{
 					attacker.teamkill_complain = time + 5;
 					attacker.teamkill_soundtime = time + 0.4;

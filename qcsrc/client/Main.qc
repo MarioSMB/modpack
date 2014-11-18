@@ -86,7 +86,6 @@ void CSQC_Init(void)
 	localcmd("\nalias killmob \"cmd editmob kill ${* ?}\"\n");
 
 	localcmd("\nalias weapon_hmg \"impulse 248\"\n");
-	localcmd("\nalias weapon_hmg \"impulse 249\"\n");
 	localcmd("\nalias weapon_shockwave \"impulse 250\"\n");
 	localcmd("\nalias weapon_arc \"impulse 251\"\n");
 
@@ -1328,17 +1327,6 @@ void Net_WeaponComplain()
 	}
 }
 
-void Net_ReadMorningRescue()
-{
-	if(morningrescue)
-		return;
-
-	localcmd("play2 sound/misc/morningrescue\n");
-	morningrescue = 1;
-	mr_appeartime = time;
-	mr_fadetime   = time + 9;
-}
-
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
 // You must ALWAYS first acquire the temporary ID, which is sent as a byte.
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
@@ -1394,10 +1382,6 @@ float CSQC_Parse_TempEntity()
 			break;
 		case TE_CSQC_SVNOTICE:
 			cl_notice_read();
-			bHandled = true;
-			break;
-		case TE_CSQC_MORNINGRESCUE:
-			Net_ReadMorningRescue();
 			bHandled = true;
 			break;
 		case TE_CSQC_SHOCKWAVEPARTICLE:

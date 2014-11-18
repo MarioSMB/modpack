@@ -1692,8 +1692,7 @@ void CSQC_UpdateView(float w, float h)
 					float ok_ammo_charge, ok_ammo_chargepool;
 					ok_ammo_charge = getstatf(STAT_OK_AMMO_CHARGE);
 					ok_ammo_chargepool = getstatf(STAT_OK_AMMO_CHARGEPOOl);
-					
-					
+										
 					float arc_heat = getstatf(STAT_ARC_HEAT);
 
 					if(vortex_charge_movingavg == 0) // this should only happen if we have just loaded up the game

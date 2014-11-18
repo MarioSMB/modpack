@@ -370,7 +370,7 @@ string getwelcomemessage(void)
 	}
 
 	// branding for the win
-	s = strcat(s, "\n\n Running the SMB mod pack\nhttps://github.com/MarioSMB");
+	s = strcat(s, "\n\n Running the SMB mod pack\nhttps://github.com/MarioSMB/modpack");
 
 	return s;
 }

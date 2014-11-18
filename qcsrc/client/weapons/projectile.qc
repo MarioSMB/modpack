@@ -466,6 +466,7 @@ void Ent_Projectile()
 			self.mins = '-16 -16 -16';
 			self.maxs = '16 16 16';
 			self.colormod = Nade_Color(Nade_IDFromProjectile(self.cnt));
+			self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 			self.move_movetype = MOVETYPE_BOUNCE;
 			self.move_touch = func_null;
 			self.scale = 1.5;
