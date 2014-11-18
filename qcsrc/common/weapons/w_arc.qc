@@ -91,6 +91,7 @@ ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float arc_overheat; // (dropped arc/player) time during which it's too hot
 .float arc_cooldown; // (dropped arc/player) cooling speed
 .float arc_heat_percent; // (player) arc heat in [0,1] (stat)
+.float arc_smoke_sound;
 #endif
 #ifdef CSQC
 void Ent_ReadArcBeam(float isnew);
@@ -262,8 +263,11 @@ void W_Arc_Beam_Think(void)
 			}
 			
 			if ( WEP_CVAR(arc, overheat_max) > 0 && self.beam_heat >= WEP_CVAR(arc, overheat_max) )
+			{
 				pointparticles( particleeffectnum("arc_overheat"), 
 					self.beam_start, self.beam_wantdir, 1 );
+				sound(self, CH_WEAPON_A, W_Sound("strength_fire"), VOL_BASE, ATTN_NORM);
+			}
 		}
 		
 		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; }
@@ -606,7 +610,14 @@ void Arc_Smoke()
 		if ( random() < self.arc_heat_percent )
 			pointparticles( particleeffectnum("arc_smoke"), smoke_origin, '0 0 0', 1 );
 		if ( self.BUTTON_ATCK || self.BUTTON_ATCK2 )
+		{
 			pointparticles( particleeffectnum("arc_overheat_fire"), smoke_origin, w_shotdir, 1 );
+			if ( !self.arc_smoke_sound )
+			{
+				self.arc_smoke_sound = 1;
+				sound(self, CH_SHOTS_SINGLE, W_Sound("gauntletbeam_fly"), VOL_BASE, ATTN_NORM);
+			}
+		}
 	}
 	else if ( self.arc_beam && WEP_CVAR(arc, overheat_max) > 0 &&
 			self.arc_beam.beam_heat > WEP_CVAR(arc, overheat_min) )
@@ -614,6 +625,13 @@ void Arc_Smoke()
 		if ( random() < (self.arc_beam.beam_heat-WEP_CVAR(arc, overheat_min)) / 
 				( WEP_CVAR(arc, overheat_max)-WEP_CVAR(arc, overheat_min) ) )
 			pointparticles( particleeffectnum("arc_smoke"), smoke_origin, '0 0 0', 1 );
+	}
+	
+	if (  self.arc_smoke_sound && ( self.arc_overheat <= time || 
+		!( self.BUTTON_ATCK || self.BUTTON_ATCK2 ) ) )
+	{
+		self.arc_smoke_sound = 0;
+		sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
 	}
 }
 
@@ -705,6 +723,8 @@ float W_Arc(float req)
 			precache_model("models/weapons/v_shotguncannon.md3");
 			precache_model("models/weapons/h_shotguncannon.iqm");
 			precache_sound(W_Sound("lgbeam_fire"));
+			precache_sound(W_Sound("gauntletbeam_fly"));
+			precache_sound(W_Sound("strength_fire"));
 			if(!arc_shotorigin[0])
 			{
 				arc_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 1);
