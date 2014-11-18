@@ -582,8 +582,6 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 	{
 		force *= 6;
 		damage = self.max_health * 0.55;
-
-		bprintf("Damage reduced to %d, health currently %d\n", damage, self.health);
 	}
 
 	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN) || DEATH_ISWEAPON(deathtype, WEP_HMG))
@@ -594,8 +592,6 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 		damage = self.max_health * 0.1;
 		force *= 10;
 	}
-	else
-		damage = self.max_health * 1.1;
 
 	self.velocity += force;
 
