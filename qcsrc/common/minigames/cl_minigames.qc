@@ -73,9 +73,7 @@ string minigame_texture(string name)
 	return path;
 }
 
-#define MSLE(Name,Fields) \
-	else if ( self.classname == #Name ) { strunzone(e.netname); Fields }
-#define FIELD(Flags, Type, Name) MSLE_CLEAN_##Type(e.Name)
+#define FIELD(Flags, Type, Name) MSLE_CLEAN_##Type(self.Name)
 #define MSLE_CLEAN_String(x) strunzone(x);
 #define MSLE_CLEAN_Byte(x)
 #define MSLE_CLEAN_Char(x)
@@ -85,16 +83,18 @@ string minigame_texture(string name)
 #define MSLE_CLEAN_Float(x)
 #define MSLE_CLEAN_Vector(x)
 #define MSLE_CLEAN_Vector2D(x)
+
+#define MSLE(Name,Fields) \
+	void msle_entremove_##Name() { strunzone(self.netname); Fields }
+MINIGAME_SIMPLELINKED_ENTITIES
+#undef MSLE
+#undef FIELD
+
 void minigame_autoclean_entity(entity e)
 {
-	if ( 0 ) {}
-	MINIGAME_SIMPLELINKED_ENTITIES
-	
 	dprint("CL Auto-cleaned: ",ftos(num_for_edict(e)), " (",e.classname,")\n");
 	remove(e);
 }
-#undef MSLE
-#undef FIELD
 
 void HUD_MinigameMenu_CurrentButton();
 float auto_close_minigamemenu;
@@ -176,7 +176,10 @@ string ReadString_Zoned() { return strzone(ReadString_Raw()); }
 #define FIELD(Flags, Type,Name) if ( sf & (Flags) ) self.Name = Read##Type();
 #define MSLE(Name,Fields) \
 	else if ( self.classname == #Name ) { \
-		if ( sf & MINIG_SF_CREATE ) minigame_read_owner(); \
+		if ( sf & MINIG_SF_CREATE ) { \
+			minigame_read_owner(); \
+			self.entremove = msle_entremove_##Name; \
+		} \
 		minigame_ent = self.owner; \
 		Fields \
 	}
