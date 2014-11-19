@@ -1,0 +1,170 @@
+entity minigame_descriptors;
+
+// previous node in a doubly linked list
+.entity list_prev;
+// next node in a linked list
+.entity list_next;
+
+entity minigame_get_descriptor(string id)
+{
+	entity e;
+	for ( e = minigame_descriptors; e != world; e = e.list_next )
+		if ( e.netname == id )
+			return e;
+	return world;
+}
+
+// Get letter index of a tile name
+float minigame_tile_letter(string id)
+{
+	return str2chr(substring(id,0,1),0)-'a';
+}
+
+// Get number index of a tile name
+// Note: this is 0 based, useful for mathematical operations
+// Note: Since the tile notation starts from the bottom left, 
+//	you may want to do number_of_rows - what_this_function_returns or something
+float minigame_tile_number(string id)
+{
+	return stof(substring(id,1,-1)) -1 ;
+}
+
+// Get relative position of the center of a given tile
+vector minigame_tile_pos(string id, float rows, float columns)
+{
+	return eX*(minigame_tile_letter(id)+0.5)/columns + 
+	       eY - eY*(minigame_tile_number(id)+0.5)/rows;
+}
+
+// Get a tile name from indices
+string minigame_tile_buildname(float letter, float number)
+{
+	return strcat(chr2str('a'+letter),ftos(number+1));
+}
+
+// Get the id of a tile relative to the given one
+string minigame_relative_tile(string start_id, float dx, float dy, float rows, float columns)
+{
+	float letter = minigame_tile_letter(start_id);
+	float number = minigame_tile_number(start_id);
+	letter = (letter+dx) % columns;
+	number = (number+dy) % rows;
+	if ( letter < 0 )
+		letter = columns + letter;
+	if ( number < 0 )
+		number = rows + number;
+	return minigame_tile_buildname(letter, number);
+}
+
+// Get tile name from a relative position (matches the tile covering a square area)
+string minigame_tile_name(vector pos, float rows, float columns)
+{
+	if ( pos_x < 0 || pos_x > 1 || pos_y < 0 || pos_y > 1 )
+		return ""; // no tile
+		
+	float letter = floor(pos_x * columns);
+	float number = floor((1-pos_y) * rows);
+	return minigame_tile_buildname(letter, number);
+}
+
+// Get the next team number (note: team numbers are between 1 and n_teams, inclusive)
+float minigame_next_team(float curr_team, float n_teams)
+{
+	return curr_team % n_teams + 1;
+}
+
+/// For minigame sessions: minigame descriptor object
+.entity descriptor;
+
+/// For minigame sessions/descriptors: execute the given event
+/// Client events:
+/// 	mouse_moved(vector mouse_pos)
+///			return 1 to handle input, 0 to discard
+/// 	mouse_pressed/released(float K_Keycode)
+///			return 1 to handle input, 0 to discard
+/// 		note: see dpdefs/keycodes.qc for values
+/// 	key_pressed/released(float K_Keycode)
+/// 		return 1 to handle input, 0 to discard
+/// 		note: see dpdefs/keycodes.qc for values
+/// 	activate()
+/// 		executed when the minigame is activated for the current client
+/// 	deactivate()
+/// 		executed when the minigame is deactivated for the current client
+/// 	network_receive(entity received,float flags)
+/// 		executed each time a networked entity is received
+/// 		note: when this is called self == ...(0,entity)
+/// 		You can use the MINIG_SF_ constants to check the send flags
+/// 		IMPORTANT: always read in client everything you send from the server!
+/// 	menu_show(entity parent_menu_item)
+/// 		executed when the Current Game menu is shown, used to add custom entries
+/// 		Call HUD_MinigameMenu_CustomEntry to do so (pass ...(0,entity) as first argument)
+/// 	menu_click(string arg)
+/// 		executed when a custom menu entry is clicked
+/// Server events:
+/// 	start()
+/// 		executed when the minigame session is starting
+/// 	end()
+/// 		executed when the minigame session is shutting down
+/// 	join(entity player)
+/// 		executed when a player wants to join the session
+/// 		return the player team number to accept the new player, 0 to discard
+/// 	part(entity player)
+/// 		executed when a player is going to leave the session
+/// 	network_send(entity sent,float flags)
+/// 		executed each time a networked entity is sent
+/// 		note: when this is called self == ...(0,entity)
+/// 		You can use the MINIG_SF_ constants to check the send flags
+/// 		IMPORTANT: always read in client everything you send from the server!
+/// 	cmd(entity minigame_player, float argc, string command)
+/// 		self = client entity triggering this
+/// 		argv(n) = console token 
+/// 		argc: number of console tokens
+/// 		command: full command string
+/// 		triggered when a player does "cmd minigame ..." with some unrecognized command
+/// 		return 1 if the minigame has handled the command
+/// 	impulse(entity minigame_player,float impulse)
+/// 		self = client entity triggering this
+/// 		triggered when a player does "impulse ..."
+/// 		return 1 if the minigame has handled the impulse
+.float(entity,string,...)   minigame_event;
+
+// For run-time gameplay entities: Whether to be removed when the game is deactivated
+.float minigame_autoclean;
+
+// For run-time gameplay entities: some place to store flags safely
+.float minigame_flags;
+
+// Send flags, set to .SendFlags on networked entities to send entity information
+// Flag values for customized events must be powers of 2 in the range
+// [MINIG_SF_CUSTOM, MINIG_SF_MAX] (inclusive)
+const float MINIG_SF_CREATE  = 0x01; // Create a new object
+const float MINIG_SF_UPDATE  = 0x02; // miscellaneous entity update
+const float MINIG_SF_CUSTOM  = 0x10; // a customized networked event
+const float MINIG_SF_MAX     = 0x80; // maximum flag value sent over the network
+const float MINIG_SF_ALL     = 0xff; // use to resend everything
+
+#include "minigame/all.qh"
+
+const float msle_base_id = 2;
+float msle_id(string class_name)
+{
+	if ( class_name == "minigame" ) return 1;
+	if ( class_name == "minigame_player" ) return 2;
+	float i = msle_base_id;
+#define MSLE(Name, Fields) i++; if ( class_name == #Name ) return i;
+	MINIGAME_SIMPLELINKED_ENTITIES
+#undef MSLE
+	return 0;
+}
+
+string msle_classname(float id)
+{
+	if ( id == 1 ) return "minigame";
+	if ( id == 2 ) return "minigame_player";
+	float i = msle_base_id;
+#define MSLE(Name, Fields) i++; if ( id == i ) return #Name;
+	MINIGAME_SIMPLELINKED_ENTITIES
+#undef MSLE
+	return "";
+}
+

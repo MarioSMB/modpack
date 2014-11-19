@@ -104,29 +104,39 @@ float current_player;
 
 float mv_active;
 
+.float panel_showflags;
+const float PANEL_SHOW_NEVER    = 0x00;
+const float PANEL_SHOW_MAINGAME = 0x01;
+const float PANEL_SHOW_MINIGAME = 0x02;
+const float PANEL_SHOW_ALWAYS   = 0xff;
+float HUD_Panel_CheckFlags(float showflags);
 
 #define HUD_PANELS \
-	HUD_PANEL(WEAPONS      , HUD_Weapons      , weapons) \
-	HUD_PANEL(AMMO         , HUD_Ammo         , ammo) \
-	HUD_PANEL(POWERUPS     , HUD_Powerups     , powerups) \
-	HUD_PANEL(HEALTHARMOR  , HUD_HealthArmor  , healtharmor) \
-	HUD_PANEL(NOTIFY       , HUD_Notify       , notify) \
-	HUD_PANEL(TIMER        , HUD_Timer        , timer) \
-	HUD_PANEL(RADAR        , HUD_Radar        , radar) \
-	HUD_PANEL(SCORE        , HUD_Score        , score) \
-	HUD_PANEL(RACETIMER    , HUD_RaceTimer    , racetimer) \
-	HUD_PANEL(VOTE         , HUD_Vote         , vote) \
-	HUD_PANEL(MODICONS     , HUD_ModIcons     , modicons) \
-	HUD_PANEL(PRESSEDKEYS  , HUD_PressedKeys  , pressedkeys) \
-	HUD_PANEL(CHAT         , HUD_Chat         , chat) \
-	HUD_PANEL(ENGINEINFO   , HUD_EngineInfo   , engineinfo) \
-	HUD_PANEL(INFOMESSAGES , HUD_InfoMessages , infomessages) \
-	HUD_PANEL(PHYSICS      , HUD_Physics      , physics) \
-	HUD_PANEL(CENTERPRINT  , HUD_CenterPrint  , centerprint) \
-	HUD_PANEL(QUICKMENU    , HUD_QuickMenu    , quickmenu) \
-	HUD_PANEL(BUFFS        , HUD_Buffs        , buffs) 
+	HUD_PANEL(WEAPONS      , HUD_Weapons      , weapons,        PANEL_SHOW_MAINGAME ) \
+	HUD_PANEL(AMMO         , HUD_Ammo         , ammo,           PANEL_SHOW_MAINGAME ) \
+	HUD_PANEL(POWERUPS     , HUD_Powerups     , powerups,       PANEL_SHOW_MAINGAME ) \
+	HUD_PANEL(HEALTHARMOR  , HUD_HealthArmor  , healtharmor,    PANEL_SHOW_MAINGAME ) \
+	HUD_PANEL(NOTIFY       , HUD_Notify       , notify,         PANEL_SHOW_ALWAYS   ) \
+	HUD_PANEL(TIMER        , HUD_Timer        , timer,          PANEL_SHOW_ALWAYS   ) \
+	HUD_PANEL(RADAR        , HUD_Radar        , radar,          PANEL_SHOW_MAINGAME ) \
+	HUD_PANEL(SCORE        , HUD_Score        , score,          PANEL_SHOW_ALWAYS   ) \
+	HUD_PANEL(RACETIMER    , HUD_RaceTimer    , racetimer,      PANEL_SHOW_MAINGAME ) \
+	HUD_PANEL(VOTE         , HUD_Vote         , vote,           PANEL_SHOW_ALWAYS   ) \
+	HUD_PANEL(MODICONS     , HUD_ModIcons     , modicons,       PANEL_SHOW_MAINGAME ) \
+	HUD_PANEL(PRESSEDKEYS  , HUD_PressedKeys  , pressedkeys,    PANEL_SHOW_MAINGAME ) \
+	HUD_PANEL(CHAT         , HUD_Chat         , chat,           PANEL_SHOW_ALWAYS   ) \
+	HUD_PANEL(ENGINEINFO   , HUD_EngineInfo   , engineinfo,     PANEL_SHOW_ALWAYS   ) \
+	HUD_PANEL(INFOMESSAGES , HUD_InfoMessages , infomessages,   PANEL_SHOW_MAINGAME ) \
+	HUD_PANEL(PHYSICS      , HUD_Physics      , physics,        PANEL_SHOW_MAINGAME ) \
+	HUD_PANEL(CENTERPRINT  , HUD_CenterPrint  , centerprint,    PANEL_SHOW_MAINGAME ) \
+	HUD_PANEL(QUICKMENU    , HUD_QuickMenu    , quickmenu,      PANEL_SHOW_MAINGAME ) \
+	HUD_PANEL(BUFFS        , HUD_Buffs        , buffs,          PANEL_SHOW_MAINGAME ) \
+	HUD_PANEL(MINIGAME_BOARD, HUD_MinigameBoard ,minigameboard, PANEL_SHOW_MINIGAME ) \
+	HUD_PANEL(MINIGAME_STATUS,HUD_MinigameStatus,minigamestatus,PANEL_SHOW_MINIGAME ) \
+	HUD_PANEL(MINIGAME_HELP,  HUD_MinigameHelp  ,minigamehelp,  PANEL_SHOW_MINIGAME ) \
+	HUD_PANEL(MINIGAME_MENU,  HUD_MinigameMenu  ,minigamemenu,  PANEL_SHOW_ALWAYS   ) 
 
-#define HUD_PANEL(NAME,draw_func,name) \
+#define HUD_PANEL(NAME,draw_func,name,showflags) \
 	float HUD_PANEL_##NAME; \
 	void draw_func(void); \
 	void RegisterHUD_Panel_##NAME() \
@@ -138,10 +148,10 @@ float mv_active;
 		hud_panelent.panel_name = #name; \
 		hud_panelent.panel_id = HUD_PANEL_##NAME; \
 		hud_panelent.panel_draw = draw_func; \
+		hud_panelent.panel_showflags = showflags; \
 		++HUD_PANEL_NUM; \
 	} \
 	ACCUMULATE_FUNCTION(RegisterHUD_Panels, RegisterHUD_Panel_##NAME);
-
 HUD_PANELS
 #undef HUD_PANEL
 

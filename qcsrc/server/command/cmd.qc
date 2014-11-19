@@ -660,6 +660,7 @@ void ClientCommand_(float request)
 	CLIENT_COMMAND("suggestmap", ClientCommand_suggestmap(request, arguments), "Suggest a map to the mapvote at match end") \
 	CLIENT_COMMAND("tell", ClientCommand_tell(request, arguments, command), "Send a message directly to a player") \
 	CLIENT_COMMAND("voice", ClientCommand_voice(request, arguments, command), "Send voice message via sound") \
+	CLIENT_COMMAND("minigame", ClientCommand_minigame(request, arguments, command), "Start a minigame") \
 	/* nothing */
 
 void ClientCommand_macro_help()

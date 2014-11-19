@@ -1363,7 +1363,10 @@ void ClientDisconnect (void)
 		print("Warning: ClientDisconnect without ClientConnect\n");
 		return;
 	}
-
+	
+	if ( self.active_minigame )
+		part_minigame(self);
+	
 	entity oldenemy = self.enemy;
 	self.enemy = world;
 	if(oldenemy)
@@ -1451,14 +1454,20 @@ void ChatBubbleThink()
 		remove(self);
 		return;
 	}
-	if ((self.owner.BUTTON_CHAT && !self.owner.deadflag && IS_PLAYER(self.owner))
-#ifdef TETRIS
-		|| self.owner.tetris_on
-#endif
-	)
-		self.model = self.mdl;
-	else
-		self.model = "";
+	
+	self.mdl = "";
+	
+	if ( !self.owner.deadflag && IS_PLAYER(self.owner) )
+	{
+		if ( self.owner.active_minigame )
+			self.mdl = "models/sprites/minigame_busy.iqm";
+		else if ( self.owner.BUTTON_CHAT )
+			self.mdl = "models/misc/chatbubble.spr";
+	}
+	
+	if ( self.model != self.mdl )
+		setmodel(self, self.mdl);
+
 }
 
 void UpdateChatBubble()
@@ -1478,7 +1487,7 @@ void UpdateChatBubble()
 		setorigin(self.chatbubbleentity, '0 0 15' + self.maxs_z * '0 0 1');
 		setattachment(self.chatbubbleentity, self, "");  // sticks to moving player better, also conserves bandwidth
 		self.chatbubbleentity.mdl = self.chatbubbleentity.model;
-		self.chatbubbleentity.model = "";
+		//self.chatbubbleentity.model = "";
 		self.chatbubbleentity.effects = EF_LOWPRECISION;
 	}
 }
@@ -2171,6 +2180,11 @@ void PrintWelcomeMessage()
 
 void ObserverThink()
 {
+	if ( self.impulse )
+	{
+		MinigameImpulse(self.impulse);
+		self.impulse = 0;
+	}
 	float prefered_movetype;
 	if (self.flags & FL_JUMPRELEASED) {
 		if (self.BUTTON_JUMP && !self.version_mismatch) {
@@ -2201,6 +2215,11 @@ void ObserverThink()
 
 void SpectatorThink()
 {
+	if ( self.impulse )
+	{
+		MinigameImpulse(self.impulse);
+		self.impulse = 0;
+	}
 	if (self.flags & FL_JUMPRELEASED) {
 		if (self.BUTTON_JUMP && !self.version_mismatch) {
 			self.flags &= ~FL_JUMPRELEASED;
@@ -2381,11 +2400,6 @@ void PlayerPreThink (void)
 		Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_GODMODE_OFF, self.max_armorvalue);
 		self.max_armorvalue = 0;
 	}
-
-#ifdef TETRIS
-	if (TetrisPreFrame())
-		return;
-#endif
 
 	if(self.frozen == 2)
 	{
@@ -2765,13 +2779,6 @@ void PlayerPostThink (void)
 		}
 	}
 
-#ifdef TETRIS
-	if(self.impulse == 100)
-		ImpulseCommands();
-	if (!TetrisPostFrame())
-	{
-#endif
-
 	CheatFrame();
 
 	//CheckPlayerJump();
@@ -2785,10 +2792,6 @@ void PlayerPostThink (void)
 			return;		// intermission or finale
 		GetPressedKeys();
 	}
-
-#ifdef TETRIS
-	}
-#endif
 
 	/*
 	float i;

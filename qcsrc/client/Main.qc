@@ -84,6 +84,7 @@ void CSQC_Init(void)
 	localcmd("\nalias editmob \"cmd editmob ${* ?}\"\n");
 	localcmd("\nalias spawnmob \"cmd editmob spawn ${* ?}\"\n");
 	localcmd("\nalias killmob \"cmd editmob kill ${* ?}\"\n");
+	if(getkeybind(K_F9) == "") { localcmd("\nbind f9 \"cl_cmd hud minigame\"\n"); }
 
 	localcmd("\nalias weapon_hmg \"impulse 248\"\n");
 	localcmd("\nalias weapon_shockwave \"impulse 250\"\n");
@@ -139,6 +140,48 @@ void CSQC_Init(void)
 	registercvar("hud_panel_buffs_bg_border", "");
 	registercvar("hud_panel_buffs_bg_padding", "");
 	//registercvar("hud_panel_buffs_iconalign", "0");
+	
+	
+	// these need to be defined for minigames to work
+	registercvar("hud_panel_minigameboard", "1");
+	registercvar("hud_panel_minigameboard_pos", "0.22 0.15");
+	registercvar("hud_panel_minigameboard_size", "0.50 0.60");
+	registercvar("hud_panel_minigameboard_bg", "border_small");
+	registercvar("hud_panel_minigameboard_bg_color", "");
+	registercvar("hud_panel_minigameboard_bg_color_team", "");
+	registercvar("hud_panel_minigameboard_bg_alpha", "");
+	registercvar("hud_panel_minigameboard_bg_border", "");
+	registercvar("hud_panel_minigameboard_bg_padding", "");
+	
+	registercvar("hud_panel_minigamestatus", "1");
+	registercvar("hud_panel_minigamestatus_pos", "0.74 0.15");
+	registercvar("hud_panel_minigamestatus_size", "0.2 0.60");
+	registercvar("hud_panel_minigamestatus_bg", "border_small");
+	registercvar("hud_panel_minigamestatus_bg_color", "");
+	registercvar("hud_panel_minigamestatus_bg_color_team", "");
+	registercvar("hud_panel_minigamestatus_bg_alpha", "");
+	registercvar("hud_panel_minigamestatus_bg_border", "");
+	registercvar("hud_panel_minigamestatus_bg_padding", "");
+	
+	registercvar("hud_panel_minigamehelp", "1");
+	registercvar("hud_panel_minigamehelp_pos", "0.22 0.78");
+	registercvar("hud_panel_minigamehelp_size", "0.50 0.20");
+	registercvar("hud_panel_minigamehelp_bg", "");
+	registercvar("hud_panel_minigamehelp_bg_color", "");
+	registercvar("hud_panel_minigamehelp_bg_color_team", "");
+	registercvar("hud_panel_minigamehelp_bg_alpha", "");
+	registercvar("hud_panel_minigamehelp_bg_border", "");
+	registercvar("hud_panel_minigamehelp_bg_padding", "");
+	
+	registercvar("hud_panel_minigamemenu", "0");
+	registercvar("hud_panel_minigamemenu_pos", "0 0.26");
+	registercvar("hud_panel_minigamemenu_size", "0.2 0.49");
+	registercvar("hud_panel_minigamemenu_bg", "border_small");
+	registercvar("hud_panel_minigamemenu_bg_color", "");
+	registercvar("hud_panel_minigamemenu_bg_color_team", "");
+	registercvar("hud_panel_minigamemenu_bg_alpha", "");
+	registercvar("hud_panel_minigamemenu_bg_border", "");
+	registercvar("hud_panel_minigamemenu_bg_padding", "");
 
 	gametype = 0;
 
@@ -165,6 +208,8 @@ void CSQC_Init(void)
 	CALL_ACCUMULATED_FUNCTION(RegisterHUD_Panels);
 	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
 	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
+	
+	initialize_minigames();
 
 	WaypointSprite_Load();
 
@@ -250,6 +295,9 @@ void Shutdown(void)
 		if (!(calledhooks & HOOK_END))
 			localcmd("\ncl_hook_gameend\n");
 	}
+	
+	deactivate_minigame();
+	HUD_MinigameMenu_Close();
 }
 
 .float has_team;
@@ -423,6 +471,9 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 		return true;
 
 	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
+		return true;
+	
+	if (HUD_Minigame_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
 	if(menu_visible && menu_action)
@@ -960,6 +1011,7 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_NOTIFICATION: Read_Notification(bIsNewEntity); break;
 		case ENT_CLIENT_HEALING_ORB: ent_healer(); break;
 		case ENT_CLIENT_JAILCAMERA: ent_jailcamera(); break;
+		case ENT_CLIENT_MINIGAME: ent_read_minigame(); break;
 		case ENT_CLIENT_EFFECT: Read_Effect(bIsNewEntity); break;
 		case ENT_CLIENT_EDITLIGHT: Ent_EditLight(); break;
 
@@ -1008,6 +1060,13 @@ void CSQC_Ent_Remove()
 		print("WARNING: CSQC_Ent_Remove called for already removed entity. Packet loss?\n");
 		return;
 	}
+	
+	if ( self == active_minigame )
+		deactivate_minigame();
+	else if ( self.owner == active_minigame && self.classname == "minigame_player" 
+			&& self.minigame_playerslot == player_localentnum )
+		deactivate_minigame();
+		
 	if(self.enttype)
 		Ent_Remove();
 	remove(self);

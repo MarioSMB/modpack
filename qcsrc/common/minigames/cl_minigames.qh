@@ -1,0 +1,115 @@
+// Get a square in the center of the avaliable area
+// \note macro to pass by reference pos and mySize
+#define minigame_hud_fitsqare(pos, mySize) \
+	if ( mySize##_x > mySize##_y ) \
+	{ \
+		pos##_x += (mySize##_x-mySize##_y)/2; \
+		mySize##_x = mySize##_y; \
+	} \
+	else \
+	{ \
+		pos##_y += (mySize##_y-mySize##_x)/2; \
+		mySize##_x = mySize##_x; \
+	} \
+	if(panel_bg_padding) \
+	{ \
+		pos += '1 1 0' * panel_bg_padding; \
+		mySize -= '2 2 0' * panel_bg_padding; \
+	}
+
+// Get position and size of a panel
+// \note macro to pass by reference pos and mySize
+#define minigame_hud_panelarea(pos, mySize, panelID) \
+	pos = stov(cvar_string(strcat("hud_panel_", HUD_PANEL(panelID).panel_name, "_pos"))); \
+	mySize = stov(cvar_string(strcat("hud_panel_", HUD_PANEL(panelID).panel_name, "_size"))); \
+	pos##_x *= vid_conwidth; pos##_y *= vid_conheight; \
+	mySize##_x *= vid_conwidth; mySize##_y *= vid_conheight;
+
+// draw a panel border and the given texture
+void minigame_hud_simpleboard(vector pos, vector mySize, string board_texture);
+
+// Normalize (2D vector) v to relative coordinate inside pos mySize
+vector minigame_hud_normalize(vector v, vector pos, vector mySize);
+
+// De-normalize (2D vector) v from relative coordinate inside pos mySize
+vector minigame_hud_denormalize(vector v, vector pos, vector mySize);
+
+// De-normalize (2D vector) v from relative size inside pos mySize
+vector minigame_hud_denormalize_size(vector v, vector pos, vector mySize);
+
+// Check if the mouse is inside the given area
+float minigame_hud_mouse_in(vector pos, vector sz);
+
+// Like drawstring, but wrapping words to fit maxwidth
+// returns the size of the drawn area
+// align selects the string alignment (0 = left, 0.5 = center, 1 = right)
+vector minigame_drawstring_wrapped( float maxwidth, vector pos, string text, 
+	vector fontsize, vector color, float theAlpha, float drawflags, float align );
+
+// Like drawcolorcodedstring, but wrapping words to fit maxwidth
+// returns the size of the drawn area
+// align selects the string alignment (0 = left, 0.5 = center, 1 = right)
+vector minigame_drawcolorcodedstring_wrapped( float maxwidth, vector pos, 
+	string text, vector fontsize, float theAlpha, float drawflags, float align );
+
+// Like drawstring but truncates the text to fit maxwidth
+void minigame_drawstring_trunc(float maxwidth, vector pos, string text, 
+	vector fontsize, vector color, float theAlpha, float drawflags );
+
+// Like drawcolorcodedstring but truncates the text to fit maxwidth
+void minigame_drawcolorcodedstring_trunc(float maxwidth, vector pos, string text, 
+	vector fontsize, float theAlpha, float drawflags );
+
+// like drawpic but pos represent the center rather than the topleft corner
+void minigame_drawpic_centered( vector pos, string texture, vector sz, 
+	vector color, float thealpha, float drawflags );
+
+// Get full path of a minigame texture
+string minigame_texture(string name);
+
+// For minigame descriptors: hud function for the game board
+.void(vector pos, vector size) minigame_hud_board;
+// For minigame descriptors: hud function for the game status
+.void(vector pos, vector size) minigame_hud_status;
+// For minigame_player: player server slot, don't use for anything else
+.float minigame_playerslot;
+
+// register all minigames
+void initialize_minigames();
+
+// client-side minigame session cleanup
+void deactivate_minigame();
+
+// Currently active minigame session
+entity active_minigame;
+// minigame_player representing this client
+entity minigame_self;
+
+// Whethere there's an active minigame
+float minigame_isactive()
+{
+	return active_minigame != world;
+}
+
+// Execute a minigame command
+#define minigame_cmd(...) minigame_cmd_workaround(0,__VA_ARGS__)
+void minigame_cmd_workaround(float dummy, string...cmdargc);
+
+// Read a minigame entity from the server
+void ent_read_minigame();
+
+// Prompt the player to play in the current minigame 
+// (ie: it's their turn and they should get back to the minigame)
+void minigame_prompt();
+
+float HUD_MinigameMenu_IsOpened();
+void HUD_MinigameMenu_Close();
+float HUD_Minigame_Showpanels();
+// Adds a game-specific entry to the menu
+void HUD_MinigameMenu_CustomEntry(entity parent, string message, string event_arg);
+
+
+#define FOREACH_MINIGAME_ENTITY(entityvar) \
+	entityvar=world; \
+	while( (entityvar = findentity(entityvar,owner,active_minigame)) ) 
+

@@ -1,0 +1,53 @@
+
+
+/// Initialize the minigame system
+void initialize_minigames();
+
+/// Create a new minigame session
+/// \return minigame session entity
+entity start_minigame(entity player, string minigame );
+
+/// Join an existing minigame session
+/// \return minigame session entity
+entity join_minigame(entity player, string game_id );
+
+/// Invite a player to join in a minigame
+/// \return Error string
+string invite_minigame(entity inviter, entity player);
+
+// Part minigame session
+void part_minigame(entity player);
+
+// Ends a minigame session
+void end_minigame(entity minigame_session);
+
+// Ends all minigame sessions
+void end_minigames();
+
+// Spawn a networked minigame entity
+entity minigame_spawn_linked_entity(entity minigame_session, string class_name);
+
+// Only sends entities to players who joined the minigame
+// Use on customizeentityforclient for gameplay entities
+float minigame_CheckSend();
+
+// Check for minigame impulses
+float MinigameImpulse(float imp);
+
+// Parse a client command ( cmd minigame ... )
+void ClientCommand_minigame(float request, float argc, string command);
+
+// Find the minigame_player entity for the given client entity
+entity minigame_find_player(entity client);
+
+/// For players: Minigame being played
+.entity active_minigame;
+
+/// For minigame sessions: list of players
+/// For minigame_player: client entity
+.entity minigame_players;
+
+entity minigame_sessions;
+
+var void remove(entity e);
+#include "minigames.qh"

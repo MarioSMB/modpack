@@ -1362,7 +1362,9 @@ void CSQC_UpdateView(float w, float h)
 				CSQC_common_hud();
 
 		// crosshair goes VERY LAST
-		if(!scoreboard_active && !camera_active && intermission != 2 && spectatee_status != -1 && hud == HUD_NORMAL && autocvar_chase_active >= 0 && !HUD_QuickMenu_IsOpened() && !tempcamera)
+		if(!scoreboard_active && !camera_active && intermission != 2 && 
+			spectatee_status != -1 && hud == HUD_NORMAL && autocvar_chase_active >= 0 && 
+			!HUD_QuickMenu_IsOpened() && !tempcamera && !HUD_MinigameMenu_IsOpened() )
 		{
 			if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
 				return;
@@ -1903,6 +1905,8 @@ void CSQC_UpdateView(float w, float h)
 		HUD_Panel_Mouse();
 	else if(HUD_QuickMenu_IsOpened())
 		HUD_QuickMenu_Mouse();
+	else if ( HUD_MinigameMenu_IsOpened() || minigame_isactive() )
+		HUD_Minigame_Mouse();
 	else 
 		HUD_Radar_Mouse();
 

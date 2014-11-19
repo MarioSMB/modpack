@@ -532,6 +532,7 @@ void Send_Notification_WOCOVA(
 	MSG_INFO_NOTIF(1, INFO_RACE_NEW_IMPROVED,              1, 3, "s1 race_col f1ord race_col f2race_time race_diff", "s1 f2race_time",        "race_newtime",          _("^BG%s^BG improved their %s%s^BG place record with %s%s %s"), "") \
 	MSG_INFO_NOTIF(1, INFO_RACE_NEW_MISSING_UID,           1, 1, "s1 f1race_time", "s1 f1race_time",                                          "race_newfail",          _("^BG%s^BG scored a new record with ^F2%s^BG, but unfortunately lacks a UID and will be lost."), "") \
 	MSG_INFO_NOTIF(1, INFO_RACE_NEW_SET,                   1, 2, "s1 race_col f1ord race_col f2race_time", "s1 f2race_time",                  "race_newrecordserver",  _("^BG%s^BG set the %s%s^BG place record with %s%s"), "") \
+	MULTIICON_INFO(1, INFO_MINIGAME_INVITE,                2, 0, "s2 minigame1_name s1","s2",              "minigame1_d",                    "minigames/%s/icon_notif",_("^F4You have been invited by ^BG%s^F4 to join their game of ^F2%s^F4 (^F1%s^F4)"), "") \
 	MULTITEAM_INFO(1, INFO_SCORES_, 4,                     0, 0, "", "",                            "",                     _("^TC^TT ^BGteam scores!"), "") \
 	MSG_INFO_NOTIF(1, INFO_SPECTATE_WARNING,               0, 1, "f1secs", "",                      "",                     _("^F2You have to become a player within the next %s, otherwise you will be kicked, because spectating isn't allowed at this time!"), "") \
 	MSG_INFO_NOTIF(1, INFO_SUPERWEAPON_PICKUP,             1, 0, "s1", "s1",                        "superweapons",         _("^BG%s^K1 picked up a Superweapon"), "") \
@@ -833,7 +834,8 @@ void Send_Notification_WOCOVA(
 	MSG_CENTER_NOTIF(1, CENTER_VIP_DROP_SELF,               0, 0, "",              CPID_VIP,          	  "0 0",  _("^F2You are no longer a VIP!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VIP_PICKUP,              	1, 0, "s1",            CPID_VIP,          	  "0 0",  _("^BG%s^F2 is now a VIP!"), "") \
 	MSG_CENTER_NOTIF(1, CENTER_VIP_PICKUP_SELF,             0, 0, "",              CPID_VIP,          	  "0 0",  _("^F2You are now a VIP!"), "") \
-	MSG_CENTER_NOTIF(1, CENTER_WEAPON_MINELAYER_LIMIT,      0, 1, "f1",            NO_CPID,          	  "0 0",  _("^BGYou cannot place more than ^F2%s^BG mines at a time"), "") 
+	MSG_CENTER_NOTIF(1, CENTER_WEAPON_MINELAYER_LIMIT,      0, 1, "f1",            NO_CPID,          	  "0 0",  _("^BGYou cannot place more than ^F2%s^BG mines at a time"), "") \
+	MSG_CENTER_NOTIF(1, CENTER_JOIN_PREVENT_MINIGAME,       0, 0, "",              NO_CPID,               "0 0",  _("^K1Cannot join given minigame session!"), "" )
 
 #define MULTITEAM_MULTI2(default,prefix,anncepre,infopre,centerpre) \
 	MSG_MULTI_NOTIF(default, prefix##RED, anncepre##RED, infopre##RED, centerpre##RED) \
@@ -1144,6 +1146,8 @@ var float autocvar_notification_show_sprees_center_specialonly = TRUE;
     item_centime: amount of time to display weapon message in centerprint
     item_buffname: return full name of a buff from buffid
     death_team: show the full name of the team a player is switching from
+    minigame1_name: return human readable name of a minigame from its id(s1)
+    minigame1_d: return descriptor name of a minigame from its id(s1)
 */
 
 #define NOTIF_MAX_ARGS 7
@@ -1199,7 +1203,9 @@ string arg_slot[NOTIF_MAX_ARGS];
     ARG_CASE(ARG_CS_SV,     "item_wepammo",  (s1 != "" ? sprintf(_(" with %s"), s1) : "")) \
     ARG_CASE(ARG_DC,        "item_centime",  ftos(autocvar_notification_item_centerprinttime)) \
     ARG_CASE(ARG_SV,        "death_team",    Team_ColoredFullName(f1)) \
-    ARG_CASE(ARG_CS,        "death_team",    Team_ColoredFullName(f1 - 1))
+    ARG_CASE(ARG_CS,        "death_team",    Team_ColoredFullName(f1 - 1)) \
+    ARG_CASE(ARG_CS_SV_HA,  "minigame1_name",find(world,netname,s1).descriptor.message) \
+    ARG_CASE(ARG_CS_SV_HA,  "minigame1_d",   find(world,netname,s1).descriptor.netname)
 
 #define NOTIF_HIT_MAX(count,funcname) if(sel_num == count) { backtrace(sprintf("%s: Hit maximum arguments!\n", funcname)); break; }
 #define NOTIF_HIT_UNKNOWN(token,funcname) { backtrace(sprintf("%s: Hit unknown token in selected string! '%s'\n", funcname, selected)); break; }
@@ -1555,6 +1561,50 @@ float notif_global_error;
 			NO_MSG,   /* chtype      */ \
 			NO_MSG,   /* optiona     */ \
 			NO_MSG);  /* optionb     */ \
+	} \
+	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name);
+
+.string nent_iconargs;
+#define MULTIICON_INFO(default,name,strnum,flnum,args,hudargs,iconargs,icon,normal,gentle) \
+	NOTIF_ADD_AUTOCVAR(name, default) \
+	float name; \
+	void RegisterNotification_##name() \
+	{ \
+		SET_FIELD_COUNT(name, NOTIF_FIRST, NOTIF_INFO_COUNT) \
+		CHECK_MAX_COUNT(name, NOTIF_INFO_MAX, NOTIF_INFO_COUNT, "MSG_INFO") \
+		Create_Notification_Entity( \
+			/* COMMON ======================== */ \
+			default,            /* var_default */ \
+			ACVNN(name),        /* var_cvar    */ \
+			MSG_INFO,           /* typeid      */ \
+			name,               /* nameid      */ \
+			strtoupper(#name),  /* namestring  */ \
+			strnum,             /* strnum      */ \
+			flnum,              /* flnum       */ \
+			/* ANNCE =========== */ \
+			NO_MSG,  /* channel  */ \
+			"",      /* snd      */ \
+			NO_MSG,  /* vol      */ \
+			NO_MSG,  /* position */ \
+			/* INFO & CENTER === */ \
+			args,     /* args    */ \
+			hudargs,  /* hudargs */ \
+			icon,     /* icon    */ \
+			NO_MSG,   /* cpid    */ \
+			"",       /* durcnt  */ \
+			normal,   /* normal  */ \
+			gentle,   /* gentle  */ \
+			/* MULTI ============= */ \
+			NO_MSG,  /* anncename  */ \
+			NO_MSG,  /* infoname   */ \
+			NO_MSG,  /* centername */ \
+			/* CHOICE ============== */ \
+			NO_MSG,   /* challow_def */ \
+			NO_MSG,   /* challow_var */ \
+			NO_MSG,   /* chtype      */ \
+			NO_MSG,   /* optiona     */ \
+			NO_MSG);  /* optionb     */ \
+		msg_info_notifs[name - 1].nent_iconargs = iconargs; \
 	} \
 	ACCUMULATE_FUNCTION(RegisterNotifications, RegisterNotification_##name);
 

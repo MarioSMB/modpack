@@ -608,12 +608,8 @@ string specialcommand = "xwxwxsxsxaxdxaxdx1x ";
 .float specialcommand_pos;
 void SpecialCommand()
 {
-#ifdef TETRIS
-	TetrisImpulse();
-#else
 	if(!CheatImpulse(99))
 		print("A hollow voice says \"Plugh\".\n");
-#endif
 }
 
 .float discomode;
