@@ -11,7 +11,7 @@ Requirements
 
 GMQCC - git://git.xonotic.org/xonotic/gmqcc.git  
 Xonotic - http://xonotic.org/download or git://git.xonotic.org/xonotic/xonotic.git  
-Required content packs - http://dl.smbclan.net/maps/zzz-misc_034.pk3 http://dl.smbclan.net/maps/zzz-quickmenu_010.pk3
+Required content packs - zzz-misc-v006-18-gb6f5ebf.pk3 http://dl.smbclan.net/maps/zzz-quickmenu_010.pk3 http://dl.smbclan.net/maps/zzz-minigames-v006-18-gb6f5ebf.pk3
 Optional content packs - http://dl.smbclan.net/maps/zzz-monsters_009.pk3 http://dl.smbclan.net/maps/zzz-vehicles_001.pk3
 
 
