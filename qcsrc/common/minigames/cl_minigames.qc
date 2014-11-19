@@ -161,6 +161,12 @@ void activate_minigame(entity minigame)
 	}
 }
 
+void minigame_player_entremove()
+{
+	if ( self.owner == active_minigame && self.minigame_playerslot == player_localentnum )
+		deactivate_minigame();
+}
+
 vector ReadVector2D() { vector v; v_x = ReadCoord(); v_y = ReadCoord(); v_z = 0; return v; }
 vector ReadVector() { vector v; v_x = ReadCoord(); v_y = ReadCoord(); v_z = ReadCoord(); return v; }
 string() ReadString_Raw = #366;
@@ -201,6 +207,7 @@ void ent_read_minigame()
 		
 		if ( sf & MINIG_SF_CREATE )
 		{
+			self.entremove = deactivate_minigame;
 			self.descriptor = minigame_get_descriptor(ReadString_Raw());
 			if ( !self.descriptor )
 				dprint("Got a minigame without a client-side descriptor!\n");
@@ -215,8 +222,8 @@ void ent_read_minigame()
 		float activate = 0;
 		if ( sf & MINIG_SF_CREATE )
 		{
+			self.entremove = minigame_player_entremove;
 			minigame_read_owner();
-			
 			float ent = ReadLong();
 			self.minigame_playerslot = ent;
 			dprint("Player: ",GetPlayerName(ent-1),"\n");
