@@ -78,7 +78,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 
 				for(e = world; (e = findfloat(e, weapon, wpn)); )
 				{
-					if(e.classname == "droppedweapon")
+					if(e.classname == "droppedweapon" && autocvar_g_showweaponspawns < 2)
 						continue;
 					if(!(e.flags & FL_ITEM))
 						continue;
@@ -94,7 +94,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 				}
 			}
 		}
-		else
+		else if(!((get_weaponinfo(wpn)).spawnflags & WEP_FLAG_MUTATORBLOCKED))
 		{
 			Send_WeaponComplain (cl, wpn, 2);
 		}
@@ -136,7 +136,7 @@ float W_GetCycleWeapon(entity pl, string weaponorder, float dir, float imp, floa
 
 		// skip weapons we don't own that aren't normal and aren't in the map
 		if(!(pl.weapons & WepSet_FromWeapon(weaponwant)))
-			if(!((get_weaponinfo(weaponwant)).spawnflags & WEP_FLAG_NORMAL))
+			//if(!((get_weaponinfo(weaponwant)).spawnflags & WEP_FLAG_NORMAL))
 				if(!(weaponsInMap & WepSet_FromWeapon(weaponwant)))
 					continue;
 
