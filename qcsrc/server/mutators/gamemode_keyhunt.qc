@@ -765,7 +765,10 @@ float kh_Customize()
 	entity e = WaypointSprite_getviewentity(other);
 
 	if(self.owner == e)
-		return FALSE;
+		self.glow_trail = 0;
+	else if(autocvar_g_keyhunt_key_glowtrails)
+		self.glow_trail = 1;
+
 	return TRUE;
 }
 
