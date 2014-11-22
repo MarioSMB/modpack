@@ -46,6 +46,5 @@ MUTATOR_DECLARATION(mutator_hats);
 MUTATOR_DECLARATION(mutator_random_vehicles);
 MUTATOR_DECLARATION(mutator_piggyback);
 MUTATOR_DECLARATION(mutator_buffs);
-MUTATOR_DECLARATION(mutator_editlights);
 
 MUTATOR_DECLARATION(sandbox);

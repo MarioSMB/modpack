@@ -1013,7 +1013,6 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_JAILCAMERA: ent_jailcamera(); break;
 		case ENT_CLIENT_MINIGAME: ent_read_minigame(); break;
 		case ENT_CLIENT_EFFECT: Read_Effect(bIsNewEntity); break;
-		case ENT_CLIENT_EDITLIGHT: Ent_EditLight(); break;
 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));

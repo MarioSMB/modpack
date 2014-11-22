@@ -58,7 +58,6 @@ noise.qh
 ../server/movelib.qc
 generator.qh
 controlpoint.qh
-editlights.qh
 main.qh
 ../common/vehicles/vehicles_include.qh
 ../common/csqcmodel_settings.qh
@@ -109,7 +108,6 @@ shownames.qc
 
 conquest.qc
 announcer.qc
-editlights.qc
 Main.qc
 View.qc
 ../csqcmodellib/interpolate.qc

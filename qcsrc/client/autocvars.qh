@@ -478,5 +478,3 @@ float autocvar_r_drawviewmodel;
 float autocvar_cl_crouch;
 var float autocvar_cl_nade_timer = 1;
 float autocvar_cl_specfov; // disable by default?
-float autocvar_cl_editlights;
-var float autocvar_cl_editlights_rainbowtime = 5;
