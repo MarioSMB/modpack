@@ -495,6 +495,8 @@ void kh_Handle_Capture(float capturetype)
 
 		PlayerTeamScore_AddScore(player, autocvar_g_keyhunt_score_capture);
 		PlayerScore_Add(player, SP_KH_CAPS, 1);
+
+		Send_Effect(key.capeffectnum, key.origin, '0 0 0', 1);
 		
 		if(key.kh_worldkeynext)
 			te_lightning2(world, kh_AttachedOrigin(key), kh_AttachedOrigin(key.kh_worldkeynext));
