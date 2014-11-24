@@ -84,6 +84,7 @@ void CSQC_Init(void)
 	localcmd("\nalias editmob \"cmd editmob ${* ?}\"\n");
 	localcmd("\nalias spawnmob \"cmd editmob spawn ${* ?}\"\n");
 	localcmd("\nalias killmob \"cmd editmob kill ${* ?}\"\n");
+	if(getkeybind(K_F8) == "") { localcmd("\nbind f8 \"cl_cmd hud quickmenu\"\n"); }
 	if(getkeybind(K_F9) == "") { localcmd("\nbind f9 \"cl_cmd hud minigame\"\n"); }
 
 	localcmd("\nalias weapon_hmg \"impulse 248\"\n");
