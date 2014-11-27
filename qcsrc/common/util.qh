@@ -1,3 +1,4 @@
+#ifndef MENUQC
 void FixSize(entity e)
 {
 	e.mins_x = rint(e.mins_x);
@@ -24,6 +25,7 @@ void setmodel_fixsize(entity e, string m)
 	setmodel(e, m);
 	FixSize(e);
 }
+#endif
 
 // commonly used, but better make them macros
 #define TRUE 1
