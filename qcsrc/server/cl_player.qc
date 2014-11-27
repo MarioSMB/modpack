@@ -685,6 +685,9 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 	else
 		colorprefix = "^7";
 
+	if(source.waterlevel >= WATERLEVEL_SWIMMING)
+		msgin = "[glub glub glub]";
+
 	if(msgin != "")
 	{
 		if(privatesay)
