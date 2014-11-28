@@ -1,10 +1,10 @@
-ESK modpack
+SMB modpack
 ===========
 
 ANOTHER NOTE ABOUT UPDATES (also read below note): Please read this before updating to latest mod: https://github.com/MarioSMB/esk-modpack/wiki/(GUIDE)-Another-Important-note-about-recent-updates
 NOTE ABOUT UPDATES: Please read this before updating to latest mod: https://github.com/MarioSMB/esk-modpack/wiki/(GUIDE)-Important-note-about-recent-updates
 
-QuakeC source for the ESK server mods
+QuakeC source for the SMB server mods
 
 
 Requirements
