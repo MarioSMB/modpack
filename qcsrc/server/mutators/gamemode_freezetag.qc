@@ -338,8 +338,8 @@ MUTATOR_HOOKFUNCTION(freezetag_PlayerDies)
 	if(self.frozen)
 		return 1;
 
-	if(g_minstagib)
-		frag_target.ammo_cells = start_ammo_cells; // we need more ammo in minstagib, otherwise the player will defrost & die again
+	if(g_instagib)
+		frag_target.ammo_cells = start_ammo_cells; // we need more ammo in instagib, otherwise the player will defrost & die again
 
 	freezetag_Freeze(frag_attacker);
 

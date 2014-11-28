@@ -296,7 +296,7 @@ void Shutdown(void)
 		if (!(calledhooks & HOOK_END))
 			localcmd("\ncl_hook_gameend\n");
 	}
-	
+
 	deactivate_minigame();
 	HUD_MinigameMenu_Close();
 }
@@ -467,20 +467,20 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 	if ( HUD_Radar_InputEvent(bInputType, nPrimary, nSecondary) )
 		return true;
-	
+
 	if (HUD_QuickMenu_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
 	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
-	
+
 	if (HUD_Minigame_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
 	if(menu_visible && menu_action)
 		if(menu_action(bInputType, nPrimary, nSecondary))
 			return TRUE;
-	
+
 	return bSkipKey;
 }
 
@@ -1060,13 +1060,13 @@ void CSQC_Ent_Remove()
 		print("WARNING: CSQC_Ent_Remove called for already removed entity. Packet loss?\n");
 		return;
 	}
-	
+
 	if ( self == active_minigame )
 		deactivate_minigame();
 	else if ( self.owner == active_minigame && self.classname == "minigame_player" 
 			&& self.minigame_playerslot == player_localentnum )
 		deactivate_minigame();
-		
+	
 	if(self.enttype)
 		Ent_Remove();
 	remove(self);
@@ -1161,8 +1161,8 @@ void Ent_Init()
 
 	armorblockpercent = ReadByte() / 255.0;
 
-	g_balance_grenadelauncher_bouncefactor = ReadCoord();
-	g_balance_grenadelauncher_bouncestop = ReadCoord();
+	g_balance_mortar_bouncefactor = ReadCoord();
+	g_balance_mortar_bouncestop = ReadCoord();
 	g_balance_electro_secondary_bouncefactor = ReadCoord();
 	g_balance_electro_secondary_bouncestop = ReadCoord();
 
@@ -1178,7 +1178,7 @@ void Ent_Init()
 	g_trueaim_minrange = ReadCoord();
 	g_balance_porto_secondary = ReadByte();
 
-	minsta_delay = ReadByte();
+	vaporizer_delay = ReadByte();
 
 	sv_showfps = ReadByte();
 

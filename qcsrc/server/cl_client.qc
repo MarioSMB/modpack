@@ -114,6 +114,8 @@ void ClientData_Touch(entity e)
 
 .string netname_previous;
 
+void SetSpectator(entity player, entity spectatee);
+
 
 /*
 =============
@@ -178,13 +180,7 @@ void PutObserverInServer (void)
 {
 	entity spot;
 
-	entity oldenemy = self.enemy;
-	self.enemy = world;
-	if(oldenemy)
-	{
-		if(oldenemy.arc_beam) { oldenemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
-		ClientData_Touch(oldenemy);
-	}
+	SetSpectator(self, world);
 
     self.hud = HUD_NORMAL;
 
@@ -478,6 +474,8 @@ void PutClientInServer (void)
 		WriteEntity(MSG_ONE, self);
 	}
 
+	SetSpectator(self, world);
+
 	// reset player keys
 	self.itemkeys = 0;
 
@@ -579,10 +577,10 @@ void PutClientInServer (void)
 
 		if(g_weaponarena_random) // WEAPONTODO: more stuff that should be in a mutator. also: rename those cvars
 		{
-			if(g_weaponarena_random_with_laser)
+			if(g_weaponarena_random_with_blaster)
 				self.weapons &= ~WEPSET_BLASTER;
 			W_RandomWeapons(self, g_weaponarena_random);
-			if(g_weaponarena_random_with_laser)
+			if(g_weaponarena_random_with_blaster)
 				self.weapons |= WEPSET_BLASTER;
 		}
 
@@ -624,6 +622,8 @@ void PutClientInServer (void)
 		self.angles = spot.angles;
 
 		self.angles_z = 0; // never spawn tilted even if the spot says to
+		if(IS_BOT_CLIENT(self))
+			self.v_angle = self.angles;
 		self.fixangle = TRUE; // turn this way immediately
 		self.velocity = '0 0 0';
 		self.avelocity = '0 0 0';
@@ -1366,14 +1366,8 @@ void ClientDisconnect (void)
 	
 	if ( self.active_minigame )
 		part_minigame(self);
-	
-	entity oldenemy = self.enemy;
-	self.enemy = world;
-	if(oldenemy)
-	{
-		if(oldenemy.arc_beam) { oldenemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
-		ClientData_Touch(oldenemy);
-	}
+
+	SetSpectator(self, world);
 
 	if(IS_PLAYER(self)) { Send_Effect(EFFECT_SPAWN_NEUTRAL, self.origin, '0 0 0', 1); }
 
@@ -1556,7 +1550,7 @@ void player_powerups (void)
 	Fire_ApplyDamage(self);
 	Fire_ApplyEffect(self);
 
-	if (!g_minstagib)
+	if (!g_instagib)
 	{
 		if (self.items & IT_SUPERWEAPON)
 		{
@@ -1865,15 +1859,9 @@ float SpectateUpdate() {
 	if(!self.enemy)
 	    return 0;
 
-	if (self == self.enemy)
-		return 0;
-
-	if(!IS_PLAYER(self.enemy))
+	if(!IS_PLAYER(self.enemy) || self == self.enemy)
 	{
-		entity oldenemy = self.enemy;
-		self.enemy = world;
-		if(oldenemy && oldenemy.arc_beam) { oldenemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
-		if(self.enemy.arc_beam) { self.enemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
+		SetSpectator(self, world);
 		return 0;
 	}
 
@@ -1902,16 +1890,28 @@ float SpectateSet()
 	return TRUE;
 }
 
+void SetSpectator(entity player, entity spectatee)
+{
+	entity old_spectatee = player.enemy;
+
+	player.enemy = spectatee;
+
+	// WEAPONTODO
+	// these are required to fix the spectator bug with arc
+	if(old_spectatee && old_spectatee.arc_beam) { old_spectatee.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
+	if(player.enemy && player.enemy.arc_beam) { player.enemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
+
+	// needed to update spectator list
+	if(old_spectatee) { ClientData_Touch(old_spectatee); }
+}
+
 float Spectate(entity pl)
 {
 	if(g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer)
 	if(DIFF_TEAM(pl, self))
 		return 0;
 
-	entity oldenemy = self.enemy;
-	self.enemy = pl;
-	if(oldenemy && oldenemy.arc_beam) { oldenemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
-	if(self.enemy.arc_beam) { self.enemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
+	SetSpectator(self, pl);
 	return SpectateSet();
 }
 
@@ -1959,10 +1959,7 @@ float SpectateNext()
 		self.glow_trail = 0;
 		self.glow_color = 0;
 		self.glow_size = 0;
-		entity oldenemy = self.enemy;
-		self.enemy = other;
-		if(oldenemy && oldenemy.arc_beam) { oldenemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
-		if(self.enemy.arc_beam) { self.enemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
+		SetSpectator(self, other);
 	}
 
 	return SpectateSet();
@@ -2002,10 +1999,7 @@ float SpectatePrev()
 		else
 			other = first;
 	}
-	entity oldenemy = self.enemy;
-	self.enemy = other;
-	if(oldenemy && oldenemy.arc_beam) { oldenemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
-	if(self.enemy.arc_beam) { self.enemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
+	SetSpectator(self, other);
 	return SpectateSet();
 }
 
@@ -2045,15 +2039,8 @@ void LeaveSpectatorMode()
 		{
 			self.classname = "player";
 			nades_RemoveBonus(self);
-			
-			entity oldenemy = self.enemy;
-			self.enemy = world;
-			if(oldenemy)
-			{
-				if(oldenemy.arc_beam)
-					oldenemy.arc_beam.SendFlags |= ARC_SF_SETTINGS;
-				ClientData_Touch(oldenemy);
-			}
+
+			SetSpectator(self, world);
 
 			if(autocvar_g_campaign || autocvar_g_balance_teams)
 				{ JoinBestTeam(self, FALSE, TRUE); }
@@ -2333,7 +2320,7 @@ void PlayerPreThink (void)
 
 	self.stat_game_starttime = game_starttime;
 	self.stat_round_starttime = round_starttime;
-	self.stat_allow_oldnexbeam = autocvar_g_allow_oldnexbeam;
+	self.stat_allow_oldvortexbeam = autocvar_g_allow_oldvortexbeam;
 	self.stat_leadlimit = autocvar_leadlimit;
 
 	self.weaponsinmap = weaponsInMap;
@@ -2627,7 +2614,7 @@ void PlayerPreThink (void)
 		player_regen();
 
 		// WEAPONTODO: Add a weapon request for this 
-		// rot nex charge to the charge limit
+		// rot vortex charge to the charge limit
 		if(WEP_CVAR(vortex, charge_rot_rate) && self.vortex_charge > WEP_CVAR(vortex, charge_limit) && self.vortex_charge_rottime < time)
 			self.vortex_charge = bound(WEP_CVAR(vortex, charge_limit), self.vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
 

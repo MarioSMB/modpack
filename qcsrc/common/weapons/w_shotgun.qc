@@ -2,7 +2,7 @@
 REGISTER_WEAPON(
 /* WEP_##id  */ SHOTGUN,
 /* function  */ W_Shotgun,
-/* ammotype  */ ammo_none,
+/* ammotype  */ ammo_shells,
 /* impulse   */ 2,
 /* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
 /* rating    */ BOT_PICKUP_RATING_LOW,
@@ -192,6 +192,7 @@ void W_Shotgun_Attack2(void)
 
 float W_Shotgun(float req)
 {
+	float ammo_amount;
 	switch(req)
 	{
 		case WR_AIM:
@@ -228,7 +229,8 @@ float W_Shotgun(float req)
 			}
 			if(self.clip_load >= 0) // we are not currently reloading
 			if(!self.crouch) // no crouchmelee please
-			if(self.BUTTON_ATCK2 && WEP_CVAR(shotgun, secondary))
+			if(WEP_CVAR(shotgun, secondary))
+			if((self.BUTTON_ATCK && self.WEP_AMMO(SHOTGUN) <= 0 && !(self.items & IT_UNLIMITED_WEAPON_AMMO)) || self.BUTTON_ATCK2)
 			if(weapon_prepareattack(1, WEP_CVAR_SEC(shotgun, refire)))
 			{
 				// attempt forcing playback of the anim by switching to another anim (that we never play) here...
@@ -255,10 +257,16 @@ float W_Shotgun(float req)
 			return TRUE;
 		}
 		case WR_CHECKAMMO1:
+		{
+			ammo_amount = self.WEP_AMMO(SHOTGUN) >= WEP_CVAR_PRI(shotgun, ammo);
+			ammo_amount += self.(weapon_load[WEP_SHOTGUN]) >= WEP_CVAR_PRI(shotgun, ammo);
+			return ammo_amount;
+		}
 		case WR_CHECKAMMO2:
 		{
-			// shotgun has infinite ammo
-			return TRUE;
+			if(WEP_CVAR(shotgun, secondary))
+				return TRUE; // melee does not use ammo
+			return FALSE; // secondary unavailable
 		}
 		case WR_CONFIG:
 		{

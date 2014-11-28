@@ -14,10 +14,10 @@ float autocvar_g_vehicles_delayspawn_jitter;
 float autocvar_g_vehicles_allow_bots;
 float autocvar_g_vehicles_teams;
 float autocvar_g_vehicles_teleportable;
-var float autocvar_g_vehicles_nex_damagerate = 0.5;
-var float autocvar_g_vehicles_uzi_damagerate = 0.5;
+var float autocvar_g_vehicles_vortex_damagerate = 0.5;
+var float autocvar_g_vehicles_machinegun_damagerate = 0.5;
 var float autocvar_g_vehicles_rifle_damagerate = 0.75;
-var float autocvar_g_vehicles_minstanex_damagerate = 0.001;
+var float autocvar_g_vehicles_vaporizer_damagerate = 0.001;
 var float autocvar_g_vehicles_tag_damagerate = 5;
 
 // vehicle definitions

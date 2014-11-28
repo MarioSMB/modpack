@@ -992,13 +992,13 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			++disownedcnt;
 	}
 
-	float weapon_cnt = WEP_COUNT - disownedcnt; // either minstanex/nex are hidden, no port-o-launch, no tuba
+	float weapon_cnt = WEP_COUNT - disownedcnt; // either vaporizer/vortex are hidden, no port-o-launch, no tuba
 	float rows = 1;
 	float height = 40;
 	float fontsize = height * 1/3;
 	float weapon_height = height * 2/3;
 	float weapon_width = sbwidth / weapon_cnt;
-	float g_minstagib = 0;
+	float g_instagib = 0;
 
 	drawstring(pos, sprintf(_("Accuracy stats (average %d%%)"), average_accuracy), hud_fontsize, '1 1 1', scoreboard_alpha_fg, DRAWFLAG_NORMAL);
 	pos_y += 1.25 * hud_fontsize_y + autocvar_scoreboard_border_thickness;
@@ -1032,7 +1032,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 		pos_x += weapon_width / 2;
 
 	if(switchweapon == WEP_VAPORIZER)
-		g_minstagib = 1; // TODO: real detection for minstagib?
+		g_instagib = 1; // TODO: real detection for instagib?
 
 	if(autocvar_scoreboard_accuracy_nocolors)
 		rgb = '1 1 1';

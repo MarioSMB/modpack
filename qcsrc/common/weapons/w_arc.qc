@@ -628,7 +628,7 @@ void Arc_Smoke()
 	}
 	
 	if (  self.arc_smoke_sound && ( self.arc_overheat <= time || 
-		!( self.BUTTON_ATCK || self.BUTTON_ATCK2 ) ) )
+		!( self.BUTTON_ATCK || self.BUTTON_ATCK2 ) ) || self.switchweapon != WEP_ARC )
 	{
 		self.arc_smoke_sound = 0;
 		sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
@@ -1185,7 +1185,7 @@ void Ent_ReadArcBeam(float isnew)
 		self.draw = Draw_ArcBeam;
 		self.entremove = Remove_ArcBeam;
 		self.move_time = time;
-		sound(self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTEN_NORM);
+		loopsound(self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTEN_NORM);
 
 		flash = spawn();
 		flash.owner = self;
@@ -1385,7 +1385,6 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '-1 -1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
-				self.beam_traileffect = FALSE;
 				self.beam_traileffect = particleeffectnum("arc_beam");
 				self.beam_hiteffect = particleeffectnum("arc_lightning");
 				self.beam_hitlight[0] = 0;
@@ -1409,7 +1408,6 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '0.5 0.5 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
-				self.beam_traileffect = FALSE;
 				self.beam_traileffect = particleeffectnum("arc_beam");
 				self.beam_hiteffect = particleeffectnum("arc_lightning");
 				self.beam_hitlight[0] = 0;
@@ -1437,7 +1435,6 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '0 1 0';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
-				self.beam_traileffect = FALSE;
 				self.beam_traileffect = particleeffectnum("arc_beam_heal");
 				self.beam_hiteffect = particleeffectnum("healray_impact");
 				self.beam_hitlight[0] = 0;
@@ -1465,7 +1462,6 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 0 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
-				self.beam_traileffect = FALSE;
 				self.beam_traileffect = particleeffectnum("arc_beam");
 				self.beam_hiteffect = particleeffectnum("arc_lightning");
 				self.beam_hitlight[0] = 0;

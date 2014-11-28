@@ -27,7 +27,7 @@ MUTATOR_DECLARATION(mutator_spawn_near_teammate);
 MUTATOR_DECLARATION(mutator_physical_items);
 MUTATOR_DECLARATION(mutator_vampire);
 MUTATOR_DECLARATION(mutator_superspec);
-MUTATOR_DECLARATION(mutator_minstagib);
+MUTATOR_DECLARATION(mutator_instagib);
 MUTATOR_DECLARATION(mutator_freeze);
 MUTATOR_DECLARATION(mutator_overkill);
 MUTATOR_DECLARATION(mutator_touchexplode);

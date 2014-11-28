@@ -1595,10 +1595,8 @@ void CSQC_UpdateView(float w, float h)
 			wcross_alpha_goal_prev = wcross_alpha;
 			wcross_color_goal_prev = wcross_color;
 
-			if(!minsta_delay)
-				minsta_delay = 0.75;
-			if(!minsta_range)
-				minsta_range = MAX_SHOT_DISTANCE;
+			if(!vaporizer_delay)
+				vaporizer_delay = 0.75;
 
 			entity me = playerslots[player_localnum];
 
@@ -1609,7 +1607,7 @@ void CSQC_UpdateView(float w, float h)
 			if(!getstatf(STAT_FROZEN))
 			if(!spectatee_status)
 			if(button_attack)
-			if(autocvar_cl_minstabeam || (me.ping >= 200 && autocvar_cl_minstabeam != -1))
+			if(autocvar_cl_vaporizerbeam || (me.ping >= 200 && autocvar_cl_vaporizerbeam != -1))
 			if(time >= last_beam)
 			{
 				string s;
@@ -1618,7 +1616,7 @@ void CSQC_UpdateView(float w, float h)
 
 				s = strcat("TE_TEI_G3", Static_Team_ColorName_Upper(myteam));
 
-				WarpZone_TraceLine(view_origin, view_origin + v + view_forward * minsta_range, MOVE_NORMAL, world);
+				WarpZone_TraceLine(view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, world);
 
 				if(trace_fraction < 1 && !trace_ent.entnum)
 					hit = 0;
@@ -1628,17 +1626,17 @@ void CSQC_UpdateView(float w, float h)
 				if(hit)
 					s = strcat(s, "_HIT");
 
-				WarpZone_TrailParticles(self, particleeffectnum(s), view_origin, view_origin + v + view_forward * minsta_range);
+				WarpZone_TrailParticles(self, particleeffectnum(s), view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE);
 
 				//sound(self, CH_SHOTS, "weapons/minstanexfire.wav", VOL_BASE, ATTEN_LARGE);
 
 				if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
-				if(autocvar_cl_particles_newnexbeam && (getstati(STAT_ALLOW_OLDNEXBEAM) || isdemo()))
+				if(autocvar_cl_particles_newvortexbeam && (getstati(STAT_ALLOW_OLDVORTEXBEAM) || isdemo()))
 					pointparticles(particleeffectnum("nex_impact_new"), trace_endpos, '0 0 0', 1);
 				else
 					pointparticles(particleeffectnum("nex_impact"), trace_endpos, '0 0 0', 1);
 
-				last_beam = time + minsta_delay;
+				last_beam = time + vaporizer_delay;
 			}
 
 			if(shottype == SHOTTYPE_HITTEAM || (shottype == SHOTTYPE_HITOBSTRUCTION && autocvar_crosshair_hittest_blur && !autocvar_chase_active))

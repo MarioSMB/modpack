@@ -2039,6 +2039,7 @@ float get_model_parameters(string m, float sk)
 	string fn, s, c;
 	float fh, i;
 
+	get_model_parameters_description = string_null;
 	get_model_parameters_modelname = string_null;
 	get_model_parameters_modelskin = -1;
 	get_model_parameters_name = string_null;
@@ -2114,6 +2115,8 @@ float get_model_parameters(string m, float sk)
 			get_model_parameters_weight = stof(s);
 		if(c == "age")
 			get_model_parameters_age = stof(s);
+		if(c == "description")
+			get_model_parameters_description = s;
 		if(c == "bone_upperbody")
 			get_model_parameters_bone_upperbody = s;
 		if(c == "bone_weapon")

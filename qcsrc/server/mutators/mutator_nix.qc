@@ -103,7 +103,7 @@ void NIX_GiveCurrentWeapon()
 		if(e.spawnflags & WEP_FLAG_RELOADABLE) // prevent accessing undefined cvars
 			self.(weapon_load[nix_weapon]) = e.reloading_ammo;
 
-		// nex too
+		// vortex too
 		if(WEP_CVAR(vortex, charge))
 		{
 			if(WEP_CVAR_SEC(vortex, chargepool))
