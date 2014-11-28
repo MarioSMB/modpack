@@ -1,6 +1,7 @@
 ESK modpack
 ===========
 
+ANOTHER NOTE ABOUT UPDATES (also read below note): Please read this before updating to latest mod: https://github.com/MarioSMB/esk-modpack/wiki/(GUIDE)-Another-Important-note-about-recent-updates
 NOTE ABOUT UPDATES: Please read this before updating to latest mod: https://github.com/MarioSMB/esk-modpack/wiki/(GUIDE)-Important-note-about-recent-updates
 
 QuakeC source for the ESK server mods
@@ -11,7 +12,7 @@ Requirements
 
 GMQCC - git://git.xonotic.org/xonotic/gmqcc.git  
 Xonotic - http://xonotic.org/download or git://git.xonotic.org/xonotic/xonotic.git  
-Required content packs - zzz-misc-v006-18-gb6f5ebf.pk3 http://dl.smbclan.net/maps/zzz-quickmenu_010.pk3 http://dl.smbclan.net/maps/zzz-minigames-v006-18-gb6f5ebf.pk3
+Required content packs - http://smb.djstrikes3.com/zzz-misc-v006-19-g43702ef.pk3 http://dl.smbclan.net/maps/zzz-quickmenu_010.pk3 http://dl.smbclan.net/maps/zzz-minigames-v006-18-gb6f5ebf.pk3
 Optional content packs - http://dl.smbclan.net/maps/zzz-monsters_009.pk3 http://dl.smbclan.net/maps/zzz-vehicles_001.pk3
 
 
