@@ -5,8 +5,6 @@
 .vector antilag_saved_origin;
 .float antilag_takenback;
 
-.float antilag_movetype;
-
 .float antilag_debug;
 
 void antilag_record(entity e, float t)
@@ -91,6 +89,7 @@ vector antilag_takebackavgvelocity(entity e, float t0, float t1)
 
 void antilag_takeback(entity e, float t)
 {
+
     if (e.vehicle && e.vehicle.vehicle_flags == VHF_PLAYERSLOT)
         return;
 
@@ -100,8 +99,6 @@ void antilag_takeback(entity e, float t)
 	if(!e.antilag_takenback)
 		e.antilag_saved_origin = e.origin;
 
-	e.antilag_movetype = e.movetype;
-	e.movetype = MOVETYPE_WALK;
 	setorigin(e, antilag_takebackorigin(e, t));
 	e.antilag_takenback = TRUE;
 }
@@ -117,7 +114,6 @@ void antilag_restore(entity e)
 	if(!e.antilag_takenback)
 		return;
 
-	e.movetype = e.antilag_movetype;
 	setorigin(e, e.antilag_saved_origin);
 	e.antilag_takenback = FALSE;
 }
