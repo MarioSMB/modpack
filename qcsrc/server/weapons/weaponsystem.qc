@@ -459,7 +459,7 @@ float weapon_prepareattack_checkammo(float secondary)
 			return FALSE;
 
 		if(self.weapon == WEP_SHOTGUN)
-		if(!secondary && WEP_CVAR(shotgun, secondary))
+		if(!secondary && WEP_CVAR(shotgun, secondary) == 1)
 			return FALSE; // no clicking, just allow
 
 		if(self.weapon == self.switchweapon && time - self.prevdryfire > 1) // only play once BEFORE starting to switch weapons
