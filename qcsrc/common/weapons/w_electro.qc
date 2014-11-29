@@ -4,7 +4,7 @@ REGISTER_WEAPON(
 /* function  */ W_Electro,
 /* ammotype  */ ammo_cells,
 /* impulse   */ 5,
-/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH,
+/* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH,
 /* rating    */ BOT_PICKUP_RATING_MID,
 /* color     */ '0 0.5 1',
 /* modelname */ "electro",
