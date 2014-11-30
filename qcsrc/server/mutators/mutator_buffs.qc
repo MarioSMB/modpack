@@ -252,19 +252,8 @@ void buff_Think()
 		}
 	}
 
-	if(!self.buff_active)
+	if(self.buff_active)
 	{
-		self.alpha = 0.3;
-		self.effects &= ~(EF_FULLBRIGHT);
-		self.pflags = 0;
-	}
-	else
-	{
-		self.alpha = 1;
-		self.effects |= EF_FULLBRIGHT;
-		self.light_lev = 220 + 36 * sin(time);
-		self.pflags = PFLAGS_FULLDYNAMIC;
-
 		if(self.team && !self.buff_waypoint)
 			buff_Waypoint_Spawn(self);
 			
@@ -297,6 +286,25 @@ void buff_Reset()
 		buff_Respawn(self);
 }
 
+float buff_Customize()
+{
+	entity player = WaypointSprite_getviewentity(other);
+	if(!self.buff_active || (self.team && DIFF_TEAM(player, self)))
+	{
+		self.alpha = 0.3;
+		if(self.effects & EF_FULLBRIGHT) { self.effects &= ~(EF_FULLBRIGHT); }
+		self.pflags = 0;
+	}
+	else
+	{
+		self.alpha = 1;
+		if(!(self.effects & EF_FULLBRIGHT)) { self.effects |= EF_FULLBRIGHT; }
+		self.light_lev = 220 + 36 * sin(time);
+		self.pflags = PFLAGS_FULLDYNAMIC;
+	}
+	return TRUE;
+}
+
 void buff_Init(entity ent)
 {
 	if(!cvar("g_buffs")) { remove(self); return; }
@@ -321,6 +329,7 @@ void buff_Init(entity ent)
 	self.skin = Buff_Skin(self.buffs);
 	self.effects = EF_FULLBRIGHT | EF_STARDUST | EF_NOSHADOW;
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
+	self.customizeentityforclient = buff_Customize;
 	//self.gravity = 100;
 	self.color = Buff_Color(self.buffs);
 	self.glowmod = buff_GlowColor(self);
