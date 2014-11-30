@@ -30,7 +30,7 @@ float buffs_BuffModel_Customize()
 
 vector buff_GlowColor(entity buff)
 {
-	if(buff.team) { return Team_ColorRGB(buff.team); }
+	//if(buff.team) { return Team_ColorRGB(buff.team); }
 	return buff.color;
 }
 
