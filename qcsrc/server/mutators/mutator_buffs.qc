@@ -28,6 +28,12 @@ float buffs_BuffModel_Customize()
 	return TRUE;
 }
 
+vector buff_GlowColor(entity buff)
+{
+	if(buff.team) { return Team_ColorRGB(buff.team); }
+	return buff.color;
+}
+
 // buff item
 float buff_Waypoint_visible_for_player(entity plr)
 {
@@ -195,7 +201,7 @@ void buff_Think()
 	if(self.buffs != self.oldbuffs)
 	{
 		self.color = Buff_Color(self.buffs);
-		self.glowmod = ((self.team) ? Team_ColorRGB(self.team) + '0.1 0.1 0.1' : self.color);
+		self.glowmod = buff_GlowColor(self);
 		self.skin = Buff_Skin(self.buffs);
 		
 		setmodel(self, "models/relics/relic.md3");
@@ -317,7 +323,7 @@ void buff_Init(entity ent)
 	self.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY;
 	//self.gravity = 100;
 	self.color = Buff_Color(self.buffs);
-	self.glowmod = ((self.team) ? Team_ColorRGB(self.team) + '0.1 0.1 0.1' : self.color);
+	self.glowmod = buff_GlowColor(self);
 	buff_SetCooldown(autocvar_g_buffs_cooldown_activate + game_starttime);
 	self.buff_active = !self.buff_activetime;
 	self.pflags = PFLAGS_FULLDYNAMIC;
@@ -668,7 +674,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerThink)
 				self.buff_model.customizeentityforclient = buffs_BuffModel_Customize;
 			}
 			self.buff_model.color = Buff_Color(self.buffs);
-			self.buff_model.glowmod = ((self.buff_model.team) ? Team_ColorRGB(self.buff_model.team) + '0.1 0.1 0.1' : self.buff_model.color);
+			self.buff_model.glowmod = buff_GlowColor(self.buff_model);
 			self.buff_model.skin = Buff_Skin(self.buffs);
 			
 			self.effects |= EF_NOSHADOW;
