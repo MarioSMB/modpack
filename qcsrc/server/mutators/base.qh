@@ -252,6 +252,16 @@ MUTATOR_HOOKABLE(PlayerUseKey);
 	// if MUTATOR_RETURNVALUE is 1, don't do anything
 	// return 1 if the use key actually did something
 
+MUTATOR_HOOKABLE(SV_ParseServerCommand);
+	// called when a server command is parsed
+	// NOTE: hooks MUST start with if(MUTATOR_RETURNVALUE) return 0;
+	// NOTE: return 1 if you handled the command, return 0 to continue handling
+	// NOTE: THESE HOOKS MUST NEVER EVER CALL tokenize()
+	// INPUT
+	string cmd_name; // command name
+	float cmd_argc; // also, argv() can be used
+	string cmd_string; // whole command, use only if you really have to
+
 MUTATOR_HOOKABLE(SV_ParseClientCommand);
 	// called when a client command is parsed
 	// NOTE: hooks MUST start with if(MUTATOR_RETURNVALUE) return 0;

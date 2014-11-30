@@ -32,6 +32,7 @@ void mutators_add()
 	CHECK_MUTATOR_ADD("g_random_vehicles", mutator_random_vehicles, cvar("g_vehicles"));
 	CHECK_MUTATOR_ADD("g_piggyback", mutator_piggyback, 1);
 	CHECK_MUTATOR_ADD("g_buffs", mutator_buffs, !g_nexball && !g_race && !g_cts);
+	CHECK_MUTATOR_ADD("g_itemeditor", mutator_itemeditor, cvar("g_pickup_items") && !g_ca);
 
 	#undef CHECK_MUTATOR_ADD
 }

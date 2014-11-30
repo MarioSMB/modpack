@@ -48,3 +48,4 @@
 #include "mutator_random_vehicles.qc"
 #include "mutator_piggyback.qc"
 #include "mutator_buffs.qc"
+#include "mutator_itemeditor.qc"

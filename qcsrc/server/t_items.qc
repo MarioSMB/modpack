@@ -719,12 +719,14 @@ void Item_FindTeam()
 	}
 }
 
-// Savage: used for item garbage-collection
-void RemoveItem(void)
+void RemoveItem(entity e)
 {
-	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
-	remove(self);
+	if(wasfreed(e) || !e) { return; }
+	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(e), '0 0 0', 1);
+	remove(e);
 }
+
+void RemoveItem_think() { RemoveItem(self); }
 
 // pickup evaluation functions
 // these functions decide how desirable an item is to the bots
@@ -856,7 +858,7 @@ float commodity_pickupevalfunc(entity player, entity item)
 void Item_Damage(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	if(ITEM_DAMAGE_NEEDKILL(deathtype))
-		RemoveItem();
+		RemoveItem(self);
 }
 
 void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, float defaultrespawntimejitter, string itemname, float itemid, float weaponid, float itemflags, float(entity player, entity item) pickupevalfunc, float pickupbasevalue)
@@ -904,7 +906,7 @@ void StartItem (string itemmodel, string pickupsound, float defaultrespawntime, 
 		self.movetype = MOVETYPE_TOSS;
 
 		// Savage: remove thrown items after a certain period of time ("garbage collection")
-		self.think = RemoveItem;
+		self.think = RemoveItem_think;
 		self.nextthink = time + 20;
 
 		self.takedamage = DAMAGE_YES;
