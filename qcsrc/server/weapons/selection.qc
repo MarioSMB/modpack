@@ -85,7 +85,7 @@ float client_hasweapon(entity cl, float wpn, float andammo, float complain)
 					WaypointSprite_Spawn(
 						(get_weaponinfo(wpn)).wpmodel,
 						1, 0,
-						world, e.origin,
+						world, e.origin + ('0 0 1' * e.maxs_z) * 1.2,
 						self, 0,
 						world, enemy,
 						0,
