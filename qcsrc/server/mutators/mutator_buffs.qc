@@ -805,7 +805,7 @@ MUTATOR_DEFINITION(mutator_buffs)
 	MUTATOR_HOOK(VehicleExit, buffs_VehicleExit, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerRegen, buffs_PlayerRegen, CBC_ORDER_ANY);
 	MUTATOR_HOOK(PlayerDies, buffs_PlayerDies, CBC_ORDER_ANY);
-	MUTATOR_HOOK(PlayerUseKey, buffs_PlayerUseKey, CBC_ORDER_ANY);
+	MUTATOR_HOOK(PlayerUseKey, buffs_PlayerUseKey, CBC_ORDER_FIRST);
 	MUTATOR_HOOK(MakePlayerObserver, buffs_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ClientDisconnect, buffs_RemovePlayer, CBC_ORDER_ANY);
 	MUTATOR_HOOK(OnEntityPreSpawn, buffs_OnEntityPreSpawn, CBC_ORDER_LAST);
