@@ -1278,7 +1278,7 @@ void precache_all_playermodels(string pattern)
 void precache()
 {
     // gamemode related things
-    precache_model ("models/misc/chatbubble.spr");
+    precache_model ("models/misc/chatbubble.md3");
 	precache_model("models/ice/ice.md3");
 
     // Precache all player models if desired

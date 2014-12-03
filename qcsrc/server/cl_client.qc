@@ -1449,19 +1449,13 @@ void ChatBubbleThink()
 		return;
 	}
 	
-	self.mdl = "";
+	self.alpha = -1;
 	
 	if ( !self.owner.deadflag && IS_PLAYER(self.owner) )
 	{
-		if ( self.owner.active_minigame )
-			self.mdl = "models/sprites/minigame_busy.iqm";
-		else if ( self.owner.BUTTON_CHAT )
-			self.mdl = "models/misc/chatbubble.spr";
+		if(self.owner.active_minigame) { self.skin = 1; self.alpha = 1; }
+		else if(self.owner.BUTTON_CHAT) { self.skin = 0; self.alpha = 1; }
 	}
-	
-	if ( self.model != self.mdl )
-		setmodel(self, self.mdl);
-
 }
 
 void UpdateChatBubble()
@@ -1476,7 +1470,7 @@ void UpdateChatBubble()
 		self.chatbubbleentity.exteriormodeltoclient = self;
 		self.chatbubbleentity.think = ChatBubbleThink;
 		self.chatbubbleentity.nextthink = time;
-		setmodel(self.chatbubbleentity, "models/misc/chatbubble.spr"); // precision set below
+		setmodel(self.chatbubbleentity, "models/misc/chatbubble.md3"); // precision set below
 		//setorigin(self.chatbubbleentity, self.origin + '0 0 15' + self.maxs_z * '0 0 1');
 		setorigin(self.chatbubbleentity, '0 0 15' + self.maxs_z * '0 0 1');
 		setattachment(self.chatbubbleentity, self, "");  // sticks to moving player better, also conserves bandwidth

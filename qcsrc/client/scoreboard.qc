@@ -290,20 +290,19 @@ void Cmd_HUD_Help()
 	        "other gamemodes except DM.\n"));
 }
 
-string HUD_DefaultColumnLayout()
-{
-	float ex = autocvar_scoreboard_extras;
-	return strcat( // fteqcc sucks
-		strcat("ping pl ", ((sv_showfps && ex) ? "fps " : ""), "name | "),
-		"-teams,race,lms/kills +freezetag/kills -teams,lms/deaths +freezetag/deaths -teams,lms,race,ka/suicides +freezetag/suicides -race,dm,tdm,ka,freezetag/frags ", // tdm already has this in "score"
-		"+tdm/kills +tdm/deaths +tdm/suicides ",
-		((ex) ? "+ctf/deaths +ctf/suicides " : ""), "+ctf/caps +ctf/pickups +ctf/fckills +ctf/returns +cq/captured +cq/liberated +ons/caps +ons/takes +as/objectives +inf/survivals ",
-		"+lms/lives +lms/rank ",
-		((ex) ? "+kh/deaths +kh/suicides " : ""), "+kh/caps +kh/pickups +kh/kckills ",
-		"?+race/laps ?+race/time ?+race/fastest ",
-		"+nexball/faults +nexball/goals +ka/pickups +ka/bckills +ka/bctime +freezetag/revivals +vip/survivals +vip/vipkills +dom/caps ",
-		"-lms,race,nexball/score");
-}
+#define HUD_DefaultColumnLayout() \
+"ping pl ~fps name | " \
+"-teams,rc,lms/kills +ft,tdm/kills -teams,lms/deaths +ft,tdm/deaths -teams,lms,rc,ka/suicides +ft,tdm/suicides -rc,dm,tdm,ka,ft/frags " /* tdm already has this in "score" */ \
+"~+ctf/deaths ~+ctf/suicides +ctf/caps +ctf/pickups +ctf/fckills +ctf/returns " \
+"+cq/captured +cq/liberated " \
+"+ons/caps +ons/takes " \
+"+inf/survivals " \
+"+lms/lives +lms/rank " \
+"~+kh/deaths ~+kh/suicides +kh/caps +kh/pushes +kh/destroyed " \
+"+vip/survivals +vip/vipkills +dom/caps " \
+"?+rc/laps ?+rc/time ?+rc/fastest " \
+"+as/objectives +nb/faults +nb/goals +ka/pickups +ka/bckills +ka/bctime +ft/revivals " \
+"-lms,rc,nb/score"
 
 void Cmd_HUD_SetFields(float argc)
 {
@@ -311,6 +310,16 @@ void Cmd_HUD_SetFields(float argc)
 	string str, pattern;
 	float have_name = 0, have_primary = 0, have_secondary = 0, have_separator = 0;
 	float missing;
+
+	if(!gametype)
+	{
+		// set up a temporary scoreboard layout
+		// no layout can be properly set up until score_info data haven't been received
+		argc = tokenizebyseparator("0 1 ping pl name | score", " ");
+		ps_primary = 0;
+		scores_label[ps_primary] = strzone("score");
+		scores_flags[ps_primary] = SFL_ALLOW_HIDE;
+	}
 
 	// TODO: re enable with gametype dependant cvars?
 	if(argc < 3) // no arguments provided
@@ -357,6 +366,19 @@ void Cmd_HUD_SetFields(float argc)
 		{
 			nocomplain = TRUE;
 			str = substring(str, 1, strlen(str) - 1);
+		}
+
+		if(substring(str, 0, 1) == "~")
+		{
+			nocomplain = TRUE;
+			
+			if(autocvar_scoreboard_extras)
+				str = substring(str, 1, strlen(str) - 1);
+			else
+			{
+				str = "";
+				continue;
+			}
 		}
 
 		slash = strstrofs(str, "/", 0);

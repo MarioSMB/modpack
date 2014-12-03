@@ -103,7 +103,7 @@ string nt_GetFullReplacement(string w)
 		case "devastator": return "minelayer";
 		case "machinegun": return "hlac";
 		case "vortex": return "rifle";
-		case "shotgun": return "shockwave";
+		//case "shotgun": return "shockwave";
 		default: return string_null;
 	}
 }
