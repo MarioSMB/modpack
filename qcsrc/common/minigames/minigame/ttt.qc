@@ -133,7 +133,7 @@ float minigame_event_ttt(entity minigame, string event, ...)
 			// Team 1 by default
 			return 1;
 		}
-		case "move":
+		case "cmd":
 		{
 			switch(argv(0))
 			{
