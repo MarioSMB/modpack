@@ -1438,6 +1438,22 @@ void ClientDisconnect (void)
 }
 
 .float BUTTON_CHAT;
+.float crouch;
+.float bubble_oldmax;
+float ChatBubbleCustomize()
+{
+	entity e = WaypointSprite_getviewentity(other), own = self.owner;
+
+	if(!own.deadflag && IS_PLAYER(own))
+	{
+		if(own.BUTTON_CHAT) { self.skin = 0; return TRUE; }
+		if(own.active_minigame) { self.skin = 1; return TRUE; }
+		if(SAME_TEAM(own, e) && e != own) { self.skin = 2; return TRUE; }
+	}
+
+	return FALSE;
+}
+
 void ChatBubbleThink()
 {
 	self.nextthink = time;
@@ -1448,13 +1464,11 @@ void ChatBubbleThink()
 		remove(self);
 		return;
 	}
-	
-	self.alpha = -1;
-	
-	if ( !self.owner.deadflag && IS_PLAYER(self.owner) )
+
+	if(self.bubble_oldmax != self.owner.maxs_z)
 	{
-		if(self.owner.active_minigame) { self.skin = 1; self.alpha = 1; }
-		else if(self.owner.BUTTON_CHAT) { self.skin = 0; self.alpha = 1; }
+		setorigin(self, '0 0 20' + self.owner.maxs_z * '0 0 1');
+		self.bubble_oldmax = self.owner.maxs_z;
 	}
 }
 
@@ -1468,6 +1482,8 @@ void UpdateChatBubble()
 		self.chatbubbleentity = spawn();
 		self.chatbubbleentity.owner = self;
 		self.chatbubbleentity.exteriormodeltoclient = self;
+		self.chatbubbleentity.alpha = 1;
+		self.chatbubbleentity.customizeentityforclient = ChatBubbleCustomize;
 		self.chatbubbleentity.think = ChatBubbleThink;
 		self.chatbubbleentity.nextthink = time;
 		setmodel(self.chatbubbleentity, "models/misc/chatbubble.md3"); // precision set below
