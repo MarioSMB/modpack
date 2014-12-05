@@ -11,8 +11,10 @@ const string PLAYERSTATS_SCOREBOARD_POS = "scoreboardpos";
 const string PLAYERSTATS_TOTAL = "total-";
 const string PLAYERSTATS_SCOREBOARD = "scoreboard-";
 
+const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_2 = ""; // defined but not sent
 const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_3 = "achievement-kill-spree-3";
 const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_5 = "achievement-kill-spree-5";
+const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_8 = ""; // defined but not sent
 const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_10 = "achievement-kill-spree-10";
 const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_15 = "achievement-kill-spree-15";
 const string PLAYERSTATS_ACHIEVEMENT_KILL_SPREE_20 = "achievement-kill-spree-20";

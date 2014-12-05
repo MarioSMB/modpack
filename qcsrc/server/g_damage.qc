@@ -409,6 +409,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			attacker.taunt_soundtime = time + 1;
 			attacker.killcount = attacker.killcount + 1;
 
+			// sprees 2 and 8 are blocked by "" value, so no sending
 			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
 				case counta: \
 				{ \

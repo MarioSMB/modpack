@@ -242,8 +242,10 @@ void Send_Notification_WOCOVA(
     MSG_ANNCE_NOTIF(1, ANNCE_ACHIEVEMENT_YODA,          CH_INFO, "yoda",              VOL_BASEVOICE, ATTEN_NONE) \
     MSG_ANNCE_NOTIF(2, ANNCE_BEGIN,                     CH_INFO, "begin",             VOL_BASEVOICE, ATTEN_NONE) \
     MSG_ANNCE_NOTIF(2, ANNCE_HEADSHOT,                  CH_INFO, "headshot",          VOL_BASEVOICE, ATTEN_NONE) \
+    MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_02,             CH_INFO, "02kills",           VOL_BASEVOICE, ATTEN_NONE) \
     MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_03,             CH_INFO, "03kills",           VOL_BASEVOICE, ATTEN_NONE) \
     MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_05,             CH_INFO, "05kills",           VOL_BASEVOICE, ATTEN_NONE) \
+    MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_08,             CH_INFO, "08kills",           VOL_BASEVOICE, ATTEN_NONE) \
     MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_10,             CH_INFO, "10kills",           VOL_BASEVOICE, ATTEN_NONE) \
     MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_15,             CH_INFO, "15kills",           VOL_BASEVOICE, ATTEN_NONE) \
     MSG_ANNCE_NOTIF(1, ANNCE_KILLSTREAK_20,             CH_INFO, "20kills",           VOL_BASEVOICE, ATTEN_NONE) \
@@ -1212,8 +1214,10 @@ string arg_slot[NOTIF_MAX_ARGS];
 #define NOTIF_HIT_UNKNOWN(token,funcname) { backtrace(sprintf("%s: Hit unknown token in selected string! '%s'\n", funcname, selected)); break; }
 
 #define KILL_SPREE_LIST \
+    SPREE_ITEM(2, 02, _("MULTI FRAG! "), _("%s^K1 made a MULTI FRAG! %s^BG"), _("%s^K1 made a DOUBLE SCORE! %s^BG")) \
     SPREE_ITEM(3, 03, _("TRIPLE FRAG! "), _("%s^K1 made a TRIPLE FRAG! %s^BG"), _("%s^K1 made a TRIPLE SCORE! %s^BG")) \
     SPREE_ITEM(5, 05, _("RAGE! "), _("%s^K1 unlocked RAGE! %s^BG"), _("%s^K1 made FIVE SCORES IN A ROW! %s^BG")) \
+    SPREE_ITEM(8, 08, _("RAMPAGE! "), _("%s^K1 is on a RAMPAGE! %s^BG"), _("%s^K1 made EIGHT SCORES IN A ROW! %s^BG")) \
     SPREE_ITEM(10, 10, _("MASSACRE! "), _("%s^K1 started a MASSACRE! %s^BG"), _("%s^K1 made TEN SCORES IN A ROW! %s^BG")) \
     SPREE_ITEM(15, 15, _("MAYHEM! "), _("%s^K1 executed MAYHEM! %s^BG"), _("%s^K1 made FIFTEEN SCORES IN A ROW! %s^BG")) \
     SPREE_ITEM(20, 20, _("BERSERKER! "), _("%s^K1 is a BERSERKER! %s^BG"), _("%s^K1 made TWENTY SCORES IN A ROW! %s^BG")) \
