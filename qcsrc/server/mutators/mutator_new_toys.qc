@@ -187,7 +187,7 @@ MUTATOR_HOOKFUNCTION(nt_SetWeaponreplace)
 MUTATOR_HOOKFUNCTION(nt_FilterItem)
 {
 	if(nt_IsNewToy(self.weapon) && autocvar_g_new_toys_use_pickupsound)
-		self.item_pickupsound = W_Sound("weaponpickup_new_toys");
+		self.item_pickupsound = strzone(W_Sound("weaponpickup_new_toys"));
 	return 0;
 }
 
