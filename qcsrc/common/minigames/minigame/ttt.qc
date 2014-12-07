@@ -98,77 +98,84 @@ void ttt_move(entity minigame, entity player, float argc )
 // required function, handle server side events
 float minigame_event_ttt(entity minigame, string event, ...)
 {
-	if ( event == "start" )
+	switch(event)
 	{
-		minigame.minigame_flags = TTT_TURN_PLACE|TTT_TURN_TEAM1;
-		return 1;
-	}
-	else if ( event == "end" )
-	{
-		entity e = world;
-		while ( ( e = findentity(e,owner,minigame) ) )
-			if ( e.classname == "minigame_board_piece" )
+		case "start":
+		{
+			minigame.minigame_flags = (TTT_TURN_PLACE | TTT_TURN_TEAM1);
+			return TRUE;
+		}
+		case "end":
+		{
+			entity e = world;
+			while( (e = findentity(e, owner, minigame)) )
+			if(e.classname == "minigame_board_piece")
 			{
-				strunzone(e.netname);
+				if(e.netname) { strunzone(e.netname); }
 				remove(e);
 			}
-	}
-	else if ( event == "join" )
-	{
-		float player_number = 0;
-		entity e;
-		for ( e = minigame.minigame_players; e; e = e.list_next )
-			player_number++;
-		
-		// Don't allow more than 2 players
-		if ( player_number >= 2 )
-			return 0;
-		// Get the right team
-		if ( minigame.minigame_players)
-			return minigame_next_team(minigame.minigame_players.team,2);
-		// Team 1 by default
-		return 1;
-	}
-	else if ( event == "cmd" )
-	{
-		if ( argv(0) == "move" )
+			return FALSE;
+		}
+		case "join":
 		{
-			ttt_move(minigame, ...(0,entity), ...(1,float));
+			float pl_num = 0;
+			entity e;
+			for(e = minigame.minigame_players; e; e = e.list_next)
+				pl_num++;
+
+			// Don't allow more than 2 players (TODO)
+			if(pl_num >= 2) { return FALSE; }
+
+			// Get the right team
+			if(minigame.minigame_players)
+				return minigame_next_team(minigame.minigame_players.team, 2);
+
+			// Team 1 by default
 			return 1;
 		}
-		else if ( argv(0) == "next" )
+		case "cmd":
 		{
-			entity player = ...(0,entity);
-			if ( minigame.minigame_flags & (TTT_TURN_WIN|TTT_TURN_DRAW) )
+			switch(argv(0))
 			{
-				minigame.minigame_flags = TTT_TURN_NEXT | player.team;
-				minigame.SendFlags |= MINIG_SF_UPDATE;
+				case "move": ttt_move(minigame, ...(0,entity), ...(1,float)); return TRUE;
+				case "next":
+				{
+					entity player = ...(0,entity);
+					if ( minigame.minigame_flags & (TTT_TURN_WIN|TTT_TURN_DRAW) )
+					{
+						minigame.minigame_flags = TTT_TURN_NEXT | player.team;
+						minigame.SendFlags |= MINIG_SF_UPDATE;
+					}
+					else if ( (minigame.minigame_flags & TTT_TURN_NEXT) &&
+							!( minigame.minigame_flags & player.team ) )
+					{
+						minigame.minigame_flags = TTT_TURN_PLACE | minigame.ttt_nexteam;
+						minigame.SendFlags |= MINIG_SF_UPDATE;
+						minigame.ttt_npieces = 0;
+						entity e = world;
+						while ( ( e = findentity(e,owner,minigame) ) )
+							if ( e.classname == "minigame_board_piece" )
+								remove(e);
+					}
+					return TRUE;
+				}
 			}
-			else if ( (minigame.minigame_flags & TTT_TURN_NEXT) &&
-					!( minigame.minigame_flags & player.team ) )
-			{
-				minigame.minigame_flags = TTT_TURN_PLACE | minigame.ttt_nexteam;
-				minigame.SendFlags |= MINIG_SF_UPDATE;
-				minigame.ttt_npieces = 0;
-				entity e = world;
-				while ( ( e = findentity(e,owner,minigame) ) )
-					if ( e.classname == "minigame_board_piece" )
-						remove(e);
-			}
-			return 1;
+
+			return FALSE;
 		}
-	}
-	else if ( event == "network_send" )
-	{
-		entity sent = ...(0,entity);
-		float sf = ...(1,float);
-		if ( sent.classname == "minigame_player" && (sf & TTT_SF_PLAYERSCORE ) )
+		case "network_send":
 		{
-			WriteByte(MSG_ENTITY,sent.minigame_flags);
+			entity sent = ...(0,entity);
+			float sf = ...(1,float);
+			if ( sent.classname == "minigame_player" && (sf & TTT_SF_PLAYERSCORE ) )
+			{
+				WriteByte(MSG_ENTITY,sent.minigame_flags);
+			}
+			return FALSE;
 		}
 	}
 	
-	return 0;
+	return FALSE;
 }
 
 
@@ -323,90 +330,109 @@ void ttt_set_curr_pos(string s)
 // Required function, handle client events
 float minigame_event_ttt(entity minigame, string event, ...)
 {
-	if ( event == "activate" )
+	switch(event)
 	{
-		ttt_set_curr_pos("");
-		minigame.message = ttt_turn_to_string(minigame.minigame_flags);
-	}
-	else if ( event == "key_pressed" && (minigame.minigame_flags & TTT_TURN_TEAM) == minigame_self.team )
-	{
-		switch ( ...(0,float) )
+		case "activate":
 		{
-			case K_RIGHTARROW:
-			case K_KP_RIGHTARROW:
-				if ( ! ttt_curr_pos )
-					ttt_set_curr_pos("a3");
-				else
-					ttt_set_curr_pos(minigame_relative_tile(ttt_curr_pos,1,0,3,3));
-				return 1;
-			case K_LEFTARROW:
-			case K_KP_LEFTARROW:
-				if ( ! ttt_curr_pos )
-					ttt_set_curr_pos("c3");
-				else
-					ttt_set_curr_pos(minigame_relative_tile(ttt_curr_pos,-1,0,3,3));
-				return 1;
-			case K_UPARROW:
-			case K_KP_UPARROW:
-				if ( ! ttt_curr_pos )
-					ttt_set_curr_pos("a1");
-				else
-					ttt_set_curr_pos(minigame_relative_tile(ttt_curr_pos,0,1,3,3));
-				return 1;
-			case K_DOWNARROW:
-			case K_KP_DOWNARROW:
-				if ( ! ttt_curr_pos )
-					ttt_set_curr_pos("a3");
-				else
-					ttt_set_curr_pos(minigame_relative_tile(ttt_curr_pos,0,-1,3,3));
-				return 1;
-			case K_ENTER:
-			case K_KP_ENTER:
-			case K_SPACE:
-				ttt_make_move(minigame);
-				return 1;
-		}
-		return 0;
-	}
-	else if ( event == "mouse_pressed" && ...(0,float) == K_MOUSE1 )
-	{
-		ttt_make_move(minigame);
-		return 1;
-	}
-	else if ( event == "mouse_moved" )
-	{
-		vector mouse_pos = minigame_hud_normalize(mousepos,ttt_boardpos,ttt_boardsize);
-		if ( minigame.minigame_flags == (TTT_TURN_PLACE|minigame_self.team) )
-			ttt_set_curr_pos(minigame_tile_name(mouse_pos,3,3));
-		if ( ! ttt_valid_tile(ttt_curr_pos) )
 			ttt_set_curr_pos("");
-		return 1;
-	}
-	else if ( event == "network_receive" )
-	{
-		entity sent = ...(0,entity);
-		float sf = ...(1,float);
-		if ( sent.classname == "minigame" && ( sf & MINIG_SF_UPDATE ) )
-		{
-			sent.message = ttt_turn_to_string(sent.minigame_flags);
-			if ( sent.minigame_flags & minigame_self.team )
-				minigame_prompt();
+			minigame.message = ttt_turn_to_string(minigame.minigame_flags);
+			return FALSE;
 		}
-		else if ( sent.classname == "minigame_player" && (sf & TTT_SF_PLAYERSCORE ) )
+		case "key_pressed":
 		{
-			sent.minigame_flags = ReadByte();
+			if((minigame.minigame_flags & TTT_TURN_TEAM) == minigame_self.team)
+			{
+				switch ( ...(0,float) )
+				{
+					case K_RIGHTARROW:
+					case K_KP_RIGHTARROW:
+						if ( ! ttt_curr_pos )
+							ttt_set_curr_pos("a3");
+						else
+							ttt_set_curr_pos(minigame_relative_tile(ttt_curr_pos,1,0,3,3));
+						return TRUE;
+					case K_LEFTARROW:
+					case K_KP_LEFTARROW:
+						if ( ! ttt_curr_pos )
+							ttt_set_curr_pos("c3");
+						else
+							ttt_set_curr_pos(minigame_relative_tile(ttt_curr_pos,-1,0,3,3));
+						return TRUE;
+					case K_UPARROW:
+					case K_KP_UPARROW:
+						if ( ! ttt_curr_pos )
+							ttt_set_curr_pos("a1");
+						else
+							ttt_set_curr_pos(minigame_relative_tile(ttt_curr_pos,0,1,3,3));
+						return TRUE;
+					case K_DOWNARROW:
+					case K_KP_DOWNARROW:
+						if ( ! ttt_curr_pos )
+							ttt_set_curr_pos("a3");
+						else
+							ttt_set_curr_pos(minigame_relative_tile(ttt_curr_pos,0,-1,3,3));
+						return TRUE;
+					case K_ENTER:
+					case K_KP_ENTER:
+					case K_SPACE:
+						ttt_make_move(minigame);
+						return TRUE;
+				}
+			}
+
+			return FALSE;
+		}
+		case "mouse_pressed":
+		{
+			if(...(0,float) == K_MOUSE1)
+			{
+				ttt_make_move(minigame);
+				return TRUE;
+			}
+
+			return FALSE;
+		}
+		case "mouse_moved":
+		{
+			vector mouse_pos = minigame_hud_normalize(mousepos,ttt_boardpos,ttt_boardsize);
+			if ( minigame.minigame_flags == (TTT_TURN_PLACE|minigame_self.team) )
+				ttt_set_curr_pos(minigame_tile_name(mouse_pos,3,3));
+			if ( ! ttt_valid_tile(ttt_curr_pos) )
+				ttt_set_curr_pos("");
+
+			return TRUE;
+		}
+		case "network_receive":
+		{
+			entity sent = ...(0,entity);
+			float sf = ...(1,float);
+			if ( sent.classname == "minigame" && ( sf & MINIG_SF_UPDATE ) )
+			{
+				sent.message = ttt_turn_to_string(sent.minigame_flags);
+				if ( sent.minigame_flags & minigame_self.team )
+					minigame_prompt();
+			}
+			else if ( sent.classname == "minigame_player" && (sf & TTT_SF_PLAYERSCORE ) )
+			{
+				sent.minigame_flags = ReadByte();
+			}
+
+			return FALSE;
+		}
+		case "menu_show":
+		{
+			HUD_MinigameMenu_CustomEntry(...(0,entity),_("Next Match"),"next");
+			return FALSE;
+		}
+		case "menu_click":
+		{
+			if(...(0,string) == "next")
+				minigame_cmd("next");
+			return FALSE;
 		}
 	}
-	else if ( event == "menu_show" )
-	{
-		HUD_MinigameMenu_CustomEntry(...(0,entity),_("Next Match"),"next");
-	}
-	else if ( event == "menu_click" && ...(0,string) == "next" )
-	{
-		minigame_cmd("next");
-	}
-	
-	return 0;
+
+	return FALSE;
 }
 
 #endif

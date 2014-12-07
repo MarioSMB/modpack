@@ -19,7 +19,7 @@ float t_plasma_dual(float req)
 	{
 		case TR_ATTACK:
 		{
-			if(g_minstagib)
+			if(g_instagib)
 			{
 				float flying;
 				flying = IsFlying(self); // do this BEFORE to make the trace values from FireRailgunBullet last
@@ -36,11 +36,11 @@ float t_plasma_dual(float req)
 				float f;
 				switch(self.team)
 				{
-					case NUM_TEAM_1: f = (damage_goodhits) ? EFFECT_MINSTANEX_RED_HIT : EFFECT_MINSTANEX_RED; break;
-					case NUM_TEAM_2: f = (damage_goodhits) ? EFFECT_MINSTANEX_BLUE_HIT : EFFECT_MINSTANEX_BLUE; break;
-					case NUM_TEAM_3: f = (damage_goodhits) ? EFFECT_MINSTANEX_YELLOW_HIT : EFFECT_MINSTANEX_YELLOW; break;
-					case NUM_TEAM_4: f = (damage_goodhits) ? EFFECT_MINSTANEX_PINK_HIT : EFFECT_MINSTANEX_PINK; break;
-					default:		 f = (damage_goodhits) ? EFFECT_MINSTANEX_NEUTRAL_HIT : EFFECT_MINSTANEX_NEUTRAL; break;
+					case NUM_TEAM_1: f = (damage_goodhits) ? EFFECT_VAPORIZER_RED_HIT : EFFECT_VAPORIZER_RED; break;
+					case NUM_TEAM_2: f = (damage_goodhits) ? EFFECT_VAPORIZER_BLUE_HIT : EFFECT_VAPORIZER_BLUE; break;
+					case NUM_TEAM_3: f = (damage_goodhits) ? EFFECT_VAPORIZER_YELLOW_HIT : EFFECT_VAPORIZER_YELLOW; break;
+					case NUM_TEAM_4: f = (damage_goodhits) ? EFFECT_VAPORIZER_PINK_HIT : EFFECT_VAPORIZER_PINK; break;
+					default:		 f = (damage_goodhits) ? EFFECT_VAPORIZER_NEUTRAL_HIT : EFFECT_VAPORIZER_NEUTRAL; break;
 				}
 				
 				Send_Effect(f, self.tur_shotorg, v, 0);

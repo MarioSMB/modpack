@@ -21,7 +21,7 @@
 #include "mutator_dodging.qh"
 #include "mutator_overkill.qh"
 #include "mutator_freeze.qh"
-#include "mutator_minstagib.qh"
+#include "mutator_instagib.qh"
 #include "mutator_nades.qh"
 #include "mutator_piggyback.qh"
 #include "mutator_buffs.qh"

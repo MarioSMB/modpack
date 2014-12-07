@@ -385,7 +385,7 @@ void W_WeaponFrame()
 
 	float forbid_weaponuse = forbidWeaponUse(self);
 
-	if(forbid_weaponuse && (!g_minstagib || forbid_weaponuse != 2))
+	if(forbid_weaponuse && (!g_instagib || forbid_weaponuse != 2))
 	if(self.weaponentity.state != WS_CLEAR)
 	{
 		w_ready();

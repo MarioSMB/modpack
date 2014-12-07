@@ -544,6 +544,7 @@ float W_Devastator(float req)
 					self.rl_release = 1;
 
 				if(self.BUTTON_ATCK2)
+				if(self.switchweapon == WEP_DEVASTATOR)
 				{
 					rockfound = 0;
 					for(rock = world; (rock = find(rock, classname, "rocket")); ) if(rock.realowner == self)

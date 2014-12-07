@@ -597,7 +597,7 @@ float g_pickup_weapons_anyway;
 float g_weaponarena;
 WepSet g_weaponarena_weapons;
 float g_weaponarena_random;
-float g_weaponarena_random_with_laser;
+float g_weaponarena_random_with_blaster;
 string g_weaponarena_list;
 float g_weaponspeedfactor;
 float g_weaponratefactor;
@@ -771,7 +771,7 @@ void readplayerstartcvars()
 		g_weaponarena_random = cvar("g_weaponarena_random");
 	else
 		g_weaponarena_random = 0;
-	g_weaponarena_random_with_laser = cvar("g_weaponarena_random_with_laser");
+	g_weaponarena_random_with_blaster = cvar("g_weaponarena_random_with_blaster");
 
 	if (g_weaponarena)
 	{
@@ -1278,7 +1278,7 @@ void precache_all_playermodels(string pattern)
 void precache()
 {
     // gamemode related things
-    precache_model ("models/misc/chatbubble.spr");
+    precache_model ("models/misc/chatbubble.md3");
 	precache_model("models/ice/ice.md3");
 
     // Precache all player models if desired

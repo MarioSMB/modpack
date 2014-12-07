@@ -2,7 +2,7 @@
 REGISTER_WEAPON(
 /* WEP_##id  */ SHOTGUN,
 /* function  */ W_Shotgun,
-/* ammotype  */ ammo_none,
+/* ammotype  */ ammo_shells,
 /* impulse   */ 2,
 /* flags     */ WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN,
 /* rating    */ BOT_PICKUP_RATING_LOW,
@@ -35,6 +35,8 @@ REGISTER_WEAPON(
 	w_cvar(id, sn, SEC,  melee_multihit) \
 	w_cvar(id, sn, SEC,  melee_delay) \
 	w_cvar(id, sn, SEC,  melee_range) \
+	w_cvar(id, sn, SEC,  alt_animtime) \
+	w_cvar(id, sn, SEC,  alt_refire) \
 	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
 	w_prop(id, sn, float,  reloading_time, reload_time) \
 	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
@@ -51,14 +53,14 @@ SHOTGUN_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef SVQC
 void spawnfunc_weapon_shotgun(void) { weapon_defaultspawnfunc(WEP_SHOTGUN); }
 
-void W_Shotgun_Attack(void)
+void W_Shotgun_Attack(float isprimary)
 {
 	float	sc;
 	entity flash;
 
 	W_DecreaseAmmo(WEP_CVAR_PRI(shotgun, ammo));
 
-	W_SetupShot(self, TRUE, 5, W_Sound("shotgun_fire"), CH_WEAPON_A, WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
+	W_SetupShot(self, TRUE, 5, W_Sound("shotgun_fire"), ((isprimary) ? CH_WEAPON_A : CH_WEAPON_SINGLE), WEP_CVAR_PRI(shotgun, damage) * WEP_CVAR_PRI(shotgun, bullets));
 	for(sc = 0;sc < WEP_CVAR_PRI(shotgun, bullets);sc = sc + 1)
 		fireBullet(w_shotorg, w_shotdir, WEP_CVAR_PRI(shotgun, spread), WEP_CVAR_PRI(shotgun, solidpenetration), WEP_CVAR_PRI(shotgun, damage), WEP_CVAR_PRI(shotgun, force), WEP_SHOTGUN, 0);
 
@@ -188,10 +190,40 @@ void W_Shotgun_Attack2(void)
 	W_SetupShot_Range(self, TRUE, 0, "", 0, WEP_CVAR_SEC(shotgun, damage), WEP_CVAR_SEC(shotgun, melee_range));
 }
 
+// alternate secondary weapon frames
+void W_Shotgun_Attack3_Frame2()
+{
+	if (!WEP_ACTION(self.weapon, WR_CHECKAMMO2))
+	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
+	{
+		W_SwitchWeapon_Force(self, w_getbestweapon(self));
+		w_ready();
+		return;
+	}
+
+	sound(self, CH_WEAPON_SINGLE, "misc/null.wav", VOL_BASE, ATTN_NORM); // kill previous sound
+	W_Shotgun_Attack(TRUE); // actually is secondary, but we trick the last shot into playing full reload sound
+	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), w_ready);
+}
+void W_Shotgun_Attack3_Frame1()
+{
+	if (!WEP_ACTION(self.weapon, WR_CHECKAMMO2))
+	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
+	{
+		W_SwitchWeapon_Force(self, w_getbestweapon(self));
+		w_ready();
+		return;
+	}
+
+	W_Shotgun_Attack(FALSE);
+	weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame2);
+}
+
 .float shotgun_primarytime;
 
 float W_Shotgun(float req)
 {
+	float ammo_amount;
 	switch(req)
 	{
 		case WR_AIM:
@@ -208,7 +240,7 @@ float W_Shotgun(float req)
 			if(WEP_CVAR(shotgun, reload_ammo) && self.clip_load < WEP_CVAR_PRI(shotgun, ammo)) // forced reload
 			{
 				// don't force reload an empty shotgun if its melee attack is active
-				if(!WEP_CVAR(shotgun, secondary))
+				if(WEP_CVAR(shotgun, secondary) < 2)
 					WEP_ACTION(self.weapon, WR_RELOAD);
 			}
 			else
@@ -219,16 +251,29 @@ float W_Shotgun(float req)
 					{
 						if(weapon_prepareattack(0, WEP_CVAR_PRI(shotgun, animtime)))
 						{
-							W_Shotgun_Attack();
+							W_Shotgun_Attack(TRUE);
 							self.shotgun_primarytime = time + WEP_CVAR_PRI(shotgun, refire) * W_WeaponRateFactor();
 							weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_PRI(shotgun, animtime), w_ready);
+						}
+					}
+				}
+				else if(self.BUTTON_ATCK2 && WEP_CVAR(shotgun, secondary) == 2)
+				{
+					if(time >= self.shotgun_primarytime) // handle refire separately so the secondary can be fired straight after a primary
+					{
+						if(weapon_prepareattack(0, WEP_CVAR_SEC(shotgun, alt_animtime)))
+						{
+							W_Shotgun_Attack(FALSE);
+							self.shotgun_primarytime = time + WEP_CVAR_SEC(shotgun, alt_refire) * W_WeaponRateFactor();
+							weapon_thinkf(WFRAME_FIRE1, WEP_CVAR_SEC(shotgun, alt_animtime), W_Shotgun_Attack3_Frame1);
 						}
 					}
 				}
 			}
 			if(self.clip_load >= 0) // we are not currently reloading
 			if(!self.crouch) // no crouchmelee please
-			if(self.BUTTON_ATCK2 && WEP_CVAR(shotgun, secondary))
+			if(WEP_CVAR(shotgun, secondary) == 1)
+			if((self.BUTTON_ATCK && self.WEP_AMMO(SHOTGUN) <= 0 && !(self.items & IT_UNLIMITED_WEAPON_AMMO)) || self.BUTTON_ATCK2)
 			if(weapon_prepareattack(1, WEP_CVAR_SEC(shotgun, refire)))
 			{
 				// attempt forcing playback of the anim by switching to another anim (that we never play) here...
@@ -255,10 +300,24 @@ float W_Shotgun(float req)
 			return TRUE;
 		}
 		case WR_CHECKAMMO1:
+		{
+			ammo_amount = self.WEP_AMMO(SHOTGUN) >= WEP_CVAR_PRI(shotgun, ammo);
+			ammo_amount += self.(weapon_load[WEP_SHOTGUN]) >= WEP_CVAR_PRI(shotgun, ammo);
+			return ammo_amount;
+		}
 		case WR_CHECKAMMO2:
 		{
-			// shotgun has infinite ammo
-			return TRUE;
+			switch(WEP_CVAR(shotgun, secondary))
+			{
+				case 1: return TRUE; // melee does not use ammo
+				case 2: // secondary triple shot
+				{
+					ammo_amount = self.WEP_AMMO(SHOTGUN) >= WEP_CVAR_PRI(shotgun, ammo);
+					ammo_amount += self.(weapon_load[WEP_SHOTGUN]) >= WEP_CVAR_PRI(shotgun, ammo);
+					return ammo_amount;
+				}
+				default: return FALSE; // secondary unavailable
+			}
 		}
 		case WR_CONFIG:
 		{

@@ -175,6 +175,8 @@ float PlayerStats_Event(entity e, string event_id, float value)
 {
 	if((e.playerstats_id == "") || playerstats_db < 0)
 		return 0;
+	if(event_id == "")
+		return 0;
 
 	string key;
 	float val;

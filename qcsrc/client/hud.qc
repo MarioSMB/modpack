@@ -438,7 +438,7 @@ void HUD_Weapons(void)
 
 	// check to see if we want to continue
 	if(hud != HUD_NORMAL) { return; }
-	
+
 	if(!autocvar__hud_configure)
 	{
 		if((!autocvar_hud_panel_weapons) || (spectatee_status == -1))

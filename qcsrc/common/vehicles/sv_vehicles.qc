@@ -618,17 +618,18 @@ void vehicles_damage(entity inflictor, entity attacker, float damage, float deat
 {
 	self.dmg_time = time;
 
+	// WEAPONTODO
 	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX))
-		damage *= autocvar_g_vehicles_nex_damagerate;
+		damage *= autocvar_g_vehicles_vortex_damagerate;
 
 	if(DEATH_ISWEAPON(deathtype, WEP_MACHINEGUN))
-		damage *= autocvar_g_vehicles_uzi_damagerate;
+		damage *= autocvar_g_vehicles_machinegun_damagerate;
 
 	if(DEATH_ISWEAPON(deathtype, WEP_RIFLE))
 		damage *= autocvar_g_vehicles_rifle_damagerate;
 
 	if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
-		damage *= autocvar_g_vehicles_minstanex_damagerate;
+		damage *= autocvar_g_vehicles_vaporizer_damagerate;
 
 	if(DEATH_ISWEAPON(deathtype, WEP_SEEKER))
 		damage *= autocvar_g_vehicles_tag_damagerate;

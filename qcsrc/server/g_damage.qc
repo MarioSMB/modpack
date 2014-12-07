@@ -115,7 +115,7 @@ void GiveFrags (entity attacker, entity targ, float f, float deathtype)
 		else if(!(attacker.weapons & WepSet_FromWeapon(culprit)))
 			culprit = attacker.weapon;
 
-		if(g_weaponarena_random_with_laser && culprit == WEP_BLASTER) // WEAPONTODO: Shouldn't this be in a mutator?
+		if(g_weaponarena_random_with_blaster && culprit == WEP_BLASTER) // WEAPONTODO: Shouldn't this be in a mutator?
 		{
 			// no exchange
 		}
@@ -409,6 +409,7 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 			attacker.taunt_soundtime = time + 1;
 			attacker.killcount = attacker.killcount + 1;
 
+			// sprees 2 and 8 are blocked by "" value, so no sending
 			#define SPREE_ITEM(counta,countb,center,normal,gentle) \
 				case counta: \
 				{ \
@@ -887,7 +888,7 @@ void Damage (entity targ, entity inflictor, entity attacker, float damage, float
 	// apply push
 	if (self.damageforcescale)
 	if (vlen(force))
-	if (!IS_PLAYER(self) || time >= self.spawnshieldtime || autocvar_g_balance_damagepush_spawnshield || DEATH_ISWEAPON(deathtype, WEP_BLASTER) || ((autocvar_g_rm || autocvar_g_rm_laser == 2) && g_minstagib && DEATH_ISWEAPON(deathtype, WEP_ELECTRO)))
+	if (!IS_PLAYER(self) || time >= self.spawnshieldtime || autocvar_g_balance_damagepush_spawnshield || DEATH_ISWEAPON(deathtype, WEP_BLASTER) || (DEATH_ISWEAPON(deathtype, WEP_VAPORIZER) && (deathtype & HITTYPE_SECONDARY)) || ((autocvar_g_rm || autocvar_g_rm_laser == 2) && g_instagib && DEATH_ISWEAPON(deathtype, WEP_ELECTRO)))
 	{
 		vector farce = damage_explosion_calcpush(self.damageforcescale * force, self.velocity, autocvar_g_balance_damagepush_speedfactor);
 		if(self.movetype == MOVETYPE_PHYSICS)

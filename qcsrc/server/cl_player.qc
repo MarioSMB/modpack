@@ -408,7 +408,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			self.health = self.health - take;
 			// pause regeneration for 5 seconds
 			if(take)
-                self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
+				self.pauseregen_finished = max(self.pauseregen_finished, time + autocvar_g_balance_pause_health_regen);
 
 			if (time > self.pain_finished)		//Don't switch pain sequences like crazy
 			{
@@ -443,12 +443,16 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 							PlayerSound(playersound_pain25, CH_PAIN, VOICETYPE_PLAYERSOUND);
 					}
 				}
+			}
 
-				// throw off bot aim temporarily
-				float shake;
+			// throw off bot aim temporarily
+			float shake;
+			if(IS_BOT_CLIENT(self) && self.health >= 1)
+			{
 				shake = damage * 5 / (bound(0,bot_skill,100) + 1);
 				self.v_angle_x = self.v_angle_x + (random() * 2 - 1) * shake;
 				self.v_angle_y = self.v_angle_y + (random() * 2 - 1) * shake;
+				self.v_angle_x = bound(-90, self.v_angle_x, 90);
 			}
 		}
 		else
@@ -521,6 +525,12 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 				// for the lemmings fans, a small harmless explosion
 				Send_Effect(EFFECT_ROCKET_EXPLODE, self.origin, '0 0 0', 1);
 			}
+		}
+
+		if(DEATH_ISWEAPON(deathtype, WEP_BLASTER) || (DEATH_ISWEAPON(deathtype, WEP_SHOTGUN) && (deathtype & HITTYPE_SECONDARY)))
+		{
+			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_HUMILIATION);
+			Send_Notification(NOTIF_ONE, attacker, MSG_ANNCE, ANNCE_HUMILIATION);
 		}
 
 		if(IS_PLAYER(attacker))
@@ -684,6 +694,9 @@ float Say(entity source, float teamsay, entity privatesay, string msgin, float f
 		colorprefix = "^3";
 	else
 		colorprefix = "^7";
+
+	if(source.waterlevel >= WATERLEVEL_SWIMMING)
+		msgin = "[glub glub glub]";
 
 	if(msgin != "")
 	{

@@ -70,9 +70,9 @@ void target_give_init()
 {
 	entity targ;
 	for (targ = world; (targ = find(targ, targetname, self.target)); ) {
-		if (targ.classname == "weapon_rocketlauncher") {
+		if (targ.classname == "weapon_rocketlauncher" || targ.classname == "weapon_devastator") {
 			self.ammo_rockets += targ.count * WEP_CVAR(devastator, ammo);
-			self.netname = "rocketlauncher";
+			self.netname = "devastator";
 		}
 		else if (targ.classname == "weapon_plasmagun") {
 			self.ammo_rockets += targ.count * WEP_CVAR_PRI(hagar, ammo); // WEAPONTODO
@@ -82,18 +82,18 @@ void target_give_init()
 				self.netname = strcat(self.netname, " hagar");
 		}
 		else if (targ.classname == "weapon_bfg") {
-			self.ammo_cells += targ.count * autocvar_g_balance_crylink_primary_ammo;
+			self.ammo_cells += targ.count * WEP_CVAR_PRI(crylink, ammo);
 			if(self.netname == "")
 				self.netname = "crylink";
 			else
 				self.netname = strcat(self.netname, " crylink");
 		}
-		else if (targ.classname == "weapon_grenadelauncher") {
-			self.ammo_rockets += targ.count * autocvar_g_balance_mortar_primary_ammo; // WEAPONTODO
+		else if (targ.classname == "weapon_grenadelauncher" || targ.classname == "weapon_mortar") {
+			self.ammo_rockets += targ.count * WEP_CVAR_PRI(mortar, ammo); // WEAPONTODO
 			if(self.netname == "")
-				self.netname = "grenadelauncher";
+				self.netname = "mortar";
 			else
-				self.netname = strcat(self.netname, " grenadelauncher");
+				self.netname = strcat(self.netname, " mortar");
 		}
 		else if (targ.classname == "item_armor_body")
 			self.armorvalue = 100;

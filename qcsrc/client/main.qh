@@ -137,8 +137,8 @@ float calledhooks;
 
 .float ping, ping_packetloss, ping_movementloss;
 
-float g_balance_grenadelauncher_bouncefactor;
-float g_balance_grenadelauncher_bouncestop;
+float g_balance_mortar_bouncefactor;
+float g_balance_mortar_bouncestop;
 float g_balance_electro_secondary_bouncefactor;
 float g_balance_electro_secondary_bouncestop;
 float g_trueaim_minrange;
@@ -149,8 +149,7 @@ float hud;
 float view_quality;
 float framecount;
 
-float minsta_delay;
-float minsta_range;
+float vaporizer_delay;
 
 float fovlock;
 

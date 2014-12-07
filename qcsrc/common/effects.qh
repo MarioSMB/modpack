@@ -1,89 +1,89 @@
 // Global list of effects, networked to CSQC by ID to save bandwidth and to use client particle numbers (allows mismatching effectinfos to some degree)
 // Not too concerned about the order of this list, just keep the weapon effects together!
 
-//  EFFECT(istrail, EFFECT_NAME,				"effectinfo_string")
+//  EFFECT(istrail, EFFECT_NAME,                "effectinfo_string")
 #define EFFECTS \
-	EFFECT(0, EFFECT_EXPLOSION_SMALL, 			"explosion_small") \
-	EFFECT(0, EFFECT_EXPLOSION_MEDIUM, 			"explosion_medium") \
-	EFFECT(0, EFFECT_EXPLOSION_BIG, 			"explosion_big") \
-	EFFECT(1, EFFECT_MINSTANEX_RED, 			"TE_TEI_G3RED") \
-	EFFECT(1, EFFECT_MINSTANEX_RED_HIT, 		"TE_TEI_G3RED_HIT") \
-	EFFECT(1, EFFECT_MINSTANEX_BLUE, 			"TE_TEI_G3BLUE") \
-	EFFECT(1, EFFECT_MINSTANEX_BLUE_HIT, 		"TE_TEI_G3BLUE_HIT") \
-	EFFECT(1, EFFECT_MINSTANEX_YELLOW, 			"TE_TEI_G3YELLOW") \
-	EFFECT(1, EFFECT_MINSTANEX_YELLOW_HIT, 		"TE_TEI_G3YELLOW_HIT") \
-	EFFECT(1, EFFECT_MINSTANEX_PINK, 			"TE_TEI_G3PINK") \
-	EFFECT(1, EFFECT_MINSTANEX_PINK_HIT, 		"TE_TEI_G3PINK_HIT") \
-	EFFECT(1, EFFECT_MINSTANEX_NEUTRAL, 		"TE_TEI_G3NEUTRAL") \
-	EFFECT(1, EFFECT_MINSTANEX_NEUTRAL_HIT, 	"TE_TEI_G3NEUTRAL_HIT") \
-	EFFECT(0, EFFECT_ELECTRO_COMBO,				"electro_combo") \
-	EFFECT(0, EFFECT_ELECTRO_IMPACT,			"electro_impact") \
-	EFFECT(0, EFFECT_ELECTRO_MUZZLEFLASH,		"electro_muzzleflash") \
-	EFFECT(0, EFFECT_HAGAR_BOUNCE,				"hagar_bounce") \
-	EFFECT(0, EFFECT_HAGAR_MUZZLEFLASH,			"hagar_muzzleflash") \
-	EFFECT(0, EFFECT_LASER_MUZZLEFLASH,			"laser_muzzleflash") \
-	EFFECT(0, EFFECT_MACHINEGUN_MUZZLEFLASH,	"uzi_muzzleflash") \
-	EFFECT(0, EFFECT_RIFLE_MUZZLEFLASH,			"rifle_muzzleflash") \
-	EFFECT(1, EFFECT_RIFLE,						"tr_rifle") \
-	EFFECT(1, EFFECT_RIFLE_WEAK,				"tr_rifle_weak") \
-	EFFECT(0, EFFECT_SEEKER_MUZZLEFLASH,		"seeker_muzzleflash") \
-	EFFECT(0, EFFECT_SHOTGUN_MUZZLEFLASH,		"shotgun_muzzleflash") \
-	EFFECT(0, EFFECT_GRENADE_MUZZLEFLASH,		"grenadelauncher_muzzleflash") \
-	EFFECT(0, EFFECT_GRENADE_EXPLODE,			"grenade_explode") \
-	EFFECT(0, EFFECT_CRYLINK_JOINEXPLODE,		"crylink_joinexplode") \
-	EFFECT(0, EFFECT_CRYLINK_MUZZLEFLASH,		"crylink_muzzleflash") \
-	EFFECT(0, EFFECT_VORTEX_MUZZLEFLASH,		"nex_muzzleflash") \
-	EFFECT(0, EFFECT_HOOK_MUZZLEFLASH,			"grapple_muzzleflash") \
-	EFFECT(0, EFFECT_HOOK_IMPACT,				"grapple_impact") \
-	EFFECT(0, EFFECT_ROCKET_EXPLODE,			"rocket_explode") \
-	EFFECT(0, EFFECT_ROCKET_GUIDE,				"rocket_guide") \
-	EFFECT(0, EFFECT_ROCKET_MUZZLEFLASH,		"rocketlauncher_muzzleflash") \
-	EFFECT(0, EFFECT_FIREBALL_LASER,			"fireball_laser") \
-	EFFECT(0, EFFECT_FIREBALL_EXPLODE,			"fireball_explode") \
-	EFFECT(0, EFFECT_FIREBALL_BFGDAMAGE,		"fireball_bfgdamage") \
-	EFFECT(0, EFFECT_FIREBALL_MUZZLEFLASH,		"fireball_muzzleflash") \
-	EFFECT(0, EFFECT_FIREBALL_PRE_MUZZLEFLASH,	"fireball_preattack_muzzleflash") \
-	EFFECT(0, EFFECT_TELEPORT,					"teleport") \
-	EFFECT(0, EFFECT_SPAWN_RED,					"spawn_event_red") \
-	EFFECT(0, EFFECT_SPAWN_BLUE,				"spawn_event_blue") \
-	EFFECT(0, EFFECT_SPAWN_YELLOW,				"spawn_event_yellow") \
-	EFFECT(0, EFFECT_SPAWN_PINK,				"spawn_event_pink") \
-	EFFECT(0, EFFECT_SPAWN_NEUTRAL,				"spawn_event_neutral") \
-	EFFECT(0, EFFECT_NADE_RED_EXPLODE,			"nade_red_explode") \
-	EFFECT(0, EFFECT_NADE_BLUE_EXPLODE,			"nade_blue_explode") \
-	EFFECT(0, EFFECT_NADE_YELLOW_EXPLODE,		"nade_yellow_explode") \
-	EFFECT(0, EFFECT_NADE_PINK_EXPLODE,			"nade_pink_explode") \
-	EFFECT(0, EFFECT_NADE_NEUTRAL_EXPLODE,		"nade_neutral_explode") \
-	EFFECT(0, EFFECT_ICEORGLASS,				"iceorglass") \
-	EFFECT(0, EFFECT_ICEFIELD,					"icefield") \
-	EFFECT(0, EFFECT_FIREFIELD,					"firefield") \
-	EFFECT(0, EFFECT_HEALING,					"healing_fx") \
-	EFFECT(1, EFFECT_LASER_BEAM_FAST,			"nex242_misc_laser_beam_fast") \
-	EFFECT(0, EFFECT_RESPAWN_GHOST,				"respawn_ghost") \
-	EFFECT(0, EFFECT_FLAG_RED_TOUCH,			"redflag_touch") \
-	EFFECT(0, EFFECT_FLAG_BLUE_TOUCH,			"blueflag_touch") \
-	EFFECT(0, EFFECT_FLAG_YELLOW_TOUCH,			"yellowflag_touch") \
-	EFFECT(0, EFFECT_FLAG_PINK_TOUCH,			"pinkflag_touch") \
-	EFFECT(0, EFFECT_FLAG_NEUTRAL_TOUCH,		"neutralflag_touch") \
-	EFFECT(1, EFFECT_RED_PASS,					"red_pass") \
-	EFFECT(1, EFFECT_BLUE_PASS,					"blue_pass") \
-	EFFECT(1, EFFECT_YELLOW_PASS,				"yellow_pass") \
-	EFFECT(1, EFFECT_PINK_PASS,					"pink_pass") \
-	EFFECT(1, EFFECT_NEUTRAL_PASS,				"neutral_pass") \
-	EFFECT(0, EFFECT_RED_CAP,					"red_cap") \
-	EFFECT(0, EFFECT_BLUE_CAP,					"blue_cap") \
-	EFFECT(0, EFFECT_YELLOW_CAP,				"yellow_cap") \
-	EFFECT(0, EFFECT_PINK_CAP,					"pink_cap") \
-	EFFECT(0, EFFECT_BALL_SPARKS,				"kaball_sparks") \
-	EFFECT(0, EFFECT_ELECTRIC_SPARKS,			"electricity_sparks") \
-	EFFECT(0, EFFECT_SPARKS,					"sparks") \
-	EFFECT(0, EFFECT_RAGE,						"rage") \
-	EFFECT(0, EFFECT_SMOKING,					"smoking") \
-	EFFECT(0, EFFECT_SMOKE_RING,				"smoke_ring") \
-	EFFECT(0, EFFECT_ITEM_PICKUP,				"item_pickup") \
-	EFFECT(0, EFFECT_ITEM_RESPAWN,				"item_respawn") \
-	EFFECT(0, EFFECT_JUMPPAD,					"jumppad_activate") \
-	EFFECT(1, EFFECT_BULLET,					"tr_bullet") 
+    EFFECT(0, EFFECT_EXPLOSION_SMALL,           "explosion_small") \
+    EFFECT(0, EFFECT_EXPLOSION_MEDIUM,          "explosion_medium") \
+    EFFECT(0, EFFECT_EXPLOSION_BIG,             "explosion_big") \
+    EFFECT(1, EFFECT_VAPORIZER_RED,             "TE_TEI_G3RED") \
+    EFFECT(1, EFFECT_VAPORIZER_RED_HIT,         "TE_TEI_G3RED_HIT") \
+    EFFECT(1, EFFECT_VAPORIZER_BLUE,            "TE_TEI_G3BLUE") \
+    EFFECT(1, EFFECT_VAPORIZER_BLUE_HIT,        "TE_TEI_G3BLUE_HIT") \
+    EFFECT(1, EFFECT_VAPORIZER_YELLOW,          "TE_TEI_G3YELLOW") \
+    EFFECT(1, EFFECT_VAPORIZER_YELLOW_HIT,      "TE_TEI_G3YELLOW_HIT") \
+    EFFECT(1, EFFECT_VAPORIZER_PINK,            "TE_TEI_G3PINK") \
+    EFFECT(1, EFFECT_VAPORIZER_PINK_HIT,        "TE_TEI_G3PINK_HIT") \
+    EFFECT(1, EFFECT_VAPORIZER_NEUTRAL,         "TE_TEI_G3NEUTRAL") \
+    EFFECT(1, EFFECT_VAPORIZER_NEUTRAL_HIT,     "TE_TEI_G3NEUTRAL_HIT") \
+    EFFECT(0, EFFECT_ELECTRO_COMBO,             "electro_combo") \
+    EFFECT(0, EFFECT_ELECTRO_IMPACT,            "electro_impact") \
+    EFFECT(0, EFFECT_ELECTRO_MUZZLEFLASH,       "electro_muzzleflash") \
+    EFFECT(0, EFFECT_HAGAR_BOUNCE,              "hagar_bounce") \
+    EFFECT(0, EFFECT_HAGAR_MUZZLEFLASH,         "hagar_muzzleflash") \
+    EFFECT(0, EFFECT_LASER_MUZZLEFLASH,         "laser_muzzleflash") \
+    EFFECT(0, EFFECT_MACHINEGUN_MUZZLEFLASH,    "uzi_muzzleflash") \
+    EFFECT(0, EFFECT_RIFLE_MUZZLEFLASH,         "rifle_muzzleflash") \
+    EFFECT(1, EFFECT_RIFLE,                     "tr_rifle") \
+    EFFECT(1, EFFECT_RIFLE_WEAK,                "tr_rifle_weak") \
+    EFFECT(0, EFFECT_SEEKER_MUZZLEFLASH,        "seeker_muzzleflash") \
+    EFFECT(0, EFFECT_SHOTGUN_MUZZLEFLASH,       "shotgun_muzzleflash") \
+    EFFECT(0, EFFECT_GRENADE_MUZZLEFLASH,       "grenadelauncher_muzzleflash") \
+    EFFECT(0, EFFECT_GRENADE_EXPLODE,           "grenade_explode") \
+    EFFECT(0, EFFECT_CRYLINK_JOINEXPLODE,       "crylink_joinexplode") \
+    EFFECT(0, EFFECT_CRYLINK_MUZZLEFLASH,       "crylink_muzzleflash") \
+    EFFECT(0, EFFECT_VORTEX_MUZZLEFLASH,        "nex_muzzleflash") \
+    EFFECT(0, EFFECT_HOOK_MUZZLEFLASH,          "grapple_muzzleflash") \
+    EFFECT(0, EFFECT_HOOK_IMPACT,               "grapple_impact") \
+    EFFECT(0, EFFECT_ROCKET_EXPLODE,            "rocket_explode") \
+    EFFECT(0, EFFECT_ROCKET_GUIDE,              "rocket_guide") \
+    EFFECT(0, EFFECT_ROCKET_MUZZLEFLASH,        "rocketlauncher_muzzleflash") \
+    EFFECT(0, EFFECT_FIREBALL_LASER,            "fireball_laser") \
+    EFFECT(0, EFFECT_FIREBALL_EXPLODE,          "fireball_explode") \
+    EFFECT(0, EFFECT_FIREBALL_BFGDAMAGE,        "fireball_bfgdamage") \
+    EFFECT(0, EFFECT_FIREBALL_MUZZLEFLASH,      "fireball_muzzleflash") \
+    EFFECT(0, EFFECT_FIREBALL_PRE_MUZZLEFLASH,  "fireball_preattack_muzzleflash") \
+    EFFECT(0, EFFECT_TELEPORT,                  "teleport") \
+    EFFECT(0, EFFECT_SPAWN_RED,                 "spawn_event_red") \
+    EFFECT(0, EFFECT_SPAWN_BLUE,                "spawn_event_blue") \
+    EFFECT(0, EFFECT_SPAWN_YELLOW,              "spawn_event_yellow") \
+    EFFECT(0, EFFECT_SPAWN_PINK,                "spawn_event_pink") \
+    EFFECT(0, EFFECT_SPAWN_NEUTRAL,             "spawn_event_neutral") \
+    EFFECT(0, EFFECT_NADE_RED_EXPLODE,          "nade_red_explode") \
+    EFFECT(0, EFFECT_NADE_BLUE_EXPLODE,         "nade_blue_explode") \
+    EFFECT(0, EFFECT_NADE_YELLOW_EXPLODE,       "nade_yellow_explode") \
+    EFFECT(0, EFFECT_NADE_PINK_EXPLODE,         "nade_pink_explode") \
+    EFFECT(0, EFFECT_NADE_NEUTRAL_EXPLODE,      "nade_neutral_explode") \
+    EFFECT(0, EFFECT_ICEORGLASS,                "iceorglass") \
+    EFFECT(0, EFFECT_ICEFIELD,                  "icefield") \
+    EFFECT(0, EFFECT_FIREFIELD,                 "firefield") \
+    EFFECT(0, EFFECT_HEALING,                   "healing_fx") \
+    EFFECT(1, EFFECT_LASER_BEAM_FAST,           "nex242_misc_laser_beam_fast") \
+    EFFECT(0, EFFECT_RESPAWN_GHOST,             "respawn_ghost") \
+    EFFECT(0, EFFECT_FLAG_RED_TOUCH,            "redflag_touch") \
+    EFFECT(0, EFFECT_FLAG_BLUE_TOUCH,           "blueflag_touch") \
+    EFFECT(0, EFFECT_FLAG_YELLOW_TOUCH,         "yellowflag_touch") \
+    EFFECT(0, EFFECT_FLAG_PINK_TOUCH,           "pinkflag_touch") \
+    EFFECT(0, EFFECT_FLAG_NEUTRAL_TOUCH,        "neutralflag_touch") \
+    EFFECT(1, EFFECT_RED_PASS,                  "red_pass") \
+    EFFECT(1, EFFECT_BLUE_PASS,                 "blue_pass") \
+    EFFECT(1, EFFECT_YELLOW_PASS,               "yellow_pass") \
+    EFFECT(1, EFFECT_PINK_PASS,                 "pink_pass") \
+    EFFECT(1, EFFECT_NEUTRAL_PASS,              "neutral_pass") \
+    EFFECT(0, EFFECT_RED_CAP,                   "red_cap") \
+    EFFECT(0, EFFECT_BLUE_CAP,                  "blue_cap") \
+    EFFECT(0, EFFECT_YELLOW_CAP,                "yellow_cap") \
+    EFFECT(0, EFFECT_PINK_CAP,                  "pink_cap") \
+    EFFECT(0, EFFECT_BALL_SPARKS,               "kaball_sparks") \
+    EFFECT(0, EFFECT_ELECTRIC_SPARKS,           "electricity_sparks") \
+    EFFECT(0, EFFECT_SPARKS,                    "sparks") \
+    EFFECT(0, EFFECT_RAGE,                      "rage") \
+    EFFECT(0, EFFECT_SMOKING,                   "smoking") \
+    EFFECT(0, EFFECT_SMOKE_RING,                "smoke_ring") \
+    EFFECT(0, EFFECT_ITEM_PICKUP,               "item_pickup") \
+    EFFECT(0, EFFECT_ITEM_RESPAWN,              "item_respawn") \
+    EFFECT(0, EFFECT_JUMPPAD,                   "jumppad_activate") \
+    EFFECT(1, EFFECT_BULLET,                    "tr_bullet") 
 
 
 
@@ -122,30 +122,30 @@ entity effects_ent[MAX_EFFECTS];
 void Create_Effect_Entity(float eff_name, string eff_string, float eff_trail);
 
 #define EFFECT(istrail,name,realname) \
-	float name; \
-	void RegisterEffect_##name() \
-	{ \
-		SET_FIELD_COUNT(name, EFFECT_FIRST, EFFECT_COUNT) \
-		CHECK_MAX_COUNT(name, MAX_EFFECTS, EFFECT_COUNT, "EFFECT") \
-		Create_Effect_Entity(name, realname, istrail); \
-	} \
-	ACCUMULATE_FUNCTION(RegisterEffects, RegisterEffect_##name);
+    float name; \
+    void RegisterEffect_##name() \
+    { \
+        SET_FIELD_COUNT(name, EFFECT_FIRST, EFFECT_COUNT) \
+        CHECK_MAX_COUNT(name, MAX_EFFECTS, EFFECT_COUNT, "EFFECT") \
+        Create_Effect_Entity(name, realname, istrail); \
+    } \
+    ACCUMULATE_FUNCTION(RegisterEffects, RegisterEffect_##name);
 
 void RegisterEffects_First()
 {
-	#ifdef SVQC
-	#define dedi (server_is_dedicated ? "a dedicated " : "")
-	#else
-	#define dedi ""
-	#endif
+    #ifdef SVQC
+    #define dedi (server_is_dedicated ? "a dedicated " : "")
+    #else
+    #define dedi ""
+    #endif
 
-	printf("Beginning effect initialization on %s%s program...\n", dedi, PROGNAME);
-	#undef dedi
+    printf("Beginning effect initialization on %s%s program...\n", dedi, PROGNAME);
+    #undef dedi
 }
 
 void RegisterEffects_Done()
 {
-	print("Effects initialization successful!\n");
+    print("Effects initialization successful!\n");
 }
 
 // NOW we actually activate the declarations

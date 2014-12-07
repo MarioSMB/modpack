@@ -458,6 +458,10 @@ float weapon_prepareattack_checkammo(float secondary)
 		for(mine = world; (mine = find(mine, classname, "mine")); ) if(mine.owner == self)
 			return FALSE;
 
+		if(self.weapon == WEP_SHOTGUN)
+		if(!secondary && WEP_CVAR(shotgun, secondary) == 1)
+			return FALSE; // no clicking, just allow
+
 		if(self.weapon == self.switchweapon && time - self.prevdryfire > 1) // only play once BEFORE starting to switch weapons
 		{
 			sound (self, CH_WEAPON_A, W_Sound("dryfire"), VOL_BASE, ATTEN_NORM);

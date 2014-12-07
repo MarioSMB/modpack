@@ -72,8 +72,8 @@ void ImpulseCommands (void)
 		// weapon switching impulses
 		if(self.deadflag == DEAD_NO)
 			W_NextWeaponOnImpulse(imp);
-		else
-			self.impulse = imp; // retry in next frame
+		//else
+		//	self.impulse = imp; // retry in next frame
 	}
 	else if(imp >= 10 && imp <= 20)
 	{

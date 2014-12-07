@@ -283,7 +283,7 @@ MUTATOR_HOOKFUNCTION(vip_RemovePlayer)
 MUTATOR_HOOKFUNCTION(vip_PlayerThink)
 {
 	if(self.wps_vip)
-		WaypointSprite_UpdateHealth(self.wps_vip, ((g_minstagib) ? self.armorvalue : '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON)));
+		WaypointSprite_UpdateHealth(self.wps_vip, ((g_instagib) ? self.armorvalue : '1 0 0' * healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON)));
 
 	self.stat_vip_red = vip_count[NUM_TEAM_1];
 	self.stat_vip_blue = vip_count[NUM_TEAM_2];
@@ -305,9 +305,9 @@ MUTATOR_HOOKFUNCTION(vip_PlayerSpawn)
 {
 	if(self.isvip)
 	{
-		if(!g_minstagib)
+		if(!g_instagib)
 			self.health = 200;
-		self.armorvalue = ((g_minstagib) ? 5 : 200); // 5 lives in minstagib
+		self.armorvalue = ((g_instagib) ? 5 : 200); // 5 lives in instagib
 	}
 
 	return FALSE;
@@ -433,8 +433,8 @@ vector vip_SoulGemColormod(float theteam, float iseffect)
 void vip_VIPWaypoints(entity player)
 {
 	WaypointSprite_Spawn("vip", 0, 0, player, FLAG_WAYPOINT_OFFSET, world, 0, player, wps_vip, TRUE, RADARICON_FLAG, Team_ColorRGB(player.team));
-	WaypointSprite_UpdateMaxHealth(player.wps_vip, ((g_minstagib) ? 5 : '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON) * 2));
-	WaypointSprite_UpdateHealth(player.wps_vip, ((g_minstagib) ? self.armorvalue : '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON)));
+	WaypointSprite_UpdateMaxHealth(player.wps_vip, ((g_instagib) ? 5 : '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON) * 2));
+	WaypointSprite_UpdateHealth(player.wps_vip, ((g_instagib) ? self.armorvalue : '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON)));
 	WaypointSprite_UpdateTeamRadar(player.wps_vip, RADARICON_FLAGCARRIER, Team_ColorRGB(player.team));
 }
 
@@ -443,9 +443,9 @@ void vip_SetVIP(entity player, float tm)
 	if(!IS_PLAYER(player) || player == world || player.isvip)
 		return; // TODO: check how this can be called at all for non players
 	player.isvip = TRUE;
-	if(!g_minstagib)
+	if(!g_instagib)
 		player.health = 200;
-	player.armorvalue = ((g_minstagib) ? 5 : 200);
+	player.armorvalue = ((g_instagib) ? 5 : 200);
 	player.pickup_antispam = time + autocvar_g_vip_pickup_wait;
 
 	vip_count[tm] += 1;

@@ -575,7 +575,7 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 	if(self.nade_type == NADE_TYPE_TRANSLOCATE || self.nade_type == NADE_TYPE_SPAWN)
 		return;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_BLASTER))
+	if(DEATH_ISWEAPON(deathtype, WEP_BLASTER) || (DEATH_ISWEAPON(deathtype, WEP_VAPORIZER) && (deathtype & HITTYPE_SECONDARY)))
 		return;
 
 	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
@@ -592,8 +592,6 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 		damage = self.max_health * 0.1;
 		force *= 10;
 	}
-	else
-		damage = self.max_health * 1.1;
 
 	self.velocity += force;
 

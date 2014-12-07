@@ -68,7 +68,7 @@ float autocvar_developer_fteqccbugs;
 float autocvar_ekg;
 #define autocvar_fraglimit cvar("fraglimit")
 #define autocvar_fraglimit_override cvar("fraglimit_override")
-float autocvar_g_allow_oldnexbeam;
+float autocvar_g_allow_oldvortexbeam;
 float autocvar_g_antilag;
 float autocvar_g_antilag_nudge;
 float autocvar_g_balance_armor_block_bycount;
@@ -445,12 +445,12 @@ float autocvar_g_maxplayers_spectator_blocktime;
 float autocvar_g_maxpushtime;
 float autocvar_g_maxspeed;
 float autocvar_g_midair_shieldtime;
-#define autocvar_g_minstagib cvar("g_minstagib")
-float autocvar_g_minstagib_use_normal_ammo;
-float autocvar_g_minstagib_ammo_drop;
-float autocvar_g_minstagib_ammo_rockets;
-float autocvar_g_minstagib_extralives;
-float autocvar_g_minstagib_damagedbycontents;
+#define autocvar_g_instagib cvar("g_instagib")
+float autocvar_g_instagib_use_normal_ammo;
+float autocvar_g_instagib_ammo_drop;
+float autocvar_g_instagib_ammo_rockets;
+float autocvar_g_instagib_extralives;
+float autocvar_g_instagib_damagedbycontents;
 #define autocvar_g_mirrordamage cvar("g_mirrordamage")
 #define autocvar_g_mirrordamage_virtual cvar("g_mirrordamage_virtual")
 
@@ -1036,12 +1036,10 @@ string autocvar_g_physics_clientselect_options;
 string autocvar_sv_announcer;
 float autocvar_sv_minigames;
 float autocvar_sv_minigames_observer;
-float autocvar_g_editlights_spawn_distance;
-float autocvar_g_editlights_storage_autosave;
-float autocvar_g_editlights_storage_autoload;
-float autocvar_g_editlights_readonly;
-float autocvar_g_editlights_max;
-float autocvar_g_editlights_debug;
-var string autocvar_g_editlights_storage_name = "default";
-float autocvar_g_editlights_editor_free;
-
+float autocvar_g_itemeditor_spawn_distance;
+float autocvar_g_itemeditor_storage_autosave;
+float autocvar_g_itemeditor_storage_autoload;
+float autocvar_g_itemeditor_readonly;
+float autocvar_g_itemeditor_max;
+float autocvar_g_itemeditor_debug;
+var string autocvar_g_itemeditor_storage_name = "default";

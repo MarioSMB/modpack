@@ -114,6 +114,8 @@ void ClientData_Touch(entity e)
 
 .string netname_previous;
 
+void SetSpectator(entity player, entity spectatee);
+
 
 /*
 =============
@@ -178,13 +180,7 @@ void PutObserverInServer (void)
 {
 	entity spot;
 
-	entity oldenemy = self.enemy;
-	self.enemy = world;
-	if(oldenemy)
-	{
-		if(oldenemy.arc_beam) { oldenemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
-		ClientData_Touch(oldenemy);
-	}
+	SetSpectator(self, world);
 
     self.hud = HUD_NORMAL;
 
@@ -478,6 +474,8 @@ void PutClientInServer (void)
 		WriteEntity(MSG_ONE, self);
 	}
 
+	SetSpectator(self, world);
+
 	// reset player keys
 	self.itemkeys = 0;
 
@@ -579,10 +577,10 @@ void PutClientInServer (void)
 
 		if(g_weaponarena_random) // WEAPONTODO: more stuff that should be in a mutator. also: rename those cvars
 		{
-			if(g_weaponarena_random_with_laser)
+			if(g_weaponarena_random_with_blaster)
 				self.weapons &= ~WEPSET_BLASTER;
 			W_RandomWeapons(self, g_weaponarena_random);
-			if(g_weaponarena_random_with_laser)
+			if(g_weaponarena_random_with_blaster)
 				self.weapons |= WEPSET_BLASTER;
 		}
 
@@ -624,6 +622,8 @@ void PutClientInServer (void)
 		self.angles = spot.angles;
 
 		self.angles_z = 0; // never spawn tilted even if the spot says to
+		if(IS_BOT_CLIENT(self))
+			self.v_angle = self.angles;
 		self.fixangle = TRUE; // turn this way immediately
 		self.velocity = '0 0 0';
 		self.avelocity = '0 0 0';
@@ -1098,23 +1098,6 @@ void FixClientCvars(entity e)
 		stuffcmd(e, "cl_cmd settemp cl_prydoncursor_notrace 0\n");
 	if(autocvar_sv_gentle)
 		stuffcmd(e, "cl_cmd settemp cl_gentle 1\n");
-	/*
-	 * we no longer need to stuff this. Remove this comment block if you feel
-	 * 2.3 and higher (or was it 2.2.3?) don't need these any more
-	stuffcmd(e, strcat("cl_gravity ", ftos(autocvar_sv_gravity), "\n"));
-	stuffcmd(e, strcat("cl_movement_accelerate ", ftos(autocvar_sv_accelerate), "\n"));
-	stuffcmd(e, strcat("cl_movement_friction ", ftos(autocvar_sv_friction), "\n"));
-	stuffcmd(e, strcat("cl_movement_maxspeed ", ftos(autocvar_sv_maxspeed), "\n"));
-	stuffcmd(e, strcat("cl_movement_airaccelerate ", ftos(autocvar_sv_airaccelerate), "\n"));
-	stuffcmd(e, strcat("cl_movement_maxairspeed ", ftos(autocvar_sv_maxairspeed), "\n"));
-	stuffcmd(e, strcat("cl_movement_stopspeed ", ftos(autocvar_sv_stopspeed), "\n"));
-	stuffcmd(e, strcat("cl_movement_jumpvelocity ", ftos(autocvar_sv_jumpvelocity), "\n"));
-	stuffcmd(e, strcat("cl_movement_stepheight ", ftos(autocvar_sv_stepheight), "\n"));
-	stuffcmd(e, strcat("set cl_movement_friction_on_land ", ftos(autocvar_sv_friction_on_land), "\n"));
-	stuffcmd(e, strcat("set cl_movement_airaccel_qw ", ftos(autocvar_sv_airaccel_qw), "\n"));
-	stuffcmd(e, strcat("set cl_movement_airaccel_sideways_friction ", ftos(autocvar_sv_airaccel_sideways_friction), "\n"));
-	stuffcmd(e, "cl_movement_edgefriction 1\n");
-	 */
 }
 
 float PlayerInIDList(entity p, string idlist)
@@ -1366,14 +1349,8 @@ void ClientDisconnect (void)
 	
 	if ( self.active_minigame )
 		part_minigame(self);
-	
-	entity oldenemy = self.enemy;
-	self.enemy = world;
-	if(oldenemy)
-	{
-		if(oldenemy.arc_beam) { oldenemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
-		ClientData_Touch(oldenemy);
-	}
+
+	SetSpectator(self, world);
 
 	if(IS_PLAYER(self)) { Send_Effect(EFFECT_SPAWN_NEUTRAL, self.origin, '0 0 0', 1); }
 
@@ -1444,6 +1421,22 @@ void ClientDisconnect (void)
 }
 
 .float BUTTON_CHAT;
+.float crouch;
+.float bubble_oldmax;
+float ChatBubbleCustomize()
+{
+	entity e = WaypointSprite_getviewentity(other), own = self.owner;
+
+	if(!own.deadflag && IS_PLAYER(own))
+	{
+		if(own.BUTTON_CHAT) { self.skin = 0; return TRUE; }
+		if(own.active_minigame) { self.skin = 1; return TRUE; }
+		if(SAME_TEAM(own, e) && e != own) { self.skin = 2; return TRUE; }
+	}
+
+	return FALSE;
+}
+
 void ChatBubbleThink()
 {
 	self.nextthink = time;
@@ -1454,20 +1447,12 @@ void ChatBubbleThink()
 		remove(self);
 		return;
 	}
-	
-	self.mdl = "";
-	
-	if ( !self.owner.deadflag && IS_PLAYER(self.owner) )
-	{
-		if ( self.owner.active_minigame )
-			self.mdl = "models/sprites/minigame_busy.iqm";
-		else if ( self.owner.BUTTON_CHAT )
-			self.mdl = "models/misc/chatbubble.spr";
-	}
-	
-	if ( self.model != self.mdl )
-		setmodel(self, self.mdl);
 
+	if(self.bubble_oldmax != self.owner.maxs_z)
+	{
+		setorigin(self, '0 0 20' + self.owner.maxs_z * '0 0 1');
+		self.bubble_oldmax = self.owner.maxs_z;
+	}
 }
 
 void UpdateChatBubble()
@@ -1480,9 +1465,11 @@ void UpdateChatBubble()
 		self.chatbubbleentity = spawn();
 		self.chatbubbleentity.owner = self;
 		self.chatbubbleentity.exteriormodeltoclient = self;
+		self.chatbubbleentity.alpha = 1;
+		self.chatbubbleentity.customizeentityforclient = ChatBubbleCustomize;
 		self.chatbubbleentity.think = ChatBubbleThink;
 		self.chatbubbleentity.nextthink = time;
-		setmodel(self.chatbubbleentity, "models/misc/chatbubble.spr"); // precision set below
+		setmodel(self.chatbubbleentity, "models/misc/chatbubble.md3"); // precision set below
 		//setorigin(self.chatbubbleentity, self.origin + '0 0 15' + self.maxs_z * '0 0 1');
 		setorigin(self.chatbubbleentity, '0 0 15' + self.maxs_z * '0 0 1');
 		setattachment(self.chatbubbleentity, self, "");  // sticks to moving player better, also conserves bandwidth
@@ -1556,7 +1543,7 @@ void player_powerups (void)
 	Fire_ApplyDamage(self);
 	Fire_ApplyEffect(self);
 
-	if (!g_minstagib)
+	if (!g_instagib)
 	{
 		if (self.items & IT_SUPERWEAPON)
 		{
@@ -1865,15 +1852,9 @@ float SpectateUpdate() {
 	if(!self.enemy)
 	    return 0;
 
-	if (self == self.enemy)
-		return 0;
-
-	if(!IS_PLAYER(self.enemy))
+	if(!IS_PLAYER(self.enemy) || self == self.enemy)
 	{
-		entity oldenemy = self.enemy;
-		self.enemy = world;
-		if(oldenemy && oldenemy.arc_beam) { oldenemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
-		if(self.enemy.arc_beam) { self.enemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
+		SetSpectator(self, world);
 		return 0;
 	}
 
@@ -1902,16 +1883,28 @@ float SpectateSet()
 	return TRUE;
 }
 
+void SetSpectator(entity player, entity spectatee)
+{
+	entity old_spectatee = player.enemy;
+
+	player.enemy = spectatee;
+
+	// WEAPONTODO
+	// these are required to fix the spectator bug with arc
+	if(old_spectatee && old_spectatee.arc_beam) { old_spectatee.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
+	if(player.enemy && player.enemy.arc_beam) { player.enemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
+
+	// needed to update spectator list
+	if(old_spectatee) { ClientData_Touch(old_spectatee); }
+}
+
 float Spectate(entity pl)
 {
 	if(g_ca && !autocvar_g_ca_spectate_enemies && self.caplayer)
 	if(DIFF_TEAM(pl, self))
 		return 0;
 
-	entity oldenemy = self.enemy;
-	self.enemy = pl;
-	if(oldenemy && oldenemy.arc_beam) { oldenemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
-	if(self.enemy.arc_beam) { self.enemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
+	SetSpectator(self, pl);
 	return SpectateSet();
 }
 
@@ -1959,10 +1952,7 @@ float SpectateNext()
 		self.glow_trail = 0;
 		self.glow_color = 0;
 		self.glow_size = 0;
-		entity oldenemy = self.enemy;
-		self.enemy = other;
-		if(oldenemy && oldenemy.arc_beam) { oldenemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
-		if(self.enemy.arc_beam) { self.enemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
+		SetSpectator(self, other);
 	}
 
 	return SpectateSet();
@@ -2002,10 +1992,7 @@ float SpectatePrev()
 		else
 			other = first;
 	}
-	entity oldenemy = self.enemy;
-	self.enemy = other;
-	if(oldenemy && oldenemy.arc_beam) { oldenemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
-	if(self.enemy.arc_beam) { self.enemy.arc_beam.SendFlags |= ARC_SF_SETTINGS; }
+	SetSpectator(self, other);
 	return SpectateSet();
 }
 
@@ -2045,15 +2032,8 @@ void LeaveSpectatorMode()
 		{
 			self.classname = "player";
 			nades_RemoveBonus(self);
-			
-			entity oldenemy = self.enemy;
-			self.enemy = world;
-			if(oldenemy)
-			{
-				if(oldenemy.arc_beam)
-					oldenemy.arc_beam.SendFlags |= ARC_SF_SETTINGS;
-				ClientData_Touch(oldenemy);
-			}
+
+			SetSpectator(self, world);
 
 			if(autocvar_g_campaign || autocvar_g_balance_teams)
 				{ JoinBestTeam(self, FALSE, TRUE); }
@@ -2333,7 +2313,7 @@ void PlayerPreThink (void)
 
 	self.stat_game_starttime = game_starttime;
 	self.stat_round_starttime = round_starttime;
-	self.stat_allow_oldnexbeam = autocvar_g_allow_oldnexbeam;
+	self.stat_allow_oldvortexbeam = autocvar_g_allow_oldvortexbeam;
 	self.stat_leadlimit = autocvar_leadlimit;
 
 	self.weaponsinmap = weaponsInMap;
@@ -2627,7 +2607,7 @@ void PlayerPreThink (void)
 		player_regen();
 
 		// WEAPONTODO: Add a weapon request for this 
-		// rot nex charge to the charge limit
+		// rot vortex charge to the charge limit
 		if(WEP_CVAR(vortex, charge_rot_rate) && self.vortex_charge > WEP_CVAR(vortex, charge_limit) && self.vortex_charge_rottime < time)
 			self.vortex_charge = bound(WEP_CVAR(vortex, charge_limit), self.vortex_charge - WEP_CVAR(vortex, charge_rot_rate) * frametime / W_TICSPERFRAME, 1);
 

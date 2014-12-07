@@ -370,8 +370,8 @@ void Ent_Projectile()
 				self.maxs = '3 3 3';
 				self.move_movetype = MOVETYPE_BOUNCE;
 				self.move_touch = func_null;
-				self.move_bounce_factor = g_balance_grenadelauncher_bouncefactor;
-				self.move_bounce_stopspeed = g_balance_grenadelauncher_bouncestop;
+				self.move_bounce_factor = g_balance_mortar_bouncefactor;
+				self.move_bounce_stopspeed = g_balance_mortar_bouncestop;
 				break;
 			case PROJECTILE_SHAMBLER_LIGHTNING:
 				self.mins = '-8 -8 -8';

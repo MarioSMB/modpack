@@ -495,6 +495,8 @@ void kh_Handle_Capture(float capturetype)
 
 		PlayerTeamScore_AddScore(player, autocvar_g_keyhunt_score_capture);
 		PlayerScore_Add(player, SP_KH_CAPS, 1);
+
+		Send_Effect(key.capeffectnum, kh_AttachedOrigin(key), '0 0 0', 1);
 		
 		if(key.kh_worldkeynext)
 			te_lightning2(world, kh_AttachedOrigin(key), kh_AttachedOrigin(key.kh_worldkeynext));
@@ -760,6 +762,18 @@ void kh_KeyThink()
 	}
 }
 
+float kh_Customize()
+{
+	entity e = WaypointSprite_getviewentity(other);
+
+	if(self.owner == e)
+		self.glow_trail = 0;
+	else if(autocvar_g_keyhunt_key_glowtrails)
+		self.glow_trail = 1;
+
+	return TRUE;
+}
+
 void kh_KeyTouch()
 {
 	if(gameover) { return; }
@@ -862,6 +876,7 @@ void kh_KeySetup(float teamnumber, entity key, entity player) // called when spa
 	key.flags = FL_ITEM | FL_NOTARGET;
 	key.solid = SOLID_TRIGGER;
 	key.takedamage = DAMAGE_NO;
+	key.customizeentityforclient = kh_Customize;
 	key.damageforcescale = autocvar_g_keyhunt_key_damageforcescale;
 	key.max_key_health = ((autocvar_g_keyhunt_key_return_damage && autocvar_g_keyhunt_key_health) ? autocvar_g_keyhunt_key_health : 100);
 	key.health = key.max_key_health;

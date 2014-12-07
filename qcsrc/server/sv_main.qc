@@ -155,7 +155,6 @@ float game_delay;
 float game_delay_last;
 
 float RedirectionThink();
-entity SelectSpawnPoint (float anypoint);
 void StartFrame (void)
 {
 	execute_next_frame();

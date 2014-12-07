@@ -433,7 +433,7 @@ void cvar_changes_init()
 		BADPREFIX("sv_ready_restart_");
 
 		// mutators that announce themselves properly to the server browser
-		BADCVAR("g_minstagib");
+		BADCVAR("g_instagib");
 		BADCVAR("g_new_toys");
 		BADCVAR("g_nix");
 		BADCVAR("g_grappling_hook");
@@ -787,7 +787,7 @@ void spawnfunc_worldspawn (void)
 	addstat(STAT_SWITCHINGWEAPON, AS_INT, switchingweapon);
 	addstat(STAT_GAMESTARTTIME, AS_FLOAT, stat_game_starttime);
 	addstat(STAT_ROUNDSTARTTIME, AS_FLOAT, stat_round_starttime);
-	addstat(STAT_ALLOW_OLDNEXBEAM, AS_INT, stat_allow_oldnexbeam);
+	addstat(STAT_ALLOW_OLDVORTEXBEAM, AS_INT, stat_allow_oldvortexbeam);
 	Nagger_Init();
 
 	addstat(STAT_SUPERWEAPONS_FINISHED, AS_FLOAT, superweapons_finished);
@@ -1873,7 +1873,7 @@ float WinningCondition_Scores(float limit, float leadlimit)
 	if(WinningConditionHelper_zeroisworst)
 		leadlimit = 0; // not supported in this mode
 
-	if(g_dm || MUTATOR_CALLHOOK(Scores_CountFragsRemaining))
+	if(MUTATOR_CALLHOOK(Scores_CountFragsRemaining))
 	// these modes always score in increments of 1, thus this makes sense
 	{
 		if(leaderfrags != WinningConditionHelper_topscore)

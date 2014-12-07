@@ -70,6 +70,8 @@ void InitGameplayMode()
 
 	if(g_dm)
 	{
+		// no custom limits needed here
+		MUTATOR_ADD(gamemode_deathmatch);
 	}
 
 	if(g_tdm)

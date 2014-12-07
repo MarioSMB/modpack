@@ -926,7 +926,7 @@ float HUD_Panel_Check_Mouse_Pos(float allow_move)
 		panel = hud_panel[i];
 		if ( ! HUD_Panel_CheckFlags(panel.panel_showflags) )
 			continue;
-		
+
 		HUD_Panel_UpdatePosSize()
 
 		border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize
@@ -1010,7 +1010,7 @@ void HUD_Panel_Highlight(float allow_move)
 		panel = hud_panel[i];
 		if ( ! HUD_Panel_CheckFlags(panel.panel_showflags) )
 			continue;
-		
+
 		HUD_Panel_UpdatePosSize()
 
 		border = max(8, panel_bg_border); // FORCED border so a small border size doesn't mean you can't resize

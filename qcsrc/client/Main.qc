@@ -84,6 +84,7 @@ void CSQC_Init(void)
 	localcmd("\nalias editmob \"cmd editmob ${* ?}\"\n");
 	localcmd("\nalias spawnmob \"cmd editmob spawn ${* ?}\"\n");
 	localcmd("\nalias killmob \"cmd editmob kill ${* ?}\"\n");
+	if(getkeybind(K_F8) == "") { localcmd("\nbind f8 \"cl_cmd hud quickmenu\"\n"); }
 	if(getkeybind(K_F9) == "") { localcmd("\nbind f9 \"cl_cmd hud minigame\"\n"); }
 
 	localcmd("\nalias weapon_hmg \"impulse 248\"\n");
@@ -188,6 +189,8 @@ void CSQC_Init(void)
 	// hud_fields uses strunzone on the titles!
 	for(i = 0; i < MAX_HUD_FIELDS; ++i)
 		hud_title[i] = strzone("(null)");
+
+	Cmd_HUD_SetFields(0);
 
 	postinit = false;
 
@@ -295,7 +298,7 @@ void Shutdown(void)
 		if (!(calledhooks & HOOK_END))
 			localcmd("\ncl_hook_gameend\n");
 	}
-	
+
 	deactivate_minigame();
 	HUD_MinigameMenu_Close();
 }
@@ -431,8 +434,6 @@ void Porto_Init();
 void TrueAim_Init();
 void PostInit(void)
 {
-	localcmd(strcat("\nscoreboard_columns_set ", autocvar_scoreboard_columns, ";\n"));
-
 	entity playerchecker;
 	playerchecker = spawn();
 	playerchecker.think = Playerchecker_Think;
@@ -466,20 +467,20 @@ float CSQC_InputEvent(float bInputType, float nPrimary, float nSecondary)
 
 	if ( HUD_Radar_InputEvent(bInputType, nPrimary, nSecondary) )
 		return true;
-	
+
 	if (HUD_QuickMenu_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
 	if (MapVote_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
-	
+
 	if (HUD_Minigame_InputEvent(bInputType, nPrimary, nSecondary))
 		return true;
 
 	if(menu_visible && menu_action)
 		if(menu_action(bInputType, nPrimary, nSecondary))
 			return TRUE;
-	
+
 	return bSkipKey;
 }
 
@@ -1013,7 +1014,6 @@ void CSQC_Ent_Update(float bIsNewEntity)
 		case ENT_CLIENT_JAILCAMERA: ent_jailcamera(); break;
 		case ENT_CLIENT_MINIGAME: ent_read_minigame(); break;
 		case ENT_CLIENT_EFFECT: Read_Effect(bIsNewEntity); break;
-		case ENT_CLIENT_EDITLIGHT: Ent_EditLight(); break;
 
 		default:
 			//error(strcat(_("unknown entity type in CSQC_Ent_Update: %d\n"), self.enttype));
@@ -1122,11 +1122,15 @@ void Ent_ScoresInfo()
 	HUD_ModIcons_SetFunc();
 	for(i = 0; i < MAX_SCORE; ++i)
 	{
+		if(scores_label[i])
+			strunzone(scores_label[i]);
 		scores_label[i] = strzone(ReadString());
 		scores_flags[i] = ReadByte();
 	}
 	for(i = 0; i < MAX_TEAMSCORE; ++i)
 	{
+		if(teamscores_label[i])
+			strunzone(teamscores_label[i]);
 		teamscores_label[i] = strzone(ReadString());
 		teamscores_flags[i] = ReadByte();
 	}
@@ -1155,8 +1159,8 @@ void Ent_Init()
 
 	armorblockpercent = ReadByte() / 255.0;
 
-	g_balance_grenadelauncher_bouncefactor = ReadCoord();
-	g_balance_grenadelauncher_bouncestop = ReadCoord();
+	g_balance_mortar_bouncefactor = ReadCoord();
+	g_balance_mortar_bouncestop = ReadCoord();
 	g_balance_electro_secondary_bouncefactor = ReadCoord();
 	g_balance_electro_secondary_bouncestop = ReadCoord();
 
@@ -1172,7 +1176,7 @@ void Ent_Init()
 	g_trueaim_minrange = ReadCoord();
 	g_balance_porto_secondary = ReadByte();
 
-	minsta_delay = ReadByte();
+	vaporizer_delay = ReadByte();
 
 	sv_showfps = ReadByte();
 

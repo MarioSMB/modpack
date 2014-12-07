@@ -918,6 +918,7 @@ void ctf_FlagTouch()
 {
 	if(gameover) { return; }
 	if(self.active != ACTIVE_ACTIVE) { return; }
+	if(trace_dphitcontents & (DPCONTENTS_PLAYERCLIP | DPCONTENTS_MONSTERCLIP)) { return; }
 
 	entity toucher = other, tmp_entity;
 	float is_not_monster = (!IS_MONSTER(toucher)), num_perteam = 0;
@@ -1137,6 +1138,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 	flag.event_damage = ctf_FlagDamage;
 	flag.pushable = TRUE;
 	flag.teleportable = TELEPORT_NORMAL;
+	flag.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP | DPCONTENTS_BOTCLIP;
 	flag.damagedbytriggers = autocvar_g_ctf_flag_return_when_unreachable;
 	flag.damagedbycontents = autocvar_g_ctf_flag_return_when_unreachable;
 	flag.velocity = '0 0 0';

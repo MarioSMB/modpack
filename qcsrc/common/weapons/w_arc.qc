@@ -91,6 +91,7 @@ ARC_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 .float arc_overheat; // (dropped arc/player) time during which it's too hot
 .float arc_cooldown; // (dropped arc/player) cooling speed
 .float arc_heat_percent; // (player) arc heat in [0,1] (stat)
+.float arc_smoke_sound;
 #endif
 #ifdef CSQC
 void Ent_ReadArcBeam(float isnew);
@@ -260,11 +261,14 @@ void W_Arc_Beam_Think(void)
 				self.owner.arc_overheat = time + self.beam_heat / cooldown_speed;
 				self.owner.arc_cooldown = cooldown_speed;
 			}
+			
+			if ( WEP_CVAR(arc, overheat_max) > 0 && self.beam_heat >= WEP_CVAR(arc, overheat_max) )
+			{
+				pointparticles( particleeffectnum("arc_overheat"), 
+					self.beam_start, self.beam_wantdir, 1 );
+				sound(self, CH_WEAPON_A, W_Sound("strength_fire"), VOL_BASE, ATTN_NORM);
+			}
 		}
-
-		if ( WEP_CVAR(arc, overheat_max) > 0 && self.beam_heat >= WEP_CVAR(arc, overheat_max) )
-			pointparticles( particleeffectnum("TE_SPIKE"),
-				self.beam_start, self.beam_wantdir, 24 );
 		
 		if(self == self.owner.arc_beam) { self.owner.arc_beam = world; }
 		entity oldself = self;
@@ -599,22 +603,37 @@ void Arc_Smoke()
 {
 	makevectors(self.v_angle);
 	W_SetupShot_Range(self,TRUE,0,"",0,0,0);
+
+	vector smoke_origin = w_shotorg + self.velocity*frametime;
 	if ( self.arc_overheat > time )
 	{
-		if ( self.arc_heat_percent > 0.75 )
-			pointparticles( particleeffectnum("morphed_damage_hit"), w_shotorg, '0 0 0', 1 );
 		if ( random() < self.arc_heat_percent )
-			pointparticles( particleeffectnum("pipe_smoke"), w_shotorg, '0 0 1', 1 );
+			pointparticles( particleeffectnum("arc_smoke"), smoke_origin, '0 0 0', 1 );
+		if ( self.BUTTON_ATCK || self.BUTTON_ATCK2 )
+		{
+			pointparticles( particleeffectnum("arc_overheat_fire"), smoke_origin, w_shotdir, 1 );
+			if ( !self.arc_smoke_sound )
+			{
+				self.arc_smoke_sound = 1;
+				sound(self, CH_SHOTS_SINGLE, W_Sound("gauntletbeam_fly"), VOL_BASE, ATTN_NORM);
+			}
+		}
 	}
 	else if ( self.arc_beam && WEP_CVAR(arc, overheat_max) > 0 &&
 			self.arc_beam.beam_heat > WEP_CVAR(arc, overheat_min) )
 	{
 		if ( random() < (self.arc_beam.beam_heat-WEP_CVAR(arc, overheat_min)) / 
 				( WEP_CVAR(arc, overheat_max)-WEP_CVAR(arc, overheat_min) ) )
-			pointparticles( particleeffectnum("pipe_smoke"), w_shotorg, '0 0 1', 1 );
+			pointparticles( particleeffectnum("arc_smoke"), smoke_origin, '0 0 0', 1 );
+	}
+	
+	if (  self.arc_smoke_sound && ( self.arc_overheat <= time || 
+		!( self.BUTTON_ATCK || self.BUTTON_ATCK2 ) ) || self.switchweapon != WEP_ARC )
+	{
+		self.arc_smoke_sound = 0;
+		sound(self, CH_SHOTS_SINGLE, "misc/null.wav", VOL_BASE, ATTEN_NORM);
 	}
 }
-
 
 float W_Arc(float req)
 {
@@ -646,7 +665,7 @@ float W_Arc(float req)
 		{
 			Arc_Player_SetHeat(self);
 			Arc_Smoke();
-			
+
 			if ( self.arc_overheat <= time )
 			if(self.BUTTON_ATCK || self.BUTTON_ATCK2 || self.arc_beam.beam_bursting )
 			{
@@ -704,6 +723,8 @@ float W_Arc(float req)
 			precache_model("models/weapons/v_arc.md3");
 			precache_model("models/weapons/h_arc.iqm");
 			precache_sound(W_Sound("lgbeam_fire"));
+			precache_sound(W_Sound("gauntletbeam_fly"));
+			precache_sound(W_Sound("strength_fire"));
 			if(!arc_shotorigin[0])
 			{
 				arc_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 1);
@@ -1164,7 +1185,7 @@ void Ent_ReadArcBeam(float isnew)
 		self.draw = Draw_ArcBeam;
 		self.entremove = Remove_ArcBeam;
 		self.move_time = time;
-		sound(self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTEN_NORM);
+		loopsound(self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTEN_NORM);
 
 		flash = spawn();
 		flash.owner = self;
@@ -1364,7 +1385,7 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '-1 -1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
-				self.beam_traileffect = FALSE;
+				self.beam_traileffect = particleeffectnum("arc_beam");
 				self.beam_hiteffect = particleeffectnum("arc_lightning");
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
@@ -1387,7 +1408,7 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '0.5 0.5 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
-				self.beam_traileffect = FALSE;
+				self.beam_traileffect = particleeffectnum("arc_beam");
 				self.beam_hiteffect = particleeffectnum("arc_lightning");
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
@@ -1414,7 +1435,7 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '0 1 0';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
-				self.beam_traileffect = FALSE;
+				self.beam_traileffect = particleeffectnum("arc_beam_heal");
 				self.beam_hiteffect = particleeffectnum("healray_impact");
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;
@@ -1441,7 +1462,7 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_color = '1 0 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
-				self.beam_traileffect = FALSE;
+				self.beam_traileffect = particleeffectnum("arc_beam");
 				self.beam_hiteffect = particleeffectnum("arc_lightning");
 				self.beam_hitlight[0] = 0;
 				self.beam_hitlight[1] = 1;

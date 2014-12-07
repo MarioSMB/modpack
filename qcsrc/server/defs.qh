@@ -475,7 +475,7 @@ void W_Porto_Remove (entity p);
 
 .string message2;
 
-.float stat_allow_oldnexbeam;
+.float stat_allow_oldvortexbeam;
 
 // reset to 0 on weapon switch
 // may be useful to all weapons
@@ -646,8 +646,7 @@ string modname;
 .entity lastkiller;
 .entity lastkilled;
 
-.float minsta_range;
-.float minsta_refire;
+.float vaporizer_refire;
 
 float sv_showfps;
 

@@ -88,7 +88,7 @@ float nt_IsNewToy(float w)
 		case WEP_MINE_LAYER:
 		case WEP_HLAC:
 		case WEP_RIFLE:
-		case WEP_SHOTGUN:
+		case WEP_SHOCKWAVE:
 			return TRUE;
 		default:
 			return FALSE;
@@ -100,10 +100,10 @@ string nt_GetFullReplacement(string w)
 	switch(w)
 	{
 		case "hagar": return "seeker";
-		case "rocketlauncher": return "minelayer";
-		case "uzi": return "hlac";
+		case "devastator": return "minelayer";
+		case "machinegun": return "hlac";
 		case "vortex": return "rifle";
-		case "shockwave": return "shotgun";
+		//case "shotgun": return "shockwave";
 		default: return string_null;
 	}
 }
@@ -187,7 +187,7 @@ MUTATOR_HOOKFUNCTION(nt_SetWeaponreplace)
 MUTATOR_HOOKFUNCTION(nt_FilterItem)
 {
 	if(nt_IsNewToy(self.weapon) && autocvar_g_new_toys_use_pickupsound)
-		self.item_pickupsound = W_Sound("weaponpickup_new_toys");
+		self.item_pickupsound = strzone(W_Sound("weaponpickup_new_toys"));
 	return 0;
 }
 
