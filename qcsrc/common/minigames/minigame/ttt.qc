@@ -60,31 +60,30 @@ float ttt_valid_tile(string tile)
 	return 0 <= number && number <= 2 && 0 <= letter && letter <= 2;
 }
 
-#ifdef SVQC
 
-.float ttt_npieces;
-.float ttt_nexteam;
+.float ttt_npieces; // (minigame) number of pieces on the board (simplifies checking a draw)
+.float ttt_nexteam; // (minigame) next team (used to change the starting team on following matches)
 
-void ttt_move(entity minigame, entity player, float argc )
+// make a move
+void ttt_move(entity minigame, entity player, string pos )
 {
 	if ( minigame.minigame_flags & TTT_TURN_PLACE )
-	if ( argc == 2 && player.team == (minigame.minigame_flags & TTT_TURN_TEAM) )
+	if ( pos && player.team == (minigame.minigame_flags & TTT_TURN_TEAM) )
 	{
-		string pos = argv(1);
 		if ( ttt_valid_tile(pos) )
 		if ( !ttt_find_piece(minigame,pos) )
 		{
-			entity piece = minigame_spawn_linked_entity(minigame,"minigame_board_piece");
+			entity piece = msle_spawn(minigame,"minigame_board_piece");
 			piece.team = player.team;
 			piece.netname = strzone(pos);
-			piece.SendFlags = MINIG_SF_ALL;
-			minigame.SendFlags |= MINIG_SF_UPDATE;
+			minigame_server_sendflags(piece,MINIG_SF_ALL);
+			minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
 			minigame.ttt_npieces++;
 			minigame.ttt_nexteam = minigame_next_team(player.team,2);
 			if ( ttt_winning_piece(piece) )
 			{
 				player.minigame_flags++;
-				player.SendFlags |= TTT_SF_PLAYERSCORE;
+				minigame_server_sendflags(player, TTT_SF_PLAYERSCORE);
 				minigame.minigame_flags = TTT_TURN_WIN | player.team;
 			}
 			else if ( minigame.ttt_npieces >= 9 )
@@ -94,6 +93,33 @@ void ttt_move(entity minigame, entity player, float argc )
 		}
 	}
 }
+
+// request a new match
+void ttt_next_match(entity minigame, entity player)
+{
+#ifdef SVQC
+	// on multiplayer matches, wait for both players to agree
+	if ( minigame.minigame_flags & (TTT_TURN_WIN|TTT_TURN_DRAW) )
+	{
+		minigame.minigame_flags = TTT_TURN_NEXT | player.team;
+		minigame.SendFlags |= MINIG_SF_UPDATE;
+	}
+	else if ( (minigame.minigame_flags & TTT_TURN_NEXT) &&
+			!( minigame.minigame_flags & player.team ) )
+#endif
+	{
+		minigame.minigame_flags = TTT_TURN_PLACE | minigame.ttt_nexteam;
+		minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
+		minigame.ttt_npieces = 0;
+		entity e = world;
+		while ( ( e = findentity(e,owner,minigame) ) )
+			if ( e.classname == "minigame_board_piece" )
+				remove(e);
+	}
+}
+
+#ifdef SVQC
+
 
 // required function, handle server side events
 float minigame_event_ttt(entity minigame, string event, ...)
@@ -137,28 +163,12 @@ float minigame_event_ttt(entity minigame, string event, ...)
 		{
 			switch(argv(0))
 			{
-				case "move": ttt_move(minigame, ...(0,entity), ...(1,float)); return TRUE;
-				case "next":
-				{
-					entity player = ...(0,entity);
-					if ( minigame.minigame_flags & (TTT_TURN_WIN|TTT_TURN_DRAW) )
-					{
-						minigame.minigame_flags = TTT_TURN_NEXT | player.team;
-						minigame.SendFlags |= MINIG_SF_UPDATE;
-					}
-					else if ( (minigame.minigame_flags & TTT_TURN_NEXT) &&
-							!( minigame.minigame_flags & player.team ) )
-					{
-						minigame.minigame_flags = TTT_TURN_PLACE | minigame.ttt_nexteam;
-						minigame.SendFlags |= MINIG_SF_UPDATE;
-						minigame.ttt_npieces = 0;
-						entity e = world;
-						while ( ( e = findentity(e,owner,minigame) ) )
-							if ( e.classname == "minigame_board_piece" )
-								remove(e);
-					}
+				case "move": 
+					ttt_move(minigame, ...(0,entity), ...(1,float) == 2 ? argv(1) : string_null ); 
 					return TRUE;
-				}
+				case "next":
+					ttt_next_match(minigame,...(0,entity));
+					return TRUE;
 			}
 
 			return FALSE;
@@ -298,8 +308,8 @@ string ttt_turn_to_string(float turnflags)
 	if ( turnflags & TTT_TURN_WIN )
 	{
 		if ( (turnflags&TTT_TURN_TEAM) != minigame_self.team )
-			return _("You lost the game!");
-		return _("You win!");
+			return _("You lost the game!\nSelect \"^1Next Match^7\" on the menu for a rematch!");
+		return _("You win!\nSelect \"^1Next Match^7\" on the menu to start a new match!");
 	}
 	
 	if ( turnflags & TTT_TURN_NEXT )

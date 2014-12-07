@@ -223,10 +223,10 @@ float minigame_event_nmm(entity minigame, string event, ...)
 		entity e;
 		for ( i = 0; i < 7; i++ )
 		{
-			e = minigame_spawn_linked_entity(minigame,"minigame_board_piece");
+			e = msle_spawn(minigame,"minigame_board_piece");
 			e.team = 1;
 			e.minigame_flags = NMM_PIECE_HOME;
-			e = minigame_spawn_linked_entity(minigame,"minigame_board_piece");
+			e = msle_spawn(minigame,"minigame_board_piece");
 			e.team = 2;
 			e.minigame_flags = NMM_PIECE_HOME;
 		}

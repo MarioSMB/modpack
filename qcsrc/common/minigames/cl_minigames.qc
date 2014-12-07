@@ -259,14 +259,73 @@ void ent_read_minigame()
 #undef FIELD
 #undef MSLE
 
+string minigame_getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
+{
+	dprint("minigame_getWrappedLine(",ftos(w),",",getWrappedLine_remaining,")\n");
+	float last_word;
+	string s;
+	float take_until;
+	float skip = 0;
+
+	s = getWrappedLine_remaining;
+
+	if(w <= 0)
+	{
+		getWrappedLine_remaining = string_null;
+		return s; // the line has no size ANYWAY, nothing would be displayed.
+	}
+
+	take_until = textLengthUpToWidth(s, w, theFontSize, tw);
+	
+	if ( take_until > strlen(s) )
+		take_until = strlen(s);
+	
+	float i;
+	for ( i = 0; i < take_until; i++ )
+		if ( substring(s,i,1) == "\n" )
+		{
+			take_until = i;
+			skip = 1;
+			break;
+		}
+	
+	if ( take_until > 0 || skip > 0 )
+	{
+		if ( skip == 0 && take_until < strlen(s) )
+		{
+			last_word = take_until;
+			while(last_word > 0 && substring(s, last_word, 1) != " ")
+				--last_word;
+
+			if ( last_word != 0 )
+			{
+				take_until = last_word;
+				skip = 1;
+			}
+		}
+			
+		getWrappedLine_remaining = substring(s, take_until+skip, strlen(s) - (take_until+skip));
+		if(getWrappedLine_remaining == "")
+			getWrappedLine_remaining = string_null;
+		else if (tw("^7", theFontSize) == 0)
+			getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take_until)), getWrappedLine_remaining);
+		return substring(s, 0, take_until);
+	}
+	else
+	{
+		getWrappedLine_remaining = string_null;
+		return s;
+	}
+}
+
 vector minigame_drawstring_wrapped( float maxwidth, vector pos, string text, 
 	vector fontsize, vector color, float theAlpha, float drawflags, float align )
-{
+{	
 	getWrappedLine_remaining = text;
 	vector mypos = pos;
 	while ( getWrappedLine_remaining )
 	{
-		string line = getWrappedLine(maxwidth,fontsize,stringwidth_nocolors);
+		string line = minigame_getWrappedLine(maxwidth,fontsize,stringwidth_nocolors);
 		if ( line == "" )
 			break;
 		mypos_x = pos_x + (maxwidth - stringwidth_nocolors(line, fontsize)) * align;
@@ -285,7 +344,7 @@ vector minigame_drawcolorcodedstring_wrapped( float maxwidth, vector pos,
 	vector mypos = pos;
 	while ( getWrappedLine_remaining )
 	{
-		string line = getWrappedLine(maxwidth,fontsize,stringwidth_colors);
+		string line = minigame_getWrappedLine(maxwidth,fontsize,stringwidth_colors);
 		if ( line == "" )
 			break;
 		mypos_x = pos_x + (maxwidth - stringwidth_colors(line, fontsize)) * align;

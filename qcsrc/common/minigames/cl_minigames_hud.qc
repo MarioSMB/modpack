@@ -1,4 +1,3 @@
-
 #include "minigames.qh"
 
 float HUD_mouse_over(entity somepanel)

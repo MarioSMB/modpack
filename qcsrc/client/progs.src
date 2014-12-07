@@ -84,7 +84,6 @@ scoreboard.qc
 mapvoting.qc
 csqcmodel_hooks.qc
 ../common/net_notice.qc
-../common/minigames/cl_minigames.qc
 
 rubble.qc
 hook.qc
@@ -149,3 +148,7 @@ controlpoint.qc
 
 player_skeleton.qc
 ../common/animdecide.qc
+
+
+../common/minigames/minigames.qc
+../common/minigames/cl_minigames.qc
