@@ -261,7 +261,6 @@ void ent_read_minigame()
 
 string minigame_getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
 {
-	dprint("minigame_getWrappedLine(",ftos(w),",",getWrappedLine_remaining,")\n");
 	float last_word;
 	string s;
 	float take_until;
