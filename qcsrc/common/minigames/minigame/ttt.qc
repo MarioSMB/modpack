@@ -334,6 +334,131 @@ string ttt_turn_to_string(float turnflags)
 	return "";
 }
 
+const float TTT_AI_POSFLAG_A1 = 0x0001;
+const float TTT_AI_POSFLAG_A2 = 0x0002;
+const float TTT_AI_POSFLAG_A3 = 0x0004;
+const float TTT_AI_POSFLAG_B1 = 0x0008;
+const float TTT_AI_POSFLAG_B2 = 0x0010;
+const float TTT_AI_POSFLAG_B3 = 0x0020;
+const float TTT_AI_POSFLAG_C1 = 0x0040;
+const float TTT_AI_POSFLAG_C2 = 0x0080;
+const float TTT_AI_POSFLAG_C3 = 0x0100;
+
+// convert a flag to a position
+string ttt_ai_piece_flag2pos(float pieceflag)
+{
+	switch(pieceflag)
+	{
+		case TTT_AI_POSFLAG_A1:
+			return "a1";
+		case TTT_AI_POSFLAG_A2:
+			return "a2";
+		case TTT_AI_POSFLAG_A3:
+			return "a3";
+			
+		case TTT_AI_POSFLAG_B1:
+			return "b1";
+		case TTT_AI_POSFLAG_B2:
+			return "b2";
+		case TTT_AI_POSFLAG_B3:
+			return "b3";
+			
+		case TTT_AI_POSFLAG_C1:
+			return "c1";
+		case TTT_AI_POSFLAG_C2:
+			return "c2";
+		case TTT_AI_POSFLAG_C3:
+			return "c3";
+			
+		default:
+			return string_null;
+	}
+}
+
+float ttt_ai_checkmask(float piecemask, float checkflags)
+{
+	return checkflags && (piecemask & checkflags) == checkflags;
+}
+
+// get the third flag if the mask matches two of them
+float ttt_ai_1of3(float piecemask, float flag1, float flag2, float flag3)
+{
+	if ( ttt_ai_checkmask(piecemask,flag1|flag2|flag3) )
+		return 0;
+	
+	if ( ttt_ai_checkmask(piecemask,flag1|flag2) )
+		return flag3;
+	
+	if ( ttt_ai_checkmask(piecemask,flag3|flag2) )
+		return flag1;
+	
+	if ( ttt_ai_checkmask(piecemask,flag3|flag1) )
+		return flag2;
+
+	return 0;
+}
+
+// Select a random flag in the mask
+float ttt_ai_random(float piecemask)
+{
+	if ( !piecemask )
+		return 0;
+	
+	float i;
+	float f = 1;
+	
+	RandomSelection_Init();
+	
+	for ( i = 0; i < 9; i++ )
+	{
+		if ( piecemask & f )
+			RandomSelection_Add(world, f, string_null, 1, 1);
+		f <<= 1;
+	}
+	
+	dprint(sprintf("TTT AI: selected %x from %x\n",
+			RandomSelection_chosen_float, piecemask) );
+	return RandomSelection_chosen_float;
+}
+
+// Block/complete a 3 i na row
+float ttt_ai_block3 ( float piecemask, float piecemask_free )
+{
+	float r = 0;
+	
+	r |= ttt_ai_1of3(piecemask,TTT_AI_POSFLAG_A1,TTT_AI_POSFLAG_A2,TTT_AI_POSFLAG_A3);
+	r |= ttt_ai_1of3(piecemask,TTT_AI_POSFLAG_B1,TTT_AI_POSFLAG_B2,TTT_AI_POSFLAG_B3);
+	r |= ttt_ai_1of3(piecemask,TTT_AI_POSFLAG_C1,TTT_AI_POSFLAG_C2,TTT_AI_POSFLAG_C3);
+	r |= ttt_ai_1of3(piecemask,TTT_AI_POSFLAG_A1,TTT_AI_POSFLAG_B1,TTT_AI_POSFLAG_C1);
+	r |= ttt_ai_1of3(piecemask,TTT_AI_POSFLAG_A2,TTT_AI_POSFLAG_B2,TTT_AI_POSFLAG_C2);
+	r |= ttt_ai_1of3(piecemask,TTT_AI_POSFLAG_A3,TTT_AI_POSFLAG_B3,TTT_AI_POSFLAG_C3);
+	r |= ttt_ai_1of3(piecemask,TTT_AI_POSFLAG_A1,TTT_AI_POSFLAG_B2,TTT_AI_POSFLAG_C3);
+	r |= ttt_ai_1of3(piecemask,TTT_AI_POSFLAG_A3,TTT_AI_POSFLAG_B2,TTT_AI_POSFLAG_C1);
+	dprint(sprintf("TTT AI: possible 3 in a rows in %x: %x (%x)\n",piecemask,r, r&piecemask_free));
+	r &= piecemask_free;
+	return ttt_ai_random(r);
+}
+
+// Simple AI
+// 1) tries to win the game if possible
+// 2) tries to block the opponent if they have 2 in a row
+// 3) places a piece randomly
+string ttt_ai_choose_simple(float piecemask_self, float piecemask_opponent, float piecemask_free )
+{
+	float move = 0;
+	
+	dprint("TTT AI: checking winning move\n");
+	if (( move = ttt_ai_block3(piecemask_self,piecemask_free) ))
+		return ttt_ai_piece_flag2pos(move); // place winning move
+		
+	dprint("TTT AI: checking opponent's winning move\n");
+	if (( move = ttt_ai_block3(piecemask_opponent,piecemask_free) ))
+		return ttt_ai_piece_flag2pos(move); // block opponent
+		
+	dprint("TTT AI: random move\n");
+	return ttt_ai_piece_flag2pos(ttt_ai_random(piecemask_free));
+}
+
 // AI move (if it's AI's turn)
 void ttt_aimove(entity minigame)
 {
@@ -343,20 +468,51 @@ void ttt_aimove(entity minigame)
 		while ( ( aiplayer = findentity(aiplayer,owner,minigame) ) )
 			if ( aiplayer.classname == "minigame_player" && !aiplayer.minigame_playerslot )
 				break;
-			
-		// TODO implement AI
+		
+		/*
+		 * Build bit masks for the board pieces
+		 * .---.---.---.
+		 * | 4 | 32|256| 3
+		 * |---+---+---| 
+		 * | 2 | 16|128| 2
+		 * |---+---+---| 
+		 * | 1 | 8 | 64| 1
+		 * '---'---'---'
+		 *   A   B   C
+		 */
+		float piecemask_self = 0;
+		float piecemask_opponent = 0;
+		float piecemask_free = 0;
+		float pieceflag = 1;
+		string pos;
+		
 		float i,j;
 		for ( i = 0; i < 3; i++ )
 			for ( j = 0; j < 3; j++ )
 			{
-				string pos = minigame_tile_buildname(i,j);
-				if ( !ttt_find_piece(minigame,pos) )
+				pos = minigame_tile_buildname(i,j);
+				entity piece = ttt_find_piece(minigame,pos);
+				if ( piece )
 				{
-					ttt_move(minigame,aiplayer,pos);
-					i = 3;
-					break;
+					if ( piece.team == aiplayer.team )
+						piecemask_self |= pieceflag;
+					else
+						piecemask_opponent |= pieceflag;
 				}
+				else
+					piecemask_free |= pieceflag;
+				pieceflag <<= 1;
 			}
+			
+		// TODO multiple AI difficulties
+		dprint(sprintf("TTT AI: self: %x opponent: %x free: %x\n",
+				piecemask_self, piecemask_opponent, piecemask_free));
+		pos = ttt_ai_choose_simple(piecemask_self, piecemask_opponent, piecemask_free);
+		dprint("TTT AI: chosen move: ",pos,"\n\n");
+		if ( !pos )
+			dprint("Tic Tac Toe AI has derped!\n");
+		else
+			ttt_move(minigame,aiplayer,pos);
 	}
 	minigame.message = ttt_turn_to_string(minigame.minigame_flags);
 }
@@ -476,8 +632,10 @@ float minigame_event_ttt(entity minigame, string event, ...)
 				if ( (sf & TTT_SF_SINGLEPLAYER) )
 				{
 					float ai = ReadByte();
+					float spawnai = ai && !sent.ttt_ai;
+					sent.ttt_ai = ai;
 					
-					if ( ai && !sent.ttt_ai )
+					if ( spawnai )
 					{
 						entity aiplayer = spawn();
 						aiplayer.classname = "minigame_player";
@@ -485,9 +643,9 @@ float minigame_event_ttt(entity minigame, string event, ...)
 						aiplayer.team = ai;
 						aiplayer.minigame_playerslot = 0;
 						aiplayer.minigame_autoclean = 1;
+						ttt_aimove(minigame);
 					}
 					
-					sent.ttt_ai = ai;
 				}
 			}
 			else if ( sent.classname == "minigame_player" && (sf & TTT_SF_PLAYERSCORE ) )
