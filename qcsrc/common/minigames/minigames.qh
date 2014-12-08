@@ -35,6 +35,9 @@ float minigame_next_team(float curr_team, float n_teams);
 // (for example in game logic which can be used both in client and server
 void minigame_server_sendflags(entity ent, float mgflags);
 
+// count the number of players in a minigame session
+float minigame_count_players(entity minigame);
+
 /// For minigame sessions: minigame descriptor object
 .entity descriptor;
 

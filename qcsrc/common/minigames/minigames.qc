@@ -112,3 +112,18 @@ string msle_classname(float id)
 #undef MSLE
 	return "";
 }
+
+float minigame_count_players(entity minigame)
+{
+	float pl_num = 0;
+	entity e;
+#ifdef SVQC
+	for(e = minigame.minigame_players; e; e = e.list_next)
+#elif defined(CSQC)
+	e = world;
+	while( (e = findentity(e,owner,minigame)) )
+		if ( e.classname == "minigame_player" )
+#endif
+		pl_num++;
+	return pl_num;
+}

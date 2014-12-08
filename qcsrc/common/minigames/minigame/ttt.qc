@@ -2,13 +2,19 @@ const float TTT_TURN_PLACE = 0x0100; // player has to place a piece on the board
 const float TTT_TURN_WIN   = 0x0200; // player has won
 const float TTT_TURN_DRAW  = 0x0400; // no moves are possible
 const float TTT_TURN_NEXT  = 0x0800; // a player wants to start a new match
-const float TTT_TURN_TYPE  = 0xff00;
+const float TTT_TURN_TYPE  = 0x0f00; // turn type mask
 
 const float TTT_TURN_TEAM1 = 0x0001;
 const float TTT_TURN_TEAM2 = 0x0002;
-const float TTT_TURN_TEAM  = 0x000f; 
+const float TTT_TURN_TEAM  = 0x000f; // turn team mask
 
-const float TTT_SF_PLAYERSCORE = MINIG_SF_CUSTOM;
+// send flags
+const float TTT_SF_PLAYERSCORE  = MINIG_SF_CUSTOM;   // send minigame_player scores (won matches)
+const float TTT_SF_SINGLEPLAYER = MINIG_SF_CUSTOM<<1;// send minigame.ttt_ai
+
+.float ttt_npieces; // (minigame) number of pieces on the board (simplifies checking a draw)
+.float ttt_nexteam; // (minigame) next team (used to change the starting team on following matches)
+.float ttt_ai;      // (minigame) when non-zero, singleplayer vs AI
 
 // find tic tac toe piece given its tile name
 entity ttt_find_piece(entity minig, string tile)
@@ -51,18 +57,15 @@ float ttt_winning_piece(entity piece)
 	return 0;
 }
 
+// check if the tile name is valid (3x3 grid)
 float ttt_valid_tile(string tile)
 {
 	if ( !tile )
 		return 0;
 	float number = minigame_tile_number(tile);
 	float letter = minigame_tile_letter(tile);
-	return 0 <= number && number <= 2 && 0 <= letter && letter <= 2;
+	return 0 <= number && number < 3 && 0 <= letter && letter < 3;
 }
-
-
-.float ttt_npieces; // (minigame) number of pieces on the board (simplifies checking a draw)
-.float ttt_nexteam; // (minigame) next team (used to change the starting team on following matches)
 
 // make a move
 void ttt_move(entity minigame, entity player, string pos )
@@ -144,12 +147,13 @@ float minigame_event_ttt(entity minigame, string event, ...)
 		}
 		case "join":
 		{
-			float pl_num = 0;
-			entity e;
-			for(e = minigame.minigame_players; e; e = e.list_next)
-				pl_num++;
+			float pl_num = minigame_count_players(minigame);
+			
+			// Don't allow joining a single player match
+			if ( (minigame.ttt_ai) && pl_num > 0 )
+				return FALSE;
 
-			// Don't allow more than 2 players (TODO)
+			// Don't allow more than 2 players
 			if(pl_num >= 2) { return FALSE; }
 
 			// Get the right team
@@ -169,6 +173,13 @@ float minigame_event_ttt(entity minigame, string event, ...)
 				case "next":
 					ttt_next_match(minigame,...(0,entity));
 					return TRUE;
+				case "singleplayer":
+					if ( minigame_count_players(minigame) == 1 )
+					{
+						minigame.ttt_ai = minigame_next_team(minigame.minigame_players.team, 2);
+						minigame.SendFlags = TTT_SF_SINGLEPLAYER;
+					}
+					return TRUE;
 			}
 
 			return FALSE;
@@ -180,6 +191,10 @@ float minigame_event_ttt(entity minigame, string event, ...)
 			if ( sent.classname == "minigame_player" && (sf & TTT_SF_PLAYERSCORE ) )
 			{
 				WriteByte(MSG_ENTITY,sent.minigame_flags);
+			}
+			else if ( sent.classname == "minigame" && (sf & TTT_SF_SINGLEPLAYER) )
+			{
+				WriteByte(MSG_ENTITY,sent.ttt_ai);
 			}
 			return FALSE;
 		}
@@ -274,7 +289,7 @@ void minigame_hud_status_ttt(vector pos, vector mySize)
 			if ( e.team == 2 )
 				mypos_y  += player_fontsize_y + ts_y;
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
-				GetPlayerName(e.minigame_playerslot-1),
+				(e.minigame_playerslot ? GetPlayerName(e.minigame_playerslot-1) : _("AI")),
 				player_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			
 			mypos_y += player_fontsize_y;
@@ -287,15 +302,6 @@ void minigame_hud_status_ttt(vector pos, vector mySize)
 			drawstring(mypos,ftos(e.minigame_flags),tile_size,
 					   '0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 		}
-	}
-}
-
-// Make the correct move
-void ttt_make_move(entity minigame)
-{
-	if ( minigame.minigame_flags == (TTT_TURN_PLACE|minigame_self.team) )
-	{
-		minigame_cmd("move ",ttt_curr_pos);
 	}
 }
 
@@ -326,6 +332,48 @@ string ttt_turn_to_string(float turnflags)
 		return _("Click on the game board to place your piece");
 	
 	return "";
+}
+
+// AI move (if it's AI's turn)
+void ttt_aimove(entity minigame)
+{
+	if ( minigame.minigame_flags == (TTT_TURN_PLACE|minigame.ttt_ai) )
+	{
+		entity aiplayer = world;
+		while ( ( aiplayer = findentity(aiplayer,owner,minigame) ) )
+			if ( aiplayer.classname == "minigame_player" && !aiplayer.minigame_playerslot )
+				break;
+			
+		// TODO implement AI
+		float i,j;
+		for ( i = 0; i < 3; i++ )
+			for ( j = 0; j < 3; j++ )
+			{
+				string pos = minigame_tile_buildname(i,j);
+				if ( !ttt_find_piece(minigame,pos) )
+				{
+					ttt_move(minigame,aiplayer,pos);
+					i = 3;
+					break;
+				}
+			}
+	}
+	minigame.message = ttt_turn_to_string(minigame.minigame_flags);
+}
+
+// Make the correct move
+void ttt_make_move(entity minigame)
+{
+	if ( minigame.minigame_flags == (TTT_TURN_PLACE|minigame_self.team) )
+	{
+		if ( minigame.ttt_ai  )
+		{
+			ttt_move(minigame, minigame_self, ttt_curr_pos );
+			ttt_aimove(minigame);
+		}
+		else
+			minigame_cmd("move ",ttt_curr_pos);
+	}
 }
 
 void ttt_set_curr_pos(string s)
@@ -416,11 +464,31 @@ float minigame_event_ttt(entity minigame, string event, ...)
 		{
 			entity sent = ...(0,entity);
 			float sf = ...(1,float);
-			if ( sent.classname == "minigame" && ( sf & MINIG_SF_UPDATE ) )
+			if ( sent.classname == "minigame" )
 			{
-				sent.message = ttt_turn_to_string(sent.minigame_flags);
-				if ( sent.minigame_flags & minigame_self.team )
-					minigame_prompt();
+				if ( sf & MINIG_SF_UPDATE )
+				{
+					sent.message = ttt_turn_to_string(sent.minigame_flags);
+					if ( sent.minigame_flags & minigame_self.team )
+						minigame_prompt();
+				}
+				
+				if ( (sf & TTT_SF_SINGLEPLAYER) )
+				{
+					float ai = ReadByte();
+					
+					if ( ai && !sent.ttt_ai )
+					{
+						entity aiplayer = spawn();
+						aiplayer.classname = "minigame_player";
+						aiplayer.owner = minigame;
+						aiplayer.team = ai;
+						aiplayer.minigame_playerslot = 0;
+						aiplayer.minigame_autoclean = 1;
+					}
+					
+					sent.ttt_ai = ai;
+				}
 			}
 			else if ( sent.classname == "minigame_player" && (sf & TTT_SF_PLAYERSCORE ) )
 			{
@@ -432,12 +500,26 @@ float minigame_event_ttt(entity minigame, string event, ...)
 		case "menu_show":
 		{
 			HUD_MinigameMenu_CustomEntry(...(0,entity),_("Next Match"),"next");
+			HUD_MinigameMenu_CustomEntry(...(0,entity),_("Single Player"),"singleplayer");
 			return FALSE;
 		}
 		case "menu_click":
 		{
 			if(...(0,string) == "next")
-				minigame_cmd("next");
+			{
+				if ( minigame.ttt_ai )
+				{
+					ttt_next_match(minigame,minigame_self);
+					ttt_aimove(minigame);
+				}
+				else
+					minigame_cmd("next");
+			}
+			else if ( ...(0,string) == "singleplayer" && !minigame.ttt_ai )
+			{
+				if ( minigame_count_players(minigame) == 1 )
+					minigame_cmd("singleplayer");
+			}
 			return FALSE;
 		}
 	}
