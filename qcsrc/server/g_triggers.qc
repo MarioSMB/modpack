@@ -1132,9 +1132,6 @@ void spawnfunc_func_snow()
 	Net_LinkEntity(self, FALSE, 0, rainsnow_SendEntity);
 }
 
-
-void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, float mindist, float maxdist, float halflifedist, float forcehalflifedist, float deathtype);
-
 .float modelscale;
 void misc_laser_aim()
 {

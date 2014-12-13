@@ -2475,7 +2475,7 @@ void ctf_Initialize()
 	ctf_captureshield_min_negscore = autocvar_g_ctf_shield_min_negscore;
 	ctf_captureshield_max_ratio = autocvar_g_ctf_shield_max_ratio;
 	ctf_captureshield_force = autocvar_g_ctf_shield_force;
-	
+
 	addstat(STAT_CTF_FLAGSTATUS, AS_INT, ctf_flagstatus);
 
 	InitializeEntity(world, ctf_DelayedInit, INITPRIO_GAMETYPE);

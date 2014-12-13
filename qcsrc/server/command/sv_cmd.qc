@@ -197,6 +197,8 @@ void GameCommand_allspec(float request, float argc)
 			FOR_EACH_REALPLAYER(client)
 			{
 				self = client;
+				if(self.caplayer)
+					self.caplayer = 0;
 				PutObserverInServer();
 				++i;
 			}
@@ -1092,6 +1094,8 @@ void GameCommand_moveplayer(float request, float argc)
 						if(!IS_SPEC(client) && !IS_OBSERVER(client))
 						{
 							self = client;
+							if(self.caplayer)
+								self.caplayer = 0;
 							PutObserverInServer();
 
 							successful = strcat(successful, (successful ? ", " : ""), client.netname);
@@ -1197,9 +1201,10 @@ void GameCommand_nospectators(float request)
 		{
 			blockSpectators = 1;
 			entity plr;
-			FOR_EACH_CLIENT(plr) //give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
+			FOR_EACH_REALCLIENT(plr) //give every spectator <g_maxplayers_spectator_blocktime> seconds time to become a player
 			{
 				if(IS_SPEC(plr) || IS_OBSERVER(plr))
+				if(!plr.caplayer)
 				{
 					plr.spectatortime = time;
 					Send_Notification(NOTIF_ONE_ONLY, plr, MSG_INFO, INFO_SPECTATE_WARNING, autocvar_g_maxplayers_spectator_blocktime);

@@ -1007,7 +1007,7 @@ void Dump_Notifications(float fh, float alsoprint)
 		if (!e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 
 		NOTIF_WRITE_ENTITY(
-			"Notification control cvar: 0 = disabled, 1 = enabled if gentle mode is off, 2 = always enabled)"
+			"0 = disabled, 1 = enabled if gentle mode is off, 2 = always enabled"
 		);
 	}
 
@@ -1018,7 +1018,7 @@ void Dump_Notifications(float fh, float alsoprint)
 		if (!e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 
 		NOTIF_WRITE_ENTITY(
-			"Notification control cvar: 0 = off, 1 = print to console, "
+			"0 = off, 1 = print to console, "
 			"2 = print to console and chatbox (if notification_allow_chatboxprint is enabled)"
 		);
 	}
@@ -1030,7 +1030,7 @@ void Dump_Notifications(float fh, float alsoprint)
 		if (!e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 
 		NOTIF_WRITE_ENTITY(
-			"Notification control cvar: 0 = off, 1 = centerprint"
+			"0 = off, 1 = centerprint"
 		);
 	}
 
@@ -1041,7 +1041,7 @@ void Dump_Notifications(float fh, float alsoprint)
 		if (!e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 
 		NOTIF_WRITE_ENTITY(
-			"Notification control cvar: 0 = off, 1 = trigger subcalls"
+			"Enable this multiple notification"
 		);
 	}
 
@@ -1052,8 +1052,8 @@ void Dump_Notifications(float fh, float alsoprint)
 		if (!e) { backtrace("Dump_Notifications(): Missing notification entity!\n"); return; }
 
 		NOTIF_WRITE_ENTITY_CHOICE(
-			"Notification control cvar: 0 = off, 1 = trigger option A subcall, 2 = trigger option B subcall",
-			"Notification control cvar: 0 = off, 1 = allowed in warmup mode, 2 = always allowed"
+			"Choice for this notification 0 = off, 1 = default message, 2 = verbose message",
+			"Allow choice for this notification 0 = off, 1 = only in warmup mode, 2 = always"
 		);
 	}
 
@@ -1062,8 +1062,10 @@ void Dump_Notifications(float fh, float alsoprint)
 
 	NOTIF_WRITE_HARDCODED(
 		"allow_chatboxprint", "1",
-		"Allow notifications to be printed to chat box by setting notification cvar to 2 "
-		"(You can also set this cvar to 2 to force ALL notifications to be printed to the chatbox)"
+		"Allow INFO notifications to be printed to chat box"
+		"0 = do not allow, "
+		"1 = allow only if allowed by individual notification_INFO* cvars, "
+		"2 = force all INFO notifications to be printed to the chatbox"
 	);
 
 	NOTIF_WRITE_HARDCODED(
@@ -2035,7 +2037,7 @@ void Send_Notification(
 		#define RECURSE_FROM_CHOICE(ent,action) \
 			if(notif.nent_challow_var && (warmup_stage || (notif.nent_challow_var == 2))) \
 			{ \
-				switch(ent.msg_choice_choices[net_name]) \
+				switch(ent.msg_choice_choices[net_name - 1]) \
 				{ \
 					case 1: found_choice = notif.nent_optiona; break; \
 					case 2: found_choice = notif.nent_optionb; break; \

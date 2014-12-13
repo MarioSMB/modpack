@@ -51,14 +51,14 @@ void instagib_stop_countdown(entity e)
 }
 void instagib_ammocheck()
 {
-	if (!IS_PLAYER(self))
-		return; // not a player
-	if (time < self.instagib_nextthink)
+	if(time < self.instagib_nextthink)
 		return;
+	if(!IS_PLAYER(self))
+		return; // not a player
 
-	if (self.deadflag || gameover)
+	if(self.deadflag || gameover)
 		instagib_stop_countdown(self);
-	else if (self.ammo_cells > 0 || (self.items & IT_UNLIMITED_WEAPON_AMMO))
+	else if (self.ammo_cells > 0 || (self.items & IT_UNLIMITED_WEAPON_AMMO) || (self.flags & FL_GODMODE))
 		instagib_stop_countdown(self);
 	else if(autocvar_g_rm)
 	{
@@ -324,13 +324,13 @@ MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 
 	if(self.ammo_cells > autocvar_g_instagib_ammo_drop && self.classname != "item_minst_cells")
 		self.ammo_cells = autocvar_g_instagib_ammo_drop;
-		
+
 	if(self.classname != "item_minst_rockets")
 		self.ammo_rockets = bound(0, self.ammo_rockets, autocvar_g_instagib_ammo_rockets);
 
 	if((self.ammo_cells || self.ammo_supercells) && !self.weapon)
 		return FALSE;
-		
+
 	if(self.ammo_rockets && !self.weapon)
 		return FALSE;
 

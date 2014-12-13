@@ -4,6 +4,14 @@ float redalive, bluealive, yellowalive, pinkalive;
 float ca_teams;
 float allowed_to_spawn;
 
+#define ST_CA_ROUNDS 1
+void ca_ScoreRules(float teams)
+{
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
+	ScoreInfo_SetLabel_TeamScore(ST_CA_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
+	ScoreRules_basics_end();
+}
+
 void CA_count_alive_players()
 {
 	entity e;
@@ -99,42 +107,57 @@ void CA_RoundStart()
 		allowed_to_spawn = FALSE;
 }
 
-float prev_total_players;
+float prev_missing_teams_mask;
 float CA_CheckTeams()
 {
 	allowed_to_spawn = TRUE;
 	CA_count_alive_players();
 	if(CA_ALIVE_TEAMS_OK())
 	{
-		if(prev_total_players > 0)
+		if(prev_missing_teams_mask > 0)
 			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
-		prev_total_players = -1;
+		prev_missing_teams_mask = -1;
 		return 1;
 	}
-	if(prev_total_players != total_players)
+	if(total_players == 0)
 	{
-		float p1 = 0, p2 = 0, p3 = 0, p4 = 0;
-		if(!redalive) p1 = NUM_TEAM_1;
-		if(!bluealive) p2 = NUM_TEAM_2;
-		if(ca_teams >= 3)
-		if(!yellowalive) p3 = NUM_TEAM_3;
-		if(ca_teams >= 4)
-		if(!pinkalive) p4 = NUM_TEAM_4;
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, p1, p2, p3, p4);
-		prev_total_players = total_players;
+		if(prev_missing_teams_mask > 0)
+			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+		prev_missing_teams_mask = -1;
+		return 0;
+	}
+	float missing_teams_mask = (!redalive) + (!bluealive) * 2;
+	if(ca_teams >= 3) missing_teams_mask += (!yellowalive) * 4;
+	if(ca_teams >= 4) missing_teams_mask += (!pinkalive) * 8;
+	if(prev_missing_teams_mask != missing_teams_mask)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
+		prev_missing_teams_mask = missing_teams_mask;
 	}
 	return 0;
+}
+
+float ca_isEliminated(entity e)
+{
+	if(e.caplayer == 1 && (e.deadflag != DEAD_NO || e.frags == FRAGS_LMS_LOSER))
+		return TRUE;
+	if(e.caplayer == 0.5)
+		return TRUE;
+	return FALSE;
 }
 
 MUTATOR_HOOKFUNCTION(ca_PlayerSpawn)
 {
 	self.caplayer = 1;
+	if(!warmup_stage)
+		eliminatedPlayers.SendFlags |= 1;
 	return 1;
 }
 
 MUTATOR_HOOKFUNCTION(ca_PutClientInServer)
 {
 	if(!allowed_to_spawn)
+	if(IS_PLAYER(self)) // this is true even when player is trying to join
 	{
 		self.classname = "observer";
 		if(self.jointime != time) //not when connecting
@@ -153,6 +176,11 @@ MUTATOR_HOOKFUNCTION(ca_reset_map_players)
 	FOR_EACH_CLIENT(self)
 	{
 		self.killcount = 0;
+		if(!self.caplayer && IS_BOT_CLIENT(self))
+		{
+			self.team = -1;
+			self.caplayer = 1;
+		}
 		if(self.caplayer)
 		{
 			self.classname = "player";
@@ -181,10 +209,47 @@ MUTATOR_HOOKFUNCTION(ca_GetTeamCount)
 	return 0;
 }
 
+entity ca_LastPlayerForTeam()
+{
+	entity pl, last_pl = world;
+	FOR_EACH_PLAYER(pl)
+	{
+		if(pl.health >= 1)
+		if(pl != self)
+		if(pl.team == self.team)
+		if(!last_pl)
+			last_pl = pl;
+		else
+			return world;
+	}
+	return last_pl;
+}
+
+void ca_LastPlayerForTeam_Notify()
+{
+	if(round_handler_IsActive())
+	if(round_handler_IsRoundStarted())
+	{
+		entity pl = ca_LastPlayerForTeam();
+		if(pl)
+			Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_ALONE);
+	}
+}
+
 MUTATOR_HOOKFUNCTION(ca_PlayerDies)
 {
+	ca_LastPlayerForTeam_Notify();
 	if(!allowed_to_spawn)
 		self.respawn_flags =  RESPAWN_SILENT;
+	if(!warmup_stage)
+		eliminatedPlayers.SendFlags |= 1;
+	return 1;
+}
+
+MUTATOR_HOOKFUNCTION(ca_ClientDisconnect)
+{
+	if(self.caplayer == 1)
+		ca_LastPlayerForTeam_Notify();
 	return 1;
 }
 
@@ -195,10 +260,14 @@ MUTATOR_HOOKFUNCTION(ca_ForbidPlayerScore_Clear)
 
 MUTATOR_HOOKFUNCTION(ca_MakePlayerObserver)
 {
+	if(self.caplayer == 1)
+		ca_LastPlayerForTeam_Notify();
 	if(self.killindicator_teamchange == -2)
 		self.caplayer = 0;
 	if(self.caplayer)
 		self.frags = FRAGS_LMS_LOSER;
+	if(!warmup_stage)
+		eliminatedPlayers.SendFlags |= 1;
 	return 1;
 }
 
@@ -280,20 +349,15 @@ MUTATOR_HOOKFUNCTION(ca_CountFrags)
 	return TRUE;
 }
 
-// scoreboard setup
-void ca_ScoreRules(float teams)
-{
-	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, TRUE);
-	ScoreInfo_SetLabel_TeamScore(ST_CA_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
-	ScoreRules_basics_end();
-}
-
 void ca_Initialize()
 {
 	allowed_to_spawn = TRUE;
-	
-	ca_teams = bound(2, ((autocvar_g_ca_teams_override < 2) ? autocvar_g_ca_teams : autocvar_g_ca_teams_override), 4);
 
+	ca_teams = autocvar_g_ca_teams_override;
+	if(ca_teams < 2)
+		ca_teams = autocvar_g_ca_teams;
+	ca_teams = bound(2, ca_teams, 4);
+	ret_float = ca_teams;
 	ca_ScoreRules(ca_teams);
 
 	round_handler_Spawn(CA_CheckTeams, CA_CheckWinner, CA_RoundStart);
@@ -303,6 +367,8 @@ void ca_Initialize()
 	addstat(STAT_BLUEALIVE, AS_INT, bluealive_stat);
 	addstat(STAT_YELLOWALIVE, AS_INT, yellowalive_stat);
 	addstat(STAT_PINKALIVE, AS_INT, pinkalive_stat);
+
+	EliminatedPlayers_Init(ca_isEliminated);
 }
 
 MUTATOR_DEFINITION(gamemode_ca)
@@ -315,6 +381,7 @@ MUTATOR_DEFINITION(gamemode_ca)
 	MUTATOR_HOOK(reset_map_players, ca_reset_map_players, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GetTeamCount, ca_GetTeamCount, CBC_ORDER_EXCLUSIVE);
 	MUTATOR_HOOK(PlayerDies, ca_PlayerDies, CBC_ORDER_ANY);
+	MUTATOR_HOOK(ClientDisconnect, ca_ClientDisconnect, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidPlayerScore_Clear, ca_ForbidPlayerScore_Clear, CBC_ORDER_ANY);
 	MUTATOR_HOOK(ForbidThrowCurrentWeapon, ca_ForbidThrowCurrentWeapon, CBC_ORDER_ANY);
 	MUTATOR_HOOK(GiveFragsForKill, ca_GiveFragsForKill, CBC_ORDER_FIRST);

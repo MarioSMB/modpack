@@ -108,7 +108,7 @@ MUTATOR_HOOKABLE(WeaponRateFactor);
 	// allows changing attack rate
 	// INPUT, OUTPUT:
 		float weapon_rate;
-		
+
 MUTATOR_HOOKABLE(WantWeapon);
 	// returns which weapon the player/bot should choose
 	// INPUT, OUTPUT:

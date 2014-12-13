@@ -22,8 +22,6 @@ void Draw_ShowNames(entity ent)
 		if(!(autocvar_hud_shownames_self && autocvar_chase_active))
 			return;
 
-	makevectors(view_angles);
-
 	if(ent.sameteam || (!ent.sameteam && autocvar_hud_shownames_enemies))
 	{
 		ent.origin_z += autocvar_hud_shownames_offset;

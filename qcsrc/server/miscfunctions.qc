@@ -1606,6 +1606,44 @@ void Net_LinkEntity(entity e, float docull, float dt, float(entity, float) sendf
     }
 }
 
+
+entity eliminatedPlayers;
+.float(entity) isEliminated;
+float EliminatedPlayers_SendEntity(entity to, float sendflags)
+{
+	float i, f, b;
+	entity e;
+	WriteByte(MSG_ENTITY, ENT_CLIENT_ELIMINATEDPLAYERS);
+	WriteByte(MSG_ENTITY, sendflags);
+
+	if(sendflags & 1)
+	{
+		for(i = 1; i <= maxclients; i += 8)
+		{
+			for(f = 0, e = edict_num(i), b = 1; b < 256; b *= 2, e = nextent(e))
+			{
+				if(eliminatedPlayers.isEliminated(e))
+					f |= b;
+			}
+			WriteByte(MSG_ENTITY, f);
+		}
+	}
+
+	return TRUE;
+}
+
+void EliminatedPlayers_Init(float(entity) isEliminated_func)
+{
+	if(eliminatedPlayers)
+	{
+		backtrace("Can't spawn eliminatedPlayers again!");
+		return;
+	}
+	Net_LinkEntity(eliminatedPlayers = spawn(), FALSE, 0, EliminatedPlayers_SendEntity);
+	eliminatedPlayers.isEliminated = isEliminated_func;
+}
+
+
 void adaptor_think2touch()
 {
     entity o;

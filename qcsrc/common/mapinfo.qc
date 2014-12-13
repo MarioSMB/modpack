@@ -521,7 +521,7 @@ void _MapInfo_Map_ApplyGametype(string s, float pWantedType, float pThisType, fl
 			cvar_set("g_conquest_teams", sa);
 		s = cdr(s);
 	}
-	
+
 	if(pWantedType == MAPINFO_TYPE_JAILBREAK)
 	{
 		sa = car(s);
@@ -722,6 +722,18 @@ float MapInfo_Type_FromString(string t)
 	{
 		print("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
 		t = "inv";
+		print("'. Should use '", t, "'.\n");
+	}
+	if(t == "assault")
+	{
+		print("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
+		t = "as";
+		print("'. Should use '", t, "'.\n");
+	}
+	if(t == "race")
+	{
+		print("MapInfo_Type_FromString (probably ", MapInfo_Map_bspname, "): using deprecated name '", t);
+		t = "rc";
 		print("'. Should use '", t, "'.\n");
 	}
 	if(t == "all")
@@ -1157,7 +1169,7 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 	else if(MapInfo_isRedundant(MapInfo_Map_bspname, MapInfo_Map_title))
 		MapInfo_Map_titlestring = MapInfo_Map_title;
 	else
-		MapInfo_Map_titlestring = sprintf(_("%s: %s"), MapInfo_Map_bspname, MapInfo_Map_title);
+		MapInfo_Map_titlestring = sprintf("%s: %s", MapInfo_Map_bspname, MapInfo_Map_title);
 
 	MapInfo_Cache_Store();
 	if(MapInfo_Map_supportedGametypes != 0)

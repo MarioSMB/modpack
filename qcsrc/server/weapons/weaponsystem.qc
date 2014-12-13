@@ -883,9 +883,6 @@ void W_ReloadedAndReady()
 
 void W_Reload(float sent_ammo_min, string sent_sound)
 {
-	if(self.frozen || self.deadflag != DEAD_NO)
-		return; // don't reload while dead/frozen
-
 	// set global values to work with
 	entity e;
 	e = get_weaponinfo(self.weapon);

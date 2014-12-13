@@ -3,7 +3,7 @@ PERL ?= perl
 QCCFLAGS_WATERMARK ?= -DWATERMARK='"$(shell git describe)"'
 QCC ?= gmqcc
 
-QCCVERSIONFILE := qccversion.$(shell $(QCC) --version > qccversion.txt && git hash-object qccversion.txt)
+QCCVERSIONFILE := qccversion.$(shell (cd server && $(QCC) --version) > qccversion.txt && git hash-object qccversion.txt)
 
 # We eventually need to get rid of these.
 QCCFLAGS_WTFS ?= \

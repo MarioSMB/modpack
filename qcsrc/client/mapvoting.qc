@@ -533,16 +533,13 @@ void MapVote_Init()
 	gametypevote = ReadByte();
 	
 	float mv_real_num_maps = mv_num_maps - mv_abstain;
-	
-	if ( gametypevote )
+
+	if(gametypevote)
 	{
 		mapvote_chosenmap = strzone(ReadString());
 		if ( gametypevote == 2 )
 			gametypevote = 0;
-	}
 
-	if(gametypevote)
-	{
 		gtv_text_size = hud_fontsize*1.4;
 		gtv_text_size_small = hud_fontsize*1.1;
 		

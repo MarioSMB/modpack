@@ -683,16 +683,15 @@ void CSQCModel_Hook_PreDraw(float isplayer)
 			self.anim_saveframe1time = self.anim_frame1time;
 			self.anim_saveframe2 = self.anim_frame2;
 			self.anim_saveframe2time = self.anim_frame2time;
-			if(sf)
-			{
-				CSQCModel_InterpolateAnimation_2To4_PreNote(sf | CSQCMODEL_PROPERTY_LERPFRAC);
-				self.lerpfrac = (doblend ? 0.5 : 0);
-				self.frame = self.anim_frame;
-				self.frame1time = self.anim_frame1time;
-				self.frame2 = self.anim_frame2;
-				self.frame2time = self.anim_frame2time;
-				CSQCModel_InterpolateAnimation_2To4_Note(sf | CSQCMODEL_PROPERTY_LERPFRAC, FALSE);
-			}
+			// Note: we always consider lerpfrac "changed", as it uses fixed values every time anyway.
+			// This ensures that .frame etc. are always written.
+			CSQCModel_InterpolateAnimation_2To4_PreNote(sf | CSQCMODEL_PROPERTY_LERPFRAC);
+			self.lerpfrac = (doblend ? 0.5 : 0);
+			self.frame = self.anim_frame;
+			self.frame1time = self.anim_frame1time;
+			self.frame2 = self.anim_frame2;
+			self.frame2time = self.anim_frame2time;
+			CSQCModel_InterpolateAnimation_2To4_Note(sf | CSQCMODEL_PROPERTY_LERPFRAC, FALSE);
 			CSQCModel_InterpolateAnimation_2To4_Do();
 			if(doblend)
 			{

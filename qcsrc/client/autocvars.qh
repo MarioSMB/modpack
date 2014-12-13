@@ -465,7 +465,6 @@ var float autocvar_cl_conquest_capture_ring_size_max = 128;
 float autocvar_cl_conquest_capture_ring_hud;
 float autocvar_cl_conquest_capture_text_align;
 float autocvar_cl_showspectators;
-float autocvar_cl_rumraisin;
 var string autocvar_crosshair_hmg = ""; 
 var vector autocvar_crosshair_hmg_color = '0.2 1.0 0.2';
 var float autocvar_crosshair_hmg_alpha = 1;

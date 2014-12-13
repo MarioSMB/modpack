@@ -163,13 +163,13 @@ vector GetCurrentFov(float fov)
 	else
 		setsensitivityscale(1);
 
-	makevectors(view_angles);
-
 	if(autocvar_cl_velocityzoom && autocvar_cl_velocityzoom_type) // _type = 0 disables velocity zoom too
 	{
 		if(intermission) { curspeed = 0; }
 		else
 		{
+
+			makevectors(view_angles);
 			v = pmove_vel;
 			if(csqcplayer)
 				v = csqcplayer.velocity;
@@ -402,9 +402,6 @@ float last_beam;
 
 float rainbow_last_flicker;
 vector rainbow_prev_color;
-
-vector wcross_prevorigin;
-float wcross_lastcheck;
 
 float fps_start;
 float fps_frames;
@@ -1385,19 +1382,7 @@ void CSQC_UpdateView(float w, float h)
 			float shottype;
 
 			// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
-			if(autocvar_cl_rumraisin)
-			{
-				if(time >= wcross_lastcheck)
-				{
-					wcross_origin = project_3d_to_2d(view_origin + MAX_SHOT_DISTANCE * view_forward) + (randomvec() * (10000 * drawframetime));
-					wcross_prevorigin = wcross_origin;
-					wcross_lastcheck = time + 0.04; // delay a bit so it's not choppy
-				}
-				else
-					wcross_origin = wcross_prevorigin;
-			}
-			else
-				wcross_origin = project_3d_to_2d(view_origin + MAX_SHOT_DISTANCE * view_forward);
+			wcross_origin = project_3d_to_2d(view_origin + MAX_SHOT_DISTANCE * view_forward);
 			wcross_origin_z = 0;
 			if(autocvar_crosshair_hittest)
 			{
@@ -1645,9 +1630,6 @@ void CSQC_UpdateView(float w, float h)
 				wcross_alpha *= 0.75;
 			}
 			else
-				wcross_blur = 0;
-
-			if(autocvar_cl_rumraisin)
 				wcross_blur = 0;
 
 			// *_prev is at time-frametime

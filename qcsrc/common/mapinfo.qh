@@ -50,10 +50,10 @@ REGISTER_GAMETYPE(_("Race CTS"),cts,g_cts,CTS,"timelimit=20 skill=-1",_("Race fo
 REGISTER_GAMETYPE(_("Team Deathmatch"),tdm,g_tdm,TEAM_DEATHMATCH,"timelimit=20 pointlimit=50 teams=2 leadlimit=0",_("Kill all enemy teammates"));
 #define g_tdm IS_GAMETYPE(TEAM_DEATHMATCH)
 
-REGISTER_GAMETYPE(_("Capture the Flag"),ctf,g_ctf,CTF,"timelimit=20 caplimit=10 leadlimit=0",_("Find and bring the enemy flag to your base to capture it"));
+REGISTER_GAMETYPE(_("Capture the Flag"),ctf,g_ctf,CTF,"timelimit=20 caplimit=10 leadlimit=6",_("Find and bring the enemy flag to your base to capture it"));
 #define g_ctf IS_GAMETYPE(CTF)
 
-REGISTER_GAMETYPE(_("Clan Arena"),ca,g_ca,CA,"timelimit=20 pointlimit=10 leadlimit=0",_("Kill all enemy teammates to win the round"));
+REGISTER_GAMETYPE(_("Clan Arena"),ca,g_ca,CA,"timelimit=20 pointlimit=10 teams=2 leadlimit=0",_("Kill all enemy teammates to win the round"));
 #define g_ca IS_GAMETYPE(CA)
 
 REGISTER_GAMETYPE(_("Domination"),dom,g_domination,DOMINATION,"timelimit=20 pointlimit=200 teams=2 leadlimit=0",_("Capture all the control points to win"));

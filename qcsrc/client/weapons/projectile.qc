@@ -45,6 +45,7 @@ void Projectile_DrawTrail(vector to)
 	}
 }
 
+.float proj_time;
 void Projectile_Draw()
 {
 	vector rot;
@@ -53,6 +54,9 @@ void Projectile_Draw()
 	float drawn;
 	float t;
 	float a;
+	float dt = time - self.proj_time;
+
+	self.proj_time = time;
 
 	f = self.move_flags;
 
@@ -139,6 +143,7 @@ void Projectile_Draw()
 	if(Nade_IDFromProjectile(self.cnt) != 0)
 		trailorigin += v_up * 4;
 
+	if(dt > 0)
 	if(drawn)
 		Projectile_DrawTrail(trailorigin);
 	else
@@ -199,6 +204,7 @@ void Ent_Projectile()
 	self.count = (f & 0x80);
 	self.iflags = (self.iflags & IFLAG_INTERNALMASK) | IFLAG_AUTOANGLES | IFLAG_ANGLES | IFLAG_ORIGIN;
 	self.solid = SOLID_TRIGGER;
+	self.proj_time = time;
 	//self.effects = EF_NOMODELFLAGS;
 
 	// this should make collisions with bmodels more exact, but it leads to

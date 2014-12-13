@@ -28,7 +28,7 @@ void Curl_URI_Get_Callback(float id, float status, string data)
 	do_cvar = curl_uri_get_cvar[i];
 	if(status != 0)
 	{
-		printf(_("error: status is %d\n"), status);
+		dprintf("error: status is %d\n", status);
 		if(do_cvar)
 			strunzone(do_cvar);
 		return;

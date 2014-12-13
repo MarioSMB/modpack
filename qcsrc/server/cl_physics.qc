@@ -785,13 +785,12 @@ void SV_PlayerPhysics()
 			self.disableclientprediction = 0;
 		}
 	}
-	
-	
+
 	if ( self.discomode )
 	{
 		if(IS_PLAYER(self))
 			self.BUTTON_JUMP = 1;
-		
+
 		self.angles_y = time*180;
 		self.fixangle = TRUE;
 	}
@@ -1103,12 +1102,11 @@ void SV_PlayerPhysics()
 		else
 			fz = bound(0, 1 + self.velocity_z / autocvar_g_jetpack_maxspeed_up, 1);
 
-		float fvel;
-		fvel = vlen(wishvel);
 		wishvel_x *= fxy;
 		wishvel_y *= fxy;
 		wishvel_z = (wishvel_z - autocvar_sv_gravity) * fz + autocvar_sv_gravity;
 
+		float fvel;
 		fvel = min(1, vlen(wishvel) / best);
 		if(autocvar_g_jetpack_fuel && (!(self.items & IT_UNLIMITED_WEAPON_AMMO) || cvar("g_overkill")))
 			f = min(1, self.ammo_fuel / (autocvar_g_jetpack_fuel * frametime * fvel));

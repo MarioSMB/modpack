@@ -127,7 +127,7 @@ void buff_Touch()
 		// can't touch this
 		return;
 	}
-	
+
 	if(cvar("g_piggyback"))
 	if(other.buffs)
 	if(other.buffs == self.buffs || !other.cvar_cl_buffs_autoreplace)
@@ -488,7 +488,7 @@ MUTATOR_HOOKFUNCTION(buffs_PlayerPhysics)
 		self.stat_sv_maxspeed *= autocvar_g_buffs_disability_speed;
 		self.stat_sv_airspeedlimit_nonqw *= autocvar_g_buffs_disability_speed;
 	}
-	
+
 	if(self.buffs & BUFF_JUMP)
 	{
 		// automatically reset, no need to worry

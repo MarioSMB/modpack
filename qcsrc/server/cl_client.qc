@@ -669,7 +669,6 @@ void PutClientInServer (void)
 		if(self.cvar_cl_sparkle == 2 && checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
 			self.colormap = 4351;
 
-		self.statdraintime = time + 5;
 		self.BUTTON_ATCK = self.BUTTON_JUMP = self.BUTTON_ATCK2 = 0;
 
 		if(self.killcount == -666) {
@@ -911,8 +910,8 @@ void ClientKill_Now()
 	if(self.killindicator_teamchange)
 		ClientKill_Now_TeamChange();
 
-	// in any case:
-	Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
+	if(IS_PLAYER(self))
+		Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
 
 	// now I am sure the player IS dead
 }
@@ -1848,7 +1847,8 @@ void SpectateCopy(entity spectatee) {
     }
 }
 
-float SpectateUpdate() {
+float SpectateUpdate()
+{
 	if(!self.enemy)
 	    return 0;
 
@@ -2089,7 +2089,7 @@ float nJoinAllowed(entity ignore) {
 
 	float currentlyPlaying = 0;
 	FOR_EACH_REALCLIENT(e)
-		if(IS_PLAYER(e) || e.caplayer == 1)
+		if(IS_PLAYER(e) || e.caplayer)
 			currentlyPlaying += 1;
 
 	if(currentlyPlaying < autocvar_g_maxplayers)
@@ -2103,7 +2103,10 @@ float nJoinAllowed(entity ignore) {
  * g_maxplayers_spectator_blocktime seconds
  */
 void checkSpectatorBlock() {
-	if(IS_SPEC(self) || IS_OBSERVER(self)) {
+	if(IS_SPEC(self) || IS_OBSERVER(self))
+	if(!self.caplayer)
+	if(IS_REAL_CLIENT(self))
+	{
 		if( time > (self.spectatortime + autocvar_g_maxplayers_spectator_blocktime) ) {
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_QUIT_KICK_SPECTATING);
 			dropclient(self);

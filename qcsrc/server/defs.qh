@@ -82,7 +82,6 @@ float server_is_dedicated;
 
 .float	pain_finished;			//Added by Supajoe
 .float	pain_frame;			//"
-.float	statdraintime;			// record the one-second intervals between draining health and armour when they're over 100
 .float  crouch;	// Crouching or not?
 
 .float	invincible_finished, strength_finished; // TODO: vehicles system abuses these
@@ -350,7 +349,6 @@ float next_pingtime;
 		_VOICEMSG(death) \
 		_VOICEMSG(drown) \
 		_VOICEMSG(fall) \
-		_VOICEMSG(fall) \
 		_VOICEMSG(falling) \
 		_VOICEMSG(gasp) \
 		_VOICEMSG(jump) \
@@ -509,8 +507,6 @@ void ClientData_Touch(entity e);
 .float wasplayer;
 
 float servertime, serverprevtime, serverframetime;
-
-.entity soundentity;
 
 .float ammo_fuel;
 
