@@ -89,7 +89,6 @@ float autocvar_g_balance_contents_playerdamage_lava;
 float autocvar_g_balance_contents_playerdamage_slime;
 float autocvar_g_balance_contents_projectiledamage;
 float autocvar_g_balance_damagepush_speedfactor;
-float autocvar_g_balance_damagepush_spawnshield;
 float autocvar_g_balance_falldamage_deadminspeed;
 float autocvar_g_balance_falldamage_factor;
 float autocvar_g_balance_falldamage_maxdamage;
