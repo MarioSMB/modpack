@@ -138,7 +138,9 @@ MUTATOR_HOOKFUNCTION(hats_PlayerSpawn)
 {
 	hats_SpawnHat();
 	self.hatentity.alpha = default_weapon_alpha;
-	self.hatname = strzone(self.cvar_cl_hat);
+	// xcompat
+	self.hatname = "santa";
+	//self.hatname = strzone(self.cvar_cl_hat);
 
 	return FALSE;
 }
@@ -153,6 +155,8 @@ MUTATOR_HOOKFUNCTION(hats_GetCvars)
 MUTATOR_HOOKFUNCTION(hats_RemovePlayer)
 {
 	self.hatentity = world;
+	if(self.hatname)
+		strunzone(self.hatname);
 	self.hatname = "";
 
 	return FALSE;
