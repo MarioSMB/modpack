@@ -155,8 +155,6 @@ MUTATOR_HOOKFUNCTION(hats_GetCvars)
 MUTATOR_HOOKFUNCTION(hats_RemovePlayer)
 {
 	self.hatentity = world;
-	if(self.hatname)
-		strunzone(self.hatname);
 	self.hatname = "";
 
 	return FALSE;
