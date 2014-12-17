@@ -139,7 +139,7 @@ MUTATOR_HOOKFUNCTION(hats_PlayerSpawn)
 	hats_SpawnHat();
 	self.hatentity.alpha = default_weapon_alpha;
 	// xcompat
-	self.hatname = "santa";
+	self.hatname = strzone("santa");
 	//self.hatname = strzone(self.cvar_cl_hat);
 
 	return FALSE;
