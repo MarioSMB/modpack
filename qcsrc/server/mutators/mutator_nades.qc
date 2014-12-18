@@ -594,10 +594,16 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 	if(self.nade_type == NADE_TYPE_TRANSLOCATE || self.nade_type == NADE_TYPE_SPAWN)
 		return;
 
-	if(DEATH_ISWEAPON(deathtype, WEP_BLASTER) || (DEATH_ISWEAPON(deathtype, WEP_VAPORIZER) && (deathtype & HITTYPE_SECONDARY)))
+	if(DEATH_ISWEAPON(deathtype, WEP_BLASTER))
 	{
 		force *= 1.5;
 		damage = 0;
+	}
+
+	if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER) && (deathtype & HITTYPE_SECONDARY))
+	{
+		force *= 0.85; // too much
+		frag_damage = 0;
 	}
 
 	if(DEATH_ISWEAPON(deathtype, WEP_VORTEX) || DEATH_ISWEAPON(deathtype, WEP_VAPORIZER))
