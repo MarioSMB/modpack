@@ -602,7 +602,7 @@ void nade_damage(entity inflictor, entity attacker, float damage, float deathtyp
 
 	if(DEATH_ISWEAPON(deathtype, WEP_VAPORIZER) && (deathtype & HITTYPE_SECONDARY))
 	{
-		force *= 0.85; // too much
+		force *= 0.5; // too much
 		frag_damage = 0;
 	}
 
