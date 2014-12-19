@@ -101,6 +101,7 @@ float autocvar_g_balance_fuel_regenstable;
 float autocvar_g_balance_fuel_rot;
 float autocvar_g_balance_fuel_rotlinear;
 float autocvar_g_balance_fuel_rotstable;
+var float autocvar_g_balance_grapplehook_piggybackfriction = 1;
 float autocvar_g_balance_grapplehook_airfriction;
 float autocvar_g_balance_grapplehook_force_rubber;
 float autocvar_g_balance_grapplehook_force_rubber_overstretch;

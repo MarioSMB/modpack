@@ -7,3 +7,6 @@
 
 void pb_Attach(entity host, entity slave);
 void pb_Detach(entity host);
+
+entity pb_TailOf(entity p);
+entity pb_RootOf(entity p);
