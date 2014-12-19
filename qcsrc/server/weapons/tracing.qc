@@ -314,7 +314,7 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 		{
 			if(deathtype == WEP_RIFLE)
 				bdamage *= autocvar_sv_headshot_damage; // more damage if a headshot
-				
+
 			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_HEADSHOT);
 		}
 

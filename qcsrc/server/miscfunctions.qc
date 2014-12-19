@@ -536,7 +536,7 @@ void GetCvars(float f)
 		if (s == "cl_weaponpriority")
 			self.switchweapon = w_getbestweapon(self);
 		if (s == "cl_allow_uidtracking")
-			PlayerStats_AddPlayer(self);
+			PlayerStats_GameReport_AddPlayer(self);
 	}
 }
 
@@ -799,11 +799,11 @@ void readplayerstartcvars()
 
 	if(start_items & IT_UNLIMITED_WEAPON_AMMO)
 	{
-		start_ammo_rockets = 999;
 		start_ammo_shells = 999;
+		start_ammo_nails = 999;
+		start_ammo_rockets = 999;
 		start_ammo_cells = 999;
 		start_ammo_plasma = 999;
-		start_ammo_nails = 999;
 		start_ammo_fuel = 999;
 	}
 	else
@@ -822,6 +822,7 @@ void readplayerstartcvars()
 		warmup_start_ammo_nails = start_ammo_nails;
 		warmup_start_ammo_rockets = start_ammo_rockets;
 		warmup_start_ammo_cells = start_ammo_cells;
+		warmup_start_ammo_plasma = start_ammo_plasma;
 		warmup_start_ammo_fuel = start_ammo_fuel;
 		warmup_start_health = start_health;
 		warmup_start_armorvalue = start_armorvalue;
@@ -832,9 +833,10 @@ void readplayerstartcvars()
 		if (!g_weaponarena && !g_ca)
 		{
 			warmup_start_ammo_shells = cvar("g_warmup_start_ammo_shells");
-			warmup_start_ammo_cells = cvar("g_warmup_start_ammo_cells");
 			warmup_start_ammo_nails = cvar("g_warmup_start_ammo_nails");
 			warmup_start_ammo_rockets = cvar("g_warmup_start_ammo_rockets");
+			warmup_start_ammo_cells = cvar("g_warmup_start_ammo_cells");
+			warmup_start_ammo_plasma = cvar("g_warmup_start_ammo_plasma");
 			warmup_start_ammo_fuel = cvar("g_warmup_start_ammo_fuel");
 			warmup_start_health = cvar("g_warmup_start_health");
 			warmup_start_armorvalue = cvar("g_warmup_start_armor");
@@ -880,16 +882,16 @@ void readplayerstartcvars()
 
 	start_ammo_shells = max(0, start_ammo_shells);
 	start_ammo_nails = max(0, start_ammo_nails);
+	start_ammo_rockets = max(0, start_ammo_rockets);
 	start_ammo_cells = max(0, start_ammo_cells);
 	start_ammo_plasma = max(0, start_ammo_plasma);
-	start_ammo_rockets = max(0, start_ammo_rockets);
 	start_ammo_fuel = max(0, start_ammo_fuel);
 
 	warmup_start_ammo_shells = max(0, warmup_start_ammo_shells);
 	warmup_start_ammo_nails = max(0, warmup_start_ammo_nails);
+	warmup_start_ammo_rockets = max(0, warmup_start_ammo_rockets);
 	warmup_start_ammo_cells = max(0, warmup_start_ammo_cells);
 	warmup_start_ammo_plasma = max(0, warmup_start_ammo_plasma);
-	warmup_start_ammo_rockets = max(0, warmup_start_ammo_rockets);
 	warmup_start_ammo_fuel = max(0, warmup_start_ammo_fuel);
 }
 
@@ -1779,7 +1781,9 @@ float WarpZone_Projectile_Touch_ImpactFilter_Callback()
 		return TRUE;
 	if(SUB_NoImpactCheck())
 	{
-		if(self.classname == "grapplinghook")
+		if(self.classname == "nade")
+			return FALSE; // no checks here
+		else if(self.classname == "grapplinghook")
 			RemoveGrapplingHook(self.realowner);
 		else if(self.classname == "spike")
 		{

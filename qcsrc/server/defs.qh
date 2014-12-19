@@ -629,6 +629,15 @@ string modname;
 #define MISSILE_IS_GUIDED(m) ((m.missile_flags & MIF_GUIDED_ALL) ? TRUE : FALSE)
 #define MISSILE_IS_TRACKING(m) ((m.missile_flags & MIF_GUIDED_TRACKING) ? TRUE : FALSE)
 
+
+////
+
+.entity player_stats;
+//.float playerid;
+.string playernick;
+.float elos;
+.float ranks;
+
 .float cvar_cl_sparkle;
 .float cvar_cl_pony;
 .float cvar_cl_pony_skin;

@@ -266,7 +266,7 @@ void W_Arc_Beam_Think(void)
 			{
 				pointparticles( particleeffectnum("arc_overheat"), 
 					self.beam_start, self.beam_wantdir, 1 );
-				sound(self, CH_WEAPON_A, W_Sound("strength_fire"), VOL_BASE, ATTN_NORM);
+				sound(self, CH_WEAPON_A, "weapons/arc_stop.wav", VOL_BASE, ATTN_NORM);
 			}
 		}
 		
@@ -579,7 +579,7 @@ void W_Arc_Beam(float burst)
 	// only play fire sound if 1 sec has passed since player let go the fire button
 	if(time - self.beam_prev > 1)
 	{
-		sound(self, CH_WEAPON_A, W_Sound("lgbeam_fire"), VOL_BASE, ATTN_NORM);
+		sound(self, CH_WEAPON_A, "weapons/arc_fire.wav", VOL_BASE, ATTN_NORM);
 	}
 
 	entity beam = self.arc_beam = spawn();
@@ -615,7 +615,7 @@ void Arc_Smoke()
 			if ( !self.arc_smoke_sound )
 			{
 				self.arc_smoke_sound = 1;
-				sound(self, CH_SHOTS_SINGLE, W_Sound("gauntletbeam_fly"), VOL_BASE, ATTN_NORM);
+				sound(self, CH_SHOTS_SINGLE, "weapons/arc_loop_overheat.wav", VOL_BASE, ATTN_NORM);
 			}
 		}
 	}
@@ -699,6 +699,7 @@ float W_Arc(float req)
 			
 			if(self.arc_BUTTON_ATCK_prev != 0)
 			{
+				sound(self, CH_WEAPON_A, "weapons/arc_stop.wav", VOL_BASE, ATTN_NORM);
 				weapon_thinkf(WFRAME_FIRE1, WEP_CVAR(arc, beam_animtime), w_ready);
 				ATTACK_FINISHED(self) = time + WEP_CVAR(arc, beam_refire) * W_WeaponRateFactor();
 			}
@@ -722,9 +723,10 @@ float W_Arc(float req)
 			precache_model("models/weapons/g_arc.md3");
 			precache_model("models/weapons/v_arc.md3");
 			precache_model("models/weapons/h_arc.iqm");
-			precache_sound(W_Sound("lgbeam_fire"));
-			precache_sound(W_Sound("gauntletbeam_fly"));
-			precache_sound(W_Sound("strength_fire"));
+			precache_sound("weapons/arc_fire.wav");
+			precache_sound("weapons/arc_loop.wav");
+			precache_sound("weapons/arc_stop.wav");
+			precache_sound("weapons/arc_loop_overheat.wav");
 			if(!arc_shotorigin[0])
 			{
 				arc_shotorigin[0] = shotorg_adjust_values(CL_Weapon_GetShotOrg(WEP_ARC), FALSE, FALSE, 1);
@@ -1185,7 +1187,7 @@ void Ent_ReadArcBeam(float isnew)
 		self.draw = Draw_ArcBeam;
 		self.entremove = Remove_ArcBeam;
 		self.move_time = time;
-		loopsound(self, CH_SHOTS_SINGLE, "weapons/lgbeam_fly.wav", VOL_BASE, ATTEN_NORM);
+		loopsound(self, CH_SHOTS_SINGLE, "weapons/arc_loop.wav", VOL_BASE, ATTEN_NORM);
 
 		flash = spawn();
 		flash.owner = self;
@@ -1276,7 +1278,7 @@ void Ent_ReadArcBeam(float isnew)
 		{
 			case ARC_BT_MISS:
 			{
-				self.beam_color = '-1 -1 1';
+				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
 				self.beam_traileffect = particleeffectnum("arc_beam");
@@ -1292,7 +1294,6 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_muzzlelight[3] = 1;
 				if(self.beam_muzzleeffect >= 0)
 				{
-					self.beam_image = "particles/lgbeam";
 					setmodel(flash, "models/flash.md3");
 					flash.alpha = self.beam_alpha;
 					flash.colormod = self.beam_color;
@@ -1302,7 +1303,7 @@ void Ent_ReadArcBeam(float isnew)
 			}
 			case ARC_BT_WALL: // grenadelauncher_muzzleflash healray_muzzleflash
 			{
-				self.beam_color = '0.5 0.5 1';
+				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
 				self.beam_traileffect = particleeffectnum("arc_beam");
@@ -1328,7 +1329,7 @@ void Ent_ReadArcBeam(float isnew)
 			}
 			case ARC_BT_HEAL:
 			{
-				self.beam_color = '0 1 0';
+				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
 				self.beam_traileffect = particleeffectnum("arc_beam_heal");
@@ -1345,7 +1346,6 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_image = "particles/lgbeam";
 				if(self.beam_muzzleeffect >= 0)
 				{
-					self.beam_image = "particles/lgbeam";
 					setmodel(flash, "models/flash.md3");
 					flash.alpha = self.beam_alpha;
 					flash.colormod = self.beam_color;
@@ -1355,7 +1355,7 @@ void Ent_ReadArcBeam(float isnew)
 			}
 			case ARC_BT_HIT:
 			{
-				self.beam_color = '1 0 1';
+				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 8;
 				self.beam_traileffect = particleeffectnum("arc_beam");
@@ -1372,7 +1372,6 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_image = "particles/lgbeam";
 				if(self.beam_muzzleeffect >= 0)
 				{
-					self.beam_image = "particles/lgbeam";
 					setmodel(flash, "models/flash.md3");
 					flash.alpha = self.beam_alpha;
 					flash.colormod = self.beam_color;
@@ -1382,30 +1381,7 @@ void Ent_ReadArcBeam(float isnew)
 			}
 			case ARC_BT_BURST_MISS:
 			{
-				self.beam_color = '-1 -1 1';
-				self.beam_alpha = 0.5;
-				self.beam_thickness = 14;
-				self.beam_traileffect = particleeffectnum("arc_beam");
-				self.beam_hiteffect = particleeffectnum("arc_lightning");
-				self.beam_hitlight[0] = 0;
-				self.beam_hitlight[1] = 1;
-				self.beam_hitlight[2] = 1;
-				self.beam_hitlight[3] = 1;
-				self.beam_muzzleeffect = -1; //particleeffectnum("nex_muzzleflash");
-				self.beam_muzzlelight[0] = 0;
-				self.beam_muzzlelight[1] = 1;
-				self.beam_muzzlelight[2] = 1;
-				self.beam_muzzlelight[3] = 1;
-				self.beam_image = "particles/lgbeam";
-				setmodel(flash, "models/flash.md3");
-				flash.alpha = self.beam_alpha;
-				flash.colormod = self.beam_color;
-				flash.scale = 0.5;
-				break;
-			}
-			case ARC_BT_BURST_WALL:
-			{
-				self.beam_color = '0.5 0.5 1';
+				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
 				self.beam_traileffect = particleeffectnum("arc_beam");
@@ -1422,7 +1398,32 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_image = "particles/lgbeam";
 				if(self.beam_muzzleeffect >= 0)
 				{
-					self.beam_image = "particles/lgbeam";
+					setmodel(flash, "models/flash.md3");
+					flash.alpha = self.beam_alpha;
+					flash.colormod = self.beam_color;
+					flash.scale = 0.5;
+				}
+				break;
+			}
+			case ARC_BT_BURST_WALL:
+			{
+				self.beam_color = '1 1 1';
+				self.beam_alpha = 0.5;
+				self.beam_thickness = 14;
+				self.beam_traileffect = particleeffectnum("arc_beam");
+				self.beam_hiteffect = particleeffectnum("arc_lightning");
+				self.beam_hitlight[0] = 0;
+				self.beam_hitlight[1] = 1;
+				self.beam_hitlight[2] = 1;
+				self.beam_hitlight[3] = 1;
+				self.beam_muzzleeffect = -1; //particleeffectnum("nex_muzzleflash");
+				self.beam_muzzlelight[0] = 0;
+				self.beam_muzzlelight[1] = 1;
+				self.beam_muzzlelight[2] = 1;
+				self.beam_muzzlelight[3] = 1;
+				self.beam_image = "particles/lgbeam";
+				if(self.beam_muzzleeffect >= 0)
+				{
 					setmodel(flash, "models/flash.md3");
 					flash.alpha = self.beam_alpha;
 					flash.colormod = self.beam_color;
@@ -1432,7 +1433,7 @@ void Ent_ReadArcBeam(float isnew)
 			}
 			case ARC_BT_BURST_HEAL:
 			{
-				self.beam_color = '0 1 0';
+				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
 				self.beam_traileffect = particleeffectnum("arc_beam_heal");
@@ -1449,7 +1450,6 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_image = "particles/lgbeam";
 				if(self.beam_muzzleeffect >= 0)
 				{
-					self.beam_image = "particles/lgbeam";
 					setmodel(flash, "models/flash.md3");
 					flash.alpha = self.beam_alpha;
 					flash.colormod = self.beam_color;
@@ -1459,7 +1459,7 @@ void Ent_ReadArcBeam(float isnew)
 			}
 			case ARC_BT_BURST_HIT:
 			{
-				self.beam_color = '1 0 1';
+				self.beam_color = '1 1 1';
 				self.beam_alpha = 0.5;
 				self.beam_thickness = 14;
 				self.beam_traileffect = particleeffectnum("arc_beam");
@@ -1476,7 +1476,6 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_image = "particles/lgbeam";
 				if(self.beam_muzzleeffect >= 0)
 				{
-					self.beam_image = "particles/lgbeam";
 					setmodel(flash, "models/flash.md3");
 					flash.alpha = self.beam_alpha;
 					flash.colormod = self.beam_color;
@@ -1505,7 +1504,6 @@ void Ent_ReadArcBeam(float isnew)
 				self.beam_image = "particles/lgbeam";
 				if(self.beam_muzzleeffect >= 0)
 				{
-					self.beam_image = "particles/lgbeam";
 					setmodel(flash, "models/flash.md3");
 					flash.alpha = self.beam_alpha;
 					flash.colormod = self.beam_color;
@@ -1533,7 +1531,7 @@ float W_Arc(float req)
 		}
 		case WR_INIT:
 		{
-			precache_sound("weapons/lgbeam_fly.wav");
+			precache_sound("weapons/arc_loop.wav");
 			return TRUE;
 		}
 		case WR_ZOOMRETICLE:

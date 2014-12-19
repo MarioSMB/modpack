@@ -13,7 +13,7 @@ float buffs_BuffModel_Customize()
 	if(cvar("g_piggyback"))
 	if(player.pbhost == myowner || myowner.piggybacker)
 		return FALSE; // don't show to piggybacker's carrier, and don't show if carrier is carrying someone else
-		
+
 	if(player == myowner || (IS_SPEC(other) && other.enemy == myowner))
 	{
 		// somewhat hide the model, but keep the glow

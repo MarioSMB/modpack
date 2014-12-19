@@ -152,6 +152,7 @@ float HUD_Panel_CheckFlags(float showflags);
 		++HUD_PANEL_NUM; \
 	} \
 	ACCUMULATE_FUNCTION(RegisterHUD_Panels, RegisterHUD_Panel_##NAME);
+
 HUD_PANELS
 #undef HUD_PANEL
 

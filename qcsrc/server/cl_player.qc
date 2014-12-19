@@ -505,7 +505,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 
 		if(self.alivetime)
 		{
-			PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
+			PS_GR_P_ADDVAL(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
 			self.alivetime = 0;
 		}
 

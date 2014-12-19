@@ -28,29 +28,12 @@ void menu_sub_null()
 {
 }
 
-#ifdef USE_FTE
-float __engine_check;
-#endif
-
 string forcefog;
 void WaypointSprite_Load();
 void ConsoleCommand_macro_init();
 void CSQC_Init(void)
 {
 	prvm_language = cvar_string("prvm_language");
-#ifdef USE_FTE
-#pragma target ID
-	__engine_check = checkextension("DP_SV_WRITEPICTURE");
-	if(!__engine_check)
-	{
-		print(_("^3Your engine build is outdated\n^3This Server uses a newer QC VM. Please update!\n"));
-		localcmd("\ndisconnect\n");
-		return;
-	}
-#pragma target FTE
-#endif
-
-	check_unacceptable_compiler_bugs();
 
 #ifdef WATERMARK
 	dprintf("^4CSQC Build information: ^1%s\n", WATERMARK);
@@ -265,13 +248,6 @@ void CSQC_Init(void)
 // CSQC_Shutdown : Called every time the CSQC code is shutdown (changing maps, quitting, etc)
 void Shutdown(void)
 {
-#ifdef USE_FTE
-#pragma TARGET id
-	if(!__engine_check)
-		return 0;
-#pragma TARGET fte
-#endif
-
 	WarpZone_Shutdown();
 
 	remove(teams);
@@ -1088,7 +1064,7 @@ void CSQC_Ent_Remove()
 	else if ( self.owner == active_minigame && self.classname == "minigame_player" 
 			&& self.minigame_playerslot == player_localentnum )
 		deactivate_minigame();
-	
+
 	if(self.enttype)
 		Ent_Remove();
 	remove(self);

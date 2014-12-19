@@ -64,7 +64,6 @@ float autocvar_bot_wander_enable;
 float autocvar_captureleadlimit_override;
 #define autocvar_capturelimit_override cvar("capturelimit_override")
 #define autocvar_developer cvar("developer")
-float autocvar_developer_fteqccbugs;
 float autocvar_ekg;
 #define autocvar_fraglimit cvar("fraglimit")
 #define autocvar_fraglimit_override cvar("fraglimit_override")
@@ -494,7 +493,6 @@ float autocvar_g_pickup_shells_max;
 float autocvar_g_player_alpha;
 float autocvar_g_player_brightness;
 float autocvar_g_playerclip_collisions;
-string autocvar_g_playerstats_uri;
 float autocvar_g_projectiles_damage;
 float autocvar_g_projectiles_keep_owner;
 float autocvar_g_projectiles_newton_style;
@@ -901,7 +899,6 @@ float autocvar_g_za_spawn_delay;
 float autocvar_g_overkill_superguns_respawn_time;
 float autocvar_g_overkill_100h_anyway;
 float autocvar_g_overkill_100a_anyway;
-float autocvar_g_overkill_ammo_start;
 float autocvar_g_overkill_ammo_charge;
 float autocvar_g_overkill_ammo_charge_notice;
 float autocvar_g_overkill_ammo_charge_limit;

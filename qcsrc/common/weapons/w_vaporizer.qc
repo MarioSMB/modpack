@@ -296,7 +296,7 @@ void W_Vaporizer_Attack(void)
 		W_RocketMinsta_Explosion(trace_endpos);
 
 	Send_Effect(f, w_shotorg, v, 0);
-	
+
 	W_DecreaseAmmo(((g_instagib) ? 1 : WEP_CVAR_PRI(vaporizer, ammo)));
 }
 

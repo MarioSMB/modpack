@@ -1058,7 +1058,7 @@ void ctf_RespawnFlag(entity flag)
 	flag.ctf_pickuptime = 0;
 	flag.ctf_droptime = 0;
 	flag.ctf_flagdamaged = 0;
-	
+
 	ctf_CheckStalemate();
 }
 
@@ -1114,7 +1114,7 @@ void ctf_DelayedFlagSetup(void) // called after a flag is placed on a map by ctf
 	ctf_CaptureShield_Spawn(self);
 }
 
-void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc 
+void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag entity on the map as a spawnfunc
 {
 	// declarations
 	self = flag; // for later usage with droptofloor()
@@ -1125,7 +1125,7 @@ void ctf_FlagSetup(float teamnumber, entity flag) // called when spawning a flag
 
 	setattachment(flag, world, "");
 
-	flag.netname = sprintf("%s%s^7 flag", Team_ColorCode(teamnumber), Team_ColorName_Upper(teamnumber));
+	flag.netname = strzone(sprintf("%s%s^7 flag", Team_ColorCode(teamnumber), Team_ColorName_Upper(teamnumber)));
 	flag.team = teamnumber;
 	flag.classname = "item_flag_team";
 	flag.target = "###item###"; // wut?

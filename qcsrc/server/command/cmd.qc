@@ -192,25 +192,33 @@ void ClientCommand_physics(float request, float argc)
 		case CMD_REQUEST_COMMAND:
 		{
 			string command = strtolower(argv(1));
-			
+
+			if(command == "list" || command == "help")
+			{
+				sprint(self, strcat("Available physics sets: \n\n", autocvar_g_physics_clientselect_options, " default\n"));
+				if(!autocvar_g_physics_clientselect)
+					sprint(self, "These are unusable currently, as client physics selection is disabled\n");
+				return;
+			}
+
+			if(Physics_Valid(command) || command == "default")
+			{
+				stuffcmd(self, strcat("\nseta cl_physics ", command, "\nsendcvar cl_physics\n"));
+
+				if(!autocvar_g_physics_clientselect)
+					sprint(self, strcat("Physics set to ^3", command, "^7, but will not be used since client physics selection is disabled\n"));
+				else
+					sprint(self, strcat("^2Physics set successfully changed to ^3", command, "\n"));
+				return;
+			}
+
 			if(!autocvar_g_physics_clientselect)
 			{
 				sprint(self, "Client physics selection is currently disabled.\n");
 				return;
 			}
 
-			if(command == "list" || command == "help")
-			{
-				sprint(self, strcat("Available physics sets: \n\n", autocvar_g_physics_clientselect_options, " default\n"));
-				return;
-			}
-			
-			if(Physics_Valid(command) || command == "default")
-			{
-				stuffcmd(self, strcat("\nseta cl_physics ", command, "\nsendcvar cl_physics\n"));
-				sprint(self, strcat("^2Physics set successfully changed to ^3", command, "\n"));
-				return;
-			}
+
 		}
 	
 		default:

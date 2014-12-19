@@ -110,6 +110,7 @@ float accuracy_isgooddamage(entity attacker, entity targ)
 
 	if(!warmup_stage)
 	if(targ.deadflag == DEAD_NO)
+	if(!targ.frozen)
 	if(mutator_check == MUT_ACCADD_INVALID || (mutator_check == MUT_ACCADD_VALID && IS_CLIENT(targ)))
 	if(DIFF_TEAM(attacker, targ))
 		return TRUE;

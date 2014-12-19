@@ -551,7 +551,7 @@ void Send_Notification_WOCOVA(
     MSG_INFO_NOTIF(1, INFO_WATERMARK,                      1, 0, "s1", "",                          "",                     _("^F3SVQC Build information: ^F4%s"), "") \
     MSG_INFO_NOTIF(1, INFO_WEAPON_ACCORDEON_MURDER,              3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weapontuba",             _("^BG%s%s^K1 died of ^BG%s^K1's great playing on the @!#%%'n Accordeon%s%s"), "") \
     MSG_INFO_NOTIF(1, INFO_WEAPON_ACCORDEON_SUICIDE,             2, 1, "s1 s2loc spree_lost", "s1",                 "weapontuba",             _("^BG%s^K1 hurt their own ears with the @!#%%'n Accordeon%s%s"), "") \
-    MSG_INFO_NOTIF(1, INFO_WEAPON_ARC_MURDER,                    3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponhlac",             _("^BG%s%s^K1 was electrocuted by ^BG%s^K1's Arc%s%s"), "") \
+    MSG_INFO_NOTIF(1, INFO_WEAPON_ARC_MURDER,                    3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponarc",              _("^BG%s%s^K1 was electrocuted by ^BG%s^K1's Arc%s%s"), "") \
     MSG_INFO_NOTIF(1, INFO_WEAPON_BLASTER_MURDER,                3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponlaser",            _("^BG%s%s^K1 was shot to death by ^BG%s^K1's Blaster%s%s"), "") \
     MSG_INFO_NOTIF(1, INFO_WEAPON_BLASTER_SUICIDE,               2, 1, "s1 s2loc spree_lost", "s1",                 "weaponlaser",            _("^BG%s^K1 shot themself to hell with their Blaster%s%s"), "") \
     MSG_INFO_NOTIF(1, INFO_WEAPON_CRYLINK_MURDER,                3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponcrylink",          _("^BG%s%s^K1 felt the strong pull of ^BG%s^K1's Crylink%s%s"), "") \
@@ -792,7 +792,7 @@ void Send_Notification_WOCOVA(
     MSG_CENTER_NOTIF(1, CENTER_INSTAGIB_FINDAMMO,           0, 0, "",              CPID_INSTAGIB_FINDAMMO,"1 9", _("^F4^COUNT^BG left to find some ammo!"), "") \
     MSG_CENTER_NOTIF(1, CENTER_INSTAGIB_FINDAMMO_FIRST,     0, 0, "",              CPID_INSTAGIB_FINDAMMO,"1 10", _("^BGGet some ammo or you'll be dead in ^F4^COUNT^BG!"), _("^BGGet some ammo! ^F4^COUNT^BG left!")) \
     MSG_CENTER_NOTIF(1, CENTER_INSTAGIB_LIVES_REMAINING,    0, 1, "f1",            NO_CPID,               "0 0", _("^F2Extra lives remaining: ^K1%s"), "") \
-    MSG_CENTER_NOTIF(1, CENTER_MOTD,                        1, 0, "s1",            CPID_MOTD,             "5 0", _("^BG%s"), "") \
+    MSG_CENTER_NOTIF(1, CENTER_MOTD,                        1, 0, "s1",            CPID_MOTD,             "5 0", "^BG%s", "") \
     MSG_CENTER_NOTIF(1, CENTER_NIX_COUNTDOWN,               0, 2, "item_wepname",  CPID_NIX,              "1 f2", _("^F2^COUNT^BG until weapon change...\nNext weapon: ^F1%s"), "") \
     MSG_CENTER_NOTIF(1, CENTER_NIX_NEWWEAPON,               0, 1, "item_wepname",  CPID_NIX,              "0 0", _("^F2Active weapon: ^F1%s"), "") \
     MSG_CENTER_NOTIF(1, CENTER_NADE,                        0, 0, "",              NO_CPID,               "0 0", _("^BGPress ^F2DROPWEAPON^BG again to toss the grenade!"), "") \

@@ -91,7 +91,7 @@ csqceffects.qc
 
 anticheat.qh
 cheats.qh
-playerstats.qh
+../common/playerstats.qh
 
 portals.qh
 
@@ -240,7 +240,7 @@ playerdemo.qc
 
 anticheat.qc
 cheats.qc
-playerstats.qc
+../common/playerstats.qc
 
 round_handler.qc
 

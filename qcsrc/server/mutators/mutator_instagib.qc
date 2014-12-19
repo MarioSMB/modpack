@@ -277,11 +277,16 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 
 MUTATOR_HOOKFUNCTION(instagib_SetStartItems)
 {
-	start_ammo_cells = warmup_start_ammo_cells = cvar("g_instagib_ammo_start");
-	start_ammo_rockets = warmup_start_ammo_rockets = cvar("g_instagib_withmines_ammo_start");
+	start_health       = warmup_start_health       = 100;
+	start_armorvalue   = warmup_start_armorvalue   = 0;
 
-	start_health = warmup_start_health = 100;
-	start_armorvalue = warmup_start_armorvalue = 0;
+	start_ammo_shells  = warmup_start_ammo_shells  = 0;
+	start_ammo_nails   = warmup_start_ammo_nails   = 0;
+	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_instagib_ammo_start");
+	start_ammo_plasma  = warmup_start_ammo_plasma  = 0;
+	start_ammo_rockets = warmup_start_ammo_rockets = cvar("g_instagib_withmines_ammo_start");;
+	start_ammo_fuel    = warmup_start_ammo_fuel    = 0;
+
 	start_weapons = warmup_start_weapons = ((cvar("g_instagib_withmines")) ? (WEPSET_VAPORIZER | WEPSET_MINE_LAYER) : WEPSET_VAPORIZER);
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;
 
@@ -293,7 +298,7 @@ MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 	if(self.classname == "item_cells")
 	if(!autocvar_g_instagib_use_normal_ammo)
 		return TRUE;
-		
+
 	if(self.classname == "item_rockets")
 	if(!autocvar_g_instagib_use_normal_ammo || !cvar("g_instagib_withmines"))
 		return TRUE;
@@ -307,7 +312,6 @@ MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 	if(self.weapon == WEP_DEVASTATOR || self.weapon == WEP_VORTEX)
 	{
 		entity e = spawn(), oldself;
-		
 		setorigin(e, self.origin);
 		oldself = self;
 		self = e;

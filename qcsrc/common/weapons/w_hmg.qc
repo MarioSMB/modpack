@@ -6,7 +6,7 @@ REGISTER_WEAPON(
 /* impulse	 */ 3,
 /* flags	 */ WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_HIDDEN | WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_SUPERWEAPON,
 /* rating	 */ BOT_PICKUP_RATING_HIGH,
-/* color     */ '1 1 0',
+/* color     */ '0.5 0.5 0',
 /* modelname */ "ok_hmg",
 /* simplemdl */ "foobar",
 /* crosshair */ "gfx/crosshairuzi 0.6",

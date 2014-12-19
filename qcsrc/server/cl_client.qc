@@ -184,7 +184,7 @@ void PutObserverInServer (void)
 
     self.hud = HUD_NORMAL;
 
-    if(IS_PLAYER(self)) { Send_Effect(EFFECT_SPAWN_NEUTRAL, self.origin, '0 0 0', 1); }
+	if(IS_PLAYER(self)) { Send_Effect(EFFECT_SPAWN_NEUTRAL, self.origin, '0 0 0', 1); }
 	
 	if(autocvar_g_observer_glowtrails)
 		CSQCModel_UnlinkEntity();
@@ -212,7 +212,7 @@ void PutObserverInServer (void)
 	if(self.alivetime)
 	{
 		if(!warmup_stage)
-			PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
+			PS_GR_P_ADDVAL(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
 		self.alivetime = 0;
 	}
 
@@ -305,6 +305,7 @@ void PutObserverInServer (void)
 	self.punchvector = '0 0 0';
 	self.oldvelocity = self.velocity;
 	self.fire_endtime = -1;
+	self.event_damage = func_null;
 
 	if(autocvar_g_observer_glowtrails)
 	{
@@ -1158,6 +1159,8 @@ void ClientConnect (void)
 		player_count = 0;
 	}
 
+	if(IS_REAL_CLIENT(self)) { PlayerStats_PlayerBasic_CheckUpdate(self); }
+
 	PlayerScore_Attach(self);
 	ClientData_Attach();
 	accuracy_init(self);
@@ -1236,10 +1239,10 @@ void ClientConnect (void)
 
 	self.playerid = (playerid_last = playerid_last + 1);
 
-	PlayerStats_AddEvent(sprintf("kills-%d", self.playerid));
+	PlayerStats_GameReport_AddEvent(sprintf("kills-%d", self.playerid));
 
     if(IS_BOT_CLIENT(self))
-        PlayerStats_AddPlayer(self);
+        PlayerStats_GameReport_AddPlayer(self);
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":join:", ftos(self.playerid), ":", ftos(num_for_edict(self)), ":", ((IS_REAL_CLIENT(self)) ? self.netaddress : "bot"), ":", self.netname));
@@ -1345,15 +1348,15 @@ void ClientDisconnect (void)
 		print("Warning: ClientDisconnect without ClientConnect\n");
 		return;
 	}
-	
+
+	PlayerStats_GameReport_FinalizePlayer(self);
+
 	if ( self.active_minigame )
 		part_minigame(self);
 
 	SetSpectator(self, world);
 
 	if(IS_PLAYER(self)) { Send_Effect(EFFECT_SPAWN_NEUTRAL, self.origin, '0 0 0', 1); }
-
-	PlayerStats_AddGlobalInfo(self);
 
 	CheatShutdownClient();
 
@@ -1790,8 +1793,7 @@ void SpectateCopy(entity spectatee) {
 	self.impulse = 0;
 	self.items = spectatee.items;
 	self.last_pickup = spectatee.last_pickup;
-	//self.damage_dealt = spectatee.damage_dealt;
-	//self.damage_dealt_total = spectatee.damage_dealt_total;
+	self.hit_time = spectatee.hit_time;
 	self.metertime = spectatee.metertime;
 	self.pressedkeys = spectatee.pressedkeys;
 	self.weapons = spectatee.weapons;

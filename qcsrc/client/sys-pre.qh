@@ -1,7 +1,3 @@
-#ifdef USE_FTE
-#pragma target FTE
-#endif
-
 #define CSQC
 
 #define ATTEN_NORM builtin_ATTEN_NORM

@@ -43,7 +43,7 @@ void sandbox_ObjectFunction_Touch()
 void sandbox_ObjectFunction_Think()
 {
 	entity e;
-	
+
 	if(autocvar_g_sandbox_snaptogrid && self.origin != self.prevorigin)
 	{
 		sandbox_SnapToGrid(self, autocvar_g_sandbox_snaptogrid);

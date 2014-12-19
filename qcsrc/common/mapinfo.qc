@@ -595,6 +595,15 @@ string _MapInfo_GetDefaultEx(float t)
 	return "";
 }
 
+float _MapInfo_GetTeamPlayBool(float t)
+{
+	entity e;
+	for(e = MapInfo_Type_first; e; e = e.enemy)
+		if(t == e.items)
+			return e.team;
+	return FALSE;
+}
+
 void _MapInfo_Map_ApplyGametypeEx(string s, float pWantedType, float pThisType)
 {
 	string sa, k, v;
@@ -1267,7 +1276,7 @@ float MapInfo_CurrentFeatures()
 {
 	float req;
 	req = 0;
-	if(!(cvar("g_lms") || cvar("g_instagib") || cvar("g_nix") || cvar("g_weaponarena") || !cvar("g_pickup_items") || cvar("g_race") || cvar("g_cts") || cvar("g_nexball")))
+	if(!(cvar("g_lms") || cvar("g_instagib") || cvar("g_overkill") || cvar("g_nix") || cvar("g_weaponarena") || !cvar("g_pickup_items") || cvar("g_race") || cvar("g_cts") || cvar("g_nexball")))
 		req |= MAPINFO_FEATURE_WEAPONS;
 	return req;
 }

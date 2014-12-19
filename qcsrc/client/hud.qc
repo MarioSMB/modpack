@@ -934,16 +934,16 @@ void DrawAmmoItem(vector myPos, vector mySize, .float ammotype, float currently_
 	if(currently_selected)
 		drawpic_aspect_skin(myPos, "ammo_current_bg", mySize, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
-    if(a > 0 && autocvar_hud_panel_ammo_progressbar)
-        HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, autocvar_hud_panel_ammo_progressbar_name, a/autocvar_hud_panel_ammo_maxammo, 0, 0, color, autocvar_hud_progressbar_alpha * panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+	if(a > 0 && autocvar_hud_panel_ammo_progressbar)
+		HUD_Panel_DrawProgressBar(myPos + eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, mySize - eX * autocvar_hud_panel_ammo_progressbar_xoffset * mySize_x, autocvar_hud_panel_ammo_progressbar_name, a/autocvar_hud_panel_ammo_maxammo, 0, 0, color, autocvar_hud_progressbar_alpha * panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 
-    if(autocvar_hud_panel_ammo_text)
-    {
-        if(a > 0 || infinite_ammo)
-            drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
-        else // "ghost" ammo count
-            drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
-    }
+	if(autocvar_hud_panel_ammo_text)
+	{
+		if(a > 0 || infinite_ammo)
+			drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, color, panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
+		else // "ghost" ammo count
+			drawstring_aspect(numpos, ftos(a), eX * (2/3) * mySize_x + eY * mySize_y, '0 0 0', panel_fg_alpha * theAlpha * 0.5, DRAWFLAG_NORMAL);
+	}
 	if(a > 0 || infinite_ammo)
 		drawpic_aspect_skin(picpos, GetAmmoPicture(ammotype), '1 1 0' * mySize_y, '1 1 1', panel_fg_alpha * theAlpha, DRAWFLAG_NORMAL);
 	else // "ghost" ammo icon
@@ -986,7 +986,7 @@ void HUD_Ammo(void)
 	if (autocvar_hud_panel_ammo_onlycurrent)
 		total_ammo_count = 1;
 	else
-		total_ammo_count = AMMO_COUNT - 1; // fuel
+		total_ammo_count = AMMO_COUNT;
 
 	if(draw_nades)
 	{
@@ -1060,7 +1060,6 @@ void HUD_Ammo(void)
 		row = column = 0;
 		for(i = 0; i < AMMO_COUNT; ++i)
 		{
-			if(i == 4) continue; // fuel
 			ammotype = GetAmmoFieldFromNum(i);
 			DrawAmmoItem(
 				pos + eX * column * (ammo_size_x + offset_x) + eY * row * (ammo_size_y + offset_y),
@@ -4016,12 +4015,12 @@ void HUD_ModIcons_SetFunc()
 		case MAPINFO_TYPE_CTF:			HUD_ModIcons_GameType = HUD_Mod_CTF; break;
 		case MAPINFO_TYPE_NEXBALL:		HUD_ModIcons_GameType = HUD_Mod_NexBall; break;
 		case MAPINFO_TYPE_CTS:
-		case MAPINFO_TYPE_RACE:			HUD_ModIcons_GameType = HUD_Mod_Race; break;
+		case MAPINFO_TYPE_RACE:		HUD_ModIcons_GameType = HUD_Mod_Race; break;
 		case MAPINFO_TYPE_CA:
 		case MAPINFO_TYPE_JAILBREAK:
 		case MAPINFO_TYPE_FREEZETAG:	HUD_ModIcons_GameType = HUD_Mod_CA; break;
 		case MAPINFO_TYPE_DOMINATION:	HUD_ModIcons_GameType = HUD_Mod_Dom; break;
-		case MAPINFO_TYPE_KEEPAWAY:		HUD_ModIcons_GameType = HUD_Mod_Keepaway; break;
+		case MAPINFO_TYPE_KEEPAWAY:	HUD_ModIcons_GameType = HUD_Mod_Keepaway; break;
 		case MAPINFO_TYPE_VIP:         	HUD_ModIcons_GameType = HUD_Mod_VIP; break;
 	}
 }
@@ -5887,7 +5886,7 @@ void HUD_Main (void)
 
 	if(intermission == 2) // no hud during mapvote
 		hud_fade_alpha = 0;
-	
+
 	if ( getstati(STAT_DISCO_MODE) )
 		HUD_DiscoMode();
 

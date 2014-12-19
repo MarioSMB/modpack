@@ -34,42 +34,6 @@ float ok_CheckWeaponCharge(entity ent, float wep)
 	return (ent.ammo_charge[wep] >= cvar(sprintf("g_overkill_ammo_decharge_%s", wepent.netname)));
 }
 
-void start_hmg()
-{
-	self.classname = "weapon_hmg";
-	self.respawntime = autocvar_g_overkill_superguns_respawn_time;
-	self.ok_item = TRUE;
-	setmodel(self, "models/weapons/g_ok_hmg.md3");
-	self.pickup_anyway = TRUE;
-	spawnfunc_weapon_hmg();
-}
-
-void start_rpc()
-{
-	self.classname = "weapon_rpc";
-	self.respawntime = autocvar_g_overkill_superguns_respawn_time;
-	self.ok_item = TRUE;
-	self.pickup_anyway = TRUE;
-	setmodel(self, "models/weapons/g_ok_rl.md3");
-	spawnfunc_weapon_rpc();
-}
-
-void start_mh_anyway()
-{
-	self.classname = "item_health_mega";
-	self.ok_item = TRUE;
-	self.pickup_anyway = TRUE;
-	spawnfunc_item_health_mega();
-}
-
-void start_ma_anyway()
-{
-	self.pickup_anyway = TRUE;
-	self.ok_item = TRUE;
-	self.classname = "item_armor_large";
-	spawnfunc_item_armor_large();
-}
-
 MUTATOR_HOOKFUNCTION(ok_PlayerDamage_Calculate)
 {
 	if(IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target))
@@ -107,8 +71,6 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 		other = world;
 	}
 
-	self.ok_lastwep = self.weapon;
-	self.ok_deathloc = self.origin;
 	self = spawn();
 	self.ok_item = TRUE;
 	self.noalign = TRUE;
@@ -122,6 +84,8 @@ MUTATOR_HOOKFUNCTION(ok_PlayerDies)
 	self.classname = "droppedweapon"; // hax
 	SUB_SetFade(self, time + 5, 1);
 	self = oldself;
+
+	self.ok_lastwep = self.switchweapon;
 
 	return FALSE;
 }
@@ -158,8 +122,14 @@ MUTATOR_HOOKFUNCTION(ok_PlayerPreThink)
 	if(self.deadflag != DEAD_NO || !IS_PLAYER(self) || self.frozen)
 		return FALSE;
 
+	if(self.ok_lastwep)
+	{
+		self.switchweapon = self.ok_lastwep;
+		self.ok_lastwep = 0;
+	}
+
 	ok_IncreaseCharge(self, self.weapon);
-	
+
 	float weaponuse_forbidden = forbidWeaponUse(self);
 
 	if(self.BUTTON_ATCK2)
@@ -235,10 +205,16 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 		self.classname = "item_removing"; // avoid letting other mutators use it
 		entity wep = spawn();
 		setorigin(wep, self.origin);
+		setmodel(wep, "models/weapons/g_ok_hmg.md3");
+		wep.classname = "weapon_hmg";
 		wep.ok_item = TRUE;
-		wep.think = start_hmg;
-		wep.nextthink = time + 0.1;
 		wep.noalign = self.noalign;
+		wep.cnt = self.cnt;
+		wep.team = self.team;
+		wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
+		wep.pickup_anyway = TRUE;
+		wep.think = spawnfunc_weapon_hmg;
+		wep.nextthink = time + 0.1;
 		return TRUE;
 	}
 
@@ -247,10 +223,16 @@ MUTATOR_HOOKFUNCTION(ok_OnEntityPreSpawn)
 		self.classname = "item_removing"; // avoid letting other mutators use it
 		entity wep = spawn();
 		setorigin(wep, self.origin);
+		setmodel(wep, "models/weapons/g_ok_rl.md3");
+		wep.classname = "weapon_rpc";
 		wep.ok_item = TRUE;
-		wep.think = start_rpc;
-		wep.nextthink = time + 0.1;
 		wep.noalign = self.noalign;
+		wep.cnt = self.cnt;
+		wep.team = self.team;
+		wep.respawntime = autocvar_g_overkill_superguns_respawn_time;
+		wep.pickup_anyway = TRUE;
+		wep.think = spawnfunc_weapon_rpc;
+		wep.nextthink = time + 0.1;
 		return TRUE;
 	}
 
@@ -289,9 +271,6 @@ MUTATOR_HOOKFUNCTION(ok_StartItems)
 	start_items |= IT_UNLIMITED_WEAPON_AMMO;
 	start_weapons = warmup_start_weapons = ok_start_items;
 
-	start_ammo_nails = start_ammo_cells = start_ammo_shells = start_ammo_rockets =
-	warmup_start_ammo_nails = warmup_start_ammo_cells = warmup_start_ammo_shells = warmup_start_ammo_rockets = autocvar_g_overkill_ammo_start; // is this really needed? ammo isn't used anymore, but should default above 0
-
 	return FALSE;
 }
 
@@ -315,9 +294,9 @@ MUTATOR_HOOKFUNCTION(ok_SetModname)
 
 void ok_SetCvars()
 {
-	// TODO: kill this awful mess
+	// we can't rely on custom balances here yet, as servers may be outdated
 
-	// playermodels
+	// hack to force overkill playermodels
 	cvar_settemp("sv_defaultcharacter", "1");
 	cvar_settemp("sv_defaultplayermodel", "models/ok_player/okrobot1.dpm models/ok_player/okrobot2.dpm models/ok_player/okrobot3.dpm models/ok_player/okrobot4.dpm models/ok_player/okmale1.dpm models/ok_player/okmale2.dpm models/ok_player/okmale3.dpm models/ok_player/okmale4.dpm");
 	cvar_settemp("sv_defaultplayermodel_red", "models/ok_player/okrobot1.dpm models/ok_player/okrobot2.dpm models/ok_player/okrobot3.dpm models/ok_player/okrobot4.dpm");
@@ -390,17 +369,8 @@ void ok_Initialize()
 	addstat(STAT_OK_AMMO_CHARGE, AS_FLOAT, ok_use_ammocharge);
 	addstat(STAT_OK_AMMO_CHARGEPOOl, AS_FLOAT, ok_ammo_charge);
 
-	WEP_ACTION(WEP_MACHINEGUN, WR_INIT);
-	WEP_ACTION(WEP_VORTEX, WR_INIT);
-	WEP_ACTION(WEP_SHOTGUN, WR_INIT);
-	WEP_ACTION(WEP_BLASTER, WR_INIT);
-	
-	WEP_ACTION(WEP_RPC, WR_INIT);
-	WEP_ACTION(WEP_HMG, WR_INIT);
-
 	(get_weaponinfo(WEP_RPC)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 	(get_weaponinfo(WEP_HMG)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
-	(get_weaponinfo(WEP_SHOTGUN)).spawnflags &= ~WEP_FLAG_MUTATORBLOCKED;
 
 	(get_weaponinfo(WEP_SHOTGUN)).mdl = "ok_shotgun";
 	(get_weaponinfo(WEP_MACHINEGUN)).mdl = "ok_mg";

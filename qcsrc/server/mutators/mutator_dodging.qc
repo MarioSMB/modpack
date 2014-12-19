@@ -1,4 +1,3 @@
-
 .float cvar_cl_dodging;
 .float cvar_cl_dodging_timeout;
 

@@ -776,7 +776,6 @@ void nade_prime()
 	if(!self.bonus_nades)
 		return; // only allow bonus nades
 
-
 	if(self.nade)
 		remove(self.nade);
 
