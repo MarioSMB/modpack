@@ -891,8 +891,6 @@ void Monster_Dead_Think()
 {
 	self.nextthink = time + self.ticrate;
 
-	CSQCMODEL_AUTOUPDATE();
-
 	if(self.monster_lifetime != 0)
 	if(time >= self.monster_lifetime)
 	{
@@ -1000,6 +998,8 @@ void Monster_Dead(entity attacker, float gibbed)
 
 	if(!((self.flags & FL_FLY) || (self.flags & FL_SWIM)))
 		self.velocity = '0 0 0';
+
+	CSQCModel_UnlinkEntity();
 
 	MON_ACTION(self.monsterid, MR_DEATH);
 
