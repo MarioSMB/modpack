@@ -12,6 +12,7 @@ REGISTER_MONSTER(
 #else
 #ifdef SVQC
 float autocvar_g_monster_spider_health;
+var float autocvar_g_monster_spider_damageforcescale = 0.6;
 float autocvar_g_monster_spider_attack_bite_damage;
 float autocvar_g_monster_spider_attack_bite_delay;
 float autocvar_g_monster_spider_attack_web_damagetime;
@@ -142,6 +143,7 @@ float M_Spider(float req)
 			if(!self.speed) { self.speed = (autocvar_g_monster_spider_speed_walk); }
 			if(!self.speed2) { self.speed2 = (autocvar_g_monster_spider_speed_run); }
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_spider_speed_stop); }
+			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_spider_damageforcescale); }
 
 			self.m_anim_walk = spider_anim_walk;
 			self.m_anim_run = spider_anim_walk;

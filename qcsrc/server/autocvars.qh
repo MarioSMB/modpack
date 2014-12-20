@@ -771,6 +771,7 @@ float autocvar_g_monsters_sounds;
 float autocvar_g_monsters_think_delay;
 float autocvar_g_monsters_max;
 float autocvar_g_monsters_max_perplayer;
+var float autocvar_g_monsters_damageforcescale = 0.8;
 float autocvar_g_player_gib_always;
 float autocvar_g_player_crush;
 var float autocvar_g_player_crush_damage = 200;

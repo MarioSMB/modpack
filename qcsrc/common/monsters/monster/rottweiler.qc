@@ -12,6 +12,7 @@ REGISTER_MONSTER(
 #else
 #ifdef SVQC
 float autocvar_g_monster_rottweiler_health;
+var float autocvar_g_monster_rottweiler_damageforcescale = 0.7;
 float autocvar_g_monster_rottweiler_attack_melee_damage;
 float autocvar_g_monster_rottweiler_attack_melee_delay;
 float autocvar_g_monster_rottweiler_speed_stop;
@@ -76,6 +77,7 @@ float M_Rottweiler(float req)
 			if(!self.speed) { self.speed = (autocvar_g_monster_rottweiler_speed_walk); }
 			if(!self.speed2) { self.speed2 = (autocvar_g_monster_rottweiler_speed_run); }
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_rottweiler_speed_stop); }
+			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_rottweiler_damageforcescale); }
 
 			self.m_anim_walk = rottweiler_anim_walk;
 			self.m_anim_run = rottweiler_anim_run;

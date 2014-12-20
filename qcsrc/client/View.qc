@@ -1693,7 +1693,7 @@ void CSQC_UpdateView(float w, float h)
 
 					float ok_ammo_charge, ok_ammo_chargepool;
 					ok_ammo_charge = getstatf(STAT_OK_AMMO_CHARGE);
-					ok_ammo_chargepool = getstatf(STAT_OK_AMMO_CHARGEPOOl);
+					ok_ammo_chargepool = getstatf(STAT_OK_AMMO_CHARGEPOOL);
 
 					float vortex_charge, vortex_chargepool;
 					vortex_charge = getstatf(STAT_VORTEX_CHARGE);

@@ -12,6 +12,7 @@ REGISTER_MONSTER(
 #else
 #ifdef SVQC
 float autocvar_g_monster_wyvern_health;
+var float autocvar_g_monster_wyvern_damageforcescale = 0.6;
 float autocvar_g_monster_wyvern_attack_fireball_damage;
 float autocvar_g_monster_wyvern_attack_fireball_edgedamage;
 float autocvar_g_monster_wyvern_attack_fireball_damagetime;
@@ -126,6 +127,7 @@ float M_Wyvern(float req)
 			if(!self.speed) { self.speed = (autocvar_g_monster_wyvern_speed_walk); }
 			if(!self.speed2) { self.speed2 = (autocvar_g_monster_wyvern_speed_run); }
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_wyvern_speed_stop); }
+			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_wyvern_damageforcescale); }
 
 			self.m_anim_walk = wyvern_anim_hover;
 			self.m_anim_run = wyvern_anim_fly;

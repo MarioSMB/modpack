@@ -1123,6 +1123,7 @@ float Monster_Spawn_Setup()
 	if(!self.respawntime) { self.respawntime = autocvar_g_monsters_respawn_delay; }
 	if(!self.monster_moveflags) { self.monster_moveflags = MONSTER_MOVE_WANDER; }
 	if(!self.attack_range) { self.attack_range = autocvar_g_monsters_attack_range; }
+	if(!self.damageforcescale) { self.damageforcescale = autocvar_g_monsters_damageforcescale; }
 
 	if(!(self.spawnflags & MONSTERFLAG_RESPAWNED))
 	{
@@ -1210,7 +1211,6 @@ float Monster_Spawn(float mon_id)
 	self.teleportable		= TRUE;
 	self.damagedbycontents	= TRUE;
 	self.monsterid			= mon_id;
-	self.damageforcescale	= 0;
 	self.event_damage		= Monster_Damage;
 	self.touch				= Monster_Touch;
 	self.use				= Monster_Use;
