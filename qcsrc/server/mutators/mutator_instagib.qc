@@ -237,12 +237,14 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 		{
 			if(frag_deathtype & HITTYPE_SECONDARY)
 			{
-				frag_damage = frag_mirrordamage = 0;
+				if(!autocvar_g_instagib_blaster_keepdamage)
+					frag_damage = frag_mirrordamage = 0;
 				
 				if(frag_target != frag_attacker)
 				{
-					if(frag_target.health > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE); }
-					frag_force = '0 0 0';
+					if(frag_damage <= 0 && frag_target.health > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE); }
+					if(!autocvar_g_instagib_blaster_keepforce)
+						frag_force = '0 0 0';
 				}
 			}
 			else if(frag_target.armorvalue)

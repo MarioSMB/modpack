@@ -450,6 +450,8 @@ float autocvar_g_instagib_ammo_drop;
 float autocvar_g_instagib_ammo_rockets;
 float autocvar_g_instagib_extralives;
 float autocvar_g_instagib_damagedbycontents;
+float autocvar_g_instagib_blaster_keepdamage;
+float autocvar_g_instagib_blaster_keepforce;
 #define autocvar_g_mirrordamage cvar("g_mirrordamage")
 #define autocvar_g_mirrordamage_virtual cvar("g_mirrordamage_virtual")
 
