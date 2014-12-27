@@ -192,8 +192,9 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 	pos += autocvar_scoreboard_border_thickness * '1 1 0';
 	img_size -= (autocvar_scoreboard_border_thickness * 2) * '1 1 0';
 
-	// xcompat
+#ifdef XMAS
 	string xpic = "gfx/menu/default/xmaspic.tga";
+#endif
 
 	if(pic == "")
 	{
@@ -208,9 +209,10 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 			drawpic(pos, pic, img_size, '1 1 1', theAlpha, DRAWFLAG_NORMAL);
             //drawpic_rotated(pos, pic, img_size, '1 1 1', M_PI, theAlpha, DRAWFLAG_NORMAL);
 
-		// xcompat
+#ifdef XMAS
 		if(drawgetimagesize(xpic) != '0 0 0')
 			drawpic(pos, xpic, img_size, '1 1 1', theAlpha, DRAWFLAG_NORMAL);
+#endif
 	}
 
 	if(id == mv_ownvote)
