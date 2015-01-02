@@ -317,6 +317,8 @@ void FireRailgunBullet (vector start, vector end, float bdamage, float bforce, f
 
 			Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_HEADSHOT);
 		}
+		else
+			jeff_Announcer_FireBullet(ent, self, hitloc, start, end);
 
 		if(accuracy_isgooddamage(self.realowner, ent))
 			totaldmg += bdamage * f;
@@ -437,6 +439,8 @@ void fireBullet(vector start, vector dir, float spread, float max_solid_penetrat
 				damage *= autocvar_sv_headshot_damage; // more damage
 				Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_HEADSHOT);
 			}
+			else
+				jeff_Announcer_FireBullet(hit, self, end, start, end);
 			float g = accuracy_isgooddamage(self, hit);
 			Damage(hit, self, self, damage * solid_penetration_left, dtype, start, force * dir * solid_penetration_left);
 			// calculate hits for ballistic weapons

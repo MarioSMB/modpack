@@ -224,6 +224,10 @@ void W_SwitchWeapon_Force(entity e, float w)
 	e.cnt = e.switchweapon;
 	e.switchweapon = w;
 	e.selectweapon = w;
+
+#ifdef JEFF
+	e.jeff_weaponswitch_count += 1;
+#endif
 }
 
 // perform weapon to attack (weaponstate and attack_finished check is here)

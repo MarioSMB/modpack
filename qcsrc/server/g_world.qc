@@ -2160,7 +2160,7 @@ void CheckRules_World()
 	if(checkrules_status == WINNING_YES)
 	{
 		//print("WINNING\n");
-		Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_GAMEOVER);
+		jeff_Announcer_MatchEnd();
 		NextLevel();
 	}
 }

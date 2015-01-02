@@ -537,11 +537,7 @@ void PlayerDamage (entity inflictor, entity attacker, float damage, float deatht
 			}
 		}
 
-		if(DEATH_ISWEAPON(deathtype, WEP_BLASTER) || (DEATH_ISWEAPON(deathtype, WEP_SHOTGUN) && (deathtype & HITTYPE_SECONDARY)))
-		{
-			Send_Notification(NOTIF_ONE, self, MSG_ANNCE, ANNCE_HUMILIATION);
-			Send_Notification(NOTIF_ONE, attacker, MSG_ANNCE, ANNCE_HUMILIATION);
-		}
+		jeff_Announcer_PlayerDies(attacker, deathtype, self, inflictor);
 
 		if(IS_PLAYER(attacker))
 		{
