@@ -77,6 +77,7 @@ void jeff_Announcer_PlayerDies(entity attacker, float deathtype, entity targ, en
 	float killed = 0;
 	float player_count = 0, best_killcount = 0;
 	float wepcount = 0, mywepcount = 0;
+	float i;
 
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
