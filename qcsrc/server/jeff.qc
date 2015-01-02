@@ -191,7 +191,7 @@ void jeff_Announcer_PlayerDies(entity attacker, float deathtype, entity targ, en
 	if(attacker.lastkiller == targ && targ.lastkiller == attacker)
 	{
 		jeff_Announcer_Send(attacker, FALSE, ANNCE_JEFF_MUTDESTRUCT);
-		jeff_Announcer_Send(targ, ANNCE_JEFF_MUTDESTRUCT);
+		jeff_Announcer_Send(targ, FALSE, ANNCE_JEFF_MUTDESTRUCT);
 	}
 
 	if(time - attacker.lastkilled_time <= autocvar_jeff_announce_multikill_time && time - attacker.lastkilled_time > 0.2) // don't do this for real multikills
@@ -221,7 +221,7 @@ void jeff_Announcer_PlayerDies(entity attacker, float deathtype, entity targ, en
 		jeff_Announcer_Send(attacker, FALSE, ANNCE_JEFF_DENIED);
 
 	if(inflictor.realowner == attacker && inflictor.jeff_projowner == targ) // killed by their own projectile
-		jeff_Announcer_Send(targ, ANNCE_JEFF_REJECTED);
+		jeff_Announcer_Send(targ, FALSE, ANNCE_JEFF_REJECTED);
 
 	if(attacker.minipickup_count >= autocvar_jeff_announce_bottomfeeder_count)
 		jeff_Announcer_Send(attacker, FALSE, ANNCE_JEFF_BOTTOMFEEDER);
@@ -292,7 +292,7 @@ void jeff_Announcer_MatchEnd()
 void jeff_Announcer_VehicleEnter(entity player, entity veh)
 {
 	if(DIFF_TEAM(player, veh))
-		jeff_Announcer_Send(player, ANNCE_JEFF_HIJACKED);
+		jeff_Announcer_Send(player, TRUE, ANNCE_JEFF_HIJACKED);
 }
 
 void jeff_Announcer_ItemTouch(entity player, entity item)
@@ -313,10 +313,10 @@ void jeff_Announcer_FireBullet(entity targ, entity ent, vector hitloc, vector st
 		return;
 	vector headmins, headmaxs, org;
 	org = antilag_takebackorigin(targ, time - ANTILAG_LATENCY(ent));
-	headmins = org - '5 5 15';
-	headmaxs = org + '5 5 15';
+	headmins = org - '5 5 10';
+	headmaxs = org + '5 5 10';
 	if(trace_hits_box(start, end, headmins, headmaxs))
-		jeff_Announcer_Send(ent, ANNCE_JEFF_BULLSEYE);
+		jeff_Announcer_Send(ent, FALSE, ANNCE_JEFF_BULLSEYE);
 }
 
 #else
