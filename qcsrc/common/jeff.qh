@@ -10,6 +10,7 @@
     MSG_ANNCE_NOTIF(1, ANNCE_JEFF_DENIED,          		CH_INFO, "denied",       	  		VOL_BASEVOICE, ATTEN_NONE) \
     MSG_ANNCE_NOTIF(1, ANNCE_JEFF_DOUBLEKILL,          	CH_INFO, "doublekill",       	  	VOL_BASEVOICE, ATTEN_NONE) \
     MSG_ANNCE_NOTIF(1, ANNCE_JEFF_EAGLEEYE,          	CH_INFO, "eagleeye",       	  		VOL_BASEVOICE, ATTEN_NONE) \
+    MSG_ANNCE_NOTIF(1, ANNCE_JEFF_FIRSTBLOOD,           CH_INFO, "firstblood",              VOL_BASEVOICE, ATTEN_NONE) \
     MSG_ANNCE_NOTIF(1, ANNCE_JEFF_FLAKMASTER,          	CH_INFO, "flakmaster",       	  	VOL_BASEVOICE, ATTEN_NONE) \
     MSG_ANNCE_NOTIF(1, ANNCE_JEFF_GAMEOVER,             CH_INFO, "gameover",          		VOL_BASEVOICE, ATTEN_NONE) \
     MSG_ANNCE_NOTIF(1, ANNCE_JEFF_GODLIKE,              CH_INFO, "godlike",          		VOL_BASEVOICE, ATTEN_NONE) \

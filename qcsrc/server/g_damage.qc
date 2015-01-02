@@ -431,6 +431,10 @@ void Obituary(entity attacker, entity inflictor, entity targ, float deathtype)
 				PS_GR_P_ADDVAL(attacker, PLAYERSTATS_ACHIEVEMENT_FIRSTBLOOD, 1);
 				PS_GR_P_ADDVAL(targ, PLAYERSTATS_ACHIEVEMENT_FIRSTVICTIM, 1);
 
+#ifdef JEFF
+				Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ANNCE_JEFF_FIRSTBLOOD);
+#endif
+
 				// tell spree_inf and spree_cen that this is a first-blood and first-victim event
 				kill_count_to_attacker = -1;
 				kill_count_to_target = -2;
