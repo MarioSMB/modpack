@@ -266,7 +266,7 @@ void jeff_Announcer_PlayerDies(entity attacker, float deathtype, entity targ, en
 
 	if(attacker.killcount >= 1)
 	if(best_killcount == attacker.killcount - 1) // attacker just took the lead (TODO: make sure this isn't spammed)
-		jeff_Announcer_Send(attacker, FALSE, ANNCE_JEFF_TOPGUN);
+		jeff_Announcer_Send(attacker, TRUE, ANNCE_JEFF_TOPGUN);
 
 	if(attacker.jeff_weaponswitch_count >= autocvar_jeff_announce_comboking_count)
 		jeff_Announcer_Send(attacker, FALSE, ANNCE_JEFF_COMBOKING);
