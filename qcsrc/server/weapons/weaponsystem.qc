@@ -450,6 +450,7 @@ void w_ready()
 float weapon_prepareattack_checkammo(float secondary)
 {
 	if (!(self.items & IT_UNLIMITED_WEAPON_AMMO))
+	if (self.ammo_field != ammo_none)
 	if (!WEP_ACTION(self.weapon, WR_CHECKAMMO1 + secondary))
 	{
 		// always keep the Mine Layer if we placed mines, so that we can detonate them
