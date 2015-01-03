@@ -311,31 +311,23 @@ void ok_SetCvars()
 	cvar_settemp("g_balance_shotgun_primary_ammo", "6.25");
 	cvar_settemp("g_balance_shotgun_reload_ammo", "50");
 	cvar_settemp("g_balance_shotgun_reload_time", "2");
-	cvar_settemp("g_balance_shotgun_primary_bulletconstant", "3000");
 
 	// machinegun
-	cvar_settemp("g_balance_machinegun_mode", "1");
 	cvar_settemp("g_balance_machinegun_sustained_damage", "25");
-	cvar_settemp("g_balance_machinegun_sustained_refire", "0.1");
 	cvar_settemp("g_balance_machinegun_sustained_spread", "0.01");
 	cvar_settemp("g_balance_machinegun_sustained_force", "5");
 	cvar_settemp("g_balance_machinegun_reload_ammo", "30");
 	cvar_settemp("g_balance_machinegun_reload_time", "1.5");
-	cvar_settemp("g_balance_machinegun_primary_bulletconstant", "3000");
 
 	// vortex
 	cvar_settemp("g_balance_vortex_primary_damage", "100");
 	cvar_settemp("g_balance_vortex_primary_force", "500");
 	cvar_settemp("g_balance_vortex_primary_refire", "0.75");
-	cvar_settemp("g_balance_vortex_primary_animtime", "0.75");
-	cvar_settemp("g_balance_vortex_primary_ammo", "6");
-	cvar_settemp("g_balance_vortex_primary_damagefalloff_mindist", "0");
-	cvar_settemp("g_balance_vortex_primary_damagefalloff_maxdist", "0");
-	cvar_settemp("g_balance_vortex_primary_damagefalloff_halflife", "0");
-	cvar_settemp("g_balance_vortex_primary_damagefalloff_forcehalflife", "0");
+	cvar_settemp("g_balance_vortex_primary_animtime", "0.95");
+	cvar_settemp("g_balance_vortex_primary_ammo", "10");
 	cvar_settemp("g_balance_vortex_secondary", "1");
 	cvar_settemp("g_balance_vortex_charge", "0");
-	cvar_settemp("g_balance_vortex_reload_ammo", "30");
+	cvar_settemp("g_balance_vortex_reload_ammo", "50");
 	cvar_settemp("g_balance_vortex_reload_time", "2");
 
 	// misc
