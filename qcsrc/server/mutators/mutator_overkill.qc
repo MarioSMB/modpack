@@ -333,7 +333,7 @@ void ok_SetCvars()
 	// misc
 	cvar_settemp("g_projectiles_newton_style_2_minfactor", "1");
 	cvar_settemp("g_pickup_healthmega_anyway", "0");
-	cvar_settemp("g_pickup_healthmega_max", "100");
+	cvar_settemp("g_pickup_healthmega_max", "200");
 	cvar_settemp("g_pickup_armorsmall_anyway", "0");
 	cvar_settemp("g_pickup_armorsmall_max", "20");
 }
