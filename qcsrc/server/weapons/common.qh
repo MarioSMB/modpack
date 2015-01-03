@@ -2,3 +2,7 @@
 void W_GiveWeapon (entity e, float wep);
 float W_CheckProjectileDamage(entity inflictor, entity projowner, float deathtype, float exception);
 void W_PrepareExplosionByDamage(entity attacker, void() explode);
+
+
+// jeff
+.entity jeff_projowner;

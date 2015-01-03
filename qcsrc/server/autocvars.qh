@@ -450,6 +450,8 @@ float autocvar_g_instagib_ammo_drop;
 float autocvar_g_instagib_ammo_rockets;
 float autocvar_g_instagib_extralives;
 float autocvar_g_instagib_damagedbycontents;
+float autocvar_g_instagib_blaster_keepdamage;
+float autocvar_g_instagib_blaster_keepforce;
 #define autocvar_g_mirrordamage cvar("g_mirrordamage")
 #define autocvar_g_mirrordamage_virtual cvar("g_mirrordamage_virtual")
 
@@ -774,7 +776,10 @@ float autocvar_g_monsters_max_perplayer;
 var float autocvar_g_monsters_damageforcescale = 0.8;
 float autocvar_g_player_gib_always;
 float autocvar_g_player_crush;
+var float autocvar_g_player_crush_simple = 1;
 var float autocvar_g_player_crush_damage = 200;
+var float autocvar_g_player_crush_bounce = 300;
+var float autocvar_g_player_crush_bounce_jump = 600;
 float autocvar_g_player_crush_headheight;
 float autocvar_g_freeze_revive_speed;
 float autocvar_g_freeze_revive_speed_random;

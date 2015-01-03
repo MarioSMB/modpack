@@ -1164,11 +1164,11 @@ float MapInfo_Get_ByName_NoFallbacks(string pFilename, float pAllowGenerate, flo
 					print("Map ", pFilename, " contains a potentially harmful cdtrack, ignored\n");
 				else
 				{
-					// xcompat
-					//MapInfo_Map_clientstuff = strcat(MapInfo_Map_clientstuff, "cd loop xmas\n");
+#ifdef XMAS
 					if(fexists("tis_xmas"))
 						MapInfo_Map_clientstuff = sprintf("%s%s%d\n", MapInfo_Map_clientstuff, "cd loop xmas", floor(random() * 5));
 					else
+#endif
 						MapInfo_Map_clientstuff = strcat(
 							MapInfo_Map_clientstuff, "cd loop \"", t, "\"\n"
 						);

@@ -35,8 +35,11 @@ command/cl_cmd.qh
 
 autocvars.qh
 
+../common/jeff.qh
+
 ../common/notifications.qh // must be after autocvars
 ../common/deathtypes.qh // must be after notifications
+
 
 ../common/effects.qh
 

@@ -990,6 +990,8 @@ void vehicles_enter(entity pl, entity veh)
 	}
 	else return;
 
+	jeff_Announcer_VehicleEnter(pl, veh);
+
 	RemoveGrapplingHook(pl);
 
 	veh.vehicle_ammo1 = 0;

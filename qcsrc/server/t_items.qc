@@ -640,6 +640,8 @@ void Item_Touch (void)
 
 	:pickup
 
+	jeff_Announcer_ItemTouch(other, self);
+
 	other.last_pickup = time;
 
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(self), '0 0 0', 1);
@@ -1150,6 +1152,7 @@ void spawnfunc_item_armor_medium (void) {
 }
 
 void spawnfunc_item_armor_big (void) {
+	self.classname = "item_armor_big";
 	if(!self.armorvalue)
 		self.armorvalue = g_pickup_armorbig;
 	if(!self.max_armorvalue)
@@ -1160,6 +1163,7 @@ void spawnfunc_item_armor_big (void) {
 }
 
 void spawnfunc_item_armor_large (void) {
+	self.classname = "item_armor_large";
 	if(!self.armorvalue)
 		self.armorvalue = g_pickup_armorlarge;
 	if(!self.max_armorvalue)
@@ -1170,6 +1174,7 @@ void spawnfunc_item_armor_large (void) {
 }
 
 void spawnfunc_item_health_small (void) {
+	self.classname = "item_health_small";
 	if(!self.max_health)
 		self.max_health = g_pickup_healthsmall_max;
 	if(!self.health)
@@ -1180,6 +1185,7 @@ void spawnfunc_item_health_small (void) {
 }
 
 void spawnfunc_item_health_medium (void) {
+	self.classname = "item_health_medium";
 	if(!self.max_health)
 		self.max_health = g_pickup_healthmedium_max;
 	if(!self.health)
@@ -1190,6 +1196,7 @@ void spawnfunc_item_health_medium (void) {
 }
 
 void spawnfunc_item_health_large (void) {
+	self.classname = "item_health_large";
 	if(!self.max_health)
 		self.max_health = g_pickup_healthlarge_max;
 	if(!self.health)
@@ -1200,6 +1207,7 @@ void spawnfunc_item_health_large (void) {
 }
 
 void spawnfunc_item_health_mega (void) {
+		self.classname = "item_health_mega";
 		if(!self.max_health)
 			self.max_health = g_pickup_healthmega_max;
 		if(!self.health)

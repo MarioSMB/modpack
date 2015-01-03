@@ -47,6 +47,8 @@ autocvars.qh
 constants.qh
 defs.qh		// Should rename this, it has fields and globals
 
+../common/jeff.qh
+
 ../common/notifications.qh // must be after autocvars
 ../common/deathtypes.qh // must be after notifications
 
@@ -129,7 +131,7 @@ bot/bot.qc
 
 g_subs.qc
 
-//runematch.qc
+jeff.qc
 
 g_violence.qc
 g_damage.qc

@@ -433,25 +433,54 @@ void PlayerTouch (void)
 	if(other == world)
 		return;
 
-	if(!IS_PLAYER(self))
+	if(!IS_PLAYER(self) || !IS_PLAYER(other))
 		return;
 
-	if(!IS_PLAYER(other))
+	if(self.deadflag != DEAD_NO || other.deadflag != DEAD_NO)
 		return;
 
-	if(self.deadflag != DEAD_NO)
-		return;
-
-	if(other.deadflag != DEAD_NO)
+	if(!self.iscreature || !other.iscreature)
 		return;
 
 	if(forbidWeaponUse(self))
 		return;
 
-	vector vdir = normalize(other.origin - self.origin);
+	if(autocvar_g_player_crush_simple)
+	{
+		vector vdir = normalize(other.origin - self.origin);
 
-	if(vdir_z > autocvar_g_player_crush_headheight) // adjust this to set how sharp from above players need to hit the player to crush them. 
-		Damage (self, other, other, autocvar_g_player_crush_damage, DEATH_CRUSH, self.origin, '0 0 0');
+		if(vdir_z > autocvar_g_player_crush_headheight) // adjust this to set how sharp from above players need to hit the player to crush them. 
+			Damage (self, other, other, autocvar_g_player_crush_damage, DEATH_CRUSH, self.origin, '0 0 0');
+	}
+	else
+	{
+
+		tracebox(self.origin, self.mins, self.maxs, self.origin - ('0 0 1' * (self.maxs_z + 5)), MOVE_NORMAL, self);
+
+		if(trace_ent == other)
+		{
+			float mjumpheight = autocvar_g_player_crush_bounce;
+
+			setorigin(self, self.origin + '0 0 2');
+
+			if(self.BUTTON_JUMP)
+			{
+				mjumpheight = autocvar_g_player_crush_bounce_jump;
+				self.flags &= ~FL_JUMPRELEASED;
+			}
+
+			self.flags &= ~FL_ONGROUND;
+
+			self.velocity_z = mjumpheight;
+			self.oldvelocity_z = self.velocity_z;
+
+			animdecide_setaction(self, ANIMACTION_JUMP, TRUE);
+
+			self.restart_jump = -1; // restart jump anim next time
+			
+			Damage (other, self, self, autocvar_g_player_crush_damage, DEATH_CRUSH, other.origin, '0 0 0');
+		}
+	}
 }
 
 /*

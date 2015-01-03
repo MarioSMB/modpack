@@ -66,6 +66,7 @@ void W_PrepareExplosionByDamage(entity attacker, void() explode)
 	
 	if(IS_CLIENT(attacker) && !autocvar_g_projectiles_keep_owner)
 	{
+		self.jeff_projowner = self.realowner;
 		self.owner = attacker;
 		self.realowner = attacker;
 	}
