@@ -283,17 +283,6 @@ void initialize_minigames()
 	#undef MINIGAME
 }
 
-entity minigame_spawn_linked_entity(entity minigame_session, string class_name)
-{
-	entity e = spawn();
-	e.classname = class_name;
-	e.owner = minigame_session;
-	e.customizeentityforclient = minigame_CheckSend;
-	e.minigame_autoclean = 1;
-	Net_LinkEntity(e, FALSE, 0, minigame_SendEntity);
-	return e;
-}
-
 string invite_minigame(entity inviter, entity player)
 {
 	if ( !inviter || !inviter.active_minigame )

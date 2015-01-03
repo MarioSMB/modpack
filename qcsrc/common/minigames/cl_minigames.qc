@@ -73,9 +73,7 @@ string minigame_texture(string name)
 	return path;
 }
 
-#define MSLE(Name,Fields) \
-	else if ( self.classname == #Name ) { strunzone(e.netname); Fields }
-#define FIELD(Flags, Type, Name) MSLE_CLEAN_##Type(e.Name)
+#define FIELD(Flags, Type, Name) MSLE_CLEAN_##Type(self.Name)
 #define MSLE_CLEAN_String(x) strunzone(x);
 #define MSLE_CLEAN_Byte(x)
 #define MSLE_CLEAN_Char(x)
@@ -85,16 +83,18 @@ string minigame_texture(string name)
 #define MSLE_CLEAN_Float(x)
 #define MSLE_CLEAN_Vector(x)
 #define MSLE_CLEAN_Vector2D(x)
+
+#define MSLE(Name,Fields) \
+	void msle_entremove_##Name() { strunzone(self.netname); Fields }
+MINIGAME_SIMPLELINKED_ENTITIES
+#undef MSLE
+#undef FIELD
+
 void minigame_autoclean_entity(entity e)
 {
-	if ( 0 ) {}
-	MINIGAME_SIMPLELINKED_ENTITIES
-	
 	dprint("CL Auto-cleaned: ",ftos(num_for_edict(e)), " (",e.classname,")\n");
 	remove(e);
 }
-#undef MSLE
-#undef FIELD
 
 void HUD_MinigameMenu_CurrentButton();
 float auto_close_minigamemenu;
@@ -161,6 +161,12 @@ void activate_minigame(entity minigame)
 	}
 }
 
+void minigame_player_entremove()
+{
+	if ( self.owner == active_minigame && self.minigame_playerslot == player_localentnum )
+		deactivate_minigame();
+}
+
 vector ReadVector2D() { vector v; v_x = ReadCoord(); v_y = ReadCoord(); v_z = 0; return v; }
 vector ReadVector() { vector v; v_x = ReadCoord(); v_y = ReadCoord(); v_z = ReadCoord(); return v; }
 string() ReadString_Raw = #366;
@@ -170,7 +176,10 @@ string ReadString_Zoned() { return strzone(ReadString_Raw()); }
 #define FIELD(Flags, Type,Name) if ( sf & (Flags) ) self.Name = Read##Type();
 #define MSLE(Name,Fields) \
 	else if ( self.classname == #Name ) { \
-		if ( sf & MINIG_SF_CREATE ) minigame_read_owner(); \
+		if ( sf & MINIG_SF_CREATE ) { \
+			minigame_read_owner(); \
+			self.entremove = msle_entremove_##Name; \
+		} \
 		minigame_ent = self.owner; \
 		Fields \
 	}
@@ -201,6 +210,7 @@ void ent_read_minigame()
 		
 		if ( sf & MINIG_SF_CREATE )
 		{
+			self.entremove = deactivate_minigame;
 			self.descriptor = minigame_get_descriptor(ReadString_Raw());
 			if ( !self.descriptor )
 				dprint("Got a minigame without a client-side descriptor!\n");
@@ -215,8 +225,8 @@ void ent_read_minigame()
 		float activate = 0;
 		if ( sf & MINIG_SF_CREATE )
 		{
+			self.entremove = minigame_player_entremove;
 			minigame_read_owner();
-			
 			float ent = ReadLong();
 			self.minigame_playerslot = ent;
 			dprint("Player: ",GetPlayerName(ent-1),"\n");
@@ -249,14 +259,72 @@ void ent_read_minigame()
 #undef FIELD
 #undef MSLE
 
+string minigame_getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
+{
+	float last_word;
+	string s;
+	float take_until;
+	float skip = 0;
+
+	s = getWrappedLine_remaining;
+
+	if(w <= 0)
+	{
+		getWrappedLine_remaining = string_null;
+		return s; // the line has no size ANYWAY, nothing would be displayed.
+	}
+
+	take_until = textLengthUpToWidth(s, w, theFontSize, tw);
+	
+	if ( take_until > strlen(s) )
+		take_until = strlen(s);
+	
+	float i;
+	for ( i = 0; i < take_until; i++ )
+		if ( substring(s,i,1) == "\n" )
+		{
+			take_until = i;
+			skip = 1;
+			break;
+		}
+	
+	if ( take_until > 0 || skip > 0 )
+	{
+		if ( skip == 0 && take_until < strlen(s) )
+		{
+			last_word = take_until;
+			while(last_word > 0 && substring(s, last_word, 1) != " ")
+				--last_word;
+
+			if ( last_word != 0 )
+			{
+				take_until = last_word;
+				skip = 1;
+			}
+		}
+			
+		getWrappedLine_remaining = substring(s, take_until+skip, strlen(s) - (take_until+skip));
+		if(getWrappedLine_remaining == "")
+			getWrappedLine_remaining = string_null;
+		else if (tw("^7", theFontSize) == 0)
+			getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take_until)), getWrappedLine_remaining);
+		return substring(s, 0, take_until);
+	}
+	else
+	{
+		getWrappedLine_remaining = string_null;
+		return s;
+	}
+}
+
 vector minigame_drawstring_wrapped( float maxwidth, vector pos, string text, 
 	vector fontsize, vector color, float theAlpha, float drawflags, float align )
-{
+{	
 	getWrappedLine_remaining = text;
 	vector mypos = pos;
 	while ( getWrappedLine_remaining )
 	{
-		string line = getWrappedLine(maxwidth,fontsize,stringwidth_nocolors);
+		string line = minigame_getWrappedLine(maxwidth,fontsize,stringwidth_nocolors);
 		if ( line == "" )
 			break;
 		mypos_x = pos_x + (maxwidth - stringwidth_nocolors(line, fontsize)) * align;
@@ -275,7 +343,7 @@ vector minigame_drawcolorcodedstring_wrapped( float maxwidth, vector pos,
 	vector mypos = pos;
 	while ( getWrappedLine_remaining )
 	{
-		string line = getWrappedLine(maxwidth,fontsize,stringwidth_colors);
+		string line = minigame_getWrappedLine(maxwidth,fontsize,stringwidth_colors);
 		if ( line == "" )
 			break;
 		mypos_x = pos_x + (maxwidth - stringwidth_colors(line, fontsize)) * align;

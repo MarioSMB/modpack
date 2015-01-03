@@ -29,7 +29,7 @@ Managing entities
 
 You can link entities without having to worry about them if their classname
 has been defined in MINIGAME_SIMPLELINKED_ENTITIES (see below)
-Such entities can be spawned with minigame_spawn_linked_entity and the system
+Such entities can be spawned with msle_spawn and the system
 will handle networking and cleanup automatically.
 You'll still need to set .SendFlags according to what you specified in FIELD
 in order for them to be sent, ../minigames.qh defines some constants to be
@@ -70,7 +70,7 @@ that .owner is set to the minigame session entity and .minigame_autoclean is tru
 
 /**
  * Set up automatic entity read/write functionality
- * To ensure that everything is handled automatically, spawn on the server using minigame_spawn_linked_entity
+ * To ensure that everything is handled automatically, spawn on the server using msle_spawn
  * Syntax:
  * 	MSLE(classname,Field...) \ 
  * 		classname: Identifier used to recognize the type of the entity

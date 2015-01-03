@@ -24,9 +24,6 @@ void end_minigame(entity minigame_session);
 // Ends all minigame sessions
 void end_minigames();
 
-// Spawn a networked minigame entity
-entity minigame_spawn_linked_entity(entity minigame_session, string class_name);
-
 // Only sends entities to players who joined the minigame
 // Use on customizeentityforclient for gameplay entities
 float minigame_CheckSend();
@@ -49,5 +46,6 @@ entity minigame_find_player(entity client);
 
 entity minigame_sessions;
 
+float minigame_SendEntity(entity to, float sf);
+
 var void remove(entity e);
-#include "minigames.qh"

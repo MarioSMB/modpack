@@ -1058,13 +1058,7 @@ void CSQC_Ent_Remove()
 		print("WARNING: CSQC_Ent_Remove called for already removed entity. Packet loss?\n");
 		return;
 	}
-
-	if ( self == active_minigame )
-		deactivate_minigame();
-	else if ( self.owner == active_minigame && self.classname == "minigame_player" 
-			&& self.minigame_playerslot == player_localentnum )
-		deactivate_minigame();
-
+		
 	if(self.enttype)
 		Ent_Remove();
 	remove(self);
