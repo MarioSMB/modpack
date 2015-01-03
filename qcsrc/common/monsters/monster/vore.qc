@@ -12,6 +12,7 @@ REGISTER_MONSTER(
 #else
 #ifdef SVQC
 float autocvar_g_monster_vore_health;
+var float autocvar_g_monster_vore_damageforcescale = 0.4;
 float autocvar_g_monster_vore_attack_spike_damage;
 float autocvar_g_monster_vore_attack_spike_radius;
 float autocvar_g_monster_vore_attack_spike_delay;
@@ -204,6 +205,7 @@ float M_Vore(float req)
 			if(!self.speed) { self.speed = (autocvar_g_monster_vore_speed_walk); }
 			if(!self.speed2) { self.speed2 = (autocvar_g_monster_vore_speed_run); }
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_vore_speed_stop); }
+			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_vore_damageforcescale); }
 
 			self.m_anim_walk = vore_anim_walk;
 			self.m_anim_run = vore_anim_walk;

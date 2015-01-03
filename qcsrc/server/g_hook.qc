@@ -181,9 +181,17 @@ void GrapplingHookThink()
 		dist = vlen(dir);
 		dir = normalize(dir);
 
+		entity realpull = self.realowner;
+
+		if(realpull.pbhost)
+		{
+			realpull = pb_RootOf(realpull);
+			tarzan = 2; // enforce tarzan
+		}
+
 		if(tarzan)
 		{
-			v = v0 = WarpZone_RefSys_TransformVelocity(self.realowner, self, self.realowner.velocity);
+			v = v0 = WarpZone_RefSys_TransformVelocity(realpull, self, realpull.velocity);
 
 			// first pull the rope...
 			if(self.realowner.hook_state & HOOK_PULLING)
@@ -201,8 +209,8 @@ void GrapplingHookThink()
 				self.hook_length = newlength;
 			}
 
-			if(self.realowner.movetype == MOVETYPE_FLY)
-				self.realowner.movetype = MOVETYPE_WALK;
+			if(realpull.movetype == MOVETYPE_FLY)
+				realpull.movetype = MOVETYPE_WALK;
 
 			if(self.realowner.hook_state & HOOK_RELEASING)
 			{
@@ -217,7 +225,7 @@ void GrapplingHookThink()
 				v = v + frametime * dir * spd * rubberforce;
 
 				dv = ((v - v0) * dir) * dir;
-				if(autocvar_g_grappling_hook_tarzan >= 2)
+				if(tarzan >= 2)
 				{
 					if(self.aiment.movetype == MOVETYPE_WALK)
 					{
@@ -235,11 +243,11 @@ void GrapplingHookThink()
 					}
 				}
 
-				self.realowner.flags &= ~FL_ONGROUND;
+				realpull.flags &= ~FL_ONGROUND;
 			}
 
 			if(!frozen_pulling)
-				self.realowner.velocity = WarpZone_RefSys_TransformVelocity(self, self.realowner, v);
+				realpull.velocity = WarpZone_RefSys_TransformVelocity(self, realpull, ((realpull == self.realowner) ? v : (v * autocvar_g_balance_grapplehook_piggybackfriction)));
 
 			if(frozen_pulling && autocvar_g_balance_grapplehook_pull_frozen == 2 && !self.aiment.frozen)
 			{
@@ -361,7 +369,7 @@ void FireGrapplingHook (void)
 	float s;
 	vector vs;
 
-	if((time < game_starttime && !autocvar_sv_ready_restart_after_countdown) || self.frozen || self.vehicle || self.pbhost || self.jb_isprisoned)
+	if((time < game_starttime && !autocvar_sv_ready_restart_after_countdown) || self.frozen || self.vehicle || self.jb_isprisoned)
 		return;
 
 	makevectors(self.v_angle);

@@ -152,6 +152,8 @@ void ClientCommand_join(float request)
 			{
 				if(!IS_PLAYER(self) && !lockteams && !gameover)
 				{
+					if(self.caplayer)
+						return;
 					if(nJoinAllowed(self))
 					{
 						if(autocvar_g_campaign) { campaign_bots_may_start = 1; }
@@ -190,25 +192,33 @@ void ClientCommand_physics(float request, float argc)
 		case CMD_REQUEST_COMMAND:
 		{
 			string command = strtolower(argv(1));
-			
+
+			if(command == "list" || command == "help")
+			{
+				sprint(self, strcat("Available physics sets: \n\n", autocvar_g_physics_clientselect_options, " default\n"));
+				if(!autocvar_g_physics_clientselect)
+					sprint(self, "These are unusable currently, as client physics selection is disabled\n");
+				return;
+			}
+
+			if(Physics_Valid(command) || command == "default")
+			{
+				stuffcmd(self, strcat("\nseta cl_physics ", command, "\nsendcvar cl_physics\n"));
+
+				if(!autocvar_g_physics_clientselect)
+					sprint(self, strcat("Physics set to ^3", command, "^7, but will not be used since client physics selection is disabled\n"));
+				else
+					sprint(self, strcat("^2Physics set successfully changed to ^3", command, "\n"));
+				return;
+			}
+
 			if(!autocvar_g_physics_clientselect)
 			{
 				sprint(self, "Client physics selection is currently disabled.\n");
 				return;
 			}
 
-			if(command == "list" || command == "help")
-			{
-				sprint(self, strcat("Available physics sets: \n\n", autocvar_g_physics_clientselect_options, " default\n"));
-				return;
-			}
-			
-			if(Physics_Valid(command) || command == "default")
-			{
-				stuffcmd(self, strcat("\nseta cl_physics ", command, "\nsendcvar cl_physics\n"));
-				sprint(self, strcat("^2Physics set successfully changed to ^3", command, "\n"));
-				return;
-			}
+
 		}
 	
 		default:
@@ -496,15 +506,11 @@ void ClientCommand_spectate(float request)
 					}
 				}
 
-				if(IS_PLAYER(self) && autocvar_sv_spectate == 1)
-					ClientKill_TeamChange(-2); // observe
-
-				// in CA, allow a dead player to move to spectators (without that, caplayer!=0 will be moved back to the player list)
-				// note: if arena game mode is ever done properly, this needs to be removed.
-				if(self.caplayer && (IS_SPEC(self) || IS_OBSERVER(self)))
+				if((IS_PLAYER(self) || self.caplayer) && autocvar_sv_spectate == 1)
 				{
-					sprint(self, "WARNING: you will spectate in the next round.\n");
-					self.caplayer = 0;
+					if(self.caplayer && (IS_SPEC(self) || IS_OBSERVER(self)))
+						Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_CA_LEAVE);
+					ClientKill_TeamChange(-2); // observe
 				}
 			}
 			return; // never fall through to usage

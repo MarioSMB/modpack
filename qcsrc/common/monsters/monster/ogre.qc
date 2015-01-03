@@ -12,6 +12,7 @@ REGISTER_MONSTER(
 #else
 #ifdef SVQC
 float autocvar_g_monster_ogre_health;
+var float autocvar_g_monster_ogre_damageforcescale = 0.4;
 float autocvar_g_monster_ogre_attack_machinegun_spread;
 float autocvar_g_monster_ogre_attack_machinegun_solidpenetration;
 float autocvar_g_monster_ogre_attack_machinegun_damage;
@@ -342,6 +343,7 @@ float M_Ogre(float req)
 			if(!self.speed) { self.speed = (autocvar_g_monster_ogre_speed_walk); }
 			if(!self.speed2) { self.speed2 = (autocvar_g_monster_ogre_speed_run); }
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_ogre_speed_stop); }
+			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_ogre_damageforcescale); }
 
 			self.m_anim_walk = ogre_anim_walk;
 			self.m_anim_run = ogre_anim_run;

@@ -1,6 +1,3 @@
-// scores
-#define SP_FREEZETAG_REVIVALS 4
-
 // stalemate
 float ft_stalemate;
 

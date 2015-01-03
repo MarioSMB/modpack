@@ -81,32 +81,6 @@ void SetDefaultAlpha()
 	}
 }
 
-void fteqcc_testbugs()
-{
-	float a, b;
-
-	if(!autocvar_developer_fteqccbugs)
-		return;
-
-	dprint("*** fteqcc test: checking for bugs...\n");
-
-	a = 1;
-	b = 5;
-	if(sqrt(a) - sqrt(b - a) == 0)
-		dprint("*** fteqcc test: found same-function-twice bug\n");
-	else
-		dprint("*** fteqcc test: same-function-twice bug got FINALLY FIXED! HOORAY!\n");
-
-	world.cnt = -10;
-	world.enemy = world;
-	world.enemy.cnt += 10;
-	if(world.cnt > 0.2 || world.cnt < -0.2) // don't error out if it's just roundoff errors
-		dprint("*** fteqcc test: found += bug\n");
-	else
-		dprint("*** fteqcc test: += bug got FINALLY FIXED! HOORAY!\n");
-	world.cnt = 0;
-}
-
 void GotoFirstMap()
 {
 	float n;
@@ -588,8 +562,6 @@ void spawnfunc_worldspawn (void)
 
 	remove = remove_safely; // during spawning, watch what you remove!
 
-	check_unacceptable_compiler_bugs();
-
 	cvar_changes_init(); // do this very early now so it REALLY matches the server config
 
 	compressShortVector_init();
@@ -615,7 +587,7 @@ void spawnfunc_worldspawn (void)
 	CALL_ACCUMULATED_FUNCTION(RegisterDeathtypes);
 	CALL_ACCUMULATED_FUNCTION(RegisterBuffs);
 	CALL_ACCUMULATED_FUNCTION(RegisterEffects);
-	
+
 	initialize_minigames();
 
 	ServerProgsDB = db_load(strcat("server.db", autocvar_sessionid));
@@ -668,7 +640,7 @@ void spawnfunc_worldspawn (void)
 
 	Map_MarkAsRecent(mapname);
 
-	PlayerStats_Init(); // we need this to be initiated before InitGameplayMode
+	PlayerStats_GameReport_Init(); // we need this to be initiated before InitGameplayMode
 
 	precache_model ("null"); // we need this one before InitGameplayMode
 	InitGameplayMode();
@@ -736,8 +708,6 @@ void spawnfunc_worldspawn (void)
 
 	if(autocvar_g_campaign)
 		CampaignPostInit();
-
-	fteqcc_testbugs();
 
 	Ban_LoadBans();
 
@@ -1565,11 +1535,7 @@ void NextLevel()
 	DumpStats(TRUE);
 
 	// send statistics
-	entity e;
-	PlayerStats_EndMatch(1);
-	FOR_EACH_CLIENT(e)
-		PlayerStats_AddGlobalInfo(e);
-	PlayerStats_Shutdown();
+	PlayerStats_GameReport(TRUE);
 	WeaponStats_Shutdown();
 
 	Kill_Notification(NOTIF_ALL, world, MSG_CENTER, 0); // kill all centerprints now
@@ -2194,6 +2160,7 @@ void CheckRules_World()
 	if(checkrules_status == WINNING_YES)
 	{
 		//print("WINNING\n");
+		jeff_Announcer_MatchEnd();
 		NextLevel();
 	}
 }
@@ -2329,8 +2296,6 @@ void RestoreGame()
 
 void Shutdown()
 {
-	entity e;
-
 	gameover = 2;
 
 	if(world_initialized > 0)
@@ -2339,10 +2304,8 @@ void Shutdown()
 		print("Saving persistent data...\n");
 		Ban_SaveBans();
 
-		PlayerStats_EndMatch(0);
-		FOR_EACH_CLIENT(e)
-			PlayerStats_AddGlobalInfo(e);
-		PlayerStats_Shutdown();
+		// playerstats with unfinished match
+		PlayerStats_GameReport(FALSE);
 
 		if(!cheatcount_total)
 		{

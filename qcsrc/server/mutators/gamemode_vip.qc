@@ -172,6 +172,7 @@ void vip_SelectVIPs()
 	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_4);
 }
 
+float prev_missing_teams_mask;
 float VIP_CheckTeams()
 {
 	float rc, bc, yc, pc;
@@ -198,24 +199,25 @@ float VIP_CheckTeams()
 	}
 	if(VIP_TEAMS_OK())
 	{
-		if(prev_total_players > 0)
+		if(prev_missing_teams_mask > 0)
 			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
-		prev_total_players = -1;
+		prev_missing_teams_mask = -1;
 		return 1;
 	}
-	if(prev_total_players != total_players)
+	if(total_players == 0)
 	{
-		float p1 = 0, p2 = 0, p3 = 0, p4 = 0;
-		if(!red_players) p1 = NUM_TEAM_1;
-		if(!blue_players) p2 = NUM_TEAM_2;
-		if(!yellow_players) p3 = NUM_TEAM_3;
-		if(!pink_players) p4 = NUM_TEAM_4;
-		if(vip_teams < 3)
-			p3 = 1; // don't count them
-		if(vip_teams < 4)
-			p4 = 1; // don't count them
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, p1, p2, p3, p4);
-		prev_total_players = total_players;
+		if(prev_missing_teams_mask > 0)
+			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+		prev_missing_teams_mask = -1;
+		return 0;
+	}
+	float missing_teams_mask = (!redalive) + (!bluealive) * 2;
+	if(vip_teams >= 3) missing_teams_mask += (!yellowalive) * 4;
+	if(vip_teams >= 4) missing_teams_mask += (!pinkalive) * 8;
+	if(prev_missing_teams_mask != missing_teams_mask)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
+		prev_missing_teams_mask = missing_teams_mask;
 	}
 	return 0;
 }

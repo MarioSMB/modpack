@@ -2,6 +2,7 @@ entity scores_initialized; // non-world when scores labels/rules have been set
 .float scores[MAX_SCORE];
 .float teamscores[MAX_TEAMSCORE];
 .entity scorekeeper;
+.float scoreboard_pos;
 
 /**
  * Attaches a PlayerScore entity to a player. Use that in ClientConnect.

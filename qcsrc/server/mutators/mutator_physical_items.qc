@@ -89,7 +89,7 @@ MUTATOR_HOOKFUNCTION(item_spawning)
 	wep.nextthink = time;
 	wep.touch = physical_item_touch;
 	wep.event_damage = physical_item_damage;
-	
+
 	if(!wep.cnt)
 	{
 		// fix the spawn origin

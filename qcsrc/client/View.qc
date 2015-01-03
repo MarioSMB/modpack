@@ -163,13 +163,13 @@ vector GetCurrentFov(float fov)
 	else
 		setsensitivityscale(1);
 
-	makevectors(view_angles);
-
-	if(autocvar_cl_velocityzoom && autocvar_cl_velocityzoom_type) // _type = 0 disables velocity zoom too
+	if(autocvar_cl_velocityzoom_enabled && autocvar_cl_velocityzoom_type) // _type = 0 disables velocity zoom too
 	{
 		if(intermission) { curspeed = 0; }
 		else
 		{
+
+			makevectors(view_angles);
 			v = pmove_vel;
 			if(csqcplayer)
 				v = csqcplayer.velocity;
@@ -184,7 +184,7 @@ vector GetCurrentFov(float fov)
 
 		velocityzoom = bound(0, drawframetime / max(0.000000001, autocvar_cl_velocityzoom_time), 1); // speed at which the zoom adapts to player velocity
 		avgspeed = avgspeed * (1 - velocityzoom) + (curspeed / autocvar_cl_velocityzoom_speed) * velocityzoom;
-		velocityzoom = exp(float2range11(avgspeed * -autocvar_cl_velocityzoom / 1) * 1);
+		velocityzoom = exp(float2range11(avgspeed * -autocvar_cl_velocityzoom_factor / 1) * 1);
 
 		//print(ftos(avgspeed), " avgspeed, ", ftos(curspeed), " curspeed, ", ftos(velocityzoom), " return\n"); // for debugging
 	}
@@ -393,6 +393,32 @@ float contentavgalpha, liquidalpha_prev;
 vector liquidcolor_prev;
 
 float eventchase_current_distance;
+float eventchase_running;
+float WantEventchase()
+{
+	if(autocvar_cl_orthoview)
+		return FALSE;
+	if(intermission)
+		return TRUE;
+	if(spectatee_status >= 0)
+	{
+		if(hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0))
+			return TRUE;
+		if(autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(WepSet_GetFromStat() & WepSet_FromWeapon(WEP_PORTO)))
+			return TRUE;
+		if(autocvar_cl_eventchase_death && (getstati(STAT_HEALTH) <= 0))
+		{
+			if(autocvar_cl_eventchase_death == 2)
+			{
+				// don't stop eventchase once it's started (even if velocity changes afterwards)
+				if(self.velocity == '0 0 0' || eventchase_running)
+					return TRUE;
+			}
+			else return TRUE;
+		}
+	}
+	return FALSE;
+}
 
 vector damage_blurpostprocess, content_blurpostprocess;
 
@@ -402,9 +428,6 @@ float last_beam;
 
 float rainbow_last_flicker;
 vector rainbow_prev_color;
-
-vector wcross_prevorigin;
-float wcross_lastcheck;
 
 float fps_start;
 float fps_frames;
@@ -517,7 +540,6 @@ void CSQC_UpdateView(float w, float h)
 	// event chase camera
 	if(autocvar_chase_active <= 0) // greater than 0 means it's enabled manually, and this code is skipped
 	{
-		WepSet weapons_stat = WepSet_GetFromStat();
 		float ons_roundlost = (gametype == MAPINFO_TYPE_ONSLAUGHT && getstati(STAT_ROUNDLOST));
 		float vehicle_chase = (hud != HUD_NORMAL && (autocvar_cl_eventchase_vehicle || spectatee_status > 0));
 		entity gen = world;
@@ -536,9 +558,10 @@ void CSQC_UpdateView(float w, float h)
 			if(!gen)
 				ons_roundlost = FALSE; // don't enforce the 3rd person camera if there is no dead generator to show
 		}
-
-		if(((spectatee_status >= 0 && (autocvar_cl_eventchase_death && is_dead)) || intermission || ons_roundlost || (autocvar_cl_eventchase_nexball && gametype == MAPINFO_TYPE_NEXBALL && !(weapons_stat & WepSet_FromWeapon(WEP_PORTO))) || vehicle_chase) && !autocvar_cl_orthoview)
+		if(WantEventchase() || (!autocvar_cl_orthoview && ons_roundlost))
 		{
+			eventchase_running = TRUE;
+
 			// make special vector since we can't use view_origin (It is one frame old as of this code, it gets set later with the results this code makes.)
 			vector current_view_origin = (csqcplayer ? csqcplayer.origin : pmove_org);
 			if(ons_roundlost) { current_view_origin = gen.origin; }
@@ -588,6 +611,7 @@ void CSQC_UpdateView(float w, float h)
 		}
 		else if(autocvar_chase_active < 0) // time to disable chase_active if it was set by this code
 		{
+			eventchase_running = FALSE;
 			cvar_set("chase_active", "0");
 			eventchase_current_distance = 0; // start from 0 next time
 		}
@@ -917,10 +941,7 @@ void CSQC_UpdateView(float w, float h)
 	{
 		// apply night vision effect
 		vector tc_00, tc_01, tc_10, tc_11;
-		vector rgb;
-		rgb_x = 0; // fteqcc sucks
-		rgb_y = 0; // fteqcc sucks
-		rgb_z = 0; // fteqcc sucks
+		vector rgb = '0 0 0';
 
 		if(!nightvision_noise)
 		{
@@ -1385,19 +1406,7 @@ void CSQC_UpdateView(float w, float h)
 			float shottype;
 
 			// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
-			if(autocvar_cl_rumraisin)
-			{
-				if(time >= wcross_lastcheck)
-				{
-					wcross_origin = project_3d_to_2d(view_origin + MAX_SHOT_DISTANCE * view_forward) + (randomvec() * (10000 * drawframetime));
-					wcross_prevorigin = wcross_origin;
-					wcross_lastcheck = time + 0.04; // delay a bit so it's not choppy
-				}
-				else
-					wcross_origin = wcross_prevorigin;
-			}
-			else
-				wcross_origin = project_3d_to_2d(view_origin + MAX_SHOT_DISTANCE * view_forward);
+			wcross_origin = project_3d_to_2d(view_origin + MAX_SHOT_DISTANCE * view_forward);
 			wcross_origin_z = 0;
 			if(autocvar_crosshair_hittest)
 			{
@@ -1647,9 +1656,6 @@ void CSQC_UpdateView(float w, float h)
 			else
 				wcross_blur = 0;
 
-			if(autocvar_cl_rumraisin)
-				wcross_blur = 0;
-
 			// *_prev is at time-frametime
 			// * is at wcross_changedonetime+f
 			// what do we have at time?
@@ -1685,14 +1691,14 @@ void CSQC_UpdateView(float w, float h)
 					weapon_clipload = getstati(STAT_WEAPON_CLIPLOAD);
 					weapon_clipsize = getstati(STAT_WEAPON_CLIPSIZE);
 
+					float ok_ammo_charge, ok_ammo_chargepool;
+					ok_ammo_charge = getstatf(STAT_OK_AMMO_CHARGE);
+					ok_ammo_chargepool = getstatf(STAT_OK_AMMO_CHARGEPOOL);
+
 					float vortex_charge, vortex_chargepool;
 					vortex_charge = getstatf(STAT_VORTEX_CHARGE);
 					vortex_chargepool = getstatf(STAT_VORTEX_CHARGEPOOL);
 
-					float ok_ammo_charge, ok_ammo_chargepool;
-					ok_ammo_charge = getstatf(STAT_OK_AMMO_CHARGE);
-					ok_ammo_chargepool = getstatf(STAT_OK_AMMO_CHARGEPOOl);
-										
 					float arc_heat = getstatf(STAT_ARC_HEAT);
 
 					if(vortex_charge_movingavg == 0) // this should only happen if we have just loaded up the game

@@ -87,7 +87,7 @@ void TeamScore_Spawn(float t, string name)
 	Net_LinkEntity(ts, FALSE, 0, TeamScore_SendEntity);
 	teamscorekeepers[t - 1] = ts;
 	++teamscores_entities_count;
-	PlayerStats_AddTeam(t);
+	PlayerStats_GameReport_AddTeam(t);
 }
 
 float TeamScore_AddToTeam(float t, float scorefield, float score)
@@ -156,8 +156,8 @@ void ScoreInfo_SetLabel_PlayerScore(float i, string label, float scoreflags)
 	}
 	if(label != "")
 	{
-		PlayerStats_AddEvent(strcat(PLAYERSTATS_TOTAL, label));
-		PlayerStats_AddEvent(strcat(PLAYERSTATS_SCOREBOARD, label));
+		PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_TOTAL, label));
+		PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_SCOREBOARD, label));
 	}
 }
 
@@ -172,8 +172,8 @@ void ScoreInfo_SetLabel_TeamScore(float i, string label, float scoreflags)
 	}
 	if(label != "")
 	{
-		PlayerStats_AddEvent(strcat(PLAYERSTATS_TOTAL, label));
-		PlayerStats_AddEvent(strcat(PLAYERSTATS_SCOREBOARD, label));
+		PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_TOTAL, label));
+		PlayerStats_GameReport_AddEvent(strcat(PLAYERSTATS_SCOREBOARD, label));
 	}
 }
 
@@ -345,7 +345,7 @@ float PlayerScore_Add(entity player, float scorefield, float score)
 		if(scores_label[scorefield] != "")
 			s.SendFlags |= pow(2, scorefield);
 	if(!warmup_stage)
-		PlayerStats_Event(s.owner, strcat(PLAYERSTATS_TOTAL, scores_label[scorefield]), score);
+		PS_GR_P_ADDVAL(s.owner, strcat(PLAYERSTATS_TOTAL, scores_label[scorefield]), score);
 	return (s.(scores[scorefield]) += score);
 }
 
@@ -935,7 +935,7 @@ void PlayerScore_PlayerStats(entity p)
 	for(i = 0; i < MAX_SCORE; ++i)
 		if(s.(scores[i]) != 0)
 			if(scores_label[i] != "")
-				PlayerStats_Event(s.owner, strcat(PLAYERSTATS_SCOREBOARD, scores_label[i]), s.(scores[i]));
+				PS_GR_P_ADDVAL(s.owner, strcat(PLAYERSTATS_SCOREBOARD, scores_label[i]), s.(scores[i]));
 }
 
 void PlayerScore_TeamStats(void)
@@ -951,6 +951,6 @@ void PlayerScore_TeamStats(void)
 			if(sk.(teamscores[i]) != 0)
 				if(teamscores_label[i] != "")
 					// the +1 is important here!
-					PlayerStats_TeamScore(t+1, strcat(PLAYERSTATS_SCOREBOARD, teamscores_label[i]), sk.(teamscores[i]));
+					PS_GR_T_ADDVAL(t+1, strcat(PLAYERSTATS_SCOREBOARD, teamscores_label[i]), sk.(teamscores[i]));
 	}
 }

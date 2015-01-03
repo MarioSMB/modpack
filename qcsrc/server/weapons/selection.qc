@@ -224,6 +224,10 @@ void W_SwitchWeapon_Force(entity e, float w)
 	e.cnt = e.switchweapon;
 	e.switchweapon = w;
 	e.selectweapon = w;
+
+#ifdef JEFF
+	e.jeff_weaponswitch_count += 1;
+#endif
 }
 
 // perform weapon to attack (weaponstate and attack_finished check is here)
@@ -253,7 +257,7 @@ void W_SwitchWeapon(float imp)
 		else
 			self.selectweapon = imp; // update selectweapon ANYWAY
 	}
-	else { WEP_ACTION(self.weapon, WR_RELOAD); }
+	else if(!forbidWeaponUse(self)) { WEP_ACTION(self.weapon, WR_RELOAD); }
 }
 
 void W_CycleWeapon(string weaponorder, float dir)

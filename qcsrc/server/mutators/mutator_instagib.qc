@@ -51,14 +51,14 @@ void instagib_stop_countdown(entity e)
 }
 void instagib_ammocheck()
 {
-	if (!IS_PLAYER(self))
-		return; // not a player
-	if (time < self.instagib_nextthink)
+	if(time < self.instagib_nextthink)
 		return;
+	if(!IS_PLAYER(self))
+		return; // not a player
 
-	if (self.deadflag || gameover)
+	if(self.deadflag || gameover)
 		instagib_stop_countdown(self);
-	else if (self.ammo_cells > 0 || (self.items & IT_UNLIMITED_WEAPON_AMMO))
+	else if (self.ammo_cells > 0 || (self.items & IT_UNLIMITED_WEAPON_AMMO) || (self.flags & FL_GODMODE))
 		instagib_stop_countdown(self);
 	else if(autocvar_g_rm)
 	{
@@ -237,12 +237,14 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 		{
 			if(frag_deathtype & HITTYPE_SECONDARY)
 			{
-				frag_damage = frag_mirrordamage = 0;
+				if(!autocvar_g_instagib_blaster_keepdamage)
+					frag_damage = frag_mirrordamage = 0;
 				
 				if(frag_target != frag_attacker)
 				{
-					if(frag_target.health > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE); }
-					frag_force = '0 0 0';
+					if(frag_damage <= 0 && frag_target.health > 0) { Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE); }
+					if(!autocvar_g_instagib_blaster_keepforce)
+						frag_force = '0 0 0';
 				}
 			}
 			else if(frag_target.armorvalue)
@@ -277,11 +279,16 @@ MUTATOR_HOOKFUNCTION(instagib_PlayerDamage)
 
 MUTATOR_HOOKFUNCTION(instagib_SetStartItems)
 {
-	start_ammo_cells = warmup_start_ammo_cells = cvar("g_instagib_ammo_start");
-	start_ammo_rockets = warmup_start_ammo_rockets = cvar("g_instagib_withmines_ammo_start");
+	start_health       = warmup_start_health       = 100;
+	start_armorvalue   = warmup_start_armorvalue   = 0;
 
-	start_health = warmup_start_health = 100;
-	start_armorvalue = warmup_start_armorvalue = 0;
+	start_ammo_shells  = warmup_start_ammo_shells  = 0;
+	start_ammo_nails   = warmup_start_ammo_nails   = 0;
+	start_ammo_cells   = warmup_start_ammo_cells   = cvar("g_instagib_ammo_start");
+	start_ammo_plasma  = warmup_start_ammo_plasma  = 0;
+	start_ammo_rockets = warmup_start_ammo_rockets = cvar("g_instagib_withmines_ammo_start");;
+	start_ammo_fuel    = warmup_start_ammo_fuel    = 0;
+
 	start_weapons = warmup_start_weapons = ((cvar("g_instagib_withmines")) ? (WEPSET_VAPORIZER | WEPSET_MINE_LAYER) : WEPSET_VAPORIZER);
 	start_items |= IT_UNLIMITED_SUPERWEAPONS;
 
@@ -293,7 +300,7 @@ MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 	if(self.classname == "item_cells")
 	if(!autocvar_g_instagib_use_normal_ammo)
 		return TRUE;
-		
+
 	if(self.classname == "item_rockets")
 	if(!autocvar_g_instagib_use_normal_ammo || !cvar("g_instagib_withmines"))
 		return TRUE;
@@ -307,7 +314,6 @@ MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 	if(self.weapon == WEP_DEVASTATOR || self.weapon == WEP_VORTEX)
 	{
 		entity e = spawn(), oldself;
-		
 		setorigin(e, self.origin);
 		oldself = self;
 		self = e;
@@ -324,13 +330,13 @@ MUTATOR_HOOKFUNCTION(instagib_FilterItem)
 
 	if(self.ammo_cells > autocvar_g_instagib_ammo_drop && self.classname != "item_minst_cells")
 		self.ammo_cells = autocvar_g_instagib_ammo_drop;
-		
+
 	if(self.classname != "item_minst_rockets")
 		self.ammo_rockets = bound(0, self.ammo_rockets, autocvar_g_instagib_ammo_rockets);
 
 	if((self.ammo_cells || self.ammo_supercells) && !self.weapon)
 		return FALSE;
-		
+
 	if(self.ammo_rockets && !self.weapon)
 		return FALSE;
 

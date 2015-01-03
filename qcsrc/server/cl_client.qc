@@ -184,7 +184,7 @@ void PutObserverInServer (void)
 
     self.hud = HUD_NORMAL;
 
-    if(IS_PLAYER(self)) { Send_Effect(EFFECT_SPAWN_NEUTRAL, self.origin, '0 0 0', 1); }
+	if(IS_PLAYER(self)) { Send_Effect(EFFECT_SPAWN_NEUTRAL, self.origin, '0 0 0', 1); }
 	
 	if(autocvar_g_observer_glowtrails)
 		CSQCModel_UnlinkEntity();
@@ -212,7 +212,7 @@ void PutObserverInServer (void)
 	if(self.alivetime)
 	{
 		if(!warmup_stage)
-			PlayerStats_Event(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
+			PS_GR_P_ADDVAL(self, PLAYERSTATS_ALIVETIME, time - self.alivetime);
 		self.alivetime = 0;
 	}
 
@@ -305,6 +305,7 @@ void PutObserverInServer (void)
 	self.punchvector = '0 0 0';
 	self.oldvelocity = self.velocity;
 	self.fire_endtime = -1;
+	self.event_damage = func_null;
 
 	if(autocvar_g_observer_glowtrails)
 	{
@@ -432,25 +433,54 @@ void PlayerTouch (void)
 	if(other == world)
 		return;
 
-	if(!IS_PLAYER(self))
+	if(!IS_PLAYER(self) || !IS_PLAYER(other))
 		return;
 
-	if(!IS_PLAYER(other))
+	if(self.deadflag != DEAD_NO || other.deadflag != DEAD_NO)
 		return;
 
-	if(self.deadflag != DEAD_NO)
-		return;
-
-	if(other.deadflag != DEAD_NO)
+	if(!self.iscreature || !other.iscreature)
 		return;
 
 	if(forbidWeaponUse(self))
 		return;
 
-	vector vdir = normalize(other.origin - self.origin);
+	if(autocvar_g_player_crush_simple)
+	{
+		vector vdir = normalize(other.origin - self.origin);
 
-	if(vdir_z > autocvar_g_player_crush_headheight) // adjust this to set how sharp from above players need to hit the player to crush them. 
-		Damage (self, other, other, autocvar_g_player_crush_damage, DEATH_CRUSH, self.origin, '0 0 0');
+		if(vdir_z > autocvar_g_player_crush_headheight) // adjust this to set how sharp from above players need to hit the player to crush them. 
+			Damage (self, other, other, autocvar_g_player_crush_damage, DEATH_CRUSH, self.origin, '0 0 0');
+	}
+	else
+	{
+
+		tracebox(self.origin, self.mins, self.maxs, self.origin - ('0 0 1' * (self.maxs_z + 5)), MOVE_NORMAL, self);
+
+		if(trace_ent == other)
+		{
+			float mjumpheight = autocvar_g_player_crush_bounce;
+
+			setorigin(self, self.origin + '0 0 2');
+
+			if(self.BUTTON_JUMP)
+			{
+				mjumpheight = autocvar_g_player_crush_bounce_jump;
+				self.flags &= ~FL_JUMPRELEASED;
+			}
+
+			self.flags &= ~FL_ONGROUND;
+
+			self.velocity_z = mjumpheight;
+			self.oldvelocity_z = self.velocity_z;
+
+			animdecide_setaction(self, ANIMACTION_JUMP, TRUE);
+
+			self.restart_jump = -1; // restart jump anim next time
+			
+			Damage (other, self, self, autocvar_g_player_crush_damage, DEATH_CRUSH, other.origin, '0 0 0');
+		}
+	}
 }
 
 /*
@@ -669,7 +699,6 @@ void PutClientInServer (void)
 		if(self.cvar_cl_sparkle == 2 && checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
 			self.colormap = 4351;
 
-		self.statdraintime = time + 5;
 		self.BUTTON_ATCK = self.BUTTON_JUMP = self.BUTTON_ATCK2 = 0;
 
 		if(self.killcount == -666) {
@@ -911,8 +940,8 @@ void ClientKill_Now()
 	if(self.killindicator_teamchange)
 		ClientKill_Now_TeamChange();
 
-	// in any case:
-	Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
+	if(IS_PLAYER(self))
+		Damage(self, self, self, 100000, DEATH_KILL, self.origin, '0 0 0');
 
 	// now I am sure the player IS dead
 }
@@ -1159,6 +1188,8 @@ void ClientConnect (void)
 		player_count = 0;
 	}
 
+	if(IS_REAL_CLIENT(self)) { PlayerStats_PlayerBasic_CheckUpdate(self); }
+
 	PlayerScore_Attach(self);
 	ClientData_Attach();
 	accuracy_init(self);
@@ -1237,10 +1268,10 @@ void ClientConnect (void)
 
 	self.playerid = (playerid_last = playerid_last + 1);
 
-	PlayerStats_AddEvent(sprintf("kills-%d", self.playerid));
+	PlayerStats_GameReport_AddEvent(sprintf("kills-%d", self.playerid));
 
     if(IS_BOT_CLIENT(self))
-        PlayerStats_AddPlayer(self);
+        PlayerStats_GameReport_AddPlayer(self);
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":join:", ftos(self.playerid), ":", ftos(num_for_edict(self)), ":", ((IS_REAL_CLIENT(self)) ? self.netaddress : "bot"), ":", self.netname));
@@ -1346,15 +1377,15 @@ void ClientDisconnect (void)
 		print("Warning: ClientDisconnect without ClientConnect\n");
 		return;
 	}
-	
+
+	PlayerStats_GameReport_FinalizePlayer(self);
+
 	if ( self.active_minigame )
 		part_minigame(self);
 
 	SetSpectator(self, world);
 
 	if(IS_PLAYER(self)) { Send_Effect(EFFECT_SPAWN_NEUTRAL, self.origin, '0 0 0', 1); }
-
-	PlayerStats_AddGlobalInfo(self);
 
 	CheatShutdownClient();
 
@@ -1791,8 +1822,7 @@ void SpectateCopy(entity spectatee) {
 	self.impulse = 0;
 	self.items = spectatee.items;
 	self.last_pickup = spectatee.last_pickup;
-	//self.damage_dealt = spectatee.damage_dealt;
-	//self.damage_dealt_total = spectatee.damage_dealt_total;
+	self.hit_time = spectatee.hit_time;
 	self.metertime = spectatee.metertime;
 	self.pressedkeys = spectatee.pressedkeys;
 	self.weapons = spectatee.weapons;
@@ -1848,7 +1878,8 @@ void SpectateCopy(entity spectatee) {
     }
 }
 
-float SpectateUpdate() {
+float SpectateUpdate()
+{
 	if(!self.enemy)
 	    return 0;
 
@@ -2089,7 +2120,7 @@ float nJoinAllowed(entity ignore) {
 
 	float currentlyPlaying = 0;
 	FOR_EACH_REALCLIENT(e)
-		if(IS_PLAYER(e) || e.caplayer == 1)
+		if(IS_PLAYER(e) || e.caplayer)
 			currentlyPlaying += 1;
 
 	if(currentlyPlaying < autocvar_g_maxplayers)
@@ -2103,7 +2134,10 @@ float nJoinAllowed(entity ignore) {
  * g_maxplayers_spectator_blocktime seconds
  */
 void checkSpectatorBlock() {
-	if(IS_SPEC(self) || IS_OBSERVER(self)) {
+	if(IS_SPEC(self) || IS_OBSERVER(self))
+	if(!self.caplayer)
+	if(IS_REAL_CLIENT(self))
+	{
 		if( time > (self.spectatortime + autocvar_g_maxplayers_spectator_blocktime) ) {
 			Send_Notification(NOTIF_ONE_ONLY, self, MSG_INFO, INFO_QUIT_KICK_SPECTATING);
 			dropclient(self);

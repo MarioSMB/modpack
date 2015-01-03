@@ -47,6 +47,8 @@ autocvars.qh
 constants.qh
 defs.qh		// Should rename this, it has fields and globals
 
+../common/jeff.qh
+
 ../common/notifications.qh // must be after autocvars
 ../common/deathtypes.qh // must be after notifications
 
@@ -92,7 +94,7 @@ csqceffects.qc
 
 anticheat.qh
 cheats.qh
-playerstats.qh
+../common/playerstats.qh
 
 portals.qh
 
@@ -130,7 +132,7 @@ bot/bot.qc
 
 g_subs.qc
 
-//runematch.qc
+jeff.qc
 
 g_violence.qc
 g_damage.qc
@@ -241,7 +243,7 @@ playerdemo.qc
 
 anticheat.qc
 cheats.qc
-playerstats.qc
+../common/playerstats.qc
 
 round_handler.qc
 

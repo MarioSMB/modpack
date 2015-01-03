@@ -521,7 +521,7 @@ void GetTeamCounts(entity ignore)
 	FOR_EACH_CLIENT(head)
 	{
 		float t;
-		if(IS_PLAYER(head))
+		if(IS_PLAYER(head) || head.caplayer)
 			t = head.team;
 		else if(head.team_forced > 0)
 			t = head.team_forced; // reserve the spot

@@ -12,6 +12,7 @@ REGISTER_MONSTER(
 #else
 #ifdef SVQC
 float autocvar_g_monster_afrit_health;
+var float autocvar_g_monster_afrit_damageforcescale = 0.3;
 float autocvar_g_monster_afrit_attack_fireball_damage;
 float autocvar_g_monster_afrit_attack_fireball_edgedamage;
 float autocvar_g_monster_afrit_attack_fireball_damagetime;
@@ -161,6 +162,7 @@ float M_Afrit(float req)
 			if(!self.speed) { self.speed = (autocvar_g_monster_afrit_speed_walk); }
 			if(!self.speed2) { self.speed2 = (autocvar_g_monster_afrit_speed_run); }
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_afrit_speed_stop); }
+			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_afrit_damageforcescale); }
 
 			self.m_anim_walk = afrit_anim_fly;
 			self.m_anim_run = afrit_anim_fly;

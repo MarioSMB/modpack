@@ -12,6 +12,7 @@ REGISTER_MONSTER(
 #else
 #ifdef SVQC
 float autocvar_g_monster_shambler_health;
+var float autocvar_g_monster_shambler_damageforcescale = 0.1;
 float autocvar_g_monster_shambler_attack_smash_damage;
 float autocvar_g_monster_shambler_attack_smash_range;
 float autocvar_g_monster_shambler_attack_claw_damage;
@@ -231,6 +232,7 @@ float M_Shambler(float req)
 			if(!self.speed) { self.speed = (autocvar_g_monster_shambler_speed_walk); }
 			if(!self.speed2) { self.speed2 = (autocvar_g_monster_shambler_speed_run); }
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_shambler_speed_stop); }
+			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_shambler_damageforcescale); }
 
 			self.m_anim_walk = shambler_anim_walk;
 			self.m_anim_run = shambler_anim_run;

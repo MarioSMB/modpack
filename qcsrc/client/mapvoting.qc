@@ -191,6 +191,11 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 
 	pos += autocvar_scoreboard_border_thickness * '1 1 0';
 	img_size -= (autocvar_scoreboard_border_thickness * 2) * '1 1 0';
+
+#ifdef XMAS
+	string xpic = "gfx/menu/default/xmaspic.tga";
+#endif
+
 	if(pic == "")
 	{
 		drawfill(pos, img_size, '.5 .5 .5', .7 * theAlpha, DRAWFLAG_NORMAL);
@@ -203,6 +208,11 @@ void MapVote_DrawMapItem(vector pos, float isize, float tsize, string map, strin
 		else
 			drawpic(pos, pic, img_size, '1 1 1', theAlpha, DRAWFLAG_NORMAL);
             //drawpic_rotated(pos, pic, img_size, '1 1 1', M_PI, theAlpha, DRAWFLAG_NORMAL);
+
+#ifdef XMAS
+		if(drawgetimagesize(xpic) != '0 0 0')
+			drawpic(pos, xpic, img_size, '1 1 1', theAlpha, DRAWFLAG_NORMAL);
+#endif
 	}
 
 	if(id == mv_ownvote)
@@ -533,16 +543,13 @@ void MapVote_Init()
 	gametypevote = ReadByte();
 	
 	float mv_real_num_maps = mv_num_maps - mv_abstain;
-	
-	if ( gametypevote )
+
+	if(gametypevote)
 	{
 		mapvote_chosenmap = strzone(ReadString());
 		if ( gametypevote == 2 )
 			gametypevote = 0;
-	}
 
-	if(gametypevote)
-	{
 		gtv_text_size = hud_fontsize*1.4;
 		gtv_text_size_small = hud_fontsize*1.1;
 		

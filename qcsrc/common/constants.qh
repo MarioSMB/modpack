@@ -42,9 +42,9 @@ const float TE_CSQC_MINELAYER_MAXMINES = 110;
 const float TE_CSQC_HAGAR_MAXROCKETS = 111;
 const float TE_CSQC_VEHICLESETUP = 112;
 const float TE_CSQC_SVNOTICE = 113;
-const float TE_CSQC_SHOCKWAVEPARTICLE = 115;
-const float TE_CSQC_SPECINFO = 116;
-const float TE_CSQC_SUPERBLASTPARTICLE = 117;
+const float TE_CSQC_SHOCKWAVEPARTICLE = 114;
+const float TE_CSQC_SPECINFO = 115;
+const float TE_CSQC_SUPERBLASTPARTICLE = 116;
 
 const float RACE_NET_CHECKPOINT_HIT_QUALIFYING = 0; // byte checkpoint, short time, short recordtime, string recordholder
 const float RACE_NET_CHECKPOINT_CLEAR = 1;
@@ -99,8 +99,7 @@ const float ENT_CLIENT_BUMBLE_RAYGUN = 35;
 const float ENT_CLIENT_SPAWNPOINT = 36;
 const float ENT_CLIENT_SPAWNEVENT = 37;
 const float ENT_CLIENT_NOTIFICATION = 38;
-const float ENT_CLIENT_CONQUEST_CONTROLPOINT = 39;
-
+const float ENT_CLIENT_ELIMINATEDPLAYERS = 39;
 const float ENT_CLIENT_TURRET = 40;
 const float ENT_CLIENT_AUXILIARYXHAIR = 50;
 const float ENT_CLIENT_VEHICLE = 60;
@@ -108,6 +107,7 @@ const float ENT_CLIENT_GENERATOR = 70;
 const float ENT_CLIENT_CONTROLPOINT_ICON = 71;
 const float ENT_CLIENT_JAILCAMERA = 72;
 const float ENT_CLIENT_EFFECT = 73;
+const float ENT_CLIENT_CONQUEST_CONTROLPOINT = 74;
 
 const float ENT_CLIENT_HEALING_ORB = 80;
 

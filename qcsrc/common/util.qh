@@ -133,6 +133,7 @@ float mod(float a, float b) { return a - (floor(a / b) * b); }
 #endif
 
 #define TIME_TO_NTHS(t,n) floor((t) * (n) + 0.4)
+string format_time(float seconds);
 string mmsss(float t);
 string mmssss(float t);
 
@@ -236,8 +237,6 @@ vector solve_quadratic(float a, float b, float c);
 
 vector solve_shotdirection(vector myorg, vector myvel, vector eorg, vector evel, float spd, float newton_style);
 vector get_shotvelocity(vector myvel, vector mydir, float spd, float newton_style, float mi, float ma);
-
-void check_unacceptable_compiler_bugs();
 
 float compressShotOrigin(vector v);
 vector decompressShotOrigin(float f);
@@ -411,9 +410,9 @@ vector get_corner_position(entity box, float corner);
 #define fprintf(file, ...) fputs(file, sprintf(__VA_ARGS__))
 #define bprintf(...) bprint(sprintf(__VA_ARGS__))
 
-#ifndef MENUQC
+//#ifndef MENUQC
 void backtrace(string msg);
-#endif
+//#endif
 
 // color code replace, place inside of sprintf and parse the string... defaults described as constants
 // foreground/normal colors

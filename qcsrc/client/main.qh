@@ -86,6 +86,7 @@ entity teamslots[17];    // 17 teams (including "spectator team")
 .float gotscores;
 .entity owner;
 .float ready;
+.float eliminated;
 
 .void(void) draw;
 .void(void) draw2d;

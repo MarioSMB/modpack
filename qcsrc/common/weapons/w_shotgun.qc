@@ -307,6 +307,9 @@ float W_Shotgun(float req)
 		}
 		case WR_CHECKAMMO2:
 		{
+			if(IS_BOT_CLIENT(self))
+			if(vlen(self.origin-self.enemy.origin) > WEP_CVAR_SEC(shotgun, melee_range))
+				return FALSE; // bots cannot use secondary out of range (fixes constant melee when out of ammo)
 			switch(WEP_CVAR(shotgun, secondary))
 			{
 				case 1: return TRUE; // melee does not use ammo

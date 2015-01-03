@@ -12,6 +12,7 @@ REGISTER_MONSTER(
 #else
 #ifdef SVQC
 float autocvar_g_monster_scrag_health;
+var float autocvar_g_monster_scrag_damageforcescale = 0.55;
 float autocvar_g_monster_scrag_attack_spike_damage;
 float autocvar_g_monster_scrag_attack_spike_edgedamage;
 float autocvar_g_monster_scrag_attack_spike_force;
@@ -136,6 +137,7 @@ float M_Scrag(float req)
 			if(!self.speed) { self.speed = (autocvar_g_monster_scrag_speed_walk); }
 			if(!self.speed2) { self.speed2 = (autocvar_g_monster_scrag_speed_run); }
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_scrag_speed_stop); }
+			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_scrag_damageforcescale); }
 
 			self.m_anim_walk = scrag_anim_hover;
 			self.m_anim_run = scrag_anim_fly;

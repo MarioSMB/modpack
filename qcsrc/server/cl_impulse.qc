@@ -45,7 +45,7 @@ void ImpulseCommands (void)
 	if (!imp || gameover)
 		return;
 	self.impulse = 0;
-	
+
 	if ( self.active_minigame )
 	if ( MinigameImpulse(imp) )
 		return;
@@ -112,7 +112,7 @@ void ImpulseCommands (void)
 					W_PreviousWeapon(1);
 					break;
 				case 20:
-					WEP_ACTION(self.weapon, WR_RELOAD);
+					if(!forbidWeaponUse(self)) { WEP_ACTION(self.weapon, WR_RELOAD); }
 					break;
 			}
 		}

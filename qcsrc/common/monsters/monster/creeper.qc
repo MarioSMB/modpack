@@ -12,6 +12,7 @@ REGISTER_MONSTER(
 #else
 #ifdef SVQC
 float autocvar_g_monster_creeper_health;
+var float autocvar_g_monster_creeper_damageforcescale = 0.0001; // hehehe
 float autocvar_g_monster_creeper_attack_explode_damage;
 float autocvar_g_monster_creeper_attack_explode_edgedamage;
 float autocvar_g_monster_creeper_attack_explode_radius;
@@ -100,6 +101,7 @@ float M_Creeper(float req)
 			if(!self.speed) { self.speed = (autocvar_g_monster_creeper_speed_walk); }
 			if(!self.speed2) { self.speed2 = (autocvar_g_monster_creeper_speed_run); }
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_creeper_speed_stop); }
+			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_creeper_damageforcescale); }
 
 			self.m_anim_walk = creeper_anim_walk;
 			self.m_anim_run = creeper_anim_walk;

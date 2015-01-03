@@ -12,6 +12,7 @@ REGISTER_MONSTER(
 #else
 #ifdef SVQC
 float autocvar_g_monster_rotfish_health;
+var float autocvar_g_monster_rotfish_damageforcescale = 0.8;
 float autocvar_g_monster_rotfish_attack_range;
 float autocvar_g_monster_rotfish_attack_melee_damage;
 float autocvar_g_monster_rotfish_attack_melee_delay;
@@ -72,6 +73,7 @@ float M_Rotfish(float req)
 			if(!self.speed2) { self.speed2 = (autocvar_g_monster_rotfish_speed_run); }
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_rotfish_speed_stop); }
 			if(!self.attack_range) { self.attack_range = autocvar_g_monster_rotfish_attack_range; }
+			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_rotfish_damageforcescale); }
 
 			self.m_anim_walk = rotfish_anim_swim;
 			self.m_anim_run = rotfish_anim_swim;

@@ -194,6 +194,24 @@ string process_time(float outputtype, float seconds)
 
 			return output;
 		}
+		case 3:
+		{
+			string output = "";
+
+			output = count_hours(tmp_hours);
+
+			if(tmp_weeks) { tmp_days += (tmp_weeks * 7); }
+			if(tmp_years) { tmp_days += (tmp_years * 365); }
+			if(tmp_days)
+			{
+				output = sprintf(
+					"%s%s",
+					count_days(tmp_days),
+					((output != "") ? sprintf(", %s", output) : ""));
+			}
+
+			return output;
+		}
 	}
 	return "";
 }

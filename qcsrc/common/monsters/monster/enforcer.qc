@@ -12,6 +12,7 @@ REGISTER_MONSTER(
 #else
 #ifdef SVQC
 float autocvar_g_monster_enforcer_health;
+var float autocvar_g_monster_enforcer_damageforcescale = 0.7;
 float autocvar_g_monster_enforcer_attack_plasma_damage;
 float autocvar_g_monster_enforcer_attack_plasma_edgedamage;
 float autocvar_g_monster_enforcer_attack_plasma_force;
@@ -151,6 +152,7 @@ float M_Enforcer(float req)
 			if(!self.speed) { self.speed = (autocvar_g_monster_enforcer_speed_walk); }
 			if(!self.speed2) { self.speed2 = (autocvar_g_monster_enforcer_speed_run); }
 			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_enforcer_speed_stop); }
+			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_enforcer_damageforcescale); }
 
 			self.m_anim_walk = enforcer_anim_walk;
 			self.m_anim_run = enforcer_anim_run;

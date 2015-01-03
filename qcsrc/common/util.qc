@@ -408,6 +408,22 @@ void buf_save(float buf, string pFilename)
 	fclose(fh);
 }
 
+string format_time(float seconds)
+{
+	float days, hours, minutes;
+	seconds = floor(seconds + 0.5);
+        days = floor(seconds / 864000);
+        seconds -= days * 864000;
+        hours = floor(seconds / 36000);
+        seconds -= hours * 36000;
+	minutes = floor(seconds / 600);
+	seconds -= minutes * 600;
+        if (days > 0)
+                return sprintf(_("%d days, %02d:%02d:%02d"), days, hours, minutes, seconds);
+        else
+                return sprintf(_("%02d:%02d:%02d"), hours, minutes, seconds);
+}
+
 string mmsss(float tenths)
 {
 	float minutes;
@@ -1703,19 +1719,6 @@ vector get_shotvelocity(vector myvel, vector mydir, float spd, float newton_styl
 	return myvel + spd * mydir;
 }
 
-void check_unacceptable_compiler_bugs()
-{
-	if(cvar("_allow_unacceptable_compiler_bugs"))
-		return;
-	tokenize_console("foo bar");
-	if(strcat(argv(0), substring("foo bar", 4, 7 - argv_start_index(1))) == "barbar")
-		error("fteqcc bug introduced with revision 3178 detected. Please upgrade fteqcc to a later revision, downgrade fteqcc to revision 3177, or pester Spike until he fixes it. You can set _allow_unacceptable_compiler_bugs 1 to skip this check, but expect stuff to be horribly broken then.");
-
-	string s = "";
-	if (!s)
-		error("The empty string counts as false. We do not want that!");
-}
-
 float compressShotOrigin(vector v)
 {
 	float x, y, z;
@@ -2602,7 +2605,6 @@ vector get_corner_position(entity box, float corner)
 #endif
 
 // todo: this sucks, lets find a better way to do backtraces?
-#ifndef MENUQC
 void backtrace(string msg)
 {
 	float dev, war;
@@ -2624,7 +2626,6 @@ void backtrace(string msg)
 	cvar_set("developer", ftos(dev));
 	cvar_set("prvm_backtraceforwarnings", ftos(war));
 }
-#endif
 
 // color code replace, place inside of sprintf and parse the string
 string CCR(string input)

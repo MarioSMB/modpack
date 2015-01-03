@@ -223,10 +223,10 @@ float _Movetype_UnstickEntity() // SV_UnstickEntity
 		if(!_Movetype_TestEntityPosition('0 0 -1' * i)) goto success;
 		if(!_Movetype_TestEntityPosition('0 0 1' * i)) goto success;
 	}
-	dprintf(_("Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n"), num_for_edict(self), self.classname, vtos(self.move_origin));
+	dprintf("Can't unstick an entity (edict: %d, classname: %s, origin: %s)\n", num_for_edict(self), self.classname, vtos(self.move_origin));
 	return FALSE;
 :success
-	dprintf(_("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)\n"), num_for_edict(self), self.classname, vtos(self.move_origin));
+	dprintf("Sucessfully unstuck an entity (edict: %d, classname: %s, origin: %s)\n", num_for_edict(self), self.classname, vtos(self.move_origin));
 	_Movetype_LinkEdict(TRUE);
 	return TRUE;
 }

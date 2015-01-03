@@ -2,3 +2,5 @@ float weaponswapping;
 float internalteam;
 
 void W_DropEvent(float event, entity player, float weapon_type, entity weapon_item);
+
+float forbidWeaponUse(entity player);

@@ -15,6 +15,7 @@ Defs.qc
 ../warpzonelib/common.qh
 ../warpzonelib/client.qh
 
+../common/playerstats.qh
 ../common/teams.qh
 ../common/util.qh
 ../common/nades.qh
@@ -34,8 +35,11 @@ command/cl_cmd.qh
 
 autocvars.qh
 
+../common/jeff.qh
+
 ../common/notifications.qh // must be after autocvars
 ../common/deathtypes.qh // must be after notifications
+
 
 ../common/effects.qh
 
@@ -118,6 +122,7 @@ noise.qc
 
 ../common/test.qc
 ../common/util.qc
+../common/playerstats.qc
 ../common/notifications.qc
 ../common/command/markup.qc
 ../common/command/rpn.qc

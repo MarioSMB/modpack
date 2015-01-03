@@ -40,3 +40,4 @@ void ScoreRules_generic()
 		ScoreRules_basics(0, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, TRUE);
 	ScoreRules_basics_end();
 }
+

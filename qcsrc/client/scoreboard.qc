@@ -280,6 +280,9 @@ void Cmd_HUD_Help()
 	        "or in all but these game types. You can also specify 'all' as a\n"
 	        "field to show all fields available for the current game mode.\n\n"));
 
+	print(_("You can also put a ~ sign before them to make the field show up\n"
+		"only if scoreboard_extras is enabled.\n\n"));
+
 	print(_("The special game type names 'teams' and 'noteams' can be used to\n"
 	        "include/exclude ALL teams/noteams game modes.\n\n"));
 
@@ -709,7 +712,7 @@ string HUD_FixScoreboardColumnWidth(float i, string str)
 	return str;
 }
 
-void HUD_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_number)
+void HUD_PrintScoreboardItem(vector pos, vector item_size, entity pl, float is_self, float pl_number)
 {
 	vector tmp, rgb;
 	rgb = Team_ColorRGB(pl.team);
@@ -723,18 +726,17 @@ void HUD_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_numb
 		rgb_y = autocvar_scoreboard_color_bg_g + 0.5;
 		rgb_z = autocvar_scoreboard_color_bg_b + 0.5; }
 
-	// Layout:
-	tmp_x = sbwidth;
-	tmp_y = hud_fontsize_y * 1.25;
-	tmp_z = 0;
-
+	vector h_pos = pos - '1 1 0';
+	vector h_size = item_size + '2 0 0';
 	// alternated rows highlighting
 	if(is_self)
-		drawfill(pos - '1 1 0', tmp + '2 0 0', rgb, scoreboard_highlight_alpha_self, DRAWFLAG_NORMAL);
+		drawfill(h_pos, h_size, rgb, scoreboard_highlight_alpha_self, DRAWFLAG_NORMAL);
 	else if((scoreboard_highlight) && (!mod(pl_number,2)))
-		drawfill(pos - '1 1 0', tmp + '2 0 0', rgb, scoreboard_highlight_alpha, DRAWFLAG_NORMAL);
+		drawfill(h_pos, h_size, rgb, scoreboard_highlight_alpha, DRAWFLAG_NORMAL);
 
+	tmp_x = item_size_x;
 	tmp_y = 0;
+	tmp_z = 0;
 
 	for(i = 0; i < hud_num_fields; ++i)
 	{
@@ -833,6 +835,9 @@ void HUD_PrintScoreboardItem(vector pos, entity pl, float is_self, float pl_numb
 			pos_x -= hud_size[i] + hud_fontsize_x;
 		}
 	}
+
+	if(pl.eliminated)
+		drawfill(h_pos, h_size, '0 0 0', 0.5, DRAWFLAG_NORMAL);
 }
 
 /*
@@ -946,6 +951,10 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 	pos_y += 1.25 * hud_fontsize_y; // skip the header
 	pos_y += autocvar_scoreboard_border_thickness;
 
+	// item size
+	tmp_x = sbwidth;
+	tmp_y = hud_fontsize_y * 1.25;
+
 	// fill the table and draw the rows
 	i = 0;
 	if (teamplay)
@@ -953,7 +962,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 		{
 			if(pl.team != tm.team)
 				continue;
-			HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localnum), i);
+			HUD_PrintScoreboardItem(pos, tmp, pl, (pl.sv_entnum == player_localnum), i);
 			pos_y += 1.25 * hud_fontsize_y;
 			++i;
 		}
@@ -962,7 +971,7 @@ vector HUD_Scoreboard_MakeTable(vector pos, entity tm, vector rgb, vector bg_siz
 		{
 			if(pl.team == NUM_SPECTATOR)
 				continue;
-			HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localnum), i);
+			HUD_PrintScoreboardItem(pos, tmp, pl, (pl.sv_entnum == player_localnum), i);
 			pos_y += 1.25 * hud_fontsize_y;
 			++i;
 		}
@@ -1085,7 +1094,7 @@ vector HUD_DrawScoreboardAccuracyStats(vector pos, vector rgb, vector bg_size)
 			average_accuracy += weapon_stats; // store sum of all accuracies in average_accuracy
 
 			string s;
-			s = sprintf(_("%d%%"), weapon_stats*100);
+			s = sprintf("%d%%", weapon_stats*100);
 
 			float padding;
 			padding = (weapon_width - stringwidth(s, FALSE, '1 0 0' * fontsize)) / 2; // center the accuracy value
@@ -1385,12 +1394,16 @@ void HUD_DrawScoreboard()
 	float specs;
 	specs = 0;
 	tmp = pos;
+	vector item_size;
+	item_size_x = sbwidth;
+	item_size_y = hud_fontsize_y * 1.25;
+	item_size_z = 0;
 	for(pl = players.sort_next; pl; pl = pl.sort_next)
 	{
 		if(pl.team != NUM_SPECTATOR)
 			continue;
 		pos_y += 1.25 * hud_fontsize_y;
-		HUD_PrintScoreboardItem(pos, pl, (pl.sv_entnum == player_localnum), specs);
+		HUD_PrintScoreboardItem(pos, item_size, pl, (pl.sv_entnum == player_localnum), specs);
 		++specs;
 	}
 

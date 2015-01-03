@@ -324,27 +324,32 @@ float cq_CheckWinner()
 	return 1;
 }
 
-float prev_total_players;
+float prev_missing_teams_mask;
 float cq_CheckTeams()
 {
+	allowed_to_spawn = TRUE;
 	cq_CountAlivePlayers();
 	if(CQ_ALIVE_TEAMS_OK())
 	{
-		Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
-		prev_total_players = -1;
+		if(prev_missing_teams_mask > 0)
+			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+		prev_missing_teams_mask = -1;
 		return 1;
 	}
-	if(prev_total_players != total_players)
+	if(total_players == 0)
 	{
-		float p1 = 0, p2 = 0, p3 = 0, p4 = 0;
-		if(!redalive) p1 = NUM_TEAM_1;
-		if(!bluealive) p2 = NUM_TEAM_2;
-		if(cq_teams >= 3)
-		if(!yellowalive) p3 = NUM_TEAM_3;
-		if(cq_teams >= 4)
-		if(!pinkalive) p4 = NUM_TEAM_4;
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, p1, p2, p3, p4);
-		prev_total_players = total_players;
+		if(prev_missing_teams_mask > 0)
+			Kill_Notification(NOTIF_ALL, world, MSG_CENTER_CPID, CPID_MISSING_TEAMS);
+		prev_missing_teams_mask = -1;
+		return 0;
+	}
+	float missing_teams_mask = (!redalive) + (!bluealive) * 2;
+	if(cq_teams >= 3) missing_teams_mask += (!yellowalive) * 4;
+	if(cq_teams >= 4) missing_teams_mask += (!pinkalive) * 8;
+	if(prev_missing_teams_mask != missing_teams_mask)
+	{
+		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
+		prev_missing_teams_mask = missing_teams_mask;
 	}
 	return 0;
 }

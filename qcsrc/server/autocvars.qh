@@ -64,7 +64,6 @@ float autocvar_bot_wander_enable;
 float autocvar_captureleadlimit_override;
 #define autocvar_capturelimit_override cvar("capturelimit_override")
 #define autocvar_developer cvar("developer")
-float autocvar_developer_fteqccbugs;
 float autocvar_ekg;
 #define autocvar_fraglimit cvar("fraglimit")
 #define autocvar_fraglimit_override cvar("fraglimit_override")
@@ -89,7 +88,6 @@ float autocvar_g_balance_contents_playerdamage_lava;
 float autocvar_g_balance_contents_playerdamage_slime;
 float autocvar_g_balance_contents_projectiledamage;
 float autocvar_g_balance_damagepush_speedfactor;
-float autocvar_g_balance_damagepush_spawnshield;
 float autocvar_g_balance_falldamage_deadminspeed;
 float autocvar_g_balance_falldamage_factor;
 float autocvar_g_balance_falldamage_maxdamage;
@@ -103,6 +101,7 @@ float autocvar_g_balance_fuel_regenstable;
 float autocvar_g_balance_fuel_rot;
 float autocvar_g_balance_fuel_rotlinear;
 float autocvar_g_balance_fuel_rotstable;
+var float autocvar_g_balance_grapplehook_piggybackfriction = 1;
 float autocvar_g_balance_grapplehook_airfriction;
 float autocvar_g_balance_grapplehook_force_rubber;
 float autocvar_g_balance_grapplehook_force_rubber_overstretch;
@@ -451,6 +450,8 @@ float autocvar_g_instagib_ammo_drop;
 float autocvar_g_instagib_ammo_rockets;
 float autocvar_g_instagib_extralives;
 float autocvar_g_instagib_damagedbycontents;
+float autocvar_g_instagib_blaster_keepdamage;
+float autocvar_g_instagib_blaster_keepforce;
 #define autocvar_g_mirrordamage cvar("g_mirrordamage")
 #define autocvar_g_mirrordamage_virtual cvar("g_mirrordamage_virtual")
 
@@ -495,7 +496,6 @@ float autocvar_g_pickup_shells_max;
 float autocvar_g_player_alpha;
 float autocvar_g_player_brightness;
 float autocvar_g_playerclip_collisions;
-string autocvar_g_playerstats_uri;
 float autocvar_g_projectiles_damage;
 float autocvar_g_projectiles_keep_owner;
 float autocvar_g_projectiles_newton_style;
@@ -773,9 +773,13 @@ float autocvar_g_monsters_sounds;
 float autocvar_g_monsters_think_delay;
 float autocvar_g_monsters_max;
 float autocvar_g_monsters_max_perplayer;
+var float autocvar_g_monsters_damageforcescale = 0.8;
 float autocvar_g_player_gib_always;
 float autocvar_g_player_crush;
+var float autocvar_g_player_crush_simple = 1;
 var float autocvar_g_player_crush_damage = 200;
+var float autocvar_g_player_crush_bounce = 300;
+var float autocvar_g_player_crush_bounce_jump = 600;
 float autocvar_g_player_crush_headheight;
 float autocvar_g_freeze_revive_speed;
 float autocvar_g_freeze_revive_speed_random;
@@ -902,7 +906,6 @@ float autocvar_g_za_spawn_delay;
 float autocvar_g_overkill_superguns_respawn_time;
 float autocvar_g_overkill_100h_anyway;
 float autocvar_g_overkill_100a_anyway;
-float autocvar_g_overkill_ammo_start;
 float autocvar_g_overkill_ammo_charge;
 float autocvar_g_overkill_ammo_charge_notice;
 float autocvar_g_overkill_ammo_charge_limit;
