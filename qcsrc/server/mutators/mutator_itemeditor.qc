@@ -85,7 +85,7 @@ string ie_FixItemName(string itname)
 			float i;
 			for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 				if((get_weaponinfo(i)).netname == itname || (get_weaponinfo(i)).netname == substring(itname, 7, strlen(itname)))
-					return itname;
+					return ((get_weaponinfo(i)).netname == substring(itname, 7, strlen(itname)) ? strcat("weapon_", itname) : itname);
 			return "";
 		}
 	}
