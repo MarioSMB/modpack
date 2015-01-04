@@ -789,7 +789,7 @@ void VoteCommand_call(float request, entity caller, float argc, string vote_comm
 			else if(!autocvar_sv_vote_gamestart && time < game_starttime) { print_to(caller, "^1Vote calling is not allowed before the match has started."); }
 			else if(vote_called) { print_to(caller, "^1There is already a vote called."); }
 			else if(!spectators_allowed && (caller && !IS_PLAYER(caller))) { print_to(caller, "^1Only players can call a vote."); }
-			else if(vote_caller && !IS_CLIENT(vote_caller)) { print_to(caller, "^1Only connected clients can vote."); }
+			else if(caller && !IS_CLIENT(caller)) { print_to(caller, "^1Only connected clients can vote."); }
 			else if(timeout_status) { print_to(caller, "^1You can not call a vote while a timeout is active."); }
 			else if(caller && (time < caller.vote_waittime)) { print_to(caller, strcat("^1You have to wait ^2", ftos(ceil(caller.vote_waittime - time)), "^1 seconds before you can again call a vote.")); }
 			else if (!VoteCommand_checknasty(vote_command)) { print_to(caller, "^1Syntax error in command, see 'vhelp' for more info."); }

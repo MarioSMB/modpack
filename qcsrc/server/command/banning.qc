@@ -69,7 +69,7 @@ void BanCommand_kickban(float request, float argc, string command)
 			if(argc >= 2)
 			{
 				entity client = GetIndexedEntity(argc, 1);
-				float accepted = VerifyClientEntity(client, TRUE, FALSE);
+				float accepted = IS_REAL_CLIENT(client);
 				float reason_arg, bantime, masksize;
 				string reason;
 
