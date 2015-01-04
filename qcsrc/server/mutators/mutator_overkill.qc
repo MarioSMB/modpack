@@ -330,6 +330,9 @@ void ok_SetCvars()
 	cvar_settemp("g_balance_vortex_reload_ammo", "50");
 	cvar_settemp("g_balance_vortex_reload_time", "2");
 
+	// laser
+	cvar_settemp("g_balance_vaporizer_secondary_force", "300");
+
 	// misc
 	cvar_settemp("g_projectiles_newton_style_2_minfactor", "1");
 	cvar_settemp("g_pickup_healthmega_anyway", "0");
