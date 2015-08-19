@@ -10,6 +10,7 @@ MUTATOR_HOOKFUNCTION(mod_BuildMutatorsPrettyString)
     return false;
 }
 
+MUTATOR_DECLARATION(mutator_mod);
 MUTATOR_DEFINITION(mutator_mod)
 {
     MUTATOR_HOOK(BuildMutatorsString, mod_BuildMutatorsString, CBC_ORDER_ANY);
