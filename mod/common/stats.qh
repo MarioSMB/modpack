@@ -1,0 +1,3 @@
+// slots 140-155 reserved for mod
+
+const int STAT_WEP_VAPORIZER_PRIMARY_REFIRE 		= 140;
