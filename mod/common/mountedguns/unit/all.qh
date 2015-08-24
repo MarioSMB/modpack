@@ -1,0 +1,4 @@
+#include "browning50.qh"
+#include "deluge.qh"
+#include "m134.qh"
+#include "shlac.qh"

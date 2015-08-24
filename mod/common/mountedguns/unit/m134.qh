@@ -1,0 +1,26 @@
+#ifndef M134_H
+#define M134_H
+
+#ifdef SVQC
+
+float autocvar_g_mountedgun_m134_machinegun_expelbulletcasings;
+float autocvar_g_mountedgun_m134_machinegun_damage;
+//float autocvar_g_mountedgun_m134_machinegun_refire;
+float autocvar_g_mountedgun_m134_machinegun_refire;
+//float autocvar_g_mountedgun_m134_machinegun_refire_min;
+//float autocvar_g_mountedgun_m134_machinegun_refire_max;
+//float autocvar_g_mountedgun_m134_machinegun_refire_changerate;
+float autocvar_g_mountedgun_m134_machinegun_spread;
+float autocvar_g_mountedgun_m134_machinegun_ammo_cost;
+float autocvar_g_mountedgun_m134_machinegun_ammo_max;
+float autocvar_g_mountedgun_m134_machinegun_ammo_regen;
+float autocvar_g_mountedgun_m134_machinegun_ammo_regen_pause;
+float autocvar_g_mountedgun_m134_machinegun_force;
+//float autocvar_g_mountedgun_m134_machinegun_speed;
+float autocvar_g_mountedgun_m134_machinegun_solidpenetration;
+
+void mg_m134_fire(entity mg_m134, entity player, entity gunmount, entity mggun1);
+
+#endif
+
+#endif

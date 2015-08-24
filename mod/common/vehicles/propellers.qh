@@ -1,0 +1,83 @@
+#ifndef PROPELLERS_H
+#define PROPELLERS_H
+
+#ifdef SVQC
+
+.entity bomb3, bomb4, bomb5, bomb6;
+.entity bomb11;
+
+////For spinning rotor death areas.
+//front/back
+.entity rotorboxft;
+.entity rotorboxmf;
+.entity rotorboxmb;
+.entity rotorboxbk;
+
+//side to side
+.entity rotorboxftr;
+.entity rotorboxmfr;
+.entity rotorboxmbr;
+.entity rotorboxbkr;
+
+//diagnol 1
+.entity rotorboxftd1;
+.entity rotorboxmfd1;
+.entity rotorboxmbd1;
+.entity rotorboxbkd1;
+
+//diagnol 2
+.entity rotorboxftd2;
+.entity rotorboxmfd2;
+.entity rotorboxmbd2;
+.entity rotorboxbkd2;
+
+.vector rotoroffset;
+.float rotor_is;
+
+//tail rotor
+.entity rotorboxft_t;
+.entity rotorboxmf_t;
+.entity rotorboxmid_t;
+.entity rotorboxmb_t;
+.entity rotorboxbk_t;
+
+void helicopter_rotor_donothing();
+
+void helicopter_rotor_die(entity hitbox);
+
+float vehicles_crushable(entity e);
+
+void helicopter_rotor_touch();
+
+
+void helicopter_rotor_touch_hitbox();
+
+void helicopter_rotor_impact_hitbox();
+
+void helicopter_rotor_think();
+
+void helicopter_rotor_think_noz();
+
+void helicopter_rotor_spawn_hitbox(float rotortype, entity vehic, entity hitbox, vector min_s, vector max_s, float fwd_s, float right_s, float up_s);
+
+void aeroplane_prop_think_right();
+
+void aeroplane_prop_think_left();
+
+
+
+void aeroplane_prop_spawn_hitbox(float rotortype, entity vehic, entity hitbox, vector min_s, vector max_s, float fwd_s, float right_s, float up_s);
+
+
+
+// not really propeller stuff, but lazy
+void helicopter_delugegun_add (entity vehic, string mountspot);
+
+void helicopter_delugegun_add2 (entity vehic, string mountspot);
+
+
+void helicopter_delugegun(entity gun, entity pilot, entity gunmount);
+
+#endif
+
+#endif

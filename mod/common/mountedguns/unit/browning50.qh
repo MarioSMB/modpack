@@ -1,0 +1,21 @@
+#ifndef BROWNING50_H
+#define BROWNING50_H
+
+#ifdef SVQC
+
+float autocvar_g_mountedgun_browning50_machinegun_expelbulletcasings;
+float autocvar_g_mountedgun_browning50_machinegun_damage;
+float autocvar_g_mountedgun_browning50_machinegun_refire;
+float autocvar_g_mountedgun_browning50_machinegun_spread;
+float autocvar_g_mountedgun_browning50_machinegun_ammo_cost;
+float autocvar_g_mountedgun_browning50_machinegun_ammo_max;
+float autocvar_g_mountedgun_browning50_machinegun_ammo_regen;
+float autocvar_g_mountedgun_browning50_machinegun_ammo_regen_pause;
+float autocvar_g_mountedgun_browning50_machinegun_force;
+float autocvar_g_mountedgun_browning50_machinegun_solidpenetration;
+
+void mg_browning50_fire(entity mg, entity player, entity gunmount);
+
+#endif
+
+#endif

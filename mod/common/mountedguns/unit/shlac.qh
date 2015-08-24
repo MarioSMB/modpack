@@ -1,0 +1,16 @@
+#ifndef SHLAC_H
+#define SHLAC_H
+
+#ifdef SVQC
+
+float autocvar_g_mountedgun_shlac_railgun_refire;
+float autocvar_g_mountedgun_shlac_railgun_ammo_cost;
+float autocvar_g_mountedgun_shlac_railgun_ammo_max;
+float autocvar_g_mountedgun_shlac_railgun_ammo_regen;
+float autocvar_g_mountedgun_shlac_railgun_ammo_regen_pause;
+
+void mg_shlac_fire(entity mg_shlac, entity player, entity gunmount);
+
+#endif
+
+#endif

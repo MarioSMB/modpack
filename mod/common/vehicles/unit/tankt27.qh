@@ -1,0 +1,16 @@
+#ifndef TANKT27_H
+#define TANKT27_H
+
+#ifdef SVQC
+.entity hitboxft;
+.entity hitboxmf;
+.entity hitboxmb;
+.entity hitboxbk;
+
+void tankt27_hitbox_die(entity hitbox);
+
+void tankt27_spawn_hitbox(float position, entity vehic, entity hitbox, vector min_s, vector max_s, float fwd_s, float vehic_health);
+
+#endif
+
+#endif

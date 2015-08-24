@@ -1,0 +1,22 @@
+#ifndef DELUGE_H
+#define DELUGE_H
+
+#ifdef SVQC
+
+float autocvar_g_mountedgun_deluge_cannon_radius;
+float autocvar_g_mountedgun_deluge_cannon_force;
+float autocvar_g_mountedgun_deluge_machinegun_damage;
+float autocvar_g_mountedgun_deluge_machinegun_edgedamage;
+float autocvar_g_mountedgun_deluge_machinegun_refire;
+float autocvar_g_mountedgun_deluge_machinegun_ammo_cost;
+float autocvar_g_mountedgun_deluge_machinegun_ammo_max;
+float autocvar_g_mountedgun_deluge_machinegun_ammo_regen;
+float autocvar_g_mountedgun_deluge_machinegun_ammo_regen_pause;
+float autocvar_g_mountedgun_deluge_water_speed;
+float autocvar_g_mountedgun_deluge_water_spread;
+
+void mg_deluge_fire(entity mg, entity player, entity gunmount);
+
+#endif
+
+#endif
