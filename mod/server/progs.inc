@@ -7,6 +7,8 @@
 #include "../common/vehicles/all.qc"
 
 #include "clientbeams.qc"
+#include "items.qc"
+#include "weapons.qc"
 
 #include "mutators/all.qh"
 #endif

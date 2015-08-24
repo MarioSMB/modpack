@@ -1,8 +1,3 @@
-string W_Sound(string input)
-{
-	return strcat("weapons/", input, ".wav");
-}
-
 #include "mountedguns.qh"
 
 #include "unit/all.qc"

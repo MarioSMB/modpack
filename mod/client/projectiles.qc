@@ -29,7 +29,7 @@ MUTATOR_HOOKFUNCTION(mod_projectiles, EditProjectile)
 		{
 			self.colormod = '1 1 1';
 			self.scale = 0.4;
-			loopsound(self, CH_SHOTS_SINGLE, "weapons/fireball_fly2.wav", VOL_BASE, ATTEN_NORM);
+			loopsound(self, CH_SHOTS_SINGLE, W_Sound("fireball_fly2"), VOL_BASE, ATTEN_NORM);
 			self.mins = '-3 -3 -3';
 			self.maxs = '3 3 3';
 			break;

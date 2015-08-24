@@ -605,7 +605,7 @@ void r22heli_minigun(entity gun, entity pilot, entity gunmount, entity mggun1)
 			else
 			{
 				gun.count = 1;
-				sound (gun, CH_WEAPON_A, "weapons/reload.wav", VOL_BASE, ATTN_NORM);
+				sound (gun, CH_WEAPON_A, W_Sound("reload"), VOL_BASE, ATTN_NORM);
 			}
 		}*/
 	}
@@ -963,7 +963,7 @@ void r22heli_diethink()
 
 	if(random() < 0.1)
 	{
-		sound(self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+		sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTN_NORM);
 		Send_Effect("explosion_small", randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	}
 

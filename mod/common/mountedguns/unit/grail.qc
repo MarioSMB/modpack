@@ -116,7 +116,7 @@ void mg_grail_linkattack (string tagname, float putforward, float speedadd, enti
 	if(autocvar_g_balance_crylink_primary_joinexplode)
 		maxdmg += autocvar_g_balance_crylink_primary_joinexplode_damage;
 
-	W_SetupShot (self, FALSE, 2, "weapons/crylink_fire.wav", CH_WEAPON_A, maxdmg);
+	W_SetupShot (self, false, 2, W_Sound("crylink_fire"), CH_WEAPON_A, maxdmg);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
@@ -132,7 +132,7 @@ void mg_grail_linkattack (string tagname, float putforward, float speedadd, enti
 		proj.owner = self;
 		proj.realowner = self.owner;
 		proj.classname = "spike";
-		proj.bot_dodge = TRUE;
+		proj.bot_dodge = true;
 		proj.bot_dodgerating = autocvar_g_balance_crylink_primary_damage;
 		if(shots == 1) {
 			proj.queuenext = proj;
@@ -173,7 +173,7 @@ void mg_grail_linkattack (string tagname, float putforward, float speedadd, enti
 			s_z = v_forward_y;
 		}
 		s = s * autocvar_g_vehicle_mg_grail_link_spread * g_weaponspreadfactor;
-		W_SetupProjectileVelocityEx(proj, w_shotdir + right * s_y + up * s_z, v_up, (autocvar_g_vehicle_mg_grail_link_speed + speedadd), 0, 0, 0, FALSE);
+		W_SetupProjectileVelocityEx(proj, w_shotdir + right * s_y + up * s_z, v_up, (autocvar_g_vehicle_mg_grail_link_speed + speedadd), 0, 0, 0, false);
 		proj.touch = W_Crylink_Touch;
 
 		proj.think = W_Crylink_Fadethink;
@@ -200,7 +200,7 @@ void mg_grail_linkattack (string tagname, float putforward, float speedadd, enti
 		proj.flags = FL_PROJECTILE;
     proj.missile_flags = MIF_SPLASH;
     
-		CSQCProjectile(proj, TRUE, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), TRUE);
+		CSQCProjectile(proj, true, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), true);
 
 		other = proj; MUTATOR_CALLHOOK(EditProjectile);
 	}
@@ -219,7 +219,7 @@ void mg_grail_attack(string tagname, entity fireentity)
     
 	entity proj;
 
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', FALSE, 2, "weapons/electro_fire.wav", CH_WEAPON_A, autocvar_g_balance_electro_primary_damage);
+	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', false, 2, W_Sound("electro_fire"), CH_WEAPON_A, autocvar_g_balance_electro_primary_damage);
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), v, v_forward * 1000, 1);
 
@@ -228,7 +228,7 @@ void mg_grail_attack(string tagname, entity fireentity)
 	//proj.owner = proj.realowner = self;
 	proj.owner = self;
 	proj.realowner = self.owner;
-	proj.bot_dodge = TRUE;
+	proj.bot_dodge = true;
 	proj.bot_dodgerating = autocvar_g_balance_electro_primary_damage;
 	proj.use = W_Plasma_Explode;
 	proj.think = adaptor_think2use_hittype_splash;
@@ -245,7 +245,7 @@ void mg_grail_attack(string tagname, entity fireentity)
 	proj.flags = FL_PROJECTILE;
 	proj.missile_flags = MIF_SPLASH;
 
-	CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
+	CSQCProjectile(proj, true, PROJECTILE_ELECTRO_BEAM, true);
 
 	other = proj; MUTATOR_CALLHOOK(EditProjectile);
 }
@@ -258,7 +258,7 @@ void mg_grail_bigattack(string tagname, float putforward, float speedadd, entity
     
 	entity proj;
 
-	W_SetupShot_ProjectileSize (self, '0 0 -9', '0 0 -9', FALSE, 2, "weapons/electro_fire.wav", CH_WEAPON_A, autocvar_g_vehicle_mg_grail_cannon_damage);
+	W_SetupShot_ProjectileSize (self, '0 0 -9', '0 0 -9', false, 2, W_Sound("electro_fire"), CH_WEAPON_A, autocvar_g_vehicle_mg_grail_cannon_damage);
 
 	pointparticles(particleeffectnum("electro_muzzleflash"), v, v_forward * 100, 1);
 
@@ -267,7 +267,7 @@ void mg_grail_bigattack(string tagname, float putforward, float speedadd, entity
 	//proj.owner = proj.realowner = self;
 	proj.owner = self;
 	proj.realowner = self.owner;
-	proj.bot_dodge = TRUE;
+	proj.bot_dodge = true;
 	proj.bot_dodgerating = autocvar_g_vehicle_mg_grail_cannon_damage;
 	proj.use = mg_grail_Plasma_Explode;
 	proj.think = adaptor_think2use_hittype_splash;
@@ -279,21 +279,21 @@ void mg_grail_bigattack(string tagname, float putforward, float speedadd, entity
 
 	proj.movetype = MOVETYPE_FLY;
 	//W_SETUPPROJECTILEVELOCITY(proj, g_vehicle_mg_grail_cannon);
-	W_SetupProjectileVelocityEx(proj, w_shotdir, v_up, (autocvar_g_vehicle_mg_grail_cannon_speed + speedadd), 0, 0, autocvar_g_vehicle_mg_grail_cannon_spread, FALSE);
+	W_SetupProjectileVelocityEx(proj, w_shotdir, v_up, (autocvar_g_vehicle_mg_grail_cannon_speed + speedadd), 0, 0, autocvar_g_vehicle_mg_grail_cannon_spread, false);
 	proj.angles = vectoangles(proj.velocity);
 	proj.touch = W_Plasma_TouchExplode;
 	setsize(proj, '0 0 -9', '0 0 -9');
 	proj.flags = FL_PROJECTILE;
 	proj.missile_flags = MIF_SPLASH;
 
-	CSQCProjectile(proj, TRUE, PROJECTILE_ELECTRO_BEAM, TRUE);
+	CSQCProjectile(proj, true, PROJECTILE_ELECTRO_BEAM, true);
 
 	other = proj; MUTATOR_CALLHOOK(EditProjectile);
 }
 
 float mg_grail_aiframe()
 {
-    return FALSE;
+    return false;
 }
 
 void mg_grail_fire(entity mg_grail, entity player, entity gunmount) 
@@ -383,7 +383,7 @@ void mg_grail_fire(entity mg_grail, entity player, entity gunmount)
 	 
 	 
    
-	 //sound (gunmount, CH_WEAPON_A, "weapons/campingrifle_fire.wav", VOL_BASE, ATTN_NORM);
+	 //sound (gunmount, CH_WEAPON_A, W_Sound("campingrifle_fire"), VOL_BASE, ATTN_NORM);
 
 	    
             self = mg_grail;
@@ -426,7 +426,7 @@ float mg_grail_frame()
     crosshair_trace2(player);
     ad = vectoangles(normalize(trace_endpos - ad));
     ad = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(mg_grail.angles), AnglesTransform_FromAngles(ad))) - mg_grail.tur_head.angles;
-    ad = AnglesTransform_Normalize(ad, TRUE);
+    ad = AnglesTransform_Normalize(ad, true);
     ////UpdateAuxiliaryXhair(player, trace_endpos, ('1 0 0' * player.vehicle_reload2) + ('0 1 0' * (1 - player.vehicle_reload2)), 2);
     
     // Rotate head
@@ -453,7 +453,7 @@ float mg_grail_frame()
         {
                                 
                 movelib_beak_simple(autocvar_g_vehicle_mg_grail_speed_stop);
-		setanim(player, player.anim_duckidle, TRUE, FALSE, FALSE);
+		setanim(player, player.anim_duckidle, true, false, false);
         }
 	
 	if not(mg_grail.spawnflags & 32)
@@ -479,15 +479,15 @@ float mg_grail_frame()
     } else {
         vehicles_regen(mg_grail.cnt, vehicle_ammo1, autocvar_g_vehicle_mg_grail_railgun_ammo_max,
                                            autocvar_g_vehicle_mg_grail_railgun_ammo_regen_pause,
-                                           autocvar_g_vehicle_mg_grail_railgun_ammo_regen, frametime, FALSE, vehicle_zero, vehicle_zero);
+                                           autocvar_g_vehicle_mg_grail_railgun_ammo_regen, frametime, false, vehicle_zero, vehicle_zero);
     }
        
 
     if(self.vehicle_flags  & VHF_SHIELDREGEN)
-        vehicles_regen(mg_grail.dmg_time, vehicle_shield, autocvar_g_vehicle_mg_grail_shield, autocvar_g_vehicle_mg_grail_shield_regen_pause, autocvar_g_vehicle_mg_grail_shield_regen, frametime, TRUE, vehicle_zero, vehicle_zero);
+        vehicles_regen(mg_grail.dmg_time, vehicle_shield, autocvar_g_vehicle_mg_grail_shield, autocvar_g_vehicle_mg_grail_shield_regen_pause, autocvar_g_vehicle_mg_grail_shield_regen, frametime, true, vehicle_zero, vehicle_zero);
 
     if(self.vehicle_flags  & VHF_HEALTHREGEN)
-        vehicles_regen(mg_grail.dmg_time, vehicle_health, autocvar_g_vehicle_mg_grail_health, autocvar_g_vehicle_mg_grail_health_regen_pause, autocvar_g_vehicle_mg_grail_health_regen, frametime, FALSE, vehicle_zero, vehicle_zero);
+        vehicles_regen(mg_grail.dmg_time, vehicle_health, autocvar_g_vehicle_mg_grail_health, autocvar_g_vehicle_mg_grail_health_regen_pause, autocvar_g_vehicle_mg_grail_health_regen, frametime, false, vehicle_zero, vehicle_zero);
 
     player.BUTTON_ATCK = player.BUTTON_ATCK2 = 0;
 
@@ -530,7 +530,7 @@ void mg_grail_exit(float eject)
     vector spot;
     
 
-    if (self.vehicle_shieldtype) self.hitboxft.bot_attack = FALSE; //self.velocity   = '0 0 0';
+    if (self.vehicle_shieldtype) self.hitboxft.bot_attack = false; //self.velocity   = '0 0 0';
     self.think      = mg_grail_think;
     self.nextthink  = time;
     self.frame      = 5;
@@ -591,7 +591,7 @@ void mg_grail_headfade()
     {
         if(self.alpha > 0.1)
         {
-            sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+            sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTN_NORM);
             pointparticles(particleeffectnum("explosion_big"), self.origin + '0 0 100', '0 0 0', 1);
         }
         remove(self);
@@ -604,7 +604,7 @@ void mg_grail_blowup()
     {
         if(random() < 0.1)
         {
-            sound (self, CH_SHOTS, "weapons/rocket_impact.wav", VOL_BASE, ATTN_NORM);
+            sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTN_NORM);
             pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
         }
         self.nextthink = time + 0.1;
@@ -743,9 +743,9 @@ void spawnfunc_mountedgun_grail()
     precache_model ( "models/mountedguns/grailgun.iqm");
     precache_model ( "models/mountedguns/grailgun_lod1.iqm");
 
-    precache_sound ( "weapons/electro_fire.wav" );
-    precache_sound ( "weapons/crylink_fire.wav" );
-    precache_sound ( "weapons/rocket_impact.wav");
+    precache_sound ( W_Sound("electro_fire") );
+    precache_sound ( W_Sound("crylink_fire") );
+    precache_sound ( W_Sound("rocket_impact"));
     
     if(autocvar_g_vehicle_mg_grail_shield)
         self.vehicle_flags |= VHF_HASSHIELD;
@@ -764,12 +764,12 @@ void spawnfunc_mountedgun_grail()
              "tag_gunpivot", "tag_player", "",
              HUD_NORMAL,
              MG_GRAIL_MIN, MG_GRAIL_MAX,
-             FALSE,
+             false,
              mg_grail_spawn, autocvar_g_vehicle_mg_grail_respawntime,
              mg_grail_frame,
              mg_grail_enter, mg_grail_exit,
              mg_grail_die,   mg_grail_think,
-             FALSE, 
+             false, 
              autocvar_g_vehicle_mg_grail_health,
              autocvar_g_vehicle_mg_grail_shield, 1, 0, 0))
 	     	//1 == yes, automatically colormap to same colormap as player
