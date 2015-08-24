@@ -6,7 +6,7 @@ MUTATOR_HOOKFUNCTION(rvehicles, OnEntityPreSpawn)
 	{
 		entity e = spawn(), oldself = self;
 		e.classname = self.classname;
-		setorigin(e, self.origin);
+		setorigin(e, self.origin + '0 0 10');
 		e.angles = self.angles;
 		e.team = self.team;
 		e.target = self.target;
