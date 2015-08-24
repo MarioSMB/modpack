@@ -1,3 +1,5 @@
+bool autocvar_g_mod = true;
+
 REGISTER_MUTATOR(mutator_mod, cvar("g_mod"));
 
 MUTATOR_HOOKFUNCTION(mutator_mod, BuildMutatorsString) {
