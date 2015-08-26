@@ -152,7 +152,6 @@ MUTATOR_HOOKFUNCTION(hats, PutClientInServer)
 	hats_SpawnHat();
 	self.hatentity.alpha = default_weapon_alpha;
 	self.hatname = strzone(self.cvar_cl_hat);
-
 	return false;
 }
 
@@ -167,7 +166,6 @@ MUTATOR_HOOKFUNCTION(hats, ClientDisconnect)
 {
 	self.hatentity = world;
 	self.hatname = "";
-
 	return false;
 }
 
@@ -175,6 +173,24 @@ MUTATOR_HOOKFUNCTION(hats, MakePlayerObserver)
 {
 	self.hatentity = world;
 	self.hatname = "";
+	return false;
+}
 
+MUTATOR_HOOKFUNCTION(hats, ClearModelParams)
+{
+	get_model_parameters_hat_height = '0 0 0';
+	get_model_parameters_hat_scale = 0;
+	get_model_parameters_hat_angles = '0 0 0';
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(hats, GetModelParams)
+{
+	if(checkmodel_input == "hat_height")
+		get_model_parameters_hat_height = stov(checkmodel_command);
+	if(checkmodel_input == "hat_scale")
+		get_model_parameters_hat_scale = stof(checkmodel_command);
+	if(checkmodel_input == "hat_angles")
+		get_model_parameters_hat_angles = stov(checkmodel_command);
 	return false;
 }

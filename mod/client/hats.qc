@@ -35,7 +35,6 @@ MUTATOR_HOOKFUNCTION(mod_hats, TagIndex_Apply)
 
 MUTATOR_HOOKFUNCTION(mod_hats, ClearModelParams)
 {
-	get_model_parameters_fixbone = 0;
 	get_model_parameters_bone_head = string_null;
 	get_model_parameters_hat_height = '0 0 0';
 	get_model_parameters_hat_scale = 0;
@@ -45,8 +44,6 @@ MUTATOR_HOOKFUNCTION(mod_hats, ClearModelParams)
 
 MUTATOR_HOOKFUNCTION(mod_hats, GetModelParams)
 {
-	if(checkmodel_input == "fixbone")
-		get_model_parameters_fixbone = stof(checkmodel_command);
 	if(checkmodel_input == "bone_head")
 		get_model_parameters_bone_head = checkmodel_command;
 	if(checkmodel_input == "hat_height")
@@ -55,5 +52,22 @@ MUTATOR_HOOKFUNCTION(mod_hats, GetModelParams)
 		get_model_parameters_hat_scale = stof(checkmodel_command);
 	if(checkmodel_input == "hat_angles")
 		get_model_parameters_hat_angles = stov(checkmodel_command);
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(mod_hats, Skeleton_CheckBones)
+{
+	self.bone_hat = gettagindex(self, "head");
+	if(!self.bone_hat)
+		self.bone_hat = gettagindex(self, "tag_head");
+	if(!self.bone_hat)
+		self.bone_hat = gettagindex(self, "bip01 head");
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(mod_hats, Skeleton_CheckModel)
+{
+	if(get_model_parameters_bone_head)
+		self.bone_hat = gettagindex(self, get_model_parameters_bone_head);
 	return false;
 }
