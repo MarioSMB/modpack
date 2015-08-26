@@ -7,5 +7,6 @@
 #include "../common/vehicles/all.qc"
 
 #include "clientbeams.qc"
+#include "hats.qc"
 #include "projectiles.qc"
 #endif

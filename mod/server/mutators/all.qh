@@ -1,3 +1,4 @@
 // Main include file for custom mutators
 
+#include "hats.qc"
 #include "random_vehicles.qc"
