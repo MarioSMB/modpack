@@ -4,25 +4,23 @@
 
 #ifdef SVQC
 
-void mg_common_SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, float casingtype, entity casingowner, string tagname)
+void mg_common_SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner, string tagname)
 {
-	entity e;
-	vector org;
-		
-	org = gettaginfo(casingowner, gettagindex(casingowner, tagname));
+    vector org = gettaginfo(casingowner, gettagindex(casingowner, tagname));
 
-	if(!sound_allowed(MSG_BROADCAST, casingowner))
-		casingtype |= 0x80;
+    if (!sound_allowed(MSG_BROADCAST, casingowner))
+        casingtype |= 0x80;
 
-	e = spawn();
-	e.state = casingtype;
-	setorigin(e, org);
-	e.velocity = vel;
-	e.angles = ang;
-	e.oldorigin_x = compressShortVector(e.velocity);
-
-	Net_LinkEntity(e, TRUE, 0.2, Casing_SendEntity);
-		// 0.2s should be enough time for all clients to receive this ent once, do the gibbage and be done with it
+    WriteByte(MSG_ALL, SVC_TEMPENTITY);
+    WriteMutator(MSG_ALL, casings);
+    WriteByte(MSG_ALL, casingtype);
+    WriteCoord(MSG_ALL, org.x);
+    WriteCoord(MSG_ALL, org.y);
+    WriteCoord(MSG_ALL, org.z);
+    WriteShort(MSG_ALL, compressShortVector(vel)); // actually compressed velocity
+    WriteByte(MSG_ALL, ang.x * 256 / 360);
+    WriteByte(MSG_ALL, ang.y * 256 / 360);
+    WriteByte(MSG_ALL, ang.z * 256 / 360);
 }
 
 void mg_common_AttachToShotorg(entity flash, vector offset, string tagname, entity attach)
@@ -43,6 +41,5 @@ void mg_common_AttachToShotorg(entity flash, vector offset, string tagname, enti
 	setattachment(xflash, attach, tagname);
 	setorigin(xflash, offset);
 }
-
 
 #endif

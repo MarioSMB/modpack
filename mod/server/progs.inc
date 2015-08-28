@@ -5,6 +5,7 @@
 #include "../common/projectiles.qh"
 #include "../common/mountedguns/all.qh"
 #include "../common/mutators/all.qh"
+#include "../common/notifications.qh"
 #include "../common/vehicles/all.qc"
 
 #include "clientbeams.qc"
