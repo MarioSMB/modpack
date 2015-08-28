@@ -9,6 +9,7 @@
 
 #include "clientbeams.qc"
 #include "items.qc"
+#include "headshots.qc"
 #include "weapons.qc"
 
 #include "mutators/all.qh"
