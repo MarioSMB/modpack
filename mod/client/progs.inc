@@ -10,4 +10,5 @@
 
 #include "clientbeams.qc"
 #include "projectiles.qc"
+#include "zombie_apocalypse.qc"
 #endif
