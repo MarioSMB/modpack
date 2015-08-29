@@ -1,14 +1,14 @@
 bool autocvar_g_za;
 int autocvar_g_za_max_monsters;
-//bool autocvar_g_za_infect;
+bool autocvar_g_za_infect;
 string autocvar_g_za_spawnmonster;
 float autocvar_g_za_spawn_delay;
 
-//.vector za_viewofs;
-//.float za_maxhealth;
+.vector za_viewofs;
+.float za_maxhealth;
 float za_spawn_delay;
-
-REGISTER_MUTATOR(za, cvar("g_za") && cvar("g_monsters") && !g_nexball && !g_invasion && !g_cts && !g_race)
+//&& !g_nexball && !g_invasion && !g_cts && !g_race
+REGISTER_MUTATOR(za, cvar("g_za") && cvar("g_monsters"))
 {
 	MUTATOR_ONADD
 	{
@@ -29,21 +29,31 @@ void za_SpawnMonster()
 	e.nextthink = time + 0.1;
 }
 
-#if 0
 void za_SetEnemy(entity player)
 {
+	// prefer players
 	entity head;
 	entity closest_targ = world;
 	FOR_EACH_PLAYER(head) if(head != player)
-	if(vlen(head.origin - player.origin) < autocvar_g_monsters_target_range)
-	if(!closest_targ || vlen(closest_targ.origin - player.origin) > vlen(head.origin - player.origin))
+	if(vlen(player.origin - head.origin) < autocvar_g_monsters_target_range)
+	if(!closest_targ || vlen(player.origin - closest_targ.origin) > vlen(player.origin - head.origin))
 		closest_targ = head;
 
 	if(!closest_targ)
 	{
 		FOR_EACH_MONSTER(head)
-		if(vlen(head.origin - player.origin) < autocvar_g_monsters_target_range)
-		if(!closest_targ || vlen(closest_targ.origin - player.origin) > vlen(head.origin - player.origin))
+		if(vlen(player.origin - head.origin) < autocvar_g_monsters_target_range)
+		if(!closest_targ || vlen(player.origin - closest_targ.origin) > vlen(player.origin - head.origin))
+			closest_targ = head;
+	}
+
+	// otherwise, attempt any entity nearby
+	if(!closest_targ)
+	{
+		for(head = world; (head = findfloat(head, monster_attack, true)); )
+		if(head.takedamage && head != player)
+		if(vlen(player.origin - head.origin) < autocvar_g_monsters_target_range)
+		if(!closest_targ || vlen(player.origin - closest_targ.origin) > vlen(player.origin - head.origin))
 			closest_targ = head;
 	}
 
@@ -135,7 +145,7 @@ MUTATOR_HOOKFUNCTION(za, PlayerDies)
 
 	entity mon = get_monsterinfo(frag_attacker.monsterid);
 
-	self.monsterid = frag_attacker.monsterid;
+	self.monsterid = mon.monsterid;
 	self.health = frag_attacker.max_health;
 	self.za_maxhealth = frag_attacker.max_health;
 	self.weapons = '0 0 0';
@@ -151,12 +161,11 @@ MUTATOR_HOOKFUNCTION(za, PlayerDies)
 	self.view_ofs = self.za_viewofs = frag_attacker.view_ofs;
 	self.attack_range = ((frag_attacker.attack_range) ? frag_attacker.attack_range : 150);
 	//self.attack_range = frag_attacker.attack_range;
-	self.monster_attackfunc = mon.monster_attackfunc;
+	self.monster_attackfunc = frag_attacker.monster_attackfunc;
 	setsize(self, frag_attacker.mins, frag_attacker.maxs);
 
 	return false;
 }
-#endif
 
 MUTATOR_HOOKFUNCTION(za, SV_StartFrame)
 {

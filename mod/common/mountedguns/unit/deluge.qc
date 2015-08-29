@@ -37,7 +37,7 @@ void mg_deluge_attack(string tagname, entity spigot)
 
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
-	pointparticles(particleeffectnum("deluge_muzzleflash"), v, w_shotdir * 1000, 1);
+	pointparticles(_particleeffectnum("deluge_muzzleflash"), v, w_shotdir * 1000, 1);
 
 	proj = spawn ();
 	proj.classname = "water";

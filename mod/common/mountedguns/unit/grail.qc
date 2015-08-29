@@ -122,7 +122,7 @@ void mg_grail_linkattack (string tagname, float putforward, float speedadd, enti
 	up = v_up;
 
 	shots = autocvar_g_vehicle_mg_grail_link_shots;
-	pointparticles(particleeffectnum("crylink_muzzleflash"), v, v_forward * 1000, shots);
+	Send_Effect(EFFECT_CRYLINK_MUZZLEFLASH, v, v_forward * 1000, shots);
 		
 	proj = prevproj = firstproj = world;
 	for(counter = 0; counter < shots; ++counter)
@@ -221,7 +221,7 @@ void mg_grail_attack(string tagname, entity fireentity)
 
 	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', false, 2, W_Sound("electro_fire"), CH_WEAPON_A, autocvar_g_balance_electro_primary_damage);
 
-	pointparticles(particleeffectnum("electro_muzzleflash"), v, v_forward * 1000, 1);
+	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, v, v_forward * 1000, 1);
 
 	proj = spawn ();
 	proj.classname = "plasma_prim";
@@ -260,7 +260,7 @@ void mg_grail_bigattack(string tagname, float putforward, float speedadd, entity
 
 	W_SetupShot_ProjectileSize (self, '0 0 -9', '0 0 -9', false, 2, W_Sound("electro_fire"), CH_WEAPON_A, autocvar_g_vehicle_mg_grail_cannon_damage);
 
-	pointparticles(particleeffectnum("electro_muzzleflash"), v, v_forward * 100, 1);
+	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, v, v_forward * 100, 1);
 
 	proj = spawn ();
 	proj.classname = "plasma_prim";
@@ -592,7 +592,7 @@ void mg_grail_headfade()
         if(self.alpha > 0.1)
         {
             sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTN_NORM);
-            pointparticles(particleeffectnum("explosion_big"), self.origin + '0 0 100', '0 0 0', 1);
+            Send_Effect(EFFECT_EXPLOSION_BIG, self.origin + '0 0 100', '0 0 0', 1);
         }
         remove(self);
     }
@@ -605,7 +605,7 @@ void mg_grail_blowup()
         if(random() < 0.1)
         {
             sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTN_NORM);
-            pointparticles(particleeffectnum("explosion_small"), randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+            Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
         }
         self.nextthink = time + 0.1;
         return;

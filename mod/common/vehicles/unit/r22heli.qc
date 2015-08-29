@@ -948,7 +948,7 @@ void r22heli_blowup()
 				 DEATH_VH_BUMB_DEATH, world);
 
 	sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTN_NORM);
-	Send_Effect("explosion_big", (self.origin + '0 0 100') + (randomvec() * 80), '0 0 0', 1);
+	Send_Effect(EFFECT_EXPLOSION_BIG, (self.origin + '0 0 100') + (randomvec() * 80), '0 0 0', 1);
 	
 	if(self.owner.deadflag == DEAD_DYING)
 		self.owner.deadflag = DEAD_DEAD;
@@ -964,7 +964,7 @@ void r22heli_diethink()
 	if(random() < 0.1)
 	{
 		sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTN_NORM);
-		Send_Effect("explosion_small", randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
+		Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	}
 
 	self.nextthink = time + 0.1;
@@ -1002,7 +1002,7 @@ void r22heli_die()
 	_body.owner = self;
 	_body.enemy = self.enemy;
 	
-	pointparticles(particleeffectnum("explosion_medium"), findbetterlocation(self.origin, 16), '0 0 0', 1);
+	Send_Effect(EFFECT_EXPLOSION_SMALL, findbetterlocation(self.origin, 16), '0 0 0', 1);
 	
 	self.health			= 0;
 	self.event_damage	= func_null;

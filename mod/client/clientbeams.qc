@@ -1,4 +1,4 @@
-bool autocvar_cl_particles_newvortexbeam;
+//bool autocvar_cl_particles_newvortexbeam;
 int autocvar_cl_vaporizerbeam;
 
 float vaporizer_delay;
@@ -39,15 +39,15 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 		if(hit)
 			s = strcat(s, "_HIT");
 
-		WarpZone_TrailParticles(self, particleeffectnum(s), view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE);
+		WarpZone_TrailParticles(self, _particleeffectnum(s), view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE);
 
 		//sound(self, CH_SHOTS, "weapons/minstanexfire.wav", VOL_BASE, ATTEN_LARGE);
 
 		if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
-		if(autocvar_cl_particles_newvortexbeam && (getstati(STAT_ALLOW_OLDVORTEXBEAM) || isdemo()))
-			pointparticles(particleeffectnum("nex_impact_new"), trace_endpos, '0 0 0', 1);
-		else
-			pointparticles(particleeffectnum("nex_impact"), trace_endpos, '0 0 0', 1);
+		//if(autocvar_cl_particles_newvortexbeam && (getstati(STAT_ALLOW_OLDVORTEXBEAM) || isdemo()))
+			//pointparticles(particleeffectnum("nex_impact_new"), trace_endpos, '0 0 0', 1);
+		//else
+			pointparticles(particleeffectnum(EFFECT_VORTEX_IMPACT), trace_endpos, '0 0 0', 1);
 
 		last_beam = time + vaporizer_delay;
 	}

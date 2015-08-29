@@ -27,7 +27,7 @@ void mg_shlac_attack(string tagname, entity fireentity)
 	spread = WEP_CVAR_PRI(hlac, spread_min) * 0.1;
 
 	W_SetupShot (self, FALSE, 3, W_Sound("lasergun_fire"), CH_WEAPON_A, WEP_CVAR_PRI(hlac, damage));
-	Send_Effect("laser_muzzleflash", v, v_forward * 1000, 1);
+	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, v, v_forward * 1000, 1);
 	if (!autocvar_g_norecoil)
 	{
 		self.punchangle_x = random () - 0.5;

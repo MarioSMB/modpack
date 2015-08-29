@@ -26,10 +26,10 @@ void mg_m134_fire(entity mg_m134, entity player, entity gunmount, entity mggun1)
 		 v_forward = normalize(v_forward);
 	 v += v_forward * 5;
 	 
-	 pointparticles(particleeffectnum("spiderbot_minigun_muzzleflash"), v, v_forward, 1);
+	Send_Effect(EFFECT_SPIDERBOT_MINIGUN_MUZZLEFLASH, v, v_forward, 1);
 	 
-	 W_MachineGun_MuzzleFlash();
-		 mg_common_AttachToShotorg(self.muzzle_flash, '5 0 0', "tag_flash", gunmount);
+	W_MachineGun_MuzzleFlash();
+		mg_common_AttachToShotorg(self.muzzle_flash, '5 0 0', "tag_flash", gunmount);
 	 
 	 sound (gunmount, CH_WEAPON_A, W_Sound("uzi_fire"), VOL_BASE, ATTN_NORM);
 
