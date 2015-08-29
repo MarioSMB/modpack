@@ -1,4 +1,6 @@
 // Main include file for custom mutators
 
 #include "random_vehicles.qc"
+#include "riflearena.qc"
+#include "shotgunarena.qc"
 #include "zombie_apocalypse.qc"
