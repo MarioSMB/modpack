@@ -9,6 +9,7 @@
 #include "../common/vehicles/all.qc"
 
 #include "clientbeams.qc"
+#include "compat.qc"
 #include "items.qc"
 #include "headshots.qc"
 #include "player_crush.qc"

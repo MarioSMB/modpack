@@ -9,6 +9,7 @@
 #include "../common/vehicles/all.qc"
 
 #include "clientbeams.qc"
+#include "compat.qc"
 #include "projectiles.qc"
 #include "zombie_apocalypse.qc"
 #endif
