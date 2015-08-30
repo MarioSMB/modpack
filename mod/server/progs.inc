@@ -13,6 +13,8 @@
 #include "clientbeams.qc"
 #include "compat.qc"
 #include "custom_playermodels.qc"
+#include "damage.qc"
+#include "irc.qc"
 #include "items.qc"
 #include "headshots.qc"
 #include "player_crush.qc"
