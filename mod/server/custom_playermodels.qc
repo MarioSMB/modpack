@@ -121,3 +121,14 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 
 	return false;
 }
+
+MUTATOR_HOOKFUNCTION(cpmodels, PlayerSpawn)
+{
+	if(self.cvar_cl_sparkle >= 1 && checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
+		self.effects |= EF_STARDUST;
+
+	if(self.cvar_cl_sparkle == 2 && checkinlist(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
+		self.colormap = 4351;
+
+	return false;
+}
