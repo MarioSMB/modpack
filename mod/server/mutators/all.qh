@@ -1,5 +1,6 @@
 // Main include file for custom mutators
 
+#include "piggyback.qc"
 #include "random_vehicles.qc"
 #include "riflearena.qc"
 #include "shotgunarena.qc"

@@ -1,15 +1,22 @@
 // Custom notifications for the mod
 
+enum {
+	CPID_PIGGYBACK = NOTIF_CPID_COUNT
+};
+
 
 // MSG_ANNCE_NOTIFICATIONS
-	MSG_ANNCE_NOTIF(2, ANNCE_HEADSHOT,                 CH_INFO, "headshot",            VOL_BASEVOICE,  ATTEN_NONE)
+	MSG_ANNCE_NOTIF(2, ANNCE_HEADSHOT,                 CH_INFO, "headshot",             VOL_BASEVOICE,  ATTEN_NONE)
 
 // MSG_INFO_NOTIFICATIONS
 
 // MSG_CENTER_NOTIFICATIONS
-	MSG_CENTER_NOTIF(1, CENTER_HEADSHOT,               0, 0, "",                       NO_CPID,        "0 0", _("^F2Headshot!"), "")
+	MSG_CENTER_NOTIF(1, CENTER_HEADSHOT,               0, 0, "",                        NO_CPID,        "0 0", _("^F2Headshot!"), "")
+	MSG_CENTER_NOTIF(1, CENTER_PIGGYBACK_CARRYING,     1, 0, "s1",            		    CPID_PIGGYBACK, "0 0", _("^BGYou are now carrying %s^BG!"), "")
+	MSG_CENTER_NOTIF(1, CENTER_PIGGYBACK_RIDING,       1, 0, "s1",                      CPID_PIGGYBACK, "0 0", _("^BGYou are now riding %s^BG!"), "")
 
 // MSG_MULTI_NOTIFICATIONS
 	MSG_MULTI_NOTIF(1, MULTI_HEADSHOT,                 ANNCE_HEADSHOT,NO_MSG,          CENTER_HEADSHOT)
 
 // MSG_CHOICE_NOTIFICATIONS
+

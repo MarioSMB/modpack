@@ -1,5 +1,7 @@
 REGISTER_MUTATOR(piggyback, cvar("g_piggyback"));
 
+bool autocvar_g_piggyback_ride_enemies;
+
 .float cvar_cl_nocarry;
 
 .entity piggybacker;
@@ -129,7 +131,9 @@ bool pb_GiveItem(entity to, entity item)
 		item.superweapons_finished = max(0, item.superweapons_finished - time);
 	}
 
-	if(!Item_GiveTo(item, to))
+	entity it = item.itemdef;
+	bool gave = (it && it.instanceOfPickup) ? ITEM_HANDLE(Pickup, it, item, to) : Item_GiveTo(item, to);
+	if (!gave)
 	{
 		if (item.classname == "droppedweapon")
 		{
@@ -150,8 +154,6 @@ bool pb_GiveItem(entity to, entity item)
 		item.invincible_finished += time;
 		item.superweapons_finished += time;
 	}
-
-	jeff_Announcer_ItemTouch(to, item);
 
 	to.last_pickup = time;
 
@@ -182,8 +184,9 @@ MUTATOR_HOOKFUNCTION(piggyback, PlayerUseKey)
 		return true;
 	}
 
-	if(!self.vehicle)
-	if(!Player_Trapped(self))
+#define LIMBO(v) ((v).frozen || (v).deadflag != DEAD_NO)
+
+	if(!self.vehicle && !self.deadflag && !self.frozen)
 	{
 		entity head, closest_target = world;
 
@@ -196,7 +199,7 @@ MUTATOR_HOOKFUNCTION(piggyback, PlayerUseKey)
 			if(!head.cvar_cl_nocarry)
 			if(head.deadflag == DEAD_NO) // we check for trapped status here, but better to be safe than sorry, considering the madness happening
 			if(!head.vehicle)
-			if((!Player_Trapped(head) && !Player_Trapped(self)) || (Player_Trapped(head) || Player_Trapped(self)))
+			if((!LIMBO(head) && !LIMBO(self)) || (LIMBO(head) || LIMBO(self))) // your guess is as good as mine
 			{
 				if(closest_target)
 				{
@@ -214,10 +217,12 @@ MUTATOR_HOOKFUNCTION(piggyback, PlayerUseKey)
 		else { pb_Attach(closest_target, self); return true; }
 	}
 
+#undef LIMBO
+
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(piggyback, PlayerThink)
+MUTATOR_HOOKFUNCTION(piggyback, PlayerPreThink)
 {
 	if(BROKEN_PBREF(self)) { pb_Detach(self); }
 	
@@ -255,23 +260,31 @@ MUTATOR_HOOKFUNCTION(piggyback, PlayerThink)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(piggyback, MonsterThink)
+MUTATOR_HOOKFUNCTION(piggyback, MonsterMove)
 {
 	if(BROKEN_PBREF(self)) { pb_Detach(self); }
 	
 	if(!self.pbent)
 		pb_FixPBEnt(self);
 
+	if(self.piggybacker)
+	{
+		self.flags |= FL_PICKUPITEMS;
+		self.last_trace = time;
+	}
+	else
+		self.flags &= ~FL_PICKUPITEMS;
+
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(piggyback, ResetMap)
+MUTATOR_HOOKFUNCTION(piggyback, reset_map_players)
 {
 	FOR_EACH_PLAYER(self) { pb_Detach(self); }
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(piggyback, RemovePlayer)
+void pb_RemovePlayer()
 {
 	if(self.piggybacker)
 	{
@@ -282,7 +295,17 @@ MUTATOR_HOOKFUNCTION(piggyback, RemovePlayer)
 	if(self.pbhost)
 		pb_Detach(self.pbhost);
 	self.pb_canattach = 0;
+}
 
+MUTATOR_HOOKFUNCTION(piggyback, MakePlayerObserver)
+{
+	pb_RemovePlayer();
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(piggyback, ClientDisconnect)
+{
+	pb_RemovePlayer();
 	return false;
 }
 
@@ -304,18 +327,88 @@ MUTATOR_HOOKFUNCTION(piggyback, PlayerDies)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(piggyback, GetCvars)
+{
+	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_nocarry, "cl_nocarry");
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(piggyback, FixPlayermodel)
+{
+	// this was the nearest hook to the original code
+	bool do_crouch = self.BUTTON_CROUCH;
+	if(self.hook_state
+	|| self.vehicle
+	|| self.frozen
+	) { do_crouch = false; }
+
+	// WEAPONTODO: THIS SHIT NEEDS TO GO EVENTUALLY
+	// It cannot be predicted by the engine!
+	if((self.weapon == WEP_SHOCKWAVE.m_id || self.weapon == WEP_SHOTGUN.m_id) && self.weaponentity.wframe == WFRAME_FIRE2 && time < self.weapon_nextthink)
+		do_crouch = false;
+
+	if(!do_crouch && self.crouch)
+	{
+		tracebox(self.origin, self.stat_pl_min, self.stat_pl_max, self.origin, false, self);
+		if (!trace_startsolid || self.pbhost)
+		{
+			self.crouch = false;
+			self.view_ofs = self.stat_pl_view_ofs;
+			setsize (self, self.stat_pl_min, self.stat_pl_max);
+		}
+	}
+
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(piggyback, GrappleHookThink)
+{
+	if(hook_pullentity.pbhost)
+	{
+		hook_pullentity = pb_RootOf(hook_pullentity);
+		hook_tarzan = 2; // enforce tarzan
+	}
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(piggyback, BuffModel_Customize)
+{
+	if(buff_player.pbhost == self.owner || self.owner.piggybacker)
+		return true; // don't show to piggybacker's carrier, and don't show if carrier is carrying someone else
+	return false;
+}
+
+
 MUTATOR_HOOKFUNCTION(piggyback, ItemTouch)
 {
-	// give items to all piggybackers	
+	if(IS_MONSTER(other))
+	{
+		entity p = other;
+		while(p.piggybacker)
+		{
+			p = p.piggybacker;
+			if(IS_PLAYER(p))
+			{
+				other = p;
+				break;
+			}
+		}
+
+		if(IS_MONSTER(other))
+			return MUT_ITEMTOUCH_RETURN; // make sure we're not allowing something nasty here
+	}
+
+	// give items to all piggybackers
+	// if we get here, the above stuff is out of the way
 
 	// we use pb_RootOf here, as magnet buff can give riders items, and it wouldn't be very nice if they hogged them
 	entity p = pb_RootOf(other);
-	if(p != other)
-		pb_GiveItem(p, self); // special case for carrier
+	if(IS_PLAYER(p))
+		pb_GiveItem(p, self);
 	while(p.piggybacker)
 	{
 		p = p.piggybacker;
-		if(p != other)
+		if(IS_PLAYER(p))
 		{
 			if(!pb_GiveItem(p, self))
 				continue;
@@ -325,8 +418,25 @@ MUTATOR_HOOKFUNCTION(piggyback, ItemTouch)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(piggyback, GetCvars)
+MUTATOR_HOOKFUNCTION(piggyback, BuffTouch)
 {
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_nocarry, "cl_nocarry");
+	if(IS_MONSTER(other))
+	if(other.piggybacker)
+		other = other.piggybacker;
+
+	if(other.buffs)
+	if(other.buffs == self.buffs || !other.cvar_cl_buffs_autoreplace)
+	{
+		entity p = other;
+		while(p.piggybacker)
+		{
+			p = p.piggybacker;
+			if(!p.buffs || (!p.piggybacker && (p.cvar_cl_buffs_autoreplace || p.buffs != self.buffs)))
+			{
+				other = p;
+				break;
+			}
+		}
+	}
 	return false;
 }
