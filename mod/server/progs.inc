@@ -11,6 +11,7 @@
 #include "clientbeams.qc"
 #include "items.qc"
 #include "headshots.qc"
+#include "player_crush.qc"
 #include "weapons.qc"
 
 #include "mutators/all.qh"
