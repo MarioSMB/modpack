@@ -7,10 +7,12 @@
 #include "../common/mutators/all.qh"
 #include "../common/notifications.qh"
 #include "../common/vehicles/all.qc"
+#include "../common/util.qc"
 
 #include "bots.qc"
 #include "clientbeams.qc"
 #include "compat.qc"
+#include "custom_playermodels.qc"
 #include "items.qc"
 #include "headshots.qc"
 #include "player_crush.qc"
