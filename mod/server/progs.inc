@@ -8,6 +8,7 @@
 #include "../common/notifications.qh"
 #include "../common/vehicles/all.qc"
 
+#include "bots.qc"
 #include "clientbeams.qc"
 #include "compat.qc"
 #include "items.qc"
