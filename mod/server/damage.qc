@@ -1,4 +1,4 @@
-float autocvar_g_turrets_player_damagerate;
+float autocvar_g_turrets_player_damagerate = 1;
 
 .entity lastkilled;
 .entity lastkiller;
