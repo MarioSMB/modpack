@@ -1,3 +1,11 @@
+STATIC_INIT(mod_cmds)
+{
+	localcmd("alias ircmsg \"sv_cmd ircmsg ${* ?}\"");
+	localcmd("alias _ircmessage \"ircmsg ${* ?}\"");
+
+	localcmd("alias chlevel \"sv_cmd chlevel ${* ?}\"");
+}
+
 void IRCSay(string msgstr)
 {
 	if(msgstr == "")
@@ -13,12 +21,23 @@ void IRCSay(string msgstr)
 		if(IS_PLAYER(head))
 			continue;
 		if(IS_REAL_CLIENT(head))
-                    sprint(head, msgstr);
+			sprint(head, msgstr);
 	}
 }
 
 MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 {
+	if(MUTATOR_RETURNVALUE) // command was already handled?
+		return false;
+
+	if(cmd_name == "chlevel")
+	{
+		string m = MapInfo_FixName(argv(1));
+		localcmd(strcat("\nchangelevel ", m, "\n"));
+		print("Switching to ", m, "\n");
+		return true;
+	}
+
 	if(cmd_name == "ircmsg")
 	{
 		IRCSay(substring(cmd_string, strlen(argv(0))+1, strlen(cmd_string)));
