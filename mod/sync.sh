@@ -1,4 +1,5 @@
 #!/bin/sh
+cd ${0%[\\/]*}
 
 if [ ! -d "github" ]; then
     mkdir github
@@ -9,6 +10,10 @@ if [ ! -d "github" ]; then
     git checkout -b develop
     popd
 fi
+
+cat << EOF > github/.gitignore
+.DS_Store
+EOF
 
 rsync -Pha --delete \
     --exclude 'github' --exclude 'sync.sh' --exclude '.git' --exclude '.gitignore' \
