@@ -15,6 +15,8 @@ cat << EOF > github/.gitignore
 .DS_Store
 EOF
 
+cp README.md github
+
 rsync -Pha --delete \
     --exclude 'github' --exclude 'sync.sh' --exclude '.git' --exclude '.gitignore' \
     ../mod ../qcsrc \
