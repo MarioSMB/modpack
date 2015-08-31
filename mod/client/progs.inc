@@ -1,4 +1,3 @@
-#if BUILD_MOD
 #include "main.qc"
 
 #include "../common/stats.qh"
@@ -15,4 +14,3 @@
 #include "piggyback.qc"
 #include "projectiles.qc"
 #include "zombie_apocalypse.qc"
-#endif
