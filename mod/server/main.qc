@@ -1,4 +1,4 @@
-REGISTER_MUTATOR(mutator_mod, cvar("g_mod"));
+REGISTER_MUTATOR(mutator_mod, true);
 
 MUTATOR_HOOKFUNCTION(mutator_mod, BuildMutatorsString) {
     ret_string = strcat(ret_string, ":mod");
