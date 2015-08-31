@@ -1,11 +1,13 @@
 STATIC_INIT(mod_cmds)
 {
-	localcmd("alias ircmsg \"sv_cmd ircmsg ${* ?}\"");
-	localcmd("alias _ircmessage \"ircmsg ${* ?}\"");
+	localcmd("\nalias ircmsg \"sv_cmd ircmsg ${* ?}\"\n");
+	localcmd("\nalias _ircmessage \"ircmsg ${* ?}\"\n");
 
-	localcmd("alias chlevel \"sv_cmd chlevel ${* ?}\"");
+	localcmd("\nalias chlevel \"sv_cmd chlevel ${* ?}\"\n");
 
-	localcmd("alias stufftoall \"sv_cmd stufftoall ${* ?}\"");
+	localcmd("\nalias stufftoall \"sv_cmd stufftoall ${* ?}\"\n");
+
+	localcmd("\nalias dumpmodcvars \"sv_cmd dumpmodcvars ${* ?}\"\n");
 }
 
 void IRCSay(string msgstr)
