@@ -1,6 +1,6 @@
 float za_spawn_delay;
 
-REGISTER_MUTATOR(za, cvar("g_za") && cvar("g_monsters"))
+REGISTER_MUTATOR(za, cvar("g_za") && cvar("g_monsters") && !g_nexball && !g_invasion && !g_cts && !g_race)
 {
 	MUTATOR_ONADD
 	{
@@ -16,9 +16,6 @@ AUTOCVAR(g_za_spawn_delay, float, 5, "");
 
 .vector za_viewofs;
 .float za_maxhealth;
-
-//&& !g_nexball && !g_invasion && !g_cts && !g_race
-
 
 void za_SpawnMonster()
 {

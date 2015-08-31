@@ -1,6 +1,5 @@
 void sha_SetCvars();
-// NOTE: this should really have a !g_nexball check, but something in the gametype system is broken...
-REGISTER_MUTATOR(sha, cvar("g_shotgunarena") && !cvar("g_instagib") && !cvar("g_overkill") && !cvar("g_riflearena"))
+REGISTER_MUTATOR(sha, cvar("g_shotgunarena") && !cvar("g_instagib") && !cvar("g_overkill") && !cvar("g_riflearena") && !g_nexball)
 {
 	MUTATOR_ONADD
 	{

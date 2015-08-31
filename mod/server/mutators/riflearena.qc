@@ -1,6 +1,5 @@
 void ra_SetCvars();
-// NOTE: this should really have a !g_nexball check, but something in the gametype system is broken...
-REGISTER_MUTATOR(ra, cvar("g_riflearena") && !cvar("g_instagib") && !cvar("g_overkill"))
+REGISTER_MUTATOR(ra, cvar("g_riflearena") && !cvar("g_instagib") && !cvar("g_overkill") && !g_nexball)
 {
 	MUTATOR_ONADD
 	{
