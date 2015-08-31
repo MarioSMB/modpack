@@ -11,8 +11,8 @@ if [ ! -d "github" ]; then
 fi
 
 rsync -Pha --delete \
-    --exclude 'github' --exclude 'sync.sh' --exclude '.git' \
-    . ../qcsrc \
+    --exclude 'github' --exclude 'sync.sh' --exclude '.git' --exclude '.gitignore' \
+    ../mod ../qcsrc \
     github
 
 REV=$(git describe)
