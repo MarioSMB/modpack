@@ -7,7 +7,7 @@ if [ ! -d "github" ]; then
     git init
     git remote add origin git@github.com:MarioSMB/modpack.git
     git fetch
-    git checkout -b develop
+    git checkout -b master
     popd
 fi
 
@@ -25,5 +25,5 @@ REV=$(git describe)
 pushd github
 git add .
 git commit -m "Sync with ${REV}"
-git push -u origin develop
+git push -u origin master
 popd
