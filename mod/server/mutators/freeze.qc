@@ -1,4 +1,4 @@
-REGISTER_MUTATOR(freeze, !g_freezetag && !g_ca && !g_cts && !g_race);
+REGISTER_MUTATOR(freeze, cvar("g_freeze") && !g_freezetag && !g_ca && !g_cts && !g_race);
 
 AUTOCVAR(g_freeze, bool, false, _("Enable freeze mutator (similar to freezetag, but for other modes)"));
 AUTOCVAR(g_freeze_noauto, bool, false, _("Don't automatically unfreeze the player"));
