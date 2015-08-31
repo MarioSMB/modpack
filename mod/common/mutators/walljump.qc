@@ -17,11 +17,11 @@ REGISTER_MUTATOR(walljump, cvar("g_walljump"))
 	}
 }
 
-bool autocvar_g_walljump;
-float autocvar_g_walljump_delay;
-float autocvar_g_walljump_force;
-float autocvar_g_walljump_velocity_xy_factor;
-float autocvar_g_walljump_velocity_z_factor;
+AUTOCVAR(g_walljump, bool, false, _("Enable wall jumping mutator"));
+AUTOCVAR(g_walljump_delay, float, 1, _("Minimum delay between wall jumps"));
+AUTOCVAR(g_walljump_force, float, 300, _("How far to bounce/jump off the wall"));
+AUTOCVAR(g_walljump_velocity_xy_factor, float, 1.15, _("How much to slow down along horizontal axis, higher value = higher deceleration, if factor is < 1, you accelerate by wall jumping"));
+AUTOCVAR(g_walljump_velocity_z_factor, float, 0.5, _("Upwards velocity factor, multiplied by normal jump velocity"));
 
 #define PHYS_WALLJUMP 						autocvar_g_walljump
 #define PHYS_WALLJUMP_VELOCITY_Z_FACTOR 	autocvar_g_walljump_velocity_z_factor

@@ -1,11 +1,11 @@
 REGISTER_MUTATOR(pc, true);
 
-bool autocvar_g_player_crush;
-bool autocvar_g_player_crush_simple = true;
-float autocvar_g_player_crush_damage = 200;
-float autocvar_g_player_crush_headheight = 0.9;
-float autocvar_g_player_crush_bounce = 300;
-float autocvar_g_player_crush_bounce_jump = 600;
+AUTOCVAR(g_player_crush, bool, false, _("Allow crushing players by jumping on their head"));
+AUTOCVAR(g_player_crush_simple, bool, true, _("Use simple height checking"));
+AUTOCVAR(g_player_crush_damage, float, 200, "");
+AUTOCVAR(g_player_crush_headheight, float, 0.9, "");
+AUTOCVAR(g_player_crush_bounce, float, 300, _("Bounce height in advanced trace mode"));
+AUTOCVAR(g_player_crush_bounce_jump, float, 600, _("Bounce height while holding jump in advanced trace mode"));
 
 void pc_PlayerTouch()
 {
@@ -43,7 +43,6 @@ void pc_PlayerTouch()
 	}
 	else
 	{
-
 		tracebox(self.origin, self.mins, self.maxs, self.origin - ('0 0 1' * (self.maxs_z + 5)), MOVE_NORMAL, self);
 
 		if(trace_ent == other)

@@ -1,4 +1,4 @@
-float autocvar_g_turrets_player_damagerate = 1;
+AUTOCVAR(g_turrets_player_damagerate, float, 1, _("Multiplier for the amount of damage a player takes from turrets"));
 
 .entity lastkilled;
 .entity lastkiller;

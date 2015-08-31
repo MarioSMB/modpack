@@ -1,7 +1,7 @@
 REGISTER_MUTATOR(headshots, cvar("sv_headshot"));
 
-bool autocvar_sv_headshot = true;
-float autocvar_sv_headshot_damage;
+AUTOCVAR(sv_headshot, bool, true, _("Announce headshots and deal extra damage with the rifle"));
+AUTOCVAR(sv_headshot_damage, float, 1.5, _("Damage multiplier if hitting the head with a rifle"));
 
 bool Headshot(entity targ, entity ent, vector hitloc, vector start, vector end)
 {

@@ -1,5 +1,5 @@
-string autocvar_sv_weapons_modeloverride;
-string autocvar_sv_weapons_sounddir;
+AUTOCVAR(sv_weapons_modeloverride, string, "", _("Custom directory for weapon models, set to something like myserver, end result will look like 'models/weapons_myserver/weapon.md3'"));
+AUTOCVAR(sv_weapons_sounddir, string, "", _("Custom directory for weapon sounds, set to something like myserver, end result will look like 'sound/weapons_myserver/weapon.wav'"));
 
 MUTATOR_HOOKFUNCTION(mutator_mod, WeaponModel)
 {

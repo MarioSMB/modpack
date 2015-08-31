@@ -7,9 +7,9 @@ REGISTER_MUTATOR(cpmodels, true)
 	}
 }
 
-bool autocvar_sv_allow_customplayermodels;
-string autocvar_sv_allow_customplayermodels_idlist;
-string autocvar_sv_allow_customplayermodels_speciallist;
+AUTOCVAR(sv_allow_customplayermodels, bool, false, "");
+AUTOCVAR(sv_allow_customplayermodels_idlist, string, "", "");
+AUTOCVAR(sv_allow_customplayermodels_speciallist, string, "", "");
 
 bool pony_allowed;
 bool weegee_allowed;

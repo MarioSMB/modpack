@@ -1,4 +1,4 @@
-string autocvar_sv_items_modeloverride;
+AUTOCVAR(sv_items_modeloverride, string, "", _("Custom directory for item models, set to something like myserver, end result will look like 'models/items_myserver/item.md3'"));
 
 MUTATOR_HOOKFUNCTION(mutator_mod, ItemModel)
 {
