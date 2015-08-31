@@ -2,6 +2,7 @@ AUTOCVAR_SAVE(g_mod,                     bool,   true,        "");
 
 STATIC_INIT(mod_cvars)
 {
+	localcmd("set cl_damagetext 1\n");
 	localcmd("set hud_panel_quickmenu_file quickmenu.txt\n");
 }
 
