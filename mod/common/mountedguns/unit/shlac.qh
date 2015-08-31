@@ -3,11 +3,11 @@
 
 #ifdef SVQC
 
-float autocvar_g_mountedgun_shlac_railgun_refire;
-float autocvar_g_mountedgun_shlac_railgun_ammo_cost;
-float autocvar_g_mountedgun_shlac_railgun_ammo_max;
-float autocvar_g_mountedgun_shlac_railgun_ammo_regen;
-float autocvar_g_mountedgun_shlac_railgun_ammo_regen_pause;
+AUTOCVAR(g_mountedgun_shlac_railgun_refire, float, 0.15, "");
+AUTOCVAR(g_mountedgun_shlac_railgun_ammo_cost, int, 1, "");
+AUTOCVAR(g_mountedgun_shlac_railgun_ammo_max, int, 9997, "");
+AUTOCVAR(g_mountedgun_shlac_railgun_ammo_regen, int, 1047, "");
+AUTOCVAR(g_mountedgun_shlac_railgun_ammo_regen_pause, float, 1, "");
 
 void mg_shlac_fire(entity mg_shlac, entity player, entity gunmount);
 

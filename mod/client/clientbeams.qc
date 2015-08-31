@@ -1,5 +1,5 @@
 //bool autocvar_cl_particles_newvortexbeam;
-int autocvar_cl_vaporizerbeam;
+AUTOCVAR_SAVE(cl_vaporizerbeam,                    int,   0,      _("Draw a client side beam when firing in instagib. -1: always disabled, 0: disabled unless ping is high, 1: enabled"));
 
 float vaporizer_delay;
 float last_beam;

@@ -3,16 +3,16 @@
 
 #ifdef SVQC
 
-float autocvar_g_mountedgun_browning50_machinegun_expelbulletcasings;
-float autocvar_g_mountedgun_browning50_machinegun_damage;
-float autocvar_g_mountedgun_browning50_machinegun_refire;
-float autocvar_g_mountedgun_browning50_machinegun_spread;
-float autocvar_g_mountedgun_browning50_machinegun_ammo_cost;
-float autocvar_g_mountedgun_browning50_machinegun_ammo_max;
-float autocvar_g_mountedgun_browning50_machinegun_ammo_regen;
-float autocvar_g_mountedgun_browning50_machinegun_ammo_regen_pause;
-float autocvar_g_mountedgun_browning50_machinegun_force;
-float autocvar_g_mountedgun_browning50_machinegun_solidpenetration;
+AUTOCVAR(g_mountedgun_browning50_machinegun_expelbulletcasings, bool, false, "");
+AUTOCVAR(g_mountedgun_browning50_machinegun_damage, float, 12, "");
+AUTOCVAR(g_mountedgun_browning50_machinegun_refire, float, 0.03, "");
+AUTOCVAR(g_mountedgun_browning50_machinegun_spread, float, 0.015, "");
+AUTOCVAR(g_mountedgun_browning50_machinegun_ammo_cost, int, 1, "");
+AUTOCVAR(g_mountedgun_browning50_machinegun_ammo_max, int, 250, "");
+AUTOCVAR(g_mountedgun_browning50_machinegun_ammo_regen, int, 250, "");
+AUTOCVAR(g_mountedgun_browning50_machinegun_ammo_regen_pause, float, 2, "");
+AUTOCVAR(g_mountedgun_browning50_machinegun_force, float, 9, "");
+AUTOCVAR(g_mountedgun_browning50_machinegun_solidpenetration, float, 16, "");
 
 void mg_browning50_fire(entity mg, entity player, entity gunmount);
 

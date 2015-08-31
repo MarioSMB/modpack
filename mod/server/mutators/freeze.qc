@@ -1,12 +1,13 @@
 REGISTER_MUTATOR(freeze, !g_freezetag && !g_ca && !g_cts && !g_race);
 
-float autocvar_g_freeze_revive_speed;
-float autocvar_g_freeze_revive_speed_random;
-bool autocvar_g_freeze_noauto;
-bool autocvar_g_freeze_norespawn;
-float autocvar_g_freeze_revive_minhealth;
-float autocvar_g_freeze_frozen_maxtime;
-float autocvar_g_freeze_respawn_time;
+AUTOCVAR(g_freeze, bool, false, _("Enable freeze mutator (similar to freezetag, but for other modes)"));
+AUTOCVAR(g_freeze_noauto, bool, false, _("Don't automatically unfreeze the player"));
+AUTOCVAR(g_freeze_norespawn, bool, false, _("Don't allow re-spawning instantly by jumping"));
+AUTOCVAR(g_freeze_revive_speed, float, 0.2, "");
+AUTOCVAR(g_freeze_revive_speed_random, float, 0, "");
+AUTOCVAR(g_freeze_revive_minhealth, int, 50, "");
+AUTOCVAR(g_freeze_frozen_maxtime, float, 20, "");
+AUTOCVAR(g_freeze_respawn_time, float, 1, "");
 
 .int freeze_flag; // used to check if the player is going to respawn or thaw out
 const int FROZEN_THAWING = 0; // player is thawing, don't take any action

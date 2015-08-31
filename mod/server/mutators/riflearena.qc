@@ -1,5 +1,3 @@
-bool autocvar_g_riflearena_withlaser;
-
 void ra_SetCvars();
 // NOTE: this should really have a !g_nexball check, but something in the gametype system is broken...
 REGISTER_MUTATOR(ra, cvar("g_riflearena") && !cvar("g_instagib") && !cvar("g_overkill"))
@@ -12,6 +10,14 @@ REGISTER_MUTATOR(ra, cvar("g_riflearena") && !cvar("g_instagib") && !cvar("g_ove
 		WEP_ACTION(WEP_RIFLE.m_id, WR_INIT);
 	}
 }
+
+AUTOCVAR(g_riflearena, bool, false, _("Enable rifle arena mutator"));
+AUTOCVAR(g_riflearena_withlaser, bool, false, _("Enable blaster in the rifle arena mutator"));
+AUTOCVAR(g_riflearena_rifle_secondary_spread, float, 0, "");
+AUTOCVAR(g_riflearena_rifle_secondary_shots, int, 1, "");
+AUTOCVAR(g_riflearena_rifle_secondary_animtime, float, 0.15, "");
+AUTOCVAR(g_riflearena_rifle_secondary_refire, float, 0.15, "");
+AUTOCVAR(g_riflearena_rifle_secondary_damage, int, 40, "");
 
 void ra_SetCvars()
 {

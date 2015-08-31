@@ -1,13 +1,5 @@
-bool autocvar_g_za;
-int autocvar_g_za_max_monsters;
-bool autocvar_g_za_infect;
-string autocvar_g_za_spawnmonster;
-float autocvar_g_za_spawn_delay;
-
-.vector za_viewofs;
-.float za_maxhealth;
 float za_spawn_delay;
-//&& !g_nexball && !g_invasion && !g_cts && !g_race
+
 REGISTER_MUTATOR(za, cvar("g_za") && cvar("g_monsters"))
 {
 	MUTATOR_ONADD
@@ -15,6 +7,18 @@ REGISTER_MUTATOR(za, cvar("g_za") && cvar("g_monsters"))
 		za_spawn_delay = time + game_starttime;
 	}
 }
+
+AUTOCVAR(g_za, bool, false, _("Enable zombie apocalypse mutator"));
+AUTOCVAR(g_za_max_monsters, int, 20, "");
+AUTOCVAR(g_za_infect, bool, false, _("On death, players become playable monsters"));
+AUTOCVAR(g_za_spawnmonster, string, "zombie", _("Spawn this type of monster, can be random or any of the mobs in 'spawnmob list'"));
+AUTOCVAR(g_za_spawn_delay, float, 5, "");
+
+.vector za_viewofs;
+.float za_maxhealth;
+
+//&& !g_nexball && !g_invasion && !g_cts && !g_race
+
 
 void za_SpawnMonster()
 {

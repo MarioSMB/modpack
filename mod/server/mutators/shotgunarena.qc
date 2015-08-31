@@ -8,6 +8,18 @@ REGISTER_MUTATOR(sha, cvar("g_shotgunarena") && !cvar("g_instagib") && !cvar("g_
 	}
 }
 
+AUTOCVAR(g_shotgunarena, bool, false, _("Enable shotgun arena mutator"));
+AUTOCVAR(g_shotgunarena_shotgun_primary_damage, int, 20, "");
+AUTOCVAR(g_shotgunarena_shotgun_primary_force, float, 400, "");
+AUTOCVAR(g_shotgunarena_shotgun_primary_refire, float, 1.2, "");
+AUTOCVAR(g_shotgunarena_shotgun_primary_spread, float, 0.10, "");
+AUTOCVAR(g_shotgunarena_shotgun_reload_ammo, int, 0, "");
+AUTOCVAR(g_shotgunarena_shotgun_reload_time, float, 1.2, "");
+AUTOCVAR(g_shotgunarena_shotgun_secondary_damage, int, 200, "");
+AUTOCVAR(g_shotgunarena_shotgun_secondary_force, float, 1600, "");
+AUTOCVAR(g_shotgunarena_shotgun_secondary_melee_time, float, 0.10, "");
+AUTOCVAR(g_shotgunarena_shotgun_secondary_refire, float, 1.2, "");
+
 void sha_SetCvars()
 {
 	cvar_settemp("g_balance_shotgun_primary_damage", cvar_string("g_shotgunarena_shotgun_primary_damage"));

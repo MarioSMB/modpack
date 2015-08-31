@@ -1,0 +1,47 @@
+#ifndef GRAIL_H
+#define GRAIL_H
+
+#ifdef SVQC
+
+AUTOCVAR(g_mountedgun_grail_smallcannon, bool, false, "");
+AUTOCVAR(g_mountedgun_grail_cannon, bool, true, "");
+AUTOCVAR(g_mountedgun_grail_cannon_damage, float, 40, "");
+AUTOCVAR(g_mountedgun_grail_cannon_edgedamage, float, 20, "");
+AUTOCVAR(g_mountedgun_grail_cannon_force, float, 200, "");
+AUTOCVAR(g_mountedgun_grail_cannon_radius, float, 100, "");
+AUTOCVAR(g_mountedgun_grail_cannon_primary_comboradius, float, 200, "");
+AUTOCVAR(g_mountedgun_grail_cannon_speed, float, 200, "");
+AUTOCVAR(g_mountedgun_grail_cannon_spread, float, 0.03, "");
+AUTOCVAR(g_mountedgun_grail_cannon_lifetime, float, 20, "");
+AUTOCVAR(g_mountedgun_grail_cannon_iterforward, int, 0, "");
+AUTOCVAR(g_mountedgun_grail_cannon_iterspeedadd, float, 610, "");
+
+AUTOCVAR(g_mountedgun_grail_link, bool, true, "");
+AUTOCVAR(g_mountedgun_grail_link_spread, float, 0.001, "");
+AUTOCVAR(g_mountedgun_grail_link_speed, float, 200, "");
+AUTOCVAR(g_mountedgun_grail_link_iter, int, 15, "");
+AUTOCVAR(g_mountedgun_grail_link_iterforward, int, 0, "");
+AUTOCVAR(g_mountedgun_grail_link_iterforwardsub, int, 0, "");
+AUTOCVAR(g_mountedgun_grail_link_iterspeedadd, float, 10, "");
+AUTOCVAR(g_mountedgun_grail_link_itersubspeedadd, float, 100, "");
+AUTOCVAR(g_mountedgun_grail_link_shots, int, 1, "");
+
+AUTOCVAR(g_mountedgun_grail_link1_skip, bool, false, "");
+AUTOCVAR(g_mountedgun_grail_link1_skipiter, int, 0, "");
+AUTOCVAR(g_mountedgun_grail_link1_skipspeed, float, 0, "");
+AUTOCVAR(g_mountedgun_grail_link2_skip, bool, false, "");
+AUTOCVAR(g_mountedgun_grail_link2_skipiter, int, 0, "");
+AUTOCVAR(g_mountedgun_grail_link2_skipspeed, float, 0, "");
+AUTOCVAR(g_mountedgun_grail_link3_skip, bool, false, "");
+AUTOCVAR(g_mountedgun_grail_link3_skipiter, int, 0, "");
+AUTOCVAR(g_mountedgun_grail_link3_skipspeed, float, 0, "");
+AUTOCVAR(g_mountedgun_grail_link4_skip, bool, false, "");
+AUTOCVAR(g_mountedgun_grail_link4_skipiter, int, 0, "");
+AUTOCVAR(g_mountedgun_grail_link4_skipspeed, float, 0, "");
+AUTOCVAR(g_mountedgun_grail_link5_skip, bool, false, "");
+AUTOCVAR(g_mountedgun_grail_link5_skipiter, int, 0, "");
+AUTOCVAR(g_mountedgun_grail_link5_skipspeed, float, 0, "");
+
+#endif
+
+#endif

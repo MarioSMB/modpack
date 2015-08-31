@@ -25,6 +25,56 @@ REGISTER_VEHICLE_SIMPLE(
 #ifdef SVQC
 #include "../propellers.qh"
 
+AUTOCVAR(g_vehicle_r22heli, bool, true, _("Enable R22 Helicopter vehicle (if allowed by mods)"));
+AUTOCVAR(g_vehicle_r22heli_respawntime, float, 30, "");
+
+AUTOCVAR(g_vehicle_r22heli_blowup_radius, float, 500, "");
+AUTOCVAR(g_vehicle_r22heli_blowup_coredamage, float, 500, "");
+AUTOCVAR(g_vehicle_r22heli_blowup_edgedamage, float, 100, "");
+AUTOCVAR(g_vehicle_r22heli_blowup_forceintensity, float, 600, "");
+
+AUTOCVAR(g_vehicle_r22heli_health, int, 150, "");
+AUTOCVAR(g_vehicle_r22heli_health_regen, int, 0, "");
+AUTOCVAR(g_vehicle_r22heli_health_regen_pause, float, 0, "");
+
+AUTOCVAR(g_vehicle_r22heli_shield, int, 75, "");
+AUTOCVAR(g_vehicle_r22heli_shield_regen, int, 25, "");
+AUTOCVAR(g_vehicle_r22heli_shield_regen_pause, float, 1.5, "");
+
+AUTOCVAR(g_vehicle_r22heli_energy, int, 100, "");
+AUTOCVAR(g_vehicle_r22heli_energy_regen, int, 10, "");
+AUTOCVAR(g_vehicle_r22heli_energy_regen_pause, float, 0.25, "");
+
+AUTOCVAR(g_vehicle_r22heli_cannon_lock, bool, false, "");
+AUTOCVAR(g_vehicle_r22heli_cannon_turnspeed, float, 160, "");
+AUTOCVAR(g_vehicle_r22heli_cannon_pitchlimit_down, float, 60, "");
+AUTOCVAR(g_vehicle_r22heli_cannon_pitchlimit_up, float, 60, "");
+AUTOCVAR(g_vehicle_r22heli_cannon_turnlimit_in, float, 20, "");
+AUTOCVAR(g_vehicle_r22heli_cannon_turnlimit_out, float, 80, "");
+AUTOCVAR(g_vehicle_r22heli_cannon_speed, float, 20000, "");
+AUTOCVAR(g_vehicle_r22heli_cannon_ammo, int, 100, "");
+AUTOCVAR(g_vehicle_r22heli_cannon_ammo_regen, int, 100, "");
+AUTOCVAR(g_vehicle_r22heli_cannon_ammo_regen_pause, float, 1, "");
+
+AUTOCVAR(g_vehicle_r22heli_bouncefactor, float, 0.25, "");
+AUTOCVAR(g_vehicle_r22heli_bouncestop, float, 0, "");
+AUTOCVAR(g_vehicle_r22heli_bouncepain, vector, '35 2 250', "");
+
+AUTOCVAR(g_vehicle_r22heli_flare_range, float, 2000, "");
+AUTOCVAR(g_vehicle_r22heli_bombs_refire, float, 5, "");
+
+AUTOCVAR(g_vehicle_r22heli_movestyle, int, 1, "");
+AUTOCVAR(g_vehicle_r22heli_takeofftime, float, 1.5, "");
+AUTOCVAR(g_vehicle_r22heli_speed_forward, float, 1700, "");
+AUTOCVAR(g_vehicle_r22heli_speed_strafe, float, 900, "");
+AUTOCVAR(g_vehicle_r22heli_speed_up, float, 1700, "");
+AUTOCVAR(g_vehicle_r22heli_speed_down, float, 1700, "");
+AUTOCVAR(g_vehicle_r22heli_mass, float, 1000, "");
+AUTOCVAR(g_vehicle_r22heli_friction, float, 2, "");
+AUTOCVAR(g_vehicle_r22heli_pitchlimit, float, 45, "");
+AUTOCVAR(g_vehicle_r22heli_pitchspeed, float, 50, "");
+AUTOCVAR(g_vehicle_r22heli_turnspeed, float, 200, "");
+
 const float R22HELIROTOR_HEIGHT = 148;
 
 const vector R22HELIROTOR_MIN_HBF = '-50 -50 -1'; //Back and front trunk for this model
@@ -78,74 +128,6 @@ const vector R22HELIROTOR_MAX_HBB_T = '5 5 30';
 .entity rotorboxmb_t;
 .entity rotorboxbk_t;
 
-//Sparrow
-
-float autocvar_g_vehicle_r22heli_takeofftime;
-
-float autocvar_g_vehicle_r22heli_movestyle;
-
-float autocvar_g_vehicle_r22heli_bombs_refire;
-
-float autocvar_g_vehicle_r22heli_flare_range;
-
-
-// Auto cvars Fastcar
-float autocvar_g_vehicle_r22heli_mass;
-float autocvar_g_vehicle_r22heli_speed_forward;
-float autocvar_g_vehicle_r22heli_speed_strafe;
-float autocvar_g_vehicle_r22heli_speed_up;
-float autocvar_g_vehicle_r22heli_speed_down;
-float autocvar_g_vehicle_r22heli_pitchlimit;
-
-float autocvar_g_vehicle_r22heli_friction;
-
-float autocvar_g_vehicle_r22heli_turnspeed;
-float autocvar_g_vehicle_r22heli_pitchspeed;
-
-float autocvar_g_vehicle_r22heli_energy;
-float autocvar_g_vehicle_r22heli_energy_regen;
-float autocvar_g_vehicle_r22heli_energy_regen_pause;
-
-float autocvar_g_vehicle_r22heli_health;
-float autocvar_g_vehicle_r22heli_health_regen;
-float autocvar_g_vehicle_r22heli_health_regen_pause;
-
-float autocvar_g_vehicle_r22heli_shield;
-float autocvar_g_vehicle_r22heli_shield_regen;
-float autocvar_g_vehicle_r22heli_shield_regen_pause;
-
-float autocvar_g_vehicle_r22heli_cannon_speed;
-
-float autocvar_g_vehicle_r22heli_cannon_ammo;
-float autocvar_g_vehicle_r22heli_cannon_ammo_regen;
-float autocvar_g_vehicle_r22heli_cannon_ammo_regen_pause;
-
-float autocvar_g_vehicle_r22heli_cannon_lock = 0;
-
-float autocvar_g_vehicle_r22heli_cannon_turnspeed;
-float autocvar_g_vehicle_r22heli_cannon_pitchlimit_down;
-float autocvar_g_vehicle_r22heli_cannon_pitchlimit_up;
-float autocvar_g_vehicle_r22heli_cannon_turnlimit_in;
-float autocvar_g_vehicle_r22heli_cannon_turnlimit_out;
-
-float autocvar_g_vehicle_r22heli_respawntime;
-
-float autocvar_g_vehicle_r22heli_blowup_radius;
-float autocvar_g_vehicle_r22heli_blowup_coredamage;
-float autocvar_g_vehicle_r22heli_blowup_edgedamage;
-float autocvar_g_vehicle_r22heli_blowup_forceintensity;
-
-float autocvar_g_vehicle_r22heli_bouncefactor;
-float autocvar_g_vehicle_r22heli_bouncestop;
-vector autocvar_g_vehicle_r22heli_bouncepain;
-
-
-//float autocvar_g_mountedgun_m134_machinegun_ammo_cost;
-//float autocvar_g_mountedgun_m134_machinegun_ammo_max;
-//float autocvar_g_mountedgun_m134_machinegun_ammo_regen;
-//float autocvar_g_mountedgun_m134_machinegun_ammo_regen_pause;
-
-float autocvar_g_vehicle_r22heli = 1;
 var vector r22heli_force_from_tag(string tag_name, float spring_length, float max_power);
 
 float r22heli_takeoff();

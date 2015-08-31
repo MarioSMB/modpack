@@ -1,4 +1,4 @@
-bool autocvar_g_mod = true;
+AUTOCVAR_SAVE(g_mod,                     bool,   true,        "");
 
 STATIC_INIT(mod_cvars)
 {

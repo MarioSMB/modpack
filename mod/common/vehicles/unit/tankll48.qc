@@ -24,6 +24,76 @@ REGISTER_VEHICLE_SIMPLE(
 #ifdef IMPLEMENTATION
 #ifdef SVQC
 
+AUTOCVAR(g_vehicle_tankll48, bool, true, _("Enable LL48 Tank vehicle (if allowed by mods)"));
+AUTOCVAR(g_vehicle_tankll48_respawntime, float, 45, "");
+
+AUTOCVAR(g_vehicle_tankll48_blowup_radius, float, 500, "");
+AUTOCVAR(g_vehicle_tankll48_blowup_coredamage, float, 500, "");
+AUTOCVAR(g_vehicle_tankll48_blowup_edgedamage, float, 100, "");
+AUTOCVAR(g_vehicle_tankll48_blowup_forceintensity, float, 600, "");
+
+AUTOCVAR(g_vehicle_tankll48_health, int, 800, "");
+AUTOCVAR(g_vehicle_tankll48_health_regen, int, 10, "");
+AUTOCVAR(g_vehicle_tankll48_health_regen_pause, float, 5, "");
+
+AUTOCVAR(g_vehicle_tankll48_shield, int, 200, "");
+AUTOCVAR(g_vehicle_tankll48_shield_regen, int, 25, "");
+AUTOCVAR(g_vehicle_tankll48_shield_regen_pause, float, 0.35, "");
+
+AUTOCVAR(g_vehicle_tankll48_energy, int, 100, "");
+AUTOCVAR(g_vehicle_tankll48_energy_regen, int, 10, "");
+AUTOCVAR(g_vehicle_tankll48_energy_regen_pause, float, 0.25, "");
+
+AUTOCVAR(g_vehicle_tankll48_turret_turnlimit, float, 90, "");
+AUTOCVAR(g_vehicle_tankll48_turret_turnspeed, float, 120, "");
+
+AUTOCVAR(g_vehicle_tankll48_gun_pitchlimit_up, float, 30, "");
+AUTOCVAR(g_vehicle_tankll48_gun_pitchlimit_down, float, -20, "");
+AUTOCVAR(g_vehicle_tankll48_gun_pitchspeed, float, 50, "");
+
+AUTOCVAR(g_vehicle_tankll48_cannon_radius, float, 350, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_force, float, 9, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_speed, float, 6000, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_spread, float, 0, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_speedaccel, float, 6500, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_speed_up, float, 0, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_damage, float, 120, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_damage2, float, 150, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_edgedamage, float, 50, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_pitchlimit_down, float, 60, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_pitchlimit_up, float, 60, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_turnlimit_in, float, 20, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_turnlimit_out, float, 80, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_ammo_cost, int, 200, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_ammo_max, int, 200, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_ammo_regen, int, 40, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_ammo_regen_pause, float, 1, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_pitchspeed, float, 50, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_turnspeed, float, 110, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_turnlimit, float, 90, "");
+
+AUTOCVAR(g_vehicle_tankll48_bouncepain, vector, '0 0 0', "");
+
+AUTOCVAR(g_vehicle_tankll48_movement_inertia, float, 0.15, "");
+AUTOCVAR(g_vehicle_tankll48_takeofftime, float, 1.5, "");
+AUTOCVAR(g_vehicle_tankll48_speed_stop, float, 50, "");
+AUTOCVAR(g_vehicle_tankll48_speed_strafe, float, 400, "");
+AUTOCVAR(g_vehicle_tankll48_speed_walk, float, 500, "");
+AUTOCVAR(g_vehicle_tankll48_springlength, float, 150, "");
+AUTOCVAR(g_vehicle_tankll48_springup, float, 20, "");
+AUTOCVAR(g_vehicle_tankll48_springblend, float, 0.1, "");
+AUTOCVAR(g_vehicle_tankll48_mass, float, 1000, "");
+AUTOCVAR(g_vehicle_tankll48_friction, float, 2, "");
+AUTOCVAR(g_vehicle_tankll48_tiltlimit, float, 90, "");
+AUTOCVAR(g_vehicle_tankll48_turnspeed, float, 90, "");
+AUTOCVAR(g_vehicle_tankll48_turnspeed_strafe, float, 300, "");
+
+AUTOCVAR(g_vehicle_tankll48_head_pitchlimit_up, float, 30, "");
+AUTOCVAR(g_vehicle_tankll48_head_pitchlimit_down, float, -20, "");
+AUTOCVAR(g_vehicle_tankll48_head_pitchspeed, float, 50, "");
+AUTOCVAR(g_vehicle_tankll48_head_turnspeed, float, 110, "");
+AUTOCVAR(g_vehicle_tankll48_head_turnlimit, float, 90, "");
+
 void crosshair_trace2(entity pl)
 {
 	traceline_antilag(pl, pl.cursor_trace_start, pl.cursor_trace_start + normalize(pl.cursor_trace_endpos - pl.cursor_trace_start) * MAX_SHOT_DISTANCE, MOVE_WORLDONLY, pl, ANTILAG_LATENCY(pl));
@@ -34,67 +104,6 @@ const vector TANKLL48_MAX_HBF = '105 105 95';
 
 const vector TANKLL48_MIN_HBB = '-60 -60 2';
 const vector TANKLL48_MAX_HBB = '60 60 50';
-
-float autocvar_g_vehicle_tankll48;
-
-float autocvar_g_vehicle_tankll48_respawntime;
-
-float autocvar_g_vehicle_tankll48_speed_stop;
-float autocvar_g_vehicle_tankll48_speed_strafe;
-float autocvar_g_vehicle_tankll48_speed_walk;
-float autocvar_g_vehicle_tankll48_movement_inertia;
-
-float autocvar_g_vehicle_tankll48_springlength;
-float autocvar_g_vehicle_tankll48_springup;
-float autocvar_g_vehicle_tankll48_springblend;
-float autocvar_g_vehicle_tankll48_tiltlimit;
-
-float autocvar_g_vehicle_tankll48_gun_pitchlimit_down;
-float autocvar_g_vehicle_tankll48_gun_pitchlimit_up;
-float autocvar_g_vehicle_tankll48_gun_pitchspeed;
-//float autocvar_g_vehicle_tankll48_gun_turnlimit;
-//float autocvar_g_vehicle_tankll48_gun_turnspeed;
-
-float autocvar_g_vehicle_tankll48_turret_turnlimit;
-float autocvar_g_vehicle_tankll48_turret_turnspeed;
-
-//float autocvar_g_vehicle_tankll48_energy;
-//float autocvar_g_vehicle_tankll48_energy_regen;
-//float autocvar_g_vehicle_tankll48_energy_regen_pause;
-
-float autocvar_g_vehicle_tankll48_health;
-float autocvar_g_vehicle_tankll48_health_regen;
-float autocvar_g_vehicle_tankll48_health_regen_pause;
-
-float autocvar_g_vehicle_tankll48_shield;
-float autocvar_g_vehicle_tankll48_shield_regen;
-float autocvar_g_vehicle_tankll48_shield_regen_pause;
-
-float autocvar_g_vehicle_tankll48_cannon_spread;
-float autocvar_g_vehicle_tankll48_cannon_speed;
-float autocvar_g_vehicle_tankll48_cannon_speed_up;
-float autocvar_g_vehicle_tankll48_cannon_damage;
-float autocvar_g_vehicle_tankll48_cannon_damage2;
-float autocvar_g_vehicle_tankll48_cannon_speedaccel;
-float autocvar_g_vehicle_tankll48_cannon_edgedamage;
-float autocvar_g_vehicle_tankll48_cannon_force;
-float autocvar_g_vehicle_tankll48_cannon_radius;
-
-//float autocvar_g_vehicle_tankll48_cannon_refire;
-//float autocvar_g_vehicle_tankll48_cannon_solidpenetration;
-float autocvar_g_vehicle_tankll48_cannon_ammo_cost;
-float autocvar_g_vehicle_tankll48_cannon_ammo_max;
-float autocvar_g_vehicle_tankll48_cannon_ammo_regen;
-float autocvar_g_vehicle_tankll48_cannon_ammo_regen_pause;
-//float autocvar_g_vehicle_tankll48_cannon_iter;
-//float autocvar_g_vehicle_tankll48_cannon_iterforward;
-//float autocvar_g_vehicle_tankll48_cannon_fragments;
-//float autocvar_g_vehicle_tankll48_cannon_fragment_damage;
-float autocvar_g_vehicle_tankll48_cannon_pitchspeed;
-float autocvar_g_vehicle_tankll48_cannon_pitchlimit_down;
-float autocvar_g_vehicle_tankll48_cannon_pitchlimit_up;
-
-vector autocvar_g_vehicle_tankll48_bouncepain;
 
 void tankll48_Grenade_Explode2(void)
 {
@@ -886,8 +895,8 @@ float v_tankll48(float req)
 
 #endif // SVQC
 #ifdef CSQC
-float autocvar_cl_vehicle_tankll48_cross_alpha = 0.7;
-float autocvar_cl_vehicle_tankll48_cross_size = 1;
+AUTOCVAR_SAVE(cl_vehicle_tankll48_cross_alpha,                    float,   0.7,      "");
+AUTOCVAR_SAVE(cl_vehicle_tankll48_cross_size,                     float,   1,        "");
 
 float v_tankll48(float req)
 {
