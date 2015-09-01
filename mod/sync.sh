@@ -52,7 +52,7 @@ NL='
 '
 MSG="Sync with ${REV}${NL}${NL}${CHANGES}"
 
-pushd github > /dev/null
+pushd "${SYNCDIR}" > /dev/null
 git add .
 git commit -m "${MSG}"
 git push -u origin "${SYNCBRANCH}"
