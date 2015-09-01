@@ -39,9 +39,11 @@ for f in ${FILES}; do copy "../${f}" "${f}"; done
 
 prune "mod/sync.sh"
 prune "mod/.gitignore"
+prune "mod/.gitattributes"
 prune "mod/README.md"
 copy "../.gitignore" ".gitignore"
 copy "README.md" "README.md"
+copy ".gitattributes" ".gitattributes"
 
 REV=$(git describe)
 LASTREV=$(git rev-parse "$(cd "${SYNCDIR}"; git log --format=%B -n 1 HEAD | head -n 1)")
