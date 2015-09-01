@@ -310,7 +310,7 @@ MUTATOR_HOOKFUNCTION(piggyback, ClientDisconnect)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(piggyback, PlayerDies)
+void pb_PlayerDies()
 {
 	if(!self.pbhost && self.pb_canattach)
 		self.pb_canattach = 0;
@@ -324,7 +324,17 @@ MUTATOR_HOOKFUNCTION(piggyback, PlayerDies)
 	if(self.pbhost)
 		pb_Detach(self.pbhost);
 	self.pb_canattach = 0;
-	
+}
+
+MUTATOR_HOOKFUNCTION(piggyback, MonsterDies)
+{
+	pb_PlayerDies();
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(piggyback, PlayerDies)
+{
+	pb_PlayerDies();
 	return false;
 }
 
@@ -405,7 +415,7 @@ MUTATOR_HOOKFUNCTION(piggyback, ItemTouch)
 	// we use pb_RootOf here, as magnet buff can give riders items, and it wouldn't be very nice if they hogged them
 	entity p = pb_RootOf(other);
 	if(IS_PLAYER(p))
-		pb_GiveItem(p, self);
+		other = p;
 	while(p.piggybacker)
 	{
 		p = p.piggybacker;
