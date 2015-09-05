@@ -26,8 +26,10 @@ function prune {
     rm "${SYNCDIR}/${1}"
 }
 
-pushd .. > /dev/null
-FILES=$(git ls-tree --name-only -r HEAD | egrep '^(mod|qcsrc)/')
+RELROOT=../..
+
+pushd "${RELROOT}" > /dev/null
+FILES=$(git ls-tree --name-only -r HEAD | egrep '^(qcsrc)/')
 popd > /dev/null
 
 pushd "${SYNCDIR}" > /dev/null
@@ -35,13 +37,13 @@ git rm -rf . > /dev/null
 git clean -xdf
 popd > /dev/null
 
-for f in ${FILES}; do copy "../${f}" "${f}"; done
+for f in ${FILES}; do copy "${RELROOT}/${f}" "${f}"; done
 
-prune "mod/sync.sh"
-prune "mod/.gitignore"
-prune "mod/.gitattributes"
-prune "mod/README.md"
-copy "../.gitignore" ".gitignore"
+prune "qcsrc/mod/sync.sh"
+prune "qcsrc/mod/.gitignore"
+prune "qcsrc/mod/.gitattributes"
+prune "qcsrc/mod/README.md"
+copy "${RELROOT}/.gitignore" ".gitignore"
 copy "README.md" "README.md"
 copy ".gitattributes" ".gitattributes"
 
