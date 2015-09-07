@@ -173,7 +173,7 @@ void r22heli_land()
 
 	self.nextthink  = time;
 
-	CSQCMODEL_AUTOUPDATE();
+	CSQCMODEL_AUTOUPDATE(self);
 }
 
 float r22heli_takeoff()

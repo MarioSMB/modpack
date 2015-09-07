@@ -122,7 +122,7 @@ void hat_Think()
 	self.glowmod = self.owner.glowmod;
 	self.colormap = self.owner.colormap;
 
-	CSQCMODEL_AUTOUPDATE();
+	CSQCMODEL_AUTOUPDATE(self);
 }
 
 bool hats_Customize()
@@ -144,12 +144,7 @@ void hats_SpawnHat()
 	self.hatentity.nextthink = time;
 	self.hatentity.customizeentityforclient = hats_Customize;
 
-	{
-		entity oldself = self;
-		self = self.hatentity;
-		CSQCMODEL_AUTOINIT();
-		self = oldself;
-	}
+	CSQCMODEL_AUTOINIT(self.hatentity);
 }
 
 MUTATOR_HOOKFUNCTION(hats, PutClientInServer)

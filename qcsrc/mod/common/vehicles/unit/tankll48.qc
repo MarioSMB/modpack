@@ -533,7 +533,7 @@ void tankll48_think()
 
 	self.nextthink = time;
 
-	CSQCMODEL_AUTOUPDATE();
+	CSQCMODEL_AUTOUPDATE(self);
 }
 
 void tankll48_exit(float eject)
