@@ -1,2 +1,3 @@
+#include "dodging.qc"
 #include "hats.qc"
 #include "walljump.qc"
