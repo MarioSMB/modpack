@@ -208,7 +208,7 @@ void helicopter_delugegun_add (entity vehic, string mountspot) {
 		//delugegun
 		vehic.bomb11 = spawn();
 		vehic.bomb11.colormap = vehic.colormap;
-		setmodel(vehic.bomb11,"models/mountedguns/delugegun.iqm");
+		_setmodel(vehic.bomb11,"models/mountedguns/delugegun.iqm");
 		setattachment(vehic.bomb11, vehic, mountspot);
 		
 		vehic.bomb11.angles_z = -90; //So ammo hose travels into fuselage
@@ -220,7 +220,7 @@ void helicopter_delugegun_add2 (entity vehic, string mountspot) {
 		//delugegun
 		vehic.bomb12 = spawn();
 		vehic.bomb12.colormap = vehic.colormap;
-		setmodel(vehic.bomb12,"models/mountedguns/delugegun.iqm");
+		_setmodel(vehic.bomb12,"models/mountedguns/delugegun.iqm");
 		setattachment(vehic.bomb12, vehic, mountspot);
 		
 		vehic.bomb12.angles_z = 90; //So ammo hose travels into fuselage

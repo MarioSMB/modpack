@@ -617,10 +617,10 @@ void tankll48_blowup()
 	g1 = spawn();
 	g2 = spawn();
 
-	setmodel(b,  "models/vehicles/tankll48.iqm");
-	setmodel(h,  "models/vehicles/tankll48_turret.iqm");
-	setmodel(g1, "models/vehicles/tankll48_cannon.iqm");
-	setmodel(g2, "models/vehicles/tankt27_gear.iqm");
+	_setmodel(b,  "models/vehicles/tankll48.iqm");
+	_setmodel(h,  "models/vehicles/tankll48_turret.iqm");
+	_setmodel(g1, "models/vehicles/tankll48_cannon.iqm");
+	_setmodel(g2, "models/vehicles/tankt27_gear.iqm");
 
 	setorigin(b, self.origin);
 	b.frame         = 11;
@@ -745,14 +745,14 @@ float v_tankll48(float req)
 			//Turret Rotation stabilizer
 			self.gun3 = spawn(); //Will be an angle stabilizer for the rotating turret
 			self.gun3.alpha = -1;
-			setmodel(self.gun3, "models/vehicles/anglestabilizer.iqm");
+			_setmodel(self.gun3, "models/vehicles/anglestabilizer.iqm");
 			setattachment(self.gun3, self.tur_head, "tag_cannon_pivot");
 			
 			
 				self.gun1               = spawn();
 				self.gun2               = spawn();    
-				setmodel(self.gun1, "models/mountedguns/shlacgun.iqm");
-				setmodel(self.gun2, "models/vehicles/tankll48_cannon.iqm");
+				_setmodel(self.gun1, "models/mountedguns/shlacgun.iqm");
+				_setmodel(self.gun2, "models/vehicles/tankll48_cannon.iqm");
 				setattachment(self.gun1, self.tur_head, "tag_gunpivot2");
 				setattachment(self.gun2, self.tur_head, "tag_cannon_pivot");
 				self.gravity            = 2;
@@ -762,7 +762,7 @@ float v_tankll48(float req)
 			
 			spinner = spawn();
 				spinner.owner = self;
-				setmodel(spinner,"models/vehicles/tankt27_gear.iqm");
+				_setmodel(spinner,"models/vehicles/tankt27_gear.iqm");
 				setattachment(spinner, self, "tag_gear_left");
 				spinner.movetype = MOVETYPE_NOCLIP;
 				spinner.avelocity = '0 90 0';
@@ -771,7 +771,7 @@ float v_tankll48(float req)
 			
 			spinner = spawn();
 				spinner.owner = self;
-				setmodel(spinner,"models/vehicles/tankt27_wheel.iqm");
+				_setmodel(spinner,"models/vehicles/tankt27_wheel.iqm");
 				setattachment(spinner, self, "tag_wheel_left");
 				spinner.movetype = MOVETYPE_NOCLIP;
 				spinner.avelocity = '0 90 0';
@@ -780,7 +780,7 @@ float v_tankll48(float req)
 			
 			spinner = spawn();
 				spinner.owner = self;
-				setmodel(spinner,"models/vehicles/tankt27_gear.iqm");
+				_setmodel(spinner,"models/vehicles/tankt27_gear.iqm");
 				setattachment(spinner, self, "tag_gear_right");
 				spinner.movetype = MOVETYPE_NOCLIP;
 				spinner.avelocity = '0 90 0';
@@ -789,7 +789,7 @@ float v_tankll48(float req)
 			
 			spinner = spawn();
 				spinner.owner = self;
-				setmodel(spinner,"models/vehicles/tankt27_wheel.iqm");
+				_setmodel(spinner,"models/vehicles/tankt27_wheel.iqm");
 				setattachment(spinner, self, "tag_wheel_right");
 				spinner.movetype = MOVETYPE_NOCLIP;
 				spinner.avelocity = '0 90 0';

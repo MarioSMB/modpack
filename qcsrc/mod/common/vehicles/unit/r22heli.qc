@@ -1046,7 +1046,7 @@ void r22heli_spawn()
 		// for some reason, autosizing of the shield entity refuses to work for this one so set it up in advance.
 		self.vehicle_shieldent = spawn();
 		self.vehicle_shieldent.effects = EF_LOWPRECISION;
-		setmodel(self.vehicle_shieldent, "models/vhshield.md3");
+		_setmodel(self.vehicle_shieldent, "models/vhshield.md3");
 		setattachment(self.vehicle_shieldent, self, "");
 		setorigin(self.vehicle_shieldent, real_origin(self) - self.origin);
 		self.vehicle_shieldent.scale       = 512 / vlen(self.maxs - self.mins);
@@ -1061,11 +1061,11 @@ void r22heli_spawn()
 		self.gun1  = spawn();
 		self.gun2  = spawn();
 
-		setmodel(self.bomb1,"null");
-		setmodel(self.bomb2,"null");
-		setmodel(self.gun1, "null");
-		setmodel(self.gun2, "null");
-		//setmodel(self.tur_head, "models/vehicles/r22heliedits_body.iqm");
+		_setmodel(self.bomb1,"null");
+		_setmodel(self.bomb2,"null");
+		_setmodel(self.gun1, "null");
+		_setmodel(self.gun2, "null");
+		//_setmodel(self.tur_head, "models/vehicles/r22heliedits_body.iqm");
 
 		setattachment(self.bomb1, self, "bombmount_left");
 		setattachment(self.bomb2, self, "bombmount_right");
@@ -1080,7 +1080,7 @@ void r22heli_spawn()
 
 		spinner = spawn();
 		spinner.owner = self;
-		setmodel(spinner,"models/vehicles/r22edits_spinner.iqm");
+		_setmodel(spinner,"models/vehicles/r22edits_spinner.iqm");
 		setattachment(spinner, self, "engine_left");
 		spinner.movetype = MOVETYPE_NOCLIP;
 		spinner.avelocity = '0 90 0';
@@ -1089,7 +1089,7 @@ void r22heli_spawn()
 
 		spinner = spawn();
 		spinner.owner = self;
-		setmodel(spinner,"models/vehicles/r22edits_smallspinner.iqm");
+		_setmodel(spinner,"models/vehicles/r22edits_smallspinner.iqm");
 		setattachment(spinner, self, "engine_right");
 		spinner.movetype = MOVETYPE_NOCLIP;
 		spinner.avelocity = '0 -90 0';
@@ -1143,12 +1143,12 @@ void r22heli_spawn()
 		{
 			// minigun left stuff
 			self.bomb3 = spawn();
-			setmodel(self.bomb3,"models/mountedguns/m134gun.iqm");
+			_setmodel(self.bomb3,"models/mountedguns/m134gun.iqm");
 			setattachment(self.bomb3, self, "gunmount_left");
 				
 			// minigun left barrels
 			self.bomb3.gun1 = spawn();
-			setmodel(self.bomb3.gun1,"models/mountedguns/m134gun_barrels.iqm");
+			_setmodel(self.bomb3.gun1,"models/mountedguns/m134gun_barrels.iqm");
 			setattachment(self.bomb3.gun1, self.bomb3, "tag_axis");
 			self.bomb3.gun1.count = 100; //autocvar_g_mountedgun_m134_machinegun_refire;
 			
@@ -1156,12 +1156,12 @@ void r22heli_spawn()
 			
 			// minigun right stuff
 			self.bomb4 = spawn();
-			setmodel(self.bomb4,"models/mountedguns/m134gun.iqm");
+			_setmodel(self.bomb4,"models/mountedguns/m134gun.iqm");
 			setattachment(self.bomb4, self, "gunmount_right");
 			
 			// minigun right barrels
 			self.bomb4.gun1 = spawn();
-			setmodel(self.bomb4.gun1,"models/mountedguns/m134gun_barrels.iqm");
+			_setmodel(self.bomb4.gun1,"models/mountedguns/m134gun_barrels.iqm");
 			setattachment(self.bomb4.gun1, self.bomb4, "tag_axis");
 			self.bomb4.gun1.count = 100; //autocvar_g_mountedgun_m134_machinegun_refire;
 			
@@ -1172,14 +1172,14 @@ void r22heli_spawn()
 		{
 			// .50 left stuff
 			self.bomb5 = spawn();
-			setmodel(self.bomb5,"models/mountedguns/browning50gun.iqm");
+			_setmodel(self.bomb5,"models/mountedguns/browning50gun.iqm");
 			setattachment(self.bomb5, self, "forwardmount_left");
 				
 			self.bomb5.angles_z = -90; // so ammo chain travels into fuselage
 			
 			// .50 right stuff
 			self.bomb6 = spawn();
-			setmodel(self.bomb6,"models/mountedguns/browning50gun.iqm");
+			_setmodel(self.bomb6,"models/mountedguns/browning50gun.iqm");
 			setattachment(self.bomb6, self, "forwardmount_right");
 			
 			self.bomb6.angles_z = 90; // so ammo chain travels into fuselage
