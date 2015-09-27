@@ -316,7 +316,7 @@ float tankll48_frame()
 					self.delay = 3;
 					self.sound_nexttime = time + 6.0009; //soundlength("machines/generator_loop_pitchdown.ogg");
 					//dprint("tankll48_idle:", ftos(soundlength("machines/generator_loop_pitchdown.ogg")), "\n");
-					sound (self, CH_TRIGGER_SINGLE, "machines/generator_loop_pitchdown.ogg", VOL_VEHICLEENGINE, ATTN_NORM);
+					_sound (self, CH_TRIGGER_SINGLE, "machines/generator_loop_pitchdown.ogg", VOL_VEHICLEENGINE, ATTN_NORM);
 				}                
 				movelib_beak_simple(autocvar_g_vehicle_tankll48_speed_stop);
 				//tankll48.frame = 5;
@@ -400,7 +400,7 @@ float tankll48_frame()
 					{                        
 						self.delay = 1;
 						self.sound_nexttime = time + 3.991; //soundlength("machines/generator_loop_speedup_pitchdown.ogg");
-						sound (self, CH_TRIGGER_SINGLE, "machines/generator_loop_speedup_pitchdown.ogg", VOL_VEHICLEENGINE, ATTN_NORM);
+						_sound (self, CH_TRIGGER_SINGLE, "machines/generator_loop_speedup_pitchdown.ogg", VOL_VEHICLEENGINE, ATTN_NORM);
 						//dprint("tankll48_walk:", ftos(soundlength("machines/generator_loop_speedup_pitchdown.ogg")), "\n");
 					}
 		  
@@ -591,7 +591,7 @@ void tankll48_headfade()
 	{
 		if(self.alpha > 0.1)
 		{
-			sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
+			_sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 			Send_Effect(EFFECT_EXPLOSION_BIG, self.origin + '0 0 100', '0 0 0', 1);
 		}
 		remove(self);
@@ -604,7 +604,7 @@ void tankll48_blowup()
 	{
 		if(random() < 0.1)
 		{
-			sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
+			_sound (self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTEN_NORM);
 			Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 		}
 		self.nextthink = time + 0.1;

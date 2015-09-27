@@ -158,7 +158,7 @@ bool pb_GiveItem(entity to, entity item)
 
 	to.last_pickup = time;
 
-	sound (to, CH_TRIGGER, item.item_pickupsound, VOL_BASE, ATTEN_NORM);
+	_sound (to, CH_TRIGGER, item.item_pickupsound, VOL_BASE, ATTEN_NORM);
 	return true;
 }
 

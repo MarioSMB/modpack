@@ -26,7 +26,7 @@ void mg_browning50_fire(entity mg, entity player, entity gunmount)
 		W_MachineGun_MuzzleFlash();
 		mg_common_AttachToShotorg(self.muzzle_flash, '5 0 0', "tag_flash", gunmount);
 	 
-		sound (gunmount, CH_WEAPON_A, W_Sound("campingrifle_fire3_bass"), VOL_BASE, ATTN_NORM);
+		_sound (gunmount, CH_WEAPON_A, W_Sound("campingrifle_fire3_bass"), VOL_BASE, ATTN_NORM);
 
 		if(autocvar_g_casings >= 2)
 		if(autocvar_g_mountedgun_browning50_machinegun_expelbulletcasings == 1)

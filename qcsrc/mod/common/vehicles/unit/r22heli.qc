@@ -193,7 +193,7 @@ float r22heli_takeoff()
 	if(player.waterlevel != WATERLEVEL_SUBMERGED)
 	{
 		self.sound_nexttime = time + 2.3807; //soundlength("vehicles/raptor_fly.wav");
-		sound (self, CH_TRIGGER_SINGLE, "vehicles/choppa_landed.wav", VOL_VEHICLEENGINE, ATTN_NORM);
+		_sound (self, CH_TRIGGER_SINGLE, "vehicles/choppa_landed.wav", VOL_VEHICLEENGINE, ATTN_NORM);
 	}
 
 	// takeoff sequence
@@ -657,7 +657,7 @@ float r22heli_pilot_frame()
 	{        
 		self.sound_nexttime = time + 2.3807; 
 		//sound (self.tur_head, CH_TRIGGER_SINGLE, "vehicles/raptor_fly.wav", 1 - ftmp,   ATTN_NORM );
-		sound (self, CH_TRIGGER_SINGLE, "vehicles/choppa.wav", 1, ATTN_NORM);        
+		_sound (self, CH_TRIGGER_SINGLE, "vehicles/choppa.wav", 1, ATTN_NORM);        
 		self.wait = ftmp;
 	}        
 	/*
@@ -846,7 +846,7 @@ float r22heli_pilot_frame()
 		}
 		
 		if(_incomming)
-			sound(self, CH_PAIN_SINGLE, "vehicles/missile_alarm.wav", VOL_BASE, ATTN_NONE);
+			_sound(self, CH_PAIN_SINGLE, "vehicles/missile_alarm.wav", VOL_BASE, ATTN_NONE);
 		
 		self.bomb1.cnt = time + 1;
 	}
@@ -929,7 +929,7 @@ void r22heli_blowup()
 				 autocvar_g_vehicle_r22heli_blowup_forceintensity,
 				 DEATH_VH_BUMB_DEATH, world);
 
-	sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTN_NORM);
+	_sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTN_NORM);
 	Send_Effect(EFFECT_EXPLOSION_BIG, (self.origin + '0 0 100') + (randomvec() * 80), '0 0 0', 1);
 	
 	if(self.owner.deadflag == DEAD_DYING)
@@ -945,7 +945,7 @@ void r22heli_diethink()
 
 	if(random() < 0.1)
 	{
-		sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTN_NORM);
+		_sound(self, CH_SHOTS, W_Sound("rocket_impact"), VOL_BASE, ATTN_NORM);
 		Send_Effect(EFFECT_EXPLOSION_SMALL, randomvec() * 80 + (self.origin + '0 0 100'), '0 0 0', 1);
 	}
 
