@@ -16,11 +16,11 @@ Instead, copy the settings you wish to change into your main server.cfg file.
 Requirements
 ============
 
-GMQCC
- - `git://git.xonotic.org/xonotic/gmqcc.git`
- 
-Xonotic
- - http://xonotic.org/download or `git://git.xonotic.org/xonotic/xonotic.git`
+Git
+ - On Debian based systems, use `sudo apt-get install git-core`
+ - Windows: https://git-scm.com/download/win
+ - On other Linux systems, follow your standard package manager instructions to install Git
+ - Mac: Install the command line tools package (Google is your friend)
  
 Required content packs:
  - http://smb.djstrikes3.com/zzz-misc-v006-41-gc670c3c.pk3
@@ -40,10 +40,9 @@ Note: PATH is one of the following depending on your system
 |Mac|~/Library/Application Support/xonotic|
 Nothing should *ever* be added to the main installation folder of Xonotic, use these paths!
 
-1. Compile GMQCC & copy the compiled gmqcc binary from the gmqcc folder to the current folder
-2. Run this from a terminal in the current folder: `./build.sh`
-3. Copy the compiled .dat files from modpack to `$PATH/data`
-4. Download the content packs to `$PATH/data` and make sure they're available on your map download server
+1. Run this from a terminal in the modpack folder: `./update.sh`
+2. Run this from a terminal in the modpack folder: `./build.sh`
+3. Copy the compiled .dat files from modpack to `PATH/data`
+4. Download the content packs to `PATH/data` and make sure they're available on your map download server
 
-To update, run this from a terminal in the modpack folder: `./update.sh`  
-Once this finishes, repeat previous usage steps
+To update your server, repeat the above steps, but skip step 4 unless the packages available are newer than the ones you have
