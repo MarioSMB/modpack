@@ -1,4 +1,2 @@
 *.q[ch] linguist-language=C
 *.inc linguist-language=C
-qcsrc/* linguist-vendored=true
-qcsrc/mod linguist-vendored=false
