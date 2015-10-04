@@ -4,8 +4,10 @@ STATIC_INIT(mod_cvars)
 {
 	if(!cvar("cl_nodamagetext"))
 		localcmd("set cl_damagetext 1\n");
-	localcmd("set hud_panel_quickmenu_file quickmenu.txt\n");
 	localcmd("set hud_panel_minigamemenu 1\n");
+
+	registercvar("hud_panel_quickmenu_file", "quickmenu.txt");
+	localcmd("\nhud_panel_quickmenu_file quickmenu.txt\n");
 }
 
 REGISTER_MUTATOR(mutator_mod, true);
