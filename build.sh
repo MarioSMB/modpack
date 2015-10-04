@@ -7,5 +7,6 @@ if [ ! -d "$base" ]; then
     echo "RTFM (README.md)"
     exit 1
 fi
-export QCC=$PWD/gmqcc
+: ${QCC:=$PWD/gmqcc}
+export QCC
 cd ${base} && make BUILD_MOD=1
