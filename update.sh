@@ -14,13 +14,16 @@ git pull
 if [ ! -d "$base" ]; then
     git clone ${repository} -b ${defaultbranch} ${base}
 else
-    cd ${base} && git pull
+    pushd ${base} && git pull
+    popd
 fi
 
 if [ ! -d "$qccDir" ]; then
     git clone ${qccRepo} -b ${qccBranch} ${qccDir}
-    cd ${qccDir}
 else
-    cd ${qccDir} && git pull
+    pushd ${qccDir} && git pull
+    popd
 fi
-make
+
+pushd ${qccDir} && make
+popd
