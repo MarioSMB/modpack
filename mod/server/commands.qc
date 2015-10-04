@@ -32,7 +32,7 @@ void IRCSay(string msgstr)
 float mod_cvar_file;
 void RegisterModCvars_Set(string name, string desc, bool archive, string file)
 {
-	if(substring(file, 0, 10) != "../mod/")
+	if(substring(file, 0, 10) != "../../mod/")
 		return;
 
 	// NOTE: the file must be opened beforehand, or this will implode!
