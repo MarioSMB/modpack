@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 cd ${0%[\\/]*}
 set -eu
-declare repository='git@github.com:MarioSMB/modpack.git'
+declare repository="$(git config --get remote.origin.url)"
 declare defaultbranch='xonotic-data.pk3dir/master'
 declare base='xonotic'
 
