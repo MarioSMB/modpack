@@ -1,6 +1,7 @@
 #include "main.qc"
 
 #include "../common/stats.qh"
+#include "../common/effects.inc"
 #include "../common/projectiles.qh"
 #include "../common/mountedguns/all.qh"
 #include "../common/mutators/all.qh"

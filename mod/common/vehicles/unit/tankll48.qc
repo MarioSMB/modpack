@@ -730,7 +730,7 @@ float v_tankll48(float req)
 			tankt27_hitbox_die(self.hitboxft);
 			tankt27_hitbox_die(self.hitboxbk);
 			
-			CSQCModel_UnlinkEntity(); // networking the death scene would be a nightmare
+			CSQCModel_UnlinkEntity(self); // networking the death scene would be a nightmare
 
 			return true;
 		}

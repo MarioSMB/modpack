@@ -4,8 +4,8 @@ MUTATOR_HOOKFUNCTION(mod_projectiles, Ent_Projectile)
 {
 	switch(self.cnt)
 	{
-		case PROJECTILE_DELUGE: _setmodel(self, "models/waterblob.iqm");self.traileffect = _particleeffectnum("TR_DELUGEPLASMA"); return true;
-		case PROJECTILE_CANNONBALL: _setmodel(self, "models/sphere/sphere.md3");self.traileffect = particleeffectnum(EFFECT_TR_ROCKET); break;
+		case PROJECTILE_DELUGE: _setmodel(self, "models/waterblob.iqm");self.traileffect = EFFECT_TR_DELUGEPLASMA.m_id; return true;
+		case PROJECTILE_CANNONBALL: _setmodel(self, "models/sphere/sphere.md3");self.traileffect = EFFECT_TR_ROCKET.m_id; break;
 	}
 	return false;
 }

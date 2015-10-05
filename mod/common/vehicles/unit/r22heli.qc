@@ -1331,7 +1331,7 @@ bool v_r22heli(int req)
 		}
 		case VR_DEATH:
 		{
-			CSQCModel_UnlinkEntity(); // networking the death scene would be a nightmare
+			CSQCModel_UnlinkEntity(self); // networking the death scene would be a nightmare
 			r22heli_die();
 
 			return true;
