@@ -68,8 +68,8 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 			bool accepted = VerifyClientEntity(head, true, false);
 			if(accepted > 0)
 			{
-				stuffcmd(head, strcat("\n", argv(2), "\n"));
-				LOG_INFO(strcat("Command: \"", argv(2), "\" sent to ", GetCallerName(head), ".\n"));
+				stuffcmd(head, strcat("\n", argv(1), "\n"));
+				LOG_INFO(strcat("Command: \"", argv(1), "\" sent to ", GetCallerName(head), ".\n"));
 				continue;
 			}
 			else
