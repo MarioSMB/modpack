@@ -30,13 +30,13 @@ void IRCSay(string msgstr)
 }
 
 float mod_cvar_file;
-void RegisterModCvars_Set(string name, string desc, bool archive, string file)
+void RegisterModCvars_Set(string name, string def, string desc, bool archive, string file)
 {
 	if(substring(file, 0, 10) != "../../mod/")
 		return;
 
 	// NOTE: the file must be opened beforehand, or this will implode!
-    string thecvar = sprintf("\n%1$s %2$s \"%4$s\" \"%3$s\"", (archive ? "seta" : "set"), name, desc, cvar_string(name));
+    string thecvar = sprintf("\n%s %s \"%s\" \"%s\"", (archive ? "seta" : "set"), name, def, desc);
     fputs(mod_cvar_file, thecvar);
 }
 

@@ -5,8 +5,9 @@ REGISTER_MUTATOR(ra, cvar("g_riflearena") && !cvar("g_instagib") && !cvar("g_ove
 	{
 		ra_SetCvars();
 
-		WEP_ACTION(WEP_BLASTER.m_id, WR_INIT);
-		WEP_ACTION(WEP_RIFLE.m_id, WR_INIT);
+		Weapon w;
+		w = WEP_BLASTER; w.wr_init(w);
+		w = WEP_RIFLE; w.wr_init(w);
 	}
 }
 
@@ -67,12 +68,12 @@ MUTATOR_HOOKFUNCTION(ra, SetStartItems)
 {
 	start_items |= IT_UNLIMITED_AMMO;
 	start_ammo_nails = warmup_start_ammo_nails = 100;
-	warmup_start_weapons = start_weapons = WEPSET_RIFLE;
+	warmup_start_weapons = start_weapons = WEPSET(RIFLE);
 	
 	if(autocvar_g_riflearena_withlaser)
 	{
-		start_weapons |= WEPSET_BLASTER;
-		warmup_start_weapons |= WEPSET_BLASTER;
+		start_weapons |= WEPSET(BLASTER);
+		warmup_start_weapons |= WEPSET(BLASTER);
 	}
 
 	return false;

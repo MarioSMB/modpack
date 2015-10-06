@@ -49,7 +49,7 @@ MUTATOR_HOOKFUNCTION(sha, SetStartItems)
 {
 	start_items |= IT_UNLIMITED_WEAPON_AMMO;
 	//start_ammo_shells = warmup_start_ammo_shells = 100;
-	warmup_start_weapons = start_weapons = WEPSET_SHOTGUN;
+	warmup_start_weapons = start_weapons = WEPSET(SHOTGUN);
 
 	return false;
 }

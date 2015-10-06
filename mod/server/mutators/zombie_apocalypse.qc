@@ -96,13 +96,14 @@ MUTATOR_HOOKFUNCTION(za, PlayerPreThink)
 {
 	if(!self.monsterid || time < self.attack_finished_single) { return false; }
 
-	MON_ACTION(self.monsterid, MR_THINK);
+	Monster mon = get_monsterinfo(self.monsterid);
+	mon.mr_think(mon);
 
 	if(self.BUTTON_ATCK)
 	if(self.monster_attackfunc)
 	{
 		za_SetEnemy(self);
-		if(self.monster_attackfunc(MONSTER_ATTACK_MELEE))
+		if(self.monster_attackfunc(MONSTER_ATTACK_MELEE, self.enemy))
 			animdecide_setaction(self, ANIMACTION_MELEE, false);
 	}
 
@@ -110,7 +111,7 @@ MUTATOR_HOOKFUNCTION(za, PlayerPreThink)
 	if(self.monster_attackfunc)
 	{
 		za_SetEnemy(self);
-		if(self.monster_attackfunc(MONSTER_ATTACK_RANGED))
+		if(self.monster_attackfunc(MONSTER_ATTACK_RANGED, self.enemy))
 			animdecide_setaction(self, ANIMACTION_SHOOT, false);
 	}
 
