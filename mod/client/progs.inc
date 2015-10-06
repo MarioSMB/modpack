@@ -3,10 +3,8 @@
 #include "../common/stats.qh"
 #include "../common/effects.inc"
 #include "../common/projectiles.qh"
-#include "../common/mountedguns/all.qh"
 #include "../common/notifications.qh"
 #include "../common/mutators/all.qh"
-#include "../common/vehicles/all.qc"
 
 #include "clientbeams.qc"
 #include "compat.qc"
