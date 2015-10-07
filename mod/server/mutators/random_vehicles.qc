@@ -16,7 +16,7 @@ MUTATOR_HOOKFUNCTION(rvehicles, OnEntityPreSpawn)
 		self = e;
 
 		RandomSelection_Init();
-		FOREACH(vehicle_info, true, LAMBDA(
+		FOREACH(Vehicles, true, LAMBDA(
 			tracebox(self.origin, it.mins * 1.1, it.maxs * 1.1, self.origin, MOVE_NORMAL, self);
 			if(trace_fraction == 1.0 && !trace_startsolid)
 			{
