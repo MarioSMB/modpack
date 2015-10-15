@@ -1,1 +1,2 @@
 #include "misc/all.inc"
+#include "trigger/all.inc"
