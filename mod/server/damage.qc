@@ -14,7 +14,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, PlayerDamage_Calculate)
 
 	if(IS_TURRET(frag_target))
 	{
-		if(DEATH_WEAPONOFWEAPONDEATH(frag_deathtype))
+		if(DEATH_WEAPONOF(frag_deathtype) != WEP_Null)
 			frag_damage *= autocvar_g_turrets_weapon_damagerate;
 	}
 	return false;

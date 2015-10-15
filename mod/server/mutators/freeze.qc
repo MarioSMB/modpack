@@ -37,7 +37,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(freeze, PlayerDies)
 {
-	if(frag_deathtype == DEATH_HURTTRIGGER)
+	if(frag_deathtype == DEATH_HURTTRIGGER.m_id)
 		return false;
 
 	calculate_player_respawn_time(); // player doesn't actually die
@@ -72,7 +72,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerDies)
 		if(g_instagib)
 			frag_target.ammo_cells = start_ammo_cells; // we need more ammo in instagib, otherwise the player will defrost & die again
 
-		if(frag_deathtype == DEATH_TEAMCHANGE || frag_deathtype == DEATH_AUTOTEAMCHANGE)
+		if(frag_deathtype == DEATH_TEAMCHANGE.m_id || frag_deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 		{
 			// let the player die, he will be automatically frozen when he respawns
 			if(self.frozen == 1)

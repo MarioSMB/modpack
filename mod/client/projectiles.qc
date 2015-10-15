@@ -5,7 +5,9 @@ MUTATOR_HOOKFUNCTION(mod_projectiles, Ent_Projectile)
 	switch(self.cnt)
 	{
 		case PROJECTILE_DELUGE: _setmodel(self, "models/waterblob.iqm");self.traileffect = EFFECT_TR_DELUGEPLASMA.m_id; return true;
-		case PROJECTILE_CANNONBALL: _setmodel(self, "models/sphere/sphere.md3");self.traileffect = EFFECT_TR_ROCKET.m_id; break;
+		case PROJECTILE_CANNONBALL: _setmodel(self, "models/sphere/sphere.md3");self.traileffect = EFFECT_TR_ROCKET.m_id; return true;
+
+		case PROJECTILE_SPIKE: setmodel(self, MDL_PROJECTILE_SPIKE);self.traileffect = 0; return true;
 	}
 	return false;
 }
@@ -41,6 +43,7 @@ MUTATOR_HOOKFUNCTION(mod_projectiles, EditProjectile)
 MUTATOR_HOOKFUNCTION(mod_projectiles, PrecacheProjectiles)
 {
 	precache_model("models/waterblob.iqm");
+	precache_model("progs/spike.mdl");
 
 	precache_sound("machines/steam_fade.wav");
 }

@@ -1,10 +1,6 @@
 #include "main.qc"
 
-#include "../common/stats.qh"
-#include "../common/effects.inc"
-#include "../common/projectiles.qh"
-#include "../common/notifications.qh"
-#include "../common/mutators/all.qh"
+#include "../common/all.inc"
 
 #include "clientbeams.qc"
 #include "compat.qc"

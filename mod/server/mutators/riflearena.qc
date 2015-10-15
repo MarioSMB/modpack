@@ -33,7 +33,7 @@ MUTATOR_HOOKFUNCTION(ra, PlayerDamage_Calculate)
 	if(IS_PLAYER(frag_attacker))
 	if(IS_PLAYER(frag_target))
 	{
-		if (DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER.m_id))
+		if (DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER))
 		{
 			if(frag_attacker == frag_target)
 				frag_damage = 5;

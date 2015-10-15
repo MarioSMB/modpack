@@ -39,7 +39,7 @@ void pc_PlayerTouch()
 		vector vdir = normalize(other.origin - self.origin);
 
 		if(vdir_z > autocvar_g_player_crush_headheight) // adjust this to set how sharp from above players need to hit the player to crush them. 
-			Damage (self, other, other, autocvar_g_player_crush_damage, DEATH_VH_CRUSH, self.origin, '0 0 0');
+			Damage (self, other, other, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, self.origin, '0 0 0');
 	}
 	else
 	{
@@ -64,7 +64,7 @@ void pc_PlayerTouch()
 
 			animdecide_setaction(self, ANIMACTION_JUMP, true);
 
-			Damage (other, self, self, autocvar_g_player_crush_damage, DEATH_VH_CRUSH, other.origin, '0 0 0');
+			Damage (other, self, self, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, other.origin, '0 0 0');
 		}
 	}
 }

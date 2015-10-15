@@ -2,3 +2,4 @@
 
 const int PROJECTILE_DELUGE 		= 40;
 const int PROJECTILE_CANNONBALL 	= 41;
+const int PROJECTILE_SPIKE			= 42;
