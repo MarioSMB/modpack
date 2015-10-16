@@ -1,9 +1,14 @@
-#include "../common/stats.qh"
-#include "../common/effects.inc"
-#include "../common/projectiles.qh"
-#include "../common/models.inc"
-#include "../common/monsters/all.inc"
-#include "../common/mutators/all.qh"
-#include "../common/notifications.qh"
-#include "../common/sounds.inc"
-#include "../common/triggers/triggers.qh"
+#include "stats.qh"
+#include "effects.inc"
+#include "projectiles.qh"
+#include "models.inc"
+#include "monsters/all.inc"
+#include "mutators/all.qh"
+#include "notifications.qh"
+#include "sounds.inc"
+#include "triggers/triggers.qh"
+#include "weapons/all.inc"
+
+#define IMPLEMENTATION
+#include "weapons/all.inc"
+#undef IMPLEMENTATION
