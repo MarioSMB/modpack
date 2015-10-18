@@ -41,7 +41,7 @@ STATIC_INIT(rocketlauncher_cvars)
 	localcmd("\ng_balance_rocketlauncher_reload_time 2\n");
 	localcmd("\ng_balance_rocketlauncher_speed 1000\n");
 	localcmd("\ng_balance_rocketlauncher_speedaccel 1000\n");
-	localcmd("\ng_balance_rocketlauncher_speedstart 5000\n");
+	localcmd("\ng_balance_rocketlauncher_speedstart 800\n");
 	localcmd("\ng_balance_rocketlauncher_switchdelay_drop 0.2\n");
 	localcmd("\ng_balance_rocketlauncher_switchdelay_raise 0.2\n");
 	localcmd("\ng_balance_rocketlauncher_weaponreplace \"\"\n");
