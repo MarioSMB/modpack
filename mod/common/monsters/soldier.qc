@@ -35,7 +35,7 @@ int autocvar_g_monster_soldier_attack_shotgun_bullets = 4;
 float autocvar_g_monster_soldier_attack_shotgun_spread = 0.03;
 float autocvar_g_monster_soldier_attack_shotgun_solidpenetration = 12;
 float autocvar_g_monster_soldier_attack_shotgun_force = 50;
-float autocvar_g_monster_soldier_attack_shotgun_refire = 0.4;
+float autocvar_g_monster_soldier_attack_shotgun_refire = 0.5;
 float autocvar_g_monster_soldier_speed_stop = 100;
 float autocvar_g_monster_soldier_speed_run = 80;
 float autocvar_g_monster_soldier_speed_walk = 40;
@@ -46,13 +46,16 @@ void M_Soldier_Attack_Shotgun()
 	if (!IS_PLAYER(self)) w_shotdir = normalize((self.enemy.origin + '0 0 10') - self.origin);
 
 	W_SetupShot(self, true, 5, SND(SHOTGUN_FIRE), CH_WEAPON_A, autocvar_g_monster_soldier_attack_shotgun_damage * autocvar_g_monster_soldier_attack_shotgun_bullets);
-	int sc;
-	for(sc = 0;sc < autocvar_g_monster_soldier_attack_shotgun_bullets;sc = sc + 1)
-		fireBullet(w_shotdir, w_shotdir, autocvar_g_monster_soldier_attack_shotgun_spread, autocvar_g_monster_soldier_attack_shotgun_solidpenetration, autocvar_g_monster_soldier_attack_shotgun_damage, autocvar_g_monster_soldier_attack_shotgun_force, WEP_SHOTGUN.m_id, 0);
+
+	for(int sc = 0; sc < autocvar_g_monster_soldier_attack_shotgun_bullets;sc = sc + 1)
+		fireBullet(w_shotdir, self.enemy.origin, autocvar_g_monster_soldier_attack_shotgun_spread, autocvar_g_monster_soldier_attack_shotgun_solidpenetration, autocvar_g_monster_soldier_attack_shotgun_damage, autocvar_g_monster_soldier_attack_shotgun_force, WEP_SHOTGUN.m_id, 0);
 
 	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotdir, w_shotdir * 1000, 1);
 
 	self.attack_finished_single = time + autocvar_g_monster_soldier_attack_shotgun_refire + random();
+	self.anim_finished = time + 0.8;
+
+	setanim(self, self.anim_shoot, true, true, true);
 }
 
 bool M_Soldier_Attack(int attack_type, entity targ)
@@ -119,6 +122,8 @@ spawnfunc(monster_army) { Monster_Spawn(MON_SOLDIER.monsterid); }
 
 			self.monster_loot = spawnfunc_item_shells;
 			self.monster_attackfunc = M_Soldier_Attack;
+
+			self.hitplotfh = -1;
 
 			return true;
 		}
