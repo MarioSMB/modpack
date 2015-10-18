@@ -13,4 +13,6 @@
 #include "player_crush.qc"
 #include "weapons.qc"
 
+#include "quake.qc"
+
 #include "mutators/all.qh"
