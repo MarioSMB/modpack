@@ -7,7 +7,7 @@ float tmparm2, tmparm3, tmparm4, tmparm5, tmparm6, tmparm7, tmparm8, tmparm9, tm
 MUTATOR_HOOKFUNCTION(pinventory, PlayerSpawn)
 {
 	self.items = tmparm2;
-	self.health = tmparm3;
+	self.health = ((parm3 > 0) ? parm3 : 100);
 	self.armorvalue = tmparm4;
 	self.ammo_shells = tmparm5;
 	self.ammo_nails = tmparm6;
@@ -23,7 +23,7 @@ MUTATOR_HOOKFUNCTION(pinventory, PlayerSpawn)
 MUTATOR_HOOKFUNCTION(pinventory, DecodeLevelParms)
 {
 	self.items = tmparm2 = parm2;
-	self.health = tmparm3 = parm3;
+	self.health = tmparm3 = ((parm3 > 0) ? parm3 : 100);
 	self.armorvalue = tmparm4 = parm4;
 	self.ammo_shells = tmparm5 = parm5;
 	self.ammo_nails = tmparm6 = parm6;
