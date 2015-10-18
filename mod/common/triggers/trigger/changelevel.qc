@@ -13,7 +13,7 @@ spawnfunc(trigger_changelevel)
 	e.chmap = this.map;
 	e.think = changelevel_inittarget;
 	e.nextthink = time;
-	e.target = this.map;
+	e.targetname = this.map;
 
 	this.map = "";
 	this.target = e.targetname;
