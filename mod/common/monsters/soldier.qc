@@ -28,7 +28,7 @@ REGISTER_MONSTER(SOLDIER, NEW(Soldier)) {
 
 #ifdef SVQC
 
-float autocvar_g_monster_soldier_health = 30;
+float autocvar_g_monster_soldier_health = 70;
 float autocvar_g_monster_soldier_damageforcescale = 0.5;
 float autocvar_g_monster_soldier_attack_shotgun_damage = 4;
 int autocvar_g_monster_soldier_attack_shotgun_bullets = 4;
