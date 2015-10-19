@@ -38,7 +38,7 @@ MUTATOR_HOOKFUNCTION(pinventory, DecodeLevelParms)
 
 MUTATOR_HOOKFUNCTION(pinventory, SetNewParms)
 {
-	vector sweps = (WEPSET(SHOTGUN));
+	vector sweps = (WEPSET(AXE) | WEPSET(SHOTGUN));
 
 	parm2 = 0;
 	parm3 = 100;

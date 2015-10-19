@@ -147,7 +147,7 @@ void W_Axe_Melee_Think(void)
 		}
 
 		if((trace_fraction < 1) // if trace is good, apply the damage and remove self
-			&& (trace_ent.takedamage == DAMAGE_AIM)
+			&& (trace_ent.solid == SOLID_BSP || trace_ent.takedamage == DAMAGE_AIM)
 			&& (trace_ent != self.swing_alreadyhit)
 			&& (is_player || WEP_CVAR(axe, melee_nonplayerdamage)))
 		{
