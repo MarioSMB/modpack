@@ -25,6 +25,7 @@ CLASS(NailGun, Weapon)
 ENDCLASS(NailGun)
 REGISTER_WEAPON(NAILGUN, NEW(NailGun));
 
+#ifdef SVQC
 STATIC_INIT(nailgun_cvars)
 {
 	localcmd("\ng_balance_nailgun_burst 3\n");
@@ -58,6 +59,7 @@ STATIC_INIT(nailgun_cvars)
 	localcmd("\ng_balance_nailgun_weaponstartoverride -1\n");
 	localcmd("\ng_balance_nailgun_weaponthrowable 1\n");
 }
+#endif
 
 #define NAILGUN_SETTINGS(w_cvar,w_prop) NAILGUN_SETTINGS_LIST(w_cvar, w_prop, NAILGUN, nailgun)
 #define NAILGUN_SETTINGS_LIST(w_cvar,w_prop,id,sn) \

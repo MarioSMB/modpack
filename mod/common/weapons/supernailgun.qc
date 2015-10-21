@@ -25,6 +25,7 @@ CLASS(SuperNailGun, Weapon)
 ENDCLASS(SuperNailGun)
 REGISTER_WEAPON(SUPERNAILGUN, NEW(SuperNailGun));
 
+#ifdef SVQC
 STATIC_INIT(supernailgun_cvars)
 {
 	localcmd("\ng_balance_supernailgun_burst 3\n");
@@ -58,6 +59,7 @@ STATIC_INIT(supernailgun_cvars)
 	localcmd("\ng_balance_supernailgun_weaponstartoverride -1\n");
 	localcmd("\ng_balance_supernailgun_weaponthrowable 1\n");
 }
+#endif
 
 #define SUPERNAILGUN_SETTINGS(w_cvar,w_prop) SUPERNAILGUN_SETTINGS_LIST(w_cvar, w_prop, SUPERNAILGUN, supernailgun)
 #define SUPERNAILGUN_SETTINGS_LIST(w_cvar,w_prop,id,sn) \

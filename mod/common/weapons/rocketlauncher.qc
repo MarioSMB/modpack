@@ -24,6 +24,7 @@ CLASS(RocketLauncher, Weapon)
 ENDCLASS(RocketLauncher)
 REGISTER_WEAPON(ROCKETLAUNCHER, NEW(RocketLauncher));
 
+#ifdef SVQC
 STATIC_INIT(rocketlauncher_cvars)
 {
 	localcmd("\ng_balance_rocketlauncher_ammo 4\n");
@@ -49,6 +50,7 @@ STATIC_INIT(rocketlauncher_cvars)
 	localcmd("\ng_balance_rocketlauncher_weaponstartoverride -1\n");
 	localcmd("\ng_balance_rocketlauncher_weaponthrowable 1\n");
 }
+#endif
 
 #define ROCKETLAUNCHER_SETTINGS(w_cvar,w_prop) ROCKETLAUNCHER_SETTINGS_LIST(w_cvar, w_prop, ROCKETLAUNCHER, rocketlauncher)
 #define ROCKETLAUNCHER_SETTINGS_LIST(w_cvar,w_prop,id,sn) \

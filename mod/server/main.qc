@@ -11,7 +11,7 @@ STATIC_INIT(mod_cvars)
 
 STATIC_INIT_LATE(mod_cvars_override)
 {
-	localcmd("\nset hud_panel_quickmenu_file quickmenu.txt\n");
+	localcmd("\nhud_panel_quickmenu_file quickmenu.txt\n");
 }
 
 REGISTER_MUTATOR(mutator_mod, true);

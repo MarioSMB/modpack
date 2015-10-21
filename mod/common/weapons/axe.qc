@@ -24,6 +24,7 @@ CLASS(Axe, Weapon)
 ENDCLASS(Axe)
 REGISTER_WEAPON(AXE, NEW(Axe));
 
+#ifdef SVQC
 STATIC_INIT(axe_cvars)
 {
 	localcmd("\ng_balance_axe_reload_ammo 0\n");
@@ -49,6 +50,7 @@ STATIC_INIT(axe_cvars)
 	localcmd("\ng_balance_axe_weaponstartoverride -1\n");
 	localcmd("\ng_balance_axe_weaponthrowable 0\n");
 }
+#endif
 
 #define AXE_SETTINGS(w_cvar,w_prop) AXE_SETTINGS_LIST(w_cvar, w_prop, AXE, axe)
 #define AXE_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
