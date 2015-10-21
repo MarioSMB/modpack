@@ -46,7 +46,7 @@ STATIC_INIT(axe_cvars)
 	localcmd("\ng_balance_axe_switchdelay_drop 0.2\n");
 	localcmd("\ng_balance_axe_switchdelay_raise 0.2\n");
 	localcmd("\ng_balance_axe_weaponreplace \"\"\n");
-	localcmd("\ng_balance_axe_weaponstart 1\n");
+	localcmd("\ng_balance_axe_weaponstart 0\n");
 	localcmd("\ng_balance_axe_weaponstartoverride -1\n");
 	localcmd("\ng_balance_axe_weaponthrowable 0\n");
 }
