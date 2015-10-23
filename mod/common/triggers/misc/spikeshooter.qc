@@ -104,6 +104,7 @@ spawnfunc(trap_shooter)
 
 	this.think = spikeshooter_think;
 	this.nextthink = this.nextthink + this.wait + this.ltime;
+	this.hitplotfh = -1; // fail
 }
 
 #endif
