@@ -1,4 +1,4 @@
-REGISTER_MUTATOR(freeze, cvar("g_freeze") && !g_freezetag && !g_ca && !g_cts && !g_race);
+REGISTER_MUTATOR(freeze, cvar("g_freeze") && !IS_GAMETYPE(FREEZETAG) && !IS_GAMETYPE(CA) && !IS_GAMETYPE(CTS) && !IS_GAMETYPE(RACE));
 
 AUTOCVAR(g_freeze, bool, false, _("Enable freeze mutator (similar to freezetag, but for other modes)"));
 AUTOCVAR(g_freeze_noauto, bool, false, _("Don't automatically unfreeze the player"));
@@ -113,7 +113,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 		if(self.frozen == 1)
 		{
 			button_pressed = (!autocvar_g_freeze_norespawn && (self.BUTTON_JUMP || self.BUTTON_USE)); // only detect jumps
-			if(g_lms || g_ca) { self.freeze_flag = FROZEN_RESPAWNING; } // these modes require player to die
+			if(IS_GAMETYPE(LMS) || IS_GAMETYPE(CA)) { self.freeze_flag = FROZEN_RESPAWNING; } // these modes require player to die
 			if(self.freeze_flag == FROZEN_THAWING)
 			{
 				if(!button_pressed)
