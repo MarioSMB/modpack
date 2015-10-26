@@ -9,7 +9,7 @@ SOUND(AXE_MELEE_HIT, "quake_weapons/axhit2.wav");
 CLASS(Axe, Weapon)
 /* ammotype  */ //ATTRIB(Axe, ammo_field, .int, ammo_none)
 /* impulse   */ ATTRIB(Axe, impulse, int, 1)
-/* flags     */ ATTRIB(Axe, spawnflags, int, WEP_FLAG_NORMAL);
+/* flags     */ //ATTRIB(Axe, spawnflags, int, WEP_FLAG_NORMAL);
 /* rating    */ ATTRIB(Axe, bot_pickupbasevalue, float, BOT_PICKUP_RATING_LOW);
 /* color     */ ATTRIB(Axe, wpcolor, vector, '0.7 0.7 0.7');
 /* modelname */ ATTRIB(Axe, mdl, string, "axe");

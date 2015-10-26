@@ -1,1 +1,1 @@
-SOUND(SPIKE_FIRE, W_Sound("spike2"));
+SOUND(SPIKE_FIRE, "quake_weapons/spike2.wav");

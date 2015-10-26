@@ -9,7 +9,7 @@ SOUND(ROCKETLAUNCHER_FIRE, "quake_weapons/sgun1.wav");
 CLASS(RocketLauncher, Weapon)
 /* ammotype  */ ATTRIB(RocketLauncher, ammo_field, .int, ammo_rockets)
 /* impulse   */ ATTRIB(RocketLauncher, impulse, int, 7)
-/* flags     */ ATTRIB(RocketLauncher, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
+/* flags     */ ATTRIB(RocketLauncher, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(RocketLauncher, bot_pickupbasevalue, float, BOT_PICKUP_RATING_HIGH);
 /* color     */ ATTRIB(RocketLauncher, wpcolor, vector, '1 1 0');
 /* modelname */ ATTRIB(RocketLauncher, mdl, string, "rocketlauncher");
