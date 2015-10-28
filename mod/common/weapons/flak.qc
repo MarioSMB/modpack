@@ -4,8 +4,17 @@ MODEL(FLAK_VIEW,                  W_Model("h_flak.iqm"));
 MODEL(FLAK_WORLD,                 W_Model("v_flak.md3"));
 MODEL(FLAK_ITEM,                  W_Model("g_flak.md3"));
 
-MODEL(PROJECTILE_FLAK,                  "models/rocket.md3");
-MODEL(PROJECTILE_FLAK_BOMB,             "models/tracer.mdl");
+MODEL(PROJECTILE_FLAK,                  "models/tracer.mdl");
+MODEL(PROJECTILE_FLAK_BOMB,             "models/rocket.md3");
+
+EFFECT(0, FLAK_BOUNCE, "flak_bounce")
+
+SOUND(FLAK_CASINGS1, W_Sound("casings1"));
+SOUND(FLAK_CASINGS2, W_Sound("casings2"));
+SOUND(FLAK_CASINGS3, W_Sound("casings3"));
+string SND_FLAK_CASINGS_RANDOM() {
+    return Sounds[SND_FLAK_CASINGS1.m_id + floor(prandom() * 3)].sound_str();
+}
 
 SOUND(FLAK_FIRE, W_Sound("flak_fire"));
 SOUND(FLAK_FIRE2, W_Sound("flak_fire2"));
@@ -190,9 +199,10 @@ void W_Flak_Projectile_Touch(void)
 		if(other.iscreature)
 			self.enemy = other;
 	}
-	else if(other.solid == SOLID_BSP)
-	{   
-		spamsound(self, CH_SHOTS, W_Sound(strcat("casings", ftos(floor(random() * 3) + 1))), VOL_BASE * 0.7, ATTN_NORM);
+	else if(other.solid == SOLID_BSP || !other)
+	{
+		if(other)
+			spamsound(self, CH_SHOTS, SND_FLAK_CASINGS_RANDOM(), VOL_BASE * 0.7, ATTN_NORM);
 		//pointparticles(particleeffectnum("flak_bounce"), self.origin, self.velocity, 1);
 		self.owner = world;
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
@@ -465,6 +475,15 @@ void W_Flak_Attack3(Weapon thiswep)
 
 #endif
 #ifdef CSQC
+.float flak_last_bounce;
+void Flak_Touch(void)
+{
+	if(time >= self.flak_last_bounce)
+	{
+		self.flak_last_bounce = time + 0.1; // spam
+    	pointparticles(particleeffectnum(EFFECT_FLAK_BOUNCE), self.move_origin, self.move_velocity, 1);
+	}
+}
 
 REGISTER_MUTATOR(projectile_flak, true);
 
@@ -492,6 +511,8 @@ MUTATOR_HOOKFUNCTION(projectile_flak, EditProjectile)
 		case PROJECTILE_FLAK:
 			self.mins = '-2 -2 -2';
 			self.maxs = '2 2 2';
+			self.move_movetype = MOVETYPE_BOUNCE;
+			self.move_touch = Flak_Touch;
 			break;
 	}
 

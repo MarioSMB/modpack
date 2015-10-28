@@ -84,6 +84,12 @@ MUTATOR_HOOKFUNCTION(egoass, PlayerPreThink)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(egoass, PlayerSpawn)
+{
+	self.jeff_switchweapon = w_getbestweapon(self);
+	return false;
+}
+
 MUTATOR_HOOKFUNCTION(egoass, PrepareExplosionByDamage)
 {
 	if(IS_CLIENT(frag_attacker) && !autocvar_g_projectiles_keep_owner)
@@ -231,6 +237,7 @@ MUTATOR_HOOKFUNCTION(egoass, PlayerDies)
 		//jeff_Announcer_Send(targ, false, ANNCE_JEFF_MUTDESTRUCT);
 	}
 
+	if(IS_PLAYER(attacker))
 	if(time - attacker.lastkilled_time <= autocvar_jeff_announce_multikill_time && time - attacker.lastkilled_time > 0.2) // don't do this for real multikills
 	if(attacker.lastkilled_flying == autocvar_jeff_announce_wickedsick_count)
 		jeff_Announcer_Send(attacker, true, ANNCE_JEFF_NUKEMHOLY);
