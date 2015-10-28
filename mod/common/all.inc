@@ -1,6 +1,8 @@
+#include "announcer.qc"
 #include "stats.qh"
 #include "effects.inc"
 #include "projectiles.qh"
+#include "killme/all.qh"
 #include "models.inc"
 #include "monsters/all.inc"
 #include "mutators/all.qh"

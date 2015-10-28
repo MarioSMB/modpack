@@ -52,7 +52,7 @@ void M_Soldier_Attack_Shotgun()
 
 	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotdir, w_shotdir * 1000, 1);
 
-	self.attack_finished_single = time + autocvar_g_monster_soldier_attack_shotgun_refire + random();
+	self.attack_finished_single[0] = time + autocvar_g_monster_soldier_attack_shotgun_refire + random();
 	self.anim_finished = time + 0.8;
 
 	setanim(self, self.anim_shoot, true, true, true);

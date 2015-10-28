@@ -38,15 +38,15 @@ REGISTER_WEAPON(VORE_SPIKE, NEW(VoreSpike));
 #ifdef SVQC
 
 void M_Vore_Attack_Spike(vector dir);
-METHOD(VoreSpike, wr_think, void(VoreSpike thiswep, entity actor, bool fire1, bool fire2)) {
-    //if (fire1)
-    if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, false, 0.2)) {
+METHOD(VoreSpike, wr_think, void(VoreSpike thiswep, entity actor, int slot, int fire)) {
+    //if (fire & 1)
+    if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, slot, false, 0.2)) {
         if (!actor.target_range) actor.target_range = autocvar_g_monsters_target_range;
         actor.enemy = Monster_FindTarget(actor);
         W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
     	if (!IS_PLAYER(actor)) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
         M_Vore_Attack_Spike(w_shotdir);
-        weapon_thinkf(actor, WFRAME_FIRE1, 0, w_ready);
+        weapon_thinkf(actor, slot, WFRAME_FIRE1, 0, w_ready);
     }
 }
 
@@ -191,10 +191,10 @@ float M_Vore_Attack(float attack_type, entity targ)
 			if(!self.vore_spike)
 			{
 				setanim(self, self.anim_shoot, true, true, true);
-				self.attack_finished_single = time + (autocvar_g_monster_vore_attack_spike_delay);
+				self.attack_finished_single[0] = time + (autocvar_g_monster_vore_attack_spike_delay);
 				self.anim_finished = time + 1;
 				Weapon wep = WEP_VORE_SPIKE;
-				wep.wr_think(wep, self, true, false);
+				wep.wr_think(wep, self, 0, 1);
 				return true;
 			}
 

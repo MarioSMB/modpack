@@ -94,7 +94,7 @@ MUTATOR_HOOKFUNCTION(za, PlayerPhysics)
 
 MUTATOR_HOOKFUNCTION(za, PlayerPreThink)
 {
-	if(!self.monsterid || time < self.attack_finished_single) { return false; }
+	if(!self.monsterid || time < self.attack_finished_single[0]) { return false; }
 
 	Monster mon = get_monsterinfo(self.monsterid);
 	mon.mr_think(mon);

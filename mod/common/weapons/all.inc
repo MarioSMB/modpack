@@ -2,3 +2,4 @@
 #include "nailgun.qc"
 #include "rocketlauncher.qc"
 #include "supernailgun.qc"
+#include "flak.qc"

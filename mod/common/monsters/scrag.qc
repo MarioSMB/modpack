@@ -45,12 +45,12 @@ float autocvar_g_monster_scrag_attack_spike_speed = 600;
 void M_Scrag_Attack_Spike_Explode();
 void M_Scrag_Attack_Spike_Touch();
 
-METHOD(ScragAttack, wr_think, void(ScragAttack thiswep, entity actor, bool fire1, bool fire2)) {
-    if (fire1)
-    if (time > actor.attack_finished_single || weapon_prepareattack(thiswep, actor, false, 1.2)) {
+METHOD(ScragAttack, wr_think, void(ScragAttack thiswep, entity actor, int slot, int fire)) {
+    if (fire & 1)
+    if (time > actor.attack_finished_single[slot] || weapon_prepareattack(thiswep, actor, slot, false, 1.2)) {
         if (IS_PLAYER(actor)) W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
 		if (IS_MONSTER(actor)) {
-			actor.attack_finished_single = time + 1.2;
+			actor.attack_finished_single[slot] = time + 1.2;
 			actor.anim_finished = time + 1.2;
 			monster_makevectors(actor.enemy);
 		}
@@ -70,7 +70,7 @@ METHOD(ScragAttack, wr_think, void(ScragAttack thiswep, entity actor, bool fire1
 		missile.touch = M_Scrag_Attack_Spike_Touch;
 		CSQCProjectile(missile, true, PROJECTILE_CRYLINK, true);
 
-        weapon_thinkf(actor, WFRAME_FIRE1, 0, w_ready);
+        weapon_thinkf(actor, slot, WFRAME_FIRE1, 0, w_ready);
     }
 }
 

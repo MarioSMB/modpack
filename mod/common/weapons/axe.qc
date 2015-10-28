@@ -199,10 +199,10 @@ void W_Axe_Melee_Think(void)
 	}
 }
 
-void W_Axe_Attack(Weapon thiswep, entity actor, bool fire1, bool fire2)
+void W_Axe_Attack(Weapon thiswep, entity actor, int slot, int fire)
 {
 	sound(actor, CH_WEAPON_A, SND_AXE_MELEE, VOL_BASEVOICE, ATTEN_NORM);
-	weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR(axe, animtime), w_ready);
+	weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR(axe, animtime), w_ready);
 
 	entity meleetemp;
 	meleetemp = spawn();
@@ -219,14 +219,14 @@ void W_Axe_Attack(Weapon thiswep, entity actor, bool fire1, bool fire2)
 			else
 				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false);
 		}
-		METHOD(Axe, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(Axe, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 		{
 			if(actor.clip_load >= 0) // we are not currently reloading
-			if(fire1)
-			if(weapon_prepareattack(thiswep, actor, true, WEP_CVAR(axe, refire)))
+			if(fire & 1)
+			if(weapon_prepareattack(thiswep, actor, slot, true, WEP_CVAR(axe, refire)))
 			{
 				// attempt forcing playback of the anim by switching to another anim (that we never play) here...
-				weapon_thinkf(actor, WFRAME_FIRE1, 0, W_Axe_Attack);
+				weapon_thinkf(actor, slot, WFRAME_FIRE1, 0, W_Axe_Attack);
 			}
 		}
 		METHOD(Axe, wr_init, void(entity thiswep))

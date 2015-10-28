@@ -127,7 +127,8 @@ void W_RocketLauncher_Explode(void)
 		if(!(self.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			self.realowner.cnt = WEP_ROCKETLAUNCHER.m_id;
-			ATTACK_FINISHED(self.realowner) = time;
+			int slot = 0;
+			ATTACK_FINISHED(self.realowner, slot) = time;
 			self.realowner.switchweapon = w_getbestweapon(self.realowner);
 		}
 	}
@@ -373,18 +374,18 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 			}
 		}
 		#endif
-		METHOD(RocketLauncher, wr_think, void(entity thiswep, entity actor, bool fire1, bool fire2))
+		METHOD(RocketLauncher, wr_think, void(entity thiswep, entity actor, int slot, int fire))
 		{
 			if(WEP_CVAR(rocketlauncher, reload_ammo) && actor.clip_load < WEP_CVAR(rocketlauncher, ammo)) { // forced reload
 				Weapon w = get_weaponinfo(actor.weapon);
 				w.wr_reload(w);
 			} else {
-				if(fire1)
+				if(fire & 1)
 				{
-					if(weapon_prepareattack(thiswep, actor, false, WEP_CVAR(rocketlauncher, refire)))
+					if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR(rocketlauncher, refire)))
 					{
 						W_RocketLauncher_Attack(thiswep);
-						weapon_thinkf(actor, WFRAME_FIRE1, WEP_CVAR(rocketlauncher, animtime), w_ready);
+						weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR(rocketlauncher, animtime), w_ready);
 					}
 				}
 			}
@@ -395,39 +396,9 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 		}
 		METHOD(RocketLauncher, wr_checkammo1, bool(entity thiswep))
 		{
-			#if 0
-			// don't switch while guiding a missile
-			if(ATTACK_FINISHED(self) <= time || self.weapon != WEP_ROCKETLAUNCHER.m_id)
-			{
-				ammo_amount = false;
-				if(WEP_CVAR(rocketlauncher, reload_ammo))
-				{
-					if(self.WEP_AMMO(ROCKETLAUNCHER) < WEP_CVAR(rocketlauncher, ammo) && self.(weapon_load[WEP_ROCKETLAUNCHER.m_id]) < WEP_CVAR(rocketlauncher, ammo))
-						ammo_amount = true;
-				}
-				else if(self.WEP_AMMO(ROCKETLAUNCHER) < WEP_CVAR(rocketlauncher, ammo))
-					ammo_amount = true;
-				return !ammo_amount;
-			}
-			#endif
-			#if 0
-			if(self.rl_release == 0)
-			{
-				LOG_INFOF("W_RocketLauncher(WR_CHECKAMMO1): %d, %.2f, %d: TRUE\n", self.rl_release, self.WEP_AMMO(ROCKETLAUNCHER), WEP_CVAR(rocketlauncher, ammo));
-				return true;
-			}
-			else
-			{
-				ammo_amount = self.WEP_AMMO(ROCKETLAUNCHER) >= WEP_CVAR(rocketlauncher, ammo);
-				ammo_amount += self.(weapon_load[WEP_ROCKETLAUNCHER.m_id]) >= WEP_CVAR(rocketlauncher, ammo);
-				LOG_INFOF("W_RocketLauncher(WR_CHECKAMMO1): %d, %.2f, %d: %s\n", self.rl_release, self.WEP_AMMO(ROCKETLAUNCHER), WEP_CVAR(rocketlauncher, ammo), (ammo_amount ? "TRUE" : "FALSE"));
-				return ammo_amount;
-			}
-			#else
 			float ammo_amount = self.WEP_AMMO(ROCKETLAUNCHER) >= WEP_CVAR(rocketlauncher, ammo);
 			ammo_amount += self.(weapon_load[WEP_ROCKETLAUNCHER.m_id]) >= WEP_CVAR(rocketlauncher, ammo);
 			return ammo_amount;
-			#endif
 		}
 		METHOD(RocketLauncher, wr_checkammo2, bool(entity thiswep))
 		{
