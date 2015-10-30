@@ -3,6 +3,12 @@
 
 #ifndef MENUQC
 MODEL(MON_AFRIT, "models/monsters/afrit.mdl");
+
+MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_AFRIT,          2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 was fireballed by an Afrit%s%s"), "")
+
+MSG_MULTI_NOTIF(1, DEATH_SELF_MON_AFRIT,                NO_MSG,        INFO_DEATH_SELF_MON_AFRIT,                CENTER_DEATH_SELF_MONSTER)
+
+REGISTER_DEATHTYPE(MONSTER_AFRIT,          DEATH_SELF_MON_AFRIT,          DEATH_MURDER_MONSTER,           "monster")
 #endif
 
 CLASS(Afrit, Monster)
@@ -87,7 +93,7 @@ void M_Afrit_Attack_Fireball()
 	missile.owner = missile.realowner = self;
 	missile.solid = SOLID_TRIGGER;
 	missile.movetype = MOVETYPE_FLYMISSILE;
-	missile.projectiledeathtype = DEATH_MONSTER_AFRIT;
+	missile.projectiledeathtype = DEATH_MONSTER_AFRIT.m_id;
 	setsize(missile, '-6 -6 -6', '6 6 6');
 	setorigin(missile, self.origin + '0 0 13' + v_forward * 10);
 	missile.flags = FL_PROJECTILE;
