@@ -431,7 +431,7 @@ void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, int slot, int fire)
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 2;
-			pointparticles(particleeffectnum(EFFECT_MACHINEGUN_IMPACT), org2, w_backoff * 1000, 1);
+			__pointparticles(particleeffectnum(EFFECT_MACHINEGUN_IMPACT), org2, w_backoff * 1000, 1);
 			if(!w_issilent)
 				if(w_random < 0.05)
 					sound(self, CH_SHOTS, SND_RIC1, VOL_BASE, ATTN_NORM);

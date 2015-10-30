@@ -431,7 +431,7 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 		{
 			vector org2;
 			org2 = w_org + w_backoff * 12;
-			pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), org2, '0 0 0', 1);
+			__pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), org2, '0 0 0', 1);
 			if(!w_issilent)
 				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTN_NORM);
 		}

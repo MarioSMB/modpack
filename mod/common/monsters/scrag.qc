@@ -96,7 +96,7 @@ void M_Scrag_Attack_Spike_Explode()
 {
 	SELFPARAM();
 	//Send_Effect(EFFECT_FIREBALL_EXPLODE, self.origin, '0 0 0', 1);
-	pointparticles(_particleeffectnum("TE_WIZSPIKE"), self.origin, '0 0 0', 1);
+	__pointparticles(_particleeffectnum("TE_WIZSPIKE"), self.origin, '0 0 0', 1);
 
 	entity owner = self.realowner;
 
