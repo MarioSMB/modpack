@@ -5,3 +5,4 @@
 #include "soldier.qc"
 #include "spawn.qc"
 #include "afrit.qc"
+#include "ogre.qc"
