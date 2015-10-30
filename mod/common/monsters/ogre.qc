@@ -325,7 +325,7 @@ bool M_Ogre_Attack(int attack_type, entity targ)
 	return false;
 }
 
-spawnfunc(monster_army) { Monster_Spawn(MON_OGRE.monsterid); }
+spawnfunc(monster_ogre) { Monster_Spawn(MON_OGRE.monsterid); }
 
 #endif // SVQC
 
