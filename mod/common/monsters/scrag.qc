@@ -6,7 +6,7 @@ MODEL(MON_SCRAG, "models/monsters/scrag.mdl");
 #endif
 
 CLASS(Scrag, Monster)
-    ATTRIB(Scrag, spawnflags, int, MONSTER_TYPE_FLY | MON_FLAG_RANGED);
+    ATTRIB(Scrag, spawnflags, int, MONSTER_SIZE_QUAKE | MONSTER_TYPE_FLY | MON_FLAG_RANGED);
     ATTRIB(Scrag, mins, vector, '-16 -16 -24');
     ATTRIB(Scrag, maxs, vector, '16 16 40');
 #ifndef MENUQC

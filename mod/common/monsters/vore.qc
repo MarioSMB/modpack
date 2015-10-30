@@ -7,7 +7,7 @@ MODEL(MON_VORE, "models/monsters/shalrath.mdl");
 #endif
 
 CLASS(Vore, Monster)
-    ATTRIB(Vore, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_RANGED);
+    ATTRIB(Vore, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_MELEE | MON_FLAG_RANGED);
     ATTRIB(Vore, mins, vector, '-32 -32 -24');
     ATTRIB(Vore, maxs, vector, '32 32 64');
 #ifndef MENUQC

@@ -4,10 +4,4 @@
 #include "scrag.qc"
 #include "soldier.qc"
 #include "spawn.qc"
-
-#define IMPLEMENTATION
-	#include "vore.qc"
-	#include "scrag.qc"
-	#include "soldier.qc"
-	#include "spawn.qc"
-#undef IMPLEMENTATION
+#include "afrit.qc"

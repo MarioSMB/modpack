@@ -6,7 +6,7 @@ MODEL(MON_TARBABY, "models/monsters/tarbaby.mdl");
 #endif
 
 CLASS(Tarbaby, Monster)
-    ATTRIB(Tarbaby, spawnflags, int, MON_FLAG_MELEE);
+    ATTRIB(Tarbaby, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_MELEE);
     ATTRIB(Tarbaby, mins, vector, '-16 -16 -24');
     ATTRIB(Tarbaby, maxs, vector, '16 16 40');
 #ifndef MENUQC

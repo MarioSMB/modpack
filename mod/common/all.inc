@@ -12,5 +12,6 @@
 #include "weapons/all.inc"
 
 #define IMPLEMENTATION
+#include "monsters/all.inc"
 #include "weapons/all.inc"
 #undef IMPLEMENTATION
