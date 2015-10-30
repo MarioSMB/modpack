@@ -83,7 +83,7 @@ ROCKETLAUNCHER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_qrocketlauncher) { weapon_defaultspawnfunc(WEP_ROCKETLAUNCHER.m_id); }
+spawnfunc(weapon_qrocketlauncher) { weapon_defaultspawnfunc(this, WEP_ROCKETLAUNCHER); }
 
 void W_RocketLauncher_Unregister(void)
 {SELFPARAM();

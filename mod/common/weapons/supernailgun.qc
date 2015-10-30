@@ -101,7 +101,7 @@ SUPERNAILGUN_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #ifdef IMPLEMENTATION
 #ifdef SVQC
 
-spawnfunc(weapon_qsupernailgun) { weapon_defaultspawnfunc(WEP_SUPERNAILGUN.m_id); }
+spawnfunc(weapon_qsupernailgun) { weapon_defaultspawnfunc(this, WEP_SUPERNAILGUN); }
 
 void W_SuperNailGun_MuzzleFlash_Think(void)
 {SELFPARAM();

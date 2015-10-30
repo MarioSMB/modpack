@@ -151,7 +151,7 @@ FLAK_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_flak) { weapon_defaultspawnfunc(WEP_FLAK.m_id); }
+spawnfunc(weapon_flak) { weapon_defaultspawnfunc(this, WEP_FLAK); }
 
 void W_Flak_Projectile_Touch(void)
 {

@@ -114,7 +114,7 @@ bool M_Afrit_Attack(int attack_type, entity targ)
 		case MONSTER_ATTACK_MELEE:
 		case MONSTER_ATTACK_RANGED:
 		{
-			self.attack_finished_single = time + 2;
+			self.attack_finished_single[0] = time + 2;
 			setanim(self, self.anim_shoot, false, true, true);
 			self.anim_finished = self.animstate_endtime;
 

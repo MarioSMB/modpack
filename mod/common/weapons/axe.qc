@@ -83,7 +83,7 @@ AXE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_axe) { weapon_defaultspawnfunc(WEP_AXE.m_id); }
+spawnfunc(weapon_axe) { weapon_defaultspawnfunc(this, WEP_AXE); }
 
 .float swing_prev;
 .entity swing_alreadyhit;
