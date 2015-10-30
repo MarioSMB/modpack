@@ -47,7 +47,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 		//if(autocvar_cl_particles_newvortexbeam && (getstati(STAT_ALLOW_OLDVORTEXBEAM) || isdemo()))
 			//pointparticles(particleeffectnum("nex_impact_new"), trace_endpos, '0 0 0', 1);
 		//else
-			pointparticles(particleeffectnum(EFFECT_VORTEX_IMPACT), trace_endpos, '0 0 0', 1);
+			__pointparticles(particleeffectnum(EFFECT_VORTEX_IMPACT), trace_endpos, '0 0 0', 1);
 
 		last_beam = time + vaporizer_delay;
 	}
