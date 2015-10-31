@@ -188,7 +188,7 @@ void M_Ogre_Attack_Grenade()
 
 	CSQCProjectile(gren, true, PROJECTILE_GRENADE_BOUNCING, true);
 
-	other = gren; MUTATOR_CALLHOOK(EditProjectile, self, gren);
+	MUTATOR_CALLHOOK(EditProjectile, self, gren);
 
 	self.attack_finished_single[0] = time + 0.7;
 	self.state = 0;
