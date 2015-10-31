@@ -6,3 +6,4 @@
 #include "spawn.qc"
 #include "afrit.qc"
 #include "ogre.qc"
+#include "enforcer.qc"

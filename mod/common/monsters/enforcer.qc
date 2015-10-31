@@ -3,6 +3,11 @@
 
 #ifndef MENUQC
 MODEL(MON_ENFORCER, "models/monsters/enforcer.mdl");
+
+
+MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_ENFORCER_PLASMA,            	2, 1, "s1 s2loc spree_lost", "s1",      	"notify_death",         				_("^BG%s^K1 was chopped into bits by an Ogre%s%s"), "")
+MSG_MULTI_NOTIF(1, DEATH_SELF_MON_ENFORCER_PLASMA,                  NO_MSG,        								INFO_DEATH_SELF_MON_ENFORCER_PLASMA,     CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_ENFORCER_PLASMA,            				DEATH_SELF_MON_ENFORCER_PLASMA,            	DEATH_MURDER_MONSTER,           		"monster")
 #endif
 
 CLASS(Enforcer, Monster)
@@ -64,7 +69,7 @@ void M_Enforcer_Attack_Plasma_Explode()
 	if(self.movetype == MOVETYPE_NONE)
 		self.velocity = self.oldvelocity;
 
-	sound (self, CH_WEAPON_A, SND(TAG_IMPACT), VOL_BASE, ATTEN_NORM);
+	sound (self, CH_WEAPON_A, SND_TAG_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_ELECTRO_IMPACT, self.origin, '0 0 0', 1);
 	RadiusDamage (self, self.realowner, autocvar_g_monster_enforcer_attack_plasma_damage, autocvar_g_monster_enforcer_attack_plasma_edgedamage, 
 				  autocvar_g_monster_enforcer_attack_plasma_radius, world, world, autocvar_g_monster_enforcer_attack_plasma_force, self.projectiledeathtype, other);
@@ -80,18 +85,16 @@ void M_Enforcer_Attack_Plasma_Touch()
 
 void M_Enforcer_Attack_Plasma()
 {
-	entity gren;
-
-	sound (self, CH_WEAPON_A, SND(LASERGUN_FIRE), VOL_BASE, ATTEN_NORM);
+	sound (self, CH_WEAPON_A, SND_LASERGUN_FIRE, VOL_BASE, ATTEN_NORM);
 
 	vector dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
 	vector org = self.origin + v_forward * 14 + '0 0 5' + v_right * -14;
 
 	makevectors(self.angles);
 
-	pointparticles(particleeffectnum("electro_muzzleflash"), org, dir * 1000, 1);
+	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, org, dir * 1000, 1);
 
-	gren = spawn ();
+	entity gren = spawn ();
 	gren.owner = gren.realowner = self;
 	gren.classname = "grenade";
 	gren.bot_dodge = true;
