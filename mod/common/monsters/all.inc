@@ -7,3 +7,4 @@
 #include "afrit.qc"
 #include "ogre.qc"
 #include "enforcer.qc"
+#include "rotfish.qc"
