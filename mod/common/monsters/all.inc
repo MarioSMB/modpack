@@ -8,3 +8,4 @@
 #include "ogre.qc"
 #include "enforcer.qc"
 #include "rotfish.qc"
+#include "demon.qc"
