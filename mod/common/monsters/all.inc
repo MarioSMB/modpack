@@ -9,3 +9,4 @@
 #include "enforcer.qc"
 #include "rotfish.qc"
 #include "demon.qc"
+#include "rottweiler.qc"
