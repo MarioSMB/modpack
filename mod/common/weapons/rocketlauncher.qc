@@ -20,7 +20,7 @@ CLASS(RocketLauncher, Weapon)
 /* crosshair */ ATTRIB(RocketLauncher, w_crosshair_size, float, 0.7);
 /* wepimg    */ ATTRIB(RocketLauncher, model2, string, "weaponrocketlauncher");
 /* refname   */ ATTRIB(RocketLauncher, netname, string, "rocketlauncher");
-/* wepname   */ ATTRIB(RocketLauncher, message, string, _("Rocket Launcher"));
+/* wepname   */ ATTRIB(RocketLauncher, m_name, string, _("Rocket Launcher"));
 ENDCLASS(RocketLauncher)
 REGISTER_WEAPON(ROCKETLAUNCHER, NEW(RocketLauncher));
 

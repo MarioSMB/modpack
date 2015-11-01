@@ -34,7 +34,7 @@ CLASS(Flak, Weapon)
 /* crosshair */ ATTRIB(Flak, w_crosshair_size, float, 0.8);
 /* wepimg    */ ATTRIB(Flak, model2, string, "weaponflak");
 /* refname   */ ATTRIB(Flak, netname, string, "flak");
-/* wepname   */ ATTRIB(Flak, message, string, _("Flak Cannon"));
+/* wepname   */ ATTRIB(Flak, m_name, string, _("Flak Cannon"));
 ENDCLASS(Flak)
 REGISTER_WEAPON(FLAK, NEW(Flak));
 

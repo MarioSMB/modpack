@@ -21,7 +21,7 @@ CLASS(NailGun, Weapon)
 /* crosshair */ ATTRIB(NailGun, w_crosshair_size, float, 0.6);
 /* wepimg    */ ATTRIB(NailGun, model2, string, "weaponuzi");
 /* refname   */ ATTRIB(NailGun, netname, string, "nailgun");
-/* wepname   */ ATTRIB(NailGun, message, string, _("NailGun"));
+/* wepname   */ ATTRIB(NailGun, m_name, string, _("NailGun"));
 ENDCLASS(NailGun)
 REGISTER_WEAPON(NAILGUN, NEW(NailGun));
 
