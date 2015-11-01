@@ -420,16 +420,16 @@ MUTATOR_HOOKFUNCTION(egoass, FireBullet_Hit)
 
 MUTATOR_HOOKFUNCTION(egoass, BuffTouch)
 {
-	if(self.buffs & BUFF_INVISIBLE.m_id)
+	if(self.buffs & BUFF_INVISIBLE.m_itemid)
 		jeff_Announcer_Send(other, true, ANNCE_JEFF_CAMOUFLAGED);
 
-	if(self.buffs & BUFF_VAMPIRE.m_id)
+	if(self.buffs & BUFF_VAMPIRE.m_itemid)
 		jeff_Announcer_Send(other, true, ANNCE_JEFF_VAMPIRE);
 
-	if(self.buffs & BUFF_BASH.m_id)
+	if(self.buffs & BUFF_BASH.m_itemid)
 		jeff_Announcer_Send(other, true, ANNCE_JEFF_BOOSTER);
 
-	if(self.buffs & BUFF_SPEED.m_id)
+	if(self.buffs & BUFF_SPEED.m_itemid)
 		jeff_Announcer_Send(other, true, ANNCE_JEFF_SPEED);
 
 	return false;
