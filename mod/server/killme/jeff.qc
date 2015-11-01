@@ -373,8 +373,8 @@ MUTATOR_HOOKFUNCTION(egoass, MatchEnd)
 
 MUTATOR_HOOKFUNCTION(egoass, VehicleEnter)
 {
-	if(vh_vehicle.team)
-	if(DIFF_TEAM(vh_player, vh_vehicle))
+	if(vh_vehicle.tur_head.team)
+	if(DIFF_TEAM(vh_player, vh_vehicle.tur_head))
 		jeff_Announcer_Send(vh_player, true, ANNCE_JEFF_HIJACKED);
 	return false;
 }
