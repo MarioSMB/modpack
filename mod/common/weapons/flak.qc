@@ -12,8 +12,8 @@ EFFECT(0, FLAK_BOUNCE, "flak_bounce")
 SOUND(FLAK_CASINGS1, W_Sound("casings1"));
 SOUND(FLAK_CASINGS2, W_Sound("casings2"));
 SOUND(FLAK_CASINGS3, W_Sound("casings3"));
-string SND_FLAK_CASINGS_RANDOM() {
-    return Sounds[SND_FLAK_CASINGS1.m_id + floor(prandom() * 3)].sound_str();
+Sound SND_FLAK_CASINGS_RANDOM() {
+    return Sounds_from(SND_FLAK_CASINGS1.m_id + floor(prandom() * 3));
 }
 
 SOUND(FLAK_FIRE, W_Sound("flak_fire"));
@@ -202,7 +202,7 @@ void W_Flak_Projectile_Touch(void)
 	else if(other.solid == SOLID_BSP || !other)
 	{
 		if(other)
-			spamsound(self, CH_SHOTS, SND_FLAK_CASINGS_RANDOM(), VOL_BASE * 0.7, ATTN_NORM);
+			spamsound(self, CH_SHOTS, SND(FLAK_CASINGS_RANDOM()), VOL_BASE * 0.7, ATTN_NORM);
 		//pointparticles(particleeffectnum("flak_bounce"), self.origin, self.velocity, 1);
 		self.owner = world;
 		self.projectiledeathtype |= HITTYPE_BOUNCE;
