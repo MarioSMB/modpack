@@ -204,6 +204,7 @@ spawnfunc(monster_enforcer) { Monster_Spawn(MON_ENFORCER.monsterid); }
 
 			self.monster_loot = spawnfunc_item_cells;
 			self.weapon = WEP_CRYLINK.m_id;
+			self.monster_attackfunc = M_Enforcer_Attack;
 
 			self.hitplotfh = -1;
 

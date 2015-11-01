@@ -127,6 +127,7 @@ spawnfunc(monster_dog) { Monster_Spawn(MON_ROTTWEILER.monsterid); }
 			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_rottweiler_damageforcescale); }
 
 			self.monster_loot = spawnfunc_item_health_small;
+			self.monster_attackfunc = M_Rottweiler_Attack;
 
 			return true;
 		}

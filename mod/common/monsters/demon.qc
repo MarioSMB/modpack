@@ -153,6 +153,7 @@ spawnfunc(monster_demon1) { Monster_Spawn(MON_DEMON.monsterid); }
 			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_demon_damageforcescale); }
 
 			self.monster_loot = spawnfunc_item_health_large;
+			self.monster_attackfunc = M_Demon_Attack;
 
 			return true;
 		}
