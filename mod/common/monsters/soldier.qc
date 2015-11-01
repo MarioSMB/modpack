@@ -2,7 +2,7 @@
 #define SOLDIER_H
 
 #ifndef MENUQC
-MODEL(MON_SOLDIER, "models/monsters/soldier.mdl");
+MODEL(MON_SOLDIER, M_Model("soldier.mdl"));
 #endif
 
 CLASS(Soldier, Monster)

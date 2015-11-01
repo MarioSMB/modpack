@@ -3,7 +3,7 @@
 #define ROTFISH_H
 
 #ifndef MENUQC
-MODEL(MON_ROTFISH, "models/monsters/fish.mdl");
+MODEL(MON_ROTFISH, M_Model("fish.mdl"));
 
 MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_ROTFISH_MELEE,            	2, 1, "s1 s2loc spree_lost", "s1",      	"notify_death",         			_("^BG%s^K1 was chopped into bits by an Ogre%s%s"), "")
 MSG_MULTI_NOTIF(1, DEATH_SELF_MON_ROTFISH_MELEE,                  	NO_MSG,        								INFO_DEATH_SELF_MON_ROTFISH_MELEE,  CENTER_DEATH_SELF_MONSTER)

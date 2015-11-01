@@ -2,7 +2,7 @@
 #define TARBABY_H
 
 #ifndef MENUQC
-MODEL(MON_TARBABY, "models/monsters/tarbaby.mdl");
+MODEL(MON_TARBABY, M_Model("tarbaby.mdl"));
 #endif
 
 CLASS(Tarbaby, Monster)

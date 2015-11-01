@@ -2,7 +2,7 @@
 #define ENFORCER_H
 
 #ifndef MENUQC
-MODEL(MON_ENFORCER, "models/monsters/enforcer.mdl");
+MODEL(MON_ENFORCER, M_Model("enforcer.mdl"));
 
 
 MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_ENFORCER_PLASMA,            	2, 1, "s1 s2loc spree_lost", "s1",      	"notify_death",         				_("^BG%s^K1 was blasted to death by an Enforcer%s%s"), "")

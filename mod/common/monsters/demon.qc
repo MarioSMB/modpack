@@ -2,7 +2,7 @@
 #define DEMON_H
 
 #ifndef MENUQC
-MODEL(MON_DEMON, "models/monsters/demon.mdl");
+MODEL(MON_DEMON, M_Model("demon.mdl"));
 
 MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_DEMON_JUMP,             	2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         			_("^BG%s^K1 was pounced on by a Demon%s%s"), "")
 MSG_MULTI_NOTIF(1, DEATH_SELF_MON_DEMON_JUMP,                 	NO_MSG,        							INFO_DEATH_SELF_MON_DEMON_JUMP,   	CENTER_DEATH_SELF_MONSTER)

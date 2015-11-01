@@ -2,7 +2,7 @@
 #define AFRIT_H
 
 #ifndef MENUQC
-MODEL(MON_AFRIT, "models/monsters/afrit.mdl");
+MODEL(MON_AFRIT, M_Model("afrit.mdl"));
 
 MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_AFRIT,          2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 was fireballed by an Afrit%s%s"), "")
 

@@ -3,7 +3,7 @@
 #define VORE_H
 
 #ifndef MENUQC
-MODEL(MON_VORE, "models/monsters/shalrath.mdl");
+MODEL(MON_VORE, M_Model("shalrath.mdl"));
 #endif
 
 CLASS(Vore, Monster)

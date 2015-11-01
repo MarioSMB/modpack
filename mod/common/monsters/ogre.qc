@@ -2,7 +2,7 @@
 #define OGRE_H
 
 #ifndef MENUQC
-MODEL(MON_OGRE, "models/monsters/ogre.mdl");
+MODEL(MON_OGRE, M_Model("ogre.mdl"));
 
 MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_OGRE_MACHINEGUN,          2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         			_("^BG%s^K1 was nailed by an Ogre%s%s"), "")
 MSG_MULTI_NOTIF(1, DEATH_SELF_MON_OGRE_MACHINEGUN,              NO_MSG,        							INFO_DEATH_SELF_MON_OGRE_MACHINEGUN,CENTER_DEATH_SELF_MONSTER)

@@ -2,7 +2,7 @@
 #define SCRAG_H
 
 #ifndef MENUQC
-MODEL(MON_SCRAG, "models/monsters/scrag.mdl");
+MODEL(MON_SCRAG, M_Model("scrag.mdl"));
 #endif
 
 CLASS(Scrag, Monster)
