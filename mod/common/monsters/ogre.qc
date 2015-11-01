@@ -396,6 +396,7 @@ spawnfunc(monster_ogre) { Monster_Spawn(MON_OGRE.monsterid); }
 			setanim(self, self.anim_draw, false, true, true);
 			self.spawn_time = self.animstate_endtime;
 			self.spawnshieldtime = self.spawn_time;
+			self.monster_attackfunc = M_Ogre_Attack;
 
 			self.hitplotfh = -1;
 
