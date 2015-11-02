@@ -396,7 +396,7 @@ MUTATOR_HOOKFUNCTION(egoass, ItemTouch)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(egoass, FireBullet_Hit)
+MUTATOR_HOOKFUNCTION(egoass, FireBullet_Hit, CBC_ORDER_FIRST)
 {
 	if(self.weapon != WEP_RIFLE.m_id && self.weapon != WEP_VAPORIZER.m_id && self.weapon != WEP_VORTEX.m_id)
 		return false;
