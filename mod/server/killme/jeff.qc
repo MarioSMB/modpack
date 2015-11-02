@@ -75,7 +75,7 @@ void jeff_Announcer_Send(entity player, bool toall, int announce)
 
 MUTATOR_HOOKFUNCTION(egoass, MonsterSpawn)
 {
-	if(self.monsterid == MON_WYVERN.m_id)
+	if(self.monsterid == MON_WYVERN.monsterid)
 		return true;
 	return false;
 }
