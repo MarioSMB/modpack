@@ -45,12 +45,12 @@ float autocvar_g_monster_scrag_attack_spike_speed = 600;
 void M_Scrag_Attack_Spike_Explode();
 void M_Scrag_Attack_Spike_Touch();
 
-METHOD(ScragAttack, wr_think, void(ScragAttack thiswep, entity actor, int slot, int fire)) {
+METHOD(ScragAttack, wr_think, void(ScragAttack thiswep, entity actor, .entity weaponentity, int fire)) {
     if (fire & 1)
-    if (time > actor.attack_finished_single[slot] || weapon_prepareattack(thiswep, actor, slot, false, 1.2)) {
+    if (time > actor.attack_finished_single[0] || weapon_prepareattack(thiswep, actor, weaponentity, false, 1.2)) {
         if (IS_PLAYER(actor)) W_SetupShot_Dir(actor, v_forward, false, 0, W_Sound("electro_fire"), CH_WEAPON_B, 0);
 		if (IS_MONSTER(actor)) {
-			actor.attack_finished_single[slot] = time + 1.2;
+			actor.attack_finished_single[0] = time + 1.2;
 			actor.anim_finished = time + 1.2;
 			monster_makevectors(actor.enemy);
 		}
@@ -70,7 +70,7 @@ METHOD(ScragAttack, wr_think, void(ScragAttack thiswep, entity actor, int slot, 
 		missile.touch = M_Scrag_Attack_Spike_Touch;
 		CSQCProjectile(missile, true, PROJECTILE_CRYLINK, true);
 
-        weapon_thinkf(actor, slot, WFRAME_FIRE1, 0, w_ready);
+        weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
     }
 }
 
@@ -117,6 +117,7 @@ void M_Scrag_Attack_Spike_Touch()
 bool M_Scrag_Attack(int attack_type, entity targ)
 {
 	SELFPARAM();
+	.entity weaponentity = weaponentities[0];
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
@@ -124,7 +125,7 @@ bool M_Scrag_Attack(int attack_type, entity targ)
 		{
 			w_shotdir = normalize((self.enemy.origin + '0 0 10') - self.origin);
 			Weapon wep = WEP_SCRAG_ATTACK;
-			wep.wr_think(wep, self, true, false);
+			wep.wr_think(wep, self, weaponentity, 1);
 
 			if(random() <= 0.1 || self.monster_moveto)
 			{

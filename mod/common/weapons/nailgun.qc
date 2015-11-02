@@ -183,11 +183,11 @@ void W_NailGun_Attack(Weapon thiswep, int deathtype)
 }
 
 // weapon frames
-void W_NailGun_Attack_Frame(Weapon thiswep, entity actor, int slot, int fire)
+void W_NailGun_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
 	if(actor.weapon != actor.switchweapon) // abort immediately if switching
 	{
-		w_ready(thiswep, actor, slot, fire);
+		w_ready(thiswep, actor, weaponentity, fire);
 		return;
 	}
 	if(actor.BUTTON_ATCK)
@@ -197,25 +197,25 @@ void W_NailGun_Attack_Frame(Weapon thiswep, entity actor, int slot, int fire)
 		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
-			w_ready(thiswep, actor, slot, fire);
+			w_ready(thiswep, actor, weaponentity, fire);
 			return;
 		}
 		actor.misc_bulletcounter = actor.misc_bulletcounter + 1;
 		W_NailGun_Attack(WEP_NAILGUN, WEP_NAILGUN.m_id);
-		weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR(nailgun, sustained_refire), W_NailGun_Attack_Frame);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(nailgun, sustained_refire), W_NailGun_Attack_Frame);
 	}
 	else
-		weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR(nailgun, sustained_refire), w_ready);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(nailgun, sustained_refire), w_ready);
 }
 
 
-void W_NailGun_Attack_Auto(Weapon thiswep, entity actor, int slot, int fire)
+void W_NailGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
 	float nailgun_spread;
 
 	if(!fire & 1)
 	{
-		w_ready(thiswep, actor, slot, fire);
+		w_ready(thiswep, actor, weaponentity, fire);
 		return;
 	}
 
@@ -224,7 +224,7 @@ void W_NailGun_Attack_Auto(Weapon thiswep, entity actor, int slot, int fire)
 	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
-		w_ready(thiswep, actor, slot, fire);
+		w_ready(thiswep, actor, weaponentity, fire);
 		return;
 	}
 
@@ -260,11 +260,11 @@ void W_NailGun_Attack_Auto(Weapon thiswep, entity actor, int slot, int fire)
 	if(autocvar_g_casings >= 2) // casing code
 		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, actor);
 
-	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(nailgun, first_refire) * W_WeaponRateFactor();
-	weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR(nailgun, sustained_refire), W_NailGun_Attack_Auto);
+	ATTACK_FINISHED(actor, 0) = time + WEP_CVAR(nailgun, first_refire) * W_WeaponRateFactor();
+	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(nailgun, sustained_refire), W_NailGun_Attack_Auto);
 }
 
-void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, int slot, int fire)
+void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
 	W_SetupShot(actor, true, 0, SND(NAILGUN_FIRE), CH_WEAPON_A, WEP_CVAR(nailgun, sustained_damage));
 	if(!autocvar_g_norecoil)
@@ -296,12 +296,12 @@ void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, int slot, int fire)
 	actor.misc_bulletcounter = actor.misc_bulletcounter + 1;
 	if(actor.misc_bulletcounter == 0)
 	{
-		ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(nailgun, burst_refire2) * W_WeaponRateFactor();
-		weapon_thinkf(actor, slot, WFRAME_FIRE2, WEP_CVAR(nailgun, burst_animtime), w_ready);
+		ATTACK_FINISHED(actor, 0) = time + WEP_CVAR(nailgun, burst_refire2) * W_WeaponRateFactor();
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(nailgun, burst_animtime), w_ready);
 	}
 	else
 	{
-		weapon_thinkf(actor, slot, WFRAME_FIRE2, WEP_CVAR(nailgun, burst_refire), W_NailGun_Attack_Burst);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(nailgun, burst_refire), W_NailGun_Attack_Burst);
 	}
 
 }
@@ -313,7 +313,7 @@ void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, int slot, int fire)
 			else
 				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false);
 		}
-		METHOD(NailGun, wr_think, void(entity thiswep, entity actor, int slot, int fire))
+		METHOD(NailGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(WEP_CVAR(nailgun, reload_ammo) && actor.clip_load < min(max(WEP_CVAR(nailgun, sustained_ammo), WEP_CVAR(nailgun, first_ammo)), WEP_CVAR(nailgun, burst_ammo))) { // forced reload
 				Weapon w = get_weaponinfo(actor.weapon);
@@ -322,47 +322,47 @@ void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, int slot, int fire)
 			if(WEP_CVAR(nailgun, mode) == 1)
 			{
 				if(fire & 1)
-				if(weapon_prepareattack(thiswep, actor, slot, false, 0))
+				if(weapon_prepareattack(thiswep, actor, weaponentity, false, 0))
 				{
 					actor.misc_bulletcounter = 0;
-					W_NailGun_Attack_Auto(thiswep, actor, slot, fire);
+					W_NailGun_Attack_Auto(thiswep, actor, weaponentity, fire);
 				}
 
 				if(fire & 2)
-				if(weapon_prepareattack(thiswep, actor, slot, true, 0))
+				if(weapon_prepareattack(thiswep, actor, weaponentity, true, 0))
 				{
 					Weapon w = get_weaponinfo(actor.weapon);
 					if(!w.wr_checkammo2(w))
 					if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 					{
 						W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
-						w_ready(thiswep, actor, slot, fire);
+						w_ready(thiswep, actor, weaponentity, fire);
 						return;
 					}
 
 					W_DecreaseAmmo(thiswep, actor, WEP_CVAR(nailgun, burst_ammo));
 
 					actor.misc_bulletcounter = WEP_CVAR(nailgun, burst) * -1;
-					W_NailGun_Attack_Burst(thiswep, actor, slot, fire);
+					W_NailGun_Attack_Burst(thiswep, actor, weaponentity, fire);
 				}
 			}
 			else
 			{
 
 				if(fire & 1)
-				if(weapon_prepareattack(thiswep, actor, slot, false, 0))
+				if(weapon_prepareattack(thiswep, actor, weaponentity, false, 0))
 				{
 					actor.misc_bulletcounter = 1;
 					W_NailGun_Attack(WEP_NAILGUN, WEP_NAILGUN.m_id); // sets attack_finished
-					weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR(nailgun, sustained_refire), W_NailGun_Attack_Frame);
+					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(nailgun, sustained_refire), W_NailGun_Attack_Frame);
 				}
 
 				if(fire & 2 && WEP_CVAR(nailgun, first))
-				if(weapon_prepareattack(thiswep, actor, slot, true, 0))
+				if(weapon_prepareattack(thiswep, actor, weaponentity, true, 0))
 				{
 					actor.misc_bulletcounter = 1;
 					W_NailGun_Attack(WEP_NAILGUN, WEP_NAILGUN.m_id | HITTYPE_SECONDARY); // sets attack_finished
-					weapon_thinkf(actor, slot, WFRAME_FIRE2, WEP_CVAR(nailgun, first_refire), w_ready);
+					weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(nailgun, first_refire), w_ready);
 				}
 			}
 		}

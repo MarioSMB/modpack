@@ -419,23 +419,23 @@ void W_Flak_Attack3(Weapon thiswep)
 			else
 				self.BUTTON_ATCK = bot_aim(WEP_CVAR_PRI(flak, speed), WEP_CVAR_PRI(flak, speed_up), WEP_CVAR_PRI(flak, lifetime), true);
 		}
-		METHOD(Flak, wr_think, void(entity thiswep, entity actor, int slot, int fire))
+		METHOD(Flak, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(fire & 1)
-			if(weapon_prepareattack(thiswep, actor, slot, false, WEP_CVAR_PRI(flak, refire)))
+			if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(flak, refire)))
 			{
 				W_Flak_Attack1(thiswep, true);
-				weapon_thinkf(actor, slot, WFRAME_FIRE1, WEP_CVAR_PRI(flak, animtime), w_ready);
+				weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(flak, animtime), w_ready);
 			}
 
 			if(fire & 2)
-			if(weapon_prepareattack(thiswep, actor, slot, true, WEP_CVAR_SEC(flak, refire)))
+			if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(flak, refire)))
 			{
 				if(WEP_CVAR(flak, bomb))
 					W_Flak_Attack3(thiswep);
 				else
 					W_Flak_Attack1(thiswep, false);
-				weapon_thinkf(actor, slot, WFRAME_FIRE2, WEP_CVAR_SEC(flak, animtime), w_ready);
+				weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(flak, animtime), w_ready);
 			}
 		}
 		METHOD(Flak, wr_init, void(entity thiswep))
