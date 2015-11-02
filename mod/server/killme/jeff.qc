@@ -73,6 +73,14 @@ void jeff_Announcer_Send(entity player, bool toall, int announce)
 	Send_Notification(((toall) ? NOTIF_ALL : NOTIF_ONE), ((toall) ? world : player), MSG_ANNCE, announce);
 }
 
+MUTATOR_HOOKFUNCTION(egoass, OnEntityPreSpawn)
+{
+	if(self.classname == "monster_wyvern")
+		self.classname = "monster_scrag";
+
+	return false;
+}
+
 MUTATOR_HOOKFUNCTION(egoass, PlayerPreThink)
 {
 	if(self.weapon != self.switchweapon)
