@@ -3,8 +3,8 @@ MODEL(AXE_VIEW,                     W_Model("h_axe.iqm"));
 MODEL(AXE_WORLD,                    W_Model("v_axe.md3"));
 MODEL(AXE_ITEM,                     W_Model("g_axe.md3"));
 
-SOUND(AXE_MELEE, "quake_weapons/ax1.wav");
-SOUND(AXE_MELEE_HIT, "quake_weapons/axhit2.wav");
+SOUND(AXE_MELEE, "quake_weapons/ax1");
+SOUND(AXE_MELEE_HIT, "quake_weapons/axhit2");
 
 CLASS(Axe, Weapon)
 /* ammotype  */ //ATTRIB(Axe, ammo_field, .int, ammo_none)

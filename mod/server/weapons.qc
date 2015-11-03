@@ -19,10 +19,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, WeaponSound)
 	{
 		string thesnd = sprintf("weapons_%s/%s", autocvar_sv_weapons_sounddir, weapon_sound);
 
-		if(fexists(strcat("sound/", thesnd, ".ogg"))
-		|| fexists(strcat("sound/", thesnd, ".wav"))
-		|| fexists(strcat("sound/", thesnd, ".flac"))
-		) { weapon_sound_output = strcat(thesnd, ".wav"); }
+		if (_Sound_fixpath(thesnd)) { weapon_sound_output = thesnd }
 	}
 
 	return false;

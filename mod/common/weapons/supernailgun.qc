@@ -1,6 +1,6 @@
 #ifndef IMPLEMENTATION
 #ifndef MENUQC
-SOUND(SUPERNAILGUN_FIRE, "quake_weapons/rocket1i.wav");
+SOUND(SUPERNAILGUN_FIRE, "quake_weapons/rocket1i");
 
 MODEL(SUPERNAILGUN_VIEW,                  W_Model("h_supernailgun.iqm"));
 MODEL(SUPERNAILGUN_WORLD,                 W_Model("v_supernailgun.md3"));

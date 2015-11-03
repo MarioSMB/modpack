@@ -1,5 +1,7 @@
 REGISTER_MUTATOR(mod_projectiles, true);
 
+SOUND(CANNONBALL_FLY, W_Sound("fireball_fly2"));
+
 MUTATOR_HOOKFUNCTION(mod_projectiles, Ent_Projectile)
 {
 	switch(self.cnt)
@@ -31,7 +33,7 @@ MUTATOR_HOOKFUNCTION(mod_projectiles, EditProjectile)
 		{
 			self.colormod = '1 1 1';
 			self.scale = 0.4;
-			loopsound(self, CH_SHOTS_SINGLE, W_Sound("fireball_fly2"), VOL_BASE, ATTEN_NORM);
+			loopsound(self, CH_SHOTS_SINGLE, SND(CANNONBALL_FLY), VOL_BASE, ATTEN_NORM);
 			self.mins = '-3 -3 -3';
 			self.maxs = '3 3 3';
 			break;

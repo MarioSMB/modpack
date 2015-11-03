@@ -4,7 +4,7 @@ MODEL(ROCKETLAUNCHER_VIEW,                  W_Model("h_rocketlauncher.iqm"));
 MODEL(ROCKETLAUNCHER_WORLD,                 W_Model("v_rocketlauncher.md3"));
 MODEL(ROCKETLAUNCHER_ITEM,                  W_Model("g_rocketlauncher.md3"));
 
-SOUND(ROCKETLAUNCHER_FIRE, "quake_weapons/sgun1.wav");
+SOUND(ROCKETLAUNCHER_FIRE, "quake_weapons/sgun1");
 
 CLASS(RocketLauncher, Weapon)
 /* ammotype  */ ATTRIB(RocketLauncher, ammo_field, .int, ammo_rockets)
