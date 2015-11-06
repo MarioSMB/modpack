@@ -8,7 +8,7 @@ AUTOCVAR(sv_announcer, string, "", _("Force client announcer to this"));
 
 MUTATOR_HOOKFUNCTION(announcer, Ent_Init, CBC_ORDER_FIRST)
 {
-	WriteString(MSG_ENTITY, autocvar_sv_announcer);
+	WriteString(MSG_ONE, autocvar_sv_announcer);
 	return false;
 }
 
