@@ -14,7 +14,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 	entity localme = playerslots[player_localnum];
 
 	if(activeweapon == WEP_VAPORIZER.m_id)
-	if(time >= getstatf(STAT_GAMESTARTTIME))
+	if(time >= STAT(GAMESTARTTIME))
 	if(time >= getstatf(STAT_ROUNDSTARTTIME))
 	if(!autocvar_chase_active)
 	if(!getstatf(STAT_FROZEN))
