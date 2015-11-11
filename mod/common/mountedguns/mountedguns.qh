@@ -1,0 +1,19 @@
+#ifndef MOUNTEDGUNS_H
+#define MOUNTEDGUNS_H
+
+#ifdef SVQC
+
+void mg_common_SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, float casingtype, entity casingowner, string tagname);
+
+void mg_common_AttachToShotorg(entity flash, vector offset, string tagname, entity attach);
+
+
+// from weapon code
+void W_MachineGun_MuzzleFlash(void);
+
+#endif
+
+// include the vehicles after the main functions have been defined
+#include "unit/all.qh"
+
+#endif

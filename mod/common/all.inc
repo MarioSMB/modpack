@@ -5,13 +5,16 @@
 #include "killme/all.qh"
 #include "models.inc"
 #include "monsters/all.inc"
+#include "mountedguns/all.qh"
 #include "mutators/all.qh"
 #include "notifications.qh"
 #include "sounds.inc"
 #include "triggers/triggers.qh"
+#include "vehicles/all.inc"
 #include "weapons/all.inc"
 
 #define IMPLEMENTATION
 #include "monsters/all.inc"
+#include "vehicles/all.inc"
 #include "weapons/all.inc"
 #undef IMPLEMENTATION

@@ -2,12 +2,17 @@ REGISTER_MUTATOR(mod_projectiles, true);
 
 SOUND(CANNONBALL_FLY, W_Sound("fireball_fly2"));
 
+SOUND(STEAM_FADE, "machines/steam_fade");
+
+MODEL(PROJECTILE_DELUGE, "models/waterblob.iqm");
+MODEL(PROJECTILE_CANNONBALL, "models/sphere/sphere.md3");
+
 MUTATOR_HOOKFUNCTION(mod_projectiles, Ent_Projectile)
 {
 	switch(self.cnt)
 	{
-		case PROJECTILE_DELUGE: _setmodel(self, "models/waterblob.iqm");self.traileffect = EFFECT_TR_DELUGEPLASMA.m_id; return true;
-		case PROJECTILE_CANNONBALL: _setmodel(self, "models/sphere/sphere.md3");self.traileffect = EFFECT_TR_ROCKET.m_id; return true;
+		case PROJECTILE_DELUGE: setmodel(self, MDL_PROJECTILE_DELUGE);self.traileffect = EFFECT_TR_NEXUIZPLASMA.m_id; return true;
+		case PROJECTILE_CANNONBALL: setmodel(self, MDL_PROJECTILE_CANNONBALL);self.traileffect = EFFECT_TR_ROCKET.m_id; return true;
 
 		case PROJECTILE_SPIKE: setmodel(self, MDL_PROJECTILE_SPIKE);self.traileffect = 0; return true;
 	}
@@ -20,7 +25,7 @@ MUTATOR_HOOKFUNCTION(mod_projectiles, EditProjectile)
 	{
 		case PROJECTILE_DELUGE:
 		{
-			loopsound(self, CH_SHOTS_SINGLE, "machines/steam_fade.wav", VOL_BASE, ATTN_NORM);
+			loopsound(self, CH_SHOTS_SINGLE, SND(STEAM_FADE), VOL_BASE, ATTN_NORM);
 			self.mins = '0 0 -4';
 			self.maxs = '0 0 -4';
 			self.move_movetype = MOVETYPE_BOUNCE;

@@ -1,0 +1,2 @@
+const string vCROSS_TANK  = "gfx/vehicles/crosshair_tank.tga";
+const string vCROSS_TANK2 = "gfx/vehicles/crosshair_tank2.tga";
