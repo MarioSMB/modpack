@@ -681,7 +681,7 @@ void tankll48_blowup()
 	self.vehicle_hudmodel.viewmodelforclient = self;
 }
 
-spawnfunc(vehicle_r22heli)
+spawnfunc(vehicle_tankll48)
 {
 	if(!autocvar_g_vehicle_tankll48) { remove(self); return; }
 	if(!vehicle_initialize(VEH_TANKLL48, false)) { remove(self); return; }
