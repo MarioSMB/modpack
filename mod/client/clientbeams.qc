@@ -4,6 +4,77 @@ AUTOCVAR_SAVE(cl_particles_newvortexbeam,          bool,  false,  _("Draw a fanc
 
 float last_beam;
 
+//bool autocvar_cl_vaporizerbeam_particle = true;
+//float autocvar_cl_vaporizerbeam_lifetime = 0.8;
+
+string Draw_ClientBeam_trace_callback_tex;
+float Draw_ClientBeam_trace_callback_rnd;
+vector Draw_ClientBeam_trace_callback_rgb;
+float Draw_ClientBeam_trace_callback_a;
+void Draw_ClientBeam_trace_callback(vector start, vector hit, vector end)
+{
+	float i;
+	vector vorg;
+	vorg = WarpZone_TransformOrigin(WarpZone_trace_transform, view_origin);
+	for(i = 0; i < Draw_ClientBeam_trace_callback_a; ++i)
+		Draw_CylindricLine(hit, start, 8, Draw_ClientBeam_trace_callback_tex, 0.25, Draw_ClientBeam_trace_callback_rnd, Draw_ClientBeam_trace_callback_rgb, min(1, Draw_ClientBeam_trace_callback_a - i), DRAWFLAG_NORMAL, vorg);
+	Draw_ClientBeam_trace_callback_rnd += 0.25 * vlen(hit - start) / 8;
+}
+
+.vector vorg1, vorg2;
+.float spawn_time;
+void ClientBeam_Draw(entity this)
+{
+	//draw either the old v2.3 beam or the new beam
+	particles_alphamin = particles_alphamax = particles_fade = 1;
+
+	string tex = "particles/lgbeam";
+	if(this.cnt)
+		tex = "particles/gauntletbeam";
+	vector rgb = getcsqcplayercolor(this.sv_entnum);
+	rgb *= (1 + 0.7);
+
+	float fail = (self.nextthink - time);
+
+	Draw_ClientBeam_trace_callback_tex = tex;
+	Draw_ClientBeam_trace_callback_rnd = 0;
+	Draw_ClientBeam_trace_callback_rgb = rgb;
+	Draw_ClientBeam_trace_callback_a = bound(0, fail, 1);
+	WarpZone_TraceBox_ThroughZone(this.vorg1, '0 0 0', '0 0 0', this.vorg2, MOVE_NOTHING, world, world, Draw_ClientBeam_trace_callback);
+	Draw_ClientBeam_trace_callback_tex = string_null;
+
+	/*if(!MUTATOR_CALLHOOK(Particles_ClientBeam, this.vorg1, this.vorg2))
+	if(autocvar_cl_particles_oldvortexbeam && (getstati(STAT_ALLOW_OLDVORTEXBEAM) || isdemo()))
+		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum(EFFECT_VORTEX_BEAM_OLD), this.vorg1, this.vorg2, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
+	else
+		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum(EFFECT_VORTEX_BEAM), this.vorg1, this.vorg2, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);*/
+}
+
+void FireClientBeam(entity player, vector start, vector end, bool hit)
+{
+	entity this = spawn();
+	this.think = SUB_Remove;
+	this.nextthink = time + bound(0, autocvar_cl_vaporizerbeam_lifetime, 10);
+	this.draw = ClientBeam_Draw;
+	this.drawmask = MASK_NORMAL;
+
+	this.vorg1 = start;
+	this.vorg2 = end;
+	this.cnt = hit;
+	this.sv_entnum = player_localentnum;
+	this.team = myteam;
+
+	if(autocvar_cl_vaporizerbeam_particle)
+	{
+		WarpZone_TrailParticles(world, particleeffectnum(((this.cnt) ? EFFECT_VAPORIZER_HIT(this.team) : EFFECT_VAPORIZER(this.team))), this.vorg1, this.vorg2);
+		this.draw = func_null;
+		this.drawmask = MASK_NORMAL;
+		remove(this);
+	}
+
+	pointparticles(EFFECT_VORTEX_MUZZLEFLASH, this.vorg1, normalize(this.vorg2 - this.vorg1) * 1000, 1);
+}
+
 MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 {
 	if((time < STAT(GAMESTARTTIME))
@@ -46,7 +117,10 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 				eff = particleeffectnum(EFFECT_VORTEX_BEAM);
 		}
 
-		WarpZone_TrailParticles(self, eff, view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE);
+		if(activeweapon == WEP_VORTEX.m_id)
+			WarpZone_TrailParticles(self, eff, view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE);
+		else if(activeweapon == WEP_VAPORIZER.m_id)
+			FireClientBeam(self, view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE, hit);
 
 		//sound(self, CH_SHOTS, "weapons/minstanexfire.wav", VOL_BASE, ATTEN_LARGE);
 
