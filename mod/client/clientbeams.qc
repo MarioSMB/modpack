@@ -27,7 +27,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 
 	if(activeweapon == WEP_VAPORIZER.m_id || activeweapon == WEP_VORTEX.m_id)
 	if((input_buttons & 1) || (activeweapon == WEP_VORTEX.m_id && WEP_CVAR(vortex, secondary) && (input_buttons & BUTTON_3) && !vortex_charge))
-	if(autocvar_cl_vaporizerbeam || (localme.ping >= 200 && autocvar_cl_vaporizerbeam != -1))
+	if(autocvar_cl_vaporizerbeam > 0 || (localme.ping >= 200 && autocvar_cl_vaporizerbeam != -1))
 	{
 		vector v = '0 0 1' * getstati(STAT_VIEWHEIGHT);
 
