@@ -1,5 +1,6 @@
 //bool autocvar_cl_particles_newvortexbeam;
 AUTOCVAR_SAVE(cl_vaporizerbeam,                    int,   0,      _("Draw a client side beam when firing in instagib. -1: always disabled, 0: disabled unless ping is high, 1: enabled"));
+AUTOCVAR_SAVE(cl_particles_newvortexbeam,          bool,  false,  _("Draw a fancy new vortex beam"));
 
 float vaporizer_delay;
 float last_beam;
@@ -23,23 +24,13 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 	if(autocvar_cl_vaporizerbeam || (localme.ping >= 200 && autocvar_cl_vaporizerbeam != -1))
 	if(time >= last_beam)
 	{
-		string s;
-		float hit = 0;
 		vector v = '0 0 1' * getstati(STAT_VIEWHEIGHT);
-
-		s = strcat("TE_TEI_G3", Static_Team_ColorName_Upper(myteam));
 
 		WarpZone_TraceLine(view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, world);
 
-		if(trace_fraction < 1 && !trace_ent.entnum)
-			hit = 0;
-		else
-			hit = 1;
+		bool hit = ((trace_fraction < 1 && !trace_ent.entnum) ? false : true);
 
-		if(hit)
-			s = strcat(s, "_HIT");
-
-		WarpZone_TrailParticles(self, _particleeffectnum(s), view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE);
+		WarpZone_TrailParticles(self, particleeffectnum((hit ? EFFECT_VAPORIZER_HIT(myteam) : EFFECT_VAPORIZER(myteam))), view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE);
 
 		//sound(self, CH_SHOTS, "weapons/minstanexfire.wav", VOL_BASE, ATTEN_LARGE);
 
@@ -51,5 +42,30 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 
 		last_beam = time + vaporizer_delay;
 	}
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(mutator_mod, Weapon_ImpactEffect)
+{
+	if(autocvar_cl_particles_newvortexbeam && w_hitwep == WEP_VORTEX)
+	{
+		vector org2 = w_org + w_backoff * 6;
+		pointparticles(EFFECT_VORTEX_IMPACT_NEW, org2, '0 0 0', 1);
+		if(!w_issilent)
+			sound(self, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
+		return true;
+	}
+
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(mutator_mod, Particles_VortexBeam)
+{
+	if(autocvar_cl_particles_newvortexbeam && particleeffectnum(EFFECT_VORTEX_BEAM_NEW) >= 0)
+	{
+		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum(EFFECT_VORTEX_BEAM_NEW), vbeam_shotorg, vbeam_endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
+		return true;
+	}
+
 	return false;
 }
