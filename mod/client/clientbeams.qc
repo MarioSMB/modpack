@@ -6,6 +6,7 @@ float last_beam;
 
 //bool autocvar_cl_vaporizerbeam_particle = true;
 //float autocvar_cl_vaporizerbeam_lifetime = 0.8;
+//float autocvar_cl_vaporizerbeam_colorboost = 0.7;
 
 string Draw_ClientBeam_trace_callback_tex;
 float Draw_ClientBeam_trace_callback_rnd;
@@ -32,7 +33,7 @@ void ClientBeam_Draw(entity this)
 	if(this.cnt)
 		tex = "particles/gauntletbeam";
 	vector rgb = getcsqcplayercolor(this.sv_entnum);
-	rgb *= (1 + 0.7);
+	rgb *= (1 + autocvar_cl_vaporizerbeam_colorboost);
 
 	float fail = (self.nextthink - time);
 
