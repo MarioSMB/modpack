@@ -840,8 +840,8 @@ float r22heli_pilot_frame()
 	setorigin(pilot,vehic.origin + '0 0 32');
 	pilot.velocity = vehic.velocity;
 
-	pilot.vehicle_ammo1 = (vehic.gun1.vehicle_energy / autocvar_g_vehicle_r22heli_cannon_ammo) * 100;
-	pilot.vehicle_ammo2 = (vehic.gun2.vehicle_energy / autocvar_g_vehicle_r22heli_cannon_ammo) * 100;
+	//pilot.vehicle_ammo1 = (vehic.gun1.vehicle_energy / autocvar_g_vehicle_r22heli_cannon_ammo) * 100;
+	//pilot.vehicle_ammo2 = (vehic.gun2.vehicle_energy / autocvar_g_vehicle_r22heli_cannon_ammo) * 100;
 	
 	self = pilot;
 
