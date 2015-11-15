@@ -289,7 +289,7 @@ void W_Flak_Attack1(Weapon thiswep, bool isprimary)
 
 	entity flash = spawn();
 	setmodel(flash, MDL_FLAK_MUZZLEFLASH);
-	flash.think = SUB_Remove;
+	flash.think = SUB_Remove_self;
 	flash.nextthink = time + 0.06;
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
 	W_AttachToShotorg(self, flash, '5 0 0');

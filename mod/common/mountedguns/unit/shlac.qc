@@ -53,7 +53,7 @@ void mg_shlac_attack(string tagname, entity fireentity)
 	//missile.angles = vectoangles (missile.velocity); // csqc
 
 	missile.touch = shlac_touch;
-	missile.think = SUB_Remove;
+	missile.think = SUB_Remove_self;
 
 	missile.nextthink = time + WEP_CVAR_PRI(hlac, lifetime);
 

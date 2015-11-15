@@ -112,7 +112,7 @@ void W_SuperNailGun_MuzzleFlash_Think(void)
 
 	if(self.alpha <= 0)
 	{
-		self.think = SUB_Remove;
+		self.think = SUB_Remove_self;
 		self.nextthink = time;
 		self.realowner.muzzle_flash = world;
 		return;

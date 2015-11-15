@@ -54,7 +54,7 @@ void ClientBeam_Draw(entity this)
 void FireClientBeam(entity player, vector start, vector end, bool hit)
 {
 	entity this = spawn();
-	this.think = SUB_Remove;
+	this.think = SUB_Remove_self;
 	this.nextthink = time + bound(0, autocvar_cl_vaporizerbeam_lifetime, 10);
 	this.draw = ClientBeam_Draw;
 	this.drawmask = MASK_NORMAL;
