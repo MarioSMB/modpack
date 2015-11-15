@@ -360,6 +360,25 @@ MUTATOR_HOOKFUNCTION(egoass, PlayerDies)
 	if(targ_flying && attacker_flying && DEATH_ISWEAPON(deathtype, WEP_FLAK))
 		jeff_Announcer_Send(attacker, false, ANNCE_JEFF_EXCELLENT);
 
+	if(targ.classname != "body")
+	if(IS_PLAYER(targ))
+	if(targ != attacker)
+	if(DIFF_TEAM(targ, attacker))
+	{
+		#define SPREE_ITEM(counta,countb,center,normal,gentle) \
+			case counta: \
+			{ \
+				Send_Notification(NOTIF_ONE, attacker, MSG_ANNCE, ANNCE_JEFF_KILLSTREAK_##countb); \
+				break; \
+			}
+		switch(attacker.killcount)
+		{
+			JEFF_KILL_SPREE_LIST
+			default: break;
+		}
+		#undef SPREE_ITEM
+	}
+
 
 	attacker.jeff_weaponswitch_count = 0;
 	attacker.lastkilled_time = time;
