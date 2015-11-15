@@ -50,12 +50,12 @@ AUTOCVAR(g_vehicle_r22heli_blowup_coredamage, float, 500, "");
 AUTOCVAR(g_vehicle_r22heli_blowup_edgedamage, float, 100, "");
 AUTOCVAR(g_vehicle_r22heli_blowup_forceintensity, float, 600, "");
 
-AUTOCVAR(g_vehicle_r22heli_health, int, 150, "");
-AUTOCVAR(g_vehicle_r22heli_health_regen, int, 0, "");
-AUTOCVAR(g_vehicle_r22heli_health_regen_pause, float, 0, "");
+AUTOCVAR(g_vehicle_r22heli_health, int, 1200, "");
+AUTOCVAR(g_vehicle_r22heli_health_regen, int, 50, "");
+AUTOCVAR(g_vehicle_r22heli_health_regen_pause, float, 1, "");
 
-AUTOCVAR(g_vehicle_r22heli_shield, int, 75, "");
-AUTOCVAR(g_vehicle_r22heli_shield_regen, int, 25, "");
+AUTOCVAR(g_vehicle_r22heli_shield, int, 600, "");
+AUTOCVAR(g_vehicle_r22heli_shield_regen, int, 300, "");
 AUTOCVAR(g_vehicle_r22heli_shield_regen_pause, float, 1.5, "");
 
 AUTOCVAR(g_vehicle_r22heli_energy, int, 100, "");
