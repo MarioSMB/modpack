@@ -624,12 +624,22 @@ entity r22heli_rocket_gettarget(entity player)
 	entity head;
     entity closest = world;
 	
-	for (head = world; (head = findflags(head, turret_flags, TUR_FLAG_ISTURRET)) != world; )
-    	if(DIFF_TEAM(player, head))
-    	if(head.deadflag == DEAD_NO)
-    		if(vlen(head.origin - player.origin) < autocvar_g_vehicle_r22heli_rocket_targetrange)
-    		if(!closest || vlen(head.origin - player.origin) < vlen(head.origin - closest.origin))
-    			closest = head;
+	for (head = world; (head = findflags(head, vehicle_flags, VHF_ISVEHICLE)) != world; )
+	    	if(DIFF_TEAM(player, head))
+	    	if(head.deadflag == DEAD_NO)
+	    		if(vlen(head.origin - player.origin) < autocvar_g_vehicle_r22heli_rocket_targetrange)
+	    		if(!closest || vlen(head.origin - player.origin) < vlen(head.origin - closest.origin))
+	    			closest = head;
+
+	if(!closest)
+	{
+		for (head = world; (head = findflags(head, turret_flags, TUR_FLAG_ISTURRET)) != world; )
+	    	if(DIFF_TEAM(player, head))
+	    	if(head.deadflag == DEAD_NO)
+	    		if(vlen(head.origin - player.origin) < autocvar_g_vehicle_r22heli_rocket_targetrange)
+	    		if(!closest || vlen(head.origin - player.origin) < vlen(head.origin - closest.origin))
+	    			closest = head;
+	}
 
     if(!closest)
     {
