@@ -555,7 +555,10 @@ void tankll48_exit(float eject)
 	self.movetype = MOVETYPE_WALK;
 	self.gun2.colormap = self.colormap;
 
-	if(!self.owner)
+	entity player = self.owner;
+	self.owner = world;
+
+	if(!player)
 		return;
 
 	makevectors(self.angles);
@@ -563,32 +566,17 @@ void tankll48_exit(float eject)
 	{
 		spot = self.origin + v_forward * 100 + '0 0 64';
 		spot = vehicles_findgoodexit(spot);
-		setorigin(self.owner, spot);
-		self.owner.velocity = (v_up + v_forward * 0.25) * 750;
-		self.owner.oldvelocity = self.owner.velocity;
+		setorigin(player, spot);
+		player.velocity = (v_up + v_forward * 0.25) * 750;
+		player.oldvelocity = player.velocity;
 	}
 	else
 	{
-		if(vlen(self.velocity) > autocvar_g_vehicle_tankll48_speed_strafe)
-		{
-			self.owner.velocity = normalize(self.velocity) * vlen(self.velocity);
-			self.owner.velocity_z += 200;
-			spot = self.origin + v_forward * 128 + '0 0 64';
-			spot = vehicles_findgoodexit(spot);
-		}
-		else
-		{
-			self.owner.velocity = self.velocity * 0.5;
-			self.owner.velocity_z += 10;
-			spot = self.origin + v_forward * 256 + '0 0 64';
-			spot = vehicles_findgoodexit(spot);
-		}
-		self.owner.oldvelocity = self.owner.velocity;
-		setorigin(self.owner, spot);
+		player.velocity = player.oldvelocity = '0 0 300';
+		setorigin(player, self.origin + ('0 0 1.5' * self.maxs_z));
 	}
 
-	antilag_clear(self.owner);
-	self.owner = world;
+	antilag_clear(player);
 }
 
 void tankll48_headfade()
