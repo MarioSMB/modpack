@@ -62,6 +62,9 @@ AUTOCVAR(g_vehicle_r22heli_energy, int, 100, "");
 AUTOCVAR(g_vehicle_r22heli_energy_regen, int, 10, "");
 AUTOCVAR(g_vehicle_r22heli_energy_regen_pause, float, 0.25, "");
 
+AUTOCVAR(g_vehicle_r22heli_rocket_refire, float, 2, "");
+AUTOCVAR(g_vehicle_r22heli_rocket_targetrange, float, 3000, "");
+
 AUTOCVAR(g_vehicle_r22heli_cannon_lock, bool, false, "");
 AUTOCVAR(g_vehicle_r22heli_cannon_turnspeed, float, 160, "");
 AUTOCVAR(g_vehicle_r22heli_cannon_pitchlimit_down, float, 60, "");
@@ -616,6 +619,188 @@ void r22heli_hmg(entity gun, entity pilot, entity gunmount)
 										   autocvar_g_mountedgun_browning50_machinegun_ammo_regen, frametime, false);
 }
 
+entity r22heli_rocket_gettarget(entity player)
+{
+	entity head;
+    entity closest = world;
+	
+	for (head = world; (head = findflags(head, turret_flags, TUR_FLAG_ISTURRET)) != world; )
+    	if(DIFF_TEAM(player, head))
+    	if(head.deadflag == DEAD_NO)
+    		if(vlen(head.origin - player.origin) < autocvar_g_vehicle_r22heli_rocket_targetrange)
+    		if(!closest || vlen(head.origin - player.origin) < vlen(head.origin - closest.origin))
+    			closest = head;
+
+    if(!closest)
+    {
+    	FOR_EACH_PLAYER(head)
+	    	if(DIFF_TEAM(player, head))
+	    	if(head.deadflag == DEAD_NO)
+	    	if(!head.alpha || head.alpha > 0.5)
+	    		if(vlen(head.origin - player.origin) < autocvar_g_vehicle_r22heli_rocket_targetrange)
+	    		if(!closest || vlen(head.origin - player.origin) < vlen(head.origin - closest.origin))
+	    			closest = head;
+    }
+
+    return closest;
+}
+
+void r22heli_rocket_tracker();
+void r22heli_rocket_groundhugger();
+
+void r22heli_fire_rocket(entity player, vector org, vector dir)
+{SELFPARAM();
+    entity rocket = vehicles_projectile(EFFECT_RACER_ROCKETLAUNCH.eent_eff_name, SND(ROCKET_FIRE),
+                           org, dir * autocvar_g_vehicle_racer_rocket_speed,
+                           autocvar_g_vehicle_racer_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
+                           DEATH_VH_WAKI_ROCKET.m_id, PROJECTILE_WAKIROCKET, 20, false, false, player);
+
+   entity trg = r22heli_rocket_gettarget(player);
+
+
+    rocket.lip			  = autocvar_g_vehicle_racer_rocket_accel * sys_frametime;
+    rocket.wait			 = autocvar_g_vehicle_racer_rocket_turnrate;
+    rocket.nextthink		= time;
+    rocket.enemy			= trg;
+    rocket.cnt			  = time + 15;
+
+    if(trg)
+        rocket.think			= r22heli_rocket_tracker;
+    else
+        rocket.think			= r22heli_rocket_groundhugger;
+}
+
+void r22heli_rocket_tracker()
+{SELFPARAM();
+    vector olddir, newdir;
+    float oldvel, newvel;
+
+    self.nextthink  = time;
+
+    if (self.owner.deadflag != DEAD_NO || self.cnt < time)
+    {
+        self.use();
+        return;
+    }
+
+    if(!self.realowner.vehicle)
+    {
+        UpdateCSQCProjectile(self);
+        return;
+    }
+
+    olddir = normalize(self.velocity);
+    oldvel = vlen(self.velocity);
+    newvel = oldvel + self.lip;
+    makevectors(vectoangles(olddir));
+
+    float time_to_impact = min(vlen(self.enemy.origin - self.origin) / vlen(self.velocity), 1);
+    vector predicted_origin = self.enemy.origin + self.enemy.velocity * time_to_impact;
+
+    traceline(self.origin, self.origin + v_forward * 64 - '0 0 32', MOVE_NORMAL, self);
+    newdir = normalize(predicted_origin - self.origin);
+
+    //vector
+    float height_diff = predicted_origin_z - self.origin_z;
+
+    if(vlen(newdir - v_forward) > autocvar_g_vehicle_racer_rocket_locked_maxangle)
+    {
+        //bprint("Target lost!\n");
+        //dprint("OF:", ftos(vlen(newdir - v_forward)), "\n");
+       // self.think = r22heli_rocket_groundhugger;
+    	self.enemy = r22heli_rocket_gettarget(self.realowner);
+        return;
+    }
+
+    if(trace_fraction != 1.0 && trace_ent != self.enemy)
+        newdir_z += 16 * sys_frametime;
+
+    self.velocity = normalize(olddir + newdir * autocvar_g_vehicle_racer_rocket_turnrate) * newvel;
+    self.velocity_z -= 800 * sys_frametime;
+    self.velocity_z += max(height_diff, autocvar_g_vehicle_racer_rocket_climbspeed) * sys_frametime ;
+
+    UpdateCSQCProjectile(self);
+    return;
+}
+
+void r22heli_rocket_groundhugger()
+{SELFPARAM();
+    vector olddir, newdir;
+    float oldvel, newvel;
+
+    self.nextthink  = time;
+
+    if(self.owner.deadflag != DEAD_NO || self.cnt < time)
+    {
+        self.use();
+        return;
+    }
+
+    if(!self.realowner.vehicle)
+    {
+        UpdateCSQCProjectile(self);
+        return;
+    }
+
+    olddir = normalize(self.velocity);
+    oldvel = vlen(self.velocity);
+    newvel = oldvel + self.lip;
+
+    tracebox(self.origin, self.mins, self.maxs, self.origin + olddir * 64, MOVE_WORLDONLY,self);
+    if(trace_fraction <= 0.5)
+    {
+        // Hitting somethign soon, just speed ahead
+        self.velocity = olddir * newvel;
+        UpdateCSQCProjectile(self);
+        return;
+    }
+
+    traceline(trace_endpos, trace_endpos - '0 0 64', MOVE_NORMAL, self);
+    if(trace_fraction != 1.0)
+    {
+        newdir = normalize(trace_endpos + '0 0 64' - self.origin) * autocvar_g_vehicle_racer_rocket_turnrate;
+        self.velocity = normalize(olddir + newdir) * newvel;
+    }
+    else
+    {
+        self.velocity = olddir * newvel;
+        self.velocity_z -= 1600 * sys_frametime; // 2x grav looks better for this one
+    }
+
+    int cont = pointcontents(self.origin - '0 0 32');
+    if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
+        self.velocity_z += 200;
+
+    UpdateCSQCProjectile(self);
+    return;
+}
+
+void r22heli_fire_rocket_aim(entity player, entity gunmount, string tagname)
+{
+	vector v = gettaginfo(gunmount, gettagindex(gunmount, tagname));
+	r22heli_fire_rocket(player, v, v_forward);
+}
+
+void r22heli_rocket(entity gun, entity pilot)
+{
+	if(!forbidWeaponUse(pilot))
+	if(time > gun.delay)
+	if(pilot.BUTTON_ATCK2)
+	{
+		r22heli_fire_rocket_aim(pilot, gun.bomb5, "tag_mgun");
+		r22heli_fire_rocket_aim(pilot, gun.bomb6, "tag_mgun");
+
+		gun.lock_strength  = 0;
+		gun.lock_target	= world;
+		gun.misc_bulletcounter = 0;
+		gun.delay = time + autocvar_g_vehicle_r22heli_rocket_refire;
+		gun.lip = time;
+		pilot.vehicle_ammo2 = 0;
+	}
+	else if(gun.misc_bulletcounter == 0)
+		pilot.vehicle_ammo2 = 100;
+}
+
 float r22heli_pilot_frame()
 {
 	entity pilot, vehic;
@@ -760,6 +945,8 @@ float r22heli_pilot_frame()
 			{
 				r22heli_hmg(vehic, pilot, vehic.bomb5);
 				r22heli_hmg(vehic, pilot, vehic.bomb6);
+
+				r22heli_rocket(vehic, pilot);
 			}
 		}
 
@@ -1342,9 +1529,9 @@ spawnfunc(vehicle_r22heli_milspec)
 
 		METHOD(R22Heli, vr_hud, void(R22Heli thisveh))
 		{
-			Vehicles_drawHUD(VEH_R22HELI.m_icon, "vehicle_helicopter_weapon1", string_null,
+			Vehicles_drawHUD(VEH_R22HELI.m_icon, "vehicle_helicopter_weapon1", "vehicle_helicopter_weapon2",
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color);
+							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo1_color);
 		}
 		METHOD(R22Heli, vr_setup, void(R22Heli thisveh))
 		{
