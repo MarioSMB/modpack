@@ -52,11 +52,11 @@ AUTOCVAR(g_vehicle_tankll48_blowup_coredamage, float, 500, "");
 AUTOCVAR(g_vehicle_tankll48_blowup_edgedamage, float, 100, "");
 AUTOCVAR(g_vehicle_tankll48_blowup_forceintensity, float, 600, "");
 
-AUTOCVAR(g_vehicle_tankll48_health, int, 800, "");
+AUTOCVAR(g_vehicle_tankll48_health, int, 5000, "");
 AUTOCVAR(g_vehicle_tankll48_health_regen, int, 10, "");
 AUTOCVAR(g_vehicle_tankll48_health_regen_pause, float, 5, "");
 
-AUTOCVAR(g_vehicle_tankll48_shield, int, 200, "");
+AUTOCVAR(g_vehicle_tankll48_shield, int, 1000, "");
 AUTOCVAR(g_vehicle_tankll48_shield_regen, int, 25, "");
 AUTOCVAR(g_vehicle_tankll48_shield_regen_pause, float, 0.35, "");
 
@@ -96,8 +96,8 @@ AUTOCVAR(g_vehicle_tankll48_bouncepain, vector, '0 0 0', "");
 
 AUTOCVAR(g_vehicle_tankll48_movement_inertia, float, 0.15, "");
 AUTOCVAR(g_vehicle_tankll48_speed_stop, float, 50, "");
-AUTOCVAR(g_vehicle_tankll48_speed_strafe, float, 400, "");
-AUTOCVAR(g_vehicle_tankll48_speed_walk, float, 500, "");
+AUTOCVAR(g_vehicle_tankll48_speed_strafe, float, 600, "");
+AUTOCVAR(g_vehicle_tankll48_speed_walk, float, 700, "");
 AUTOCVAR(g_vehicle_tankll48_springlength, float, 150, "");
 AUTOCVAR(g_vehicle_tankll48_springup, float, 20, "");
 AUTOCVAR(g_vehicle_tankll48_springblend, float, 0.1, "");
