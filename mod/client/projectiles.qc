@@ -37,10 +37,10 @@ MUTATOR_HOOKFUNCTION(mod_projectiles, EditProjectile)
 		case PROJECTILE_CANNONBALL:
 		{
 			self.colormod = '1 1 1';
-			self.scale = 0.4;
+			self.scale = 0.5;
 			loopsound(self, CH_SHOTS_SINGLE, SND(CANNONBALL_FLY), VOL_BASE, ATTEN_NORM);
-			self.mins = '-3 -3 -3';
-			self.maxs = '3 3 3';
+			self.mins = '-16 -16 -16';
+			self.maxs = '16 16 16';
 			break;
 		}
 	}

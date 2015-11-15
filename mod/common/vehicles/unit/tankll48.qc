@@ -71,15 +71,15 @@ AUTOCVAR(g_vehicle_tankll48_gun_pitchlimit_up, float, 30, "");
 AUTOCVAR(g_vehicle_tankll48_gun_pitchlimit_down, float, -20, "");
 AUTOCVAR(g_vehicle_tankll48_gun_pitchspeed, float, 50, "");
 
-AUTOCVAR(g_vehicle_tankll48_cannon_radius, float, 350, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_radius, float, 1000, "");
 AUTOCVAR(g_vehicle_tankll48_cannon_force, float, 9, "");
-AUTOCVAR(g_vehicle_tankll48_cannon_speed, float, 6000, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_speed, float, 9001, "");
 AUTOCVAR(g_vehicle_tankll48_cannon_spread, float, 0, "");
 AUTOCVAR(g_vehicle_tankll48_cannon_speedaccel, float, 6500, "");
 AUTOCVAR(g_vehicle_tankll48_cannon_speed_up, float, 0, "");
-AUTOCVAR(g_vehicle_tankll48_cannon_damage, float, 460, "");
-AUTOCVAR(g_vehicle_tankll48_cannon_damage2, float, 350, "");
-AUTOCVAR(g_vehicle_tankll48_cannon_edgedamage, float, 250, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_damage, float, 6000, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_damage2, float, 5000, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_edgedamage, float, 3500, "");
 AUTOCVAR(g_vehicle_tankll48_cannon_pitchlimit_down, float, -10, "");
 AUTOCVAR(g_vehicle_tankll48_cannon_pitchlimit_up, float, 40, "");
 AUTOCVAR(g_vehicle_tankll48_cannon_turnlimit_in, float, 20, "");
@@ -88,7 +88,7 @@ AUTOCVAR(g_vehicle_tankll48_cannon_ammo_cost, int, 200, "");
 AUTOCVAR(g_vehicle_tankll48_cannon_ammo_max, int, 200, "");
 AUTOCVAR(g_vehicle_tankll48_cannon_ammo_regen, int, 100, "");
 AUTOCVAR(g_vehicle_tankll48_cannon_ammo_regen_pause, float, 1, "");
-AUTOCVAR(g_vehicle_tankll48_cannon_pitchspeed, float, 50, "");
+AUTOCVAR(g_vehicle_tankll48_cannon_pitchspeed, float, 60, "");
 AUTOCVAR(g_vehicle_tankll48_cannon_turnspeed, float, 110, "");
 AUTOCVAR(g_vehicle_tankll48_cannon_turnlimit, float, 90, "");
 
@@ -472,7 +472,7 @@ float tankll48_frame()
 		missile.movetype = MOVETYPE_FLY;
 
 		missile.projectiledeathtype = DEATH_VH_SPID_DEATH.m_id;
-		setsize (missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot
+		setsize (missile, '-16 -16 -16', '16 16 16'); // give it some size so it can be shot
 
 		setorigin (missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
 		//W_SetupProjectileVelocity(missile, autocvar_g_vehicle_tankll48_cannon_speed, 0);
