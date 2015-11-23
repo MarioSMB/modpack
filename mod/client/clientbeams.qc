@@ -91,6 +91,9 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 	float vortex_sdelay = getstatf(STAT_WEP_VORTEX_SECONDARY_REFIRE);
 	float vortex_charge = getstatf(STAT_VORTEX_CHARGE);
 
+	bool attack1_held = (input_buttons & BIT(0))
+	bool attack2_held = (input_buttons & BIT(2));
+
 	if(!vaporizer_delay) vaporizer_delay = 0.75;
 	if(!vortex_pdelay) vortex_pdelay = 1.5;
 	if(!vortex_sdelay) vortex_sdelay = 0.75;
@@ -98,7 +101,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 	entity localme = playerslots[player_localnum];
 
 	if(activeweapon == WEP_VAPORIZER.m_id || activeweapon == WEP_VORTEX.m_id)
-	if((input_buttons & 1) || (activeweapon == WEP_VORTEX.m_id && WEP_CVAR(vortex, secondary) && (input_buttons & BUTTON_3) && !vortex_charge))
+	if(attack1_held || (activeweapon == WEP_VORTEX.m_id && WEP_CVAR(vortex, secondary) && attack2_held && !vortex_charge))
 	if(autocvar_cl_vaporizerbeam > 0 || (localme.ping >= 200 && autocvar_cl_vaporizerbeam != -1))
 	{
 		vector v = '0 0 1' * getstati(STAT_VIEWHEIGHT);
@@ -137,7 +140,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 		{
 			if(input_buttons & 1)
 				last_beam = time + vortex_pdelay;
-			else if(WEP_CVAR(vortex, secondary) && (input_buttons & BUTTON_3))
+			else if(WEP_CVAR(vortex, secondary) && attack2_held)
 				last_beam = time + vortex_sdelay;
 		}
 	}
