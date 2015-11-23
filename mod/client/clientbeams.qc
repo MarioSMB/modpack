@@ -91,7 +91,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 	float vortex_sdelay = getstatf(STAT_WEP_VORTEX_SECONDARY_REFIRE);
 	float vortex_charge = getstatf(STAT_VORTEX_CHARGE);
 
-	bool attack1_held = (input_buttons & BIT(0))
+	bool attack1_held = (input_buttons & BIT(0));
 	bool attack2_held = (input_buttons & BIT(2));
 
 	if(!vaporizer_delay) vaporizer_delay = 0.75;
