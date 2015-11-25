@@ -243,6 +243,13 @@ void tankll48_cannon_think()
 	if(IS_PLAYER(trace_ent))
 		Damage (trace_ent, self, self.realowner, autocvar_g_vehicle_tankll48_cannon_damage2, self.projectiledeathtype, self.origin, normalize(self.origin - other.origin) * autocvar_g_vehicle_tankll48_cannon_force);
 
+	if(trace_allsolid || trace_startsolid)
+	{
+		other = trace_ent;
+		self.touch();
+		return;
+	}
+
 	self.velocity = self.pos1 * (self.cnt + (autocvar_g_vehicle_tankll48_cannon_speedaccel * sys_frametime));
 
 	UpdateCSQCProjectile(self);
