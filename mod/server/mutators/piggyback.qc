@@ -346,6 +346,8 @@ MUTATOR_HOOKFUNCTION(piggyback, GetCvars)
 
 MUTATOR_HOOKFUNCTION(piggyback, FixPlayermodel)
 {
+	if(!self.pbhost) { return false; }
+
 	// this was the nearest hook to the original code
 	bool do_crouch = self.BUTTON_CROUCH;
 	if(self.hook_state
