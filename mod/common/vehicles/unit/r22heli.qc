@@ -1543,6 +1543,10 @@ spawnfunc(vehicle_r22heli_milspec)
 							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
 							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo1_color);
 		}
+		METHOD(R22Heli, vr_crosshair, void(R22Heli thisveh))
+		{
+			Vehicles_drawCrosshair(vCROSS_LOCK);
+		}
 		METHOD(R22Heli, vr_setup, void(R22Heli thisveh))
 		{
 			AuxiliaryXhair[0].axh_image = vCROSS_HINT; // Minigun1
