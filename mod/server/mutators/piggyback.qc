@@ -358,7 +358,7 @@ MUTATOR_HOOKFUNCTION(piggyback, FixPlayermodel)
 	// WEAPONTODO: THIS SHIT NEEDS TO GO EVENTUALLY
 	// It cannot be predicted by the engine!
 	.entity weaponentity = weaponentities[0];
-	if((self.weapon == WEP_SHOCKWAVE.m_id || self.weapon == WEP_SHOTGUN.m_id) && self.(weaponentity).wframe == WFRAME_FIRE2 && time < self.weapon_nextthink)
+	if((self.weapon == WEP_SHOCKWAVE.m_id || self.weapon == WEP_SHOTGUN.m_id) && self.(weaponentity).wframe == WFRAME_FIRE2 && time < self.(weaponentity).weapon_nextthink)
 		do_crouch = false;
 
 	if(!do_crouch && self.crouch)
