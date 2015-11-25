@@ -148,7 +148,7 @@ MUTATOR_HOOKFUNCTION(egoass, PlayerDies)
 	{
 		if(head != attacker)
 		if(head.lastkiller == attacker)
-		if(head.lastkiller_time - time <= 0.1) // killed within 0.1 seconds by this attacker
+		if(head.lastkiller_time - time <= 5) // killed within 5 seconds by this attacker
 			++killed;
 
 		++player_count;
