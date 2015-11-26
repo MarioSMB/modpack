@@ -143,7 +143,7 @@ void M_Ogre_Attack_Grenade_Touch()
 	}
 
 	spamsound(self, CH_SHOTS, SND(GRENADE_BOUNCE_RANDOM()), VOL_BASE, ATTEN_NORM);
-	self.projectiledeathtype |= HITTYPE_BOUNCE;
+	//self.projectiledeathtype |= HITTYPE_BOUNCE;
 }
 
 void M_Ogre_Attack_Grenade()
@@ -235,8 +235,8 @@ void M_Ogre_Attack_Chainsaw()
 		WarpZone_traceline_antilag(self, self.realowner.origin + self.realowner.view_ofs, targpos, false, self, 0);
 
 		// draw lightning beams for debugging
-		te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5);
-		te_customflash(targpos, 40,  2, '1 1 1');
+		//te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5);
+		//te_customflash(targpos, 40,  2, '1 1 1');
 
 		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body");
 		is_monster = IS_MONSTER(trace_ent);
