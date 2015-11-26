@@ -32,7 +32,7 @@ void ClientBeam_Draw(entity this)
 	string tex = "particles/lgbeam";
 	if(this.cnt)
 		tex = "particles/gauntletbeam";
-	vector rgb = getcsqcplayercolor(this.sv_entnum);
+	vector rgb = getcsqcplayercolor(this.sv_entnum - 1);
 	rgb *= (1 + autocvar_cl_vaporizerbeam_colorboost);
 
 	float fail = (self.nextthink - time);

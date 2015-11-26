@@ -112,7 +112,7 @@ void PM_walljump_PlayerJump()
 			self.velocity_x /= wj_xy_factor;
 			self.velocity_y += plane_normal_y * wj_force;
 			self.velocity_y /= wj_xy_factor;
-			self.velocity_z = PHYS_JUMPVELOCITY * wj_z_factor;
+			self.velocity_z = PHYS_JUMPVELOCITY(self) * wj_z_factor;
 			if(PHYS_INPUT_BUTTON_CROUCH(self)) self.velocity_z *= -1;
 
 #ifdef SVQC
