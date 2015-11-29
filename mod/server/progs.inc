@@ -11,6 +11,7 @@
 #include "headshots.qc"
 #include "monsters.qc"
 #include "player_crush.qc"
+#include "rate.qc"
 #include "weapons.qc"
 
 #include "quake.qc"
