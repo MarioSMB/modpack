@@ -77,16 +77,16 @@ MUTATOR_HOOKFUNCTION(za, PlayerPhysics)
 
 	self.weapons = '0 0 0';
 	self.switchweapon = 0;
-	self.stat_pl_min = mon.mins;
-	self.stat_pl_max = mon.maxs;
-	self.stat_pl_crouch_min = mon.mins;
-	self.stat_pl_crouch_max = mon.maxs;
-	self.stat_pl_crouch_view_ofs = self.za_viewofs;
-	self.stat_pl_view_ofs = self.za_viewofs;
-	self.stat_sv_jumpvelocity = 0;
+	self.stat_PL_MIN = mon.mins;
+	self.stat_PL_MAX = mon.maxs;
+	self.stat_PL_CROUCH_MIN = mon.mins;
+	self.stat_PL_CROUCH_MAX = mon.maxs;
+	self.stat_PL_CROUCH_VIEW_OFS = self.za_viewofs;
+	self.stat_PL_VIEW_OFS = self.za_viewofs;
+	self.stat_MOVEVARS_JUMPVELOCITY = 0;
 
-	self.stat_sv_maxspeed = self.speed2;
-	self.stat_sv_maxairspeed = self.speed2;
+	self.stat_MOVEVARS_MAXSPEED = self.speed2;
+	self.stat_MOVEVARS_MAXAIRSPEED = self.speed2;
 	self.BUTTON_CROUCH = false;
 
 	return false;
@@ -152,10 +152,10 @@ MUTATOR_HOOKFUNCTION(za, PlayerDies)
 	self.za_maxhealth = frag_attacker.max_health;
 	self.weapons = '0 0 0';
 	self.switchweapon = 0;
-	self.stat_pl_min = mon.mins;
-	self.stat_pl_max = mon.maxs;
-	self.stat_pl_crouch_min = mon.mins;
-	self.stat_pl_crouch_max = mon.maxs;
+	self.stat_PL_MIN = mon.mins;
+	self.stat_PL_MAX = mon.maxs;
+	self.stat_PL_CROUCH_MIN = mon.mins;
+	self.stat_PL_CROUCH_MAX = mon.maxs;
 	self.monster_attack = false;
 	self.speed = frag_attacker.speed;
 	self.speed2 = frag_attacker.speed2;

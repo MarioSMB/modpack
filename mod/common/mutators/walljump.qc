@@ -1,60 +1,27 @@
 #ifdef CSQC
 REGISTER_MUTATOR(walljump, true);
-
-#define PHYS_WALLJUMP 						getstati(STAT_WALLJUMP)
-#define PHYS_WALLJUMP_VELOCITY_Z_FACTOR 	getstatf(STAT_WALLJUMP_VELOCITY_Z_FACTOR)
-#define PHYS_WALLJUMP_VELOCITY_XY_FACTOR 	getstatf(STAT_WALLJUMP_VELOCITY_XY_FACTOR)
-#define PHYS_WALLJUMP_DELAY 				getstatf(STAT_WALLJUMP_DELAY)
-#define PHYS_WALLJUMP_FORCE 				getstatf(STAT_WALLJUMP_FORCE)
-
 #elif defined(SVQC)
 void walljump_AddStats();
-REGISTER_MUTATOR(walljump, cvar("g_walljump"))
-{
-	MUTATOR_ONADD
-	{
-		walljump_AddStats();
-	}
-}
+REGISTER_MUTATOR(walljump, cvar("g_walljump"));
 
 AUTOCVAR(g_walljump, bool, false, _("Enable wall jumping mutator"));
 AUTOCVAR(g_walljump_delay, float, 1, _("Minimum delay between wall jumps"));
 AUTOCVAR(g_walljump_force, float, 300, _("How far to bounce/jump off the wall"));
 AUTOCVAR(g_walljump_velocity_xy_factor, float, 1.15, _("How much to slow down along horizontal axis, higher value = higher deceleration, if factor is < 1, you accelerate by wall jumping"));
 AUTOCVAR(g_walljump_velocity_z_factor, float, 0.5, _("Upwards velocity factor, multiplied by normal jump velocity"));
-
-#define PHYS_WALLJUMP 						autocvar_g_walljump
-#define PHYS_WALLJUMP_VELOCITY_Z_FACTOR 	autocvar_g_walljump_velocity_z_factor
-#define PHYS_WALLJUMP_VELOCITY_XY_FACTOR 	autocvar_g_walljump_velocity_xy_factor
-#define PHYS_WALLJUMP_DELAY 				autocvar_g_walljump_delay
-#define PHYS_WALLJUMP_FORCE 				autocvar_g_walljump_force
-
-
-.bool stat_walljump;
-.float stat_walljump_velocity_xy_factor;
-.float stat_walljump_velocity_z_factor;
-.float stat_walljump_delay;
-.float stat_walljump_force;
-
-void walljump_UpdateStats()
-{
-	self.stat_walljump = PHYS_WALLJUMP;
-	self.stat_walljump_velocity_xy_factor = PHYS_WALLJUMP_VELOCITY_XY_FACTOR;
-	self.stat_walljump_velocity_z_factor = PHYS_WALLJUMP_VELOCITY_Z_FACTOR;
-	self.stat_walljump_delay = PHYS_WALLJUMP_DELAY;
-	self.stat_walljump_force = PHYS_WALLJUMP_FORCE;
-}
-
-void walljump_AddStats()
-{
-	addstat(STAT_WALLJUMP, AS_INT, stat_walljump);
-	addstat(STAT_WALLJUMP_VELOCITY_XY_FACTOR, AS_FLOAT, stat_walljump_velocity_xy_factor);
-	addstat(STAT_WALLJUMP_VELOCITY_Z_FACTOR, AS_FLOAT, stat_walljump_velocity_z_factor);
-	addstat(STAT_WALLJUMP_DELAY, AS_FLOAT, stat_walljump_delay);
-	addstat(STAT_WALLJUMP_FORCE, AS_FLOAT, stat_walljump_force);
-}
-
 #endif
+
+#define PHYS_WALLJUMP(s) 						STAT(WALLJUMP, s)
+#define PHYS_WALLJUMP_VELOCITY_Z_FACTOR(s) 		STAT(WALLJUMP_VELOCITY_Z_FACTOR, s)
+#define PHYS_WALLJUMP_VELOCITY_XY_FACTOR(s) 	STAT(WALLJUMP_VELOCITY_XY_FACTOR, s)
+#define PHYS_WALLJUMP_DELAY(s) 					STAT(WALLJUMP_DELAY, s)
+#define PHYS_WALLJUMP_FORCE(s) 					STAT(WALLJUMP_FORCE, s)
+
+REGISTER_STAT(WALLJUMP, int, autocvar_g_walljump)
+REGISTER_STAT(WALLJUMP_VELOCITY_Z_FACTOR, float, autocvar_g_walljump_velocity_z_factor)
+REGISTER_STAT(WALLJUMP_VELOCITY_XY_FACTOR, float, autocvar_g_walljump_velocity_xy_factor)
+REGISTER_STAT(WALLJUMP_DELAY, float, autocvar_g_walljump_delay)
+REGISTER_STAT(WALLJUMP_FORCE, float, autocvar_g_walljump_force)
 
 .float lastwj;
 
@@ -90,8 +57,8 @@ vector PlayerTouchWall ()
 
 void PM_walljump_PlayerJump()
 {
-	if(PHYS_WALLJUMP)
-	if(time - self.lastwj > PHYS_WALLJUMP_DELAY) // can't do this on client, as it's too stupid to obey counters
+	if(PHYS_WALLJUMP(self))
+	if(time - self.lastwj > PHYS_WALLJUMP_DELAY(self)) // can't do this on client, as it's too stupid to obey counters
 	if(!IS_ONGROUND(self))
 #ifdef SVQC
 	if(self.movetype != MOVETYPE_NONE && self.movetype != MOVETYPE_FOLLOW && self.movetype != MOVETYPE_FLY && self.movetype != MOVETYPE_NOCLIP)
@@ -105,9 +72,9 @@ void PM_walljump_PlayerJump()
 		if(plane_normal != '0 0 0')
 		{
 			self.lastwj = time;
-			float wj_force = PHYS_WALLJUMP_FORCE;
-			float wj_xy_factor = PHYS_WALLJUMP_VELOCITY_XY_FACTOR;
-			float wj_z_factor = PHYS_WALLJUMP_VELOCITY_Z_FACTOR;
+			float wj_force = PHYS_WALLJUMP_FORCE(self);
+			float wj_xy_factor = PHYS_WALLJUMP_VELOCITY_XY_FACTOR(self);
+			float wj_z_factor = PHYS_WALLJUMP_VELOCITY_Z_FACTOR(self);
 			self.velocity_x += plane_normal_x * wj_force;
 			self.velocity_x /= wj_xy_factor;
 			self.velocity_y += plane_normal_y * wj_force;
@@ -132,11 +99,3 @@ MUTATOR_HOOKFUNCTION(walljump, PlayerJump)
 	PM_walljump_PlayerJump();
 	return false;
 }
-
-#ifdef SVQC
-MUTATOR_HOOKFUNCTION(walljump, PlayerPhysics)
-{
-	walljump_UpdateStats();
-	return false;
-}
-#endif

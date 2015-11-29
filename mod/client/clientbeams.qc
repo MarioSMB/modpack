@@ -79,17 +79,17 @@ void FireClientBeam(entity player, vector start, vector end, bool hit)
 MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 {
 	if((time < STAT(GAMESTARTTIME))
-	|| (time < getstatf(STAT_ROUNDSTARTTIME))
+	|| (time < STAT(ROUNDSTARTTIME))
 	|| (autocvar_chase_active)
-	|| (getstatf(STAT_FROZEN))
+	|| (STAT(FROZEN))
 	|| (spectatee_status)
 	|| (time < last_beam)
 	) { return false; }
 
-	float vaporizer_delay = getstatf(STAT_WEP_VAPORIZER_PRIMARY_REFIRE);
-	float vortex_pdelay = getstatf(STAT_WEP_VORTEX_PRIMARY_REFIRE);
-	float vortex_sdelay = getstatf(STAT_WEP_VORTEX_SECONDARY_REFIRE);
-	float vortex_charge = getstatf(STAT_VORTEX_CHARGE);
+	float vaporizer_delay = STAT(WEP_VAPORIZER_PRIMARY_REFIRE);
+	float vortex_pdelay = STAT(WEP_VORTEX_PRIMARY_REFIRE);
+	float vortex_sdelay = STAT(WEP_VORTEX_SECONDARY_REFIRE);
+	float vortex_charge = STAT(VORTEX_CHARGE);
 
 	bool attack1_held = (input_buttons & BIT(0));
 	bool attack2_held = (input_buttons & BIT(2));
