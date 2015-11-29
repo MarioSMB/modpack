@@ -1,5 +1,6 @@
 //bool autocvar_cl_particles_newvortexbeam;
 AUTOCVAR_SAVE(cl_vaporizerbeam,                    int,   0,      _("Draw a client side beam when firing in instagib. -1: always disabled, 0: disabled unless ping is high, 1: enabled"));
+AUTOCVAR_SAVE(cl_vaporizerbeam_minping,            int,   160,    _("Minimum ping for the client side beams to automatically enable"));
 AUTOCVAR_SAVE(cl_particles_newvortexbeam,          bool,  false,  _("Draw a fancy new vortex beam"));
 
 float last_beam;
@@ -102,7 +103,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 
 	if(activeweapon == WEP_VAPORIZER.m_id || activeweapon == WEP_VORTEX.m_id)
 	if(attack1_held || (activeweapon == WEP_VORTEX.m_id && WEP_CVAR(vortex, secondary) && attack2_held && !vortex_charge))
-	if(autocvar_cl_vaporizerbeam > 0 || (localme.ping >= 200 && autocvar_cl_vaporizerbeam != -1))
+	if(autocvar_cl_vaporizerbeam > 0 || (localme.ping >= autocvar_cl_vaporizerbeam_minping && autocvar_cl_vaporizerbeam != -1))
 	{
 		vector v = '0 0 1' * getstati(STAT_VIEWHEIGHT);
 
