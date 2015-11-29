@@ -4,7 +4,6 @@ STATIC_INIT(mod_cvars)
 {
 	if(!cvar("cl_nodamagetext"))
 		localcmd("set cl_damagetext 1\n");
-
 	localcmd("set hud_panel_minigamemenu 1\n");
 }
 
