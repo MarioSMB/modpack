@@ -1,7 +1,6 @@
 #ifdef CSQC
 REGISTER_MUTATOR(walljump, true);
 #elif defined(SVQC)
-void walljump_AddStats();
 REGISTER_MUTATOR(walljump, cvar("g_walljump"));
 
 AUTOCVAR(g_walljump, bool, false, _("Enable wall jumping mutator"));
