@@ -491,10 +491,10 @@ MUTATOR_HOOKFUNCTION(projectile_flak, Ent_Projectile)
 {
 	switch(self.cnt)
 	{
-		#define CASE(id) case PROJECTILE_##id: setmodel(self, MDL_PROJECTILE_##id);
-		CASE(FLAK) self.traileffect = EFFECT_RIFLE_WEAK.m_id; return true;
-		CASE(FLAK_BOMB) self.traileffect = EFFECT_TR_KNIGHTSPIKE.m_id; return true;
-		#undef CASE
+		#define HANDLE(id) case PROJECTILE_##id: setmodel(self, MDL_PROJECTILE_##id);
+		HANDLE(FLAK) self.traileffect = EFFECT_RIFLE_WEAK.m_id; return true;
+		HANDLE(FLAK_BOMB) self.traileffect = EFFECT_TR_KNIGHTSPIKE.m_id; return true;
+		#undef HANDLE
 	}
 
 	return false;
