@@ -378,7 +378,7 @@ void W_Flak_Attack3(Weapon thiswep)
 
 	W_DecreaseAmmo(thiswep, self, WEP_CVAR_SEC(flak, ammo));
 
-	W_SetupShot_ProjectileSize (self, '0 0 -3', '0 0 -3', false, 4, SND(FLAK_FIRE3), CH_WEAPON_A, WEP_CVAR(flak, bomb_damage));
+	W_SetupShot_ProjectileSize (self, '-3 -3 -3', '3 3 3', false, 4, SND(FLAK_FIRE3), CH_WEAPON_A, WEP_CVAR(flak, bomb_damage));
 	w_shotdir = v_forward;
 
 	entity e = spawn();
@@ -389,7 +389,7 @@ void W_Flak_Attack3(Weapon thiswep)
 	e.movetype = MOVETYPE_BOUNCE;
 	PROJECTILE_MAKETRIGGER(e);
 	e.projectiledeathtype = WEP_FLAK.m_id | HITTYPE_SECONDARY;
-	setsize(e, '0 0 -3', '0 0 -3');
+	setsize(e, '-3 -3 -3', '3 3 3');
 	setorigin(e, w_shotorg);
 
 	e.nextthink = time + WEP_CVAR(flak, bomb_lifetime);
