@@ -12,6 +12,7 @@
 #include "triggers/triggers.qh"
 #include "vehicles/all.inc"
 #include "weapons/all.inc"
+#include "weapons.qc"
 
 #define IMPLEMENTATION
 #include "monsters/all.inc"
