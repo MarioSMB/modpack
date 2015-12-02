@@ -64,6 +64,7 @@ AUTOCVAR(g_vehicle_r22heli_energy_regen_pause, float, 0.25, "");
 
 AUTOCVAR(g_vehicle_r22heli_rocket_refire, float, 2, "");
 AUTOCVAR(g_vehicle_r22heli_rocket_targetrange, float, 3000, "");
+AUTOCVAR(g_vehicle_r22heli_rocket_damage, float, 100, "");
 
 AUTOCVAR(g_vehicle_r22heli_cannon_lock, bool, false, "");
 AUTOCVAR(g_vehicle_r22heli_cannon_turnspeed, float, 160, "");
@@ -662,7 +663,7 @@ void r22heli_fire_rocket(entity player, vector org, vector dir)
 {SELFPARAM();
     entity rocket = vehicles_projectile(EFFECT_RACER_ROCKETLAUNCH.eent_eff_name, SND(ROCKET_FIRE),
                            org, dir * autocvar_g_vehicle_racer_rocket_speed,
-                           autocvar_g_vehicle_racer_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
+                           autocvar_g_vehicle_r22heli_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
                            DEATH_VH_WAKI_ROCKET.m_id, PROJECTILE_WAKIROCKET, 20, false, false, player);
 
    entity trg = r22heli_rocket_gettarget(player);
