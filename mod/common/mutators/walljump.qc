@@ -24,68 +24,68 @@ REGISTER_STAT(WALLJUMP_FORCE, float, autocvar_g_walljump_force)
 
 .float lastwj;
 
-vector PlayerTouchWall ()
+vector PlayerTouchWall(entity this)
 {
 	local float dist, max_normal;
 	local vector start, end;
 	dist = 10;
 	max_normal = 0.2;
-	start = self.origin;
+	start = this.origin;
 	end = start + v_forward * 100;
-	tracebox (start, self.mins, self.maxs, end, true, self);
-	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
+	tracebox (start, this.mins, this.maxs, end, true, this);
+	if (trace_fraction < 1 && vlen (this.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		return trace_plane_normal;
 	end = start - v_forward * 100;
-	tracebox (start, self.mins, self.maxs, end, true, self);
-	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
+	tracebox (start, this.mins, this.maxs, end, true, this);
+	if (trace_fraction < 1 && vlen (this.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		return trace_plane_normal;
 	end = start + v_right * 100;
-	tracebox (start, self.mins, self.maxs, end, true, self);
-	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
+	tracebox (start, this.mins, this.maxs, end, true, this);
+	if (trace_fraction < 1 && vlen (this.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		return trace_plane_normal;
 	end = start - v_right * 100;
-	tracebox (start, self.mins, self.maxs, end, true, self);
-	if (trace_fraction < 1 && vlen (self.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
+	tracebox (start, this.mins, this.maxs, end, true, this);
+	if (trace_fraction < 1 && vlen (this.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		return trace_plane_normal;
 	return '0 0 0';
 }
 
-void PM_walljump_PlayerJump()
+void PM_walljump_PlayerJump(entity this)
 {
-	if(PHYS_WALLJUMP(self))
-	if(time - self.lastwj > PHYS_WALLJUMP_DELAY(self)) // can't do this on client, as it's too stupid to obey counters
-	if(!IS_ONGROUND(self))
+	if(PHYS_WALLJUMP(this))
+	if(time - this.lastwj > PHYS_WALLJUMP_DELAY(this)) // can't do this on client, as it's too stupid to obey counters
+	if(!IS_ONGROUND(this))
 #ifdef SVQC
-	if(self.movetype != MOVETYPE_NONE && self.movetype != MOVETYPE_FOLLOW && self.movetype != MOVETYPE_FLY && self.movetype != MOVETYPE_NOCLIP)
+	if(this.movetype != MOVETYPE_NONE && this.movetype != MOVETYPE_FOLLOW && this.movetype != MOVETYPE_FLY && this.movetype != MOVETYPE_NOCLIP)
 #endif
-	if(!IS_JUMP_HELD(self))
-	if(!PHYS_FROZEN(self))
-	if(!PHYS_DEAD(self))
+	if(!IS_JUMP_HELD(this))
+	if(!PHYS_FROZEN(this))
+	if(!PHYS_DEAD(this))
 	{
-		vector plane_normal = PlayerTouchWall();
+		vector plane_normal = PlayerTouchWall(this);
 		
 		if(plane_normal != '0 0 0')
 		{
-			self.lastwj = time;
-			float wj_force = PHYS_WALLJUMP_FORCE(self);
-			float wj_xy_factor = PHYS_WALLJUMP_VELOCITY_XY_FACTOR(self);
-			float wj_z_factor = PHYS_WALLJUMP_VELOCITY_Z_FACTOR(self);
-			self.velocity_x += plane_normal_x * wj_force;
-			self.velocity_x /= wj_xy_factor;
-			self.velocity_y += plane_normal_y * wj_force;
-			self.velocity_y /= wj_xy_factor;
-			self.velocity_z = PHYS_JUMPVELOCITY(self) * wj_z_factor;
-			if(PHYS_INPUT_BUTTON_CROUCH(self)) self.velocity_z *= -1;
+			this.lastwj = time;
+			float wj_force = PHYS_WALLJUMP_FORCE(this);
+			float wj_xy_factor = PHYS_WALLJUMP_VELOCITY_XY_FACTOR(this);
+			float wj_z_factor = PHYS_WALLJUMP_VELOCITY_Z_FACTOR(this);
+			this.velocity_x += plane_normal_x * wj_force;
+			this.velocity_x /= wj_xy_factor;
+			this.velocity_y += plane_normal_y * wj_force;
+			this.velocity_y /= wj_xy_factor;
+			this.velocity_z = PHYS_JUMPVELOCITY(this) * wj_z_factor;
+			if(PHYS_INPUT_BUTTON_CROUCH(this)) this.velocity_z *= -1;
 
 #ifdef SVQC
-			self.oldvelocity = self.velocity;
+			this.oldvelocity = this.velocity;
 			Send_Effect(EFFECT_SMOKE_RING, trace_endpos, plane_normal, 5);
-			PlayerSound(self, playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-			animdecide_setaction(self, ANIMACTION_JUMP, true);
+			PlayerSound(this, playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+			animdecide_setaction(this, ANIMACTION_JUMP, true);
 #endif
 			
 			player_multijump = true;
@@ -95,6 +95,6 @@ void PM_walljump_PlayerJump()
 
 MUTATOR_HOOKFUNCTION(walljump, PlayerJump)
 {
-	PM_walljump_PlayerJump();
+	PM_walljump_PlayerJump(self);
 	return false;
 }
