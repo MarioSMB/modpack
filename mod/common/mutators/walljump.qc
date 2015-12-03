@@ -84,7 +84,7 @@ void PM_walljump_PlayerJump()
 #ifdef SVQC
 			self.oldvelocity = self.velocity;
 			Send_Effect(EFFECT_SMOKE_RING, trace_endpos, plane_normal, 5);
-			PlayerSound(playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+			PlayerSound(self, playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
 			animdecide_setaction(self, ANIMACTION_JUMP, true);
 #endif
 			
