@@ -377,7 +377,7 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 		METHOD(RocketLauncher, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(WEP_CVAR(rocketlauncher, reload_ammo) && actor.clip_load < WEP_CVAR(rocketlauncher, ammo)) { // forced reload
-				Weapon w = get_weaponinfo(actor.weapon);
+				Weapon w = Weapons_from(actor.weapon);
 				w.wr_reload(w);
 			} else {
 				if(fire & 1)

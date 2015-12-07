@@ -192,7 +192,7 @@ void W_NailGun_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, 
 	}
 	if(actor.BUTTON_ATCK)
 	{
-		Weapon w = get_weaponinfo(actor.weapon);
+		Weapon w = Weapons_from(actor.weapon);
 		if(!w.wr_checkammo2(w))
 		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
@@ -219,7 +219,7 @@ void W_NailGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, i
 		return;
 	}
 
-	Weapon w = get_weaponinfo(actor.weapon);
+	Weapon w = Weapons_from(actor.weapon);
 	if(!w.wr_checkammo1(w))
 	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
@@ -316,7 +316,7 @@ void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, 
 		METHOD(NailGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if(WEP_CVAR(nailgun, reload_ammo) && actor.clip_load < min(max(WEP_CVAR(nailgun, sustained_ammo), WEP_CVAR(nailgun, first_ammo)), WEP_CVAR(nailgun, burst_ammo))) { // forced reload
-				Weapon w = get_weaponinfo(actor.weapon);
+				Weapon w = Weapons_from(actor.weapon);
 				w.wr_reload(w);
 			} else
 			if(WEP_CVAR(nailgun, mode) == 1)
@@ -331,7 +331,7 @@ void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, 
 				if(fire & 2)
 				if(weapon_prepareattack(thiswep, actor, weaponentity, true, 0))
 				{
-					Weapon w = get_weaponinfo(actor.weapon);
+					Weapon w = Weapons_from(actor.weapon);
 					if(!w.wr_checkammo2(w))
 					if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 					{

@@ -102,8 +102,8 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 
 	entity localme = playerslots[player_localnum];
 
-	if(activeweapon == WEP_VAPORIZER.m_id || activeweapon == WEP_VORTEX.m_id)
-	if(attack1_held || (activeweapon == WEP_VORTEX.m_id && WEP_CVAR(vortex, secondary) && attack2_held && !vortex_charge))
+	if(activeweapon == WEP_VAPORIZER || activeweapon == WEP_VORTEX)
+	if(attack1_held || (activeweapon == WEP_VORTEX && WEP_CVAR(vortex, secondary) && attack2_held && !vortex_charge))
 	if(autocvar_cl_vaporizerbeam > 0 || (localme.ping >= autocvar_cl_vaporizerbeam_minping && autocvar_cl_vaporizerbeam != -1))
 	{
 		vector v = '0 0 1' * getstati(STAT_VIEWHEIGHT);
@@ -113,7 +113,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 		bool hit = ((trace_fraction < 1 && !trace_ent.entnum) ? false : true);
 
 		int eff = particleeffectnum((hit ? EFFECT_VAPORIZER_HIT(myteam) : EFFECT_VAPORIZER(myteam)));
-		if(activeweapon == WEP_VORTEX.m_id)
+		if(activeweapon == WEP_VORTEX)
 		{
 			if(autocvar_cl_particles_oldvortexbeam)
 			{ /* keep insta beam */ }
@@ -123,22 +123,22 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 				eff = particleeffectnum(EFFECT_VORTEX_BEAM);
 		}
 
-		if(activeweapon == WEP_VORTEX.m_id)
+		if(activeweapon == WEP_VORTEX)
 			WarpZone_TrailParticles(self, eff, view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE);
-		else if(activeweapon == WEP_VAPORIZER.m_id)
+		else if(activeweapon == WEP_VAPORIZER)
 			FireClientBeam(self, view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE, hit);
 
 		//sound(self, CH_SHOTS, "weapons/minstanexfire.wav", VOL_BASE, ATTEN_LARGE);
 
 		if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
-		if(autocvar_cl_particles_newvortexbeam && activeweapon == WEP_VORTEX.m_id)
+		if(autocvar_cl_particles_newvortexbeam && activeweapon == WEP_VORTEX)
 			__pointparticles(particleeffectnum(EFFECT_VORTEX_IMPACT_NEW), trace_endpos, '0 0 0', 1);
 		else
 			__pointparticles(particleeffectnum(EFFECT_VORTEX_IMPACT), trace_endpos, '0 0 0', 1);
 
-		if(activeweapon == WEP_VAPORIZER.m_id)
+		if(activeweapon == WEP_VAPORIZER)
 			last_beam = time + vaporizer_delay;
-		else if(activeweapon == WEP_VORTEX.m_id)
+		else if(activeweapon == WEP_VORTEX)
 		{
 			if(input_buttons & 1)
 				last_beam = time + vortex_pdelay;
