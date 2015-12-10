@@ -22,8 +22,44 @@ CLASS(NailGun, Weapon)
 /* wepimg    */ ATTRIB(NailGun, model2, string, "weaponuzi");
 /* refname   */ ATTRIB(NailGun, netname, string, "nailgun");
 /* wepname   */ ATTRIB(NailGun, m_name, string, _("NailGun"));
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, spread_min, float, NONE) \
+		P(class, prefix, spread_max, float, NONE) \
+		P(class, prefix, spread_add, float, NONE) \
+		P(class, prefix, mode, float, NONE) \
+		P(class, prefix, first, float, NONE) \
+		P(class, prefix, first_damage, float, NONE) \
+		P(class, prefix, first_force, float, NONE) \
+		P(class, prefix, first_refire, float, NONE) \
+		P(class, prefix, first_spread, float, NONE) \
+		P(class, prefix, solidpenetration, float, NONE) \
+		P(class, prefix, sustained_damage, float, NONE) \
+		P(class, prefix, sustained_force, float, NONE) \
+		P(class, prefix, sustained_refire, float, NONE) \
+		P(class, prefix, sustained_spread, float, NONE) \
+		P(class, prefix, sustained_ammo, float, NONE) \
+		P(class, prefix, burst, float, NONE) \
+		P(class, prefix, burst_refire, float, NONE) \
+		P(class, prefix, burst_refire2, float, NONE) \
+		P(class, prefix, burst_animtime, float, NONE) \
+		P(class, prefix, burst_speed, float, NONE) \
+		P(class, prefix, burst_ammo, float, NONE) \
+		P(class, prefix, reload_ammo, float, NONE) \
+        P(class, prefix, reload_time, float, NONE) \
+        P(class, prefix, switchdelay_raise, float, NONE) \
+        P(class, prefix, switchdelay_drop, float, NONE) \
+        P(class, prefix, weaponreplace, string, NONE) \
+        P(class, prefix, weaponstart, float, NONE) \
+        P(class, prefix, weaponstartoverride, float, NONE) \
+        P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+    W_PROPS(X, NailGun, nailgun)
+#undef X
+
 ENDCLASS(NailGun)
-REGISTER_WEAPON(NAILGUN, NEW(NailGun));
+REGISTER_WEAPON(NAILGUN, nailgun, NEW(NailGun));
 
 #ifdef SVQC
 STATIC_INIT(nailgun_cvars)
@@ -61,42 +97,6 @@ STATIC_INIT(nailgun_cvars)
 }
 #endif
 
-#define NAILGUN_SETTINGS(w_cvar,w_prop) NAILGUN_SETTINGS_LIST(w_cvar, w_prop, NAILGUN, nailgun)
-#define NAILGUN_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, NONE, spread_min) \
-	w_cvar(id, sn, NONE, spread_max) \
-	w_cvar(id, sn, NONE, spread_add) \
-	w_cvar(id, sn, NONE, mode) \
-	w_cvar(id, sn, NONE, first) \
-	w_cvar(id, sn, NONE, first_damage) \
-	w_cvar(id, sn, NONE, first_force) \
-	w_cvar(id, sn, NONE, first_refire) \
-	w_cvar(id, sn, NONE, first_spread) \
-	w_cvar(id, sn, NONE, first_ammo) \
-	w_cvar(id, sn, NONE, solidpenetration) \
-	w_cvar(id, sn, NONE, sustained_damage) \
-	w_cvar(id, sn, NONE, sustained_force) \
-	w_cvar(id, sn, NONE, sustained_refire) \
-	w_cvar(id, sn, NONE, sustained_spread) \
-	w_cvar(id, sn, NONE, sustained_ammo) \
-	w_cvar(id, sn, NONE, burst) \
-	w_cvar(id, sn, NONE, burst_refire) \
-	w_cvar(id, sn, NONE, burst_refire2) \
-	w_cvar(id, sn, NONE, burst_animtime) \
-	w_cvar(id, sn, NONE, burst_speed) \
-	w_cvar(id, sn, NONE, burst_ammo) \
-	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
-	w_prop(id, sn, float,  reloading_time, reload_time) \
-	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(id, sn, string, weaponreplace, weaponreplace) \
-	w_prop(id, sn, float,  weaponstart, weaponstart) \
-	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride) \
-	w_prop(id, sn, float,  weaponthrowable, weaponthrowable)
-
-#ifdef SVQC
-NAILGUN_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
-#endif
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
@@ -196,7 +196,7 @@ void W_NailGun_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, 
 		if(!w.wr_checkammo2(w))
 		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
-			W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
+			W_SwitchWeapon_Force(actor, Weapons_from(w_getbestweapon(actor)));
 			w_ready(thiswep, actor, weaponentity, fire);
 			return;
 		}
@@ -223,7 +223,7 @@ void W_NailGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, i
 	if(!w.wr_checkammo1(w))
 	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
-		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
+		W_SwitchWeapon_Force(actor, Weapons_from(w_getbestweapon(actor)));
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;
 	}
@@ -335,7 +335,7 @@ void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, 
 					if(!w.wr_checkammo2(w))
 					if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 					{
-						W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
+						W_SwitchWeapon_Force(actor, Weapons_from(w_getbestweapon(actor)));
 						w_ready(thiswep, actor, weaponentity, fire);
 						return;
 					}
@@ -365,10 +365,6 @@ void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, 
 					weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(nailgun, first_refire), w_ready);
 				}
 			}
-		}
-		METHOD(NailGun, wr_init, void(entity thiswep))
-		{
-			NAILGUN_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
 		}
 		METHOD(NailGun, wr_checkammo1, bool(entity thiswep))
 		{
@@ -403,10 +399,6 @@ void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, 
 					ammo_amount += self.(weapon_load[WEP_NAILGUN.m_id]) >= WEP_CVAR(nailgun, first_ammo);
 			}
 			return ammo_amount;
-		}
-		METHOD(NailGun, wr_config, void(entity thiswep))
-		{
-			NAILGUN_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 		}
 		METHOD(NailGun, wr_reload, void(entity thiswep))
 		{

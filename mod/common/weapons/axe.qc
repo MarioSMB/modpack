@@ -21,8 +21,28 @@ CLASS(Axe, Weapon)
 /* wepimg    */ ATTRIB(Axe, model2, string, "weaponaxe");
 /* refname   */ ATTRIB(Axe, netname, string, "axe");
 /* wepname   */ ATTRIB(Axe, m_name, string, _("Axe"));
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, animtime, float, NONE) \
+		P(class, prefix, damage, float, NONE) \
+		P(class, prefix, force, float, NONE) \
+		P(class, prefix, refire, float, NONE) \
+		P(class, prefix, debug, float, NONE) \
+		P(class, prefix, reload_ammo, float, NONE) \
+        P(class, prefix, reload_time, float, NONE) \
+        P(class, prefix, switchdelay_raise, float, NONE) \
+        P(class, prefix, switchdelay_drop, float, NONE) \
+        P(class, prefix, weaponreplace, string, NONE) \
+        P(class, prefix, weaponstart, float, NONE) \
+        P(class, prefix, weaponstartoverride, float, NONE) \
+        P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+    W_PROPS(X, Axe, axe)
+#undef X
+
 ENDCLASS(Axe)
-REGISTER_WEAPON(AXE, NEW(Axe));
+REGISTER_WEAPON(AXE, axe, NEW(Axe));
 
 #ifdef SVQC
 STATIC_INIT(axe_cvars)
@@ -52,34 +72,6 @@ STATIC_INIT(axe_cvars)
 }
 #endif
 
-#define AXE_SETTINGS(w_cvar,w_prop) AXE_SETTINGS_LIST(w_cvar, w_prop, AXE, axe)
-#define AXE_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, NONE, animtime) \
-	w_cvar(id, sn, NONE, refire) \
-	w_cvar(id, sn, NONE, damage) \
-	w_cvar(id, sn, NONE, force) \
-	w_cvar(id, sn, NONE, debug) \
-	w_cvar(id, sn, NONE,  melee_time) \
-	w_cvar(id, sn, NONE,  melee_no_doubleslap) \
-	w_cvar(id, sn, NONE,  melee_traces) \
-	w_cvar(id, sn, NONE,  melee_swing_up) \
-	w_cvar(id, sn, NONE,  melee_swing_side) \
-	w_cvar(id, sn, NONE,  melee_nonplayerdamage) \
-	w_cvar(id, sn, NONE,  melee_multihit) \
-	w_cvar(id, sn, NONE,  melee_delay) \
-	w_cvar(id, sn, NONE,  melee_range) \
-	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
-	w_prop(id, sn, float,  reloading_time, reload_time) \
-	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(id, sn, string, weaponreplace, weaponreplace) \
-	w_prop(id, sn, float,  weaponstart, weaponstart) \
-	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride) \
-	w_prop(id, sn, float,  weaponthrowable, weaponthrowable)
-
-#ifdef SVQC
-AXE_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
-#endif
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
@@ -229,10 +221,6 @@ void W_Axe_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 				weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, W_Axe_Attack);
 			}
 		}
-		METHOD(Axe, wr_init, void(entity thiswep))
-		{
-			AXE_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-		}
 		METHOD(Axe, wr_setup, void(entity thiswep))
 		{
 			self.ammo_field = ammo_none;
@@ -244,10 +232,6 @@ void W_Axe_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 		METHOD(Axe, wr_checkammo2, bool(entity thiswep))
 		{
 			return true;
-		}
-		METHOD(Axe, wr_config, void(entity thiswep))
-		{
-			AXE_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 		}
 		METHOD(Axe, wr_reload, void(entity thiswep))
 		{

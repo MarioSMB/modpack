@@ -35,8 +35,53 @@ CLASS(Flak, Weapon)
 /* wepimg    */ ATTRIB(Flak, model2, string, "weaponflak");
 /* refname   */ ATTRIB(Flak, netname, string, "flak");
 /* wepname   */ ATTRIB(Flak, m_name, string, _("Flak Cannon"));
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, ammo, float, BOTH) \
+		P(class, prefix, animtime, float, BOTH) \
+		P(class, prefix, bouncefactor, float, BOTH) \
+		P(class, prefix, count, float, BOTH) \
+		P(class, prefix, damage, float, BOTH) \
+		P(class, prefix, damage_bouncefactor, float, BOTH) \
+		P(class, prefix, force, float, BOTH) \
+		P(class, prefix, gravity, float, BOTH) \
+		P(class, prefix, refire, float, BOTH) \
+		P(class, prefix, speed, float, BOTH) \
+		P(class, prefix, speed_up, float, BOTH) \
+		P(class, prefix, spread_side, float, BOTH) \
+		P(class, prefix, spread_up, float, BOTH) \
+		P(class, prefix, passthrough, float, BOTH) \
+		P(class, prefix, lifetime, float, BOTH) \
+		P(class, prefix, bomb, float, NONE) \
+		P(class, prefix, bomb_ammo, float, NONE) \
+		P(class, prefix, bomb_count, float, NONE) \
+		P(class, prefix, bomb_damage, float, NONE) \
+		P(class, prefix, bomb_edgedamage, float, NONE) \
+		P(class, prefix, bomb_damageforcescale, float, NONE) \
+		P(class, prefix, bomb_force, float, NONE) \
+		P(class, prefix, bomb_health, float, NONE) \
+		P(class, prefix, bomb_lifetime, float, NONE) \
+		P(class, prefix, bomb_radius, float, NONE) \
+		P(class, prefix, bomb_speed, float, NONE) \
+		P(class, prefix, bomb_speed_up, float, NONE) \
+		P(class, prefix, bomb_speed_side, float, NONE) \
+		P(class, prefix, bomb_spread_side, float, NONE) \
+		P(class, prefix, bomb_spread_up, float, NONE) \
+		P(class, prefix, reload_ammo, float, NONE) \
+        P(class, prefix, reload_time, float, NONE) \
+        P(class, prefix, switchdelay_raise, float, NONE) \
+        P(class, prefix, switchdelay_drop, float, NONE) \
+        P(class, prefix, weaponreplace, string, NONE) \
+        P(class, prefix, weaponstart, float, NONE) \
+        P(class, prefix, weaponstartoverride, float, NONE) \
+        P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+    W_PROPS(X, Flak, flak)
+#undef X
+
 ENDCLASS(Flak)
-REGISTER_WEAPON(FLAK, NEW(Flak));
+REGISTER_WEAPON(FLAK, flak, NEW(Flak));
 
 const int PROJECTILE_FLAK = 45;
 const int PROJECTILE_FLAK_BOMB = 46;
@@ -105,49 +150,6 @@ STATIC_INIT(flak_cvars)
 }
 #endif
 
-#define FLAK_SETTINGS(w_cvar,w_prop) FLAK_SETTINGS_LIST(w_cvar, w_prop, FLAK, flak)
-#define FLAK_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, BOTH, ammo) \
-	w_cvar(id, sn, BOTH, animtime) \
-	w_cvar(id, sn, BOTH, bouncefactor) \
-	w_cvar(id, sn, BOTH, count) \
-	w_cvar(id, sn, BOTH, damage) \
-	w_cvar(id, sn, BOTH, damage_bouncefactor) \
-	w_cvar(id, sn, BOTH, force) \
-	w_cvar(id, sn, BOTH, gravity) \
-	w_cvar(id, sn, BOTH, refire) \
-	w_cvar(id, sn, BOTH, speed) \
-	w_cvar(id, sn, BOTH, speed_up) \
-	w_cvar(id, sn, BOTH, spread_side) \
-	w_cvar(id, sn, BOTH, spread_up) \
-	w_cvar(id, sn, BOTH, passthrough) \
-	w_cvar(id, sn, BOTH, lifetime) \
-	w_cvar(id, sn, NONE, bomb_ammo) \
-	w_cvar(id, sn, NONE, bomb) \
-	w_cvar(id, sn, NONE, bomb_count) \
-	w_cvar(id, sn, NONE, bomb_damage) \
-	w_cvar(id, sn, NONE, bomb_damageforcescale) \
-	w_cvar(id, sn, NONE, bomb_edgedamage) \
-	w_cvar(id, sn, NONE, bomb_force) \
-	w_cvar(id, sn, NONE, bomb_health) \
-	w_cvar(id, sn, NONE, bomb_lifetime) \
-	w_cvar(id, sn, NONE, bomb_radius) \
-	w_cvar(id, sn, NONE, bomb_speed) \
-	w_cvar(id, sn, NONE, bomb_speed_up) \
-	w_cvar(id, sn, NONE, bomb_spread_side) \
-	w_cvar(id, sn, NONE, bomb_spread_up) \
-	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
-	w_prop(id, sn, float,  reloading_time, reload_time) \
-	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(id, sn, string, weaponreplace, weaponreplace) \
-	w_prop(id, sn, float,  weaponstart, weaponstart) \
-	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride) \
-	w_prop(id, sn, float,  weaponthrowable, weaponthrowable)
-
-#ifdef SVQC
-FLAK_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
-#endif
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
@@ -438,10 +440,6 @@ void W_Flak_Attack3(Weapon thiswep)
 				weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(flak, animtime), w_ready);
 			}
 		}
-		METHOD(Flak, wr_init, void(entity thiswep))
-		{
-			FLAK_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-		}
 		METHOD(Flak, wr_checkammo1, bool(entity thiswep))
 		{
 			bool ammo_amount = self.WEP_AMMO(FLAK) >= WEP_CVAR_PRI(flak, ammo);
@@ -452,10 +450,6 @@ void W_Flak_Attack3(Weapon thiswep)
 		{
 			// can't use above logic here, as we have 2 ammo types - WEAPONTODO
 			return self.ammo_shells >= WEP_CVAR_SEC(flak, ammo) && (!WEP_CVAR(flak, bomb) || self.ammo_rockets >= WEP_CVAR(flak, bomb_ammo));
-		}
-		METHOD(Flak, wr_config, void(entity thiswep))
-		{
-			FLAK_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 		}
 		METHOD(Flak, wr_reload, void(entity thiswep))
 		{

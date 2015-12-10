@@ -21,8 +21,37 @@ CLASS(RocketLauncher, Weapon)
 /* wepimg    */ ATTRIB(RocketLauncher, model2, string, "weaponrocketlauncher");
 /* refname   */ ATTRIB(RocketLauncher, netname, string, "rocketlauncher");
 /* wepname   */ ATTRIB(RocketLauncher, m_name, string, _("Rocket Launcher"));
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, ammo, float, NONE) \
+		P(class, prefix, animtime, float, NONE) \
+		P(class, prefix, damage, float, NONE) \
+		P(class, prefix, damageforcescale, float, NONE) \
+		P(class, prefix, detonatedelay, float, NONE) \
+		P(class, prefix, edgedamage, float, NONE) \
+		P(class, prefix, force, float, NONE) \
+		P(class, prefix, health, float, NONE) \
+		P(class, prefix, lifetime, float, NONE) \
+		P(class, prefix, radius, float, NONE) \
+		P(class, prefix, refire, float, NONE) \
+		P(class, prefix, speed, float, NONE) \
+		P(class, prefix, speedaccel, float, NONE) \
+		P(class, prefix, speedstart, float, NONE) \
+		P(class, prefix, reload_ammo, float, NONE) \
+        P(class, prefix, reload_time, float, NONE) \
+        P(class, prefix, switchdelay_raise, float, NONE) \
+        P(class, prefix, switchdelay_drop, float, NONE) \
+        P(class, prefix, weaponreplace, string, NONE) \
+        P(class, prefix, weaponstart, float, NONE) \
+        P(class, prefix, weaponstartoverride, float, NONE) \
+        P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+    W_PROPS(X, RocketLauncher, rocketlauncher)
+#undef X
+
 ENDCLASS(RocketLauncher)
-REGISTER_WEAPON(ROCKETLAUNCHER, NEW(RocketLauncher));
+REGISTER_WEAPON(ROCKETLAUNCHER, rocketlauncher, NEW(RocketLauncher));
 
 #ifdef SVQC
 STATIC_INIT(rocketlauncher_cvars)
@@ -52,34 +81,6 @@ STATIC_INIT(rocketlauncher_cvars)
 }
 #endif
 
-#define ROCKETLAUNCHER_SETTINGS(w_cvar,w_prop) ROCKETLAUNCHER_SETTINGS_LIST(w_cvar, w_prop, ROCKETLAUNCHER, rocketlauncher)
-#define ROCKETLAUNCHER_SETTINGS_LIST(w_cvar,w_prop,id,sn) \
-	w_cvar(id, sn, NONE, ammo) \
-	w_cvar(id, sn, NONE, animtime) \
-	w_cvar(id, sn, NONE, damage) \
-	w_cvar(id, sn, NONE, damageforcescale) \
-	w_cvar(id, sn, NONE, detonatedelay) \
-	w_cvar(id, sn, NONE, edgedamage) \
-	w_cvar(id, sn, NONE, force) \
-	w_cvar(id, sn, NONE, health) \
-	w_cvar(id, sn, NONE, lifetime) \
-	w_cvar(id, sn, NONE, radius) \
-	w_cvar(id, sn, NONE, refire) \
-	w_cvar(id, sn, NONE, speed) \
-	w_cvar(id, sn, NONE, speedaccel) \
-	w_cvar(id, sn, NONE, speedstart) \
-	w_prop(id, sn, float,  reloading_ammo, reload_ammo) \
-	w_prop(id, sn, float,  reloading_time, reload_time) \
-	w_prop(id, sn, float,  switchdelay_raise, switchdelay_raise) \
-	w_prop(id, sn, float,  switchdelay_drop, switchdelay_drop) \
-	w_prop(id, sn, string, weaponreplace, weaponreplace) \
-	w_prop(id, sn, float,  weaponstart, weaponstart) \
-	w_prop(id, sn, float,  weaponstartoverride, weaponstartoverride) \
-	w_prop(id, sn, float,  weaponthrowable, weaponthrowable)
-
-#ifdef SVQC
-ROCKETLAUNCHER_SETTINGS(WEP_ADD_CVAR, WEP_ADD_PROP)
-#endif
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
@@ -390,10 +391,6 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 				}
 			}
 		}
-		METHOD(RocketLauncher, wr_init, void(entity thiswep))
-		{
-			ROCKETLAUNCHER_SETTINGS(WEP_SKIP_CVAR, WEP_SET_PROP);
-		}
 		METHOD(RocketLauncher, wr_checkammo1, bool(entity thiswep))
 		{
 			float ammo_amount = self.WEP_AMMO(ROCKETLAUNCHER) >= WEP_CVAR(rocketlauncher, ammo);
@@ -403,10 +400,6 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 		METHOD(RocketLauncher, wr_checkammo2, bool(entity thiswep))
 		{
 			return false;
-		}
-		METHOD(RocketLauncher, wr_config, void(entity thiswep))
-		{
-			ROCKETLAUNCHER_SETTINGS(WEP_CONFIG_WRITE_CVARS, WEP_CONFIG_WRITE_PROPS);
 		}
 		METHOD(RocketLauncher, wr_reload, void(entity thiswep))
 		{
