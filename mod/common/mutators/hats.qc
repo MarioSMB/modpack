@@ -151,7 +151,8 @@ MUTATOR_HOOKFUNCTION(hats, PutClientInServer)
 {
 	hats_SpawnHat();
 	self.hatentity.alpha = default_weapon_alpha;
-	self.hatname = strzone(self.cvar_cl_hat);
+	//self.hatname = strzone(self.cvar_cl_hat);
+	self.hatname = strzone("santa");
 	return false;
 }
 
