@@ -1,5 +1,4 @@
 #include "announcer.qc"
-#include "stats.qh"
 #include "effects.inc"
 #include "projectiles.qh"
 #include "killme/all.qh"
