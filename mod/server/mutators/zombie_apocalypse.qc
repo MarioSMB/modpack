@@ -76,7 +76,7 @@ MUTATOR_HOOKFUNCTION(za, PlayerPhysics)
 	entity mon = get_monsterinfo(self.monsterid);
 
 	self.weapons = '0 0 0';
-	self.switchweapon = 0;
+	PS(self).m_switchweapon = WEP_Null;
 	self.stat_PL_MIN = mon.mins;
 	self.stat_PL_MAX = mon.maxs;
 	self.stat_PL_CROUCH_MIN = mon.mins;
@@ -151,7 +151,7 @@ MUTATOR_HOOKFUNCTION(za, PlayerDies)
 	self.health = frag_attacker.max_health;
 	self.za_maxhealth = frag_attacker.max_health;
 	self.weapons = '0 0 0';
-	self.switchweapon = 0;
+	PS(self).m_switchweapon = WEP_Null;
 	self.stat_PL_MIN = mon.mins;
 	self.stat_PL_MAX = mon.maxs;
 	self.stat_PL_CROUCH_MIN = mon.mins;

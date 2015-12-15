@@ -277,7 +277,7 @@ float tankll48_frame()
 	
 	player.BUTTON_ZOOM      = 0;
 	//player.BUTTON_CROUCH    = 0;
-	player.switchweapon     = 0;
+	PS(player).m_switchweapon = WEP_Null;
 
 	ad = gettaginfo(tankll48.gun3, gettagindex(tankll48.gun3, "tag_mgun"));
 	traceline(ad, ad + v_forward * MAX_SHOT_DISTANCE, MOVE_WORLDONLY, tankll48);

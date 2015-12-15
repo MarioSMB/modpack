@@ -16,7 +16,7 @@ MUTATOR_HOOKFUNCTION(pinventory, PlayerSpawn)
 	self.weapons_x = tmparm9;
 	self.weapons_y = tmparm10;
 	self.weapons_z = tmparm11;
-	self.switchweapon = tmparm12;
+	PS(self).m_switchweapon = Weapons_from(tmparm12);
 	return false;
 }
 
@@ -32,7 +32,7 @@ MUTATOR_HOOKFUNCTION(pinventory, DecodeLevelParms)
 	self.weapons_x = tmparm9 = parm9;
 	self.weapons_y = tmparm10 = parm10;
 	self.weapons_z = tmparm11 = parm11;
-	self.switchweapon = tmparm12 = parm12;
+	PS(self).m_switchweapon = Weapons_from(tmparm12 = parm12);
 	return false;
 }
 
@@ -75,6 +75,6 @@ MUTATOR_HOOKFUNCTION(pinventory, SetChangeParms)
 	parm9 = self.weapons.x;
 	parm10 = self.weapons.y;
 	parm11 = self.weapons.z;
-	parm12 = self.switchweapon;
+	parm12 = PS(self).m_switchweapon.m_id;
 	return false;
 }

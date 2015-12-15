@@ -175,18 +175,18 @@ void W_SuperNailGun_Attack(Weapon thiswep, int deathtype)
 // weapon frames
 void W_SuperNailGun_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	if(actor.weapon != actor.switchweapon) // abort immediately if switching
+	if(PS(actor).m_switchweapon != PS(actor).m_weapon) // abort immediately if switching
 	{
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;
 	}
 	if(actor.BUTTON_ATCK)
 	{
-		Weapon w = Weapons_from(actor.weapon);
+		Weapon w = Weapons_from(PS(actor).m_weapon.m_id);
 		if(!w.wr_checkammo2(w))
 		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
-			W_SwitchWeapon_Force(actor, Weapons_from(w_getbestweapon(actor)));
+			W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
 			w_ready(thiswep, actor, weaponentity, fire);
 			return;
 		}
@@ -209,11 +209,11 @@ void W_SuperNailGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponenti
 		return;
 	}
 
-	Weapon w = Weapons_from(actor.weapon);
+	Weapon w = Weapons_from(PS(actor).m_weapon.m_id);
 	if(!w.wr_checkammo1(w))
 	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
-		W_SwitchWeapon_Force(actor, Weapons_from(w_getbestweapon(actor)));
+		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;
 	}
@@ -305,7 +305,7 @@ void W_SuperNailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponent
 					if(!w.wr_checkammo2(w))
 					if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 					{
-						W_SwitchWeapon_Force(actor, Weapons_from(w_getbestweapon(actor)));
+						W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
 						w_ready(thiswep, actor, weaponentity, fire);
 						return;
 					}
@@ -340,9 +340,9 @@ void W_SuperNailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponent
 		{
 			float ammo_amount;
 			if(WEP_CVAR(supernailgun, mode) == 1)
-				ammo_amount = self.WEP_AMMO(SUPERNAILGUN) >= WEP_CVAR(supernailgun, sustained_ammo);
+				ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(supernailgun, sustained_ammo);
 			else
-				ammo_amount = self.WEP_AMMO(SUPERNAILGUN) >= WEP_CVAR(supernailgun, first_ammo);
+				ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(supernailgun, first_ammo);
 
 			if(WEP_CVAR(supernailgun, reload_ammo))
 			{
@@ -357,9 +357,9 @@ void W_SuperNailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponent
 		{
 			float ammo_amount;
 			if(WEP_CVAR(supernailgun, mode) == 1)
-				ammo_amount = self.WEP_AMMO(SUPERNAILGUN) >= WEP_CVAR(supernailgun, burst_ammo);
+				ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(supernailgun, burst_ammo);
 			else
-				ammo_amount = self.WEP_AMMO(SUPERNAILGUN) >= WEP_CVAR(supernailgun, first_ammo);
+				ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(supernailgun, first_ammo);
 
 			if(WEP_CVAR(supernailgun, reload_ammo))
 			{

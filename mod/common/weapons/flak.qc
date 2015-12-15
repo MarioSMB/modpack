@@ -442,7 +442,7 @@ void W_Flak_Attack3(Weapon thiswep)
 		}
 		METHOD(Flak, wr_checkammo1, bool(entity thiswep))
 		{
-			bool ammo_amount = self.WEP_AMMO(FLAK) >= WEP_CVAR_PRI(flak, ammo);
+			bool ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR_PRI(flak, ammo);
 			ammo_amount += self.(weapon_load[WEP_FLAK.m_id]) >= WEP_CVAR_PRI(flak, ammo);
 			return ammo_amount;
 		}

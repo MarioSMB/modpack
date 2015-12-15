@@ -122,15 +122,16 @@ void W_RocketLauncher_Explode(void)
 		other
 	);
 
-	if(self.realowner.weapon == WEP_ROCKETLAUNCHER.m_id)
+	Weapon thiswep = WEP_ROCKETLAUNCHER;
+	if(PS(self.realowner).m_weapon == thiswep)
 	{
-		if(self.realowner.WEP_AMMO(ROCKETLAUNCHER) < WEP_CVAR(rocketlauncher, ammo))
+		if(self.realowner.(thiswep.ammo_field) < WEP_CVAR(rocketlauncher, ammo))
 		if(!(self.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			self.realowner.cnt = WEP_ROCKETLAUNCHER.m_id;
 			int slot = 0;
 			ATTACK_FINISHED(self.realowner, slot) = time;
-			self.realowner.switchweapon = w_getbestweapon(self.realowner);
+			PS(self.realowner).m_switchweapon = w_getbestweapon(self.realowner);
 		}
 	}
 	remove(self);
@@ -393,7 +394,7 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 		}
 		METHOD(RocketLauncher, wr_checkammo1, bool(entity thiswep))
 		{
-			float ammo_amount = self.WEP_AMMO(ROCKETLAUNCHER) >= WEP_CVAR(rocketlauncher, ammo);
+			float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(rocketlauncher, ammo);
 			ammo_amount += self.(weapon_load[WEP_ROCKETLAUNCHER.m_id]) >= WEP_CVAR(rocketlauncher, ammo);
 			return ammo_amount;
 		}
