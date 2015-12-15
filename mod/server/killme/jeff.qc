@@ -90,10 +90,10 @@ MUTATOR_HOOKFUNCTION(egoass, OnEntityPreSpawn)
 
 MUTATOR_HOOKFUNCTION(egoass, PlayerPreThink)
 {
-	if(self.weapon != self.switchweapon)
-	if(self.jeff_switchweapon != self.switchweapon)
+	if(PS(self).m_weapon != PS(self).m_switchweapon)
+	if(self.jeff_switchweapon != PS(self).m_switchweapon.m_id)
 	{
-		self.jeff_switchweapon = self.switchweapon;
+		self.jeff_switchweapon = PS(self).m_switchweapon.m_id;
 		self.jeff_weaponswitch_count += 1;
 	}
 	return false;
@@ -101,7 +101,7 @@ MUTATOR_HOOKFUNCTION(egoass, PlayerPreThink)
 
 MUTATOR_HOOKFUNCTION(egoass, PlayerSpawn)
 {
-	self.jeff_switchweapon = w_getbestweapon(self);
+	self.jeff_switchweapon = Weapons_from(w_getbestweapon(self));
 	return false;
 }
 
