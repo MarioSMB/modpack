@@ -47,7 +47,7 @@ int autocvar_jeff_announce_monkill_count = 5;
 
 .int jeff_weaponswitch_count;
 
-.int jeff_switchweapon;
+.Weapon jeff_switchweapon;
 
 .int annce_count;
 .float last_announcer;
@@ -91,9 +91,9 @@ MUTATOR_HOOKFUNCTION(egoass, OnEntityPreSpawn)
 MUTATOR_HOOKFUNCTION(egoass, PlayerPreThink)
 {
 	if(PS(self).m_weapon != PS(self).m_switchweapon)
-	if(self.jeff_switchweapon != PS(self).m_switchweapon.m_id)
+	if(self.jeff_switchweapon != PS(self).m_switchweapon)
 	{
-		self.jeff_switchweapon = PS(self).m_switchweapon.m_id;
+		self.jeff_switchweapon = PS(self).m_switchweapon;
 		self.jeff_weaponswitch_count += 1;
 	}
 	return false;
@@ -101,7 +101,7 @@ MUTATOR_HOOKFUNCTION(egoass, PlayerPreThink)
 
 MUTATOR_HOOKFUNCTION(egoass, PlayerSpawn)
 {
-	self.jeff_switchweapon = Weapons_from(w_getbestweapon(self));
+	self.jeff_switchweapon = w_getbestweapon(self);
 	return false;
 }
 
@@ -136,9 +136,9 @@ MUTATOR_HOOKFUNCTION(egoass, PlayerDies)
 
 	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
 	{
-		if(weaponsInMap & WepSet_FromWeapon(i))
+		if(weaponsInMap & _WepSet_FromWeapon(i))
 		{
-			if(attacker.weapons & WepSet_FromWeapon(i))
+			if(attacker.weapons & _WepSet_FromWeapon(i))
 				++mywepcount;
 			++wepcount;
 		}
