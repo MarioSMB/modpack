@@ -29,6 +29,15 @@ CLASS(Axe, Weapon)
 		P(class, prefix, force, float, NONE) \
 		P(class, prefix, refire, float, NONE) \
 		P(class, prefix, debug, float, NONE) \
+		P(class, prefix, melee_delay, float, NONE) \
+		P(class, prefix, melee_multihit, float, NONE) \
+		P(class, prefix, melee_no_doubleslap, float, NONE) \
+		P(class, prefix, melee_nonplayerdamage, float, NONE) \
+		P(class, prefix, melee_range, float, NONE) \
+		P(class, prefix, melee_swing_side, float, NONE) \
+		P(class, prefix, melee_swing_up, float, NONE) \
+		P(class, prefix, melee_time, float, NONE) \
+		P(class, prefix, melee_traces, float, NONE) \
 		P(class, prefix, reload_ammo, float, NONE) \
         P(class, prefix, reload_time, float, NONE) \
         P(class, prefix, switchdelay_raise, float, NONE) \
