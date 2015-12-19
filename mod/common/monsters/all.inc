@@ -10,3 +10,6 @@
 #include "rotfish.qc"
 #include "demon.qc"
 #include "rottweiler.qc"
+#if 0
+#include "spawner.qc"
+#endif
