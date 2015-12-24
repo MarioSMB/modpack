@@ -33,29 +33,31 @@ void za_SpawnMonster()
 void za_SetEnemy(entity player)
 {
 	// prefer players
-	entity head;
 	entity closest_targ = world;
-	FOR_EACH_PLAYER(head) if(head != player)
-	if(vlen(player.origin - head.origin) < autocvar_g_monsters_target_range)
-	if(!closest_targ || vlen(player.origin - closest_targ.origin) > vlen(player.origin - head.origin))
-		closest_targ = head;
+	FOREACH_CLIENT(IS_PLAYER(it) && it != player, LAMBDA(
+		if(vlen(player.origin - it.origin) < autocvar_g_monsters_target_range)
+		if(!closest_targ || vlen(player.origin - closest_targ.origin) > vlen(player.origin - it.origin))
+			closest_targ = it;
+	));
 
 	if(!closest_targ)
 	{
-		FOR_EACH_MONSTER(head)
-		if(vlen(player.origin - head.origin) < autocvar_g_monsters_target_range)
-		if(!closest_targ || vlen(player.origin - closest_targ.origin) > vlen(player.origin - head.origin))
-			closest_targ = head;
+		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
+			if(vlen(player.origin - it.origin) < autocvar_g_monsters_target_range)
+			if(!closest_targ || vlen(player.origin - closest_targ.origin) > vlen(player.origin - it.origin))
+				closest_targ = it;
+		));
 	}
 
 	// otherwise, attempt any entity nearby
 	if(!closest_targ)
 	{
-		for(head = world; (head = findfloat(head, monster_attack, true)); )
-		if(head.takedamage && head != player)
-		if(vlen(player.origin - head.origin) < autocvar_g_monsters_target_range)
-		if(!closest_targ || vlen(player.origin - closest_targ.origin) > vlen(player.origin - head.origin))
-			closest_targ = head;
+		FOREACH_ENTITY_FLOAT(monster_attack, true, LAMBDA(
+			if(it.takedamage && it != player)
+			if(vlen(player.origin - it.origin) < autocvar_g_monsters_target_range)
+			if(!closest_targ || vlen(player.origin - closest_targ.origin) > vlen(player.origin - it.origin))
+				closest_targ = it;
+		));
 	}
 
 	if(closest_targ)
@@ -175,10 +177,9 @@ MUTATOR_HOOKFUNCTION(za, SV_StartFrame)
 		return false;
 
 	float n_monsters = 0, maxmon = autocvar_g_za_max_monsters;
-	entity head;
 
 	// count dead monsters too (zombies)
-	FOR_EACH_MONSTER(head) ++n_monsters;
+	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(++n_monsters));
 
 	while(n_monsters < maxmon)
 	{

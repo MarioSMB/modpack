@@ -242,7 +242,7 @@ void W_Axe_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 		{
 			return true;
 		}
-		METHOD(Axe, wr_reload, void(entity thiswep))
+		METHOD(Axe, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			//W_Reload(self, WEP_CVAR_PRI(axe, ammo), SND(RELOAD)); // WEAPONTODO
 		}

@@ -62,22 +62,20 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 #ifdef STUFFTO_ENABLED
 	if(cmd_name == "stufftoall")
 	{
-		entity head;
-		FOR_EACH_REALCLIENT(head)
-		{
-			bool accepted = VerifyClientEntity(head, true, false);
+		FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(
+			bool accepted = VerifyClientEntity(it, true, false);
 			if(accepted > 0)
 			{
-				stuffcmd(head, strcat("\n", argv(1), "\n"));
-				LOG_INFO(strcat("Command: \"", argv(1), "\" sent to ", GetCallerName(head), ".\n"));
+				stuffcmd(it, strcat("\n", argv(1), "\n"));
+				LOG_INFO(strcat("Command: \"", argv(1), "\" sent to ", GetCallerName(it), ".\n"));
 				continue;
 			}
 			else
 			{
-				LOG_INFO("stuffto failed on ", GetCallerName(head), ".\n");
+				LOG_INFO("stuffto failed on ", GetCallerName(it), ".\n");
 				continue;
 			}
-		}
+		));
 		return true;
 	}
 #endif

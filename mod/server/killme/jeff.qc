@@ -134,42 +134,33 @@ MUTATOR_HOOKFUNCTION(egoass, PlayerDies)
 	float wepcount = 0, mywepcount = 0;
 	float i;
 
-	for(i = WEP_FIRST; i <= WEP_LAST; ++i)
-	{
-		if(weaponsInMap & _WepSet_FromWeapon(i))
-		{
-			if(attacker.weapons & _WepSet_FromWeapon(i))
-				++mywepcount;
-			++wepcount;
-		}
-	}
+	FOREACH(Weapons, weaponsInMap & (it.m_wepset), LAMBDA(
+		if(attacker.weapons & (it.m_wepset))
+			++mywepcount;
+		++wepcount;
+	));
 
-	FOR_EACH_PLAYER(head)
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 	{
-		if(head != attacker)
-		if(head.lastkiller == attacker)
-		if(head.lastkiller_time - time <= 5) // killed within 5 seconds by this attacker
+		if(it != attacker)
+		if(it.lastkiller == attacker)
+		if(it.lastkiller_time - time <= 5) // killed within 5 seconds by this attacker
 			++killed;
 
 		++player_count;
 	}
 
 	if(player_count > 5)
-	FOR_EACH_PLAYER(head)
-	{
-		if(head != attacker)
-		if(head.killcount >= 1)
-		if(!best_killcount || head.killcount >= best_killcount)
-			best_killcount = head.killcount;
-	}
+		FOREACH_CLIENT(IS_PLAYER(it) && it != attacker && it.killcount >= 1, LAMBDA(
+			if(!best_killcount || it.killcount >= best_killcount)
+				best_killcount = it.killcount;
+		));
 
 	if(!IS_PLAYER(attacker))
-	FOR_EACH_PLAYER(head)
-	if(vlen(head.origin - targ.origin) <= autocvar_jeff_announce_bluestreak_distance)
-	{
-		bluestreak = true;
-		break;
-	}
+		FOREACH_CLIENT(IS_PLAYER(it) && vlen(it.origin - targ.origin) <= autocvar_jeff_announce_bluestreak_distance, LAMBDA(
+			bluestreak = true;
+			break;
+		));
 
 	if(deathtype == DEATH_NADE.m_id) { attacker.nadekill_count += 1; }
 	else { attacker.nadekill_count = 0; }

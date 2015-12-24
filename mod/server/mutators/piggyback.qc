@@ -164,9 +164,8 @@ bool pb_GiveItem(entity to, entity item)
 
 MUTATOR_HOOKFUNCTION(piggyback, MatchEnd)
 {
-	entity head;
-	FOR_EACH_PLAYER(head) { pb_Detach(head); }
-	FOR_EACH_MONSTER(head) { pb_Detach(head); }
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(pb_Detach(it)));
+	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(pb_Detach(it)));
 	return false;
 }
 
@@ -281,7 +280,7 @@ MUTATOR_HOOKFUNCTION(piggyback, MonsterMove)
 
 MUTATOR_HOOKFUNCTION(piggyback, reset_map_players)
 {
-	FOR_EACH_PLAYER(self) { pb_Detach(self); }
+	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(pb_Detach(it)));
 	return false;
 }
 

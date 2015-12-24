@@ -40,7 +40,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerDies)
 	if(frag_deathtype == DEATH_HURTTRIGGER.m_id)
 		return false;
 
-	calculate_player_respawn_time(); // player doesn't actually die
+	calculate_player_respawn_time(frag_target); // player doesn't actually die
 
 	bool can_freeze = false;
 
@@ -140,21 +140,19 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 
 		if(self.frozen == 1)
 		{
-			float frozen_count = 0, nplayers = 0;
-			FOR_EACH_PLAYER(other) if(SAME_TEAM(self, other))
-			{
+			int frozen_count = 0, nplayers = 0;
+			FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, self), LAMBDA(
 				++nplayers;
-				if(other.frozen == 1)
+				if(it.frozen == 1)
 					++frozen_count;
-			}
+			));
 			if(nplayers == frozen_count)
 			{
-				FOR_EACH_PLAYER(other) if(SAME_TEAM(self, other))
-				{
-					other.freeze_flag = FROZEN_RESPAWNING;
-					other.respawn_time = time + autocvar_g_freeze_respawn_time;
-					PlayerScore_Add(other, SP_SCORE, -1); // lose score for this
-				}
+				FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, self), LAMBDA(
+					it.freeze_flag = FROZEN_RESPAWNING;
+					it.respawn_time = time + autocvar_g_freeze_respawn_time;
+					PlayerScore_Add(it, SP_SCORE, -1); // lose score for this
+				));
 
 				return 1;
 			}
@@ -172,24 +170,16 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 		{
 			vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 			n = 0;
-			FOR_EACH_PLAYER(other) if(self != other)
-			{
-				if(other.deadflag == DEAD_NO)
-				if(other.frozen == 0)
+			FOREACH_CLIENT(IS_PLAYER(it) && it != self && it.deadflag == DEAD_NO && it.frozen == 0 && SAME_TEAM(it, self), LAMBDA(
+				if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, it.absmin, it.absmax))
 				{
-					if(SAME_TEAM(other, self))
-					{
-						if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, other.absmin, other.absmax))
-						{
-							if(!o)
-								o = other;
-							if(self.frozen == 1)
-								other.reviving = true;
-							++n;
-						}
-					}
+					if(!o)
+						o = it;
+					if(self.frozen == 1)
+						it.reviving = true;
+					++n;
 				}
-			}
+			));
 		}
 
 		if(n && self.frozen == 1) // OK, there is at least one teammate reviving us
@@ -209,29 +199,20 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 				}
 
 				// EVERY team mate nearby gets a point (even if multiple!)
-				FOR_EACH_PLAYER(other)
-				{
-					if(other.reviving)
-					{
-						PlayerScore_Add(other, SP_SCORE, +1);
-
-						nades_GiveBonus(other,autocvar_g_nades_bonus_score_low);
-					}
-				}
+				FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, LAMBDA(
+					PlayerScore_Add(other, SP_SCORE, +1);
+					nades_GiveBonus(other,autocvar_g_nades_bonus_score_low);
+				));
 
 				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
 				Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, self.netname);
 				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED, self.netname, o.netname);
 			}
 
-			FOR_EACH_PLAYER(other)
-			{
-				if(other.reviving)
-				{
-					other.revive_progress = self.revive_progress;
-					other.reviving = false;
-				}
-			}
+			FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, LAMBDA(
+				other.revive_progress = self.revive_progress;
+				other.reviving = false;
+			));
 		}
 		else if(!n && self.frozen == 1) // only if no teammate is nearby will we reset
 		{

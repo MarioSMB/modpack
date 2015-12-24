@@ -451,7 +451,7 @@ void W_Flak_Attack3(Weapon thiswep)
 			// can't use above logic here, as we have 2 ammo types - WEAPONTODO
 			return self.ammo_shells >= WEP_CVAR_SEC(flak, ammo) && (!WEP_CVAR(flak, bomb) || self.ammo_rockets >= WEP_CVAR(flak, bomb_ammo));
 		}
-		METHOD(Flak, wr_reload, void(entity thiswep))
+		METHOD(Flak, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			W_Reload(self, min(WEP_CVAR_PRI(flak, ammo), WEP_CVAR_SEC(flak, ammo), WEP_CVAR(flak, bomb_ammo)), SND(RELOAD));
 		}

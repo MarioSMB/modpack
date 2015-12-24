@@ -344,7 +344,7 @@ float tankll48_frame()
 					//dprint("tankll48_idle:", ftos(soundlength("machines/generator_loop_pitchdown.ogg")), "\n");
 					sound (self, CH_TRIGGER_SINGLE, SND_TANK_IDLE, VOL_VEHICLEENGINE, ATTN_NORM);
 				}                
-				movelib_beak_simple(autocvar_g_vehicle_tankll48_speed_stop);
+				movelib_brake_simple(autocvar_g_vehicle_tankll48_speed_stop);
 				//tankll48.frame = 5;
 		
 		self.bomb1.gun1.avelocity_y = self.bomb1.gun2.avelocity_y = self.bomb2.gun1.avelocity_y = self.bomb2.gun2.avelocity_y = 0;
@@ -433,7 +433,7 @@ float tankll48_frame()
 	 } else {
 		//If we are not moving forward or backwards we should stop
 		//Otherwise we "drift" while turn buttons are pressed, like on ice
-		movelib_beak_simple(autocvar_g_vehicle_tankll48_speed_stop);
+		movelib_brake_simple(autocvar_g_vehicle_tankll48_speed_stop);
 	 }
 	}
 	
@@ -707,7 +707,7 @@ spawnfunc(vehicle_tankll48)
 		METHOD(TankLL48, vr_think, void(TankLL48 thisveh))
 		{
 			if(self.flags & FL_ONGROUND)
-				movelib_beak_simple(autocvar_g_vehicle_tankll48_speed_stop);
+				movelib_brake_simple(autocvar_g_vehicle_tankll48_speed_stop);
 		}
 		METHOD(TankLL48, vr_death, void(TankLL48 thisveh))
 		{

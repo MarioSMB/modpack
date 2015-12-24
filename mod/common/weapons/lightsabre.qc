@@ -263,7 +263,8 @@ void W_Lightsabre_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 
 .bool lightsabre_active;
 
-void W_LightSabre_SetActive(entity actor, bool newactive, bool dosound)
+void lightsabre_active_send(entity this, int newactive);
+void W_LightSabre_SetActive(entity actor, .entity weaponentity, bool newactive, bool dosound)
 {
 	if(newactive)
 	{
@@ -279,6 +280,10 @@ void W_LightSabre_SetActive(entity actor, bool newactive, bool dosound)
 		if(dosound)
 			sound(actor, CH_WEAPON_A, SND_LIGHTSABRE_DEACTIVATE, VOL_BASE, ATTEN_NORM);
 	}
+
+	lightsabre_active_send(actor, actor.lightsabre_active);
+	actor.(weaponentity).state = WS_INUSE;
+	weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, 0.1, w_ready);
 }
 
 		METHOD(Lightsabre, wr_aim, void(entity thiswep))
@@ -295,8 +300,8 @@ void W_LightSabre_SetActive(entity actor, bool newactive, bool dosound)
 			{
 				if(!self.lightsabre_active)
 				{
-					W_LightSabre_SetActive(actor, true, true);
-					weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, WEP_CVAR_BOTH(lightsabre, !(fire & 2), animtime), w_ready);
+					W_LightSabre_SetActive(actor, weaponentity, true, true);
+					//weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, WEP_CVAR_BOTH(lightsabre, !(fire & 2), animtime), w_ready);
 				}
 				else
 				{
@@ -309,8 +314,9 @@ void W_LightSabre_SetActive(entity actor, bool newactive, bool dosound)
 		}
 		METHOD(Lightsabre, wr_setup, void(entity thiswep))
 		{
+			.entity weaponentity = weaponentities[0];
 			self.ammo_field = ammo_none;
-			W_LightSabre_SetActive(self, false, false);
+			W_LightSabre_SetActive(self, weaponentity, false, false);
 		}
 		METHOD(Lightsabre, wr_checkammo1, bool(entity thiswep))
 		{
@@ -319,10 +325,6 @@ void W_LightSabre_SetActive(entity actor, bool newactive, bool dosound)
 		METHOD(Lightsabre, wr_checkammo2, bool(entity thiswep))
 		{
 			return true;
-		}
-		METHOD(Lightsabre, wr_reload, void(entity thiswep))
-		{
-			W_LightSabre_SetActive(self, ((self.lightsabre_active) ? false : true), true);
 		}
 		METHOD(Lightsabre, wr_suicidemessage, int(entity thiswep))
 		{
@@ -333,5 +335,38 @@ void W_LightSabre_SetActive(entity actor, bool newactive, bool dosound)
 			return WEAPON_LIGHTSABRE_MURDER;
 		}
 
+#endif
+
+REGISTER_NET_S2C(lightsabre_activate)
+#ifdef CSQC
+NET_HANDLE(lightsabre_activate, bool)
+{
+	int i = ReadByte();
+	return = true;
+	string s = (i == false) ? "lightsabre" : "lightsabre_active";
+	CL_WeaponEntity_SetModel(viewmodel, s);
+}
+#endif
+#ifdef SVQC
+void lightsabre_active_send(entity this, int newactive)
+{
+	msg_entity = this;
+	int chan = MSG_ONE;
+	WriteHeader(chan, lightsabre_activate);
+	WriteByte(chan, newactive);
+}
+SPECTATE_COPY()
+{
+	if (this.lightsabre_active != spectatee.lightsabre_active)
+		lightsabre_active_send(this, this.lightsabre_active = spectatee.lightsabre_active);
+}
+METHOD(Lightsabre, wr_reload, void(Lightsabre this, entity actor, .entity weaponentity))
+{
+	// switch to alternate instruments :)
+	if (actor.(weaponentity).state == WS_READY)
+	{
+		W_LightSabre_SetActive(self, weaponentity, ((self.lightsabre_active) ? false : true), true);
+	}
+}
 #endif
 #endif

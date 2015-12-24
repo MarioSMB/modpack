@@ -380,7 +380,7 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 		{
 			if(WEP_CVAR(rocketlauncher, reload_ammo) && actor.clip_load < WEP_CVAR(rocketlauncher, ammo)) { // forced reload
 				Weapon w = Weapons_from(actor.weapon);
-				w.wr_reload(w);
+				w.wr_reload(w, actor, weaponentity);
 			} else {
 				if(fire & 1)
 				{
@@ -402,7 +402,7 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 		{
 			return false;
 		}
-		METHOD(RocketLauncher, wr_reload, void(entity thiswep))
+		METHOD(RocketLauncher, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			W_Reload(self, WEP_CVAR(rocketlauncher, ammo), SND(RELOAD));
 		}

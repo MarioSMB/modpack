@@ -77,9 +77,7 @@ void SkyCycle_Set()
 	skycycle_skybox = autocvar_g_skycycle_skybox;
 	skycycle_skybox_number = 0;
 
-	entity e;
-	FOR_EACH_REALCLIENT(e)
-		e.skycycle_playernextthink = time;
+	FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(it.skycycle_playernextthink = time));
 }
 
 void SkyCycle_Restart()
@@ -192,9 +190,7 @@ void SkyCycle_SendPlayer(float checkboxnum)
 				if (checkboxnum)
 				{
 					//Send to all players
-					entity e;
-  					FOR_EACH_REALCLIENT(e)
-    					stuffcmd(e, strcat("loadsky ", skycycle_nightsky, "\n"));	
+					FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(stuffcmd(it, sprintf("loadsky %s\n", skycycle_nightsky))));
 				}
 				else
 				{
@@ -214,9 +210,7 @@ void SkyCycle_SendPlayer(float checkboxnum)
 				if(checkboxnum)
 				{
 					//Send to all players
-					entity e;
-  					FOR_EACH_REALCLIENT(e)
-    					stuffcmd(e, strcat("loadsky ", skycycle_dusksky, "\n"));	
+					FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(stuffcmd(it, sprintf("loadsky %s\n", skycycle_dusksky))));	
 				}
 				else
 				{
@@ -236,9 +230,7 @@ void SkyCycle_SendPlayer(float checkboxnum)
 				if(checkboxnum)
 				{
 					//Send to all players
-					entity e;
-  					FOR_EACH_REALCLIENT(e)
-    					stuffcmd(e, strcat("loadsky ", skycycle_daysky, "\n"));	
+					FOREACH_CLIENT(IS_REAL_CLIENT(it), LAMBDA(stuffcmd(it, sprintf("loadsky %s\n", skycycle_daysky))));
 				}
 				else
 				{

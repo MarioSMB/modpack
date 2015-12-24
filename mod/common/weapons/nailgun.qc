@@ -317,7 +317,7 @@ void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, 
 		{
 			if(WEP_CVAR(nailgun, reload_ammo) && actor.clip_load < min(max(WEP_CVAR(nailgun, sustained_ammo), WEP_CVAR(nailgun, first_ammo)), WEP_CVAR(nailgun, burst_ammo))) { // forced reload
 				Weapon w = Weapons_from(actor.weapon);
-				w.wr_reload(w);
+				w.wr_reload(w, actor, weaponentity);
 			} else
 			if(WEP_CVAR(nailgun, mode) == 1)
 			{
@@ -400,7 +400,7 @@ void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, 
 			}
 			return ammo_amount;
 		}
-		METHOD(NailGun, wr_reload, void(entity thiswep))
+		METHOD(NailGun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			W_Reload(self, min(max(WEP_CVAR(nailgun, sustained_ammo), WEP_CVAR(nailgun, first_ammo)), WEP_CVAR(nailgun, burst_ammo)), SND(RELOAD));
 		}
