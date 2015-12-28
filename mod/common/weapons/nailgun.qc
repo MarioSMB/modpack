@@ -30,6 +30,7 @@ CLASS(NailGun, Weapon)
 		P(class, prefix, spread_add, float, NONE) \
 		P(class, prefix, mode, float, NONE) \
 		P(class, prefix, first, float, NONE) \
+		P(class, prefix, first_ammo, float, NONE) \
 		P(class, prefix, first_damage, float, NONE) \
 		P(class, prefix, first_force, float, NONE) \
 		P(class, prefix, first_refire, float, NONE) \
