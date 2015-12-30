@@ -1,5 +1,5 @@
 #ifndef MENUQC
-REGISTER_MUTATOR(weapons, true);
+REGISTER_MUTATOR(weapon_models, true);
 #endif
 
 #ifdef SVQC
@@ -7,13 +7,13 @@ REGISTER_MUTATOR(weapons, true);
 AUTOCVAR(sv_weapons_modeloverride, string, "", _("Custom directory for weapon models, set to something like myserver, end result will look like 'models/weapons_myserver/weapon.md3'"));
 AUTOCVAR(sv_weapons_sounddir, string, "", _("Custom directory for weapon sounds, set to something like myserver, end result will look like 'sound/weapons_myserver/weapon.wav'"));
 
-MUTATOR_HOOKFUNCTION(weapons, Ent_Init, CBC_ORDER_LAST)
+MUTATOR_HOOKFUNCTION(weapon_models, Ent_Init, CBC_ORDER_LAST)
 {
 	WriteString(MSG_ONE, autocvar_sv_weapons_modeloverride);
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(weapons, WeaponSound)
+MUTATOR_HOOKFUNCTION(weapon_models, WeaponSound)
 {
 	if(autocvar_sv_weapons_sounddir != "" && autocvar_sv_weapons_sounddir != "default")
 	{
@@ -31,7 +31,7 @@ string sv_weapons_modeloverride;
 
 AUTOCVAR_SAVE(cl_weaponmodel_force,                    bool,   false,      _("Don't allow server to override weapon models"));
 
-MUTATOR_HOOKFUNCTION(weapons, Ent_Init, CBC_ORDER_LAST)
+MUTATOR_HOOKFUNCTION(weapon_models, Ent_Init, CBC_ORDER_LAST)
 {
 	sv_weapons_modeloverride = strzone(ReadString());
 	if(sv_weapons_modeloverride && sv_weapons_modeloverride != "" && sv_weapons_modeloverride != "default")
@@ -49,7 +49,7 @@ MUTATOR_HOOKFUNCTION(weapons, Ent_Init, CBC_ORDER_LAST)
 #endif
 
 #ifndef MENUQC
-MUTATOR_HOOKFUNCTION(weapons, WeaponModel)
+MUTATOR_HOOKFUNCTION(weapon_models, WeaponModel)
 {
 	string override;
 #ifdef SVQC
