@@ -132,7 +132,6 @@ MUTATOR_HOOKFUNCTION(egoass, PlayerDies)
 	float killed = 0;
 	float player_count = 0, best_killcount = 0;
 	float wepcount = 0, mywepcount = 0;
-	float i;
 
 	FOREACH(Weapons, weaponsInMap & (it.m_wepset), LAMBDA(
 		if(attacker.weapons & (it.m_wepset))
