@@ -141,14 +141,13 @@ MUTATOR_HOOKFUNCTION(egoass, PlayerDies)
 	));
 
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-	{
 		if(it != attacker)
 		if(it.lastkiller == attacker)
 		if(it.lastkiller_time - time <= 5) // killed within 5 seconds by this attacker
 			++killed;
 
 		++player_count;
-	}
+	));
 
 	if(player_count > 5)
 		FOREACH_CLIENT(IS_PLAYER(it) && it != attacker && it.killcount >= 1, LAMBDA(
