@@ -109,7 +109,7 @@ void W_Axe_Melee_Think(void)
 	f = ((1 - swing) * WEP_CVAR(axe, melee_traces));
 
 	// check to see if we can still continue, otherwise give up now
-	if((self.realowner.deadflag != DEAD_NO) && WEP_CVAR(axe, melee_no_doubleslap))
+	if(IS_DEAD(self.realowner) && WEP_CVAR(axe, melee_no_doubleslap))
 	{
 		remove(self);
 		return;

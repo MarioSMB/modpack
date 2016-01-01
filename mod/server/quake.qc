@@ -1,4 +1,4 @@
-REGISTER_MUTATOR(pinventory, cvar("sv_persistent_inventory"));
+REGISTER_MUTATOR(pinventory, true);
 
 AUTOCVAR(sv_persistent_inventory, bool, false, _("Enable persistent item saving"));
 
@@ -6,6 +6,9 @@ float tmparm2, tmparm3, tmparm4, tmparm5, tmparm6, tmparm7, tmparm8, tmparm9, tm
 
 MUTATOR_HOOKFUNCTION(pinventory, PlayerSpawn)
 {
+	if(!autocvar_sv_persistent_inventory)
+		return false;
+
 	self.items = tmparm2;
 	self.health = ((parm3 > 0) ? parm3 : 100);
 	self.armorvalue = tmparm4;
@@ -22,6 +25,9 @@ MUTATOR_HOOKFUNCTION(pinventory, PlayerSpawn)
 
 MUTATOR_HOOKFUNCTION(pinventory, DecodeLevelParms)
 {
+	if(!autocvar_sv_persistent_inventory)
+		return false;
+
 	self.items = tmparm2 = parm2;
 	self.health = tmparm3 = ((parm3 > 0) ? parm3 : 100);
 	self.armorvalue = tmparm4 = parm4;
@@ -38,6 +44,9 @@ MUTATOR_HOOKFUNCTION(pinventory, DecodeLevelParms)
 
 MUTATOR_HOOKFUNCTION(pinventory, SetNewParms)
 {
+	if(!autocvar_sv_persistent_inventory)
+		return false;
+
 	vector sweps = (WEPSET(AXE) | WEPSET(SHOTGUN));
 
 	parm2 = 0;
@@ -56,6 +65,9 @@ MUTATOR_HOOKFUNCTION(pinventory, SetNewParms)
 
 MUTATOR_HOOKFUNCTION(pinventory, SetChangeParms)
 {
+	if(!autocvar_sv_persistent_inventory)
+		return false;
+
 	if(self.health <= 0)
 	{
 		SetNewParms();

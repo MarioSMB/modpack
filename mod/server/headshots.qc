@@ -11,7 +11,7 @@ bool Headshot(entity targ, entity ent, vector hitloc, vector start, vector end)
 		return false;
 	if(!IS_PLAYER(targ))
 		return false;
-	if(targ.deadflag != DEAD_NO || targ.frozen || !targ.takedamage)
+	if(IS_DEAD(targ) || STAT(FROZEN, targ) || !targ.takedamage)
 		return false;
 	vector headmins, headmaxs, org;
 	org = antilag_takebackorigin(targ, time - ANTILAG_LATENCY(ent));

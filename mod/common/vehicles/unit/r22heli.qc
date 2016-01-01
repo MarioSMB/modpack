@@ -340,7 +340,7 @@ float r22heli_gunner_frame()
 		if(trace_ent)
 			if(trace_ent.movetype)
 				if(trace_ent.takedamage)
-					if(!trace_ent.deadflag)
+					if(!IS_DEAD(trace_ent))
 					{
 						if(DIFF_TEAM(trace_ent, gunner))
 						{
@@ -626,7 +626,7 @@ entity r22heli_rocket_gettarget(entity player)
 	
 	FOREACH_ENTITY_FLAGS(vehicle_flags, VHF_ISVEHICLE, LAMBDA(
 		if(DIFF_TEAM(player, it))
-		if(it.deadflag == DEAD_NO)
+		if(!IS_DEAD(trace_ent))
 			if(vlen(it.origin - player.origin) < autocvar_g_vehicle_r22heli_rocket_targetrange)
 			if(!closest || vlen(it.origin - player.origin) < vlen(it.origin - closest.origin))
 				closest = it;
@@ -636,7 +636,7 @@ entity r22heli_rocket_gettarget(entity player)
 	{
 		FOREACH_ENTITY_FLAGS(turret_flags, TUR_FLAG_ISTURRET, LAMBDA(
 			if(DIFF_TEAM(player, it))
-			if(it.deadflag == DEAD_NO)
+			if(!IS_DEAD(trace_ent))
 				if(vlen(it.origin - player.origin) < autocvar_g_vehicle_r22heli_rocket_targetrange)
 				if(!closest || vlen(it.origin - player.origin) < vlen(it.origin - closest.origin))
 					closest = it;
@@ -647,7 +647,7 @@ entity r22heli_rocket_gettarget(entity player)
 	{
 		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
 			if(DIFF_TEAM(player, it))
-			if(it.deadflag == DEAD_NO)
+			if(!IS_DEAD(trace_ent))
 			if(!it.alpha || it.alpha > 0.5)
 				if(vlen(it.origin - player.origin) < autocvar_g_vehicle_r22heli_rocket_targetrange)
 				if(!closest || vlen(it.origin - player.origin) < vlen(it.origin - closest.origin))
@@ -690,7 +690,7 @@ void r22heli_rocket_tracker()
 
 	self.nextthink  = time;
 
-	if (self.owner.deadflag != DEAD_NO || self.cnt < time)
+	if (IS_DEAD(self.owner) || self.cnt < time)
 	{
 		self.use();
 		return;
@@ -743,7 +743,7 @@ void r22heli_rocket_groundhugger()
 
 	self.nextthink  = time;
 
-	if(self.owner.deadflag != DEAD_NO || self.cnt < time)
+	if(IS_DEAD(self.owner) || self.cnt < time)
 	{
 		self.use();
 		return;
@@ -849,7 +849,7 @@ float r22heli_pilot_frame()
 	}
 	*/
 	
-	if(vehic.deadflag != DEAD_NO)
+	if(IS_DEAD(vehic))
 	{
 		self = pilot;
 		pilot.BUTTON_ATCK = pilot.BUTTON_ATCK2 = 0;
@@ -1058,7 +1058,7 @@ void r22heli_exit(float eject)
 		return;
 	
 	// add from sparrow	
-	if(self.deadflag == DEAD_NO)
+	if(!IS_DEAD(self))
 	{
 		self.think      = r22heli_land;
 		self.nextthink  = time;

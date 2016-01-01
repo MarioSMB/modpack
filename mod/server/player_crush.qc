@@ -25,7 +25,7 @@ void pc_PlayerTouch()
 	if(!IS_PLAYER(other) && !and_monster)
 		return;
 
-	if(self.deadflag != DEAD_NO || other.deadflag != DEAD_NO)
+	if(IS_DEAD(self) || IS_DEAD(other))
 		return;
 
 	if(!self.iscreature || !other.iscreature)

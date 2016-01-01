@@ -184,9 +184,9 @@ MUTATOR_HOOKFUNCTION(piggyback, PlayerUseKey)
 		return true;
 	}
 
-#define LIMBO(v) ((v).frozen || (v).deadflag != DEAD_NO)
+#define LIMBO(v) (IS_DEAD(v) || STAT(FROZEN, v))
 
-	if(!self.vehicle && !self.deadflag && !self.frozen)
+	if(!self.vehicle && !IS_DEAD(self) && !STAT(FROZEN, self))
 	{
 		entity head, closest_target = world;
 
@@ -197,7 +197,7 @@ MUTATOR_HOOKFUNCTION(piggyback, PlayerUseKey)
 			if(SAME_TEAM(head, self) || autocvar_g_piggyback_ride_enemies || (IS_MONSTER(head) && head.realowner == self))
 			if(head != self)
 			if(!head.cvar_cl_nocarry)
-			if(head.deadflag == DEAD_NO) // we check for trapped status here, but better to be safe than sorry, considering the madness happening
+			if(!IS_DEAD(head)) // we check for trapped status here, but better to be safe than sorry, considering the madness happening
 			if(!head.vehicle)
 			if((!LIMBO(head) && !LIMBO(self)) || (LIMBO(head) || LIMBO(self))) // your guess is as good as mine
 			{
@@ -351,7 +351,7 @@ MUTATOR_HOOKFUNCTION(piggyback, FixPlayermodel)
 	bool do_crouch = self.BUTTON_CROUCH;
 	if(self.hook_state
 	|| self.vehicle
-	|| self.frozen
+	|| STAT(FROZEN, self)
 	) { do_crouch = false; }
 
 	// WEAPONTODO: THIS SHIT NEEDS TO GO EVENTUALLY

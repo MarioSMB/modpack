@@ -17,16 +17,15 @@ void IRCSay(string msgstr)
 
 	msgstr = strcat("\{1}", strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
 
-	entity head;
-	FOR_EACH_CLIENTSLOT(head)
+	FOREACH_CLIENTSLOT(true,
 	{
 		if(!intermission_running)
 		if((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || gameover)))
-		if(IS_PLAYER(head))
+		if(IS_PLAYER(it))
 			continue;
-		if(IS_REAL_CLIENT(head))
-			sprint(head, msgstr);
-	}
+		if(IS_REAL_CLIENT(it))
+			sprint(it, msgstr);
+	});
 }
 
 float mod_cvar_file;

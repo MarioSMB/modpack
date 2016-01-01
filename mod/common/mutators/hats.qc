@@ -76,7 +76,7 @@ void hat_Think()
 		remove(self);
 		return;
 	}
-	if(self.owner.frozen || self.owner.deadflag != DEAD_NO)
+	if(STAT(FROZEN, self.owner) || IS_DEAD(self.owner))
 	{
 		self.model = "";
 		return;

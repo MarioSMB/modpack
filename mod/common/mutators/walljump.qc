@@ -63,8 +63,8 @@ void PM_walljump_PlayerJump(entity this)
 	if(this.movetype != MOVETYPE_NONE && this.movetype != MOVETYPE_FOLLOW && this.movetype != MOVETYPE_FLY && this.movetype != MOVETYPE_NOCLIP)
 #endif
 	if(!IS_JUMP_HELD(this))
-	if(!PHYS_FROZEN(this))
-	if(!PHYS_DEAD(this))
+	if(!STAT(FROZEN, this))
+	if(!IS_DEAD(this))
 	{
 		vector plane_normal = PlayerTouchWall(this);
 		

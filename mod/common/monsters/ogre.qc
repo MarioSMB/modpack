@@ -216,7 +216,7 @@ void M_Ogre_Attack_Chainsaw()
 	f = ((1 - swing) * autocvar_g_monster_ogre_attack_melee_traces);
 
 	// check to see if we can still continue, otherwise give up now
-	if(self.realowner.deadflag != DEAD_NO)
+	if(IS_DEAD(self.realowner))
 	{
 		remove(self);
 		return;

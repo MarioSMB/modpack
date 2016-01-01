@@ -56,13 +56,13 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerDies)
 		
 	if(ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	{
-		if(self.frozen)
+		if(STAT(FROZEN, self))
 			self.freeze_flag = FROZEN_RESPAWNING;
 		return true;
 	}
 
 	if(can_freeze)
-	if(!frag_target.frozen)
+	if(!STAT(FROZEN, frag_target))
 	{
 		if(!(teamplay && autocvar_g_freeze_noauto))
 		if(IS_REAL_CLIENT(frag_target))
@@ -75,7 +75,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerDies)
 		if(frag_deathtype == DEATH_TEAMCHANGE.m_id || frag_deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 		{
 			// let the player die, he will be automatically frozen when he respawns
-			if(self.frozen == 1)
+			if(STAT(FROZEN, self) == 1)
 				freeze_Unfreeze(self); // remove ice
 			return 1;
 		}
@@ -91,7 +91,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerDies)
 
 MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 {
-	if(self.deadflag != DEAD_NO || !IS_PLAYER(self) || gameover)
+	if(IS_DEAD(self) || !IS_PLAYER(self) || gameover)
 		return false;
 
 	if(round_handler_IsActive())
@@ -104,13 +104,13 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 	if(teamplay && autocvar_g_freeze_noauto)
 	{
 		// copied from freezetag
-		if(self.frozen == 1)
+		if(STAT(FROZEN, self) == 1)
 		{
 			// keep health = 1
 			self.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
 		}
 
-		if(self.frozen == 1)
+		if(STAT(FROZEN, self) == 1)
 		{
 			button_pressed = (!autocvar_g_freeze_norespawn && (self.BUTTON_JUMP || self.BUTTON_USE)); // only detect jumps
 			if(IS_GAMETYPE(LMS) || IS_GAMETYPE(CA)) { self.freeze_flag = FROZEN_RESPAWNING; } // these modes require player to die
@@ -138,12 +138,12 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 			}
 		}
 
-		if(self.frozen == 1)
+		if(STAT(FROZEN, self) == 1)
 		{
 			int frozen_count = 0, nplayers = 0;
 			FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, self), LAMBDA(
 				++nplayers;
-				if(it.frozen == 1)
+				if(STAT(FROZEN, it) == 1)
 					++frozen_count;
 			));
 			if(nplayers == frozen_count)
@@ -170,19 +170,19 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 		{
 			vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 			n = 0;
-			FOREACH_CLIENT(IS_PLAYER(it) && it != self && it.deadflag == DEAD_NO && it.frozen == 0 && SAME_TEAM(it, self), LAMBDA(
+			FOREACH_CLIENT(IS_PLAYER(it) && it != self && !IS_DEAD(it) && !STAT(FROZEN, it) && SAME_TEAM(it, self), LAMBDA(
 				if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, it.absmin, it.absmax))
 				{
 					if(!o)
 						o = it;
-					if(self.frozen == 1)
+					if(STAT(FROZEN, self) == 1)
 						it.reviving = true;
 					++n;
 				}
 			));
 		}
 
-		if(n && self.frozen == 1) // OK, there is at least one teammate reviving us
+		if(n && STAT(FROZEN, self) == 1) // OK, there is at least one teammate reviving us
 		{
 			self.revive_progress = bound(0, self.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
 			self.health = max(1, self.revive_progress * start_health);
@@ -214,17 +214,17 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 				other.reviving = false;
 			));
 		}
-		else if(!n && self.frozen == 1) // only if no teammate is nearby will we reset
+		else if(!n && STAT(FROZEN, self) == 1) // only if no teammate is nearby will we reset
 		{
 			self.revive_progress = bound(0, self.revive_progress - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
 			self.health = max(1, self.revive_progress * start_health);
 		}
-		else if(!n && !self.frozen)
+		else if(!n && !STAT(FROZEN, self))
 		{
 			self.revive_progress = 0; // thawing nobody
 		}
 	}
-	else if(self.frozen == 1) // auto revive
+	else if(STAT(FROZEN, self) == 1) // auto revive
 	{
 		float rspeed = autocvar_g_freeze_revive_speed;
 		if(autocvar_g_freeze_revive_speed_random)

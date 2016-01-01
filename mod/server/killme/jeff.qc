@@ -417,7 +417,7 @@ MUTATOR_HOOKFUNCTION(egoass, FireBullet_Hit, CBC_ORDER_FIRST)
 		return false;
 	if(!IS_PLAYER(bullet_hit))
 		return false;
-	if(bullet_hit.deadflag != DEAD_NO || bullet_hit.frozen || !bullet_hit.takedamage)
+	if(IS_DEAD(bullet_hit) || STAT(FROZEN, bullet_hit) || !bullet_hit.takedamage)
 		return false;
 
 	// TODO: hooks into another mutator?

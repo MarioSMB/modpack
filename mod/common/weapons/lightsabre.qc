@@ -167,7 +167,7 @@ void W_Lightsabre_Melee_Think()
 	f = ((1 - swing) * WEP_CVAR_BOTH(lightsabre, isprimary, melee_traces));
 
 	// check to see if we can still continue, otherwise give up now
-	if((self.realowner.deadflag != DEAD_NO) && WEP_CVAR_BOTH(lightsabre, isprimary, melee_no_doubleslap))
+	if(IS_DEAD(self.realowner) && WEP_CVAR_BOTH(lightsabre, isprimary, melee_no_doubleslap))
 	{
 		remove(self);
 		return;
