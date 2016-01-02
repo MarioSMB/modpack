@@ -26,6 +26,8 @@ spawnfunc(qlight)
 	}
 }
 
+SOUND(AMBIENT_FLURO_HUM1, "ambience/fl_hum1");
+
 spawnfunc(light_fluoro)
 {
 	if(this.style >= 32)
@@ -37,8 +39,18 @@ spawnfunc(light_fluoro)
 			lightstyle(this.style, "m");
 	}
 
-	precache_sound("ambience/f1_hum1.wav");
-	ambientsound(this.origin, "ambience/fl_hum1.wav", VOL_BASE * 0.5, ATTEN_STATIC);
+	ambientsound(this.origin, SND(AMBIENT_FLURO_HUM1), VOL_BASE * 0.5, ATTEN_STATIC);
+}
+
+MODEL(LIGHT_FLAME2, "progs/flame2.mdl");
+SOUND(AMBIENT_FIRE1, "ambience/fire1");
+
+spawnfunc(light_flame_large_yellow)
+{
+	setmodel(this, MDL_LIGHT_FLAME2);
+	this.frame = 1;
+
+	ambientsound(this.origin, SND(AMBIENT_FIRE1), VOL_BASE * 0.5, ATTEN_STATIC);
 }
 
 #endif

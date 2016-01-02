@@ -1,10 +1,12 @@
+REGISTER_MUTATOR(damage_mod, true);
+
 AUTOCVAR(g_turrets_player_damagerate, float, 1, _("Multiplier for the amount of damage a player takes from turrets"));
 AUTOCVAR(g_turrets_weapon_damagerate, float, 1, _("Multiplier for the amount of damage a turret takes from players"));
 
 .entity lastkilled;
 .entity lastkiller;
 
-MUTATOR_HOOKFUNCTION(mutator_mod, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(damage_mod, PlayerDamage_Calculate)
 {
 	if(IS_PLAYER(frag_target))
 	{
@@ -20,7 +22,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, PlayerDamage_Calculate)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(mutator_mod, PlayerDies)
+MUTATOR_HOOKFUNCTION(damage_mod, PlayerDies)
 {
 	if(IS_PLAYER(frag_attacker))
 	{
@@ -30,7 +32,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, PlayerDies)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(mutator_mod, FormatMessage)
+MUTATOR_HOOKFUNCTION(damage_mod, FormatMessage)
 {
 	switch(format_escape)
 	{

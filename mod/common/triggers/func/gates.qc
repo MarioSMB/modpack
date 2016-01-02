@@ -1,5 +1,4 @@
-int qserverflags;
-
+#ifdef SVQC
 void qgate_use()
 {
 	self.frame = 1 - self.frame;
@@ -7,27 +6,24 @@ void qgate_use()
 
 spawnfunc(func_episodegate)
 {
-	if(!(qserverflags & this.spawnflags)) { remove(this); return; }
+	if(!(serverflags & this.spawnflags)) { remove(this); return; }
 
-	this.angles = '0 0 0';
-	this.movetype = MOVETYPE_PUSH;
-	this.solid = SOLID_BSP;
+	spawnfunc_func_wall(this);
+
 	this.use = qgate_use;
-	setmodel(this, this.model);
 }
 
 spawnfunc(func_bossgate)
 {
-	if((qserverflags & 15) == 15) { remove(this); return; }
+	if((serverflags & 15) == 15) { remove(this); return; }
 
-	this.angles = '0 0 0';
-	this.movetype = MOVETYPE_PUSH;
-	this.solid = SOLID_BSP;
+	spawnfunc_func_wall(this);
+
 	this.use = qgate_use;
-	setmodel(this, this.model);
 }
 
 spawnfunc(trigger_onlyregistered)
 {
 	spawnfunc_trigger_multiple(this);
 }
+#endif
