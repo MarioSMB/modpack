@@ -1,6 +1,6 @@
 vector Get_Num_Color (float x, float maxvalue)
 {
-	vector color = '1 1 1';
+	vector color = '1 0 0';
 	if(x > maxvalue * 0.75)
 		color.x = 0.9 + (x-150)*0.02 * 0.1; // green value between 0.9 -> 1
 	else if(x > maxvalue * 0.5)
@@ -23,7 +23,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, FormatMessage)
 {
 	switch(format_escape)
 	{
-		case "H": format_replacement = strcat(rgb_to_hexcolor(Get_Num_Color((healtharmor_maxdamage(floor(self.health + 1), floor(self.armorvalue + 1), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)).x, g_pickup_healthsmall_max)), ftos(floor(self.health))); break;
+		case "H": format_replacement = strcat(rgb_to_hexcolor(Get_Num_Color(floor(self.health + 1), g_pickup_healthsmall_max)), ftos(floor(self.health))); break;
 	}
 	return false;
 }
