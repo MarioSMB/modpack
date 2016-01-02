@@ -2,7 +2,7 @@ vector Get_Num_Color (float x, float maxvalue)
 {
 	vector color = '1 1 1';
 	if(x > maxvalue * 0.75)
-		color.y = 0.9 + (x-150)*0.02 * 0.1; // green value between 0.9 -> 1
+		color.x = 0.9 + (x-150)*0.02 * 0.1; // green value between 0.9 -> 1
 	else if(x > maxvalue * 0.5)
 		color.x = 1 - (x-100)*0.02 * 0.1;
 	else if(x > maxvalue * 0.25)
