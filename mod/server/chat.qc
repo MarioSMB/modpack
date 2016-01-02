@@ -39,7 +39,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, FormatMessage)
 {
 	switch(format_escape)
 	{
-		case "H": format_replacement = strcat(vtos(Get_Num_Color((healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)).x, g_pickup_healthsmall_max)), ftos(floor(self.health))); break;
+		case "H": format_replacement = strcat(rgb_to_hexcolor(Get_Num_Color((healtharmor_maxdamage(self.health, self.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)).x, g_pickup_healthsmall_max)), ftos(floor(self.health))); break;
 	}
 	return false;
 }
