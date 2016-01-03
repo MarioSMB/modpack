@@ -103,7 +103,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 	entity localme = playerslots[player_localnum];
 
 	if(activeweapon == WEP_VAPORIZER || activeweapon == WEP_VORTEX)
-	if(attack1_held || (activeweapon == WEP_VORTEX && WEP_CVAR(vortex, secondary) && attack2_held && !vortex_charge))
+	if(attack1_held || (activeweapon == WEP_VORTEX && WEP_CVAR(vortex, secondary) && attack2_held && !WEP_CVAR(vortex, charge)))
 	if(autocvar_cl_vaporizerbeam > 0 || (localme.ping >= autocvar_cl_vaporizerbeam_minping && autocvar_cl_vaporizerbeam != -1))
 	{
 		vector v = '0 0 1' * getstati(STAT_VIEWHEIGHT);
