@@ -711,23 +711,23 @@ spawnfunc(vehicle_tankll48)
 		}
 		METHOD(TankLL48, vr_death, void(TankLL48 thisveh, entity instance))
 		{
-			self.health				= 0;
-			self.event_damage		= func_null;
-			self.takedamage			= DAMAGE_NO;
-			self.touch				= func_null;
-			self.cnt				= 3.4 + time + random() * 2;
-			self.think				= tankll48_blowup;
-			self.nextthink			= time;
-			self.deadflag			= DEAD_DYING;
-			self.frame				= 5;
-			self.tur_head.effects  |= EF_FLAME;
-			self.colormod			= self.tur_head.colormod = '-1 -1 -1';
-			self.frame				= 10;
-			self.movetype			= MOVETYPE_TOSS;
-			tankt27_hitbox_die(self.hitboxft);
-			tankt27_hitbox_die(self.hitboxbk);
+			instance.health				= 0;
+			instance.event_damage		= func_null;
+			instance.takedamage			= DAMAGE_NO;
+			instance.touch				= func_null;
+			instance.cnt				= 3.4 + time + random() * 2;
+			instance.think				= tankll48_blowup;
+			instance.nextthink			= time;
+			instance.deadflag			= DEAD_DYING;
+			instance.frame				= 5;
+			instance.tur_head.effects  |= EF_FLAME;
+			instance.colormod			= instance.tur_head.colormod = '-1 -1 -1';
+			instance.frame				= 10;
+			instance.movetype			= MOVETYPE_TOSS;
+			tankt27_hitbox_die(instance.hitboxft);
+			tankt27_hitbox_die(instance.hitboxbk);
 			
-			CSQCModel_UnlinkEntity(self); // networking the death scene would be a nightmare
+			CSQCModel_UnlinkEntity(instance); // networking the death scene would be a nightmare
 		}
 		METHOD(TankLL48, vr_spawn, void(TankLL48 thisveh, entity instance))
 		{

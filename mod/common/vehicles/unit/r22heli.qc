@@ -1485,8 +1485,8 @@ spawnfunc(vehicle_r22heli_milspec)
 		}
 		METHOD(R22Heli, vr_death, void(R22Heli thisveh, entity actor))
 		{
-			CSQCModel_UnlinkEntity(self); // networking the death scene would be a nightmare
-			r22heli_die();
+			CSQCModel_UnlinkEntity(actor); // networking the death scene would be a nightmare
+			WITH(entity, self, actor, r22heli_die());
 		}
 		METHOD(R22Heli, vr_spawn, void(R22Heli thisveh, entity actor))
 		{
