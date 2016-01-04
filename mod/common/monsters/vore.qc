@@ -39,7 +39,7 @@ REGISTER_WEAPON(VORE_SPIKE, NEW(VoreSpike));
 
 #ifdef SVQC
 
-void M_Vore_Attack_Spike(vector dir);
+void M_Vore_Attack_Spike(entity actor, vector dir);
 METHOD(VoreSpike, wr_think, void(VoreSpike thiswep, entity actor, .entity weaponentity, int fire)) {
     //if (fire & 1)
     if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, weaponentity, false, 0.2)) {
@@ -47,7 +47,7 @@ METHOD(VoreSpike, wr_think, void(VoreSpike thiswep, entity actor, .entity weapon
         actor.enemy = Monster_FindTarget(actor);
         W_SetupShot_Dir(actor, v_forward, false, 0, SND(VORE_FIRESPIKE), CH_WEAPON_B, 0);
     	if (!IS_PLAYER(actor)) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
-        M_Vore_Attack_Spike(w_shotdir);
+        M_Vore_Attack_Spike(actor, w_shotdir);
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
     }
 }
@@ -80,25 +80,25 @@ const float vore_anim_run		= 5;
 
 .entity vore_spike;
 
-void M_Vore_Attack_Spike_Explode()
-{SELFPARAM();
-	self.event_damage = func_null;
+void M_Vore_Attack_Spike_Explode(entity this)
+{
+	this.event_damage = func_null;
 
-	sound(self, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
+	sound(this, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
 
-	self.realowner.vore_spike = world;
+	this.realowner.vore_spike = world;
 
-	Send_Effect(EFFECT_EXPLOSION_SMALL, self.origin, '0 0 0', 1);
-	RadiusDamage (self, self.realowner, (autocvar_g_monster_vore_attack_spike_damage), (autocvar_g_monster_vore_attack_spike_damage) * 0.5, (autocvar_g_monster_vore_attack_spike_radius), world, world, 0, DEATH_MONSTER_MAGE.m_id, other);
+	Send_Effect(EFFECT_EXPLOSION_SMALL, this.origin, '0 0 0', 1);
+	RadiusDamage (this, this.realowner, (autocvar_g_monster_vore_attack_spike_damage), (autocvar_g_monster_vore_attack_spike_damage) * 0.5, (autocvar_g_monster_vore_attack_spike_radius), world, world, 0, DEATH_MONSTER_MAGE.m_id, other);
 
-	remove (self);
+	remove (this);
 }
 
 void M_Vore_Attack_Spike_Touch()
 {
 	PROJECTILE_TOUCH;
 
-	M_Vore_Attack_Spike_Explode();
+	M_Vore_Attack_Spike_Explode(self);
 }
 
 .float wait;
@@ -108,7 +108,7 @@ void M_Vore_Attack_Spike_Think()
 {SELFPARAM();
 	if (time > self.ltime || (self.enemy && self.enemy.health <= 0) || self.owner.health <= 0) {
 		self.projectiledeathtype |= HITTYPE_SPLASH;
-		M_Vore_Attack_Spike_Explode();
+		M_Vore_Attack_Spike_Explode(self);
 	}
 
 	float spd = vlen(self.velocity);
@@ -135,7 +135,7 @@ void M_Vore_Attack_Spike_Think()
 		if ((autocvar_g_monster_vore_attack_spike_smart) && (dist > (autocvar_g_monster_vore_attack_spike_smart_mindist)))
 		{
 			// Is it a better idea (shorter distance) to trace to the target itself?
-			if ( vlen(self.origin + olddir * self.wait) < dist)
+			if(vdist(self.origin + olddir * self.wait, <, dist))
 				traceline(self.origin, self.origin + olddir * self.wait, false, self);
 			else
 				traceline(self.origin, eorg, false, self);
@@ -158,50 +158,49 @@ void M_Vore_Attack_Spike_Think()
 	UpdateCSQCProjectile(self);
 }
 
-void M_Vore_Attack_Spike(vector dir)
+void M_Vore_Attack_Spike(entity this, vector dir)
 {
-	SELFPARAM();
-	makevectors(self.angles);
+	makevectors(this.angles);
 
 	entity missile = spawn();
-	missile.owner = missile.realowner = self;
+	missile.owner = missile.realowner = this;
 	missile.think = M_Vore_Attack_Spike_Think;
 	missile.ltime = time + 7;
 	missile.nextthink = time;
 	missile.solid = SOLID_BBOX;
 	missile.movetype = MOVETYPE_FLYMISSILE;
 	missile.flags = FL_PROJECTILE;
-	setorigin(missile, self.origin + v_forward * 14 + '0 0 30' + v_right * -14);
+	setorigin(missile, this.origin + v_forward * 14 + '0 0 30' + v_right * -14);
 	setsize(missile, '0 0 0', '0 0 0');
 	missile.velocity = dir * 400;
 	missile.avelocity = '300 300 300';
-	missile.enemy = self.enemy;
+	missile.enemy = this.enemy;
 	missile.touch = M_Vore_Attack_Spike_Touch;
 
-	self.vore_spike = missile;
+	this.vore_spike = missile;
 
 	CSQCProjectile(missile, true, PROJECTILE_MAGE_SPIKE, true);
 }
 
-float M_Vore_Attack(float attack_type, entity targ)
-{SELFPARAM();
+bool M_Vore_Attack(int attack_type, entity actor, entity targ)
+{
 	.entity weaponentity = weaponentities[0];
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		case MONSTER_ATTACK_RANGED:
 		{
-			if(!self.vore_spike)
+			if(!actor.vore_spike)
 			{
-				setanim(self, self.anim_shoot, true, true, true);
-				self.attack_finished_single[0] = time + (autocvar_g_monster_vore_attack_spike_delay);
-				self.anim_finished = time + 1;
+				setanim(actor, actor.anim_shoot, true, true, true);
+				actor.attack_finished_single[0] = time + (autocvar_g_monster_vore_attack_spike_delay);
+				actor.anim_finished = time + 1;
 				Weapon wep = WEP_VORE_SPIKE;
-				wep.wr_think(wep, self, weaponentity, 1);
+				wep.wr_think(wep, actor, weaponentity, 1);
 				return true;
 			}
 
-			if(self.vore_spike)
+			if(actor.vore_spike)
 				return true;
 			else
 				return false;
@@ -211,55 +210,51 @@ float M_Vore_Attack(float attack_type, entity targ)
 	return false;
 }
 
-spawnfunc(monster_shalrath) { Monster_Spawn(MON_VORE.monsterid); }
+spawnfunc(monster_shalrath) { Monster_Spawn(this, MON_VORE.monsterid); }
 
 #endif // SVQC
 
 		#ifdef SVQC
-		METHOD(Vore, mr_think, bool(Monster thismon))
+		METHOD(Vore, mr_think, bool(Monster thismon, entity actor))
 		{
 			return true;
 		}
-		METHOD(Vore, mr_pain, bool(Monster thismon))
+		METHOD(Vore, mr_pain, bool(Monster thismon, entity actor))
 		{
 			return true;
 		}
-		METHOD(Vore, mr_death, bool(Monster thismon))
+		METHOD(Vore, mr_death, bool(Monster thismon, entity actor))
 		{
-			SELFPARAM();
-			setanim(self, self.anim_die1, false, true, true);
+			setanim(actor, actor.anim_die1, false, true, true);
 			return true;
 		}
 		#endif
 		#ifndef MENUQC
-		METHOD(Vore, mr_anim, bool(Monster thismon))
+		METHOD(Vore, mr_anim, bool(Monster thismon, entity actor))
 		{
-			SELFPARAM();
 			vector none = '0 0 0';
-			self.anim_die1 = animfixfps(self, '2 1 1', none); // 2 seconds
-			self.anim_walk = animfixfps(self, '3 1.2 1', none);
-			self.anim_idle = animfixfps(self, '3 1.2 1', none);
-			self.anim_pain1 = animfixfps(self, '1 0.4 1', none); // 0.5 seconds
-			self.anim_shoot = animfixfps(self, '0 1 1', none); // analyze models and set framerate
-			self.anim_run = animfixfps(self, '3 1.2 1.3', none);
-
+			actor.anim_die1 = animfixfps(actor, '2 1 1', none); // 2 seconds
+			actor.anim_walk = animfixfps(actor, '3 1.2 1', none);
+			actor.anim_idle = animfixfps(actor, '3 1.2 1', none);
+			actor.anim_pain1 = animfixfps(actor, '1 0.4 1', none); // 0.5 seconds
+			actor.anim_shoot = animfixfps(actor, '0 1 1', none); // analyze models and set framerate
+			actor.anim_run = animfixfps(actor, '3 1.2 1.3', none);
 			return true;
 		}
 		#endif
 		#ifdef SVQC
 		.float speed;
 		//spawnfunc(item_health_large);
-		METHOD(Vore, mr_setup, bool(Monster thismon))
+		METHOD(Vore, mr_setup, bool(Monster thismon, entity actor))
 		{
-			SELFPARAM();
-			if(!self.health) self.health = (autocvar_g_monster_vore_health);
-			if(!self.speed) { self.speed = (autocvar_g_monster_vore_speed_walk); }
-			if(!self.speed2) { self.speed2 = (autocvar_g_monster_vore_speed_run); }
-			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_vore_speed_stop); }
-			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_vore_damageforcescale); }
+			if(!actor.health) actor.health = (autocvar_g_monster_vore_health);
+			if(!actor.speed) { actor.speed = (autocvar_g_monster_vore_speed_walk); }
+			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_vore_speed_run); }
+			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_vore_speed_stop); }
+			if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_vore_damageforcescale); }
 
-			//self.monster_loot = spawnfunc_item_health_large;
-			self.monster_attackfunc = M_Vore_Attack;
+			//actor.monster_loot = spawnfunc_item_health_large;
+			actor.monster_attackfunc = M_Vore_Attack;
 
 			return true;
 		}

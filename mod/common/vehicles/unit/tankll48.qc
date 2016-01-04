@@ -272,8 +272,6 @@ float tankll48_frame()
 	player = self;
 	tankll48 = self.vehicle;
 	self   = tankll48;
-
-	vehicles_painframe();
 	
 	player.BUTTON_ZOOM      = 0;
 	//player.BUTTON_CROUCH    = 0;
@@ -344,7 +342,7 @@ float tankll48_frame()
 					//dprint("tankll48_idle:", ftos(soundlength("machines/generator_loop_pitchdown.ogg")), "\n");
 					sound (self, CH_TRIGGER_SINGLE, SND_TANK_IDLE, VOL_VEHICLEENGINE, ATTN_NORM);
 				}                
-				movelib_brake_simple(autocvar_g_vehicle_tankll48_speed_stop);
+				movelib_brake_simple(self, autocvar_g_vehicle_tankll48_speed_stop);
 				//tankll48.frame = 5;
 		
 		self.bomb1.gun1.avelocity_y = self.bomb1.gun2.avelocity_y = self.bomb2.gun1.avelocity_y = self.bomb2.gun2.avelocity_y = 0;
@@ -420,7 +418,7 @@ float tankll48_frame()
 			//fixedmakevectors(tankll48.angles);
 				makevectors(tankll48.angles + '-2 0 0' * tankll48.angles_x);
 	
-					movelib_move_simple(normalize(v_forward * player.movement_x),autocvar_g_vehicle_tankll48_speed_walk,autocvar_g_vehicle_tankll48_movement_inertia);
+					movelib_move_simple(self, normalize(v_forward * player.movement_x),autocvar_g_vehicle_tankll48_speed_walk,autocvar_g_vehicle_tankll48_movement_inertia);
 
 					if(self.sound_nexttime < time || self.delay != 1)
 					{                        
@@ -433,7 +431,7 @@ float tankll48_frame()
 	 } else {
 		//If we are not moving forward or backwards we should stop
 		//Otherwise we "drift" while turn buttons are pressed, like on ice
-		movelib_brake_simple(autocvar_g_vehicle_tankll48_speed_stop);
+		movelib_brake_simple(self, autocvar_g_vehicle_tankll48_speed_stop);
 	 }
 	}
 	
@@ -682,12 +680,12 @@ spawnfunc(vehicle_tankll48)
 	if(!vehicle_initialize(VEH_TANKLL48, false)) { remove(self); return; }
 }
 
-		METHOD(TankLL48, vr_impact, void(TankLL48 thisveh))
+		METHOD(TankLL48, vr_impact, void(TankLL48 thisveh, entity instance))
 		{
 			if(autocvar_g_vehicle_tankll48_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_tankll48_bouncepain_x, autocvar_g_vehicle_tankll48_bouncepain_y, autocvar_g_vehicle_tankll48_bouncepain_z);
 		}
-		METHOD(TankLL48, vr_enter, void(TankLL48 thisveh))
+		METHOD(TankLL48, vr_enter, void(TankLL48 thisveh, entity actor))
 		{
 			self.movetype = MOVETYPE_WALK;
 			CSQCVehicleSetup(self.owner, 0);
@@ -704,12 +702,12 @@ spawnfunc(vehicle_tankll48)
 				setorigin(self.owner.flagcarried, '-20 0 120');
 			}
 		}
-		METHOD(TankLL48, vr_think, void(TankLL48 thisveh))
+		METHOD(TankLL48, vr_think, void(TankLL48 thisveh, entity actor))
 		{
-			if(self.flags & FL_ONGROUND)
-				movelib_brake_simple(autocvar_g_vehicle_tankll48_speed_stop);
+			if(IS_ONGROUND(self))
+				movelib_brake_simple(self, autocvar_g_vehicle_tankll48_speed_stop);
 		}
-		METHOD(TankLL48, vr_death, void(TankLL48 thisveh))
+		METHOD(TankLL48, vr_death, void(TankLL48 thisveh, entity actor))
 		{
 			self.health				= 0;
 			self.event_damage		= func_null;
@@ -729,7 +727,7 @@ spawnfunc(vehicle_tankll48)
 			
 			CSQCModel_UnlinkEntity(self); // networking the death scene would be a nightmare
 		}
-		METHOD(TankLL48, vr_spawn, void(TankLL48 thisveh))
+		METHOD(TankLL48, vr_spawn, void(TankLL48 thisveh, entity actor))
 		{
 			if(!self.gun1)
 			{
@@ -829,7 +827,7 @@ spawnfunc(vehicle_tankll48)
 			tankt27_spawn_hitbox(0, self, self.hitboxft, TANKLL48_MIN_HBF, TANKLL48_MAX_HBF, 95, autocvar_g_vehicle_tankll48_health);
 			tankt27_spawn_hitbox(1, self, self.hitboxbk, TANKLL48_MIN_HBB, TANKLL48_MAX_HBB, -120, autocvar_g_vehicle_tankll48_health * 0.5);
 		}
-		METHOD(TankLL48, vr_setup, void(TankLL48 thisveh))
+		METHOD(TankLL48, vr_setup, void(TankLL48 thisveh, entity actor))
 		{
 			if(autocvar_g_vehicle_tankll48_shield)
 				self.vehicle_flags |= VHF_HASSHIELD;
@@ -869,7 +867,7 @@ AUTOCVAR_SAVE(cl_vehicle_tankll48_cross_size,                     float,   1,   
 				drawpic(tmpPos, vCROSS_TANK2, tmpSize, '0 0 1', autocvar_crosshair_alpha * 0.5, DRAWFLAG_NORMAL);
 			}
 		}
-		METHOD(TankLL48, vr_setup, void(TankLL48 thisveh))
+		METHOD(TankLL48, vr_setup, void(TankLL48 thisveh, entity actor))
 		{
 			AuxiliaryXhair[0].axh_image = vCROSS_HINT; // gun
 			AuxiliaryXhair[1].axh_image = vCROSS_LOCK; // cannon?

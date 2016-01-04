@@ -88,11 +88,11 @@ const float ogre_anim_death2 		= 12;
 const float ogre_anim_pull 			= 13;
 */
 
-void M_Ogre_Attack_MachineGun()
+void M_Ogre_Attack_MachineGun(entity this)
 {
-	vector dir = normalize(self.enemy.origin - self.origin);
-	vector org = self.origin + self.view_ofs + v_forward * 14;
-	sound (self, CH_WEAPON_A, SND_UZI_FIRE, VOL_BASE, ATTEN_NORM);
+	vector dir = normalize(this.enemy.origin - this.origin);
+	vector org = this.origin + this.view_ofs + v_forward * 14;
+	sound (this, CH_WEAPON_A, SND_UZI_FIRE, VOL_BASE, ATTEN_NORM);
 
 	fireBullet(org, dir, autocvar_g_monster_ogre_attack_machinegun_spread, autocvar_g_monster_ogre_attack_machinegun_solidpenetration, autocvar_g_monster_ogre_attack_machinegun_damage, autocvar_g_monster_ogre_attack_machinegun_force, DEATH_MONSTER_OGRE_MACHINEGUN.m_id, 0);
 
@@ -100,7 +100,7 @@ void M_Ogre_Attack_MachineGun()
 
 	// casing code
 	if (autocvar_g_casings >= 2)
-		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
+		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, this);
 }
 
 void M_Ogre_Attack_Grenade_Explode()
@@ -118,18 +118,18 @@ void M_Ogre_Attack_Grenade_Explode()
 	remove (self);
 }
 
-void M_Ogre_Attack_Grenade_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void M_Ogre_Attack_Grenade_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
-	if (self.health <= 0)
+	if (this.health <= 0)
 		return;
 
-	if (!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+	if (!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	self.health -= damage;
+	this.health -= damage;
 
-	if (self.health <= 0)
-		W_PrepareExplosionByDamage(attacker, self.use);
+	if (this.health <= 0)
+		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, this.use));
 }
 
 void M_Ogre_Attack_Grenade_Touch()
@@ -146,19 +146,19 @@ void M_Ogre_Attack_Grenade_Touch()
 	//self.projectiledeathtype |= HITTYPE_BOUNCE;
 }
 
-void M_Ogre_Attack_Grenade()
+void M_Ogre_Attack_Grenade(entity this)
 {
-	sound (self, CH_WEAPON_A, SND_GRENADE_FIRE, VOL_BASE, ATTEN_NORM);
+	sound (this, CH_WEAPON_A, SND_GRENADE_FIRE, VOL_BASE, ATTEN_NORM);
 
-	vector dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
-	vector org = self.origin + v_forward * 14 + '0 0 30' + v_right * -14;
+	vector dir = normalize((this.enemy.origin + '0 0 10') - this.origin);
+	vector org = this.origin + v_forward * 14 + '0 0 30' + v_right * -14;
 
-	makevectors(self.angles);
+	makevectors(this.angles);
 
 	Send_Effect(EFFECT_GRENADE_MUZZLEFLASH, org, dir * 1000, 1);
 
 	entity gren = spawn ();
-	gren.owner = gren.realowner = self;
+	gren.owner = gren.realowner = this;
 	gren.classname = "grenade";
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = autocvar_g_monster_ogre_attack_grenade_damage;
@@ -188,10 +188,10 @@ void M_Ogre_Attack_Grenade()
 
 	CSQCProjectile(gren, true, PROJECTILE_GRENADE_BOUNCING, true);
 
-	MUTATOR_CALLHOOK(EditProjectile, self, gren);
+	MUTATOR_CALLHOOK(EditProjectile, this, gren);
 
-	self.attack_finished_single[0] = time + 0.7;
-	self.state = 0;
+	this.attack_finished_single[0] = time + 0.7;
+	this.state = 0;
 }
 
 .float ogre_swing_prev;
@@ -283,41 +283,41 @@ void M_Ogre_Attack_Chainsaw()
 	}
 }
 
-bool M_Ogre_Attack(int attack_type, entity targ)
-{SELFPARAM();
+bool M_Ogre_Attack(int attack_type, entity actor, entity targ)
+{
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			vector vdir = normalize(self.enemy.origin - self.origin);
+			vector vdir = normalize(targ.origin - actor.origin);
 
 			if(vdir_z > 0.7)
 			{
-				self.attack_finished_single[0] = time + 1.2;
-				setanim(self, self.anim_pain1, true, true, false);
-				self.state = MONSTER_ATTACK_RANGED;
-				Monster_Delay(2, 0.1, 0.4, M_Ogre_Attack_MachineGun);
+				actor.attack_finished_single[0] = time + 1.2;
+				setanim(actor, actor.anim_pain1, true, true, false);
+				actor.state = MONSTER_ATTACK_RANGED;
+				Monster_Delay(actor, 2, 0.4, M_Ogre_Attack_MachineGun);
 				return 2;
 			}
 			entity meleetemp;
 			meleetemp = spawn();
-			meleetemp.realowner = self;
+			meleetemp.realowner = actor;
 			meleetemp.think = M_Ogre_Attack_Chainsaw;
 			meleetemp.nextthink = time + autocvar_g_monster_ogre_attack_melee_delay;
-			self.attack_finished_single[0] = time + autocvar_g_monster_ogre_attack_melee_time + autocvar_g_monster_ogre_attack_melee_delay + 0.7;
-			self.anim_finished = self.attack_finished_single[0];
-			self.state = MONSTER_ATTACK_MELEE;
-			setanim(self, self.anim_melee1, true, true, false);
+			actor.attack_finished_single[0] = time + autocvar_g_monster_ogre_attack_melee_time + autocvar_g_monster_ogre_attack_melee_delay + 0.7;
+			actor.anim_finished = actor.attack_finished_single[0];
+			actor.state = MONSTER_ATTACK_MELEE;
+			setanim(actor, actor.anim_melee1, true, true, false);
 
 			return true;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			Monster_Delay(0, 0, 0.5, M_Ogre_Attack_Grenade);
-			self.state = MONSTER_ATTACK_RANGED;
-			self.attack_finished_single[0] = time + 1;
-			self.anim_finished = time + 0.5;
-			setanim(self, self.anim_pain1, true, true, false);
+			Monster_Delay(actor, 0, 0.5, M_Ogre_Attack_Grenade);
+			actor.state = MONSTER_ATTACK_RANGED;
+			actor.attack_finished_single[0] = time + 1;
+			actor.anim_finished = time + 0.5;
+			setanim(actor, actor.anim_pain1, true, true, false);
 			return true;
 		}
 	}
@@ -325,80 +325,74 @@ bool M_Ogre_Attack(int attack_type, entity targ)
 	return false;
 }
 
-spawnfunc(monster_ogre) { Monster_Spawn(MON_OGRE.monsterid); }
+spawnfunc(monster_ogre) { Monster_Spawn(this, MON_OGRE.monsterid); }
 
 #endif // SVQC
 
 		#ifdef SVQC
-		METHOD(Ogre, mr_think, bool(Monster thismon))
+		METHOD(Ogre, mr_think, bool(Monster thismon, entity actor))
 		{
 			return true;
 		}
-		METHOD(Ogre, mr_pain, bool(Monster thismon))
+		METHOD(Ogre, mr_pain, bool(Monster thismon, entity actor))
 		{
 			vector anim;
 			switch(floor(random() * 6))
 			{
 				default:
-				case 1: anim = self.anim_pain1; self.anim_finished = time + 0.4; break;
-				case 2: anim = self.anim_pain2; self.anim_finished = time + 0.2; break;
-				case 3: anim = self.anim_pain3; self.anim_finished = time + 0.5; break;
-				case 4: anim = self.anim_pain4; self.anim_finished = time + 1.5; break;
-				case 5: anim = self.anim_pain5; self.anim_finished = time + 1.4; break;
+				case 1: anim = actor.anim_pain1; actor.anim_finished = time + 0.4; break;
+				case 2: anim = actor.anim_pain2; actor.anim_finished = time + 0.2; break;
+				case 3: anim = actor.anim_pain3; actor.anim_finished = time + 0.5; break;
+				case 4: anim = actor.anim_pain4; actor.anim_finished = time + 1.5; break;
+				case 5: anim = actor.anim_pain5; actor.anim_finished = time + 1.4; break;
 			}
-			setanim(self, anim, true, true, true);
+			setanim(actor, anim, true, true, true);
 			return true;
 		}
-		METHOD(Ogre, mr_death, bool(Monster thismon))
+		METHOD(Ogre, mr_death, bool(Monster thismon, entity actor))
 		{
-			SELFPARAM();
-			setanim(self, ((random() > 0.5) ? self.anim_die1 : self.anim_die2), false, true, true);
+			setanim(actor, ((random() > 0.5) ? actor.anim_die1 : actor.anim_die2), false, true, true);
 			return true;
 		}
 		#endif
 		#ifndef MENUQC
-		METHOD(Ogre, mr_anim, bool(Monster thismon))
+		METHOD(Ogre, mr_anim, bool(Monster thismon, entity actor))
 		{
-			SELFPARAM();
 			vector none = '0 0 0';
-			self.anim_die1 = animfixfps(self, '11 1 0.5', none); // 2 seconds
-			self.anim_die2 = animfixfps(self, '12 1 0.5', none); // 2 seconds
-			self.anim_walk = animfixfps(self, '1 1 1', none);
-			self.anim_idle = animfixfps(self, '0 1 1', none);
-			self.anim_pain1 = animfixfps(self, '6 1 2', none); // 0.5 seconds
-			self.anim_pain2 = animfixfps(self, '7 1 2', none); // 0.5 seconds
-			self.anim_pain3 = animfixfps(self, '8 1 2', none); // 0.5 seconds
-			self.anim_pain4 = animfixfps(self, '9 1 2', none); // 0.5 seconds
-			self.anim_pain5 = animfixfps(self, '10 1 2', none); // 0.5 seconds
-			self.anim_melee1 = animfixfps(self, '3 1 5', none); // analyze models and set framerate
-			self.anim_melee2 = animfixfps(self, '4 1 5', none); // analyze models and set framerate
-			self.anim_shoot = animfixfps(self, '5 1 5', none); // analyze models and set framerate
-			self.anim_run = animfixfps(self, '2 1 1', none);
-			self.anim_draw = animfixfps(self, '13 1 1', none);
-
+			actor.anim_die1 = animfixfps(actor, '11 1 0.5', none); // 2 seconds
+			actor.anim_die2 = animfixfps(actor, '12 1 0.5', none); // 2 seconds
+			actor.anim_walk = animfixfps(actor, '1 1 1', none);
+			actor.anim_idle = animfixfps(actor, '0 1 1', none);
+			actor.anim_pain1 = animfixfps(actor, '6 1 2', none); // 0.5 seconds
+			actor.anim_pain2 = animfixfps(actor, '7 1 2', none); // 0.5 seconds
+			actor.anim_pain3 = animfixfps(actor, '8 1 2', none); // 0.5 seconds
+			actor.anim_pain4 = animfixfps(actor, '9 1 2', none); // 0.5 seconds
+			actor.anim_pain5 = animfixfps(actor, '10 1 2', none); // 0.5 seconds
+			actor.anim_melee1 = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
+			actor.anim_melee2 = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
+			actor.anim_shoot = animfixfps(actor, '5 1 5', none); // analyze models and set framerate
+			actor.anim_run = animfixfps(actor, '2 1 1', none);
+			actor.anim_draw = animfixfps(actor, '13 1 1', none);
 			return true;
 		}
 		#endif
 		#ifdef SVQC
 		.float speed;
 		spawnfunc(item_rockets);
-		METHOD(Ogre, mr_setup, bool(Monster thismon))
+		METHOD(Ogre, mr_setup, bool(Monster thismon, entity actor))
 		{
-			SELFPARAM();
-			if(!self.health) self.health = (autocvar_g_monster_ogre_health);
-			if(!self.speed) { self.speed = (autocvar_g_monster_ogre_speed_walk); }
-			if(!self.speed2) { self.speed2 = (autocvar_g_monster_ogre_speed_run); }
-			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_ogre_speed_stop); }
-			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_ogre_damageforcescale); }
+			if(!actor.health) actor.health = (autocvar_g_monster_ogre_health);
+			if(!actor.speed) { actor.speed = (autocvar_g_monster_ogre_speed_walk); }
+			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_ogre_speed_run); }
+			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_ogre_speed_stop); }
+			if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_ogre_damageforcescale); }
 
-			self.monster_loot = spawnfunc_item_rockets;
-			self.weapon = WEP_MACHINEGUN.m_id;
-			setanim(self, self.anim_draw, false, true, true);
-			self.spawn_time = self.animstate_endtime;
-			self.spawnshieldtime = self.spawn_time;
-			self.monster_attackfunc = M_Ogre_Attack;
-
-			self.hitplotfh = -1;
+			actor.monster_loot = spawnfunc_item_rockets;
+			actor.weapon = WEP_MACHINEGUN.m_id;
+			setanim(actor, actor.anim_draw, false, true, true);
+			actor.spawn_time = actor.animstate_endtime;
+			actor.spawnshieldtime = actor.spawn_time;
+			actor.monster_attackfunc = M_Ogre_Attack;
 
 			return true;
 		}

@@ -56,25 +56,25 @@ bool M_Spawner_SpawnMonsters(entity this)
 	return true;
 }
 
-bool M_Spawner_Attack(int attack_type, entity targ)
-{SELFPARAM();
+bool M_Spawner_Attack(int attack_type, entity actor, entity targ)
+{
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		case MONSTER_ATTACK_RANGED:
 		{
-			if(self.spawner_count >= autocvar_g_monster_spawner_spawn_max)
+			if(actor.spawner_count >= autocvar_g_monster_spawner_spawn_max)
 				return false;
 
 			for(int i = 0; i <= autocvar_g_monster_spawner_spawn_burst; ++i)
 			{
-				if(M_Spawner_SpawnMonsters(self))
-					++self.spawner_count;
-				if(self.spawner_count >= autocvar_g_monster_spawner_spawn_max)
+				if(M_Spawner_SpawnMonsters(actor))
+					++actor.spawner_count;
+				if(actor.spawner_count >= autocvar_g_monster_spawner_spawn_max)
 					break;
 			}
 			
-			self.attack_finished_single[0] = time + (autocvar_g_monster_spawner_spawn_delay);
+			actor.attack_finished_single[0] = time + (autocvar_g_monster_spawner_spawn_delay);
 			return true;
 		}
 	}
@@ -82,35 +82,33 @@ bool M_Spawner_Attack(int attack_type, entity targ)
 	return false;
 }
 
-spawnfunc(monster_spawner) { Monster_Spawn(MON_SPAWNER.monsterid); }
+spawnfunc(monster_spawner) { Monster_Spawn(this, MON_SPAWNER.monsterid); }
 
-		METHOD(Spawner, mr_think, bool(Monster thismon))
+		METHOD(Spawner, mr_think, bool(Monster thismon, entity actor))
 		{
 			thismon.state = MONSTER_ATTACK_MELEE; // always use this state
 			return true;
 		}
 
-		METHOD(Spawner, mr_death, bool(Monster thismon))
+		METHOD(Spawner, mr_death, bool(Monster thismon, entity actor))
 		{
-			SELFPARAM();
 			// explode
 			return true;
 		}
 
-		METHOD(Spawner, mr_setup, bool(Monster thismon))
+		METHOD(Spawner, mr_setup, bool(Monster thismon, entity actor))
 		{
-			SELFPARAM();
-			if(!self.spawner_mob || self.spawner_mob == "") { self.spawner_mob = autocvar_g_monster_spawner_spawn_default; }
-			if(!self.health) self.health = (autocvar_g_monster_spawner_health);
-			self.speed = self.speed2 = self.stopspeed = self.damageforcescale = 0;
+			if(!actor.spawner_mob || actor.spawner_mob == "") { actor.spawner_mob = autocvar_g_monster_spawner_spawn_default; }
+			if(!actor.health) actor.health = (autocvar_g_monster_spawner_health);
+			actor.speed = actor.speed2 = actor.stopspeed = actor.damageforcescale = 0;
 
-			self.monster_attackfunc = M_Spawner_Attack;
+			actor.monster_attackfunc = M_Spawner_Attack;
 
-			self.movetype = MOVETYPE_NONE;
-			self.monster_moveflags = 4;
-			self.spawner_count = 0;
+			actor.movetype = MOVETYPE_NONE;
+			actor.monster_moveflags = 4;
+			actor.spawner_count = 0;
 
-			LOG_INFO("Setting up spawner with spawner_mob", self.spawner_mob, "\n");
+			LOG_INFO("Setting up spawner with spawner_mob", actor.spawner_mob, "\n");
 
 			return true;
 		}

@@ -35,16 +35,16 @@ void za_SetEnemy(entity player)
 	// prefer players
 	entity closest_targ = world;
 	FOREACH_CLIENT(IS_PLAYER(it) && it != player, LAMBDA(
-		if(vlen(player.origin - it.origin) < autocvar_g_monsters_target_range)
-		if(!closest_targ || vlen(player.origin - closest_targ.origin) > vlen(player.origin - it.origin))
+		if(vdist(player.origin - it.origin, <, autocvar_g_monsters_target_range))
+		if(!closest_targ || vlen2(player.origin - closest_targ.origin) > vlen2(player.origin - it.origin))
 			closest_targ = it;
 	));
 
 	if(!closest_targ)
 	{
 		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
-			if(vlen(player.origin - it.origin) < autocvar_g_monsters_target_range)
-			if(!closest_targ || vlen(player.origin - closest_targ.origin) > vlen(player.origin - it.origin))
+			if(vdist(player.origin - it.origin, <, autocvar_g_monsters_target_range))
+			if(!closest_targ || vlen2(player.origin - closest_targ.origin) > vlen2(player.origin - it.origin))
 				closest_targ = it;
 		));
 	}
@@ -54,8 +54,8 @@ void za_SetEnemy(entity player)
 	{
 		FOREACH_ENTITY_FLOAT(monster_attack, true, LAMBDA(
 			if(it.takedamage && it != player)
-			if(vlen(player.origin - it.origin) < autocvar_g_monsters_target_range)
-			if(!closest_targ || vlen(player.origin - closest_targ.origin) > vlen(player.origin - it.origin))
+			if(vdist(player.origin - it.origin, <, autocvar_g_monsters_target_range))
+			if(!closest_targ || vlen2(player.origin - closest_targ.origin) > vlen2(player.origin - it.origin))
 				closest_targ = it;
 		));
 	}
@@ -99,13 +99,13 @@ MUTATOR_HOOKFUNCTION(za, PlayerPreThink)
 	if(!self.monsterid || time < self.attack_finished_single[0]) { return false; }
 
 	Monster mon = get_monsterinfo(self.monsterid);
-	mon.mr_think(mon);
+	mon.mr_think(mon, self);
 
 	if(self.BUTTON_ATCK)
 	if(self.monster_attackfunc)
 	{
 		za_SetEnemy(self);
-		if(self.monster_attackfunc(MONSTER_ATTACK_MELEE, self.enemy))
+		if(self.monster_attackfunc(MONSTER_ATTACK_MELEE, self, self.enemy))
 			animdecide_setaction(self, ANIMACTION_MELEE, false);
 	}
 
@@ -113,7 +113,7 @@ MUTATOR_HOOKFUNCTION(za, PlayerPreThink)
 	if(self.monster_attackfunc)
 	{
 		za_SetEnemy(self);
-		if(self.monster_attackfunc(MONSTER_ATTACK_RANGED, self.enemy))
+		if(self.monster_attackfunc(MONSTER_ATTACK_RANGED, self, self.enemy))
 			animdecide_setaction(self, ANIMACTION_SHOOT, false);
 	}
 

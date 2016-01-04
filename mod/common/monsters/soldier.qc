@@ -41,31 +41,31 @@ float autocvar_g_monster_soldier_speed_run = 80;
 float autocvar_g_monster_soldier_speed_walk = 40;
 
 
-void M_Soldier_Attack_Shotgun()
-{SELFPARAM();
-	if (!IS_PLAYER(self)) w_shotdir = normalize((self.enemy.origin + '0 0 10') - self.origin);
+void M_Soldier_Attack_Shotgun(entity this)
+{
+	if (!IS_PLAYER(this)) w_shotdir = normalize((this.enemy.origin + '0 0 10') - this.origin);
 
-	W_SetupShot(self, true, 5, SND(SHOTGUN_FIRE), CH_WEAPON_A, autocvar_g_monster_soldier_attack_shotgun_damage * autocvar_g_monster_soldier_attack_shotgun_bullets);
+	W_SetupShot(this, true, 5, SND(SHOTGUN_FIRE), CH_WEAPON_A, autocvar_g_monster_soldier_attack_shotgun_damage * autocvar_g_monster_soldier_attack_shotgun_bullets);
 
 	for(int sc = 0; sc < autocvar_g_monster_soldier_attack_shotgun_bullets;sc = sc + 1)
-		fireBullet(w_shotdir, self.enemy.origin, autocvar_g_monster_soldier_attack_shotgun_spread, autocvar_g_monster_soldier_attack_shotgun_solidpenetration, autocvar_g_monster_soldier_attack_shotgun_damage, autocvar_g_monster_soldier_attack_shotgun_force, WEP_SHOTGUN.m_id, 0);
+		WITH(entity, self, this, fireBullet(w_shotdir, this.enemy.origin, autocvar_g_monster_soldier_attack_shotgun_spread, autocvar_g_monster_soldier_attack_shotgun_solidpenetration, autocvar_g_monster_soldier_attack_shotgun_damage, autocvar_g_monster_soldier_attack_shotgun_force, WEP_SHOTGUN.m_id, 0));
 
 	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotdir, w_shotdir * 1000, 1);
 
-	self.attack_finished_single[0] = time + autocvar_g_monster_soldier_attack_shotgun_refire + random();
-	self.anim_finished = time + 0.8;
+	this.attack_finished_single[0] = time + autocvar_g_monster_soldier_attack_shotgun_refire + random();
+	this.anim_finished = time + 0.8;
 
-	setanim(self, self.anim_shoot, true, true, true);
+	setanim(this, this.anim_shoot, true, true, true);
 }
 
-bool M_Soldier_Attack(int attack_type, entity targ)
+bool M_Soldier_Attack(int attack_type, entity actor, entity targ)
 {SELFPARAM();
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		case MONSTER_ATTACK_RANGED:
 		{
-			M_Soldier_Attack_Shotgun();
+			M_Soldier_Attack_Shotgun(actor);
 			return true;
 		}
 	}
@@ -73,57 +73,51 @@ bool M_Soldier_Attack(int attack_type, entity targ)
 	return false;
 }
 
-spawnfunc(monster_army) { Monster_Spawn(MON_SOLDIER.monsterid); }
+spawnfunc(monster_army) { Monster_Spawn(this, MON_SOLDIER.monsterid); }
 
 #endif // SVQC
 
 		#ifdef SVQC
-		METHOD(Soldier, mr_think, bool(Monster thismon))
+		METHOD(Soldier, mr_think, bool(Monster thismon, entity actor))
 		{
 			return true;
 		}
-		METHOD(Soldier, mr_pain, bool(Monster thismon))
+		METHOD(Soldier, mr_pain, bool(Monster thismon, entity actor))
 		{
 			return true;
 		}
-		METHOD(Soldier, mr_death, bool(Monster thismon))
+		METHOD(Soldier, mr_death, bool(Monster thismon, entity actor))
 		{
-			SELFPARAM();
-			setanim(self, self.anim_die1, false, true, true);
+			setanim(actor, actor.anim_die1, false, true, true);
 			return true;
 		}
 		#endif
 		#ifndef MENUQC
-		METHOD(Soldier, mr_anim, bool(Monster thismon))
+		METHOD(Soldier, mr_anim, bool(Monster thismon, entity actor))
 		{
-			SELFPARAM();
 			vector none = '0 0 0';
-			self.anim_die1 = animfixfps(self, '1 0.9 1', none); // 2 seconds
-			self.anim_walk = animfixfps(self, '9 2.3 1', none);
-			self.anim_idle = animfixfps(self, '0 0.7 1', none);
-			self.anim_pain1 = animfixfps(self, '4 1 2', none); // 0.5 seconds
-			self.anim_shoot = animfixfps(self, '8 0.8 1', none); // analyze models and set framerate
-			self.anim_run = animfixfps(self, '7 0.7 1', none);
-
+			actor.anim_die1 = animfixfps(actor, '1 0.9 1', none); // 2 seconds
+			actor.anim_walk = animfixfps(actor, '9 2.3 1', none);
+			actor.anim_idle = animfixfps(actor, '0 0.7 1', none);
+			actor.anim_pain1 = animfixfps(actor, '4 1 2', none); // 0.5 seconds
+			actor.anim_shoot = animfixfps(actor, '8 0.8 1', none); // analyze models and set framerate
+			actor.anim_run = animfixfps(actor, '7 0.7 1', none);
 			return true;
 		}
 		#endif
 		#ifdef SVQC
 		.float speed;
 		spawnfunc(item_health_large);
-		METHOD(Soldier, mr_setup, bool(Monster thismon))
+		METHOD(Soldier, mr_setup, bool(Monster thismon, entity actor))
 		{
-			SELFPARAM();
-			if(!self.health) self.health = (autocvar_g_monster_soldier_health);
-			if(!self.speed) { self.speed = (autocvar_g_monster_soldier_speed_walk); }
-			if(!self.speed2) { self.speed2 = (autocvar_g_monster_soldier_speed_run); }
-			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_soldier_speed_stop); }
-			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_soldier_damageforcescale); }
+			if(!actor.health) actor.health = (autocvar_g_monster_soldier_health);
+			if(!actor.speed) { actor.speed = (autocvar_g_monster_soldier_speed_walk); }
+			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_soldier_speed_run); }
+			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_soldier_speed_stop); }
+			if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_soldier_damageforcescale); }
 
-			self.monster_loot = spawnfunc_item_shells;
-			self.monster_attackfunc = M_Soldier_Attack;
-
-			self.hitplotfh = -1;
+			actor.monster_loot = spawnfunc_item_shells;
+			actor.monster_attackfunc = M_Soldier_Attack;
 
 			return true;
 		}

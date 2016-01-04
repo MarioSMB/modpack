@@ -2,57 +2,57 @@
 #ifdef SVQC
 #include "tankt27.qh"
 
-void tankt27_vehicles_damage_hitboxft(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void tankt27_vehicles_damage_hitboxft(entity this, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	if(self.vehicle_health <= 0)
+	if(this.vehicle_health <= 0)
 	{
 		//print("FWD DMG\n");
-		self.event_damage       = func_null;
-		self.takedamage         = DAMAGE_NO;
-			self.touch              = func_null;
-			self.think              = func_null;
-			self.deadflag           = DEAD_DEAD;
-			self.solid      = SOLID_NOT;
+		this.event_damage       = func_null;
+		this.takedamage         = DAMAGE_NO;
+			this.touch              = func_null;
+			this.think              = func_null;
+			this.deadflag           = DEAD_DEAD;
+			this.solid      = SOLID_NOT;
 	} else {
-		self.dmg_time = time;
+		this.dmg_time = time;
 	
 		//damage = vehicles_evaldamage(damage, deathtype);
 		
-		//if(self.vehicle_tankresists == 1) {
+		//if(this.vehicle_tankresists == 1) {
 				//damage = vehicles_evaltankdamage(damage, deathtype);
 			//}
 		
-		self.vehicle_health -= damage;
+		this.vehicle_health -= damage;
 		
 		//if(sound_allowed(MSG_BROADCAST, attacker))
-					//spamsound (self, CH_PAIN, "object/impact_metal_3.ogg", VOL_BASE, ATTN_NORM);
+					//spamsound (this, CH_PAIN, "object/impact_metal_3.ogg", VOL_BASE, ATTN_NORM);
 			
 		//print("DMG\n");
 	}
 }
 
-void vehicles_damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
-void tankt27_vehicles_damage_hitboxbk(entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void vehicles_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force);
+void tankt27_vehicles_damage_hitboxbk(entity this, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	if(self.vehicle_health <= 0)
+	if(this.vehicle_health <= 0)
 	{
-		self.event_damage       = func_null;
-		self.takedamage         = DAMAGE_NO;
-			self.touch              = func_null;
-			self.think              = func_null;
-			self.deadflag           = DEAD_DEAD;
-			self.solid      = SOLID_NOT;
+		this.event_damage       = func_null;
+		this.takedamage         = DAMAGE_NO;
+			this.touch              = func_null;
+			this.think              = func_null;
+			this.deadflag           = DEAD_DEAD;
+			this.solid      = SOLID_NOT;
 	} else {
 		//float ardamage; //Damage to armor
-		self.dmg_time = time;
+		this.dmg_time = time;
 		//ardamage = vehicles_evaldamage(damage, deathtype);
-		self.vehicle_health -= damage;
+		this.vehicle_health -= damage;
 		
 		//if(sound_allowed(MSG_BROADCAST, attacker))
-					//spamsound (self, CH_PAIN, "object/impact_metal_4.ogg", VOL_BASE, ATTN_NORM);
+					//spamsound (this, CH_PAIN, "object/impact_metal_4.ogg", VOL_BASE, ATTN_NORM);
 		
-		self = self.owner;
-		vehicles_damage(inflictor, attacker, damage, deathtype, hitloc, force);
+		this = this.owner;
+		vehicles_damage(this, inflictor, attacker, damage, deathtype, hitloc, force);
 		
 		//print("BKDMG\n");
 	}
@@ -69,8 +69,8 @@ void tankt27_impact_hitbox()
 {
 	self = self.owner;
 	if(self.play_time < time) {
-		Vehicle info = get_vehicleinfo(self.vehicleid);
-		info.vr_impact(info);
+		Vehicle info = Vehicles_from(self.vehicleid);
+		info.vr_impact(info, self);
 	}
 	//self.vehicle_impact();
 }

@@ -52,13 +52,13 @@ const float rottweiler_anim_idle		= 7;
 const float rottweiler_anim_walk		= 8;
 */
 
-bool M_Rottweiler_Attack(int attack_type, entity targ)
-{SELFPARAM();
+bool M_Rottweiler_Attack(int attack_type, entity actor, entity targ)
+{
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_rottweiler_attack_melee_damage), ((random() >= 0.5) ? self.anim_melee1 : self.anim_melee2), self.attack_range, (autocvar_g_monster_rottweiler_attack_melee_delay), DEATH_MONSTER_ROTTWEILER_MELEE.m_id, true);
+			return Monster_Attack_Melee(actor, targ, (autocvar_g_monster_rottweiler_attack_melee_damage), ((random() >= 0.5) ? actor.anim_melee1 : actor.anim_melee2), actor.attack_range, (autocvar_g_monster_rottweiler_attack_melee_delay), DEATH_MONSTER_ROTTWEILER_MELEE.m_id, true);
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
@@ -70,46 +70,44 @@ bool M_Rottweiler_Attack(int attack_type, entity targ)
 	return false;
 }
 
-spawnfunc(monster_rottweiler) { Monster_Spawn(MON_ROTTWEILER.monsterid); }
-spawnfunc(monster_dog) { Monster_Spawn(MON_ROTTWEILER.monsterid); }
+spawnfunc(monster_rottweiler) { Monster_Spawn(this, MON_ROTTWEILER.monsterid); }
+spawnfunc(monster_dog) { Monster_Spawn(this, MON_ROTTWEILER.monsterid); }
 
 #endif // SVQC
 
 		#ifdef SVQC
-		METHOD(Rottweiler, mr_think, bool(Monster thismon))
+		METHOD(Rottweiler, mr_think, bool(Monster thismon, entity actor))
 		{
 			return true;
 		}
-		METHOD(Rottweiler, mr_pain, bool(Monster thismon))
+		METHOD(Rottweiler, mr_pain, bool(Monster thismon, entity actor))
 		{
 			if(random() <= 0.3)
 			{
-				self.pain_finished = time + 1.5;
-				setanim(self, self.anim_pain1, true, true, false);
+				actor.pain_finished = time + 1.5;
+				setanim(actor, actor.anim_pain1, true, true, false);
 			}
 			return true;
 		}
-		METHOD(Rottweiler, mr_death, bool(Monster thismon))
+		METHOD(Rottweiler, mr_death, bool(Monster thismon, entity actor))
 		{
-			SELFPARAM();
-			setanim(self, ((random() > 0.5) ? self.anim_die1 : self.anim_die2), false, true, true);
+			setanim(actor, ((random() > 0.5) ? actor.anim_die1 : actor.anim_die2), false, true, true);
 			return true;
 		}
 		#endif
 		#ifndef MENUQC
-		METHOD(Rottweiler, mr_anim, bool(Monster thismon))
+		METHOD(Rottweiler, mr_anim, bool(Monster thismon, entity actor))
 		{
-			SELFPARAM();
 			vector none = '0 0 0';
-			self.anim_die1 = animfixfps(self, '5 1 0.5', none); // 2 seconds
-			self.anim_die2 = animfixfps(self, '1 1 0.5', none); // 2 seconds
-			self.anim_walk = animfixfps(self, '2 1 1', none);
-			self.anim_idle = animfixfps(self, '7 1 1', none);
-			self.anim_pain1 = animfixfps(self, '4 1 2', none); // 0.5 seconds
-			self.anim_melee1 = animfixfps(self, '0 1 5', none); // analyze models and set framerate
-			self.anim_melee2 = animfixfps(self, '3 1 5', none); // analyze models and set framerate
-			self.anim_shoot = animfixfps(self, '6 1 5', none); // analyze models and set framerate
-			self.anim_run = animfixfps(self, '5 1 1', none);
+			actor.anim_die1 = animfixfps(actor, '5 1 0.5', none); // 2 seconds
+			actor.anim_die2 = animfixfps(actor, '1 1 0.5', none); // 2 seconds
+			actor.anim_walk = animfixfps(actor, '2 1 1', none);
+			actor.anim_idle = animfixfps(actor, '7 1 1', none);
+			actor.anim_pain1 = animfixfps(actor, '4 1 2', none); // 0.5 seconds
+			actor.anim_melee1 = animfixfps(actor, '0 1 5', none); // analyze models and set framerate
+			actor.anim_melee2 = animfixfps(actor, '3 1 5', none); // analyze models and set framerate
+			actor.anim_shoot = animfixfps(actor, '6 1 5', none); // analyze models and set framerate
+			actor.anim_run = animfixfps(actor, '5 1 1', none);
 
 			return true;
 		}
@@ -117,17 +115,16 @@ spawnfunc(monster_dog) { Monster_Spawn(MON_ROTTWEILER.monsterid); }
 		#ifdef SVQC
 		.float speed;
 		spawnfunc(item_health_small);
-		METHOD(Rottweiler, mr_setup, bool(Monster thismon))
+		METHOD(Rottweiler, mr_setup, bool(Monster thismon, entity actor))
 		{
-			SELFPARAM();
-			if(!self.health) self.health = (autocvar_g_monster_rottweiler_health);
-			if(!self.speed) { self.speed = (autocvar_g_monster_rottweiler_speed_walk); }
-			if(!self.speed2) { self.speed2 = (autocvar_g_monster_rottweiler_speed_run); }
-			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_rottweiler_speed_stop); }
-			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_rottweiler_damageforcescale); }
+			if(!actor.health) actor.health = (autocvar_g_monster_rottweiler_health);
+			if(!actor.speed) { actor.speed = (autocvar_g_monster_rottweiler_speed_walk); }
+			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_rottweiler_speed_run); }
+			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_rottweiler_speed_stop); }
+			if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_rottweiler_damageforcescale); }
 
-			self.monster_loot = spawnfunc_item_health_small;
-			self.monster_attackfunc = M_Rottweiler_Attack;
+			actor.monster_loot = spawnfunc_item_health_small;
+			actor.monster_attackfunc = M_Rottweiler_Attack;
 
 			return true;
 		}

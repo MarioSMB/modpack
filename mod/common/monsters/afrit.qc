@@ -83,42 +83,41 @@ void M_Afrit_Attack_Fireball_Touch()
 	M_Afrit_Attack_Fireball_Explode();
 }
 
-void M_Afrit_Attack_Fireball()
+void M_Afrit_Attack_Fireball(entity this)
 {
 	entity missile = spawn();
-	vector dir = normalize((self.enemy.origin + '0 0 10') - self.origin);
+	vector dir = normalize((this.enemy.origin + '0 0 10') - this.origin);
 
-	monster_makevectors(self.enemy);
+	monster_makevectors(this, this.enemy);
 
-	missile.owner = missile.realowner = self;
+	missile.owner = missile.realowner = this;
 	missile.solid = SOLID_TRIGGER;
 	missile.movetype = MOVETYPE_FLYMISSILE;
 	missile.projectiledeathtype = DEATH_MONSTER_AFRIT.m_id;
 	setsize(missile, '-6 -6 -6', '6 6 6');
-	setorigin(missile, self.origin + '0 0 13' + v_forward * 10);
+	setorigin(missile, this.origin + '0 0 13' + v_forward * 10);
 	missile.flags = FL_PROJECTILE;
 	missile.velocity = dir * (autocvar_g_monster_afrit_attack_fireball_speed);
 	missile.avelocity = '300 300 300';
 	missile.nextthink = time + 5;
 	missile.think = M_Afrit_Attack_Fireball_Explode;
-	missile.enemy = self.enemy;
+	missile.enemy = this.enemy;
 	missile.touch = M_Afrit_Attack_Fireball_Touch;
 	CSQCProjectile(missile, true, PROJECTILE_FIREMINE, true);
 }
 
-bool M_Afrit_Attack(int attack_type, entity targ)
+bool M_Afrit_Attack(int attack_type, entity actor, entity targ)
 {
-	SELFPARAM();
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		case MONSTER_ATTACK_RANGED:
 		{
-			self.attack_finished_single[0] = time + 2;
-			setanim(self, self.anim_shoot, false, true, true);
-			self.anim_finished = self.animstate_endtime;
+			actor.attack_finished_single[0] = time + 2;
+			setanim(actor, actor.anim_shoot, false, true, true);
+			actor.anim_finished = actor.animstate_endtime;
 
-			Monster_Delay(2, 0.3, 0.7, M_Afrit_Attack_Fireball);
+			Monster_Delay(actor, 2, 0.7, M_Afrit_Attack_Fireball);
 			return true;
 		}
 	}
@@ -126,96 +125,92 @@ bool M_Afrit_Attack(int attack_type, entity targ)
 	return false;
 }
 
-spawnfunc(monster_afrit) { Monster_Spawn(MON_AFRIT.monsterid); }
+spawnfunc(monster_afrit) { Monster_Spawn(this, MON_AFRIT.monsterid); }
 #endif // SVQC
 
 		#ifdef SVQC
-		METHOD(Afrit, mr_think, bool(Afrit thismon))
+		METHOD(Afrit, mr_think, bool(Afrit thismon, entity actor))
 		{
-			if(self.target_range < 0)
+			if(actor.target_range < 0)
 			{
-				if(time >= self.afrit_targetcheck_delay)
+				if(time >= actor.afrit_targetcheck_delay)
 				{
-					self.target_range = self.afrit_targetrange_backup;
-					if(Monster_FindTarget(self) != world)
+					actor.target_range = actor.afrit_targetrange_backup;
+					if(Monster_FindTarget(actor) != world)
 					{
-						setanim(self, self.anim_draw, false, true, true);
-						self.anim_finished = self.animstate_endtime;
+						setanim(actor, actor.anim_draw, false, true, true);
+						actor.anim_finished = actor.animstate_endtime;
 					}
 					else
 					{
-						self.target_range = -1;
-						self.afrit_targetcheck_delay = time + 1;
+						actor.target_range = -1;
+						actor.afrit_targetcheck_delay = time + 1;
 					}
 				}
 			}
-			self.fire_endtime = 0; // never burns
+			actor.fire_endtime = 0; // never burns
 
-			if(self.flags & FL_ONGROUND)
-				self.anim_idle = animfixfps(self, '0 1 0.5', '0 0 0');
+			if(IS_ONGROUND(actor))
+				actor.anim_idle = animfixfps(actor, '0 1 0.5', '0 0 0');
 			else
-				self.anim_idle = animfixfps(self, '2 1 0.5', '0 0 0');
+				actor.anim_idle = animfixfps(actor, '2 1 0.5', '0 0 0');
 
-			if(self.flags & FL_ONGROUND)
-				self.armorvalue = 0.95; // almost invincible
+			if(actor.flags & FL_ONGROUND)
+				actor.armorvalue = 0.95; // almost invincible
 			else
-				self.armorvalue = autocvar_g_monsters_armor_blockpercent;
+				actor.armorvalue = autocvar_g_monsters_armor_blockpercent;
 			return true;
 		}
-		METHOD(Afrit, mr_pain, bool(Afrit thismon))
+		METHOD(Afrit, mr_pain, bool(Afrit thismon, entity actor))
 		{
-			SELFPARAM();
 			if(frag_deathtype == DEATH_FIRE.m_id || frag_deathtype == DEATH_LAVA.m_id)
 				frag_damage = 0; // afrit doesn't burn
 			else
-				setanim(self, self.anim_pain1, true, true, true);
+				setanim(actor, actor.anim_pain1, true, true, true);
 			return true;
 		}
-		METHOD(Afrit, mr_death, bool(Afrit thismon))
+		METHOD(Afrit, mr_death, bool(Afrit thismon, entity actor))
 		{
 			SELFPARAM();
-			setanim(self, ((random() >= 0.5) ? self.anim_die1 : self.anim_die2), false, true, true);
-			self.superweapons_finished = time + 20;
+			setanim(actor, ((random() >= 0.5) ? actor.anim_die1 : actor.anim_die2), false, true, true);
+			actor.superweapons_finished = time + 20;
 			return true;
 		}
 		#endif
 		#ifndef MENUQC
-		METHOD(Afrit, mr_anim, bool(Afrit thismon))
+		METHOD(Afrit, mr_anim, bool(Afrit thismon, entity actor))
 		{
-			SELFPARAM();
 			vector none = '0 0 0';
-			self.anim_die1 = animfixfps(self, '5 1 0.5', none); // 2 seconds
-			self.anim_die2 = animfixfps(self, '6 1 0.5', none); // 2 seconds
-			self.anim_walk = animfixfps(self, '2 1 1', none);
-			self.anim_idle = animfixfps(self, '0 1 0.5', none);
-			self.anim_pain1 = animfixfps(self, '3 1 2', none); // 0.5 seconds
-			self.anim_shoot = animfixfps(self, '4 1 5', none); // analyze models and set framerate
-			self.anim_run = animfixfps(self, '2 1 1', none);
-			self.anim_draw = animfixfps(self, '1 1 1', none);
-
+			actor.anim_die1 = animfixfps(actor, '5 1 0.5', none); // 2 seconds
+			actor.anim_die2 = animfixfps(actor, '6 1 0.5', none); // 2 seconds
+			actor.anim_walk = animfixfps(actor, '2 1 1', none);
+			actor.anim_idle = animfixfps(actor, '0 1 0.5', none);
+			actor.anim_pain1 = animfixfps(actor, '3 1 2', none); // 0.5 seconds
+			actor.anim_shoot = animfixfps(actor, '4 1 5', none); // analyze models and set framerate
+			actor.anim_run = animfixfps(actor, '2 1 1', none);
+			actor.anim_draw = animfixfps(actor, '1 1 1', none);
 			return true;
 		}
 		#endif
 		#ifdef SVQC
 		spawnfunc(item_cells);
-		METHOD(Afrit, mr_setup, bool(Afrit thismon))
+		METHOD(Afrit, mr_setup, bool(Afrit thismon, entity actor))
 		{
-			SELFPARAM();
-			if(!self.health) self.health = (autocvar_g_monster_afrit_health);
-			if(!self.speed) { self.speed = (autocvar_g_monster_afrit_speed_walk); }
-			if(!self.speed2) { self.speed2 = (autocvar_g_monster_afrit_speed_run); }
-			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_afrit_speed_stop); }
-			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_afrit_damageforcescale); }
+			if(!actor.health) actor.health = (autocvar_g_monster_afrit_health);
+			if(!actor.speed) { actor.speed = (autocvar_g_monster_afrit_speed_walk); }
+			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_afrit_speed_run); }
+			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_afrit_speed_stop); }
+			if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_afrit_damageforcescale); }
 
-			if(!self.target_range) { self.afrit_targetrange_backup = autocvar_g_monsters_target_range; }
-			else { self.afrit_targetrange_backup = self.target_range; }
-			self.target_range = -1; // special handler
+			if(!actor.target_range) { actor.afrit_targetrange_backup = autocvar_g_monsters_target_range; }
+			else { actor.afrit_targetrange_backup = actor.target_range; }
+			actor.target_range = -1; // special handler
 
-			self.weapon = WEP_FIREBALL.m_id; // hehe
-			self.effects |= EF_FLAME;
-			self.noalign = false; // always starts on ground
-			//self.monster_loot = spawnfunc_item_cells;
-			self.monster_attackfunc = M_Afrit_Attack;
+			actor.weapon = WEP_FIREBALL.m_id; // hehe
+			actor.effects |= EF_FLAME;
+			actor.noalign = false; // always starts on ground
+			//actor.monster_loot = spawnfunc_item_cells;
+			actor.monster_attackfunc = M_Afrit_Attack;
 
 			return true;
 		}

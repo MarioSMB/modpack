@@ -249,8 +249,8 @@ float r22heli_takeoff()
 					self.bomb1.gun2.avelocity_y = -self.bomb1.gun1.avelocity_y;
 			}
 		}
-		if(r22heli.flags & FL_ONGROUND)
-			movelib_brake_simple(1);
+		if(IS_ONGROUND(r22heli))
+			movelib_brake_simple(self, 1);
 	}
 
 	// cannon firing
@@ -830,8 +830,6 @@ float r22heli_pilot_frame()
 	pilot = self;
 	vehic = self.vehicle;
 	self  = vehic;
-
-	vehicles_painframe();
 		
 	if(self.sound_nexttime < time)
 	if(pilot.waterlevel != WATERLEVEL_SUBMERGED)
@@ -1436,12 +1434,12 @@ spawnfunc(vehicle_r22heli_milspec)
 	spawnfunc_vehicle_r22heli(this);
 }
 
-		METHOD(R22Heli, vr_impact, void(R22Heli thisveh))
+		METHOD(R22Heli, vr_impact, void(R22Heli thisveh, entity instance))
 		{
 			if(autocvar_g_vehicle_r22heli_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_r22heli_bouncepain_x, autocvar_g_vehicle_r22heli_bouncepain_y, autocvar_g_vehicle_r22heli_bouncepain_z);
 		}
-		METHOD(R22Heli, vr_enter, void(R22Heli thisveh))
+		METHOD(R22Heli, vr_enter, void(R22Heli thisveh, entity actor))
 		{
 			self.touch = r22heli_touch;
 			self.nextthink = 0;
@@ -1463,7 +1461,7 @@ spawnfunc(vehicle_r22heli_milspec)
 			if(self.owner.flagcarried)
 				setorigin(self.owner.flagcarried, '-20 0 96');
 		}
-		METHOD(R22Heli, vr_think, void(R22Heli thisveh))
+		METHOD(R22Heli, vr_think, void(R22Heli thisveh, entity actor))
 		{
 			if(!self.owner)
 			{
@@ -1483,16 +1481,16 @@ spawnfunc(vehicle_r22heli_milspec)
 				
 			}
 		}
-		METHOD(R22Heli, vr_death, void(R22Heli thisveh))
+		METHOD(R22Heli, vr_death, void(R22Heli thisveh, entity actor))
 		{
 			CSQCModel_UnlinkEntity(self); // networking the death scene would be a nightmare
 			r22heli_die();
 		}
-		METHOD(R22Heli, vr_spawn, void(R22Heli thisveh))
+		METHOD(R22Heli, vr_spawn, void(R22Heli thisveh, entity actor))
 		{
 			r22heli_spawn();
 		}
-		METHOD(R22Heli, vr_setup, void(R22Heli thisveh))
+		METHOD(R22Heli, vr_setup, void(R22Heli thisveh, entity actor))
 		{
 			if(autocvar_g_vehicle_r22heli_energy)
 			if(autocvar_g_vehicle_r22heli_energy_regen)
@@ -1550,7 +1548,7 @@ spawnfunc(vehicle_r22heli_milspec)
 		{
 			Vehicles_drawCrosshair(vCROSS_LOCK);
 		}
-		METHOD(R22Heli, vr_setup, void(R22Heli thisveh))
+		METHOD(R22Heli, vr_setup, void(R22Heli thisveh, entity actor))
 		{
 			AuxiliaryXhair[0].axh_image = vCROSS_HINT; // Minigun1
 			AuxiliaryXhair[1].axh_image = vCROSS_HINT; // Minigun2

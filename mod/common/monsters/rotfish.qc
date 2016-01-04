@@ -49,13 +49,13 @@ const float rotfish_anim_swim   = 2;
 const float rotfish_anim_pain   = 3;
 */
 
-float M_Rotfish_Attack(float attack_type, entity targ)
-{SELFPARAM();
+bool M_Rotfish_Attack(int attack_type, entity actor, entity targ)
+{
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			return Monster_Attack_Melee(self.enemy, (autocvar_g_monster_rotfish_attack_melee_damage), self.anim_melee, self.attack_range, (autocvar_g_monster_rotfish_attack_melee_delay), DEATH_MONSTER_ROTFISH_MELEE.m_id, true);
+			return Monster_Attack_Melee(actor, targ, (autocvar_g_monster_rotfish_attack_melee_damage), actor.anim_melee, actor.attack_range, (autocvar_g_monster_rotfish_attack_melee_delay), DEATH_MONSTER_ROTFISH_MELEE.m_id, true);
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
@@ -67,40 +67,38 @@ float M_Rotfish_Attack(float attack_type, entity targ)
 	return false;
 }
 
-spawnfunc(monster_rotfish) { Monster_Spawn(MON_ROTFISH.monsterid); }
-spawnfunc(monster_fish) { Monster_Spawn(MON_ROTFISH.monsterid); }
+spawnfunc(monster_rotfish) { Monster_Spawn(this, MON_ROTFISH.monsterid); }
+spawnfunc(monster_fish) { Monster_Spawn(this, MON_ROTFISH.monsterid); }
 
 #endif // SVQC
 
 		#ifdef SVQC
-		METHOD(Rotfish, mr_think, bool(Monster thismon))
+		METHOD(Rotfish, mr_think, bool(Monster thismon, entity actor))
 		{
 			return true;
 		}
-		METHOD(Rotfish, mr_pain, bool(Monster thismon))
+		METHOD(Rotfish, mr_pain, bool(Monster thismon, entity actor))
 		{
-			self.pain_finished = 0.8;
-			setanim(self, self.anim_pain1, true, true, false);
+			actor.pain_finished = 0.8;
+			setanim(actor, actor.anim_pain1, true, true, false);
 			return true;
 		}
-		METHOD(Rotfish, mr_death, bool(Monster thismon))
+		METHOD(Rotfish, mr_death, bool(Monster thismon, entity actor))
 		{
-			SELFPARAM();
-			setanim(self, self.anim_die1, false, true, true);
+			setanim(actor, actor.anim_die1, false, true, true);
 			return true;
 		}
 		#endif
 		#ifndef MENUQC
-		METHOD(Rotfish, mr_anim, bool(Monster thismon))
+		METHOD(Rotfish, mr_anim, bool(Monster thismon, entity actor))
 		{
-			SELFPARAM();
 			vector none = '0 0 0';
-			self.anim_die1 = animfixfps(self, '1 1 0.5', none); // 2 seconds
-			self.anim_walk = animfixfps(self, '2 1 1', none);
-			self.anim_idle = animfixfps(self, '2 1 1', none);
-			self.anim_pain1 = animfixfps(self, '3 1 2', none); // 0.5 seconds
-			self.anim_melee = animfixfps(self, '0 1 5', none); // analyze models and set framerate
-			self.anim_run = animfixfps(self, '2 1 1', none);
+			actor.anim_die1 = animfixfps(actor, '1 1 0.5', none); // 2 seconds
+			actor.anim_walk = animfixfps(actor, '2 1 1', none);
+			actor.anim_idle = animfixfps(actor, '2 1 1', none);
+			actor.anim_pain1 = animfixfps(actor, '3 1 2', none); // 0.5 seconds
+			actor.anim_melee = animfixfps(actor, '0 1 5', none); // analyze models and set framerate
+			actor.anim_run = animfixfps(actor, '2 1 1', none);
 
 			return true;
 		}
@@ -108,17 +106,16 @@ spawnfunc(monster_fish) { Monster_Spawn(MON_ROTFISH.monsterid); }
 		#ifdef SVQC
 		.float speed;
 		//spawnfunc(item_health_large);
-		METHOD(Rotfish, mr_setup, bool(Monster thismon))
+		METHOD(Rotfish, mr_setup, bool(Monster thismon, entity actor))
 		{
-			SELFPARAM();
-			if(!self.health) self.health = (autocvar_g_monster_rotfish_health);
-			if(!self.speed) { self.speed = (autocvar_g_monster_rotfish_speed_walk); }
-			if(!self.speed2) { self.speed2 = (autocvar_g_monster_rotfish_speed_run); }
-			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_rotfish_speed_stop); }
-			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_rotfish_damageforcescale); }
+			if(!actor.health) actor.health = (autocvar_g_monster_rotfish_health);
+			if(!actor.speed) { actor.speed = (autocvar_g_monster_rotfish_speed_walk); }
+			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_rotfish_speed_run); }
+			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_rotfish_speed_stop); }
+			if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_rotfish_damageforcescale); }
 
-			//self.monster_loot = spawnfunc_item_health_large;
-			self.monster_attackfunc = M_Rotfish_Attack;
+			//actor.monster_loot = spawnfunc_item_health_large;
+			actor.monster_attackfunc = M_Rotfish_Attack;
 
 			return true;
 		}

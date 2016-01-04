@@ -45,8 +45,8 @@ void helicopter_rotor_touch()
 	}
 
 		if(self.play_time < time) {
-			Vehicle info = get_vehicleinfo(self.vehicleid);
-			info.vr_impact(info);
+			Vehicle info = Vehicles_from(self.vehicleid);
+			info.vr_impact(info, self);
 		}
 
 		return;
@@ -81,8 +81,8 @@ void helicopter_rotor_impact_hitbox()
 	//print("here2\n");
 	self = self.owner;
 	if(self.play_time < time) {
-		Vehicle info = get_vehicleinfo(self.vehicleid);
-		info.vr_impact(info);
+		Vehicle info = Vehicles_from(self.vehicleid);
+		info.vr_impact(info, self);
 	}
 }
 

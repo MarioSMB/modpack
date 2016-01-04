@@ -54,7 +54,7 @@ METHOD(ScragAttack, wr_think, void(ScragAttack thiswep, entity actor, .entity we
 		if (IS_MONSTER(actor)) {
 			actor.attack_finished_single[0] = time + 1.2;
 			actor.anim_finished = time + 1.2;
-			monster_makevectors(actor.enemy);
+			monster_makevectors(actor, actor.enemy);
 		}
 
 		entity missile = spawn();
@@ -116,26 +116,25 @@ void M_Scrag_Attack_Spike_Touch()
 	M_Scrag_Attack_Spike_Explode();
 }
 
-bool M_Scrag_Attack(int attack_type, entity targ)
+bool M_Scrag_Attack(int attack_type, entity actor, entity targ)
 {
-	SELFPARAM();
 	.entity weaponentity = weaponentities[0];
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		case MONSTER_ATTACK_RANGED:
 		{
-			w_shotdir = normalize((self.enemy.origin + '0 0 10') - self.origin);
+			w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
 			Weapon wep = WEP_SCRAG_ATTACK;
-			wep.wr_think(wep, self, weaponentity, 1);
+			wep.wr_think(wep, actor, weaponentity, 1);
 
-			if(random() <= 0.1 || self.monster_moveto)
+			if(random() <= 0.1 || actor.monster_moveto)
 			{
-				makevectors(self.angles);
-				self.monster_moveto = self.origin + '1 1 0' * (random() >= 0.5) ? (v_right * 300) : (v_right * -300);
-				self.monster_face = self.enemy.origin; // but still look at enemy
+				makevectors(actor.angles);
+				actor.monster_moveto = actor.origin + '1 1 0' * (random() >= 0.5) ? (v_right * 300) : (v_right * -300);
+				actor.monster_face = actor.enemy.origin; // but still look at enemy
 				if(random() <= 0.4)
-					self.monster_moveto = self.monster_face = '0 0 0';
+					actor.monster_moveto = actor.monster_face = '0 0 0';
 			}
 			return true;
 		}
@@ -144,59 +143,54 @@ bool M_Scrag_Attack(int attack_type, entity targ)
 	return false;
 }
 
-spawnfunc(monster_scrag) { Monster_Spawn(MON_SCRAG.monsterid); }
+spawnfunc(monster_scrag) { Monster_Spawn(this, MON_SCRAG.monsterid); }
 #endif // SVQC
 
 		#ifdef SVQC
-		METHOD(Scrag, mr_think, bool(Scrag thismon))
+		METHOD(Scrag, mr_think, bool(Scrag thismon, entity actor))
 		{
 			return true;
 		}
-		METHOD(Scrag, mr_pain, bool(Scrag thismon))
+		METHOD(Scrag, mr_pain, bool(Scrag thismon, entity actor))
 		{
-			SELFPARAM();
-			self.pain_finished = time + 0.5;
-			setanim(self, self.anim_pain1, true, true, false);
+			actor.pain_finished = time + 0.5;
+			setanim(actor, actor.anim_pain1, true, true, false);
 			return true;
 		}
-		METHOD(Scrag, mr_death, bool(Scrag thismon))
+		METHOD(Scrag, mr_death, bool(Scrag thismon, entity actor))
 		{
-			SELFPARAM();
-			setanim(self, self.anim_die1, false, true, true);
-			self.velocity_x = -200 + 400 * random();
-			self.velocity_y = -200 + 400 * random();
-			self.velocity_z = 100 + 100 * random();
+			setanim(actor, actor.anim_die1, false, true, true);
+			actor.velocity_x = -200 + 400 * random();
+			actor.velocity_y = -200 + 400 * random();
+			actor.velocity_z = 100 + 100 * random();
 			return true;
 		}
 		#endif
 		#ifndef MENUQC
-		METHOD(Scrag, mr_anim, bool(Scrag thismon))
+		METHOD(Scrag, mr_anim, bool(Scrag thismon, entity actor))
 		{
-			SELFPARAM();
 			vector none = '0 0 0';
-			self.anim_die1 = animfixfps(self, '4 1 0.5', none); // 2 seconds
-			self.anim_walk = animfixfps(self, '1 1 1', none);
-			self.anim_idle = animfixfps(self, '0 1 1', none);
-			self.anim_pain1 = animfixfps(self, '3 1 2', none); // 0.5 seconds
-			self.anim_shoot = animfixfps(self, '2 1 5', none); // analyze models and set framerate
-			self.anim_run = animfixfps(self, '1 1 1', none);
-
+			actor.anim_die1 = animfixfps(actor, '4 1 0.5', none); // 2 seconds
+			actor.anim_walk = animfixfps(actor, '1 1 1', none);
+			actor.anim_idle = animfixfps(actor, '0 1 1', none);
+			actor.anim_pain1 = animfixfps(actor, '3 1 2', none); // 0.5 seconds
+			actor.anim_shoot = animfixfps(actor, '2 1 5', none); // analyze models and set framerate
+			actor.anim_run = animfixfps(actor, '1 1 1', none);
 			return true;
 		}
 		#endif
 		#ifdef SVQC
 		spawnfunc(item_cells);
-		METHOD(Scrag, mr_setup, bool(Scrag thismon))
+		METHOD(Scrag, mr_setup, bool(Scrag thismon, entity actor))
 		{
-			SELFPARAM();
-			if(!self.health) self.health = (autocvar_g_monster_scrag_health);
-			if(!self.speed) { self.speed = (autocvar_g_monster_scrag_speed_walk); }
-			if(!self.speed2) { self.speed2 = (autocvar_g_monster_scrag_speed_run); }
-			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_scrag_speed_stop); }
-			if(!self.damageforcescale) { self.damageforcescale = (autocvar_g_monster_scrag_damageforcescale); }
+			if(!actor.health) actor.health = (autocvar_g_monster_scrag_health);
+			if(!actor.speed) { actor.speed = (autocvar_g_monster_scrag_speed_walk); }
+			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_scrag_speed_run); }
+			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_scrag_speed_stop); }
+			if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_scrag_damageforcescale); }
 
-			//self.monster_loot = spawnfunc_item_cells;
-			self.monster_attackfunc = M_Scrag_Attack;
+			//actor.monster_loot = spawnfunc_item_cells;
+			actor.monster_attackfunc = M_Scrag_Attack;
 
 			return true;
 		}

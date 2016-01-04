@@ -37,7 +37,7 @@ void ClientBeam_Draw(entity this)
 	vector rgb = colormapPaletteColor(stof(getplayerkeyvalue(this.sv_entnum - 1, "colors")) & 0x0F, true);
 	rgb *= (1 + autocvar_cl_vaporizerbeam_colorboost);
 
-	float fail = (self.nextthink - time);
+	float fail = (this.nextthink - time);
 
 	Draw_ClientBeam_trace_callback_tex = tex;
 	Draw_ClientBeam_trace_callback_rnd = 0;

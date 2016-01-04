@@ -359,18 +359,18 @@ void W_Flak_Bomb_Touch(void)
 	self.use();
 }
 
-void W_Flak_Bomb_Damage(entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_Flak_Bomb_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
-	if(self.health <= 0)
+	if(this.health <= 0)
 		return;
 
-	if(!W_CheckProjectileDamage(inflictor.realowner, self.realowner, deathtype, -1)) // no exceptions
+	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	self.health = self.health - damage;
+	this.health = this.health - damage;
 
-	if(self.health <= 0)
-		W_PrepareExplosionByDamage(attacker, self.use);
+	if(this.health <= 0)
+		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, this.use));
 }
 
 void W_Flak_Attack3(Weapon thiswep)

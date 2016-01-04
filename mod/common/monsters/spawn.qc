@@ -53,84 +53,81 @@ void M_Tarbaby_Attack_Explode(entity this)
 
 void M_Tarbaby_Attack_Leap_Touch()
 {SELFPARAM();
-	if (self.health <= 0)
+	if (this.health <= 0)
 		return;
 
 	if(other.takedamage)
-		M_Tarbaby_Attack_Explode(self);
+		M_Tarbaby_Attack_Explode(this);
 
 	if (trace_dphitcontents)
 	{
-		self.state = 0;
-		self.touch = Monster_Touch;
+		this.state = 0;
+		this.touch = Monster_Touch;
 	}
 }
 
-float M_Tarbaby_Attack(float attack_type, entity targ)
-{SELFPARAM();
+bool M_Tarbaby_Attack(int attack_type, entity actor, entity targ)
+{
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			M_Tarbaby_Attack_Explode(self);
+			M_Tarbaby_Attack_Explode(actor);
 			return true;
 		}
 		case MONSTER_ATTACK_RANGED:
 		{
-			makevectors(self.angles);
-			return Monster_Attack_Leap(self.anim_jump, M_Tarbaby_Attack_Leap_Touch, v_forward * (autocvar_g_monster_spawn_attack_leap_speed) + '0 0 200', (autocvar_g_monster_spawn_attack_leap_delay));
+			makevectors(actor.angles);
+			return Monster_Attack_Leap(actor, actor.anim_jump, M_Tarbaby_Attack_Leap_Touch, v_forward * (autocvar_g_monster_spawn_attack_leap_speed) + '0 0 200', (autocvar_g_monster_spawn_attack_leap_delay));
 		}
 	}
 
 	return false;
 }
 
-spawnfunc(monster_tarbaby) { Monster_Spawn(MON_TARBABY.monsterid); }
+spawnfunc(monster_tarbaby) { Monster_Spawn(this, MON_TARBABY.monsterid); }
 #endif // SVQC
 
 		#ifdef SVQC
-		METHOD(Tarbaby, mr_think, bool(Tarbaby thismon))
+		METHOD(Tarbaby, mr_think, bool(Tarbaby thismon, entity actor))
 		{
 			return true;
 		}
-		METHOD(Tarbaby, mr_pain, bool(Tarbaby thismon))
+		METHOD(Tarbaby, mr_pain, bool(Tarbaby thismon, entity actor))
 		{
 			return true;
 		}
-		METHOD(Tarbaby, mr_death, bool(Tarbaby thismon))
+		METHOD(Tarbaby, mr_death, bool(Tarbaby thismon, entity actor))
 		{
-			SELFPARAM();
-
-			M_Tarbaby_Attack_Explode(self);
+			M_Tarbaby_Attack_Explode(actor);
 			return true;
 		}
 		#endif
 		#ifndef MENUQC
-		METHOD(Tarbaby, mr_anim, bool(Tarbaby thismon))
+		METHOD(Tarbaby, mr_anim, bool(Tarbaby thismon, entity actor))
 		{
-			SELFPARAM();
 			vector none = '0 0 0';
-			self.anim_walk = animfixfps(self, '0 2.4 1', none);
-			self.anim_idle = animfixfps(self, '0 2.4 1', none);
-			self.anim_jump = animfixfps(self, '2 0.5 1', none); // analyze models and set framerate
-			self.anim_run = animfixfps(self, '1 2.4 1', none);
-			self.anim_die1 = animfixfps(self, '4 0.1 1', none);
-			//self.anim_fly = animfixfps(self, '8 1 1', none);
+			actor.anim_walk = animfixfps(actor, '0 2.4 1', none);
+			actor.anim_idle = animfixfps(actor, '0 2.4 1', none);
+			actor.anim_jump = animfixfps(actor, '2 0.5 1', none); // analyze models and set framerate
+			actor.anim_run = animfixfps(actor, '1 2.4 1', none);
+			actor.anim_die1 = animfixfps(actor, '4 0.1 1', none);
+			//actor.anim_fly = animfixfps(actor, '8 1 1', none);
 
 			return true;
 		}
 		#endif
 		#ifdef SVQC
-		METHOD(Tarbaby, mr_setup, bool(Tarbaby thismon))
+		METHOD(Tarbaby, mr_setup, bool(Tarbaby thismon, entity actor))
 		{
-			if(!self.health) self.health = (autocvar_g_monster_spawn_health);
-			if(!self.speed) { self.speed = (autocvar_g_monster_spawn_speed_walk); }
-			if(!self.speed2) { self.speed2 = (autocvar_g_monster_spawn_speed_run); }
-			if(!self.stopspeed) { self.stopspeed = (autocvar_g_monster_spawn_speed_stop); }
+			if(!actor.health) actor.health = (autocvar_g_monster_spawn_health);
+			if(!actor.speed) { actor.speed = (autocvar_g_monster_spawn_speed_walk); }
+			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_spawn_speed_run); }
+			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_spawn_speed_stop); }
 
-			self.monster_loot = spawnfunc_item_rockets;
-			self.monster_attackfunc = M_Tarbaby_Attack;
-			self.damageforcescale = 0.01; // no push while spawning
+			actor.monster_loot = spawnfunc_item_rockets;
+			actor.monster_attackfunc = M_Tarbaby_Attack;
+			actor.damageforcescale = 0.01; // no push while spawning
 
 			return true;
 		}
