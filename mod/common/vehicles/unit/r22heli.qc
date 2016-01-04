@@ -20,6 +20,8 @@ CLASS(R22Heli, Vehicle)
 /* spawnflags */ ATTRIB(R22Heli, spawnflags, int, VHF_DMGSHAKE);
 /* mins       */ ATTRIB(R22Heli, mins, vector, '-60 -60 0');
 /* maxs       */ ATTRIB(R22Heli, maxs, vector, '60 60 86');
+/* view offset*/ ATTRIB(R22Heli, view_ofs, vector, '0 0 150');
+/* view dist  */ ATTRIB(R22Heli, height, float, 250);
 /* model	  */ ATTRIB(R22Heli, mdl, string, "models/vehicles/r22edits.iqm");
 /* model	  */ ATTRIB(R22Heli, model, string, "models/vehicles/r22edits.iqm");
 /* head_model */ ATTRIB(R22Heli, head_model, string, "null");

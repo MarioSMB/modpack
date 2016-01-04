@@ -23,6 +23,8 @@ CLASS(TankLL48, Vehicle)
 /* spawnflags */ ATTRIB(TankLL48, spawnflags, int, VHF_DMGSHAKE);
 /* mins       */ ATTRIB(TankLL48, mins, vector, '-110 -110 2');
 /* maxs       */ ATTRIB(TankLL48, maxs, vector, '110 110 136');
+/* view offset*/ ATTRIB(TankLL48, view_ofs, vector, '0 0 150');
+/* view dist  */ ATTRIB(TankLL48, height, float, 300);
 /* model	  */ ATTRIB(TankLL48, mdl, string, "models/vehicles/tankll48.iqm");
 /* model	  */ ATTRIB(TankLL48, model, string, "models/vehicles/tankll48.iqm");
 /* head_model */ ATTRIB(TankLL48, head_model, string, "models/vehicles/tankll48_turret.iqm");
@@ -290,7 +292,7 @@ float tankll48_frame()
 	crosshair_trace2(player);
 	ad = vectoangles(normalize(trace_endpos - ad));
 	ad = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(tankll48.angles), AnglesTransform_FromAngles(ad))) - tankll48.gun3.angles;
-	ad = AnglesTransform_Normalize(ad, TRUE);
+	ad = AnglesTransform_Normalize(ad, true);
 	
 	//Make sure angles are fine
 	//if(tankll48.tur_head.angles_y > 180)  tankll48.tur_head.angles_y -= 360; if(tankll48.tur_head.angles_y < -180) tankll48.tur_head.angles_y += 360;
@@ -311,7 +313,7 @@ float tankll48_frame()
 	crosshair_trace2(player);
 	ad = vectoangles(normalize(trace_endpos - ad));
 	ad = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(tankll48.angles), AnglesTransform_FromAngles(ad))) - tankll48.gun1.angles;
-	ad = AnglesTransform_Normalize(ad, TRUE);
+	ad = AnglesTransform_Normalize(ad, true);
 	
 	//ftmp = autocvar_g_vehicle_tankll48_gun_turnspeed * sys_frametime;    
 	//ad_y = bound(-ftmp, ad_y, ftmp);
@@ -375,7 +377,7 @@ float tankll48_frame()
 		}
 		
 		////////player.angles_y = player.angles_y + (player.movement_y / -200);
-		////////player.fixangle = TRUE;
+		////////player.fixangle = true;
 		
 		//////msg_entity = player;
 		//////WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
@@ -468,12 +470,12 @@ float tankll48_frame()
 
 		missile.owner = tankll48;
 		missile.realowner = player;
-		missile.bot_dodge = TRUE;
+		missile.bot_dodge = true;
 		missile.bot_dodgerating = autocvar_g_vehicle_tankll48_cannon_damage * 2;
 
 		missile.takedamage = DAMAGE_NO;
 		missile.event_damage = func_null;
-		missile.damagedbycontents = TRUE;
+		missile.damagedbycontents = true;
 		missile.movetype = MOVETYPE_FLY;
 
 		missile.projectiledeathtype = DEATH_VH_SPID_DEATH.m_id;
@@ -685,7 +687,7 @@ spawnfunc(vehicle_tankll48)
 			if(autocvar_g_vehicle_tankll48_bouncepain)
 				vehicles_impact(autocvar_g_vehicle_tankll48_bouncepain_x, autocvar_g_vehicle_tankll48_bouncepain_y, autocvar_g_vehicle_tankll48_bouncepain_z);
 		}
-		METHOD(TankLL48, vr_enter, void(TankLL48 thisveh, entity actor))
+		METHOD(TankLL48, vr_enter, void(TankLL48 thisveh, entity instance))
 		{
 			self.movetype = MOVETYPE_WALK;
 			CSQCVehicleSetup(self.owner, 0);
@@ -702,12 +704,12 @@ spawnfunc(vehicle_tankll48)
 				setorigin(self.owner.flagcarried, '-20 0 120');
 			}
 		}
-		METHOD(TankLL48, vr_think, void(TankLL48 thisveh, entity actor))
+		METHOD(TankLL48, vr_think, void(TankLL48 thisveh, entity instance))
 		{
 			if(IS_ONGROUND(self))
 				movelib_brake_simple(self, autocvar_g_vehicle_tankll48_speed_stop);
 		}
-		METHOD(TankLL48, vr_death, void(TankLL48 thisveh, entity actor))
+		METHOD(TankLL48, vr_death, void(TankLL48 thisveh, entity instance))
 		{
 			self.health				= 0;
 			self.event_damage		= func_null;
@@ -727,7 +729,7 @@ spawnfunc(vehicle_tankll48)
 			
 			CSQCModel_UnlinkEntity(self); // networking the death scene would be a nightmare
 		}
-		METHOD(TankLL48, vr_spawn, void(TankLL48 thisveh, entity actor))
+		METHOD(TankLL48, vr_spawn, void(TankLL48 thisveh, entity instance))
 		{
 			if(!self.gun1)
 			{
@@ -827,7 +829,7 @@ spawnfunc(vehicle_tankll48)
 			tankt27_spawn_hitbox(0, self, self.hitboxft, TANKLL48_MIN_HBF, TANKLL48_MAX_HBF, 95, autocvar_g_vehicle_tankll48_health);
 			tankt27_spawn_hitbox(1, self, self.hitboxbk, TANKLL48_MIN_HBB, TANKLL48_MAX_HBB, -120, autocvar_g_vehicle_tankll48_health * 0.5);
 		}
-		METHOD(TankLL48, vr_setup, void(TankLL48 thisveh, entity actor))
+		METHOD(TankLL48, vr_setup, void(TankLL48 thisveh, entity instance))
 		{
 			if(autocvar_g_vehicle_tankll48_shield)
 				self.vehicle_flags |= VHF_HASSHIELD;
@@ -867,7 +869,7 @@ AUTOCVAR_SAVE(cl_vehicle_tankll48_cross_size,                     float,   1,   
 				drawpic(tmpPos, vCROSS_TANK2, tmpSize, '0 0 1', autocvar_crosshair_alpha * 0.5, DRAWFLAG_NORMAL);
 			}
 		}
-		METHOD(TankLL48, vr_setup, void(TankLL48 thisveh, entity actor))
+		METHOD(TankLL48, vr_setup, void(TankLL48 thisveh, entity instance))
 		{
 			AuxiliaryXhair[0].axh_image = vCROSS_HINT; // gun
 			AuxiliaryXhair[1].axh_image = vCROSS_LOCK; // cannon?
