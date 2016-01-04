@@ -1,0 +1,212 @@
+
+// ========================================================================
+//   Lexer
+// ========================================================================
+
+const float LEX_UNKNOWN          =   0;
+const float LEX_VALUE_NUMBER     =   1;
+const float LEX_VALUE_STRING     =   2;
+const float LEX_IDENTIFIER       =   3;
+const float LEX_KEYWORD          =   4;
+const float LEX_EOF              =   5;
+const float LEX_OPERATOR_OTHER   = 100;
+const float LEX_OPERATOR_ARITH   = 101;
+const float LEX_OPERATOR_MULT    = 102;
+const float LEX_OPERATOR_ASSIGN  = 103;
+const float LEX_OPERATOR_BIT     = 104;
+const float LEX_OPERATOR_LOGICAL = 105;
+const float LEX_OPERATOR_COMPARE = 106;
+const float LEX_OPERATOR_COMMA   = 107;
+const float LEX_OPERATOR_INCREMENT=108;
+
+float lex_string_index;
+float lex_string_end;
+string lex_string;
+entity lex_lookahead;
+
+entity lex_move_lookahead()
+{
+	entity tmp = lex_lookahead;
+	lex_lookahead = world;
+	return tmp;
+}
+void lex_token(float type, string lexeme)
+{
+	if ( lex_lookahead )
+		remove(lex_lookahead);
+	lex_lookahead = new_pure("lex_token");
+	lex_lookahead.script_value = lexeme;
+	lex_lookahead.script_type = type;
+}
+
+void lex_skipws()
+{
+	while ( lex_string_index < lex_string_end && 
+		ctype_space(substring(lex_string,lex_string_index,1)) )
+	{
+		lex_string_index++;
+	}
+}
+
+string lex_identifier()
+{
+	float start_index = lex_string_index;
+	while( lex_string_index < lex_string_end && 
+		ctype_identifier(substring(lex_string,lex_string_index,1)) )
+	{
+			lex_string_index++;
+	}
+	return substring(lex_string,start_index,lex_string_index-start_index);
+}
+
+// TODO: allow exponent 1.2e-3
+string lex_number()
+{
+	string nextch;
+	float start_index = lex_string_index;
+	float candot = 1;
+	while( lex_string_index < lex_string_end )
+	{
+		nextch = substring(lex_string,lex_string_index,1);
+		if ( ctype_digit(nextch) )
+		{
+			lex_string_index++;
+		}
+		else if ( candot && nextch == "." )
+		{
+			candot = 0;
+			lex_string_index++;
+		}
+		else
+		{
+			break;
+		}
+	}
+	// ensure that trailing fractional zeros are truncated
+	return script_ftos(stof(substring(lex_string,start_index,lex_string_index-start_index)));
+}
+
+string lex_string_literal()
+{
+	string nextch;
+	lex_string_index++; // skip "
+	string lexeme = "";
+	while( lex_string_index < lex_string_end )
+	{
+		nextch = substring(lex_string,lex_string_index,1);
+		
+		lex_string_index++;
+		if ( nextch == "\"" )
+			break;
+		
+		if ( nextch == "\\" && lex_string_index < lex_string_end )
+		{
+			nextch = substring(lex_string,lex_string_index,1);
+			if ( nextch == "\\" || nextch == "\"" )
+				lex_string_index++;
+			else if ( nextch == "n" )
+			{
+				nextch = "\n";
+				lex_string_index++;
+			}
+			else
+				nextch = "\\";
+		}
+		
+		lexeme = strcat(lexeme,nextch);
+	}
+	return lexeme;
+}
+
+void lex_get_token()
+{
+	lex_skipws();
+	if ( lex_string_index >= lex_string_end )
+		return lex_token(LEX_EOF,"");
+	
+	string nextch = substring(lex_string,lex_string_index,1);
+	
+	if ( ctype_digit(nextch) || 
+		( nextch == "." && ctype_digit(substring(lex_string,lex_string_index+1,1)) ) )
+	{
+		return lex_token(LEX_VALUE_NUMBER,lex_number());
+	}
+	
+	if ( ctype_identifier(nextch) )
+	{
+		string id = lex_identifier();
+		if ( id == "if" || id == "else" || id == "while" || id == "for" || 
+			id == "function" || id == "return" || id == "break" || id == "continue" )
+			return lex_token(LEX_KEYWORD,id);
+		return lex_token(LEX_IDENTIFIER,id);
+	}
+	
+	if ( nextch == "\"" )
+	{
+		return lex_token(LEX_VALUE_STRING,lex_string_literal());
+	}
+	
+	lex_string_index++;
+	
+	if (  nextch == "(" || nextch == "{" )
+		return lex_token(LEX_OPERATOR_OTHER,"(");
+	if (  nextch == ")" || nextch == "}" )
+		return lex_token(LEX_OPERATOR_OTHER,")");
+	if (  nextch == "?" || nextch == ":" || nextch == "." )
+		return lex_token(LEX_OPERATOR_OTHER,nextch);
+	if ( nextch == "," || nextch == ";" )
+		return lex_token(LEX_OPERATOR_COMMA,nextch);
+	
+	if ( lex_string_index < lex_string_end && substring(lex_string,lex_string_index,1) == "=" )
+	{
+		lex_string_index++;
+		
+		if ( nextch == "=" || nextch == "!" || nextch == "<" || nextch == ">" )
+			return lex_token(LEX_OPERATOR_COMPARE,strcat(nextch,"="));
+	
+		if ( nextch == "&" || nextch == "^" || nextch == "|" ||
+			nextch == "+" || nextch == "-" || nextch == "*" || nextch == "/" || nextch == "%" )
+			return lex_token(LEX_OPERATOR_ASSIGN,strcat(nextch,"="));
+		
+		lex_string_index--;
+	}
+		
+	if ( nextch == "+" || nextch == "-" )
+	{
+		if ( substring(lex_string,lex_string_index,1) == nextch )
+		{
+			lex_string_index++;
+			return lex_token(LEX_OPERATOR_INCREMENT,strcat(nextch,nextch));
+		}
+		return lex_token(LEX_OPERATOR_ARITH,nextch);
+	}
+	if ( nextch == "*" || nextch == "/" || nextch == "%" )
+		return lex_token(LEX_OPERATOR_MULT,nextch);
+	if ( nextch == "^" || nextch == "~" )
+		return lex_token(LEX_OPERATOR_BIT,nextch);
+	if ( nextch == "|" || nextch == "&" )
+	{
+		if ( substring(lex_string,lex_string_index,1) == nextch )
+		{
+			lex_string_index++;
+			return lex_token(LEX_OPERATOR_LOGICAL,strcat(nextch,nextch));
+		}
+		return lex_token(LEX_OPERATOR_BIT,nextch);
+	}
+	if ( nextch == "<" || nextch == ">" )
+	{
+		if ( substring(lex_string,lex_string_index,1) == nextch )
+		{
+			lex_string_index++;
+			return lex_token(LEX_OPERATOR_BIT,strcat(nextch,nextch));
+		}
+		return lex_token(LEX_OPERATOR_COMPARE,nextch);
+	}
+	if ( nextch == "!" )
+		return lex_token(LEX_OPERATOR_LOGICAL,nextch);
+	if ( nextch == "=" )
+		return lex_token(LEX_OPERATOR_ASSIGN,nextch);
+	
+	return lex_token(LEX_UNKNOWN,substring(lex_string,lex_string_index-1,1));
+}
+ 

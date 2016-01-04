@@ -1,0 +1,25 @@
+#ifndef SCRIPT_H
+#define SCRIPT_H
+
+void GenericCommand_script(float request, float argc, string command);
+
+// Compile the source into an abstract sytax tree
+entity script_compile(string src);
+
+// Recursively evaluate an abstract syntax tree
+string script_evaluate(entity ast_root);
+
+// Recursively remove all the nodes in the abstract syntax tree
+void script_cleanup(entity ast_root);
+
+#ifdef MENUQC
+float(float s) asin = #471; // returns angle in radians for a given sin() value, the result is in the range -PI*0.5 to PI*0.5
+float(float c) acos = #472; // returns angle in radians for a given cos() value, the result is in the range 0 to PI
+float(float t) atan = #473; // returns angle in radians for a given tan() value, the result is in the range -PI*0.5 to PI*0.5
+float(float c, float s) atan2 = #474; // returns angle in radians for a given cos() and sin() value pair, the result is in the range -PI to PI (this is identical to vectoyaw except it returns radians rather than degrees)
+float(float a) tan = #475; // returns tangent value (which is simply sin(a)/cos(a)) for the given angle in radians, the result is in the range -infinity to +infinity
+float(entity num) num_for_edict = #512;
+float(entity ent) wasfreed = #353; // same as in EXT_CSQC extension
+#endif
+
+#endif
