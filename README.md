@@ -3,6 +3,8 @@ SMB modpack
 
 QuakeC source for the SMB server mods
 
+Travis CI: https://travis-ci.org/MarioSMB/modpack
+
 
 NOTE:  
 Since 0.8.1, the mod has been remade as a mutator.  
