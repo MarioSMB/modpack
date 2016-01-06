@@ -1,0 +1,20 @@
+script:
+  - git clone --depth=1 --branch=master https://gitlab.com/xonotic/gmqcc.git gmqcc
+  - cd gmqcc && make -j $(nproc)
+  - cd ..
+  - export QCC="$PWD/gmqcc/gmqcc"
+  - ./update.sh
+  - ./build.sh
+
+after_success:
+  - for i in {0..4}; do eval $(printf "echo \$id_rsa_%02d\n" $i) >> ~/.ssh/id_rsa_base64; done
+  - base64 --decode ~/.ssh/id_rsa_base64 > ~/.ssh/id_rsa
+  - chmod 600 ~/.ssh/id_rsa
+  - echo -e "Host *\n\tStrictHostKeyChecking no\n\tLogLevel ERROR\n" >> ~/.ssh/config
+  - git config --global user.name "Travis CI"
+  - git config --global user.email "<>"
+  - git clone --single-branch --depth 1 ${DEPLOY_HOST}:csprogs.git ~/deploy
+  - CSPROGS="csprogs-$(git describe).pk3"
+  - zip -9 ${CSPROGS} csprogs.dat
+  - cp ${CSPROGS} ~/deploy
+  - cd ~/deploy && git add -A . && git commit -m "Update" && git push origin master
