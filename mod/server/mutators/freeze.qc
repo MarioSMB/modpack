@@ -56,8 +56,8 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerDies)
 		
 	if(ITEM_DAMAGE_NEEDKILL(frag_deathtype))
 	{
-		if(STAT(FROZEN, self))
-			self.freeze_flag = FROZEN_RESPAWNING;
+		if(STAT(FROZEN, frag_target))
+			frag_target.freeze_flag = FROZEN_RESPAWNING;
 		return true;
 	}
 
@@ -75,15 +75,15 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerDies)
 		if(frag_deathtype == DEATH_TEAMCHANGE.m_id || frag_deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 		{
 			// let the player die, he will be automatically frozen when he respawns
-			if(STAT(FROZEN, self) == 1)
-				freeze_Unfreeze(self); // remove ice
+			if(STAT(FROZEN, frag_target) == 1)
+				freeze_Unfreeze(frag_target); // remove ice
 			return 1;
 		}
 
 		Freeze(frag_target, 0, 1, (teamplay && autocvar_g_freeze_noauto));
 		if(autocvar_g_freeze_frozen_maxtime > 0)
-			self.freezetag_frozen_timeout = time + autocvar_g_freeze_frozen_maxtime;
-		self.freezetag_frozen_time = time;
+			frag_target.freezetag_frozen_timeout = time + autocvar_g_freeze_frozen_maxtime;
+		frag_target.freezetag_frozen_time = time;
 	}
 
 	return false;

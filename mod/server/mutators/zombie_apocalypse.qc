@@ -143,30 +143,30 @@ MUTATOR_HOOKFUNCTION(za, PlayerDies)
 {
 	if(!IS_MONSTER(frag_attacker) || !autocvar_g_za_infect)
 	{
-		self.monsterid = 0;
+		frag_target.monsterid = 0;
 		return false;
 	}
 
 	entity mon = get_monsterinfo(frag_attacker.monsterid);
 
-	self.monsterid = mon.monsterid;
-	self.health = frag_attacker.max_health;
-	self.za_maxhealth = frag_attacker.max_health;
-	self.weapons = '0 0 0';
-	PS(self).m_switchweapon = WEP_Null;
-	self.stat_PL_MIN = mon.mins;
-	self.stat_PL_MAX = mon.maxs;
-	self.stat_PL_CROUCH_MIN = mon.mins;
-	self.stat_PL_CROUCH_MAX = mon.maxs;
-	self.monster_attack = false;
-	self.speed = frag_attacker.speed;
-	self.speed2 = frag_attacker.speed2;
-	self.stopspeed = frag_attacker.stopspeed;
-	self.view_ofs = self.za_viewofs = frag_attacker.view_ofs;
-	self.attack_range = ((frag_attacker.attack_range) ? frag_attacker.attack_range : 150);
-	//self.attack_range = frag_attacker.attack_range;
-	self.monster_attackfunc = frag_attacker.monster_attackfunc;
-	setsize(self, frag_attacker.mins, frag_attacker.maxs);
+	frag_target.monsterid = mon.monsterid;
+	frag_target.health = frag_attacker.max_health;
+	frag_target.za_maxhealth = frag_attacker.max_health;
+	frag_target.weapons = '0 0 0';
+	PS(frag_target).m_switchweapon = WEP_Null;
+	frag_target.stat_PL_MIN = mon.mins;
+	frag_target.stat_PL_MAX = mon.maxs;
+	frag_target.stat_PL_CROUCH_MIN = mon.mins;
+	frag_target.stat_PL_CROUCH_MAX = mon.maxs;
+	frag_target.monster_attack = false;
+	frag_target.speed = frag_attacker.speed;
+	frag_target.speed2 = frag_attacker.speed2;
+	frag_target.stopspeed = frag_attacker.stopspeed;
+	frag_target.view_ofs = frag_target.za_viewofs = frag_attacker.view_ofs;
+	frag_target.attack_range = ((frag_attacker.attack_range) ? frag_attacker.attack_range : 150);
+	//frag_target.attack_range = frag_attacker.attack_range;
+	frag_target.monster_attackfunc = frag_attacker.monster_attackfunc;
+	setsize(frag_target, frag_attacker.mins, frag_attacker.maxs);
 
 	return false;
 }

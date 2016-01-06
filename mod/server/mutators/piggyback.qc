@@ -309,31 +309,31 @@ MUTATOR_HOOKFUNCTION(piggyback, ClientDisconnect)
 	return false;
 }
 
-void pb_PlayerDies()
+void pb_PlayerDies(entity this)
 {
-	if(!self.pbhost && self.pb_canattach)
-		self.pb_canattach = 0;
+	if(!this.pbhost && this.pb_canattach)
+		this.pb_canattach = 0;
 		
-	if(self.piggybacker)
+	if(this.piggybacker)
 	{
-		self.piggybacker.pb_canattach = 1;
-		pb_Detach(self);
+		this.piggybacker.pb_canattach = 1;
+		pb_Detach(this);
 	}
 	
-	if(self.pbhost)
-		pb_Detach(self.pbhost);
-	self.pb_canattach = 0;
+	if(this.pbhost)
+		pb_Detach(this.pbhost);
+	this.pb_canattach = 0;
 }
 
 MUTATOR_HOOKFUNCTION(piggyback, MonsterDies)
 {
-	pb_PlayerDies();
+	pb_PlayerDies(frag_target);
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(piggyback, PlayerDies)
 {
-	pb_PlayerDies();
+	pb_PlayerDies(frag_target);
 	return false;
 }
 
