@@ -9,4 +9,5 @@ if [ ! -d "$base" ]; then
 fi
 : ${QCC:=$PWD/gmqcc/gmqcc}
 export QCC
+export QCCFLAGS_WATERMARK=$(git describe)
 cd ${base} && make BUILD_MOD=1

@@ -1,3 +1,7 @@
+sudo: false
+services:
+  - docker
+
 script:
   - git clone --depth=1 --branch=master https://gitlab.com/xonotic/gmqcc.git gmqcc
   - cd gmqcc && make -j $(nproc)
@@ -14,7 +18,10 @@ after_success:
   - git config --global user.name "Travis CI"
   - git config --global user.email "<>"
   - git clone --single-branch --depth 1 ${DEPLOY_HOST}:csprogs.git ~/deploy
-  - CSPROGS="csprogs-$(git describe).pk3"
-  - zip -9 ${CSPROGS} csprogs.dat
-  - cp ${CSPROGS} ~/deploy
+  - VERSION="$(git describe)"
+  - PROG="csprogs"
+  - ARCHIVE="${PROG}-${VERSION}.pk3"
+  - PKGINFO="${PROG}-${VERSION}.txt"
+  - echo "https://github.com/MarioSMB/modpack" > "${PKGINFO}"
+  - zip -9 "${ARCHIVE}" "${PROG}.dat" "${PROG}.lno" "${PKGINFO}" && mv "${ARCHIVE}" ~/deploy
   - cd ~/deploy && git add -A . && git commit -m "Update" && git push origin master
