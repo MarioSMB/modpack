@@ -5,6 +5,12 @@ QuakeC source for the SMB server mods
 
 [![Build Status](https://travis-ci.org/MarioSMB/modpack.svg?branch=master)](https://travis-ci.org/MarioSMB/modpack)
 
+MORE NOTE:
+The mod now links to Xonotic as a submodule.  
+This means a slightly bigger download for the xonotic folder (about 400MB), but this is a necessary step in making csprogs.dat downloads instant!  
+When you first update to this, you'll need to do the following: `./update.sh && rm -rf xonotic && ./update.sh`  
+Once you've done this once, you'll just need to run `./update.sh` in the future.  
+
 
 NOTE:  
 Since 0.8.1, the mod has been remade as a mutator.  
