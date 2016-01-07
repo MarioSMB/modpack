@@ -2,6 +2,9 @@ sudo: false
 services:
   - docker
 
+git:
+  submodules: false
+
 script:
   - git clone --depth=1 --branch=master https://gitlab.com/xonotic/gmqcc.git gmqcc
   - cd gmqcc && make -j $(nproc)
