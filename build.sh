@@ -14,6 +14,6 @@ export PROGS_OUT
 : ${QCC:=$PWD/gmqcc/gmqcc}
 export QCC
 
-export QCCFLAGS_WATERMARK=$(git describe)
+export QCCFLAGS_WATERMARK=$(git describe --tags --dirty=*)
 
 cd ${base} && make BUILD_MOD=1
