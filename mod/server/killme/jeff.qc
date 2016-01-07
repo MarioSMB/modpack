@@ -298,7 +298,7 @@ MUTATOR_HOOKFUNCTION(egoass, PlayerDies)
 		case 3: jeff_Announcer_Send(attacker, false, ((random() > 0.5) ? ANNCE_JEFF_TRIPLEKILL : ((random() > 0.5) ? ANNCE_JEFF_MULTIKILL : ANNCE_JEFF_TRIPLEKILL1))); break;
 		case 4: jeff_Announcer_Send(attacker, true, ANNCE_JEFF_MEGAKILL); break;
 		case 5: jeff_Announcer_Send(attacker, true, ((random() > 0.5) ? ANNCE_JEFF_ULTRAKILL : ANNCE_JEFF_ULTRAKILL2)); break;
-		case 6: jeff_Announcer_Send(attacker, true, ((random() > 0.5) ? ANNCE_JEFF_MONSTERKILL : ANNCE_JEFF_MONSTERKILL1)); break;
+		case 6: jeff_Announcer_Send(attacker, true, ((random() > 0.5) ? ANNCE_JEFF_MONSTERKILL : ((random() > 0.5) ? ANNCE_JEFF_MONSTERKILL1 : ANNCE_JEFF_MONSTERKILL2))); break;
 		case 7: jeff_Announcer_Send(attacker, true, ANNCE_JEFF_LUDICROUSKILL); break;
 		case 10: jeff_Announcer_Send(attacker, true, ((random() > 0.5) ? ANNCE_JEFF_GODLIKE1 : ANNCE_JEFF_GODLIKE)); break;
 	}
@@ -314,7 +314,7 @@ MUTATOR_HOOKFUNCTION(egoass, PlayerDies)
 
 	if(attacker.killcount >= 1)
 	if(best_killcount == attacker.killcount - 1) // attacker just took the lead (TODO: make sure this isn't spammed)
-		jeff_Announcer_Send(attacker, true, ANNCE_JEFF_TOPGUN);
+		jeff_Announcer_Send(attacker, true, ((random() > 0.5) ? ANNCE_JEFF_TOPGUN : ANNCE_JEFF_TOPGUN1));
 
 	if(attacker.killcount >= 1)
 	if(best_killcount == attacker.killcount - 5)
@@ -385,6 +385,9 @@ MUTATOR_HOOKFUNCTION(egoass, PlayerDamage_SplitHealthArmor)
 	if(DIFF_TEAM(frag_attacker, frag_target))
 		Send_Notification(NOTIF_ALL, world, MSG_ANNCE, ((random() > 0.5) ? ANNCE_JEFF_FIRSTBLOOD : ((random() > 0.5) ? ANNCE_JEFF_FIRSTBLOOD1 : ANNCE_JEFF_FIRSTBLOOD2)));
 
+	if(frag_deathtype == DEATH_CAMP.m_id)
+		jeff_Announcer_Send(frag_target, true, ANNCE_JEFF_CAMPER);
+
 	return false;
 }
 
@@ -399,6 +402,9 @@ MUTATOR_HOOKFUNCTION(egoass, VehicleEnter)
 	if(vh_vehicle.tur_head.team)
 	if(DIFF_TEAM(vh_player, vh_vehicle.tur_head))
 		jeff_Announcer_Send(vh_player, true, ANNCE_JEFF_HIJACKED);
+
+	if(!vh_vehicle.tur_head.team)
+		Jeff_Announcer_Send(vh_player, true, ANNCE_JEFF_CARJACKED);
 	return false;
 }
 

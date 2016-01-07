@@ -49,6 +49,7 @@ MSG_ANNCE_NOTIF(1, ANNCE_JEFF_MANSLAUGHTER,         CH_INFO, "vehicularmanslaugh
 MSG_ANNCE_NOTIF(1, ANNCE_JEFF_MEGAKILL,             CH_INFO, "megakill",                VOL_BASEVOICE, ATTEN_NONE);
 MSG_ANNCE_NOTIF(1, ANNCE_JEFF_MONSTERKILL,          CH_INFO, "monsterkill",             VOL_BASEVOICE, ATTEN_NONE);
 MSG_ANNCE_NOTIF(1, ANNCE_JEFF_MONSTERKILL1,         CH_INFO, "monsterkill1",            VOL_BASEVOICE, ATTEN_NONE);
+MSG_ANNCE_NOTIF(1, ANNCE_JEFF_MONSTERKILL2,         CH_INFO, "monsterkill2",            VOL_BASEVOICE, ATTEN_NONE);
 MSG_ANNCE_NOTIF(1, ANNCE_JEFF_MULTIKILL,            CH_INFO, "multikill",               VOL_BASEVOICE, ATTEN_NONE);
 MSG_ANNCE_NOTIF(1, ANNCE_JEFF_MUTDESTRUCT,          CH_INFO, "mutualdestruction",       VOL_BASEVOICE, ATTEN_NONE);
 MSG_ANNCE_NOTIF(1, ANNCE_JEFF_NODEBUSTER,           CH_INFO, "nodebuster",              VOL_BASEVOICE, ATTEN_NONE);
@@ -67,6 +68,7 @@ MSG_ANNCE_NOTIF(1, ANNCE_JEFF_SLACKER,              CH_INFO, "slacker",         
 MSG_ANNCE_NOTIF(1, ANNCE_JEFF_SPEED,                CH_INFO, "speed",                   VOL_BASEVOICE, ATTEN_NONE);
 MSG_ANNCE_NOTIF(1, ANNCE_JEFF_TEAMKILLER,           CH_INFO, "teamkiller",              VOL_BASEVOICE, ATTEN_NONE);
 MSG_ANNCE_NOTIF(1, ANNCE_JEFF_TOPGUN,               CH_INFO, "topgun",                  VOL_BASEVOICE, ATTEN_NONE);
+MSG_ANNCE_NOTIF(1, ANNCE_JEFF_TOPGUN1,              CH_INFO, "topgun1",                 VOL_BASEVOICE, ATTEN_NONE);
 MSG_ANNCE_NOTIF(1, ANNCE_JEFF_TRIPLEKILL,           CH_INFO, "triplekill",              VOL_BASEVOICE, ATTEN_NONE);
 MSG_ANNCE_NOTIF(1, ANNCE_JEFF_TRIPLEKILL1,          CH_INFO, "triplekill1",        		VOL_BASEVOICE, ATTEN_NONE);
 MSG_ANNCE_NOTIF(1, ANNCE_JEFF_ULTRAKILL,            CH_INFO, "ultrakill",               VOL_BASEVOICE, ATTEN_NONE);
@@ -79,5 +81,9 @@ MSG_ANNCE_NOTIF(1, ANNCE_JEFF_VENGEANCE,            CH_INFO, "vengeance",       
 MSG_ANNCE_NOTIF(1, ANNCE_JEFF_WICKEDSICK,           CH_INFO, "wickedsick",              VOL_BASEVOICE, ATTEN_NONE);
 MSG_ANNCE_NOTIF(1, ANNCE_JEFF_WRECKER,              CH_INFO, "wrecker",                 VOL_BASEVOICE, ATTEN_NONE);
 MSG_ANNCE_NOTIF(1, ANNCE_JEFF_EXCELLENT,            CH_INFO, "excellent",               VOL_BASEVOICE, ATTEN_NONE);
+MSG_ANNCE_NOTIF(1, ANNCE_JEFF_CAMPER,            	CH_INFO, "Camper",               	VOL_BASEVOICE, ATTEN_NONE);
+MSG_ANNCE_NOTIF(1, ANNCE_JEFF_BERZERK,            	CH_INFO, "Berzerk",               	VOL_BASEVOICE, ATTEN_NONE);
+MSG_ANNCE_NOTIF(1, ANNCE_JEFF_WARPATH,            	CH_INFO, "warpath",               	VOL_BASEVOICE, ATTEN_NONE);
+MSG_ANNCE_NOTIF(1, ANNCE_JEFF_CARJACKED,            CH_INFO, "carjacked",               VOL_BASEVOICE, ATTEN_NONE);
 
 #endif
