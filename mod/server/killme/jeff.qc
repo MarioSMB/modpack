@@ -404,7 +404,7 @@ MUTATOR_HOOKFUNCTION(egoass, VehicleEnter)
 		jeff_Announcer_Send(vh_player, true, ANNCE_JEFF_HIJACKED);
 
 	if(!vh_vehicle.tur_head.team)
-		Jeff_Announcer_Send(vh_player, true, ANNCE_JEFF_CARJACKED);
+		jeff_Announcer_Send(vh_player, true, ANNCE_JEFF_CARJACKED);
 	return false;
 }
 
