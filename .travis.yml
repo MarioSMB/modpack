@@ -21,7 +21,7 @@ after_success:
   - git config --global user.name "Travis CI"
   - git config --global user.email "<>"
   - git clone --single-branch --depth 1 ${DEPLOY_HOST}:csprogs.git ~/deploy
-  - VERSION="$(git describe)"
+  - VERSION="$(git describe --tags --dirty=*)"
   - PROG="csprogs"
   - ARCHIVE="${PROG}-${VERSION}.pk3"
   - PKGINFO="${PROG}-${VERSION}.txt"
