@@ -13,7 +13,7 @@ void pc_PlayerTouch()
 		return;
 
 	bool and_monster = IS_MONSTER(other);
-	if(and_monster && !((get_monsterinfo(other.monsterid)).spawnflags & MON_FLAG_CRUSH))
+	if(and_monster && !((Monsters_from(other.monsterid)).spawnflags & MON_FLAG_CRUSH))
 		and_monster = false;
 
 	if(!autocvar_g_player_crush && !and_monster)

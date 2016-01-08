@@ -67,7 +67,7 @@ void za_SetEnemy(entity player)
 MUTATOR_HOOKFUNCTION(za, FixPlayermodel)
 {
 	if(self.monsterid)
-		ret_string = (get_monsterinfo(self.monsterid)).model;
+		ret_string = (Monsters_from(self.monsterid)).model;
 	return false;
 }
 
@@ -75,7 +75,7 @@ MUTATOR_HOOKFUNCTION(za, PlayerPhysics)
 {
 	if(!self.monsterid) { return false; }
 
-	entity mon = get_monsterinfo(self.monsterid);
+	entity mon = Monsters_from(self.monsterid);
 
 	self.weapons = '0 0 0';
 	PS(self).m_switchweapon = WEP_Null;
@@ -98,7 +98,7 @@ MUTATOR_HOOKFUNCTION(za, PlayerPreThink)
 {
 	if(!self.monsterid || time < self.attack_finished_single[0]) { return false; }
 
-	Monster mon = get_monsterinfo(self.monsterid);
+	Monster mon = Monsters_from(self.monsterid);
 	mon.mr_think(mon, self);
 
 	if(self.BUTTON_ATCK)
@@ -147,7 +147,7 @@ MUTATOR_HOOKFUNCTION(za, PlayerDies)
 		return false;
 	}
 
-	entity mon = get_monsterinfo(frag_attacker.monsterid);
+	entity mon = Monsters_from(frag_attacker.monsterid);
 
 	frag_target.monsterid = mon.monsterid;
 	frag_target.health = frag_attacker.max_health;

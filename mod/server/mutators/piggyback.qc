@@ -193,7 +193,7 @@ MUTATOR_HOOKFUNCTION(piggyback, PlayerUseKey)
 		head = WarpZone_FindRadius(self.origin, autocvar_g_vehicles_enter_radius, true);
 		while(head)
 		{
-			if(IS_PLAYER(head) || (IS_MONSTER(head) && ((get_monsterinfo(head.monsterid)).spawnflags & MON_FLAG_RIDE)))
+			if(IS_PLAYER(head) || (IS_MONSTER(head) && ((Monsters_from(head.monsterid)).spawnflags & MON_FLAG_RIDE)))
 			if(SAME_TEAM(head, self) || autocvar_g_piggyback_ride_enemies || (IS_MONSTER(head) && head.realowner == self))
 			if(head != self)
 			if(!head.cvar_cl_nocarry)
