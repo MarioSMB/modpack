@@ -26,5 +26,7 @@ after_success:
   - ARCHIVE="${PROG}-${VERSION}.pk3"
   - PKGINFO="${PROG}-${VERSION}.txt"
   - echo "https://github.com/MarioSMB/modpack" > "${PKGINFO}"
-  - zip -9 "${ARCHIVE}" "${PROG}.dat" "${PROG}.lno" "${PKGINFO}" && mv "${ARCHIVE}" ~/deploy
+  - mv ${PROG}{,-${VERSION}}.dat
+  - mv ${PROG}{,-${VERSION}}.lno
+  - zip -9 "${ARCHIVE}" ${PROG}-${VERSION}.{dat,lno} "${PKGINFO}" && mv "${ARCHIVE}" ~/deploy
   - cd ~/deploy && git add -A . && git commit -m "Update" && git push origin master
