@@ -1,4 +1,5 @@
-gmqcc
+gmqcc/
 *.dat
 *.lno
+.cache/
 .DS_Store

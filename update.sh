@@ -8,7 +8,9 @@ declare qccDir='gmqcc'
 declare qccRepo='https://github.com/graphitemaster/gmqcc.git'
 declare qccBranch='master'
 
-git pull
+git pull --tags
+
+wget -P .cache https://github.com/MarioSMB/csprogs/raw/master/csprogs-$(git describe --tags --dirty=*).pk3
 
 if [ ! -d "$qccDir" ]; then
     git clone ${qccRepo} -b ${qccBranch} ${qccDir}
