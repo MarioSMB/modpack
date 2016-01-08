@@ -10,7 +10,6 @@ script:
   - cd gmqcc && make -j $(nproc)
   - cd ..
   - export QCC="$PWD/gmqcc/gmqcc"
-  - ./update.sh
   - ./build.sh
 
 after_success:
