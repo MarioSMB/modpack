@@ -29,4 +29,6 @@ after_success:
   - mv ${PROG}{,-${VERSION}}.dat
   - mv ${PROG}{,-${VERSION}}.lno
   - zip -9 "${ARCHIVE}" ${PROG}-${VERSION}.{dat,lno} "${PKGINFO}" && mv "${ARCHIVE}" ~/deploy
-  - cd ~/deploy && git add -A . && git commit -m "Update" && git push origin master
+  - cd ~/deploy
+  - git config --add remote.origin.url git@github.com:MarioSMB/csprogs.git
+  - git add -A . && git commit -m "Update" && git push origin master
