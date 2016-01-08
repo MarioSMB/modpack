@@ -6,10 +6,7 @@ git:
   submodules: false
 
 script:
-  - git clone --depth=1 --branch=master https://gitlab.com/xonotic/gmqcc.git gmqcc
-  - cd gmqcc && make -j $(nproc)
-  - cd ..
-  - export QCC="$PWD/gmqcc/gmqcc"
+  - ./update.sh
   - ./build.sh
 
 after_success:
