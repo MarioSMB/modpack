@@ -11,7 +11,7 @@ declare qccBranch='master'
 git pull --tags
 
 if [ -z "${CI-}" ]; then
-    wget -P .cache https://github.com/MarioSMB/csprogs/raw/master/csprogs-$(git describe --tags --dirty=*).pk3
+    wget -P .cache -c https://github.com/MarioSMB/csprogs/raw/master/csprogs-$(git describe --tags --dirty=*).pk3
 fi
 
 if [ ! -d "$qccDir" ]; then
