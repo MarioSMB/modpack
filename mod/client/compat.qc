@@ -64,4 +64,7 @@ STATIC_INIT(mod_compat_cvars)
 	registercvar("hud_panel_minigamemenu_bg_alpha", "");
 	registercvar("hud_panel_minigamemenu_bg_border", "");
 	registercvar("hud_panel_minigamemenu_bg_padding", "");
+
+	if(!(cvar_type("g_xonoticversion") & CVAR_TYPEFLAG_EXISTS))
+		localcmd("\nexec _xonotic_compat.cfg\n");
 }
