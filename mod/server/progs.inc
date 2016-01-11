@@ -15,5 +15,4 @@
 
 #include "quake.qc"
 
-#include "killme/all.qh"
 #include "mutators/all.qh"
