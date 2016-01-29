@@ -31,9 +31,9 @@ Git
  - Mac: Install the command line tools package (Google is your friend)
  
 Required content packs:
- - http://smb.djstrikes3.com/zzz-misc-v006-46-g1edff38.pk3
- - http://smb.djstrikes3.com/zzz-quickmenu_016.pk3
- - http://smb.djstrikes3.com/zzz-minigames-v006-47-g908aea1.pk3
+ - http://smb.djstrikes3.com/zzz-misc-v006-52-g36645e5.pk3
+ - http://smb.djstrikes3.com/zzz-quickmenu_017.pk3
+ - http://smb.djstrikes3.com/zzz-minigames-v006-50-g6b93a8d.pk3
 
 
 Usage
