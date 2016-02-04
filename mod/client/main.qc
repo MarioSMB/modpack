@@ -15,7 +15,8 @@ STATIC_INIT_LATE(mod_cvars_override)
 
 REGISTER_MUTATOR(mutator_mod, true);
 
-MUTATOR_HOOKFUNCTION(mutator_mod, BuildMutatorsString) {
+MUTATOR_HOOKFUNCTION(mutator_mod, BuildMutatorsString)
+{
     ret_string = strcat(ret_string, ":mod");
 }
 
