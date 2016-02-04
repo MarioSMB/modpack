@@ -85,6 +85,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 	if(!cvar("g_overkill"))
 	{
 		// public hax
+		// stuff anyone can use
 		if(self.cvar_cl_pony && pony_allowed)
 		{
 			ret_string = "models/player/pony.iqm";
