@@ -130,7 +130,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 				{
 					self.respawn_time = time + 1; // only retry once a second
 					if(self.nade)
-						toss_nade(self, '0 0 100', max(self.nade.wait, time + 0.05));
+						toss_nade(self, true, '0 0 100', max(self.nade.wait, time + 0.05));
 					PutClientInServer();
 				}
 
@@ -257,7 +257,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 			{
 				self.respawn_time = time + 1; // only retry once a second
 				if(self.nade)
-					toss_nade(self, '0 0 100', max(self.nade.wait, time + 0.05));
+					toss_nade(self, true, '0 0 100', max(self.nade.wait, time + 0.05));
 				PutClientInServer();
 				return 1;
 			}
