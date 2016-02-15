@@ -64,6 +64,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, FormatMessage)
 {
 	if(format_message == "moo")
 		self.cow = true;
+
 	return false;
 }
 
