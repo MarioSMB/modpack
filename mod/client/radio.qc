@@ -19,6 +19,7 @@ void Radio_Stopper_Think(void)
     {
         localcmd("\ncd reset\n");
         remove(self);
+        return; // don't continue, we just removed this thing...
     }
 
     self.cnt = t;
@@ -45,7 +46,7 @@ void Radio_Think(void)
         //cvar_clientsettemp("bgmvolume", "0.1");
 
     float start = ((self.flags) ? 0 : servertime - self.radio_starttime);
-    localcmd("\ncd reset\ncd remap ", self.netname, "\ncd loop 1 ", ftos(start), "\n");
+    localcmd(sprintf("\ncd reset\ncd loop %s %d\n", self.netname, start));
     strunzone(self.netname);
 
     if(self.flags)
