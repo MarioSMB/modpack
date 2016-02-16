@@ -12,6 +12,7 @@
 #include "headshots.qc"
 #include "monsters.qc"
 #include "player_crush.qc"
+#include "radio.qc"
 
 #include "quake.qc"
 

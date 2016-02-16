@@ -1,0 +1,6 @@
+#ifdef SVQC
+bool sv_radio;
+#endif
+REGISTER_STAT(RADIO, int, sv_radio)
+
+REGISTER_NET_TEMP(TE_CSQC_RADIO)

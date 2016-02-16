@@ -6,6 +6,7 @@
 #include "monsters/all.inc"
 #include "mutators/all.qh"
 #include "notifications.qh"
+#include "radio.qh"
 #include "sounds.inc"
 #include "triggers/triggers.qh"
 #include "vehicles/all.inc"
