@@ -417,6 +417,15 @@ MUTATOR_HOOKFUNCTION(radio, ClientConnect)
 	if(!IS_REAL_CLIENT(self))
 		return false;
 
+	int realclients = 0;
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),
+	{
+		++realclients;
+	});
+
+	if(realclients <= 1)
+		defer(5, Radio_Queue_PlayFirst);
+
 	if(autocvar_sv_radio_preload)
 		Radio_SendPreload(self, radio_url);
 	defer(self, 3, Radio_ClientConnect_Delayed);

@@ -6,7 +6,7 @@ REGISTER_MUTATOR(radio, true);
 
 void Radio_Stopper_Think(void)
 {
-    if(self.cnt < -2)
+    if(self.cnt < -2 || intermission)
     {
         remove(self);
         return;
@@ -83,7 +83,7 @@ NET_HANDLE(TE_CSQC_RADIO, bool isNew)
 	if(!loop)
 		start = ReadCoord();
 
-	if(!autocvar_cl_radio)
+	if(!autocvar_cl_radio || intermission)
 		return true;
 
 	localcmd("\ncurl --pak ", url, "\n");
