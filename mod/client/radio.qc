@@ -109,6 +109,7 @@ MUTATOR_HOOKFUNCTION(radio, Ent_Init)
 	localcmd("\ncmd radio ", ftos(autocvar_cl_radio), "\n");
 }
 
+.bool paused;
 MUTATOR_HOOKFUNCTION(radio, CSQC_ConsoleCommand)
 {
 	if(MUTATOR_RETURNVALUE) // command was already handled?
