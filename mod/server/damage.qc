@@ -39,5 +39,6 @@ MUTATOR_HOOKFUNCTION(damage_mod, FormatMessage)
 		case "j": format_replacement = ((self.lastkilled) ? self.lastkilled.netname : "(nobody)"); break;
 		case "k": format_replacement = ((self.lastkiller) ? self.lastkiller.netname : "(nobody)"); break;
 	}
+
 	return false;
 }
