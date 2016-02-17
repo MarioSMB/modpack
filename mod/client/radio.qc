@@ -4,6 +4,28 @@ REGISTER_MUTATOR(radio, true);
 
 .float radio_starttime;
 
+void Radio_Stopper_Think(void)
+{
+    if(self.cnt < -2)
+    {
+        remove(self);
+        return;
+    }
+
+    float t = gettime(GETTIME_CDTRACK);
+    //print(ftos(t), "\n");
+
+    if(self.cnt > t)
+    {
+        localcmd("\ncd stop\n");
+        remove(self);
+        return; // don't continue, we just removed this thing...
+    }
+
+    self.cnt = t;
+    self.nextthink = time;
+}
+
 void Radio_Think(void)
 {
 	if(self.cnt < 0 || time - self.cnt > 300)
@@ -24,20 +46,22 @@ void Radio_Think(void)
 		//cvar_clientsettemp("bgmvolume", "0.1");
 
 	float start = ((self.flags) ? 0 : servertime - self.radio_starttime);
+	localcmd(sprintf("\ncd loop %s %d\n", self.netname, start));
+	strunzone(self.netname);
 
 	if(self.flags)
 	{
 		// loop
-		localcmd(sprintf("\ncd loop %s %d\n", self.netname, start));
+		remove(self);
 	}
 	else
 	{
-		// play once
-		localcmd(sprintf("\ncd play %s %d\n", self.netname, start));
+		// play once - we can't just use "cd play" here becase it's apparently broken
+		// instead, detect when the track starts to loop and stop it
+		self.cnt = -2;
+		self.think = Radio_Stopper_Think;
+		self.nextthink = time + 1;
 	}
-
-	if(self.netname) { strunzone(self.netname); }
-	remove(self); // screw you guys, i'm going home
 }
 
 NET_HANDLE(TE_CSQC_RADIO, bool isNew)

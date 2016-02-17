@@ -150,7 +150,7 @@ void Radio_Stop(void)
 
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		stuffcmd(it, "cd reset\n");
+		stuffcmd(it, "cd stop\n");
 	});
 }
 
