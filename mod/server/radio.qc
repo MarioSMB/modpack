@@ -424,7 +424,7 @@ MUTATOR_HOOKFUNCTION(radio, ClientConnect)
 	});
 
 	if(realclients <= 1)
-		defer(5, Radio_Queue_PlayFirst);
+		defer(self, 5, Radio_Queue_PlayFirst);
 
 	if(autocvar_sv_radio_preload)
 		Radio_SendPreload(self, radio_url);
