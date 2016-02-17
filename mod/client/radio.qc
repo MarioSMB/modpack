@@ -117,8 +117,23 @@ MUTATOR_HOOKFUNCTION(radio, CSQC_ConsoleCommand)
 	if(cmd_name == "radio")
 	{
 		if(!stof(argv(1)))
-		if(find(world, classname, "radio"))
-			localcmd("\ncd pause\n");
+		{
+			entity e = find(world, classname, "radio");
+
+			if(e)
+			{
+				if(e.paused)
+				{
+					e.paused = false;
+					localcmd("\ncd resume\n");
+				}
+				else
+				{
+					e.paused = true;
+					localcmd("\ncd pause\n");
+				}
+			}
+		}
 
 		cvar_set("cl_radio", argv(1));
 		localcmd("\ncmd radio ", ftos(autocvar_cl_radio), "\n");
