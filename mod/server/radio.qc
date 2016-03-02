@@ -245,7 +245,7 @@ void Radio_Queue(string url, string fname, float len, string desc)
 	cvar_set(url_var, url);
 	cvar_set(fname_var, fname);
 	cvar_set(len_var, ftos(len));
-	cvar_set(desc_var, desc);
+	cvar_set(desc_var, MakeConsoleSafe(desc));
 
 	string q = cvar_string("_radio_queue");
 	if(q == "")
