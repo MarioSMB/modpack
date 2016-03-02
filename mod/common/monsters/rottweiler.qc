@@ -84,8 +84,11 @@ spawnfunc(monster_dog) { Monster_Spawn(this, MON_ROTTWEILER.monsterid); }
 		{
 			if(random() <= 0.3)
 			{
-				actor.pain_finished = time + 1.5;
 				setanim(actor, actor.anim_pain1, true, true, false);
+				if(actor.animstate_endtime > time)
+					actor.pain_finished = actor.animstate_endtime;
+				else
+					actor.pain_finished = time + 0.5; // short burst?
 			}
 			return true;
 		}
@@ -99,9 +102,9 @@ spawnfunc(monster_dog) { Monster_Spawn(this, MON_ROTTWEILER.monsterid); }
 		METHOD(Rottweiler, mr_anim, bool(Monster thismon, entity actor))
 		{
 			vector none = '0 0 0';
-			actor.anim_die1 = animfixfps(actor, '5 1 0.5', none); // 2 seconds
-			actor.anim_die2 = animfixfps(actor, '1 1 0.5', none); // 2 seconds
-			actor.anim_walk = animfixfps(actor, '2 1 1', none);
+			actor.anim_die1 = animfixfps(actor, '1 1 0.5', none); // 2 seconds
+			actor.anim_die2 = animfixfps(actor, '2 1 0.5', none); // 2 seconds
+			actor.anim_walk = animfixfps(actor, '8 1 1', none);
 			actor.anim_idle = animfixfps(actor, '7 1 1', none);
 			actor.anim_pain1 = animfixfps(actor, '4 1 2', none); // 0.5 seconds
 			actor.anim_melee1 = animfixfps(actor, '0 1 5', none); // analyze models and set framerate
