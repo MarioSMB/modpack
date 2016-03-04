@@ -1,3 +1,5 @@
+#ifdef QUAKE
+
 REGISTER_MUTATOR(pinventory, true);
 
 AUTOCVAR(sv_persistent_inventory, bool, false, _("Enable persistent item saving"));
@@ -90,3 +92,5 @@ MUTATOR_HOOKFUNCTION(pinventory, SetChangeParms)
 	parm12 = PS(self).m_switchweapon.m_id;
 	return false;
 }
+
+#endif
