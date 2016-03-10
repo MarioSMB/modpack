@@ -51,7 +51,7 @@ void pc_PlayerTouch()
 
 			setorigin(self, self.origin + '0 0 2');
 
-			if(self.BUTTON_JUMP)
+			if(PHYS_INPUT_BUTTON_JUMP(self))
 			{
 				mjumpheight = autocvar_g_player_crush_bounce_jump;
 				self.flags &= ~FL_JUMPRELEASED;

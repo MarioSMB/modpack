@@ -232,16 +232,16 @@ MUTATOR_HOOKFUNCTION(piggyback, PlayerPreThink)
 		pb_FixPBEnt(self);
 
 	if(IS_MONSTER(self.pbhost))
-	if(self.movement || self.BUTTON_JUMP || self.BUTTON_CROUCH)
+	if(self.movement || PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_CROUCH(self))
 	//if(!self.pbhost.enemy) // if player is trying to move, don't override
 	{
 		float forw, rit, updown = 0;
 		vector wishvel = '0 0 0';
 
 		makevectors(self.angles);
-		if(self.BUTTON_JUMP)
+		if(PHYS_INPUT_BUTTON_JUMP(self))
 			updown = 300;
-		else if(self.BUTTON_CROUCH)
+		else if(PHYS_INPUT_BUTTON_CROUCH(self))
 			updown = -300;
 
 		if(self.movement)
@@ -351,7 +351,7 @@ MUTATOR_HOOKFUNCTION(piggyback, FixPlayermodel)
 	if(!self.pbhost) { return false; }
 
 	// this was the nearest hook to the original code
-	bool do_crouch = self.BUTTON_CROUCH;
+	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(self);
 	if(self.hook_state
 	|| self.vehicle
 	|| STAT(FROZEN, self)

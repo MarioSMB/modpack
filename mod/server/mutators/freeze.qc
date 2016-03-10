@@ -112,7 +112,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 
 		if(STAT(FROZEN, self) == 1)
 		{
-			button_pressed = (!autocvar_g_freeze_norespawn && (self.BUTTON_JUMP || self.BUTTON_USE)); // only detect jumps
+			button_pressed = (!autocvar_g_freeze_norespawn && (PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_USE(self))); // only detect jumps
 			if(IS_GAMETYPE(LMS) || IS_GAMETYPE(CA)) { self.freeze_flag = FROZEN_RESPAWNING; } // these modes require player to die
 			if(self.freeze_flag == FROZEN_THAWING)
 			{
@@ -234,9 +234,9 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 		self.health = max(1, self.revive_progress * start_health);
 
 		if(self.health >= autocvar_g_freeze_revive_minhealth)
-			button_pressed = (self.BUTTON_JUMP || self.BUTTON_USE); // we're about to defrost, only detect jumps
+			button_pressed = (PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_USE(self)); // we're about to defrost, only detect jumps
 		else
-			button_pressed = (self.BUTTON_ATCK || self.BUTTON_JUMP || self.BUTTON_ATCK2 || self.BUTTON_HOOK || self.BUTTON_USE);
+			button_pressed = (PHYS_INPUT_BUTTON_ATCK(self) || PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_ATCK2(self) || PHYS_INPUT_BUTTON_HOOK(self) || PHYS_INPUT_BUTTON_USE(self));
 
 		if(autocvar_g_freeze_norespawn)
 			button_pressed = 0; // don't allow re-spawning via jump/attack

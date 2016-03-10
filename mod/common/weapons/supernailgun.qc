@@ -181,7 +181,7 @@ void W_SuperNailGun_Attack_Frame(Weapon thiswep, entity actor, .entity weaponent
 		w_ready(thiswep, actor, weaponentity, fire);
 		return;
 	}
-	if(actor.BUTTON_ATCK)
+	if(PHYS_INPUT_BUTTON_ATCK(actor))
 	{
 		Weapon w = Weapons_from(PS(actor).m_weapon.m_id);
 		if(!w.wr_checkammo2(w))
@@ -280,9 +280,9 @@ void W_SuperNailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponent
 		METHOD(SuperNailGun, wr_aim, void(entity thiswep))
 		{
 			if(vlen(self.origin-self.enemy.origin) < 3000 - bound(0, skill, 10) * 200)
-				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false);
+				PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(1000000, 0, 0.001, false);
 			else
-				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false);
+				PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(1000000, 0, 0.001, false);
 		}
 		METHOD(SuperNailGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{

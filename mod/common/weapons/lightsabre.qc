@@ -149,7 +149,7 @@ void W_Lightsabre_Melee_Think()
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
 	entity target_victim;
 	vector targpos;
-	float isprimary = !(self.realowner.BUTTON_ATCK2);
+	bool isprimary = !PHYS_INPUT_BUTTON_ATCK2(self.realowner);
 	int deathtype = WEP_LIGHTSABRE.m_id;
 	if(!isprimary)
 		deathtype |= HITTYPE_SECONDARY;
@@ -289,9 +289,9 @@ void W_LightSabre_SetActive(entity actor, .entity weaponentity, bool newactive, 
 		METHOD(Lightsabre, wr_aim, void(entity thiswep))
 		{
 			if(random() >= 0.5)
-				self.BUTTON_ATCK2 = bot_aim(1000000, 0, 0.001, false);
+				PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(1000000, 0, 0.001, false);
 			else
-				self.BUTTON_ATCK = bot_aim(1000000, 0, 0.001, false);
+				PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(1000000, 0, 0.001, false);
 		}
 		METHOD(Lightsabre, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{

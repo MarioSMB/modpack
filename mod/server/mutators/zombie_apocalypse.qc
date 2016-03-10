@@ -89,7 +89,7 @@ MUTATOR_HOOKFUNCTION(za, PlayerPhysics)
 
 	self.stat_MOVEVARS_MAXSPEED = self.speed2;
 	self.stat_MOVEVARS_MAXAIRSPEED = self.speed2;
-	self.BUTTON_CROUCH = false;
+	PHYS_INPUT_BUTTON_CROUCH(self) = false;
 
 	return false;
 }
@@ -101,7 +101,7 @@ MUTATOR_HOOKFUNCTION(za, PlayerPreThink)
 	Monster mon = Monsters_from(self.monsterid);
 	mon.mr_think(mon, self);
 
-	if(self.BUTTON_ATCK)
+	if(PHYS_INPUT_BUTTON_ATCK(self))
 	if(self.monster_attackfunc)
 	{
 		za_SetEnemy(self);
@@ -109,7 +109,7 @@ MUTATOR_HOOKFUNCTION(za, PlayerPreThink)
 			animdecide_setaction(self, ANIMACTION_MELEE, false);
 	}
 
-	if(self.BUTTON_ATCK2)
+	if(PHYS_INPUT_BUTTON_ATCK2(self))
 	if(self.monster_attackfunc)
 	{
 		za_SetEnemy(self);
