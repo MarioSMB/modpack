@@ -62,9 +62,9 @@ CLASS(Lightsabre, Weapon)
 ENDCLASS(Lightsabre)
 REGISTER_WEAPON(LIGHTSABRE, lightsabre, NEW(Lightsabre));
 
-MSG_INFO_NOTIF(1, INFO_WEAPON_LIGHTSABRE_MURDER,      3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponlightsabre",   _("^BG%s%s^K1's hand was sliced off by ^BG%s^K1's Lightsabre%s%s"), "")
+MSG_INFO_NOTIF(WEAPON_LIGHTSABRE_MURDER,   1,   3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponlightsabre",   _("^BG%s%s^K1's hand was sliced off by ^BG%s^K1's Lightsabre%s%s"), "")
 
-MSG_MULTI_NOTIF(1, WEAPON_LIGHTSABRE_MURDER,      NO_MSG,        INFO_WEAPON_LIGHTSABRE_MURDER,      NO_MSG)
+MSG_MULTI_NOTIF(WEAPON_LIGHTSABRE_MURDER,   1,   NULL,        INFO_WEAPON_LIGHTSABRE_MURDER,      NULL)
 
 #ifdef SVQC
 STATIC_INIT(lightsabre_cvars)
@@ -326,11 +326,11 @@ void W_LightSabre_SetActive(entity actor, .entity weaponentity, bool newactive, 
 		{
 			return true;
 		}
-		METHOD(Lightsabre, wr_suicidemessage, int(entity thiswep))
+		METHOD(Lightsabre, wr_suicidemessage, Notification(entity thiswep))
 		{
 			return WEAPON_THINKING_WITH_PORTALS;
 		}
-		METHOD(Lightsabre, wr_killmessage, int(entity thiswep))
+		METHOD(Lightsabre, wr_killmessage, Notification(entity thiswep))
 		{
 			return WEAPON_LIGHTSABRE_MURDER;
 		}

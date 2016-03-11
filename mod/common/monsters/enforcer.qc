@@ -4,9 +4,8 @@
 #ifndef MENUQC
 MODEL(MON_ENFORCER, M_Model("enforcer.mdl"));
 
-
-MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_ENFORCER_PLASMA,            	2, 1, "s1 s2loc spree_lost", "s1",      	"notify_death",         				_("^BG%s^K1 was blasted to death by an Enforcer%s%s"), "")
-MSG_MULTI_NOTIF(1, DEATH_SELF_MON_ENFORCER_PLASMA,                  NO_MSG,        								INFO_DEATH_SELF_MON_ENFORCER_PLASMA,     CENTER_DEATH_SELF_MONSTER)
+MSG_INFO_NOTIF(DEATH_SELF_MON_ENFORCER_PLASMA,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         _("^BG%s^K1 was blasted to death by an Enforcer%s%s"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_ENFORCER_PLASMA,                1,  NULL,           INFO_DEATH_SELF_MON_ENFORCER_PLASMA,               CENTER_DEATH_SELF_MONSTER)
 REGISTER_DEATHTYPE(MONSTER_ENFORCER_PLASMA,            				DEATH_SELF_MON_ENFORCER_PLASMA,            	DEATH_MURDER_MONSTER,           		"monster")
 #endif
 

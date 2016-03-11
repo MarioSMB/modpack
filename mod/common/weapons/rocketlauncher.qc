@@ -406,11 +406,11 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 		{
 			W_Reload(self, WEP_CVAR(rocketlauncher, ammo), SND(RELOAD));
 		}
-		METHOD(RocketLauncher, wr_suicidemessage, int(entity thiswep))
+		METHOD(RocketLauncher, wr_suicidemessage, Notification(entity thiswep))
 		{
 			return WEAPON_DEVASTATOR_SUICIDE;
 		}
-		METHOD(RocketLauncher, wr_killmessage, int(entity thiswep))
+		METHOD(RocketLauncher, wr_killmessage, Notification(entity thiswep))
 		{
 			if((w_deathtype & HITTYPE_BOUNCE) || (w_deathtype & HITTYPE_SPLASH))
 				return WEAPON_DEVASTATOR_MURDER_SPLASH;

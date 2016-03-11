@@ -20,12 +20,10 @@ AUTOCVAR_SAVE(cl_announcer_force,                    bool,   false,      _("Don'
 
 void Announcer_Precache()
 {
-	for(int i = 0; i < NOTIF_ANNCE_MAX; ++i)
-	{
-		entity e = msg_annce_notifs[i];
-		if(e.nent_enabled)
-			precache_sound(sprintf("announcer/%s/%s.wav", AnnouncerOption(), e.nent_snd));
-	}
+	FOREACH(Notifications, it.nent_type == MSG_ANNCE, {
+		if(it.nent_enabled)
+			precache_sound(sprintf("announcer/%s/%s.wav", AnnouncerOption(), it.nent_snd));
+	});
 }
 
 MUTATOR_HOOKFUNCTION(announcer, AnnouncerOption)

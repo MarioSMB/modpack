@@ -405,11 +405,11 @@ void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, 
 		{
 			W_Reload(self, min(max(WEP_CVAR(nailgun, sustained_ammo), WEP_CVAR(nailgun, first_ammo)), WEP_CVAR(nailgun, burst_ammo)), SND(RELOAD));
 		}
-		METHOD(NailGun, wr_suicidemessage, int(entity thiswep))
+		METHOD(NailGun, wr_suicidemessage, Notification(entity thiswep))
 		{
 			return WEAPON_THINKING_WITH_PORTALS;
 		}
-		METHOD(NailGun, wr_killmessage, int(entity thiswep))
+		METHOD(NailGun, wr_killmessage, Notification(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_MACHINEGUN_MURDER_SNIPE;

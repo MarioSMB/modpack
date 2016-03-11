@@ -23,7 +23,7 @@ void freeze_Unfreeze(entity ent)
 	self.freezetag_frozen_time = 0;
 	self.freezetag_frozen_timeout = 0;
 
-	Kill_Notification(NOTIF_ONE_ONLY, ent, MSG_CENTER_CPID, CPID_FREEZE);
+	Kill_Notification(NOTIF_ONE_ONLY, ent, MSG_CENTER, CPID_FREEZE);
 
 	Unfreeze(ent);
 }

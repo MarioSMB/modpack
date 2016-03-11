@@ -28,7 +28,7 @@ MUTATOR_HOOKFUNCTION(headshots, FireBullet_Hit)
 	if(Headshot(bullet_hit, self, bullet_endpos, bullet_startpos, bullet_endpos))
 	{
 		frag_damage *= autocvar_sv_headshot_damage; // more damage
-		Send_Notification(NOTIF_ONE, self, MSG_MULTI, MULTI_HEADSHOT);
+		Send_Notification(NOTIF_ONE, self, MSG_MULTI, HEADSHOT);
 	}
 	return false;
 }

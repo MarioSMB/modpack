@@ -4,9 +4,9 @@
 #ifndef MENUQC
 MODEL(MON_AFRIT, M_Model("afrit.mdl"));
 
-MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_AFRIT,          2, 1, "s1 s2loc spree_lost", "s1",       "notify_death",         _("^BG%s^K1 was fireballed by an Afrit%s%s"), "")
+MSG_INFO_NOTIF(DEATH_SELF_MON_AFRIT,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         _("^BG%s^K1 was fireballed by an Afrit%s%s"), "")
 
-MSG_MULTI_NOTIF(1, DEATH_SELF_MON_AFRIT,                NO_MSG,        INFO_DEATH_SELF_MON_AFRIT,                CENTER_DEATH_SELF_MONSTER)
+MSG_MULTI_NOTIF(DEATH_SELF_MON_AFRIT,                1,  NULL,           INFO_DEATH_SELF_MON_AFRIT,               CENTER_DEATH_SELF_MONSTER)
 
 REGISTER_DEATHTYPE(MONSTER_AFRIT,          DEATH_SELF_MON_AFRIT,          DEATH_MURDER_MONSTER,           "monster")
 #endif

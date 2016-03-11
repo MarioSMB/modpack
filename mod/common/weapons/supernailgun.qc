@@ -375,11 +375,11 @@ void W_SuperNailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponent
 		{
 			W_Reload(self, min(max(WEP_CVAR(supernailgun, sustained_ammo), WEP_CVAR(supernailgun, first_ammo)), WEP_CVAR(supernailgun, burst_ammo)), SND(RELOAD));
 		}
-		METHOD(SuperNailGun, wr_suicidemessage, int(entity thiswep))
+		METHOD(SuperNailGun, wr_suicidemessage, Notification(entity thiswep))
 		{
 			return WEAPON_THINKING_WITH_PORTALS;
 		}
-		METHOD(SuperNailGun, wr_killmessage, int(entity thiswep))
+		METHOD(SuperNailGun, wr_killmessage, Notification(entity thiswep))
 		{
 			if(w_deathtype & HITTYPE_SECONDARY)
 				return WEAPON_MACHINEGUN_MURDER_SNIPE;

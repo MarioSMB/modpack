@@ -100,9 +100,9 @@ void pb_Detach(entity host)
 			setorigin(slave, trace_endpos); // fix player glitching out of the world
 		slave.oldorigin = slave.origin; // no fall damage!
 		
-		Kill_Notification(NOTIF_ONE, slave, MSG_CENTER_CPID, CPID_PIGGYBACK);
+		Kill_Notification(NOTIF_ONE, slave, MSG_CENTER, CPID_PIGGYBACK);
 		if(IS_PLAYER(host))
-			Kill_Notification(NOTIF_ONE, host, MSG_CENTER_CPID, CPID_PIGGYBACK);
+			Kill_Notification(NOTIF_ONE, host, MSG_CENTER, CPID_PIGGYBACK);
 	}
 	
 	host.piggybacker = world;

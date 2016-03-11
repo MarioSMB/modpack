@@ -246,11 +246,11 @@ void W_Axe_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 		{
 			//W_Reload(self, WEP_CVAR_PRI(axe, ammo), SND(RELOAD)); // WEAPONTODO
 		}
-		METHOD(Axe, wr_suicidemessage, int(entity thiswep))
+		METHOD(Axe, wr_suicidemessage, Notification(entity thiswep))
 		{
 			return WEAPON_THINKING_WITH_PORTALS;
 		}
-		METHOD(Axe, wr_killmessage, int(entity thiswep))
+		METHOD(Axe, wr_killmessage, Notification(entity thiswep))
 		{
 			return WEAPON_SHOTGUN_MURDER_SLAP;
 		}

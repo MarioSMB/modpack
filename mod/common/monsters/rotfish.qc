@@ -5,8 +5,8 @@
 #ifndef MENUQC
 MODEL(MON_ROTFISH, M_Model("fish.mdl"));
 
-MSG_INFO_NOTIF(1, INFO_DEATH_SELF_MON_ROTFISH_MELEE,            	2, 1, "s1 s2loc spree_lost", "s1",      	"notify_death",         			_("^BG%s^K1 was chopped into bits by an Ogre%s%s"), "")
-MSG_MULTI_NOTIF(1, DEATH_SELF_MON_ROTFISH_MELEE,                  	NO_MSG,        								INFO_DEATH_SELF_MON_ROTFISH_MELEE,  CENTER_DEATH_SELF_MONSTER)
+MSG_INFO_NOTIF(DEATH_SELF_MON_ROTFISH_MELEE,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         _("^BG%s^K1 let a Rotfish nibble their toes%s%s"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_ROTFISH_MELEE,                1,  NULL,           INFO_DEATH_SELF_MON_ROTFISH_MELEE,               CENTER_DEATH_SELF_MONSTER)
 REGISTER_DEATHTYPE(MONSTER_ROTFISH_MELEE,            				DEATH_SELF_MON_ROTFISH_MELEE,            	DEATH_MURDER_MONSTER,           	"monster")
 #endif
 
