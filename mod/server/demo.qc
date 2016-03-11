@@ -37,7 +37,7 @@ MUTATOR_HOOKFUNCTION(demo, SV_ParseClientCommand)
 		}
 
 		// write it to the demo
-		stuffcmd(self, strcat("//", strconv(2, 0, 0, GetGametype()), " EVENT SNAPPED ", ((argv(1)) ? argv(1) : "-1"), " ", ((argv(2)) ? substring(cmd_string, argv_start_index(2), -1) : ""), "\n"));
+		stuffcmd(self, strcat("//", strconv(2, 0, 0, GetGametype()), " EVENT SNAPPED ", argv(1), " ", ((argv(2)) ? substring(cmd_string, argv_start_index(2), -1) : ""), "\n"));
 		self.demo_moments += 1;
 
 		return true;
