@@ -8,6 +8,7 @@
 #include "compat.qc"
 #include "custom_playermodels.qc"
 #include "damage.qc"
+#include "demo.qc"
 #include "items.qc"
 #include "headshots.qc"
 #include "monsters.qc"
