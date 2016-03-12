@@ -76,7 +76,8 @@ MUTATOR_HOOKFUNCTION(pinventory, SetChangeParms)
 		return false;
 	}
 
-	self.items &= ~(IT_KEY1 | IT_INVISIBILITY | IT_STRENGTH | IT_INVULNERABILITY | IT_INVINCIBLE | IT_SUIT | IT_QUAD);
+	// | IT_INVULNERABILITY | IT_SUIT | IT_QUAD
+	self.items &= ~(IT_KEY1 | IT_KEY2 | IT_INVISIBILITY | IT_STRENGTH | IT_INVINCIBLE);
 	self.health = bound(50, self.health, 100);
 
 	parm2 = self.items;
