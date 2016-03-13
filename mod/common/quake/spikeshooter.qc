@@ -1,3 +1,31 @@
+SOUND(SPIKE_FIRE, "quake_weapons/spike2");
+
+MODEL(PROJECTILE_SPIKE, "progs/spike.mdl");
+
+int PROJECTILE_SPIKE;
+
+STATIC_INIT(SpikeShooterProjectile) { PROJECTILE_SPIKE = MOD_PROJECTILES++; }
+
+#ifdef CSQC
+REGISTER_MUTATOR(spikeshooter_projectile, true);
+
+MUTATOR_HOOKFUNCTION(spikeshooter_projectile, Ent_Projectile)
+{
+	if(self.cnt == PROJECTILE_SPIKE)
+	{
+		setmodel(self, MDL_PROJECTILE_SPIKE);
+		self.traileffect = 0;
+		return true;
+	}
+	return false;
+}
+
+MUTATOR_HOOKFUNCTION(spikeshooter_projectile, PrecacheProjectiles)
+{
+	precache_model("progs/spike.mdl");
+}
+#endif
+
 #ifdef SVQC
 
 const int SPIKESHOOTER_SUPERSPIKE = 1;

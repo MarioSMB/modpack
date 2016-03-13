@@ -8,6 +8,5 @@
 #include "demo.qc"
 #include "freeze.qc"
 #include "piggyback.qc"
-#include "projectiles.qc"
 #include "radio.qc"
 #include "zombie_apocalypse.qc"

@@ -1,5 +1,3 @@
 // slots 40-50 reserved for mod
 
-const int PROJECTILE_DELUGE 		= 40;
-const int PROJECTILE_CANNONBALL 	= 41;
-const int PROJECTILE_SPIKE			= 42;
+int MOD_PROJECTILES = 40;

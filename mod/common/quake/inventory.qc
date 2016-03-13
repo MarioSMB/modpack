@@ -1,4 +1,4 @@
-#ifdef QUAKE
+#ifdef SVQC
 
 REGISTER_MUTATOR(pinventory, true);
 
@@ -49,7 +49,7 @@ MUTATOR_HOOKFUNCTION(pinventory, SetNewParms)
 	if(!autocvar_sv_persistent_inventory)
 		return false;
 
-	vector sweps = (WEPSET(AXE) | WEPSET(SHOTGUN));
+	WepSet sweps = (WEPSET(AXE) | WEPSET(SHOTGUN));
 
 	parm2 = 0;
 	parm3 = 100;

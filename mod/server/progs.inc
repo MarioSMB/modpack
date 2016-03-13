@@ -15,6 +15,4 @@
 #include "player_crush.qc"
 #include "radio.qc"
 
-#include "quake.qc"
-
 #include "mutators/all.qh"
