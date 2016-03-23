@@ -8,6 +8,7 @@ REGISTER_MUTATOR(cpmodels, true)
 }
 
 AUTOCVAR(sv_allow_customplayermodels, bool, false, "");
+AUTOCVAR(sv_allow_customplayermodels_bots, bool, true, "");
 AUTOCVAR(sv_allow_customplayermodels_idlist, string, "", "");
 AUTOCVAR(sv_allow_customplayermodels_speciallist, string, "", "");
 
@@ -97,8 +98,11 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 		if(self.cvar_cl_goat)
 			ret_string = "models/player/draconimale.iqm";
 
+		if(IS_BOT_CLIENT(self) && autocvar_sv_allow_customplayermodels_bots)
+			ret_string = "models/player/ubot.iqm";
+
 		// special hax
-		if(strhasword(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist) || IS_BOT_CLIENT(self))
+		if(strhasword(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
 		{
 			if(self.cvar_cl_thestars == 1)
 			{
@@ -108,8 +112,6 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 			}
 			if(self.cvar_cl_damnfurries == 1)
 				ret_string = "models/player/renamon.iqm";
-			if(IS_BOT_CLIENT(self))
-				ret_string = "models/player/ubot.iqm";
 		}
 		if(strhasword(self.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
 		{
@@ -126,10 +128,10 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 
 MUTATOR_HOOKFUNCTION(cpmodels, PlayerSpawn)
 {
-	if(self.cvar_cl_sparkle >= 1 && strhasword(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
+	if(self.cvar_cl_sparkle >= 1 && strhasword(self.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
 		self.effects |= EF_STARDUST;
 
-	if(self.cvar_cl_sparkle == 2 && strhasword(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
+	if(self.cvar_cl_sparkle == 2 && strhasword(self.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
 		self.colormap = 4351;
 
 	return false;
