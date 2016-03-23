@@ -141,7 +141,7 @@ void W_NailGun_MuzzleFlash(void)
 
 void W_NailGun_Attack(Weapon thiswep, int deathtype)
 {SELFPARAM();
-	W_SetupShot(self, true, 0, SND(NAILGUN_FIRE), CH_WEAPON_A, ((self.misc_bulletcounter == 1) ? WEP_CVAR(nailgun, first_damage) : WEP_CVAR(nailgun, sustained_damage)));
+	W_SetupShot(self, true, 0, SND_NAILGUN_FIRE, CH_WEAPON_A, ((self.misc_bulletcounter == 1) ? WEP_CVAR(nailgun, first_damage) : WEP_CVAR(nailgun, sustained_damage)));
 	if(!autocvar_g_norecoil)
 	{
 		self.punchangle_x = random() - 0.5;
@@ -231,7 +231,7 @@ void W_NailGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, i
 
 	W_DecreaseAmmo(WEP_NAILGUN, actor, WEP_CVAR(nailgun, sustained_ammo));
 
-	W_SetupShot(actor, true, 0, SND(NAILGUN_FIRE), CH_WEAPON_A, WEP_CVAR(nailgun, sustained_damage));
+	W_SetupShot(actor, true, 0, SND_NAILGUN_FIRE, CH_WEAPON_A, WEP_CVAR(nailgun, sustained_damage));
 	if(!autocvar_g_norecoil)
 	{
 		actor.punchangle_x = random() - 0.5;
@@ -267,7 +267,7 @@ void W_NailGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, i
 
 void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	W_SetupShot(actor, true, 0, SND(NAILGUN_FIRE), CH_WEAPON_A, WEP_CVAR(nailgun, sustained_damage));
+	W_SetupShot(actor, true, 0, SND_NAILGUN_FIRE, CH_WEAPON_A, WEP_CVAR(nailgun, sustained_damage));
 	if(!autocvar_g_norecoil)
 	{
 		actor.punchangle_x = random() - 0.5;
@@ -310,9 +310,9 @@ void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, 
 		METHOD(NailGun, wr_aim, void(entity thiswep))
 		{
 			if(vlen(self.origin-self.enemy.origin) < 3000 - bound(0, skill, 10) * 200)
-				PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(1000000, 0, 0.001, false);
+				PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, 1000000, 0, 0.001, false);
 			else
-				PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(1000000, 0, 0.001, false);
+				PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(self, 1000000, 0, 0.001, false);
 		}
 		METHOD(NailGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
@@ -403,7 +403,7 @@ void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, 
 		}
 		METHOD(NailGun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
-			W_Reload(self, min(max(WEP_CVAR(nailgun, sustained_ammo), WEP_CVAR(nailgun, first_ammo)), WEP_CVAR(nailgun, burst_ammo)), SND(RELOAD));
+			W_Reload(self, min(max(WEP_CVAR(nailgun, sustained_ammo), WEP_CVAR(nailgun, first_ammo)), WEP_CVAR(nailgun, burst_ammo)), SND_RELOAD);
 		}
 		METHOD(NailGun, wr_suicidemessage, Notification(entity thiswep))
 		{

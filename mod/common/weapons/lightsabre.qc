@@ -258,7 +258,7 @@ void W_Lightsabre_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	meleetemp.owner = meleetemp.realowner = actor;
 	meleetemp.think = W_Lightsabre_Melee_Think;
 	meleetemp.nextthink = time + WEP_CVAR_BOTH(lightsabre, isprimary, melee_delay) * W_WeaponRateFactor();
-	W_SetupShot_Range(actor, true, 0, "", 0, WEP_CVAR_BOTH(lightsabre, isprimary, damage), WEP_CVAR_BOTH(lightsabre, isprimary, melee_range));
+	W_SetupShot_Range(actor, true, 0, SND_Null, 0, WEP_CVAR_BOTH(lightsabre, isprimary, damage), WEP_CVAR_BOTH(lightsabre, isprimary, melee_range));
 }
 
 .bool lightsabre_active;
@@ -289,9 +289,9 @@ void W_LightSabre_SetActive(entity actor, .entity weaponentity, bool newactive, 
 		METHOD(Lightsabre, wr_aim, void(entity thiswep))
 		{
 			if(random() >= 0.5)
-				PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(1000000, 0, 0.001, false);
+				PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(self, 1000000, 0, 0.001, false);
 			else
-				PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(1000000, 0, 0.001, false);
+				PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, 1000000, 0, 0.001, false);
 		}
 		METHOD(Lightsabre, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{

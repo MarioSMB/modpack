@@ -69,7 +69,7 @@ void spikeshooter_fire()
 		'0 0 -3',
 		false,
 		0,
-		SND(SPIKE_FIRE),
+		SND_SPIKE_FIRE,
 		CH_WEAPON_A,
 		self.dmg
 	);

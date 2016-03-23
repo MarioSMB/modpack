@@ -45,7 +45,7 @@ METHOD(VoreSpike, wr_think, void(VoreSpike thiswep, entity actor, .entity weapon
     if (!IS_PLAYER(actor) || weapon_prepareattack(thiswep, actor, weaponentity, false, 0.2)) {
         if (!actor.target_range) actor.target_range = autocvar_g_monsters_target_range;
         actor.enemy = Monster_FindTarget(actor);
-        W_SetupShot_Dir(actor, v_forward, false, 0, SND(VORE_FIRESPIKE), CH_WEAPON_B, 0);
+        W_SetupShot_Dir(actor, v_forward, false, 0, SND_VORE_FIRESPIKE, CH_WEAPON_B, 0);
     	if (!IS_PLAYER(actor)) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
         M_Vore_Attack_Spike(actor, w_shotdir);
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);

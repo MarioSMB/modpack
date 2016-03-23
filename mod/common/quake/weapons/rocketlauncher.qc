@@ -203,7 +203,7 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 
 	W_DecreaseAmmo(thiswep, self, WEP_CVAR(rocketlauncher, ammo));
 
-	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 5, SND(ROCKETLAUNCHER_FIRE), CH_WEAPON_A, WEP_CVAR(rocketlauncher, damage));
+	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKETLAUNCHER_FIRE, CH_WEAPON_A, WEP_CVAR(rocketlauncher, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	missile = WarpZone_RefSys_SpawnSameRefSys(self);
@@ -256,7 +256,7 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 		METHOD(RocketLauncher, wr_aim, void(entity thiswep))
 		{
 			// aim and decide to fire if appropriate
-			PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR(rocketlauncher, speed), 0, WEP_CVAR(rocketlauncher, lifetime), false);
+			PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR(rocketlauncher, speed), 0, WEP_CVAR(rocketlauncher, lifetime), false);
 			if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
 			{
 				// decide whether to detonate rockets
@@ -283,7 +283,7 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 		METHOD(RocketLauncher, wr_aim, void(entity thiswep))
 		{
 			// aim and decide to fire if appropriate
-			PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(WEP_CVAR(rocketlauncher, speed), 0, WEP_CVAR(rocketlauncher, lifetime), false);
+			PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR(rocketlauncher, speed), 0, WEP_CVAR(rocketlauncher, lifetime), false);
 			if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
 			{
 				// decide whether to detonate rockets
@@ -316,7 +316,7 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 							selfdamage = selfdamage + d;
 						else if(targ.team == self.team && teamplay)
 							teamdamage = teamdamage + d;
-						else if(bot_shouldattack(targ))
+						else if(bot_shouldattack(self, targ))
 							enemydamage = enemydamage + d;
 						targ = targ.chain;
 					}
@@ -404,7 +404,7 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 		}
 		METHOD(RocketLauncher, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
-			W_Reload(self, WEP_CVAR(rocketlauncher, ammo), SND(RELOAD));
+			W_Reload(self, WEP_CVAR(rocketlauncher, ammo), SND_RELOAD);
 		}
 		METHOD(RocketLauncher, wr_suicidemessage, Notification(entity thiswep))
 		{
