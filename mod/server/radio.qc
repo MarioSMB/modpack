@@ -15,6 +15,7 @@ const int URI_GET_RADIO = 195;
 
 AUTOCVAR(sv_radio, bool, false, "Enable radio");
 AUTOCVAR(sv_radio_announce, bool, true, "");
+AUTOCVAR(sv_radio_announce_howto, bool, true, "");
 AUTOCVAR(sv_radio_log_skips, bool, false, "");
 AUTOCVAR(sv_radio_preload, bool, true, "");
 AUTOCVAR(sv_radio_queue_advanceat, float, 0.4, "");
@@ -68,6 +69,9 @@ void Radio_Announce(entity this)
 		float left = cvar("_radio_queue_left");
 		if(left)
 			desc = strcat(desc, "^7 - ", ftos(left), " in queue");
+
+		if(autocvar_sv_radio_announce_howto)
+			desc = strcat(desc, " ^2(NOTE: you can turn off radio with ^1radio off^2)");
 
 		if(this)
 			sprint(this, strcat("\{1}", desc, "\n"));
@@ -433,7 +437,10 @@ MUTATOR_HOOKFUNCTION(radio, ClientConnect)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(radio, SV_ParseClientCommand)
+// handle the command as a separate mutator, so it's always checked
+REGISTER_MUTATOR(radio_cmd, true);
+
+MUTATOR_HOOKFUNCTION(radio_cmd, SV_ParseClientCommand)
 {SELFPARAM();
 	if(MUTATOR_RETURNVALUE) // command was already handled?
 		return false;
