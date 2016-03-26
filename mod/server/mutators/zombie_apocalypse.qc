@@ -67,7 +67,7 @@ void za_SetEnemy(entity player)
 MUTATOR_HOOKFUNCTION(za, FixPlayermodel)
 {
 	if(self.monsterid)
-		ret_string = (Monsters_from(self.monsterid)).model;
+		ret_string = (Monsters_from(self.monsterid)).m_model.model_str();
 	return false;
 }
 
@@ -79,16 +79,16 @@ MUTATOR_HOOKFUNCTION(za, PlayerPhysics)
 
 	self.weapons = '0 0 0';
 	PS(self).m_switchweapon = WEP_Null;
-	self.stat_PL_MIN = mon.mins;
-	self.stat_PL_MAX = mon.maxs;
-	self.stat_PL_CROUCH_MIN = mon.mins;
-	self.stat_PL_CROUCH_MAX = mon.maxs;
-	self.stat_PL_CROUCH_VIEW_OFS = self.za_viewofs;
-	self.stat_PL_VIEW_OFS = self.za_viewofs;
-	self.stat_MOVEVARS_JUMPVELOCITY = 0;
+	STAT(PL_MIN, self) = mon.mins;
+	STAT(PL_MAX, self) = mon.maxs;
+	STAT(PL_CROUCH_MIN, self) = mon.mins;
+	STAT(PL_CROUCH_MAX, self) = mon.maxs;
+	STAT(PL_VIEW_OFS, self) = self.za_viewofs;
+	STAT(PL_CROUCH_VIEW_OFS, self) = self.za_viewofs;
+	PHYS_JUMPVELOCITY(self) = 0;
 
-	self.stat_MOVEVARS_MAXSPEED = self.speed2;
-	self.stat_MOVEVARS_MAXAIRSPEED = self.speed2;
+	PHYS_MAXSPEED(self) = self.speed2;
+	PHYS_MAXAIRSPEED(self) = self.speed2;
 	PHYS_INPUT_BUTTON_CROUCH(self) = false;
 
 	return false;
@@ -147,26 +147,31 @@ MUTATOR_HOOKFUNCTION(za, PlayerDies)
 		return false;
 	}
 
-	entity mon = Monsters_from(frag_attacker.monsterid);
+	Monster mon = Monsters_from(frag_attacker.monsterid);
 
 	frag_target.monsterid = mon.monsterid;
 	frag_target.health = frag_attacker.max_health;
 	frag_target.za_maxhealth = frag_attacker.max_health;
 	frag_target.weapons = '0 0 0';
+	frag_attacker.enemy = NULL;
 	PS(frag_target).m_switchweapon = WEP_Null;
-	frag_target.stat_PL_MIN = mon.mins;
-	frag_target.stat_PL_MAX = mon.maxs;
-	frag_target.stat_PL_CROUCH_MIN = mon.mins;
-	frag_target.stat_PL_CROUCH_MAX = mon.maxs;
+	STAT(PL_MIN, frag_target) = mon.mins;
+	STAT(PL_MAX, frag_target) = mon.maxs;
+	STAT(PL_CROUCH_MIN, frag_target) = mon.mins;
+	STAT(PL_CROUCH_MAX, frag_target) = mon.maxs;
 	frag_target.monster_attack = false;
 	frag_target.speed = frag_attacker.speed;
 	frag_target.speed2 = frag_attacker.speed2;
 	frag_target.stopspeed = frag_attacker.stopspeed;
-	frag_target.view_ofs = frag_target.za_viewofs = frag_attacker.view_ofs;
+	STAT(PL_VIEW_OFS, frag_target) = frag_target.za_viewofs = frag_attacker.view_ofs;
+	STAT(PL_CROUCH_VIEW_OFS, frag_target) = frag_attacker.view_ofs;
 	frag_target.attack_range = ((frag_attacker.attack_range) ? frag_attacker.attack_range : 150);
 	//frag_target.attack_range = frag_attacker.attack_range;
 	frag_target.monster_attackfunc = frag_attacker.monster_attackfunc;
 	setsize(frag_target, frag_attacker.mins, frag_attacker.maxs);
+
+	if(mon.spawnflags & MONSTER_TYPE_FLY)
+		frag_target.movetype = MOVETYPE_FLY;
 
 	return false;
 }
@@ -176,7 +181,7 @@ MUTATOR_HOOKFUNCTION(za, SV_StartFrame)
 	if(time < za_spawn_delay || autocvar_g_za_max_monsters <= 0 || !autocvar_g_za)
 		return false;
 
-	float n_monsters = 0, maxmon = autocvar_g_za_max_monsters;
+	int n_monsters = 0, maxmon = autocvar_g_za_max_monsters;
 
 	// count dead monsters too (zombies)
 	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(++n_monsters));
