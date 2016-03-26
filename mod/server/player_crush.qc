@@ -8,7 +8,7 @@ AUTOCVAR(g_player_crush_bounce, float, 300, _("Bounce height in advanced trace m
 AUTOCVAR(g_player_crush_bounce_jump, float, 600, _("Bounce height while holding jump in advanced trace mode"));
 
 void pc_PlayerTouch()
-{
+{SELFPARAM();
 	if(other == world)
 		return;
 
@@ -70,7 +70,7 @@ void pc_PlayerTouch()
 }
 
 MUTATOR_HOOKFUNCTION(pc, PlayerSpawn)
-{
+{SELFPARAM();
 	self.touch = pc_PlayerTouch;
 	return false;
 }

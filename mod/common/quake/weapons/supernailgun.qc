@@ -153,9 +153,9 @@ void W_SuperNailGun_Attack(Weapon thiswep, int deathtype)
 	ATTACK_FINISHED(self, slot) = time + WEP_CVAR(supernailgun, first_refire) * W_WeaponRateFactor();
 
 	if(self.misc_bulletcounter == 1)
-		fireBullet(w_shotorg, w_shotdir, WEP_CVAR(supernailgun, first_spread), WEP_CVAR(supernailgun, solidpenetration), WEP_CVAR(supernailgun, first_damage), WEP_CVAR(supernailgun, first_force), deathtype, 0);
+		fireBullet(self, w_shotorg, w_shotdir, WEP_CVAR(supernailgun, first_spread), WEP_CVAR(supernailgun, solidpenetration), WEP_CVAR(supernailgun, first_damage), WEP_CVAR(supernailgun, first_force), deathtype, 0);
 	else
-		fireBullet(w_shotorg, w_shotdir, WEP_CVAR(supernailgun, sustained_spread), WEP_CVAR(supernailgun, solidpenetration), WEP_CVAR(supernailgun, sustained_damage), WEP_CVAR(supernailgun, sustained_force), deathtype, 0);
+		fireBullet(self, w_shotorg, w_shotdir, WEP_CVAR(supernailgun, sustained_spread), WEP_CVAR(supernailgun, solidpenetration), WEP_CVAR(supernailgun, sustained_damage), WEP_CVAR(supernailgun, sustained_force), deathtype, 0);
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, (w_shotdir) * 1000, 1);
 
@@ -229,7 +229,7 @@ void W_SuperNailGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponenti
 	}
 
 	supernailgun_spread = bound(WEP_CVAR(supernailgun, spread_min), WEP_CVAR(supernailgun, spread_min) + (WEP_CVAR(supernailgun, spread_add) * actor.misc_bulletcounter), WEP_CVAR(supernailgun, spread_max));
-	fireBullet(w_shotorg, w_shotdir, supernailgun_spread, WEP_CVAR(supernailgun, solidpenetration), WEP_CVAR(supernailgun, sustained_damage), WEP_CVAR(supernailgun, sustained_force), WEP_SUPERNAILGUN.m_id, 0);
+	fireBullet(actor, w_shotorg, w_shotdir, supernailgun_spread, WEP_CVAR(supernailgun, solidpenetration), WEP_CVAR(supernailgun, sustained_damage), WEP_CVAR(supernailgun, sustained_force), WEP_SUPERNAILGUN.m_id, 0);
 
 	actor.misc_bulletcounter = actor.misc_bulletcounter + 1;
 
@@ -254,7 +254,7 @@ void W_SuperNailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponent
 		actor.punchangle_y = random() - 0.5;
 	}
 
-	fireBullet(w_shotorg, w_shotdir, WEP_CVAR(supernailgun, burst_speed), WEP_CVAR(supernailgun, solidpenetration), WEP_CVAR(supernailgun, sustained_damage), WEP_CVAR(supernailgun, sustained_force), WEP_SUPERNAILGUN.m_id, 0);
+	fireBullet(actor, w_shotorg, w_shotdir, WEP_CVAR(supernailgun, burst_speed), WEP_CVAR(supernailgun, solidpenetration), WEP_CVAR(supernailgun, sustained_damage), WEP_CVAR(supernailgun, sustained_force), WEP_SUPERNAILGUN.m_id, 0);
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, (w_shotdir) * 1000, 1);
 
@@ -278,7 +278,7 @@ void W_SuperNailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponent
 }
 
 		METHOD(SuperNailGun, wr_aim, void(entity thiswep))
-		{
+		{SELFPARAM();
 			if(vlen(self.origin-self.enemy.origin) < 3000 - bound(0, skill, 10) * 200)
 				PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, 1000000, 0, 0.001, false);
 			else
@@ -338,7 +338,7 @@ void W_SuperNailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponent
 			}
 		}
 		METHOD(SuperNailGun, wr_checkammo1, bool(entity thiswep))
-		{
+		{SELFPARAM();
 			float ammo_amount;
 			if(WEP_CVAR(supernailgun, mode) == 1)
 				ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(supernailgun, sustained_ammo);
@@ -355,7 +355,7 @@ void W_SuperNailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponent
 			return ammo_amount;
 		}
 		METHOD(SuperNailGun, wr_checkammo2, bool(entity thiswep))
-		{
+		{SELFPARAM();
 			float ammo_amount;
 			if(WEP_CVAR(supernailgun, mode) == 1)
 				ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(supernailgun, burst_ammo);
@@ -372,7 +372,7 @@ void W_SuperNailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponent
 			return ammo_amount;
 		}
 		METHOD(SuperNailGun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
-		{
+		{SELFPARAM();
 			W_Reload(self, min(max(WEP_CVAR(supernailgun, sustained_ammo), WEP_CVAR(supernailgun, first_ammo)), WEP_CVAR(supernailgun, burst_ammo)), SND_RELOAD);
 		}
 		METHOD(SuperNailGun, wr_suicidemessage, Notification(entity thiswep))
@@ -391,7 +391,7 @@ void W_SuperNailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponent
 #ifdef CSQC
 
 		METHOD(SuperNailGun, wr_impacteffect, void(entity thiswep))
-		{
+		{SELFPARAM();
 			vector org2;
 			org2 = w_org + w_backoff * 2;
 			__pointparticles(particleeffectnum(EFFECT_MACHINEGUN_IMPACT), org2, w_backoff * 1000, 1);

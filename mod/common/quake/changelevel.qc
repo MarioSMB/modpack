@@ -3,7 +3,7 @@
 .string map;
 
 void changelevel_inittarget()
-{
+{SELFPARAM();
 	spawnfunc_target_changelevel(self);
 }
 

@@ -17,7 +17,7 @@ const int FROZEN_RESPAWNING = 2; // player released the key, respawn when we can
 .int cvar_cl_freeze;
 
 void freeze_Unfreeze(entity ent)
-{
+{SELFPARAM();
 	ent.freeze_flag = FROZEN_THAWING; // thawing is fine, as this is only checked when the player is frozen
 
 	self.freezetag_frozen_time = 0;
@@ -30,7 +30,7 @@ void freeze_Unfreeze(entity ent)
 
 
 MUTATOR_HOOKFUNCTION(freeze, PlayerSpawn)
-{
+{SELFPARAM();
 	freeze_Unfreeze(self);
 	return false;
 }
@@ -90,7 +90,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerDies)
 }
 
 MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
-{
+{SELFPARAM();
 	if(IS_DEAD(self) || !IS_PLAYER(self) || gameover)
 		return false;
 

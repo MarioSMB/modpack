@@ -109,7 +109,7 @@ void pb_Detach(entity host)
 }
 
 void pb_PBEntThink()
-{
+{SELFPARAM();
 	setorigin(self, self.owner.origin + '0 0 0.82' * self.owner.maxs_z);
 	self.nextthink = time;
 }
@@ -171,7 +171,7 @@ MUTATOR_HOOKFUNCTION(piggyback, MatchEnd)
 }
 
 MUTATOR_HOOKFUNCTION(piggyback, PlayerUseKey)
-{
+{SELFPARAM();
 	if(MUTATOR_RETURNVALUE || gameover) { return false; }
 	
 	if(self.pbhost)
@@ -225,7 +225,7 @@ MUTATOR_HOOKFUNCTION(piggyback, PlayerUseKey)
 }
 
 MUTATOR_HOOKFUNCTION(piggyback, PlayerPreThink)
-{
+{SELFPARAM();
 	if(BROKEN_PBREF(self)) { pb_Detach(self); }
 	
 	if(!self.pbent)
@@ -263,7 +263,7 @@ MUTATOR_HOOKFUNCTION(piggyback, PlayerPreThink)
 }
 
 MUTATOR_HOOKFUNCTION(piggyback, MonsterMove)
-{
+{SELFPARAM();
 	if(BROKEN_PBREF(self)) { pb_Detach(self); }
 	
 	if(!self.pbent)
@@ -287,7 +287,7 @@ MUTATOR_HOOKFUNCTION(piggyback, reset_map_players)
 }
 
 void pb_RemovePlayer()
-{
+{SELFPARAM();
 	if(self.piggybacker)
 	{
 		self.piggybacker.pb_canattach = 1;
@@ -347,7 +347,7 @@ MUTATOR_HOOKFUNCTION(piggyback, GetCvars)
 }
 
 MUTATOR_HOOKFUNCTION(piggyback, FixPlayermodel)
-{
+{SELFPARAM();
 	if(!self.pbhost) { return false; }
 
 	// this was the nearest hook to the original code
@@ -388,7 +388,7 @@ MUTATOR_HOOKFUNCTION(piggyback, GrappleHookThink)
 }
 
 MUTATOR_HOOKFUNCTION(piggyback, BuffModel_Customize)
-{
+{SELFPARAM();
 	if(buff_player.pbhost == self.owner || self.owner.piggybacker)
 		return true; // don't show to piggybacker's carrier, and don't show if carrier is carrying someone else
 	return false;
@@ -396,7 +396,7 @@ MUTATOR_HOOKFUNCTION(piggyback, BuffModel_Customize)
 
 
 MUTATOR_HOOKFUNCTION(piggyback, ItemTouch)
-{
+{SELFPARAM();
 	if(IS_MONSTER(other))
 	{
 		entity p = other;
@@ -435,7 +435,7 @@ MUTATOR_HOOKFUNCTION(piggyback, ItemTouch)
 }
 
 MUTATOR_HOOKFUNCTION(piggyback, BuffTouch)
-{
+{SELFPARAM();
 	if(IS_MONSTER(other))
 	if(other.piggybacker)
 		other = other.piggybacker;

@@ -193,7 +193,7 @@ void W_RocketLauncher_Damage(entity this, entity inflictor, entity attacker, flo
 	this.angles = vectoangles(this.velocity);
 
 	if(this.health <= 0)
-		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, W_RocketLauncher_Explode));
+		WITHSELF(this, W_PrepareExplosionByDamage(attacker, W_RocketLauncher_Explode));
 }
 
 void W_RocketLauncher_Attack(Weapon thiswep)
@@ -281,7 +281,7 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 		}
 		#else
 		METHOD(RocketLauncher, wr_aim, void(entity thiswep))
-		{
+		{SELFPARAM();
 			// aim and decide to fire if appropriate
 			PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR(rocketlauncher, speed), 0, WEP_CVAR(rocketlauncher, lifetime), false);
 			if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
@@ -393,7 +393,7 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 			}
 		}
 		METHOD(RocketLauncher, wr_checkammo1, bool(entity thiswep))
-		{
+		{SELFPARAM();
 			float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(rocketlauncher, ammo);
 			ammo_amount += self.(weapon_load[WEP_ROCKETLAUNCHER.m_id]) >= WEP_CVAR(rocketlauncher, ammo);
 			return ammo_amount;
@@ -403,7 +403,7 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 			return false;
 		}
 		METHOD(RocketLauncher, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
-		{
+		{SELFPARAM();
 			W_Reload(self, WEP_CVAR(rocketlauncher, ammo), SND_RELOAD);
 		}
 		METHOD(RocketLauncher, wr_suicidemessage, Notification(entity thiswep))
@@ -422,7 +422,7 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 #ifdef CSQC
 
 		METHOD(RocketLauncher, wr_impacteffect, void(entity thiswep))
-		{
+		{SELFPARAM();
 			vector org2;
 			org2 = w_org + w_backoff * 12;
 			__pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), org2, '0 0 0', 1);

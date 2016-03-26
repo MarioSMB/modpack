@@ -62,7 +62,7 @@ void cpmodels_Precache()
 .bool cow;
 
 MUTATOR_HOOKFUNCTION(cpmodels, FormatMessage)
-{
+{SELFPARAM();
 	if(format_message == "moo")
 		self.cow = true;
 
@@ -82,7 +82,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, GetCvars)
 }
 
 MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
-{
+{SELFPARAM();
 	if(autocvar_sv_allow_customplayermodels)
 	if(!cvar("g_overkill"))
 	{
@@ -127,7 +127,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 }
 
 MUTATOR_HOOKFUNCTION(cpmodels, PlayerSpawn)
-{
+{SELFPARAM();
 	if(self.cvar_cl_sparkle >= 1 && strhasword(self.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
 		self.effects |= EF_STARDUST;
 

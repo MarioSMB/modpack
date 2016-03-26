@@ -7,7 +7,7 @@ AUTOCVAR(sv_persistent_inventory, bool, false, _("Enable persistent item saving"
 float tmparm2, tmparm3, tmparm4, tmparm5, tmparm6, tmparm7, tmparm8, tmparm9, tmparm10, tmparm11, tmparm12;
 
 MUTATOR_HOOKFUNCTION(pinventory, PlayerSpawn)
-{
+{SELFPARAM();
 	if(!autocvar_sv_persistent_inventory)
 		return false;
 
@@ -26,7 +26,7 @@ MUTATOR_HOOKFUNCTION(pinventory, PlayerSpawn)
 }
 
 MUTATOR_HOOKFUNCTION(pinventory, DecodeLevelParms)
-{
+{SELFPARAM();
 	if(!autocvar_sv_persistent_inventory)
 		return false;
 
@@ -66,7 +66,7 @@ MUTATOR_HOOKFUNCTION(pinventory, SetNewParms)
 }
 
 MUTATOR_HOOKFUNCTION(pinventory, SetChangeParms)
-{
+{SELFPARAM();
 	if(!autocvar_sv_persistent_inventory)
 		return false;
 

@@ -68,7 +68,7 @@ vector hats_getangles(entity e)
 }
 
 void hat_Think()
-{
+{SELFPARAM();
 	float tag_found;
 	self.nextthink = time;
 	if (self.owner.hatentity != self)
@@ -132,7 +132,7 @@ bool hats_Customize()
 }
 
 void hats_SpawnHat()
-{
+{SELFPARAM();
 	self.hatentity = spawn();
 	self.hatentity.classname = "hatentity";
 	self.hatentity.solid = SOLID_NOT;
@@ -148,7 +148,7 @@ void hats_SpawnHat()
 }
 
 MUTATOR_HOOKFUNCTION(hats, PutClientInServer)
-{
+{SELFPARAM();
 	hats_SpawnHat();
 	self.hatentity.alpha = default_weapon_alpha;
 	self.hatname = strzone(self.cvar_cl_hat);
@@ -163,14 +163,14 @@ MUTATOR_HOOKFUNCTION(hats, GetCvars)
 }
 
 MUTATOR_HOOKFUNCTION(hats, ClientDisconnect)
-{
+{SELFPARAM();
 	self.hatentity = world;
 	self.hatname = "";
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(hats, MakePlayerObserver)
-{
+{SELFPARAM();
 	self.hatentity = world;
 	self.hatname = "";
 	return false;
@@ -209,7 +209,7 @@ class(Skeleton) .vector hat_height;
 class(Skeleton) .float hat_scale;
 
 MUTATOR_HOOKFUNCTION(mod_hats, TagIndex_Apply)
-{
+{SELFPARAM();
 	if(substring(self.model, 0, 12) == "models/hats/")
 	{
 		if(substring(self.tag_entity.model, 0, 12) == "models/hats/")
@@ -256,7 +256,7 @@ MUTATOR_HOOKFUNCTION(mod_hats, GetModelParams)
 }
 
 MUTATOR_HOOKFUNCTION(mod_hats, Skeleton_CheckBones)
-{
+{SELFPARAM();
 	self.bone_hat = gettagindex(self, "head");
 	if(!self.bone_hat)
 		self.bone_hat = gettagindex(self, "tag_head");
@@ -266,7 +266,7 @@ MUTATOR_HOOKFUNCTION(mod_hats, Skeleton_CheckBones)
 }
 
 MUTATOR_HOOKFUNCTION(mod_hats, Skeleton_CheckModel)
-{
+{SELFPARAM();
 	if(get_model_parameters_bone_head)
 		self.bone_hat = gettagindex(self, get_model_parameters_bone_head);
 	return false;

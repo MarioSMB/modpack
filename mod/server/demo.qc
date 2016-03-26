@@ -19,7 +19,7 @@ MUTATOR_HOOKFUNCTION(demo, MatchEnd)
 }
 
 MUTATOR_HOOKFUNCTION(demo, SV_ParseClientCommand)
-{
+{SELFPARAM();
 	if(MUTATOR_RETURNVALUE) // command was already handled?
 		return false;
 

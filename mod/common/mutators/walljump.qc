@@ -94,7 +94,7 @@ void PM_walljump_PlayerJump(entity this)
 }
 
 MUTATOR_HOOKFUNCTION(walljump, PlayerJump)
-{
+{SELFPARAM();
 	PM_walljump_PlayerJump(self);
 	return false;
 }

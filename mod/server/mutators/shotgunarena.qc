@@ -34,7 +34,7 @@ void sha_SetCvars()
 }
 
 MUTATOR_HOOKFUNCTION(sha, FilterItem)
-{
+{SELFPARAM();
 	switch (self.items)
 	{
 		case IT_5HP:

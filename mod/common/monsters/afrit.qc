@@ -60,7 +60,7 @@ const float afrit_anim_die2		= 6;
 .float afrit_targetcheck_delay;
 
 void M_Afrit_Attack_Fireball_Explode()
-{
+{SELFPARAM();
 	entity e;
 	if(self)
 	{

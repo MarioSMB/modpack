@@ -18,7 +18,7 @@ AUTOCVAR(g_za_spawn_delay, float, 5, "");
 .float za_maxhealth;
 
 void za_SpawnMonster()
-{
+{SELFPARAM();
 	if(gameover) { return; }
 
 	entity e = spawn(), mon;
@@ -65,14 +65,14 @@ void za_SetEnemy(entity player)
 }
 
 MUTATOR_HOOKFUNCTION(za, FixPlayermodel)
-{
+{SELFPARAM();
 	if(self.monsterid)
 		ret_string = (Monsters_from(self.monsterid)).m_model.model_str();
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(za, PlayerPhysics)
-{
+{SELFPARAM();
 	if(!self.monsterid) { return false; }
 
 	entity mon = Monsters_from(self.monsterid);
@@ -95,7 +95,7 @@ MUTATOR_HOOKFUNCTION(za, PlayerPhysics)
 }
 
 MUTATOR_HOOKFUNCTION(za, PlayerPreThink)
-{
+{SELFPARAM();
 	if(!self.monsterid || time < self.attack_finished_single[0]) { return false; }
 
 	Monster mon = Monsters_from(self.monsterid);
@@ -121,7 +121,7 @@ MUTATOR_HOOKFUNCTION(za, PlayerPreThink)
 }
 
 MUTATOR_HOOKFUNCTION(za, PlayerRegen)
-{
+{SELFPARAM();
 	if(self.monsterid)
 	if(self.za_maxhealth)
 	{

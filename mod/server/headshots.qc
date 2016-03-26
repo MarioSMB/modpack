@@ -22,7 +22,7 @@ bool Headshot(entity targ, entity ent, vector hitloc, vector start, vector end)
 }
 
 MUTATOR_HOOKFUNCTION(headshots, FireBullet_Hit)
-{
+{SELFPARAM();
 	if(MUTATOR_RETURNVALUE) { return false; }
 
 	if(Headshot(bullet_hit, self, bullet_endpos, bullet_startpos, bullet_endpos))

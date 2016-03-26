@@ -409,12 +409,12 @@ MUTATOR_HOOKFUNCTION(radio, URI_GetCallback)
 }
 
 void Radio_ClientConnect_Delayed(void)
-{
+{SELFPARAM();
 	Radio_SendPlay(self);
 }
 
 MUTATOR_HOOKFUNCTION(radio, ClientConnect)
-{
+{SELFPARAM();
 	if(!IS_REAL_CLIENT(self))
 		return false;
 

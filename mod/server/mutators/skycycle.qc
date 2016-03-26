@@ -128,7 +128,7 @@ void SkyCycle_Darken()
 }
 
 void SkyCycle_Run()
-{
+{SELFPARAM();
 	//print("SkyCycle Run\n");
 	if (time - skycycle_timestart > skycycle_time)
 	{
@@ -168,7 +168,7 @@ void SkyCycle_Spawn()
 }
 
 void SkyCycle_SendPlayer(float checkboxnum)
-{
+{SELFPARAM();
 	//print("sending sky stuff\n");
 	//print(strcat("maxintensity ", ftos(skycycle_intensity_realmax), "\n"));
 	//print(strcat("maxambient", ftos(skycycle_ambient_realmax), "\n"));
@@ -244,7 +244,7 @@ void SkyCycle_SendPlayer(float checkboxnum)
 
 
 MUTATOR_HOOKFUNCTION(skycycle, PlayerPreThink)
-{
+{SELFPARAM();
 	if (skycycle_enabled)
 	if (time > self.skycycle_playernextthink)
 	{
@@ -255,7 +255,7 @@ MUTATOR_HOOKFUNCTION(skycycle, PlayerPreThink)
 }
 
 MUTATOR_HOOKFUNCTION(skycycle, PutClientInServer)
-{
+{SELFPARAM();
 	stuffcmd(self, "cl_cmd settemp r_fakelight 2\n");
 		
 	SkyCycle_SendPlayer(0);

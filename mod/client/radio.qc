@@ -5,7 +5,7 @@ REGISTER_MUTATOR(radio, true);
 .float radio_starttime;
 
 void Radio_Stopper_Think(void)
-{
+{SELFPARAM();
     if(self.cnt < -2 || intermission)
     {
         remove(self);
@@ -27,7 +27,7 @@ void Radio_Stopper_Think(void)
 }
 
 void Radio_Think(void)
-{
+{SELFPARAM();
 	if(self.cnt < 0 || time - self.cnt > 300)
 	{
 		if(self.netname) { strunzone(self.netname); }

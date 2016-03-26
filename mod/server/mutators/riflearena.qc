@@ -53,7 +53,7 @@ MUTATOR_HOOKFUNCTION(ra, PlayerDamage_Calculate)
 }
 
 MUTATOR_HOOKFUNCTION(ra, FilterItem)
-{
+{SELFPARAM();
 	switch (self.items)
 	{
 		case IT_5HP:

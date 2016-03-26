@@ -79,7 +79,7 @@ void FireClientBeam(entity player, vector start, vector end, bool hit)
 }
 
 MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
-{
+{SELFPARAM();
 	if((time < STAT(GAMESTARTTIME))
 	|| (time < STAT(ROUNDSTARTTIME))
 	|| (autocvar_chase_active)
@@ -150,7 +150,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 }
 
 MUTATOR_HOOKFUNCTION(mutator_mod, Weapon_ImpactEffect)
-{
+{SELFPARAM();
 	if(autocvar_cl_particles_newvortexbeam && w_hitwep == WEP_VORTEX)
 	{
 		vector org2 = w_org + w_backoff * 6;

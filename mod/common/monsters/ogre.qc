@@ -94,7 +94,7 @@ void M_Ogre_Attack_MachineGun(entity this)
 	vector org = this.origin + this.view_ofs + v_forward * 14;
 	sound (this, CH_WEAPON_A, SND_UZI_FIRE, VOL_BASE, ATTEN_NORM);
 
-	fireBullet(org, dir, autocvar_g_monster_ogre_attack_machinegun_spread, autocvar_g_monster_ogre_attack_machinegun_solidpenetration, autocvar_g_monster_ogre_attack_machinegun_damage, autocvar_g_monster_ogre_attack_machinegun_force, DEATH_MONSTER_OGRE_MACHINEGUN.m_id, 0);
+	fireBullet(this, org, dir, autocvar_g_monster_ogre_attack_machinegun_spread, autocvar_g_monster_ogre_attack_machinegun_solidpenetration, autocvar_g_monster_ogre_attack_machinegun_damage, autocvar_g_monster_ogre_attack_machinegun_force, DEATH_MONSTER_OGRE_MACHINEGUN.m_id, 0);
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, org, dir * 1000, 1);
 
@@ -104,7 +104,7 @@ void M_Ogre_Attack_MachineGun(entity this)
 }
 
 void M_Ogre_Attack_Grenade_Explode()
-{
+{SELFPARAM();
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 
@@ -129,11 +129,11 @@ void M_Ogre_Attack_Grenade_Damage(entity this, entity inflictor, entity attacker
 	this.health -= damage;
 
 	if (this.health <= 0)
-		WITH(entity, self, this, W_PrepareExplosionByDamage(attacker, this.use));
+		WITHSELF(this, W_PrepareExplosionByDamage(attacker, this.use));
 }
 
 void M_Ogre_Attack_Grenade_Touch()
-{
+{SELFPARAM();
 	PROJECTILE_TOUCH;
 
 	if (other.takedamage == DAMAGE_AIM)
@@ -197,7 +197,7 @@ void M_Ogre_Attack_Grenade(entity this)
 .float ogre_swing_prev;
 .entity ogre_swing_alreadyhit;
 void M_Ogre_Attack_Chainsaw()
-{
+{SELFPARAM();
 	// declarations
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player, is_monster;
 	entity target_victim;

@@ -1,7 +1,7 @@
 #ifdef SVQC
 
 void light_use()
-{
+{SELFPARAM();
 	if(self.spawnflags & 1)
 	{
 		lightstyle(self.style, "m");

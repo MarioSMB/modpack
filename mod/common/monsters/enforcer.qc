@@ -61,7 +61,7 @@ const float enforcer_anim_pain4			= 9;
 */
 
 void M_Enforcer_Attack_Plasma_Explode()
-{
+{SELFPARAM();
 	self.event_damage = func_null;
 	self.takedamage = DAMAGE_NO;
 

@@ -214,8 +214,8 @@ void W_Axe_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 }
 
 		METHOD(Axe, wr_aim, void(entity thiswep))
-		{
-			if(vlen(self.origin-self.enemy.origin) <= WEP_CVAR(axe, melee_range))
+		{SELFPARAM();
+			if(vdist(self.origin - self.enemy.origin, <=, WEP_CVAR(axe, melee_range)))
 				PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(self, 1000000, 0, 0.001, false);
 			else
 				PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, 1000000, 0, 0.001, false);
@@ -231,7 +231,7 @@ void W_Axe_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 			}
 		}
 		METHOD(Axe, wr_setup, void(entity thiswep))
-		{
+		{SELFPARAM();
 			self.ammo_field = ammo_none;
 		}
 		METHOD(Axe, wr_checkammo1, bool(entity thiswep))

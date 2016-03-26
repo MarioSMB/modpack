@@ -253,13 +253,12 @@ entity ast_tempnull();
 // Evaluate a tree and return the resulting entity
 // Use this when you need to forward the result
 entity script_evaluate_entity(entity ast_root)
-{
+{SELFPARAM();
 	if ( !ast_root )
 		return ast_tempnull();
-	entity oldself = self;
-	self = ast_root;
+	setself(ast_root);
 	entity result = self.ast_evaluate();
-	self = oldself;
+	setself(this);
 	return result;
 }
 
@@ -323,7 +322,7 @@ void script_debug_ast(entity ast_root)
 
 // simple string value
 entity ast_tempvalue_evaluate()
-{
+{SELFPARAM();
 	return self;
 }
 entity ast_tempvalue(string newvalue)
@@ -340,7 +339,7 @@ entity ast_tempnull()
 }
 
 entity ast_simplevalue_evaluate()
-{
+{SELFPARAM();
 	return ast_tempvalue(self.script_value);
 }
 entity ast_simplevalue(string newvalue)
@@ -354,7 +353,7 @@ entity ast_simplevalue(string newvalue)
 
 // variable reference
 entity ast_variable_evaluate()
-{
+{SELFPARAM();
 	entity val = ast_tempvalue(context_get_variable(current_context,self.script_value));
 	val.ast_lvalue = self.ast_lvalue;
 	val.ast_lvalue_reference = self.ast_lvalue_reference;
@@ -372,7 +371,7 @@ entity ast_variable(string var_name)
 }
 
 entity ast_field_evaluate()
-{
+{SELFPARAM();
 	string entname = script_evaluate(self.ast_operand1);
 	entity ent = string_to_entity(entname);
 	if ( ent )
@@ -402,7 +401,7 @@ entity ast_field(entity operand,string field_name)
 
 // variable assignment
 entity ast_assign_evaluate()
-{
+{SELFPARAM();
 	entity lval = script_evaluate_entity(self.ast_operand1);
 	entity rval = script_evaluate_entity(self.ast_operand2);
 	
@@ -435,7 +434,7 @@ entity ast_assign(entity lvalue,entity rvalue)
 	return ast_temp;
 }
 entity ast_assign_operator_evaluate()
-{
+{SELFPARAM();
 	entity lval_tree = self.ast_operand1;
 	self.ast_operand1 = script_evaluate_entity(lval_tree);
 	self.ast_operand1.classname = "ast_assign_operator_lval";
@@ -458,7 +457,7 @@ entity ast_assign_operator(entity lvalue,entity rvalue,entity(entity,entity) ope
 
 // function call
 entity ast_function_evaluate()
-{
+{SELFPARAM();
 	entity function = context_get_function(current_context,self.script_value);
 	entity next_arg = self.ast_operand1;
 	entity next_param = function.ast_operand1;
@@ -496,7 +495,7 @@ entity ast_function(string newname)
 }
 
 entity ast_function_declaration_evaluate()
-{
+{SELFPARAM();
 	context_define_function(current_context,self.script_value,self.ast_operand2,self.ast_operand1);
 	return ast_tempnull();
 }
@@ -511,7 +510,7 @@ entity ast_function_declaration(string newname)
 
 // control structure
 entity ast_if_evaluate()
-{
+{SELFPARAM();
 	if ( stof(script_evaluate(self.ast_operand1)) )
 		return script_evaluate_entity(self.ast_operand2);
 	return script_evaluate_entity(self.ast_operand3);
@@ -528,7 +527,7 @@ entity ast_if(entity condition, entity branch_true, entity branch_false)
 }
 
 entity ast_while_evaluate()
-{
+{SELFPARAM();
 	entity val = world;
 	float it = 0;
 	while ( stof(script_evaluate(self.ast_operand1)) && 
@@ -558,7 +557,7 @@ entity ast_while(entity condition, entity body)
 }
 
 entity ast_block_evaluate()
-{
+{SELFPARAM();
 	entity val = world;
 	entity next = self.ast_operand1;
 	context_push();
@@ -586,7 +585,7 @@ entity ast_block()
 }
 
 entity ast_break_evaluate()
-{
+{SELFPARAM();
 	entity val = ast_tempvalue(self.script_value);
 	val.script_type = self.script_type;
 	return val;
@@ -609,7 +608,7 @@ entity ast_continue()
 }
 
 entity ast_return_evaluate()
-{
+{SELFPARAM();
 	entity val = script_evaluate_entity(self.ast_operand1);
 	val.script_type = self.script_type;
 	return val;
@@ -627,7 +626,7 @@ entity ast_return(entity newvalue)
 
 // Simple unary oprators
 entity ast_unaryminus_evaluate()
-{
+{SELFPARAM();
 	return ast_tempvalue(script_ftos(-stof( script_evaluate(self.ast_operand1) )));
 }
 entity ast_unaryminus(entity operand)
@@ -639,7 +638,7 @@ entity ast_unaryminus(entity operand)
 	return ast_temp;
 }
 entity ast_bitnot_evaluate()
-{
+{SELFPARAM();
 	return ast_tempvalue(script_ftos( ~ stof(
 		script_evaluate(self.ast_operand1) )));
 }
@@ -652,7 +651,7 @@ entity ast_bitnot(entity operand)
 	return ast_temp;
 }
 entity ast_not_evaluate()
-{
+{SELFPARAM();
 	return ast_tempvalue(script_ftos( ! stof(
 		script_evaluate(self.ast_operand1) )));
 }
@@ -667,7 +666,7 @@ entity ast_not(entity operand)
 
 // Simple binary operators
 entity ast_mul_evaluate()
-{
+{SELFPARAM();
 	return ast_tempvalue(script_ftos(
 		stof(script_evaluate(self.ast_operand1)) *
 		stof(script_evaluate(self.ast_operand2))
@@ -683,7 +682,7 @@ entity ast_mul(entity operand1, entity operand2)
 	return ast_temp;
 }
 entity ast_div_evaluate()
-{
+{SELFPARAM();
 	return ast_tempvalue(script_ftos(
 		stof(script_evaluate(self.ast_operand1)) /
 		stof(script_evaluate(self.ast_operand2))
@@ -699,7 +698,7 @@ entity ast_div(entity operand1, entity operand2)
 	return ast_temp;
 }
 entity ast_mod_evaluate()
-{
+{SELFPARAM();
 	return ast_tempvalue(script_ftos(
 		stof(script_evaluate(self.ast_operand1)) %
 		stof(script_evaluate(self.ast_operand2))
@@ -715,7 +714,7 @@ entity ast_mod(entity operand1, entity operand2)
 	return ast_temp;
 }
 entity ast_sum_evaluate()
-{
+{SELFPARAM();
 	string op1 = script_evaluate(self.ast_operand1);
 	string op2 = script_evaluate(self.ast_operand2);
 	if ( is_numeric(op1) && is_numeric(op2) )
@@ -732,7 +731,7 @@ entity ast_sum(entity operand1, entity operand2)
 	return ast_temp;
 }
 entity ast_sub_evaluate()
-{
+{SELFPARAM();
 	return ast_tempvalue(script_ftos(
 		stof(script_evaluate(self.ast_operand1)) -
 		stof(script_evaluate(self.ast_operand2))
@@ -748,7 +747,7 @@ entity ast_sub(entity operand1, entity operand2)
 	return ast_temp;
 }
 entity ast_bitand_evaluate()
-{
+{SELFPARAM();
 	return ast_tempvalue(script_ftos(
 		stof(script_evaluate(self.ast_operand1)) &
 		stof(script_evaluate(self.ast_operand2))
@@ -764,7 +763,7 @@ entity ast_bitand(entity operand1, entity operand2)
 	return ast_temp;
 }
 entity ast_bitor_evaluate()
-{
+{SELFPARAM();
 	return ast_tempvalue(script_ftos(
 		stof(script_evaluate(self.ast_operand1)) |
 		stof(script_evaluate(self.ast_operand2))
@@ -780,7 +779,7 @@ entity ast_bitor(entity operand1, entity operand2)
 	return ast_temp;
 }
 entity ast_bitxor_evaluate()
-{
+{SELFPARAM();
 	return ast_tempvalue(script_ftos(
 		stof(script_evaluate(self.ast_operand1)) ^
 		stof(script_evaluate(self.ast_operand2))
@@ -796,7 +795,7 @@ entity ast_bitxor(entity operand1, entity operand2)
 	return ast_temp;
 }
 entity ast_bitlshift_evaluate()
-{
+{SELFPARAM();
 	return ast_tempvalue(script_ftos(
 		stof(script_evaluate(self.ast_operand1)) <<
 		stof(script_evaluate(self.ast_operand2))
@@ -812,7 +811,7 @@ entity ast_bitlshift(entity operand1, entity operand2)
 	return ast_temp;
 }
 entity ast_bitrshift_evaluate()
-{
+{SELFPARAM();
 	return ast_tempvalue(script_ftos(
 		stof(script_evaluate(self.ast_operand1)) >>
 		stof(script_evaluate(self.ast_operand2))
@@ -828,7 +827,7 @@ entity ast_bitrshift(entity operand1, entity operand2)
 	return ast_temp;
 }
 entity ast_eq_evaluate()
-{
+{SELFPARAM();
 	return ast_tempvalue(script_ftos(
 		script_evaluate(self.ast_operand1) ==
 		script_evaluate(self.ast_operand2)
@@ -844,7 +843,7 @@ entity ast_eq(entity operand1, entity operand2)
 	return ast_temp;
 }
 entity ast_ne_evaluate()
-{
+{SELFPARAM();
 	string op1 = script_evaluate(self.ast_operand1);
 	string op2 = script_evaluate(self.ast_operand2);
 	if ( is_numeric(op1) && is_numeric(op2) )
@@ -861,7 +860,7 @@ entity ast_ne(entity operand1, entity operand2)
 	return ast_temp;
 }
 entity ast_lt_evaluate()
-{
+{SELFPARAM();
 	string op1 = script_evaluate(self.ast_operand1);
 	string op2 = script_evaluate(self.ast_operand2);
 	if ( is_numeric(op1) && is_numeric(op2) )
@@ -878,7 +877,7 @@ entity ast_lt(entity operand1, entity operand2)
 	return ast_temp;
 }
 entity ast_le_evaluate()
-{
+{SELFPARAM();
 	string op1 = script_evaluate(self.ast_operand1);
 	string op2 = script_evaluate(self.ast_operand2);
 	if ( is_numeric(op1) && is_numeric(op2) )
@@ -895,7 +894,7 @@ entity ast_le(entity operand1, entity operand2)
 	return ast_temp;
 }
 entity ast_gt_evaluate()
-{
+{SELFPARAM();
 	string op1 = script_evaluate(self.ast_operand1);
 	string op2 = script_evaluate(self.ast_operand2);
 	if ( is_numeric(op1) && is_numeric(op2) )
@@ -912,7 +911,7 @@ entity ast_gt(entity operand1, entity operand2)
 	return ast_temp;
 }
 entity ast_ge_evaluate()
-{
+{SELFPARAM();
 	string op1 = script_evaluate(self.ast_operand1);
 	string op2 = script_evaluate(self.ast_operand2);
 	if ( is_numeric(op1) && is_numeric(op2) )
@@ -929,7 +928,7 @@ entity ast_ge(entity operand1, entity operand2)
 	return ast_temp;
 }
 entity ast_and_evaluate()
-{
+{SELFPARAM();
 	return ast_tempvalue(script_ftos(
 		stof(script_evaluate(self.ast_operand1)) &&
 		stof(script_evaluate(self.ast_operand2))
@@ -945,7 +944,7 @@ entity ast_and(entity operand1, entity operand2)
 	return ast_temp;
 }
 entity ast_or_evaluate()
-{
+{SELFPARAM();
 	return ast_tempvalue(script_ftos(
 		stof(script_evaluate(self.ast_operand1)) ||
 		stof(script_evaluate(self.ast_operand2))

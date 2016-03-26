@@ -33,7 +33,7 @@ MUTATOR_HOOKFUNCTION(damage_mod, PlayerDies)
 }
 
 MUTATOR_HOOKFUNCTION(damage_mod, FormatMessage)
-{
+{SELFPARAM();
 	switch(format_escape)
 	{
 		case "j": format_replacement = ((self.lastkilled) ? self.lastkilled.netname : "(nobody)"); break;

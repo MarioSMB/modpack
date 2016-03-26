@@ -1,6 +1,6 @@
 #ifdef SVQC
 void qgate_use()
-{
+{SELFPARAM();
 	self.frame = 1 - self.frame;
 }
 

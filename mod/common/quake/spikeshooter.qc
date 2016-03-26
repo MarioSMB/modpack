@@ -10,7 +10,7 @@ STATIC_INIT(SpikeShooterProjectile) { PROJECTILE_SPIKE = MOD_PROJECTILES++; }
 REGISTER_MUTATOR(spikeshooter_projectile, true);
 
 MUTATOR_HOOKFUNCTION(spikeshooter_projectile, Ent_Projectile)
-{
+{SELFPARAM();
 	if(self.cnt == PROJECTILE_SPIKE)
 	{
 		setmodel(self, MDL_PROJECTILE_SPIKE);
@@ -103,7 +103,7 @@ void spikeshooter_fire()
 }
 
 void spikeshooter_think()
-{
+{SELFPARAM();
 	spikeshooter_fire();
 
 	self.nextthink = time + self.wait;

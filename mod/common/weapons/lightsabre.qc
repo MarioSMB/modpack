@@ -113,7 +113,7 @@ spawnfunc(weapon_lightsabre) { weapon_defaultspawnfunc(this, WEP_LIGHTSABRE); }
 .entity swing_alreadyhit;
 
 bool W_Lightsabre_Melee_Block(entity player)
-{
+{SELFPARAM();
 	if(!IS_PLAYER(player)) { return false; }
 
 	entity player_melee = world, e;
@@ -144,7 +144,7 @@ bool W_Lightsabre_Melee_Block(entity player)
 }
 
 void W_Lightsabre_Melee_Think()
-{
+{SELFPARAM();
 	// declarations
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
 	entity target_victim;
@@ -287,14 +287,14 @@ void W_LightSabre_SetActive(entity actor, .entity weaponentity, bool newactive, 
 }
 
 		METHOD(Lightsabre, wr_aim, void(entity thiswep))
-		{
+		{SELFPARAM();
 			if(random() >= 0.5)
 				PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(self, 1000000, 0, 0.001, false);
 			else
 				PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, 1000000, 0, 0.001, false);
 		}
 		METHOD(Lightsabre, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
-		{
+		{SELFPARAM();
 			if((fire & 1) || (fire & 2))
 			if(weapon_prepareattack(thiswep, actor, weaponentity, (fire & 2), WEP_CVAR_BOTH(lightsabre, !(fire & 2), refire)))
 			{
@@ -313,7 +313,7 @@ void W_LightSabre_SetActive(entity actor, .entity weaponentity, bool newactive, 
 			}
 		}
 		METHOD(Lightsabre, wr_setup, void(entity thiswep))
-		{
+		{SELFPARAM();
 			.entity weaponentity = weaponentities[0];
 			self.ammo_field = ammo_none;
 			W_LightSabre_SetActive(self, weaponentity, false, false);
@@ -361,7 +361,7 @@ SPECTATE_COPY()
 		lightsabre_active_send(this, this.lightsabre_active = spectatee.lightsabre_active);
 }
 METHOD(Lightsabre, wr_reload, void(Lightsabre this, entity actor, .entity weaponentity))
-{
+{SELFPARAM();
 	// switch to alternate instruments :)
 	if (actor.(weaponentity).state == WS_READY)
 	{

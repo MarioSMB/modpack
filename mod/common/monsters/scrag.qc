@@ -95,8 +95,7 @@ const float scrag_anim_death	= 4;
 */
 
 void M_Scrag_Attack_Spike_Explode()
-{
-	SELFPARAM();
+{SELFPARAM();
 	//Send_Effect(EFFECT_FIREBALL_EXPLODE, self.origin, '0 0 0', 1);
 	__pointparticles(_particleeffectnum("TE_WIZSPIKE"), self.origin, '0 0 0', 1);
 
@@ -109,7 +108,7 @@ void M_Scrag_Attack_Spike_Explode()
 }
 
 void M_Scrag_Attack_Spike_Touch()
-{
+{SELFPARAM();
 	PROJECTILE_TOUCH;
 	if(other == self.owner) { return; }
 

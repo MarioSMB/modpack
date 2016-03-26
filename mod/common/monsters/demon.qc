@@ -60,7 +60,7 @@ const float demon_anim_attack	= 6;
 */
 
 void M_Demon_Attack_Leap_Touch()
-{
+{SELFPARAM();
 	if (self.health <= 0)
 		return;
 
