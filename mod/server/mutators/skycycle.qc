@@ -1,4 +1,4 @@
-void skycycle_Init();
+void skycycle_Init(entity this);
 bool skycycle_enabled;
 
 REGISTER_MUTATOR(skycycle, cvar("g_skycycle"))
@@ -297,7 +297,7 @@ MUTATOR_HOOKFUNCTION(skycycle, BuildMutatorsPrettyString)
 	return false;
 }
 
-void skycycle_Init()
+void skycycle_Init(entity this)
 {
 	SkyCycle_Spawn();
 

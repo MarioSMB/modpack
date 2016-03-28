@@ -165,7 +165,7 @@ void Radio_Queue_Request(void)
 		uri_get(autocvar_sv_radio_queue_autofill_server, URI_GET_RADIO);
 }
 
-void Radio_Queue_PlayFirst(void)
+void Radio_Queue_PlayFirst(entity this)
 {
 	if(!sv_radio)
 		return;
@@ -258,7 +258,7 @@ void Radio_Queue(string url, string fname, float len, string desc)
 		cvar_set("_radio_queue", strcat(q, " ", id));
 
 	if(radio_playing_queue < 0)
-		Radio_Queue_PlayFirst();
+		Radio_Queue_PlayFirst(NULL);
 	else if(!cvar("_radio_queue_left"))
 		Radio_Preload(url);
 
@@ -296,7 +296,7 @@ void Radio_Queue_Skip(void)
 
 	if(radio_queue_advanceat)
 		Radio_Queue_Advance();
-	Radio_Queue_PlayFirst();
+	Radio_Queue_PlayFirst(NULL);
 }
 
 MUTATOR_HOOKFUNCTION(radio, SV_ParseServerCommand)
@@ -336,7 +336,7 @@ MUTATOR_HOOKFUNCTION(radio, SV_ParseServerCommand)
 
 	if(cmd_name == "radio_queue_restart")
 	{
-		Radio_Queue_PlayFirst();
+		Radio_Queue_PlayFirst(NULL);
 		return true;
 	}
 
@@ -372,7 +372,7 @@ MUTATOR_HOOKFUNCTION(radio, SV_StartFrame)
 	}
 
 	if(time > radio_starttime + radio_tracklen)
-		Radio_Queue_PlayFirst();
+		Radio_Queue_PlayFirst(NULL);
 
 	return false;
 }
@@ -408,14 +408,14 @@ MUTATOR_HOOKFUNCTION(radio, URI_GetCallback)
 	return false;
 }
 
-void Radio_ClientConnect_Delayed(void)
-{SELFPARAM();
-	Radio_SendPlay(self);
+void Radio_ClientConnect_Delayed(entity this)
+{
+	Radio_SendPlay(this);
 }
 
 MUTATOR_HOOKFUNCTION(radio, ClientConnect)
 {SELFPARAM();
-	if(!IS_REAL_CLIENT(self))
+	if(!IS_REAL_CLIENT(this))
 		return false;
 
 	int realclients = 0;
@@ -425,14 +425,14 @@ MUTATOR_HOOKFUNCTION(radio, ClientConnect)
 	});
 
 	if(realclients == 1 && !radio_playing)
-		defer(self, 5, Radio_Queue_PlayFirst);
+		defer(this, 5, Radio_Queue_PlayFirst);
 
 	if(!radio_playing)
 		return false;
 
 	if(autocvar_sv_radio_preload)
-		Radio_SendPreload(self, radio_url);
-	defer(self, 3, Radio_ClientConnect_Delayed);
+		Radio_SendPreload(this, radio_url);
+	defer(this, 3, Radio_ClientConnect_Delayed);
 
 	return false;
 }
