@@ -1,6 +1,7 @@
 #include "announcer.qc"
 #include "commands/all.inc"
 #include "effects.inc"
+#include "items/all.inc"
 #include "projectiles.qh"
 #include "monsters/all.inc"
 #include "mutators/all.qh"
