@@ -260,7 +260,7 @@ MUTATOR_HOOKFUNCTION(sv_mpowerups, MatchEnd)
 		STAT(METAL_FINISHED, it) = 0;
 		STAT(STAR_FINISHED, it) = 0;
 		sound(it, CH_TRIGGER_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
-	}
+	});
 	return false;
 }
 
