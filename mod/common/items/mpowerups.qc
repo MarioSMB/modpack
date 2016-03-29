@@ -253,6 +253,17 @@ MUTATOR_HOOKFUNCTION(sv_mpowerups, ClientDisconnect)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(sv_mpowerups, MatchEnd)
+{
+	FOREACH_CLIENT(IS_PLAYER(it),
+	{
+		STAT(METAL_FINISHED, it) = 0;
+		STAT(STAR_FINISHED, it) = 0;
+		sound(it, CH_TRIGGER_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
+	}
+	return false;
+}
+
 MUTATOR_HOOKFUNCTION(sv_mpowerups, FixPlayermodel)
 {SELFPARAM();
 	if(this.items & ITEM_Metal.m_itemid)
