@@ -262,7 +262,7 @@ MUTATOR_HOOKFUNCTION(sv_mpowerups, FixPlayermodel)
 	return false;
 }
 
-MUTATOR_HOOKFUNCTION(sv_mpowerups, OnEntityPreSpawn)
+MUTATOR_HOOKFUNCTION(sv_mpowerups, OnEntityPreSpawn, CBC_ORDER_FIRST)
 {SELFPARAM();
 	if(!autocvar_g_powerups_mario_replace) return false;
 	if(this.classname == "item_strength")
