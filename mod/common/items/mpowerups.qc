@@ -71,7 +71,7 @@ bool have_powerup(entity this)
 {
 	FOREACH(Items, it.instanceOfPowerup && (this.items & it.m_itemid),
 	{
-		if(it != ITEM_Star && it != ITEM_Metal)
+		if(it != ITEM_Star && it != ITEM_Metal && it != ITEM_JetpackRegen && it != ITEM_Jetpack)
 			return true;
 	});
 
