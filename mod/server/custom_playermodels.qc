@@ -16,6 +16,7 @@ bool pony_allowed;
 bool weegee_allowed;
 bool rosa_allowed;
 bool cow_allowed;
+bool use_botmodel;
 
 void cpmodels_Precache()
 {
@@ -37,6 +38,12 @@ void cpmodels_Precache()
 		precache_playermodel("models/player/ubot.iqm");
 		precache_playermodel("models/player/rosalina.dpm");
 		precache_playermodel("models/player/draconimale.iqm");
+
+		if(fexists("models/player/ubot.iqm"))
+		{
+			use_botmodel = true;
+			precache_playermodel("models/player/ubot.iqm");
+		}
 
 		if(fexists("models/player/luigi.dpm"))
 		{
@@ -98,7 +105,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 		if(self.cvar_cl_goat)
 			ret_string = "models/player/draconimale.iqm";
 
-		if(IS_BOT_CLIENT(self) && autocvar_sv_allow_customplayermodels_bots)
+		if(use_botmodel && IS_BOT_CLIENT(self) && autocvar_sv_allow_customplayermodels_bots)
 			ret_string = "models/player/ubot.iqm";
 
 		// special hax
