@@ -120,7 +120,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 			if(self.cvar_cl_damnfurries == 1)
 				ret_string = "models/player/renamon.iqm";
 		}
-		else if(self.model == "models/player/renamon.iqm")
+		else if(self.playermodel == "models/player/renamon.iqm")
 		{
 			ret_string = autocvar_sv_defaultplayermodel;
 		}
