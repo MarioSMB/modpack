@@ -120,6 +120,10 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 			if(self.cvar_cl_damnfurries == 1)
 				ret_string = "models/player/renamon.iqm";
 		}
+		else if(self.model == "models/player/renamon.iqm")
+		{
+			ret_string = autocvar_sv_defaultplayermodel;
+		}
 		if(strhasword(self.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
 		{
 			if(self.cvar_cl_sparkle >= 4 && weegee_allowed)
