@@ -12,51 +12,39 @@ AUTOCVAR(sv_allow_customplayermodels_bots, bool, true, "");
 AUTOCVAR(sv_allow_customplayermodels_idlist, string, "", "");
 AUTOCVAR(sv_allow_customplayermodels_speciallist, string, "", "");
 
-bool pony_allowed;
-bool weegee_allowed;
-bool rosa_allowed;
-bool cow_allowed;
-bool use_botmodel;
+int models_allowed;
+const int MODELS_PONY = BIT(0);
+const int MODELS_WEEGEE = BIT(1);
+const int MODELS_ROSALINA = BIT(2);
+const int MODELS_COW = BIT(3);
+const int MODELS_GOAT = BIT(4);
+const int MODELS_ROBOT = BIT(5);
+const int MODELS_RENAMON = BIT(6);
+const int MODELS_BOT = BIT(7);
 
 void cpmodels_Precache()
 {
-	if(fexists("models/player/cow.md3"))
-	{
-		cow_allowed = true;
-		precache_playermodel("models/player/cow.md3");
+	models_allowed = 0;
+#define CHECK_MODEL(d,o) \
+	if(fexists(strcat("models/player/", d))) \
+	{ \
+		models_allowed |= MODELS_##o; \
+		precache_playermodel(strcat("models/player/", d)); \
 	}
+
+	CHECK_MODEL("cow.md3", COW)
 
 	if(cvar("sv_allow_customplayermodels"))
 	{
-		if(fexists("models/player/pony.iqm"))
-		{
-			pony_allowed = true;
-			precache_playermodel("models/player/pony.iqm");
-		}
-		precache_playermodel("models/player/renamon.iqm");
-		precache_playermodel("models/player/terminusmale.iqm");
-		precache_playermodel("models/player/ubot.iqm");
-		precache_playermodel("models/player/rosalina.dpm");
-		precache_playermodel("models/player/draconimale.iqm");
-
-		if(fexists("models/player/ubot.iqm"))
-		{
-			use_botmodel = true;
-			precache_playermodel("models/player/ubot.iqm");
-		}
-
-		if(fexists("models/player/luigi.dpm"))
-		{
-			weegee_allowed = true;
-			precache_playermodel("models/player/luigi.dpm");
-		}
-
-		if(fexists("models/player/rosalina.dpm"))
-		{
-			rosa_allowed = true;
-			precache_playermodel("models/player/rosalina.dpm");
-		}
+		CHECK_MODEL("pony.iqm", PONY)
+		CHECK_MODEL("renamon.iqm", RENAMON)
+		CHECK_MODEL("terminusmale.iqm", ROBOT)
+		CHECK_MODEL("draconimale.iqm", GOAT)
+		CHECK_MODEL("ubot.iqm", BOT)
+		CHECK_MODEL("luigi.dpm", WEEGEE)
+		CHECK_MODEL("rosalina.dpm", ROSALINA)
 	}
+#undef CHECK_MODEL
 }
 
 .bool cvar_cl_pony;
@@ -93,31 +81,32 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 	if(autocvar_sv_allow_customplayermodels)
 	if(!cvar("g_overkill"))
 	{
+#define ALLOWED(d) (models_allowed & MODELS_##d)
 		// public hax
 		// stuff anyone can use
-		if(self.cvar_cl_pony && pony_allowed)
+		if(self.cvar_cl_pony && ALLOWED(PONY))
 		{
 			ret_string = "models/player/pony.iqm";
 			ret_int = self.cvar_cl_pony_skin;
 		}
-		if(self.cvar_cl_robot == 1)
+		if(self.cvar_cl_robot == 1 && ALLOWED(ROBOT))
 			ret_string = "models/player/terminusmale.iqm";
-		if(self.cvar_cl_goat)
+		if(self.cvar_cl_goat && ALLOWED(GOAT))
 			ret_string = "models/player/draconimale.iqm";
 
-		if(use_botmodel && IS_BOT_CLIENT(self) && autocvar_sv_allow_customplayermodels_bots)
+		if(ALLOWED(BOT) && IS_BOT_CLIENT(self) && autocvar_sv_allow_customplayermodels_bots)
 			ret_string = "models/player/ubot.iqm";
 
 		// special hax
 		if(strhasword(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
 		{
-			if(self.cvar_cl_thestars == 1)
+			if(self.cvar_cl_thestars == 1 && ALLOWED(ROSALINA))
 			{
 				if(autocvar_g_fullbrightplayers && autocvar_g_player_brightness)
 					self.colormod = '0.7 0.7 0.7'; // regular brightness is way too bright here
 				ret_string = "models/player/rosalina.dpm";
 			}
-			if(self.cvar_cl_damnfurries == 1)
+			if(self.cvar_cl_damnfurries == 1 && ALLOWED(RENAMON))
 				ret_string = "models/player/renamon.iqm";
 		}
 		else if(self.playermodel == "models/player/renamon.iqm")
@@ -126,13 +115,15 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 		}
 		if(strhasword(self.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
 		{
-			if(self.cvar_cl_sparkle >= 4 && weegee_allowed)
+			if(self.cvar_cl_sparkle >= 4 && ALLOWED(WEEGEE))
 				ret_string = "models/player/luigi.dpm";
 		}
 	}
 
-	if(!cvar("g_overkill") && self.cow && cow_allowed)
+	if(!cvar("g_overkill") && self.cow && ALLOWED(COW))
 		ret_string = "models/player/cow.md3";
+
+#undef ALLOWED
 
 	return false;
 }
