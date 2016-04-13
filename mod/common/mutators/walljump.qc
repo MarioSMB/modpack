@@ -10,6 +10,8 @@ AUTOCVAR(g_walljump_velocity_xy_factor, float, 1.15, _("How much to slow down al
 AUTOCVAR(g_walljump_velocity_z_factor, float, 0.5, _("Upwards velocity factor, multiplied by normal jump velocity"));
 #endif
 
+.float lastwj;
+
 #define PHYS_WALLJUMP(s) 						STAT(WALLJUMP, s)
 #define PHYS_WALLJUMP_VELOCITY_Z_FACTOR(s) 		STAT(WALLJUMP_VELOCITY_Z_FACTOR, s)
 #define PHYS_WALLJUMP_VELOCITY_XY_FACTOR(s) 	STAT(WALLJUMP_VELOCITY_XY_FACTOR, s)
@@ -21,8 +23,7 @@ REGISTER_STAT(WALLJUMP_VELOCITY_Z_FACTOR, float, autocvar_g_walljump_velocity_z_
 REGISTER_STAT(WALLJUMP_VELOCITY_XY_FACTOR, float, autocvar_g_walljump_velocity_xy_factor)
 REGISTER_STAT(WALLJUMP_DELAY, float, autocvar_g_walljump_delay)
 REGISTER_STAT(WALLJUMP_FORCE, float, autocvar_g_walljump_force)
-
-.float lastwj;
+REGISTER_STAT(LASTWJ, float, this.lastwj)
 
 vector PlayerTouchWall(entity this)
 {
@@ -56,11 +57,16 @@ vector PlayerTouchWall(entity this)
 
 void PM_walljump_PlayerJump(entity this)
 {
+#ifdef CSQC
+	this.lastwj = STAT(LASTWJ, this);
+#endif
 	if(PHYS_WALLJUMP(this))
 	if(time - this.lastwj > PHYS_WALLJUMP_DELAY(this)) // can't do this on client, as it's too stupid to obey counters
 	if(!IS_ONGROUND(this))
 #ifdef SVQC
 	if(this.movetype != MOVETYPE_NONE && this.movetype != MOVETYPE_FOLLOW && this.movetype != MOVETYPE_FLY && this.movetype != MOVETYPE_NOCLIP)
+#elif defined(CSQC)
+	if(this.move_movetype != MOVETYPE_NONE && this.move_movetype != MOVETYPE_FOLLOW && this.move_movetype != MOVETYPE_FLY && this.move_movetype != MOVETYPE_NOCLIP)
 #endif
 	if(!IS_JUMP_HELD(this))
 	if(!STAT(FROZEN, this))
