@@ -21,6 +21,7 @@ const int MODELS_GOAT = BIT(4);
 const int MODELS_ROBOT = BIT(5);
 const int MODELS_RENAMON = BIT(6);
 const int MODELS_BOT = BIT(7);
+const int MODELS_MARIO = BIT(8);
 
 void cpmodels_Precache()
 {
@@ -43,6 +44,7 @@ void cpmodels_Precache()
 		CHECK_MODEL("ubot.iqm", BOT)
 		CHECK_MODEL("luigi.dpm", WEEGEE)
 		CHECK_MODEL("rosalina.dpm", ROSALINA)
+		CHECK_MODEL("mario.dpm", MARIO)
 	}
 #undef CHECK_MODEL
 }
@@ -115,10 +117,15 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 		}
 		if(strhasword(self.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
 		{
+			if(self.cvar_cl_sparkle == 3 && ALLOWED(MARIO))
+				ret_string = "models/player/mario.dpm";
 			if(self.cvar_cl_sparkle >= 4 && ALLOWED(WEEGEE))
 				ret_string = "models/player/luigi.dpm";
 		}
 	}
+
+	if(self.playermodel == "models/player/mario.dpm" && !strhasword(self.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
+		ret_string = autocvar_sv_defaultplayermodel;
 
 	if(!cvar("g_overkill") && self.cow && ALLOWED(COW))
 		ret_string = "models/player/cow.md3";
