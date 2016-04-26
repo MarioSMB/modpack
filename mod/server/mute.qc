@@ -43,7 +43,7 @@ MUTATOR_HOOKFUNCTION(muteban, SV_ParseServerCommand)
 
 		if (accepted > 0)
 		{
-			argc = tokenizebyseparator(autocvar_sv_muteban_list, " ");
+			int argc = tokenizebyseparator(autocvar_sv_muteban_list, " ");
 
 			string tmp_string = "";
 			for(int i = 0; i < argc; ++i)
@@ -60,7 +60,7 @@ MUTATOR_HOOKFUNCTION(muteban, SV_ParseServerCommand)
 			LOG_INFO("mute-ban failed: ", GetClientErrorString(accepted, argv(1)), ", attempting to unban by string.\n");
 			string removal = argv(1);
 
-			argc = tokenizebyseparator(autocvar_sv_muteban_list, " ");
+			int argc = tokenizebyseparator(autocvar_sv_muteban_list, " ");
 
 			string tmp_string = "";
 			for(int i = 0; i < argc; ++i)
