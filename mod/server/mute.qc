@@ -17,7 +17,7 @@ MUTATOR_HOOKFUNCTION(muteban, SV_ParseServerCommand)
 
 	if(cmd_name == "muteban")
 	{
-		entity client = GetIndexedEntity(argc, 1);
+		entity client = GetIndexedEntity(cmd_argc, 1);
 		bool accepted = VerifyClientEntity(client, true, false);
 
 		if (accepted > 0)
@@ -38,7 +38,7 @@ MUTATOR_HOOKFUNCTION(muteban, SV_ParseServerCommand)
 
 	if(cmd_name == "unmuteban")
 	{
-		entity client = GetIndexedEntity(argc, 1);
+		entity client = GetIndexedEntity(cmd_argc, 1);
 		bool accepted = VerifyClientEntity(client, true, false);
 
 		if (accepted > 0)
