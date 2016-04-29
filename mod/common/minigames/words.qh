@@ -1,0 +1,57 @@
+#define MINIGAME_SUPPORT_WORDS
+#ifdef MINIGAME_SUPPORT_WORDS
+
+#ifndef P_WORDS_H
+#define P_WORDS_H
+
+const int MAX_WORDS_PERFILE = 8400; // let's hope we don't reach it
+
+bool Find_Word_Entity(string wrd_name)
+{
+    string theword = strtolower(wrd_name);
+    string fail = substring(theword, 0, 1);
+    int ltr = str2chr(strtoupper(fail), 0) - str2chr("A", 0);
+    //ltr += 1;
+    string letter = strtolower(chr2str(str2chr("A", 0) + ltr));
+
+    bool found = false;
+
+    string fn = strcat("words/words_", letter, ".txt");
+    int fh = fopen(fn, FILE_READ);
+
+    if(fh >= 0)
+    {
+        int j;
+        string l;
+        for(j = 0; (l = fgets(fh)); )
+        {
+            j += 1;
+            if(j >= MAX_WORDS_PERFILE)
+                break;
+            if(strlen(l) == 0)
+                continue;
+            if(substring(l, 0, 3) == "\"//")
+                continue; // comment
+            if(substring(l, 0, 2) == "//")
+                continue; // comment
+
+            if(theword == l)
+            {
+                found = true;
+                break;
+            }
+        }
+        fclose(fh);
+    }
+    else
+    {
+        LOG_INFO("Server/Client lacks dictionary files, this is bad!\n");
+        return false;
+    }
+
+    return found;
+}
+
+#endif
+
+#endif

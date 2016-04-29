@@ -3,6 +3,7 @@
 #include "effects.inc"
 #include "items/all.inc"
 #include "projectiles.qh"
+#include "minigames/all.inc"
 #include "monsters/all.inc"
 #include "mutators/all.qh"
 #include "notifications.qh"
