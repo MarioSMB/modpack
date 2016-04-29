@@ -40,6 +40,7 @@ MUTATOR_HOOKFUNCTION(muteban, SV_ParseServerCommand)
 	{
 		entity client = GetIndexedEntity(cmd_argc, 1);
 		bool accepted = VerifyClientEntity(client, true, false);
+		string original_arg = argv(1);
 
 		if (accepted > 0)
 		{
@@ -52,19 +53,18 @@ MUTATOR_HOOKFUNCTION(muteban, SV_ParseServerCommand)
 
 			tmp_string = substring(tmp_string, 1, strlen(tmp_string) - 1);
 			cvar_set("sv_muteban_list", tmp_string);
-			LOG_INFO(strcat("Unmuting player ", GetCallerName(client), " (", argv(1), ").\n"));
+			LOG_INFO(strcat("Unmuting player ", GetCallerName(client), " (", original_arg, ").\n"));
 			client.muted = false;
 		}
 		else
 		{
-			LOG_INFO("mute-ban failed: ", GetClientErrorString(accepted, argv(1)), ", attempting to unban by string.\n");
-			string removal = argv(1);
+			LOG_INFO("mute-ban failed: ", GetClientErrorString(accepted, original_arg), ", attempting to unban by string.\n");
 
 			int argc = tokenizebyseparator(autocvar_sv_muteban_list, " ");
 
 			string tmp_string = "";
 			for(int i = 0; i < argc; ++i)
-				if(argv(i) != removal)
+				if(argv(i) != original_arg)
 					tmp_string = strcat(tmp_string, " ", argv(i));
 
 			tmp_string = substring(tmp_string, 1, strlen(tmp_string) - 1);
