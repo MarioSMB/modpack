@@ -33,7 +33,7 @@ Git
 Required content packs:
  - http://dl.xonotic.co/zzz-misc-v006-53-g24b24ff.pk3
  - http://dl.xonotic.co/zzz-quickmenu_017.pk3
- - http://dl.xonotic.co/zzz-minigames-v006-50-g6b93a8d.pk3
+ - http://dl.xonotic.co/zzz-minigames-v006-56-gc588925.pk3
 
 
 Usage
