@@ -1,16 +1,16 @@
 #ifdef SVQC
 
-void light_use()
-{SELFPARAM();
-	if(self.spawnflags & 1)
+void light_use(entity this, entity actor, entity trigger)
+{
+	if(this.spawnflags & 1)
 	{
-		lightstyle(self.style, "m");
-		self.spawnflags &= ~1;
+		lightstyle(this.style, "m");
+		this.spawnflags &= ~1;
 	}
 	else
 	{
-		lightstyle(self.style, "a");
-		self.spawnflags |= 1;
+		lightstyle(this.style, "a");
+		this.spawnflags |= 1;
 	}
 }
 

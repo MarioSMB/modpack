@@ -76,6 +76,11 @@ void M_Enforcer_Attack_Plasma_Explode()
 	remove (self);
 }
 
+void M_Enforcer_Attack_Plasma_Explode_use(entity this, entity actor, entity trigger)
+{
+	WITHSELF(this, M_Enforcer_Attack_Plasma_Explode());
+}
+
 void M_Enforcer_Attack_Plasma_Touch()
 {
 	PROJECTILE_TOUCH;
@@ -106,7 +111,7 @@ void M_Enforcer_Attack_Plasma(entity this)
 
 	gren.nextthink = time + autocvar_g_monster_enforcer_attack_plasma_lifetime;
 	gren.think = adaptor_think2use_hittype_splash;
-	gren.use = M_Enforcer_Attack_Plasma_Explode;
+	gren.use = M_Enforcer_Attack_Plasma_Explode_use;
 	gren.touch = M_Enforcer_Attack_Plasma_Touch;
 
 	gren.missile_flags = MIF_SPLASH;

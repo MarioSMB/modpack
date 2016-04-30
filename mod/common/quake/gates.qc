@@ -1,7 +1,7 @@
 #ifdef SVQC
-void qgate_use()
-{SELFPARAM();
-	self.frame = 1 - self.frame;
+void qgate_use(entity this, entity actor, entity trigger)
+{
+	this.frame = 1 - this.frame;
 }
 
 spawnfunc(func_episodegate)

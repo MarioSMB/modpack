@@ -52,46 +52,51 @@ void spikeshooter_explode()
 	remove(self);
 }
 
+void spikeshooter_explode_use(entity this, entity actor, entity trigger)
+{
+	WITHSELF(this, spikeshooter_explode());
+}
+
 void spikeshooter_touch()
 {
 	PROJECTILE_TOUCH;
 	spikeshooter_explode();
 }
 
-void spikeshooter_fire()
-{SELFPARAM();
+void spikeshooter_fire(entity this, entity actor, entity trigger)
+{
 	entity proj;
-	bool is_laser = (self.spawnflags & SPIKESHOOTER_LASER);
+	bool is_laser = (this.spawnflags & SPIKESHOOTER_LASER);
 
 	W_SetupShot_ProjectileSize(
-		self,
+		this,
 		'0 0 -3',
 		'0 0 -3',
 		false,
 		0,
 		SND_SPIKE_FIRE,
 		CH_WEAPON_A,
-		self.dmg
+		this.dmg
 	);
 
 	proj = spawn();
 	proj.classname = "spikeshooter_spike";
-	proj.owner = proj.realowner = self;
+	proj.owner = proj.realowner = this;
 	proj.bot_dodge = true;
-	proj.bot_dodgerating = self.dmg;
-	proj.use = spikeshooter_explode;
-	proj.think = proj.use;
+	proj.bot_dodgerating = this.dmg;
+	proj.use = spikeshooter_explode_use;
+	proj.think = adaptor_think2use;
 	proj.nextthink = time + 7;
 	PROJECTILE_MAKETRIGGER(proj);
-	proj.dmg = self.dmg;
+	proj.dmg = this.dmg;
 	proj.projectiledeathtype = WEP_MACHINEGUN.m_id;
-	setorigin(proj, self.origin);
+	setorigin(proj, this.origin);
 
 	if(is_laser)
-		proj.cnt = self.dmg * 0.7;
+		proj.cnt = this.dmg * 0.7;
 
 	proj.movetype = MOVETYPE_FLY;
-	W_SetupProjVelocity_Explicit(proj, self.movedir, v_up, 500, 0, 0, 0, false);
+	W_SetupProjVelocity_Explicit(proj, this.movedir, v_up, 500, 0, 0, 0, false);
 	proj.angles = vectoangles(proj.velocity);
 	proj.touch = spikeshooter_touch;
 	setsize(proj, '0 0 -3', '0 0 -3');
@@ -99,12 +104,12 @@ void spikeshooter_fire()
 
 	CSQCProjectile(proj, true, ((is_laser) ? PROJECTILE_BLASTER : PROJECTILE_SPIKE), false);
 
-	MUTATOR_CALLHOOK(EditProjectile, self, proj);
+	MUTATOR_CALLHOOK(EditProjectile, this, proj);
 }
 
 void spikeshooter_think()
 {SELFPARAM();
-	spikeshooter_fire();
+	spikeshooter_fire(self, NULL, NULL);
 
 	self.nextthink = time + self.wait;
 }

@@ -118,6 +118,11 @@ void M_Ogre_Attack_Grenade_Explode()
 	remove (self);
 }
 
+void M_Ogre_Attack_Grenade_Explode_use(entity this, entity actor, entity trigger)
+{
+	WITHSELF(this, M_Ogre_Attack_Grenade_Explode());
+}
+
 void M_Ogre_Attack_Grenade_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
 {
 	if (this.health <= 0)
@@ -129,7 +134,7 @@ void M_Ogre_Attack_Grenade_Damage(entity this, entity inflictor, entity attacker
 	this.health -= damage;
 
 	if (this.health <= 0)
-		WITHSELF(this, W_PrepareExplosionByDamage(attacker, this.use));
+		W_PrepareExplosionByDamage(this, attacker, adaptor_think2use);
 }
 
 void M_Ogre_Attack_Grenade_Touch()
@@ -138,7 +143,7 @@ void M_Ogre_Attack_Grenade_Touch()
 
 	if (other.takedamage == DAMAGE_AIM)
 	{
-		self.use();
+		this.use(this, NULL, NULL);
 		return;
 	}
 
@@ -172,7 +177,7 @@ void M_Ogre_Attack_Grenade(entity this)
 
 	gren.nextthink = time + autocvar_g_monster_ogre_attack_grenade_lifetime;
 	gren.think = adaptor_think2use_hittype_splash;
-	gren.use = M_Ogre_Attack_Grenade_Explode;
+	gren.use = M_Ogre_Attack_Grenade_Explode_use;
 	gren.touch = M_Ogre_Attack_Grenade_Touch;
 
 	gren.takedamage = DAMAGE_YES;
