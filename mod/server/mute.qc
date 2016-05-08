@@ -4,7 +4,7 @@ AUTOCVAR(sv_muteban_list, string, "", "");
 
 MUTATOR_HOOKFUNCTION(muteban, ClientConnect)
 {SELFPARAM();
-	if(strhasword(autocvar_sv_muteban_list, self.crypto_idfp) || strhasword(autocvar_sv_muteban_list, self.netaddress))
+	if((self.crypto_idfp != "" && strhasword(autocvar_sv_muteban_list, self.crypto_idfp)) || strhasword(autocvar_sv_muteban_list, self.netaddress))
 		self.muted = true;
 
 	return false;
