@@ -104,7 +104,7 @@ NET_HANDLE(TE_CSQC_RADIO, bool isNew)
 
 MUTATOR_HOOKFUNCTION(radio, Ent_Init)
 {
-	localcmd("\nalias radio \"cmd radio ${* ?}\"\n");
+	localcmd("\nalias radio \"cl_cmd radio ${* ?}\"\n");
 
 	localcmd("\ncmd radio ", ftos(autocvar_cl_radio), "\n");
 }
@@ -134,10 +134,14 @@ MUTATOR_HOOKFUNCTION(radio, CSQC_ConsoleCommand)
 					localcmd("\ncd pause\n");
 				}
 			}
+
+			return true;
 		}
 
-		cvar_set("cl_radio", argv(1));
-		localcmd("\ncmd radio ", ftos(autocvar_cl_radio), "\n");
+		string onoff = (argv(1) == "on" || argv(1) == "1") ? "1" : "0";
+
+		cvar_set("cl_radio", onoff);
+		localcmd("\ncmd radio ", cvar_string("cl_radio"), "\n");
 		return true;
 	}
 
