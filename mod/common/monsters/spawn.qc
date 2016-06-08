@@ -51,8 +51,8 @@ void M_Tarbaby_Attack_Explode(entity this)
 	Monster_Remove(this);
 }
 
-void M_Tarbaby_Attack_Leap_Touch()
-{SELFPARAM();
+void M_Tarbaby_Attack_Leap_Touch(entity this)
+{
 	if (this.health <= 0)
 		return;
 
@@ -62,7 +62,7 @@ void M_Tarbaby_Attack_Leap_Touch()
 	if (trace_dphitcontents)
 	{
 		this.state = 0;
-		this.touch = Monster_Touch;
+		settouch(this, Monster_Touch);
 	}
 }
 

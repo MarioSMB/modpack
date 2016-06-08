@@ -143,57 +143,57 @@ bool W_Lightsabre_Melee_Block(entity player)
 	return true;
 }
 
-void W_Lightsabre_Melee_Think()
-{SELFPARAM();
+void W_Lightsabre_Melee_Think(entity this)
+{
 	// declarations
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
 	entity target_victim;
 	vector targpos;
-	bool isprimary = !PHYS_INPUT_BUTTON_ATCK2(self.realowner);
+	bool isprimary = !PHYS_INPUT_BUTTON_ATCK2(this.realowner);
 	int deathtype = WEP_LIGHTSABRE.m_id;
 	if(!isprimary)
 		deathtype |= HITTYPE_SECONDARY;
 
-	if(!self.cnt) // set start time of melee
+	if(!this.cnt) // set start time of melee
 	{
-		self.cnt = time;
+		this.cnt = time;
 	}
 
-	makevectors(self.realowner.v_angle); // update values for v_* vectors
+	makevectors(this.realowner.v_angle); // update values for v_* vectors
 
 	// calculate swing percentage based on time
 	meleetime = WEP_CVAR_BOTH(lightsabre, isprimary, melee_time) * W_WeaponRateFactor();
-	swing = bound(0, (self.cnt + meleetime - time) / meleetime, 10);
+	swing = bound(0, (this.cnt + meleetime - time) / meleetime, 10);
 	f = ((1 - swing) * WEP_CVAR_BOTH(lightsabre, isprimary, melee_traces));
 
 	// check to see if we can still continue, otherwise give up now
-	if(IS_DEAD(self.realowner) && WEP_CVAR_BOTH(lightsabre, isprimary, melee_no_doubleslap))
+	if(IS_DEAD(this.realowner) && WEP_CVAR_BOTH(lightsabre, isprimary, melee_no_doubleslap))
 	{
-		remove(self);
+		remove(this);
 		return;
 	}
 
 	// if okay, perform the traces needed for this frame
-	for(i=self.swing_prev; i < f; ++i)
+	for(i=this.swing_prev; i < f; ++i)
 	{
 		swing_factor = ((1 - (i / WEP_CVAR_BOTH(lightsabre, isprimary, melee_traces))) * 2 - 1);
 
-		targpos = (self.realowner.origin + self.realowner.view_ofs
+		targpos = (this.realowner.origin + this.realowner.view_ofs
 			+ (v_forward * WEP_CVAR_BOTH(lightsabre, isprimary, melee_range))
 			+ (v_up * swing_factor * WEP_CVAR_BOTH(lightsabre, isprimary, melee_swing_up))
 			+ (v_right * swing_factor * WEP_CVAR_BOTH(lightsabre, isprimary, melee_swing_side)));
 
-		WarpZone_traceline_antilag(self, self.realowner.origin + self.realowner.view_ofs, targpos, false, self.realowner, ANTILAG_LATENCY(self.realowner));
+		WarpZone_traceline_antilag(this, this.realowner.origin + this.realowner.view_ofs, targpos, false, this.realowner, ANTILAG_LATENCY(this.realowner));
 
 		// draw lightning beams for debugging
-		//te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5);
+		//te_lightning2(world, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
 		//te_customflash(targpos, 40,  2, '1 1 1');
 
 		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || (trace_ent.flags & FL_MONSTER));
 
-		if((trace_fraction < 1) // if trace is good, apply the damage and remove self
+		if((trace_fraction < 1) // if trace is good, apply the damage and remove this
 			&& (trace_ent.takedamage == DAMAGE_AIM)
-			&& (trace_ent != self.swing_alreadyhit)
+			&& (trace_ent != this.swing_alreadyhit)
 			&& (is_player || WEP_CVAR_BOTH(lightsabre, isprimary, melee_nonplayerdamage)))
 		{
 			target_victim = trace_ent; // so it persists through other calls
@@ -205,16 +205,16 @@ void W_Lightsabre_Melee_Think()
 				else
 					swing_damage = (WEP_CVAR_BOTH(lightsabre, isprimary, melee_nonplayerdamage) * min(1, swing_factor + 1));
 
-				//print(strcat(self.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
+				//print(strcat(this.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
 
-				Damage(target_victim, self.realowner, self.realowner,
+				Damage(target_victim, this.realowner, this.realowner,
 					swing_damage, deathtype,
-					self.realowner.origin + self.realowner.view_ofs,
+					this.realowner.origin + this.realowner.view_ofs,
 					v_forward * WEP_CVAR_BOTH(lightsabre, isprimary, force));
 
-				spamsound(self.realowner, CH_WEAPON_A, SND(LIGHTSABRE_HIT_RANDOM()), VOL_BASE, ATTN_NORM);
+				spamsound(this.realowner, CH_WEAPON_A, SND(LIGHTSABRE_HIT_RANDOM()), VOL_BASE, ATTN_NORM);
 
-				if(accuracy_isgooddamage(self.realowner, target_victim)) { accuracy_add(self.realowner, WEP_LIGHTSABRE.m_id, 0, swing_damage); }
+				if(accuracy_isgooddamage(this.realowner, target_victim)) { accuracy_add(this.realowner, WEP_LIGHTSABRE.m_id, 0, swing_damage); }
 			}
 
 			// draw large red flash for debugging
@@ -222,28 +222,28 @@ void W_Lightsabre_Melee_Think()
 
 			if(WEP_CVAR_BOTH(lightsabre, isprimary, melee_multihit)) // allow multiple hits with one swing, but not against the same player twice.
 			{
-				self.swing_alreadyhit = target_victim;
+				this.swing_alreadyhit = target_victim;
 				continue; // move along to next trace
 			}
 			else
 			{
-				remove(self);
+				remove(this);
 				return;
 			}
 		}
 	}
 
-	if(time >= self.cnt + meleetime)
+	if(time >= this.cnt + meleetime)
 	{
 		// melee is finished
-		remove(self);
+		remove(this);
 		return;
 	}
 	else
 	{
 		// set up next frame
-		self.swing_prev = i;
-		self.nextthink = time;
+		this.swing_prev = i;
+		this.nextthink = time;
 	}
 }
 
@@ -256,7 +256,7 @@ void W_Lightsabre_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	entity meleetemp = new(meleetemp);
 	make_pure(meleetemp);
 	meleetemp.owner = meleetemp.realowner = actor;
-	meleetemp.think = W_Lightsabre_Melee_Think;
+	setthink(meleetemp, W_Lightsabre_Melee_Think);
 	meleetemp.nextthink = time + WEP_CVAR_BOTH(lightsabre, isprimary, melee_delay) * W_WeaponRateFactor();
 	W_SetupShot_Range(actor, true, 0, SND_Null, 0, WEP_CVAR_BOTH(lightsabre, isprimary, damage), WEP_CVAR_BOTH(lightsabre, isprimary, melee_range));
 }
@@ -318,11 +318,11 @@ void W_LightSabre_SetActive(entity actor, .entity weaponentity, bool newactive, 
 			self.ammo_field = ammo_none;
 			W_LightSabre_SetActive(self, weaponentity, false, false);
 		}
-		METHOD(Lightsabre, wr_checkammo1, bool(entity thiswep))
+		METHOD(Lightsabre, wr_checkammo1, bool(entity thiswep, entity actor))
 		{
 			return true;
 		}
-		METHOD(Lightsabre, wr_checkammo2, bool(entity thiswep))
+		METHOD(Lightsabre, wr_checkammo2, bool(entity thiswep, entity actor))
 		{
 			return true;
 		}

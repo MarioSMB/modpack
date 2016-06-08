@@ -86,55 +86,55 @@ STATIC_INIT(rocketlauncher_cvars)
 #ifdef SVQC
 spawnfunc(weapon_qrocketlauncher) { weapon_defaultspawnfunc(this, WEP_ROCKETLAUNCHER); }
 
-void W_RocketLauncher_Unregister(void)
-{SELFPARAM();
-	if(self.realowner && self.realowner.lastrocket == self)
+void W_RocketLauncher_Unregister(entity this)
+{
+	if(this.realowner && this.realowner.lastrocket == this)
 	{
-		self.realowner.lastrocket = world;
-		// self.realowner.rl_release = 1;
+		this.realowner.lastrocket = world;
+		// this.realowner.rl_release = 1;
 	}
 }
 
-void W_RocketLauncher_Explode(void)
-{SELFPARAM();
-	W_RocketLauncher_Unregister();
+void W_RocketLauncher_Explode(entity this)
+{
+	W_RocketLauncher_Unregister(this);
 
 	if(other.takedamage == DAMAGE_AIM)
 		if(IS_PLAYER(other))
-			if(DIFF_TEAM(self.realowner, other))
+			if(DIFF_TEAM(this.realowner, other))
 				if(!IS_DEAD(other))
 					if(IsFlying(other))
-						Send_Notification(NOTIF_ONE, self.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
+						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
-	self.event_damage = func_null;
-	self.takedamage = DAMAGE_NO;
+	this.event_damage = func_null;
+	this.takedamage = DAMAGE_NO;
 
 	RadiusDamage(
-		self,
-		self.realowner,
+		this,
+		this.realowner,
 		WEP_CVAR(rocketlauncher, damage),
 		WEP_CVAR(rocketlauncher, edgedamage),
 		WEP_CVAR(rocketlauncher, radius),
 		world,
 		world,
 		WEP_CVAR(rocketlauncher, force),
-		self.projectiledeathtype,
+		this.projectiledeathtype,
 		other
 	);
 
 	Weapon thiswep = WEP_ROCKETLAUNCHER;
-	if(PS(self.realowner).m_weapon == thiswep)
+	if(PS(this.realowner).m_weapon == thiswep)
 	{
-		if(self.realowner.(thiswep.ammo_field) < WEP_CVAR(rocketlauncher, ammo))
-		if(!(self.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
+		if(this.realowner.(thiswep.ammo_field) < WEP_CVAR(rocketlauncher, ammo))
+		if(!(this.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
-			self.realowner.cnt = WEP_ROCKETLAUNCHER.m_id;
+			this.realowner.cnt = WEP_ROCKETLAUNCHER.m_id;
 			int slot = 0;
-			ATTACK_FINISHED(self.realowner, slot) = time;
-			PS(self.realowner).m_switchweapon = w_getbestweapon(self.realowner);
+			ATTACK_FINISHED(this.realowner, slot) = time;
+			PS(this.realowner).m_switchweapon = w_getbestweapon(this.realowner);
 		}
 	}
-	remove(self);
+	remove(this);
 }
 
 // assume thisdir == -goaldir:
@@ -147,38 +147,38 @@ void W_RocketLauncher_Explode(void)
 //   normalize(thisdir + goaldir)
 //   normalize(0)
 
-void W_RocketLauncher_Think(void)
-{SELFPARAM();
+void W_RocketLauncher_Think(entity this)
+{
 	float velspeed;
-	self.nextthink = time;
-	if(time > self.cnt)
+	this.nextthink = time;
+	if(time > this.cnt)
 	{
 		other = world;
-		self.projectiledeathtype |= HITTYPE_BOUNCE;
-		W_RocketLauncher_Explode();
+		this.projectiledeathtype |= HITTYPE_BOUNCE;
+		W_RocketLauncher_Explode(this);
 		return;
 	}
 
 	// accelerate
-	makevectors(self.angles.x * '-1 0 0' + self.angles.y * '0 1 0');
-	velspeed = WEP_CVAR(rocketlauncher, speed) * W_WeaponSpeedFactor() - (self.velocity * v_forward);
+	makevectors(this.angles.x * '-1 0 0' + this.angles.y * '0 1 0');
+	velspeed = WEP_CVAR(rocketlauncher, speed) * W_WeaponSpeedFactor() - (this.velocity * v_forward);
 	if(velspeed > 0)
-		self.velocity = self.velocity + v_forward * min(WEP_CVAR(rocketlauncher, speedaccel) * W_WeaponSpeedFactor() * frametime, velspeed);
+		this.velocity = this.velocity + v_forward * min(WEP_CVAR(rocketlauncher, speedaccel) * W_WeaponSpeedFactor() * frametime, velspeed);
 
-	if(self.csqcprojectile_clientanimate == 0)
-		UpdateCSQCProjectile(self);
+	if(this.csqcprojectile_clientanimate == 0)
+		UpdateCSQCProjectile(this);
 }
 
-void W_RocketLauncher_Touch(void)
-{SELFPARAM();
-	if(WarpZone_Projectile_Touch())
+void W_RocketLauncher_Touch(entity this)
+{
+	if(WarpZone_Projectile_Touch(this))
 	{
-		if(wasfreed(self))
-			W_RocketLauncher_Unregister();
+		if(wasfreed(this))
+			W_RocketLauncher_Unregister(this);
 		return;
 	}
-	W_RocketLauncher_Unregister();
-	W_RocketLauncher_Explode();
+	W_RocketLauncher_Unregister(this);
+	W_RocketLauncher_Explode(this);
 }
 
 void W_RocketLauncher_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -193,7 +193,7 @@ void W_RocketLauncher_Damage(entity this, entity inflictor, entity attacker, flo
 	this.angles = vectoangles(this.velocity);
 
 	if(this.health <= 0)
-		WITHSELF(this, W_PrepareExplosionByDamage(attacker, W_RocketLauncher_Explode));
+		W_PrepareExplosionByDamage(attacker, W_RocketLauncher_Explode);
 }
 
 void W_RocketLauncher_Attack(Weapon thiswep)
@@ -232,8 +232,8 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 	W_SetupProjVelocity_Basic(missile, WEP_CVAR(rocketlauncher, speedstart), 0);
 	missile.angles = vectoangles(missile.velocity);
 
-	missile.touch = W_RocketLauncher_Touch;
-	missile.think = W_RocketLauncher_Think;
+	settouch(missile, W_RocketLauncher_Touch);
+	setthink(missile, W_RocketLauncher_Think);
 	missile.nextthink = time;
 	missile.cnt = time + WEP_CVAR(rocketlauncher, lifetime);
 	missile.flags = FL_PROJECTILE;
@@ -392,13 +392,13 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 				}
 			}
 		}
-		METHOD(RocketLauncher, wr_checkammo1, bool(entity thiswep))
-		{SELFPARAM();
-			float ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(rocketlauncher, ammo);
-			ammo_amount += self.(weapon_load[WEP_ROCKETLAUNCHER.m_id]) >= WEP_CVAR(rocketlauncher, ammo);
+		METHOD(RocketLauncher, wr_checkammo1, bool(entity thiswep, entity actor))
+		{
+			float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(rocketlauncher, ammo);
+			ammo_amount += actor.(weapon_load[WEP_ROCKETLAUNCHER.m_id]) >= WEP_CVAR(rocketlauncher, ammo);
 			return ammo_amount;
 		}
-		METHOD(RocketLauncher, wr_checkammo2, bool(entity thiswep))
+		METHOD(RocketLauncher, wr_checkammo2, bool(entity thiswep, entity actor))
 		{
 			return false;
 		}

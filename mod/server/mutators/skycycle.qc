@@ -127,8 +127,8 @@ void SkyCycle_Darken()
 	skycycle_ambient_current = d;
 }
 
-void SkyCycle_Run()
-{SELFPARAM();
+void SkyCycle_Run(entity this)
+{
 	//print("SkyCycle Run\n");
 	if (time - skycycle_timestart > skycycle_time)
 	{
@@ -150,7 +150,7 @@ void SkyCycle_Run()
 		//Advance start time at same pace if timelock is set
 		skycycle_timestart += skycycle_timebetween;
 
-	self.nextthink = time + skycycle_timebetween;
+	this.nextthink = time + skycycle_timebetween;
 }
 
 void SkyCycle_Spawn()
@@ -159,7 +159,7 @@ void SkyCycle_Spawn()
 		entity e;
 		
 		e = spawn();
-		e.think = SkyCycle_Run;
+		setthink(e, SkyCycle_Run);
 		e.nextthink = time; //Start Right Away
 		skycycle_epoch = 0;
 		SkyCycle_Restart();

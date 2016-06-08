@@ -67,62 +67,62 @@ vector hats_getangles(entity e)
 	return s;
 }
 
-void hat_Think()
-{SELFPARAM();
+void hat_Think(entity this)
+{
 	float tag_found;
-	self.nextthink = time;
-	if (self.owner.hatentity != self)
+	this.nextthink = time;
+	if (this.owner.hatentity != this)
 	{
-		remove(self);
+		remove(this);
 		return;
 	}
-	if(STAT(FROZEN, self.owner) || IS_DEAD(self.owner))
+	if(STAT(FROZEN, this.owner) || IS_DEAD(this.owner))
 	{
-		self.model = "";
+		this.model = "";
 		return;
 	}
-	if (self.hatname != self.owner.hatname || self.dmg != self.owner.modelindex || self.deadflag != self.owner.deadflag)
+	if (this.hatname != this.owner.hatname || this.dmg != this.owner.modelindex || this.deadflag != this.owner.deadflag)
 	{
-		self.hatname = self.owner.hatname;
-		self.dmg = self.owner.modelindex;
-		self.deadflag = self.owner.deadflag;
-		if (self.owner.hatname != "" && fexists(strcat("models/hats/", self.owner.hatname, ".md3")))
-			_setmodel(self, strcat("models/hats/", self.owner.hatname, ".md3")); // precision set below
+		this.hatname = this.owner.hatname;
+		this.dmg = this.owner.modelindex;
+		this.deadflag = this.owner.deadflag;
+		if (this.owner.hatname != "" && fexists(strcat("models/hats/", this.owner.hatname, ".md3")))
+			_setmodel(this, strcat("models/hats/", this.owner.hatname, ".md3")); // precision set below
 		else
-			self.model = "";
+			this.model = "";
 
-		if((tag_found = gettagindex(self.owner, "tag_head")))
+		if((tag_found = gettagindex(this.owner, "tag_head")))
 		{
-			self.tag_index = tag_found;
-			self.tag_entity = self.owner;
-			setorigin(self, hats_getheight(self.owner));
-			self.scale = hats_getscale(self.owner);
-			self.angles = hats_getangles(self.owner);
+			this.tag_index = tag_found;
+			this.tag_entity = this.owner;
+			setorigin(this, hats_getheight(this.owner));
+			this.scale = hats_getscale(this.owner);
+			this.angles = hats_getangles(this.owner);
 		}
 		else
 		{
-			setattachment(self, self.owner, "head");
-			setorigin(self, hats_getheight(self.owner));
-			self.scale = hats_getscale(self.owner);
-			self.angles = hats_getangles(self.owner);
+			setattachment(this, this.owner, "head");
+			setorigin(this, hats_getheight(this.owner));
+			this.scale = hats_getscale(this.owner);
+			this.angles = hats_getangles(this.owner);
 		}
 	}
-	self.effects = self.owner.effects;
-	self.effects |= EF_LOWPRECISION;
-	self.effects = self.effects & EFMASK_CHEAP; // eat performance
-	if(self.scale < -1)
-		self.alpha = -1;
-	else if(self.owner.alpha == default_player_alpha)
-		self.alpha = default_weapon_alpha;
-	else if(self.owner.alpha != 0)
-		self.alpha = self.owner.alpha;
+	this.effects = this.owner.effects;
+	this.effects |= EF_LOWPRECISION;
+	this.effects = this.effects & EFMASK_CHEAP; // eat performance
+	if(this.scale < -1)
+		this.alpha = -1;
+	else if(this.owner.alpha == default_player_alpha)
+		this.alpha = default_weapon_alpha;
+	else if(this.owner.alpha != 0)
+		this.alpha = this.owner.alpha;
 	else
-		self.alpha = 1;
+		this.alpha = 1;
 
-	self.glowmod = self.owner.glowmod;
-	self.colormap = self.owner.colormap;
+	this.glowmod = this.owner.glowmod;
+	this.colormap = this.owner.colormap;
 
-	CSQCMODEL_AUTOUPDATE(self);
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
 bool hats_Customize()
@@ -140,7 +140,7 @@ void hats_SpawnHat()
 	self.hatentity.hatentity = self.hatentity;
 	setorigin(self.hatentity, '0 0 0');
 	self.hatentity.angles = '0 0 0';
-	self.hatentity.think = hat_Think;
+	setthink(self.hatentity, hat_Think);
 	self.hatentity.nextthink = time;
 	self.hatentity.customizeentityforclient = hats_Customize;
 

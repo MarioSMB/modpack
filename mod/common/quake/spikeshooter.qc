@@ -31,36 +31,36 @@ MUTATOR_HOOKFUNCTION(spikeshooter_projectile, PrecacheProjectiles)
 const int SPIKESHOOTER_SUPERSPIKE = 1;
 const int SPIKESHOOTER_LASER = 2;
 
-void spikeshooter_explode()
-{SELFPARAM();
-	self.event_damage = func_null;
-	self.takedamage = DAMAGE_NO;
+void spikeshooter_explode(entity this)
+{
+	this.event_damage = func_null;
+	this.takedamage = DAMAGE_NO;
 
 	RadiusDamage(
-		self,
-		self.realowner,
-		self.dmg,
-		self.cnt,
+		this,
+		this.realowner,
+		this.dmg,
+		this.cnt,
 		50,
 		world,
 		world,
 		0,
-		self.projectiledeathtype,
+		this.projectiledeathtype,
 		other
 	);
 
-	remove(self);
+	remove(this);
 }
 
 void spikeshooter_explode_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, spikeshooter_explode());
+	spikeshooter_explode(this);
 }
 
-void spikeshooter_touch()
+void spikeshooter_touch(entity this)
 {
-	PROJECTILE_TOUCH;
-	spikeshooter_explode();
+	PROJECTILE_TOUCH(this);
+	spikeshooter_explode(this);
 }
 
 void spikeshooter_fire(entity this, entity actor, entity trigger)
@@ -85,7 +85,7 @@ void spikeshooter_fire(entity this, entity actor, entity trigger)
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = this.dmg;
 	proj.use = spikeshooter_explode_use;
-	proj.think = adaptor_think2use;
+	setthink(proj, adaptor_think2use);
 	proj.nextthink = time + 7;
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.dmg = this.dmg;
@@ -98,7 +98,7 @@ void spikeshooter_fire(entity this, entity actor, entity trigger)
 	proj.movetype = MOVETYPE_FLY;
 	W_SetupProjVelocity_Explicit(proj, this.movedir, v_up, 500, 0, 0, 0, false);
 	proj.angles = vectoangles(proj.velocity);
-	proj.touch = spikeshooter_touch;
+	settouch(proj, spikeshooter_touch);
 	setsize(proj, '0 0 -3', '0 0 -3');
 	proj.flags = FL_PROJECTILE;
 
@@ -107,11 +107,11 @@ void spikeshooter_fire(entity this, entity actor, entity trigger)
 	MUTATOR_CALLHOOK(EditProjectile, this, proj);
 }
 
-void spikeshooter_think()
-{SELFPARAM();
-	spikeshooter_fire(self, NULL, NULL);
+void spikeshooter_think(entity this)
+{
+	spikeshooter_fire(this, NULL, NULL);
 
-	self.nextthink = time + self.wait;
+	this.nextthink = time + this.wait;
 }
 
 spawnfunc(trap_spikeshooter)
@@ -135,7 +135,7 @@ spawnfunc(trap_shooter)
 	if(!this.wait)
 		this.wait = 1;
 
-	this.think = spikeshooter_think;
+	setthink(this, spikeshooter_think);
 	this.nextthink = this.nextthink + this.wait + this.ltime;
 	this.hitplotfh = -1; // fail
 }

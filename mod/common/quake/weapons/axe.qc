@@ -88,49 +88,49 @@ spawnfunc(weapon_axe) { weapon_defaultspawnfunc(this, WEP_AXE); }
 
 .float swing_prev;
 .entity swing_alreadyhit;
-void W_Axe_Melee_Think(void)
-{SELFPARAM();
+void W_Axe_Melee_Think(entity this)
+{
 	// declarations
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
 	entity target_victim;
 	vector targpos;
 
-	if(!self.cnt) // set start time of melee
+	if(!this.cnt) // set start time of melee
 	{
-		self.cnt = time;
-		W_PlayStrengthSound(self.realowner);
+		this.cnt = time;
+		W_PlayStrengthSound(this.realowner);
 	}
 
-	makevectors(self.realowner.v_angle); // update values for v_* vectors
+	makevectors(this.realowner.v_angle); // update values for v_* vectors
 
 	// calculate swing percentage based on time
 	meleetime = WEP_CVAR(axe, melee_time) * W_WeaponRateFactor();
-	swing = bound(0, (self.cnt + meleetime - time) / meleetime, 10);
+	swing = bound(0, (this.cnt + meleetime - time) / meleetime, 10);
 	f = ((1 - swing) * WEP_CVAR(axe, melee_traces));
 
 	// check to see if we can still continue, otherwise give up now
-	if(IS_DEAD(self.realowner) && WEP_CVAR(axe, melee_no_doubleslap))
+	if(IS_DEAD(this.realowner) && WEP_CVAR(axe, melee_no_doubleslap))
 	{
-		remove(self);
+		remove(this);
 		return;
 	}
 
 	// if okay, perform the traces needed for this frame
-	for(i=self.swing_prev; i < f; ++i)
+	for(i=this.swing_prev; i < f; ++i)
 	{
 		swing_factor = ((1 - (i / WEP_CVAR(axe, melee_traces))) * 2 - 1);
 
-		targpos = (self.realowner.origin + self.realowner.view_ofs
+		targpos = (this.realowner.origin + this.realowner.view_ofs
 			+ (v_forward * WEP_CVAR(axe, melee_range))
 			+ (v_up * swing_factor * WEP_CVAR(axe, melee_swing_up))
 			+ (v_right * swing_factor * WEP_CVAR(axe, melee_swing_side)));
 
-		WarpZone_traceline_antilag(self, self.realowner.origin + self.realowner.view_ofs, targpos, false, self, ANTILAG_LATENCY(self.realowner));
+		WarpZone_traceline_antilag(this, this.realowner.origin + this.realowner.view_ofs, targpos, false, this, ANTILAG_LATENCY(this.realowner));
 
 		// draw lightning beams for debugging
 		if(WEP_CVAR(axe, debug))
 		{
-			te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5);
+			te_lightning2(world, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
 			te_customflash(targpos, 40,  2, '1 1 1');
 		}
 
@@ -146,12 +146,12 @@ void W_Axe_Melee_Think(void)
 
 			vector org2 = trace_endpos + bckoff * 2;
 			Send_Effect(EFFECT_SHOTGUN_IMPACT, org2, bckoff * 1000, 1);
-			sound(self.realowner, CH_WEAPON_B, SND_AXE_MELEE_HIT, VOL_BASE, ATTEN_NORM);
+			sound(this.realowner, CH_WEAPON_B, SND_AXE_MELEE_HIT, VOL_BASE, ATTEN_NORM);
 		}
 
-		if((trace_fraction < 1) // if trace is good, apply the damage and remove self
+		if((trace_fraction < 1) // if trace is good, apply the damage and remove this
 			&& (trace_ent.solid == SOLID_BSP || trace_ent.takedamage == DAMAGE_AIM)
-			&& (trace_ent != self.swing_alreadyhit)
+			&& (trace_ent != this.swing_alreadyhit)
 			&& (is_player || WEP_CVAR(axe, melee_nonplayerdamage)))
 		{
 			target_victim = trace_ent; // so it persists through other calls
@@ -161,42 +161,42 @@ void W_Axe_Melee_Think(void)
 			else
 				swing_damage = (WEP_CVAR(axe, melee_nonplayerdamage) * min(1, swing_factor + 1));
 
-			//print(strcat(self.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
+			//print(strcat(this.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
 
-			Damage(target_victim, self.realowner, self.realowner,
+			Damage(target_victim, this.realowner, this.realowner,
 				swing_damage, WEP_AXE.m_id | HITTYPE_SECONDARY,
-				self.realowner.origin + self.realowner.view_ofs,
+				this.realowner.origin + this.realowner.view_ofs,
 				v_forward * WEP_CVAR(axe, force));
 
-			if(accuracy_isgooddamage(self.realowner, target_victim)) { accuracy_add(self.realowner, WEP_AXE.m_id, 0, swing_damage); }
+			if(accuracy_isgooddamage(this.realowner, target_victim)) { accuracy_add(this.realowner, WEP_AXE.m_id, 0, swing_damage); }
 
 			// draw large red flash for debugging
 			//te_customflash(targpos, 200, 2, '15 0 0');
 
 			if(WEP_CVAR(axe, melee_multihit)) // allow multiple hits with one swing, but not against the same player twice.
 			{
-				self.swing_alreadyhit = target_victim;
+				this.swing_alreadyhit = target_victim;
 				continue; // move along to next trace
 			}
 			else
 			{
-				remove(self);
+				remove(this);
 				return;
 			}
 		}
 	}
 
-	if(time >= self.cnt + meleetime)
+	if(time >= this.cnt + meleetime)
 	{
 		// melee is finished
-		remove(self);
+		remove(this);
 		return;
 	}
 	else
 	{
 		// set up next frame
-		self.swing_prev = i;
-		self.nextthink = time;
+		this.swing_prev = i;
+		this.nextthink = time;
 	}
 }
 
@@ -208,7 +208,7 @@ void W_Axe_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 	entity meleetemp;
 	meleetemp = spawn();
 	meleetemp.realowner = actor;
-	meleetemp.think = W_Axe_Melee_Think;
+	setthink(meleetemp, W_Axe_Melee_Think);
 	meleetemp.nextthink = time + WEP_CVAR(axe, melee_delay) * W_WeaponRateFactor();
 	W_SetupShot_Range(actor, true, 0, SND_Null, 0, WEP_CVAR(axe, damage), WEP_CVAR(axe, melee_range));
 }
@@ -234,11 +234,11 @@ void W_Axe_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 		{SELFPARAM();
 			self.ammo_field = ammo_none;
 		}
-		METHOD(Axe, wr_checkammo1, bool(entity thiswep))
+		METHOD(Axe, wr_checkammo1, bool(entity thiswep, entity actor))
 		{
 			return true;
 		}
-		METHOD(Axe, wr_checkammo2, bool(entity thiswep))
+		METHOD(Axe, wr_checkammo2, bool(entity thiswep, entity actor))
 		{
 			return true;
 		}

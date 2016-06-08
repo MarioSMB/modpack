@@ -108,10 +108,10 @@ void pb_Detach(entity host)
 	host.piggybacker = world;
 }
 
-void pb_PBEntThink()
-{SELFPARAM();
-	setorigin(self, self.owner.origin + '0 0 0.82' * self.owner.maxs_z);
-	self.nextthink = time;
+void pb_PBEntThink(entity this)
+{
+	setorigin(this, this.owner.origin + '0 0 0.82' * this.owner.maxs_z);
+	this.nextthink = time;
 }
 
 void pb_FixPBEnt(entity p)
@@ -119,7 +119,7 @@ void pb_FixPBEnt(entity p)
 	entity e = spawn();
 	e.owner = p;
 	e.classname = "pb_ent";
-	e.think = pb_PBEntThink;
+	setthink(e, pb_PBEntThink);
 	e.nextthink = time;
 	p.pbent = e;
 }

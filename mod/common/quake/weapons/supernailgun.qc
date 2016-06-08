@@ -113,7 +113,7 @@ void W_SuperNailGun_MuzzleFlash_Think(void)
 
 	if(self.alpha <= 0)
 	{
-		self.think = SUB_Remove_self;
+		setthink(self, SUB_Remove);
 		self.nextthink = time;
 		self.realowner.muzzle_flash = world;
 		return;
@@ -130,7 +130,7 @@ void W_SuperNailGun_MuzzleFlash(void)
 	setmodel(self.muzzle_flash, MDL_MACHINEGUN_MUZZLEFLASH); // precision set below
 
 	self.muzzle_flash.scale = 0.75;
-	self.muzzle_flash.think = W_SuperNailGun_MuzzleFlash_Think;
+	setthink(self.muzzle_flash, W_SuperNailGun_MuzzleFlash_Think);
 	self.muzzle_flash.nextthink = time + 0.02;
 	self.muzzle_flash.frame = 2;
 	self.muzzle_flash.alpha = 0.75;
@@ -184,7 +184,7 @@ void W_SuperNailGun_Attack_Frame(Weapon thiswep, entity actor, .entity weaponent
 	if(PHYS_INPUT_BUTTON_ATCK(actor))
 	{
 		Weapon w = Weapons_from(PS(actor).m_weapon.m_id);
-		if(!w.wr_checkammo2(w))
+		if(!w.wr_checkammo2(w, actor))
 		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
@@ -211,7 +211,7 @@ void W_SuperNailGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponenti
 	}
 
 	Weapon w = Weapons_from(PS(actor).m_weapon.m_id);
-	if(!w.wr_checkammo1(w))
+	if(!w.wr_checkammo1(w, actor))
 	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
@@ -303,7 +303,7 @@ void W_SuperNailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponent
 				if(weapon_prepareattack(thiswep, actor, weaponentity, true, 0))
 				{
 					Weapon w = Weapons_from(actor.weapon);
-					if(!w.wr_checkammo2(w))
+					if(!w.wr_checkammo2(w, actor))
 					if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 					{
 						W_SwitchWeapon_Force(actor, w_getbestweapon(actor));
@@ -337,37 +337,37 @@ void W_SuperNailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponent
 				}
 			}
 		}
-		METHOD(SuperNailGun, wr_checkammo1, bool(entity thiswep))
-		{SELFPARAM();
+		METHOD(SuperNailGun, wr_checkammo1, bool(entity thiswep, entity actor))
+		{
 			float ammo_amount;
 			if(WEP_CVAR(supernailgun, mode) == 1)
-				ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(supernailgun, sustained_ammo);
+				ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(supernailgun, sustained_ammo);
 			else
-				ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(supernailgun, first_ammo);
+				ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(supernailgun, first_ammo);
 
 			if(WEP_CVAR(supernailgun, reload_ammo))
 			{
 				if(WEP_CVAR(supernailgun, mode) == 1)
-					ammo_amount += self.(weapon_load[WEP_SUPERNAILGUN.m_id]) >= WEP_CVAR(supernailgun, sustained_ammo);
+					ammo_amount += actor.(weapon_load[WEP_SUPERNAILGUN.m_id]) >= WEP_CVAR(supernailgun, sustained_ammo);
 				else
-					ammo_amount += self.(weapon_load[WEP_SUPERNAILGUN.m_id]) >= WEP_CVAR(supernailgun, first_ammo);
+					ammo_amount += actor.(weapon_load[WEP_SUPERNAILGUN.m_id]) >= WEP_CVAR(supernailgun, first_ammo);
 			}
 			return ammo_amount;
 		}
-		METHOD(SuperNailGun, wr_checkammo2, bool(entity thiswep))
-		{SELFPARAM();
+		METHOD(SuperNailGun, wr_checkammo2, bool(entity thiswep, entity actor))
+		{
 			float ammo_amount;
 			if(WEP_CVAR(supernailgun, mode) == 1)
-				ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(supernailgun, burst_ammo);
+				ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(supernailgun, burst_ammo);
 			else
-				ammo_amount = self.(thiswep.ammo_field) >= WEP_CVAR(supernailgun, first_ammo);
+				ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(supernailgun, first_ammo);
 
 			if(WEP_CVAR(supernailgun, reload_ammo))
 			{
 				if(WEP_CVAR(supernailgun, mode) == 1)
-					ammo_amount += self.(weapon_load[WEP_SUPERNAILGUN.m_id]) >= WEP_CVAR(supernailgun, burst_ammo);
+					ammo_amount += actor.(weapon_load[WEP_SUPERNAILGUN.m_id]) >= WEP_CVAR(supernailgun, burst_ammo);
 				else
-					ammo_amount += self.(weapon_load[WEP_SUPERNAILGUN.m_id]) >= WEP_CVAR(supernailgun, first_ammo);
+					ammo_amount += actor.(weapon_load[WEP_SUPERNAILGUN.m_id]) >= WEP_CVAR(supernailgun, first_ammo);
 			}
 			return ammo_amount;
 		}

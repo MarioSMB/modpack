@@ -7,8 +7,8 @@ AUTOCVAR(g_player_crush_headheight, float, 0.9, "");
 AUTOCVAR(g_player_crush_bounce, float, 300, _("Bounce height in advanced trace mode"));
 AUTOCVAR(g_player_crush_bounce_jump, float, 600, _("Bounce height while holding jump in advanced trace mode"));
 
-void pc_PlayerTouch()
-{SELFPARAM();
+void pc_PlayerTouch(entity this)
+{
 	if(other == world)
 		return;
 
@@ -19,58 +19,58 @@ void pc_PlayerTouch()
 	if(!autocvar_g_player_crush && !and_monster)
 		return;
 
-	if(!IS_PLAYER(self))
+	if(!IS_PLAYER(this))
 		return;
 
 	if(!IS_PLAYER(other) && !and_monster)
 		return;
 
-	if(IS_DEAD(self) || IS_DEAD(other))
+	if(IS_DEAD(this) || IS_DEAD(other))
 		return;
 
-	if(!self.iscreature || !other.iscreature)
+	if(!this.iscreature || !other.iscreature)
 		return;
 
-	if(forbidWeaponUse(self))
+	if(forbidWeaponUse(this))
 		return;
 
 	if(autocvar_g_player_crush_simple && IS_PLAYER(other))
 	{
-		vector vdir = normalize(other.origin - self.origin);
+		vector vdir = normalize(other.origin - this.origin);
 
 		if(vdir_z > autocvar_g_player_crush_headheight) // adjust this to set how sharp from above players need to hit the player to crush them. 
-			Damage (self, other, other, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, self.origin, '0 0 0');
+			Damage (this, other, other, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, this.origin, '0 0 0');
 	}
 	else
 	{
-		tracebox(self.origin, self.mins, self.maxs, self.origin - ('0 0 1' * (self.maxs_z + 5)), MOVE_NORMAL, self);
+		tracebox(this.origin, this.mins, this.maxs, this.origin - ('0 0 1' * (this.maxs_z + 5)), MOVE_NORMAL, this);
 
 		if(trace_ent == other)
 		{
 			float mjumpheight = autocvar_g_player_crush_bounce;
 
-			setorigin(self, self.origin + '0 0 2');
+			setorigin(this, this.origin + '0 0 2');
 
-			if(PHYS_INPUT_BUTTON_JUMP(self))
+			if(PHYS_INPUT_BUTTON_JUMP(this))
 			{
 				mjumpheight = autocvar_g_player_crush_bounce_jump;
-				self.flags &= ~FL_JUMPRELEASED;
+				this.flags &= ~FL_JUMPRELEASED;
 			}
 
-			self.flags &= ~FL_ONGROUND;
+			this.flags &= ~FL_ONGROUND;
 
-			self.velocity_z = mjumpheight;
-			self.oldvelocity_z = self.velocity_z;
+			this.velocity_z = mjumpheight;
+			this.oldvelocity_z = this.velocity_z;
 
-			animdecide_setaction(self, ANIMACTION_JUMP, true);
+			animdecide_setaction(this, ANIMACTION_JUMP, true);
 
-			Damage (other, self, self, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, other.origin, '0 0 0');
+			Damage (other, this, this, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, other.origin, '0 0 0');
 		}
 	}
 }
 
 MUTATOR_HOOKFUNCTION(pc, PlayerSpawn)
 {SELFPARAM();
-	self.touch = pc_PlayerTouch;
+	settouch(this, pc_PlayerTouch);
 	return false;
 }

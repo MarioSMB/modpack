@@ -59,7 +59,7 @@ void M_Soldier_Attack_Shotgun(entity this)
 }
 
 bool M_Soldier_Attack(int attack_type, entity actor, entity targ)
-{SELFPARAM();
+{
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:

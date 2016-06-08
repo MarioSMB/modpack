@@ -188,7 +188,7 @@ MUTATOR_HOOKFUNCTION(sv_mpowerups, PlayerPowerups)
 }
 
 MUTATOR_HOOKFUNCTION(sv_mpowerups, PlayerDamage_Calculate)
-{SELFPARAM();
+{
 	if(frag_target.items & ITEM_Metal.m_itemid)
 	{
 		if(frag_attacker != frag_target)

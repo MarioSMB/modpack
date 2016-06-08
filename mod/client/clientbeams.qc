@@ -55,27 +55,27 @@ void ClientBeam_Draw(entity this)
 
 void FireClientBeam(entity player, vector start, vector end, bool hit)
 {
-	entity this = spawn();
-	this.think = SUB_Remove_self;
-	this.nextthink = time + bound(0, autocvar_cl_vaporizerbeam_lifetime, 10);
-	this.draw = ClientBeam_Draw;
-	this.drawmask = MASK_NORMAL;
+	entity e = spawn();
+	setthink(e, SUB_Remove);
+	e.nextthink = time + bound(0, autocvar_cl_vaporizerbeam_lifetime, 10);
+	e.draw = ClientBeam_Draw;
+	e.drawmask = MASK_NORMAL;
 
-	this.vorg1 = start;
-	this.vorg2 = end;
-	this.cnt = hit;
-	this.sv_entnum = player_localentnum;
-	this.team = myteam;
+	e.vorg1 = start;
+	e.vorg2 = end;
+	e.cnt = hit;
+	e.sv_entnum = player_localentnum;
+	e.team = myteam;
+
+	pointparticles(EFFECT_VORTEX_MUZZLEFLASH, e.vorg1, normalize(e.vorg2 - e.vorg1) * 1000, 1);
 
 	if(autocvar_cl_vaporizerbeam_particle)
 	{
-		WarpZone_TrailParticles(world, particleeffectnum(((this.cnt) ? EFFECT_VAPORIZER_HIT(this.team) : EFFECT_VAPORIZER(this.team))), this.vorg1, this.vorg2);
-		this.draw = func_null;
-		this.drawmask = MASK_NORMAL;
-		remove(this);
+		WarpZone_TrailParticles(world, particleeffectnum(((e.cnt) ? EFFECT_VAPORIZER_HIT(e.team) : EFFECT_VAPORIZER(e.team))), e.vorg1, e.vorg2);
+		e.draw = func_null;
+		e.drawmask = MASK_NORMAL;
+		remove(e);
 	}
-
-	pointparticles(EFFECT_VORTEX_MUZZLEFLASH, this.vorg1, normalize(this.vorg2 - this.vorg1) * 1000, 1);
 }
 
 MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)

@@ -60,31 +60,31 @@ const float enforcer_anim_pain3			= 8;
 const float enforcer_anim_pain4			= 9;
 */
 
-void M_Enforcer_Attack_Plasma_Explode()
-{SELFPARAM();
-	self.event_damage = func_null;
-	self.takedamage = DAMAGE_NO;
+void M_Enforcer_Attack_Plasma_Explode(entity this)
+{
+	this.event_damage = func_null;
+	this.takedamage = DAMAGE_NO;
 
-	if(self.movetype == MOVETYPE_NONE)
-		self.velocity = self.oldvelocity;
+	if(this.movetype == MOVETYPE_NONE)
+		this.velocity = this.oldvelocity;
 
-	sound (self, CH_WEAPON_A, SND_TAG_IMPACT, VOL_BASE, ATTEN_NORM);
-	Send_Effect(EFFECT_ELECTRO_IMPACT, self.origin, '0 0 0', 1);
-	RadiusDamage (self, self.realowner, autocvar_g_monster_enforcer_attack_plasma_damage, autocvar_g_monster_enforcer_attack_plasma_edgedamage, 
-				  autocvar_g_monster_enforcer_attack_plasma_radius, world, world, autocvar_g_monster_enforcer_attack_plasma_force, self.projectiledeathtype, other);
+	sound (this, CH_WEAPON_A, SND_TAG_IMPACT, VOL_BASE, ATTEN_NORM);
+	Send_Effect(EFFECT_ELECTRO_IMPACT, this.origin, '0 0 0', 1);
+	RadiusDamage (this, this.realowner, autocvar_g_monster_enforcer_attack_plasma_damage, autocvar_g_monster_enforcer_attack_plasma_edgedamage, 
+				  autocvar_g_monster_enforcer_attack_plasma_radius, world, world, autocvar_g_monster_enforcer_attack_plasma_force, this.projectiledeathtype, other);
 
-	remove (self);
+	remove (this);
 }
 
 void M_Enforcer_Attack_Plasma_Explode_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, M_Enforcer_Attack_Plasma_Explode());
+	M_Enforcer_Attack_Plasma_Explode(this);
 }
 
-void M_Enforcer_Attack_Plasma_Touch()
+void M_Enforcer_Attack_Plasma_Touch(entity this)
 {
-	PROJECTILE_TOUCH;
-	M_Enforcer_Attack_Plasma_Explode();
+	PROJECTILE_TOUCH(this);
+	M_Enforcer_Attack_Plasma_Explode(this);
 }
 
 void M_Enforcer_Attack_Plasma(entity this)
@@ -110,9 +110,9 @@ void M_Enforcer_Attack_Plasma(entity this)
 	setsize(gren, '-3 -3 -3', '3 3 3');
 
 	gren.nextthink = time + autocvar_g_monster_enforcer_attack_plasma_lifetime;
-	gren.think = adaptor_think2use_hittype_splash;
+	setthink(gren, adaptor_think2use_hittype_splash);
 	gren.use = M_Enforcer_Attack_Plasma_Explode_use;
-	gren.touch = M_Enforcer_Attack_Plasma_Touch;
+	settouch(gren, M_Enforcer_Attack_Plasma_Touch);
 
 	gren.missile_flags = MIF_SPLASH;
 	W_SetupProjVelocity_Explicit(gren, dir, v_up, autocvar_g_monster_enforcer_attack_plasma_speed, 0, 0, autocvar_g_monster_enforcer_attack_plasma_spread, false);

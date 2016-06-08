@@ -4,40 +4,40 @@ REGISTER_MUTATOR(radio, true);
 
 .float radio_starttime;
 
-void Radio_Stopper_Think(void)
-{SELFPARAM();
-    if(self.cnt < -2 || intermission)
+void Radio_Stopper_Think(entity this)
+{
+    if(this.cnt < -2 || intermission)
     {
-        remove(self);
+        remove(this);
         return;
     }
 
     float t = gettime(GETTIME_CDTRACK);
     //print(ftos(t), "\n");
 
-    if(self.cnt > t)
+    if(this.cnt > t)
     {
         localcmd("\ncd stop\n");
-        remove(self);
+        remove(this);
         return; // don't continue, we just removed this thing...
     }
 
-    self.cnt = t;
-    self.nextthink = time;
+    this.cnt = t;
+    this.nextthink = time;
 }
 
-void Radio_Think(void)
-{SELFPARAM();
-	if(self.cnt < 0 || time - self.cnt > 300)
+void Radio_Think(entity this)
+{
+	if(this.cnt < 0 || time - this.cnt > 300)
 	{
-		if(self.netname) { strunzone(self.netname); }
-		remove(self);
+		if(this.netname) { strunzone(this.netname); }
+		remove(this);
 		return;
 	}
 
-	if(!fexists(self.netname))
+	if(!fexists(this.netname))
 	{
-		self.nextthink = time + 1;
+		this.nextthink = time + 1;
 		return;
 	}
 
@@ -45,22 +45,22 @@ void Radio_Think(void)
 	//if(autocvar_bgmvolume < 0.1)
 		//cvar_clientsettemp("bgmvolume", "0.1");
 
-	float start = ((self.flags) ? 0 : servertime - self.radio_starttime);
-	localcmd(sprintf("\ncd loop %s %d\n", self.netname, start));
-	strunzone(self.netname);
+	float start = ((this.flags) ? 0 : servertime - this.radio_starttime);
+	localcmd(sprintf("\ncd loop %s %d\n", this.netname, start));
+	strunzone(this.netname);
 
-	if(self.flags)
+	if(this.flags)
 	{
 		// loop
-		remove(self);
+		remove(this);
 	}
 	else
 	{
 		// play once - we can't just use "cd play" here becase it's apparently broken
 		// instead, detect when the track starts to loop and stop it
-		self.cnt = -2;
-		self.think = Radio_Stopper_Think;
-		self.nextthink = time + 1;
+		this.cnt = -2;
+		setthink(this, Radio_Stopper_Think);
+		this.nextthink = time + 1;
 	}
 }
 
@@ -94,7 +94,7 @@ NET_HANDLE(TE_CSQC_RADIO, bool isNew)
 
 	e = new(radio);
 	e.netname = fname;
-	e.think = Radio_Think;
+	setthink(e, Radio_Think);
 	e.nextthink = time;
 	e.cnt = time;
 	e.flags = loop;

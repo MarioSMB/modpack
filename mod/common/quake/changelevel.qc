@@ -2,16 +2,16 @@
 
 .string map;
 
-void changelevel_inittarget()
-{SELFPARAM();
-	spawnfunc_target_changelevel(self);
+void changelevel_inittarget(entity this)
+{
+	spawnfunc_target_changelevel(this);
 }
 
 spawnfunc(trigger_changelevel)
 {
 	entity e = spawn();
 	e.chmap = this.map;
-	e.think = changelevel_inittarget;
+	setthink(e, changelevel_inittarget);
 	e.nextthink = time;
 	e.targetname = this.map;
 

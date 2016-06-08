@@ -59,28 +59,27 @@ const float afrit_anim_die2		= 6;
 .float afrit_targetrange_backup;
 .float afrit_targetcheck_delay;
 
-void M_Afrit_Attack_Fireball_Explode()
-{SELFPARAM();
-	entity e;
-	if(self)
+void M_Afrit_Attack_Fireball_Explode(entity this)
+{
+	if(this)
 	{
-		Send_Effect(EFFECT_FIREBALL_EXPLODE, self.origin, '0 0 0', 1);
+		Send_Effect(EFFECT_FIREBALL_EXPLODE, this.origin, '0 0 0', 1);
 
-		RadiusDamage(self, self.realowner, (autocvar_g_monster_afrit_attack_fireball_damage), (autocvar_g_monster_afrit_attack_fireball_edgedamage), 
-					(autocvar_g_monster_afrit_attack_fireball_force), world, world, (autocvar_g_monster_afrit_attack_fireball_radius), self.projectiledeathtype, world);
+		RadiusDamage(this, this.realowner, (autocvar_g_monster_afrit_attack_fireball_damage), (autocvar_g_monster_afrit_attack_fireball_edgedamage), 
+					(autocvar_g_monster_afrit_attack_fireball_force), world, world, (autocvar_g_monster_afrit_attack_fireball_radius), this.projectiledeathtype, world);
 
-		for(e = world; (e = findfloat(e, takedamage, DAMAGE_AIM)); ) if(vlen(e.origin - self.origin) <= (autocvar_g_monster_afrit_attack_fireball_radius))
-			Fire_AddDamage(e, self, 5 * MONSTER_SKILLMOD(self), (autocvar_g_monster_afrit_attack_fireball_damagetime), self.projectiledeathtype);
+		for(entity e = world; (e = findfloat(e, takedamage, DAMAGE_AIM)); ) if(vlen(e.origin - this.origin) <= (autocvar_g_monster_afrit_attack_fireball_radius))
+			Fire_AddDamage(e, this, 5 * MONSTER_SKILLMOD(this), (autocvar_g_monster_afrit_attack_fireball_damagetime), this.projectiledeathtype);
 
-		remove(self);
+		remove(this);
 	}
 }
 
-void M_Afrit_Attack_Fireball_Touch()
+void M_Afrit_Attack_Fireball_Touch(entity this)
 {
-	PROJECTILE_TOUCH;
+	PROJECTILE_TOUCH(this);
 
-	M_Afrit_Attack_Fireball_Explode();
+	M_Afrit_Attack_Fireball_Explode(this);
 }
 
 void M_Afrit_Attack_Fireball(entity this)
@@ -100,9 +99,9 @@ void M_Afrit_Attack_Fireball(entity this)
 	missile.velocity = dir * (autocvar_g_monster_afrit_attack_fireball_speed);
 	missile.avelocity = '300 300 300';
 	missile.nextthink = time + 5;
-	missile.think = M_Afrit_Attack_Fireball_Explode;
+	setthink(missile, M_Afrit_Attack_Fireball_Explode);
 	missile.enemy = this.enemy;
-	missile.touch = M_Afrit_Attack_Fireball_Touch;
+	settouch(missile, M_Afrit_Attack_Fireball_Touch);
 	CSQCProjectile(missile, true, PROJECTILE_FIREMINE, true);
 }
 
@@ -171,7 +170,6 @@ spawnfunc(monster_afrit) { Monster_Spawn(this, MON_AFRIT.monsterid); }
 		}
 		METHOD(Afrit, mr_death, bool(Afrit thismon, entity actor))
 		{
-			SELFPARAM();
 			setanim(actor, ((random() >= 0.5) ? actor.anim_die1 : actor.anim_die2), false, true, true);
 			actor.superweapons_finished = time + 20;
 			return true;

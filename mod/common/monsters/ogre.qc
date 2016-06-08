@@ -137,9 +137,9 @@ void M_Ogre_Attack_Grenade_Damage(entity this, entity inflictor, entity attacker
 		W_PrepareExplosionByDamage(this, attacker, adaptor_think2use);
 }
 
-void M_Ogre_Attack_Grenade_Touch()
-{SELFPARAM();
-	PROJECTILE_TOUCH;
+void M_Ogre_Attack_Grenade_Touch(entity this)
+{
+	PROJECTILE_TOUCH(this);
 
 	if (other.takedamage == DAMAGE_AIM)
 	{
@@ -176,9 +176,9 @@ void M_Ogre_Attack_Grenade(entity this)
 	setsize(gren, '-3 -3 -3', '3 3 3');
 
 	gren.nextthink = time + autocvar_g_monster_ogre_attack_grenade_lifetime;
-	gren.think = adaptor_think2use_hittype_splash;
+	setthink(gren, adaptor_think2use_hittype_splash);
 	gren.use = M_Ogre_Attack_Grenade_Explode_use;
-	gren.touch = M_Ogre_Attack_Grenade_Touch;
+	settouch(gren, M_Ogre_Attack_Grenade_Touch);
 
 	gren.takedamage = DAMAGE_YES;
 	gren.health = autocvar_g_monster_ogre_attack_grenade_health;
@@ -201,54 +201,54 @@ void M_Ogre_Attack_Grenade(entity this)
 
 .float ogre_swing_prev;
 .entity ogre_swing_alreadyhit;
-void M_Ogre_Attack_Chainsaw()
-{SELFPARAM();
+void M_Ogre_Attack_Chainsaw(entity this)
+{
 	// declarations
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player, is_monster;
 	entity target_victim;
 	vector targpos;
 
-	if(!self.cnt) // set start time of melee
+	if(!this.cnt) // set start time of melee
 	{
-		self.cnt = time;
+		this.cnt = time;
 	}
 
-	makevectors(self.realowner.angles); // update values for v_* vectors
+	makevectors(this.realowner.angles); // update values for v_* vectors
 
 	// calculate swing percentage based on time
 	meleetime = autocvar_g_monster_ogre_attack_melee_time;
-	swing = bound(0, (self.cnt + meleetime - time) / meleetime, 10);
+	swing = bound(0, (this.cnt + meleetime - time) / meleetime, 10);
 	f = ((1 - swing) * autocvar_g_monster_ogre_attack_melee_traces);
 
 	// check to see if we can still continue, otherwise give up now
-	if(IS_DEAD(self.realowner))
+	if(IS_DEAD(this.realowner))
 	{
-		remove(self);
+		remove(this);
 		return;
 	}
 
 	// if okay, perform the traces needed for this frame
-	for(i=self.ogre_swing_prev; i < f; ++i)
+	for(i=this.ogre_swing_prev; i < f; ++i)
 	{
 		swing_factor = ((1 - (i / autocvar_g_monster_ogre_attack_melee_traces)) * 2 - 1);
 
-		targpos = (self.realowner.origin + self.realowner.view_ofs
+		targpos = (this.realowner.origin + this.realowner.view_ofs
 			+ (v_forward * autocvar_g_monster_ogre_attack_melee_range)
 			+ (v_up * swing_factor * autocvar_g_monster_ogre_attack_melee_swing_up)
 			+ (v_right * swing_factor * autocvar_g_monster_ogre_attack_melee_swing_side));
 
-		WarpZone_traceline_antilag(self, self.realowner.origin + self.realowner.view_ofs, targpos, false, self, 0);
+		WarpZone_traceline_antilag(this, this.realowner.origin + this.realowner.view_ofs, targpos, false, this, 0);
 
 		// draw lightning beams for debugging
-		//te_lightning2(world, targpos, self.realowner.origin + self.realowner.view_ofs + v_forward * 5 - v_up * 5);
+		//te_lightning2(world, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
 		//te_customflash(targpos, 40,  2, '1 1 1');
 
 		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body");
 		is_monster = IS_MONSTER(trace_ent);
 
-		if((trace_fraction < 1) // if trace is good, apply the damage and remove self
+		if((trace_fraction < 1) // if trace is good, apply the damage and remove this
 			&& (trace_ent.takedamage == DAMAGE_AIM)
-			&& (trace_ent != self.ogre_swing_alreadyhit)
+			&& (trace_ent != this.ogre_swing_alreadyhit)
 			&& ((is_player || is_monster) || autocvar_g_monster_ogre_attack_melee_nonplayerdamage))
 		{
 			target_victim = trace_ent; // so it persists through other calls
@@ -258,33 +258,33 @@ void M_Ogre_Attack_Chainsaw()
 			else
 				swing_damage = (autocvar_g_monster_ogre_attack_melee_nonplayerdamage * min(1, swing_factor + 1));
 
-			//print(strcat(self.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
+			//print(strcat(this.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
 
-			Damage(target_victim, self.realowner, self.realowner,
+			Damage(target_victim, this.realowner, this.realowner,
 				swing_damage, DEATH_MONSTER_OGRE_MELEE.m_id,
-				self.realowner.origin + self.realowner.view_ofs,
+				this.realowner.origin + this.realowner.view_ofs,
 				v_forward * 1);
 
 			// draw large red flash for debugging
 			//te_customflash(targpos, 200, 2, '15 0 0');
 
-			self.ogre_swing_alreadyhit = target_victim;
+			this.ogre_swing_alreadyhit = target_victim;
 			continue; // move along to next trace
 		}
 	}
 
-	if(time >= self.cnt + meleetime)
+	if(time >= this.cnt + meleetime)
 	{
 		// melee is finished
-		setanim(self.realowner, self.realowner.anim_idle, true, false, false);
-		remove(self);
+		setanim(this.realowner, this.realowner.anim_idle, true, false, false);
+		remove(this);
 		return;
 	}
 	else
 	{
 		// set up next frame
-		self.ogre_swing_prev = i;
-		self.nextthink = time;
+		this.ogre_swing_prev = i;
+		this.nextthink = time;
 	}
 }
 
@@ -307,7 +307,7 @@ bool M_Ogre_Attack(int attack_type, entity actor, entity targ)
 			entity meleetemp;
 			meleetemp = spawn();
 			meleetemp.realowner = actor;
-			meleetemp.think = M_Ogre_Attack_Chainsaw;
+			setthink(meleetemp, M_Ogre_Attack_Chainsaw);
 			meleetemp.nextthink = time + autocvar_g_monster_ogre_attack_melee_delay;
 			actor.attack_finished_single[0] = time + autocvar_g_monster_ogre_attack_melee_time + autocvar_g_monster_ogre_attack_melee_delay + 0.7;
 			actor.anim_finished = actor.attack_finished_single[0];
