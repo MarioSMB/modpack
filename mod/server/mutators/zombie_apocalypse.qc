@@ -119,8 +119,6 @@ MUTATOR_HOOKFUNCTION(za, PlayerPreThink)
 		if(player.monster_attackfunc(MONSTER_ATTACK_RANGED, player, player.enemy))
 			animdecide_setaction(player, ANIMACTION_SHOOT, false);
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(za, PlayerRegen)
@@ -131,7 +129,6 @@ MUTATOR_HOOKFUNCTION(za, PlayerRegen)
 		regen_health_rotstable = this.za_maxhealth;
 		regen_health_stable = this.za_maxhealth;
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(za, ItemTouch)
