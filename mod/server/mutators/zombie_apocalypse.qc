@@ -122,12 +122,14 @@ MUTATOR_HOOKFUNCTION(za, PlayerPreThink)
 }
 
 MUTATOR_HOOKFUNCTION(za, PlayerRegen)
-{SELFPARAM();
-	if(this.monsterid)
-	if(this.za_maxhealth)
+{
+	entity player = M_ARGV(0, entity);
+	
+	if(player.monsterid)
+	if(player.za_maxhealth)
 	{
-		regen_health_rotstable = this.za_maxhealth;
-		regen_health_stable = this.za_maxhealth;
+		M_ARGV(9, float) = player.za_maxhealth;
+		M_ARGV(10, float) = player.za_maxhealth;
 	}
 }
 
