@@ -9,7 +9,6 @@ AUTOCVAR(sv_announcer, string, "", _("Force client announcer to this"));
 MUTATOR_HOOKFUNCTION(announcer, Ent_Init, CBC_ORDER_FIRST)
 {
 	WriteString(MSG_ONE, autocvar_sv_announcer);
-	return false;
 }
 
 #elif defined(CSQC)
@@ -31,8 +30,7 @@ MUTATOR_HOOKFUNCTION(announcer, AnnouncerOption)
 	if(autocvar_cl_announcer_force || sv_announcer == "" || !sv_announcer || autocvar_cl_announcer != "default")
 		return false;
 
-	ret_string = sv_announcer;
-	return false;
+	M_ARGV(0, string) = sv_announcer;
 }
 
 MUTATOR_HOOKFUNCTION(announcer, Ent_Init, CBC_ORDER_FIRST)
@@ -40,7 +38,6 @@ MUTATOR_HOOKFUNCTION(announcer, Ent_Init, CBC_ORDER_FIRST)
 	sv_announcer = strzone(ReadString());
 
 	if(sv_announcer != "" && sv_announcer) { Announcer_Precache(); }
-	return false;
 }
 
 #endif

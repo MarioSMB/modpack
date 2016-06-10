@@ -14,34 +14,33 @@ MUTATOR_HOOKFUNCTION(demo, MatchEnd)
 			stuffcmd(it, strcat("//", strconv(2, 0, 0, GetGametype()), " RECORD ME ", "\n"));
 		});
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(demo, SV_ParseClientCommand)
-{SELFPARAM();
+{
 	if(MUTATOR_RETURNVALUE) // command was already handled?
 		return false;
 
+	entity caller = M_ARGV(0, entity);
+	string cmd_name = M_ARGV(1, string);
+	string cmd_string = M_ARGV(2, string);
+
 	if(cmd_name == "snap")
 	{
-		if(!IS_PLAYER(self))
+		if(!IS_PLAYER(caller))
 		{
-			sprint(self, "You need to be a player to use this command.\n");
+			sprint(caller, "You need to be a player to use this command.\n");
 			return true;
 		}
-		if(self.demo_moments >= autocvar_sv_demo_moments)
+		if(caller.demo_moments >= autocvar_sv_demo_moments)
 		{
-			sprint(self, "You've recorded too many moments, please wait until the next match.\n");
+			sprint(caller, "You've recorded too many moments, please wait until the next match.\n");
 			return true;
 		}
 
 		// write it to the demo
-		stuffcmd(self, strcat("//", strconv(2, 0, 0, GetGametype()), " EVENT SNAPPED ", argv(1), " ", ((argv(2)) ? substring(cmd_string, argv_start_index(2), -1) : ""), "\n"));
-		self.demo_moments += 1;
-
+		stuffcmd(caller, strcat("//", strconv(2, 0, 0, GetGametype()), " EVENT SNAPPED ", argv(1), " ", ((argv(2)) ? substring(cmd_string, argv_start_index(2), -1) : ""), "\n"));
+		caller.demo_moments += 1;
 		return true;
 	}
-
-	return false;
 }

@@ -304,6 +304,8 @@ MUTATOR_HOOKFUNCTION(radio, SV_ParseServerCommand)
 	if(MUTATOR_RETURNVALUE) // command was already handled?
 		return false;
 
+	string cmd_name = M_ARGV(0, string);
+
 	if(cmd_name == "netmusic" || cmd_name == "radio_play")
 	{
 		Radio_Play(argv(1), argv(2), (argv(3) == "loop"));
@@ -348,8 +350,6 @@ MUTATOR_HOOKFUNCTION(radio, SV_ParseServerCommand)
 		});
 		return true;
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(radio, SV_StartFrame)
@@ -373,8 +373,6 @@ MUTATOR_HOOKFUNCTION(radio, SV_StartFrame)
 
 	if(time > radio_starttime + radio_tracklen)
 		Radio_Queue_PlayFirst(NULL);
-
-	return false;
 }
 
 void Radio_URI_Get_Callback(float id, float status, string data)
@@ -399,13 +397,15 @@ void Radio_URI_Get_Callback(float id, float status, string data)
 
 MUTATOR_HOOKFUNCTION(radio, URI_GetCallback)
 {
+	int uricb_id = M_ARGV(0, int);
+	int uricb_status = M_ARGV(1, int);
+	string uricb_data = M_ARGV(2, string);
+
 	if(uricb_id == URI_GET_RADIO)
 	{
 		Radio_URI_Get_Callback(uricb_id, uricb_status, uricb_data);
 		return true;
 	}
-
-	return false;
 }
 
 void Radio_ClientConnect_Delayed(entity this)
@@ -414,9 +414,11 @@ void Radio_ClientConnect_Delayed(entity this)
 }
 
 MUTATOR_HOOKFUNCTION(radio, ClientConnect)
-{SELFPARAM();
-	if(!IS_REAL_CLIENT(this))
-		return false;
+{
+	entity player = M_ARGV(0, entity);
+
+	if(!IS_REAL_CLIENT(player))
+		return;
 
 	int realclients = 0;
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
@@ -425,39 +427,38 @@ MUTATOR_HOOKFUNCTION(radio, ClientConnect)
 	});
 
 	if(realclients == 1 && !radio_playing)
-		defer(this, 5, Radio_Queue_PlayFirst);
+		defer(player, 5, Radio_Queue_PlayFirst);
 
 	if(!radio_playing)
-		return false;
+		return;
 
 	if(autocvar_sv_radio_preload)
-		Radio_SendPreload(this, radio_url);
-	defer(this, 3, Radio_ClientConnect_Delayed);
-
-	return false;
+		Radio_SendPreload(player, radio_url);
+	defer(player, 3, Radio_ClientConnect_Delayed);
 }
 
 // handle the command as a separate mutator, so it's always checked
 REGISTER_MUTATOR(radio_cmd, true);
 
 MUTATOR_HOOKFUNCTION(radio_cmd, SV_ParseClientCommand)
-{SELFPARAM();
+{
 	if(MUTATOR_RETURNVALUE) // command was already handled?
-		return false;
+		return;
+
+	entity caller = M_ARGV(0, entity);
+	string cmd_name = M_ARGV(1, string);
 
 	if(cmd_name == "radio")
 	{
-		if(!self.scorekeeper || !sv_radio)
-			return false;
+		if(!caller.scorekeeper || !sv_radio)
+			return;
 
-		bool o = self.radio_enabled;
-		self.radio_enabled = stof(argv(1));
+		bool o = caller.radio_enabled;
+		caller.radio_enabled = stof(argv(1));
 
-		if(!o && self.radio_enabled)
-			Radio_SendPlay(self);
+		if(!o && caller.radio_enabled)
+			Radio_SendPlay(caller);
 
 		return true;
 	}
-
-	return false;
 }

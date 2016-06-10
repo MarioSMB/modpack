@@ -55,52 +55,48 @@ vector PlayerTouchWall(entity this)
 	return '0 0 0';
 }
 
-void PM_walljump_PlayerJump(entity this)
+MUTATOR_HOOKFUNCTION(walljump, PlayerJump)
 {
+	entity player = M_ARGV(0, entity);
+
 #ifdef CSQC
-	this.lastwj = STAT(LASTWJ, this);
+	player.lastwj = STAT(LASTWJ, player);
 #endif
-	if(PHYS_WALLJUMP(this))
-	if(time - this.lastwj > PHYS_WALLJUMP_DELAY(this)) // can't do this on client, as it's too stupid to obey counters
-	if(!IS_ONGROUND(this))
+	if(PHYS_WALLJUMP(player))
+	if(time - player.lastwj > PHYS_WALLJUMP_DELAY(player)) // can't do this on client, as it's too stupid to obey counters
+	if(!IS_ONGROUND(player))
 #ifdef SVQC
-	if(this.movetype != MOVETYPE_NONE && this.movetype != MOVETYPE_FOLLOW && this.movetype != MOVETYPE_FLY && this.movetype != MOVETYPE_NOCLIP)
+	if(player.movetype != MOVETYPE_NONE && player.movetype != MOVETYPE_FOLLOW && player.movetype != MOVETYPE_FLY && player.movetype != MOVETYPE_NOCLIP)
 #elif defined(CSQC)
-	if(this.move_movetype != MOVETYPE_NONE && this.move_movetype != MOVETYPE_FOLLOW && this.move_movetype != MOVETYPE_FLY && this.move_movetype != MOVETYPE_NOCLIP)
+	if(player.move_movetype != MOVETYPE_NONE && player.move_movetype != MOVETYPE_FOLLOW && player.move_movetype != MOVETYPE_FLY && player.move_movetype != MOVETYPE_NOCLIP)
 #endif
-	if(!IS_JUMP_HELD(this))
-	if(!STAT(FROZEN, this))
-	if(!IS_DEAD(this))
+	if(!IS_JUMP_HELD(player))
+	if(!STAT(FROZEN, player))
+	if(!IS_DEAD(player))
 	{
-		vector plane_normal = PlayerTouchWall(this);
+		vector plane_normal = PlayerTouchWall(player);
 		
 		if(plane_normal != '0 0 0')
 		{
-			this.lastwj = time;
-			float wj_force = PHYS_WALLJUMP_FORCE(this);
-			float wj_xy_factor = PHYS_WALLJUMP_VELOCITY_XY_FACTOR(this);
-			float wj_z_factor = PHYS_WALLJUMP_VELOCITY_Z_FACTOR(this);
-			this.velocity_x += plane_normal_x * wj_force;
-			this.velocity_x /= wj_xy_factor;
-			this.velocity_y += plane_normal_y * wj_force;
-			this.velocity_y /= wj_xy_factor;
-			this.velocity_z = PHYS_JUMPVELOCITY(this) * wj_z_factor;
-			if(PHYS_INPUT_BUTTON_CROUCH(this)) this.velocity_z *= -1;
+			player.lastwj = time;
+			float wj_force = PHYS_WALLJUMP_FORCE(player);
+			float wj_xy_factor = PHYS_WALLJUMP_VELOCITY_XY_FACTOR(player);
+			float wj_z_factor = PHYS_WALLJUMP_VELOCITY_Z_FACTOR(player);
+			player.velocity_x += plane_normal_x * wj_force;
+			player.velocity_x /= wj_xy_factor;
+			player.velocity_y += plane_normal_y * wj_force;
+			player.velocity_y /= wj_xy_factor;
+			player.velocity_z = PHYS_JUMPVELOCITY(player) * wj_z_factor;
+			if(PHYS_INPUT_BUTTON_CROUCH(player)) player.velocity_z *= -1;
 
 #ifdef SVQC
-			this.oldvelocity = this.velocity;
+			player.oldvelocity = player.velocity;
 			Send_Effect(EFFECT_SMOKE_RING, trace_endpos, plane_normal, 5);
-			PlayerSound(this, playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
-			animdecide_setaction(this, ANIMACTION_JUMP, true);
+			PlayerSound(player, playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+			animdecide_setaction(player, ANIMACTION_JUMP, true);
 #endif
 			
-			player_multijump = true;
+			M_ARGV(2, bool) = true; // multijump
 		}
 	}
-}
-
-MUTATOR_HOOKFUNCTION(walljump, PlayerJump)
-{SELFPARAM();
-	PM_walljump_PlayerJump(self);
-	return false;
 }

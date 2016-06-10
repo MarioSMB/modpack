@@ -3,17 +3,20 @@ REGISTER_MUTATOR(muteban, true);
 AUTOCVAR(sv_muteban_list, string, "", "");
 
 MUTATOR_HOOKFUNCTION(muteban, ClientConnect)
-{SELFPARAM();
-	if((self.crypto_idfp != "" && strhasword(autocvar_sv_muteban_list, self.crypto_idfp)) || strhasword(autocvar_sv_muteban_list, self.netaddress))
-		self.muted = true;
+{
+	entity player = M_ARGV(0, entity);
 
-	return false;
+	if((player.crypto_idfp != "" && strhasword(autocvar_sv_muteban_list, player.crypto_idfp)) || strhasword(autocvar_sv_muteban_list, player.netaddress))
+		player.muted = true;
 }
 
 MUTATOR_HOOKFUNCTION(muteban, SV_ParseServerCommand)
 {
 	if(MUTATOR_RETURNVALUE) // command was already handled?
 		return false;
+
+	string cmd_name = M_ARGV(0, string);
+	int cmd_argc = M_ARGV(1, int);
 
 	if(cmd_name == "muteban")
 	{
@@ -72,6 +75,4 @@ MUTATOR_HOOKFUNCTION(muteban, SV_ParseServerCommand)
 		}
 		return true;
 	}
-
-	return false;
 }

@@ -154,7 +154,7 @@ spawnfunc(monster_enforcer) { Monster_Spawn(this, MON_ENFORCER.monsterid); }
 		{
 			return true;
 		}
-		METHOD(Enforcer, mr_pain, bool(Monster thismon, entity actor))
+		METHOD(Enforcer, mr_pain, float(Monster thismon, entity actor, float damage_take, entity attacker, float deathtype))
 		{
 			vector anim;
 			switch(floor(random() * 5))
@@ -166,7 +166,7 @@ spawnfunc(monster_enforcer) { Monster_Spawn(this, MON_ENFORCER.monsterid); }
 				case 4: anim = actor.anim_pain4; actor.pain_finished = time + 1; break;
 			}
 			setanim(actor, anim, true, true, false);
-			return true;
+			return damage_take;
 		}
 		METHOD(Enforcer, mr_death, bool(Monster thismon, entity actor))
 		{

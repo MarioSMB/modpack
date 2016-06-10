@@ -155,27 +155,27 @@ void SkyCycle_Run(entity this)
 
 void SkyCycle_Spawn()
 {
-		SkyCycle_Set();
-		entity e;
-		
-		e = spawn();
-		setthink(e, SkyCycle_Run);
-		e.nextthink = time; //Start Right Away
-		skycycle_epoch = 0;
-		SkyCycle_Restart();
-		
-		//print("spawning sky cycle\n");
+	SkyCycle_Set();
+	entity e;
+
+	e = spawn();
+	setthink(e, SkyCycle_Run);
+	e.nextthink = time; //Start Right Away
+	skycycle_epoch = 0;
+	SkyCycle_Restart();
+
+	//print("spawning sky cycle\n");
 }
 
-void SkyCycle_SendPlayer(float checkboxnum)
-{SELFPARAM();
+void SkyCycle_SendPlayer(entity this, float checkboxnum)
+{
 	//print("sending sky stuff\n");
 	//print(strcat("maxintensity ", ftos(skycycle_intensity_realmax), "\n"));
 	//print(strcat("maxambient", ftos(skycycle_ambient_realmax), "\n"));
 	//print(strcat("intensity    ", ftos(skycycle_intensity_current), "\n"));
 	//print(strcat("ambient   ", ftos(skycycle_ambient_current), "\n"));
-	stuffcmd(self, strcat("cl_cmd settemp r_fakelight_intensity ", ftos(skycycle_intensity_current), "\n"));
-	stuffcmd(self, strcat("cl_cmd settemp r_ambient ", ftos(skycycle_ambient_current), "\n"));
+	stuffcmd(this, strcat("cl_cmd settemp r_fakelight_intensity ", ftos(skycycle_intensity_current), "\n"));
+	stuffcmd(this, strcat("cl_cmd settemp r_ambient ", ftos(skycycle_ambient_current), "\n"));
 	
 	if (skycycle_skybox)
 	{
@@ -194,7 +194,7 @@ void SkyCycle_SendPlayer(float checkboxnum)
 				}
 				else
 				{
-					stuffcmd(self, strcat("loadsky ", skycycle_nightsky, "\n"));
+					stuffcmd(this, strcat("loadsky ", skycycle_nightsky, "\n"));
 				}
 				skycycle_skybox_number = 2;
 			}
@@ -214,7 +214,7 @@ void SkyCycle_SendPlayer(float checkboxnum)
 				}
 				else
 				{
-					stuffcmd(self, strcat("loadsky ", skycycle_dusksky, "\n"));
+					stuffcmd(this, strcat("loadsky ", skycycle_dusksky, "\n"));
 				}
 				skycycle_skybox_number = 1;
 			}
@@ -234,7 +234,7 @@ void SkyCycle_SendPlayer(float checkboxnum)
 				}
 				else
 				{
-					stuffcmd(self, strcat("loadsky ", skycycle_daysky, "\n"));
+					stuffcmd(this, strcat("loadsky ", skycycle_daysky, "\n"));
 				}
 				skycycle_skybox_number = 0;
 			}
@@ -244,22 +244,24 @@ void SkyCycle_SendPlayer(float checkboxnum)
 
 
 MUTATOR_HOOKFUNCTION(skycycle, PlayerPreThink)
-{SELFPARAM();
+{
+	entity player = M_ARGV(0, entity);
+
 	if (skycycle_enabled)
-	if (time > self.skycycle_playernextthink)
+	if (time > player.skycycle_playernextthink)
 	{
-		SkyCycle_SendPlayer(1);
-		self.skycycle_playernextthink = time + 1;
+		SkyCycle_SendPlayer(player, 1);
+		player.skycycle_playernextthink = time + 1;
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(skycycle, PutClientInServer)
-{SELFPARAM();
-	stuffcmd(self, "cl_cmd settemp r_fakelight 2\n");
+{
+	entity player = M_ARGV(0, entity);
+
+	stuffcmd(player, "cl_cmd settemp r_fakelight 2\n");
 		
-	SkyCycle_SendPlayer(0);
-	return false;
+	SkyCycle_SendPlayer(player, 0);
 }
 
 MUTATOR_HOOKFUNCTION(skycycle, SV_StartFrame)
@@ -275,26 +277,21 @@ MUTATOR_HOOKFUNCTION(skycycle, SV_StartFrame)
 	
 	if(skycycle_intensity_realmax < skycycle_intensity_current)
 		skycycle_intensity_current = autocvar_g_skycycle_intensity_realmax;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(skycycle, reset_map_global)
 {
 	SkyCycle_Restart();
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(skycycle, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":skycycle");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":skycycle");
 }
 
 MUTATOR_HOOKFUNCTION(skycycle, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Sky Cycle");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Sky Cycle");
 }
 
 void skycycle_Init(entity this)

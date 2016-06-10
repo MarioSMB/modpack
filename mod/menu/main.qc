@@ -1,9 +1,9 @@
 REGISTER_MUTATOR(mutator_mod, true);
 
 MUTATOR_HOOKFUNCTION(mutator_mod, BuildMutatorsString) {
-    ret_string = strcat(ret_string, ":mod");
+    M_ARGV(0, string) = strcat(M_ARGV(0, string), ":mod");
 }
 
 MUTATOR_HOOKFUNCTION(mutator_mod, BuildMutatorsPrettyString) {
-    ret_string = strcat(ret_string, ", Mod");
+    M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Mod");
 }

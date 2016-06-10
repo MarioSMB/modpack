@@ -219,10 +219,6 @@ spawnfunc(monster_shalrath) { Monster_Spawn(this, MON_VORE.monsterid); }
 		{
 			return true;
 		}
-		METHOD(Vore, mr_pain, bool(Monster thismon, entity actor))
-		{
-			return true;
-		}
 		METHOD(Vore, mr_death, bool(Monster thismon, entity actor))
 		{
 			setanim(actor, actor.anim_die1, false, true, true);

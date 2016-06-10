@@ -4,10 +4,8 @@ MUTATOR_HOOKFUNCTION(mutator_mod, MonsterModel)
 {
 	if(autocvar_sv_monsters_modeloverride != "" && autocvar_sv_monsters_modeloverride != "default")
 	{
-		string themdl = sprintf("models/monsters_%s/%s", autocvar_sv_monsters_modeloverride, monster_model);
+		string themdl = sprintf("models/monsters_%s/%s", autocvar_sv_monsters_modeloverride, M_ARGV(0, string));
 		if(fexists(themdl))
-			monster_model_output = themdl;
+			M_ARGV(1, string) = themdl;
 	}
-
-	return false;
 }

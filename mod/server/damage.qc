@@ -8,37 +8,41 @@ AUTOCVAR(g_turrets_weapon_damagerate, float, 1, _("Multiplier for the amount of 
 
 MUTATOR_HOOKFUNCTION(damage_mod, PlayerDamage_Calculate)
 {
+	entity frag_target = M_ARGV(2, entity);
+	float frag_deathtype = M_ARGV(3, float);
+
 	if(IS_PLAYER(frag_target))
 	{
 		if(DEATH_ISTURRET(frag_deathtype))
-			frag_damage *= autocvar_g_turrets_player_damagerate;
+			M_ARGV(4, float) *= autocvar_g_turrets_player_damagerate;
 	}
 
 	if(IS_TURRET(frag_target))
 	{
 		if(DEATH_WEAPONOF(frag_deathtype) != WEP_Null)
-			frag_damage *= autocvar_g_turrets_weapon_damagerate;
+			M_ARGV(4, float) *= autocvar_g_turrets_weapon_damagerate;
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(damage_mod, PlayerDies)
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+
 	if(IS_PLAYER(frag_attacker))
 	{
 		frag_target.lastkiller = frag_attacker;
 		frag_attacker.lastkilled = frag_target;
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(damage_mod, FormatMessage)
-{SELFPARAM();
-	switch(format_escape)
-	{
-		case "j": format_replacement = ((self.lastkilled) ? self.lastkilled.netname : "(nobody)"); break;
-		case "k": format_replacement = ((self.lastkiller) ? self.lastkiller.netname : "(nobody)"); break;
-	}
+{
+	entity player = M_ARGV(0, entity);
 
-	return false;
+	switch(M_ARGV(1, string))
+	{
+		case "j": M_ARGV(2, string) = ((player.lastkilled) ? player.lastkilled.netname : "(nobody)"); break;
+		case "k": M_ARGV(2, string) = ((player.lastkiller) ? player.lastkiller.netname : "(nobody)"); break;
+	}
 }

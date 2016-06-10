@@ -10,19 +10,16 @@ AUTOCVAR(sv_weapons_sounddir, string, "", _("Custom directory for weapon sounds,
 MUTATOR_HOOKFUNCTION(weapon_models, Ent_Init, CBC_ORDER_LAST)
 {
 	WriteString(MSG_ONE, autocvar_sv_weapons_modeloverride);
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(weapon_models, WeaponSound)
 {
 	if(autocvar_sv_weapons_sounddir != "" && autocvar_sv_weapons_sounddir != "default")
 	{
-		string thesnd = sprintf("weapons_%s/%s", autocvar_sv_weapons_sounddir, weapon_sound);
+		string thesnd = sprintf("weapons_%s/%s", autocvar_sv_weapons_sounddir, M_ARGV(0, string));
 
-		if (_Sound_fixpath(thesnd)) { weapon_sound_output = thesnd; }
+		if (_Sound_fixpath(thesnd)) { M_ARGV(1, string) = thesnd; }
 	}
-
-	return false;
 }
 
 #elif defined(CSQC)
@@ -43,7 +40,6 @@ MUTATOR_HOOKFUNCTION(weapon_models, Ent_Init, CBC_ORDER_LAST)
 			themdl = sprintf("models/weapons_%s/g_%s.md3", sv_weapons_modeloverride, it.mdl);
 			if(fexists(themdl)) { precache_model(themdl); }
 		}));
-	return false;
 }
 
 #endif
@@ -60,11 +56,9 @@ MUTATOR_HOOKFUNCTION(weapon_models, WeaponModel)
 #endif
 	if(override != "" && override != "default" && override)
 	{
-		string themdl = sprintf("models/weapons_%s/%s", override, weapon_model);
+		string themdl = sprintf("models/weapons_%s/%s", override, M_ARGV(0, string));
 		if(fexists(themdl))
-			weapon_model_output = themdl;
+			M_ARGV(1, string) = themdl;
 	}
-
-	return false;
 }
 #endif

@@ -5,15 +5,17 @@ AUTOCVAR(g_spawn_unique, bool, false, _("Prevent spawning at the same spawn poin
 .entity su_last_point;
 
 MUTATOR_HOOKFUNCTION(su, PlayerSpawn)
-{SELFPARAM();
-	self.su_last_point = spawn_spot;
-	return false;
+{
+	entity player = M_ARGV(0, entity);
+
+	player.su_last_point = M_ARGV(1, entity); // spot
 }
 
 MUTATOR_HOOKFUNCTION(su, Spawn_Score)
-{SELFPARAM();
+{
+	entity player = M_ARGV(0, entity);
+
 	// give it a low score if we've already been there
-	if(spawn_spot == self.su_last_point)
-		spawn_score = '0.1 0 0';
-	return false;
+	if(M_ARGV(1, entity) == player.su_last_point) // spot
+		M_ARGV(2, vector) = '0.1 0 0'; // score
 }

@@ -18,13 +18,13 @@ AUTOCVAR(g_za_spawn_delay, float, 5, "");
 .float za_maxhealth;
 
 void za_SpawnMonster()
-{SELFPARAM();
+{
 	if(gameover) { return; }
 
 	entity e = spawn(), mon;
 
 	if(MoveToRandomMapLocation(e, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
-		mon = spawnmonster(autocvar_g_za_spawnmonster, 0, self, self, e.origin, false, false, 2);
+		mon = spawnmonster(autocvar_g_za_spawnmonster, 0, NULL, NULL, e.origin, false, false, 2);
 
 	setthink(e, SUB_Remove);
 	e.nextthink = time + 0.1;
@@ -65,56 +65,59 @@ void za_SetEnemy(entity player)
 }
 
 MUTATOR_HOOKFUNCTION(za, FixPlayermodel)
-{SELFPARAM();
-	if(self.monsterid)
-		ret_string = (Monsters_from(self.monsterid)).m_model.model_str();
-	return false;
+{
+	entity player = M_ARGV(2, entity);
+
+	if(player.monsterid)
+		M_ARGV(0, string) = (Monsters_from(player.monsterid)).m_model.model_str();
 }
 
 MUTATOR_HOOKFUNCTION(za, PlayerPhysics)
-{SELFPARAM();
-	if(!self.monsterid) { return false; }
+{
+	entity player = M_ARGV(0, entity);
 
-	entity mon = Monsters_from(self.monsterid);
+	if(!player.monsterid) { return false; }
 
-	self.weapons = '0 0 0';
-	PS(self).m_switchweapon = WEP_Null;
-	STAT(PL_MIN, self) = mon.mins;
-	STAT(PL_MAX, self) = mon.maxs;
-	STAT(PL_CROUCH_MIN, self) = mon.mins;
-	STAT(PL_CROUCH_MAX, self) = mon.maxs;
-	STAT(PL_VIEW_OFS, self) = self.za_viewofs;
-	STAT(PL_CROUCH_VIEW_OFS, self) = self.za_viewofs;
-	PHYS_JUMPVELOCITY(self) = 0;
+	entity mon = Monsters_from(player.monsterid);
 
-	PHYS_MAXSPEED(self) = self.speed2;
-	PHYS_MAXAIRSPEED(self) = self.speed2;
-	PHYS_INPUT_BUTTON_CROUCH(self) = false;
+	player.weapons = '0 0 0';
+	PS(player).m_switchweapon = WEP_Null;
+	STAT(PL_MIN, player) = mon.mins;
+	STAT(PL_MAX, player) = mon.maxs;
+	STAT(PL_CROUCH_MIN, player) = mon.mins;
+	STAT(PL_CROUCH_MAX, player) = mon.maxs;
+	STAT(PL_VIEW_OFS, player) = player.za_viewofs;
+	STAT(PL_CROUCH_VIEW_OFS, player) = player.za_viewofs;
+	PHYS_JUMPVELOCITY(player) = 0;
 
-	return false;
+	PHYS_MAXSPEED(player) = player.speed2;
+	PHYS_MAXAIRSPEED(player) = player.speed2;
+	PHYS_INPUT_BUTTON_CROUCH(player) = false;
 }
 
 MUTATOR_HOOKFUNCTION(za, PlayerPreThink)
-{SELFPARAM();
-	if(!self.monsterid || time < self.attack_finished_single[0]) { return false; }
+{
+	entity player = M_ARGV(0, entity);
 
-	Monster mon = Monsters_from(self.monsterid);
-	mon.mr_think(mon, self);
+	if(!player.monsterid || time < player.attack_finished_single[0]) { return false; }
 
-	if(PHYS_INPUT_BUTTON_ATCK(self))
-	if(self.monster_attackfunc)
+	Monster mon = Monsters_from(player.monsterid);
+	mon.mr_think(mon, player);
+
+	if(PHYS_INPUT_BUTTON_ATCK(player))
+	if(player.monster_attackfunc)
 	{
-		za_SetEnemy(self);
-		if(self.monster_attackfunc(MONSTER_ATTACK_MELEE, self, self.enemy))
-			animdecide_setaction(self, ANIMACTION_MELEE, false);
+		za_SetEnemy(player);
+		if(player.monster_attackfunc(MONSTER_ATTACK_MELEE, player, player.enemy))
+			animdecide_setaction(player, ANIMACTION_MELEE, false);
 	}
 
-	if(PHYS_INPUT_BUTTON_ATCK2(self))
-	if(self.monster_attackfunc)
+	if(PHYS_INPUT_BUTTON_ATCK2(player))
+	if(player.monster_attackfunc)
 	{
-		za_SetEnemy(self);
-		if(self.monster_attackfunc(MONSTER_ATTACK_RANGED, self, self.enemy))
-			animdecide_setaction(self, ANIMACTION_SHOOT, false);
+		za_SetEnemy(player);
+		if(player.monster_attackfunc(MONSTER_ATTACK_RANGED, player, player.enemy))
+			animdecide_setaction(player, ANIMACTION_SHOOT, false);
 	}
 
 	return false;
@@ -122,29 +125,34 @@ MUTATOR_HOOKFUNCTION(za, PlayerPreThink)
 
 MUTATOR_HOOKFUNCTION(za, PlayerRegen)
 {SELFPARAM();
-	if(self.monsterid)
-	if(self.za_maxhealth)
+	if(this.monsterid)
+	if(this.za_maxhealth)
 	{
-		regen_health_rotstable = self.za_maxhealth;
-		regen_health_stable = self.za_maxhealth;
+		regen_health_rotstable = this.za_maxhealth;
+		regen_health_stable = this.za_maxhealth;
 	}
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(za, ItemTouch)
 {
-	if(other.monsterid)
+	entity toucher = M_ARGV(1, entity);
+
+	if(IS_PLAYER(toucher) && toucher.monsterid)
 		return MUT_ITEMTOUCH_RETURN;
 
-	return false;
+	return MUT_ITEMTOUCH_CONTINUE;
 }
 
 MUTATOR_HOOKFUNCTION(za, PlayerDies)
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+
 	if(!IS_MONSTER(frag_attacker) || !autocvar_g_za_infect)
 	{
 		frag_target.monsterid = 0;
-		return false;
+		return;
 	}
 
 	Monster mon = Monsters_from(frag_attacker.monsterid);
@@ -172,14 +180,12 @@ MUTATOR_HOOKFUNCTION(za, PlayerDies)
 
 	if(mon.spawnflags & MONSTER_TYPE_FLY)
 		frag_target.movetype = MOVETYPE_FLY;
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(za, SV_StartFrame)
 {
 	if(time < za_spawn_delay || autocvar_g_za_max_monsters <= 0 || !autocvar_g_za)
-		return false;
+		return;
 
 	int n_monsters = 0, maxmon = autocvar_g_za_max_monsters;
 
@@ -193,6 +199,4 @@ MUTATOR_HOOKFUNCTION(za, SV_StartFrame)
 	}
 
 	za_spawn_delay = time + autocvar_g_za_spawn_delay;
-
-	return false;
 }

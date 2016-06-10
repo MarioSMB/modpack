@@ -3,16 +3,18 @@ REGISTER_MUTATOR(rvehicles, cvar("g_random_vehicles") && cvar("g_vehicles"));
 AUTOCVAR(g_random_vehicles, bool, false, _("Enable random vehicles mutator"));
 
 MUTATOR_HOOKFUNCTION(rvehicles, OnEntityPreSpawn)
-{SELFPARAM();
-	if(startsWith(self.classname, "vehicle_"))
+{
+	entity ent = M_ARGV(0, entity);
+
+	if(startsWith(ent.classname, "vehicle_"))
 	{
 		entity e = spawn();
-		e.classname = self.classname;
-		setorigin(e, self.origin + '0 0 10');
-		e.angles = self.angles;
-		e.team = self.team;
-		e.target = self.target;
-		e.targetname = self.targetname;
+		e.classname = ent.classname;
+		setorigin(e, ent.origin + '0 0 10');
+		e.angles = ent.angles;
+		e.team = ent.team;
+		e.target = ent.target;
+		e.targetname = ent.targetname;
 
 		RandomSelection_Init();
 		FOREACH(Vehicles, true, LAMBDA(
@@ -32,6 +34,4 @@ MUTATOR_HOOKFUNCTION(rvehicles, OnEntityPreSpawn)
 		if(!vehicle_initialize(e, RandomSelection_chosen_ent, false)) { remove(e); return false; }
 		return true;
 	}
-
-	return false;
 }

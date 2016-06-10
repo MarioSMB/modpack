@@ -113,7 +113,9 @@ MUTATOR_HOOKFUNCTION(radio, Ent_Init)
 MUTATOR_HOOKFUNCTION(radio, CSQC_ConsoleCommand)
 {
 	if(MUTATOR_RETURNVALUE) // command was already handled?
-		return false;
+		return;
+
+	string cmd_name = M_ARGV(0, string);
 
 	if(cmd_name == "radio")
 	{
@@ -144,6 +146,4 @@ MUTATOR_HOOKFUNCTION(radio, CSQC_ConsoleCommand)
 		localcmd("\ncmd radio ", cvar_string("cl_radio"), "\n");
 		return true;
 	}
-
-	return false;
 }

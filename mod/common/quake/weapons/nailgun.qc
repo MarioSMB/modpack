@@ -121,66 +121,66 @@ void W_NailGun_MuzzleFlash_Think(entity this)
 
 }
 
-void W_NailGun_MuzzleFlash(void)
-{SELFPARAM();
-	if(self.muzzle_flash == world)
-		self.muzzle_flash = spawn();
+void W_NailGun_MuzzleFlash(entity this)
+{
+	if(this.muzzle_flash == world)
+		this.muzzle_flash = spawn();
 
 	// muzzle flash for 1st person view
-	setmodel(self.muzzle_flash, MDL_MACHINEGUN_MUZZLEFLASH); // precision set below
+	setmodel(this.muzzle_flash, MDL_MACHINEGUN_MUZZLEFLASH); // precision set below
 
-	self.muzzle_flash.scale = 0.75;
-	setthink(self.muzzle_flash, W_NailGun_MuzzleFlash_Think);
-	self.muzzle_flash.nextthink = time + 0.02;
-	self.muzzle_flash.frame = 2;
-	self.muzzle_flash.alpha = 0.75;
-	self.muzzle_flash.angles_z = random() * 180;
-	self.muzzle_flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	self.muzzle_flash.owner = self.muzzle_flash.realowner = self;
+	this.muzzle_flash.scale = 0.75;
+	setthink(this.muzzle_flash, W_NailGun_MuzzleFlash_Think);
+	this.muzzle_flash.nextthink = time + 0.02;
+	this.muzzle_flash.frame = 2;
+	this.muzzle_flash.alpha = 0.75;
+	this.muzzle_flash.angles_z = random() * 180;
+	this.muzzle_flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
+	this.muzzle_flash.owner = this.muzzle_flash.realowner = this;
 }
 
-void W_NailGun_Attack(Weapon thiswep, int deathtype)
-{SELFPARAM();
-	W_SetupShot(self, true, 0, SND_NAILGUN_FIRE, CH_WEAPON_A, ((self.misc_bulletcounter == 1) ? WEP_CVAR(nailgun, first_damage) : WEP_CVAR(nailgun, sustained_damage)));
+void W_NailGun_Attack(Weapon thiswep, entity actor, int deathtype)
+{
+	W_SetupShot(actor, true, 0, SND_NAILGUN_FIRE, CH_WEAPON_A, ((actor.misc_bulletcounter == 1) ? WEP_CVAR(nailgun, first_damage) : WEP_CVAR(nailgun, sustained_damage)));
 	if(!autocvar_g_norecoil)
 	{
-		self.punchangle_x = random() - 0.5;
-		self.punchangle_y = random() - 0.5;
+		actor.punchangle_x = random() - 0.5;
+		actor.punchangle_y = random() - 0.5;
 	}
 
 	// this attack_finished just enforces a cooldown at the end of a burst
 	int slot = 0;
-	ATTACK_FINISHED(self, slot) = time + WEP_CVAR(nailgun, first_refire) * W_WeaponRateFactor();
+	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(nailgun, first_refire) * W_WeaponRateFactor();
 
 	vector ang = '0 0 0';
-	if(self.misc_bulletcounter % 2)
+	if(actor.misc_bulletcounter % 2)
 		ang = v_right;
 	else
 		ang = v_right * -1;
 
-	if(self.misc_bulletcounter == 1)
-		fireBullet(self, w_shotorg + ang, w_shotdir + (ang * 0.03), WEP_CVAR(nailgun, first_spread), WEP_CVAR(nailgun, solidpenetration), WEP_CVAR(nailgun, first_damage), WEP_CVAR(nailgun, first_force), deathtype, 0);
+	if(actor.misc_bulletcounter == 1)
+		fireBullet(actor, w_shotorg + ang, w_shotdir + (ang * 0.03), WEP_CVAR(nailgun, first_spread), WEP_CVAR(nailgun, solidpenetration), WEP_CVAR(nailgun, first_damage), WEP_CVAR(nailgun, first_force), deathtype, 0);
 	else
-		fireBullet(self, w_shotorg + ang, w_shotdir + (ang * 0.03), WEP_CVAR(nailgun, sustained_spread), WEP_CVAR(nailgun, solidpenetration), WEP_CVAR(nailgun, sustained_damage), WEP_CVAR(nailgun, sustained_force), deathtype, 0);
+		fireBullet(actor, w_shotorg + ang, w_shotdir + (ang * 0.03), WEP_CVAR(nailgun, sustained_spread), WEP_CVAR(nailgun, solidpenetration), WEP_CVAR(nailgun, sustained_damage), WEP_CVAR(nailgun, sustained_force), deathtype, 0);
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg + ang, (w_shotdir + (ang * 0.03)) * 1000, 1);
 
-	W_NailGun_MuzzleFlash();
+	W_NailGun_MuzzleFlash(actor);
 
 	vector vecs = '5 0 0';
 	vecs.y = 4.5;
-	if(self.misc_bulletcounter % 2)
+	if(actor.misc_bulletcounter % 2)
 		vecs.y = -4.5;
-	W_AttachToShotorg(self, self.muzzle_flash, vecs);
+	W_AttachToShotorg(actor, actor.muzzle_flash, vecs);
 
 	// casing code
 	if(autocvar_g_casings >= 2)
-		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, self);
+		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, actor);
 
-	if(self.misc_bulletcounter == 1)
-		W_DecreaseAmmo(thiswep, self, WEP_CVAR(nailgun, first_ammo));
+	if(actor.misc_bulletcounter == 1)
+		W_DecreaseAmmo(thiswep, actor, WEP_CVAR(nailgun, first_ammo));
 	else
-		W_DecreaseAmmo(thiswep, self, WEP_CVAR(nailgun, sustained_ammo));
+		W_DecreaseAmmo(thiswep, actor, WEP_CVAR(nailgun, sustained_ammo));
 }
 
 // weapon frames
@@ -202,7 +202,7 @@ void W_NailGun_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, 
 			return;
 		}
 		actor.misc_bulletcounter = actor.misc_bulletcounter + 1;
-		W_NailGun_Attack(WEP_NAILGUN, WEP_NAILGUN.m_id);
+		W_NailGun_Attack(WEP_NAILGUN, actor, WEP_NAILGUN.m_id);
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(nailgun, sustained_refire), W_NailGun_Attack_Frame);
 	}
 	else
@@ -251,7 +251,7 @@ void W_NailGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, i
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg + ang, (w_shotdir + (ang * 0.03)) * 1000, 1);
 
-	W_NailGun_MuzzleFlash();
+	W_NailGun_MuzzleFlash(actor);
 	vector vecs = '5 0 0';
 	vecs.y = 4.5;
 	if(actor.misc_bulletcounter % 2)
@@ -284,7 +284,7 @@ void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, 
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg + ang, (w_shotdir + (ang * 0.03)) * 1000, 1);
 
-	W_NailGun_MuzzleFlash();
+	W_NailGun_MuzzleFlash(actor);
 	vector vecs = '5 0 0';
 	vecs.y = 4.5;
 	if(actor.misc_bulletcounter % 2)
@@ -307,12 +307,12 @@ void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, 
 
 }
 
-		METHOD(NailGun, wr_aim, void(entity thiswep))
-		{SELFPARAM();
-			if(vlen(self.origin-self.enemy.origin) < 3000 - bound(0, skill, 10) * 200)
-				PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, 1000000, 0, 0.001, false);
+		METHOD(NailGun, wr_aim, void(entity thiswep, entity actor))
+		{
+			if(vdist(actor.origin - actor.enemy.origin, <, 3000 - bound(0, skill, 10) * 200))
+				PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, 1000000, 0, 0.001, false);
 			else
-				PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(self, 1000000, 0, 0.001, false);
+				PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, 1000000, 0, 0.001, false);
 		}
 		METHOD(NailGun, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
@@ -354,7 +354,7 @@ void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, 
 				if(weapon_prepareattack(thiswep, actor, weaponentity, false, 0))
 				{
 					actor.misc_bulletcounter = 1;
-					W_NailGun_Attack(WEP_NAILGUN, WEP_NAILGUN.m_id); // sets attack_finished
+					W_NailGun_Attack(WEP_NAILGUN, actor, WEP_NAILGUN.m_id); // sets attack_finished
 					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(nailgun, sustained_refire), W_NailGun_Attack_Frame);
 				}
 
@@ -402,8 +402,8 @@ void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, 
 			return ammo_amount;
 		}
 		METHOD(NailGun, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
-		{SELFPARAM();
-			W_Reload(self, min(max(WEP_CVAR(nailgun, sustained_ammo), WEP_CVAR(nailgun, first_ammo)), WEP_CVAR(nailgun, burst_ammo)), SND_RELOAD);
+		{
+			W_Reload(actor, min(max(WEP_CVAR(nailgun, sustained_ammo), WEP_CVAR(nailgun, first_ammo)), WEP_CVAR(nailgun, burst_ammo)), SND_RELOAD);
 		}
 		METHOD(NailGun, wr_suicidemessage, Notification(entity thiswep))
 		{
@@ -420,18 +420,18 @@ void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, 
 #endif
 #ifdef CSQC
 
-		METHOD(NailGun, wr_impacteffect, void(entity thiswep))
-		{SELFPARAM();
+		METHOD(NailGun, wr_impacteffect, void(entity thiswep, entity actor))
+		{
 			vector org2;
 			org2 = w_org + w_backoff * 2;
 			__pointparticles(particleeffectnum(EFFECT_MACHINEGUN_IMPACT), org2, w_backoff * 1000, 1);
 			if(!w_issilent)
 				if(w_random < 0.05)
-					sound(self, CH_SHOTS, SND_RIC1, VOL_BASE, ATTN_NORM);
+					sound(actor, CH_SHOTS, SND_RIC1, VOL_BASE, ATTN_NORM);
 				else if(w_random < 0.1)
-					sound(self, CH_SHOTS, SND_RIC2, VOL_BASE, ATTN_NORM);
+					sound(actor, CH_SHOTS, SND_RIC2, VOL_BASE, ATTN_NORM);
 				else if(w_random < 0.2)
-					sound(self, CH_SHOTS, SND_RIC3, VOL_BASE, ATTN_NORM);
+					sound(actor, CH_SHOTS, SND_RIC3, VOL_BASE, ATTN_NORM);
 		}
 
 #endif

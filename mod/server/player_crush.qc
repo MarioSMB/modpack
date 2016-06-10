@@ -70,7 +70,8 @@ void pc_PlayerTouch(entity this)
 }
 
 MUTATOR_HOOKFUNCTION(pc, PlayerSpawn)
-{SELFPARAM();
-	settouch(this, pc_PlayerTouch);
-	return false;
+{
+	entity player = M_ARGV(0, entity);
+
+	settouch(player, pc_PlayerTouch);
 }

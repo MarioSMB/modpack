@@ -196,19 +196,19 @@ void W_RocketLauncher_Damage(entity this, entity inflictor, entity attacker, flo
 		W_PrepareExplosionByDamage(attacker, W_RocketLauncher_Explode);
 }
 
-void W_RocketLauncher_Attack(Weapon thiswep)
-{SELFPARAM();
+void W_RocketLauncher_Attack(Weapon thiswep, entity actor)
+{
 	entity missile;
 	entity flash;
 
-	W_DecreaseAmmo(thiswep, self, WEP_CVAR(rocketlauncher, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(rocketlauncher, ammo));
 
-	W_SetupShot_ProjectileSize(self, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKETLAUNCHER_FIRE, CH_WEAPON_A, WEP_CVAR(rocketlauncher, damage));
+	W_SetupShot_ProjectileSize(actor, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKETLAUNCHER_FIRE, CH_WEAPON_A, WEP_CVAR(rocketlauncher, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	missile = WarpZone_RefSys_SpawnSameRefSys(self);
-	missile.owner = missile.realowner = self;
-	self.lastrocket = missile;
+	missile = WarpZone_RefSys_SpawnSameRefSys(actor);
+	missile.owner = missile.realowner = actor;
+	actor.lastrocket = missile;
 	if(WEP_CVAR(rocketlauncher, detonatedelay) >= 0)
 		missile.spawnshieldtime = time + WEP_CVAR(rocketlauncher, detonatedelay);
 	else
@@ -246,44 +246,44 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 	setmodel(flash, MDL_ROCKETLAUNCHER_MUZZLEFLASH); // precision set below
 	SUB_SetFade(flash, time, 0.1);
 	flash.effects = EF_ADDITIVE | EF_FULLBRIGHT | EF_LOWPRECISION;
-	W_AttachToShotorg(self, flash, '5 0 0');
+	W_AttachToShotorg(actor, flash, '5 0 0');
 
 	// common properties
-	MUTATOR_CALLHOOK(EditProjectile, self, missile);
+	MUTATOR_CALLHOOK(EditProjectile, actor, missile);
 }
 
 		#if 0
-		METHOD(RocketLauncher, wr_aim, void(entity thiswep))
+		METHOD(RocketLauncher, wr_aim, void(entity thiswep, entity actor))
 		{
 			// aim and decide to fire if appropriate
-			PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR(rocketlauncher, speed), 0, WEP_CVAR(rocketlauncher, lifetime), false);
+			PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR(rocketlauncher, speed), 0, WEP_CVAR(rocketlauncher, lifetime), false);
 			if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
 			{
 				// decide whether to detonate rockets
 				entity missile, targetlist, targ;
 				targetlist = findchainfloat(bot_attack, true);
-				for(missile = world; (missile = find(missile, classname, "rocket")); ) if(missile.realowner == self)
+				for(missile = world; (missile = find(missile, classname, "rocket")); ) if(missile.realowner == actor)
 				{
 					targ = targetlist;
 					while(targ)
 					{
 						if(targ != missile.realowner && vlen(targ.origin - missile.origin) < WEP_CVAR(rocketlauncher, radius))
 						{
-							PHYS_INPUT_BUTTON_ATCK2(self) = true;
+							PHYS_INPUT_BUTTON_ATCK2(actor) = true;
 							break;
 						}
 						targ = targ.chain;
 					}
 				}
 
-				if(PHYS_INPUT_BUTTON_ATCK2(self)) PHYS_INPUT_BUTTON_ATCK(self) = false;
+				if(PHYS_INPUT_BUTTON_ATCK2(actor)) PHYS_INPUT_BUTTON_ATCK(actor) = false;
 			}
 		}
 		#else
-		METHOD(RocketLauncher, wr_aim, void(entity thiswep))
-		{SELFPARAM();
+		METHOD(RocketLauncher, wr_aim, void(entity thiswep, entity actor))
+		{
 			// aim and decide to fire if appropriate
-			PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, WEP_CVAR(rocketlauncher, speed), 0, WEP_CVAR(rocketlauncher, lifetime), false);
+			PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR(rocketlauncher, speed), 0, WEP_CVAR(rocketlauncher, lifetime), false);
 			if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
 			{
 				// decide whether to detonate rockets
@@ -301,7 +301,7 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 				missile = find(world, classname, "rocket");
 				while(missile)
 				{
-					if(missile.realowner != self)
+					if(missile.realowner != actor)
 					{
 						missile = find(missile, classname, "rocket");
 						continue;
@@ -312,11 +312,11 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 						d = vlen(targ.origin + (targ.mins + targ.maxs) * 0.5 - missile.origin);
 						d = bound(0, edgedamage + (coredamage - edgedamage) * sqrt(1 - d * recipricoledgeradius), 10000);
 						// count potential damage according to type of target
-						if(targ == self)
+						if(targ == actor)
 							selfdamage = selfdamage + d;
-						else if(targ.team == self.team && teamplay)
+						else if(targ.team == actor.team && teamplay)
 							teamdamage = teamdamage + d;
-						else if(bot_shouldattack(self, targ))
+						else if(bot_shouldattack(actor, targ))
 							enemydamage = enemydamage + d;
 						targ = targ.chain;
 					}
@@ -324,15 +324,15 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 				}
 				float desirabledamage;
 				desirabledamage = enemydamage;
-				if(time > self.invincible_finished && time > self.spawnshieldtime)
+				if(time > actor.invincible_finished && time > actor.spawnshieldtime)
 					desirabledamage = desirabledamage - selfdamage * autocvar_g_balance_selfdamagepercent;
-				if(teamplay && self.team)
+				if(teamplay && actor.team)
 					desirabledamage = desirabledamage - teamdamage;
 
 				missile = find(world, classname, "rocket");
 				while(missile)
 				{
-					if(missile.realowner != self)
+					if(missile.realowner != actor)
 					{
 						missile = find(missile, classname, "rocket");
 						continue;
@@ -347,18 +347,18 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 							if(
 								(v_forward * normalize(missile.origin - targ.origin)< 0.1)
 								&& desirabledamage > 0.1*coredamage
-							)PHYS_INPUT_BUTTON_ATCK2(self) = true;
+							)PHYS_INPUT_BUTTON_ATCK2(actor) = true;
 							targ = targ.chain;
 						}
 					}else{
-						float distance; distance= bound(300,vlen(self.origin-self.enemy.origin),30000);
+						float distance; distance= bound(300,vlen(actor.origin-actor.enemy.origin),30000);
 						//As the distance gets larger, a correct detonation gets near imposible
 						//Bots are assumed to use the rocket spawnfunc_light to see if the rocket gets near a player
-						if(v_forward * normalize(missile.origin - self.enemy.origin)< 0.1)
-							if(IS_PLAYER(self.enemy))
+						if(v_forward * normalize(missile.origin - actor.enemy.origin)< 0.1)
+							if(IS_PLAYER(actor.enemy))
 								if(desirabledamage >= 0.1*coredamage)
 									if(random()/distance*300 > frametime*bound(0,(10-skill)*0.2,1))
-										PHYS_INPUT_BUTTON_ATCK2(self) = true;
+										PHYS_INPUT_BUTTON_ATCK2(actor) = true;
 					//	dprint(ftos(random()/distance*300),">");dprint(ftos(frametime*bound(0,(10-skill)*0.2,1)),"\n");
 					}
 
@@ -367,12 +367,12 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 				// if we would be doing at X percent of the core damage, detonate it
 				// but don't fire a new shot at the same time!
 				if(desirabledamage >= 0.75 * coredamage) //this should do group damage in rare fortunate events
-					PHYS_INPUT_BUTTON_ATCK2(self) = true;
-				if((skill > 6.5) && (selfdamage > self.health))
-					PHYS_INPUT_BUTTON_ATCK2(self) = false;
-				//if(PHYS_INPUT_BUTTON_ATCK2(self) == true)
+					PHYS_INPUT_BUTTON_ATCK2(actor) = true;
+				if((skill > 6.5) && (selfdamage > actor.health))
+					PHYS_INPUT_BUTTON_ATCK2(actor) = false;
+				//if(PHYS_INPUT_BUTTON_ATCK2(actor) == true)
 				//	dprint(ftos(desirabledamage),"\n");
-				if(PHYS_INPUT_BUTTON_ATCK2(self) == true) PHYS_INPUT_BUTTON_ATCK(self) = false;
+				if(PHYS_INPUT_BUTTON_ATCK2(actor) == true) PHYS_INPUT_BUTTON_ATCK(actor) = false;
 			}
 		}
 		#endif
@@ -386,7 +386,7 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 				{
 					if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(rocketlauncher, refire)))
 					{
-						W_RocketLauncher_Attack(thiswep);
+						W_RocketLauncher_Attack(thiswep, actor);
 						weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(rocketlauncher, animtime), w_ready);
 					}
 				}
@@ -403,8 +403,8 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 			return false;
 		}
 		METHOD(RocketLauncher, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
-		{SELFPARAM();
-			W_Reload(self, WEP_CVAR(rocketlauncher, ammo), SND_RELOAD);
+		{
+			W_Reload(actor, WEP_CVAR(rocketlauncher, ammo), SND_RELOAD);
 		}
 		METHOD(RocketLauncher, wr_suicidemessage, Notification(entity thiswep))
 		{
@@ -421,13 +421,13 @@ void W_RocketLauncher_Attack(Weapon thiswep)
 #endif
 #ifdef CSQC
 
-		METHOD(RocketLauncher, wr_impacteffect, void(entity thiswep))
-		{SELFPARAM();
+		METHOD(RocketLauncher, wr_impacteffect, void(entity thiswep, entity actor))
+		{
 			vector org2;
 			org2 = w_org + w_backoff * 12;
 			__pointparticles(particleeffectnum(EFFECT_ROCKET_EXPLODE), org2, '0 0 0', 1);
 			if(!w_issilent)
-				sound(self, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTN_NORM);
+				sound(actor, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTN_NORM);
 		}
 
 #endif

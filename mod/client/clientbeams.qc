@@ -53,7 +53,7 @@ void ClientBeam_Draw(entity this)
 		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum(EFFECT_VORTEX_BEAM), this.vorg1, this.vorg2, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);*/
 }
 
-void FireClientBeam(entity player, vector start, vector end, bool hit)
+void FireClientBeam(vector start, vector end, bool hit)
 {
 	entity e = spawn();
 	setthink(e, SUB_Remove);
@@ -79,7 +79,7 @@ void FireClientBeam(entity player, vector start, vector end, bool hit)
 }
 
 MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
-{SELFPARAM();
+{
 	if((time < STAT(GAMESTARTTIME))
 	|| (time < STAT(ROUNDSTARTTIME))
 	|| (autocvar_chase_active)
@@ -124,11 +124,11 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 		}
 
 		if(activeweapon == WEP_VORTEX)
-			WarpZone_TrailParticles(self, eff, view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE);
+			WarpZone_TrailParticles(localme, eff, view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE);
 		else if(activeweapon == WEP_VAPORIZER)
-			FireClientBeam(self, view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE, hit);
+			FireClientBeam(view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE, hit);
 
-		//sound(self, CH_SHOTS, "weapons/minstanexfire.wav", VOL_BASE, ATTEN_LARGE);
+		//sound(localme, CH_SHOTS, "weapons/minstanexfire.wav", VOL_BASE, ATTEN_LARGE);
 
 		if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
 		if(autocvar_cl_particles_newvortexbeam && activeweapon == WEP_VORTEX)
@@ -150,13 +150,13 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 }
 
 MUTATOR_HOOKFUNCTION(mutator_mod, Weapon_ImpactEffect)
-{SELFPARAM();
-	if(autocvar_cl_particles_newvortexbeam && w_hitwep == WEP_VORTEX)
+{
+	if(autocvar_cl_particles_newvortexbeam && M_ARGV(0, entity) == WEP_VORTEX)
 	{
 		vector org2 = w_org + w_backoff * 6;
 		pointparticles(EFFECT_VORTEX_IMPACT_NEW, org2, '0 0 0', 1);
 		if(!w_issilent)
-			sound(self, CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
+			sound(M_ARGV(1, entity), CH_SHOTS, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
 		return true;
 	}
 
@@ -167,7 +167,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, Particles_VortexBeam)
 {
 	if(autocvar_cl_particles_newvortexbeam && particleeffectnum(EFFECT_VORTEX_BEAM_NEW) >= 0)
 	{
-		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum(EFFECT_VORTEX_BEAM_NEW), vbeam_shotorg, vbeam_endpos, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
+		WarpZone_TrailParticles_WithMultiplier(world, particleeffectnum(EFFECT_VORTEX_BEAM_NEW), M_ARGV(0, vector), M_ARGV(1, vector), 1, PARTICLES_USEALPHA | PARTICLES_USEFADE);
 		return true;
 	}
 

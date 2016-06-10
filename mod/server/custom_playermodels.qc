@@ -58,90 +58,92 @@ void cpmodels_Precache()
 .bool cvar_cl_damnfurries;
 .bool cow;
 
+REPLICATE(cvar_cl_pony, bool, "cl_pony");
+REPLICATE(cvar_cl_pony_skin, int, "cl_pony_skin");
+REPLICATE(cvar_cl_robot, bool, "cl_robot");
+REPLICATE(cvar_cl_thestars, bool, "cl_thestars");
+REPLICATE(cvar_cl_sparkle, int, "cl_sparkle");
+REPLICATE(cvar_cl_goat, bool, "cl_goat");
+REPLICATE(cvar_cl_damnfurries, bool, "cl_damnfurries");
+
 MUTATOR_HOOKFUNCTION(cpmodels, FormatMessage)
-{SELFPARAM();
-	if(format_message == "moo")
-		self.cow = true;
-
-	return false;
-}
-
-MUTATOR_HOOKFUNCTION(cpmodels, GetCvars)
 {
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_pony, "cl_pony");
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_pony_skin, "cl_pony_skin");
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_robot, "cl_robot");
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_thestars, "cl_thestars");
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_sparkle, "cl_sparkle");
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_goat, "cl_goat");
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_damnfurries, "cl_damnfurries");
-	return false;
+	entity player = M_ARGV(0, entity);
+	string format_message = M_ARGV(3, string);
+
+	if(format_message == "moo")
+		player.cow = true;
 }
 
 MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
-{SELFPARAM();
+{
+	string ret_string = M_ARGV(0, string);
+	int ret_int = M_ARGV(1, int);
+	entity player = M_ARGV(2, entity);
+
 	if(autocvar_sv_allow_customplayermodels)
 	if(!cvar("g_overkill"))
 	{
 #define ALLOWED(d) (models_allowed & MODELS_##d)
 		// public hax
 		// stuff anyone can use
-		if(self.cvar_cl_pony && ALLOWED(PONY))
+		if(player.cvar_cl_pony && ALLOWED(PONY))
 		{
 			ret_string = "models/player/pony.iqm";
-			ret_int = self.cvar_cl_pony_skin;
+			ret_int = player.cvar_cl_pony_skin;
 		}
-		if(self.cvar_cl_robot == 1 && ALLOWED(ROBOT))
+		if(player.cvar_cl_robot == 1 && ALLOWED(ROBOT))
 			ret_string = "models/player/terminusmale.iqm";
-		if(self.cvar_cl_goat && ALLOWED(GOAT))
+		if(player.cvar_cl_goat && ALLOWED(GOAT))
 			ret_string = "models/player/draconimale.iqm";
 
-		if(ALLOWED(BOT) && IS_BOT_CLIENT(self) && autocvar_sv_allow_customplayermodels_bots)
+		if(ALLOWED(BOT) && IS_BOT_CLIENT(player) && autocvar_sv_allow_customplayermodels_bots)
 			ret_string = "models/player/ubot.iqm";
 
 		// special hax
-		if(strhasword(self.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
+		if(strhasword(player.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
 		{
-			if(self.cvar_cl_thestars == 1 && ALLOWED(ROSALINA))
+			if(player.cvar_cl_thestars == 1 && ALLOWED(ROSALINA))
 			{
 				if(autocvar_g_fullbrightplayers && autocvar_g_player_brightness)
-					self.colormod = '0.7 0.7 0.7'; // regular brightness is way too bright here
+					player.colormod = '0.7 0.7 0.7'; // regular brightness is way too bright here
 				ret_string = "models/player/rosalina.dpm";
 			}
-			if(self.cvar_cl_damnfurries == 1 && ALLOWED(RENAMON))
+			if(player.cvar_cl_damnfurries == 1 && ALLOWED(RENAMON))
 				ret_string = "models/player/renamon.iqm";
 		}
-		else if(self.playermodel == "models/player/renamon.iqm")
+		else if(player.playermodel == "models/player/renamon.iqm")
 		{
 			ret_string = autocvar_sv_defaultplayermodel;
 		}
-		if(strhasword(self.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
+		if(strhasword(player.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
 		{
-			if(self.cvar_cl_sparkle == 3 && ALLOWED(MARIO))
+			if(player.cvar_cl_sparkle == 3 && ALLOWED(MARIO))
 				ret_string = "models/player/mario.dpm";
-			if(self.cvar_cl_sparkle >= 4 && ALLOWED(WEEGEE))
+			if(player.cvar_cl_sparkle >= 4 && ALLOWED(WEEGEE))
 				ret_string = "models/player/luigi.dpm";
 		}
 	}
 
-	if(self.playermodel == "models/player/mario.dpm" && !strhasword(self.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
+	if(player.playermodel == "models/player/mario.dpm" && !strhasword(player.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
 		ret_string = autocvar_sv_defaultplayermodel;
 
-	if(!cvar("g_overkill") && self.cow && ALLOWED(COW))
+	if(!cvar("g_overkill") && player.cow && ALLOWED(COW))
 		ret_string = "models/player/cow.md3";
 
-#undef ALLOWED
+	M_ARGV(0, string) = ret_string;
+	M_ARGV(1, int) = ret_int;
 
-	return false;
+#undef ALLOWED
 }
 
 MUTATOR_HOOKFUNCTION(cpmodels, PlayerSpawn)
-{SELFPARAM();
-	if(self.cvar_cl_sparkle >= 1 && strhasword(self.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
-		self.effects |= EF_STARDUST;
+{
+	entity player = M_ARGV(0, entity);
 
-	if(self.cvar_cl_sparkle == 2 && strhasword(self.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
-		self.colormap = 4351;
+	if(player.cvar_cl_sparkle >= 1 && strhasword(player.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
+		player.effects |= EF_STARDUST;
 
-	return false;
+	if(player.cvar_cl_sparkle == 2 && strhasword(player.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
+		player.colormap = 4351;
 }

@@ -93,10 +93,6 @@ spawnfunc(monster_tarbaby) { Monster_Spawn(this, MON_TARBABY.monsterid); }
 		{
 			return true;
 		}
-		METHOD(Tarbaby, mr_pain, bool(Tarbaby thismon, entity actor))
-		{
-			return true;
-		}
 		METHOD(Tarbaby, mr_death, bool(Tarbaby thismon, entity actor))
 		{
 			M_Tarbaby_Attack_Explode(actor);

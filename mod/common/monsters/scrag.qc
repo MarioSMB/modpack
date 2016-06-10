@@ -150,11 +150,11 @@ spawnfunc(monster_scrag) { Monster_Spawn(this, MON_SCRAG.monsterid); }
 		{
 			return true;
 		}
-		METHOD(Scrag, mr_pain, bool(Scrag thismon, entity actor))
+		METHOD(Scrag, mr_pain, float(Scrag thismon, entity actor, float damage_take, entity attacker, float deathtype))
 		{
 			actor.pain_finished = time + 0.5;
 			setanim(actor, actor.anim_pain1, true, true, false);
-			return true;
+			return damage_take;
 		}
 		METHOD(Scrag, mr_death, bool(Scrag thismon, entity actor))
 		{

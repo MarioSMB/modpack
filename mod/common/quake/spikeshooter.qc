@@ -10,14 +10,15 @@ STATIC_INIT(SpikeShooterProjectile) { PROJECTILE_SPIKE = MOD_PROJECTILES++; }
 REGISTER_MUTATOR(spikeshooter_projectile, true);
 
 MUTATOR_HOOKFUNCTION(spikeshooter_projectile, Ent_Projectile)
-{SELFPARAM();
-	if(self.cnt == PROJECTILE_SPIKE)
+{
+	entity proj = M_ARGV(0, entity);
+
+	if(proj.cnt == PROJECTILE_SPIKE)
 	{
-		setmodel(self, MDL_PROJECTILE_SPIKE);
-		self.traileffect = 0;
+		setmodel(proj, MDL_PROJECTILE_SPIKE);
+		proj.traileffect = 0;
 		return true;
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(spikeshooter_projectile, PrecacheProjectiles)

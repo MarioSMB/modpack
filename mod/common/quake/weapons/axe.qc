@@ -213,12 +213,12 @@ void W_Axe_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 	W_SetupShot_Range(actor, true, 0, SND_Null, 0, WEP_CVAR(axe, damage), WEP_CVAR(axe, melee_range));
 }
 
-		METHOD(Axe, wr_aim, void(entity thiswep))
-		{SELFPARAM();
-			if(vdist(self.origin - self.enemy.origin, <=, WEP_CVAR(axe, melee_range)))
-				PHYS_INPUT_BUTTON_ATCK2(self) = bot_aim(self, 1000000, 0, 0.001, false);
+		METHOD(Axe, wr_aim, void(entity thiswep, entity actor))
+		{
+			if(vdist(actor.origin - actor.enemy.origin, <=, WEP_CVAR(axe, melee_range)))
+				PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, 1000000, 0, 0.001, false);
 			else
-				PHYS_INPUT_BUTTON_ATCK(self) = bot_aim(self, 1000000, 0, 0.001, false);
+				PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, 1000000, 0, 0.001, false);
 		}
 		METHOD(Axe, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
@@ -230,9 +230,9 @@ void W_Axe_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 				weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, W_Axe_Attack);
 			}
 		}
-		METHOD(Axe, wr_setup, void(entity thiswep))
-		{SELFPARAM();
-			self.ammo_field = ammo_none;
+		METHOD(Axe, wr_setup, void(entity thiswep, entity actor))
+		{
+			actor.ammo_field = ammo_none;
 		}
 		METHOD(Axe, wr_checkammo1, bool(entity thiswep, entity actor))
 		{
@@ -244,7 +244,7 @@ void W_Axe_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 		}
 		METHOD(Axe, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
-			//W_Reload(self, WEP_CVAR_PRI(axe, ammo), SND_RELOAD); // WEAPONTODO
+			//W_Reload(actor, WEP_CVAR_PRI(axe, ammo), SND_RELOAD); // WEAPONTODO
 		}
 		METHOD(Axe, wr_suicidemessage, Notification(entity thiswep))
 		{

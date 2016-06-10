@@ -42,7 +42,10 @@ void RegisterModCvars_Set(string name, string def, string desc, bool archive, st
 MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 {
 	if(MUTATOR_RETURNVALUE) // command was already handled?
-		return false;
+		return;
+
+	string cmd_name = M_ARGV(0, string);
+	string cmd_string = M_ARGV(2, string);
 
 	if(cmd_name == "chlevel")
 	{
@@ -97,6 +100,4 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 			
 		return true;
 	}
-
-	return false;
 }

@@ -82,10 +82,6 @@ spawnfunc(monster_army) { Monster_Spawn(this, MON_SOLDIER.monsterid); }
 		{
 			return true;
 		}
-		METHOD(Soldier, mr_pain, bool(Monster thismon, entity actor))
-		{
-			return true;
-		}
 		METHOD(Soldier, mr_death, bool(Monster thismon, entity actor))
 		{
 			setanim(actor, actor.anim_die1, false, true, true);

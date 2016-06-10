@@ -34,8 +34,10 @@ void sha_SetCvars()
 }
 
 MUTATOR_HOOKFUNCTION(sha, FilterItem)
-{SELFPARAM();
-	switch (self.items)
+{
+	entity item = M_ARGV(0, entity);
+
+	switch (item.items)
 	{
 		case IT_5HP:
 		case IT_ARMOR_SHARD:
@@ -50,8 +52,6 @@ MUTATOR_HOOKFUNCTION(sha, SetStartItems)
 	start_items |= IT_UNLIMITED_WEAPON_AMMO;
 	//start_ammo_shells = warmup_start_ammo_shells = 100;
 	warmup_start_weapons = start_weapons = WEPSET(SHOTGUN);
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(sha, ForbidThrowCurrentWeapon)
@@ -61,18 +61,16 @@ MUTATOR_HOOKFUNCTION(sha, ForbidThrowCurrentWeapon)
 
 MUTATOR_HOOKFUNCTION(sha, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":SHA");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":SHA");
 }
 
 MUTATOR_HOOKFUNCTION(sha, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Shotgun Arena");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Shotgun Arena");
 }
 
 MUTATOR_HOOKFUNCTION(sha, SetModname)
 {
-	modname = "Shotgun Arena";
+	M_ARGV(0, string) = "Shotgun Arena";
 	return true;
 }

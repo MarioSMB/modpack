@@ -160,13 +160,13 @@ spawnfunc(monster_afrit) { Monster_Spawn(this, MON_AFRIT.monsterid); }
 				actor.armorvalue = autocvar_g_monsters_armor_blockpercent;
 			return true;
 		}
-		METHOD(Afrit, mr_pain, bool(Afrit thismon, entity actor))
+		METHOD(Afrit, mr_pain, float(Afrit thismon, entity actor, float damage_take, entity attacker, float deathtype))
 		{
-			if(frag_deathtype == DEATH_FIRE.m_id || frag_deathtype == DEATH_LAVA.m_id)
-				frag_damage = 0; // afrit doesn't burn
+			if(deathtype == DEATH_FIRE.m_id || deathtype == DEATH_LAVA.m_id)
+				damage_take = 0; // afrit doesn't burn
 			else
 				setanim(actor, actor.anim_pain1, true, true, true);
-			return true;
+			return damage_take;
 		}
 		METHOD(Afrit, mr_death, bool(Afrit thismon, entity actor))
 		{

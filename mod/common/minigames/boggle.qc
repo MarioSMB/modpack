@@ -30,12 +30,13 @@ REGISTER_STAT(BOGGLE_TIMER, float)
 REGISTER_MUTATOR(boggle_timer, true);
 
 MUTATOR_HOOKFUNCTION(boggle_timer, PlayerPreThink)
-{SELFPARAM();
-	if(self.active_minigame)
-		STAT(BOGGLE_TIMER, self) = (self.active_minigame.boggle_timer_start + autocvar_sv_minigames_boggle_timelimit) - time;
+{
+	entity player = M_ARGV(0, entity);
+
+	if(player.active_minigame)
+		STAT(BOGGLE_TIMER, player) = (player.active_minigame.boggle_timer_start + autocvar_sv_minigames_boggle_timelimit) - time;
 	else
-		STAT(BOGGLE_TIMER, self) = 0;
-	return false;
+		STAT(BOGGLE_TIMER, player) = 0;
 }
 #endif
 

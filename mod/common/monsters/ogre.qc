@@ -103,24 +103,24 @@ void M_Ogre_Attack_MachineGun(entity this)
 		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, this);
 }
 
-void M_Ogre_Attack_Grenade_Explode()
-{SELFPARAM();
-	self.event_damage = func_null;
-	self.takedamage = DAMAGE_NO;
+void M_Ogre_Attack_Grenade_Explode(entity this)
+{
+	this.event_damage = func_null;
+	this.takedamage = DAMAGE_NO;
 
-	if(self.movetype == MOVETYPE_NONE)
-		self.velocity = self.oldvelocity;
+	if(this.movetype == MOVETYPE_NONE)
+		this.velocity = this.oldvelocity;
 
-	sound (self, CH_WEAPON_A, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
-	Send_Effect(EFFECT_GRENADE_EXPLODE, self.origin, '0 0 0', 1);
-	RadiusDamage (self, self.realowner, autocvar_g_monster_ogre_attack_grenade_damage, autocvar_g_monster_ogre_attack_grenade_edgedamage, autocvar_g_monster_ogre_attack_grenade_radius, world, world, autocvar_g_monster_ogre_attack_grenade_force, self.projectiledeathtype, other);
+	sound (this, CH_WEAPON_A, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
+	Send_Effect(EFFECT_GRENADE_EXPLODE, this.origin, '0 0 0', 1);
+	RadiusDamage (this, this.realowner, autocvar_g_monster_ogre_attack_grenade_damage, autocvar_g_monster_ogre_attack_grenade_edgedamage, autocvar_g_monster_ogre_attack_grenade_radius, world, world, autocvar_g_monster_ogre_attack_grenade_force, this.projectiledeathtype, other);
 
-	remove (self);
+	remove (this);
 }
 
 void M_Ogre_Attack_Grenade_Explode_use(entity this, entity actor, entity trigger)
 {
-	WITHSELF(this, M_Ogre_Attack_Grenade_Explode());
+	M_Ogre_Attack_Grenade_Explode(this);
 }
 
 void M_Ogre_Attack_Grenade_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -147,8 +147,8 @@ void M_Ogre_Attack_Grenade_Touch(entity this)
 		return;
 	}
 
-	spamsound(self, CH_SHOTS, SND(GRENADE_BOUNCE_RANDOM()), VOL_BASE, ATTEN_NORM);
-	//self.projectiledeathtype |= HITTYPE_BOUNCE;
+	spamsound(this, CH_SHOTS, SND(GRENADE_BOUNCE_RANDOM()), VOL_BASE, ATTEN_NORM);
+	//this.projectiledeathtype |= HITTYPE_BOUNCE;
 }
 
 void M_Ogre_Attack_Grenade(entity this)
@@ -339,7 +339,7 @@ spawnfunc(monster_ogre) { Monster_Spawn(this, MON_OGRE.monsterid); }
 		{
 			return true;
 		}
-		METHOD(Ogre, mr_pain, bool(Monster thismon, entity actor))
+		METHOD(Ogre, mr_pain, float(Monster thismon, entity actor, float damage_take, entity attacker, float deathtype))
 		{
 			vector anim;
 			switch(floor(random() * 6))
@@ -352,7 +352,7 @@ spawnfunc(monster_ogre) { Monster_Spawn(this, MON_OGRE.monsterid); }
 				case 5: anim = actor.anim_pain5; actor.anim_finished = time + 1.4; break;
 			}
 			setanim(actor, anim, true, true, true);
-			return true;
+			return damage_take;
 		}
 		METHOD(Ogre, mr_death, bool(Monster thismon, entity actor))
 		{

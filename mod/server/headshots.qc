@@ -22,13 +22,17 @@ bool Headshot(entity targ, entity ent, vector hitloc, vector start, vector end)
 }
 
 MUTATOR_HOOKFUNCTION(headshots, FireBullet_Hit)
-{SELFPARAM();
-	if(MUTATOR_RETURNVALUE) { return false; }
+{
+	if(MUTATOR_RETURNVALUE) { return; }
 
-	if(Headshot(bullet_hit, self, bullet_endpos, bullet_startpos, bullet_endpos))
+    entity player = M_ARGV(0, entity);
+    entity targ = M_ARGV(1, entity);
+    vector bullet_startpos = M_ARGV(2, vector);
+    vector bullet_endpos = M_ARGV(3, vector);
+
+	if(Headshot(targ, player, bullet_endpos, bullet_startpos, bullet_endpos))
 	{
-		frag_damage *= autocvar_sv_headshot_damage; // more damage
-		Send_Notification(NOTIF_ONE, self, MSG_MULTI, HEADSHOT);
+		M_ARGV(4, float) *= autocvar_sv_headshot_damage; // more damage
+		Send_Notification(NOTIF_ONE, player, MSG_MULTI, HEADSHOT);
 	}
-	return false;
 }

@@ -131,49 +131,48 @@ bool hats_Customize()
 	return true;
 }
 
-void hats_SpawnHat()
-{SELFPARAM();
-	self.hatentity = spawn();
-	self.hatentity.classname = "hatentity";
-	self.hatentity.solid = SOLID_NOT;
-	self.hatentity.owner = self;
-	self.hatentity.hatentity = self.hatentity;
-	setorigin(self.hatentity, '0 0 0');
-	self.hatentity.angles = '0 0 0';
-	setthink(self.hatentity, hat_Think);
-	self.hatentity.nextthink = time;
-	self.hatentity.customizeentityforclient = hats_Customize;
+REPLICATE(cvar_cl_hat, string, "cl_magical_hax");
+REPLICATE(cvar_cl_nohats, bool, "cl_nohats");
 
-	CSQCMODEL_AUTOINIT(self.hatentity);
+void hats_SpawnHat(entity this)
+{
+	this.hatentity = spawn();
+	this.hatentity.classname = "hatentity";
+	this.hatentity.solid = SOLID_NOT;
+	this.hatentity.owner = this;
+	this.hatentity.hatentity = this.hatentity;
+	setorigin(this.hatentity, '0 0 0');
+	this.hatentity.angles = '0 0 0';
+	setthink(this.hatentity, hat_Think);
+	this.hatentity.nextthink = time;
+	this.hatentity.customizeentityforclient = hats_Customize;
+
+	CSQCMODEL_AUTOINIT(this.hatentity);
 }
 
 MUTATOR_HOOKFUNCTION(hats, PutClientInServer)
-{SELFPARAM();
-	hats_SpawnHat();
-	self.hatentity.alpha = default_weapon_alpha;
-	self.hatname = strzone(self.cvar_cl_hat);
-	return false;
-}
-
-MUTATOR_HOOKFUNCTION(hats, GetCvars)
 {
-	GetCvars_handleString(get_cvars_s, get_cvars_f, cvar_cl_hat, "cl_magical_hax");
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_nohats, "cl_nohats");
-	return false;
+	entity player = M_ARGV(0, entity);
+
+	hats_SpawnHat(player);
+	player.hatentity.alpha = default_weapon_alpha;
+	player.hatname = strzone(player.cvar_cl_hat);
 }
 
 MUTATOR_HOOKFUNCTION(hats, ClientDisconnect)
-{SELFPARAM();
-	self.hatentity = world;
-	self.hatname = "";
-	return false;
+{
+	entity player = M_ARGV(0, entity);
+
+	player.hatentity = world;
+	player.hatname = "";
 }
 
 MUTATOR_HOOKFUNCTION(hats, MakePlayerObserver)
-{SELFPARAM();
-	self.hatentity = world;
-	self.hatname = "";
-	return false;
+{
+	entity player = M_ARGV(0, entity);
+
+	player.hatentity = world;
+	player.hatname = "";
 }
 
 MUTATOR_HOOKFUNCTION(hats, ClearModelParams)
@@ -181,18 +180,19 @@ MUTATOR_HOOKFUNCTION(hats, ClearModelParams)
 	get_model_parameters_hat_height = '0 0 0';
 	get_model_parameters_hat_scale = 0;
 	get_model_parameters_hat_angles = '0 0 0';
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(hats, GetModelParams)
 {
+	string checkmodel_input = M_ARGV(0, string);
+	string checkmodel_command = M_ARGV(1, string);
+
 	if(checkmodel_input == "hat_height")
 		get_model_parameters_hat_height = stov(checkmodel_command);
 	if(checkmodel_input == "hat_scale")
 		get_model_parameters_hat_scale = stof(checkmodel_command);
 	if(checkmodel_input == "hat_angles")
 		get_model_parameters_hat_angles = stov(checkmodel_command);
-	return false;
 }
 
 #elif defined(CSQC)
@@ -209,28 +209,29 @@ class(Skeleton) .vector hat_height;
 class(Skeleton) .float hat_scale;
 
 MUTATOR_HOOKFUNCTION(mod_hats, TagIndex_Apply)
-{SELFPARAM();
-	if(substring(self.model, 0, 12) == "models/hats/")
+{
+	entity ent = M_ARGV(0, entity);
+
+	if(substring(ent.model, 0, 12) == "models/hats/")
 	{
-		if(substring(self.tag_entity.model, 0, 12) == "models/hats/")
+		if(substring(ent.tag_entity.model, 0, 12) == "models/hats/")
 		{
-			self.tag_index = gettagindex(self.tag_entity, "tag_head");
-			if(!self.tag_index)
-				self.tag_index = gettagindex(self.tag_entity, "head");
-			if(!self.tag_index)
+			ent.tag_index = gettagindex(ent.tag_entity, "tag_head");
+			if(!ent.tag_index)
+				ent.tag_index = gettagindex(ent.tag_entity, "head");
+			if(!ent.tag_index)
 			{
 				// we need to prevent this from 'appening
-				self.tag_entity = world;
-				self.drawmask = 0;
+				ent.tag_entity = world;
+				ent.drawmask = 0;
 			}
 		}
-		else if(self.tag_entity.isplayermodel)
+		else if(ent.tag_entity.isplayermodel)
 		{
-			skeleton_loadinfo(self.tag_entity);
-			self.tag_index = self.tag_entity.bone_hat;
+			skeleton_loadinfo(ent.tag_entity);
+			ent.tag_index = ent.tag_entity.bone_hat;
 		}
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(mod_hats, ClearModelParams)
@@ -239,11 +240,13 @@ MUTATOR_HOOKFUNCTION(mod_hats, ClearModelParams)
 	get_model_parameters_hat_height = '0 0 0';
 	get_model_parameters_hat_scale = 0;
 	get_model_parameters_hat_angles = '0 0 0';
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(mod_hats, GetModelParams)
 {
+	string checkmodel_input = M_ARGV(0, string);
+	string checkmodel_command = M_ARGV(1, string);
+
 	if(checkmodel_input == "bone_head")
 		get_model_parameters_bone_head = checkmodel_command;
 	if(checkmodel_input == "hat_height")
@@ -252,24 +255,25 @@ MUTATOR_HOOKFUNCTION(mod_hats, GetModelParams)
 		get_model_parameters_hat_scale = stof(checkmodel_command);
 	if(checkmodel_input == "hat_angles")
 		get_model_parameters_hat_angles = stov(checkmodel_command);
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(mod_hats, Skeleton_CheckBones)
-{SELFPARAM();
-	self.bone_hat = gettagindex(self, "head");
-	if(!self.bone_hat)
-		self.bone_hat = gettagindex(self, "tag_head");
-	if(!self.bone_hat)
-		self.bone_hat = gettagindex(self, "bip01 head");
-	return false;
+{
+	entity ent = M_ARGV(0, entity);
+
+	ent.bone_hat = gettagindex(ent, "head");
+	if(!ent.bone_hat)
+		ent.bone_hat = gettagindex(ent, "tag_head");
+	if(!ent.bone_hat)
+		ent.bone_hat = gettagindex(ent, "bip01 head");
 }
 
 MUTATOR_HOOKFUNCTION(mod_hats, Skeleton_CheckModel)
-{SELFPARAM();
+{
+	entity ent = M_ARGV(0, entity);
+
 	if(get_model_parameters_bone_head)
-		self.bone_hat = gettagindex(self, get_model_parameters_bone_head);
-	return false;
+		ent.bone_hat = gettagindex(ent, get_model_parameters_bone_head);
 }
 
 #endif

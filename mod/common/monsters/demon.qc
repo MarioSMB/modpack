@@ -112,11 +112,11 @@ spawnfunc(monster_demon1) { Monster_Spawn(this, MON_DEMON.monsterid); }
 		{
 			return true;
 		}
-		METHOD(Demon, mr_pain, bool(Monster thismon, entity actor))
+		METHOD(Demon, mr_pain, float(Monster thismon, entity actor, float damage_take, entity attacker, float deathtype))
 		{
 			actor.pain_finished = time + 0.5;
 			setanim(actor, actor.anim_pain1, true, true, false);
-			return true;
+			return damage_take;
 		}
 		METHOD(Demon, mr_death, bool(Monster thismon, entity actor))
 		{

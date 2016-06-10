@@ -2,14 +2,16 @@
 
 .bool cvar_cl_dodging;
 
-MUTATOR_HOOKFUNCTION(mutator_mod, GetCvars, CBC_ORDER_LAST)
-{SELFPARAM();
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_dodging, "cl_dodging");
+REPLICATE(cvar_cl_dodging, bool, "cl_dodging");
 
-	if(!self.cvar_cl_dodging && cvar("g_dodging") >= 2)
-		self.cvar_cl_dodging_timeout = 0;
+REGISTER_MUTATOR(mod_dodging, cvar("g_dodging"));
 
-	return false;
+MUTATOR_HOOKFUNCTION(mod_dodging, PlayerSpawn)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(!player.cvar_cl_dodging && cvar("g_dodging") >= 2)
+		player.cvar_cl_dodging_timeout = 0;
 }
 
 #elif defined(CSQC)

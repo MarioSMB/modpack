@@ -16,12 +16,14 @@ const int FROZEN_RESPAWNING = 2; // player released the key, respawn when we can
 
 .int cvar_cl_freeze;
 
+REPLICATE(cvar_cl_freeze, bool, "cl_freeze");
+
 void freeze_Unfreeze(entity ent)
-{SELFPARAM();
+{
 	ent.freeze_flag = FROZEN_THAWING; // thawing is fine, as this is only checked when the player is frozen
 
-	self.freezetag_frozen_time = 0;
-	self.freezetag_frozen_timeout = 0;
+	ent.freezetag_frozen_time = 0;
+	ent.freezetag_frozen_timeout = 0;
 
 	Kill_Notification(NOTIF_ONE_ONLY, ent, MSG_CENTER, CPID_FREEZE);
 
@@ -30,15 +32,19 @@ void freeze_Unfreeze(entity ent)
 
 
 MUTATOR_HOOKFUNCTION(freeze, PlayerSpawn)
-{SELFPARAM();
-	freeze_Unfreeze(self);
-	return false;
+{
+	entity player = M_ARGV(0, entity);
+
+	freeze_Unfreeze(player);
 }
 
 MUTATOR_HOOKFUNCTION(freeze, PlayerDies)
 {
+	entity frag_target = M_ARGV(2, entity);
+	float frag_deathtype = M_ARGV(3, float);
+
 	if(frag_deathtype == DEATH_HURTTRIGGER.m_id)
-		return false;
+		return;
 
 	calculate_player_respawn_time(frag_target); // player doesn't actually die
 
@@ -77,7 +83,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerDies)
 			// let the player die, he will be automatically frozen when he respawns
 			if(STAT(FROZEN, frag_target) == 1)
 				freeze_Unfreeze(frag_target); // remove ice
-			return 1;
+			return true;
 		}
 
 		Freeze(frag_target, 0, 1, (teamplay && autocvar_g_freeze_noauto));
@@ -85,18 +91,18 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerDies)
 			frag_target.freezetag_frozen_timeout = time + autocvar_g_freeze_frozen_maxtime;
 		frag_target.freezetag_frozen_time = time;
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
-{SELFPARAM();
-	if(IS_DEAD(self) || !IS_PLAYER(self) || gameover)
-		return false;
+{
+	entity player = M_ARGV(0, entity);
+
+	if(IS_DEAD(player) || !IS_PLAYER(player) || gameover)
+		return;
 
 	if(round_handler_IsActive())
 	if(!round_handler_IsRoundStarted())
-		return false;
+		return;
 
 	bool button_pressed = false;
 	int n;
@@ -104,186 +110,176 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 	if(teamplay && autocvar_g_freeze_noauto)
 	{
 		// copied from freezetag
-		if(STAT(FROZEN, self) == 1)
+		if(STAT(FROZEN, player) == 1)
 		{
 			// keep health = 1
-			self.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
+			player.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
 		}
 
-		if(STAT(FROZEN, self) == 1)
+		if(STAT(FROZEN, player) == 1)
 		{
-			button_pressed = (!autocvar_g_freeze_norespawn && (PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_USE(self))); // only detect jumps
-			if(IS_GAMETYPE(LMS) || IS_GAMETYPE(CA)) { self.freeze_flag = FROZEN_RESPAWNING; } // these modes require player to die
-			if(self.freeze_flag == FROZEN_THAWING)
+			button_pressed = (!autocvar_g_freeze_norespawn && (PHYS_INPUT_BUTTON_JUMP(player) || PHYS_INPUT_BUTTON_USE(player))); // only detect jumps
+			if(IS_GAMETYPE(LMS) || IS_GAMETYPE(CA)) { player.freeze_flag = FROZEN_RESPAWNING; } // these modes require player to die
+			if(player.freeze_flag == FROZEN_THAWING)
 			{
 				if(!button_pressed)
-					self.freeze_flag = FROZEN_WILLRESPAWN;
+					player.freeze_flag = FROZEN_WILLRESPAWN;
 			}
-			else if(self.freeze_flag == FROZEN_WILLRESPAWN)
+			else if(player.freeze_flag == FROZEN_WILLRESPAWN)
 			{
 				if(button_pressed)
-					self.freeze_flag = FROZEN_RESPAWNING;
+					player.freeze_flag = FROZEN_RESPAWNING;
 			}
-			else if(self.freeze_flag == FROZEN_RESPAWNING)
+			else if(player.freeze_flag == FROZEN_RESPAWNING)
 			{
-				if(time > self.respawn_time)
+				if(time > player.respawn_time)
 				{
-					self.respawn_time = time + 1; // only retry once a second
-					if(self.nade)
-						toss_nade(self, true, '0 0 100', max(self.nade.wait, time + 0.05));
-					PutClientInServer();
+					player.respawn_time = time + 1; // only retry once a second
+					if(player.nade)
+						toss_nade(player, true, '0 0 100', max(player.nade.wait, time + 0.05));
+					WITHSELF(player, PutClientInServer());
 				}
 
-				return 1; // if we get here, normal revivals have been cancelled
+				return true; // if we get here, normal revivals have been cancelled
 			}
 		}
 
-		if(STAT(FROZEN, self) == 1)
+		if(STAT(FROZEN, player) == 1)
 		{
 			int frozen_count = 0, nplayers = 0;
-			FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, self), LAMBDA(
+			FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, player), LAMBDA(
 				++nplayers;
 				if(STAT(FROZEN, it) == 1)
 					++frozen_count;
 			));
 			if(nplayers == frozen_count)
 			{
-				FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, self), LAMBDA(
+				FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, player), LAMBDA(
 					it.freeze_flag = FROZEN_RESPAWNING;
 					it.respawn_time = time + autocvar_g_freeze_respawn_time;
 					PlayerScore_Add(it, SP_SCORE, -1); // lose score for this
 				));
 
-				return 1;
+				return true;
 			}
 		}
 
 		entity o;
 		o = world;
-		//if(self.freezetag_frozen_timeout > 0 && time < self.freezetag_frozen_timeout)
-		//if(self.iceblock)
-			//self.iceblock.alpha = ICE_MIN_ALPHA + (ICE_MAX_ALPHA - ICE_MIN_ALPHA) * (self.freezetag_frozen_timeout - time) / (self.freezetag_frozen_timeout - self.freezetag_frozen_time);
+		//if(player.freezetag_frozen_timeout > 0 && time < player.freezetag_frozen_timeout)
+		//if(player.iceblock)
+			//player.iceblock.alpha = ICE_MIN_ALPHA + (ICE_MAX_ALPHA - ICE_MIN_ALPHA) * (player.freezetag_frozen_timeout - time) / (player.freezetag_frozen_timeout - player.freezetag_frozen_time);
 
-		if(self.freezetag_frozen_timeout > 0 && time >= self.freezetag_frozen_timeout)
+		if(player.freezetag_frozen_timeout > 0 && time >= player.freezetag_frozen_timeout)
 			n = -1;
 		else
 		{
 			vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 			n = 0;
-			FOREACH_CLIENT(IS_PLAYER(it) && it != self && !IS_DEAD(it) && !STAT(FROZEN, it) && SAME_TEAM(it, self), LAMBDA(
-				if(boxesoverlap(self.absmin - revive_extra_size, self.absmax + revive_extra_size, it.absmin, it.absmax))
+			FOREACH_CLIENT(IS_PLAYER(it) && it != player && !IS_DEAD(it) && !STAT(FROZEN, it) && SAME_TEAM(it, player), LAMBDA(
+				if(boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
 				{
 					if(!o)
 						o = it;
-					if(STAT(FROZEN, self) == 1)
+					if(STAT(FROZEN, player) == 1)
 						it.reviving = true;
 					++n;
 				}
 			));
 		}
 
-		if(n && STAT(FROZEN, self) == 1) // OK, there is at least one teammate reviving us
+		if(n && STAT(FROZEN, player) == 1) // OK, there is at least one teammate reviving us
 		{
-			self.revive_progress = bound(0, self.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
-			self.health = max(1, self.revive_progress * start_health);
+			player.revive_progress = bound(0, player.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
+			player.health = max(1, player.revive_progress * start_health);
 
-			if(self.revive_progress >= 1)
+			if(player.revive_progress >= 1)
 			{
-				freeze_Unfreeze(self);
+				freeze_Unfreeze(player);
 
 				if(n == -1)
 				{
-					Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_FREEZETAG_AUTO_REVIVED, autocvar_g_freeze_frozen_maxtime);
-					Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_AUTO_REVIVED, self.netname, autocvar_g_freeze_frozen_maxtime);
-					return 1;
+					Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_AUTO_REVIVED, autocvar_g_freeze_frozen_maxtime);
+					Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_AUTO_REVIVED, player.netname, autocvar_g_freeze_frozen_maxtime);
+					return true;
 				}
 
 				// EVERY team mate nearby gets a point (even if multiple!)
 				FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, LAMBDA(
-					PlayerScore_Add(other, SP_SCORE, +1);
-					nades_GiveBonus(other,autocvar_g_nades_bonus_score_low);
+					PlayerScore_Add(it, SP_SCORE, +1);
+					nades_GiveBonus(it,autocvar_g_nades_bonus_score_low);
 				));
 
-				Send_Notification(NOTIF_ONE, self, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
-				Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, self.netname);
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED, self.netname, o.netname);
+				Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
+				Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
+				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED, player.netname, o.netname);
 			}
 
 			FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, LAMBDA(
-				other.revive_progress = self.revive_progress;
-				other.reviving = false;
+				it.revive_progress = player.revive_progress;
+				it.reviving = false;
 			));
 		}
-		else if(!n && STAT(FROZEN, self) == 1) // only if no teammate is nearby will we reset
+		else if(!n && STAT(FROZEN, player) == 1) // only if no teammate is nearby will we reset
 		{
-			self.revive_progress = bound(0, self.revive_progress - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
-			self.health = max(1, self.revive_progress * start_health);
+			player.revive_progress = bound(0, player.revive_progress - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
+			player.health = max(1, player.revive_progress * start_health);
 		}
-		else if(!n && !STAT(FROZEN, self))
+		else if(!n && !STAT(FROZEN, player))
 		{
-			self.revive_progress = 0; // thawing nobody
+			player.revive_progress = 0; // thawing nobody
 		}
 	}
-	else if(STAT(FROZEN, self) == 1) // auto revive
+	else if(STAT(FROZEN, player) == 1) // auto revive
 	{
 		float rspeed = autocvar_g_freeze_revive_speed;
 		if(autocvar_g_freeze_revive_speed_random)
 			rspeed *= (random() * autocvar_g_freeze_revive_speed_random);
 
-		self.revive_progress = bound(0, self.revive_progress + frametime * rspeed, 1);
-		self.health = max(1, self.revive_progress * start_health);
+		player.revive_progress = bound(0, player.revive_progress + frametime * rspeed, 1);
+		player.health = max(1, player.revive_progress * start_health);
 
-		if(self.health >= autocvar_g_freeze_revive_minhealth)
-			button_pressed = (PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_USE(self)); // we're about to defrost, only detect jumps
+		if(player.health >= autocvar_g_freeze_revive_minhealth)
+			button_pressed = (PHYS_INPUT_BUTTON_JUMP(player) || PHYS_INPUT_BUTTON_USE(player)); // we're about to defrost, only detect jumps
 		else
-			button_pressed = (PHYS_INPUT_BUTTON_ATCK(self) || PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_ATCK2(self) || PHYS_INPUT_BUTTON_HOOK(self) || PHYS_INPUT_BUTTON_USE(self));
+			button_pressed = (PHYS_INPUT_BUTTON_ATCK(player) || PHYS_INPUT_BUTTON_JUMP(player) || PHYS_INPUT_BUTTON_ATCK2(player) || PHYS_INPUT_BUTTON_HOOK(player) || PHYS_INPUT_BUTTON_USE(player));
 
 		if(autocvar_g_freeze_norespawn)
 			button_pressed = 0; // don't allow re-spawning via jump/attack
 
-		if(self.freeze_flag == FROZEN_THAWING)
+		if(player.freeze_flag == FROZEN_THAWING)
 		{
 			if(!button_pressed)
-				self.freeze_flag = FROZEN_WILLRESPAWN;
+				player.freeze_flag = FROZEN_WILLRESPAWN;
 		}
-		else if(self.freeze_flag == FROZEN_WILLRESPAWN)
+		else if(player.freeze_flag == FROZEN_WILLRESPAWN)
 		{
 			if(button_pressed)
-				self.freeze_flag = FROZEN_RESPAWNING;
+				player.freeze_flag = FROZEN_RESPAWNING;
 		}
-		else if(self.freeze_flag == FROZEN_RESPAWNING)
+		else if(player.freeze_flag == FROZEN_RESPAWNING)
 		{
-			if(time > self.respawn_time)
+			if(time > player.respawn_time)
 			{
-				self.respawn_time = time + 1; // only retry once a second
-				if(self.nade)
-					toss_nade(self, true, '0 0 100', max(self.nade.wait, time + 0.05));
-				PutClientInServer();
-				return 1;
+				player.respawn_time = time + 1; // only retry once a second
+				if(player.nade)
+					toss_nade(player, true, '0 0 100', max(player.nade.wait, time + 0.05));
+				WITHSELF(player, PutClientInServer());
+				return true;
 			}
 		}
 
-		if(self.revive_progress >= 1)
-			freeze_Unfreeze(self);
+		if(player.revive_progress >= 1)
+			freeze_Unfreeze(player);
 	}
-
-	return false;
-}
-
-MUTATOR_HOOKFUNCTION(freeze, GetCvars)
-{
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_freeze, "cl_freeze");
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(freeze, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":Freeze");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":Freeze");
 }
 
 MUTATOR_HOOKFUNCTION(freeze, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Freeze");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Freeze");
 }

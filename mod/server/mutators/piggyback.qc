@@ -6,6 +6,9 @@ AUTOCVAR(g_piggyback_ride_enemies, bool, false, _("Allow riding enemies"));
 .float cvar_cl_nocarry;
 .float cvar_cl_noride;
 
+REPLICATE(cvar_cl_nocarry, bool, "cl_nocarry");
+REPLICATE(cvar_cl_noride, bool, "cl_noride");
+
 .entity piggybacker;
 .entity pbent;
 .entity pbhost;
@@ -171,41 +174,43 @@ MUTATOR_HOOKFUNCTION(piggyback, MatchEnd)
 }
 
 MUTATOR_HOOKFUNCTION(piggyback, PlayerUseKey)
-{SELFPARAM();
-	if(MUTATOR_RETURNVALUE || gameover) { return false; }
+{
+	if(MUTATOR_RETURNVALUE || gameover) { return; }
+
+	entity player = M_ARGV(0, entity);
 	
-	if(self.pbhost)
+	if(player.pbhost)
 	{
-		pb_Detach(self.pbhost);
+		pb_Detach(player.pbhost);
 		return true;
 	}
-	if(self.piggybacker)
+	if(player.piggybacker)
 	{
-		pb_Detach(self);
+		pb_Detach(player);
 		return true;
 	}
 
 #define LIMBO(v) (IS_DEAD(v) || STAT(FROZEN, v))
 
-	if(!self.cvar_cl_noride)
-	if(!self.vehicle && !IS_DEAD(self) && !STAT(FROZEN, self))
+	if(!player.cvar_cl_noride)
+	if(!player.vehicle && !IS_DEAD(player) && !STAT(FROZEN, player))
 	{
 		entity head, closest_target = world;
 
-		head = WarpZone_FindRadius(self.origin, autocvar_g_vehicles_enter_radius, true);
+		head = WarpZone_FindRadius(player.origin, autocvar_g_vehicles_enter_radius, true);
 		while(head)
 		{
 			if(IS_PLAYER(head) || (IS_MONSTER(head) && ((Monsters_from(head.monsterid)).spawnflags & MON_FLAG_RIDE)))
-			if(SAME_TEAM(head, self) || autocvar_g_piggyback_ride_enemies || (IS_MONSTER(head) && head.realowner == self))
-			if(head != self)
+			if(SAME_TEAM(head, player) || autocvar_g_piggyback_ride_enemies || (IS_MONSTER(head) && head.realowner == player))
+			if(head != player)
 			if(!head.cvar_cl_nocarry)
 			if(!IS_DEAD(head)) // we check for trapped status here, but better to be safe than sorry, considering the madness happening
 			if(!head.vehicle)
-			if((!LIMBO(head) && !LIMBO(self)) || (LIMBO(head) || LIMBO(self))) // your guess is as good as mine
+			if((!LIMBO(head) && !LIMBO(player)) || (LIMBO(head) || LIMBO(player))) // your guess is as good as mine
 			{
 				if(closest_target)
 				{
-					if(vlen(self.origin - head.origin) < vlen(self.origin - closest_target.origin))
+					if(vlen2(player.origin - head.origin) < vlen2(player.origin - closest_target.origin))
 					{ closest_target = head; }
 				}
 				else { closest_target = head; }
@@ -215,100 +220,99 @@ MUTATOR_HOOKFUNCTION(piggyback, PlayerUseKey)
 		}
 
 		if(closest_target)
-		if(IS_BOT_CLIENT(closest_target)) { pb_Attach(self, closest_target); return true; }
-		else { pb_Attach(closest_target, self); return true; }
+		if(IS_BOT_CLIENT(closest_target)) { pb_Attach(player, closest_target); return true; }
+		else { pb_Attach(closest_target, player); return true; }
 	}
 
 #undef LIMBO
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(piggyback, PlayerPreThink)
-{SELFPARAM();
-	if(BROKEN_PBREF(self)) { pb_Detach(self); }
-	
-	if(!self.pbent)
-		pb_FixPBEnt(self);
+{
+	entity player = M_ARGV(0, entity);
 
-	if(IS_MONSTER(self.pbhost))
-	if(self.movement || PHYS_INPUT_BUTTON_JUMP(self) || PHYS_INPUT_BUTTON_CROUCH(self))
-	//if(!self.pbhost.enemy) // if player is trying to move, don't override
+	if(BROKEN_PBREF(player)) { pb_Detach(player); }
+	
+	if(!player.pbent)
+		pb_FixPBEnt(player);
+
+	if(IS_MONSTER(player.pbhost))
+	if(player.movement || PHYS_INPUT_BUTTON_JUMP(player) || PHYS_INPUT_BUTTON_CROUCH(player))
+	//if(!player.pbhost.enemy) // if player is trying to move, don't override
 	{
 		float forw, rit, updown = 0;
 		vector wishvel = '0 0 0';
 
-		makevectors(self.angles);
-		if(PHYS_INPUT_BUTTON_JUMP(self))
+		makevectors(player.angles);
+		if(PHYS_INPUT_BUTTON_JUMP(player))
 			updown = 300;
-		else if(PHYS_INPUT_BUTTON_CROUCH(self))
+		else if(PHYS_INPUT_BUTTON_CROUCH(player))
 			updown = -300;
 
-		if(self.movement)
+		if(player.movement)
 		{
-			forw = self.movement_x * 500;
-			rit = self.movement_y * 500;
-			//updown = self.movement_z * 100;
+			forw = player.movement_x * 500;
+			rit = player.movement_y * 500;
+			//updown = player.movement_z * 100;
 			
 			wishvel = v_forward * forw + v_right * rit;
 		}
 		
-		//vector wishvel = normalize(('10 0 0' + v_forward * self.movement_x) + ('0 10 0' + v_right * self.movement_y) + ('0 0 1' * self.movement_z));
-		//print(vtos(self.origin), vtos(self.origin + wishvel), "\n");
-		self.pbhost.monster_moveto = self.origin + wishvel;
-		self.pbhost.monster_moveto_z = v_up_z * updown;
+		//vector wishvel = normalize(('10 0 0' + v_forward * player.movement_x) + ('0 10 0' + v_right * player.movement_y) + ('0 0 1' * player.movement_z));
+		//print(vtos(player.origin), vtos(player.origin + wishvel), "\n");
+		player.pbhost.monster_moveto = player.origin + wishvel;
+		player.pbhost.monster_moveto_z = v_up_z * updown;
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(piggyback, MonsterMove)
-{SELFPARAM();
-	if(BROKEN_PBREF(self)) { pb_Detach(self); }
-	
-	if(!self.pbent)
-		pb_FixPBEnt(self);
+{
+	entity mon = M_ARGV(0, entity);
 
-	if(self.piggybacker)
+	if(BROKEN_PBREF(mon)) { pb_Detach(mon); }
+	
+	if(!mon.pbent)
+		pb_FixPBEnt(mon);
+
+	if(mon.piggybacker)
 	{
-		self.flags |= FL_PICKUPITEMS;
-		self.last_trace = time;
+		mon.flags |= FL_PICKUPITEMS;
+		mon.last_trace = time;
 	}
 	else
-		self.flags &= ~FL_PICKUPITEMS;
-
-	return false;
+		mon.flags &= ~FL_PICKUPITEMS;
 }
 
 MUTATOR_HOOKFUNCTION(piggyback, reset_map_players)
 {
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(pb_Detach(it)));
-	return false;
 }
 
-void pb_RemovePlayer()
-{SELFPARAM();
-	if(self.piggybacker)
+void pb_RemovePlayer(entity this)
+{
+	if(this.piggybacker)
 	{
-		self.piggybacker.pb_canattach = 1;
-		pb_Detach(self);
+		this.piggybacker.pb_canattach = 1;
+		pb_Detach(this);
 	}
 	
-	if(self.pbhost)
-		pb_Detach(self.pbhost);
-	self.pb_canattach = 0;
+	if(this.pbhost)
+		pb_Detach(this.pbhost);
+	this.pb_canattach = 0;
 }
 
 MUTATOR_HOOKFUNCTION(piggyback, MakePlayerObserver)
 {
-	pb_RemovePlayer();
-	return false;
+	entity player = M_ARGV(0, entity);
+
+	pb_RemovePlayer(player);
 }
 
 MUTATOR_HOOKFUNCTION(piggyback, ClientDisconnect)
 {
-	pb_RemovePlayer();
-	return false;
+	entity player = M_ARGV(0, entity);
+
+	pb_RemovePlayer(player);
 }
 
 void pb_PlayerDies(entity this)
@@ -329,88 +333,91 @@ void pb_PlayerDies(entity this)
 
 MUTATOR_HOOKFUNCTION(piggyback, MonsterDies)
 {
+	entity frag_target = M_ARGV(0, entity);
+
 	pb_PlayerDies(frag_target);
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(piggyback, PlayerDies)
 {
-	pb_PlayerDies(frag_target);
-	return false;
-}
+	entity frag_target = M_ARGV(2, entity);
 
-MUTATOR_HOOKFUNCTION(piggyback, GetCvars)
-{
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_nocarry, "cl_nocarry");
-	GetCvars_handleFloat(get_cvars_s, get_cvars_f, cvar_cl_noride, "cl_noride");
-	return false;
+	pb_PlayerDies(frag_target);
 }
 
 MUTATOR_HOOKFUNCTION(piggyback, FixPlayermodel)
-{SELFPARAM();
-	if(!self.pbhost) { return false; }
+{
+	entity player = M_ARGV(2, entity);
+
+	if(!player.pbhost) { return false; }
 
 	// this was the nearest hook to the original code
-	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(self);
-	if(self.hook_state
-	|| self.vehicle
-	|| STAT(FROZEN, self)
+	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(player);
+	if(player.hook_state
+	|| player.vehicle
+	|| STAT(FROZEN, player)
 	) { do_crouch = false; }
 
 	// WEAPONTODO: THIS SHIT NEEDS TO GO EVENTUALLY
 	// It cannot be predicted by the engine!
 	.entity weaponentity = weaponentities[0];
-	if((self.weapon == WEP_SHOCKWAVE.m_id || self.weapon == WEP_SHOTGUN.m_id) && self.(weaponentity).wframe == WFRAME_FIRE2 && time < self.(weaponentity).weapon_nextthink)
+	if((player.weapon == WEP_SHOCKWAVE.m_id || player.weapon == WEP_SHOTGUN.m_id) && player.(weaponentity).wframe == WFRAME_FIRE2 && time < player.(weaponentity).weapon_nextthink)
 		do_crouch = false;
 
-	if(!do_crouch && self.crouch)
+	if(!do_crouch && player.crouch)
 	{
-		tracebox(self.origin, STAT(PL_MIN, self), STAT(PL_MAX, self), self.origin, false, self);
-		if (!trace_startsolid || self.pbhost)
+		tracebox(player.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), player.origin, false, player);
+		if (!trace_startsolid || player.pbhost)
 		{
-			self.crouch = false;
-			self.view_ofs = STAT(PL_VIEW_OFS, self);
-			setsize (self, STAT(PL_MIN, self), STAT(PL_MAX, self));
+			player.crouch = false;
+			player.view_ofs = STAT(PL_VIEW_OFS, player);
+			setsize (player, STAT(PL_MIN, player), STAT(PL_MAX, player));
 		}
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(piggyback, GrappleHookThink)
 {
+	entity hook_pullentity = M_ARGV(2, entity);
+
 	if(hook_pullentity.pbhost)
 	{
 		hook_pullentity = pb_RootOf(hook_pullentity);
-		hook_tarzan = 2; // enforce tarzan
+		M_ARGV(1, int) = 2; // enforce tarzan
 	}
-	return false;
+
+	M_ARGV(2, entity) = hook_pullentity;
 }
 
 MUTATOR_HOOKFUNCTION(piggyback, BuffModel_Customize)
-{SELFPARAM();
-	if(buff_player.pbhost == self.owner || self.owner.piggybacker)
+{
+	entity buff = M_ARGV(0, entity);
+	entity player = M_ARGV(1, entity);
+
+	if(player.pbhost == buff.owner || buff.owner.piggybacker)
 		return true; // don't show to piggybacker's carrier, and don't show if carrier is carrying someone else
-	return false;
 }
 
 
 MUTATOR_HOOKFUNCTION(piggyback, ItemTouch)
-{SELFPARAM();
-	if(IS_MONSTER(other))
+{
+	entity item = M_ARGV(0, entity);
+	entity toucher = M_ARGV(1, entity);
+
+	if(IS_MONSTER(toucher))
 	{
-		entity p = other;
+		entity p = toucher;
 		while(p.piggybacker)
 		{
 			p = p.piggybacker;
 			if(IS_PLAYER(p))
 			{
-				other = p;
+				toucher = p;
 				break;
 			}
 		}
 
-		if(IS_MONSTER(other))
+		if(IS_MONSTER(toucher))
 			return MUT_ITEMTOUCH_RETURN; // make sure we're not allowing something nasty here
 	}
 
@@ -418,41 +425,47 @@ MUTATOR_HOOKFUNCTION(piggyback, ItemTouch)
 	// if we get here, the above stuff is out of the way
 
 	// we use pb_RootOf here, as magnet buff can give riders items, and it wouldn't be very nice if they hogged them
-	entity p = pb_RootOf(other);
+	entity p = pb_RootOf(toucher);
 	if(IS_PLAYER(p))
-		other = p;
+		toucher = p;
 	while(p.piggybacker)
 	{
 		p = p.piggybacker;
 		if(IS_PLAYER(p))
 		{
-			if(!pb_GiveItem(p, self))
+			if(!pb_GiveItem(p, item))
 				continue;
 		}
 	}
 
-	return false;
+	M_ARGV(1, entity) = toucher;
+
+	return MUT_ITEMTOUCH_CONTINUE;
 }
 
 MUTATOR_HOOKFUNCTION(piggyback, BuffTouch)
-{SELFPARAM();
-	if(IS_MONSTER(other))
-	if(other.piggybacker)
-		other = other.piggybacker;
+{
+	entity buff = M_ARGV(0, entity);
+	entity toucher = M_ARGV(1, entity);
 
-	if(other.buffs)
-	if(other.buffs == self.buffs || !other.cvar_cl_buffs_autoreplace)
+	if(IS_MONSTER(toucher))
+	if(toucher.piggybacker)
+		toucher = toucher.piggybacker;
+
+	if(toucher.buffs)
+	if(toucher.buffs == buff.buffs || !toucher.cvar_cl_buffs_autoreplace)
 	{
-		entity p = other;
+		entity p = toucher;
 		while(p.piggybacker)
 		{
 			p = p.piggybacker;
-			if(!p.buffs || (!p.piggybacker && (p.cvar_cl_buffs_autoreplace || p.buffs != self.buffs)))
+			if(!p.buffs || (!p.piggybacker && (p.cvar_cl_buffs_autoreplace || p.buffs != buff.buffs)))
 			{
-				other = p;
+				toucher = p;
 				break;
 			}
 		}
 	}
-	return false;
+
+	M_ARGV(1, entity) = toucher;
 }

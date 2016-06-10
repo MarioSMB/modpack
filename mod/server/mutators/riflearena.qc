@@ -30,31 +30,35 @@ void ra_SetCvars()
 
 MUTATOR_HOOKFUNCTION(ra, PlayerDamage_Calculate)
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	float frag_deathtype = M_ARGV(3, float);
+
 	if(IS_PLAYER(frag_attacker))
 	if(IS_PLAYER(frag_target))
 	{
 		if (DEATH_ISWEAPON(frag_deathtype, WEP_BLASTER))
 		{
 			if(frag_attacker == frag_target)
-				frag_damage = 5;
+				M_ARGV(4, float) = 5; // damage
 			else
-				frag_damage = 0;
-			frag_mirrordamage = 0;
+				M_ARGV(4, float) = 0; // damage
+			M_ARGV(5, float) = 0; // mirror damage
 			if (frag_target != frag_attacker)
 			{
 				if (frag_target.health >= 1 && IS_PLAYER(frag_target) && !STAT(FROZEN, frag_target) && !IS_DEAD(frag_target))
 					Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE);
-				frag_force = '0 0 0';
+				M_ARGV(6, vector) = '0 0 0'; // the force is not strong with this one
 			}
 		}
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ra, FilterItem)
-{SELFPARAM();
-	switch (self.items)
+{
+	entity item = M_ARGV(0, entity);
+
+	switch (item.items)
 	{
 		case IT_5HP:
 		case IT_ARMOR_SHARD:
@@ -75,8 +79,6 @@ MUTATOR_HOOKFUNCTION(ra, SetStartItems)
 		start_weapons |= WEPSET(BLASTER);
 		warmup_start_weapons |= WEPSET(BLASTER);
 	}
-
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ra, ForbidThrowCurrentWeapon)
@@ -86,18 +88,16 @@ MUTATOR_HOOKFUNCTION(ra, ForbidThrowCurrentWeapon)
 
 MUTATOR_HOOKFUNCTION(ra, BuildMutatorsString)
 {
-	ret_string = strcat(ret_string, ":RA");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":RA");
 }
 
 MUTATOR_HOOKFUNCTION(ra, BuildMutatorsPrettyString)
 {
-	ret_string = strcat(ret_string, ", Rifle Arena");
-	return false;
+	M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Rifle Arena");
 }
 
 MUTATOR_HOOKFUNCTION(ra, SetModname)
 {
-	modname = "Rifle Arena";
+	M_ARGV(0, string) = "Rifle Arena";
 	return true;
 }

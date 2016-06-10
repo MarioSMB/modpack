@@ -80,7 +80,7 @@ spawnfunc(monster_dog) { Monster_Spawn(this, MON_ROTTWEILER.monsterid); }
 		{
 			return true;
 		}
-		METHOD(Rottweiler, mr_pain, bool(Monster thismon, entity actor))
+		METHOD(Rottweiler, mr_pain, float(Monster thismon, entity actor, float damage_take, entity attacker, float deathtype))
 		{
 			if(random() <= 0.3)
 			{
@@ -90,7 +90,7 @@ spawnfunc(monster_dog) { Monster_Spawn(this, MON_ROTTWEILER.monsterid); }
 				else
 					actor.pain_finished = time + 0.5; // short burst?
 			}
-			return true;
+			return damage_take;
 		}
 		METHOD(Rottweiler, mr_death, bool(Monster thismon, entity actor))
 		{

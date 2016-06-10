@@ -79,25 +79,28 @@ bool have_powerup(entity this)
 }
 
 MUTATOR_HOOKFUNCTION(sv_mpowerups, ItemTouch)
-{SELFPARAM();
-	if(this.itemdef.instanceOfPowerup)
+{
+	entity item = M_ARGV(0, entity);
+	entity toucher = M_ARGV(1, entity);
+
+	if(item.itemdef.instanceOfPowerup)
 	{
-		if((other.items & ITEM_Star.m_itemid) || (other.items & ITEM_Metal.m_itemid))
+		if((toucher.items & ITEM_Star.m_itemid) || (toucher.items & ITEM_Metal.m_itemid))
 			return MUT_ITEMTOUCH_RETURN; // nope
 	}
 
-	if (this.star_finished)
+	if (item.star_finished)
 	{
-		if(have_powerup(other))
+		if(have_powerup(toucher))
 			return MUT_ITEMTOUCH_RETURN;
-		STAT(STAR_FINISHED, other) = max(STAT(STAR_FINISHED, other), time) + this.star_finished;
+		STAT(STAR_FINISHED, toucher) = max(STAT(STAR_FINISHED, toucher), time) + item.star_finished;
 		return MUT_ITEMTOUCH_PICKUP;
 	}
-	if (this.metal_finished)
+	if (item.metal_finished)
 	{
-		if(have_powerup(other))
+		if(have_powerup(toucher))
 			return MUT_ITEMTOUCH_RETURN;
-		STAT(METAL_FINISHED, other) = max(STAT(METAL_FINISHED, other), time) + this.metal_finished;
+		STAT(METAL_FINISHED, toucher) = max(STAT(METAL_FINISHED, toucher), time) + item.metal_finished;
 		return MUT_ITEMTOUCH_PICKUP;
 	}
 	return MUT_ITEMTOUCH_CONTINUE;
@@ -105,90 +108,98 @@ MUTATOR_HOOKFUNCTION(sv_mpowerups, ItemTouch)
 
 .int cvar_cl_sparkle; // TODO?
 MUTATOR_HOOKFUNCTION(sv_mpowerups, PlayerPreThink)
-{SELFPARAM();
+{
+	entity player = M_ARGV(0, entity);
+
 	if(frametime) // reduce load by only doing it in server frames
 	{
-		if(!this.cvar_cl_sparkle)
-			this.effects &= ~EF_STARDUST;
-		this.effects &= ~EF_DIMLIGHT;
+		if(!player.cvar_cl_sparkle)
+			player.effects &= ~EF_STARDUST;
+		player.effects &= ~EF_DIMLIGHT;
 	}
 
-	if(this.items & ITEM_Star.m_itemid)
-	if(time > this.star_touch_time)
+	if(player.items & ITEM_Star.m_itemid)
+	if(time > player.star_touch_time)
 	if(!gameover)
-	if(!STAT(FROZEN, this))
-	if(IS_PLAYER(this))
-	if(!IS_DEAD(this))
-	if(!IS_INDEPENDENT_PLAYER(this))
+	if(!STAT(FROZEN, player))
+	if(IS_PLAYER(player))
+	if(!IS_DEAD(player))
+	if(!IS_INDEPENDENT_PLAYER(player))
 	{
-		FOREACH_CLIENT(IS_PLAYER(it) && it != this, LAMBDA(
+		FOREACH_CLIENT(IS_PLAYER(it) && it != player, LAMBDA(
 			if(time > it.star_touch_time)
 			if(!STAT(FROZEN, it))
 			if(!IS_DEAD(it))
 			if(!IS_INDEPENDENT_PLAYER(it))
-			if(boxesoverlap(this.absmin, this.absmax, it.absmin, it.absmax))
+			if(boxesoverlap(player.absmin, player.absmax, it.absmin, it.absmax))
 			{
-				Damage(it, this, this, 999, DEATH_CHEAT.m_id, it.origin, it.origin);
-				this.star_touch_time = it.star_touch_time = time + autocvar_g_powerup_star_touch_delay;
+				Damage(it, player, player, 999, DEATH_CHEAT.m_id, it.origin, it.origin);
+				player.star_touch_time = it.star_touch_time = time + autocvar_g_powerup_star_touch_delay;
 			}
 		));
 	}
-	return false;
 }
 
 .string oldhatname;
 .string hatname; // TODO?
 MUTATOR_HOOKFUNCTION(sv_mpowerups, PlayerPowerups)
-{SELFPARAM();
-	if (this.items & ITEM_Star.m_itemid)
+{
+	entity player = M_ARGV(0, entity);
+
+	if (player.items & ITEM_Star.m_itemid)
 	{
-		play_countdown(STAT(STAR_FINISHED, this), SND_POWEROFF);
-		this.effects = this.effects | (EF_DIMLIGHT | EF_FULLBRIGHT);
-		if (time > STAT(STAR_FINISHED, this))
+		play_countdown(player, STAT(STAR_FINISHED, player), SND_POWEROFF);
+		player.effects = player.effects | (EF_DIMLIGHT | EF_FULLBRIGHT);
+		if (time > STAT(STAR_FINISHED, player))
 		{
-			this.items = this.items - (this.items & ITEM_Star.m_itemid);
-			//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_STAR, this.netname);
-			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_POWERDOWN_STAR);
+			player.items = player.items - (player.items & ITEM_Star.m_itemid);
+			//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_STAR, player.netname);
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_STAR);
 		}
 	}
 	else
 	{
-		if (time < STAT(STAR_FINISHED, this))
+		if (time < STAT(STAR_FINISHED, player))
 		{
-			this.items = this.items | ITEM_Star.m_itemid;
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_STAR, this.netname);
-			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_POWERUP_STAR);
+			player.items = player.items | ITEM_Star.m_itemid;
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_STAR, player.netname);
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_STAR);
 		}
 	}
 
-	if (this.items & ITEM_Metal.m_itemid)
+	if (player.items & ITEM_Metal.m_itemid)
 	{
-		play_countdown(STAT(METAL_FINISHED, this), SND_POWEROFF);
-		this.effects = this.effects | (EF_FULLBRIGHT);
-		if (time > STAT(METAL_FINISHED, this))
+		play_countdown(player, STAT(METAL_FINISHED, player), SND_POWEROFF);
+		player.effects = player.effects | (EF_FULLBRIGHT);
+		if (time > STAT(METAL_FINISHED, player))
 		{
-			this.hatname = this.oldhatname;
-			this.items = this.items - (this.items & ITEM_Metal.m_itemid);
-			//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_METAL, this.netname);
-			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_POWERDOWN_METAL);
+			player.hatname = player.oldhatname;
+			player.items = player.items - (player.items & ITEM_Metal.m_itemid);
+			//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_METAL, player.netname);
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_METAL);
 		}
 	}
 	else
 	{
-		if (time < STAT(METAL_FINISHED, this))
+		if (time < STAT(METAL_FINISHED, player))
 		{
-			self.oldhatname = self.hatname;
-			this.hatname = strzone("metal");
-			this.items = this.items | ITEM_Metal.m_itemid;
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_METAL, this.netname);
-			Send_Notification(NOTIF_ONE, this, MSG_CENTER, CENTER_POWERUP_METAL);
+			player.oldhatname = player.hatname;
+			player.hatname = strzone("metal");
+			player.items = player.items | ITEM_Metal.m_itemid;
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_METAL, player.netname);
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_METAL);
 		}
 	}
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(sv_mpowerups, PlayerDamage_Calculate)
 {
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	float frag_deathtype = M_ARGV(3, float);
+	float frag_damage = M_ARGV(4, float);
+	vector frag_force = M_ARGV(6, vector);
+
 	if(frag_target.items & ITEM_Metal.m_itemid)
 	{
 		if(frag_attacker != frag_target)
@@ -211,46 +222,54 @@ MUTATOR_HOOKFUNCTION(sv_mpowerups, PlayerDamage_Calculate)
 			frag_force = '0 0 0';
 	}
 
-	return false;
+	M_ARGV(4, float) = frag_damage;
+	M_ARGV(6, vector) = frag_force;
 }
 
 MUTATOR_HOOKFUNCTION(sv_mpowerups, SpectateCopy)
-{SELFPARAM();
-	STAT(METAL_FINISHED, this) = STAT(METAL_FINISHED, other);
-	STAT(STAR_FINISHED, this) = STAT(STAR_FINISHED, other);
+{
+	entity spectatee = M_ARGV(0, entity);
+	entity client = M_ARGV(1, entity);
+
+	STAT(METAL_FINISHED, client) = STAT(METAL_FINISHED, spectatee);
+	STAT(STAR_FINISHED, client) = STAT(STAR_FINISHED, spectatee);
 	return false;
 }
 
 MUTATOR_HOOKFUNCTION(sv_mpowerups, PlayerDies)
-{SELFPARAM();
-	STAT(METAL_FINISHED, this) = 0;
-	STAT(STAR_FINISHED, this) = 0;
-	sound(this, CH_TRIGGER_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
-	return false;
+{
+	entity frag_target = M_ARGV(2, entity);
+
+	STAT(METAL_FINISHED, frag_target) = 0;
+	STAT(STAR_FINISHED, frag_target) = 0;
+	sound(frag_target, CH_TRIGGER_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 }
 
 MUTATOR_HOOKFUNCTION(sv_mpowerups, PlayerSpawn)
-{SELFPARAM();
-	STAT(METAL_FINISHED, this) = 0;
-	STAT(STAR_FINISHED, this) = 0;
-	sound(this, CH_TRIGGER_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
-	return false;
+{
+	entity player = M_ARGV(0, entity);
+
+	STAT(METAL_FINISHED, player) = 0;
+	STAT(STAR_FINISHED, player) = 0;
+	sound(player, CH_TRIGGER_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 }
 
 MUTATOR_HOOKFUNCTION(sv_mpowerups, MakePlayerObserver)
-{SELFPARAM();
-	STAT(METAL_FINISHED, this) = 0;
-	STAT(STAR_FINISHED, this) = 0;
-	sound(this, CH_TRIGGER_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
-	return false;
+{
+	entity player = M_ARGV(0, entity);
+
+	STAT(METAL_FINISHED, player) = 0;
+	STAT(STAR_FINISHED, player) = 0;
+	sound(player, CH_TRIGGER_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 }
 
 MUTATOR_HOOKFUNCTION(sv_mpowerups, ClientDisconnect)
-{SELFPARAM();
-	STAT(METAL_FINISHED, this) = 0;
-	STAT(STAR_FINISHED, this) = 0;
-	sound(this, CH_TRIGGER_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
-	return false;
+{
+	entity player = M_ARGV(0, entity);
+
+	STAT(METAL_FINISHED, player) = 0;
+	STAT(STAR_FINISHED, player) = 0;
+	sound(player, CH_TRIGGER_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 }
 
 MUTATOR_HOOKFUNCTION(sv_mpowerups, MatchEnd)
@@ -261,27 +280,28 @@ MUTATOR_HOOKFUNCTION(sv_mpowerups, MatchEnd)
 		STAT(STAR_FINISHED, it) = 0;
 		sound(it, CH_TRIGGER_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 	});
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(sv_mpowerups, FixPlayermodel)
-{SELFPARAM();
-	if(this.items & ITEM_Metal.m_itemid)
-		ret_int = 2;
-	if(this.items & ITEM_Star.m_itemid)
-		ret_int = 1;
-	return false;
+{
+	entity player = M_ARGV(2, entity);
+
+	if(player.items & ITEM_Metal.m_itemid)
+		M_ARGV(1, int) = 2;
+	if(player.items & ITEM_Star.m_itemid)
+		M_ARGV(1, int) = 1;
 }
 
 MUTATOR_HOOKFUNCTION(sv_mpowerups, OnEntityPreSpawn, CBC_ORDER_FIRST)
-{SELFPARAM();
+{
 	if(!autocvar_g_powerups_mario_replace) return false;
-	if(this.classname == "item_strength")
-		this.classname = "item_metalcap";
-	if(this.classname == "item_invincible")
-		this.classname = "item_starman";
 
-	return false;
+	entity ent = M_ARGV(0, entity);
+
+	if(ent.classname == "item_strength")
+		ent.classname = "item_metalcap";
+	if(ent.classname == "item_invincible")
+		ent.classname = "item_starman";
 }
 
 void Metal_check_hitground(entity this)
@@ -301,19 +321,20 @@ void Metal_check_hitground(entity this)
 }
 
 MUTATOR_HOOKFUNCTION(sv_mpowerups, PlayerPhysics)
-{SELFPARAM();
-	if(this.items & ITEM_Star.m_itemid)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(player.items & ITEM_Star.m_itemid)
 	{
-		this.stat_sv_maxspeed *= autocvar_g_powerup_star_speed;
-		this.stat_sv_airspeedlimit_nonqw *= autocvar_g_powerup_star_speed;
+		player.stat_sv_maxspeed *= autocvar_g_powerup_star_speed;
+		player.stat_sv_airspeedlimit_nonqw *= autocvar_g_powerup_star_speed;
 	}
 
-	if(this.items & ITEM_Metal.m_itemid)
+	if(player.items & ITEM_Metal.m_itemid)
 	{
-		if(IS_PLAYER(this) && IS_ONGROUND(this))
-			Metal_check_hitground(this);
+		if(IS_PLAYER(player) && IS_ONGROUND(player))
+			Metal_check_hitground(player);
 	}
-	return false;
 }
 
 spawnfunc(item_starman)
@@ -338,18 +359,19 @@ MUTATOR_HOOKFUNCTION(sv_mpowerups, PM_Physics)
 #elif defined(CSQC)
 MUTATOR_HOOKFUNCTION(cl_mpowerups, PM_Physics)
 #endif
-{SELFPARAM();
-	if(STAT(ITEMS, this) & ITEM_Metal.m_itemid)
-	if(this.waterlevel)
+{
+	entity player = M_ARGV(0, entity);
+	float maxspeed_mod = M_ARGV(1, float);
+
+	if(STAT(ITEMS, player) & ITEM_Metal.m_itemid)
+	if(player.waterlevel)
 	{
-		if(IS_ONGROUND(this))
-			PM_walk(this, pm_maxspeed_mod * 0.6);
+		if(IS_ONGROUND(player))
+			PM_walk(player, maxspeed_mod * 0.6);
 		else
-			PM_air(this, this.buttons_old, pm_maxspeed_mod * 1.2);
+			PM_air(player, player.buttons_old, maxspeed_mod * 1.2);
 		return true;
 	}
-
-	return false;
 }
 #endif
 
@@ -390,7 +412,6 @@ MUTATOR_HOOKFUNCTION(cl_mpowerups, HUD_Powerups_add)
 		addPowerupItem("Metal Cap", "metal", autocvar_hud_progressbar_metal_color, metalTime, 30);
 	if(starTime)
 		addPowerupItem("Starman", "star", autocvar_hud_progressbar_star_color, starTime, 33.616);
-	return false;
 }
 
 MUTATOR_HOOKFUNCTION(cl_mpowerups, HUD_Draw_overlay)
@@ -486,7 +507,5 @@ MUTATOR_HOOKFUNCTION(cl_mpowerups, HUD_Draw_overlay)
 		R_PolygonVertex(autocvar_vid_conheight * '0 1 0', tc_01, rgb, a);
 		R_EndPolygon();
 	}
-
-	return false;
 }
 #endif
