@@ -36,6 +36,8 @@ REGISTER_MUTATOR(radio, cvar("sv_radio"))
 		registercvar("_radio_queue", "");
 		registercvar("_radio_queue_left", "0");
 	}
+
+	return false;
 }
 
 void Radio_SendPreload(entity e, string url)
@@ -450,8 +452,14 @@ MUTATOR_HOOKFUNCTION(radio_cmd, SV_ParseClientCommand)
 
 	if(cmd_name == "radio")
 	{
-		if(!caller.scorekeeper || !sv_radio)
-			return;
+		if(!caller.scorekeeper)
+			return true;
+
+		if(!sv_radio)
+		{
+			sprint(caller, "Radio is not enabled\n");
+			return true;
+		}
 
 		bool o = caller.radio_enabled;
 		caller.radio_enabled = stof(argv(1));
