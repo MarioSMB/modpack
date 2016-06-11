@@ -47,15 +47,18 @@ float autocvar_g_monster_scrag_attack_spike_speed = 600;
 void M_Scrag_Attack_Spike_Explode(entity this);
 void M_Scrag_Attack_Spike_Touch(entity this);
 
-METHOD(ScragAttack, wr_think, void(ScragAttack thiswep, entity actor, .entity weaponentity, int fire)) {
+METHOD(ScragAttack, wr_think, void(ScragAttack thiswep, entity actor, .entity weaponentity, int fire))
+{
+	TC(ScragAttack, thiswep);
     if (fire & 1)
     if (time > actor.attack_finished_single[0] || weapon_prepareattack(thiswep, actor, weaponentity, false, 1.2)) {
         if (IS_PLAYER(actor)) W_SetupShot_Dir(actor, v_forward, false, 0, SND_SCRAG_FIRESPIKE, CH_WEAPON_B, 0);
 		if (IS_MONSTER(actor)) {
-			actor.attack_finished_single[0] = time + 1.2;
 			actor.anim_finished = time + 1.2;
 			monster_makevectors(actor, actor.enemy);
 		}
+
+		actor.attack_finished_single[0] = time + 1.2;
 
 		entity missile = spawn();
 		missile.owner = missile.realowner = actor;
@@ -77,6 +80,7 @@ METHOD(ScragAttack, wr_think, void(ScragAttack thiswep, entity actor, .entity we
 }
 
 METHOD(ScragAttack, wr_checkammo1, bool(ScragAttack thiswep, entity actor)) {
+	TC(ScragAttack, this);
 	return true;
 }
 
@@ -102,7 +106,7 @@ void M_Scrag_Attack_Spike_Explode(entity this)
 	entity own = this.realowner;
 
 	RadiusDamage(this, own, autocvar_g_monster_scrag_attack_spike_damage, autocvar_g_monster_scrag_attack_spike_edgedamage, autocvar_g_monster_scrag_attack_spike_force, 
-		world, world, autocvar_g_monster_scrag_attack_spike_radius, this.projectiledeathtype, world);
+		world, world, autocvar_g_monster_scrag_attack_spike_radius, this.projectiledeathtype, other);
 
 	remove(this);
 }

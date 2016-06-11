@@ -76,7 +76,7 @@ MUTATOR_HOOKFUNCTION(za, PlayerPhysics)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(!player.monsterid) { return false; }
+	if(!player.monsterid) { return; }
 
 	entity mon = Monsters_from(player.monsterid);
 
@@ -88,7 +88,7 @@ MUTATOR_HOOKFUNCTION(za, PlayerPhysics)
 	STAT(PL_CROUCH_MAX, player) = mon.maxs;
 	STAT(PL_VIEW_OFS, player) = player.za_viewofs;
 	STAT(PL_CROUCH_VIEW_OFS, player) = player.za_viewofs;
-	PHYS_JUMPVELOCITY(player) = 0;
+	//PHYS_JUMPVELOCITY(player) = 0;
 
 	PHYS_MAXSPEED(player) = player.speed2;
 	PHYS_MAXAIRSPEED(player) = player.speed2;
