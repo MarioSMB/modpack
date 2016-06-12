@@ -34,22 +34,22 @@ vector PlayerTouchWall(entity this)
 	start = this.origin;
 	end = start + v_forward * 100;
 	tracebox (start, this.mins, this.maxs, end, true, this);
-	if (trace_fraction < 1 && vlen (this.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
+	if (trace_fraction < 1 && vdist(this.origin - trace_endpos, <, dist) && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		return trace_plane_normal;
 	end = start - v_forward * 100;
 	tracebox (start, this.mins, this.maxs, end, true, this);
-	if (trace_fraction < 1 && vlen (this.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
+	if (trace_fraction < 1 && vdist(this.origin - trace_endpos, <, dist) && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		return trace_plane_normal;
 	end = start + v_right * 100;
 	tracebox (start, this.mins, this.maxs, end, true, this);
-	if (trace_fraction < 1 && vlen (this.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
+	if (trace_fraction < 1 && vdist(this.origin - trace_endpos, <, dist) && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		return trace_plane_normal;
 	end = start - v_right * 100;
 	tracebox (start, this.mins, this.maxs, end, true, this);
-	if (trace_fraction < 1 && vlen (this.origin - trace_endpos) < dist && trace_plane_normal_z < max_normal)
+	if (trace_fraction < 1 && vdist(this.origin - trace_endpos, <, dist) && trace_plane_normal_z < max_normal)
 	if (!(trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOIMPACT))
 		return trace_plane_normal;
 	return '0 0 0';
