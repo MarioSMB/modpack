@@ -31,8 +31,8 @@ Git
  - Mac: Install the command line tools package (Google is your friend)
  
 Required content packs:
- - http://dl.xonotic.co/zzz-misc-v006-53-g24b24ff.pk3
- - http://dl.xonotic.co/zzz-quickmenu_017.pk3
+ - http://dl.xonotic.co/zzz-misc-v006-57-g5e135c9.pk3
+ - http://dl.xonotic.co/zzz-quickmenu_018.pk3
  - http://dl.xonotic.co/zzz-minigames-v006-56-gc588925.pk3
 
 
