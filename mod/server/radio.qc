@@ -399,8 +399,8 @@ void Radio_URI_Get_Callback(float id, float status, string data)
 
 MUTATOR_HOOKFUNCTION(radio, URI_GetCallback)
 {
-	int uricb_id = M_ARGV(0, int);
-	int uricb_status = M_ARGV(1, int);
+	float uricb_id = M_ARGV(0, float);
+	float uricb_status = M_ARGV(1, float);
 	string uricb_data = M_ARGV(2, string);
 
 	if(uricb_id == URI_GET_RADIO)
