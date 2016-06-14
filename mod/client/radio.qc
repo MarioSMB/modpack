@@ -69,11 +69,13 @@ NET_HANDLE(TE_CSQC_RADIO, bool isNew)
 	bool preload = ReadByte();
 	string url = ReadString();
 
+	return = true;
+
 	if(preload)
 	{
 		if(autocvar_cl_radio)
 			localcmd("\ncurl --pak ", url, "\n");
-		return true;
+		return;
 	}
 
 	string fname = strzone(ReadString());
@@ -84,13 +86,14 @@ NET_HANDLE(TE_CSQC_RADIO, bool isNew)
 		start = ReadCoord();
 
 	if(!autocvar_cl_radio || intermission)
-		return true;
+		return;
 
 	localcmd("\ncurl --pak ", url, "\n");
 
-	entity e;
-	for(e = world; (e = find(e, classname, "radio"));)
-		remove(e);
+	FOREACH_ENTITY_CLASS("radio", true,
+	{
+		remove(it);
+	});
 
 	e = new(radio);
 	e.netname = fname;
@@ -99,7 +102,6 @@ NET_HANDLE(TE_CSQC_RADIO, bool isNew)
 	e.cnt = time;
 	e.flags = loop;
 	e.radio_starttime = start;
-	return true;
 }
 
 MUTATOR_HOOKFUNCTION(radio, Ent_Init)
