@@ -95,7 +95,7 @@ NET_HANDLE(TE_CSQC_RADIO, bool isNew)
 		remove(it);
 	});
 
-	e = new(radio);
+	entity e = new(radio);
 	e.netname = fname;
 	setthink(e, Radio_Think);
 	e.nextthink = time;
