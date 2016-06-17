@@ -14,6 +14,7 @@
 #include "monsters.qc"
 #include "mute.qc"
 #include "player_crush.qc"
+#include "prediction.qc"
 #include "radio.qc"
 
 #include "mutators/all.qh"
