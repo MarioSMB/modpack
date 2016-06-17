@@ -1,0 +1,21 @@
+#pragma once
+
+#define W_MOD_PROPS(L, class, prefix) \
+    L(W_PROP_BEGIN, W_MOD_PROP, W_PROP_END, class, prefix) \
+    L(W_CONFIG_BEGIN, W_CONFIG, W_CONFIG_END, class, prefix) \
+    L(W_UPDATE_BEGIN, W_UPDATE, W_UPDATE_END, class, prefix) \
+    L(W_NET_BEGIN, W_NET, W_NET_END, class, prefix) \
+    /**/ \
+
+
+    #define W_MOD_PROP(class, wepname, fld, T, m)       W_MOD_PROP_##m(class, fld, T, wepname)
+    #define W_MOD_PROP_NONE(class, fld, T, wepname)     _W_MOD_PROP(class, fld, T, wepname)
+    #define W_MOD_PROP_PRI(class, fld, T, wepname)      _W_MOD_PROP(class, primary_##fld, T, wepname)
+    #define W_MOD_PROP_SEC(class, fld, T, wepname)      _W_MOD_PROP(class, secondary_##fld, T, wepname)
+    #define W_MOD_PROP_BOTH(class, fld, T, wepname) \
+            W_MOD_PROP_PRI(class, fld, T, wepname) \
+            W_MOD_PROP_SEC(class, fld, T, wepname)
+        #define _W_MOD_PROP(class, fld, T, wepname) \
+            /* not needed (hack) */ /*T _W_MOD_PROP_CVAR(wepname, fld);*/ \
+            ATTRIB(class, wepvar_##fld, T, _W_MOD_PROP_CVAR(wepname, fld));
+        #define _W_MOD_PROP_CVAR(wepname, fld) autocvar_g_balance_##wepname##_##fld

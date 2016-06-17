@@ -16,6 +16,39 @@ Sound SND_LIGHTSABRE_HIT_RANDOM() {
     return Sounds_from(SND_LIGHTSABRE_HIT1.m_id + floor(prandom() * 3));
 }
 
+float autocvar_g_balance_lightsabre_primary_animtime = 0.8;
+float autocvar_g_balance_lightsabre_primary_damage = 65;
+float autocvar_g_balance_lightsabre_primary_force = 200;
+float autocvar_g_balance_lightsabre_primary_melee_delay = 0.1;
+float autocvar_g_balance_lightsabre_primary_melee_multihit = 1;
+float autocvar_g_balance_lightsabre_primary_melee_no_doubleslap = 1;
+float autocvar_g_balance_lightsabre_primary_melee_nonplayerdamage = 40;
+float autocvar_g_balance_lightsabre_primary_melee_range = 120;
+float autocvar_g_balance_lightsabre_primary_melee_swing_side = 80;
+float autocvar_g_balance_lightsabre_primary_melee_swing_up = 60;
+float autocvar_g_balance_lightsabre_primary_melee_time = 0.15;
+float autocvar_g_balance_lightsabre_primary_melee_traces = 10;
+float autocvar_g_balance_lightsabre_primary_refire = 0.5;
+float autocvar_g_balance_lightsabre_secondary_damage = 55;
+float autocvar_g_balance_lightsabre_secondary_animtime = 0.5;
+float autocvar_g_balance_lightsabre_secondary_force = 200;
+float autocvar_g_balance_lightsabre_secondary_melee_delay = 0.25;
+float autocvar_g_balance_lightsabre_secondary_melee_multihit = 1;
+float autocvar_g_balance_lightsabre_secondary_melee_no_doubleslap = 1;
+float autocvar_g_balance_lightsabre_secondary_melee_nonplayerdamage = 40;
+float autocvar_g_balance_lightsabre_secondary_melee_range = 120;
+float autocvar_g_balance_lightsabre_secondary_melee_swing_side = -80;
+float autocvar_g_balance_lightsabre_secondary_melee_swing_up = -50;
+float autocvar_g_balance_lightsabre_secondary_melee_time = 0.15;
+float autocvar_g_balance_lightsabre_secondary_melee_traces = 10;
+float autocvar_g_balance_lightsabre_secondary_refire = 0.65;
+float autocvar_g_balance_lightsabre_switchdelay_drop = 0.2;
+float autocvar_g_balance_lightsabre_switchdelay_raise = 0.2;
+string autocvar_g_balance_lightsabre_weaponreplace = "";
+float autocvar_g_balance_lightsabre_weaponstart = 0;
+float autocvar_g_balance_lightsabre_weaponstartoverride = -1;
+float autocvar_g_balance_lightsabre_weaponthrowable = 0;
+
 CLASS(Lightsabre, Weapon)
 /* ammotype  */ //ATTRIB(Lightsabre, ammo_field, .int, ammo_shells)
 /* impulse   */ ATTRIB(Lightsabre, impulse, int, 1)
@@ -47,8 +80,6 @@ CLASS(Lightsabre, Weapon)
 		P(class, prefix, melee_multihit, float, BOTH) \
 		P(class, prefix, melee_delay, float, BOTH) \
 		P(class, prefix, melee_range, float, BOTH) \
-		P(class, prefix, reload_ammo, float, NONE) \
-        P(class, prefix, reload_time, float, NONE) \
         P(class, prefix, switchdelay_raise, float, NONE) \
         P(class, prefix, switchdelay_drop, float, NONE) \
         P(class, prefix, weaponreplace, string, NONE) \
@@ -56,7 +87,7 @@ CLASS(Lightsabre, Weapon)
         P(class, prefix, weaponstartoverride, float, NONE) \
         P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, Lightsabre, lightsabre)
+    W_MOD_PROPS(X, Lightsabre, lightsabre)
 #undef X
 
 ENDCLASS(Lightsabre)
@@ -66,72 +97,63 @@ MSG_INFO_NOTIF(WEAPON_LIGHTSABRE_MURDER,   1,   3, 2, "spree_inf s1 s2 s3loc spr
 
 MSG_MULTI_NOTIF(WEAPON_LIGHTSABRE_MURDER,   1,   NULL,        INFO_WEAPON_LIGHTSABRE_MURDER,      NULL)
 
-#ifdef SVQC
-STATIC_INIT(lightsabre_cvars)
-{
-	localcmd("\ng_balance_lightsabre_primary_animtime 0.8\n");
-	localcmd("\ng_balance_lightsabre_primary_damage 65\n");
-	localcmd("\ng_balance_lightsabre_primary_force 200\n");
-	localcmd("\ng_balance_lightsabre_primary_melee_delay 0.1\n");
-	localcmd("\ng_balance_lightsabre_primary_melee_multihit 1\n");
-	localcmd("\ng_balance_lightsabre_primary_melee_no_doubleslap 1\n");
-	localcmd("\ng_balance_lightsabre_primary_melee_nonplayerdamage 40\n");
-	localcmd("\ng_balance_lightsabre_primary_melee_range 120\n");
-	localcmd("\ng_balance_lightsabre_primary_melee_swing_side 80\n");
-	localcmd("\ng_balance_lightsabre_primary_melee_swing_up 60\n");
-	localcmd("\ng_balance_lightsabre_primary_melee_time 0.15\n");
-	localcmd("\ng_balance_lightsabre_primary_melee_traces 10\n");
-	localcmd("\ng_balance_lightsabre_primary_refire 0.5\n");
-	localcmd("\ng_balance_lightsabre_secondary_damage 55\n");
-	localcmd("\ng_balance_lightsabre_secondary_animtime 0.5\n");
-	localcmd("\ng_balance_lightsabre_secondary_force 200\n");
-	localcmd("\ng_balance_lightsabre_secondary_melee_delay 0.25\n");
-	localcmd("\ng_balance_lightsabre_secondary_melee_multihit 1\n");
-	localcmd("\ng_balance_lightsabre_secondary_melee_no_doubleslap 1\n");
-	localcmd("\ng_balance_lightsabre_secondary_melee_nonplayerdamage 40\n");
-	localcmd("\ng_balance_lightsabre_secondary_melee_range 120\n");
-	localcmd("\ng_balance_lightsabre_secondary_melee_swing_side -80\n");
-	localcmd("\ng_balance_lightsabre_secondary_melee_swing_up -50\n");
-	localcmd("\ng_balance_lightsabre_secondary_melee_time 0.15\n");
-	localcmd("\ng_balance_lightsabre_secondary_melee_traces 10\n");
-	localcmd("\ng_balance_lightsabre_secondary_refire 0.65\n");
-	localcmd("\ng_balance_lightsabre_switchdelay_drop 0.2\n");
-	localcmd("\ng_balance_lightsabre_switchdelay_raise 0.2\n");
-	localcmd("\ng_balance_lightsabre_weaponreplace \"\"\n");
-	localcmd("\ng_balance_lightsabre_weaponstart 0\n");
-	localcmd("\ng_balance_lightsabre_weaponstartoverride -1\n");
-	localcmd("\ng_balance_lightsabre_weaponthrowable 0\n");
-}
-#endif
-
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
 spawnfunc(weapon_lightsabre) { weapon_defaultspawnfunc(this, WEP_LIGHTSABRE); }
+
+.float lightsabre_hitshield;
 
 .float swing_prev;
 .entity swing_alreadyhit;
 
 bool W_Lightsabre_Melee_Block(entity this, entity player)
 {
-	if(!IS_PLAYER(player)) { return false; }
-
-	entity player_melee = world, e;
 	entity myowner = this.realowner;
-
-	for(e = world; (e = find(e, classname, "melee_temp")); )
-	if(e.realowner == player)
+	if(IS_PLAYER(player))
 	{
-		player_melee = e;
-		break;
+		entity player_melee = world, e;
+
+		for(e = world; (e = find(e, classname, "melee_temp")); )
+		if(e.realowner == player)
+		{
+			player_melee = e;
+			break;
+		}
+
+		if(!player_melee) { return false; }
+
+		makevectors (player.v_angle);
+		float dot = normalize (myowner.origin - player.origin) * v_forward;
+
+		if(dot <= 0.3) { return false; }
 	}
+	else if(!player)
+	{
+		bool doneblock = false;
+		makevectors(myowner.v_angle);
+		FOREACH_ENTITY_FLAGS(flags, FL_PROJECTILE,
+		{
+			if(time > it.lightsabre_hitshield)
+			if(vdist(it.origin - myowner.origin, <, 256))
+			{
+				LOG_INFO("Too close!\n");
+				float dot = normalize(myowner.origin - it.origin) * v_forward;
+				LOG_INFO("dot = ", ftos(dot), "\n");
+				if(dot <= 0.3) { continue; }
 
-	if(!player_melee) { return false; }
+				LOG_INFO("We got one!\n");
 
-	makevectors (player.v_angle);
-	float dot = normalize (myowner.origin - player.origin) * v_forward;
+				it.velocity *= -1; // straight forward...?
+				it.realowner = it.owner = myowner;
+				it.lightsabre_hitshield = time + 0.15;
+				UpdateCSQCProjectile(it);
+				doneblock = true;
+			}
+		});
 
-	if(dot <= 0.3) { return false; }
+		if(!doneblock) { return false; }
+	}
 
 	//if((myowner.v_angle_x - player.v_angle_x < 70) && (myowner.v_angle_x - player.v_angle_x > -70)) //Look up and down
 	//if((myowner.v_angle_y - player.v_angle_y > 160) || (myowner.v_angle_y - player.v_angle_y < -160)) //Side to side Facing eachother
@@ -162,7 +184,7 @@ void W_Lightsabre_Melee_Think(entity this)
 	makevectors(this.realowner.v_angle); // update values for v_* vectors
 
 	// calculate swing percentage based on time
-	meleetime = WEP_CVAR_BOTH(lightsabre, isprimary, melee_time) * W_WeaponRateFactor();
+	meleetime = WEP_CVAR_BOTH(lightsabre, isprimary, melee_time) * W_WeaponRateFactor(this.realowner);
 	swing = bound(0, (this.cnt + meleetime - time) / meleetime, 10);
 	f = ((1 - swing) * WEP_CVAR_BOTH(lightsabre, isprimary, melee_traces));
 
@@ -184,6 +206,8 @@ void W_Lightsabre_Melee_Think(entity this)
 			+ (v_right * swing_factor * WEP_CVAR_BOTH(lightsabre, isprimary, melee_swing_side)));
 
 		WarpZone_traceline_antilag(this, this.realowner.origin + this.realowner.view_ofs, targpos, false, this.realowner, ANTILAG_LATENCY(this.realowner));
+
+		W_Lightsabre_Melee_Block(this, NULL);
 
 		// draw lightning beams for debugging
 		//te_lightning2(world, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
@@ -252,12 +276,12 @@ void W_Lightsabre_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	bool isprimary = !(fire & 2);
 	sound(actor, CH_WEAPON_A, ((isprimary) ? SND_LIGHTSABRE_MELEE2 : SND_LIGHTSABRE_MELEE1), VOL_BASE, ATTN_NORM);
 	weapon_thinkf(actor, weaponentity, ((isprimary) ? WFRAME_FIRE2 : WFRAME_FIRE1), WEP_CVAR_BOTH(lightsabre, isprimary, animtime), w_ready);
+	animdecide_setaction(actor, ANIMACTION_MELEE, true);
 
 	entity meleetemp = new(meleetemp);
-	make_pure(meleetemp);
 	meleetemp.owner = meleetemp.realowner = actor;
 	setthink(meleetemp, W_Lightsabre_Melee_Think);
-	meleetemp.nextthink = time + WEP_CVAR_BOTH(lightsabre, isprimary, melee_delay) * W_WeaponRateFactor();
+	meleetemp.nextthink = time + WEP_CVAR_BOTH(lightsabre, isprimary, melee_delay) * W_WeaponRateFactor(actor);
 	W_SetupShot_Range(actor, true, 0, SND_Null, 0, WEP_CVAR_BOTH(lightsabre, isprimary, damage), WEP_CVAR_BOTH(lightsabre, isprimary, melee_range));
 }
 
@@ -306,11 +330,14 @@ void W_LightSabre_SetActive(entity actor, .entity weaponentity, bool newactive, 
 				else
 				{
 					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, W_Lightsabre_Attack);
-					animdecide_setaction(actor, ANIMACTION_MELEE, true);
-					if (actor.anim_upper_action == ANIMACTION_SHOOT || actor.anim_upper_action == ANIMACTION_MELEE)
-						actor.anim_upper_action = 0;
+					//animdecide_setaction(actor, ANIMACTION_MELEE, true);
+					//if (actor.anim_upper_action == ANIMACTION_SHOOT || actor.anim_upper_action == ANIMACTION_MELEE)
+						//actor.anim_upper_action = 0;
 				}
 			}
+
+			if(PS(actor).m_switchweapon != WEP_LIGHTSABRE && actor.lightsabre_active)
+				W_LightSabre_SetActive(actor, weaponentity, false, true);
 		}
 		METHOD(Lightsabre, wr_setup, void(entity thiswep, entity actor))
 		{
@@ -344,12 +371,16 @@ NET_HANDLE(lightsabre_activate, bool)
 	int i = ReadByte();
 	return = true;
 	string s = (i == false) ? "lightsabre" : "lightsabre_active";
-	CL_WeaponEntity_SetModel(viewmodel, s);
+	Weapon wep = WEP_LIGHTSABRE;
+	wep.mdl = s;
+	//CL_WeaponEntity_SetModel(viewmodel, s, false);
 }
 #endif
 #ifdef SVQC
 void lightsabre_active_send(entity this, int newactive)
 {
+	if(!IS_REAL_CLIENT(this)) return;
+
 	msg_entity = this;
 	int chan = MSG_ONE;
 	WriteHeader(chan, lightsabre_activate);
