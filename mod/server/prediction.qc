@@ -11,3 +11,12 @@ MUTATOR_HOOKFUNCTION(prediction, PlayerPhysics)
 			player.disableclientprediction = -1; // should be early enough for this to take effect
 	}
 }
+
+MUTATOR_HOOKFUNCTION(prediction, VehicleEnter)
+{
+	if(autocvar_g_physics_predictall)
+	{
+		entity player = M_ARGV(0, entity);
+		player.disableclientprediction = 0; // no prediction for vehicles (yet)
+	}
+}
