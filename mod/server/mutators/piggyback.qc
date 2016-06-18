@@ -78,8 +78,8 @@ void pb_Detach(entity host)
 	if(!slave)
 		return;
 	
-	slave.aiment = world;
-	slave.pbhost = world;
+	slave.aiment = NULL;
+	slave.pbhost = NULL;
 
 	if(IS_MONSTER(host))
 	{
@@ -119,9 +119,8 @@ void pb_PBEntThink(entity this)
 
 void pb_FixPBEnt(entity p)
 {
-	entity e = spawn();
+	entity e = new(pb_ent);
 	e.owner = p;
-	e.classname = "pb_ent";
 	setthink(e, pb_PBEntThink);
 	e.nextthink = time;
 	p.pbent = e;
@@ -195,7 +194,7 @@ MUTATOR_HOOKFUNCTION(piggyback, PlayerUseKey)
 	if(!player.cvar_cl_noride)
 	if(!player.vehicle && !IS_DEAD(player) && !STAT(FROZEN, player))
 	{
-		entity head, closest_target = world;
+		entity head, closest_target = NULL;
 
 		head = WarpZone_FindRadius(player.origin, autocvar_g_vehicles_enter_radius, true);
 		while(head)
@@ -299,6 +298,12 @@ void pb_RemovePlayer(entity this)
 	if(this.pbhost)
 		pb_Detach(this.pbhost);
 	this.pb_canattach = 0;
+
+	if(this.pbent)
+	{
+		remove(this.pbent);
+		this.pbent = NULL;
+	}
 }
 
 MUTATOR_HOOKFUNCTION(piggyback, MakePlayerObserver)
@@ -353,16 +358,12 @@ MUTATOR_HOOKFUNCTION(piggyback, FixPlayermodel)
 
 	// this was the nearest hook to the original code
 	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(player);
+	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 	if(player.hook_state
 	|| player.vehicle
 	|| STAT(FROZEN, player)
+	|| ((PS(player).m_weapon == WEP_SHOTGUN || PS(player).m_weapon == WEP_SHOCKWAVE) && player.(weaponentity).wframe == WFRAME_FIRE2 && time < player.(weaponentity).weapon_nextthink)
 	) { do_crouch = false; }
-
-	// WEAPONTODO: THIS SHIT NEEDS TO GO EVENTUALLY
-	// It cannot be predicted by the engine!
-	.entity weaponentity = weaponentities[0];
-	if((player.weapon == WEP_SHOCKWAVE.m_id || player.weapon == WEP_SHOTGUN.m_id) && player.(weaponentity).wframe == WFRAME_FIRE2 && time < player.(weaponentity).weapon_nextthink)
-		do_crouch = false;
 
 	if(!do_crouch && player.crouch)
 	{
