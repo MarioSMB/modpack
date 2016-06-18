@@ -7,7 +7,7 @@ MUTATOR_HOOKFUNCTION(prediction, PlayerPhysics)
 	if(autocvar_g_physics_predictall)
 	{
 		entity player = M_ARGV(0, entity);
-		if(player.movetype != MOVETYPE_FOLLOW) // unpredictable
+		if(player.movetype != MOVETYPE_FOLLOW && !player.vehicle) // unpredictable
 			player.disableclientprediction = -1; // should be early enough for this to take effect
 	}
 }
