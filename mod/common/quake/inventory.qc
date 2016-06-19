@@ -75,7 +75,7 @@ MUTATOR_HOOKFUNCTION(pinventory, SetChangeParms)
 
 	if(player.health <= 0)
 	{
-		WITHSELF(player, SetNewParms());
+		SetNewParms();
 		return;
 	}
 

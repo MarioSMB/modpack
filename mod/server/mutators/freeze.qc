@@ -137,7 +137,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 					player.respawn_time = time + 1; // only retry once a second
 					if(player.nade)
 						toss_nade(player, true, '0 0 100', max(player.nade.wait, time + 0.05));
-					WITHSELF(player, PutClientInServer());
+					PutClientInServer(player);
 				}
 
 				return true; // if we get here, normal revivals have been cancelled
@@ -264,7 +264,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 				player.respawn_time = time + 1; // only retry once a second
 				if(player.nade)
 					toss_nade(player, true, '0 0 100', max(player.nade.wait, time + 0.05));
-				WITHSELF(player, PutClientInServer());
+				PutClientInServer(player);
 				return true;
 			}
 		}
