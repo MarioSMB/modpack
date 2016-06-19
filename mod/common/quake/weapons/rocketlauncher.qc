@@ -6,6 +6,29 @@ MODEL(ROCKETLAUNCHER_ITEM,                  W_Model("g_rocketlauncher.md3"));
 
 SOUND(ROCKETLAUNCHER_FIRE, "quake_weapons/sgun1");
 
+float autocvar_g_balance_rocketlauncher_ammo = 4;
+float autocvar_g_balance_rocketlauncher_animtime = 0.4;
+float autocvar_g_balance_rocketlauncher_damage = 110;
+float autocvar_g_balance_rocketlauncher_damageforcescale = 1;
+float autocvar_g_balance_rocketlauncher_detonatedelay = 0.02;
+float autocvar_g_balance_rocketlauncher_edgedamage = 50;
+float autocvar_g_balance_rocketlauncher_force = 300;
+float autocvar_g_balance_rocketlauncher_health = 30;
+float autocvar_g_balance_rocketlauncher_lifetime = 3;
+float autocvar_g_balance_rocketlauncher_radius = 130;
+float autocvar_g_balance_rocketlauncher_refire = 1.1;
+float autocvar_g_balance_rocketlauncher_reload_ammo = 0;
+float autocvar_g_balance_rocketlauncher_reload_time = 2;
+float autocvar_g_balance_rocketlauncher_speed = 1000;
+float autocvar_g_balance_rocketlauncher_speedaccel = 1000;
+float autocvar_g_balance_rocketlauncher_speedstart = 800;
+float autocvar_g_balance_rocketlauncher_switchdelay_drop = 0.2;
+float autocvar_g_balance_rocketlauncher_switchdelay_raise = 0.2;
+string autocvar_g_balance_rocketlauncher_weaponreplace = "";
+float autocvar_g_balance_rocketlauncher_weaponstart = 0;
+float autocvar_g_balance_rocketlauncher_weaponstartoverride = -1;
+float autocvar_g_balance_rocketlauncher_weaponthrowable = 1;
+
 CLASS(RocketLauncher, Weapon)
 /* ammotype  */ ATTRIB(RocketLauncher, ammo_field, .int, ammo_rockets)
 /* impulse   */ ATTRIB(RocketLauncher, impulse, int, 7)
@@ -47,39 +70,11 @@ CLASS(RocketLauncher, Weapon)
         P(class, prefix, weaponstartoverride, float, NONE) \
         P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, RocketLauncher, rocketlauncher)
+    W_MOD_PROPS(X, RocketLauncher, rocketlauncher)
 #undef X
 
 ENDCLASS(RocketLauncher)
 REGISTER_WEAPON(ROCKETLAUNCHER, rocketlauncher, NEW(RocketLauncher));
-
-#ifdef SVQC
-STATIC_INIT(rocketlauncher_cvars)
-{
-	localcmd("\ng_balance_rocketlauncher_ammo 4\n");
-	localcmd("\ng_balance_rocketlauncher_animtime 0.4\n");
-	localcmd("\ng_balance_rocketlauncher_damage 110\n");
-	localcmd("\ng_balance_rocketlauncher_damageforcescale 1\n");
-	localcmd("\ng_balance_rocketlauncher_detonatedelay 0.02\n");
-	localcmd("\ng_balance_rocketlauncher_edgedamage 50\n");
-	localcmd("\ng_balance_rocketlauncher_force 300\n");
-	localcmd("\ng_balance_rocketlauncher_health 30\n");
-	localcmd("\ng_balance_rocketlauncher_lifetime 3\n");
-	localcmd("\ng_balance_rocketlauncher_radius 130\n");
-	localcmd("\ng_balance_rocketlauncher_refire 1.1\n");
-	localcmd("\ng_balance_rocketlauncher_reload_ammo 0\n");
-	localcmd("\ng_balance_rocketlauncher_reload_time 2\n");
-	localcmd("\ng_balance_rocketlauncher_speed 1000\n");
-	localcmd("\ng_balance_rocketlauncher_speedaccel 1000\n");
-	localcmd("\ng_balance_rocketlauncher_speedstart 800\n");
-	localcmd("\ng_balance_rocketlauncher_switchdelay_drop 0.2\n");
-	localcmd("\ng_balance_rocketlauncher_switchdelay_raise 0.2\n");
-	localcmd("\ng_balance_rocketlauncher_weaponreplace \"\"\n");
-	localcmd("\ng_balance_rocketlauncher_weaponstart 0\n");
-	localcmd("\ng_balance_rocketlauncher_weaponstartoverride -1\n");
-	localcmd("\ng_balance_rocketlauncher_weaponthrowable 1\n");
-}
-#endif
 
 #endif
 #ifdef IMPLEMENTATION
@@ -161,9 +156,9 @@ void W_RocketLauncher_Think(entity this)
 
 	// accelerate
 	makevectors(this.angles.x * '-1 0 0' + this.angles.y * '0 1 0');
-	velspeed = WEP_CVAR(rocketlauncher, speed) * W_WeaponSpeedFactor() - (this.velocity * v_forward);
+	velspeed = WEP_CVAR(rocketlauncher, speed) * W_WeaponSpeedFactor(this.realowner) - (this.velocity * v_forward);
 	if(velspeed > 0)
-		this.velocity = this.velocity + v_forward * min(WEP_CVAR(rocketlauncher, speedaccel) * W_WeaponSpeedFactor() * frametime, velspeed);
+		this.velocity = this.velocity + v_forward * min(WEP_CVAR(rocketlauncher, speedaccel) * W_WeaponSpeedFactor(this.realowner) * frametime, velspeed);
 
 	if(this.csqcprojectile_clientanimate == 0)
 		UpdateCSQCProjectile(this);
@@ -193,7 +188,7 @@ void W_RocketLauncher_Damage(entity this, entity inflictor, entity attacker, flo
 	this.angles = vectoangles(this.velocity);
 
 	if(this.health <= 0)
-		W_PrepareExplosionByDamage(attacker, W_RocketLauncher_Explode);
+		W_PrepareExplosionByDamage(this, attacker, W_RocketLauncher_Explode);
 }
 
 void W_RocketLauncher_Attack(Weapon thiswep, entity actor)

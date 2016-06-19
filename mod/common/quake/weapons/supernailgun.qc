@@ -7,6 +7,37 @@ MODEL(SUPERNAILGUN_WORLD,                 W_Model("v_supernailgun.md3"));
 MODEL(SUPERNAILGUN_ITEM,                  W_Model("g_supernailgun.md3"));
 #endif
 
+float autocvar_g_balance_supernailgun_burst = 3;
+float autocvar_g_balance_supernailgun_burst_ammo = 3;
+float autocvar_g_balance_supernailgun_burst_animtime = 0.3;
+float autocvar_g_balance_supernailgun_burst_refire = 0.06;
+float autocvar_g_balance_supernailgun_burst_refire2 = 0.45;
+float autocvar_g_balance_supernailgun_burst_speed = 0;
+float autocvar_g_balance_supernailgun_first = 0;
+float autocvar_g_balance_supernailgun_first_ammo = 1;
+float autocvar_g_balance_supernailgun_first_damage = 5;
+float autocvar_g_balance_supernailgun_first_force = 5;
+float autocvar_g_balance_supernailgun_first_refire = 0.125;
+float autocvar_g_balance_supernailgun_first_spread = 0.03;
+float autocvar_g_balance_supernailgun_mode = 0;
+float autocvar_g_balance_supernailgun_reload_ammo = 0;
+float autocvar_g_balance_supernailgun_reload_time = 2;
+float autocvar_g_balance_supernailgun_solidpenetration = 13.1;
+float autocvar_g_balance_supernailgun_spread_add = 0.012;
+float autocvar_g_balance_supernailgun_spread_max = 0.02;
+float autocvar_g_balance_supernailgun_spread_min = 0.01;
+float autocvar_g_balance_supernailgun_sustained_ammo = 2;
+float autocvar_g_balance_supernailgun_sustained_damage = 18;
+float autocvar_g_balance_supernailgun_sustained_force = 5;
+float autocvar_g_balance_supernailgun_sustained_refire = 0.14;
+float autocvar_g_balance_supernailgun_sustained_spread = 0.01;
+float autocvar_g_balance_supernailgun_switchdelay_drop = 0.2;
+float autocvar_g_balance_supernailgun_switchdelay_raise = 0.2;
+string autocvar_g_balance_supernailgun_weaponreplace = "";
+float autocvar_g_balance_supernailgun_weaponstart = 0;
+float autocvar_g_balance_supernailgun_weaponstartoverride = -1;
+float autocvar_g_balance_supernailgun_weaponthrowable = 1;
+
 CLASS(SuperNailGun, Weapon)
 /* ammotype  */ ATTRIB(SuperNailGun, ammo_field, .int, ammo_nails)
 /* impulse   */ ATTRIB(SuperNailGun, impulse, int, 5)
@@ -56,47 +87,11 @@ CLASS(SuperNailGun, Weapon)
         P(class, prefix, weaponstartoverride, float, NONE) \
         P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, SuperNailGun, supernailgun)
+    W_MOD_PROPS(X, SuperNailGun, supernailgun)
 #undef X
 
 ENDCLASS(SuperNailGun)
 REGISTER_WEAPON(SUPERNAILGUN, supernailgun, NEW(SuperNailGun));
-
-#ifdef SVQC
-STATIC_INIT(supernailgun_cvars)
-{
-	localcmd("\ng_balance_supernailgun_burst 3\n");
-	localcmd("\ng_balance_supernailgun_burst_ammo 3\n");
-	localcmd("\ng_balance_supernailgun_burst_animtime 0.3\n");
-	localcmd("\ng_balance_supernailgun_burst_refire 0.06\n");
-	localcmd("\ng_balance_supernailgun_burst_refire2 0.45\n");
-	localcmd("\ng_balance_supernailgun_burst_speed 0\n");
-	localcmd("\ng_balance_supernailgun_first 0\n");
-	localcmd("\ng_balance_supernailgun_first_ammo 1\n");
-	localcmd("\ng_balance_supernailgun_first_damage 5\n");
-	localcmd("\ng_balance_supernailgun_first_force 5\n");
-	localcmd("\ng_balance_supernailgun_first_refire 0.125\n");
-	localcmd("\ng_balance_supernailgun_first_spread 0.03\n");
-	localcmd("\ng_balance_supernailgun_mode 0\n");
-	localcmd("\ng_balance_supernailgun_reload_ammo 0\n");
-	localcmd("\ng_balance_supernailgun_reload_time 2\n");
-	localcmd("\ng_balance_supernailgun_solidpenetration 13.1\n");
-	localcmd("\ng_balance_supernailgun_spread_add 0.012\n");
-	localcmd("\ng_balance_supernailgun_spread_max 0.02\n");
-	localcmd("\ng_balance_supernailgun_spread_min 0.01\n");
-	localcmd("\ng_balance_supernailgun_sustained_ammo 2\n");
-	localcmd("\ng_balance_supernailgun_sustained_damage 18\n");
-	localcmd("\ng_balance_supernailgun_sustained_force 5\n");
-	localcmd("\ng_balance_supernailgun_sustained_refire 0.14\n");
-	localcmd("\ng_balance_supernailgun_sustained_spread 0.01\n");
-	localcmd("\ng_balance_supernailgun_switchdelay_drop 0.2\n");
-	localcmd("\ng_balance_supernailgun_switchdelay_raise 0.2\n");
-	localcmd("\ng_balance_supernailgun_weaponreplace \"\"\n");
-	localcmd("\ng_balance_supernailgun_weaponstart 0\n");
-	localcmd("\ng_balance_supernailgun_weaponstartoverride -1\n");
-	localcmd("\ng_balance_supernailgun_weaponthrowable 1\n");
-}
-#endif
 
 #endif
 #ifdef IMPLEMENTATION
@@ -150,7 +145,7 @@ void W_SuperNailGun_Attack(Weapon thiswep, entity actor, int deathtype)
 
 	// this attack_finished just enforces a cooldown at the end of a burst
 	int slot = 0;
-	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(supernailgun, first_refire) * W_WeaponRateFactor();
+	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(supernailgun, first_refire) * W_WeaponRateFactor(actor);
 
 	if(actor.misc_bulletcounter == 1)
 		fireBullet(actor, w_shotorg, w_shotdir, WEP_CVAR(supernailgun, first_spread), WEP_CVAR(supernailgun, solidpenetration), WEP_CVAR(supernailgun, first_damage), WEP_CVAR(supernailgun, first_force), deathtype, 0);
@@ -235,13 +230,13 @@ void W_SuperNailGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponenti
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, (w_shotdir) * 1000, 1);
 
-	W_SuperNailGun_MuzzleFlash();
+	W_SuperNailGun_MuzzleFlash(actor);
 	W_AttachToShotorg(actor, actor.muzzle_flash, '5 0 0');
 
 	if(autocvar_g_casings >= 2) // casing code
 		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, actor);
 
-	ATTACK_FINISHED(actor, 0) = time + WEP_CVAR(supernailgun, first_refire) * W_WeaponRateFactor();
+	ATTACK_FINISHED(actor, 0) = time + WEP_CVAR(supernailgun, first_refire) * W_WeaponRateFactor(actor);
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(supernailgun, sustained_refire), W_SuperNailGun_Attack_Auto);
 }
 
@@ -267,7 +262,7 @@ void W_SuperNailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponent
 	actor.misc_bulletcounter = actor.misc_bulletcounter + 1;
 	if(actor.misc_bulletcounter == 0)
 	{
-		ATTACK_FINISHED(actor, 0) = time + WEP_CVAR(supernailgun, burst_refire2) * W_WeaponRateFactor();
+		ATTACK_FINISHED(actor, 0) = time + WEP_CVAR(supernailgun, burst_refire2) * W_WeaponRateFactor(actor);
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(supernailgun, burst_animtime), w_ready);
 	}
 	else

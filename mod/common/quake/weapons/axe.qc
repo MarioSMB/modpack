@@ -6,6 +6,29 @@ MODEL(AXE_ITEM,                     W_Model("g_axe.md3"));
 SOUND(AXE_MELEE, "quake_weapons/ax1");
 SOUND(AXE_MELEE_HIT, "quake_weapons/axhit2");
 
+float autocvar_g_balance_axe_reload_ammo = 0;
+float autocvar_g_balance_axe_reload_time = 2;
+float autocvar_g_balance_axe_animtime = 0.35;
+float autocvar_g_balance_axe_damage = 15;
+float autocvar_g_balance_axe_debug = 0;
+float autocvar_g_balance_axe_force = 200;
+float autocvar_g_balance_axe_melee_delay = 0.25;
+float autocvar_g_balance_axe_melee_multihit = 0;
+float autocvar_g_balance_axe_melee_no_doubleslap = 1;
+float autocvar_g_balance_axe_melee_nonplayerdamage = 25;
+float autocvar_g_balance_axe_melee_range = 70;
+float autocvar_g_balance_axe_melee_swing_side = 0;
+float autocvar_g_balance_axe_melee_swing_up = 0;
+float autocvar_g_balance_axe_melee_time = 0.15;
+float autocvar_g_balance_axe_melee_traces = 1;
+float autocvar_g_balance_axe_refire = 0.4;
+float autocvar_g_balance_axe_switchdelay_drop = 0.2;
+float autocvar_g_balance_axe_switchdelay_raise = 0.2;
+string autocvar_g_balance_axe_weaponreplace = "";
+float autocvar_g_balance_axe_weaponstart = 0;
+float autocvar_g_balance_axe_weaponstartoverride = -1;
+float autocvar_g_balance_axe_weaponthrowable = 0;
+
 CLASS(Axe, Weapon)
 /* ammotype  */ //ATTRIB(Axe, ammo_field, .int, ammo_none)
 /* impulse   */ ATTRIB(Axe, impulse, int, 1)
@@ -47,39 +70,11 @@ CLASS(Axe, Weapon)
         P(class, prefix, weaponstartoverride, float, NONE) \
         P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, Axe, axe)
+    W_MOD_PROPS(X, Axe, axe)
 #undef X
 
 ENDCLASS(Axe)
 REGISTER_WEAPON(AXE, axe, NEW(Axe));
-
-#ifdef SVQC
-STATIC_INIT(axe_cvars)
-{
-	localcmd("\ng_balance_axe_reload_ammo 0\n");
-	localcmd("\ng_balance_axe_reload_time 2\n");
-	localcmd("\ng_balance_axe_animtime 0.35\n");
-	localcmd("\ng_balance_axe_damage 15\n");
-	localcmd("\ng_balance_axe_debug 0\n");
-	localcmd("\ng_balance_axe_force 200\n");
-	localcmd("\ng_balance_axe_melee_delay 0.25\n");
-	localcmd("\ng_balance_axe_melee_multihit 0\n");
-	localcmd("\ng_balance_axe_melee_no_doubleslap 1\n");
-	localcmd("\ng_balance_axe_melee_nonplayerdamage 25\n");
-	localcmd("\ng_balance_axe_melee_range 70\n");
-	localcmd("\ng_balance_axe_melee_swing_side 0\n");
-	localcmd("\ng_balance_axe_melee_swing_up 0\n");
-	localcmd("\ng_balance_axe_melee_time 0.15\n");
-	localcmd("\ng_balance_axe_melee_traces 1\n");
-	localcmd("\ng_balance_axe_refire 0.4\n");
-	localcmd("\ng_balance_axe_switchdelay_drop 0.2\n");
-	localcmd("\ng_balance_axe_switchdelay_raise 0.2\n");
-	localcmd("\ng_balance_axe_weaponreplace \"\"\n");
-	localcmd("\ng_balance_axe_weaponstart 0\n");
-	localcmd("\ng_balance_axe_weaponstartoverride -1\n");
-	localcmd("\ng_balance_axe_weaponthrowable 0\n");
-}
-#endif
 
 #endif
 #ifdef IMPLEMENTATION
@@ -104,7 +99,7 @@ void W_Axe_Melee_Think(entity this)
 	makevectors(this.realowner.v_angle); // update values for v_* vectors
 
 	// calculate swing percentage based on time
-	meleetime = WEP_CVAR(axe, melee_time) * W_WeaponRateFactor();
+	meleetime = WEP_CVAR(axe, melee_time) * W_WeaponRateFactor(this.realowner);
 	swing = bound(0, (this.cnt + meleetime - time) / meleetime, 10);
 	f = ((1 - swing) * WEP_CVAR(axe, melee_traces));
 
@@ -209,7 +204,7 @@ void W_Axe_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 	meleetemp = spawn();
 	meleetemp.realowner = actor;
 	setthink(meleetemp, W_Axe_Melee_Think);
-	meleetemp.nextthink = time + WEP_CVAR(axe, melee_delay) * W_WeaponRateFactor();
+	meleetemp.nextthink = time + WEP_CVAR(axe, melee_delay) * W_WeaponRateFactor(actor);
 	W_SetupShot_Range(actor, true, 0, SND_Null, 0, WEP_CVAR(axe, damage), WEP_CVAR(axe, melee_range));
 }
 
@@ -258,7 +253,7 @@ void W_Axe_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 #endif
 #ifdef CSQC
 
-		METHOD(Axe, wr_impacteffect, void(entity thiswep))
+		METHOD(Axe, wr_impacteffect, void(entity thiswep, entity actor))
 		{
 			// nothing
 		}

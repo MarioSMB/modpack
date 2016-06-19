@@ -7,6 +7,37 @@ MODEL(NAILGUN_WORLD,                 W_Model("v_nailgun.md3"));
 MODEL(NAILGUN_ITEM,                  W_Model("g_nailgun.md3"));
 #endif
 
+float autocvar_g_balance_nailgun_burst = 3;
+float autocvar_g_balance_nailgun_burst_ammo = 3;
+float autocvar_g_balance_nailgun_burst_animtime = 0.3;
+float autocvar_g_balance_nailgun_burst_refire = 0.06;
+float autocvar_g_balance_nailgun_burst_refire2 = 0.45;
+float autocvar_g_balance_nailgun_burst_speed = 0;
+float autocvar_g_balance_nailgun_first = 0;
+float autocvar_g_balance_nailgun_first_ammo = 1;
+float autocvar_g_balance_nailgun_first_damage = 5;
+float autocvar_g_balance_nailgun_first_force = 5;
+float autocvar_g_balance_nailgun_first_refire = 0.125;
+float autocvar_g_balance_nailgun_first_spread = 0.03;
+float autocvar_g_balance_nailgun_mode = 0;
+float autocvar_g_balance_nailgun_reload_ammo = 0;
+float autocvar_g_balance_nailgun_reload_time = 2;
+float autocvar_g_balance_nailgun_solidpenetration = 13.1;
+float autocvar_g_balance_nailgun_spread_add = 0.012;
+float autocvar_g_balance_nailgun_spread_max = 0.02;
+float autocvar_g_balance_nailgun_spread_min = 0.01;
+float autocvar_g_balance_nailgun_sustained_ammo = 1;
+float autocvar_g_balance_nailgun_sustained_damage = 9;
+float autocvar_g_balance_nailgun_sustained_force = 5;
+float autocvar_g_balance_nailgun_sustained_refire = 0.1;
+float autocvar_g_balance_nailgun_sustained_spread = 0.01;
+float autocvar_g_balance_nailgun_switchdelay_drop = 0.2;
+float autocvar_g_balance_nailgun_switchdelay_raise = 0.2;
+string autocvar_g_balance_nailgun_weaponreplace = "";
+float autocvar_g_balance_nailgun_weaponstart = 0;
+float autocvar_g_balance_nailgun_weaponstartoverride = -1;
+float autocvar_g_balance_nailgun_weaponthrowable = 1;
+
 CLASS(NailGun, Weapon)
 /* ammotype  */ ATTRIB(NailGun, ammo_field, .int, ammo_nails)
 /* impulse   */ ATTRIB(NailGun, impulse, int, 4)
@@ -56,47 +87,11 @@ CLASS(NailGun, Weapon)
         P(class, prefix, weaponstartoverride, float, NONE) \
         P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, NailGun, nailgun)
+    W_MOD_PROPS(X, NailGun, nailgun)
 #undef X
 
 ENDCLASS(NailGun)
 REGISTER_WEAPON(NAILGUN, nailgun, NEW(NailGun));
-
-#ifdef SVQC
-STATIC_INIT(nailgun_cvars)
-{
-	localcmd("\ng_balance_nailgun_burst 3\n");
-	localcmd("\ng_balance_nailgun_burst_ammo 3\n");
-	localcmd("\ng_balance_nailgun_burst_animtime 0.3\n");
-	localcmd("\ng_balance_nailgun_burst_refire 0.06\n");
-	localcmd("\ng_balance_nailgun_burst_refire2 0.45\n");
-	localcmd("\ng_balance_nailgun_burst_speed 0\n");
-	localcmd("\ng_balance_nailgun_first 0\n");
-	localcmd("\ng_balance_nailgun_first_ammo 1\n");
-	localcmd("\ng_balance_nailgun_first_damage 5\n");
-	localcmd("\ng_balance_nailgun_first_force 5\n");
-	localcmd("\ng_balance_nailgun_first_refire 0.125\n");
-	localcmd("\ng_balance_nailgun_first_spread 0.03\n");
-	localcmd("\ng_balance_nailgun_mode 0\n");
-	localcmd("\ng_balance_nailgun_reload_ammo 0\n");
-	localcmd("\ng_balance_nailgun_reload_time 2\n");
-	localcmd("\ng_balance_nailgun_solidpenetration 13.1\n");
-	localcmd("\ng_balance_nailgun_spread_add 0.012\n");
-	localcmd("\ng_balance_nailgun_spread_max 0.02\n");
-	localcmd("\ng_balance_nailgun_spread_min 0.01\n");
-	localcmd("\ng_balance_nailgun_sustained_ammo 1\n");
-	localcmd("\ng_balance_nailgun_sustained_damage 9\n");
-	localcmd("\ng_balance_nailgun_sustained_force 5\n");
-	localcmd("\ng_balance_nailgun_sustained_refire 0.1\n");
-	localcmd("\ng_balance_nailgun_sustained_spread 0.01\n");
-	localcmd("\ng_balance_nailgun_switchdelay_drop 0.2\n");
-	localcmd("\ng_balance_nailgun_switchdelay_raise 0.2\n");
-	localcmd("\ng_balance_nailgun_weaponreplace \"\"\n");
-	localcmd("\ng_balance_nailgun_weaponstart 0\n");
-	localcmd("\ng_balance_nailgun_weaponstartoverride -1\n");
-	localcmd("\ng_balance_nailgun_weaponthrowable 1\n");
-}
-#endif
 
 #endif
 #ifdef IMPLEMENTATION
@@ -150,7 +145,7 @@ void W_NailGun_Attack(Weapon thiswep, entity actor, int deathtype)
 
 	// this attack_finished just enforces a cooldown at the end of a burst
 	int slot = 0;
-	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(nailgun, first_refire) * W_WeaponRateFactor();
+	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(nailgun, first_refire) * W_WeaponRateFactor(actor);
 
 	vector ang = '0 0 0';
 	if(actor.misc_bulletcounter % 2)
@@ -261,7 +256,7 @@ void W_NailGun_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, i
 	if(autocvar_g_casings >= 2) // casing code
 		SpawnCasing(((random() * 50 + 50) * v_right) - (v_forward * (random() * 25 + 25)) - ((random() * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, actor);
 
-	ATTACK_FINISHED(actor, 0) = time + WEP_CVAR(nailgun, first_refire) * W_WeaponRateFactor();
+	ATTACK_FINISHED(actor, 0) = time + WEP_CVAR(nailgun, first_refire) * W_WeaponRateFactor(actor);
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(nailgun, sustained_refire), W_NailGun_Attack_Auto);
 }
 
@@ -297,7 +292,7 @@ void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, 
 	actor.misc_bulletcounter = actor.misc_bulletcounter + 1;
 	if(actor.misc_bulletcounter == 0)
 	{
-		ATTACK_FINISHED(actor, 0) = time + WEP_CVAR(nailgun, burst_refire2) * W_WeaponRateFactor();
+		ATTACK_FINISHED(actor, 0) = time + WEP_CVAR(nailgun, burst_refire2) * W_WeaponRateFactor(actor);
 		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(nailgun, burst_animtime), w_ready);
 	}
 	else
@@ -358,11 +353,11 @@ void W_NailGun_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, 
 					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(nailgun, sustained_refire), W_NailGun_Attack_Frame);
 				}
 
-				if(fire & 2 && WEP_CVAR(nailgun, first))
+				if((fire & 2) && WEP_CVAR(nailgun, first))
 				if(weapon_prepareattack(thiswep, actor, weaponentity, true, 0))
 				{
 					actor.misc_bulletcounter = 1;
-					W_NailGun_Attack(WEP_NAILGUN, WEP_NAILGUN.m_id | HITTYPE_SECONDARY); // sets attack_finished
+					W_NailGun_Attack(WEP_NAILGUN, actor, WEP_NAILGUN.m_id | HITTYPE_SECONDARY); // sets attack_finished
 					weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(nailgun, first_refire), w_ready);
 				}
 			}
