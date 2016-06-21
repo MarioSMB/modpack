@@ -1,6 +1,6 @@
 #include "cvars.qh"
 
+#include "chainsaw.qc"
 #if 0
-	#include "chainsaw.qc"
 	#include "lightsabre.qc"
 #endif
