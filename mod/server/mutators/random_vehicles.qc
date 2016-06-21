@@ -17,7 +17,7 @@ MUTATOR_HOOKFUNCTION(rvehicles, OnEntityPreSpawn)
 		e.targetname = ent.targetname;
 
 		RandomSelection_Init();
-		FOREACH(Vehicles, true, LAMBDA(
+		FOREACH(Vehicles, !(it.spawnflags & VHF_PLAYERSLOT), LAMBDA(
 			tracebox(e.origin, it.mins * 1.1, it.maxs * 1.1, e.origin, MOVE_NORMAL, e);
 			if(trace_fraction == 1.0 && !trace_startsolid)
 			{
