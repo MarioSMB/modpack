@@ -111,6 +111,8 @@ vector autocvar_g_vehicle_lightapc_gunner_offset = '0 0 15';
 float autocvar_g_vehicle_lightapc_gear_speed = 200;
 float autocvar_g_vehicle_lightapc_wheel_speed = 220;
 
+bool autocvar_g_vehicle_lightapc_snapview = false;
+
 //float autocvar_g_vehicles_crash_damage = 500;
 
 float autocvar_g_vehicle_lightapc_mass = 9001;
@@ -500,7 +502,8 @@ bool lightapc_gunner_frame(entity this)
 		
 			//player.v_angle_y = turretmount.angles_y; //kiss
 			
-			if (IS_REAL_CLIENT(player))
+			if(autocvar_g_vehicle_lightapc_snapview)
+			if(IS_REAL_CLIENT(player))
 			{
 				msg_entity = player;
 				WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
@@ -768,7 +771,8 @@ bool lightapc_pilot_frame(entity this)
 			
 			pilot.v_angle_y = vehic.angles_y; //kiss
 
-			if (IS_REAL_CLIENT(pilot))
+			if(autocvar_g_vehicle_lightapc_snapview)
+			if(IS_REAL_CLIENT(pilot))
 			{
 				msg_entity = pilot;
 				WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
