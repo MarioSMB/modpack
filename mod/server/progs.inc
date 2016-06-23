@@ -16,5 +16,6 @@
 #include "player_crush.qc"
 #include "prediction.qc"
 #include "radio.qc"
+#include "spawnreplace.qc"
 
 #include "mutators/all.qh"
