@@ -59,27 +59,34 @@ const float afrit_anim_die2		= 6;
 .float afrit_targetrange_backup;
 .float afrit_targetcheck_delay;
 
-void M_Afrit_Attack_Fireball_Explode(entity this)
+void M_Afrit_Attack_Fireball_Explode(entity this, entity directhitentity)
 {
 	if(this)
 	{
 		Send_Effect(EFFECT_FIREBALL_EXPLODE, this.origin, '0 0 0', 1);
 
 		RadiusDamage(this, this.realowner, (autocvar_g_monster_afrit_attack_fireball_damage), (autocvar_g_monster_afrit_attack_fireball_edgedamage), 
-					(autocvar_g_monster_afrit_attack_fireball_force), world, world, (autocvar_g_monster_afrit_attack_fireball_radius), this.projectiledeathtype, world);
+					(autocvar_g_monster_afrit_attack_fireball_force), NULL, NULL, (autocvar_g_monster_afrit_attack_fireball_radius), this.projectiledeathtype, directhitentity);
 
-		for(entity e = world; (e = findfloat(e, takedamage, DAMAGE_AIM)); ) if(vlen(e.origin - this.origin) <= (autocvar_g_monster_afrit_attack_fireball_radius))
-			Fire_AddDamage(e, this, 5 * MONSTER_SKILLMOD(this), (autocvar_g_monster_afrit_attack_fireball_damagetime), this.projectiledeathtype);
+		FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_monster_afrit_attack_fireball_radius, it.takedamage == DAMAGE_AIM,
+		{
+			Fire_AddDamage(it, this, 5 * MONSTER_SKILLMOD(this), (autocvar_g_monster_afrit_attack_fireball_damagetime), this.projectiledeathtype);
+		});
 
 		remove(this);
 	}
 }
 
-void M_Afrit_Attack_Fireball_Touch(entity this)
+void M_Afrit_Attack_Fireball_Explode_think(entity this)
 {
-	PROJECTILE_TOUCH(this);
+	M_Afrit_Attack_Fireball_Explode(this, NULL);
+}
 
-	M_Afrit_Attack_Fireball_Explode(this);
+void M_Afrit_Attack_Fireball_Touch(entity this, entity toucher)
+{
+	PROJECTILE_TOUCH(this, toucher);
+
+	M_Afrit_Attack_Fireball_Explode(this, toucher);
 }
 
 void M_Afrit_Attack_Fireball(entity this)
@@ -99,7 +106,7 @@ void M_Afrit_Attack_Fireball(entity this)
 	missile.velocity = dir * (autocvar_g_monster_afrit_attack_fireball_speed);
 	missile.avelocity = '300 300 300';
 	missile.nextthink = time + 5;
-	setthink(missile, M_Afrit_Attack_Fireball_Explode);
+	setthink(missile, M_Afrit_Attack_Fireball_Explode_think);
 	missile.enemy = this.enemy;
 	settouch(missile, M_Afrit_Attack_Fireball_Touch);
 	CSQCProjectile(missile, true, PROJECTILE_FIREMINE, true);

@@ -20,29 +20,29 @@ AUTOCVAR(g_vehicle_lightapc_deluge_ammo_regen_pause, float, 1, "");
 AUTOCVAR(g_vehicle_lightapc_deluge_water_speed, float, 3600, "");
 AUTOCVAR(g_vehicle_lightapc_deluge_water_spread, float, 0.03, "");
 
-void lightapc_deluge_Water_Explode(entity this)
+void lightapc_deluge_Water_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 	
-	if (other.fire_endtime > time)
-		other.fire_endtime = other.fire_endtime * 0.9;
+	if (directhitentity.fire_endtime > time)
+		directhitentity.fire_endtime = directhitentity.fire_endtime * 0.9;
 
 	RadiusDamage (this, this.realowner, autocvar_g_vehicle_lightapc_deluge_damage, autocvar_g_vehicle_lightapc_deluge_edgedamage, autocvar_g_vehicle_lightapc_deluge_cannon_radius, world, world,
-				autocvar_g_vehicle_lightapc_deluge_cannon_force, this.projectiledeathtype, other);
+				autocvar_g_vehicle_lightapc_deluge_cannon_force, this.projectiledeathtype, directhitentity);
 
 	remove (this);
 }
 
 void lightapc_deluge_Water_Explode_use(entity this, entity actor, entity trigger)
 {
-	lightapc_deluge_Water_Explode(this);
+	lightapc_deluge_Water_Explode(this, trigger);
 }
 
-void lightapc_deluge_Water_TouchExplode(entity this)
+void lightapc_deluge_Water_TouchExplode(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
-	lightapc_deluge_Water_Explode(this);
+	PROJECTILE_TOUCH(this, toucher);
+	lightapc_deluge_Water_Explode(this, toucher);
 }
 
 void lightapc_deluge_attack(entity actor, string tagname, entity spigot)

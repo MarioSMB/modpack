@@ -214,7 +214,7 @@ void lightapc_hitbox_touch2(entity this, entity toucher)
 	if(autocvar_g_vehicles_enter) { return; }
 
 	if(gettouch(this))
-		gettouch(this)(this);
+		gettouch(this)(this, toucher);
 
 #if 0
 
@@ -299,9 +299,9 @@ void lightapc_hitbox_touch2(entity this, entity toucher)
 #endif
 }
 
-void lightapc_hitbox_touch(entity this)
+void lightapc_hitbox_touch(entity this, entity toucher)
 {
-	lightapc_hitbox_touch2(this.owner, other); // This way this.subordinate is tested for max_z rather than this
+	lightapc_hitbox_touch2(this.owner, toucher); // This way this.subordinate is tested for max_z rather than this
 }
 
 void lightapc_damage_hitboxft(entity this, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
@@ -1044,7 +1044,7 @@ void lightapc_setgunnertype(entity gunner, entity instance, entity bomber)
 	}
 }
 
-void lightapc_blowup(entity this)
+void lightapc_blowup(entity this, entity toucher)
 {
 	entity vehic = this.owner;
 
@@ -1059,10 +1059,15 @@ void lightapc_blowup(entity this)
 	remove(this);
 }
 
+void lightapc_blowup_think(entity this)
+{
+	lightapc_blowup(this, NULL);
+}
+
 void lightapc_diethink(entity this)
 {
 	if(time >= this.wait)
-		setthink(this, lightapc_blowup);
+		setthink(this, lightapc_blowup_think);
 
 	if(random() < 0.1)
 	{
@@ -1073,31 +1078,31 @@ void lightapc_diethink(entity this)
 	this.nextthink = time + 0.1;
 }
 
-void lightapc_deadtouch(entity this)
+void lightapc_deadtouch(entity this, entity toucher)
 {
 	this.avelocity_x *= 0.7;
 	this.cnt -= 1;
 	if(this.cnt <= 0)
-		lightapc_blowup(this);
+		lightapc_blowup(this, toucher);
 }
 
-void lightapc_touch(entity this)
+void lightapc_touch(entity this, entity toucher)
 {
 	// Vehicle currently in use
-	if(this.owner && other.vehicle_enter_delay < time)
+	if(this.owner && toucher.vehicle_enter_delay < time)
 	{
 		// try gunner first
-		if(IS_REAL_CLIENT(other))
+		if(IS_REAL_CLIENT(toucher))
 		{
 			LL_EACH(this.gunners, !it.owner && it.vehicle_enter && time >= it.phase,
 			{
-				if(it.vehicle_enter(this, other))
+				if(it.vehicle_enter(this, toucher))
 					return; // boom
 			});
 		}
 	}
 
-	vehicles_touch(this);
+	vehicles_touch(this, toucher);
 }
 
 spawnfunc(vehicle_lightapc)

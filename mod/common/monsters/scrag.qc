@@ -44,8 +44,8 @@ float autocvar_g_monster_scrag_attack_spike_force = 10;
 float autocvar_g_monster_scrag_attack_spike_radius = 10;
 float autocvar_g_monster_scrag_attack_spike_speed = 600;
 
-void M_Scrag_Attack_Spike_Explode(entity this);
-void M_Scrag_Attack_Spike_Touch(entity this);
+void M_Scrag_Attack_Spike_Explode_think(entity this);
+void M_Scrag_Attack_Spike_Touch(entity this, entity toucher);
 
 METHOD(ScragAttack, wr_think, void(ScragAttack thiswep, entity actor, .entity weaponentity, int fire))
 {
@@ -71,7 +71,7 @@ METHOD(ScragAttack, wr_think, void(ScragAttack thiswep, entity actor, .entity we
 		missile.velocity = w_shotdir * (autocvar_g_monster_scrag_attack_spike_speed);
 		missile.avelocity = '300 300 300';
 		missile.nextthink = time + 5;
-		setthink(missile, M_Scrag_Attack_Spike_Explode);
+		setthink(missile, M_Scrag_Attack_Spike_Explode_think);
 		settouch(missile, M_Scrag_Attack_Spike_Touch);
 		CSQCProjectile(missile, true, PROJECTILE_CRYLINK, true);
 
@@ -98,7 +98,7 @@ const float scrag_anim_pain	= 3;
 const float scrag_anim_death	= 4;
 */
 
-void M_Scrag_Attack_Spike_Explode(entity this)
+void M_Scrag_Attack_Spike_Explode(entity this, entity directhitentity)
 {
 	//Send_Effect(EFFECT_FIREBALL_EXPLODE, this.origin, '0 0 0', 1);
 	__pointparticles(_particleeffectnum("TE_WIZSPIKE"), this.origin, '0 0 0', 1);
@@ -106,17 +106,22 @@ void M_Scrag_Attack_Spike_Explode(entity this)
 	entity own = this.realowner;
 
 	RadiusDamage(this, own, autocvar_g_monster_scrag_attack_spike_damage, autocvar_g_monster_scrag_attack_spike_edgedamage, autocvar_g_monster_scrag_attack_spike_force, 
-		world, world, autocvar_g_monster_scrag_attack_spike_radius, this.projectiledeathtype, other);
+		world, world, autocvar_g_monster_scrag_attack_spike_radius, this.projectiledeathtype, directhitentity);
 
 	remove(this);
 }
 
-void M_Scrag_Attack_Spike_Touch(entity this)
+void M_Scrag_Attack_Spike_Explode_think(entity this)
 {
-	PROJECTILE_TOUCH(this);
-	if(other == this.owner) { return; }
+	M_Scrag_Attack_Spike_Explode(this, NULL);
+}
 
-	M_Scrag_Attack_Spike_Explode(this);
+void M_Scrag_Attack_Spike_Touch(entity this, entity toucher)
+{
+	PROJECTILE_TOUCH(this, toucher);
+	if(toucher == this.owner) { return; }
+
+	M_Scrag_Attack_Spike_Explode(this, toucher);
 }
 
 bool M_Scrag_Attack(int attack_type, entity actor, entity targ)

@@ -60,7 +60,7 @@ const float enforcer_anim_pain3			= 8;
 const float enforcer_anim_pain4			= 9;
 */
 
-void M_Enforcer_Attack_Plasma_Explode(entity this)
+void M_Enforcer_Attack_Plasma_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
@@ -71,20 +71,20 @@ void M_Enforcer_Attack_Plasma_Explode(entity this)
 	sound (this, CH_WEAPON_A, SND_TAG_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_ELECTRO_IMPACT, this.origin, '0 0 0', 1);
 	RadiusDamage (this, this.realowner, autocvar_g_monster_enforcer_attack_plasma_damage, autocvar_g_monster_enforcer_attack_plasma_edgedamage, 
-				  autocvar_g_monster_enforcer_attack_plasma_radius, world, world, autocvar_g_monster_enforcer_attack_plasma_force, this.projectiledeathtype, other);
+				  autocvar_g_monster_enforcer_attack_plasma_radius, world, world, autocvar_g_monster_enforcer_attack_plasma_force, this.projectiledeathtype, directhitentity);
 
 	remove (this);
 }
 
 void M_Enforcer_Attack_Plasma_Explode_use(entity this, entity actor, entity trigger)
 {
-	M_Enforcer_Attack_Plasma_Explode(this);
+	M_Enforcer_Attack_Plasma_Explode(this, trigger);
 }
 
-void M_Enforcer_Attack_Plasma_Touch(entity this)
+void M_Enforcer_Attack_Plasma_Touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
-	M_Enforcer_Attack_Plasma_Explode(this);
+	PROJECTILE_TOUCH(this, toucher);
+	M_Enforcer_Attack_Plasma_Explode(this, toucher);
 }
 
 void M_Enforcer_Attack_Plasma(entity this)

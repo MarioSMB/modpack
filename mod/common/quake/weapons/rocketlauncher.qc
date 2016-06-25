@@ -90,15 +90,15 @@ void W_RocketLauncher_Unregister(entity this)
 	}
 }
 
-void W_RocketLauncher_Explode(entity this)
+void W_RocketLauncher_Explode(entity this, entity directhitentity)
 {
 	W_RocketLauncher_Unregister(this);
 
-	if(other.takedamage == DAMAGE_AIM)
-		if(IS_PLAYER(other))
-			if(DIFF_TEAM(this.realowner, other))
-				if(!IS_DEAD(other))
-					if(IsFlying(other))
+	if(directhitentity.takedamage == DAMAGE_AIM)
+		if(IS_PLAYER(directhitentity))
+			if(DIFF_TEAM(this.realowner, directhitentity))
+				if(!IS_DEAD(directhitentity))
+					if(IsFlying(directhitentity))
 						Send_Notification(NOTIF_ONE, this.realowner, MSG_ANNCE, ANNCE_ACHIEVEMENT_AIRSHOT);
 
 	this.event_damage = func_null;
@@ -114,7 +114,7 @@ void W_RocketLauncher_Explode(entity this)
 		world,
 		WEP_CVAR(rocketlauncher, force),
 		this.projectiledeathtype,
-		other
+		directhitentity
 	);
 
 	Weapon thiswep = WEP_ROCKETLAUNCHER;
@@ -130,6 +130,11 @@ void W_RocketLauncher_Explode(entity this)
 		}
 	}
 	remove(this);
+}
+
+void W_RocketLauncher_Explode_think(entity this)
+{
+	W_RocketLauncher_Explode(this, NULL);
 }
 
 // assume thisdir == -goaldir:
@@ -148,9 +153,8 @@ void W_RocketLauncher_Think(entity this)
 	this.nextthink = time;
 	if(time > this.cnt)
 	{
-		other = world;
 		this.projectiledeathtype |= HITTYPE_BOUNCE;
-		W_RocketLauncher_Explode(this);
+		W_RocketLauncher_Explode(this, NULL);
 		return;
 	}
 
@@ -164,16 +168,16 @@ void W_RocketLauncher_Think(entity this)
 		UpdateCSQCProjectile(this);
 }
 
-void W_RocketLauncher_Touch(entity this)
+void W_RocketLauncher_Touch(entity this, entity toucher)
 {
-	if(WarpZone_Projectile_Touch(this))
+	if(WarpZone_Projectile_Touch(this, toucher))
 	{
 		if(wasfreed(this))
 			W_RocketLauncher_Unregister(this);
 		return;
 	}
 	W_RocketLauncher_Unregister(this);
-	W_RocketLauncher_Explode(this);
+	W_RocketLauncher_Explode(this, toucher);
 }
 
 void W_RocketLauncher_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -188,7 +192,7 @@ void W_RocketLauncher_Damage(entity this, entity inflictor, entity attacker, flo
 	this.angles = vectoangles(this.velocity);
 
 	if(this.health <= 0)
-		W_PrepareExplosionByDamage(this, attacker, W_RocketLauncher_Explode);
+		W_PrepareExplosionByDamage(this, attacker, W_RocketLauncher_Explode_think);
 }
 
 void W_RocketLauncher_Attack(Weapon thiswep, entity actor)

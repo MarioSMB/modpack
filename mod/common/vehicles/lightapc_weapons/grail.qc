@@ -61,27 +61,27 @@ AUTOCVAR(g_vehicle_lightapc_grail_link5_skip, bool, false, "");
 AUTOCVAR(g_vehicle_lightapc_grail_link5_skipiter, int, 0, "");
 AUTOCVAR(g_vehicle_lightapc_grail_link5_skipspeed, float, 0, "");
 
-void lightapc_grail_Plasma_Explode(entity this)
+void lightapc_grail_Plasma_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 	
 	W_Electro_TriggerCombo(this.origin, autocvar_g_vehicle_lightapc_grail_cannon_comboradius, this.realowner);
 		RadiusDamage (this, this.realowner, autocvar_g_vehicle_lightapc_grail_cannon_damage, autocvar_g_vehicle_lightapc_grail_cannon_edgedamage,autocvar_g_vehicle_lightapc_grail_cannon_radius,
-					NULL, NULL, autocvar_g_vehicle_lightapc_grail_cannon_force, this.projectiledeathtype, other);
+					NULL, NULL, autocvar_g_vehicle_lightapc_grail_cannon_force, this.projectiledeathtype, directhitentity);
 
 	remove (this);
 }
 
 void lightapc_grail_Plasma_Explode_use(entity this, entity actor, entity trigger)
 {
-	lightapc_grail_Plasma_Explode(this);
+	lightapc_grail_Plasma_Explode(this, trigger);
 }
 
-void lightapc_grail_Plasma_TouchExplode(entity this)
+void lightapc_grail_Plasma_TouchExplode(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
-	lightapc_grail_Plasma_Explode(this);
+	PROJECTILE_TOUCH(this, toucher);
+	lightapc_grail_Plasma_Explode(this, toucher);
 }
 
 void lightapc_grail_linkattack (entity actor, string tagname, float putforward, float speedadd, entity fireentity)

@@ -7,13 +7,13 @@ AUTOCVAR(g_player_crush_headheight, float, 0.9, "");
 AUTOCVAR(g_player_crush_bounce, float, 300, _("Bounce height in advanced trace mode"));
 AUTOCVAR(g_player_crush_bounce_jump, float, 600, _("Bounce height while holding jump in advanced trace mode"));
 
-void pc_PlayerTouch(entity this)
+void pc_PlayerTouch(entity this, entity toucher)
 {
-	if(other == world)
+	if(toucher == world)
 		return;
 
-	bool and_monster = IS_MONSTER(other);
-	if(and_monster && !((Monsters_from(other.monsterid)).spawnflags & MON_FLAG_CRUSH))
+	bool and_monster = IS_MONSTER(toucher);
+	if(and_monster && !((Monsters_from(toucher.monsterid)).spawnflags & MON_FLAG_CRUSH))
 		and_monster = false;
 
 	if(!autocvar_g_player_crush && !and_monster)
@@ -22,30 +22,30 @@ void pc_PlayerTouch(entity this)
 	if(!IS_PLAYER(this))
 		return;
 
-	if(!IS_PLAYER(other) && !and_monster)
+	if(!IS_PLAYER(toucher) && !and_monster)
 		return;
 
-	if(IS_DEAD(this) || IS_DEAD(other))
+	if(IS_DEAD(this) || IS_DEAD(toucher))
 		return;
 
-	if(!this.iscreature || !other.iscreature)
+	if(!this.iscreature || !toucher.iscreature)
 		return;
 
 	if(forbidWeaponUse(this))
 		return;
 
-	if(autocvar_g_player_crush_simple && IS_PLAYER(other))
+	if(autocvar_g_player_crush_simple && IS_PLAYER(toucher))
 	{
-		vector vdir = normalize(other.origin - this.origin);
+		vector vdir = normalize(toucher.origin - this.origin);
 
 		if(vdir_z > autocvar_g_player_crush_headheight) // adjust this to set how sharp from above players need to hit the player to crush them. 
-			Damage (this, other, other, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, this.origin, '0 0 0');
+			Damage (this, toucher, toucher, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, this.origin, '0 0 0');
 	}
 	else
 	{
 		tracebox(this.origin, this.mins, this.maxs, this.origin - ('0 0 1' * (this.maxs_z + 5)), MOVE_NORMAL, this);
 
-		if(trace_ent == other)
+		if(trace_ent == toucher)
 		{
 			float mjumpheight = autocvar_g_player_crush_bounce;
 
@@ -64,7 +64,7 @@ void pc_PlayerTouch(entity this)
 
 			animdecide_setaction(this, ANIMACTION_JUMP, true);
 
-			Damage (other, this, this, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, other.origin, '0 0 0');
+			Damage (toucher, this, this, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, toucher.origin, '0 0 0');
 		}
 	}
 }

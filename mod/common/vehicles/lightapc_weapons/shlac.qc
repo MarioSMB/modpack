@@ -6,16 +6,16 @@ AUTOCVAR(g_vehicle_lightapc_shlac_ammo_max, int, 100, "");
 AUTOCVAR(g_vehicle_lightapc_shlac_ammo_regen, int, 20, "");
 AUTOCVAR(g_vehicle_lightapc_shlac_ammo_regen_pause, float, 1, "");
 
-void lightapc_shlac_touch(entity this)
+void lightapc_shlac_touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 
 	this.event_damage = func_null;
 
 	bool isprimary = !(this.projectiledeathtype & HITTYPE_SECONDARY);
 
 	RadiusDamage(this, this.realowner, WEP_CVAR_BOTH(hlac, isprimary, damage), WEP_CVAR_BOTH(hlac, isprimary, edgedamage), WEP_CVAR_BOTH(hlac, isprimary, radius), 
-					   this.realowner.vehicle, world, WEP_CVAR_BOTH(hlac, isprimary, force), this.projectiledeathtype, other);
+					   this.realowner.vehicle, world, WEP_CVAR_BOTH(hlac, isprimary, force), this.projectiledeathtype, toucher);
 
 	remove(this);
 }

@@ -80,7 +80,7 @@ const float vore_anim_run		= 5;
 
 .entity vore_spike;
 
-void M_Vore_Attack_Spike_Explode(entity this)
+void M_Vore_Attack_Spike_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
 
@@ -89,16 +89,16 @@ void M_Vore_Attack_Spike_Explode(entity this)
 	this.realowner.vore_spike = world;
 
 	Send_Effect(EFFECT_EXPLOSION_SMALL, this.origin, '0 0 0', 1);
-	RadiusDamage (this, this.realowner, (autocvar_g_monster_vore_attack_spike_damage), (autocvar_g_monster_vore_attack_spike_damage) * 0.5, (autocvar_g_monster_vore_attack_spike_radius), world, world, 0, DEATH_MONSTER_MAGE.m_id, other);
+	RadiusDamage (this, this.realowner, (autocvar_g_monster_vore_attack_spike_damage), (autocvar_g_monster_vore_attack_spike_damage) * 0.5, (autocvar_g_monster_vore_attack_spike_radius), world, world, 0, DEATH_MONSTER_MAGE.m_id, directhitentity);
 
 	remove (this);
 }
 
-void M_Vore_Attack_Spike_Touch(entity this)
+void M_Vore_Attack_Spike_Touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 
-	M_Vore_Attack_Spike_Explode(this);
+	M_Vore_Attack_Spike_Explode(this, toucher);
 }
 
 .float wait;
@@ -108,7 +108,7 @@ void M_Vore_Attack_Spike_Think(entity this)
 {
 	if (time > this.ltime || (this.enemy && this.enemy.health <= 0) || this.owner.health <= 0) {
 		this.projectiledeathtype |= HITTYPE_SPLASH;
-		M_Vore_Attack_Spike_Explode(this);
+		M_Vore_Attack_Spike_Explode(this, NULL);
 	}
 
 	float spd = vlen(this.velocity);

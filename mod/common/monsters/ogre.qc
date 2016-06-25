@@ -103,7 +103,7 @@ void M_Ogre_Attack_MachineGun(entity this)
 		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, this);
 }
 
-void M_Ogre_Attack_Grenade_Explode(entity this)
+void M_Ogre_Attack_Grenade_Explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
@@ -113,14 +113,15 @@ void M_Ogre_Attack_Grenade_Explode(entity this)
 
 	sound (this, CH_WEAPON_A, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_GRENADE_EXPLODE, this.origin, '0 0 0', 1);
-	RadiusDamage (this, this.realowner, autocvar_g_monster_ogre_attack_grenade_damage, autocvar_g_monster_ogre_attack_grenade_edgedamage, autocvar_g_monster_ogre_attack_grenade_radius, world, world, autocvar_g_monster_ogre_attack_grenade_force, this.projectiledeathtype, other);
+	RadiusDamage (this, this.realowner, autocvar_g_monster_ogre_attack_grenade_damage, autocvar_g_monster_ogre_attack_grenade_edgedamage, autocvar_g_monster_ogre_attack_grenade_radius, 
+				NULL, NULL, autocvar_g_monster_ogre_attack_grenade_force, this.projectiledeathtype, directhitentity);
 
 	remove (this);
 }
 
 void M_Ogre_Attack_Grenade_Explode_use(entity this, entity actor, entity trigger)
 {
-	M_Ogre_Attack_Grenade_Explode(this);
+	M_Ogre_Attack_Grenade_Explode(this, trigger);
 }
 
 void M_Ogre_Attack_Grenade_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -137,13 +138,13 @@ void M_Ogre_Attack_Grenade_Damage(entity this, entity inflictor, entity attacker
 		W_PrepareExplosionByDamage(this, attacker, adaptor_think2use);
 }
 
-void M_Ogre_Attack_Grenade_Touch(entity this)
+void M_Ogre_Attack_Grenade_Touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
+	PROJECTILE_TOUCH(this, toucher);
 
-	if (other.takedamage == DAMAGE_AIM)
+	if (toucher.takedamage == DAMAGE_AIM)
 	{
-		this.use(this, NULL, NULL);
+		this.use(this, NULL, toucher);
 		return;
 	}
 

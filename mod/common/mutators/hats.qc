@@ -125,9 +125,9 @@ void hat_Think(entity this)
 	CSQCMODEL_AUTOUPDATE(this);
 }
 
-bool hats_Customize()
+bool hats_Customize(entity this, entity client)
 {
-	if(other.cvar_cl_nohats) { return false; }
+	if(client.cvar_cl_nohats) { return false; }
 	return true;
 }
 
@@ -145,7 +145,7 @@ void hats_SpawnHat(entity this)
 	this.hatentity.angles = '0 0 0';
 	setthink(this.hatentity, hat_Think);
 	this.hatentity.nextthink = time;
-	this.hatentity.customizeentityforclient = hats_Customize;
+	setcefc(this.hatentity, hats_Customize);
 
 	CSQCMODEL_AUTOINIT(this.hatentity);
 }

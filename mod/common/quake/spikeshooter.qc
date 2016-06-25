@@ -32,7 +32,7 @@ MUTATOR_HOOKFUNCTION(spikeshooter_projectile, PrecacheProjectiles)
 const int SPIKESHOOTER_SUPERSPIKE = 1;
 const int SPIKESHOOTER_LASER = 2;
 
-void spikeshooter_explode(entity this)
+void spikeshooter_explode(entity this, entity directhitentity)
 {
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
@@ -47,7 +47,7 @@ void spikeshooter_explode(entity this)
 		world,
 		0,
 		this.projectiledeathtype,
-		other
+		directhitentity
 	);
 
 	remove(this);
@@ -55,13 +55,13 @@ void spikeshooter_explode(entity this)
 
 void spikeshooter_explode_use(entity this, entity actor, entity trigger)
 {
-	spikeshooter_explode(this);
+	spikeshooter_explode(this, trigger);
 }
 
-void spikeshooter_touch(entity this)
+void spikeshooter_touch(entity this, entity toucher)
 {
-	PROJECTILE_TOUCH(this);
-	spikeshooter_explode(this);
+	PROJECTILE_TOUCH(this, toucher);
+	spikeshooter_explode(this, toucher);
 }
 
 void spikeshooter_fire(entity this, entity actor, entity trigger)

@@ -37,7 +37,7 @@ AUTOCVAR(g_monster_spawn_speed_stop, float, 50, "");
 AUTOCVAR(g_monster_spawn_speed_run, float, 70, "");
 AUTOCVAR(g_monster_spawn_speed_walk, float, 50, "");
 
-void M_Tarbaby_Attack_Explode(entity this)
+void M_Tarbaby_Attack_Explode(entity this, entity directhitentity)
 {
 	setanim(this, this.anim_die1, false, true, true);
 
@@ -46,18 +46,18 @@ void M_Tarbaby_Attack_Explode(entity this)
 	sound(this, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
 
 	Send_Effect(EFFECT_EXPLOSION_SMALL, this.origin, '0 0 0', 1);
-	RadiusDamage (this, this, (autocvar_g_monster_spawn_attack_explode_damage), (autocvar_g_monster_spawn_attack_explode_damage) * 0.5, (autocvar_g_monster_spawn_attack_explode_radius), world, world, 50, DEATH_MONSTER_MAGE.m_id, other);
+	RadiusDamage (this, this, (autocvar_g_monster_spawn_attack_explode_damage), (autocvar_g_monster_spawn_attack_explode_damage) * 0.5, (autocvar_g_monster_spawn_attack_explode_radius), world, world, 50, DEATH_MONSTER_MAGE.m_id, directhitentity);
 
 	Monster_Remove(this);
 }
 
-void M_Tarbaby_Attack_Leap_Touch(entity this)
+void M_Tarbaby_Attack_Leap_Touch(entity this, entity toucher)
 {
 	if (this.health <= 0)
 		return;
 
-	if(other.takedamage)
-		M_Tarbaby_Attack_Explode(this);
+	if(toucher.takedamage)
+		M_Tarbaby_Attack_Explode(this, toucher);
 
 	if (trace_dphitcontents)
 	{
@@ -72,7 +72,7 @@ bool M_Tarbaby_Attack(int attack_type, entity actor, entity targ)
 	{
 		case MONSTER_ATTACK_MELEE:
 		{
-			M_Tarbaby_Attack_Explode(actor);
+			M_Tarbaby_Attack_Explode(actor, NULL); // we don't count this as a direct hit, despite monster being close
 			return true;
 		}
 		case MONSTER_ATTACK_RANGED:
@@ -95,7 +95,7 @@ spawnfunc(monster_tarbaby) { Monster_Spawn(this, MON_TARBABY.monsterid); }
 		}
 		METHOD(Tarbaby, mr_death, bool(Tarbaby thismon, entity actor))
 		{
-			M_Tarbaby_Attack_Explode(actor);
+			M_Tarbaby_Attack_Explode(actor, NULL);
 			return true;
 		}
 		#endif
