@@ -15,7 +15,13 @@ void IRCSay(string msgstr)
 	if(msgstr == "")
 		return;
 
-	msgstr = strcat("\{1}", strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
+	string prefix;
+	if(substring(msgstr, 0, 3) == "^4*") // actions
+		prefix = "\{3}";
+	else
+		prefix = "\{1}";
+
+	msgstr = strcat(prefix, strreplace("\n", " ", msgstr), "\n"); // newlines only are good for centerprint
 
 	FOREACH_CLIENTSLOT(true,
 	{
