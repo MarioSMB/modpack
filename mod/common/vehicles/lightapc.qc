@@ -450,6 +450,9 @@ bool lightapc_gunner_frame(entity this)
 
 	return = true;
 
+	if(intermission_running)
+		return;
+
 	setorigin(player, vehic.origin);
 	player.velocity = vehic.velocity;
 
