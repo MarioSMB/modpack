@@ -7,6 +7,7 @@
 #include "custom_playermodels.qc"
 #include "demo.qc"
 #include "freeze.qc"
+#include "hook.qc"
 #include "piggyback.qc"
 #include "radio.qc"
 #include "zombie_apocalypse.qc"
