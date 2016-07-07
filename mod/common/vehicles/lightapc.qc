@@ -508,16 +508,16 @@ bool lightapc_gunner_frame(entity this)
 		
 			if(turretmount.angles_y >= -1 && turretmount.angles_y <= -1)
 				turretmount.angles_y = 0;	
-
-			player.angles_y = player.angles_y + ((player.movement_y * sys_frametime) / -6.66666);
-			float ydegrees = ((player.movement_y * sys_frametime) / -6.66666);
-			player.v_angle_y += ydegrees;
 		
 			//player.v_angle_y = turretmount.angles_y; //kiss
 			
 			if(autocvar_g_vehicle_lightapc_snapview)
 			if(IS_REAL_CLIENT(player))
 			{
+				player.angles_y = player.angles_y + ((player.movement_y * sys_frametime) / -6.66666);
+				float ydegrees = ((player.movement_y * sys_frametime) / -6.66666);
+				player.v_angle_y += ydegrees;
+
 				msg_entity = player;
 				WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
 				WriteAngle(MSG_ONE, player.v_angle_x);
@@ -781,12 +781,12 @@ bool lightapc_pilot_frame(entity this)
 			////pilot.angles_y = pilot.angles_y + ((pilot.movement_y * sys_frametime) / -6.66666);
 			////degree_y = ((pilot.movement_y * sys_frametime) / -6.66666);
 			////pilot.v_angle_y += degree_y;
-			
-			pilot.v_angle_y = vehic.angles_y; //kiss
 
 			if(autocvar_g_vehicle_lightapc_snapview)
 			if(IS_REAL_CLIENT(pilot))
 			{
+				pilot.v_angle_y = vehic.angles_y; //kiss
+
 				msg_entity = pilot;
 				WriteByte (MSG_ONE, SVC_SETVIEWANGLES);
 				WriteAngle(MSG_ONE, pilot.v_angle_x);
