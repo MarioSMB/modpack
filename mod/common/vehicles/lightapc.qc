@@ -66,6 +66,16 @@ CLASS(LightAPCGunner2, Vehicle)
 ENDCLASS(LightAPCGunner2)
 REGISTER_VEHICLE(LIGHTAPCGUNNER2, NEW(LightAPCGunner2));
 
+CLASS(LightAPCPassenger, Vehicle)
+/* spawnflags */ ATTRIB(LightAPCPassenger, spawnflags, int, VHF_PLAYERSLOT);
+/* view offset*/ ATTRIB(LightAPCPassenger, view_ofs, vector, '0 0 0');
+/* view dist  */ ATTRIB(LightAPCPassenger, height, float, 0);
+/* netname    */ ATTRIB(LightAPCPassenger, netname, string, "lightapcpassenger");
+/* fullname   */ ATTRIB(LightAPCPassenger, vehicle_name, string, _("LightAPC Passenger"));
+/* icon       */ ATTRIB(LightAPCPassenger, m_icon, string, "vehicle_lightapc");
+ENDCLASS(LightAPCPassenger)
+REGISTER_VEHICLE(LIGHTAPCPASSENGER, NEW(LightAPCPassenger));
+
 #endif
 
 #ifdef IMPLEMENTATION
@@ -1091,8 +1101,14 @@ void lightapc_deadtouch(entity this, entity toucher)
 
 void lightapc_touch(entity this, entity toucher)
 {
+	if(autocvar_g_vehicles_enter)
+	{
+		vehicles_touch(this, toucher);
+		return; // use button handles entering
+	}
+
 	// Vehicle currently in use
-	if(this.owner && toucher.vehicle_enter_delay < time)
+	if(this.owner && SAME_TEAM(this.owner, toucher) && toucher.vehicle_enter_delay < time)
 	{
 		// try gunner first
 		if(IS_REAL_CLIENT(toucher))
@@ -1135,6 +1151,20 @@ METHOD(LightAPC, vr_enter, void(LightAPC thisveh, entity instance))
 		setorigin(instance.owner.flagcarried, '-190 0 96');
 #elif defined(CSQC)
 	instance.move_movetype = MOVETYPE_WALK;
+#endif
+}
+
+METHOD(LightAPC, vr_gunner_enter, void(LightAPC thisveh, entity instance, entity actor))
+{
+#ifdef SVQC
+	if(IS_REAL_CLIENT(actor))
+	{
+		LL_EACH(instance.gunners, !it.owner && it.vehicle_enter && time >= it.phase,
+		{
+			if(it.vehicle_enter(instance, actor))
+				return; // boom
+		});
+	}
 #endif
 }
 
@@ -1270,7 +1300,7 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 			g.vehicle = instance; \
 			setmodel(g, MDL_Null); \
 			setattachment(g, instance, (s)); \
-			vehicle_addplayerslot(instance, g, VEH_LIGHTAPC.vehicleid, MDL_Null, lightapc_gunner_frame, lightapc_gunner_exit, lightapc_gunner_enter); \
+			vehicle_addplayerslot(instance, g, VEH_LIGHTAPCPASSENGER.vehicleid, MDL_Null, lightapc_gunner_frame, lightapc_gunner_exit, lightapc_gunner_enter); \
 			LL_PUSH(instance.gunners, g);
 
 			X("tag_pass3")
@@ -1508,6 +1538,24 @@ METHOD(LightAPCGunner2, vr_crosshair, void(LightAPCGunner2 thisveh, entity playe
 METHOD(LightAPCGunner2, vr_setup, void(LightAPCGunner2 thisveh, entity instance))
 {
 	AuxiliaryXhair[0].axh_image = vCROSS_LOCK; // Match all?
+}
+#endif
+
+#ifdef CSQC
+METHOD(LightAPCPassenger, vr_hud, void(LightAPCPassenger thisveh))
+{
+	Vehicles_drawHUD(VEH_LIGHTAPCPASSENGER.m_icon, string_null, string_null,
+					 string_null, '0 0 0',
+					 string_null, '0 0 0');
+}
+METHOD(LightAPCPassenger, vr_crosshair, void(LightAPCPassenger thisveh, entity player))
+{
+	//Vehicles_drawCrosshair(vCROSS_GUIDE);
+}
+
+METHOD(LightAPCPassenger, vr_setup, void(LightAPCPassenger thisveh, entity instance))
+{
+	//AuxiliaryXhair[0].axh_image = vCROSS_LOCK; // Match all?
 }
 #endif
 
