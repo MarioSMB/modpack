@@ -118,10 +118,11 @@ MUTATOR_HOOKFUNCTION(radio, CSQC_ConsoleCommand)
 		return;
 
 	string cmd_name = M_ARGV(0, string);
+	int cmd_argc = M_ARGV(2, int);
 
 	if(cmd_name == "radio")
 	{
-		if(!stof(argv(1)))
+		if(cmd_argc == 1)
 		{
 			entity e = find(world, classname, "radio");
 
