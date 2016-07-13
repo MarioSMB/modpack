@@ -1,3 +1,5 @@
+#include "words.qh" // defines MINIGAME_SUPPORT_WORDS
+
 #ifdef MINIGAME_SUPPORT_WORDS
 
 REGISTER_MINIGAME(boggle, "Boggle");

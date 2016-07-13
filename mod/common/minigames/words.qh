@@ -1,9 +1,8 @@
+#pragma once
+
 #define MINIGAME_SUPPORT_WORDS
+
 #ifdef MINIGAME_SUPPORT_WORDS
-
-#ifndef P_WORDS_H
-#define P_WORDS_H
-
 const int MAX_WORDS_PERFILE = 8400; // let's hope we don't reach it
 
 bool Find_Word_Entity(string wrd_name)
@@ -51,7 +50,4 @@ bool Find_Word_Entity(string wrd_name)
 
     return found;
 }
-
-#endif
-
 #endif
