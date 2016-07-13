@@ -126,7 +126,7 @@ MUTATOR_HOOKFUNCTION(pickspawns, Ent_Update)
 	if(STAT(PICK_SPAWNS))
 	{
 		ent.teamradar_icon = RADARICON_WAYPOINT.m_id;
-		ent.teamradar_color = ((serverflags & SERVERFLAG_TEAMPLAY) ? Team_ColorRGB(ent.team) : '1 1 1');
+		ent.teamradar_color = ((serverflags & SERVERFLAG_TEAMPLAY) ? Team_ColorRGB(ent.team - 1) : '1 1 1');
 	}
 }
 #endif
