@@ -937,10 +937,10 @@ void chess_hud_status(vector pos, vector mySize)
 string chess_turn_to_string(int turnflags)
 {
 	if ( turnflags & CHESS_TURN_WIN )
-		return _("Well done, you win!");
+		return "Well done, you win!";
 	
 	if ( turnflags & CHESS_TURN_MOVE )
-		return _("Strategize!");
+		return "Strategize!";
 	
 	return "";
 }

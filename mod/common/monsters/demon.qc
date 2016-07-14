@@ -4,11 +4,11 @@
 #ifndef MENUQC
 MODEL(MON_DEMON, M_Model("demon.mdl"));
 
-MSG_INFO_NOTIF(DEATH_SELF_MON_DEMON_JUMP,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         _("^BG%s^K1 was pounced on by a Demon%s%s"), "")
+MSG_INFO_NOTIF(DEATH_SELF_MON_DEMON_JUMP,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         "^BG%s^K1 was pounced on by a Demon%s%s", "")
 MSG_MULTI_NOTIF(DEATH_SELF_MON_DEMON_JUMP,                1,  NULL,           INFO_DEATH_SELF_MON_DEMON_JUMP,               CENTER_DEATH_SELF_MONSTER)
 REGISTER_DEATHTYPE(MONSTER_DEMON_JUMP,            				DEATH_SELF_MON_DEMON_JUMP,            	DEATH_MURDER_MONSTER,           	"monster")
 
-MSG_INFO_NOTIF(DEATH_SELF_MON_DEMON_MELEE,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         _("^BG%s^K1 was eviscerated by a Demon%s%s"), "")
+MSG_INFO_NOTIF(DEATH_SELF_MON_DEMON_MELEE,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         "^BG%s^K1 was eviscerated by a Demon%s%s", "")
 MSG_MULTI_NOTIF(DEATH_SELF_MON_DEMON_MELEE,                1,  NULL,           INFO_DEATH_SELF_MON_DEMON_MELEE,               CENTER_DEATH_SELF_MONSTER)
 REGISTER_DEATHTYPE(MONSTER_DEMON_MELEE,            				DEATH_SELF_MON_DEMON_MELEE,            	DEATH_MURDER_MONSTER,           	"monster")
 #endif
@@ -21,7 +21,7 @@ CLASS(Demon, Monster)
     ATTRIB(Demon, m_model, Model, MDL_MON_DEMON);
 #endif
     ATTRIB(Demon, netname, string, "demon");
-    ATTRIB(Demon, monster_name, string, _("Demon"));
+    ATTRIB(Demon, monster_name, string, "Demon");
 ENDCLASS(Demon)
 
 REGISTER_MONSTER(DEMON, NEW(Demon)) {

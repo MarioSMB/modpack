@@ -452,12 +452,12 @@ void boggle_hud_status(vector pos, vector mySize)
 
 			//mypos_x += tile_size_x;
 
-			drawstring(mypos,sprintf(_("Words: %d"), e.boggle_wordscore),'28 28 0',
+			drawstring(mypos,sprintf("Words: %d", e.boggle_wordscore),'28 28 0',
 					   '0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			mypos_y += player_fontsize_y;
 
-			drawstring(mypos,sprintf(_("Score: %d"), e.boggle_score),'28 28 0',
+			drawstring(mypos,sprintf("Score: %d", e.boggle_score),'28 28 0',
 					   '0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			if(active_minigame.minigame_flags & BOGGLE_TURN_MOVE)
@@ -465,7 +465,7 @@ void boggle_hud_status(vector pos, vector mySize)
 			{
 				mypos_y += player_fontsize_y;
 
-				drawstring(mypos,sprintf(_("Time left: %s"), count_seconds(STAT(BOGGLE_TIMER))),'28 28 0',
+				drawstring(mypos,sprintf("Time left: %s", count_seconds(STAT(BOGGLE_TIMER))),'28 28 0',
 						   '0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 		}
@@ -476,13 +476,13 @@ void boggle_hud_status(vector pos, vector mySize)
 string boggle_turn_to_string(int turnflags)
 {
 	if (turnflags & BOGGLE_TURN_DRAW )
-		return _("Game over!");
+		return "Game over!";
 
 	if(turnflags & BOGGLE_TURN_WAIT)
-		return _("Press \"Ready\" to begin");
+		return "Press \"Ready\" to begin";
 
 	if ( turnflags & BOGGLE_TURN_MOVE )
-		return _("Drag the mouse to select as many words as you can before time runs out!");
+		return "Drag the mouse to select as many words as you can before time runs out!";
 
 	return "";
 }
@@ -687,7 +687,7 @@ int boggle_client_event(entity minigame, string event, ...)
 		}
 		case "menu_show":
 		{
-			HUD_MinigameMenu_CustomEntry(...(0,entity),_("Ready"),"ready");
+			HUD_MinigameMenu_CustomEntry(...(0,entity),"Ready","ready");
 			return false;
 		}
 		case "menu_click":

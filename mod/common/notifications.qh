@@ -12,10 +12,10 @@ enum {
 // MSG_INFO_NOTIFICATIONS
 
 // MSG_CENTER_NOTIFICATIONS
-    MSG_CENTER_NOTIF(FREEZE_THAWING,           1,   0, 0, "",             CPID_FREEZE,          "5 0", _("^BGThawing slowly now\n^BGJump to re-spawn at base instantly"), "")
-    MSG_CENTER_NOTIF(HEADSHOT,                 1,   0, 0, "",             CPID_Null,              "0 0", _("^F2Headshot!"), "")
-    MSG_CENTER_NOTIF(PIGGYBACK_CARRYING,       1,   1, 0, "s1",           CPID_PIGGYBACK,       "0 0", _("^BGYou are now carrying %s^BG!"), "")
-    MSG_CENTER_NOTIF(PIGGYBACK_RIDING,         1,   1, 0, "s1",           CPID_PIGGYBACK,       "0 0", _("^BGYou are now riding %s^BG!"), "")
+    MSG_CENTER_NOTIF(FREEZE_THAWING,           1,   0, 0, "",             CPID_FREEZE,          "5 0", "^BGThawing slowly now\n^BGJump to re-spawn at base instantly", "")
+    MSG_CENTER_NOTIF(HEADSHOT,                 1,   0, 0, "",             CPID_Null,              "0 0", "^F2Headshot!", "")
+    MSG_CENTER_NOTIF(PIGGYBACK_CARRYING,       1,   1, 0, "s1",           CPID_PIGGYBACK,       "0 0", "^BGYou are now carrying %s^BG!", "")
+    MSG_CENTER_NOTIF(PIGGYBACK_RIDING,         1,   1, 0, "s1",           CPID_PIGGYBACK,       "0 0", "^BGYou are now riding %s^BG!", "")
 
 // MSG_MULTI_NOTIFICATIONS
     MSG_MULTI_NOTIF(HEADSHOT,                     1,  ANNCE_HEADSHOT,           NULL,                    CENTER_HEADSHOT)

@@ -4,15 +4,15 @@ const int IT_METAL = BIT(19);
 REGISTER_STAT(STAR_FINISHED, float);
 REGISTER_STAT(METAL_FINISHED, float);
 
-MSG_INFO_NOTIF(POWERUP_STAR,                        1,      1, 0, "s1", "s1",       "star",                         _("^BG%s^K1 picked up Starman"), "")
+MSG_INFO_NOTIF(POWERUP_STAR,                        1,      1, 0, "s1", "s1",       "star",                         "^BG%s^K1 picked up Starman", "")
 
-MSG_CENTER_NOTIF(POWERUP_STAR,                      1,      0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2Starman gives you complete invulnerability!"), "")
-MSG_CENTER_NOTIF(POWERDOWN_STAR,                    1,      0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2Starman has worn off"), "")
+MSG_CENTER_NOTIF(POWERUP_STAR,                      1,      0, 0, "",               CPID_POWERUP,           "0 0",  "^F2Starman gives you complete invulnerability!", "")
+MSG_CENTER_NOTIF(POWERDOWN_STAR,                    1,      0, 0, "",               CPID_POWERUP,           "0 0",  "^F2Starman has worn off", "")
 
-MSG_INFO_NOTIF(POWERUP_METAL,                       1,      1, 0, "s1", "s1",       "metal",                        _("^BG%s^K1 picked up Metal Cap"), "")
+MSG_INFO_NOTIF(POWERUP_METAL,                       1,      1, 0, "s1", "s1",       "metal",                        "^BG%s^K1 picked up Metal Cap", "")
 
-MSG_CENTER_NOTIF(POWERUP_METAL,                     1,      0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2Metal Cap gives you a heavy feeling!"), "")
-MSG_CENTER_NOTIF(POWERDOWN_METAL,                   1,      0, 0, "",               CPID_POWERUP,           "0 0",  _("^F2Metal Cap has worn off"), "")
+MSG_CENTER_NOTIF(POWERUP_METAL,                     1,      0, 0, "",               CPID_POWERUP,           "0 0",  "^F2Metal Cap gives you a heavy feeling!", "")
+MSG_CENTER_NOTIF(POWERDOWN_METAL,                   1,      0, 0, "",               CPID_POWERUP,           "0 0",  "^F2Metal Cap has worn off", "")
 
 REGISTER_GLOBALSOUND(FALL_METALCAP, "misc/metalcaphitground")
 
@@ -29,7 +29,7 @@ REGISTER_ITEM(Star, Powerup) {
     this.m_name             =   "starman";
     this.m_icon             =   "star";
     this.m_color            =   '1 1 0';
-    this.m_waypoint         =   _("Starman");
+    this.m_waypoint         =   "Starman";
     this.m_waypointblink    =   2;
     this.m_itemid           =   IT_STAR;
 }
@@ -47,7 +47,7 @@ REGISTER_ITEM(Metal, Powerup) {
     this.m_name             =   "metalcap";
     this.m_icon             =   "metal";
     this.m_color            =   '0.5 0.5 0.5';
-    this.m_waypoint         =   _("Metal Cap");
+    this.m_waypoint         =   "Metal Cap";
     this.m_waypointblink    =   2;
     this.m_itemid           =   IT_METAL;
 }

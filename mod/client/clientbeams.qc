@@ -1,7 +1,7 @@
 //bool autocvar_cl_particles_newvortexbeam;
-AUTOCVAR_SAVE(cl_vaporizerbeam,                    int,   0,      _("Draw a client side beam when firing in instagib. -1: always disabled, 0: disabled unless ping is high, 1: enabled"));
-AUTOCVAR_SAVE(cl_vaporizerbeam_minping,            int,   160,    _("Minimum ping for the client side beams to automatically enable"));
-AUTOCVAR_SAVE(cl_particles_newvortexbeam,          bool,  false,  _("Draw a fancy new vortex beam"));
+AUTOCVAR_SAVE(cl_vaporizerbeam,                    int,   0,      "Draw a client side beam when firing in instagib. -1: always disabled, 0: disabled unless ping is high, 1: enabled");
+AUTOCVAR_SAVE(cl_vaporizerbeam_minping,            int,   160,    "Minimum ping for the client side beams to automatically enable");
+AUTOCVAR_SAVE(cl_particles_newvortexbeam,          bool,  false,  "Draw a fancy new vortex beam");
 
 float last_beam;
 

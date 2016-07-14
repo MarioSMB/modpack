@@ -13,7 +13,7 @@ CLASS(Spawner, Monster)
     ATTRIB(Spawner, m_model, Model, MDL_MON_SPAWNER);
 #endif
     ATTRIB(Spawner, netname, string, "spawner");
-    ATTRIB(Spawner, monster_name, string, _("Spawner"));
+    ATTRIB(Spawner, monster_name, string, "Spawner");
 ENDCLASS(Spawner)
 
 REGISTER_MONSTER(SPAWNER, NEW(Spawner)) {

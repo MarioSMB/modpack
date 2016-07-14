@@ -15,7 +15,7 @@ CLASS(Scrag, Monster)
     ATTRIB(Scrag, m_model, Model, MDL_MON_SCRAG);
 #endif
     ATTRIB(Scrag, netname, string, "scrag");
-    ATTRIB(Scrag, monster_name, string, _("Scrag"));
+    ATTRIB(Scrag, monster_name, string, "Scrag");
 ENDCLASS(Scrag)
 
 REGISTER_MONSTER(SCRAG, NEW(Scrag)) {
@@ -28,7 +28,7 @@ CLASS(ScragAttack, PortoLaunch)
 /* flags     */ ATTRIB(ScragAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(ScragAttack, impulse, int, 9);
 /* refname   */ ATTRIB(ScragAttack, netname, string, "scrag");
-/* wepname   */ ATTRIB(ScragAttack, message, string, _("Scrag attack"));
+/* wepname   */ ATTRIB(ScragAttack, message, string, "Scrag attack");
 ENDCLASS(ScragAttack)
 REGISTER_WEAPON(SCRAG_ATTACK, NEW(ScragAttack));
 

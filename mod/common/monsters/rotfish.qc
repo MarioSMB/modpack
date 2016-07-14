@@ -5,7 +5,7 @@
 #ifndef MENUQC
 MODEL(MON_ROTFISH, M_Model("fish.mdl"));
 
-MSG_INFO_NOTIF(DEATH_SELF_MON_ROTFISH_MELEE,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         _("^BG%s^K1 let a Rotfish nibble their toes%s%s"), "")
+MSG_INFO_NOTIF(DEATH_SELF_MON_ROTFISH_MELEE,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         "^BG%s^K1 let a Rotfish nibble their toes%s%s", "")
 MSG_MULTI_NOTIF(DEATH_SELF_MON_ROTFISH_MELEE,                1,  NULL,           INFO_DEATH_SELF_MON_ROTFISH_MELEE,               CENTER_DEATH_SELF_MONSTER)
 REGISTER_DEATHTYPE(MONSTER_ROTFISH_MELEE,            				DEATH_SELF_MON_ROTFISH_MELEE,            	DEATH_MURDER_MONSTER,           	"monster")
 #endif
@@ -18,7 +18,7 @@ CLASS(Rotfish, Monster)
     ATTRIB(Rotfish, m_model, Model, MDL_MON_ROTFISH);
 #endif
     ATTRIB(Rotfish, netname, string, "rotfish");
-    ATTRIB(Rotfish, monster_name, string, _("Rotfish"));
+    ATTRIB(Rotfish, monster_name, string, "Rotfish");
 ENDCLASS(Rotfish)
 
 REGISTER_MONSTER(ROTFISH, NEW(Rotfish)) {

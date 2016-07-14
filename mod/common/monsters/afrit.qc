@@ -4,7 +4,7 @@
 #ifndef MENUQC
 MODEL(MON_AFRIT, M_Model("afrit.mdl"));
 
-MSG_INFO_NOTIF(DEATH_SELF_MON_AFRIT,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         _("^BG%s^K1 was fireballed by an Afrit%s%s"), "")
+MSG_INFO_NOTIF(DEATH_SELF_MON_AFRIT,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         "^BG%s^K1 was fireballed by an Afrit%s%s", "")
 
 MSG_MULTI_NOTIF(DEATH_SELF_MON_AFRIT,                1,  NULL,           INFO_DEATH_SELF_MON_AFRIT,               CENTER_DEATH_SELF_MONSTER)
 
@@ -19,7 +19,7 @@ CLASS(Afrit, Monster)
     ATTRIB(Afrit, m_model, Model, MDL_MON_AFRIT);
 #endif
     ATTRIB(Afrit, netname, string, "afrit");
-    ATTRIB(Afrit, monster_name, string, _("Afrit"));
+    ATTRIB(Afrit, monster_name, string, "Afrit");
 ENDCLASS(Afrit)
 
 REGISTER_MONSTER(AFRIT, NEW(Afrit)) {

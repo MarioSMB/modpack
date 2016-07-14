@@ -4,7 +4,7 @@
 #ifndef MENUQC
 MODEL(MON_ENFORCER, M_Model("enforcer.mdl"));
 
-MSG_INFO_NOTIF(DEATH_SELF_MON_ENFORCER_PLASMA,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         _("^BG%s^K1 was blasted to death by an Enforcer%s%s"), "")
+MSG_INFO_NOTIF(DEATH_SELF_MON_ENFORCER_PLASMA,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         "^BG%s^K1 was blasted to death by an Enforcer%s%s", "")
 MSG_MULTI_NOTIF(DEATH_SELF_MON_ENFORCER_PLASMA,                1,  NULL,           INFO_DEATH_SELF_MON_ENFORCER_PLASMA,               CENTER_DEATH_SELF_MONSTER)
 REGISTER_DEATHTYPE(MONSTER_ENFORCER_PLASMA,            				DEATH_SELF_MON_ENFORCER_PLASMA,            	DEATH_MURDER_MONSTER,           		"monster")
 #endif
@@ -17,7 +17,7 @@ CLASS(Enforcer, Monster)
     ATTRIB(Enforcer, m_model, Model, MDL_MON_ENFORCER);
 #endif
     ATTRIB(Enforcer, netname, string, "enforcer");
-    ATTRIB(Enforcer, monster_name, string, _("Enforcer"));
+    ATTRIB(Enforcer, monster_name, string, "Enforcer");
 ENDCLASS(Enforcer)
 
 REGISTER_MONSTER(ENFORCER, NEW(Enforcer)) {

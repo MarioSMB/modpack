@@ -13,7 +13,7 @@ CLASS(Tarbaby, Monster)
     ATTRIB(Tarbaby, m_model, Model, MDL_MON_TARBABY);
 #endif
     ATTRIB(Tarbaby, netname, string, "spawn");
-    ATTRIB(Tarbaby, monster_name, string, _("Tarbaby"));
+    ATTRIB(Tarbaby, monster_name, string, "Tarbaby");
 ENDCLASS(Tarbaby)
 
 REGISTER_MONSTER(TARBABY, NEW(Tarbaby)) {

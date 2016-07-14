@@ -5,7 +5,7 @@ vector get_model_parameters_hat_angles;
 #ifdef SVQC
 void hats_Precache(string pattern);
 
-AUTOCVAR(g_hats, bool, false, _("Allow clients to use hats"));
+AUTOCVAR(g_hats, bool, false, "Allow clients to use hats");
 
 REGISTER_MUTATOR(hats, cvar("g_hats") && !cvar("g_overkill"))
 {
@@ -199,8 +199,8 @@ MUTATOR_HOOKFUNCTION(hats, GetModelParams)
 
 REGISTER_MUTATOR(mod_hats, true);
 
-AUTOCVAR_SAVE(cl_nohats,                    bool,   false,      _("Disable hats completely, requires reconnect or sendcvar"));
-AUTOCVAR_SAVE(cl_magical_hax,               string, "",      	_("Magical hax, use at your own risk"));
+AUTOCVAR_SAVE(cl_nohats,                    bool,   false,      "Disable hats completely, requires reconnect or sendcvar");
+AUTOCVAR_SAVE(cl_magical_hax,               string, "",      	"Magical hax, use at your own risk");
 
 string get_model_parameters_bone_head;
 

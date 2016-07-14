@@ -16,7 +16,7 @@ CLASS(Vore, Monster)
     ATTRIB(Vore, m_model, Model, MDL_MON_VORE);
 #endif
     ATTRIB(Vore, netname, string, "vore");
-    ATTRIB(Vore, monster_name, string, _("Vore"));
+    ATTRIB(Vore, monster_name, string, "Vore");
 ENDCLASS(Vore)
 
 REGISTER_MONSTER(VORE, NEW(Vore)) {
@@ -29,7 +29,7 @@ CLASS(VoreSpike, PortoLaunch)
 /* flags     */ ATTRIB(VoreSpike, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(VoreSpike, impulse, int, 9);
 /* refname   */ ATTRIB(VoreSpike, netname, string, "vorespike");
-/* wepname   */ ATTRIB(VoreSpike, message, string, _("Vore spike"));
+/* wepname   */ ATTRIB(VoreSpike, message, string, "Vore spike");
 ENDCLASS(VoreSpike)
 REGISTER_WEAPON(VORE_SPIKE, NEW(VoreSpike));
 

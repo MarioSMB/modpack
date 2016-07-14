@@ -13,7 +13,7 @@ CLASS(Soldier, Monster)
     ATTRIB(Soldier, m_model, Model, MDL_MON_SOLDIER);
 #endif
     ATTRIB(Soldier, netname, string, "soldier");
-    ATTRIB(Soldier, monster_name, string, _("Soldier"));
+    ATTRIB(Soldier, monster_name, string, "Soldier");
 ENDCLASS(Soldier)
 
 REGISTER_MONSTER(SOLDIER, NEW(Soldier)) {

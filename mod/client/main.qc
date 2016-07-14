@@ -1,4 +1,4 @@
-AUTOCVAR_SAVE(cl_nodamagetext,	bool,   false,      _("Disabler for damage text"));
+AUTOCVAR_SAVE(cl_nodamagetext,	bool,   false,      "Disabler for damage text");
 
 STATIC_INIT(mod_cvars)
 {

@@ -2,7 +2,7 @@
 
 REGISTER_MUTATOR(pinventory, true);
 
-AUTOCVAR(sv_persistent_inventory, bool, false, _("Enable persistent item saving"));
+AUTOCVAR(sv_persistent_inventory, bool, false, "Enable persistent item saving");
 
 float tmparm2, tmparm3, tmparm4, tmparm5, tmparm6, tmparm7, tmparm8, tmparm9, tmparm10, tmparm11, tmparm12;
 

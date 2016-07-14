@@ -4,7 +4,7 @@ REGISTER_MUTATOR(announcer, true);
 
 #ifdef SVQC
 
-AUTOCVAR(sv_announcer, string, "", _("Force client announcer to this"));
+AUTOCVAR(sv_announcer, string, "", "Force client announcer to this");
 
 MUTATOR_HOOKFUNCTION(announcer, Ent_Init, CBC_ORDER_FIRST)
 {
@@ -15,7 +15,7 @@ MUTATOR_HOOKFUNCTION(announcer, Ent_Init, CBC_ORDER_FIRST)
 
 string sv_announcer;
 
-AUTOCVAR_SAVE(cl_announcer_force,                    bool,   false,      _("Don't allow server to override default announcer"));
+AUTOCVAR_SAVE(cl_announcer_force,                    bool,   false,      "Don't allow server to override default announcer");
 
 void Announcer_Precache()
 {
