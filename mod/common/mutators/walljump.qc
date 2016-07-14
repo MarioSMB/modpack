@@ -92,7 +92,7 @@ MUTATOR_HOOKFUNCTION(walljump, PlayerJump)
 #ifdef SVQC
 			player.oldvelocity = player.velocity;
 			Send_Effect(EFFECT_SMOKE_RING, trace_endpos, plane_normal, 5);
-			PlayerSound(player, playersound_jump, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+			PlayerSound(player, playersound_jump, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
 			animdecide_setaction(player, ANIMACTION_JUMP, true);
 #endif
 			
