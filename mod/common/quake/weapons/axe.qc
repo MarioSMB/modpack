@@ -43,7 +43,7 @@ CLASS(Axe, Weapon)
 /* crosshair */ ATTRIB(Axe, w_crosshair_size, float, 0.7);
 /* wepimg    */ ATTRIB(Axe, model2, string, "weaponaxe");
 /* refname   */ ATTRIB(Axe, netname, string, "axe");
-/* wepname   */ ATTRIB(Axe, m_name, string, _("Axe"));
+/* wepname   */ ATTRIB(Axe, m_name, string, "Axe");
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
