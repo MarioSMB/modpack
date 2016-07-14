@@ -52,7 +52,7 @@ CLASS(SuperNailGun, Weapon)
 /* crosshair */ ATTRIB(SuperNailGun, w_crosshair_size, float, 0.6);
 /* wepimg    */ ATTRIB(SuperNailGun, model2, string, "weaponhmg");
 /* refname   */ ATTRIB(SuperNailGun, netname, string, "supernailgun");
-/* wepname   */ ATTRIB(SuperNailGun, m_name, string, _("Super NailGun"));
+/* wepname   */ ATTRIB(SuperNailGun, m_name, string, "Super NailGun");
 
 #define X(BEGIN, P, END, class, prefix) \
 	BEGIN(class) \
