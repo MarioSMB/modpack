@@ -316,7 +316,7 @@ void Metal_check_hitground(entity this)
     trace_dphitq3surfaceflags = 0;
     tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
     if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS) return;
-    GlobalSound(this, GS_FALL_METALCAP, CH_PLAYER, VOICETYPE_PLAYERSOUND);
+    GlobalSound(this, GS_FALL_METALCAP, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
 #endif
 }
 
