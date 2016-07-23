@@ -15,7 +15,7 @@ AUTOCVAR(g_skycycle, bool, false, _("Enable day-night cycles"));
 AUTOCVAR(g_skycycle_time, float, 120, "");
 AUTOCVAR(g_skycycle_timebetween, float, 3, "");
 AUTOCVAR(g_skycycle_intensity_realmax, float, 0.75, "");
-AUTOCVAR(g_skycycle_intensity_realmin, float, 0, "");
+AUTOCVAR(g_skycycle_intensity_realmin, float, 0.05, "");
 AUTOCVAR(g_skycycle_intensity_max, float, 1, "");
 AUTOCVAR(g_skycycle_intensity_min, float, -0.25, "");
 AUTOCVAR(g_skycycle_ambient_realmax, float, 20, "");
