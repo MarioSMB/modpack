@@ -1,7 +1,7 @@
 void skycycle_Init(entity this);
 bool skycycle_enabled;
 
-REGISTER_MUTATOR(skycycle, cvar("g_skycycle"))
+REGISTER_MUTATOR(skycycle, cvar("g_skycycle") || (cvar("g_skycycle_suggested") && cvar("g_skycycle_allow_suggested")))
 {
 	MUTATOR_ONADD
 	{
@@ -31,6 +31,8 @@ AUTOCVAR(g_skycycle_dusksky_max, float, 0.2, "");
 AUTOCVAR(g_skycycle_startatnight, bool, false, "");
 AUTOCVAR(g_skycycle_startattime, float, 0, _("Start at specific time (percentage of time [0 to 1])"));
 AUTOCVAR(g_skycycle_timelock, bool, false, _("Don't advance time"));
+AUTOCVAR(g_skycycle_suggested, bool, false, "Map suggests using skycycles");
+AUTOCVAR(g_skycycle_allow_suggested, bool, true, "Allow maps to turn on skycycle");
 
 float skycycle_time;
 float skycycle_timebetween;
