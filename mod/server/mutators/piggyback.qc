@@ -16,7 +16,7 @@ REPLICATE(cvar_cl_noride, bool, "cl_noride");
 //.float pb_attachblock;
 .float pb_oldsolid;
 
-#define BROKEN_PBREF(e) ((e).piggybacker && ((e).piggybacker.pbhost != (e) || (e).piggybacker.movetype != MOVETYPE_FOLLOW))
+#define BROKEN_PBREF(e) ((e).piggybacker && ((e).piggybacker.pbhost != (e) || (e).piggybacker.move_movetype != MOVETYPE_FOLLOW))
 
 void pb_Attach(entity host, entity slave);
 void pb_Detach(entity host);
@@ -49,7 +49,7 @@ void pb_Attach(entity host, entity slave)
 		return;
 	
 	host.piggybacker = slave;
-	slave.movetype = MOVETYPE_FOLLOW;
+	set_movetype(slave, MOVETYPE_FOLLOW);
 	slave.aiment = host.pbent;
 	slave.pbhost = host;
 	slave.pb_oldsolid = slave.solid;
@@ -92,8 +92,8 @@ void pb_Detach(entity host)
 	{
 		// this doesn't happen when we're fixing a broken reference
 		
-		if(slave.movetype == MOVETYPE_FOLLOW) // don't reset if player was killed
-			slave.movetype = MOVETYPE_WALK;
+		if(slave.move_movetype == MOVETYPE_FOLLOW) // don't reset if player was killed
+			set_movetype(slave, MOVETYPE_WALK);
 		slave.velocity = '0 0 0';
 		slave.solid = slave.pb_oldsolid;
 		

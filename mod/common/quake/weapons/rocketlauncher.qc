@@ -222,7 +222,7 @@ void W_RocketLauncher_Attack(Weapon thiswep, entity actor)
 	missile.event_damage = W_RocketLauncher_Damage;
 	missile.damagedbycontents = true;
 
-	missile.movetype = MOVETYPE_FLY;
+	set_movetype(missile, MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(missile);
 	missile.projectiledeathtype = WEP_ROCKETLAUNCHER.m_id;
 	setsize(missile, '-3 -3 -3', '3 3 3'); // give it some size so it can be shot

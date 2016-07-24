@@ -215,7 +215,7 @@ void lightapc_kill_hitbox(entity hitbox)
 	setthink(hitbox, func_null);
 	settouch(hitbox, func_null);
 	hitbox.deadflag           = DEAD_DEAD;
-	hitbox.movetype           = MOVETYPE_NONE;
+	set_movetype(hitbox, MOVETYPE_NONE);
 	hitbox.solid      		  = SOLID_NOT;
 }
 
@@ -426,7 +426,7 @@ void lightapc_spawn_hitbox(float position, entity vehic, entity hitbox, vector m
 	hitbox.iscreature         = true;
 	hitbox.teleportable       = false; // no teleporting for vehicles, too buggy
 	hitbox.damagedbycontents  = true;
-	hitbox.movetype           = MOVETYPE_WALK;
+	set_movetype(hitbox, MOVETYPE_WALK);
 	hitbox.solid              = SOLID_SLIDEBOX;
 	hitbox.takedamage         = DAMAGE_AIM;
 	hitbox.deadflag           = DEAD_NO;
@@ -635,7 +635,7 @@ void lightapc_gunner_exit(entity this, int _exitflag)
 
 	player.takedamage     = DAMAGE_AIM;
 	player.solid          = SOLID_SLIDEBOX;
-	player.movetype       = MOVETYPE_WALK;
+	set_movetype(player, MOVETYPE_WALK);
 	player.effects       &= ~EF_NODRAW;
 	player.alpha          = 1;
 	player.PlayerPhysplug = func_null;
@@ -684,7 +684,7 @@ bool lightapc_gunner_enter(entity this, entity player)
 	player.takedamage 		= DAMAGE_NO;
 	player.solid 			= SOLID_NOT;
 	player.alpha 			= -1;
-	player.movetype 		= MOVETYPE_NOCLIP;
+	set_movetype(player, MOVETYPE_NOCLIP);
 	player.event_damage 	= func_null;
 	player.view_ofs 		= '0 0 0';
 	player.hud 				= gunner.hud;
@@ -695,7 +695,7 @@ bool lightapc_gunner_enter(entity this, entity player)
 	player.vehicle_reload1 	= vehic.vehicle_reload1;
 	player.vehicle_reload2 	= vehic.vehicle_reload2;
 	player.vehicle_energy 	= vehic.vehicle_energy;
-	player.flags 		   &= ~FL_ONGROUND;
+	UNSET_ONGROUND(player);
 
 	RemoveGrapplingHook(player);
 
@@ -937,7 +937,7 @@ void lightapc_pilot_exit(entity this, int eject)
 {
 	setthink(this, lightapc_think);
 	this.nextthink  = time;
-	this.movetype   = MOVETYPE_BOUNCE;
+	set_movetype(this, MOVETYPE_BOUNCE);
 	sound (this, CH_TRIGGER_SINGLE, SND_Null, VOL_VEHICLEENGINE, ATTEN_NORM);
 
 	this.bomb1.gun1.avelocity_y = 0;
@@ -1143,14 +1143,14 @@ METHOD(LightAPC, vr_impact, void(LightAPC thisveh, entity instance))
 METHOD(LightAPC, vr_enter, void(LightAPC thisveh, entity instance))
 {
 #ifdef SVQC
-	instance.movetype = MOVETYPE_WALK;
+	set_movetype(instance, MOVETYPE_WALK);
 	instance.owner.vehicle_health = (instance.vehicle_health / autocvar_g_vehicle_lightapc_health) * 100;
 	instance.owner.vehicle_shield = (instance.vehicle_shield / autocvar_g_vehicle_lightapc_shield) * 100;
 
 	if(instance.owner.flagcarried)
 		setorigin(instance.owner.flagcarried, '-190 0 96');
 #elif defined(CSQC)
-	instance.move_movetype = MOVETYPE_WALK;
+	set_movetype(instance, MOVETYPE_WALK);
 #endif
 }
 
@@ -1198,7 +1198,7 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 		spinner.owner = instance;
 		setmodel(spinner,MDL_LIGHTAPC_TIRE);
 		setattachment(spinner, instance, "tag_gear_left");
-		spinner.movetype = MOVETYPE_NOCLIP;
+		set_movetype(spinner, MOVETYPE_NOCLIP);
 		spinner.avelocity = '0 90 0';
 		instance.bomb1.gun1 = spinner;
 	
@@ -1206,7 +1206,7 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 		spinner.owner = instance;
 		setmodel(spinner,MDL_LIGHTAPC_TIRE);
 		setattachment(spinner, instance, "tag_wheel_left");
-		spinner.movetype = MOVETYPE_NOCLIP;
+		set_movetype(spinner, MOVETYPE_NOCLIP);
 		spinner.avelocity = '0 90 0';
 		instance.bomb1.gun2 = spinner;
 	
@@ -1214,7 +1214,7 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 		spinner.owner = instance;
 		setmodel(spinner,MDL_LIGHTAPC_TIRE);
 		setattachment(spinner, instance, "tag_gear_right");
-		spinner.movetype = MOVETYPE_NOCLIP;
+		set_movetype(spinner, MOVETYPE_NOCLIP);
 		spinner.avelocity = '0 90 0';
 		instance.bomb2.gun1 = spinner;
 	
@@ -1222,7 +1222,7 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 		spinner.owner = instance;
 		setmodel(spinner,MDL_LIGHTAPC_TIRE);
 		setattachment(spinner, instance, "tag_wheel_right");
-		spinner.movetype = MOVETYPE_NOCLIP;
+		set_movetype(spinner, MOVETYPE_NOCLIP);
 		spinner.avelocity = '0 90 0';
 		instance.bomb2.gun2 = spinner;
 	
@@ -1231,7 +1231,7 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 		spinner.owner = instance;
 		setmodel(spinner,MDL_LIGHTAPC_TIRE);
 		setattachment(spinner, instance, "tag_gear_left2");
-		spinner.movetype = MOVETYPE_NOCLIP;
+		set_movetype(spinner, MOVETYPE_NOCLIP);
 		spinner.avelocity = '0 90 0';
 		instance.bomb3.gun1 = spinner;
 	
@@ -1239,7 +1239,7 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 		spinner.owner = instance;
 		setmodel(spinner,MDL_LIGHTAPC_TIRE);
 		setattachment(spinner, instance, "tag_wheel_left2");
-		spinner.movetype = MOVETYPE_NOCLIP;
+		set_movetype(spinner, MOVETYPE_NOCLIP);
 		spinner.avelocity = '0 90 0';
 		instance.bomb3.gun2 = spinner;
 	
@@ -1247,7 +1247,7 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 		spinner.owner = instance;
 		setmodel(spinner,MDL_LIGHTAPC_TIRE);
 		setattachment(spinner, instance, "tag_gear_right2");
-		spinner.movetype = MOVETYPE_NOCLIP;
+		set_movetype(spinner, MOVETYPE_NOCLIP);
 		spinner.avelocity = '0 90 0';
 		instance.bomb4.gun1 = spinner;
 	
@@ -1255,7 +1255,7 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 		spinner.owner = instance;
 		setmodel(spinner,MDL_LIGHTAPC_TIRE);
 		setattachment(spinner, instance, "tag_wheel_right2");
-		spinner.movetype = MOVETYPE_NOCLIP;
+		set_movetype(spinner, MOVETYPE_NOCLIP);
 		spinner.avelocity = '0 90 0';
 		instance.bomb4.gun2 = spinner;
 		//End Wheels
@@ -1341,7 +1341,7 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 	settouch(instance, lightapc_touch);
 	instance.nextthink = time;
 
-	instance.movetype	= MOVETYPE_TOSS;
+	instance.move_movetype	= MOVETYPE_TOSS;
 	instance.solid		= SOLID_SLIDEBOX;
 	instance.delay		= time;
 	instance.scale		= 0.75;
@@ -1384,7 +1384,7 @@ METHOD(LightAPC, vr_death, void(LightAPC thisveh, entity instance))
 	instance.solid			= SOLID_CORPSE;
 	instance.takedamage		= DAMAGE_NO;
 	instance.deadflag		= DEAD_DYING;
-	instance.movetype		= MOVETYPE_BOUNCE;
+	set_movetype(instance, MOVETYPE_BOUNCE);
 	instance.wait			= time;
 	instance.delay			= 2 + time + random() * 3;
 	instance.cnt			= 1 + random() * 2;
@@ -1431,7 +1431,7 @@ METHOD(LightAPC, vr_death, void(LightAPC thisveh, entity instance))
 	instance.solid			= SOLID_CORPSE;
 	instance.takedamage		= DAMAGE_NO;
 	instance.deadflag		= DEAD_DYING;
-	instance.movetype		= MOVETYPE_NONE;
+	set_movetype(instance, MOVETYPE_NONE);
 	instance.effects		= EF_NODRAW;
 	instance.colormod		= '0 0 0';
 	instance.avelocity		= '0 0 0';

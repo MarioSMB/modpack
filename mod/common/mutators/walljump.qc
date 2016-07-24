@@ -65,11 +65,7 @@ MUTATOR_HOOKFUNCTION(walljump, PlayerJump)
 	if(PHYS_WALLJUMP(player))
 	if(time - player.lastwj > PHYS_WALLJUMP_DELAY(player)) // can't do this on client, as it's too stupid to obey counters
 	if(!IS_ONGROUND(player))
-#ifdef SVQC
-	if(player.movetype != MOVETYPE_NONE && player.movetype != MOVETYPE_FOLLOW && player.movetype != MOVETYPE_FLY && player.movetype != MOVETYPE_NOCLIP)
-#elif defined(CSQC)
 	if(player.move_movetype != MOVETYPE_NONE && player.move_movetype != MOVETYPE_FOLLOW && player.move_movetype != MOVETYPE_FLY && player.move_movetype != MOVETYPE_NOCLIP)
-#endif
 	if(!IS_JUMP_HELD(player))
 	if(!STAT(FROZEN, player))
 	if(!IS_DEAD(player))

@@ -57,7 +57,7 @@ void pc_PlayerTouch(entity this, entity toucher)
 				this.flags &= ~FL_JUMPRELEASED;
 			}
 
-			this.flags &= ~FL_ONGROUND;
+			UNSET_ONGROUND(this);
 
 			this.velocity_z = mjumpheight;
 			this.oldvelocity_z = this.velocity_z;

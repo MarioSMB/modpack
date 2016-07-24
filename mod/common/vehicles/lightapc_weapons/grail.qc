@@ -139,7 +139,7 @@ void lightapc_grail_linkattack (entity actor, string tagname, float putforward, 
 
 		prevproj = proj;
 
-		proj.movetype = MOVETYPE_BOUNCEMISSILE;
+		set_movetype(proj, MOVETYPE_BOUNCEMISSILE);
 		PROJECTILE_MAKETRIGGER(proj);
 		proj.projectiledeathtype = WEP_CRYLINK.m_id;
 		//proj.gravity = 0.001;
@@ -223,7 +223,7 @@ void lightapc_grail_attack(entity actor, string tagname, entity fireentity)
 	proj.projectiledeathtype = WEP_ELECTRO.m_id;
 	setorigin(proj, v);
 
-	proj.movetype = MOVETYPE_FLY;
+	set_movetype(proj, MOVETYPE_FLY);
 	W_SetupProjVelocity_Basic(proj, autocvar_g_vehicle_lightapc_grail_smallcannon_speed, 0);
 	proj.angles = vectoangles(proj.velocity);
 	settouch(proj, lightapc_grail_Plasma_TouchExplode);
@@ -263,7 +263,7 @@ void lightapc_grail_bigattack(entity actor, string tagname, float putforward, fl
 	proj.scale = 3;
 	setorigin(proj, v);
 
-	proj.movetype = MOVETYPE_FLY;
+	set_movetype(proj, MOVETYPE_FLY);
 	//W_SETUPPROJECTILEVELOCITY(proj, g_vehicle_lightapc_grail_cannon);
 	W_SetupProjVelocity_Explicit(proj, w_shotdir, v_up, (autocvar_g_vehicle_lightapc_grail_cannon_speed + speedadd), 0, 0, autocvar_g_vehicle_lightapc_grail_cannon_spread, false);
 	proj.angles = vectoangles(proj.velocity);

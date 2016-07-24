@@ -168,7 +168,7 @@ void M_Vore_Attack_Spike(entity this, vector dir)
 	missile.ltime = time + 7;
 	missile.nextthink = time;
 	missile.solid = SOLID_BBOX;
-	missile.movetype = MOVETYPE_FLYMISSILE;
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.flags = FL_PROJECTILE;
 	setorigin(missile, this.origin + v_forward * 14 + '0 0 30' + v_right * -14);
 	setsize(missile, '0 0 0', '0 0 0');

@@ -65,7 +65,7 @@ void M_Enforcer_Attack_Plasma_Explode(entity this, entity directhitentity)
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	if(this.movetype == MOVETYPE_NONE)
+	if(this.move_movetype == MOVETYPE_NONE)
 		this.velocity = this.oldvelocity;
 
 	sound (this, CH_WEAPON_A, SND_TAG_IMPACT, VOL_BASE, ATTEN_NORM);
@@ -103,7 +103,7 @@ void M_Enforcer_Attack_Plasma(entity this)
 	gren.classname = "grenade";
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = autocvar_g_monster_enforcer_attack_plasma_damage;
-	gren.movetype = MOVETYPE_FLY;
+	set_movetype(gren, MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(gren);
 	gren.projectiledeathtype = DEATH_MONSTER_ENFORCER_PLASMA.m_id;
 	setorigin(gren, org);

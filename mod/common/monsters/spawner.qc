@@ -104,7 +104,7 @@ spawnfunc(monster_spawner) { Monster_Spawn(this, MON_SPAWNER.monsterid); }
 
 			actor.monster_attackfunc = M_Spawner_Attack;
 
-			actor.movetype = MOVETYPE_NONE;
+			set_movetype(actor, MOVETYPE_NONE);
 			actor.monster_moveflags = 4;
 			actor.spawner_count = 0;
 

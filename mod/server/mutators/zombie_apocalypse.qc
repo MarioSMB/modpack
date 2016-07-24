@@ -178,7 +178,7 @@ MUTATOR_HOOKFUNCTION(za, PlayerDies)
 	setsize(frag_target, frag_attacker.mins, frag_attacker.maxs);
 
 	if(mon.spawnflags & MONSTER_TYPE_FLY)
-		frag_target.movetype = MOVETYPE_FLY;
+		set_movetype(frag_target, MOVETYPE_FLY);
 }
 
 MUTATOR_HOOKFUNCTION(za, SV_StartFrame)

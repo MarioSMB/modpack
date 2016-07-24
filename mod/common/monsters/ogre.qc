@@ -108,7 +108,7 @@ void M_Ogre_Attack_Grenade_Explode(entity this, entity directhitentity)
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
-	if(this.movetype == MOVETYPE_NONE)
+	if(this.move_movetype == MOVETYPE_NONE)
 		this.velocity = this.oldvelocity;
 
 	sound (this, CH_WEAPON_A, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
@@ -168,7 +168,7 @@ void M_Ogre_Attack_Grenade(entity this)
 	gren.classname = "grenade";
 	gren.bot_dodge = true;
 	gren.bot_dodgerating = autocvar_g_monster_ogre_attack_grenade_damage;
-	gren.movetype = MOVETYPE_BOUNCE;
+	set_movetype(gren, MOVETYPE_BOUNCE);
 	gren.bouncefactor = autocvar_g_monster_ogre_attack_grenade_bouncefactor;
 	gren.bouncestop = autocvar_g_monster_ogre_attack_grenade_bouncestop;
 	PROJECTILE_MAKETRIGGER(gren);

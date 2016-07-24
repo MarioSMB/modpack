@@ -96,7 +96,7 @@ void spikeshooter_fire(entity this, entity actor, entity trigger)
 	if(is_laser)
 		proj.cnt = this.dmg * 0.7;
 
-	proj.movetype = MOVETYPE_FLY;
+	set_movetype(proj, MOVETYPE_FLY);
 	W_SetupProjVelocity_Explicit(proj, this.movedir, v_up, 500, 0, 0, 0, false);
 	proj.angles = vectoangles(proj.velocity);
 	settouch(proj, spikeshooter_touch);

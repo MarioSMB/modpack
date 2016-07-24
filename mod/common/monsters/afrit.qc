@@ -98,7 +98,7 @@ void M_Afrit_Attack_Fireball(entity this)
 
 	missile.owner = missile.realowner = this;
 	missile.solid = SOLID_TRIGGER;
-	missile.movetype = MOVETYPE_FLYMISSILE;
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.projectiledeathtype = DEATH_MONSTER_AFRIT.m_id;
 	setsize(missile, '-6 -6 -6', '6 6 6');
 	setorigin(missile, this.origin + '0 0 13' + v_forward * 10);
@@ -161,7 +161,7 @@ spawnfunc(monster_afrit) { Monster_Spawn(this, MON_AFRIT.monsterid); }
 			else
 				actor.anim_idle = animfixfps(actor, '2 1 0.5', '0 0 0');
 
-			if(actor.flags & FL_ONGROUND)
+			if(IS_ONGROUND(actor))
 				actor.armorvalue = 0.95; // almost invincible
 			else
 				actor.armorvalue = autocvar_g_monsters_armor_blockpercent;

@@ -75,7 +75,7 @@ void lightapc_deluge_attack(entity actor, string tagname, entity spigot)
 
 	//proj.glow_size = 50;
 	//proj.glow_color = 45;
-	proj.movetype = MOVETYPE_BOUNCE;
+	set_movetype(proj, MOVETYPE_BOUNCE);
 	W_SetupProjVelocity_Explicit(proj, w_shotdir, v_up, autocvar_g_vehicle_lightapc_deluge_water_speed, 0, 0, autocvar_g_vehicle_lightapc_deluge_water_spread, false);
 	//W_SETUPPROJECTILEVELOCITY_UP(proj, g_vehicle_lightapc_deluge_water);
 	settouch(proj, lightapc_deluge_Water_TouchExplode);
@@ -149,10 +149,10 @@ MUTATOR_HOOKFUNCTION(cl_deluge, EditProjectile)
 		loopsound(proj, CH_SHOTS_SINGLE, SND(STEAM_FADE), VOL_BASE, ATTN_NORM);
 		proj.mins = '0 0 -4';
 		proj.maxs = '0 0 -4';
-		proj.move_movetype = MOVETYPE_BOUNCE;
-		proj.move_touch = func_null;
-		proj.move_bounce_factor = WEP_CVAR_SEC(electro, bouncefactor);
-		proj.move_bounce_stopspeed = WEP_CVAR_SEC(electro, bouncestop);
+		set_movetype(proj, MOVETYPE_BOUNCE);
+		settouch(proj, func_null);
+		proj.bouncefactor = WEP_CVAR_SEC(electro, bouncefactor);
+		proj.bouncestop = WEP_CVAR_SEC(electro, bouncestop);
 	}
 }
 

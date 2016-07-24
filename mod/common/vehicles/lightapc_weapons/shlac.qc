@@ -45,7 +45,7 @@ void lightapc_shlac_attack(entity actor, string tagname, entity fireentity)
 
 	missile.bot_dodgerating = WEP_CVAR_PRI(hlac, damage);
 
-	missile.movetype = MOVETYPE_FLY;
+	set_movetype(missile, MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(missile);
 
 	setorigin (missile, v);
