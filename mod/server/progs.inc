@@ -17,5 +17,6 @@
 #include "prediction.qc"
 #include "radio.qc"
 #include "spawnreplace.qc"
+#include "stats.qc"
 
 #include "mutators/all.qh"
