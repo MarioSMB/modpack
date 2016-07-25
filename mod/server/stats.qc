@@ -7,7 +7,8 @@ AUTOCVAR(g_require_stats_blacklist, string, "", "");
 
 bool stats_CheckPlayer(entity this)
 {
-	return IS_REAL_CLIENT(this) && boolean(this.crypto_idfp == "" || (autocvar_g_require_stats_use_whitelist && !strhasword(autocvar_g_require_stats_whitelist, this.crypto_idfp)) || strhasword(autocvar_g_require_stats_blacklist, this.crypto_idfp));
+	return IS_REAL_CLIENT(this) &&
+			boolean((this.crypto_idfp == "" || !this.crypto_idfp) || (autocvar_g_require_stats_use_whitelist && !strhasword(autocvar_g_require_stats_whitelist, this.crypto_idfp)) || strhasword(autocvar_g_require_stats_blacklist, this.crypto_idfp));
 }
 
 MUTATOR_HOOKFUNCTION(require_stats, ClientConnect)
