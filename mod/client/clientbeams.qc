@@ -60,6 +60,7 @@ void FireClientBeam(vector start, vector end, bool hit)
 	e.nextthink = time + bound(0, autocvar_cl_vaporizerbeam_lifetime, 10);
 	e.draw = ClientBeam_Draw;
 	e.drawmask = MASK_NORMAL;
+	IL_PUSH(g_drawables, e);
 
 	e.vorg1 = start;
 	e.vorg2 = end;
