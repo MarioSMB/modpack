@@ -42,11 +42,12 @@ void za_SetEnemy(entity player)
 
 	if(!closest_targ)
 	{
-		FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(
+		IL_EACH(g_monsters, true,
+		{
 			if(vdist(player.origin - it.origin, <, autocvar_g_monsters_target_range))
 			if(!closest_targ || vlen2(player.origin - closest_targ.origin) > vlen2(player.origin - it.origin))
 				closest_targ = it;
-		));
+		});
 	}
 
 	// otherwise, attempt any entity nearby
@@ -189,7 +190,10 @@ MUTATOR_HOOKFUNCTION(za, SV_StartFrame)
 	int n_monsters = 0, maxmon = autocvar_g_za_max_monsters;
 
 	// count dead monsters too (zombies)
-	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(++n_monsters));
+	IL_EACH(g_monsters, true,
+	{
+		++n_monsters;
+	});
 
 	while(n_monsters < maxmon)
 	{

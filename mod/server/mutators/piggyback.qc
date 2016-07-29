@@ -168,7 +168,10 @@ bool pb_GiveItem(entity to, entity item)
 MUTATOR_HOOKFUNCTION(piggyback, MatchEnd)
 {
 	FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(pb_Detach(it)));
-	FOREACH_ENTITY_FLAGS(flags, FL_MONSTER, LAMBDA(pb_Detach(it)));
+	IL_EACH(g_monsters, true,
+	{
+		pb_Detach(it);
+	});
 	return false;
 }
 
