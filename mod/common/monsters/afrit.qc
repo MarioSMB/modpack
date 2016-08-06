@@ -103,6 +103,7 @@ void M_Afrit_Attack_Fireball(entity this)
 	setsize(missile, '-6 -6 -6', '6 6 6');
 	setorigin(missile, this.origin + '0 0 13' + v_forward * 10);
 	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 	missile.velocity = dir * (autocvar_g_monster_afrit_attack_fireball_speed);
 	missile.avelocity = '300 300 300';
 	missile.nextthink = time + 5;

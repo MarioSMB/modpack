@@ -62,6 +62,7 @@ void lightapc_shlac_attack(entity actor, string tagname, entity fireentity)
 	missile.nextthink = time + WEP_CVAR_PRI(hlac, lifetime);
 
 	missile.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, missile);
 	missile.projectiledeathtype = WEP_HLAC.m_id;
 
 	CSQCProjectile(missile, true, PROJECTILE_HLAC, true);

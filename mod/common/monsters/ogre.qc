@@ -191,6 +191,7 @@ void M_Ogre_Attack_Grenade(entity this)
 
 	gren.angles = vectoangles (gren.velocity);
 	gren.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, gren);
 
 	CSQCProjectile(gren, true, PROJECTILE_GRENADE_BOUNCING, true);
 

@@ -132,17 +132,16 @@ bool W_Lightsabre_Melee_Block(entity this, entity player)
 	{
 		bool doneblock = false;
 		makevectors(myowner.v_angle);
-		FOREACH_ENTITY_FLAGS(flags, FL_PROJECTILE,
+		IL_EACH(g_projectiles, time > it.lightsabre_hitshield,
 		{
-			if(time > it.lightsabre_hitshield)
 			if(vdist(it.origin - myowner.origin, <, 256))
 			{
-				LOG_INFO("Too close!\n");
+				//LOG_INFO("Too close!\n");
 				float dot = normalize(myowner.origin - it.origin) * v_forward;
 				LOG_INFO("dot = ", ftos(dot), "\n");
 				if(dot <= 0.3) { continue; }
 
-				LOG_INFO("We got one!\n");
+				//LOG_INFO("We got one!\n");
 
 				it.velocity *= -1; // straight forward...?
 				it.realowner = it.owner = myowner;

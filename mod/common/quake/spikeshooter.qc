@@ -102,6 +102,7 @@ void spikeshooter_fire(entity this, entity actor, entity trigger)
 	settouch(proj, spikeshooter_touch);
 	setsize(proj, '0 0 -3', '0 0 -3');
 	proj.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, proj);
 
 	CSQCProjectile(proj, true, ((is_laser) ? PROJECTILE_BLASTER : PROJECTILE_SPIKE), false);
 

@@ -118,6 +118,7 @@ void M_Enforcer_Attack_Plasma(entity this)
 	W_SetupProjVelocity_Explicit(gren, dir, v_up, autocvar_g_monster_enforcer_attack_plasma_speed, 0, 0, autocvar_g_monster_enforcer_attack_plasma_spread, false);
 
 	gren.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, gren);
 
 	CSQCProjectile(gren, true, PROJECTILE_ELECTRO, true);
 
