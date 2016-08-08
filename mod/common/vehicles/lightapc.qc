@@ -443,16 +443,16 @@ void lightapc_spawn_hitbox(float position, entity vehic, entity hitbox, vector m
 	hitbox.ballistics_density = autocvar_g_vehicle_lightapc_ballistics_density;
 }
 
-void lightapc_regen(entity this)
+void lightapc_regen(entity this, float dt)
 {
 	if(this.vehicle_flags & VHF_SHIELDREGEN)
-		vehicles_regen(this, this.dmg_time, vehicle_shield, autocvar_g_vehicle_lightapc_shield, autocvar_g_vehicle_lightapc_shield_regen_pause, autocvar_g_vehicle_lightapc_shield_regen, frametime, true);
+		vehicles_regen(this, this.dmg_time, vehicle_shield, autocvar_g_vehicle_lightapc_shield, autocvar_g_vehicle_lightapc_shield_regen_pause, autocvar_g_vehicle_lightapc_shield_regen, dt, true);
 
 	if(this.vehicle_flags & VHF_HEALTHREGEN)
-		vehicles_regen(this, this.dmg_time, vehicle_health, autocvar_g_vehicle_lightapc_health, autocvar_g_vehicle_lightapc_health_regen_pause, autocvar_g_vehicle_lightapc_health_regen, frametime, false);
+		vehicles_regen(this, this.dmg_time, vehicle_health, autocvar_g_vehicle_lightapc_health, autocvar_g_vehicle_lightapc_health_regen_pause, autocvar_g_vehicle_lightapc_health_regen, dt, false);
 }
 
-bool lightapc_gunner_frame(entity this)
+bool lightapc_gunner_frame(entity this, float dt)
 {
 	entity vehic = this.vehicle.vehicle;
 	entity gunner = this.vehicle;
@@ -504,7 +504,7 @@ bool lightapc_gunner_frame(entity this)
 				turretmount.angles_y -= 360;
 			if(turretmount.angles_y < -180)
 				turretmount.angles_y += 360;
-			turretmount.angles_y = bound(-184,turretmount.angles_y + ((player.movement_y * sys_frametime) / -6.66666),184);	
+			turretmount.angles_y = bound(-184,turretmount.angles_y + ((player.movement_y * PHYS_INPUT_FRAMETIME) / -6.66666),184);	
 		
 			if(turretmount.angles_y >= -1 && turretmount.angles_y <= -1)
 				turretmount.angles_y = 0;	
@@ -514,8 +514,8 @@ bool lightapc_gunner_frame(entity this)
 			if(autocvar_g_vehicle_lightapc_snapview)
 			if(IS_REAL_CLIENT(player))
 			{
-				player.angles_y = player.angles_y + ((player.movement_y * sys_frametime) / -6.66666);
-				float ydegrees = ((player.movement_y * sys_frametime) / -6.66666);
+				player.angles_y = player.angles_y + ((player.movement_y * PHYS_INPUT_FRAMETIME) / -6.66666);
+				float ydegrees = ((player.movement_y * PHYS_INPUT_FRAMETIME) / -6.66666);
 				player.v_angle_y += ydegrees;
 
 				msg_entity = player;
@@ -723,7 +723,7 @@ bool lightapc_gunner_enter(entity this, entity player)
 	return true;
 }
 
-bool lightapc_pilot_frame(entity this)
+bool lightapc_pilot_frame(entity this, float dt)
 {
 	entity pilot = this;
 	entity vehic = this.vehicle;
@@ -772,14 +772,14 @@ bool lightapc_pilot_frame(entity this)
 		{
 			if(vehic.angles_y > 180)  vehic.angles_y -= 360;
 			if(vehic.angles_y < -180) vehic.angles_y += 360;
-			vehic.angles_y = bound(-184,vehic.angles_y + ((pilot.movement_y * sys_frametime) / -6.66666),184);	
+			vehic.angles_y = bound(-184,vehic.angles_y + ((pilot.movement_y * PHYS_INPUT_FRAMETIME) / -6.66666),184);	
 			
 			if(vehic.angles_y >= -1 && vehic.angles_y <= -1)
 				vehic.angles_y = 0;	
 
 			////float degree_y;
-			////pilot.angles_y = pilot.angles_y + ((pilot.movement_y * sys_frametime) / -6.66666);
-			////degree_y = ((pilot.movement_y * sys_frametime) / -6.66666);
+			////pilot.angles_y = pilot.angles_y + ((pilot.movement_y * PHYS_INPUT_FRAMETIME) / -6.66666);
+			////degree_y = ((pilot.movement_y * PHYS_INPUT_FRAMETIME) / -6.66666);
 			////pilot.v_angle_y += degree_y;
 
 			if(autocvar_g_vehicle_lightapc_snapview)
@@ -890,7 +890,7 @@ bool lightapc_pilot_frame(entity this)
 
 	// pilot has no weapons, gunners must defend the vehicle
 
-	lightapc_regen(vehic);
+	lightapc_regen(vehic, dt);
 
 	if(vehic.gun1.owner)
 		pilot.vehicle_ammo1 = vehic.gun1.owner.vehicle_ammo1;
