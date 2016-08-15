@@ -31,9 +31,11 @@ void lightapc_hmg2(entity player, entity gunmount)
 		v += v_forward * 5;
 		 
 		Send_Effect(EFFECT_SPIDERBOT_MINIGUN_MUZZLEFLASH, v, v_forward, 1);
+
+		.entity weaponentity = weaponentities[0];
 		 
-		W_MachineGun_MuzzleFlash(player);
-		lightapc_AttachToShotorg(player, player.muzzle_flash, '5 0 0', "tag_flash", gunmount);
+		W_MachineGun_MuzzleFlash(player, weaponentity);
+		lightapc_AttachToShotorg(player, player.(weaponentity).muzzle_flash, '5 0 0', "tag_flash", gunmount);
 	 
 		sound (gunmount, CH_WEAPON_SINGLE, SND_RIFLE_FIRE3_BASS, VOL_BASE, ATTN_NORM);
 

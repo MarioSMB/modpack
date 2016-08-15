@@ -31,7 +31,7 @@ float autocvar_g_balance_axe_weaponthrowable = 0;
 
 CLASS(Axe, Weapon)
 /* ammotype  */ //ATTRIB(Axe, ammo_field, .int, ammo_none)
-/* impulse   */ ATTRIB(Axe, impulse, int, 1)
+/* impulse   */ ATTRIB(Axe, impulse, int, 1);
 /* flags     */ //ATTRIB(Axe, spawnflags, int, WEP_FLAG_NORMAL);
 /* rating    */ ATTRIB(Axe, bot_pickupbasevalue, float, BOT_PICKUP_RATING_LOW);
 /* color     */ ATTRIB(Axe, wpcolor, vector, '0.7 0.7 0.7');
@@ -205,7 +205,7 @@ void W_Axe_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 	meleetemp.realowner = actor;
 	setthink(meleetemp, W_Axe_Melee_Think);
 	meleetemp.nextthink = time + WEP_CVAR(axe, melee_delay) * W_WeaponRateFactor(actor);
-	W_SetupShot_Range(actor, true, 0, SND_Null, 0, WEP_CVAR(axe, damage), WEP_CVAR(axe, melee_range));
+	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR(axe, damage), WEP_CVAR(axe, melee_range));
 }
 
 		METHOD(Axe, wr_aim, void(entity thiswep, entity actor))
@@ -239,7 +239,7 @@ void W_Axe_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 		}
 		METHOD(Axe, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{
-			//W_Reload(actor, WEP_CVAR_PRI(axe, ammo), SND_RELOAD); // WEAPONTODO
+			//W_Reload(actor, weaponentity, WEP_CVAR_PRI(axe, ammo), SND_RELOAD); // WEAPONTODO
 		}
 		METHOD(Axe, wr_suicidemessage, Notification(entity thiswep))
 		{

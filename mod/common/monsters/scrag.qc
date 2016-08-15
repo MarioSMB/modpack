@@ -52,7 +52,7 @@ METHOD(ScragAttack, wr_think, void(ScragAttack thiswep, entity actor, .entity we
 	TC(ScragAttack, thiswep);
     if (fire & 1)
     if (time > actor.attack_finished_single[0] || weapon_prepareattack(thiswep, actor, weaponentity, false, 1.2)) {
-        if (IS_PLAYER(actor)) W_SetupShot_Dir(actor, v_forward, false, 0, SND_SCRAG_FIRESPIKE, CH_WEAPON_B, 0);
+        if (IS_PLAYER(actor)) W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_SCRAG_FIRESPIKE, CH_WEAPON_B, 0);
 		if (IS_MONSTER(actor)) {
 			actor.anim_finished = time + 1.2;
 			monster_makevectors(actor, actor.enemy);

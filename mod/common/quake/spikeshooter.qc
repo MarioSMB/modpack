@@ -71,6 +71,7 @@ void spikeshooter_fire(entity this, entity actor, entity trigger)
 
 	W_SetupShot_ProjectileSize(
 		this,
+		weaponentities[0], // TODO
 		'0 0 -3',
 		'0 0 -3',
 		false,

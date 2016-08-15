@@ -1,0 +1,220 @@
+#pragma once
+
+.float mplant_grid;
+.float mplant_tool_modelindex;
+.float mplant_set_index;
+noref float mplant_sets, mplant_set_count;
+.vector mplant_org_mins;
+.vector mplant_org_maxs;
+.float mplant_object_anglefix;
+
+const int MPLANT_ACTIVE_NOT = 0;
+const int MPLANT_ACTIVE_EDIT = 1;
+const int MPLANT_ACTIVE_GAME = 10;
+.float mplant_active;
+
+#define _MPLANT_SELECTABLE(obj) \
+    (obj && (obj.mdlplant_object_flags & (MPOF_SELECTABLE | MPOF_ISMPLANTOBJECT)))
+
+const int MPOF_ISMPLANTOBJECT = BIT(1);
+const int MPOF_SAVEABLE       = BIT(2);
+const int MPOF_SELECTABLE     = BIT(3);
+const int MPOF_SHOWCORNERS    = BIT(4);
+const int MPOF_SHOWSIDES      = BIT(5);
+const int MPOF_HIDDEN         = BIT(6);
+const int MPOF_SELECTED       = BIT(7);
+.float mdlplant_object_flags;
+
+#define MPOT_BLOCK_SOLID    0
+#define MPOT_DETAIL_SIMPLE  10
+#define MPOT_DETAIL_SCRIPT  11
+#define MPOT_GROUP          20
+.float mdlplant_object_type;
+
+const int MPSF_NEW      = BIT(0);
+const int MPSF_ORIGIN   = BIT(1);
+const int MPSF_MODEL    = BIT(2);
+const int MPSF_ANGLES   = BIT(3);
+const int MPSF_FLAGS    = BIT(4);
+const int MPSF_SIZE     = BIT(5);
+const int MPSF_SCALE    = BIT(6);
+//.SendFlags
+
+const int MPT_FIRST        = 1;
+const int MPT_PLACE        = 1;
+const int MPT_ROTATE       = 2;
+const int MPT_EXTRUDE      = 3;
+const int MPT_SMART        = 4;
+const int MPT_MODEL_SELECT = 5;
+const int MPT_RUBBLE       = 6;
+const int MPT_LAST         = 6;
+.vector mplant_tool_multiplier;
+
+const int MTBO_SNAP = 0;
+const int MTBO_MUL  = 1;
+.float  mplant_tool_bufs[MPT_LAST];
+
+.float mplant_cursor_select_maxdistance;
+
+.float mplant_cursor_placedist;
+.float mplant_cursor_pushback;
+.float mplant_cursor_privatespace;
+.float mplant_random_scale_min;
+.float mplant_random_scale_max;
+.vector mplant_random_rot_min;
+.vector mplant_random_rot_max;
+
+
+const int MPS_CORNER      = BIT(1);
+const int MPS_CENTER      = BIT(2);
+const int MPS_EDGE        = BIT(3);
+const int MPS_GRID        = BIT(4);
+const int MPS_SRCANGLE    = BIT(5);
+const int MPS_TOOLANGLE   = BIT(6);
+const int MPS_NORMANGLE   = BIT(7);
+const int MPS_BLOCKS      = BIT(8);
+.float mplant_snaptions;
+
+const int MPTS_EXTR_SELECT_SRC    = 0;
+const int MPTS_EXTR_SELECT_DEST   = 1;
+const int MPTS_EXTR_SELECT_DO     = 2;
+.float mplant_tool_state;
+
+const int MPPI_INIT           = BIT(0);
+const int MPPI_ENABLE         = BIT(1);
+const int MPPI_TOOL           = BIT(2);
+const int MPPI_SNAP           = BIT(3);
+const int MPPI_OBJECT         = BIT(4);
+const int MPPI_GRID           = BIT(5);
+//.SendFlags
+
+#ifdef SVQC
+.entity mplant_player_info;
+
+#define _SETMODEL(_e,_m) do { \
+    if (_e.mdl) strunzone(_e.mdl); \
+    _e.mdl = strzone(_m); \
+    _setmodel(_e, _e.mdl); \
+    if (getfileext(_m) != "bsp") \
+        _e.mplant_object_anglefix = true; \
+    else \
+        _e.mplant_object_anglefix = false; \
+} while(0)
+// &/()#&�)="(&%?=�!!!! WHO THE FUCK THINKS DIFFRENT INTERNAL ROTATIONS PER EXTERNAL FORMAT IS OK?!
+
+
+bool autocvar_g_modelplanter;
+bool autocvar_g_modelplanter_withitems;
+float mplant_load_dir_models(entity this, string _ptrn);
+void mplant_block_delete(entity _block);
+void mplant_set_buildmode(entity this, bool _on);
+void mplant_switch_block(entity this, float _down);
+void mplant_save(string _filename);
+void mplant_load(entity this, string _filename);
+void mplant_export(string _filename);
+
+entity mplant_cursor_select(entity this);
+float mplant_tool_place(entity this);
+float mplant_tool_rotate(entity this);
+float mplant_tool_extrude(entity this);
+float mplant_tool_smart(entity this);
+float mplant_tool_select(entity this);
+
+.float mplant_set_models;
+.float mplant_set_models_count;
+
+vector vtmp1, vtmp2;
+
+const int btf_primary_topfwdright   = 0;
+const int btf_primary_topfwdleft    = 1;
+const int btf_primary_topbckright   = 2;
+const int btf_primary_topbckleft    = 3;
+const int btf_primary_btmfwdright   = 4;
+const int btf_primary_btmfwdleft    = 5;
+const int btf_primary_btmbckright   = 6;
+const int btf_primary_btmbckleft    = 7;
+const int btf_primary_right         = 8;
+const int btf_primary_left          = 9;
+const int btf_primary_forward       = 10;
+const int btf_primary_back          = 11;
+const int btf_primary_up            = 12;
+const int btf_primary_down          = 13;
+
+const int btf_secondary_topfwdright = 14;
+const int btf_secondary_topfwdleft  = 15;
+const int btf_secondary_topbckright = 16;
+const int btf_secondary_topbckleft  = 17;
+const int btf_secondary_btmfwdright = 18;
+const int btf_secondary_btmfwdleft  = 19;
+const int btf_secondary_btmbckright = 20;
+const int btf_secondary_btmbckleft  = 21;
+const int btf_secondary_right       = 22;
+const int btf_secondary_left        = 23;
+const int btf_secondary_forward     = 24;
+const int btf_secondary_back        = 25;
+const int btf_secondary_up          = 26;
+
+/* --todo
+#define btf_primary_edge_topforward
+#define btf_primary_edge_topback
+#define btf_primary_edge_topright
+#define btf_primary_edge_topleft
+
+#define btf_primary_edge_btmforward
+#define btf_primary_edge_btmback
+#define btf_primary_edge_btmright
+#define btf_primary_edge_btmleft
+
+#define btf_primary_edge_centerforwardright
+#define btf_primary_edge_centerforwardleft
+#define btf_primary_edge_centerbackright
+#define btf_primary_edge_centerbackdleft
+*/
+vector mplant_btf_points[32];
+
+.entity mplant_cursorobject;
+.float create_refire;
+
+var .float (entity _e, string _prop_name, string _prop_val) mplant_object_setprop;
+var .entity(entity this, string _uid) mplant_object_create;
+var .float (entity _e, float _fh) mplant_object_write;
+var .void (entity _e) mplant_object_delete;
+var .void (entity _e, vector _v, float _abs) mplant_object_rotate;
+
+void mplant_block_delete(entity _block);
+float mplant_block_setprop(entity _e, string _prop_name, string _prop_val);
+float mplant_block_write(entity _e, float _fh);
+entity mplant_block_create(entity this, string _uid);
+
+.string mplant_object_uid;
+.string mplant_object_type;
+
+var .float(entity this) mplant_toolfunc;
+const int MPTC_SWITCHTO = 1;
+const int MPTC_SWITCHFROM = 2;
+const int MPTC_SAVE = 3;
+const int MPTC_LOAD = 4;
+var .float(float _msg, float _fp1, float _fp2) mplant_tool_com;
+
+float mplant_tool_register(string _name, float _index,
+                           float(entity) _func,
+                           float(float, float, float) _com);
+
+.string mplant_tool_name = netname;
+.float mplant_tool_index = cnt;
+
+string  mplant_toolname(float _toolidx);
+float   mplant_toolindex(string _name);
+entity mplant_gettool(entity this, float _toolidx);
+.entity mplant_tool;
+.entity mplant_tool_chain;
+
+entity mplant_root;
+
+#endif
+
+#ifdef CSQC
+.string mplant_tool_name;
+.float mplant_tool_index;
+void cl_mplant_player_info_init(entity this, bool isnew);
+#endif

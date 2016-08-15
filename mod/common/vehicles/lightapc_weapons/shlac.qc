@@ -29,7 +29,7 @@ void lightapc_shlac_attack(entity actor, string tagname, entity fireentity)
 
 	spread = WEP_CVAR_PRI(hlac, spread_min) * 0.1;
 
-	W_SetupShot (actor, false, 3, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(hlac, damage));
+	W_SetupShot (actor, weaponentities[0], false, 3, SND_LASERGUN_FIRE, CH_WEAPON_A, WEP_CVAR_PRI(hlac, damage));
 	Send_Effect(EFFECT_BLASTER_MUZZLEFLASH, v, v_forward * 1000, 1);
 	if (!autocvar_g_norecoil)
 	{

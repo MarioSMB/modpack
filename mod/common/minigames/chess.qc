@@ -419,7 +419,7 @@ bool chess_move_piece(entity minigame, entity piece, string pos, int promote)
 	entity thepiece = chess_find_piece(minigame, pos);
 	if(thepiece.team == piece.team)
 	{
-		LOG_TRACE("Chess: Trying to move a piece onto an existing piece we own, THIS SHOULD NOT HAPPEN!\n");
+		LOG_TRACE("Chess: Trying to move a piece onto an existing piece we own, THIS SHOULD NOT HAPPEN!");
 		return false;
 	}
 

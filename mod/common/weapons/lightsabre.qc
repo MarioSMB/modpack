@@ -50,8 +50,8 @@ float autocvar_g_balance_lightsabre_weaponstartoverride = -1;
 float autocvar_g_balance_lightsabre_weaponthrowable = 0;
 
 CLASS(Lightsabre, Weapon)
-/* ammotype  */ //ATTRIB(Lightsabre, ammo_field, .int, ammo_shells)
-/* impulse   */ ATTRIB(Lightsabre, impulse, int, 1)
+/* ammotype  */ //ATTRIB(Lightsabre, ammo_field, .int, ammo_shells);
+/* impulse   */ ATTRIB(Lightsabre, impulse, int, 1);
 /* flags     */ ATTRIB(Lightsabre, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE);
 /* rating    */ ATTRIB(Lightsabre, bot_pickupbasevalue, float, BOT_PICKUP_RATING_LOW);
 /* color     */ ATTRIB(Lightsabre, wpcolor, vector, '1 0.25 0.25');
@@ -281,7 +281,7 @@ void W_Lightsabre_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	meleetemp.owner = meleetemp.realowner = actor;
 	setthink(meleetemp, W_Lightsabre_Melee_Think);
 	meleetemp.nextthink = time + WEP_CVAR_BOTH(lightsabre, isprimary, melee_delay) * W_WeaponRateFactor(actor);
-	W_SetupShot_Range(actor, true, 0, SND_Null, 0, WEP_CVAR_BOTH(lightsabre, isprimary, damage), WEP_CVAR_BOTH(lightsabre, isprimary, melee_range));
+	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR_BOTH(lightsabre, isprimary, damage), WEP_CVAR_BOTH(lightsabre, isprimary, melee_range));
 }
 
 .bool lightsabre_active;

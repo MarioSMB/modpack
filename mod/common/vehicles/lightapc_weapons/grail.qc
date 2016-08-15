@@ -101,7 +101,7 @@ void lightapc_grail_linkattack (entity actor, string tagname, float putforward, 
 	if(autocvar_g_vehicle_lightapc_grail_link_joinexplode)
 		maxdmg += autocvar_g_vehicle_lightapc_grail_link_joinexplode_damage;
 
-	W_SetupShot (actor, false, 2, SND_CRYLINK_FIRE, CH_WEAPON_A, maxdmg);
+	W_SetupShot (actor, weaponentities[0], false, 2, SND_CRYLINK_FIRE, CH_WEAPON_A, maxdmg);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
@@ -206,7 +206,7 @@ void lightapc_grail_attack(entity actor, string tagname, entity fireentity)
 	
 	entity proj;
 
-	W_SetupShot_ProjectileSize (actor, '0 0 -3', '0 0 -3', false, 2, SND_ELECTRO_FIRE, CH_WEAPON_A, autocvar_g_vehicle_lightapc_grail_smallcannon_damage);
+	W_SetupShot_ProjectileSize (actor, weaponentities[0], '0 0 -3', '0 0 -3', false, 2, SND_ELECTRO_FIRE, CH_WEAPON_A, autocvar_g_vehicle_lightapc_grail_smallcannon_damage);
 
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, v, v_forward * 1000, 1);
 
@@ -246,7 +246,7 @@ void lightapc_grail_bigattack(entity actor, string tagname, float putforward, fl
 	
 	entity proj;
 
-	W_SetupShot_ProjectileSize (actor, '0 0 -9', '0 0 -9', false, 2, SND_ELECTRO_FIRE, CH_WEAPON_A, autocvar_g_vehicle_lightapc_grail_cannon_damage);
+	W_SetupShot_ProjectileSize (actor, weaponentities[0], '0 0 -9', '0 0 -9', false, 2, SND_ELECTRO_FIRE, CH_WEAPON_A, autocvar_g_vehicle_lightapc_grail_cannon_damage);
 
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, v, v_forward * 100, 1);
 

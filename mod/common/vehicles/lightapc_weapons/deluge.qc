@@ -53,7 +53,7 @@ void lightapc_deluge_attack(entity actor, string tagname, entity spigot)
 	
 	entity proj;
 
-	W_SetupShot_ProjectileSize (actor, '0 0 -1', '0 0 -1', false, 2, SND_DELUGE_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(electro, damage));
+	W_SetupShot_ProjectileSize (actor, weaponentities[0], '0 0 -1', '0 0 -1', false, 2, SND_DELUGE_FIRE, CH_WEAPON_A, WEP_CVAR_SEC(electro, damage));
 
 	w_shotdir = v_forward; // no TrueAim for grenades please
 

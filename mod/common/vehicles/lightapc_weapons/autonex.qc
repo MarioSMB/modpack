@@ -26,7 +26,7 @@ void lightapc_autonex_attack(string tagname, entity fireentity, entity player)
 	myhalflife = autocvar_g_vehicle_lightapc_autonex_damagefalloff_halflife;
 	myforcehalflife = autocvar_g_vehicle_lightapc_autonex_damagefalloff_forcehalflife;
 
-	W_SetupShot (player, true, 5, SND_NEXFIRE, CH_WEAPON_A, mydmg);
+	W_SetupShot (player, weaponentities[0], true, 5, SND_NEXFIRE, CH_WEAPON_A, mydmg);
 
 	FireRailgunBullet (player, v, v + w_shotdir * MAX_SHOT_DISTANCE,
 						mydmg, myforce, mymindist, mymaxdist, myhalflife, myforcehalflife, DEATH_TURRET_PLASMA.m_id);
