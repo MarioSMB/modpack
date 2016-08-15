@@ -1,0 +1,94 @@
+#pragma once
+
+#ifdef CSQC
+void HUD_Mod_VIP(vector pos, vector mySize);
+void HUD_Mod_VIP_Reset();
+#endif
+CLASS(VIP, Gametype)
+    INIT(VIP)
+    {
+        this.gametype_init(this, _("VIP"),"vip","g_vip",true,"","timelimit=20 pointlimit=10 leadlimit=0",_("A VIP is chosen on each team, when a VIP dies, the round is over"));
+    }
+    METHOD(VIP, m_generate_mapinfo, void(Gametype this, string v))
+    {
+        if(v == "item_flag_team2" || v == "team_CTF_blueflag")
+            MapInfo_Map_supportedGametypes |= this.m_flags;
+    }
+    METHOD(VIP, m_isTwoBaseMode, bool())
+    {
+        return true; // TODO: not always
+    }
+    METHOD(VIP, m_setTeams, void(string sa))
+    {
+        cvar_set("fraglimit", sa);
+    }
+    METHOD(VIP, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+    {
+        if(spawnpoints >= 8 && diameter > 4096)
+            return true;
+        return false;
+    }
+#ifdef CSQC
+    ATTRIB(VIP, m_modicons, void(vector pos, vector mySize), HUD_Mod_VIP);
+    ATTRIB(VIP, m_modicons_reset, void(), HUD_Mod_VIP_Reset);
+#endif
+ENDCLASS(VIP)
+REGISTER_GAMETYPE(VIP, NEW(VIP));
+#define g_vip IS_GAMETYPE(VIP)
+
+REGISTER_WAYPOINT(VIP, _("VIP"), '0.8 0.8 0', 1);
+
+REGISTER_SP(VIP_VIPKILLS);
+REGISTER_SP(VIP_SURVIVALS);
+
+REGISTER_STAT(VIP_RED, int)
+REGISTER_STAT(VIP_BLUE, int)
+REGISTER_STAT(VIP_YELLOW, int)
+REGISTER_STAT(VIP_PINK, int)
+REGISTER_STAT(VIP, bool)
+
+SOUND(VIP_GEM_DROPPED, "kh/destroy");
+SOUND(VIP_GEM_PICKUP, "kh/capture");
+
+MODEL(VIP_GEM, "models/runematch/rune.mdl");
+MODEL(VIP_GEM_RING, "models/runematch/curse.mdl");
+
+SOUND(VIP_WIN_NEUTRAL,  "ctf/capture");
+SOUND(VIP_WIN_RED,      "ctf/red_capture");
+SOUND(VIP_WIN_BLUE,     "ctf/blue_capture");
+SOUND(VIP_WIN_YELLOW,   "ctf/yellow_capture");
+SOUND(VIP_WIN_PINK,     "ctf/pink_capture");
+Sound SND_VIP_WIN(int teamid) {
+    switch (teamid) {
+        case NUM_TEAM_1:    return SND_VIP_WIN_RED;
+        case NUM_TEAM_2:    return SND_VIP_WIN_BLUE;
+        case NUM_TEAM_3:    return SND_VIP_WIN_YELLOW;
+        case NUM_TEAM_4:    return SND_VIP_WIN_PINK;
+        default:            return SND_VIP_WIN_NEUTRAL;
+    }
+}
+
+#ifdef SVQC
+void vip_SpawnSoulGem(vector orig, int theteam);
+void vip_SetVIP(entity player, int tm);
+
+int g_vip_soulgems;
+
+.bool gem_pickedup;
+.bool gem_dropped;
+
+.entity wps_vip;
+int redgem_count, bluegem_count, yellowgem_count, pinkgem_count;
+
+.int drop_count;
+.float drop_prevtime;
+.float pickup_antispam;
+
+const int VIP_TEAMS = 17;
+int vip_count[VIP_TEAMS];
+
+// score rule declarations
+const int ST_VIP_SCORE = 1;
+
+int vip_teams;
+#endif

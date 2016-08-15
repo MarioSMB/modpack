@@ -1,6 +1,7 @@
 #include "announcer.qc"
 #include "commands/all.inc"
 #include "effects.inc"
+#include "gamemodes/all.inc"
 #include "projectiles.qh"
 #include "minigames/all.inc"
 #include "monsters/all.inc"
@@ -13,6 +14,7 @@
 #include "weapons.qc"
 
 #define IMPLEMENTATION
+#include "gamemodes/all.inc"
 #include "monsters/all.inc"
 #include "vehicles/all.inc"
 #include "weapons/all.inc"
