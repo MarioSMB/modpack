@@ -1,11 +1,13 @@
 #ifndef IMPLEMENTATION
+#ifdef SVQC
+AUTOCVAR(g_vip, bool, false, "");
+#endif
 #include "vip.qh"
 #endif
 
 #ifdef IMPLEMENTATION
 
 #ifdef SVQC
-AUTOCVAR(g_vip, bool, false, "");
 AUTOCVAR(g_vip_warmup, float, 10, "");
 AUTOCVAR(g_vip_round_timelimit, float, 180, "");
 AUTOCVAR(g_vip_point_limit, int, -1, "VIP point limit overriding the mapinfo specified one (use 0 to play without limit, and -1 to use mapinfo's limit)");
