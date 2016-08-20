@@ -4,6 +4,7 @@ enum {
     CPID_PIGGYBACK = CPID_LAST
 ,   CPID_FREEZE
 ,	CPID_VIP
+,	CPID_JAILBREAK
 };
 
 
@@ -11,10 +12,24 @@ enum {
     MSG_ANNCE_NOTIF(HEADSHOT,       2,       "headshot",   CH_INFO,             VOL_BASEVOICE,  ATTEN_NONE)
 
 // MSG_INFO_NOTIFICATIONS
+    MSG_INFO_NOTIF(JAILBREAK_CAPTURE,                   1,  2, 0, "s1 s2", "",                                  "",     _("^BG%s^BG captured %s"), "")
+    MSG_INFO_NOTIF(JAILBREAK_FREE,                      1,  1, 0, "s1", "",                                     "",     _("^BG%s^3 has broken free!"), "")
+
     MSG_INFO_NOTIF(VIP_DROP,                            1,  1, 0, "s1", "",             "",                     _("^BG%s^K1 dropped the soul gem"), "")
 	MSG_INFO_NOTIF(VIP_PICKUP,                          1,  1, 0, "s1", "",             "",                     _("^BG%s^K1 picked up the soul gem"), "")
 
 // MSG_CENTER_NOTIFICATIONS
+	MSG_CENTER_NOTIF(JAILBREAK_DEFENSE,           		1,  	0, 0, "",               CPID_JAILBREAK,         "0 0",  _("^F2You gained some bonus score for defending the control point!"), "")
+    MULTITEAM_CENTER(JAILBREAK_ESCAPE, 4,         		1,  	0, 0, "",               CPID_JAILBREAK,         "0 0",  _("^K1The ^TC^TT^K1 team is escaping!"), "", NAME)
+    MSG_CENTER_NOTIF(JAILBREAK_FREE,              		1,  	0, 0, "",               CPID_JAILBREAK,         "0 0",  _("^F2You're free! Run away!"), "")
+    MSG_CENTER_NOTIF(JAILBREAK_FREED,             		1,  	0, 0, "",               CPID_JAILBREAK,         "0 0",  _("^K3You bailed your teammates out of jail!"), "")
+    MSG_CENTER_NOTIF(JAILBREAK_IMPRISON,          		1,  	0, 0, "",               CPID_JAILBREAK,         "0 0",  _("^K1You're in jail, prisoner!"), "")
+    MSG_CENTER_NOTIF(JAILBREAK_NOENTRY,           		1,  	0, 0, "",               CPID_JAILBREAK,         "0 0",  _("^K1No sneaking into jail!"), "")
+    MSG_CENTER_NOTIF(JAILBREAK_NOTREADY,          		1,  	0, 0, "",               CPID_JAILBREAK,         "0 0",  _("^BGThis control point is not ready yet"), "")
+    MSG_CENTER_NOTIF(JAILBREAK_TEAMALIVE,         		1,  	0, 0, "",               CPID_JAILBREAK,         "0 0",  _("^BGYour team is already free"), "")
+    MSG_CENTER_NOTIF(JAILBREAK_TOOLATE,           		1,  	0, 0, "",               CPID_JAILBREAK,         "0 0",  _("^BGSomeone is already capturing this control point"), "")
+    MSG_CENTER_NOTIF(JAILBREAK_WRONGTEAM,         		1,  	0, 0, "",               CPID_JAILBREAK,         "0 0",  _("^BGYou can't capture your team's control points"), "")
+
     MSG_CENTER_NOTIF(FREEZE_THAWING,           1,   0, 0, "",             CPID_FREEZE,          "5 0", "^BGThawing slowly now\n^BGJump to re-spawn at base instantly", "")
     MSG_CENTER_NOTIF(HEADSHOT,                 1,   0, 0, "",             CPID_Null,              "0 0", "^F2Headshot!", "")
     MSG_CENTER_NOTIF(PIGGYBACK_CARRYING,       1,   1, 0, "s1",           CPID_PIGGYBACK,       "0 0", "^BGYou are now carrying %s^BG!", "")

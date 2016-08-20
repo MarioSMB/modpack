@@ -1,0 +1,107 @@
+#pragma once
+
+CLASS(Jailbreak, Gametype)
+    INIT(Jailbreak)
+    {
+        this.gametype_init(this, _("Jailbreak"),"jb","g_jailbreak",true,"","teams=2 timelimit=20 pointlimit=5 leadlimit=0",_("Kill enemies to send them to jail, capture control points to release teammates"));
+    }
+    METHOD(Jailbreak, m_parse_mapinfo, bool(string k, string v))
+    {
+        if (!k) {
+            cvar_set("g_jailbreak_teams", cvar_defstring("g_jailbreak_teams"));
+            return true;
+        }
+        switch (k) {
+            case "teams":
+                cvar_set("g_jailbreak_teams", v);
+                return true;
+        }
+        return false;
+    }
+    METHOD(Jailbreak, m_generate_mapinfo, void(Gametype this, string v))
+    {
+        if(substring(v, 0, 10) == "jailbreak_")
+            MapInfo_Map_supportedGametypes |= this.m_flags;
+    }
+#ifdef CSQC
+    ATTRIB(Jailbreak, m_modicons, void(vector pos, vector mySize), HUD_Mod_CA);
+#endif
+ENDCLASS(Jailbreak)
+REGISTER_GAMETYPE(JAILBREAK, NEW(Jailbreak));
+#define g_jailbreak IS_GAMETYPE(JAILBREAK)
+
+REGISTER_SP(JB_JBREAKS);
+REGISTER_SP(JB_FREED);
+REGISTER_SP(JB_DEFENSE);
+
+REGISTER_STAT(JB_ISPRISONED, int)
+
+REGISTER_WAYPOINT(JB_ControlPoint, _("Control point"), '0 1 1', 1);
+
+#ifdef SVQC
+
+bool g_jailbreak_claim;
+bool g_jailbreak_jail_deathmatch;
+
+void JB_NonJBInit(entity this);
+
+.int   jb_isprisoned_prev;
+.float jb_jail_resettime;
+.float jb_prisontime;
+.float jb_cooldown;
+.float jb_cooldown_max;
+.bool  jb_active;
+.int   jb_capturecount;
+.int   jb_team_initial;
+.float jb_defendthink_next;
+.bool  jb_had_unlimited_ammo;
+.float jb_lastmessage;
+
+.entity jb_waypoint;
+.entity jb_capturingplayer;
+.entity jb_imprisoner;
+
+bool jb_roundover;
+int jb_teams;
+
+int jb_cp_num;
+
+const vector JB_CP_MIN = ('-32 -32 -32');
+const vector JB_CP_MAX = ('32 32 32');
+const float JB_CP_SCALE = 0.6;
+const vector JB_CP_WPOFFSET = ('0 0 32');
+
+const int ST_JB_ROUNDS = 1;
+
+.int jaildoormode;
+const int JAILDOORMODE_DEFAULT = 0;
+const int JAILDOORMODE_OPEN = 1;
+const int JAILDOORMODE_CLOSED = 2;
+
+const int OPENJAILS_LOCKED = 0;
+const int OPENJAILS_OPEN = 1;
+const int OPENJAILS_LOCKED_FORCE = 2;
+const int OPENJAILS_OPEN_FORCE = 3;
+
+// list of doors on the map
+entity jb_worlddoorlist;
+.entity jb_worlddoornext;
+
+// list of control points on the map
+entity jb_worldcplist;
+.entity jb_worldcpnext;
+
+.float jb_torture_force;
+.float jb_torture_force_jitter;
+.float jb_torture_delay;
+.float jb_torture_delay_jitter;
+.float jb_torture_suggestedforce;
+
+const int JB_PROJ_OWNERSTATE_UNDEFINED = 0;
+const int JB_PROJ_OWNERSTATE_IMPRISONED = 1;
+const int JB_PROJ_OWNERSTATE_FREE = 2;
+
+// TODO: cvar this
+const float JB_TORTURE_DURATION = 15;
+
+#endif
