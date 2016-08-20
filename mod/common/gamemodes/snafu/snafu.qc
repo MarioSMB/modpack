@@ -372,6 +372,7 @@ void snafu_tadpole_damage(entity this, entity inflictor, entity attacker, float 
 
 	if(this.health <= 0)
 	{
+		this.deadflag = DEAD_DEAD;
 		this.frame = TADPOLE_FRAME_DIE;
 		this.solid = SOLID_NOT;
 		this.event_damage = func_null;
@@ -418,6 +419,7 @@ spawnfunc(snafu_tadpole)
 	tracebox(this.origin + '0 0 64', TADPOLE_MIN, TADPOLE_MAX, this.origin - '0 0 512', MOVE_NORMAL, this);
 	setorigin(this, trace_endpos);
 	this.solid = SOLID_BBOX;
+	this.deadflag = DEAD_NO;
 	this.takedamage = DAMAGE_AIM;
 	this.event_damage = snafu_tadpole_damage;
 	this.health = autocvar_g_snafu_tadpole_health;
