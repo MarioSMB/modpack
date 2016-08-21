@@ -5,7 +5,8 @@ enum {
 ,   CPID_FREEZE
 ,	CPID_VIP
 ,   CPID_JAILBREAK
-,	CPID_SNAFU
+,   CPID_SNAFU
+,	CPID_DOTC
 };
 
 
@@ -13,6 +14,9 @@ enum {
     MSG_ANNCE_NOTIF(HEADSHOT,       2,       "headshot",   CH_INFO,             VOL_BASEVOICE,  ATTEN_NONE)
 
 // MSG_INFO_NOTIFICATIONS
+    MSG_INFO_NOTIF(DOTC_CORE_DESTROYED,                     1,  1, 0, "s1", "",         "",     _("^BG%s^BG has been destroyed"), "")
+    MSG_INFO_NOTIF(DOTC_CORE_UPGRADE,                       1,  1, 1, "s1 f1", "",      "",     _("^BG%s^BG has been upgraded to level ^F4%s^BG!"), "")
+
     MSG_INFO_NOTIF(JAILBREAK_CAPTURE,                   1,  2, 0, "s1 s2", "",                                  "",     _("^BG%s^BG captured %s"), "")
     MSG_INFO_NOTIF(JAILBREAK_FREE,                      1,  1, 0, "s1", "",                                     "",     _("^BG%s^3 has broken free!"), "")
 
@@ -20,6 +24,9 @@ enum {
 	MSG_INFO_NOTIF(VIP_PICKUP,                          1,  1, 0, "s1", "",             "",                     _("^BG%s^K1 picked up the soul gem"), "")
 
 // MSG_CENTER_NOTIFICATIONS
+    MSG_CENTER_NOTIF(DOTC_CORE_UNDERATTACK,             1,      0, 0, "",               CPID_DOTC,             "2 0",  _("^K1Your core is under attack!\n^K3Defend it ^K1NOW!"), "")
+    MSG_CENTER_NOTIF(DOTC_FACTORY_UNDERATTACK,          1,      0, 0, "",               CPID_DOTC,             "2 0",  _("^K1Your factory is under attack!\n^K3Defend it ^K1NOW!"), "")
+
 	MSG_CENTER_NOTIF(JAILBREAK_DEFENSE,           		1,  	0, 0, "",               CPID_JAILBREAK,         "0 0",  _("^F2You gained some bonus score for defending the control point!"), "")
     MULTITEAM_CENTER(JAILBREAK_ESCAPE, 4,         		1,  	0, 0, "",               CPID_JAILBREAK,         "0 0",  _("^K1The ^TC^TT^K1 team is escaping!"), "", NAME)
     MSG_CENTER_NOTIF(JAILBREAK_FREE,              		1,  	0, 0, "",               CPID_JAILBREAK,         "0 0",  _("^F2You're free! Run away!"), "")

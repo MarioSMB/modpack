@@ -1,0 +1,29 @@
+REGISTER_NET_LINKED(ENT_CLIENT_DOTC_CREDIT)
+
+const vector DOTC_CREDIT_MINS = ('-20 -20 -20');
+const vector DOTC_CREDIT_MAXS = ('20 20 20');
+
+MODEL(DOTC_CREDIT, "models/dotc/credit.md3");
+
+SOUND(DOTC_CREDIT_PICKUP, "dotc/coinpickup");
+
+// networking
+const int DOTC_CREDIT_SF_MOVE 	= BIT(0);
+const int DOTC_CREDIT_SF_TEAM 	= BIT(1);
+const int DOTC_CREDIT_SF_INIT 	= BIT(6);
+
+#ifdef SVQC
+
+.int dotc_credit_team;
+.vector dotc_credit_origin;
+
+#elif defined(CSQC)
+
+float autocvar_cl_dotc_credit_spinspeed = 90;
+
+// credit spinning
+#define DOTC_CREDIT_AVELOCITY ('0 1 0' * autocvar_cl_dotc_credit_spinspeed)
+
+.bool dotc_credit_simple;
+
+#endif

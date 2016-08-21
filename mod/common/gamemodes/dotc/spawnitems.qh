@@ -1,0 +1,3 @@
+void dotc_ItemSpawn_Give(entity player);
+
+entity dotc_ItemSpawn(entity olditem);

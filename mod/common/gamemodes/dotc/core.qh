@@ -1,0 +1,56 @@
+MODEL(DOTC_CORE_LEVEL_1, "models/dotc/lvl1.dpm");
+MODEL(DOTC_CORE_LEVEL_2_3, "models/dotc/lvl1add.dpm");
+MODEL(DOTC_CORE_LEVEL_4, "models/dotc/lvl4.dpm");
+MODEL(DOTC_CORE_LEVEL_5_6, "models/dotc/lvl4add.dpm");
+MODEL(DOTC_CORE_LEVEL_7, "models/dotc/lvl7.dpm");
+MODEL(DOTC_CORE_LEVEL_8_9, "models/dotc/lvl7add.dpm");
+MODEL(DOTC_CORE_LEVEL_10, "models/dotc/lvl10.dpm");
+
+SOUND(DOTC_CORE_ATTACK, "dotc/core_attack");
+SOUND(DOTC_CORE_LEVEL_RED, "dotc/red_core_level");
+SOUND(DOTC_CORE_LEVEL_BLUE, "dotc/blue_core_level");
+SOUND(DOTC_CORE_LEVEL_YELLOW, "dotc/yellow_core_level");
+SOUND(DOTC_CORE_LEVEL_PINK, "dotc/pink_core_level");
+Sound SND_DOTC_CORE_LEVEL(int teamid) {
+    switch (teamid) {
+        case NUM_TEAM_1:    return SND_DOTC_CORE_LEVEL_RED;
+        case NUM_TEAM_2:    return SND_DOTC_CORE_LEVEL_BLUE;
+        case NUM_TEAM_3:    return SND_DOTC_CORE_LEVEL_YELLOW;
+        case NUM_TEAM_4:    return SND_DOTC_CORE_LEVEL_PINK;
+        default:			return SND_Null;
+    }
+}
+
+#ifdef SVQC
+
+// used elsewhere
+entity dotc_GetCore(int teamnumber);
+
+// core properties
+.int dotc_corelevel; // current core level
+.int dotc_nextlevel; // number of credits required until next level
+.int dotc_credits; // current core credit count
+
+// statuses
+const int CORE_IDLE 	= 1; // round has not started yet
+const int CORE_ACTIVE 	= 2; // round has started, we must prepare for battle
+const int CORE_DYING 	= 3; // playing death animation
+const int CORE_DEAD 	= 4; // core is no longer available
+
+// list of cores on the map
+entity dotc_worldcorelist;
+.entity dotc_worldcorenext;
+
+// waypointsprites
+.entity wps_corebase;
+
+// core constants
+const vector DOTC_CORE_WAYPOINT_OFFSET = ('0 0 350');
+
+const float DOTC_CORE_THINKRATE = 0.5;
+const vector DOTC_CORE_SPAWN_OFFSET = ('0 0 32');
+
+// sounds
+.string snd_core_upgrade;
+
+#endif
