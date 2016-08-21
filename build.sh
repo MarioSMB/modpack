@@ -16,4 +16,11 @@ export QCC
 
 export QCCFLAGS_WATERMARK=$(git describe --tags --dirty=*)
 
-cd ${base} && make BUILD_MOD=1
+relpath() {
+    b=; s=$(cd $(realpath ${1%%/}); pwd); d=$(cd $2; pwd)
+    while [ "${d#$s/}" == "${d}" ]; do s=$(dirname ${s}); b="../${b}"; done
+    echo ${b}${d#${s}/}
+}
+
+export BUILD_MOD="$(relpath xonotic/qcsrc $PWD)"
+make -C ${base}
