@@ -6,7 +6,8 @@ enum {
 ,	CPID_VIP
 ,   CPID_JAILBREAK
 ,   CPID_SNAFU
-,	CPID_DOTC
+,   CPID_DOTC
+,	CPID_CONQUEST
 };
 
 
@@ -14,6 +15,9 @@ enum {
     MSG_ANNCE_NOTIF(HEADSHOT,       2,       "headshot",   CH_INFO,             VOL_BASEVOICE,  ATTEN_NONE)
 
 // MSG_INFO_NOTIFICATIONS
+    MULTITEAM_INFO(CONQUEST_CAPTURE, 4,                     1,  1, 0, "s1", "",                         "",                         _("^BG%s^BG was captured by the ^TC^TT^BG team"), "", NAME)
+    MULTITEAM_INFO(CONQUEST_LIBERATE, 4,                    1,  1, 0, "s1", "",                         "",                         _("^BG%s^BG was liberated from the ^TC^TT^BG team"), "", NAME)
+
     MSG_INFO_NOTIF(DOTC_CORE_DESTROYED,                     1,  1, 0, "s1", "",         "",     _("^BG%s^BG has been destroyed"), "")
     MSG_INFO_NOTIF(DOTC_CORE_UPGRADE,                       1,  1, 1, "s1 f1", "",      "",     _("^BG%s^BG has been upgraded to level ^F4%s^BG!"), "")
 
@@ -24,6 +28,12 @@ enum {
 	MSG_INFO_NOTIF(VIP_PICKUP,                          1,  1, 0, "s1", "",             "",                     _("^BG%s^K1 picked up the soul gem"), "")
 
 // MSG_CENTER_NOTIFICATIONS
+    MULTITEAM_CENTER(CONQUEST_CAPTURE, 4,               1,      1, 0, "s1",             CPID_CONQUEST,          "0 0",  _("^BG%s^BG has been captured by the ^TC^TT^BG team"), "", NAME)
+    MSG_CENTER_NOTIF(CONQUEST_CAPTURE_TEAM,             1,      1, 0, "s1",             CPID_CONQUEST,          "0 0",  _("^BGYour team has captured %s"), "")
+    MULTITEAM_CENTER(CONQUEST_LIBERATE, 4,              1,      1, 0, "s1",             CPID_CONQUEST,          "0 0",  _("^BG%s^BG has been liberated from the ^TC^TT^BG team"), "", NAME)
+    MULTITEAM_CENTER(CONQUEST_LIBERATE_TEAM, 4,         1,      1, 0, "s1",             CPID_CONQUEST,          "0 0",  _("^BGYour team has liberated %s^BG from the ^TC^TT^BG team"), "", NAME)
+    MULTITEAM_CENTER(CONQUEST_LOST, 4,                  1,      1, 0, "s1",             CPID_CONQUEST,          "0 0",  _("^BG%s^BG has been lost to the ^TC^TT^BG team"), "", NAME)
+
     MSG_CENTER_NOTIF(DOTC_CORE_UNDERATTACK,             1,      0, 0, "",               CPID_DOTC,             "2 0",  _("^K1Your core is under attack!\n^K3Defend it ^K1NOW!"), "")
     MSG_CENTER_NOTIF(DOTC_FACTORY_UNDERATTACK,          1,      0, 0, "",               CPID_DOTC,             "2 0",  _("^K1Your factory is under attack!\n^K3Defend it ^K1NOW!"), "")
 
