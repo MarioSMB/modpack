@@ -17,7 +17,7 @@ export QCC
 export QCCFLAGS_WATERMARK=$(git describe --tags --dirty=*)
 
 relpath() {
-    b=; s=$(cd $(realpath ${1%%/}); pwd); d=$(cd $2; pwd)
+    b=; s=$(cd $(readlink -f ${1%%/}); pwd); d=$(cd $2; pwd)
     while [ "${d#$s/}" == "${d}" ]; do s=$(dirname ${s}); b="../${b}"; done
     echo ${b}${d#${s}/}
 }
