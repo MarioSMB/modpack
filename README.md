@@ -5,21 +5,6 @@ QuakeC source for the SMB server mods
 
 [![Build Status](https://travis-ci.org/MarioSMB/modpack.svg?branch=master)](https://travis-ci.org/MarioSMB/modpack)
 
-MORE NOTE:
-The mod now links to Xonotic as a submodule.  
-This means a slightly bigger download for the xonotic folder (about 400MB), but this is a necessary step in making csprogs.dat downloads instant!  
-When you first update to this, you'll need to do the following: `./update.sh && rm -rf xonotic && ./update.sh`  
-Once you've done this once, you'll just need to run `./update.sh` in the future.  
-
-
-NOTE:  
-Since 0.8.1, the mod has been remade as a mutator.  
-This greatly improves maintainability and allows us to provide updates quicker.  
-In the process though, some cvars have changed, and a new system has been added to check the mod's cvars (no more autoexec, yay!)  
-To see the available cvars, do the following from your server (or rcon) console: `dumpmodcvars`  
-This will place a configuration file in the data/data folder, named mod_cvars.cfg. Do not execute or modify this on your server!  
-Instead, copy the settings you wish to change into your main server.cfg file.
-
 
 Requirements
 ============
@@ -29,6 +14,11 @@ Git
  - Windows: https://git-scm.com/download/win
  - On other Linux systems, follow your standard package manager instructions to install Git
  - Mac: Install the command line tools package (Google is your friend)
+
+Building tools
+ - On Debian based systems, use `sudo apt-get install build-essential`
+ - Windows: ??? (alternatively, use MSYS2, guide pending)
+ - Mac systems should already come with the required building tools once Git is installed
  
 Required content packs:
  - http://dl.xonotic.co/zzz-misc-v006-62-g9667a44.pk3
