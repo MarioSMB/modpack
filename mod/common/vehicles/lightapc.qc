@@ -423,6 +423,7 @@ void lightapc_spawn_hitbox(float position, entity vehic, entity hitbox, vector m
 		hitbox.event_damage = lightapc_damage_hitboxft;
 
 	hitbox.bot_attack         = true;
+	IL_PUSH(g_bot_targets, hitbox);
 	hitbox.iscreature         = true;
 	hitbox.teleportable       = false; // no teleporting for vehicles, too buggy
 	hitbox.damagedbycontents  = true;

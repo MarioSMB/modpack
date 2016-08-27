@@ -84,6 +84,7 @@ entity dotc_projectile( entity this,
     }
 
     IL_PUSH(g_projectiles, proj);
+    IL_PUSH(g_bot_dodge, proj);
 
 
     if(pgravity)

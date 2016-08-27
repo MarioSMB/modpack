@@ -1115,6 +1115,7 @@ void JB_SetupControlPoint(entity this)
 	settouch(this, JB_ControlPoint_Touch);
 	this.solid = SOLID_TRIGGER;
 	this.flags = FL_ITEM;
+	IL_PUSH(g_items, this);
 	this.reset = JB_ControlPoint_Reset;
 	this.jb_capturecount = 0;
 	this.jb_active = true;

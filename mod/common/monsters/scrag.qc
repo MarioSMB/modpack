@@ -69,6 +69,7 @@ METHOD(ScragAttack, wr_think, void(ScragAttack thiswep, entity actor, .entity we
 		setorigin(missile, actor.origin + actor.view_ofs + v_forward * 14);
 		missile.flags = FL_PROJECTILE;
 		IL_PUSH(g_projectiles, missile);
+		IL_PUSH(g_bot_dodge, missile);
 		missile.velocity = w_shotdir * (autocvar_g_monster_scrag_attack_spike_speed);
 		missile.avelocity = '300 300 300';
 		missile.nextthink = time + 5;

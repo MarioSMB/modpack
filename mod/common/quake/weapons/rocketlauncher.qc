@@ -237,6 +237,7 @@ void W_RocketLauncher_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.cnt = time + WEP_CVAR(rocketlauncher, lifetime);
 	missile.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, missile);
+	IL_PUSH(g_bot_dodge, missile);
 	missile.missile_flags = MIF_SPLASH;
 
 	CSQCProjectile(missile, WEP_CVAR(rocketlauncher, speedaccel) == 0, PROJECTILE_ROCKET, false); // because of fly sound

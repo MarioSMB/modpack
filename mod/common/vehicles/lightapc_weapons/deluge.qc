@@ -86,6 +86,7 @@ void lightapc_deluge_attack(entity actor, string tagname, entity spigot)
 	proj.event_damage = func_null; // there's checks to prevent this from being executed
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
+	IL_PUSH(g_bot_dodge, proj);
 	proj.damagedbycontents = WEP_CVAR_SEC(electro, damagedbycontents);
 
 	proj.bouncefactor = WEP_CVAR_SEC(electro, bouncefactor);

@@ -184,6 +184,7 @@ void lightapc_grail_linkattack (entity actor, string tagname, float putforward, 
 
 		proj.flags = FL_PROJECTILE;
 		IL_PUSH(g_projectiles, proj);
+		IL_PUSH(g_bot_dodge, proj);
 		proj.missile_flags = MIF_SPLASH;
 	
 		CSQCProjectile(proj, true, (proj.cnt ? PROJECTILE_CRYLINK_BOUNCING : PROJECTILE_CRYLINK), true);
@@ -231,6 +232,7 @@ void lightapc_grail_attack(entity actor, string tagname, entity fireentity)
 	setsize(proj, '0 0 -3', '0 0 -3');
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
+	IL_PUSH(g_bot_dodge, proj);
 	proj.missile_flags = MIF_SPLASH;
 
 	CSQCProjectile(proj, true, PROJECTILE_ELECTRO_BEAM, true);
@@ -273,6 +275,7 @@ void lightapc_grail_bigattack(entity actor, string tagname, float putforward, fl
 	setsize(proj, '0 0 -9', '0 0 -9');
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
+	IL_PUSH(g_bot_dodge, proj);
 	proj.missile_flags = MIF_SPLASH;
 
 	CSQCProjectile(proj, true, PROJECTILE_ELECTRO_BEAM, true);

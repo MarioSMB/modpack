@@ -600,6 +600,7 @@ void vip_SpawnSoulGem(vector orig, float theteam)
 	e.nextthink = time + random();
 	e.solid = SOLID_TRIGGER;
 	e.flags = FL_ITEM;
+	IL_PUSH(g_items, e);
 	e.reset = vip_SoulGem_reset;
 	setmodel(e, MDL_VIP_GEM);
 	setsize(e, '0 0 -35', '0 0 0');

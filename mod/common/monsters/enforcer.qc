@@ -119,6 +119,7 @@ void M_Enforcer_Attack_Plasma(entity this)
 
 	gren.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, gren);
+	IL_PUSH(g_bot_dodge, gren);
 
 	CSQCProjectile(gren, true, PROJECTILE_ELECTRO, true);
 
