@@ -682,10 +682,10 @@ spawnfunc(item_soulgem_team4)
 }
 
 // scoreboard setup
-void vip_ScoreRules()
+void vip_ScoreRules(int teams)
 {
-	CheckAllowedTeams(world);
-	ScoreRules_basics(vip_teams, SFL_SORT_PRIO_PRIMARY, 0, true);
+	//CheckAllowedTeams(world);
+	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true);
 	ScoreInfo_SetLabel_PlayerScore(SP_VIP_SURVIVALS,	"survivals",	0);
 	ScoreInfo_SetLabel_PlayerScore(SP_VIP_VIPKILLS,		"vipkills",		SFL_SORT_PRIO_SECONDARY);
 	ScoreInfo_SetLabel_TeamScore(  ST_VIP_SCORE,		"scores",		SFL_SORT_PRIO_PRIMARY);
@@ -696,12 +696,19 @@ void vip_DelayedInit(entity this) // Do this check with a delay so we can wait f
 {
 	vip_teams = 0;
 
-	if(redgem_count > 0) 	BITSET_ASSIGN(vip_teams, BIT(0));
-	if(bluegem_count > 0) 	BITSET_ASSIGN(vip_teams, BIT(1));
-	if(yellowgem_count > 0) BITSET_ASSIGN(vip_teams, BIT(2));
-	if(pinkgem_count > 0) 	BITSET_ASSIGN(vip_teams, BIT(3));
+	if(redgem_count > 0) 	vip_teams |= BIT(0);
+	if(bluegem_count > 0) 	vip_teams |= BIT(1);
+	if(yellowgem_count > 0) vip_teams |= BIT(2);
+	if(pinkgem_count > 0) 	vip_teams |= BIT(3);
 
-	vip_ScoreRules();
+	if(NumTeams(vip_teams) < 2) // not enough teams? fall back!
+	{
+		vip_teams = 0;
+		vip_teams |= BIT(0);
+		vip_teams |= BIT(1);
+	}
+
+	vip_ScoreRules(vip_teams);
 }
 
 void vip_Initialize()
