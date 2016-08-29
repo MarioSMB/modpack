@@ -8,6 +8,7 @@ AUTOCVAR(g_vip, bool, false, "");
 #ifdef IMPLEMENTATION
 
 #ifdef SVQC
+AUTOCVAR(g_vip_soulgems, bool, true, "");
 AUTOCVAR(g_vip_warmup, float, 10, "");
 AUTOCVAR(g_vip_round_timelimit, float, 180, "");
 AUTOCVAR(g_vip_point_limit, int, -1, "VIP point limit overriding the mapinfo specified one (use 0 to play without limit, and -1 to use mapinfo's limit)");
