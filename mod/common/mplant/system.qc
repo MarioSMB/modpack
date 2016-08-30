@@ -34,7 +34,7 @@ string getfileext(string _filename)
 	@_mins untransformed mins
 	@_maxs untransformed maxs
 	@_secondary results in secondary buffer
-	@_ofs offset (this.origin for world coordinates, '0 0 0' for local transform)
+	@_ofs offset (this.origin for NULL coordinates, '0 0 0' for local transform)
 **/
 void mplant_btf(entity _obj, vector _angles, vector _mins, vector _maxs, float _secondary, vector _ofs, float _anglefix)
 {

@@ -17,10 +17,10 @@ void dotc_projectile_touch(entity this, entity toucher)
 	else
         __pointparticles(__particleeffectnum(this.explode_fx), findbetterlocation (this.origin, 8), trace_plane_normal, 1);
 
-    RadiusDamage (this, this.owner, this.shot_dmg, 0, this.shot_radius, world, world, this.shot_force, DEATH_TURRET.m_id, world);
+    RadiusDamage (this, this.owner, this.shot_dmg, 0, this.shot_radius, NULL, NULL, this.shot_force, DEATH_TURRET.m_id, NULL);
     _sound (this, CH_SHOTS, this.explode_snd, VOL_BASE, ATTN_NORM);
 
-	remove(this);
+	delete(this);
 }
 
 void dotc_projectile_touch_think(entity this)

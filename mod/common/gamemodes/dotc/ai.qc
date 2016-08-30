@@ -41,7 +41,7 @@ int dotc_find_attack_spot_direct(entity this)
         _test = randomvec();
         _test_z = 0;
         _test = _spot + _test * (256 + random() * 256);
-        te_lightning1(world, this.origin, _test);
+        te_lightning1(NULL, this.origin, _test);
         dotc_attack_spot_test_loc = _test;
         if(!dotc_find_attack_spot_direct_test(this))
         {
@@ -487,7 +487,7 @@ int dotc_ai_valid_target(entity me, entity trg)
 
 entity dotc_ai_acquire_target(entity this)
 {
-	entity targ, best_targ = world;
+	entity targ, best_targ = NULL;
 	float dist, best_dist;
 	int r;
 	best_dist = 300000;
@@ -601,7 +601,7 @@ vector dotc_find_firelocation_los(entity this, vector from, float gridsize)
 		v_x = x;
 		v_y = y;
 		
-		te_lightning2(world, this.origin , v);
+		te_lightning2(NULL, this.origin , v);
 		tracebox(from + '0 0 64', this.mins, this.maxs, v + '0 0 64', MOVE_NORMAL, this);			
 		if(trace_fraction == 1.0)
 		{			

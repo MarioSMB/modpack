@@ -23,17 +23,17 @@ const int NIM_TEAMS = 2;
 // find nim piece given its tile name
 entity nim_find_piece(entity minig, string tile)
 {
-	entity e = world;
+	entity e = NULL;
 	while ( ( e = findentity(e,owner,minig) ) )
 		if ( e.classname == "minigame_board_piece" && e.netname == tile )
 			return e;
-	return world;
+	return NULL;
 }
 
 // Checks if the given piece completes a row
 bool nim_winning_piece(entity minig)
 {
-	entity e = world;
+	entity e = NULL;
 	while ( ( e = findentity(e,owner,minig) ) )
 		if ( e.classname == "minigame_board_piece" )
 			return false;
@@ -92,7 +92,7 @@ void nim_move(entity minigame, entity player, string pos )
 				entity thepiece = nim_find_piece(minigame, minigame_tile_buildname(i, number));
 				if(!thepiece) break;
 				if(thepiece.netname) { strunzone(thepiece.netname); }
-				remove(thepiece);
+				delete(thepiece);
 			}
 
 			minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
@@ -129,7 +129,7 @@ void nim_next_match(entity minigame, entity player)
 		FOREACH_ENTITY_ENT(owner, minigame, LAMBDA(
 			if(it.classname != "minigame_board_piece") continue;
 			if(it.netname) { strunzone(it.netname); }
-			remove(it);
+			delete(it);
 		));
 
 		nim_setup_pieces(minigame);
@@ -155,7 +155,7 @@ int nim_server_event(entity minigame, string event, ...)
 			FOREACH_ENTITY_ENT(owner, minigame, LAMBDA(
 				if(it.classname != "minigame_board_piece") continue;
 				if(it.netname) { strunzone(it.netname); }
-				remove(it);
+				delete(it);
 			));
 			return false;
 		}

@@ -52,7 +52,7 @@ void DOTC_GibsDraw(entity this)
 	this.alpha = bound(0, this.nextthink - time, 1);
 	if(this.alpha < ALPHA_MIN_VISIBLE)
 	{
-		remove(this);
+		delete(this);
 	}
 	
 	if (this.traileffect)
@@ -69,7 +69,7 @@ void DOTC_GibTouch(entity this, entity toucher)
 	sound (this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTN_NORM);
 	pointparticles(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);    
 	
-	remove(this);
+	delete(this);
 }
 
 void DOTC_DroneCorpseTouch(entity this, entity toucher)
@@ -117,7 +117,7 @@ void DOTC_DroneCorpseTouch(entity this, entity toucher)
 				
 	}
 
-	remove(this);
+	delete(this);
 }
 
 NET_HANDLE(TE_CSQC_DOTC_DRONEDIE, bool isNew)
@@ -146,7 +146,7 @@ NET_HANDLE(TE_CSQC_DOTC_DRONEDIE, bool isNew)
 	// Client requests minimal death sequence, just do particles & sound.
 	/*if(autocvar_cl_dotc_deaddrone_simple)	
 	{
-		remove(e);
+		delete(e);
 		return false;
 	}*/
 

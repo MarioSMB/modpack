@@ -15,9 +15,9 @@ void lightapc_shlac_touch(entity this, entity toucher)
 	bool isprimary = !(this.projectiledeathtype & HITTYPE_SECONDARY);
 
 	RadiusDamage(this, this.realowner, WEP_CVAR_BOTH(hlac, isprimary, damage), WEP_CVAR_BOTH(hlac, isprimary, edgedamage), WEP_CVAR_BOTH(hlac, isprimary, radius), 
-					   this.realowner.vehicle, world, WEP_CVAR_BOTH(hlac, isprimary, force), this.projectiledeathtype, toucher);
+					   this.realowner.vehicle, NULL, WEP_CVAR_BOTH(hlac, isprimary, force), this.projectiledeathtype, toucher);
 
-	remove(this);
+	delete(this);
 }
 
 void lightapc_shlac_attack(entity actor, string tagname, entity fireentity)

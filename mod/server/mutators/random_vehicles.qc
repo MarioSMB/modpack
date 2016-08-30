@@ -31,7 +31,7 @@ MUTATOR_HOOKFUNCTION(rvehicles, OnEntityPreSpawn)
 			}
 		));
 
-		if(!vehicle_initialize(e, RandomSelection_chosen_ent, false)) { remove(e); return false; }
+		if(!vehicle_initialize(e, RandomSelection_chosen_ent, false)) { delete(e); return false; }
 		return true;
 	}
 }

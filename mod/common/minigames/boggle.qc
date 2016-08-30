@@ -63,20 +63,20 @@ bool boggle_word_in_list(entity minigame, string word)
 // find same game piece given its tile name
 entity boggle_find_piece(entity minig, string tile)
 {
-	entity e = world;
+	entity e = NULL;
 	while( ( e = findentity(e,owner,minig) ) )
 		if( e.classname == "minigame_board_piece" )
 		{
 			if(e.netname == tile)
 				return e;
 		}
-	return world;
+	return NULL;
 }
 
 bool boggle_draw(entity minigame)
 {
 	int valid = 0;
-	entity e = world;
+	entity e = NULL;
 	while( ( e = findentity(e,owner,minigame) ) )
 		if( e.classname == "minigame_board_piece" )
 		{
@@ -126,13 +126,13 @@ string boggle_get_letter(int try)
 
 	//LOG_INFO(ftos(try), "\n");
 
-	FOREACH_WORD(boggle_letters[try], true, LAMBDA(RandomSelection_Add(world, 0, it, 1, 1)));
+	FOREACH_WORD(boggle_letters[try], true, LAMBDA(RandomSelection_Add(NULL, 0, it, 1, 1)));
 
 	string dotry = RandomSelection_chosen_string;
 
 	RandomSelection_Init();
 
-	FOREACH_WORD(dotry, true, LAMBDA(RandomSelection_Add(world, 0, it, 1, 1)));
+	FOREACH_WORD(dotry, true, LAMBDA(RandomSelection_Add(NULL, 0, it, 1, 1)));
 
 	return RandomSelection_chosen_string;
 }
@@ -143,7 +143,7 @@ int boggle_get_unused(int used_bit)
 
 	for(int i = 0; i < 16; ++i)
 		if(!(used_bit & BIT(i)))
-			RandomSelection_Add(world, i, string_null, 1, 1);
+			RandomSelection_Add(NULL, i, string_null, 1, 1);
 
 	return RandomSelection_chosen_float;
 }
@@ -177,13 +177,13 @@ entity boggle_get_player(entity minigame, int pteam)
 #ifdef SVQC
 	for(e = minigame.minigame_players; e; e = e.list_next)
 #elif defined(CSQC)
-	e = world;
+	e = NULL;
 	while( (e = findentity(e,owner,minigame)) )
 		if ( e.classname == "minigame_player" )
 #endif
 	if(e.team == pteam)
 		return e;
-	return world;
+	return NULL;
 }
 
 void boggle_add_wordscore(entity minigame, int pteam, int thescore)
@@ -289,13 +289,13 @@ int boggle_server_event(entity minigame, string event, ...)
 		{
 			LL_CLEAR(minigame.boggle_words, { if(it.netname) strunzone(it.netname); });
 
-			entity e = world;
+			entity e = NULL;
 			while( (e = findentity(e, owner, minigame)) )
 			if(e.classname == "minigame_board_piece")
 			{
 				if(e.netname) { strunzone(e.netname); }
 				if(e.boggle_letter) { strunzone(e.boggle_letter); }
-				remove(e);
+				delete(e);
 			}
 			return false;
 		}

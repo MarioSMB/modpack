@@ -115,8 +115,8 @@ bool VIP_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
 
 		FOREACH_CLIENT(IS_PLAYER(it),
 		{
@@ -138,8 +138,8 @@ bool VIP_CheckWinner()
 	float winner_team = VIP_GetWinnerTeam();
 	if(winner_team > 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		TeamScore_AddToTeam(winner_team, ST_VIP_SCORE, +1);
 
 		FOREACH_CLIENT(IS_PLAYER(it),
@@ -152,8 +152,8 @@ bool VIP_CheckWinner()
 	}
 	else if(winner_team == -1)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_TIED);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
 
 		FOREACH_CLIENT(IS_PLAYER(it),
 		{
@@ -248,14 +248,14 @@ bool VIP_CheckTeams()
 	if(VIP_TEAMS_OK())
 	{
 		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_MISSING_TEAMS);
+			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
 		return true;
 	}
 	if(total_players == 0)
 	{
 		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, world, MSG_CENTER, CPID_MISSING_TEAMS);
+			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
 		return false;
 	}
@@ -264,7 +264,7 @@ bool VIP_CheckTeams()
 	if(NumTeams(vip_teams) >= 4) missing_teams_mask += (!pinkalive) * 8;
 	if(prev_missing_teams_mask != missing_teams_mask)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
 		prev_missing_teams_mask = missing_teams_mask;
 	}
 	return false;
@@ -291,7 +291,7 @@ void vip_DropSoulGem(entity player)
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_VIP_DROP_SELF);
 
 	Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_CENTER, CENTER_VIP_DROP, player.netname);
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_VIP_DROP, player.netname);
+	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_VIP_DROP, player.netname);
 
 	play2all(SND(VIP_GEM_DROPPED));
 }
@@ -494,7 +494,7 @@ vector vip_SoulGemColormod(int theteam, bool iseffect)
 
 void vip_VIPWaypoints(entity player)
 {
-	WaypointSprite_Spawn(WP_VIP, 0, 0, player, FLAG_WAYPOINT_OFFSET, world, 0, player, wps_vip, true, RADARICON_FLAG);
+	WaypointSprite_Spawn(WP_VIP, 0, 0, player, FLAG_WAYPOINT_OFFSET, NULL, 0, player, wps_vip, true, RADARICON_FLAG);
 	WaypointSprite_UpdateMaxHealth(player.wps_vip, ((g_instagib) ? 5 : '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id) * 2));
 	WaypointSprite_UpdateHealth(player.wps_vip, ((g_instagib) ? player.armorvalue : '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)));
 	WaypointSprite_UpdateTeamRadar(player.wps_vip, RADARICON_FLAGCARRIER, Team_ColorRGB(player.team));
@@ -502,7 +502,7 @@ void vip_VIPWaypoints(entity player)
 
 void vip_SetVIP(entity player, float tm)
 {
-	if(!IS_PLAYER(player) || player == world || STAT(VIP, player))
+	if(!IS_PLAYER(player) || player == NULL || STAT(VIP, player))
 		return; // TODO: check how this can be called at all for non players
 	STAT(VIP, player) = true;
 	if(!g_instagib)
@@ -518,7 +518,7 @@ void vip_SetVIP(entity player, float tm)
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_VIP_PICKUP_SELF);
 
 	Send_Notification(NOTIF_ALL_EXCEPT, player, MSG_CENTER, CENTER_VIP_PICKUP, player.netname);
-	Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_VIP_PICKUP, player.netname);
+	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_VIP_PICKUP, player.netname);
 }
 
 void vip_SoulGem_touch(entity this, entity toucher)
@@ -576,17 +576,17 @@ void vip_SoulGem_reset(entity this)
 	this.alpha = this.enemy.alpha = 0.8;
 	this.colormod = vip_SoulGemColormod(this.team, false);
 	this.enemy.colormod = vip_SoulGemColormod(this.team, true);
-	this.owner = world;
+	this.owner = NULL;
 
 	// "run here" waypoint
 	if(!this.waypointsprite_attached)
-		WaypointSprite_Spawn(WP_KeyCarrierFinish, 0, 0, this, FLAG_WAYPOINT_OFFSET, world, this.team, this, waypointsprite_attached, true, RADARICON_FLAG);
+		WaypointSprite_Spawn(WP_KeyCarrierFinish, 0, 0, this, FLAG_WAYPOINT_OFFSET, NULL, this.team, this, waypointsprite_attached, true, RADARICON_FLAG);
 }
 
 void vip_DelayedGemSetup(entity this) // called after a gem is placed on a map
 {
 	// waypointsprites
-	WaypointSprite_Spawn(WP_KeyCarrierFinish, 0, 0, this, FLAG_WAYPOINT_OFFSET, world, this.team, this, waypointsprite_attached, true, RADARICON_FLAG);
+	WaypointSprite_Spawn(WP_KeyCarrierFinish, 0, 0, this, FLAG_WAYPOINT_OFFSET, NULL, this.team, this, waypointsprite_attached, true, RADARICON_FLAG);
 }
 
 void vip_SpawnSoulGem(vector orig, float theteam)
@@ -644,7 +644,7 @@ void vip_SpawnSoulGem(vector orig, float theteam)
 // for maps without flags
 spawnfunc(item_soulgem_team1)
 {
-	if(!g_vip || !g_vip_soulgems) { remove(this); return; }
+	if(!g_vip || !g_vip_soulgems) { delete(this); return; }
 
 	vip_SpawnSoulGem(this.origin, NUM_TEAM_1);
 
@@ -654,7 +654,7 @@ spawnfunc(item_soulgem_team1)
 
 spawnfunc(item_soulgem_team2)
 {
-	if(!g_vip || !g_vip_soulgems) { remove(this); return; }
+	if(!g_vip || !g_vip_soulgems) { delete(this); return; }
 
 	vip_SpawnSoulGem(this.origin, NUM_TEAM_2);
 
@@ -664,7 +664,7 @@ spawnfunc(item_soulgem_team2)
 
 spawnfunc(item_soulgem_team3)
 {
-	if(!g_vip || !g_vip_soulgems) { remove(this); return; }
+	if(!g_vip || !g_vip_soulgems) { delete(this); return; }
 
 	vip_SpawnSoulGem(this.origin, NUM_TEAM_3);
 
@@ -674,7 +674,7 @@ spawnfunc(item_soulgem_team3)
 
 spawnfunc(item_soulgem_team4)
 {
-	if(!g_vip || !g_vip_soulgems) { remove(this); return; }
+	if(!g_vip || !g_vip_soulgems) { delete(this); return; }
 
 	vip_SpawnSoulGem(this.origin, NUM_TEAM_4);
 
@@ -685,7 +685,7 @@ spawnfunc(item_soulgem_team4)
 // scoreboard setup
 void vip_ScoreRules(int teams)
 {
-	//CheckAllowedTeams(world);
+	//CheckAllowedTeams(NULL);
 	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true);
 	ScoreInfo_SetLabel_PlayerScore(SP_VIP_SURVIVALS,	"survivals",	0);
 	ScoreInfo_SetLabel_PlayerScore(SP_VIP_VIPKILLS,		"vipkills",		SFL_SORT_PRIO_SECONDARY);
@@ -721,7 +721,7 @@ void vip_Initialize()
 	round_handler_Spawn(VIP_CheckTeams, VIP_CheckWinner, VIP_RoundStart);
 	round_handler_Init(5, autocvar_g_vip_warmup, autocvar_g_vip_round_timelimit);
 
-	InitializeEntity(world, vip_DelayedInit, INITPRIO_GAMETYPE);
+	InitializeEntity(NULL, vip_DelayedInit, INITPRIO_GAMETYPE);
 }
 #endif
 

@@ -73,7 +73,7 @@ void hat_Think(entity this)
 	this.nextthink = time;
 	if (this.owner.hatentity != this)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 	if(STAT(FROZEN, this.owner) || IS_DEAD(this.owner))
@@ -163,7 +163,7 @@ MUTATOR_HOOKFUNCTION(hats, ClientDisconnect)
 {
 	entity player = M_ARGV(0, entity);
 
-	player.hatentity = world;
+	player.hatentity = NULL;
 	player.hatname = "";
 }
 
@@ -171,7 +171,7 @@ MUTATOR_HOOKFUNCTION(hats, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
 
-	player.hatentity = world;
+	player.hatentity = NULL;
 	player.hatname = "";
 }
 
@@ -222,7 +222,7 @@ MUTATOR_HOOKFUNCTION(mod_hats, TagIndex_Apply)
 			if(!ent.tag_index)
 			{
 				// we need to prevent this from 'appening
-				ent.tag_entity = world;
+				ent.tag_entity = NULL;
 				ent.drawmask = 0;
 			}
 		}

@@ -85,7 +85,7 @@ void W_RocketLauncher_Unregister(entity this)
 {
 	if(this.realowner && this.realowner.lastrocket == this)
 	{
-		this.realowner.lastrocket = world;
+		this.realowner.lastrocket = NULL;
 		// this.realowner.rl_release = 1;
 	}
 }
@@ -110,8 +110,8 @@ void W_RocketLauncher_Explode(entity this, entity directhitentity)
 		WEP_CVAR(rocketlauncher, damage),
 		WEP_CVAR(rocketlauncher, edgedamage),
 		WEP_CVAR(rocketlauncher, radius),
-		world,
-		world,
+		NULL,
+		NULL,
 		WEP_CVAR(rocketlauncher, force),
 		this.projectiledeathtype,
 		directhitentity
@@ -129,7 +129,7 @@ void W_RocketLauncher_Explode(entity this, entity directhitentity)
 			PS(this.realowner).m_switchweapon = w_getbestweapon(this.realowner);
 		}
 	}
-	remove(this);
+	delete(this);
 }
 
 void W_RocketLauncher_Explode_think(entity this)
@@ -263,7 +263,7 @@ void W_RocketLauncher_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 				// decide whether to detonate rockets
 				entity missile, targetlist, targ;
 				targetlist = findchainfloat(bot_attack, true);
-				for(missile = world; (missile = find(missile, classname, "rocket")); ) if(missile.realowner == actor)
+				for(missile = NULL; (missile = find(missile, classname, "rocket")); ) if(missile.realowner == actor)
 				{
 					targ = targetlist;
 					while(targ)
@@ -299,7 +299,7 @@ void W_RocketLauncher_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 				teamdamage = 0;
 				enemydamage = 0;
 				targetlist = findchainfloat(bot_attack, true);
-				missile = find(world, classname, "rocket");
+				missile = find(NULL, classname, "rocket");
 				while(missile)
 				{
 					if(missile.realowner != actor)
@@ -330,7 +330,7 @@ void W_RocketLauncher_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 				if(teamplay && actor.team)
 					desirabledamage = desirabledamage - teamdamage;
 
-				missile = find(world, classname, "rocket");
+				missile = find(NULL, classname, "rocket");
 				while(missile)
 				{
 					if(missile.realowner != actor)

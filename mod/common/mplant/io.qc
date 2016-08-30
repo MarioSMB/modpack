@@ -113,7 +113,7 @@ void _mplant_formant1_load(entity this, string _filename, float _append, vector 
     while ((s = fgets(fh))) {
         r = tokenize_console(s);
         if (r) {
-            entity m = world;
+            entity m = NULL;
             string _object_type = "<unknown object>";
             if (argv(0) == "create") {
                 ++_obj_cnt;

@@ -54,7 +54,7 @@ void mplant_foliage_delete(entity _block)
 
     _block.mdl = "";
 
-    remove(_block);
+    delete(_block);
 }
 
 float mplant_foliage_setprop(entity _e, string _prop_name, string _prop_val)

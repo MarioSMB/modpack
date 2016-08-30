@@ -43,14 +43,14 @@ void spikeshooter_explode(entity this, entity directhitentity)
 		this.dmg,
 		this.cnt,
 		50,
-		world,
-		world,
+		NULL,
+		NULL,
 		0,
 		this.projectiledeathtype,
 		directhitentity
 	);
 
-	remove(this);
+	delete(this);
 }
 
 void spikeshooter_explode_use(entity this, entity actor, entity trigger)

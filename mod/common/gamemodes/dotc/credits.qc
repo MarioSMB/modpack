@@ -15,7 +15,7 @@ void dotc_CreditRemove(entity this)
 		return;
 	}
 	Send_Effect(EFFECT_ITEM_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 0', 1);
-	remove(this);
+	delete(this);
 }
 
 void dotc_CreditRemove_Reset(entity this) { dotc_CreditRemove(this); }

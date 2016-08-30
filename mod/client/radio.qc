@@ -8,7 +8,7 @@ void Radio_Stopper_Think(entity this)
 {
     if(this.cnt < -2 || intermission)
     {
-        remove(this);
+        delete(this);
         return;
     }
 
@@ -18,7 +18,7 @@ void Radio_Stopper_Think(entity this)
     if(this.cnt > t)
     {
         localcmd("\ncd stop\n");
-        remove(this);
+        delete(this);
         return; // don't continue, we just removed this thing...
     }
 
@@ -31,7 +31,7 @@ void Radio_Think(entity this)
 	if(this.cnt < 0 || time - this.cnt > 300)
 	{
 		if(this.netname) { strunzone(this.netname); }
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -52,7 +52,7 @@ void Radio_Think(entity this)
 	if(this.flags)
 	{
 		// loop
-		remove(this);
+		delete(this);
 	}
 	else
 	{
@@ -92,7 +92,7 @@ NET_HANDLE(TE_CSQC_RADIO, bool isNew)
 
 	FOREACH_ENTITY_CLASS("radio", true,
 	{
-		remove(it);
+		delete(it);
 	});
 
 	entity e = new(radio);
@@ -124,7 +124,7 @@ MUTATOR_HOOKFUNCTION(radio, CSQC_ConsoleCommand)
 	{
 		if(cmd_argc == 1)
 		{
-			entity e = find(world, classname, "radio");
+			entity e = find(NULL, classname, "radio");
 
 			if(e)
 			{

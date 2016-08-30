@@ -213,7 +213,7 @@ MUTATOR_HOOKFUNCTION(mdlplant, SV_ParseClientCommand)
 
 	if (cmd_name == "mplant_grid")
 	{
-		CMDHELP("Set / Show world gridsize.\nUsage: ^3cmd^2 mplant_grid^5 [#]");
+		CMDHELP("Set / Show NULL gridsize.\nUsage: ^3cmd^2 mplant_grid^5 [#]");
 
 		if (cmd_argc == 1)
 			if (player.mplant_snaptions & MPS_GRID)

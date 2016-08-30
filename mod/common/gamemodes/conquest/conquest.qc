@@ -13,7 +13,7 @@ REGISTER_MUTATOR(cq, false)
 	{
 		if (time > 1) // game loads at time 1
 			error("This is a game type and it cannot be added at runtime.");
-		InitializeEntity(world, cq_DelayedInit, INITPRIO_GAMETYPE);
+		InitializeEntity(NULL, cq_DelayedInit, INITPRIO_GAMETYPE);
 
 		ActivateTeamplay();
 		//SetLimits(autocvar_g_tdm_point_limit, autocvar_g_tdm_point_leadlimit, autocvar_timelimit_override, -1);
@@ -109,7 +109,7 @@ void cq_ControlPoint_SwitchTeam(entity this, int newteam, int newstatus, bool sh
 	if(showmessage)
 	if(newstatus == CP_NEUTRAL && this.cq_status != CP_NEUTRAL)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT(this, INFO_CONQUEST_LIBERATE), this.netname);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_ENT(this, INFO_CONQUEST_LIBERATE), this.netname);
 		Send_Notification(NOTIF_TEAM, this, MSG_CENTER, APP_TEAM_NUM(newteam, CENTER_CONQUEST_LOST), this.netname);
 
 		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it),
@@ -141,7 +141,7 @@ void cq_ControlPoint_SwitchTeam(entity this, int newteam, int newstatus, bool sh
 
 			if(showmessage)
 			{
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_ENT(this, INFO_CONQUEST_CAPTURE), this.netname);
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_ENT(this, INFO_CONQUEST_CAPTURE), this.netname);
 				Send_Notification(NOTIF_TEAM, this, MSG_CENTER, CENTER_CONQUEST_CAPTURE_TEAM, this.netname);
 
 				FOREACH_CLIENT(IS_PLAYER(it),
@@ -238,7 +238,7 @@ void cq_ControlPoint_Reset(entity this)
 
 spawnfunc(conquest_controlpoint)
 {
-	if(!g_conquest) { remove(this); return; }
+	if(!g_conquest) { delete(this); return; }
 
 	this.cq_worldcpnext = cq_worldcplist; // link control point into cq_worldcplist
 	cq_worldcplist = this;
@@ -334,8 +334,8 @@ bool cq_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
 		round_handler_Init(5, autocvar_g_conquest_warmup, autocvar_g_conquest_round_timelimit);
 		return true;
 	}
@@ -362,14 +362,14 @@ bool cq_CheckWinner()
 	int winner_team = cq_getWinnerTeam();
 	if(winner_team > 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		TeamScore_AddToTeam(winner_team, ST_CONQUEST_ROUNDS, +1);
 	}
 	else if(winner_team == -1)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_TIED);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
 	}
 
 	round_handler_Init(5, autocvar_g_conquest_warmup, autocvar_g_conquest_round_timelimit);
@@ -400,7 +400,7 @@ bool cq_CheckTeams()
 	if(ca_teams >= 4) missing_teams_mask += (!pinkalive) * 8;
 	if(prev_missing_teams_mask != missing_teams_mask)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
 		prev_missing_teams_mask = missing_teams_mask;
 	}
 	return 0;
@@ -417,13 +417,13 @@ bool cq_CheckTeams()
  */
 entity cq_Nearest_ControlPoint(entity this, vector pos, float max_dist)
 {
-	entity tmp_entity, closest_target = world;
+	entity tmp_entity, closest_target = NULL;
 	for(tmp_entity = cq_worldcplist; tmp_entity; tmp_entity = tmp_entity.cq_worldcpnext)
 	{
 		if(SAME_TEAM(tmp_entity, this))
 		if(tmp_entity.cq_status == CP_CAPTURED)
 		if(max_dist <= 0 || vdist(tmp_entity.origin - pos, <=, max_dist))
-		if(vlen2(tmp_entity.origin - pos) <= vlen2(closest_target.origin - pos) || closest_target == world)
+		if(vlen2(tmp_entity.origin - pos) <= vlen2(closest_target.origin - pos) || closest_target == NULL)
 			closest_target = tmp_entity;
 	}
 
@@ -437,7 +437,7 @@ entity cq_Nearest_ControlPoint(entity this, vector pos, float max_dist)
  */
 entity cq_Nearest_ControlPoint_2D(entity this, vector pos, float max_dist)
 {
-	entity tmp_entity, closest_target = world;
+	entity tmp_entity, closest_target = NULL;
 	vector delta;
 	float smallest_distance = 0, distance;
 
@@ -450,7 +450,7 @@ entity cq_Nearest_ControlPoint_2D(entity this, vector pos, float max_dist)
 		if(SAME_TEAM(tmp_entity, this))
 		if(tmp_entity.cq_status == CP_CAPTURED)
 		if(max_dist <= 0 || distance <= max_dist)
-		if(closest_target == world || distance <= smallest_distance )
+		if(closest_target == NULL || distance <= smallest_distance )
 		{
 			closest_target = tmp_entity;
 			smallest_distance = distance;
@@ -501,7 +501,7 @@ bool cq_Teleport(entity player, entity tele_target, float range, bool tele_effec
 		tracebox(loc, PL_MIN_CONST, PL_MAX_CONST, loc, MOVE_NORMAL, player);
 		if(trace_fraction == 1.0 && !trace_startsolid)
 		{
-			traceline(tele_target.origin, loc, MOVE_NOMONSTERS, tele_target); // double check to make sure we're not spawning outside the world
+			traceline(tele_target.origin, loc, MOVE_NOMONSTERS, tele_target); // double check to make sure we're not spawning outside the NULL
 			if(trace_fraction == 1.0)
 			{
 				if ( tele_effects )
@@ -739,13 +739,13 @@ MUTATOR_HOOKFUNCTION(cq, PlayerSpawn)
 	if ( player.cq_spawn_by )
 	if ( cq_Teleport(player,player.cq_spawn_by,autocvar_g_conquest_teleport_radius,false) )
 	{
-		player.cq_spawn_by = world;
+		player.cq_spawn_by = NULL;
 		return;
 	}
 
 	bool random_target = !(autocvar_g_conquest_spawn_close_to_death);
 	int owned_count = cq_Count_MyControlPoints(player);
-	entity tmp_entity, closest_target = world;
+	entity tmp_entity, closest_target = NULL;
 	vector spawn_loc = player.cq_deathloc;
 
 	// new joining player or round reset, don't bother checking
@@ -759,7 +759,7 @@ MUTATOR_HOOKFUNCTION(cq, PlayerSpawn)
 		if(tmp_entity.cq_status == CP_CAPTURED || !owned_count)
 		if(random_target)
 			RandomSelection_Add(tmp_entity, 0, string_null, 1, 1);
-		else if(vlen2(tmp_entity.origin - spawn_loc) <= vlen2(closest_target.origin - spawn_loc) || closest_target == world)
+		else if(vlen2(tmp_entity.origin - spawn_loc) <= vlen2(closest_target.origin - spawn_loc) || closest_target == NULL)
 			closest_target = tmp_entity;
 	}
 
@@ -792,7 +792,7 @@ MUTATOR_HOOKFUNCTION(cq, PlayerSpawn)
 			tracebox(loc, PL_MIN_CONST, PL_MAX_CONST, loc, MOVE_NORMAL, player);
 			if(trace_fraction == 1.0 && !trace_startsolid)
 			{
-				traceline(closest_target.origin, loc, MOVE_NOMONSTERS, closest_target); // double check to make sure we're not spawning outside the world
+				traceline(closest_target.origin, loc, MOVE_NOMONSTERS, closest_target); // double check to make sure we're not spawning outside the NULL
 				if(trace_fraction == 1.0)
 				{
 					setorigin(player, loc);
@@ -841,7 +841,7 @@ MUTATOR_HOOKFUNCTION(cq, SV_ParseClientCommand)
 
 				entity closest_target = cq_Nearest_ControlPoint_2D(player, pos, autocvar_g_conquest_click_radius);
 
-				if ( closest_target == world )
+				if ( closest_target == NULL )
 				{
 					sprint(player, "\nNo control point found\n");
 					return true;

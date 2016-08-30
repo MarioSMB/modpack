@@ -73,7 +73,7 @@ void M_Afrit_Attack_Fireball_Explode(entity this, entity directhitentity)
 			Fire_AddDamage(it, this, 5 * MONSTER_SKILLMOD(this), (autocvar_g_monster_afrit_attack_fireball_damagetime), this.projectiledeathtype);
 		});
 
-		remove(this);
+		delete(this);
 	}
 }
 
@@ -144,7 +144,7 @@ spawnfunc(monster_afrit) { Monster_Spawn(this, MON_AFRIT.monsterid); }
 				if(time >= actor.afrit_targetcheck_delay)
 				{
 					actor.target_range = actor.afrit_targetrange_backup;
-					if(Monster_FindTarget(actor) != world)
+					if(Monster_FindTarget(actor) != NULL)
 					{
 						setanim(actor, actor.anim_draw, false, true, true);
 						actor.anim_finished = actor.animstate_endtime;

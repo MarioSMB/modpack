@@ -134,7 +134,7 @@ void dotc_sprite(entity this, entity simg, vector ofs, float max_hp, float hp, v
 	else
 	{
 		//this.team
-		entity wp = WaypointSprite_Spawn(simg, 0, 700, this, ofs, world, 0, this, waypointsprite_attached, false, RADARICON_OBJECTIVE);
+		entity wp = WaypointSprite_Spawn(simg, 0, 700, this, ofs, NULL, 0, this, waypointsprite_attached, false, RADARICON_OBJECTIVE);
 		wp.colormod = clr;
 	}
     
@@ -198,14 +198,14 @@ bool dotc_CheckWinner()
 	int winner_team = dotc_GetWinnerTeam();
 	if(winner_team > 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
 		TeamScore_AddToTeam(winner_team, ST_DOTC_DESTROYED, +1);
 	}
 	else if(winner_team == -1)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_TIED);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
 	}
 
 	round_handler_Init(5, autocvar_g_dotc_warmup, 0);
@@ -215,10 +215,10 @@ bool dotc_CheckWinner()
 		nades_Clear(it);
 	});
 
-	for(entity tmp_entity = world; (tmp_entity = find(tmp_entity, classname, "dotc_drone")); )
+	for(entity tmp_entity = NULL; (tmp_entity = find(tmp_entity, classname, "dotc_drone")); )
 	{
 		if(tmp_entity.event_damage)
-			tmp_entity.event_damage(tmp_entity, world, world, tmp_entity.health + tmp_entity.max_health + 100, DEATH_KILL.m_id, '0 0 0', '0 0 0');
+			tmp_entity.event_damage(tmp_entity, NULL, NULL, tmp_entity.health + tmp_entity.max_health + 100, DEATH_KILL.m_id, '0 0 0', '0 0 0');
 	}
 
 	return 1;
@@ -386,7 +386,7 @@ void dotc_DelayedInit(entity this)
 
 void dotc_Initialize()
 {
-	InitializeEntity(world, dotc_DelayedInit, INITPRIO_GAMETYPE);
+	InitializeEntity(NULL, dotc_DelayedInit, INITPRIO_GAMETYPE);
 }
 
 #endif

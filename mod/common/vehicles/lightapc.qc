@@ -364,7 +364,7 @@ void lightapc_damage_hitboxbk(entity this, entity inflictor, entity attacker, fl
 		//ShieldStuff
 		if((this.owner.vehicle_flags & VHF_HASSHIELD) && (this.owner.vehicle_shield > 0))
 		{
-			if (wasfreed(this.owner.vehicle_shieldent) || this.owner.vehicle_shieldent == world)
+			if (wasfreed(this.owner.vehicle_shieldent) || this.owner.vehicle_shieldent == NULL)
 			{
 				this.owner.vehicle_shieldent = spawn();
 				this.owner.vehicle_shieldent.effects = EF_LOWPRECISION;
@@ -1070,7 +1070,7 @@ void lightapc_blowup(entity this, entity toucher)
 					autocvar_g_vehicle_lightapc_blowup_forceintensity,
 					DEATH_VH_WAKI_DEATH.m_id, NULL);
 
-	remove(this);
+	delete(this);
 }
 
 void lightapc_blowup_think(entity this)
@@ -1127,8 +1127,8 @@ void lightapc_touch(entity this, entity toucher)
 
 spawnfunc(vehicle_lightapc)
 {
-	if(!autocvar_g_vehicle_lightapc) { remove(this); return; }
-	if(!vehicle_initialize(this, VEH_LIGHTAPC, false)) { remove(this); return; }
+	if(!autocvar_g_vehicle_lightapc) { delete(this); return; }
+	if(!vehicle_initialize(this, VEH_LIGHTAPC, false)) { delete(this); return; }
 }
 
 #endif // SVQC

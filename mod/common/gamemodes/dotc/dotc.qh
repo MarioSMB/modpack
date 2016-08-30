@@ -106,7 +106,7 @@ void remove_ent(entity this)
 {
 	if(this.entremove)
 		this.entremove(this);
-	remove(this);
+	delete(this);
 }
 
 

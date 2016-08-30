@@ -87,7 +87,7 @@ void conquest_controlpoint_predraw(entity this)
 void conquest_controlpoint_remove(entity this)
 {
 	if(this.enemy)
-		remove(this.enemy);
+		delete(this.enemy);
 
 	if(this.netname)
 		strunzone(this.netname);

@@ -27,13 +27,13 @@ entity lex_lookahead;
 entity lex_move_lookahead()
 {
 	entity tmp = lex_lookahead;
-	lex_lookahead = world;
+	lex_lookahead = NULL;
 	return tmp;
 }
 void lex_token(float type, string lexeme)
 {
 	if ( lex_lookahead )
-		remove(lex_lookahead);
+		delete(lex_lookahead);
 	lex_lookahead = new_pure("lex_token");
 	lex_lookahead.script_value = lexeme;
 	lex_lookahead.script_type = type;

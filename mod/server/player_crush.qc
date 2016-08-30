@@ -9,7 +9,7 @@ AUTOCVAR(g_player_crush_bounce_jump, float, 600, _("Bounce height while holding 
 
 void pc_PlayerTouch(entity this, entity toucher)
 {
-	if(toucher == world)
+	if(toucher == NULL)
 		return;
 
 	bool and_monster = IS_MONSTER(toucher);

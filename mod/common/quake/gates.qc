@@ -6,7 +6,7 @@ void qgate_use(entity this, entity actor, entity trigger)
 
 spawnfunc(func_episodegate)
 {
-	if(!(serverflags & this.spawnflags)) { remove(this); return; }
+	if(!(serverflags & this.spawnflags)) { delete(this); return; }
 
 	spawnfunc_func_wall(this);
 
@@ -15,7 +15,7 @@ spawnfunc(func_episodegate)
 
 spawnfunc(func_bossgate)
 {
-	if((serverflags & 15) == 15) { remove(this); return; }
+	if((serverflags & 15) == 15) { delete(this); return; }
 
 	spawnfunc_func_wall(this);
 

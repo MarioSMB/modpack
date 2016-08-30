@@ -49,7 +49,7 @@ vector dotc_guardian_stepto(entity this, vector v_target)
 	v_step = this.origin + v_dir * 160;
 
 	tracebox(this.origin, this.mins, this.maxs, v_step, MOVE_NORMAL, this);
-	//te_lightning1(world, this.origin, v_step);
+	//te_lightning1(NULL, this.origin, v_step);
 
 	//We can fir the whole bbox at least  160 units ahead, no need to do anything fancy.
 	if(trace_fraction == 1.0)
@@ -64,13 +64,13 @@ vector dotc_guardian_stepto(entity this, vector v_target)
 		v_step_r = (v_forward * 160) + (v_right * 80) + this.origin;
 		tracebox(this.origin, this.mins, this.maxs, v_step_r, MOVE_NORMAL, this);
 		f_step_r = trace_fraction;
-		te_lightning1(world, this.origin, v_step_r);
+		te_lightning1(NULL, this.origin, v_step_r);
 		//GUARDIAN_CRUSHIT // If a enemy player is blocking us, chaneg behaviour and step on the basterd :P
 		
 		v_step_l = (v_forward * 160) - (v_right * 80) + this.origin;
 		tracebox(this.origin, this.mins, this.maxs, v_step_l, MOVE_NORMAL, this);
 		f_step_l = trace_fraction;
-		te_lightning1(world, this.origin, v_step_l);		
+		te_lightning1(NULL, this.origin, v_step_l);		
 
 		// Both angled steps free, select the one closer to goal (this.moveto)
 		if(f_step_l + f_step_r == 2.0)
@@ -96,12 +96,12 @@ vector dotc_guardian_stepto(entity this, vector v_target)
 			v_step_r = (v_right * 160) + this.origin;
 			tracebox(this.origin, this.mins, this.maxs, v_step_r, MOVE_NORMAL, this);
 			f_step_r = trace_fraction;
-			te_lightning1(world, this.origin, v_step_r);
+			te_lightning1(NULL, this.origin, v_step_r);
 
 			v_step_l = (v_right * -160) + this.origin;
 			tracebox(this.origin, this.mins, this.maxs, v_step_l, MOVE_NORMAL, this);
 			f_step_l = trace_fraction;
-			te_lightning1(world, this.origin, v_step_l);
+			te_lightning1(NULL, this.origin, v_step_l);
 
 			// no free step ar all
 			if(f_step_l != 1.0 && f_step_r != 1.0)
@@ -152,13 +152,13 @@ void dotc_guardian_think_idle(entity this)
 		m_angle = dotc_ai_moveangle(this, '0 0 0', vectoangles(normalize(this.squad.enemy.origin - this.origin)) , '360 360 360');		
 		this.avelocity_y = bound(this.dotc_turnspeed * -1, m_angle_y, this.dotc_turnspeed);
 
-		//te_lightning1(world, this.origin + '0 0 90', this.moveto + '0 0 90');		
-		//te_lightning1(world, this.origin + '0 0 90', this.origin + this.steerto * 512 + '0 0 190');
+		//te_lightning1(NULL, this.origin + '0 0 90', this.moveto + '0 0 90');		
+		//te_lightning1(NULL, this.origin + '0 0 90', this.origin + this.steerto * 512 + '0 0 190');
 	}
 		
 
 	this.tur_shotorg = gettaginfo(this.grd_railgun, gettagindex(this.grd_railgun, "firerail01"));
-	//te_lightning1(world,this.tur_shotorg, this.tur_shotorg + v_forward * 256);
+	//te_lightning1(NULL,this.tur_shotorg, this.tur_shotorg + v_forward * 256);
 	// dprint("moonbase say:", ftos(autocvar_dotc_guardian_test), "\n");
 
 	CSQCMODEL_AUTOUPDATE(this);
@@ -167,7 +167,7 @@ void dotc_guardian_think_idle(entity this)
 
 spawnfunc(dotc_guardian)
 {
-	if(!g_dotc) { remove(this); return; }
+	if(!g_dotc) { delete(this); return; }
 
 	this.solid 			= SOLID_SLIDEBOX;
 	set_movetype(this, MOVETYPE_WALK);

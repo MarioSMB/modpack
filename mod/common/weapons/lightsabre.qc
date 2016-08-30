@@ -112,9 +112,9 @@ bool W_Lightsabre_Melee_Block(entity this, entity player)
 	entity myowner = this.realowner;
 	if(IS_PLAYER(player))
 	{
-		entity player_melee = world, e;
+		entity player_melee = NULL, e;
 
-		for(e = world; (e = find(e, classname, "melee_temp")); )
+		for(e = NULL; (e = find(e, classname, "melee_temp")); )
 		if(e.realowner == player)
 		{
 			player_melee = e;
@@ -190,7 +190,7 @@ void W_Lightsabre_Melee_Think(entity this)
 	// check to see if we can still continue, otherwise give up now
 	if(IS_DEAD(this.realowner) && WEP_CVAR_BOTH(lightsabre, isprimary, melee_no_doubleslap))
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -209,7 +209,7 @@ void W_Lightsabre_Melee_Think(entity this)
 		W_Lightsabre_Melee_Block(this, NULL);
 
 		// draw lightning beams for debugging
-		//te_lightning2(world, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
+		//te_lightning2(NULL, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
 		//te_customflash(targpos, 40,  2, '1 1 1');
 
 		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body" || (trace_ent.flags & FL_MONSTER));
@@ -250,7 +250,7 @@ void W_Lightsabre_Melee_Think(entity this)
 			}
 			else
 			{
-				remove(this);
+				delete(this);
 				return;
 			}
 		}
@@ -259,7 +259,7 @@ void W_Lightsabre_Melee_Think(entity this)
 	if(time >= this.cnt + meleetime)
 	{
 		// melee is finished
-		remove(this);
+		delete(this);
 		return;
 	}
 	else

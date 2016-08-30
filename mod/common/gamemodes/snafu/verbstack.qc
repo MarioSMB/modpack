@@ -52,10 +52,10 @@ entity verbstack_push(entity stack, float(entity, entity, int) vrb_call, float v
     entity vrb;
 
     if(!stack)
-        return world;
+        return NULL;
 
     if(!vrb_call)
-        return world;
+        return NULL;
 
     vrb                   = spawn();
     vrb.owner             = verb_owner;
@@ -83,7 +83,7 @@ entity verbstack_push(entity stack, float(entity, entity, int) vrb_call, float v
 **/
 int verbstack_pop(entity stack)
 {
-    entity bestverb = world;
+    entity bestverb = NULL;
     int value = 0, bestvalue = 0;
 
     entity vrb = findchainentity(verbstack,stack);
@@ -99,7 +99,7 @@ int verbstack_pop(entity stack)
         if(value < 0)
         {
             if(value == VS_CALL_REMOVE)
-                remove(verb);
+                delete(verb);
         }
         else
         {
@@ -117,7 +117,7 @@ int verbstack_pop(entity stack)
         value = theverb.verb_call(theverb, theverb.owner, VCM_DO);
 
         if(value == VS_CALL_REMOVE)
-            remove(bestverb);
+            delete(bestverb);
     }
 
     return value;
@@ -129,7 +129,7 @@ int verbstack_pop(entity stack)
 **/
 entity verbstack_pull(entity stack)
 {
-    entity bestverb = world;
+    entity bestverb = NULL;
     int value = 0, bestvalue = 0;
 
     entity vrb = findchainentity(verbstack,stack);
@@ -142,7 +142,7 @@ entity verbstack_pull(entity stack)
         if(value < 0)
         {
             if(value == VS_CALL_REMOVE)
-                remove(verb);
+                delete(verb);
         }
         else
         {
@@ -168,10 +168,10 @@ void verbstack_flush(entity stack)
         entity verb = vrb;
         vrb  = vrb.chain;
         verb.verb_call(verb, verb.owner, VCM_REMOVE);
-        remove(verb);
+        delete(verb);
     }
 
-    //stack.vchain = world;
+    //stack.vchain = NULL;
 }
 
 void verbstack_doverb(entity vrb)
@@ -179,7 +179,7 @@ void verbstack_doverb(entity vrb)
     int value = vrb.verb_call(vrb, vrb.owner, VCM_DO);
 
     if(value == VS_CALL_REMOVE)
-        remove(vrb);
+        delete(vrb);
 }
 
 #endif

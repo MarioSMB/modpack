@@ -86,10 +86,10 @@ void M_Vore_Attack_Spike_Explode(entity this, entity directhitentity)
 
 	sound(this, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
 
-	this.realowner.vore_spike = world;
+	this.realowner.vore_spike = NULL;
 
 	Send_Effect(EFFECT_EXPLOSION_SMALL, this.origin, '0 0 0', 1);
-	RadiusDamage (this, this.realowner, (autocvar_g_monster_vore_attack_spike_damage), (autocvar_g_monster_vore_attack_spike_damage) * 0.5, (autocvar_g_monster_vore_attack_spike_radius), world, world, 0, DEATH_MONSTER_MAGE.m_id, directhitentity);
+	RadiusDamage (this, this.realowner, (autocvar_g_monster_vore_attack_spike_damage), (autocvar_g_monster_vore_attack_spike_damage) * 0.5, (autocvar_g_monster_vore_attack_spike_radius), NULL, NULL, 0, DEATH_MONSTER_MAGE.m_id, directhitentity);
 
 	remove (this);
 }
@@ -118,11 +118,11 @@ void M_Vore_Attack_Spike_Think(entity this)
 		spd + (autocvar_g_monster_vore_attack_spike_accel) * frametime
 	);
 
-	if (this.enemy != world)
+	if (this.enemy != NULL)
 		if (this.enemy.takedamage != DAMAGE_AIM || IS_DEAD(this.enemy))
-			this.enemy = world;
+			this.enemy = NULL;
 
-	if (this.enemy != world)
+	if (this.enemy != NULL)
 	{
 		entity e = this.enemy;
 		vector eorg = 0.5 * (e.absmin + e.absmax);
@@ -131,7 +131,7 @@ void M_Vore_Attack_Spike_Think(entity this)
 		vector olddir = normalize(this.velocity); // get my current direction
 		float dist = vlen(eorg - this.origin);
 
-		// Do evasive maneuvers for world objects? ( this should be a cpu hog. :P )
+		// Do evasive maneuvers for NULL objects? ( this should be a cpu hog. :P )
 		if ((autocvar_g_monster_vore_attack_spike_smart) && (dist > (autocvar_g_monster_vore_attack_spike_smart_mindist)))
 		{
 			// Is it a better idea (shorter distance) to trace to the target itthis?

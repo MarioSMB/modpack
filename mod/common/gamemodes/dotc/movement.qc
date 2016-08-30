@@ -24,7 +24,7 @@ vector dotc_movestep(entity this, vector v_target)
 		// Forward-right
 		v_test = this.origin + v_forward * dotc_movestep_size + v_right * dotc_movestep_size;		
 		tracebox(this.origin, this.mins, this.maxs, v_test, MOVE_NORMAL, this);
-		//te_lightning1(world, this.origin, v_test);
+		//te_lightning1(NULL, this.origin, v_test);
 		if(trace_fraction == 1.0)
 		{
 			d_test = vlen(v_test - v_target);
@@ -38,7 +38,7 @@ vector dotc_movestep(entity this, vector v_target)
 		//Forward-left
 		v_test = this.origin + v_forward * dotc_movestep_size - v_right * dotc_movestep_size;
 		tracebox(this.origin, this.mins, this.maxs, v_test, MOVE_NORMAL, this);
-		//te_lightning1(world, this.origin, v_test);
+		//te_lightning1(NULL, this.origin, v_test);
 		if(trace_fraction == 1.0)
 		{
 			d_test = vlen(v_test - v_target);
@@ -52,7 +52,7 @@ vector dotc_movestep(entity this, vector v_target)
 		//Right
 		v_test = this.origin + v_right * dotc_movestep_size;
 		tracebox(this.origin, this.mins, this.maxs, v_test, MOVE_NORMAL, this);
-		//te_lightning1(world, this.origin, v_test);
+		//te_lightning1(NULL, this.origin, v_test);
 		if(trace_fraction == 1.0)
 		{
 			d_test = vlen(v_test - v_target);
@@ -66,7 +66,7 @@ vector dotc_movestep(entity this, vector v_target)
 		//Left
 		v_test = this.origin - v_right * dotc_movestep_size;
 		tracebox(this.origin, this.mins, this.maxs, v_test, MOVE_NORMAL, this);
-		//te_lightning1(world, this.origin, v_test);
+		//te_lightning1(NULL, this.origin, v_test);
 		if(trace_fraction == 1.0)
 		{
 			d_test = vlen(v_test - v_target);
@@ -79,8 +79,8 @@ vector dotc_movestep(entity this, vector v_target)
 		
 		if(d_test != MAX_SHOT_DISTANCE)
 		{
-			te_lightning1(world, this.origin, v_best);	
-			te_lightning1(world, this.origin, v_target);	
+			te_lightning1(NULL, this.origin, v_best);	
+			te_lightning1(NULL, this.origin, v_target);	
 			return v_best;
 		}
 		

@@ -73,6 +73,13 @@ MUTATOR_HOOKFUNCTION(snafu, GetTeamCount, CBC_ORDER_EXCLUSIVE)
 	M_ARGV(0, float) = snafu_teams;
 }
 
+MUTATOR_HOOKFUNCTION(snafu, PlayHitsound)
+{
+	entity frag_victim = M_ARGV(0, entity);
+
+	return (frag_victim.snafu_ai_flags & SAF_ZOMBIE);
+}
+
 // round handling
 float snafu_spawn_delay;
 #define ST_SNAFU_ROUNDS 1
@@ -116,8 +123,8 @@ bool SNAFU_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_OVER);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
 		round_handler_Init(autocvar_g_snafu_wave_pause, autocvar_g_snafu_warmup, autocvar_g_snafu_round_timelimit);
 		FOREACH_CLIENT(IS_PLAYER(it),
 		{
@@ -140,7 +147,7 @@ bool SNAFU_CheckWinner()
 		if(snafu_spawn_delay >= time)
 			return false;
 		snafu_spawn_delay = time + autocvar_g_snafu_wave_first_rate;
-		if(snafu_zombie_alive < snafu_zombie_wavemax)
+		if(snafu_zombie_alive < (snafu_zombie_wavemax - snafu_zombie_killed))
 		{
 			entity e = findchain(classname, "snafu_zombies");
 			float _idx = 1 + rint(random() * (snafu_spawnareas -1));
@@ -162,18 +169,18 @@ bool SNAFU_CheckWinner()
 	int winner_team = SNAFU_GetWinnerTeam();
 	if(winner_team > 0)
 	{
-		//Send_Notification(NOTIF_ALL, world, MSG_CENTER, APP_TEAM_NUM_4(winner_team, CENTER_ROUND_TEAM_WIN_));
-		//Send_Notification(NOTIF_ALL, world, MSG_INFO, APP_TEAM_NUM_4(winner_team, INFO_ROUND_TEAM_WIN_));
+		//Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM_4(winner_team, CENTER_ROUND_TEAM_WIN_));
+		//Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM_4(winner_team, INFO_ROUND_TEAM_WIN_));
 		int prevmax = snafu_zombie_wavemax;
 		snafu_zombie_wavemax  = floor(autocvar_g_snafu_wave_count_multi * snafu_zombie_wavemax);
 		snafu_zombie_waverate = floor(autocvar_g_snafu_wave_rate_multi * snafu_zombie_waverate);
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_SNAFU_ROUND_WON, snafu_wavenum, prevmax, snafu_wavenum + 1, snafu_zombie_wavemax);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_SNAFU_ROUND_WON, snafu_wavenum, prevmax, snafu_wavenum + 1, snafu_zombie_wavemax);
 		TeamScore_AddToTeam(winner_team, ST_SNAFU_ROUNDS, +1);
 	}
 	else if(winner_team == -1)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_CENTER, CENTER_ROUND_TIED);
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_TIED);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
 	}
 
 	round_handler_Init(autocvar_g_snafu_wave_pause, autocvar_g_snafu_warmup, autocvar_g_snafu_round_timelimit);
@@ -267,7 +274,7 @@ bool snafu_zombie_domelee(entity this, float _up, float _range, float _dmg, floa
 
 void snafu_zombie_localtarget(entity this, float _range)
 {
-	entity best_targ = world;
+	entity best_targ = NULL;
 	float targ_score, targ_score_best = MAX_SHOT_DISTANCE;
 
 	if(this.enemy)
@@ -281,7 +288,7 @@ void snafu_zombie_localtarget(entity this, float _range)
 	FOREACH_ENTITY_RADIUS(this.origin, _range, true,
 	{
 		if(IS_PLAYER(it) || it.classname == "snafu_tadpole")
-		if(it.deadflag == DEAD_NO)
+		if(!IS_DEAD(it))
 		{
 			targ_score = vlen(it.origin - this.origin);
 
@@ -300,7 +307,7 @@ void snafu_zombie_localtarget(entity this, float _range)
 	{
 		FOREACH_ENTITY_RADIUS(this.origin, 1500, it.snafu_ai_flags & SAF_ZOMBIE,
 		{
-			if(it.deadflag == DEAD_NO && it.enemy.classname == "snafu_tadpole")
+			if(!IS_DEAD(it) && it.enemy.classname == "snafu_tadpole")
 			{
 				it.enemy = best_targ;
 				it.snafu_ai_enemy_select_timer = time + 1;
@@ -312,7 +319,7 @@ void snafu_zombie_localtarget(entity this, float _range)
 	else
 	{
 		RandomSelection_Init();
-		FOREACH_ENTITY_CLASS("snafu_tadpole", it.deadflag == DEAD_NO,
+		FOREACH_ENTITY_CLASS("snafu_tadpole", !IS_DEAD(it),
 		{
 			RandomSelection_Add(it, 0, string_null, 1, 1);
 		});
@@ -325,7 +332,7 @@ void snafu_zombie_localtarget(entity this, float _range)
 
 spawnfunc(snafu_zombies)
 {
-	if(!g_snafu) { remove(this); return; }
+	if(!g_snafu) { delete(this); return; }
 
 	++snafu_spawnareas;
 
@@ -338,14 +345,14 @@ spawnfunc(snafu_zombies)
 void snafu_gameover()
 {
 	RandomSelection_Init();
-	FOREACH_ENTITY_CLASS("snafu_tadpole", it.deadflag != DEAD_NO,
+	FOREACH_ENTITY_CLASS("snafu_tadpole", IS_DEAD(it),
 	{
 		RandomSelection_Add(it, 0, string_null, 1, 1);
 	});
 
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
-		centerprint(it, "The tadpole is ^1DEAD^7 you ^1LOOSERS!");
+		centerprint(it, "The tadpole is ^1DEAD^7 you ^1LOSERS!");
 		set_movetype(it, MOVETYPE_NONE);
 		it.origin = RandomSelection_chosen_ent.origin + '0 0 200';
 
@@ -359,6 +366,8 @@ void snafu_gameover()
 		it.angles = vectoangles(normalize(RandomSelection_chosen_ent.origin - it.origin));
 		it.angles_x *= -1;
 	});
+
+	NextLevel();
 }
 
 const int TADPOLE_FRAME_IDLE = 0;
@@ -368,7 +377,8 @@ const int TADPOLE_FRAME_DIE = 6;
 
 void snafu_tadpole_damage(entity this, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
-	this.health -= damage;
+	if(!IS_PLAYER(attacker))
+		this.health -= damage;
 
 	if(this.health <= 0)
 	{
@@ -412,7 +422,7 @@ void snafu_tadpole_think(entity this)
 
 spawnfunc(snafu_tadpole)
 {
-	if(!g_snafu) { remove(this); return; }
+	if(!g_snafu) { delete(this); return; }
 
 	setmodel(this, MDL_SNAFU_TADPOLE);
 	setsize(this, TADPOLE_MIN, TADPOLE_MAX);

@@ -21,12 +21,12 @@ void dotc_ItemSpawn_Give(entity player)
 
 	core = dotc_GetCore(player.team);
 
-	for(spawner = world; (spawner = find(spawner, classname, "dotc_itemspawn")); )
+	for(spawner = NULL; (spawner = find(spawner, classname, "dotc_itemspawn")); )
 	{
 		if(spawner.cnt <= core.dotc_corelevel)
 		if(spawner.count >= core.dotc_corelevel)
 		{
-			for(item = world; (item = find(item, targetname, spawner.target)); )
+			for(item = NULL; (item = find(item, targetname, spawner.target)); )
 			{
 				dotc_Item_Give(item, player);
 			}
@@ -46,7 +46,7 @@ count: 	What core level to stop giving targeted items
 */
 spawnfunc(dotc_spawnitems)
 {
-	if(!g_dotc) { remove(this); return; }
+	if(!g_dotc) { delete(this); return; }
 
 	this.classname = "dotc_itemspawn";
 
@@ -65,11 +65,11 @@ spawnfunc(dotc_spawnitems)
 void dotc_ItemCheck(entity this)
 {
 	// check to make sure this item is valid
-	entity item_owner = find(world, target, this.targetname);
+	entity item_owner = find(NULL, target, this.targetname);
 
 	if(item_owner.classname != "dotc_itemspawn")
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 }

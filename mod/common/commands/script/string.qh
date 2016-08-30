@@ -59,7 +59,7 @@ string script_ftos(float f)
 
 void script_remove(entity e)
 {
-	remove(e);
+	delete(e);
 }
 
 float is_numeric(string s)
@@ -98,7 +98,7 @@ entity float_to_entity(float n)
 #elif defined(MENUQC)
 	if ( n ) return ftoe(n);
 #endif
-	return world;
+	return NULL;
 }
 entity string_to_entity(string s)
 {

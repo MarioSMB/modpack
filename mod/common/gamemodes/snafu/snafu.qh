@@ -3,7 +3,7 @@
 CLASS(Snafu, Gametype)
     INIT(Snafu)
     {
-        this.gametype_init(this, _("SNAFU"),"snafu","g_snafu",true,"","timelimit=30 pointlimit=30",_("Situation normal..."));
+        this.gametype_init(this, _("SNAFU"),"snafu","g_snafu",true,"","timelimit=30 pointlimit=5",_("Situation normal..."));
     }
     METHOD(Snafu, m_generate_mapinfo, void(Gametype this, string v))
     {
@@ -68,26 +68,6 @@ AUTOCVAR(g_snafu_fatty_health, float, 220, "");
 void snafu_damageswitch(entity this, entity attacker);
 void snafu_deathalert(entity this, entity attacker);
 bool snafu_zombie_domelee(entity this, float _up, float _range, float _dmg, float _force);
-
-const vector FATONE_MIN = '-30 -30 0';
-const vector FATONE_MAX = '30 30 90';
-const vector FATONE_DEAD_MIN = '-60 -60 0';
-const vector FATONE_DEAD_MAX = '60 60 60';
-
-const int fatone_idle = 0;
-const int fatone_run = 1;
-const int fatone_walkheadless = 2;
-const int fatone_fallonass = 3;
-const int fatone_throw = 4;
-const int fatone_stab1 = 5;
-const int fatone_stab2 = 6;
-const int fatone_pain1 = 7;
-const int fatone_pain2 = 8;
-const int fatone_pain3 = 9;
-const int fatone_die1 = 10;
-const int fatone_dead1 = 11;
-const int fatone_die2 = 12;
-const int fatone_dead2 = 13;
 //.frame
 
 .entity zombie_head; // = tur_head;

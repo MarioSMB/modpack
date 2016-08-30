@@ -7,7 +7,7 @@ REGISTER_MUTATOR(skycycle, cvar("g_skycycle") || (cvar("g_skycycle_suggested") &
 	{
 	 	skycycle_enabled = true;
 		serverflags |= SERVERFLAG_ALLOW_FULLBRIGHT;
-		InitializeEntity(world, skycycle_Init, INITPRIO_GAMETYPE);
+		InitializeEntity(NULL, skycycle_Init, INITPRIO_GAMETYPE);
 	}
 }
 

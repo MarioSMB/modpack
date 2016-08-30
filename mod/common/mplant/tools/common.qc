@@ -61,10 +61,10 @@ void mplant_selecttool(entity this, float _toolidx)
 entity mplant_gettool(entity this, float _toolidx)
 {
     if (_toolidx > MPT_LAST)
-        return world;
+        return NULL;
 
     if (_toolidx < MPT_FIRST)
-        return world;
+        return NULL;
 
     this.mplant_player_info.SendFlags |= MPPI_TOOL;
 
@@ -73,7 +73,7 @@ entity mplant_gettool(entity this, float _toolidx)
             return t;
     }
 
-    return world;
+    return NULL;
 }
 
 #define _mp_select(pl,_e) \
@@ -91,7 +91,7 @@ entity mplant_gettool(entity this, float _toolidx)
     _e.SendFlags |= MPSF_FLAGS
 
 /**
-    Returns the mplant object pointed at, or world if none / to far away (mplant_cursor_select_maxdistance)
+    Returns the mplant object pointed at, or NULL if none / to far away (mplant_cursor_select_maxdistance)
 **/
 entity mplant_cursor_select(entity this)
 {
@@ -113,7 +113,7 @@ entity mplant_cursor_select(entity this)
     if (this.mplant_cursorobject.enemy)
         if (this.mplant_cursorobject.wait < time) {
             _mp_deselect(this.mplant_cursorobject.enemy);
-            this.mplant_cursorobject.enemy = world;
+            this.mplant_cursorobject.enemy = NULL;
         }
 
     return this.mplant_cursorobject.enemy;

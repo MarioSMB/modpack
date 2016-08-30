@@ -227,7 +227,7 @@ void M_Ogre_Attack_Chainsaw(entity this)
 	// check to see if we can still continue, otherwise give up now
 	if(IS_DEAD(this.realowner))
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -244,7 +244,7 @@ void M_Ogre_Attack_Chainsaw(entity this)
 		WarpZone_traceline_antilag(this, this.realowner.origin + this.realowner.view_ofs, targpos, false, this, 0);
 
 		// draw lightning beams for debugging
-		//te_lightning2(world, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
+		//te_lightning2(NULL, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
 		//te_customflash(targpos, 40,  2, '1 1 1');
 
 		is_player = (IS_PLAYER(trace_ent) || trace_ent.classname == "body");
@@ -281,7 +281,7 @@ void M_Ogre_Attack_Chainsaw(entity this)
 	{
 		// melee is finished
 		setanim(this.realowner, this.realowner.anim_idle, true, false, false);
-		remove(this);
+		delete(this);
 		return;
 	}
 	else

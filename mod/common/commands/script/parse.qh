@@ -16,7 +16,7 @@ entity parse_identifier(string id)
 			lex_get_token(); 
 		else
 		{
-			entity param = world;
+			entity param = NULL;
 			entity nextparam;
 			while ( lex_lookahead.script_type != LEX_EOF )
 			{
@@ -48,7 +48,7 @@ entity parse_primary()
 {
 	entity lex_prev = lex_move_lookahead();
 	lex_get_token();
-	entity result = world;
+	entity result = NULL;
 	switch(lex_prev.script_type)
 	{
 		case LEX_IDENTIFIER:
@@ -114,7 +114,7 @@ entity parse_primary()
 			}
 			break;
 	}
-	remove(lex_prev);
+	delete(lex_prev);
 	return result;
 }
 
@@ -145,7 +145,7 @@ entity parse_multiplication()
 			val = ast_mod(val,parse_field());
 		else
 			val = ast_mul(val,parse_field());
-		remove(lex_prev);
+		delete(lex_prev);
 	}
 	return val;
 }
@@ -162,7 +162,7 @@ entity parse_arithmetic()
 			val = ast_sub(val,parse_multiplication());
 		else
 			val = ast_sum(val,parse_multiplication());
-		remove(lex_prev);
+		delete(lex_prev);
 	}
 	return val;
 }
@@ -185,7 +185,7 @@ entity parse_bitwise()
 			val = ast_bitxor(val,parse_arithmetic());
 		else
 			val = ast_bitor(val,parse_arithmetic());
-		remove(lex_prev);
+		delete(lex_prev);
 	}
 	return val;
 }
@@ -210,7 +210,7 @@ entity parse_comparison()
 			val = ast_gt(val,parse_bitwise());
 		else
 			val = ast_eq(val,parse_bitwise());
-		remove(lex_prev);
+		delete(lex_prev);
 	}
 	return val;
 }
@@ -227,7 +227,7 @@ entity parse_boolean()
 			val = ast_or(val,parse_comparison());
 		else
 			val = ast_and(val,parse_comparison());
-		remove(lex_prev);
+		delete(lex_prev);
 	}
 	return val;
 }
@@ -367,7 +367,7 @@ entity parse_statement()
 				lex_get_token(); 
 			else
 			{
-				entity param = world;
+				entity param = NULL;
 				entity nextparam;
 				while ( lex_lookahead.script_type != LEX_EOF )
 				{
@@ -413,7 +413,7 @@ entity parse_statement()
 entity parse_block()
 {
 	entity val = ast_block();
-	entity prev = world;
+	entity prev = NULL;
 	entity next;
 	while ( lex_lookahead.script_type != LEX_EOF && 
 		!( lex_lookahead.script_type == LEX_OPERATOR_OTHER && lex_lookahead.script_value == ")" ) )
@@ -437,7 +437,7 @@ entity script_compile(string code_source)
 	lex_string = code_source;
 	lex_get_token();
 	entity ast = parse_block();
-	remove(lex_lookahead);
+	delete(lex_lookahead);
 	lex_lookahead = NULL;
 	//script_debug_ast(ast);
 	return ast;

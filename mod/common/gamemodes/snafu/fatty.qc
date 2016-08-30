@@ -1,5 +1,25 @@
 #ifdef SVQC
 
+const vector FATONE_MIN = '-30 -30 0';
+const vector FATONE_MAX = '30 30 90';
+const vector FATONE_DEAD_MIN = '-60 -60 0';
+const vector FATONE_DEAD_MAX = '60 60 60';
+
+const int fatone_idle = 0;
+const int fatone_run = 1;
+const int fatone_walkheadless = 2;
+const int fatone_fallonass = 3;
+const int fatone_throw = 4;
+const int fatone_stab1 = 5;
+const int fatone_stab2 = 6;
+const int fatone_pain1 = 7;
+const int fatone_pain2 = 8;
+const int fatone_pain3 = 9;
+const int fatone_die1 = 10;
+const int fatone_dead1 = 11;
+const int fatone_die2 = 12;
+const int fatone_dead2 = 13;
+
 void snafu_fatty_die(entity this)
 {
 	if(this.deadflag == DEAD_DYING)
@@ -67,7 +87,7 @@ void snafu_fatty_damage(entity this, entity inflictor, entity attacker, float da
 			//vector l = '0 0 0';
 			//l = gettaginfo(this, gettagindex(this, "Bip001 Head"));
 			this.frame = fatone_walkheadless;
-			setattachment(this.zombie_head, world, "");
+			setattachment(this.zombie_head, NULL, "");
 			setorigin(this.zombie_head, gettaginfo(this, gettagindex(this, "Bip001 Head")));
 			this.zombie_head.solid = SOLID_CORPSE;
 			this.zombie_head.movetype = MOVETYPE_BOUNCE;
@@ -76,7 +96,7 @@ void snafu_fatty_damage(entity this, entity inflictor, entity attacker, float da
 			this.zombie_head.angles = vectoangles(v_forward);
 			this.zombie_head.owner = this;
 			SUB_SetFade(this.zombie_head, time + 2.5, 1);
-			this.zombie_head = world;
+			this.zombie_head = NULL;
 		}
 	}*/
 	
@@ -85,19 +105,19 @@ void snafu_fatty_damage(entity this, entity inflictor, entity attacker, float da
 	
 	if(this.health <= 0)
 	{
-		if(this.deadflag == DEAD_NO)
+		if(!IS_DEAD(this))
 		{        
 			if(this.zombie_projectile)
 			{
 				vector l = gettaginfo(this, gettagindex(this, "Bip001 L Hand"));
-				setattachment(this.zombie_projectile, world, "");
+				setattachment(this.zombie_projectile, NULL, "");
 				setorigin(this.zombie_projectile, l);
 				this.zombie_projectile.solid = SOLID_CORPSE;
 				set_movetype(this.zombie_projectile, MOVETYPE_TOSS);
 				this.zombie_projectile.velocity = this.velocity + v_forward * (100 + random() * 300);
 				this.zombie_projectile.avelocity = randomvec() * 180;
 				this.zombie_projectile.owner = this;                
-				this.zombie_projectile = world;
+				this.zombie_projectile = NULL;
 			}
 
 			if(IS_PLAYER(attacker))
@@ -161,7 +181,7 @@ void snafu_fatty_projectile_touch(entity this, entity toucher)
 	
 	//void (vector org, vector velocity, float howmany) te_blood = #405;
 	//void (vector mincorner, vector maxcorner, float explosionspeed, float howmany) te_bloodshower = #406;
-	remove(this);
+	delete(this);
 
 }
 
@@ -190,9 +210,9 @@ void snafu_fatty_think(entity this)
 	fixedmakevectors(this.angles);
 	
 	if(this.enemy.deadflag != DEAD_NO)
-		this.enemy = world;
+		this.enemy = NULL;
 	
-	if(this.snafu_ai_enemy_select_timer < time || this.enemy == world)
+	if(this.snafu_ai_enemy_select_timer < time || this.enemy == NULL)
 		snafu_zombie_localtarget(this, autocvar_g_snafu_fatty_range_target);
 
 	// Modal states: pain, fly, attack
@@ -202,7 +222,7 @@ void snafu_fatty_think(entity this)
 		return;
 	
 	this.velocity -= (this.velocity * (autocvar_g_snafu_fatty_friction * _delta));
-	float _dist  = vlen(this.enemy.origin - this.origin);
+	float _dist  = vlen(NearestPointOnBox(this.enemy, this.origin) - this.origin);
 	
 	if(this.attack_finished_single[0] > time)
 	{

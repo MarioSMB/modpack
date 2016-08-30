@@ -1,6 +1,6 @@
 void mplant_block_explode(entity this)
 {
-    RadiusDamage(this, this, 100, 0, 300, this, world, 500, DEATH_GENERIC.m_id, world);
+    RadiusDamage(this, this, 100, 0, 300, this, NULL, 500, DEATH_GENERIC.m_id, NULL);
     sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_MIN);
     Send_Effect(EFFECT_EXPLOSION_SMALL, this.origin, '0 0 0', 1);
     mplant_block_delete(this);
@@ -39,7 +39,7 @@ void mplant_block_delete(entity _block)
 
     _block.mdl = "";
 
-    remove(_block);
+    delete(_block);
 }
 
 float mplant_block_setprop(entity _e, string _prop_name, string _prop_val)

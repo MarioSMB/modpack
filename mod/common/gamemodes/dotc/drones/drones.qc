@@ -31,8 +31,8 @@ AUTOCVAR(g_dotc_squads_teletime, float, 1, "");
 
 void dotc_drone_remove(entity this)
 {
-	if(this.drone_turret) { remove(this.drone_turret); this.drone_turret = world; }
-	if(this.drone_gun) { remove(this.drone_gun); this.drone_gun = world; }
+	if(this.drone_turret) { delete(this.drone_turret); this.drone_turret = NULL; }
+	if(this.drone_gun) { delete(this.drone_gun); this.drone_gun = NULL; }
 #ifdef SVQC
 	WaypointSprite_Kill(this.waypointsprite_attached);
 #endif
@@ -52,7 +52,7 @@ void gib_groundboom(entity this, entity toucher)
 	sound (this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTN_NORM);
 	Send_Effect(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
 
-	remove(this);
+	delete(this);
 }
 
 void dotc_sv_gibshower(entity this, vector where)
@@ -109,7 +109,7 @@ void ghost_groundboom(entity this)
 	}
 
 	dotc_sv_gibshower(this, this.origin);
-	remove(this);
+	delete(this);
 }
 
 void ghost_groundboom_touch(entity this, entity toucher)
@@ -196,7 +196,7 @@ void dotc_drone_die(entity this, bool silent)
 		this.squad.cnt -= 1;
 
 	// unlink!
-	this.squad = world;
+	this.squad = NULL;
 	this.dotc_targetflags	    = DOTC_TARGET_NOT;
 	this.target_validate_flags  = DOTC_TARGET_NOT;
 	this.dotc_unittype 		= DOTC_UF_NONE;
@@ -205,14 +205,14 @@ void dotc_drone_die(entity this, bool silent)
 	this.takedamage             = DAMAGE_NO;
 	this.deadflag 				= DEAD_DEAD;
 
-	setthink(this, SUB_Remove); // gun and turret already removed
+	setthink(this, SUB_Remove); // gun and turret already deleted
 	this.nextthink 	= time + 0.1;
 
 	if(this.drone_gun)
-		remove(this.drone_gun);
+		delete(this.drone_gun);
 
 	if(this.drone_turret)
-		remove(this.drone_turret);
+		delete(this.drone_turret);
 
 }
 
@@ -443,7 +443,7 @@ entity dotc_spawn_drone( entity sqd, entity own,
 
 	// Make it appear on the minimap
 	
-	entity wp = WaypointSprite_Spawn(WP_Null, 0, 1024, drone, '0 0 64', world, drone.team, drone, waypointsprite_attached, 2, RADARICON_Drone);
+	entity wp = WaypointSprite_Spawn(WP_Null, 0, 1024, drone, '0 0 64', NULL, drone.team, drone, waypointsprite_attached, 2, RADARICON_Drone);
 	wp.colormod = ((drone.team) ? Team_ColorRGB(drone.team) : '1 1 1');
 	WaypointSprite_UpdateTeamRadar(drone.waypointsprite_attached, RADARICON_Drone, ((drone.team) ? colormapPaletteColor(drone.team - 1, false) : '1 1 1'));
 

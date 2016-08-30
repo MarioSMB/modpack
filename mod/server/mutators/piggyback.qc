@@ -100,7 +100,7 @@ void pb_Detach(entity host)
 		tracebox(host.origin, slave.mins, slave.maxs, slave.origin, MOVE_NOMONSTERS, slave);
 		
 		if(trace_fraction < 1)
-			setorigin(slave, trace_endpos); // fix player glitching out of the world
+			setorigin(slave, trace_endpos); // fix player glitching out of the NULL
 		slave.oldorigin = slave.origin; // no fall damage!
 		
 		Kill_Notification(NOTIF_ONE, slave, MSG_CENTER, CPID_PIGGYBACK);
@@ -108,7 +108,7 @@ void pb_Detach(entity host)
 			Kill_Notification(NOTIF_ONE, host, MSG_CENTER, CPID_PIGGYBACK);
 	}
 	
-	host.piggybacker = world;
+	host.piggybacker = NULL;
 }
 
 void pb_PBEntThink(entity this)
@@ -304,7 +304,7 @@ void pb_RemovePlayer(entity this)
 
 	if(this.pbent)
 	{
-		remove(this.pbent);
+		delete(this.pbent);
 		this.pbent = NULL;
 	}
 }

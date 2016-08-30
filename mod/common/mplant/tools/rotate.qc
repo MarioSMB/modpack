@@ -83,7 +83,7 @@ float mplant_tool_rotate(entity this)
         {
             //this.mplant_cursorobject.pos2 = this.v_angle;
             if (this.mplant_cursorobject.enemy && this.mplant_cursorobject.wait < time)
-               this.mplant_cursorobject.enemy = world;
+               this.mplant_cursorobject.enemy = NULL;
         }
     */
     PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = false;

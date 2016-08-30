@@ -22,8 +22,8 @@ void dotc_DronePathThink(entity this)
 
 void dotc_DelayedDronePathSetup(entity this)
 {
-	entity next_node = world;
-	next_node = find(world, targetname, this.target);
+	entity next_node = NULL;
+	next_node = find(NULL, targetname, this.target);
 	if(next_node)
 	{
 		next_node.owner 	= this;
@@ -55,7 +55,7 @@ void dotc_DronePathSetup(entity this)
 
 spawnfunc(dotc_dronepath)
 {
-	if(!g_dotc) { remove(this); return; }
+	if(!g_dotc) { delete(this); return; }
 
 	dotc_DronePathSetup(this);
 }
@@ -200,7 +200,7 @@ void dotc_DelayedFactorySetup(entity this) // called after a factory is placed o
 	this.bot_basewaypoint = this.nearestwaypoint;
 
 	// node target
-	entity next_node = find(world, targetname, this.target);
+	entity next_node = find(NULL, targetname, this.target);
 	if(!next_node)
 		LOG_DEBUG("Warning: factory is missing a target, fix your map!\n");
 
@@ -220,7 +220,7 @@ void dotc_FactorySetup(int teamnumber, entity this) // called when spawning a fa
 	this.dotc_worldfactorynext = dotc_worldfactorylist; // link factory into dotc_worldfactorylist
 	dotc_worldfactorylist = this;
 
-	setattachment(this, world, "");
+	setattachment(this, NULL, "");
 	setmodel(this, MDL_DOTC_FACTORY);
 	fix_mins_maxs_for_rotating(this);
 
@@ -266,7 +266,7 @@ void dotc_FactorySetup(int teamnumber, entity this) // called when spawning a fa
 
 spawnfunc(dotc_factory)
 {
-	if(!g_dotc) { remove(this); return; }
+	if(!g_dotc) { delete(this); return; }
 
 	dotc_FactorySetup(this.team, this);
 }

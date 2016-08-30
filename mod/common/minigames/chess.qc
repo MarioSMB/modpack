@@ -81,7 +81,7 @@ entity chess_find_piece(entity minig, string tile)
 		if(it.netname == tile)
 			return it;
 	});
-	return world;
+	return NULL;
 }
 
 // check if the tile name is valid (5x5 grid)
@@ -144,7 +144,7 @@ int chess_move_try(entity minigame, string thepiece, string pos, bool recurse_ki
 				if(sx == -1) p_dir = -1;
 				to_p = chess_find_piece(minigame, minigame_tile_buildname(fx + p_dir, fy));
 				if(!to_p.chess_passant)
-					to_p = world; // nope
+					to_p = NULL; // nope
 			}
 			to_t = (to_p) ? to_p.team : 0;
 
@@ -426,8 +426,8 @@ bool chess_move_piece(entity minigame, entity piece, string pos, int promote)
 	if(thepiece)
 	{
 		if(thepiece.netname) { strunzone(thepiece.netname); }
-		remove(thepiece);
-		thepiece = world;
+		delete(thepiece);
+		thepiece = NULL;
 	}
 
 	int letter = minigame_tile_letter(piece.netname);
@@ -447,13 +447,13 @@ bool chess_move_piece(entity minigame, entity piece, string pos, int promote)
 
 		thepiece = chess_find_piece(minigame, minigame_tile_buildname(letter + ang, number));
 		if(!thepiece.chess_passant || thepiece.team == piece.team)
-			thepiece = world; // revert what we did, it's no use
+			thepiece = NULL; // revert what we did, it's no use
 	}
 
 	if(thepiece)
 	{
 		if(thepiece.netname) { strunzone(thepiece.netname); }
-		remove(thepiece);
+		delete(thepiece);
 	}
 
 	FOREACH_ENTITY_ENT_ORDERED(owner, minigame,
@@ -511,7 +511,7 @@ void chess_move(entity minigame, entity player, string thepiece, string pos, str
 		int promote = piece__Empty;
 		int rletter = 0, rnumber = 0;
 		string thepos = string_null;
-		entity rook = world;
+		entity rook = NULL;
 		string thenewpos = string_null;
 		if(CHESS_GOOD_MOVE(r))
 		{
@@ -633,7 +633,7 @@ int chess_server_event(entity minigame, string event, ...)
 			FOREACH_ENTITY_ENT_ORDERED(owner, minigame,
 			{
 				if(it.netname) { strunzone(it.netname); }
-				remove(it);
+				delete(it);
 			});
 			return false;
 		}
@@ -758,7 +758,7 @@ void chess_set_curr_piece(entity minigame, entity piece)
 				int to_number = minigame_tile_number(newpos);
 				int to_letter = minigame_tile_letter(newpos);
 
-				entity thepiece = world;
+				entity thepiece = NULL;
 
 				if(chess_curr_piece.chess_id == piece__Pawn)
 				if(to_number != number && to_letter != letter)
@@ -771,7 +771,7 @@ void chess_set_curr_piece(entity minigame, entity piece)
 
 					thepiece = chess_find_piece(minigame, minigame_tile_buildname(letter + ang, number));
 					if(!thepiece.chess_passant || thepiece.team == chess_curr_piece.team)
-						thepiece = world; // revert what we did, it's no use
+						thepiece = NULL; // revert what we did, it's no use
 				}
 				if(thepiece)
 					chess_spawn_list_item(minigame, thepiece.netname, r);
@@ -956,7 +956,7 @@ void chess_make_move(entity minigame)
 		else if(chess_curr_piece)
 		{
 			minigame_cmd("move ", chess_curr_piece.netname, " ", chess_curr_pos, " ", strtolower(piece_name[chess_curr_promotion]));
-			chess_set_curr_piece(minigame, world);
+			chess_set_curr_piece(minigame, NULL);
 		}
 	}
 }
@@ -994,7 +994,7 @@ int chess_client_event(entity minigame, string event, ...)
 		{
 			chess_set_curr_pos("");
 			chess_curr_promotion = piece__Queen;
-			chess_curr_piece = world;
+			chess_curr_piece = NULL;
 			minigame.message = chess_turn_to_string(minigame.minigame_flags);
 			return false;
 		}
@@ -1083,7 +1083,7 @@ int chess_client_event(entity minigame, string event, ...)
 					if ( sent.minigame_flags & minigame_self.team )
 						minigame_prompt();
 					else
-						chess_set_curr_piece(minigame, world);
+						chess_set_curr_piece(minigame, NULL);
 				}
 			}
 			if(sent.classname == "minigame_board_piece")

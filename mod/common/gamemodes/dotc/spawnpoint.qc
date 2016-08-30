@@ -2,5 +2,5 @@
 **/
 spawnfunc(dotc_spawnpoint)
 {
-	if(!g_dotc) { remove(this); return; }
+	if(!g_dotc) { delete(this); return; }
 }

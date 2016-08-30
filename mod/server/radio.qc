@@ -211,7 +211,7 @@ void Radio_Queue_PlayFirst(entity this)
 		Radio_Preload(cvar_string(strcat("_radio_queue_", id, "_url")));
 
 	cvar_set("_radio_queue_left", ftos(n-1));
-	Radio_Announce(world);
+	Radio_Announce(NULL);
 }
 
 string Radio_Queue_GetFreeID(void)

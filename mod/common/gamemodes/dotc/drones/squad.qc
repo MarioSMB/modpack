@@ -275,12 +275,12 @@ void dotc_dronesquad_think(entity this)
 
 	if(gameover)
 	{
-		this.enemy = world;
+		this.enemy = NULL;
 		this.velocity = '0 0 0';
 		FOREACH_ENTITY_ENT(squad, this,
 		{
 			// blow up all drones
-			it.event_damage(it, world, world, it.health + it.max_health + 10, DEATH_KILL.m_id, '0 0 0', '0 0 0');
+			it.event_damage(it, NULL, NULL, it.health + it.max_health + 10, DEATH_KILL.m_id, '0 0 0', '0 0 0');
 		});
 
 		return;
@@ -293,7 +293,7 @@ void dotc_dronesquad_think(entity this)
 			WaypointSprite_Kill(this.waypointsprite_attached);
 
 		this.owner.cnt -= 1;
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -321,7 +321,7 @@ void dotc_dronesquad_think(entity this)
 
 	bool dpf = true;
 
-	if(this.enemy != world)
+	if(this.enemy != NULL)
 		dpf = false;
 
 	if(autocvar_g_dotc_squads_dont_chase != 0)

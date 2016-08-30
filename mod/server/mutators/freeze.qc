@@ -165,7 +165,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 		}
 
 		entity o;
-		o = world;
+		o = NULL;
 		//if(player.freezetag_frozen_timeout > 0 && time < player.freezetag_frozen_timeout)
 		//if(player.iceblock)
 			//player.iceblock.alpha = ICE_MIN_ALPHA + (ICE_MAX_ALPHA - ICE_MIN_ALPHA) * (player.freezetag_frozen_timeout - time) / (player.freezetag_frozen_timeout - player.freezetag_frozen_time);
@@ -200,7 +200,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 				if(n == -1)
 				{
 					Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_AUTO_REVIVED, autocvar_g_freeze_frozen_maxtime);
-					Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_AUTO_REVIVED, player.netname, autocvar_g_freeze_frozen_maxtime);
+					Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_AUTO_REVIVED, player.netname, autocvar_g_freeze_frozen_maxtime);
 					return true;
 				}
 
@@ -212,7 +212,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 
 				Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
 				Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
-				Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_FREEZETAG_REVIVED, player.netname, o.netname);
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED, player.netname, o.netname);
 			}
 
 			FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, LAMBDA(

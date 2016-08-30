@@ -106,7 +106,7 @@ void W_Axe_Melee_Think(entity this)
 	// check to see if we can still continue, otherwise give up now
 	if(IS_DEAD(this.realowner) && WEP_CVAR(axe, melee_no_doubleslap))
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 
@@ -125,7 +125,7 @@ void W_Axe_Melee_Think(entity this)
 		// draw lightning beams for debugging
 		if(WEP_CVAR(axe, debug))
 		{
-			te_lightning2(world, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
+			te_lightning2(NULL, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
 			te_customflash(targpos, 40,  2, '1 1 1');
 		}
 
@@ -175,7 +175,7 @@ void W_Axe_Melee_Think(entity this)
 			}
 			else
 			{
-				remove(this);
+				delete(this);
 				return;
 			}
 		}
@@ -184,7 +184,7 @@ void W_Axe_Melee_Think(entity this)
 	if(time >= this.cnt + meleetime)
 	{
 		// melee is finished
-		remove(this);
+		delete(this);
 		return;
 	}
 	else

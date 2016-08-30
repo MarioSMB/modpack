@@ -99,7 +99,7 @@ void script_global_functions_init(entity context)
 			} else { \
 				float i; \
 				entity nextparam; \
-				param = world; \
+				param = NULL; \
 				for ( i = nargs; i > 0; i-- ) { \
 					nextparam = spawn(); \
 					nextparam.script_value = strcat("arg",ftos(i));\
@@ -189,7 +189,7 @@ entity context_get_function(entity context, string funcname)
 	if ( context.owner )
 		return context_get_function(context.owner,funcname);
 	dprint("Script: called undefined function: ",funcname,"\n");
-	return world;
+	return NULL;
 }
 entity context_define_function(entity context, string funcname, entity executor, entity param_chain)
 {
@@ -233,14 +233,14 @@ void context_pop()
 			func = func.script_next;
 			if ( func_old.classname == "script_global_function" )
 			{
-				func_old.script_next = world;
+				func_old.script_next = NULL;
 				script_cleanup(func_old.ast_operand1);
-				remove(func_old.ast_operand2);
+				delete(func_old.ast_operand2);
 			}
-			remove(func_old);
+			delete(func_old);
 		}
-		old_context.context_functions = world;
-		remove(old_context);
+		old_context.context_functions = NULL;
+		delete(old_context);
 	}
 }
 
@@ -267,7 +267,7 @@ string script_evaluate(entity ast_root)
 	entity e = script_evaluate_entity(ast_root);
 	string result = e.script_value;
 	if ( e.classname == "ast_tempvalue" )
-		remove(e);
+		delete(e);
 	return result;
 }
 
@@ -283,7 +283,7 @@ void script_cleanup(entity ast_root)
 		script_cleanup(ast_root.ast_operand3);
 	if ( ast_root.script_next )
 		script_cleanup(ast_root.script_next);
-	remove(ast_root);
+	delete(ast_root);
 }
 
 void script_debug_ast_recursive(entity ast_root,string prefix)
@@ -418,7 +418,7 @@ entity ast_assign_evaluate(entity this)
 		dprint("Assignment ro rvalue: ",lval.script_value," = ",rval.script_value,"\n");
 	rval.ast_lvalue = lval.ast_lvalue;
 	rval.ast_lvalue_reference = lval.ast_lvalue_reference;
-	remove(lval);
+	delete(lval);
 	return rval;
 }
 entity ast_assign(entity lvalue,entity rvalue)
@@ -438,7 +438,7 @@ entity ast_assign_operator_evaluate(entity this)
 	this.ast_operand1.classname = "ast_assign_operator_lval";
 	this.ast_operand2.ast_operand1 = this.ast_operand1;
 	entity result = ast_assign_evaluate(this);
-	this.ast_operand2.ast_operand1 = world;
+	this.ast_operand2.ast_operand1 = NULL;
 	this.ast_operand1 = lval_tree;
 	return result;
 }
@@ -446,7 +446,7 @@ entity ast_assign_operator(entity lvalue,entity rvalue,entity(entity,entity) ope
 {
 	entity ast_temp = spawn();
 	ast_temp.ast_operand1 = lvalue;
-	ast_temp.ast_operand2 = operator(world,rvalue);
+	ast_temp.ast_operand2 = operator(NULL,rvalue);
 	ast_temp.ast_evaluate = ast_assign_operator_evaluate;
 	ast_temp.ast_lvalue = -1;
 	ast_temp.classname="ast_assign_operator";
@@ -526,13 +526,13 @@ entity ast_if(entity condition, entity branch_true, entity branch_false)
 
 entity ast_while_evaluate(entity this)
 {
-	entity val = world;
+	entity val = NULL;
 	float it = 0;
 	while ( stof(script_evaluate(this.ast_operand1)) && 
 		it < this.ast_max_iterations )
 	{
 		if ( val )
-			remove(val);
+			delete(val);
 		val = script_evaluate_entity(this.ast_operand2);
 		if ( val.script_type & (AST_TYPE_BREAK|AST_TYPE_RETURN) )
 		{
@@ -556,13 +556,13 @@ entity ast_while(entity condition, entity body)
 
 entity ast_block_evaluate(entity this)
 {
-	entity val = world;
+	entity val = NULL;
 	entity next = this.ast_operand1;
 	context_push();
 	while ( next )
 	{
 		if ( val )
-			remove(val);
+			delete(val);
 		val = script_evaluate_entity(next);
 		if ( val.script_type & (AST_TYPE_BREAK|AST_TYPE_RETURN|AST_TYPE_CONTINUE) )
 		{

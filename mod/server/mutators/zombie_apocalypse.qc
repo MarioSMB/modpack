@@ -33,7 +33,7 @@ void za_SpawnMonster()
 void za_SetEnemy(entity player)
 {
 	// prefer players
-	entity closest_targ = world;
+	entity closest_targ = NULL;
 	FOREACH_CLIENT(IS_PLAYER(it) && it != player, LAMBDA(
 		if(vdist(player.origin - it.origin, <, autocvar_g_monsters_target_range))
 		if(!closest_targ || vlen2(player.origin - closest_targ.origin) > vlen2(player.origin - it.origin))

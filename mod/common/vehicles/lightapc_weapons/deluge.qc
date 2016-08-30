@@ -28,7 +28,7 @@ void lightapc_deluge_Water_Explode(entity this, entity directhitentity)
 	if (directhitentity.fire_endtime > time)
 		directhitentity.fire_endtime = directhitentity.fire_endtime * 0.9;
 
-	RadiusDamage (this, this.realowner, autocvar_g_vehicle_lightapc_deluge_damage, autocvar_g_vehicle_lightapc_deluge_edgedamage, autocvar_g_vehicle_lightapc_deluge_cannon_radius, world, world,
+	RadiusDamage (this, this.realowner, autocvar_g_vehicle_lightapc_deluge_damage, autocvar_g_vehicle_lightapc_deluge_edgedamage, autocvar_g_vehicle_lightapc_deluge_cannon_radius, NULL, NULL,
 				autocvar_g_vehicle_lightapc_deluge_cannon_force, this.projectiledeathtype, directhitentity);
 
 	remove (this);

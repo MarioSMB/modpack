@@ -14,7 +14,7 @@ entity dotc_GetCore(int teamnumber)
 			return tmp_entity;
 	}
 
-	return world; // safe?
+	return NULL; // safe?
 }
 
 
@@ -67,7 +67,7 @@ void dotc_Core_Addons_Clear(entity this)
 	{
 		if(it.dotc_unittype == DOTC_UF_ADDON)
 		{
-			it.owner = world;
+			it.owner = NULL;
 			setthink(it, SUB_Remove);
 			it.nextthink = time;
 		}
@@ -115,7 +115,7 @@ void dotc_Core_SetLevel(entity core, int newlevel, bool silent)
 
 	if(!silent)
 	{
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_DOTC_CORE_UPGRADE, core.netname, newlevel);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_DOTC_CORE_UPGRADE, core.netname, newlevel);
 		play2all(core.snd_core_upgrade);
 	}
 
@@ -229,7 +229,7 @@ void dotc_CoreDamage(entity this, entity inflictor, entity attacker, float damag
 			this.wps_corebase.SendFlags |= 1;
 		}
 
-		Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_DOTC_CORE_DESTROYED, this.netname);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_DOTC_CORE_DESTROYED, this.netname);
 	}
 	else if(DIFF_TEAM(attacker, this))
 		this.dmgtime = time + 1;
@@ -432,7 +432,7 @@ void dotc_CoreSetup(int teamnumber, entity this) // called when spawning a core 
 	this.dotc_worldcorenext = dotc_worldcorelist; // link core into dotc_worldcorelist
 	dotc_worldcorelist = this;
 
-	setattachment(this, world, "");
+	setattachment(this, NULL, "");
 
 	this.netname = strzone((this.netname == "") ? strcat(dotc_TeamColoredName(teamnumber), " core") : this.netname);
 	this.team = teamnumber;
@@ -479,7 +479,7 @@ void dotc_CoreSetup(int teamnumber, entity this) // called when spawning a core 
 
 spawnfunc(dotc_core)
 {
-	if(!g_dotc) { remove(this); return; }
+	if(!g_dotc) { delete(this); return; }
 
 	dotc_CoreSetup(this.team, this);
 }
@@ -487,14 +487,14 @@ spawnfunc(dotc_core)
 // team based spawns
 spawnfunc(dotc_core_red)
 {
-	if(!g_dotc) { remove(this); return; }
+	if(!g_dotc) { delete(this); return; }
 	this.team = NUM_TEAM_1;
 	spawnfunc_dotc_core(this);
 }
 
 spawnfunc(dotc_core_blue)
 {
-	if(!g_dotc) { remove(this); return; }
+	if(!g_dotc) { delete(this); return; }
 	this.team = NUM_TEAM_2;
 	spawnfunc_dotc_core(this);
 }
