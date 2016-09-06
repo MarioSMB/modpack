@@ -1,8 +1,3 @@
-bool autocvar_g_dotc_waypointsprites_cores = true;
-float autocvar_g_dotc_nextlevel_multiplier = 1.5;
-
-int autocvar_g_dotc_core_health = 2000;
-
 // core listing
 entity dotc_GetCore(int teamnumber)
 {

@@ -52,18 +52,6 @@ Key concepts
 #ifndef GAMEMODE_DOTC_H
 #define GAMEMODE_DOTC_H
 
-AUTOCVAR(g_dotc_warmup, float, 5, "");
-AUTOCVAR(g_dotc_point_limit, int, 1, "");
-AUTOCVAR(g_dotc_factory_killscore, int, 20, "");
-
-AUTOCVAR(g_dotc_guarddog, int, 2, "");
-AUTOCVAR(g_dotc_apply_friendlyfire, bool, false, "");
-
-AUTOCVAR(g_dotc_turrets_healthabs, int, 1, "");
-AUTOCVAR(g_dotc_turrets_healthmod, float, 1.5, "");
-AUTOCVAR(g_dotc_turrets_norespawn, bool, true, "");
-AUTOCVAR(g_dotc_turrets_credits, int, 50, "");
-
 .float aim_maxrot;
 
 int dotc_teams;

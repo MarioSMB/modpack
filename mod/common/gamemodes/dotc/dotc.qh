@@ -34,6 +34,113 @@ REGISTER_RADARICON(Drone,           1);
 // TODO: find a way to kill!
 .string cvar_basename;
 
+AUTOCVAR(g_dotc_warmup, float, 5, "");
+AUTOCVAR(g_dotc_point_limit, int, 1, "");
+AUTOCVAR(g_dotc_factory_killscore, int, 20, "");
+
+AUTOCVAR(g_dotc_guarddog, int, 2, "");
+AUTOCVAR(g_dotc_apply_friendlyfire, bool, false, "");
+
+AUTOCVAR(g_dotc_turrets_healthabs, int, 1, "");
+AUTOCVAR(g_dotc_turrets_healthmod, float, 1.5, "");
+AUTOCVAR(g_dotc_turrets_norespawn, bool, true, "");
+AUTOCVAR(g_dotc_turrets_credits, int, 50, "");
+
+AUTOCVAR(g_dotc_core_health, float, 15000, "");
+AUTOCVAR(g_dotc_nextlevel_multiplier, float, 2, "");
+
+AUTOCVAR(g_dotc_scout_health, float, 50, "");
+
+AUTOCVAR(g_dotc_scout_shot_dmg, float, 5, "");
+AUTOCVAR(g_dotc_scout_shot_radius, float, 25, "");
+AUTOCVAR(g_dotc_scout_shot_force, float, 25, "");
+AUTOCVAR(g_dotc_scout_shot_speed, float, 6000, "");
+AUTOCVAR(g_dotc_scout_shot_spread, float, 0.045, "");
+AUTOCVAR(g_dotc_scout_shot_refire, float, 0.15, "");
+
+AUTOCVAR(g_dotc_scout_target_range, float, 3000, "");
+AUTOCVAR(g_dotc_scout_target_range_min, float, 5, "");
+AUTOCVAR(g_dotc_scout_target_range_optimal, float, 1000, "");
+AUTOCVAR(g_dotc_scout_deathcredits, float, 10, "");
+
+AUTOCVAR(g_dotc_scout_aim_firetolerance_dist, float, 8, "");
+AUTOCVAR(g_dotc_scout_aim_speed, float, 200, "");
+AUTOCVAR(g_dotc_scout_aim_maxpitch, float, 25, "");
+AUTOCVAR(g_dotc_scout_aim_maxrot, float, 10, "");
+
+AUTOCVAR(g_dotc_scout_movespeed, float, 800, "");
+AUTOCVAR(g_dotc_scout_turnspeed, float, 350, "");
+
+AUTOCVAR(g_dotc_scout_spring_length, float, 200, "");
+AUTOCVAR(g_dotc_scout_spring_strength, float, 1250, "");
+
+AUTOCVAR(g_dotc_lighttank_health, float, 90, "");
+
+AUTOCVAR(g_dotc_lighttank_shot_dmg, float, 15, "");
+AUTOCVAR(g_dotc_lighttank_shot_radius, float, 50, "");
+AUTOCVAR(g_dotc_lighttank_shot_force, float, 50, "");
+AUTOCVAR(g_dotc_lighttank_shot_speed, float, 2000, "");
+AUTOCVAR(g_dotc_lighttank_shot_spread, float, 0.075, "");
+AUTOCVAR(g_dotc_lighttank_shot_refire, float, 2, "");
+
+AUTOCVAR(g_dotc_lighttank_target_range, float, 2000, "");
+AUTOCVAR(g_dotc_lighttank_target_range_min, float, 5, "");
+AUTOCVAR(g_dotc_lighttank_target_range_optimal, float, 900, "");
+AUTOCVAR(g_dotc_lighttank_deathcredits, float, 20, "");
+
+AUTOCVAR(g_dotc_lighttank_aim_firetolerance_dist, float, 10, "");
+AUTOCVAR(g_dotc_lighttank_aim_speed, float, 180, "");
+AUTOCVAR(g_dotc_lighttank_aim_maxpitch, float, 20, "");
+AUTOCVAR(g_dotc_lighttank_aim_maxrot, float, 100, "");
+
+AUTOCVAR(g_dotc_lighttank_movespeed, float, 750, "");
+AUTOCVAR(g_dotc_lighttank_turnspeed, float, 300, "");
+
+AUTOCVAR(g_dotc_lighttank_spring_length, float, 100, "");
+AUTOCVAR(g_dotc_lighttank_spring_strength, float, 1500, "");
+
+AUTOCVAR(g_dotc_rart_health, float, 150, "");
+AUTOCVAR(g_dotc_rart_shot_dmg, float, 50, "");
+AUTOCVAR(g_dotc_rart_shot_radius, float, 250, "");
+AUTOCVAR(g_dotc_rart_shot_force, float, 250, "");
+AUTOCVAR(g_dotc_rart_shot_speed, float, 1250, "");
+AUTOCVAR(g_dotc_rart_shot_spread, float, 0.025, "");
+AUTOCVAR(g_dotc_rart_shot_refire, float, 0.25, "");
+AUTOCVAR(g_dotc_rart_target_range, float, 3000, "");
+AUTOCVAR(g_dotc_rart_target_range_min, float, 200, "");
+AUTOCVAR(g_dotc_rart_target_range_optimal, float, 1000, "");
+AUTOCVAR(g_dotc_rart_deathcredits, float, 40, "");
+AUTOCVAR(g_dotc_rart_aim_firetolerance_dist, float, 10, "");
+AUTOCVAR(g_dotc_rart_aim_speed, float, 90, "");
+AUTOCVAR(g_dotc_rart_aim_maxpitch, float, 20, "");
+AUTOCVAR(g_dotc_rart_aim_maxrot, float, 45, "");
+AUTOCVAR(g_dotc_rart_movespeed, float, 500, "");
+AUTOCVAR(g_dotc_rart_turnspeed, float, 70, "");
+AUTOCVAR(g_dotc_rart_spring_length, float, 128, "");
+AUTOCVAR(g_dotc_rart_spring_strength, float, 1200, "");
+AUTOCVAR(g_dotc_gart_health, float, 170, "");
+AUTOCVAR(g_dotc_gart_shot_dmg, float, 75, "");
+AUTOCVAR(g_dotc_gart_shot_radius, float, 300, "");
+AUTOCVAR(g_dotc_gart_shot_force, float, 500, "");
+AUTOCVAR(g_dotc_gart_shot_speed, float, 1250, "");
+AUTOCVAR(g_dotc_gart_shot_spread, float, 0.025, "");
+AUTOCVAR(g_dotc_gart_shot_refire, float, 1.5, "");
+AUTOCVAR(g_dotc_gart_target_range, float, 4000, "");
+AUTOCVAR(g_dotc_gart_target_range_min, float, 400, "");
+AUTOCVAR(g_dotc_gart_target_range_optimal, float, 2000, "");
+AUTOCVAR(g_dotc_gart_deathcredits, float, 55, "");
+AUTOCVAR(g_dotc_gart_aim_firetolerance_dist, float, 10, "");
+AUTOCVAR(g_dotc_gart_aim_speed, float, 90, "");
+AUTOCVAR(g_dotc_gart_aim_maxpitch, float, 20, "");
+AUTOCVAR(g_dotc_gart_aim_maxrot, float, 45, "");
+AUTOCVAR(g_dotc_gart_movespeed, float, 450, "");
+AUTOCVAR(g_dotc_gart_turnspeed, float, 70, "");
+AUTOCVAR(g_dotc_gart_spring_length, float, 128, "");
+AUTOCVAR(g_dotc_gart_spring_strength, float, 1200, "");
+AUTOCVAR(g_dotc_waypointsprites_justhealth, float, 1, "");
+AUTOCVAR(g_dotc_waypointsprites_cores, float, 1, "");
+
+
 MODEL(PROJECTILE_DOTC_DRONE_SCOUT,              "models/dotc/fx/bullet.md3");
 MODEL(PROJECTILE_DOTC_DRONE_LTANK,              "models/dotc/fx/blueplasma.md3");
 MODEL(PROJECTILE_DOTC_DRONE_TANK,               "models/dotc/fx/tankshell.md3");

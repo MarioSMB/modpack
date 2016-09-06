@@ -7,7 +7,7 @@ SOUND(DOTC_DRONE_RART_FIRE, W_Sound("rocket_fire"));
 #ifdef SVQC
 
 AUTOCVAR(g_dotc_rart_shot_refire2, float, 2, "");
-AUTOCVAR(g_dotc_rart_shots, int, 3, "");
+AUTOCVAR(g_dotc_rart_shots, int, 4, "");
 
 void dotc_rart_fire(entity this)
 {

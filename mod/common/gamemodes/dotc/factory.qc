@@ -1,5 +1,5 @@
 AUTOCVAR(g_dotc_waypointsprites_factories, bool, true, "");
-AUTOCVAR(g_dotc_factory_health, int, 500, "");
+AUTOCVAR(g_dotc_factory_health, int, 5000, "");
 AUTOCVAR(g_dotc_factory_squads, int, 5, "");
 AUTOCVAR(g_dotc_factory_wait, float, 3, "");
 
