@@ -28,17 +28,17 @@ REGISTER_MONSTER(SOLDIER, NEW(Soldier)) {
 
 #ifdef SVQC
 
-float autocvar_g_monster_soldier_health = 70;
-float autocvar_g_monster_soldier_damageforcescale = 0.5;
-float autocvar_g_monster_soldier_attack_shotgun_damage = 4;
-int autocvar_g_monster_soldier_attack_shotgun_bullets = 4;
-float autocvar_g_monster_soldier_attack_shotgun_spread = 0.03;
-float autocvar_g_monster_soldier_attack_shotgun_solidpenetration = 12;
-float autocvar_g_monster_soldier_attack_shotgun_force = 50;
-float autocvar_g_monster_soldier_attack_shotgun_refire = 0.5;
-float autocvar_g_monster_soldier_speed_stop = 100;
-float autocvar_g_monster_soldier_speed_run = 80;
-float autocvar_g_monster_soldier_speed_walk = 40;
+AUTOCVAR(g_monster_soldier_health, float, 70, "");
+AUTOCVAR(g_monster_soldier_damageforcescale, float, 0.5, "");
+AUTOCVAR(g_monster_soldier_attack_shotgun_damage, float, 4, "");
+AUTOCVAR(g_monster_soldier_attack_shotgun_bullets, int, 4, "");
+AUTOCVAR(g_monster_soldier_attack_shotgun_spread, float, 0.03, "");
+AUTOCVAR(g_monster_soldier_attack_shotgun_solidpenetration, float, 12, "");
+AUTOCVAR(g_monster_soldier_attack_shotgun_force, float, 50, "");
+AUTOCVAR(g_monster_soldier_attack_shotgun_refire, float, 0.5, "");
+AUTOCVAR(g_monster_soldier_speed_stop, float, 100, "");
+AUTOCVAR(g_monster_soldier_speed_run, float, 80, "");
+AUTOCVAR(g_monster_soldier_speed_walk, float, 40, "");
 
 
 void M_Soldier_Attack_Shotgun(entity this, .entity weaponentity)

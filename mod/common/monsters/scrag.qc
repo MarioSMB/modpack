@@ -38,11 +38,11 @@ REGISTER_WEAPON(SCRAG_ATTACK, NEW(ScragAttack));
 
 #ifdef SVQC
 
-float autocvar_g_monster_scrag_attack_spike_damage = 10;
-float autocvar_g_monster_scrag_attack_spike_edgedamage = 4;
-float autocvar_g_monster_scrag_attack_spike_force = 10;
-float autocvar_g_monster_scrag_attack_spike_radius = 10;
-float autocvar_g_monster_scrag_attack_spike_speed = 600;
+AUTOCVAR(g_monster_scrag_attack_spike_damage, float, 10, "");
+AUTOCVAR(g_monster_scrag_attack_spike_edgedamage, float, 4, "");
+AUTOCVAR(g_monster_scrag_attack_spike_force, float, 10, "");
+AUTOCVAR(g_monster_scrag_attack_spike_radius, float, 10, "");
+AUTOCVAR(g_monster_scrag_attack_spike_speed, float, 600, "");
 
 void M_Scrag_Attack_Spike_Explode_think(entity this);
 void M_Scrag_Attack_Spike_Touch(entity this, entity toucher);
@@ -86,11 +86,11 @@ METHOD(ScragAttack, wr_checkammo1, bool(ScragAttack thiswep, entity actor)) {
 	return true;
 }
 
-float autocvar_g_monster_scrag_health = 110;
-float autocvar_g_monster_scrag_damageforcescale = 0.55;
-float autocvar_g_monster_scrag_speed_stop = 50;
-float autocvar_g_monster_scrag_speed_run = 120;
-float autocvar_g_monster_scrag_speed_walk = 80;
+AUTOCVAR(g_monster_scrag_health, float, 110, "");
+AUTOCVAR(g_monster_scrag_damageforcescale, float, 0.55, "");
+AUTOCVAR(g_monster_scrag_speed_stop, float, 50, "");
+AUTOCVAR(g_monster_scrag_speed_run, float, 120, "");
+AUTOCVAR(g_monster_scrag_speed_walk, float, 80, "");
 
 /*
 const float scrag_anim_hover	= 0;

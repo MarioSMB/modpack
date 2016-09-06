@@ -81,62 +81,62 @@ REGISTER_VEHICLE(LIGHTAPCPASSENGER, NEW(LightAPCPassenger));
 #ifdef IMPLEMENTATION
 
 #ifdef SVQC
-bool autocvar_g_vehicle_lightapc = false;
+AUTOCVAR(g_vehicle_lightapc, bool, false, "");
 
-float autocvar_g_vehicle_lightapc_thinkrate = 0.05;
+AUTOCVAR(g_vehicle_lightapc_thinkrate, float, 0.05, "");
 
-float autocvar_g_vehicle_lightapc_speed_forward = 800;
-float autocvar_g_vehicle_lightapc_speed_stop = 2000;
+AUTOCVAR(g_vehicle_lightapc_speed_forward, float, 800, "");
+AUTOCVAR(g_vehicle_lightapc_speed_stop, float, 2000, "");
 
-float autocvar_g_vehicle_lightapc_movement_inertia = 0.15;
+AUTOCVAR(g_vehicle_lightapc_movement_inertia, float, 0.15, "");
 
-float autocvar_g_vehicle_lightapc_cannon_turnspeed = 160;
-float autocvar_g_vehicle_lightapc_cannon_pitchlimit_down = 60;
-float autocvar_g_vehicle_lightapc_cannon_pitchlimit_up = 60;
-float autocvar_g_vehicle_lightapc_cannon_turnlimit_in = 20;
-float autocvar_g_vehicle_lightapc_cannon_turnlimit_out = 80;
+AUTOCVAR(g_vehicle_lightapc_cannon_turnspeed, float, 160, "");
+AUTOCVAR(g_vehicle_lightapc_cannon_pitchlimit_down, float, 60, "");
+AUTOCVAR(g_vehicle_lightapc_cannon_pitchlimit_up, float, 60, "");
+AUTOCVAR(g_vehicle_lightapc_cannon_turnlimit_in, float, 20, "");
+AUTOCVAR(g_vehicle_lightapc_cannon_turnlimit_out, float, 80, "");
 
-float autocvar_g_vehicle_lightapc_tiltlimit = 90;
-float autocvar_g_vehicle_lightapc_springlength = 150;
-float autocvar_g_vehicle_lightapc_springup = 20;
-float autocvar_g_vehicle_lightapc_springblend = 0.1;
+AUTOCVAR(g_vehicle_lightapc_tiltlimit, float, 90, "");
+AUTOCVAR(g_vehicle_lightapc_springlength, float, 150, "");
+AUTOCVAR(g_vehicle_lightapc_springup, float, 20, "");
+AUTOCVAR(g_vehicle_lightapc_springblend, float, 0.1, "");
 
-float autocvar_g_vehicle_lightapc_health = 3000;
-float autocvar_g_vehicle_lightapc_health_regen = 0;
-float autocvar_g_vehicle_lightapc_health_regen_pause = 0;
+AUTOCVAR(g_vehicle_lightapc_health, float, 3000, "");
+AUTOCVAR(g_vehicle_lightapc_health_regen, float, 0, "");
+AUTOCVAR(g_vehicle_lightapc_health_regen_pause, float, 0, "");
 
-float autocvar_g_vehicle_lightapc_shield = 1000;
-float autocvar_g_vehicle_lightapc_shield_regen = 30;
-float autocvar_g_vehicle_lightapc_shield_regen_pause = 1;
+AUTOCVAR(g_vehicle_lightapc_shield, float, 1000, "");
+AUTOCVAR(g_vehicle_lightapc_shield_regen, float, 30, "");
+AUTOCVAR(g_vehicle_lightapc_shield_regen_pause, float, 1, "");
 
-float autocvar_g_vehicle_lightapc_respawntime = 60;
+AUTOCVAR(g_vehicle_lightapc_respawntime, float, 60, "");
 
-float autocvar_g_vehicle_lightapc_blowup_radius = 450;
-float autocvar_g_vehicle_lightapc_blowup_coredamage = 250;
-float autocvar_g_vehicle_lightapc_blowup_edgedamage = 15;
-float autocvar_g_vehicle_lightapc_blowup_forceintensity = 300;
+AUTOCVAR(g_vehicle_lightapc_blowup_radius, float, 450, "");
+AUTOCVAR(g_vehicle_lightapc_blowup_coredamage, float, 250, "");
+AUTOCVAR(g_vehicle_lightapc_blowup_edgedamage, float, 15, "");
+AUTOCVAR(g_vehicle_lightapc_blowup_forceintensity, float, 300, "");
 
-vector autocvar_g_vehicle_lightapc_gunner_offset = '0 0 15';
+AUTOCVAR(g_vehicle_lightapc_gunner_offset, vector, '0 0 15', "");
 
-float autocvar_g_vehicle_lightapc_gear_speed = 200;
-float autocvar_g_vehicle_lightapc_wheel_speed = 220;
+AUTOCVAR(g_vehicle_lightapc_gear_speed, float, 200, "");
+AUTOCVAR(g_vehicle_lightapc_wheel_speed, float, 220, "");
 
-bool autocvar_g_vehicle_lightapc_snapview = false;
+AUTOCVAR(g_vehicle_lightapc_snapview, bool, false, "");
 
-//float autocvar_g_vehicles_crash_damage = 500;
+//AUTOCVAR(g_vehicles_crash_damage, float, 500, "");
 
-float autocvar_g_vehicle_lightapc_mass = 9001;
+AUTOCVAR(g_vehicle_lightapc_mass, float, 9001, "");
 
 // Factor of old velocity to keep after collision
-float autocvar_g_vehicle_lightapc_bouncefactor = 0.25;
+AUTOCVAR(g_vehicle_lightapc_bouncefactor, float, 0.25, "");
 // if != 0, New veloctiy after bounce = 0 if new velocity < this
-float autocvar_g_vehicle_lightapc_bouncestop = 0;
+AUTOCVAR(g_vehicle_lightapc_bouncestop, float, 0, "");
 // "minspeed_for_pain speedchange_to_pain_factor max_damage"
-vector autocvar_g_vehicle_lightapc_bouncepain = '0 0 0';
+AUTOCVAR(g_vehicle_lightapc_bouncepain, vector, '0 0 0', "");
 
-float autocvar_g_vehicle_lightapc_ballistics_density = 4.55;
+AUTOCVAR(g_vehicle_lightapc_ballistics_density, float, 4.55, "");
 
-int autocvar_g_vehicle_lightapc_forcetype = 0;
+AUTOCVAR(g_vehicle_lightapc_forcetype, int, 0, "");
 
 void lightapc_SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner, string tagname);
 void lightapc_AttachToShotorg(entity this, entity flash, vector offset, string tagname, entity attach);

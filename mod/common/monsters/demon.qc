@@ -36,18 +36,18 @@ REGISTER_MONSTER(DEMON, NEW(Demon)) {
 
 #ifdef SVQC
 
-float autocvar_g_monster_demon_health = 350;
-float autocvar_g_monster_demon_damageforcescale = 0.35;
-float autocvar_g_monster_demon_attack_melee_damage = 50;
-float autocvar_g_monster_demon_attack_melee_delay = 1.2;
-float autocvar_g_monster_demon_attack_leap_damage = 50;
-float autocvar_g_monster_demon_attack_leap_force = 300;
-float autocvar_g_monster_demon_attack_leap_speed = 700;
-float autocvar_g_monster_demon_attack_leap_delay = 0.7;
-float autocvar_g_monster_demon_attack_leap_mindist = 400;
-float autocvar_g_monster_demon_speed_stop = 100;
-float autocvar_g_monster_demon_speed_run = 300;
-float autocvar_g_monster_demon_speed_walk = 95;
+AUTOCVAR(g_monster_demon_health, float, 350, "");
+AUTOCVAR(g_monster_demon_damageforcescale, float, 0.35, "");
+AUTOCVAR(g_monster_demon_attack_melee_damage, float, 50, "");
+AUTOCVAR(g_monster_demon_attack_melee_delay, float, 1.2, "");
+AUTOCVAR(g_monster_demon_attack_leap_damage, float, 50, "");
+AUTOCVAR(g_monster_demon_attack_leap_force, float, 300, "");
+AUTOCVAR(g_monster_demon_attack_leap_speed, float, 700, "");
+AUTOCVAR(g_monster_demon_attack_leap_delay, float, 0.7, "");
+AUTOCVAR(g_monster_demon_attack_leap_mindist, float, 400, "");
+AUTOCVAR(g_monster_demon_speed_stop, float, 100, "");
+AUTOCVAR(g_monster_demon_speed_run, float, 300, "");
+AUTOCVAR(g_monster_demon_speed_walk, float, 95, "");
 
 /*
 const float demon_anim_stand	= 0;

@@ -34,17 +34,17 @@ REGISTER_MONSTER(AFRIT, NEW(Afrit)) {
 
 #ifdef SVQC
 
-float autocvar_g_monster_afrit_health = 400;
-float autocvar_g_monster_afrit_damageforcescale = 0.3;
-float autocvar_g_monster_afrit_attack_fireball_damage = 20;
-float autocvar_g_monster_afrit_attack_fireball_edgedamage = 15;
-float autocvar_g_monster_afrit_attack_fireball_damagetime = 2;
-float autocvar_g_monster_afrit_attack_fireball_force = 50;
-float autocvar_g_monster_afrit_attack_fireball_radius = 120;
-float autocvar_g_monster_afrit_attack_fireball_speed = 1200;
-float autocvar_g_monster_afrit_speed_stop = 300;
-float autocvar_g_monster_afrit_speed_run = 120;
-float autocvar_g_monster_afrit_speed_walk = 40;
+AUTOCVAR(g_monster_afrit_health, float, 400, "");
+AUTOCVAR(g_monster_afrit_damageforcescale, float, 0.3, "");
+AUTOCVAR(g_monster_afrit_attack_fireball_damage, float, 20, "");
+AUTOCVAR(g_monster_afrit_attack_fireball_edgedamage, float, 15, "");
+AUTOCVAR(g_monster_afrit_attack_fireball_damagetime, float, 2, "");
+AUTOCVAR(g_monster_afrit_attack_fireball_force, float, 50, "");
+AUTOCVAR(g_monster_afrit_attack_fireball_radius, float, 120, "");
+AUTOCVAR(g_monster_afrit_attack_fireball_speed, float, 1200, "");
+AUTOCVAR(g_monster_afrit_speed_stop, float, 300, "");
+AUTOCVAR(g_monster_afrit_speed_run, float, 120, "");
+AUTOCVAR(g_monster_afrit_speed_walk, float, 40, "");
 
 /*
 const float afrit_anim_sleep	= 0;

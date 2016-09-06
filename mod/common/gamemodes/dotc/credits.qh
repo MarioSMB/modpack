@@ -19,7 +19,7 @@ const int DOTC_CREDIT_SF_INIT 	= BIT(6);
 
 #elif defined(CSQC)
 
-float autocvar_cl_dotc_credit_spinspeed = 90;
+AUTOCVAR(cl_dotc_credit_spinspeed, float, 90, "");
 
 // credit spinning
 #define DOTC_CREDIT_AVELOCITY ('0 1 0' * autocvar_cl_dotc_credit_spinspeed)

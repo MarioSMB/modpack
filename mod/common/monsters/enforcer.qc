@@ -32,20 +32,20 @@ REGISTER_MONSTER(ENFORCER, NEW(Enforcer)) {
 
 #ifdef SVQC
 
-float autocvar_g_monster_enforcer_health = 200;
-float autocvar_g_monster_enforcer_damageforcescale = 0.7;
-float autocvar_g_monster_enforcer_attack_plasma_damage = 25;
-float autocvar_g_monster_enforcer_attack_plasma_edgedamage = 20;
-float autocvar_g_monster_enforcer_attack_plasma_force = 50;
-float autocvar_g_monster_enforcer_attack_plasma_radius = 100;
-float autocvar_g_monster_enforcer_attack_plasma_spread = 0;
-float autocvar_g_monster_enforcer_attack_plasma_speed = 1500;
-float autocvar_g_monster_enforcer_attack_plasma_lifetime = 7;
-float autocvar_g_monster_enforcer_attack_plasma_shots = 2;
-float autocvar_g_monster_enforcer_attack_plasma_delay = 0.7;
-float autocvar_g_monster_enforcer_speed_stop = 100;
-float autocvar_g_monster_enforcer_speed_run = 150;
-float autocvar_g_monster_enforcer_speed_walk = 60;
+AUTOCVAR(g_monster_enforcer_health, float, 200, "");
+AUTOCVAR(g_monster_enforcer_damageforcescale, float, 0.7, "");
+AUTOCVAR(g_monster_enforcer_attack_plasma_damage, float, 25, "");
+AUTOCVAR(g_monster_enforcer_attack_plasma_edgedamage, float, 20, "");
+AUTOCVAR(g_monster_enforcer_attack_plasma_force, float, 50, "");
+AUTOCVAR(g_monster_enforcer_attack_plasma_radius, float, 100, "");
+AUTOCVAR(g_monster_enforcer_attack_plasma_spread, float, 0, "");
+AUTOCVAR(g_monster_enforcer_attack_plasma_speed, float, 1500, "");
+AUTOCVAR(g_monster_enforcer_attack_plasma_lifetime, float, 7, "");
+AUTOCVAR(g_monster_enforcer_attack_plasma_shots, float, 2, "");
+AUTOCVAR(g_monster_enforcer_attack_plasma_delay, float, 0.7, "");
+AUTOCVAR(g_monster_enforcer_speed_stop, float, 100, "");
+AUTOCVAR(g_monster_enforcer_speed_run, float, 150, "");
+AUTOCVAR(g_monster_enforcer_speed_walk, float, 60, "");
 
 /*
 const float enforcer_anim_stand			= 0;

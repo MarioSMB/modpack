@@ -1,5 +1,5 @@
 #ifdef SVQC
-float autocvar_g_dotc_item_lifetime = 25;
+AUTOCVAR(g_dotc_item_lifetime, float, 25, "");
 
 .float lifetime;
 

@@ -2,9 +2,9 @@
 #include "tools/common.qc"
 #include "system.qc"
 
-float autocvar_cl_mplant_drawdistance;
-float autocvar_cl_mplant_fadedistance;
-float autocvar_cl_mplant_boxdistance;
+AUTOCVAR(cl_mplant_drawdistance, float, 0, "");
+AUTOCVAR(cl_mplant_fadedistance, float, 0, "");
+AUTOCVAR(cl_mplant_boxdistance, float, 0, "");
 
 /**
     Optimized for csqc.

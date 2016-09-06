@@ -103,8 +103,8 @@ const int MPPI_GRID           = BIT(5);
 // &/()#&�)="(&%?=�!!!! WHO THE FUCK THINKS DIFFRENT INTERNAL ROTATIONS PER EXTERNAL FORMAT IS OK?!
 
 
-bool autocvar_g_modelplanter;
-bool autocvar_g_modelplanter_withitems;
+AUTOCVAR(g_modelplanter, bool, false, "");
+AUTOCVAR(g_modelplanter_withitems, bool, false, "");
 float mplant_load_dir_models(entity this, string _ptrn);
 void mplant_block_delete(entity _block);
 void mplant_set_buildmode(entity this, bool _on);

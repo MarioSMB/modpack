@@ -32,13 +32,13 @@ REGISTER_MONSTER(ROTTWEILER, NEW(Rottweiler)) {
 
 #ifdef SVQC
 
-float autocvar_g_monster_rottweiler_health = 80;
-float autocvar_g_monster_rottweiler_damageforcescale = 0.7;
-float autocvar_g_monster_rottweiler_attack_melee_damage = 25;
-float autocvar_g_monster_rottweiler_attack_melee_delay = 0.8;
-float autocvar_g_monster_rottweiler_speed_stop = 100;
-float autocvar_g_monster_rottweiler_speed_run = 300;
-float autocvar_g_monster_rottweiler_speed_walk = 70;
+AUTOCVAR(g_monster_rottweiler_health, float, 80, "");
+AUTOCVAR(g_monster_rottweiler_damageforcescale, float, 0.7, "");
+AUTOCVAR(g_monster_rottweiler_attack_melee_damage, float, 25, "");
+AUTOCVAR(g_monster_rottweiler_attack_melee_delay, float, 0.8, "");
+AUTOCVAR(g_monster_rottweiler_speed_stop, float, 100, "");
+AUTOCVAR(g_monster_rottweiler_speed_run, float, 300, "");
+AUTOCVAR(g_monster_rottweiler_speed_walk, float, 70, "");
 
 /*
 const float rottweiler_anim_attack1		= 0;

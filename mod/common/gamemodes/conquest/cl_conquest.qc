@@ -7,10 +7,10 @@
 #include <common/ent_cs.qh>
 #include <common/mutators/mutator/waypoints/all.qh>
 
-float autocvar_cl_conquest_capture_ring_size_min = 32;
-float autocvar_cl_conquest_capture_ring_size_max = 128;
-float autocvar_cl_conquest_capture_ring_hud;
-int autocvar_cl_conquest_capture_text_align;
+AUTOCVAR(cl_conquest_capture_ring_size_min, float, 32, "");
+AUTOCVAR(cl_conquest_capture_ring_size_max, float, 128, "");
+AUTOCVAR(cl_conquest_capture_ring_hud, bool, false, "");
+AUTOCVAR(cl_conquest_capture_text_align, int, 0, "");
 
 .float scale;
 

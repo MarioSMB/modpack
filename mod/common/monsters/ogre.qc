@@ -40,36 +40,36 @@ REGISTER_MONSTER(OGRE, NEW(Ogre)) {
 
 #ifdef SVQC
 
-float autocvar_g_monster_ogre_health = 320;
-float autocvar_g_monster_ogre_damageforcescale = 0.4;
-float autocvar_g_monster_ogre_attack_machinegun_spread = 0.04;
-float autocvar_g_monster_ogre_attack_machinegun_solidpenetration = 13.1;
-float autocvar_g_monster_ogre_attack_machinegun_damage = 10;
-float autocvar_g_monster_ogre_attack_machinegun_force = 5;
-float autocvar_g_monster_ogre_attack_grenade_damage = 50;
-float autocvar_g_monster_ogre_attack_grenade_edgedamage = 20;
-float autocvar_g_monster_ogre_attack_grenade_radius = 120;
-float autocvar_g_monster_ogre_attack_grenade_speed = 1000;
-float autocvar_g_monster_ogre_attack_grenade_speed_up = 120;
-float autocvar_g_monster_ogre_attack_grenade_speed_z = 0;
-float autocvar_g_monster_ogre_attack_grenade_spread = 0;
-float autocvar_g_monster_ogre_attack_grenade_force = 150;
-float autocvar_g_monster_ogre_attack_grenade_bouncefactor = 0.3;
-float autocvar_g_monster_ogre_attack_grenade_bouncestop = 0.75;
-float autocvar_g_monster_ogre_attack_grenade_lifetime = 3;
-float autocvar_g_monster_ogre_attack_grenade_health = 30;
-float autocvar_g_monster_ogre_attack_grenade_damageforcescale = 4;
-float autocvar_g_monster_ogre_attack_melee_damage = 45;
-float autocvar_g_monster_ogre_attack_melee_nonplayerdamage = 30;
-float autocvar_g_monster_ogre_attack_melee_delay = 0.35;
-float autocvar_g_monster_ogre_attack_melee_time = 0.25;
-float autocvar_g_monster_ogre_attack_melee_range = 120;
-float autocvar_g_monster_ogre_attack_melee_traces = 10;
-float autocvar_g_monster_ogre_attack_melee_swing_up = 40;
-float autocvar_g_monster_ogre_attack_melee_swing_side = 130;
-float autocvar_g_monster_ogre_speed_stop = 100;
-float autocvar_g_monster_ogre_speed_run = 120;
-float autocvar_g_monster_ogre_speed_walk = 60;
+AUTOCVAR(g_monster_ogre_health, float, 320, "");
+AUTOCVAR(g_monster_ogre_damageforcescale, float, 0.4, "");
+AUTOCVAR(g_monster_ogre_attack_machinegun_spread, float, 0.04, "");
+AUTOCVAR(g_monster_ogre_attack_machinegun_solidpenetration, float, 13.1, "");
+AUTOCVAR(g_monster_ogre_attack_machinegun_damage, float, 10, "");
+AUTOCVAR(g_monster_ogre_attack_machinegun_force, float, 5, "");
+AUTOCVAR(g_monster_ogre_attack_grenade_damage, float, 50, "");
+AUTOCVAR(g_monster_ogre_attack_grenade_edgedamage, float, 20, "");
+AUTOCVAR(g_monster_ogre_attack_grenade_radius, float, 120, "");
+AUTOCVAR(g_monster_ogre_attack_grenade_speed, float, 1000, "");
+AUTOCVAR(g_monster_ogre_attack_grenade_speed_up, float, 120, "");
+AUTOCVAR(g_monster_ogre_attack_grenade_speed_z, float, 0, "");
+AUTOCVAR(g_monster_ogre_attack_grenade_spread, float, 0, "");
+AUTOCVAR(g_monster_ogre_attack_grenade_force, float, 150, "");
+AUTOCVAR(g_monster_ogre_attack_grenade_bouncefactor, float, 0.3, "");
+AUTOCVAR(g_monster_ogre_attack_grenade_bouncestop, float, 0.75, "");
+AUTOCVAR(g_monster_ogre_attack_grenade_lifetime, float, 3, "");
+AUTOCVAR(g_monster_ogre_attack_grenade_health, float, 30, "");
+AUTOCVAR(g_monster_ogre_attack_grenade_damageforcescale, float, 4, "");
+AUTOCVAR(g_monster_ogre_attack_melee_damage, float, 45, "");
+AUTOCVAR(g_monster_ogre_attack_melee_nonplayerdamage, float, 30, "");
+AUTOCVAR(g_monster_ogre_attack_melee_delay, float, 0.35, "");
+AUTOCVAR(g_monster_ogre_attack_melee_time, float, 0.25, "");
+AUTOCVAR(g_monster_ogre_attack_melee_range, float, 120, "");
+AUTOCVAR(g_monster_ogre_attack_melee_traces, float, 10, "");
+AUTOCVAR(g_monster_ogre_attack_melee_swing_up, float, 40, "");
+AUTOCVAR(g_monster_ogre_attack_melee_swing_side, float, 130, "");
+AUTOCVAR(g_monster_ogre_speed_stop, float, 100, "");
+AUTOCVAR(g_monster_ogre_speed_run, float, 120, "");
+AUTOCVAR(g_monster_ogre_speed_walk, float, 60, "");
 
 /*
 const float ogre_anim_idle 			= 0;
