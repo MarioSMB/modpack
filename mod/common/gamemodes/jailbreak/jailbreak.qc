@@ -937,7 +937,7 @@ void JB_ControlPoint_Capture(entity this, entity player)
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
 		if(DIFF_TEAM(it, player))
-			Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_ENT(player, CENTER_JAILBREAK_ESCAPE));
+			Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(player.team, CENTER_JAILBREAK_ESCAPE));
 		else if(it == player)
 			Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_JAILBREAK_FREED);
 

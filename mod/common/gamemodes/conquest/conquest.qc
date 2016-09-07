@@ -109,13 +109,13 @@ void cq_ControlPoint_SwitchTeam(entity this, int newteam, int newstatus, bool sh
 	if(showmessage)
 	if(newstatus == CP_NEUTRAL && this.cq_status != CP_NEUTRAL)
 	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_ENT(this, INFO_CONQUEST_LIBERATE), this.netname);
+		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_CONQUEST_LIBERATE), this.netname);
 		Send_Notification(NOTIF_TEAM, this, MSG_CENTER, APP_TEAM_NUM(newteam, CENTER_CONQUEST_LOST), this.netname);
 
 		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it),
 		{
 			if(it.team == newteam)
-				Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_ENT(this, CENTER_CONQUEST_LIBERATE_TEAM), this.netname);
+				Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(this.team, CENTER_CONQUEST_LIBERATE_TEAM), this.netname);
 			else if(DIFF_TEAM(it, this))
 				Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(newteam, CENTER_CONQUEST_LIBERATE), this.netname);
 		});
@@ -141,13 +141,13 @@ void cq_ControlPoint_SwitchTeam(entity this, int newteam, int newstatus, bool sh
 
 			if(showmessage)
 			{
-				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_ENT(this, INFO_CONQUEST_CAPTURE), this.netname);
+				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_CONQUEST_CAPTURE), this.netname);
 				Send_Notification(NOTIF_TEAM, this, MSG_CENTER, CENTER_CONQUEST_CAPTURE_TEAM, this.netname);
 
 				FOREACH_CLIENT(IS_PLAYER(it),
 				{
 					if(DIFF_TEAM(it, this))
-						Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_ENT(this, CENTER_CONQUEST_CAPTURE), this.netname);
+						Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(this.team, CENTER_CONQUEST_CAPTURE), this.netname);
 				});
 			}
 

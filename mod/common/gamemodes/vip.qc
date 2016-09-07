@@ -180,7 +180,7 @@ void VIP_RoundStart()
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
 		if(STAT(VIP, it))
-			Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_ENT(it, CENTER_VIP_BEGIN));
+			Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(it.team, CENTER_VIP_BEGIN));
 		PutClientInServer(it);
 	});
 }
