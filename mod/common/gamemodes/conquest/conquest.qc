@@ -924,7 +924,7 @@ MUTATOR_HOOKFUNCTION(cq, HavocBot_ChooseRole)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(cq, GetTeamCount)
+MUTATOR_HOOKFUNCTION(cq, CheckAllowedTeams)
 {
 	M_ARGV(0, float) = cq_teams;
 }

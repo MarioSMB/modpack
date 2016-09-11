@@ -278,7 +278,7 @@ MUTATOR_HOOKFUNCTION(dotc, reset_map_global)
 	});
 }
 
-MUTATOR_HOOKFUNCTION(dotc, GetTeamCount)
+MUTATOR_HOOKFUNCTION(dotc, CheckAllowedTeams)
 {
 	M_ARGV(0, float) = dotc_teams;
 	return false;

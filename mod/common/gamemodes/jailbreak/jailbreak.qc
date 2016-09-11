@@ -1355,7 +1355,7 @@ MUTATOR_HOOKFUNCTION(jb, GiveFragsForKill)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(jb, GetTeamCount)
+MUTATOR_HOOKFUNCTION(jb, CheckAllowedTeams)
 {
 	M_ARGV(0, float) = jb_teams;
 }

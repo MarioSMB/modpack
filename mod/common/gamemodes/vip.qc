@@ -461,7 +461,7 @@ MUTATOR_HOOKFUNCTION(vip, OnEntityPreSpawn)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(vip, GetTeamCount)
+MUTATOR_HOOKFUNCTION(vip, CheckAllowedTeams)
 {
 	M_ARGV(0, float) = vip_teams;
 }
