@@ -47,7 +47,7 @@ MUTATOR_HOOKFUNCTION(sha, FilterItem)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(sha, SetStartItems)
+MUTATOR_HOOKFUNCTION(sha, SetStartItems, CBC_ORDER_LAST)
 {
 	start_items |= IT_UNLIMITED_WEAPON_AMMO;
 	//start_ammo_shells = warmup_start_ammo_shells = 100;

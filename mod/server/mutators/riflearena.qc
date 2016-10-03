@@ -68,7 +68,7 @@ MUTATOR_HOOKFUNCTION(ra, FilterItem)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(ra, SetStartItems)
+MUTATOR_HOOKFUNCTION(ra, SetStartItems, CBC_ORDER_LAST)
 {
 	start_items |= IT_UNLIMITED_AMMO;
 	start_ammo_nails = warmup_start_ammo_nails = 100;
