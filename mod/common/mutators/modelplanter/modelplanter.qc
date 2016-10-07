@@ -15,14 +15,13 @@
 #include "../../mplant/tools/smart.qc"
 #include "../../mplant/tools/rubble.qc"
 
-bool mplant_init();
+void mplant_init();
 
 REGISTER_MUTATOR(mdlplant, autocvar_g_modelplanter)
 {
 	MUTATOR_ONADD
 	{
-		if (!mplant_init())
-			error("modelplant did not initialize propely!");
+		mplant_init();
 	}
 
 	return false;
@@ -596,7 +595,7 @@ MUTATOR_HOOKFUNCTION(mdlplant, ClientDisconnect)
 	mplant_client_shutdown(player);
 }
 
-bool mplant_init()
+void mplant_init()
 {
 	mplant_root = spawn();
 	mplant_load_dirs();
@@ -606,8 +605,6 @@ bool mplant_init()
 	mplant_tool_register("Select",     MPT_MODEL_SELECT, mplant_tool_select,  mplant_tool_select_com);
 	mplant_tool_register("Smart tool", MPT_SMART,        mplant_tool_smart,   mplant_tool_smart_com);
 	mplant_tool_register("Rubble",     MPT_RUBBLE,       mplant_tool_rubble,  mplant_tool_rubble_com);
-
-	return true; // TODO: why bother checking?
 }
 
 #undef _SETMODEL
