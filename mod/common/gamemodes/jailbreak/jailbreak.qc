@@ -605,12 +605,12 @@ entity jb_ChooseJailSpawn(entity player, entity attacker)
 		if(attacker && DIFF_TEAM(player, attacker)) // don't throw teammates in own jail?
 		{
 			if(SAME_TEAM(it, attacker))
-				RandomSelection_Add(it, 0, string_null, 1, 1);
+				RandomSelection_AddEnt(it, 1, 1);
 		}
 		else
 		{
 			if(DIFF_TEAM(it, player))
-				RandomSelection_Add(it, 0, string_null, 1, 1);
+				RandomSelection_AddEnt(it, 1, 1);
 		}
 	});
 
@@ -651,7 +651,7 @@ entity JB_FindCamera(int theteam)
 
 	FOREACH_ENTITY_CLASS("info_jailbreak_jailcamera", it.team == theteam,
 	{
-		RandomSelection_Add(it, 0, string_null, 1, 1);
+		RandomSelection_AddEnt(it, 1, 1);
 	});
 
 	return RandomSelection_chosen_ent;

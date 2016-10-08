@@ -192,7 +192,7 @@ void vip_SelectVIPs()
 	FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0,
 	{
 		if((redgem_count < 1 || !usegems) && it.team == NUM_TEAM_1 && vip_count[NUM_TEAM_1] < 1)
-			RandomSelection_Add(it, 0, string_null, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
+			RandomSelection_AddEnt(it, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
 	});
 	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_1);
 
@@ -200,7 +200,7 @@ void vip_SelectVIPs()
 	FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0,
 	{
 		if((bluegem_count < 1 || !usegems) && it.team == NUM_TEAM_2 && vip_count[NUM_TEAM_2] < 1)
-			RandomSelection_Add(it, 0, string_null, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
+			RandomSelection_AddEnt(it, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
 	});
 	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_2);
 	
@@ -208,7 +208,7 @@ void vip_SelectVIPs()
 	FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0,
 	{
 		if((yellowgem_count < 1 || !usegems) && it.team == NUM_TEAM_3 && vip_count[NUM_TEAM_3] < 1)
-			RandomSelection_Add(it, 0, string_null, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
+			RandomSelection_AddEnt(it, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
 	});
 	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_3);
 	
@@ -216,7 +216,7 @@ void vip_SelectVIPs()
 	FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0,
 	{
 		if((pinkgem_count < 1 || !usegems) && it.team == NUM_TEAM_4 && vip_count[NUM_TEAM_4] < 1)
-			RandomSelection_Add(it, 0, string_null, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
+			RandomSelection_AddEnt(it, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
 	});
 	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_4);
 }

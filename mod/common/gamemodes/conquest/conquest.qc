@@ -758,7 +758,7 @@ MUTATOR_HOOKFUNCTION(cq, PlayerSpawn)
 		if(SAME_TEAM(tmp_entity, player) || (!tmp_entity.team && !owned_count))
 		if(tmp_entity.cq_status == CP_CAPTURED || !owned_count)
 		if(random_target)
-			RandomSelection_Add(tmp_entity, 0, string_null, 1, 1);
+			RandomSelection_AddEnt(tmp_entity, 1, 1);
 		else if(vlen2(tmp_entity.origin - spawn_loc) <= vlen2(closest_target.origin - spawn_loc) || closest_target == NULL)
 			closest_target = tmp_entity;
 	}

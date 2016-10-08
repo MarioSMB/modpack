@@ -321,7 +321,7 @@ void snafu_zombie_localtarget(entity this, float _range)
 		RandomSelection_Init();
 		FOREACH_ENTITY_CLASS("snafu_tadpole", !IS_DEAD(it),
 		{
-			RandomSelection_Add(it, 0, string_null, 1, 1);
+			RandomSelection_AddEnt(it, 1, 1);
 		});
 		this.enemy = RandomSelection_chosen_ent;
 	}
@@ -347,7 +347,7 @@ void snafu_gameover()
 	RandomSelection_Init();
 	FOREACH_ENTITY_CLASS("snafu_tadpole", IS_DEAD(it),
 	{
-		RandomSelection_Add(it, 0, string_null, 1, 1);
+		RandomSelection_AddEnt(it, 1, 1);
 	});
 
 	FOREACH_CLIENT(IS_PLAYER(it),

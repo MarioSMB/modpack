@@ -27,7 +27,7 @@ MUTATOR_HOOKFUNCTION(rvehicles, OnEntityPreSpawn)
 					if(!(trace_fraction == 1.0 && !trace_startsolid))
 						continue;
 				}
-				RandomSelection_Add(it, 0, string_null, 1, 1);
+				RandomSelection_AddEnt(it, 1, 1);
 			}
 		));
 

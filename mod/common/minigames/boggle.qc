@@ -126,13 +126,13 @@ string boggle_get_letter(int try)
 
 	//LOG_INFO(ftos(try), "\n");
 
-	FOREACH_WORD(boggle_letters[try], true, LAMBDA(RandomSelection_Add(NULL, 0, it, 1, 1)));
+	FOREACH_WORD(boggle_letters[try], true, LAMBDA(RandomSelection_AddString(it, 1, 1)));
 
 	string dotry = RandomSelection_chosen_string;
 
 	RandomSelection_Init();
 
-	FOREACH_WORD(dotry, true, LAMBDA(RandomSelection_Add(NULL, 0, it, 1, 1)));
+	FOREACH_WORD(dotry, true, LAMBDA(RandomSelection_AddString(it, 1, 1)));
 
 	return RandomSelection_chosen_string;
 }
@@ -143,7 +143,7 @@ int boggle_get_unused(int used_bit)
 
 	for(int i = 0; i < 16; ++i)
 		if(!(used_bit & BIT(i)))
-			RandomSelection_Add(NULL, i, string_null, 1, 1);
+			RandomSelection_AddFloat(i, 1, 1);
 
 	return RandomSelection_chosen_float;
 }
