@@ -21,12 +21,12 @@ EFFECT(0, IMPACT_METAL,           "impact_metal")
 float autocvar_g_balance_chainsaw_reload_ammo = 0;
 float autocvar_g_balance_chainsaw_reload_time = 2;
 float autocvar_g_balance_chainsaw_melee_ammo = 1;
-float autocvar_g_balance_chainsaw_melee_animtime = 0.15;
+float autocvar_g_balance_chainsaw_melee_animtime = 0.07;
 float autocvar_g_balance_chainsaw_melee_damage = 20;
 float autocvar_g_balance_chainsaw_melee_force = 50;
 float autocvar_g_balance_chainsaw_melee_nonplayerdamage = 20;
 float autocvar_g_balance_chainsaw_melee_range = 160;
-float autocvar_g_balance_chainsaw_melee_refire = 0.2;
+float autocvar_g_balance_chainsaw_melee_refire = 0.07;
 float autocvar_g_balance_chainsaw_swing_ammo = 10;
 float autocvar_g_balance_chainsaw_swing_animtime = 1.15;
 float autocvar_g_balance_chainsaw_swing_damage = 15;
