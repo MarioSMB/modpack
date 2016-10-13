@@ -8,6 +8,7 @@
 	#include "gates.qc"
 	#include "inventory.qc"
 	#include "lights.qc"
+	#include "monsterjump.qc"
 	#include "spikeshooter.qc"
 
 	#define IMPLEMENTATION
