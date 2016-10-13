@@ -9,6 +9,8 @@ void monsterjump_touch(entity this, entity toucher)
 
 spawnfunc(trigger_monsterjump)
 {
+	this.noise = SND(Null);
+
 	spawnfunc_trigger_push(this);
 
 	settouch(this, monsterjump_touch);
