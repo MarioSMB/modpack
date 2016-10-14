@@ -9,6 +9,7 @@
 #include "notifications.qh"
 #include "quake/all.inc"
 #include "radio.qh"
+#include "special.qc"
 #include "vehicles/all.inc"
 #include "weapons/all.inc"
 #include "weapons.qc"
