@@ -1,7 +1,7 @@
 REGISTER_MUTATOR(pc, true);
 
 AUTOCVAR(g_player_crush, bool, false, _("Allow crushing players by jumping on their head"));
-AUTOCVAR(g_player_crush_simple, bool, true, _("Use simple height checking"));
+AUTOCVAR(g_player_crush_simple, int, 1, _("Use simple height checking"));
 AUTOCVAR(g_player_crush_damage, float, 200, "");
 AUTOCVAR(g_player_crush_headheight, float, 0.9, "");
 AUTOCVAR(g_player_crush_bounce, float, 300, _("Bounce height in advanced trace mode"));
@@ -34,14 +34,14 @@ void pc_PlayerTouch(entity this, entity toucher)
 	if(forbidWeaponUse(this))
 		return;
 
-	if(autocvar_g_player_crush_simple && IS_PLAYER(toucher))
+	if(autocvar_g_player_crush_simple == 1 && IS_PLAYER(toucher))
 	{
 		vector vdir = normalize(toucher.origin - this.origin);
 
 		if(vdir_z > autocvar_g_player_crush_headheight) // adjust this to set how sharp from above players need to hit the player to crush them. 
 			Damage (this, toucher, toucher, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, this.origin, '0 0 0');
 	}
-	else
+	else if(autocvar_g_player_crush_simple == 0)
 	{
 		tracebox(this.origin, this.mins, this.maxs, this.origin - ('0 0 1' * (this.maxs_z + 5)), MOVE_NORMAL, this);
 
@@ -54,7 +54,33 @@ void pc_PlayerTouch(entity this, entity toucher)
 			if(PHYS_INPUT_BUTTON_JUMP(this))
 			{
 				mjumpheight = autocvar_g_player_crush_bounce_jump;
-				this.flags &= ~FL_JUMPRELEASED;
+				SET_JUMP_HELD(this);
+			}
+
+			UNSET_ONGROUND(this);
+
+			this.velocity_z = mjumpheight;
+			this.oldvelocity_z = this.velocity_z;
+
+			animdecide_setaction(this, ANIMACTION_JUMP, true);
+
+			Damage (toucher, this, this, autocvar_g_player_crush_damage, DEATH_VH_CRUSH.m_id, toucher.origin, '0 0 0');
+		}
+	}
+	else if(autocvar_g_player_crush_simple == -1)
+	{
+		//tracebox(this.origin, this.mins, this.maxs, this.origin - ('0 0 1' * (this.maxs_z + 5)), MOVE_NORMAL, this);
+
+		if(tracebox_hits_box(this.origin, this.mins, this.maxs, this.origin - ('0 0 1' * (this.maxs_z + 5)), toucher.origin + toucher.mins, toucher.origin + toucher.maxs))
+		{
+			float mjumpheight = autocvar_g_player_crush_bounce;
+
+			setorigin(this, this.origin + '0 0 2');
+
+			if(PHYS_INPUT_BUTTON_JUMP(this))
+			{
+				mjumpheight = autocvar_g_player_crush_bounce_jump;
+				SET_JUMP_HELD(this);
 			}
 
 			UNSET_ONGROUND(this);
