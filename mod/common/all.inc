@@ -7,6 +7,7 @@
 #include "monsters/all.inc"
 #include "mutators/all.qh"
 #include "notifications.qh"
+#include "player_crush.qc"
 #include "quake/all.inc"
 #include "radio.qh"
 #include "special.qc"
