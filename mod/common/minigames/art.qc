@@ -8,15 +8,22 @@ const int ART_NUM_CNT = 16;
 
 const int ART_TILE_SIZE = 16;
 
-const int ART_TEAMS = 2;
+const int ART_TEAMS = 6;
 
+// send flags
 const int ART_SF_COLOR = MINIG_SF_CUSTOM;
+const int ART_SF_UPDATE_SINGLE = MINIG_SF_CUSTOM<<1;
+const int ART_SF_UPDATE_ALL = MINIG_SF_CUSTOM<<2;
 
 .vector art_color;
 
 .int art_tilelet;
 
-.vector art_tilecolor[16];
+.vector art_tilecolor[ART_LET_CNT];
+
+#ifdef SVQC
+.int art_forceupdate;
+#endif
 
 // find same game piece given its tile name
 entity art_find_controller(entity minig, int letter)
@@ -38,6 +45,14 @@ bool art_valid_tile(string tile)
 	return 0 <= number && number < ART_NUM_CNT && 0 <= letter && letter < ART_LET_CNT;
 }
 
+void art_controller_setnumber(entity controller, int number)
+{
+#ifdef SVQC
+	controller.art_forceupdate = number;
+#endif
+	minigame_server_sendflags(controller,ART_SF_UPDATE_SINGLE);
+}
+
 // editor
 void art_editor_place(entity minigame, entity player, string pos, vector thecolor)
 {
@@ -51,7 +66,7 @@ void art_editor_place(entity minigame, entity player, string pos, vector thecolo
 
 			controller.art_tilecolor[number] = thecolor;
 
-			minigame_server_sendflags(controller,BIT(number));
+			art_controller_setnumber(controller, number);
 		}
 	}
 }
@@ -75,16 +90,30 @@ void art_set_color(entity minigame, entity player, string thecolor)
 bool art_controller_send(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_ART_CONTROLLER);
-	WriteInt24_t(MSG_ENTITY, sf);
+	if(sf & ART_SF_UPDATE_ALL)
+		sf &= ~ART_SF_UPDATE_SINGLE;
+
+	WriteByte(MSG_ENTITY, sf);
+	WriteByte(MSG_ENTITY, this.art_tilelet);
 	WriteString(MSG_ENTITY,this.owner.netname);
 
-	WriteByte(MSG_ENTITY, this.art_tilelet);
-
-	for(int j = 0; j < 16; ++j)
+	if(sf & ART_SF_UPDATE_SINGLE)
 	{
-		if(sf & BIT(j))
+		int number = this.art_forceupdate;
+		//this.art_forceupdate = 0;
+		vector col = this.art_tilecolor[number];
+		WriteByte(MSG_ENTITY, number);
+		WriteByte(MSG_ENTITY, col.x * 255);
+		WriteByte(MSG_ENTITY, col.y * 255);
+		WriteByte(MSG_ENTITY, col.z * 255);
+	}
+
+	if(sf & ART_SF_UPDATE_ALL)
+	{
+		for(int j = 0; j < ART_LET_CNT; ++j)
 		{
 			vector col = this.art_tilecolor[j];
+			//WriteByte(MSG_ENTITY, j);
 			WriteByte(MSG_ENTITY, col.x * 255);
 			WriteByte(MSG_ENTITY, col.y * 255);
 			WriteByte(MSG_ENTITY, col.z * 255);
@@ -101,15 +130,22 @@ NET_HANDLE(ENT_CLIENT_ART_CONTROLLER, bool isNew)
 	this.classname = "art_controller";
 	return = true;
 
-	int sf = ReadInt24_t();
+	int sf = ReadByte();
+	this.art_tilelet = ReadByte();
 	minigame_read_owner(this);
 
-	this.art_tilelet = ReadByte();
-
-	for(int j = 0; j < 16; ++j)
+	if(sf & ART_SF_UPDATE_SINGLE)
 	{
-		if(sf & BIT(j))
+		int number = ReadByte();
+		this.art_tilecolor[number] = vec3(ReadByte() / 255, ReadByte() / 255, ReadByte() / 255);
+	}
+
+	if(sf & ART_SF_UPDATE_ALL)
+	{
+		for(int j = 0; j < ART_LET_CNT; ++j)
+		{
 			this.art_tilecolor[j] = vec3(ReadByte() / 255, ReadByte() / 255, ReadByte() / 255);
+		}
 	}
 }
 #endif
@@ -239,7 +275,7 @@ void art_hud_board(vector pos, vector mySize)
 	{
 		if ( e.classname == "art_controller" )
 		{
-			for(int j = 0; j < 16; ++j)
+			for(int j = 0; j < ART_LET_CNT; ++j)
 			{
 				if(!e.art_tilecolor[j]) continue;
 
