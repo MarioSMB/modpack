@@ -550,9 +550,10 @@ MUTATOR_HOOKFUNCTION(mdlplant, FilterItem)
 	if (autocvar_g_modelplanter_withitems)
 		return false;
 
-	entity item = M_ARGV(0, entity);
+	//entity item = M_ARGV(0, entity);
 
-	// Keep spawnpoints
+	// Keep spawnpoints (yo tZork, this is an ITEM hook, not a general spawn hook)
+	/*
 	if (item.classname == "info_player_deathmatch")
 		return false;
 	if (item.classname == "info_player_team1")
@@ -568,7 +569,7 @@ MUTATOR_HOOKFUNCTION(mdlplant, FilterItem)
 	if (item.classname == "info_player_defender")
 		return false;
 	if (item.classname == "info_player_race")
-		return false;
+		return false;*/
 
 	// Get rid of everything else
 	return true;

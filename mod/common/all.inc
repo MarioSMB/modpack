@@ -5,6 +5,7 @@
 #include "projectiles.qh"
 #include "minigames/all.inc"
 #include "monsters/all.inc"
+//#include "mpowerups.qc"
 #include "mutators/all.qh"
 #include "notifications.qh"
 #include "player_crush.qc"
