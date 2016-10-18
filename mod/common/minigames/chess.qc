@@ -75,12 +75,10 @@ string response_phrase[] = {responses(lambda)};
 
 entity chess_find_piece(entity minig, string tile)
 {
-	FOREACH_ENTITY_ENT_ORDERED(owner, minig,
-	{
-		if(it.classname != "minigame_board_piece") continue;
-		if(it.netname == tile)
-			return it;
-	});
+	entity e = NULL;
+	while ( ( e = findentity(e,owner,minig) ) )
+		if ( e.classname == "minigame_board_piece" && e.netname == tile )
+			return e;
 	return NULL;
 }
 
@@ -256,12 +254,11 @@ bool chess_check_king_in_spot(entity minigame, string piece, string topos)
 
 	thepiece.netname = topos;
 
-	FOREACH_ENTITY_ENT_ORDERED(owner, minigame,
-	{
-		if(it.classname != "minigame_board_piece") continue;
-		if(it.team == thepiece.team && it.chess_id == piece__King)
+	entity e = NULL;
+	while ( ( e = findentity(e,owner,minigame) ) )
+		if ( e.classname == "minigame_board_piece" && e.team == thepiece.team && e.chess_id == piece__King )
 		{
-			if(chess_check(minigame, it))
+			if(chess_check(minigame, e))
 			{
 				thepiece.netname = thepos;
 				if(oldpos)
@@ -272,7 +269,6 @@ bool chess_check_king_in_spot(entity minigame, string piece, string topos)
 				return true;
 			}
 		}
-	});
 
 	thepiece.netname = thepos;
 	if(oldpos)
@@ -304,12 +300,12 @@ bool chess_king_checkspot(entity minig, entity king, string topos)
 			oldpiece.netname = foldpos;
 		return false; // the existing piece is our team?!
 	}
-	FOREACH_ENTITY_ENT_ORDERED(owner, minig,
-	{
-		if(it.classname != "minigame_board_piece") continue;
-		if(it.team != kteam)
+
+	entity e = NULL;
+	while ( ( e = findentity(e,owner,minig) ) )
+		if ( e.classname == "minigame_board_piece" && e.team != kteam )
 		{
-			int try = chess_move_try(minig, it.netname, topos, false);
+			int try = chess_move_try(minig, e.netname, topos, false);
 			if(CHESS_GOOD_MOVE(try))
 			{
 				king.netname = oldpos;
@@ -318,7 +314,6 @@ bool chess_king_checkspot(entity minig, entity king, string topos)
 				return true;
 			}
 		}
-	});
 
 	if(foldpos)
 		oldpiece.netname = foldpos;
@@ -330,16 +325,15 @@ bool chess_king_checkspot(entity minig, entity king, string topos)
 bool chess_check(entity minig, entity king)
 {
 	int kteam = king.team;
-	FOREACH_ENTITY_ENT_ORDERED(owner, minig,
-	{
-		if(it.classname != "minigame_board_piece") continue;
-		if(it.team != kteam && it.chess_id != piece__King)
+
+	entity e = NULL;
+	while ( ( e = findentity(e,owner,minig) ) )
+		if ( e.classname == "minigame_board_piece" && e.team != kteam && e.chess_id != piece__King )
 		{
-			int try = chess_move_try(minig, it.netname, king.netname, false);
+			int try = chess_move_try(minig, e.netname, king.netname, false);
 			if(CHESS_GOOD_MOVE(try))
 				return true;
 		}
-	});
 
 	return false;
 }
@@ -370,25 +364,29 @@ bool chess_king_canmove(entity minigame, entity piece)
 bool chess_king_canbesaved(entity minigame, entity king)
 {
 	int save_cnt = 0, total_cnt = 0;
-	FOREACH_ENTITY_ENT_ORDERED(owner, minigame,
+
+	entity e = NULL;
+	while ( ( e = findentity(e,owner,minigame) ) )
 	{
-		if(it.classname != "minigame_board_piece") continue;
-		if(it.team == king.team || it.chess_id == piece__King) continue;
-		int try = chess_move_try(minigame, it.netname, king.netname, true);
+		if(e.classname != "minigame_board_piece") continue;
+		if(e.team == king.team || e.chess_id == piece__King) continue;
+
+		int try = chess_move_try(minigame, e.netname, king.netname, true);
 		if(CHESS_GOOD_MOVE(try))
 		{
 			++total_cnt;
-			const string myname = it.netname;
-			FOREACH_ENTITY_ENT_ORDERED(owner, minigame,
+			string myname = e.netname;
+			entity e2 = NULL;
+			while ( ( e2 = findentity(e2,owner,minigame) ) )
 			{
-				if(it.classname != "minigame_board_piece") continue;
-				if(it.team != king.team || it.chess_id == piece__King) continue;
-				int try2 = chess_move_try(minigame, it.netname, myname, true);
+				if(e2.classname != "minigame_board_piece") continue;
+				if(e2.team != king.team || e2.chess_id == piece__King) continue;
+				int try2 = chess_move_try(minigame, e2.netname, myname, true);
 				if(CHESS_GOOD_MOVE(try2))
 					++save_cnt;
-			});
+			}
 		}
-	});
+	}
 
 	return (save_cnt >= total_cnt) ? true : false;
 }
@@ -397,19 +395,18 @@ int chess_kingstatus(entity minigame, int pteam)
 {
 	return = CHESS_FINE;
 
-	FOREACH_ENTITY_ENT_ORDERED(owner, minigame,
-	{
-		if(it.classname != "minigame_board_piece") continue;
-		if(it.team != pteam || it.chess_id != piece__King) continue;
-		if(!chess_check(minigame, it)) { continue; }
-		return = CHESS_CHECK;
-		it.chess_king_checked = true;
-		if(!chess_king_canmove(minigame, it))
-		if(!chess_king_canbesaved(minigame, it))
+	entity e = NULL;
+	while ( ( e = findentity(e,owner,minigame) ) )
+		if ( e.classname == "minigame_board_piece" )
 		{
-			return CHESS_CHECKMATE;
+			if(e.team != pteam || e.chess_id != piece__King) continue;
+			if(!chess_check(minigame, e)) continue;
+			return = CHESS_CHECK;
+			e.chess_king_checked = true;
+			if(!chess_king_canmove(minigame, e))
+			if(!chess_king_canbesaved(minigame, e))
+				return CHESS_CHECKMATE;
 		}
-	});
 }
 
 bool chess_move_piece(entity minigame, entity piece, string pos, int promote)
