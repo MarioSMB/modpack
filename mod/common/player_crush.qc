@@ -71,9 +71,7 @@ void pc_PlayerTouch(entity this, entity toucher)
 		return;
 
 #ifdef SVQC
-	bool and_monster = IS_MONSTER(toucher);
-	if(and_monster && !((Monsters_from(toucher.monsterid)).spawnflags & MON_FLAG_CRUSH))
-		and_monster = false;
+	bool and_monster = IS_MONSTER(toucher) && ((Monsters_from(toucher.monsterid)).spawnflags & MON_FLAG_CRUSH);
 
 	if(!autocvar_g_player_crush && !and_monster)
 		return;
