@@ -70,8 +70,8 @@ bool M_Rottweiler_Attack(int attack_type, entity actor, entity targ)
 	return false;
 }
 
-spawnfunc(monster_rottweiler) { Monster_Spawn(this, MON_ROTTWEILER.monsterid); }
-spawnfunc(monster_dog) { Monster_Spawn(this, MON_ROTTWEILER.monsterid); }
+spawnfunc(monster_rottweiler) { Monster_Spawn(this, true, MON_ROTTWEILER.monsterid); }
+spawnfunc(monster_dog) { Monster_Spawn(this, true, MON_ROTTWEILER.monsterid); }
 
 #endif // SVQC
 

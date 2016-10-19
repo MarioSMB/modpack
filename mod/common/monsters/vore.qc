@@ -213,7 +213,7 @@ bool M_Vore_Attack(int attack_type, entity actor, entity targ)
 	return false;
 }
 
-spawnfunc(monster_shalrath) { Monster_Spawn(this, MON_VORE.monsterid); }
+spawnfunc(monster_shalrath) { Monster_Spawn(this, true, MON_VORE.monsterid); }
 
 #endif // SVQC
 

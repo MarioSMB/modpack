@@ -147,7 +147,7 @@ bool M_Enforcer_Attack(int attack_type, entity actor, entity targ)
 	return false;
 }
 
-spawnfunc(monster_enforcer) { Monster_Spawn(this, MON_ENFORCER.monsterid); }
+spawnfunc(monster_enforcer) { Monster_Spawn(this, true, MON_ENFORCER.monsterid); }
 
 #endif // SVQC
 

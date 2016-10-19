@@ -102,8 +102,8 @@ bool M_Demon_Attack(int attack_type, entity actor, entity targ)
 	return false;
 }
 
-spawnfunc(monster_demon) { Monster_Spawn(this, MON_DEMON.monsterid); }
-spawnfunc(monster_demon1) { Monster_Spawn(this, MON_DEMON.monsterid); }
+spawnfunc(monster_demon) { Monster_Spawn(this, true, MON_DEMON.monsterid); }
+spawnfunc(monster_demon1) { Monster_Spawn(this, true, MON_DEMON.monsterid); }
 
 #endif // SVQC
 

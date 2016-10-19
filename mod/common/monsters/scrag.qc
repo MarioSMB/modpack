@@ -153,7 +153,7 @@ bool M_Scrag_Attack(int attack_type, entity actor, entity targ)
 	return false;
 }
 
-spawnfunc(monster_scrag) { Monster_Spawn(this, MON_SCRAG.monsterid); }
+spawnfunc(monster_scrag) { Monster_Spawn(this, true, MON_SCRAG.monsterid); }
 #endif // SVQC
 
 		#ifdef SVQC

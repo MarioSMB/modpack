@@ -85,7 +85,7 @@ bool M_Tarbaby_Attack(int attack_type, entity actor, entity targ)
 	return false;
 }
 
-spawnfunc(monster_tarbaby) { Monster_Spawn(this, MON_TARBABY.monsterid); }
+spawnfunc(monster_tarbaby) { Monster_Spawn(this, true, MON_TARBABY.monsterid); }
 #endif // SVQC
 
 		#ifdef SVQC

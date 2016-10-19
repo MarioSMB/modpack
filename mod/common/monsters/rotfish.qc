@@ -67,8 +67,8 @@ bool M_Rotfish_Attack(int attack_type, entity actor, entity targ)
 	return false;
 }
 
-spawnfunc(monster_rotfish) { Monster_Spawn(this, MON_ROTFISH.monsterid); }
-spawnfunc(monster_fish) { Monster_Spawn(this, MON_ROTFISH.monsterid); }
+spawnfunc(monster_rotfish) { Monster_Spawn(this, true, MON_ROTFISH.monsterid); }
+spawnfunc(monster_fish) { Monster_Spawn(this, true, MON_ROTFISH.monsterid); }
 
 #endif // SVQC
 

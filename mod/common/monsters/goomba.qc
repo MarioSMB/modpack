@@ -88,7 +88,7 @@ void M_Goomba_Touch(entity this, entity toucher)
 	}
 }
 
-spawnfunc(monster_goomba) { Monster_Spawn(this, MON_GOOMBA.monsterid); }
+spawnfunc(monster_goomba) { Monster_Spawn(this, true, MON_GOOMBA.monsterid); }
 
 #endif // SVQC
 

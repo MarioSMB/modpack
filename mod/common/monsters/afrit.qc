@@ -133,7 +133,7 @@ bool M_Afrit_Attack(int attack_type, entity actor, entity targ)
 	return false;
 }
 
-spawnfunc(monster_afrit) { Monster_Spawn(this, MON_AFRIT.monsterid); }
+spawnfunc(monster_afrit) { Monster_Spawn(this, true, MON_AFRIT.monsterid); }
 #endif // SVQC
 
 		#ifdef SVQC

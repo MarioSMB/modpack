@@ -82,7 +82,7 @@ bool M_Spawner_Attack(int attack_type, entity actor, entity targ)
 	return false;
 }
 
-spawnfunc(monster_spawner) { Monster_Spawn(this, MON_SPAWNER.monsterid); }
+spawnfunc(monster_spawner) { Monster_Spawn(this, true, MON_SPAWNER.monsterid); }
 
 		METHOD(Spawner, mr_think, bool(Monster thismon, entity actor))
 		{
