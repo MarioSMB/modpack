@@ -21,13 +21,10 @@ void za_SpawnMonster()
 {
 	if(gameover) { return; }
 
-	entity e = spawn(), mon;
+	entity e = spawn();
 
 	if(MoveToRandomMapLocation(e, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
-		mon = spawnmonster(autocvar_g_za_spawnmonster, 0, NULL, NULL, e.origin, false, false, 2);
-
-	setthink(e, SUB_Remove);
-	e.nextthink = time + 0.1;
+		spawnmonster(e, autocvar_g_za_spawnmonster, 0, NULL, NULL, e.origin, false, false, 2);
 }
 
 void za_SetEnemy(entity player)

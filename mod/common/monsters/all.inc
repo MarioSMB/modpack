@@ -1,5 +1,3 @@
-// NOTE: monsters must be included in the same order twice, for implementation!
-
 #include "vore.qc"
 #include "scrag.qc"
 #include "soldier.qc"
@@ -11,6 +9,6 @@
 #include "demon.qc"
 #include "rottweiler.qc"
 #include "goomba.qc"
-#if 0
+
+// not actually a monster
 #include "spawner.qc"
-#endif
