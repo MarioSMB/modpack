@@ -9,6 +9,7 @@
 #include "demon.qc"
 #include "rottweiler.qc"
 #include "goomba.qc"
+#include "koopa.qc"
 
 // not actually a monster
 #include "spawner.qc"
