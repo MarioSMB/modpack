@@ -23,7 +23,7 @@ Building tools
 Required content packs:
  - http://dl.xonotic.co/zzz-misc-v006-62-g9667a44.pk3
  - http://dl.xonotic.co/zzz-quickmenu_019.pk3
- - http://dl.xonotic.co/zzz-minigames-v006-62-g9667a44.pk3
+ - http://dl.xonotic.co/zzz-minigames-v006-64-g09ed1c0.pk3
 
 Optional content packs:
  - http://dl.xonotic.co/zzz-mod-extra-v006-62-g9667a44.pk3
