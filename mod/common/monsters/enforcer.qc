@@ -30,6 +30,9 @@ REGISTER_MONSTER(ENFORCER, NEW(Enforcer)) {
 
 #ifdef IMPLEMENTATION
 
+.vector anim_pain3;
+.vector anim_pain4;
+
 #ifdef SVQC
 
 AUTOCVAR(g_monster_enforcer_health, float, 200, "");

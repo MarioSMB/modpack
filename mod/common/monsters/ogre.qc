@@ -38,6 +38,10 @@ REGISTER_MONSTER(OGRE, NEW(Ogre)) {
 
 #ifdef IMPLEMENTATION
 
+.vector anim_pain3;
+.vector anim_pain4;
+.vector anim_pain5;
+
 #ifdef SVQC
 
 AUTOCVAR(g_monster_ogre_health, float, 320, "");
