@@ -217,7 +217,7 @@ this.effects |= EF_MUZZLEFLASH;
 ai_face(this);
 this.owner = spawn();
 o = this.owner;
-setmodel(o, "progs/s_light.mdl");
+_setmodel(o, "progs/s_light.mdl");
 setorigin(o, this.origin);
 o.angles = this.angles;
 o.nextthink = time + 0.7;
@@ -259,7 +259,7 @@ void() sham_pain4       =[      $pain4, sham_pain5      ] {}
 void() sham_pain5       =[      $pain5, sham_pain6      ] {}
 void() sham_pain6       =[      $pain6, sham_run1      ] {}
 
-void(entity attacker, float damage)	sham_pain =
+void sham_pain(entity this, entity attacker, float damage)
 {
 	_sound(this, CHAN_VOICE, "shambler/shurt2.wav", 1, ATTN_NORM);
 
@@ -309,6 +309,62 @@ void sham_die(entity this, entity attacker)
 	sham_death1();
 }
 
+/*
+===========
+ShamCheckAttack
+
+The player is in view, so decide to move or launch an attack
+Returns false if movement should continue
+============
+*/
+bool ShamCheckAttack(entity this)
+{
+	if(this.enemy_range == RANGE_MELEE)
+	{
+		if(CanDamage(this.enemy, this))
+		{
+			this.attack_state = AS_MELEE;
+			return true;
+		}
+	}
+
+	if(time < this.attack_finished)
+		return false;
+	
+	if(!this.enemy_vis)
+		return false;
+		
+	entity targ = this.enemy;
+	
+// see if any entities are in the way of the shot
+	vector spot1 = this.origin + this.view_ofs;
+	vector spot2 = targ.origin + targ.view_ofs;
+
+	if(vlen(spot1 - spot2) > 600)
+		return false;
+
+	traceline(spot1, spot2, false, this);
+
+	if(trace_inopen && trace_inwater)
+		return false;			// sight line crossed contents
+
+	if(trace_ent != targ)
+	{
+		return false;	// don't have a clear shot
+	}
+			
+// missile attack
+	if(this.enemy_range == RANGE_FAR)
+		return false;
+		
+	this.attack_state = AS_MISSILE;
+	SUB_AttackFinished(this, 2 + 2*random());
+	return true;
+}
+
+string shambler_sight() { return "shambler/ssight.wav"; }
+string shambler_deathmessage() { return "was smashed by a Shambler"; }
+
 //============================================================================
 
 
@@ -338,7 +394,7 @@ spawnfunc(monster_shambler)
 
 	this.solid = SOLID_SLIDEBOX;
 	this.movetype = MOVETYPE_STEP;
-	setmodel(this, "progs/shambler.mdl");
+	_setmodel(this, "progs/shambler.mdl");
 
 	setsize(this, VEC_HULL2_MIN, VEC_HULL2_MAX);
 	this.health = 600;
@@ -350,6 +406,10 @@ spawnfunc(monster_shambler)
 	this.th_melee = sham_melee;
 	this.th_missile = sham_magic1;
 	this.th_pain = sham_pain;
+
+	this.sightsound = shambler_sight;
+	this.checkattack = ShamCheckAttack;
+	this.deathmessage = shambler_deathmessage;
 	
 	walkmonster_start(this);
 }

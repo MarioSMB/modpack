@@ -102,7 +102,7 @@ void SpawnMeatSpray(entity this, vector org, vector vel)
 	missile.nextthink = time + 1;
 	setthink(missile, SUB_Remove);
 
-	setmodel(missile, "progs/zom_gib.mdl");
+	_setmodel(missile, "progs/zom_gib.mdl");
 	setsize(missile, '0 0 0', '0 0 0');		
 	setorigin(missile, org);
 }
@@ -314,7 +314,7 @@ void BecomeExplosion(entity this)
 	this.movetype = MOVETYPE_NONE;
 	this.velocity = '0 0 0';
 	settouch(this, func_null);
-	setmodel(this, "progs/s_explod.spr");
+	_setmodel(this, "progs/s_explod.spr");
 	this.solid = SOLID_NOT;
 	s_explode1(this);
 }
@@ -389,7 +389,7 @@ void W_FireRocket(entity this)
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);
 
-	setmodel(missile, "progs/missile.mdl");
+	_setmodel(missile, "progs/missile.mdl");
 	setsize(missile, '0 0 0', '0 0 0');		
 	setorigin(missile, this.origin + v_forward*8 + '0 0 16');
 }
@@ -568,7 +568,7 @@ void W_FireGrenade(entity this)
 	missile.nextthink = time + 2.5;
 	setthink(missile, GrenadeExplode);
 
-	setmodel(missile, "progs/grenade.mdl");
+	_setmodel(missile, "progs/grenade.mdl");
 	setsize(missile, '0 0 0', '0 0 0');		
 	setorigin(missile, this.origin);
 }
@@ -600,7 +600,7 @@ void launch_spike(vector org, vector dir)
 	newmis.classname = "spike";
 	setthink(newmis, SUB_Remove);
 	newmis.nextthink = time + 6;
-	setmodel(newmis, "progs/spike.mdl");
+	_setmodel(newmis, "progs/spike.mdl");
 	setsize(newmis, VEC_ORIGIN, VEC_ORIGIN);		
 	setorigin(newmis, org);
 
@@ -618,7 +618,7 @@ void W_FireSuperSpikes()
 	dir = aim(this, 1000);
 	launch_spike(this.origin + '0 0 16', dir);
 	settouch(newmis, superspike_touch);
-	setmodel(newmis, "progs/s_spike.mdl");
+	_setmodel(newmis, "progs/s_spike.mdl");
 	setsize(newmis, VEC_ORIGIN, VEC_ORIGIN);		
 	this.punchangle_x = -2;
 }
@@ -816,17 +816,17 @@ void W_SetCurrentAmmo(entity this)
 
 int W_BestWeapon(entity this)
 {
-	int it = this.items;
+	int itm = this.items;
 
-	if(this.waterlevel <= 1 && this.ammo_cells >= 1 &&(it & IT_LIGHTNING) )
+	if(this.waterlevel <= 1 && this.ammo_cells >= 1 &&(itm & IT_LIGHTNING) )
 		return IT_LIGHTNING;
-	if(this.ammo_nails >= 2 &&(it & IT_SUPER_NAILGUN) )
+	if(this.ammo_nails >= 2 &&(itm & IT_SUPER_NAILGUN) )
 		return IT_SUPER_NAILGUN;
-	if(this.ammo_shells >= 2 &&(it & IT_SUPER_SHOTGUN) )
+	if(this.ammo_shells >= 2 &&(itm & IT_SUPER_SHOTGUN) )
 		return IT_SUPER_SHOTGUN;
-	if(this.ammo_nails >= 1 &&(it & IT_NAILGUN) )
+	if(this.ammo_nails >= 1 &&(itm & IT_NAILGUN) )
 		return IT_NAILGUN;
-	if(this.ammo_shells >= 1 &&(it & IT_SHOTGUN) )
+	if(this.ammo_shells >= 1 &&(itm & IT_SHOTGUN) )
 		return IT_SHOTGUN;
 	return IT_AXE;
 }
@@ -871,57 +871,68 @@ void W_Attack(entity this)
 	makevectors	(this.v_angle);			// calculate forward angle for velocity
 	this.show_hostile = time + 1;	// wake monsters up
 
-	if(this.weapon == IT_AXE)
+	switch(this.weapon)
 	{
-		_sound(this, CHAN_WEAPON, "weapons/ax1.wav", 1, ATTN_NORM);
-		float r = random();
-		if(r < 0.25)
-			player_axe1(this);
-		else if(r<0.5)
-			player_axeb1(this);
-		else if(r<0.75)
-			player_axec1(this);
-		else
-			player_axed1(this);
-		this.attack_finished = time + 0.5;
-	}
-	else if(this.weapon == IT_SHOTGUN)
-	{
-		player_shot1(this);
-		W_FireShotgun(this);
-		this.attack_finished = time + 0.5;
-	}
-	else if(this.weapon == IT_SUPER_SHOTGUN)
-	{
-		player_shot1(this);
-		W_FireSuperShotgun(this);
-		this.attack_finished = time + 0.7;
-	}
-	else if(this.weapon == IT_NAILGUN)
-	{
-		player_nail1(this);
-	}
-	else if(this.weapon == IT_SUPER_NAILGUN)
-	{
-		player_nail1(this);
-	}
-	else if(this.weapon == IT_GRENADE_LAUNCHER)
-	{
-		player_rocket1(this);
-		W_FireGrenade(this);
-		this.attack_finished = time + 0.6;
-	}
-	else if(this.weapon == IT_ROCKET_LAUNCHER)
-	{
-		player_rocket1(this);
-		W_FireRocket(this);
-		this.attack_finished = time + 0.8;
-	}
-	else if(this.weapon == IT_LIGHTNING)
-	{
-		player_light1(this);
-		this.attack_finished = time + 0.1;
-		_sound(this, CHAN_AUTO, "weapons/lstart.wav", 1, ATTN_NORM);
+		case IT_AXE:
+		{
+			_sound(this, CHAN_WEAPON, "weapons/ax1.wav", 1, ATTN_NORM);
+			float r = random();
+			if(r < 0.25)
+				player_axe1(this);
+			else if(r<0.5)
+				player_axeb1(this);
+			else if(r<0.75)
+				player_axec1(this);
+			else
+				player_axed1(this);
+			this.attack_finished = time + 0.5;
+			break;
+		}
+		case IT_SHOTGUN:
+		{
+			player_shot1(this);
+			W_FireShotgun(this);
+			this.attack_finished = time + 0.5;
+			break;
+		}
+		case IT_SUPER_SHOTGUN:
+		{
+			player_shot1(this);
+			W_FireSuperShotgun(this);
+			this.attack_finished = time + 0.7;
+			break;
+		}
+		case IT_NAILGUN:
+		{
+			player_nail1(this);
+			break;
+		}
+		case IT_SUPER_NAILGUN:
+		{
+			player_nail1(this);
+			break;
+		}
+		case IT_GRENADE_LAUNCHER:
+		{
+			player_rocket1(this);
+			W_FireGrenade(this);
+			this.attack_finished = time + 0.6;
+			break;
+		}
+		case IT_ROCKET_LAUNCHER:
+		{
+			player_rocket1(this);
+			W_FireRocket(this);
+			this.attack_finished = time + 0.8;
+			break;
+		}
+		case IT_LIGHTNING:
+		{
+			player_light1(this);
+			this.attack_finished = time + 0.1;
+			_sound(this, CHAN_AUTO, "weapons/lstart.wav", 1, ATTN_NORM);
+			break;
+		}
 	}
 }
 
@@ -933,54 +944,65 @@ W_ChangeWeapon
 */
 void W_ChangeWeapon(entity this)
 {
-	int am = 0;
+	bool am = false;
 	int fl = 0;
 	
-	if(this.impulse == 1)
+	switch(this.impulse)
 	{
-		fl = IT_AXE;
-	}
-	else if(this.impulse == 2)
-	{
-		fl = IT_SHOTGUN;
-		if(this.ammo_shells < 1)
-			am = 1;
-	}
-	else if(this.impulse == 3)
-	{
-		fl = IT_SUPER_SHOTGUN;
-		if(this.ammo_shells < 2)
-			am = 1;
-	}		
-	else if(this.impulse == 4)
-	{
-		fl = IT_NAILGUN;
-		if(this.ammo_nails < 1)
-			am = 1;
-	}
-	else if(this.impulse == 5)
-	{
-		fl = IT_SUPER_NAILGUN;
-		if(this.ammo_nails < 2)
-			am = 1;
-	}
-	else if(this.impulse == 6)
-	{
-		fl = IT_GRENADE_LAUNCHER;
-		if(this.ammo_rockets < 1)
-			am = 1;
-	}
-	else if(this.impulse == 7)
-	{
-		fl = IT_ROCKET_LAUNCHER;
-		if(this.ammo_rockets < 1)
-			am = 1;
-	}
-	else if(this.impulse == 8)
-	{
-		fl = IT_LIGHTNING;
-		if(this.ammo_cells < 1)
-			am = 1;
+		case 1:
+		{
+			fl = IT_AXE;
+			break;
+		}
+		case 2:
+		{
+			fl = IT_SHOTGUN;
+			if(this.ammo_shells < 1)
+				am = true;
+			break;
+		}
+		case 3:
+		{
+			fl = IT_SUPER_SHOTGUN;
+			if(this.ammo_shells < 2)
+				am = true;
+			break;
+		}		
+		case 4:
+		{
+			fl = IT_NAILGUN;
+			if(this.ammo_nails < 1)
+				am = true;
+			break;
+		}
+		case 5:
+		{
+			fl = IT_SUPER_NAILGUN;
+			if(this.ammo_nails < 2)
+				am = true;
+			break;
+		}
+		case 6:
+		{
+			fl = IT_GRENADE_LAUNCHER;
+			if(this.ammo_rockets < 1)
+				am = true;
+			break;
+		}
+		case 7:
+		{
+			fl = IT_ROCKET_LAUNCHER;
+			if(this.ammo_rockets < 1)
+				am = true;
+			break;
+		}
+		case 8:
+		{
+			fl = IT_LIGHTNING;
+			if(this.ammo_cells < 1)
+				am = true;
+			break;
+		}
 	}
 
 	this.impulse = 0;
@@ -1049,56 +1071,67 @@ void CycleWeaponCommand(entity this)
 	
 	while(1)
 	{
-		int am = 0;
+		bool am = false;
 
-		if(this.weapon == IT_LIGHTNING)
+		switch(this.weapon)
 		{
-			this.weapon = IT_AXE;
-		}
-		else if(this.weapon == IT_AXE)
-		{
-			this.weapon = IT_SHOTGUN;
-			if(this.ammo_shells < 1)
-				am = 1;
-		}
-		else if(this.weapon == IT_SHOTGUN)
-		{
-			this.weapon = IT_SUPER_SHOTGUN;
-			if(this.ammo_shells < 2)
-				am = 1;
-		}		
-		else if(this.weapon == IT_SUPER_SHOTGUN)
-		{
-			this.weapon = IT_NAILGUN;
-			if(this.ammo_nails < 1)
-				am = 1;
-		}
-		else if(this.weapon == IT_NAILGUN)
-		{
-			this.weapon = IT_SUPER_NAILGUN;
-			if(this.ammo_nails < 2)
-				am = 1;
-		}
-		else if(this.weapon == IT_SUPER_NAILGUN)
-		{
-			this.weapon = IT_GRENADE_LAUNCHER;
-			if(this.ammo_rockets < 1)
-				am = 1;
-		}
-		else if(this.weapon == IT_GRENADE_LAUNCHER)
-		{
-			this.weapon = IT_ROCKET_LAUNCHER;
-			if(this.ammo_rockets < 1)
-				am = 1;
-		}
-		else if(this.weapon == IT_ROCKET_LAUNCHER)
-		{
-			this.weapon = IT_LIGHTNING;
-			if(this.ammo_cells < 1)
-				am = 1;
+			case IT_LIGHTNING:
+			{
+				this.weapon = IT_AXE;
+				break;
+			}
+			case IT_AXE:
+			{
+				this.weapon = IT_SHOTGUN;
+				if(this.ammo_shells < 1)
+					am = true;
+				break;
+			}
+			case IT_SHOTGUN:
+			{
+				this.weapon = IT_SUPER_SHOTGUN;
+				if(this.ammo_shells < 2)
+					am = true;
+				break;
+			}		
+			case IT_SUPER_SHOTGUN:
+			{
+				this.weapon = IT_NAILGUN;
+				if(this.ammo_nails < 1)
+					am = true;
+				break;
+			}
+			case IT_NAILGUN:
+			{
+				this.weapon = IT_SUPER_NAILGUN;
+				if(this.ammo_nails < 2)
+					am = true;
+				break;
+			}
+			case IT_SUPER_NAILGUN:
+			{
+				this.weapon = IT_GRENADE_LAUNCHER;
+				if(this.ammo_rockets < 1)
+					am = true;
+				break;
+			}
+			case IT_GRENADE_LAUNCHER:
+			{
+				this.weapon = IT_ROCKET_LAUNCHER;
+				if(this.ammo_rockets < 1)
+					am = true;
+				break;
+			}
+			case IT_ROCKET_LAUNCHER:
+			{
+				this.weapon = IT_LIGHTNING;
+				if(this.ammo_cells < 1)
+					am = true;
+				break;
+			}
 		}
 	
-		if((myitems & this.weapon) && am == 0)
+		if((myitems & this.weapon) && am == false)
 		{
 			W_SetCurrentAmmo(this);
 			return;
@@ -1121,56 +1154,67 @@ void CycleWeaponReverseCommand(entity this)
 
 	while(1)
 	{
-		int am = 0;
+		bool am = false;
 
-		if(this.weapon == IT_LIGHTNING)
+		switch(this.weapon)
 		{
-			this.weapon = IT_ROCKET_LAUNCHER;
-			if(this.ammo_rockets < 1)
-				am = 1;
-		}
-		else if(this.weapon == IT_ROCKET_LAUNCHER)
-		{
-			this.weapon = IT_GRENADE_LAUNCHER;
-			if(this.ammo_rockets < 1)
-				am = 1;
-		}
-		else if(this.weapon == IT_GRENADE_LAUNCHER)
-		{
-			this.weapon = IT_SUPER_NAILGUN;
-			if(this.ammo_nails < 2)
-				am = 1;
-		}
-		else if(this.weapon == IT_SUPER_NAILGUN)
-		{
-			this.weapon = IT_NAILGUN;
-			if(this.ammo_nails < 1)
-				am = 1;
-		}
-		else if(this.weapon == IT_NAILGUN)
-		{
-			this.weapon = IT_SUPER_SHOTGUN;
-			if(this.ammo_shells < 2)
-				am = 1;
-		}		
-		else if(this.weapon == IT_SUPER_SHOTGUN)
-		{
-			this.weapon = IT_SHOTGUN;
-			if(this.ammo_shells < 1)
-				am = 1;
-		}
-		else if(this.weapon == IT_SHOTGUN)
-		{
-			this.weapon = IT_AXE;
-		}
-		else if(this.weapon == IT_AXE)
-		{
-			this.weapon = IT_LIGHTNING;
-			if(this.ammo_cells < 1)
-				am = 1;
+			case IT_LIGHTNING:
+			{
+				this.weapon = IT_ROCKET_LAUNCHER;
+				if(this.ammo_rockets < 1)
+					am = true;
+				break;
+			}
+			case IT_ROCKET_LAUNCHER:
+			{
+				this.weapon = IT_GRENADE_LAUNCHER;
+				if(this.ammo_rockets < 1)
+					am = true;
+				break;
+			}
+			case IT_GRENADE_LAUNCHER:
+			{
+				this.weapon = IT_SUPER_NAILGUN;
+				if(this.ammo_nails < 2)
+					am = true;
+				break;
+			}
+			case IT_SUPER_NAILGUN:
+			{
+				this.weapon = IT_NAILGUN;
+				if(this.ammo_nails < 1)
+					am = true;
+				break;
+			}
+			case IT_NAILGUN:
+			{
+				this.weapon = IT_SUPER_SHOTGUN;
+				if(this.ammo_shells < 2)
+					am = true;
+				break;
+			}		
+			case IT_SUPER_SHOTGUN:
+			{
+				this.weapon = IT_SHOTGUN;
+				if(this.ammo_shells < 1)
+					am = true;
+				break;
+			}
+			case IT_SHOTGUN:
+			{
+				this.weapon = IT_AXE;
+				break;
+			}
+			case IT_AXE:
+			{
+				this.weapon = IT_LIGHTNING;
+				if(this.ammo_cells < 1)
+					am = true;
+				break;
+			}
 		}
 	
-		if((myitems & this.weapon) && am == 0)
+		if((myitems & this.weapon) && am == false)
 		{
 			W_SetCurrentAmmo(this);
 			return;
@@ -1179,19 +1223,7 @@ void CycleWeaponReverseCommand(entity this)
 
 }
 
-/*
-============
-ServerflagsCommand
-
-Just for development
-============
-*/
-void ServerflagsCommand()
-{
-	serverflags = serverflags * 2 + 1;
-}
-
-void QuadCheat()
+void QuadCheat(entity this)
 {
 	if(deathmatch || coop)
 		return;
@@ -1210,19 +1242,17 @@ ImpulseCommands
 void ImpulseCommands()
 {
 	if(this.impulse >= 1 && this.impulse <= 8)
-		W_ChangeWeapon();
+		W_ChangeWeapon(this);
 
 	if(this.impulse == 9)
-		CheatCommand();
+		CheatCommand(this);
 	if(this.impulse == 10)
-		CycleWeaponCommand();
-	if(this.impulse == 11)
-		ServerflagsCommand();
+		CycleWeaponCommand(this);
 	if(this.impulse == 12)
-		CycleWeaponReverseCommand();
+		CycleWeaponReverseCommand(this);
 
 	if(this.impulse == 255)
-		QuadCheat();
+		QuadCheat(this);
 		
 	this.impulse = 0;
 }

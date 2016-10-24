@@ -86,7 +86,7 @@ void LaunchLaser(vector org, vector vec)
 	newmis.solid = SOLID_BBOX;
 	newmis.effects = EF_DIMLIGHT;
 
-	setmodel(newmis, "progs/laser.mdl");
+	_setmodel(newmis, "progs/laser.mdl");
 	setsize(newmis, '0 0 0', '0 0 0');		
 
 	setorigin(newmis, org);
@@ -210,13 +210,12 @@ void()	enf_paind17	=[	$paind17,	enf_paind18	] {ai_pain(1);}
 void()	enf_paind18	=[	$paind18,	enf_paind19	] {}
 void()	enf_paind19	=[	$paind19,	enf_run1	] {}
 
-void enf_pain(entity attacker, float damage)
+void enf_pain(entity this, entity attacker, float damage)
 {
 	float r = random();
 	if(this.pain_finished > time)
 		return;
 
-	
 	if(r < 0.5)
 		_sound(this, CHAN_VOICE, "enforcer/pain1.wav", 1, ATTN_NORM);
 	else
@@ -302,6 +301,18 @@ void enf_die(entity this, entity attacker)
 		enf_fdie1();
 }
 
+string enf_sight()
+{
+	switch(rint(random() * 3))
+	{
+		case 1: return "enforcer/sight1.wav";
+		case 2: return "enforcer/sight2.wav";
+		case 0: return "enforcer/sight3.wav";
+		default: return "enforcer/sight4.wav";
+	}
+}
+
+string enf_deathmessage() { return "was blasted by an Enforcer"; }
 
 /*QUAKED monster_enforcer(1 0 0)(-16 -16 -24)(16 16 40) Ambush
 
@@ -331,7 +342,7 @@ spawnfunc(monster_enforcer)
 	this.solid = SOLID_SLIDEBOX;
 	this.movetype = MOVETYPE_STEP;
 
-	setmodel(this, "progs/enforcer.mdl");
+	_setmodel(this, "progs/enforcer.mdl");
 
 	setsize(this, '-16 -16 -24', '16 16 40');
 	this.health = 80;
@@ -342,6 +353,9 @@ spawnfunc(monster_enforcer)
 	this.th_pain = enf_pain;
 	this.th_die = enf_die;
 	this.th_missile = enf_atk1;
+
+	this.sightsound = enf_sight;
+	this.deathmessage = enf_deathmessage;
 
 	walkmonster_start(this);
 }

@@ -2,7 +2,7 @@
 // prototypes
 void W_WeaponFrame(entity this);
 void W_SetCurrentAmmo(entity this);
-void player_pain(entity this, entity attacker);
+void player_pain(entity this, entity attacker, float damage);
 void player_stand1(entity this);
 void spawn_tfog(vector org);
 void spawn_tdeath(vector org, entity death_owner);
@@ -527,10 +527,10 @@ void PutClientInServer(entity this)
 	this.fixangle = true;		// turn this way immediately
 
 // oh, this is a hack!
-	setmodel(this, "progs/eyes.mdl");
+	_setmodel(this, "progs/eyes.mdl");
 	modelindex_eyes = this.modelindex;
 
-	setmodel(this, "progs/player.mdl");
+	_setmodel(this, "progs/player.mdl");
 	modelindex_player = this.modelindex;
 
 	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
@@ -762,7 +762,7 @@ void PlayerJump(entity this)
 	if( !(this.flags & FL_JUMPRELEASED) )
 		return;		// don't pogo stick
 
-	this.flags = this.flags -(this.flags & FL_JUMPRELEASED);
+	this.flags &= ~FL_JUMPRELEASED;
 
 	this.flags &= ~FL_ONGROUND;
 	
@@ -854,7 +854,7 @@ void WaterMove(entity this)
 		if(this.watertype == CONTENT_SLIME)
 			_sound(this, CHAN_BODY, "player/slimbrn2.wav", 1, ATTN_NORM);
 
-		this.flags = this.flags + FL_INWATER;
+		this.flags |= FL_INWATER;
 		this.dmgtime = 0;
 	}
 	
@@ -882,7 +882,7 @@ void CheckWaterJump(entity this)
 		{	// open at eye level
 			this.flags |= FL_WATERJUMP;
 			this.velocity_z = 225;
-			this.flags = this.flags -(this.flags & FL_JUMPRELEASED);
+			this.flags &= ~FL_JUMPRELEASED;
 			this.teleport_time = time + 2;	// safety net
 			return;
 		}
@@ -1232,7 +1232,7 @@ void ClientObituary(entity targ, entity attacker)
 				if(rnum < 0.25)
 					deathstring = " mows down a teammate\n";
 				else if(rnum < 0.50)
-					deathstring = " checks his glasses\n";
+					deathstring = " checks their glasses\n";
 				else if(rnum < 0.75)
 					deathstring = " gets a frag for the other team\n";
 				else
@@ -1312,42 +1312,11 @@ void ClientObituary(entity targ, entity attacker)
 			targ.frags = targ.frags - 1;
 			bprint(targ.netname);
 
-			// killed by a montser?
+			// killed by a monster?
 			if(IS_MONSTER(attacker))
 			{
-				if(attacker.classname == "monster_army")
-					bprint(" was shot by a Grunt\n");
-				if(attacker.classname == "monster_demon1")
-					bprint(" was eviscerated by a Fiend\n");
-				if(attacker.classname == "monster_dog")
-					bprint(" was mauled by a Rottweiler\n");
-				if(attacker.classname == "monster_dragon")
-					bprint(" was fried by a Dragon\n");
-				if(attacker.classname == "monster_enforcer")
-					bprint(" was blasted by an Enforcer\n");
-				if(attacker.classname == "monster_fish")
-					bprint(" was fed to the Rotfish\n");
-				if(attacker.classname == "monster_hell_knight")
-					bprint(" was slain by a Death Knight\n");
-				if(attacker.classname == "monster_knight")
-					bprint(" was slashed by a Knight\n");
-				if(attacker.classname == "monster_ogre")
-					bprint(" was destroyed by an Ogre\n");
-				if(attacker.classname == "monster_oldone")
-					bprint(" became one with Shub-Niggurath\n");
-				if(attacker.classname == "monster_shalrath")
-					bprint(" was exploded by a Vore\n");
-				if(attacker.classname == "monster_shambler")
-					bprint(" was smashed by a Shambler\n");
-				if(attacker.classname == "monster_tarbaby")
-					bprint(" was slimed by a Spawn\n");
-				if(attacker.classname == "monster_vomit")
-					bprint(" was vomited on by a Vomitus\n");
-				if(attacker.classname == "monster_wizard")
-					bprint(" was scragged by a Scrag\n");
-				if(attacker.classname == "monster_zombie")
-					bprint(" joins the Zombies\n");
-
+				if(attacker.deathmessage)
+					bprintf(" %s\n", attacker.deathmessage());
 				return;
 			}
 
@@ -1414,7 +1383,7 @@ void ClientObituary(entity targ, entity attacker)
 			if(targ.deathtype == "falling")
 			{
 				targ.deathtype = "";
-				bprint(" fell to his death\n");
+				bprint(" fell to their death\n");
 				return;
 			}
 

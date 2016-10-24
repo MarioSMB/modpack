@@ -112,7 +112,7 @@ spawnfunc(item_health)
 		precache_model("maps/b_bh10.bsp");
 
 		precache_sound("items/r_item1.wav");
-		setmodel(this, "maps/b_bh10.bsp");
+		_setmodel(this, "maps/b_bh10.bsp");
 		this.noise = "items/r_item1.wav";
 		this.healamount = 15;
 		this.healtype = 0;
@@ -122,7 +122,7 @@ spawnfunc(item_health)
 	{
 		precache_model("maps/b_bh100.bsp");
 		precache_sound("items/r_item2.wav");
-		setmodel(this, "maps/b_bh100.bsp");
+		_setmodel(this, "maps/b_bh100.bsp");
 		this.noise = "items/r_item2.wav";
 		this.healamount = 100;
 		this.healtype = 2;
@@ -131,7 +131,7 @@ spawnfunc(item_health)
 	{
 		precache_model("maps/b_bh25.bsp");
 		precache_sound("items/health1.wav");
-		setmodel(this, "maps/b_bh25.bsp");
+		_setmodel(this, "maps/b_bh25.bsp");
 		this.noise = "items/health1.wav";
 		this.healamount = 25;
 		this.healtype = 1;
@@ -276,7 +276,7 @@ spawnfunc(item_armor1)
 {
 	settouch(this, armor_touch);
 	precache_model("progs/armor.mdl");
-	setmodel(this, "progs/armor.mdl");
+	_setmodel(this, "progs/armor.mdl");
 	this.skin = 0;
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
@@ -289,7 +289,7 @@ spawnfunc(item_armor2)
 {
 	settouch(this, armor_touch);
 	precache_model("progs/armor.mdl");
-	setmodel(this, "progs/armor.mdl");
+	_setmodel(this, "progs/armor.mdl");
 	this.skin = 1;
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
@@ -302,7 +302,7 @@ spawnfunc(item_armorInv)
 {
 	settouch(this, armor_touch);
 	precache_model("progs/armor.mdl");
-	setmodel(this, "progs/armor.mdl");
+	_setmodel(this, "progs/armor.mdl");
 	this.skin = 2;
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
@@ -473,7 +473,7 @@ void weapon_touch(entity this, entity toucher)
 spawnfunc(weapon_supershotgun)
 {
 	precache_model("progs/g_shot.mdl");
-	setmodel(this, "progs/g_shot.mdl");
+	_setmodel(this, "progs/g_shot.mdl");
 	this.weapon = IT_SUPER_SHOTGUN;
 	this.netname = "Double-barrelled Shotgun";
 	settouch(this, weapon_touch);
@@ -487,7 +487,7 @@ spawnfunc(weapon_supershotgun)
 spawnfunc(weapon_nailgun)
 {
 	precache_model("progs/g_nail.mdl");
-	setmodel(this, "progs/g_nail.mdl");
+	_setmodel(this, "progs/g_nail.mdl");
 	this.weapon = IT_NAILGUN;
 	this.netname = "nailgun";
 	settouch(this, weapon_touch);
@@ -501,7 +501,7 @@ spawnfunc(weapon_nailgun)
 spawnfunc(weapon_supernailgun)
 {
 	precache_model("progs/g_nail2.mdl");
-	setmodel(this, "progs/g_nail2.mdl");
+	_setmodel(this, "progs/g_nail2.mdl");
 	this.weapon = IT_SUPER_NAILGUN;
 	this.netname = "Super Nailgun";
 	settouch(this, weapon_touch);
@@ -515,7 +515,7 @@ spawnfunc(weapon_supernailgun)
 spawnfunc(weapon_grenadelauncher)
 {
 	precache_model("progs/g_rock.mdl");
-	setmodel(this, "progs/g_rock.mdl");
+	_setmodel(this, "progs/g_rock.mdl");
 	this.weapon = 3;
 	this.netname = "Grenade Launcher";
 	settouch(this, weapon_touch);
@@ -529,7 +529,7 @@ spawnfunc(weapon_grenadelauncher)
 spawnfunc(weapon_rocketlauncher)
 {
 	precache_model("progs/g_rock2.mdl");
-	setmodel(this, "progs/g_rock2.mdl");
+	_setmodel(this, "progs/g_rock2.mdl");
 	this.weapon = 3;
 	this.netname = "Rocket Launcher";
 	settouch(this, weapon_touch);
@@ -544,7 +544,7 @@ spawnfunc(weapon_rocketlauncher)
 spawnfunc(weapon_lightning)
 {
 	precache_model("progs/g_light.mdl");
-	setmodel(this, "progs/g_light.mdl");
+	_setmodel(this, "progs/g_light.mdl");
 	this.weapon = 3;
 	this.netname = "Thunderbolt";
 	settouch(this, weapon_touch);
@@ -965,22 +965,22 @@ spawnfunc(item_sigil)
 	if(this.spawnflags & 1)
 	{
 		precache_model("progs/end1.mdl");
-		setmodel(this, "progs/end1.mdl");
+		_setmodel(this, "progs/end1.mdl");
 	}
 	if(this.spawnflags & 2)
 	{
 		precache_model2("progs/end2.mdl");
-		setmodel(this, "progs/end2.mdl");
+		_setmodel(this, "progs/end2.mdl");
 	}
 	if(this.spawnflags & 4)
 	{
 		precache_model2("progs/end3.mdl");
-		setmodel(this, "progs/end3.mdl");
+		_setmodel(this, "progs/end3.mdl");
 	}
 	if(this.spawnflags & 8)
 	{
 		precache_model2("progs/end4.mdl");
-		setmodel(this, "progs/end4.mdl");
+		_setmodel(this, "progs/end4.mdl");
 	}
 	
 	settouch(this, sigil_touch);
@@ -1067,7 +1067,7 @@ spawnfunc(item_artifact_invulnerability)
 	precache_sound("items/protect2.wav");
 	precache_sound("items/protect3.wav");
 	this.noise = "items/protect.wav";
-	setmodel(this, "progs/invulner.mdl");
+	_setmodel(this, "progs/invulner.mdl");
 	this.netname = "Pentagram of Protection";
 	this.items = IT_INVULNERABILITY;
 	setsize(this, '-16 -16 -24', '16 16 32');
@@ -1085,7 +1085,7 @@ spawnfunc(item_artifact_envirosuit)
 	precache_sound("items/suit.wav");
 	precache_sound("items/suit2.wav");
 	this.noise = "items/suit.wav";
-	setmodel(this, "progs/suit.mdl");
+	_setmodel(this, "progs/suit.mdl");
 	this.netname = "Biosuit";
 	this.items = IT_SUIT;
 	setsize(this, '-16 -16 -24', '16 16 32');
@@ -1105,7 +1105,7 @@ spawnfunc(item_artifact_invisibility)
 	precache_sound("items/inv2.wav");
 	precache_sound("items/inv3.wav");
 	this.noise = "items/inv1.wav";
-	setmodel(this, "progs/invisibl.mdl");
+	_setmodel(this, "progs/invisibl.mdl");
 	this.netname = "Ring of Shadows";
 	this.items = IT_INVISIBILITY;
 	setsize(this, '-16 -16 -24', '16 16 32');
@@ -1125,7 +1125,7 @@ spawnfunc(item_artifact_super_damage)
 	precache_sound("items/damage2.wav");
 	precache_sound("items/damage3.wav");
 	this.noise = "items/damage.wav";
-	setmodel(this, "progs/quaddama.mdl");
+	_setmodel(this, "progs/quaddama.mdl");
 	this.netname = "Quad Damage";
 	this.items = IT_QUAD;
 	setsize(this, '-16 -16 -24', '16 16 32');
@@ -1270,7 +1270,7 @@ void DropBackpack()
 	item.flags = FL_ITEM;
 	item.solid = SOLID_TRIGGER;
 	item.movetype = MOVETYPE_TOSS;
-	setmodel(item, "progs/backpack.mdl");
+	_setmodel(item, "progs/backpack.mdl");
 	setsize(item, '-16 -16 0', '16 16 56');
 	settouch(item, BackpackTouch);
 	

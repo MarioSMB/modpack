@@ -3,12 +3,12 @@
 int maxclients;
 
 const string STR_PLAYER = "player";
-const string STR_SPECTATOR = "spectator";
-const string STR_OBSERVER = "observer";
+//const string STR_SPECTATOR = "spectator";
+//const string STR_OBSERVER = "observer";
 
 #define IS_PLAYER(v) ((v).classname == STR_PLAYER)
-#define IS_SPEC(v) ((v).classname == STR_SPECTATOR)
-#define IS_OBSERVER(v) ((v).classname == STR_OBSERVER)
+//#define IS_SPEC(v) ((v).classname == STR_SPECTATOR)
+//#define IS_OBSERVER(v) ((v).classname == STR_OBSERVER)
 
 #define IS_CLIENT(v) (v.flags & FL_CLIENT)
 /** want: (IS_CLIENT(v) && !IS_REAL_CLIENT(v)) */
@@ -19,15 +19,6 @@ const string STR_OBSERVER = "observer";
 #define IS_NOT_A_CLIENT(v) (!IS_CLIENT(v))
 
 #define IS_MONSTER(v) (v.flags & FL_MONSTER)
-
-// NOTE: FOR_EACH_CLIENTSLOT deprecated! Use the following instead: FOREACH_CLIENTSLOT(true, { code; });
-// NOTE: FOR_EACH_CLIENT deprecated! Use the following instead: FOREACH_CLIENT(true, { code; });
-// NOTE: FOR_EACH_REALCLIENT deprecated! Use the following instead: FOREACH_CLIENT(IS_REAL_CLIENT(it), { code; });
-
-// NOTE: FOR_EACH_PLAYER deprecated! Use the following instead: FOREACH_CLIENT(IS_PLAYER(it), { code; });
-// NOTE: FOR_EACH_SPEC deprecated! Use the following instead: FOREACH_CLIENT(IS_SPEC(it), { code; });
-// NOTE: FOR_EACH_OBSERVER deprecated! Use the following instead: FOREACH_CLIENT(IS_OBSERVER(it), { code; });
-// NOTE: FOR_EACH_REALPLAYER deprecated! Use the following instead: FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it), { code; });
 
 #define FOREACH_CLIENTSLOT(cond, body) \
 	MACRO_BEGIN { \
@@ -40,8 +31,6 @@ const string STR_OBSERVER = "observer";
 	} MACRO_END
 
 #define FOREACH_CLIENT(cond, body) FOREACH_CLIENTSLOT(IS_CLIENT(it) && (cond), body)
-
-// NOTE: FOR_EACH_MONSTER deprecated! Use the following instead: IL_EACH(g_monsters, true, { code; });
 
 #include "autocvars.qh"
 #include "constants.qh"

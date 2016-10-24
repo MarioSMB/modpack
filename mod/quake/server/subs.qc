@@ -29,7 +29,7 @@ void InitTrigger(entity this)
 	if(this.angles != '0 0 0')
 		SetMovedir(this);
 	this.solid = SOLID_TRIGGER;
-	setmodel(this, this.model);	// set size and link into world
+	_setmodel(this, this.model);	// set size and link into world
 	this.movetype = MOVETYPE_NONE;
 	this.modelindex = 0;
 	this.model = "";
@@ -43,11 +43,6 @@ calculate this.velocity and this.nextthink to reach dest from
 this.origin traveling at speed
 ===============
 */
-void SUB_CalcMoveEnt(entity ent, vector tdest, float tspeed, void(entity) func)
-{
-	SUB_CalcMove(ent, tdest, tspeed, func);
-}
-
 void SUB_CalcMove(entity this, vector tdest, float tspeed, void(entity) func)
 {
 	if(!tspeed)
@@ -112,11 +107,6 @@ this.angles rotating
 The calling function should make sure this.think is valid
 ===============
 */
-void SUB_CalcAngleMoveEnt(entity ent, vector destangle, float tspeed, void(entity) func)
-{
-	SUB_CalcAngleMove(ent, destangle, tspeed, func);
-}
-
 void SUB_CalcAngleMove(entity this, vector destangle, float tspeed, void(entity) func)
 {
 	if(!tspeed)

@@ -154,7 +154,7 @@ void() dog_leap2	=[	$leap2,		dog_leap3	]
 	this.origin_z = this.origin_z + 1;
 	this.velocity = v_forward * 300 + '0 0 200';
 	if(this.flags & FL_ONGROUND)
-		this.flags = this.flags - FL_ONGROUND;
+		this.flags &= ~FL_ONGROUND;
 }
 
 void() dog_leap3	=[	$leap3,		dog_leap4	] {}
@@ -189,7 +189,7 @@ void() dog_painb14	=[	$painb14 ,	dog_painb15	] {}
 void() dog_painb15	=[	$painb15 ,	dog_painb16	] {}
 void() dog_painb16	=[	$painb16 ,	dog_run1	] {}
 
-void dog_pain()
+void dog_pain(entity this, entity attacker, float damage)
 {
 	_sound(this, CHAN_VOICE, "dog/dpain1.wav", 1, ATTN_NORM);
 
@@ -254,7 +254,7 @@ Returns true if a melee attack would hit right now
 */
 bool CheckDogMelee(entity this)
 {
-	if(enemy_range == RANGE_MELEE)
+	if(this.enemy_range == RANGE_MELEE)
 	{	// FIXME: check canreach
 		this.attack_state = AS_MELEE;
 		return true;
@@ -307,6 +307,8 @@ bool DogCheckAttack(entity this)
 	return false;
 }
 
+string dog_sight() { return "dog/dsight.wav"; }
+string dog_deathmessage() { return "was mauled by a Rottweiler"; }
 
 //===========================================================================
 
@@ -332,7 +334,7 @@ spawnfunc(monster_dog)
 	this.solid = SOLID_SLIDEBOX;
 	this.movetype = MOVETYPE_STEP;
 
-	setmodel(this, "progs/dog.mdl");
+	_setmodel(this, "progs/dog.mdl");
 
 	setsize(this, '-32 -32 -24', '32 32 40');
 	this.health = 25;
@@ -344,6 +346,10 @@ spawnfunc(monster_dog)
 	this.th_die = dog_die;
 	this.th_melee = dog_atta1;
 	this.th_missile = dog_leap1;
+
+	this.sightsound = dog_sight;
+	this.checkattack = DogCheckAttack;
+	this.deathmessage = dog_deathmessage;
 
 	walkmonster_start(this);
 }

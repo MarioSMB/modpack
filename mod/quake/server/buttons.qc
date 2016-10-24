@@ -11,7 +11,7 @@ void button_wait(entity this)
 	this.frame = 1;			// use alternate textures
 }
 
-void button_done()
+void button_done(entity this)
 {
 	this.state = STATE_BOTTOM;
 }
@@ -27,7 +27,7 @@ void button_return(entity this)
 
 
 void button_blocked(entity this, entity blocker)
-{	// do nothing, just don't ome all the way back out
+{	// do nothing, just don't come all the way back out
 }
 
 
@@ -104,11 +104,11 @@ spawnfunc(func_button)
 		this.noise = "buttons/switch04.wav";
 	}
 	
-	SetMovedir();
+	SetMovedir(this);
 
 	this.movetype = MOVETYPE_PUSH;
 	this.solid = SOLID_BSP;
-	setmodel(this, this.model);
+	_setmodel(this, this.model);
 
 	setblocked(this, button_blocked);
 	this.use = button_use;

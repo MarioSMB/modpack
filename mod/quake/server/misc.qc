@@ -1,3 +1,9 @@
+void set_anim(entity this, int frm, void(entity) tnk)
+{
+	this.frame = frm;
+	setthink(this, tnk);
+	this.nextthink = time + FRAME_TIME;
+}
 
 /*QUAKED info_null(0 0.5 0)(-4 -4 -4)(4 4 4)
 Used as a positional target for spotlights, etc.
@@ -23,12 +29,12 @@ void light_use(entity this, entity actor, entity trigger)
 	if(this.spawnflags & START_OFF)
 	{
 		lightstyle(this.style, "m");
-		this.spawnflags = this.spawnflags - START_OFF;
+		this.spawnflags &= ~START_OFF;
 	}
 	else
 	{
 		lightstyle(this.style, "a");
-		this.spawnflags = this.spawnflags + START_OFF;
+		this.spawnflags |= START_OFF;
 	}
 }
 
@@ -101,7 +107,7 @@ Default style is 0
 spawnfunc(light_globe)
 {
 	precache_model("progs/s_light.spr");
-	setmodel(this, "progs/s_light.spr");
+	_setmodel(this, "progs/s_light.spr");
 	makestatic(this);
 }
 
@@ -120,7 +126,7 @@ Default style is 0
 spawnfunc(light_torch_small_walltorch)
 {
 	precache_model("progs/flame.mdl");
-	setmodel(this, "progs/flame.mdl");
+	_setmodel(this, "progs/flame.mdl");
 	FireAmbient(this);
 	makestatic(this);
 }
@@ -131,7 +137,7 @@ Large yellow flame ball
 spawnfunc(light_flame_large_yellow)
 {
 	precache_model("progs/flame2.mdl");
-	setmodel(this, "progs/flame2.mdl");
+	_setmodel(this, "progs/flame2.mdl");
 	this.frame = 1;
 	FireAmbient(this);
 	makestatic(this);
@@ -143,7 +149,7 @@ Small yellow flame ball
 spawnfunc(light_flame_small_yellow)
 {
 	precache_model("progs/flame2.mdl");
-	setmodel(this, "progs/flame2.mdl");
+	_setmodel(this, "progs/flame2.mdl");
 	FireAmbient(this);
 	makestatic(this);
 }
@@ -154,7 +160,7 @@ Small white flame ball
 spawnfunc(light_flame_small_white)
 {
 	precache_model("progs/flame2.mdl");
-	setmodel(this, "progs/flame2.mdl");
+	_setmodel(this, "progs/flame2.mdl");
 	FireAmbient(this);
 	makestatic(this);
 }
@@ -191,7 +197,7 @@ entity	fireball;
 	fireball.velocity_y =(random() * 100) - 50;
 	fireball.velocity_z = this.speed +(random() * 200);
 	fireball.classname = "fireball";
-	setmodel(fireball, "progs/lavaball.mdl");
+	_setmodel(fireball, "progs/lavaball.mdl");
 	setsize(fireball, '0 0 0', '0 0 0');
 	setorigin(fireball, this.origin);
 	fireball.nextthink = time + 5;
@@ -236,7 +242,7 @@ spawnfunc(misc_explobox)
 	this.solid = SOLID_BBOX;
 	this.movetype = MOVETYPE_NONE;
 	precache_model("maps/b_explob.bsp");
-	setmodel(this, "maps/b_explob.bsp");
+	_setmodel(this, "maps/b_explob.bsp");
 	precache_sound("weapons/r_exp3.wav");
 	this.health = 20;
 	this.th_die = barrel_explode;
@@ -266,7 +272,7 @@ spawnfunc(misc_explobox2)
 	this.solid = SOLID_BBOX;
 	this.movetype = MOVETYPE_NONE;
 	precache_model2("maps/b_exbox2.bsp");
-	setmodel(this, "maps/b_exbox2.bsp");
+	_setmodel(this, "maps/b_exbox2.bsp");
 	precache_sound("weapons/r_exp3.wav");
 	this.health = 20;
 	this.th_die = barrel_explode;
@@ -291,7 +297,7 @@ const int SPAWNFLAG_LASER = BIT(1);
 
 void(vector org, vector vec) LaunchLaser;
 
-void spikeshooter_use()
+void spikeshooter_use(entity this, entity actor, entity trigger)
 {
 	if(this.spawnflags & SPAWNFLAG_LASER)
 	{
@@ -310,7 +316,7 @@ void spikeshooter_use()
 
 void shooter_think()
 {
-	spikeshooter_use();
+	spikeshooter_use(this, NULL, NULL);
 	this.nextthink = time + this.wait;
 	newmis.velocity = this.movedir * 500;
 }
@@ -323,7 +329,7 @@ Laser is only for REGISTERED.
 
 spawnfunc(trap_spikeshooter)
 {
-	SetMovedir();
+	SetMovedir(this);
 	this.use = spikeshooter_use;
 	if(this.spawnflags & SPAWNFLAG_LASER)
 	{
@@ -386,7 +392,7 @@ spawnfunc(air_bubbles)
 void make_bubbles(entity this)
 {
 	entity bubble = spawn();
-	setmodel(bubble, "progs/s_bubble.spr");
+	_setmodel(bubble, "progs/s_bubble.spr");
 	setorigin(bubble, this.origin);
 	bubble.movetype = MOVETYPE_NOCLIP;
 	bubble.solid = SOLID_NOT;
@@ -405,7 +411,7 @@ void make_bubbles(entity this)
 void bubble_split(entity this)
 {
 	entity bubble = spawn();
-	setmodel(bubble, "progs/s_bubble.spr");
+	_setmodel(bubble, "progs/s_bubble.spr");
 	setorigin(bubble, this.origin);
 	bubble.movetype = MOVETYPE_NOCLIP;
 	bubble.solid = SOLID_NOT;
@@ -481,7 +487,7 @@ spawnfunc(viewthing)
 	this.movetype = MOVETYPE_NONE;
 	this.solid = SOLID_NOT;
 	precache_model("progs/player.mdl");
-	setmodel(this, "progs/player.mdl");
+	_setmodel(this, "progs/player.mdl");
 }
 
 
@@ -493,7 +499,7 @@ SIMPLE BMODELS
 ==============================================================================
 */
 
-void func_wall_use()
+void func_wall_use(entity this, entity actor, entity trigger)
 {	// change to alternate textures
 	this.frame = 1 - this.frame;
 }
@@ -507,7 +513,7 @@ spawnfunc(func_wall)
 	this.movetype = MOVETYPE_PUSH;	// so it doesn't get pushed by anything
 	this.solid = SOLID_BSP;
 	this.use = func_wall_use;
-	setmodel(this, this.model);
+	_setmodel(this, this.model);
 }
 
 
@@ -519,7 +525,7 @@ spawnfunc(func_illusionary)
 	this.angles = '0 0 0';
 	this.movetype = MOVETYPE_NONE;
 	this.solid = SOLID_NOT;
-	setmodel(this, this.model);
+	_setmodel(this, this.model);
 	makestatic();
 }
 
@@ -535,7 +541,7 @@ spawnfunc(func_episodegate)
 	this.movetype = MOVETYPE_PUSH;	// so it doesn't get pushed by anything
 	this.solid = SOLID_BSP;
 	this.use = func_wall_use;
-	setmodel(this, this.model);
+	_setmodel(this, this.model);
 }
 
 /*QUAKED func_bossgate(0 .5 .8) ?
@@ -549,7 +555,7 @@ spawnfunc(func_bossgate)
 	this.movetype = MOVETYPE_PUSH;	// so it doesn't get pushed by anything
 	this.solid = SOLID_BSP;
 	this.use = func_wall_use;
-	setmodel(this, this.model);
+	_setmodel(this, this.model);
 }
 
 //============================================================================

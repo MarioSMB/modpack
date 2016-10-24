@@ -21,8 +21,7 @@ $frame death1 death2 death3 death4 death5 death6 death7
 $frame	walk1 walk2 walk3 walk4 walk5 walk6 walk7 walk8 walk9 walk10
 $frame	walk11 walk12
 
-void shalrath_pain();
-void ShalMissile();
+void ShalMissile(entity this);
 void(entity this) shal_stand     =[      $walk1,       shal_stand    ] {ai_stand(this);}
 
 void() shal_walk1     =[      $walk2,       shal_walk2    ] {
@@ -68,7 +67,7 @@ void() shal_attack5     =[      $attack5,       shal_attack6    ] {ai_face(this)
 void() shal_attack6     =[      $attack6,       shal_attack7    ] {ai_face(this);}
 void() shal_attack7     =[      $attack7,       shal_attack8    ] {ai_face(this);}
 void() shal_attack8     =[      $attack8,       shal_attack9    ] {ai_face(this);}
-void() shal_attack9     =[      $attack9,       shal_attack10   ] {ShalMissile();}
+void() shal_attack9     =[      $attack9,       shal_attack10   ] {ShalMissile(this);}
 void() shal_attack10    =[      $attack10,      shal_attack11   ] {ai_face(this);}
 void() shal_attack11    =[      $attack11,      shal_run1   ] {}
 
@@ -87,7 +86,7 @@ void() shal_death6      =[      $death6,        shal_death7     ] {}
 void() shal_death7      =[      $death7,        shal_death7    ] {}
 
 
-void shalrath_pain()
+void shalrath_pain(entity this, entity attacker, float damage)
 {
 	if(this.pain_finished > time)
 		return;
@@ -139,7 +138,7 @@ void ShalMissile()
 
 	missile.solid = SOLID_BBOX;
 	missile.movetype = MOVETYPE_FLYMISSILE;
-	setmodel(missile, "progs/v_spike.mdl");
+	_setmodel(missile, "progs/v_spike.mdl");
 
 	setsize(missile, '0 0 0', '0 0 0');		
 
@@ -188,10 +187,13 @@ void ShalMissileTouch(entity this, entity toucher)
 
 	this.velocity = '0 0 0';
 	settouch(this, func_null);
-	setmodel(this, "progs/s_explod.spr");
+	_setmodel(this, "progs/s_explod.spr");
 	this.solid = SOLID_NOT;
 	s_explode1();
 }
+
+string shalrath_sight() { return "shalrath/sight.wav"; }
+string shalrath_deathmessage() { return "was exploded by a Vore"; }
 
 //=================================================================
 
@@ -218,7 +220,7 @@ spawnfunc(monster_shalrath)
 	this.solid = SOLID_SLIDEBOX;
 	this.movetype = MOVETYPE_STEP;
 	
-	setmodel(this, "progs/shalrath.mdl");
+	_setmodel(this, "progs/shalrath.mdl");
 	setsize(this, VEC_HULL2_MIN, VEC_HULL2_MAX);
 	this.health = 400;
 
@@ -228,6 +230,9 @@ spawnfunc(monster_shalrath)
 	this.th_die = shalrath_die;
 	this.th_pain = shalrath_pain;
 	this.th_missile = shal_attack1;
+
+	this.sightsound = shalrath_sight;
+	this.deathmessage = shalrath_deathmessage;
 
 	setthink(this, walkmonster_start);
 	this.nextthink = time + 0.1 + random()*0.1;	

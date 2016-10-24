@@ -107,16 +107,12 @@ void Tar_JumpTouch(entity this, entity toucher)
 	{
 		if(this.flags & FL_ONGROUND)
 		{	// jump randomly to not get hung up
-//dprint("popjump\n");
-	settouch(this, func_null);
-	setthink(this, tbaby_run1);
-	this.movetype = MOVETYPE_STEP;
-	this.nextthink = time + 0.1;
+			//dprint("popjump\n");
+			settouch(this, func_null);
+			setthink(this, tbaby_run1);
+			this.movetype = MOVETYPE_STEP;
+			this.nextthink = time + 0.1;
 
-//			this.velocity_x =(random() - 0.5) * 600;
-//			this.velocity_y =(random() - 0.5) * 600;
-//			this.velocity_z = 200;
-//			this.flags = this.flags - FL_ONGROUND;
 		}
 		return;	// not on ground yet
 	}
@@ -153,7 +149,7 @@ void()	tbaby_jump5		=[	$jump5,	tbaby_jump6		]
 	this.velocity = v_forward * 600 + '0 0 200';
 	this.velocity_z = this.velocity_z + random()*150;
 	if(this.flags & FL_ONGROUND)
-		this.flags = this.flags - FL_ONGROUND;
+		this.flags &= ~FL_ONGROUND;
 	this.cnt = 0;
 }
 void()	tbaby_jump6	=[	$jump6,tbaby_fly1	] {}
@@ -181,6 +177,9 @@ void()	tbaby_die2	=[	$exp,		tbaby_run1	]
 	BecomeExplosion(this);
 }
 
+string tbaby_sight() { return "blob/sight1.wav"; }
+string tbaby_deathmessage() { return "was slimed by a Spawn"; }
+
 //=============================================================================
 
 
@@ -203,7 +202,7 @@ spawnfunc(monster_tarbaby)
 	this.solid = SOLID_SLIDEBOX;
 	this.movetype = MOVETYPE_STEP;
 
-	setmodel(this, "progs/tarbaby.mdl");
+	_setmodel(this, "progs/tarbaby.mdl");
 
 	setsize(this, '-16 -16 -24', '16 16 40');
 	this.health = 80;
@@ -214,6 +213,9 @@ spawnfunc(monster_tarbaby)
 	this.th_missile = tbaby_jump1;
 	this.th_melee = tbaby_jump1;
 	this.th_die = tbaby_die1;
+
+	this.sightsound = tbaby_sight;
+	this.deathmessage = tbaby_deathmessage;
 	
 	walkmonster_start();
 }

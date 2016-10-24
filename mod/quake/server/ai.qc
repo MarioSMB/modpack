@@ -118,7 +118,7 @@ returns the range catagorization of an entity reletive to this
 3	only triggered by damage
 =============
 */
-int range(entity targ)
+int range(entity this, entity targ)
 {
 	vector spot1 = this.origin + this.view_ofs;
 	vector spot2 = targ.origin + targ.view_ofs;
@@ -139,7 +139,7 @@ visible
 returns 1 if the entity is visible to this, even if not infront()
 =============
 */
-bool visible(entity targ)
+bool visible(entity this, entity targ)
 {
 	vector	spot1, spot2;
 	
@@ -163,7 +163,7 @@ infront
 returns 1 if the entity is in front(in sight) of this
 =============
 */
-bool infront(entity targ)
+bool infront(entity this, entity targ)
 {
 	makevectors(this.angles);
 	vector vec = normalize(targ.origin - this.origin);
@@ -180,7 +180,7 @@ bool infront(entity targ)
 
 //============================================================================
 
-void HuntTarget()
+void HuntTarget(entity this)
 {
 	this.goalentity = this.enemy;
 	setthink(this, this.th_run);
@@ -189,44 +189,11 @@ void HuntTarget()
 	SUB_AttackFinished(this, 1);	// wait a while before first attack
 }
 
+.string sightsound();
 void SightSound()
 {
-	if(this.classname == "monster_ogre")	
-		_sound(this, CHAN_VOICE, "ogre/ogwake.wav", 1, ATTN_NORM);
-	else if(this.classname == "monster_knight")
-		_sound(this, CHAN_VOICE, "knight/ksight.wav", 1, ATTN_NORM);
-	else if(this.classname == "monster_shambler")
-		_sound(this, CHAN_VOICE, "shambler/ssight.wav", 1, ATTN_NORM);
-	else if(this.classname == "monster_demon1")
-		_sound(this, CHAN_VOICE, "demon/sight2.wav", 1, ATTN_NORM);
-	else if(this.classname == "monster_wizard")
-		_sound(this, CHAN_VOICE, "wizard/wsight.wav", 1, ATTN_NORM);
-	else if(this.classname == "monster_zombie")
-		_sound(this, CHAN_VOICE, "zombie/z_idle.wav", 1, ATTN_NORM);
-	else if(this.classname == "monster_dog")
-		_sound(this, CHAN_VOICE, "dog/dsight.wav", 1, ATTN_NORM);
-	else if(this.classname == "monster_hell_knight")
-		_sound(this, CHAN_VOICE, "hknight/sight1.wav", 1, ATTN_NORM);
-	else if(this.classname == "monster_tarbaby")
-		_sound(this, CHAN_VOICE, "blob/sight1.wav", 1, ATTN_NORM);
-	else if(this.classname == "monster_vomit")
-		_sound(this, CHAN_VOICE, "vomitus/v_sight1.wav", 1, ATTN_NORM);
-	else if(this.classname == "monster_enforcer")
-	{
-		int rsnd = rint(random() * 3);			
-		if(rsnd == 1)
-			_sound(this, CHAN_VOICE, "enforcer/sight1.wav", 1, ATTN_NORM);
-		else if(rsnd == 2)
-			_sound(this, CHAN_VOICE, "enforcer/sight2.wav", 1, ATTN_NORM);
-		else if(rsnd == 0)
-			_sound(this, CHAN_VOICE, "enforcer/sight3.wav", 1, ATTN_NORM);
-		else
-			_sound(this, CHAN_VOICE, "enforcer/sight4.wav", 1, ATTN_NORM);
-	}
-	else if(this.classname == "monster_army")
-		_sound(this, CHAN_VOICE, "soldier/sight1.wav", 1, ATTN_NORM);
-	else if(this.classname == "monster_shalrath")
-		_sound(this, CHAN_VOICE, "shalrath/sight.wav", 1, ATTN_NORM);
+	if(this.sightsound)
+		_sound(this, CHAN_VOICE, this.sightsound(), 1, ATTN_NORM);
 }
 
 void FoundTarget(entity this)
@@ -295,7 +262,7 @@ bool FindTarget(entity this)
 	if(r == RANGE_FAR)
 		return false;
 		
-	if(!visible(client))
+	if(!visible(this, client))
 		return false;
 
 	if(r == RANGE_NEAR)
@@ -331,12 +298,12 @@ bool FindTarget(entity this)
 
 //=============================================================================
 
-void ai_forward(float dist)
+void ai_forward(entity this, float dist)
 {
 	walkmove(this.angles_y, dist);
 }
 
-void ai_back(float dist)
+void ai_back(entity this, float dist)
 {
 	walkmove((this.angles_y+180), dist);
 }
@@ -349,7 +316,7 @@ ai_pain
 stagger back a bit
 =============
 */
-void ai_pain(float dist)
+void ai_pain(entity this, float dist)
 {
 	ai_back(dist);
 /*
@@ -367,7 +334,7 @@ ai_painforward
 stagger back a bit
 =============
 */
-void ai_painforward(float dist)
+void ai_painforward(entity this, float dist)
 {
 	walkmove(this.ideal_yaw, dist);
 }
@@ -427,7 +394,7 @@ ai_turn
 don't move, but turn towards ideal_yaw
 =============
 */
-void ai_turn()
+void ai_turn(entity this)
 {
 	if(FindTarget(this))
 		return;
@@ -484,25 +451,13 @@ bool FacingIdeal(entity this)
 
 //=============================================================================
 
-bool WizardCheckAttack(entity this);
-bool DogCheckAttack(entity this);
-
+.bool checkattack(entity this);
 bool CheckAnyAttack(entity this)
 {
-	if(!enemy_vis)
+	if(!this.enemy_vis)
 		return;
-	if(this.classname == "monster_army")
-		return SoldierCheckAttack(this);
-	if(this.classname == "monster_ogre")
-		return OgreCheckAttack(this);
-	if(this.classname == "monster_shambler")
-		return ShamCheckAttack(this);
-	if(this.classname == "monster_demon1")
-		return DemonCheckAttack(this);
-	if(this.classname == "monster_dog")
-		return DogCheckAttack(this);
-	if(this.classname == "monster_wizard")
-		return WizardCheckAttack(this);
+	if(this.checkattack)
+		return this.checkattack(this);
 	return CheckAttack(this);
 }
 
@@ -514,9 +469,9 @@ ai_run_melee
 Turn and close until within an angle to launch a melee attack
 =============
 */
-void ai_run_melee()
+void ai_run_melee(entity this)
 {
-	this.ideal_yaw = enemy_yaw;
+	this.ideal_yaw = this.enemy_yaw;
 	ChangeYaw(this);
 
 	if(FacingIdeal(this))
@@ -534,9 +489,9 @@ ai_run_missile
 Turn in place until within an angle to launch a missile attack
 =============
 */
-void ai_run_missile()
+void ai_run_missile(entity this)
 {
-	this.ideal_yaw = enemy_yaw;
+	this.ideal_yaw = this.enemy_yaw;
 	ChangeYaw(this);
 	if(FacingIdeal())
 	{
@@ -553,11 +508,11 @@ ai_run_slide
 Strafe sideways, but stay at aproximately the same range
 =============
 */
-void ai_run_slide()
+void ai_run_slide(entity this)
 {
 	float ofs;
 	
-	this.ideal_yaw = enemy_yaw;
+	this.ideal_yaw = this.enemy_yaw;
 	ChangeYaw(this);
 	if(this.lefty)
 		ofs = 90;
@@ -580,7 +535,7 @@ ai_run
 The monster has an enemy it is trying to kill
 =============
 */
-void ai_run(float dist)
+void ai_run(entity this, float dist)
 {
 	movedist = dist;
 // see if the enemy is dead
@@ -606,8 +561,8 @@ void ai_run(float dist)
 	this.show_hostile = time + 1;		// wake up other monsters
 
 // check knowledge of enemy
-	enemy_vis = visible(this.enemy);
-	if(enemy_vis)
+	this.enemy_vis = visible(this, this.enemy);
+	if(this.enemy_vis)
 		this.search_time = time + 5;
 
 // look for other coop players
@@ -617,9 +572,9 @@ void ai_run(float dist)
 			return;
 	}
 
-	enemy_infront = infront(this.enemy);
-	enemy_range = range(this.enemy);
-	enemy_yaw = vectoyaw(this.enemy.origin - this.origin);
+	//this.enemy_infront = infront(this.enemy);
+	this.enemy_range = range(this.enemy);
+	this.enemy_yaw = vectoyaw(this.enemy.origin - this.origin);
 	
 	if(this.attack_state == AS_MISSILE)
 	{

@@ -33,69 +33,69 @@ $frame attacka9 attacka10 attacka11 attacka12 attacka13 attacka14 attacka15
 
 void Demon_JumpTouch(entity this, entity toucher);
 
-void(entity this)	demon1_stand1	=[	$stand1,	demon1_stand2	] {ai_stand(this);}
-void()	demon1_stand2	=[	$stand2,	demon1_stand3	] {ai_stand(this);}
-void()	demon1_stand3	=[	$stand3,	demon1_stand4	] {ai_stand(this);}
-void()	demon1_stand4	=[	$stand4,	demon1_stand5	] {ai_stand(this);}
-void()	demon1_stand5	=[	$stand5,	demon1_stand6	] {ai_stand(this);}
-void()	demon1_stand6	=[	$stand6,	demon1_stand7	] {ai_stand(this);}
-void()	demon1_stand7	=[	$stand7,	demon1_stand8	] {ai_stand(this);}
-void()	demon1_stand8	=[	$stand8,	demon1_stand9	] {ai_stand(this);}
-void()	demon1_stand9	=[	$stand9,	demon1_stand10	] {ai_stand(this);}
-void()	demon1_stand10	=[	$stand10,	demon1_stand11	] {ai_stand(this);}
-void()	demon1_stand11	=[	$stand11,	demon1_stand12	] {ai_stand(this);}
-void()	demon1_stand12	=[	$stand12,	demon1_stand13	] {ai_stand(this);}
-void()	demon1_stand13	=[	$stand13,	demon1_stand1	] {ai_stand(this);}
+void demon1_stand1(entity this) { set_anim(this, $stand1, demon1_stand2); ai_stand(this); }
+void demon1_stand2(entity this) { set_anim(this, $stand2, demon1_stand3); ai_stand(this); }
+void demon1_stand3(entity this) { set_anim(this, $stand3, demon1_stand4); ai_stand(this); }
+void demon1_stand4(entity this) { set_anim(this, $stand4, demon1_stand5); ai_stand(this); }
+void demon1_stand5(entity this) { set_anim(this, $stand5, demon1_stand6); ai_stand(this); }
+void demon1_stand6(entity this) { set_anim(this, $stand6, demon1_stand7); ai_stand(this); }
+void demon1_stand7(entity this) { set_anim(this, $stand7, demon1_stand8); ai_stand(this); }
+void demon1_stand8(entity this) { set_anim(this, $stand8, demon1_stand9); ai_stand(this); }
+void demon1_stand9(entity this) { set_anim(this, $stand9, demon1_stand10); ai_stand(this); }
+void demon1_stand10(entity this) { set_anim(this, $stand10, demon1_stand11); ai_stand(this); }
+void demon1_stand11(entity this) { set_anim(this, $stand11, demon1_stand12); ai_stand(this); }
+void demon1_stand12(entity this) { set_anim(this, $stand12, demon1_stand13); ai_stand(this); }
+void demon1_stand13(entity this) { set_anim(this, $stand1, demon1_stand1); ai_stand(this); }
 
-void()	demon1_walk1	=[	$walk1,		demon1_walk2	] {
-if(random() < 0.2)
-    _sound(this, CHAN_VOICE, "demon/idle1.wav", 1, ATTN_IDLE);
-ai_walk(8);
-}
-void()	demon1_walk2	=[	$walk2,		demon1_walk3	] {ai_walk(6);}
-void()	demon1_walk3	=[	$walk3,		demon1_walk4	] {ai_walk(6);}
-void()	demon1_walk4	=[	$walk4,		demon1_walk5	] {ai_walk(7);}
-void()	demon1_walk5	=[	$walk5,		demon1_walk6	] {ai_walk(4);}
-void()	demon1_walk6	=[	$walk6,		demon1_walk7	] {ai_walk(6);}
-void()	demon1_walk7	=[	$walk7,		demon1_walk8	] {ai_walk(10);}
-void()	demon1_walk8	=[	$walk8,		demon1_walk1	] {ai_walk(10);}
-
-void()	demon1_run1	=[	$run1,		demon1_run2	] {
-if(random() < 0.2)
-    _sound(this, CHAN_VOICE, "demon/idle1.wav", 1, ATTN_IDLE);
-ai_run(20);}
-void()	demon1_run2	=[	$run2,		demon1_run3	] {ai_run(15);}
-void()	demon1_run3	=[	$run3,		demon1_run4	] {ai_run(36);}
-void()	demon1_run4	=[	$run4,		demon1_run5	] {ai_run(20);}
-void()	demon1_run5	=[	$run5,		demon1_run6	] {ai_run(15);}
-void()	demon1_run6	=[	$run6,		demon1_run1	] {ai_run(36);}
-
-void()	demon1_jump1	=[	$leap1,		demon1_jump2	] {ai_face(this);}
-void()	demon1_jump2	=[	$leap2,		demon1_jump3	] {ai_face(this);}
-void()	demon1_jump3	=[	$leap3,		demon1_jump4	] {ai_face(this);}
-void()	demon1_jump4	=[	$leap4,		demon1_jump5	]
+void demon1_walk1(entity this)
 {
-	ai_face(this);
-	
-	settouch(this, Demon_JumpTouch);
-	makevectors(this.angles);
-	this.origin_z = this.origin_z + 1;
-	this.velocity = v_forward * 600 + '0 0 250';
-	if(this.flags & FL_ONGROUND)
-		this.flags = this.flags - FL_ONGROUND;
+	set_anim(this, $walk1, demon1_walk2);
+	if(random() < 0.2)
+		_sound(this, CHAN_VOICE, "demon/idle1.wav", 1, ATTN_IDLE);
+	ai_walk(this, 8);
 }
-void()	demon1_jump5	=[	$leap5,		demon1_jump6	] {}
-void()	demon1_jump6	=[	$leap6,		demon1_jump7	] {}
-void()	demon1_jump7	=[	$leap7,		demon1_jump8	] {}
-void()	demon1_jump8	=[ 	$leap8,		demon1_jump9	] {}
-void()	demon1_jump9	=[ 	$leap9,		demon1_jump10	] {}
-void()	demon1_jump10	=[ 	$leap10,	demon1_jump1	] {
-this.nextthink = time + 3;
-// if three seconds pass, assume demon is stuck and jump again
-}
+void demon1_walk2(entity this) { set_anim(this, $walk2, demon1_walk3); ai_walk(this, 6); }
+void demon1_walk3(entity this) { set_anim(this, $walk3, demon1_walk4); ai_walk(this, 6); }
+void demon1_walk4(entity this) { set_anim(this, $walk4, demon1_walk5); ai_walk(this, 7); }
+void demon1_walk5(entity this) { set_anim(this, $walk5, demon1_walk6); ai_walk(this, 4); }
+void demon1_walk6(entity this) { set_anim(this, $walk6, demon1_walk7); ai_walk(this, 6); }
+void demon1_walk7(entity this) { set_anim(this, $walk7, demon1_walk8); ai_walk(this, 10); }
+void demon1_walk8(entity this) { set_anim(this, $walk8, demon1_walk1); ai_walk(this, 10); }
 
-void()	demon1_jump11	=[ 	$leap11,	demon1_jump12	] {}
-void()	demon1_jump12	=[ 	$leap12,	demon1_run1	] {}
+void demon1_run1(entity this)
+{
+	set_anim(this, $run1, demon1_run2);
+	if(random() < 0.2)
+		_sound(this, CHAN_VOICE, "demon/idle1.wav", 1, ATTN_IDLE);
+	ai_run(this, 20);
+}
+void demon1_run2(entity this) { set_anim(this, $run2, demon1_run3); ai_run(this, 15); }
+void demon1_run3(entity this) { set_anim(this, $run3, demon1_run4); ai_run(this, 36); }
+void demon1_run4(entity this) { set_anim(this, $run4, demon1_run5); ai_run(this, 20); }
+void demon1_run5(entity this) { set_anim(this, $run5, demon1_run6); ai_run(this, 15); }
+void demon1_run6(entity this) { set_anim(this, $run6, demon1_run1); ai_run(this, 36); }
+
+void demon1_jump1(entity this) { set_anim(this, $leap1, demon1_jump2); ai_face(this); }
+void demon1_jump2(entity this) { set_anim(this, $leap2, demon1_jump3); ai_face(this); }
+void demon1_jump3(entity this) { set_anim(this, $leap3, demon1_jump4); ai_face(this); }
+void demon1_jump4(entity this)
+{
+	set_anim(this, $leap4, demon1_jump5);
+	ai_face(this);
+	settouch(this, Demon_JumpTouch);
+	this.origin_z += 1;
+	this.velocity = v_forward * 600 + '0 0 250';
+	this.flags &= ~FL_ONGROUND;
+}
+void demon1_jump5(entity this) { set_anim(this, $leap5, demon1_jump6); }
+void demon1_jump6(entity this) { set_anim(this, $leap6, demon1_jump7); }
+void demon1_jump7(entity this) { set_anim(this, $leap7, demon1_jump8); }
+void demon1_jump8(entity this) { set_anim(this, $leap8, demon1_jump9); }
+void demon1_jump9(entity this) { set_anim(this, $leap9, demon1_jump10); }
+void demon1_jump10(entity this) { set_anim(this, $leap10, demon1_jump1); this.nextthink = time + 3; }
+void demon1_jump11(entity this) { set_anim(this, $leap11, demon1_jump12); }
+void demon1_jump12(entity this) { set_anim(this, $leap12, demon1_jump1); }
+// if three seconds pass, assume demon is stuck and jump again
 
 
 void()	demon1_atta1	=[	$attacka1,		demon1_atta2	] {ai_charge(4);}
@@ -121,7 +121,7 @@ void()	demon1_pain4	=[	$pain4,		demon1_pain5	] {}
 void()	demon1_pain5	=[	$pain5,		demon1_pain6	] {}
 void()	demon1_pain6	=[	$pain6,		demon1_run1	] {}
 
-void demon1_pain(entity attacker, float damage)
+void demon1_pain(entity this, entity attacker, float damage)
 {
 	if(gettouch(this) == Demon_JumpTouch)
 		return;
@@ -135,7 +135,7 @@ void demon1_pain(entity attacker, float damage)
 	if(random()*200 > damage)
 		return;		// didn't flinch
 		
-	demon1_pain1();
+	demon1_pain1(this);
 }
 
 void()	demon1_die1		=[	$death1,		demon1_die2	] {
@@ -164,19 +164,23 @@ void demon_die(entity this, entity attacker)
 	}
 
 // regular death
-	demon1_die1();
+	monster_playanim(this, demon1_die1);
 }
 
 
-void Demon_MeleeAttack()
+void Demon_MeleeAttack(entity this)
 {
-	demon1_atta1();
+	monster_playanim(this, demon1_atta1);
 }
+
+string demon1_sight() { return "demon/sight2.wav"; }
+string demon1_deathmessage() { return "was eviscerated by a Fiend"; }
 
 
 /*QUAKED monster_demon1(1 0 0)(-32 -32 -24)(32 32 64) Ambush
 
 */
+bool DemonCheckAttack(entity this);
 spawnfunc(monster_demon1)
 {
 	if(deathmatch)
@@ -197,7 +201,7 @@ spawnfunc(monster_demon1)
 	this.solid = SOLID_SLIDEBOX;
 	this.movetype = MOVETYPE_STEP;
 
-	setmodel(this, "progs/demon.mdl");
+	_setmodel(this, "progs/demon.mdl");
 
 	setsize(this, VEC_HULL2_MIN, VEC_HULL2_MAX);
 	this.health = 300;
@@ -209,6 +213,10 @@ spawnfunc(monster_demon1)
 	this.th_melee = Demon_MeleeAttack;		// one of two attacks
 	this.th_missile = demon1_jump1;			// jump attack
 	this.th_pain = demon1_pain;
+
+	this.sightsound = demon1_sight;
+	this.checkattack = DemonCheckAttack;
+	this.deathmessage = demon1_deathmessage;
 		
 	walkmonster_start(this);
 }
@@ -231,7 +239,7 @@ Returns true if a melee attack would hit right now
 */
 bool CheckDemonMelee(entity this)
 {
-	if(enemy_range == RANGE_MELEE)
+	if(this.enemy_range == RANGE_MELEE)
 	{	// FIXME: check canreach
 		this.attack_state = AS_MELEE;
 		return true;
@@ -248,11 +256,11 @@ CheckDemonJump
 bool CheckDemonJump(entity this)
 {
 	if(this.origin_z + this.mins_z > this.enemy.origin_z + this.enemy.mins_z
-	+ 0.75 * this.enemy.size_z)
+		+ 0.75 * this.enemy.size_z)
 		return false;
 		
 	if(this.origin_z + this.maxs_z < this.enemy.origin_z + this.enemy.mins_z
-	+ 0.25 * this.enemy.size_z)
+		+ 0.25 * this.enemy.size_z)
 		return false;
 		
 	vector dist = vec2(this.enemy.origin - this.origin);
@@ -317,7 +325,7 @@ void Demon_JumpTouch(entity this, entity toucher)
 		
 	if(toucher.takedamage)
 	{
-		if( vdist(this.velocity, >, 400) )
+		if(vdist(this.velocity, >, 400))
 		{
 			float ldmg = 40 + 10*random();
 			T_Damage(toucher, this, this, ldmg);	
@@ -328,15 +336,10 @@ void Demon_JumpTouch(entity this, entity toucher)
 	{
 		if(this.flags & FL_ONGROUND)
 		{	// jump randomly to not get hung up
-//dprint("popjump\n");
-	settouch(this, func_null);
-	setthink(this, demon1_jump1);
-	this.nextthink = time + 0.1;
-
-//			this.velocity_x =(random() - 0.5) * 600;
-//			this.velocity_y =(random() - 0.5) * 600;
-//			this.velocity_z = 200;
-//			this.flags = this.flags - FL_ONGROUND;
+			//dprint("popjump\n");
+			settouch(this, func_null);
+			setthink(this, demon1_jump1);
+			this.nextthink = time + 0.1;
 		}
 		return;	// not on ground yet
 	}

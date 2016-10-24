@@ -222,7 +222,7 @@ void boss_missile(entity this, vector p)
 	vec = normalize(d - org);
 
 	launch_spike(org, vec);
-	setmodel(newmis, "progs/lavaball.mdl");
+	_setmodel(newmis, "progs/lavaball.mdl");
 	newmis.avelocity = '200 100 300';
 	setsize(newmis, VEC_ORIGIN, VEC_ORIGIN);		
 	newmis.velocity = vec*300;
@@ -241,7 +241,7 @@ void boss_awake(entity this, entity actor, entity trigger)
 	this.movetype = MOVETYPE_STEP;
 	this.takedamage = DAMAGE_NO;
 	
-	setmodel(this, "progs/boss.mdl");
+	_setmodel(this, "progs/boss.mdl");
 	setsize(this, '-128 -128 -24', '128 128 256');
 	
 	if(skill == 0)

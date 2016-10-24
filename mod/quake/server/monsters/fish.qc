@@ -144,7 +144,7 @@ void fish_pain(entity attacker, float damage)
 	f_pain1();
 }
 
-
+string fish_deathmessage() { return "was fed to the Rotfish"; }
 
 /*QUAKED monster_fish(1 0 0)(-16 -16 -24)(16 16 24) Ambush
 */
@@ -164,7 +164,7 @@ spawnfunc(monster_fish)
 	this.solid = SOLID_SLIDEBOX;
 	this.movetype = MOVETYPE_STEP;
 
-	setmodel(this, "progs/fish.mdl");
+	_setmodel(this, "progs/fish.mdl");
 
 	setsize(this, '-16 -16 -24', '16 16 24');
 	this.health = 25;
@@ -175,6 +175,8 @@ spawnfunc(monster_fish)
 	this.th_die = f_death1;
 	this.th_pain = fish_pain;
 	this.th_melee = f_attack1;
+
+	this.deathmessage = fish_deathmessage;
 	
 	swimmonster_start(this);
 }

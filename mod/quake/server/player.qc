@@ -88,8 +88,10 @@ PLAYER
 
 void player_run(entity this);
 
-void()	player_stand1 =[	$axstnd1,	player_stand1	]
+void player_stand1(entity this)
 {
+	set_anim(this, $axstnd1, player_stand1);
+
 	this.weaponframe=0;
 	if(this.velocity_x || this.velocity_y)
 	{
@@ -113,13 +115,15 @@ void()	player_stand1 =[	$axstnd1,	player_stand1	]
 	this.walkframe = this.walkframe + 1;	
 }
 
-void(entity this)	player_run =[	$rockrun1,	player_run	]
+void player_run(entity this);
 {
+	set_anim(this, $rockrun1, player_run);
+
 	this.weaponframe=0;
 	if(!this.velocity_x && !this.velocity_y)
 	{
 		this.walkframe=0;
-		player_stand1();
+		player_stand1(this);
 		return;
 	}
 
@@ -138,34 +142,32 @@ void(entity this)	player_run =[	$rockrun1,	player_run	]
 	this.walkframe = this.walkframe + 1;
 }
 
+void player_shot1(entity this) { set_anim(this, $shotatt1, player_shot2); this.weaponframe = 1; this.effects |= EF_MUZZLEFLASH; }
+void player_shot2(entity this) { set_anim(this, $shotatt2, player_shot3); this.weaponframe = 2; }
+void player_shot3(entity this) { set_anim(this, $shotatt3, player_shot4); this.weaponframe = 3; }
+void player_shot4(entity this) { set_anim(this, $shotatt4, player_shot5); this.weaponframe = 4; }
+void player_shot5(entity this) { set_anim(this, $shotatt5, player_shot6); this.weaponframe = 5; }
+void player_shot6(entity this) { set_anim(this, $shotatt6, player_run); this.weaponframe = 6; }
 
-void()	player_shot1 =	[$shotatt1, player_shot2	] {this.weaponframe=1;
-this.effects |= EF_MUZZLEFLASH;}
-void()	player_shot2 =	[$shotatt2, player_shot3	] {this.weaponframe=2;}
-void()	player_shot3 =	[$shotatt3, player_shot4	] {this.weaponframe=3;}
-void()	player_shot4 =	[$shotatt4, player_shot5	] {this.weaponframe=4;}
-void()	player_shot5 =	[$shotatt5, player_shot6	] {this.weaponframe=5;}
-void()	player_shot6 =	[$shotatt6, player_run	] {this.weaponframe=6;}
+void player_axe1(entity this) { set_anim(this, $axatt1, player_axe2); this.weaponframe = 1; }
+void player_axe2(entity this) { set_anim(this, $axatt2, player_axe3); this.weaponframe = 2; }
+void player_axe3(entity this) { set_anim(this, $axatt3, player_axe4); this.weaponframe = 3; W_FireAxe(this); }
+void player_axe4(entity this) { set_anim(this, $axatt4, player_run); this.weaponframe = 4; }
 
-void()	player_axe1 =	[$axatt1, player_axe2	] {this.weaponframe=1;}
-void()	player_axe2 =	[$axatt2, player_axe3	] {this.weaponframe=2;}
-void()	player_axe3 =	[$axatt3, player_axe4	] {this.weaponframe=3;W_FireAxe(this);}
-void()	player_axe4 =	[$axatt4, player_run	] {this.weaponframe=4;}
+void player_axeb1(entity this) { set_anim(this, $axattb1, player_axeb2); this.weaponframe = 5; }
+void player_axeb2(entity this) { set_anim(this, $axattb2, player_axeb3); this.weaponframe = 6; }
+void player_axeb3(entity this) { set_anim(this, $axattb3, player_axeb4); this.weaponframe = 7; W_FireAxe(this); }
+void player_axeb4(entity this) { set_anim(this, $axattb4, player_run); this.weaponframe = 8; }
 
-void()	player_axeb1 =	[$axattb1, player_axeb2	] {this.weaponframe=5;}
-void()	player_axeb2 =	[$axattb2, player_axeb3	] {this.weaponframe=6;}
-void()	player_axeb3 =	[$axattb3, player_axeb4	] {this.weaponframe=7;W_FireAxe(this);}
-void()	player_axeb4 =	[$axattb4, player_run	] {this.weaponframe=8;}
+void player_axec1(entity this) { set_anim(this, $axattc1, player_axec2); this.weaponframe = 1; }
+void player_axec2(entity this) { set_anim(this, $axattc2, player_axec3); this.weaponframe = 2; }
+void player_axec3(entity this) { set_anim(this, $axattc3, player_axec4); this.weaponframe = 3; W_FireAxe(this); }
+void player_axec4(entity this) { set_anim(this, $axattc4, player_run); this.weaponframe = 4; }
 
-void()	player_axec1 =	[$axattc1, player_axec2	] {this.weaponframe=1;}
-void()	player_axec2 =	[$axattc2, player_axec3	] {this.weaponframe=2;}
-void()	player_axec3 =	[$axattc3, player_axec4	] {this.weaponframe=3;W_FireAxe(this);}
-void()	player_axec4 =	[$axattc4, player_run	] {this.weaponframe=4;}
-
-void()	player_axed1 =	[$axattd1, player_axed2	] {this.weaponframe=5;}
-void()	player_axed2 =	[$axattd2, player_axed3	] {this.weaponframe=6;}
-void()	player_axed3 =	[$axattd3, player_axed4	] {this.weaponframe=7;W_FireAxe(this);}
-void()	player_axed4 =	[$axattd4, player_run	] {this.weaponframe=8;}
+void player_axed1(entity this) { set_anim(this, $axattd1, player_axed2); this.weaponframe = 5; }
+void player_axed2(entity this) { set_anim(this, $axattd2, player_axed3); this.weaponframe = 6; }
+void player_axed3(entity this) { set_anim(this, $axattd3, player_axed4); this.weaponframe = 7; W_FireAxe(this); }
+void player_axed4(entity this) { set_anim(this, $axattd4, player_run); this.weaponframe = 8; }
 
 
 //============================================================================
@@ -236,7 +238,7 @@ void() player_rocket3   =[$rockatt3, player_rocket4  ] {this.weaponframe=3;}
 void() player_rocket4   =[$rockatt4, player_rocket5  ] {this.weaponframe=4;}
 void() player_rocket5   =[$rockatt5, player_rocket6  ] {this.weaponframe=5;}
 void() player_rocket6   =[$rockatt6, player_run  ] {this.weaponframe=6;}
-void DeathBubbles(int num_bubbles);
+void DeathBubbles(entity this, int num_bubbles);
 
 void PainSound(entity this, entity attacker)
 {
@@ -252,7 +254,7 @@ void PainSound(entity this, entity attacker)
 // water pain sounds
 	if(this.watertype == CONTENT_WATER && this.waterlevel == 3)
 	{
-		DeathBubbles(1);
+		DeathBubbles(this, 1);
 		if(random() > 0.5)
 			_sound(this, CHAN_VOICE, "player/drown1.wav", 1, ATTN_NORM);
 		else
@@ -332,7 +334,7 @@ void()	player_axpain4 =	[	$axpain4,	player_axpain5	] {}
 void()	player_axpain5 =	[	$axpain5,	player_axpain6	] {}
 void()	player_axpain6 =	[	$axpain6,	player_run	] {}
 
-void player_pain(entity this, entity attacker)
+void player_pain(entity this, entity attacker, float damage)
 {
 	if(this.weaponframe)
 		return;
@@ -353,13 +355,13 @@ void player_died1();
 void player_diee1();
 void player_die_ax1();
 
-void DeathBubblesSpawn()
+void DeathBubblesSpawn(entity this)
 {
 entity	bubble;
 	if(this.owner.waterlevel != 3)
 		return;
 	bubble = spawn();
-	setmodel(bubble, "progs/s_bubble.spr");
+	_setmodel(bubble, "progs/s_bubble.spr");
 	setorigin(bubble, this.owner.origin + '0 0 24');
 	bubble.movetype = MOVETYPE_NOCLIP;
 	bubble.solid = SOLID_NOT;
@@ -377,7 +379,7 @@ entity	bubble;
 		delete(this);
 }
 
-void DeathBubbles(int num_bubbles)
+void DeathBubbles(entity this, int num_bubbles)
 {
 	entity bubble_spawner = spawn();
 	setorigin(bubble_spawner, this.origin);
@@ -392,12 +394,12 @@ void DeathBubbles(int num_bubbles)
 }
 
 
-void DeathSound()
+void DeathSound(entity this)
 {
 	// water death sounds
 	if(this.waterlevel == 3)
 	{
-		DeathBubbles(20);
+		DeathBubbles(this, 20);
 		_sound(this, CHAN_VOICE, "player/h2odeath.wav", 1, ATTN_NONE);
 		return;
 	}
@@ -456,7 +458,7 @@ void ThrowGib(string gibname, float dm)
 
 	new = spawn();
 	new.origin = this.origin;
-	setmodel(new, gibname);
+	_setmodel(new, gibname);
 	setsize(new, '0 0 0', '0 0 0');
 	new.velocity = VelocityForDamage(dm);
 	new.movetype = MOVETYPE_BOUNCE;
@@ -473,7 +475,7 @@ void ThrowGib(string gibname, float dm)
 
 void ThrowHead(string gibname, float dm)
 {
-	setmodel(this, gibname);
+	_setmodel(this, gibname);
 	this.frame = 0;
 	this.nextthink = -1;
 	this.movetype = MOVETYPE_BOUNCE;
@@ -483,7 +485,7 @@ void ThrowHead(string gibname, float dm)
 	setsize(this, '-16 -16 0', '16 16 56');
 	this.velocity = VelocityForDamage(dm);
 	this.origin_z = this.origin_z - 24;
-	this.flags = this.flags -(this.flags & FL_ONGROUND);
+	this.flags &= ~FL_ONGROUND;
 	this.avelocity = crandom() * '0 600 0';
 }
 
@@ -525,13 +527,13 @@ void PlayerDie(entity this, entity attacker)
 	this.modelindex = modelindex_player;	// don't use eyes
 
 	if(deathmatch || coop)
-		DropBackpack();
+		DropBackpack(this);
 	
 	this.weaponmodel="";
 	this.view_ofs = '0 0 -8';
 	this.deadflag = DEAD_DYING;
 	this.solid = SOLID_NOT;
-	this.flags = this.flags -(this.flags & FL_ONGROUND);
+	this.flags &= ~FL_ONGROUND;
 	this.movetype = MOVETYPE_TOSS;
 	if(this.velocity_z < 10)
 		this.velocity_z = this.velocity_z + random()*300;
@@ -542,36 +544,33 @@ void PlayerDie(entity this, entity attacker)
 		return;
 	}
 
-	DeathSound();
+	DeathSound(this);
 	
 	this.angles_x = 0;
 	this.angles_z = 0;
 	
 	if(this.weapon == IT_AXE)
 	{
-		player_die_ax1();
+		player_die_ax1(this);
 		return;
 	}
 	
 	int i = autocvar_temp1;
 	if(!i)
 		i = 1 + floor(random()*6);
-	
-	if(i == 1)
-		player_diea1();
-	else if(i == 2)
-		player_dieb1();
-	else if(i == 3)
-		player_diec1();
-	else if(i == 4)
-		player_died1();
-	else
-		player_diee1();
 
+	switch(i)
+	{
+		case 1: player_diea1(this); break;
+		case 2: player_dieb1(this); break;
+		case 3: player_diec1(this); break;
+		case 4: player_died1(this); break;
+		default: player_diee1(this); break;
+	}
 }
 
 void set_suicide_frame(entity this)
-{	// used by klill command and diconnect command
+{	// used by kill command and diconnect command
 	if(this.model != "progs/player.mdl")
 		return;	// allready gibbed
 	this.frame = $deatha11;

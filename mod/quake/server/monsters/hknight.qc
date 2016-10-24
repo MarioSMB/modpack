@@ -74,7 +74,7 @@ void hknight_shot(float offset)
 	
 	launch_spike(org, vec);
 	newmis.classname = "knightspike";
-	setmodel(newmis, "progs/k_spike.mdl");
+	_setmodel(newmis, "progs/k_spike.mdl");
 	setsize(newmis, VEC_ORIGIN, VEC_ORIGIN);		
 	newmis.velocity = vec*300;
 	_sound(this, CHAN_WEAPON, "hknight/attack1.wav", 1, ATTN_NORM);
@@ -83,7 +83,7 @@ void hknight_shot(float offset)
 void CheckForCharge()
 {
 // check for mad charge
-if(!enemy_vis)
+if(!this.enemy_vis)
 	return;
 if(time < this.attack_finished)
 	return;	
@@ -394,6 +394,9 @@ void hknight_melee()
 	}
 }
 
+string hknight_sight() { return "hknight/sight1.wav"; }
+string hknight_deathmessage() { return "was slain by a Death Knight"; }
+
 /*QUAKED monster_hell_knight(1 0 0)(-16 -16 -24)(16 16 40) Ambush
 */
 spawnfunc(monster_hell_knight)
@@ -423,7 +426,7 @@ spawnfunc(monster_hell_knight)
 	this.solid = SOLID_SLIDEBOX;
 	this.movetype = MOVETYPE_STEP;
 
-	setmodel(this, "progs/hknight.mdl");
+	_setmodel(this, "progs/hknight.mdl");
 
 	setsize(this, '-16 -16 -24', '16 16 40');
 	this.health = 250;
@@ -435,6 +438,9 @@ spawnfunc(monster_hell_knight)
 	this.th_missile = hknight_magicc1;
 	this.th_pain = hknight_pain;
 	this.th_die = hknight_die;
-	
+
+	this.sightsound = hknight_sight;
+	this.deathmessage = hknight_deathmessage;
+
 	walkmonster_start();
 }

@@ -121,6 +121,19 @@ ai_melee();}
 void()	knight_atk9	=[	$attackb9,		knight_atk10] {ai_charge(1);}
 void()	knight_atk10=[	$attackb10,		knight_run1	] {ai_charge(5);}
 
+void knight_attack(entity this)
+{
+	float		len;
+	
+// decide if now is a good swing time
+	len = vlen(this.enemy.origin+this.enemy.view_ofs -(this.origin+this.view_ofs));
+	
+	if(len<80)
+		knight_atk1();
+	else
+		knight_runatk1();
+}
+
 //void()	knight_atk9	=[	$attack9,		knight_atk10	] {}
 //void()	knight_atk10	=[	$attack10,		knight_atk11	] {}
 //void()	knight_atk11	=[	$attack11,		knight_run1	] {}
@@ -143,7 +156,7 @@ void()	knight_painb9	=[	$painb9,	knight_painb10	] {ai_painforward(5);}
 void()	knight_painb10	=[	$painb10,	knight_painb11	] {ai_painforward(0);}
 void()	knight_painb11	=[	$painb11,	knight_run1	] {}
 
-void knight_pain(entity attacker, float damage)
+void knight_pain(entity this, entity attacker, float damage)
 {
 	if(this.pain_finished > time)
 		return;
@@ -229,6 +242,8 @@ void knight_die(entity this, entity attacker)
 		knight_dieb1();
 }
 
+string knight_sight() { return "knight/ksight.wav"; }
+string knight_deathmessage() { return "was slashed by a Knight"; }
 
 /*QUAKED monster_knight(1 0 0)(-16 -16 -24)(16 16 40) Ambush
 */
@@ -252,7 +267,7 @@ spawnfunc(monster_knight)
 	this.solid = SOLID_SLIDEBOX;
 	this.movetype = MOVETYPE_STEP;
 
-	setmodel(this, "progs/knight.mdl");
+	_setmodel(this, "progs/knight.mdl");
 
 	setsize(this, '-16 -16 -24', '16 16 40');
 	this.health = 75;
@@ -260,9 +275,12 @@ spawnfunc(monster_knight)
 	this.th_stand = knight_stand1;
 	this.th_walk = knight_walk1;
 	this.th_run = knight_run1;
-	this.th_melee = knight_atk1;
+	this.th_melee = knight_attack;
 	this.th_pain = knight_pain;
 	this.th_die = knight_die;
+
+	this.sightsound = knight_sight;
+	this.sightsound = knight_deathmessage;
 	
 	walkmonster_start();
 }

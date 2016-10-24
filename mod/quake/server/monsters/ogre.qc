@@ -63,7 +63,7 @@ void OgreGrenadeExplode(entity this)
 
 	this.velocity = '0 0 0';
 	settouch(this, func_null);
-	setmodel(this, "progs/s_explod.spr");
+	_setmodel(this, "progs/s_explod.spr");
 	this.solid = SOLID_NOT;
 	s_explode1();
 }
@@ -118,7 +118,7 @@ void OgreFireGrenade()
 	missile.nextthink = time + 2.5;
 	setthink(missile, OgreGrenadeExplode);
 
-	setmodel(missile, "progs/grenade.mdl");
+	_setmodel(missile, "progs/grenade.mdl");
 	setsize(missile, '0 0 0', '0 0 0');		
 	setorigin(missile, this.origin);
 }
@@ -307,7 +307,7 @@ void()	ogre_paine14=[	$paine14,	ogre_paine15	] {}
 void()	ogre_paine15=[	$paine15,	ogre_run1	] {}
 
 
-void ogre_pain(entity attacker, float damage)
+void ogre_pain(entity this, entity attacker, float damage)
 {
 // don't make multiple pain sounds right after each other
 	if(this.pain_finished > time)
@@ -403,6 +403,69 @@ void ogre_melee()
 		ogre_swing1();
 }
 
+/*
+===========
+OgreCheckAttack
+
+The player is in view, so decide to move or launch an attack
+Returns false if movement should continue
+============
+*/
+bool OgreCheckAttack(entity this)
+{
+	if(this.enemy_range == RANGE_MELEE)
+	{
+		if(CanDamage(this.enemy, this))
+		{
+			this.attack_state = AS_MELEE;
+			return true;
+		}
+	}
+
+	if(time < this.attack_finished)
+		return false;
+	
+	if(!this.enemy_vis)
+		return false;
+		
+	entity targ = this.enemy;
+	
+// see if any entities are in the way of the shot
+	vector spot1 = this.origin + this.view_ofs;
+	vector spot2 = targ.origin + targ.view_ofs;
+
+	traceline(spot1, spot2, false, this);
+
+	if(trace_inopen && trace_inwater)
+		return false;			// sight line crossed contents
+
+	if(trace_ent != targ)
+	{
+		return false;	// don't have a clear shot
+	}
+			
+// missile attack
+	float chance;
+	if(time < this.attack_finished)
+		return false;
+		
+	if(this.enemy_range == RANGE_FAR)
+		return false;
+	
+	else if(this.enemy_range == RANGE_NEAR)
+		chance = 0.10;
+	else if(this.enemy_range == RANGE_MID)
+		chance = 0.05;
+	else
+		chance = 0;
+
+	this.attack_state = AS_MISSILE;
+	SUB_AttackFinished(this, 1 + 2*random());
+	return true;
+}
+
+string ogre_sight() { return "ogre/ogwake.wav"; }
+string ogre_deathmessage() { return "was destroyed by an Ogre"; }
 
 /*QUAKED monster_ogre(1 0 0)(-32 -32 -24)(32 32 64) Ambush
 
@@ -429,7 +492,7 @@ spawnfunc(monster_ogre)
 	this.solid = SOLID_SLIDEBOX;
 	this.movetype = MOVETYPE_STEP;
 
-	setmodel(this, "progs/ogre.mdl");
+	_setmodel(this, "progs/ogre.mdl");
 
 	setsize(this, VEC_HULL2_MIN, VEC_HULL2_MAX);
 	this.health = 200;
@@ -441,7 +504,11 @@ spawnfunc(monster_ogre)
 	this.th_melee = ogre_melee;
 	this.th_missile = ogre_nail1;
 	this.th_pain = ogre_pain;
-	
+
+	this.sightsound = ogre_sight;
+	this.checkattack = OgreCheckAttack;
+	this.deathmessage = ogre_deathmessage;
+
 	walkmonster_start(this);
 }
 

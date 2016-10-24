@@ -24,7 +24,6 @@ World Types:
 spawnfunc(worldspawn)
 {
 	lastspawn = NULL;
-	InitBodyQue();
 
 // custom map attributes
 	if(this.model == "maps/e1m8.bsp")
@@ -196,7 +195,7 @@ void StartFrame()
 {
 	teamplay = autocvar_teamplay;
 	skill = autocvar_skill;
-	framecount = framecount + 1;
+	//framecount = framecount + 1;
 }
 
 /*
@@ -207,46 +206,21 @@ BODY QUE
 ==============================================================================
 */
 
-// TODO: replace all of this with the modern CopyBody code
-
-entity	bodyque_head;
-
-void bodyque()
-{	// just here so spawn functions don't complain after the world
-	// creates bodyques
-}
-
-void InitBodyQue()
-{
-	entity	e;
-	
-	bodyque_head = spawn();
-	bodyque_head.classname = "bodyque";
-	bodyque_head.owner = spawn();
-	bodyque_head.owner.classname = "bodyque";
-	bodyque_head.owner.owner = spawn();
-	bodyque_head.owner.owner.classname = "bodyque";
-	bodyque_head.owner.owner.owner = spawn();
-	bodyque_head.owner.owner.owner.classname = "bodyque";
-	bodyque_head.owner.owner.owner.owner = bodyque_head;
-}
-
-
 // make a body que entry for the given ent so the ent can be
 // respawned elsewhere
 void CopyToBodyQue(entity ent)
 {
-	bodyque_head.angles = ent.angles;
-	bodyque_head.model = ent.model;
-	bodyque_head.modelindex = ent.modelindex;
-	bodyque_head.frame = ent.frame;
-	bodyque_head.colormap = ent.colormap;
-	bodyque_head.movetype = ent.movetype;
-	bodyque_head.velocity = ent.velocity;
-	bodyque_head.flags = 0;
-	setorigin(bodyque_head, ent.origin);
-	setsize(bodyque_head, ent.mins, ent.maxs);
-	bodyque_head = bodyque_head.owner;
+	entity body = new(bodyque);
+	body.angles = ent.angles;
+	body.model = ent.model;
+	body.modelindex = ent.modelindex;
+	body.frame = ent.frame;
+	body.colormap = ent.colormap;
+	body.movetype = ent.movetype;
+	body.velocity = ent.velocity;
+	body.flags = 0;
+	setorigin(body, ent.origin);
+	setsize(body, ent.mins, ent.maxs);
 }
 
 

@@ -1,5 +1,5 @@
 bool autocvar_samelevel;
-bool autocvar_registered;
+bool autocvar_registered = true; // to prevent being locked out of gpl levels
 int autocvar_noexit;
 int autocvar_temp1; // temp
 #define autocvar_fraglimit cvar("fraglimit")

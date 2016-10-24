@@ -142,7 +142,7 @@ void()	army_painc11=[	$painc11,	army_painc12] {ai_painforward(6);}
 void()	army_painc12=[	$painc12,	army_painc13] {ai_painforward(8);}
 void()	army_painc13=[	$painc13,	army_run1] {}
 
-void army_pain(entity attacker, float damage)
+void army_pain(entity this, entity attacker, float damage)
 {
 	if(this.pain_finished > time)
 		return;
@@ -237,6 +237,63 @@ void army_die(entity this, entity attacker)
 		army_cdie1();
 }
 
+/*
+===========
+SoldierCheckAttack
+
+The player is in view, so decide to move or launch an attack
+Returns false if movement should continue
+============
+*/
+bool SoldierCheckAttack(entity this)
+{
+	entity targ = this.enemy;
+	
+// see if any entities are in the way of the shot
+	vector spot1 = this.origin + this.view_ofs;
+	vector spot2 = targ.origin + targ.view_ofs;
+
+	traceline(spot1, spot2, false, this);
+
+	if(trace_inopen && trace_inwater)
+		return false;			// sight line crossed contents
+
+	if(trace_ent != targ)
+		return false;	// don't have a clear shot
+			
+	
+// missile attack
+	if(time < this.attack_finished)
+		return false;
+		
+	if(this.enemy_range == RANGE_FAR)
+		return false;
+
+	float chance;
+	if(this.enemy_range == RANGE_MELEE)
+		chance = 0.9;
+	else if(this.enemy_range == RANGE_NEAR)
+		chance = 0.4;
+	else if(this.enemy_range == RANGE_MID)
+		chance = 0.05;
+	else
+		chance = 0;
+
+	if(random() < chance)
+	{
+		this.th_missile();
+		SUB_AttackFinished(this, 1 + random());
+		if(random() < 0.3)
+			this.lefty = !this.lefty;
+
+		return true;
+	}
+
+	return false;
+}
+
+string army_sight() { return "soldier/sight1.wav"; }
+string army_deathmessage() { return "was shot by a Grunt"; }
 
 /*QUAKED monster_army(1 0 0)(-16 -16 -24)(16 16 40) Ambush
 */
@@ -266,7 +323,7 @@ spawnfunc(monster_army)
 	this.solid = SOLID_SLIDEBOX;
 	this.movetype = MOVETYPE_STEP;
 
-	setmodel(this, "progs/soldier.mdl");
+	_setmodel(this, "progs/soldier.mdl");
 
 	setsize(this, '-16 -16 -24', '16 16 40');
 	this.health = 30;
@@ -277,6 +334,10 @@ spawnfunc(monster_army)
 	this.th_missile = army_atk1;
 	this.th_pain = army_pain;
 	this.th_die = army_die;
+
+	this.sightsound = army_sight;
+	this.checkattack = SoldierCheckAttack;
+	this.deathmessage = army_deathmessage;
 
 	walkmonster_start();
 }

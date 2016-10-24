@@ -4,7 +4,7 @@ void plat_trigger_use(entity this, entity actor, entity trigger);
 void plat_go_up(entity this);
 void plat_go_down(entity this);
 void plat_crush(entity this, entity blocker);
-const int PLAT_LOW_TRIGGER = 1;
+const int PLAT_LOW_TRIGGER = BIT(0);
 
 void plat_spawn_inside_trigger(entity this)
 {
@@ -174,7 +174,7 @@ spawnfunc(func_plat)
 	this.solid = SOLID_BSP;
 	this.movetype = MOVETYPE_PUSH;
 	setorigin(this, this.origin);	
-	setmodel(this, this.model);
+	_setmodel(this, this.model);
 	setsize(this, this.mins , this.maxs);
 
 	setblocked(this, plat_crush);
@@ -310,7 +310,7 @@ spawnfunc(func_train)
 	this.use = train_use;
 	this.classname = "train";
 
-	setmodel(this, this.model);
+	_setmodel(this, this.model);
 	setsize(this, this.mins , this.maxs);
 	setorigin(this, this.origin);
 
@@ -343,7 +343,7 @@ spawnfunc(misc_teleporttrain)
 	precache_sound("misc/null.wav");
 
 	precache_model2("progs/teleport.mdl");
-	setmodel(this, "progs/teleport.mdl");
+	_setmodel(this, "progs/teleport.mdl");
 	setsize(this, this.mins , this.maxs);
 	setorigin(this, this.origin);
 

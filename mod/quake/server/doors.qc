@@ -437,14 +437,13 @@ spawnfunc(func_door)
 		this.noise2 = "doors/ddoor1.wav";
 	}
 
-
-	SetMovedir();
+	SetMovedir(this);
 
 	this.max_health = this.health;
 	this.solid = SOLID_BSP;
 	this.movetype = MOVETYPE_PUSH;
 	setorigin(this, this.origin);	
-	setmodel(this, this.model);
+	_setmodel(this, this.model);
 	this.classname = "door";
 
 	this.blocked = door_blocked;
@@ -566,6 +565,11 @@ void fd_secret_use(entity this, entity actor, entity trigger)
 	_sound(this, CHAN_VOICE, this.noise2, 1, ATTN_NORM);
 }
 
+void fd_secret_pain(entity this, entity attacker, float damage)
+{
+	fd_secret_use(this, attacker, NULL);
+}
+
 void fd_secret_die(entity this, entity attacker)
 {
 	fd_secret_use(this, attacker, NULL);
@@ -624,7 +628,7 @@ void  fd_secret_done()
 	{
 		this.health = 10000;
 		this.takedamage = DAMAGE_YES;
-		this.th_pain = fd_secret_use;	
+		this.th_pain = fd_secret_pain;	
 	}
 	_sound(this, CHAN_VOICE, this.noise3, 1, ATTN_NORM);
 }
@@ -717,7 +721,7 @@ spawnfunc(func_door_secret)
 	this.solid = SOLID_BSP;
 	this.movetype = MOVETYPE_PUSH;
 	this.classname = "door";
-	setmodel(this, this.model);
+	_setmodel(this, this.model);
 	setorigin(this, this.origin);	
 	
 	settouch(this, secret_touch);
@@ -728,7 +732,7 @@ spawnfunc(func_door_secret)
 	{
 		this.health = 10000;
 		this.takedamage = DAMAGE_YES;
-		this.th_pain = fd_secret_use;
+		this.th_pain = fd_secret_pain;
 		this.th_die = fd_secret_die;
 	}
 	this.oldorigin = this.origin;

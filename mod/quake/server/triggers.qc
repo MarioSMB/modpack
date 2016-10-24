@@ -9,8 +9,8 @@ void trigger_reactivate(entity this)
 
 //=============================================================================
 
-const int SPAWNFLAG_NOMESSAGE = 1;
-const int SPAWNFLAG_NOTOUCH = 1;
+const int SPAWNFLAG_NOMESSAGE = BIT(0);
+const int SPAWNFLAG_NOTOUCH = BIT(0);
 
 // the wait time has passed, so set back up for another activation
 void multi_wait(entity this)
@@ -70,9 +70,9 @@ void multi_killed(entity this, entity attacker)
 	multi_trigger(this);
 }
 
-void multi_use()
+void multi_use(entity this, entity actor, entity trigger)
 {
-	this.enemy = activator;
+	this.enemy = actor;
 	multi_trigger(this);
 }
 
@@ -274,8 +274,8 @@ TELEPORT TRIGGERS
 ==============================================================================
 */
 
-const int PLAYER_ONLY = 1;
-const int SILENT = 2;
+const int PLAYER_ONLY = BIT(0);
+const int SILENT = BIT(1);
 
 void play_teleport()
 {
@@ -356,9 +356,6 @@ void spawn_tdeath(vector org, entity death_owner)
 
 void teleport_touch(entity this, entity toucher)
 {
-entity	t;
-vector	org;
-
 	if(this.targetname)
 	{
 		if(this.nextthink < time)
@@ -377,18 +374,18 @@ vector	org;
 	if(toucher.health <= 0 || toucher.solid != SOLID_SLIDEBOX)
 		return;
 
-	SUB_UseTargets();
+	SUB_UseTargets(this, NULL, toucher);
 
 // put a tfog where the player was
 	spawn_tfog(toucher.origin);
 
-	t = find(NULL, targetname, this.target);
+	entity t = find(NULL, targetname, this.target);
 	if(!t)
 		objerror("couldn't find target");
 		
 // spawn a tfog flash in front of the destination
 	makevectors(t.mangle);
-	org = t.origin + 32 * v_forward;
+	vector org = t.origin + 32 * v_forward;
 
 	spawn_tfog(org);
 	spawn_tdeath(t.origin, toucher);
@@ -408,7 +405,7 @@ vector	org;
 		toucher.fixangle = 1;		// turn this way immediately
 		toucher.teleport_time = time + 0.7;
 		if(toucher.flags & FL_ONGROUND)
-			toucher.flags = toucher.flags - FL_ONGROUND;
+			toucher.flags &= ~FL_ONGROUND;
 		toucher.velocity = v_forward * 300;
 	}
 	toucher.flags &= ~FL_ONGROUND;
@@ -564,7 +561,7 @@ spawnfunc(trigger_hurt)
 
 //============================================================================
 
-const int PUSH_ONCE = 1;
+const int PUSH_ONCE = BIT(0);
 
 void trigger_push_touch(entity this, entity toucher)
 {
@@ -613,7 +610,7 @@ void trigger_monsterjump_touch(entity this, entity toucher)
 	if( !(toucher.flags & FL_ONGROUND) )
 		return;
 	
-	toucher.flags = toucher.flags - FL_ONGROUND;
+	toucher.flags &= ~FL_ONGROUND;
 
 	toucher.velocity_z = this.height;
 }

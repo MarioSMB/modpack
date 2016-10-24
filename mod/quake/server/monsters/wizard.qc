@@ -86,10 +86,10 @@ float WizardCheckAttack()
 {
 	if(time < this.attack_finished)
 		return false;
-	if(!enemy_vis)
+	if(!this.enemy_vis)
 		return false;
 
-	if(enemy_range == RANGE_FAR)
+	if(this.enemy_range == RANGE_FAR)
 	{
 		if(this.attack_state != AS_STRAIGHT)
 		{
@@ -118,11 +118,11 @@ float WizardCheckAttack()
 	}
 
 	float chance;	
-	if(enemy_range == RANGE_MELEE)
+	if(this.enemy_range == RANGE_MELEE)
 		chance = 0.9;
-	else if(enemy_range == RANGE_NEAR)
+	else if(this.enemy_range == RANGE_NEAR)
 		chance = 0.6;
-	else if(enemy_range == RANGE_MID)
+	else if(this.enemy_range == RANGE_MID)
 		chance = 0.2;
 	else
 		chance = 0;
@@ -133,7 +133,7 @@ float WizardCheckAttack()
 		return true;
 	}
 
-	if(enemy_range == RANGE_MID)
+	if(this.enemy_range == RANGE_MID)
 	{
 		if(this.attack_state != AS_STRAIGHT)
 		{
@@ -160,7 +160,7 @@ WizardAttackFinished
 */
 void WizardAttackFinished(entity this)
 {
-	if(enemy_range >= RANGE_MID || !enemy_vis)
+	if(this.enemy_range >= RANGE_MID || !this.enemy_vis)
 	{
 		this.attack_state = AS_STRAIGHT;
 		setthink(this, wiz_run1);
@@ -198,7 +198,7 @@ void Wiz_FastFire()
 		newmis.velocity = vec*600;
 		newmis.owner = this.owner;
 		newmis.classname = "wizspike";
-		setmodel(newmis, "progs/w_spike.mdl");
+		_setmodel(newmis, "progs/w_spike.mdl");
 		setsize(newmis, VEC_ORIGIN, VEC_ORIGIN);		
 	}
 
@@ -319,7 +319,7 @@ void()	wiz_death1	=[	$death1,		wiz_death2	] {
 this.velocity_x = -200 + 400*random();
 this.velocity_y = -200 + 400*random();
 this.velocity_z = 100 + 100*random();
-this.flags = this.flags -(this.flags & FL_ONGROUND);
+this.flags &= ~FL_ONGROUND;
 _sound(this, CHAN_VOICE, "wizard/wdeath.wav", 1, ATTN_NORM);
 }
 void()	wiz_death2	=[	$death2,		wiz_death3	] {}
@@ -347,7 +347,7 @@ void wiz_die(entity this, entity attacker)
 }
 
 
-void Wiz_Pain(entity attacker, float damage)
+void Wiz_Pain(entity this, entity attacker, float damage)
 {
 	_sound(this, CHAN_VOICE, "wizard/wpain.wav", 1, ATTN_NORM);
 	if(random()*70 > damage)
@@ -361,6 +361,9 @@ void Wiz_Missile()
 {
 	wiz_fast1();
 }
+
+string wiz_sight() { return "wizard/wsight.wav"; }
+string wiz_deathmessage() { return "was scragged by a Scrag"; }
 
 /*QUAKED monster_wizard(1 0 0)(-16 -16 -24)(16 16 40) Ambush
 */
@@ -386,7 +389,7 @@ spawnfunc(monster_wizard)
 	this.solid = SOLID_SLIDEBOX;
 	this.movetype = MOVETYPE_STEP;
 
-	setmodel(this, "progs/wizard.mdl");
+	_setmodel(this, "progs/wizard.mdl");
 
 	setsize(this, '-16 -16 -24', '16 16 40');
 	this.health = 80;
@@ -397,6 +400,10 @@ spawnfunc(monster_wizard)
 	this.th_missile = Wiz_Missile;
 	this.th_pain = Wiz_Pain;
 	this.th_die = wiz_die;
+
+	this.sightsound = wiz_sight;
+	this.checkattack = WizardCheckAttack;
+	this.deathmessage = wiz_deathmessage;
 		
 	flymonster_start(this);
 }

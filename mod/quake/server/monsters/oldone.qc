@@ -212,7 +212,7 @@ void finale_4()
 
 // put a player model down
 	entity n = spawn();
-	setmodel(n, "progs/player.mdl");
+	_setmodel(n, "progs/player.mdl");
 	oldo = oldo - '32 264 0';
 	setorigin(n, oldo);
 	n.angles = '0 290 0';
@@ -236,6 +236,8 @@ void  nopain()
 
 //============================================================================
 
+string oldone_deathmessage() { return "became one with Shub-Niggurath"; }
+
 
 /*QUAKED monster_oldone(1 0 0)(-16 -16 -24)(16 16 32)
 */
@@ -257,7 +259,7 @@ spawnfunc(monster_oldone)
 	this.solid = SOLID_SLIDEBOX;
 	this.movetype = MOVETYPE_STEP;
 	
-	setmodel(this, "progs/oldone.mdl");
+	_setmodel(this, "progs/oldone.mdl");
 	setsize(this, '-160 -128 -24', '160 128 256');
 
 	this.health = 40000;		// kill by telefrag
@@ -267,6 +269,8 @@ spawnfunc(monster_oldone)
 	this.th_pain = nopain;
 	this.th_die = finale_1;
 	shub = this;
+
+	this.deathmessage = oldone_deathmessage;
 	
 	total_monsters = total_monsters + 1;
 }

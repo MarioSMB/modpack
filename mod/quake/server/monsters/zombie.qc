@@ -194,7 +194,7 @@ void ZombieFireGrenade(entity this, vector st)
 	missile.nextthink = time + 2.5;
 	setthink(missile, SUB_Remove);
 
-	setmodel(missile, "progs/zom_gib.mdl");
+	_setmodel(missile, "progs/zom_gib.mdl");
 	setsize(missile, '0 0 0', '0 0 0');		
 	setorigin(missile, org);
 }
@@ -414,7 +414,7 @@ A hit of less than 10 points of damage(winged by a shotgun) will be ignored.
 FIXME: don't use pain_finished because of nightmare hack
 =================
 */
-void zombie_pain(entity attacker, float take)
+void zombie_pain(entity this, entity attacker, float take)
 {
 	this.health = 60;		// allways reset health
 
@@ -461,6 +461,9 @@ void zombie_pain(entity attacker, float take)
 		zombie_paind1();
 }
 
+string zombie_sight() { return "zombie/z_idle.wav"; }
+string zombie_deathmessage() { return "joins the Zombies"; }
+
 //============================================================================
 
 /*QUAKED monster_zombie(1 0 0)(-16 -16 -24)(16 16 32) Crucified ambush
@@ -493,7 +496,7 @@ void monster_zombie()
 	this.solid = SOLID_SLIDEBOX;
 	this.movetype = MOVETYPE_STEP;
 
-	setmodel(this, "progs/zombie.mdl");
+	_setmodel(this, "progs/zombie.mdl");
 
 	setsize(this, '-16 -16 -24', '16 16 40');
 	this.health = 60;
@@ -504,6 +507,9 @@ void monster_zombie()
 	this.th_pain = zombie_pain;
 	this.th_die = zombie_die;
 	this.th_missile = zombie_missile;
+
+	this.sightsound = zombie_sight;
+	this.deathmessage = zombie_deathmessage;
 
 	if(this.spawnflags & SPAWN_CRUCIFIED)
 	{

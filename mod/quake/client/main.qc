@@ -12,7 +12,14 @@ void CSQC_Shutdown()
 
 void CSQC_UpdateView(entity this, float w, float h)
 {
+	// Draw the Crosshair
+	setproperty(VF_DRAWCROSSHAIR, 1);
 
+	// Draw the Engine Status Bar (the default Quake HUD)
+	setproperty(VF_DRAWENGINESBAR, 1);
+
+	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
+	renderscene();
 }
 
 bool CSQC_InputEvent(int inputType, float nPrimary, float nSecondary)
