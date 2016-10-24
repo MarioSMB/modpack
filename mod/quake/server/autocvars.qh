@@ -1,0 +1,8 @@
+bool autocvar_samelevel;
+bool autocvar_registered;
+int autocvar_noexit;
+int autocvar_temp1; // temp
+#define autocvar_fraglimit cvar("fraglimit")
+#define autocvar_timelimit cvar("timelimit")
+int autocvar_skill;
+int autocvar_teamplay;

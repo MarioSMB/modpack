@@ -1,1 +1,3 @@
-#include "main.qc"
+#if XONOTIC
+	#include "main.qc"
+#endif

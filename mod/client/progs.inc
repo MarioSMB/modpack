@@ -1,13 +1,20 @@
-#include "main.qc"
+#if XONOTIC
+	#include "main.qc"
 
-#include "../common/all.inc"
+	#include "../common/all.inc"
 
-#include "clientbeams.qc"
-#include "compat.qc"
-#include "custom_playermodels.qc"
-#include "demo.qc"
-#include "freeze.qc"
-#include "hook.qc"
-#include "piggyback.qc"
-#include "radio.qc"
-#include "zombie_apocalypse.qc"
+	#include "clientbeams.qc"
+	#include "compat.qc"
+	#include "custom_playermodels.qc"
+	#include "demo.qc"
+	#include "freeze.qc"
+	#include "hook.qc"
+	#include "piggyback.qc"
+	#include "radio.qc"
+	#include "zombie_apocalypse.qc"
+#endif
+
+#define QUAKE_ONE 0
+#if QUAKE_ONE
+	#include "../quake/client/progs.inc"
+#endif

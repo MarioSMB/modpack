@@ -1,21 +1,28 @@
-#include "main.qc"
+#if XONOTIC
+	#include "main.qc"
 
-#include "../common/all.inc"
+	#include "../common/all.inc"
 
-#include "bots.qc"
-#include "chat.qc"
-#include "commands.qc"
-#include "compat.qc"
-#include "custom_playermodels.qc"
-#include "damage.qc"
-#include "demo.qc"
-#include "items.qc"
-#include "headshots.qc"
-#include "monsters.qc"
-#include "mute.qc"
-#include "prediction.qc"
-#include "radio.qc"
-#include "spawnreplace.qc"
-#include "stats.qc"
+	#include "bots.qc"
+	#include "chat.qc"
+	#include "commands.qc"
+	#include "compat.qc"
+	#include "custom_playermodels.qc"
+	#include "damage.qc"
+	#include "demo.qc"
+	#include "items.qc"
+	#include "headshots.qc"
+	#include "monsters.qc"
+	#include "mute.qc"
+	#include "prediction.qc"
+	#include "radio.qc"
+	#include "spawnreplace.qc"
+	#include "stats.qc"
 
-#include "mutators/all.qh"
+	#include "mutators/all.qh"
+#endif
+
+#define QUAKE_ONE 0
+#if QUAKE_ONE
+	#include "../quake/server/progs.inc"
+#endif

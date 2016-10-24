@@ -1,0 +1,3 @@
+#pragma once
+
+const int FRAME_TIME = 0.1;
