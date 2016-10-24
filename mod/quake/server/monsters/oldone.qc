@@ -12,12 +12,10 @@ $skin skin
 $scale 1
 
 void finale_1(entity this, entity attacker);
-void finale_2();
-void finale_3();
-void finale_4();
+void finale_2(entity this);
+void finale_3(entity this);
+void finale_4(entity this);
 
-
-entity	shub;
 
 $frame old1 old2 old3 old4 old5 old6 old7 old8 old9 
 $frame old10 old11 old12 old13 old14 old15 old16 old17 old18 old19 
@@ -142,17 +140,18 @@ void finale_1(entity this, entity attacker)
 	
 	// wait for 1 second
 	entity timer = spawn();
+	timer.owner = this;
 	timer.nextthink = time + 1;
 	setthink(timer, finale_2);
 }
 
-void finale_2()
+void finale_2(entity this)
 {
-	vector	o;
-
 	// start a teleport splash inside shub
+	entity shub = this.owner;
 
-	o = shub.origin - '0 100 0';
+	vector o = shub.origin - '0 100 0';
+	setorigin(this, o);
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_TELEPORT);
 	WriteCoord(MSG_BROADCAST, o_x);
@@ -165,16 +164,19 @@ void finale_2()
 	setthink(this, finale_3);
 }
 
-void finale_3()
+void finale_3(entity this)
 {
+	entity shub = this.owner;
 	// start shub thrashing wildly
 	setthink(shub, old_thrash1);
 	_sound(shub, CHAN_VOICE, "boss2/death.wav", 1, ATTN_NORM);
 	lightstyle(0, "abcdefghijklmlkjihgfedcb");	
 }
 
-void finale_4()
+void finale_4(entity this)
 {
+	entity shub = this.owner;
+
 	// throw tons of meat chunks
 	_sound(this, CHAN_VOICE, "boss2/pop2.wav", 1, ATTN_NORM);
 	
@@ -229,7 +231,7 @@ void finale_4()
 
 //============================================================================
 
-void  nopain()
+void nopain(entity this, entity attacker, float damage)
 {
 	this.health = 40000;
 }
@@ -268,7 +270,6 @@ spawnfunc(monster_oldone)
 	this.takedamage = DAMAGE_YES;
 	this.th_pain = nopain;
 	this.th_die = finale_1;
-	shub = this;
 
 	this.deathmessage = oldone_deathmessage;
 	

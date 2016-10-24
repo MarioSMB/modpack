@@ -303,21 +303,17 @@ void PainSound(entity this, entity attacker)
 	int rs = rint((random() * 5) + 1);
 
 	this.noise = "";
-	if(rs == 1)
-		this.noise = "player/pain1.wav";
-	else if(rs == 2)
-		this.noise = "player/pain2.wav";
-	else if(rs == 3)
-		this.noise = "player/pain3.wav";
-	else if(rs == 4)
-		this.noise = "player/pain4.wav";
-	else if(rs == 5)
-		this.noise = "player/pain5.wav";
-	else
-		this.noise = "player/pain6.wav";
+	switch(rs)
+	{
+		case 1: this.noise = "player/pain1.wav"; break;
+		case 2: this.noise = "player/pain2.wav"; break;
+		case 3: this.noise = "player/pain3.wav"; break;
+		case 4: this.noise = "player/pain4.wav"; break;
+		case 5: this.noise = "player/pain5.wav"; break;
+		default: this.noise = "player/pain6.wav"; break;
+	}
 
 	_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NORM);
-	return;
 }
 
 void(entity this, entity attacker)	player_pain1 =	[	$pain1,	player_pain2	] {PainSound(this, attacker);this.weaponframe=0;}

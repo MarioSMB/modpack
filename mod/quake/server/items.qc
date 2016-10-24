@@ -39,7 +39,6 @@ void PlaceItem(entity this)
 	this.movetype = MOVETYPE_TOSS;	
 	this.velocity = '0 0 0';
 	this.origin_z = this.origin_z + 6;
-	float oldz = this.origin_z;
 	if(!droptofloor())
 	{
 		LOG_DEBUGF("Bonus item fell out of level at %v\n", this.origin);
@@ -433,9 +432,10 @@ void weapon_touch(entity this, entity toucher)
 	else
 		objerror("weapon_touch: unknown classname");
 
-	sprint(toucher, "You got the ");
-	sprint(toucher, this.netname);
-	sprint(toucher, "\n");
+	if(this.netname != "")
+		sprintf(toucher, "You got the %s\n", this.netname);
+	else
+		sprintf(toucher, "You picked up a weapon\n");
 // weapon touch sound
 	_sound(toucher, CHAN_ITEM, "weapons/pkup.wav", 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
@@ -605,10 +605,11 @@ void ammo_touch(entity this, entity toucher)
 	}
 
 	bound_other_ammo(toucher);
-	
-	sprint(toucher, "You got the ");
-	sprint(toucher, this.netname);
-	sprint(toucher, "\n");
+
+	if(this.netname != "")
+		sprintf(toucher, "You got the %s\n", this.netname);
+	else
+		sprintf(toucher, "You picked up some ammo\n");
 // ammo touch sound
 	_sound(toucher, CHAN_ITEM, "weapons/lock4.wav", 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
@@ -815,9 +816,10 @@ void key_touch(entity this, entity toucher)
 	if(toucher.items & this.items)
 		return;
 
-	sprint(toucher, "You got the ");
-	sprint(toucher, this.netname);
-	sprint(toucher,"\n");
+	if(this.netname != "")
+		sprintf(toucher, "You got the %s\n", this.netname);
+	else
+		sprintf(toucher, "You picked up a key\n");
 
 	_sound(toucher, CHAN_ITEM, this.noise, 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
@@ -1003,9 +1005,10 @@ void powerup_touch(entity this, entity toucher)
 	if(toucher.health <= 0)
 		return;
 
-	sprint(toucher, "You got the ");
-	sprint(toucher, this.netname);
-	sprint(toucher,"\n");
+	if(this.netname != "")
+		sprintf(toucher, "You got the %s\n", this.netname);
+	else
+		sprintf(toucher, "You picked up a powerup\n");
 
 	if(deathmatch)
 	{
@@ -1228,35 +1231,27 @@ void BackpackTouch(entity this, entity toucher)
 DropBackpack
 ===============
 */
-void DropBackpack()
+void DropBackpack(entity this)
 {
-	entity	item;
-
 	if(!(this.ammo_shells + this.ammo_nails + this.ammo_rockets + this.ammo_cells))
 		return;	// nothing in it
 
-	item = spawn();
+	entity item = spawn();
 	item.origin = this.origin - '0 0 24';
 	
 	item.items = this.weapon;
-	if(item.items == IT_AXE)
-		item.netname = "Axe";
-	else if(item.items == IT_SHOTGUN)
-		item.netname = "Shotgun";
-	else if(item.items == IT_SUPER_SHOTGUN)
-		item.netname = "Double-barrelled Shotgun";
-	else if(item.items == IT_NAILGUN)
-		item.netname = "Nailgun";
-	else if(item.items == IT_SUPER_NAILGUN)
-		item.netname = "Super Nailgun";
-	else if(item.items == IT_GRENADE_LAUNCHER)
-		item.netname = "Grenade Launcher";
-	else if(item.items == IT_ROCKET_LAUNCHER)
-		item.netname = "Rocket Launcher";
-	else if(item.items == IT_LIGHTNING)
-		item.netname = "Thunderbolt";
-	else
-		item.netname = "";
+	switch(this.items)
+	{
+		case IT_AXE: 				item.netname = "Axe"; break;
+		case IT_SHOTGUN: 			item.netname = "Shotgun"; break;
+		case IT_SUPER_SHOTGUN: 		item.netname = "Double-barrelled Shotgun"; break;
+		case IT_NAILGUN: 			item.netname = "Nailgun"; break;
+		case IT_SUPER_NAILGUN: 		item.netname = "Super Nailgun"; break;
+		case IT_GRENADE_LAUNCHER: 	item.netname = "Grenade Launcher"; break;
+		case IT_ROCKET_LAUNCHER: 	item.netname = "Rocket Launcher"; break;
+		case IT_LIGHTNING: 			item.netname = "Thunderbolt"; break;
+		default: 					item.netname = ""; break;
+	}
 
 	item.ammo_shells = this.ammo_shells;
 	item.ammo_nails = this.ammo_nails;

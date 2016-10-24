@@ -617,22 +617,22 @@ void NextLevel()
 		{
 			mapname = "e1m1";
 		}
-		else if(!(serverflags & 1))
+		else if(!(serverflags & BIT(0)))
 		{
 			mapname = "e1m1";
-			serverflags |= 1;
+			serverflags |= BIT(0);
 		}
-		else if(!(serverflags & 2))
+		else if(!(serverflags & BIT(1)))
 		{
 			mapname = "e2m1";
-			serverflags |= 2;
+			serverflags |= BIT(1);
 		}
-		else if(!(serverflags & 4))
+		else if(!(serverflags & BIT(2)))
 		{
 			mapname = "e3m1";
-			serverflags |= 4;
+			serverflags |= BIT(2);
 		}
-		else if(!(serverflags & 8))
+		else if(!(serverflags & BIT(3)))
 		{
 			mapname = "e4m1";
 			serverflags &= ~7;
