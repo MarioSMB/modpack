@@ -166,7 +166,7 @@ set "message" to text string
 spawnfunc(trigger_once)
 {
 	this.wait = -1;
-	trigger_multiple();
+	spawnfunc_trigger_multiple(this);
 }
 
 //=============================================================================
@@ -211,7 +211,7 @@ spawnfunc(trigger_secret)
 		this.noise = "misc/talk.wav";
 	}
 
-	trigger_multiple();
+	spawnfunc_trigger_multiple(this);
 }
 
 //=============================================================================
@@ -277,7 +277,7 @@ TELEPORT TRIGGERS
 const int PLAYER_ONLY = BIT(0);
 const int SILENT = BIT(1);
 
-void play_teleport()
+void play_teleport(entity this)
 {
 	string tmpstr;
 
@@ -502,7 +502,7 @@ void trigger_onlyregistered_touch(entity this, entity toucher)
 	if(autocvar_registered)
 	{
 		this.message = "";
-		SUB_UseTargets();
+		SUB_UseTargets(this, NULL, toucher);
 		delete(this);
 	}
 	else
@@ -527,7 +527,7 @@ spawnfunc(trigger_onlyregistered)
 
 //============================================================================
 
-void hurt_on()
+void hurt_on(entity this)
 {
 	this.solid = SOLID_TRIGGER;
 	this.nextthink = -1;

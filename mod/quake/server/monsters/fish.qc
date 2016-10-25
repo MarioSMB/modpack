@@ -71,7 +71,7 @@ void() f_run7  =[      $swim13, f_run8 ] {ai_run(12);}
 void() f_run8  =[      $swim15, f_run9 ] {ai_run(12);}
 void() f_run9  =[      $swim17, f_run1 ] {ai_run(12);}
 
-void fish_melee()
+void fish_melee(entity this)
 {
 	if(!this.enemy)
 		return;		// removed before stroke
@@ -84,24 +84,24 @@ void fish_melee()
 	T_Damage(this.enemy, this, this, ldmg);
 }
 
-void() f_attack1        =[      $attack1,       f_attack2 ] {ai_charge(10);}
-void() f_attack2        =[      $attack2,       f_attack3 ] {ai_charge(10);}
-void() f_attack3        =[      $attack3,       f_attack4 ] {fish_melee();}
-void() f_attack4        =[      $attack4,       f_attack5 ] {ai_charge(10);}
-void() f_attack5        =[      $attack5,       f_attack6 ] {ai_charge(10);}
-void() f_attack6        =[      $attack6,       f_attack7 ] {ai_charge(10);}
-void() f_attack7        =[      $attack7,       f_attack8 ] {ai_charge(10);}
-void() f_attack8        =[      $attack8,       f_attack9 ] {ai_charge(10);}
-void() f_attack9        =[      $attack9,       f_attack10] {fish_melee();}
-void() f_attack10       =[      $attack10,      f_attack11] {ai_charge(10);}
-void() f_attack11       =[      $attack11,      f_attack12] {ai_charge(10);}
-void() f_attack12       =[      $attack12,      f_attack13] {ai_charge(10);}
-void() f_attack13       =[      $attack13,      f_attack14] {ai_charge(10);}
-void() f_attack14       =[      $attack14,      f_attack15] {ai_charge(10);}
-void() f_attack15       =[      $attack15,      f_attack16] {fish_melee();}
-void() f_attack16       =[      $attack16,      f_attack17] {ai_charge(10);}
-void() f_attack17       =[      $attack17,      f_attack18] {ai_charge(10);}
-void() f_attack18       =[      $attack18,      f_run1    ] {ai_charge(10);}
+void() f_attack1        =[      $attack1,       f_attack2 ] {ai_charge(this, 10);}
+void() f_attack2        =[      $attack2,       f_attack3 ] {ai_charge(this, 10);}
+void() f_attack3        =[      $attack3,       f_attack4 ] {fish_melee(this);}
+void() f_attack4        =[      $attack4,       f_attack5 ] {ai_charge(this, 10);}
+void() f_attack5        =[      $attack5,       f_attack6 ] {ai_charge(this, 10);}
+void() f_attack6        =[      $attack6,       f_attack7 ] {ai_charge(this, 10);}
+void() f_attack7        =[      $attack7,       f_attack8 ] {ai_charge(this, 10);}
+void() f_attack8        =[      $attack8,       f_attack9 ] {ai_charge(this, 10);}
+void() f_attack9        =[      $attack9,       f_attack10] {fish_melee(this);}
+void() f_attack10       =[      $attack10,      f_attack11] {ai_charge(this, 10);}
+void() f_attack11       =[      $attack11,      f_attack12] {ai_charge(this, 10);}
+void() f_attack12       =[      $attack12,      f_attack13] {ai_charge(this, 10);}
+void() f_attack13       =[      $attack13,      f_attack14] {ai_charge(this, 10);}
+void() f_attack14       =[      $attack14,      f_attack15] {ai_charge(this, 10);}
+void() f_attack15       =[      $attack15,      f_attack16] {fish_melee(this);}
+void() f_attack16       =[      $attack16,      f_attack17] {ai_charge(this, 10);}
+void() f_attack17       =[      $attack17,      f_attack18] {ai_charge(this, 10);}
+void() f_attack18       =[      $attack18,      f_run1    ] {ai_charge(this, 10);}
 
 void(entity this, entity attacker) f_death1 =[      $death1,        f_death2        ] {
 _sound(this, CHAN_VOICE, "fish/death.wav", 1, ATTN_NORM);

@@ -39,7 +39,7 @@ void PlaceItem(entity this)
 	this.movetype = MOVETYPE_TOSS;	
 	this.velocity = '0 0 0';
 	this.origin_z = this.origin_z + 6;
-	if(!droptofloor())
+	if(!droptofloor(this))
 	{
 		LOG_DEBUGF("Bonus item fell out of level at %v\n", this.origin);
 		delete(this);
@@ -330,19 +330,16 @@ void bound_other_ammo(entity this)
 
 int RankForWeapon(int w)
 {
-	if(w == IT_LIGHTNING)
-		return 1;
-	if(w == IT_ROCKET_LAUNCHER)
-		return 2;
-	if(w == IT_SUPER_NAILGUN)
-		return 3;
-	if(w == IT_GRENADE_LAUNCHER)
-		return 4;
-	if(w == IT_SUPER_SHOTGUN)
-		return 5;
-	if(w == IT_NAILGUN)
-		return 6;
-	return 7;
+	switch(w)
+	{
+		case IT_LIGHTNING: 			return 1;
+		case IT_ROCKET_LAUNCHER: 	return 2;
+		case IT_SUPER_NAILGUN: 		return 3;
+		case IT_GRENADE_LAUNCHER: 	return 4;
+		case IT_SUPER_SHOTGUN: 		return 5;
+		case IT_NAILGUN: 			return 6;
+		default: 					return 7;
+	}
 }
 
 /*
@@ -359,7 +356,7 @@ void Deathmatch_Weapon(int old, int new)
 // change this.weapon if desired
 	int or = RankForWeapon(this.weapon);
 	int nr = RankForWeapon(new);
-	if( nr < or )
+	if(nr < or)
 		this.weapon = new;
 }
 
@@ -375,7 +372,7 @@ void weapon_touch(entity this, entity toucher)
 	if(!IS_CLIENT(toucher))
 		return;
 
-	int hadammo, new, old;
+	int hadammo, new;
 // if the player was using his best weapon, change up to the new one if better		
 	int best = W_BestWeapon(toucher);
 
@@ -834,7 +831,7 @@ void key_touch(entity this, entity toucher)
 }
 
 
-void key_setsounds()
+void key_setsounds(entity this)
 {
 	if(world.worldtype == 0)
 	{
@@ -881,7 +878,7 @@ spawnfunc(item_key1)
 		setmodel(this, MDL_ITEM_SILVERKEYCARD);
 		this.netname = "silver keycard";
 	}
-	key_setsounds();
+	key_setsounds(this);
 	settouch(this, key_touch);
 	this.items = IT_KEY1;
 	setsize(this, '-16 -16 -24', '16 16 32');
@@ -916,7 +913,7 @@ spawnfunc(item_key2)
 		setmodel(this, MDL_ITEM_GOLDKEYCARD);
 		this.netname = "gold keycard";
 	}
-	key_setsounds();
+	key_setsounds(this);
 	settouch(this, key_touch);
 	this.items = IT_KEY2;
 	setsize(this, '-16 -16 -24', '16 16 32');

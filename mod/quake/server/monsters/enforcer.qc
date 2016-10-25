@@ -73,12 +73,10 @@ void Laser_Touch(entity this, entity toucher)
 
 void LaunchLaser(vector org, vector vec)
 {
-	vector	vec;
-		
 	if(this.classname == "monster_enforcer")
 		_sound(this, CHAN_WEAPON, "enforcer/enfire.wav", 1, ATTN_NORM);
 
-	vec = normalize(vec);
+	vector vec = normalize(vec);
 	
 	newmis = spawn();
 	newmis.owner = this;
@@ -101,7 +99,7 @@ void LaunchLaser(vector org, vector vec)
 
 
 
-void enforcer_fire()
+void enforcer_fire(entity this)
 {
 	this.effects |= EF_MUZZLEFLASH;
 	makevectors(this.angles);

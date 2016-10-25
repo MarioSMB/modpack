@@ -47,7 +47,7 @@ bool CheckAttack(entity this)
 	{	// melee attack
 		if(this.th_melee)
 		{
-			this.th_melee();
+			this.th_melee(this);
 			return true;
 		}
 	}
@@ -87,7 +87,7 @@ bool CheckAttack(entity this)
 
 	if(random() < chance)
 	{
-		this.th_missile();
+		this.th_missile(this);
 		SUB_AttackFinished(this, 2*random());
 		return true;
 	}
@@ -165,7 +165,7 @@ void ai_melee_side(entity this)
 	if(!this.enemy)
 		return;		// removed before stroke
 
-	ai_charge_side();
+	ai_charge_side(this);
 
 	if(vdist(this.enemy.origin - this.origin, >, 60))
 		return;

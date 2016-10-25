@@ -28,8 +28,6 @@ spawnfunc(info_intermission)
 {
 }
 
-
-
 void SetChangeParms(entity this)
 {
 	if(this.health <= 0)
@@ -102,22 +100,17 @@ Returns the entity to view from
 entity FindIntermission()
 {
 // look for info_intermission first
-	entity spot = find(NULL, classname, "info_intermission");
-	if(spot)
-	{	// pick a random one
-		float cyc = random() * 4;
-		while(cyc > 1)
-		{
-			spot = find(spot, classname, "info_intermission");
-			if(!spot)
-				spot = find(spot, classname, "info_intermission");
-			cyc = cyc - 1;
-		}
-		return spot;
-	}
+	RandomSelection_Init();
+	FOREACH_ENTITY_CLASS("info_intermission", true,
+	{
+		found = true;
+		RandomSelection_AddEnt(it, 1, 1);
+	});
+	if(found)
+		return RandomSelection_chosen_ent;
 
 // then look for the start position
-	spot = find(NULL, classname, "info_player_start");
+	entity spot = find(NULL, classname, "info_player_start");
 	if(spot)
 		return spot;
 	
@@ -129,7 +122,6 @@ entity FindIntermission()
 	objerror("FindIntermission: no spot");
 }
 
-
 string nextmap;
 void GotoNextMap()
 {
@@ -138,7 +130,6 @@ void GotoNextMap()
 	else
 		changelevel(nextmap);
 }
-
 
 void ExitIntermission()
 {
@@ -248,8 +239,6 @@ void IntermissionThink(entity this)
 
 void execute_changelevel()
 {
-	entity	pos;
-
 	intermission_running = 1;
 	
 // enforce a wait time before allowing changelevel
@@ -262,7 +251,7 @@ void execute_changelevel()
 	WriteByte(MSG_ALL, 3);
 	WriteByte(MSG_ALL, 3);
 	
-	pos = FindIntermission();
+	entity pos = FindIntermission();
 
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
@@ -295,19 +284,16 @@ void changelevel_touch(entity this, entity toucher)
 
 	toucher.chlevel_targ = this;
 
-	entity head;
-	int plnum;
-	plnum = 0;
-	int realplnum;
-	realplnum = 0;
+	int plnum = 0;
+	int realplnum = 0;
 	// let's not count bots
-	FOR_EACH_REALPLAYER(head)
+	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
 		++realplnum;
-		if(head.chlevel_targ == this)
+		if(it.chlevel_targ == this)
 			++plnum;
-	}
-	int themin;
+	});
+	float themin;
 	if(this.count >= 1)
 		themin = 1;
 	else
@@ -316,10 +302,7 @@ void changelevel_touch(entity this, entity toucher)
 		return;
 
 	if(coop || deathmatch)
-	{
-		bprint(toucher.netname);
-		bprint(" exited the level\n");
-	}
+		bprintf("%s exited the level\n", toucher.netname);
 	
 	nextmap = this.map;
 
@@ -363,6 +346,29 @@ spawnfunc(trigger_changelevel)
 
 void set_suicide_frame(entity this);
 
+// make a body que entry for the given ent so the ent can be
+// respawned elsewhere
+void CopyToBodyQue(entity ent)
+{
+	entity body = new(bodyque);
+	body.angles = ent.angles;
+	body.model = ent.model;
+	body.modelindex = ent.modelindex;
+	body.frame = ent.frame;
+	body.colormap = ent.colormap;
+	body.movetype = ent.movetype;
+	body.velocity = ent.velocity;
+	body.flags = 0;
+	setorigin(body, ent.origin);
+	setsize(body, ent.mins, ent.maxs);
+
+	if(coop)
+	{
+		setthink(body, SUB_Remove);
+		body.nextthink = time + 10;
+	}
+}
+
 // called by ClientKill and DeadThink
 void respawn(entity this)
 {
@@ -400,8 +406,7 @@ Player entered the suicide command
 */
 void ClientKill(entity this)
 {
-	bprint(this.netname);
-	bprint(" suicides\n");
+	bprintf("%s suicides\n", this.netname);
 	set_suicide_frame(this);
 	this.modelindex = modelindex_player;
 	this.frags = this.frags - 2;	// extra penalty
@@ -729,8 +734,6 @@ void PlayerDeathThink(entity this)
 
 void PlayerJump(entity this)
 {
-	vector start, end;
-	
 	if(this.flags & FL_WATERJUMP)
 		return;
 	
@@ -1033,7 +1036,6 @@ void CheckPowerups(entity this)
 // super damage
 	if(this.super_damage_finished)
 	{
-
 // sound and screen flash when items starts to run out
 
 		if(this.super_damage_finished < time + 3)

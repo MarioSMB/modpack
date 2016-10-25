@@ -30,7 +30,7 @@ walkmove(angle, speed) primitive is all or nothing
 // as the sight target the next frame so that monsters near that one
 // will wake up even if they wouldn't have noticed the player
 //
-entity	sight_entity;
+entity sight_entity;
 float sight_entity_time;
 
 /*
@@ -136,20 +136,17 @@ int range(entity this, entity targ)
 =============
 visible
 
-returns 1 if the entity is visible to this, even if not infront()
+returns true if the entity is visible to this, even if not infront()
 =============
 */
 bool visible(entity this, entity targ)
 {
-	vector	spot1, spot2;
-	
-	spot1 = this.origin + this.view_ofs;
-	spot2 = targ.origin + targ.view_ofs;
-	traceline(spot1, spot2, true, this);	// see through other monsters
+	vector spot1 = this.origin + this.view_ofs;
+	vector spot2 = targ.origin + targ.view_ofs;
+	traceline(spot1, spot2, true, this); // see through other monsters
 	
 	if(trace_inopen && trace_inwater)
-		return false;			// sight line crossed contents
-
+		return false; // sight line crossed contents
 	if(trace_fraction == 1)
 		return true;
 	return false;
@@ -190,7 +187,7 @@ void HuntTarget(entity this)
 }
 
 .string sightsound();
-void SightSound()
+void SightSound(entity this)
 {
 	if(this.sightsound)
 		_sound(this, CHAN_VOICE, this.sightsound(), 1, ATTN_NORM);
@@ -206,8 +203,8 @@ void FoundTarget(entity this)
 	
 	this.show_hostile = time + 1;		// wake up other monsters
 
-	SightSound();
-	HuntTarget();
+	SightSound(this);
+	HuntTarget(this);
 }
 
 /*
@@ -229,7 +226,7 @@ slower noticing monsters.
 */
 bool FindTarget(entity this)
 {
-	entity	client;
+	entity client;
 
 // if the first spawnflag bit is set, the monster will only wake up on
 // really seeing the player, not another monster getting angry
@@ -346,17 +343,11 @@ ai_walk
 The monster is walking it's beat
 =============
 */
+.float move_dist;
 void ai_walk(entity this, float dist)
 {
-	vector		mtemp;
-	
-	movedist = dist;
-	
-	if(this.classname == "monster_dragon")
-	{
-		movetogoal(this, dist);
-		return;
-	}
+	this.move_dist = dist;
+
 	// check for noticing a player
 	if(FindTarget(this))
 		return;
@@ -411,26 +402,21 @@ ChooseTurn
 */
 void ChooseTurn(vector dest3)
 {
-	vector	dir, newdir;
-	
-	dir = this.origin - dest3;
-
-	newdir_x = trace_plane_normal_y;
-	newdir_y = 0 - trace_plane_normal_x;
-	newdir_z = 0;
+	vector dir = this.origin - dest3;
+	vector newdir = vec2(trace_plane_normal.y, trace_plane_normal.x);
 	
 	if(dir * newdir > 0)
 	{
-		dir_x = 0 - trace_plane_normal_y;
-		dir_y = trace_plane_normal_x;
+		dir.x = 0 - trace_plane_normal.y;
+		dir.y = trace_plane_normal.x;
 	}
 	else
 	{
-		dir_x = trace_plane_normal_y;
-		dir_y = 0 - trace_plane_normal_x;
+		dir.x = trace_plane_normal.y;
+		dir.y = 0 - trace_plane_normal.x;
 	}
 
-	dir_z = 0;
+	dir.z = 0;
 	this.ideal_yaw = vectoyaw(dir);	
 }
 
@@ -493,9 +479,9 @@ void ai_run_missile(entity this)
 {
 	this.ideal_yaw = this.enemy_yaw;
 	ChangeYaw(this);
-	if(FacingIdeal())
+	if(FacingIdeal(this))
 	{
-		this.th_missile();
+		this.th_missile(this);
 		this.attack_state = AS_STRAIGHT;
 	}
 }
@@ -510,21 +496,16 @@ Strafe sideways, but stay at aproximately the same range
 */
 void ai_run_slide(entity this)
 {
-	float ofs;
-	
 	this.ideal_yaw = this.enemy_yaw;
 	ChangeYaw(this);
-	if(this.lefty)
-		ofs = 90;
-	else
-		ofs = -90;
+	float ofs = (this.lefty) ? 90 : -90;
 	
-	if(walkmove(this, this.ideal_yaw + ofs, movedist))
+	if(walkmove(this, this.ideal_yaw + ofs, this.move_dist))
 		return;
 		
 	this.lefty = 1 - this.lefty;
 	
-	walkmove(this, this.ideal_yaw - ofs, movedist);
+	walkmove(this, this.ideal_yaw - ofs, this.move_dist);
 }
 
 
@@ -537,7 +518,7 @@ The monster has an enemy it is trying to kill
 */
 void ai_run(entity this, float dist)
 {
-	movedist = dist;
+	this.move_dist = dist;
 // see if the enemy is dead
 	if(this.enemy.health <= 0)
 	{
@@ -558,7 +539,7 @@ void ai_run(entity this, float dist)
 		}
 	}
 
-	this.show_hostile = time + 1;		// wake up other monsters
+	this.show_hostile = time + 1; // wake up other monsters
 
 // check knowledge of enemy
 	this.enemy_vis = visible(this, this.enemy);

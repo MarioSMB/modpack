@@ -81,19 +81,19 @@ if(random() > 0.8)
 
 void() sham_smash1     =[      $smash1,       sham_smash2    ] {
 _sound(this, CHAN_VOICE, "shambler/melee1.wav", 1, ATTN_NORM);
-ai_charge(2);}
-void() sham_smash2     =[      $smash2,       sham_smash3    ] {ai_charge(6);}
-void() sham_smash3     =[      $smash3,       sham_smash4    ] {ai_charge(6);}
-void() sham_smash4     =[      $smash4,       sham_smash5    ] {ai_charge(5);}
-void() sham_smash5     =[      $smash5,       sham_smash6    ] {ai_charge(4);}
-void() sham_smash6     =[      $smash6,       sham_smash7    ] {ai_charge(1);}
-void() sham_smash7     =[      $smash7,       sham_smash8    ] {ai_charge(0);}
-void() sham_smash8     =[      $smash8,       sham_smash9    ] {ai_charge(0);}
-void() sham_smash9     =[      $smash9,       sham_smash10   ] {ai_charge(0);}
+ai_charge(this, 2);}
+void() sham_smash2     =[      $smash2,       sham_smash3    ] {ai_charge(this, 6);}
+void() sham_smash3     =[      $smash3,       sham_smash4    ] {ai_charge(this, 6);}
+void() sham_smash4     =[      $smash4,       sham_smash5    ] {ai_charge(this, 5);}
+void() sham_smash5     =[      $smash5,       sham_smash6    ] {ai_charge(this, 4);}
+void() sham_smash6     =[      $smash6,       sham_smash7    ] {ai_charge(this, 1);}
+void() sham_smash7     =[      $smash7,       sham_smash8    ] {ai_charge(this, 0);}
+void() sham_smash8     =[      $smash8,       sham_smash9    ] {ai_charge(this, 0);}
+void() sham_smash9     =[      $smash9,       sham_smash10   ] {ai_charge(this, 0);}
 void() sham_smash10    =[      $smash10,      sham_smash11   ] {
 	if(!this.enemy)
 		return;
-	ai_charge(0);
+	ai_charge(this, 0);
 
 	if(vdist(this.enemy.origin - this.origin, >, 100))
 		return;
@@ -107,8 +107,8 @@ void() sham_smash10    =[      $smash10,      sham_smash11   ] {
 	SpawnMeatSpray(this, this.origin + v_forward*16, crandom() * 100 * v_right);
 	SpawnMeatSpray(this, this.origin + v_forward*16, crandom() * 100 * v_right);
 }
-void() sham_smash11    =[      $smash11,      sham_smash12   ] {ai_charge(5);}
-void() sham_smash12    =[      $smash12,      sham_run1	   ] {ai_charge(4);}
+void() sham_smash11    =[      $smash11,      sham_smash12   ] {ai_charge(this, 5);}
+void() sham_smash12    =[      $smash12,      sham_run1	   ] {ai_charge(this, 4);}
 
 void sham_swingr1();
 
@@ -116,7 +116,7 @@ void ShamClaw(entity this, float side)
 {
 	if(!this.enemy)
 		return;
-	ai_charge(10);
+	ai_charge(this, 10);
 
 	if(vdist(this.enemy.origin - this.origin, >, 100))
 		return;
@@ -134,32 +134,32 @@ void ShamClaw(entity this, float side)
 
 void() sham_swingl1	=[      $swingl1,      sham_swingl2   ] {
 _sound(this, CHAN_VOICE, "shambler/melee2.wav", 1, ATTN_NORM);
-ai_charge(5);}
-void() sham_swingl2 =[      $swingl2,      sham_swingl3   ] {ai_charge(3);}
-void() sham_swingl3 =[      $swingl3,      sham_swingl4   ] {ai_charge(7);}
-void() sham_swingl4 =[      $swingl4,      sham_swingl5   ] {ai_charge(3);}
-void() sham_swingl5 =[      $swingl5,      sham_swingl6   ] {ai_charge(7);}
-void() sham_swingl6 =[      $swingl6,      sham_swingl7   ] {ai_charge(9);}
-void() sham_swingl7 =[      $swingl7,      sham_swingl8   ] {ai_charge(5); ShamClaw(250);}
-void() sham_swingl8 =[      $swingl8,      sham_swingl9   ] {ai_charge(4);}
+ai_charge(this, 5);}
+void() sham_swingl2 =[      $swingl2,      sham_swingl3   ] {ai_charge(this, 3);}
+void() sham_swingl3 =[      $swingl3,      sham_swingl4   ] {ai_charge(this, 7);}
+void() sham_swingl4 =[      $swingl4,      sham_swingl5   ] {ai_charge(this, 3);}
+void() sham_swingl5 =[      $swingl5,      sham_swingl6   ] {ai_charge(this, 7);}
+void() sham_swingl6 =[      $swingl6,      sham_swingl7   ] {ai_charge(this, 9);}
+void() sham_swingl7 =[      $swingl7,      sham_swingl8   ] {ai_charge(this, 5); ShamClaw(250);}
+void() sham_swingl8 =[      $swingl8,      sham_swingl9   ] {ai_charge(this, 4);}
 void() sham_swingl9 =[      $swingl9,      sham_run1  ] {
-ai_charge(8);
+ai_charge(this, 8);
 if(random()<0.5)
 	setthink(this, sham_swingr1);
 }
 
 void() sham_swingr1	=[      $swingr1,      sham_swingr2   ] {
 _sound(this, CHAN_VOICE, "shambler/melee1.wav", 1, ATTN_NORM);
-ai_charge(1);}
-void() sham_swingr2	=[      $swingr2,      sham_swingr3   ] {ai_charge(8);}
-void() sham_swingr3 =[      $swingr3,      sham_swingr4   ] {ai_charge(14);}
-void() sham_swingr4 =[      $swingr4,      sham_swingr5   ] {ai_charge(7);}
-void() sham_swingr5 =[      $swingr5,      sham_swingr6   ] {ai_charge(3);}
-void() sham_swingr6 =[      $swingr6,      sham_swingr7   ] {ai_charge(6);}
-void() sham_swingr7 =[      $swingr7,      sham_swingr8   ] {ai_charge(6); ShamClaw(-250);}
-void() sham_swingr8 =[      $swingr8,      sham_swingr9   ] {ai_charge(3);}
-void sham_swingr9 =[      $swingr9,      sham_run1  ] {ai_charge(1)();
-ai_charge(10);
+ai_charge(this, 1);}
+void() sham_swingr2	=[      $swingr2,      sham_swingr3   ] {ai_charge(this, 8);}
+void() sham_swingr3 =[      $swingr3,      sham_swingr4   ] {ai_charge(this, 14);}
+void() sham_swingr4 =[      $swingr4,      sham_swingr5   ] {ai_charge(this, 7);}
+void() sham_swingr5 =[      $swingr5,      sham_swingr6   ] {ai_charge(this, 3);}
+void() sham_swingr6 =[      $swingr6,      sham_swingr7   ] {ai_charge(this, 6);}
+void() sham_swingr7 =[      $swingr7,      sham_swingr8   ] {ai_charge(this, 6); ShamClaw(-250);}
+void() sham_swingr8 =[      $swingr8,      sham_swingr9   ] {ai_charge(this, 3);}
+void sham_swingr9 =[      $swingr9,      sham_run1  ] {ai_charge(this, 1)();
+ai_charge(this, 10);
 if(random()<0.5)
 	setthink(this, sham_swingl1);
 }
@@ -178,17 +178,15 @@ void sham_melee(entity this)
 
 //============================================================================
 
-void CastLightning()
+void CastLightning(entity this)
 {
-	vector	org, dir;
-	
 	this.effects |= EF_MUZZLEFLASH;
 
 	ai_face(this);
 
-	org = this.origin + '0 0 40';
+	vector org = this.origin + '0 0 40';
 
-	dir = this.enemy.origin + '0 0 16' - org;
+	vector dir = this.enemy.origin + '0 0 16' - org;
 	dir = normalize(dir);
 
 	traceline(org, this.origin + dir*600, true, this);

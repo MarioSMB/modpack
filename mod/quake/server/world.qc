@@ -1,13 +1,4 @@
-void InitBodyQue();
-
-// unused, but required?
-void main()
-{
-
-}
-
-
-entity	lastspawn;
+entity lastspawn;
 
 //=======================
 /*QUAKED worldspawn(0 0 0) ?
@@ -197,30 +188,3 @@ void StartFrame()
 	skill = autocvar_skill;
 	//framecount = framecount + 1;
 }
-
-/*
-==============================================================================
-
-BODY QUE
-
-==============================================================================
-*/
-
-// make a body que entry for the given ent so the ent can be
-// respawned elsewhere
-void CopyToBodyQue(entity ent)
-{
-	entity body = new(bodyque);
-	body.angles = ent.angles;
-	body.model = ent.model;
-	body.modelindex = ent.modelindex;
-	body.frame = ent.frame;
-	body.colormap = ent.colormap;
-	body.movetype = ent.movetype;
-	body.velocity = ent.velocity;
-	body.flags = 0;
-	setorigin(body, ent.origin);
-	setsize(body, ent.mins, ent.maxs);
-}
-
-

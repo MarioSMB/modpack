@@ -87,7 +87,7 @@ void SUB_CalcMove(entity this, vector tdest, float tspeed, void(entity) func)
 After moving, set origin to exact final destination
 ============
 */
-void  SUB_CalcMoveDone(entity this)
+void SUB_CalcMoveDone(entity this)
 {
 	setorigin(this, this.finaldest);
 	this.velocity = '0 0 0';

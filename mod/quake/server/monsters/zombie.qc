@@ -242,7 +242,7 @@ void() zombie_attc10	=[	$attc10,	zombie_attc11	] {ai_face(this);}
 void() zombie_attc11	=[	$attc11,	zombie_attc12	] {ai_face(this);}
 void() zombie_attc12	=[	$attc12,	zombie_run1		] {ai_face(this);ZombieFireGrenade(this, '-12 -19 29');}
 
-void zombie_missile()
+void zombie_missile(entity this)
 {
 	float r = random();
 	
@@ -470,7 +470,7 @@ string zombie_deathmessage() { return "joins the Zombies"; }
 
 If crucified, stick the bounding box 12 pixels back into a wall to look right.
 */
-void monster_zombie()
+spawnfunc(monster_zombie)
 {
 	if(deathmatch)
 	{

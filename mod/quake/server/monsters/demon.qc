@@ -97,29 +97,28 @@ void demon1_jump11(entity this) { set_anim(this, $leap11, demon1_jump12); }
 void demon1_jump12(entity this) { set_anim(this, $leap12, demon1_jump1); }
 // if three seconds pass, assume demon is stuck and jump again
 
+void demon1_atta1(entity this) { set_anim(this, $attack1, demon1_atta2); ai_charge(this, 4); }
+void demon1_atta2(entity this) { set_anim(this, $attack2, demon1_atta3); ai_charge(this, 0); }
+void demon1_atta3(entity this) { set_anim(this, $attack3, demon1_atta4); ai_charge(this, 0); }
+void demon1_atta4(entity this) { set_anim(this, $attack4, demon1_atta5); ai_charge(this, 1); }
+void demon1_atta5(entity this) { set_anim(this, $attack5, demon1_atta6); ai_charge(this, 2); Demon_Melee(this, 200); }
+void demon1_atta6(entity this) { set_anim(this, $attack6, demon1_atta7); ai_charge(this, 1); }
+void demon1_atta7(entity this) { set_anim(this, $attack7, demon1_atta8); ai_charge(this, 6); }
+void demon1_atta8(entity this) { set_anim(this, $attack8, demon1_atta9); ai_charge(this, 8); }
+void demon1_atta9(entity this) { set_anim(this, $attack9, demon1_atta10); ai_charge(this, 4); }
+void demon1_atta10(entity this) { set_anim(this, $attack10, demon1_atta11); ai_charge(this, 2); }
+void demon1_atta11(entity this) { set_anim(this, $attack11, demon1_atta12); Demon_Melee(this, -200); }
+void demon1_atta12(entity this) { set_anim(this, $attack12, demon1_atta13); ai_charge(this, 5); }
+void demon1_atta13(entity this) { set_anim(this, $attack13, demon1_atta14); ai_charge(this, 8); }
+void demon1_atta14(entity this) { set_anim(this, $attack14, demon1_atta15); ai_charge(this, 4); }
+void demon1_atta15(entity this) { set_anim(this, $attack15, demon1_run1); ai_charge(this, 4); }
 
-void()	demon1_atta1	=[	$attacka1,		demon1_atta2	] {ai_charge(4);}
-void()	demon1_atta2	=[	$attacka2,		demon1_atta3	] {ai_charge(0);}
-void()	demon1_atta3	=[	$attacka3,		demon1_atta4	] {ai_charge(0);}
-void()	demon1_atta4	=[	$attacka4,		demon1_atta5	] {ai_charge(1);}
-void()	demon1_atta5	=[	$attacka5,		demon1_atta6	] {ai_charge(2); Demon_Melee(200);}
-void()	demon1_atta6	=[	$attacka6,		demon1_atta7	] {ai_charge(1);}
-void()	demon1_atta7	=[	$attacka7,		demon1_atta8	] {ai_charge(6);}
-void()	demon1_atta8	=[	$attacka8,		demon1_atta9	] {ai_charge(8);}
-void()	demon1_atta9	=[	$attacka9,		demon1_atta10] {ai_charge(4);}
-void()	demon1_atta10	=[	$attacka10,		demon1_atta11] {ai_charge(2);}
-void()	demon1_atta11	=[	$attacka11,		demon1_atta12] {Demon_Melee(-200);}
-void()	demon1_atta12	=[	$attacka12,		demon1_atta13] {ai_charge(5);}
-void()	demon1_atta13	=[	$attacka13,		demon1_atta14] {ai_charge(8);}
-void()	demon1_atta14	=[	$attacka14,		demon1_atta15] {ai_charge(4);}
-void()	demon1_atta15	=[	$attacka15,		demon1_run1] {ai_charge(4);}
-
-void()	demon1_pain1	=[	$pain1,		demon1_pain2	] {}
-void()	demon1_pain2	=[	$pain2,		demon1_pain3	] {}
-void()	demon1_pain3	=[	$pain3,		demon1_pain4	] {}
-void()	demon1_pain4	=[	$pain4,		demon1_pain5	] {}
-void()	demon1_pain5	=[	$pain5,		demon1_pain6	] {}
-void()	demon1_pain6	=[	$pain6,		demon1_run1	] {}
+void demon1_pain1(entity this) { set_anim(this, $pain1, demon1_pain2); }
+void demon1_pain2(entity this) { set_anim(this, $pain2, demon1_pain3); }
+void demon1_pain3(entity this) { set_anim(this, $pain3, demon1_pain4); }
+void demon1_pain4(entity this) { set_anim(this, $pain4, demon1_pain5); }
+void demon1_pain5(entity this) { set_anim(this, $pain5, demon1_pain6); }
+void demon1_pain6(entity this) { set_anim(this, $pain6, demon1_run1); }
 
 void demon1_pain(entity this, entity attacker, float damage)
 {
@@ -138,17 +137,19 @@ void demon1_pain(entity this, entity attacker, float damage)
 	demon1_pain1(this);
 }
 
-void()	demon1_die1		=[	$death1,		demon1_die2	] {
-_sound(this, CHAN_VOICE, "demon/ddeath.wav", 1, ATTN_NORM);}
-void()	demon1_die2		=[	$death2,		demon1_die3	] {}
-void()	demon1_die3		=[	$death3,		demon1_die4	] {}
-void()	demon1_die4		=[	$death4,		demon1_die5	] {}
-void()	demon1_die5		=[	$death5,		demon1_die6	] {}
-void()	demon1_die6		=[	$death6,		demon1_die7	]
-{this.solid = SOLID_NOT;}
-void()	demon1_die7		=[	$death7,		demon1_die8	] {}
-void()	demon1_die8		=[	$death8,		demon1_die9	] {}
-void()	demon1_die9		=[	$death9,		demon1_die9 ] {}
+void demon1_die1(entity this)
+{
+	set_anim(this, $death1, demon1_die2);
+	_sound(this, CHAN_VOICE, "demon/ddeath.wav", 1, ATTN_NORM);
+}
+void demon1_die2(entity this) { set_anim(this, $death2, demon1_die3); }
+void demon1_die3(entity this) { set_anim(this, $death3, demon1_die4); }
+void demon1_die4(entity this) { set_anim(this, $death4, demon1_die5); }
+void demon1_die5(entity this) { set_anim(this, $death5, demon1_die6); this.solid = SOLID_NOT; }
+void demon1_die6(entity this) { set_anim(this, $death6, demon1_die7); }
+void demon1_die7(entity this) { set_anim(this, $death7, demon1_die8); }
+void demon1_die8(entity this) { set_anim(this, $death8, demon1_die9); }
+void demon1_die9(entity this) { set_anim(this, $death9, demon1_die9); }
 
 void demon_die(entity this, entity attacker)
 {
@@ -172,63 +173,6 @@ void Demon_MeleeAttack(entity this)
 {
 	monster_playanim(this, demon1_atta1);
 }
-
-string demon1_sight() { return "demon/sight2.wav"; }
-string demon1_deathmessage() { return "was eviscerated by a Fiend"; }
-
-
-/*QUAKED monster_demon1(1 0 0)(-32 -32 -24)(32 32 64) Ambush
-
-*/
-bool DemonCheckAttack(entity this);
-spawnfunc(monster_demon1)
-{
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
-	precache_model("progs/demon.mdl");
-	precache_model("progs/h_demon.mdl");
-
-	precache_sound("demon/ddeath.wav");
-	precache_sound("demon/dhit2.wav");
-	precache_sound("demon/djump.wav");
-	precache_sound("demon/dpain1.wav");
-	precache_sound("demon/idle1.wav");
-	precache_sound("demon/sight2.wav");
-
-	this.solid = SOLID_SLIDEBOX;
-	this.movetype = MOVETYPE_STEP;
-
-	_setmodel(this, "progs/demon.mdl");
-
-	setsize(this, VEC_HULL2_MIN, VEC_HULL2_MAX);
-	this.health = 300;
-
-	this.th_stand = demon1_stand1;
-	this.th_walk = demon1_walk1;
-	this.th_run = demon1_run1;
-	this.th_die = demon_die;
-	this.th_melee = Demon_MeleeAttack;		// one of two attacks
-	this.th_missile = demon1_jump1;			// jump attack
-	this.th_pain = demon1_pain;
-
-	this.sightsound = demon1_sight;
-	this.checkattack = DemonCheckAttack;
-	this.deathmessage = demon1_deathmessage;
-		
-	walkmonster_start(this);
-}
-
-
-/*
-==============================================================================
-
-DEMON
-
-==============================================================================
-*/
 
 /*
 ==============
@@ -347,5 +291,52 @@ void Demon_JumpTouch(entity this, entity toucher)
 	settouch(this, func_null);
 	setthink(this, demon1_jump11);
 	this.nextthink = time + 0.1;
+}
+
+string demon1_sight() { return "demon/sight2.wav"; }
+string demon1_deathmessage() { return "was eviscerated by a Fiend"; }
+
+
+/*QUAKED monster_demon1(1 0 0)(-32 -32 -24)(32 32 64) Ambush
+
+*/
+spawnfunc(monster_demon1)
+{
+	if(deathmatch)
+	{
+		delete(this);
+		return;
+	}
+	precache_model("progs/demon.mdl");
+	precache_model("progs/h_demon.mdl");
+
+	precache_sound("demon/ddeath.wav");
+	precache_sound("demon/dhit2.wav");
+	precache_sound("demon/djump.wav");
+	precache_sound("demon/dpain1.wav");
+	precache_sound("demon/idle1.wav");
+	precache_sound("demon/sight2.wav");
+
+	this.solid = SOLID_SLIDEBOX;
+	this.movetype = MOVETYPE_STEP;
+
+	_setmodel(this, "progs/demon.mdl");
+
+	setsize(this, VEC_HULL2_MIN, VEC_HULL2_MAX);
+	this.health = 300;
+
+	this.th_stand = demon1_stand1;
+	this.th_walk = demon1_walk1;
+	this.th_run = demon1_run1;
+	this.th_die = demon_die;
+	this.th_melee = Demon_MeleeAttack;		// one of two attacks
+	this.th_missile = demon1_jump1;			// jump attack
+	this.th_pain = demon1_pain;
+
+	this.sightsound = demon1_sight;
+	this.checkattack = DemonCheckAttack;
+	this.deathmessage = demon1_deathmessage;
+		
+	walkmonster_start(this);
 }
 

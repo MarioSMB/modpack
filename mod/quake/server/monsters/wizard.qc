@@ -82,7 +82,7 @@ void wiz_side1();
 WizardCheckAttack
 =================
 */
-float WizardCheckAttack()
+bool WizardCheckAttack(entity this)
 {
 	if(time < this.attack_finished)
 		return false;
@@ -180,19 +180,16 @@ FAST ATTACKS
 ==============================================================================
 */
 
-void Wiz_FastFire()
+void Wiz_FastFire(entity this)
 {
-	vector		vec;
-	vector		dst;
-
 	if(this.owner.health > 0)
 	{
 		this.owner.effects = this.owner.effects | EF_MUZZLEFLASH;
 
 		makevectors(this.enemy.angles);	
-		dst = this.enemy.origin - 13*this.movedir;
+		vector dst = this.enemy.origin - 13*this.movedir;
 	
-		vec = normalize(dst - this.origin);
+		vector vec = normalize(dst - this.origin);
 		_sound(this, CHAN_WEAPON, "wizard/wattack.wav", 1, ATTN_NORM);
 		launch_spike(this.origin, vec);
 		newmis.velocity = vec*600;
@@ -205,16 +202,13 @@ void Wiz_FastFire()
 	delete(this);
 }
 
-
-void Wiz_StartFast()
+void Wiz_StartFast(entity this)
 {
-	entity	missile;
-	
 	_sound(this, CHAN_WEAPON, "wizard/wattack.wav", 1, ATTN_NORM);
 	this.v_angle = this.angles;
 	makevectors(this.angles);
 
-	missile = spawn();
+	entity missile = spawn();
 	missile.owner = this;
 	missile.nextthink = time + 0.6;
 	setsize(missile, '0 0 0', '0 0 0');		
@@ -235,9 +229,7 @@ void Wiz_StartFast()
 	missile.movedir = VEC_ORIGIN - v_right;
 }
 
-
-
-void Wiz_idle_sound()
+void Wiz_idle_sound(entity this)
 {
 	float wr = random() * 5;
 
@@ -346,7 +338,6 @@ void wiz_die(entity this, entity attacker)
 	wiz_death1();
 }
 
-
 void Wiz_Pain(entity this, entity attacker, float damage)
 {
 	_sound(this, CHAN_VOICE, "wizard/wpain.wav", 1, ATTN_NORM);
@@ -356,8 +347,7 @@ void Wiz_Pain(entity this, entity attacker, float damage)
 	wiz_pain1();
 }
 
-
-void Wiz_Missile()
+void Wiz_Missile(entity this)
 {
 	wiz_fast1();
 }

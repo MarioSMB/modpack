@@ -93,42 +93,38 @@ if(random() > 0.5)
 	_sound(this, CHAN_WEAPON, "knight/sword2.wav", 1, ATTN_NORM);
 else
 	_sound(this, CHAN_WEAPON, "knight/sword1.wav", 1, ATTN_NORM);
-ai_charge(20);
+ai_charge(this, 20);
 }
-void()	knight_runatk2	=[	$runattack2,	knight_runatk3	] {ai_charge_side();}
-void()	knight_runatk3	=[	$runattack3,	knight_runatk4	] {ai_charge_side();}
-void()	knight_runatk4	=[	$runattack4,	knight_runatk5	] {ai_charge_side();}
-void()	knight_runatk5	=[	$runattack5,	knight_runatk6	] {ai_melee_side();}
-void()	knight_runatk6	=[	$runattack6,	knight_runatk7	] {ai_melee_side();}
-void()	knight_runatk7	=[	$runattack7,	knight_runatk8	] {ai_melee_side();}
-void()	knight_runatk8	=[	$runattack8,	knight_runatk9	] {ai_melee_side();}
-void()	knight_runatk9	=[	$runattack9,	knight_runatk10	] {ai_melee_side();}
-void()	knight_runatk10	=[	$runattack10,	knight_runatk11	] {ai_charge_side();}
-void()	knight_runatk11	=[	$runattack11,	knight_run1	] {ai_charge(10);}
+void()	knight_runatk2	=[	$runattack2,	knight_runatk3	] {ai_charge_side(this);}
+void()	knight_runatk3	=[	$runattack3,	knight_runatk4	] {ai_charge_side(this);}
+void()	knight_runatk4	=[	$runattack4,	knight_runatk5	] {ai_charge_side(this);}
+void()	knight_runatk5	=[	$runattack5,	knight_runatk6	] {ai_melee_side(this);}
+void()	knight_runatk6	=[	$runattack6,	knight_runatk7	] {ai_melee_side(this);}
+void()	knight_runatk7	=[	$runattack7,	knight_runatk8	] {ai_melee_side(this);}
+void()	knight_runatk8	=[	$runattack8,	knight_runatk9	] {ai_melee_side(this);}
+void()	knight_runatk9	=[	$runattack9,	knight_runatk10	] {ai_melee_side(this);}
+void()	knight_runatk10	=[	$runattack10,	knight_runatk11	] {ai_charge_side(this);}
+void()	knight_runatk11	=[	$runattack11,	knight_run1	] {ai_charge(this, 10);}
 
 void()	knight_atk1	=[	$attackb1,		knight_atk2	]
 {
 _sound(this, CHAN_WEAPON, "knight/sword1.wav", 1, ATTN_NORM);
-ai_charge(0);}
-void()	knight_atk2	=[	$attackb2,		knight_atk3	] {ai_charge(7);}
-void()	knight_atk3	=[	$attackb3,		knight_atk4	] {ai_charge(4);}
-void()	knight_atk4	=[	$attackb4,		knight_atk5	] {ai_charge(0);}
-void()	knight_atk5	=[	$attackb5,		knight_atk6	] {ai_charge(3);}
-void()	knight_atk6	=[	$attackb6,		knight_atk7	] {ai_charge(4); ai_melee();}
-void()	knight_atk7	=[	$attackb7,		knight_atk8	] {ai_charge(1); ai_melee();}
-void()	knight_atk8	=[	$attackb8,		knight_atk9	] {ai_charge(3);
-ai_melee();}
-void()	knight_atk9	=[	$attackb9,		knight_atk10] {ai_charge(1);}
-void()	knight_atk10=[	$attackb10,		knight_run1	] {ai_charge(5);}
+ai_charge(this, 0);}
+void()	knight_atk2	=[	$attackb2,		knight_atk3	] {ai_charge(this, 7);}
+void()	knight_atk3	=[	$attackb3,		knight_atk4	] {ai_charge(this, 4);}
+void()	knight_atk4	=[	$attackb4,		knight_atk5	] {ai_charge(this, 0);}
+void()	knight_atk5	=[	$attackb5,		knight_atk6	] {ai_charge(this, 3);}
+void()	knight_atk6	=[	$attackb6,		knight_atk7	] {ai_charge(this, 4); ai_melee(this);}
+void()	knight_atk7	=[	$attackb7,		knight_atk8	] {ai_charge(this, 1); ai_melee(this);}
+void()	knight_atk8	=[	$attackb8,		knight_atk9	] {ai_charge(this, 3);
+ai_melee(this);}
+void()	knight_atk9	=[	$attackb9,		knight_atk10] {ai_charge(this, 1);}
+void()	knight_atk10=[	$attackb10,		knight_run1	] {ai_charge(this, 5);}
 
 void knight_attack(entity this)
 {
-	float		len;
-	
 // decide if now is a good swing time
-	len = vlen(this.enemy.origin+this.enemy.view_ofs -(this.origin+this.view_ofs));
-	
-	if(len<80)
+	if(vdist((this.enemy.origin + this.enemy.view_ofs) - (this.origin + this.view_ofs), <, 80))
 		knight_atk1();
 	else
 		knight_runatk1();
@@ -282,5 +278,5 @@ spawnfunc(monster_knight)
 	this.sightsound = knight_sight;
 	this.sightsound = knight_deathmessage;
 	
-	walkmonster_start();
+	walkmonster_start(this);
 }

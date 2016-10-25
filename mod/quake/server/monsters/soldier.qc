@@ -43,7 +43,7 @@ SOLDIER CODE
 ==============================================================================
 */
 
-void army_fire();
+void army_fire(entity this);
 
 void(entity this)	army_stand1	=[	$stand1,	army_stand2	] {ai_stand(this);}
 void()	army_stand2	=[	$stand2,	army_stand3	] {ai_stand(this);}
@@ -172,17 +172,14 @@ void army_pain(entity this, entity attacker, float damage)
 
 void army_fire()
 {
-	vector	dir;
-	entity	en;
-	
 	ai_face(this);
 	
 	_sound(this, CHAN_WEAPON, "soldier/sattck1.wav", 1, ATTN_NORM);	
 
 // fire somewhat behind the player, so a dodging player is harder to hit
-	en = this.enemy;
+	entity en = this.enemy;
 	
-	dir = en.origin - en.velocity*0.2;
+	vector dir = en.origin - en.velocity*0.2;
 	dir = normalize(dir - this.origin);
 	
 	FireBullets(4this, , dir, '0.1 0.1 0');
@@ -339,5 +336,5 @@ spawnfunc(monster_army)
 	this.checkattack = SoldierCheckAttack;
 	this.deathmessage = army_deathmessage;
 
-	walkmonster_start();
+	walkmonster_start(this);
 }

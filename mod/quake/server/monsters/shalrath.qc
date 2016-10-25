@@ -120,9 +120,9 @@ void shalrath_die(entity this, entity attacker)
 ShalMissile
 ================
 */
-void ShalMissileTouch();
-void ShalHome();
-void ShalMissile()
+void ShalMissileTouch(entity this, entity toucher);
+void ShalHome(entity this);
+void ShalMissile(entity this)
 {
 	vector dir = normalize((this.enemy.origin + '0 0 10') - this.origin);
 	float dist = vlen(this.enemy.origin - this.origin);

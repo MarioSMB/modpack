@@ -172,8 +172,8 @@ spawnfunc(light_flame_small_white)
 Lava Balls
 */
 
-void fire_fly();
-void fire_touch();
+void fire_fly(entity this);
+void fire_touch(entity this, entity toucher);
 spawnfunc(misc_fireball)
 {
 	
@@ -185,11 +185,9 @@ spawnfunc(misc_fireball)
 		this.speed == 1000;
 }
 
-void fire_fly()
+void fire_fly(entity this)
 {
-entity	fireball;
-
-	fireball = spawn();
+	entity fireball = spawn();
 	fireball.solid = SOLID_TRIGGER;
 	fireball.movetype = MOVETYPE_TOSS;
 	fireball.velocity = '0 0 1000';
@@ -250,7 +248,7 @@ spawnfunc(misc_explobox)
 
 	this.origin_z = this.origin_z + 2;
 	float oldz = this.origin_z;
-	droptofloor();
+	droptofloor(this);
 	if(oldz - this.origin_z > 250)
 	{
 		dprint("item fell out of level at ");
@@ -280,7 +278,7 @@ spawnfunc(misc_explobox2)
 
 	this.origin_z = this.origin_z + 2;
 	float oldz = this.origin_z;
-	droptofloor();
+	droptofloor(this);
 	if(oldz - this.origin_z > 250)
 	{
 		dprint("item fell out of level at ");
@@ -314,7 +312,7 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 	}
 }
 
-void shooter_think()
+void shooter_think(entity this)
 {
 	spikeshooter_use(this, NULL, NULL);
 	this.nextthink = time + this.wait;
@@ -350,7 +348,7 @@ Continuously fires spikes.
 */
 spawnfunc(trap_shooter)
 {
-	trap_spikeshooter();
+	spawnfunc_trap_spikeshooter(this);
 	
 	if(this.wait == 0)
 		this.wait = 1;
@@ -368,9 +366,9 @@ spawnfunc(trap_shooter)
 */
 
 
-void make_bubbles();
+void make_bubbles(entity this);
 void bubble_remove(entity this, entity toucher);
-void bubble_bob();
+void bubble_bob(entity this);
 
 /*QUAKED air_bubbles(0 .5 .8)(-8 -8 -8)(8 8 8)
 
@@ -526,7 +524,7 @@ spawnfunc(func_illusionary)
 	this.movetype = MOVETYPE_NONE;
 	this.solid = SOLID_NOT;
 	_setmodel(this, this.model);
-	makestatic();
+	makestatic(this);
 }
 
 /*QUAKED func_episodegate(0 .5 .8) ? E1 E2 E3 E4
@@ -627,7 +625,7 @@ spawnfunc(ambient_swamp2)
 
 //============================================================================
 
-void noise_think()
+void noise_think(entity this)
 {
 	this.nextthink = time + 0.5;
 	_sound(this, 1, "enforcer/enfire.wav", 1, ATTN_NORM);

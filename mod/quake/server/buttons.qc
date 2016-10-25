@@ -25,11 +25,9 @@ void button_return(entity this)
 		this.takedamage = DAMAGE_YES;	// can be shot again
 }
 
-
 void button_blocked(entity this, entity blocker)
 {	// do nothing, just don't come all the way back out
 }
-
 
 void button_fire(entity this)
 {
@@ -41,7 +39,6 @@ void button_fire(entity this)
 	this.state = STATE_UP;
 	SUB_CalcMove(this, this.pos2, this.speed, button_wait);
 }
-
 
 void button_use(entity this, entity actor, entity trigger)
 {
@@ -83,25 +80,32 @@ When a button is touched, it moves some distance in the direction of it's angle,
 */
 spawnfunc(func_button)
 {
-	if(this.sounds == 0)
+	switch(this.sounds)
 	{
-		precache_sound("buttons/airbut1.wav");
-		this.noise = "buttons/airbut1.wav";
-	}
-	if(this.sounds == 1)
-	{
-		precache_sound("buttons/switch21.wav");
-		this.noise = "buttons/switch21.wav";
-	}
-	if(this.sounds == 2)
-	{
-		precache_sound("buttons/switch02.wav");
-		this.noise = "buttons/switch02.wav";
-	}
-	if(this.sounds == 3)
-	{
-		precache_sound("buttons/switch04.wav");
-		this.noise = "buttons/switch04.wav";
+		case 0:
+		{
+			precache_sound("buttons/airbut1.wav");
+			this.noise = "buttons/airbut1.wav";
+			break;
+		}
+		case 1:
+		{
+			precache_sound("buttons/switch21.wav");
+			this.noise = "buttons/switch21.wav";
+			break;
+		}
+		case 2:
+		{
+			precache_sound("buttons/switch02.wav");
+			this.noise = "buttons/switch02.wav";
+			break;
+		}
+		case 3:
+		{
+			precache_sound("buttons/switch04.wav");
+			this.noise = "buttons/switch04.wav";
+			break;
+		}
 	}
 	
 	SetMovedir(this);
@@ -134,4 +138,3 @@ spawnfunc(func_button)
 	this.pos1 = this.origin;
 	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
 }
-

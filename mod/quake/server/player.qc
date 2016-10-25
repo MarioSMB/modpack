@@ -1,6 +1,3 @@
-
-void bubble_bob();
-
 /*
 ==============================================================================
 
@@ -172,8 +169,10 @@ void player_axed4(entity this) { set_anim(this, $axattd4, player_run); this.weap
 
 //============================================================================
 
-void() player_nail1   =[$nailatt1, player_nail2  ] 
+void player_nail1(entity this)
 {
+	set_anim(this, $nailatt1, player_nail2);
+
 	this.effects |= EF_MUZZLEFLASH;
 
 	if(!this.button0)
@@ -181,12 +180,14 @@ void() player_nail1   =[$nailatt1, player_nail2  ]
 	this.weaponframe = this.weaponframe + 1;
 	if(this.weaponframe == 9)
 		this.weaponframe = 1;
-	SuperDamageSound();
-	W_FireSpikes(4);
+	SuperDamageSound(this);
+	W_FireSpikes(this, 4);
 	this.attack_finished = time + 0.2;
 }
-void() player_nail2   =[$nailatt2, player_nail1  ]
+void player_nail2(entity this)
 {
+	set_anim(this, $nailatt2, player_nail1);
+
 	this.effects |= EF_MUZZLEFLASH;
 
 	if(!this.button0)
@@ -194,15 +195,17 @@ void() player_nail2   =[$nailatt2, player_nail1  ]
 	this.weaponframe = this.weaponframe + 1;
 	if(this.weaponframe == 9)
 		this.weaponframe = 1;
-	SuperDamageSound();
-	W_FireSpikes(-4);
+	SuperDamageSound(this);
+	W_FireSpikes(this, -4);
 	this.attack_finished = time + 0.2;
 }
 
 //============================================================================
 
-void() player_light1   =[$light1, player_light2  ] 
+void player_light1(entity this)
 {
+	set_anim(this, $light1, player_light2);
+
 	this.effects |= EF_MUZZLEFLASH;
 
 	if(!this.button0)
@@ -210,12 +213,14 @@ void() player_light1   =[$light1, player_light2  ]
 	this.weaponframe = this.weaponframe + 1;
 	if(this.weaponframe == 5)
 		this.weaponframe = 1;
-	SuperDamageSound();
-	W_FireLightning();
+	SuperDamageSound(this);
+	W_FireLightning(this);
 	this.attack_finished = time + 0.2;
 }
-void() player_light2   =[$light2, player_light1  ]
+void player_light2(entity this)
 {
+	set_anim(this, $light2, player_light1);
+
 	this.effects |= EF_MUZZLEFLASH;
 
 	if(!this.button0)
@@ -223,21 +228,21 @@ void() player_light2   =[$light2, player_light1  ]
 	this.weaponframe = this.weaponframe + 1;
 	if(this.weaponframe == 5)
 		this.weaponframe = 1;
-	SuperDamageSound();
-	W_FireLightning();
+	SuperDamageSound(this);
+	W_FireLightning(this);
 	this.attack_finished = time + 0.2;
 }
 
 //============================================================================
 
 
-void player_rocket1   =[$rockatt1, player_rocket2  ] {this.weaponframe=1();
-this.effects |= EF_MUZZLEFLASH;}
-void() player_rocket2   =[$rockatt2, player_rocket3  ] {this.weaponframe=2;}
-void() player_rocket3   =[$rockatt3, player_rocket4  ] {this.weaponframe=3;}
-void() player_rocket4   =[$rockatt4, player_rocket5  ] {this.weaponframe=4;}
-void() player_rocket5   =[$rockatt5, player_rocket6  ] {this.weaponframe=5;}
-void() player_rocket6   =[$rockatt6, player_run  ] {this.weaponframe=6;}
+void player_rocket1(entity this) { set_anim(this, $rockatt1, player_rocket2); this.weaponframe = 1; this.effects |= EF_MUZZLEFLASH; }
+void player_rocket2(entity this) { set_anim(this, $rockatt2, player_rocket3); this.weaponframe = 2; }
+void player_rocket3(entity this) { set_anim(this, $rockatt3, player_rocket4); this.weaponframe = 3; }
+void player_rocket4(entity this) { set_anim(this, $rockatt4, player_rocket5); this.weaponframe = 4; }
+void player_rocket5(entity this) { set_anim(this, $rockatt5, player_rocket6); this.weaponframe = 5; }
+void player_rocket6(entity this) { set_anim(this, $rockatt6, player_run); this.weaponframe = 6; }
+
 void DeathBubbles(entity this, int num_bubbles);
 
 void PainSound(entity this, entity attacker)
@@ -316,19 +321,19 @@ void PainSound(entity this, entity attacker)
 	_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NORM);
 }
 
-void(entity this, entity attacker)	player_pain1 =	[	$pain1,	player_pain2	] {PainSound(this, attacker);this.weaponframe=0;}
-void()	player_pain2 =	[	$pain2,	player_pain3	] {}
-void()	player_pain3 =	[	$pain3,	player_pain4	] {}
-void()	player_pain4 =	[	$pain4,	player_pain5	] {}
-void()	player_pain5 =	[	$pain5,	player_pain6	] {}
-void()	player_pain6 =	[	$pain6,	player_run	] {}
+void player_pain1(entity this, entity attacker) { set_anim(this, $pain1, player_pain2); PainSound(this, attacker); this.weaponframe = 0; }
+void player_pain2(entity this) { set_anim(this, $pain2, player_pain3); }
+void player_pain3(entity this) { set_anim(this, $pain3, player_pain4); }
+void player_pain4(entity this) { set_anim(this, $pain4, player_pain5); }
+void player_pain5(entity this) { set_anim(this, $pain5, player_pain6); }
+void player_pain6(entity this) { set_anim(this, $pain6, player_run); }
 
-void(entity this, entity attacker)	player_axpain1 =	[	$axpain1,	player_axpain2	] {PainSound(this, attacker);this.weaponframe=0;}
-void()	player_axpain2 =	[	$axpain2,	player_axpain3	] {}
-void()	player_axpain3 =	[	$axpain3,	player_axpain4	] {}
-void()	player_axpain4 =	[	$axpain4,	player_axpain5	] {}
-void()	player_axpain5 =	[	$axpain5,	player_axpain6	] {}
-void()	player_axpain6 =	[	$axpain6,	player_run	] {}
+void player_axpain1(entity this, entity attacker) { set_anim(this, $axpain1, player_axpain2); PainSound(this, attacker); this.weaponframe = 0; }
+void player_axpain2(entity this) { set_anim(this, $axpain2, player_axpain3); }
+void player_axpain3(entity this) { set_anim(this, $axpain3, player_axpain4); }
+void player_axpain4(entity this) { set_anim(this, $axpain4, player_axpain5); }
+void player_axpain5(entity this) { set_anim(this, $axpain5, player_axpain6); }
+void player_axpain6(entity this) { set_anim(this, $axpain6, player_run); }
 
 void player_pain(entity this, entity attacker, float damage)
 {
@@ -344,19 +349,20 @@ void player_pain(entity this, entity attacker, float damage)
 		player_pain1(this, attacker);
 }
 
-void player_diea1();
-void player_dieb1();
-void player_diec1();
-void player_died1();
-void player_diee1();
-void player_die_ax1();
+void player_diea1(entity this);
+void player_dieb1(entity this);
+void player_diec1(entity this);
+void player_died1(entity this);
+void player_diee1(entity this);
+void player_die_ax1(entity this);
+
+void bubble_bob(entity this);
 
 void DeathBubblesSpawn(entity this)
 {
-entity	bubble;
 	if(this.owner.waterlevel != 3)
 		return;
-	bubble = spawn();
+	entity bubble = new(bubble);
 	_setmodel(bubble, "progs/s_bubble.spr");
 	setorigin(bubble, this.owner.origin + '0 0 24');
 	bubble.movetype = MOVETYPE_NOCLIP;
@@ -364,7 +370,6 @@ entity	bubble;
 	bubble.velocity = '0 0 15';
 	bubble.nextthink = time + 0.5;
 	setthink(bubble, bubble_bob);
-	bubble.classname = "bubble";
 	bubble.frame = 0;
 	bubble.cnt = 0;
 	setsize(bubble, '-8 -8 -8', '8 8 8');
@@ -417,7 +422,7 @@ void DeathSound(entity this)
 }
 
 
-void PlayerDead()
+void PlayerDead(entity this)
 {
 	this.nextthink = -1;
 // allow respawn after a certain time
@@ -450,9 +455,7 @@ vector VelocityForDamage(float dm)
 
 void ThrowGib(string gibname, float dm)
 {
-	entity new;
-
-	new = spawn();
+	entity new = spawn();
 	new.origin = this.origin;
 	_setmodel(new, gibname);
 	setsize(new, '0 0 0', '0 0 0');
@@ -515,7 +518,7 @@ void GibPlayer(entity this, entity attacker)
 
 void PlayerDie(entity this, entity attacker)
 {
-	this.items = this.items -(this.items & IT_INVISIBILITY);
+	this.items &= ~IT_INVISIBILITY;
 	this.invisible_finished = 0;	// don't die as eyes
 	this.invincible_finished = 0;
 	this.super_damage_finished = 0;
@@ -576,71 +579,70 @@ void set_suicide_frame(entity this)
 	this.nextthink = -1;
 }
 
+void player_diea1(entity this) { set_anim(this, $deatha1, player_diea2); }
+void player_diea2(entity this) { set_anim(this, $deatha2, player_diea3); }
+void player_diea3(entity this) { set_anim(this, $deatha3, player_diea4); }
+void player_diea4(entity this) { set_anim(this, $deatha4, player_diea5); }
+void player_diea5(entity this) { set_anim(this, $deatha5, player_diea6); }
+void player_diea6(entity this) { set_anim(this, $deatha6, player_diea7); }
+void player_diea7(entity this) { set_anim(this, $deatha7, player_diea8); }
+void player_diea8(entity this) { set_anim(this, $deatha8, player_diea9); }
+void player_diea9(entity this) { set_anim(this, $deatha9, player_diea10); }
+void player_diea10(entity this) { set_anim(this, $deatha10, player_diea11); }
+void player_diea11(entity this) { set_anim(this, $deatha11, player_diea11); PlayerDead(this); }
 
-void()	player_diea1	=	[	$deatha1,	player_diea2	] {}
-void()	player_diea2	=	[	$deatha2,	player_diea3	] {}
-void()	player_diea3	=	[	$deatha3,	player_diea4	] {}
-void()	player_diea4	=	[	$deatha4,	player_diea5	] {}
-void()	player_diea5	=	[	$deatha5,	player_diea6	] {}
-void()	player_diea6	=	[	$deatha6,	player_diea7	] {}
-void()	player_diea7	=	[	$deatha7,	player_diea8	] {}
-void()	player_diea8	=	[	$deatha8,	player_diea9	] {}
-void()	player_diea9	=	[	$deatha9,	player_diea10	] {}
-void()	player_diea10	=	[	$deatha10,	player_diea11	] {}
-void()	player_diea11	=	[	$deatha11,	player_diea11 ] {PlayerDead();}
+void player_dieb1(entity this) { set_anim(this, $deathb1, player_dieb2); }
+void player_dieb2(entity this) { set_anim(this, $deathb2, player_dieb3); }
+void player_dieb3(entity this) { set_anim(this, $deathb3, player_dieb4); }
+void player_dieb4(entity this) { set_anim(this, $deathb4, player_dieb5); }
+void player_dieb5(entity this) { set_anim(this, $deathb5, player_dieb6); }
+void player_dieb6(entity this) { set_anim(this, $deathb6, player_dieb7); }
+void player_dieb7(entity this) { set_anim(this, $deathb7, player_dieb8); }
+void player_dieb8(entity this) { set_anim(this, $deathb8, player_dieb9); }
+void player_dieb9(entity this) { set_anim(this, $deathb9, player_dieb9); PlayerDead(this); }
 
-void()	player_dieb1	=	[	$deathb1,	player_dieb2	] {}
-void()	player_dieb2	=	[	$deathb2,	player_dieb3	] {}
-void()	player_dieb3	=	[	$deathb3,	player_dieb4	] {}
-void()	player_dieb4	=	[	$deathb4,	player_dieb5	] {}
-void()	player_dieb5	=	[	$deathb5,	player_dieb6	] {}
-void()	player_dieb6	=	[	$deathb6,	player_dieb7	] {}
-void()	player_dieb7	=	[	$deathb7,	player_dieb8	] {}
-void()	player_dieb8	=	[	$deathb8,	player_dieb9	] {}
-void()	player_dieb9	=	[	$deathb9,	player_dieb9	] {PlayerDead();}
+void player_diec1(entity this) { set_anim(this, $deathc1, player_diec2); }
+void player_diec2(entity this) { set_anim(this, $deathc2, player_diec3); }
+void player_diec3(entity this) { set_anim(this, $deathc3, player_diec4); }
+void player_diec4(entity this) { set_anim(this, $deathc4, player_diec5); }
+void player_diec5(entity this) { set_anim(this, $deathc5, player_diec6); }
+void player_diec6(entity this) { set_anim(this, $deathc6, player_diec7); }
+void player_diec7(entity this) { set_anim(this, $deathc7, player_diec8); }
+void player_diec8(entity this) { set_anim(this, $deathc8, player_diec9); }
+void player_diec9(entity this) { set_anim(this, $deathc9, player_diec10); }
+void player_diec10(entity this) { set_anim(this, $deathc10, player_diec11); }
+void player_diec11(entity this) { set_anim(this, $deathc11, player_diec12); }
+void player_diec12(entity this) { set_anim(this, $deathc12, player_diec13); }
+void player_diec13(entity this) { set_anim(this, $deathc13, player_diec14); }
+void player_diec14(entity this) { set_anim(this, $deathc14, player_diec15); }
+void player_diec15(entity this) { set_anim(this, $deathc15, player_diec15); PlayerDead(this); }
 
-void()	player_diec1	=	[	$deathc1,	player_diec2	] {}
-void()	player_diec2	=	[	$deathc2,	player_diec3	] {}
-void()	player_diec3	=	[	$deathc3,	player_diec4	] {}
-void()	player_diec4	=	[	$deathc4,	player_diec5	] {}
-void()	player_diec5	=	[	$deathc5,	player_diec6	] {}
-void()	player_diec6	=	[	$deathc6,	player_diec7	] {}
-void()	player_diec7	=	[	$deathc7,	player_diec8	] {}
-void()	player_diec8	=	[	$deathc8,	player_diec9	] {}
-void()	player_diec9	=	[	$deathc9,	player_diec10	] {}
-void()	player_diec10	=	[	$deathc10,	player_diec11	] {}
-void()	player_diec11	=	[	$deathc11,	player_diec12	] {}
-void()	player_diec12	=	[	$deathc12,	player_diec13	] {}
-void()	player_diec13	=	[	$deathc13,	player_diec14	] {}
-void()	player_diec14	=	[	$deathc14,	player_diec15	] {}
-void()	player_diec15	=	[	$deathc15,	player_diec15 ] {PlayerDead();}
+void player_died1(entity this) { set_anim(this, $deathd1, player_died2); }
+void player_died2(entity this) { set_anim(this, $deathd2, player_died3); }
+void player_died3(entity this) { set_anim(this, $deathd3, player_died4); }
+void player_died4(entity this) { set_anim(this, $deathd4, player_died5); }
+void player_died5(entity this) { set_anim(this, $deathd5, player_died6); }
+void player_died6(entity this) { set_anim(this, $deathd6, player_died7); }
+void player_died7(entity this) { set_anim(this, $deathd7, player_died8); }
+void player_died8(entity this) { set_anim(this, $deathd8, player_died9); }
+void player_died9(entity this) { set_anim(this, $deathd9, player_died9); PlayerDead(this); }
 
-void()	player_died1	=	[	$deathd1,	player_died2	] {}
-void()	player_died2	=	[	$deathd2,	player_died3	] {}
-void()	player_died3	=	[	$deathd3,	player_died4	] {}
-void()	player_died4	=	[	$deathd4,	player_died5	] {}
-void()	player_died5	=	[	$deathd5,	player_died6	] {}
-void()	player_died6	=	[	$deathd6,	player_died7	] {}
-void()	player_died7	=	[	$deathd7,	player_died8	] {}
-void()	player_died8	=	[	$deathd8,	player_died9	] {}
-void()	player_died9	=	[	$deathd9,	player_died9	] {PlayerDead();}
+void player_diee1(entity this) { set_anim(this, $deathe1, player_diee2); }
+void player_diee2(entity this) { set_anim(this, $deathe2, player_diee3); }
+void player_diee3(entity this) { set_anim(this, $deathe3, player_diee4); }
+void player_diee4(entity this) { set_anim(this, $deathe4, player_diee5); }
+void player_diee5(entity this) { set_anim(this, $deathe5, player_diee6); }
+void player_diee6(entity this) { set_anim(this, $deathe6, player_diee7); }
+void player_diee7(entity this) { set_anim(this, $deathe7, player_diee8); }
+void player_diee8(entity this) { set_anim(this, $deathe8, player_diee9); }
+void player_diee9(entity this) { set_anim(this, $deathe9, player_diee9); PlayerDead(this); }
 
-void()	player_diee1	=	[	$deathe1,	player_diee2	] {}
-void()	player_diee2	=	[	$deathe2,	player_diee3	] {}
-void()	player_diee3	=	[	$deathe3,	player_diee4	] {}
-void()	player_diee4	=	[	$deathe4,	player_diee5	] {}
-void()	player_diee5	=	[	$deathe5,	player_diee6	] {}
-void()	player_diee6	=	[	$deathe6,	player_diee7	] {}
-void()	player_diee7	=	[	$deathe7,	player_diee8	] {}
-void()	player_diee8	=	[	$deathe8,	player_diee9	] {}
-void()	player_diee9	=	[	$deathe9,	player_diee9	] {PlayerDead();}
-
-void()	player_die_ax1	=	[	$axdeth1,	player_die_ax2	] {}
-void()	player_die_ax2	=	[	$axdeth2,	player_die_ax3	] {}
-void()	player_die_ax3	=	[	$axdeth3,	player_die_ax4	] {}
-void()	player_die_ax4	=	[	$axdeth4,	player_die_ax5	] {}
-void()	player_die_ax5	=	[	$axdeth5,	player_die_ax6	] {}
-void()	player_die_ax6	=	[	$axdeth6,	player_die_ax7	] {}
-void()	player_die_ax7	=	[	$axdeth7,	player_die_ax8	] {}
-void()	player_die_ax8	=	[	$axdeth8,	player_die_ax9	] {}
-void()	player_die_ax9	=	[	$axdeth9,	player_die_ax9	] {PlayerDead();}
+void player_die_ax1(entity this) { set_anim(this, $axdeth1, player_die_ax2); }
+void player_die_ax2(entity this) { set_anim(this, $axdeth2, player_die_ax3); }
+void player_die_ax3(entity this) { set_anim(this, $axdeth3, player_die_ax4); }
+void player_die_ax4(entity this) { set_anim(this, $axdeth4, player_die_ax5); }
+void player_die_ax5(entity this) { set_anim(this, $axdeth5, player_die_ax6); }
+void player_die_ax6(entity this) { set_anim(this, $axdeth6, player_die_ax7); }
+void player_die_ax7(entity this) { set_anim(this, $axdeth7, player_die_ax8); }
+void player_die_ax8(entity this) { set_anim(this, $axdeth8, player_die_ax9); }
+void player_die_ax9(entity this) { set_anim(this, $axdeth9, player_die_ax9); PlayerDead(this); }

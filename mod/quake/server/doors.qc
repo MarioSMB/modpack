@@ -236,7 +236,7 @@ void door_touch(entity this, entity toucher)
 	settouch(this, func_null);
 	if(this.enemy)
 		settouch(this.enemy, func_null); // get paired door
-	door_use();
+	door_use(this, NULL, toucher);
 }
 
 /*
@@ -502,13 +502,13 @@ SECRET DOORS
 =============================================================================
 */
 
-void fd_secret_move1();
-void fd_secret_move2();
-void fd_secret_move3();
-void fd_secret_move4();
-void fd_secret_move5();
-void fd_secret_move6();
-void fd_secret_done();
+void fd_secret_move1(entity this);
+void fd_secret_move2(entity this);
+void fd_secret_move3(entity this);
+void fd_secret_move4(entity this);
+void fd_secret_move5(entity this);
+void fd_secret_move6(entity this);
+void fd_secret_done(entity this);
 
 const int SECRET_OPEN_ONCE = BIT(0);		// stays open
 const int SECRET_1ST_LEFT = BIT(1);		// 1st move is left of arrow
@@ -541,7 +541,7 @@ void fd_secret_use(entity this, entity actor, entity trigger)
 	_sound(this, CHAN_VOICE, this.noise1, 1, ATTN_NORM);
 	this.nextthink = this.ltime + 0.1;
 
-	int temp = 1 -(this.spawnflags & SECRET_1ST_LEFT);	// 1 or -1
+	int temp = 1 - (this.spawnflags & SECRET_1ST_LEFT);	// 1 or -1
 	makevectors(this.mangle);
 	
 	if(!this.t_width)
@@ -576,7 +576,7 @@ void fd_secret_die(entity this, entity attacker)
 }
 
 // Wait after first movement...
-void() fd_secret_move1 = 
+void fd_secret_move1(entity this) 
 {
 	this.nextthink = this.ltime + 1.0;
 	setthink(this, fd_secret_move2);
@@ -584,14 +584,14 @@ void() fd_secret_move1 =
 }
 
 // Start moving sideways w/sound...
-void  fd_secret_move2()
+void fd_secret_move2(entity this)
 {
 	_sound(this, CHAN_VOICE, this.noise2, 1, ATTN_NORM);
 	SUB_CalcMove(this, this.dest2, this.speed, fd_secret_move3);
 }
 
 // Wait here until time to go back...
-void  fd_secret_move3()
+void fd_secret_move3(entity this)
 {
 	_sound(this, CHAN_VOICE, this.noise3, 1, ATTN_NORM);
 	if(!(this.spawnflags & SECRET_OPEN_ONCE))
@@ -602,27 +602,27 @@ void  fd_secret_move3()
 }
 
 // Move backward...
-void  fd_secret_move4()
+void fd_secret_move4(entity this)
 {
 	_sound(this, CHAN_VOICE, this.noise2, 1, ATTN_NORM);
 	SUB_CalcMove(this, this.dest1, this.speed, fd_secret_move5);		
 }
 
 // Wait 1 second...
-void() fd_secret_move5 = 
+void fd_secret_move5(entity this) 
 {
 	this.nextthink = this.ltime + 1.0;
 	setthink(this, fd_secret_move6);
 	_sound(this, CHAN_VOICE, this.noise3, 1, ATTN_NORM);
 }
 
-void  fd_secret_move6()
+void fd_secret_move6(entity this)
 {
 	_sound(this, CHAN_VOICE, this.noise2, 1, ATTN_NORM);
 	SUB_CalcMove(this, this.oldorigin, this.speed, fd_secret_done);
 }
 
-void  fd_secret_done()
+void fd_secret_done(entity this)
 {
 	if(!this.targetname || this.spawnflags&SECRET_YES_SHOOT)
 	{
@@ -633,7 +633,7 @@ void  fd_secret_done()
 	_sound(this, CHAN_VOICE, this.noise3, 1, ATTN_NORM);
 }
 
-void  secret_blocked(entity this, entity blocker)
+void secret_blocked(entity this, entity blocker)
 {
 	if(time < this.attack_finished)
 		return;

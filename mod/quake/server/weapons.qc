@@ -158,7 +158,7 @@ void ClearMultiDamage()
 	multi_damage = 0;
 }
 
-void ApplyMultiDamage()
+void ApplyMultiDamage(entity this)
 {
 	if(!multi_ent)
 		return;
@@ -172,7 +172,7 @@ void AddMultiDamage(entity hit, float damage)
 	
 	if(hit != multi_ent)
 	{
-		ApplyMultiDamage();
+		ApplyMultiDamage(hit);
 		multi_damage = damage;
 		multi_ent = hit;
 	}
@@ -247,7 +247,7 @@ void FireBullets(entity this, int shotcount, vector dir, vector spread)
 
 		shotcount = shotcount - 1;
 	}
-	ApplyMultiDamage();
+	ApplyMultiDamage(this);
 }
 
 /*
@@ -280,7 +280,7 @@ void W_FireSuperShotgun(entity this)
 
 	if(this.currentammo == 1)
 	{
-		W_FireShotgun();
+		W_FireShotgun(this);
 		return;
 	}
 		
@@ -500,7 +500,7 @@ void W_FireLightning(entity this)
 //=============================================================================
 
 
-void GrenadeExplode()
+void GrenadeExplode(entity this)
 {
 	T_RadiusDamage(this, this.owner, 120, world);
 
@@ -519,7 +519,7 @@ void GrenadeTouch(entity this, entity toucher)
 		return;		// don't explode on owner
 	if(toucher.takedamage == DAMAGE_AIM)
 	{
-		GrenadeExplode();
+		GrenadeExplode(this);
 		return;
 	}
 	_sound(this, CHAN_WEAPON, "weapons/bounce.wav", 1, ATTN_NORM);	// bounce sound
@@ -607,15 +607,12 @@ void launch_spike(vector org, vector dir)
 	newmis.velocity = dir * 1000;
 }
 
-void W_FireSuperSpikes()
+void W_FireSuperSpikes(entity this)
 {
-	vector	dir;
-	entity	old;
-	
 	_sound(this, CHAN_WEAPON, "weapons/spike2.wav", 1, ATTN_NORM);
 	this.attack_finished = time + 0.2;
 	this.currentammo = this.ammo_nails = this.ammo_nails - 2;
-	dir = aim(this, 1000);
+	vector dir = aim(this, 1000);
 	launch_spike(this.origin + '0 0 16', dir);
 	settouch(newmis, superspike_touch);
 	_setmodel(newmis, "progs/s_spike.mdl");
@@ -625,20 +622,17 @@ void W_FireSuperSpikes()
 
 void W_FireSpikes(float ox)
 {
-	vector	dir;
-	entity	old;
-	
 	makevectors(this.v_angle);
 	
 	if(this.ammo_nails >= 2 && this.weapon == IT_SUPER_NAILGUN)
 	{
-		W_FireSuperSpikes();
+		W_FireSuperSpikes(this);
 		return;
 	}
 
 	if(this.ammo_nails < 1)
 	{
-		this.weapon = W_BestWeapon();
+		this.weapon = W_BestWeapon(this);
 		W_SetCurrentAmmo(this);
 		return;
 	}
@@ -646,7 +640,7 @@ void W_FireSpikes(float ox)
 	_sound(this, CHAN_WEAPON, "weapons/rocket1i.wav", 1, ATTN_NORM);
 	this.attack_finished = time + 0.2;
 	this.currentammo = this.ammo_nails = this.ammo_nails - 1;
-	dir = aim(this, 1000);
+	vector dir = aim(this, 1000);
 	launch_spike(this.origin + '0 0 16' + v_right*ox, dir);
 
 	this.punchangle_x = -2;
@@ -1239,7 +1233,7 @@ ImpulseCommands
 
 ============
 */
-void ImpulseCommands()
+void ImpulseCommands(entity this)
 {
 	if(this.impulse >= 1 && this.impulse <= 8)
 		W_ChangeWeapon(this);

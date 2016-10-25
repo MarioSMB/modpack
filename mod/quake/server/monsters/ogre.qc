@@ -65,7 +65,7 @@ void OgreGrenadeExplode(entity this)
 	settouch(this, func_null);
 	_setmodel(this, "progs/s_explod.spr");
 	this.solid = SOLID_NOT;
-	s_explode1();
+	s_explode1(this);
 }
 
 void OgreGrenadeTouch(entity this, entity toucher)
@@ -87,15 +87,13 @@ void OgreGrenadeTouch(entity this, entity toucher)
 OgreFireGrenade
 ================
 */
-void OgreFireGrenade()
+void OgreFireGrenade(entity this)
 {
-	entity missile, mpuff;
-	
 	this.effects |= EF_MUZZLEFLASH;
 
 	_sound(this, CHAN_WEAPON, "weapons/grenade.wav", 1, ATTN_NORM);
 
-	missile = spawn();
+	entity missile = spawn();
 	missile.owner = this;
 	missile.movetype = MOVETYPE_BOUNCE;
 	missile.solid = SOLID_BBOX;
@@ -129,18 +127,18 @@ void OgreFireGrenade()
 /*
 ================
 chainsaw
-
+this, 
 FIXME
 ================
 */
-void chainsaw(float side)
+void chainsaw(this, float side)
 {
 	if(!this.enemy)
 		return;
 	if(!CanDamage(this.enemy, this))
 		return;
 
-	ai_charge(10);
+	ai_charge(this, 10);
 
 	if(vdist(this.enemy.origin - this.origin, >, 100))
 		return;
@@ -173,77 +171,77 @@ void() ogre_stand7	=[	$stand7,	ogre_stand8	] {ai_stand(this);}
 void() ogre_stand8	=[	$stand8,	ogre_stand9	] {ai_stand(this);}
 void() ogre_stand9	=[	$stand9,	ogre_stand1	] {ai_stand(this);}
 
-void() ogre_walk1	=[	$walk1,		ogre_walk2	] {ai_walk(3);}
-void() ogre_walk2	=[	$walk2,		ogre_walk3	] {ai_walk(2);}
+void() ogre_walk1	=[	$walk1,		ogre_walk2	] {ai_walk(this, 3);}
+void() ogre_walk2	=[	$walk2,		ogre_walk3	] {ai_walk(this, 2);}
 void() ogre_walk3	=[	$walk3,		ogre_walk4	] {
-ai_walk(2);
+ai_walk(this, 2);
 if(random() < 0.2)
 	_sound(this, CHAN_VOICE, "ogre/ogidle.wav", 1, ATTN_IDLE);
 }
-void() ogre_walk4	=[	$walk4,		ogre_walk5	] {ai_walk(2);}
-void() ogre_walk5	=[	$walk5,		ogre_walk6	] {ai_walk(2);}
+void() ogre_walk4	=[	$walk4,		ogre_walk5	] {ai_walk(this, 2);}
+void() ogre_walk5	=[	$walk5,		ogre_walk6	] {ai_walk(this, 2);}
 void() ogre_walk6	=[	$walk6,		ogre_walk7	] {
-ai_walk(5);
+ai_walk(this, 5);
 if(random() < 0.1)
 	_sound(this, CHAN_VOICE, "ogre/ogdrag.wav", 1, ATTN_IDLE);
 }
-void() ogre_walk7	=[	$walk7,		ogre_walk8	] {ai_walk(3);}
-void() ogre_walk8	=[	$walk8,		ogre_walk9	] {ai_walk(2);}
-void() ogre_walk9	=[	$walk9,		ogre_walk10	] {ai_walk(3);}
-void() ogre_walk10	=[	$walk10,	ogre_walk11	] {ai_walk(1);}
-void() ogre_walk11	=[	$walk11,	ogre_walk12	] {ai_walk(2);}
-void() ogre_walk12	=[	$walk12,	ogre_walk13	] {ai_walk(3);}
-void() ogre_walk13	=[	$walk13,	ogre_walk14	] {ai_walk(3);}
-void() ogre_walk14	=[	$walk14,	ogre_walk15	] {ai_walk(3);}
-void() ogre_walk15	=[	$walk15,	ogre_walk16	] {ai_walk(3);}
-void() ogre_walk16	=[	$walk16,	ogre_walk1	] {ai_walk(4);}
+void() ogre_walk7	=[	$walk7,		ogre_walk8	] {ai_walk(this, 3);}
+void() ogre_walk8	=[	$walk8,		ogre_walk9	] {ai_walk(this, 2);}
+void() ogre_walk9	=[	$walk9,		ogre_walk10	] {ai_walk(this, 3);}
+void() ogre_walk10	=[	$walk10,	ogre_walk11	] {ai_walk(this, 1);}
+void() ogre_walk11	=[	$walk11,	ogre_walk12	] {ai_walk(this, 2);}
+void() ogre_walk12	=[	$walk12,	ogre_walk13	] {ai_walk(this, 3);}
+void() ogre_walk13	=[	$walk13,	ogre_walk14	] {ai_walk(this, 3);}
+void() ogre_walk14	=[	$walk14,	ogre_walk15	] {ai_walk(this, 3);}
+void() ogre_walk15	=[	$walk15,	ogre_walk16	] {ai_walk(this, 3);}
+void() ogre_walk16	=[	$walk16,	ogre_walk1	] {ai_walk(this, 4);}
 
-void ogre_run1	=[	$run1,		ogre_run2	] {ai_run(9)();
+void ogre_run1	=[	$run1,		ogre_run2	] {ai_run(this, 9)();
 if(random() < 0.2)
 	_sound(this, CHAN_VOICE, "ogre/ogidle2.wav", 1, ATTN_IDLE);
 }
-void() ogre_run2	=[	$run2,		ogre_run3	] {ai_run(12);}
-void() ogre_run3	=[	$run3,		ogre_run4	] {ai_run(8);}
-void() ogre_run4	=[	$run4,		ogre_run5	] {ai_run(22);}
-void() ogre_run5	=[	$run5,		ogre_run6	] {ai_run(16);}
-void() ogre_run6	=[	$run6,		ogre_run7	] {ai_run(4);}
-void() ogre_run7	=[	$run7,		ogre_run8	] {ai_run(13);}
-void() ogre_run8	=[	$run8,		ogre_run1	] {ai_run(24);}
+void() ogre_run2	=[	$run2,		ogre_run3	] {ai_run(this, 12);}
+void() ogre_run3	=[	$run3,		ogre_run4	] {ai_run(this, 8);}
+void() ogre_run4	=[	$run4,		ogre_run5	] {ai_run(this, 22);}
+void() ogre_run5	=[	$run5,		ogre_run6	] {ai_run(this, 16);}
+void() ogre_run6	=[	$run6,		ogre_run7	] {ai_run(this, 4);}
+void() ogre_run7	=[	$run7,		ogre_run8	] {ai_run(this, 13);}
+void() ogre_run8	=[	$run8,		ogre_run1	] {ai_run(this, 24);}
 
-void ogre_swing1	=[	$swing1,		ogre_swing2	] {ai_charge(11)();
+void ogre_swing1	=[	$swing1,		ogre_swing2	] {ai_charge(this, 11)();
 _sound(this, CHAN_WEAPON, "ogre/ogsawatk.wav", 1, ATTN_NORM);
 }
-void() ogre_swing2	=[	$swing2,		ogre_swing3	] {ai_charge(1);}
-void() ogre_swing3	=[	$swing3,		ogre_swing4	] {ai_charge(4);}
-void() ogre_swing4	=[	$swing4,		ogre_swing5	] {ai_charge(13);}
-void() ogre_swing5	=[	$swing5,		ogre_swing6	] {ai_charge(9); chainsaw(0);this.angles_y = this.angles_y + random()*25;}
-void() ogre_swing6	=[	$swing6,		ogre_swing7	] {chainsaw(200);this.angles_y = this.angles_y + random()* 25;}
-void() ogre_swing7	=[	$swing7,		ogre_swing8	] {chainsaw(0);this.angles_y = this.angles_y + random()* 25;}
-void() ogre_swing8	=[	$swing8,		ogre_swing9	] {chainsaw(0);this.angles_y = this.angles_y + random()* 25;}
-void() ogre_swing9	=[	$swing9,		ogre_swing10 ] {chainsaw(0);this.angles_y = this.angles_y + random()* 25;}
-void() ogre_swing10	=[	$swing10,		ogre_swing11 ] {chainsaw(-200);this.angles_y = this.angles_y + random()* 25;}
-void() ogre_swing11	=[	$swing11,		ogre_swing12 ] {chainsaw(0);this.angles_y = this.angles_y + random()* 25;}
-void() ogre_swing12	=[	$swing12,		ogre_swing13 ] {ai_charge(3);}
-void() ogre_swing13	=[	$swing13,		ogre_swing14 ] {ai_charge(8);}
-void() ogre_swing14	=[	$swing14,		ogre_run1	] {ai_charge(9);}
+void() ogre_swing2	=[	$swing2,		ogre_swing3	] {ai_charge(this, 1);}
+void() ogre_swing3	=[	$swing3,		ogre_swing4	] {ai_charge(this, 4);}
+void() ogre_swing4	=[	$swing4,		ogre_swing5	] {ai_charge(this, 13);}
+void() ogre_swing5	=[	$swing5,		ogre_swing6	] {ai_charge(this, 9); chainsaw(this, 0);this.angles_y = this.angles_y + random()*25;}
+void() ogre_swing6	=[	$swing6,		ogre_swing7	] {chainsaw(this, 200);this.angles_y = this.angles_y + random()* 25;}
+void() ogre_swing7	=[	$swing7,		ogre_swing8	] {chainsaw(this, 0);this.angles_y = this.angles_y + random()* 25;}
+void() ogre_swing8	=[	$swing8,		ogre_swing9	] {chainsaw(this, 0);this.angles_y = this.angles_y + random()* 25;}
+void() ogre_swing9	=[	$swing9,		ogre_swing10 ] {chainsaw(this, 0);this.angles_y = this.angles_y + random()* 25;}
+void() ogre_swing10	=[	$swing10,		ogre_swing11 ] {chainsaw(this, -200);this.angles_y = this.angles_y + random()* 25;}
+void() ogre_swing11	=[	$swing11,		ogre_swing12 ] {chainsaw(this, 0);this.angles_y = this.angles_y + random()* 25;}
+void() ogre_swing12	=[	$swing12,		ogre_swing13 ] {ai_charge(this, 3);}
+void() ogre_swing13	=[	$swing13,		ogre_swing14 ] {ai_charge(this, 8);}
+void() ogre_swing14	=[	$swing14,		ogre_run1	] {ai_charge(this, 9);}
 
-void ogre_smash1	=[	$smash1,		ogre_smash2	] {ai_charge(6)();
+void ogre_smash1	=[	$smash1,		ogre_smash2	] {ai_charge(this, 6)();
 _sound(this, CHAN_WEAPON, "ogre/ogsawatk.wav", 1, ATTN_NORM);
 }
-void() ogre_smash2	=[	$smash2,		ogre_smash3	] {ai_charge(0);}
-void() ogre_smash3	=[	$smash3,		ogre_smash4	] {ai_charge(0);}
-void() ogre_smash4	=[	$smash4,		ogre_smash5	] {ai_charge(1);}
-void() ogre_smash5	=[	$smash5,		ogre_smash6	] {ai_charge(4);}
-void() ogre_smash6	=[	$smash6,		ogre_smash7	] {ai_charge(4); chainsaw(0);}
-void() ogre_smash7	=[	$smash7,		ogre_smash8	] {ai_charge(4); chainsaw(0);}
-void() ogre_smash8	=[	$smash8,		ogre_smash9	] {ai_charge(10); chainsaw(0);}
-void() ogre_smash9	=[	$smash9,		ogre_smash10 ] {ai_charge(13); chainsaw(0);}
-void() ogre_smash10	=[	$smash10,		ogre_smash11 ] {chainsaw(1);}
-void ogre_smash11	=[	$smash11,		ogre_smash12 ] {ai_charge(2); chainsaw(0)();
+void() ogre_smash2	=[	$smash2,		ogre_smash3	] {ai_charge(this, 0);}
+void() ogre_smash3	=[	$smash3,		ogre_smash4	] {ai_charge(this, 0);}
+void() ogre_smash4	=[	$smash4,		ogre_smash5	] {ai_charge(this, 1);}
+void() ogre_smash5	=[	$smash5,		ogre_smash6	] {ai_charge(this, 4);}
+void() ogre_smash6	=[	$smash6,		ogre_smash7	] {ai_charge(this, 4); chainsaw(this, 0);}
+void() ogre_smash7	=[	$smash7,		ogre_smash8	] {ai_charge(this, 4); chainsaw(this, 0);}
+void() ogre_smash8	=[	$smash8,		ogre_smash9	] {ai_charge(this, 10); chainsaw(this, 0);}
+void() ogre_smash9	=[	$smash9,		ogre_smash10 ] {ai_charge(this, 13); chainsaw(this, 0);}
+void() ogre_smash10	=[	$smash10,		ogre_smash11 ] {chainsaw(this, 1);}
+void ogre_smash11	=[	$smash11,		ogre_smash12 ] {ai_charge(this, 2); chainsaw(this, 0)();
 this.nextthink = this.nextthink + random()*0.2;}	// slight variation
-void() ogre_smash12	=[	$smash12,		ogre_smash13 ] {ai_charge();}
-void() ogre_smash13	=[	$smash13,		ogre_smash14 ] {ai_charge(4);}
-void() ogre_smash14	=[	$smash14,		ogre_run1	] {ai_charge(12);}
+void() ogre_smash12	=[	$smash12,		ogre_smash13 ] {ai_charge(this, 0);}
+void() ogre_smash13	=[	$smash13,		ogre_smash14 ] {ai_charge(this, 4);}
+void() ogre_smash14	=[	$smash14,		ogre_run1	] {ai_charge(this, 12);}
 
 void() ogre_nail1	=[	$shoot1,		ogre_nail2	] {ai_face(this);}
 void() ogre_nail2	=[	$shoot2,		ogre_nail3	] {ai_face(this);}

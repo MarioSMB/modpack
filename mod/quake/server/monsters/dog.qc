@@ -41,12 +41,12 @@ dog_bite
 
 ================
 */
-void dog_bite()
+void dog_bite(entity this)
 {
 	if(!this.enemy)
 		return;
 
-	ai_charge(10);
+	ai_charge(this, 10);
 
 	if(!CanDamage(this.enemy, this))
 		return;
@@ -108,41 +108,41 @@ void() dog_stand9	=[	$stand9,	dog_stand1	] {ai_stand(this);}
 void() dog_walk1	=[	$walk1 ,	dog_walk2	] {
 if(random() < 0.2)
 	_sound(this, CHAN_VOICE, "dog/idle.wav", 1, ATTN_IDLE);
-ai_walk(8);}
-void() dog_walk2	=[	$walk2 ,	dog_walk3	] {ai_walk(8);}
-void() dog_walk3	=[	$walk3 ,	dog_walk4	] {ai_walk(8);}
-void() dog_walk4	=[	$walk4 ,	dog_walk5	] {ai_walk(8);}
-void() dog_walk5	=[	$walk5 ,	dog_walk6	] {ai_walk(8);}
-void() dog_walk6	=[	$walk6 ,	dog_walk7	] {ai_walk(8);}
-void() dog_walk7	=[	$walk7 ,	dog_walk8	] {ai_walk(8);}
-void() dog_walk8	=[	$walk8 ,	dog_walk1	] {ai_walk(8);}
+ai_walk(this, 8);}
+void() dog_walk2	=[	$walk2 ,	dog_walk3	] {ai_walk(this, 8);}
+void() dog_walk3	=[	$walk3 ,	dog_walk4	] {ai_walk(this, 8);}
+void() dog_walk4	=[	$walk4 ,	dog_walk5	] {ai_walk(this, 8);}
+void() dog_walk5	=[	$walk5 ,	dog_walk6	] {ai_walk(this, 8);}
+void() dog_walk6	=[	$walk6 ,	dog_walk7	] {ai_walk(this, 8);}
+void() dog_walk7	=[	$walk7 ,	dog_walk8	] {ai_walk(this, 8);}
+void() dog_walk8	=[	$walk8 ,	dog_walk1	] {ai_walk(this, 8);}
 
 void() dog_run1		=[	$run1  ,	dog_run2	] {
 if(random() < 0.2)
 	_sound(this, CHAN_VOICE, "dog/idle.wav", 1, ATTN_IDLE);
-ai_run(16);}
-void() dog_run2		=[	$run2  ,	dog_run3	] {ai_run(32);}
-void() dog_run3		=[	$run3  ,	dog_run4	] {ai_run(32);}
-void() dog_run4		=[	$run4  ,	dog_run5	] {ai_run(20);}
-void() dog_run5		=[	$run5  ,	dog_run6	] {ai_run(64);}
-void() dog_run6		=[	$run6  ,	dog_run7	] {ai_run(32);}
-void() dog_run7		=[	$run7  ,	dog_run8	] {ai_run(16);}
-void() dog_run8		=[	$run8  ,	dog_run9	] {ai_run(32);}
-void() dog_run9		=[	$run9  ,	dog_run10	] {ai_run(32);}
-void() dog_run10	=[	$run10  ,	dog_run11	] {ai_run(20);}
-void() dog_run11	=[	$run11  ,	dog_run12	] {ai_run(64);}
-void() dog_run12	=[	$run12  ,	dog_run1	] {ai_run(32);}
+ai_run(this, 16);}
+void() dog_run2		=[	$run2  ,	dog_run3	] {ai_run(this, 32);}
+void() dog_run3		=[	$run3  ,	dog_run4	] {ai_run(this, 32);}
+void() dog_run4		=[	$run4  ,	dog_run5	] {ai_run(this, 20);}
+void() dog_run5		=[	$run5  ,	dog_run6	] {ai_run(this, 64);}
+void() dog_run6		=[	$run6  ,	dog_run7	] {ai_run(this, 32);}
+void() dog_run7		=[	$run7  ,	dog_run8	] {ai_run(this, 16);}
+void() dog_run8		=[	$run8  ,	dog_run9	] {ai_run(this, 32);}
+void() dog_run9		=[	$run9  ,	dog_run10	] {ai_run(this, 32);}
+void() dog_run10	=[	$run10  ,	dog_run11	] {ai_run(this, 20);}
+void() dog_run11	=[	$run11  ,	dog_run12	] {ai_run(this, 64);}
+void() dog_run12	=[	$run12  ,	dog_run1	] {ai_run(this, 32);}
 
-void() dog_atta1	=[	$attack1,	dog_atta2	] {ai_charge(10);}
-void() dog_atta2	=[	$attack2,	dog_atta3	] {ai_charge(10);}
-void() dog_atta3	=[	$attack3,	dog_atta4	] {ai_charge(10);}
+void() dog_atta1	=[	$attack1,	dog_atta2	] {ai_charge(this, 10);}
+void() dog_atta2	=[	$attack2,	dog_atta3	] {ai_charge(this, 10);}
+void() dog_atta3	=[	$attack3,	dog_atta4	] {ai_charge(this, 10);}
 void() dog_atta4	=[	$attack4,	dog_atta5	] {
 _sound(this, CHAN_VOICE, "dog/dattack1.wav", 1, ATTN_NORM);
 dog_bite();}
-void() dog_atta5	=[	$attack5,	dog_atta6	] {ai_charge(10);}
-void() dog_atta6	=[	$attack6,	dog_atta7	] {ai_charge(10);}
-void() dog_atta7	=[	$attack7,	dog_atta8	] {ai_charge(10);}
-void() dog_atta8	=[	$attack8,	dog_run1	] {ai_charge(10);}
+void() dog_atta5	=[	$attack5,	dog_atta6	] {ai_charge(this, 10);}
+void() dog_atta6	=[	$attack6,	dog_atta7	] {ai_charge(this, 10);}
+void() dog_atta7	=[	$attack7,	dog_atta8	] {ai_charge(this, 10);}
+void() dog_atta8	=[	$attack8,	dog_run1	] {ai_charge(this, 10);}
 
 void() dog_leap1	=[	$leap1,		dog_leap2	] {ai_face(this);}
 void() dog_leap2	=[	$leap2,		dog_leap3	]

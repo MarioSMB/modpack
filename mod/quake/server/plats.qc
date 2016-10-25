@@ -191,7 +191,7 @@ spawnfunc(func_plat)
 
 	this.use = plat_trigger_use;
 
-	plat_spawn_inside_trigger();	// the "start moving" trigger	
+	plat_spawn_inside_trigger(this);	// the "start moving" trigger	
 
 	if(this.targetname)
 	{
@@ -221,7 +221,7 @@ void train_use(entity this, entity actor, entity trigger)
 {
 	if(getthink(this) != func_train_find)
 		return;		// already activated
-	train_next();
+	train_next(this);
 }
 
 void train_wait(entity this)
