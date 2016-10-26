@@ -56,7 +56,7 @@ void t_movetarget(entity this, entity toucher);
 void movetarget_f(entity this)
 {
 	if(!this.targetname)
-		objerror("monster_movetarget: no targetname");
+		objerror(this, "monster_movetarget: no targetname");
 		
 	this.solid = SOLID_TRIGGER;
 	settouch(this, t_movetarget);
@@ -186,7 +186,7 @@ void HuntTarget(entity this)
 	SUB_AttackFinished(this, 1);	// wait a while before first attack
 }
 
-.string sightsound();
+.string() sightsound;
 void SightSound(entity this)
 {
 	if(this.sightsound)
@@ -226,7 +226,7 @@ slower noticing monsters.
 */
 bool FindTarget(entity this)
 {
-	entity client;
+	entity client = NULL;
 
 // if the first spawnflag bit is set, the monster will only wake up on
 // really seeing the player, not another monster getting angry
@@ -255,7 +255,7 @@ bool FindTarget(entity this)
 	if(client.items & IT_INVISIBILITY)
 		return false;
 
-	int r = range(client);
+	int r = range(this, client);
 	if(r == RANGE_FAR)
 		return false;
 		
@@ -264,12 +264,12 @@ bool FindTarget(entity this)
 
 	if(r == RANGE_NEAR)
 	{
-		if(client.show_hostile < time && !infront(client))
+		if(client.show_hostile < time && !infront(this, client))
 			return false;
 	}
 	else if(r == RANGE_MID)
 	{
-		if( /* client.show_hostile < time || */ !infront(client))
+		if( /* client.show_hostile < time || */ !infront(this, client))
 			return false;
 	}
 	
@@ -297,12 +297,12 @@ bool FindTarget(entity this)
 
 void ai_forward(entity this, float dist)
 {
-	walkmove(this.angles_y, dist);
+	walkmove(this, this.angles_y, dist);
 }
 
 void ai_back(entity this, float dist)
 {
-	walkmove((this.angles_y+180), dist);
+	walkmove(this, (this.angles_y+180), dist);
 }
 
 
@@ -315,12 +315,12 @@ stagger back a bit
 */
 void ai_pain(entity this, float dist)
 {
-	ai_back(dist);
+	ai_back(this, dist);
 /*
 	float away = anglemod(vectoyaw(this.origin - this.enemy.origin) 
 	+ 180*(random()- 0.5) );
 	
-	walkmove(away, dist);
+	walkmove(this, away, dist);
 */
 }
 
@@ -333,7 +333,7 @@ stagger back a bit
 */
 void ai_painforward(entity this, float dist)
 {
-	walkmove(this.ideal_yaw, dist);
+	walkmove(this, this.ideal_yaw, dist);
 }
 
 /*
@@ -400,7 +400,7 @@ void ai_turn(entity this)
 ChooseTurn
 =============
 */
-void ChooseTurn(vector dest3)
+void ChooseTurn(entity this, vector dest3)
 {
 	vector dir = this.origin - dest3;
 	vector newdir = vec2(trace_plane_normal.y, trace_plane_normal.x);
@@ -437,11 +437,11 @@ bool FacingIdeal(entity this)
 
 //=============================================================================
 
-.bool checkattack(entity this);
+.bool(entity this) checkattack;
 bool CheckAnyAttack(entity this)
 {
 	if(!this.enemy_vis)
-		return;
+		return false;
 	if(this.checkattack)
 		return this.checkattack(this);
 	return CheckAttack(this);
@@ -553,8 +553,8 @@ void ai_run(entity this, float dist)
 			return;
 	}
 
-	//this.enemy_infront = infront(this.enemy);
-	this.enemy_range = range(this.enemy);
+	//this.enemy_infront = infront(this, this.enemy);
+	this.enemy_range = range(this, this.enemy);
 	this.enemy_yaw = vectoyaw(this.enemy.origin - this.origin);
 	
 	if(this.attack_state == AS_MISSILE)

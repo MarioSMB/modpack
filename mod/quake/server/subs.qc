@@ -1,8 +1,24 @@
+.vector		finaldest, finalangle; 		//plat.qc stuff
+.void(entity this) think1;
+.float state;
+
+.float	delay;
+.float	wait;
+.float	lip;
+.float	speed;
+.float	sounds;
+
+.string killtarget;
+
+.int cnt;
+
+.float attack_finished;
+
 /*
 QuakeEd only writes a single float for angles(bad idea), so up and down are
 just constant angles.
 */
-vector SetMovedir(entity this)
+void SetMovedir(entity this)
 {
 	if(this.angles == '0 -1 0')
 		this.movedir = '0 0 1';
@@ -43,10 +59,11 @@ calculate this.velocity and this.nextthink to reach dest from
 this.origin traveling at speed
 ===============
 */
+void SUB_CalcMoveDone(entity this);
 void SUB_CalcMove(entity this, vector tdest, float tspeed, void(entity) func)
 {
 	if(!tspeed)
-		objerror("No speed is defined!");
+		objerror(this, "No speed is defined!");
 
 	this.think1 = func;
 	this.finaldest = tdest;
@@ -107,10 +124,11 @@ this.angles rotating
 The calling function should make sure this.think is valid
 ===============
 */
+void SUB_CalcAngleMoveDone(entity this);
 void SUB_CalcAngleMove(entity this, vector destangle, float tspeed, void(entity) func)
 {
 	if(!tspeed)
-		objerror("No speed is defined!");
+		objerror(this, "No speed is defined!");
 		
 // set destdelta to the vector needed to move
 	vector destdelta = destangle - this.angles;
@@ -149,6 +167,7 @@ void SUB_CalcAngleMoveDone(entity this)
 
 //=============================================================================
 
+void SUB_UseTargets(entity this, entity actor, entity trigger);
 void DelayThink(entity this)
 {
 	SUB_UseTargets(this, this.enemy, NULL);
@@ -208,7 +227,7 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 //
 	if(this.killtarget)
 	{
-		t = NULL;
+		entity t = NULL;
 		do
 		{
 			t = find(t, targetname, this.killtarget);

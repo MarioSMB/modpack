@@ -226,10 +226,10 @@ void dog_die(entity this, entity attacker)
 	if(this.health < -35)
 	{
 		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		ThrowGib("progs/gib3.mdl", this.health);
-		ThrowGib("progs/gib3.mdl", this.health);
-		ThrowGib("progs/gib3.mdl", this.health);
-		ThrowHead("progs/h_dog.mdl", this.health);
+		ThrowGib(this, "progs/gib3.mdl", this.health);
+		ThrowGib(this, "progs/gib3.mdl", this.health);
+		ThrowGib(this, "progs/gib3.mdl", this.health);
+		ThrowHead(this, "progs/h_dog.mdl", this.health);
 		return;
 	}
 

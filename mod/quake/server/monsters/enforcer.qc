@@ -71,14 +71,14 @@ void Laser_Touch(entity this, entity toucher)
 	delete(this);	
 }
 
-void LaunchLaser(vector org, vector vec)
+void LaunchLaser(entity this, vector org, vector vec)
 {
 	if(this.classname == "monster_enforcer")
 		_sound(this, CHAN_WEAPON, "enforcer/enfire.wav", 1, ATTN_NORM);
 
 	vector vec = normalize(vec);
 	
-	newmis = spawn();
+	entity newmis = spawn();
 	newmis.owner = this;
 	newmis.movetype = MOVETYPE_FLY;
 	newmis.solid = SOLID_BBOX;
@@ -284,10 +284,10 @@ void enf_die(entity this, entity attacker)
 	if(this.health < -35)
 	{
 		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		ThrowHead("progs/h_mega.mdl", this.health);
-		ThrowGib("progs/gib1.mdl", this.health);
-		ThrowGib("progs/gib2.mdl", this.health);
-		ThrowGib("progs/gib3.mdl", this.health);
+		ThrowHead(this, "progs/h_mega.mdl", this.health);
+		ThrowGib(this, "progs/gib1.mdl", this.health);
+		ThrowGib(this, "progs/gib2.mdl", this.health);
+		ThrowGib(this, "progs/gib3.mdl", this.health);
 		return;
 	}
 

@@ -56,7 +56,7 @@ void hknight_char_a1();
 void hknight_run1();
 void hk_idle__sound(entity this);
 
-void hknight_shot(float offset)
+void hknight_shot(entity this, float offset)
 {
 	vector	offang;
 	vector	org, vec;
@@ -72,7 +72,7 @@ void hknight_shot(float offset)
 	vec = normalize(v_forward);
 	vec_z = 0 - vec_z +(random() - 0.5)*0.1;
 	
-	launch_spike(org, vec);
+	entity newmis = launch_spike(this, org, vec);
 	newmis.classname = "knightspike";
 	_setmodel(newmis, "progs/k_spike.mdl");
 	setsize(newmis, VEC_ORIGIN, VEC_ORIGIN);		
@@ -203,10 +203,10 @@ void hknight_die(entity this, entity attacker)
 	if(this.health < -40)
 	{
 		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		ThrowHead("progs/h_hellkn.mdl", this.health);
-		ThrowGib("progs/gib1.mdl", this.health);
-		ThrowGib("progs/gib2.mdl", this.health);
-		ThrowGib("progs/gib3.mdl", this.health);
+		ThrowHead(this, "progs/h_hellkn.mdl", this.health);
+		ThrowGib(this, "progs/gib1.mdl", this.health);
+		ThrowGib(this, "progs/gib2.mdl", this.health);
+		ThrowGib(this, "progs/gib3.mdl", this.health);
 		return;
 	}
 
@@ -227,12 +227,12 @@ void()	hknight_magica3 =[	$magica3,	hknight_magica4	] {ai_face(this);}
 void()	hknight_magica4 =[	$magica4,	hknight_magica5	] {ai_face(this);}
 void()	hknight_magica5 =[	$magica5,	hknight_magica6	] {ai_face(this);}
 void()	hknight_magica6 =[	$magica6,	hknight_magica7	] {ai_face(this);}
-void()	hknight_magica7 =[	$magica7,	hknight_magica8	] {hknight_shot(-2);}
-void()	hknight_magica8 =[	$magica8,	hknight_magica9	] {hknight_shot(-1);}
-void()	hknight_magica9 =[	$magica9,	hknight_magica10] {hknight_shot(0);}
-void()	hknight_magica10 =[	$magica10,	hknight_magica11] {hknight_shot(1);}
-void()	hknight_magica11 =[	$magica11,	hknight_magica12] {hknight_shot(2);}
-void()	hknight_magica12 =[	$magica12,	hknight_magica13] {hknight_shot(3);}
+void()	hknight_magica7 =[	$magica7,	hknight_magica8	] {hknight_shot(this, -2);}
+void()	hknight_magica8 =[	$magica8,	hknight_magica9	] {hknight_shot(this, -1);}
+void()	hknight_magica9 =[	$magica9,	hknight_magica10] {hknight_shot(this, 0);}
+void()	hknight_magica10 =[	$magica10,	hknight_magica11] {hknight_shot(this, 1);}
+void()	hknight_magica11 =[	$magica11,	hknight_magica12] {hknight_shot(this, 2);}
+void()	hknight_magica12 =[	$magica12,	hknight_magica13] {hknight_shot(this, 3);}
 void()	hknight_magica13 =[	$magica13,	hknight_magica14] {ai_face(this);}
 void()	hknight_magica14 =[	$magica14,	hknight_run1	] {ai_face(this);}
 
@@ -244,12 +244,12 @@ void()	hknight_magicb3 =[	$magicb3,	hknight_magicb4	] {ai_face(this);}
 void()	hknight_magicb4 =[	$magicb4,	hknight_magicb5	] {ai_face(this);}
 void()	hknight_magicb5 =[	$magicb5,	hknight_magicb6	] {ai_face(this);}
 void()	hknight_magicb6 =[	$magicb6,	hknight_magicb7	] {ai_face(this);}
-void()	hknight_magicb7 =[	$magicb7,	hknight_magicb8	] {hknight_shot(-2);}
-void()	hknight_magicb8 =[	$magicb8,	hknight_magicb9	] {hknight_shot(-1);}
-void()	hknight_magicb9 =[	$magicb9,	hknight_magicb10] {hknight_shot(0);}
-void()	hknight_magicb10 =[	$magicb10,	hknight_magicb11] {hknight_shot(1);}
-void()	hknight_magicb11 =[	$magicb11,	hknight_magicb12] {hknight_shot(2);}
-void()	hknight_magicb12 =[	$magicb12,	hknight_magicb13] {hknight_shot(3);}
+void()	hknight_magicb7 =[	$magicb7,	hknight_magicb8	] {hknight_shot(this, -2);}
+void()	hknight_magicb8 =[	$magicb8,	hknight_magicb9	] {hknight_shot(this, -1);}
+void()	hknight_magicb9 =[	$magicb9,	hknight_magicb10] {hknight_shot(this, 0);}
+void()	hknight_magicb10 =[	$magicb10,	hknight_magicb11] {hknight_shot(this, 1);}
+void()	hknight_magicb11 =[	$magicb11,	hknight_magicb12] {hknight_shot(this, 2);}
+void()	hknight_magicb12 =[	$magicb12,	hknight_magicb13] {hknight_shot(this, 3);}
 void()	hknight_magicb13 =[	$magicb13,	hknight_run1] {ai_face(this);}
 
 //============================================================================
@@ -259,12 +259,12 @@ void()	hknight_magicc2 =[	$magicc2,	hknight_magicc3	] {ai_face(this);}
 void()	hknight_magicc3 =[	$magicc3,	hknight_magicc4	] {ai_face(this);}
 void()	hknight_magicc4 =[	$magicc4,	hknight_magicc5	] {ai_face(this);}
 void()	hknight_magicc5 =[	$magicc5,	hknight_magicc6	] {ai_face(this);}
-void()	hknight_magicc6 =[	$magicc6,	hknight_magicc7	] {hknight_shot(-2);}
-void()	hknight_magicc7 =[	$magicc7,	hknight_magicc8	] {hknight_shot(-1);}
-void()	hknight_magicc8 =[	$magicc8,	hknight_magicc9	] {hknight_shot(0);}
-void()	hknight_magicc9 =[	$magicc9,	hknight_magicc10] {hknight_shot(1);}
-void()	hknight_magicc10 =[	$magicc10,	hknight_magicc11] {hknight_shot(2);}
-void()	hknight_magicc11 =[	$magicc11,	hknight_run1] {hknight_shot(3);}
+void()	hknight_magicc6 =[	$magicc6,	hknight_magicc7	] {hknight_shot(this, -2);}
+void()	hknight_magicc7 =[	$magicc7,	hknight_magicc8	] {hknight_shot(this, -1);}
+void()	hknight_magicc8 =[	$magicc8,	hknight_magicc9	] {hknight_shot(this, 0);}
+void()	hknight_magicc9 =[	$magicc9,	hknight_magicc10] {hknight_shot(this, 1);}
+void()	hknight_magicc10 =[	$magicc10,	hknight_magicc11] {hknight_shot(this, 2);}
+void()	hknight_magicc11 =[	$magicc11,	hknight_run1] {hknight_shot(this, 3);}
 
 //===========================================================================
 

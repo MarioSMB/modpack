@@ -7,11 +7,6 @@ float anglemod(float v)
 	return v;
 }
 
-float crandom()
-{
-	return 2*(random() - 0.5);
-}
-
 bool EntitiesTouching(entity e1, entity e2)
 {
 	if((e1.mins.x > e2.maxs.x)

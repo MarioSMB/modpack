@@ -295,10 +295,10 @@ void sham_die(entity this, entity attacker)
 	if(this.health < -60)
 	{
 		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		ThrowHead("progs/h_shams.mdl", this.health);
-		ThrowGib("progs/gib1.mdl", this.health);
-		ThrowGib("progs/gib2.mdl", this.health);
-		ThrowGib("progs/gib3.mdl", this.health);
+		ThrowHead(this, "progs/h_shams.mdl", this.health);
+		ThrowGib(this, "progs/gib1.mdl", this.health);
+		ThrowGib(this, "progs/gib2.mdl", this.health);
+		ThrowGib(this, "progs/gib3.mdl", this.health);
 		return;
 	}
 

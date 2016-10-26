@@ -1,0 +1,5 @@
+#pragma once
+
+bool CanDamage(entity targ, entity inflictor);
+
+void T_Damage(entity targ, entity inflictor, entity attacker, float damage);

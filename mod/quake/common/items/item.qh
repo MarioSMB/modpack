@@ -1,0 +1,59 @@
+#pragma once
+
+const int IT_UNLIMITED_WEAPON_AMMO 		=  BIT(0); // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
+const int IT_UNLIMITED_SUPERWEAPONS		=  BIT(1); // when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
+
+const int IT_JETPACK               		=  BIT(2); // actual item
+const int IT_USING_JETPACK         		=  BIT(3); // confirmation that button is pressed
+const int IT_FUEL_REGEN            		=  BIT(4); // fuel regeneration trigger
+
+const int IT_FUEL       				=  BIT(5);
+const int IT_SHELLS                     =  BIT(6);
+const int IT_NAILS                      =  BIT(7);
+const int IT_ROCKETS                    =  BIT(8);
+const int IT_CELLS                      =  BIT(9);
+const int IT_PLASMA     				= BIT(10);
+
+const int IT_5HP                       	= BIT(11);
+const int IT_25HP                      	= BIT(12);
+const int IT_HEALTH     				= BIT(13);
+
+const int IT_ARMOR_SHARD               	= BIT(14);
+const int IT_ARMOR                     	= BIT(15);
+
+const int IT_KEY1						= BIT(16);
+const int IT_KEY2						= BIT(17);
+
+const int IT_CTF_SHIELDED          		= BIT(18); // set for the flag shield
+
+// special colorblend meaning in engine
+const int IT_INVISIBILITY 				= BIT(19);
+const int IT_INVINCIBLE 				= BIT(20);
+const int IT_SUPERWEAPON				= BIT(21); // suit
+const int IT_STRENGTH   				= BIT(22);
+
+// item masks
+const int IT_AMMO                      	= IT_FUEL | IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_PLASMA;
+const int IT_UNLIMITED_AMMO            	= IT_UNLIMITED_WEAPON_AMMO | IT_UNLIMITED_SUPERWEAPONS;
+const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_JETPACK | IT_FUEL_REGEN; // strength and invincible are handled separately
+
+#define ITEM_HANDLE(signal, ...) __Item_Send_##signal(__VA_ARGS__)
+CLASS(GameItem, Object)
+    ATTRIB(GameItem, m_id, int, 0);
+    ATTRIB(GameItem, m_name, string);
+    ATTRIB(GameItem, m_icon, string);
+    ATTRIB(GameItem, m_color, vector, '1 1 1');
+    ATTRIB(GameItem, m_waypoint, string);
+    ATTRIB(GameItem, m_waypointblink, int, 1);
+    METHOD(GameItem, display, void(GameItem this, void(string name, string icon) returns))
+    {
+        TC(GameItem, this);
+        returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon) : string_null);
+    }
+    METHOD(GameItem, show, void(GameItem this))
+    {
+        TC(GameItem, this);
+        LOG_INFO("A game item\n");
+    }
+    void ITEM_HANDLE(Show, GameItem this) { this.show(this); }
+ENDCLASS(GameItem)

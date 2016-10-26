@@ -1,3 +1,5 @@
+#include "combat.qh"
+
 void plat_center_touch(entity this, entity toucher);
 void plat_outside_touch(entity this, entity toucher);
 void plat_trigger_use(entity this, entity actor, entity trigger);
@@ -113,14 +115,14 @@ void plat_crush(entity this, entity blocker)
 	else if(this.state == STATE_DOWN)
 		plat_go_up(this);
 	else
-		objerror("plat_crush: bad this.state\n");
+		objerror(this, "plat_crush: bad this.state\n");
 }
 
 void plat_use(entity this, entity actor, entity trigger)
 {
 	this.use = func_null;
 	if(this.state != STATE_UP)
-		objerror("plat_use: not in up state");
+		objerror(this, "plat_use: not in up state");
 	plat_go_down(this);
 }
 
@@ -244,7 +246,7 @@ void train_next(entity this)
 	targ = find(NULL, targetname, this.target);
 	this.target = targ.target;
 	if(!this.target)
-		objerror("train_next: no next target");
+		objerror(this, "train_next: no next target");
 	if(targ.wait)
 		this.wait = targ.wait;
 	else
@@ -283,7 +285,7 @@ spawnfunc(func_train)
 	if(!this.speed)
 		this.speed = 100;
 	if(!this.target)
-		objerror("func_train without a target");
+		objerror(this, "func_train without a target");
 	if(!this.dmg)
 		this.dmg = 2;
 
@@ -328,7 +330,7 @@ spawnfunc(misc_teleporttrain)
 	if(!this.speed)
 		this.speed = 100;
 	if(!this.target)
-		objerror("func_train without a target");
+		objerror(this, "func_train without a target");
 
 	this.cnt = 1;
 	this.solid = SOLID_NOT;

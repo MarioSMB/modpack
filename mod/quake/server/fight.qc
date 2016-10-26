@@ -1,3 +1,4 @@
+#include "combat.qh"
 
 /*
 
@@ -8,7 +9,7 @@ When it decides it can't attack, it goes into hunt mode.
 
 */
 
-void ChooseTurn(vector dest);
+void ChooseTurn(entity this, vector dest);
 
 
 .float enemy_vis;
@@ -116,9 +117,9 @@ ai_charge
 The monster is in a melee attack, so get as close as possible to .enemy
 =============
 */
-bool visible(entity targ);
-bool infront(entity targ);
-int range(entity targ);
+bool visible(entity this, entity targ);
+bool infront(entity this, entity targ);
+int range(entity this, entity targ);
 
 void ai_charge(entity this, float d)
 {
@@ -137,7 +138,7 @@ void ai_charge_side(entity this)
 	vector dtemp = this.enemy.origin - 30*v_right;
 	float heading = vectoyaw(dtemp - this.origin);
 	
-	walkmove(heading, 20);
+	walkmove(this, heading, 20);
 }
 
 

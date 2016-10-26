@@ -31,6 +31,7 @@ PlaceItem
 plants the object on the floor
 ============
 */
+
 void PlaceItem(entity this)
 {
 	this.mdl = this.model;		// so it can be restored on respawn
@@ -39,7 +40,9 @@ void PlaceItem(entity this)
 	this.movetype = MOVETYPE_TOSS;	
 	this.velocity = '0 0 0';
 	this.origin_z = this.origin_z + 6;
-	if(!droptofloor(this))
+	bool didit = false;
+	WITHSELF(this, didit = builtin_droptofloor());
+	if(!didit)
 	{
 		LOG_DEBUGF("Bonus item fell out of level at %v\n", this.origin);
 		delete(this);
@@ -158,7 +161,7 @@ void health_touch(entity this, entity toucher)
 			return;
 	}
 
-	sprintf(toucher, "You receive %d health\n", this.healamount);
+	sprint(toucher, sprintf("You receive %d health\n", this.healamount));
 	
 // health touch sound
 	_sound(toucher, CHAN_ITEM, this.noise, 1, ATTN_NORM);
@@ -224,8 +227,8 @@ void armor_touch(entity this, entity toucher)
 	if(!IS_PLAYER(toucher))
 		return;
 
-	float type, value;
-	int bit;
+	float type = 0, value = 0;
+	int bit = 0;
 
 	if(this.classname == "item_armor1")
 	{
@@ -351,7 +354,7 @@ Deathmatch weapon change rules for picking up a weapon
 .int		ammo_shells, ammo_nails, ammo_rockets, ammo_cells;
 =============
 */
-void Deathmatch_Weapon(int old, int new)
+void Deathmatch_Weapon(entity this, int old, int new)
 {
 // change this.weapon if desired
 	int or = RankForWeapon(this.weapon);
@@ -372,9 +375,9 @@ void weapon_touch(entity this, entity toucher)
 	if(!IS_CLIENT(toucher))
 		return;
 
-	int hadammo, new;
+	int hadammo = 0, new = 0;
 // if the player was using his best weapon, change up to the new one if better		
-	int best = W_BestWeapon(toucher);
+	//int best = W_BestWeapon(toucher);
 
 	bool leave = (deathmatch == 2 || coop);
 	
@@ -427,12 +430,12 @@ void weapon_touch(entity this, entity toucher)
 		toucher.ammo_cells = toucher.ammo_cells + 15;
 	}
 	else
-		objerror("weapon_touch: unknown classname");
+		objerror(this, "weapon_touch: unknown classname");
 
 	if(this.netname != "")
-		sprintf(toucher, "You got the %s\n", this.netname);
+		sprint(toucher, sprintf("You got the %s\n", this.netname));
 	else
-		sprintf(toucher, "You picked up a weapon\n");
+		sprint(toucher, sprintf("You picked up a weapon\n"));
 // weapon touch sound
 	_sound(toucher, CHAN_ITEM, "weapons/pkup.wav", 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
@@ -566,7 +569,7 @@ void ammo_touch(entity this, entity toucher)
 		return;
 
 // if the player was using his best weapon, change up to the new one if better		
-	best = W_BestWeapon(toucher);
+	int best = W_BestWeapon(toucher);
 
 
 // shotgun
@@ -604,9 +607,9 @@ void ammo_touch(entity this, entity toucher)
 	bound_other_ammo(toucher);
 
 	if(this.netname != "")
-		sprintf(toucher, "You got the %s\n", this.netname);
+		sprint(toucher, sprintf("You got the %s\n", this.netname));
 	else
-		sprintf(toucher, "You picked up some ammo\n");
+		sprint(toucher, sprintf("You picked up some ammo\n"));
 // ammo touch sound
 	_sound(toucher, CHAN_ITEM, "weapons/lock4.wav", 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
@@ -814,9 +817,9 @@ void key_touch(entity this, entity toucher)
 		return;
 
 	if(this.netname != "")
-		sprintf(toucher, "You got the %s\n", this.netname);
+		sprint(toucher, sprintf("You got the %s\n", this.netname));
 	else
-		sprintf(toucher, "You picked up a key\n");
+		sprint(toucher, sprintf("You picked up a key\n"));
 
 	_sound(toucher, CHAN_ITEM, this.noise, 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
@@ -956,7 +959,7 @@ End of level sigil, pick up to end episode and return to jrstart.
 spawnfunc(item_sigil)
 {
 	if(!this.spawnflags)
-		objerror("no spawnflags");
+		objerror(this, "no spawnflags");
 
 	precache_sound("misc/runekey.wav");
 	this.noise = "misc/runekey.wav";
@@ -1003,9 +1006,9 @@ void powerup_touch(entity this, entity toucher)
 		return;
 
 	if(this.netname != "")
-		sprintf(toucher, "You got the %s\n", this.netname);
+		sprint(toucher, sprintf("You got the %s\n", this.netname));
 	else
-		sprintf(toucher, "You picked up a powerup\n");
+		sprint(toucher, sprintf("You picked up a powerup\n"));
 
 	if(deathmatch)
 	{
@@ -1161,7 +1164,7 @@ void BackpackTouch(entity this, entity toucher)
 		}
 
 // if the player was using his best weapon, change up to the new one if better
-	int best = W_BestWeapon(toucher);
+	//int best = W_BestWeapon(toucher);
 
 // change weapons
 	toucher.ammo_shells = toucher.ammo_shells + this.ammo_shells;
@@ -1182,28 +1185,28 @@ void BackpackTouch(entity this, entity toucher)
 		if(acount)
 			sprint(toucher, ", ");
 		acount = true;
-		sprintf(toucher, "%d shells", this.ammo_shells);
+		sprint(toucher, sprintf("%d shells", this.ammo_shells));
 	}
 	if(this.ammo_nails)
 	{
 		if(acount)
 			sprint(toucher, ", ");
 		acount = true;
-		sprintf(toucher, "%d nails", this.ammo_nails);
+		sprint(toucher, sprintf("%d nails", this.ammo_nails));
 	}
 	if(this.ammo_rockets)
 	{
 		if(acount)
 			sprint(toucher, ", ");
 		acount = true;
-		sprintf(toucher, "%d rockets", this.ammo_rockets);
+		sprint(toucher, sprintf("%d rockets", this.ammo_rockets));
 	}
 	if(this.ammo_cells)
 	{
 		if(acount)
 			sprint(toucher, ", ");
 		acount = true;
-		sprintf(toucher, "%d cells", this.ammo_cells);
+		sprint(toucher, sprintf("%d cells", this.ammo_cells));
 	}
 	
 	sprint(toucher, "\n");

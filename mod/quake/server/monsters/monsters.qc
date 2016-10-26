@@ -1,3 +1,5 @@
+#include "../combat.qh"
+
 /* ALL MONSTERS SHOULD BE 1 0 0 IN COLOR */
 
 // name =[framenum,	nexttime, nextthink] {code}
@@ -65,8 +67,8 @@ void monster_death_use(entity this)
 void walkmonster_start_go(entity this)
 {
 	this.origin_z = this.origin_z + 1;	// raise off floor a bit
-	droptofloor(this);
-	
+	WITHSELF(this, builtin_droptofloor());
+
 	if(!walkmove(this,0,0))
 	{
 		dprint("walkmonster in wall at: ");
@@ -134,7 +136,7 @@ void flymonster_start_go(entity this)
 	this.flags |= FL_FLY;
 	this.flags |= FL_MONSTER;
 
-	if(!walkmove(0,0))
+	if(!walkmove(this, 0,0))
 	{
 		dprint("flymonster in wall at: ");
 		dprint(vtos(this.origin));

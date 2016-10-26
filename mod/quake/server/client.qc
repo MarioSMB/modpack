@@ -1,3 +1,4 @@
+#include "combat.qh"
 
 // prototypes
 void W_WeaponFrame(entity this);
@@ -97,10 +98,11 @@ FindIntermission
 Returns the entity to view from
 ============
 */
-entity FindIntermission()
+entity FindIntermission(entity this)
 {
 // look for info_intermission first
 	RandomSelection_Init();
+	bool found = false;
 	FOREACH_ENTITY_CLASS("info_intermission", true,
 	{
 		found = true;
@@ -118,8 +120,10 @@ entity FindIntermission()
 	spot = find(NULL, classname, "testplayerstart");
 	if(spot)
 		return spot;
-	
-	objerror("FindIntermission: no spot");
+
+	objerror(this, "FindIntermission: no spot");
+
+	return NULL;
 }
 
 string nextmap;
@@ -237,7 +241,7 @@ void IntermissionThink(entity this)
 	ExitIntermission();
 }
 
-void execute_changelevel()
+void execute_changelevel(entity this)
 {
 	intermission_running = 1;
 	
@@ -251,7 +255,7 @@ void execute_changelevel()
 	WriteByte(MSG_ALL, 3);
 	WriteByte(MSG_ALL, 3);
 	
-	entity pos = FindIntermission();
+	entity pos = FindIntermission(this);
 
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
@@ -328,7 +332,7 @@ When the player touches this, he gets sent to the map listed in the "map" variab
 spawnfunc(trigger_changelevel)
 {
 	if(!this.map)
-		objerror("chagnelevel trigger doesn't have map");
+		objerror(this, "chagnelevel trigger doesn't have map");
 	
 	InitTrigger(this);
 	settouch(this, changelevel_touch);
@@ -677,7 +681,7 @@ CheckRules
 Exit deathmatch games upon conditions
 ============
 */
-void CheckRules()
+void CheckRules(entity this)
 {
 	if(gameover)	// someone else quit the game already
 		return;
@@ -913,7 +917,7 @@ void PlayerPreThink(entity this)
 
 	makevectors(this.v_angle);		// is this still used
 
-	CheckRules(); // TODO
+	CheckRules(this);
 	WaterMove(this);
 
 	if(this.waterlevel == 2)
@@ -1189,7 +1193,7 @@ called when a player dies
 */
 void ClientObituary(entity targ, entity attacker)
 {
-	string deathstring, deathstring2;
+	string deathstring = "", deathstring2 = "";
 	float rnum = random();
 
 	if(IS_PLAYER(targ))

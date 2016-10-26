@@ -1,3 +1,5 @@
+#include "combat.qh"
+
 void set_anim(entity this, int frm, void(entity) tnk)
 {
 	this.frame = frm;
@@ -81,7 +83,7 @@ spawnfunc(light_fluoro)
 	}
 	
 	precache_sound("ambience/fl_hum1.wav");
-	ambient_sound(this.origin, "ambience/fl_hum1.wav", 0.5, ATTN_STATIC);
+	ambientsound(this.origin, "ambience/fl_hum1.wav", 0.5, ATTN_STATIC);
 }
 
 /*QUAKED light_fluorospark(0 1 0)(-8 -8 -8)(8 8 8)
@@ -96,7 +98,7 @@ spawnfunc(light_fluorospark)
 		this.style = 10;
 
 	precache_sound("ambience/buzz1.wav");
-	ambient_sound(this.origin, "ambience/buzz1.wav", 0.5, ATTN_STATIC);
+	ambientsound(this.origin, "ambience/buzz1.wav", 0.5, ATTN_STATIC);
 }
 
 /*QUAKED light_globe(0 1 0)(-8 -8 -8)(8 8 8)
@@ -115,7 +117,7 @@ void FireAmbient(entity this)
 {
 	precache_sound("ambience/fire1.wav");
 // attenuate fast
-	ambient_sound(this.origin, "ambience/fire1.wav", 0.5, ATTN_STATIC);
+	ambientsound(this.origin, "ambience/fire1.wav", 0.5, ATTN_STATIC);
 }
 
 /*QUAKED light_torch_small_walltorch(0 .5 0)(-10 -10 -20)(10 10 20)
@@ -182,7 +184,7 @@ spawnfunc(misc_fireball)
 	this.nextthink = time +(random() * 5);
 	setthink(this, fire_fly);
 	if(!this.speed)
-		this.speed == 1000;
+		this.speed = 1000;
 }
 
 void fire_fly(entity this)
@@ -248,7 +250,7 @@ spawnfunc(misc_explobox)
 
 	this.origin_z = this.origin_z + 2;
 	float oldz = this.origin_z;
-	droptofloor(this);
+	WITHSELF(this, builtin_droptofloor());
 	if(oldz - this.origin_z > 250)
 	{
 		dprint("item fell out of level at ");
@@ -278,7 +280,7 @@ spawnfunc(misc_explobox2)
 
 	this.origin_z = this.origin_z + 2;
 	float oldz = this.origin_z;
-	droptofloor(this);
+	WITHSELF(this, builtin_droptofloor());
 	if(oldz - this.origin_z > 250)
 	{
 		dprint("item fell out of level at ");
@@ -293,19 +295,19 @@ spawnfunc(misc_explobox2)
 const int SPAWNFLAG_SUPERSPIKE = BIT(0);
 const int SPAWNFLAG_LASER = BIT(1);
 
-void(vector org, vector vec) LaunchLaser;
+void LaunchLaser(entity this, vector org, vector vec);
 
 void spikeshooter_use(entity this, entity actor, entity trigger)
 {
 	if(this.spawnflags & SPAWNFLAG_LASER)
 	{
 		_sound(this, CHAN_VOICE, "enforcer/enfire.wav", 1, ATTN_NORM);
-		LaunchLaser(this.origin, this.movedir);
+		LaunchLaser(this, this.origin, this.movedir);
 	}
 	else
 	{
 		_sound(this, CHAN_VOICE, "weapons/spike2.wav", 1, ATTN_NORM);
-		launch_spike(this.origin, this.movedir);
+		entity newmis = launch_spike(this, this.origin, this.movedir);
 		newmis.velocity = this.movedir * 500;
 		if(this.spawnflags & SPAWNFLAG_SUPERSPIKE)
 			settouch(newmis, superspike_touch);
@@ -316,7 +318,10 @@ void shooter_think(entity this)
 {
 	spikeshooter_use(this, NULL, NULL);
 	this.nextthink = time + this.wait;
-	newmis.velocity = this.movedir * 500;
+	FOREACH_ENTITY_ENT(owner, this,
+	{
+		it.velocity = this.movedir * 500;
+	});
 }
 
 
@@ -562,7 +567,7 @@ spawnfunc(func_bossgate)
 spawnfunc(ambient_suck_wind)
 {
 	precache_sound("ambience/suck1.wav");
-	ambient_sound(this.origin, "ambience/suck1.wav", 1, ATTN_STATIC);
+	ambientsound(this.origin, "ambience/suck1.wav", 1, ATTN_STATIC);
 }
 
 /*QUAKED ambient_drone(0.3 0.1 0.6)(-10 -10 -8)(10 10 8)
@@ -570,7 +575,7 @@ spawnfunc(ambient_suck_wind)
 spawnfunc(ambient_drone)
 {
 	precache_sound("ambience/drone6.wav");
-	ambient_sound(this.origin, "ambience/drone6.wav", 0.5, ATTN_STATIC);
+	ambientsound(this.origin, "ambience/drone6.wav", 0.5, ATTN_STATIC);
 }
 
 /*QUAKED ambient_flouro_buzz(0.3 0.1 0.6)(-10 -10 -8)(10 10 8)
@@ -578,49 +583,49 @@ spawnfunc(ambient_drone)
 spawnfunc(ambient_flouro_buzz)
 {
 	precache_sound("ambience/buzz1.wav");
-	ambient_sound(this.origin, "ambience/buzz1.wav", 1, ATTN_STATIC);
+	ambientsound(this.origin, "ambience/buzz1.wav", 1, ATTN_STATIC);
 }
 /*QUAKED ambient_drip(0.3 0.1 0.6)(-10 -10 -8)(10 10 8)
 */
 spawnfunc(ambient_drip)
 {
 	precache_sound("ambience/drip1.wav");
-	ambient_sound(this.origin, "ambience/drip1.wav", 0.5, ATTN_STATIC);
+	ambientsound(this.origin, "ambience/drip1.wav", 0.5, ATTN_STATIC);
 }
 /*QUAKED ambient_comp_hum(0.3 0.1 0.6)(-10 -10 -8)(10 10 8)
 */
 spawnfunc(ambient_comp_hum)
 {
 	precache_sound("ambience/comp1.wav");
-	ambient_sound(this.origin, "ambience/comp1.wav", 1, ATTN_STATIC);
+	ambientsound(this.origin, "ambience/comp1.wav", 1, ATTN_STATIC);
 }
 /*QUAKED ambient_thunder(0.3 0.1 0.6)(-10 -10 -8)(10 10 8)
 */
 spawnfunc(ambient_thunder)
 {
 	precache_sound("ambience/thunder1.wav");
-	ambient_sound(this.origin, "ambience/thunder1.wav", 0.5, ATTN_STATIC);
+	ambientsound(this.origin, "ambience/thunder1.wav", 0.5, ATTN_STATIC);
 }
 /*QUAKED ambient_light_buzz(0.3 0.1 0.6)(-10 -10 -8)(10 10 8)
 */
 spawnfunc(ambient_light_buzz)
 {
 	precache_sound("ambience/fl_hum1.wav");
-	ambient_sound(this.origin, "ambience/fl_hum1.wav", 0.5, ATTN_STATIC);
+	ambientsound(this.origin, "ambience/fl_hum1.wav", 0.5, ATTN_STATIC);
 }
 /*QUAKED ambient_swamp1(0.3 0.1 0.6)(-10 -10 -8)(10 10 8)
 */
 spawnfunc(ambient_swamp1)
 {
 	precache_sound("ambience/swamp1.wav");
-	ambient_sound(this.origin, "ambience/swamp1.wav", 0.5, ATTN_STATIC);
+	ambientsound(this.origin, "ambience/swamp1.wav", 0.5, ATTN_STATIC);
 }
 /*QUAKED ambient_swamp2(0.3 0.1 0.6)(-10 -10 -8)(10 10 8)
 */
 spawnfunc(ambient_swamp2)
 {
 	precache_sound("ambience/swamp2.wav");
-	ambient_sound(this.origin, "ambience/swamp2.wav", 0.5, ATTN_STATIC);
+	ambientsound(this.origin, "ambience/swamp2.wav", 0.5, ATTN_STATIC);
 }
 
 //============================================================================

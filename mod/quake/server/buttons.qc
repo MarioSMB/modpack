@@ -56,7 +56,7 @@ void button_touch(entity this, entity toucher)
 
 void button_killed(entity this, entity attacker)
 {
-	this.enemy = attkacker;
+	this.enemy = attacker;
 	this.health = this.max_health;
 	this.takedamage = DAMAGE_NO;	// wil be reset upon return
 	button_fire(this);

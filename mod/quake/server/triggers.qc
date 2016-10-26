@@ -1,6 +1,4 @@
-
-entity stemp, otemp, s, old;
-
+#include "combat.qh"
 
 void trigger_reactivate(entity this)
 {
@@ -133,7 +131,7 @@ spawnfunc(trigger_multiple)
 	if(this.health)
 	{
 		if(this.spawnflags & SPAWNFLAG_NOTOUCH)
-			objerror("health and notouch don't make sense\n");
+			objerror(this, "health and notouch don't make sense\n");
 		this.max_health = this.health;
 		this.th_die = multi_killed;
 		this.takedamage = DAMAGE_YES;
@@ -219,8 +217,6 @@ spawnfunc(trigger_secret)
 
 void counter_use(entity this, entity actor, entity trigger)
 {
-	string junk;
-
 	this.count = this.count - 1;
 	if(this.count < 0)
 		return;
@@ -299,7 +295,7 @@ void play_teleport(entity this)
 
 void spawn_tfog(vector org)
 {
-	s = spawn();
+	entity s = spawn();
 	s.origin = org;
 	s.nextthink = time + 0.2;
 	setthink(s, play_teleport);
@@ -381,7 +377,7 @@ void teleport_touch(entity this, entity toucher)
 
 	entity t = find(NULL, targetname, this.target);
 	if(!t)
-		objerror("couldn't find target");
+		objerror(this, "couldn't find target");
 		
 // spawn a tfog flash in front of the destination
 	makevectors(t.mangle);
@@ -422,7 +418,7 @@ spawnfunc(info_teleport_destination)
 	this.model = "";
 	this.origin = this.origin + '0 0 27';
 	if(!this.targetname)
-		objerror("no targetname");
+		objerror(this, "no targetname");
 }
 
 void teleport_use(entity this, entity actor, entity trigger)
@@ -445,14 +441,14 @@ spawnfunc(trigger_teleport)
 	settouch(this, teleport_touch);
 	// find the destination 
 	if(!this.target)
-		objerror("no target");
+		objerror(this, "no target");
 	this.use = teleport_use;
 
 	if(!(this.spawnflags & SILENT))
 	{
 		precache_sound("ambience/hum1.wav");
 		o =(this.mins + this.maxs)*0.5;
-		ambient_sound(o, "ambience/hum1.wav",0.5 , ATTN_STATIC);
+		ambientsound(o, "ambience/hum1.wav",0.5 , ATTN_STATIC);
 	}
 }
 

@@ -1,6 +1,7 @@
+#include "combat.qh"
+
 /*
 */
-void T_Damage(entity targ, entity inflictor, entity attacker, float damage);
 void player_run(entity this);
 void T_RadiusDamage(entity bomb, entity attacker, float rad, entity ignore);
 void SpawnBlood(vector org, vector vel, float damage);
@@ -65,9 +66,7 @@ void W_FireAxe(entity this)
 
 vector wall_velocity(entity this)
 {
-	vector	vel;
-	
-	vel = normalize(this.velocity);
+	vector vel = normalize(this.velocity);
 	vel = normalize(vel + v_up*(random()- 0.5) + v_right*(random()- 0.5));
 	vel = vel + 2*trace_plane_normal;
 	vel = vel * 200;
@@ -83,10 +82,7 @@ SpawnMeatSpray
 */
 void SpawnMeatSpray(entity this, vector org, vector vel)
 {
-	entity missile, mpuff;
-	vector	org;
-
-	missile = spawn();
+	entity missile = spawn();
 	missile.owner = this;
 	missile.movetype = MOVETYPE_BOUNCE;
 	missile.solid = SOLID_NOT;
@@ -302,12 +298,12 @@ ROCKETS
 ==============================================================================
 */
 
-void s_explode1(entity this) { this.frame = 0; setthink(this, s_explode2); this.nextthink = time + FRAME_TIME; }
-void s_explode2(entity this) { this.frame = 1; setthink(this, s_explode3); this.nextthink = time + FRAME_TIME; }
-void s_explode3(entity this) { this.frame = 2; setthink(this, s_explode4); this.nextthink = time + FRAME_TIME; }
-void s_explode4(entity this) { this.frame = 3; setthink(this, s_explode5); this.nextthink = time + FRAME_TIME; }
-void s_explode5(entity this) { this.frame = 4; setthink(this, s_explode6); this.nextthink = time + FRAME_TIME; }
 void s_explode6(entity this) { this.frame = 5; setthink(this, SUB_Remove); this.nextthink = time + FRAME_TIME; }
+void s_explode5(entity this) { this.frame = 4; setthink(this, s_explode6); this.nextthink = time + FRAME_TIME; }
+void s_explode4(entity this) { this.frame = 3; setthink(this, s_explode5); this.nextthink = time + FRAME_TIME; }
+void s_explode3(entity this) { this.frame = 2; setthink(this, s_explode4); this.nextthink = time + FRAME_TIME; }
+void s_explode2(entity this) { this.frame = 1; setthink(this, s_explode3); this.nextthink = time + FRAME_TIME; }
+void s_explode1(entity this) { this.frame = 0; setthink(this, s_explode2); this.nextthink = time + FRAME_TIME; }
 
 void BecomeExplosion(entity this)
 {
@@ -587,9 +583,9 @@ launch_spike
 Used for both the player and the ogre
 ===============
 */
-void launch_spike(vector org, vector dir)
+entity launch_spike(entity this, vector org, vector dir)
 {
-	newmis = spawn();
+	entity newmis = spawn();
 	newmis.owner = this;
 	newmis.movetype = MOVETYPE_FLYMISSILE;
 	newmis.solid = SOLID_BBOX;
@@ -605,6 +601,8 @@ void launch_spike(vector org, vector dir)
 	setorigin(newmis, org);
 
 	newmis.velocity = dir * 1000;
+
+	return newmis;
 }
 
 void W_FireSuperSpikes(entity this)
@@ -613,14 +611,14 @@ void W_FireSuperSpikes(entity this)
 	this.attack_finished = time + 0.2;
 	this.currentammo = this.ammo_nails = this.ammo_nails - 2;
 	vector dir = aim(this, 1000);
-	launch_spike(this.origin + '0 0 16', dir);
+	entity newmis = launch_spike(this, this.origin + '0 0 16', dir);
 	settouch(newmis, superspike_touch);
 	_setmodel(newmis, "progs/s_spike.mdl");
 	setsize(newmis, VEC_ORIGIN, VEC_ORIGIN);		
 	this.punchangle_x = -2;
 }
 
-void W_FireSpikes(float ox)
+void W_FireSpikes(entity this, float ox)
 {
 	makevectors(this.v_angle);
 	
@@ -641,7 +639,7 @@ void W_FireSpikes(float ox)
 	this.attack_finished = time + 0.2;
 	this.currentammo = this.ammo_nails = this.ammo_nails - 1;
 	vector dir = aim(this, 1000);
-	launch_spike(this.origin + '0 0 16' + v_right*ox, dir);
+	launch_spike(this, this.origin + '0 0 16' + v_right*ox, dir);
 
 	this.punchangle_x = -2;
 }

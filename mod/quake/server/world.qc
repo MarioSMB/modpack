@@ -1,5 +1,15 @@
 entity lastspawn;
 
+#define cvar_string_normal builtin_cvar_string
+#define cvar_normal builtin_cvar
+#define cvar_set_normal builtin_cvar_set
+
+// unused
+void main()
+{
+
+}
+
 //=======================
 /*QUAKED worldspawn(0 0 0) ?
 Only used for the world entity.
@@ -12,19 +22,9 @@ World Types:
 2: base
 */
 //=======================
-spawnfunc(worldspawn)
+void PrecacheJunk()
 {
-	lastspawn = NULL;
-
-// custom map attributes
-	if(this.model == "maps/e1m8.bsp")
-		cvar_set("sv_gravity", "100");
-	else
-		cvar_set("sv_gravity", "800");
-
-// the area based ambient sounds MUST be the first precache_sounds
-
-// player precaches	
+	// player precaches	
 	W_Precache();			// get weapon precaches
 
 // sounds used from C physics code
@@ -129,12 +129,64 @@ spawnfunc(worldspawn)
 	precache_model("progs/zom_gib.mdl");
 
 	precache_model("progs/v_light.mdl");
+}
+
+void make_safe_for_remove(entity e)
+{
+}
+
+void remove_safely(entity e)
+{
+    make_safe_for_remove(e);
+    builtin_remove(e);
+}
+
+.float remove_except_protected_forbidden;
+void remove_except_protected(entity e)
+{
+	if(e.remove_except_protected_forbidden)
+		error("not allowed to remove this at this point");
+	builtin_remove(e);
+}
+
+void SV_OnEntityPreSpawnFunction(entity this)
+{
+	__spawnfunc_expecting = true;
+	__spawnfunc_expect = this;
+}
+
+bool world_already_spawned;
+bool world_initialized;
+spawnfunc(worldspawn)
+{
+	lastspawn = NULL;
+
+// custom map attributes
+	//if(this.model == "maps/e1m8.bsp")
+		//cvar_set("sv_gravity", "100");
+	//else
+		//cvar_set("sv_gravity", "800");
+
+// the area based ambient sounds MUST be the first precache_sounds
+
+	cvar = cvar_normal;
+	cvar_string = cvar_string_normal;
+	cvar_set = cvar_set_normal;
+
+	if(world_already_spawned)
+		error("world already spawned - you may have EXACTLY ONE worldspawn!");
+	world_already_spawned = true;
+
+	delete_fn = remove_safely; // during spawning, watch what you remove!
 
 	maxclients = 0;
 	for(entity head = nextent(NULL); head; head = nextent(head))
 	{
 		++maxclients;
 	}
+
+	// needs to be done so early because of the constants they create
+	static_init();
 
 //
 // Setup light animation tables. 'a' is total darkness, 'z' is maxbright.
@@ -180,6 +232,13 @@ spawnfunc(worldspawn)
 
 	// 63 testing
 	lightstyle(63, "a");
+
+	static_init_late();
+	static_init_precache();
+
+	PrecacheJunk();
+
+	world_initialized = true;
 }
 
 void StartFrame()
@@ -187,4 +246,7 @@ void StartFrame()
 	teamplay = autocvar_teamplay;
 	skill = autocvar_skill;
 	//framecount = framecount + 1;
+
+	//delete_fn = remove_unsafely; // not during spawning!
+	delete_fn = remove_except_protected;
 }

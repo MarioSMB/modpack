@@ -191,7 +191,7 @@ void Wiz_FastFire(entity this)
 	
 		vector vec = normalize(dst - this.origin);
 		_sound(this, CHAN_WEAPON, "wizard/wattack.wav", 1, ATTN_NORM);
-		launch_spike(this.origin, vec);
+		entity newmis = launch_spike(this, this.origin, vec);
 		newmis.velocity = vec*600;
 		newmis.owner = this.owner;
 		newmis.classname = "wizspike";
@@ -328,10 +328,10 @@ void wiz_die(entity this, entity attacker)
 	if(this.health < -40)
 	{
 		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		ThrowHead("progs/h_wizard.mdl", this.health);
-		ThrowGib("progs/gib2.mdl", this.health);
-		ThrowGib("progs/gib2.mdl", this.health);
-		ThrowGib("progs/gib2.mdl", this.health);
+		ThrowHead(this, "progs/h_wizard.mdl", this.health);
+		ThrowGib(this, "progs/gib2.mdl", this.health);
+		ThrowGib(this, "progs/gib2.mdl", this.health);
+		ThrowGib(this, "progs/gib2.mdl", this.health);
 		return;
 	}
 

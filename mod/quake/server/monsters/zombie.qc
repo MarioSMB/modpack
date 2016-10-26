@@ -360,7 +360,7 @@ void() zombie_paine12	=[	$paine12,	zombie_paine13	]{
 this.health = 60;
 _sound(this, CHAN_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
 this.solid = SOLID_SLIDEBOX;
-if(!walkmove(0, 0))
+if(!walkmove(this, 0, 0))
 {
 	setthink(this, zombie_paine11);
 	this.solid = SOLID_NOT;
@@ -389,10 +389,10 @@ void() zombie_paine30	=[	$paine30,	zombie_run1		] {}
 void zombie_die(entity this, entity attacker)
 {
 	_sound(this, CHAN_VOICE, "zombie/z_gib.wav", 1, ATTN_NORM);
-	ThrowHead("progs/h_zombie.mdl", this.health);
-	ThrowGib("progs/gib1.mdl", this.health);
-	ThrowGib("progs/gib2.mdl", this.health);
-	ThrowGib("progs/gib3.mdl", this.health);
+	ThrowHead(this, "progs/h_zombie.mdl", this.health);
+	ThrowGib(this, "progs/gib1.mdl", this.health);
+	ThrowGib(this, "progs/gib2.mdl", this.health);
+	ThrowGib(this, "progs/gib3.mdl", this.health);
 }
 
 /*

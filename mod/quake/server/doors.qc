@@ -1,3 +1,5 @@
+#include "combat.qh"
+
 const int DOOR_START_OPEN = BIT(0);
 const int DOOR_DONT_LINK = BIT(2);
 const int DOOR_GOLD_KEY = BIT(3);
@@ -103,7 +105,7 @@ ACTIVATION FUNCTIONS
 void door_fire(entity this)
 {
 	if(this.owner != this)
-		objerror("door_fire: this.owner != this");
+		objerror(this, "door_fire: this.owner != this");
 
 // play use key sound
 
@@ -325,7 +327,7 @@ void LinkDoors(entity this)
 		if(EntitiesTouching(e,t))
 		{
 			if(t.enemy)
-				objerror("cross connected doors");
+				objerror(this, "cross connected doors");
 			
 			e.enemy = t;
 			e = t;
@@ -446,7 +448,7 @@ spawnfunc(func_door)
 	_setmodel(this, this.model);
 	this.classname = "door";
 
-	this.blocked = door_blocked;
+	setblocked(this, door_blocked);
 	this.use = door_use;
 	
 	if(this.spawnflags & DOOR_SILVER_KEY)
@@ -547,13 +549,13 @@ void fd_secret_use(entity this, entity actor, entity trigger)
 	if(!this.t_width)
 	{
 		if(this.spawnflags & SECRET_1ST_DOWN)
-			this. t_width = fabs(v_up * this.size);
+			this.t_width = fabs(v_up * this.size);
 		else
-			this. t_width = fabs(v_right * this.size);
+			this.t_width = fabs(v_right * this.size);
 	}
 		
 	if(!this.t_length)
-		this. t_length = fabs(v_forward * this.size);
+		this.t_length = fabs(v_forward * this.size);
 
 	if(this.spawnflags & SECRET_1ST_DOWN)
 		this.dest1 = this.origin - v_up * this.t_width;
@@ -725,7 +727,7 @@ spawnfunc(func_door_secret)
 	setorigin(this, this.origin);	
 	
 	settouch(this, secret_touch);
-	this.blocked = secret_blocked;
+	setblocked(this, secret_blocked);
 	this.speed = 50;
 	this.use = fd_secret_use;
 	if( !this.targetname || this.spawnflags&SECRET_YES_SHOOT)

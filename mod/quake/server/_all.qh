@@ -14,7 +14,7 @@ const string STR_PLAYER = "player";
 /** want: (IS_CLIENT(v) && !IS_REAL_CLIENT(v)) */
 //#define IS_BOT_CLIENT(v) (clienttype(v) == CLIENTTYPE_BOT)
 //#define IS_FAKE_CLIENT(v) (clienttype(v) == CLIENTTYPE_NOTACLIENT)
-//#define IS_REAL_CLIENT(v) (clienttype(v) == CLIENTTYPE_REAL)
+#define IS_REAL_CLIENT(v) (clienttype(v) == CLIENTTYPE_REAL)
 /** was: (clienttype(v) == CLIENTTYPE_NOTACLIENT) */
 #define IS_NOT_A_CLIENT(v) (!IS_CLIENT(v))
 
@@ -34,3 +34,4 @@ const string STR_PLAYER = "player";
 
 #include "autocvars.qh"
 #include "constants.qh"
+#include "defs.qh"
