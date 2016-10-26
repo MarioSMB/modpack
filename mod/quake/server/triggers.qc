@@ -352,7 +352,7 @@ void spawn_tdeath(vector org, entity death_owner)
 
 void teleport_touch(entity this, entity toucher)
 {
-	if(this.targetname)
+	if(this.targetname && this.targetname != "")
 	{
 		if(this.nextthink < time)
 		{
@@ -423,9 +423,9 @@ spawnfunc(info_teleport_destination)
 
 void teleport_use(entity this, entity actor, entity trigger)
 {
-	this.nextthink = time + 0.2;
+	//this.nextthink = time + 0.2;
 	force_retouch = 2;		// make sure even still objects get hit
-	setthink(this, func_null);
+	//setthink(this, func_null);
 }
 
 /*QUAKED trigger_teleport(.5 .5 .5) ? PLAYER_ONLY SILENT

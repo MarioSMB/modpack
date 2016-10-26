@@ -225,35 +225,28 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 //
 // kill the killtagets
 //
-	if(this.killtarget)
+
+	string s;
+	s = this.killtarget;
+	if (s != "")
 	{
-		entity t = NULL;
-		do
-		{
-			t = find(t, targetname, this.killtarget);
-			if(!t)
-				return;
+		for(entity t = NULL; (t = find(t, targetname, s)); )
 			delete(t);
-		} while( 1 );
 	}
 	
 //
 // fire targets
 //
-	if(this.target)
+
+	s = this.target;
+	if(s != "")
 	{
-		entity t = NULL;
-		do
+		for(entity t = NULL; (t = find(t, targetname, s)); )
 		{
-			t = find(t, targetname, this.target);
-			if(!t)
-				return;
 			if(t.use)
 				t.use(t, actor, this);
-		} while( 1 );
+		}
 	}
-	
-
 }
 
 
