@@ -387,15 +387,13 @@ bool SoldierCheckAttack(entity this)
 	if(this.enemy_range == RANGE_FAR)
 		return false;
 
-	float chance;
+	float chance = 0;
 	if(this.enemy_range == RANGE_MELEE)
 		chance = 0.9;
 	else if(this.enemy_range == RANGE_NEAR)
 		chance = 0.4;
 	else if(this.enemy_range == RANGE_MID)
 		chance = 0.05;
-	else
-		chance = 0;
 
 	if(random() < chance)
 	{

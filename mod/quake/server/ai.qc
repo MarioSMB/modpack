@@ -242,7 +242,7 @@ bool FindTarget(entity this)
 	}
 	else
 	{
-		client = checkclient(client);
+		client = checkclient(this);
 		if(!client)
 			return false;	// current check entity isn't in PVS
 	}
