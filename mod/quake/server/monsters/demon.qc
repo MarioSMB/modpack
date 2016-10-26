@@ -12,7 +12,6 @@ $origin 0 0 24
 $base base
 $skin base
 
-
 const int anim_demon_stand1 = 0;
 const int anim_demon_stand2 = 1;
 const int anim_demon_stand3 = 2;

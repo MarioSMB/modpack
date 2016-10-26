@@ -12,6 +12,13 @@ void CSQC_Shutdown()
 
 void CSQC_UpdateView(entity this, float w, float h)
 {
+	// ALWAYS Clear Current Scene First
+	clearscene();
+
+	// Assign Standard Viewflags
+	// Draw the World (and sky)
+	setproperty(VF_DRAWWORLD, 1);
+
 	// Draw the Crosshair
 	setproperty(VF_DRAWCROSSHAIR, 1);
 
