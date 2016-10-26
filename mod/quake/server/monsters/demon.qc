@@ -12,118 +12,181 @@ $origin 0 0 24
 $base base
 $skin base
 
-$frame demon_stand1 demon_stand2 demon_stand3 demon_stand4 demon_stand5 demon_stand6 demon_stand7 demon_stand8 demon_stand9
-$frame demon_stand10 demon_stand11 demon_stand12 demon_stand13
 
-$frame demon_walk1 demon_walk2 demon_walk3 demon_walk4 demon_walk5 demon_walk6 demon_walk7 demon_walk8
+const int anim_demon_stand1 = 0;
+const int anim_demon_stand2 = 1;
+const int anim_demon_stand3 = 2;
+const int anim_demon_stand4 = 3;
+const int anim_demon_stand5 = 4;
+const int anim_demon_stand6 = 5;
+const int anim_demon_stand7 = 6;
+const int anim_demon_stand8 = 7;
+const int anim_demon_stand9 = 8;
 
-$frame demon_run1 demon_run2 demon_run3 demon_run4 demon_run5 demon_run6
+const int anim_demon_stand10 = 9;
+const int anim_demon_stand11 = 10;
+const int anim_demon_stand12 = 11;
+const int anim_demon_stand13 = 12;
 
-$frame demon_leap1 demon_leap2 demon_leap3 demon_leap4 demon_leap5 demon_leap6 demon_leap7 demon_leap8 demon_leap9 demon_leap10
-$frame demon_leap11 demon_leap12
+const int anim_demon_walk1 = 13;
+const int anim_demon_walk2 = 14;
+const int anim_demon_walk3 = 15;
+const int anim_demon_walk4 = 16;
+const int anim_demon_walk5 = 17;
+const int anim_demon_walk6 = 18;
+const int anim_demon_walk7 = 19;
+const int anim_demon_walk8 = 20;
 
-$frame demon_pain1 demon_pain2 demon_pain3 demon_pain4 demon_pain5 demon_pain6
+const int anim_demon_run1 = 21;
+const int anim_demon_run2 = 22;
+const int anim_demon_run3 = 23;
+const int anim_demon_run4 = 24;
+const int anim_demon_run5 = 25;
+const int anim_demon_run6 = 26;
 
-$frame demon_death1 demon_death2 demon_death3 demon_death4 demon_death5 demon_death6 demon_death7 demon_death8 demon_death9
+const int anim_demon_leap1 = 27;
+const int anim_demon_leap2 = 28;
+const int anim_demon_leap3 = 29;
+const int anim_demon_leap4 = 30;
+const int anim_demon_leap5 = 31;
+const int anim_demon_leap6 = 32;
+const int anim_demon_leap7 = 33;
+const int anim_demon_leap8 = 34;
+const int anim_demon_leap9 = 35;
+const int anim_demon_leap10 = 36;
+const int anim_demon_leap11 = 37;
+const int anim_demon_leap12 = 38;
 
-$frame demon_attacka1 demon_attacka2 demon_attacka3 demon_attacka4 demon_attacka5 demon_attacka6 demon_attacka7 demon_attacka8
-$frame demon_attacka9 demon_attacka10 demon_attacka11 demon_attacka12 demon_attacka13 demon_attacka14 demon_attacka15
+const int anim_demon_pain1 = 39;
+const int anim_demon_pain2 = 40;
+const int anim_demon_pain3 = 41;
+const int anim_demon_pain4 = 42;
+const int anim_demon_pain5 = 43;
+const int anim_demon_pain6 = 44;
+
+const int anim_demon_death1 = 45;
+const int anim_demon_death2 = 46;
+const int anim_demon_death3 = 47;
+const int anim_demon_death4 = 48;
+const int anim_demon_death5 = 49;
+const int anim_demon_death6 = 50;
+const int anim_demon_death7 = 51;
+const int anim_demon_death8 = 52;
+const int anim_demon_death9 = 53;
+
+const int anim_demon_attacka1 = 54;
+const int anim_demon_attacka2 = 55;
+const int anim_demon_attacka3 = 56;
+const int anim_demon_attacka4 = 57;
+const int anim_demon_attacka5 = 58;
+const int anim_demon_attacka6 = 59;
+const int anim_demon_attacka7 = 60;
+const int anim_demon_attacka8 = 61;
+
+const int anim_demon_attacka9 = 62;
+const int anim_demon_attacka10 = 63;
+const int anim_demon_attacka11 = 64;
+const int anim_demon_attacka12 = 65;
+const int anim_demon_attacka13 = 66;
+const int anim_demon_attacka14 = 67;
+const int anim_demon_attacka15 = 68;
 
 //============================================================================
 
 void Demon_JumpTouch(entity this, entity toucher);
 
 void demon1_stand1(entity this);
-void demon1_stand13(entity this) { set_anim(this, $demon_stand1, demon1_stand1); ai_stand(this); }
-void demon1_stand12(entity this) { set_anim(this, $demon_stand12, demon1_stand13); ai_stand(this); }
-void demon1_stand11(entity this) { set_anim(this, $demon_stand11, demon1_stand12); ai_stand(this); }
-void demon1_stand10(entity this) { set_anim(this, $demon_stand10, demon1_stand11); ai_stand(this); }
-void demon1_stand9(entity this) { set_anim(this, $demon_stand9, demon1_stand10); ai_stand(this); }
-void demon1_stand8(entity this) { set_anim(this, $demon_stand8, demon1_stand9); ai_stand(this); }
-void demon1_stand7(entity this) { set_anim(this, $demon_stand7, demon1_stand8); ai_stand(this); }
-void demon1_stand6(entity this) { set_anim(this, $demon_stand6, demon1_stand7); ai_stand(this); }
-void demon1_stand5(entity this) { set_anim(this, $demon_stand5, demon1_stand6); ai_stand(this); }
-void demon1_stand4(entity this) { set_anim(this, $demon_stand4, demon1_stand5); ai_stand(this); }
-void demon1_stand3(entity this) { set_anim(this, $demon_stand3, demon1_stand4); ai_stand(this); }
-void demon1_stand2(entity this) { set_anim(this, $demon_stand2, demon1_stand3); ai_stand(this); }
-void demon1_stand1(entity this) { set_anim(this, $demon_stand1, demon1_stand2); ai_stand(this); }
+void demon1_stand13(entity this) { set_anim(this, anim_demon_stand1, demon1_stand1); ai_stand(this); }
+void demon1_stand12(entity this) { set_anim(this, anim_demon_stand12, demon1_stand13); ai_stand(this); }
+void demon1_stand11(entity this) { set_anim(this, anim_demon_stand11, demon1_stand12); ai_stand(this); }
+void demon1_stand10(entity this) { set_anim(this, anim_demon_stand10, demon1_stand11); ai_stand(this); }
+void demon1_stand9(entity this) { set_anim(this, anim_demon_stand9, demon1_stand10); ai_stand(this); }
+void demon1_stand8(entity this) { set_anim(this, anim_demon_stand8, demon1_stand9); ai_stand(this); }
+void demon1_stand7(entity this) { set_anim(this, anim_demon_stand7, demon1_stand8); ai_stand(this); }
+void demon1_stand6(entity this) { set_anim(this, anim_demon_stand6, demon1_stand7); ai_stand(this); }
+void demon1_stand5(entity this) { set_anim(this, anim_demon_stand5, demon1_stand6); ai_stand(this); }
+void demon1_stand4(entity this) { set_anim(this, anim_demon_stand4, demon1_stand5); ai_stand(this); }
+void demon1_stand3(entity this) { set_anim(this, anim_demon_stand3, demon1_stand4); ai_stand(this); }
+void demon1_stand2(entity this) { set_anim(this, anim_demon_stand2, demon1_stand3); ai_stand(this); }
+void demon1_stand1(entity this) { set_anim(this, anim_demon_stand1, demon1_stand2); ai_stand(this); }
 
 void demon1_walk1(entity this);
-void demon1_walk8(entity this) { set_anim(this, $demon_walk8, demon1_walk1); ai_walk(this, 10); }
-void demon1_walk7(entity this) { set_anim(this, $demon_walk7, demon1_walk8); ai_walk(this, 10); }
-void demon1_walk6(entity this) { set_anim(this, $demon_walk6, demon1_walk7); ai_walk(this, 6); }
-void demon1_walk5(entity this) { set_anim(this, $demon_walk5, demon1_walk6); ai_walk(this, 4); }
-void demon1_walk4(entity this) { set_anim(this, $demon_walk4, demon1_walk5); ai_walk(this, 7); }
-void demon1_walk3(entity this) { set_anim(this, $demon_walk3, demon1_walk4); ai_walk(this, 6); }
-void demon1_walk2(entity this) { set_anim(this, $demon_walk2, demon1_walk3); ai_walk(this, 6); }
+void demon1_walk8(entity this) { set_anim(this, anim_demon_walk8, demon1_walk1); ai_walk(this, 10); }
+void demon1_walk7(entity this) { set_anim(this, anim_demon_walk7, demon1_walk8); ai_walk(this, 10); }
+void demon1_walk6(entity this) { set_anim(this, anim_demon_walk6, demon1_walk7); ai_walk(this, 6); }
+void demon1_walk5(entity this) { set_anim(this, anim_demon_walk5, demon1_walk6); ai_walk(this, 4); }
+void demon1_walk4(entity this) { set_anim(this, anim_demon_walk4, demon1_walk5); ai_walk(this, 7); }
+void demon1_walk3(entity this) { set_anim(this, anim_demon_walk3, demon1_walk4); ai_walk(this, 6); }
+void demon1_walk2(entity this) { set_anim(this, anim_demon_walk2, demon1_walk3); ai_walk(this, 6); }
 void demon1_walk1(entity this)
 {
-	set_anim(this, $demon_walk1, demon1_walk2);
+	set_anim(this, anim_demon_walk1, demon1_walk2);
 	if(random() < 0.2)
 		_sound(this, CHAN_VOICE, "demon/idle1.wav", 1, ATTN_IDLE);
 	ai_walk(this, 8);
 }
 
 void demon1_run1(entity this);
-void demon1_run6(entity this) { set_anim(this, $demon_run6, demon1_run1); ai_run(this, 36); }
-void demon1_run5(entity this) { set_anim(this, $demon_run5, demon1_run6); ai_run(this, 15); }
-void demon1_run4(entity this) { set_anim(this, $demon_run4, demon1_run5); ai_run(this, 20); }
-void demon1_run3(entity this) { set_anim(this, $demon_run3, demon1_run4); ai_run(this, 36); }
-void demon1_run2(entity this) { set_anim(this, $demon_run2, demon1_run3); ai_run(this, 15); }
+void demon1_run6(entity this) { set_anim(this, anim_demon_run6, demon1_run1); ai_run(this, 36); }
+void demon1_run5(entity this) { set_anim(this, anim_demon_run5, demon1_run6); ai_run(this, 15); }
+void demon1_run4(entity this) { set_anim(this, anim_demon_run4, demon1_run5); ai_run(this, 20); }
+void demon1_run3(entity this) { set_anim(this, anim_demon_run3, demon1_run4); ai_run(this, 36); }
+void demon1_run2(entity this) { set_anim(this, anim_demon_run2, demon1_run3); ai_run(this, 15); }
 void demon1_run1(entity this)
 {
-	set_anim(this, $demon_run1, demon1_run2);
+	set_anim(this, anim_demon_run1, demon1_run2);
 	if(random() < 0.2)
 		_sound(this, CHAN_VOICE, "demon/idle1.wav", 1, ATTN_IDLE);
 	ai_run(this, 20);
 }
 
 void demon1_jump1(entity this);
-void demon1_jump12(entity this) { set_anim(this, $demon_leap12, demon1_jump1); }
-void demon1_jump11(entity this) { set_anim(this, $demon_leap11, demon1_jump12); }
-void demon1_jump10(entity this) { set_anim(this, $demon_leap10, demon1_jump1); this.nextthink = time + 3; }
-void demon1_jump9(entity this) { set_anim(this, $demon_leap9, demon1_jump10); }
-void demon1_jump8(entity this) { set_anim(this, $demon_leap8, demon1_jump9); }
-void demon1_jump7(entity this) { set_anim(this, $demon_leap7, demon1_jump8); }
-void demon1_jump6(entity this) { set_anim(this, $demon_leap6, demon1_jump7); }
-void demon1_jump5(entity this) { set_anim(this, $demon_leap5, demon1_jump6); }
+void demon1_jump12(entity this) { set_anim(this, anim_demon_leap12, demon1_jump1); }
+void demon1_jump11(entity this) { set_anim(this, anim_demon_leap11, demon1_jump12); }
+void demon1_jump10(entity this) { set_anim(this, anim_demon_leap10, demon1_jump1); this.nextthink = time + 3; }
+void demon1_jump9(entity this) { set_anim(this, anim_demon_leap9, demon1_jump10); }
+void demon1_jump8(entity this) { set_anim(this, anim_demon_leap8, demon1_jump9); }
+void demon1_jump7(entity this) { set_anim(this, anim_demon_leap7, demon1_jump8); }
+void demon1_jump6(entity this) { set_anim(this, anim_demon_leap6, demon1_jump7); }
+void demon1_jump5(entity this) { set_anim(this, anim_demon_leap5, demon1_jump6); }
 void demon1_jump4(entity this)
 {
-	set_anim(this, $demon_leap4, demon1_jump5);
+	set_anim(this, anim_demon_leap4, demon1_jump5);
 	ai_face(this);
 	settouch(this, Demon_JumpTouch);
 	this.origin_z += 1;
+	makevectors(this.angles);
 	this.velocity = v_forward * 600 + '0 0 250';
 	this.flags &= ~FL_ONGROUND;
 }
 // if three seconds pass, assume demon is stuck and jump again
-void demon1_jump3(entity this) { set_anim(this, $demon_leap3, demon1_jump4); ai_face(this); }
-void demon1_jump2(entity this) { set_anim(this, $demon_leap2, demon1_jump3); ai_face(this); }
-void demon1_jump1(entity this) { set_anim(this, $demon_leap1, demon1_jump2); ai_face(this); }
+void demon1_jump3(entity this) { set_anim(this, anim_demon_leap3, demon1_jump4); ai_face(this); }
+void demon1_jump2(entity this) { set_anim(this, anim_demon_leap2, demon1_jump3); ai_face(this); }
+void demon1_jump1(entity this) { set_anim(this, anim_demon_leap1, demon1_jump2); ai_face(this); }
 
 void Demon_Melee(entity this, float side);
-void demon1_atta15(entity this) { set_anim(this, $demon_attacka15, demon1_run1); ai_charge(this, 4); }
-void demon1_atta14(entity this) { set_anim(this, $demon_attacka14, demon1_atta15); ai_charge(this, 4); }
-void demon1_atta13(entity this) { set_anim(this, $demon_attacka13, demon1_atta14); ai_charge(this, 8); }
-void demon1_atta12(entity this) { set_anim(this, $demon_attacka12, demon1_atta13); ai_charge(this, 5); }
-void demon1_atta11(entity this) { set_anim(this, $demon_attacka11, demon1_atta12); Demon_Melee(this, -200); }
-void demon1_atta10(entity this) { set_anim(this, $demon_attacka10, demon1_atta11); ai_charge(this, 2); }
-void demon1_atta9(entity this) { set_anim(this, $demon_attacka9, demon1_atta10); ai_charge(this, 4); }
-void demon1_atta8(entity this) { set_anim(this, $demon_attacka8, demon1_atta9); ai_charge(this, 8); }
-void demon1_atta7(entity this) { set_anim(this, $demon_attacka7, demon1_atta8); ai_charge(this, 6); }
-void demon1_atta6(entity this) { set_anim(this, $demon_attacka6, demon1_atta7); ai_charge(this, 1); }
-void demon1_atta5(entity this) { set_anim(this, $demon_attacka5, demon1_atta6); ai_charge(this, 2); Demon_Melee(this, 200); }
-void demon1_atta4(entity this) { set_anim(this, $demon_attacka4, demon1_atta5); ai_charge(this, 1); }
-void demon1_atta3(entity this) { set_anim(this, $demon_attacka3, demon1_atta4); ai_charge(this, 0); }
-void demon1_atta2(entity this) { set_anim(this, $demon_attacka2, demon1_atta3); ai_charge(this, 0); }
-void demon1_atta1(entity this) { set_anim(this, $demon_attacka1, demon1_atta2); ai_charge(this, 4); }
+void demon1_atta15(entity this) { set_anim(this, anim_demon_attacka15, demon1_run1); ai_charge(this, 4); }
+void demon1_atta14(entity this) { set_anim(this, anim_demon_attacka14, demon1_atta15); ai_charge(this, 4); }
+void demon1_atta13(entity this) { set_anim(this, anim_demon_attacka13, demon1_atta14); ai_charge(this, 8); }
+void demon1_atta12(entity this) { set_anim(this, anim_demon_attacka12, demon1_atta13); ai_charge(this, 5); }
+void demon1_atta11(entity this) { set_anim(this, anim_demon_attacka11, demon1_atta12); Demon_Melee(this, -200); }
+void demon1_atta10(entity this) { set_anim(this, anim_demon_attacka10, demon1_atta11); ai_charge(this, 2); }
+void demon1_atta9(entity this) { set_anim(this, anim_demon_attacka9, demon1_atta10); ai_charge(this, 4); }
+void demon1_atta8(entity this) { set_anim(this, anim_demon_attacka8, demon1_atta9); ai_charge(this, 8); }
+void demon1_atta7(entity this) { set_anim(this, anim_demon_attacka7, demon1_atta8); ai_charge(this, 6); }
+void demon1_atta6(entity this) { set_anim(this, anim_demon_attacka6, demon1_atta7); ai_charge(this, 1); }
+void demon1_atta5(entity this) { set_anim(this, anim_demon_attacka5, demon1_atta6); ai_charge(this, 2); Demon_Melee(this, 200); }
+void demon1_atta4(entity this) { set_anim(this, anim_demon_attacka4, demon1_atta5); ai_charge(this, 1); }
+void demon1_atta3(entity this) { set_anim(this, anim_demon_attacka3, demon1_atta4); ai_charge(this, 0); }
+void demon1_atta2(entity this) { set_anim(this, anim_demon_attacka2, demon1_atta3); ai_charge(this, 0); }
+void demon1_atta1(entity this) { set_anim(this, anim_demon_attacka1, demon1_atta2); ai_charge(this, 4); }
 
-void demon1_pain6(entity this) { set_anim(this, $demon_pain6, demon1_run1); }
-void demon1_pain5(entity this) { set_anim(this, $demon_pain5, demon1_pain6); }
-void demon1_pain4(entity this) { set_anim(this, $demon_pain4, demon1_pain5); }
-void demon1_pain3(entity this) { set_anim(this, $demon_pain3, demon1_pain4); }
-void demon1_pain2(entity this) { set_anim(this, $demon_pain2, demon1_pain3); }
-void demon1_pain1(entity this) { set_anim(this, $demon_pain1, demon1_pain2); }
+void demon1_pain6(entity this) { set_anim(this, anim_demon_pain6, demon1_run1); }
+void demon1_pain5(entity this) { set_anim(this, anim_demon_pain5, demon1_pain6); }
+void demon1_pain4(entity this) { set_anim(this, anim_demon_pain4, demon1_pain5); }
+void demon1_pain3(entity this) { set_anim(this, anim_demon_pain3, demon1_pain4); }
+void demon1_pain2(entity this) { set_anim(this, anim_demon_pain2, demon1_pain3); }
+void demon1_pain1(entity this) { set_anim(this, anim_demon_pain1, demon1_pain2); }
 
 void demon1_pain(entity this, entity attacker, float damage)
 {
@@ -142,17 +205,17 @@ void demon1_pain(entity this, entity attacker, float damage)
 	demon1_pain1(this);
 }
 
-void demon1_die9(entity this) { set_anim(this, $demon_death9, demon1_die9); }
-void demon1_die8(entity this) { set_anim(this, $demon_death8, demon1_die9); }
-void demon1_die7(entity this) { set_anim(this, $demon_death7, demon1_die8); }
-void demon1_die6(entity this) { set_anim(this, $demon_death6, demon1_die7); }
-void demon1_die5(entity this) { set_anim(this, $demon_death5, demon1_die6); this.solid = SOLID_NOT; }
-void demon1_die4(entity this) { set_anim(this, $demon_death4, demon1_die5); }
-void demon1_die3(entity this) { set_anim(this, $demon_death3, demon1_die4); }
-void demon1_die2(entity this) { set_anim(this, $demon_death2, demon1_die3); }
+void demon1_die9(entity this) { set_anim(this, anim_demon_death9, demon1_die9); }
+void demon1_die8(entity this) { set_anim(this, anim_demon_death8, demon1_die9); }
+void demon1_die7(entity this) { set_anim(this, anim_demon_death7, demon1_die8); }
+void demon1_die6(entity this) { set_anim(this, anim_demon_death6, demon1_die7); }
+void demon1_die5(entity this) { set_anim(this, anim_demon_death5, demon1_die6); this.solid = SOLID_NOT; }
+void demon1_die4(entity this) { set_anim(this, anim_demon_death4, demon1_die5); }
+void demon1_die3(entity this) { set_anim(this, anim_demon_death3, demon1_die4); }
+void demon1_die2(entity this) { set_anim(this, anim_demon_death2, demon1_die3); }
 void demon1_die1(entity this)
 {
-	set_anim(this, $demon_death1, demon1_die2);
+	set_anim(this, anim_demon_death1, demon1_die2);
 	_sound(this, CHAN_VOICE, "demon/ddeath.wav", 1, ATTN_NORM);
 }
 
