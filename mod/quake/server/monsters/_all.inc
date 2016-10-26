@@ -14,5 +14,5 @@
 //#include "hknight.qc"		// registered
 //#include "fish.qc"			// registered
 //#include "shalrath.qc"		// registered
-//#include "enforcer.qc"		// registered
+#include "enforcer.qc"		// registered
 //#include "oldone.qc"		// registered
