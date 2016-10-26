@@ -11,35 +11,124 @@ $base base
 $skin skin
 $scale 5
 
-$frame rise1 rise2 rise3 rise4 rise5 rise6 rise7 rise8 rise9 rise10
-$frame rise11 rise12 rise13 rise14 rise15 rise16 rise17 
+const int anim_boss_rise1 = 0;
+const int anim_boss_rise2 = 1;
+const int anim_boss_rise3 = 2;
+const int anim_boss_rise4 = 3;
+const int anim_boss_rise5 = 4;
+const int anim_boss_rise6 = 5;
+const int anim_boss_rise7 = 6;
+const int anim_boss_rise8 = 7;
+const int anim_boss_rise9 = 8;
+const int anim_boss_rise10 = 9;
+const int anim_boss_rise11 = 10;
+const int anim_boss_rise12 = 11;
+const int anim_boss_rise13 = 12;
+const int anim_boss_rise14 = 13;
+const int anim_boss_rise15 = 14;
+const int anim_boss_rise16 = 15;
+const int anim_boss_rise17 = 16;
 
-$frame walk1 walk2 walk3 walk4 walk5 walk6 walk7 walk8
-$frame walk9 walk10 walk11 walk12 walk13 walk14 walk15
-$frame walk16 walk17 walk18 walk19 walk20 walk21 walk22
-$frame walk23 walk24 walk25 walk26 walk27 walk28 walk29 walk30 walk31
+const int anim_boss_walk1 = 17;
+const int anim_boss_walk2 = 18;
+const int anim_boss_walk3 = 19;
+const int anim_boss_walk4 = 20;
+const int anim_boss_walk5 = 21;
+const int anim_boss_walk6 = 22;
+const int anim_boss_walk7 = 23;
+const int anim_boss_walk8 = 24;
+const int anim_boss_walk9 = 25;
+const int anim_boss_walk10 = 26;
+const int anim_boss_walk11 = 27;
+const int anim_boss_walk12 = 28;
+const int anim_boss_walk13 = 29;
+const int anim_boss_walk14 = 30;
+const int anim_boss_walk15 = 31;
+const int anim_boss_walk16 = 32;
+const int anim_boss_walk17 = 33;
+const int anim_boss_walk18 = 34;
+const int anim_boss_walk19 = 35;
+const int anim_boss_walk20 = 36;
+const int anim_boss_walk21 = 37;
+const int anim_boss_walk22 = 38;
+const int anim_boss_walk23 = 39;
+const int anim_boss_walk24 = 40;
+const int anim_boss_walk25 = 41;
+const int anim_boss_walk26 = 42;
+const int anim_boss_walk27 = 43;
+const int anim_boss_walk28 = 44;
+const int anim_boss_walk29 = 45;
+const int anim_boss_walk30 = 46;
+const int anim_boss_walk31 = 47;
 
-$frame death1 death2 death3 death4 death5 death6 death7 death8 death9
+const int anim_boss_death1 = 48;
+const int anim_boss_death2 = 49;
+const int anim_boss_death3 = 50;
+const int anim_boss_death4 = 51;
+const int anim_boss_death5 = 52;
+const int anim_boss_death6 = 53;
+const int anim_boss_death7 = 54;
+const int anim_boss_death8 = 55;
+const int anim_boss_death9 = 56;
 
-$frame attack1 attack2 attack3 attack4 attack5 attack6 attack7 attack8
-$frame attack9 attack10 attack11 attack12 attack13 attack14 attack15
-$frame attack16 attack17 attack18 attack19 attack20 attack21 attack22
-$frame attack23
+const int anim_boss_attack1 = 57;
+const int anim_boss_attack2 = 58;
+const int anim_boss_attack3 = 59;
+const int anim_boss_attack4 = 60;
+const int anim_boss_attack5 = 61;
+const int anim_boss_attack6 = 62;
+const int anim_boss_attack7 = 63;
+const int anim_boss_attack8 = 64;
+const int anim_boss_attack9 = 65;
+const int anim_boss_attack10 = 66;
+const int anim_boss_attack11 = 67;
+const int anim_boss_attack12 = 68;
+const int anim_boss_attack13 = 69;
+const int anim_boss_attack14 = 70;
+const int anim_boss_attack15 = 71;
 
-$frame shocka1 shocka2 shocka3 shocka4 shocka5 shocka6 shocka7 shocka8
-$frame shocka9 shocka10 
+const int anim_boss_attack16 = 72;
+const int anim_boss_attack17 = 73;
+const int anim_boss_attack18 = 74;
+const int anim_boss_attack19 = 75;
+const int anim_boss_attack20 = 76;
+const int anim_boss_attack21 = 77;
+const int anim_boss_attack22 = 78;
+const int anim_boss_attack23 = 79;
 
-$frame shockb1 shockb2 shockb3 shockb4 shockb5 shockb6
+const int anim_boss_shocka1 = 80;
+const int anim_boss_shocka2 = 81;
+const int anim_boss_shocka3 = 82;
+const int anim_boss_shocka4 = 83;
+const int anim_boss_shocka5 = 84;
+const int anim_boss_shocka6 = 85;
+const int anim_boss_shocka7 = 86;
+const int anim_boss_shocka8 = 87;
+const int anim_boss_shocka9 = 88;
+const int anim_boss_shocka10 = 89;
 
-$frame shockc1 shockc2 shockc3 shockc4 shockc5 shockc6 shockc7 shockc8 
-$frame shockc9 shockc10
+const int anim_boss_shockb1 = 90;
+const int anim_boss_shockb2 = 91;
+const int anim_boss_shockb3 = 92;
+const int anim_boss_shockb4 = 93;
+const int anim_boss_shockb5 = 94;
+const int anim_boss_shockb6 = 95;
 
+const int anim_boss_shockc1 = 96;
+const int anim_boss_shockc2 = 97;
+const int anim_boss_shockc3 = 98;
+const int anim_boss_shockc4 = 99;
+const int anim_boss_shockc5 = 100;
+const int anim_boss_shockc6 = 101;
+const int anim_boss_shockc7 = 102;
+const int anim_boss_shockc8 = 103;
+const int anim_boss_shockc9 = 104;
+const int anim_boss_shockc10 = 105;
 
-void boss_missile(vector p);
+void boss_missile(entity this, vector p);
 
 void boss_face(entity this)
 {
-	
 // go for another player if multi player
 	if(this.enemy.health <= 0 || random() < 0.02)
 	{
@@ -50,161 +139,166 @@ void boss_face(entity this)
 	ai_face(this);
 }
 
+void boss_missile1(entity this);
+
+void boss_rise17(entity this) { set_anim(this, anim_boss_rise17, boss_missile1); }
+void boss_rise16(entity this) { set_anim(this, anim_boss_rise16, boss_rise17); }
+void boss_rise15(entity this) { set_anim(this, anim_boss_rise15, boss_rise16); }
+void boss_rise14(entity this) { set_anim(this, anim_boss_rise14, boss_rise15); }
+void boss_rise13(entity this) { set_anim(this, anim_boss_rise13, boss_rise14); }
+void boss_rise12(entity this) { set_anim(this, anim_boss_rise12, boss_rise13); }
+void boss_rise11(entity this) { set_anim(this, anim_boss_rise11, boss_rise12); }
+void boss_rise10(entity this) { set_anim(this, anim_boss_rise10, boss_rise11); }
+void boss_rise9(entity this) { set_anim(this, anim_boss_rise9, boss_rise10); }
+void boss_rise8(entity this) { set_anim(this, anim_boss_rise8, boss_rise9); }
+void boss_rise7(entity this) { set_anim(this, anim_boss_rise7, boss_rise8); }
+void boss_rise6(entity this) { set_anim(this, anim_boss_rise6, boss_rise7); }
+void boss_rise5(entity this) { set_anim(this, anim_boss_rise5, boss_rise6); }
+void boss_rise4(entity this) { set_anim(this, anim_boss_rise4, boss_rise5); }
+void boss_rise3(entity this) { set_anim(this, anim_boss_rise3, boss_rise4); }
+void boss_rise2(entity this)
+{
+	set_anim(this, anim_boss_rise2, boss_rise3);
+	_sound(this, CH_VOICE, "boss1/sight1.wav", 1, ATTN_NORM);
+}
 void boss_rise1(entity this)
 {
-	this.frame = $rise;
-	setthink(this, boss_rise2);
-	this.nextthink = time + 0.1; // ?
-	_sound(this, CHAN_WEAPON, "boss1/out1.wav", 1, ATTN_NORM);
+	set_anim(this, anim_boss_rise1, boss_rise2);
+	_sound(this, CH_SHOTS, "boss1/out1.wav", 1, ATTN_NORM);
 }
-void() boss_rise2	=[	$rise2, boss_rise3 ] {
-_sound(this, CHAN_VOICE, "boss1/sight1.wav", 1, ATTN_NORM);
-}
-void() boss_rise3	=[	$rise3, boss_rise4 ] {}
-void() boss_rise4	=[	$rise4, boss_rise5 ] {}
-void() boss_rise5	=[	$rise5, boss_rise6 ] {}
-void() boss_rise6	=[	$rise6, boss_rise7 ] {}
-void() boss_rise7	=[	$rise7, boss_rise8 ] {}
-void() boss_rise8	=[	$rise8, boss_rise9 ] {}
-void() boss_rise9	=[	$rise9, boss_rise10 ] {}
-void() boss_rise10	=[	$rise10, boss_rise11 ] {}
-void() boss_rise11	=[	$rise11, boss_rise12 ] {}
-void() boss_rise12	=[	$rise12, boss_rise13 ] {}
-void() boss_rise13	=[	$rise13, boss_rise14 ] {}
-void() boss_rise14	=[	$rise14, boss_rise15 ] {}
-void() boss_rise15	=[	$rise15, boss_rise16 ] {}
-void() boss_rise16	=[	$rise16, boss_rise17 ] {}
-void() boss_rise17	=[	$rise17, boss_missile1 ] {}
 
-void() boss_idle1	=[	$walk1, boss_idle2 ]
+void boss_idle1(entity this);
+void boss_idle31(entity this) { set_anim(this, anim_boss_walk31, boss_idle1); boss_face(this); }
+void boss_idle30(entity this) { set_anim(this, anim_boss_walk30, boss_idle31); boss_face(this); }
+void boss_idle29(entity this) { set_anim(this, anim_boss_walk29, boss_idle30); boss_face(this); }
+void boss_idle28(entity this) { set_anim(this, anim_boss_walk28, boss_idle29); boss_face(this); }
+void boss_idle27(entity this) { set_anim(this, anim_boss_walk27, boss_idle28); boss_face(this); }
+void boss_idle26(entity this) { set_anim(this, anim_boss_walk26, boss_idle27); boss_face(this); }
+void boss_idle25(entity this) { set_anim(this, anim_boss_walk25, boss_idle26); boss_face(this); }
+void boss_idle24(entity this) { set_anim(this, anim_boss_walk24, boss_idle25); boss_face(this); }
+void boss_idle23(entity this) { set_anim(this, anim_boss_walk23, boss_idle24); boss_face(this); }
+void boss_idle22(entity this) { set_anim(this, anim_boss_walk22, boss_idle23); boss_face(this); }
+void boss_idle21(entity this) { set_anim(this, anim_boss_walk21, boss_idle22); boss_face(this); }
+void boss_idle20(entity this) { set_anim(this, anim_boss_walk20, boss_idle21); boss_face(this); }
+void boss_idle19(entity this) { set_anim(this, anim_boss_walk19, boss_idle20); boss_face(this); }
+void boss_idle18(entity this) { set_anim(this, anim_boss_walk18, boss_idle19); boss_face(this); }
+void boss_idle17(entity this) { set_anim(this, anim_boss_walk17, boss_idle18); boss_face(this); }
+void boss_idle16(entity this) { set_anim(this, anim_boss_walk16, boss_idle17); boss_face(this); }
+void boss_idle15(entity this) { set_anim(this, anim_boss_walk15, boss_idle16); boss_face(this); }
+void boss_idle14(entity this) { set_anim(this, anim_boss_walk14, boss_idle15); boss_face(this); }
+void boss_idle13(entity this) { set_anim(this, anim_boss_walk13, boss_idle14); boss_face(this); }
+void boss_idle12(entity this) { set_anim(this, anim_boss_walk12, boss_idle13); boss_face(this); }
+void boss_idle11(entity this) { set_anim(this, anim_boss_walk11, boss_idle12); boss_face(this); }
+void boss_idle10(entity this) { set_anim(this, anim_boss_walk10, boss_idle11); boss_face(this); }
+void boss_idle9(entity this) { set_anim(this, anim_boss_walk9, boss_idle10); boss_face(this); }
+void boss_idle8(entity this) { set_anim(this, anim_boss_walk8, boss_idle9); boss_face(this); }
+void boss_idle7(entity this) { set_anim(this, anim_boss_walk7, boss_idle8); boss_face(this); }
+void boss_idle6(entity this) { set_anim(this, anim_boss_walk6, boss_idle7); boss_face(this); }
+void boss_idle5(entity this) { set_anim(this, anim_boss_walk5, boss_idle6); boss_face(this); }
+void boss_idle4(entity this) { set_anim(this, anim_boss_walk4, boss_idle5); boss_face(this); }
+void boss_idle3(entity this) { set_anim(this, anim_boss_walk3, boss_idle4); boss_face(this); }
+void boss_idle2(entity this) { set_anim(this, anim_boss_walk2, boss_idle3); boss_face(this); }
+void boss_idle1(entity this) { set_anim(this, anim_boss_walk1, boss_idle2); }
+
+void boss_missile23(entity this) { set_anim(this, anim_boss_attack23, boss_missile1); boss_face(this); }
+void boss_missile22(entity this) { set_anim(this, anim_boss_attack22, boss_missile23); boss_face(this); }
+void boss_missile21(entity this) { set_anim(this, anim_boss_attack21, boss_missile22); boss_face(this); }
+void boss_missile20(entity this) { set_anim(this, anim_boss_attack20, boss_missile21); boss_missile(this, '100 -100 200'); }
+void boss_missile19(entity this) { set_anim(this, anim_boss_attack19, boss_missile20); boss_face(this); }
+void boss_missile18(entity this) { set_anim(this, anim_boss_attack18, boss_missile19); boss_face(this); }
+void boss_missile17(entity this) { set_anim(this, anim_boss_attack17, boss_missile18); boss_face(this); }
+void boss_missile16(entity this) { set_anim(this, anim_boss_attack16, boss_missile17); boss_face(this); }
+void boss_missile15(entity this) { set_anim(this, anim_boss_attack15, boss_missile16); boss_face(this); }
+void boss_missile14(entity this) { set_anim(this, anim_boss_attack14, boss_missile15); boss_face(this); }
+void boss_missile13(entity this) { set_anim(this, anim_boss_attack13, boss_missile14); boss_face(this); }
+void boss_missile12(entity this) { set_anim(this, anim_boss_attack12, boss_missile13); boss_face(this); }
+void boss_missile11(entity this) { set_anim(this, anim_boss_attack11, boss_missile12); boss_face(this); }
+void boss_missile10(entity this) { set_anim(this, anim_boss_attack10, boss_missile11); boss_face(this); }
+void boss_missile9(entity this) { set_anim(this, anim_boss_attack9, boss_missile10); boss_missile(this, '100 100 200'); }
+void boss_missile8(entity this) { set_anim(this, anim_boss_attack8, boss_missile9); boss_face(this); }
+void boss_missile7(entity this) { set_anim(this, anim_boss_attack7, boss_missile8); boss_face(this); }
+void boss_missile6(entity this) { set_anim(this, anim_boss_attack6, boss_missile7); boss_face(this); }
+void boss_missile5(entity this) { set_anim(this, anim_boss_attack5, boss_missile6); boss_face(this); }
+void boss_missile4(entity this) { set_anim(this, anim_boss_attack4, boss_missile5); boss_face(this); }
+void boss_missile3(entity this) { set_anim(this, anim_boss_attack3, boss_missile4); boss_face(this); }
+void boss_missile2(entity this) { set_anim(this, anim_boss_attack2, boss_missile3); boss_face(this); }
+void boss_missile1(entity this) { set_anim(this, anim_boss_attack1, boss_missile2); boss_face(this); }
+
+void boss_shocka10(entity this) { set_anim(this, anim_boss_shocka10, boss_missile1); }
+void boss_shocka9(entity this) { set_anim(this, anim_boss_shocka9, boss_shocka10); }
+void boss_shocka8(entity this) { set_anim(this, anim_boss_shocka8, boss_shocka9); }
+void boss_shocka7(entity this) { set_anim(this, anim_boss_shocka7, boss_shocka8); }
+void boss_shocka6(entity this) { set_anim(this, anim_boss_shocka6, boss_shocka7); }
+void boss_shocka5(entity this) { set_anim(this, anim_boss_shocka5, boss_shocka6); }
+void boss_shocka4(entity this) { set_anim(this, anim_boss_shocka4, boss_shocka5); }
+void boss_shocka3(entity this) { set_anim(this, anim_boss_shocka3, boss_shocka4); }
+void boss_shocka2(entity this) { set_anim(this, anim_boss_shocka2, boss_shocka3); }
+void boss_shocka1(entity this) { set_anim(this, anim_boss_shocka1, boss_shocka2); }
+
+void boss_shockb10(entity this) { set_anim(this, anim_boss_shockb4, boss_missile1); }
+void boss_shockb9(entity this) { set_anim(this, anim_boss_shockb3, boss_shockb10); }
+void boss_shockb8(entity this) { set_anim(this, anim_boss_shockb2, boss_shockb9); }
+void boss_shockb7(entity this) { set_anim(this, anim_boss_shockb1, boss_shockb8); }
+void boss_shockb6(entity this) { set_anim(this, anim_boss_shockb6, boss_shockb7); }
+void boss_shockb5(entity this) { set_anim(this, anim_boss_shockb5, boss_shockb6); }
+void boss_shockb4(entity this) { set_anim(this, anim_boss_shockb4, boss_shockb5); }
+void boss_shockb3(entity this) { set_anim(this, anim_boss_shockb3, boss_shockb4); }
+void boss_shockb2(entity this) { set_anim(this, anim_boss_shockb2, boss_shockb3); }
+void boss_shockb1(entity this) { set_anim(this, anim_boss_shockb1, boss_shockb2); }
+
+void boss_death1(entity this);
+
+void boss_shockc10(entity this) { set_anim(this, anim_boss_shockc10, boss_death1); }
+void boss_shockc9(entity this) { set_anim(this, anim_boss_shockc9, boss_shockc10); }
+void boss_shockc8(entity this) { set_anim(this, anim_boss_shockc8, boss_shockc9); }
+void boss_shockc7(entity this) { set_anim(this, anim_boss_shockc7, boss_shockc8); }
+void boss_shockc6(entity this) { set_anim(this, anim_boss_shockc6, boss_shockc7); }
+void boss_shockc5(entity this) { set_anim(this, anim_boss_shockc5, boss_shockc6); }
+void boss_shockc4(entity this) { set_anim(this, anim_boss_shockc4, boss_shockc5); }
+void boss_shockc3(entity this) { set_anim(this, anim_boss_shockc3, boss_shockc4); }
+void boss_shockc2(entity this) { set_anim(this, anim_boss_shockc2, boss_shockc3); }
+void boss_shockc1(entity this) { set_anim(this, anim_boss_shockc1, boss_shockc2); }
+
+void boss_death10(entity this)
 {
-// look for other players
+	// being removed, don't need new frame
+	//set_anim(this, anim_boss_death9, boss_death10);
+	killed_monsters = killed_monsters + 1;
+	WriteByte(MSG_ALL, SVC_KILLEDMONSTER);	// FIXME: reliable broadcast
+	SUB_UseTargets(this, this.enemy, NULL);
+	delete(this);
 }
-void() boss_idle2	=[	$walk2, boss_idle3 ] {boss_face(this);}
-void() boss_idle3	=[	$walk3, boss_idle4 ] {boss_face(this);}
-void() boss_idle4	=[	$walk4, boss_idle5 ] {boss_face(this);}
-void() boss_idle5	=[	$walk5, boss_idle6 ] {boss_face(this);}
-void() boss_idle6	=[	$walk6, boss_idle7 ] {boss_face(this);}
-void() boss_idle7	=[	$walk7, boss_idle8 ] {boss_face(this);}
-void() boss_idle8	=[	$walk8, boss_idle9 ] {boss_face(this);}
-void() boss_idle9	=[	$walk9, boss_idle10 ] {boss_face(this);}
-void() boss_idle10	=[	$walk10, boss_idle11 ] {boss_face(this);}
-void() boss_idle11	=[	$walk11, boss_idle12 ] {boss_face(this);}
-void() boss_idle12	=[	$walk12, boss_idle13 ] {boss_face(this);}
-void() boss_idle13	=[	$walk13, boss_idle14 ] {boss_face(this);}
-void() boss_idle14	=[	$walk14, boss_idle15 ] {boss_face(this);}
-void() boss_idle15	=[	$walk15, boss_idle16 ] {boss_face(this);}
-void() boss_idle16	=[	$walk16, boss_idle17 ] {boss_face(this);}
-void() boss_idle17	=[	$walk17, boss_idle18 ] {boss_face(this);}
-void() boss_idle18	=[	$walk18, boss_idle19 ] {boss_face(this);}
-void() boss_idle19	=[	$walk19, boss_idle20 ] {boss_face(this);}
-void() boss_idle20	=[	$walk20, boss_idle21 ] {boss_face(this);}
-void() boss_idle21	=[	$walk21, boss_idle22 ] {boss_face(this);}
-void() boss_idle22	=[	$walk22, boss_idle23 ] {boss_face(this);}
-void() boss_idle23	=[	$walk23, boss_idle24 ] {boss_face(this);}
-void() boss_idle24	=[	$walk24, boss_idle25 ] {boss_face(this);}
-void() boss_idle25	=[	$walk25, boss_idle26 ] {boss_face(this);}
-void() boss_idle26	=[	$walk26, boss_idle27 ] {boss_face(this);}
-void() boss_idle27	=[	$walk27, boss_idle28 ] {boss_face(this);}
-void() boss_idle28	=[	$walk28, boss_idle29 ] {boss_face(this);}
-void() boss_idle29	=[	$walk29, boss_idle30 ] {boss_face(this);}
-void() boss_idle30	=[	$walk30, boss_idle31 ] {boss_face(this);}
-void() boss_idle31	=[	$walk31, boss_idle1 ] {boss_face(this);}
-
-void() boss_missile1	=[	$attack1, boss_missile2 ] {boss_face(this);}
-void() boss_missile2	=[	$attack2, boss_missile3 ] {boss_face(this);}
-void() boss_missile3	=[	$attack3, boss_missile4 ] {boss_face(this);}
-void() boss_missile4	=[	$attack4, boss_missile5 ] {boss_face(this);}
-void() boss_missile5	=[	$attack5, boss_missile6 ] {boss_face(this);}
-void() boss_missile6	=[	$attack6, boss_missile7 ] {boss_face(this);}
-void() boss_missile7	=[	$attack7, boss_missile8 ] {boss_face(this);}
-void() boss_missile8	=[	$attack8, boss_missile9 ] {boss_face(this);}
-void() boss_missile9	=[	$attack9, boss_missile10 ] {boss_missile(this, '100 100 200');}
-void() boss_missile10	=[	$attack10, boss_missile11 ] {boss_face(this);}
-void() boss_missile11	=[	$attack11, boss_missile12 ] {boss_face(this);}
-void() boss_missile12	=[	$attack12, boss_missile13 ] {boss_face(this);}
-void() boss_missile13	=[	$attack13, boss_missile14 ] {boss_face(this);}
-void() boss_missile14	=[	$attack14, boss_missile15 ] {boss_face(this);}
-void() boss_missile15	=[	$attack15, boss_missile16 ] {boss_face(this);}
-void() boss_missile16	=[	$attack16, boss_missile17 ] {boss_face(this);}
-void() boss_missile17	=[	$attack17, boss_missile18 ] {boss_face(this);}
-void() boss_missile18	=[	$attack18, boss_missile19 ] {boss_face(this);}
-void() boss_missile19	=[	$attack19, boss_missile20 ] {boss_face(this);}
-void() boss_missile20	=[	$attack20, boss_missile21 ] {boss_missile(this, '100 -100 200');}
-void() boss_missile21	=[	$attack21, boss_missile22 ] {boss_face(this);}
-void() boss_missile22	=[	$attack22, boss_missile23 ] {boss_face(this);}
-void() boss_missile23	=[	$attack23, boss_missile1 ] {boss_face(this);}
-
-void() boss_shocka1 =[	$shocka1, boss_shocka2 ] {}
-void() boss_shocka2 =[	$shocka2, boss_shocka3 ] {}
-void() boss_shocka3 =[	$shocka3, boss_shocka4 ] {}
-void() boss_shocka4 =[	$shocka4, boss_shocka5 ] {}
-void() boss_shocka5 =[	$shocka5, boss_shocka6 ] {}
-void() boss_shocka6 =[	$shocka6, boss_shocka7 ] {}
-void() boss_shocka7 =[	$shocka7, boss_shocka8 ] {}
-void() boss_shocka8 =[	$shocka8, boss_shocka9 ] {}
-void() boss_shocka9 =[	$shocka9, boss_shocka10 ] {}
-void() boss_shocka10 =[	$shocka10, boss_missile1 ] {}
-
-void() boss_shockb1 =[	$shockb1, boss_shockb2 ] {}
-void() boss_shockb2 =[	$shockb2, boss_shockb3 ] {}
-void() boss_shockb3 =[	$shockb3, boss_shockb4 ] {}
-void() boss_shockb4 =[	$shockb4, boss_shockb5 ] {}
-void() boss_shockb5 =[	$shockb5, boss_shockb6 ] {}
-void() boss_shockb6 =[	$shockb6, boss_shockb7 ] {}
-void() boss_shockb7 =[	$shockb1, boss_shockb8 ] {}
-void() boss_shockb8 =[	$shockb2, boss_shockb9 ] {}
-void() boss_shockb9 =[	$shockb3, boss_shockb10 ] {}
-void() boss_shockb10 =[	$shockb4, boss_missile1 ] {}
-
-void() boss_shockc1 =[	$shockc1, boss_shockc2 ] {}
-void() boss_shockc2 =[	$shockc2, boss_shockc3 ] {}
-void() boss_shockc3 =[	$shockc3, boss_shockc4 ] {}
-void() boss_shockc4 =[	$shockc4, boss_shockc5 ] {}
-void() boss_shockc5 =[	$shockc5, boss_shockc6 ] {}
-void() boss_shockc6 =[	$shockc6, boss_shockc7 ] {}
-void() boss_shockc7 =[	$shockc7, boss_shockc8 ] {}
-void() boss_shockc8 =[	$shockc8, boss_shockc9 ] {}
-void() boss_shockc9 =[	$shockc9, boss_shockc10 ] {}
-void() boss_shockc10 =[	$shockc10, boss_death1 ] {}
-
-void() boss_death1 = [$death1, boss_death2] {
-_sound(this, CHAN_VOICE, "boss1/death.wav", 1, ATTN_NORM);
-}
-void() boss_death2 = [$death2, boss_death3] {}
-void() boss_death3 = [$death3, boss_death4] {}
-void() boss_death4 = [$death4, boss_death5] {}
-void() boss_death5 = [$death5, boss_death6] {}
-void() boss_death6 = [$death6, boss_death7] {}
-void() boss_death7 = [$death7, boss_death8] {}
-void() boss_death8 = [$death8, boss_death9] {}
-void() boss_death9 = [$death9, boss_death10]
+void boss_death9(entity this)
 {
-	_sound(this, CHAN_BODY, "boss1/out1.wav", 1, ATTN_NORM);
+	set_anim(this, anim_boss_death9, boss_death10);
+	_sound(this, CH_PAIN, "boss1/out1.wav", 1, ATTN_NORM);
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_LAVASPLASH);
 	WriteCoord(MSG_BROADCAST, this.origin_x);
 	WriteCoord(MSG_BROADCAST, this.origin_y);
 	WriteCoord(MSG_BROADCAST, this.origin_z);
 }
-
-void() boss_death10 = [$death9, boss_death10]
+void boss_death8(entity this) { set_anim(this, anim_boss_death8, boss_death9); }
+void boss_death7(entity this) { set_anim(this, anim_boss_death7, boss_death8); }
+void boss_death6(entity this) { set_anim(this, anim_boss_death6, boss_death7); }
+void boss_death5(entity this) { set_anim(this, anim_boss_death5, boss_death6); }
+void boss_death4(entity this) { set_anim(this, anim_boss_death4, boss_death5); }
+void boss_death3(entity this) { set_anim(this, anim_boss_death3, boss_death4); }
+void boss_death2(entity this) { set_anim(this, anim_boss_death2, boss_death3); }
+void boss_death1(entity this)
 {
-	killed_monsters = killed_monsters + 1;
-	WriteByte(MSG_ALL, SVC_KILLEDMONSTER);	// FIXME: reliable broadcast
-	SUB_UseTargets(this, this.enemy, NULL);
-	delete(this);
+	set_anim(this, anim_boss_death1, boss_death2);
+	_sound(this, CH_VOICE, "boss1/death.wav", 1, ATTN_NORM);
 }
 
 void boss_missile(entity this, vector p)
 {
-	vector	offang;
-	vector	org, vec, d;
+	vector vec, d;
 
-	offang = vectoangles(this.enemy.origin - this.origin);	
+	vector offang = vectoangles(this.enemy.origin - this.origin);	
 	makevectors(offang);
 
-	org = this.origin + p_x*v_forward + p_y*v_right + p_z*'0 0 1';
+	vector org = this.origin + p_x*v_forward + p_y*v_right + p_z*'0 0 1';
 	
 // lead the player on hard mode
 	if(skill > 1)
@@ -227,11 +321,11 @@ void boss_missile(entity this, vector p)
 	setsize(newmis, VEC_ORIGIN, VEC_ORIGIN);		
 	newmis.velocity = vec*300;
 	settouch(newmis, T_MissileTouch); // rocket explosion
-	_sound(this, CHAN_WEAPON, "boss1/throw.wav", 1, ATTN_NORM);
+	_sound(this, CH_SHOTS, "boss1/throw.wav", 1, ATTN_NORM);
 
 // check for dead enemy
 	if(this.enemy.health <= 0)
-		boss_idle1();
+		boss_idle1(this);
 }
 
 
@@ -258,7 +352,7 @@ void boss_awake(entity this, entity actor, entity trigger)
 	WriteCoord(MSG_BROADCAST, this.origin_z);
 
 	this.yaw_speed = 20;
-	boss_rise1();
+	boss_rise1(this);
 }
 
 
@@ -294,8 +388,6 @@ float lightning_end;
 
 void lightning_fire(entity this)
 {
-	vector p1, p2;
-	
 	if(time >= lightning_end)
 	{	// done here, put the terminals back up
 		door_go_down(le1);
@@ -303,10 +395,10 @@ void lightning_fire(entity this)
 		return;
 	}
 	
-	p1 =(le1.mins + le1.maxs) * 0.5;
+	vector p1 =(le1.mins + le1.maxs) * 0.5;
 	p1_z = le1.absmin_z - 16;
 	
-	p2 =(le2.mins + le2.maxs) * 0.5;
+	vector p2 =(le2.mins + le2.maxs) * 0.5;
 	p2_z = le2.absmin_z - 16;
 	
 	// compensate for length of bolt
@@ -353,7 +445,7 @@ void lightning_use(entity this, entity actor, entity trigger)
 	le2.nextthink = -1;
 	lightning_end = time + 1;
 
-	_sound(this, CHAN_VOICE, "misc/power.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "misc/power.wav", 1, ATTN_NORM);
 	lightning_fire(this);		
 
 // advance the boss pain if down
@@ -363,7 +455,7 @@ void lightning_use(entity this, entity actor, entity trigger)
 	e.enemy = actor;
 	if(le1.state == STATE_TOP && e.health > 0)
 	{
-		_sound(e, CHAN_VOICE, "boss1/pain.wav", 1, ATTN_NORM);
+		_sound(e, CH_VOICE, "boss1/pain.wav", 1, ATTN_NORM);
 		e.health = e.health - 1;
 		if(e.health >= 2)
 			boss_shocka1(e);

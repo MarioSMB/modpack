@@ -298,12 +298,12 @@ ROCKETS
 ==============================================================================
 */
 
-void s_explode6(entity this) { this.frame = 5; setthink(this, SUB_Remove); this.nextthink = time + FRAME_TIME; }
-void s_explode5(entity this) { this.frame = 4; setthink(this, s_explode6); this.nextthink = time + FRAME_TIME; }
-void s_explode4(entity this) { this.frame = 3; setthink(this, s_explode5); this.nextthink = time + FRAME_TIME; }
-void s_explode3(entity this) { this.frame = 2; setthink(this, s_explode4); this.nextthink = time + FRAME_TIME; }
-void s_explode2(entity this) { this.frame = 1; setthink(this, s_explode3); this.nextthink = time + FRAME_TIME; }
-void s_explode1(entity this) { this.frame = 0; setthink(this, s_explode2); this.nextthink = time + FRAME_TIME; }
+void s_explode6(entity this) { set_anim(this, 5, SUB_Remove); }
+void s_explode5(entity this) { set_anim(this, 4, s_explode6); }
+void s_explode4(entity this) { set_anim(this, 3, s_explode5); }
+void s_explode3(entity this) { set_anim(this, 2, s_explode4); }
+void s_explode2(entity this) { set_anim(this, 1, s_explode3); }
+void s_explode1(entity this) { set_anim(this, 0, s_explode2); }
 
 void BecomeExplosion(entity this)
 {
@@ -311,6 +311,7 @@ void BecomeExplosion(entity this)
 	this.velocity = '0 0 0';
 	settouch(this, func_null);
 	_setmodel(this, "progs/s_explod.spr");
+	_sound(this, CH_SHOTS, "weapons/r_exp3.wav", 1, ATTN_NORM);
 	this.solid = SOLID_NOT;
 	s_explode1(this);
 }

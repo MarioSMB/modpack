@@ -161,17 +161,17 @@ spawnfunc(worldspawn)
 {
 	lastspawn = NULL;
 
-// custom map attributes
-	//if(this.model == "maps/e1m8.bsp")
-		//cvar_set("sv_gravity", "100");
-	//else
-		//cvar_set("sv_gravity", "800");
-
 // the area based ambient sounds MUST be the first precache_sounds
 
 	cvar = cvar_normal;
 	cvar_string = cvar_string_normal;
 	cvar_set = cvar_set_normal;
+
+	// custom map attributes
+	if(this.model == "maps/e1m8.bsp")
+		cvar_set("sv_gravity", "100");
+	else
+		cvar_set("sv_gravity", "800");
 
 	if(world_already_spawned)
 		error("world already spawned - you may have EXACTLY ONE worldspawn!");
