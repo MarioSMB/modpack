@@ -1236,8 +1236,8 @@ void ImpulseCommands(entity this)
 	if(this.impulse >= 1 && this.impulse <= 8)
 		W_ChangeWeapon(this);
 
-	if(this.impulse == 9)
-		CheatCommand(this);
+	//if(this.impulse == 9)
+		//CheatCommand(this);
 	if(this.impulse == 10)
 		CycleWeaponCommand(this);
 	if(this.impulse == 12)

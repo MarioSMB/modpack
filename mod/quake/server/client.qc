@@ -1398,3 +1398,37 @@ void ClientObituary(entity targ, entity attacker)
 		}
 	}
 }
+
+void SV_ParseClientCommand(entity this, string command)
+{
+	// If invalid UTF-8, don't even parse it
+	string command2 = "";
+	float len = strlen(command);
+	float i;
+	for (i = 0; i < len; ++i)
+		command2 = strcat(command2, chr2str(str2chr(command, i)));
+	if (command != command2) return;
+
+	tokenize_console(command);
+
+	// Guide for working with argc arguments by example:
+	// argc:   1    - 2      - 3     - 4
+	// argv:   0    - 1      - 2     - 3
+	// cmd     vote - master - login - password
+
+	// for floodcheck
+	switch (strtolower(argv(0)))
+	{
+		// exempt commands which are not subject to floodcheck
+		case "begin": break;                               // handled by engine in host_cmd.c
+		case "download": break;                            // handled by engine in cl_parse.c
+		case "mv_getpicture": break;                       // handled by server in this file
+		case "pause": break;                               // handled by engine in host_cmd.c
+		case "prespawn": break;                            // handled by engine in host_cmd.c
+		case "sentcvar": break;                            // handled by server in this file
+		case "spawn": break;                               // handled by engine in host_cmd.c
+		case "c2s": Net_ClientCommand(this, command); return; // handled by net.qh
+	}
+
+	clientcommand(this, command);
+}
