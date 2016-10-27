@@ -1,6 +1,6 @@
 #include "monsters.qc"
 
-//#include "ogre.qc"
+#include "ogre.qc"
 #include "demon.qc"
 //#include "shambler.qc"
 //#include "knight.qc"
