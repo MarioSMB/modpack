@@ -11,80 +11,120 @@ $base base
 $skin skin
 $scale 0.7
 
-$frame attack1 attack2 attack3 attack4 attack5 attack6 attack7 attack8
-$frame attack9 attack10 attack11
 
-$frame pain1 pain2 pain3 pain4 pain5 
+const int anim_shal_attack1 = 0;
+const int anim_shal_attack2 = 1;
+const int anim_shal_attack3 = 2;
+const int anim_shal_attack4 = 3;
+const int anim_shal_attack5 = 4;
+const int anim_shal_attack6 = 5;
+const int anim_shal_attack7 = 6;
+const int anim_shal_attack8 = 7;
+const int anim_shal_attack9 = 8;
+const int anim_shal_attack10 = 9;
+const int anim_shal_attack11 = 10;
 
-$frame death1 death2 death3 death4 death5 death6 death7
+const int anim_shal_pain1 = 11;
+const int anim_shal_pain2 = 12;
+const int anim_shal_pain3 = 13;
+const int anim_shal_pain4 = 14;
+const int anim_shal_pain5 = 15;
 
-$frame	walk1 walk2 walk3 walk4 walk5 walk6 walk7 walk8 walk9 walk10
-$frame	walk11 walk12
+const int anim_shal_death1 = 16;
+const int anim_shal_death2 = 17;
+const int anim_shal_death3 = 18;
+const int anim_shal_death4 = 19;
+const int anim_shal_death5 = 20;
+const int anim_shal_death6 = 21;
+const int anim_shal_death7 = 22;
+
+const int anim_shal_walk1 = 23;
+const int anim_shal_walk2 = 24;
+const int anim_shal_walk3 = 25;
+const int anim_shal_walk4 = 26;
+const int anim_shal_walk5 = 27;
+const int anim_shal_walk6 = 28;
+const int anim_shal_walk7 = 29;
+const int anim_shal_walk8 = 30;
+const int anim_shal_walk9 = 31;
+const int anim_shal_walk10 = 32;
+const int anim_shal_walk11 = 33;
+const int anim_shal_walk12 = 34;
 
 void ShalMissile(entity this);
-void(entity this) shal_stand     =[      $walk1,       shal_stand    ] {ai_stand(this);}
 
-void() shal_walk1     =[      $walk2,       shal_walk2    ] {
-if(random() < 0.2)
-	_sound(this, CHAN_VOICE, "shalrath/idle.wav", 1, ATTN_IDLE);
-ai_walk(6);}
-void() shal_walk2     =[      $walk3,       shal_walk3    ] {ai_walk(4);}
-void() shal_walk3     =[      $walk4,       shal_walk4    ] {ai_walk(0);}
-void() shal_walk4     =[      $walk5,       shal_walk5    ] {ai_walk(0);}
-void() shal_walk5     =[      $walk6,       shal_walk6    ] {ai_walk(0);}
-void() shal_walk6     =[      $walk7,       shal_walk7    ] {ai_walk(0);}
-void() shal_walk7     =[      $walk8,       shal_walk8    ] {ai_walk(5);}
-void() shal_walk8     =[      $walk9,       shal_walk9    ] {ai_walk(6);}
-void() shal_walk9     =[      $walk10,       shal_walk10    ] {ai_walk(5);}
-void() shal_walk10    =[      $walk11,       shal_walk11    ] {ai_walk(0);}
-void() shal_walk11    =[      $walk12,       shal_walk12    ] {ai_walk(4);}
-void() shal_walk12    =[      $walk1,       shal_walk1    ] {ai_walk(5);}
+void shal_stand(entity this) { set_anim(this, anim_shal_walk1, shal_stand); ai_stand(this); }
 
-void() shal_run1     =[      $walk2,       shal_run2    ] {
-if(random() < 0.2)
-	_sound(this, CHAN_VOICE, "shalrath/idle.wav", 1, ATTN_IDLE);
-ai_run(6);}
-void() shal_run2     =[      $walk3,       shal_run3    ] {ai_run(4);}
-void() shal_run3     =[      $walk4,       shal_run4    ] {ai_run(0);}
-void() shal_run4     =[      $walk5,       shal_run5    ] {ai_run(0);}
-void() shal_run5     =[      $walk6,       shal_run6    ] {ai_run(0);}
-void() shal_run6     =[      $walk7,       shal_run7    ] {ai_run(0);}
-void() shal_run7     =[      $walk8,       shal_run8    ] {ai_run(5);}
-void() shal_run8     =[      $walk9,       shal_run9    ] {ai_run(6);}
-void() shal_run9     =[      $walk10,       shal_run10    ] {ai_run(5);}
-void() shal_run10    =[      $walk11,       shal_run11    ] {ai_run(0);}
-void() shal_run11    =[      $walk12,       shal_run12    ] {ai_run(4);}
-void() shal_run12    =[      $walk1,       shal_run1    ] {ai_run(5);}
-
-void() shal_attack1     =[      $attack1,       shal_attack2    ] {
-_sound(this, CHAN_VOICE, "shalrath/attack.wav", 1, ATTN_NORM);
-ai_face(this);
+void shal_walk1(entity this);
+void shal_walk12(entity this) { set_anim(this, anim_shal_walk1, shal_walk1); ai_walk(this, 5); }
+void shal_walk11(entity this) { set_anim(this, anim_shal_walk12, shal_walk12); ai_walk(this, 4); }
+void shal_walk10(entity this) { set_anim(this, anim_shal_walk11, shal_walk11); ai_walk(this, 0); }
+void shal_walk9(entity this) { set_anim(this, anim_shal_walk10, shal_walk10); ai_walk(this, 5); }
+void shal_walk8(entity this) { set_anim(this, anim_shal_walk9, shal_walk9); ai_walk(this, 6); }
+void shal_walk7(entity this) { set_anim(this, anim_shal_walk8, shal_walk8); ai_walk(this, 5); }
+void shal_walk6(entity this) { set_anim(this, anim_shal_walk7, shal_walk7); ai_walk(this, 0); }
+void shal_walk5(entity this) { set_anim(this, anim_shal_walk6, shal_walk6); ai_walk(this, 0); }
+void shal_walk4(entity this) { set_anim(this, anim_shal_walk5, shal_walk5); ai_walk(this, 0); }
+void shal_walk3(entity this) { set_anim(this, anim_shal_walk4, shal_walk4); ai_walk(this, 0); }
+void shal_walk2(entity this) { set_anim(this, anim_shal_walk3, shal_walk3); ai_walk(this, 4); }
+void shal_walk1(entity this)
+{
+	set_anim(this, anim_shal_walk2, shal_walk2);
+	if(random() < 0.2)
+		_sound(this, CHAN_VOICE, "shalrath/idle.wav", 1, ATTN_IDLE);
+	ai_walk(this, 6);
 }
-void() shal_attack2     =[      $attack2,       shal_attack3    ] {ai_face(this);}
-void() shal_attack3     =[      $attack3,       shal_attack4    ] {ai_face(this);}
-void() shal_attack4     =[      $attack4,       shal_attack5    ] {ai_face(this);}
-void() shal_attack5     =[      $attack5,       shal_attack6    ] {ai_face(this);}
-void() shal_attack6     =[      $attack6,       shal_attack7    ] {ai_face(this);}
-void() shal_attack7     =[      $attack7,       shal_attack8    ] {ai_face(this);}
-void() shal_attack8     =[      $attack8,       shal_attack9    ] {ai_face(this);}
-void() shal_attack9     =[      $attack9,       shal_attack10   ] {ShalMissile(this);}
-void() shal_attack10    =[      $attack10,      shal_attack11   ] {ai_face(this);}
-void() shal_attack11    =[      $attack11,      shal_run1   ] {}
 
-void() shal_pain1       =[      $pain1, shal_pain2      ] {}
-void() shal_pain2       =[      $pain2, shal_pain3      ] {}
-void() shal_pain3       =[      $pain3, shal_pain4      ] {}
-void() shal_pain4       =[      $pain4, shal_pain5      ] {}
-void() shal_pain5       =[      $pain5, shal_run1      ] {}
+void shal_run1(entity this);
+void shal_run12(entity this) { set_anim(this, anim_shal_walk1, shal_run1); ai_run(this, 5); }
+void shal_run11(entity this) { set_anim(this, anim_shal_walk12, shal_run12); ai_run(this, 4); }
+void shal_run10(entity this) { set_anim(this, anim_shal_walk11, shal_run11); ai_run(this, 0); }
+void shal_run9(entity this) { set_anim(this, anim_shal_walk10, shal_run10); ai_run(this, 5); }
+void shal_run8(entity this) { set_anim(this, anim_shal_walk9, shal_run9); ai_run(this, 6); }
+void shal_run7(entity this) { set_anim(this, anim_shal_walk8, shal_run8); ai_run(this, 5); }
+void shal_run6(entity this) { set_anim(this, anim_shal_walk7, shal_run7); ai_run(this, 0); }
+void shal_run5(entity this) { set_anim(this, anim_shal_walk6, shal_run6); ai_run(this, 0); }
+void shal_run4(entity this) { set_anim(this, anim_shal_walk5, shal_run5); ai_run(this, 0); }
+void shal_run3(entity this) { set_anim(this, anim_shal_walk4, shal_run4); ai_run(this, 0); }
+void shal_run2(entity this) { set_anim(this, anim_shal_walk3, shal_run3); ai_run(this, 4); }
+void shal_run1(entity this)
+{
+	set_anim(this, anim_shal_walk2, shal_run2);
+	if(random() < 0.2)
+		_sound(this, CHAN_VOICE, "shalrath/idle.wav", 1, ATTN_IDLE);
+	ai_run(this, 6);
+}
 
-void() shal_death1      =[      $death1,        shal_death2     ] {}
-void() shal_death2      =[      $death2,        shal_death3     ] {}
-void() shal_death3      =[      $death3,        shal_death4     ] {}
-void() shal_death4      =[      $death4,        shal_death5     ] {}
-void() shal_death5      =[      $death5,        shal_death6     ] {}
-void() shal_death6      =[      $death6,        shal_death7     ] {}
-void() shal_death7      =[      $death7,        shal_death7    ] {}
+void shal_attack11(entity this) { set_anim(this, anim_shal_attack11, shal_run1); ai_face(this); }
+void shal_attack10(entity this) { set_anim(this, anim_shal_attack10, shal_attack11); ai_face(this); }
+void shal_attack9(entity this) { set_anim(this, anim_shal_attack9, shal_attack10); ShalMissile(this); }
+void shal_attack8(entity this) { set_anim(this, anim_shal_attack8, shal_attack9); ai_face(this); }
+void shal_attack7(entity this) { set_anim(this, anim_shal_attack7, shal_attack8); ai_face(this); }
+void shal_attack6(entity this) { set_anim(this, anim_shal_attack6, shal_attack7); ai_face(this); }
+void shal_attack5(entity this) { set_anim(this, anim_shal_attack5, shal_attack6); ai_face(this); }
+void shal_attack4(entity this) { set_anim(this, anim_shal_attack4, shal_attack5); ai_face(this); }
+void shal_attack3(entity this) { set_anim(this, anim_shal_attack3, shal_attack4); ai_face(this); }
+void shal_attack2(entity this) { set_anim(this, anim_shal_attack2, shal_attack3); ai_face(this); }
+void shal_attack1(entity this)
+{
+	set_anim(this, anim_shal_attack1, shal_attack2);
+	_sound(this, CHAN_VOICE, "shalrath/attack.wav", 1, ATTN_NORM);
+	ai_face(this);
+}
 
+void shal_pain5(entity this) { set_anim(this, anim_shal_pain5, shal_run1); }
+void shal_pain4(entity this) { set_anim(this, anim_shal_pain4, shal_pain5); }
+void shal_pain3(entity this) { set_anim(this, anim_shal_pain3, shal_pain4); }
+void shal_pain2(entity this) { set_anim(this, anim_shal_pain2, shal_pain3); }
+void shal_pain1(entity this) { set_anim(this, anim_shal_pain1, shal_pain2); }
+
+void shal_death7(entity this) { set_anim(this, anim_shal_death7, shal_death7); }
+void shal_death6(entity this) { set_anim(this, anim_shal_death6, shal_death7); }
+void shal_death5(entity this) { set_anim(this, anim_shal_death5, shal_death6); }
+void shal_death4(entity this) { set_anim(this, anim_shal_death4, shal_death5); }
+void shal_death3(entity this) { set_anim(this, anim_shal_death3, shal_death4); }
+void shal_death2(entity this) { set_anim(this, anim_shal_death2, shal_death3); }
+void shal_death1(entity this) { set_anim(this, anim_shal_death1, shal_death2); }
 
 void shalrath_pain(entity this, entity attacker, float damage)
 {
@@ -92,7 +132,7 @@ void shalrath_pain(entity this, entity attacker, float damage)
 		return;
 
 	_sound(this, CHAN_VOICE, "shalrath/pain.wav", 1, ATTN_NORM);
-	shal_pain1();
+	shal_pain1(this);
 	this.pain_finished = time + 3;
 }
 
@@ -110,7 +150,7 @@ void shalrath_die(entity this, entity attacker)
 	}
 
 	_sound(this, CHAN_VOICE, "shalrath/death.wav", 1, ATTN_NORM);
-	shal_death1();
+	shal_death1(this);
 	this.solid = SOLID_NOT;
 	// insert death sounds here
 }
@@ -153,14 +193,13 @@ void ShalMissile(entity this)
 
 void ShalHome(entity this)
 {
-	vector	dir, vtemp;
-	vtemp = this.enemy.origin + '0 0 10';
+	vector vtemp = this.enemy.origin + '0 0 10';
 	if(this.enemy.health < 1)
 	{
 		delete(this);
 		return;
 	}
-	dir = normalize(vtemp - this.origin);
+	vector dir = normalize(vtemp - this.origin);
 	if(skill == 3)
 		this.velocity = dir * 350;
 	else
@@ -189,7 +228,7 @@ void ShalMissileTouch(entity this, entity toucher)
 	settouch(this, func_null);
 	_setmodel(this, "progs/s_explod.spr");
 	this.solid = SOLID_NOT;
-	s_explode1();
+	s_explode1(this);
 }
 
 string shalrath_sight() { return "shalrath/sight.wav"; }
