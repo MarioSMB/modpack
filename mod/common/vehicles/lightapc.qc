@@ -427,6 +427,7 @@ void lightapc_spawn_hitbox(float position, entity vehic, entity hitbox, vector m
 	hitbox.iscreature         = true;
 	hitbox.teleportable       = false; // no teleporting for vehicles, too buggy
 	hitbox.damagedbycontents  = true;
+	IL_PUSH(g_damagedbycontents, hitbox);
 	set_movetype(hitbox, MOVETYPE_WALK);
 	hitbox.solid              = SOLID_SLIDEBOX;
 	hitbox.takedamage         = DAMAGE_AIM;

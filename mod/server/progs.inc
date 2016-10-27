@@ -22,7 +22,6 @@
 	#include "mutators/all.qh"
 #endif
 
-#define QUAKE_ONE 0
-#if QUAKE_ONE
+#ifdef QUAKE_ONE
 	#include "../quake/server/progs.inc"
 #endif

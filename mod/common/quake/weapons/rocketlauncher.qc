@@ -221,6 +221,7 @@ void W_RocketLauncher_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	missile.health = WEP_CVAR(rocketlauncher, health);
 	missile.event_damage = W_RocketLauncher_Damage;
 	missile.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, missile);
 
 	set_movetype(missile, MOVETYPE_FLY);
 	PROJECTILE_MAKETRIGGER(missile);

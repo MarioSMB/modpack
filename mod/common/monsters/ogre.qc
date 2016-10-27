@@ -191,6 +191,7 @@ void M_Ogre_Attack_Grenade(entity this)
 	gren.damageforcescale = autocvar_g_monster_ogre_attack_grenade_damageforcescale;
 	gren.event_damage = M_Ogre_Attack_Grenade_Damage;
 	gren.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, gren);
 	gren.missile_flags = MIF_SPLASH | MIF_ARC;
 	W_SetupProjVelocity_Explicit(gren, dir, v_up, autocvar_g_monster_ogre_attack_grenade_speed, autocvar_g_monster_ogre_attack_grenade_speed_up, autocvar_g_monster_ogre_attack_grenade_speed_z, autocvar_g_monster_ogre_attack_grenade_spread, false);
 

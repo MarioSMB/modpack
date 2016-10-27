@@ -88,6 +88,8 @@ void lightapc_deluge_attack(entity actor, string tagname, entity spigot)
 	IL_PUSH(g_projectiles, proj);
 	IL_PUSH(g_bot_dodge, proj);
 	proj.damagedbycontents = WEP_CVAR_SEC(electro, damagedbycontents);
+	if(proj.damagedbycontents)
+		IL_PUSH(g_damagedbycontents, proj);
 
 	proj.bouncefactor = WEP_CVAR_SEC(electro, bouncefactor);
 	proj.bouncestop = WEP_CVAR_SEC(electro, bouncestop);
