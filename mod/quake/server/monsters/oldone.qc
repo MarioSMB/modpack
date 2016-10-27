@@ -16,91 +16,152 @@ void finale_2(entity this);
 void finale_3(entity this);
 void finale_4(entity this);
 
+const int anim_old_old1 = 0;
+const int anim_old_old2 = 1;
+const int anim_old_old3 = 2;
+const int anim_old_old4 = 3;
+const int anim_old_old5 = 4;
+const int anim_old_old6 = 5;
+const int anim_old_old7 = 6;
+const int anim_old_old8 = 7;
+const int anim_old_old9 = 8;
+const int anim_old_old10 = 9;
+const int anim_old_old11 = 10;
+const int anim_old_old12 = 11;
+const int anim_old_old13 = 12;
+const int anim_old_old14 = 13;
+const int anim_old_old15 = 14;
+const int anim_old_old16 = 15;
+const int anim_old_old17 = 16;
+const int anim_old_old18 = 17;
+const int anim_old_old19 = 18;
+const int anim_old_old20 = 19;
+const int anim_old_old21 = 20;
+const int anim_old_old22 = 21;
+const int anim_old_old23 = 22;
+const int anim_old_old24 = 23;
+const int anim_old_old25 = 24;
+const int anim_old_old26 = 25;
+const int anim_old_old27 = 26;
+const int anim_old_old28 = 27;
+const int anim_old_old29 = 28;
+const int anim_old_old30 = 29;
+const int anim_old_old31 = 30;
+const int anim_old_old32 = 31;
+const int anim_old_old33 = 32;
+const int anim_old_old34 = 33;
+const int anim_old_old35 = 34;
+const int anim_old_old36 = 35;
+const int anim_old_old37 = 36;
+const int anim_old_old38 = 37;
+const int anim_old_old39 = 38;
+const int anim_old_old40 = 39;
+const int anim_old_old41 = 40;
+const int anim_old_old42 = 41;
+const int anim_old_old43 = 42;
+const int anim_old_old44 = 43;
+const int anim_old_old45 = 44;
+const int anim_old_old46 = 45;
 
-$frame old1 old2 old3 old4 old5 old6 old7 old8 old9 
-$frame old10 old11 old12 old13 old14 old15 old16 old17 old18 old19 
-$frame old20 old21 old22 old23 old24 old25 old26 old27 old28 old29 
-$frame old30 old31 old32 old33 old34 old35 old36 old37 old38 old39 
-$frame old40 old41 old42 old43 old44 old45 old46 
+const int anim_old_shake1 = 46;
+const int anim_old_shake2 = 47;
+const int anim_old_shake3 = 48;
+const int anim_old_shake4 = 49;
+const int anim_old_shake5 = 50;
+const int anim_old_shake6 = 51;
+const int anim_old_shake7 = 52;
+const int anim_old_shake8 = 53;
+const int anim_old_shake9 = 54;
+const int anim_old_shake10 = 55;
+const int anim_old_shake11 = 56;
+const int anim_old_shake12 = 57;
+const int anim_old_shake13 = 58;
+const int anim_old_shake14 = 59;
+const int anim_old_shake15 = 60;
+const int anim_old_shake16 = 61;
+const int anim_old_shake17 = 62;
+const int anim_old_shake18 = 63;
+const int anim_old_shake19 = 64;
+const int anim_old_shake20 = 65;
 
-$frame shake1 shake2 shake3 shake4 shake5 shake6 shake7 shake8
-$frame shake9 shake10 shake11 shake12 shake12 shake13 shake14
-$frame shake15 shake16 shake17 shake18 shake19 shake20
+//void old_stand(entity this) { set_anim(this, anim_old_old1, old_stand); }
 
-//void() old_stand     =[      $old1,       old_stand    ] {}
+void old_idle1(entity this);
+void old_idle46(entity this) { set_anim(this, anim_old_old46, old_idle1); }
+void old_idle45(entity this) { set_anim(this, anim_old_old45, old_idle46); }
+void old_idle44(entity this) { set_anim(this, anim_old_old44, old_idle45); }
+void old_idle43(entity this) { set_anim(this, anim_old_old43, old_idle44); }
+void old_idle42(entity this) { set_anim(this, anim_old_old42, old_idle43); }
+void old_idle41(entity this) { set_anim(this, anim_old_old41, old_idle42); }
+void old_idle40(entity this) { set_anim(this, anim_old_old40, old_idle41); }
+void old_idle39(entity this) { set_anim(this, anim_old_old39, old_idle40); }
+void old_idle38(entity this) { set_anim(this, anim_old_old38, old_idle39); }
+void old_idle37(entity this) { set_anim(this, anim_old_old37, old_idle38); }
+void old_idle36(entity this) { set_anim(this, anim_old_old36, old_idle37); }
+void old_idle35(entity this) { set_anim(this, anim_old_old35, old_idle36); }
+void old_idle34(entity this) { set_anim(this, anim_old_old34, old_idle35); }
+void old_idle33(entity this) { set_anim(this, anim_old_old33, old_idle34); }
+void old_idle32(entity this) { set_anim(this, anim_old_old32, old_idle33); }
+void old_idle31(entity this) { set_anim(this, anim_old_old31, old_idle32); }
+void old_idle30(entity this) { set_anim(this, anim_old_old30, old_idle31); }
+void old_idle29(entity this) { set_anim(this, anim_old_old29, old_idle30); }
+void old_idle28(entity this) { set_anim(this, anim_old_old28, old_idle29); }
+void old_idle27(entity this) { set_anim(this, anim_old_old27, old_idle28); }
+void old_idle26(entity this) { set_anim(this, anim_old_old26, old_idle27); }
+void old_idle25(entity this) { set_anim(this, anim_old_old25, old_idle26); }
+void old_idle24(entity this) { set_anim(this, anim_old_old24, old_idle25); }
+void old_idle23(entity this) { set_anim(this, anim_old_old23, old_idle24); }
+void old_idle22(entity this) { set_anim(this, anim_old_old22, old_idle23); }
+void old_idle21(entity this) { set_anim(this, anim_old_old21, old_idle22); }
+void old_idle20(entity this) { set_anim(this, anim_old_old20, old_idle21); }
+void old_idle19(entity this) { set_anim(this, anim_old_old19, old_idle20); }
+void old_idle18(entity this) { set_anim(this, anim_old_old18, old_idle19); }
+void old_idle17(entity this) { set_anim(this, anim_old_old17, old_idle18); }
+void old_idle16(entity this) { set_anim(this, anim_old_old16, old_idle17); }
+void old_idle15(entity this) { set_anim(this, anim_old_old15, old_idle16); }
+void old_idle14(entity this) { set_anim(this, anim_old_old14, old_idle15); }
+void old_idle13(entity this) { set_anim(this, anim_old_old13, old_idle14); }
+void old_idle12(entity this) { set_anim(this, anim_old_old12, old_idle13); }
+void old_idle11(entity this) { set_anim(this, anim_old_old11, old_idle12); }
+void old_idle10(entity this) { set_anim(this, anim_old_old10, old_idle11); }
+void old_idle9(entity this) { set_anim(this, anim_old_old9, old_idle10); }
+void old_idle8(entity this) { set_anim(this, anim_old_old8, old_idle9); }
+void old_idle7(entity this) { set_anim(this, anim_old_old7, old_idle8); }
+void old_idle6(entity this) { set_anim(this, anim_old_old6, old_idle7); }
+void old_idle5(entity this) { set_anim(this, anim_old_old5, old_idle6); }
+void old_idle4(entity this) { set_anim(this, anim_old_old4, old_idle5); }
+void old_idle3(entity this) { set_anim(this, anim_old_old3, old_idle4); }
+void old_idle2(entity this) { set_anim(this, anim_old_old2, old_idle3); }
+void old_idle1(entity this) { set_anim(this, anim_old_old1, old_idle2); }
 
-void() old_idle1        =[      $old1,  old_idle2       ] {}
-void() old_idle2        =[      $old2,  old_idle3       ] {}
-void() old_idle3        =[      $old3,  old_idle4       ] {}
-void() old_idle4        =[      $old4,  old_idle5       ] {}
-void() old_idle5        =[      $old5,  old_idle6       ] {}
-void() old_idle6        =[      $old6,  old_idle7       ] {}
-void() old_idle7        =[      $old7,  old_idle8       ] {}
-void() old_idle8        =[      $old8,  old_idle9       ] {}
-void() old_idle9        =[      $old9,  old_idle10      ] {}
-void() old_idle10       =[      $old10, old_idle11      ] {}
-void() old_idle11       =[      $old11, old_idle12      ] {}
-void() old_idle12       =[      $old12, old_idle13      ] {}
-void() old_idle13       =[      $old13, old_idle14      ] {}
-void() old_idle14       =[      $old14, old_idle15      ] {}
-void() old_idle15       =[      $old15, old_idle16      ] {}
-void() old_idle16       =[      $old16, old_idle17      ] {}
-void() old_idle17       =[      $old17, old_idle18      ] {}
-void() old_idle18       =[      $old18, old_idle19      ] {}
-void() old_idle19       =[      $old19, old_idle20      ] {}
-void() old_idle20       =[      $old20, old_idle21      ] {}
-void() old_idle21       =[      $old21, old_idle22      ] {}
-void() old_idle22       =[      $old22, old_idle23      ] {}
-void() old_idle23       =[      $old23, old_idle24      ] {}
-void() old_idle24       =[      $old24, old_idle25      ] {}
-void() old_idle25       =[      $old25, old_idle26      ] {}
-void() old_idle26       =[      $old26, old_idle27      ] {}
-void() old_idle27       =[      $old27, old_idle28      ] {}
-void() old_idle28       =[      $old28, old_idle29      ] {}
-void() old_idle29       =[      $old29, old_idle30      ] {}
-void() old_idle30       =[      $old30, old_idle31      ] {}
-void() old_idle31       =[      $old31, old_idle32      ] {}
-void() old_idle32       =[      $old32, old_idle33      ] {}
-void() old_idle33       =[      $old33, old_idle34      ] {}
-void() old_idle34       =[      $old34, old_idle35      ] {}
-void() old_idle35       =[      $old35, old_idle36      ] {}
-void() old_idle36       =[      $old36, old_idle37      ] {}
-void() old_idle37       =[      $old37, old_idle38      ] {}
-void() old_idle38       =[      $old38, old_idle39      ] {}
-void() old_idle39       =[      $old39, old_idle40      ] {}
-void() old_idle40       =[      $old40, old_idle41      ] {}
-void() old_idle41       =[      $old41, old_idle42      ] {}
-void() old_idle42       =[      $old42, old_idle43      ] {}
-void() old_idle43       =[      $old43, old_idle44      ] {}
-void() old_idle44       =[      $old44, old_idle45      ] {}
-void() old_idle45       =[      $old45, old_idle46      ] {}
-void() old_idle46       =[      $old46, old_idle1       ] {}
-
-
-void() old_thrash1        =[ $shake1,  old_thrash2       ] {lightstyle(0, "m");}
-void() old_thrash2        =[      $shake2,  old_thrash3       ] {lightstyle(0, "k");}
-void() old_thrash3        =[      $shake3,  old_thrash4       ] {lightstyle(0, "k");}
-void() old_thrash4        =[      $shake4,  old_thrash5       ] {lightstyle(0, "i");}
-void() old_thrash5        =[      $shake5,  old_thrash6       ] {lightstyle(0, "g");}
-void() old_thrash6        =[      $shake6,  old_thrash7       ] {lightstyle(0, "e");}
-void() old_thrash7        =[      $shake7,  old_thrash8       ] {lightstyle(0, "c");}
-void() old_thrash8        =[      $shake8,  old_thrash9       ] {lightstyle(0, "a");}
-void() old_thrash9        =[      $shake9,  old_thrash10      ] {lightstyle(0, "c");}
-void() old_thrash10       =[      $shake10, old_thrash11      ] {lightstyle(0, "e");}
-void() old_thrash11       =[      $shake11, old_thrash12      ] {lightstyle(0, "g");}
-void() old_thrash12       =[      $shake12, old_thrash13      ] {lightstyle(0, "i");}
-void() old_thrash13       =[      $shake13, old_thrash14      ] {lightstyle(0, "k");}
-void() old_thrash14       =[      $shake14, old_thrash15      ] {lightstyle(0, "m");}
-void old_thrash15       =[      $shake15, old_thrash16      ] {lightstyle(0, "m")();
-this.cnt = this.cnt + 1;
-if(this.cnt != 3)
-	setthink(this, old_thrash1);
+void old_thrash1(entity this);
+void old_thrash20(entity this) { set_anim(this, anim_old_shake20, old_thrash20); finale_4(this); }
+void old_thrash19(entity this) { set_anim(this, anim_old_shake19, old_thrash20); lightstyle(0, "a"); }
+void old_thrash18(entity this) { set_anim(this, anim_old_shake18, old_thrash19); lightstyle(0, "b"); }
+void old_thrash17(entity this) { set_anim(this, anim_old_shake17, old_thrash18); lightstyle(0, "c"); }
+void old_thrash16(entity this) { set_anim(this, anim_old_shake16, old_thrash17); lightstyle(0, "g"); }
+void old_thrash15(entity this)
+{
+	set_anim(this, anim_old_shake15, old_thrash16);
+	lightstyle(0, "m");
+	this.cnt += 1;
+	if(this.cnt < 3)
+		setthink(this, old_thrash1);
 }
-void() old_thrash16       =[      $shake16, old_thrash17      ] {lightstyle(0, "g");}
-void() old_thrash17       =[      $shake17, old_thrash18      ] {lightstyle(0, "c");}
-void() old_thrash18       =[      $shake18, old_thrash19      ] {lightstyle(0, "b");}
-void() old_thrash19       =[      $shake19, old_thrash20      ] {lightstyle(0, "a");}
-void() old_thrash20       =[      $shake20, old_thrash20      ] {finale_4();}
+void old_thrash14(entity this) { set_anim(this, anim_old_shake14, old_thrash15); lightstyle(0, "m"); }
+void old_thrash13(entity this) { set_anim(this, anim_old_shake13, old_thrash14); lightstyle(0, "k"); }
+void old_thrash12(entity this) { set_anim(this, anim_old_shake12, old_thrash13); lightstyle(0, "i"); }
+void old_thrash11(entity this) { set_anim(this, anim_old_shake11, old_thrash12); lightstyle(0, "g"); }
+void old_thrash10(entity this) { set_anim(this, anim_old_shake10, old_thrash11); lightstyle(0, "e"); }
+void old_thrash9(entity this) { set_anim(this, anim_old_shake9, old_thrash10); lightstyle(0, "c"); }
+void old_thrash8(entity this) { set_anim(this, anim_old_shake8, old_thrash9); lightstyle(0, "a"); }
+void old_thrash7(entity this) { set_anim(this, anim_old_shake7, old_thrash8); lightstyle(0, "c"); }
+void old_thrash6(entity this) { set_anim(this, anim_old_shake6, old_thrash7); lightstyle(0, "e"); }
+void old_thrash5(entity this) { set_anim(this, anim_old_shake5, old_thrash6); lightstyle(0, "g"); }
+void old_thrash4(entity this) { set_anim(this, anim_old_shake4, old_thrash5); lightstyle(0, "i"); }
+void old_thrash3(entity this) { set_anim(this, anim_old_shake3, old_thrash4); lightstyle(0, "k"); }
+void old_thrash2(entity this) { set_anim(this, anim_old_shake2, old_thrash3); lightstyle(0, "k"); }
+void old_thrash1(entity this) { set_anim(this, anim_old_shake1, old_thrash2); lightstyle(0, "m"); }
 
 //============================================================================
 
@@ -175,7 +236,7 @@ void finale_3(entity this)
 
 void finale_4(entity this)
 {
-	entity shub = this.owner;
+	//entity shub = this.owner;
 
 	// throw tons of meat chunks
 	_sound(this, CHAN_VOICE, "boss2/pop2.wav", 1, ATTN_NORM);
