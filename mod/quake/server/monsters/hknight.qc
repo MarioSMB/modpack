@@ -11,65 +11,203 @@ $origin 0 0 24
 $base base
 $skin skin
 
-$frame stand1 stand2 stand3 stand4 stand5 stand6 stand7 stand8 stand9
 
-$frame walk1 walk2 walk3 walk4 walk5 walk6 walk7 walk8 walk9
-$frame walk10 walk11 walk12 walk13 walk14 walk15 walk16 walk17
-$frame walk18 walk19 walk20
+const int anim_hknight_stand1 = 0;
+const int anim_hknight_stand2 = 1;
+const int anim_hknight_stand3 = 2;
+const int anim_hknight_stand4 = 3;
+const int anim_hknight_stand5 = 4;
+const int anim_hknight_stand6 = 5;
+const int anim_hknight_stand7 = 6;
+const int anim_hknight_stand8 = 7;
+const int anim_hknight_stand9 = 8;
 
-$frame run1 run2 run3 run4 run5 run6 run7 run8
+const int anim_hknight_walk1 = 9;
+const int anim_hknight_walk2 = 10;
+const int anim_hknight_walk3 = 11;
+const int anim_hknight_walk4 = 12;
+const int anim_hknight_walk5 = 13;
+const int anim_hknight_walk6 = 14;
+const int anim_hknight_walk7 = 15;
+const int anim_hknight_walk8 = 16;
+const int anim_hknight_walk9 = 17;
+const int anim_hknight_walk10 = 18;
+const int anim_hknight_walk11 = 19;
+const int anim_hknight_walk12 = 20;
+const int anim_hknight_walk13 = 21;
+const int anim_hknight_walk14 = 22;
+const int anim_hknight_walk15 = 23;
+const int anim_hknight_walk16 = 24;
+const int anim_hknight_walk17 = 25;
+const int anim_hknight_walk18 = 26;
+const int anim_hknight_walk19 = 27;
+const int anim_hknight_walk20 = 28;
 
-$frame pain1 pain2 pain3 pain4 pain5
+const int anim_hknight_run1 = 29;
+const int anim_hknight_run2 = 30;
+const int anim_hknight_run3 = 31;
+const int anim_hknight_run4 = 32;
+const int anim_hknight_run5 = 33;
+const int anim_hknight_run6 = 34;
+const int anim_hknight_run7 = 35;
+const int anim_hknight_run8 = 36;
 
-$frame death1 death2 death3 death4 death5 death6 death7 death8
-$frame death9 death10 death11 death12
+const int anim_hknight_pain1 = 37;
+const int anim_hknight_pain2 = 38;
+const int anim_hknight_pain3 = 39;
+const int anim_hknight_pain4 = 40;
+const int anim_hknight_pain5 = 41;
 
-$frame deathb1 deathb2 deathb3 deathb4 deathb5 deathb6 deathb7 deathb8
-$frame deathb9
+const int anim_hknight_death1 = 42;
+const int anim_hknight_death2 = 43;
+const int anim_hknight_death3 = 44;
+const int anim_hknight_death4 = 45;
+const int anim_hknight_death5 = 46;
+const int anim_hknight_death6 = 47;
+const int anim_hknight_death7 = 48;
+const int anim_hknight_death8 = 49;
+const int anim_hknight_death9 = 50;
+const int anim_hknight_death10 = 51;
+const int anim_hknight_death11 = 52;
+const int anim_hknight_death12 = 53;
 
-$frame char_a1 char_a2 char_a3 char_a4 char_a5 char_a6 char_a7 char_a8
-$frame char_a9 char_a10 char_a11 char_a12 char_a13 char_a14 char_a15 char_a16
+const int anim_hknight_deathb1 = 54;
+const int anim_hknight_deathb2 = 55;
+const int anim_hknight_deathb3 = 56;
+const int anim_hknight_deathb4 = 57;
+const int anim_hknight_deathb5 = 58;
+const int anim_hknight_deathb6 = 59;
+const int anim_hknight_deathb7 = 60;
+const int anim_hknight_deathb8 = 61;
+const int anim_hknight_deathb9 = 62;
 
-$frame magica1 magica2 magica3 magica4 magica5 magica6 magica7 magica8
-$frame magica9 magica10 magica11 magica12 magica13 magica14
+const int anim_hknight_char_a1 = 63;
+const int anim_hknight_char_a2 = 64;
+const int anim_hknight_char_a3 = 65;
+const int anim_hknight_char_a4 = 66;
+const int anim_hknight_char_a5 = 67;
+const int anim_hknight_char_a6 = 68;
+const int anim_hknight_char_a7 = 69;
+const int anim_hknight_char_a8 = 70;
+const int anim_hknight_char_a9 = 71;
+const int anim_hknight_char_a10 = 72;
+const int anim_hknight_char_a11 = 73;
+const int anim_hknight_char_a12 = 74;
+const int anim_hknight_char_a13 = 75;
+const int anim_hknight_char_a14 = 76;
+const int anim_hknight_char_a15 = 77;
+const int anim_hknight_char_a16 = 78;
 
-$frame magicb1 magicb2 magicb3 magicb4 magicb5 magicb6 magicb7 magicb8
-$frame magicb9 magicb10 magicb11 magicb12 magicb13
+const int anim_hknight_magica1 = 79;
+const int anim_hknight_magica2 = 80;
+const int anim_hknight_magica3 = 81;
+const int anim_hknight_magica4 = 82;
+const int anim_hknight_magica5 = 83;
+const int anim_hknight_magica6 = 84;
+const int anim_hknight_magica7 = 85;
+const int anim_hknight_magica8 = 86;
+const int anim_hknight_magica9 = 87;
+const int anim_hknight_magica10 = 88;
+const int anim_hknight_magica11 = 89;
+const int anim_hknight_magica12 = 90;
+const int anim_hknight_magica13 = 91;
+const int anim_hknight_magica14 = 92;
 
-$frame char_b1 char_b2 char_b3 char_b4 char_b5 char_b6
+const int anim_hknight_magicb1 = 93;
+const int anim_hknight_magicb2 = 94;
+const int anim_hknight_magicb3 = 95;
+const int anim_hknight_magicb4 = 96;
+const int anim_hknight_magicb5 = 97;
+const int anim_hknight_magicb6 = 98;
+const int anim_hknight_magicb7 = 99;
+const int anim_hknight_magicb8 = 100;
+const int anim_hknight_magicb9 = 101;
+const int anim_hknight_magicb10 = 102;
+const int anim_hknight_magicb11 = 103;
+const int anim_hknight_magicb12 = 104;
+const int anim_hknight_magicb13 = 105;
 
-$frame slice1 slice2 slice3 slice4 slice5 slice6 slice7 slice8 slice9 slice10
+const int anim_hknight_char_b1 = 106;
+const int anim_hknight_char_b2 = 107;
+const int anim_hknight_char_b3 = 108;
+const int anim_hknight_char_b4 = 109;
+const int anim_hknight_char_b5 = 110;
+const int anim_hknight_char_b6 = 111;
 
-$frame smash1 smash2 smash3 smash4 smash5 smash6 smash7 smash8 smash9 smash10
-$frame smash11
+const int anim_hknight_slice1 = 112;
+const int anim_hknight_slice2 = 113;
+const int anim_hknight_slice3 = 114;
+const int anim_hknight_slice4 = 115;
+const int anim_hknight_slice5 = 116;
+const int anim_hknight_slice6 = 117;
+const int anim_hknight_slice7 = 118;
+const int anim_hknight_slice8 = 119;
+const int anim_hknight_slice9 = 120;
+const int anim_hknight_slice10 = 121;
 
-$frame w_attack1 w_attack2 w_attack3 w_attack4 w_attack5 w_attack6 w_attack7 
-$frame w_attack8 w_attack9 w_attack10 w_attack11 w_attack12 w_attack13 w_attack14
-$frame w_attack15 w_attack16 w_attack17 w_attack18 w_attack19 w_attack20 
-$frame w_attack21 w_attack22 
+const int anim_hknight_smash1 = 122;
+const int anim_hknight_smash2 = 123;
+const int anim_hknight_smash3 = 124;
+const int anim_hknight_smash4 = 125;
+const int anim_hknight_smash5 = 126;
+const int anim_hknight_smash6 = 127;
+const int anim_hknight_smash7 = 128;
+const int anim_hknight_smash8 = 129;
+const int anim_hknight_smash9 = 130;
+const int anim_hknight_smash10 = 131;
+const int anim_hknight_smash11 = 132;
 
-$frame magicc1 magicc2 magicc3 magicc4 magicc5 magicc6 magicc7 magicc8
-$frame magicc9 magicc10 magicc11
+const int anim_hknight_w_attack1 = 133;
+const int anim_hknight_w_attack2 = 134;
+const int anim_hknight_w_attack3 = 135;
+const int anim_hknight_w_attack4 = 136;
+const int anim_hknight_w_attack5 = 137;
+const int anim_hknight_w_attack6 = 138;
+const int anim_hknight_w_attack7 = 139;
+const int anim_hknight_w_attack8 = 140;
+const int anim_hknight_w_attack9 = 141;
+const int anim_hknight_w_attack10 = 142;
+const int anim_hknight_w_attack11 = 143;
+const int anim_hknight_w_attack12 = 144;
+const int anim_hknight_w_attack13 = 145;
+const int anim_hknight_w_attack14 = 146;
+const int anim_hknight_w_attack15 = 147;
+const int anim_hknight_w_attack16 = 148;
+const int anim_hknight_w_attack17 = 149;
+const int anim_hknight_w_attack18 = 150;
+const int anim_hknight_w_attack19 = 151;
+const int anim_hknight_w_attack20 = 152;
+const int anim_hknight_w_attack21 = 153;
+const int anim_hknight_w_attack22 = 154;
+
+const int anim_hknight_magicc1 = 155;
+const int anim_hknight_magicc2 = 156;
+const int anim_hknight_magicc3 = 157;
+const int anim_hknight_magicc4 = 158;
+const int anim_hknight_magicc5 = 159;
+const int anim_hknight_magicc6 = 160;
+const int anim_hknight_magicc7 = 161;
+const int anim_hknight_magicc8 = 162;
+const int anim_hknight_magicc9 = 163;
+const int anim_hknight_magicc10 = 164;
+const int anim_hknight_magicc11 = 165;
 
 
-void hknight_char_a1();
-void hknight_run1();
-void hk_idle__sound(entity this);
+void hknight_char_a1(entity this);
+void hknight_run1(entity this);
+void hk_idle_sound(entity this);
 
 void hknight_shot(entity this, float offset)
 {
-	vector	offang;
-	vector	org, vec;
-	
-	offang = vectoangles(this.enemy.origin - this.origin);
+	vector offang = vectoangles(this.enemy.origin - this.origin);
 	offang_y = offang_y + offset * 6;
 	
 	makevectors(offang);
 
-	org = this.origin + this.mins + this.size*0.5 + v_forward * 20;
+	vector org = this.origin + this.mins + this.size*0.5 + v_forward * 20;
 
 // set missile speed
-	vec = normalize(v_forward);
+	vector vec = normalize(v_forward);
 	vec_z = 0 - vec_z +(random() - 0.5)*0.1;
 	
 	entity newmis = launch_spike(this, org, vec);
@@ -94,16 +232,17 @@ void CheckForCharge(entity this)
 
 // charge		
 	SUB_AttackFinished(this, 2);
-	hknight_char_a1();
+	hknight_char_a1(this);
 
 }
 
+void hknight_run1(entity this);
 void CheckContinueCharge(entity this)
 {
 	if(time > this.attack_finished)
 	{
 		SUB_AttackFinished(this, 3);
-		hknight_run1();
+		hknight_run1(this);
 		return;		// done charging
 	}
 	if(random() > 0.5)
@@ -114,88 +253,85 @@ void CheckContinueCharge(entity this)
 
 //===========================================================================
 
-void(entity this)	hknight_stand1	=[	$stand1,	hknight_stand2	] {ai_stand(this);}
-void()	hknight_stand2	=[	$stand2,	hknight_stand3	] {ai_stand(this);}
-void()	hknight_stand3	=[	$stand3,	hknight_stand4	] {ai_stand(this);}
-void()	hknight_stand4	=[	$stand4,	hknight_stand5	] {ai_stand(this);}
-void()	hknight_stand5	=[	$stand5,	hknight_stand6	] {ai_stand(this);}
-void()	hknight_stand6	=[	$stand6,	hknight_stand7	] {ai_stand(this);}
-void()	hknight_stand7	=[	$stand7,	hknight_stand8	] {ai_stand(this);}
-void()	hknight_stand8	=[	$stand8,	hknight_stand9	] {ai_stand(this);}
-void()	hknight_stand9	=[	$stand9,	hknight_stand1	] {ai_stand(this);}
+void hknight_stand1(entity this);
+void hknight_stand9(entity this) { set_anim(this, anim_hknight_stand9, hknight_stand1); ai_stand(this); }
+void hknight_stand8(entity this) { set_anim(this, anim_hknight_stand8, hknight_stand9); ai_stand(this); }
+void hknight_stand7(entity this) { set_anim(this, anim_hknight_stand7, hknight_stand8); ai_stand(this); }
+void hknight_stand6(entity this) { set_anim(this, anim_hknight_stand6, hknight_stand7); ai_stand(this); }
+void hknight_stand5(entity this) { set_anim(this, anim_hknight_stand5, hknight_stand6); ai_stand(this); }
+void hknight_stand4(entity this) { set_anim(this, anim_hknight_stand4, hknight_stand5); ai_stand(this); }
+void hknight_stand3(entity this) { set_anim(this, anim_hknight_stand3, hknight_stand4); ai_stand(this); }
+void hknight_stand2(entity this) { set_anim(this, anim_hknight_stand2, hknight_stand3); ai_stand(this); }
+void hknight_stand1(entity this) { set_anim(this, anim_hknight_stand1, hknight_stand2); ai_stand(this); }
 
 //===========================================================================
 
-void()	hknight_walk1	=[	$walk1,		hknight_walk2	] {
-hk_idle__sound(this);
-ai_walk(2);}
-void()	hknight_walk2	=[	$walk2,		hknight_walk3	] {ai_walk(5);}
-void()	hknight_walk3	=[	$walk3,		hknight_walk4	] {ai_walk(5);}
-void()	hknight_walk4	=[	$walk4,		hknight_walk5	] {ai_walk(4);}
-void()	hknight_walk5	=[	$walk5,		hknight_walk6	] {ai_walk(4);}
-void()	hknight_walk6	=[	$walk6,		hknight_walk7	] {ai_walk(2);}
-void()	hknight_walk7	=[	$walk7,		hknight_walk8	] {ai_walk(2);}
-void()	hknight_walk8	=[	$walk8,		hknight_walk9	] {ai_walk(3);}
-void()	hknight_walk9	=[	$walk9,		hknight_walk10	] {ai_walk(3);}
-void()	hknight_walk10	=[	$walk10,	hknight_walk11	] {ai_walk(4);}
-void()	hknight_walk11	=[	$walk11,	hknight_walk12	] {ai_walk(3);}
-void()	hknight_walk12	=[	$walk12,	hknight_walk13	] {ai_walk(4);}
-void()	hknight_walk13	=[	$walk13,	hknight_walk14	] {ai_walk(6);}
-void()	hknight_walk14	=[	$walk14,	hknight_walk15	] {ai_walk(2);}
-void()	hknight_walk15	=[	$walk15,	hknight_walk16	] {ai_walk(2);}
-void()	hknight_walk16	=[	$walk16,	hknight_walk17	] {ai_walk(4);}
-void()	hknight_walk17	=[	$walk17,	hknight_walk18	] {ai_walk(3);}
-void()	hknight_walk18	=[	$walk18,	hknight_walk19	] {ai_walk(3);}
-void()	hknight_walk19	=[	$walk19,	hknight_walk20	] {ai_walk(3);}
-void()	hknight_walk20	=[	$walk20,	hknight_walk1	] {ai_walk(2);}
+void hknight_walk1(entity this);
+void hknight_walk20(entity this) { set_anim(this, anim_hknight_walk20, hknight_walk1); ai_walk(this, 2); }
+void hknight_walk19(entity this) { set_anim(this, anim_hknight_walk19, hknight_walk20); ai_walk(this, 3); }
+void hknight_walk18(entity this) { set_anim(this, anim_hknight_walk18, hknight_walk19); ai_walk(this, 3); }
+void hknight_walk17(entity this) { set_anim(this, anim_hknight_walk17, hknight_walk18); ai_walk(this, 3); }
+void hknight_walk16(entity this) { set_anim(this, anim_hknight_walk16, hknight_walk17); ai_walk(this, 4); }
+void hknight_walk15(entity this) { set_anim(this, anim_hknight_walk15, hknight_walk16); ai_walk(this, 2); }
+void hknight_walk14(entity this) { set_anim(this, anim_hknight_walk14, hknight_walk15); ai_walk(this, 2); }
+void hknight_walk13(entity this) { set_anim(this, anim_hknight_walk13, hknight_walk14); ai_walk(this, 6); }
+void hknight_walk12(entity this) { set_anim(this, anim_hknight_walk12, hknight_walk13); ai_walk(this, 4); }
+void hknight_walk11(entity this) { set_anim(this, anim_hknight_walk11, hknight_walk12); ai_walk(this, 3); }
+void hknight_walk10(entity this) { set_anim(this, anim_hknight_walk10, hknight_walk11); ai_walk(this, 4); }
+void hknight_walk9(entity this) { set_anim(this, anim_hknight_walk9, hknight_walk10); ai_walk(this, 3); }
+void hknight_walk8(entity this) { set_anim(this, anim_hknight_walk8, hknight_walk9); ai_walk(this, 3); }
+void hknight_walk7(entity this) { set_anim(this, anim_hknight_walk7, hknight_walk8); ai_walk(this, 2); }
+void hknight_walk6(entity this) { set_anim(this, anim_hknight_walk6, hknight_walk7); ai_walk(this, 2); }
+void hknight_walk5(entity this) { set_anim(this, anim_hknight_walk5, hknight_walk6); ai_walk(this, 4); }
+void hknight_walk4(entity this) { set_anim(this, anim_hknight_walk4, hknight_walk5); ai_walk(this, 4); }
+void hknight_walk3(entity this) { set_anim(this, anim_hknight_walk3, hknight_walk4); ai_walk(this, 5); }
+void hknight_walk2(entity this) { set_anim(this, anim_hknight_walk2, hknight_walk3); ai_walk(this, 5); }
+void hknight_walk1(entity this) { set_anim(this, anim_hknight_walk1, hknight_walk2); hk_idle_sound(this); ai_walk(this, 2); }
 
 //===========================================================================
 
-void()	hknight_run1	=[	$run1,		hknight_run2	] {
-hk_idle__sound(this);
-ai_run(20); CheckForCharge(this); }
-void()	hknight_run2	=[	$run2,		hknight_run3	] {ai_run(25);}
-void()	hknight_run3	=[	$run3,		hknight_run4	] {ai_run(18);}
-void()	hknight_run4	=[	$run4,		hknight_run5	] {ai_run(16);}
-void()	hknight_run5	=[	$run5,		hknight_run6	] {ai_run(14);}
-void()	hknight_run6	=[	$run6,		hknight_run7	] {ai_run(25);}
-void()	hknight_run7	=[	$run7,		hknight_run8	] {ai_run(21);}
-void()	hknight_run8	=[	$run8,		hknight_run1	] {ai_run(13);}
+void hknight_run1(entity this);
+void hknight_run8(entity this) { set_anim(this, anim_hknight_run8, hknight_run1); ai_run(this, 13); }
+void hknight_run7(entity this) { set_anim(this, anim_hknight_run7, hknight_run8); ai_run(this, 21); }
+void hknight_run6(entity this) { set_anim(this, anim_hknight_run6, hknight_run7); ai_run(this, 25); }
+void hknight_run5(entity this) { set_anim(this, anim_hknight_run5, hknight_run6); ai_run(this, 14); }
+void hknight_run4(entity this) { set_anim(this, anim_hknight_run4, hknight_run5); ai_run(this, 16); }
+void hknight_run3(entity this) { set_anim(this, anim_hknight_run3, hknight_run4); ai_run(this, 18); }
+void hknight_run2(entity this) { set_anim(this, anim_hknight_run2, hknight_run3); ai_run(this, 25); }
+void hknight_run1(entity this) { set_anim(this, anim_hknight_run1, hknight_run2); hk_idle_sound(this); ai_run(this, 20); CheckForCharge(this); }
 
 //============================================================================
 
-void()	hknight_pain1	=[	$pain1,		hknight_pain2	] {_sound(this, CHAN_VOICE, "hknight/pain1.wav", 1, ATTN_NORM);}
-void()	hknight_pain2	=[	$pain2,		hknight_pain3	] {}
-void()	hknight_pain3	=[	$pain3,		hknight_pain4	] {}
-void()	hknight_pain4	=[	$pain4,		hknight_pain5	] {}
-void()	hknight_pain5	=[	$pain5,		hknight_run1	] {}
+void hknight_pain5(entity this) { set_anim(this, anim_hknight_pain5, hknight_run1); }
+void hknight_pain4(entity this) { set_anim(this, anim_hknight_pain4, hknight_pain5); }
+void hknight_pain3(entity this) { set_anim(this, anim_hknight_pain3, hknight_pain4); }
+void hknight_pain2(entity this) { set_anim(this, anim_hknight_pain2, hknight_pain3); }
+void hknight_pain1(entity this) { set_anim(this, anim_hknight_pain1, hknight_pain2); _sound(this, CHAN_VOICE, "hknight/pain1.wav", 1, ATTN_NORM); }
 
 //============================================================================
 
-void()	hknight_die1	=[	$death1,	hknight_die2	] {ai_forward(10);}
-void()	hknight_die2	=[	$death2,	hknight_die3	] {ai_forward(8);}
-void()	hknight_die3	=[	$death3,	hknight_die4	]
-{this.solid = SOLID_NOT; ai_forward(7);}
-void()	hknight_die4	=[	$death4,	hknight_die5	] {}
-void()	hknight_die5	=[	$death5,	hknight_die6	] {}
-void()	hknight_die6	=[	$death6,	hknight_die7	] {}
-void()	hknight_die7	=[	$death7,	hknight_die8	] {}
-void()	hknight_die8	=[	$death8,	hknight_die9	] {ai_forward(10);}
-void()	hknight_die9	=[	$death9,	hknight_die10	] {ai_forward(11);}
-void()	hknight_die10	=[	$death10,	hknight_die11	] {}
-void()	hknight_die11	=[	$death11,	hknight_die12	] {}
-void()	hknight_die12	=[	$death12,	hknight_die12	] {}
+void hknight_die12(entity this) { set_anim(this, anim_hknight_death12, hknight_die12); }
+void hknight_die11(entity this) { set_anim(this, anim_hknight_death11, hknight_die12); }
+void hknight_die10(entity this) { set_anim(this, anim_hknight_death10, hknight_die11); }
+void hknight_die9(entity this) { set_anim(this, anim_hknight_death9, hknight_die10); ai_forward(this, 11); }
+void hknight_die8(entity this) { set_anim(this, anim_hknight_death8, hknight_die9); ai_forward(this, 10); }
+void hknight_die7(entity this) { set_anim(this, anim_hknight_death7, hknight_die8); }
+void hknight_die6(entity this) { set_anim(this, anim_hknight_death6, hknight_die7); }
+void hknight_die5(entity this) { set_anim(this, anim_hknight_death5, hknight_die6); }
+void hknight_die4(entity this) { set_anim(this, anim_hknight_death4, hknight_die5); }
+void hknight_die3(entity this) { set_anim(this, anim_hknight_death3, hknight_die4); this.solid = SOLID_NOT; ai_forward(this, 7); }
+void hknight_die2(entity this) { set_anim(this, anim_hknight_death2, hknight_die3); ai_forward(this, 8); }
+void hknight_die1(entity this) { set_anim(this, anim_hknight_death1, hknight_die2); ai_forward(this, 10); }
 
-void()	hknight_dieb1	=[	$deathb1,	hknight_dieb2	] {}
-void()	hknight_dieb2	=[	$deathb2,	hknight_dieb3	] {}
-void()	hknight_dieb3	=[	$deathb3,	hknight_dieb4	]
-{this.solid = SOLID_NOT;}
-void()	hknight_dieb4	=[	$deathb4,	hknight_dieb5	] {}
-void()	hknight_dieb5	=[	$deathb5,	hknight_dieb6	] {}
-void()	hknight_dieb6	=[	$deathb6,	hknight_dieb7	] {}
-void()	hknight_dieb7	=[	$deathb7,	hknight_dieb8	] {}
-void()	hknight_dieb8	=[	$deathb8,	hknight_dieb9	] {}
-void()	hknight_dieb9	=[	$deathb9,	hknight_dieb9	] {}
+void hknight_dieb9(entity this) { set_anim(this, anim_hknight_deathb9, hknight_dieb9); }
+void hknight_dieb8(entity this) { set_anim(this, anim_hknight_deathb8, hknight_dieb9); }
+void hknight_dieb7(entity this) { set_anim(this, anim_hknight_deathb7, hknight_dieb8); }
+void hknight_dieb6(entity this) { set_anim(this, anim_hknight_deathb6, hknight_dieb7); }
+void hknight_dieb5(entity this) { set_anim(this, anim_hknight_deathb5, hknight_dieb6); }
+void hknight_dieb4(entity this) { set_anim(this, anim_hknight_deathb4, hknight_dieb5); }
+void hknight_dieb3(entity this) { set_anim(this, anim_hknight_deathb3, hknight_dieb4); this.solid = SOLID_NOT; }
+void hknight_dieb2(entity this) { set_anim(this, anim_hknight_deathb2, hknight_dieb3); }
+void hknight_dieb1(entity this) { set_anim(this, anim_hknight_deathb1, hknight_dieb2); }
 
 void hknight_die(entity this, entity attacker)
 {
@@ -213,143 +349,143 @@ void hknight_die(entity this, entity attacker)
 // regular death
 	_sound(this, CHAN_VOICE, "hknight/death1.wav", 1, ATTN_NORM);
 	if(random() > 0.5)
-		hknight_die1();
+		hknight_die1(this);
 	else
-		hknight_dieb1();
+		hknight_dieb1(this);
 }
 
 
 //============================================================================
 
-void()	hknight_magica1 =[	$magica1,	hknight_magica2	] {ai_face(this);}
-void()	hknight_magica2 =[	$magica2,	hknight_magica3	] {ai_face(this);}
-void()	hknight_magica3 =[	$magica3,	hknight_magica4	] {ai_face(this);}
-void()	hknight_magica4 =[	$magica4,	hknight_magica5	] {ai_face(this);}
-void()	hknight_magica5 =[	$magica5,	hknight_magica6	] {ai_face(this);}
-void()	hknight_magica6 =[	$magica6,	hknight_magica7	] {ai_face(this);}
-void()	hknight_magica7 =[	$magica7,	hknight_magica8	] {hknight_shot(this, -2);}
-void()	hknight_magica8 =[	$magica8,	hknight_magica9	] {hknight_shot(this, -1);}
-void()	hknight_magica9 =[	$magica9,	hknight_magica10] {hknight_shot(this, 0);}
-void()	hknight_magica10 =[	$magica10,	hknight_magica11] {hknight_shot(this, 1);}
-void()	hknight_magica11 =[	$magica11,	hknight_magica12] {hknight_shot(this, 2);}
-void()	hknight_magica12 =[	$magica12,	hknight_magica13] {hknight_shot(this, 3);}
-void()	hknight_magica13 =[	$magica13,	hknight_magica14] {ai_face(this);}
-void()	hknight_magica14 =[	$magica14,	hknight_run1	] {ai_face(this);}
+void hknight_magica14(entity this) { set_anim(this, anim_hknight_magica14, hknight_run1); ai_face(this); }
+void hknight_magica13(entity this) { set_anim(this, anim_hknight_magica13, hknight_magica14); ai_face(this); }
+void hknight_magica12(entity this) { set_anim(this, anim_hknight_magica12, hknight_magica13); hknight_shot(this, 3); }
+void hknight_magica11(entity this) { set_anim(this, anim_hknight_magica11, hknight_magica12); hknight_shot(this, 2); }
+void hknight_magica10(entity this) { set_anim(this, anim_hknight_magica10, hknight_magica11); hknight_shot(this, 1); }
+void hknight_magica9(entity this) { set_anim(this, anim_hknight_magica9, hknight_magica10); hknight_shot(this, 0); }
+void hknight_magica8(entity this) { set_anim(this, anim_hknight_magica8, hknight_magica9); hknight_shot(this, -1); }
+void hknight_magica7(entity this) { set_anim(this, anim_hknight_magica7, hknight_magica8); hknight_shot(this, -2); }
+void hknight_magica6(entity this) { set_anim(this, anim_hknight_magica6, hknight_magica7); ai_face(this); }
+void hknight_magica5(entity this) { set_anim(this, anim_hknight_magica5, hknight_magica6); ai_face(this); }
+void hknight_magica4(entity this) { set_anim(this, anim_hknight_magica4, hknight_magica5); ai_face(this); }
+void hknight_magica3(entity this) { set_anim(this, anim_hknight_magica3, hknight_magica4); ai_face(this); }
+void hknight_magica2(entity this) { set_anim(this, anim_hknight_magica2, hknight_magica3); ai_face(this); }
+void hknight_magica1(entity this) { set_anim(this, anim_hknight_magica1, hknight_magica2); ai_face(this); }
 
 //============================================================================
 
-void()	hknight_magicb1 =[	$magicb1,	hknight_magicb2	] {ai_face(this);}
-void()	hknight_magicb2 =[	$magicb2,	hknight_magicb3	] {ai_face(this);}
-void()	hknight_magicb3 =[	$magicb3,	hknight_magicb4	] {ai_face(this);}
-void()	hknight_magicb4 =[	$magicb4,	hknight_magicb5	] {ai_face(this);}
-void()	hknight_magicb5 =[	$magicb5,	hknight_magicb6	] {ai_face(this);}
-void()	hknight_magicb6 =[	$magicb6,	hknight_magicb7	] {ai_face(this);}
-void()	hknight_magicb7 =[	$magicb7,	hknight_magicb8	] {hknight_shot(this, -2);}
-void()	hknight_magicb8 =[	$magicb8,	hknight_magicb9	] {hknight_shot(this, -1);}
-void()	hknight_magicb9 =[	$magicb9,	hknight_magicb10] {hknight_shot(this, 0);}
-void()	hknight_magicb10 =[	$magicb10,	hknight_magicb11] {hknight_shot(this, 1);}
-void()	hknight_magicb11 =[	$magicb11,	hknight_magicb12] {hknight_shot(this, 2);}
-void()	hknight_magicb12 =[	$magicb12,	hknight_magicb13] {hknight_shot(this, 3);}
-void()	hknight_magicb13 =[	$magicb13,	hknight_run1] {ai_face(this);}
+void hknight_magicb13(entity this) { set_anim(this, anim_hknight_magicb13, hknight_run1); ai_face(this); }
+void hknight_magicb12(entity this) { set_anim(this, anim_hknight_magicb12, hknight_magicb13); hknight_shot(this, 3); }
+void hknight_magicb11(entity this) { set_anim(this, anim_hknight_magicb11, hknight_magicb12); hknight_shot(this, 2); }
+void hknight_magicb10(entity this) { set_anim(this, anim_hknight_magicb10, hknight_magicb11); hknight_shot(this, 1); }
+void hknight_magicb9(entity this) { set_anim(this, anim_hknight_magicb9, hknight_magicb10); hknight_shot(this, 0); }
+void hknight_magicb8(entity this) { set_anim(this, anim_hknight_magicb8, hknight_magicb9); hknight_shot(this, -1); }
+void hknight_magicb7(entity this) { set_anim(this, anim_hknight_magicb7, hknight_magicb8); hknight_shot(this, -2); }
+void hknight_magicb6(entity this) { set_anim(this, anim_hknight_magicb6, hknight_magicb7); ai_face(this); }
+void hknight_magicb5(entity this) { set_anim(this, anim_hknight_magicb5, hknight_magicb6); ai_face(this); }
+void hknight_magicb4(entity this) { set_anim(this, anim_hknight_magicb4, hknight_magicb5); ai_face(this); }
+void hknight_magicb3(entity this) { set_anim(this, anim_hknight_magicb3, hknight_magicb4); ai_face(this); }
+void hknight_magicb2(entity this) { set_anim(this, anim_hknight_magicb2, hknight_magicb3); ai_face(this); }
+void hknight_magicb1(entity this) { set_anim(this, anim_hknight_magicb1, hknight_magicb2); ai_face(this); }
 
 //============================================================================
 
-void()	hknight_magicc1 =[	$magicc1,	hknight_magicc2	] {ai_face(this);}
-void()	hknight_magicc2 =[	$magicc2,	hknight_magicc3	] {ai_face(this);}
-void()	hknight_magicc3 =[	$magicc3,	hknight_magicc4	] {ai_face(this);}
-void()	hknight_magicc4 =[	$magicc4,	hknight_magicc5	] {ai_face(this);}
-void()	hknight_magicc5 =[	$magicc5,	hknight_magicc6	] {ai_face(this);}
-void()	hknight_magicc6 =[	$magicc6,	hknight_magicc7	] {hknight_shot(this, -2);}
-void()	hknight_magicc7 =[	$magicc7,	hknight_magicc8	] {hknight_shot(this, -1);}
-void()	hknight_magicc8 =[	$magicc8,	hknight_magicc9	] {hknight_shot(this, 0);}
-void()	hknight_magicc9 =[	$magicc9,	hknight_magicc10] {hknight_shot(this, 1);}
-void()	hknight_magicc10 =[	$magicc10,	hknight_magicc11] {hknight_shot(this, 2);}
-void()	hknight_magicc11 =[	$magicc11,	hknight_run1] {hknight_shot(this, 3);}
+void hknight_magicc11(entity this) { set_anim(this, anim_hknight_magicc11, hknight_run1); hknight_shot(this, 3); }
+void hknight_magicc10(entity this) { set_anim(this, anim_hknight_magicc10, hknight_magicc11); hknight_shot(this, 2); }
+void hknight_magicc9(entity this) { set_anim(this, anim_hknight_magicc9, hknight_magicc10); hknight_shot(this, 1); }
+void hknight_magicc8(entity this) { set_anim(this, anim_hknight_magicc8, hknight_magicc9); hknight_shot(this, 0); }
+void hknight_magicc7(entity this) { set_anim(this, anim_hknight_magicc7, hknight_magicc8); hknight_shot(this, -1); }
+void hknight_magicc6(entity this) { set_anim(this, anim_hknight_magicc6, hknight_magicc7); hknight_shot(this, -2); }
+void hknight_magicc5(entity this) { set_anim(this, anim_hknight_magicc5, hknight_magicc6); ai_face(this); }
+void hknight_magicc4(entity this) { set_anim(this, anim_hknight_magicc4, hknight_magicc5); ai_face(this); }
+void hknight_magicc3(entity this) { set_anim(this, anim_hknight_magicc3, hknight_magicc4); ai_face(this); }
+void hknight_magicc2(entity this) { set_anim(this, anim_hknight_magicc2, hknight_magicc3); ai_face(this); }
+void hknight_magicc1(entity this) { set_anim(this, anim_hknight_magicc1, hknight_magicc2); ai_face(this); }
 
 //===========================================================================
 
-void()	hknight_char_a1	=[	$char_a1,	hknight_char_a2	] {ai_charge(this, 20);}
-void()	hknight_char_a2	=[	$char_a2,	hknight_char_a3	] {ai_charge(this, 25);}
-void()	hknight_char_a3	=[	$char_a3,	hknight_char_a4	] {ai_charge(this, 18);}
-void()	hknight_char_a4	=[	$char_a4,	hknight_char_a5	] {ai_charge(this, 16);}
-void()	hknight_char_a5	=[	$char_a5,	hknight_char_a6	] {ai_charge(this, 14);}
-void()	hknight_char_a6	=[	$char_a6,	hknight_char_a7	] {ai_charge(this, 20); ai_melee(this);}
-void()	hknight_char_a7	=[	$char_a7,	hknight_char_a8	] {ai_charge(this, 21); ai_melee(this);}
-void()	hknight_char_a8	=[	$char_a8,	hknight_char_a9	] {ai_charge(this, 13); ai_melee(this);}
-void()	hknight_char_a9	=[	$char_a9,	hknight_char_a10	] {ai_charge(this, 20); ai_melee(this);}
-void()	hknight_char_a10=[	$char_a10,	hknight_char_a11	] {ai_charge(this, 20); ai_melee(this);}
-void()	hknight_char_a11=[	$char_a11,	hknight_char_a12	] {ai_charge(this, 18); ai_melee(this);}
-void()	hknight_char_a12=[	$char_a12,	hknight_char_a13	] {ai_charge(this, 16);}
-void()	hknight_char_a13=[	$char_a13,	hknight_char_a14	] {ai_charge(this, 14);}
-void()	hknight_char_a14=[	$char_a14,	hknight_char_a15	] {ai_charge(this, 25);}
-void()	hknight_char_a15=[	$char_a15,	hknight_char_a16	] {ai_charge(this, 21);}
-void()	hknight_char_a16=[	$char_a16,	hknight_run1	] {ai_charge(this, 13);}
+void hknight_char_a16(entity this) { set_anim(this, anim_hknight_char_a16, hknight_run1); ai_charge(this, 13); }
+void hknight_char_a15(entity this) { set_anim(this, anim_hknight_char_a15, hknight_char_a16); ai_charge(this, 21); }
+void hknight_char_a14(entity this) { set_anim(this, anim_hknight_char_a14, hknight_char_a15); ai_charge(this, 25); }
+void hknight_char_a13(entity this) { set_anim(this, anim_hknight_char_a13, hknight_char_a14); ai_charge(this, 14); }
+void hknight_char_a12(entity this) { set_anim(this, anim_hknight_char_a12, hknight_char_a13); ai_charge(this, 16); }
+void hknight_char_a11(entity this) { set_anim(this, anim_hknight_char_a11, hknight_char_a12); ai_charge(this, 18); ai_melee(this); }
+void hknight_char_a10(entity this) { set_anim(this, anim_hknight_char_a10, hknight_char_a11); ai_charge(this, 20); ai_melee(this); }
+void hknight_char_a9(entity this) { set_anim(this, anim_hknight_char_a9, hknight_char_a10); ai_charge(this, 20); ai_melee(this); }
+void hknight_char_a8(entity this) { set_anim(this, anim_hknight_char_a8, hknight_char_a9); ai_charge(this, 13); ai_melee(this); }
+void hknight_char_a7(entity this) { set_anim(this, anim_hknight_char_a7, hknight_char_a8); ai_charge(this, 21); ai_melee(this); }
+void hknight_char_a6(entity this) { set_anim(this, anim_hknight_char_a6, hknight_char_a7); ai_charge(this, 20); ai_melee(this); }
+void hknight_char_a5(entity this) { set_anim(this, anim_hknight_char_a5, hknight_char_a6); ai_charge(this, 14); }
+void hknight_char_a4(entity this) { set_anim(this, anim_hknight_char_a4, hknight_char_a5); ai_charge(this, 16); }
+void hknight_char_a3(entity this) { set_anim(this, anim_hknight_char_a3, hknight_char_a4); ai_charge(this, 18); }
+void hknight_char_a2(entity this) { set_anim(this, anim_hknight_char_a2, hknight_char_a3); ai_charge(this, 25); }
+void hknight_char_a1(entity this) { set_anim(this, anim_hknight_char_a1, hknight_char_a2); ai_charge(this, 20); }
 
 //===========================================================================
 
-void()	hknight_char_b1	=[	$char_b1,	hknight_char_b2	]
-{CheckContinueCharge(this); ai_charge(this, 23); ai_melee(this);}
-void()	hknight_char_b2	=[	$char_b2,	hknight_char_b3	] {ai_charge(this, 17); ai_melee(this);}
-void()	hknight_char_b3	=[	$char_b3,	hknight_char_b4	] {ai_charge(this, 12); ai_melee(this);}
-void()	hknight_char_b4	=[	$char_b4,	hknight_char_b5	] {ai_charge(this, 22); ai_melee(this);}
-void()	hknight_char_b5	=[	$char_b5,	hknight_char_b6	] {ai_charge(this, 18); ai_melee(this);}
-void()	hknight_char_b6	=[	$char_b6,	hknight_char_b1	] {ai_charge(this, 8); ai_melee(this);}
+void hknight_char_b1(entity this);
+void hknight_char_b6(entity this) { set_anim(this, anim_hknight_char_b6, hknight_char_b1); ai_charge(this, 8); ai_melee(this); }
+void hknight_char_b5(entity this) { set_anim(this, anim_hknight_char_b5, hknight_char_b6); ai_charge(this, 18); ai_melee(this); }
+void hknight_char_b4(entity this) { set_anim(this, anim_hknight_char_b4, hknight_char_b5); ai_charge(this, 22); ai_melee(this); }
+void hknight_char_b3(entity this) { set_anim(this, anim_hknight_char_b3, hknight_char_b4); ai_charge(this, 12); ai_melee(this); }
+void hknight_char_b2(entity this) { set_anim(this, anim_hknight_char_b2, hknight_char_b3); ai_charge(this, 17); ai_melee(this); }
+void hknight_char_b1(entity this) { set_anim(this, anim_hknight_char_b1, hknight_char_b2); CheckContinueCharge(this); ai_charge(this, 23); ai_melee(this); }
 
 //===========================================================================
 
-void()	hknight_slice1	=[	$slice1,	hknight_slice2	] {ai_charge(this, 9);}
-void()	hknight_slice2	=[	$slice2,	hknight_slice3	] {ai_charge(this, 6);}
-void()	hknight_slice3	=[	$slice3,	hknight_slice4	] {ai_charge(this, 13);}
-void()	hknight_slice4	=[	$slice4,	hknight_slice5	] {ai_charge(this, 4);}
-void()	hknight_slice5	=[	$slice5,	hknight_slice6	] {ai_charge(this, 7); ai_melee(this);}
-void()	hknight_slice6	=[	$slice6,	hknight_slice7	] {ai_charge(this, 15); ai_melee(this);}
-void()	hknight_slice7	=[	$slice7,	hknight_slice8	] {ai_charge(this, 8); ai_melee(this);}
-void()	hknight_slice8	=[	$slice8,	hknight_slice9	] {ai_charge(this, 2); ai_melee(this);}
-void()	hknight_slice9	=[	$slice9,	hknight_slice10	] {ai_melee(this);}
-void()	hknight_slice10	=[	$slice10,	hknight_run1	] {ai_charge(this, 3);}
+void hknight_slice10(entity this) { set_anim(this, anim_hknight_slice10, hknight_run1); ai_charge(this, 3); }
+void hknight_slice9(entity this) { set_anim(this, anim_hknight_slice9, hknight_slice10); ai_melee(this); }
+void hknight_slice8(entity this) { set_anim(this, anim_hknight_slice8, hknight_slice9); ai_charge(this, 2); ai_melee(this); }
+void hknight_slice7(entity this) { set_anim(this, anim_hknight_slice7, hknight_slice8); ai_charge(this, 8); ai_melee(this); }
+void hknight_slice6(entity this) { set_anim(this, anim_hknight_slice6, hknight_slice7); ai_charge(this, 15); ai_melee(this); }
+void hknight_slice5(entity this) { set_anim(this, anim_hknight_slice5, hknight_slice6); ai_charge(this, 7); ai_melee(this); }
+void hknight_slice4(entity this) { set_anim(this, anim_hknight_slice4, hknight_slice5); ai_charge(this, 4); }
+void hknight_slice3(entity this) { set_anim(this, anim_hknight_slice3, hknight_slice4); ai_charge(this, 13); }
+void hknight_slice2(entity this) { set_anim(this, anim_hknight_slice2, hknight_slice3); ai_charge(this, 6); }
+void hknight_slice1(entity this) { set_anim(this, anim_hknight_slice1, hknight_slice2); ai_charge(this, 9); }
 
 //===========================================================================
 
-void()	hknight_smash1	=[	$smash1,	hknight_smash2	] {ai_charge(this, 1);}
-void()	hknight_smash2	=[	$smash2,	hknight_smash3	] {ai_charge(this, 13);}
-void()	hknight_smash3	=[	$smash3,	hknight_smash4	] {ai_charge(this, 9);}
-void()	hknight_smash4	=[	$smash4,	hknight_smash5	] {ai_charge(this, 11);}
-void()	hknight_smash5	=[	$smash5,	hknight_smash6	] {ai_charge(this, 10); ai_melee(this);}
-void()	hknight_smash6	=[	$smash6,	hknight_smash7	] {ai_charge(this, 7); ai_melee(this);}
-void()	hknight_smash7	=[	$smash7,	hknight_smash8	] {ai_charge(this, 12); ai_melee(this);}
-void()	hknight_smash8	=[	$smash8,	hknight_smash9	] {ai_charge(this, 2); ai_melee(this);}
-void()	hknight_smash9	=[	$smash9,	hknight_smash10	] {ai_charge(this, 3); ai_melee(this);}
-void()	hknight_smash10	=[	$smash10,	hknight_smash11	] {ai_charge(this, 0);}
-void()	hknight_smash11	=[	$smash11,	hknight_run1	] {ai_charge(this, 0);}
+void hknight_smash11(entity this) { set_anim(this, anim_hknight_smash11, hknight_run1); ai_charge(this, 0); }
+void hknight_smash10(entity this) { set_anim(this, anim_hknight_smash10, hknight_smash11); ai_charge(this, 0); }
+void hknight_smash9(entity this) { set_anim(this, anim_hknight_smash9, hknight_smash10); ai_charge(this, 3); ai_melee(this); }
+void hknight_smash8(entity this) { set_anim(this, anim_hknight_smash8, hknight_smash9); ai_charge(this, 2); ai_melee(this); }
+void hknight_smash7(entity this) { set_anim(this, anim_hknight_smash7, hknight_smash8); ai_charge(this, 12); ai_melee(this); }
+void hknight_smash6(entity this) { set_anim(this, anim_hknight_smash6, hknight_smash7); ai_charge(this, 7); ai_melee(this); }
+void hknight_smash5(entity this) { set_anim(this, anim_hknight_smash5, hknight_smash6); ai_charge(this, 10); ai_melee(this); }
+void hknight_smash4(entity this) { set_anim(this, anim_hknight_smash4, hknight_smash5); ai_charge(this, 11); }
+void hknight_smash3(entity this) { set_anim(this, anim_hknight_smash3, hknight_smash4); ai_charge(this, 9); }
+void hknight_smash2(entity this) { set_anim(this, anim_hknight_smash2, hknight_smash3); ai_charge(this, 13); }
+void hknight_smash1(entity this) { set_anim(this, anim_hknight_smash1, hknight_smash2); ai_charge(this, 1); }
 
 //============================================================================
 
-void()	hknight_watk1	=[	$w_attack1,	hknight_watk2	] {ai_charge(this, 2);}
-void()	hknight_watk2	=[	$w_attack2,	hknight_watk3	] {ai_charge(this, 0);}
-void()	hknight_watk3	=[	$w_attack3,	hknight_watk4	] {ai_charge(this, 0);}
-void()	hknight_watk4	=[	$w_attack4,	hknight_watk5	] {ai_melee(this);}
-void()	hknight_watk5	=[	$w_attack5,	hknight_watk6	] {ai_melee(this);}
-void()	hknight_watk6	=[	$w_attack6,	hknight_watk7	] {ai_melee(this);}
-void()	hknight_watk7	=[	$w_attack7,	hknight_watk8	] {ai_charge(this, 1);}
-void()	hknight_watk8	=[	$w_attack8,	hknight_watk9	] {ai_charge(this, 4);}
-void()	hknight_watk9	=[	$w_attack9,	hknight_watk10	] {ai_charge(this, 5);}
-void()	hknight_watk10	=[	$w_attack10,	hknight_watk11	] {ai_charge(this, 3); ai_melee(this);}
-void()	hknight_watk11	=[	$w_attack11,	hknight_watk12	] {ai_charge(this, 2); ai_melee(this);}
-void()	hknight_watk12	=[	$w_attack12,	hknight_watk13	] {ai_charge(this, 2); ai_melee(this);}
-void()	hknight_watk13	=[	$w_attack13,	hknight_watk14	] {ai_charge(this, 0);}
-void()	hknight_watk14	=[	$w_attack14,	hknight_watk15	] {ai_charge(this, 0);}
-void()	hknight_watk15	=[	$w_attack15,	hknight_watk16	] {ai_charge(this, 0);}
-void()	hknight_watk16	=[	$w_attack16,	hknight_watk17	] {ai_charge(this, 1);}
-void()	hknight_watk17	=[	$w_attack17,	hknight_watk18	] {ai_charge(this, 1); ai_melee(this);}
-void()	hknight_watk18	=[	$w_attack18,	hknight_watk19	] {ai_charge(this, 3); ai_melee(this);}
-void()	hknight_watk19	=[	$w_attack19,	hknight_watk20	] {ai_charge(this, 4); ai_melee(this);}
-void()	hknight_watk20	=[	$w_attack20,	hknight_watk21	] {ai_charge(this, 6);}
-void()	hknight_watk21	=[	$w_attack21,	hknight_watk22	] {ai_charge(this, 7);}
-void()	hknight_watk22	=[	$w_attack22,	hknight_run1	] {ai_charge(this, 3);}
+void hknight_watk22(entity this) { set_anim(this, anim_hknight_w_attack22, hknight_run1); ai_charge(this, 3); }
+void hknight_watk21(entity this) { set_anim(this, anim_hknight_w_attack21, hknight_watk22); ai_charge(this, 7); }
+void hknight_watk20(entity this) { set_anim(this, anim_hknight_w_attack20, hknight_watk21); ai_charge(this, 6); }
+void hknight_watk19(entity this) { set_anim(this, anim_hknight_w_attack19, hknight_watk20); ai_charge(this, 4); ai_melee(this); }
+void hknight_watk18(entity this) { set_anim(this, anim_hknight_w_attack18, hknight_watk19); ai_charge(this, 3); ai_melee(this); }
+void hknight_watk17(entity this) { set_anim(this, anim_hknight_w_attack17, hknight_watk18); ai_charge(this, 1); ai_melee(this); }
+void hknight_watk16(entity this) { set_anim(this, anim_hknight_w_attack16, hknight_watk17); ai_charge(this, 1); }
+void hknight_watk15(entity this) { set_anim(this, anim_hknight_w_attack15, hknight_watk16); ai_charge(this, 0); }
+void hknight_watk14(entity this) { set_anim(this, anim_hknight_w_attack14, hknight_watk15); ai_charge(this, 0); }
+void hknight_watk13(entity this) { set_anim(this, anim_hknight_w_attack13, hknight_watk14); ai_charge(this, 0); }
+void hknight_watk12(entity this) { set_anim(this, anim_hknight_w_attack12, hknight_watk13); ai_charge(this, 2); ai_melee(this); }
+void hknight_watk11(entity this) { set_anim(this, anim_hknight_w_attack11, hknight_watk12); ai_charge(this, 2); ai_melee(this); }
+void hknight_watk10(entity this) { set_anim(this, anim_hknight_w_attack10, hknight_watk11); ai_charge(this, 3); ai_melee(this); }
+void hknight_watk9(entity this) { set_anim(this, anim_hknight_w_attack9, hknight_watk10); ai_charge(this, 5); }
+void hknight_watk8(entity this) { set_anim(this, anim_hknight_w_attack8, hknight_watk9); ai_charge(this, 4); }
+void hknight_watk7(entity this) { set_anim(this, anim_hknight_w_attack7, hknight_watk8); ai_charge(this, 1); }
+void hknight_watk6(entity this) { set_anim(this, anim_hknight_w_attack6, hknight_watk7); ai_melee(this); }
+void hknight_watk5(entity this) { set_anim(this, anim_hknight_w_attack5, hknight_watk6); ai_melee(this); }
+void hknight_watk4(entity this) { set_anim(this, anim_hknight_w_attack4, hknight_watk5); ai_melee(this); }
+void hknight_watk3(entity this) { set_anim(this, anim_hknight_w_attack3, hknight_watk4); ai_charge(this, 0); }
+void hknight_watk2(entity this) { set_anim(this, anim_hknight_w_attack2, hknight_watk3); ai_charge(this, 0); }
+void hknight_watk1(entity this) { set_anim(this, anim_hknight_w_attack1, hknight_watk2); ai_charge(this, 2); }
 
 //============================================================================
 
-void hk_idle__sound(entity this)
+void hk_idle_sound(entity this)
 {
 	if(random() < 0.2)
 		_sound(this, CHAN_VOICE, "hknight/idle.wav", 1, ATTN_NORM);
@@ -364,7 +500,7 @@ void hknight_pain(entity this, entity attacker, float damage)
 
 	if(time - this.pain_finished > 5)
 	{	// allways go into pain frame if it has been a while
-		hknight_pain1();
+		hknight_pain1(this);
 		this.pain_finished = time + 1;
 		return;
 	}
@@ -373,7 +509,7 @@ void hknight_pain(entity this, entity attacker, float damage)
 		return;		// didn't flinch
 
 	this.pain_finished = time + 1;
-	hknight_pain1();
+	hknight_pain1(this);
 }
 
 .int hknight_type;
@@ -384,12 +520,12 @@ void hknight_melee(entity this)
 
 	_sound(this, CHAN_WEAPON, "hknight/slash1.wav", 1, ATTN_NORM);
 	if(this.hknight_type == 1)
-		hknight_slice1();
+		hknight_slice1(this);
 	else if(this.hknight_type == 2)
-		hknight_smash1();
+		hknight_smash1(this);
 	else if(this.hknight_type == 3)
 	{
-		hknight_watk1();
+		hknight_watk1(this);
 		this.hknight_type = 0;
 	}
 }

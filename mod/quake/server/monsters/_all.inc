@@ -11,7 +11,7 @@
 #include "boss.qc"
 
 #include "tarbaby.qc"		// registered
-//#include "hknight.qc"		// registered
+#include "hknight.qc"		// registered
 #include "fish.qc"			// registered
 #include "shalrath.qc"		// registered
 #include "enforcer.qc"		// registered
