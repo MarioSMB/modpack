@@ -12,81 +12,135 @@ $base base
 
 $skin skin
 
-$frame walk1 walk2 walk3 walk4  walk5 walk6 walk7 walk8 walk9 walk10
-$frame walk11 walk12 walk13 walk14 walk15 walk16 walk17 walk18 walk19
-$frame walk20 walk21 walk22 walk23 walk24 walk25
+const int anim_tbaby_walk1 = 0;
+const int anim_tbaby_walk2 = 1;
+const int anim_tbaby_walk3 = 2;
+const int anim_tbaby_walk4 = 3;
+const int anim_tbaby_walk5 = 4;
+const int anim_tbaby_walk6 = 5;
+const int anim_tbaby_walk7 = 6;
+const int anim_tbaby_walk8 = 7;
+const int anim_tbaby_walk9 = 8;
+const int anim_tbaby_walk10 = 9;
+const int anim_tbaby_walk11 = 10;
+const int anim_tbaby_walk12 = 11;
+const int anim_tbaby_walk13 = 12;
+const int anim_tbaby_walk14 = 13;
+const int anim_tbaby_walk15 = 14;
+const int anim_tbaby_walk16 = 15;
+const int anim_tbaby_walk17 = 16;
+const int anim_tbaby_walk18 = 17;
+const int anim_tbaby_walk19 = 18;
+const int anim_tbaby_walk20 = 19;
+const int anim_tbaby_walk21 = 20;
+const int anim_tbaby_walk22 = 21;
+const int anim_tbaby_walk23 = 22;
+const int anim_tbaby_walk24 = 23;
+const int anim_tbaby_walk25 = 24;
 
-$frame run1 run2 run3 run4 run5 run6  run7 run8 run9 run10 run11 run12 run13
-$frame run14 run15 run16 run17 run18 run19 run20 run21 run22 run23
-$frame run24 run25
+const int anim_tbaby_run1 = 25;
+const int anim_tbaby_run2 = 26;
+const int anim_tbaby_run3 = 27;
+const int anim_tbaby_run4 = 28;
+const int anim_tbaby_run5 = 29;
+const int anim_tbaby_run6 = 30;
+const int anim_tbaby_run7 = 31;
+const int anim_tbaby_run8 = 32;
+const int anim_tbaby_run9 = 33;
+const int anim_tbaby_run10 = 34;
+const int anim_tbaby_run11 = 35;
+const int anim_tbaby_run12 = 36;
+const int anim_tbaby_run13 = 37;
+const int anim_tbaby_run14 = 38;
+const int anim_tbaby_run15 = 39;
+const int anim_tbaby_run16 = 40;
+const int anim_tbaby_run17 = 41;
+const int anim_tbaby_run18 = 42;
+const int anim_tbaby_run19 = 43;
+const int anim_tbaby_run20 = 44;
+const int anim_tbaby_run21 = 45;
+const int anim_tbaby_run22 = 46;
+const int anim_tbaby_run23 = 47;
+const int anim_tbaby_run24 = 48;
+const int anim_tbaby_run25 = 49;
 
-$frame jump1 jump2 jump3 jump4 jump5 jump6
+const int anim_tbaby_jump1 = 50;
+const int anim_tbaby_jump2 = 51;
+const int anim_tbaby_jump3 = 52;
+const int anim_tbaby_jump4 = 53;
+const int anim_tbaby_jump5 = 54;
+const int anim_tbaby_jump6 = 55;
 
-$frame fly1 fly2 fly3 fly4
+const int anim_tbaby_fly1 = 56;
+const int anim_tbaby_fly2 = 57;
+const int anim_tbaby_fly3 = 58;
+const int anim_tbaby_fly4 = 59;
 
-$frame exp
+const int anim_tbaby_exp = 60;
 
-void(entity this)	tbaby_stand1	=[	$walk1,		tbaby_stand1	] {ai_stand(this);}
+void tbaby_stand1(entity this) { set_anim(this, anim_tbaby_walk1, tbaby_stand1); ai_stand(this); }
 
-void()	tbaby_hang1		=[	$walk1,		tbaby_hang1	] {ai_stand(this);}
+void tbaby_hang1(entity this) { set_anim(this, anim_tbaby_walk1, tbaby_hang1); ai_stand(this); }
 
-void()	tbaby_walk1	=[	$walk1,		tbaby_walk2	] {ai_turn();}
-void()	tbaby_walk2	=[	$walk2,		tbaby_walk3	] {ai_turn();}
-void()	tbaby_walk3	=[	$walk3,		tbaby_walk4	] {ai_turn();}
-void()	tbaby_walk4	=[	$walk4,		tbaby_walk5	] {ai_turn();}
-void()	tbaby_walk5	=[	$walk5,		tbaby_walk6	] {ai_turn();}
-void()	tbaby_walk6	=[	$walk6,		tbaby_walk7	] {ai_turn();}
-void()	tbaby_walk7	=[	$walk7,		tbaby_walk8	] {ai_turn();}
-void()	tbaby_walk8	=[	$walk8,		tbaby_walk9	] {ai_turn();}
-void()	tbaby_walk9	=[	$walk9,		tbaby_walk10	] {ai_turn();}
-void()	tbaby_walk10	=[	$walk10,		tbaby_walk11	] {ai_turn();}
-void()	tbaby_walk11	=[	$walk11,		tbaby_walk12	] {ai_walk(2);}
-void()	tbaby_walk12	=[	$walk12,		tbaby_walk13	] {ai_walk(2);}
-void()	tbaby_walk13	=[	$walk13,		tbaby_walk14	] {ai_walk(2);}
-void()	tbaby_walk14	=[	$walk14,		tbaby_walk15	] {ai_walk(2);}
-void()	tbaby_walk15	=[	$walk15,		tbaby_walk16	] {ai_walk(2);}
-void()	tbaby_walk16	=[	$walk16,		tbaby_walk17	] {ai_walk(2);}
-void()	tbaby_walk17	=[	$walk17,		tbaby_walk18	] {ai_walk(2);}
-void()	tbaby_walk18	=[	$walk18,		tbaby_walk19	] {ai_walk(2);}
-void()	tbaby_walk19	=[	$walk19,		tbaby_walk20	] {ai_walk(2);}
-void()	tbaby_walk20	=[	$walk20,		tbaby_walk21	] {ai_walk(2);}
-void()	tbaby_walk21	=[	$walk21,		tbaby_walk22	] {ai_walk(2);}
-void()	tbaby_walk22	=[	$walk22,		tbaby_walk23	] {ai_walk(2);}
-void()	tbaby_walk23	=[	$walk23,		tbaby_walk24	] {ai_walk(2);}
-void()	tbaby_walk24	=[	$walk24,		tbaby_walk25	] {ai_walk(2);}
-void()	tbaby_walk25	=[	$walk25,		tbaby_walk1	] {ai_walk(2);}
+void tbaby_walk1(entity this);
+void tbaby_walk25(entity this) { set_anim(this, anim_tbaby_walk25, tbaby_walk1); ai_walk(this, 2); }
+void tbaby_walk24(entity this) { set_anim(this, anim_tbaby_walk24, tbaby_walk25); ai_walk(this, 2); }
+void tbaby_walk23(entity this) { set_anim(this, anim_tbaby_walk23, tbaby_walk24); ai_walk(this, 2); }
+void tbaby_walk22(entity this) { set_anim(this, anim_tbaby_walk22, tbaby_walk23); ai_walk(this, 2); }
+void tbaby_walk21(entity this) { set_anim(this, anim_tbaby_walk21, tbaby_walk22); ai_walk(this, 2); }
+void tbaby_walk20(entity this) { set_anim(this, anim_tbaby_walk20, tbaby_walk21); ai_walk(this, 2); }
+void tbaby_walk19(entity this) { set_anim(this, anim_tbaby_walk19, tbaby_walk20); ai_walk(this, 2); }
+void tbaby_walk18(entity this) { set_anim(this, anim_tbaby_walk18, tbaby_walk19); ai_walk(this, 2); }
+void tbaby_walk17(entity this) { set_anim(this, anim_tbaby_walk17, tbaby_walk18); ai_walk(this, 2); }
+void tbaby_walk16(entity this) { set_anim(this, anim_tbaby_walk16, tbaby_walk17); ai_walk(this, 2); }
+void tbaby_walk15(entity this) { set_anim(this, anim_tbaby_walk15, tbaby_walk16); ai_walk(this, 2); }
+void tbaby_walk14(entity this) { set_anim(this, anim_tbaby_walk14, tbaby_walk15); ai_walk(this, 2); }
+void tbaby_walk13(entity this) { set_anim(this, anim_tbaby_walk13, tbaby_walk14); ai_walk(this, 2); }
+void tbaby_walk12(entity this) { set_anim(this, anim_tbaby_walk12, tbaby_walk13); ai_walk(this, 2); }
+void tbaby_walk11(entity this) { set_anim(this, anim_tbaby_walk11, tbaby_walk12); ai_walk(this, 2); }
+void tbaby_walk10(entity this) { set_anim(this, anim_tbaby_walk10, tbaby_walk11); ai_turn(this); }
+void tbaby_walk9(entity this) { set_anim(this, anim_tbaby_walk9, tbaby_walk10); ai_turn(this); }
+void tbaby_walk8(entity this) { set_anim(this, anim_tbaby_walk8, tbaby_walk9); ai_turn(this); }
+void tbaby_walk7(entity this) { set_anim(this, anim_tbaby_walk7, tbaby_walk8); ai_turn(this); }
+void tbaby_walk6(entity this) { set_anim(this, anim_tbaby_walk6, tbaby_walk7); ai_turn(this); }
+void tbaby_walk5(entity this) { set_anim(this, anim_tbaby_walk5, tbaby_walk6); ai_turn(this); }
+void tbaby_walk4(entity this) { set_anim(this, anim_tbaby_walk4, tbaby_walk5); ai_turn(this); }
+void tbaby_walk3(entity this) { set_anim(this, anim_tbaby_walk3, tbaby_walk4); ai_turn(this); }
+void tbaby_walk2(entity this) { set_anim(this, anim_tbaby_walk2, tbaby_walk3); ai_turn(this); }
+void tbaby_walk1(entity this) { set_anim(this, anim_tbaby_walk1, tbaby_walk2); ai_turn(this); }
 
-void()	tbaby_run1	=[	$run1,		tbaby_run2	] {ai_face(this);}
-void()	tbaby_run2	=[	$run2,		tbaby_run3	] {ai_face(this);}
-void()	tbaby_run3	=[	$run3,		tbaby_run4	] {ai_face(this);}
-void()	tbaby_run4	=[	$run4,		tbaby_run5	] {ai_face(this);}
-void()	tbaby_run5	=[	$run5,		tbaby_run6	] {ai_face(this);}
-void()	tbaby_run6	=[	$run6,		tbaby_run7	] {ai_face(this);}
-void()	tbaby_run7	=[	$run7,		tbaby_run8	] {ai_face(this);}
-void()	tbaby_run8	=[	$run8,		tbaby_run9	] {ai_face(this);}
-void()	tbaby_run9	=[	$run9,		tbaby_run10	] {ai_face(this);}
-void()	tbaby_run10	=[	$run10,		tbaby_run11	] {ai_face(this);}
-void()	tbaby_run11	=[	$run11,		tbaby_run12	] {ai_run(2);}
-void()	tbaby_run12	=[	$run12,		tbaby_run13	] {ai_run(2);}
-void()	tbaby_run13	=[	$run13,		tbaby_run14	] {ai_run(2);}
-void()	tbaby_run14	=[	$run14,		tbaby_run15	] {ai_run(2);}
-void()	tbaby_run15	=[	$run15,		tbaby_run16	] {ai_run(2);}
-void()	tbaby_run16	=[	$run16,		tbaby_run17	] {ai_run(2);}
-void()	tbaby_run17	=[	$run17,		tbaby_run18	] {ai_run(2);}
-void()	tbaby_run18	=[	$run18,		tbaby_run19	] {ai_run(2);}
-void()	tbaby_run19	=[	$run19,		tbaby_run20	] {ai_run(2);}
-void()	tbaby_run20	=[	$run20,		tbaby_run21	] {ai_run(2);}
-void()	tbaby_run21	=[	$run21,		tbaby_run22	] {ai_run(2);}
-void()	tbaby_run22	=[	$run22,		tbaby_run23	] {ai_run(2);}
-void()	tbaby_run23	=[	$run23,		tbaby_run24	] {ai_run(2);}
-void()	tbaby_run24	=[	$run24,		tbaby_run25	] {ai_run(2);}
-void()	tbaby_run25	=[	$run25,		tbaby_run1	] {ai_run(2);}
+void tbaby_run1(entity this);
+void tbaby_run25(entity this) { set_anim(this, anim_tbaby_run25, tbaby_run1); ai_run(this, 2); }
+void tbaby_run24(entity this) { set_anim(this, anim_tbaby_run24, tbaby_run25); ai_run(this, 2); }
+void tbaby_run23(entity this) { set_anim(this, anim_tbaby_run23, tbaby_run24); ai_run(this, 2); }
+void tbaby_run22(entity this) { set_anim(this, anim_tbaby_run22, tbaby_run23); ai_run(this, 2); }
+void tbaby_run21(entity this) { set_anim(this, anim_tbaby_run21, tbaby_run22); ai_run(this, 2); }
+void tbaby_run20(entity this) { set_anim(this, anim_tbaby_run20, tbaby_run21); ai_run(this, 2); }
+void tbaby_run19(entity this) { set_anim(this, anim_tbaby_run19, tbaby_run20); ai_run(this, 2); }
+void tbaby_run18(entity this) { set_anim(this, anim_tbaby_run18, tbaby_run19); ai_run(this, 2); }
+void tbaby_run17(entity this) { set_anim(this, anim_tbaby_run17, tbaby_run18); ai_run(this, 2); }
+void tbaby_run16(entity this) { set_anim(this, anim_tbaby_run16, tbaby_run17); ai_run(this, 2); }
+void tbaby_run15(entity this) { set_anim(this, anim_tbaby_run15, tbaby_run16); ai_run(this, 2); }
+void tbaby_run14(entity this) { set_anim(this, anim_tbaby_run14, tbaby_run15); ai_run(this, 2); }
+void tbaby_run13(entity this) { set_anim(this, anim_tbaby_run13, tbaby_run14); ai_run(this, 2); }
+void tbaby_run12(entity this) { set_anim(this, anim_tbaby_run12, tbaby_run13); ai_run(this, 2); }
+void tbaby_run11(entity this) { set_anim(this, anim_tbaby_run11, tbaby_run12); ai_run(this, 2); }
+void tbaby_run10(entity this) { set_anim(this, anim_tbaby_run10, tbaby_run11); ai_face(this); }
+void tbaby_run9(entity this) { set_anim(this, anim_tbaby_run9, tbaby_run10); ai_face(this); }
+void tbaby_run8(entity this) { set_anim(this, anim_tbaby_run8, tbaby_run9); ai_face(this); }
+void tbaby_run7(entity this) { set_anim(this, anim_tbaby_run7, tbaby_run8); ai_face(this); }
+void tbaby_run6(entity this) { set_anim(this, anim_tbaby_run6, tbaby_run7); ai_face(this); }
+void tbaby_run5(entity this) { set_anim(this, anim_tbaby_run5, tbaby_run6); ai_face(this); }
+void tbaby_run4(entity this) { set_anim(this, anim_tbaby_run4, tbaby_run5); ai_face(this); }
+void tbaby_run3(entity this) { set_anim(this, anim_tbaby_run3, tbaby_run4); ai_face(this); }
+void tbaby_run2(entity this) { set_anim(this, anim_tbaby_run2, tbaby_run3); ai_face(this); }
+void tbaby_run1(entity this) { set_anim(this, anim_tbaby_run1, tbaby_run2); ai_face(this); }
 
 
 //============================================================================
 
 
-void()	tbaby_jump1;
+void tbaby_jump1(entity this);
 
 void Tar_JumpTouch(entity this, entity toucher)
 {
@@ -122,51 +176,50 @@ void Tar_JumpTouch(entity this, entity toucher)
 	this.nextthink = time + 0.1;
 }
 
-void()	tbaby_jump5;
+void tbaby_jump5(entity this);
 
-void()	tbaby_fly1		=[	$fly1,	tbaby_fly2	] {}
-void()	tbaby_fly2		=[	$fly2,	tbaby_fly3	] {}
-void()	tbaby_fly3		=[	$fly3,	tbaby_fly4	] {}
-void()	tbaby_fly4		=[	$fly4,	tbaby_fly1	] {
-this.cnt = this.cnt + 1;
-if(this.cnt == 4)
+void tbaby_fly1(entity this);
+void tbaby_fly4(entity this)
 {
-//dprint("spawn hop\n");
-tbaby_jump5();
+	set_anim(this, anim_tbaby_fly4, tbaby_fly1);
+	this.cnt += 1;
+	if(this.cnt >= 4)
+		tbaby_jump5(this);
 }
-}
+void tbaby_fly3(entity this) { set_anim(this, anim_tbaby_fly3, tbaby_fly4); }
+void tbaby_fly2(entity this) { set_anim(this, anim_tbaby_fly2, tbaby_fly3); }
+void tbaby_fly1(entity this) { set_anim(this, anim_tbaby_fly1, tbaby_fly2); }
 
-void()	tbaby_jump1		=[	$jump1,	tbaby_jump2		] {ai_face(this);}
-void()	tbaby_jump2		=[	$jump2,	tbaby_jump3		] {ai_face(this);}
-void()	tbaby_jump3		=[	$jump3,	tbaby_jump4		] {ai_face(this);}
-void()	tbaby_jump4		=[	$jump4,	tbaby_jump5		] {ai_face(this);}
-void()	tbaby_jump5		=[	$jump5,	tbaby_jump6		]
-{	
+void tbaby_jump6(entity this) { set_anim(this, anim_tbaby_jump6, tbaby_fly1); }
+void tbaby_jump5(entity this)
+{
+	set_anim(this, anim_tbaby_jump5, tbaby_jump6);
+
 	this.movetype = MOVETYPE_BOUNCE;
 	settouch(this, Tar_JumpTouch);
 	makevectors(this.angles);
 	this.origin_z = this.origin_z + 1;
 	this.velocity = v_forward * 600 + '0 0 200';
 	this.velocity_z = this.velocity_z + random()*150;
-	if(this.flags & FL_ONGROUND)
-		this.flags &= ~FL_ONGROUND;
+	this.flags &= ~FL_ONGROUND;
 	this.cnt = 0;
 }
-void()	tbaby_jump6	=[	$jump6,tbaby_fly1	] {}
+void tbaby_jump4(entity this) { set_anim(this, anim_tbaby_jump4, tbaby_jump5); ai_face(this); }
+void tbaby_jump3(entity this) { set_anim(this, anim_tbaby_jump3, tbaby_jump4); ai_face(this); }
+void tbaby_jump2(entity this) { set_anim(this, anim_tbaby_jump2, tbaby_jump3); ai_face(this); }
+void tbaby_jump1(entity this) { set_anim(this, anim_tbaby_jump1, tbaby_jump2); ai_face(this); }
 
 
 
 //=============================================================================
 
-void(entity this, entity attacker)	tbaby_die1	=[	$exp,		tbaby_die2	] {
-this.takedamage = DAMAGE_NO;
-}
-void()	tbaby_die2	=[	$exp,		tbaby_run1	] 
+void tbaby_die2(entity this)
 {
+	set_anim(this, anim_tbaby_exp, tbaby_run1);
 	T_RadiusDamage(this, this, 120, NULL);
 
 	_sound(this, CHAN_VOICE, "blob/death1.wav", 1, ATTN_NORM);
-	this.origin = this.origin - 8*normalize(this.velocity);
+	this.origin = this.origin - 8 * normalize(this.velocity);
 
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_TAREXPLOSION);
@@ -176,6 +229,7 @@ void()	tbaby_die2	=[	$exp,		tbaby_run1	]
 	
 	BecomeExplosion(this);
 }
+void tbaby_die1(entity this, entity attacker) { set_anim(this, anim_tbaby_exp, tbaby_die2); this.takedamage = DAMAGE_NO; }
 
 string tbaby_sight() { return "blob/sight1.wav"; }
 string tbaby_deathmessage() { return "was slimed by a Spawn"; }
