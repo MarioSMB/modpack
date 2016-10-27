@@ -11,18 +11,64 @@ $origin 0 0 24
 $base wizbase	
 $skin wizbase
 
-$frame hover1 hover2 hover3 hover4 hover5 hover6 hover7 hover8
-$frame hover9 hover10 hover11 hover12 hover13 hover14 hover15
+const int anim_wiz_hover1 = 0;
+const int anim_wiz_hover2 = 1;
+const int anim_wiz_hover3 = 2;
+const int anim_wiz_hover4 = 3;
+const int anim_wiz_hover5 = 4;
+const int anim_wiz_hover6 = 5;
+const int anim_wiz_hover7 = 6;
+const int anim_wiz_hover8 = 7;
+const int anim_wiz_hover9 = 8;
+const int anim_wiz_hover10 = 9;
+const int anim_wiz_hover11 = 10;
+const int anim_wiz_hover12 = 11;
+const int anim_wiz_hover13 = 12;
+const int anim_wiz_hover14 = 13;
+const int anim_wiz_hover15 = 14;
 
-$frame fly1 fly2 fly3 fly4 fly5 fly6 fly7 fly8 fly9 fly10
-$frame fly11 fly12 fly13 fly14
+const int anim_wiz_fly1 = 15;
+const int anim_wiz_fly2 = 16;
+const int anim_wiz_fly3 = 17;
+const int anim_wiz_fly4 = 18;
+const int anim_wiz_fly5 = 19;
+const int anim_wiz_fly6 = 20;
+const int anim_wiz_fly7 = 21;
+const int anim_wiz_fly8 = 22;
+const int anim_wiz_fly9 = 23;
+const int anim_wiz_fly10 = 24;
+const int anim_wiz_fly11 = 25;
+const int anim_wiz_fly12 = 26;
+const int anim_wiz_fly13 = 27;
+const int anim_wiz_fly14 = 28;
 
-$frame magatt1 magatt2 magatt3 magatt4 magatt5 magatt6 magatt7
-$frame magatt8 magatt9 magatt10 magatt11 magatt12 magatt13
+const int anim_wiz_magatt1 = 29;
+const int anim_wiz_magatt2 = 30;
+const int anim_wiz_magatt3 = 31;
+const int anim_wiz_magatt4 = 32;
+const int anim_wiz_magatt5 = 33;
+const int anim_wiz_magatt6 = 34;
+const int anim_wiz_magatt7 = 35;
+const int anim_wiz_magatt8 = 36;
+const int anim_wiz_magatt9 = 37;
+const int anim_wiz_magatt10 = 38;
+const int anim_wiz_magatt11 = 39;
+const int anim_wiz_magatt12 = 40;
+const int anim_wiz_magatt13 = 41;
 
-$frame pain1 pain2 pain3 pain4
+const int anim_wiz_pain1 = 42;
+const int anim_wiz_pain2 = 43;
+const int anim_wiz_pain3 = 44;
+const int anim_wiz_pain4 = 45;
 
-$frame death1 death2 death3 death4 death5 death6 death7 death8
+const int anim_wiz_death1 = 46;
+const int anim_wiz_death2 = 47;
+const int anim_wiz_death3 = 48;
+const int anim_wiz_death4 = 49;
+const int anim_wiz_death5 = 50;
+const int anim_wiz_death6 = 51;
+const int anim_wiz_death7 = 52;
+const int anim_wiz_death8 = 53;
 
 /*
 ==============================================================================
@@ -44,7 +90,7 @@ if this.enemy maintains it's current velocity
 0.1 is moderately accurate, 0.0 is totally accurate
 =============
 */
-void LaunchMissile(entity missile, float mspeed, float accuracy)
+void LaunchMissile(entity this, entity missile, float mspeed, float accuracy)
 {
 	makevectors(this.angles);
 		
@@ -74,8 +120,8 @@ void LaunchMissile(entity missile, float mspeed, float accuracy)
 }
 
 
-void wiz_run1();
-void wiz_side1();
+void wiz_run1(entity this);
+void wiz_side1(entity this);
 
 /*
 =================
@@ -94,7 +140,7 @@ bool WizardCheckAttack(entity this)
 		if(this.attack_state != AS_STRAIGHT)
 		{
 			this.attack_state = AS_STRAIGHT;
-			wiz_run1();
+			wiz_run1(this);
 		}
 		return false;
 	}
@@ -112,7 +158,7 @@ bool WizardCheckAttack(entity this)
 		if(this.attack_state != AS_STRAIGHT)
 		{
 			this.attack_state = AS_STRAIGHT;
-			wiz_run1();
+			wiz_run1(this);
 		}
 		return false;
 	}
@@ -138,7 +184,7 @@ bool WizardCheckAttack(entity this)
 		if(this.attack_state != AS_STRAIGHT)
 		{
 			this.attack_state = AS_STRAIGHT;
-			wiz_run1();
+			wiz_run1(this);
 		}
 	}
 	else
@@ -146,7 +192,7 @@ bool WizardCheckAttack(entity this)
 		if(this.attack_state != AS_SLIDING)
 		{
 			this.attack_state = AS_SLIDING;
-			wiz_side1();
+			wiz_side1(this);
 		}
 	}
 	
@@ -229,6 +275,7 @@ void Wiz_StartFast(entity this)
 	missile.movedir = VEC_ORIGIN - v_right;
 }
 
+.float waitmin;
 void Wiz_idle_sound(entity this)
 {
 	float wr = random() * 5;
@@ -244,83 +291,84 @@ void Wiz_idle_sound(entity this)
 	return;
 }
 
-void(entity this)	wiz_stand1	=[	$hover1,		wiz_stand2	] {ai_stand(this);}
-void()	wiz_stand2	=[	$hover2,		wiz_stand3	] {ai_stand(this);}
-void()	wiz_stand3	=[	$hover3,		wiz_stand4	] {ai_stand(this);}
-void()	wiz_stand4	=[	$hover4,		wiz_stand5	] {ai_stand(this);}
-void()	wiz_stand5	=[	$hover5,		wiz_stand6	] {ai_stand(this);}
-void()	wiz_stand6	=[	$hover6,		wiz_stand7	] {ai_stand(this);}
-void()	wiz_stand7	=[	$hover7,		wiz_stand8	] {ai_stand(this);}
-void()	wiz_stand8	=[	$hover8,		wiz_stand1	] {ai_stand(this);}
+void wiz_stand1(entity this);
+void wiz_stand8(entity this) { set_anim(this, anim_wiz_hover8, wiz_stand1); ai_stand(this); }
+void wiz_stand7(entity this) { set_anim(this, anim_wiz_hover7, wiz_stand8); ai_stand(this); }
+void wiz_stand6(entity this) { set_anim(this, anim_wiz_hover6, wiz_stand7); ai_stand(this); }
+void wiz_stand5(entity this) { set_anim(this, anim_wiz_hover5, wiz_stand6); ai_stand(this); }
+void wiz_stand4(entity this) { set_anim(this, anim_wiz_hover4, wiz_stand5); ai_stand(this); }
+void wiz_stand3(entity this) { set_anim(this, anim_wiz_hover3, wiz_stand4); ai_stand(this); }
+void wiz_stand2(entity this) { set_anim(this, anim_wiz_hover2, wiz_stand3); ai_stand(this); }
+void wiz_stand1(entity this) { set_anim(this, anim_wiz_hover1, wiz_stand2); ai_stand(this); }
 
-void()	wiz_walk1	=[	$hover1,		wiz_walk2	] {ai_walk(8);
-Wiz_idle_sound();}
-void()	wiz_walk2	=[	$hover2,		wiz_walk3	] {ai_walk(8);}
-void()	wiz_walk3	=[	$hover3,		wiz_walk4	] {ai_walk(8);}
-void()	wiz_walk4	=[	$hover4,		wiz_walk5	] {ai_walk(8);}
-void()	wiz_walk5	=[	$hover5,		wiz_walk6	] {ai_walk(8);}
-void()	wiz_walk6	=[	$hover6,		wiz_walk7	] {ai_walk(8);}
-void()	wiz_walk7	=[	$hover7,		wiz_walk8	] {ai_walk(8);}
-void()	wiz_walk8	=[	$hover8,		wiz_walk1	] {ai_walk(8);}
+void wiz_walk1(entity this);
+void wiz_walk8(entity this) { set_anim(this, anim_wiz_hover8, wiz_walk1); ai_walk(this, 8); }
+void wiz_walk7(entity this) { set_anim(this, anim_wiz_hover7, wiz_walk8); ai_walk(this, 8); }
+void wiz_walk6(entity this) { set_anim(this, anim_wiz_hover6, wiz_walk7); ai_walk(this, 8); }
+void wiz_walk5(entity this) { set_anim(this, anim_wiz_hover5, wiz_walk6); ai_walk(this, 8); }
+void wiz_walk4(entity this) { set_anim(this, anim_wiz_hover4, wiz_walk5); ai_walk(this, 8); }
+void wiz_walk3(entity this) { set_anim(this, anim_wiz_hover3, wiz_walk4); ai_walk(this, 8); }
+void wiz_walk2(entity this) { set_anim(this, anim_wiz_hover2, wiz_walk3); ai_walk(this, 8); }
+void wiz_walk1(entity this) { set_anim(this, anim_wiz_hover1, wiz_walk2); ai_walk(this, 8); Wiz_idle_sound(this); }
 
-void()	wiz_side1	=[	$hover1,		wiz_side2	] {ai_run(8);
-Wiz_idle_sound();}
-void()	wiz_side2	=[	$hover2,		wiz_side3	] {ai_run(8);}
-void()	wiz_side3	=[	$hover3,		wiz_side4	] {ai_run(8);}
-void()	wiz_side4	=[	$hover4,		wiz_side5	] {ai_run(8);}
-void()	wiz_side5	=[	$hover5,		wiz_side6	] {ai_run(8);}
-void()	wiz_side6	=[	$hover6,		wiz_side7	] {ai_run(8);}
-void()	wiz_side7	=[	$hover7,		wiz_side8	] {ai_run(8);}
-void()	wiz_side8	=[	$hover8,		wiz_side1	] {ai_run(8);}
+void wiz_side1(entity this);
+void wiz_side8(entity this) { set_anim(this, anim_wiz_hover8, wiz_side1); ai_run(this, 8); }
+void wiz_side7(entity this) { set_anim(this, anim_wiz_hover7, wiz_side8); ai_run(this, 8); }
+void wiz_side6(entity this) { set_anim(this, anim_wiz_hover6, wiz_side7); ai_run(this, 8); }
+void wiz_side5(entity this) { set_anim(this, anim_wiz_hover5, wiz_side6); ai_run(this, 8); }
+void wiz_side4(entity this) { set_anim(this, anim_wiz_hover4, wiz_side5); ai_run(this, 8); }
+void wiz_side3(entity this) { set_anim(this, anim_wiz_hover3, wiz_side4); ai_run(this, 8); }
+void wiz_side2(entity this) { set_anim(this, anim_wiz_hover2, wiz_side3); ai_run(this, 8); }
+void wiz_side1(entity this) { set_anim(this, anim_wiz_hover1, wiz_side2); ai_run(this, 8); Wiz_idle_sound(this); }
 
-void()	wiz_run1	=[	$fly1,		wiz_run2	] {ai_run(16);
-Wiz_idle_sound();
+void wiz_run1(entity this);
+void wiz_run14(entity this) { set_anim(this, anim_wiz_fly14, wiz_run1); ai_run(this, 16); }
+void wiz_run13(entity this) { set_anim(this, anim_wiz_fly13, wiz_run14); ai_run(this, 16); }
+void wiz_run12(entity this) { set_anim(this, anim_wiz_fly12, wiz_run13); ai_run(this, 16); }
+void wiz_run11(entity this) { set_anim(this, anim_wiz_fly11, wiz_run12); ai_run(this, 16); }
+void wiz_run10(entity this) { set_anim(this, anim_wiz_fly10, wiz_run11); ai_run(this, 16); }
+void wiz_run9(entity this) { set_anim(this, anim_wiz_fly9, wiz_run10); ai_run(this, 16); }
+void wiz_run8(entity this) { set_anim(this, anim_wiz_fly8, wiz_run9); ai_run(this, 16); }
+void wiz_run7(entity this) { set_anim(this, anim_wiz_fly7, wiz_run8); ai_run(this, 16); }
+void wiz_run6(entity this) { set_anim(this, anim_wiz_fly6, wiz_run7); ai_run(this, 16); }
+void wiz_run5(entity this) { set_anim(this, anim_wiz_fly5, wiz_run6); ai_run(this, 16); }
+void wiz_run4(entity this) { set_anim(this, anim_wiz_fly4, wiz_run5); ai_run(this, 16); }
+void wiz_run3(entity this) { set_anim(this, anim_wiz_fly3, wiz_run4); ai_run(this, 16); }
+void wiz_run2(entity this) { set_anim(this, anim_wiz_fly2, wiz_run3); ai_run(this, 16); }
+void wiz_run1(entity this) { set_anim(this, anim_wiz_fly1, wiz_run2); ai_run(this, 16); Wiz_idle_sound(this); }
+
+void wiz_fast10(entity this) { set_anim(this, anim_wiz_magatt10, wiz_run1); ai_face(this); SUB_AttackFinished(this, 2); WizardAttackFinished(this); }
+void wiz_fast9(entity this) { set_anim(this, anim_wiz_magatt9, wiz_fast10); ai_face(this); }
+void wiz_fast8(entity this) { set_anim(this, anim_wiz_magatt8, wiz_fast9); ai_face(this); }
+void wiz_fast7(entity this) { set_anim(this, anim_wiz_magatt7, wiz_fast8); ai_face(this); }
+void wiz_fast6(entity this) { set_anim(this, anim_wiz_magatt6, wiz_fast7); ai_face(this); }
+void wiz_fast5(entity this) { set_anim(this, anim_wiz_magatt5, wiz_fast6); ai_face(this); }
+void wiz_fast4(entity this) { set_anim(this, anim_wiz_magatt4, wiz_fast5); ai_face(this); }
+void wiz_fast3(entity this) { set_anim(this, anim_wiz_magatt3, wiz_fast4); ai_face(this); }
+void wiz_fast2(entity this) { set_anim(this, anim_wiz_magatt2, wiz_fast3); ai_face(this); }
+void wiz_fast1(entity this) { set_anim(this, anim_wiz_magatt1, wiz_fast2); ai_face(this); Wiz_StartFast(this); }
+
+void wiz_pain4(entity this) { set_anim(this, anim_wiz_pain4, wiz_run1); }
+void wiz_pain3(entity this) { set_anim(this, anim_wiz_pain3, wiz_pain4); }
+void wiz_pain2(entity this) { set_anim(this, anim_wiz_pain2, wiz_pain3); }
+void wiz_pain1(entity this) { set_anim(this, anim_wiz_pain1, wiz_pain2); }
+
+void wiz_death8(entity this) { set_anim(this, anim_wiz_death8, wiz_death8); }
+void wiz_death7(entity this) { set_anim(this, anim_wiz_death7, wiz_death8); }
+void wiz_death6(entity this) { set_anim(this, anim_wiz_death6, wiz_death7); }
+void wiz_death5(entity this) { set_anim(this, anim_wiz_death5, wiz_death6); }
+void wiz_death4(entity this) { set_anim(this, anim_wiz_death4, wiz_death5); }
+void wiz_death3(entity this) { set_anim(this, anim_wiz_death3, wiz_death4); this.solid = SOLID_NOT; }
+void wiz_death2(entity this) { set_anim(this, anim_wiz_death2, wiz_death3); }
+void wiz_death1(entity this)
+{
+	set_anim(this, anim_wiz_death1, wiz_death2);
+	this.velocity_x = -200 + 400*random();
+	this.velocity_y = -200 + 400*random();
+	this.velocity_z = 100 + 100*random();
+	this.flags &= ~FL_ONGROUND;
+	_sound(this, CHAN_VOICE, "wizard/wdeath.wav", 1, ATTN_NORM);
 }
-void()	wiz_run2	=[	$fly2,		wiz_run3	] {ai_run(16);}
-void()	wiz_run3	=[	$fly3,		wiz_run4	] {ai_run(16);}
-void()	wiz_run4	=[	$fly4,		wiz_run5	] {ai_run(16);}
-void()	wiz_run5	=[	$fly5,		wiz_run6	] {ai_run(16);}
-void()	wiz_run6	=[	$fly6,		wiz_run7	] {ai_run(16);}
-void()	wiz_run7	=[	$fly7,		wiz_run8	] {ai_run(16);}
-void()	wiz_run8	=[	$fly8,		wiz_run9	] {ai_run(16);}
-void()	wiz_run9	=[	$fly9,		wiz_run10	] {ai_run(16);}
-void()	wiz_run10	=[	$fly10,		wiz_run11	] {ai_run(16);}
-void()	wiz_run11	=[	$fly11,		wiz_run12	] {ai_run(16);}
-void()	wiz_run12	=[	$fly12,		wiz_run13	] {ai_run(16);}
-void()	wiz_run13	=[	$fly13,		wiz_run14	] {ai_run(16);}
-void()	wiz_run14	=[	$fly14,		wiz_run1	] {ai_run(16);}
-
-void()	wiz_fast1	=[	$magatt1,		wiz_fast2	] {ai_face(this);Wiz_StartFast();}
-void()	wiz_fast2	=[	$magatt2,		wiz_fast3	] {ai_face(this);}
-void()	wiz_fast3	=[	$magatt3,		wiz_fast4	] {ai_face(this);}
-void()	wiz_fast4	=[	$magatt4,		wiz_fast5	] {ai_face(this);}
-void()	wiz_fast5	=[	$magatt5,		wiz_fast6	] {ai_face(this);}
-void()	wiz_fast6	=[	$magatt6,		wiz_fast7	] {ai_face(this);}
-void()	wiz_fast7	=[	$magatt5,		wiz_fast8	] {ai_face(this);}
-void()	wiz_fast8	=[	$magatt4,		wiz_fast9	] {ai_face(this);}
-void()	wiz_fast9	=[	$magatt3,		wiz_fast10	] {ai_face(this);}
-void()	wiz_fast10	=[	$magatt2,		wiz_run1	] {ai_face(this);SUB_AttackFinished(2);WizardAttackFinished();}
-
-void()	wiz_pain1	=[	$pain1,		wiz_pain2	] {}
-void()	wiz_pain2	=[	$pain2,		wiz_pain3	] {}
-void()	wiz_pain3	=[	$pain3,		wiz_pain4	] {}
-void()	wiz_pain4	=[	$pain4,		wiz_run1	] {}
-
-void()	wiz_death1	=[	$death1,		wiz_death2	] {
-
-this.velocity_x = -200 + 400*random();
-this.velocity_y = -200 + 400*random();
-this.velocity_z = 100 + 100*random();
-this.flags &= ~FL_ONGROUND;
-_sound(this, CHAN_VOICE, "wizard/wdeath.wav", 1, ATTN_NORM);
-}
-void()	wiz_death2	=[	$death2,		wiz_death3	] {}
-void()	wiz_death3	=[	$death3,		wiz_death4	]{this.solid = SOLID_NOT;}
-void()	wiz_death4	=[	$death4,		wiz_death5	] {}
-void()	wiz_death5	=[	$death5,		wiz_death6	] {}
-void()	wiz_death6	=[	$death6,		wiz_death7	] {}
-void()	wiz_death7	=[	$death7,		wiz_death8	] {}
-void()	wiz_death8	=[	$death8,		wiz_death8	] {}
 
 void wiz_die(entity this, entity attacker)
 {
@@ -335,7 +383,7 @@ void wiz_die(entity this, entity attacker)
 		return;
 	}
 
-	wiz_death1();
+	wiz_death1(this);
 }
 
 void Wiz_Pain(entity this, entity attacker, float damage)
@@ -344,12 +392,12 @@ void Wiz_Pain(entity this, entity attacker, float damage)
 	if(random()*70 > damage)
 		return;		// didn't flinch
 
-	wiz_pain1();
+	wiz_pain1(this);
 }
 
 void Wiz_Missile(entity this)
 {
-	wiz_fast1();
+	wiz_fast1(this);
 }
 
 string wiz_sight() { return "wizard/wsight.wav"; }
