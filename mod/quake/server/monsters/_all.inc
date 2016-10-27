@@ -7,7 +7,7 @@
 #include "soldier.qc"
 #include "wizard.qc"
 #include "dog.qc"
-//#include "zombie.qc"
+#include "zombie.qc"
 #include "boss.qc"
 
 #include "tarbaby.qc"		// registered
