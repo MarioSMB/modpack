@@ -2,7 +2,10 @@
 
 void CSQC_Init()
 {
-
+	// needs to be done so early because of the constants they create
+	static_init();
+	static_init_late();
+	static_init_precache();
 }
 
 void CSQC_Shutdown()
