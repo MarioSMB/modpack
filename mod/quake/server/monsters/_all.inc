@@ -3,7 +3,7 @@
 #include "ogre.qc"
 #include "demon.qc"
 #include "shambler.qc"
-//#include "knight.qc"
+#include "knight.qc"
 #include "soldier.qc"
 #include "wizard.qc"
 #include "dog.qc"
