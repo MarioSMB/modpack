@@ -1432,3 +1432,13 @@ void SV_ParseClientCommand(entity this, string command)
 
 	clientcommand(this, command);
 }
+
+void SV_ChangeTeam(entity this, float _color)
+{
+	if(!IS_CLIENT(this))
+	{
+		// since this is an engine function, and gamecode doesn't have any calls earlier than this, do the connecting message here
+		bprintf("%s is connecting...\n");
+		return;
+	}
+}
