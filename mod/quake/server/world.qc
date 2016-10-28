@@ -248,6 +248,37 @@ spawnfunc(worldspawn)
 
 	world_initialized = true;
 
+	// fill sv_curl_serverpackages from .serverpackage files
+	if (autocvar_sv_curl_serverpackages_auto)
+	{
+		string s = "csprogs-" WATERMARK ".txt";
+		// remove automatically managed files from the list to prevent duplicates
+		for (int i = 0, n = tokenize_console(cvar_string("sv_curl_serverpackages")); i < n; ++i)
+		{
+			string pkg = argv(i);
+			if (startsWith(pkg, "csprogs-")) continue;
+			if (endsWith(pkg, "-serverpackage.txt")) continue;
+			if (endsWith(pkg, ".serverpackage")) continue;  // OLD legacy
+			s = cons(s, pkg);
+		}
+		// add automatically managed files to the list
+		#define X(match) MACRO_BEGIN { \
+			int fd = search_begin(match, true, false); \
+			if (fd >= 0) \
+			{ \
+				for (int i = 0, j = search_getsize(fd); i < j; ++i) \
+				{ \
+					s = cons(s, search_getfilename(fd, i)); \
+				} \
+				search_end(fd); \
+			} \
+		} MACRO_END
+		X("*-serverpackage.txt");
+		X("*.serverpackage");
+		#undef X
+		cvar_set("sv_curl_serverpackages", s);
+	}
+
 	sv_playerphysicsqc_backup = cvar("sv_playerphysicsqc");
 	cvar_set("sv_playerphysicsqc", "0");
 
