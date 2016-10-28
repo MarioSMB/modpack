@@ -1,16 +1,20 @@
 // required engine functions
 
+bool oldjump;
 void CSQC_Init()
 {
 	// needs to be done so early because of the constants they create
 	static_init();
 	static_init_late();
 	static_init_precache();
+
+	oldjump = cvar("cl_movement_track_canjump");
+	cvar_set("cl_movement_track_canjump", "1");
 }
 
 void CSQC_Shutdown()
 {
-
+	cvar_set("cl_movement_track_canjump", ftos(oldjump));
 }
 
 void CSQC_UpdateView(entity this, float w, float h)
