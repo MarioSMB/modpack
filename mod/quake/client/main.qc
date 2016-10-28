@@ -17,7 +17,7 @@ void CSQC_Init()
 void CSQC_Shutdown()
 {
 	cvar_set("cl_movement_track_canjump", ftos(oldjump));
-	localcmd(sprintf("\ncd remap %s\n"), cvar_string("g_cdtracks_remaplist"));
+	localcmd(sprintf("\ncd remap %s\n", cvar_string("g_cdtracks_remaplist")));
 }
 
 void CSQC_UpdateView(entity this, float w, float h)
