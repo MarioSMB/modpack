@@ -351,7 +351,7 @@ spawnfunc(monster_knight)
 	this.th_die = knight_die;
 
 	this.sightsound = knight_sight;
-	this.sightsound = knight_deathmessage;
+	this.deathmessage = knight_deathmessage;
 	
 	walkmonster_start(this);
 }
