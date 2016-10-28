@@ -14,8 +14,6 @@ bool sv_playerphysicsqc_backup;
 void SV_Shutdown()
 {
 	cvar_set("sv_playerphysicsqc", ftos(sv_playerphysicsqc_backup));
-
-	localcmd(sprintf("\ncd remap %s\n"), cvar_string("g_cdtracks_remaplist"));
 }
 
 //=======================
@@ -281,8 +279,6 @@ spawnfunc(worldspawn)
 
 	sv_playerphysicsqc_backup = cvar("sv_playerphysicsqc");
 	cvar_set("sv_playerphysicsqc", "0");
-
-	localcmd("\ncd remap track001 track002 track003 track004 track005 track006 track007 track008 track009 track010 track011\n");
 }
 
 void GotoNextMap();
