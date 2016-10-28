@@ -164,7 +164,7 @@ void SV_OnEntityPreSpawnFunction(entity this)
 }
 
 bool world_already_spawned;
-bool world_initialized;
+int world_initialized;
 spawnfunc(worldspawn)
 {
 	lastspawn = NULL;
@@ -246,7 +246,7 @@ spawnfunc(worldspawn)
 
 	PrecacheJunk();
 
-	world_initialized = true;
+	world_initialized = 1;
 
 	// fill sv_curl_serverpackages from .serverpackage files
 	if (autocvar_sv_curl_serverpackages_auto)
@@ -283,6 +283,65 @@ spawnfunc(worldspawn)
 	cvar_set("sv_playerphysicsqc", "0");
 
 	localcmd("\ncd remap track001 track002 track003 track004 track005 track006 track007 track008 track009 track010 track011\n");
+}
+
+void GotoNextMap();
+bool autocvar__sv_init;
+void GotoFirstMap(entity this)
+{
+	if(autocvar__sv_init)
+	{
+		// cvar_set("_sv_init", "0");
+		// we do NOT set this to 0 any more, so someone "accidentally" changing
+		// to this "init" map on a dedicated server will cause no permanent
+		// harm
+		mapname = "start";
+		GotoNextMap();
+
+		return;
+	}
+
+	if(time < 5)
+	{
+		this.nextthink = time;
+	}
+	else
+	{
+		this.nextthink = time + 1;
+		LOG_INFO("Waiting for _sv_init being set to 1 by initialization scripts...\n");
+	}
+}
+
+void remove_unsafely(entity e)
+{
+    if(e.classname == "spike")
+        error("Removing spikes is forbidden (crylink bug), please report");
+    builtin_remove(e);
+}
+
+spawnfunc(__init_dedicated_server)
+{
+	// handler for _init/_init map (only for dedicated server initialization)
+
+	world_initialized = -1; // don't complain
+	cvar = cvar_normal;
+	cvar_string = cvar_string_normal;
+	cvar_set = cvar_set_normal;
+
+	delete_fn = remove_unsafely;
+
+	entity e = spawn();
+	setthink(e, GotoFirstMap);
+	e.nextthink = time; // this is usually 1 at this point
+
+	e = new(info_player_deathmatch);  // safeguard against player joining
+
+	this.classname = "worldspawn"; // safeguard against various stuff ;)
+
+	// needs to be done so early because of the constants they create
+	static_init();
+	static_init_late();
+	static_init_precache();
 }
 
 void StartFrame()
