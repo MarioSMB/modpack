@@ -28,7 +28,7 @@ void FixItem(entity this)
 {
 	this.nextthink = time + 0.5;
 	// sanity checks
-	if(!this.noalign)
+	//if(!this.noalign)
 	if(this.mins != this.m_min || this.maxs != this.m_max)
 	{ // reset the item boundaries in case it got squished
 		LOG_TRACE("wtf the item got squashed?");
