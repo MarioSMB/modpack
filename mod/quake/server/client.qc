@@ -1433,12 +1433,39 @@ void SV_ParseClientCommand(entity this, string command)
 	clientcommand(this, command);
 }
 
+void setcolor(entity this, int clr)
+{
+#if 0
+	this.clientcolors = clr;
+	this.team = (clr & 15) + 1;
+#else
+	builtin_setcolor(this, clr);
+#endif
+}
+
+void SetPlayerColors(entity pl, float _color)
+{
+	/*string s;
+	s = ftos(cl);
+	stuffcmd(pl, strcat("color ", s, " ", s, "\n")  );
+	pl.team = cl + 1;
+	//pl.clientcolors = pl.clientcolors - (pl.clientcolors & 15) + cl;
+	pl.clientcolors = 16*cl + cl;*/
+
+	int pants = _color & 0x0F;
+	int shirt = _color & 0xF0;
+
+	setcolor(pl, shirt + pants);
+}
+
 void SV_ChangeTeam(entity this, float _color)
 {
 	if(!IS_CLIENT(this))
 	{
 		// since this is an engine function, and gamecode doesn't have any calls earlier than this, do the connecting message here
-		bprintf("%s is connecting...\n");
+		bprintf("%s is connecting...\n", this.netname);
 		return;
 	}
+
+	SetPlayerColors(this, _color);
 }
