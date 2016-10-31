@@ -274,22 +274,19 @@ LinkDoors
 */
 void LinkDoors(entity this)
 {
-	entity	t, starte;
-	vector	cmins, cmaxs;
-
 	if(this.enemy)
 		return;		// already linked by another door
-	if(this.spawnflags & 4)
+	if(this.spawnflags & BIT(2))
 	{
 		this.owner = this.enemy = this;
 		return;		// don't want to link this door
 	}
 
-	cmins = this.mins;
-	cmaxs = this.maxs;
+	vector cmins = this.mins;
+	vector cmaxs = this.maxs;
 	
-	starte = this;
-	t = this;
+	entity starte = this;
+	entity t = this;
 
 	entity e = this;
 	

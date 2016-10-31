@@ -22,6 +22,19 @@ spawnfunc(noclass)
 	delete(this);
 }
 
+.vector m_min;
+.vector m_max;
+void FixItem(entity this)
+{
+	this.nextthink = time + 0.5;
+	// sanity checks
+	if(!this.noalign)
+	if(this.mins != this.m_min || this.maxs != this.m_max)
+	{ // reset the item boundaries in case it got squished
+		LOG_TRACE("wtf the item got squashed?");
+		setsize(this, this.m_min, this.m_max);
+	}
+}
 
 
 /*
@@ -40,6 +53,10 @@ void PlaceItem(entity this)
 	this.movetype = MOVETYPE_TOSS;	
 	this.velocity = '0 0 0';
 	this.origin_z = this.origin_z + 6;
+	this.m_min = this.mins;
+	this.m_max = this.maxs;
+	setthink(this, FixItem);
+	this.nextthink = time + 1; // initial delay
 	bool didit = false;
 	WITHSELF(this, didit = builtin_droptofloor());
 	if(!didit)
