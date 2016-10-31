@@ -85,23 +85,21 @@ void t_movetarget(entity this, entity toucher)
 {
 	if(toucher.movetarget != this)
 		return;
-	
 	if(toucher.enemy)
-		return;		// fighting, not following a path
+		return; // fighting, not following a path
 
-	if(this.classname == "monster_ogre")
-		_sound(this, CHAN_VOICE, "ogre/ogdrag.wav", 1, ATTN_IDLE);// play chainsaw drag sound
+	if(toucher.classname == "monster_ogre")
+		_sound(toucher, CHAN_VOICE, "ogre/ogdrag.wav", 1, ATTN_IDLE); // play chainsaw drag sound
 
-//dprint("t_movetarget\n");
-	this.goalentity = this.movetarget = find(NULL, targetname, toucher.target);
-	this.ideal_yaw = vectoyaw(this.goalentity.origin - this.origin);
-	if(!this.movetarget)
+	toucher.goalentity = toucher.movetarget = find (world, targetname, other.target);
+	toucher.ideal_yaw = vectoyaw(toucher.goalentity.origin - toucher.origin);
+	if (!toucher.movetarget)
 	{
-		this.pausetime = time + 999999;
-		this.th_stand(this);
+		toucher.pausetime = time + 999999;
+		toucher.th_stand(toucher);
 		return;
 	}
-}
+};
 
 
 
