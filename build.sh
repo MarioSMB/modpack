@@ -23,5 +23,5 @@ relpath() {
 }
 
 export BUILD_MOD="$(relpath xonotic/qcsrc $PWD)"
-export XONOTIC=1
+export XONOTIC=0
 make -C ${base}
