@@ -1,4 +1,4 @@
-REGISTER_MUTATOR(freeze, cvar("g_freeze") && !IS_GAMETYPE(FREEZETAG) && !IS_GAMETYPE(CA) && !IS_GAMETYPE(CTS) && !IS_GAMETYPE(RACE));
+REGISTER_MUTATOR(freeze, cvar("g_freeze") && !IS_GAMETYPE(FREEZETAG) && !IS_GAMETYPE(CA) && !IS_GAMETYPE(CTS) && !IS_GAMETYPE(RACE) && teamplay);
 
 AUTOCVAR(g_freeze, bool, false, _("Enable freeze mutator (similar to freezetag, but for other modes)"));
 AUTOCVAR(g_freeze_noauto, bool, false, _("Don't automatically unfreeze the player"));
