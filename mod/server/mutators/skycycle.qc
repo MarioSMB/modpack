@@ -51,7 +51,7 @@ float skycycle_ambient_max; //Goal
 float skycycle_ambient_min; //Goal
 float skycycle_ambient_current;
 float skycycle_skybox;
-float skycycle_skybox_number;
+int skycycle_skybox_number;
 string skycycle_nightsky;
 string skycycle_dusksky;
 string skycycle_daysky;
