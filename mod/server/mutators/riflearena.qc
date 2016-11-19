@@ -81,6 +81,12 @@ MUTATOR_HOOKFUNCTION(ra, SetStartItems, CBC_ORDER_LAST)
 	}
 }
 
+MUTATOR_HOOKFUNCTION(ra, SetWeaponArena)
+{
+	// turn weapon arena off
+	M_ARGV(0, string) = "off";
+}
+
 MUTATOR_HOOKFUNCTION(ra, ForbidThrowCurrentWeapon)
 {
 	return true;

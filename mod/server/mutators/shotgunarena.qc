@@ -54,6 +54,12 @@ MUTATOR_HOOKFUNCTION(sha, SetStartItems, CBC_ORDER_LAST)
 	warmup_start_weapons = start_weapons = WEPSET(SHOTGUN);
 }
 
+MUTATOR_HOOKFUNCTION(sha, SetWeaponArena)
+{
+	// turn weapon arena off
+	M_ARGV(0, string) = "off";
+}
+
 MUTATOR_HOOKFUNCTION(sha, ForbidThrowCurrentWeapon)
 {
 	return true;
