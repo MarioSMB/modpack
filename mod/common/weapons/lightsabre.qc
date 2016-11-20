@@ -361,6 +361,11 @@ void W_LightSabre_SetActive(entity actor, .entity weaponentity, bool newactive, 
 			return WEAPON_LIGHTSABRE_MURDER;
 		}
 
+#elif defined(CSQC)
+METHOD(Lightsabre, wr_viewmodel, string(Lightsabre this, entity wep))
+{
+	return (this.lightsabre_active) ? "lightsabre_active" : "lightsabre";
+}
 #endif
 
 REGISTER_NET_S2C(lightsabre_activate)
@@ -370,9 +375,10 @@ NET_HANDLE(lightsabre_activate, bool)
 	int i = ReadByte();
 	return = true;
 	string s = (i == false) ? "lightsabre" : "lightsabre_active";
-	Weapon wep = WEP_LIGHTSABRE;
-	wep.mdl = s;
-	//CL_WeaponEntity_SetModel(viewmodel, s, false);
+	//Weapon wep = WEP_LIGHTSABRE;
+	//wep.mdl = s;
+	viewmodel.lightsabre_active = i;
+	CL_WeaponEntity_SetModel(viewmodel, s, false);
 }
 #endif
 #ifdef SVQC
