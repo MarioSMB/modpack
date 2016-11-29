@@ -3,7 +3,7 @@
 REGISTER_NET_LINKED(ENT_CLIENT_JAILCAMERA)
 #endif
 #ifdef SVQC
-AUTOCVAR(g_jailbreak, bool, false, "Jailbreak: kill enemies to send them to jail, capture control points to free jailed teammates");
+AUTOCVAR_NOREF(g_jailbreak, bool, false, "Jailbreak: kill enemies to send them to jail, capture control points to free jailed teammates");
 #endif
 #include "jailbreak.qh"
 #endif
@@ -96,13 +96,13 @@ REGISTER_MUTATOR(jb, false)
 
 AUTOCVAR(g_jailbreak_teams, int, 2, "");
 AUTOCVAR(g_jailbreak_teams_override, int, 0, "");
-AUTOCVAR(g_jb_respawn_delay_small, float, 0, "");
-AUTOCVAR(g_jb_respawn_delay_small_count, float, 0, "");
-AUTOCVAR(g_jb_respawn_delay_large, float, 0, "");
-AUTOCVAR(g_jb_respawn_delay_large_count, float, 0, "");
-AUTOCVAR(g_jb_respawn_delay_max, float, 0, "");
-AUTOCVAR(g_jb_respawn_waves, float, 0, "");
-AUTOCVAR(g_jb_weapon_stay, float, 0, "");
+AUTOCVAR_NOREF(g_jb_respawn_delay_small, float, 0, "");
+AUTOCVAR_NOREF(g_jb_respawn_delay_small_count, float, 0, "");
+AUTOCVAR_NOREF(g_jb_respawn_delay_large, float, 0, "");
+AUTOCVAR_NOREF(g_jb_respawn_delay_large_count, float, 0, "");
+AUTOCVAR_NOREF(g_jb_respawn_delay_max, float, 0, "");
+AUTOCVAR_NOREF(g_jb_respawn_waves, float, 0, "");
+AUTOCVAR_NOREF(g_jb_weapon_stay, float, 0, "");
 AUTOCVAR(g_jailbreak_warmup, float, 5, "");
 AUTOCVAR(g_jailbreak_round_timelimit, float, 360, "");
 AUTOCVAR(g_jailbreak_score_imprison, int, 50, "Score for putting an enemy into jail");
@@ -128,7 +128,6 @@ AUTOCVAR(g_jailbreak_controlpoint_idletime_neutral_factor, float, 1, "See g_jail
 AUTOCVAR(g_jailbreak_controlpoint_claim, bool, true, "If enabled, controlpoints will change their team whenever they are triggered");
 AUTOCVAR(g_jailbreak_controlpoint_claim_allneutral, bool, false, "If enabled, all controlpoints will start as neutral in claim mode");
 AUTOCVAR(g_jailbreak_controlpoint_claim_noneutral, bool, true, "If enabled, neutral controlpoints will not be claimed");
-AUTOCVAR(g_jailbreak_torture_damagefactor, float, 0.3, "Damage multiplier for torture scenes");
 AUTOCVAR(g_jailbreak_nonjb_openjails, bool, true, "Defines how jail doors behave when playing Jailbreak maps on non-Jailbreak gametypes. 0 = locked unless overriden by the map, 1 = open unless overriden by the map, 2 = always locked, 3 = always open");
 AUTOCVAR(g_jailbreak_jail_deathmatch, int, 1, "Enables free-for-all deathmatch between imprisoned players of the same team (only when the jail doors are closed)");
 AUTOCVAR(g_jailbreak_prisoner_health, int, 100, "Amount of health imprisoned players get");

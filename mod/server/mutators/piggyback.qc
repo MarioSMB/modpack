@@ -1,6 +1,6 @@
 REGISTER_MUTATOR(piggyback, cvar("g_piggyback"));
 
-AUTOCVAR(g_piggyback, bool, false, _("Enable piggyback mutator (riding teammates)"));
+AUTOCVAR_NOREF(g_piggyback, bool, false, _("Enable piggyback mutator (riding teammates)"));
 AUTOCVAR(g_piggyback_ride_enemies, bool, false, _("Allow riding enemies"));
 
 .float cvar_cl_nocarry;

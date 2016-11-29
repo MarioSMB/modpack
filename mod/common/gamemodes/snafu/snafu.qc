@@ -1,6 +1,6 @@
 #ifndef IMPLEMENTATION
 #ifdef SVQC
-AUTOCVAR(g_snafu, bool, false, "SNAFU: I don't even know");
+AUTOCVAR_NOREF(g_snafu, bool, false, "SNAFU: I don't even know");
 #endif
 #include "snafu.qh"
 #ifndef MENUQC

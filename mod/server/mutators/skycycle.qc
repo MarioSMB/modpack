@@ -11,7 +11,7 @@ REGISTER_MUTATOR(skycycle, cvar("g_skycycle") || (cvar("g_skycycle_suggested") &
 	}
 }
 
-AUTOCVAR(g_skycycle, bool, false, _("Enable day-night cycles"));
+AUTOCVAR_NOREF(g_skycycle, bool, false, _("Enable day-night cycles"));
 AUTOCVAR(g_skycycle_time, float, 120, "");
 AUTOCVAR(g_skycycle_timebetween, float, 3, "");
 AUTOCVAR(g_skycycle_intensity_realmax, float, 0.75, "");
@@ -31,8 +31,8 @@ AUTOCVAR(g_skycycle_dusksky_max, float, 0.2, "");
 AUTOCVAR(g_skycycle_startatnight, bool, false, "");
 AUTOCVAR(g_skycycle_startattime, float, 0, _("Start at specific time (percentage of time [0 to 1])"));
 AUTOCVAR(g_skycycle_timelock, bool, false, _("Don't advance time"));
-AUTOCVAR(g_skycycle_suggested, bool, false, "Map suggests using skycycles");
-AUTOCVAR(g_skycycle_allow_suggested, bool, true, "Allow maps to turn on skycycle");
+AUTOCVAR_NOREF(g_skycycle_suggested, bool, false, "Map suggests using skycycles");
+AUTOCVAR_NOREF(g_skycycle_allow_suggested, bool, true, "Allow maps to turn on skycycle");
 
 float skycycle_time;
 float skycycle_timebetween;

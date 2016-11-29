@@ -11,13 +11,13 @@ REGISTER_MUTATOR(ra, cvar("g_riflearena") && !cvar("g_instagib") && !cvar("g_ove
 	}
 }
 
-AUTOCVAR(g_riflearena, bool, false, _("Enable rifle arena mutator"));
+AUTOCVAR_NOREF(g_riflearena, bool, false, _("Enable rifle arena mutator"));
 AUTOCVAR(g_riflearena_withlaser, bool, false, _("Enable blaster in the rifle arena mutator"));
-AUTOCVAR(g_riflearena_rifle_secondary_spread, float, 0, "");
-AUTOCVAR(g_riflearena_rifle_secondary_shots, int, 1, "");
-AUTOCVAR(g_riflearena_rifle_secondary_animtime, float, 0.15, "");
-AUTOCVAR(g_riflearena_rifle_secondary_refire, float, 0.15, "");
-AUTOCVAR(g_riflearena_rifle_secondary_damage, int, 40, "");
+AUTOCVAR_NOREF(g_riflearena_rifle_secondary_spread, float, 0, "");
+AUTOCVAR_NOREF(g_riflearena_rifle_secondary_shots, int, 1, "");
+AUTOCVAR_NOREF(g_riflearena_rifle_secondary_animtime, float, 0.15, "");
+AUTOCVAR_NOREF(g_riflearena_rifle_secondary_refire, float, 0.15, "");
+AUTOCVAR_NOREF(g_riflearena_rifle_secondary_damage, int, 40, "");
 
 void ra_SetCvars()
 {

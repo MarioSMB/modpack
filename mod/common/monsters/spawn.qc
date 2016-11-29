@@ -28,7 +28,7 @@ REGISTER_MONSTER(TARBABY, NEW(Tarbaby)) {
 
 #ifdef SVQC
 AUTOCVAR(g_monster_spawn_health, float, 80, "");
-AUTOCVAR(g_monster_spawn_damageforcescale, float, 0.2, "");
+//AUTOCVAR(g_monster_spawn_damageforcescale, float, 0.2, "");
 AUTOCVAR(g_monster_spawn_attack_explode_damage, float, 120, "");
 AUTOCVAR(g_monster_spawn_attack_explode_radius, float, 100, "");
 AUTOCVAR(g_monster_spawn_attack_leap_speed, float, 600, "");

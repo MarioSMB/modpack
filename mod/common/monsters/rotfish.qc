@@ -37,7 +37,7 @@ AUTOCVAR(g_monster_rotfish_health, int, 30, "");
 AUTOCVAR(g_monster_rotfish_damageforcescale, float, 0.8, "");
 AUTOCVAR(g_monster_rotfish_attack_melee_damage, float, 20, "");
 AUTOCVAR(g_monster_rotfish_attack_melee_delay, float, 1.7, "");
-AUTOCVAR(g_monster_rotfish_attack_range, float, 80, "");
+//AUTOCVAR(g_monster_rotfish_attack_range, float, 80, "");
 AUTOCVAR(g_monster_rotfish_speed_stop, float, 100, "");
 AUTOCVAR(g_monster_rotfish_speed_run, float, 100, "");
 AUTOCVAR(g_monster_rotfish_speed_walk, float, 80, "");

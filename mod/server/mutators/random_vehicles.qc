@@ -1,6 +1,6 @@
 REGISTER_MUTATOR(rvehicles, cvar("g_random_vehicles") && cvar("g_vehicles"));
 
-AUTOCVAR(g_random_vehicles, bool, false, _("Enable random vehicles mutator"));
+AUTOCVAR_NOREF(g_random_vehicles, bool, false, _("Enable random vehicles mutator"));
 
 MUTATOR_HOOKFUNCTION(rvehicles, OnEntityPreSpawn)
 {

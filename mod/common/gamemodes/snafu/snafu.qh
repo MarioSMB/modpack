@@ -15,7 +15,7 @@ REGISTER_GAMETYPE(SNAFU, NEW(Snafu));
 #define g_snafu IS_GAMETYPE(SNAFU)
 
 #ifdef SVQC
-AUTOCVAR(g_snafu_point_limit, int, -1, "SNAFU point limit overriding the mapinfo specified one (use 0 to play without limit, and -1 to use the mapinfo's limit)");
+AUTOCVAR_NOREF(g_snafu_point_limit, int, -1, "SNAFU point limit overriding the mapinfo specified one (use 0 to play without limit, and -1 to use the mapinfo's limit)");
 
 AUTOCVAR(g_snafu_prinsess_friction, float, 2, "");
 AUTOCVAR(g_snafu_prinsess_speed_walk, float, 220, "");
@@ -47,13 +47,13 @@ const int princess_dead1 = 13;
 const int princess_dead2 = 14;
 //float .frame;
 
-AUTOCVAR(g_snafu_respawn_delay_small, float, 0, "");
-AUTOCVAR(g_snafu_respawn_delay_small_count, float, 0, "");
-AUTOCVAR(g_snafu_respawn_delay_large, float, 0, "");
-AUTOCVAR(g_snafu_respawn_delay_large_count, float, 0, "");
-AUTOCVAR(g_snafu_respawn_delay_max, float, 0, "");
-AUTOCVAR(g_snafu_respawn_waves, float, 0, "");
-AUTOCVAR(g_snafu_weapon_stay, float, 0, "");
+AUTOCVAR_NOREF(g_snafu_respawn_delay_small, float, 0, "");
+AUTOCVAR_NOREF(g_snafu_respawn_delay_small_count, float, 0, "");
+AUTOCVAR_NOREF(g_snafu_respawn_delay_large, float, 0, "");
+AUTOCVAR_NOREF(g_snafu_respawn_delay_large_count, float, 0, "");
+AUTOCVAR_NOREF(g_snafu_respawn_delay_max, float, 0, "");
+AUTOCVAR_NOREF(g_snafu_respawn_waves, float, 0, "");
+AUTOCVAR_NOREF(g_snafu_weapon_stay, float, 0, "");
 
 AUTOCVAR(g_snafu_fatty_friction, float, 2, "");
 AUTOCVAR(g_snafu_fatty_speed_walk, float, 160, "");

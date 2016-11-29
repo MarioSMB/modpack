@@ -1,6 +1,6 @@
 #ifndef IMPLEMENTATION
 #ifdef SVQC
-	AUTOCVAR(g_conquest, bool, false, "Conquest: take control points until the enemy has nowhere to spawn");
+	AUTOCVAR_NOREF(g_conquest, bool, false, "Conquest: take control points until the enemy has nowhere to spawn");
 #endif
 #include "conquest.qh"
 
@@ -42,13 +42,13 @@ REGISTER_MUTATOR(cq, false)
 #ifdef IMPLEMENTATION
 
 #ifdef SVQC
-AUTOCVAR(g_conquest_respawn_delay_small, float, 0, "");
-AUTOCVAR(g_conquest_respawn_delay_small_count, float, 0, "");
-AUTOCVAR(g_conquest_respawn_delay_large, float, 0, "");
-AUTOCVAR(g_conquest_respawn_delay_large_count, float, 0, "");
-AUTOCVAR(g_conquest_respawn_delay_max, float, 0, "");
-AUTOCVAR(g_conquest_respawn_waves, float, 0, "");
-AUTOCVAR(g_conquest_weapon_stay, float, 0, "");
+AUTOCVAR_NOREF(g_conquest_respawn_delay_small, float, 0, "");
+AUTOCVAR_NOREF(g_conquest_respawn_delay_small_count, float, 0, "");
+AUTOCVAR_NOREF(g_conquest_respawn_delay_large, float, 0, "");
+AUTOCVAR_NOREF(g_conquest_respawn_delay_large_count, float, 0, "");
+AUTOCVAR_NOREF(g_conquest_respawn_delay_max, float, 0, "");
+AUTOCVAR_NOREF(g_conquest_respawn_waves, float, 0, "");
+AUTOCVAR_NOREF(g_conquest_weapon_stay, float, 0, "");
 AUTOCVAR(g_conquest_spawn_close_to_death, bool, true, "default to closest spawnpoint to death location");
 AUTOCVAR(g_conquest_capture_distance_default, float, 512, "maximum distance from control point at which players can capture/liberate");
 AUTOCVAR(g_conquest_capture_sps, float, 100, "capture/liberation speed");
