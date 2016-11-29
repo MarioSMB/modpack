@@ -55,7 +55,7 @@ MUTATOR_HOOKFUNCTION(mod_chat, PreFormatMessage)
 	// replace id with the player's name
 	FOREACH_CLIENTSLOT_REVERSE(true,
 	{
-		string myname = ((IS_CLIENT(it)) ? it.netname : "(nobody)");
+		string myname = strcat("^7", ((IS_CLIENT(it)) ? it.netname : "(nobody)"), "^7");
 		themsg = strreplace(strcat("@#", ftos(i)), myname, themsg);
 	});
 
