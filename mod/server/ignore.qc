@@ -2,7 +2,7 @@ REGISTER_MUTATOR(ignore, true);
 
 .string ignore_list; // stores player id's, maybe can be upgraded to store net address for reconnect protection
 
-MUTATOR_HOOKFUNCTION(muteban, ClientDisconnect)
+MUTATOR_HOOKFUNCTION(ignore, ClientDisconnect)
 {
 	entity player = M_ARGV(0, entity);
 
@@ -38,7 +38,7 @@ MUTATOR_HOOKFUNCTION(ignore, SV_ParseClientCommand)
 		{
 			if(player.ignore_list)
 				strunzone(player.ignore_list);
-			player.ignore_list = strzone(strcat(player.ignore_list, ftos(etof(client)), " "));
+			player.ignore_list = strzone(sprintf("%s%d ", player.ignore_list, etof(client)));
 
 			sprint(player, "You no longer receive messages from ", client.netname, ", use unignore to hear them again.\n");
 		}
@@ -74,7 +74,7 @@ MUTATOR_HOOKFUNCTION(ignore, ChatMessageTo)
 	entity to = M_ARGV(0, entity);
 	entity sender = M_ARGV(1, entity);
 
-	if(sender.ignore_list && IS_REAL_CLIENT(sender))
-	if(strhasword(sender.ignore_list, ftos(etof(to))))
+	if(to.ignore_list && IS_REAL_CLIENT(sender))
+	if(strhasword(to.ignore_list, ftos(etof(sender))))
 		return true; // no sending to this player, thank you very much
 }
