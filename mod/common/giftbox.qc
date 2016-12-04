@@ -150,6 +150,7 @@ MUTATOR_HOOKFUNCTION(giftbox, OnEntityPreSpawn)
 {
 	entity item = M_ARGV(0, entity);
 
+	if(!item.team) // no teamed items
 	if(random() <= autocvar_g_giftbox_spawnrate)
 	if(item.classname == "item_rockets" || item.classname == "item_bullets" || item.classname == "item_shells" || item.classname == "item_cells" || startsWith(item.classname, "ammo_"))
 		item.classname = "giftbox";
