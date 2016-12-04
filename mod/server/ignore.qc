@@ -16,7 +16,7 @@ MUTATOR_HOOKFUNCTION(muteban, ClientDisconnect)
 	{
 		if(it.ignore_list)
 			strunzone(it.ignore_list);
-		it.ignore_list = strzone(strreplace(sprintf(" %d ", player.playerid), " ", it.ignore_list));
+		it.ignore_list = strzone(strreplace(sprintf(" %d ", edict_num(player)), " ", it.ignore_list));
 	});
 }
 
@@ -38,7 +38,7 @@ MUTATOR_HOOKFUNCTION(ignore, SV_ParseClientCommand)
 		{
 			if(player.ignore_list)
 				strunzone(player.ignore_list);
-			player.ignore_list = strzone(strcat(player.ignore_list, ftos(client.playerid), " "));
+			player.ignore_list = strzone(strcat(player.ignore_list, ftos(edict_num(client)), " "));
 
 			sprint(player, "You no longer receive messages from ", client.netname, ", use unignore to hear them again.\n");
 		}
@@ -57,7 +57,7 @@ MUTATOR_HOOKFUNCTION(ignore, SV_ParseClientCommand)
 		{
 			if(player.ignore_list)
 				strunzone(player.ignore_list);
-			player.ignore_list = strzone(strreplace(sprintf(" %d ", client.playerid), " ", player.ignore_list));
+			player.ignore_list = strzone(strreplace(sprintf(" %d ", edict_num(client)), " ", player.ignore_list));
 
 			sprint(player, "You can now receive messages from ", client.netname, " again.\n");
 		}
@@ -75,6 +75,6 @@ MUTATOR_HOOKFUNCTION(ignore, ChatMessageTo)
 	entity sender = M_ARGV(1, entity);
 
 	if(sender.ignore_list && IS_REAL_CLIENT(sender))
-	if(strhasword(sender.ignore_list, ftos(to.playerid)))
+	if(strhasword(sender.ignore_list, edict_num(to)))
 		return true; // no sending to this player, thank you very much
 }
