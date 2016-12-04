@@ -4,6 +4,10 @@ MSG_INFO_NOTIF(GIFT_COAL,                     1,  0, 0, "", "",               ""
 MSG_CENTER_NOTIF(GIFT_COAL,                   1,  0, 0, "",                   CPID_Null,     "0 0",   "^K1You got ^9coal^K1, all bonuses lost!", "")
 MSG_MULTI_NOTIF(GIFT_COAL,                    1,  NULL,                       INFO_GIFT_COAL,         CENTER_GIFT_COAL)
 
+MSG_INFO_NOTIF(GIFT_DIAMOND,                  1,  0, 0, "", "",               "",                     "^F1You got ^5coal^F1, all bonuses granted!", "")
+MSG_CENTER_NOTIF(GIFT_DIAMOND,                1,  0, 0, "",                   CPID_Null,     "0 0",   "^F1You got ^5coal^F1, all bonuses granted!", "")
+MSG_MULTI_NOTIF(GIFT_DIAMOND,                 1,  NULL,                       INFO_GIFT_DIAMOND,      CENTER_GIFT_DIAMOND)
+
 MSG_INFO_NOTIF(GIFT_ARMOR,                    1,  0, 1, "f1", "",             "",                     "^BGYou got ^F2%s^F1 armor^BG!", "")
 MSG_CENTER_NOTIF(GIFT_ARMOR,                  1,  0, 1, "f1",                 CPID_Null,     "0 0",   "^BGYou got ^F2%s^F1 armor^BG!", "")
 MSG_MULTI_NOTIF(GIFT_ARMOR,                   1,  NULL,                       INFO_GIFT_ARMOR,        CENTER_GIFT_ARMOR)
@@ -39,6 +43,21 @@ MSG_MULTI_NOTIF(GIFT, 1, NULL, INFO_GIFT, CENTER_GIFT)
 #endif
 
 #ifdef SVQC
+int get_all_gifts()
+{
+	return 	( GIFTBOX_GIFT_ROCKINGHORSE
+			| GIFTBOX_GIFT_CANDYCORN
+			| GIFTBOX_GIFT_EGGNOG
+			| GIFTBOX_GIFT_SWEATER
+			| GIFTBOX_GIFT_SCARF
+			| GIFTBOX_GIFT_CHOCOLATE
+			| GIFTBOX_GIFT_FAIRYFLOSS
+			| GIFTBOX_GIFT_SLIPPERS
+			| GIFTBOX_GIFT_WATCH
+			| GIFTBOX_GIFT_RING
+			);
+}
+
 int get_random_gift()
 {
 	RandomSelection_Init();

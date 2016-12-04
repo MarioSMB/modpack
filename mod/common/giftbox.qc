@@ -79,8 +79,16 @@ void giftbox_touch(entity this, entity toucher)
 
 	if(this.gifts & GIFTBOX_GIFT_COAL)
 	{
-		toucher.gifts = 0;
-		Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, GIFT_COAL);
+		if(!toucher.gifts)
+		{
+			toucher.gifts |= get_all_gifts();
+			Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, GIFT_DIAMOND);
+		}
+		else
+		{
+			toucher.gifts = 0;
+			Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, GIFT_COAL);
+		}
 	}
 	else if(this.gifts & GIFTBOX_GIFT_BOMB)
 	{
