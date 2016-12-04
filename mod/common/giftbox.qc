@@ -101,6 +101,8 @@ void giftbox_touch(entity this, entity toucher)
 	else if(this.gifts & GIFTBOX_GIFT_ARMOR)
 	{
 		int amnt = floor(random() * 150);
+		if(cvar("g_instagib"))
+			amnt = floor(random() * 3); // 2 lives max in insta
 		Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, GIFT_ARMOR, amnt);
 		toucher.armorvalue = bound(toucher.armorvalue, 200, toucher.armorvalue + amnt);
 	}
