@@ -71,8 +71,11 @@ void giftbox_touch(entity this, entity toucher)
 	this.solid = SOLID_NOT;
 	this.respawntime = time + autocvar_g_giftbox_respawntime;
 
-	Send_Effect(EFFECT_GIFTBOX_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 100', 1);
-	sound(toucher, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTN_NORM);
+	if(!(this.gifts & GIFTBOX_GIFT_BOMB))
+	{
+		Send_Effect(EFFECT_GIFTBOX_PICKUP, CENTER_OR_VIEWOFS(this), '0 0 100', 1);
+		sound(toucher, CH_TRIGGER, SND_SHIELD_RESPAWN, VOL_BASE, ATTN_NORM);
+	}
 
 	if(this.gifts & GIFTBOX_GIFT_COAL)
 	{
