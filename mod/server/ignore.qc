@@ -75,6 +75,6 @@ MUTATOR_HOOKFUNCTION(ignore, ChatMessageTo)
 	entity sender = M_ARGV(1, entity);
 
 	if(sender.ignore_list && IS_REAL_CLIENT(sender))
-	if(strhasword(sender.ignore_list, etof(to)))
+	if(strhasword(sender.ignore_list, ftos(etof(to))))
 		return true; // no sending to this player, thank you very much
 }
