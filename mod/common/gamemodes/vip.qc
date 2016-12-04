@@ -388,6 +388,14 @@ MUTATOR_HOOKFUNCTION(vip, PlayerRegen)
 	}
 }
 
+MUTATOR_HOOKFUNCTION(vip, SpectateCopy)
+{
+	entity spectatee = M_ARGV(0, entity);
+	entity client = M_ARGV(1, entity);
+
+	STAT(VIP, client) = STAT(VIP, spectatee); // make spectators see it too
+}
+
 MUTATOR_HOOKFUNCTION(vip, PlayerUseKey)
 {
 	if(MUTATOR_RETURNVALUE || gameover || round_handler_IsRoundStarted()) { return; }
