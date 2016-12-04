@@ -35,6 +35,7 @@ MSG_MULTI_NOTIF(GIFT, 1, NULL, INFO_GIFT, CENTER_GIFT)
 	const int GIFTBOX_GIFT_WATCH 				= BIT(11);
 	const int GIFTBOX_GIFT_MUG 					= BIT(12);
 	const int GIFTBOX_GIFT_RING 				= BIT(13);
+	const int GIFTBOX_GIFT_BOMB 				= BIT(14);
 #endif
 
 #ifdef SVQC
@@ -55,6 +56,7 @@ int get_random_gift()
 	RandomSelection_AddFloat(GIFTBOX_GIFT_WATCH, 1, 1);
 	RandomSelection_AddFloat(GIFTBOX_GIFT_MUG, 1, 1);
 	RandomSelection_AddFloat(GIFTBOX_GIFT_RING, 1, 1);
+	RandomSelection_AddFloat(GIFTBOX_GIFT_BOMB, 0.5, 1);
 
 	return RandomSelection_chosen_float;
 }

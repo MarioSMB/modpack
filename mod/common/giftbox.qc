@@ -79,6 +79,14 @@ void giftbox_touch(entity this, entity toucher)
 		toucher.gifts = 0;
 		Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, GIFT_COAL);
 	}
+	else if(this.gifts & GIFTBOX_GIFT_BOMB)
+	{
+		Send_Effect(EFFECT_EXPLOSION_MEDIUM, this.origin, '0 0 0', 1);
+		sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
+
+		RadiusDamage (this, this, 50, 35, 150,
+					NULL, NULL, 120, DEATH_GENERIC.m_id, toucher);
+	}
 	else if(this.gifts & GIFTBOX_GIFT_ARMOR)
 	{
 		int amnt = floor(random() * 150);
