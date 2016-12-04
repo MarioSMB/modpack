@@ -168,6 +168,9 @@ MUTATOR_HOOKFUNCTION(giftbox, PlayerPhysics)
 		player.stat_sv_maxspeed *= (1 + get_gift_percent(GIFTBOX_GIFT_ROCKINGHORSE));
 		player.stat_sv_airspeedlimit_nonqw *= (1 + get_gift_percent(GIFTBOX_GIFT_ROCKINGHORSE));
 	}
+
+	if(player.gifts & GIFTBOX_GIFT_FAIRYFLOSS)
+		player.stat_sv_jumpvelocity *= (1 + get_gift_percent(GIFTBOX_GIFT_FAIRYFLOSS));
 }
 
 MUTATOR_HOOKFUNCTION(giftbox, PlayerDamage_Calculate)
@@ -216,14 +219,6 @@ MUTATOR_HOOKFUNCTION(giftbox, PlayerDamaged)
 		float thered = autocvar_g_balance_pause_health_regen * (1 - get_gift_percent(GIFTBOX_GIFT_MUG));
 		player.pauseregen_finished -= thered;
 	}
-}
-
-MUTATOR_HOOKFUNCTION(giftbox, PlayerJump)
-{
-	entity player = M_ARGV(0, entity);
-
-	if(player.gifts & GIFTBOX_GIFT_FAIRYFLOSS)
-		M_ARGV(1, float) *= (1 + get_gift_percent(GIFTBOX_GIFT_FAIRYFLOSS)); // jump height
 }
 
 MUTATOR_HOOKFUNCTION(giftbox, WeaponRateFactor)
