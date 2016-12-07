@@ -11,7 +11,7 @@ MUTATOR_HOOKFUNCTION(tp, SV_ParseServerCommand)
 	if(cmd_name == "tp")
 	{
 		entity to = GetIndexedEntity(cmd_argc, 2);
-		bool accepted = VerifyClientEntity(to, true, false);
+		bool accepted = VerifyClientEntity(to, false, false);
 
 		if(accepted <= 0)
 		{
@@ -53,7 +53,7 @@ MUTATOR_HOOKFUNCTION(tp, SV_ParseServerCommand)
 		else
 		{
 			entity from = GetIndexedEntity(cmd_argc, 1);
-			accepted = VerifyClientEntity(from, true, false);
+			accepted = VerifyClientEntity(from, false, false);
 
 			if(accepted > 0 && IS_PLAYER(to))
 			{
