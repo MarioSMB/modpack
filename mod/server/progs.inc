@@ -19,6 +19,7 @@
 	#include "radio.qc"
 	#include "spawnreplace.qc"
 	#include "stats.qc"
+	#include "tp.qc"
 
 	#include "mutators/all.qh"
 #endif
