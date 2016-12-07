@@ -1,5 +1,10 @@
 REGISTER_MUTATOR(tp, true);
 
+STATIC_INIT_LATE(tpcmd)
+{
+	localcmd("\nalias tp \"sv_cmd tp ${* ?}\"\n");
+}
+
 MUTATOR_HOOKFUNCTION(tp, SV_ParseServerCommand)
 {
 	if(MUTATOR_RETURNVALUE) // command was already handled?
