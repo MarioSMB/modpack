@@ -11,11 +11,11 @@ MUTATOR_HOOKFUNCTION(tp, SV_ParseServerCommand)
 	if(cmd_name == "tp")
 	{
 		entity to = GetIndexedEntity(cmd_argc, 2);
-		bool accepted = VerifyClientEntity(to, false, false);
+		int accepted = VerifyClientEntity(to, false, false);
 
-		if(accepted <= 0)
+		if(accepted <= 0 || !IS_PLAYER(to))
 		{
-			LOG_INFO("Could not teleport to ", to.netname, ".\n");
+			LOG_INFO("Could not teleport to ", to.netname, "^7.\n");
 			return true;
 		}
 
@@ -23,15 +23,21 @@ MUTATOR_HOOKFUNCTION(tp, SV_ParseServerCommand)
 
 		if(arg == "all" || arg == "@a")
 		{
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && IS_PLAYER(it) && it != to,
+			int fnd = 0;
+			FOREACH_CLIENT(IS_PLAYER(it) && it != to,
 			{
 				setorigin(it, to.origin);
 				it.oldorigin = to.origin;
 				it.velocity = '0 0 0';
 				it.oldvelocity = '0 0 0';
+
+				++fnd;
 			});
 
-			LOG_INFO("Teleported everyone to ", to.netname, ".\n");
+			if(!fnd)
+				LOG_INFO("Found nobody to teleport...\n");
+			else
+				LOG_INFO("Teleported everyone to ", to.netname, "^7.\n");
 		}
 		else if(teamplay && (arg == "red" || arg == "blue" || arg == "yellow" || arg == "pink"))
 		{
@@ -40,32 +46,38 @@ MUTATOR_HOOKFUNCTION(tp, SV_ParseServerCommand)
 			if(arg == "yellow") tnum = NUM_TEAM_3;
 			if(arg == "pink") tnum = NUM_TEAM_4;
 
-			FOREACH_CLIENT(IS_REAL_CLIENT(it) && IS_PLAYER(it) && it != to && it.team == tnum,
+			int fnd = 0;
+			FOREACH_CLIENT(IS_PLAYER(it) && it != to && it.team == tnum,
 			{
 				setorigin(it, to.origin);
 				it.oldorigin = to.origin;
 				it.velocity = '0 0 0';
 				it.oldvelocity = '0 0 0';
+
+				++fnd;
 			});
 
-			LOG_INFO("Teleported everyone on the ", arg, " team to ", to.netname, ".\n");
+			if(!fnd)
+				LOG_INFO("Found nobody to teleport...\n");
+			else
+				LOG_INFO("Teleported everyone on the ", arg, " team to ", to.netname, "^7.\n");
 		}
 		else
 		{
 			entity from = GetIndexedEntity(cmd_argc, 1);
 			accepted = VerifyClientEntity(from, false, false);
 
-			if(accepted > 0 && IS_PLAYER(to))
+			if(accepted > 0)
 			{
 				setorigin(from, to.origin);
 				from.oldorigin = to.origin;
 				from.velocity = '0 0 0';
 				from.oldvelocity = '0 0 0';
 
-				LOG_INFO("Teleported ", from.netname, " to ", to.netname, ".\n");
+				LOG_INFO("Teleported ", from.netname, " ^7to ", to.netname, "^7.\n");
 			}
 			else
-				LOG_INFO("Could not teleport ", from.netname, " to ", to.netname, ".\n");
+				LOG_INFO("Could not teleport ", from.netname, " ^7to ", to.netname, "^7.\n");
 		}
 
 		return true;
