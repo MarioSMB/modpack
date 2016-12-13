@@ -10,6 +10,7 @@
 	#include "custom_playermodels.qc"
 	#include "damage.qc"
 	#include "demo.qc"
+	#include "ignore.qc"
 	#include "items.qc"
 	#include "headshots.qc"
 	#include "monsters.qc"
@@ -18,6 +19,7 @@
 	#include "radio.qc"
 	#include "spawnreplace.qc"
 	#include "stats.qc"
+	#include "tp.qc"
 
 	#include "mutators/all.qh"
 #endif

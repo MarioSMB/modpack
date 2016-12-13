@@ -37,3 +37,27 @@ MUTATOR_HOOKFUNCTION(mod_chat, FormatMessage)
 		case "A": M_ARGV(2, string) = sprintf("%s%d", rgb_to_hexcolor(('0 2 0' * player.armorvalue / g_pickup_armorsmall_max) + ('0 0 1' * ( player.armorvalue - 100) / g_pickup_armorsmall_max)), rint(player.armorvalue)); break;
 	}
 }
+
+#define FOREACH_CLIENTSLOT_REVERSE(cond, body) \
+	MACRO_BEGIN { \
+		for(int _i = maxclients; _i >= 1; --_i) \
+		{ \
+			const noref int i = _i; \
+			ITER_CONST noref entity it = ftoe(i); \
+			if(cond) { LAMBDA(body) } \
+		} \
+	} MACRO_END
+
+MUTATOR_HOOKFUNCTION(mod_chat, PreFormatMessage)
+{
+	string themsg = M_ARGV(1, string);
+
+	// replace id with the player's name
+	FOREACH_CLIENTSLOT_REVERSE(true,
+	{
+		string myname = strcat("^7", ((IS_CLIENT(it)) ? it.netname : "(nobody)"), "^7");
+		themsg = strreplace(strcat("@#", ftos(i)), myname, themsg);
+	});
+
+	M_ARGV(1, string) = themsg;
+}

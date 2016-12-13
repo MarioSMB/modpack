@@ -1,6 +1,6 @@
 #ifndef IMPLEMENTATION
 #ifdef SVQC
-AUTOCVAR(g_vip, bool, false, "");
+AUTOCVAR_NOREF(g_vip, bool, false, "");
 #endif
 #include "vip.qh"
 #endif
@@ -8,7 +8,7 @@ AUTOCVAR(g_vip, bool, false, "");
 #ifdef IMPLEMENTATION
 
 #ifdef SVQC
-AUTOCVAR(g_vip_soulgems, bool, true, "");
+AUTOCVAR_NOREF(g_vip_soulgems, bool, true, "");
 AUTOCVAR(g_vip_warmup, float, 10, "");
 AUTOCVAR(g_vip_round_timelimit, float, 180, "");
 AUTOCVAR(g_vip_point_limit, int, -1, "VIP point limit overriding the mapinfo specified one (use 0 to play without limit, and -1 to use mapinfo's limit)");
@@ -386,6 +386,14 @@ MUTATOR_HOOKFUNCTION(vip, PlayerRegen)
 		M_ARGV(1, float) *= 2; // max_mod
 		M_ARGV(2, float) = 0.7; // but with slower regen
 	}
+}
+
+MUTATOR_HOOKFUNCTION(vip, SpectateCopy)
+{
+	entity spectatee = M_ARGV(0, entity);
+	entity client = M_ARGV(1, entity);
+
+	STAT(VIP, client) = STAT(VIP, spectatee); // make spectators see it too
 }
 
 MUTATOR_HOOKFUNCTION(vip, PlayerUseKey)

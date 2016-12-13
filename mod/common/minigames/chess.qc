@@ -67,10 +67,6 @@ enum {
 #undef lambda
 };
 
-#define lambda(id, text) text,
-string response_phrase[] = {responses(lambda)};
-#undef lambda
-
 #define CHESS_GOOD_MOVE(X) (X == response__Ok || X == response__Promotion || X == response__CastleK || X == response__CastleQ)
 
 entity chess_find_piece(entity minig, string tile)
@@ -504,7 +500,6 @@ void chess_move(entity minigame, entity player, string thepiece, string pos, str
 		if(chess_king_checkspot(minigame, piece, pos))
 			return;
 		int r = chess_move_try(minigame, thepiece, pos, true);
-		//LOG_INFOF("%s\n", response_phrase[r]);
 		int promote = piece__Empty;
 		int rletter = 0, rnumber = 0;
 		string thepos = string_null;

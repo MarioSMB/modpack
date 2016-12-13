@@ -1,6 +1,6 @@
 REGISTER_MUTATOR(su, cvar("g_spawn_unique"));
 
-AUTOCVAR(g_spawn_unique, bool, false, _("Prevent spawning at the same spawn point twice if possible"));
+AUTOCVAR_NOREF(g_spawn_unique, bool, false, _("Prevent spawning at the same spawn point twice if possible"));
 
 .entity su_last_point;
 

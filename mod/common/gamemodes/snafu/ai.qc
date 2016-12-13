@@ -16,7 +16,7 @@ const int GAIN_FRAMES = 16;
 //.SendFlags
 
 .float  gai_physics_stepheight;
-.float  gai_physics_hoverheight = gai_physics_stepheight;
+//.float  gai_physics_hoverheight = gai_physics_stepheight;
 .float  gai_physics_airfriction;
 .float  gai_physics_waterfriction;
 .float  gai_physics_slimefriction;

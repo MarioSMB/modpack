@@ -37,7 +37,7 @@ void IRCSay(string msgstr)
 float mod_cvar_file;
 void RegisterModCvars_Set(string name, string def, string desc, bool archive, string file)
 {
-	if(substring(file, 0, 10) != "../../mod/")
+	if(substring(file, 0, 10) != "../../mod/" && substring(file, 0, 21) != "../../../modpack/mod/")
 		return;
 
 	// NOTE: the file must be opened beforehand, or this will implode!

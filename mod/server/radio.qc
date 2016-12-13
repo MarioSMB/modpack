@@ -13,7 +13,7 @@ string radio_filename;
 
 const int URI_GET_RADIO = 195;
 
-AUTOCVAR(sv_radio, bool, false, "Enable radio");
+AUTOCVAR_NOREF(sv_radio, bool, false, "Enable radio");
 AUTOCVAR(sv_radio_announce, bool, true, "");
 AUTOCVAR(sv_radio_announce_howto, bool, true, "");
 AUTOCVAR(sv_radio_log_skips, bool, false, "");

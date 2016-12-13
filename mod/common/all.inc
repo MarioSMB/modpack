@@ -1,7 +1,10 @@
+#include "cvars.qh"
+
 #include "announcer.qc"
 #include "commands/all.inc"
 #include "effects.inc"
 #include "gamemodes/all.inc"
+#include "giftbox.qc"
 #include "projectiles.qh"
 #include "minigames/all.inc"
 //#include "mpowerups.qc"

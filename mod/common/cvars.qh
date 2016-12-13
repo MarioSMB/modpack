@@ -1,0 +1,17 @@
+// the mod relies on AUTOCVAR() to define cvars for use in a special dumping command, so admins know which cvars are from the mod
+// but, many of these don't have any direct references, so we need to use this custom copy of the AUTOCVAR()
+
+#define __AUTOCVAR_NOREF(file, archive, var, type, desc, default) \
+	[[accumulate]] void RegisterCvars(void(string, string, string, bool, string) f) \
+	{ \
+		f( #var, repr_cvar_##type(default), desc, archive, file); \
+	} \
+	noref type autocvar_##var = default
+#define AUTOCVAR_NOREF_5(file, archive, var, type, desc) \
+	__AUTOCVAR_NOREF(file, archive, var, type, desc, default_##type)
+#define AUTOCVAR_NOREF_6(file, archive, var, type, default, desc) \
+	__AUTOCVAR_NOREF(file, archive, var, type, desc, default)
+#define _AUTOCVAR_NOREF(...) EVAL__AUTOCVAR_NOREF(OVERLOAD(AUTOCVAR_NOREF, __FILE__, __VA_ARGS__))
+#define EVAL__AUTOCVAR_NOREF(...) __VA_ARGS__
+#define AUTOCVAR_NOREF_SAVE(...) _AUTOCVAR_NOREF(true, __VA_ARGS__)
+#define AUTOCVAR_NOREF(...) _AUTOCVAR_NOREF(false, __VA_ARGS__)

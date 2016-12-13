@@ -1,0 +1,139 @@
+#pragma once
+
+MSG_INFO_NOTIF(GIFT_COAL,                     1,  0, 0, "", "",               "",                     "^K1You got ^9coal^K1, all bonuses lost!", "")
+MSG_CENTER_NOTIF(GIFT_COAL,                   1,  0, 0, "",                   CPID_Null,     "0 0",   "^K1You got ^9coal^K1, all bonuses lost!", "")
+MSG_MULTI_NOTIF(GIFT_COAL,                    1,  NULL,                       INFO_GIFT_COAL,         CENTER_GIFT_COAL)
+
+MSG_INFO_NOTIF(GIFT_DIAMOND,                  1,  0, 0, "", "",               "",                     "^F1You got ^5diamond^F1, all bonuses granted!", "")
+MSG_CENTER_NOTIF(GIFT_DIAMOND,                1,  0, 0, "",                   CPID_Null,     "0 0",   "^F1You got ^5diamond^F1, all bonuses granted!", "")
+MSG_MULTI_NOTIF(GIFT_DIAMOND,                 1,  NULL,                       INFO_GIFT_DIAMOND,      CENTER_GIFT_DIAMOND)
+
+MSG_INFO_NOTIF(GIFT_ARMOR,                    1,  0, 1, "f1", "",             "",                     "^BGYou got ^F2%s^F1 armor^BG!", "")
+MSG_CENTER_NOTIF(GIFT_ARMOR,                  1,  0, 1, "f1",                 CPID_Null,     "0 0",   "^BGYou got ^F2%s^F1 armor^BG!", "")
+MSG_MULTI_NOTIF(GIFT_ARMOR,                   1,  NULL,                       INFO_GIFT_ARMOR,        CENTER_GIFT_ARMOR)
+
+MSG_INFO_NOTIF(GIFT_HEALTH,                   1,  0, 1, "f1", "",             "",                     "^BGYou got ^F2%s^K1 health^BG!", "")
+MSG_CENTER_NOTIF(GIFT_HEALTH,                 1,  0, 1, "f1",                 CPID_Null,     "0 0",   "^BGYou got ^F2%s^K1 health^BG!", "")
+MSG_MULTI_NOTIF(GIFT_HEALTH,                  1,  NULL,                       INFO_GIFT_HEALTH,       CENTER_GIFT_HEALTH)
+
+MSG_CENTER_NOTIF(GIFT_NOTHING,                1,  0, 0, "",                   CPID_Null,     "0 0",   "^BGThis gift is not for you!", "")
+
+MSG_INFO_NOTIF(GIFT, 1, 2, 1, "s1 s2 f1", "", "", "^BGYou got ^F2%s^BG, ^F3%s^BG increased by ^F1%s%%^BG!", "")
+MSG_CENTER_NOTIF(GIFT, 1, 2, 1, "s1 s2 f1", CPID_Null, "0 0", "^BGYou got ^F2%s^BG, ^F3%s^BG increased by ^F1%s%%^BG!", "")
+MSG_MULTI_NOTIF(GIFT, 1, NULL, INFO_GIFT, CENTER_GIFT)
+
+
+// list of the available gifts from gift boxes
+#ifdef SVQC
+	const int GIFTBOX_GIFT_COAL 				= BIT(0);
+	const int GIFTBOX_GIFT_ROCKINGHORSE 		= BIT(1);
+	const int GIFTBOX_GIFT_CANDYCORN 			= BIT(2);
+	const int GIFTBOX_GIFT_EGGNOG 				= BIT(3);
+	const int GIFTBOX_GIFT_SWEATER 				= BIT(4);
+	const int GIFTBOX_GIFT_SCARF 				= BIT(5);
+	const int GIFTBOX_GIFT_CHOCOLATE 			= BIT(6);
+	const int GIFTBOX_GIFT_ARMOR 				= BIT(7);
+	const int GIFTBOX_GIFT_HEALTH 				= BIT(8);
+	const int GIFTBOX_GIFT_FAIRYFLOSS 			= BIT(9);
+	const int GIFTBOX_GIFT_SLIPPERS 			= BIT(10);
+	const int GIFTBOX_GIFT_WATCH 				= BIT(11);
+	const int GIFTBOX_GIFT_MUG 					= BIT(12);
+	const int GIFTBOX_GIFT_RING 				= BIT(13);
+	const int GIFTBOX_GIFT_BOMB 				= BIT(14);
+#endif
+
+#ifdef SVQC
+int get_all_gifts()
+{
+	return 	( GIFTBOX_GIFT_ROCKINGHORSE
+			| GIFTBOX_GIFT_CANDYCORN
+			| GIFTBOX_GIFT_EGGNOG
+			| GIFTBOX_GIFT_SWEATER
+			| GIFTBOX_GIFT_SCARF
+			| GIFTBOX_GIFT_CHOCOLATE
+			| GIFTBOX_GIFT_FAIRYFLOSS
+			| GIFTBOX_GIFT_SLIPPERS
+			| GIFTBOX_GIFT_WATCH
+			| GIFTBOX_GIFT_RING
+			);
+}
+
+int get_random_gift()
+{
+	RandomSelection_Init();
+	RandomSelection_AddFloat(GIFTBOX_GIFT_COAL, 0.5, 1);
+	RandomSelection_AddFloat(GIFTBOX_GIFT_ROCKINGHORSE, 1, 1);
+	RandomSelection_AddFloat(GIFTBOX_GIFT_CANDYCORN, 1, 1);
+	RandomSelection_AddFloat(GIFTBOX_GIFT_EGGNOG, 1, 1);
+	RandomSelection_AddFloat(GIFTBOX_GIFT_SWEATER, 1, 1);
+	RandomSelection_AddFloat(GIFTBOX_GIFT_SCARF, 1, 1);
+	RandomSelection_AddFloat(GIFTBOX_GIFT_CHOCOLATE, 1, 1);
+	RandomSelection_AddFloat(GIFTBOX_GIFT_ARMOR, 1, 1);
+	RandomSelection_AddFloat(GIFTBOX_GIFT_HEALTH, 1, 1);
+	RandomSelection_AddFloat(GIFTBOX_GIFT_FAIRYFLOSS, 1, 1);
+	RandomSelection_AddFloat(GIFTBOX_GIFT_SLIPPERS, 1, 1);
+	RandomSelection_AddFloat(GIFTBOX_GIFT_WATCH, 1, 1);
+	RandomSelection_AddFloat(GIFTBOX_GIFT_MUG, 1, 1);
+	RandomSelection_AddFloat(GIFTBOX_GIFT_RING, 1, 1);
+	RandomSelection_AddFloat(GIFTBOX_GIFT_BOMB, 0.75, 1);
+
+	return RandomSelection_chosen_float;
+}
+
+float get_gift_percent(int gf)
+{
+	switch(gf)
+	{
+		case GIFTBOX_GIFT_ROCKINGHORSE: return 0.10;
+		case GIFTBOX_GIFT_CANDYCORN: return 0.15;
+		case GIFTBOX_GIFT_EGGNOG: return 0.05;
+		case GIFTBOX_GIFT_SWEATER: return 0.05;
+		case GIFTBOX_GIFT_SCARF: return 0.10;
+		case GIFTBOX_GIFT_CHOCOLATE: return 0.15;
+		case GIFTBOX_GIFT_FAIRYFLOSS: return 0.10;
+		case GIFTBOX_GIFT_SLIPPERS: return 0.65;
+		case GIFTBOX_GIFT_WATCH: return 0.10;
+		case GIFTBOX_GIFT_MUG: return 0.50;
+		case GIFTBOX_GIFT_RING: return 0.50;
+		default: return 0.05; // default to 5%
+	}
+}
+
+string get_gift_name(int gf)
+{
+	switch(gf)
+	{
+		case GIFTBOX_GIFT_ROCKINGHORSE: return "a rocking horse";
+		case GIFTBOX_GIFT_CANDYCORN: return "candy corn";
+		case GIFTBOX_GIFT_EGGNOG: return "eggnog";
+		case GIFTBOX_GIFT_SWEATER: return "an ugly sweater";
+		case GIFTBOX_GIFT_SCARF: return "a scarf";
+		case GIFTBOX_GIFT_CHOCOLATE: return "chocolate";
+		case GIFTBOX_GIFT_FAIRYFLOSS: return "fairy floss";
+		case GIFTBOX_GIFT_SLIPPERS: return "old slippers";
+		case GIFTBOX_GIFT_WATCH: return "a cheap watch";
+		case GIFTBOX_GIFT_MUG: return "a coffee mug";
+		case GIFTBOX_GIFT_RING: return "an expensive gold ring";
+		default: return "new toys";
+	}
+}
+
+string get_gift_strength(int gf)
+{
+	switch(gf)
+	{
+		case GIFTBOX_GIFT_ROCKINGHORSE: return "speed";
+		case GIFTBOX_GIFT_CANDYCORN: return "maximum health";
+		case GIFTBOX_GIFT_EGGNOG: return "damage";
+		case GIFTBOX_GIFT_SWEATER: return "defense";
+		case GIFTBOX_GIFT_SCARF: return "defense";
+		case GIFTBOX_GIFT_CHOCOLATE: return "regeneration";
+		case GIFTBOX_GIFT_FAIRYFLOSS: return "jump height";
+		case GIFTBOX_GIFT_SLIPPERS: return "fall damage resistance";
+		case GIFTBOX_GIFT_WATCH: return "attack speed";
+		case GIFTBOX_GIFT_MUG: return "regeneration pause reduction";
+		case GIFTBOX_GIFT_RING: return "enemy weapon drops";
+		default: return "bling";
+	}
+}
+#endif
