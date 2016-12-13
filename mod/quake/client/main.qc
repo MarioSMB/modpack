@@ -26,11 +26,67 @@ void CSQC_Shutdown()
 #define drawstring(position, text, scale, rgb, alpha, flag) \
 	drawstring_builtin(position, text, scale, rgb, alpha, flag)
 
+string draw_currentSkin;
+void draw_cursor(vector pos, vector ofs, string img, vector col, float a)
+{
+	ofs = eX * (ofs.x * SIZE_CURSOR.x) + eY * (ofs.y * SIZE_CURSOR.y);
+	drawpic(pos - ofs, strcat(draw_currentSkin, img), SIZE_CURSOR, col, a, DRAWFLAG_NORMAL);
+}
+
+void draw_cursor_normal(vector pos, vector col, float a)
+{
+	draw_cursor(pos, OFFSET_CURSOR, "/cursor", col, a);
+}
+
+void LoadMenuSkinValues()
+{
+	int fh = -1;
+	if(cvar_string("menu_skin") != "")
+	{
+		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
+		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
+	}
+	if(fh < 0 && cvar_defstring("menu_skin") != "")
+	{
+		cvar_set("menu_skin", cvar_defstring("menu_skin"));
+		draw_currentSkin = strcat("gfx/menu/", cvar_string("menu_skin"));
+		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
+	}
+	if(fh < 0)
+	{
+		draw_currentSkin = "gfx/menu/default";
+		fh = fopen(strcat(draw_currentSkin, "/skinvalues.txt"), FILE_READ);
+	}
+
+	draw_currentSkin = strzone(draw_currentSkin);
+
+	if(fh >= 0)
+	{
+		string s;
+		while((s = fgets(fh)))
+		{
+			int n = tokenize_console(s);
+			if (n < 2)
+				continue;
+			if(substring(argv(0), 0, 2) == "//")
+				continue;
+			if(argv(0) == "SIZE_CURSOR")
+				SIZE_CURSOR = stov(substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
+			else if(argv(0) == "OFFSET_CURSOR")
+				OFFSET_CURSOR = stov(substring(s, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)));
+		}
+		fclose(fh);
+	}
+}
+
 int cs_project_is_b0rked;
 
 float autocvar_vid_conwidth;
 float autocvar_vid_conheight;
 
+bool autocvar_cl_enginesbar = true;
+
+void Sbar_Draw();
 void HUD_Crosshair(entity this);
 void CSQC_UpdateView(entity this, float w, float h)
 {
@@ -45,7 +101,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	setproperty(VF_DRAWCROSSHAIR, 0);
 
 	// Draw the Engine Status Bar (the default Quake HUD)
-	setproperty(VF_DRAWENGINESBAR, 1);
+	setproperty(VF_DRAWENGINESBAR, autocvar_cl_enginesbar);
 
 	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
 	renderscene();
@@ -55,6 +111,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// next R_RenderScene call
 	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
 
+	Sbar_Draw();
 	HUD_Crosshair(this);
 
 	// we must do this check AFTER a frame was rendered, or it won't work
@@ -83,10 +140,20 @@ void CSQC_UpdateView(entity this, float w, float h)
 		cvar_set("vid_conwidth", w0);
 		cvar_set("vid_conheight", h0);
 	}
+
+	if(intermission && !completed_time)
+		completed_time = time;
 }
 
 bool CSQC_InputEvent(int inputType, float nPrimary, float nSecondary)
 {
+	if(inputType == 3)
+	{
+		mousepos.x = nPrimary;
+		mousepos.y = nSecondary;
+		return true;
+	}
+
 	return false;
 }
 

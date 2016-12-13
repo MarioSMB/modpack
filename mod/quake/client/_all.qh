@@ -1,2 +1,8 @@
 #pragma once
 
+vector mousepos;
+
+float completed_time;
+
+vector SIZE_CURSOR = '32 32 0';
+vector OFFSET_CURSOR = '0 0 0';

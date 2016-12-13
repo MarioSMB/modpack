@@ -3,3 +3,4 @@
 #include "../common/_all.inc"
 
 #include "main.qc"
+#include "sbar.qc"
