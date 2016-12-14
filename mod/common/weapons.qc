@@ -18,7 +18,7 @@ MUTATOR_HOOKFUNCTION(weapon_models, WeaponSound)
 	{
 		string thesnd = sprintf("weapons_%s/%s", autocvar_sv_weapons_sounddir, M_ARGV(0, string));
 
-		if (_Sound_fixpath(thesnd)) { M_ARGV(1, string) = thesnd; }
+		if (Sound_Exists(thesnd)) { M_ARGV(1, string) = thesnd; }
 	}
 }
 

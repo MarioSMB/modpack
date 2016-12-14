@@ -17,6 +17,6 @@ MUTATOR_HOOKFUNCTION(mutator_mod, ItemSound)
 	{
 		string thesnd = sprintf("misc_%s/%s", autocvar_sv_items_sounddir, M_ARGV(0, string));
 
-		if (_Sound_fixpath(thesnd)) { M_ARGV(1, string) = thesnd; }
+		if (Sound_Exists(thesnd)) { M_ARGV(1, string) = thesnd; }
 	}
 }

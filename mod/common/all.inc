@@ -1,4 +1,5 @@
 #include "cvars.qh"
+#include "sounds.qh"
 
 #include "announcer.qc"
 #include "commands/all.inc"

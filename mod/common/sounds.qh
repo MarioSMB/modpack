@@ -1,0 +1,15 @@
+	bool Sound_Exists(string base)
+	{
+		if (base == "") return false;
+		#define extensions(x) \
+			x(wav) \
+			x(ogg) \
+			x(flac) \
+			/**/
+		#define tryext(ext) { string s = strcat(base, "." #ext); if (fexists(strcat("sound/", s))) return true; }
+		extensions(tryext);
+		//LOG_WARNF("Missing sound: \"%s\"", strcat("sound/", base));
+		#undef tryext
+		#undef extensions
+		return false;
+	}
