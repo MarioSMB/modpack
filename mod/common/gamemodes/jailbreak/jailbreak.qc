@@ -713,7 +713,7 @@ void JB_Jail_Touch(entity this, entity toucher)
 
 	if(toucher.classname == "grapplinghook")
 	{
-		RemoveGrapplingHook(toucher.realowner);
+		RemoveHook(toucher);
 		return;
 	}
 

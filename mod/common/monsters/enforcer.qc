@@ -131,7 +131,7 @@ void M_Enforcer_Attack_Plasma(entity this)
 	this.attack_finished_single[0] = time + autocvar_g_monster_enforcer_attack_plasma_delay;
 }
 
-bool M_Enforcer_Attack(int attack_type, entity actor, entity targ)
+bool M_Enforcer_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
 	switch(attack_type)
 	{

@@ -208,12 +208,12 @@ void W_Axe_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR(axe, damage), WEP_CVAR(axe, melee_range));
 }
 
-		METHOD(Axe, wr_aim, void(entity thiswep, entity actor))
+		METHOD(Axe, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			if(vdist(actor.origin - actor.enemy.origin, <=, WEP_CVAR(axe, melee_range)))
-				PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, 1000000, 0, 0.001, false);
+				PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false);
 			else
-				PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, 1000000, 0, 0.001, false);
+				PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false);
 		}
 		METHOD(Axe, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
@@ -229,11 +229,11 @@ void W_Axe_Attack(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 		{
 			actor.ammo_field = ammo_none;
 		}
-		METHOD(Axe, wr_checkammo1, bool(entity thiswep, entity actor))
+		METHOD(Axe, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 		{
 			return true;
 		}
-		METHOD(Axe, wr_checkammo2, bool(entity thiswep, entity actor))
+		METHOD(Axe, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 		{
 			return true;
 		}

@@ -81,7 +81,7 @@ METHOD(ScragAttack, wr_think, void(ScragAttack thiswep, entity actor, .entity we
     }
 }
 
-METHOD(ScragAttack, wr_checkammo1, bool(ScragAttack thiswep, entity actor)) {
+METHOD(ScragAttack, wr_checkammo1, bool(ScragAttack thiswep, entity actor, .entity weaponentity)) {
 	TC(ScragAttack, this);
 	return true;
 }
@@ -126,9 +126,8 @@ void M_Scrag_Attack_Spike_Touch(entity this, entity toucher)
 	M_Scrag_Attack_Spike_Explode(this, toucher);
 }
 
-bool M_Scrag_Attack(int attack_type, entity actor, entity targ)
+bool M_Scrag_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
-	.entity weaponentity = weaponentities[0];
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:

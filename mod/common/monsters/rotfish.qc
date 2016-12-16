@@ -49,7 +49,7 @@ const float rotfish_anim_swim   = 2;
 const float rotfish_anim_pain   = 3;
 */
 
-bool M_Rotfish_Attack(int attack_type, entity actor, entity targ)
+bool M_Rotfish_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
 	switch(attack_type)
 	{

@@ -118,7 +118,8 @@ void W_RocketLauncher_Explode(entity this, entity directhitentity)
 	);
 
 	Weapon thiswep = WEP_ROCKETLAUNCHER;
-	if(PS(this.realowner).m_weapon == thiswep)
+	.entity weaponentity = this.weaponentity_fld;
+	if(this.realowner.(weaponentity).m_weapon == thiswep)
 	{
 		if(this.realowner.(thiswep.ammo_field) < WEP_CVAR(rocketlauncher, ammo))
 		if(!(this.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
@@ -126,7 +127,7 @@ void W_RocketLauncher_Explode(entity this, entity directhitentity)
 			this.realowner.cnt = WEP_ROCKETLAUNCHER.m_id;
 			int slot = 0;
 			ATTACK_FINISHED(this.realowner, slot) = time;
-			PS(this.realowner).m_switchweapon = w_getbestweapon(this.realowner);
+			this.realowner.(weaponentity).m_switchweapon = w_getbestweapon(this.realowner, weaponentity);
 		}
 	}
 	delete(this);
@@ -200,7 +201,7 @@ void W_RocketLauncher_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	entity missile;
 	entity flash;
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(rocketlauncher, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(rocketlauncher, ammo), weaponentity);
 
 	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_ROCKETLAUNCHER_FIRE, CH_WEAPON_A, WEP_CVAR(rocketlauncher, damage));
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
@@ -240,6 +241,8 @@ void W_RocketLauncher_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	IL_PUSH(g_projectiles, missile);
 	IL_PUSH(g_bot_dodge, missile);
 	missile.missile_flags = MIF_SPLASH;
+
+	missile.weaponentity_fld = weaponentity;
 
 	CSQCProjectile(missile, WEP_CVAR(rocketlauncher, speedaccel) == 0, PROJECTILE_ROCKET, false); // because of fly sound
 
@@ -282,10 +285,10 @@ void W_RocketLauncher_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 			}
 		}
 		#else
-		METHOD(RocketLauncher, wr_aim, void(entity thiswep, entity actor))
+		METHOD(RocketLauncher, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			// aim and decide to fire if appropriate
-			PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR(rocketlauncher, speed), 0, WEP_CVAR(rocketlauncher, lifetime), false);
+			PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR(rocketlauncher, speed), 0, WEP_CVAR(rocketlauncher, lifetime), false);
 			if(skill >= 2) // skill 0 and 1 bots won't detonate rockets!
 			{
 				// decide whether to detonate rockets
@@ -394,13 +397,13 @@ void W_RocketLauncher_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 				}
 			}
 		}
-		METHOD(RocketLauncher, wr_checkammo1, bool(entity thiswep, entity actor))
+		METHOD(RocketLauncher, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 		{
 			float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(rocketlauncher, ammo);
 			ammo_amount += actor.(weapon_load[WEP_ROCKETLAUNCHER.m_id]) >= WEP_CVAR(rocketlauncher, ammo);
 			return ammo_amount;
 		}
-		METHOD(RocketLauncher, wr_checkammo2, bool(entity thiswep, entity actor))
+		METHOD(RocketLauncher, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 		{
 			return false;
 		}

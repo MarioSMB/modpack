@@ -23,7 +23,8 @@ void lightapc_hmg2(entity player, entity gunmount)
 		vector v = gettaginfo(gunmount, gettagindex(gunmount, "tag_mgun"));
 		v_forward = normalize(v_forward);
 		 //   v += v_forward * 50;
-		fireBullet(player, v, v_forward, autocvar_g_vehicle_lightapc_hmg2_spread, autocvar_g_vehicle_lightapc_hmg2_solidpenetration,
+		.entity weaponentity = weaponentities[0];
+		fireBullet(player, weaponentity, v, v_forward, autocvar_g_vehicle_lightapc_hmg2_spread, autocvar_g_vehicle_lightapc_hmg2_solidpenetration,
 								 autocvar_g_vehicle_lightapc_hmg2_damage, autocvar_g_vehicle_lightapc_hmg2_force, DEATH_VH_SPID_MINIGUN.m_id, 0);
 
 		v = gettaginfo(gunmount, gettagindex(gunmount, "tag_flash"));
@@ -31,8 +32,6 @@ void lightapc_hmg2(entity player, entity gunmount)
 		v += v_forward * 5;
 		 
 		Send_Effect(EFFECT_SPIDERBOT_MINIGUN_MUZZLEFLASH, v, v_forward, 1);
-
-		.entity weaponentity = weaponentities[0];
 		 
 		W_MachineGun_MuzzleFlash(player, weaponentity);
 		lightapc_AttachToShotorg(player, player.(weaponentity).muzzle_flash, '5 0 0', "tag_flash", gunmount);

@@ -31,7 +31,8 @@ void lightapc_hvyminigun(entity player, entity gunmount, entity mggun1)
 		//	autocvar_g_vehicle_lightapc_hvyminigun_damage, autocvar_g_vehicle_lightapc_hvyminigun_headshotaddeddamage, autocvar_g_vehicle_lightapc_hvyminigun_force,
 		//	DEATH_SPORTSTERGUN.m_id, 1, 1, autocvar_g_vehicle_lightapc_hvyminigun_bulletconstant, autocvar_g_vehicle_lightapc_hvyminigun_coreshotaddeddamage);
 		//endFireBallisticBullet();
-		fireBullet(player, v, v_forward, autocvar_g_vehicle_lightapc_hvyminigun_spread, autocvar_g_vehicle_lightapc_hvyminigun_solidpenetration,
+		.entity weaponentity = weaponentities[0];
+		fireBullet(player, weaponentity, v, v_forward, autocvar_g_vehicle_lightapc_hvyminigun_spread, autocvar_g_vehicle_lightapc_hvyminigun_solidpenetration,
 								 autocvar_g_vehicle_lightapc_hvyminigun_damage, autocvar_g_vehicle_lightapc_hvyminigun_force, DEATH_VH_SPID_MINIGUN.m_id, 0);
 		// End Ballistic bullet
 
@@ -42,7 +43,6 @@ void lightapc_hvyminigun(entity player, entity gunmount, entity mggun1)
 	 
 		Send_Effect(EFFECT_SPIDERBOT_MINIGUN_MUZZLEFLASH, v, v_forward, 1);
 	 
-		.entity weaponentity = weaponentities[0];
 		 
 		W_MachineGun_MuzzleFlash(player, weaponentity);
 		lightapc_AttachToShotorg(player, player.(weaponentity).muzzle_flash, '5 0 0', "tag_flash", gunmount);

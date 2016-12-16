@@ -309,12 +309,12 @@ void W_LightSabre_SetActive(entity actor, .entity weaponentity, bool newactive, 
 	weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, 0.1, w_ready);
 }
 
-		METHOD(Lightsabre, wr_aim, void(entity thiswep, entity actor))
+		METHOD(Lightsabre, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			if(random() >= 0.5)
-				PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, 1000000, 0, 0.001, false);
+				PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false);
 			else
-				PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, 1000000, 0, 0.001, false);
+				PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false);
 		}
 		METHOD(Lightsabre, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
@@ -335,20 +335,19 @@ void W_LightSabre_SetActive(entity actor, .entity weaponentity, bool newactive, 
 				}
 			}
 
-			if(PS(actor).m_switchweapon != WEP_LIGHTSABRE && actor.lightsabre_active)
+			if(actor.(weaponentity).m_switchweapon != WEP_LIGHTSABRE && actor.lightsabre_active)
 				W_LightSabre_SetActive(actor, weaponentity, false, true);
 		}
-		METHOD(Lightsabre, wr_setup, void(entity thiswep, entity actor))
+		METHOD(Lightsabre, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
 		{
-			.entity weaponentity = weaponentities[0];
 			actor.ammo_field = ammo_none;
 			W_LightSabre_SetActive(actor, weaponentity, false, false);
 		}
-		METHOD(Lightsabre, wr_checkammo1, bool(entity thiswep, entity actor))
+		METHOD(Lightsabre, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 		{
 			return true;
 		}
-		METHOD(Lightsabre, wr_checkammo2, bool(entity thiswep, entity actor))
+		METHOD(Lightsabre, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 		{
 			return true;
 		}

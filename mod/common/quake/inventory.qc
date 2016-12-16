@@ -13,6 +13,8 @@ MUTATOR_HOOKFUNCTION(pinventory, PlayerSpawn)
 
 	entity player = M_ARGV(0, entity);
 
+	.entity weaponentity = weaponentities[0];
+
 	player.items = tmparm2;
 	player.health = ((parm3 > 0) ? parm3 : 100);
 	player.armorvalue = tmparm4;
@@ -23,7 +25,7 @@ MUTATOR_HOOKFUNCTION(pinventory, PlayerSpawn)
 	player.weapons_x = tmparm9;
 	player.weapons_y = tmparm10;
 	player.weapons_z = tmparm11;
-	PS(player).m_switchweapon = Weapons_from(tmparm12);
+	player.(weaponentity).m_switchweapon = Weapons_from(tmparm12);
 }
 
 MUTATOR_HOOKFUNCTION(pinventory, DecodeLevelParms)
@@ -32,6 +34,8 @@ MUTATOR_HOOKFUNCTION(pinventory, DecodeLevelParms)
 		return;
 
 	entity player = M_ARGV(0, entity);
+
+	.entity weaponentity = weaponentities[0];
 
 	player.items = tmparm2 = parm2;
 	player.health = tmparm3 = ((parm3 > 0) ? parm3 : 100);
@@ -43,7 +47,7 @@ MUTATOR_HOOKFUNCTION(pinventory, DecodeLevelParms)
 	player.weapons_x = tmparm9 = parm9;
 	player.weapons_y = tmparm10 = parm10;
 	player.weapons_z = tmparm11 = parm11;
-	PS(player).m_switchweapon = Weapons_from(tmparm12 = parm12);
+	player.(weaponentity).m_switchweapon = Weapons_from(tmparm12 = parm12);
 }
 
 MUTATOR_HOOKFUNCTION(pinventory, SetNewParms)
@@ -83,6 +87,8 @@ MUTATOR_HOOKFUNCTION(pinventory, SetChangeParms)
 	player.items &= ~(IT_KEY1 | IT_KEY2 | IT_INVISIBILITY | IT_STRENGTH | IT_INVINCIBLE);
 	player.health = bound(50, player.health, 100);
 
+	.entity weaponentity = weaponentities[0];
+
 	parm2 = player.items;
 	parm3 = player.health;
 	parm4 = player.armorvalue;
@@ -93,7 +99,7 @@ MUTATOR_HOOKFUNCTION(pinventory, SetChangeParms)
 	parm9 = player.weapons.x;
 	parm10 = player.weapons.y;
 	parm11 = player.weapons.z;
-	parm12 = PS(player).m_switchweapon.m_id;
+	parm12 = player.(weaponentity).m_switchweapon.m_id;
 }
 
 #endif

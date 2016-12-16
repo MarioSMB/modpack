@@ -56,7 +56,7 @@ bool M_Spawner_SpawnMonsters(entity this)
 	return true;
 }
 
-bool M_Spawner_Attack(int attack_type, entity actor, entity targ)
+bool M_Spawner_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
 	switch(attack_type)
 	{

@@ -52,7 +52,7 @@ const float rottweiler_anim_idle		= 7;
 const float rottweiler_anim_walk		= 8;
 */
 
-bool M_Rottweiler_Attack(int attack_type, entity actor, entity targ)
+bool M_Rottweiler_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
 	switch(attack_type)
 	{
