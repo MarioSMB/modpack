@@ -4,7 +4,7 @@ set -eu
 
 git pull --tags
 
-git submodule update --init --depth 100
+git submodule update --init
 
 declare qccDir='gmqcc'
 declare qccRepo='https://gitlab.com/xonotic/gmqcc.git'
