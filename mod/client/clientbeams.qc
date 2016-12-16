@@ -88,9 +88,44 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 	if(held)// || (wep.activeweapon == WEP_VORTEX && WEP_CVAR(vortex, secondary) && attack2_held && !WEP_CVAR(vortex, charge)))
 	if(autocvar_cl_vaporizerbeam > 0 || (player.ping >= autocvar_cl_vaporizerbeam_minping && autocvar_cl_vaporizerbeam != -1))
 	{
-		vector v = '0 0 1' * getstati(STAT_VIEWHEIGHT);
+		//vector v = '0 0 1' * getstati(STAT_VIEWHEIGHT);
 
-		WarpZone_TraceLine(view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, NULL);
+		vector traceorigin = entcs_receiver(player_localentnum - 1).origin + (eZ * STAT(VIEWHEIGHT));
+
+		//vector vecs = decompressShotOrigin(STAT(SHOTORG));
+
+		traceline(traceorigin, traceorigin + view_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, trueaim);
+		vector trueaimpoint = trace_endpos;
+
+		if(vdist((trueaimpoint - traceorigin), <, g_trueaim_minrange))
+			trueaimpoint = traceorigin + view_forward * g_trueaim_minrange;
+
+		/*if(vecs.x > 0)
+			vecs.y = -vecs.y;
+		else
+			vecs = '0 0 0';*/
+
+		vector vecs;
+		vector md = wep.movedir;
+		if(md.x > 0)
+		{
+			vecs = md;
+			vecs.y = -vecs.y;
+		}
+		else
+			vecs = '0 0 0';
+
+		vector dv = view_right * vecs.y + view_up * vecs.z;
+		vector w_shotorg = traceorigin + dv;
+		float nudge = 1;
+
+		// now move the vecs forward as much as requested if possible
+		tracebox(w_shotorg, '0 0 0', '0 0 0', w_shotorg + view_forward * (vecs.x + nudge), MOVE_NORMAL, trueaim); // FIXME this MOVE_NORMAL part will misbehave a little in csqc
+		w_shotorg = trace_endpos - view_forward * nudge;
+		tracebox(w_shotorg, '0 0 0', '0 0 0', trueaimpoint, MOVE_NORMAL, trueaim);
+
+
+		//WarpZone_TraceLine(view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, NULL);
 
 		bool hit = ((trace_fraction < 1 && !trace_ent.entnum) ? false : true);
 
@@ -106,9 +141,9 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 		}
 
 		if(wep.activeweapon == WEP_VORTEX)
-			WarpZone_TrailParticles(player, eff, view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE);
+			WarpZone_TrailParticles(player, eff, w_shotorg, trueaimpoint);
 		else if(wep.activeweapon == WEP_VAPORIZER)
-			FireClientBeam(view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE, hit);
+			FireClientBeam(w_shotorg, trueaimpoint, hit);
 
 		//sound(player, CH_SHOTS, "weapons/minstanexfire.wav", VOL_BASE, ATTEN_LARGE);
 
@@ -153,9 +188,11 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 
 	entity localme = playerslots[player_localnum];
 
-	entity wep = viewmodels[0];
-
-	DrawClientBeam(wep, vortex_pdelay, vaporizer_delay, attack1_held, localme);
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		entity wep = viewmodels[slot];
+		DrawClientBeam(wep, vortex_pdelay, vaporizer_delay, attack1_held, localme);
+	}
 
 	return false;
 }
