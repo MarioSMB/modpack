@@ -102,7 +102,7 @@ void dotc_rart_frame(entity this, vector formaion_loc, float tdelta)
 		if(this.drone_turret.lip != 0 && this.dotc_nextfire < time)
 			this.drone_fire(this);
 
-		if(vlen(dotc_ai_track_targetoffset) < this.aim_firetolerance_dist)
+		if(vdist(dotc_ai_track_targetoffset, <, this.aim_firetolerance_dist))
 			if(this.dotc_nextfire < time)
 				this.drone_fire(this);
 

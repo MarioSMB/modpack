@@ -822,7 +822,7 @@ float JB_ControlPoint_Cooldown(entity e)
 		f	 = autocvar_g_jailbreak_controlpoint_idletime_factor;
 	}
 
-	return base + pow(c, pw) * f * base;
+	return base + (c ** pw) * f * base;
 }
 
 float JB_ControlPoint_InitialCooldown(entity e)

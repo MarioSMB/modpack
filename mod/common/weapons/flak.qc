@@ -176,7 +176,7 @@ void W_Flak_Projectile_Touch(entity this, entity toucher)
 
 		if(toucher != this.enemy && (toucher != this.realowner || (this.projectiledeathtype & HITTYPE_BOUNCE)))
 		{
-			bnc = pow(WEP_CVAR_BOTH(flak, isprimary, damage_bouncefactor), this.cnt);
+			bnc = (WEP_CVAR_BOTH(flak, isprimary, damage_bouncefactor) ** this.cnt);
 			damage = WEP_CVAR_BOTH(flak, isprimary, damage) * bnc;
 			frc = WEP_CVAR_BOTH(flak, isprimary, force) * bnc;
 

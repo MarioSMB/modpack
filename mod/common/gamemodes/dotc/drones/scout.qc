@@ -81,7 +81,7 @@ void dotc_scout_frame(entity this, vector formaion_loc, float tdelta)
 		dotc_ai_track_combined_step(this, this.drone_turret, this.tur_shotorg ,aim_at, this.aim_speed, 0.5 * this.aim_speed, aim_minmax, tdelta);
 
 		if(this.dotc_nextfire < time)
-			if(vlen(dotc_ai_track_targetoffset) < this.aim_firetolerance_dist)
+			if(vdist(dotc_ai_track_targetoffset, <, this.aim_firetolerance_dist))
 				this.drone_fire(this);
     }
 	else
