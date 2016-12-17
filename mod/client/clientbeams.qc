@@ -79,6 +79,25 @@ void FireClientBeam(vector start, vector end, bool hit)
 	}
 }
 
+int ClientBeam_HitCheck()
+{
+	int n;
+	if(trace_ent)
+		n = trace_ent.entnum;
+	else
+		n = trace_networkentity;
+	if(n < 1)
+		return SHOTTYPE_HITWORLD;
+	if(n > maxclients)
+		return SHOTTYPE_HITWORLD;
+	int t = entcs_GetTeam(n - 1);
+	if(teamplay && t == myteam)
+		return SHOTTYPE_HITTEAM;
+	if(t == NUM_SPECTATOR)
+		return SHOTTYPE_HITWORLD;
+	return SHOTTYPE_HITENEMY;
+}
+
 void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, entity player)
 {
 	if(time < wep.last_beam)
@@ -127,7 +146,8 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 
 		//WarpZone_TraceLine(view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, NULL);
 
-		bool hit = ((trace_fraction < 1 && !trace_ent.entnum) ? false : true);
+		int shottype = ClientBeam_HitCheck();
+		bool hit = boolean(shottype == SHOTTYPE_HITENEMY || shottype == SHOTTYPE_HITTEAM); // also count team shots
 
 		int eff = particleeffectnum((hit ? EFFECT_VAPORIZER_HIT(myteam) : EFFECT_VAPORIZER(myteam)));
 		if(wep.activeweapon == WEP_VORTEX)
