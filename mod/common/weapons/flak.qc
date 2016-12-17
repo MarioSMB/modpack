@@ -242,11 +242,11 @@ void W_Flak_Projectile_Think(entity this)
 
 entity W_Flak_Projectile(entity o, bool isprimary, float damage, float grav, float lt, float spd, float upspd, float bnc, int deathtype)
 {
-	entity e = spawn();
+	entity e = new(flak_proj);
 	e.owner = e.realowner = o;
-	e.classname = "flak_proj";
 	e.bot_dodge = true;
 	e.bot_dodgerating = damage;
+	IL_PUSH(g_bot_dodge, e);
 	set_movetype(e, MOVETYPE_BOUNCE);
 	PROJECTILE_MAKETRIGGER(e);
 	e.projectiledeathtype = deathtype;
@@ -263,6 +263,7 @@ entity W_Flak_Projectile(entity o, bool isprimary, float damage, float grav, flo
 
 	e.angles = vectoangles(e.velocity);
 	e.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, e);
 	e.missile_flags = MIF_ARC;
 
 	CSQCProjectile(e, true, PROJECTILE_FLAK, true);   
@@ -404,6 +405,7 @@ void W_Flak_Attack3(Weapon thiswep, entity actor, .entity weaponentity)
 	e.classname = "flak_bomb";
 	e.bot_dodge = true;
 	e.bot_dodgerating = WEP_CVAR(flak, bomb_damage);
+	IL_PUSH(g_bot_dodge, e);
 	set_movetype(e, MOVETYPE_BOUNCE);
 	PROJECTILE_MAKETRIGGER(e);
 	e.projectiledeathtype = WEP_FLAK.m_id | HITTYPE_SECONDARY;
@@ -422,6 +424,7 @@ void W_Flak_Attack3(Weapon thiswep, entity actor, .entity weaponentity)
 
 	e.angles = vectoangles(e.velocity);
 	e.flags = FL_PROJECTILE;
+	IL_PUSH(g_projectiles, e);
 	e.missile_flags = MIF_SPLASH | MIF_ARC | MIF_PROXY;
 
 	CSQCProjectile(e, true, PROJECTILE_FLAK_BOMB, true);
