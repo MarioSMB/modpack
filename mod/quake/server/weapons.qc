@@ -467,6 +467,8 @@ void W_FireLightning(entity this)
 		return;
 	}
 
+	makevectors(this.v_angle);
+
 	if(this.t_width < time)
 	{
 		_sound(this, CHAN_WEAPON, "weapons/lhit.wav", 1, ATTN_NORM);

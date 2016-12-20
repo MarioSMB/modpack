@@ -164,7 +164,7 @@ bool infront(entity this, entity targ)
 	vector vec = normalize(targ.origin - this.origin);
 	float dot = vec * v_forward;
 	
-	if( dot > 0.3)
+	if(dot > 0.3)
 		return true;
 	return false;
 }
