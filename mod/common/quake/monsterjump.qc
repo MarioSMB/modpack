@@ -1,7 +1,9 @@
 #ifdef SVQC
 void monsterjump_touch(entity this, entity toucher)
 {
-	if(toucher.flags & (FL_MONSTER | FL_FLY | FL_SWIM) != FL_MONSTER)
+	if(!IS_MONSTER(toucher))
+		return;
+	if((toucher.flags & FL_FLY) || (toucher.flags & FL_SWIM))
 		return;
 
 	trigger_push_touch(this, toucher);
