@@ -20,5 +20,6 @@
 #include "plats.qc"
 #include "misc.qc"
 #include "commands.qc"
+#include "chat.qc"
 
 #include "monsters/_all.inc"

@@ -1422,6 +1422,7 @@ void ClientObituary(entity targ, entity attacker)
 	}
 }
 
+int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol);
 void SV_ParseClientCommand(entity this, string command)
 {
 	// If invalid UTF-8, don't even parse it
@@ -1432,15 +1433,17 @@ void SV_ParseClientCommand(entity this, string command)
 		command2 = strcat(command2, chr2str(str2chr(command, i)));
 	if (command != command2) return;
 
-	tokenize_console(command);
+	float argc = tokenize_console(command);
 
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4
 	// argv:   0    - 1      - 2     - 3
 	// cmd     vote - master - login - password
 
+	string cmd_name = strtolower(argv(0));
+
 	// for floodcheck
-	switch (strtolower(argv(0)))
+	switch (cmd_name)
 	{
 		// exempt commands which are not subject to floodcheck
 		case "begin": break;                               // handled by engine in host_cmd.c
@@ -1451,6 +1454,12 @@ void SV_ParseClientCommand(entity this, string command)
 		case "sentcvar": break;                            // handled by server in this file
 		case "spawn": break;                               // handled by engine in host_cmd.c
 		case "c2s": Net_ClientCommand(this, command); return; // handled by net.qh
+	}
+
+	if(cmd_name == "say" || cmd_name == "say_team")
+	{
+		if(argc >= 2) Say(this, false, NULL, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
+		return;
 	}
 
 	clientcommand(this, command);
