@@ -904,8 +904,23 @@ PlayerPreThink
 Called every frame before physics are run
 ================
 */
+.string netname_previous;
 void PlayerPreThink(entity this)
 {
+	// Check for nameless players
+	if (isInvisibleString(this.netname)) {
+		this.netname = strzone(sprintf("Player#%d", this.playerid));
+		// stuffcmd(this, strcat("name ", this.netname, "\n")); // maybe?
+	}
+	if (this.netname != this.netname_previous) {
+		if (autocvar_sv_eventlog) {
+			GameLogEcho(strcat(":name:", ftos(this.playerid), ":", this.netname));
+        }
+		if (this.netname_previous) strunzone(this.netname_previous);
+		this.netname_previous = strzone(this.netname);
+	}
+
+
 	if(intermission_running)
 	{
 		IntermissionThink(this);	// otherwise a button could be missed between
@@ -1157,6 +1172,12 @@ called when a player connects to a server
 void ClientConnect(entity this)
 {
 	bprintf("%s entered the game\n", this.netname);
+
+	static int playerid_last;
+	this.playerid = ++playerid_last;
+
+	if(autocvar_sv_eventlog)
+		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", this.netaddress, ":", this.netname));
 	
 // a client connecting during an intermission can cause problems
 	if(intermission_running)
@@ -1180,6 +1201,8 @@ void ClientDisconnect(entity this)
 
 	// let everyone else know
 	bprintf("%s left the game with %d frags\n", this.netname, this.frags);
+	if(autocvar_sv_eventlog)
+		GameLogEcho(strcat(":part:", ftos(this.playerid)));
 	_sound(this, CHAN_BODY, "player/tornoff2.wav", 1, ATTN_NONE);
 	set_suicide_frame(this);
 }

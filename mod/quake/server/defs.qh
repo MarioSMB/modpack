@@ -1,5 +1,12 @@
 #pragma once
 
+bool autocvar_sv_eventlog;
+int autocvar_sv_eventlog_files_counter; // TODO
+
+.int playerid;
+
+void GameLogEcho(string s);
+
 float skill;
 
 #define bprintf(...) bprint(sprintf(__VA_ARGS__))

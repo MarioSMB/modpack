@@ -308,6 +308,16 @@ spawnfunc(worldspawn)
 
 	PrecacheJunk();
 
+	if(autocvar_sv_eventlog)
+	{
+		string s = sprintf("%d.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
+		//matchid = strzone(s);
+
+		GameLogEcho(strcat(":gamestart:coop_", mapname, ":", s));
+
+		GameLogEcho(":gameinfo:end");
+	}
+
 	world_initialized = 1;
 
 	// fill sv_curl_serverpackages from .serverpackage files
