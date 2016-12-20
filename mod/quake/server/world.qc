@@ -163,8 +163,72 @@ void SV_OnEntityPreSpawnFunction(entity this)
 
 bool world_already_spawned;
 int world_initialized;
+bool server_is_dedicated;
 spawnfunc(worldspawn)
 {
+	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
+
+    bool wantrestart = false;
+	{
+		if (!server_is_dedicated)
+		{
+			// force unloading of server pk3 files when starting a listen server
+			// localcmd("\nfs_rescan\n"); // FIXME: does more harm than good, has unintended side effects. What we really want is to unload temporary pk3s only
+			// restore csqc_progname too
+			string expect = "csprogs.dat";
+			wantrestart = cvar_string_normal("csqc_progname") != expect;
+			cvar_set_normal("csqc_progname", expect);
+		}
+		else
+		{
+			// Try to use versioned csprogs from pk3
+			// Only ever use versioned csprogs.dat files on dedicated servers;
+			// we need to reset csqc_progname on clients ourselves, and it's easier if the client's release name is constant
+			string pk3csprogs = "csprogs-" WATERMARK ".dat";
+			// This always works; fall back to it if a versioned csprogs.dat is suddenly missing
+			string select = "csprogs.dat";
+			if (fexists(pk3csprogs)) select = pk3csprogs;
+			if (cvar_string_normal("csqc_progname") != select)
+			{
+				cvar_set_normal("csqc_progname", select);
+				wantrestart = true;
+			}
+			// Check for updates on startup
+			// We do it this way for atomicity so that connecting clients still match the server progs and don't disconnect
+			int sentinel = fopen("progs.txt", FILE_READ);
+			if (sentinel >= 0)
+			{
+				string switchversion = fgets(sentinel);
+				fclose(sentinel);
+				if (switchversion != "" && switchversion != WATERMARK)
+				{
+					LOG_INFOF("Switching progs: " WATERMARK " -> %s\n", switchversion);
+					// if it doesn't exist, assume either:
+					//   a) the current program was overwritten
+					//   b) this is a client only update
+					string newprogs = sprintf("progs-%s.dat", switchversion);
+					if (fexists(newprogs))
+					{
+						cvar_set_normal("sv_progs", newprogs);
+						wantrestart = true;
+					}
+					string newcsprogs = sprintf("csprogs-%s.dat", switchversion);
+					if (fexists(newcsprogs))
+					{
+						cvar_set_normal("csqc_progname", newcsprogs);
+						wantrestart = true;
+					}
+				}
+			}
+		}
+		if (wantrestart)
+		{
+			LOG_INFOF("Restart requested\n");
+			changelevel(mapname);
+			// let initialization continue, shutdown depends on it
+		}
+	}
+
 	lastspawn = NULL;
 
 // the area based ambient sounds MUST be the first precache_sounds
