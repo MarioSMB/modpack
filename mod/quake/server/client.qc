@@ -1176,6 +1176,8 @@ void ClientConnect(entity this)
 	static int playerid_last;
 	this.playerid = ++playerid_last;
 
+	this.netname_previous = strzone(this.netname);
+
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", this.netaddress, ":", this.netname));
 	
