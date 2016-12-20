@@ -25,7 +25,7 @@ void IRCSay(string msgstr)
 
 void GameCommand(string command)
 {
-	//float argc = tokenize_console(command);
+	tokenize_console(command);
 
 	// Guide for working with argc arguments by example:
 	// argc:   1    - 2      - 3     - 4
