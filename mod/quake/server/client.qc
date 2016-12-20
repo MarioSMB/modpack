@@ -932,7 +932,7 @@ void PlayerPreThink(entity this)
 	if(this.view_ofs == '0 0 0')
 		return;		// intermission or finale
 
-	makevectors(this.v_angle);		// is this still used
+	//makevectors(this.v_angle);		// is this still used
 
 	CheckRules(this);
 	WaterMove(this);

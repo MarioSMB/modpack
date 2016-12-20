@@ -157,8 +157,20 @@ bool CSQC_InputEvent(int inputType, float nPrimary, float nSecondary)
 	return false;
 }
 
-bool CSQC_ConsoleCommand(string s)
+STATIC_INIT(accuracy_commands)
 {
+	registercommand("+showaccuracy");
+	registercommand("-showaccuracy");
+}
+
+bool CSQC_ConsoleCommand(string command)
+{
+	tokenize_console(command);
+	string s = strtolower(argv(0));
+
+	if(s == "+showaccuracy" || s == "-showaccuracy")
+		return true; // don't handle, just don't do anything
+
 	return false;
 }
 
