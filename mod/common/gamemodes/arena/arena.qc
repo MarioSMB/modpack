@@ -13,7 +13,7 @@ REGISTER_MUTATOR(cl_arena, true);
 
 MUTATOR_HOOKFUNCTION(cl_arena, DrawInfoMessages)
 {
-	if(spectatee_status && !intermission)
+	if(spectatee_status && !intermission && gametype == MAPINFO_TYPE_ARENA)
 	{
 		string s = _("^1Wait for your turn to join");
 		vector pos = M_ARGV(0, vector);
