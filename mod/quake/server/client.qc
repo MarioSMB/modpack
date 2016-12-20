@@ -1494,12 +1494,12 @@ void SetPlayerColors(entity pl, float _color)
 
 void SV_ChangeTeam(entity this, float _color)
 {
+	SetPlayerColors(this, _color);
+
 	if(!IS_CLIENT(this))
 	{
 		// since this is an engine function, and gamecode doesn't have any calls earlier than this, do the connecting message here
 		bprintf("%s is connecting...\n", this.netname);
 		return;
 	}
-
-	SetPlayerColors(this, _color);
 }
