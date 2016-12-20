@@ -201,8 +201,10 @@ void health_touch(entity this, entity toucher)
 		if(deathmatch != 2)		// deathmatch 2 is the silly old rules
 		{
 			if(deathmatch)
+			{
 				this.nextthink = time + 20;
-			setthink(this, SUB_regen);
+				setthink(this, SUB_regen);
+			}
 		}
 	}
 
@@ -276,8 +278,10 @@ void armor_touch(entity this, entity toucher)
 	this.solid = SOLID_NOT;
 	this.model = string_null;
 	if(deathmatch == 1)
+	{
 		this.nextthink = time + 20;
-	setthink(this, SUB_regen);
+		setthink(this, SUB_regen);
+	}
 
 	sprint(toucher, "You got armor\n");
 // armor touch sound
@@ -477,8 +481,10 @@ void weapon_touch(entity this, entity toucher)
 	this.model = string_null;
 	this.solid = SOLID_NOT;
 	if(deathmatch == 1)
+	{
 		this.nextthink = time + 30;
-	setthink(this, SUB_regen);
+		setthink(this, SUB_regen);
+	}
 
 	SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
 }
@@ -646,8 +652,10 @@ void ammo_touch(entity this, entity toucher)
 	this.model = string_null;
 	this.solid = SOLID_NOT;
 	if(deathmatch == 1)
+	{
 		this.nextthink = time + 30;
-	setthink(this, SUB_regen);
+		setthink(this, SUB_regen);
+	}
 
 	SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
 }
