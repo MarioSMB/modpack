@@ -100,8 +100,10 @@ void walkmonster_start_go(entity this)
 		if(this.movetarget.classname == "path_corner")
 			this.th_walk(this);
 		else
+		{
 			this.pausetime = 99999999;
 			this.th_stand(this);
+		}
 	}
 	else
 	{
@@ -156,8 +158,10 @@ void flymonster_start_go(entity this)
 		if(this.movetarget.classname == "path_corner")
 			this.th_walk(this);
 		else
+		{
 			this.pausetime = 99999999;
 			this.th_stand(this);
+		}
 	}
 	else
 	{
