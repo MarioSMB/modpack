@@ -19,5 +19,6 @@
 #include "triggers.qc"
 #include "plats.qc"
 #include "misc.qc"
+#include "commands.qc"
 
 #include "monsters/_all.inc"
