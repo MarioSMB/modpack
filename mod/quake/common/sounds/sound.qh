@@ -43,7 +43,7 @@ const float VOL_MUFFLED = 0.35;
 		MACRO_BEGIN \
 		{ \
 			entity __e = e; \
-			if (sound_allowed(MSG_BROADCAST, __e)) \
+			/*if (sound_allowed(MSG_BROADCAST, __e))*/ \
 				sound7(__e, c, s, v, a, 0, 0); \
 		} MACRO_END
 #else
