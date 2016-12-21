@@ -75,27 +75,6 @@ bool gameover;
 
 .bool axhitme;
 
-// items
-const int IT_AXE = 4096;
-const int IT_SHOTGUN = 1;
-const int IT_SUPER_SHOTGUN = 2;
-const int IT_NAILGUN = 4;
-const int IT_SUPER_NAILGUN = 8;
-const int IT_GRENADE_LAUNCHER = 16;
-const int IT_ROCKET_LAUNCHER = 32;
-const int IT_LIGHTNING = 64;
-const int IT_EXTRA_WEAPON = 128;
-
-const int IT_ARMOR1 = 8192;
-const int IT_ARMOR2 = 16384;
-const int IT_ARMOR3 = 32768;
-const int IT_SUPERHEALTH = 65536;
-
-//const int IT_INVISIBILITY = 524288;
-const int IT_INVULNERABILITY = 1048576;
-const int IT_SUIT = 2097152;
-const int IT_QUAD = 4194304;
-
 .int attack_state;
 const int AS_STRAIGHT = 1;
 const int AS_SLIDING = 2;

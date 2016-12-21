@@ -1,41 +1,32 @@
 #pragma once
 
-const int IT_UNLIMITED_WEAPON_AMMO 		=  BIT(0); // when this bit is set, using a weapon does not reduce ammo. Checkpoints can give this powerup.
-const int IT_UNLIMITED_SUPERWEAPONS		=  BIT(1); // when this bit is set, superweapons don't expire. Checkpoints can give this powerup.
+const int IT_AXE                  = 4096;
+const int IT_SHOTGUN              = 1;
+const int IT_SUPER_SHOTGUN        = 2;
+const int IT_NAILGUN              = 4;
+const int IT_SUPER_NAILGUN        = 8;
+const int IT_GRENADE_LAUNCHER     = 16;
+const int IT_ROCKET_LAUNCHER      = 32;
+const int IT_LIGHTNING            = 64;
+const int IT_EXTRA_WEAPON         = 128;
 
-const int IT_JETPACK               		=  BIT(2); // actual item
-const int IT_USING_JETPACK         		=  BIT(3); // confirmation that button is pressed
-const int IT_FUEL_REGEN            		=  BIT(4); // fuel regeneration trigger
+const int IT_SHELLS               = 256;
+const int IT_NAILS                = 512;
+const int IT_ROCKETS              = 1024;
+const int IT_CELLS                = 2048;
 
-const int IT_FUEL       				=  BIT(5);
-const int IT_SHELLS                     =  BIT(6);
-const int IT_NAILS                      =  BIT(7);
-const int IT_ROCKETS                    =  BIT(8);
-const int IT_CELLS                      =  BIT(9);
-const int IT_PLASMA     				= BIT(10);
+const int IT_ARMOR1               = 8192;
+const int IT_ARMOR2               = 16384;
+const int IT_ARMOR3               = 32768;
+const int IT_SUPERHEALTH          = 65536;
 
-const int IT_5HP                       	= BIT(11);
-const int IT_25HP                      	= BIT(12);
-const int IT_HEALTH     				= BIT(13);
+const int IT_KEY1                 = 131072;
+const int IT_KEY2                 = 262144;
 
-const int IT_ARMOR_SHARD               	= BIT(14);
-const int IT_ARMOR                     	= BIT(15);
-
-const int IT_KEY1						= BIT(16);
-const int IT_KEY2						= BIT(17);
-
-const int IT_CTF_SHIELDED          		= BIT(18); // set for the flag shield
-
-// special colorblend meaning in engine
-const int IT_INVISIBILITY 				= BIT(19);
-const int IT_INVINCIBLE 				= BIT(20);
-const int IT_SUPERWEAPON				= BIT(21); // suit
-const int IT_STRENGTH   				= BIT(22);
-
-// item masks
-const int IT_AMMO                      	= IT_FUEL | IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS | IT_PLASMA;
-const int IT_UNLIMITED_AMMO            	= IT_UNLIMITED_WEAPON_AMMO | IT_UNLIMITED_SUPERWEAPONS;
-const int IT_PICKUPMASK                	= IT_UNLIMITED_AMMO | IT_JETPACK | IT_FUEL_REGEN; // strength and invincible are handled separately
+const int IT_INVISIBILITY         = 524288;
+const int IT_INVULNERABILITY      = 1048576;
+const int IT_SUIT                 = 2097152;
+const int IT_QUAD                 = 4194304;
 
 #define ITEM_HANDLE(signal, ...) __Item_Send_##signal(__VA_ARGS__)
 CLASS(GameItem, Object)
