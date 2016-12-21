@@ -223,8 +223,7 @@ void counter_use(entity this, entity actor, entity trigger)
 	
 	if(this.count != 0)
 	{
-		if(IS_PLAYER(actor)
-		&&(this.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
+		if(IS_PLAYER(actor) && !(this.spawnflags & SPAWNFLAG_NOMESSAGE))
 		{
 			if(this.count >= 4)
 				centerprint(actor, "There are more to go...");
@@ -238,8 +237,7 @@ void counter_use(entity this, entity actor, entity trigger)
 		return;
 	}
 	
-	if(IS_PLAYER(actor)
-	&&(this.spawnflags & SPAWNFLAG_NOMESSAGE) == 0)
+	if(IS_PLAYER(actor) && !(this.spawnflags & SPAWNFLAG_NOMESSAGE))
 		centerprint(actor, "Sequence completed!");
 	this.enemy = actor;
 	multi_trigger(this);
@@ -360,11 +358,8 @@ void teleport_touch(entity this, entity toucher)
 		}
 	}
 
-	if(this.spawnflags & PLAYER_ONLY)
-	{
-		if(!IS_PLAYER(toucher))
-			return;
-	}
+	if((this.spawnflags & PLAYER_ONLY) && !IS_PLAYER(toucher))
+		return;
 
 // only teleport living creatures
 	if(toucher.health <= 0 || toucher.solid != SOLID_SLIDEBOX)
@@ -400,11 +395,10 @@ void teleport_touch(entity this, entity toucher)
 	{
 		toucher.fixangle = 1;		// turn this way immediately
 		toucher.teleport_time = time + 0.7;
-		if(toucher.flags & FL_ONGROUND)
-			toucher.flags &= ~FL_ONGROUND;
 		toucher.velocity = v_forward * 300;
 	}
-	toucher.flags &= ~FL_ONGROUND;
+	if(toucher.flags & FL_ONGROUND)
+		toucher.flags &= ~FL_ONGROUND;
 }
 
 /*QUAKED info_teleport_destination(.5 .5 .5)(-8 -8 -8)(8 8 32)
@@ -472,7 +466,7 @@ void trigger_skill_touch(entity this, entity toucher)
 sets skill level to the value of "message".
 Only used on start map.
 */
-spawnfunc( trigger_setskill)
+spawnfunc(trigger_setskill)
 {
 	InitTrigger(this);
 	settouch(this, trigger_skill_touch);
@@ -596,14 +590,16 @@ spawnfunc(trigger_push)
 
 void trigger_monsterjump_touch(entity this, entity toucher)
 {
-	if( toucher.flags & (FL_MONSTER | FL_FLY | FL_SWIM) != FL_MONSTER )
+	if(!IS_MONSTER(toucher))
+		return;
+	if((toucher.flags & FL_FLY) || (toucher.flags & FL_SWIM))
 		return;
 
 // set XY even if not on ground, so the jump will clear lips
 	toucher.velocity_x = this.movedir_x * this.speed;
 	toucher.velocity_y = this.movedir_y * this.speed;
 	
-	if( !(toucher.flags & FL_ONGROUND) )
+	if(!(toucher.flags & FL_ONGROUND))
 		return;
 	
 	toucher.flags &= ~FL_ONGROUND;
