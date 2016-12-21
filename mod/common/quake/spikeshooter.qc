@@ -81,8 +81,7 @@ void spikeshooter_fire(entity this, entity actor, entity trigger)
 		this.dmg
 	);
 
-	proj = spawn();
-	proj.classname = "spikeshooter_spike";
+	proj = new(spikeshooter_spike);
 	proj.owner = proj.realowner = this;
 	proj.bot_dodge = true;
 	proj.bot_dodgerating = this.dmg;

@@ -6,6 +6,7 @@ vector get_model_parameters_hat_angles;
 void hats_Precache(string pattern);
 
 AUTOCVAR_NOREF(g_hats, bool, false, "Allow clients to use hats");
+AUTOCVAR(g_hats_default, string, "", "Default hat when player has none on");
 
 REGISTER_MUTATOR(hats, cvar("g_hats") && !cvar("g_overkill"))
 {
@@ -156,7 +157,10 @@ MUTATOR_HOOKFUNCTION(hats, PutClientInServer)
 
 	hats_SpawnHat(player);
 	player.hatentity.alpha = default_weapon_alpha;
-	player.hatname = strzone(player.cvar_cl_hat);
+	if(player.cvar_cl_hat != "")
+		player.hatname = strzone(player.cvar_cl_hat);
+	else
+		player.hatname = strzone(autocvar_g_hats_default);
 }
 
 MUTATOR_HOOKFUNCTION(hats, ClientDisconnect)
