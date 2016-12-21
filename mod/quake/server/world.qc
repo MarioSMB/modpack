@@ -312,8 +312,9 @@ spawnfunc(worldspawn)
 	{
 		string s = sprintf("%d.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
 		//matchid = strzone(s);
+		string gtype = ((coop) ? "coop" : "dm");
 
-		GameLogEcho(strcat(":gamestart:coop_", mapname, ":", s));
+		GameLogEcho(sprintf(":gamestart:%s_%s:%s", gtype, mapname, s));
 
 		GameLogEcho(":gameinfo:end");
 	}

@@ -855,6 +855,13 @@ void key_touch(entity this, entity toucher)
 		this.solid = SOLID_NOT;
 		this.model = string_null;
 	}
+	else
+	{
+		if(this.netname != "")
+			bprintf("%s^7 got the %s\n", toucher.netname, this.netname);
+		else
+			bprintf("%s^7 picked up a key\n");
+	}
 	SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
 }
 
