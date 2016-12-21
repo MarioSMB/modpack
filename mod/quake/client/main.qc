@@ -188,6 +188,18 @@ float sb_showscores;
 
 
 // optional stuff
+STATIC_INIT_LATE(fix_hud)
+{
+	registercvar("_rrestarted", "0");
+
+	if(!cvar("_rrestarted"))
+	{
+		cvar_set("_rrestarted", "1");
+		localcmd("\ndefer 1 r_restart\n");
+	}
+}
+
+
 const int SHOTTYPE_HITTEAM = 1;
 const int SHOTTYPE_HITOBSTRUCTION = 2;
 const int SHOTTYPE_HITWORLD = 3;

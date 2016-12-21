@@ -9,14 +9,6 @@ STATIC_INIT_LATE(mod_cvars_override)
 
 	localcmd("\nalias ignore \"cmd ignore ${* ?}\"\n");
 	localcmd("\nalias unignore \"cmd unignore ${* ?}\"\n");
-
-	registercvar("_rrestarted", "0");
-
-	if(!cvar("_rrestarted"))
-	{
-		cvar_set("_rrestarted", "1");
-		localcmd("\ndefer 1 r_restart\n");
-	}
 }
 
 REGISTER_MUTATOR(mutator_mod, true);
