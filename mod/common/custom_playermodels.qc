@@ -1,3 +1,28 @@
+#ifdef GAMEQC
+#ifdef SVQC
+AUTOCVAR(sv_jumpvelocity_crouch, float, 600, "");
+int models_allowed;
+#endif
+
+REGISTER_STAT(JUMPVELOCITY_CROUCH, float, autocvar_sv_jumpvelocity_crouch);
+REGISTER_STAT(MODELS_ALLOWED, int, models_allowed);
+
+// TODO
+SOUND(MARIO_CJUMP, "player/mario/player/jump7");
+
+const int MODELS_PONY = BIT(0);
+const int MODELS_WEEGEE = BIT(1);
+const int MODELS_ROSALINA = BIT(2);
+const int MODELS_COW = BIT(3);
+const int MODELS_GOAT = BIT(4);
+const int MODELS_ROBOT = BIT(5);
+const int MODELS_RENAMON = BIT(6);
+const int MODELS_BOT = BIT(7);
+const int MODELS_MARIO = BIT(8);
+#endif
+
+#ifdef SVQC
+
 void cpmodels_Precache();
 REGISTER_MUTATOR(cpmodels, true)
 {
@@ -11,17 +36,6 @@ AUTOCVAR(sv_allow_customplayermodels, bool, false, "");
 AUTOCVAR(sv_allow_customplayermodels_bots, bool, true, "");
 AUTOCVAR(sv_allow_customplayermodels_idlist, string, "", "");
 AUTOCVAR(sv_allow_customplayermodels_speciallist, string, "", "");
-
-int models_allowed;
-const int MODELS_PONY = BIT(0);
-const int MODELS_WEEGEE = BIT(1);
-const int MODELS_ROSALINA = BIT(2);
-const int MODELS_COW = BIT(3);
-const int MODELS_GOAT = BIT(4);
-const int MODELS_ROBOT = BIT(5);
-const int MODELS_RENAMON = BIT(6);
-const int MODELS_BOT = BIT(7);
-const int MODELS_MARIO = BIT(8);
 
 void cpmodels_Precache()
 {
@@ -147,3 +161,36 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerSpawn)
 	if(player.cvar_cl_sparkle == 2 && strhasword(player.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
 		player.colormap = 4351;
 }
+
+#endif
+
+#ifdef CSQC
+REGISTER_MUTATOR(cpmodels, true);
+#endif
+
+#ifdef GAMEQC
+MUTATOR_HOOKFUNCTION(cpmodels, PlayerJump, CBC_ORDER_LAST)
+{
+	if(M_ARGV(2, bool))
+		return false; // no double jumping
+
+	entity player = M_ARGV(0, entity);
+
+	if(STAT(JUMPVELOCITY_CROUCH, player) && PHYS_INPUT_BUTTON_CROUCH(player) && IS_ONGROUND(player) && vdist(player.velocity, <, PHYS_MAXSPEED(player) * 0.6) &&
+		player.model == "models/player/mario.dpm" && (STAT(MODELS_ALLOWED, player) & MODELS_MARIO) &&
+#ifdef SVQC
+		!g_cts && !g_race && player.cvar_cl_sparkle == 3
+#elif defined(CSQC)
+		gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && cvar("cl_sparkle") == 3
+#endif
+		)
+	{
+		M_ARGV(1, float) = STAT(JUMPVELOCITY_CROUCH, player);
+		makevectors(PHYS_WORLD_ANGLES(player));
+		player.velocity -= v_forward * 50;
+	#ifdef SVQC
+		sound(player, CH_VOICE, SND_MARIO_CJUMP, VOL_BASE, ATTEN_NORM);
+	#endif
+	}
+}
+#endif

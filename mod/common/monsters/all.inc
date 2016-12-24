@@ -10,3 +10,4 @@
 #include "rottweiler.qc"
 #include "goomba.qc"
 #include "koopa.qc"
+//#include "spawner.qc"
