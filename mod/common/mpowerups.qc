@@ -98,7 +98,6 @@ const vector PL_CROUCH_VIEW_OFS_CONST = '0 0 20';
 const vector PL_CROUCH_MAX_CONST = '16 16 25';
 const vector PL_CROUCH_MIN_CONST = '-16 -16 -24';
 
-
 .float star_finished;
 .float metal_finished;
 .float mini_finished;
