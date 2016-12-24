@@ -9,7 +9,7 @@
 #include "giftbox.qc"
 #include "projectiles.qh"
 #include "minigames/all.inc"
-#include "mpowerups.qc"
+//#include "mpowerups.qc"
 #include "monsters/all.inc"
 #include "mutators/all.qh"
 #include "notifications.qh"
