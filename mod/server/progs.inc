@@ -7,7 +7,6 @@
 	#include "chat.qc"
 	#include "commands.qc"
 	#include "compat.qc"
-	#include "custom_playermodels.qc"
 	#include "damage.qc"
 	#include "demo.qc"
 	#include "ignore.qc"
