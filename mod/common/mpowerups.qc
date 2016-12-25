@@ -1,24 +1,16 @@
 const int IT_STAR = BIT(18); // same id as ctf shielded
-const int IT_METAL = BIT(19); // same id as invisibility (which gives a nice side effect of making monsters not target this player)
 const int IT_MINI = BIT(23); // TODO: make sure this is actually available
 
 REGISTER_STAT(STAR_FINISHED, float);
-REGISTER_STAT(METAL_FINISHED, float);
 REGISTER_STAT(MINI_FINISHED, float);
 
 MSG_INFO_NOTIF(POWERUP_STAR,                        1,      1, 0, "s1", "s1",       "star",                         "^BG%s^K1 picked up Starman", "")
 MSG_CENTER_NOTIF(POWERUP_STAR,                      1,      0, 0, "",               CPID_POWERUP,           "0 0",  "^F2Starman gives you complete invulnerability!", "")
 MSG_CENTER_NOTIF(POWERDOWN_STAR,                    1,      0, 0, "",               CPID_POWERUP,           "0 0",  "^F2Starman has faded", "")
 
-MSG_INFO_NOTIF(POWERUP_METAL,                       1,      1, 0, "s1", "s1",       "metal",                        "^BG%s^K1 picked up Metal Cap", "")
-MSG_CENTER_NOTIF(POWERUP_METAL,                     1,      0, 0, "",               CPID_POWERUP,           "0 0",  "^F2Metal Cap gives you a heavy feeling!", "")
-MSG_CENTER_NOTIF(POWERDOWN_METAL,                   1,      0, 0, "",               CPID_POWERUP,           "0 0",  "^F2Metal Cap has worn off", "")
-
 MSG_INFO_NOTIF(POWERUP_MINI,                        1,      1, 0, "s1", "s1",       "mini",                         "^BG%s^K1 picked up Mini Mushroom", "")
 MSG_CENTER_NOTIF(POWERUP_MINI,                      1,      0, 0, "",               CPID_POWERUP,           "0 0",  "^F2Mini Mushroom makes you tiny but vulnerable!", "")
 MSG_CENTER_NOTIF(POWERDOWN_MINI,                    1,      0, 0, "",               CPID_POWERUP,           "0 0",  "^F2Mini Mushroom has outgrown you", "")
-
-REGISTER_GLOBALSOUND(FALL_METALCAP, "misc/metalcaphitground")
 
 #ifdef GAMEQC
 MODEL(Star_ITEM, Item_Model("star.md3"));
@@ -36,24 +28,6 @@ REGISTER_ITEM(Star, Powerup) {
     this.m_waypoint         =   "Starman";
     this.m_waypointblink    =   2;
     this.m_itemid           =   IT_STAR;
-}
-
-#ifdef GAMEQC
-MODEL(Metal_ITEM, Item_Model("metal.md3"));
-SOUND(Metal, "items/powerup_metal");
-#endif
-
-REGISTER_ITEM(Metal, Powerup) {
-#ifdef GAMEQC
-    this.m_model            =   MDL_Metal_ITEM;
-    this.m_sound            =   SND_Metal;
-#endif
-    this.m_name             =   "metalcap";
-    this.m_icon             =   "metal";
-    this.m_color            =   '0.5 0.5 0.5';
-    this.m_waypoint         =   "Metal Cap";
-    this.m_waypointblink    =   2;
-    this.m_itemid           =   IT_METAL;
 }
 
 #ifdef GAMEQC
@@ -85,7 +59,6 @@ REGISTER_MUTATOR(mpowerups, true);
 AUTOCVAR(g_powerup_star_touch_delay, float, 0.2, "");
 AUTOCVAR(g_powerup_star_speed, float, 1.7, "");
 AUTOCVAR(g_powerup_star_time, float, 33.616, "");
-AUTOCVAR(g_powerup_metal_time, float, 29.930, "");
 AUTOCVAR(g_powerups_mario_replace, bool, false, "");
 AUTOCVAR(g_powerup_mini_time, float, 30, "");
 AUTOCVAR(g_powerup_mini_gravity, float, 0.4, "");
@@ -99,7 +72,6 @@ const vector PL_CROUCH_MAX_CONST = '16 16 25';
 const vector PL_CROUCH_MIN_CONST = '-16 -16 -24';
 
 .float star_finished;
-.float metal_finished;
 .float mini_finished;
 
 .float mini_oldgravity;
@@ -109,7 +81,7 @@ bool have_powerup(entity this)
 {
 	FOREACH(Items, it.instanceOfPowerup && (this.items & it.m_itemid),
 	{
-		if(it != ITEM_Star && it != ITEM_Metal && it != ITEM_JetpackRegen && it != ITEM_Jetpack && it != ITEM_Mini)
+		if(it != ITEM_Star && it != ITEM_JetpackRegen && it != ITEM_Jetpack && it != ITEM_Mini)
 			return true;
 	});
 
@@ -118,10 +90,9 @@ bool have_powerup(entity this)
 
 void RemovePowerups(entity this)
 {
-	STAT(METAL_FINISHED, this) = 0;
 	STAT(STAR_FINISHED, this) = 0;
-
 	STAT(MINI_FINISHED, this) = 0;
+
 	this.scale = 0; // 0 is default, it'll do for now
 	if(this.mini_oldgravity)
 	{
@@ -151,7 +122,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, ItemTouch)
 
 	if(def.instanceOfPowerup)
 	{
-		if((toucher.items & ITEM_Star.m_itemid) || (toucher.items & ITEM_Metal.m_itemid) || (toucher.items & ITEM_Mini.m_itemid))
+		if((toucher.items & ITEM_Star.m_itemid) || (toucher.items & ITEM_Mini.m_itemid))
 			return MUT_ITEMTOUCH_RETURN; // nope
 	}
 
@@ -160,13 +131,6 @@ MUTATOR_HOOKFUNCTION(mpowerups, ItemTouch)
 		if(have_powerup(toucher))
 			return MUT_ITEMTOUCH_RETURN;
 		STAT(STAR_FINISHED, toucher) = max(STAT(STAR_FINISHED, toucher), time) + item.star_finished;
-		return MUT_ITEMTOUCH_PICKUP;
-	}
-	if (item.metal_finished)
-	{
-		if(have_powerup(toucher))
-			return MUT_ITEMTOUCH_RETURN;
-		STAT(METAL_FINISHED, toucher) = max(STAT(METAL_FINISHED, toucher), time) + item.metal_finished;
 		return MUT_ITEMTOUCH_PICKUP;
 	}
 	if (item.mini_finished)
@@ -234,30 +198,6 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPowerups)
 			player.items = player.items | ITEM_Star.m_itemid;
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_STAR, player.netname);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_STAR);
-		}
-	}
-
-	if (player.items & ITEM_Metal.m_itemid)
-	{
-		play_countdown(player, STAT(METAL_FINISHED, player), SND_POWEROFF);
-		player.effects = player.effects | (EF_FULLBRIGHT);
-		if (time > STAT(METAL_FINISHED, player))
-		{
-			player.hatname = player.oldhatname;
-			player.items = player.items - (player.items & ITEM_Metal.m_itemid);
-			//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_METAL, player.netname);
-			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_METAL);
-		}
-	}
-	else
-	{
-		if (time < STAT(METAL_FINISHED, player))
-		{
-			player.oldhatname = player.hatname; // copying zoned string, risky business
-			player.hatname = strzone("metal");
-			player.items = player.items | ITEM_Metal.m_itemid;
-			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_METAL, player.netname);
-			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_METAL);
 		}
 	}
 
@@ -335,20 +275,6 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerDamage_Calculate)
 	float frag_damage = M_ARGV(4, float);
 	vector frag_force = M_ARGV(6, vector);
 
-	if(time < STAT(METAL_FINISHED, frag_target))
-	{
-		if(frag_attacker != frag_target)
-		{
-			frag_damage *= 0.3;
-			frag_force = '0 0 0';
-		}
-		else
-			frag_damage *= 0.1;
-
-		if(frag_deathtype == DEATH_FALL.m_id || frag_deathtype == DEATH_DROWN.m_id || frag_deathtype == DEATH_LAVA.m_id || frag_deathtype == DEATH_SLIME.m_id)
-			frag_damage = 0;
-	}
-
 	if(time < STAT(STAR_FINISHED, frag_target))
 	{
 		if(!ITEM_DAMAGE_NEEDKILL(frag_deathtype))
@@ -366,7 +292,6 @@ MUTATOR_HOOKFUNCTION(mpowerups, SpectateCopy)
 	entity spectatee = M_ARGV(0, entity);
 	entity client = M_ARGV(1, entity);
 
-	STAT(METAL_FINISHED, client) = STAT(METAL_FINISHED, spectatee);
 	STAT(STAR_FINISHED, client) = STAT(STAR_FINISHED, spectatee);
 	STAT(MINI_FINISHED, client) = STAT(MINI_FINISHED, spectatee);
 	return false;
@@ -412,8 +337,6 @@ MUTATOR_HOOKFUNCTION(mpowerups, FixPlayermodel)
 {
 	entity player = M_ARGV(2, entity);
 
-	if(time < STAT(METAL_FINISHED, player))
-		M_ARGV(1, int) = 3;
 	if(time < STAT(STAR_FINISHED, player))
 		M_ARGV(1, int) = 2;
 }
@@ -426,26 +349,9 @@ MUTATOR_HOOKFUNCTION(mpowerups, OnEntityPreSpawn, CBC_ORDER_FIRST)
 
 	switch(ent.classname)
 	{
-		case "item_strength": ent.classname = "item_metalcap"; break;
+		case "item_strength": ent.classname = "item_minishroom"; break;
 		case "item_invincible": ent.classname = "item_starman"; break;
-		case "item_quad": case "item_enviro": ent.classname = "item_minishroom"; break;
 	}
-}
-
-void Metal_check_hitground(entity this)
-{
-#ifdef SVQC
-	if (!this.wasFlying) return;
-    this.wasFlying = false;
-    if (this.waterlevel >= WATERLEVEL_SWIMMING) return;
-    if (time < this.ladder_time) return;
-    if (this.hook) return;
-    this.nextstep = time + 0.3 + random() * 0.1;
-    trace_dphitq3surfaceflags = 0;
-    tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NOMONSTERS, this);
-    if (trace_dphitq3surfaceflags & Q3SURFACEFLAG_NOSTEPS) return;
-    GlobalSound(this, GS_FALL_METALCAP, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
-#endif
 }
 
 MUTATOR_HOOKFUNCTION(mpowerups, PlayerRegen)
@@ -466,13 +372,6 @@ spawnfunc(item_starman)
 	StartItem(this, ITEM_Star);
 }
 
-spawnfunc(item_metalcap)
-{
-	if(!this.metal_finished)
-		this.metal_finished = autocvar_g_powerup_metal_time;
-	StartItem(this, ITEM_Metal);
-}
-
 spawnfunc(item_minishroom)
 {
 	if(!this.mini_finished)
@@ -491,12 +390,6 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPhysics)
 	{
 		player.stat_sv_maxspeed *= autocvar_g_powerup_star_speed;
 		player.stat_sv_airspeedlimit_nonqw *= autocvar_g_powerup_star_speed;
-	}
-
-	if(time < STAT(METAL_FINISHED, player))
-	{
-		if(IS_PLAYER(player) && IS_ONGROUND(player))
-			Metal_check_hitground(player);
 	}
 
 	if(time < STAT(MINI_FINISHED, player))
@@ -520,63 +413,13 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPhysics)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(mpowerups, PM_Physics)
-{
-	entity player = M_ARGV(0, entity);
-	float maxspeed_mod = M_ARGV(1, float);
-	float dt = M_ARGV(2, float);
-
-	if(time < STAT(METAL_FINISHED, player))
-	if(player.waterlevel)
-	{
-		if(IS_ONGROUND(player))
-		{
-			if (!WAS_ONGROUND(player)) {
-				emit(phys_land, player);
-				if (player.lastground < time - 0.3) {
-					player.velocity *= (1 - PHYS_FRICTION_ONLAND(player));
-				}
-			}
-			player.com_phys_vel_max = PHYS_MAXSPEED(player) * (maxspeed_mod * 0.6);
-			player.com_phys_gravity = '0 0 -1' * PHYS_GRAVITY(player) * dt;
-			if (PHYS_ENTGRAVITY(player)) { player.com_phys_gravity *= PHYS_ENTGRAVITY(player); }
-			player.com_phys_ground = true;
-			player.com_phys_vel_2d = true;
-			sys_phys_simulate(player, dt);
-			player.com_phys_vel_2d = false;
-			player.com_phys_ground = false;
-			player.com_phys_gravity = '0 0 0';
-		}
-		else
-		{
-			maxspeed_mod *= 1.2;
-
-			player.com_phys_acc_rate_air = PHYS_AIRACCELERATE(player) * min(maxspeed_mod, 1);
-			player.com_phys_acc_rate_air_stop = PHYS_AIRSTOPACCELERATE(player) * maxspeed_mod;
-			player.com_phys_acc_rate_air_strafe = PHYS_AIRSTRAFEACCELERATE(player) * maxspeed_mod;
-			player.com_phys_vel_max_air_strafe = PHYS_MAXAIRSTRAFESPEED(player) * maxspeed_mod;
-			player.com_phys_vel_max_air = PHYS_MAXAIRSPEED(player) * maxspeed_mod;
-			player.com_phys_vel_max = PHYS_MAXAIRSPEED(player) * min(maxspeed_mod, 1);
-			player.com_phys_air = true;
-			player.com_phys_vel_2d = true;
-			sys_phys_simulate(player, dt);
-			player.com_phys_vel_2d = false;
-			player.com_phys_air = false;
-		}
-
-		return true;
-	}
-}
-
 #ifdef CSQC
 bool have_star;
-bool have_metalcap;
 
 int powerup_music_index_backup;
 
 entity rainbowvision_noise2;
 
-AUTOCVAR_SAVE(hud_progressbar_metal_color,	vector,   '0.5 0.5 0.5',   "");
 AUTOCVAR_SAVE(hud_progressbar_star_color,	vector,   '0.8 0.8 0.1',   "");
 AUTOCVAR_SAVE(hud_progressbar_mini_color,	vector,   '0.2 0.2 0.8',   "");
 
@@ -586,12 +429,9 @@ MUTATOR_HOOKFUNCTION(mpowerups, HUD_Powerups_add)
 		return;
 
 	//int allItems = STAT(ITEMS);
-	float metalTime = bound(0, STAT(METAL_FINISHED) - time, 99);
 	float starTime = bound(0, STAT(STAR_FINISHED) - time, 99);
 	float miniTime = bound(0, STAT(MINI_FINISHED) - time, 99);
 
-	if(metalTime)
-		addPowerupItem("Metal Cap", "metal", autocvar_hud_progressbar_metal_color, metalTime, 30);
 	if(starTime)
 		addPowerupItem("Starman", "star", autocvar_hud_progressbar_star_color, starTime, 33.616);
 	if(miniTime)
@@ -632,40 +472,6 @@ MUTATOR_HOOKFUNCTION(mpowerups, HUD_Draw_overlay)
 			}
 			
 			have_star = true;
-		}
-	}
-	if(have_metalcap)
-	{
-		if(time > STAT(METAL_FINISHED) || autocvar__hud_configure)
-		{
-			if(cvar("music_playlist_index") == 999)
-			{
-				cvar_set("music_playlist_index", ftos(powerup_music_index_backup));
-			}
-			else
-				localcmd("\ncd resume\n");
-				
-			have_metalcap = false;
-		}
-	}
-	else if(!autocvar__hud_configure)
-	{
-		if(time < STAT(METAL_FINISHED))
-		{
-			if(cvar("music_playlist_index") != 999) // if the playlist isn't paused
-			{
-				// pause music
-				if(cvar("music_playlist_index") != -1)
-				{
-					powerup_music_index_backup = cvar("music_playlist_index");
-					cvar_set("music_playlist_sampleposition0", "0");
-					cvar_set("music_playlist_index", "999");
-				}
-				else
-					localcmd("\ncd pause\n");
-			}
-			
-			have_metalcap = true;
 		}
 	}
 
