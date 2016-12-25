@@ -80,13 +80,7 @@ const vector PL_CROUCH_MIN_CONST = '-16 -16 -24';
 
 bool have_powerup(entity this)
 {
-	FOREACH(Items, it.instanceOfPowerup && (this.items & it.m_itemid),
-	{
-		if(it != ITEM_Star && it != ITEM_JetpackRegen && it != ITEM_Jetpack && it != ITEM_Mini)
-			return true;
-	});
-
-	return false;
+	return ((this.items & ITEM_Star.m_itemid) || (this.items & ITEM_Mini.m_itemid));
 }
 
 void RemovePowerups(entity this)
@@ -119,13 +113,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, ItemTouch)
 {
 	entity item = M_ARGV(0, entity);
 	entity toucher = M_ARGV(1, entity);
-	GameItem def = item.itemdef;
-
-	if(def.instanceOfPowerup)
-	{
-		if((toucher.items & ITEM_Star.m_itemid) || (toucher.items & ITEM_Mini.m_itemid))
-			return MUT_ITEMTOUCH_RETURN; // nope
-	}
+	//GameItem def = item.itemdef;
 
 	if (item.star_finished)
 	{
