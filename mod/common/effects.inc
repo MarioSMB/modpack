@@ -2,6 +2,7 @@
 
 // EFFECT(istrail, EFFECT_NAME,     "effectinfo_string")
 EFFECT(1, TR_DELUGEPLASMA,          "TR_DELUGEPLASMA")
+EFFECT(0, DELUGE_MUZZLEFLASH,       "deluge_muzzleflash")
 
 EFFECT(1, VORTEX_BEAM_NEW,          "nex_beam_new")
 EFFECT(0, VORTEX_IMPACT_NEW,        "nex_impact_new")
