@@ -195,7 +195,7 @@ void W_Flak_Projectile_Touch(entity this, entity toucher)
 
 		if(passThrough <= 0)
 		{
-			remove(this);
+			delete(this);
 			return;
 		}
 
@@ -226,7 +226,7 @@ void W_Flak_Projectile_Think(entity this)
 {
 	if(time > this.spawnshieldtime)
 	{
-		remove(this);
+		delete(this);
 		return;
 	}
 

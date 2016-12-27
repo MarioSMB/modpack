@@ -1,19 +1,19 @@
 #ifdef IMPLEMENTATION
 
-#include "../../mplant/system.qc"
-#include "../../mplant/io.qc"
-#include "../../mplant/networking.qc"
+#include "mplant/system.qc"
+#include "mplant/io.qc"
+#include "mplant/networking.qc"
 
-#include "../../mplant/objects/common.qc"
-#include "../../mplant/objects/block.qc"
+#include "mplant/objects/common.qc"
+#include "mplant/objects/block.qc"
 
-#include "../../mplant/tools/common.qc"
-#include "../../mplant/tools/extrude.qc"
-#include "../../mplant/tools/place.qc"
-#include "../../mplant/tools/rotate.qc"
-#include "../../mplant/tools/select.qc"
-#include "../../mplant/tools/smart.qc"
-#include "../../mplant/tools/rubble.qc"
+#include "mplant/tools/common.qc"
+#include "mplant/tools/extrude.qc"
+#include "mplant/tools/place.qc"
+#include "mplant/tools/rotate.qc"
+#include "mplant/tools/select.qc"
+#include "mplant/tools/smart.qc"
+#include "mplant/tools/rubble.qc"
 
 void mplant_init();
 

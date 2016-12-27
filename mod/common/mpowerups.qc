@@ -1,5 +1,5 @@
-const int IT_STAR = BIT(18); // same id as ctf shielded
-const int IT_MINI = BIT(23); // TODO: make sure this is actually available
+const int MIT_STAR = BIT(0); // same id as ctf shielded
+const int MIT_MINI = BIT(1); // TODO: make sure this is actually available
 
 REGISTER_STAT(STAR_FINISHED, float);
 REGISTER_STAT(MINI_FINISHED, float);
@@ -27,7 +27,7 @@ REGISTER_ITEM(Star, Powerup) {
     this.m_color            =   '1 1 0';
     this.m_waypoint         =   "Starman";
     this.m_waypointblink    =   2;
-    this.m_itemid           =   IT_STAR;
+    this.m_itemid           =   MIT_STAR;
 }
 
 #ifdef GAMEQC
@@ -45,7 +45,7 @@ REGISTER_ITEM(Mini, Powerup) {
     this.m_color            =   '0.25 0.25 1';
     this.m_waypoint         =   "Mini Mushroom";
     this.m_waypointblink    =   2;
-    this.m_itemid           =   IT_MINI;
+    this.m_itemid           =   MIT_MINI;
 }
 
 #ifdef SVQC
@@ -71,6 +71,8 @@ const vector PL_CROUCH_VIEW_OFS_CONST = '0 0 20';
 const vector PL_CROUCH_MAX_CONST = '16 16 25';
 const vector PL_CROUCH_MIN_CONST = '-16 -16 -24';
 
+.int mitems;
+
 .float star_finished;
 .float mini_finished;
 
@@ -79,13 +81,15 @@ const vector PL_CROUCH_MIN_CONST = '-16 -16 -24';
 
 bool have_powerup(entity this)
 {
-	return ((this.items & ITEM_Star.m_itemid) || (this.items & ITEM_Mini.m_itemid));
+	return ((this.mitems & ITEM_Star.m_itemid) || (this.mitems & ITEM_Mini.m_itemid));
 }
 
 void RemovePowerups(entity this)
 {
 	STAT(STAR_FINISHED, this) = 0;
 	STAT(MINI_FINISHED, this) = 0;
+
+	this.mitems = 0;
 
 	this.scale = 0; // 0 is default, it'll do for now
 	if(this.mini_oldgravity)
@@ -168,13 +172,13 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPowerups)
 {
 	entity player = M_ARGV(0, entity);
 
-	if (player.items & ITEM_Star.m_itemid)
+	if (player.mitems & ITEM_Star.m_itemid)
 	{
 		play_countdown(player, STAT(STAR_FINISHED, player), SND_POWEROFF);
 		player.effects = player.effects | (EF_DIMLIGHT | EF_FULLBRIGHT);
 		if (time > STAT(STAR_FINISHED, player))
 		{
-			player.items = player.items - (player.items & ITEM_Star.m_itemid);
+			player.mitems &= ~ITEM_Star.m_itemid;
 			//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_STAR, player.netname);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_STAR);
 		}
@@ -183,13 +187,13 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPowerups)
 	{
 		if (time < STAT(STAR_FINISHED, player))
 		{
-			player.items = player.items | ITEM_Star.m_itemid;
+			player.mitems |= ITEM_Star.m_itemid;
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_STAR, player.netname);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_STAR);
 		}
 	}
 
-	if (player.items & ITEM_Mini.m_itemid)
+	if (player.mitems & ITEM_Mini.m_itemid)
 	{
 		play_countdown(player, STAT(MINI_FINISHED, player), SND_POWEROFF);
 		if (time > STAT(MINI_FINISHED, player))
@@ -220,7 +224,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPowerups)
 			vector offset = vec3(0, 0, (PL_MIN_CONST.z - (PL_MIN_CONST.z * max(0, autocvar_g_powerup_mini_size))) * -1);
 			setorigin(player, player.origin + (offset + '0 0 1')); // restore player's location
 
-			player.items = player.items - (player.items & ITEM_Mini.m_itemid);
+			player.mitems &= ~ITEM_Mini.m_itemid;
 			//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_MINI, player.netname);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_MINI);
 
@@ -248,7 +252,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPowerups)
 			player.mini_oldgravity = ((player.gravity != 0) ? player.gravity : 1);
 			player.scale = myscale;
 			player.gravity = autocvar_g_powerup_mini_gravity;
-			player.items = player.items | ITEM_Mini.m_itemid;
+			player.mitems |= ITEM_Mini.m_itemid;
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_MINI, player.netname);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_MINI);
 		}

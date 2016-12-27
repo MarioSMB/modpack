@@ -8,7 +8,7 @@
 	#include "modelplanter.qc"
 #elif defined(CSQC)
 #ifdef IMPLEMENTATION
-	#include "../../mplant/client.qc"
-	#include "../../mplant/networking.qc"
+	#include "mplant/client.qc"
+	#include "mplant/networking.qc"
 #endif
 #endif
