@@ -138,8 +138,6 @@ AUTOCVAR(g_vehicle_lightapc_ballistics_density, float, 4.55, "");
 
 AUTOCVAR(g_vehicle_lightapc_forcetype, int, 0, "");
 
-void lightapc_SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner, string tagname);
-void lightapc_AttachToShotorg(entity this, entity flash, vector offset, string tagname, entity attach);
 #endif
 
 // include for both client and server
@@ -157,54 +155,16 @@ vector vehicle_aimturret2(entity _vehic, entity _turretmount, vector _target, en
 						  float _pichlimit_min, float _pichlimit_max, 
 						  float _rotlimit_min, float _rotlimit_max, float _aimspeed)
 {
-	vector vtmp, vtag;
-	float ftmp;
-	vtag = gettaginfo(_turrret, gettagindex(_turrret, _tagname));
-	vtmp = vectoangles(normalize(_target - vtag));
+	vector vtag = gettaginfo(_turrret, gettagindex(_turrret, _tagname));
+	vector vtmp = vectoangles(normalize(_target - vtag));
 	vtmp = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(_vehic.angles+_turretmount.angles), AnglesTransform_FromAngles(vtmp))) - _turrret.angles;
 	vtmp = AnglesTransform_Normalize(vtmp, true);
-	ftmp = _aimspeed * frametime;
-	vtmp_y = bound(-ftmp, vtmp_y, ftmp);
-	vtmp_x = bound(-ftmp, vtmp_x, ftmp);
-	_turrret.angles_y = bound(_rotlimit_min, _turrret.angles_y + vtmp_y, _rotlimit_max);    
-	_turrret.angles_x = bound(_pichlimit_min, _turrret.angles_x + vtmp_x, _pichlimit_max);
+	float ftmp = _aimspeed * frametime;
+	vtmp.y = bound(-ftmp, vtmp.y, ftmp);
+	vtmp.x = bound(-ftmp, vtmp.x, ftmp);
+	_turrret.angles_y = bound(_rotlimit_min, _turrret.angles_y + vtmp.y, _rotlimit_max);    
+	_turrret.angles_x = bound(_pichlimit_min, _turrret.angles_x + vtmp.x, _pichlimit_max);
 	return vtag;
-}
-
-void lightapc_SpawnCasing(vector vel, float randomvel, vector ang, vector avel, float randomavel, int casingtype, entity casingowner, string tagname)
-{
-	vector org = gettaginfo(casingowner, gettagindex(casingowner, tagname));
-
-	if (!sound_allowed(MSG_BROADCAST, casingowner))
-		casingtype |= 0x80;
-
-	WriteHeader(MSG_ALL, casings);
-	WriteByte(MSG_ALL, casingtype);
-	WriteCoord(MSG_ALL, org.x);
-	WriteCoord(MSG_ALL, org.y);
-	WriteCoord(MSG_ALL, org.z);
-	WriteShort(MSG_ALL, compressShortVector(vel)); // actually compressed velocity
-	WriteByte(MSG_ALL, ang.x * 256 / 360);
-	WriteByte(MSG_ALL, ang.y * 256 / 360);
-	WriteByte(MSG_ALL, ang.z * 256 / 360);
-}
-
-void lightapc_AttachToShotorg(entity this, entity flash, vector offset, string tagname, entity attach)
-{
-	entity xflash;
-	flash.owner = this;
-	flash.angles_z = random() * 360;
-
-	setattachment(flash, this, tagname);
-	setorigin(flash, offset);
-
-	xflash = spawn();
-	copyentity(flash, xflash);
-
-	flash.viewmodelforclient = this;
-
-	setattachment(xflash, attach, tagname);
-	setorigin(xflash, offset);
 }
 
 void lightapc_kill_hitbox(entity hitbox)
@@ -534,7 +494,7 @@ bool lightapc_gunner_frame(entity this, float dt)
 
 		vector angvec = gettaginfo(gunner, gettagindex(gunner, "tag_camera"));
 		setorigin(player, angvec);
-		traceline(angvec, angvec + v_forward * MAX_SHOT_DISTANCE, MOVE_WORLDONLY, gunner);
+		traceline(angvec, angvec + v_forward * max_shot_distance, MOVE_WORLDONLY, gunner);
 		vector crossy = trace_endpos;
 		
 		// Guns

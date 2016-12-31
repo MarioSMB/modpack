@@ -202,7 +202,7 @@ void snafu_vprincess_create(entity own)
     _where_y += random() * own.mins_y;
     _where_y += random() * own.maxs_y;
     
-    tracebox(_where + '0 0 64', PRINCESS_MIN, PRINCESS_MAX, _where - '0 0 1' * MAX_SHOT_DISTANCE, MOVE_NORMAL, own);    
+    tracebox(_where + '0 0 64', PRINCESS_MIN, PRINCESS_MAX, _where - '0 0 1' * max_shot_distance, MOVE_NORMAL, own);    
     setorigin(zom, trace_endpos);
     
     set_movetype(zom, MOVETYPE_WALK);

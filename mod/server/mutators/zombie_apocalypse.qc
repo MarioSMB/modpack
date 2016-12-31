@@ -24,7 +24,10 @@ void za_SpawnMonster()
 	entity e = spawn();
 
 	if(MoveToRandomMapLocation(e, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
+	{
+		e.angles = '0 0 0';
 		spawnmonster(e, autocvar_g_za_spawnmonster, 0, NULL, NULL, e.origin, false, false, 2);
+	}
 }
 
 void za_SetEnemy(entity player)
@@ -159,11 +162,13 @@ MUTATOR_HOOKFUNCTION(za, PlayerDies)
 
 	Monster mon = Monsters_from(frag_attacker.monsterid);
 
+	if(frag_attacker.enemy == frag_target)
+		frag_attacker.enemy = NULL;
+
 	frag_target.monsterid = mon.monsterid;
 	frag_target.health = frag_attacker.max_health;
 	frag_target.za_maxhealth = frag_attacker.max_health;
 	frag_target.weapons = '0 0 0';
-	frag_attacker.enemy = NULL;
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		.entity weaponentity = weaponentities[slot];

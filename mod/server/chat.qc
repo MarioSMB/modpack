@@ -2,7 +2,7 @@ REGISTER_MUTATOR(mod_chat, true);
 
 .entity lasthit;
 
-MUTATOR_HOOKFUNCTION(mod_chat, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(mod_chat, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);

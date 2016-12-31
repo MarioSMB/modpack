@@ -275,7 +275,7 @@ bool snafu_zombie_domelee(entity this, float _up, float _range, float _dmg, floa
 void snafu_zombie_localtarget(entity this, float _range)
 {
 	entity best_targ = NULL;
-	float targ_score, targ_score_best = MAX_SHOT_DISTANCE;
+	float targ_score, targ_score_best = max_shot_distance;
 
 	if(this.enemy)
 	{

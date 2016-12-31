@@ -113,7 +113,7 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 
 		//vector vecs = decompressShotOrigin(STAT(SHOTORG));
 
-		traceline(traceorigin, traceorigin + view_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, trueaim);
+		traceline(traceorigin, traceorigin + view_forward * max_shot_distance, MOVE_NORMAL, trueaim);
 		vector trueaimpoint = trace_endpos;
 
 		if(vdist((trueaimpoint - traceorigin), <, g_trueaim_minrange))
@@ -144,7 +144,7 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 		tracebox(w_shotorg, '0 0 0', '0 0 0', trueaimpoint, MOVE_NORMAL, trueaim);
 
 
-		//WarpZone_TraceLine(view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, NULL);
+		//WarpZone_TraceLine(view_origin, view_origin + v + view_forward * max_shot_distance, MOVE_NORMAL, NULL);
 
 		int shottype = ClientBeam_HitCheck();
 		bool hit = boolean(shottype == SHOTTYPE_HITENEMY || shottype == SHOTTYPE_HITTEAM); // also count team shots

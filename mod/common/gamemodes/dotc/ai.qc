@@ -72,7 +72,7 @@ vector dotc_ai_aim_ballistic(entity this, vector vtarget, vector shootfrom, floa
 	//dist = vlen(e_org - this.origin);
 
 	// Find the height offset to the sky / celing
-	//traceline(e_org + '0 0 4', e_org + ('0 0 1' * MAX_SHOT_DISTANCE),  MOVE_WORLDONLY, this);
+	//traceline(e_org + '0 0 4', e_org + ('0 0 1' * max_shot_distance),  MOVE_WORLDONLY, this);
 	//hgt = 0.5 * vlen(e_org - trace_endpos) - 64;
 
 	hgt = 128;

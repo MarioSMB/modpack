@@ -37,7 +37,7 @@ void dotc_rart_fire(entity this)
 	//float i;
 
 	// Find the height offset to the sky	/ celing
-	traceline(e_org + '0 0 4', e_org + ('0 0 1' * MAX_SHOT_DISTANCE),  MOVE_WORLDONLY, this);
+	traceline(e_org + '0 0 4', e_org + ('0 0 1' * max_shot_distance),  MOVE_WORLDONLY, this);
 
 	// Determine suitable rocket arc height
 	hgt = vlen(e_org - trace_endpos) - 64;
