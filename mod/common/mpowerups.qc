@@ -1,8 +1,10 @@
-const int MIT_STAR = BIT(0); // same id as ctf shielded
-const int MIT_MINI = BIT(1); // TODO: make sure this is actually available
+const int MIT_STAR = BIT(0);
+const int MIT_MINI = BIT(1);
+const int MIT_LIFE = BIT(2);
 
 REGISTER_STAT(STAR_FINISHED, float);
 REGISTER_STAT(MINI_FINISHED, float);
+REGISTER_STAT(LIFE_FINISHED, float);
 
 MSG_INFO_NOTIF(POWERUP_STAR,                        1,      1, 0, "s1", "s1",       "star",                         "^BG%s^K1 picked up Starman", "")
 MSG_CENTER_NOTIF(POWERUP_STAR,                      1,      0, 0, "",               CPID_POWERUP,           "0 0",  "^F2Starman gives you complete invulnerability!", "")
@@ -11,6 +13,10 @@ MSG_CENTER_NOTIF(POWERDOWN_STAR,                    1,      0, 0, "",           
 MSG_INFO_NOTIF(POWERUP_MINI,                        1,      1, 0, "s1", "s1",       "mini",                         "^BG%s^K1 picked up Mini Mushroom", "")
 MSG_CENTER_NOTIF(POWERUP_MINI,                      1,      0, 0, "",               CPID_POWERUP,           "0 0",  "^F2Mini Mushroom makes you tiny but vulnerable!", "")
 MSG_CENTER_NOTIF(POWERDOWN_MINI,                    1,      0, 0, "",               CPID_POWERUP,           "0 0",  "^F2Mini Mushroom has outgrown you", "")
+
+MSG_INFO_NOTIF(POWERUP_LIFE,                        1,      1, 0, "s1", "s1",       "life",                         "^BG%s^K1 picked up Life Mushroom", "")
+MSG_CENTER_NOTIF(POWERUP_LIFE,                      1,      0, 0, "",               CPID_POWERUP,           "0 0",  "^F2Life Mushroom gives you double health capacity!", "")
+MSG_CENTER_NOTIF(POWERDOWN_LIFE,                    1,      0, 0, "",               CPID_POWERUP,           "0 0",  "^F2Life Mushroom has withered", "")
 
 #ifdef GAMEQC
 MODEL(Star_ITEM, Item_Model("star.md3"));
@@ -48,6 +54,24 @@ REGISTER_ITEM(Mini, Powerup) {
     this.m_itemid           =   MIT_MINI;
 }
 
+#ifdef GAMEQC
+MODEL(Life_ITEM, Item_Model("life.md3"));
+SOUND(Life, "items/powerup_life");
+#endif
+
+REGISTER_ITEM(Life, Powerup) {
+#ifdef GAMEQC
+    this.m_model            =   MDL_Life_ITEM;
+    this.m_sound            =   SND_Life;
+#endif
+    this.m_name             =   "lifeshroom";
+    this.m_icon             =   "life";
+    this.m_color            =   '1 0.25 0.25';
+    this.m_waypoint         =   "Life Mushroom";
+    this.m_waypointblink    =   2;
+    this.m_itemid           =   MIT_LIFE;
+}
+
 #ifdef SVQC
 AUTOCVAR(g_powerup_mini_water_minspeed, float, 100, "Need to be moving faster than this to stay above water");
 #endif
@@ -64,6 +88,7 @@ AUTOCVAR(g_powerup_mini_time, float, 30, "");
 AUTOCVAR(g_powerup_mini_gravity, float, 0.4, "");
 AUTOCVAR(g_powerup_mini_healthscale, float, 0.5, "Scale of the player's health limits, use a value between 0 and 1");
 AUTOCVAR(g_powerup_mini_size, float, 0.2, "Scale of the player when under the influence, use a value between 0 and 1");
+AUTOCVAR(g_powerup_life_time, float, 60, "");
 
 const vector PL_VIEW_OFS_CONST = '0 0 35';
 const vector PL_CROUCH_VIEW_OFS_CONST = '0 0 20';
@@ -75,19 +100,21 @@ const vector PL_CROUCH_MIN_CONST = '-16 -16 -24';
 
 .float star_finished;
 .float mini_finished;
+.float life_finished;
 
 .float mini_oldgravity;
 .float star_touch_time;
 
 bool have_powerup(entity this)
 {
-	return ((this.mitems & ITEM_Star.m_itemid) || (this.mitems & ITEM_Mini.m_itemid));
+	return ((this.mitems & ITEM_Star.m_itemid) || (this.mitems & ITEM_Mini.m_itemid) || (this.mitems & ITEM_Life.m_itemid));
 }
 
 void RemovePowerups(entity this)
 {
 	STAT(STAR_FINISHED, this) = 0;
 	STAT(MINI_FINISHED, this) = 0;
+	STAT(LIFE_FINISHED, this) = 0;
 
 	this.mitems = 0;
 
@@ -130,6 +157,21 @@ MUTATOR_HOOKFUNCTION(mpowerups, ItemTouch)
 		if(have_powerup(toucher))
 			return MUT_ITEMTOUCH_RETURN;
 		STAT(MINI_FINISHED, toucher) = max(STAT(MINI_FINISHED, toucher), time) + item.mini_finished;
+		return MUT_ITEMTOUCH_PICKUP;
+	}
+	if (item.life_finished)
+	{
+		if(have_powerup(toucher))
+			return MUT_ITEMTOUCH_RETURN;
+		STAT(LIFE_FINISHED, toucher) = max(STAT(LIFE_FINISHED, toucher), time) + item.life_finished;
+		return MUT_ITEMTOUCH_PICKUP;
+	}
+
+	if(item.health && STAT(LIFE_FINISHED, toucher) > time)
+	{
+		bool gave = Item_GiveAmmoTo(item, toucher, health, item.max_health * 2, ITEM_MODE_HEALTH);
+		if(!gave)
+			return MUT_ITEMTOUCH_RETURN;
 		return MUT_ITEMTOUCH_PICKUP;
 	}
 	return MUT_ITEMTOUCH_CONTINUE;
@@ -257,6 +299,31 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPowerups)
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_MINI);
 		}
 	}
+
+	if (player.mitems & ITEM_Life.m_itemid)
+	{
+		play_countdown(player, STAT(LIFE_FINISHED, player), SND_POWEROFF);
+		if (time > STAT(LIFE_FINISHED, player))
+		{
+			player.mitems &= ~ITEM_Life.m_itemid;
+			//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_LIFE, player.netname);
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_LIFE);
+		}
+	}
+	else
+	{
+		if (time < STAT(LIFE_FINISHED, player))
+		{
+			float starthp = ((warmup_stage) ? warmup_start_health : start_health);
+
+			if(player.health > 0)
+				player.health = starthp * 2;
+
+			player.mitems |= ITEM_Life.m_itemid;
+			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_LIFE, player.netname);
+			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_LIFE);
+		}
+	}
 }
 
 MUTATOR_HOOKFUNCTION(mpowerups, PlayerDamage_Calculate)
@@ -343,6 +410,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, OnEntityPreSpawn, CBC_ORDER_FIRST)
 	{
 		case "item_strength": ent.classname = "item_minishroom"; break;
 		case "item_invincible": ent.classname = "item_starman"; break;
+		case "item_quad": ent.classname = "item_lifeshroom"; break;
 	}
 }
 
@@ -354,6 +422,12 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerRegen)
 	{
 		M_ARGV(9, float) *= autocvar_g_powerup_mini_healthscale; // regen_health_stable
 		M_ARGV(10, float) *= autocvar_g_powerup_mini_healthscale; // regen_health_rotstable
+	}
+
+	if(time < STAT(LIFE_FINISHED, player))
+	{
+		M_ARGV(1, float) *= 2; // max_mod
+		M_ARGV(4, float) *= 2; // limit_mod
 	}
 }
 
@@ -369,6 +443,13 @@ spawnfunc(item_minishroom)
 	if(!this.mini_finished)
 		this.mini_finished = autocvar_g_powerup_mini_time;
 	StartItem(this, ITEM_Mini);
+}
+
+spawnfunc(item_lifeshroom)
+{
+	if(!this.life_finished)
+		this.life_finished = autocvar_g_powerup_life_time;
+	StartItem(this, ITEM_Life);
 }
 
 #endif
@@ -414,6 +495,7 @@ entity rainbowvision_noise2;
 
 AUTOCVAR_SAVE(hud_progressbar_star_color,	vector,   '0.8 0.8 0.1',   "");
 AUTOCVAR_SAVE(hud_progressbar_mini_color,	vector,   '0.2 0.2 0.8',   "");
+AUTOCVAR_SAVE(hud_progressbar_life_color,	vector,   '0.8 0.2 0.2',   "");
 
 MUTATOR_HOOKFUNCTION(mpowerups, HUD_Powerups_add)
 {
@@ -423,11 +505,14 @@ MUTATOR_HOOKFUNCTION(mpowerups, HUD_Powerups_add)
 	//int allItems = STAT(ITEMS);
 	float starTime = bound(0, STAT(STAR_FINISHED) - time, 99);
 	float miniTime = bound(0, STAT(MINI_FINISHED) - time, 99);
+	float lifeTime = bound(0, STAT(LIFE_FINISHED) - time, 99);
 
 	if(starTime)
 		addPowerupItem("Starman", "star", autocvar_hud_progressbar_star_color, starTime, 33.616);
 	if(miniTime)
 		addPowerupItem("Mini Mushroom", "mini", autocvar_hud_progressbar_mini_color, miniTime, 30);
+	if(lifeTime)
+		addPowerupItem("Life Mushroom", "life", autocvar_hud_progressbar_life_color, lifeTime, 60);
 }
 
 MUTATOR_HOOKFUNCTION(mpowerups, HUD_Draw_overlay)
