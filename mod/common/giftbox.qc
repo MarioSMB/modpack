@@ -194,7 +194,7 @@ MUTATOR_HOOKFUNCTION(giftbox, PlayerPhysics)
 		player.stat_sv_jumpvelocity *= (1 + get_gift_percent(GIFTBOX_GIFT_FAIRYFLOSS));
 }
 
-MUTATOR_HOOKFUNCTION(giftbox, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(giftbox, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);

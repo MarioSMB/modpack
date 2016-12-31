@@ -5,7 +5,7 @@ float mplant_tool_rubble_com(float _msg, float _f1, float _f2)
 void mplant_setmark(entity this, int _idx);
 float mplant_tool_rubble(entity this)
 {
-    //float  s, bs = MAX_SHOT_DISTANCE, i, y;
+    //float  s, bs = max_shot_distance, i, y;
     //vector vO;
     float _pb = 0;
 

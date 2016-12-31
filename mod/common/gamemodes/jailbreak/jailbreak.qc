@@ -1320,7 +1320,7 @@ MUTATOR_HOOKFUNCTION(jb, PlayerPreThink)
 		JB_Release(player, NULL);
 }
 
-MUTATOR_HOOKFUNCTION(jb, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(jb, Damage_Calculate)
 {
 	entity frag_target = M_ARGV(2, entity);
 	float frag_deathtype = M_ARGV(3, float);

@@ -494,7 +494,7 @@ bool lightapc_gunner_frame(entity this, float dt)
 
 		vector angvec = gettaginfo(gunner, gettagindex(gunner, "tag_camera"));
 		setorigin(player, angvec);
-		traceline(angvec, angvec + v_forward * MAX_SHOT_DISTANCE, MOVE_WORLDONLY, gunner);
+		traceline(angvec, angvec + v_forward * max_shot_distance, MOVE_WORLDONLY, gunner);
 		vector crossy = trace_endpos;
 		
 		// Guns

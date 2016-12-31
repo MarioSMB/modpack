@@ -109,7 +109,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 	{
 		vector v = '0 0 1' * getstati(STAT_VIEWHEIGHT);
 
-		WarpZone_TraceLine(view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, NULL);
+		WarpZone_TraceLine(view_origin, view_origin + v + view_forward * max_shot_distance, MOVE_NORMAL, NULL);
 
 		bool hit = ((trace_fraction < 1 && !trace_ent.entnum) ? false : true);
 
@@ -125,9 +125,9 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 		}
 
 		if(activeweapon == WEP_VORTEX)
-			WarpZone_TrailParticles(localme, eff, view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE);
+			WarpZone_TrailParticles(localme, eff, view_origin, view_origin + v + view_forward * max_shot_distance);
 		else if(activeweapon == WEP_VAPORIZER)
-			FireClientBeam(view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE, hit);
+			FireClientBeam(view_origin, view_origin + v + view_forward * max_shot_distance, hit);
 
 		//sound(localme, CH_SHOTS, "weapons/minstanexfire.wav", VOL_BASE, ATTEN_LARGE);
 

@@ -28,7 +28,7 @@ void ra_SetCvars()
 	cvar_settemp("g_balance_rifle_secondary_damage", ftos(cvar("g_riflearena_rifle_secondary_damage")));
 }
 
-MUTATOR_HOOKFUNCTION(ra, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(ra, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);

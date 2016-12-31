@@ -5,7 +5,7 @@ bool mplant_tool_place_com(float _msg, float _f1, float _f2)
 
 bool mplant_tool_place(entity this)
 {
-    float  s, bs = MAX_SHOT_DISTANCE, i, y;
+    float  s, bs = max_shot_distance, i, y;
     vector vO = '0 0 0';
 
     this.mplant_cursorobject.effects &= ~EF_NODRAW;
@@ -40,7 +40,7 @@ bool mplant_tool_place(entity this)
             setorigin(this.mplant_cursorobject, vtmp2);
         } else {
             setorigin(this.mplant_cursorobject, trace_endpos - (normalize(trace_endpos - this.origin) * 48) + trace_plane_normal * 96);
-            bs = MAX_SHOT_DISTANCE;
+            bs = max_shot_distance;
 
             float _start1 = 0;
             float _stop1  = 8;

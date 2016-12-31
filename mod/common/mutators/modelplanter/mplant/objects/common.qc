@@ -7,8 +7,8 @@ void mplant_rotate(entity _what, vector _how_much, float _absolute)
     _what.angles_z = anglemods(_what.angles_z);
 
     mplant_btf(_what, _what.angles, _what.mplant_org_mins, _what.mplant_org_maxs, false, '0 0 0', _what.mplant_object_anglefix);
-    _what.mins = '1 1 1' * MAX_SHOT_DISTANCE;
-    _what.maxs = '-1 -1 -1' * MAX_SHOT_DISTANCE;
+    _what.mins = '1 1 1' * max_shot_distance;
+    _what.maxs = '-1 -1 -1' * max_shot_distance;
     for (int i = 0; i < 9; ++i) {
         vtmp1 = (mplant_btf_points[i]);
 

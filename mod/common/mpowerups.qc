@@ -326,7 +326,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPowerups)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(mpowerups, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(mpowerups, Damage_Calculate)
 {
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
