@@ -605,8 +605,14 @@ void lightapc_gunner_exit(entity this, int _exitflag)
 	player.event_damage   = PlayerDamage;
 	player.hud            = HUD_NORMAL;
 	player.teleportable	  = TELEPORT_NORMAL;
-	PS(player).m_switchweapon = gunner.m_switchweapon;
 	player.vehicle_enter_delay = time + 2;
+
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		player.(weaponentity).m_switchweapon = gunner.(weaponentity).m_switchweapon;
+		delete(gunner.(weaponentity));
+	}
 
 	fixedmakevectors(vehic.angles);
 
@@ -659,9 +665,16 @@ bool lightapc_gunner_enter(entity this, entity player)
 	player.vehicle_energy 	= vehic.vehicle_energy;
 	UNSET_ONGROUND(player);
 
-	RemoveGrapplingHook(player);
+	RemoveGrapplingHooks(player);
 
-	gunner.m_switchweapon = PS(player).m_switchweapon;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+
+		gunner.(weaponentity) = new(temp_wepent);
+		gunner.(weaponentity).m_switchweapon = player.(weaponentity).m_switchweapon;
+	}
+
 	gunner.vehicle_exit = lightapc_gunner_exit;
 	gunner.vehicle_hudmodel.viewmodelforclient = player;
 	gunner.owner = player;

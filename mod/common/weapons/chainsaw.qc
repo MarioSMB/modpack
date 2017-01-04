@@ -114,7 +114,7 @@ void W_Chainsaw_Attack1(Weapon thiswep, entity actor, .entity weaponentity, int 
 {
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(chainsaw, melee_animtime), w_ready);
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(chainsaw, melee_ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(chainsaw, melee_ammo), weaponentity);
 
 	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR(chainsaw, melee_damage), WEP_CVAR(chainsaw, melee_range));
 
@@ -280,7 +280,7 @@ void W_Chainsaw_Attack2(Weapon thiswep, entity actor, .entity weaponentity, int 
 	if(WEP_CVAR(chainsaw, swing_animtime))
 		animdecide_setaction(actor, ANIMACTION_MELEE, true);
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(chainsaw, swing_ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(chainsaw, swing_ammo), weaponentity);
 
 	entity meleetemp = new_pure(meleetemp);
 	meleetemp.realowner = actor;
@@ -293,12 +293,12 @@ void W_Chainsaw_Attack2(Weapon thiswep, entity actor, .entity weaponentity, int 
 .bool chainsaw_held_down;
 .float chainsaw_snd_time;
 
-METHOD(Chainsaw, wr_aim, void(entity thiswep, entity actor))
+METHOD(Chainsaw, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     if(vdist(actor.origin - actor.enemy.origin, <=, WEP_CVAR(chainsaw, swing_range)))
-        PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, 1000000, 0, 0.001, false);
+        PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false);
     else
-        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, 1000000, 0, 0.001, false);
+        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false);
 }
 METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
@@ -337,7 +337,7 @@ METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponenti
     	actor.(weaponentity).chainsaw_snd_time = 0;
     }
 
-    if(PS(actor).m_switchweapon != WEP_CHAINSAW)
+    if(actor.(weaponentity).m_switchweapon != WEP_CHAINSAW)
     {
     	actor.(weaponentity).chainsaw_snd_time = 0;
     	sound(actor, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
@@ -372,13 +372,13 @@ METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponenti
     		actor.(thiswep.ammo_field) -= 1; // we lose a bit of fuel every second
     }
 }
-METHOD(Chainsaw, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Chainsaw, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(chainsaw, melee_ammo);
     ammo_amount += actor.(weapon_load[WEP_CHAINSAW.m_id]) >= WEP_CVAR(chainsaw, melee_ammo);
     return ammo_amount;
 }
-METHOD(Chainsaw, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(Chainsaw, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     if(IS_BOT_CLIENT(actor))
     if(vdist(actor.origin - actor.enemy.origin, >, WEP_CVAR(chainsaw, swing_range)))
@@ -399,7 +399,7 @@ METHOD(Chainsaw, wr_killmessage, Notification(entity thiswep))
 {
     return WEAPON_CHAINSAW_MURDER;
 }
-METHOD(Chainsaw, wr_drop, void(entity thiswep, entity actor))
+METHOD(Chainsaw, wr_drop, void(entity thiswep, entity actor, .entity weaponentity))
 {
 	sound(actor, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 }

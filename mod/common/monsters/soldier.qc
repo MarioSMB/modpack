@@ -48,7 +48,7 @@ void M_Soldier_Attack_Shotgun(entity this, .entity weaponentity)
 	W_SetupShot(this, weaponentity, true, 5, SND_SHOTGUN_FIRE, CH_WEAPON_A, autocvar_g_monster_soldier_attack_shotgun_damage * autocvar_g_monster_soldier_attack_shotgun_bullets);
 
 	for(int sc = 0; sc < autocvar_g_monster_soldier_attack_shotgun_bullets;sc = sc + 1)
-		fireBullet(this, w_shotdir, this.enemy.origin, autocvar_g_monster_soldier_attack_shotgun_spread, autocvar_g_monster_soldier_attack_shotgun_solidpenetration, autocvar_g_monster_soldier_attack_shotgun_damage, autocvar_g_monster_soldier_attack_shotgun_force, WEP_SHOTGUN.m_id, 0);
+		fireBullet(this, weaponentity, w_shotdir, this.enemy.origin, autocvar_g_monster_soldier_attack_shotgun_spread, autocvar_g_monster_soldier_attack_shotgun_solidpenetration, autocvar_g_monster_soldier_attack_shotgun_damage, autocvar_g_monster_soldier_attack_shotgun_force, WEP_SHOTGUN.m_id, 0);
 
 	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotdir, w_shotdir * 1000, 1);
 
@@ -58,10 +58,8 @@ void M_Soldier_Attack_Shotgun(entity this, .entity weaponentity)
 	setanim(this, this.anim_shoot, true, true, true);
 }
 
-bool M_Soldier_Attack(int attack_type, entity actor, entity targ)
+bool M_Soldier_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
-	.entity weaponentity = weaponentities[0];
-
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:

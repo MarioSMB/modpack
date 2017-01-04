@@ -48,7 +48,8 @@ MUTATOR_HOOKFUNCTION(mdlplant, PlayerPreThink)
 	if (!player.mplant_active)
 		return true;
 
-	switch(PS(player).m_weapon)
+	.entity weaponentity = weaponentities[0];
+	switch(player.(weaponentity).m_weapon)
 	{
 
 	case WEP_BLASTER: // place / remove

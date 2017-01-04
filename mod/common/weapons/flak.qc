@@ -278,7 +278,7 @@ void W_Flak_Attack1(Weapon thiswep, entity actor, .entity weaponentity, bool isp
 	float pcount = WEP_CVAR_BOTH(flak, isprimary, count), i;
 	int dtype = (isprimary) ? WEP_FLAK.m_id : (WEP_FLAK.m_id | HITTYPE_SECONDARY | HITTYPE_BOUNCE);
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_BOTH(flak, isprimary, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_BOTH(flak, isprimary, ammo), weaponentity);
 
 	W_SetupShot_ProjectileSize(actor, weaponentity, '0 0 -3', '0 0 -3', false, 4, ((isprimary) ? SND_FLAK_FIRE2 : SND_FLAK_FIRE), CH_WEAPON_A, WEP_CVAR_BOTH(flak, isprimary, damage) * pcount);
 	w_shotdir = v_forward;
@@ -395,7 +395,7 @@ void W_Flak_Attack3(Weapon thiswep, entity actor, .entity weaponentity)
 	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
 		actor.ammo_rockets -= WEP_CVAR(flak, bomb_ammo);
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(flak, ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(flak, ammo), weaponentity);
 
 	W_SetupShot_ProjectileSize (actor, weaponentity, '-3 -3 -3', '3 3 3', false, 4, SND_FLAK_FIRE3, CH_WEAPON_A, WEP_CVAR(flak, bomb_damage));
 	w_shotdir = v_forward;
@@ -433,12 +433,12 @@ void W_Flak_Attack3(Weapon thiswep, entity actor, .entity weaponentity)
 	MUTATOR_CALLHOOK(EditProjectile, actor, e);
 }
 
-		METHOD(Flak, wr_aim, void(entity thiswep, entity actor))
+		METHOD(Flak, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			if(random() < 0.35 && WEP_CVAR(flak, bomb) && actor.ammo_rockets >= WEP_CVAR(flak, bomb_ammo))
-				PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, WEP_CVAR(flak, bomb_speed), WEP_CVAR(flak, bomb_speed_up), WEP_CVAR(flak, bomb_lifetime), true);
+				PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, WEP_CVAR(flak, bomb_speed), WEP_CVAR(flak, bomb_speed_up), WEP_CVAR(flak, bomb_lifetime), true);
 			else
-				PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, WEP_CVAR_PRI(flak, speed), WEP_CVAR_PRI(flak, speed_up), WEP_CVAR_PRI(flak, lifetime), true);
+				PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(flak, speed), WEP_CVAR_PRI(flak, speed_up), WEP_CVAR_PRI(flak, lifetime), true);
 		}
 		METHOD(Flak, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
@@ -459,13 +459,13 @@ void W_Flak_Attack3(Weapon thiswep, entity actor, .entity weaponentity)
 				weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(flak, animtime), w_ready);
 			}
 		}
-		METHOD(Flak, wr_checkammo1, bool(entity thiswep, entity actor))
+		METHOD(Flak, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 		{
 			bool ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(flak, ammo);
 			ammo_amount += actor.(weapon_load[WEP_FLAK.m_id]) >= WEP_CVAR_PRI(flak, ammo);
 			return ammo_amount;
 		}
-		METHOD(Flak, wr_checkammo2, bool(entity thiswep, entity actor))
+		METHOD(Flak, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 		{
 			// can't use above logic here, as we have 2 ammo types - WEAPONTODO
 			return actor.ammo_shells >= WEP_CVAR_SEC(flak, ammo) && (!WEP_CVAR(flak, bomb) || actor.ammo_rockets >= WEP_CVAR(flak, bomb_ammo));

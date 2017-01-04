@@ -58,6 +58,8 @@ void lightapc_t17mm(entity player, entity gunmount)
 		gunmount.cnt = time;
 		gunmount.misc_bulletcounter += 1;
 
+		.entity weaponentity = weaponentities[0];
+
 		vector v = gettaginfo(gunmount, gettagindex(gunmount, "tag_mgun1"));
 		v_forward = normalize(v_forward);
 		//   v += v_forward * 50;
@@ -67,7 +69,7 @@ void lightapc_t17mm(entity player, entity gunmount)
 		//		autocvar_g_vehicle_lightapc_t17mm_damage, autocvar_g_vehicle_lightapc_t17mm_headshotaddeddamage, autocvar_g_vehicle_lightapc_t17mm_force, DEATH_SPORTSTERGUNHV.m_id,
 		//		1, 1, autocvar_g_vehicle_lightapc_t17mm_bulletconstant, autocvar_g_vehicle_lightapc_t17mm_coreshotaddeddamage);
 		//endFireBallisticBullet();
-		fireBullet(player, v, v_forward, autocvar_g_vehicle_lightapc_t17mm_spread, autocvar_g_vehicle_lightapc_t17mm_solidpenetration,
+		fireBullet(player, weaponentity, v, v_forward, autocvar_g_vehicle_lightapc_t17mm_spread, autocvar_g_vehicle_lightapc_t17mm_solidpenetration,
 								 autocvar_g_vehicle_lightapc_t17mm_damage, autocvar_g_vehicle_lightapc_t17mm_force, DEATH_VH_SPID_MINIGUN.m_id, 0);
 		// End Ballistic bullet
 
@@ -103,7 +105,7 @@ void lightapc_t17mm(entity player, entity gunmount)
 		//		autocvar_g_vehicle_lightapc_t17mm_damage, autocvar_g_vehicle_lightapc_t17mm_headshotaddeddamage, autocvar_g_vehicle_lightapc_t17mm_force, DEATH_SPORTSTERGUNHV.m_id,
 		//		1, 1, autocvar_g_vehicle_lightapc_t17mm_bulletconstant, autocvar_g_vehicle_lightapc_t17mm_coreshotaddeddamage);
 		//endFireBallisticBullet();
-		fireBullet(player, v, v_forward, autocvar_g_vehicle_lightapc_t17mm_spread, autocvar_g_vehicle_lightapc_t17mm_solidpenetration,
+		fireBullet(player, weaponentity, v, v_forward, autocvar_g_vehicle_lightapc_t17mm_spread, autocvar_g_vehicle_lightapc_t17mm_solidpenetration,
 								 autocvar_g_vehicle_lightapc_t17mm_damage, autocvar_g_vehicle_lightapc_t17mm_force, DEATH_VH_SPID_MINIGUN.m_id, 0);
 		// End Ballistic bullet
 

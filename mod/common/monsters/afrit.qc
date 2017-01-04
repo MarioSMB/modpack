@@ -114,7 +114,7 @@ void M_Afrit_Attack_Fireball(entity this)
 	CSQCProjectile(missile, true, PROJECTILE_FIREMINE, true);
 }
 
-bool M_Afrit_Attack(int attack_type, entity actor, entity targ)
+bool M_Afrit_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
 	switch(attack_type)
 	{

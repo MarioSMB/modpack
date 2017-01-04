@@ -15,10 +15,11 @@ void vwep_hmg2_attack(
 {
 	gunmount.misc_bulletcounter += 1;
 
+	.entity weaponentity = weaponentities[0];
 	vector v = gettaginfo(gunmount, gettagindex(gunmount, tagname));
 	v_forward = normalize(v_forward);
 	 //   v += v_forward * 50;
-	fireBullet(player, v, v_forward, atk_spread, atk_solidpenetration,
+	fireBullet(player, weaponentity, v, v_forward, atk_spread, atk_solidpenetration,
 									 atk_damage, atk_force, atk_deathtype, 0);
 
 	v = gettaginfo(gunmount, gettagindex(gunmount, "tag_flash"));
@@ -27,7 +28,6 @@ void vwep_hmg2_attack(
 		 
 	Send_Effect(EFFECT_SPIDERBOT_MINIGUN_MUZZLEFLASH, v, v_forward, 1);
 
-	.entity weaponentity = weaponentities[0];
 		 
 	W_MachineGun_MuzzleFlash(player, weaponentity);
 	vwep_AttachToShotorg(player, player.(weaponentity).muzzle_flash, '5 0 0', "tag_flash", gunmount);

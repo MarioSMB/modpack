@@ -66,7 +66,7 @@ void M_Tarbaby_Attack_Leap_Touch(entity this, entity toucher)
 	}
 }
 
-bool M_Tarbaby_Attack(int attack_type, entity actor, entity targ)
+bool M_Tarbaby_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
 	switch(attack_type)
 	{

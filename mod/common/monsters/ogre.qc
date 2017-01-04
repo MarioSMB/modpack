@@ -98,7 +98,8 @@ void M_Ogre_Attack_MachineGun(entity this)
 	vector org = this.origin + this.view_ofs + v_forward * 14;
 	sound (this, CH_WEAPON_A, SND_UZI_FIRE, VOL_BASE, ATTEN_NORM);
 
-	fireBullet(this, org, dir, autocvar_g_monster_ogre_attack_machinegun_spread, autocvar_g_monster_ogre_attack_machinegun_solidpenetration, autocvar_g_monster_ogre_attack_machinegun_damage,
+	.entity weaponentity = weaponentities[0];
+	fireBullet(this, weaponentity, org, dir, autocvar_g_monster_ogre_attack_machinegun_spread, autocvar_g_monster_ogre_attack_machinegun_solidpenetration, autocvar_g_monster_ogre_attack_machinegun_damage,
 			autocvar_g_monster_ogre_attack_machinegun_force, DEATH_MONSTER_OGRE_MACHINEGUN.m_id, 0);
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, org, dir * 1000, 1);
@@ -297,7 +298,7 @@ void M_Ogre_Attack_Chainsaw(entity this)
 	}
 }
 
-bool M_Ogre_Attack(int attack_type, entity actor, entity targ)
+bool M_Ogre_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
 	switch(attack_type)
 	{

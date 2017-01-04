@@ -17,11 +17,12 @@ void vwep_hvyminigun_attack(
 	bool atk_dropcasings)
 {
 	gunmount.misc_bulletcounter += 1;
+	.entity weaponentity = weaponentities[0];
 
 	vector v = gettaginfo(gunmount, gettagindex(gunmount, tagname));
 	v_forward = normalize(v_forward);
 
-	fireBullet(player, v, v_forward, atk_spread, atk_solidpenetration,
+	fireBullet(player, weaponentity, v, v_forward, atk_spread, atk_solidpenetration,
 							 atk_damage, atk_force, atk_deathtype, 0);
 
 	 
@@ -31,7 +32,6 @@ void vwep_hvyminigun_attack(
 	 
 	Send_Effect(EFFECT_SPIDERBOT_MINIGUN_MUZZLEFLASH, v, v_forward, 1);
 	 
-	.entity weaponentity = weaponentities[0];
 		 
 	W_MachineGun_MuzzleFlash(player, weaponentity);
 	vwep_AttachToShotorg(player, player.(weaponentity).muzzle_flash, '5 0 0', "tag_flash", gunmount);

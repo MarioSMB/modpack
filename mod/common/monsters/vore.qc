@@ -185,9 +185,8 @@ void M_Vore_Attack_Spike(entity this, vector dir)
 	CSQCProjectile(missile, true, PROJECTILE_MAGE_SPIKE, true);
 }
 
-bool M_Vore_Attack(int attack_type, entity actor, entity targ)
+bool M_Vore_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
-	.entity weaponentity = weaponentities[0];
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:
