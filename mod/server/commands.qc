@@ -26,7 +26,7 @@ void IRCSay(string msgstr)
 	FOREACH_CLIENTSLOT(true,
 	{
 		if(!intermission_running)
-		if((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || gameover)))
+		if((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || game_stopped)))
 		if(IS_PLAYER(it))
 			continue;
 		if(IS_REAL_CLIENT(it))

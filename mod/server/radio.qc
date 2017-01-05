@@ -178,7 +178,7 @@ void Radio_Queue_PlayFirst(entity this)
 		++realclients;
 	});
 
-	if(!realclients || gameover)
+	if(!realclients || game_stopped)
 	{
 		Radio_Stop();
 		return;

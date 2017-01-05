@@ -876,7 +876,7 @@ MUTATOR_HOOKFUNCTION(cq, SV_ParseClientCommand)
 
 MUTATOR_HOOKFUNCTION(cq, PlayerUseKey)
 {
-	if(MUTATOR_RETURNVALUE || gameover) { return false; }
+	if(MUTATOR_RETURNVALUE || game_stopped) { return false; }
 
 	entity player = M_ARGV(0, entity);
 

@@ -191,7 +191,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPreThink)
 
 	if(time < STAT(STAR_FINISHED, player))
 	if(time > player.star_touch_time)
-	if(!gameover && IS_PLAYER(player))
+	if(!game_stopped && IS_PLAYER(player))
 	if(!IS_DEAD(player) && !STAT(FROZEN, player))
 	if(!IS_INDEPENDENT_PLAYER(player))
 	{

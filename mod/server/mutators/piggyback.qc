@@ -177,7 +177,7 @@ MUTATOR_HOOKFUNCTION(piggyback, MatchEnd)
 
 MUTATOR_HOOKFUNCTION(piggyback, PlayerUseKey)
 {
-	if(MUTATOR_RETURNVALUE || gameover) { return; }
+	if(MUTATOR_RETURNVALUE || game_stopped) { return; }
 
 	entity player = M_ARGV(0, entity);
 	

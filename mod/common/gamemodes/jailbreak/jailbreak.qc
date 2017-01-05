@@ -544,7 +544,7 @@ void JB_TorturePrisoners(int theteam)
 
 void JB_Torture_Think(entity this)
 {
-	if(gameover)
+	if(game_stopped)
 	{
 		delete(this);
 		return;
@@ -976,7 +976,7 @@ void JB_ControlPoint_Touch(entity this, entity toucher)
 	if(toucher.health < 1 || STAT(FROZEN, toucher))
 		return;
 
-	if(gameover)
+	if(game_stopped)
 		return;
 
 	if(!IS_PLAYER(toucher))
@@ -1283,7 +1283,7 @@ MUTATOR_HOOKFUNCTION(jb, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(gameover)
+	if(game_stopped)
 	{
 		STAT(JB_ISPRISONED, player) = false;
 		return;

@@ -422,7 +422,7 @@ bool lightapc_gunner_frame(entity this, float dt)
 
 	return = true;
 
-	if(gameover)
+	if(game_stopped)
 		return;
 
 	setorigin(player, vehic.origin);
@@ -704,7 +704,7 @@ bool lightapc_pilot_frame(entity this, float dt)
 	entity vehic = this.vehicle;
 	return = true;
 
-	if(gameover)
+	if(game_stopped)
 	{
 		vehic.velocity = '0 0 0';
 		vehic.avelocity = '0 0 0';

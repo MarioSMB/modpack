@@ -250,7 +250,7 @@ void dotc_CoreReset(entity this)
 
 void dotc_CoreThink(entity this)
 {
-	if(gameover)
+	if(game_stopped)
 	if(this.wps_corebase)
 		WaypointSprite_Kill(this.wps_corebase);
 

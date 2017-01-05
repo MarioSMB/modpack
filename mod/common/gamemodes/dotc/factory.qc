@@ -111,7 +111,7 @@ void dotc_FactoryDamage(entity this, entity inflictor, entity attacker, float da
 
 void dotc_FactoryThink(entity this)
 {
-	if(gameover)
+	if(game_stopped)
 	{
 		WaypointSprite_Kill(this.wps_factorybase);
 		return;

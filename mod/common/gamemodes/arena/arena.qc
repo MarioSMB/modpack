@@ -305,7 +305,7 @@ MUTATOR_HOOKFUNCTION(arena, PlayerDies)
 
 MUTATOR_HOOKFUNCTION(arena, SV_StartFrame)
 {
-	if(gameover) return true;
+	if(game_stopped) return true;
 	if(time <= game_starttime || !arena_roundbased)
 		Arena_AddChallengers();
 	return true;

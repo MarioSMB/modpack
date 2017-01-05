@@ -34,7 +34,7 @@ void giftbox_newgift(entity this)
 .float gift_msg_time;
 void giftbox_touch(entity this, entity toucher)
 {
-	if(gameover) { return; }
+	if(game_stopped) { return; }
 
 	if(ITEM_TOUCH_NEEDKILL())
 	{

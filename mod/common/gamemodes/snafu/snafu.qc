@@ -342,7 +342,7 @@ spawnfunc(snafu_zombies)
 	EXACTTRIGGER_INIT;
 }
 
-void snafu_gameover()
+void snafu_game_stopped()
 {
 	RandomSelection_Init();
 	FOREACH_ENTITY_CLASS("snafu_tadpole", IS_DEAD(it),
@@ -388,7 +388,7 @@ void snafu_tadpole_damage(entity this, entity inflictor, entity attacker, float 
 		this.event_damage = func_null;
 		this.nextthink = 0;
 		CSQCMODEL_AUTOUPDATE(this);
-		snafu_gameover();
+		snafu_game_stopped();
 		return;
 	}
 

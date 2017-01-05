@@ -19,7 +19,7 @@ AUTOCVAR(g_za_spawn_delay, float, 5, "");
 
 void za_SpawnMonster()
 {
-	if(gameover) { return; }
+	if(game_stopped) { return; }
 
 	entity e = spawn();
 
