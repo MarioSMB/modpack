@@ -18,33 +18,33 @@ EFFECT(0, IMPACT_FLESH,           "impact_flesh")
 EFFECT(0, IMPACT_METAL,           "impact_metal")
 #endif
 
-float autocvar_g_balance_chainsaw_reload_ammo = 0;
-float autocvar_g_balance_chainsaw_reload_time = 2;
-float autocvar_g_balance_chainsaw_melee_ammo = 1;
-float autocvar_g_balance_chainsaw_melee_animtime = 0.07;
-float autocvar_g_balance_chainsaw_melee_damage = 20;
-float autocvar_g_balance_chainsaw_melee_force = 50;
-float autocvar_g_balance_chainsaw_melee_nonplayerdamage = 20;
-float autocvar_g_balance_chainsaw_melee_range = 160;
-float autocvar_g_balance_chainsaw_melee_refire = 0.07;
-float autocvar_g_balance_chainsaw_swing_ammo = 10;
-float autocvar_g_balance_chainsaw_swing_animtime = 1.15;
-float autocvar_g_balance_chainsaw_swing_damage = 15;
-float autocvar_g_balance_chainsaw_swing_force = 75;
-float autocvar_g_balance_chainsaw_swing_delay = 0.25;
-float autocvar_g_balance_chainsaw_swing_nonplayerdamage = 10;
-float autocvar_g_balance_chainsaw_swing_range = 140;
-float autocvar_g_balance_chainsaw_swing_side = 120;
-float autocvar_g_balance_chainsaw_swing_up = 30;
-float autocvar_g_balance_chainsaw_swing_time = 0.3;
-float autocvar_g_balance_chainsaw_swing_traces = 10;
-float autocvar_g_balance_chainsaw_swing_refire = 1.25;
-float autocvar_g_balance_chainsaw_switchdelay_drop = 0.2;
-float autocvar_g_balance_chainsaw_switchdelay_raise = 0.2;
-string autocvar_g_balance_chainsaw_weaponreplace = "";
-float autocvar_g_balance_chainsaw_weaponstart = 0;
-float autocvar_g_balance_chainsaw_weaponstartoverride = -1;
-float autocvar_g_balance_chainsaw_weaponthrowable = 1;
+AUTOCVAR(g_balance_chainsaw_reload_ammo, float, 0, "");
+AUTOCVAR(g_balance_chainsaw_reload_time, float, 2, "");
+AUTOCVAR(g_balance_chainsaw_melee_ammo, float, 1, "");
+AUTOCVAR(g_balance_chainsaw_melee_animtime, float, 0.07, "");
+AUTOCVAR(g_balance_chainsaw_melee_damage, float, 20, "");
+AUTOCVAR(g_balance_chainsaw_melee_force, float, 50, "");
+AUTOCVAR(g_balance_chainsaw_melee_nonplayerdamage, float, 20, "");
+AUTOCVAR(g_balance_chainsaw_melee_range, float, 160, "");
+AUTOCVAR(g_balance_chainsaw_melee_refire, float, 0.07, "");
+AUTOCVAR(g_balance_chainsaw_swing_ammo, float, 10, "");
+AUTOCVAR(g_balance_chainsaw_swing_animtime, float, 1.15, "");
+AUTOCVAR(g_balance_chainsaw_swing_damage, float, 15, "");
+AUTOCVAR(g_balance_chainsaw_swing_force, float, 75, "");
+AUTOCVAR(g_balance_chainsaw_swing_delay, float, 0.25, "");
+AUTOCVAR(g_balance_chainsaw_swing_nonplayerdamage, float, 10, "");
+AUTOCVAR(g_balance_chainsaw_swing_range, float, 140, "");
+AUTOCVAR(g_balance_chainsaw_swing_side, float, 120, "");
+AUTOCVAR(g_balance_chainsaw_swing_up, float, 30, "");
+AUTOCVAR(g_balance_chainsaw_swing_time, float, 0.3, "");
+AUTOCVAR(g_balance_chainsaw_swing_traces, float, 10, "");
+AUTOCVAR(g_balance_chainsaw_swing_refire, float, 1.25, "");
+AUTOCVAR(g_balance_chainsaw_switchdelay_drop, float, 0.2, "");
+AUTOCVAR(g_balance_chainsaw_switchdelay_raise, float, 0.2, "");
+AUTOCVAR(g_balance_chainsaw_weaponreplace, string, "", "");
+AUTOCVAR(g_balance_chainsaw_weaponstart, float, 0, "");
+AUTOCVAR(g_balance_chainsaw_weaponstartoverride, float, -1, "");
+AUTOCVAR(g_balance_chainsaw_weaponthrowable, float, 1, "");
 
 CLASS(Chainsaw, Weapon)
 /* ammotype  */ ATTRIB(Chainsaw, ammo_field, .int, ammo_fuel);
