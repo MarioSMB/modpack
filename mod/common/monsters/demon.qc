@@ -14,7 +14,7 @@ REGISTER_DEATHTYPE(MONSTER_DEMON_MELEE,            				DEATH_SELF_MON_DEMON_MELE
 #endif
 
 CLASS(Demon, Monster)
-    ATTRIB(Demon, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_MELEE | MON_FLAG_RANGED);
+    ATTRIB(Demon, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MON_FLAG_MELEE | MON_FLAG_RANGED);
     ATTRIB(Demon, mins, vector, '-32 -32 -24');
     ATTRIB(Demon, maxs, vector, '32 32 24');
 #ifndef MENUQC

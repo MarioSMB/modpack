@@ -18,7 +18,7 @@ REGISTER_DEATHTYPE(MONSTER_OGRE_MELEE,            				DEATH_SELF_MON_OGRE_MELEE,
 #endif
 
 CLASS(Ogre, Monster)
-    ATTRIB(Ogre, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_MELEE | MON_FLAG_RANGED);
+    ATTRIB(Ogre, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MON_FLAG_MELEE | MON_FLAG_RANGED);
     ATTRIB(Ogre, mins, vector, '-36 -36 -20');
     ATTRIB(Ogre, maxs, vector, '36 36 50');
 #ifndef MENUQC

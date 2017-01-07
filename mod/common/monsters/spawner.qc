@@ -6,6 +6,7 @@ MODEL(MON_SPAWNER, M_Model("spawner.bsp"));
 #endif
 
 CLASS(Spawner, Monster)
+	ATTRIB(Spawner, spawnflags, int, MON_FLAG_HIDDEN);
     ATTRIB(Spawner, mins, vector, '-32 -32 -24');
     ATTRIB(Spawner, maxs, vector, '32 32 32');
 #ifndef MENUQC

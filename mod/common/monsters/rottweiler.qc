@@ -10,7 +10,7 @@ REGISTER_DEATHTYPE(MONSTER_ROTTWEILER_MELEE,            			DEATH_SELF_MON_ROTTWE
 #endif
 
 CLASS(Rottweiler, Monster)
-    ATTRIB(Rottweiler, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_MELEE | MON_FLAG_RIDE);
+    ATTRIB(Rottweiler, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MON_FLAG_MELEE | MON_FLAG_RIDE);
     ATTRIB(Rottweiler, mins, vector, '-16 -16 -24');
     ATTRIB(Rottweiler, maxs, vector, '16 16 12');
 #ifndef MENUQC

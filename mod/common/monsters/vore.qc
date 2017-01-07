@@ -9,7 +9,7 @@ SOUND(VORE_FIRESPIKE, W_Sound("electro_fire"));
 #endif
 
 CLASS(Vore, Monster)
-    ATTRIB(Vore, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_MELEE | MON_FLAG_RANGED);
+    ATTRIB(Vore, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MON_FLAG_MELEE | MON_FLAG_RANGED);
     ATTRIB(Vore, mins, vector, '-32 -32 -24');
     ATTRIB(Vore, maxs, vector, '32 32 64');
 #ifndef MENUQC
