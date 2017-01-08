@@ -1,0 +1,28 @@
+#pragma once
+
+#ifdef GAMEQC
+MSG_INFO_NOTIF(DEATH_SELF_MON_TROLL_MELEE,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         "^BG%s^K1 was ripped apart by a Troll%s%s", "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_TROLL_MELEE,                1,  NULL,           INFO_DEATH_SELF_MON_TROLL_MELEE,               CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_TROLL_MELEE,                        DEATH_SELF_MON_TROLL_MELEE,        DEATH_MURDER_MONSTER,                       "monster")
+#endif
+
+#ifdef GAMEQC
+MODEL(MON_TROLL, M_Model("troll.dpm"));
+#endif
+
+CLASS(Troll, Monster)
+    ATTRIB(Troll, spawnflags, int, MON_FLAG_SUPERMONSTER | MON_FLAG_MELEE);
+    ATTRIB(Troll, mins, vector, '-45 -45 -24');
+    ATTRIB(Troll, maxs, vector, '45 45 160');
+#ifdef GAMEQC
+    ATTRIB(Troll, m_model, Model, MDL_MON_TROLL);
+#endif
+    ATTRIB(Troll, netname, string, "troll");
+    ATTRIB(Troll, monster_name, string, _("Troll"));
+ENDCLASS(Troll)
+
+REGISTER_MONSTER(TROLL, NEW(Troll)) {
+#ifdef GAMEQC
+    this.mr_precache(this);
+#endif
+}
