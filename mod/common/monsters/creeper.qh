@@ -1,0 +1,28 @@
+#pragma once
+
+#ifdef GAMEQC
+MSG_INFO_NOTIF(DEATH_SELF_MON_CREEPER,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         "^BG%s^K1 was exploded by a Creeper%s%s", "")
+MSG_MULTI_NOTIF(DEATH_SELF_MON_CREEPER,                1,  NULL,           INFO_DEATH_SELF_MON_CREEPER,               CENTER_DEATH_SELF_MONSTER)
+REGISTER_DEATHTYPE(MONSTER_CREEPER,                        DEATH_SELF_MON_CREEPER,        DEATH_MURDER_MONSTER,                       "monster")
+#endif
+
+#ifdef GAMEQC
+MODEL(MON_CREEPER, M_Model("creeper.dpm"));
+#endif
+
+CLASS(Creeper, Monster)
+    ATTRIB(Creeper, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_HIDDEN);
+    ATTRIB(Creeper, mins, vector, '-18 -18 -25');
+    ATTRIB(Creeper, maxs, vector, '18 18 40');
+#ifdef GAMEQC
+    ATTRIB(Creeper, m_model, Model, MDL_MON_CREEPER);
+#endif
+    ATTRIB(Creeper, netname, string, "creeper");
+    ATTRIB(Creeper, monster_name, string, _("Creeper"));
+ENDCLASS(Creeper)
+
+REGISTER_MONSTER(CREEPER, NEW(Creeper)) {
+#ifdef GAMEQC
+    this.mr_precache(this);
+#endif
+}
