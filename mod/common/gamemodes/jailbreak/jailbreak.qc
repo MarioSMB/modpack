@@ -475,8 +475,6 @@ void JB_Imprison(entity targ, entity attacker)
 	if(!targ.jb_had_unlimited_ammo)
 		targ.items |= IT_UNLIMITED_WEAPON_AMMO;
 
-	targ.weapon_blocked = true;
-
 	nades_Clear(targ);
 
 	LOG_DEBUGF("Imprisoning %s^7, attacker: %e with netname: %s\n", targ.netname, attacker, attacker.netname);
@@ -513,7 +511,6 @@ void JB_Release(entity player, entity saviour)
 
 	STAT(JB_ISPRISONED, player) = false;
 	player.jb_imprisoner = NULL;
-	player.weapon_blocked = false;
 	player.player_blocked = false; // just incase
 
 	if(!player.jb_had_unlimited_ammo)
@@ -1170,7 +1167,6 @@ MUTATOR_HOOKFUNCTION(jb, reset_map_players)
 		}
 
 		it.player_blocked = 0;
-		it.weapon_blocked = false;
 		STAT(ROUNDLOST, it) = false;
 		it.clientcamera = it;
 	});
