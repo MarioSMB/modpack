@@ -350,13 +350,8 @@ void spawn_tdeath(vector org, entity death_owner)
 
 void teleport_touch(entity this, entity toucher)
 {
-	if(this.targetname && this.targetname != "")
-	{
-		if(this.nextthink < time)
-		{
-			return;		// not fired yet
-		}
-	}
+	if(this.targetname && this.targetname != "" && this.nextthink < time)
+		return;		// not fired yet
 
 	if((this.spawnflags & PLAYER_ONLY) && !IS_PLAYER(toucher))
 		return;
@@ -415,11 +410,13 @@ spawnfunc(info_teleport_destination)
 		objerror(this, "no targetname");
 }
 
+void SUB_NullThink(entity this) { }
+
 void teleport_use(entity this, entity actor, entity trigger)
 {
-	//this.nextthink = time + 0.2;
+	this.nextthink = time + 0.2;
 	force_retouch = 2;		// make sure even still objects get hit
-	//setthink(this, func_null);
+	setthink(this, SUB_NullThink);
 }
 
 /*QUAKED trigger_teleport(.5 .5 .5) ? PLAYER_ONLY SILENT
