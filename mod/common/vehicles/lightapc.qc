@@ -1099,6 +1099,28 @@ void lightapc_touch(entity this, entity toucher)
 	vehicles_touch(this, toucher);
 }
 
+void lightapc_spawn_gunner(entity vehic, string tagname)
+{
+	entity gunner = new(lightapc_gunner);
+	gunner.vehicle = vehic;
+	setmodel(gunner, MDL_Null);
+	setattachment(gunner, vehic, tagname);
+	vehicle_addplayerslot(vehic, gunner, VEH_LIGHTAPCPASSENGER.vehicleid, MDL_Null, lightapc_gunner_frame, lightapc_gunner_exit, lightapc_gunner_enter);
+	LL_PUSH(vehic.gunners, gunner);
+}
+
+entity lightapc_spawn_tire(entity vehic, string tagname)
+{
+	entity spinner = spawn();
+	spinner.owner = vehic;
+	setmodel(spinner, MDL_LIGHTAPC_TIRE);
+	setattachment(spinner, vehic, tagname);
+	set_movetype(spinner, MOVETYPE_NOCLIP);
+	spinner.avelocity = '0 90 0';
+
+	return spinner;
+}
+
 spawnfunc(vehicle_lightapc)
 {
 	if(!autocvar_g_vehicle_lightapc) { delete(this); return; }
@@ -1161,79 +1183,20 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 		
 		instance.gun1 = spawn();
 		instance.gun2 = spawn();
-		
-		entity spinner;
+
 		instance.bomb1 = spawn();
 		instance.bomb2 = spawn();
 		instance.bomb3 = spawn();
 		instance.bomb4 = spawn();
-	
-		//Wheels
-		spinner = spawn();
-		spinner.owner = instance;
-		setmodel(spinner,MDL_LIGHTAPC_TIRE);
-		setattachment(spinner, instance, "tag_gear_left");
-		set_movetype(spinner, MOVETYPE_NOCLIP);
-		spinner.avelocity = '0 90 0';
-		instance.bomb1.gun1 = spinner;
-	
-		spinner = spawn();
-		spinner.owner = instance;
-		setmodel(spinner,MDL_LIGHTAPC_TIRE);
-		setattachment(spinner, instance, "tag_wheel_left");
-		set_movetype(spinner, MOVETYPE_NOCLIP);
-		spinner.avelocity = '0 90 0';
-		instance.bomb1.gun2 = spinner;
-	
-		spinner = spawn();
-		spinner.owner = instance;
-		setmodel(spinner,MDL_LIGHTAPC_TIRE);
-		setattachment(spinner, instance, "tag_gear_right");
-		set_movetype(spinner, MOVETYPE_NOCLIP);
-		spinner.avelocity = '0 90 0';
-		instance.bomb2.gun1 = spinner;
-	
-		spinner = spawn();
-		spinner.owner = instance;
-		setmodel(spinner,MDL_LIGHTAPC_TIRE);
-		setattachment(spinner, instance, "tag_wheel_right");
-		set_movetype(spinner, MOVETYPE_NOCLIP);
-		spinner.avelocity = '0 90 0';
-		instance.bomb2.gun2 = spinner;
-	
-		//
-		spinner = spawn();
-		spinner.owner = instance;
-		setmodel(spinner,MDL_LIGHTAPC_TIRE);
-		setattachment(spinner, instance, "tag_gear_left2");
-		set_movetype(spinner, MOVETYPE_NOCLIP);
-		spinner.avelocity = '0 90 0';
-		instance.bomb3.gun1 = spinner;
-	
-		spinner = spawn();
-		spinner.owner = instance;
-		setmodel(spinner,MDL_LIGHTAPC_TIRE);
-		setattachment(spinner, instance, "tag_wheel_left2");
-		set_movetype(spinner, MOVETYPE_NOCLIP);
-		spinner.avelocity = '0 90 0';
-		instance.bomb3.gun2 = spinner;
-	
-		spinner = spawn();
-		spinner.owner = instance;
-		setmodel(spinner,MDL_LIGHTAPC_TIRE);
-		setattachment(spinner, instance, "tag_gear_right2");
-		set_movetype(spinner, MOVETYPE_NOCLIP);
-		spinner.avelocity = '0 90 0';
-		instance.bomb4.gun1 = spinner;
-	
-		spinner = spawn();
-		spinner.owner = instance;
-		setmodel(spinner,MDL_LIGHTAPC_TIRE);
-		setattachment(spinner, instance, "tag_wheel_right2");
-		set_movetype(spinner, MOVETYPE_NOCLIP);
-		spinner.avelocity = '0 90 0';
-		instance.bomb4.gun2 = spinner;
-		//End Wheels
+
+		instance.bomb1.gun1 = lightapc_spawn_tire(instance, "tag_gear_left");
+		instance.bomb1.gun2 = lightapc_spawn_tire(instance, "tag_wheel_left");
+		instance.bomb2.gun1 = lightapc_spawn_tire(instance, "tag_gear_right");
+		instance.bomb2.gun2 = lightapc_spawn_tire(instance, "tag_wheel_right");
+		instance.bomb3.gun1 = lightapc_spawn_tire(instance, "tag_gear_left2");
+		instance.bomb3.gun2 = lightapc_spawn_tire(instance, "tag_wheel_left2");
+		instance.bomb4.gun1 = lightapc_spawn_tire(instance, "tag_gear_right2");
+		instance.bomb4.gun2 = lightapc_spawn_tire(instance, "tag_wheel_right2");
 
 		instance.vehicle_flags |= VHF_MULTISLOT;
 
@@ -1260,8 +1223,6 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 
 		if(!instance.gunners)
 		{
-			entity g;
-
 			instance.gunners = LL_NEW();
 
 			LL_PUSH(instance.gunners, instance.gun1);
@@ -1270,26 +1231,17 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 			vehicle_addplayerslot(instance, instance.gun1, VEH_LIGHTAPCGUNNER1.vehicleid, MDL_Null, lightapc_gunner_frame, lightapc_gunner_exit, lightapc_gunner_enter);
 			vehicle_addplayerslot(instance, instance.gun2, VEH_LIGHTAPCGUNNER2.vehicleid, MDL_Null, lightapc_gunner_frame, lightapc_gunner_exit, lightapc_gunner_enter);
 
-	#define X(s) \
-			g = new(lightapc_gunner); \
-			g.vehicle = instance; \
-			setmodel(g, MDL_Null); \
-			setattachment(g, instance, (s)); \
-			vehicle_addplayerslot(instance, g, VEH_LIGHTAPCPASSENGER.vehicleid, MDL_Null, lightapc_gunner_frame, lightapc_gunner_exit, lightapc_gunner_enter); \
-			LL_PUSH(instance.gunners, g);
-
-			X("tag_pass3")
-			X("tag_pass4")
-			X("tag_pass5")
-			X("tag_pass6")
-			X("tag_pass7")
-			X("tag_pass8")
-			X("tag_pass9")
-			X("tag_pass10")
-			X("tag_pass11")
-			X("tag_pass12")
-			X("tag_pass13")
-	#undef X
+			lightapc_spawn_gunner(instance, "tag_pass3");
+			lightapc_spawn_gunner(instance, "tag_pass4");
+			lightapc_spawn_gunner(instance, "tag_pass5");
+			lightapc_spawn_gunner(instance, "tag_pass6");
+			lightapc_spawn_gunner(instance, "tag_pass7");
+			lightapc_spawn_gunner(instance, "tag_pass8");
+			lightapc_spawn_gunner(instance, "tag_pass9");
+			lightapc_spawn_gunner(instance, "tag_pass10");
+			lightapc_spawn_gunner(instance, "tag_pass11");
+			lightapc_spawn_gunner(instance, "tag_pass12");
+			lightapc_spawn_gunner(instance, "tag_pass13");
 		}
 
 		if (instance.gun1.spawnflags)
