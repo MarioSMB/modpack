@@ -2,29 +2,38 @@ REGISTER_MUTATOR(ignore, true);
 
 .string ignore_list; // stores player id's, maybe can be upgraded to store net address for reconnect protection
 
+string ignore_removefromlist(string list, string ignore)
+{
+	int argc = tokenizebyseparator(list, " ");
+	string newlist = "";
+
+	for(int j = 0; j < argc; ++j)
+	{
+		if(argv(j) != ignore)
+			newlist = strcat(newlist, " ", argv(j));
+	}
+
+	if(newlist == "")
+		return string_null;
+	else
+		return newlist;
+}
+
 MUTATOR_HOOKFUNCTION(ignore, ClientDisconnect)
 {
 	entity player = M_ARGV(0, entity);
 
 	if(player.ignore_list)
-	{
 		strunzone(player.ignore_list);
-		player.ignore_list = string_null;
-	}
+	player.ignore_list = string_null;
 
 	FOREACH_CLIENT(IS_REAL_CLIENT(it) && it.ignore_list,
 	{
+		string mylist = ignore_removefromlist(it.ignore_list, ftos(etof(player)));
 		if(it.ignore_list)
 			strunzone(it.ignore_list);
-		int argc = tokenizebyseparator(it.ignore_list, " ");
-		string newlist = "";
-		for(int j = 0; j < argc; ++j)
-		{
-			if(argv(j) != ftos(etof(player)))
-				newlist = strcat(newlist, " ", argv(j));
-		}
 
-		it.ignore_list = strzone(newlist);
+		it.ignore_list = strzone(mylist);
 	});
 }
 
@@ -39,10 +48,16 @@ MUTATOR_HOOKFUNCTION(ignore, SV_ParseClientCommand)
 
 	if ( cmd_name == "ignore" )
 	{
-		entity client = GetIndexedEntity(cmd_argc, 1);
-		bool accepted = VerifyClientEntity(client, true, false);
+		if(!argv(1) || argv(1) == "")
+		{
+			sprint(player, "This command requires an argument. Use a player's name or their ID from the status command.\n");
+			return true;
+		}
 
-		if(accepted)
+		entity client = GetIndexedEntity(cmd_argc, 1);
+		int accepted = VerifyClientEntity(client, true, false);
+
+		if(accepted == CLIENT_ACCEPTABLE)
 		{
 			if(player.ignore_list)
 				strunzone(player.ignore_list);
@@ -58,22 +73,22 @@ MUTATOR_HOOKFUNCTION(ignore, SV_ParseClientCommand)
 
 	if ( cmd_name == "unignore" )
 	{
-		entity client = GetIndexedEntity(cmd_argc, 1);
-		bool accepted = VerifyClientEntity(client, true, false);
-
-		if(accepted)
+		if(!argv(1) || argv(1) == "")
 		{
+			sprint(player, "This command requires an argument. Use a player's name or their ID from the status command.\n");
+			return true;
+		}
+
+		entity client = GetIndexedEntity(cmd_argc, 1);
+		int accepted = VerifyClientEntity(client, true, false);
+
+		if(accepted == CLIENT_ACCEPTABLE)
+		{
+			string mylist = ignore_removefromlist(player.ignore_list, ftos(etof(client)));
 			if(player.ignore_list)
 				strunzone(player.ignore_list);
-			int argc = tokenizebyseparator(player.ignore_list, " ");
-			string newlist = "";
-			for(int j = 0; j < argc; ++j)
-			{
-				if(argv(j) != ftos(etof(client)))
-					newlist = strcat(newlist, " ", argv(j));
-			}
 
-			player.ignore_list = strzone(newlist);
+			player.ignore_list = strzone(mylist);
 
 			sprint(player, "You can now receive messages from ", client.netname, " again.\n");
 		}
