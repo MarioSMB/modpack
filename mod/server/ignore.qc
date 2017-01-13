@@ -59,6 +59,12 @@ MUTATOR_HOOKFUNCTION(ignore, SV_ParseClientCommand)
 
 		if(accepted == CLIENT_ACCEPTABLE)
 		{
+			if(client == player)
+			{
+				sprint(player, "Hey silly, you can't ignore yourself!\n");
+				return true;
+			}
+
 			if(player.ignore_list)
 				strunzone(player.ignore_list);
 			player.ignore_list = strzone(sprintf("%s%d ", player.ignore_list, etof(client)));
