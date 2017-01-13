@@ -16,7 +16,15 @@ MUTATOR_HOOKFUNCTION(ignore, ClientDisconnect)
 	{
 		if(it.ignore_list)
 			strunzone(it.ignore_list);
-		it.ignore_list = strzone(strreplace(sprintf(" %d ", etof(player)), " ", it.ignore_list));
+		int argc = tokenizebyseparator(it.ignore_list, " ");
+		string newlist = "";
+		for(int j = 0; j < argc; ++j)
+		{
+			if(argv(j) != ftos(etof(player)))
+				newlist = strcat(newlist, " ", argv(j));
+		}
+
+		it.ignore_list = strzone(newlist);
 	});
 }
 
@@ -57,7 +65,15 @@ MUTATOR_HOOKFUNCTION(ignore, SV_ParseClientCommand)
 		{
 			if(player.ignore_list)
 				strunzone(player.ignore_list);
-			player.ignore_list = strzone(strreplace(sprintf(" %d ", etof(client)), " ", player.ignore_list));
+			int argc = tokenizebyseparator(player.ignore_list, " ");
+			string newlist = "";
+			for(int j = 0; j < argc; ++j)
+			{
+				if(argv(j) != ftos(etof(client)))
+					newlist = strcat(newlist, " ", argv(j));
+			}
+
+			player.ignore_list = strzone(newlist);
 
 			sprint(player, "You can now receive messages from ", client.netname, " again.\n");
 		}
