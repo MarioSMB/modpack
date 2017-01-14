@@ -24,7 +24,7 @@ CLASS(Flak, Weapon)
 /* ammotype  */ ATTRIB(Flak, ammo_field, .int, ammo_shells);
 /* impulse   */ ATTRIB(Flak, impulse, int,8);
 /* flags     */ ATTRIB(Flak, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
-/* rating    */ ATTRIB(Flak, bot_pickupbasevalue, float, BOT_PICKUP_RATING_MID);
+/* rating    */ ATTRIB(Flak, bot_pickupbasevalue, float, 6000);
 /* color     */ ATTRIB(Flak, wpcolor, vector, '1 1 0');
 /* modelname */ ATTRIB(Flak, mdl, string, "flak");
 #ifndef MENUQC

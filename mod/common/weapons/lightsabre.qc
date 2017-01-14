@@ -53,7 +53,7 @@ CLASS(Lightsabre, Weapon)
 /* ammotype  */ //ATTRIB(Lightsabre, ammo_field, .int, ammo_shells);
 /* impulse   */ ATTRIB(Lightsabre, impulse, int, 1);
 /* flags     */ ATTRIB(Lightsabre, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE);
-/* rating    */ ATTRIB(Lightsabre, bot_pickupbasevalue, float, BOT_PICKUP_RATING_LOW);
+/* rating    */ ATTRIB(Lightsabre, bot_pickupbasevalue, float, 6000);
 /* color     */ ATTRIB(Lightsabre, wpcolor, vector, '1 0.25 0.25');
 /* modelname */ ATTRIB(Lightsabre, mdl, string, "lightsabre");
 #ifndef MENUQC

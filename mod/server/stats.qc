@@ -41,17 +41,17 @@ MUTATOR_HOOKFUNCTION(require_stats, ClientConnect)
 
 MUTATOR_HOOKFUNCTION(require_stats, PutClientInServer)
 {
-	if(autocvar_g_require_stats >= 1) // >=, incase cvar is updated when theyre on?
+	if(autocvar_g_require_stats < 1)
+		return;
+
+	entity player = M_ARGV(0, entity);
+
+	if(!IS_REAL_CLIENT(player))
+		return; // don't check bots
+
+	if(IS_PLAYER(player) && stats_CheckPlayer(player))
 	{
-		entity player = M_ARGV(0, entity);
-
-		if(!IS_REAL_CLIENT(player))
-			return; // don't check bots
-
-		if(IS_PLAYER(player) && stats_CheckPlayer(player))
-		{
-			TRANSMUTE(Observer, player);
-			centerprint(player, "No can do, sugar tits... Joining is disabled if you don't have stats enabled");
-		}
+		TRANSMUTE(Observer, player);
+		centerprint(player, "No can do, sugar tits... Joining is disabled if you don't have stats enabled");
 	}
 }
