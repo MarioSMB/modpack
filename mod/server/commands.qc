@@ -2,11 +2,8 @@ STATIC_INIT(mod_cmds)
 {
 	localcmd("\nalias ircmsg \"sv_cmd ircmsg ${* ?}\"\n");
 	localcmd("\nalias _ircmessage \"ircmsg ${* ?}\"\n");
-
 	localcmd("\nalias chlevel \"sv_cmd chlevel ${* ?}\"\n");
-
 	localcmd("\nalias stufftoall \"sv_cmd stufftoall ${* ?}\"\n");
-
 	localcmd("\nalias dumpmodcvars \"sv_cmd dumpmodcvars ${* ?}\"\n");
 }
 
