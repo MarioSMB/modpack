@@ -617,7 +617,7 @@ void lightapc_gunner_exit(entity this, int _exitflag)
 	fixedmakevectors(vehic.angles);
 
 	vector spot = vehic.origin + v_forward * 2 + '0 0 64';
-	spot = vehicles_findgoodexit(player, spot);
+	spot = vehicles_findgoodexit(vehic, player, spot);
 
 	// TODO: figure a way to move player out of the gunner
 
@@ -933,7 +933,7 @@ void lightapc_pilot_exit(entity this, int eject)
 	{
 		makevectors(this.angles);
 		vector spot = this.origin + v_forward * 100 + '0 0 64';
-		spot = vehicles_findgoodexit(this, spot);
+		spot = vehicles_findgoodexit(this, player, spot);
 		setorigin(player, spot);
 		player.velocity = (v_up + v_forward * 0.25) * 750;
 		player.oldvelocity = player.velocity;
