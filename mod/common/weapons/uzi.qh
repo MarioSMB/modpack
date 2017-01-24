@@ -1,0 +1,8 @@
+#pragma once
+
+MODEL(UZI_MUZZLEFLASH,           "models/uziflash.md3");
+MODEL(UZI_VIEW,                  W_Model("h_mac10.iqm"));
+MODEL(UZI_WORLD,                 W_Model("v_mac10.md3"));
+MODEL(UZI_ITEM,                  W_Model("g_mac10.md3"));
+
+SOUND(MAC10_FIRE, W_Sound("mac10_fire"));
