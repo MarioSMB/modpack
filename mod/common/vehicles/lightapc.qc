@@ -928,7 +928,6 @@ void lightapc_pilot_exit(entity this, int eject)
 		return;
 
 	entity player = this.owner;
-	this.owner = NULL;
 	if(eject)
 	{
 		makevectors(this.angles);
@@ -943,6 +942,7 @@ void lightapc_pilot_exit(entity this, int eject)
 		player.velocity = player.oldvelocity = '0 0 300';
 		setorigin(player, this.origin + ('0 0 1.5' * this.maxs_z));
 	}
+	this.owner = NULL;
 	antilag_clear(player, CS(player));
 }
 
