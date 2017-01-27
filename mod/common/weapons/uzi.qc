@@ -159,10 +159,10 @@ REGISTER_NET_TEMP(muzzleflash)
 #ifdef CSQC
 NET_HANDLE(muzzleflash, bool isNew)
 {
-	vector a;
-	a.x = ReadCoord();
-    a.y = ReadCoord();
-    a.z = ReadCoord();
+	vector a = '5 0 0';
+	//a.x = ReadCoord();
+    //a.y = ReadCoord();
+    //a.z = ReadCoord();
     int slot = ReadByte();
 	entity wepent = viewmodels[slot];
 	W_Uzi_MuzzleFlash(wepent);
@@ -171,15 +171,15 @@ NET_HANDLE(muzzleflash, bool isNew)
 }
 #endif
 #ifdef SVQC
-void muzzleflash_send(entity actor, entity wepent, vector a)
+void muzzleflash_send(entity actor, entity wepent)
 {
 	if (!IS_REAL_CLIENT(actor)) return;
 	int channel = MSG_ONE;
 	msg_entity = actor;
 	WriteHeader(channel, muzzleflash);
-	WriteCoord(channel, a.x);
-	WriteCoord(channel, a.y);
-	WriteCoord(channel, a.z);
+	//WriteCoord(channel, a.x);
+	//WriteCoord(channel, a.y);
+	//WriteCoord(channel, a.z);
 	WriteByte(channel, weaponslot(wepent.weaponentity_fld));
 }
 #endif
@@ -213,7 +213,7 @@ void W_Uzi_Attack(Weapon thiswep, int deathtype, entity actor, .entity weaponent
 
 	FOREACH_CLIENT(it == actor || (IS_SPEC(it) && it.enemy == actor),
 	{
-		muzzleflash_send(it, actor.(weaponentity), '5 0 0');
+		muzzleflash_send(it, actor.(weaponentity));
 	});
 
 	// casing code
@@ -295,7 +295,7 @@ void W_Uzi_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int f
 
 	FOREACH_CLIENT(it == actor || (IS_SPEC(it) && it.enemy == actor),
 	{
-		muzzleflash_send(it, actor.(weaponentity), '5 0 0');
+		muzzleflash_send(it, actor.(weaponentity));
 	});
 
 	if(autocvar_g_casings >= 2) // casing code
@@ -328,7 +328,7 @@ void W_Uzi_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, int 
 
 	FOREACH_CLIENT(it == actor || (IS_SPEC(it) && it.enemy == actor),
 	{
-		muzzleflash_send(it, actor.(weaponentity), '5 0 0');
+		muzzleflash_send(it, actor.(weaponentity));
 	});
 
 	if(autocvar_g_casings >= 2) // casing code
