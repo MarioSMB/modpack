@@ -4,10 +4,12 @@ MODEL(FLAK_VIEW,                  W_Model("h_flak.iqm"));
 MODEL(FLAK_WORLD,                 W_Model("v_flak.md3"));
 MODEL(FLAK_ITEM,                  W_Model("g_flak.md3"));
 
-MODEL(PROJECTILE_FLAK,                  "models/tracer.mdl");
+MODEL(PROJECTILE_FLAK_PRIMARY,          "models/bullet.mdl");
+MODEL(PROJECTILE_FLAK_SECONDARY,        "models/bullet.mdl");
 MODEL(PROJECTILE_FLAK_BOMB,             "models/rocket.md3");
 
 EFFECT(0, FLAK_BOUNCE, "flak_bounce")
+EFFECT(1, FLAK_BULLET, "flak_trail")
 
 SOUND(FLAK_CASINGS1, W_Sound("casings1"));
 SOUND(FLAK_CASINGS2, W_Sound("casings2"));
@@ -23,7 +25,7 @@ SOUND(FLAK_FIRE3, W_Sound("flak_fire3"));
 CLASS(Flak, Weapon)
 /* ammotype  */ ATTRIB(Flak, ammo_field, .int, ammo_shells);
 /* impulse   */ ATTRIB(Flak, impulse, int,8);
-/* flags     */ ATTRIB(Flak, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
+/* flags     */ ATTRIB(Flak, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Flak, bot_pickupbasevalue, float, 6000);
 /* color     */ ATTRIB(Flak, wpcolor, vector, '1 1 0');
 /* modelname */ ATTRIB(Flak, mdl, string, "flak");
@@ -83,8 +85,9 @@ CLASS(Flak, Weapon)
 ENDCLASS(Flak)
 REGISTER_WEAPON(FLAK, flak, NEW(Flak));
 
-const int PROJECTILE_FLAK = 45;
-const int PROJECTILE_FLAK_BOMB = 46;
+const int PROJECTILE_FLAK_PRIMARY = 45;
+const int PROJECTILE_FLAK_SECONDARY = 46;
+const int PROJECTILE_FLAK_BOMB = 47;
 
 MSG_INFO_NOTIF(WEAPON_FLAK_MURDER_SPLASH,      1, 3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponflak",   _("^BG%s%s^K1 took ^BG%s^K1's Flak%s%s"), "")
 MSG_INFO_NOTIF(WEAPON_FLAK_MURDER_SPRAY,       1, 3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponflak",   _("^BG%s%s^K1 was shredded by ^BG%s^K1's Flak Cannon%s%s"), "")
@@ -97,39 +100,39 @@ MSG_MULTI_NOTIF(WEAPON_FLAK_SUICIDE,            1, NULL,        INFO_WEAPON_FLAK
 #ifdef SVQC
 STATIC_INIT(flak_cvars)
 {
-	localcmd("\ng_balance_flak_primary_damage 7\n");
+	localcmd("\ng_balance_flak_primary_damage 16\n");
 	localcmd("\ng_balance_flak_primary_damage_bouncefactor 0.5\n");
-	localcmd("\ng_balance_flak_primary_count 34\n");
+	localcmd("\ng_balance_flak_primary_count 8\n");
 	localcmd("\ng_balance_flak_primary_refire 0.5\n");
 	localcmd("\ng_balance_flak_primary_animtime 0.2\n");
-	localcmd("\ng_balance_flak_primary_ammo 2\n");
-	localcmd("\ng_balance_flak_primary_speed 2000\n");
-	localcmd("\ng_balance_flak_primary_speed_up 0\n");
+	localcmd("\ng_balance_flak_primary_ammo 1\n");
+	localcmd("\ng_balance_flak_primary_speed 2200\n");
+	localcmd("\ng_balance_flak_primary_speed_up 270\n");
 	localcmd("\ng_balance_flak_primary_spread_up 6\n");
-	localcmd("\ng_balance_flak_primary_spread_side 11\n");
-	localcmd("\ng_balance_flak_primary_lifetime 1.5\n");
+	localcmd("\ng_balance_flak_primary_spread_side 5\n");
+	localcmd("\ng_balance_flak_primary_lifetime 1.2\n");
 	localcmd("\ng_balance_flak_primary_gravity 1\n");
 	localcmd("\ng_balance_flak_primary_force 25\n");
 	localcmd("\ng_balance_flak_primary_passthrough 0.5\n");
 	localcmd("\ng_balance_flak_primary_bouncefactor 0.25\n");
-	localcmd("\ng_balance_flak_secondary_damage 4\n");
+	localcmd("\ng_balance_flak_secondary_damage 12\n");
 	localcmd("\ng_balance_flak_secondary_damage_bouncefactor 0.5\n");
-	localcmd("\ng_balance_flak_secondary_count 24\n");
+	localcmd("\ng_balance_flak_secondary_count 8\n");
 	localcmd("\ng_balance_flak_secondary_refire 0.7\n");
 	localcmd("\ng_balance_flak_secondary_animtime 0.3\n");
-	localcmd("\ng_balance_flak_secondary_ammo 3\n");
-	localcmd("\ng_balance_flak_secondary_speed 1000\n");
-	localcmd("\ng_balance_flak_secondary_speed_up 0\n");
-	localcmd("\ng_balance_flak_secondary_spread_up 7\n");
+	localcmd("\ng_balance_flak_secondary_ammo 1\n");
+	localcmd("\ng_balance_flak_secondary_speed 900\n");
+	localcmd("\ng_balance_flak_secondary_speed_up 400\n");
+	localcmd("\ng_balance_flak_secondary_spread_up 9\n");
 	localcmd("\ng_balance_flak_secondary_spread_side 15\n");
-	localcmd("\ng_balance_flak_secondary_lifetime 1.5\n");
-	localcmd("\ng_balance_flak_secondary_gravity 1\n");
+	localcmd("\ng_balance_flak_secondary_lifetime 2\n");
+	localcmd("\ng_balance_flak_secondary_gravity 2.5\n");
 	localcmd("\ng_balance_flak_secondary_force 25\n");
 	localcmd("\ng_balance_flak_secondary_passthrough 0.5\n");
 	localcmd("\ng_balance_flak_secondary_bouncefactor 0.25\n");
 	localcmd("\ng_balance_flak_bomb 1\n");
 	localcmd("\ng_balance_flak_bomb_ammo 3\n");
-	localcmd("\ng_balance_flak_bomb_count 24\n");
+	localcmd("\ng_balance_flak_bomb_count 5\n");
 	localcmd("\ng_balance_flak_bomb_damage 45\n");
 	localcmd("\ng_balance_flak_bomb_edgedamage 5\n");
 	localcmd("\ng_balance_flak_bomb_radius 140\n");
@@ -171,14 +174,13 @@ void W_Flak_Projectile_Touch(entity this, entity toucher)
 
 	if(toucher.takedamage)
 	{
-		float damage, bnc, frc;
 		bool isprimary = !(this.projectiledeathtype & HITTYPE_SECONDARY);
 
 		if(toucher != this.enemy && (toucher != this.realowner || (this.projectiledeathtype & HITTYPE_BOUNCE)))
 		{
-			bnc = (WEP_CVAR_BOTH(flak, isprimary, damage_bouncefactor) ** this.cnt);
-			damage = WEP_CVAR_BOTH(flak, isprimary, damage) * bnc;
-			frc = WEP_CVAR_BOTH(flak, isprimary, force) * bnc;
+			float bnc = (WEP_CVAR_BOTH(flak, isprimary, damage_bouncefactor) ** this.cnt);
+			float damage = WEP_CVAR_BOTH(flak, isprimary, damage) * bnc;
+			float frc = WEP_CVAR_BOTH(flak, isprimary, force) * bnc;
 
 			vector force = normalize(NearestPointOnBox(toucher, this.origin) - this.origin + this.velocity) * frc;
 
@@ -253,7 +255,7 @@ entity W_Flak_Projectile(entity o, bool isprimary, float damage, float grav, flo
 	e.gravity = grav;
 	e.bouncefactor = bnc;
 	setorigin(e, w_shotorg);
-	setsize(e, '0 0 -3', '0 0 -3');
+	setsize(e, '1 1 1', '1 1 1');
 
 	e.spawnshieldtime = time + lt;
 	e.nextthink = time;
@@ -266,7 +268,7 @@ entity W_Flak_Projectile(entity o, bool isprimary, float damage, float grav, flo
 	IL_PUSH(g_projectiles, e);
 	e.missile_flags = MIF_ARC;
 
-	CSQCProjectile(e, true, PROJECTILE_FLAK, true);   
+	CSQCProjectile(e, true, ((isprimary) ? PROJECTILE_FLAK_PRIMARY : PROJECTILE_FLAK_SECONDARY), true);   
 
 	// common properties
 	MUTATOR_CALLHOOK(EditProjectile, o, e);
@@ -275,18 +277,17 @@ entity W_Flak_Projectile(entity o, bool isprimary, float damage, float grav, flo
 
 void W_Flak_Attack1(Weapon thiswep, entity actor, .entity weaponentity, bool isprimary)
 {
-	float pcount = WEP_CVAR_BOTH(flak, isprimary, count), i;
+	int pcount = WEP_CVAR_BOTH(flak, isprimary, count);
 	int dtype = (isprimary) ? WEP_FLAK.m_id : (WEP_FLAK.m_id | HITTYPE_SECONDARY | HITTYPE_BOUNCE);
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_BOTH(flak, isprimary, ammo), weaponentity);
 
-	W_SetupShot_ProjectileSize(actor, weaponentity, '0 0 -3', '0 0 -3', false, 4, ((isprimary) ? SND_FLAK_FIRE2 : SND_FLAK_FIRE), CH_WEAPON_A, WEP_CVAR_BOTH(flak, isprimary, damage) * pcount);
+	W_SetupShot_ProjectileSize(actor, weaponentity, '1 1 1', '1 1 1', false, 4, ((isprimary) ? SND_FLAK_FIRE2 : SND_FLAK_FIRE), CH_WEAPON_A, WEP_CVAR_BOTH(flak, isprimary, damage) * pcount);
 	w_shotdir = v_forward;
-	vector a;
 
-	for(i = 0; i < pcount; ++i)
+	for(int i = 0; i < pcount; ++i)
 	{
-		a = fixedvectoangles(w_shotdir);
+		vector a = fixedvectoangles(w_shotdir);
 
 		fixedmakevectors(a + '1 0 0' *  random() * WEP_CVAR_BOTH(flak, isprimary, spread_up) + '0 1 0' * crandom() * WEP_CVAR_BOTH(flak, isprimary, spread_side));
 
@@ -493,8 +494,8 @@ void Flak_Touch(entity this, entity toucher)
 {
 	if(time >= this.flak_last_bounce)
 	{
-		this.flak_last_bounce = time + 0.1; // spam
-    	__pointparticles(particleeffectnum(EFFECT_FLAK_BOUNCE), this.origin, this.velocity, 1);
+		this.flak_last_bounce = time + 0.3; // spam
+    	pointparticles(EFFECT_FLAK_BOUNCE, this.origin, this.velocity, 1);
 	}
 }
 
@@ -507,7 +508,8 @@ MUTATOR_HOOKFUNCTION(projectile_flak, Ent_Projectile)
 	switch(proj.cnt)
 	{
 		#define HANDLE(id) case PROJECTILE_##id: setmodel(proj, MDL_PROJECTILE_##id);
-		HANDLE(FLAK) proj.traileffect = EFFECT_RIFLE_WEAK.m_id; return true;
+		HANDLE(FLAK_PRIMARY) proj.traileffect = EFFECT_FLAK_BULLET.m_id; return true;
+		HANDLE(FLAK_SECONDARY) proj.traileffect = EFFECT_FLAK_BULLET.m_id; return true;
 		HANDLE(FLAK_BOMB) proj.traileffect = EFFECT_TR_KNIGHTSPIKE.m_id; return true;
 		#undef HANDLE
 	}
@@ -525,9 +527,13 @@ MUTATOR_HOOKFUNCTION(projectile_flak, EditProjectile)
 			proj.mins = '-3 -3 -3';
 			proj.maxs = '3 3 3';
 			break;
-		case PROJECTILE_FLAK:
-			proj.mins = '-2 -2 -2';
-			proj.maxs = '2 2 2';
+		case PROJECTILE_FLAK_PRIMARY:
+		case PROJECTILE_FLAK_SECONDARY:
+			bool isprimary = (proj.cnt == PROJECTILE_FLAK_PRIMARY);
+			proj.mins = '-1 -1 -1';
+			proj.maxs = '1 1 1';
+			proj.bouncefactor = WEP_CVAR_BOTH(flak, isprimary, bouncefactor);
+			proj.gravity = WEP_CVAR_BOTH(flak, isprimary, gravity);
 			set_movetype(proj, MOVETYPE_BOUNCE);
 			settouch(proj, Flak_Touch);
 			break;
@@ -538,7 +544,7 @@ METHOD(Flak, wr_impacteffect, void(entity thiswep, entity actor))
 {
 	vector org2;
 	org2 = w_org + w_backoff * 12;
-	pointparticles(EFFECT_ROCKET_EXPLODE, org2, '0 0 0', 1);
+	pointparticles(EFFECT_GRENADE_EXPLODE, org2, '0 0 0', 1);
 	if(!w_issilent)
 		sound(actor, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTN_NORM);
 }
