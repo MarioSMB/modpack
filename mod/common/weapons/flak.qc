@@ -22,6 +22,59 @@ SOUND(FLAK_FIRE, W_Sound("flak_fire"));
 SOUND(FLAK_FIRE2, W_Sound("flak_fire2"));
 SOUND(FLAK_FIRE3, W_Sound("flak_fire3"));
 
+AUTOCVAR(g_balance_flak_primary_damage, float, 16, "");
+AUTOCVAR(g_balance_flak_primary_damage_bouncefactor, float, 0.5, "");
+AUTOCVAR(g_balance_flak_primary_count, float, 8, "");
+AUTOCVAR(g_balance_flak_primary_refire, float, 0.5, "");
+AUTOCVAR(g_balance_flak_primary_animtime, float, 0.2, "");
+AUTOCVAR(g_balance_flak_primary_ammo, float, 1, "");
+AUTOCVAR(g_balance_flak_primary_speed, float, 2200, "");
+AUTOCVAR(g_balance_flak_primary_speed_up, float, 270, "");
+AUTOCVAR(g_balance_flak_primary_spread_up, float, 6, "");
+AUTOCVAR(g_balance_flak_primary_spread_side, float, 5, "");
+AUTOCVAR(g_balance_flak_primary_lifetime, float, 1.2, "");
+AUTOCVAR(g_balance_flak_primary_gravity, float, 1, "");
+AUTOCVAR(g_balance_flak_primary_force, float, 25, "");
+AUTOCVAR(g_balance_flak_primary_passthrough, float, 0.5, "");
+AUTOCVAR(g_balance_flak_primary_bouncefactor, float, 0.25, "");
+AUTOCVAR(g_balance_flak_secondary_damage, float, 12, "");
+AUTOCVAR(g_balance_flak_secondary_damage_bouncefactor, float, 0.5, "");
+AUTOCVAR(g_balance_flak_secondary_count, float, 8, "");
+AUTOCVAR(g_balance_flak_secondary_refire, float, 0.7, "");
+AUTOCVAR(g_balance_flak_secondary_animtime, float, 0.3, "");
+AUTOCVAR(g_balance_flak_secondary_ammo, float, 1, "");
+AUTOCVAR(g_balance_flak_secondary_speed, float, 900, "");
+AUTOCVAR(g_balance_flak_secondary_speed_up, float, 400, "");
+AUTOCVAR(g_balance_flak_secondary_spread_up, float, 9, "");
+AUTOCVAR(g_balance_flak_secondary_spread_side, float, 15, "");
+AUTOCVAR(g_balance_flak_secondary_lifetime, float, 2, "");
+AUTOCVAR(g_balance_flak_secondary_gravity, float, 2.5, "");
+AUTOCVAR(g_balance_flak_secondary_force, float, 25, "");
+AUTOCVAR(g_balance_flak_secondary_passthrough, float, 0.5, "");
+AUTOCVAR(g_balance_flak_secondary_bouncefactor, float, 0.25, "");
+AUTOCVAR(g_balance_flak_bomb, float, 1, "");
+AUTOCVAR(g_balance_flak_bomb_ammo, float, 3, "");
+AUTOCVAR(g_balance_flak_bomb_count, float, 5, "");
+AUTOCVAR(g_balance_flak_bomb_damage, float, 45, "");
+AUTOCVAR(g_balance_flak_bomb_edgedamage, float, 5, "");
+AUTOCVAR(g_balance_flak_bomb_radius, float, 140, "");
+AUTOCVAR(g_balance_flak_bomb_force, float, 300, "");
+AUTOCVAR(g_balance_flak_bomb_lifetime, float, 3, "");
+AUTOCVAR(g_balance_flak_bomb_health, float, 50, "");
+AUTOCVAR(g_balance_flak_bomb_damageforcescale, float, 4, "");
+AUTOCVAR(g_balance_flak_bomb_speed, float, 1800, "");
+AUTOCVAR(g_balance_flak_bomb_speed_up, float, 200, "");
+AUTOCVAR(g_balance_flak_bomb_spread_up, float, 7, "");
+AUTOCVAR(g_balance_flak_bomb_spread_side, float, 15, "");
+AUTOCVAR(g_balance_flak_reload_ammo, float, 0, "");
+AUTOCVAR(g_balance_flak_reload_time, float, 2, "");
+AUTOCVAR(g_balance_flak_switchdelay_drop, float, 0.2, "");
+AUTOCVAR(g_balance_flak_switchdelay_raise, float, 0.2, "");
+AUTOCVAR(g_balance_flak_weaponreplace, string, "", "");
+AUTOCVAR(g_balance_flak_weaponstart, float, 0, "");
+AUTOCVAR(g_balance_flak_weaponstartoverride, float, -1, "");
+AUTOCVAR(g_balance_flak_weaponthrowable, float, 1, "");
+
 CLASS(Flak, Weapon)
 /* ammotype  */ ATTRIB(Flak, ammo_field, .int, ammo_shells);
 /* impulse   */ ATTRIB(Flak, impulse, int,8);
@@ -67,7 +120,6 @@ CLASS(Flak, Weapon)
 		P(class, prefix, bomb_radius, float, NONE) \
 		P(class, prefix, bomb_speed, float, NONE) \
 		P(class, prefix, bomb_speed_up, float, NONE) \
-		P(class, prefix, bomb_speed_side, float, NONE) \
 		P(class, prefix, bomb_spread_side, float, NONE) \
 		P(class, prefix, bomb_spread_up, float, NONE) \
 		P(class, prefix, reload_ammo, float, NONE) \
@@ -79,7 +131,7 @@ CLASS(Flak, Weapon)
         P(class, prefix, weaponstartoverride, float, NONE) \
         P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, Flak, flak)
+    W_MOD_PROPS(X, Flak, flak)
 #undef X
 
 ENDCLASS(Flak)
@@ -96,62 +148,6 @@ MSG_INFO_NOTIF(WEAPON_FLAK_SUICIDE,            1, 2, 1, "s1 s2loc spree_lost", "
 MSG_MULTI_NOTIF(WEAPON_FLAK_MURDER_SPLASH,      1, NULL,        INFO_WEAPON_FLAK_MURDER_SPLASH,      NULL)
 MSG_MULTI_NOTIF(WEAPON_FLAK_MURDER_SPRAY,       1, NULL,        INFO_WEAPON_FLAK_MURDER_SPRAY,       NULL)
 MSG_MULTI_NOTIF(WEAPON_FLAK_SUICIDE,            1, NULL,        INFO_WEAPON_FLAK_SUICIDE,            CENTER_DEATH_SELF_GENERIC)
-
-#ifdef SVQC
-STATIC_INIT(flak_cvars)
-{
-	localcmd("\ng_balance_flak_primary_damage 16\n");
-	localcmd("\ng_balance_flak_primary_damage_bouncefactor 0.5\n");
-	localcmd("\ng_balance_flak_primary_count 8\n");
-	localcmd("\ng_balance_flak_primary_refire 0.5\n");
-	localcmd("\ng_balance_flak_primary_animtime 0.2\n");
-	localcmd("\ng_balance_flak_primary_ammo 1\n");
-	localcmd("\ng_balance_flak_primary_speed 2200\n");
-	localcmd("\ng_balance_flak_primary_speed_up 270\n");
-	localcmd("\ng_balance_flak_primary_spread_up 6\n");
-	localcmd("\ng_balance_flak_primary_spread_side 5\n");
-	localcmd("\ng_balance_flak_primary_lifetime 1.2\n");
-	localcmd("\ng_balance_flak_primary_gravity 1\n");
-	localcmd("\ng_balance_flak_primary_force 25\n");
-	localcmd("\ng_balance_flak_primary_passthrough 0.5\n");
-	localcmd("\ng_balance_flak_primary_bouncefactor 0.25\n");
-	localcmd("\ng_balance_flak_secondary_damage 12\n");
-	localcmd("\ng_balance_flak_secondary_damage_bouncefactor 0.5\n");
-	localcmd("\ng_balance_flak_secondary_count 8\n");
-	localcmd("\ng_balance_flak_secondary_refire 0.7\n");
-	localcmd("\ng_balance_flak_secondary_animtime 0.3\n");
-	localcmd("\ng_balance_flak_secondary_ammo 1\n");
-	localcmd("\ng_balance_flak_secondary_speed 900\n");
-	localcmd("\ng_balance_flak_secondary_speed_up 400\n");
-	localcmd("\ng_balance_flak_secondary_spread_up 9\n");
-	localcmd("\ng_balance_flak_secondary_spread_side 15\n");
-	localcmd("\ng_balance_flak_secondary_lifetime 2\n");
-	localcmd("\ng_balance_flak_secondary_gravity 2.5\n");
-	localcmd("\ng_balance_flak_secondary_force 25\n");
-	localcmd("\ng_balance_flak_secondary_passthrough 0.5\n");
-	localcmd("\ng_balance_flak_secondary_bouncefactor 0.25\n");
-	localcmd("\ng_balance_flak_bomb 1\n");
-	localcmd("\ng_balance_flak_bomb_ammo 3\n");
-	localcmd("\ng_balance_flak_bomb_count 5\n");
-	localcmd("\ng_balance_flak_bomb_damage 45\n");
-	localcmd("\ng_balance_flak_bomb_edgedamage 5\n");
-	localcmd("\ng_balance_flak_bomb_radius 140\n");
-	localcmd("\ng_balance_flak_bomb_force 300\n");
-	localcmd("\ng_balance_flak_bomb_lifetime 3\n");
-	localcmd("\ng_balance_flak_bomb_health 50\n");
-	localcmd("\ng_balance_flak_bomb_damageforcescale 4\n");
-	localcmd("\ng_balance_flak_bomb_speed 1800\n");
-	localcmd("\ng_balance_flak_bomb_speed_up 200\n");
-	localcmd("\ng_balance_flak_bomb_spread_up 7\n");
-	localcmd("\ng_balance_flak_bomb_spread_side 15\n");
-	localcmd("\ng_balance_flak_switchdelay_drop 0.2\n");
-	localcmd("\ng_balance_flak_switchdelay_raise 0.2\n");
-	localcmd("\ng_balance_flak_weaponreplace \"\"\n");
-	localcmd("\ng_balance_flak_weaponstart 0\n");
-	localcmd("\ng_balance_flak_weaponstartoverride -1\n");
-	localcmd("\ng_balance_flak_weaponthrowable 1\n");
-}
-#endif
 
 #endif
 #ifdef IMPLEMENTATION
@@ -443,21 +439,26 @@ void W_Flak_Attack3(Weapon thiswep, entity actor, .entity weaponentity)
 		}
 		METHOD(Flak, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
-			if(fire & 1)
-			if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(flak, refire)))
+			if(WEP_CVAR(flak, reload_ammo) && actor.(weaponentity).clip_load < min(WEP_CVAR_PRI(flak, ammo), WEP_CVAR_SEC(flak, ammo), WEP_CVAR(flak, bomb_ammo))) // forced reload
+				thiswep.wr_reload(thiswep, actor, weaponentity);
+			else
 			{
-				W_Flak_Attack1(thiswep, actor, weaponentity, true);
-				weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(flak, animtime), w_ready);
-			}
+				if(fire & 1)
+				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(flak, refire)))
+				{
+					W_Flak_Attack1(thiswep, actor, weaponentity, true);
+					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(flak, animtime), w_ready);
+				}
 
-			if(fire & 2)
-			if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(flak, refire)))
-			{
-				if(WEP_CVAR(flak, bomb))
-					W_Flak_Attack3(thiswep, actor, weaponentity);
-				else
-					W_Flak_Attack1(thiswep, actor, weaponentity, false);
-				weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(flak, animtime), w_ready);
+				if(fire & 2)
+				if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR_SEC(flak, refire)))
+				{
+					if(WEP_CVAR(flak, bomb))
+						W_Flak_Attack3(thiswep, actor, weaponentity);
+					else
+						W_Flak_Attack1(thiswep, actor, weaponentity, false);
+					weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR_SEC(flak, animtime), w_ready);
+				}
 			}
 		}
 		METHOD(Flak, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))

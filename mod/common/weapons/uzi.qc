@@ -1,5 +1,38 @@
 #include "uzi.qh"
 #ifndef IMPLEMENTATION
+
+AUTOCVAR(g_balance_uzi_burst, float, 1, "");
+AUTOCVAR(g_balance_uzi_burst_ammo, float, 1, "");
+AUTOCVAR(g_balance_uzi_burst_animtime, float, 0.4, "");
+AUTOCVAR(g_balance_uzi_burst_damage, float, 16, "");
+AUTOCVAR(g_balance_uzi_burst_refire, float, 0.5, "");
+AUTOCVAR(g_balance_uzi_burst_refire2, float, 0.6, "");
+AUTOCVAR(g_balance_uzi_burst_speed, float, 0, "");
+AUTOCVAR(g_balance_uzi_first, float, 1, "");
+AUTOCVAR(g_balance_uzi_first_ammo, float, 1, "");
+AUTOCVAR(g_balance_uzi_first_damage, float, 14, "");
+AUTOCVAR(g_balance_uzi_first_force, float, 3, "");
+AUTOCVAR(g_balance_uzi_first_refire, float, 0.125, "");
+AUTOCVAR(g_balance_uzi_first_spread, float, 0.03, "");
+AUTOCVAR(g_balance_uzi_mode, float, 1, "");
+AUTOCVAR(g_balance_uzi_reload_ammo, float, 30, "");
+AUTOCVAR(g_balance_uzi_reload_time, float, 1.6, "");
+AUTOCVAR(g_balance_uzi_solidpenetration, float, 9, "");
+AUTOCVAR(g_balance_uzi_spread_add, float, 0.012, "");
+AUTOCVAR(g_balance_uzi_spread_max, float, 0.05, "");
+AUTOCVAR(g_balance_uzi_spread_min, float, 0.02, "");
+AUTOCVAR(g_balance_uzi_sustained_ammo, float, 1, "");
+AUTOCVAR(g_balance_uzi_sustained_damage, float, 7, "");
+AUTOCVAR(g_balance_uzi_sustained_force, float, 3, "");
+AUTOCVAR(g_balance_uzi_sustained_refire, float, 0.05, "");
+AUTOCVAR(g_balance_uzi_sustained_spread, float, 0.04, "");
+AUTOCVAR(g_balance_uzi_switchdelay_drop, float, 0.1, "");
+AUTOCVAR(g_balance_uzi_switchdelay_raise, float, 0.1, "");
+AUTOCVAR(g_balance_uzi_weaponreplace, string, "", "");
+AUTOCVAR(g_balance_uzi_weaponstart, float, 0, "");
+AUTOCVAR(g_balance_uzi_weaponstartoverride, float, -1, "");
+AUTOCVAR(g_balance_uzi_weaponthrowable, float, 1, "");
+
 CLASS(Uzi, Weapon)
 /* ammotype  */ ATTRIB(Uzi, ammo_field, .int, ammo_nails);
 /* impulse   */ ATTRIB(Uzi, impulse, int, 3);
@@ -50,7 +83,7 @@ CLASS(Uzi, Weapon)
         P(class, prefix, weaponstart, float, NONE) \
         P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_PROPS(X, Uzi, uzi)
+    W_MOD_PROPS(X, Uzi, uzi)
 #undef X
 
 ENDCLASS(Uzi)
@@ -62,43 +95,6 @@ MSG_INFO_NOTIF(WEAPON_UZI_MURDER_SPRAY,          1,  3, 2, "spree_inf s1 s2 s3lo
 
 MSG_MULTI_NOTIF(WEAPON_UZI_MURDER_SNIPE,     1,  NULL,           INFO_WEAPON_UZI_MURDER_SNIPE,    NULL)
 MSG_MULTI_NOTIF(WEAPON_UZI_MURDER_SPRAY,     1,  NULL,           INFO_WEAPON_UZI_MURDER_SPRAY,    NULL)
-
-#ifdef SVQC
-STATIC_INIT(uzi_cvars)
-{
-	localcmd("\ng_balance_uzi_burst 1\n");
-	localcmd("\ng_balance_uzi_burst_ammo 1\n");
-	localcmd("\ng_balance_uzi_burst_animtime 0.4\n");
-	localcmd("\ng_balance_uzi_burst_damage 16\n");
-	localcmd("\ng_balance_uzi_burst_refire 0.5\n");
-	localcmd("\ng_balance_uzi_burst_refire2 0.6\n");
-	localcmd("\ng_balance_uzi_burst_speed 0\n");
-	localcmd("\ng_balance_uzi_first 1\n");
-	localcmd("\ng_balance_uzi_first_ammo 1\n");
-	localcmd("\ng_balance_uzi_first_damage 14\n");
-	localcmd("\ng_balance_uzi_first_force 3\n");
-	localcmd("\ng_balance_uzi_first_refire 0.125\n");
-	localcmd("\ng_balance_uzi_first_spread 0.03\n");
-	localcmd("\ng_balance_uzi_mode 1\n");
-	localcmd("\ng_balance_uzi_reload_ammo 30\n");
-	localcmd("\ng_balance_uzi_reload_time 1.6\n");
-	localcmd("\ng_balance_uzi_solidpenetration 9\n");
-	localcmd("\ng_balance_uzi_spread_add 0.012\n");
-	localcmd("\ng_balance_uzi_spread_max 0.05\n");
-	localcmd("\ng_balance_uzi_spread_min 0.02\n");
-	localcmd("\ng_balance_uzi_sustained_ammo 1\n");
-	localcmd("\ng_balance_uzi_sustained_damage 7\n");
-	localcmd("\ng_balance_uzi_sustained_force 3\n");
-	localcmd("\ng_balance_uzi_sustained_refire 0.05\n");
-	localcmd("\ng_balance_uzi_sustained_spread 0.04\n");
-	localcmd("\ng_balance_uzi_switchdelay_drop 0.1\n");
-	localcmd("\ng_balance_uzi_switchdelay_raise 0.1\n");
-	localcmd("\ng_balance_uzi_weaponreplace \"\"\n");
-	localcmd("\ng_balance_uzi_weaponstart 0\n");
-	localcmd("\ng_balance_uzi_weaponstartoverride -1\n");
-	localcmd("\ng_balance_uzi_weaponthrowable 1\n");
-}
-#endif
 
 #endif
 #ifdef IMPLEMENTATION
