@@ -36,7 +36,7 @@ AUTOCVAR(g_balance_uzi_weaponthrowable, float, 1, "");
 CLASS(Uzi, Weapon)
 /* ammotype  */ ATTRIB(Uzi, ammo_field, .int, ammo_nails);
 /* impulse   */ ATTRIB(Uzi, impulse, int, 3);
-/* flags     */ ATTRIB(Uzi, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
+/* flags     */ ATTRIB(Uzi, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_DUALWIELD);
 /* rating    */ ATTRIB(Uzi, bot_pickupbasevalue, float, 7000);
 /* color     */ ATTRIB(Uzi, wpcolor, vector, '1 0.9 0.1');
 /* modelname */ ATTRIB(Uzi, mdl, string, "mac10");
