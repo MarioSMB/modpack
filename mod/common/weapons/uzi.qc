@@ -46,7 +46,7 @@ CLASS(Uzi, Weapon)
 /* crosshair */ ATTRIB(Uzi, w_crosshair, string, "gfx/crosshair63");
 /* crosshair */ ATTRIB(Uzi, w_crosshair_size, float, 0.6);
 /* wepimg    */ ATTRIB(Uzi, model2, string, "weaponmac10");
-/* refname   */ ATTRIB(Uzi, netname, string, "uzi");
+/* refname   */ ATTRIB(Uzi, netname, string, "mac10");
 /* wepname   */ ATTRIB(Uzi, m_name, string, _("Uzi"));
 
 #define X(BEGIN, P, END, class, prefix) \

@@ -12,6 +12,7 @@
 	#include "piggyback.qc"
 	#include "polytrails.qc"
 	#include "radio.qc"
+	#include "weapons.qc"
 	#include "zombie_apocalypse.qc"
 #endif
 
