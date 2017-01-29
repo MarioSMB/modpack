@@ -114,7 +114,7 @@ bool W_Lightsabre_Melee_Block(entity this, entity player)
 	{
 		entity player_melee = NULL, e;
 
-		for(e = NULL; (e = find(e, classname, "melee_temp")); )
+		for(e = NULL; (e = find(e, classname, "meleetemp")); )
 		if(e.realowner == player)
 		{
 			player_melee = e;
@@ -125,6 +125,8 @@ bool W_Lightsabre_Melee_Block(entity this, entity player)
 
 		makevectors (player.v_angle);
 		float dot = normalize (myowner.origin - player.origin) * v_forward;
+
+		makevectors(myowner.v_angle); // reset v vectors
 
 		if(dot <= 0.3) { return false; }
 	}
@@ -138,7 +140,7 @@ bool W_Lightsabre_Melee_Block(entity this, entity player)
 			{
 				//LOG_INFO("Too close!\n");
 				float dot = normalize(myowner.origin - it.origin) * v_forward;
-				LOG_INFO("dot = ", ftos(dot), "\n");
+				//LOG_INFO("dot = ", ftos(dot), "\n");
 				if(dot <= 0.3) { continue; }
 
 				//LOG_INFO("We got one!\n");
@@ -284,27 +286,26 @@ void W_Lightsabre_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR_BOTH(lightsabre, isprimary, damage), WEP_CVAR_BOTH(lightsabre, isprimary, melee_range));
 }
 
-.bool lightsabre_active;
+// HACK: use tuba_instrument to avoid the need to manually network this from mod
+//.bool lightsabre_active;
 
-void lightsabre_active_send(entity this, int newactive);
 void W_LightSabre_SetActive(entity actor, .entity weaponentity, bool newactive, bool dosound)
 {
 	if(newactive)
 	{
-		actor.lightsabre_active = true;
-		actor.weaponname = "lightsabre_active";
+		actor.(weaponentity).tuba_instrument = true;
+		actor.(weaponentity).weaponname = "lightsabre_active";
 		if(dosound)
 			sound(actor, CH_WEAPON_A, SND_LIGHTSABRE_ACTIVATE, VOL_BASE, ATTEN_NORM);
 	}
 	else
 	{
-		actor.lightsabre_active = false;
-		actor.weaponname = "lightsabre";
+		actor.(weaponentity).tuba_instrument = false;
+		actor.(weaponentity).weaponname = "lightsabre";
 		if(dosound)
 			sound(actor, CH_WEAPON_A, SND_LIGHTSABRE_DEACTIVATE, VOL_BASE, ATTEN_NORM);
 	}
 
-	lightsabre_active_send(actor, actor.lightsabre_active);
 	actor.(weaponentity).state = WS_INUSE;
 	weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, 0.1, w_ready);
 }
@@ -321,7 +322,7 @@ void W_LightSabre_SetActive(entity actor, .entity weaponentity, bool newactive, 
 			if((fire & 1) || (fire & 2))
 			if(weapon_prepareattack(thiswep, actor, weaponentity, (fire & 2), WEP_CVAR_BOTH(lightsabre, !(fire & 2), refire)))
 			{
-				if(!actor.lightsabre_active)
+				if(!actor.(weaponentity).tuba_instrument)
 				{
 					W_LightSabre_SetActive(actor, weaponentity, true, true);
 					//weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, WEP_CVAR_BOTH(lightsabre, !(fire & 2), animtime), w_ready);
@@ -335,7 +336,7 @@ void W_LightSabre_SetActive(entity actor, .entity weaponentity, bool newactive, 
 				}
 			}
 
-			if(actor.(weaponentity).m_switchweapon != WEP_LIGHTSABRE && actor.lightsabre_active)
+			if(actor.(weaponentity).m_switchweapon != WEP_LIGHTSABRE && actor.(weaponentity).tuba_instrument)
 				W_LightSabre_SetActive(actor, weaponentity, false, true);
 		}
 		METHOD(Lightsabre, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
@@ -363,44 +364,17 @@ void W_LightSabre_SetActive(entity actor, .entity weaponentity, bool newactive, 
 #elif defined(CSQC)
 METHOD(Lightsabre, wr_viewmodel, string(Lightsabre this, entity wep))
 {
-	return (this.lightsabre_active) ? "lightsabre_active" : "lightsabre";
+	return (wep.tuba_instrument) ? "lightsabre_active" : "lightsabre";
 }
 #endif
 
-REGISTER_NET_S2C(lightsabre_activate)
-#ifdef CSQC
-NET_HANDLE(lightsabre_activate, bool)
-{
-	int i = ReadByte();
-	return = true;
-	string s = (i == false) ? "lightsabre" : "lightsabre_active";
-	//Weapon wep = WEP_LIGHTSABRE;
-	//wep.mdl = s;
-	viewmodel.lightsabre_active = i;
-	CL_WeaponEntity_SetModel(viewmodel, s, false);
-}
-#endif
 #ifdef SVQC
-void lightsabre_active_send(entity this, int newactive)
-{
-	if(!IS_REAL_CLIENT(this)) return;
-
-	msg_entity = this;
-	int chan = MSG_ONE;
-	WriteHeader(chan, lightsabre_activate);
-	WriteByte(chan, newactive);
-}
-SPECTATE_COPY()
-{
-	if (this.lightsabre_active != spectatee.lightsabre_active)
-		lightsabre_active_send(this, this.lightsabre_active = spectatee.lightsabre_active);
-}
 METHOD(Lightsabre, wr_reload, void(Lightsabre this, entity actor, .entity weaponentity))
 {
 	// switch to alternate instruments :)
 	if (actor.(weaponentity).state == WS_READY)
 	{
-		W_LightSabre_SetActive(actor, weaponentity, ((actor.lightsabre_active) ? false : true), true);
+		W_LightSabre_SetActive(actor, weaponentity, ((actor.(weaponentity).tuba_instrument) ? false : true), true);
 	}
 }
 #endif
