@@ -102,6 +102,61 @@ MSG_MULTI_NOTIF(WEAPON_LIGHTSABRE_MURDER,   1,   NULL,        INFO_WEAPON_LIGHTS
 #ifdef SVQC
 spawnfunc(weapon_lightsabre) { weapon_defaultspawnfunc(this, WEP_LIGHTSABRE); }
 
+REGISTER_MUTATOR(lightsabre_evil, true);
+
+MUTATOR_HOOKFUNCTION(lightsabre_evil, Damage_Calculate)
+{
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	float frag_deathtype = M_ARGV(3, float);
+	float frag_damage = M_ARGV(4, float);
+	vector frag_force = M_ARGV(6, vector);
+
+	if(!IS_PLAYER(frag_target))
+		return;
+
+	if(DEATH_ISWEAPON(frag_deathtype, WEP_VORTEX) && (frag_target.weapons & WEPSET(LIGHTSABRE)))
+	{
+		bool have_lightsabre = false;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity wepe = weaponentities[slot];
+			if(frag_target.(wepe).m_weapon == WEP_LIGHTSABRE)
+			{
+				have_lightsabre = true;
+				break;
+			}
+		}
+
+		if(!have_lightsabre)
+			return; // quicker to check for this than to loop through all melee entities
+
+		entity player_melee = NULL;
+		for(entity e = NULL; (e = find(e, classname, "meleetemp")); )
+		if(e.realowner == frag_target)
+		{
+			player_melee = e;
+			break;
+		}
+		if(!player_melee)
+			return;
+		makevectors (frag_attacker.v_angle);
+		float dot = normalize (frag_target.origin - frag_attacker.origin) * v_forward;
+
+		if(dot <= 0.3)
+			return;
+		makevectors(frag_target.v_angle);
+
+		M_ARGV(4, float) = 0; // no damage for this!
+		.entity weaponentity = player_melee.weaponentity_fld;
+		// no accuracy needed for this, really
+		FireRailgunBullet(frag_target, weaponentity, v_forward, frag_attacker.origin, frag_damage * 0.5, vlen(frag_force) * 0.5, 0, 0, 0, 0, WEP_VORTEX.m_id);
+
+		animdecide_setaction(frag_target, ANIMACTION_SHOOT, 1);
+		spamsound(frag_target, CH_WEAPON_A, SND(LIGHTSABRE_HIT_RANDOM()), VOL_BASE, ATTN_NORM);
+	}
+}
+
 .float lightsabre_hitshield;
 
 .float swing_prev;
@@ -283,6 +338,7 @@ void W_Lightsabre_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	entity meleetemp = new(meleetemp);
 	meleetemp.owner = meleetemp.realowner = actor;
 	setthink(meleetemp, W_Lightsabre_Melee_Think);
+	meleetemp.weaponentity_fld = weaponentity;
 	meleetemp.nextthink = time + WEP_CVAR_BOTH(lightsabre, isprimary, melee_delay) * W_WeaponRateFactor(actor);
 	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR_BOTH(lightsabre, isprimary, damage), WEP_CVAR_BOTH(lightsabre, isprimary, melee_range));
 }
