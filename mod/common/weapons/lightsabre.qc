@@ -227,10 +227,8 @@ void W_Lightsabre_Melee_Think(entity this)
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
 	entity target_victim;
 	vector targpos;
-	bool isprimary = !PHYS_INPUT_BUTTON_ATCK2(this.realowner);
-	int deathtype = WEP_LIGHTSABRE.m_id;
-	if(!isprimary)
-		deathtype |= HITTYPE_SECONDARY;
+	int deathtype = this.projectiledeathtype;
+	bool isprimary = !(deathtype & HITTYPE_SECONDARY);
 
 	if(!this.cnt) // set start time of melee
 	{
@@ -338,6 +336,9 @@ void W_Lightsabre_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	entity meleetemp = new(meleetemp);
 	meleetemp.owner = meleetemp.realowner = actor;
 	setthink(meleetemp, W_Lightsabre_Melee_Think);
+	meleetemp.projectiledeathtype = WEP_LIGHTSABRE.m_id;
+	if(!isprimary)
+		meleetemp.projectiledeathtype |= HITTYPE_SECONDARY;
 	meleetemp.weaponentity_fld = weaponentity;
 	meleetemp.nextthink = time + WEP_CVAR_BOTH(lightsabre, isprimary, melee_delay) * W_WeaponRateFactor(actor);
 	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR_BOTH(lightsabre, isprimary, damage), WEP_CVAR_BOTH(lightsabre, isprimary, melee_range));
