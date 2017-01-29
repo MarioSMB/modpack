@@ -139,7 +139,7 @@ bool W_Lightsabre_Melee_Block(entity this, entity player)
 			if(vdist(it.origin - myowner.origin, <, 256))
 			{
 				//LOG_INFO("Too close!\n");
-				float dot = normalize(myowner.origin - it.origin) * v_forward;
+				float dot = normalize(it.origin - myowner.origin) * v_forward;
 				//LOG_INFO("dot = ", ftos(dot), "\n");
 				if(dot <= 0.3) { continue; }
 
@@ -208,7 +208,8 @@ void W_Lightsabre_Melee_Think(entity this)
 
 		WarpZone_traceline_antilag(this, this.realowner.origin + this.realowner.view_ofs, targpos, false, this.realowner, ANTILAG_LATENCY(this.realowner));
 
-		W_Lightsabre_Melee_Block(this, NULL);
+		if(W_Lightsabre_Melee_Block(this, NULL))
+			accuracy_add(this.realowner, WEP_LIGHTSABRE.m_id, 0, (WEP_CVAR_BOTH(lightsabre, isprimary, melee_nonplayerdamage) * min(1, swing_factor + 1)));
 
 		// draw lightning beams for debugging
 		//te_lightning2(NULL, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
