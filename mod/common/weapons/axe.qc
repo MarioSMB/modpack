@@ -66,7 +66,7 @@ ENDCLASS(Axe)
 REGISTER_WEAPON(AXE, axe, NEW(Axe));
 
 
-MSG_INFO_NOTIF(WEAPON_AXE_MURDER_SLAP,          1,  3, 2, "spree_inf s2 s1 s3loc spree_end", "s2 s1",       "notify_melee_axe",     _("^BG%s%s^K1 was chopped in half by ^BG%s^K1 Axe%s%s"), "")
+MSG_INFO_NOTIF(WEAPON_AXE_MURDER_SLAP,          1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "notify_melee_axe",     _("^BG%s%s^K1 was chopped in half by ^BG%s^K1 Axe%s%s"), "")
 MSG_MULTI_NOTIF(WEAPON_AXE_MURDER_SLAP,         1,  NULL,           INFO_WEAPON_AXE_MURDER_SLAP,        NULL)
 
 #endif
