@@ -17,7 +17,7 @@ Sound SND_LIGHTSABRE_HIT_RANDOM() {
 }
 
 AUTOCVAR(g_balance_lightsabre_primary_animtime, float, 0.8, "");
-AUTOCVAR(g_balance_lightsabre_primary_damage, float, 65, "");
+AUTOCVAR(g_balance_lightsabre_primary_damage, float, 70, "");
 AUTOCVAR(g_balance_lightsabre_primary_force, float, 200, "");
 AUTOCVAR(g_balance_lightsabre_primary_melee_delay, float, 0.1, "");
 AUTOCVAR(g_balance_lightsabre_primary_melee_multihit, float, 1, "");
@@ -29,8 +29,8 @@ AUTOCVAR(g_balance_lightsabre_primary_melee_swing_up, float, 60, "");
 AUTOCVAR(g_balance_lightsabre_primary_melee_time, float, 0.15, "");
 AUTOCVAR(g_balance_lightsabre_primary_melee_traces, float, 10, "");
 AUTOCVAR(g_balance_lightsabre_primary_refire, float, 0.5, "");
-AUTOCVAR(g_balance_lightsabre_secondary_damage, float, 55, "");
-AUTOCVAR(g_balance_lightsabre_secondary_animtime, float, 0.5, "");
+AUTOCVAR(g_balance_lightsabre_secondary_damage, float, 20, "");
+AUTOCVAR(g_balance_lightsabre_secondary_animtime, float, 0.35, "");
 AUTOCVAR(g_balance_lightsabre_secondary_force, float, 200, "");
 AUTOCVAR(g_balance_lightsabre_secondary_melee_delay, float, 0.25, "");
 AUTOCVAR(g_balance_lightsabre_secondary_melee_multihit, float, 1, "");
@@ -41,9 +41,9 @@ AUTOCVAR(g_balance_lightsabre_secondary_melee_swing_side, float, -80, "");
 AUTOCVAR(g_balance_lightsabre_secondary_melee_swing_up, float, -50, "");
 AUTOCVAR(g_balance_lightsabre_secondary_melee_time, float, 0.15, "");
 AUTOCVAR(g_balance_lightsabre_secondary_melee_traces, float, 10, "");
-AUTOCVAR(g_balance_lightsabre_secondary_refire, float, 0.65, "");
-AUTOCVAR(g_balance_lightsabre_switchdelay_drop, float, 0.2, "");
-AUTOCVAR(g_balance_lightsabre_switchdelay_raise, float, 0.2, "");
+AUTOCVAR(g_balance_lightsabre_secondary_refire, float, 0.35, "");
+AUTOCVAR(g_balance_lightsabre_switchdelay_drop, float, 0.15, "");
+AUTOCVAR(g_balance_lightsabre_switchdelay_raise, float, 0.15, "");
 AUTOCVAR(g_balance_lightsabre_weaponreplace, string, "", "");
 AUTOCVAR(g_balance_lightsabre_weaponstart, float, 0, "");
 AUTOCVAR(g_balance_lightsabre_weaponstartoverride, float, -1, "");
@@ -201,7 +201,7 @@ bool W_Lightsabre_Melee_Block(entity this, entity player)
 				//LOG_INFO("We got one!\n");
 
 				it.velocity *= -1; // straight forward...?
-				it.realowner = it.owner = myowner;
+				it.owner = myowner;
 				it.lightsabre_hitshield = time + 0.15;
 				UpdateCSQCProjectile(it);
 				doneblock = true;
