@@ -210,6 +210,8 @@ bool W_Lightsabre_Melee_Block(entity this, entity player)
 
 		if(!doneblock) { return false; }
 	}
+	else
+		return false; // didn't block it, must be a non-player entity
 
 	//if((myowner.v_angle_x - player.v_angle_x < 70) && (myowner.v_angle_x - player.v_angle_x > -70)) //Look up and down
 	//if((myowner.v_angle_y - player.v_angle_y > 160) || (myowner.v_angle_y - player.v_angle_y < -160)) //Side to side Facing eachother
