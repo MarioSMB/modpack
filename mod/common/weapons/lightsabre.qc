@@ -201,7 +201,7 @@ bool W_Lightsabre_Melee_Block(entity this, entity player)
 				//LOG_INFO("We got one!\n");
 
 				it.velocity *= -1; // straight forward...?
-				it.owner = myowner;
+				it.realowner = it.owner = myowner;
 				it.lightsabre_hitshield = time + 0.15;
 				UpdateCSQCProjectile(it);
 				doneblock = true;
