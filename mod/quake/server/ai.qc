@@ -184,11 +184,11 @@ void HuntTarget(entity this)
 	SUB_AttackFinished(this, 1);	// wait a while before first attack
 }
 
-.string() sightsound;
+.string(entity this) sightsound;
 void SightSound(entity this)
 {
 	if(this.sightsound)
-		_sound(this, CHAN_VOICE, this.sightsound(), 1, ATTN_NORM);
+		_sound(this, CHAN_VOICE, this.sightsound(this), 1, ATTN_NORM);
 }
 
 void FoundTarget(entity this)

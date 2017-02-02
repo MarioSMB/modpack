@@ -360,8 +360,8 @@ void Demon_JumpTouch(entity this, entity toucher)
 	this.nextthink = time + 0.1;
 }
 
-string demon1_sight() { return "demon/sight2.wav"; }
-string demon1_deathmessage() { return "was eviscerated by a Fiend"; }
+string demon1_sight(entity this) { return "demon/sight2.wav"; }
+string demon1_deathmessage(entity this) { return "was eviscerated by a Fiend"; }
 
 
 /*QUAKED monster_demon1(1 0 0)(-32 -32 -24)(32 32 64) Ambush

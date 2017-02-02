@@ -464,8 +464,8 @@ bool ShamCheckAttack(entity this)
 	return true;
 }
 
-string shambler_sight() { return "shambler/ssight.wav"; }
-string shambler_deathmessage() { return "was smashed by a Shambler"; }
+string shambler_sight(entity this) { return "shambler/ssight.wav"; }
+string shambler_deathmessage(entity this) { return "was smashed by a Shambler"; }
 
 //============================================================================
 

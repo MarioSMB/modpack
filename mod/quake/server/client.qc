@@ -1349,7 +1349,7 @@ void ClientObituary(entity targ, entity attacker)
 			if(IS_MONSTER(attacker))
 			{
 				if(attacker.deathmessage)
-					bprintf(" %s\n", attacker.deathmessage());
+					bprintf(" %s\n", attacker.deathmessage(attacker));
 				return;
 			}
 

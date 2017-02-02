@@ -20,7 +20,7 @@ float skill;
 .bool jump_flag;
 
 .string deathtype;
-.string() deathmessage;
+.string(entity this) deathmessage;
 
 .float height;
 

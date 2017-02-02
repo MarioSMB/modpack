@@ -313,8 +313,8 @@ void knight_die(entity this, entity attacker)
 		knight_dieb1(this);
 }
 
-string knight_sight() { return "knight/ksight.wav"; }
-string knight_deathmessage() { return "was slashed by a Knight"; }
+string knight_sight(entity this) { return "knight/ksight.wav"; }
+string knight_deathmessage(entity this) { return "was slashed by a Knight"; }
 
 /*QUAKED monster_knight(1 0 0)(-16 -16 -24)(16 16 40) Ambush
 */

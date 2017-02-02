@@ -392,8 +392,8 @@ bool DogCheckAttack(entity this)
 	return false;
 }
 
-string dog_sight() { return "dog/dsight.wav"; }
-string dog_deathmessage() { return "was mauled by a Rottweiler"; }
+string dog_sight(entity this) { return "dog/dsight.wav"; }
+string dog_deathmessage(entity this) { return "was mauled by a Rottweiler"; }
 
 //===========================================================================
 

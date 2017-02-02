@@ -408,8 +408,8 @@ bool SoldierCheckAttack(entity this)
 	return false;
 }
 
-string army_sight() { return "soldier/sight1.wav"; }
-string army_deathmessage() { return "was shot by a Grunt"; }
+string army_sight(entity this) { return "soldier/sight1.wav"; }
+string army_deathmessage(entity this) { return "was shot by a Grunt"; }
 
 /*QUAKED monster_army(1 0 0)(-16 -16 -24)(16 16 40) Ambush
 */

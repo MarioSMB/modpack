@@ -606,8 +606,8 @@ bool OgreCheckAttack(entity this)
 	return true;
 }
 
-string ogre_sight() { return "ogre/ogwake.wav"; }
-string ogre_deathmessage() { return "was destroyed by an Ogre"; }
+string ogre_sight(entity this) { return "ogre/ogwake.wav"; }
+string ogre_deathmessage(entity this) { return "was destroyed by an Ogre"; }
 
 /*QUAKED monster_ogre(1 0 0)(-32 -32 -24)(32 32 64) Ambush
 

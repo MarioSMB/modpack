@@ -400,8 +400,8 @@ void Wiz_Missile(entity this)
 	wiz_fast1(this);
 }
 
-string wiz_sight() { return "wizard/wsight.wav"; }
-string wiz_deathmessage() { return "was scragged by a Scrag"; }
+string wiz_sight(entity this) { return "wizard/wsight.wav"; }
+string wiz_deathmessage(entity this) { return "was scragged by a Scrag"; }
 
 /*QUAKED monster_wizard(1 0 0)(-16 -16 -24)(16 16 40) Ambush
 */

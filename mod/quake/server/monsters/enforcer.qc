@@ -393,7 +393,7 @@ void enf_die(entity this, entity attacker)
 		enf_fdie1(this);
 }
 
-string enf_sight()
+string enf_sight(entity this)
 {
 	switch(rint(random() * 3))
 	{
@@ -404,7 +404,7 @@ string enf_sight()
 	}
 }
 
-string enf_deathmessage() { return "was blasted by an Enforcer"; }
+string enf_deathmessage(entity this) { return "was blasted by an Enforcer"; }
 
 /*QUAKED monster_enforcer(1 0 0)(-16 -16 -24)(16 16 40) Ambush
 

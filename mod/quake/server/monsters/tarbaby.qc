@@ -231,8 +231,8 @@ void tbaby_die2(entity this)
 }
 void tbaby_die1(entity this, entity attacker) { set_anim(this, anim_tbaby_exp, tbaby_die2); this.takedamage = DAMAGE_NO; }
 
-string tbaby_sight() { return "blob/sight1.wav"; }
-string tbaby_deathmessage() { return "was slimed by a Spawn"; }
+string tbaby_sight(entity this) { return "blob/sight1.wav"; }
+string tbaby_deathmessage(entity this) { return "was slimed by a Spawn"; }
 
 //=============================================================================
 

@@ -530,8 +530,8 @@ void hknight_melee(entity this)
 	}
 }
 
-string hknight_sight() { return "hknight/sight1.wav"; }
-string hknight_deathmessage() { return "was slain by a Death Knight"; }
+string hknight_sight(entity this) { return "hknight/sight1.wav"; }
+string hknight_deathmessage(entity this) { return "was slain by a Death Knight"; }
 
 /*QUAKED monster_hell_knight(1 0 0)(-16 -16 -24)(16 16 40) Ambush
 */

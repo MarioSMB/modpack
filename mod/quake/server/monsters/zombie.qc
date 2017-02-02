@@ -649,8 +649,8 @@ void zombie_pain(entity this, entity attacker, float take)
 		zombie_paind1(this);
 }
 
-string zombie_sight() { return "zombie/z_idle.wav"; }
-string zombie_deathmessage() { return "joins the Zombies"; }
+string zombie_sight(entity this) { return "zombie/z_idle.wav"; }
+string zombie_deathmessage(entity this) { return "joins the Zombies"; }
 
 //============================================================================
 

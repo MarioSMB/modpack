@@ -231,8 +231,8 @@ void ShalMissileTouch(entity this, entity toucher)
 	s_explode1(this);
 }
 
-string shalrath_sight() { return "shalrath/sight.wav"; }
-string shalrath_deathmessage() { return "was exploded by a Vore"; }
+string shalrath_sight(entity this) { return "shalrath/sight.wav"; }
+string shalrath_deathmessage(entity this) { return "was exploded by a Vore"; }
 
 //=================================================================
 
