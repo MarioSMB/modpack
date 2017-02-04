@@ -299,7 +299,7 @@ void nopain(entity this, entity attacker, float damage)
 
 //============================================================================
 
-string oldone_deathmessage() { return "became one with Shub-Niggurath"; }
+string oldone_deathmessage(entity this) { return "became one with Shub-Niggurath"; }
 
 
 /*QUAKED monster_oldone(1 0 0)(-16 -16 -24)(16 16 32)

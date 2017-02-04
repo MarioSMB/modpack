@@ -208,7 +208,7 @@ void fish_pain(entity this, entity attacker, float damage)
 	f_pain1(this);
 }
 
-string fish_deathmessage() { return "was fed to the Rotfish"; }
+string fish_deathmessage(entity this) { return "was fed to the Rotfish"; }
 
 /*QUAKED monster_fish(1 0 0)(-16 -16 -24)(16 16 24) Ambush
 */
