@@ -5,3 +5,4 @@
 #include "flak.qc"
 #include "axe.qc"
 #include "lightsabre.qc"
+#include "rpg.qc"
