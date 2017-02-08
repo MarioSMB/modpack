@@ -93,10 +93,14 @@ void W_RPG7_Explode(entity this, entity directhitentity)
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 
+	float damg = WEP_CVAR(rpg, damage);
+	if(IS_VEHICLE(directhitentity))
+		damg *= 3;
+
 	RadiusDamage(
 		this,
 		this.realowner,
-		WEP_CVAR(rpg, damage),
+		damg,
 		WEP_CVAR(rpg, edgedamage),
 		WEP_CVAR(rpg, radius),
 		NULL,
