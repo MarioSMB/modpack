@@ -110,6 +110,28 @@ void mod_parse_print(string strMessage)
 	print(mod_translate_clean(strMessage));
 }
 
+string mod_ccr(string input)
+{
+	// See the autocvar declarations in util.qh for default values
+
+	// foreground/normal colors
+	input = strreplace("^F1", strcat("^", autocvar_hud_colorset_foreground_1), input);
+	input = strreplace("^F2", strcat("^", autocvar_hud_colorset_foreground_2), input);
+	input = strreplace("^F3", strcat("^", autocvar_hud_colorset_foreground_3), input);
+	input = strreplace("^F4", strcat("^", autocvar_hud_colorset_foreground_4), input);
+
+	// "kill" colors
+	input = strreplace("^K1", strcat("^", autocvar_hud_colorset_kill_1), input);
+	input = strreplace("^K2", strcat("^", autocvar_hud_colorset_kill_2), input);
+	input = strreplace("^K3", strcat("^", autocvar_hud_colorset_kill_3), input);
+
+	// background colors
+	input = strreplace("^BG", strcat("^", autocvar_hud_colorset_background), input);
+	input = strreplace("^N", "^7", input);  // "none"-- reset to white...
+	input = mod_translate_clean(input);
+	return input;
+}
+
 STATIC_INIT_LATE(mod_cvars_override)
 {
 	localcmd("\nset hud_panel_quickmenu_file quickmenu.txt\n");
@@ -119,6 +141,7 @@ STATIC_INIT_LATE(mod_cvars_override)
 
 	ColorTranslateRGB = mod_translate;
 	CSQC_Parse_Print = mod_parse_print;
+	CCR = mod_ccr;
 }
 
 REGISTER_MUTATOR(mutator_mod, true);
