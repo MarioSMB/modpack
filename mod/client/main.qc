@@ -93,6 +93,23 @@ string mod_translate(string s)
 	return theword;
 }
 
+string mod_translate_clean(string s)
+{
+	if(ColorTranslateMode & 1)
+		return strdecolorize(s);
+
+	string col = s;
+	col = strreplace("^x666", "^1", col);
+	col = strreplace("^x667", "^2", col);
+	return col;
+}
+
+void mod_parse_print(string strMessage)
+{
+	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_Print(\"%s\")\n", strMessage);
+	print(mod_translate_clean(strMessage));
+}
+
 STATIC_INIT_LATE(mod_cvars_override)
 {
 	localcmd("\nset hud_panel_quickmenu_file quickmenu.txt\n");
@@ -101,6 +118,7 @@ STATIC_INIT_LATE(mod_cvars_override)
 	localcmd("\nalias unignore \"cmd unignore ${* ?}\"\n");
 
 	ColorTranslateRGB = mod_translate;
+	CSQC_Parse_Print = mod_parse_print;
 }
 
 REGISTER_MUTATOR(mutator_mod, true);
