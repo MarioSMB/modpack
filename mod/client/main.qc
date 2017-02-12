@@ -5,7 +5,7 @@ STATIC_INIT(mod_cvars)
 
 AUTOCVAR(cl_stripfancystuff, bool, false, "Turn off the fancy blinking colorful names");
 
-string mod_translate(string s)
+string mod_translate_clean(string s)
 {
 	if(ColorTranslateMode & 1)
 		return strdecolorize(s);
@@ -13,7 +13,20 @@ string mod_translate(string s)
 	if(s == "" || !s)
 		return s;
 
+	s = strreplace("^x666", "^1", s);
+	s = strreplace("^x667", "^2", s);
+	return s;
+}
+
+string mod_translate(string s)
+{
 	if(autocvar_cl_stripfancystuff)
+		return mod_translate_clean(s);
+
+	if(ColorTranslateMode & 1)
+		return strdecolorize(s);
+
+	if(s == "" || !s)
 		return s;
 
 #if 1
@@ -91,19 +104,6 @@ string mod_translate(string s)
 #endif
 
 	return theword;
-}
-
-string mod_translate_clean(string s)
-{
-	if(ColorTranslateMode & 1)
-		return strdecolorize(s);
-
-	if(s == "" || !s)
-		return s;
-
-	s = strreplace("^x666", "^1", s);
-	s = strreplace("^x667", "^2", s);
-	return s;
 }
 
 void mod_parse_print(string strMessage)
