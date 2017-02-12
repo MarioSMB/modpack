@@ -98,6 +98,9 @@ string mod_translate_clean(string s)
 	if(ColorTranslateMode & 1)
 		return strdecolorize(s);
 
+	if(s == "" || !s)
+		return s;
+
 	string col = s;
 	col = strreplace("^x666", "^1", col);
 	col = strreplace("^x667", "^2", col);
