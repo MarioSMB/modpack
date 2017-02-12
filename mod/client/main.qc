@@ -101,10 +101,9 @@ string mod_translate_clean(string s)
 	if(s == "" || !s)
 		return s;
 
-	string col = s;
-	col = strreplace("^x666", "^1", col);
-	col = strreplace("^x667", "^2", col);
-	return col;
+	s = strreplace("^x666", "^1", s);
+	s = strreplace("^x667", "^2", s);
+	return s;
 }
 
 void mod_parse_print(string strMessage)
