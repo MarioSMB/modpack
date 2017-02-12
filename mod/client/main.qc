@@ -134,6 +134,33 @@ string mod_ccr(string input)
 	return input;
 }
 
+string mod_scoreboard_getname(entity pl)
+{
+	string pname = entcs_GetName(pl.sv_entnum);
+	string dcname = strtolower(strdecolorize(pname));
+
+	if(strstrofs(dcname, "antibody", 0) >= 0)
+	{
+		int f = entcs_GetClientColors(pl.sv_entnum);
+		sbt_field_icon0 = "gfx/menu/luma/icon_mod_newtoys";
+		sbt_field_icon0_rgb = colormapPaletteColor(f % 16, 1);
+	}
+	else if(ready_waiting && pl.ready)
+		sbt_field_icon0 = "gfx/scoreboard/player_ready";
+	else if(!teamplay)
+	{
+		int f = entcs_GetClientColors(pl.sv_entnum);
+		{
+			sbt_field_icon0 = "gfx/scoreboard/playercolor_base";
+			sbt_field_icon1 = "gfx/scoreboard/playercolor_shirt";
+			sbt_field_icon1_rgb = colormapPaletteColor(floor(f / 16), 0);
+			sbt_field_icon2 = "gfx/scoreboard/playercolor_pants";
+			sbt_field_icon2_rgb = colormapPaletteColor(f % 16, 1);
+		}
+	}
+	return pname;
+}
+
 STATIC_INIT_LATE(mod_cvars_override)
 {
 	localcmd("\nset hud_panel_quickmenu_file quickmenu.txt\n");
@@ -144,6 +171,7 @@ STATIC_INIT_LATE(mod_cvars_override)
 	ColorTranslateRGB = mod_translate;
 	CSQC_Parse_Print = mod_parse_print;
 	CCR = mod_ccr;
+	Scoreboard_GetName = mod_scoreboard_getname;
 }
 
 REGISTER_MUTATOR(mutator_mod, true);
