@@ -2,6 +2,7 @@
 #include "sounds.qh"
 
 #include "announcer.qc"
+#include "colors.qc"
 #include "commands/all.inc"
 #include "custom_playermodels.qc"
 #include "effects.inc"
