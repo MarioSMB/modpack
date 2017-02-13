@@ -1,5 +1,7 @@
 REGISTER_MUTATOR(mod_chat, true);
 
+AUTOCVAR(chat_replacewords, bool, false, "Allow replacing words in chat via chat_replace_* cvars");
+
 .entity lasthit;
 
 MUTATOR_HOOKFUNCTION(mod_chat, Damage_Calculate)
@@ -50,14 +52,37 @@ MUTATOR_HOOKFUNCTION(mod_chat, FormatMessage)
 
 MUTATOR_HOOKFUNCTION(mod_chat, PreFormatMessage)
 {
+	entity player = M_ARGV(0, entity);
 	string themsg = M_ARGV(1, string);
 
-	// replace id with the player's name
-	FOREACH_CLIENTSLOT_REVERSE(true,
+	if(!IS_CLIENT(player))
+		return; // don't modify map entity strings or other formatted stuff
+
+	string newmsg = "";
+	FOREACH_WORD(themsg, true,
 	{
-		string myname = strcat("^7", ((IS_CLIENT(it)) ? it.netname : "(nobody)"), "^7");
-		themsg = strreplace(strcat("@#", ftos(i)), myname, themsg);
+		string theword = it;
+
+		if(substring(theword, 0, 2) == "@#")
+		{
+			entity player = GetFilteredEntity(substring(theword, 1, strlen(theword)));
+			int accepted = VerifyClientEntity(player, false, false);
+			theword = strcat("^7", ((accepted >= 0) ? playername(player, false) : "(nobody)"), "^7");
+		}
+
+		if(!autocvar_chat_replacewords)
+		{
+			newmsg = strcat(newmsg, theword, " ");
+			continue;
+		}
+
+		string myvar = strcat("chat_replace_", theword);
+		if(cvar_type(myvar) & CVAR_TYPEFLAG_EXISTS)
+			newmsg = strcat(newmsg, cvar_string(myvar), " ");
+		else
+			newmsg = strcat(newmsg, theword, " ");
 	});
+	themsg = newmsg;
 
 	M_ARGV(1, string) = themsg;
 }
