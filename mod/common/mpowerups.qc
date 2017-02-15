@@ -23,17 +23,30 @@ MODEL(Star_ITEM, Item_Model("star.md3"));
 SOUND(Star, "items/powerup_star");
 #endif
 
+#ifdef SVQC
+.float star_finished;
+AUTOCVAR(g_powerup_star_time, float, 33.616, "");
+void powerup_star_init(entity item)
+{
+    if(!item.star_finished)
+        item.star_finished = autocvar_g_powerup_star_time;
+}
+#endif
 REGISTER_ITEM(Star, Powerup) {
 #ifdef GAMEQC
     this.m_model            =   MDL_Star_ITEM;
     this.m_sound            =   SND_Star;
 #endif
+    this.netname            =   "starman";
     this.m_name             =   "starman";
     this.m_icon             =   "star";
     this.m_color            =   '1 1 0';
     this.m_waypoint         =   "Starman";
     this.m_waypointblink    =   2;
     this.m_itemid           =   MIT_STAR;
+#ifdef SVQC
+    this.m_iteminit         =   powerup_star_init;
+#endif
 }
 
 #ifdef GAMEQC
@@ -41,17 +54,30 @@ MODEL(Mini_ITEM, Item_Model("mini.md3"));
 SOUND(Mini, "items/powerup_mini");
 #endif
 
+#ifdef SVQC
+.float mini_finished;
+AUTOCVAR(g_powerup_mini_time, float, 30, "");
+void powerup_mini_init(entity item)
+{
+    if(!item.mini_finished)
+        item.mini_finished = autocvar_g_powerup_mini_time;
+}
+#endif
 REGISTER_ITEM(Mini, Powerup) {
 #ifdef GAMEQC
     this.m_model            =   MDL_Mini_ITEM;
     this.m_sound            =   SND_Mini;
 #endif
+    this.netname            =   "minishroom";
     this.m_name             =   "minishroom";
     this.m_icon             =   "mini";
     this.m_color            =   '0.25 0.25 1';
     this.m_waypoint         =   "Mini Mushroom";
     this.m_waypointblink    =   2;
     this.m_itemid           =   MIT_MINI;
+#ifdef SVQC
+    this.m_iteminit         =   powerup_mini_init;
+#endif
 }
 
 #ifdef GAMEQC
@@ -59,17 +85,30 @@ MODEL(Life_ITEM, Item_Model("life.md3"));
 SOUND(Life, "items/powerup_life");
 #endif
 
+#ifdef SVQC
+.float life_finished;
+AUTOCVAR(g_powerup_life_time, float, 60, "");
+void powerup_life_init(entity item)
+{
+    if(!item.life_finished)
+        item.life_finished = autocvar_g_powerup_life_time;
+}
+#endif
 REGISTER_ITEM(Life, Powerup) {
 #ifdef GAMEQC
     this.m_model            =   MDL_Life_ITEM;
     this.m_sound            =   SND_Life;
 #endif
+    this.netname            =   "lifeshroom";
     this.m_name             =   "lifeshroom";
     this.m_icon             =   "life";
     this.m_color            =   '1 0.25 0.25';
     this.m_waypoint         =   "Life Mushroom";
     this.m_waypointblink    =   2;
     this.m_itemid           =   MIT_LIFE;
+#ifdef SVQC
+    this.m_iteminit         =   powerup_life_init;
+#endif
 }
 
 #ifdef SVQC
@@ -82,13 +121,10 @@ REGISTER_MUTATOR(mpowerups, true);
 #ifdef SVQC
 AUTOCVAR(g_powerup_star_touch_delay, float, 0.2, "");
 AUTOCVAR(g_powerup_star_speed, float, 1.7, "");
-AUTOCVAR(g_powerup_star_time, float, 33.616, "");
 AUTOCVAR(g_powerups_mario_replace, bool, false, "");
-AUTOCVAR(g_powerup_mini_time, float, 30, "");
 AUTOCVAR(g_powerup_mini_gravity, float, 0.4, "");
 AUTOCVAR(g_powerup_mini_healthscale, float, 0.5, "Scale of the player's health limits, use a value between 0 and 1");
 AUTOCVAR(g_powerup_mini_size, float, 0.2, "Scale of the player when under the influence, use a value between 0 and 1");
-AUTOCVAR(g_powerup_life_time, float, 60, "");
 
 const vector PL_VIEW_OFS_CONST = '0 0 35';
 const vector PL_CROUCH_VIEW_OFS_CONST = '0 0 20';
@@ -97,10 +133,6 @@ const vector PL_CROUCH_MAX_CONST = '16 16 25';
 const vector PL_CROUCH_MIN_CONST = '-16 -16 -24';
 
 .int mitems;
-
-.float star_finished;
-.float mini_finished;
-.float life_finished;
 
 .float mini_oldgravity;
 .float star_touch_time;

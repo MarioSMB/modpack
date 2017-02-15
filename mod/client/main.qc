@@ -34,6 +34,9 @@ STATIC_INIT_LATE(mod_cvars_override)
 
 	localcmd("\nalias ignore \"cmd ignore ${* ?}\"\n");
 	localcmd("\nalias unignore \"cmd unignore ${* ?}\"\n");
+
+	localcmd("\nalias itemlist \"cl_cmd itemlist ${* ?}\"\n");
+	localcmd("\nalias place_item \"cmd place_item ${* ?}\"\n");
 }
 
 REGISTER_MUTATOR(mutator_mod, true);
@@ -41,4 +44,23 @@ REGISTER_MUTATOR(mutator_mod, true);
 MUTATOR_HOOKFUNCTION(mutator_mod, BuildMutatorsString)
 {
     M_ARGV(0, string) = strcat(M_ARGV(0, string), ":mod");
+}
+
+MUTATOR_HOOKFUNCTION(mutator_mod, CSQC_ConsoleCommand)
+{
+	if(MUTATOR_RETURNVALUE) // command was already handled?
+		return;
+
+	string cmd_name = M_ARGV(0, string);
+	//int cmd_argc = M_ARGV(2, int);
+
+	if(cmd_name == "itemlist")
+	{
+		LOG_INFO("Available items: \n");
+		FOREACH(Items, true,
+		{
+			LOG_INFOF("%s (%s)\n", it.netname, it.m_name);
+		});
+		return true;
+	}
 }
