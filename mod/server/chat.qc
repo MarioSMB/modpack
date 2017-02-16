@@ -82,7 +82,7 @@ MUTATOR_HOOKFUNCTION(mod_chat, PreFormatMessage)
 		else
 			newmsg = strcat(newmsg, theword, " ");
 	});
-	themsg = newmsg;
+	themsg = mod_translate_clean(newmsg);
 
 	M_ARGV(1, string) = themsg;
 }
