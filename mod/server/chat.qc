@@ -55,7 +55,7 @@ MUTATOR_HOOKFUNCTION(mod_chat, PreFormatMessage)
 	entity player = M_ARGV(0, entity);
 	string themsg = M_ARGV(1, string);
 
-	if(!IS_CLIENT(player))
+	if(!IS_CLIENT(player) || themsg == "")
 		return; // don't modify map entity strings or other formatted stuff
 
 	string newmsg = "";
