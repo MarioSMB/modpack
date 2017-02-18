@@ -3,13 +3,14 @@ REGISTER_MUTATOR(require_stats, cvar("g_require_stats"));
 AUTOCVAR(g_require_stats, int, 0, "Require stats to be enabled to join the server");
 AUTOCVAR(g_require_stats_use_whitelist, bool, false, "");
 AUTOCVAR(g_require_stats_verify, bool, false, "Verify that client stats ID is signed, for additional security");
+AUTOCVAR(g_require_stats_checkempty, bool, true, "Prevent clients from joining if they have no stats ID at all");
 AUTOCVAR(g_require_stats_whitelist, string, "", "");
 AUTOCVAR(g_require_stats_blacklist, string, "", "");
 
 bool stats_CheckPlayer(entity this)
 {
 	return boolean(
-		(this.crypto_idfp == "" || !this.crypto_idfp)
+		(autocvar_g_require_stats_checkempty && (this.crypto_idfp == "" || !this.crypto_idfp))
 	||  (autocvar_g_require_stats_use_whitelist && !strhasword(autocvar_g_require_stats_whitelist, this.crypto_idfp)) 
 	||  strhasword(autocvar_g_require_stats_blacklist, this.crypto_idfp)
 	||  (autocvar_g_require_stats_verify && !this.crypto_idfp_signed)
