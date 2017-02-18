@@ -329,6 +329,19 @@ float autocvar_g_chat_flood_lmax;
 
 bool autocvar_g_chat_flood_notify_flooder;
 
+string mod_translate_clean(string s)
+{
+	if(s == "" || !s)
+		return s;
+
+	s = strreplace("^x665", "^3", s);
+	s = strreplace("^x666", "^1", s);
+	s = strreplace("^x667", "^2", s);
+	s = strreplace("^x668", "^4", s);
+	s = strreplace("^x669", "^0", s);
+	return s;
+}
+
 /**
  * message "": do not say, just test flood control
  * return value:
@@ -342,6 +355,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
         msgin = substring(msgin, 1, -1); // work around DP say bug (say_team does not have this!)
 
 	msgin = formatmessage(source, msgin);
+	msgin = mod_translate_clean(msgin);
 
     string colorstr;
 	if (!IS_PLAYER(source))
@@ -365,7 +379,7 @@ int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodc
 
     string namestr = "";
     if (source)
-        namestr = source.netname;
+        namestr = mod_translate_clean(source.netname);
 
     string colorprefix = (strdecolorize(namestr) == namestr) ? "^3" : "^7";
 
