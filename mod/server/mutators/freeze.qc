@@ -97,7 +97,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(IS_DEAD(player) || !IS_PLAYER(player) || gameover)
+	if(IS_DEAD(player) || !IS_PLAYER(player) || game_stopped)
 		return;
 
 	if(round_handler_IsActive())

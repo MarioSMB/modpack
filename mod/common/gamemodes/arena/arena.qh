@@ -1,0 +1,21 @@
+#pragma once
+
+CLASS(Arena, Gametype)
+    INIT(Arena)
+    {
+        this.gametype_init(this, _("Arena"),"arena","g_arena",false,"","timelimit=20 pointlimit=10 leadlimit=0",_("Emerge victorious in a series of duels to win the match!"));
+    }
+    METHOD(Arena, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+    {
+        return (diameter < 4096);
+    }
+ENDCLASS(Arena)
+REGISTER_GAMETYPE(ARENA, NEW(Arena));
+#define g_arena IS_GAMETYPE(ARENA)
+
+#ifdef SVQC
+
+int maxspawned;
+bool arena_roundbased;
+
+#endif

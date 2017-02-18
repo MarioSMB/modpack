@@ -18,7 +18,7 @@ REGISTER_DEATHTYPE(MONSTER_OGRE_MELEE,            				DEATH_SELF_MON_OGRE_MELEE,
 #endif
 
 CLASS(Ogre, Monster)
-    ATTRIB(Ogre, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_MELEE | MON_FLAG_RANGED);
+    ATTRIB(Ogre, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MON_FLAG_MELEE | MON_FLAG_RANGED);
     ATTRIB(Ogre, mins, vector, '-36 -36 -20');
     ATTRIB(Ogre, maxs, vector, '36 36 50');
 #ifndef MENUQC
@@ -98,7 +98,8 @@ void M_Ogre_Attack_MachineGun(entity this)
 	vector org = this.origin + this.view_ofs + v_forward * 14;
 	sound (this, CH_WEAPON_A, SND_UZI_FIRE, VOL_BASE, ATTEN_NORM);
 
-	fireBullet(this, org, dir, autocvar_g_monster_ogre_attack_machinegun_spread, autocvar_g_monster_ogre_attack_machinegun_solidpenetration, autocvar_g_monster_ogre_attack_machinegun_damage,
+	.entity weaponentity = weaponentities[0];
+	fireBullet(this, weaponentity, org, dir, autocvar_g_monster_ogre_attack_machinegun_spread, autocvar_g_monster_ogre_attack_machinegun_solidpenetration, autocvar_g_monster_ogre_attack_machinegun_damage,
 			autocvar_g_monster_ogre_attack_machinegun_force, DEATH_MONSTER_OGRE_MACHINEGUN.m_id, 0);
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, org, dir * 1000, 1);
@@ -297,7 +298,7 @@ void M_Ogre_Attack_Chainsaw(entity this)
 	}
 }
 
-bool M_Ogre_Attack(int attack_type, entity actor, entity targ)
+bool M_Ogre_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
 	switch(attack_type)
 	{

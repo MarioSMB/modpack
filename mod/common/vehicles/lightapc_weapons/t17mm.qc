@@ -58,6 +58,8 @@ void lightapc_t17mm(entity player, entity gunmount)
 		gunmount.cnt = time;
 		gunmount.misc_bulletcounter += 1;
 
+		.entity weaponentity = weaponentities[0];
+
 		vector v = gettaginfo(gunmount, gettagindex(gunmount, "tag_mgun1"));
 		v_forward = normalize(v_forward);
 		//   v += v_forward * 50;
@@ -67,7 +69,7 @@ void lightapc_t17mm(entity player, entity gunmount)
 		//		autocvar_g_vehicle_lightapc_t17mm_damage, autocvar_g_vehicle_lightapc_t17mm_headshotaddeddamage, autocvar_g_vehicle_lightapc_t17mm_force, DEATH_SPORTSTERGUNHV.m_id,
 		//		1, 1, autocvar_g_vehicle_lightapc_t17mm_bulletconstant, autocvar_g_vehicle_lightapc_t17mm_coreshotaddeddamage);
 		//endFireBallisticBullet();
-		fireBullet(player, v, v_forward, autocvar_g_vehicle_lightapc_t17mm_spread, autocvar_g_vehicle_lightapc_t17mm_solidpenetration,
+		fireBullet(player, weaponentity, v, v_forward, autocvar_g_vehicle_lightapc_t17mm_spread, autocvar_g_vehicle_lightapc_t17mm_solidpenetration,
 								 autocvar_g_vehicle_lightapc_t17mm_damage, autocvar_g_vehicle_lightapc_t17mm_force, DEATH_VH_SPID_MINIGUN.m_id, 0);
 		// End Ballistic bullet
 
@@ -81,20 +83,17 @@ void lightapc_t17mm(entity player, entity gunmount)
 		if(player.muzzle_flash == NULL)
 			player.muzzle_flash = spawn();
 		lightapc_t17mm_muzzleflash(player, player.muzzle_flash);
-		lightapc_AttachToShotorg(player, player.muzzle_flash, '5 0 0', "tag_flash1", gunmount);
+		vwep_AttachToShotorg(player, player.muzzle_flash, '5 0 0', "tag_flash1", gunmount);
 	 
 		sound (gunmount, CH_WEAPON_A, SND_LIGHTAPC_T17MM_FIRE, VOL_BASE, ATTN_NORM);
 		
-		if (autocvar_g_vehicle_lightapc_t17mm_expelbulletcasings == 1)
+		if (autocvar_g_vehicle_lightapc_t17mm_expelbulletcasings)
 		{
-			if (autocvar_g_casings >= 2)
-			{
-				lightapc_SpawnCasing (((random () * 50 + 50) * v_right) - 
+			vwep_SpawnCasing (((random () * 50 + 50) * v_right) - 
 						(v_forward * (random () * 25 + 25)) - 
 						((random () * 12 + 20) * v_up), 2, 
-				vectoangles(v_forward),'0 250 0', 100, 29, gunmount, "tag_casings");
-				//Not rifle style casings, those look too big for this gun
-			}
+			vectoangles(v_forward),'0 250 0', 100, 29, gunmount, "tag_casings");
+			//Not rifle style casings, those look too big for this gun
 		}
 
 		v = gettaginfo(gunmount, gettagindex(gunmount, "tag_mgun2"));
@@ -106,7 +105,7 @@ void lightapc_t17mm(entity player, entity gunmount)
 		//		autocvar_g_vehicle_lightapc_t17mm_damage, autocvar_g_vehicle_lightapc_t17mm_headshotaddeddamage, autocvar_g_vehicle_lightapc_t17mm_force, DEATH_SPORTSTERGUNHV.m_id,
 		//		1, 1, autocvar_g_vehicle_lightapc_t17mm_bulletconstant, autocvar_g_vehicle_lightapc_t17mm_coreshotaddeddamage);
 		//endFireBallisticBullet();
-		fireBullet(player, v, v_forward, autocvar_g_vehicle_lightapc_t17mm_spread, autocvar_g_vehicle_lightapc_t17mm_solidpenetration,
+		fireBullet(player, weaponentity, v, v_forward, autocvar_g_vehicle_lightapc_t17mm_spread, autocvar_g_vehicle_lightapc_t17mm_solidpenetration,
 								 autocvar_g_vehicle_lightapc_t17mm_damage, autocvar_g_vehicle_lightapc_t17mm_force, DEATH_VH_SPID_MINIGUN.m_id, 0);
 		// End Ballistic bullet
 
@@ -120,20 +119,17 @@ void lightapc_t17mm(entity player, entity gunmount)
 		if(player.muzzle_flash2 == NULL)
 			player.muzzle_flash2 = spawn();
 		lightapc_t17mm_muzzleflash(player, player.muzzle_flash2);
-		lightapc_AttachToShotorg(player, player.muzzle_flash2, '5 0 0', "tag_flash2", gunmount);
+		vwep_AttachToShotorg(player, player.muzzle_flash2, '5 0 0', "tag_flash2", gunmount);
 	 
 		sound (gunmount, CH_WEAPON_A, SND_LIGHTAPC_T17MM_FIRE, VOL_BASE, ATTN_NORM);
 		sound (gunmount, CH_WEAPON_A, SND_HOOK_IMPACT, VOL_BASE, ATTN_NORM);
 
-		if (autocvar_g_vehicle_lightapc_t17mm_expelbulletcasings == 1)
+		if (autocvar_g_vehicle_lightapc_t17mm_expelbulletcasings)
 		{
-			if (autocvar_g_casings >= 2)
-			{
-				lightapc_SpawnCasing (((random () * 50 + 50) * v_right) - 
+			vwep_SpawnCasing (((random () * 50 + 50) * v_right) - 
 						(v_forward * (random () * 25 + 25)) - 
 						((random () * 12 + 20) * v_up), 2, 
-				vectoangles(v_forward),'0 250 0', 100, 29, gunmount, "tag_casings");
-			}
+			vectoangles(v_forward),'0 250 0', 100, 29, gunmount, "tag_casings");
 		}
 
 		gunmount.vehicle_ammo1 -= autocvar_g_vehicle_lightapc_t17mm_ammo_cost;

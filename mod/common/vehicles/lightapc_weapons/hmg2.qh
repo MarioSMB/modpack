@@ -1,0 +1,34 @@
+#ifdef SVQC
+
+AUTOCVAR(g_vehicle_lightapc_hmg2_expelbulletcasings, bool, false, "");
+AUTOCVAR(g_vehicle_lightapc_hmg2_damage, float, 30, "");
+AUTOCVAR(g_vehicle_lightapc_hmg2_refire, float, 0.07, "");
+AUTOCVAR(g_vehicle_lightapc_hmg2_spread, float, 0.015, "");
+AUTOCVAR(g_vehicle_lightapc_hmg2_ammo_cost, int, 1, "");
+AUTOCVAR(g_vehicle_lightapc_hmg2_ammo_max, int, 100, "");
+AUTOCVAR(g_vehicle_lightapc_hmg2_ammo_regen, int, 30, "");
+AUTOCVAR(g_vehicle_lightapc_hmg2_ammo_regen_pause, float, 2, "");
+AUTOCVAR(g_vehicle_lightapc_hmg2_force, float, 9, "");
+AUTOCVAR(g_vehicle_lightapc_hmg2_solidpenetration, float, 16, "");
+
+void lightapc_hmg2(entity player, entity gunmount)
+{
+	if(PHYS_INPUT_BUTTON_ATCK(player) && gunmount.vehicle_ammo1 >= autocvar_g_vehicle_lightapc_hmg2_ammo_cost && gunmount.attack_finished_single[0] <= time)
+	{
+		gunmount.cnt = time;
+		vwep_hmg2_attack("tag_mgun", gunmount, player, DEATH_VH_SPID_MINIGUN.m_id, autocvar_g_vehicle_lightapc_hmg2_damage, autocvar_g_vehicle_lightapc_hmg2_spread, autocvar_g_vehicle_lightapc_hmg2_force,
+				autocvar_g_vehicle_lightapc_hmg2_solidpenetration, autocvar_g_vehicle_lightapc_hmg2_expelbulletcasings);
+		gunmount.vehicle_ammo1 -= autocvar_g_vehicle_lightapc_hmg2_ammo_cost;
+		gunmount.attack_finished_single[0] = time + autocvar_g_vehicle_lightapc_hmg2_refire;
+	}
+	else
+	{
+		vehicles_regen(gunmount, gunmount.cnt, vehicle_ammo1, autocvar_g_vehicle_lightapc_hmg2_ammo_max,
+										   autocvar_g_vehicle_lightapc_hmg2_ammo_regen_pause,
+										   autocvar_g_vehicle_lightapc_hmg2_ammo_regen, frametime, false);
+	}
+
+	player.vehicle_ammo1 = (gunmount.vehicle_ammo1 / autocvar_g_vehicle_lightapc_hmg2_ammo_max) * 100;
+}
+
+#endif

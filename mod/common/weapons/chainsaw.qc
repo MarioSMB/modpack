@@ -18,39 +18,39 @@ EFFECT(0, IMPACT_FLESH,           "impact_flesh")
 EFFECT(0, IMPACT_METAL,           "impact_metal")
 #endif
 
-float autocvar_g_balance_chainsaw_reload_ammo = 0;
-float autocvar_g_balance_chainsaw_reload_time = 2;
-float autocvar_g_balance_chainsaw_melee_ammo = 1;
-float autocvar_g_balance_chainsaw_melee_animtime = 0.07;
-float autocvar_g_balance_chainsaw_melee_damage = 20;
-float autocvar_g_balance_chainsaw_melee_force = 50;
-float autocvar_g_balance_chainsaw_melee_nonplayerdamage = 20;
-float autocvar_g_balance_chainsaw_melee_range = 160;
-float autocvar_g_balance_chainsaw_melee_refire = 0.07;
-float autocvar_g_balance_chainsaw_swing_ammo = 10;
-float autocvar_g_balance_chainsaw_swing_animtime = 1.15;
-float autocvar_g_balance_chainsaw_swing_damage = 15;
-float autocvar_g_balance_chainsaw_swing_force = 75;
-float autocvar_g_balance_chainsaw_swing_delay = 0.25;
-float autocvar_g_balance_chainsaw_swing_nonplayerdamage = 10;
-float autocvar_g_balance_chainsaw_swing_range = 140;
-float autocvar_g_balance_chainsaw_swing_side = 120;
-float autocvar_g_balance_chainsaw_swing_up = 30;
-float autocvar_g_balance_chainsaw_swing_time = 0.3;
-float autocvar_g_balance_chainsaw_swing_traces = 10;
-float autocvar_g_balance_chainsaw_swing_refire = 1.25;
-float autocvar_g_balance_chainsaw_switchdelay_drop = 0.2;
-float autocvar_g_balance_chainsaw_switchdelay_raise = 0.2;
-string autocvar_g_balance_chainsaw_weaponreplace = "";
-float autocvar_g_balance_chainsaw_weaponstart = 0;
-float autocvar_g_balance_chainsaw_weaponstartoverride = -1;
-float autocvar_g_balance_chainsaw_weaponthrowable = 1;
+AUTOCVAR(g_balance_chainsaw_reload_ammo, float, 0, "");
+AUTOCVAR(g_balance_chainsaw_reload_time, float, 2, "");
+AUTOCVAR(g_balance_chainsaw_melee_ammo, float, 1, "");
+AUTOCVAR(g_balance_chainsaw_melee_animtime, float, 0.07, "");
+AUTOCVAR(g_balance_chainsaw_melee_damage, float, 20, "");
+AUTOCVAR(g_balance_chainsaw_melee_force, float, 50, "");
+AUTOCVAR(g_balance_chainsaw_melee_nonplayerdamage, float, 20, "");
+AUTOCVAR(g_balance_chainsaw_melee_range, float, 160, "");
+AUTOCVAR(g_balance_chainsaw_melee_refire, float, 0.07, "");
+AUTOCVAR(g_balance_chainsaw_swing_ammo, float, 10, "");
+AUTOCVAR(g_balance_chainsaw_swing_animtime, float, 1.15, "");
+AUTOCVAR(g_balance_chainsaw_swing_damage, float, 15, "");
+AUTOCVAR(g_balance_chainsaw_swing_force, float, 75, "");
+AUTOCVAR(g_balance_chainsaw_swing_delay, float, 0.25, "");
+AUTOCVAR(g_balance_chainsaw_swing_nonplayerdamage, float, 10, "");
+AUTOCVAR(g_balance_chainsaw_swing_range, float, 140, "");
+AUTOCVAR(g_balance_chainsaw_swing_side, float, 120, "");
+AUTOCVAR(g_balance_chainsaw_swing_up, float, 30, "");
+AUTOCVAR(g_balance_chainsaw_swing_time, float, 0.3, "");
+AUTOCVAR(g_balance_chainsaw_swing_traces, float, 10, "");
+AUTOCVAR(g_balance_chainsaw_swing_refire, float, 1.25, "");
+AUTOCVAR(g_balance_chainsaw_switchdelay_drop, float, 0.2, "");
+AUTOCVAR(g_balance_chainsaw_switchdelay_raise, float, 0.2, "");
+AUTOCVAR(g_balance_chainsaw_weaponreplace, string, "", "");
+AUTOCVAR(g_balance_chainsaw_weaponstart, float, 0, "");
+AUTOCVAR(g_balance_chainsaw_weaponstartoverride, float, -1, "");
+AUTOCVAR(g_balance_chainsaw_weaponthrowable, float, 1, "");
 
 CLASS(Chainsaw, Weapon)
 /* ammotype  */ ATTRIB(Chainsaw, ammo_field, .int, ammo_fuel);
 /* impulse   */ ATTRIB(Chainsaw, impulse, int, 5);
 /* flags     */ ATTRIB(Chainsaw, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_TYPE_MELEE_SEC);
-/* rating    */ ATTRIB(Chainsaw, bot_pickupbasevalue, float, BOT_PICKUP_RATING_LOW);
+/* rating    */ ATTRIB(Chainsaw, bot_pickupbasevalue, float, 6000);
 /* color     */ ATTRIB(Chainsaw, wpcolor, vector, '0.5 0.45 0.25');
 /* modelname */ ATTRIB(Chainsaw, mdl, string, "chainsaw");
 #ifndef MENUQC
@@ -114,7 +114,7 @@ void W_Chainsaw_Attack1(Weapon thiswep, entity actor, .entity weaponentity, int 
 {
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(chainsaw, melee_animtime), w_ready);
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(chainsaw, melee_ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(chainsaw, melee_ammo), weaponentity);
 
 	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR(chainsaw, melee_damage), WEP_CVAR(chainsaw, melee_range));
 
@@ -280,7 +280,7 @@ void W_Chainsaw_Attack2(Weapon thiswep, entity actor, .entity weaponentity, int 
 	if(WEP_CVAR(chainsaw, swing_animtime))
 		animdecide_setaction(actor, ANIMACTION_MELEE, true);
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(chainsaw, swing_ammo));
+	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(chainsaw, swing_ammo), weaponentity);
 
 	entity meleetemp = new_pure(meleetemp);
 	meleetemp.realowner = actor;
@@ -293,12 +293,12 @@ void W_Chainsaw_Attack2(Weapon thiswep, entity actor, .entity weaponentity, int 
 .bool chainsaw_held_down;
 .float chainsaw_snd_time;
 
-METHOD(Chainsaw, wr_aim, void(entity thiswep, entity actor))
+METHOD(Chainsaw, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     if(vdist(actor.origin - actor.enemy.origin, <=, WEP_CVAR(chainsaw, swing_range)))
-        PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, 1000000, 0, 0.001, false);
+        PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false);
     else
-        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, 1000000, 0, 0.001, false);
+        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false);
 }
 METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
@@ -337,7 +337,7 @@ METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponenti
     	actor.(weaponentity).chainsaw_snd_time = 0;
     }
 
-    if(PS(actor).m_switchweapon != WEP_CHAINSAW)
+    if(actor.(weaponentity).m_switchweapon != WEP_CHAINSAW)
     {
     	actor.(weaponentity).chainsaw_snd_time = 0;
     	sound(actor, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
@@ -372,13 +372,13 @@ METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponenti
     		actor.(thiswep.ammo_field) -= 1; // we lose a bit of fuel every second
     }
 }
-METHOD(Chainsaw, wr_checkammo1, bool(entity thiswep, entity actor))
+METHOD(Chainsaw, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(chainsaw, melee_ammo);
     ammo_amount += actor.(weapon_load[WEP_CHAINSAW.m_id]) >= WEP_CVAR(chainsaw, melee_ammo);
     return ammo_amount;
 }
-METHOD(Chainsaw, wr_checkammo2, bool(entity thiswep, entity actor))
+METHOD(Chainsaw, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     if(IS_BOT_CLIENT(actor))
     if(vdist(actor.origin - actor.enemy.origin, >, WEP_CVAR(chainsaw, swing_range)))
@@ -399,7 +399,7 @@ METHOD(Chainsaw, wr_killmessage, Notification(entity thiswep))
 {
     return WEAPON_CHAINSAW_MURDER;
 }
-METHOD(Chainsaw, wr_drop, void(entity thiswep, entity actor))
+METHOD(Chainsaw, wr_drop, void(entity thiswep, entity actor, .entity weaponentity))
 {
 	sound(actor, CH_SHOTS_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 }

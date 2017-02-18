@@ -19,12 +19,15 @@ AUTOCVAR(g_za_spawn_delay, float, 5, "");
 
 void za_SpawnMonster()
 {
-	if(gameover) { return; }
+	if(game_stopped) { return; }
 
 	entity e = spawn();
 
 	if(MoveToRandomMapLocation(e, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
+	{
+		e.angles = '0 0 0';
 		spawnmonster(e, autocvar_g_za_spawnmonster, 0, NULL, NULL, e.origin, false, false, 2);
+	}
 }
 
 void za_SetEnemy(entity player)
@@ -79,7 +82,11 @@ MUTATOR_HOOKFUNCTION(za, PlayerPhysics)
 	entity mon = Monsters_from(player.monsterid);
 
 	player.weapons = '0 0 0';
-	PS(player).m_switchweapon = WEP_Null;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		player.(weaponentity).m_switchweapon = WEP_Null;
+	}
 	STAT(PL_MIN, player) = mon.mins;
 	STAT(PL_MAX, player) = mon.maxs;
 	STAT(PL_CROUCH_MIN, player) = mon.mins;
@@ -99,6 +106,7 @@ MUTATOR_HOOKFUNCTION(za, PlayerPreThink)
 
 	if(!player.monsterid || time < player.attack_finished_single[0]) { return false; }
 
+	.entity weaponentity = weaponentities[0];
 	Monster mon = Monsters_from(player.monsterid);
 	mon.mr_think(mon, player);
 
@@ -106,7 +114,7 @@ MUTATOR_HOOKFUNCTION(za, PlayerPreThink)
 	if(player.monster_attackfunc)
 	{
 		za_SetEnemy(player);
-		if(player.monster_attackfunc(MONSTER_ATTACK_MELEE, player, player.enemy))
+		if(player.monster_attackfunc(MONSTER_ATTACK_MELEE, player, player.enemy, weaponentity))
 			animdecide_setaction(player, ANIMACTION_MELEE, false);
 	}
 
@@ -114,7 +122,7 @@ MUTATOR_HOOKFUNCTION(za, PlayerPreThink)
 	if(player.monster_attackfunc)
 	{
 		za_SetEnemy(player);
-		if(player.monster_attackfunc(MONSTER_ATTACK_RANGED, player, player.enemy))
+		if(player.monster_attackfunc(MONSTER_ATTACK_RANGED, player, player.enemy, weaponentity))
 			animdecide_setaction(player, ANIMACTION_SHOOT, false);
 	}
 }
@@ -154,12 +162,18 @@ MUTATOR_HOOKFUNCTION(za, PlayerDies)
 
 	Monster mon = Monsters_from(frag_attacker.monsterid);
 
+	if(frag_attacker.enemy == frag_target)
+		frag_attacker.enemy = NULL;
+
 	frag_target.monsterid = mon.monsterid;
 	frag_target.health = frag_attacker.max_health;
 	frag_target.za_maxhealth = frag_attacker.max_health;
 	frag_target.weapons = '0 0 0';
-	frag_attacker.enemy = NULL;
-	PS(frag_target).m_switchweapon = WEP_Null;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		frag_target.(weaponentity).m_switchweapon = WEP_Null;
+	}
 	STAT(PL_MIN, frag_target) = mon.mins;
 	STAT(PL_MAX, frag_target) = mon.maxs;
 	STAT(PL_CROUCH_MIN, frag_target) = mon.mins;

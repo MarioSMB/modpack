@@ -64,7 +64,7 @@ void pb_Attach(entity host, entity slave)
 		host.monster_moveflags = MONSTER_MOVE_NOMOVE;
 	}
 	
-	RemoveGrapplingHook(slave);
+	RemoveGrapplingHooks(slave);
 	
 	Send_Notification(NOTIF_ONE, slave, MSG_CENTER, CENTER_PIGGYBACK_RIDING, (IS_MONSTER(host)) ? host.monster_name : host.netname);
 	if(IS_PLAYER(host))
@@ -177,7 +177,7 @@ MUTATOR_HOOKFUNCTION(piggyback, MatchEnd)
 
 MUTATOR_HOOKFUNCTION(piggyback, PlayerUseKey)
 {
-	if(MUTATOR_RETURNVALUE || gameover) { return; }
+	if(MUTATOR_RETURNVALUE || game_stopped) { return; }
 
 	entity player = M_ARGV(0, entity);
 	
@@ -361,11 +361,9 @@ MUTATOR_HOOKFUNCTION(piggyback, FixPlayermodel)
 
 	// this was the nearest hook to the original code
 	bool do_crouch = PHYS_INPUT_BUTTON_CROUCH(player);
-	.entity weaponentity = weaponentities[0]; // TODO: unhardcode
 	if(player.hook_state
 	|| player.vehicle
 	|| STAT(FROZEN, player)
-	|| ((PS(player).m_weapon == WEP_SHOTGUN || PS(player).m_weapon == WEP_SHOCKWAVE) && player.(weaponentity).wframe == WFRAME_FIRE2 && time < player.(weaponentity).weapon_nextthink)
 	) { do_crouch = false; }
 
 	if(!do_crouch && player.crouch)

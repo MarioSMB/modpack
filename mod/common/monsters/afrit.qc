@@ -12,7 +12,7 @@ REGISTER_DEATHTYPE(MONSTER_AFRIT,          DEATH_SELF_MON_AFRIT,          DEATH_
 #endif
 
 CLASS(Afrit, Monster)
-    ATTRIB(Afrit, spawnflags, int, MONSTER_TYPE_FLY | MON_FLAG_RANGED | MONSTER_SIZE_QUAKE);
+    ATTRIB(Afrit, spawnflags, int, MONSTER_TYPE_FLY | MON_FLAG_RANGED | MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN);
     ATTRIB(Afrit, mins, vector, '-16 -16 -24');
     ATTRIB(Afrit, maxs, vector, '16 16 24');
 #ifndef MENUQC
@@ -114,7 +114,7 @@ void M_Afrit_Attack_Fireball(entity this)
 	CSQCProjectile(missile, true, PROJECTILE_FIREMINE, true);
 }
 
-bool M_Afrit_Attack(int attack_type, entity actor, entity targ)
+bool M_Afrit_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
 	switch(attack_type)
 	{

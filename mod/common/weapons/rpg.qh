@@ -1,0 +1,15 @@
+#pragma once
+
+MODEL(RPG_MUZZLEFLASH,           "models/flash.md3");
+MODEL(RPG_VIEW,                  W_Model("h_rpg7.iqm"));
+MODEL(RPG_WORLD,                 W_Model("v_rpg7.md3"));
+MODEL(RPG_ITEM,                  W_Model("g_rpg7.md3"));
+
+MODEL(RPG_EMPTY_VIEW,                  W_Model("h_rpg7_empty.iqm"));
+MODEL(RPG_EMPTY_WORLD,                 W_Model("v_rpg7_empty.md3"));
+
+SOUND(RPG_FIRE, W_Sound("rpg7_fire"));
+
+int PROJECTILE_RPG;
+
+STATIC_INIT(RPGProjectile) { PROJECTILE_RPG = MOD_PROJECTILES++; }

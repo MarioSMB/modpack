@@ -16,7 +16,7 @@ const int BOGGLE_NUM_CNT = 4;
 
 const int BOGGLE_TILE_SIZE = 5;
 
-float autocvar_sv_minigames_boggle_timelimit = 180; // 3 minutes
+AUTOCVAR(sv_minigames_boggle_timelimit, float, 180, ""); // 3 minutes
 
 .string boggle_letter;
 .int boggle_wordscore;

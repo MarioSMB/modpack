@@ -273,7 +273,7 @@ void dotc_dronesquad_think(entity this)
 	vector vf, vr, vu, form_loc;
 	float deltatime, dist, spd;
 
-	if(gameover)
+	if(game_stopped)
 	{
 		this.enemy = NULL;
 		this.velocity = '0 0 0';

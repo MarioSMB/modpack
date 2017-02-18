@@ -9,7 +9,7 @@ SOUND(VORE_FIRESPIKE, W_Sound("electro_fire"));
 #endif
 
 CLASS(Vore, Monster)
-    ATTRIB(Vore, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_MELEE | MON_FLAG_RANGED);
+    ATTRIB(Vore, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MON_FLAG_MELEE | MON_FLAG_RANGED);
     ATTRIB(Vore, mins, vector, '-32 -32 -24');
     ATTRIB(Vore, maxs, vector, '32 32 64');
 #ifndef MENUQC
@@ -185,9 +185,8 @@ void M_Vore_Attack_Spike(entity this, vector dir)
 	CSQCProjectile(missile, true, PROJECTILE_MAGE_SPIKE, true);
 }
 
-bool M_Vore_Attack(int attack_type, entity actor, entity targ)
+bool M_Vore_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
-	.entity weaponentity = weaponentities[0];
 	switch(attack_type)
 	{
 		case MONSTER_ATTACK_MELEE:

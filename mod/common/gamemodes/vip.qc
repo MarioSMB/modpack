@@ -398,7 +398,7 @@ MUTATOR_HOOKFUNCTION(vip, SpectateCopy)
 
 MUTATOR_HOOKFUNCTION(vip, PlayerUseKey)
 {
-	if(MUTATOR_RETURNVALUE || gameover || round_handler_IsRoundStarted()) { return; }
+	if(MUTATOR_RETURNVALUE || game_stopped || round_handler_IsRoundStarted()) { return; }
 
 	entity player = M_ARGV(0, entity);
 

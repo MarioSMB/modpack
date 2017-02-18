@@ -11,7 +11,7 @@ REGISTER_DEATHTYPE(MONSTER_ROTFISH_MELEE,            				DEATH_SELF_MON_ROTFISH_
 #endif
 
 CLASS(Rotfish, Monster)
-    ATTRIB(Rotfish, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_MELEE | MONSTER_TYPE_SWIM);
+    ATTRIB(Rotfish, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MON_FLAG_MELEE | MONSTER_TYPE_SWIM);
     ATTRIB(Rotfish, mins, vector, '-20 -20 -31');
     ATTRIB(Rotfish, maxs, vector, '20 20 20');
 #ifndef MENUQC
@@ -49,7 +49,7 @@ const float rotfish_anim_swim   = 2;
 const float rotfish_anim_pain   = 3;
 */
 
-bool M_Rotfish_Attack(int attack_type, entity actor, entity targ)
+bool M_Rotfish_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
 	switch(attack_type)
 	{

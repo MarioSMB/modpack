@@ -6,7 +6,7 @@ AUTOCVAR(g_turrets_weapon_damagerate, float, 1, _("Multiplier for the amount of 
 .entity lastkilled;
 .entity lastkiller;
 
-MUTATOR_HOOKFUNCTION(damage_mod, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(damage_mod, Damage_Calculate)
 {
 	entity frag_target = M_ARGV(2, entity);
 	float frag_deathtype = M_ARGV(3, float);

@@ -10,7 +10,7 @@ REGISTER_DEATHTYPE(MONSTER_ROTTWEILER_MELEE,            			DEATH_SELF_MON_ROTTWE
 #endif
 
 CLASS(Rottweiler, Monster)
-    ATTRIB(Rottweiler, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_MELEE | MON_FLAG_RIDE);
+    ATTRIB(Rottweiler, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MON_FLAG_MELEE | MON_FLAG_RIDE);
     ATTRIB(Rottweiler, mins, vector, '-16 -16 -24');
     ATTRIB(Rottweiler, maxs, vector, '16 16 12');
 #ifndef MENUQC
@@ -52,7 +52,7 @@ const float rottweiler_anim_idle		= 7;
 const float rottweiler_anim_walk		= 8;
 */
 
-bool M_Rottweiler_Attack(int attack_type, entity actor, entity targ)
+bool M_Rottweiler_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
 	switch(attack_type)
 	{

@@ -2,11 +2,8 @@ STATIC_INIT(mod_cmds)
 {
 	localcmd("\nalias ircmsg \"sv_cmd ircmsg ${* ?}\"\n");
 	localcmd("\nalias _ircmessage \"ircmsg ${* ?}\"\n");
-
 	localcmd("\nalias chlevel \"sv_cmd chlevel ${* ?}\"\n");
-
 	localcmd("\nalias stufftoall \"sv_cmd stufftoall ${* ?}\"\n");
-
 	localcmd("\nalias dumpmodcvars \"sv_cmd dumpmodcvars ${* ?}\"\n");
 }
 
@@ -26,7 +23,7 @@ void IRCSay(string msgstr)
 	FOREACH_CLIENTSLOT(true,
 	{
 		if(!intermission_running)
-		if((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || gameover)))
+		if((autocvar_g_chat_nospectators == 1) || (autocvar_g_chat_nospectators == 2 && !(warmup_stage || game_stopped)))
 		if(IS_PLAYER(it))
 			continue;
 		if(IS_REAL_CLIENT(it))

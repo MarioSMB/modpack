@@ -14,7 +14,7 @@ vector dotc_movestep(entity this, vector v_target)
 	vector v_test, v_best = nil;
 	float  d_test = 0, d_best;
 	
-	d_best = MAX_SHOT_DISTANCE;
+	d_best = max_shot_distance;
 	
 	dotc_movestep_blocked = 0;
 	fixedmakevectors(this.angles);
@@ -77,7 +77,7 @@ vector dotc_movestep(entity this, vector v_target)
 			}
 		}
 		
-		if(d_test != MAX_SHOT_DISTANCE)
+		if(d_test != max_shot_distance)
 		{
 			te_lightning1(NULL, this.origin, v_best);	
 			te_lightning1(NULL, this.origin, v_target);	

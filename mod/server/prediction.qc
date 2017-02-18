@@ -8,7 +8,7 @@ MUTATOR_HOOKFUNCTION(prediction, PlayerPhysics)
 	{
 		entity player = M_ARGV(0, entity);
 		if(player.disableclientprediction == -1 || !player.disableclientprediction)
-		if(player.move_movetype != MOVETYPE_FOLLOW && !player.vehicle && !gameover && !IS_SPEC(player) && !g_bugrigs) // unpredictable
+		if(player.move_movetype != MOVETYPE_FOLLOW && !player.vehicle && !game_stopped && !IS_SPEC(player) && !g_bugrigs) // unpredictable
 			player.disableclientprediction = -1; // should be early enough for this to take effect
 	}
 }
@@ -16,19 +16,19 @@ MUTATOR_HOOKFUNCTION(prediction, PlayerPhysics)
 MUTATOR_HOOKFUNCTION(prediction, PlayerPreThink)
 {
 	// we need to repeat some of the checks here, as physics isn't called on the server after a certain point
-	if(autocvar_g_physics_predictall)
-	{
-		entity player = M_ARGV(0, entity);
-		if(gameover || IS_SPEC(player))
-			player.disableclientprediction = 0;
-	}
+	if(!autocvar_g_physics_predictall)
+		return;
+
+	entity player = M_ARGV(0, entity);
+	if(game_stopped || IS_SPEC(player))
+		player.disableclientprediction = 0;
 }
 
 MUTATOR_HOOKFUNCTION(prediction, VehicleEnter)
 {
-	if(autocvar_g_physics_predictall)
-	{
-		entity player = M_ARGV(0, entity);
-		player.disableclientprediction = 0; // no prediction for vehicles (yet)
-	}
+	if(!autocvar_g_physics_predictall)
+		return;
+
+	entity player = M_ARGV(0, entity);
+	player.disableclientprediction = 0; // no prediction for vehicles (yet)
 }

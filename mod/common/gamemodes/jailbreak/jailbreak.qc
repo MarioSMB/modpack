@@ -475,8 +475,6 @@ void JB_Imprison(entity targ, entity attacker)
 	if(!targ.jb_had_unlimited_ammo)
 		targ.items |= IT_UNLIMITED_WEAPON_AMMO;
 
-	targ.weapon_blocked = true;
-
 	nades_Clear(targ);
 
 	LOG_DEBUGF("Imprisoning %s^7, attacker: %e with netname: %s\n", targ.netname, attacker, attacker.netname);
@@ -513,7 +511,6 @@ void JB_Release(entity player, entity saviour)
 
 	STAT(JB_ISPRISONED, player) = false;
 	player.jb_imprisoner = NULL;
-	player.weapon_blocked = false;
 	player.player_blocked = false; // just incase
 
 	if(!player.jb_had_unlimited_ammo)
@@ -544,7 +541,7 @@ void JB_TorturePrisoners(int theteam)
 
 void JB_Torture_Think(entity this)
 {
-	if(gameover)
+	if(game_stopped)
 	{
 		delete(this);
 		return;
@@ -713,7 +710,7 @@ void JB_Jail_Touch(entity this, entity toucher)
 
 	if(toucher.classname == "grapplinghook")
 	{
-		RemoveGrapplingHook(toucher.realowner);
+		RemoveHook(toucher);
 		return;
 	}
 
@@ -822,7 +819,7 @@ float JB_ControlPoint_Cooldown(entity e)
 		f	 = autocvar_g_jailbreak_controlpoint_idletime_factor;
 	}
 
-	return base + pow(c, pw) * f * base;
+	return base + (c ** pw) * f * base;
 }
 
 float JB_ControlPoint_InitialCooldown(entity e)
@@ -976,7 +973,7 @@ void JB_ControlPoint_Touch(entity this, entity toucher)
 	if(toucher.health < 1 || STAT(FROZEN, toucher))
 		return;
 
-	if(gameover)
+	if(game_stopped)
 		return;
 
 	if(!IS_PLAYER(toucher))
@@ -1170,7 +1167,6 @@ MUTATOR_HOOKFUNCTION(jb, reset_map_players)
 		}
 
 		it.player_blocked = 0;
-		it.weapon_blocked = false;
 		STAT(ROUNDLOST, it) = false;
 		it.clientcamera = it;
 	});
@@ -1283,7 +1279,7 @@ MUTATOR_HOOKFUNCTION(jb, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(gameover)
+	if(game_stopped)
 	{
 		STAT(JB_ISPRISONED, player) = false;
 		return;
@@ -1320,7 +1316,7 @@ MUTATOR_HOOKFUNCTION(jb, PlayerPreThink)
 		JB_Release(player, NULL);
 }
 
-MUTATOR_HOOKFUNCTION(jb, PlayerDamage_Calculate)
+MUTATOR_HOOKFUNCTION(jb, Damage_Calculate)
 {
 	entity frag_target = M_ARGV(2, entity);
 	float frag_deathtype = M_ARGV(3, float);

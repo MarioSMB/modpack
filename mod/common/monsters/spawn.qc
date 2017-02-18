@@ -6,7 +6,7 @@ MODEL(MON_TARBABY, M_Model("tarbaby.mdl"));
 #endif
 
 CLASS(Tarbaby, Monster)
-    ATTRIB(Tarbaby, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_MELEE);
+    ATTRIB(Tarbaby, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MON_FLAG_MELEE);
     ATTRIB(Tarbaby, mins, vector, '-16 -16 -24');
     ATTRIB(Tarbaby, maxs, vector, '16 16 40');
 #ifndef MENUQC
@@ -66,7 +66,7 @@ void M_Tarbaby_Attack_Leap_Touch(entity this, entity toucher)
 	}
 }
 
-bool M_Tarbaby_Attack(int attack_type, entity actor, entity targ)
+bool M_Tarbaby_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
 	switch(attack_type)
 	{

@@ -8,6 +8,14 @@ MUTATOR_HOOKFUNCTION(mutator_mod, OnEntityPreSpawn)
 		if(thecvar == "")
 			return true; // empty string means remove?
 		else
-			ent.classname = strzone(thecvar); // NOTE: zoned, but never unzoned
+		{
+			RandomSelection_Init();
+			FOREACH_WORD(thecvar, true,
+			{
+				RandomSelection_AddString(it, 1, 1);
+			});
+			string thestring = RandomSelection_chosen_string;
+			ent.classname = strzone(thestring); // NOTE: zoned, but never unzoned
+		}
 	}
 }

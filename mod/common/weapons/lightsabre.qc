@@ -16,44 +16,44 @@ Sound SND_LIGHTSABRE_HIT_RANDOM() {
     return Sounds_from(SND_LIGHTSABRE_HIT1.m_id + floor(prandom() * 3));
 }
 
-float autocvar_g_balance_lightsabre_primary_animtime = 0.8;
-float autocvar_g_balance_lightsabre_primary_damage = 65;
-float autocvar_g_balance_lightsabre_primary_force = 200;
-float autocvar_g_balance_lightsabre_primary_melee_delay = 0.1;
-float autocvar_g_balance_lightsabre_primary_melee_multihit = 1;
-float autocvar_g_balance_lightsabre_primary_melee_no_doubleslap = 1;
-float autocvar_g_balance_lightsabre_primary_melee_nonplayerdamage = 40;
-float autocvar_g_balance_lightsabre_primary_melee_range = 120;
-float autocvar_g_balance_lightsabre_primary_melee_swing_side = 80;
-float autocvar_g_balance_lightsabre_primary_melee_swing_up = 60;
-float autocvar_g_balance_lightsabre_primary_melee_time = 0.15;
-float autocvar_g_balance_lightsabre_primary_melee_traces = 10;
-float autocvar_g_balance_lightsabre_primary_refire = 0.5;
-float autocvar_g_balance_lightsabre_secondary_damage = 55;
-float autocvar_g_balance_lightsabre_secondary_animtime = 0.5;
-float autocvar_g_balance_lightsabre_secondary_force = 200;
-float autocvar_g_balance_lightsabre_secondary_melee_delay = 0.25;
-float autocvar_g_balance_lightsabre_secondary_melee_multihit = 1;
-float autocvar_g_balance_lightsabre_secondary_melee_no_doubleslap = 1;
-float autocvar_g_balance_lightsabre_secondary_melee_nonplayerdamage = 40;
-float autocvar_g_balance_lightsabre_secondary_melee_range = 120;
-float autocvar_g_balance_lightsabre_secondary_melee_swing_side = -80;
-float autocvar_g_balance_lightsabre_secondary_melee_swing_up = -50;
-float autocvar_g_balance_lightsabre_secondary_melee_time = 0.15;
-float autocvar_g_balance_lightsabre_secondary_melee_traces = 10;
-float autocvar_g_balance_lightsabre_secondary_refire = 0.65;
-float autocvar_g_balance_lightsabre_switchdelay_drop = 0.2;
-float autocvar_g_balance_lightsabre_switchdelay_raise = 0.2;
-string autocvar_g_balance_lightsabre_weaponreplace = "";
-float autocvar_g_balance_lightsabre_weaponstart = 0;
-float autocvar_g_balance_lightsabre_weaponstartoverride = -1;
-float autocvar_g_balance_lightsabre_weaponthrowable = 0;
+AUTOCVAR(g_balance_lightsabre_primary_animtime, float, 0.8, "");
+AUTOCVAR(g_balance_lightsabre_primary_damage, float, 70, "");
+AUTOCVAR(g_balance_lightsabre_primary_force, float, 200, "");
+AUTOCVAR(g_balance_lightsabre_primary_melee_delay, float, 0.1, "");
+AUTOCVAR(g_balance_lightsabre_primary_melee_multihit, float, 1, "");
+AUTOCVAR(g_balance_lightsabre_primary_melee_no_doubleslap, float, 1, "");
+AUTOCVAR(g_balance_lightsabre_primary_melee_nonplayerdamage, float, 40, "");
+AUTOCVAR(g_balance_lightsabre_primary_melee_range, float, 120, "");
+AUTOCVAR(g_balance_lightsabre_primary_melee_swing_side, float, 80, "");
+AUTOCVAR(g_balance_lightsabre_primary_melee_swing_up, float, 60, "");
+AUTOCVAR(g_balance_lightsabre_primary_melee_time, float, 0.15, "");
+AUTOCVAR(g_balance_lightsabre_primary_melee_traces, float, 10, "");
+AUTOCVAR(g_balance_lightsabre_primary_refire, float, 0.5, "");
+AUTOCVAR(g_balance_lightsabre_secondary_damage, float, 20, "");
+AUTOCVAR(g_balance_lightsabre_secondary_animtime, float, 0.35, "");
+AUTOCVAR(g_balance_lightsabre_secondary_force, float, 200, "");
+AUTOCVAR(g_balance_lightsabre_secondary_melee_delay, float, 0.25, "");
+AUTOCVAR(g_balance_lightsabre_secondary_melee_multihit, float, 1, "");
+AUTOCVAR(g_balance_lightsabre_secondary_melee_no_doubleslap, float, 1, "");
+AUTOCVAR(g_balance_lightsabre_secondary_melee_nonplayerdamage, float, 40, "");
+AUTOCVAR(g_balance_lightsabre_secondary_melee_range, float, 120, "");
+AUTOCVAR(g_balance_lightsabre_secondary_melee_swing_side, float, -80, "");
+AUTOCVAR(g_balance_lightsabre_secondary_melee_swing_up, float, -50, "");
+AUTOCVAR(g_balance_lightsabre_secondary_melee_time, float, 0.15, "");
+AUTOCVAR(g_balance_lightsabre_secondary_melee_traces, float, 10, "");
+AUTOCVAR(g_balance_lightsabre_secondary_refire, float, 0.35, "");
+AUTOCVAR(g_balance_lightsabre_switchdelay_drop, float, 0.15, "");
+AUTOCVAR(g_balance_lightsabre_switchdelay_raise, float, 0.15, "");
+AUTOCVAR(g_balance_lightsabre_weaponreplace, string, "", "");
+AUTOCVAR(g_balance_lightsabre_weaponstart, float, 0, "");
+AUTOCVAR(g_balance_lightsabre_weaponstartoverride, float, -1, "");
+AUTOCVAR(g_balance_lightsabre_weaponthrowable, float, 0, "");
 
 CLASS(Lightsabre, Weapon)
 /* ammotype  */ //ATTRIB(Lightsabre, ammo_field, .int, ammo_shells);
 /* impulse   */ ATTRIB(Lightsabre, impulse, int, 1);
 /* flags     */ ATTRIB(Lightsabre, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE);
-/* rating    */ ATTRIB(Lightsabre, bot_pickupbasevalue, float, BOT_PICKUP_RATING_LOW);
+/* rating    */ ATTRIB(Lightsabre, bot_pickupbasevalue, float, 6000);
 /* color     */ ATTRIB(Lightsabre, wpcolor, vector, '1 0.25 0.25');
 /* modelname */ ATTRIB(Lightsabre, mdl, string, "lightsabre");
 #ifndef MENUQC
@@ -102,6 +102,61 @@ MSG_MULTI_NOTIF(WEAPON_LIGHTSABRE_MURDER,   1,   NULL,        INFO_WEAPON_LIGHTS
 #ifdef SVQC
 spawnfunc(weapon_lightsabre) { weapon_defaultspawnfunc(this, WEP_LIGHTSABRE); }
 
+REGISTER_MUTATOR(lightsabre_evil, true);
+
+MUTATOR_HOOKFUNCTION(lightsabre_evil, Damage_Calculate)
+{
+	entity frag_attacker = M_ARGV(1, entity);
+	entity frag_target = M_ARGV(2, entity);
+	float frag_deathtype = M_ARGV(3, float);
+	float frag_damage = M_ARGV(4, float);
+	vector frag_force = M_ARGV(6, vector);
+
+	if(!IS_PLAYER(frag_target))
+		return;
+
+	if(DEATH_ISWEAPON(frag_deathtype, WEP_VORTEX) && (frag_target.weapons & WEPSET(LIGHTSABRE)))
+	{
+		bool have_lightsabre = false;
+		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+		{
+			.entity wepe = weaponentities[slot];
+			if(frag_target.(wepe).m_weapon == WEP_LIGHTSABRE)
+			{
+				have_lightsabre = true;
+				break;
+			}
+		}
+
+		if(!have_lightsabre)
+			return; // quicker to check for this than to loop through all melee entities
+
+		entity player_melee = NULL;
+		for(entity e = NULL; (e = find(e, classname, "meleetemp")); )
+		if(e.realowner == frag_target)
+		{
+			player_melee = e;
+			break;
+		}
+		if(!player_melee)
+			return;
+		makevectors (frag_attacker.v_angle);
+		float dot = normalize (frag_target.origin - frag_attacker.origin) * v_forward;
+
+		if(dot <= 0.3)
+			return;
+		makevectors(frag_target.v_angle);
+
+		M_ARGV(4, float) = 0; // no damage for this!
+		.entity weaponentity = player_melee.weaponentity_fld;
+		// no accuracy needed for this, really
+		FireRailgunBullet(frag_target, weaponentity, v_forward, frag_attacker.origin, frag_damage * 0.5, vlen(frag_force) * 0.5, 0, 0, 0, 0, WEP_VORTEX.m_id);
+
+		animdecide_setaction(frag_target, ANIMACTION_SHOOT, 1);
+		spamsound(frag_target, CH_WEAPON_A, SND(LIGHTSABRE_HIT_RANDOM()), VOL_BASE, ATTN_NORM);
+	}
+}
+
 .float lightsabre_hitshield;
 
 .float swing_prev;
@@ -114,7 +169,7 @@ bool W_Lightsabre_Melee_Block(entity this, entity player)
 	{
 		entity player_melee = NULL, e;
 
-		for(e = NULL; (e = find(e, classname, "melee_temp")); )
+		for(e = NULL; (e = find(e, classname, "meleetemp")); )
 		if(e.realowner == player)
 		{
 			player_melee = e;
@@ -125,6 +180,8 @@ bool W_Lightsabre_Melee_Block(entity this, entity player)
 
 		makevectors (player.v_angle);
 		float dot = normalize (myowner.origin - player.origin) * v_forward;
+
+		makevectors(myowner.v_angle); // reset v vectors
 
 		if(dot <= 0.3) { return false; }
 	}
@@ -137,8 +194,8 @@ bool W_Lightsabre_Melee_Block(entity this, entity player)
 			if(vdist(it.origin - myowner.origin, <, 256))
 			{
 				//LOG_INFO("Too close!\n");
-				float dot = normalize(myowner.origin - it.origin) * v_forward;
-				LOG_INFO("dot = ", ftos(dot), "\n");
+				float dot = normalize(it.origin - myowner.origin) * v_forward;
+				//LOG_INFO("dot = ", ftos(dot), "\n");
 				if(dot <= 0.3) { continue; }
 
 				//LOG_INFO("We got one!\n");
@@ -153,6 +210,8 @@ bool W_Lightsabre_Melee_Block(entity this, entity player)
 
 		if(!doneblock) { return false; }
 	}
+	else
+		return false; // didn't block it, must be a non-player entity
 
 	//if((myowner.v_angle_x - player.v_angle_x < 70) && (myowner.v_angle_x - player.v_angle_x > -70)) //Look up and down
 	//if((myowner.v_angle_y - player.v_angle_y > 160) || (myowner.v_angle_y - player.v_angle_y < -160)) //Side to side Facing eachother
@@ -170,10 +229,8 @@ void W_Lightsabre_Melee_Think(entity this)
 	float i, f, swing, swing_factor, swing_damage, meleetime, is_player;
 	entity target_victim;
 	vector targpos;
-	bool isprimary = !PHYS_INPUT_BUTTON_ATCK2(this.realowner);
-	int deathtype = WEP_LIGHTSABRE.m_id;
-	if(!isprimary)
-		deathtype |= HITTYPE_SECONDARY;
+	int deathtype = this.projectiledeathtype;
+	bool isprimary = !(deathtype & HITTYPE_SECONDARY);
 
 	if(!this.cnt) // set start time of melee
 	{
@@ -206,7 +263,8 @@ void W_Lightsabre_Melee_Think(entity this)
 
 		WarpZone_traceline_antilag(this, this.realowner.origin + this.realowner.view_ofs, targpos, false, this.realowner, ANTILAG_LATENCY(this.realowner));
 
-		W_Lightsabre_Melee_Block(this, NULL);
+		if(W_Lightsabre_Melee_Block(this, NULL))
+			accuracy_add(this.realowner, WEP_LIGHTSABRE.m_id, 0, (WEP_CVAR_BOTH(lightsabre, isprimary, melee_nonplayerdamage) * min(1, swing_factor + 1)));
 
 		// draw lightning beams for debugging
 		//te_lightning2(NULL, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
@@ -280,48 +338,51 @@ void W_Lightsabre_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 	entity meleetemp = new(meleetemp);
 	meleetemp.owner = meleetemp.realowner = actor;
 	setthink(meleetemp, W_Lightsabre_Melee_Think);
+	meleetemp.projectiledeathtype = WEP_LIGHTSABRE.m_id;
+	if(!isprimary)
+		meleetemp.projectiledeathtype |= HITTYPE_SECONDARY;
+	meleetemp.weaponentity_fld = weaponentity;
 	meleetemp.nextthink = time + WEP_CVAR_BOTH(lightsabre, isprimary, melee_delay) * W_WeaponRateFactor(actor);
 	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR_BOTH(lightsabre, isprimary, damage), WEP_CVAR_BOTH(lightsabre, isprimary, melee_range));
 }
 
-.bool lightsabre_active;
+// HACK: use tuba_instrument to avoid the need to manually network this from mod
+//.bool lightsabre_active;
 
-void lightsabre_active_send(entity this, int newactive);
 void W_LightSabre_SetActive(entity actor, .entity weaponentity, bool newactive, bool dosound)
 {
 	if(newactive)
 	{
-		actor.lightsabre_active = true;
-		actor.weaponname = "lightsabre_active";
+		actor.(weaponentity).tuba_instrument = true;
+		actor.(weaponentity).weaponname = "lightsabre_active";
 		if(dosound)
 			sound(actor, CH_WEAPON_A, SND_LIGHTSABRE_ACTIVATE, VOL_BASE, ATTEN_NORM);
 	}
 	else
 	{
-		actor.lightsabre_active = false;
-		actor.weaponname = "lightsabre";
+		actor.(weaponentity).tuba_instrument = false;
+		actor.(weaponentity).weaponname = "lightsabre";
 		if(dosound)
 			sound(actor, CH_WEAPON_A, SND_LIGHTSABRE_DEACTIVATE, VOL_BASE, ATTEN_NORM);
 	}
 
-	lightsabre_active_send(actor, actor.lightsabre_active);
 	actor.(weaponentity).state = WS_INUSE;
 	weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, 0.1, w_ready);
 }
 
-		METHOD(Lightsabre, wr_aim, void(entity thiswep, entity actor))
+		METHOD(Lightsabre, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 		{
 			if(random() >= 0.5)
-				PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, 1000000, 0, 0.001, false);
+				PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false);
 			else
-				PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, 1000000, 0, 0.001, false);
+				PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false);
 		}
 		METHOD(Lightsabre, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 		{
 			if((fire & 1) || (fire & 2))
 			if(weapon_prepareattack(thiswep, actor, weaponentity, (fire & 2), WEP_CVAR_BOTH(lightsabre, !(fire & 2), refire)))
 			{
-				if(!actor.lightsabre_active)
+				if(!actor.(weaponentity).tuba_instrument)
 				{
 					W_LightSabre_SetActive(actor, weaponentity, true, true);
 					//weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, WEP_CVAR_BOTH(lightsabre, !(fire & 2), animtime), w_ready);
@@ -335,20 +396,19 @@ void W_LightSabre_SetActive(entity actor, .entity weaponentity, bool newactive, 
 				}
 			}
 
-			if(PS(actor).m_switchweapon != WEP_LIGHTSABRE && actor.lightsabre_active)
+			if(actor.(weaponentity).m_switchweapon != WEP_LIGHTSABRE && actor.(weaponentity).tuba_instrument)
 				W_LightSabre_SetActive(actor, weaponentity, false, true);
 		}
-		METHOD(Lightsabre, wr_setup, void(entity thiswep, entity actor))
+		METHOD(Lightsabre, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
 		{
-			.entity weaponentity = weaponentities[0];
 			actor.ammo_field = ammo_none;
 			W_LightSabre_SetActive(actor, weaponentity, false, false);
 		}
-		METHOD(Lightsabre, wr_checkammo1, bool(entity thiswep, entity actor))
+		METHOD(Lightsabre, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 		{
 			return true;
 		}
-		METHOD(Lightsabre, wr_checkammo2, bool(entity thiswep, entity actor))
+		METHOD(Lightsabre, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 		{
 			return true;
 		}
@@ -364,44 +424,17 @@ void W_LightSabre_SetActive(entity actor, .entity weaponentity, bool newactive, 
 #elif defined(CSQC)
 METHOD(Lightsabre, wr_viewmodel, string(Lightsabre this, entity wep))
 {
-	return (this.lightsabre_active) ? "lightsabre_active" : "lightsabre";
+	return (wep.tuba_instrument) ? "lightsabre_active" : "lightsabre";
 }
 #endif
 
-REGISTER_NET_S2C(lightsabre_activate)
-#ifdef CSQC
-NET_HANDLE(lightsabre_activate, bool)
-{
-	int i = ReadByte();
-	return = true;
-	string s = (i == false) ? "lightsabre" : "lightsabre_active";
-	//Weapon wep = WEP_LIGHTSABRE;
-	//wep.mdl = s;
-	viewmodel.lightsabre_active = i;
-	CL_WeaponEntity_SetModel(viewmodel, s, false);
-}
-#endif
 #ifdef SVQC
-void lightsabre_active_send(entity this, int newactive)
-{
-	if(!IS_REAL_CLIENT(this)) return;
-
-	msg_entity = this;
-	int chan = MSG_ONE;
-	WriteHeader(chan, lightsabre_activate);
-	WriteByte(chan, newactive);
-}
-SPECTATE_COPY()
-{
-	if (this.lightsabre_active != spectatee.lightsabre_active)
-		lightsabre_active_send(this, this.lightsabre_active = spectatee.lightsabre_active);
-}
 METHOD(Lightsabre, wr_reload, void(Lightsabre this, entity actor, .entity weaponentity))
 {
 	// switch to alternate instruments :)
 	if (actor.(weaponentity).state == WS_READY)
 	{
-		W_LightSabre_SetActive(actor, weaponentity, ((actor.lightsabre_active) ? false : true), true);
+		W_LightSabre_SetActive(actor, weaponentity, ((actor.(weaponentity).tuba_instrument) ? false : true), true);
 	}
 }
 #endif

@@ -1,3 +1,4 @@
+#include "arena/module.inc"
 #include "conquest/module.inc"
 #include "dotc/module.inc"
 #include "jailbreak/module.inc"

@@ -10,7 +10,7 @@ REGISTER_DEATHTYPE(MONSTER_ENFORCER_PLASMA,            				DEATH_SELF_MON_ENFORC
 #endif
 
 CLASS(Enforcer, Monster)
-    ATTRIB(Enforcer, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_MELEE | MON_FLAG_RANGED);
+    ATTRIB(Enforcer, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MON_FLAG_MELEE | MON_FLAG_RANGED);
     ATTRIB(Enforcer, mins, vector, '-16 -16 -24');
     ATTRIB(Enforcer, maxs, vector, '16 16 40');
 #ifndef MENUQC
@@ -131,7 +131,7 @@ void M_Enforcer_Attack_Plasma(entity this)
 	this.attack_finished_single[0] = time + autocvar_g_monster_enforcer_attack_plasma_delay;
 }
 
-bool M_Enforcer_Attack(int attack_type, entity actor, entity targ)
+bool M_Enforcer_Attack(int attack_type, entity actor, entity targ, .entity weaponentity)
 {
 	switch(attack_type)
 	{

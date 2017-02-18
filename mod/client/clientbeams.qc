@@ -3,7 +3,69 @@ AUTOCVAR_SAVE(cl_vaporizerbeam,                    int,   0,      "Draw a client
 AUTOCVAR_SAVE(cl_vaporizerbeam_minping,            int,   160,    "Minimum ping for the client side beams to automatically enable");
 AUTOCVAR_SAVE(cl_particles_newvortexbeam,          bool,  false,  "Draw a fancy new vortex beam");
 
-float last_beam;
+float autocvar_g_trueaim_minrange; // TODO: stat?
+
+.float last_beam;
+
+vector w_shotend;
+vector w_shotorg;
+vector w_shotdir;
+int ClientBeam_HitCheck();
+
+int W_SetupShot_Dir_ProjectileSize_Range(entity ent, entity wepent, vector s_forward, vector mi, vector ma, float antilag, float recoil, Sound snd, float chan, float maxdamage, float range)
+{
+	float nudge = 1; // added to traceline target and subtracted from result  TOOD(divVerent): do we still need this? Doesn't the engine do this now for us?
+	vector vecs;
+	int oldsolid = ent.dphitcontentsmask;
+	if (IS_PLAYER(ent) && wepent.activeweapon == WEP_RIFLE)
+		ent.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+	else
+		ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+	WarpZone_TraceLine(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * range, MOVE_NOMONSTERS, ent);
+	ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
+
+	vector vf, vr, vu;
+	vf = v_forward;
+	vr = v_right;
+	vu = v_up;
+	w_shotend = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos); // warpzone support
+	v_forward = vf;
+	v_right = vr;
+	v_up = vu;
+
+	return = ClientBeam_HitCheck();
+
+	// un-adjust trueaim if shotend is too close
+	if(vdist(w_shotend - (ent.origin + ent.view_ofs), <, autocvar_g_trueaim_minrange))
+		w_shotend = ent.origin + ent.view_ofs + s_forward * autocvar_g_trueaim_minrange;
+
+	vector md = wepent.movedir;
+	if(md.x > 0)
+		vecs = md;
+	else
+		vecs = '0 0 0';
+
+	vector dv = v_right * -vecs.y + v_up * vecs.z;
+	w_shotorg = ent.origin + ent.view_ofs + dv;
+
+	// now move the shotorg forward as much as requested if possible
+	tracebox(w_shotorg, mi, ma, w_shotorg + v_forward * (vecs.x + nudge), MOVE_NORMAL, ent);
+	w_shotorg = trace_endpos - v_forward * nudge;
+	// calculate the shotdir from the chosen shotorg
+	w_shotdir = normalize(w_shotend - w_shotorg);
+
+	//vector prevdir = w_shotdir;
+	//vector prevorg = w_shotorg;
+	//vector prevend = w_shotend;
+
+	ent.dphitcontentsmask = oldsolid; // restore solid type (generally SOLID_SLIDEBOX)
+
+	// nudge w_shotend so a trace to w_shotend hits
+	w_shotend = w_shotend + normalize(w_shotend - w_shotorg) * nudge;
+	//if(w_shotend != prevend) { printf("SERVER: shotEND differs: %s - %s\n", vtos(w_shotend), vtos(prevend)); }
+	//if(w_shotorg != prevorg) { printf("SERVER: shotORG differs: %s - %s\n", vtos(w_shotorg), vtos(prevorg)); }
+	//if(w_shotdir != prevdir) { printf("SERVER: shotDIR differs: %s - %s\n", vtos(w_shotdir), vtos(prevdir)); }
+}
 
 //bool autocvar_cl_vaporizerbeam_particle = true;
 //float autocvar_cl_vaporizerbeam_lifetime = 0.8;
@@ -79,6 +141,85 @@ void FireClientBeam(vector start, vector end, bool hit)
 	}
 }
 
+int ClientBeam_HitCheck()
+{
+	int n;
+	if(trace_ent)
+		n = trace_ent.entnum;
+	else
+		n = trace_networkentity;
+	if(n < 1)
+		return SHOTTYPE_HITWORLD;
+	if(n > maxclients)
+		return SHOTTYPE_HITWORLD;
+	int t = entcs_GetTeam(n - 1);
+	if(teamplay && t == myteam)
+		return SHOTTYPE_HITTEAM;
+	if(t == NUM_SPECTATOR)
+		return SHOTTYPE_HITWORLD;
+	return SHOTTYPE_HITENEMY;
+}
+
+void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, entity player)
+{
+	if(time < wep.last_beam)
+		return;
+
+	if(wep.activeweapon == WEP_VAPORIZER || wep.activeweapon == WEP_VORTEX)
+	if(held)// || (wep.activeweapon == WEP_VORTEX && WEP_CVAR(vortex, secondary) && attack2_held && !WEP_CVAR(vortex, charge)))
+	if(autocvar_cl_vaporizerbeam > 0 || (player.ping >= autocvar_cl_vaporizerbeam_minping && autocvar_cl_vaporizerbeam != -1))
+	{
+		//vector v = '0 0 1' * getstati(STAT_VIEWHEIGHT);
+		entity rlplayer = CSQCModel_server2csqc(player_localentnum - 1);
+		if(!rlplayer)
+			rlplayer = csqcplayer; // fall back to the global
+
+		makevectors(view_angles);
+
+		//v_forward = view_forward;
+		//v_right = view_right;
+		//v_up = view_up;
+
+		int shottype = W_SetupShot_Dir_ProjectileSize_Range(rlplayer, wep, v_forward, '0 0 0', '0 0 0', false, 0, SND_Null, CH_WEAPON_A, 0, max_shot_distance);
+
+		bool hit = boolean(shottype == SHOTTYPE_HITENEMY || shottype == SHOTTYPE_HITTEAM); // also count team shots
+
+		int eff = particleeffectnum((hit ? EFFECT_VAPORIZER_HIT(myteam) : EFFECT_VAPORIZER(myteam)));
+		if(wep.activeweapon == WEP_VORTEX)
+		{
+			if(autocvar_cl_particles_oldvortexbeam)
+			{ /* keep insta beam */ }
+			else if(autocvar_cl_particles_newvortexbeam)
+				eff = particleeffectnum(EFFECT_VORTEX_BEAM_NEW);
+			else
+				eff = particleeffectnum(EFFECT_VORTEX_BEAM);
+		}
+
+		if(wep.activeweapon == WEP_VORTEX)
+			WarpZone_TrailParticles(player, eff, w_shotorg, w_shotend);
+		else if(wep.activeweapon == WEP_VAPORIZER)
+			FireClientBeam(w_shotorg, w_shotend, hit);
+
+		//sound(player, CH_SHOTS, "weapons/minstanexfire.wav", VOL_BASE, ATTEN_LARGE);
+
+		if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
+		if(autocvar_cl_particles_newvortexbeam && wep.activeweapon == WEP_VORTEX)
+			__pointparticles(particleeffectnum(EFFECT_VORTEX_IMPACT_NEW), w_shotend, '0 0 0', 1);
+		else
+			__pointparticles(particleeffectnum(EFFECT_VORTEX_IMPACT), w_shotend, '0 0 0', 1);
+
+		if(wep.activeweapon == WEP_VAPORIZER)
+			wep.last_beam = time + vapedelay;
+		else if(wep.activeweapon == WEP_VORTEX)
+		{
+			if(input_buttons & 1)
+				wep.last_beam = time + vordelay;
+			//else if(WEP_CVAR(vortex, secondary) && attack2_held)
+				//wep.last_beam = time + vortex_sdelay;
+		}
+	}
+}
+
 MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 {
 	if((time < STAT(GAMESTARTTIME))
@@ -86,7 +227,6 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 	|| (autocvar_chase_active)
 	|| (STAT(FROZEN))
 	|| (spectatee_status)
-	|| (time < last_beam)
 	) { return false; }
 
 	float vaporizer_delay = WEP_CVAR_PRI(vaporizer, refire);
@@ -103,50 +243,12 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 
 	entity localme = playerslots[player_localnum];
 
-	if(activeweapon == WEP_VAPORIZER || activeweapon == WEP_VORTEX)
-	if(attack1_held)// || (activeweapon == WEP_VORTEX && WEP_CVAR(vortex, secondary) && attack2_held && !WEP_CVAR(vortex, charge)))
-	if(autocvar_cl_vaporizerbeam > 0 || (localme.ping >= autocvar_cl_vaporizerbeam_minping && autocvar_cl_vaporizerbeam != -1))
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
-		vector v = '0 0 1' * getstati(STAT_VIEWHEIGHT);
-
-		WarpZone_TraceLine(view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE, MOVE_NORMAL, NULL);
-
-		bool hit = ((trace_fraction < 1 && !trace_ent.entnum) ? false : true);
-
-		int eff = particleeffectnum((hit ? EFFECT_VAPORIZER_HIT(myteam) : EFFECT_VAPORIZER(myteam)));
-		if(activeweapon == WEP_VORTEX)
-		{
-			if(autocvar_cl_particles_oldvortexbeam)
-			{ /* keep insta beam */ }
-			else if(autocvar_cl_particles_newvortexbeam)
-				eff = particleeffectnum(EFFECT_VORTEX_BEAM_NEW);
-			else
-				eff = particleeffectnum(EFFECT_VORTEX_BEAM);
-		}
-
-		if(activeweapon == WEP_VORTEX)
-			WarpZone_TrailParticles(localme, eff, view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE);
-		else if(activeweapon == WEP_VAPORIZER)
-			FireClientBeam(view_origin, view_origin + v + view_forward * MAX_SHOT_DISTANCE, hit);
-
-		//sound(localme, CH_SHOTS, "weapons/minstanexfire.wav", VOL_BASE, ATTEN_LARGE);
-
-		if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
-		if(autocvar_cl_particles_newvortexbeam && activeweapon == WEP_VORTEX)
-			__pointparticles(particleeffectnum(EFFECT_VORTEX_IMPACT_NEW), trace_endpos, '0 0 0', 1);
-		else
-			__pointparticles(particleeffectnum(EFFECT_VORTEX_IMPACT), trace_endpos, '0 0 0', 1);
-
-		if(activeweapon == WEP_VAPORIZER)
-			last_beam = time + vaporizer_delay;
-		else if(activeweapon == WEP_VORTEX)
-		{
-			if(input_buttons & 1)
-				last_beam = time + vortex_pdelay;
-			//else if(WEP_CVAR(vortex, secondary) && attack2_held)
-				//last_beam = time + vortex_sdelay;
-		}
+		entity wep = viewmodels[slot];
+		DrawClientBeam(wep, vortex_pdelay, vaporizer_delay, attack1_held, localme);
 	}
+
 	return false;
 }
 
