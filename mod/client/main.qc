@@ -37,6 +37,7 @@ STATIC_INIT_LATE(mod_cvars_override)
 
 	localcmd("\nalias itemlist \"cl_cmd itemlist ${* ?}\"\n");
 	localcmd("\nalias place_item \"cmd place_item ${* ?}\"\n");
+	localcmd("\nalias placeitems \"cl_cmd placeitems ${* ?}\"\n");
 }
 
 REGISTER_MUTATOR(mutator_mod, true);
@@ -61,6 +62,12 @@ MUTATOR_HOOKFUNCTION(mutator_mod, CSQC_ConsoleCommand)
 		{
 			LOG_INFOF("%s (%s)\n", it.netname, it.m_name);
 		});
+		return true;
+	}
+
+	if(cmd_name == "placeitems")
+	{
+		localcmd("\ncl_cmd hud quickmenu file \"\" placeitems.txt\n");
 		return true;
 	}
 }
