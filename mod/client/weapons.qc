@@ -9,7 +9,7 @@ STATIC_INIT(fix_weaponpriority)
 	bool have_lightsabre = strhasword(curprio, "lightsabre");
 	bool have_chainsaw = strhasword(curprio, "chainsaw");
 	bool have_uzi = strhasword(curprio, "mac10");
-	bool have_rpg = strhasword(curprio, "rpg");
+	bool have_rpg = strhasword(curprio, "rpg7");
 
 	// to save on rebuilding, only loop through if one of these is indeed missing
 	if(!have_flak || !have_axe || !have_lightsabre || !have_chainsaw || !have_uzi)
@@ -30,7 +30,7 @@ STATIC_INIT(fix_weaponpriority)
 			if(it == "machinegun" && !have_uzi)
 				newprio = strcat(newprio, "mac10 ");
 			if(it == "devastator" && !have_rpg)
-				newprio = strcat(newprio, "rpg ");
+				newprio = strcat(newprio, "rpg7 ");
 		});
 
 		cvar_set("cl_weaponpriority", newprio);

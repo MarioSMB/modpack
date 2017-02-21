@@ -35,7 +35,7 @@ CLASS(RPG7, Weapon)
 /* crosshair */ ATTRIB(RPG7, w_crosshair, string, "gfx/crosshair65");
 /* crosshair */ ATTRIB(RPG7, w_crosshair_size, float, 0.7);
 /* wepimg    */ ATTRIB(RPG7, model2, string, "weaponrpg");
-/* refname   */ ATTRIB(RPG7, netname, string, "rpg");
+/* refname   */ ATTRIB(RPG7, netname, string, "rpg7");
 /* wepname   */ ATTRIB(RPG7, m_name, string, _("RPG-7"));
 
 #define X(BEGIN, P, END, class, prefix) \
