@@ -7,4 +7,5 @@ STATIC_INIT(mod_cpmodels)
 	registercvar("cl_thestars", "0");
 	registercvar("cl_sparkle", "0");
 	registercvar("cl_goat", "0");
+	registercvar("cl_brothersbear", "0");
 }

@@ -19,6 +19,7 @@ const int MODELS_ROBOT = BIT(5);
 const int MODELS_RENAMON = BIT(6);
 const int MODELS_BOT = BIT(7);
 const int MODELS_MARIO = BIT(8);
+const int MODELS_BEAR = BIT(9);
 #endif
 
 #ifdef SVQC
@@ -59,6 +60,7 @@ void cpmodels_Precache()
 		CHECK_MODEL("luigi.dpm", WEEGEE)
 		CHECK_MODEL("rosalina.dpm", ROSALINA)
 		CHECK_MODEL("mario.dpm", MARIO)
+		CHECK_MODEL("bear.dpm", BEAR)
 	}
 #undef CHECK_MODEL
 }
@@ -70,6 +72,7 @@ void cpmodels_Precache()
 .int cvar_cl_sparkle;
 .bool cvar_cl_goat;
 .bool cvar_cl_damnfurries;
+.bool cvar_cl_brothersbear;
 .bool cow;
 
 REPLICATE(cvar_cl_pony, bool, "cl_pony");
@@ -79,6 +82,7 @@ REPLICATE(cvar_cl_thestars, bool, "cl_thestars");
 REPLICATE(cvar_cl_sparkle, int, "cl_sparkle");
 REPLICATE(cvar_cl_goat, bool, "cl_goat");
 REPLICATE(cvar_cl_damnfurries, bool, "cl_damnfurries");
+REPLICATE(cvar_cl_brothersbear, bool, "cl_brothersbear");
 
 MUTATOR_HOOKFUNCTION(cpmodels, FormatMessage)
 {
@@ -136,10 +140,15 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 				ret_string = "models/player/mario.dpm";
 			if(player.cvar_cl_sparkle >= 4 && ALLOWED(WEEGEE))
 				ret_string = "models/player/luigi.dpm";
+			if(player.cvar_cl_brothersbear && ALLOWED(BEAR))
+				ret_string = "models/player/bear.dpm";
 		}
 	}
 
 	if(player.playermodel == "models/player/mario.dpm" && !strhasword(player.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
+		ret_string = autocvar_sv_defaultplayermodel;
+
+	if(player.playermodel == "models/player/bear.dpm" && !strhasword(player.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
 		ret_string = autocvar_sv_defaultplayermodel;
 
 	if(!cvar("g_overkill") && player.cow && ALLOWED(COW))
