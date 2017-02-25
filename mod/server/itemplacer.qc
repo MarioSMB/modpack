@@ -58,6 +58,61 @@ void try_itemspawn(entity caller, string item)
 		return; // it's a monster, don't try anything else
 	}
 
+	if(startsWith(item, "item_flag_"))
+	{
+		if(!g_ctf)
+			return; // don't even try to spawn a flag
+
+		int theteam = caller.team; // only reliable way to tell the team
+		switch(item)
+		{
+			case "item_flag_team1": theteam = NUM_TEAM_1; break;
+			case "item_flag_team2": theteam = NUM_TEAM_1; break;
+			case "item_flag_team3": theteam = NUM_TEAM_1; break;
+			case "item_flag_team4": theteam = NUM_TEAM_1; break;
+			case "item_flag_neutral": theteam = 0; break;
+		}
+
+		entity itm = new(placed_item);
+		ctf_FlagSetup(theteam, itm);
+	}
+
+	if(startsWith(item, "item_buff_"))
+	{
+		string thebuff = substring(item, 10, strlen(item));
+		FOREACH(Buffs, it.m_name == thebuff,
+		{
+			entity itm = new(placed_item);
+			itm.spawnfunc_checked = true;
+			//itm.classname = item;
+			setorigin(itm, caller.origin);
+			itm.angles = caller.angles;
+			itm.buffs = it.m_itemid;
+			itm.team = caller.team; // TODO?
+			buff_Init(itm);
+			return;
+		});
+		return; // it's a buff, don't try anything else
+	}
+
+	if(startsWith(item, "turret_"))
+	{
+		string thetur = substring(item, 7, strlen(item));
+		FOREACH(Turrets, it.netname == thetur,
+		{
+			entity tur = new(placed_item);
+			tur.spawnfunc_checked = true;
+			//tur.classname = item;
+			setorigin(tur, caller.origin);
+			tur.angles = caller.angles;
+			tur.team = caller.team;
+			if(!turret_initialize(tur, it))
+				delete(tur);
+			return; // got our turret!
+		});
+		return; // it's a turret, don't try anything else
+	}
+
 	string theitem = substring(item, 5, strlen(item));
 	FOREACH(Items, it.netname == theitem,
 	{
