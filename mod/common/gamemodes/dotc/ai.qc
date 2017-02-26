@@ -449,14 +449,14 @@ int dotc_ai_valid_target(entity this, entity targ)
 	if(vdist(this.origin - targ.origin, >=, this.target_range))
 		return -7;
 
-	// a worldonly trace is about as useful as a pvs check, so let's do the latter!
 	if(!checkpvs(targ.origin, this))
 		return -8;
-	/*traceline(this.origin + '0 0 32', real_origin(targ), MOVE_WORLDONLY, this);
+
+	traceline(this.origin + '0 0 32', real_origin(targ), MOVE_WORLDONLY, this);
 	if((trace_ent != targ) && (trace_fraction != 1.0))
 	{
 		return -8;
-	}*/
+	}
 
 	if(this.target_validate_flags & DOTC_TARGET_DRONES)
 	if(targ.dotc_targetflags & DOTC_TARGET_DRONES)
