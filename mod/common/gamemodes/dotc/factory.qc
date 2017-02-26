@@ -8,9 +8,6 @@ AUTOCVAR(g_dotc_factory_wait, float, 3, "");
 // Drone squad pathing setup
 // =========================
 
-IntrusiveList g_dotc_dronepaths;
-STATIC_INIT(g_dotc_dronepaths) { g_dotc_dronepaths = IL_NEW(); }
-
 void dotc_DronePathThink(entity this)
 {
 	this.nextthink = time + 0.25;
@@ -201,7 +198,7 @@ void dotc_DelayedFactorySetup(entity this) // called after a factory is placed o
 	// node target
 	entity next_node = dotc_squad_nextpath(this);
 	if(!next_node)
-		LOG_DEBUG("Warning: factory is missing a target, fix your map!\n");
+		LOG_INFO("Warning: factory is missing a target, fix your map!\n");
 
 	this.enemy = next_node;
 

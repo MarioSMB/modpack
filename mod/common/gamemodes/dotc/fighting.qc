@@ -4,11 +4,9 @@ void dotc_projectile_think(entity this)
 	this.nextthink = time;
 }
 
-void dotc_projectile_touch(entity this, entity toucher)
+void dotc_projectile_explode(entity this, entity directhitentity)
 {
- 	PROJECTILE_TOUCH(this, toucher);
-
-    this.event_damage 	= func_null;
+    this.event_damage = func_null;
 	settouch(this, func_null);
 
 	traceline(this.origin - this.velocity, this.origin + (this.velocity * 2), MOVE_NORMAL, this);
@@ -17,15 +15,22 @@ void dotc_projectile_touch(entity this, entity toucher)
     else
         Send_Effect(this.explode_fx, findbetterlocation(this.origin, 8), trace_plane_normal, 1);
 
-    RadiusDamage(this, this.owner, this.shot_dmg, 0, this.shot_radius, NULL, NULL, this.shot_force, DEATH_TURRET.m_id, NULL);
+    RadiusDamage(this, this.owner, this.shot_dmg, 0, this.shot_radius, NULL, NULL, this.shot_force, DEATH_TURRET.m_id, directhitentity);
     sound(this, CH_SHOTS, this.explode_snd, VOL_BASE, ATTN_NORM);
 
 	delete(this);
 }
 
-void dotc_projectile_touch_think(entity this)
+void dotc_projectile_touch(entity this, entity toucher)
 {
-    dotc_projectile_touch(this, NULL);
+    PROJECTILE_TOUCH(this, toucher);
+
+    dotc_projectile_explode(this, toucher);
+}
+
+void dotc_projectile_explode_think(entity this)
+{
+    dotc_projectile_explode(this, NULL);
 }
 
 void dotc_projectile_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -35,7 +40,7 @@ void dotc_projectile_damage(entity this, entity inflictor, entity attacker, floa
     if(this.health >= 0)
         return;
 
-    setthink(this, dotc_projectile_touch_think);
+    setthink(this, dotc_projectile_explode_think);
     this.nextthink = time;
 }
 

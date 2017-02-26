@@ -4,7 +4,7 @@
 
 #ifdef SVQC
 
-AUTOCVAR(g_dotc_squads_dont_chase, bool, true, "");
+AUTOCVAR(g_dotc_squads_dont_chase, bool, false, "");
 
 .float lastpushtime;
 
@@ -261,16 +261,18 @@ vector aim_target;
 
 bool dotc_squad_enemyframe(entity this)
 {
-	if(!this.enemy || wasfreed(this.enemy)) { return false; }
+	entity targ = this.enemy;
 
-	if(vdist(this.enemy.origin - this.origin, <, this.target_range_min))
-		move_target = this.origin + steerlib_push(this, this.enemy.origin) * this.target_range_optimal;
-	else if(vdist(this.enemy.origin - this.origin, >, this.target_range_optimal))
-		move_target = this.origin + steerlib_pull(this, this.enemy.origin) * this.target_range_optimal;
+	if(!targ || wasfreed(targ)) { return false; }
+
+	if(vdist(targ.origin - this.origin, <, this.target_range_min))
+		move_target = this.origin + steerlib_push(this, targ.origin) * this.target_range_optimal;
+	else if(vdist(targ.origin - this.origin, >, this.target_range_optimal))
+		move_target = this.origin + steerlib_pull(this, targ.origin) * this.target_range_optimal;
 	else
 		move_target = this.origin;
 
-	aim_target = this.enemy.origin;
+	aim_target = targ.origin;
 
 	return true;
 }
@@ -278,7 +280,7 @@ bool dotc_squad_enemyframe(entity this)
 entity dotc_squad_nextpath(entity curpath)
 {
 	RandomSelection_Init();
-	FOREACH_ENTITY_STRING(targetname, curpath.target,
+	IL_EACH(g_dotc_dronepaths, it != curpath && it.targetname == curpath.target,
 	{
 		RandomSelection_AddEnt(it, 1, 1);
 	});
@@ -368,7 +370,7 @@ void dotc_dronesquad_think(entity this)
 
 	bool dpf = true;
 
-	if(this.enemy != NULL)
+	if(this.enemy != NULL && !wasfreed(this.enemy))
 		dpf = false;
 
 	if(autocvar_g_dotc_squads_dont_chase != 0)
@@ -388,9 +390,9 @@ void dotc_dronesquad_think(entity this)
 	float dist = vlen(move_target - this.origin);
 	float spd;
 	if(this.enemy)
-		spd = bound(0, (dist / this.target_range_optimal * 0.5 ) * this.dotc_movespeed, this.dotc_movespeed);
+		spd = bound(0, (dist / this.target_range_optimal * 0.5) * this.dotc_movespeed, this.dotc_movespeed);
 	else
-		spd = bound(150, (dist / this.target_range_optimal * 0.5 ) * this.dotc_movespeed, this.dotc_movespeed);
+		spd = bound(150, (dist / this.target_range_optimal * 0.5) * this.dotc_movespeed, this.dotc_movespeed);
 
 	this.velocity = aim_target * spd;
 
