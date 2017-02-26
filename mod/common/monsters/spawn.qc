@@ -121,7 +121,7 @@ spawnfunc(monster_tarbaby) { Monster_Spawn(this, true, MON_TARBABY.monsterid); }
 			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_spawn_speed_run); }
 			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_spawn_speed_stop); }
 
-			actor.monster_loot = spawnfunc_item_rockets;
+			actor.monster_loot = ITEM_Rockets;
 			actor.monster_attackfunc = M_Tarbaby_Attack;
 			actor.damageforcescale = 0.01; // no push while spawning
 

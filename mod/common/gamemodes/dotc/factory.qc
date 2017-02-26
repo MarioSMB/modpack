@@ -158,7 +158,7 @@ void dotc_SpawnWaypoints(entity this)
 		entity wp = WaypointSprite_SpawnFixed(basename, this.origin + DOTC_FACTORY_WAYPOINT_OFFSET, this, wps_factorybase, RADARICON_FACTORY);
 		wp.colormod = ((this.team) ? Team_ColorRGB(this.team) : '1 1 1');
 		WaypointSprite_UpdateTeamRadar(this.wps_factorybase, RADARICON_FACTORY, ((this.team) ? colormapPaletteColor(this.team - 1, false) : '1 1 1'));
-		WaypointSprite_UpdateRule(this.wps_factorybase, this.team, SPRITERULE_TEAMPLAY);
+		//WaypointSprite_UpdateRule(this.wps_factorybase, this.team, SPRITERULE_TEAMPLAY);
 		WaypointSprite_UpdateMaxHealth(this.wps_factorybase, this.max_health);
 		WaypointSprite_UpdateHealth(this.wps_factorybase, this.health);
 

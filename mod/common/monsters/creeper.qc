@@ -105,7 +105,6 @@ METHOD(Creeper, mr_anim, bool(Creeper this, entity actor))
 }
 #endif
 #ifdef SVQC
-spawnfunc(ammo_rockets);
 .float animstate_endtime;
 METHOD(Creeper, mr_setup, bool(Creeper this, entity actor))
 {
@@ -119,7 +118,7 @@ METHOD(Creeper, mr_setup, bool(Creeper this, entity actor))
     if(!actor.wander_delay) actor.wander_delay = 10;
     if(!actor.wander_distance) actor.wander_distance = 200;
 
-    actor.monster_loot = spawnfunc_ammo_rockets;
+    actor.monster_loot = ITEM_Rockets;
 
     setanim(actor, actor.anim_idle, false, true, true);
     actor.spawn_time = actor.animstate_endtime;

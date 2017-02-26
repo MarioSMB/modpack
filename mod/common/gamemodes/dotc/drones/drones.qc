@@ -44,6 +44,7 @@ void dotc_drone_remove(entity this)
 #ifdef SVQC
 
 AUTOCVAR(g_dotc_waypointsprites_squads, bool, true, "");
+AUTOCVAR(g_dotc_waypointsprites_drones, bool, false, "");
 
 void gib_groundboom(entity this, entity toucher)
 {
@@ -419,9 +420,12 @@ entity dotc_spawn_drone( entity sqd, entity own,
 
 	// Make it appear on the minimap
 	
-	entity wp = WaypointSprite_Spawn(WP_Null, 0, 1024, drone, '0 0 64', NULL, drone.team, drone, waypointsprite_attached, 2, RADARICON_Drone);
-	wp.colormod = ((drone.team) ? Team_ColorRGB(drone.team) : '1 1 1');
-	WaypointSprite_UpdateTeamRadar(drone.waypointsprite_attached, RADARICON_Drone, ((drone.team) ? colormapPaletteColor(drone.team - 1, false) : '1 1 1'));
+	if(autocvar_g_dotc_waypointsprites_drones)
+	{
+		entity wp = WaypointSprite_Spawn(WP_Null, 0, 1024, drone, '0 0 64', NULL, drone.team, drone, waypointsprite_attached, 2, RADARICON_Drone);
+		wp.colormod = ((drone.team) ? Team_ColorRGB(drone.team) : '1 1 1');
+		WaypointSprite_UpdateTeamRadar(drone.waypointsprite_attached, RADARICON_Drone, ((drone.team) ? colormapPaletteColor(drone.team - 1, false) : '1 1 1'));
+	}
 
 	drone.dotc_dronetype = dronetype;
 	Net_LinkEntity(drone, true, 0, dotc_drone_send);
