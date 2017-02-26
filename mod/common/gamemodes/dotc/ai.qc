@@ -66,7 +66,7 @@ int dotc_find_attack_spot_direct(entity this)
 
 vector dotc_ai_aim_ballistic(entity this, vector vtarget, vector shootfrom, float proj_speed, float min_height, float max_height)
 {
-	vector e_org = real_origin(this.squad.enemy);
+	vector e_org = vtarget;
 	//dist = vlen(e_org - this.origin);
 
 	// Find the height offset to the sky / celing
@@ -74,9 +74,7 @@ vector dotc_ai_aim_ballistic(entity this, vector vtarget, vector shootfrom, floa
 	//hgt = 0.5 * vlen(e_org - trace_endpos) - 64;
 
 	float hgt = 128;
-	vector pp;
-
-	pp = e_org;
+	vector pp = e_org;
 	for(int i = 0 ; i < 3; ++i)
 	{
 		arc_projectile_calculatevelocity(this.tur_shotorg, pp, hgt);

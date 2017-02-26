@@ -129,7 +129,7 @@ void dotc_lighttank_init(entity this)
 
 entity dotc_spawn_ltank(entity sqd, entity own)
 {
-	entity drone = dotc_spawn_drone( sqd, own, MDL_DOTC_DRONE_LIGHT_BODY, MDL_DOTC_DRONE_LIGHT_TURRET, MDL_Null, MDL_DOTC_DRONE_LIGHT_DEAD, EFFECT_DOTC_DRONE_LIGHTTANK_PROJ_EXPLODE, dotc_ltank_frame, dotc_ltank_fire, DOTC_DRONETYPE_LTANK);
+	entity drone = dotc_spawn_drone(sqd, own, MDL_DOTC_DRONE_LIGHT_BODY, MDL_DOTC_DRONE_LIGHT_TURRET, MDL_Null, MDL_DOTC_DRONE_LIGHT_DEAD, EFFECT_DOTC_DRONE_LIGHTTANK_PROJ_EXPLODE, dotc_ltank_frame, dotc_ltank_fire, DOTC_DRONETYPE_LTANK);
 	setsize(drone, drone_size_small_min, drone_size_small_max);
 	set_movetype(drone, MOVETYPE_FLY);
 	drone.classname = "dotc_drone";
