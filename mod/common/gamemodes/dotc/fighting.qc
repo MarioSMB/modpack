@@ -59,7 +59,7 @@ entity dotc_projectile( entity this,
 
     //dprint("^1FXFLASH IS: ",fxflash, "  FXEXPLODE IS: ", fxexplode, "\n");
 
-    entity proj = spawn();
+    entity proj = new(dotc_projectile);
 
 	PROJECTILE_MAKETRIGGER(proj);
     setorigin(proj, this.tur_shotorg);
@@ -68,6 +68,7 @@ entity dotc_projectile( entity this,
     //proj.trail_fx;
     proj.explode_snd     = sfxexplode;
     proj.explode_fx      = fxexplode;
+    proj.flags           = FL_PROJECTILE;
     proj.owner           = proj.realowner = this;
     proj.shot_dmg 		 = this.shot_dmg;
     proj.shot_radius  	 = this.shot_radius;
@@ -80,13 +81,12 @@ entity dotc_projectile( entity this,
     if(phealth)
     {
         proj.health     = phealth;
-        proj.flags      = FL_PROJECTILE;
         proj.takedamage = DAMAGE_YES;
         proj.event_damage = dotc_projectile_damage;
     }
     else
     {
-        proj.flags  = FL_PROJECTILE | FL_NOTARGET;
+        proj.flags |= FL_NOTARGET;
     }
 
     IL_PUSH(g_projectiles, proj);
