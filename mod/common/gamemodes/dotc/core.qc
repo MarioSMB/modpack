@@ -116,83 +116,44 @@ void dotc_Core_SetLevel(entity core, int newlevel, bool silent)
 
 	core.dotc_corelevel = newlevel;
 	core.dotc_nextlevel = core.dotc_nextlevel * autocvar_g_dotc_nextlevel_multiplier;
-	
+
+	dotc_Core_Addons_Clear(core);
+
 	if(newlevel >= 7)
 	{
-		switch(newlevel)
-		{
-			case 7:
-			{
-				dotc_Core_Addons_Clear(core);
-				setmodel(core, MDL_DOTC_CORE_LEVEL_7);
-				dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_8_9, "addon01");
-				break;	
-			}
-			case 8:
-			{
-				dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_8_9, "addon02");
-				break;
-			}
-			case 9:
-			{
-				dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_8_9, "addon03");
-				break;
-			}
-			case 10:
-			{
-				dotc_Core_Sphere_Spawn(core);
-				break;
-			}
-		}
+		setmodel(core, MDL_DOTC_CORE_LEVEL_7);
+		dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_8_9, "addon01");
+
+		if(newlevel >= 8)
+			dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_8_9, "addon02");
+		if(newlevel >= 9)
+			dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_8_9, "addon03");
+		if(newlevel >= 10)
+			dotc_Core_Sphere_Spawn(core);
 	}
 	else if(newlevel >= 4)
 	{
-		switch(newlevel)
-		{
-			case 4:
-			{
-				dotc_Core_Addons_Clear(core);
-				setmodel(core, MDL_DOTC_CORE_LEVEL_4);
-				dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_5_6, "addon01");
-				break;
-			}
-			case 5:
-			{
-				dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_5_6, "addon02");
-				break;
-			}
-			case 6:
-			{
-				dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_5_6, "addon03");
-				break;
-			}
-		}		
+		setmodel(core, MDL_DOTC_CORE_LEVEL_4);
+		dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_5_6, "addon01");
+
+		if(newlevel >= 5)
+			dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_5_6, "addon02");
+		if(newlevel >= 6)
+			dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_5_6, "addon03");
 	}
-	else
+	else if(newlevel >= 1)
 	{
-		switch(newlevel)
-		{
-			case 1:
-			{
-				dotc_Core_Addons_Clear(core);
-				setmodel(core, MDL_DOTC_CORE_LEVEL_1);
-				dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_2_3, "addon01");
-				break;
-			}
-			case 2:
-			{
-				dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_2_3, "addon02");
-				break;
-			}
-			case 3:
-			{
-				dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_2_3, "addon03");
-				break;
-			}
-		}
+		setmodel(core, MDL_DOTC_CORE_LEVEL_1);
+		dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_2_3, "addon01");
+
+		if(newlevel >= 2)
+			dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_2_3, "addon02");
+		if(newlevel >= 3)
+			dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_2_3, "addon03");
 	}
 
 	fix_mins_maxs_for_rotating(core);
+	CSQCMODEL_AUTOUPDATE(core);
 }
 
 

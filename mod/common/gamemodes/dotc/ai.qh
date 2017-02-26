@@ -18,7 +18,7 @@ int dotc_ai_track_separate_inert(entity this, entity turret, entity gun, vector 
 
 vector arc_projectile_calculatevelocity(vector org, vector tgt, float ht);
 
-vector dotc_ai_aim_ballistic(entity this, vector vtarget, vector shootfrom, float proj_speed, float min_height, float max_height);
+vector dotc_ai_aim_ballistic(entity this, entity thesquad, vector shootfrom, float proj_speed, float min_height, float max_height);
 
 int dotc_ai_track_combined_step(entity this, entity turret, vector shot_org, vector aimloc, float turnspeed, float pitchspeed, vector aim_minmax, float delta);
 

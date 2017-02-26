@@ -105,7 +105,7 @@ void dotc_rart_frame(entity this, entity thesquad, vector formation_loc, float t
 
 		this.velocity = dotc_drone_move(this, formation_loc, 0, 128, 0.5);
 
-		vector aim_at = dotc_ai_aim_ballistic(this, real_origin(thesquad.enemy), this.tur_shotorg, this.shot_speed, 10, 1000);
+		vector aim_at = dotc_ai_aim_ballistic(this, thesquad, this.tur_shotorg, this.shot_speed, 10, 1000);
 		dotc_ai_track_separate_inert(this, this.drone_turret, this.drone_gun, this.tur_shotorg, aim_at, lvaim_speed, 0.2, lvaim_minmax, tdelta);
 
 		//te_lightning1(this, this.tur_shotorg, this.tur_shotorg + v_forward * 256);
