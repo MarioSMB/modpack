@@ -66,7 +66,7 @@ void DOTC_GibTouch(entity this, entity toucher)
 	if(this.dotc_bouncecnt >= 0)
 		return;
 		
-	sound (this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTN_NORM);
+	sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTN_NORM);
 	pointparticles(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);    
 	
 	delete(this);
@@ -74,12 +74,10 @@ void DOTC_GibTouch(entity this, entity toucher)
 
 void DOTC_DroneCorpseTouch(entity this, entity toucher)
 {
-	int i;
-
 	sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 	pointparticles(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
 	
-	for(i = 1; i < (random() * 5); ++i)
+	for(int i = 1; i < (random() * 5); ++i)
 	{
 		entity gib = spawn();
 		setmodel(gib, MDL_DOTC_GIB_RANDOM());
@@ -122,14 +120,10 @@ void DOTC_DroneCorpseTouch(entity this, entity toucher)
 
 NET_HANDLE(TE_CSQC_DOTC_DRONEDIE, bool isNew)
 {
-	vector loc, vel, ang;
-	int drone_type;
-	vector vadd;
-	
-	drone_type = ReadByte();
-	loc = ReadVector();
-	vel = ReadVector();
-	ang = ReadVector();
+	int drone_type = ReadByte();
+	vector loc = ReadVector();
+	vector vel = ReadVector();
+	vector ang = ReadVector();
 
 	if(drone_type < 1 || drone_type > DOTC_DRONETYPE_LAST)
 	{
@@ -182,9 +176,9 @@ NET_HANDLE(TE_CSQC_DOTC_DRONEDIE, bool isNew)
 			break;
 	}	
 		
-	vadd = ('0 0 1' * (autocvar_cl_dotc_deaddrone_upspeed1 + random() * autocvar_cl_dotc_deaddrone_upspeed2)) 
-		 + ('0 1 0' * (-autocvar_cl_dotc_deaddrone_side1speed1 + random() * autocvar_cl_dotc_deaddrone_side1speed2)) 
-		 + ('0 0 1' * (-autocvar_cl_dotc_deaddrone_side2speed1 + random() * autocvar_cl_dotc_deaddrone_side2speed2));
+	vector vadd = ('0 0 1' * (autocvar_cl_dotc_deaddrone_upspeed1 + random() * autocvar_cl_dotc_deaddrone_upspeed2)) 
+		 		+ ('0 1 0' * (-autocvar_cl_dotc_deaddrone_side1speed1 + random() * autocvar_cl_dotc_deaddrone_side1speed2)) 
+		 		+ ('0 0 1' * (-autocvar_cl_dotc_deaddrone_side2speed1 + random() * autocvar_cl_dotc_deaddrone_side2speed2));
 	
 	
 	e.solid 	     = SOLID_CORPSE;
@@ -193,9 +187,9 @@ NET_HANDLE(TE_CSQC_DOTC_DRONEDIE, bool isNew)
 	e.draw           = DOTC_GibsDraw;
 	IL_PUSH(g_drawables, e);
 	e.nextthink      = time + 6;	    
-	e.angles = ang;		
-	e.velocity  = vel + vadd;
-	e.avelocity = randomvec() * autocvar_cl_dotc_deaddrone_spinnspeed;
+	e.angles 		 = ang;		
+	e.velocity  	 = vel + vadd;
+	e.avelocity 	 = randomvec() * autocvar_cl_dotc_deaddrone_spinnspeed;
 	e.move_time 	 = time;
 	set_movetype(e, MOVETYPE_BOUNCE);
 

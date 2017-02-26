@@ -60,8 +60,6 @@ int dotc_teams;
 const int ST_DOTC_DESTROYED	  	= 1;
 //#define SP_DOTC_NEUTRAL_KILLS 8
 
-void dotc_sprite(entity this, entity simg, vector ofs, float max_hp, float hp, vector clr, float fixed);
-
 #define DOTC_FFCHECK(otr,me) ((SAME_TEAM(otr, me)) ? !autocvar_g_dotc_apply_friendlyfire : false)
 
 void dotc_Initialize();
@@ -110,28 +108,6 @@ void fix_mins_maxs_for_rotating(entity e)
 {
 	float r = bbox_radius(e.mins, e.maxs);
 	setsize(e, '-1 -1 -1' * r, '1 1 1' * r);
-}
-
-void dotc_sprite(entity this, entity simg, vector ofs, float max_hp, float hp, vector clr, float fixed)
-{
-	if(fixed)
-	{
-		entity wp = WaypointSprite_SpawnFixed(simg, this.origin + ofs, this, sprite, RADARICON_OBJECTIVE);
-		wp.colormod = clr;
-	}
-	else
-	{
-		//this.team
-		entity wp = WaypointSprite_Spawn(simg, 0, 700, this, ofs, NULL, 0, this, waypointsprite_attached, false, RADARICON_OBJECTIVE);
-		wp.colormod = clr;
-	}
-    
-	if(max_hp <= 0)
-		return;
-		
-	WaypointSprite_UpdateMaxHealth(this.sprite, max_hp);
-	WaypointSprite_UpdateHealth(this.sprite, hp);
-	//WaypointSprite_UpdateTeamRadar(this.sprite, RADARICON_OBJECTIVE, clr);
 }
 
 // Round handler
@@ -203,11 +179,10 @@ bool dotc_CheckWinner()
 		nades_Clear(it);
 	});
 
-	for(entity tmp_entity = NULL; (tmp_entity = find(tmp_entity, classname, "dotc_drone")); )
+	IL_EACH(g_dotc_drones, it.event_damage,
 	{
-		if(tmp_entity.event_damage)
-			tmp_entity.event_damage(tmp_entity, NULL, NULL, tmp_entity.health + tmp_entity.max_health + 100, DEATH_KILL.m_id, '0 0 0', '0 0 0');
-	}
+		it.event_damage(it, NULL, NULL, it.health + it.max_health + 100, DEATH_KILL.m_id, '0 0 0', '0 0 0');
+	});
 
 	return 1;
 }

@@ -3,6 +3,10 @@
 // ============
 
 
+IntrusiveList g_dotc_itemgivers;
+STATIC_INIT(g_dotc_itemgivers) { g_dotc_itemgivers = IL_NEW(); }
+
+
 // ===========
 // Item giving
 // ===========
@@ -17,21 +21,16 @@ int dotc_Item_Give(entity item, entity player)
 
 void dotc_ItemSpawn_Give(entity player)
 {
-	entity spawner, item, core;
+	entity core = dotc_GetCore(player.team);
 
-	core = dotc_GetCore(player.team);
-
-	for(spawner = NULL; (spawner = find(spawner, classname, "dotc_itemspawn")); )
+	IL_EACH(g_dotc_itemgivers, it.cnt <= core.dotc_corelevel && it.count >= core.dotc_corelevel,
 	{
-		if(spawner.cnt <= core.dotc_corelevel)
-		if(spawner.count >= core.dotc_corelevel)
+		string targ = it.target;
+		FOREACH_ENTITY_STRING(targetname, targ,
 		{
-			for(item = NULL; (item = find(item, targetname, spawner.target)); )
-			{
-				dotc_Item_Give(item, player);
-			}
-		}
-	}
+			dotc_Item_Give(it, player);
+		});
+	});
 }
 
 
@@ -49,6 +48,8 @@ spawnfunc(dotc_spawnitems)
 	if(!g_dotc) { delete(this); return; }
 
 	this.classname = "dotc_itemspawn";
+
+	IL_PUSH(g_dotc_itemgivers, this);
 
 	if(this.target == "")
 		LOG_DEBUG("Warning: dotc_spawnitems spawning without .target, fix your map!\n");
@@ -76,8 +77,7 @@ void dotc_ItemCheck(entity this)
 
 entity dotc_ItemSpawn(entity olditem)
 {
-	entity item = spawn();
-	item.classname = "dotc_item";
+	entity item = new(dotc_item);
 	item.targetname = olditem.targetname;
 	item.target = olditem.target;
 	item.weapon = olditem.weapon;

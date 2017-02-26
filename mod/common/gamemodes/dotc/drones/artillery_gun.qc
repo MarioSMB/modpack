@@ -2,6 +2,28 @@
 
 SOUND(DOTC_DRONE_GART_FIRE, "dotc/lasershot3");
 
+#ifdef SVQC
+AUTOCVAR(g_dotc_gart_health, float, 170, "");
+AUTOCVAR(g_dotc_gart_shot_dmg, float, 75, "");
+AUTOCVAR(g_dotc_gart_shot_radius, float, 300, "");
+AUTOCVAR(g_dotc_gart_shot_force, float, 500, "");
+AUTOCVAR(g_dotc_gart_shot_speed, float, 1250, "");
+AUTOCVAR(g_dotc_gart_shot_spread, float, 0.025, "");
+AUTOCVAR(g_dotc_gart_shot_refire, float, 1.5, "");
+AUTOCVAR(g_dotc_gart_target_range, float, 4000, "");
+AUTOCVAR(g_dotc_gart_target_range_min, float, 400, "");
+AUTOCVAR(g_dotc_gart_target_range_optimal, float, 2000, "");
+AUTOCVAR(g_dotc_gart_deathcredits, float, 55, "");
+AUTOCVAR(g_dotc_gart_aim_firetolerance_dist, float, 10, "");
+AUTOCVAR(g_dotc_gart_aim_speed, float, 90, "");
+AUTOCVAR(g_dotc_gart_aim_maxpitch, float, 20, "");
+AUTOCVAR(g_dotc_gart_aim_maxrot, float, 45, "");
+AUTOCVAR(g_dotc_gart_movespeed, float, 450, "");
+AUTOCVAR(g_dotc_gart_turnspeed, float, 70, "");
+AUTOCVAR(g_dotc_gart_spring_length, float, 128, "");
+AUTOCVAR(g_dotc_gart_spring_strength, float, 1200, "");
+#endif
+
 #else
 
 #ifdef SVQC
@@ -22,26 +44,19 @@ void dotc_gart_fire(entity this)
 	this.dotc_nextfire = time + this.shot_refire;
 }
 
-void dotc_gart_frame(entity this, vector formaion_loc, float tdelta)
+void dotc_gart_frame(entity this, entity thesquad, vector formation_loc, float tdelta)
 {
-	vector aim_at, lvaim_minmax, lvaim_speed;
-
 	dotc_droneyaw(this);
 
-	lvaim_minmax_x = this.aim_maxpitch;
-	lvaim_minmax_y = this.aim_maxpitch * -1;
-	lvaim_minmax_z = this.aim_maxrot;
+	vector lvaim_minmax = vec3(this.aim_maxpitch, this.aim_maxpitch * -1, this.aim_maxrot);
+	vector lvaim_speed = vec3(this.aim_speed * 0.5, this.aim_speed, 0.75);
 
-	lvaim_speed_x = this.aim_speed * 0.5;
-	lvaim_speed_y = this.aim_speed;
-	lvaim_speed_z = 0.75;
-
-    if(this.squad.enemy)
+    if(thesquad.enemy)
     {
-		this.velocity = dotc_drone_move(this, formaion_loc, 0, 128, 0.5);
+		this.velocity = dotc_drone_move(this, formation_loc, 0, 128, 0.5);
 
 		this.tur_shotorg = gettaginfo(this.drone_gun, gettagindex(this.drone_gun, "fire"));
-		aim_at = dotc_ai_aim_projectile(this.squad.enemy, this.tur_shotorg, this.shot_speed, this.dotc_nextfire);
+		vector aim_at = dotc_ai_aim_projectile(thesquad.enemy, this.tur_shotorg, this.shot_speed, this.dotc_nextfire);
 		dotc_ai_track_separate_inert(this, this.drone_turret, this.drone_gun, this.tur_shotorg, aim_at, lvaim_speed, 0.2, lvaim_minmax, tdelta);
 
 		if(this.dotc_nextfire < time)
@@ -50,7 +65,7 @@ void dotc_gart_frame(entity this, vector formaion_loc, float tdelta)
     }
 	else
 	{
-		this.velocity = dotc_drone_move(this, formaion_loc, 0, 128, 0.5);
+		this.velocity = dotc_drone_move(this, formation_loc, 0, 128, 0.5);
 
 		//this.tur_shotorg = gettaginfo(this.drone_gun, gettagindex(this.drone_gun, "fire"));
 		//dotc_ai_track_separate_inert(this, this.drone_turret, this.drone_gun, this.tur_shotorg, this.origin + v_forward * 200, lvaim_speed, 0.2, lvaim_minmax, tdelta);
@@ -65,15 +80,44 @@ void dotc_gart_frame(entity this, vector formaion_loc, float tdelta)
 	dotc_bob(this, 4, 16);
 }
 
+void dotc_gart_init(entity this)
+{
+	this.health					 = autocvar_g_dotc_gart_health;
+
+	this.shot_dmg				 = autocvar_g_dotc_gart_shot_dmg;
+	this.shot_radius			 = autocvar_g_dotc_gart_shot_radius;
+	this.shot_force				 = autocvar_g_dotc_gart_shot_force;
+	this.shot_speed				 = autocvar_g_dotc_gart_shot_speed;
+	this.shot_refire			 = autocvar_g_dotc_gart_shot_refire;
+	this.shot_spread       		 = autocvar_g_dotc_gart_shot_spread;
+
+	this.target_range			 = autocvar_g_dotc_gart_target_range;
+	this.target_range_min		 = autocvar_g_dotc_gart_target_range_min;
+	this.target_range_optimal	 = autocvar_g_dotc_gart_target_range_optimal;
+
+	this.dotc_deathcredits		 = autocvar_g_dotc_gart_deathcredits;
+
+	this.aim_firetolerance_dist  = autocvar_g_dotc_gart_aim_firetolerance_dist;
+	this.aim_speed				 = autocvar_g_dotc_gart_aim_speed;
+	this.aim_maxpitch			 = autocvar_g_dotc_gart_aim_maxpitch;
+	this.aim_maxrot			 	 = autocvar_g_dotc_gart_aim_maxrot;
+
+	this.dotc_movespeed		 	 = autocvar_g_dotc_gart_movespeed;
+	this.dotc_turnspeed		 	 = autocvar_g_dotc_gart_turnspeed;
+
+	this.dotc_spring_length	 	 = autocvar_g_dotc_gart_spring_length;
+	this.dotc_spring_strength	 = autocvar_g_dotc_gart_spring_strength;
+}
+
 entity dotc_spawn_gart(entity this, entity own)
 {
-	entity drone;
-
-	drone 			= dotc_spawn_drone(this, own, MDL_DOTC_DRONE_GART_BODY, MDL_DOTC_DRONE_GART_TURRET, MDL_DOTC_DRONE_GART_GUN, MDL_DOTC_DRONE_GART_DEAD.model_str(), "g_dotc_gart_", "g_dotc_gart_pexplode", dotc_gart_frame, dotc_gart_fire, DOTC_DRONETYPE_GART);
+	entity drone = dotc_spawn_drone(this, own, MDL_DOTC_DRONE_GART_BODY, MDL_DOTC_DRONE_GART_TURRET, MDL_DOTC_DRONE_GART_GUN, MDL_DOTC_DRONE_GART_DEAD, "g_dotc_gart_pexplode", dotc_gart_frame, dotc_gart_fire, DOTC_DRONETYPE_GART);
 	setsize(drone, drone_size_small_min, drone_size_small_max);
 	set_movetype(drone, MOVETYPE_FLY);
 	drone.classname = "cannon_artillery";
-	drone.netname 	= "Cannon Artillery";
+	drone.netname = "Cannon Artillery";
+
+	dotc_gart_init(drone);
 
 	if(drone.waypointsprite_attached)
 		WaypointSprite_UpdateTeamRadar(drone.waypointsprite_attached, RADARICON_FLAG, '0.9 0.9 0');

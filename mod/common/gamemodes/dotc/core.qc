@@ -409,7 +409,7 @@ void dotc_DelayedCoreSetup(entity this) // called after a core is placed on a ma
 		entity wp = WaypointSprite_SpawnFixed(basename, this.origin + CPGEN_WAYPOINT_OFFSET, this, wps_corebase, RADARICON_GENERATOR);
 		wp.colormod = ((this.team) ? Team_ColorRGB(this.team) : '1 1 1');
 		WaypointSprite_UpdateTeamRadar(this.wps_corebase, RADARICON_GENERATOR, ((this.team) ? colormapPaletteColor(this.team - 1, false) : '1 1 1'));
-		WaypointSprite_UpdateRule(this.wps_corebase, this.team, SPRITERULE_TEAMPLAY);
+		//WaypointSprite_UpdateRule(this.wps_corebase, this.team, SPRITERULE_TEAMPLAY);
 		WaypointSprite_UpdateMaxHealth(this.wps_corebase, this.max_health);
 		WaypointSprite_UpdateHealth(this.wps_corebase, this.health);
 	}

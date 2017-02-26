@@ -8,6 +8,9 @@ AUTOCVAR(g_dotc_factory_wait, float, 3, "");
 // Drone squad pathing setup
 // =========================
 
+IntrusiveList g_dotc_dronepaths;
+STATIC_INIT(g_dotc_dronepaths) { g_dotc_dronepaths = IL_NEW(); }
+
 void dotc_DronePathThink(entity this)
 {
 	this.nextthink = time + 0.25;
@@ -17,17 +20,11 @@ void dotc_DronePathThink(entity this)
 
 	// debug tracer to show the alignment of paths
 	if(autocvar_developer)
-		te_lightning1(this, this.origin, this.owner.origin);
-}
-
-void dotc_DelayedDronePathSetup(entity this)
-{
-	entity next_node = NULL;
-	next_node = find(NULL, targetname, this.target);
-	if(next_node)
 	{
-		next_node.owner 	= this;
-		this.enemy 			= next_node;
+		IL_EACH(g_dotc_dronepaths, it != this && it.target == this.targetname,
+		{
+			te_lightning1(this, this.origin, it.origin);
+		});
 	}
 }
 
@@ -36,6 +33,8 @@ void dotc_DronePathSetup(entity this)
 	set_movetype(this, MOVETYPE_NONE);
 	setthink(this, dotc_DronePathThink);
 	this.nextthink = time + 1;
+
+	IL_PUSH(g_dotc_dronepaths, this);
 
 	setorigin(this, this.origin + DOTC_FACTORY_SPAWN_OFFSET);
 
@@ -49,8 +48,6 @@ void dotc_DronePathSetup(entity this)
 		this.noalign = false;
 		droptofloor(this);
 	}
-
-	InitializeEntity(this, dotc_DelayedDronePathSetup, INITPRIO_FINDTARGET);
 }
 
 spawnfunc(dotc_dronepath)
@@ -122,9 +119,10 @@ void dotc_FactoryThink(entity this)
 	if(!round_handler_IsRoundStarted())
 		return;
 
-	if(this.floodcontrol_chat < time && this.dmgtime > time)
+	entity core = dotc_GetCore(this.team);
+	if(core.floodcontrol_chat < time && this.dmgtime > time)
 	{
-		this.floodcontrol_chat = time + 3;
+		core.floodcontrol_chat = time + 3;
 
 		Send_Notification(NOTIF_TEAM, this, MSG_CENTER, CENTER_DOTC_FACTORY_UNDERATTACK);
 		
@@ -192,6 +190,7 @@ void dotc_FactoryReset(entity this)
 	CSQCMODEL_AUTOUPDATE(this);
 }
 
+entity dotc_squad_nextpath(entity curpath);
 void dotc_DelayedFactorySetup(entity this) // called after a factory is placed on a map by dotc_FactorySetup()
 {
 	// bot waypoints
@@ -200,12 +199,11 @@ void dotc_DelayedFactorySetup(entity this) // called after a factory is placed o
 	this.bot_basewaypoint = this.nearestwaypoint;
 
 	// node target
-	entity next_node = find(NULL, targetname, this.target);
+	entity next_node = dotc_squad_nextpath(this);
 	if(!next_node)
 		LOG_DEBUG("Warning: factory is missing a target, fix your map!\n");
 
-	next_node.owner 	= this;
-	this.enemy 			= next_node;
+	this.enemy = next_node;
 
 	// waypointsprites
 	dotc_SpawnWaypoints(this);

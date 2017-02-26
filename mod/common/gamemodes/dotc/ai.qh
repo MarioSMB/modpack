@@ -4,9 +4,11 @@ vector dotc_ai_track_targetoffset;
 vector dotc_ai_aim_ballistic_vel;
 float arc_projectile_flighttime;
 
+#if 0
 .float dotc_attack_spot_timer;
 .vector  dotc_attack_spot_loc;
 vector dotc_attack_spot_test_loc;
+#endif
 
 vector dotc_ai_moveangle(entity this, vector input_angels, vector goal_angels, vector minmax);
 
