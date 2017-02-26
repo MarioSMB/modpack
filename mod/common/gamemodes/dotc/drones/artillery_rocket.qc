@@ -1,6 +1,10 @@
 #ifndef IMPLEMENTATION
 
+EFFECT(0, DOTC_DRONE_RART_PROJ_EXPLODE,      "g_dotc_rart_pexplode")
+EFFECT(0, DOTC_DRONE_RART_MUZZLEFLASH,       "g_dotc_rart_mflash")
+
 SOUND(DOTC_DRONE_RART_FIRE, W_Sound("rocket_fire"));
+SOUND(DOTC_DRONE_RART_PROJ_EXPLODE, W_Sound("rocket_impact"));
 
 #ifdef SVQC
 AUTOCVAR(g_dotc_rart_health, float, 150, "");
@@ -76,7 +80,7 @@ void dotc_rart_fire(entity this)
 
 	dotc_ai_aim_ballistic_vel = arc_projectile_calculatevelocity(this.tur_shotorg, r_target, hgt);
 
-	entity rkt = dotc_projectile(this, SND_DOTC_DRONE_RART_FIRE, "g_dotc_rart_mflash", "g_dotc_rart_pexplode", 1, 25,PROJECTILE_DOTC_DRONE_RART);
+	entity rkt = dotc_projectile(this, SND_DOTC_DRONE_RART_FIRE, EFFECT_DOTC_DRONE_RART_MUZZLEFLASH, EFFECT_DOTC_DRONE_RART_PROJ_EXPLODE, SND_DOTC_DRONE_RART_PROJ_EXPLODE, 1, 25,PROJECTILE_DOTC_DRONE_RART);
 	rkt.velocity = dotc_ai_aim_ballistic_vel;
 	set_movetype(rkt, MOVETYPE_TOSS);
 
@@ -165,7 +169,7 @@ void dotc_rart_init(entity this)
 
 entity dotc_spawn_rart(entity this, entity own)
 {
-	entity drone = dotc_spawn_drone(this, own, MDL_DOTC_DRONE_RART_BODY, MDL_DOTC_DRONE_RART_TURRET, MDL_DOTC_DRONE_RART_GUN, MDL_DOTC_DRONE_RART_DEAD, "g_dotc_rart_pexplode", dotc_rart_frame, dotc_rart_fire, DOTC_DRONETYPE_RART);
+	entity drone = dotc_spawn_drone(this, own, MDL_DOTC_DRONE_RART_BODY, MDL_DOTC_DRONE_RART_TURRET, MDL_DOTC_DRONE_RART_GUN, MDL_DOTC_DRONE_RART_DEAD, EFFECT_DOTC_DRONE_RART_PROJ_EXPLODE, dotc_rart_frame, dotc_rart_fire, DOTC_DRONETYPE_RART);
 	set_movetype(drone, MOVETYPE_FLY);
 	drone.classname = "dotc_drone";
 	drone.netname 	= "Rocket Artillery";

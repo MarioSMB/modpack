@@ -1,6 +1,10 @@
 #ifndef IMPLEMENTATION
 
+EFFECT(0, DOTC_DRONE_GART_PROJ_EXPLODE,      "g_dotc_rart_pexplode")
+EFFECT(0, DOTC_DRONE_GART_MUZZLEFLASH,       "g_dotc_rart_mflash")
+
 SOUND(DOTC_DRONE_GART_FIRE, "dotc/lasershot3");
+SOUND(DOTC_DRONE_GART_PROJ_EXPLODE, "dotc/explosion1");
 
 #ifdef SVQC
 AUTOCVAR(g_dotc_gart_health, float, 170, "");
@@ -39,7 +43,7 @@ void dotc_gart_fire(entity this)
 	if(SAME_TEAM(trace_ent, this))
 		return;
 
-	dotc_projectile(this, SND_DOTC_DRONE_GART_FIRE, "g_dotc_rart_mflash", "g_dotc_rart_pexplode", 0, 0, PROJECTILE_DOTC_DRONE_GART);
+	dotc_projectile(this, SND_DOTC_DRONE_GART_FIRE, EFFECT_DOTC_DRONE_GART_MUZZLEFLASH, EFFECT_DOTC_DRONE_GART_PROJ_EXPLODE, SND_DOTC_DRONE_GART_PROJ_EXPLODE, 0, 0, PROJECTILE_DOTC_DRONE_GART);
 
 	this.dotc_nextfire = time + this.shot_refire;
 }
@@ -111,7 +115,7 @@ void dotc_gart_init(entity this)
 
 entity dotc_spawn_gart(entity this, entity own)
 {
-	entity drone = dotc_spawn_drone(this, own, MDL_DOTC_DRONE_GART_BODY, MDL_DOTC_DRONE_GART_TURRET, MDL_DOTC_DRONE_GART_GUN, MDL_DOTC_DRONE_GART_DEAD, "g_dotc_gart_pexplode", dotc_gart_frame, dotc_gart_fire, DOTC_DRONETYPE_GART);
+	entity drone = dotc_spawn_drone(this, own, MDL_DOTC_DRONE_GART_BODY, MDL_DOTC_DRONE_GART_TURRET, MDL_DOTC_DRONE_GART_GUN, MDL_DOTC_DRONE_GART_DEAD, EFFECT_DOTC_DRONE_GART_PROJ_EXPLODE, dotc_gart_frame, dotc_gart_fire, DOTC_DRONETYPE_GART);
 	setsize(drone, drone_size_small_min, drone_size_small_max);
 	set_movetype(drone, MOVETYPE_FLY);
 	drone.classname = "cannon_artillery";

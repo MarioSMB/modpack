@@ -344,13 +344,11 @@ entity dotc_spawn_drone( entity sqd, entity own,
 						 Model turret_model,
 						 Model gun_model,
 						 Model dead_model,
-						 string explodeffect,
+						 entity explodeffect,
 						 void(entity this, entity thesquad, vector formation_loc, float tdelta) fp_framefunc,
 						 void(entity this) fp_firefunc,
 						 float dronetype)
 {
-#define CCVAR(part) cvar(strcat(drone.cvar_basename,part))
-
 	entity drone = spawn();
 	drone.classname = "dotc_drone";
 	drone.squad 	= sqd;
@@ -429,7 +427,6 @@ entity dotc_spawn_drone( entity sqd, entity own,
 	Net_LinkEntity(drone, true, 0, dotc_drone_send);
 	drone.SendFlags = DDSF_SETUP;
 	return drone;
-#undef CCVAR
 }
 
 bool dotc_drone_send(entity this, entity to, int sf)

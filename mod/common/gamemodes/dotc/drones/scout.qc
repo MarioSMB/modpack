@@ -1,6 +1,10 @@
 #ifndef IMPLEMENTATION
 
+EFFECT(0, DOTC_DRONE_SCOUT_PROJ_EXPLODE,      "g_dotc_scout_pexplode")
+EFFECT(0, DOTC_DRONE_SCOUT_MUZZLEFLASH,       "g_dotc_scout_mflash")
+
 SOUND(DOTC_DRONE_SCOUT_FIRE, "dotc/lasershot3");
+SOUND(DOTC_DRONE_SCOUT_PROJ_EXPLODE, "dotc/explosion2");
 
 #ifdef SVQC
 AUTOCVAR(g_dotc_scout_health, float, 50, "");
@@ -51,7 +55,7 @@ void dotc_scout_fire(entity this)
 	if(SAME_TEAM(trace_ent, this))
 		return;
 
-	dotc_projectile(this, SND_DOTC_DRONE_SCOUT_FIRE, "g_dotc_scout_mflash", "g_dotc_scout_pexplode", 0, 0, PROJECTILE_DOTC_DRONE_SCOUT);
+	dotc_projectile(this, SND_DOTC_DRONE_SCOUT_FIRE, EFFECT_DOTC_DRONE_SCOUT_MUZZLEFLASH, EFFECT_DOTC_DRONE_SCOUT_PROJ_EXPLODE, SND_DOTC_DRONE_SCOUT_PROJ_EXPLODE, 0, 0, PROJECTILE_DOTC_DRONE_SCOUT);
 
 	this.dotc_nextfire = time + this.shot_refire;
 
@@ -157,7 +161,7 @@ void dotc_scout_init(entity this)
 
 entity dotc_spawn_scout(entity sqd, entity own)
 {
-	entity drone = dotc_spawn_drone(sqd, own, MDL_DOTC_DRONE_SCOUT_BODY, MDL_DOTC_DRONE_SCOUT_TURRET, MDL_Null, MDL_DOTC_DRONE_SCOUT_DEAD, "g_dotc_scout_pexplode", dotc_scout_frame, dotc_scout_fire, DOTC_DRONETYPE_SCOUT);
+	entity drone = dotc_spawn_drone(sqd, own, MDL_DOTC_DRONE_SCOUT_BODY, MDL_DOTC_DRONE_SCOUT_TURRET, MDL_Null, MDL_DOTC_DRONE_SCOUT_DEAD, EFFECT_DOTC_DRONE_SCOUT_PROJ_EXPLODE, dotc_scout_frame, dotc_scout_fire, DOTC_DRONETYPE_SCOUT);
 
 	setsize(drone, '-30 -30 -5', '30 30 25');
 	set_movetype(drone, MOVETYPE_BOUNCEMISSILE);

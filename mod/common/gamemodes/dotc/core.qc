@@ -468,6 +468,31 @@ void dotc_CoreSetup(int teamnumber, entity this) // called when spawning a core 
 }
 
 
+// Debugging
+MUTATOR_HOOKFUNCTION(dotc, SV_ParseServerCommand)
+{
+	if(MUTATOR_RETURNVALUE) // command was already handled?
+		return false;
+
+	string cmd_name = M_ARGV(0, string);
+
+	if(cmd_name == "set_corelevel")
+	{
+		if(argv(1) == "" || argv(2) == "")
+		{
+			LOG_INFO("Both team and level need to be set.\n");
+			return true;
+		}
+
+		int forteam = Team_ColorToTeam(argv(1));
+		int tolevel = stoi(argv(2));
+		entity core = dotc_GetCore(forteam);
+		dotc_Core_SetLevel(core, tolevel, true);
+		return true;
+	}
+}
+
+
 // ===============
 // Spawn functions
 // ===============

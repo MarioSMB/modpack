@@ -1,6 +1,10 @@
 #ifndef IMPLEMENTATION
 
+EFFECT(0, DOTC_DRONE_TANK_PROJ_EXPLODE,      "g_dotc_tank_pexplode")
+EFFECT(0, DOTC_DRONE_TANK_MUZZLEFLASH,       "g_dotc_tank_mflash")
+
 SOUND(DOTC_DRONE_TANK_FIRE, W_Sound("hagar_fire"));
+SOUND(DOTC_DRONE_TANK_PROJ_EXPLODE, "dotc/explosion1");
 
 #ifdef SVQC
 entity dotc_spawn_tank(entity this, entity own);
@@ -40,7 +44,7 @@ void dotc_tank_fire(entity this)
 	if(SAME_TEAM(trace_ent, this))
 		return;
 
-	dotc_projectile(this, SND_DOTC_DRONE_TANK_FIRE, "g_dotc_tank_mflash", "g_dotc_tank_pexplode", 0, 0, PROJECTILE_DOTC_DRONE_TANK);
+	dotc_projectile(this, SND_DOTC_DRONE_TANK_FIRE, EFFECT_DOTC_DRONE_TANK_MUZZLEFLASH, EFFECT_DOTC_DRONE_TANK_PROJ_EXPLODE, SND_DOTC_DRONE_TANK_PROJ_EXPLODE, 0, 0, PROJECTILE_DOTC_DRONE_TANK);
 
 	this.dotc_nextfire = time + this.shot_refire;
 }
@@ -114,7 +118,7 @@ void dotc_tank_init(entity this)
 
 entity dotc_spawn_tank(entity this, entity own)
 {
-	entity drone = dotc_spawn_drone(this, own, MDL_DOTC_DRONE_TANK_BODY, MDL_DOTC_DRONE_TANK_TURRET, MDL_DOTC_DRONE_TANK_GUN, MDL_DOTC_DRONE_TANK_DEAD, "g_dotc_tank_pexplode", dotc_tank_frame, dotc_tank_fire, DOTC_DRONETYPE_TANK);
+	entity drone = dotc_spawn_drone(this, own, MDL_DOTC_DRONE_TANK_BODY, MDL_DOTC_DRONE_TANK_TURRET, MDL_DOTC_DRONE_TANK_GUN, MDL_DOTC_DRONE_TANK_DEAD, EFFECT_DOTC_DRONE_TANK_PROJ_EXPLODE, dotc_tank_frame, dotc_tank_fire, DOTC_DRONETYPE_TANK);
 	setsize(drone, drone_size_medium_min, drone_size_medium_max * 1.25);
 	set_movetype(drone, MOVETYPE_FLY);
 	drone.classname = "dotc_drone";

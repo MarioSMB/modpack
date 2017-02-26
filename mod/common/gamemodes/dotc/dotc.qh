@@ -231,8 +231,8 @@ const int DOTC_FF_BACK = BIT(3);
 /// General (simple) AI target validator. @targ target to validate
 int dotc_ai_valid_target(entity this, entity targ);
 
-.string explode_fx;
-.string explode_snd;
+.entity explode_fx;
+.Sound explode_snd;
 
 #endif // SVQC
 

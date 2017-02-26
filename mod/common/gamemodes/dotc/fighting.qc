@@ -13,12 +13,12 @@ void dotc_projectile_touch(entity this, entity toucher)
 
 	traceline(this.origin - this.velocity, this.origin + (this.velocity * 2), MOVE_NORMAL, this);
 	if(trace_fraction == 1.0)
-        __pointparticles(__particleeffectnum(this.explode_fx), findbetterlocation (this.origin, 8), normalize(this.velocity), 1);
-	else
-        __pointparticles(__particleeffectnum(this.explode_fx), findbetterlocation (this.origin, 8), trace_plane_normal, 1);
+        Send_Effect(this.explode_fx, findbetterlocation(this.origin, 8), normalize(this.velocity), 1);
+    else
+        Send_Effect(this.explode_fx, findbetterlocation(this.origin, 8), trace_plane_normal, 1);
 
-    RadiusDamage (this, this.owner, this.shot_dmg, 0, this.shot_radius, NULL, NULL, this.shot_force, DEATH_TURRET.m_id, NULL);
-    _sound (this, CH_SHOTS, this.explode_snd, VOL_BASE, ATTN_NORM);
+    RadiusDamage(this, this.owner, this.shot_dmg, 0, this.shot_radius, NULL, NULL, this.shot_force, DEATH_TURRET.m_id, NULL);
+    sound(this, CH_SHOTS, this.explode_snd, VOL_BASE, ATTN_NORM);
 
 	delete(this);
 }
@@ -41,14 +41,15 @@ void dotc_projectile_damage(entity this, entity inflictor, entity attacker, floa
 
 entity dotc_projectile( entity this,
                         Sound msound,
-                        string fxflash,
-                        string fxexplode,
+                        entity fxflash,
+                        entity fxexplode,
+                        Sound sfxexplode,
                         float  pgravity,
                         float  phealth,
                         int  projectile_id)
 {
-    sound (this, CH_WEAPON_A, msound, VOL_BASE, ATTN_NORM);
-    __pointparticles(__particleeffectnum(fxflash), this.tur_shotorg, v_forward * this.shot_speed, 1);
+    sound(this, CH_WEAPON_A, msound, VOL_BASE, ATTN_NORM);
+    Send_Effect(fxflash, this.tur_shotorg, v_forward * this.shot_speed, 1);
 
 
     //dprint("^1FXFLASH IS: ",fxflash, "  FXEXPLODE IS: ", fxexplode, "\n");
@@ -60,7 +61,7 @@ entity dotc_projectile( entity this,
     setsize(proj, '0 0 0 ', '0 0 0');
 
     //proj.trail_fx;
-    //proj.explode_snd;
+    proj.explode_snd     = sfxexplode;
     proj.explode_fx      = fxexplode;
     proj.owner           = proj.realowner = this;
     proj.shot_dmg 		 = this.shot_dmg;
@@ -85,7 +86,6 @@ entity dotc_projectile( entity this,
 
     IL_PUSH(g_projectiles, proj);
     IL_PUSH(g_bot_dodge, proj);
-
 
     if(pgravity)
 	{
