@@ -296,26 +296,18 @@ MUTATOR_HOOKFUNCTION(dotc, CheckAllowedTeams)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(dotc, ForbidDropCurrentWeapon)
+{
+	// no weapon drop on death
+	return true;
+}
+
 MUTATOR_HOOKFUNCTION(dotc, ForbidThrowCurrentWeapon)
 {
 	// no weapon tossing
 	return true;
 }
 
-//Handle pickups
-MUTATOR_HOOKFUNCTION(dotc, FilterItem)
-{
-	entity item = M_ARGV(0, entity);
-
-	// Untargeted, not valid in DotC
-	if(item.targetname == "")
-		return false;
-
-    dotc_ItemSpawn(item);
-    return true;
-}
-
-// No pickups
 MUTATOR_HOOKFUNCTION(dotc, TurretSpawn)
 {
 	entity turret = M_ARGV(0, entity);

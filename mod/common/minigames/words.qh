@@ -50,4 +50,6 @@ bool Find_Word_Entity(string wrd_name)
 
     return found;
 }
+#else
+bool Find_Word_Entity(string wrd_name) { return false; }
 #endif
