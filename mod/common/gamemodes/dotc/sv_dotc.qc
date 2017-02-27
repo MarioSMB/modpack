@@ -208,6 +208,47 @@ bool dotc_CheckTeams()
 // Mutator hooks
 // =============
 
+MUTATOR_HOOKFUNCTION(dotc, PlayerPreThink)
+{
+	entity player = M_ARGV(0, entity);
+
+	// stats
+	for(entity core = dotc_worldcorelist; core; core = core.dotc_worldcorenext)
+	{
+		switch(core.team)
+		{
+			case NUM_TEAM_1:
+			{
+				STAT(DOTC_CORE_LEVEL_RED, player) = core.dotc_corelevel;
+				STAT(DOTC_CORE_CREDITS_RED_MAX, player) = core.dotc_nextlevel;
+				STAT(DOTC_CORE_CREDITS_RED, player) = core.dotc_credits;
+				break;
+			}
+			case NUM_TEAM_2:
+			{
+				STAT(DOTC_CORE_LEVEL_BLUE, player) = core.dotc_corelevel;
+				STAT(DOTC_CORE_CREDITS_BLUE_MAX, player) = core.dotc_nextlevel;
+				STAT(DOTC_CORE_CREDITS_BLUE, player) = core.dotc_credits;
+				break;
+			}
+			case NUM_TEAM_3:
+			{
+				STAT(DOTC_CORE_LEVEL_YELLOW, player) = core.dotc_corelevel;
+				STAT(DOTC_CORE_CREDITS_YELLOW_MAX, player) = core.dotc_nextlevel;
+				STAT(DOTC_CORE_CREDITS_YELLOW, player) = core.dotc_credits;
+				break;
+			}
+			case NUM_TEAM_4:
+			{
+				STAT(DOTC_CORE_LEVEL_PINK, player) = core.dotc_corelevel;
+				STAT(DOTC_CORE_CREDITS_PINK_MAX, player) = core.dotc_nextlevel;
+				STAT(DOTC_CORE_CREDITS_PINK, player) = core.dotc_credits;
+				break;
+			}
+		}
+	}
+}
+
 MUTATOR_HOOKFUNCTION(dotc, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
@@ -351,5 +392,9 @@ void dotc_Initialize()
 {
 	InitializeEntity(NULL, dotc_DelayedInit, INITPRIO_GAMETYPE);
 }
+
+#endif
+
+#ifdef CSQC
 
 #endif

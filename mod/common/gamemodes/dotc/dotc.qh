@@ -2,6 +2,9 @@
 	AUTOCVAR_NOREF(g_dotc, bool, false, "");
 #endif
 
+#ifdef CSQC
+void HUD_Mod_DotC(vector pos, vector mySize);
+#endif
 CLASS(DoTC, Gametype)
     INIT(DoTC)
     {
@@ -16,6 +19,9 @@ CLASS(DoTC, Gametype)
     {
         return true;
     }
+#ifdef CSQC
+    ATTRIB(DoTC, m_modicons, void(vector pos, vector mySize), HUD_Mod_DotC);
+#endif
 ENDCLASS(DoTC)
 REGISTER_GAMETYPE(DOTC, NEW(DoTC));
 #define g_dotc IS_GAMETYPE(DOTC)
@@ -31,9 +37,21 @@ REGISTER_RADARICON(FACTORY,         4);
 
 REGISTER_RADARICON(Drone,           1);
 
+REGISTER_STAT(DOTC_CORE_LEVEL_RED, int)
+REGISTER_STAT(DOTC_CORE_CREDITS_RED, int)
+REGISTER_STAT(DOTC_CORE_CREDITS_RED_MAX, int)
+REGISTER_STAT(DOTC_CORE_LEVEL_BLUE, int)
+REGISTER_STAT(DOTC_CORE_CREDITS_BLUE, int)
+REGISTER_STAT(DOTC_CORE_CREDITS_BLUE_MAX, int)
+REGISTER_STAT(DOTC_CORE_LEVEL_YELLOW, int)
+REGISTER_STAT(DOTC_CORE_CREDITS_YELLOW, int)
+REGISTER_STAT(DOTC_CORE_CREDITS_YELLOW_MAX, int)
+REGISTER_STAT(DOTC_CORE_LEVEL_PINK, int)
+REGISTER_STAT(DOTC_CORE_CREDITS_PINK, int)
+REGISTER_STAT(DOTC_CORE_CREDITS_PINK_MAX, int)
+
 #ifdef SVQC
-// TODO: find a way to kill!
-.string cvar_basename;
+//.string cvar_basename;
 
 AUTOCVAR_NOREF(g_dotc_respawn_delay_small, float, 0, "");
 AUTOCVAR_NOREF(g_dotc_respawn_delay_small_count, float, 0, "");
