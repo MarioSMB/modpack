@@ -142,7 +142,7 @@ void Radio_Play(string url, string fname, bool loop)
 	});
 }
 
-void Radio_Stop(void)
+void Radio_Stop(bool dostop)
 {
 	if(radio_url)       strunzone(radio_url);
 	if(radio_filename)  strunzone(radio_filename);
@@ -154,10 +154,13 @@ void Radio_Stop(void)
 	radio_url = radio_filename = string_null;
 	radio_playing_queue = -1;
 
-	FOREACH_CLIENT(IS_REAL_CLIENT(it),
+	if(dostop)
 	{
-		stuffcmd(it, "cd stop\n");
-	});
+		FOREACH_CLIENT(IS_REAL_CLIENT(it),
+		{
+			stuffcmd(it, "cd stop\n");
+		});
+	}
 }
 
 void Radio_Queue_Request(void)
@@ -178,9 +181,9 @@ void Radio_Queue_PlayFirst(entity this)
 		++realclients;
 	});
 
-	if(!realclients || game_stopped)
+	if(!realclients || intermission_running)
 	{
-		Radio_Stop();
+		Radio_Stop(false);
 		return;
 	}
 
@@ -188,7 +191,7 @@ void Radio_Queue_PlayFirst(entity this)
 
 	if(q == "")
 	{
-		Radio_Stop();
+		Radio_Stop(true);
 		Radio_Queue_Request();
 		return;
 	}
@@ -316,7 +319,7 @@ MUTATOR_HOOKFUNCTION(radio, SV_ParseServerCommand)
 	
 	if(cmd_name == "stopmusic" || cmd_name == "radio_stop")
 	{
-		Radio_Stop();
+		Radio_Stop(true);
 		return true;
 	}
 
