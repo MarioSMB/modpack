@@ -131,7 +131,6 @@ void dotc_FactoryThink(entity this)
 		dotc_spawn_dronesquad(this, this.enemy.origin, this.enemy);
 		this.lip = time + this.wait;
 		this.cnt += 1;
-
 	}
 
 	CSQCMODEL_AUTOUPDATE(this);
@@ -171,6 +170,7 @@ void dotc_FactoryReset(entity this)
 	setthink(this, dotc_FactoryThink);
 	this.nextthink 		= time;
 	this.health 		= this.max_health;
+	this.cnt = 0;
 
 	if(this.wps_factorybase)
 	{

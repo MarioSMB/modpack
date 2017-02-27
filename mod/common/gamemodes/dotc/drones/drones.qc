@@ -138,7 +138,6 @@ void te_csqc_dronedie(entity this)
 	WriteCoord(MSG_BROADCAST, this.angles_x);	
 	WriteCoord(MSG_BROADCAST, this.angles_y);
 	WriteCoord(MSG_BROADCAST, this.angles_z);
-	
 }
 
 void dotc_drone_die(entity this, bool silent)

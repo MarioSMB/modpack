@@ -81,17 +81,15 @@ void dotc_squad_update(entity this)
 
 void dotc_dronesquad_remove(entity this)
 {
-	// TODO: remove drones here!
-}
-
-void dotc_dronesquad_reset(entity this)
-{
 	IL_EACH(g_dotc_drones, it.squad == this,
 	{
 		remove_ent(it);
 	});
+}
 
-	remove_ent(this);
+void dotc_dronesquad_reset(entity this)
+{
+	remove_ent(this); // handles removal of drones
 }
 
 entity dotc_spawn_dronesquad(entity factory, vector where, entity path)
