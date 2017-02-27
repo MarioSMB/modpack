@@ -179,6 +179,7 @@ bool dotc_CheckWinner()
 		nades_Clear(it);
 	});
 
+	game_stopped = true;
 	return 1;
 }
 

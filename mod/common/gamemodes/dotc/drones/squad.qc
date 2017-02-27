@@ -320,12 +320,6 @@ void dotc_dronesquad_think(entity this)
 	{
 		this.enemy = NULL;
 		this.velocity = '0 0 0';
-		IL_EACH(g_dotc_drones, it.squad == this,
-		{
-			// blow up all drones
-			it.event_damage(it, NULL, NULL, it.health + it.max_health + 10, DEATH_KILL.m_id, '0 0 0', '0 0 0');
-		});
-
 		return;
 	}
 
