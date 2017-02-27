@@ -28,6 +28,9 @@ void dotc_ItemSpawn_Give(entity player)
 		GiveItems(player, 0, tokenize_console(it.netname));
 	});
 
+	if(player.items & ITEM_Jetpack.m_itemid)
+		player.ammo_fuel = max(player.ammo_fuel, g_pickup_fuel_jetpack);
+
 	FOREACH(Weapons, it != WEP_Null && (player.weapons & it.m_wepset),
 	{
 		switch (it.ammo_field)
