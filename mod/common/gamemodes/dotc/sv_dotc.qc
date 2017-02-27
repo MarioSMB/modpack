@@ -179,11 +179,6 @@ bool dotc_CheckWinner()
 		nades_Clear(it);
 	});
 
-	IL_EACH(g_dotc_drones, it.event_damage,
-	{
-		it.event_damage(it, NULL, NULL, it.health + it.max_health + 100, DEATH_KILL.m_id, '0 0 0', '0 0 0');
-	});
-
 	return 1;
 }
 
