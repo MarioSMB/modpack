@@ -85,6 +85,8 @@ void dotc_dronesquad_remove(entity this)
 	{
 		remove_ent(it);
 	});
+
+	WaypointSprite_Kill(this.waypointsprite_attached);
 }
 
 void dotc_dronesquad_reset(entity this)
