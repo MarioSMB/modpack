@@ -75,6 +75,7 @@ AUTOCVAR(g_dotc_turrets_norespawn, bool, true, "");
 
 AUTOCVAR(g_dotc_core_health, float, 15000, "");
 AUTOCVAR(g_dotc_nextlevel_multiplier, float, 2, "");
+AUTOCVAR(g_dotc_nextlevel_resethealth, bool, true, "");
 
 AUTOCVAR(g_dotc_waypointsprites_cores, float, 1, "");
 #endif

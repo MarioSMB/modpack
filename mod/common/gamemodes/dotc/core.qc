@@ -117,6 +117,13 @@ void dotc_Core_SetLevel(entity core, int newlevel, bool silent)
 	core.dotc_corelevel = newlevel;
 	core.dotc_nextlevel = core.dotc_nextlevel * autocvar_g_dotc_nextlevel_multiplier;
 
+	if(autocvar_g_dotc_nextlevel_resethealth)
+	{
+		core.health = core.max_health;
+		if(core.wps_corebase)
+			WaypointSprite_UpdateHealth(core.wps_corebase, core.health);
+	}
+
 	dotc_Core_Addons_Clear(core);
 
 	if(newlevel >= 7)
