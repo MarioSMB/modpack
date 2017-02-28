@@ -15,7 +15,7 @@ void dotc_projectile_explode(entity this, entity directhitentity)
     else
         Send_Effect(this.explode_fx, findbetterlocation(this.origin, 8), trace_plane_normal, 1);
 
-    RadiusDamage(this, this.owner, this.shot_dmg, 0, this.shot_radius, NULL, NULL, this.shot_force, DEATH_TURRET.m_id, directhitentity);
+    RadiusDamage(this, this.owner, this.shot_dmg, 0, this.shot_radius, NULL, NULL, this.shot_force, this.projectiledeathtype, directhitentity);
     sound(this, CH_SHOTS, this.explode_snd, VOL_BASE, ATTN_NORM);
 
 	delete(this);
@@ -49,9 +49,10 @@ entity dotc_projectile( entity this,
                         entity fxflash,
                         entity fxexplode,
                         Sound sfxexplode,
-                        float  pgravity,
-                        float  phealth,
-                        int  projectile_id)
+                        float pgravity,
+                        float phealth,
+                        int pdeathtype,
+                        int projectile_id)
 {
     sound(this, CH_WEAPON_A, msound, VOL_BASE, ATTN_NORM);
     Send_Effect(fxflash, this.tur_shotorg, v_forward * this.shot_speed, 1);
@@ -75,6 +76,7 @@ entity dotc_projectile( entity this,
     proj.shot_force 	 = this.shot_force;
     proj.bot_dodge       = true;
     proj.bot_dodgerating = this.shot_dmg;
+    proj.projectiledeathtype = pdeathtype;
     settouch(proj, dotc_projectile_touch);
     proj.velocity        = normalize(v_forward + randomvec() * this.shot_spread) * this.shot_speed;
 
@@ -95,7 +97,7 @@ entity dotc_projectile( entity this,
     if(pgravity)
 	{
 		set_movetype(proj, MOVETYPE_TOSS);
-		proj.gravity    = pgravity;
+		proj.gravity = pgravity;
 		setthink(proj, dotc_projectile_think);
 		proj.nextthink  = time;
 		CSQCProjectile(proj, true, projectile_id, true);

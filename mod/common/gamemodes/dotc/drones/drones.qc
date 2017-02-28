@@ -1,5 +1,9 @@
 #ifndef IMPLEMENTATION
 
+MSG_CENTER_NOTIF(DEATH_SELF_DOTC_DRONE_PROJECTILE,         1,      0, 0, "",                              CPID_Null,                             "0 0",  _("^K1You were gunned down by a drone!"), "")
+MSG_INFO_NOTIF(DEATH_MURDER_DOTC_DRONE_PROJECTILE,         1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_death",           _("^BG%s%s^K1 was turned into drone cannon fodder by ^BG%s^K1%s%s"), "")
+MSG_MULTI_NOTIF(DEATH_MURDER_DOTC_DRONE_PROJECTILE,        1,  NULL,                                      INFO_DEATH_MURDER_DOTC_DRONE_PROJECTILE,        NULL)
+
 const int DDSF_SETUP = BIT(0);
 const int DDSF_MOVE = BIT(1);
 const int DDSF_AIM = BIT(2);

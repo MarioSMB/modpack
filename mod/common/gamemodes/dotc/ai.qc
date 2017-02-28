@@ -312,7 +312,7 @@ int dotc_ai_track_combined_step(entity this, entity turret, vector shot_org, vec
 	return ret | DOTC_AI_TRACK_OK;
 }
 
-
+#if 0
 int dotc_ai_track_combined_inert(entity this, entity turret, vector shot_org, vector aimloc, vector turnspeed, float blend, vector aim_minmax, float delta)
 {
 	int ret = 0;
@@ -366,6 +366,7 @@ int dotc_ai_track_combined_inert(entity this, entity turret, vector shot_org, ve
 
 	return ret | DOTC_AI_TRACK_OK;
 }
+#endif
 
 int dotc_ai_track_separate_inert(entity this, entity turret, entity gun, vector shot_org, vector aimloc, vector turnspeed, float blend, vector aim_minmax, float delta)
 {

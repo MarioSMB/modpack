@@ -6,6 +6,10 @@ EFFECT(0, DOTC_DRONE_RART_MUZZLEFLASH,       "g_dotc_rart_mflash")
 SOUND(DOTC_DRONE_RART_FIRE, W_Sound("rocket_fire"));
 SOUND(DOTC_DRONE_RART_PROJ_EXPLODE, W_Sound("rocket_impact"));
 
+MSG_INFO_NOTIF(DEATH_SELF_DOTC_RART_PROJECTILE,            1,  2, 1, "s1 s2loc spree_lost", "s1",         "notify_death",                                _("^BG%s^K1 was destroyed by a Rocket Artillery drone%s%s"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_DOTC_RART_PROJECTILE,           1,  NULL,                                      INFO_DEATH_SELF_DOTC_RART_PROJECTILE,          CENTER_DEATH_SELF_DOTC_DRONE_PROJECTILE)
+REGISTER_DEATHTYPE(DOTC_RART_PROJECTILE,                   DEATH_SELF_DOTC_RART_PROJECTILE,               DEATH_MURDER_DOTC_DRONE_PROJECTILE,             "")
+
 #ifdef SVQC
 AUTOCVAR(g_dotc_rart_health, float, 150, "");
 AUTOCVAR(g_dotc_rart_shot_dmg, float, 50, "");
@@ -80,7 +84,7 @@ void dotc_rart_fire(entity this)
 
 	dotc_ai_aim_ballistic_vel = arc_projectile_calculatevelocity(this.tur_shotorg, r_target, hgt);
 
-	entity rkt = dotc_projectile(this, SND_DOTC_DRONE_RART_FIRE, EFFECT_DOTC_DRONE_RART_MUZZLEFLASH, EFFECT_DOTC_DRONE_RART_PROJ_EXPLODE, SND_DOTC_DRONE_RART_PROJ_EXPLODE, 1, 25,PROJECTILE_DOTC_DRONE_RART);
+	entity rkt = dotc_projectile(this, SND_DOTC_DRONE_RART_FIRE, EFFECT_DOTC_DRONE_RART_MUZZLEFLASH, EFFECT_DOTC_DRONE_RART_PROJ_EXPLODE, SND_DOTC_DRONE_RART_PROJ_EXPLODE, 1, 25, DEATH_DOTC_RART_PROJECTILE.m_id, PROJECTILE_DOTC_DRONE_RART);
 	rkt.velocity = dotc_ai_aim_ballistic_vel;
 	set_movetype(rkt, MOVETYPE_TOSS);
 

@@ -6,6 +6,10 @@ EFFECT(0, DOTC_DRONE_SCOUT_MUZZLEFLASH,       "g_dotc_scout_mflash")
 SOUND(DOTC_DRONE_SCOUT_FIRE, "dotc/lasershot3");
 SOUND(DOTC_DRONE_SCOUT_PROJ_EXPLODE, "dotc/explosion2");
 
+MSG_INFO_NOTIF(DEATH_SELF_DOTC_SCOUT_PROJECTILE,            1,  2, 1, "s1 s2loc spree_lost", "s1",         "notify_death",                                _("^BG%s^K1 was gunned down by a Scout drone%s%s"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_DOTC_SCOUT_PROJECTILE,           1,  NULL,                                      INFO_DEATH_SELF_DOTC_SCOUT_PROJECTILE,         CENTER_DEATH_SELF_DOTC_DRONE_PROJECTILE)
+REGISTER_DEATHTYPE(DOTC_SCOUT_PROJECTILE,                   DEATH_SELF_DOTC_SCOUT_PROJECTILE,              DEATH_MURDER_DOTC_DRONE_PROJECTILE,            "")
+
 #ifdef SVQC
 AUTOCVAR(g_dotc_scout_health, float, 50, "");
 AUTOCVAR(g_dotc_scout_shot_dmg, float, 5, "");
@@ -55,7 +59,7 @@ void dotc_scout_fire(entity this)
 	if(SAME_TEAM(trace_ent, this))
 		return;
 
-	dotc_projectile(this, SND_DOTC_DRONE_SCOUT_FIRE, EFFECT_DOTC_DRONE_SCOUT_MUZZLEFLASH, EFFECT_DOTC_DRONE_SCOUT_PROJ_EXPLODE, SND_DOTC_DRONE_SCOUT_PROJ_EXPLODE, 0, 0, PROJECTILE_DOTC_DRONE_SCOUT);
+	dotc_projectile(this, SND_DOTC_DRONE_SCOUT_FIRE, EFFECT_DOTC_DRONE_SCOUT_MUZZLEFLASH, EFFECT_DOTC_DRONE_SCOUT_PROJ_EXPLODE, SND_DOTC_DRONE_SCOUT_PROJ_EXPLODE, 0, 0, DEATH_DOTC_SCOUT_PROJECTILE.m_id, PROJECTILE_DOTC_DRONE_SCOUT);
 
 	this.dotc_nextfire = time + this.shot_refire;
 

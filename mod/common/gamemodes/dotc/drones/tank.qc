@@ -6,6 +6,10 @@ EFFECT(0, DOTC_DRONE_TANK_MUZZLEFLASH,       "g_dotc_tank_mflash")
 SOUND(DOTC_DRONE_TANK_FIRE, W_Sound("hagar_fire"));
 SOUND(DOTC_DRONE_TANK_PROJ_EXPLODE, "dotc/explosion1");
 
+MSG_INFO_NOTIF(DEATH_SELF_DOTC_TANK_PROJECTILE,            1,  2, 1, "s1 s2loc spree_lost", "s1",         "notify_death",                                _("^BG%s^K1 was obliterated by a Tank drone%s%s"), "")
+MSG_MULTI_NOTIF(DEATH_SELF_DOTC_TANK_PROJECTILE,           1,  NULL,                                      INFO_DEATH_SELF_DOTC_TANK_PROJECTILE,          CENTER_DEATH_SELF_DOTC_DRONE_PROJECTILE)
+REGISTER_DEATHTYPE(DOTC_TANK_PROJECTILE,                   DEATH_SELF_DOTC_TANK_PROJECTILE,               DEATH_MURDER_DOTC_DRONE_PROJECTILE,             "")
+
 #ifdef SVQC
 entity dotc_spawn_tank(entity this, entity own);
 
@@ -44,7 +48,7 @@ void dotc_tank_fire(entity this)
 	if(SAME_TEAM(trace_ent, this))
 		return;
 
-	dotc_projectile(this, SND_DOTC_DRONE_TANK_FIRE, EFFECT_DOTC_DRONE_TANK_MUZZLEFLASH, EFFECT_DOTC_DRONE_TANK_PROJ_EXPLODE, SND_DOTC_DRONE_TANK_PROJ_EXPLODE, 0, 0, PROJECTILE_DOTC_DRONE_TANK);
+	dotc_projectile(this, SND_DOTC_DRONE_TANK_FIRE, EFFECT_DOTC_DRONE_TANK_MUZZLEFLASH, EFFECT_DOTC_DRONE_TANK_PROJ_EXPLODE, SND_DOTC_DRONE_TANK_PROJ_EXPLODE, 0, 0, DEATH_DOTC_TANK_PROJECTILE.m_id, PROJECTILE_DOTC_DRONE_TANK);
 
 	this.dotc_nextfire = time + this.shot_refire;
 }
