@@ -443,7 +443,6 @@ bool dotc_drone_send(entity this, entity to, int sf)
 
 	if(sf & DDSF_SETUP)
 	{
-
 		WriteByte(MSG_ENTITY, this.dotc_dronetype);
 		WriteByte(MSG_ENTITY, this.team);
 	}
@@ -464,6 +463,9 @@ bool dotc_drone_send(entity this, entity to, int sf)
 		WriteCoord(MSG_ENTITY, this.angles_x);
 		WriteCoord(MSG_ENTITY, this.angles_y);
 		//WriteCoord(MSG_ENTITY, this.angles_z);
+
+		WriteCoord(MSG_ENTITY, this.avelocity_x);
+		WriteCoord(MSG_ENTITY, this.avelocity_y);
 	}
 
 	if(sf & DDSF_AIM)
@@ -545,11 +547,13 @@ MUTATOR_HOOKFUNCTION(cl_drones, EditProjectile)
 	}
 }
 
-
+.vector oldangles;
 void dotc_drone_predraw(entity this)
 {
 	if(this.velocity)
 		setorigin(this, this.oldorigin + this.velocity * (time - this.move_time));
+	if(this.avelocity)
+		this.angles = this.oldangles + this.avelocity * (time - this.move_time);
 	//InterpolateOrigin_Do();
 }
 
@@ -667,9 +671,12 @@ NET_HANDLE(ENT_CLIENT_DOTC_DRONE, bool isnew)
 
 	if(sf & DDSF_TURN)
 	{
-		this.angles_x = ReadCoord();
-		this.angles_y = ReadCoord();
+		this.oldangles_x = ReadCoord();
+		this.oldangles_y = ReadCoord();
 		//this.angles_z = ReadCoord();
+
+		this.avelocity_x = ReadCoord();
+		this.avelocity_y = ReadCoord();
 	}
 
 	if(sf & DDSF_AIM)
