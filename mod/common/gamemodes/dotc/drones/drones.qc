@@ -15,6 +15,7 @@ const int DDSF_TURN = BIT(7);
 
 REGISTER_NET_LINKED(ENT_CLIENT_DOTC_DRONE)
 
+// death animation is handled as a different entity so we can remove it at will
 REGISTER_NET_TEMP(TE_CSQC_DOTC_DRONEDIE)
 
 #ifdef SVQC
@@ -57,23 +58,22 @@ void gib_groundboom(entity this, entity toucher)
 	if(this.cnt > 0)
 		return;
 
-	sound (this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTN_NORM);
+	sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTN_NORM);
 	Send_Effect(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
+
+	settouch(this, func_null); // just incase...?
 
 	delete(this);
 }
 
 void dotc_sv_gibshower(entity this, vector where)
 {
-	int i;
-	entity gib;
-
-	sound (this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTN_NORM);
+	sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTN_NORM);
 	Send_Effect(EFFECT_ROCKET_EXPLODE, where, '0 0 0', 1);
 
-	for(i = 1; i < (random() * 5); ++i)
+	for(int i = 1; i < (random() * 5); ++i)
 	{
-		gib = spawn();
+		entity gib = spawn();
 		setmodel(gib, MDL_DOTC_GIB_RANDOM());
 		setorigin(gib, where);
 
@@ -87,7 +87,7 @@ void dotc_sv_gibshower(entity this, vector where)
 		gib.avelocity 	= randomvec() * 160;
 
 		// cnt = bounce how many times before exploding.
-		gib.cnt         = rint(random() * 5);
+		gib.cnt = rint(random() * 5);
 		settouch(gib, gib_groundboom);
 
 		// Failsafe.
@@ -244,7 +244,7 @@ void dotc_droneyaw(entity this)
 		dotc_ai_track_targetoffset = dotc_ai_moveangle(this, '0 0 0', this.squad.angles, '360 360 360');
 
 	this.avelocity_y = bound(this.dotc_turnspeed * -1, dotc_ai_track_targetoffset_y, this.dotc_turnspeed);
-	this.SendFlags |= DDSF_TURN| DDSF_MOVE;
+	this.SendFlags |= DDSF_TURN | DDSF_MOVE;
 }
 
 

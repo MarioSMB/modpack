@@ -262,7 +262,8 @@ MUTATOR_HOOKFUNCTION(dotc, PlayerDamage_SplitHealthArmor)
 	if(autocvar_g_dotc_guarddog)
 	if(IS_PLAYER(frag_attacker))
 	{
-		FOREACH_ENTITY_FLOAT(team, frag_target.team,
+		// reasoning: only squads have player targeting enabled, so this should work
+		IL_EACH(g_dotc_squads, it.team == frag_target.team,
 		{
 			if(it.target_validate_flags & DOTC_TARGET_PLAYERS)
 			if(dotc_ai_valid_target(it, frag_attacker) > 0)

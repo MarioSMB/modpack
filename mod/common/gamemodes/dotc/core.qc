@@ -1,3 +1,6 @@
+IntrusiveList g_dotc_addons;
+STATIC_INIT(g_dotc_addons) { g_dotc_addons = IL_NEW(); }
+
 // core listing
 entity dotc_GetCore(int teamnumber)
 {
@@ -50,6 +53,8 @@ entity dotc_Core_Addons_Spawn(entity core, Model smdl, string sbone)
 	setthink(addon, dotc_Core_Addons_Think);
 	addon.nextthink			= time + DOTC_CORE_THINKRATE;
 
+	IL_PUSH(g_dotc_addons, addon);
+
 	fix_mins_maxs_for_rotating(addon);
 	CSQCMODEL_AUTOINIT(addon);
 
@@ -58,14 +63,12 @@ entity dotc_Core_Addons_Spawn(entity core, Model smdl, string sbone)
 
 void dotc_Core_Addons_Clear(entity this)
 {
-	FOREACH_ENTITY_ENT(owner, this,
+	IL_EACH(g_dotc_addons, it.owner == this && it.dotc_unittype == DOTC_UF_ADDON,
 	{
-		if(it.dotc_unittype == DOTC_UF_ADDON)
-		{
-			it.owner = NULL;
-			setthink(it, SUB_Remove);
-			it.nextthink = time;
-		}
+		it.owner = NULL;
+		setthink(it, SUB_Remove);
+		it.nextthink = time;
+		IL_REMOVE(g_dotc_addons, it);
 	});
 }
 
@@ -84,9 +87,7 @@ void dotc_Core_Sphere_Think(entity this)
 
 void dotc_Core_Sphere_Spawn(entity core)
 {
-	entity sphere;
-
-	sphere = dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_10, "addon04");
+	entity sphere = dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_10, "addon04");
 	sphere.solid 	 = SOLID_NOT;
 	set_movetype(sphere, MOVETYPE_NOCLIP);
 	setthink(sphere, dotc_Core_Sphere_Think);
@@ -306,30 +307,27 @@ void dotc_CoreThink(entity this)
 				Send_Effect(EFFECT_ONS_GENERATOR_EXPLODE, org, '0 0 0', 1);
 				sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
-				FOREACH_ENTITY_ENT(owner, this,
+				IL_EACH(g_dotc_addons, it.owner == this && it.dotc_unittype == DOTC_UF_ADDON,
 				{
-					if(it.dotc_unittype == DOTC_UF_ADDON)
-					{
-						it.effects   = EF_FLAME;
-						it.colormod  = '-1 -1 -1';
-						setsize(it,'-1 -1 -1', '1 1 1');				
+					it.effects   = EF_FLAME;
+					it.colormod  = '-1 -1 -1';
+					setsize(it,'-1 -1 -1', '1 1 1');				
 						
-						if(it.move_movetype == MOVETYPE_NOCLIP) // level 10 sphere
-						{
-							it.nextthink = 0;
-							set_movetype(it, MOVETYPE_BOUNCE);
-							it.solid 	= SOLID_CORPSE;
-							it.velocity  = normalize(it.origin - this.origin) *  (200 + (random() * 200)) + ('0 0 150' * (random() * 5));
-						}
-						else
-						{
-							set_movetype(it, MOVETYPE_BOUNCE);
-							it.solid 	= SOLID_CORPSE;
-							it.velocity = normalize(it.origin - this.origin) *  (500 + (random() * 1000)) + ('0 0 150' * (random() * 5));					
-						}
-
-						it.avelocity = randomvec() * 720;
+					if(it.move_movetype == MOVETYPE_NOCLIP) // level 10 sphere
+					{
+						it.nextthink = 0;
+						set_movetype(it, MOVETYPE_BOUNCE);
+						it.solid 	= SOLID_CORPSE;
+						it.velocity  = normalize(it.origin - this.origin) *  (200 + (random() * 200)) + ('0 0 150' * (random() * 5));
 					}
+					else
+					{
+						set_movetype(it, MOVETYPE_BOUNCE);
+						it.solid 	= SOLID_CORPSE;
+						it.velocity = normalize(it.origin - this.origin) *  (500 + (random() * 1000)) + ('0 0 150' * (random() * 5));					
+					}
+
+					it.avelocity = randomvec() * 720;
 				});
 			}
 			else

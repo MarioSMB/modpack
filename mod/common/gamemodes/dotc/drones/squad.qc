@@ -1,5 +1,10 @@
 #ifndef IMPLEMENTATION
 
+#ifdef SVQC
+IntrusiveList g_dotc_squads;
+STATIC_INIT(g_dotc_squads) { g_dotc_squads = IL_NEW(); }
+#endif
+
 #else
 
 #ifdef SVQC
@@ -10,33 +15,26 @@ AUTOCVAR(g_dotc_squads_dont_chase, bool, false, "");
 
 void dotc_sprite(entity this, entity simg, vector ofs, float max_hp, float hp, vector clr, float fixed)
 {
+	entity wp;
 	if(fixed)
 	{
-		entity wp = WaypointSprite_SpawnFixed(simg, this.origin + ofs, this, sprite, RADARICON_OBJECTIVE);
+		wp = WaypointSprite_SpawnFixed(simg, this.origin + ofs, this, sprite, RADARICON_OBJECTIVE);
 		wp.colormod = clr;
+		//WaypointSprite_UpdateTeamRadar(wp, RADARICON_OBJECTIVE, clr);
 	}
 	else
 	{
 		//this.team
-		entity wp = WaypointSprite_Spawn(simg, 0, 700, this, ofs, NULL, this.team, this, waypointsprite_attached, false, RADARICON_OBJECTIVE);
+		wp = WaypointSprite_Spawn(simg, 0, 700, this, ofs, NULL, this.team, this, waypointsprite_attached, false, RADARICON_OBJECTIVE);
 		wp.colormod = clr;
+		//WaypointSprite_UpdateRule(wp, this.team, SPRITERULE_TEAMPLAY);
 	}
     
 	if(max_hp <= 0)
 		return;
 
-	if(fixed)
-	{
-		WaypointSprite_UpdateMaxHealth(this.sprite, max_hp);
-		WaypointSprite_UpdateHealth(this.sprite, hp);
-		//WaypointSprite_UpdateTeamRadar(this.sprite, RADARICON_OBJECTIVE, clr);
-	}
-	else
-	{
-		WaypointSprite_UpdateMaxHealth(this.waypointsprite_attached, max_hp);
-		WaypointSprite_UpdateHealth(this.waypointsprite_attached, hp);
-		//WaypointSprite_UpdateRule(this.waypointsprite_attached, this.team, SPRITERULE_TEAMPLAY);
-	}
+	WaypointSprite_UpdateMaxHealth(wp, max_hp);
+	WaypointSprite_UpdateHealth(wp, hp);
 }
 
 void dotc_dronesquad_think(entity this);
@@ -116,6 +114,8 @@ entity dotc_spawn_dronesquad(entity factory, vector where, entity path)
 	sqd.dotc_unittype 			= DOTC_UF_SQUAD;
 	sqd.dotc_targetflags		= DOTC_TARGET_TURRETS | DOTC_TARGET_DRONES;
 	sqd.target_validate_flags 	= DOTC_TARGET_TURRETS | DOTC_TARGET_DRONES | DOTC_TARGET_PLAYERS;
+
+	IL_PUSH(g_dotc_squads, sqd);
 
 	setorigin(sqd, where);
 
