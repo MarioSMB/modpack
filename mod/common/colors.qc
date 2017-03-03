@@ -8,6 +8,7 @@ string mod_translate_clean(string s)
 	if(s == "" || !s)
 		return s;
 
+	s = strreplace("^x664", "^7", s);
 	s = strreplace("^x665", "^3", s);
 	s = strreplace("^x666", "^1", s);
 	s = strreplace("^x667", "^2", s);
@@ -42,6 +43,7 @@ vector mod_get_num_color(int num)
 		case 3: color = '0 0 1'; thenum = 1; break;
 		case 4: color = vec3(1, 1, sin(2 * M_PI * time)); thenum = 200; break;
 		case 5: color = vec3(sin(2 * M_PI * time), sin(2 * M_PI * time), sin(2 * M_PI * time)); thenum = 200; break;
+		case 6: color = '1 1 1'; thenum = 1; break;
 	}
 
 	float blinkingamt = (1 - thenum/200/0.25);
@@ -77,10 +79,11 @@ string mod_translate(string s)
 			string nc3 = chr2str(str2chr(iter_s, iter_i + 2));
 			string nc4 = chr2str(str2chr(iter_s, iter_i + 3));
 			int fc4 = stoi(nc4);
-			if(nc1 == "x" && nc2 == "6" && nc3 == "6" && (fc4 >= 5 && fc4 <= 9)) // so far so good
+			if(nc1 == "x" && nc2 == "6" && nc3 == "6" && (fc4 >= 4 && fc4 <= 9)) // so far so good
 			{
 				switch(fc4)
 				{
+					case 4: fancy = 6; break;
 					case 5: fancy = 4; break;
 					default:
 					case 6: fancy = 2; break;
