@@ -1253,6 +1253,11 @@ MUTATOR_HOOKFUNCTION(jb, SpectateCopy)
 
 	STAT(JB_ISPRISONED, client) = STAT(JB_ISPRISONED, spectatee);
 	STAT(CAPTURE_PROGRESS, client) = STAT(CAPTURE_PROGRESS, spectatee);
+
+	if(spectatee.clientcamera != spectatee)
+		client.clientcamera = spectatee.clientcamera;
+	else
+		client.clientcamera = client; // make sure we don't get stuck
 }
 
 MUTATOR_HOOKFUNCTION(jb, MakePlayerObserver)
@@ -1263,6 +1268,7 @@ MUTATOR_HOOKFUNCTION(jb, MakePlayerObserver)
 		JB_Release(player, NULL);
 
 	STAT(ROUNDLOST, player) = false;
+	player.clientcamera = player;
 }
 
 MUTATOR_HOOKFUNCTION(jb, ClientDisconnect)
@@ -1295,10 +1301,13 @@ MUTATOR_HOOKFUNCTION(jb, PlayerPreThink)
 	int ps = min(1, STAT(JB_ISPRISONED, player));
 	if(ps != player.jb_isprisoned_prev)
 	{
-		if(!ps)
+		if(!ps && IS_PLAYER(player))
 			Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_JAILBREAK_FREE, player.netname);
 		player.jb_isprisoned_prev = ps;
 	}
+
+	if(!IS_PLAYER(player))
+		return;
 
 	if(time - player.pointupdatetime >= 0.01)
 		STAT(CAPTURE_PROGRESS, player) = 0;
