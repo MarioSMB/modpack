@@ -95,10 +95,10 @@ const float VOL_MUFFLED = 0.35;
 CLASS(Sound, Object)
 	ATTRIB(Sound, m_id, int, 0);
 	ATTRIB(Sound, sound_str, string());
-	CONSTRUCTOR(Sound, string() path)
+	CONSTRUCTOR(Sound, string() thepath)
 	{
 		CONSTRUCT(Sound);
-		this.sound_str = path;
+		this.sound_str = thepath;
 	}
 	#define Sound_fixpath(this) _Sound_fixpath((this).sound_str())
 	string _Sound_fixpath(string base)

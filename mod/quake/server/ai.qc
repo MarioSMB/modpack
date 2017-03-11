@@ -91,7 +91,7 @@ void t_movetarget(entity this, entity toucher)
 	if(toucher.classname == "monster_ogre")
 		_sound(toucher, CHAN_VOICE, "ogre/ogdrag.wav", 1, ATTN_IDLE); // play chainsaw drag sound
 
-	toucher.goalentity = toucher.movetarget = find (world, targetname, other.target);
+	toucher.goalentity = toucher.movetarget = find (NULL, targetname, toucher.target);
 	toucher.ideal_yaw = vectoyaw(toucher.goalentity.origin - toucher.origin);
 	if (!toucher.movetarget)
 	{
