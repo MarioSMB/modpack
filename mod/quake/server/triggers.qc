@@ -314,10 +314,19 @@ void tdeath_touch(entity this, entity toucher)
 // frag anyone who teleports in on top of an invincible player
 	if(IS_PLAYER(toucher))
 	{
+		if(toucher.invincible_finished > time && this.owner.invincible_finished > time)
+		{
+			this.classname = "teledeath3";
+			toucher.invincible_finished = 0;
+			this.owner.invincible_finished = 0;
+			T_Damage(toucher, this, this, 50000);
+			entity other2 = this.owner;
+			this.owner = toucher;
+			T_Damage(other2, this, this, 50000);
+		}
 		if(toucher.invincible_finished > time)
+		{
 			this.classname = "teledeath2";
-		if(!IS_PLAYER(this.owner))
-		{	// toucher monsters explode themselves
 			T_Damage(this.owner, this, this, 50000);
 			return;
 		}
@@ -451,22 +460,13 @@ trigger_setskill
 ==============================================================================
 */
 
-void trigger_skill_touch(entity this, entity toucher)
-{
-	if(!IS_PLAYER(toucher))
-		return;
-		
-	cvar_set("skill", this.message);
-}
-
 /*QUAKED trigger_setskill(.5 .5 .5) ?
 sets skill level to the value of "message".
 Only used on start map.
 */
 spawnfunc(trigger_setskill)
 {
-	InitTrigger(this);
-	settouch(this, trigger_skill_touch);
+	delete(this);
 }
 
 

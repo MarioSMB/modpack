@@ -274,7 +274,7 @@ void player_nail1(entity this)
 
 	this.effects |= EF_MUZZLEFLASH;
 
-	if(!this.button0)
+	if(!this.button0 || intermission_running || this.impulse)
 		{player_run(this);return;}
 	this.weaponframe = this.weaponframe + 1;
 	if(this.weaponframe == 9)
@@ -289,7 +289,7 @@ void player_nail2(entity this)
 
 	this.effects |= EF_MUZZLEFLASH;
 
-	if(!this.button0)
+	if(!this.button0 || intermission_running || this.impulse)
 		{player_run(this);return;}
 	this.weaponframe = this.weaponframe + 1;
 	if(this.weaponframe == 9)
@@ -308,7 +308,7 @@ void player_light1(entity this)
 
 	this.effects |= EF_MUZZLEFLASH;
 
-	if(!this.button0)
+	if(!this.button0 || intermission_running)
 		{player_run(this);return;}
 	this.weaponframe = this.weaponframe + 1;
 	if(this.weaponframe == 5)
@@ -323,7 +323,7 @@ void player_light2(entity this)
 
 	this.effects |= EF_MUZZLEFLASH;
 
-	if(!this.button0)
+	if(!this.button0 || intermission_running)
 		{player_run(this);return;}
 	this.weaponframe = this.weaponframe + 1;
 	if(this.weaponframe == 5)
@@ -501,7 +501,7 @@ void DeathSound(entity this)
 	// water death sounds
 	if(this.waterlevel == 3)
 	{
-		DeathBubbles(this, 20);
+		DeathBubbles(this, 5);
 		_sound(this, CHAN_VOICE, "player/h2odeath.wav", 1, ATTN_NONE);
 		return;
 	}
@@ -530,13 +530,25 @@ void PlayerDead(entity this)
 	this.deadflag = DEAD_DEAD;
 }
 
-vector VelocityForDamage(float dm)
+vector VelocityForDamage(entity this, float dm)
 {
 	vector v;
 
-	v_x = 100 * crandom();
-	v_y = 100 * crandom();
-	v_z = 200 + 100 * random();
+	if(vdist(damage_inflictor.velocity, >, 0))
+	{
+		v = 0.5 * damage_inflictor.velocity;
+		v = v + (25 * normalize(this.origin - damage_inflictor.origin));
+		v.z = 100 + 240 * random();
+		v.x = v.x + (200 * crandom());
+		v.y = v.y + (200 * crandom());
+		//dprint ("Velocity gib\n");                
+	}
+	else
+	{
+		v.x = 100 * crandom();
+		v.y = 100 * crandom();
+		v.z = 200 + 100 * random();
+	}
 
 	if(dm > -50)
 	{
@@ -560,7 +572,7 @@ void ThrowGib(entity this, string gibname, float dm)
 	new.origin = this.origin;
 	_setmodel(new, gibname);
 	setsize(new, '0 0 0', '0 0 0');
-	new.velocity = VelocityForDamage(dm);
+	new.velocity = VelocityForDamage(this, dm);
 	new.movetype = MOVETYPE_BOUNCE;
 	new.solid = SOLID_NOT;
 	new.avelocity_x = random()*600;
@@ -583,7 +595,7 @@ void ThrowHead(entity this, string gibname, float dm)
 	this.solid = SOLID_NOT;
 	this.view_ofs = '0 0 8';
 	setsize(this, '-16 -16 0', '16 16 56');
-	this.velocity = VelocityForDamage(dm);
+	this.velocity = VelocityForDamage(this, dm);
 	this.origin_z = this.origin_z - 24;
 	this.flags &= ~FL_ONGROUND;
 	this.avelocity = crandom() * '0 600 0';
@@ -620,14 +632,36 @@ void GibPlayer(entity this, entity attacker)
 void PlayerDie(entity this, entity attacker)
 {
 	this.items &= ~IT_INVISIBILITY;
+	//if(stof(infokey(world, "dq")) != 0)
+	{
+		if(this.super_damage_finished > 0)
+		{
+			DropQuad(this, this.super_damage_finished - time);
+			bprint(this.netname);
+			if(deathmatch == 4)
+				bprint(" lost an OctaPower with ");
+			else
+				bprint(" lost a quad with ");
+			bprintf("%d seconds remaining\n", rint(this.super_damage_finished - time));
+		}
+	}
+
+	//if((stof(infokey(world,"dr"))) != 0)
+	{
+		if(this.invisible_finished > 0)
+		{
+			bprintf("%s lost a ring with %d seconds remaining\n", this.netname, rint(this.invincible_finished - time));
+			DropRing(this, this.invisible_finished - time);
+		}
+	}
+
 	this.invisible_finished = 0;	// don't die as eyes
 	this.invincible_finished = 0;
 	this.super_damage_finished = 0;
 	this.radsuit_finished = 0;
 	this.modelindex = modelindex_player;	// don't use eyes
 
-	if(deathmatch || coop)
-		DropBackpack(this);
+	DropBackpack(this);
 	
 	this.weaponmodel="";
 	this.view_ofs = '0 0 -8';

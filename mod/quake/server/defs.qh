@@ -7,7 +7,7 @@ int autocvar_sv_eventlog_files_counter; // TODO
 
 void GameLogEcho(string s);
 
-float skill;
+//float skill;
 
 #define bprintf(...) bprint(sprintf(__VA_ARGS__))
 
@@ -50,7 +50,7 @@ void set_anim(entity this, int frm, void(entity) tnk);
 
 .float dmg;
 
-bool gameover;
+//bool gameover;
 
 .float pausetime;
 
@@ -92,3 +92,8 @@ const int AS_MISSILE = 4;
 .void(entity this) th_melee;
 .void(entity this, entity attacker, float damage) th_pain;
 .void(entity this, entity attacker) th_die;
+
+.bool voided;
+
+float timelimit;
+float fraglimit;

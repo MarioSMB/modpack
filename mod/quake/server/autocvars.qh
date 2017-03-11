@@ -2,10 +2,10 @@
 
 bool autocvar_samelevel;
 bool autocvar_registered = true; // to prevent being locked out of gpl levels
-int autocvar_noexit;
+//int autocvar_noexit;
 int autocvar_temp1; // temp
 #define autocvar_fraglimit cvar("fraglimit")
 #define autocvar_timelimit cvar("timelimit")
-int autocvar_skill;
+//int autocvar_skill;
 int autocvar_teamplay;
 bool autocvar_sv_curl_serverpackages_auto;

@@ -85,12 +85,8 @@ void SUB_CalcMove(entity this, vector tdest, float tspeed, void(entity) func)
 // divide by speed to get time to reach dest
 	float traveltime = len / tspeed;
 
-	if(traveltime < 0.1)
-	{
-		this.velocity = '0 0 0';
-		this.nextthink = this.ltime + 0.1;
-		return;
-	}
+	if(traveltime < 0.03)
+		traveltime = 0.03;
 	
 // set nextthink to trigger a think when dest is reached
 	this.nextthink = this.ltime + traveltime;
@@ -247,33 +243,4 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 				t.use(t, actor, this);
 		}
 	}
-}
-
-
-/*
-
-in nightmare mode, all attack_finished times become 0
-some monsters refire twice automatically
-
-*/
-
-void SUB_AttackFinished(entity this, float normal)
-{
-	this.cnt = 0;		// refire count for nightmare
-	if(skill != 3)
-		this.attack_finished = time + normal;
-}
-
-bool visible(entity this, entity targ);
-
-void SUB_CheckRefire(entity this, void(entity) thinkst)
-{
-	if(skill != 3)
-		return;
-	if(this.cnt == 1)
-		return;
-	if(!visible(this, this.enemy))
-		return;
-	this.cnt = 1;
-	setthink(this, thinkst);
 }

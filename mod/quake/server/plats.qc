@@ -108,6 +108,7 @@ void plat_crush(entity this, entity blocker)
 {
 //dprint("plat_crush\n");
 
+	blocker.deathtype = "squish";
 	T_Damage(blocker, this, this, 1);
 	
 	if(this.state == STATE_UP)
@@ -217,6 +218,7 @@ void train_blocked(entity this, entity blocker)
 	if(time < this.attack_finished)
 		return;
 	this.attack_finished = time + 0.5;
+	blocker.deathtype = "squish";
 	T_Damage(blocker, this, this, this.dmg);
 }
 void train_use(entity this, entity actor, entity trigger)

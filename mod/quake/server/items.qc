@@ -22,6 +22,107 @@ spawnfunc(noclass)
 	delete(this);
 }
 
+
+void q_touch(entity this, entity toucher)
+{
+	if(!IS_PLAYER(toucher))
+		return;
+	if(toucher.health <= 0)
+		return;
+
+	this.mdl = this.model;
+
+	_sound(toucher, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+	stuffcmd(toucher, "bf\n");
+	this.solid = SOLID_NOT;
+	toucher.items |= IT_QUAD;
+	this.model = string_null;
+	if(deathmatch == 4)
+	{
+		toucher.armortype = 0;
+		toucher.armorvalue = 0 * 0.01;
+		toucher.ammo_cells = 0;
+	}
+
+// do the apropriate action
+	toucher.super_time = 1;
+	toucher.super_damage_finished = this.cnt;
+
+	bprintf("%s recovered %s with %d seconds remaining!\n", 
+		toucher.netname, ((deathmatch == 4) ? "an OctaPower" : "a Quad"), rint(toucher.super_damage_finished - time));
+
+	SUB_UseTargets(this, toucher, toucher); // fire all targets / killtargets
+}
+
+
+void DropQuad(entity this, float timeleft)
+{
+	entity item = spawn();
+	item.origin = this.origin;
+	
+	item.velocity_z = 300;
+	item.velocity_x = -100 + (random() * 200);
+	item.velocity_y = -100 + (random() * 200);
+	
+	item.flags = FL_ITEM;
+	item.solid = SOLID_TRIGGER;
+	item.movetype = MOVETYPE_TOSS;
+	item.noise = "items/damage.wav";
+	_setmodel(item, "progs/quaddama.mdl");
+	setsize(item, '-16 -16 -24', '16 16 32');
+	item.cnt = time + timeleft;
+	settouch(item, q_touch);
+	item.nextthink = time + timeleft;    // remove it with the time left on it
+	setthink(item, SUB_Remove);
+}
+
+
+void r_touch(entity this, entity toucher)
+{
+	if(!IS_PLAYER(toucher))
+		return;
+	if(toucher.health <= 0)
+		return;
+
+	this.mdl = this.model;
+
+	_sound(toucher, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+	stuffcmd(toucher, "bf\n");
+	this.solid = SOLID_NOT;
+	toucher.items |= IT_INVISIBILITY;
+	this.model = string_null;
+
+// do the apropriate action
+	toucher.invisible_time = 1;
+	toucher.invisible_finished = this.cnt;
+	bprintf("%s recovered a Ring with %d seconds remaining!\n", toucher.netname, rint(toucher.invisible_finished - time));
+
+	SUB_UseTargets(this, toucher, toucher); // fire all targets / killtargets
+}
+
+
+void DropRing(entity this, float timeleft)
+{
+	entity item = spawn();
+	item.origin = this.origin;
+	
+	item.velocity_z = 300;
+	item.velocity_x = -100 + (random() * 200);
+	item.velocity_y = -100 + (random() * 200);
+	
+	item.flags = FL_ITEM;
+	item.solid = SOLID_TRIGGER;
+	item.movetype = MOVETYPE_TOSS;
+	item.noise = "items/inv1.wav";
+	_setmodel(item, "progs/invisibl.mdl");
+	setsize(item, '-16 -16 -24', '16 16 32');
+	item.cnt = time + timeleft;
+	settouch(item, r_touch);
+	item.nextthink = time + timeleft;    // remove after 30 seconds
+	setthink(item, SUB_Remove);
+}
+
+
 .vector m_min;
 .vector m_max;
 void FixItem(entity this)
@@ -162,6 +263,9 @@ spawnfunc(item_health)
 
 void health_touch(entity this, entity toucher)
 {
+	if(deathmatch == 4 && toucher.invincible_time > 0)
+		return;
+
 	if(!IS_PLAYER(toucher))
 		return;
 	
@@ -192,19 +296,19 @@ void health_touch(entity this, entity toucher)
 	if(this.healtype == 2)
 	{
 		toucher.items |= IT_SUPERHEALTH;
-		this.nextthink = time + 5;
-		setthink(this, item_megahealth_rot);
+		if(deathmatch != 4)
+		{
+			this.nextthink = time + 5;
+			setthink(this, item_megahealth_rot);
+		}
 		this.owner = toucher;
 	}
 	else
 	{
 		if(deathmatch != 2)		// deathmatch 2 is the silly old rules
 		{
-			if(deathmatch)
-			{
-				this.nextthink = time + 20;
-				setthink(this, SUB_regen);
-			}
+			this.nextthink = time + 20;
+			setthink(this, SUB_regen);
 		}
 	}
 
@@ -224,7 +328,7 @@ void item_megahealth_rot(entity this)
 // just blindly subtract the flag off
 	this.owner.items &= ~IT_SUPERHEALTH;
 	
-	if(deathmatch == 1)	// deathmatch 2 is silly old rules
+	if(deathmatch != 2)	// deathmatch 2 is silly old rules
 	{
 		this.nextthink = time + 20;
 		setthink(this, SUB_regen);
@@ -244,6 +348,8 @@ void armor_touch(entity this, entity toucher)
 	if(toucher.health <= 0)
 		return;
 	if(!IS_PLAYER(toucher))
+		return;
+	if(deathmatch == 4 && toucher.invincible_time > 0)
 		return;
 
 	float type = 0, value = 0;
@@ -277,7 +383,7 @@ void armor_touch(entity this, entity toucher)
 
 	this.solid = SOLID_NOT;
 	this.model = string_null;
-	if(deathmatch == 1)
+	if(deathmatch != 2)
 	{
 		this.nextthink = time + 20;
 		setthink(this, SUB_regen);
@@ -366,6 +472,21 @@ int RankForWeapon(int w)
 	}
 }
 
+int WeaponCode(int w)
+{
+	switch(w)
+	{
+		case IT_SUPER_SHOTGUN: 		return 3;
+		case IT_NAILGUN:			return 4;
+		case IT_SUPER_NAILGUN:		return 5;
+		case IT_GRENADE_LAUNCHER:	return 6;
+		case IT_ROCKET_LAUNCHER:	return 7;
+		case IT_LIGHTNING:			return 8;
+		default:					return 1;
+	}
+}
+
+
 /*
 =============
 Deathmatch_Weapon
@@ -396,11 +517,16 @@ void weapon_touch(entity this, entity toucher)
 	if(!IS_CLIENT(toucher))
 		return;
 
+	//float w_switch = (stof(infokey(other,"w_switch")));
+	float w_switch = 0;
+	if(!w_switch)
+		w_switch = 8;
+
 	int hadammo = 0, new = 0;
 // if the player was using his best weapon, change up to the new one if better		
 	//int best = W_BestWeapon(toucher);
 
-	bool leave = (deathmatch == 2 || coop);
+	bool leave = (deathmatch == 2 || deathmatch == 3 || deathmatch == 5);
 	
 	if(this.classname == "weapon_nailgun")
 	{
@@ -467,23 +593,32 @@ void weapon_touch(entity this, entity toucher)
 	int old = toucher.items;
 	toucher.items |= new;
 
-	if(!deathmatch)
-		toucher.weapon = new;
-	else
-		Deathmatch_Weapon(toucher, old, new);
+	if(WeaponCode(new) <= w_switch)
+	{
+		if(this.flags & FL_INWATER)
+		{
+			if(new != IT_LIGHTNING)
+				Deathmatch_Weapon(toucher, old, new);
+		}
+		else
+			Deathmatch_Weapon(toucher, old, new);
+	}
 
 	W_SetCurrentAmmo(toucher);
 
 	if(leave)
 		return;
 
-// remove it in single player, or setup for respawning in deathmatch
-	this.model = string_null;
-	this.solid = SOLID_NOT;
-	if(deathmatch == 1)
+	if(deathmatch != 3 || deathmatch != 5)
 	{
-		this.nextthink = time + 30;
-		setthink(this, SUB_regen);
+	// remove it in single player, or setup for respawning in deathmatch
+		this.model = string_null;
+		this.solid = SOLID_NOT;
+		if(deathmatch != 2)
+		{
+			this.nextthink = time + 30;
+			setthink(this, SUB_regen);
+		}
 	}
 
 	SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
@@ -495,6 +630,8 @@ void weapon_touch(entity this, entity toucher)
 
 spawnfunc(weapon_supershotgun)
 {
+	if(deathmatch > 3) { delete(this); return; }
+
 	precache_model("progs/g_shot.mdl");
 	_setmodel(this, "progs/g_shot.mdl");
 	this.weapon = IT_SUPER_SHOTGUN;
@@ -509,6 +646,8 @@ spawnfunc(weapon_supershotgun)
 
 spawnfunc(weapon_nailgun)
 {
+	if(deathmatch > 3) { delete(this); return; }
+
 	precache_model("progs/g_nail.mdl");
 	_setmodel(this, "progs/g_nail.mdl");
 	this.weapon = IT_NAILGUN;
@@ -523,6 +662,8 @@ spawnfunc(weapon_nailgun)
 
 spawnfunc(weapon_supernailgun)
 {
+	if(deathmatch > 3) { delete(this); return; }
+
 	precache_model("progs/g_nail2.mdl");
 	_setmodel(this, "progs/g_nail2.mdl");
 	this.weapon = IT_SUPER_NAILGUN;
@@ -537,6 +678,8 @@ spawnfunc(weapon_supernailgun)
 
 spawnfunc(weapon_grenadelauncher)
 {
+	if(deathmatch > 3) { delete(this); return; }
+
 	precache_model("progs/g_rock.mdl");
 	_setmodel(this, "progs/g_rock.mdl");
 	this.weapon = 3;
@@ -551,6 +694,8 @@ spawnfunc(weapon_grenadelauncher)
 
 spawnfunc(weapon_rocketlauncher)
 {
+	if(deathmatch > 3) { delete(this); return; }
+
 	precache_model("progs/g_rock2.mdl");
 	_setmodel(this, "progs/g_rock2.mdl");
 	this.weapon = 3;
@@ -566,6 +711,8 @@ spawnfunc(weapon_rocketlauncher)
 
 spawnfunc(weapon_lightning)
 {
+	if(deathmatch > 3) { delete(this); return; }
+
 	precache_model("progs/g_light.mdl");
 	_setmodel(this, "progs/g_light.mdl");
 	this.weapon = 3;
@@ -651,9 +798,16 @@ void ammo_touch(entity this, entity toucher)
 // remove it in single player, or setup for respawning in deathmatch
 	this.model = string_null;
 	this.solid = SOLID_NOT;
-	if(deathmatch == 1)
+	if(deathmatch != 2)
 	{
 		this.nextthink = time + 30;
+		setthink(this, SUB_regen);
+	}
+
+// Xian -- If playing in DM 3.0 mode, halve the time ammo respawns
+	if(deathmatch == 3 || deathmatch == 5)
+	{
+		this.nextthink = time + 15;
 		setthink(this, SUB_regen);
 	}
 
@@ -670,6 +824,8 @@ const int WEAPON_BIG2 = BIT(0);
 
 spawnfunc(item_shells)
 {
+	if(deathmatch == 4) { delete(this); return; }
+
 	settouch(this, ammo_touch);
 
 	if(this.spawnflags & WEAPON_BIG2)
@@ -693,6 +849,8 @@ spawnfunc(item_shells)
 
 spawnfunc(item_spikes)
 {
+	if(deathmatch == 4) { delete(this); return; }
+
 	settouch(this, ammo_touch);
 
 	if(this.spawnflags & WEAPON_BIG2)
@@ -716,6 +874,8 @@ spawnfunc(item_spikes)
 
 spawnfunc(item_rockets)
 {
+	if(deathmatch == 4) { delete(this); return; }
+
 	settouch(this, ammo_touch);
 
 	if(this.spawnflags & WEAPON_BIG2)
@@ -740,6 +900,8 @@ spawnfunc(item_rockets)
 
 spawnfunc(item_cells)
 {
+	if(deathmatch == 4) { delete(this); return; }
+
 	settouch(this, ammo_touch);
 
 	if(this.spawnflags & WEAPON_BIG2)
@@ -850,18 +1012,14 @@ void key_touch(entity this, entity toucher)
 	stuffcmd(toucher, "bf\n");
 	toucher.items |= this.items;
 
-	if(!coop)
-	{	
-		this.solid = SOLID_NOT;
-		this.model = string_null;
-	}
+	this.solid = SOLID_NOT;
+	this.model = string_null;
+
+	if(this.netname != "")
+		bprintf("%s^7 got the %s\n", toucher.netname, this.netname);
 	else
-	{
-		if(this.netname != "")
-			bprintf("%s^7 got the %s\n", toucher.netname, this.netname);
-		else
-			bprintf("%s^7 picked up a key\n");
-	}
+		bprintf("%s^7 picked up a key\n");
+
 	SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
 }
 
@@ -1042,18 +1200,15 @@ void powerup_touch(entity this, entity toucher)
 	else
 		sprint(toucher, sprintf("You picked up a powerup\n"));
 
-	if(deathmatch)
-	{
-		this.mdl = this.model;
+	this.mdl = this.model;
 		
-		if((this.classname == "item_artifact_invulnerability") ||
-			(this.classname == "item_artifact_invisibility"))
-			this.nextthink = time + 60*5;
-		else
-			this.nextthink = time + 60;
+	if((this.classname == "item_artifact_invulnerability") ||
+		(this.classname == "item_artifact_invisibility"))
+		this.nextthink = time + 60*5;
+	else
+		this.nextthink = time + 60;
 		
-		setthink(this, SUB_regen);
-	}	
+	setthink(this, SUB_regen);	
 
 	_sound(toucher, CHAN_VOICE, this.noise, 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
@@ -1082,6 +1237,12 @@ void powerup_touch(entity this, entity toucher)
 
 	if(this.classname == "item_artifact_super_damage")
 	{
+		if(deathmatch == 4)
+		{
+			toucher.armortype = 0;
+			toucher.armorvalue = 0 * 0.01;
+			toucher.ammo_cells = 0;
+		}
 		toucher.super_time = 1;
 		toucher.super_damage_finished = time + 30;
 	}	
@@ -1104,6 +1265,7 @@ spawnfunc(item_artifact_invulnerability)
 	this.noise = "items/protect.wav";
 	_setmodel(this, "progs/invulner.mdl");
 	this.netname = "Pentagram of Protection";
+	this.effects |= EF_RED;
 	this.items = IT_INVULNERABILITY;
 	setsize(this, '-16 -16 -24', '16 16 32');
 	StartItem(this);
@@ -1161,8 +1323,12 @@ spawnfunc(item_artifact_super_damage)
 	precache_sound("items/damage3.wav");
 	this.noise = "items/damage.wav";
 	_setmodel(this, "progs/quaddama.mdl");
-	this.netname = "Quad Damage";
+	if(deathmatch == 4)
+		this.netname = "OctaPower";
+	else
+		this.netname = "Quad Damage";
 	this.items = IT_QUAD;
+	this.effects |= EF_BLUE;
 	setsize(this, '-16 -16 -24', '16 16 32');
 	StartItem(this);
 }
@@ -1183,9 +1349,49 @@ void BackpackTouch(entity this, entity toucher)
 		return;
 	if(toucher.health <= 0)
 		return;
+	if(deathmatch == 4 && toucher.invincible_time > 0)
+		return;
+
+	//float b_switch = (stof(infokey(toucher,"b_switch")));
+	float b_switch = 0;
+	if(!b_switch)
+		b_switch = 8;
 
 	bool acount = false;
 	sprint(toucher, "You get ");
+
+	if(deathmatch == 4)
+	{       
+		toucher.health = toucher.health + 10;
+		sprint(toucher, "10 additional health\n");
+		if((toucher.health > 250) && (toucher.health < 300))
+			_sound(toucher, CHAN_ITEM, "items/protect3.wav", 1, ATTN_NORM);
+		else
+			_sound(toucher, CHAN_ITEM, "weapons/lock4.wav", 1, ATTN_NORM);
+		stuffcmd(toucher, "bf\n");
+		delete(this);
+
+		if(toucher.health > 299)
+		{               
+			if(toucher.invincible_time != 1)
+			{                       
+				toucher.invincible_time = 1;
+				toucher.invincible_finished = time + 30;
+				toucher.items |= IT_INVULNERABILITY;
+				
+				toucher.super_time = 1;
+				toucher.super_damage_finished = time + 30;
+				toucher.items |= IT_QUAD;
+
+				toucher.ammo_cells = 0;
+
+				_sound(toucher, CHAN_VOICE, "boss1/sight1.wav", 1, ATTN_NORM);
+				stuffcmd(toucher, "bf\n");               
+				bprintf("%s attains bonus powers!!!\n", toucher.netname);
+			}
+		}
+		return;
+	}
 
 	if(this.items)
 		if((toucher.items & this.items) == 0)
@@ -1208,7 +1414,7 @@ void BackpackTouch(entity this, entity toucher)
 	if(!new)
 		new = toucher.weapon;
 	int old = toucher.items;
-	toucher.items |= new;
+	toucher.items |= this.items;
 	
 	bound_other_ammo(toucher);
 
@@ -1240,20 +1446,28 @@ void BackpackTouch(entity this, entity toucher)
 		acount = true;
 		sprint(toucher, sprintf("%d cells", this.ammo_cells));
 	}
+
+	if((deathmatch == 3 || deathmatch == 5) & ((WeaponCode(new) == 6) || (WeaponCode(new) == 7)) & (toucher.ammo_rockets < 5))
+		toucher.ammo_rockets = 5;
 	
 	sprint(toucher, "\n");
 // backpack touch sound
 	_sound(toucher, CHAN_ITEM, "weapons/lock4.wav", 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
 
-// remove the backpack, change this to the player
 	delete(this);
 
 // change to the weapon
-	if(!deathmatch)
-		toucher.weapon = new;
-	else
-		Deathmatch_Weapon(toucher, old, new);
+	if(WeaponCode(new) <= b_switch)
+	{
+		if(this.flags & FL_INWATER)
+		{
+			if(new != IT_LIGHTNING)
+				Deathmatch_Weapon(toucher, old, new);
+		}
+		else
+			Deathmatch_Weapon(toucher, old, new);
+	}
 
 	W_SetCurrentAmmo(toucher);
 }

@@ -32,7 +32,8 @@ void door_go_up(entity this);
 
 void door_blocked(entity this, entity blocker)
 {
-	T_Damage(blocker, this, this, this.dmg);
+	blocker.deathtype = "squish";
+	T_Damage(blocker, this, this.goalentity, this.dmg);
 	
 // if a door has a negative wait, it would never come back if blocked,
 // so let it just squash the object to death real fast
@@ -102,7 +103,7 @@ ACTIVATION FUNCTIONS
 =============================================================================
 */
 
-void door_fire(entity this)
+void door_fire(entity this, entity actor)
 {
 	if(this.owner != this)
 		objerror(this, "door_fire: this.owner != this");
@@ -130,6 +131,7 @@ void door_fire(entity this)
 // trigger all paired doors
 	entity e = this;
 	do {
+		e.goalentity = actor; // who fired us
 		door_go_up(e);
 		e = e.enemy;
 	} while ((e != this) && (e != NULL));
@@ -141,7 +143,7 @@ void door_use(entity this, entity actor, entity trigger)
 	this.message = "";			// door message are for touch only
 	this.owner.message = "";	
 	this.enemy.message = "";
-	door_fire(this.owner);
+	door_fire(this.owner, actor);
 }
 
 
@@ -627,7 +629,8 @@ void fd_secret_done(entity this)
 	{
 		this.health = 10000;
 		this.takedamage = DAMAGE_YES;
-		this.th_pain = fd_secret_pain;	
+		this.th_pain = fd_secret_pain;
+		this.th_die = fd_secret_die;
 	}
 	_sound(this, CHAN_VOICE, this.noise3, 1, ATTN_NORM);
 }
@@ -637,6 +640,7 @@ void secret_blocked(entity this, entity blocker)
 	if(time < this.attack_finished)
 		return;
 	this.attack_finished = time + 0.5;
+	blocker.deathtype = "squish";
 	T_Damage(blocker, this, this, this.dmg);
 }
 
@@ -732,7 +736,6 @@ spawnfunc(func_door_secret)
 		this.health = 10000;
 		this.takedamage = DAMAGE_YES;
 		this.th_pain = fd_secret_pain;
-		this.th_die = fd_secret_die;
 	}
 	this.oldorigin = this.origin;
 	if(!this.wait)

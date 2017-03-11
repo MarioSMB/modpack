@@ -85,6 +85,8 @@ void PrecacheJunk()
 	precache_sound("player/death4.wav");
 	precache_sound("player/death5.wav");
 
+	precache_sound("boss1/sight1.wav");
+
 // ax sounds	
 	precache_sound("weapons/ax1.wav");			// ax swoosh
 	precache_sound("player/axhit1.wav");		// ax hit meat
@@ -101,6 +103,11 @@ void PrecacheJunk()
 
 	precache_sound("misc/water1.wav");			// swimming
 	precache_sound("misc/water2.wav");			// swimming
+
+// Invulnerability sounds
+	precache_sound("items/protect.wav");
+	precache_sound("items/protect2.wav");
+	precache_sound("items/protect3.wav");
 
 	precache_model("progs/player.mdl");
 	precache_model("progs/eyes.mdl");
@@ -812,8 +819,10 @@ spawnfunc(__init_dedicated_server)
 
 void StartFrame()
 {
+	timelimit = autocvar_timelimit * 60;
+	fraglimit = autocvar_fraglimit;
 	teamplay = autocvar_teamplay;
-	skill = autocvar_skill;
+	//deathmatch = autocvar_deathmatch; // doesn't engine handle this?
 	//framecount = framecount + 1;
 
 	//delete_fn = remove_unsafely; // not during spawning!

@@ -123,6 +123,7 @@ const int anim_enf_paind17 = 99;
 const int anim_enf_paind18 = 100;
 const int anim_enf_paind19 = 101;
 
+#if 0
 void Laser_Touch(entity this, entity toucher)
 {
 	if(toucher == this.owner)
@@ -139,7 +140,7 @@ void Laser_Touch(entity this, entity toucher)
 
 	if(toucher.health)
 	{
-		SpawnBlood(org, this.velocity*0.2, 15);
+		SpawnBlood(org, 15);
 		T_Damage(toucher, this, this.owner, 15);
 	}
 	else
@@ -179,6 +180,7 @@ void LaunchLaser(entity this, vector org, vector vec)
 	setthink(newmis, SUB_Remove);
 	settouch(newmis, Laser_Touch);
 }
+#endif
 
 void enforcer_fire(entity this)
 {

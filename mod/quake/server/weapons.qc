@@ -3,8 +3,8 @@
 /*
 */
 void player_run(entity this);
-void T_RadiusDamage(entity bomb, entity attacker, float rad, entity ignore);
-void SpawnBlood(vector org, vector vel, float damage);
+void T_RadiusDamage(entity bomb, entity attacker, float rad, entity ignore, string dtype);
+void SpawnBlood(vector org, float damage);
 void SuperDamageSound(entity this);
 
 
@@ -46,8 +46,11 @@ void W_FireAxe(entity this)
 	if(trace_ent.takedamage)
 	{
 		trace_ent.axhitme = 1;
-		SpawnBlood(org, '0 0 0', 20);
-		T_Damage(trace_ent, this, this, 20);
+		SpawnBlood(org, 20);
+		if(deathmatch > 3)
+			T_Damage(trace_ent, this, this, 75);
+		else
+			T_Damage(trace_ent, this, this, 20);
 	}
 	else
 	{	// hit wall
@@ -108,9 +111,9 @@ void SpawnMeatSpray(entity this, vector org, vector vel)
 SpawnBlood
 ================
 */
-void SpawnBlood(vector org, vector vel, float damage)
+void SpawnBlood(vector org, float damage)
 {
-	particle(org, vel*0.1, 73, damage*2);
+	te_blood(org, '0 0 0', damage);
 }
 
 /*
@@ -121,19 +124,9 @@ spawn_touchblood
 void spawn_touchblood(entity this, float damage)
 {
 	vector vel = wall_velocity(this) * 0.2;
-	SpawnBlood(this.origin + vel*0.01, vel, damage);
+	SpawnBlood(this.origin + vel*0.01, damage);
 }
 
-
-/*
-================
-SpawnChunk
-================
-*/
-void SpawnChunk(vector org, vector vel)
-{
-	particle(org, vel*0.02, 0, 10);
-}
 
 /*
 ==============================================================================
@@ -148,10 +141,18 @@ Collects multiple small damages into a single damage
 entity	multi_ent;
 float	multi_damage;
 
+vector  blood_org;
+float   blood_count;
+
+vector  puff_org;
+float   puff_count;
+
 void ClearMultiDamage()
 {
 	multi_ent = NULL;
 	multi_damage = 0;
+	blood_count = 0;
+	puff_count = 0;
 }
 
 void ApplyMultiDamage(entity this)
@@ -174,6 +175,21 @@ void AddMultiDamage(entity hit, float damage)
 	}
 	else
 		multi_damage = multi_damage + damage;
+}
+
+void Multi_Finish()
+{
+	if(puff_count)
+	{
+		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
+		WriteByte(MSG_BROADCAST, TE_GUNSHOT);
+		WriteCoord(MSG_BROADCAST, puff_org.x);
+		WriteCoord(MSG_BROADCAST, puff_org.y);
+		WriteCoord(MSG_BROADCAST, puff_org.z);
+	}
+
+	if(blood_count)
+		te_blood(blood_org, '0 0 0', blood_count);
 }
 
 /*
@@ -201,16 +217,13 @@ void TraceAttack(float damage, vector dir)
 
 	if(trace_ent.takedamage)
 	{
-		SpawnBlood(org, vel*0.2, damage);
+		blood_count = blood_count + 1;
+		blood_org = org;
 		AddMultiDamage(trace_ent, damage);
 	}
 	else
 	{
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_GUNSHOT);
-		WriteCoord(MSG_BROADCAST, org_x);
-		WriteCoord(MSG_BROADCAST, org_y);
-		WriteCoord(MSG_BROADCAST, org_z);
+		puff_count = puff_count + 1;
 	}
 }
 
@@ -233,6 +246,8 @@ void FireBullets(entity this, int shotcount, vector dir, vector spread)
 	src_z = this.absmin_z + this.size_z * 0.7;
 
 	ClearMultiDamage();
+	traceline(src, src + dir * 2048, false, this);
+	puff_org = trace_endpos - dir * 4;
 	while(shotcount > 0)
 	{
 		direction = dir + crandom()*spread_x*v_right + crandom()*spread_y*v_up;
@@ -244,6 +259,7 @@ void FireBullets(entity this, int shotcount, vector dir, vector spread)
 		shotcount = shotcount - 1;
 	}
 	ApplyMultiDamage(this);
+	Multi_Finish();
 }
 
 /*
@@ -259,7 +275,8 @@ void W_FireShotgun(entity this)
 
 	this.punchangle_x = -2;
 	
-	this.currentammo = this.ammo_shells = this.ammo_shells - 1;
+	if(deathmatch != 4)
+		this.currentammo = this.ammo_shells = this.ammo_shells - 1;
 	dir = aim(this, 100000);
 	FireBullets(this, 6, dir, '0.04 0.04 0');
 }
@@ -283,8 +300,9 @@ void W_FireSuperShotgun(entity this)
 	_sound(this ,CHAN_WEAPON, "weapons/shotgn2.wav", 1, ATTN_NORM);	
 
 	this.punchangle_x = -4;
-	
-	this.currentammo = this.ammo_shells = this.ammo_shells - 2;
+
+	if(deathmatch != 4)
+		this.currentammo = this.ammo_shells = this.ammo_shells - 2;
 	dir = aim(this, 100000);
 	FireBullets(this, 14, dir, '0.14 0.08 0');
 }
@@ -298,28 +316,14 @@ ROCKETS
 ==============================================================================
 */
 
-void s_explode6(entity this) { set_anim(this, 5, SUB_Remove); }
-void s_explode5(entity this) { set_anim(this, 4, s_explode6); }
-void s_explode4(entity this) { set_anim(this, 3, s_explode5); }
-void s_explode3(entity this) { set_anim(this, 2, s_explode4); }
-void s_explode2(entity this) { set_anim(this, 1, s_explode3); }
-void s_explode1(entity this) { set_anim(this, 0, s_explode2); }
-
-void BecomeExplosion(entity this)
-{
-	this.movetype = MOVETYPE_NONE;
-	this.velocity = '0 0 0';
-	settouch(this, func_null);
-	_setmodel(this, "progs/s_explod.spr");
-	_sound(this, CH_SHOTS, "weapons/r_exp3.wav", 1, ATTN_NORM);
-	this.solid = SOLID_NOT;
-	s_explode1(this);
-}
-
 void T_MissileTouch(entity this, entity toucher)
 {
 	if(toucher == this.owner)
 		return;		// don't explode on owner
+
+	if(this.voided)
+		return;
+	this.voided = true;
 
 	if(pointcontents(this.origin) == CONTENT_SKY)
 	{
@@ -331,14 +335,13 @@ void T_MissileTouch(entity this, entity toucher)
 	
 	if(toucher.health)
 	{
-		if(toucher.classname == "monster_shambler")
-			damg = damg * 0.5;	// mostly immune
+		toucher.deathtype = "rocket";
 		T_Damage(toucher, this, this.owner, damg );
 	}
 
 	// don't do radius damage to the toucher, because all the damage
 	// was done in the impact
-	T_RadiusDamage(this, this.owner, 120, toucher);
+	T_RadiusDamage(this, this.owner, 120, toucher, "rocket");
 
 //	_sound(this, CHAN_WEAPON, "weapons/r_exp3.wav", 1, ATTN_NORM);
 	this.origin = this.origin - 8*normalize(this.velocity);
@@ -349,7 +352,7 @@ void T_MissileTouch(entity this, entity toucher)
 	WriteCoord(MSG_BROADCAST, this.origin_y);
 	WriteCoord(MSG_BROADCAST, this.origin_z);
 
-	BecomeExplosion(this);
+	delete(this);
 }
 
 
@@ -361,7 +364,8 @@ W_FireRocket
 */
 void W_FireRocket(entity this)
 {
-	this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
+	if(deathmatch != 4)
+		this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
 	
 	_sound(this, CHAN_WEAPON, "weapons/sgun1.wav", 1, ATTN_NORM);
 
@@ -460,11 +464,30 @@ void W_FireLightning(entity this)
 // explode if under water
 	if(this.waterlevel > 1)
 	{
-		int cells = this.ammo_cells;
-		this.ammo_cells = 0;
-		W_SetCurrentAmmo(this);
-		T_RadiusDamage(this, this, 35*cells, world);
-		return;
+		if(deathmatch > 3)
+		{
+			if(random() <= 0.5)
+			{
+				this.deathtype = "thiswater";
+				T_Damage(this, this, this.owner, 4000);
+			}
+			else
+			{
+				int cells = this.ammo_cells;
+				this.ammo_cells = 0;
+				W_SetCurrentAmmo(this);
+				T_RadiusDamage(this, this, 35 * cells, NULL, "");
+				return;
+			}
+		}
+		else
+		{
+			int cells = this.ammo_cells;
+			this.ammo_cells = 0;
+			W_SetCurrentAmmo(this);
+			T_RadiusDamage(this, this, 35 * cells, NULL,"");
+			return;
+		}
 	}
 
 	makevectors(this.v_angle);
@@ -476,7 +499,8 @@ void W_FireLightning(entity this)
 	}
 	this.punchangle_x = -2;
 
-	this.currentammo = this.ammo_cells = this.ammo_cells - 1;
+	if(deathmatch != 4)
+		this.currentammo = this.ammo_cells = this.ammo_cells - 1;
 
 	vector org = this.origin + '0 0 16';
 	
@@ -501,7 +525,11 @@ void W_FireLightning(entity this)
 
 void GrenadeExplode(entity this)
 {
-	T_RadiusDamage(this, this.owner, 120, world);
+	if(this.voided)
+		return;
+	this.voided = true;
+
+	T_RadiusDamage(this, this.owner, 120, NULL, "grenade");
 
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_EXPLOSION);
@@ -509,7 +537,7 @@ void GrenadeExplode(entity this)
 	WriteCoord(MSG_BROADCAST, this.origin_y);
 	WriteCoord(MSG_BROADCAST, this.origin_z);
 
-	BecomeExplosion(this);
+	delete(this);
 }
 
 void GrenadeTouch(entity this, entity toucher)
@@ -533,7 +561,8 @@ W_FireGrenade
 */
 void W_FireGrenade(entity this)
 {
-	this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
+	if(deathmatch != 4)
+		this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
 	
 	_sound(this, CHAN_WEAPON, "weapons/grenade.wav", 1, ATTN_NORM);
 
@@ -564,7 +593,15 @@ void W_FireGrenade(entity this)
 	settouch(missile, GrenadeTouch);
 	
 // set missile duration
-	missile.nextthink = time + 2.5;
+	if(deathmatch == 4)
+	{
+		missile.nextthink = time + 2.5;
+		this.attack_finished = time + 1.1;
+		this.health = this.health - 1;
+		T_Damage(this, this, this.owner, 10);
+	}
+	else
+		missile.nextthink = time + 2.5;
 	setthink(missile, GrenadeExplode);
 
 	_setmodel(missile, "progs/grenade.mdl");
@@ -612,7 +649,8 @@ void W_FireSuperSpikes(entity this)
 {
 	_sound(this, CHAN_WEAPON, "weapons/spike2.wav", 1, ATTN_NORM);
 	this.attack_finished = time + 0.2;
-	this.currentammo = this.ammo_nails = this.ammo_nails - 2;
+	if(deathmatch != 4)
+		this.currentammo = this.ammo_nails = this.ammo_nails - 2;
 	vector dir = aim(this, 1000);
 	entity newmis = launch_spike(this, this.origin + '0 0 16', dir);
 	settouch(newmis, superspike_touch);
@@ -640,7 +678,8 @@ void W_FireSpikes(entity this, float ox)
 
 	_sound(this, CHAN_WEAPON, "weapons/rocket1i.wav", 1, ATTN_NORM);
 	this.attack_finished = time + 0.2;
-	this.currentammo = this.ammo_nails = this.ammo_nails - 1;
+	if(deathmatch != 4)
+		this.currentammo = this.ammo_nails = this.ammo_nails - 1;
 	vector dir = aim(this, 1000);
 	launch_spike(this, this.origin + '0 0 16' + v_right*ox, dir);
 
@@ -651,6 +690,10 @@ void spike_touch(entity this, entity toucher)
 {
 	if(toucher == this.owner)
 		return;
+
+	if(this.voided)
+		return;
+	this.voided = true;
 
 	if(toucher.solid == SOLID_TRIGGER)
 		return;	// trigger field, do nothing
@@ -665,6 +708,7 @@ void spike_touch(entity this, entity toucher)
 	if(toucher.takedamage)
 	{
 		spawn_touchblood(this, 9);
+		toucher.deathtype = "nail";
 		T_Damage(toucher, this, this.owner, 9);
 	}
 	else
@@ -691,6 +735,10 @@ void superspike_touch(entity this, entity toucher)
 	if(toucher == this.owner)
 		return;
 
+	if(this.voided)
+		return;
+	this.voided = true;
+
 	if(toucher.solid == SOLID_TRIGGER)
 		return;	// trigger field, do nothing
 
@@ -704,6 +752,7 @@ void superspike_touch(entity this, entity toucher)
 	if(toucher.takedamage)
 	{
 		spawn_touchblood(this, 18);
+		toucher.deathtype = "supernail";
 		T_Damage(toucher, this, this.owner, 18);
 	}
 	else
@@ -815,14 +864,17 @@ int W_BestWeapon(entity this)
 
 	if(this.waterlevel <= 1 && this.ammo_cells >= 1 &&(itm & IT_LIGHTNING) )
 		return IT_LIGHTNING;
-	if(this.ammo_nails >= 2 &&(itm & IT_SUPER_NAILGUN) )
+	else if(this.ammo_nails >= 2 &&(itm & IT_SUPER_NAILGUN) )
 		return IT_SUPER_NAILGUN;
-	if(this.ammo_shells >= 2 &&(itm & IT_SUPER_SHOTGUN) )
+	else if(this.ammo_shells >= 2 &&(itm & IT_SUPER_SHOTGUN) )
 		return IT_SUPER_SHOTGUN;
-	if(this.ammo_nails >= 1 &&(itm & IT_NAILGUN) )
+	else if(this.ammo_nails >= 1 &&(itm & IT_NAILGUN) )
 		return IT_NAILGUN;
-	if(this.ammo_shells >= 1 &&(itm & IT_SHOTGUN) )
+	else if(this.ammo_shells >= 1 &&(itm & IT_SHOTGUN) )
 		return IT_SHOTGUN;
+/*
+	rocketlauncher and grenadelauncher?
+*/
 	return IT_AXE;
 }
 
@@ -870,6 +922,7 @@ void W_Attack(entity this)
 	{
 		case IT_AXE:
 		{
+			this.attack_finished = time + 0.5;
 			_sound(this, CHAN_WEAPON, "weapons/ax1.wav", 1, ATTN_NORM);
 			float r = random();
 			if(r < 0.25)
@@ -880,21 +933,20 @@ void W_Attack(entity this)
 				player_axec1(this);
 			else
 				player_axed1(this);
-			this.attack_finished = time + 0.5;
 			break;
 		}
 		case IT_SHOTGUN:
 		{
 			player_shot1(this);
-			W_FireShotgun(this);
 			this.attack_finished = time + 0.5;
+			W_FireShotgun(this);
 			break;
 		}
 		case IT_SUPER_SHOTGUN:
 		{
 			player_shot1(this);
-			W_FireSuperShotgun(this);
 			this.attack_finished = time + 0.7;
+			W_FireSuperShotgun(this);
 			break;
 		}
 		case IT_NAILGUN:
@@ -910,22 +962,22 @@ void W_Attack(entity this)
 		case IT_GRENADE_LAUNCHER:
 		{
 			player_rocket1(this);
-			W_FireGrenade(this);
 			this.attack_finished = time + 0.6;
+			W_FireGrenade(this);
 			break;
 		}
 		case IT_ROCKET_LAUNCHER:
 		{
 			player_rocket1(this);
-			W_FireRocket(this);
 			this.attack_finished = time + 0.8;
+			W_FireRocket(this);
 			break;
 		}
 		case IT_LIGHTNING:
 		{
-			player_light1(this);
 			this.attack_finished = time + 0.1;
 			_sound(this, CHAN_AUTO, "weapons/lstart.wav", 1, ATTN_NORM);
+			player_light1(this);
 			break;
 		}
 	}
@@ -1028,6 +1080,7 @@ CheatCommand
 */
 void CheatCommand(entity this)
 {
+#if 0
 	if(deathmatch || coop)
 		return;
 
@@ -1050,6 +1103,7 @@ void CheatCommand(entity this)
 	this.weapon = IT_ROCKET_LAUNCHER;
 	this.impulse = 0;
 	W_SetCurrentAmmo(this);
+#endif
 }
 
 /*
@@ -1061,7 +1115,7 @@ Go to the next weapon with ammo
 */
 void CycleWeaponCommand(entity this)
 {
-	int myitems = this.items;
+	//int myitems = this.items;
 	this.impulse = 0;
 	
 	while(1)
@@ -1126,7 +1180,7 @@ void CycleWeaponCommand(entity this)
 			}
 		}
 	
-		if((myitems & this.weapon) && am == false)
+		if((this.items & this.weapon) && am == false)
 		{
 			W_SetCurrentAmmo(this);
 			return;
@@ -1218,16 +1272,6 @@ void CycleWeaponReverseCommand(entity this)
 
 }
 
-void QuadCheat(entity this)
-{
-	if(deathmatch || coop)
-		return;
-	this.super_time = 1;
-	this.super_damage_finished = time + 30;
-	this.items |= IT_QUAD;
-	dprint("quad cheat\n");
-}
-
 /*
 ============
 ImpulseCommands
@@ -1245,9 +1289,6 @@ void ImpulseCommands(entity this)
 		CycleWeaponCommand(this);
 	if(this.impulse == 12)
 		CycleWeaponReverseCommand(this);
-
-	if(this.impulse == 255)
-		QuadCheat(this);
 		
 	this.impulse = 0;
 }

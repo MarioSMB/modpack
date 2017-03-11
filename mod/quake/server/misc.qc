@@ -237,12 +237,10 @@ void barrel_explode(entity this, entity attacker)
 	this.takedamage = DAMAGE_NO;
 	this.classname = "explo_box";
 	// did say this.owner
-	T_RadiusDamage(this, this, 160, NULL);
-	_sound(this, CHAN_VOICE, "weapons/r_exp3.wav", 1, ATTN_NORM);
-	particle(this.origin, '0 0 0', 75, 255);
-
-	this.origin_z = this.origin_z + 32;
-	BecomeExplosion(this);
+	T_RadiusDamage(this, this, 160, NULL, "");
+	//_sound(this, CHAN_VOICE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+	te_explosion(vec3(this.origin_x, this.origin_y, this.origin_z + 32));
+	delete(this);
 }
 
 
@@ -257,6 +255,7 @@ spawnfunc(misc_explobox)
 	this.movetype = MOVETYPE_NONE;
 	precache_model("maps/b_explob.bsp");
 	_setmodel(this, "maps/b_explob.bsp");
+	setsize(this, '0 0 0', '32 32 64');
 	precache_sound("weapons/r_exp3.wav");
 	this.health = 20;
 	this.th_die = barrel_explode;
@@ -287,6 +286,7 @@ spawnfunc(misc_explobox2)
 	this.movetype = MOVETYPE_NONE;
 	precache_model2("maps/b_exbox2.bsp");
 	_setmodel(this, "maps/b_exbox2.bsp");
+	setsize(this, '0 0 0', '32 32 32');
 	precache_sound("weapons/r_exp3.wav");
 	this.health = 20;
 	this.th_die = barrel_explode;
@@ -309,7 +309,62 @@ spawnfunc(misc_explobox2)
 const int SPAWNFLAG_SUPERSPIKE = BIT(0);
 const int SPAWNFLAG_LASER = BIT(1);
 
-void LaunchLaser(entity this, vector org, vector vec);
+void Laser_Touch(entity this, entity toucher)
+{
+	if(toucher == this.owner)
+		return;		// don't explode on owner
+
+	if(pointcontents(this.origin) == CONTENT_SKY)
+	{
+		delete(this);
+		return;
+	}
+	
+	_sound(this, CHAN_WEAPON, "enforcer/enfstop.wav", 1, ATTN_STATIC);
+	vector org = this.origin - 8*normalize(this.velocity);
+
+	if(toucher.health)
+	{
+		SpawnBlood(org, 15);
+		T_Damage(toucher, this, this.owner, 15);
+	}
+	else
+	{
+		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
+		WriteByte(MSG_BROADCAST, TE_GUNSHOT);
+		WriteCoord(MSG_BROADCAST, org_x);
+		WriteCoord(MSG_BROADCAST, org_y);
+		WriteCoord(MSG_BROADCAST, org_z);
+	}
+	
+	delete(this);	
+}
+
+void LaunchLaser(entity this, vector org, vector vec)
+{
+	if(this.classname == "monster_enforcer")
+		_sound(this, CHAN_WEAPON, "enforcer/enfire.wav", 1, ATTN_NORM);
+
+	vector vec2 = normalize(vec);
+	
+	entity newmis = spawn();
+	newmis.owner = this;
+	newmis.movetype = MOVETYPE_FLY;
+	newmis.solid = SOLID_BBOX;
+	newmis.effects = EF_DIMLIGHT;
+
+	_setmodel(newmis, "progs/laser.mdl");
+	setsize(newmis, '0 0 0', '0 0 0');		
+
+	setorigin(newmis, org);
+
+	newmis.velocity = vec2 * 600;
+	newmis.angles = vectoangles(newmis.velocity);
+
+	newmis.nextthink = time + 5;
+	setthink(newmis, SUB_Remove);
+	settouch(newmis, Laser_Touch);
+}
 
 void spikeshooter_use(entity this, entity actor, entity trigger)
 {
@@ -396,14 +451,7 @@ testing air bubbles
 
 spawnfunc(air_bubbles)
 {
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
-	precache_model("progs/s_bubble.spr");
-	this.nextthink = time + 1;
-	setthink(this, make_bubbles);
+	delete(this);
 }
 
 void make_bubbles(entity this)

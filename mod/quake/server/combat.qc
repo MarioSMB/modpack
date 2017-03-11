@@ -1,6 +1,12 @@
 void ClientObituary(entity targ, entity attacker);
 
+void T_RadiusDamage(entity inflictor, entity attacker, float damage, entity ignore, string dtype);
+/*SERVER
 void monster_death_use(entity this);
+*/
+
+entity damage_inflictor;
+float rj = 1;
 
 //============================================================================
 
@@ -74,8 +80,11 @@ void Killed(entity targ, entity attacker)
 	
 	targ.takedamage = DAMAGE_NO;
 	settouch(targ, func_null);
+	targ.effects = 0;
 
+/*SERVER
 	monster_death_use(targ);
+*/
 	targ.th_die(targ, attacker);
 }
 
@@ -94,7 +103,10 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 		return;
 
 // check for quad damage powerup on the attacker
-	if(attacker.super_damage_finished > time)
+	if(attacker.super_damage_finished > time && inflictor.classname != "door")
+	if(deathmatch == 4)
+		damage = damage * 8;
+	else
 		damage = damage * 4;
 
 // save damage based on the target's armor level
@@ -120,12 +132,26 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 		targ.dmg_inflictor = inflictor;
 	}
 
+	damage_inflictor = inflictor;
+
 // figure momentum add
 	if((inflictor != NULL) &&(targ.movetype == MOVETYPE_WALK) )
 	{
 		vector dir = targ.origin -(inflictor.absmin + inflictor.absmax) * 0.5;
 		dir = normalize(dir);
-		targ.velocity = targ.velocity + dir*damage*8;
+		// Set kickback for smaller weapons
+//Zoid -- use normal NQ kickback
+//		// Read: only if it's not yourself doing the damage
+//		if ( (damage < 60) & (IS_PLAYER(attacker) & IS_PLAYER(targ)) & ( attacker.netname != targ.netname)) 
+//			targ.velocity = targ.velocity + dir * damage * 11;
+//		else                        
+		// Otherwise, these rules apply to rockets and grenades                        
+		// for blast velocity
+			targ.velocity = targ.velocity + dir * damage * 8;
+		
+		// Rocket Jump modifiers
+		if ( (rj > 1) & (IS_PLAYER(attacker) & IS_PLAYER(targ)) & ( attacker.netname == targ.netname)) 
+			targ.velocity = targ.velocity + dir * damage * rj;
 	}
 
 // check for godmode or invincibility
@@ -142,7 +168,15 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 	}
 
 // team play damage avoidance
-	if((teamplay == 1) &&(targ.team > 0)&&(targ.team == attacker.team) )
+//ZOID 12-13-96: self.team doesn't work in QW.  Use keys
+	if ((teamplay == 1) && (targ.team == attacker.team) &&
+		IS_PLAYER(attacker) && (attacker.team) &&
+		inflictor.classname !="door")
+		return;
+
+	if ((teamplay == 3) && (targ.team == attacker.team) &&
+		IS_PLAYER(attacker) && (attacker.team) &&
+		(targ != attacker)&& inflictor.classname !="door")
 		return;
 		
 // do the damage
@@ -155,7 +189,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 	}
 
 // react to the damage
-
+/*SERVER
 	if(IS_MONSTER(targ) && attacker != NULL)
 	{
 	// get mad unless of the same class(except for soldiers)
@@ -171,14 +205,10 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 			}
 		}
 	}
+*/
 
 	if(targ.th_pain)
-	{
-		targ.th_pain(targ, attacker, take);
-	// nightmare mode monsters don't go into pain frames often
-		if(skill == 3)
-			targ.pain_finished = time + 5;		
-	}
+		targ.th_pain(targ, attacker, take);	
 }
 
 /*
@@ -186,7 +216,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 T_RadiusDamage
 ============
 */
-void T_RadiusDamage(entity inflictor, entity attacker, float damage, entity ignore)
+void T_RadiusDamage(entity inflictor, entity attacker, float damage, entity ignore, string dtype)
 {
 	entity head = findradius(inflictor.origin, damage+40);
 	
@@ -206,11 +236,9 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, entity igno
 				if(points > 0)
 				{
 					if(CanDamage(head, inflictor))
-					{	// shambler takes half damage from all explosions
-						if(head.classname == "monster_shambler")						
-							T_Damage(head, inflictor, attacker, points*0.5);
-						else
-							T_Damage(head, inflictor, attacker, points);
+					{
+						head.deathtype = dtype;
+						T_Damage(head, inflictor, attacker, points);
 					}
 				}
 			}
@@ -241,12 +269,7 @@ void T_BeamDamage(entity attacker, float damage)
 			if(points > 0)
 			{
 				if(CanDamage(head, attacker))
-				{
-					if(head.classname == "monster_shambler")						
-						T_Damage(head, attacker, attacker, points*0.5);
-					else
-						T_Damage(head, attacker, attacker, points);
-				}
+					T_Damage(head, attacker, attacker, points);
 			}
 		}
 		head = head.chain;
