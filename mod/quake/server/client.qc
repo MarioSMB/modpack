@@ -1505,3 +1505,26 @@ void SV_ChangeTeam(entity this, float _color)
 		return;
 	}
 }
+
+/**
+ * Determines whether the player is allowed to join. This depends on cvar
+ * g_maxplayers, if it isn't used this function always return true, otherwise
+ * it checks whether the number of currently playing players exceeds g_maxplayers.
+ * @return int number of free slots for players, 0 if none
+ */
+int nJoinAllowed(entity this, entity ignore)
+{
+	// TODO simplify this
+	int totalClients = 0;
+	int currentlyPlaying = 0;
+	FOREACH_CLIENT(true, LAMBDA(
+		if(it != ignore)
+			++totalClients;
+		if(IS_REAL_CLIENT(it) && IS_PLAYER(it))
+			++currentlyPlaying;
+	));
+
+	int free_slots = maxclients - totalClients;
+
+	return free_slots;
+}
