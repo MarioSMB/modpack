@@ -141,6 +141,18 @@ void GameCommand(string command)
 
 	string cmdname = strtolower(argv(0));
 
+	if(cmdname == "cvar_purechanges")
+	{
+		LOG_INFO(cvar_purechanges, "\n");
+		return;
+	}
+
+	if(cmdname == "cvar_changes")
+	{
+		LOG_INFO(cvar_changes, "\n");
+		return;
+	}
+
 	if(cmdname == "ircmsg")
 	{
 		IRCSay(substring(command, strlen(argv(0)) + 1, strlen(command)));

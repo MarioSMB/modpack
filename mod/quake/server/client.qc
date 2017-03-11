@@ -1460,6 +1460,18 @@ void SV_ParseClientCommand(entity this, string command)
 		case "c2s": Net_ClientCommand(this, command); return; // handled by net.qh
 	}
 
+	if(cmd_name == "cvar_purechanges")
+	{
+		sprint(this, strcat(cvar_purechanges), "\n");
+		return;
+	}
+
+	if(cmd_name == "cvar_changes")
+	{
+		sprint(this, strcat(cvar_changes), "\n");
+		return;
+	}
+
 	if(cmd_name == "say" || cmd_name == "say_team")
 	{
 		if(argc >= 2) Say(this, false, NULL, substring(command, argv_start_index(1), argv_end_index(-1) - argv_start_index(1)), 1);
