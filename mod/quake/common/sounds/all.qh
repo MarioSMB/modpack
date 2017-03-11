@@ -6,8 +6,8 @@ REGISTRY(Sounds, BITS(9))
 #define Sounds_from(i) _Sounds_from(i, SND_Null)
 REGISTER_REGISTRY(Sounds)
 
-#define SOUND(name, path) \
-    string SND_##name##_get() { return path; } \
+#define SOUND(name, thepath) \
+    string SND_##name##_get() { return thepath; } \
     REGISTER(Sounds, SND, name, m_id, NEW(Sound, SND_##name##_get))
 
 /** @deprecated Used in places where a string is required for legacy reasons, prefer using SND_id constants instead */
