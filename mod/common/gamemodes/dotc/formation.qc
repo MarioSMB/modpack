@@ -1,77 +1,77 @@
+#if 0
 void dotc_setformation_broad(entity this)
 {
-	float x = -floor(this.cnt / 2);
-	FOREACH_ENTITY_ENT(owner, this,
+	int fx = -floor(this.cnt / 2);
+	IL_EACH(g_dotc_drones, it.squad == this,
 	{
-		++x;
+		++fx;
 		it.dotc_formation_ofs_z = 0;
 		it.dotc_formation_ofs_y = 0;
-		it.dotc_formation_ofs_x = x * formation_offset1;
+		it.dotc_formation_ofs_x = fx * formation_offset1;
 	});	
 }
 
 void dotc_setformation_line(entity this)
 {
-	float y = 0;
-	FOREACH_ENTITY_ENT(owner, this,
+	int fy = 0;
+	IL_EACH(g_dotc_drones, it.squad == this,
 	{
-		++y;
-		it.dotc_formation_ofs_x = 0;
-		it.dotc_formation_ofs_z = 0;
-		it.dotc_formation_ofs_y = y * formation_offset1;
+		++fy;
+		it.dotc_formation_ofs = vec3(0, fy * formation_offset1, 0);
 	});
 }
 
-void dotc_setformation_box()
+void dotc_setformation_box(entity this)
 {
 	LOG_DEBUG("dotc_setformation_box not implemented.\n");
 }
 
 void dotc_setformation_wedge(entity this)
 {
-	entity drone;
-	float x, xo, yo;
-		
-	drone = findchainentity(owner, this);	
-	drone.dotc_formation_ofs_z = 0;
-	drone.dotc_formation_ofs_x = 0;
-	drone.dotc_formation_ofs_y = 0;
-	
-	drone = drone.chain;
-	if(!drone)
-		return;
-	
-	int line = 1;	
-	
-	while(drone)
+	int numdrones = 0;
+	IL_EACH(g_dotc_drones, it.squad == this,
 	{
-		xo = 0.5 * line * -formation_offset1;
-		yo = line *  -formation_offset1;
-		for(x = 0; x <= line; ++x)
-		{
-		
-			drone.dotc_formation_ofs_z = 0;
-			drone.dotc_formation_ofs_x = xo + x * formation_offset1;
-			drone.dotc_formation_ofs_y = yo;
-			drone = drone.chain;
-		}
-		++line;
-		
-	}
-}
+		++numdrones;
+	});
 
-void dotc_formation_force(entity sqent)
-{
-	vector pos;
-	entity drone;
-	
-	drone = findchainentity(squad, sqent);	
-	while(drone)
-	{		
-		pos = sqent.origin + (drone.dotc_formation_ofs_x * v_right) + (drone.dotc_formation_ofs_y * v_forward);
-		setorigin(drone, pos);
-		drone.pos1 = pos;
-		drone.angles = vectoangles(v_forward);
-		drone = drone.chain;
+	if(!numdrones)
+		return;
+
+	if(numdrones == 1)
+	{
+		IL_EACH(g_dotc_drones, it.squad == this,
+		{
+			it.dotc_formation_ofs = '0 0 0';
+			return;
+		});
 	}
+
+	int line = 1;
+	IL_EACH(g_dotc_drones, it.squad == this,
+	{
+		float xo = 0.5 * line * -formation_offset1;
+		float yo = line * -formation_offset1;
+		for(int fx = 0; fx <= line; ++fx)
+		{
+			it.dotc_formation_ofs_x = xo + fx * formation_offset1;
+			it.dotc_formation_ofs_y = yo;
+			it.dotc_formation_ofs_z = 0;
+		}
+
+		++line;
+	});
+}
+#endif
+
+void dotc_formation_force(entity this)
+{
+	vector vang = vectoangles(v_forward);
+
+	IL_EACH(g_dotc_drones, it.squad == this,
+	{		
+		vector pos = this.origin + (it.dotc_formation_ofs_x * v_right) + (it.dotc_formation_ofs_y * v_forward);
+		setorigin(it, pos);
+		it.pos1 = pos;
+		it.angles = vang;
+	});
 }

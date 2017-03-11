@@ -200,7 +200,6 @@ spawnfunc(monster_afrit) { Monster_Spawn(this, true, MON_AFRIT.monsterid); }
 		}
 		#endif
 		#ifdef SVQC
-		spawnfunc(item_cells);
 		METHOD(Afrit, mr_setup, bool(Afrit thismon, entity actor))
 		{
 			if(!actor.health) actor.health = (autocvar_g_monster_afrit_health);
@@ -216,7 +215,7 @@ spawnfunc(monster_afrit) { Monster_Spawn(this, true, MON_AFRIT.monsterid); }
 			actor.weapon = WEP_FIREBALL.m_id; // hehe
 			actor.effects |= EF_FLAME;
 			actor.noalign = false; // always starts on ground
-			//actor.monster_loot = spawnfunc_item_cells;
+			//actor.monster_loot = ITEM_Cells;
 			actor.monster_attackfunc = M_Afrit_Attack;
 
 			return true;

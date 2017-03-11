@@ -1,3 +1,6 @@
+#define GUARDIAN_DEBUG 0
+#if GUARDIAN_DEBUG
+
 #ifdef SVQC
 
 const int GUARD_ANIM_IDLE =  1;
@@ -24,13 +27,11 @@ const int GUARD_ANIM_DIE2 =  4;
 
 .vector moveto;
 
-
 entity dotc_guardian_addpart(entity this, string s_bone, Model s_model, entity e_to)
 {
-	entity prt;
-	prt 			= spawn();
-	prt.owner 		= this;
-	prt.colormap 	= this.colormap;
+	entity prt = spawn();
+	prt.owner = this;
+	prt.colormap = this.colormap;
 
 	setmodel(prt, s_model);
 	setattachment(prt, e_to, s_bone);
@@ -43,10 +44,10 @@ vector dotc_guardian_stepto(entity this, vector v_target)
 	vector v_step, v_dir;
 	fixedmakevectors(this.angles);
 
-	v_dir = v_forward;
-	//v_dir_z = 0; // never pich/roll.
-	//v_dir_x = 0; // never pich/roll.
-	v_step = this.origin + v_dir * 160;
+	vector v_dir = v_forward;
+	//v_dir.z = 0; // never pich/roll.
+	//v_dir.x = 0; // never pich/roll.
+	vector v_step = this.origin + v_dir * 160;
 
 	tracebox(this.origin, this.mins, this.maxs, v_step, MOVE_NORMAL, this);
 	//te_lightning1(NULL, this.origin, v_step);
@@ -65,7 +66,7 @@ vector dotc_guardian_stepto(entity this, vector v_target)
 		tracebox(this.origin, this.mins, this.maxs, v_step_r, MOVE_NORMAL, this);
 		f_step_r = trace_fraction;
 		te_lightning1(NULL, this.origin, v_step_r);
-		//GUARDIAN_CRUSHIT // If a enemy player is blocking us, chaneg behaviour and step on the basterd :P
+		//GUARDIAN_CRUSHIT // If a enemy player is blocking us, change behaviour and step on the bastard :P
 		
 		v_step_l = (v_forward * 160) - (v_right * 80) + this.origin;
 		tracebox(this.origin, this.mins, this.maxs, v_step_l, MOVE_NORMAL, this);
@@ -131,7 +132,7 @@ vector dotc_guardian_stepto(entity this, vector v_target)
 		}
 	}
 	
-	dprint("Once I saw a drunk crow. Fascinating!\n");
+	LOG_DEBUG("Once I saw a drunk crow. Fascinating!");
 	return '0 0 0'; // this point should never be reached..
 }
 
@@ -144,7 +145,7 @@ void dotc_guardian_think_idle(entity this)
 	this.moveto = dotc_guardian_stepto(this, '0 0 0');
 	// Stuck?
 	if(this.moveto == '0 0 0')
-		dprint("Bwaaaaa aaaa *sob*\n");
+		LOG_DEBUG("Bwaaaaa aaaa *sob*");
 	else
 	{
 		vector m_angle;
@@ -190,5 +191,7 @@ spawnfunc(dotc_guardian)
 
 	CSQCMODEL_AUTOINIT(this);
 }
+
+#endif
 
 #endif

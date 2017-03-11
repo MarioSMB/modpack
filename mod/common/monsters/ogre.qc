@@ -393,7 +393,6 @@ spawnfunc(monster_ogre) { Monster_Spawn(this, true, MON_OGRE.monsterid); }
 		#endif
 		#ifdef SVQC
 		.float speed;
-		spawnfunc(item_rockets);
 		METHOD(Ogre, mr_setup, bool(Monster thismon, entity actor))
 		{
 			if(!actor.health) actor.health = (autocvar_g_monster_ogre_health);
@@ -402,7 +401,7 @@ spawnfunc(monster_ogre) { Monster_Spawn(this, true, MON_OGRE.monsterid); }
 			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_ogre_speed_stop); }
 			if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_ogre_damageforcescale); }
 
-			actor.monster_loot = spawnfunc_item_rockets;
+			actor.monster_loot = ITEM_Rockets;
 			actor.weapon = WEP_MACHINEGUN.m_id;
 			setanim(actor, actor.anim_draw, false, true, true);
 			actor.spawn_time = actor.animstate_endtime;

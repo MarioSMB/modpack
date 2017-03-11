@@ -24,7 +24,7 @@ AUTOCVAR(g_balance_rpg_weaponthrowable, float, 1, "");
 
 CLASS(RPG7, Weapon)
 /* ammotype  */ ATTRIB(RPG7, ammo_field, .int, ammo_rockets);
-/* impulse   */ ATTRIB(RPG7, impulse, int, 7);
+/* impulse   */ ATTRIB(RPG7, impulse, int, 9);
 /* flags     */ ATTRIB(RPG7, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(RPG7, bot_pickupbasevalue, float, 8000);
 /* color     */ ATTRIB(RPG7, wpcolor, vector, '0.6 0.8 0.7');
@@ -35,7 +35,7 @@ CLASS(RPG7, Weapon)
 /* crosshair */ ATTRIB(RPG7, w_crosshair, string, "gfx/crosshair65");
 /* crosshair */ ATTRIB(RPG7, w_crosshair_size, float, 0.7);
 /* wepimg    */ ATTRIB(RPG7, model2, string, "weaponrpg");
-/* refname   */ ATTRIB(RPG7, netname, string, "rpg");
+/* refname   */ ATTRIB(RPG7, netname, string, "rpg7");
 /* wepname   */ ATTRIB(RPG7, m_name, string, _("RPG-7"));
 
 #define X(BEGIN, P, END, class, prefix) \

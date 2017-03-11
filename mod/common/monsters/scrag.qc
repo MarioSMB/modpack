@@ -189,7 +189,6 @@ spawnfunc(monster_scrag) { Monster_Spawn(this, true, MON_SCRAG.monsterid); }
 		}
 		#endif
 		#ifdef SVQC
-		spawnfunc(item_cells);
 		METHOD(Scrag, mr_setup, bool(Scrag thismon, entity actor))
 		{
 			if(!actor.health) actor.health = (autocvar_g_monster_scrag_health);
@@ -198,7 +197,7 @@ spawnfunc(monster_scrag) { Monster_Spawn(this, true, MON_SCRAG.monsterid); }
 			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_scrag_speed_stop); }
 			if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_scrag_damageforcescale); }
 
-			//actor.monster_loot = spawnfunc_item_cells;
+			//actor.monster_loot = ITEM_Cells;
 			actor.monster_attackfunc = M_Scrag_Attack;
 
 			return true;

@@ -141,7 +141,6 @@ spawnfunc(monster_demon1) { Monster_Spawn(this, true, MON_DEMON.monsterid); }
 		#endif
 		#ifdef SVQC
 		.float speed;
-		spawnfunc(item_health_large);
 		METHOD(Demon, mr_setup, bool(Monster thismon, entity actor))
 		{
 			if(!actor.health) actor.health = (autocvar_g_monster_demon_health);
@@ -150,7 +149,7 @@ spawnfunc(monster_demon1) { Monster_Spawn(this, true, MON_DEMON.monsterid); }
 			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_demon_speed_stop); }
 			if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_demon_damageforcescale); }
 
-			actor.monster_loot = spawnfunc_item_health_large;
+			actor.monster_loot = ITEM_HealthBig;
 			actor.monster_attackfunc = M_Demon_Attack;
 
 			return true;

@@ -1,4 +1,4 @@
-#ifndef MENUQC
+#ifdef GAMEQC
 
 #ifndef IMPLEMENTATION
 #if 0
@@ -18,7 +18,7 @@
 #include "drones/all.inc"
 
 #if defined(SVQC)
-	#include "dotc.qc"
+	#include "sv_dotc.qc"
 	#ifndef IMPLEMENTATION
 		#include "ai.qh"
 		#include "core.qh"
@@ -36,6 +36,8 @@
 		#include "spawnitems.qc"
 		#include "spawnpoint.qc"
 	#endif
+#elif defined(CSQC)
+	#include "cl_dotc.qc"
 #endif
 
 #endif

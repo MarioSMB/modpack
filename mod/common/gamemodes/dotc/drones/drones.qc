@@ -1,5 +1,9 @@
 #ifndef IMPLEMENTATION
 
+MSG_CENTER_NOTIF(DEATH_SELF_DOTC_DRONE_PROJECTILE,         1,      0, 0, "",                              CPID_Null,                             "0 0",  _("^K1You were gunned down by a drone!"), "")
+MSG_INFO_NOTIF(DEATH_MURDER_DOTC_DRONE_PROJECTILE,         1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_death",           _("^BG%s%s^K1 was turned into drone cannon fodder by ^BG%s^K1%s%s"), "")
+MSG_MULTI_NOTIF(DEATH_MURDER_DOTC_DRONE_PROJECTILE,        1,  NULL,                                      INFO_DEATH_MURDER_DOTC_DRONE_PROJECTILE,        NULL)
+
 const int DDSF_SETUP = BIT(0);
 const int DDSF_MOVE = BIT(1);
 const int DDSF_AIM = BIT(2);
@@ -11,6 +15,7 @@ const int DDSF_TURN = BIT(7);
 
 REGISTER_NET_LINKED(ENT_CLIENT_DOTC_DRONE)
 
+// death animation is handled as a different entity so we can remove it at will
 REGISTER_NET_TEMP(TE_CSQC_DOTC_DRONEDIE)
 
 #ifdef SVQC
@@ -22,6 +27,9 @@ AUTOCVAR(g_dotc_gib_side2speed2, float, 800, "");
 
 AUTOCVAR(g_dotc_squads_maxofdist, float, 100, "");
 AUTOCVAR(g_dotc_squads_teletime, float, 1, "");
+
+IntrusiveList g_dotc_drones;
+STATIC_INIT(g_dotc_drones) { g_dotc_drones = IL_NEW(); }
 #endif
 
 .entity drone_gun;
@@ -41,6 +49,7 @@ void dotc_drone_remove(entity this)
 #ifdef SVQC
 
 AUTOCVAR(g_dotc_waypointsprites_squads, bool, true, "");
+AUTOCVAR(g_dotc_waypointsprites_drones, bool, false, "");
 
 void gib_groundboom(entity this, entity toucher)
 {
@@ -49,23 +58,22 @@ void gib_groundboom(entity this, entity toucher)
 	if(this.cnt > 0)
 		return;
 
-	sound (this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTN_NORM);
+	sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTN_NORM);
 	Send_Effect(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
+
+	settouch(this, func_null); // just incase...?
 
 	delete(this);
 }
 
 void dotc_sv_gibshower(entity this, vector where)
 {
-	int i;
-	entity gib;
-
-	sound (this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTN_NORM);
+	sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTN_NORM);
 	Send_Effect(EFFECT_ROCKET_EXPLODE, where, '0 0 0', 1);
 
-	for(i = 1; i < (random() * 5); ++i)
+	for(int i = 1; i < (random() * 5); ++i)
 	{
-		gib = spawn();
+		entity gib = spawn();
 		setmodel(gib, MDL_DOTC_GIB_RANDOM());
 		setorigin(gib, where);
 
@@ -79,7 +87,7 @@ void dotc_sv_gibshower(entity this, vector where)
 		gib.avelocity 	= randomvec() * 160;
 
 		// cnt = bounce how many times before exploding.
-		gib.cnt         = rint(random() * 5);
+		gib.cnt = rint(random() * 5);
 		settouch(gib, gib_groundboom);
 
 		// Failsafe.
@@ -134,79 +142,78 @@ void te_csqc_dronedie(entity this)
 	WriteCoord(MSG_BROADCAST, this.angles_x);	
 	WriteCoord(MSG_BROADCAST, this.angles_y);
 	WriteCoord(MSG_BROADCAST, this.angles_z);
-	
 }
 
 void dotc_drone_die(entity this, bool silent)
 {
-	if(autocvar_g_dotc_drones_dead_csqc && !silent)
-		te_csqc_dronedie(this);
-
-	if(autocvar_g_dotc_waypointsprites_squads)
-		WaypointSprite_UpdateHealth(this.squad.sprite, this.squad.cnt);
-
-	if (!autocvar_g_dotc_drones_dead_csqc && !silent)
+	if(!silent)
 	{
-
-		//if(random() < 0.25)
-		//	dotc_sv_gibshower(this.origin);
-		if(this.mdl != "")
+		if(autocvar_g_dotc_drones_dead_csqc)
+			te_csqc_dronedie(this);
+		else
 		{
-			entity ghost;
-			vector vadd;
 
-			sound (this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTN_NORM);
-			Send_Effect(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
-
-			ghost = spawn();
-			setorigin(ghost, this.origin);
-			_setmodel(ghost, this.mdl);
-
-			vadd = ('0 0 1' * (autocvar_g_dotc_drones_dead_upspeed1 + random() * autocvar_g_dotc_drones_dead_upspeed2))
-				 + ('0 1 0' * (-autocvar_g_dotc_drones_dead_side1speed1 + random() * autocvar_g_dotc_drones_dead_side1speed2))
-				 + ('0 0 1' * (-autocvar_g_dotc_drones_dead_side2speed1 + random() * autocvar_g_dotc_drones_dead_side2speed2));
-
-			ghost.velocity 	= this.velocity + vadd;
-			ghost.avelocity = randomvec() * autocvar_g_dotc_drones_dead_spinnspeed;
-			ghost.gravity 	= 0.5;
-
-			ghost.solid 	= SOLID_CORPSE;
-			set_movetype(ghost, MOVETYPE_BOUNCE);
-			ghost.angles 	= this.angles;
-
-			settouch(ghost, ghost_groundboom_touch);
-			setthink(ghost, ghost_groundboom);
-			ghost.lip = ghost.nextthink = time + (random() * 5);
-
-			if(random() < 0.25)
+			//if(random() < 0.25)
+			//	dotc_sv_gibshower(this.origin);
+			if(this.mdl != "")
 			{
-				ghost.effects = EF_FLAME;
-				ghost.cnt = 1;
-			}
-			else
-				ghost.cnt = 1 + rint(random() * 3);
+				sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTN_NORM);
+				Send_Effect(EFFECT_ROCKET_EXPLODE, this.origin, '0 0 0', 1);
 
-			ghost.effects 	|= EF_LOWPRECISION;
+				entity ghost = spawn();
+				setorigin(ghost, this.origin);
+				_setmodel(ghost, this.mdl);
+
+				vector vadd = ('0 0 1' * (autocvar_g_dotc_drones_dead_upspeed1 + random() * autocvar_g_dotc_drones_dead_upspeed2))
+					 		+ ('0 1 0' * (-autocvar_g_dotc_drones_dead_side1speed1 + random() * autocvar_g_dotc_drones_dead_side1speed2))
+					 		+ ('0 0 1' * (-autocvar_g_dotc_drones_dead_side2speed1 + random() * autocvar_g_dotc_drones_dead_side2speed2));
+
+				ghost.velocity 	= this.velocity + vadd;
+				ghost.avelocity = randomvec() * autocvar_g_dotc_drones_dead_spinnspeed;
+				ghost.gravity 	= 0.5;
+
+				ghost.solid 	= SOLID_CORPSE;
+				set_movetype(ghost, MOVETYPE_BOUNCE);
+				ghost.angles 	= this.angles;
+
+				settouch(ghost, ghost_groundboom_touch);
+				setthink(ghost, ghost_groundboom);
+				ghost.lip = ghost.nextthink = time + (random() * 5);
+
+				if(random() < 0.25)
+				{
+					ghost.effects = EF_FLAME;
+					ghost.cnt = 1;
+				}
+				else
+					ghost.cnt = 1 + rint(random() * 3);
+
+				ghost.effects |= EF_LOWPRECISION;
+			}
 		}
 	}
 
 	WaypointSprite_Kill(this.waypointsprite_attached);
 
 	if(this.squad)
+	{
 		this.squad.cnt -= 1;
+		if(this.squad.waypointsprite_attached)
+			WaypointSprite_UpdateHealth(this.squad.waypointsprite_attached, this.squad.cnt);
+	}
 
 	// unlink!
 	this.squad = NULL;
 	this.dotc_targetflags	    = DOTC_TARGET_NOT;
 	this.target_validate_flags  = DOTC_TARGET_NOT;
-	this.dotc_unittype 		= DOTC_UF_NONE;
+	this.dotc_unittype 			= DOTC_UF_NONE;
 
 	this.event_damage           = func_null;
 	this.takedamage             = DAMAGE_NO;
 	this.deadflag 				= DEAD_DEAD;
 
 	setthink(this, SUB_Remove); // gun and turret already deleted
-	this.nextthink 	= time + 0.1;
+	this.nextthink = time + 0.1;
 
 	if(this.drone_gun)
 		delete(this.drone_gun);
@@ -237,7 +244,7 @@ void dotc_droneyaw(entity this)
 		dotc_ai_track_targetoffset = dotc_ai_moveangle(this, '0 0 0', this.squad.angles, '360 360 360');
 
 	this.avelocity_y = bound(this.dotc_turnspeed * -1, dotc_ai_track_targetoffset_y, this.dotc_turnspeed);
-	this.SendFlags |= DDSF_TURN| DDSF_MOVE;
+	this.SendFlags |= DDSF_TURN | DDSF_MOVE;
 }
 
 
@@ -250,8 +257,12 @@ void dotc_drone_teleto(entity this, vector v_dest)
 	setorigin(this, v_dest);
 }
 
+#if 0
+/*
+  Unused, perhaps related to debugging
+*/
 .vector step_move_pos;
-.float  step_move_time;
+.float step_move_time;
 
 int dotc_step_move_testloc(entity this, vector _loc)
 {
@@ -262,46 +273,41 @@ int dotc_step_move_testloc(entity this, vector _loc)
 	return 0;
 }
 
-int dotc_step_move(entity this)
+bool dotc_step_move(entity this)
 {
-	float _dist, _dist_best = 0;
-	vector _dir, _loc;
-
-	_dist = vlen(this.origin - this.moveto);
-	if(_dist < 64 || this.step_move_time < time)
+	float best = 0;
+	if(this.step_move_time < time || vdist(this.origin - this.moveto, <, 64))
 	{
 		this.step_move_time = time + 5;
-		_dir = normalize(this.origin - this.moveto);
-		_loc = _dir * 256 + this.origin;
-		if(!dotc_step_move_testloc(this, _loc))
+		vector dir = normalize(this.origin - this.moveto);
+		vector loc = dir * 256 + this.origin;
+		if(!dotc_step_move_testloc(this, loc))
 		{
-			_dist = vlen(this.origin - this.moveto);
-			if(_dist_best > _dist || _dist_best == 0)
+			dist = vlen2(this.origin - this.moveto);
+			if(!best || best > dist)
 			{
-				_dist_best = _dist;
-				this.step_move_pos = _loc;
+				best = dist;
+				this.step_move_pos = loc;
 			}
 		}
 	}
-	return 0;
+	return false;
 }
+#endif
 
 vector dotc_drone_move(entity this, vector move_where, float speed_min, float dist_max, bool blend)
 {
-	vector mdir;
-	float dist;
+	vector dist = move_where - this.origin;
 
-	dist = vlen(move_where - this.origin);
-
-	if(dist > autocvar_g_dotc_squads_maxofdist && this.lip < time)
+	if(this.lip < time && vdist(dist, >, autocvar_g_dotc_squads_maxofdist))
 		this.lip = time + autocvar_g_dotc_squads_teletime;
 	else
 		this.lip = 0;
 
-	mdir = normalize(move_where - this.origin);
+	vector mdir = normalize(move_where - this.origin);
 	mdir = steerlib_beamsteer(this, mdir, 128, 8, 8, 256);
 
-	return mdir * bound(speed_min, (dist / dist_max) * this.dotc_movespeed, this.dotc_movespeed);
+	return mdir * bound(speed_min, (vlen(dist) / dist_max) * this.dotc_movespeed, this.dotc_movespeed);
 }
 
 void dotc_drone_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
@@ -331,31 +337,29 @@ void dotc_drone_damage(entity this, entity inflictor, entity attacker, float dam
 	this.punchvector = force;
 }
 
-void dotc_drone_touch()
+/*void dotc_drone_touch()
 {
 	//dprint("^3Drone touch!\n");
-}
+}*/
 
 bool dotc_drone_send(entity this, entity to, int sf);
 entity dotc_spawn_drone( entity sqd, entity own,
 						 Model body_model,
 						 Model turret_model,
 						 Model gun_model,
-						 string dead_model,
-						 string cvar_base_name,
-						 string explodeffect,
-						 void(entity this, vector formaion_loc, float tdelta) fp_framefunc,
+						 Model dead_model,
+						 entity explodeffect,
+						 void(entity this, entity thesquad, vector formation_loc, float tdelta) fp_framefunc,
 						 void(entity this) fp_firefunc,
 						 float dronetype)
 {
-#define CCVAR(part) cvar(strcat(drone.cvar_basename,part))
-
-	entity drone 			= spawn();
-	drone.classname	= "dotc_drone";
+	entity drone = spawn();
+	drone.classname = "dotc_drone";
 	drone.squad 	= sqd;
 	drone.team 		= sqd.team;
 	drone.owner		= own;
 	drone.colormap 	= 1024 + (drone.team - 1) * 17;
+	IL_PUSH(g_dotc_drones, drone);
 
 	drone.dotc_dronetype = dronetype;
 	//drone.touch = dotc_drone_touch;
@@ -375,45 +379,21 @@ entity dotc_spawn_drone( entity sqd, entity own,
 
 	drone.event_damage 		= dotc_drone_damage;
 
-	drone.cvar_basename 	= cvar_base_name;
-	drone.health			= CCVAR("health");
+	//drone.cvar_basename 	= cvar_base_name;
+	//fp_initfunc(drone);
 
-	drone.shot_dmg			= CCVAR("shot_dmg");
-	drone.shot_radius		= CCVAR("shot_radius");
-	drone.shot_force		= CCVAR("shot_force");
-	drone.shot_speed		= CCVAR("shot_speed");
-	drone.shot_refire		= CCVAR("shot_refire");
-	drone.shot_spread       = CCVAR("shot_spread");
-
-	drone.target_range			 = CCVAR("target_range");
-	drone.target_range_min		 = CCVAR("target_range_min");
-	drone.target_range_optimal	 = CCVAR("target_range_optimal");
-
-	drone.dotc_deathcredits		 = CCVAR("deathcredits");
-
-	drone.aim_firetolerance_dist = CCVAR("aim_firetolerance_dist");
-	drone.aim_speed				 = CCVAR("aim_speed");
-	drone.aim_maxpitch			 = CCVAR("aim_maxpitch");
-	drone.aim_maxrot			 = CCVAR("aim_maxrot");
-
-	drone.dotc_movespeed		 = CCVAR("movespeed");
-	drone.dotc_turnspeed		 = CCVAR("turnspeed");
-
-	drone.dotc_spring_length	 = CCVAR("spring_length");
-	drone.dotc_spring_strength	 = CCVAR("spring_strength");
-
-	drone.drone_fire	= fp_firefunc;
-	drone.drone_frame	= fp_framefunc;
+	drone.drone_fire = fp_firefunc;
+	drone.drone_frame = fp_framefunc;
 
 	setmodel(drone, body_model);
 
 	drone.glowmod = (drone.team) ? Team_ColorRGB(drone.team) : '1 1 1';
 
-	drone.mdl = dead_model;
+	drone.mdl = dead_model.model_str();
 
 	if(turret_model != MDL_Null)
 	{
-		drone.drone_turret 	= spawn();
+		drone.drone_turret = spawn();
 		setmodel(drone.drone_turret, turret_model);
 		setattachment(drone.drone_turret, drone, "turret");
 
@@ -443,15 +423,17 @@ entity dotc_spawn_drone( entity sqd, entity own,
 
 	// Make it appear on the minimap
 	
-	entity wp = WaypointSprite_Spawn(WP_Null, 0, 1024, drone, '0 0 64', NULL, drone.team, drone, waypointsprite_attached, 2, RADARICON_Drone);
-	wp.colormod = ((drone.team) ? Team_ColorRGB(drone.team) : '1 1 1');
-	WaypointSprite_UpdateTeamRadar(drone.waypointsprite_attached, RADARICON_Drone, ((drone.team) ? colormapPaletteColor(drone.team - 1, false) : '1 1 1'));
+	if(autocvar_g_dotc_waypointsprites_drones)
+	{
+		entity wp = WaypointSprite_Spawn(WP_Null, 0, 1024, drone, '0 0 64', NULL, drone.team, drone, waypointsprite_attached, 2, RADARICON_Drone);
+		wp.colormod = ((drone.team) ? Team_ColorRGB(drone.team) : '1 1 1');
+		WaypointSprite_UpdateTeamRadar(drone.waypointsprite_attached, RADARICON_Drone, ((drone.team) ? colormapPaletteColor(drone.team - 1, false) : '1 1 1'));
+	}
 
 	drone.dotc_dronetype = dronetype;
 	Net_LinkEntity(drone, true, 0, dotc_drone_send);
 	drone.SendFlags = DDSF_SETUP;
 	return drone;
-#undef CCVAR
 }
 
 bool dotc_drone_send(entity this, entity to, int sf)
@@ -461,7 +443,6 @@ bool dotc_drone_send(entity this, entity to, int sf)
 
 	if(sf & DDSF_SETUP)
 	{
-
 		WriteByte(MSG_ENTITY, this.dotc_dronetype);
 		WriteByte(MSG_ENTITY, this.team);
 	}
@@ -482,6 +463,9 @@ bool dotc_drone_send(entity this, entity to, int sf)
 		WriteCoord(MSG_ENTITY, this.angles_x);
 		WriteCoord(MSG_ENTITY, this.angles_y);
 		//WriteCoord(MSG_ENTITY, this.angles_z);
+
+		WriteCoord(MSG_ENTITY, this.avelocity_x);
+		WriteCoord(MSG_ENTITY, this.avelocity_y);
 	}
 
 	if(sf & DDSF_AIM)
@@ -563,11 +547,13 @@ MUTATOR_HOOKFUNCTION(cl_drones, EditProjectile)
 	}
 }
 
-
+.vector oldangles;
 void dotc_drone_predraw(entity this)
 {
 	if(this.velocity)
 		setorigin(this, this.oldorigin + this.velocity * (time - this.move_time));
+	if(this.avelocity)
+		this.angles = this.oldangles + this.avelocity * (time - this.move_time);
 	//InterpolateOrigin_Do();
 }
 
@@ -634,7 +620,7 @@ void dotc_drone_construct(entity this, bool is_new)
 			setsize(this, drone_size_medium_min, drone_size_medium_max);
 			break;
 		default:
-			dprint(strcat("Warning: unknown drone type ", this.dotc_dronetype, "\n"));
+			LOG_DEBUGF("Warning: Unknown drone type %d", this.dotc_dronetype);
 			return;
 	}
 
@@ -685,9 +671,12 @@ NET_HANDLE(ENT_CLIENT_DOTC_DRONE, bool isnew)
 
 	if(sf & DDSF_TURN)
 	{
-		this.angles_x = ReadCoord();
-		this.angles_y = ReadCoord();
+		this.oldangles_x = ReadCoord();
+		this.oldangles_y = ReadCoord();
 		//this.angles_z = ReadCoord();
+
+		this.avelocity_x = ReadCoord();
+		this.avelocity_y = ReadCoord();
 	}
 
 	if(sf & DDSF_AIM)
@@ -708,7 +697,7 @@ NET_HANDLE(ENT_CLIENT_DOTC_DRONE, bool isnew)
 
 	if(sf & DDSF_ANIMATE)
 	{
-		this.frame1time =  ReadCoord();
+		this.frame1time = ReadCoord();
 		this.frame = ReadByte();
 	}
 

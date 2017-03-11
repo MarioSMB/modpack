@@ -87,7 +87,6 @@ METHOD(Troll, mr_anim, bool(Troll this, entity actor))
 }
 #endif
 #ifdef SVQC
-spawnfunc(item_armor_big);
 .float animstate_endtime;
 METHOD(Troll, mr_setup, bool(Troll this, entity actor))
 {
@@ -101,7 +100,7 @@ METHOD(Troll, mr_setup, bool(Troll this, entity actor))
 
     actor.view_ofs = '0 0 35'; // we swing at a lower height than our eyes
 
-    actor.monster_loot = spawnfunc_item_armor_big;
+    actor.monster_loot = ITEM_ArmorBig;
     actor.weapon = WEP_MORTAR.m_id;
 
     setanim(actor, actor.anim_idle, false, true, true);

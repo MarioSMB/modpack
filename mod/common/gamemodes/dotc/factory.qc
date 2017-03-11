@@ -17,17 +17,11 @@ void dotc_DronePathThink(entity this)
 
 	// debug tracer to show the alignment of paths
 	if(autocvar_developer)
-		te_lightning1(this, this.origin, this.owner.origin);
-}
-
-void dotc_DelayedDronePathSetup(entity this)
-{
-	entity next_node = NULL;
-	next_node = find(NULL, targetname, this.target);
-	if(next_node)
 	{
-		next_node.owner 	= this;
-		this.enemy 			= next_node;
+		IL_EACH(g_dotc_dronepaths, it != this && it.target == this.targetname,
+		{
+			te_lightning1(this, this.origin, it.origin);
+		});
 	}
 }
 
@@ -36,6 +30,8 @@ void dotc_DronePathSetup(entity this)
 	set_movetype(this, MOVETYPE_NONE);
 	setthink(this, dotc_DronePathThink);
 	this.nextthink = time + 1;
+
+	IL_PUSH(g_dotc_dronepaths, this);
 
 	setorigin(this, this.origin + DOTC_FACTORY_SPAWN_OFFSET);
 
@@ -49,8 +45,6 @@ void dotc_DronePathSetup(entity this)
 		this.noalign = false;
 		droptofloor(this);
 	}
-
-	InitializeEntity(this, dotc_DelayedDronePathSetup, INITPRIO_FINDTARGET);
 }
 
 spawnfunc(dotc_dronepath)
@@ -111,20 +105,15 @@ void dotc_FactoryDamage(entity this, entity inflictor, entity attacker, float da
 
 void dotc_FactoryThink(entity this)
 {
-	if(game_stopped)
-	{
-		WaypointSprite_Kill(this.wps_factorybase);
-		return;
-	}
-	
 	this.nextthink = time + DOTC_FACTORY_THINKRATE;
 
 	if(!round_handler_IsRoundStarted())
 		return;
 
-	if(this.floodcontrol_chat < time && this.dmgtime > time)
+	entity core = dotc_GetCore(this.team);
+	if(core.floodcontrol_chat < time && this.dmgtime > time)
 	{
-		this.floodcontrol_chat = time + 3;
+		core.floodcontrol_chat = time + 3;
 
 		Send_Notification(NOTIF_TEAM, this, MSG_CENTER, CENTER_DOTC_FACTORY_UNDERATTACK);
 		
@@ -136,7 +125,6 @@ void dotc_FactoryThink(entity this)
 		dotc_spawn_dronesquad(this, this.enemy.origin, this.enemy);
 		this.lip = time + this.wait;
 		this.cnt += 1;
-
 	}
 
 	CSQCMODEL_AUTOUPDATE(this);
@@ -160,7 +148,7 @@ void dotc_SpawnWaypoints(entity this)
 		entity wp = WaypointSprite_SpawnFixed(basename, this.origin + DOTC_FACTORY_WAYPOINT_OFFSET, this, wps_factorybase, RADARICON_FACTORY);
 		wp.colormod = ((this.team) ? Team_ColorRGB(this.team) : '1 1 1');
 		WaypointSprite_UpdateTeamRadar(this.wps_factorybase, RADARICON_FACTORY, ((this.team) ? colormapPaletteColor(this.team - 1, false) : '1 1 1'));
-		WaypointSprite_UpdateRule(this.wps_factorybase, this.team, SPRITERULE_TEAMPLAY);
+		//WaypointSprite_UpdateRule(this.wps_factorybase, this.team, SPRITERULE_TEAMPLAY);
 		WaypointSprite_UpdateMaxHealth(this.wps_factorybase, this.max_health);
 		WaypointSprite_UpdateHealth(this.wps_factorybase, this.health);
 
@@ -176,6 +164,7 @@ void dotc_FactoryReset(entity this)
 	setthink(this, dotc_FactoryThink);
 	this.nextthink 		= time;
 	this.health 		= this.max_health;
+	this.cnt = 0;
 
 	if(this.wps_factorybase)
 	{
@@ -192,6 +181,7 @@ void dotc_FactoryReset(entity this)
 	CSQCMODEL_AUTOUPDATE(this);
 }
 
+entity dotc_squad_nextpath(entity curpath);
 void dotc_DelayedFactorySetup(entity this) // called after a factory is placed on a map by dotc_FactorySetup()
 {
 	// bot waypoints
@@ -200,12 +190,11 @@ void dotc_DelayedFactorySetup(entity this) // called after a factory is placed o
 	this.bot_basewaypoint = this.nearestwaypoint;
 
 	// node target
-	entity next_node = find(NULL, targetname, this.target);
+	entity next_node = dotc_squad_nextpath(this);
 	if(!next_node)
-		LOG_DEBUG("Warning: factory is missing a target, fix your map!\n");
+		LOG_INFO("Warning: factory is missing a target, fix your map!\n");
 
-	next_node.owner 	= this;
-	this.enemy 			= next_node;
+	this.enemy = next_node;
 
 	// waypointsprites
 	dotc_SpawnWaypoints(this);

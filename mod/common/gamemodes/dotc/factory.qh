@@ -5,6 +5,9 @@ SOUND(DOTC_FACTORY_LOST, "dotc/factory_lost");
 
 #ifdef SVQC
 
+IntrusiveList g_dotc_dronepaths;
+STATIC_INIT(g_dotc_dronepaths) { g_dotc_dronepaths = IL_NEW(); }
+
 // list of factories on the map
 entity dotc_worldfactorylist;
 .entity dotc_worldfactorynext;

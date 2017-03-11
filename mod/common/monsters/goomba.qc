@@ -123,7 +123,6 @@ spawnfunc(monster_goomba) { Monster_Spawn(this, true, MON_GOOMBA.monsterid); }
 		#endif
 		#ifdef SVQC
 		.float speed;
-		//spawnfunc(item_health_large);
 		METHOD(Goomba, mr_setup, bool(Monster thismon, entity actor))
 		{
 			if(!actor.health) actor.health = (autocvar_g_monster_goomba_health);
@@ -133,7 +132,7 @@ spawnfunc(monster_goomba) { Monster_Spawn(this, true, MON_GOOMBA.monsterid); }
 			if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_goomba_damageforcescale); }
 
 			actor.ticrate = sys_frametime; // accuracy required
-			//actor.monster_loot = spawnfunc_item_health_large;
+			//actor.monster_loot = ITEM_HealthBig;
 			actor.monster_attackfunc = func_null;
 			actor.spawn_time = time + 0.55;
 			actor.spawnshieldtime = actor.spawn_time;

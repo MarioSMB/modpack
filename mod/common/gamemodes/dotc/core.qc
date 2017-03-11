@@ -1,3 +1,6 @@
+IntrusiveList g_dotc_addons;
+STATIC_INIT(g_dotc_addons) { g_dotc_addons = IL_NEW(); }
+
 // core listing
 entity dotc_GetCore(int teamnumber)
 {
@@ -50,6 +53,8 @@ entity dotc_Core_Addons_Spawn(entity core, Model smdl, string sbone)
 	setthink(addon, dotc_Core_Addons_Think);
 	addon.nextthink			= time + DOTC_CORE_THINKRATE;
 
+	IL_PUSH(g_dotc_addons, addon);
+
 	fix_mins_maxs_for_rotating(addon);
 	CSQCMODEL_AUTOINIT(addon);
 
@@ -58,14 +63,12 @@ entity dotc_Core_Addons_Spawn(entity core, Model smdl, string sbone)
 
 void dotc_Core_Addons_Clear(entity this)
 {
-	FOREACH_ENTITY_ENT(owner, this,
+	IL_EACH(g_dotc_addons, it.owner == this && it.dotc_unittype == DOTC_UF_ADDON,
 	{
-		if(it.dotc_unittype == DOTC_UF_ADDON)
-		{
-			it.owner = NULL;
-			setthink(it, SUB_Remove);
-			it.nextthink = time;
-		}
+		it.owner = NULL;
+		setthink(it, SUB_Remove);
+		it.nextthink = time;
+		IL_REMOVE(g_dotc_addons, it);
 	});
 }
 
@@ -84,9 +87,7 @@ void dotc_Core_Sphere_Think(entity this)
 
 void dotc_Core_Sphere_Spawn(entity core)
 {
-	entity sphere;
-
-	sphere = dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_10, "addon04");
+	entity sphere = dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_10, "addon04");
 	sphere.solid 	 = SOLID_NOT;
 	set_movetype(sphere, MOVETYPE_NOCLIP);
 	setthink(sphere, dotc_Core_Sphere_Think);
@@ -116,83 +117,51 @@ void dotc_Core_SetLevel(entity core, int newlevel, bool silent)
 
 	core.dotc_corelevel = newlevel;
 	core.dotc_nextlevel = core.dotc_nextlevel * autocvar_g_dotc_nextlevel_multiplier;
-	
+
+	if(autocvar_g_dotc_nextlevel_resethealth)
+	{
+		core.health = core.max_health;
+		if(core.wps_corebase)
+			WaypointSprite_UpdateHealth(core.wps_corebase, core.health);
+	}
+
+	dotc_Core_Addons_Clear(core);
+
 	if(newlevel >= 7)
 	{
-		switch(newlevel)
-		{
-			case 7:
-			{
-				dotc_Core_Addons_Clear(core);
-				setmodel(core, MDL_DOTC_CORE_LEVEL_7);
-				dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_8_9, "addon01");
-				break;	
-			}
-			case 8:
-			{
-				dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_8_9, "addon02");
-				break;
-			}
-			case 9:
-			{
-				dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_8_9, "addon03");
-				break;
-			}
-			case 10:
-			{
-				dotc_Core_Sphere_Spawn(core);
-				break;
-			}
-		}
+		setmodel(core, MDL_DOTC_CORE_LEVEL_7);
+		dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_8_9, "addon01");
+
+		if(newlevel >= 8)
+			dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_8_9, "addon02");
+		if(newlevel >= 9)
+			dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_8_9, "addon03");
+		if(newlevel >= 10)
+			dotc_Core_Sphere_Spawn(core);
 	}
 	else if(newlevel >= 4)
 	{
-		switch(newlevel)
-		{
-			case 4:
-			{
-				dotc_Core_Addons_Clear(core);
-				setmodel(core, MDL_DOTC_CORE_LEVEL_4);
-				dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_5_6, "addon01");
-				break;
-			}
-			case 5:
-			{
-				dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_5_6, "addon02");
-				break;
-			}
-			case 6:
-			{
-				dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_5_6, "addon03");
-				break;
-			}
-		}		
+		setmodel(core, MDL_DOTC_CORE_LEVEL_4);
+		dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_5_6, "addon01");
+
+		if(newlevel >= 5)
+			dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_5_6, "addon02");
+		if(newlevel >= 6)
+			dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_5_6, "addon03");
 	}
-	else
+	else if(newlevel >= 1)
 	{
-		switch(newlevel)
-		{
-			case 1:
-			{
-				dotc_Core_Addons_Clear(core);
-				setmodel(core, MDL_DOTC_CORE_LEVEL_1);
-				dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_2_3, "addon01");
-				break;
-			}
-			case 2:
-			{
-				dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_2_3, "addon02");
-				break;
-			}
-			case 3:
-			{
-				dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_2_3, "addon03");
-				break;
-			}
-		}
+		setmodel(core, MDL_DOTC_CORE_LEVEL_1);
+		dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_2_3, "addon01");
+
+		if(newlevel >= 2)
+			dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_2_3, "addon02");
+		if(newlevel >= 3)
+			dotc_Core_Addons_Spawn(core, MDL_DOTC_CORE_LEVEL_2_3, "addon03");
 	}
 
 	fix_mins_maxs_for_rotating(core);
+	CSQCMODEL_AUTOUPDATE(core);
 }
 
 
@@ -338,30 +307,27 @@ void dotc_CoreThink(entity this)
 				Send_Effect(EFFECT_ONS_GENERATOR_EXPLODE, org, '0 0 0', 1);
 				sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
-				FOREACH_ENTITY_ENT(owner, this,
+				IL_EACH(g_dotc_addons, it.owner == this && it.dotc_unittype == DOTC_UF_ADDON,
 				{
-					if(it.dotc_unittype == DOTC_UF_ADDON)
-					{
-						it.effects   = EF_FLAME;
-						it.colormod  = '-1 -1 -1';
-						setsize(it,'-1 -1 -1', '1 1 1');				
+					it.effects   = EF_FLAME;
+					it.colormod  = '-1 -1 -1';
+					setsize(it,'-1 -1 -1', '1 1 1');				
 						
-						if(it.move_movetype == MOVETYPE_NOCLIP) // level 10 sphere
-						{
-							it.nextthink = 0;
-							set_movetype(it, MOVETYPE_BOUNCE);
-							it.solid 	= SOLID_CORPSE;
-							it.velocity  = normalize(it.origin - this.origin) *  (200 + (random() * 200)) + ('0 0 150' * (random() * 5));
-						}
-						else
-						{
-							set_movetype(it, MOVETYPE_BOUNCE);
-							it.solid 	= SOLID_CORPSE;
-							it.velocity = normalize(it.origin - this.origin) *  (500 + (random() * 1000)) + ('0 0 150' * (random() * 5));					
-						}
-
-						it.avelocity = randomvec() * 720;
+					if(it.move_movetype == MOVETYPE_NOCLIP) // level 10 sphere
+					{
+						it.nextthink = 0;
+						set_movetype(it, MOVETYPE_BOUNCE);
+						it.solid 	= SOLID_CORPSE;
+						it.velocity  = normalize(it.origin - this.origin) *  (200 + (random() * 200)) + ('0 0 150' * (random() * 5));
 					}
+					else
+					{
+						set_movetype(it, MOVETYPE_BOUNCE);
+						it.solid 	= SOLID_CORPSE;
+						it.velocity = normalize(it.origin - this.origin) *  (500 + (random() * 1000)) + ('0 0 150' * (random() * 5));					
+					}
+
+					it.avelocity = randomvec() * 720;
 				});
 			}
 			else
@@ -409,7 +375,7 @@ void dotc_DelayedCoreSetup(entity this) // called after a core is placed on a ma
 		entity wp = WaypointSprite_SpawnFixed(basename, this.origin + CPGEN_WAYPOINT_OFFSET, this, wps_corebase, RADARICON_GENERATOR);
 		wp.colormod = ((this.team) ? Team_ColorRGB(this.team) : '1 1 1');
 		WaypointSprite_UpdateTeamRadar(this.wps_corebase, RADARICON_GENERATOR, ((this.team) ? colormapPaletteColor(this.team - 1, false) : '1 1 1'));
-		WaypointSprite_UpdateRule(this.wps_corebase, this.team, SPRITERULE_TEAMPLAY);
+		//WaypointSprite_UpdateRule(this.wps_corebase, this.team, SPRITERULE_TEAMPLAY);
 		WaypointSprite_UpdateMaxHealth(this.wps_corebase, this.max_health);
 		WaypointSprite_UpdateHealth(this.wps_corebase, this.health);
 	}
@@ -465,6 +431,31 @@ void dotc_CoreSetup(int teamnumber, entity this) // called when spawning a core 
 	}
 
 	InitializeEntity(this, dotc_DelayedCoreSetup, INITPRIO_SETLOCATION);
+}
+
+
+// Debugging
+MUTATOR_HOOKFUNCTION(dotc, SV_ParseServerCommand)
+{
+	if(MUTATOR_RETURNVALUE) // command was already handled?
+		return false;
+
+	string cmd_name = M_ARGV(0, string);
+
+	if(cmd_name == "set_corelevel")
+	{
+		if(argv(1) == "" || argv(2) == "")
+		{
+			LOG_INFO("Both team and level need to be set.\n");
+			return true;
+		}
+
+		int forteam = Team_ColorToTeam(argv(1));
+		int tolevel = stoi(argv(2));
+		entity core = dotc_GetCore(forteam);
+		dotc_Core_SetLevel(core, tolevel, true);
+		return true;
+	}
 }
 
 

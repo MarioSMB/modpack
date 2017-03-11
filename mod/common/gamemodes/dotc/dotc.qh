@@ -2,6 +2,9 @@
 	AUTOCVAR_NOREF(g_dotc, bool, false, "");
 #endif
 
+#ifdef CSQC
+void HUD_Mod_DotC(vector pos, vector mySize);
+#endif
 CLASS(DoTC, Gametype)
     INIT(DoTC)
     {
@@ -16,6 +19,9 @@ CLASS(DoTC, Gametype)
     {
         return true;
     }
+#ifdef CSQC
+    ATTRIB(DoTC, m_modicons, void(vector pos, vector mySize), HUD_Mod_DotC);
+#endif
 ENDCLASS(DoTC)
 REGISTER_GAMETYPE(DOTC, NEW(DoTC));
 #define g_dotc IS_GAMETYPE(DOTC)
@@ -31,9 +37,29 @@ REGISTER_RADARICON(FACTORY,         4);
 
 REGISTER_RADARICON(Drone,           1);
 
+REGISTER_STAT(DOTC_CORE_LEVEL_RED, int)
+REGISTER_STAT(DOTC_CORE_CREDITS_RED, int)
+REGISTER_STAT(DOTC_CORE_CREDITS_RED_MAX, int)
+REGISTER_STAT(DOTC_CORE_LEVEL_BLUE, int)
+REGISTER_STAT(DOTC_CORE_CREDITS_BLUE, int)
+REGISTER_STAT(DOTC_CORE_CREDITS_BLUE_MAX, int)
+REGISTER_STAT(DOTC_CORE_LEVEL_YELLOW, int)
+REGISTER_STAT(DOTC_CORE_CREDITS_YELLOW, int)
+REGISTER_STAT(DOTC_CORE_CREDITS_YELLOW_MAX, int)
+REGISTER_STAT(DOTC_CORE_LEVEL_PINK, int)
+REGISTER_STAT(DOTC_CORE_CREDITS_PINK, int)
+REGISTER_STAT(DOTC_CORE_CREDITS_PINK_MAX, int)
+
 #ifdef SVQC
-// TODO: find a way to kill!
-.string cvar_basename;
+//.string cvar_basename;
+
+AUTOCVAR_NOREF(g_dotc_respawn_delay_small, float, 0, "");
+AUTOCVAR_NOREF(g_dotc_respawn_delay_small_count, float, 0, "");
+AUTOCVAR_NOREF(g_dotc_respawn_delay_large, float, 0, "");
+AUTOCVAR_NOREF(g_dotc_respawn_delay_large_count, float, 0, "");
+AUTOCVAR_NOREF(g_dotc_respawn_delay_max, float, 0, "");
+AUTOCVAR_NOREF(g_dotc_respawn_waves, float, 0, "");
+AUTOCVAR_NOREF(g_dotc_weapon_stay, float, 0, "");
 
 AUTOCVAR(g_dotc_warmup, float, 5, "");
 AUTOCVAR(g_dotc_point_limit, int, 1, "");
@@ -42,102 +68,15 @@ AUTOCVAR(g_dotc_factory_killscore, int, 20, "");
 AUTOCVAR(g_dotc_guarddog, int, 2, "");
 AUTOCVAR(g_dotc_apply_friendlyfire, bool, false, "");
 
-AUTOCVAR(g_dotc_turrets_healthabs, int, 1, "");
+AUTOCVAR(g_dotc_turrets_healthabs, float, 0, "");
 AUTOCVAR(g_dotc_turrets_healthmod, float, 1.5, "");
 AUTOCVAR(g_dotc_turrets_norespawn, bool, true, "");
 //AUTOCVAR(g_dotc_turrets_credits, int, 50, "");
 
 AUTOCVAR(g_dotc_core_health, float, 15000, "");
 AUTOCVAR(g_dotc_nextlevel_multiplier, float, 2, "");
+AUTOCVAR(g_dotc_nextlevel_resethealth, bool, true, "");
 
-AUTOCVAR_NOREF(g_dotc_scout_health, float, 50, "");
-
-AUTOCVAR_NOREF(g_dotc_scout_shot_dmg, float, 5, "");
-AUTOCVAR_NOREF(g_dotc_scout_shot_radius, float, 25, "");
-AUTOCVAR_NOREF(g_dotc_scout_shot_force, float, 25, "");
-AUTOCVAR_NOREF(g_dotc_scout_shot_speed, float, 6000, "");
-AUTOCVAR_NOREF(g_dotc_scout_shot_spread, float, 0.045, "");
-AUTOCVAR_NOREF(g_dotc_scout_shot_refire, float, 0.15, "");
-
-AUTOCVAR_NOREF(g_dotc_scout_target_range, float, 3000, "");
-AUTOCVAR_NOREF(g_dotc_scout_target_range_min, float, 5, "");
-AUTOCVAR_NOREF(g_dotc_scout_target_range_optimal, float, 1000, "");
-AUTOCVAR_NOREF(g_dotc_scout_deathcredits, float, 10, "");
-
-AUTOCVAR_NOREF(g_dotc_scout_aim_firetolerance_dist, float, 8, "");
-AUTOCVAR_NOREF(g_dotc_scout_aim_speed, float, 200, "");
-AUTOCVAR_NOREF(g_dotc_scout_aim_maxpitch, float, 25, "");
-AUTOCVAR_NOREF(g_dotc_scout_aim_maxrot, float, 10, "");
-
-AUTOCVAR_NOREF(g_dotc_scout_movespeed, float, 800, "");
-AUTOCVAR_NOREF(g_dotc_scout_turnspeed, float, 350, "");
-
-AUTOCVAR_NOREF(g_dotc_scout_spring_length, float, 200, "");
-AUTOCVAR_NOREF(g_dotc_scout_spring_strength, float, 1250, "");
-
-AUTOCVAR_NOREF(g_dotc_lighttank_health, float, 90, "");
-
-AUTOCVAR_NOREF(g_dotc_lighttank_shot_dmg, float, 15, "");
-AUTOCVAR_NOREF(g_dotc_lighttank_shot_radius, float, 50, "");
-AUTOCVAR_NOREF(g_dotc_lighttank_shot_force, float, 50, "");
-AUTOCVAR_NOREF(g_dotc_lighttank_shot_speed, float, 2000, "");
-AUTOCVAR_NOREF(g_dotc_lighttank_shot_spread, float, 0.075, "");
-AUTOCVAR_NOREF(g_dotc_lighttank_shot_refire, float, 2, "");
-
-AUTOCVAR_NOREF(g_dotc_lighttank_target_range, float, 2000, "");
-AUTOCVAR_NOREF(g_dotc_lighttank_target_range_min, float, 5, "");
-AUTOCVAR_NOREF(g_dotc_lighttank_target_range_optimal, float, 900, "");
-AUTOCVAR_NOREF(g_dotc_lighttank_deathcredits, float, 20, "");
-
-AUTOCVAR_NOREF(g_dotc_lighttank_aim_firetolerance_dist, float, 10, "");
-AUTOCVAR_NOREF(g_dotc_lighttank_aim_speed, float, 180, "");
-AUTOCVAR_NOREF(g_dotc_lighttank_aim_maxpitch, float, 20, "");
-AUTOCVAR_NOREF(g_dotc_lighttank_aim_maxrot, float, 100, "");
-
-AUTOCVAR_NOREF(g_dotc_lighttank_movespeed, float, 750, "");
-AUTOCVAR_NOREF(g_dotc_lighttank_turnspeed, float, 300, "");
-
-AUTOCVAR_NOREF(g_dotc_lighttank_spring_length, float, 100, "");
-AUTOCVAR_NOREF(g_dotc_lighttank_spring_strength, float, 1500, "");
-
-AUTOCVAR_NOREF(g_dotc_rart_health, float, 150, "");
-AUTOCVAR_NOREF(g_dotc_rart_shot_dmg, float, 50, "");
-AUTOCVAR_NOREF(g_dotc_rart_shot_radius, float, 250, "");
-AUTOCVAR_NOREF(g_dotc_rart_shot_force, float, 250, "");
-AUTOCVAR_NOREF(g_dotc_rart_shot_speed, float, 1250, "");
-AUTOCVAR_NOREF(g_dotc_rart_shot_spread, float, 0.025, "");
-AUTOCVAR_NOREF(g_dotc_rart_shot_refire, float, 0.25, "");
-AUTOCVAR_NOREF(g_dotc_rart_target_range, float, 3000, "");
-AUTOCVAR_NOREF(g_dotc_rart_target_range_min, float, 200, "");
-AUTOCVAR_NOREF(g_dotc_rart_target_range_optimal, float, 1000, "");
-AUTOCVAR_NOREF(g_dotc_rart_deathcredits, float, 40, "");
-AUTOCVAR_NOREF(g_dotc_rart_aim_firetolerance_dist, float, 10, "");
-AUTOCVAR_NOREF(g_dotc_rart_aim_speed, float, 90, "");
-AUTOCVAR_NOREF(g_dotc_rart_aim_maxpitch, float, 20, "");
-AUTOCVAR_NOREF(g_dotc_rart_aim_maxrot, float, 45, "");
-AUTOCVAR_NOREF(g_dotc_rart_movespeed, float, 500, "");
-AUTOCVAR_NOREF(g_dotc_rart_turnspeed, float, 70, "");
-AUTOCVAR_NOREF(g_dotc_rart_spring_length, float, 128, "");
-AUTOCVAR_NOREF(g_dotc_rart_spring_strength, float, 1200, "");
-AUTOCVAR_NOREF(g_dotc_gart_health, float, 170, "");
-AUTOCVAR_NOREF(g_dotc_gart_shot_dmg, float, 75, "");
-AUTOCVAR_NOREF(g_dotc_gart_shot_radius, float, 300, "");
-AUTOCVAR_NOREF(g_dotc_gart_shot_force, float, 500, "");
-AUTOCVAR_NOREF(g_dotc_gart_shot_speed, float, 1250, "");
-AUTOCVAR_NOREF(g_dotc_gart_shot_spread, float, 0.025, "");
-AUTOCVAR_NOREF(g_dotc_gart_shot_refire, float, 1.5, "");
-AUTOCVAR_NOREF(g_dotc_gart_target_range, float, 4000, "");
-AUTOCVAR_NOREF(g_dotc_gart_target_range_min, float, 400, "");
-AUTOCVAR_NOREF(g_dotc_gart_target_range_optimal, float, 2000, "");
-AUTOCVAR_NOREF(g_dotc_gart_deathcredits, float, 55, "");
-AUTOCVAR_NOREF(g_dotc_gart_aim_firetolerance_dist, float, 10, "");
-AUTOCVAR_NOREF(g_dotc_gart_aim_speed, float, 90, "");
-AUTOCVAR_NOREF(g_dotc_gart_aim_maxpitch, float, 20, "");
-AUTOCVAR_NOREF(g_dotc_gart_aim_maxrot, float, 45, "");
-AUTOCVAR_NOREF(g_dotc_gart_movespeed, float, 450, "");
-AUTOCVAR_NOREF(g_dotc_gart_turnspeed, float, 70, "");
-AUTOCVAR_NOREF(g_dotc_gart_spring_length, float, 128, "");
-AUTOCVAR_NOREF(g_dotc_gart_spring_strength, float, 1200, "");
 AUTOCVAR(g_dotc_waypointsprites_cores, float, 1, "");
 #endif
 
@@ -282,8 +221,8 @@ const int DOTC_FF_BACK = BIT(3);
 /// Function pointer to drone's firenig code.
 .void(entity this) drone_fire;
 //.float drone_nextframe;
-/// Drones frame ("think") function. @formaion_loc is where the squad thinks this drone should be. @tdela is the delta time since last frame call.
-.void(entity this, vector formaion_loc, float tdelta) drone_frame;
+/// Drones frame ("think") function. @formation_loc is where the squad thinks this drone should be. @tdela is the delta time since last frame call.
+.void(entity this, entity thesquad, vector formation_loc, float tdelta) drone_frame;
 
 /// Path entity squad is currently navigating towards
 .entity dotc_squadpath;
@@ -308,11 +247,11 @@ const int DOTC_FF_BACK = BIT(3);
 .int dotc_status; // status of this objective
 
 
-/// General (simple) AI target validator. @trg target to validate
-int dotc_ai_valid_target(entity me, entity trg);
+/// General (simple) AI target validator. @targ target to validate
+int dotc_ai_valid_target(entity this, entity targ);
 
-.string explode_fx;
-.string explode_snd;
+.entity explode_fx;
+.Sound explode_snd;
 
 #endif // SVQC
 

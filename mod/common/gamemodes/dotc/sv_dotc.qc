@@ -60,8 +60,6 @@ int dotc_teams;
 const int ST_DOTC_DESTROYED	  	= 1;
 //#define SP_DOTC_NEUTRAL_KILLS 8
 
-void dotc_sprite(entity this, entity simg, vector ofs, float max_hp, float hp, vector clr, float fixed);
-
 #define DOTC_FFCHECK(otr,me) ((SAME_TEAM(otr, me)) ? !autocvar_g_dotc_apply_friendlyfire : false)
 
 void dotc_Initialize();
@@ -110,28 +108,6 @@ void fix_mins_maxs_for_rotating(entity e)
 {
 	float r = bbox_radius(e.mins, e.maxs);
 	setsize(e, '-1 -1 -1' * r, '1 1 1' * r);
-}
-
-void dotc_sprite(entity this, entity simg, vector ofs, float max_hp, float hp, vector clr, float fixed)
-{
-	if(fixed)
-	{
-		entity wp = WaypointSprite_SpawnFixed(simg, this.origin + ofs, this, sprite, RADARICON_OBJECTIVE);
-		wp.colormod = clr;
-	}
-	else
-	{
-		//this.team
-		entity wp = WaypointSprite_Spawn(simg, 0, 700, this, ofs, NULL, 0, this, waypointsprite_attached, false, RADARICON_OBJECTIVE);
-		wp.colormod = clr;
-	}
-    
-	if(max_hp <= 0)
-		return;
-		
-	WaypointSprite_UpdateMaxHealth(this.sprite, max_hp);
-	WaypointSprite_UpdateHealth(this.sprite, hp);
-	//WaypointSprite_UpdateTeamRadar(this.sprite, RADARICON_OBJECTIVE, clr);
 }
 
 // Round handler
@@ -203,12 +179,7 @@ bool dotc_CheckWinner()
 		nades_Clear(it);
 	});
 
-	for(entity tmp_entity = NULL; (tmp_entity = find(tmp_entity, classname, "dotc_drone")); )
-	{
-		if(tmp_entity.event_damage)
-			tmp_entity.event_damage(tmp_entity, NULL, NULL, tmp_entity.health + tmp_entity.max_health + 100, DEATH_KILL.m_id, '0 0 0', '0 0 0');
-	}
-
+	game_stopped = true;
 	return 1;
 }
 
@@ -233,6 +204,47 @@ bool dotc_CheckTeams()
 // Mutator hooks
 // =============
 
+MUTATOR_HOOKFUNCTION(dotc, PlayerPreThink)
+{
+	entity player = M_ARGV(0, entity);
+
+	// stats
+	for(entity core = dotc_worldcorelist; core; core = core.dotc_worldcorenext)
+	{
+		switch(core.team)
+		{
+			case NUM_TEAM_1:
+			{
+				STAT(DOTC_CORE_LEVEL_RED, player) = core.dotc_corelevel;
+				STAT(DOTC_CORE_CREDITS_RED_MAX, player) = core.dotc_nextlevel;
+				STAT(DOTC_CORE_CREDITS_RED, player) = core.dotc_credits;
+				break;
+			}
+			case NUM_TEAM_2:
+			{
+				STAT(DOTC_CORE_LEVEL_BLUE, player) = core.dotc_corelevel;
+				STAT(DOTC_CORE_CREDITS_BLUE_MAX, player) = core.dotc_nextlevel;
+				STAT(DOTC_CORE_CREDITS_BLUE, player) = core.dotc_credits;
+				break;
+			}
+			case NUM_TEAM_3:
+			{
+				STAT(DOTC_CORE_LEVEL_YELLOW, player) = core.dotc_corelevel;
+				STAT(DOTC_CORE_CREDITS_YELLOW_MAX, player) = core.dotc_nextlevel;
+				STAT(DOTC_CORE_CREDITS_YELLOW, player) = core.dotc_credits;
+				break;
+			}
+			case NUM_TEAM_4:
+			{
+				STAT(DOTC_CORE_LEVEL_PINK, player) = core.dotc_corelevel;
+				STAT(DOTC_CORE_CREDITS_PINK_MAX, player) = core.dotc_nextlevel;
+				STAT(DOTC_CORE_CREDITS_PINK, player) = core.dotc_credits;
+				break;
+			}
+		}
+	}
+}
+
 MUTATOR_HOOKFUNCTION(dotc, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
@@ -250,7 +262,8 @@ MUTATOR_HOOKFUNCTION(dotc, PlayerDamage_SplitHealthArmor)
 	if(autocvar_g_dotc_guarddog)
 	if(IS_PLAYER(frag_attacker))
 	{
-		FOREACH_ENTITY_FLOAT(team, frag_target.team,
+		// reasoning: only squads have player targeting enabled, so this should work
+		IL_EACH(g_dotc_squads, it.team == frag_target.team,
 		{
 			if(it.target_validate_flags & DOTC_TARGET_PLAYERS)
 			if(dotc_ai_valid_target(it, frag_attacker) > 0)
@@ -284,26 +297,18 @@ MUTATOR_HOOKFUNCTION(dotc, CheckAllowedTeams)
 	return false;
 }
 
+MUTATOR_HOOKFUNCTION(dotc, ForbidDropCurrentWeapon)
+{
+	// no weapon drop on death
+	return true;
+}
+
 MUTATOR_HOOKFUNCTION(dotc, ForbidThrowCurrentWeapon)
 {
 	// no weapon tossing
 	return true;
 }
 
-//Handle pickups
-MUTATOR_HOOKFUNCTION(dotc, FilterItem)
-{
-	entity item = M_ARGV(0, entity);
-
-	// Untargeted, not valid in DotC
-	if(item.targetname == "")
-		return false;
-
-    dotc_ItemSpawn(item);
-    return true;
-}
-
-// No pickups
 MUTATOR_HOOKFUNCTION(dotc, TurretSpawn)
 {
 	entity turret = M_ARGV(0, entity);
@@ -376,5 +381,9 @@ void dotc_Initialize()
 {
 	InitializeEntity(NULL, dotc_DelayedInit, INITPRIO_GAMETYPE);
 }
+
+#endif
+
+#ifdef CSQC
 
 #endif
