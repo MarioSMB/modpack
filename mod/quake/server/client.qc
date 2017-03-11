@@ -1462,13 +1462,13 @@ void SV_ParseClientCommand(entity this, string command)
 
 	if(cmd_name == "cvar_purechanges")
 	{
-		sprint(this, strcat(cvar_purechanges), "\n");
+		sprint(this, strcat(cvar_purechanges, "\n"));
 		return;
 	}
 
 	if(cmd_name == "cvar_changes")
 	{
-		sprint(this, strcat(cvar_changes), "\n");
+		sprint(this, strcat(cvar_changes, "\n"));
 		return;
 	}
 
