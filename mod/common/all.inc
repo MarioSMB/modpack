@@ -12,6 +12,7 @@
 #include "minigames/all.inc"
 #include "mpowerups.qc"
 #include "monsters/all.inc"
+#include "nocross.qc"
 #include "mutators/all.qh"
 #include "notifications.qh"
 #include "player_crush.qc"
