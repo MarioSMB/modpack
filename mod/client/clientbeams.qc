@@ -220,7 +220,7 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 	}
 }
 
-MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
+MUTATOR_HOOKFUNCTION(mutator_mod, DrawCrosshair)
 {
 	if((time < STAT(GAMESTARTTIME))
 	|| (time < STAT(ROUNDSTARTTIME))
