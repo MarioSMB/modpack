@@ -1,8 +1,8 @@
 #ifdef GAMEQC
 REGISTER_STAT(NOCROSS, bool);
-#endif
 
 REGISTER_MUTATOR(nocross, true);
+#endif
 
 #ifdef SVQC
 bool nocross_active;
