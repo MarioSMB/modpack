@@ -8,7 +8,6 @@
 	#include "custom_playermodels.qc"
 	#include "demo.qc"
 	#include "freeze.qc"
-	#include "hook.qc"
 	#include "piggyback.qc"
 	#include "polytrails.qc"
 	#include "radio.qc"

@@ -8,6 +8,7 @@
 #include "effects.inc"
 #include "gamemodes/all.inc"
 //#include "giftbox.qc"
+#include "hook.qc"
 #include "projectiles.qh"
 #include "minigames/all.inc"
 #include "mpowerups.qc"
