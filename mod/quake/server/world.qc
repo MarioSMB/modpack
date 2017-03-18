@@ -810,6 +810,46 @@ spawnfunc(__init_dedicated_server)
 	static_init_precache();
 }
 
+/*
+============
+CheckRules_World
+
+Exit deathmatch games upon conditions
+============
+*/
+void NextLevel();
+bool autocvar_quit_when_empty = true;
+void CheckRules_World()
+{
+	if(gameover)	// someone else quit the game already
+		return;
+		
+	float timelimit = autocvar_timelimit * 60;
+	float fraglimit = autocvar_fraglimit;
+	
+	if(timelimit && time >= timelimit)
+	{
+		// crude hack to force restart of the server if we've reached the timelimit on a co-op level
+		if(server_is_dedicated && autocvar_quit_when_empty && !deathmatch && world.model != "maps/start.bsp" && world.model != "maps/rstart.bsp" && world.model != "maps/hipstart.bsp")
+			localcmd("\nmap start\n");
+		else
+			NextLevel();
+		return;
+	}
+
+	if(fraglimit)
+	{
+		FOREACH_CLIENT(IS_PLAYER(it),
+		{
+			if(it.frags >= fraglimit)
+			{
+				NextLevel();
+				return;
+			}
+		});
+	}
+}
+
 void StartFrame()
 {
 	teamplay = autocvar_teamplay;
@@ -818,4 +858,6 @@ void StartFrame()
 
 	//delete_fn = remove_unsafely; // not during spawning!
 	delete_fn = remove_except_protected;
+
+	CheckRules_World();
 }

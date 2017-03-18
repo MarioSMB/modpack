@@ -674,34 +674,6 @@ void NextLevel()
 	}
 }
 
-/*
-============
-CheckRules
-
-Exit deathmatch games upon conditions
-============
-*/
-void CheckRules(entity this)
-{
-	if(gameover)	// someone else quit the game already
-		return;
-		
-	float timelimit = autocvar_timelimit * 60;
-	float fraglimit = autocvar_fraglimit;
-	
-	if(timelimit && time >= timelimit)
-	{
-		NextLevel();
-		return;
-	}
-	
-	if(fraglimit && this.frags >= fraglimit)
-	{
-		NextLevel();
-		return;
-	}	
-}
-
 //============================================================================
 
 void PlayerDeathThink(entity this)
@@ -934,7 +906,6 @@ void PlayerPreThink(entity this)
 
 	//makevectors(this.v_angle);		// is this still used
 
-	CheckRules(this);
 	WaterMove(this);
 
 	if(this.waterlevel == 2)
