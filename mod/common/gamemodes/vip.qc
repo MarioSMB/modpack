@@ -78,30 +78,30 @@ void vip_ClearVIPs()
 		it.gem_dropped = false;
 	});
 
-	for(int j = 0; j < VIP_TEAMS; ++j)
+	for(int j = 0; j < 4; ++j)
 		vip_count[j] = 0;
 }
 
 #define VIP_TEAMS_COUNT() ((red_players > 0) + (blue_players > 0) + (yellow_players > 0) + (pink_players > 0))
 #define VIP_TEAMS_OK() (VIP_TEAMS_COUNT() == NumTeams(vip_teams))
-#define VIP_COUNT() ((vip_count[NUM_TEAM_1] > 0) + (vip_count[NUM_TEAM_2] > 0) + (vip_count[NUM_TEAM_3] > 0) + (vip_count[NUM_TEAM_4] > 0))
+#define VIP_COUNT() ((vip_count[0] > 0) + (vip_count[1] > 0) + (vip_count[2] > 0) + (vip_count[3] > 0))
 
 int VIP_GetWinnerTeam()
 {
 	float winner_team = 0;
-	if(vip_count[NUM_TEAM_1] > 0)
+	if(vip_count[0] > 0)
 		winner_team = NUM_TEAM_1;
-	if(vip_count[NUM_TEAM_2] > 0)
+	if(vip_count[1] > 0)
 	{
 		if(winner_team) return 0;
 		winner_team = NUM_TEAM_2;
 	}
-	if(vip_count[NUM_TEAM_3] > 0)
+	if(vip_count[2] > 0)
 	{
 		if(winner_team) return 0;
 		winner_team = NUM_TEAM_3;
 	}
-	if(vip_count[NUM_TEAM_4] > 0)
+	if(vip_count[3] > 0)
 	{
 		if(winner_team) return 0;
 		winner_team = NUM_TEAM_4;
@@ -191,7 +191,7 @@ void vip_SelectVIPs()
 	RandomSelection_Init();
 	FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0,
 	{
-		if((redgem_count < 1 || !usegems) && it.team == NUM_TEAM_1 && vip_count[NUM_TEAM_1] < 1)
+		if((redgem_count < 1 || !usegems) && it.team == NUM_TEAM_1 && vip_count[0] < 1)
 			RandomSelection_AddEnt(it, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
 	});
 	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_1);
@@ -199,7 +199,7 @@ void vip_SelectVIPs()
 	RandomSelection_Init();
 	FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0,
 	{
-		if((bluegem_count < 1 || !usegems) && it.team == NUM_TEAM_2 && vip_count[NUM_TEAM_2] < 1)
+		if((bluegem_count < 1 || !usegems) && it.team == NUM_TEAM_2 && vip_count[1] < 1)
 			RandomSelection_AddEnt(it, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
 	});
 	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_2);
@@ -207,7 +207,7 @@ void vip_SelectVIPs()
 	RandomSelection_Init();
 	FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0,
 	{
-		if((yellowgem_count < 1 || !usegems) && it.team == NUM_TEAM_3 && vip_count[NUM_TEAM_3] < 1)
+		if((yellowgem_count < 1 || !usegems) && it.team == NUM_TEAM_3 && vip_count[2] < 1)
 			RandomSelection_AddEnt(it, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
 	});
 	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_3);
@@ -215,7 +215,7 @@ void vip_SelectVIPs()
 	RandomSelection_Init();
 	FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0,
 	{
-		if((pinkgem_count < 1 || !usegems) && it.team == NUM_TEAM_4 && vip_count[NUM_TEAM_4] < 1)
+		if((pinkgem_count < 1 || !usegems) && it.team == NUM_TEAM_4 && vip_count[3] < 1)
 			RandomSelection_AddEnt(it, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
 	});
 	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_4);
@@ -230,15 +230,15 @@ bool VIP_CheckTeams()
 	pc = ((pinkgem_count) ? pinkgem_count : 1);
 	allowed_to_spawn = true;
 	VIP_count_players();
-	if(vip_count[NUM_TEAM_1] < rc || vip_count[NUM_TEAM_2] < bc || (NumTeams(vip_teams) >= 3 && vip_count[NUM_TEAM_3] < yc) || (NumTeams(vip_teams) >= 4 && vip_count[NUM_TEAM_4] < pc))
+	if(vip_count[0] < rc || vip_count[1] < bc || (NumTeams(vip_teams) >= 3 && vip_count[2] < yc) || (NumTeams(vip_teams) >= 4 && vip_count[3] < pc))
 	{
 		if(!g_vip_soulgems || redgem_count < 1 || bluegem_count < 1 || (NumTeams(vip_teams) >= 3 && yellowgem_count < 1) || (NumTeams(vip_teams) >= 4 && pinkgem_count < 1))
 			vip_SelectVIPs();
 
 		FOREACH_CLIENT(IS_PLAYER(it),
 		{
-			if((it.team == NUM_TEAM_1 && vip_count[NUM_TEAM_1] > 0) || (it.team == NUM_TEAM_2 && vip_count[NUM_TEAM_2] > 0)
-				|| (NumTeams(vip_teams) >= 3 && it.team == NUM_TEAM_3 && vip_count[NUM_TEAM_3] > 0) || (NumTeams(vip_teams) >= 4 && it.team == NUM_TEAM_4 && vip_count[NUM_TEAM_4] > 0))
+			if((it.team == NUM_TEAM_1 && vip_count[0] > 0) || (it.team == NUM_TEAM_2 && vip_count[1] > 0)
+				|| (NumTeams(vip_teams) >= 3 && it.team == NUM_TEAM_3 && vip_count[2] > 0) || (NumTeams(vip_teams) >= 4 && it.team == NUM_TEAM_4 && vip_count[3] > 0))
 				Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_VIP_MISSING_ENEMY);
 			else
 				Send_Notification(NOTIF_ONE, it, MSG_CENTER, CENTER_VIP_MISSING);
@@ -285,7 +285,9 @@ void vip_DropSoulGem(entity player)
 	player.armorvalue = 0;
 	STAT(VIP, player) = false;
 	player.gem_dropped = true;
-	vip_count[player.team] -= 1;
+	int theirteam = Team_TeamToNumber(player.team);
+	theirteam = ((theirteam == -1) ? 0 : theirteam - 1);
+	vip_count[theirteam] -= 1;
 
 	if(IS_REAL_CLIENT(player))
 		Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_VIP_DROP_SELF);
@@ -309,7 +311,9 @@ MUTATOR_HOOKFUNCTION(vip, PlayerDies)
 			PlayerScore_Add(frag_attacker, SP_SCORE, 1);
 		}
 
-		vip_count[frag_target.team] -= 1;
+		int theirteam = Team_TeamToNumber(frag_target.team);
+		theirteam = ((theirteam == -1) ? 0 : theirteam - 1);
+		vip_count[theirteam] -= 1;
 		STAT(VIP, frag_target) = false;
 
 		play2all(SND(VIP_GEM_DROPPED));
@@ -323,7 +327,9 @@ void vip_RemovePlayer(entity this)
 {
 	if(STAT(VIP, this))
 	{
-		vip_count[this.team] -= 1;
+		int theirteam = Team_TeamToNumber(this.team);
+		theirteam = ((theirteam == -1) ? 0 : theirteam - 1);
+		vip_count[theirteam] -= 1;
 		STAT(VIP, this) = false;
 		WaypointSprite_Kill(this.wps_vip);
 	}
@@ -350,10 +356,10 @@ MUTATOR_HOOKFUNCTION(vip, PlayerPreThink)
 	if(player.wps_vip)
 		WaypointSprite_UpdateHealth(player.wps_vip, ((g_instagib) ? player.armorvalue : '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)));
 
-	STAT(VIP_RED, player) = vip_count[NUM_TEAM_1];
-	STAT(VIP_BLUE, player) = vip_count[NUM_TEAM_2];
-	STAT(VIP_YELLOW, player) = vip_count[NUM_TEAM_3];
-	STAT(VIP_PINK, player) = vip_count[NUM_TEAM_4];
+	STAT(VIP_RED, player) = vip_count[0];
+	STAT(VIP_BLUE, player) = vip_count[1];
+	STAT(VIP_YELLOW, player) = vip_count[2];
+	STAT(VIP_PINK, player) = vip_count[3];
 }
 
 MUTATOR_HOOKFUNCTION(vip, reset_map_players)
@@ -518,7 +524,9 @@ void vip_SetVIP(entity player, float tm)
 	player.armorvalue = ((g_instagib) ? 5 : 200);
 	player.pickup_antispam = time + autocvar_g_vip_pickup_wait;
 
-	vip_count[tm] += 1;
+	int theirteam = Team_TeamToNumber(tm);
+	theirteam = ((theirteam == -1) ? 0 : theirteam - 1);
+	vip_count[theirteam] += 1;
 
 	vip_VIPWaypoints(player);
 
@@ -574,7 +582,9 @@ void vip_SoulGem_think(entity this)
 	this.glow_size = 256 + cos(time * 2) * 64;
 	this.nextthink = time + 0.1;
 
-	if(vip_count[this.team] < 1 && this.gem_pickedup && allowed_to_spawn && this.owner && !STAT(VIP, this.owner) && !round_handler_IsRoundStarted())
+	int theirteam = Team_TeamToNumber(this.team);
+	theirteam = ((theirteam == -1) ? 0 : theirteam - 1);
+	if(vip_count[theirteam] < 1 && this.gem_pickedup && allowed_to_spawn && this.owner && !STAT(VIP, this.owner) && !round_handler_IsRoundStarted())
 		this.reset(this);
 }
 
