@@ -44,7 +44,7 @@ MUTATOR_HOOKFUNCTION(cl_hooks, DrawGrapplingHook)
 
 	if(e && autocvar_cl_customhook_perplayer)
 	{
-		if(!entcs_is_self(e) && e.hook_type)
+		if((!entcs_is_self(e) || spectatee_status > 0) && e.hook_type)
 			hooktype = e.hook_type;
 	}
 
