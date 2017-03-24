@@ -39,7 +39,7 @@ MUTATOR_HOOKFUNCTION(cl_hooks, DrawGrapplingHook)
 
 	float t = M_ARGV(3, float);
 	int hooktype = autocvar_cl_customhook;
-	int ownnum = thehook.owner.sv_entnum;
+	int ownnum = thehook.sv_entnum;
 	entity e = entcs_receiver(ownnum);
 
 	if(e && autocvar_cl_customhook_perplayer)
