@@ -42,6 +42,52 @@ void RegisterModCvars_Set(string name, string def, string desc, bool archive, st
     fputs(mod_cvar_file, thecvar);
 }
 
+.float mapquery_antispam;
+MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseClientCommand)
+{
+	if (MUTATOR_RETURNVALUE) // command was already handled?
+		return false;
+
+	entity player = M_ARGV(0, entity);
+	string cmd_name = M_ARGV(1, string);
+	int cmd_argc = M_ARGV(2, int);
+
+	if(cmd_name == "findmap")
+	{
+		if(cmd_argc > 1)
+		{
+			if(time < player.mapquery_antispam)
+			{
+				print_to(player, "You can only use this command once every 5 seconds.");
+				return true;
+			}
+
+			string param = argv(1);
+			string themaplist = strreplace("^7Maps in list: ", "", maplist_reply);
+			if(param == "any" && cmd_argc > 2)
+			{
+				param = argv(2);
+				FOREACH_WORD(themaplist, strstrofs(it, param, 0) >= 0,
+				{
+					print_to(player, it);
+				});
+			}
+			else
+			{
+				FOREACH_WORD(themaplist, startsWithNocase(strdecolorize(it), param),
+				{
+					print_to(player, it);
+				});
+			}
+
+			player.mapquery_antispam = time + 5; // prevent using this command too often, to avoid lag issues
+		}
+		else
+			print_to(player, maplist_reply);
+		return true;
+	}
+}
+
 MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 {
 	if(MUTATOR_RETURNVALUE) // command was already handled?
