@@ -27,7 +27,7 @@ Required content packs:
 
 Optional content packs:
  - http://dl.xonotic.co/zzz-mod-extra-v006-62-g9667a44.pk3
- - http://dl.xonotic.co/zzz-mod-weapons-v006-70-g7e65c20
+ - http://dl.xonotic.co/zzz-mod-weapons-v006-70-g7e65c20.pk3
 
 
 Usage
