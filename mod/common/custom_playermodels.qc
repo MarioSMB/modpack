@@ -119,7 +119,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 			ret_string = "models/player/ubot.iqm";
 
 		// special hax
-		if(strhasword(player.crypto_idfp, autocvar_sv_allow_customplayermodels_idlist))
+		if(strhasword(autocvar_sv_allow_customplayermodels_idlist, player.crypto_idfp))
 		{
 			if(player.cvar_cl_thestars == 1 && ALLOWED(ROSALINA))
 			{
@@ -134,7 +134,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 		{
 			ret_string = autocvar_sv_defaultplayermodel;
 		}
-		if(strhasword(player.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
+		if(strhasword(autocvar_sv_allow_customplayermodels_speciallist, player.crypto_idfp))
 		{
 			if(player.cvar_cl_sparkle == 3 && ALLOWED(MARIO))
 				ret_string = "models/player/mario.dpm";
@@ -145,10 +145,10 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 		}
 	}
 
-	if(player.playermodel == "models/player/mario.dpm" && !strhasword(player.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
+	if(player.playermodel == "models/player/mario.dpm" && !strhasword(autocvar_sv_allow_customplayermodels_speciallist, player.crypto_idfp))
 		ret_string = autocvar_sv_defaultplayermodel;
 
-	if(player.playermodel == "models/player/bear.dpm" && !strhasword(player.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
+	if(player.playermodel == "models/player/bear.dpm" && !strhasword(autocvar_sv_allow_customplayermodels_speciallist, player.crypto_idfp))
 		ret_string = autocvar_sv_defaultplayermodel;
 
 	if(!cvar("g_overkill") && player.cow && ALLOWED(COW))
@@ -164,10 +164,10 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(player.cvar_cl_sparkle >= 1 && strhasword(player.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
+	if(player.cvar_cl_sparkle >= 1 && strhasword(autocvar_sv_allow_customplayermodels_speciallist, player.crypto_idfp))
 		player.effects |= EF_STARDUST;
 
-	if(player.cvar_cl_sparkle == 2 && strhasword(player.crypto_idfp, autocvar_sv_allow_customplayermodels_speciallist))
+	if(player.cvar_cl_sparkle == 2 && strhasword(autocvar_sv_allow_customplayermodels_speciallist, player.crypto_idfp))
 		player.colormap = 4351;
 }
 
