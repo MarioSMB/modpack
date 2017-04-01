@@ -154,7 +154,7 @@ void M_Ogre_Attack_Grenade_Touch(entity this, entity toucher)
 		return;
 	}
 
-	spamsound(this, CH_SHOTS, SND(GRENADE_BOUNCE_RANDOM()), VOL_BASE, ATTEN_NORM);
+	spamsound(this, CH_SHOTS, SND_GRENADE_BOUNCE_RANDOM(), VOL_BASE, ATTEN_NORM);
 	//this.projectiledeathtype |= HITTYPE_BOUNCE;
 }
 
