@@ -34,7 +34,8 @@ MUTATOR_HOOKFUNCTION(weapon_models, Ent_Init, CBC_ORDER_LAST)
 			if(fexists(themdl)) { precache_model(themdl); }
 		}));
 
-	FOREACH(Sounds, true, it.sound_precache(it)); // re-run this so we have things fully up to date
+	if(sv_weapons_sounddir && sv_weapons_sounddir != "" && sv_weapons_sounddir != "default")
+		FOREACH(Sounds, true, it.sound_precache(it)); // re-run this so we have things fully up to date
 }
 
 #endif
