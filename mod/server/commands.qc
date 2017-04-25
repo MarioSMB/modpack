@@ -5,6 +5,7 @@ STATIC_INIT(mod_cmds)
 	localcmd("\nalias chlevel \"sv_cmd chlevel ${* ?}\"\n");
 	localcmd("\nalias stufftoall \"sv_cmd stufftoall ${* ?}\"\n");
 	localcmd("\nalias dumpmodcvars \"sv_cmd dumpmodcvars ${* ?}\"\n");
+	localcmd("\nalias gotorandom \"sv_cmd gotorandom ${* ?}\"\n");
 }
 
 void IRCSay(string msgstr)
@@ -101,6 +102,23 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 		string m = MapInfo_FixName(argv(1));
 		localcmd(strcat("\nchangelevel ", m, "\n"));
 		LOG_INFO("Switching to ", m, "\n");
+		return true;
+	}
+
+	if(cmd_name == "gotorandom")
+	{
+		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
+		Map_Current = bound(0, GetMaplistPosition(), Map_Count - 1);
+		int pos = MaplistMethod_Random();
+		if(pos == -1)
+		{
+			LOG_INFO("Failed to select a map, try again.\n");
+			return true;
+		}
+
+		string themap = argv(pos);
+		localcmd(strcat("\nchangelevel ", themap, "\n"));
+		LOG_INFO("Switching to ", themap, "\n");
 		return true;
 	}
 
