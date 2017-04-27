@@ -144,6 +144,14 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 // team play damage avoidance
 	if((teamplay == 1) &&(targ.team > 0)&&(targ.team == attacker.team) )
 		return;
+
+// coop damage avoidance (if enabled)
+	if(coop && IS_CLIENT(attacker) && IS_CLIENT(targ))
+	{
+		if(autocvar_g_friendlyfire_virtual)
+			return;
+		take *= autocvar_g_friendlyfire;
+	}
 		
 // do the damage
 	targ.health = targ.health - take;
