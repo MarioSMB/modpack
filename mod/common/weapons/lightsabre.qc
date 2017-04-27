@@ -153,7 +153,7 @@ MUTATOR_HOOKFUNCTION(lightsabre_evil, Damage_Calculate)
 		FireRailgunBullet(frag_target, weaponentity, v_forward, frag_attacker.origin, frag_damage * 0.5, vlen(frag_force) * 0.5, 0, 0, 0, 0, WEP_VORTEX.m_id);
 
 		animdecide_setaction(frag_target, ANIMACTION_SHOOT, 1);
-		spamsound(frag_target, CH_WEAPON_A, SND(LIGHTSABRE_HIT_RANDOM()), VOL_BASE, ATTN_NORM);
+		spamsound(frag_target, CH_WEAPON_A, SND_LIGHTSABRE_HIT_RANDOM(), VOL_BASE, ATTN_NORM);
 	}
 }
 
@@ -218,7 +218,7 @@ bool W_Lightsabre_Melee_Block(entity this, entity player)
 		// fun stuff
 
 	animdecide_setaction(myowner, ANIMACTION_SHOOT, 1);
-	spamsound(myowner, CH_WEAPON_A, SND(LIGHTSABRE_HIT_RANDOM()), VOL_BASE, ATTN_NORM);
+	spamsound(myowner, CH_WEAPON_A, SND_LIGHTSABRE_HIT_RANDOM(), VOL_BASE, ATTN_NORM);
 
 	return true;
 }
@@ -293,7 +293,7 @@ void W_Lightsabre_Melee_Think(entity this)
 					this.realowner.origin + this.realowner.view_ofs,
 					v_forward * WEP_CVAR_BOTH(lightsabre, isprimary, force));
 
-				spamsound(this.realowner, CH_WEAPON_A, SND(LIGHTSABRE_HIT_RANDOM()), VOL_BASE, ATTN_NORM);
+				spamsound(this.realowner, CH_WEAPON_A, SND_LIGHTSABRE_HIT_RANDOM(), VOL_BASE, ATTN_NORM);
 
 				if(accuracy_isgooddamage(this.realowner, target_victim)) { accuracy_add(this.realowner, WEP_LIGHTSABRE.m_id, 0, swing_damage); }
 			}

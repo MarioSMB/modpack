@@ -39,12 +39,12 @@ MUTATOR_HOOKFUNCTION(cl_hooks, DrawGrapplingHook)
 
 	float t = M_ARGV(3, float);
 	int hooktype = autocvar_cl_customhook;
-	int ownnum = thehook.owner.sv_entnum;
+	int ownnum = thehook.sv_entnum;
+	entity e = entcs_receiver(ownnum - 1);
 
-	if((ownnum + 1) != player_localentnum && autocvar_cl_customhook_perplayer)
+	if(e && autocvar_cl_customhook_perplayer)
 	{
-		entity e = entcs_receiver(ownnum);
-		if(e && e.hook_type)
+		if((!entcs_is_self(e) || spectatee_status > 0) && e.hook_type)
 			hooktype = e.hook_type;
 	}
 
@@ -83,11 +83,11 @@ MUTATOR_HOOKFUNCTION(cl_hooks, DrawGrapplingHook)
 		// we don't need to adjust colours here, already done by main code
 		switch(t)
 		{
-			case NUM_TEAM_1: M_ARGV(1, string) = "particles/hook_red_floxy"; break;
-			case NUM_TEAM_2: M_ARGV(1, string) = "particles/hook_blue_floxy"; break;
-			case NUM_TEAM_3: M_ARGV(1, string) = "particles/hook_yellow_floxy"; break;
-			case NUM_TEAM_4: M_ARGV(1, string) = "particles/hook_pink_floxy"; break;
-			default: 		 M_ARGV(1, string) = "particles/hook_white_floxy"; break;
+			case NUM_TEAM_1: M_ARGV(1, string) = "particles/hook_red_foxy"; break;
+			case NUM_TEAM_2: M_ARGV(1, string) = "particles/hook_blue_foxy"; break;
+			case NUM_TEAM_3: M_ARGV(1, string) = "particles/hook_yellow_foxy"; break;
+			case NUM_TEAM_4: M_ARGV(1, string) = "particles/hook_pink_foxy"; break;
+			default: 		 M_ARGV(1, string) = "particles/hook_white_foxy"; break;
 		}
 
 		return; // don't do other hooks?

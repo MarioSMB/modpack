@@ -126,7 +126,7 @@ MUTATOR_HOOKFUNCTION(cl_deluge, EditProjectile)
 
 	if(proj.cnt == PROJECTILE_DELUGE)
 	{
-		loopsound(proj, CH_SHOTS_SINGLE, SND(STEAM_FADE), VOL_BASE, ATTN_NORM);
+		loopsound(proj, CH_SHOTS_SINGLE, SND_STEAM_FADE, VOL_BASE, ATTN_NORM);
 		proj.mins = '0 0 -4';
 		proj.maxs = '0 0 -4';
 		set_movetype(proj, MOVETYPE_BOUNCE);

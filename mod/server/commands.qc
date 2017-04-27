@@ -5,6 +5,7 @@ STATIC_INIT(mod_cmds)
 	localcmd("\nalias chlevel \"sv_cmd chlevel ${* ?}\"\n");
 	localcmd("\nalias stufftoall \"sv_cmd stufftoall ${* ?}\"\n");
 	localcmd("\nalias dumpmodcvars \"sv_cmd dumpmodcvars ${* ?}\"\n");
+	localcmd("\nalias gotorandom \"sv_cmd gotorandom ${* ?}\"\n");
 }
 
 void IRCSay(string msgstr)
@@ -42,6 +43,52 @@ void RegisterModCvars_Set(string name, string def, string desc, bool archive, st
     fputs(mod_cvar_file, thecvar);
 }
 
+.float mapquery_antispam;
+MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseClientCommand)
+{
+	if (MUTATOR_RETURNVALUE) // command was already handled?
+		return false;
+
+	entity player = M_ARGV(0, entity);
+	string cmd_name = M_ARGV(1, string);
+	int cmd_argc = M_ARGV(2, int);
+
+	if(cmd_name == "findmap")
+	{
+		if(cmd_argc > 1)
+		{
+			if(time < player.mapquery_antispam)
+			{
+				print_to(player, "You can only use this command once every 5 seconds.");
+				return true;
+			}
+
+			string param = argv(1);
+			string themaplist = strreplace("^7Maps in list: ", "", maplist_reply);
+			if(param == "any" && cmd_argc > 2)
+			{
+				param = argv(2);
+				FOREACH_WORD(themaplist, strstrofs(it, param, 0) >= 0,
+				{
+					print_to(player, it);
+				});
+			}
+			else
+			{
+				FOREACH_WORD(themaplist, startsWithNocase(strdecolorize(it), param),
+				{
+					print_to(player, it);
+				});
+			}
+
+			player.mapquery_antispam = time + 5; // prevent using this command too often, to avoid lag issues
+		}
+		else
+			print_to(player, maplist_reply);
+		return true;
+	}
+}
+
 MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 {
 	if(MUTATOR_RETURNVALUE) // command was already handled?
@@ -55,6 +102,23 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 		string m = MapInfo_FixName(argv(1));
 		localcmd(strcat("\nchangelevel ", m, "\n"));
 		LOG_INFO("Switching to ", m, "\n");
+		return true;
+	}
+
+	if(cmd_name == "gotorandom")
+	{
+		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
+		Map_Current = bound(0, GetMaplistPosition(), Map_Count - 1);
+		int pos = MaplistMethod_Random();
+		if(pos == -1)
+		{
+			LOG_INFO("Failed to select a map, try again.\n");
+			return true;
+		}
+
+		string themap = argv(pos);
+		localcmd(strcat("\nchangelevel ", themap, "\n"));
+		LOG_INFO("Switching to ", themap, "\n");
 		return true;
 	}
 

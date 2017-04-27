@@ -523,22 +523,22 @@ MUTATOR_HOOKFUNCTION(cl_drones, EditProjectile)
 		case PROJECTILE_DOTC_DRONE_SCOUT:
 			break;
 		case PROJECTILE_DOTC_DRONE_LTANK:
-			loopsound(proj, CH_SHOTS_SINGLE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
+			loopsound(proj, CH_SHOTS_SINGLE, SND_ELECTRO_FLY, VOL_BASE, ATTN_NORM);
 			proj.mins = '0 0 -4';
 			proj.maxs = '0 0 -4';
 			break;
 		case PROJECTILE_DOTC_DRONE_TANK:
-			loopsound(proj, CH_SHOTS_SINGLE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
+			loopsound(proj, CH_SHOTS_SINGLE, SND_ELECTRO_FLY, VOL_BASE, ATTN_NORM);
 			proj.mins = '0 0 -4';
 			proj.maxs = '0 0 -4';
 			break;
 		case PROJECTILE_DOTC_DRONE_HTANK:
-			loopsound(proj, CH_SHOTS_SINGLE, "weapons/electro_fly.wav", VOL_BASE, ATTN_NORM);
+			loopsound(proj, CH_SHOTS_SINGLE, SND_ELECTRO_FLY, VOL_BASE, ATTN_NORM);
 			proj.mins = '0 0 -4';
 			proj.maxs = '0 0 -4';
 			break;
 		case PROJECTILE_DOTC_DRONE_RART:
-			loopsound(proj, CH_SHOTS_SINGLE, "weapons/rocket_fly.wav", VOL_BASE, ATTN_NORM);
+			loopsound(proj, CH_SHOTS_SINGLE, SND_ROCKET_FLY, VOL_BASE, ATTN_NORM);
 			proj.mins = '-3 -3 -3';
 			proj.maxs = '3 3 3';
 			break;
