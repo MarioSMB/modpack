@@ -1,3 +1,4 @@
+void W_SwitchWeapon(entity this, float to_wep);
 void W_SetCurrentAmmo(entity this);
 /* ALL LIGHTS SHOULD BE 0 1 0 IN COLOR ALL OTHER ITEMS SHOULD
 BE .8 .3 .4 IN COLOR */
@@ -381,7 +382,7 @@ void Deathmatch_Weapon(entity this, int old, int new)
 	int or = RankForWeapon(this.weapon);
 	int nr = RankForWeapon(new);
 	if(nr < or)
-		this.weapon = new;
+		W_SwitchWeapon(this, new);
 }
 
 /*
@@ -389,7 +390,7 @@ void Deathmatch_Weapon(entity this, int old, int new)
 weapon_touch
 =============
 */
-int W_BestWeapon(entity this);
+int W_BestWeapon(entity this, float except);
 
 void weapon_touch(entity this, entity toucher)
 {
@@ -468,11 +469,9 @@ void weapon_touch(entity this, entity toucher)
 	toucher.items |= new;
 
 	if(!deathmatch)
-		toucher.weapon = new;
+		W_SwitchWeapon(toucher, new);
 	else
 		Deathmatch_Weapon(toucher, old, new);
-
-	W_SetCurrentAmmo(toucher);
 
 	if(leave)
 		return;
@@ -592,7 +591,7 @@ void ammo_touch(entity this, entity toucher)
 		return;
 
 // if the player was using his best weapon, change up to the new one if better		
-	int best = W_BestWeapon(toucher);
+	int best = W_BestWeapon(toucher, 0);
 
 
 // shotgun
@@ -640,10 +639,7 @@ void ammo_touch(entity this, entity toucher)
 // change to a better weapon if appropriate
 
 	if( toucher.weapon == best )
-	{
-		toucher.weapon = W_BestWeapon(toucher);
-		W_SetCurrentAmmo(toucher);
-	}
+		W_SwitchWeapon(toucher, W_BestWeapon(toucher, 0));
 
 // if changed current ammo, update it
 	W_SetCurrentAmmo(toucher);
@@ -1251,11 +1247,9 @@ void BackpackTouch(entity this, entity toucher)
 
 // change to the weapon
 	if(!deathmatch)
-		toucher.weapon = new;
+		W_SwitchWeapon(toucher, new);
 	else
 		Deathmatch_Weapon(toucher, old, new);
-
-	W_SetCurrentAmmo(toucher);
 }
 
 /*

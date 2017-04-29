@@ -57,6 +57,7 @@ void SetChangeParms(entity this)
 	parm7 = this.ammo_cells;
 	parm8 = this.weapon;
 	parm9 = this.armortype * 100;
+	parm10 = this.cnt;
 }
 
 void SetNewParms()
@@ -70,6 +71,7 @@ void SetNewParms()
 	parm7 = 0;
 	parm8 = 1;
 	parm9 = 0;
+	parm10 = 4096;
 }
 
 void DecodeLevelParms(entity this)
@@ -89,6 +91,7 @@ void DecodeLevelParms(entity this)
 	this.ammo_cells = parm7;
 	this.weapon = parm8;
 	this.armortype = parm9 * 0.01;
+	this.cnt = parm10;
 }
 
 /*
@@ -517,6 +520,10 @@ void PutClientInServer(entity this)
 	this.effects = 0;
 	this.invincible_time = 0;
 
+	this.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_SOLID;
+	if (autocvar_g_playerclip_collisions)
+		this.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
+
 	DecodeLevelParms(this);
 	
 	W_SetCurrentAmmo(this);
@@ -932,10 +939,7 @@ void PlayerPreThink(entity this)
 		this.velocity = '0 0 0';
 
 	if(time > this.attack_finished && this.currentammo == 0 && this.weapon != IT_AXE)
-	{
-		this.weapon = W_BestWeapon(this);
-		W_SetCurrentAmmo(this);
-	}
+		W_SwitchWeapon(this, W_BestWeapon(this, 0));
 }
 	
 /*

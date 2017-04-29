@@ -7,7 +7,6 @@ void T_RadiusDamage(entity bomb, entity attacker, float rad, entity ignore);
 void SpawnBlood(vector org, vector vel, float damage);
 void SuperDamageSound(entity this);
 
-
 // called by worldspawn
 void W_Precache()
 {
@@ -23,6 +22,14 @@ void W_Precache()
 	precache_sound("weapons/grenade.wav");	// grenade launcher
 	precache_sound("weapons/bounce.wav");		// grenade bounce
 	precache_sound("weapons/shotgn2.wav");	// super shotgun
+}
+
+void W_SwitchWeapon(entity this, float to_wep)
+{
+	this.cnt = this.weapon;
+	this.weapon = to_wep;
+
+	W_SetCurrentAmmo(this);
 }
 
 /*
@@ -452,8 +459,7 @@ void W_FireLightning(entity this)
 {
 	if(this.ammo_cells < 1)
 	{
-		this.weapon = W_BestWeapon(this);
-		W_SetCurrentAmmo(this);
+		W_SwitchWeapon(this, W_BestWeapon(this, 0));
 		return;
 	}
 
@@ -633,8 +639,7 @@ void W_FireSpikes(entity this, float ox)
 
 	if(this.ammo_nails < 1)
 	{
-		this.weapon = W_BestWeapon(this);
-		W_SetCurrentAmmo(this);
+		W_SwitchWeapon(this, W_BestWeapon(this, 0));
 		return;
 	}
 
@@ -809,34 +814,46 @@ void W_SetCurrentAmmo(entity this)
 	}
 }
 
-int W_BestWeapon(entity this)
+int W_BestWeapon(entity this, float except)
 {
 	int itm = this.items;
 
-	if(this.waterlevel <= 1 && this.ammo_cells >= 1 &&(itm & IT_LIGHTNING) )
+	if(this.waterlevel <= 1 && this.ammo_cells >= 1 &&(itm & IT_LIGHTNING) && except != IT_LIGHTNING)
 		return IT_LIGHTNING;
-	if(this.ammo_nails >= 2 &&(itm & IT_SUPER_NAILGUN) )
+	if(this.ammo_nails >= 2 &&(itm & IT_SUPER_NAILGUN) && except != IT_SUPER_NAILGUN)
 		return IT_SUPER_NAILGUN;
-	if(this.ammo_shells >= 2 &&(itm & IT_SUPER_SHOTGUN) )
+	if(this.ammo_shells >= 2 &&(itm & IT_SUPER_SHOTGUN) && except != IT_SUPER_SHOTGUN)
 		return IT_SUPER_SHOTGUN;
-	if(this.ammo_nails >= 1 &&(itm & IT_NAILGUN) )
+	if(this.ammo_nails >= 1 &&(itm & IT_NAILGUN) && except != IT_NAILGUN)
 		return IT_NAILGUN;
-	if(this.ammo_shells >= 1 &&(itm & IT_SHOTGUN) )
+	if(this.ammo_shells >= 1 &&(itm & IT_SHOTGUN) && except != IT_SHOTGUN)
 		return IT_SHOTGUN;
-	return IT_AXE;
+	return IT_AXE; // just fall back if all else fails
 }
 
-bool W_CheckNoAmmo(entity this)
+bool W_CheckNoAmmo(entity this, int forwep)
 {
+	if(forwep)
+	{
+		switch(forwep)
+		{
+			case IT_LIGHTNING: return (this.ammo_cells >= 1);
+			case IT_SUPER_NAILGUN: return (this.ammo_nails >= 2);
+			case IT_SUPER_SHOTGUN: return (this.ammo_shells >= 2);
+			case IT_NAILGUN: return (this.ammo_nails >= 1);
+			case IT_SHOTGUN: return (this.ammo_shells >= 1);
+			case IT_AXE:
+			default: return true; // axe doesn't use ammo, fallback
+		}
+	}
+
 	if(this.currentammo > 0)
 		return true;
 
 	if(this.weapon == IT_AXE)
 		return true;
 	
-	this.weapon = W_BestWeapon(this);
-
-	W_SetCurrentAmmo(this);
+	W_SwitchWeapon(this, W_BestWeapon(this, 0));
 	
 // drop the weapon down
 	return false;
@@ -860,7 +877,7 @@ void player_rocket1(entity this);
 
 void W_Attack(entity this)
 {
-	if(!W_CheckNoAmmo(this))
+	if(!W_CheckNoAmmo(this, 0))
 		return;
 
 	makevectors	(this.v_angle);			// calculate forward angle for velocity
@@ -937,12 +954,12 @@ W_ChangeWeapon
 
 ============
 */
-void W_ChangeWeapon(entity this)
+void W_ChangeWeapon(entity this, int imp)
 {
 	bool am = false;
 	int fl = 0;
 	
-	switch(this.impulse)
+	switch(imp)
 	{
 		case 1:
 		{
@@ -999,8 +1016,6 @@ void W_ChangeWeapon(entity this)
 			break;
 		}
 	}
-
-	this.impulse = 0;
 	
 	if(!(this.items & fl))
 	{	// don't have the weapon or the ammo
@@ -1017,8 +1032,7 @@ void W_ChangeWeapon(entity this)
 //
 // set weapon, set ammo
 //
-	this.weapon = fl;		
-	W_SetCurrentAmmo(this);
+	W_SwitchWeapon(this, fl);
 }
 
 /*
@@ -1047,9 +1061,8 @@ void CheatCommand(entity this)
 	this.ammo_cells = 200;
 	this.items |= IT_LIGHTNING;
 
-	this.weapon = IT_ROCKET_LAUNCHER;
+	W_SwitchWeapon(this, IT_ROCKET_LAUNCHER);
 	this.impulse = 0;
-	W_SetCurrentAmmo(this);
 }
 
 /*
@@ -1063,6 +1076,7 @@ void CycleWeaponCommand(entity this)
 {
 	int myitems = this.items;
 	this.impulse = 0;
+	float oldwep = this.weapon;
 	
 	while(1)
 	{
@@ -1128,11 +1142,13 @@ void CycleWeaponCommand(entity this)
 	
 		if((myitems & this.weapon) && am == false)
 		{
+			this.cnt = oldwep;
 			W_SetCurrentAmmo(this);
 			return;
 		}
 	}
 
+	this.weapon = oldwep; // didn't save the switch
 }
 
 /*
@@ -1146,6 +1162,7 @@ void CycleWeaponReverseCommand(entity this)
 {
 	int myitems = this.items;
 	this.impulse = 0;
+	float oldwep = this.weapon;
 
 	while(1)
 	{
@@ -1211,11 +1228,13 @@ void CycleWeaponReverseCommand(entity this)
 	
 		if((myitems & this.weapon) && am == false)
 		{
+			this.cnt = oldwep;
 			W_SetCurrentAmmo(this);
 			return;
 		}
 	}
 
+	this.weapon = oldwep; // we didn't save the switch
 }
 
 void QuadCheat(entity this)
@@ -1228,6 +1247,31 @@ void QuadCheat(entity this)
 	dprint("quad cheat\n");
 }
 
+void W_LastWeapon(entity this)
+{
+	if ((this.items & this.cnt) && this.cnt != this.weapon && W_CheckNoAmmo(this, this.cnt))
+		W_SwitchWeapon(this, this.cnt);
+	else
+		W_SwitchWeapon(this, W_BestWeapon(this, this.weapon));
+}
+
+int W_GetWeaponImpulse(int imp)
+{
+	switch(imp)
+	{
+		default: // default to axe
+		case 230: case 244: return 1; // blaster, tuba -> axe
+		case 231: case 248: return 2; // shotgun, shockwave -> shotgun
+		case 232: return 4; // machinegun -> nailgun
+		case 233: case 234: return 6; // mortar, minelayer -> grenade launcher
+		case 235: case 249: return 8; // electro, arc -> lightning gun
+		case 238: case 243: case 247: return 5; // hagar, hlac, seeker -> super nailgun
+		case 236: return 3; // crylink -> super shotgun
+		case 239: case 246: return 7; // devastator, fireball -> rocket launcher
+		// TODO: rifle, vaprozier, vortex, hook(?), porto(?)
+	}
+}
+
 /*
 ============
 ImpulseCommands
@@ -1236,19 +1280,40 @@ ImpulseCommands
 */
 void ImpulseCommands(entity this)
 {
-	if(this.impulse >= 1 && this.impulse <= 8)
-		W_ChangeWeapon(this);
+	if((this.impulse >= 1 && this.impulse <= 8) || (this.impulse >= 230 && this.impulse <= 253))
+	{
+		int imp = this.impulse;
+		if(imp >= 230 && imp <= 253)
+			imp = W_GetWeaponImpulse(imp);
+		W_ChangeWeapon(this, imp);
+	}
 
-	//if(this.impulse == 9)
-		//CheatCommand(this);
-	if(this.impulse == 10)
-		CycleWeaponCommand(this);
-	if(this.impulse == 12)
-		CycleWeaponReverseCommand(this);
+	switch(this.impulse)
+	{
+		case 10:
+		case 15: // TODO
+		case 18: // TODO
+			CycleWeaponCommand(this);
+			break;
+		case 11:
+			W_LastWeapon(this);
+			break;
+		case 12:
+		case 16: // TODO
+		case 19: // TODO
+			CycleWeaponReverseCommand(this);
+			break;
+		case 13:
+			W_SwitchWeapon(this, W_BestWeapon(this, 0));
+			break;
+		case 99: // hehe
+			CheatCommand(this);
+			break;
+		case 255:
+			QuadCheat(this);
+			break;
+	}	
 
-	if(this.impulse == 255)
-		QuadCheat(this);
-		
 	this.impulse = 0;
 }
 

@@ -11,3 +11,4 @@ int autocvar_teamplay;
 bool autocvar_sv_curl_serverpackages_auto;
 bool autocvar_g_friendlyfire_virtual;
 float autocvar_g_friendlyfire;
+bool autocvar_g_playerclip_collisions;
