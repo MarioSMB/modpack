@@ -237,6 +237,7 @@ void cvar_changes_init()
 		BADPREFIX("g_playerstats_");
 		BADPREFIX("g_voice_flood_");
 		BADPREFIX("log_file");
+		BADPREFIX("quit_");
 		BADPREFIX("rcon_");
 		BADPREFIX("sv_allowdownloads");
 		BADPREFIX("sv_autodemo");
