@@ -132,41 +132,62 @@ AUTOCVAR(cl_glowtrails, int, 1, "Enable glowy trails (if set to 1, only in CTS, 
 AUTOCVAR(cl_glowtrails_usealpha, bool, true, "Account for player's transparency");
 AUTOCVAR(cl_glowtrails_scale, float, 0.1, "Speed scale for player's velocity (to control the rate at which it becomes lighter)");
 
-vector polytrails_get_color (float hp, float maxvalue)
-{
-    vector color;
-    if(hp >= maxvalue) {
-        color.x = sin(2*M_PI*time);
-        color.y = 1;
-        color.z = sin(2*M_PI*time);
-    }
-    else if(hp > maxvalue * 0.75) {
-        color.x = 0.4 - (hp-150)*0.02 * 0.4; //red value between 0.4 -> 0
-        color.y = 0.9 + (hp-150)*0.02 * 0.1; // green value between 0.9 -> 1
-        color.z = 0;
-    }
-    else if(hp > maxvalue * 0.5) {
-        color.x = 1 - (hp-100)*0.02 * 0.6; //red value between 1 -> 0.4
-        color.y = 1 - (hp-100)*0.02 * 0.1; // green value between 1 -> 0.9
-        color.z = 1 - (hp-100)*0.02; // blue value between 1 -> 0
-    }
-    else if(hp > maxvalue * 0.25) {
-        color.x = 1;
-        color.y = 1;
-        color.z = 0.2 + (hp-50)*0.02 * 0.8; // blue value between 0.2 -> 1
-    }
-    else if(hp > maxvalue * 0.1) {
-        color.x = 1;
-        color.y = (hp-20)*90/27/100; // green value between 0 -> 1
-        color.z = (hp-20)*90/27/100 * 0.2; // blue value between 0 -> 0.2
-    }
-    else {
-        color.x = 1;
-        color.y = 0;
-        color.z = 0;
-    }
+const int polytrails_flashy_color_count = 6;
+const float polytrails_flashy_color_frequency = 24;
+vector polytrails_flashy_colors[polytrails_flashy_color_count] = {
+    '0 0 1', // blue
+    '1 1 0', // yellow
+    '1 0 0', // red
+    '0 1 1', // cyan
+    '0 1 0', // green
+    '1 1 1', // white
+};
 
+/*
+ * Returns a flashy color, alternates polytrails_flashy_colors colors at
+ * polytrails_flashy_color_frequency hertz
+ */
+vector polytrails_flashy_color()
+{
+    return polytrails_flashy_colors[
+        floor(time*polytrails_flashy_color_frequency) % polytrails_flashy_color_count
+    ];
+}
+
+const int polytrails_color_count = 6;
+vector polytrails_colors[polytrails_color_count] = {
+    '0 0 1', // blue
+    '0 1 0', // green
+    '0 0 1', // red
+    '0 1 1', // yellow
+    '1 1 1', // white
+    '-1 -1 -1', // flashy
+};
+
+/*
+ * Returns a color from polytrails_colors, handling the flashy color
+ */
+vector polytrails_color(int index)
+{
+    vector color = polytrails_colors[index];
+    if ( color.x < 0 )
+        return polytrails_flashy_color();
     return color;
+}
+
+/*
+ * Selects a color from polytrails_colors based on how far hp is in the range
+ * [0, maxvalue], linerly interpolating between colors.
+ */
+vector polytrails_get_color(float hp, float maxvalue)
+{
+    float total_ratio = hp / maxvalue * polytrails_color_count;
+    int color_index = floor(total_ratio);
+    if ( color_index >= polytrails_color_count )
+        return polytrails_color(polytrails_color_count - 1);
+    return lerpvratio(polytrails_color(color_index),
+                      polytrails_color(color_index+1),
+                      total_ratio - color_index);
 }
 
 .PolyTrail ptrail;
