@@ -203,7 +203,8 @@ MUTATOR_HOOKFUNCTION(polytrails, TagIndex_Update)
     if(!player.isplayermodel)
         return;
 
-    if(player == csqcplayer && !autocvar_chase_active)
+    entity local_player = ((csqcplayer) ? csqcplayer : CSQCModel_server2csqc(player_localentnum - 1));
+    if(player == local_player && !autocvar_chase_active)
     {
         if(player.ptrail)
             player.ptrail.polytrail_follow = NULL;
