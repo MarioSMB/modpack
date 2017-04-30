@@ -129,6 +129,7 @@ MUTATOR_HOOKFUNCTION(polytrails, EditProjectile) {
 }
 
 AUTOCVAR(cl_glowtrails, int, 1, "Enable glowy trails (if set to 1, only in CTS, if higher any mode)");
+AUTOCVAR(cl_glowtrails_usealpha, bool, true, "Account for player's transparency");
 AUTOCVAR(cl_glowtrails_scale, float, 0.1, "Speed scale for player's velocity (to control the rate at which it becomes lighter)");
 
 vector polytrails_get_color (float hp, float maxvalue)
@@ -193,14 +194,16 @@ MUTATOR_HOOKFUNCTION(polytrails, TagIndex_Update)
     {
         player.ptrail = NEW(PolyTrail, player);
         player.ptrail.polytrail_tex = "gfx/trails/plain.tga";
-        player.ptrail.polytrail_alpha[0] = 1;
-        player.ptrail.polytrail_alpha[1] = 0.5;
-        player.ptrail.polytrail_alpha[2] = 0;
         player.ptrail.polytrail_thickness[0] = 10;
         player.ptrail.polytrail_thickness[1] = 5;
         player.ptrail.polytrail_thickness[2] = 0;
         IL_PUSH(g_drawables, player.ptrail);
     }
+
+    float myalpha = ((autocvar_cl_glowtrails_usealpha) ? player.alpha : 1);
+    player.ptrail.polytrail_alpha[0] = myalpha;
+    player.ptrail.polytrail_alpha[1] = myalpha * 0.5;
+    player.ptrail.polytrail_alpha[2] = 0;
 
     float myspeed = vlen(player.velocity);
     myspeed = bound(0, myspeed * autocvar_cl_glowtrails_scale, 200);
