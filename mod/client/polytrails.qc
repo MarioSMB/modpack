@@ -133,7 +133,7 @@ AUTOCVAR(cl_glowtrails_usealpha, bool, true, "Account for player's transparency"
 AUTOCVAR(cl_glowtrails_scale, float, 0.1, "Speed scale for player's velocity (to control the rate at which it becomes lighter)");
 
 const int polytrails_flashy_color_count = 6;
-const float polytrails_flashy_color_frequency = 24;
+const float polytrails_flashy_color_frequency = 2;
 vector polytrails_flashy_colors[polytrails_flashy_color_count] = {
     '0 0 1', // blue
     '1 1 0', // yellow
@@ -158,8 +158,8 @@ const int polytrails_color_count = 6;
 vector polytrails_colors[polytrails_color_count] = {
     '0 0 1', // blue
     '0 1 0', // green
-    '0 0 1', // red
-    '0 1 1', // yellow
+    '1 0 0', // red
+    '1 1 0', // yellow
     '1 1 1', // white
     '-1 -1 -1', // flashy
 };
