@@ -18,7 +18,7 @@ float lerp3ratio(float f0, float f1, float f2, float ratio)
 AUTOCVAR(cl_polytrails, bool, false, "");
 AUTOCVAR(cl_polytrail_segmentsize, float, 10, "");
 AUTOCVAR(cl_polytrail_lifetime, float, .2, "");
-AUTOCVAR(cl_polytrail_noise, float, 10, "");
+AUTOCVAR(cl_polytrail_noise, float, 0, "");
 
 CLASS(PolyTrail, Object)
     ATTRIB(PolyTrail, polytrail_follow, entity, NULL);
