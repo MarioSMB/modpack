@@ -127,3 +127,85 @@ MUTATOR_HOOKFUNCTION(polytrails, EditProjectile) {
 
     IL_PUSH(g_drawables, t);
 }
+
+AUTOCVAR(cl_glowtrails, int, 1, "Enable glowy trails (if set to 1, only in CTS, if higher any mode)");
+AUTOCVAR(cl_glowtrails_scale, float, 0.1, "Speed scale for player's velocity (to control the rate at which it becomes lighter)");
+
+vector polytrails_get_color (float hp, float maxvalue)
+{
+    vector color;
+    if(hp >= maxvalue) {
+        color.x = sin(2*M_PI*time);
+        color.y = 1;
+        color.z = sin(2*M_PI*time);
+    }
+    else if(hp > maxvalue * 0.75) {
+        color.x = 0.4 - (hp-150)*0.02 * 0.4; //red value between 0.4 -> 0
+        color.y = 0.9 + (hp-150)*0.02 * 0.1; // green value between 0.9 -> 1
+        color.z = 0;
+    }
+    else if(hp > maxvalue * 0.5) {
+        color.x = 1 - (hp-100)*0.02 * 0.6; //red value between 1 -> 0.4
+        color.y = 1 - (hp-100)*0.02 * 0.1; // green value between 1 -> 0.9
+        color.z = 1 - (hp-100)*0.02; // blue value between 1 -> 0
+    }
+    else if(hp > maxvalue * 0.25) {
+        color.x = 1;
+        color.y = 1;
+        color.z = 0.2 + (hp-50)*0.02 * 0.8; // blue value between 0.2 -> 1
+    }
+    else if(hp > maxvalue * 0.1) {
+        color.x = 1;
+        color.y = (hp-20)*90/27/100; // green value between 0 -> 1
+        color.z = (hp-20)*90/27/100 * 0.2; // blue value between 0 -> 0.2
+    }
+    else {
+        color.x = 1;
+        color.y = 0;
+        color.z = 0;
+    }
+
+    return color;
+}
+
+.PolyTrail ptrail;
+MUTATOR_HOOKFUNCTION(polytrails, TagIndex_Update)
+{
+    return = false; // not needed?
+
+    if(!autocvar_cl_glowtrails || (gametype != MAPINFO_TYPE_CTS && autocvar_cl_glowtrails == 1))
+        return;
+
+    entity player = M_ARGV(0, entity);
+
+    if(!player.isplayermodel)
+        return;
+
+    if(player == csqcplayer && !autocvar_chase_active)
+    {
+        if(player.ptrail)
+            player.ptrail.polytrail_follow = NULL;
+        player.ptrail = NULL;
+        return;
+    }
+
+    if(!player.ptrail || wasfreed(player.ptrail))
+    {
+        player.ptrail = NEW(PolyTrail, player);
+        player.ptrail.polytrail_tex = "gfx/trails/plain.tga";
+        player.ptrail.polytrail_alpha[0] = 1;
+        player.ptrail.polytrail_alpha[1] = 0.5;
+        player.ptrail.polytrail_alpha[2] = 0;
+        player.ptrail.polytrail_thickness[0] = 10;
+        player.ptrail.polytrail_thickness[1] = 5;
+        player.ptrail.polytrail_thickness[2] = 0;
+        IL_PUSH(g_drawables, player.ptrail);
+    }
+
+    float myspeed = vlen(player.velocity);
+    myspeed = bound(0, myspeed * autocvar_cl_glowtrails_scale, 200);
+
+    player.ptrail.polytrail_rgb[0] = polytrails_get_color(myspeed, 200);
+    player.ptrail.polytrail_rgb[1] = polytrails_get_color(myspeed * 0.75, 200);
+    player.ptrail.polytrail_rgb[2] = polytrails_get_color(myspeed * 0.5, 200);
+}

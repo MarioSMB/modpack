@@ -9,7 +9,6 @@
 	#include "compat.qc"
 	#include "damage.qc"
 	#include "demo.qc"
-	#include "glow_trails.qc"
 	#include "ignore.qc"
 	#include "itemplacer.qc"
 	#include "items.qc"
