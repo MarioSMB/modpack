@@ -59,7 +59,7 @@ CLASS(PolyTrail, Object)
             }
         } else {
             setorigin(this, this.polytrail_follow.origin);
-            if (this.polytrail_cnt < 0 || vlen(this.origin - this.polytrail_bufpos[this.polytrail_bufidx]) >= autocvar_cl_polytrail_segmentsize) {
+            if (this.polytrail_cnt < 0 || vdist(this.origin - this.polytrail_bufpos[this.polytrail_bufidx], >=, autocvar_cl_polytrail_segmentsize)) {
                 int i = POLYTRAIL_SEEK(this, 1);
                 this.polytrail_bufpos[i] = this.origin;
                 float f = autocvar_cl_polytrail_noise;
