@@ -130,7 +130,7 @@ MUTATOR_HOOKFUNCTION(polytrails, EditProjectile) {
 
 AUTOCVAR(cl_glowtrails, int, 1, "Enable glowy trails (if set to 1, only in CTS, if higher any mode)");
 AUTOCVAR(cl_glowtrails_usealpha, bool, true, "Account for player's transparency");
-AUTOCVAR(cl_glowtrails_scale, float, 0.1, "Speed scale for player's velocity (to control the rate at which it becomes lighter)");
+AUTOCVAR(cl_glowtrails_scale, float, 0.07, "Speed scale for player's velocity (to control the rate at which it becomes lighter)");
 
 const int polytrails_flashy_color_count = 6;
 const float polytrails_flashy_color_frequency = 2;
