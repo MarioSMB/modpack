@@ -38,6 +38,25 @@ MUTATOR_HOOKFUNCTION(require_stats, SV_ParseServerCommand)
 
 	if(cmd_name == "elobypass")
 	{
+		if(argv(1) == "")
+		{
+			FOREACH_CLIENT(IS_REAL_CLIENT(it),
+			{
+				client.elo_bypass = true;
+			});
+			LOG_INFO("Allowing all players to bypass elo checks for this match.\n");
+			return true;
+		}
+		else if(argv(1) == "off")
+		{
+			FOREACH_CLIENT(IS_REAL_CLIENT(it),
+			{
+				client.elo_bypass = false;
+			});
+			LOG_INFO("Turning off elo bypassing for all players.\n");
+			return true;
+		}
+
 		entity client = GetIndexedEntity(cmd_argc, 1);
 		bool accepted = VerifyClientEntity(client, true, false);
 
