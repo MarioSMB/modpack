@@ -11,6 +11,7 @@ AUTOCVAR(g_require_stats_elo_limit_global, int, 0, "Global elo limit (note: game
 
 .float last_elocheck;
 .bool elo_overlimit;
+.bool elo_bypass;
 
 bool stats_CheckPlayer(entity this)
 {
@@ -22,6 +23,37 @@ bool stats_CheckPlayer(entity this)
 		);
 }
 
+STATIC_INIT_LATE(elo_setvars)
+{
+	localcmd("\nalias elobypass \"sv_cmd elobypass ${* ?}\"\n");
+}
+
+MUTATOR_HOOKFUNCTION(require_stats, SV_ParseServerCommand)
+{
+	if(MUTATOR_RETURNVALUE) // command was already handled?
+		return false;
+
+	string cmd_name = M_ARGV(0, string);
+	int cmd_argc = M_ARGV(1, int);
+
+	if(cmd_name == "elobypass")
+	{
+		entity client = GetIndexedEntity(cmd_argc, 1);
+		bool accepted = VerifyClientEntity(client, true, false);
+
+		if (accepted > 0)
+		{
+			client.elo_bypass = true;
+			LOG_INFO(strcat("Player ", GetCallerName(client), " is now allowed to join for this match, regardless of their elo.\n"));
+		}
+		else
+		{
+			LOG_INFO("elo bypass failed: ", GetClientErrorString(accepted, argv(1)), ".\n");
+		}
+		return true;
+	}
+}
+
 MUTATOR_HOOKFUNCTION(require_stats, PlayerPreThink)
 {
 	if(autocvar_g_require_stats < 1)
@@ -31,7 +63,7 @@ MUTATOR_HOOKFUNCTION(require_stats, PlayerPreThink)
 		return;
 
 	entity player = M_ARGV(0, entity);
-	if(player.elo_overlimit)
+	if(player.elo_overlimit || player.elo_bypass)
 		return; // once we know they have too much elo, we don't need to check at all
 	if(time < player.last_elocheck)
 		return;
@@ -114,7 +146,7 @@ MUTATOR_HOOKFUNCTION(require_stats, PutClientInServer)
 		return;
 	}
 
-	if(IS_PLAYER(player) && player.elo_overlimit)
+	if(!player.elo_bypass && player.elo_overlimit && IS_PLAYER(player))
 	{
 		TRANSMUTE(Observer, player);
 		centerprint(player, "Sorry, you are too good to play here");
