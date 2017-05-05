@@ -104,7 +104,7 @@ void hat_Think(entity this)
 	entity player = this.owner;
 	float tag_found;
 	this.nextthink = time;
-	if (this.owner.hatentity != this)
+	if (player.hatentity != this)
 	{
 		delete(this);
 		return;
@@ -119,8 +119,8 @@ void hat_Think(entity this)
 		this.hatname = player.hatname;
 		this.dmg = player.modelindex;
 		this.deadflag = player.deadflag;
-		string exists = hat_exists(strcat("models/hats/", player.hatname));
-		if (player.hatname != "" && exists)
+		string exists = ((player.hatname && player.hatname != "") ? hat_exists(strcat("models/hats/", player.hatname)) : string_null);
+		if (player.hatname && player.hatname != "" && exists)
 			_setmodel(this, exists); // precision set below
 		else
 			this.model = "";
