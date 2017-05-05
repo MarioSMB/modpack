@@ -42,7 +42,7 @@ MUTATOR_HOOKFUNCTION(require_stats, SV_ParseServerCommand)
 		{
 			FOREACH_CLIENT(IS_REAL_CLIENT(it),
 			{
-				client.elo_bypass = true;
+				it.elo_bypass = true;
 			});
 			LOG_INFO("Allowing all players to bypass elo checks for this match.\n");
 			return true;
@@ -51,7 +51,7 @@ MUTATOR_HOOKFUNCTION(require_stats, SV_ParseServerCommand)
 		{
 			FOREACH_CLIENT(IS_REAL_CLIENT(it),
 			{
-				client.elo_bypass = false;
+				it.elo_bypass = false;
 			});
 			LOG_INFO("Turning off elo bypassing for all players.\n");
 			return true;
