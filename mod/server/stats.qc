@@ -82,7 +82,7 @@ MUTATOR_HOOKFUNCTION(require_stats, PlayerPreThink)
 	if(autocvar_g_require_stats_elo_limit_global > 0)
 		elo_limit = autocvar_g_require_stats_elo_limit_global;
 
-	string current_type = MapInfo_Type_ToString(MapInfo_CurrentGametype());
+	string current_type = PlayerStats_GetGametype();
 	string thevar = strcat("g_require_stats_elo_limit_", current_type);
 	if(cvar_type(thevar) & CVAR_TYPEFLAG_EXISTS)
 		elo_limit = cvar(thevar); // override default limit
@@ -148,6 +148,10 @@ MUTATOR_HOOKFUNCTION(require_stats, PutClientInServer)
 
 	if(!player.elo_bypass && player.elo_overlimit && IS_PLAYER(player))
 	{
+		int player_count = 0;
+		FOREACH_CLIENT(IS_PLAYER(it), ++player_count);
+		if(player_count <= 2)
+			return; // don't enforce elo limits when there's not enough players
 		TRANSMUTE(Observer, player);
 		centerprint(player, "Sorry, you are too good to play here");
 		return;
