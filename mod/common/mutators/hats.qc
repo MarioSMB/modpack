@@ -5,14 +5,17 @@ vector get_model_parameters_hat_angles;
 #ifdef SVQC
 void hats_Precache(string pattern);
 
-AUTOCVAR_NOREF(g_hats, bool, false, "Allow clients to use hats");
+AUTOCVAR(g_hats, bool, false, "Allow clients to use hats");
 AUTOCVAR(g_hats_default, string, "", "Default hat when player has none on");
+AUTOCVAR(g_hats_nolegacy, bool, false, "Use new default offsets (not recommended yet)");
 
-REGISTER_MUTATOR(hats, cvar("g_hats") && !cvar("g_overkill"))
+REGISTER_MUTATOR(hats, autocvar_g_hats && !cvar("g_overkill"))
 {
 	MUTATOR_ONADD
 	{
 		hats_Precache("models/hats/*.md3");
+		hats_Precache("models/hats/*.obj");
+		hats_Precache("models/hats/*.iqm");
 	}
 }
 
@@ -54,6 +57,12 @@ vector hats_getheight(entity e)
 	get_model_parameters(e.model, e.skin);
 	s = get_model_parameters_hat_height;
 	get_model_parameters(string_null, 0);
+
+	if(s == '0 0 0' && autocvar_g_hats_nolegacy)
+	{
+		// attempt to get default height
+		s = '0 10 -1';
+	}
 	
 	return s;
 }
@@ -64,12 +73,35 @@ vector hats_getangles(entity e)
 	get_model_parameters(e.model, e.skin);
 	s = get_model_parameters_hat_angles;
 	get_model_parameters(string_null, 0);
+
+	if(s == '0 0 0' && autocvar_g_hats_nolegacy)
+	{
+		// attempt to get default angle
+		s = '90 0 0';
+	}
 	
 	return s;
 }
 
+string hat_exists(string pattern)
+{
+	string try;
+	try = strcat(pattern, ".md3");
+	if(fexists(try))
+		return try;
+	try = strcat(pattern, ".obj");
+	if(fexists(try))
+		return try;
+	try = strcat(pattern, ".iqm");
+	if(fexists(try))
+		return try;
+
+	return string_null;
+}
+
 void hat_Think(entity this)
 {
+	entity player = this.owner;
 	float tag_found;
 	this.nextthink = time;
 	if (this.owner.hatentity != this)
@@ -77,51 +109,52 @@ void hat_Think(entity this)
 		delete(this);
 		return;
 	}
-	if(STAT(FROZEN, this.owner) || IS_DEAD(this.owner))
+	if(STAT(FROZEN, player) || IS_DEAD(player))
 	{
 		this.model = "";
 		return;
 	}
-	if (this.hatname != this.owner.hatname || this.dmg != this.owner.modelindex || this.deadflag != this.owner.deadflag)
+	if (this.hatname != player.hatname || this.dmg != player.modelindex || this.deadflag != player.deadflag)
 	{
-		this.hatname = this.owner.hatname;
-		this.dmg = this.owner.modelindex;
-		this.deadflag = this.owner.deadflag;
-		if (this.owner.hatname != "" && fexists(strcat("models/hats/", this.owner.hatname, ".md3")))
-			_setmodel(this, strcat("models/hats/", this.owner.hatname, ".md3")); // precision set below
+		this.hatname = player.hatname;
+		this.dmg = player.modelindex;
+		this.deadflag = player.deadflag;
+		string exists = hat_exists(strcat("models/hats/", player.hatname));
+		if (player.hatname != "" && exists)
+			_setmodel(this, exists); // precision set below
 		else
 			this.model = "";
 
-		if((tag_found = gettagindex(this.owner, "tag_head")))
+		if((tag_found = gettagindex(player, "tag_head")))
 		{
 			this.tag_index = tag_found;
-			this.tag_entity = this.owner;
-			setorigin(this, hats_getheight(this.owner));
-			this.scale = hats_getscale(this.owner);
-			this.angles = hats_getangles(this.owner);
+			this.tag_entity = player;
+			setorigin(this, hats_getheight(player));
+			this.scale = hats_getscale(player);
+			this.angles = hats_getangles(player);
 		}
 		else
 		{
-			setattachment(this, this.owner, "head");
-			setorigin(this, hats_getheight(this.owner));
-			this.scale = hats_getscale(this.owner);
-			this.angles = hats_getangles(this.owner);
+			setattachment(this, player, "head");
+			setorigin(this, hats_getheight(player));
+			this.scale = hats_getscale(player);
+			this.angles = hats_getangles(player);
 		}
 	}
-	this.effects = this.owner.effects;
+	this.effects = player.effects;
 	this.effects |= EF_LOWPRECISION;
 	this.effects = this.effects & EFMASK_CHEAP; // eat performance
 	if(this.scale < -1)
 		this.alpha = -1;
-	else if(this.owner.alpha == default_player_alpha)
+	else if(player.alpha == default_player_alpha)
 		this.alpha = default_weapon_alpha;
-	else if(this.owner.alpha != 0)
-		this.alpha = this.owner.alpha;
+	else if(player.alpha != 0)
+		this.alpha = player.alpha;
 	else
 		this.alpha = 1;
 
-	this.glowmod = this.owner.glowmod;
-	this.colormap = this.owner.colormap;
+	this.glowmod = player.glowmod;
+	this.colormap = player.colormap;
 
 	CSQCMODEL_AUTOUPDATE(this);
 }
