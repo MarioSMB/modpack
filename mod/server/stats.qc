@@ -73,9 +73,12 @@ MUTATOR_HOOKFUNCTION(require_stats, PlayerPreThink)
 	if(my_elo <= 0) // no elo or not loaded
 		return; // try to return before checking the gametype (slow)
 
-	int player_count = 0;
-	FOREACH_CLIENT(IS_PLAYER(it), ++player_count);
-	if(player_count <= 2)
+	int tmp_playercount = 0;
+	FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it),
+	{
+		++tmp_playercount;
+	});
+	if(tmp_playercount <= 2)
 		return; // don't enforce elo limits when there's not enough players
 
 	int elo_limit = 0;
@@ -148,9 +151,12 @@ MUTATOR_HOOKFUNCTION(require_stats, PutClientInServer)
 
 	if(!player.elo_bypass && player.elo_overlimit && IS_PLAYER(player))
 	{
-		int player_count = 0;
-		FOREACH_CLIENT(IS_PLAYER(it), ++player_count);
-		if(player_count <= 2)
+		int tmp_playercount = 0;
+		FOREACH_CLIENT(IS_PLAYER(it) && IS_REAL_CLIENT(it),
+		{
+			++tmp_playercount;
+		});
+		if(tmp_playercount <= 2)
 			return; // don't enforce elo limits when there's not enough players
 		TRANSMUTE(Observer, player);
 		centerprint(player, "Sorry, you are too good to play here");
