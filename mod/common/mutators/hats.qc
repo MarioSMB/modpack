@@ -104,7 +104,7 @@ void hat_Think(entity this)
 	entity player = this.owner;
 	float tag_found;
 	this.nextthink = time;
-	if (player.hatentity != this)
+	if (player.hatentity != this || !player)
 	{
 		delete(this);
 		return;
