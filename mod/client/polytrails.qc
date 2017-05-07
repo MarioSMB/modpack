@@ -131,6 +131,10 @@ MUTATOR_HOOKFUNCTION(polytrails, EditProjectile) {
 AUTOCVAR(cl_glowtrails, int, 1, "Enable glowy trails (if set to 1, only in CTS, if higher any mode)");
 AUTOCVAR(cl_glowtrails_usealpha, bool, true, "Account for player's transparency");
 AUTOCVAR(cl_glowtrails_scale, float, 0.07, "Speed scale for player's velocity (to control the rate at which it becomes lighter)");
+AUTOCVAR(cl_glowtrails_thickness_max, float, 12, "Width of the trails at their maximum");
+AUTOCVAR(cl_glowtrails_thickness_med, float, 6, "Width of the trails at the half way point");
+AUTOCVAR(cl_glowtrails_thickness_min, float, 0, "Width of the trails at the end");
+AUTOCVAR(cl_glowtrails_texture, int, 0, "Texture of the trail, 0: plain, 1: lgbeam, 2: gauntletbeam");
 
 const int polytrails_flashy_color_count = 6;
 const float polytrails_flashy_color_frequency = 2;
@@ -202,6 +206,8 @@ MUTATOR_HOOKFUNCTION(polytrails, TagIndex_Update)
 
     if(!player.isplayermodel)
         return;
+    if(!(player.entnum >= 1 && player.entnum <= maxclients))
+        return;
 
     entity local_player = CSQCModel_server2csqc(player_localentnum - 1);
     if(player == local_player && !autocvar_chase_active)
@@ -215,22 +221,45 @@ MUTATOR_HOOKFUNCTION(polytrails, TagIndex_Update)
     if(!player.ptrail || wasfreed(player.ptrail))
     {
         player.ptrail = NEW(PolyTrail, player);
-        player.ptrail.polytrail_tex = "gfx/trails/plain.tga";
-        player.ptrail.polytrail_thickness[0] = 10;
-        player.ptrail.polytrail_thickness[1] = 5;
-        player.ptrail.polytrail_thickness[2] = 0;
         IL_PUSH(g_drawables, player.ptrail);
     }
+    switch(autocvar_cl_glowtrails_texture)
+    {
+        default:
+        case 0: player.ptrail.polytrail_tex = "gfx/trails/plain.tga"; break;
+        case 1: player.ptrail.polytrail_tex = "particles/lgbeam.tga"; break;
+        case 2: player.ptrail.polytrail_tex = "particles/gauntletbeam.tga"; break;
+    }
 
-    float myalpha = ((autocvar_cl_glowtrails_usealpha) ? player.alpha : 1);
+    player.ptrail.polytrail_thickness[0] = autocvar_cl_glowtrails_thickness_max;
+    player.ptrail.polytrail_thickness[1] = autocvar_cl_glowtrails_thickness_med;
+    player.ptrail.polytrail_thickness[2] = autocvar_cl_glowtrails_thickness_min;
+
+    float myalpha = ((autocvar_cl_glowtrails_usealpha) ? ((player.alpha == 0 || player.alpha == 1) ? autocvar_cl_glowtrails_usealpha : player.alpha) : 1);
     player.ptrail.polytrail_alpha[0] = myalpha;
     player.ptrail.polytrail_alpha[1] = myalpha * 0.5;
     player.ptrail.polytrail_alpha[2] = 0;
 
-    float myspeed = vlen(player.velocity);
-    myspeed = bound(0, myspeed * autocvar_cl_glowtrails_scale, 200);
+    if(gametype == MAPINFO_TYPE_CTS)
+    {
+        float myspeed = vlen(player.velocity);
+        myspeed = bound(0, myspeed * autocvar_cl_glowtrails_scale, 200);
 
-    player.ptrail.polytrail_rgb[0] = polytrails_get_color(myspeed, 200);
-    player.ptrail.polytrail_rgb[1] = polytrails_get_color(myspeed * 0.75, 200);
-    player.ptrail.polytrail_rgb[2] = polytrails_get_color(myspeed * 0.5, 200);
+        player.ptrail.polytrail_rgb[0] = polytrails_get_color(myspeed, 200);
+        player.ptrail.polytrail_rgb[1] = polytrails_get_color(myspeed * 0.75, 200);
+        player.ptrail.polytrail_rgb[2] = polytrails_get_color(myspeed * 0.5, 200);
+    }
+    else
+    {
+        int pnum = player.entnum - 1;
+        vector col;
+        if(teamplay)
+            col = Team_ColorRGB(entcs_GetTeam(pnum));
+        else
+            col = entcs_GetColor(pnum);
+
+        player.ptrail.polytrail_rgb[0] = col;
+        player.ptrail.polytrail_rgb[1] = col;
+        player.ptrail.polytrail_rgb[2] = col;
+    }
 }
