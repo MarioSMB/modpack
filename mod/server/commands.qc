@@ -129,6 +129,12 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 
 	if(cmd_name == "gotorandom")
 	{
+		if(autocvar_g_maplist == "")
+		{
+			localcmd("\nendmatch\n");
+			LOG_INFO("g_maplist is empty, ending match...\n");
+		}
+
 		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
 		Map_Current = bound(0, GetMaplistPosition(), Map_Count - 1);
 		int pos = MaplistMethod_Random();
