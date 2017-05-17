@@ -73,7 +73,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseClientCommand)
 					print_to(player, "This command only works in CTS and Race.");
 					return true;
 				}
-				FOREACH_WORD(themaplist, !race_readTime(MapInfo_Map_bspname, 1),
+				FOREACH_WORD(themaplist, !race_readTime(it, 1),
 				{
 					col = ((i % 2) ? "^2" : "^3");
 					print_to(player, strcat(col, it));
@@ -84,7 +84,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseClientCommand)
 				param = argv(2);
 				FOREACH_WORD(themaplist, strstrofs(it, param, 0) >= 0,
 				{
-					if((g_race || g_cts) && !race_readTime(MapInfo_Map_bspname, 1))
+					if((g_race || g_cts) && !race_readTime(it, 1))
 						col = ((i % 2) ? "^4*" : "^5*");
 					else
 						col = ((i % 2) ? "^2" : "^3");
@@ -95,7 +95,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseClientCommand)
 			{
 				FOREACH_WORD(themaplist, startsWithNocase(strdecolorize(it), param),
 				{
-					if((g_race || g_cts) && !race_readTime(MapInfo_Map_bspname, 1))
+					if((g_race || g_cts) && !race_readTime(it, 1))
 						col = ((i % 2) ? "^4*" : "^5*");
 					else
 						col = ((i % 2) ? "^2" : "^3");
