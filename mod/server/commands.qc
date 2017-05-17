@@ -63,21 +63,30 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseClientCommand)
 				return true;
 			}
 
+			string col;
 			string param = argv(1);
-			string themaplist = strreplace("^7Maps in list: ", "", maplist_reply);
+			string themaplist = ((autocvar_g_maplist == "") ? strdecolorize(strreplace("^7Maps in list: ", "", maplist_reply)) : autocvar_g_maplist);
 			if(param == "any" && cmd_argc > 2)
 			{
 				param = argv(2);
 				FOREACH_WORD(themaplist, strstrofs(it, param, 0) >= 0,
 				{
-					print_to(player, it);
+					if((g_race || g_cts) && !race_readTime(MapInfo_Map_bspname, 1))
+						col = ((i % 2) ? "^4*" : "^5*");
+					else
+						col = ((i % 2) ? "^2" : "^3");
+					print_to(player, strcat(col, it));
 				});
 			}
 			else
 			{
 				FOREACH_WORD(themaplist, startsWithNocase(strdecolorize(it), param),
 				{
-					print_to(player, it);
+					if((g_race || g_cts) && !race_readTime(MapInfo_Map_bspname, 1))
+						col = ((i % 2) ? "^4*" : "^5*");
+					else
+						col = ((i % 2) ? "^2" : "^3");
+					print_to(player, strcat(col, it));
 				});
 			}
 
