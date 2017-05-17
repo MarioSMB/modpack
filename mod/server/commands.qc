@@ -22,12 +22,16 @@ STATIC_INIT(mod_buildmaplist)
 	MapInfo_Enumerate();
 	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
 
-	int page = 0;
+	int page = 0, curcount = 0;
 	for(int j = 0; j < MapInfo_count; ++j)
 	{
 		newmaplist[page] = strcat(newmaplist[page], " ", _MapInfo_GlobItem(MapInfo_FilterList_Lookup(j)));
-		if((j % autocvar_g_maplist_max_perpage) && page < MAX_MAPLISTS)
-			page += 1; // fills up last page
+		curcount += 1;
+		if(curcount > autocvar_g_maplist_max_perpage && page < MAX_MAPLISTS)
+		{
+			curcount = 0;
+			page += 1; // note: fills up last page
+		}
 	}
 
 	for(int j = 0; j < MAX_MAPLISTS; ++j)
