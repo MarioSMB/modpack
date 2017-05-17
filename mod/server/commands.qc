@@ -1,5 +1,6 @@
 AUTOCVAR(g_maplist_max_perpage, int, 200, "Maximum maps per maplist page (shouldn't be too low or too high, as last page will be filled with the remainder)");
 AUTOCVAR(g_maplist_generate_lists, bool, false, "Generate a new list for maps using paged design (may cause crashes)");
+AUTOCVAR(g_maplist_gotorandom_fancy, bool, false, "Attempt a fancy lookup for the next map (relies on hacky measures)");
 
 STATIC_INIT(mod_cmds)
 {
@@ -185,6 +186,14 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 			LOG_INFO("g_maplist is empty, ending match...\n");
 		}
 
+		if(autocvar_g_maplist_gotorandom_fancy)
+		{
+			// TODO: we can't actually rely on this...
+			string foundmap = _MapInfo_GlobItem(MapInfo_FilterList_Lookup(floor(random() * (MapInfo_count + 1))));
+			localcmd(strcat("\nchangelevel ", foundmap, "\n"));
+			LOG_INFO("Switching to ", foundmap, "\n");
+			return true;
+		}
 		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
 		Map_Current = bound(0, GetMaplistPosition(), Map_Count - 1);
 		int pos = MaplistMethod_Random();
