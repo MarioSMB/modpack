@@ -66,7 +66,20 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseClientCommand)
 			string col;
 			string param = argv(1);
 			string themaplist = ((autocvar_g_maplist == "") ? strdecolorize(strreplace("^7Maps in list: ", "", maplist_reply)) : autocvar_g_maplist);
-			if(param == "any" && cmd_argc > 2)
+			if(param == "new")
+			{
+				if(!g_race && !g_cts)
+				{
+					print_to(player, "This command only works in CTS and Race.");
+					return true;
+				}
+				FOREACH_WORD(themaplist, !race_readTime(MapInfo_Map_bspname, 1),
+				{
+					col = ((i % 2) ? "^2" : "^3");
+					print_to(player, strcat(col, it));
+				});
+			}
+			else if(param == "any" && cmd_argc > 2)
 			{
 				param = argv(2);
 				FOREACH_WORD(themaplist, strstrofs(it, param, 0) >= 0,
