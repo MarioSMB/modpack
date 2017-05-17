@@ -26,7 +26,7 @@ STATIC_INIT(mod_buildmaplist)
 	for(int j = 0; j < MapInfo_count; ++j)
 	{
 		newmaplist[page] = strcat(newmaplist[page], " ", _MapInfo_GlobItem(MapInfo_FilterList_Lookup(j)));
-		if((j % 10) && page < MAX_MAPLISTS)
+		if((j % autocvar_g_maplist_max_perpage) && page < MAX_MAPLISTS)
 			page += 1; // fills up last page
 	}
 
