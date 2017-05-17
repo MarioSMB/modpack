@@ -460,7 +460,7 @@ MUTATOR_HOOKFUNCTION(radio_cmd, SV_ParseClientCommand)
 
 		if(!sv_radio)
 		{
-			sprint(caller, "Radio is not enabled\n");
+			//sprint(caller, "Radio is not enabled\n");
 			return true;
 		}
 
