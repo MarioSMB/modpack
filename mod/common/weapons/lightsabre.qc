@@ -200,6 +200,8 @@ bool W_Lightsabre_Melee_Block(entity this, entity player)
 
 				//LOG_INFO("We got one!\n");
 
+				W_Devastator_Unregister(it);
+
 				it.velocity *= -1; // straight forward...?
 				it.realowner = it.owner = myowner;
 				it.lightsabre_hitshield = time + 0.15;

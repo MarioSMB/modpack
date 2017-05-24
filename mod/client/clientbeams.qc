@@ -96,7 +96,7 @@ void ClientBeam_Draw(entity this)
 	if(this.cnt)
 		tex = "particles/gauntletbeam";
 	//vector rgb = getcsqcplayercolor(this.sv_entnum - 1);
-	vector rgb = colormapPaletteColor(stof(getplayerkeyvalue(this.sv_entnum - 1, "colors")) & 0x0F, true);
+	vector rgb = colormapPaletteColor(entcs_GetClientColors(this.sv_entnum - 1) & 0x0F, true);
 	rgb *= (1 + autocvar_cl_vaporizerbeam_colorboost);
 
 	float fail = (this.nextthink - time);
