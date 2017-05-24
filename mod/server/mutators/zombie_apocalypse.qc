@@ -87,10 +87,10 @@ MUTATOR_HOOKFUNCTION(za, PlayerPhysics)
 		.entity weaponentity = weaponentities[slot];
 		player.(weaponentity).m_switchweapon = WEP_Null;
 	}
-	STAT(PL_MIN, player) = mon.mins;
-	STAT(PL_MAX, player) = mon.maxs;
-	STAT(PL_CROUCH_MIN, player) = mon.mins;
-	STAT(PL_CROUCH_MAX, player) = mon.maxs;
+	STAT(PL_MIN, player) = mon.m_mins;
+	STAT(PL_MAX, player) = mon.m_maxs;
+	STAT(PL_CROUCH_MIN, player) = mon.m_mins;
+	STAT(PL_CROUCH_MAX, player) = mon.m_maxs;
 	STAT(PL_VIEW_OFS, player) = player.za_viewofs;
 	STAT(PL_CROUCH_VIEW_OFS, player) = player.za_viewofs;
 	//PHYS_JUMPVELOCITY(player) = 0;
@@ -174,10 +174,10 @@ MUTATOR_HOOKFUNCTION(za, PlayerDies)
 		.entity weaponentity = weaponentities[slot];
 		frag_target.(weaponentity).m_switchweapon = WEP_Null;
 	}
-	STAT(PL_MIN, frag_target) = mon.mins;
-	STAT(PL_MAX, frag_target) = mon.maxs;
-	STAT(PL_CROUCH_MIN, frag_target) = mon.mins;
-	STAT(PL_CROUCH_MAX, frag_target) = mon.maxs;
+	STAT(PL_MIN, frag_target) = mon.m_mins;
+	STAT(PL_MAX, frag_target) = mon.m_maxs;
+	STAT(PL_CROUCH_MIN, frag_target) = mon.m_mins;
+	STAT(PL_CROUCH_MAX, frag_target) = mon.m_maxs;
 	frag_target.monster_attack = false;
 	frag_target.speed = frag_attacker.speed;
 	frag_target.speed2 = frag_attacker.speed2;

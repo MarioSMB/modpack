@@ -7,8 +7,8 @@ MODEL(MON_TARBABY, M_Model("tarbaby.mdl"));
 
 CLASS(Tarbaby, Monster)
     ATTRIB(Tarbaby, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MON_FLAG_MELEE);
-    ATTRIB(Tarbaby, mins, vector, '-16 -16 -24');
-    ATTRIB(Tarbaby, maxs, vector, '16 16 40');
+    ATTRIB(Tarbaby, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Tarbaby, m_maxs, vector, '16 16 40');
 #ifndef MENUQC
     ATTRIB(Tarbaby, m_model, Model, MDL_MON_TARBABY);
 #endif

@@ -12,8 +12,8 @@ REGISTER_DEATHTYPE(MONSTER_GOOMBA,            				DEATH_SELF_MON_GOOMBA,        
 
 CLASS(Goomba, Monster)
     ATTRIB(Goomba, spawnflags, int, MONSTER_TYPE_PASSIVE | MON_FLAG_CRUSH | MON_FLAG_HIDDEN);
-    ATTRIB(Goomba, mins, vector, '-15 -15 -32');
-    ATTRIB(Goomba, maxs, vector, '15 15 10');
+    ATTRIB(Goomba, m_mins, vector, '-15 -15 -32');
+    ATTRIB(Goomba, m_maxs, vector, '15 15 10');
 #ifndef MENUQC
     ATTRIB(Goomba, m_model, Model, MDL_MON_GOOMBA);
 #endif

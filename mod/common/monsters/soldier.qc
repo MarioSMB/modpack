@@ -7,8 +7,8 @@ MODEL(MON_SOLDIER, M_Model("soldier.mdl"));
 
 CLASS(Soldier, Monster)
     ATTRIB(Soldier, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MON_FLAG_MELEE | MON_FLAG_RANGED);
-    ATTRIB(Soldier, mins, vector, '-16 -16 -24');
-    ATTRIB(Soldier, maxs, vector, '16 16 40');
+    ATTRIB(Soldier, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Soldier, m_maxs, vector, '16 16 40');
 #ifndef MENUQC
     ATTRIB(Soldier, m_model, Model, MDL_MON_SOLDIER);
 #endif

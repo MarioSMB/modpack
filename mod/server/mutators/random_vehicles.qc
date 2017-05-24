@@ -18,7 +18,7 @@ MUTATOR_HOOKFUNCTION(rvehicles, OnEntityPreSpawn)
 
 		RandomSelection_Init();
 		FOREACH(Vehicles, !(it.spawnflags & VHF_PLAYERSLOT), LAMBDA(
-			tracebox(e.origin, it.mins * 1.1, it.maxs * 1.1, e.origin, MOVE_NORMAL, e);
+			tracebox(e.origin, it.m_mins * 1.1, it.m_maxs * 1.1, e.origin, MOVE_NORMAL, e);
 			if(trace_fraction == 1.0 && !trace_startsolid)
 			{
 				if(it == VEH_RAPTOR) // temp hack

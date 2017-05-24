@@ -12,8 +12,8 @@ REGISTER_DEATHTYPE(MONSTER_ROTFISH_MELEE,            				DEATH_SELF_MON_ROTFISH_
 
 CLASS(Rotfish, Monster)
     ATTRIB(Rotfish, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MON_FLAG_MELEE | MONSTER_TYPE_SWIM);
-    ATTRIB(Rotfish, mins, vector, '-20 -20 -31');
-    ATTRIB(Rotfish, maxs, vector, '20 20 20');
+    ATTRIB(Rotfish, m_mins, vector, '-20 -20 -31');
+    ATTRIB(Rotfish, m_maxs, vector, '20 20 20');
 #ifndef MENUQC
     ATTRIB(Rotfish, m_model, Model, MDL_MON_ROTFISH);
 #endif

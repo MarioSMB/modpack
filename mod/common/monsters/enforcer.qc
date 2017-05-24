@@ -11,8 +11,8 @@ REGISTER_DEATHTYPE(MONSTER_ENFORCER_PLASMA,            				DEATH_SELF_MON_ENFORC
 
 CLASS(Enforcer, Monster)
     ATTRIB(Enforcer, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MON_FLAG_MELEE | MON_FLAG_RANGED);
-    ATTRIB(Enforcer, mins, vector, '-16 -16 -24');
-    ATTRIB(Enforcer, maxs, vector, '16 16 40');
+    ATTRIB(Enforcer, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Enforcer, m_maxs, vector, '16 16 40');
 #ifndef MENUQC
     ATTRIB(Enforcer, m_model, Model, MDL_MON_ENFORCER);
 #endif

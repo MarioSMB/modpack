@@ -29,8 +29,8 @@ SOUND(LIGHTAPC_DMG_2, "onslaught/electricity_explode");
 #endif
 
 CLASS(LightAPC, Vehicle)
-/* mins       */ ATTRIB(LightAPC, mins, vector, '-120 -120 0' * 0.5);
-/* maxs       */ ATTRIB(LightAPC, maxs, vector, '120 120 250' * 0.5);
+/* mins       */ ATTRIB(LightAPC, m_mins, vector, '-120 -120 0' * 0.5);
+/* maxs       */ ATTRIB(LightAPC, m_maxs, vector, '120 120 250' * 0.5);
 /* view offset*/ ATTRIB(LightAPC, view_ofs, vector, '0 0 50');
 /* view dist  */ ATTRIB(LightAPC, height, float, 400);
 /* model	  */ ATTRIB(LightAPC, mdl, string, "models/vehicles/lightapc.dpm");

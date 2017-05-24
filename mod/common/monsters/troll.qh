@@ -12,8 +12,8 @@ MODEL(MON_TROLL, M_Model("troll.dpm"));
 
 CLASS(Troll, Monster)
     ATTRIB(Troll, spawnflags, int, MON_FLAG_SUPERMONSTER | MON_FLAG_MELEE);
-    ATTRIB(Troll, mins, vector, '-45 -45 -24');
-    ATTRIB(Troll, maxs, vector, '45 45 160');
+    ATTRIB(Troll, m_mins, vector, '-45 -45 -24');
+    ATTRIB(Troll, m_maxs, vector, '45 45 160');
 #ifdef GAMEQC
     ATTRIB(Troll, m_model, Model, MDL_MON_TROLL);
 #endif

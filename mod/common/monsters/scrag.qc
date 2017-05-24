@@ -9,8 +9,8 @@ SOUND(SCRAG_FIRESPIKE, W_Sound("electro_fire"));
 
 CLASS(Scrag, Monster)
     ATTRIB(Scrag, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MONSTER_TYPE_FLY | MON_FLAG_RANGED);
-    ATTRIB(Scrag, mins, vector, '-16 -16 -24');
-    ATTRIB(Scrag, maxs, vector, '16 16 40');
+    ATTRIB(Scrag, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Scrag, m_maxs, vector, '16 16 40');
 #ifndef MENUQC
     ATTRIB(Scrag, m_model, Model, MDL_MON_SCRAG);
 #endif

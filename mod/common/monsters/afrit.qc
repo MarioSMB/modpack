@@ -13,8 +13,8 @@ REGISTER_DEATHTYPE(MONSTER_AFRIT,          DEATH_SELF_MON_AFRIT,          DEATH_
 
 CLASS(Afrit, Monster)
     ATTRIB(Afrit, spawnflags, int, MONSTER_TYPE_FLY | MON_FLAG_RANGED | MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN);
-    ATTRIB(Afrit, mins, vector, '-16 -16 -24');
-    ATTRIB(Afrit, maxs, vector, '16 16 24');
+    ATTRIB(Afrit, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Afrit, m_maxs, vector, '16 16 24');
 #ifndef MENUQC
     ATTRIB(Afrit, m_model, Model, MDL_MON_AFRIT);
 #endif
