@@ -280,7 +280,7 @@ void lightapc_damage_hitbox(entity this, entity inflictor, entity attacker, floa
 		this.owner.event_damage(this.owner, inflictor, attacker, damage, deathtype, hitloc, force);
 }
 
-void lightapc_spawn_hitbox(float position, entity vehic, entity hitbox, vector min_s, vector max_s, float fwd_s, float vehic_health)
+void lightapc_spawn_hitbox(entity vehic, entity hitbox, vector min_s, vector max_s, float fwd_s)
 {
 	hitbox.owner = vehic;
 	settouch(hitbox, lightapc_hitbox_touch);
@@ -301,7 +301,7 @@ void lightapc_spawn_hitbox(float position, entity vehic, entity hitbox, vector m
 	hitbox.deadflag           = DEAD_NO;
 	hitbox.flags              = FL_NOTARGET;
 	setthink(hitbox, func_null);
-	hitbox.vehicle_health = vehic_health;
+	hitbox.vehicle_health = vehic.vehicle_health;
 	hitbox.netname = hitbox.owner.netname;
 	setsize(hitbox, min_s, max_s);
 	makevectors(vehic.angles_x * '-1 0 0' + vehic.angles_y * '0 1 0' + vehic.angles_z * '0 0 1'); // Inverted pitch on models
@@ -1018,7 +1018,7 @@ void lightapc_spawn_gunner(entity vehic, string tagname)
 
 entity lightapc_spawn_tire(entity vehic, string tagname)
 {
-	entity spinner = spawn();
+	entity spinner = new(lightapctire);
 	spinner.owner = vehic;
 	setmodel(spinner, MDL_LIGHTAPC_TIRE);
 	setattachment(spinner, vehic, tagname);
@@ -1095,7 +1095,7 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 	if(!instance.gun1)
 	{
 		// for some reason, autosizing of the shield entity refuses to work for this one so set it up in advance.
-		instance.vehicle_shieldent = spawn();
+		instance.vehicle_shieldent = new(vehicle_shield);
 		instance.vehicle_shieldent.effects = EF_LOWPRECISION;
 		setmodel(instance.vehicle_shieldent, MDL_VEH_SHIELD);
 		setattachment(instance.vehicle_shieldent, instance, "");
@@ -1105,13 +1105,13 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 		instance.vehicle_shieldent.alpha = -1;
 		instance.vehicle_shieldent.effects = EF_LOWPRECISION | EF_NODRAW;
 		
-		instance.gun1 = spawn();
-		instance.gun2 = spawn();
+		instance.gun1 = new(lightapcgunner);
+		instance.gun2 = new(lightapcgunner);
 
-		instance.bomb1 = spawn();
-		instance.bomb2 = spawn();
-		instance.bomb3 = spawn();
-		instance.bomb4 = spawn();
+		instance.bomb1 = new(lightapcwheelcontroller);
+		instance.bomb2 = new(lightapcwheelcontroller);
+		instance.bomb3 = new(lightapcwheelcontroller);
+		instance.bomb4 = new(lightapcwheelcontroller);
 
 		instance.bomb1.gun1 = lightapc_spawn_tire(instance, "tag_gear_left");
 		instance.bomb1.gun2 = lightapc_spawn_tire(instance, "tag_wheel_left");
@@ -1127,8 +1127,8 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 		instance.gun1.vehicle = instance;
 		instance.gun2.vehicle = instance;
 		
-		instance.bomb5 = spawn();
-		instance.bomb6 = spawn();
+		instance.bomb5 = new(lightapcturret);
+		instance.bomb6 = new(lightapcturret);
 
 		lightapc_setgunnertype(instance.gun1, instance, instance.bomb5);
 		lightapc_setgunnertype(instance.gun2, instance, instance.bomb6);
@@ -1174,8 +1174,8 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 		if (instance.gun2.spawnflags)
 			setattachment(instance.gun2.vehicle_viewport, instance.gun2, "tag_camera");
 
-		instance.hitboxmf = spawn();
-		instance.hitboxmb = spawn();
+		instance.hitboxmf = new(lightapchitbox);
+		instance.hitboxmb = new(lightapchitbox);
 	}
 
 	if(instance.scale != 0.75)
@@ -1215,8 +1215,8 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 	instance.bomb4.gun1.avelocity_y = 0;
 	instance.bomb4.gun2.avelocity_y = 0;
 
-	lightapc_spawn_hitbox(0, instance, instance.hitboxmf, thisveh.mins, thisveh.maxs, 90, autocvar_g_vehicle_lightapc_health);	
-	lightapc_spawn_hitbox(0, instance, instance.hitboxmb, thisveh.mins, thisveh.maxs, -90, autocvar_g_vehicle_lightapc_health);
+	lightapc_spawn_hitbox(instance, instance.hitboxmf, thisveh.m_mins, thisveh.m_maxs, 90);	
+	lightapc_spawn_hitbox(instance, instance.hitboxmb, thisveh.m_mins, thisveh.m_maxs, -90);
 #endif
 }
 
