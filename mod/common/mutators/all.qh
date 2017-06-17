@@ -3,7 +3,7 @@
 #include "pick_spawns.qc"
 //#include "pots.qc"
 
-#if 0
+#if 1
 #include "modelplanter/module.inc"
 
 #define IMPLEMENTATION
