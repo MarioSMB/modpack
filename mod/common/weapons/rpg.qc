@@ -25,7 +25,7 @@ AUTOCVAR(g_balance_rpg_weaponthrowable, float, 1, "");
 CLASS(RPG7, Weapon)
 /* ammotype  */ ATTRIB(RPG7, ammo_field, .int, ammo_rockets);
 /* impulse   */ ATTRIB(RPG7, impulse, int, 9);
-/* flags     */ ATTRIB(RPG7, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
+/* flags     */ ATTRIB(RPG7, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH | WEP_FLAG_NODUAL);
 /* rating    */ ATTRIB(RPG7, bot_pickupbasevalue, float, 8000);
 /* color     */ ATTRIB(RPG7, wpcolor, vector, '0.6 0.8 0.7');
 /* modelname */ ATTRIB(RPG7, mdl, string, "rpg7");
