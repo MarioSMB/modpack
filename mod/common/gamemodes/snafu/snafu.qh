@@ -17,18 +17,16 @@ REGISTER_GAMETYPE(SNAFU, NEW(Snafu));
 #ifdef SVQC
 AUTOCVAR_NOREF(g_snafu_point_limit, int, -1, "SNAFU point limit overriding the mapinfo specified one (use 0 to play without limit, and -1 to use the mapinfo's limit)");
 
-AUTOCVAR(g_snafu_prinsess_friction, float, 2, "");
-AUTOCVAR(g_snafu_prinsess_speed_walk, float, 220, "");
-AUTOCVAR(g_snafu_prinsess_speed_run, float, 300, "");
-AUTOCVAR(g_snafu_prinsess_range_walk, float, 70, "");
-AUTOCVAR(g_snafu_prinsess_range_attack, float, 80, "");
-AUTOCVAR(g_snafu_prinsess_range_target, float, 800, "");
-AUTOCVAR(g_snafu_prinsess_health, float, 170, "");
+AUTOCVAR(g_snafu_princess_friction, float, 2, "");
+AUTOCVAR(g_snafu_princess_speed_walk, float, 220, "");
+AUTOCVAR(g_snafu_princess_speed_run, float, 300, "");
+AUTOCVAR(g_snafu_princess_range_walk, float, 70, "");
+AUTOCVAR(g_snafu_princess_range_attack, float, 80, "");
+AUTOCVAR(g_snafu_princess_range_target, float, 800, "");
+AUTOCVAR(g_snafu_princess_health, float, 170, "");
+AUTOCVAR(g_snafu_princess_chance, float, 0.75, "");
 
-const vector PRINCESS_MIN = '-16 -16 0';
-const vector PRINCESS_MAX = '16 16 75';
-const vector PRINCESS_DEAD_MIN = '-32 -32 0';
-const vector PRINCESS_DEAD_MAX = '32 32 32';
+AUTOCVAR(g_snafu_vprincess_chance, float, 0, "");
 
 const int princess_run = 0;
 const int princess_walk = 1;
@@ -63,6 +61,7 @@ AUTOCVAR(g_snafu_fatty_range_attack2_min, float, 70, "");
 AUTOCVAR(g_snafu_fatty_range_attack2_max, float, 120, "");
 AUTOCVAR(g_snafu_fatty_range_target, float, 800, "");
 AUTOCVAR(g_snafu_fatty_health, float, 220, "");
+AUTOCVAR(g_snafu_fatty_chance, float, 0.25, "");
 //vector autocvar_g_snafu_fatty_headbox;
 
 void snafu_damageswitch(entity this, entity attacker);

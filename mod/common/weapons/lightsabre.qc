@@ -56,7 +56,7 @@ CLASS(Lightsabre, Weapon)
 /* rating    */ ATTRIB(Lightsabre, bot_pickupbasevalue, float, 6000);
 /* color     */ ATTRIB(Lightsabre, wpcolor, vector, '1 0.25 0.25');
 /* modelname */ ATTRIB(Lightsabre, mdl, string, "lightsabre");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Lightsabre, m_model, Model, MDL_LIGHTSABRE_ITEM);
 #endif
 /* crosshair */ ATTRIB(Lightsabre, w_crosshair, string, "gfx/crosshairlightsabre");

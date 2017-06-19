@@ -1,7 +1,7 @@
 #ifndef GOOMBA_H
 #define GOOMBA_H
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(MON_GOOMBA, M_Model("goomba.dpm"));
 MODEL(MON_GOOMBA_DEAD, M_Model("goomba_dead.md3"));
 
@@ -14,7 +14,7 @@ CLASS(Goomba, Monster)
     ATTRIB(Goomba, spawnflags, int, MONSTER_TYPE_PASSIVE | MON_FLAG_CRUSH | MON_FLAG_HIDDEN);
     ATTRIB(Goomba, m_mins, vector, '-15 -15 -32');
     ATTRIB(Goomba, m_maxs, vector, '15 15 10');
-#ifndef MENUQC
+#ifdef GAMEQC
     ATTRIB(Goomba, m_model, Model, MDL_MON_GOOMBA);
 #endif
     ATTRIB(Goomba, netname, string, "goomba");
@@ -22,7 +22,7 @@ CLASS(Goomba, Monster)
 ENDCLASS(Goomba)
 
 REGISTER_MONSTER(GOOMBA, NEW(Goomba)) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.mr_precache(this);
 #endif
 }
@@ -111,7 +111,7 @@ spawnfunc(monster_goomba) { Monster_Spawn(this, true, MON_GOOMBA.monsterid); }
 			return true;
 		}
 		#endif
-		#ifndef MENUQC
+		#ifdef GAMEQC
 		METHOD(Goomba, mr_anim, bool(Monster thismon, entity actor))
 		{
 			vector none = '0 0 0';

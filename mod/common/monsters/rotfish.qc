@@ -2,7 +2,7 @@
 #ifndef ROTFISH_H
 #define ROTFISH_H
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(MON_ROTFISH, M_Model("fish.mdl"));
 
 MSG_INFO_NOTIF(DEATH_SELF_MON_ROTFISH_MELEE,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         "^BG%s^K1 let a Rotfish nibble their toes%s%s", "")
@@ -14,7 +14,7 @@ CLASS(Rotfish, Monster)
     ATTRIB(Rotfish, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MON_FLAG_MELEE | MONSTER_TYPE_SWIM);
     ATTRIB(Rotfish, m_mins, vector, '-20 -20 -31');
     ATTRIB(Rotfish, m_maxs, vector, '20 20 20');
-#ifndef MENUQC
+#ifdef GAMEQC
     ATTRIB(Rotfish, m_model, Model, MDL_MON_ROTFISH);
 #endif
     ATTRIB(Rotfish, netname, string, "rotfish");
@@ -22,7 +22,7 @@ CLASS(Rotfish, Monster)
 ENDCLASS(Rotfish)
 
 REGISTER_MONSTER(ROTFISH, NEW(Rotfish)) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.mr_precache(this);
 #endif
 }
@@ -89,7 +89,7 @@ spawnfunc(monster_fish) { Monster_Spawn(this, true, MON_ROTFISH.monsterid); }
 			return true;
 		}
 		#endif
-		#ifndef MENUQC
+		#ifdef GAMEQC
 		METHOD(Rotfish, mr_anim, bool(Monster thismon, entity actor))
 		{
 			vector none = '0 0 0';

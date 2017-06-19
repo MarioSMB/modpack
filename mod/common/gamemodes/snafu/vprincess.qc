@@ -1,3 +1,21 @@
+#ifdef GAMEQC
+MODEL(SNAFU_VPRINCESS, "models/snafu/princess.dpm");
+#endif
+
+CLASS(VPrincess, Gai)
+    ATTRIB(VPrincess, m_mins, vector, '-16 -16 0');
+    ATTRIB(VPrincess, m_maxs, vector, '16 16 75');
+#ifdef GAMEQC
+    ATTRIB(VPrincess, m_model, Model, MDL_SNAFU_VPRINCESS);
+#endif
+    ATTRIB(VPrincess, deadmins, vector, '-32 -32 0');
+    ATTRIB(VPrincess, deadmaxs, vector, '32 32 0');
+    ATTRIB(VPrincess, netname, string, "vprincess");
+    ATTRIB(VPrincess, monster_name, string, _("Princess (verb based)"));
+ENDCLASS(VPrincess)
+
+REGISTER_GAI(VPRINCESS, NEW(VPrincess));
+
 #ifdef SVQC
 
 int princess_roam(entity verb, entity own, int msg)
@@ -69,7 +87,7 @@ int princess_find_target(entity verb, entity own, int msg)
 		return VS_CALL_NO;
 
 	case VCM_DO:
-		snafu_zombie_localtarget(own, autocvar_g_snafu_prinsess_range_target);
+		snafu_zombie_localtarget(own, autocvar_g_snafu_princess_range_target);
 
 		return VS_CALL_YES_DONE;
 	}
@@ -88,7 +106,7 @@ int princess_attack(entity verb, entity own, int msg)
         if(own.attack_finished_single[0] < time && own.cnt)
             return VS_EBASE_MODAL;		
                 
-        if(own.snafu_ai_enemy_dist <= autocvar_g_snafu_prinsess_range_attack)
+        if(own.snafu_ai_enemy_dist <= autocvar_g_snafu_princess_range_attack)
             return verb.verb_static_value;
         
         return VS_CALL_NO;
@@ -133,13 +151,13 @@ int princess_chase(entity verb, entity own, int msg)
 			return VS_CALL_NO;
         */
                 
-        if(own.snafu_ai_enemy_dist >= autocvar_g_snafu_prinsess_range_attack)
+        if(own.snafu_ai_enemy_dist >= autocvar_g_snafu_princess_range_attack)
             return verb.verb_static_value;
         
         return VS_CALL_NO;
 
 	case VCM_DO:
-        if(own.snafu_ai_enemy_dist > autocvar_g_snafu_prinsess_range_walk)
+        if(own.snafu_ai_enemy_dist > autocvar_g_snafu_princess_range_walk)
             own.frame = princess_run;
         else
             own.frame = princess_walk;
@@ -178,23 +196,26 @@ void snafu_vprincess_think(entity this)
         return;
     }
     
-    this.velocity -= (this.velocity * (autocvar_g_snafu_prinsess_friction * _delta));
+    this.velocity -= (this.velocity * (autocvar_g_snafu_princess_friction * _delta));
     
     verbstack_pop(this.verbs_attack);
     
     if(this.frame == princess_run)
     
-        this.velocity += v_forward * autocvar_g_snafu_prinsess_speed_run * _delta;
+        this.velocity += v_forward * autocvar_g_snafu_princess_speed_run * _delta;
         
     if(this.frame == princess_walk)
-        this.velocity += v_forward * autocvar_g_snafu_prinsess_speed_walk * _delta;
+        this.velocity += v_forward * autocvar_g_snafu_princess_speed_walk * _delta;
 }
 
 void snafu_vprincess_create(entity own)
 {
     entity zom = spawn();
-    setmodel(zom, MDL_SNAFU_PRINCESS);    
-    setsize(zom, PRINCESS_MIN, PRINCESS_MAX);
+    Gai info = GAI_VPRINCESS;
+    zom.gaid = info.gaid;
+
+    setmodel(zom, info.m_model);    
+    setsize(zom, info.m_mins, info.m_maxs);
     
     vector _where = own.origin;
     _where_x += random() * own.mins_x;
@@ -202,7 +223,7 @@ void snafu_vprincess_create(entity own)
     _where_y += random() * own.mins_y;
     _where_y += random() * own.maxs_y;
     
-    tracebox(_where + '0 0 64', PRINCESS_MIN, PRINCESS_MAX, _where - '0 0 1' * max_shot_distance, MOVE_NORMAL, own);    
+    tracebox(_where + '0 0 64', info.m_mins, info.m_maxs, _where - '0 0 1' * max_shot_distance, MOVE_NORMAL, own);    
     setorigin(zom, trace_endpos);
     
     set_movetype(zom, MOVETYPE_WALK);
@@ -211,7 +232,8 @@ void snafu_vprincess_create(entity own)
     zom.takedamage      = DAMAGE_AIM;
     zom.event_damage    = snafu_princess_damage;    
     zom.snafu_ai_flags  = SAF_ZOMBIE;
-    zom.health          = autocvar_g_snafu_prinsess_health;
+    zom.damageforcescale = 3;
+    zom.health          = autocvar_g_snafu_princess_health;
     setthink(zom, snafu_vprincess_think);
     zom.nextthink       = time;
     zom.classname       = "zombie";
@@ -228,7 +250,6 @@ void snafu_vprincess_create(entity own)
     verbstack_push(zom.verbs_attack, princess_find_target, VS_EBASE_NORMAL + VS_EBASE_NUDGE, 0, zom);
     verbstack_push(zom.verbs_attack, princess_attack, VS_EBASE_HIGH, 0, zom);
     verbstack_push(zom.verbs_attack, princess_chase, VS_EBASE_NORMAL, 0, zom);
-    
     
     ++snafu_zombie_spawned;
     ++snafu_zombie_alive;

@@ -1,7 +1,7 @@
 #ifndef AFRIT_H
 #define AFRIT_H
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(MON_AFRIT, M_Model("afrit.mdl"));
 
 MSG_INFO_NOTIF(DEATH_SELF_MON_AFRIT,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         "^BG%s^K1 was fireballed by an Afrit%s%s", "")
@@ -15,7 +15,7 @@ CLASS(Afrit, Monster)
     ATTRIB(Afrit, spawnflags, int, MONSTER_TYPE_FLY | MON_FLAG_RANGED | MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN);
     ATTRIB(Afrit, m_mins, vector, '-16 -16 -24');
     ATTRIB(Afrit, m_maxs, vector, '16 16 24');
-#ifndef MENUQC
+#ifdef GAMEQC
     ATTRIB(Afrit, m_model, Model, MDL_MON_AFRIT);
 #endif
     ATTRIB(Afrit, netname, string, "afrit");
@@ -23,7 +23,7 @@ CLASS(Afrit, Monster)
 ENDCLASS(Afrit)
 
 REGISTER_MONSTER(AFRIT, NEW(Afrit)) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.mr_precache(this);
 #endif
 }
@@ -184,7 +184,7 @@ spawnfunc(monster_afrit) { Monster_Spawn(this, true, MON_AFRIT.monsterid); }
 			return true;
 		}
 		#endif
-		#ifndef MENUQC
+		#ifdef GAMEQC
 		METHOD(Afrit, mr_anim, bool(Afrit thismon, entity actor))
 		{
 			vector none = '0 0 0';

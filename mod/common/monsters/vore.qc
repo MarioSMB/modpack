@@ -2,7 +2,7 @@
 #ifndef VORE_H
 #define VORE_H
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(MON_VORE, M_Model("shalrath.mdl"));
 
 SOUND(VORE_FIRESPIKE, W_Sound("electro_fire"));
@@ -12,7 +12,7 @@ CLASS(Vore, Monster)
     ATTRIB(Vore, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MON_FLAG_MELEE | MON_FLAG_RANGED);
     ATTRIB(Vore, m_mins, vector, '-32 -32 -24');
     ATTRIB(Vore, m_maxs, vector, '32 32 64');
-#ifndef MENUQC
+#ifdef GAMEQC
     ATTRIB(Vore, m_model, Model, MDL_MON_VORE);
 #endif
     ATTRIB(Vore, netname, string, "vore");
@@ -20,7 +20,7 @@ CLASS(Vore, Monster)
 ENDCLASS(Vore)
 
 REGISTER_MONSTER(VORE, NEW(Vore)) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.mr_precache(this);
 #endif
 }
@@ -227,7 +227,7 @@ spawnfunc(monster_shalrath) { Monster_Spawn(this, true, MON_VORE.monsterid); }
 			return true;
 		}
 		#endif
-		#ifndef MENUQC
+		#ifdef GAMEQC
 		METHOD(Vore, mr_anim, bool(Monster thismon, entity actor))
 		{
 			vector none = '0 0 0';

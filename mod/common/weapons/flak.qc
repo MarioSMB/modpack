@@ -82,7 +82,7 @@ CLASS(Flak, Weapon)
 /* rating    */ ATTRIB(Flak, bot_pickupbasevalue, float, 6000);
 /* color     */ ATTRIB(Flak, wpcolor, vector, '1 1 0');
 /* modelname */ ATTRIB(Flak, mdl, string, "flak");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Flak, m_model, Model, MDL_FLAK_ITEM);
 #endif
 /* crosshair */ ATTRIB(Flak, w_crosshair, string, "gfx/crosshairflak");

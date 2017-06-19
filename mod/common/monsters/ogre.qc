@@ -1,7 +1,7 @@
 #ifndef OGRE_H
 #define OGRE_H
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(MON_OGRE, M_Model("ogre.mdl"));
 
 MSG_INFO_NOTIF(DEATH_SELF_MON_OGRE_MACHINEGUN,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         "^BG%s^K1 was nailed by an Ogre%s%s", "")
@@ -21,7 +21,7 @@ CLASS(Ogre, Monster)
     ATTRIB(Ogre, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MON_FLAG_MELEE | MON_FLAG_RANGED);
     ATTRIB(Ogre, m_mins, vector, '-36 -36 -20');
     ATTRIB(Ogre, m_maxs, vector, '36 36 50');
-#ifndef MENUQC
+#ifdef GAMEQC
     ATTRIB(Ogre, m_model, Model, MDL_MON_OGRE);
 #endif
     ATTRIB(Ogre, netname, string, "ogre");
@@ -29,7 +29,7 @@ CLASS(Ogre, Monster)
 ENDCLASS(Ogre)
 
 REGISTER_MONSTER(OGRE, NEW(Ogre)) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.mr_precache(this);
 #endif
 }
@@ -370,7 +370,7 @@ spawnfunc(monster_ogre) { Monster_Spawn(this, true, MON_OGRE.monsterid); }
 			return true;
 		}
 		#endif
-		#ifndef MENUQC
+		#ifdef GAMEQC
 		METHOD(Ogre, mr_anim, bool(Monster thismon, entity actor))
 		{
 			vector none = '0 0 0';

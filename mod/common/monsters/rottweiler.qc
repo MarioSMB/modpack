@@ -1,7 +1,7 @@
 #ifndef ROTTWEILER_H
 #define ROTTWEILER_H
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(MON_ROTTWEILER, M_Model("dog.mdl"));
 
 MSG_INFO_NOTIF(DEATH_SELF_MON_ROTTWEILER_MELEE,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         "^BG%s^K1 was mauled by a Rottweiler%s%s", "")
@@ -13,7 +13,7 @@ CLASS(Rottweiler, Monster)
     ATTRIB(Rottweiler, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MON_FLAG_MELEE | MON_FLAG_RIDE);
     ATTRIB(Rottweiler, m_mins, vector, '-16 -16 -24');
     ATTRIB(Rottweiler, m_maxs, vector, '16 16 12');
-#ifndef MENUQC
+#ifdef GAMEQC
     ATTRIB(Rottweiler, m_model, Model, MDL_MON_ROTTWEILER);
 #endif
     ATTRIB(Rottweiler, netname, string, "rottweiler");
@@ -21,7 +21,7 @@ CLASS(Rottweiler, Monster)
 ENDCLASS(Rottweiler)
 
 REGISTER_MONSTER(ROTTWEILER, NEW(Rottweiler)) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.mr_precache(this);
 #endif
 }
@@ -98,7 +98,7 @@ spawnfunc(monster_dog) { Monster_Spawn(this, true, MON_ROTTWEILER.monsterid); }
 			return true;
 		}
 		#endif
-		#ifndef MENUQC
+		#ifdef GAMEQC
 		METHOD(Rottweiler, mr_anim, bool(Monster thismon, entity actor))
 		{
 			vector none = '0 0 0';

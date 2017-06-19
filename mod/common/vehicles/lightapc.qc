@@ -1,7 +1,7 @@
 #ifndef VEHICLE_LIGHTAPC
 #define VEHICLE_LIGHTAPC
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(LIGHTAPC_DELUGE, "models/mountedguns/delugegun.iqm");
 MODEL(LIGHTAPC_SHLAC, "models/mountedguns/shlacgun.iqm");
 MODEL(LIGHTAPC_GRAIL, "models/mountedguns/grailgun.iqm");

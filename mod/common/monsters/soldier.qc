@@ -1,7 +1,7 @@
 #ifndef SOLDIER_H
 #define SOLDIER_H
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(MON_SOLDIER, M_Model("soldier.mdl"));
 #endif
 
@@ -9,7 +9,7 @@ CLASS(Soldier, Monster)
     ATTRIB(Soldier, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MON_FLAG_MELEE | MON_FLAG_RANGED);
     ATTRIB(Soldier, m_mins, vector, '-16 -16 -24');
     ATTRIB(Soldier, m_maxs, vector, '16 16 40');
-#ifndef MENUQC
+#ifdef GAMEQC
     ATTRIB(Soldier, m_model, Model, MDL_MON_SOLDIER);
 #endif
     ATTRIB(Soldier, netname, string, "soldier");
@@ -17,7 +17,7 @@ CLASS(Soldier, Monster)
 ENDCLASS(Soldier)
 
 REGISTER_MONSTER(SOLDIER, NEW(Soldier)) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.mr_precache(this);
 #endif
 }
@@ -88,7 +88,7 @@ spawnfunc(monster_army) { Monster_Spawn(this, true, MON_SOLDIER.monsterid); }
 			return true;
 		}
 		#endif
-		#ifndef MENUQC
+		#ifdef GAMEQC
 		METHOD(Soldier, mr_anim, bool(Monster thismon, entity actor))
 		{
 			vector none = '0 0 0';

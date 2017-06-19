@@ -1,4 +1,5 @@
 #ifdef IMPLEMENTATION
+	#include "all.qh"
 	#include "ai.qc"
 	#include "verbstack.qc"
 

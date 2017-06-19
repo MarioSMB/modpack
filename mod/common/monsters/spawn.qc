@@ -1,7 +1,7 @@
 #ifndef TARBABY_H
 #define TARBABY_H
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(MON_TARBABY, M_Model("tarbaby.mdl"));
 #endif
 
@@ -9,7 +9,7 @@ CLASS(Tarbaby, Monster)
     ATTRIB(Tarbaby, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MON_FLAG_MELEE);
     ATTRIB(Tarbaby, m_mins, vector, '-16 -16 -24');
     ATTRIB(Tarbaby, m_maxs, vector, '16 16 40');
-#ifndef MENUQC
+#ifdef GAMEQC
     ATTRIB(Tarbaby, m_model, Model, MDL_MON_TARBABY);
 #endif
     ATTRIB(Tarbaby, netname, string, "spawn");
@@ -17,7 +17,7 @@ CLASS(Tarbaby, Monster)
 ENDCLASS(Tarbaby)
 
 REGISTER_MONSTER(TARBABY, NEW(Tarbaby)) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.mr_precache(this);
 #endif
 }
@@ -99,7 +99,7 @@ spawnfunc(monster_tarbaby) { Monster_Spawn(this, true, MON_TARBABY.monsterid); }
 			return true;
 		}
 		#endif
-		#ifndef MENUQC
+		#ifdef GAMEQC
 		METHOD(Tarbaby, mr_anim, bool(Tarbaby thismon, entity actor))
 		{
 			vector none = '0 0 0';

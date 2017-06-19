@@ -1,7 +1,7 @@
 #ifndef ENFORCER_H
 #define ENFORCER_H
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(MON_ENFORCER, M_Model("enforcer.mdl"));
 
 MSG_INFO_NOTIF(DEATH_SELF_MON_ENFORCER_PLASMA,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         "^BG%s^K1 was blasted to death by an Enforcer%s%s", "")
@@ -13,7 +13,7 @@ CLASS(Enforcer, Monster)
     ATTRIB(Enforcer, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MON_FLAG_MELEE | MON_FLAG_RANGED);
     ATTRIB(Enforcer, m_mins, vector, '-16 -16 -24');
     ATTRIB(Enforcer, m_maxs, vector, '16 16 40');
-#ifndef MENUQC
+#ifdef GAMEQC
     ATTRIB(Enforcer, m_model, Model, MDL_MON_ENFORCER);
 #endif
     ATTRIB(Enforcer, netname, string, "enforcer");
@@ -21,7 +21,7 @@ CLASS(Enforcer, Monster)
 ENDCLASS(Enforcer)
 
 REGISTER_MONSTER(ENFORCER, NEW(Enforcer)) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.mr_precache(this);
 #endif
 }
@@ -179,7 +179,7 @@ spawnfunc(monster_enforcer) { Monster_Spawn(this, true, MON_ENFORCER.monsterid);
 			return true;
 		}
 		#endif
-		#ifndef MENUQC
+		#ifdef GAMEQC
 		METHOD(Enforcer, mr_anim, bool(Monster thismon, entity actor))
 		{
 			vector none = '0 0 0';

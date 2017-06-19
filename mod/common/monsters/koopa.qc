@@ -1,7 +1,7 @@
 #ifndef KOOPA_H
 #define KOOPA_H
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(MON_KOOPA, M_Model("koopa.dpm"));
 MODEL(MON_KOOPA_DEAD, M_Model("koopa_shell.md3"));
 
@@ -14,7 +14,7 @@ CLASS(Koopa, Monster)
     ATTRIB(Koopa, spawnflags, int, MONSTER_TYPE_PASSIVE | MON_FLAG_CRUSH | MON_FLAG_HIDDEN);
     ATTRIB(Koopa, m_mins, vector, '-15 -15 -32');
     ATTRIB(Koopa, m_maxs, vector, '15 15 10');
-#ifndef MENUQC
+#ifdef GAMEQC
     ATTRIB(Koopa, m_model, Model, MDL_MON_KOOPA);
 #endif
     ATTRIB(Koopa, netname, string, "koopa");
@@ -22,7 +22,7 @@ CLASS(Koopa, Monster)
 ENDCLASS(Koopa)
 
 REGISTER_MONSTER(KOOPA, NEW(Koopa)) {
-#ifndef MENUQC
+#ifdef GAMEQC
     this.mr_precache(this);
 #endif
 }
@@ -111,7 +111,7 @@ spawnfunc(monster_koopa) { Monster_Spawn(this, true, MON_KOOPA.monsterid); }
 			return true;
 		}
 		#endif
-		#ifndef MENUQC
+		#ifdef GAMEQC
 		METHOD(Koopa, mr_anim, bool(Monster thismon, entity actor))
 		{
 			vector none = '0 0 0';
