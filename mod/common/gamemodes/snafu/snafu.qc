@@ -155,13 +155,17 @@ bool SNAFU_CheckWinner()
 			RandomSelection_Init();
 			RandomSelection_AddFloat(1, autocvar_g_snafu_fatty_chance, 1);
 			RandomSelection_AddFloat(2, autocvar_g_snafu_princess_chance, 1);
-			RandomSelection_AddFloat(3, 0.10, 1);
+		#if 0
+			RandomSelection_AddFloat(3, autocvar_g_snafu_vprincess_chance, 1);
+		#endif
 
 			switch(RandomSelection_chosen_float)
 			{
 				case 1: snafu_fatty_create(e);
 				case 2: snafu_princess_create(e);
+			#if 0
 				case 3: snafu_vprincess_create(e);
+			#endif
 			}
 		}
 		return false;

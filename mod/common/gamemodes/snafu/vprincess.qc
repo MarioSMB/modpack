@@ -230,6 +230,8 @@ void snafu_vprincess_create(entity own)
     zom.solid           = SOLID_SLIDEBOX;
     zom.deadflag        = DEAD_NO;
     zom.takedamage      = DAMAGE_AIM;
+    zom.damagedbycontents = true;
+    IL_PUSH(g_damagedbycontents, zom);
     zom.event_damage    = snafu_princess_damage;    
     zom.snafu_ai_flags  = SAF_ZOMBIE;
     zom.damageforcescale = 3;

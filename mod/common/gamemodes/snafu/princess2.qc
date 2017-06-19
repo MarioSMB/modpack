@@ -254,6 +254,8 @@ void snafu_princess_create(entity own)
 	zom.solid = SOLID_BBOX;
 	zom.deadflag = DEAD_NO;
 	zom.takedamage = DAMAGE_AIM;
+	zom.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, zom);
 	zom.health = autocvar_g_snafu_princess_health;
 	setthink(zom, snafu_princess_think);
 	zom.nextthink = time;
