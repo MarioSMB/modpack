@@ -21,8 +21,4 @@ CLASS(Troll, Monster)
     ATTRIB(Troll, monster_name, string, _("Troll"));
 ENDCLASS(Troll)
 
-REGISTER_MONSTER(TROLL, NEW(Troll)) {
-#ifdef GAMEQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(TROLL, NEW(Troll));

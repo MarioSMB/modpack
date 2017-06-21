@@ -16,11 +16,7 @@ CLASS(Spawner, Monster)
     ATTRIB(Spawner, monster_name, string, "Spawner");
 ENDCLASS(Spawner)
 
-REGISTER_MONSTER(SPAWNER, NEW(Spawner)) {
-#ifdef GAMEQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(SPAWNER, NEW(Spawner));
 
 #endif
 

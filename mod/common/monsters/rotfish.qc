@@ -21,11 +21,7 @@ CLASS(Rotfish, Monster)
     ATTRIB(Rotfish, monster_name, string, "Rotfish");
 ENDCLASS(Rotfish)
 
-REGISTER_MONSTER(ROTFISH, NEW(Rotfish)) {
-#ifdef GAMEQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(ROTFISH, NEW(Rotfish));
 
 #endif
 
@@ -116,10 +112,6 @@ spawnfunc(monster_fish) { Monster_Spawn(this, true, MON_ROTFISH.monsterid); }
 			//actor.monster_loot = ITEM_HealthBig;
 			actor.monster_attackfunc = M_Rotfish_Attack;
 
-			return true;
-		}
-		METHOD(Rotfish, mr_precache, bool(Monster thismon))
-		{
 			return true;
 		}
 		#endif

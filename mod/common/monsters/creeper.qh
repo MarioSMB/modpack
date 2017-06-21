@@ -21,8 +21,4 @@ CLASS(Creeper, Monster)
     ATTRIB(Creeper, monster_name, string, _("Creeper"));
 ENDCLASS(Creeper)
 
-REGISTER_MONSTER(CREEPER, NEW(Creeper)) {
-#ifdef GAMEQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(CREEPER, NEW(Creeper));

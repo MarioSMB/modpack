@@ -628,7 +628,10 @@ bool lightapc_pilot_frame(entity this, float dt)
 
 	makevectors(vehic.angles + '-2 0 0' * vehic.angles_x);
 	
+	vector oldmax = vehic.maxs;
+	vehic.maxs += vehic.hitboxmf.maxs;
 	movelib_groundalign4point(vehic, autocvar_g_vehicle_lightapc_springlength, autocvar_g_vehicle_lightapc_springup, autocvar_g_vehicle_lightapc_springblend, autocvar_g_vehicle_lightapc_tiltlimit);
+	vehic.maxs = oldmax;
 
 	if(IS_ONGROUND(vehic))
 	{

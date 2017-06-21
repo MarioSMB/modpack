@@ -16,11 +16,7 @@ CLASS(Soldier, Monster)
     ATTRIB(Soldier, monster_name, string, "Soldier");
 ENDCLASS(Soldier)
 
-REGISTER_MONSTER(SOLDIER, NEW(Soldier)) {
-#ifdef GAMEQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(SOLDIER, NEW(Soldier));
 
 #endif
 
@@ -114,10 +110,6 @@ spawnfunc(monster_army) { Monster_Spawn(this, true, MON_SOLDIER.monsterid); }
 			actor.monster_loot = ITEM_Shells;
 			actor.monster_attackfunc = M_Soldier_Attack;
 
-			return true;
-		}
-		METHOD(Soldier, mr_precache, bool(Monster thismon))
-		{
 			return true;
 		}
 		#endif

@@ -110,12 +110,6 @@ METHOD(Troll, mr_setup, bool(Troll this, entity actor))
 
     return true;
 }
-
-METHOD(Troll, mr_precache, bool(Troll this))
-{
-    TC(Troll, this);
-    return true;
-}
 #endif
 
 #endif

@@ -19,11 +19,7 @@ CLASS(Vore, Monster)
     ATTRIB(Vore, monster_name, string, "Vore");
 ENDCLASS(Vore)
 
-REGISTER_MONSTER(VORE, NEW(Vore)) {
-#ifdef GAMEQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(VORE, NEW(Vore));
 
 CLASS(VoreSpike, PortoLaunch)
 /* flags     */ ATTRIB(VoreSpike, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
@@ -253,10 +249,6 @@ spawnfunc(monster_shalrath) { Monster_Spawn(this, true, MON_VORE.monsterid); }
 			//actor.monster_loot = ITEM_HealthBig;
 			actor.monster_attackfunc = M_Vore_Attack;
 
-			return true;
-		}
-		METHOD(Vore, mr_precache, bool(Monster thismon))
-		{
 			return true;
 		}
 		#endif

@@ -21,11 +21,7 @@ CLASS(Koopa, Monster)
     ATTRIB(Koopa, monster_name, string, "Koopa");
 ENDCLASS(Koopa)
 
-REGISTER_MONSTER(KOOPA, NEW(Koopa)) {
-#ifdef GAMEQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(KOOPA, NEW(Koopa));
 
 #endif
 
@@ -139,10 +135,6 @@ spawnfunc(monster_koopa) { Monster_Spawn(this, true, MON_KOOPA.monsterid); }
 
 			settouch(actor, M_Koopa_Touch);
 
-			return true;
-		}
-		METHOD(Koopa, mr_precache, bool(Monster thismon))
-		{
 			return true;
 		}
 		#endif

@@ -20,11 +20,7 @@ CLASS(Rottweiler, Monster)
     ATTRIB(Rottweiler, monster_name, string, "Rottweiler");
 ENDCLASS(Rottweiler)
 
-REGISTER_MONSTER(ROTTWEILER, NEW(Rottweiler)) {
-#ifdef GAMEQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(ROTTWEILER, NEW(Rottweiler));
 
 #endif
 
@@ -128,10 +124,6 @@ spawnfunc(monster_dog) { Monster_Spawn(this, true, MON_ROTTWEILER.monsterid); }
 			actor.monster_loot = ITEM_HealthSmall;
 			actor.monster_attackfunc = M_Rottweiler_Attack;
 
-			return true;
-		}
-		METHOD(Rottweiler, mr_precache, bool(Monster thismon))
-		{
 			return true;
 		}
 		#endif

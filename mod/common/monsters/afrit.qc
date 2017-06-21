@@ -22,11 +22,7 @@ CLASS(Afrit, Monster)
     ATTRIB(Afrit, monster_name, string, "Afrit");
 ENDCLASS(Afrit)
 
-REGISTER_MONSTER(AFRIT, NEW(Afrit)) {
-#ifdef GAMEQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(AFRIT, NEW(Afrit));
 
 #endif
 
@@ -218,10 +214,6 @@ spawnfunc(monster_afrit) { Monster_Spawn(this, true, MON_AFRIT.monsterid); }
 			//actor.monster_loot = ITEM_Cells;
 			actor.monster_attackfunc = M_Afrit_Attack;
 
-			return true;
-		}
-		METHOD(Afrit, mr_precache, bool(Afrit thismon))
-		{
 			return true;
 		}
 		#endif

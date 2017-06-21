@@ -24,11 +24,7 @@ CLASS(Demon, Monster)
     ATTRIB(Demon, monster_name, string, "Demon");
 ENDCLASS(Demon)
 
-REGISTER_MONSTER(DEMON, NEW(Demon)) {
-#ifdef GAMEQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(DEMON, NEW(Demon));
 
 #endif
 
@@ -152,10 +148,6 @@ spawnfunc(monster_demon1) { Monster_Spawn(this, true, MON_DEMON.monsterid); }
 			actor.monster_loot = ITEM_HealthBig;
 			actor.monster_attackfunc = M_Demon_Attack;
 
-			return true;
-		}
-		METHOD(Demon, mr_precache, bool(Monster thismon))
-		{
 			return true;
 		}
 		#endif

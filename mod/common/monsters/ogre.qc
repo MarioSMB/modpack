@@ -28,11 +28,7 @@ CLASS(Ogre, Monster)
     ATTRIB(Ogre, monster_name, string, "Ogre");
 ENDCLASS(Ogre)
 
-REGISTER_MONSTER(OGRE, NEW(Ogre)) {
-#ifdef GAMEQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(OGRE, NEW(Ogre));
 
 #endif
 
@@ -408,10 +404,6 @@ spawnfunc(monster_ogre) { Monster_Spawn(this, true, MON_OGRE.monsterid); }
 			actor.spawnshieldtime = actor.spawn_time;
 			actor.monster_attackfunc = M_Ogre_Attack;
 
-			return true;
-		}
-		METHOD(Ogre, mr_precache, bool(Monster thismon))
-		{
 			return true;
 		}
 		#endif

@@ -18,11 +18,7 @@ CLASS(Scrag, Monster)
     ATTRIB(Scrag, monster_name, string, "Scrag");
 ENDCLASS(Scrag)
 
-REGISTER_MONSTER(SCRAG, NEW(Scrag)) {
-#ifdef GAMEQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(SCRAG, NEW(Scrag));
 
 CLASS(ScragAttack, PortoLaunch)
 /* flags     */ ATTRIB(ScragAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
@@ -200,10 +196,6 @@ spawnfunc(monster_scrag) { Monster_Spawn(this, true, MON_SCRAG.monsterid); }
 			//actor.monster_loot = ITEM_Cells;
 			actor.monster_attackfunc = M_Scrag_Attack;
 
-			return true;
-		}
-		METHOD(Scrag, mr_precache, bool(Scrag thismon))
-		{
 			return true;
 		}
 		#endif

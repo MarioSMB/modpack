@@ -20,11 +20,7 @@ CLASS(Enforcer, Monster)
     ATTRIB(Enforcer, monster_name, string, "Enforcer");
 ENDCLASS(Enforcer)
 
-REGISTER_MONSTER(ENFORCER, NEW(Enforcer)) {
-#ifdef GAMEQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(ENFORCER, NEW(Enforcer));
 
 #endif
 
@@ -211,10 +207,6 @@ spawnfunc(monster_enforcer) { Monster_Spawn(this, true, MON_ENFORCER.monsterid);
 			actor.weapon = WEP_CRYLINK.m_id;
 			actor.monster_attackfunc = M_Enforcer_Attack;
 
-			return true;
-		}
-		METHOD(Enforcer, mr_precache, bool(Monster thismon))
-		{
 			return true;
 		}
 		#endif

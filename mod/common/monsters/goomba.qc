@@ -21,11 +21,7 @@ CLASS(Goomba, Monster)
     ATTRIB(Goomba, monster_name, string, "Goomba");
 ENDCLASS(Goomba)
 
-REGISTER_MONSTER(GOOMBA, NEW(Goomba)) {
-#ifdef GAMEQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(GOOMBA, NEW(Goomba));
 
 #endif
 
@@ -139,10 +135,6 @@ spawnfunc(monster_goomba) { Monster_Spawn(this, true, MON_GOOMBA.monsterid); }
 
 			settouch(actor, M_Goomba_Touch);
 
-			return true;
-		}
-		METHOD(Goomba, mr_precache, bool(Monster thismon))
-		{
 			return true;
 		}
 		#endif

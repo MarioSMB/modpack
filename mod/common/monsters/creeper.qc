@@ -129,12 +129,6 @@ METHOD(Creeper, mr_setup, bool(Creeper this, entity actor))
 
     return true;
 }
-
-METHOD(Creeper, mr_precache, bool(Creeper this))
-{
-    TC(Creeper, this);
-    return true;
-}
 #endif
 
 #endif

@@ -16,11 +16,7 @@ CLASS(Tarbaby, Monster)
     ATTRIB(Tarbaby, monster_name, string, "Tarbaby");
 ENDCLASS(Tarbaby)
 
-REGISTER_MONSTER(TARBABY, NEW(Tarbaby)) {
-#ifdef GAMEQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(TARBABY, NEW(Tarbaby));
 
 #endif
 
@@ -125,10 +121,6 @@ spawnfunc(monster_tarbaby) { Monster_Spawn(this, true, MON_TARBABY.monsterid); }
 			actor.monster_attackfunc = M_Tarbaby_Attack;
 			actor.damageforcescale = 0.01; // no push while spawning
 
-			return true;
-		}
-		METHOD(Tarbaby, mr_precache, bool(Tarbaby thismon))
-		{
 			return true;
 		}
 		#endif
