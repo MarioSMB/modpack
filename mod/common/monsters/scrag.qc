@@ -1,7 +1,7 @@
 #ifndef SCRAG_H
 #define SCRAG_H
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(MON_SCRAG, M_Model("scrag.mdl"));
 
 SOUND(SCRAG_FIRESPIKE, W_Sound("electro_fire"));
@@ -9,20 +9,16 @@ SOUND(SCRAG_FIRESPIKE, W_Sound("electro_fire"));
 
 CLASS(Scrag, Monster)
     ATTRIB(Scrag, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MONSTER_TYPE_FLY | MON_FLAG_RANGED);
-    ATTRIB(Scrag, mins, vector, '-16 -16 -24');
-    ATTRIB(Scrag, maxs, vector, '16 16 40');
-#ifndef MENUQC
+    ATTRIB(Scrag, m_mins, vector, '-16 -16 -24');
+    ATTRIB(Scrag, m_maxs, vector, '16 16 40');
+#ifdef GAMEQC
     ATTRIB(Scrag, m_model, Model, MDL_MON_SCRAG);
 #endif
     ATTRIB(Scrag, netname, string, "scrag");
     ATTRIB(Scrag, monster_name, string, "Scrag");
 ENDCLASS(Scrag)
 
-REGISTER_MONSTER(SCRAG, NEW(Scrag)) {
-#ifndef MENUQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(SCRAG, NEW(Scrag));
 
 CLASS(ScragAttack, PortoLaunch)
 /* flags     */ ATTRIB(ScragAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
@@ -175,7 +171,7 @@ spawnfunc(monster_scrag) { Monster_Spawn(this, true, MON_SCRAG.monsterid); }
 			return true;
 		}
 		#endif
-		#ifndef MENUQC
+		#ifdef GAMEQC
 		METHOD(Scrag, mr_anim, bool(Scrag thismon, entity actor))
 		{
 			vector none = '0 0 0';
@@ -200,10 +196,6 @@ spawnfunc(monster_scrag) { Monster_Spawn(this, true, MON_SCRAG.monsterid); }
 			//actor.monster_loot = ITEM_Cells;
 			actor.monster_attackfunc = M_Scrag_Attack;
 
-			return true;
-		}
-		METHOD(Scrag, mr_precache, bool(Scrag thismon))
-		{
 			return true;
 		}
 		#endif

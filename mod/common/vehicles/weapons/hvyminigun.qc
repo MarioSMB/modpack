@@ -1,4 +1,4 @@
-#ifndef MENUQC
+#ifdef GAMEQC
 SOUND(LIGHTAPC_HVYMINIGUN_FIRE, W_Sound("campingrifle_fire_bass"));
 #endif
 

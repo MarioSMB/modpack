@@ -1,7 +1,7 @@
 #ifndef VEHICLE_LIGHTAPC
 #define VEHICLE_LIGHTAPC
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(LIGHTAPC_DELUGE, "models/mountedguns/delugegun.iqm");
 MODEL(LIGHTAPC_SHLAC, "models/mountedguns/shlacgun.iqm");
 MODEL(LIGHTAPC_GRAIL, "models/mountedguns/grailgun.iqm");
@@ -29,8 +29,8 @@ SOUND(LIGHTAPC_DMG_2, "onslaught/electricity_explode");
 #endif
 
 CLASS(LightAPC, Vehicle)
-/* mins       */ ATTRIB(LightAPC, mins, vector, '-120 -120 0' * 0.5);
-/* maxs       */ ATTRIB(LightAPC, maxs, vector, '120 120 250' * 0.5);
+/* mins       */ ATTRIB(LightAPC, m_mins, vector, '-120 -120 0' * 0.5);
+/* maxs       */ ATTRIB(LightAPC, m_maxs, vector, '120 120 250' * 0.5);
 /* view offset*/ ATTRIB(LightAPC, view_ofs, vector, '0 0 50');
 /* view dist  */ ATTRIB(LightAPC, height, float, 400);
 /* model	  */ ATTRIB(LightAPC, mdl, string, "models/vehicles/lightapc.dpm");
@@ -274,129 +274,34 @@ void lightapc_hitbox_touch(entity this, entity toucher)
 	lightapc_hitbox_touch2(this.owner, toucher); // This way this.subordinate is tested for max_z rather than this
 }
 
-void lightapc_damage_hitboxft(entity this, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void lightapc_damage_hitbox(entity this, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
 {
 	if(this.owner.event_damage)
 		this.owner.event_damage(this.owner, inflictor, attacker, damage, deathtype, hitloc, force);
-
-#if 0
-	if(this.vehicle_health <= 0)
-	{
-		//print("FWD DMG\n");
-		this.event_damage = func_null;
-		this.takedamage = DAMAGE_NO;
-		settouch(this, func_null);
-		setthink(this, func_null);
-		this.deadflag = DEAD_DEAD;
-		this.solid = SOLID_NOT;
-	}
-	else
-	{
-		this.dmg_time = time;
-	
-		this.vehicle_health -= damage;
-		
-		if(sound_allowed(MSG_BROADCAST, attacker))
-			spamsound (this, CH_PAIN, SND(LIGHTAPC_IMPACT_1), VOL_BASE, ATTN_NORM);
-	}
-#endif
 }
 
-void lightapc_damage_hitboxbk(entity this, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
-{
-	if(this.owner.event_damage)
-		this.owner.event_damage(this.owner, inflictor, attacker, damage, deathtype, hitloc, force);
-
-#if 0
-	if(this.vehicle_health <= 0)
-	{
-		this.event_damage = func_null;
-		this.takedamage = DAMAGE_NO;
-		settouch(this, func_null);
-		setthink(this, func_null);
-		this.deadflag = DEAD_DEAD;
-		this.solid = SOLID_NOT;
-	}
-	else
-	{
-		this.dmg_time = time;
-		
-		//ShieldStuff
-		if((this.owner.vehicle_flags & VHF_HASSHIELD) && (this.owner.vehicle_shield > 0))
-		{
-			if (wasfreed(this.owner.vehicle_shieldent) || this.owner.vehicle_shieldent == NULL)
-			{
-				this.owner.vehicle_shieldent = spawn();
-				this.owner.vehicle_shieldent.effects = EF_LOWPRECISION;
-
-				setmodel(this.owner.vehicle_shieldent, MDL_VEH_SHIELD);
-				setattachment(this.owner.vehicle_shieldent, this.owner, "");
-				setorigin(this.owner.vehicle_shieldent, real_origin(this.owner) - this.owner.origin);
-				this.owner.vehicle_shieldent.scale       = 256 / vlen(this.owner.maxs - this.owner.mins);
-				setthink(this.owner.vehicle_shieldent, shieldhit_think);
-			}
-
-			this.owner.vehicle_shieldent.colormod    = '1 1 1';
-			this.owner.vehicle_shieldent.alpha       = 0.45;
-			this.owner.vehicle_shieldent.angles      = vectoangles(normalize(hitloc - (this.owner.origin + this.owner.vehicle_shieldent.origin))) - this.owner.angles;
-			this.owner.vehicle_shieldent.nextthink   = time;
-			this.owner.vehicle_shieldent.effects &= ~EF_NODRAW;
-
-			this.owner.vehicle_shield -= damage;
-
-			if(this.owner.vehicle_shield < 0)
-			{
-				this.owner.vehicle_health            -= fabs(this.owner.vehicle_shield);
-				this.owner.vehicle_shieldent.colormod = '2 0 0';
-				this.owner.vehicle_shield             = 0;
-				this.owner.vehicle_shieldent.alpha    = 0.75;
-
-				if(sound_allowed(MSG_BROADCAST, attacker))
-					spamsound (this.owner, CH_PAIN, SND(LIGHTAPC_DMG_1), VOL_BASE, ATTN_NORM);   // FIXME: PLACEHOLDER
-			}
-			else if(sound_allowed(MSG_BROADCAST, attacker))
-				spamsound (this.owner, CH_PAIN, SND(LIGHTAPC_DMG_2), VOL_BASE, ATTN_NORM);  // FIXME: PLACEHOLDER
-
-		}
-		else
-		{
-			//No Shield
-			this.vehicle_health -= damage;
-			
-			if(sound_allowed(MSG_BROADCAST, attacker))
-				spamsound (this, CH_PAIN, SND(LIGHTAPC_IMPACT_2), VOL_BASE, ATTN_NORM);
-
-			vehicles_damage(this.owner, inflictor, attacker, damage, deathtype, hitloc, force);
-		}
-	}
-#endif
-}
-
-void lightapc_spawn_hitbox(float position, entity vehic, entity hitbox, vector min_s, vector max_s, float fwd_s, float vehic_health)
+void lightapc_spawn_hitbox(entity vehic, entity hitbox, vector min_s, vector max_s, float fwd_s)
 {
 	hitbox.owner = vehic;
 	settouch(hitbox, lightapc_hitbox_touch);
 
-	if (position == 1)
-		hitbox.event_damage = lightapc_damage_hitboxbk;
-	else
-		hitbox.event_damage = lightapc_damage_hitboxft;
+	hitbox.event_damage = lightapc_damage_hitbox;
 
-	hitbox.bot_attack         = true;
 	if(!hitbox.bot_attack)
 		IL_PUSH(g_bot_targets, hitbox);
-	hitbox.iscreature         = true;
-	hitbox.teleportable       = false; // no teleporting for vehicles, too buggy
-	hitbox.damagedbycontents  = true;
+	hitbox.bot_attack = true;
+	hitbox.iscreature = true;
+	hitbox.teleportable = false; // no teleporting for vehicles, too buggy
 	if(!hitbox.damagedbycontents)
 		IL_PUSH(g_damagedbycontents, hitbox);
+	hitbox.damagedbycontents = true;
 	set_movetype(hitbox, MOVETYPE_WALK);
 	hitbox.solid              = SOLID_SLIDEBOX;
 	hitbox.takedamage         = DAMAGE_AIM;
 	hitbox.deadflag           = DEAD_NO;
 	hitbox.flags              = FL_NOTARGET;
 	setthink(hitbox, func_null);
-	hitbox.vehicle_health = vehic_health;
+	hitbox.vehicle_health = vehic.vehicle_health;
 	hitbox.netname = hitbox.owner.netname;
 	setsize(hitbox, min_s, max_s);
 	makevectors(vehic.angles_x * '-1 0 0' + vehic.angles_y * '0 1 0' + vehic.angles_z * '0 0 1'); // Inverted pitch on models
@@ -595,7 +500,7 @@ void lightapc_gunner_exit(entity this, int _exitflag)
 	}
 
 	CSQCVehicleSetup(player, HUD_NORMAL);
-	setsize(player, STAT(PL_MIN, NULL), STAT(PL_MAX, NULL));
+	setsize(player, STAT(PL_MIN, player), STAT(PL_MAX, player));
 
 	player.takedamage     = DAMAGE_AIM;
 	player.solid          = SOLID_SLIDEBOX;
@@ -603,7 +508,7 @@ void lightapc_gunner_exit(entity this, int _exitflag)
 	player.effects       &= ~EF_NODRAW;
 	player.alpha          = 1;
 	player.PlayerPhysplug = func_null;
-	player.view_ofs       = STAT(PL_VIEW_OFS, NULL);
+	player.view_ofs       = STAT(PL_VIEW_OFS, player);
 	player.event_damage   = PlayerDamage;
 	player.hud            = HUD_NORMAL;
 	player.teleportable	  = TELEPORT_NORMAL;
@@ -723,7 +628,10 @@ bool lightapc_pilot_frame(entity this, float dt)
 
 	makevectors(vehic.angles + '-2 0 0' * vehic.angles_x);
 	
+	vector oldmax = vehic.maxs;
+	vehic.maxs += vehic.hitboxmf.maxs;
 	movelib_groundalign4point(vehic, autocvar_g_vehicle_lightapc_springlength, autocvar_g_vehicle_lightapc_springup, autocvar_g_vehicle_lightapc_springblend, autocvar_g_vehicle_lightapc_tiltlimit);
+	vehic.maxs = oldmax;
 
 	if(IS_ONGROUND(vehic))
 	{
@@ -1113,7 +1021,7 @@ void lightapc_spawn_gunner(entity vehic, string tagname)
 
 entity lightapc_spawn_tire(entity vehic, string tagname)
 {
-	entity spinner = spawn();
+	entity spinner = new(lightapctire);
 	spinner.owner = vehic;
 	setmodel(spinner, MDL_LIGHTAPC_TIRE);
 	setattachment(spinner, vehic, tagname);
@@ -1167,13 +1075,30 @@ METHOD(LightAPC, vr_gunner_enter, void(LightAPC thisveh, entity instance, entity
 #endif
 }
 
+METHOD(LightAPC, vr_setcolors, void(LightAPC thisveh, entity instance))
+{
+#ifdef SVQC
+	entity veh = instance; // too big a word for so many cases
+
+	veh.bomb1.gun1.colormap = veh.bomb1.gun2.colormap = veh.bomb2.gun1.colormap = veh.bomb2.gun2.colormap = veh.bomb3.gun1.colormap = veh.bomb3.gun2.colormap = veh.bomb4.gun1.colormap = veh.bomb4.gun2.colormap = veh.colormap;
+	veh.bomb1.gun1.colormod = veh.bomb1.gun2.colormod = veh.bomb2.gun1.colormod = veh.bomb2.gun2.colormod = veh.bomb3.gun1.colormod = veh.bomb3.gun2.colormod = veh.bomb4.gun1.colormod = veh.bomb4.gun2.colormod = veh.colormod;
+	veh.bomb1.gun1.effects = veh.bomb1.gun2.effects = veh.bomb2.gun1.effects = veh.bomb2.gun2.effects = veh.bomb3.gun1.effects = veh.bomb3.gun2.effects = veh.bomb4.gun1.effects = veh.bomb4.gun2.effects = veh.effects;
+	veh.bomb1.gun1.alpha = veh.bomb1.gun2.alpha = veh.bomb2.gun1.alpha = veh.bomb2.gun2.alpha = veh.bomb3.gun1.alpha = veh.bomb3.gun2.alpha = veh.bomb4.gun1.alpha = veh.bomb4.gun2.alpha = 1;
+
+	veh.gun1.colormap = veh.gun2.colormap = veh.colormap;
+	veh.gun1.colormod = veh.gun2.colormod = veh.colormod;
+	veh.gun1.effects = veh.gun2.effects = veh.effects;
+	veh.gun1.alpha = veh.gun2.alpha = 1;
+#endif
+}
+
 METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 {
 #ifdef SVQC
 	if(!instance.gun1)
 	{
 		// for some reason, autosizing of the shield entity refuses to work for this one so set it up in advance.
-		instance.vehicle_shieldent = spawn();
+		instance.vehicle_shieldent = new(vehicle_shield);
 		instance.vehicle_shieldent.effects = EF_LOWPRECISION;
 		setmodel(instance.vehicle_shieldent, MDL_VEH_SHIELD);
 		setattachment(instance.vehicle_shieldent, instance, "");
@@ -1183,13 +1108,13 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 		instance.vehicle_shieldent.alpha = -1;
 		instance.vehicle_shieldent.effects = EF_LOWPRECISION | EF_NODRAW;
 		
-		instance.gun1 = spawn();
-		instance.gun2 = spawn();
+		instance.gun1 = new(lightapcgunner);
+		instance.gun2 = new(lightapcgunner);
 
-		instance.bomb1 = spawn();
-		instance.bomb2 = spawn();
-		instance.bomb3 = spawn();
-		instance.bomb4 = spawn();
+		instance.bomb1 = new(lightapcwheelcontroller);
+		instance.bomb2 = new(lightapcwheelcontroller);
+		instance.bomb3 = new(lightapcwheelcontroller);
+		instance.bomb4 = new(lightapcwheelcontroller);
 
 		instance.bomb1.gun1 = lightapc_spawn_tire(instance, "tag_gear_left");
 		instance.bomb1.gun2 = lightapc_spawn_tire(instance, "tag_wheel_left");
@@ -1205,8 +1130,8 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 		instance.gun1.vehicle = instance;
 		instance.gun2.vehicle = instance;
 		
-		instance.bomb5 = spawn();
-		instance.bomb6 = spawn();
+		instance.bomb5 = new(lightapcturret);
+		instance.bomb6 = new(lightapcturret);
 
 		lightapc_setgunnertype(instance.gun1, instance, instance.bomb5);
 		lightapc_setgunnertype(instance.gun2, instance, instance.bomb6);
@@ -1252,8 +1177,8 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 		if (instance.gun2.spawnflags)
 			setattachment(instance.gun2.vehicle_viewport, instance.gun2, "tag_camera");
 
-		instance.hitboxmf = spawn();
-		instance.hitboxmb = spawn();
+		instance.hitboxmf = new(lightapchitbox);
+		instance.hitboxmb = new(lightapchitbox);
 	}
 
 	if(instance.scale != 0.75)
@@ -1293,8 +1218,8 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 	instance.bomb4.gun1.avelocity_y = 0;
 	instance.bomb4.gun2.avelocity_y = 0;
 
-	lightapc_spawn_hitbox(0, instance, instance.hitboxmf, thisveh.mins, thisveh.maxs, 90, autocvar_g_vehicle_lightapc_health);	
-	lightapc_spawn_hitbox(0, instance, instance.hitboxmb, thisveh.mins, thisveh.maxs, -90, autocvar_g_vehicle_lightapc_health);
+	lightapc_spawn_hitbox(instance, instance.hitboxmf, thisveh.m_mins, thisveh.m_maxs, 90);	
+	lightapc_spawn_hitbox(instance, instance.hitboxmb, thisveh.m_mins, thisveh.m_maxs, -90);
 #endif
 }
 

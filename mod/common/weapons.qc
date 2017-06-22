@@ -1,4 +1,4 @@
-#ifndef MENUQC
+#ifdef GAMEQC
 REGISTER_MUTATOR(weapon_models, true);
 #endif
 

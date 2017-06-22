@@ -1,6 +1,6 @@
 #ifndef IMPLEMENTATION
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(CHAINSAW_VIEW,                     W_Model("h_chainsaw.iqm"));
 MODEL(CHAINSAW_WORLD,                    W_Model("v_chainsaw.md3"));
 MODEL(CHAINSAW_ITEM,                     W_Model("g_chainsaw.md3"));
@@ -53,7 +53,7 @@ CLASS(Chainsaw, Weapon)
 /* rating    */ ATTRIB(Chainsaw, bot_pickupbasevalue, float, 6000);
 /* color     */ ATTRIB(Chainsaw, wpcolor, vector, '0.5 0.45 0.25');
 /* modelname */ ATTRIB(Chainsaw, mdl, string, "chainsaw");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Chainsaw, m_model, Model, MDL_CHAINSAW_ITEM);
 #endif
 /* crosshair */ ATTRIB(Chainsaw, w_crosshair, string, "gfx/crosshairrpc");

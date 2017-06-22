@@ -1,26 +1,22 @@
 #ifndef SPAWNER_H
 #define SPAWNER_H
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(MON_SPAWNER, M_Model("spawner.bsp"));
 #endif
 
 CLASS(Spawner, Monster)
 	ATTRIB(Spawner, spawnflags, int, MON_FLAG_HIDDEN);
-    ATTRIB(Spawner, mins, vector, '-32 -32 -24');
-    ATTRIB(Spawner, maxs, vector, '32 32 32');
-#ifndef MENUQC
+    ATTRIB(Spawner, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Spawner, m_maxs, vector, '32 32 32');
+#ifdef GAMEQC
     ATTRIB(Spawner, m_model, Model, MDL_MON_SPAWNER);
 #endif
     ATTRIB(Spawner, netname, string, "spawner");
     ATTRIB(Spawner, monster_name, string, "Spawner");
 ENDCLASS(Spawner)
 
-REGISTER_MONSTER(SPAWNER, NEW(Spawner)) {
-#ifndef MENUQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(SPAWNER, NEW(Spawner));
 
 #endif
 
