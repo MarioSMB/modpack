@@ -187,7 +187,7 @@ void rune_touch(entity this, entity toucher)
 	this.solid = SOLID_NOT;
 	setorigin(this, this.origin);
 
-	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RUNEMATCH_LOST, toucher.netname, this.netname, this.enemy.netname);
+	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RUNEMATCH_PICKUP, toucher.netname, this.netname, this.enemy.netname);
 }
 
 bool rune_spawn_somewhere(entity this)
@@ -547,6 +547,13 @@ MUTATOR_HOOKFUNCTION(rune, ClientDisconnect)
 	entity player = M_ARGV(0, entity);
 	DropAllRunes(player);
 	player.runes = 0;
+}
+
+MUTATOR_HOOKFUNCTION(rune, PlayerDies)
+{
+	entity frag_target = M_ARGV(2, entity);
+	DropAllRunes(frag_target);
+	frag_target.runes = 0;
 }
 
 MUTATOR_HOOKFUNCTION(rune, MakePlayerObserver)
