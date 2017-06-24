@@ -17,6 +17,7 @@ AUTOCVAR(g_runematch_point_leadlimit, float, -1, "Runematch point lead limit ove
 AUTOCVAR(g_runematch_point_limit, float, -1, "Runematch point limit overriding the mapinfo specified one (use 0 to play without limit, and -1 to use the mapinfo's limit)");
 AUTOCVAR(g_runematch_pointamt, float, 1, "");
 AUTOCVAR(g_runematch_pointrate, float, 5, "");
+AUTOCVAR(g_runematch_points_bykill, bool, false, "Count scores by kills instead of giving them over time");
 AUTOCVAR(g_runematch_respawntime, float, 15, "How soon after being dropped to respawn");
 AUTOCVAR(g_runematch_rune_alpha, float, 0.78, "");
 AUTOCVAR(g_runematch_rune_color_strength, float, 1.0, "");
@@ -52,13 +53,13 @@ REGISTER_MUTATOR(rune, false)
 	return 0;
 }
 
-AUTOCVAR_NOREF(g_runematch_respawn_delay_small, float, 0, "");
-AUTOCVAR_NOREF(g_runematch_respawn_delay_small_count, float, 0, "");
-AUTOCVAR_NOREF(g_runematch_respawn_delay_large, float, 0, "");
-AUTOCVAR_NOREF(g_runematch_respawn_delay_large_count, float, 0, "");
-AUTOCVAR_NOREF(g_runematch_respawn_delay_max, float, 0, "");
-AUTOCVAR_NOREF(g_runematch_respawn_waves, float, 0, "");
-AUTOCVAR_NOREF(g_runematch_weapon_stay, float, 0, "");
+AUTOCVAR_NOREF(g_rune_respawn_delay_small, float, 0, "");
+AUTOCVAR_NOREF(g_rune_respawn_delay_small_count, float, 0, "");
+AUTOCVAR_NOREF(g_rune_respawn_delay_large, float, 0, "");
+AUTOCVAR_NOREF(g_rune_respawn_delay_large_count, float, 0, "");
+AUTOCVAR_NOREF(g_rune_respawn_delay_max, float, 0, "");
+AUTOCVAR_NOREF(g_rune_respawn_waves, float, 0, "");
+AUTOCVAR_NOREF(g_rune_weapon_stay, float, 0, "");
 
 AUTOCVAR(g_balance_rune_defense_combo_takedamage, float, 1.0, "");
 AUTOCVAR(g_balance_rune_defense_takedamage, float, 0.5, "");
@@ -187,16 +188,22 @@ void rune_touch(entity this, entity toucher)
 	this.solid = SOLID_NOT;
 	setorigin(this, this.origin);
 
+	sound(toucher, CH_TRIGGER, SND_BUFF_LOST, VOL_BASE, ATTN_NORM);
+
 	Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_RUNEMATCH_PICKUP, toucher.netname, this.netname, this.enemy.netname);
 }
 
 bool rune_spawn_somewhere(entity this)
 {
 	entity spot = rune_find_spawnpoint();
+	vector oldloc = this.origin;
 	if(spot)
 	{
 		spot.owner = this;
 		setorigin(this, spot.origin);
+
+		Send_Effect(EFFECT_ELECTRO_BALLEXPLODE, oldloc, '0 0 0', 1);
+		Send_Effect(EFFECT_ELECTRO_BALLEXPLODE, this.origin, '0 0 0', 1);
 
 		this.owner = spot;
 		spot.owner = this;
@@ -206,6 +213,8 @@ bool rune_spawn_somewhere(entity this)
 	{
 		if(MoveToRandomMapLocation(this, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
 		{
+			Send_Effect(EFFECT_ELECTRO_BALLEXPLODE, oldloc, '0 0 0', 1);
+			Send_Effect(EFFECT_ELECTRO_BALLEXPLODE, this.origin, '0 0 0', 1);
 			// great
 			makevectors(this.angles),
 			this.velocity = v_forward * 250;
@@ -394,7 +403,8 @@ void rune_SpawnRunes(entity this)
 
 float RunematchHandleFrags(entity attacker, entity targ, float f)
 {
-	float newfrags = 0;
+	if(autocvar_g_runematch_points_bykill)
+		return 0;
 
 	if(f <= 0 || attacker == targ)
 		return f;
@@ -402,6 +412,7 @@ float RunematchHandleFrags(entity attacker, entity targ, float f)
 	if(!attacker.runes && !targ.runes)
 		return f - 1 + autocvar_g_runematch_frags_norune; // don't give points to players when no runes are involved.
 		
+	float newfrags = 0;
 	if(attacker.runes)
 		newfrags += autocvar_g_runematch_frags_killedby_runeholder;
 
@@ -416,7 +427,7 @@ float RunematchHandleFrags(entity attacker, entity targ, float f)
 
 MUTATOR_HOOKFUNCTION(rune, SV_StartFrame)
 {
-	if(game_stopped || !autocvar_g_runematch_pointamt)
+	if(game_stopped || !autocvar_g_runematch_pointamt || autocvar_g_runematch_points_bykill)
 		return false;
 	if(runematch_point_time > time)
 		return false;
@@ -551,7 +562,19 @@ MUTATOR_HOOKFUNCTION(rune, ClientDisconnect)
 
 MUTATOR_HOOKFUNCTION(rune, PlayerDies)
 {
+	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
+	if(autocvar_g_runematch_points_bykill && (frag_attacker != frag_target) && IS_PLAYER(frag_attacker))
+	{
+		float runes_score = 0;
+		IL_EACH(g_runematch_runes, it.classname == "rune" && it.owner == frag_attacker,
+		{
+			runes_score += autocvar_g_runematch_pointamt;
+		});
+		if(runes_score)
+			PlayerScore_Add(frag_attacker, SP_SCORE, runes_score);
+	}
+
 	DropAllRunes(frag_target);
 	frag_target.runes = 0;
 }
