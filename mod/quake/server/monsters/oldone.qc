@@ -284,9 +284,13 @@ void finale_4(entity this)
 	delete(this);
 
 // switch cd track
+#if 0
 	WriteByte(MSG_ALL, SVC_CDTRACK);
 	WriteByte(MSG_ALL, 3);
 	WriteByte(MSG_ALL, 3);
+#else
+	SendCDTrack(NULL, 3);
+#endif
 	lightstyle(0, "m");	
 }
 

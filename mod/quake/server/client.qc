@@ -138,6 +138,29 @@ void GotoNextMap()
 		changelevel(nextmap);
 }
 
+string getcdtrack(int numb);
+void SendCDTrack(entity to, int numb)
+{
+	if(!to)
+	{
+		// TODO: doesn't support play/loop
+		string thetrack = getcdtrack(numb);
+		string tostuff = strcat("cd loop ", thetrack, "\n");
+		FOREACH_CLIENT(IS_REAL_CLIENT(it),
+		{
+			stuffcmd(it, tostuff);
+		});
+
+		if(current_cdtrack)
+			strunzone(current_cdtrack);
+		current_cdtrack = strzone(thetrack);
+
+		return;
+	}
+
+	stuffcmd(to, strcat("cd loop ", getcdtrack(numb), "\n"));
+}
+
 void ExitIntermission()
 {
 // skip any text in deathmatch
@@ -157,9 +180,13 @@ void ExitIntermission()
 	{
 		if(world.model == "maps/e1m7.bsp")
 		{
+		#if 0
 			WriteByte(MSG_ALL, SVC_CDTRACK);
 			WriteByte(MSG_ALL, 2);
 			WriteByte(MSG_ALL, 3);
+		#else
+			SendCDTrack(NULL, 3);
+		#endif
 			if(!autocvar_registered)
 			{
 				WriteByte(MSG_ALL, SVC_FINALE);
@@ -174,9 +201,13 @@ void ExitIntermission()
 		}
 		else if(world.model == "maps/e2m6.bsp")
 		{
+		#if 0
 			WriteByte(MSG_ALL, SVC_CDTRACK);
 			WriteByte(MSG_ALL, 2);
 			WriteByte(MSG_ALL, 3);
+		#else
+			SendCDTrack(NULL, 3);
+		#endif
 
 			WriteByte(MSG_ALL, SVC_FINALE);
 			WriteString(MSG_ALL, "The Rune of Black Magic throbs evilly in\nyour hand and whispers dark thoughts\ninto your brain. You learn the inmost\nlore of the Hell-Mother; Shub-Niggurath!\nYou now know that she is behind all the\nterrible plotting which has led to so\nmuch death and horror. But she is not\ninviolate! Armed with this Rune, you\nrealize that once all four Runes are\ncombined, the gate to Shub-Niggurath's\nPit will open, and you can face the\nWitch-Goddess herthis in her frightful\notherworld cathedral.");
@@ -184,9 +215,13 @@ void ExitIntermission()
 		}
 		else if(world.model == "maps/e3m6.bsp")
 		{
+		#if 0
 			WriteByte(MSG_ALL, SVC_CDTRACK);
 			WriteByte(MSG_ALL, 2);
 			WriteByte(MSG_ALL, 3);
+		#else
+			SendCDTrack(NULL, 3);
+		#endif
 
 			WriteByte(MSG_ALL, SVC_FINALE);
 			WriteString(MSG_ALL, "The charred viscera of diabolic horrors\nbubble viscously as you seize the Rune\nof Hell Magic. Its heat scorches your\nhand, and its terrible secrets blight\nyour mind. Gathering the shreds of your\ncourage, you shake the devil's shackles\nfrom your soul, and become ever more\nhard and determined to destroy the\nhideous creatures whose mere existence\nthreatens the souls and psyches of all\nthe population of Earth.");
@@ -194,9 +229,13 @@ void ExitIntermission()
 		}
 		else if(world.model == "maps/e4m7.bsp")
 		{
+		#if 0
 			WriteByte(MSG_ALL, SVC_CDTRACK);
 			WriteByte(MSG_ALL, 2);
 			WriteByte(MSG_ALL, 3);
+		#else
+			SendCDTrack(NULL, 3);
+		#endif
 
 			WriteByte(MSG_ALL, SVC_FINALE);
 			WriteString(MSG_ALL, "Despite the awful might of the Elder\nWorld, you have achieved the Rune of\nElder Magic, capstone of all types of\narcane wisdom. Beyond good and evil,\nbeyond life and death, the Rune\npulsates, heavy with import. Patient and\npotent, the Elder Being Shub-Niggurath\nweaves her dire plans to clear off all\nlife from the Earth, and bring her own\nfoul offspring to our world! For all the\ndwellers in these nightmare dimensions\nare her descendants! Once all Runes of\nmagic power are united, the energy\nbehind them will blast open the Gateway\nto Shub-Niggurath, and you can travel\nthere to foil the Hell-Mother's plots\nin person.");
@@ -254,9 +293,13 @@ void execute_changelevel(entity this)
 	else
 		intermission_exittime = time + 2;
 
+#if 0
 	WriteByte(MSG_ALL, SVC_CDTRACK);
 	WriteByte(MSG_ALL, 3);
 	WriteByte(MSG_ALL, 3);
+#else
+	SendCDTrack(NULL, 3);
+#endif
 	
 	entity pos = FindIntermission(this);
 
@@ -1138,6 +1181,27 @@ void PlayerPostThink(entity this)
 	CheckPowerups(this);
 }
 
+string getcdtrack(int numb)
+{
+	switch(numb)
+	{
+		default:
+		case 1: return "track001";
+		case 2: return "track002";
+		case 3: return "track003";
+		case 4: return "track004";
+		case 5: return "track005";
+		case 6: return "track006";
+		case 7: return "track007";
+		case 8: return "track008";
+		case 9: return "track009";
+		case 10: return "track010";
+		case 11: return "track011";
+	}
+
+	return "track001"; // because gmqcc
+}
+
 
 /*
 ===========
@@ -1154,6 +1218,9 @@ void ClientConnect(entity this)
 	this.playerid = ++playerid_last;
 
 	this.netname_previous = strzone(this.netname);
+
+	string thetrack = ((current_cdtrack) ? current_cdtrack : getcdtrack(world.sounds));
+	stuffcmd(this, strcat("cd loop ", thetrack, "\n"));
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", this.netaddress, ":", this.netname));

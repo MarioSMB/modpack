@@ -11,13 +11,13 @@ void CSQC_Init()
 	oldjump = cvar("cl_movement_track_canjump");
 	cvar_set("cl_movement_track_canjump", "1");
 
-	localcmd("\ncd remap track001 track002 track003 track004 track005 track006 track007 track008 track009 track010 track011\n");
+	//localcmd("\ncd remap track001 track002 track003 track004 track005 track006 track007 track008 track009 track010 track011\n");
 }
 
 void CSQC_Shutdown()
 {
 	cvar_set("cl_movement_track_canjump", ftos(oldjump));
-	localcmd(sprintf("\ncd remap %s\n", cvar_string("g_cdtracks_remaplist")));
+	//localcmd(sprintf("\ncd remap %s\n", cvar_string("g_cdtracks_remaplist")));
 }
 
 #define drawpic(position, pic, size, rgb, alpha, flag) \
