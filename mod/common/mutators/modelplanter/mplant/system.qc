@@ -106,11 +106,14 @@ void mplant_setmark(entity this, int _idx)
 	this.mplant_cursorobject.mplant_object_rotate = mplant_cursorobject_rotate;
 	this.mplant_cursorobject.mplant_object_rotate(this.mplant_cursorobject, '0 0 0', true);
 
-	string _msg = sprintf("^3Block name: ^2%s.%s\n ^3Size: ^2%v",
-						  getfiletitle(bufstr_get(this.mplant_set_models, _idx)),
-						  getfileext(bufstr_get(this.mplant_set_models, _idx)),
-						  this.mplant_cursorobject.maxs - this.mplant_cursorobject.mins);
-	centerprint(this, _msg);
+	if(this.mplant_active)
+	{
+		string _msg = sprintf("^3Block name: ^2%s.%s\n ^3Size: ^2%v",
+							  getfiletitle(bufstr_get(this.mplant_set_models, _idx)),
+							  getfileext(bufstr_get(this.mplant_set_models, _idx)),
+							  this.mplant_cursorobject.maxs - this.mplant_cursorobject.mins);
+		centerprint(this, _msg);
+	}
 }
 
 float _mplant_load_dir_models(entity this, string _ptrn)

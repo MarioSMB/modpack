@@ -5,6 +5,7 @@
 #include "piggyback.qc"
 #include "random_vehicles.qc"
 #include "riflearena.qc"
+#include "rocketcam.qc"
 #include "shotgunarena.qc"
 #include "skycycle.qc"
 #include "spawn_unique.qc"
