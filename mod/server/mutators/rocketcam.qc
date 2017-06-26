@@ -10,7 +10,7 @@ MUTATOR_HOOKFUNCTION(rocketcam, EditProjectile)
 	entity player = M_ARGV(0, entity);
 	entity proj = M_ARGV(1, entity);
 
-	if(proj.classname != "rocket" || !IS_REAL_CLIENT(player)) // || player.clientcamera.classname == "rocket") // only view the controlled rocket
+	if(proj.classname != "rocket" || !IS_REAL_CLIENT(player) || !IS_PLAYER(player)) // || player.clientcamera.classname == "rocket") // only view the controlled rocket
 		return;
 
 	player.clientcamera = proj;
@@ -23,7 +23,7 @@ MUTATOR_HOOKFUNCTION(rocketcam, PlayerPreThink)
 
 	entity player = M_ARGV(0, entity);
 
-	if(!IS_REAL_CLIENT(player))
+	if(!IS_REAL_CLIENT(player) || !IS_PLAYER(player))
 		return; // nope
 
 	if(player.clientcamera.classname != "rocket")
