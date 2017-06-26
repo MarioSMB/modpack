@@ -61,9 +61,9 @@ void W_FireAxe(entity this)
 		_sound(this, CHAN_WEAPON, "player/axhit2.wav", 1, ATTN_NORM);
 		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 		WriteByte(MSG_BROADCAST, TE_GUNSHOT);
-		WriteCoord(MSG_BROADCAST, org_x);
-		WriteCoord(MSG_BROADCAST, org_y);
-		WriteCoord(MSG_BROADCAST, org_z);
+		WriteCoord(MSG_BROADCAST, org.x);
+		WriteCoord(MSG_BROADCAST, org.y);
+		WriteCoord(MSG_BROADCAST, org.z);
 	}
 }
 
