@@ -153,6 +153,12 @@ void GameCommand(string command)
 		return;
 	}
 
+	if(cmdname == "banlist")
+	{
+		LOG_INFO("Banning is currently not implemented, sorry Melanobot\n");
+		return;
+	}
+
 	if(cmdname == "ircmsg")
 	{
 		IRCSay(substring(command, strlen(argv(0)) + 1, strlen(command)));
