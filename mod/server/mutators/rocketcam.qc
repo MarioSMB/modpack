@@ -26,7 +26,7 @@ MUTATOR_HOOKFUNCTION(rocketcam, PlayerPreThink)
 	if(!IS_REAL_CLIENT(player))
 		return; // nope
 
-	if(player.clientcamera == player)
+	if(player.clientcamera.classname != "rocket")
 		return;
 
 	if(wasfreed(player.clientcamera))
