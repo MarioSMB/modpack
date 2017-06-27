@@ -25,6 +25,139 @@ walkmove(angle, speed) primitive is all or nothing
 */
 
 
+#if 0
+// hacked in version of movetogoal (to be rewritten)
+
+bool t_stepdirection(entity this, float yaw, float dist)
+{
+	this.ideal_yaw = yaw;
+	ChangeYaw(this);
+
+	/*float oldyaw = yaw; // before we hack it apart
+	yaw = yaw * M_PI * 2 / 360;
+	vector move = vec2(cos(yaw) * dist, sin(yaw) * dist);*/
+	vector oldorg = this.origin;
+
+	if(walkmove(this, yaw, dist))
+	{
+		float delta = this.angles.y - this.ideal_yaw;
+		if(delta > 45 && delta < 315)
+			setorigin(this, oldorg);
+		// leave the linking to the engine? TODO
+		return true;
+	}
+
+	return false;
+}
+
+void t_newchasedir(entity this, entity targ, float dist)
+{
+	float di_nodir = -1;
+	vector d;
+	float olddir = anglemods((this.ideal_yaw / 45) * 45);
+	float turnaround = anglemods(olddir - 180);
+	float tdir;
+
+	vector delta = vec2(targ.origin - this.origin);
+
+	if(delta.x > 10)
+		d.x = 0;
+	else if(delta.x < -10)
+		d.x = 180;
+	else
+		d.x = di_nodir;
+	if(delta.y < -10)
+		d.y = 270;
+	else if(delta.y > 10)
+		d.y = 90;
+	else
+		d.y = di_nodir;
+
+	// try direct route
+	if(d.x != di_nodir && d.y != di_nodir)
+	{
+		if(d.x == 0)
+			tdir = (d.y == 90) ? 45 : 315;
+		else
+			tdir = (d.y == 90) ? 135 : 215;
+
+		if(tdir != turnaround && t_stepdirection(this, tdir, dist))
+			return;
+	}
+
+	// try other directions
+	if(random() < 0.33 || fabs(delta.y) > fabs(delta.x))
+		d = vec2(d.y, d.x);
+
+	if(d.x != di_nodir && d.x != turnaround && t_stepdirection(this, d.x, dist))
+		return;
+	if(d.y != di_nodir && d.y != turnaround && t_stepdirection(this, d.y, dist))
+		return;
+
+	if(olddir != di_nodir && t_stepdirection(this, olddir, dist))
+		return;
+
+	if(random() < 0.5) // randomly determine direction of search
+	{
+		for(tdir = 0; tdir <= 315; tdir += 45)
+		{
+			if(tdir != turnaround && t_stepdirection(this, tdir, dist))
+				return;
+		}
+	}
+	else
+	{
+		for(tdir = 315; tdir >= 0; tdir -= 45)
+		{
+			if(tdir != turnaround && t_stepdirection(this, tdir, dist))
+				return;
+		}
+	}
+
+	if(turnaround != di_nodir && t_stepdirection(this, turnaround, dist))
+		return;
+
+	this.ideal_yaw = olddir; // can't move
+
+	// if a bridge was pulled out from underneath a monster, it may not have a valid standing position at all
+
+	if(!checkbottom(this))
+		this.flags |= FL_PARTIALGROUND;
+}
+
+bool t_closeenough(entity this, entity goal, float dist)
+{
+	if(goal.absmin.x > (this.absmax.x + dist)) return false;
+	if(goal.absmin.y > (this.absmax.y + dist)) return false;
+	if(goal.absmin.z > (this.absmax.z + dist)) return false;
+
+	if(goal.absmax.x < (this.absmin.x - dist)) return false;
+	if(goal.absmax.y < (this.absmin.y - dist)) return false;
+	if(goal.absmax.z < (this.absmin.z - dist)) return false;
+
+	return true;
+}
+#endif
+
+void t_movetogoal(entity this, float dist)
+{
+#if 0
+	if(!(this.flags & (FL_ONGROUND | FL_FLY | FL_SWIM)))
+		return;
+
+	// if the next step hits the enemy, return immediately
+	if(this.enemy && t_closeenough(this, this.goalentity, dist))
+		return;
+
+	// bump around...
+	if(random() < 0.33 || !t_stepdirection(this, this.ideal_yaw, dist))
+		t_newchasedir(this, this.goalentity, dist);
+#else
+	movetogoal(this, dist);
+#endif
+}
+
+
 //
 // when a monster becomes angry at a player, that monster will be used
 // as the sight target the next frame so that monsters near that one
@@ -53,23 +186,18 @@ The number of seconds to spend standing or bowing for path_stand or path_bow
 */
 
 void t_movetarget(entity this, entity toucher);
-void movetarget_f(entity this)
-{
-	if(!this.targetname)
-		objerror(this, "monster_movetarget: no targetname");
-		
-	this.solid = SOLID_TRIGGER;
-	settouch(this, t_movetarget);
-	setsize(this, '-8 -8 -8', '8 8 8');
-	
-}
 
 /*QUAKED path_corner(0.5 0.3 0)(-8 -8 -8)(8 8 8)
 Monsters will continue walking towards the next target corner.
 */
 spawnfunc(path_corner)
 {
-	movetarget_f(this);
+	if(!this.targetname || this.targetname == "")
+		objerror(this, "monster_movetarget: no targetname");
+		
+	this.solid = SOLID_TRIGGER;
+	settouch(this, t_movetarget);
+	setsize(this, '-8 -8 -8', '8 8 8');
 }
 
 
@@ -350,7 +478,7 @@ void ai_walk(entity this, float dist)
 	if(FindTarget(this))
 		return;
 
-	movetogoal(this, dist);
+	t_movetogoal(this, dist);
 }
 
 
@@ -578,6 +706,6 @@ void ai_run(entity this, float dist)
 	}
 		
 // head straight in
-	movetogoal(this, dist);		// done in C code...
+	t_movetogoal(this, dist);		// done in C code...
 }
 

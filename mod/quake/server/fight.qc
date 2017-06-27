@@ -120,11 +120,12 @@ The monster is in a melee attack, so get as close as possible to .enemy
 bool visible(entity this, entity targ);
 bool infront(entity this, entity targ);
 int range(entity this, entity targ);
+void t_movetogoal(entity this, float dist);
 
 void ai_charge(entity this, float d)
 {
 	ai_face(this);	
-	movetogoal(this, d);		// done in C code...
+	t_movetogoal(this, d);		// done in C code...
 }
 
 void ai_charge_side(entity this)
