@@ -28,6 +28,7 @@ bool CanDamage(entity targ, entity inflictor)
 	traceline(inflictor.origin, targ.origin, true, targ);
 	if(trace_fraction == 1)
 		return true;
+#if 0
 	traceline(inflictor.origin, targ.origin + '15 15 0', true, targ);
 	if(trace_fraction == 1)
 		return true;
@@ -40,6 +41,11 @@ bool CanDamage(entity targ, entity inflictor)
 	traceline(inflictor.origin, targ.origin + '15 -15 0', true, targ);
 	if(trace_fraction == 1)
 		return true;
+#else
+	tracebox(inflictor.origin, '-15 -15 0', '15 15 0', targ.origin, true, targ);
+	if(trace_fraction == 1)
+		return true;
+#endif
 
 	return false;
 }

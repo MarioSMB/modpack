@@ -10,8 +10,6 @@ const int PLAT_LOW_TRIGGER = BIT(0);
 
 void plat_spawn_inside_trigger(entity this)
 {
-	vector	tmin, tmax;
-
 //
 // middle trigger
 //	
@@ -21,21 +19,21 @@ void plat_spawn_inside_trigger(entity this)
 	trigger.solid = SOLID_TRIGGER;
 	trigger.enemy = this;
 	
-	tmin = this.mins + '25 25 0';
-	tmax = this.maxs - '25 25 -8';
-	tmin_z = tmax_z -(this.pos1_z - this.pos2_z + 8);
+	vector tmin = this.mins + '25 25 0';
+	vector tmax = this.maxs - '25 25 -8';
+	tmin.z = tmax_z -(this.pos1_z - this.pos2_z + 8);
 	if(this.spawnflags & PLAT_LOW_TRIGGER)
-		tmax_z = tmin_z + 8;
+		tmax_z = tmin.z + 8;
 	
 	if(this.size_x <= 50)
 	{
-		tmin_x =(this.mins_x + this.maxs_x) / 2;
-		tmax_x = tmin_x + 1;
+		tmin.x =(this.mins_x + this.maxs_x) / 2;
+		tmax_x = tmin.x + 1;
 	}
 	if(this.size_y <= 50)
 	{
-		tmin_y =(this.mins_y + this.maxs_y) / 2;
-		tmax_y = tmin_y + 1;
+		tmin.y =(this.mins_y + this.maxs_y) / 2;
+		tmax_y = tmin.y + 1;
 	}
 	
 	setsize(trigger, tmin, tmax);
@@ -354,4 +352,3 @@ spawnfunc(misc_teleporttrain)
 	this.nextthink = this.ltime + 0.1;
 	setthink(this, func_train_find);
 }
-

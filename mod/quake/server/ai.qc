@@ -124,19 +124,6 @@ void t_newchasedir(entity this, entity targ, float dist)
 	if(!checkbottom(this))
 		this.flags |= FL_PARTIALGROUND;
 }
-
-bool t_closeenough(entity this, entity goal, float dist)
-{
-	if(goal.absmin.x > (this.absmax.x + dist)) return false;
-	if(goal.absmin.y > (this.absmax.y + dist)) return false;
-	if(goal.absmin.z > (this.absmax.z + dist)) return false;
-
-	if(goal.absmax.x < (this.absmin.x - dist)) return false;
-	if(goal.absmax.y < (this.absmin.y - dist)) return false;
-	if(goal.absmax.z < (this.absmin.z - dist)) return false;
-
-	return true;
-}
 #endif
 
 void t_movetogoal(entity this, float dist)
@@ -146,8 +133,13 @@ void t_movetogoal(entity this, float dist)
 		return;
 
 	// if the next step hits the enemy, return immediately
-	if(this.enemy && t_closeenough(this, this.goalentity, dist))
-		return;
+	if(this.enemy)
+	{
+		vector rdist = '1 1 1' * dist;
+		entity targ = this.goalentity; // why not the enemy itself?
+		if(boxesoverlap(targ.absmin, targ.absmax, this.absmin - rdist, this.absmax + rdist))
+			return;
+	}
 
 	// bump around...
 	if(random() < 0.33 || !t_stepdirection(this, this.ideal_yaw, dist))
