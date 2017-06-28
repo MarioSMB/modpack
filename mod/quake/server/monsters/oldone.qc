@@ -191,7 +191,7 @@ void finale_1(entity this, entity attacker)
 		it.nextthink = time + 0.5;
 		it.takedamage = DAMAGE_NO;
 		it.solid = SOLID_NOT;
-		it.movetype = MOVETYPE_NONE;
+		set_movetype(it, MOVETYPE_NONE);
 		it.modelindex = 0;
 		setorigin(it, pos.origin);
 	});
@@ -324,7 +324,7 @@ spawnfunc(monster_oldone)
 	precache_sound2("boss2/pop2.wav");
 
 	this.solid = SOLID_SLIDEBOX;
-	this.movetype = MOVETYPE_STEP;
+	set_movetype(this, MOVETYPE_STEP);
 	
 	_setmodel(this, "progs/oldone.mdl");
 	setsize(this, '-160 -128 -24', '160 128 256');

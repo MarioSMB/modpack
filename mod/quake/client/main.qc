@@ -90,6 +90,8 @@ void Sbar_Draw();
 void HUD_Crosshair(entity this);
 void CSQC_UpdateView(entity this, float w, float h)
 {
+	stats_get();
+
 	// ALWAYS Clear Current Scene First
 	clearscene();
 

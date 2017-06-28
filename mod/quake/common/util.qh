@@ -1,0 +1,6 @@
+#pragma once
+
+#ifdef GAMEQC
+int Mod_Q1BSP_SuperContentsFromNativeContents(int nativecontents);
+int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents);
+#endif

@@ -91,7 +91,7 @@ void SpawnMeatSpray(entity this, vector org, vector vel)
 {
 	entity missile = spawn();
 	missile.owner = this;
-	missile.movetype = MOVETYPE_BOUNCE;
+	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_NOT;
 
 	makevectors(this.angles);
@@ -314,7 +314,7 @@ void s_explode1(entity this) { set_anim(this, 0, s_explode2); }
 
 void BecomeExplosion(entity this)
 {
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	this.velocity = '0 0 0';
 	settouch(this, func_null);
 	_setmodel(this, "progs/s_explod.spr");
@@ -376,7 +376,7 @@ void W_FireRocket(entity this)
 
 	entity missile = spawn();
 	missile.owner = this;
-	missile.movetype = MOVETYPE_FLYMISSILE;
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.solid = SOLID_BBOX;
 	missile.classname = "missile";
 		
@@ -547,7 +547,7 @@ void W_FireGrenade(entity this)
 
 	entity missile = new(grenade);
 	missile.owner = this;
-	missile.movetype = MOVETYPE_BOUNCE;
+	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
 		
 // set missile speed	
@@ -596,7 +596,7 @@ entity launch_spike(entity this, vector org, vector dir)
 {
 	entity newmis = spawn();
 	newmis.owner = this;
-	newmis.movetype = MOVETYPE_FLYMISSILE;
+	set_movetype(newmis, MOVETYPE_FLYMISSILE);
 	newmis.solid = SOLID_BBOX;
 
 	newmis.angles = vectoangles(dir);

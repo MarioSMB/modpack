@@ -425,7 +425,7 @@ spawnfunc(monster_wizard)
 	precache_sound("wizard/wsight.wav");
 
 	this.solid = SOLID_SLIDEBOX;
-	this.movetype = MOVETYPE_STEP;
+	set_movetype(this, MOVETYPE_STEP);
 
 	_setmodel(this, "progs/wizard.mdl");
 

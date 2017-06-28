@@ -1,0 +1,64 @@
+#pragma once
+
+// water levels
+const int WATERLEVEL_NONE = 0;
+const int WATERLEVEL_WETFEET = 1;
+const int WATERLEVEL_SWIMMING = 2;
+const int WATERLEVEL_SUBMERGED = 3;
+
+.vector view_ofs;
+
+.float pm_frametime;
+
+#ifdef CSQC
+	const int FL_WATERJUMP = 2048;  // player jumping out of water
+
+	.float watertype;
+	.float waterlevel;
+
+	.vector v_angle;
+#endif
+
+#ifdef SVQC
+	.bool move_qcphysics;
+#endif
+
+// physics stats
+#define PHYS_JUMPSTEP(s)                    STAT(MOVEVARS_JUMPSTEP, s)
+
+#define PHYS_NOSTEP(s)                      STAT(NOSTEP, s)
+#define PHYS_STEPHEIGHT(s)                  STAT(MOVEVARS_STEPHEIGHT, s)
+
+#define PHYS_WALLFRICTION(s)                STAT(MOVEVARS_WALLFRICTION, s)
+
+#define UPWARD_VELOCITY_CLEARS_ONGROUND(s)  STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND, s)
+
+#ifdef CSQC
+
+	#define PHYS_GRAVITY(s)                     STAT(MOVEVARS_GRAVITY, s)
+
+	#define PHYS_ENTGRAVITY(s)                  STAT(MOVEVARS_ENTGRAVITY, s)
+
+	#define TICRATE                             ticrate
+
+	#define GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE  (boolean(moveflags & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE))
+	#define GAMEPLAYFIX_NOGRAVITYONGROUND           (boolean(moveflags & MOVEFLAG_NOGRAVITYONGROUND))
+
+	#define PHYS_INPUT_TIMELENGTH               input_timelength
+	#define PHYS_INPUT_FRAMETIME                serverdeltatime
+
+#elif defined(SVQC)
+
+	#define PHYS_GRAVITY(s)                     autocvar_sv_gravity
+
+	#define PHYS_ENTGRAVITY(s)                  ((s).gravity)
+
+	#define TICRATE sys_frametime
+
+	#define GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE  autocvar_sv_gameplayfix_gravityunaffectedbyticrate
+	#define GAMEPLAYFIX_NOGRAVITYONGROUND           autocvar_sv_gameplayfix_nogravityonground
+
+	#define PHYS_INPUT_TIMELENGTH               frametime
+	#define PHYS_INPUT_FRAMETIME                sys_frametime
+
+#endif

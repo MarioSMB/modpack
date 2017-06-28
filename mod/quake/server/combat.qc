@@ -15,7 +15,7 @@ explosions and melee attacks.
 bool CanDamage(entity targ, entity inflictor)
 {
 // bmodels need special checking because their origin is 0,0,0
-	if(targ.movetype == MOVETYPE_PUSH)
+	if(targ.move_movetype == MOVETYPE_PUSH)
 	{
 		traceline(inflictor.origin, 0.5 *(targ.absmin + targ.absmax), true, targ);
 		if(trace_fraction == 1)
@@ -61,7 +61,7 @@ void Killed(entity targ, entity attacker)
 	if(targ.health < -99)
 		targ.health = -99;		// don't let sbar look bad if a player
 
-	if(targ.movetype == MOVETYPE_PUSH || targ.movetype == MOVETYPE_NONE)
+	if(targ.move_movetype == MOVETYPE_PUSH || targ.move_movetype == MOVETYPE_NONE)
 	{	// doors, triggers, etc
 		targ.th_die(targ, attacker);
 		return;
@@ -127,7 +127,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 	}
 
 // figure momentum add
-	if((inflictor != NULL) &&(targ.movetype == MOVETYPE_WALK) )
+	if((inflictor != NULL) &&(targ.move_movetype == MOVETYPE_WALK) )
 	{
 		vector dir = targ.origin -(inflictor.absmin + inflictor.absmax) * 0.5;
 		dir = normalize(dir);

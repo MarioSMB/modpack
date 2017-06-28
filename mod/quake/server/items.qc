@@ -51,7 +51,7 @@ void PlaceItem(entity this)
 	this.mdl = this.model;		// so it can be restored on respawn
 	this.flags = FL_ITEM;		// make extra wide
 	this.solid = SOLID_TRIGGER;
-	this.movetype = MOVETYPE_TOSS;	
+	set_movetype(this, MOVETYPE_TOSS);	
 	this.velocity = '0 0 0';
 	this.origin_z = this.origin_z + 6;
 	this.m_min = this.mins;
@@ -1290,7 +1290,7 @@ void DropBackpack(entity this)
 	
 	item.flags = FL_ITEM;
 	item.solid = SOLID_TRIGGER;
-	item.movetype = MOVETYPE_TOSS;
+	set_movetype(item, MOVETYPE_TOSS);
 	_setmodel(item, "progs/backpack.mdl");
 	setsize(item, '-16 -16 0', '16 16 56');
 	settouch(item, BackpackTouch);

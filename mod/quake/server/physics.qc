@@ -154,7 +154,7 @@ void SVQC_AirMove(entity this)
 	makevectors(self.angles_y * '0 1 0');
 	vector wishvel = v_forward * self.movement_x + v_right * self.movement_y;
 
-	if(this.movetype != MOVETYPE_WALK)
+	if(this.move_movetype != MOVETYPE_WALK)
 		wishvel.z += this.movement_z;
 
 	vector wishdir = normalize(wishvel);
@@ -169,7 +169,7 @@ void SVQC_AirMove(entity this)
 	{
 		// do nothing
 	}
-	if(this.movetype == MOVETYPE_NOCLIP)
+	if(this.move_movetype == MOVETYPE_NOCLIP)
 	{
 		// noclip
 		this.velocity = wishvel;
@@ -188,7 +188,7 @@ void SVQC_AirMove(entity this)
 
 void SV_PlayerPhysics(entity this)
 {
-	if(this.movetype == MOVETYPE_NONE)
+	if(this.move_movetype == MOVETYPE_NONE)
 		return;
 
 	SV_check_punch(this, frametime);
@@ -212,7 +212,7 @@ void SV_PlayerPhysics(entity this)
 		return;
 	}
 
-	if(this.waterlevel >= 2 && this.movetype != MOVETYPE_NOCLIP)
+	if(this.waterlevel >= 2 && this.move_movetype != MOVETYPE_NOCLIP)
 	{
 		SVQC_WaterMove(this);
 		return;

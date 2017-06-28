@@ -46,7 +46,7 @@ void InitTrigger(entity this)
 		SetMovedir(this);
 	this.solid = SOLID_TRIGGER;
 	_setmodel(this, this.model);	// set size and link into world
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	this.modelindex = 0;
 	this.model = "";
 }

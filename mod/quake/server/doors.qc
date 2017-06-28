@@ -253,7 +253,7 @@ SPAWNING FUNCTIONS
 entity spawn_field(entity this, vector fmins, vector fmaxs)
 {
 	entity trigger = spawn();
-	trigger.movetype = MOVETYPE_NONE;
+	set_movetype(trigger, MOVETYPE_NONE);
 	trigger.solid = SOLID_TRIGGER;
 	trigger.owner = this;
 	settouch(trigger, door_trigger_touch);
@@ -440,7 +440,7 @@ spawnfunc(func_door)
 
 	this.max_health = this.health;
 	this.solid = SOLID_BSP;
-	this.movetype = MOVETYPE_PUSH;
+	set_movetype(this, MOVETYPE_PUSH);
 	setorigin(this, this.origin);	
 	_setmodel(this, this.model);
 	this.classname = "door";
@@ -718,7 +718,7 @@ spawnfunc(func_door_secret)
 	this.mangle = this.angles;
 	this.angles = '0 0 0';
 	this.solid = SOLID_BSP;
-	this.movetype = MOVETYPE_PUSH;
+	set_movetype(this, MOVETYPE_PUSH);
 	this.classname = "door";
 	_setmodel(this, this.model);
 	setorigin(this, this.origin);	

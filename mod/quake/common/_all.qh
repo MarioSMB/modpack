@@ -1,5 +1,9 @@
 #pragma once
 
+#include "stats.qh"
+
+#include "physics.qh"
+
 //#include "effects/all.qh"
 #include "models/all.qh"
 #include "sounds/all.qh"

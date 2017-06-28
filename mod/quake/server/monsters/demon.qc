@@ -385,7 +385,7 @@ spawnfunc(monster_demon1)
 	precache_sound("demon/sight2.wav");
 
 	this.solid = SOLID_SLIDEBOX;
-	this.movetype = MOVETYPE_STEP;
+	set_movetype(this, MOVETYPE_STEP);
 
 	_setmodel(this, "progs/demon.mdl");
 

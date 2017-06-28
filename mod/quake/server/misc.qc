@@ -205,7 +205,7 @@ void fire_fly(entity this)
 {
 	entity fireball = spawn();
 	fireball.solid = SOLID_TRIGGER;
-	fireball.movetype = MOVETYPE_TOSS;
+	set_movetype(fireball, MOVETYPE_TOSS);
 	fireball.velocity = '0 0 1000';
 	fireball.velocity_x =(random() * 100) - 50;
 	fireball.velocity_y =(random() * 100) - 50;
@@ -254,7 +254,7 @@ TESTING THING
 spawnfunc(misc_explobox)
 {
 	this.solid = SOLID_BBOX;
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	precache_model("maps/b_explob.bsp");
 	_setmodel(this, "maps/b_explob.bsp");
 	precache_sound("weapons/r_exp3.wav");
@@ -284,7 +284,7 @@ Smaller exploding box, REGISTERED ONLY
 spawnfunc(misc_explobox2)
 {
 	this.solid = SOLID_BBOX;
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	precache_model2("maps/b_exbox2.bsp");
 	_setmodel(this, "maps/b_exbox2.bsp");
 	precache_sound("weapons/r_exp3.wav");
@@ -411,7 +411,7 @@ void make_bubbles(entity this)
 	entity bubble = spawn();
 	_setmodel(bubble, "progs/s_bubble.spr");
 	setorigin(bubble, this.origin);
-	bubble.movetype = MOVETYPE_NOCLIP;
+	set_movetype(bubble, MOVETYPE_NOCLIP);
 	bubble.solid = SOLID_NOT;
 	bubble.velocity = '0 0 15';
 	bubble.nextthink = time + 0.5;
@@ -430,7 +430,7 @@ void bubble_split(entity this)
 	entity bubble = spawn();
 	_setmodel(bubble, "progs/s_bubble.spr");
 	setorigin(bubble, this.origin);
-	bubble.movetype = MOVETYPE_NOCLIP;
+	set_movetype(bubble, MOVETYPE_NOCLIP);
 	bubble.solid = SOLID_NOT;
 	bubble.velocity = this.velocity;
 	bubble.nextthink = time + 0.5;
@@ -501,7 +501,7 @@ Just for the debugging level.  Don't use
 
 spawnfunc(viewthing)
 {
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	this.solid = SOLID_NOT;
 	precache_model("progs/player.mdl");
 	_setmodel(this, "progs/player.mdl");
@@ -527,7 +527,7 @@ This is just a solid wall if not inhibitted
 spawnfunc(func_wall)
 {
 	this.angles = '0 0 0';
-	this.movetype = MOVETYPE_PUSH;	// so it doesn't get pushed by anything
+	set_movetype(this, MOVETYPE_PUSH);	// so it doesn't get pushed by anything
 	this.solid = SOLID_BSP;
 	this.use = func_wall_use;
 	_setmodel(this, this.model);
@@ -540,7 +540,7 @@ A simple entity that looks solid but lets you walk through it.
 spawnfunc(func_illusionary)
 {
 	this.angles = '0 0 0';
-	this.movetype = MOVETYPE_NONE;
+	set_movetype(this, MOVETYPE_NONE);
 	this.solid = SOLID_NOT;
 	_setmodel(this, this.model);
 	makestatic(this);
@@ -555,7 +555,7 @@ spawnfunc(func_episodegate)
 		return;			// can still enter episode
 
 	this.angles = '0 0 0';
-	this.movetype = MOVETYPE_PUSH;	// so it doesn't get pushed by anything
+	set_movetype(this, MOVETYPE_PUSH);	// so it doesn't get pushed by anything
 	this.solid = SOLID_BSP;
 	this.use = func_wall_use;
 	_setmodel(this, this.model);
@@ -569,7 +569,7 @@ spawnfunc(func_bossgate)
 	if((serverflags & 15) == 15)
 		return;		// all episodes completed
 	this.angles = '0 0 0';
-	this.movetype = MOVETYPE_PUSH;	// so it doesn't get pushed by anything
+	set_movetype(this, MOVETYPE_PUSH);	// so it doesn't get pushed by anything
 	this.solid = SOLID_BSP;
 	this.use = func_wall_use;
 	_setmodel(this, this.model);

@@ -1,5 +1,7 @@
 #pragma once
 
+float ticrate;
+
 vector mousepos;
 
 float completed_time;

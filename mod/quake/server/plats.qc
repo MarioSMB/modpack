@@ -15,7 +15,7 @@ void plat_spawn_inside_trigger(entity this)
 //	
 	entity trigger = spawn();
 	settouch(trigger, plat_center_touch);
-	trigger.movetype = MOVETYPE_NONE;
+	set_movetype(trigger, MOVETYPE_NONE);
 	trigger.solid = SOLID_TRIGGER;
 	trigger.enemy = this;
 	
@@ -172,7 +172,7 @@ spawnfunc(func_plat)
 
 	this.classname = "plat";
 	this.solid = SOLID_BSP;
-	this.movetype = MOVETYPE_PUSH;
+	set_movetype(this, MOVETYPE_PUSH);
 	setorigin(this, this.origin);	
 	_setmodel(this, this.model);
 	setsize(this, this.mins , this.maxs);
@@ -305,7 +305,7 @@ spawnfunc(func_train)
 
 	this.cnt = 1;
 	this.solid = SOLID_BSP;
-	this.movetype = MOVETYPE_PUSH;
+	set_movetype(this, MOVETYPE_PUSH);
 	setblocked(this, train_blocked);
 	this.use = train_use;
 	this.classname = "train";
@@ -332,7 +332,7 @@ spawnfunc(misc_teleporttrain)
 
 	this.cnt = 1;
 	this.solid = SOLID_NOT;
-	this.movetype = MOVETYPE_PUSH;
+	set_movetype(this, MOVETYPE_PUSH);
 	setblocked(this, train_blocked);
 	this.use = train_use;
 	this.avelocity = '100 200 300';

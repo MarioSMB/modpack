@@ -164,7 +164,7 @@ void Tar_JumpTouch(entity this, entity toucher)
 			//dprint("popjump\n");
 			settouch(this, func_null);
 			setthink(this, tbaby_run1);
-			this.movetype = MOVETYPE_STEP;
+			set_movetype(this, MOVETYPE_STEP);
 			this.nextthink = time + 0.1;
 
 		}
@@ -195,7 +195,7 @@ void tbaby_jump5(entity this)
 {
 	set_anim(this, anim_tbaby_jump5, tbaby_jump6);
 
-	this.movetype = MOVETYPE_BOUNCE;
+	set_movetype(this, MOVETYPE_BOUNCE);
 	settouch(this, Tar_JumpTouch);
 	makevectors(this.angles);
 	this.origin_z = this.origin_z + 1;
@@ -254,7 +254,7 @@ spawnfunc(monster_tarbaby)
 	precache_sound2("blob/sight1.wav");
 	
 	this.solid = SOLID_SLIDEBOX;
-	this.movetype = MOVETYPE_STEP;
+	set_movetype(this, MOVETYPE_STEP);
 
 	_setmodel(this, "progs/tarbaby.mdl");
 

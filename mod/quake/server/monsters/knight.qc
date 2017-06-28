@@ -336,7 +336,7 @@ spawnfunc(monster_knight)
 	precache_sound("knight/idle.wav");
 
 	this.solid = SOLID_SLIDEBOX;
-	this.movetype = MOVETYPE_STEP;
+	set_movetype(this, MOVETYPE_STEP);
 
 	_setmodel(this, "progs/knight.mdl");
 

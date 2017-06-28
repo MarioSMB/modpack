@@ -311,7 +311,7 @@ void execute_changelevel(entity this)
 		it.nextthink = time + 0.5;
 		it.takedamage = DAMAGE_NO;
 		it.solid = SOLID_NOT;
-		it.movetype = MOVETYPE_NONE;
+		set_movetype(it, MOVETYPE_NONE);
 		it.modelindex = 0;
 		setorigin(it, pos.origin);
 	});
@@ -406,8 +406,9 @@ void CopyToBodyQue(entity ent)
 	body.modelindex = ent.modelindex;
 	body.frame = ent.frame;
 	body.colormap = ent.colormap;
-	body.movetype = ent.movetype;
+	set_movetype(body, ent.move_movetype);
 	body.velocity = ent.velocity;
+	body.move_qcphysics = false; // not for clones
 	body.flags = 0;
 	setorigin(body, ent.origin);
 	setsize(body, ent.mins, ent.maxs);
@@ -550,7 +551,7 @@ void PutClientInServer(entity this)
 	this.health = 100;
 	this.takedamage = DAMAGE_AIM;
 	this.solid = SOLID_SLIDEBOX;
-	this.movetype = MOVETYPE_WALK;
+	set_movetype(this, MOVETYPE_WALK);
 	this.show_hostile = 0;
 	this.max_health = 100;
 	this.flags = FL_CLIENT;
@@ -813,7 +814,7 @@ WaterMove
 void WaterMove(entity this)
 {
 //dprint(ftos(this.waterlevel));
-	if(this.movetype == MOVETYPE_NOCLIP)
+	if(this.move_movetype == MOVETYPE_NOCLIP)
 		return;
 	if(this.health < 0)
 		return;
@@ -1139,6 +1140,21 @@ void CheckPowerups(entity this)
 
 }
 
+void Player_Physics(entity this)
+{
+	set_movetype(this, this.move_movetype);
+
+	if(!this.move_qcphysics)
+		return;
+
+	if(!frametime && !this.pm_frametime)
+		return;
+
+	Movetype_Physics_NoMatchTicrate(this, this.pm_frametime, true);
+
+	this.pm_frametime = 0;
+}
+
 
 /*
 ================
@@ -1149,6 +1165,8 @@ Called every frame after physics are run
 */
 void PlayerPostThink(entity this)
 {
+	Player_Physics(this);
+
 	if(this.view_ofs == '0 0 0')
 		return;		// intermission or finale
 	if(this.deadflag)

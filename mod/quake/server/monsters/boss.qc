@@ -332,7 +332,7 @@ void boss_missile(entity this, vector p)
 void boss_awake(entity this, entity actor, entity trigger)
 {
 	this.solid = SOLID_SLIDEBOX;
-	this.movetype = MOVETYPE_STEP;
+	set_movetype(this, MOVETYPE_STEP);
 	this.takedamage = DAMAGE_NO;
 	
 	_setmodel(this, "progs/boss.mdl");

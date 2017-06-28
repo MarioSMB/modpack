@@ -335,7 +335,7 @@ void spawn_tdeath(vector org, entity death_owner)
 {
 	entity death = spawn();
 	death.classname = "teledeath";
-	death.movetype = MOVETYPE_NONE;
+	set_movetype(death, MOVETYPE_NONE);
 	death.solid = SOLID_TRIGGER;
 	death.angles = '0 0 0';
 	setsize(death, death_owner.mins - '1 1 1', death_owner.maxs + '1 1 1');

@@ -163,7 +163,7 @@ void LaunchLaser(entity this, vector org, vector vec)
 	
 	entity newmis = spawn();
 	newmis.owner = this;
-	newmis.movetype = MOVETYPE_FLY;
+	set_movetype(newmis, MOVETYPE_FLY);
 	newmis.solid = SOLID_BBOX;
 	newmis.effects = EF_DIMLIGHT;
 
@@ -432,7 +432,7 @@ spawnfunc(monster_enforcer)
 	precache_sound2("enforcer/sight4.wav");
 	
 	this.solid = SOLID_SLIDEBOX;
-	this.movetype = MOVETYPE_STEP;
+	set_movetype(this, MOVETYPE_STEP);
 
 	_setmodel(this, "progs/enforcer.mdl");
 

@@ -110,7 +110,7 @@ spawnfunc(func_button)
 	
 	SetMovedir(this);
 
-	this.movetype = MOVETYPE_PUSH;
+	set_movetype(this, MOVETYPE_PUSH);
 	this.solid = SOLID_BSP;
 	_setmodel(this, this.model);
 

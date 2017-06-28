@@ -353,7 +353,7 @@ void ZombieFireGrenade(entity this, vector st)
 
 	entity missile = spawn();
 	missile.owner = this;
-	missile.movetype = MOVETYPE_BOUNCE;
+	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
 
 // calc org
@@ -682,7 +682,7 @@ spawnfunc(monster_zombie)
 	precache_sound("zombie/idle_w2.wav");
 
 	this.solid = SOLID_SLIDEBOX;
-	this.movetype = MOVETYPE_STEP;
+	set_movetype(this, MOVETYPE_STEP);
 
 	_setmodel(this, "progs/zombie.mdl");
 
@@ -701,7 +701,7 @@ spawnfunc(monster_zombie)
 
 	if(this.spawnflags & SPAWN_CRUCIFIED)
 	{
-		this.movetype = MOVETYPE_NONE;
+		set_movetype(this, MOVETYPE_NONE);
 		zombie_cruc1(this);
 	}
 	else
