@@ -1,5 +1,7 @@
 #pragma once
 
+int intermission_running;
+
 bool autocvar_sv_eventlog;
 int autocvar_sv_eventlog_files_counter; // TODO
 

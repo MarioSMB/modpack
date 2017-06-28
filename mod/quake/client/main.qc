@@ -235,9 +235,36 @@ void CSQC_Ent_Update(entity this, bool isnew)
 	}
 }
 
+// Destructor, but does NOT deallocate the entity by calling remove(). Also
+// used when an entity changes its type. For an entity that someone interacts
+// with others, make sure it can no longer do so.
+void Ent_Remove(entity this)
+{
+	if(this.entremove) this.entremove(this);
+
+	if(this.snd_looping > 0)
+	{
+		sound(this, this.snd_looping, SND_Null, VOL_BASE, 2);
+		this.snd_looping = 0;
+	}
+
+	this.enttype = 0;
+	this.classname = "";
+	//this.draw = func_null;
+	this.entremove = func_null;
+	// TODO possibly set more stuff to defaults
+}
+// CSQC_Ent_Remove : Called when the server requests a SSQC / CSQC entity to be removed.  Essentially call remove(this) as well.
 void CSQC_Ent_Remove(entity this)
 {
-
+	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Ent_Remove() with this=%i {.entnum=%d, .enttype=%d}\n", this, this.entnum, this.enttype);
+	if (wasfreed(this))
+	{
+		LOG_WARN("CSQC_Ent_Remove called for already removed entity. Packet loss?");
+		return;
+	}
+	if (this.enttype) Ent_Remove(this);
+	delete(this);
 }
 
 float sb_showscores;

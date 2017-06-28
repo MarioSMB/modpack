@@ -1,14 +1,5 @@
 #pragma once
 
-#if 0
-void SV_PlayerPhysics(entity this)
-{
-
-}
-
-#undef SV_PlayerPhysics
-#endif
-
 int maxclients;
 
 const string STR_PLAYER = "player";

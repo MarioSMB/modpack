@@ -18,7 +18,6 @@ int modelindex_eyes, modelindex_player;
 =============================================================================
 */
 
-int intermission_running;
 float intermission_exittime;
 
 /*QUAKED info_intermission(1 0.5 0.5)(-16 -16 -16)(16 16 16)
@@ -303,18 +302,22 @@ void execute_changelevel(entity this)
 	
 	entity pos = FindIntermission(this);
 
-	FOREACH_CLIENT(IS_PLAYER(it),
+	if(pos)
 	{
-		it.view_ofs = '0 0 0';
-		it.angles = it.v_angle = pos.mangle;
-		it.fixangle = true;		// turn this way immediately
-		it.nextthink = time + 0.5;
-		it.takedamage = DAMAGE_NO;
-		it.solid = SOLID_NOT;
-		set_movetype(it, MOVETYPE_NONE);
-		it.modelindex = 0;
-		setorigin(it, pos.origin);
-	});
+		FOREACH_CLIENT(IS_PLAYER(it),
+		{
+			it.view_ofs = '0 0 0';
+			it.angles = it.v_angle = pos.mangle;
+			it.fixangle = true;		// turn this way immediately
+			it.nextthink = time + 0.5;
+			it.takedamage = DAMAGE_NO;
+			it.solid = SOLID_NOT;
+			it.health = -2342;
+			set_movetype(it, MOVETYPE_NONE);
+			it.modelindex = 0;
+			setorigin(it, pos.origin);
+		});
+	}
 
 	WriteByte(MSG_ALL, SVC_INTERMISSION);
 }
@@ -561,7 +564,7 @@ void PutClientInServer(entity this)
 	this.radsuit_finished = 0;
 	this.invisible_finished = 0;
 	this.invincible_finished = 0;
-	this.effects = 0;
+	this.effects = EF_TELEPORT_BIT;
 	this.invincible_time = 0;
 
 	this.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_SOLID;
@@ -583,7 +586,7 @@ void PutClientInServer(entity this)
 //	spot = SelectSpawnPoint();
 
 	this.origin = spot.origin + '0 0 1';
-	this.angles = spot.angles;
+	this.angles = vec2(spot.angles);
 	this.fixangle = true;		// turn this way immediately
 
 // oh, this is a hack!
@@ -901,7 +904,6 @@ void PlayerPreThink(entity this)
 		this.netname_previous = strzone(this.netname);
 	}
 
-
 	if(intermission_running)
 	{
 		IntermissionThink(this);	// otherwise a button could be missed between
@@ -1117,35 +1119,37 @@ void PlayerPostThink(entity this)
 	Player_Physics(this);
 
 	if(this.view_ofs == '0 0 0')
-		return;		// intermission or finale
-	if(this.deadflag)
-		return;
-		
-// do weapon stuff
-
-	W_WeaponFrame(this);
-
-// check to see if player landed and play landing sound	
-	if((this.jump_flag < -300) &&(this.flags & FL_ONGROUND) &&(this.health > 0))
 	{
-		if(this.watertype == CONTENT_WATER)
-			_sound(this, CHAN_BODY, "player/h2ojump.wav", 1, ATTN_NORM);
-		else if(this.jump_flag < -650)
-		{
-			T_Damage(this, NULL, NULL, 5); 
-			_sound(this, CHAN_VOICE, "player/land2.wav", 1, ATTN_NORM);
-			this.deathtype = "falling";
-		}
-		else
-			_sound(this, CHAN_VOICE, "player/land.wav", 1, ATTN_NORM);
-
-		this.jump_flag = 0;
+		CSQCMODEL_AUTOUPDATE(this);
+		return;		// intermission or finale
 	}
+	if(this.deadflag == DEAD_NO)
+	{
+		// do weapon stuff
+		W_WeaponFrame(this);
 
-	if(!(this.flags & FL_ONGROUND))
-		this.jump_flag = this.velocity_z;
+		// check to see if player landed and play landing sound	
+		if((this.jump_flag < -300) && IS_ONGROUND(this) && (this.health > 0))
+		{
+			if(this.watertype == CONTENT_WATER)
+				_sound(this, CHAN_BODY, "player/h2ojump.wav", 1, ATTN_NORM);
+			else if(this.jump_flag < -650)
+			{
+				T_Damage(this, NULL, NULL, 5); 
+				_sound(this, CHAN_VOICE, "player/land2.wav", 1, ATTN_NORM);
+				this.deathtype = "falling";
+			}
+			else
+				_sound(this, CHAN_VOICE, "player/land.wav", 1, ATTN_NORM);
 
-	CheckPowerups(this);
+			this.jump_flag = 0;
+		}
+
+		if(!IS_ONGROUND(this))
+			this.jump_flag = this.velocity_z;
+
+		CheckPowerups(this);
+	}
 
 	CSQCMODEL_AUTOUPDATE(this);
 }
@@ -1186,7 +1190,11 @@ void ClientConnect(entity this)
 	static int playerid_last;
 	this.playerid = ++playerid_last;
 
+	this.flags |= FL_CLIENT;
+
 	this.netname_previous = strzone(this.netname);
+
+	this.disableclientprediction = -1;
 
 	string thetrack = ((current_cdtrack) ? current_cdtrack : getcdtrack(world.sounds));
 	stuffcmd(this, strcat("cd loop ", thetrack, "\n"));

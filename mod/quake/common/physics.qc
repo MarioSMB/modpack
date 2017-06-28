@@ -1,12 +1,13 @@
 void Physics_UpdateStats(entity this)
 {
 #ifdef SVQC
-	STAT(PL_MIN, this) = VEC_HULL_MIN;
-	STAT(PL_MAX, this) = VEC_HULL_MAX;
-	STAT(PL_VIEW_OFS, this) = '0 0 22';
-	STAT(PL_CROUCH_MIN, this) = VEC_HULL_MIN;
-	STAT(PL_CROUCH_MAX, this) = VEC_HULL_MAX;
-	STAT(PL_CROUCH_VIEW_OFS, this) = '0 0 22';
+	if(intermission_running)
+		STAT(PL_VIEW_OFS, this) = STAT(PL_CROUCH_VIEW_OFS, this) = '0 0 0';
+	else
+		STAT(PL_VIEW_OFS, this) = STAT(PL_CROUCH_VIEW_OFS, this) = '0 0 22';
+
+	STAT(PL_MIN, this) = STAT(PL_CROUCH_MIN, this) = VEC_HULL_MIN;
+	STAT(PL_MAX, this) = STAT(PL_CROUCH_MAX, this) = VEC_HULL_MAX;	
 #endif
 }
 
@@ -303,10 +304,10 @@ void PM_RollView(entity this)
 
 void PM_Main(entity this, float dt)
 {
+	PM_FixClient(this);
+
 	if(this.move_movetype == MOVETYPE_NONE)
 		return;
-
-	PM_FixClient(this);
 
 	SV_check_punch(this, dt);
 
