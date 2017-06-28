@@ -2,6 +2,8 @@
 
 #include "../common/_all.inc"
 
+#include <lib/csqcmodel/sv_model.qc>
+
 //#include "defs.qc"
 #include "lib.qc"
 #include "subs.qc"

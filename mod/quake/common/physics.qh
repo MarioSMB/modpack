@@ -41,6 +41,17 @@ const int WATERLEVEL_SUBMERGED = 3;
 #define SET_JUMP_HELD(s)                    ((s).flags &= ~FL_JUMPRELEASED)
 #define UNSET_JUMP_HELD(s)                  ((s).flags |= FL_JUMPRELEASED)
 
+#define PHYS_PL_MAX(s)						STAT(PL_MAX, s)
+#define PHYS_PL_MIN(s)						STAT(PL_MIN, s)
+#define PHYS_PL_CROUCH_MAX(s)				STAT(PL_CROUCH_MAX, s)
+#define PHYS_PL_CROUCH_MIN(s)				STAT(PL_CROUCH_MIN, s)
+
+#define PHYS_PL_VIEWOFS(s)					STAT(PL_VIEW_OFS, s)
+#define PHYS_PL_CROUCH_VIEWOFS(s)			STAT(PL_CROUCH_VIEW_OFS, s)
+
+#define PHYS_VIEWHEIGHT(s)					STAT(VIEWHEIGHT, s)
+#define PHYS_HEALTH(s)						STAT(HEALTH, s)
+
 // quake specific stats
 #define PHYS_WATERFRICTION(s)               STAT(MOVEVARS_FRICTION_WATER, s)
 #define PHYS_WATERACCELERATE(s)             STAT(MOVEVARS_WATERACCELERATE, s)
@@ -68,9 +79,17 @@ const int WATERLEVEL_SUBMERGED = 3;
 
 	#define TICRATE                             ticrate
 
+	#define PHYS_INPUT_ANGLES(s)                input_angles
+// TODO
+	#define PHYS_WORLD_ANGLES(s)                input_angles
+
 	#define GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE  (boolean(moveflags & MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE))
 	#define GAMEPLAYFIX_NOGRAVITYONGROUND           (boolean(moveflags & MOVEFLAG_NOGRAVITYONGROUND))
 	#define GAMEPLAYFIX_Q2AIRACCELERATE             (boolean(moveflags & MOVEFLAG_Q2AIRACCELERATE))
+
+	#define IS_DUCKED(s)                        (boolean((s).flags & FL_DUCKED))
+	#define SET_DUCKED(s)                       ((s).flags |= FL_DUCKED)
+	#define UNSET_DUCKED(s)                     ((s).flags &= ~FL_DUCKED)
 
 	#define PHYS_INPUT_TIMELENGTH               input_timelength
 	#define PHYS_INPUT_FRAMETIME                serverdeltatime
@@ -105,9 +124,16 @@ const int WATERLEVEL_SUBMERGED = 3;
 
 	#define TICRATE sys_frametime
 
+	#define PHYS_INPUT_ANGLES(s)                ((s).v_angle)
+	#define PHYS_WORLD_ANGLES(s)                ((s).angles)
+
 	#define GAMEPLAYFIX_GRAVITYUNAFFECTEDBYTICRATE  autocvar_sv_gameplayfix_gravityunaffectedbyticrate
 	#define GAMEPLAYFIX_NOGRAVITYONGROUND           autocvar_sv_gameplayfix_nogravityonground
 	#define GAMEPLAYFIX_Q2AIRACCELERATE             autocvar_sv_gameplayfix_q2airaccelerate
+
+	#define IS_DUCKED(s)                        ((s).crouch)
+	#define SET_DUCKED(s)                       ((s).crouch = true)
+	#define UNSET_DUCKED(s)                     ((s).crouch = false)
 
 	#define PHYS_INPUT_TIMELENGTH               frametime
 	#define PHYS_INPUT_FRAMETIME                sys_frametime

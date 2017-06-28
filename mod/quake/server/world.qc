@@ -11,6 +11,7 @@ void main()
 }
 
 #if 0
+#if 0
 bool sv_playerphysicsqc_backup;
 #endif
 void SV_Shutdown()
@@ -19,6 +20,7 @@ void SV_Shutdown()
 	cvar_set("sv_playerphysicsqc", ftos(sv_playerphysicsqc_backup));
 #endif
 }
+#endif
 
 //=======================
 /*QUAKED worldspawn(0 0 0) ?
@@ -863,6 +865,10 @@ void StartFrame()
 {
 	sys_frametime = autocvar_sys_ticrate * autocvar_slowmo;
 	if (sys_frametime <= 0) sys_frametime = 1.0 / 60.0; // somewhat safe fallback
+
+	serverprevtime = servertime;
+	servertime = time;
+	serverframetime = frametime;
 	
 	teamplay = autocvar_teamplay;
 	skill = autocvar_skill;

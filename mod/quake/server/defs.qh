@@ -96,3 +96,5 @@ const int AS_MISSILE = 4;
 string current_cdtrack;
 
 float sys_frametime;     // gets initialised in worldspawn, saves the value from autocvar_sys_ticrate
+
+float servertime, serverprevtime, serverframetime;

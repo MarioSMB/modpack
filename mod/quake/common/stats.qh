@@ -5,6 +5,47 @@
 
 const int MAX_CL_STATS = 256;
 
+// const int STAT_HEALTH = 0;
+// const int STAT_ARMOR = 4;
+// const int STAT_SHELLS = 6;
+// const int STAT_NAILS = 7;
+// const int STAT_ROCKETS = 8;
+// const int STAT_CELLS = 9;
+// const int STAT_ACTIVEWEAPON = 10;
+// const int STAT_ITEMS = 15; // .items | .items2 << 23 | serverflags << 28
+// const int STAT_VIEWHEIGHT = 16;
+
+#if defined(CSQC)
+    #define g_stat_HEALTH getstati(STAT_HEALTH)
+    #define g_stat_ARMOR getstat_int(STAT_ARMOR)
+    #define g_stat_SHELLS getstat_int(STAT_SHELLS)
+    #define g_stat_NAILS getstat_int(STAT_NAILS)
+    #define g_stat_ROCKETS getstat_int(STAT_ROCKETS)
+    #define g_stat_CELLS getstat_int(STAT_CELLS)
+    #define g_stat_ACTIVEWEAPON getstat_int(STAT_ACTIVEWEAPON)
+    #define g_stat_ITEMS getstat_int(STAT_ITEMS)
+    #define g_stat_VIEWHEIGHT getstati(STAT_VIEWHEIGHT)
+#elif defined(SVQC)
+    #define stat_HEALTH health
+    #define stat_ARMOR armorvalue
+    #define stat_SHELLS ammo_shells
+    #define stat_NAILS ammo_nails
+    #define stat_ROCKETS ammo_rockets
+    #define stat_CELLS ammo_cells
+    #define stat_ACTIVEWEAPON weapon
+    #define stat_ITEMS items
+    #define stat_VIEWHEIGHT view_ofs_z
+#endif
+
+REGISTER_STAT(PL_VIEW_OFS, vector)
+REGISTER_STAT(PL_CROUCH_VIEW_OFS, vector)
+
+REGISTER_STAT(PL_MIN, vector)
+REGISTER_STAT(PL_CROUCH_MIN, vector)
+
+REGISTER_STAT(PL_MAX, vector)
+REGISTER_STAT(PL_CROUCH_MAX, vector)
+
 #ifdef SVQC
 #include <common/physics/movetypes/movetypes.qh>
 #endif
@@ -39,6 +80,9 @@ REGISTER_STAT(GAMEPLAYFIX_STEPMULTIPLETIMES, int, autocvar_sv_gameplayfix_stepmu
 REGISTER_STAT(GAMEPLAYFIX_UNSTICKPLAYERS, int, autocvar_sv_gameplayfix_unstickplayers)
 REGISTER_STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND, int, autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag)
 REGISTER_STAT(GAMEPLAYFIX_WATERTRANSITION, int, autocvar_sv_gameplayfix_fixedcheckwatertransition)
+
+REGISTER_STAT(MOVEVARS_TICRATE, float, autocvar_sys_ticrate)
+REGISTER_STAT(MOVEVARS_TIMESCALE, float, autocvar_slowmo)
 
 REGISTER_STAT(MOVEVARS_JUMPSTEP, int, cvar("sv_jumpstep"))
 REGISTER_STAT(NOSTEP, int, cvar("sv_nostep"))

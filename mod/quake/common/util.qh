@@ -4,3 +4,10 @@
 int Mod_Q1BSP_SuperContentsFromNativeContents(int nativecontents);
 int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents);
 #endif
+
+IntrusiveList g_saved_cvars;
+STATIC_INIT(g_saved_cvars) { g_saved_cvars = IL_NEW(); }
+
+#ifndef SVQC
+.string message;
+#endif

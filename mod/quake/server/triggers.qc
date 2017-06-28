@@ -392,8 +392,10 @@ void teleport_touch(entity this, entity toucher)
 		toucher.teleport_time = time + 0.7;
 		toucher.velocity = v_forward * 300;
 	}
-	if(toucher.flags & FL_ONGROUND)
-		toucher.flags &= ~FL_ONGROUND;
+
+	UNSET_ONGROUND(toucher);
+
+	BITXOR_ASSIGN(toucher.effects, EF_TELEPORT_BIT);
 }
 
 /*QUAKED info_teleport_destination(.5 .5 .5)(-8 -8 -8)(8 8 32)

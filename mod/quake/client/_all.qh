@@ -1,5 +1,7 @@
 #pragma once
 
+float serverprevtime, serverdeltatime;
+
 float ticrate;
 
 vector mousepos;
@@ -8,3 +10,13 @@ float completed_time;
 
 vector SIZE_CURSOR = '32 32 0';
 vector OFFSET_CURSOR = '0 0 0';
+
+.int		renderflags;
+
+.void(entity) entremove;
+
+.int enttype; // entity type sent from server
+.int sv_entnum; // entity number sent from server
+
+int framecount;
+.float health;

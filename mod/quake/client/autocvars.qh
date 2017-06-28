@@ -1,0 +1,3 @@
+#pragma once
+
+bool autocvar_developer_csqcentities;

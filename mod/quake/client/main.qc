@@ -14,11 +14,13 @@ void CSQC_Init()
 	//localcmd("\ncd remap track001 track002 track003 track004 track005 track006 track007 track008 track009 track010 track011\n");
 }
 
+#if 0
 void CSQC_Shutdown()
 {
 	cvar_set("cl_movement_track_canjump", ftos(oldjump));
 	//localcmd(sprintf("\ncd remap %s\n", cvar_string("g_cdtracks_remaplist")));
 }
+#endif
 
 #define drawpic(position, pic, size, rgb, alpha, flag) \
 	drawpic_builtin(position, pic, size, rgb, alpha, flag)
@@ -91,6 +93,8 @@ void HUD_Crosshair(entity this);
 void CSQC_UpdateView(entity this, float w, float h)
 {
 	stats_get();
+
+	CSQCPlayer_SetCamera();
 
 	// ALWAYS Clear Current Scene First
 	clearscene();
@@ -176,9 +180,59 @@ bool CSQC_ConsoleCommand(string command)
 	return false;
 }
 
-void CSQC_Ent_Update(entity this, bool isNew)
+void CSQC_Ent_Update(entity this, bool isnew)
 {
+	this.sourceLoc = __FILE__ ":" STR(__LINE__);
+	int t = ReadByte();
 
+	// set up the "time" global for received entities to be correct for interpolation purposes
+	float savetime = time;
+	if(servertime)
+	{
+		time = servertime;
+	}
+	else
+	{
+		serverprevtime = time;
+		serverdeltatime = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
+		time = serverprevtime + serverdeltatime;
+	}
+
+#ifdef DP_CSQC_ENTITY_REMOVE_IS_B0RKED
+	if (this.enttype)
+	{
+		if (t != this.enttype || isnew)
+		{
+			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", etof(this), this.entnum, this.enttype, t);
+			Ent_Remove(this);
+			clearentity(this);
+			isnew = true;
+		}
+	}
+	else
+	{
+		if (!isnew)
+		{
+			LOG_INFOF("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n", etof(this), this.entnum, t);
+			isnew = true;
+		}
+	}
+#endif
+	this.enttype = t;
+	bool done = false;
+	FOREACH(LinkedEntities, it.m_id == t, {
+		if (isnew) this.classname = it.netname;
+		if (autocvar_developer_csqcentities)
+            LOG_INFOF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
+		done = it.m_read(this, NULL, isnew);
+		//MUTATOR_CALLHOOK(Ent_Update, this, isnew);
+		break;
+	});
+	time = savetime;
+	if (!done)
+	{
+		LOG_FATALF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
+	}
 }
 
 void CSQC_Ent_Remove(entity this)

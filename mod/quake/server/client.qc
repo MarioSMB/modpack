@@ -759,50 +759,6 @@ void PlayerDeathThink(entity this)
 }
 
 
-void PlayerJump(entity this)
-{
-	if(this.flags & FL_WATERJUMP)
-		return;
-	
-	if(this.waterlevel >= 2)
-	{
-		if(this.watertype == CONTENT_WATER)
-			this.velocity_z = 100;
-		else if(this.watertype == CONTENT_SLIME)
-			this.velocity_z = 80;
-		else
-			this.velocity_z = 50;
-
-// play swiming sound
-		if(this.swim_flag < time)
-		{
-			this.swim_flag = time + 1;
-			if(random() < 0.5)
-				_sound(this, CHAN_BODY, "misc/water1.wav", 1, ATTN_NORM);
-			else
-				_sound(this, CHAN_BODY, "misc/water2.wav", 1, ATTN_NORM);
-		}
-
-		return;
-	}
-
-	if(!IS_ONGROUND(this))
-		return;
-
-	if(IS_JUMP_HELD(this))
-		return;		// don't pogo stick
-
-	SET_JUMP_HELD(this);
-
-	UNSET_ONGROUND(this);
-	
-	this.button2 = 0;
-// player jumping sound
-	_sound(this, CHAN_BODY, "player/plyrjmp8.wav", 1, ATTN_NORM);
-	this.velocity_z = this.velocity_z + 270;
-}
-
-
 /*
 ===========
 WaterMove
@@ -970,13 +926,6 @@ void PlayerPreThink(entity this)
 	
 	if(this.deadflag == DEAD_DYING)
 		return;	// dying, so do nothing
-
-	if(this.button2)
-	{
-		PlayerJump(this);
-	}
-	else
-		UNSET_JUMP_HELD(this);
 
 // teleporters can force a non-moving pause time	
 	if(time < this.pausetime)
@@ -1197,6 +1146,8 @@ void PlayerPostThink(entity this)
 		this.jump_flag = this.velocity_z;
 
 	CheckPowerups(this);
+
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
 string getcdtrack(int numb)
@@ -1246,6 +1197,10 @@ void ClientConnect(entity this)
 // a client connecting during an intermission can cause problems
 	if(intermission_running)
 		ExitIntermission();
+
+	CSQCMODEL_AUTOINIT(this);
+
+	Physics_UpdateStats(this);
 }
 
 

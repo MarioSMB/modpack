@@ -1,3 +1,15 @@
+void Physics_UpdateStats(entity this)
+{
+#ifdef SVQC
+	STAT(PL_MIN, this) = VEC_HULL_MIN;
+	STAT(PL_MAX, this) = VEC_HULL_MAX;
+	STAT(PL_VIEW_OFS, this) = '0 0 22';
+	STAT(PL_CROUCH_MIN, this) = VEC_HULL_MIN;
+	STAT(PL_CROUCH_MAX, this) = VEC_HULL_MAX;
+	STAT(PL_CROUCH_VIEW_OFS, this) = '0 0 22';
+#endif
+}
+
 void PM_ClientMovement_UpdateStatus(entity this)
 {
 #if 0
@@ -20,6 +32,8 @@ void PM_FixClient(entity this)
 	if (!(PHYS_INPUT_BUTTON_JUMP(this))) // !jump
 		UNSET_JUMP_HELD(this);           // canjump = true
 	PM_ClientMovement_UpdateStatus(this);
+#elif defined(SVQC)
+	Physics_UpdateStats(this);
 #endif
 }
 
@@ -67,7 +81,54 @@ float SV_CalcRoll(entity this)
 }
 #endif
 
-void PM_WaterMove(entity this)
+void PlayerJump(entity this)
+{
+	if(this.flags & FL_WATERJUMP)
+		return;
+	
+	if(this.waterlevel >= 2)
+	{
+		if(this.watertype == CONTENT_WATER)
+			this.velocity_z = 100;
+		else if(this.watertype == CONTENT_SLIME)
+			this.velocity_z = 80;
+		else
+			this.velocity_z = 50;
+
+// play swiming sound
+#ifdef SVQC
+		if(this.swim_flag < time)
+		{
+			this.swim_flag = time + 1;
+			if(random() < 0.5)
+				_sound(this, CHAN_BODY, "misc/water1.wav", 1, ATTN_NORM);
+			else
+				_sound(this, CHAN_BODY, "misc/water2.wav", 1, ATTN_NORM);
+		}
+#endif
+
+		return;
+	}
+
+	if(!IS_ONGROUND(this))
+		return;
+
+	if(IS_JUMP_HELD(this))
+		return;		// don't pogo stick
+
+	SET_JUMP_HELD(this);
+
+	UNSET_ONGROUND(this);
+	
+#ifdef SVQC
+	this.button2 = 0;
+// player jumping sound
+	_sound(this, CHAN_BODY, "player/plyrjmp8.wav", 1, ATTN_NORM);
+#endif
+	this.velocity_z = this.velocity_z + 270;
+}
+
+void PM_WaterMove(entity this, float dt)
 {
 	makevectors(this.v_angle);
 
@@ -85,7 +146,7 @@ void PM_WaterMove(entity this)
 	// water friction
 	float frict = ((PHYS_WATERFRICTION(this) < 0) ? PHYS_FRICTION(this) : PHYS_WATERFRICTION(this));
 	float speed = vlen(this.velocity);
-	float spd = (1 - frametime * frict);
+	float spd = (1 - dt * frict);
 	float newspeed = max(0, speed - spd);
 	self.velocity = self.velocity * spd;
 
@@ -98,7 +159,7 @@ void PM_WaterMove(entity this)
 		return;
 
 	float accel = ((PHYS_WATERACCELERATE(this)) < 0 ? PHYS_ACCELERATE(this) : PHYS_WATERACCELERATE(this));
-	float accelspeed = accel * wishspeed * frametime;
+	float accelspeed = accel * wishspeed * dt;
 	if (accelspeed > addspeed)
 		accelspeed = addspeed;
 
@@ -117,7 +178,7 @@ void PM_WaterJump(entity this)
 	this.velocity_y = this.movedir_y;
 }
 
-void PM_UserFriction(entity this)
+void PM_UserFriction(entity this, float dt)
 {
 	if(this.velocity == '0 0 0')
 		return;
@@ -138,7 +199,7 @@ void PM_UserFriction(entity this)
 		friction = PHYS_FRICTION(this);
 
 	float control = (speed < PHYS_STOPSPEED(this)) ? PHYS_STOPSPEED(this) : speed;
-	float newspeed = speed - frametime * control * friction;
+	float newspeed = speed - dt * control * friction;
 
 	if(newspeed < 0)
 		newspeed = 0;
@@ -148,20 +209,20 @@ void PM_UserFriction(entity this)
 	this.velocity = this.velocity * newspeed;
 }
 
-void PM_Accelerate(entity this, vector wishdir, float wishspeed)
+void PM_Accelerate(entity this, float dt, vector wishdir, float wishspeed)
 {
 	float currentspeed = (this.velocity * wishdir);
 	float addspeed = wishspeed - currentspeed;
 	if(addspeed <= 0)
 		return;
-	float accelspeed = PHYS_ACCELERATE(this) * frametime * wishspeed;
+	float accelspeed = PHYS_ACCELERATE(this) * dt * wishspeed;
 	if(accelspeed > addspeed)
 		accelspeed = addspeed;
 
 	this.velocity += accelspeed * wishdir;
 }
 
-void PM_AirAccelerate(entity this, vector wishvel, float wishspeed)
+void PM_AirAccelerate(entity this, float dt, vector wishvel, float wishspeed)
 {
 	vector wishdir = normalize(wishvel);
 	float wishspd = vlen(wishvel);
@@ -172,14 +233,14 @@ void PM_AirAccelerate(entity this, vector wishvel, float wishspeed)
 	if(addspeed <= 0)
 		return;
 	float accelspeed = (PHYS_AIRACCELERATE(this) < 0 ? PHYS_ACCELERATE(this) : PHYS_AIRACCELERATE(this))
-			* (GAMEPLAYFIX_Q2AIRACCELERATE ? wishspd : wishspeed) * frametime;
+			* (GAMEPLAYFIX_Q2AIRACCELERATE ? wishspd : wishspeed) * dt;
 	if(accelspeed > addspeed)
 		accelspeed = addspeed;
 
 	this.velocity += accelspeed * wishdir;
 }
 
-void PM_AirMove(entity this)
+void PM_AirMove(entity this, float dt)
 {
 	makevectors(self.angles_y * '0 1 0');
 	vector wishvel = v_forward * self.movement_x + v_right * self.movement_y;
@@ -204,15 +265,15 @@ void PM_AirMove(entity this)
 		// noclip
 		this.velocity = wishvel;
 	}
-	else if(this.flags & FL_ONGROUND)
+	else if(IS_ONGROUND(this))
 	{
-		PM_UserFriction(this);
-		PM_Accelerate(this, wishdir, wishspeed);
+		PM_UserFriction(this, dt);
+		PM_Accelerate(this, dt, wishdir, wishspeed);
 	}
 	else
 	{
 		// not on ground, so little effect on velocity
-		PM_AirAccelerate(this, wishvel, wishspeed);
+		PM_AirAccelerate(this, dt, wishvel, wishspeed);
 	}
 }
 
@@ -247,12 +308,17 @@ void PM_Main(entity this, float dt)
 
 	PM_FixClient(this);
 
-	SV_check_punch(this, frametime);
+	SV_check_punch(this, dt);
 
 	if(PM_CheckDead(this))
 		return;
 
 	PM_RollView(this);
+
+	if(PHYS_INPUT_BUTTON_JUMP(this))
+		PlayerJump(this);
+	else
+		UNSET_JUMP_HELD(this);
 
 	if(this.flags & FL_WATERJUMP)
 	{
@@ -262,14 +328,18 @@ void PM_Main(entity this, float dt)
 
 	if(this.waterlevel >= 2 && this.move_movetype != MOVETYPE_NOCLIP)
 	{
-		PM_WaterMove(this);
+		PM_WaterMove(this, dt);
 		return;
 	}
 
-	PM_AirMove(this);
+	PM_AirMove(this, dt);
 }
 
+#if defined(SVQC)
 void SV_PlayerPhysics(entity this)
+#elif defined(CSQC)
+void CSQC_ClientMovement_PlayerMove_Frame(entity this)
+#endif
 {
 	PM_Main(this, PHYS_INPUT_TIMELENGTH);
 
