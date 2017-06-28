@@ -585,7 +585,7 @@ void ThrowHead(entity this, string gibname, float dm)
 	setsize(this, '-16 -16 0', '16 16 56');
 	this.velocity = VelocityForDamage(dm);
 	this.origin_z = this.origin_z - 24;
-	this.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(this);
 	this.avelocity = crandom() * '0 600 0';
 }
 
@@ -633,7 +633,7 @@ void PlayerDie(entity this, entity attacker)
 	this.view_ofs = '0 0 -8';
 	this.deadflag = DEAD_DYING;
 	this.solid = SOLID_NOT;
-	this.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(this);
 	set_movetype(this, MOVETYPE_TOSS);
 	if(this.velocity_z < 10)
 		this.velocity_z = this.velocity_z + random()*300;

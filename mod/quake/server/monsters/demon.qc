@@ -156,7 +156,7 @@ void demon1_jump4(entity this)
 	this.origin_z += 1;
 	makevectors(this.angles);
 	this.velocity = v_forward * 600 + '0 0 250';
-	this.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(this);
 }
 // if three seconds pass, assume demon is stuck and jump again
 void demon1_jump3(entity this) { set_anim(this, anim_demon_leap3, demon1_jump4); ai_face(this); }
@@ -345,7 +345,7 @@ void Demon_JumpTouch(entity this, entity toucher)
 
 	if(!t_checkbottom(this))
 	{
-		if(this.flags & FL_ONGROUND)
+		if(IS_ONGROUND(this))
 		{	// jump randomly to not get hung up
 			//dprint("popjump\n");
 			settouch(this, func_null);

@@ -597,11 +597,11 @@ void trigger_monsterjump_touch(entity this, entity toucher)
 // set XY even if not on ground, so the jump will clear lips
 	toucher.velocity_x = this.movedir_x * this.speed;
 	toucher.velocity_y = this.movedir_y * this.speed;
-	
-	if(!(toucher.flags & FL_ONGROUND))
+
+	if(!IS_ONGROUND(toucher))
 		return;
 	
-	toucher.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(toucher);
 
 	toucher.velocity_z = this.height;
 }

@@ -159,7 +159,7 @@ void Tar_JumpTouch(entity this, entity toucher)
 
 	if(!t_checkbottom(this))
 	{
-		if(this.flags & FL_ONGROUND)
+		if(IS_ONGROUND(this))
 		{	// jump randomly to not get hung up
 			//dprint("popjump\n");
 			settouch(this, func_null);
@@ -201,7 +201,7 @@ void tbaby_jump5(entity this)
 	this.origin_z = this.origin_z + 1;
 	this.velocity = v_forward * 600 + '0 0 200';
 	this.velocity_z = this.velocity_z + random()*150;
-	this.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(this);
 	this.cnt = 0;
 }
 void tbaby_jump4(entity this) { set_anim(this, anim_tbaby_jump4, tbaby_jump5); ai_face(this); }
