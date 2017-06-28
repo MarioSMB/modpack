@@ -148,7 +148,7 @@ void Dog_JumpTouch(entity this, entity toucher)
 		}
 	}
 
-	if(!checkbottom(this))
+	if(!t_checkbottom(this))
 	{
 		if(this.flags & FL_ONGROUND)
 		{	// jump randomly to not get hung up

@@ -313,7 +313,7 @@ bool DemonCheckAttack(entity this)
 void Demon_Melee(entity this, float side)
 {
 	ai_face(this);
-	walkmove(this, this.ideal_yaw, 12);	// allow a little closing
+	t_walkmove(this, this.ideal_yaw, 12);	// allow a little closing
 
 	if(vdist(this.enemy.origin - this.origin, >, 100))
 		return;
@@ -343,7 +343,7 @@ void Demon_JumpTouch(entity this, entity toucher)
 		}
 	}
 
-	if(!checkbottom(this))
+	if(!t_checkbottom(this))
 	{
 		if(this.flags & FL_ONGROUND)
 		{	// jump randomly to not get hung up

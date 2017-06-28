@@ -157,7 +157,7 @@ void Tar_JumpTouch(entity this, entity toucher)
 		_sound(this, CHAN_WEAPON, "blob/land1.wav", 1, ATTN_NORM);
 
 
-	if(!checkbottom(this))
+	if(!t_checkbottom(this))
 	{
 		if(this.flags & FL_ONGROUND)
 		{	// jump randomly to not get hung up

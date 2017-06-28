@@ -786,15 +786,15 @@ void PlayerJump(entity this)
 		return;
 	}
 
-	if(!(this.flags & FL_ONGROUND))
+	if(!IS_ONGROUND(this))
 		return;
 
-	if( !(this.flags & FL_JUMPRELEASED) )
+	if(IS_JUMP_HELD(this))
 		return;		// don't pogo stick
 
-	this.flags &= ~FL_JUMPRELEASED;
+	SET_JUMP_HELD(this);
 
-	this.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(this);
 	
 	this.button2 = 0;
 // player jumping sound
@@ -912,7 +912,7 @@ void CheckWaterJump(entity this)
 		{	// open at eye level
 			this.flags |= FL_WATERJUMP;
 			this.velocity_z = 225;
-			this.flags &= ~FL_JUMPRELEASED;
+			SET_JUMP_HELD(this);
 			this.teleport_time = time + 2;	// safety net
 			return;
 		}
@@ -976,7 +976,7 @@ void PlayerPreThink(entity this)
 		PlayerJump(this);
 	}
 	else
-		this.flags |= FL_JUMPRELEASED;
+		UNSET_JUMP_HELD(this);
 
 // teleporters can force a non-moving pause time	
 	if(time < this.pausetime)

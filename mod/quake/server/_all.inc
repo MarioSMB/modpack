@@ -12,7 +12,6 @@
 #include "weapons.qc"
 #include "world.qc"
 #include "client.qc"
-//#include "physics.qc"
 #include "player.qc"
 #include "doors.qc"
 #include "buttons.qc"

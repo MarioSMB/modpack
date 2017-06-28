@@ -545,7 +545,7 @@ void zombie_paine12(entity this)
 	this.health = 60;
 	_sound(this, CHAN_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
 	this.solid = SOLID_SLIDEBOX;
-	if(!walkmove(this, 0, 0))
+	if(!t_walkmove(this, 0, 0))
 	{
 		setthink(this, zombie_paine11);
 		this.solid = SOLID_NOT;

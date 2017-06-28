@@ -53,3 +53,31 @@ REGISTER_STAT(MOVEVARS_STEPHEIGHT, float, autocvar_sv_stepheight)
 float autocvar_sv_wallfriction;
 #endif
 REGISTER_STAT(MOVEVARS_WALLFRICTION, int, autocvar_sv_wallfriction)
+
+// unique to quake
+#ifdef SVQC
+bool autocvar_sv_gameplayfix_nostepmoveonsteepslopes;
+float autocvar_sv_waterfriction;
+float autocvar_sv_wateraccelerate;
+float autocvar_sv_edgefriction;
+#endif
+REGISTER_STAT(GAMEPLAYFIX_NOSTEPMOVEONSTEEPSLOPES, int, autocvar_sv_gameplayfix_nostepmoveonsteepslopes)
+REGISTER_STAT(MOVEVARS_FRICTION_WATER, float, autocvar_sv_waterfriction)
+REGISTER_STAT(MOVEVARS_WATERACCELERATE, float, autocvar_sv_wateraccelerate)
+REGISTER_STAT(MOVEVARS_FRICTION_EDGE, float, autocvar_sv_edgefriction)
+
+// handled slightly differently
+#ifdef SVQC
+float autocvar_sv_friction;
+float autocvar_sv_accelerate;
+float autocvar_sv_maxspeed;
+float autocvar_sv_stopspeed;
+float autocvar_sv_maxairspeed;
+float autocvar_sv_airaccelerate;
+#endif
+REGISTER_STAT(MOVEVARS_FRICTION, float, autocvar_sv_friction)
+REGISTER_STAT(MOVEVARS_ACCELERATE, float, autocvar_sv_accelerate)
+REGISTER_STAT(MOVEVARS_MAXSPEED, float, autocvar_sv_maxspeed)
+REGISTER_STAT(MOVEVARS_STOPSPEED, float, autocvar_sv_stopspeed)
+REGISTER_STAT(MOVEVARS_MAXAIRSPEED, float, autocvar_sv_maxairspeed)
+REGISTER_STAT(MOVEVARS_AIRACCELERATE, float, autocvar_sv_airaccelerate)

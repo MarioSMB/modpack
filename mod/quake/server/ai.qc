@@ -24,28 +24,270 @@ time > .pausetime.
 walkmove(angle, speed) primitive is all or nothing
 */
 
+void changeyaw(entity this)
+{
+#if 1
+	float current = anglemods(this.angles_y);
 
-#if 0
+	if (current == this.ideal_yaw)
+		return;
+
+	float move = this.ideal_yaw - current;
+	if (this.ideal_yaw > current)
+	{
+		if(move >= 180)
+			move -= 360;
+	}
+	else
+	{
+		if(move <= -180)
+			move += 360;
+	}
+	if(move > 0)
+	{
+		if(move > this.yaw_speed)
+			move = this.yaw_speed;
+	}
+	else
+	{
+		if(move < -this.yaw_speed)
+			move = -this.yaw_speed;
+	}
+
+	current += move;
+	this.angles_y = anglemods(current);
+#else
+	ChangeYaw(this);
+#endif
+}
+
+bool t_checkbottom(entity this)
+{
+#if 1
+	vector minz = this.origin + this.mins;
+	vector maxz = this.origin + this.maxs;
+
+	vector start = minz - '0 0 1';
+
+	// if all the points under the corners are solid world, don't bother with the tougher checks
+	// the corners must be within 16 of the midpoint
+	for(int j = 0; j <= 1; j++)
+	{
+		for(int k = 0; k <= 1; k++)
+		{
+			start.x = (j) ? maxz.x : minz.x;
+			start.y = (k) ? maxz.y : minz.y;
+			if(pointcontents(start) != CONTENT_SOLID)
+				goto realcheck;
+		}
+	}
+
+	return true; // we got out easy
+
+	LABEL(realcheck)
+
+	// check it for real...
+	start.z = minz.z;
+
+	// the midpoint must be within 16 of the bottom
+	vector stop;
+	start = stop = vec2((minz + maxz) * 0.5);
+	start.z = stop.z = 2 * PHYS_STEPHEIGHT(this);
+
+	traceline(start, stop, MOVE_NOMONSTERS, this);
+	if(trace_fraction == 1.0)
+		return false;
+	float mid, bottom;
+	mid = bottom = trace_endpos.z;
+
+	// the corners must be within 16 of the midpoint
+	for(int j = 0; j <= 1; j++)
+	{
+		for(int k = 0; k <= 1; k++)
+		{
+			start.x = stop.x = ((j) ? maxz.x : minz.x);
+			start.y = stop.y = ((k) ? maxz.y : minz.y);
+
+			traceline(start, stop, MOVE_NOMONSTERS, this);
+
+			if(trace_fraction != 1.0 && trace_endpos.z > bottom)
+				bottom = trace_endpos.z;
+			if(trace_fraction == 1.0 || mid - trace_endpos.z > PHYS_STEPHEIGHT(this))
+				return false;
+		}
+	}
+
+	return true;
+#else
+	return checkbottom(this);
+#endif
+}
+
+bool t_movestep(entity this, vector move, bool relink, bool noenemy)
+{
+	vector oldorg = this.origin;
+	vector neworg = this.origin + move;
+	entity targ;
+
+	// flying monsters don't step up
+	if((this.flags & FL_SWIM) || (this.flags & FL_FLY))
+	{
+		// try one move with vertical motion, then one without
+		for(int j = 0; j < 2; ++j)
+		{
+			neworg = this.origin + move;
+			if(noenemy)
+				targ = NULL;
+			else
+			{
+				targ = this.enemy;
+				if(j == 0 && targ)
+				{
+					float dz = this.origin.z - targ.origin.z;
+					if(dz > 40)
+						neworg.z -= 8;
+					if(dz < 30)
+						neworg.z += 8;
+				}
+			}
+
+			tracebox(this.origin, this.mins, this.maxs, neworg, MOVE_NORMAL, this);
+			if(trace_fraction == 1)
+			{
+				if((this.flags & FL_SWIM) && (Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(trace_endpos)) & DPCONTENTS_LIQUIDSMASK))
+					return false; // swim monster left water
+
+				this.origin = trace_endpos;
+				if(relink)
+				{
+					// do nothing for now
+					setorigin(this, this.origin);
+				}
+				return true;
+			}
+
+			if(!targ)
+				break;
+		}
+
+		return false;
+	}
+
+	// push down from a step height above the desired position
+	neworg.z += PHYS_STEPHEIGHT(this);
+	vector end = neworg;
+	end.z -= PHYS_STEPHEIGHT(this) * 2;
+
+	tracebox(neworg, this.mins, this.maxs, end, MOVE_NORMAL, this);
+	if(trace_startsolid)
+	{
+		neworg.z -= PHYS_STEPHEIGHT(this);
+		tracebox(neworg, this.mins, this.maxs, end, MOVE_NORMAL, this);
+		if(trace_startsolid)
+			return false;
+	}
+
+	if(trace_fraction == 1)
+	{
+		// if monster had the ground pulled out, go ahead and fall
+		if(this.flags & FL_PARTIALGROUND)
+		{
+			this.origin = this.origin + move;
+			if(relink)
+			{
+				// do nothing for now
+				setorigin(this, this.origin);
+			}
+			UNSET_ONGROUND(this);
+			return true;
+		}
+
+		return false; // walked off an edge
+	}
+
+	// check point traces down for dangling corners
+	setorigin(this, trace_endpos);
+
+	if(!t_checkbottom(this))
+	{
+		if(this.flags & FL_PARTIALGROUND)
+		{
+			// entity had floor mostly pulled out from underneath it
+			// and is trying to correct
+			if(relink)
+			{
+				// do nothing for now
+				setorigin(this, this.origin);
+			}
+			return true;
+		}
+		this.origin = oldorg;
+		return false;
+	}
+
+	if(this.flags & FL_PARTIALGROUND)
+		this.flags &= ~FL_PARTIALGROUND;
+
+	// gameplayfix: check if reached pretty steep plane and bail
+	if(!((this.flags & FL_SWIM) || (this.flags & FL_FLY)) && STAT(GAMEPLAYFIX_NOSTEPMOVEONSTEEPSLOPES, this))
+	{
+		if(trace_plane_normal.z < 0.5)
+		{
+			this.origin = oldorg;
+			return false;
+		}
+	}
+
+	this.groundentity = trace_ent;
+
+	// the move is ok
+	if(relink)
+	{
+		// do nothing for now
+		setorigin(this, this.origin);
+	}
+
+	return true;
+}
+
+bool t_walkmove(entity this, float yaw, float dist)
+{
+#if 1
+	if(!(IS_ONGROUND(this) || (this.flags & FL_SWIM) || (this.flags & FL_FLY)))
+		return false;
+
+	yaw = yaw * M_PI * 2 / 360;
+	vector move = vec2(cos(yaw) * dist, sin(yaw) * dist);
+
+	return t_movestep(this, move, true, false);
+#else
+	return walkmove(this, yaw, dist);
+#endif
+}
+
 // hacked in version of movetogoal (to be rewritten)
-
+#if 0
 bool t_stepdirection(entity this, float yaw, float dist)
 {
 	this.ideal_yaw = yaw;
-	ChangeYaw(this);
+	changeyaw(this);
 
-	/*float oldyaw = yaw; // before we hack it apart
 	yaw = yaw * M_PI * 2 / 360;
-	vector move = vec2(cos(yaw) * dist, sin(yaw) * dist);*/
+	vector move = vec2(cos(yaw) * dist, sin(yaw) * dist);
 	vector oldorg = this.origin;
 
-	if(walkmove(this, yaw, dist))
+	if(t_movestep(this, move, false, false))
 	{
 		float delta = this.angles.y - this.ideal_yaw;
 		if(delta > 45 && delta < 315)
-			setorigin(this, oldorg);
+			this.origin = oldorg; // not turned far enough, so don't take the step
 		// leave the linking to the engine? TODO
+		setorigin(this, this.origin);
 		return true;
 	}
+
+	// relink...
+	setorigin(this, this.origin);
 
 	return false;
 }
@@ -54,7 +296,7 @@ void t_newchasedir(entity this, entity targ, float dist)
 {
 	float di_nodir = -1;
 	vector d;
-	float olddir = anglemods((this.ideal_yaw / 45) * 45);
+	float olddir = anglemods((rint(this.ideal_yaw / 45) * 45));
 	float turnaround = anglemods(olddir - 180);
 	float tdir;
 
@@ -86,13 +328,15 @@ void t_newchasedir(entity this, entity targ, float dist)
 	}
 
 	// try other directions
-	if(random() < 0.33 || fabs(delta.y) > fabs(delta.x))
+	if(random() < 0.5 || fabs(delta.y) > fabs(delta.x))
 		d = vec2(d.y, d.x);
 
 	if(d.x != di_nodir && d.x != turnaround && t_stepdirection(this, d.x, dist))
 		return;
 	if(d.y != di_nodir && d.y != turnaround && t_stepdirection(this, d.y, dist))
 		return;
+
+	// there is no direct path to the player, so pick another direction
 
 	if(olddir != di_nodir && t_stepdirection(this, olddir, dist))
 		return;
@@ -120,8 +364,7 @@ void t_newchasedir(entity this, entity targ, float dist)
 	this.ideal_yaw = olddir; // can't move
 
 	// if a bridge was pulled out from underneath a monster, it may not have a valid standing position at all
-
-	if(!checkbottom(this))
+	if(!t_checkbottom(this))
 		this.flags |= FL_PARTIALGROUND;
 }
 #endif
@@ -129,20 +372,19 @@ void t_newchasedir(entity this, entity targ, float dist)
 void t_movetogoal(entity this, float dist)
 {
 #if 0
-	if(!(this.flags & (FL_ONGROUND | FL_FLY | FL_SWIM)))
+	if(!(IS_ONGROUND(this) || (this.flags & FL_SWIM) || (this.flags & FL_FLY)))
 		return;
 
 	// if the next step hits the enemy, return immediately
 	if(this.enemy)
 	{
 		vector rdist = '1 1 1' * dist;
-		entity targ = this.goalentity; // why not the enemy itself?
-		if(boxesoverlap(targ.absmin, targ.absmax, this.absmin - rdist, this.absmax + rdist))
+		if(boxesoverlap(this.absmin - rdist, this.absmax + rdist, this.goalentity.absmin, this.goalentity.absmax))
 			return;
 	}
 
 	// bump around...
-	if(random() < 0.33 || !t_stepdirection(this, this.ideal_yaw, dist))
+	if(random() <= 0.25 || !t_stepdirection(this, this.ideal_yaw, dist))
 		t_newchasedir(this, this.goalentity, dist);
 #else
 	movetogoal(this, dist);
@@ -415,12 +657,12 @@ bool FindTarget(entity this)
 
 void ai_forward(entity this, float dist)
 {
-	walkmove(this, this.angles_y, dist);
+	t_walkmove(this, this.angles_y, dist);
 }
 
 void ai_back(entity this, float dist)
 {
-	walkmove(this, (this.angles_y+180), dist);
+	t_walkmove(this, (this.angles_y+180), dist);
 }
 
 
@@ -438,7 +680,7 @@ void ai_pain(entity this, float dist)
 	float away = anglemod(vectoyaw(this.origin - this.enemy.origin) 
 	+ 180*(random()- 0.5) );
 	
-	walkmove(this, away, dist);
+	t_walkmove(this, away, dist);
 */
 }
 
@@ -451,7 +693,7 @@ stagger back a bit
 */
 void ai_painforward(entity this, float dist)
 {
-	walkmove(this, this.ideal_yaw, dist);
+	t_walkmove(this, this.ideal_yaw, dist);
 }
 
 /*
@@ -508,7 +750,7 @@ void ai_turn(entity this)
 	if(FindTarget(this))
 		return;
 	
-	ChangeYaw(this);
+	changeyaw(this);
 }
 
 //=============================================================================
@@ -576,7 +818,7 @@ Turn and close until within an angle to launch a melee attack
 void ai_run_melee(entity this)
 {
 	this.ideal_yaw = this.enemy_yaw;
-	ChangeYaw(this);
+	changeyaw(this);
 
 	if(FacingIdeal(this))
 	{
@@ -596,7 +838,7 @@ Turn in place until within an angle to launch a missile attack
 void ai_run_missile(entity this)
 {
 	this.ideal_yaw = this.enemy_yaw;
-	ChangeYaw(this);
+	changeyaw(this);
 	if(FacingIdeal(this))
 	{
 		this.th_missile(this);
@@ -615,15 +857,15 @@ Strafe sideways, but stay at aproximately the same range
 void ai_run_slide(entity this)
 {
 	this.ideal_yaw = this.enemy_yaw;
-	ChangeYaw(this);
+	changeyaw(this);
 	float ofs = (this.lefty) ? 90 : -90;
 	
-	if(walkmove(this, this.ideal_yaw + ofs, this.move_dist))
+	if(t_walkmove(this, this.ideal_yaw + ofs, this.move_dist))
 		return;
 		
 	this.lefty = 1 - this.lefty;
 	
-	walkmove(this, this.ideal_yaw - ofs, this.move_dist);
+	t_walkmove(this, this.ideal_yaw - ofs, this.move_dist);
 }
 
 

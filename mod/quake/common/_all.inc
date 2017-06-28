@@ -4,3 +4,5 @@
 
 #include <common/physics/movetypes/movetypes.qh>
 #include <common/physics/movetypes/all.inc>
+
+#include "physics.qc"
