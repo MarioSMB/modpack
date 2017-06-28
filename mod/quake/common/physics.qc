@@ -129,6 +129,130 @@ void PlayerJump(entity this)
 	this.velocity_z = this.velocity_z + 270;
 }
 
+/*
+===========
+WaterMove
+
+============
+*/
+#ifdef SVQC
+.float	dmgtime;
+void T_Damage(entity targ, entity inflictor, entity attacker, float damage);
+#endif
+
+void WaterMove(entity this)
+{
+//dprint(ftos(this.waterlevel));
+	if(this.move_movetype == MOVETYPE_NOCLIP)
+		return;
+	if(PHYS_HEALTH(this) < 0)
+		return;
+
+#ifdef SVQC
+	if(this.waterlevel != 3)
+	{
+		if(this.air_finished < time)
+			_sound(this, CHAN_VOICE, "player/gasp2.wav", 1, ATTN_NORM);
+		else if(this.air_finished < time + 9)
+			_sound(this, CHAN_VOICE, "player/gasp1.wav", 1, ATTN_NORM);
+		this.air_finished = time + 12;
+		this.dmg = 2;
+	}
+	else if(this.air_finished < time)
+	{	// drown!
+		if(this.pain_finished < time)
+		{
+			this.dmg = this.dmg + 2;
+			if(this.dmg > 15)
+				this.dmg = 10;
+			T_Damage(this, NULL, NULL, this.dmg);
+			this.pain_finished = time + 1;
+		}
+	}
+#endif
+	
+	if(!this.waterlevel)
+	{
+	#ifdef SVQC
+		if(this.flags & FL_INWATER)
+		{	
+			// play leave water sound
+			_sound(this, CHAN_BODY, "misc/outwater.wav", 1, ATTN_NORM);
+			this.flags &= ~FL_INWATER;
+		}
+	#endif
+		return;
+	}
+
+#ifdef SVQC
+	if(this.watertype == CONTENT_LAVA)
+	{	// do damage
+		if(this.dmgtime < time)
+		{
+			if(this.radsuit_finished > time)
+				this.dmgtime = time + 1;
+			else
+				this.dmgtime = time + 0.2;
+
+			T_Damage(this, NULL, NULL, 10*this.waterlevel);
+		}
+	}
+	else if(this.watertype == CONTENT_SLIME)
+	{	// do damage
+		if(this.dmgtime < time && this.radsuit_finished < time)
+		{
+			this.dmgtime = time + 1;
+			T_Damage(this, NULL, NULL, 4*this.waterlevel);
+		}
+	}
+	
+	if( !(this.flags & FL_INWATER) )
+	{	
+
+		// player enter water sound
+
+		if(this.watertype == CONTENT_LAVA)
+			_sound(this, CHAN_BODY, "player/inlava.wav", 1, ATTN_NORM);
+		if(this.watertype == CONTENT_WATER)
+			_sound(this, CHAN_BODY, "player/inh2o.wav", 1, ATTN_NORM);
+		if(this.watertype == CONTENT_SLIME)
+			_sound(this, CHAN_BODY, "player/slimbrn2.wav", 1, ATTN_NORM);
+
+		this.flags |= FL_INWATER;
+		this.dmgtime = 0;
+	}
+#endif
+	if(!(this.flags & FL_WATERJUMP) )
+		this.velocity = this.velocity - 0.8*this.waterlevel*frametime*this.velocity;
+}
+
+void CheckWaterJump(entity this)
+{
+	// check for a jump-out-of-water
+	makevectors(this.angles);
+	vector start = this.origin;
+	start.z = start.z + 8; 
+	v_forward_z = 0;
+	normalize(v_forward);
+	vector end = start + v_forward*24;
+	traceline(start, end, true, this);
+	if(trace_fraction < 1)
+	{	// solid at waist
+		start.z = start.z + this.maxs_z - 8;
+		end = start + v_forward*24;
+		this.movedir = trace_plane_normal * -50;
+		traceline(start, end, true, this);
+		if(trace_fraction == 1)
+		{	// open at eye level
+			this.flags |= FL_WATERJUMP;
+			this.velocity_z = 225;
+			SET_JUMP_HELD(this);
+			this.teleport_time = time + 2;	// safety net
+			return;
+		}
+	}
+}
+
 void PM_WaterMove(entity this, float dt)
 {
 	makevectors(this.v_angle);
@@ -320,6 +444,11 @@ void PM_Main(entity this, float dt)
 		PlayerJump(this);
 	else
 		UNSET_JUMP_HELD(this);
+
+	WaterMove(this);
+
+	if(this.waterlevel == 2)
+		CheckWaterJump(this);
 
 	if(this.flags & FL_WATERJUMP)
 	{
