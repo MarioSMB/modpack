@@ -26,7 +26,7 @@ void W_Precache()
 
 void W_SwitchWeapon(entity this, float to_wep)
 {
-	this.cnt = this.weapon;
+	this.prevweapon = this.weapon;
 	this.weapon = to_wep;
 
 	W_SetCurrentAmmo(this);
@@ -1142,7 +1142,7 @@ void CycleWeaponCommand(entity this)
 	
 		if((myitems & this.weapon) && am == false)
 		{
-			this.cnt = oldwep;
+			this.prevweapon = oldwep;
 			W_SetCurrentAmmo(this);
 			return;
 		}
@@ -1228,7 +1228,7 @@ void CycleWeaponReverseCommand(entity this)
 	
 		if((myitems & this.weapon) && am == false)
 		{
-			this.cnt = oldwep;
+			this.prevweapon = oldwep;
 			W_SetCurrentAmmo(this);
 			return;
 		}
@@ -1249,8 +1249,8 @@ void QuadCheat(entity this)
 
 void W_LastWeapon(entity this)
 {
-	if ((this.items & this.cnt) && this.cnt != this.weapon && W_CheckNoAmmo(this, this.cnt))
-		W_SwitchWeapon(this, this.cnt);
+	if ((this.items & this.prevweapon) && this.prevweapon != this.weapon && W_CheckNoAmmo(this, this.prevweapon))
+		W_SwitchWeapon(this, this.prevweapon);
 	else
 		W_SwitchWeapon(this, W_BestWeapon(this, this.weapon));
 }

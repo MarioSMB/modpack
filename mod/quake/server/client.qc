@@ -56,7 +56,7 @@ void SetChangeParms(entity this)
 	parm7 = this.ammo_cells;
 	parm8 = this.weapon;
 	parm9 = this.armortype * 100;
-	parm10 = this.cnt;
+	parm10 = this.prevweapon;
 }
 
 void SetNewParms()
@@ -90,7 +90,7 @@ void DecodeLevelParms(entity this)
 	this.ammo_cells = parm7;
 	this.weapon = parm8;
 	this.armortype = parm9 * 0.01;
-	this.cnt = parm10;
+	this.prevweapon = parm10;
 }
 
 /*

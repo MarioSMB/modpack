@@ -1,50 +1,29 @@
 #pragma once
 
-const int IT_AXE                  = 4096;
-const int IT_SHOTGUN              = 1;
-const int IT_SUPER_SHOTGUN        = 2;
-const int IT_NAILGUN              = 4;
-const int IT_SUPER_NAILGUN        = 8;
-const int IT_GRENADE_LAUNCHER     = 16;
-const int IT_ROCKET_LAUNCHER      = 32;
-const int IT_LIGHTNING            = 64;
-const int IT_EXTRA_WEAPON         = 128;
+const int IT_AXE                  = BIT(12);
+const int IT_SHOTGUN              = BIT(0);
+const int IT_SUPER_SHOTGUN        = BIT(1);
+const int IT_NAILGUN              = BIT(2);
+const int IT_SUPER_NAILGUN        = BIT(3);
+const int IT_GRENADE_LAUNCHER     = BIT(4);
+const int IT_ROCKET_LAUNCHER      = BIT(5);
+const int IT_LIGHTNING            = BIT(6);
+const int IT_EXTRA_WEAPON         = BIT(7);
 
-const int IT_SHELLS               = 256;
-const int IT_NAILS                = 512;
-const int IT_ROCKETS              = 1024;
-const int IT_CELLS                = 2048;
+const int IT_SHELLS               = BIT(8);
+const int IT_NAILS                = BIT(9);
+const int IT_ROCKETS              = BIT(10);
+const int IT_CELLS                = BIT(11);
 
-const int IT_ARMOR1               = 8192;
-const int IT_ARMOR2               = 16384;
-const int IT_ARMOR3               = 32768;
-const int IT_SUPERHEALTH          = 65536;
+const int IT_ARMOR1               = BIT(13);
+const int IT_ARMOR2               = BIT(14);
+const int IT_ARMOR3               = BIT(15);
+const int IT_SUPERHEALTH          = BIT(16);
 
-const int IT_KEY1                 = 131072;
-const int IT_KEY2                 = 262144;
+const int IT_KEY1                 = BIT(17);
+const int IT_KEY2                 = BIT(18);
 
-const int IT_INVISIBILITY         = 524288;
-const int IT_INVULNERABILITY      = 1048576;
-const int IT_SUIT                 = 2097152;
-const int IT_QUAD                 = 4194304;
-
-#define ITEM_HANDLE(signal, ...) __Item_Send_##signal(__VA_ARGS__)
-CLASS(GameItem, Object)
-    ATTRIB(GameItem, m_id, int, 0);
-    ATTRIB(GameItem, m_name, string);
-    ATTRIB(GameItem, m_icon, string);
-    ATTRIB(GameItem, m_color, vector, '1 1 1');
-    ATTRIB(GameItem, m_waypoint, string);
-    ATTRIB(GameItem, m_waypointblink, int, 1);
-    METHOD(GameItem, display, void(GameItem this, void(string name, string icon) returns))
-    {
-        TC(GameItem, this);
-        returns(this.m_name, this.m_icon ? sprintf("/gfx/hud/%s/%s", cvar_string("menu_skin"), this.m_icon) : string_null);
-    }
-    METHOD(GameItem, show, void(GameItem this))
-    {
-        TC(GameItem, this);
-        LOG_INFO("A game item\n");
-    }
-    void ITEM_HANDLE(Show, GameItem this) { this.show(this); }
-ENDCLASS(GameItem)
+const int IT_INVISIBILITY         = BIT(19);
+const int IT_INVULNERABILITY      = BIT(20);
+const int IT_SUIT                 = BIT(21);
+const int IT_QUAD                 = BIT(22);

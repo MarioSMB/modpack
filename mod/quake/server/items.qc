@@ -861,6 +861,10 @@ void key_touch(entity this, entity toucher)
 	SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
 }
 
+bool key_customize(entity this, entity client)
+{
+	return !(client.items & this.items);
+}
 
 void key_setsounds(entity this)
 {
@@ -910,6 +914,7 @@ spawnfunc(item_key1)
 		this.netname = "silver keycard";
 	}
 	key_setsounds(this);
+	setcefc(this, key_customize);
 	settouch(this, key_touch);
 	this.items = IT_KEY1;
 	setsize(this, '-16 -16 -24', '16 16 32');
@@ -945,6 +950,7 @@ spawnfunc(item_key2)
 		this.netname = "gold keycard";
 	}
 	key_setsounds(this);
+	setcefc(this, key_customize);
 	settouch(this, key_touch);
 	this.items = IT_KEY2;
 	setsize(this, '-16 -16 -24', '16 16 32');
