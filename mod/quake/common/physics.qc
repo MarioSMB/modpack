@@ -258,7 +258,7 @@ void PM_WaterMove(entity this, float dt)
 	makevectors(this.v_angle);
 
 	vector wishvel;
-	wishvel = v_forward * self.movement_x + v_right * self.movement_y + '0 0 1' * self.movement_z;
+	wishvel = v_forward * this.movement_x + v_right * this.movement_y + '0 0 1' * this.movement_z;
 	if (wishvel == '0 0 0')
 		wishvel = '0 0 -60'; // drift towards bottom
 
@@ -273,7 +273,7 @@ void PM_WaterMove(entity this, float dt)
 	float speed = vlen(this.velocity);
 	float spd = (1 - dt * frict);
 	float newspeed = max(0, speed - spd);
-	self.velocity = self.velocity * spd;
+	this.velocity = this.velocity * spd;
 
 	// water acceleration
 	if (!wishspeed)
@@ -367,8 +367,8 @@ void PM_AirAccelerate(entity this, float dt, vector wishvel, float wishspeed)
 
 void PM_AirMove(entity this, float dt)
 {
-	makevectors(self.angles_y * '0 1 0');
-	vector wishvel = v_forward * self.movement_x + v_right * self.movement_y;
+	makevectors(this.angles_y * '0 1 0');
+	vector wishvel = v_forward * this.movement_x + v_right * this.movement_y;
 
 	if(this.move_movetype != MOVETYPE_WALK)
 		wishvel.z += this.movement_z;
