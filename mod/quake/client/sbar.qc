@@ -800,7 +800,7 @@ void Sbar_DrawInventory()
 	// sigils
 	for(int j = 0; j < 4; j++)
 	{
-		if(myitems & BIT(28 + j));
+		if(STAT(SERVERFLAGS) & BIT(j))
 			Sbar_DrawPic(320 - 32 + j * 8, -16, Sbar_PickSigil(j));
 	}
 #endif

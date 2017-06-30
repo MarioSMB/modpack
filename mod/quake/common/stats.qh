@@ -127,3 +127,5 @@ REGISTER_STAT(MOVEVARS_MAXSPEED, float, autocvar_sv_maxspeed)
 REGISTER_STAT(MOVEVARS_STOPSPEED, float, autocvar_sv_stopspeed)
 REGISTER_STAT(MOVEVARS_MAXAIRSPEED, float, autocvar_sv_maxairspeed)
 REGISTER_STAT(MOVEVARS_AIRACCELERATE, float, autocvar_sv_airaccelerate)
+
+REGISTER_STAT(SERVERFLAGS, int, serverflags)

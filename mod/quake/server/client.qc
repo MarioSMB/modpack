@@ -789,8 +789,6 @@ void PlayerPreThink(entity this)
 
 	//makevectors(this.v_angle);		// is this still used
 
-	
-
 	if(this.deadflag >= DEAD_DEAD)
 	{
 		PlayerDeathThink(this);
