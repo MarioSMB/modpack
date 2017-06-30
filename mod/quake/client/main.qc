@@ -1,15 +1,25 @@
 // required engine functions
 
-bool oldjump;
+float deathmatch, coop;
+
+//bool oldjump;
+void Sbar_Precache();
 void CSQC_Init()
 {
+	{
+		int i = 0;
+		for ( ; i < 255; ++i)
+			if (getplayerkeyvalue(i, "viewentity") == "")
+				break;
+		maxclients = i;
+	}
+
 	// needs to be done so early because of the constants they create
 	static_init();
 	static_init_late();
 	static_init_precache();
 
-	oldjump = cvar("cl_movement_track_canjump");
-	cvar_set("cl_movement_track_canjump", "1");
+	Sbar_Precache();
 
 	//localcmd("\ncd remap track001 track002 track003 track004 track005 track006 track007 track008 track009 track010 track011\n");
 }
@@ -17,7 +27,6 @@ void CSQC_Init()
 #if 0
 void CSQC_Shutdown()
 {
-	cvar_set("cl_movement_track_canjump", ftos(oldjump));
 	//localcmd(sprintf("\ncd remap %s\n", cvar_string("g_cdtracks_remaplist")));
 }
 #endif
@@ -27,6 +36,15 @@ void CSQC_Shutdown()
 
 #define drawstring(position, text, scale, rgb, alpha, flag) \
 	drawstring_builtin(position, text, scale, rgb, alpha, flag)
+
+#define drawcolorcodedstring(position, text, scale, alpha, flag) \
+	drawcolorcodedstring_builtin(position, text, scale, alpha, flag)
+
+#define drawcolorcodedstring2(position, text, scale, rgb, alpha, flag) \
+	drawcolorcodedstring2_builtin(position, text, scale, rgb, alpha, flag)
+
+#define drawfill(position, size, rgb, alpha, flag) \
+	drawfill_builtin(position, size, rgb, alpha, flag)
 
 string draw_currentSkin;
 void draw_cursor(vector pos, vector ofs, string img, vector col, float a)
@@ -86,15 +104,19 @@ int cs_project_is_b0rked;
 float autocvar_vid_conwidth;
 float autocvar_vid_conheight;
 
-bool autocvar_cl_enginesbar = true;
+bool autocvar_cl_enginesbar = false;
 
 void Sbar_Draw();
 void HUD_Crosshair(entity this);
 void CSQC_UpdateView(entity this, float w, float h)
 {
+	++framecount;
+
 	stats_get();
 
 	CSQCPlayer_SetCamera();
+
+	ticrate = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
 
 	// ALWAYS Clear Current Scene First
 	clearscene();
@@ -149,6 +171,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	if(intermission && !completed_time)
 		completed_time = time;
+
+	IL_ENDFRAME();
 }
 
 bool CSQC_InputEvent(int inputType, float nPrimary, float nSecondary)
@@ -275,6 +299,7 @@ STATIC_INIT_LATE(fix_hud)
 {
 	registercvar("_rrestarted", "0");
 
+	if(autocvar_cl_enginesbar)
 	if(!cvar("_rrestarted"))
 	{
 		cvar_set("_rrestarted", "1");
@@ -441,8 +466,7 @@ void HUD_Crosshair(entity this)
 		vector view_forward = v_forward;
 
 		// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
-		wcross_origin = project_3d_to_2d(view_origin + 32768 * view_forward);
-		wcross_origin.z = 0;
+		wcross_origin = vec2(project_3d_to_2d(view_origin + 32768 * view_forward));
 		/*if(autocvar_crosshair_hittest)
 		{
 			vector wcross_oldorigin;

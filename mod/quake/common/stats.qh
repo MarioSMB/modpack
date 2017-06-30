@@ -81,6 +81,8 @@ REGISTER_STAT(GAMEPLAYFIX_UNSTICKPLAYERS, int, autocvar_sv_gameplayfix_unstickpl
 REGISTER_STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND, int, autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag)
 REGISTER_STAT(GAMEPLAYFIX_WATERTRANSITION, int, autocvar_sv_gameplayfix_fixedcheckwatertransition)
 
+REGISTER_STAT(TIMELIMIT, float, autocvar_timelimit)
+
 REGISTER_STAT(MOVEVARS_TICRATE, float, autocvar_sys_ticrate)
 REGISTER_STAT(MOVEVARS_TIMESCALE, float, autocvar_slowmo)
 

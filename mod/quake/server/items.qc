@@ -385,6 +385,13 @@ void Deathmatch_Weapon(entity this, int old, int new)
 		W_SwitchWeapon(this, new);
 }
 
+bool weapon_customize(entity this, entity client)
+{
+	if((deathmatch == 2 || coop) && (client.items & this.weapon))
+		return false;
+	return true;
+}
+
 /*
 =============
 weapon_touch
@@ -499,6 +506,7 @@ spawnfunc(weapon_supershotgun)
 	this.weapon = IT_SUPER_SHOTGUN;
 	this.netname = "Double-barrelled Shotgun";
 	settouch(this, weapon_touch);
+	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
 }
@@ -513,6 +521,7 @@ spawnfunc(weapon_nailgun)
 	this.weapon = IT_NAILGUN;
 	this.netname = "nailgun";
 	settouch(this, weapon_touch);
+	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
 }
@@ -527,6 +536,7 @@ spawnfunc(weapon_supernailgun)
 	this.weapon = IT_SUPER_NAILGUN;
 	this.netname = "Super Nailgun";
 	settouch(this, weapon_touch);
+	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
 }
@@ -541,6 +551,7 @@ spawnfunc(weapon_grenadelauncher)
 	this.weapon = 3;
 	this.netname = "Grenade Launcher";
 	settouch(this, weapon_touch);
+	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
 }
@@ -555,6 +566,7 @@ spawnfunc(weapon_rocketlauncher)
 	this.weapon = 3;
 	this.netname = "Rocket Launcher";
 	settouch(this, weapon_touch);
+	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
 }
@@ -570,6 +582,7 @@ spawnfunc(weapon_lightning)
 	this.weapon = 3;
 	this.netname = "Thunderbolt";
 	settouch(this, weapon_touch);
+	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
 }

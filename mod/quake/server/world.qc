@@ -954,4 +954,6 @@ void Physics_Frame()
 void EndFrame()
 {
 	Physics_Frame();
+
+	IL_ENDFRAME();
 }
