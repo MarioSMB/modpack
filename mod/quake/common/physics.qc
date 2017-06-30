@@ -122,7 +122,7 @@ void PlayerJump(entity this)
 	UNSET_ONGROUND(this);
 	
 #ifdef SVQC
-	this.button2 = 0;
+	//this.button2 = 0;
 // player jumping sound
 	_sound(this, CHAN_BODY, "player/plyrjmp8.wav", 1, ATTN_NORM);
 #endif
