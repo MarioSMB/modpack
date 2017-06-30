@@ -1219,11 +1219,12 @@ void BackpackTouch(entity this, entity toucher)
 	toucher.ammo_rockets = toucher.ammo_rockets + this.ammo_rockets;
 	toucher.ammo_cells = toucher.ammo_cells + this.ammo_cells;
 
-	int new = this.items;
-	if(!new)
-		new = toucher.weapon;
+	int newitem = this.items;
+	//if(!newitem)
+		//newitem = toucher.weapon;
 	int old = toucher.items;
-	toucher.items |= new;
+	if(newitem)
+		toucher.items |= newitem;
 	
 	bound_other_ammo(toucher);
 
@@ -1265,10 +1266,11 @@ void BackpackTouch(entity this, entity toucher)
 	delete(this);
 
 // change to the weapon
+	if(newitem)
 	if(!deathmatch)
-		W_SwitchWeapon(toucher, new);
+		W_SwitchWeapon(toucher, newitem);
 	else
-		Deathmatch_Weapon(toucher, old, new);
+		Deathmatch_Weapon(toucher, old, newitem);
 }
 
 /*
