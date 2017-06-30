@@ -292,7 +292,7 @@ void execute_changelevel(entity this)
 #else
 	SendCDTrack(NULL, 3);
 #endif
-	
+
 	entity pos = FindIntermission(this);
 
 	if(pos)
@@ -305,9 +305,11 @@ void execute_changelevel(entity this)
 			it.nextthink = time + 0.5;
 			it.takedamage = DAMAGE_NO;
 			it.solid = SOLID_NOT;
+			it.flags |= FL_NOTARGET; // fix a silly monster bug
 			//it.health = -2342; // can't do this because of parms
 			set_movetype(it, MOVETYPE_NONE);
-			it.modelindex = 0;
+			//it.modelindex = 0;
+			setmodel(it, MDL_Null);
 			setorigin(it, pos.origin);
 		});
 	}
@@ -537,6 +539,12 @@ void PlayerDie(entity this, entity attacker);
 
 void PutClientInServer(entity this)
 {
+	if (IS_REAL_CLIENT(this)) {
+		msg_entity = this;
+		WriteByte(MSG_ONE, SVC_SETVIEW);
+		WriteEntity(MSG_ONE, this);
+	}
+
 	entity spot = SelectSpawnPoint();
 
 	this.classname = STR_PLAYER;
