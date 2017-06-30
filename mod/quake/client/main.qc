@@ -299,7 +299,7 @@ STATIC_INIT_LATE(fix_hud)
 {
 	registercvar("_rrestarted", "0");
 
-	if(autocvar_cl_enginesbar)
+	//if(autocvar_cl_enginesbar)
 	if(!cvar("_rrestarted"))
 	{
 		cvar_set("_rrestarted", "1");
