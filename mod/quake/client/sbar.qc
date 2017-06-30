@@ -42,6 +42,12 @@ void Sbar_Precache()
 	precache_pic("gfx/sbar");
 	precache_pic("gfx/ibar");
 
+	for(int j = 0; j < 7; j++)
+	{
+		precache_pic(strcat("gfx/inv_", Sbar_PickWeapon_wepname(j)));
+		precache_pic(strcat("gfx/inv2_", Sbar_PickWeapon_wepname(j)));
+	}
+
 	for(int j = 0; j < 5; j++)
 	{
 		for(int k = 0; k < 7; k++)
