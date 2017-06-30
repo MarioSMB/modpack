@@ -183,6 +183,8 @@ void Sbar_DrawCharacter(int dx, int dy, int num)
 
 void Sbar_DrawAlphaPic(int dx, int dy, string pic, float thealpha)
 {
+	if(precache_pic(pic) == "")
+		return;
 	drawpic(sbar + vec2(dx, dy), pic, drawgetimagesize(pic), '1 1 1', thealpha, DRAWFLAG_NORMAL);
 }
 
@@ -211,7 +213,11 @@ void Sbar_DrawNum_lettersize(int dx, int dy, string num, int digits, bool thecol
 		if(!letterscale)
 			Sbar_DrawPic(dx, dy, thepic);
 		else
+		{
+			if(precache_pic(thepic) == "")
+				continue; // ehh
 			drawpic(sbar + vec2(dx, dy), thepic, letterscale, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+		}
 
 		dx += lettersize;
 	});
@@ -246,7 +252,10 @@ void Sbar_DrawXNum(int dx, int dy, int num, int digits, int lettersize, vector c
 			theframe = "colon";
 		else
 			theframe = chr2str(it);
-		drawpic(sbar + vec2(dx, dy), Sbar_PickNum(false, theframe), vec2(lettersize, lettersize), col, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+		string thepic = Sbar_PickNum(false, theframe);
+		if(precache_pic(thepic) == "")
+			continue;
+		drawpic(sbar + vec2(dx, dy), thepic, vec2(lettersize, lettersize), col, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 		dx += lettersize;
 	});
@@ -545,8 +554,11 @@ void Sbar_DeathmatchOverlay()
 	float xmin = (autocvar_vid_conwidth - (16 + 25) * 8 * SBAR_MAXWIDTH) / 2; // TODO
 	//float xmax = autocvar_vid_conwidth - xmin;
 
-	vector pz = drawgetimagesize("gfx/ranking");
-	drawpic(vec2((autocvar_vid_conwidth - pz.x) / 2, 8), "gfx/ranking", pz, '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+	if(precache_pic("gfx/ranking") != "")
+	{
+		vector pz = drawgetimagesize("gfx/ranking");
+		drawpic(vec2((autocvar_vid_conwidth - pz.x) / 2, 8), "gfx/ranking", pz, '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+	}
 
 	// draw the text
 	int dy = 40;
