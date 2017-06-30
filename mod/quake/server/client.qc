@@ -38,19 +38,12 @@ void SetChangeParms(entity this)
 
 // remove items
 	this.items &= ~(IT_KEY1 | IT_KEY2 | IT_INVISIBILITY | IT_INVULNERABILITY | IT_SUIT | IT_QUAD);
-	
-// cap super health
-	if(this.health > 100)
-		this.health = 100;
-	if(this.health < 50)
-		this.health = 50;
+
+	this.health = bound(50, this.health, 100); // cap super health
 	parm1 = this.items;
 	parm2 = this.health;
 	parm3 = this.armorvalue;
-	if(this.ammo_shells < 25)
-		parm4 = 25;
-	else
-		parm4 = this.ammo_shells;
+	parm4 = max(25, this.ammo_shells);
 	parm5 = this.ammo_nails;
 	parm6 = this.ammo_rockets;
 	parm7 = this.ammo_cells;
@@ -68,9 +61,9 @@ void SetNewParms()
 	parm5 = 0;
 	parm6 = 0;
 	parm7 = 0;
-	parm8 = 1;
+	parm8 = IT_SHOTGUN;
 	parm9 = 0;
-	parm10 = 4096;
+	parm10 = IT_AXE;
 }
 
 void DecodeLevelParms(entity this)
@@ -312,7 +305,7 @@ void execute_changelevel(entity this)
 			it.nextthink = time + 0.5;
 			it.takedamage = DAMAGE_NO;
 			it.solid = SOLID_NOT;
-			it.health = -2342;
+			//it.health = -2342; // can't do this because of parms
 			set_movetype(it, MOVETYPE_NONE);
 			it.modelindex = 0;
 			setorigin(it, pos.origin);
@@ -346,11 +339,7 @@ void changelevel_touch(entity this, entity toucher)
 		if(it.chlevel_targ == this)
 			++plnum;
 	});
-	float themin;
-	if(this.count >= 1)
-		themin = 1;
-	else
-		themin = this.count;
+	float themin = min(1.0, this.count);
 	if(plnum < ceil(realplnum * themin)) // 70% of players
 		return;
 
