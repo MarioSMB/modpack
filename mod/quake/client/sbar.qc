@@ -1,6 +1,3 @@
-#define MP_ROGUE 0
-#define MP_HIPNOTIC 0
-
 //float autocvar_r_letterbox;
 //int autocvar_cl_prydoncursor;
 int autocvar_cl_deathscoreboard;
@@ -44,11 +41,6 @@ void Sbar_Precache()
 
 	precache_pic("gfx/sbar");
 	precache_pic("gfx/ibar");
-
-#if MP_ROGUE
-	precache_pic("gfx/r_invbar1");
-	precache_pic("gfx/r_invbar2");
-#endif
 
 	for(int j = 0; j < 5; j++)
 	{
@@ -652,16 +644,7 @@ void Sbar_DrawInventory()
 	}
 	olditems = myitems;
 
-
-
-#if MP_ROGUE
-	if(STAT(ACTIVEWEAPON) >= RIT_LAVA_NAILGUN)
-		Sbar_DrawAlphaPic(0, -24, "gfx/r_invbar1", autocvar_sbar_alpha_bg);
-	else
-		Sbar_DrawAlphaPic(0, -24, "gfx/r_invbar2", autocvar_sbar_alpha_bg);
-#else
 	Sbar_DrawAlphaPic(0, -24, "gfx/ibar", autocvar_sbar_alpha_bg);
-#endif
 
 	// weapons
 	for(int j = 0; j < 7; j++)
@@ -683,67 +666,6 @@ void Sbar_DrawInventory()
 			Sbar_DrawPic(j * 24, -16, Sbar_PickWeapon(flashon, j));
 		}
 	}
-
-	// MED 01/04/97
-	// hipnotic weapons
-#if MP_HIPNOTIC
-	int grenadeflashing = 0;
-	for(int j = 0; j < 4; j++)
-	{
-		if(myitems & (1<<hipweapons[j]) )
-		{
-			time = max(0, cl.item_gettime[hipweapons[j]]);
-			flashon = rint((time - thetime)*10);
-			if(flashon >= 10)
-			{
-				if(STAT(ACTIVEWEAPON) == (1<<hipweapons[j]))
-					flashon = 1;
-				else
-					flashon = 0;
-			}
-			else
-				flashon = (flashon%5) + 2;
-
-			// check grenade launcher
-			if(j==2)
-			{
-				if(myitems & HIT_PROXIMITY_GUN)
-				{
-					if(flashon)
-					{
-						grenadeflashing = 1;
-						Sbar_DrawPic (96, -16, hsb_weapons[flashon][2]);
-					}
-				}
-			}
-			else if(j==3)
-			{
-				if(myitems & (IT_SHOTGUN<<4))
-				{
-					if(!grenadeflashing)
-						Sbar_DrawPic (96, -16, hsb_weapons[flashon][3]);
-				}
-				else
-					Sbar_DrawPic (96, -16, hsb_weapons[flashon][4]);
-			}
-			else
-				Sbar_DrawPic (176 + (j*24), -16, hsb_weapons[flashon][j]);
-		}
-	}
-#endif
-
-
-#if MP_ROGUE
-	// check for powered up weapon.
-	if(STAT(ACTIVEWEAPON) >= RIT_LAVA_NAILGUN)
-	{
-		for(int j = 0; j < 5; j++)
-		{
-			if(STAT(ACTIVEWEAPON) == (RIT_LAVA_NAILGUN << j))
-				Sbar_DrawPic((j+2)*24, -16, rsb_weapons[j]);
-		}
-	}
-#endif
 
 	// ammo counts
 	for(int j = 0; j < 4; j++)
@@ -767,7 +689,6 @@ void Sbar_DrawInventory()
 	}
 
 	// items
-#if !(MP_HIPNOTIC)
 	for(int j = 0; j < 6; j++)
 	{
 		if(myitems & BIT(17 + j))
@@ -777,33 +698,13 @@ void Sbar_DrawInventory()
 				Sbar_DrawPic(192 + j * 16, -16, Sbar_PickItem(j));
 		}
 	}
-#endif
 
-#if MP_HIPNOTIC
-	//MED 01/04/97 added hipnotic items
-	// hipnotic items
-	for(int j = 0; j < 2; j++)
-	{
-		if(myitems & BIT(24 + j))
-			Sbar_DrawPic(288 + j * 16, -16, hsb_items[j]);
-	}
-#endif
-
-#if MP_ROGUE
-	// new rogue items
-	for(int j = 0; j < 2; j++)
-	{
-		if(myitems & BIT(29 + j))
-			Sbar_DrawPic(288 + j * 16, -16, rsb_items[j]);
-	}
-#else
 	// sigils
 	for(int j = 0; j < 4; j++)
 	{
 		if(STAT(SERVERFLAGS) & BIT(j))
 			Sbar_DrawPic(320 - 32 + j * 8, -16, Sbar_PickSigil(j));
 	}
-#endif
 }
 
 /*
@@ -943,15 +844,6 @@ void Sbar_Draw()
 				}
 				else
 				{
-				#if MP_ROGUE
-					Sbar_DrawNum(24, 0, itos(getstati(STAT_ARMOR)), 3, getstati(STAT_ARMOR) <= 25);
-					if(STAT(ITEMS) & RIT_ARMOR3)
-						Sbar_DrawPic(0, 0, "gfx/sb_armor3");
-					else if(STAT(ITEMS) & RIT_ARMOR2)
-						Sbar_DrawPic(0, 0, "gfx/sb_armor2");
-					else if(STAT(ITEMS) & RIT_ARMOR1)
-						Sbar_DrawPic(0, 0, "gfx/sb_armor1");
-				#else
 					Sbar_DrawNum(24, 0, itos(getstati(STAT_ARMOR)), 3, getstati(STAT_ARMOR) <= 25);
 					if(STAT(ITEMS) & IT_ARMOR3)
 						Sbar_DrawPic(0, 0, "gfx/sb_armor3");
@@ -959,7 +851,6 @@ void Sbar_Draw()
 						Sbar_DrawPic(0, 0, "gfx/sb_armor2");
 					else if(STAT(ITEMS) & IT_ARMOR1)
 						Sbar_DrawPic(0, 0, "gfx/sb_armor1");
-				#endif
 				}
 
 				// face
