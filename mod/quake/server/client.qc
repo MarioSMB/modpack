@@ -778,6 +778,8 @@ void PlayerPreThink(entity this)
 		this.netname_previous = strzone(this.netname);
 	}
 
+	this.disableclientprediction = ((intermission_running || this.deadflag != DEAD_NO) ? 1 : -1);
+
 	if(intermission_running)
 	{
 		IntermissionThink(this);	// otherwise a button could be missed between

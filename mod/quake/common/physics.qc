@@ -407,7 +407,7 @@ bool PM_CheckDead(entity this)
 #ifdef SVQC
 	return (this.health <= 0);
 #else
-	return false;
+	return PHYS_HEALTH(this) <= 0;
 #endif
 }
 
@@ -418,11 +418,15 @@ void PM_RollView(entity this)
 
 	this.angles_z = SV_CalcRoll(this) * 4;
 
+#if 1
+	if(!this.fixangle) { this.angles = '0 1 0' * vang.y; }
+#else
 	if (!this.fixangle)
 	{
 		this.angles_x = vang.x / 3;
 		this.angles_y = vang.y;
 	}
+#endif
 #endif
 }
 
