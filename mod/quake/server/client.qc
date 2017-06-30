@@ -539,12 +539,6 @@ void PlayerDie(entity this, entity attacker);
 
 void PutClientInServer(entity this)
 {
-	if (IS_REAL_CLIENT(this)) {
-		msg_entity = this;
-		WriteByte(MSG_ONE, SVC_SETVIEW);
-		WriteEntity(MSG_ONE, this);
-	}
-
 	entity spot = SelectSpawnPoint();
 
 	this.classname = STR_PLAYER;
