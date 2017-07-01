@@ -152,7 +152,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 		return;
 
 // coop damage avoidance (if enabled)
-	if(coop && IS_CLIENT(attacker) && IS_CLIENT(targ))
+	if(coop && attacker != targ && IS_CLIENT(attacker) && IS_CLIENT(targ))
 	{
 		if(autocvar_g_friendlyfire_virtual)
 			return;
