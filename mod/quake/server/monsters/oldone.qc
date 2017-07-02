@@ -192,7 +192,8 @@ void finale_1(entity this, entity attacker)
 		it.takedamage = DAMAGE_NO;
 		it.solid = SOLID_NOT;
 		set_movetype(it, MOVETYPE_NONE);
-		it.modelindex = 0;
+		//it.modelindex = 0;
+		setmodel(it, MDL_Null);
 		setorigin(it, pos.origin);
 	});
 	
@@ -211,13 +212,13 @@ void finale_2(entity this)
 	// start a teleport splash inside shub
 	entity shub = this.owner;
 
-	vector o = shub.origin - '0 100 0';
-	setorigin(this, o);
+	vector org = shub.origin - '0 100 0';
+	setorigin(this, org);
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_TELEPORT);
-	WriteCoord(MSG_BROADCAST, o_x);
-	WriteCoord(MSG_BROADCAST, o_y);
-	WriteCoord(MSG_BROADCAST, o_z);
+	WriteCoord(MSG_BROADCAST, org.x);
+	WriteCoord(MSG_BROADCAST, org.y);
+	WriteCoord(MSG_BROADCAST, org.z);
 
 	_sound(shub, CHAN_VOICE, "misc/r_tele1.wav", 1, ATTN_NORM);
 	
@@ -271,7 +272,7 @@ void finale_4(entity this)
 	}
 	// start the end text
 	WriteByte(MSG_ALL, SVC_FINALE);
-	WriteString(MSG_ALL, "Congratulations and well done! You have\nbeaten the hideous Shub-Niggurath, and\nher hundreds of ugly changelings and\nmonsters. You have proven that your\nskill and your cunning are greater than\nall the powers of Quake. You are the\nmaster now. Id Software salutes you.");
+	WriteString(MSG_ALL, "Congratulations and well done! You have\nbeaten the hideous Shub-Niggurath, and\nher hundreds of ugly changelings and\nmonsters. You have proven that your\nskill and your cunning are greater than\nall the powers of Quake. You are the\nmaster now. Team Xonotic salutes you.");
 
 // put a player model down
 	entity n = spawn();
