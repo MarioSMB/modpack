@@ -557,7 +557,7 @@ vector VelocityForDamage(float dm)
 void ThrowGib(entity this, string gibname, float dm)
 {
 	entity gib = spawn();
-	gib.origin = this.origin;
+	setorigin(gib, this.origin);
 	_setmodel(gib, gibname);
 	setsize(gib, '0 0 0', '0 0 0');
 	gib.velocity = VelocityForDamage(dm);

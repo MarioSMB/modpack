@@ -113,12 +113,10 @@ entity FindIntermission(entity this)
 	
 // testinfo_player_start is only found in regioned levels
 	spot = find(NULL, classname, "testplayerstart");
-	if(spot)
-		return spot;
+	if(!spot)
+		objerror(this, "FindIntermission: no spot");
 
-	objerror(this, "FindIntermission: no spot");
-
-	return NULL;
+	return spot;
 }
 
 string nextmap;
@@ -580,6 +578,11 @@ void PutClientInServer(entity this)
 	this.angles = vec2(spot.angles);
 	this.fixangle = true;		// turn this way immediately
 
+	//JIM
+	// Clear out velocity so you're not launched into the air
+	// when you respawn.
+	this.velocity = '0 0 0';
+
 // oh, this is a hack!
 	_setmodel(this, "progs/eyes.mdl");
 	modelindex_eyes = this.modelindex;
@@ -908,7 +911,7 @@ void CheckPowerups(entity this)
 				stuffcmd(this, "bf\n");
 				_sound(this, CHAN_AUTO, "items/damage2.wav", 1, ATTN_NORM);
 				this.super_time = time + 1;
-			}	  
+			}
 			
 			if(this.super_time < time)
 			{

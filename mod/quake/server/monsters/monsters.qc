@@ -121,6 +121,7 @@ void walkmonster_start(entity this)
 // delay drop to floor to make sure all doors have been spawned
 // spread think times so they don't all happen at same time
 	this.nextthink = this.nextthink + random()*0.5;
+	this.flags |= FL_MONSTER;
 	setthink(this, walkmonster_start_go);
 	total_monsters = total_monsters + 1;
 }
@@ -174,6 +175,7 @@ void flymonster_start(entity this)
 {
 // spread think times so they don't all happen at same time
 	this.nextthink = this.nextthink + random()*0.5;
+	this.flags |= FL_MONSTER;
 	setthink(this, flymonster_start_go);
 	total_monsters = total_monsters + 1;
 }
@@ -226,6 +228,7 @@ void swimmonster_start(entity this)
 {
 // spread think times so they don't all happen at same time
 	this.nextthink = this.nextthink + random()*0.5;
+	this.flags |= FL_MONSTER;
 	setthink(this, swimmonster_start_go);
 	total_monsters = total_monsters + 1;
 }

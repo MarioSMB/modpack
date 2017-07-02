@@ -215,9 +215,9 @@ void TraceAttack(float damage, vector dir)
 	{
 		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 		WriteByte(MSG_BROADCAST, TE_GUNSHOT);
-		WriteCoord(MSG_BROADCAST, org_x);
-		WriteCoord(MSG_BROADCAST, org_y);
-		WriteCoord(MSG_BROADCAST, org_z);
+		WriteCoord(MSG_BROADCAST, org.x);
+		WriteCoord(MSG_BROADCAST, org.y);
+		WriteCoord(MSG_BROADCAST, org.z);
 	}
 }
 
@@ -231,20 +231,17 @@ Go to the trouble of combining multiple pellets into a single damage call.
 */
 void FireBullets(entity this, int shotcount, vector dir, vector spread)
 {
-	vector direction;
-	vector	src;
-	
 	makevectors(this.v_angle);
 
-	src = this.origin + v_forward*10;
-	src_z = this.absmin_z + this.size_z * 0.7;
+	vector src = this.origin + v_forward*10;
+	src.z = this.absmin_z + this.size_z * 0.7;
 
 	ClearMultiDamage();
 	while(shotcount > 0)
 	{
-		direction = dir + crandom()*spread_x*v_right + crandom()*spread_y*v_up;
+		vector direction = dir + crandom()*spread.x*v_right + crandom()*spread.y*v_up;
 
-		traceline(src, src + direction*2048, false, this);
+		traceline(src, src + direction * 2048, MOVE_NORMAL, this);
 		if(trace_fraction != 1.0)
 			TraceAttack(4, direction);
 
@@ -413,17 +410,14 @@ LightningDamage
 */
 void LightningDamage(vector p1, vector p2, entity from, float damage)
 {
-	entity		e1, e2;
-	vector		f;
-	
-	f = p2 - p1;
+	vector f = p2 - p1;
 	normalize(f);
-	f_x = 0 - f_y;
-	f_y = f_x;
-	f_z = 0;
+	f.x = 0 - f.y;
+	f.y = f.x;
+	f.z = 0;
 	f = f*16;
 
-	e1 = e2 = NULL;
+	entity e1 = NULL, e2 = NULL;
 
 	traceline(p1, p2, false, from);
 	if(trace_ent.takedamage)
@@ -469,7 +463,7 @@ void W_FireLightning(entity this)
 		int cells = this.ammo_cells;
 		this.ammo_cells = 0;
 		W_SetCurrentAmmo(this);
-		T_RadiusDamage(this, this, 35*cells, world);
+		T_RadiusDamage(this, this, 35*cells, NULL);
 		return;
 	}
 
@@ -491,12 +485,12 @@ void W_FireLightning(entity this)
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_LIGHTNING2);
 	WriteEntity(MSG_BROADCAST, this);
-	WriteCoord(MSG_BROADCAST, org_x);
-	WriteCoord(MSG_BROADCAST, org_y);
-	WriteCoord(MSG_BROADCAST, org_z);
-	WriteCoord(MSG_BROADCAST, trace_endpos_x);
-	WriteCoord(MSG_BROADCAST, trace_endpos_y);
-	WriteCoord(MSG_BROADCAST, trace_endpos_z);
+	WriteCoord(MSG_BROADCAST, org.x);
+	WriteCoord(MSG_BROADCAST, org.y);
+	WriteCoord(MSG_BROADCAST, org.z);
+	WriteCoord(MSG_BROADCAST, trace_endpos.x);
+	WriteCoord(MSG_BROADCAST, trace_endpos.y);
+	WriteCoord(MSG_BROADCAST, trace_endpos.z);
 
 	LightningDamage(this.origin, trace_endpos + v_forward*4, this, 30);
 }
@@ -507,7 +501,7 @@ void W_FireLightning(entity this)
 
 void GrenadeExplode(entity this)
 {
-	T_RadiusDamage(this, this.owner, 120, world);
+	T_RadiusDamage(this, this.owner, 120, NULL);
 
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_EXPLOSION);
@@ -818,15 +812,15 @@ int W_BestWeapon(entity this, float except)
 {
 	int itm = this.items;
 
-	if(this.waterlevel <= 1 && this.ammo_cells >= 1 &&(itm & IT_LIGHTNING) && except != IT_LIGHTNING)
+	if(this.waterlevel <= 1 && this.ammo_cells >= 1 && (itm & IT_LIGHTNING) && except != IT_LIGHTNING)
 		return IT_LIGHTNING;
-	if(this.ammo_nails >= 2 &&(itm & IT_SUPER_NAILGUN) && except != IT_SUPER_NAILGUN)
+	if(this.ammo_nails >= 2 && (itm & IT_SUPER_NAILGUN) && except != IT_SUPER_NAILGUN)
 		return IT_SUPER_NAILGUN;
-	if(this.ammo_shells >= 2 &&(itm & IT_SUPER_SHOTGUN) && except != IT_SUPER_SHOTGUN)
+	if(this.ammo_shells >= 2 && (itm & IT_SUPER_SHOTGUN) && except != IT_SUPER_SHOTGUN)
 		return IT_SUPER_SHOTGUN;
-	if(this.ammo_nails >= 1 &&(itm & IT_NAILGUN) && except != IT_NAILGUN)
+	if(this.ammo_nails >= 1 && (itm & IT_NAILGUN) && except != IT_NAILGUN)
 		return IT_NAILGUN;
-	if(this.ammo_shells >= 1 &&(itm & IT_SHOTGUN) && except != IT_SHOTGUN)
+	if(this.ammo_shells >= 1 && (itm & IT_SHOTGUN) && except != IT_SHOTGUN)
 		return IT_SHOTGUN;
 	return IT_AXE; // just fall back if all else fails
 }
@@ -1237,6 +1231,7 @@ void CycleWeaponReverseCommand(entity this)
 	this.weapon = oldwep; // we didn't save the switch
 }
 
+#ifdef QUAKE_CHEATS
 void QuadCheat(entity this)
 {
 	if(deathmatch || coop)
@@ -1244,8 +1239,10 @@ void QuadCheat(entity this)
 	this.super_time = 1;
 	this.super_damage_finished = time + 30;
 	this.items |= IT_QUAD;
-	dprint("quad cheat\n");
+	bprint("quad cheat\n");
 }
+
+#endif
 
 void W_LastWeapon(entity this)
 {
@@ -1268,7 +1265,7 @@ int W_GetWeaponImpulse(int imp)
 		case 238: case 243: case 247: return 5; // hagar, hlac, seeker -> super nailgun
 		case 236: return 3; // crylink -> super shotgun
 		case 239: case 246: return 7; // devastator, fireball -> rocket launcher
-		// TODO: rifle, vaprozier, vortex, hook(?), porto(?)
+		// TODO: rifle, vaporizer, vortex, hook(?), porto(?)
 	}
 }
 
@@ -1309,10 +1306,14 @@ void ImpulseCommands(entity this)
 		case 99: // hehe
 			CheatCommand(this);
 			break;
-		case 255:
-			QuadCheat(this);
-			break;
-	}	
+	}
+
+#ifdef QUAKE_CHEATS
+	switch(this.impulse)
+	{
+		case 255: QuadCheat(this); break;
+	}
+#endif
 
 	this.impulse = 0;
 }

@@ -410,56 +410,68 @@ void weapon_touch(entity this, entity toucher)
 
 	bool leave = (deathmatch == 2 || coop);
 	
-	if(this.classname == "weapon_nailgun")
+	switch(this.classname)
 	{
-		if(leave &&(toucher.items & IT_NAILGUN) )
-			return;
-		hadammo = toucher.ammo_nails;			
-		new = IT_NAILGUN;
-		toucher.ammo_nails = toucher.ammo_nails + 30;
+		case "weapon_nailgun":
+		{
+			if(leave && (toucher.items & IT_NAILGUN))
+				return;
+			hadammo = toucher.ammo_nails;			
+			new = IT_NAILGUN;
+			toucher.ammo_nails = toucher.ammo_nails + 30;
+			break;
+		}
+		case "weapon_supernailgun":
+		{
+			if(leave && (toucher.items & IT_SUPER_NAILGUN))
+				return;
+			hadammo = toucher.ammo_rockets;			
+			new = IT_SUPER_NAILGUN;
+			toucher.ammo_nails = toucher.ammo_nails + 30;
+			break;
+		}
+		case "weapon_supershotgun":
+		{
+			if(leave && (toucher.items & IT_SUPER_SHOTGUN))
+				return;
+			hadammo = toucher.ammo_rockets;			
+			new = IT_SUPER_SHOTGUN;
+			toucher.ammo_shells = toucher.ammo_shells + 5;
+			break;
+		}
+		case "weapon_rocketlauncher":
+		{
+			if(leave && (toucher.items & IT_ROCKET_LAUNCHER))
+				return;
+			hadammo = toucher.ammo_rockets;			
+			new = IT_ROCKET_LAUNCHER;
+			toucher.ammo_rockets = toucher.ammo_rockets + 5;
+			break;
+		}
+		case "weapon_grenadelauncher":
+		{
+			if(leave && (toucher.items & IT_GRENADE_LAUNCHER))
+				return;
+			hadammo = toucher.ammo_rockets;			
+			new = IT_GRENADE_LAUNCHER;
+			toucher.ammo_rockets = toucher.ammo_rockets + 5;
+			break;
+		}
+		case "weapon_lightning":
+		{
+			if(leave && (toucher.items & IT_LIGHTNING))
+				return;
+			hadammo = toucher.ammo_rockets;			
+			new = IT_LIGHTNING;
+			toucher.ammo_cells = toucher.ammo_cells + 15;
+			break;
+		}
+		default:
+		{
+			objerror(this, "weapon_touch: unknown classname");
+			break;
+		}
 	}
-	else if(this.classname == "weapon_supernailgun")
-	{
-		if(leave &&(toucher.items & IT_SUPER_NAILGUN) )
-			return;
-		hadammo = toucher.ammo_rockets;			
-		new = IT_SUPER_NAILGUN;
-		toucher.ammo_nails = toucher.ammo_nails + 30;
-	}
-	else if(this.classname == "weapon_supershotgun")
-	{
-		if(leave &&(toucher.items & IT_SUPER_SHOTGUN) )
-			return;
-		hadammo = toucher.ammo_rockets;			
-		new = IT_SUPER_SHOTGUN;
-		toucher.ammo_shells = toucher.ammo_shells + 5;
-	}
-	else if(this.classname == "weapon_rocketlauncher")
-	{
-		if(leave &&(toucher.items & IT_ROCKET_LAUNCHER) )
-			return;
-		hadammo = toucher.ammo_rockets;			
-		new = IT_ROCKET_LAUNCHER;
-		toucher.ammo_rockets = toucher.ammo_rockets + 5;
-	}
-	else if(this.classname == "weapon_grenadelauncher")
-	{
-		if(leave &&(toucher.items & IT_GRENADE_LAUNCHER) )
-			return;
-		hadammo = toucher.ammo_rockets;			
-		new = IT_GRENADE_LAUNCHER;
-		toucher.ammo_rockets = toucher.ammo_rockets + 5;
-	}
-	else if(this.classname == "weapon_lightning")
-	{
-		if(leave &&(toucher.items & IT_LIGHTNING) )
-			return;
-		hadammo = toucher.ammo_rockets;			
-		new = IT_LIGHTNING;
-		toucher.ammo_cells = toucher.ammo_cells + 15;
-	}
-	else
-		objerror(this, "weapon_touch: unknown classname");
 
 	if(this.netname != "")
 		sprint(toucher, sprintf("You got the %s\n", this.netname));

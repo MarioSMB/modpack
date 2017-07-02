@@ -273,7 +273,6 @@ spawnfunc(monster_shalrath)
 	this.sightsound = shalrath_sight;
 	this.deathmessage = shalrath_deathmessage;
 
-	setthink(this, walkmonster_start);
+	walkmonster_start(this);
 	this.nextthink = time + 0.1 + random()*0.1;	
-
 }

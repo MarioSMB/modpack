@@ -140,7 +140,7 @@ WaterMove
 void T_Damage(entity targ, entity inflictor, entity attacker, float damage);
 #endif
 
-void WaterMove(entity this)
+void WaterMove(entity this, float dt)
 {
 //dprint(ftos(this.waterlevel));
 	if(this.move_movetype == MOVETYPE_NOCLIP)
@@ -223,7 +223,7 @@ void WaterMove(entity this)
 	}
 #endif
 	if(!(this.flags & FL_WATERJUMP) )
-		this.velocity = this.velocity - 0.8*this.waterlevel*frametime*this.velocity;
+		this.velocity = this.velocity - 0.8*this.waterlevel*dt*this.velocity;
 }
 
 void CheckWaterJump(entity this)
@@ -449,7 +449,7 @@ void PM_Main(entity this, float dt)
 	else
 		UNSET_JUMP_HELD(this);
 
-	WaterMove(this);
+	WaterMove(this, dt);
 
 	if(this.waterlevel == 2)
 		CheckWaterJump(this);
