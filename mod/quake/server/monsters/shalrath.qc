@@ -177,7 +177,7 @@ void ShalMissile(entity this)
 	missile.owner = this;
 
 	missile.solid = SOLID_BBOX;
-	missile.movetype = MOVETYPE_FLYMISSILE;
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	_setmodel(missile, "progs/v_spike.mdl");
 
 	setsize(missile, '0 0 0', '0 0 0');		
@@ -257,7 +257,7 @@ spawnfunc(monster_shalrath)
 	precache_sound2("shalrath/sight.wav");
 	
 	this.solid = SOLID_SLIDEBOX;
-	this.movetype = MOVETYPE_STEP;
+	set_movetype(this, MOVETYPE_STEP);
 	
 	_setmodel(this, "progs/shalrath.mdl");
 	setsize(this, VEC_HULL2_MIN, VEC_HULL2_MAX);
@@ -273,7 +273,6 @@ spawnfunc(monster_shalrath)
 	this.sightsound = shalrath_sight;
 	this.deathmessage = shalrath_deathmessage;
 
-	setthink(this, walkmonster_start);
+	walkmonster_start(this);
 	this.nextthink = time + 0.1 + random()*0.1;	
-
 }

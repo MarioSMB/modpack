@@ -1,4 +1,4 @@
-#ifndef MENUQC
+#ifdef GAMEQC
 SOUND(LIGHTAPC_T17MM_FIRE, W_Sound("uzi_fire_slow_bass"));
 #endif
 

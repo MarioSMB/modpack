@@ -220,7 +220,7 @@ void OgreFireGrenade(entity this)
 
 	entity missile = spawn();
 	missile.owner = this;
-	missile.movetype = MOVETYPE_BOUNCE;
+	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
 		
 // set missile speed	
@@ -632,7 +632,7 @@ spawnfunc(monster_ogre)
 	precache_sound("ogre/ogwake.wav");
 
 	this.solid = SOLID_SLIDEBOX;
-	this.movetype = MOVETYPE_STEP;
+	set_movetype(this, MOVETYPE_STEP);
 
 	_setmodel(this, "progs/ogre.mdl");
 

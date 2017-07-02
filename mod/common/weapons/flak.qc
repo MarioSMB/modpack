@@ -82,7 +82,7 @@ CLASS(Flak, Weapon)
 /* rating    */ ATTRIB(Flak, bot_pickupbasevalue, float, 6000);
 /* color     */ ATTRIB(Flak, wpcolor, vector, '1 1 0');
 /* modelname */ ATTRIB(Flak, mdl, string, "flak");
-#ifndef MENUQC
+#ifdef GAMEQC
 /* model     */ ATTRIB(Flak, m_model, Model, MDL_FLAK_ITEM);
 #endif
 /* crosshair */ ATTRIB(Flak, w_crosshair, string, "gfx/crosshairflak");
@@ -212,7 +212,7 @@ void W_Flak_Projectile_Touch(entity this, entity toucher)
 	else if(toucher.solid == SOLID_BSP || !toucher)
 	{
 		if(toucher)
-			spamsound(this, CH_SHOTS, SND(FLAK_CASINGS_RANDOM()), VOL_BASE * 0.7, ATTN_NORM);
+			spamsound(this, CH_SHOTS, SND_FLAK_CASINGS_RANDOM(), VOL_BASE * 0.7, ATTN_NORM);
 		//pointparticles(particleeffectnum("flak_bounce"), this.origin, this.velocity, 1);
 		this.owner = world;
 		this.projectiledeathtype |= HITTYPE_BOUNCE;

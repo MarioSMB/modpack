@@ -96,6 +96,7 @@ bool CheckAttack(entity this)
 	return false;
 }
 
+void changeyaw(entity this);
 
 /*
 =============
@@ -107,7 +108,7 @@ Stay facing the enemy
 void ai_face(entity this)
 {
 	this.ideal_yaw = vectoyaw(this.enemy.origin - this.origin);
-	ChangeYaw(this);
+	changeyaw(this);
 }
 
 /*
@@ -120,11 +121,13 @@ The monster is in a melee attack, so get as close as possible to .enemy
 bool visible(entity this, entity targ);
 bool infront(entity this, entity targ);
 int range(entity this, entity targ);
+void t_movetogoal(entity this, float dist);
+bool t_walkmove(entity this, float yaw, float dist);
 
 void ai_charge(entity this, float d)
 {
 	ai_face(this);	
-	movetogoal(this, d);		// done in C code...
+	t_movetogoal(this, d);		// done in C code...
 }
 
 void ai_charge_side(entity this)
@@ -132,13 +135,13 @@ void ai_charge_side(entity this)
 // aim to the left of the enemy for a flyby
 
 	this.ideal_yaw = vectoyaw(this.enemy.origin - this.origin);
-	ChangeYaw(this);
+	changeyaw(this);
 
 	makevectors(this.angles);
 	vector dtemp = this.enemy.origin - 30*v_right;
 	float heading = vectoyaw(dtemp - this.origin);
 	
-	walkmove(this, heading, 20);
+	t_walkmove(this, heading, 20);
 }
 
 

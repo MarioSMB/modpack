@@ -366,7 +366,7 @@ void wiz_death1(entity this)
 	this.velocity_x = -200 + 400*random();
 	this.velocity_y = -200 + 400*random();
 	this.velocity_z = 100 + 100*random();
-	this.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(this);
 	_sound(this, CHAN_VOICE, "wizard/wdeath.wav", 1, ATTN_NORM);
 }
 
@@ -425,7 +425,7 @@ spawnfunc(monster_wizard)
 	precache_sound("wizard/wsight.wav");
 
 	this.solid = SOLID_SLIDEBOX;
-	this.movetype = MOVETYPE_STEP;
+	set_movetype(this, MOVETYPE_STEP);
 
 	_setmodel(this, "progs/wizard.mdl");
 

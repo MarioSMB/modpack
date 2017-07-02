@@ -2,7 +2,7 @@
 #ifndef VORE_H
 #define VORE_H
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(MON_VORE, M_Model("shalrath.mdl"));
 
 SOUND(VORE_FIRESPIKE, W_Sound("electro_fire"));
@@ -10,20 +10,16 @@ SOUND(VORE_FIRESPIKE, W_Sound("electro_fire"));
 
 CLASS(Vore, Monster)
     ATTRIB(Vore, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MON_FLAG_MELEE | MON_FLAG_RANGED);
-    ATTRIB(Vore, mins, vector, '-32 -32 -24');
-    ATTRIB(Vore, maxs, vector, '32 32 64');
-#ifndef MENUQC
+    ATTRIB(Vore, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Vore, m_maxs, vector, '32 32 64');
+#ifdef GAMEQC
     ATTRIB(Vore, m_model, Model, MDL_MON_VORE);
 #endif
     ATTRIB(Vore, netname, string, "vore");
     ATTRIB(Vore, monster_name, string, "Vore");
 ENDCLASS(Vore)
 
-REGISTER_MONSTER(VORE, NEW(Vore)) {
-#ifndef MENUQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(VORE, NEW(Vore));
 
 CLASS(VoreSpike, PortoLaunch)
 /* flags     */ ATTRIB(VoreSpike, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
@@ -227,7 +223,7 @@ spawnfunc(monster_shalrath) { Monster_Spawn(this, true, MON_VORE.monsterid); }
 			return true;
 		}
 		#endif
-		#ifndef MENUQC
+		#ifdef GAMEQC
 		METHOD(Vore, mr_anim, bool(Monster thismon, entity actor))
 		{
 			vector none = '0 0 0';
@@ -253,10 +249,6 @@ spawnfunc(monster_shalrath) { Monster_Spawn(this, true, MON_VORE.monsterid); }
 			//actor.monster_loot = ITEM_HealthBig;
 			actor.monster_attackfunc = M_Vore_Attack;
 
-			return true;
-		}
-		METHOD(Vore, mr_precache, bool(Monster thismon))
-		{
 			return true;
 		}
 		#endif

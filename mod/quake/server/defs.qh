@@ -1,5 +1,7 @@
 #pragma once
 
+int intermission_running;
+
 bool autocvar_sv_eventlog;
 int autocvar_sv_eventlog_files_counter; // TODO
 
@@ -92,6 +94,14 @@ const int AS_MISSILE = 4;
 .void(entity this) th_melee;
 .void(entity this, entity attacker, float damage) th_pain;
 .void(entity this, entity attacker) th_die;
+
+string current_cdtrack;
+
+float sys_frametime;     // gets initialised in worldspawn, saves the value from autocvar_sys_ticrate
+
+float servertime, serverprevtime, serverframetime;
+
+.int prevweapon;
 
 .bool voided;
 

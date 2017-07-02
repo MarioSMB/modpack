@@ -344,7 +344,7 @@ void spawn_tdeath(vector org, entity death_owner)
 {
 	entity death = spawn();
 	death.classname = "teledeath";
-	death.movetype = MOVETYPE_NONE;
+	set_movetype(death, MOVETYPE_NONE);
 	death.solid = SOLID_TRIGGER;
 	death.angles = '0 0 0';
 	setsize(death, death_owner.mins - '1 1 1', death_owner.maxs + '1 1 1');
@@ -401,8 +401,10 @@ void teleport_touch(entity this, entity toucher)
 		toucher.teleport_time = time + 0.7;
 		toucher.velocity = v_forward * 300;
 	}
-	if(toucher.flags & FL_ONGROUND)
-		toucher.flags &= ~FL_ONGROUND;
+
+	UNSET_ONGROUND(toucher);
+
+	BITXOR_ASSIGN(toucher.effects, EF_TELEPORT_BIT);
 }
 
 /*QUAKED info_teleport_destination(.5 .5 .5)(-8 -8 -8)(8 8 32)
@@ -595,11 +597,11 @@ void trigger_monsterjump_touch(entity this, entity toucher)
 // set XY even if not on ground, so the jump will clear lips
 	toucher.velocity_x = this.movedir_x * this.speed;
 	toucher.velocity_y = this.movedir_y * this.speed;
-	
-	if(!(toucher.flags & FL_ONGROUND))
+
+	if(!IS_ONGROUND(toucher))
 		return;
 	
-	toucher.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(toucher);
 
 	toucher.velocity_z = this.height;
 }

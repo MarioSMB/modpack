@@ -25,7 +25,6 @@ int modelindex_eyes, modelindex_player;
 
 string nextmap;
 
-int intermission_running;
 float intermission_exittime;
 
 /*QUAKED info_intermission(1 0.5 0.5)(-16 -16 -16)(16 16 16)
@@ -47,24 +46,18 @@ void SetChangeParms(entity this)
 
 // remove items
 	this.items &= ~(IT_KEY1 | IT_KEY2 | IT_INVISIBILITY | IT_INVULNERABILITY | IT_SUIT | IT_QUAD);
-	
-// cap super health
-	if(this.health > 100)
-		this.health = 100;
-	if(this.health < 50)
-		this.health = 50;
+
+	this.health = bound(50, this.health, 100); // cap super health
 	parm1 = this.items;
 	parm2 = this.health;
 	parm3 = this.armorvalue;
-	if(this.ammo_shells < 25)
-		parm4 = 25;
-	else
-		parm4 = this.ammo_shells;
+	parm4 = max(25, this.ammo_shells);
 	parm5 = this.ammo_nails;
 	parm6 = this.ammo_rockets;
 	parm7 = this.ammo_cells;
 	parm8 = this.weapon;
 	parm9 = this.armortype * 100;
+	parm10 = this.prevweapon;
 }
 
 void SetNewParms()
@@ -76,8 +69,9 @@ void SetNewParms()
 	parm5 = 0;
 	parm6 = 0;
 	parm7 = 0;
-	parm8 = 1;
+	parm8 = IT_SHOTGUN;
 	parm9 = 0;
+	parm10 = IT_AXE;
 }
 
 void DecodeLevelParms(entity this)
@@ -97,6 +91,7 @@ void DecodeLevelParms(entity this)
 	this.ammo_cells = parm7;
 	this.weapon = parm8;
 	this.armortype = parm9 * 0.01;
+	this.prevweapon = parm10;
 }
 
 /*
@@ -121,12 +116,10 @@ entity FindIntermission(entity this)
 
 // then look for the start position
 	entity spot = find(NULL, classname, "info_player_start");
-	if(spot)
-		return spot;
+	if(!spot)
+		objerror(this, "FindIntermission: no spot");
 
-	objerror(this, "FindIntermission: no spot");
-
-	return NULL;
+	return spot;
 }
 
 void GotoNextMap()
@@ -144,6 +137,29 @@ void GotoNextMap()
 		else
 			changelevel(nextmap);
 	}
+}
+
+string getcdtrack(int numb);
+void SendCDTrack(entity to, int numb)
+{
+	if(!to)
+	{
+		// TODO: doesn't support play/loop
+		string thetrack = getcdtrack(numb);
+		string tostuff = strcat("cd loop ", thetrack, "\n");
+		FOREACH_CLIENT(IS_REAL_CLIENT(it),
+		{
+			stuffcmd(it, tostuff);
+		});
+
+		if(current_cdtrack)
+			strunzone(current_cdtrack);
+		current_cdtrack = strzone(thetrack);
+
+		return;
+	}
+
+	stuffcmd(to, strcat("cd loop ", getcdtrack(numb), "\n"));
 }
 
 /*
@@ -181,9 +197,13 @@ void execute_changelevel(entity this)
 	entity pos = FindIntermission(this);
 
 	// play intermission music
+#if 0
 	WriteByte(MSG_ALL, SVC_CDTRACK);
 	WriteByte(MSG_ALL, 3);
 	//WriteByte(MSG_ALL, 3);
+#else
+	SendCDTrack(NULL, 3);
+#endif
 
 	WriteByte(MSG_ALL, SVC_INTERMISSION);
 	WriteCoord(MSG_ALL, pos.origin_x);
@@ -193,13 +213,17 @@ void execute_changelevel(entity this)
 	WriteAngle(MSG_ALL, pos.mangle_y);
 	WriteAngle(MSG_ALL, pos.mangle_z);
 
-	FOREACH_CLIENT(IS_PLAYER(it),
+	if(pos)
 	{
-		it.takedamage = DAMAGE_NO;
-		it.solid = SOLID_NOT;
-		it.movetype = MOVETYPE_NONE;
-		it.modelindex = 0;
-	});
+		FOREACH_CLIENT(IS_PLAYER(it),
+		{
+			it.takedamage = DAMAGE_NO;
+			it.solid = SOLID_NOT;
+			set_movetype(it, MOVETYPE_NONE);
+			//it.modelindex = 0;
+			setmodel(it, MDL_Null);
+		});
+	};
 }
 
 .entity chlevel_targ;
@@ -229,11 +253,7 @@ void changelevel_touch(entity this, entity toucher)
 		if(it.chlevel_targ == this)
 			++plnum;
 	});
-	float themin;
-	if(this.count >= 1)
-		themin = 1;
-	else
-		themin = this.count;
+	float themin = min(1.0, this.count);
 	if(plnum < ceil(realplnum * themin)) // 70% of players
 		return;
 
@@ -285,8 +305,9 @@ void CopyToBodyQue(entity ent)
 	body.modelindex = ent.modelindex;
 	body.frame = ent.frame;
 	body.colormap = ent.colormap;
-	body.movetype = ent.movetype;
+	set_movetype(body, ent.move_movetype);
 	body.velocity = ent.velocity;
+	body.move_qcphysics = false; // not for clones
 	body.flags = 0;
 	setorigin(body, ent.origin);
 	setsize(body, ent.mins, ent.maxs);
@@ -421,11 +442,20 @@ void PlayerDie(entity this, entity attacker);
 
 void PutClientInServer(entity this)
 {
+	if(IS_SPEC(this))
+	{
+		entity spot = SelectSpawnPoint();
+		setorigin(this, spot.origin + '0 0 1');
+		this.angles = vec2(spot.angles);
+		this.fixangle = true;
+		return;
+	}
+
 	this.classname = STR_PLAYER;
 	this.health = 100;
 	this.takedamage = DAMAGE_AIM;
 	this.solid = SOLID_SLIDEBOX;
-	this.movetype = MOVETYPE_WALK;
+	set_movetype(this, MOVETYPE_WALK);
 	this.show_hostile = 0;
 	this.max_health = 100;
 	this.flags = FL_CLIENT;
@@ -435,8 +465,12 @@ void PutClientInServer(entity this)
 	this.radsuit_finished = 0;
 	this.invisible_finished = 0;
 	this.invincible_finished = 0;
-	this.effects = 0;
+	this.effects = EF_TELEPORT_BIT;
 	this.invincible_time = 0;
+
+	this.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_SOLID;
+	if (autocvar_g_playerclip_collisions)
+		this.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;
 
 	DecodeLevelParms(this);
 	
@@ -453,8 +487,13 @@ void PutClientInServer(entity this)
 	entity spot = SelectSpawnPoint();
 
 	this.origin = spot.origin + '0 0 1';
-	this.angles = spot.angles;
+	this.angles = vec2(spot.angles);
 	this.fixangle = true;		// turn this way immediately
+
+	//JIM
+	// Clear out velocity so you're not launched into the air
+	// when you respawn.
+	this.velocity = '0 0 0';
 
 // oh, this is a hack!
 	_setmodel(this, "progs/eyes.mdl");
@@ -636,27 +675,11 @@ void NextLevel()
 	}
 }
 
-/*
-============
-CheckRules
-
-Exit deathmatch games upon conditions
-============
-*/
-void CheckRules(entity this)
-{
-	if(timelimit && time >= timelimit)
-		NextLevel();
-	
-	if(fraglimit && this.frags >= fraglimit)
-		NextLevel();	
-}
-
 //============================================================================
 
 void PlayerDeathThink(entity this)
 {
-	if((this.flags & FL_ONGROUND))
+	if(IS_ONGROUND(this))
 	{
 		float forward = vlen(this.velocity);
 		forward = forward - 20;
@@ -685,161 +708,6 @@ void PlayerDeathThink(entity this)
 	respawn(this);
 }
 
-
-void PlayerJump(entity this)
-{
-	if(this.flags & FL_WATERJUMP)
-		return;
-	
-	if(this.waterlevel >= 2)
-	{
-// play swiming sound
-		if(this.swim_flag < time)
-		{
-			this.swim_flag = time + 1;
-			if(random() < 0.5)
-				_sound(this, CHAN_BODY, "misc/water1.wav", 1, ATTN_NORM);
-			else
-				_sound(this, CHAN_BODY, "misc/water2.wav", 1, ATTN_NORM);
-		}
-
-		return;
-	}
-
-	if(!(this.flags & FL_ONGROUND))
-		return;
-
-	if( !(this.flags & FL_JUMPRELEASED) )
-		return;		// don't pogo stick
-
-	this.flags &= ~FL_JUMPRELEASED;
-
-	this.flags &= ~FL_ONGROUND; // TODO: this isn't in QW
-	
-	this.button2 = 0;
-// player jumping sound
-	_sound(this, CHAN_BODY, "player/plyrjmp8.wav", 1, ATTN_NORM);
-	this.velocity_z = this.velocity_z + 270; // TODO: this isn't in QW
-}
-
-
-/*
-===========
-WaterMove
-
-============
-*/
-.float	dmgtime;
-
-void WaterMove(entity this)
-{
-//dprint(ftos(this.waterlevel));
-	if(this.movetype == MOVETYPE_NOCLIP)
-		return;
-	if(this.health < 0)
-		return;
-
-	if(this.waterlevel != 3)
-	{
-		if(this.air_finished < time)
-			_sound(this, CHAN_VOICE, "player/gasp2.wav", 1, ATTN_NORM);
-		else if(this.air_finished < time + 9)
-			_sound(this, CHAN_VOICE, "player/gasp1.wav", 1, ATTN_NORM);
-		this.air_finished = time + 12;
-		this.dmg = 2;
-	}
-	else if(this.air_finished < time)
-	{	// drown!
-		if(this.pain_finished < time)
-		{
-			this.dmg = this.dmg + 2;
-			if(this.dmg > 15)
-				this.dmg = 10;
-			T_Damage(this, NULL, NULL, this.dmg);
-			this.pain_finished = time + 1;
-		}
-	}
-	
-	if(!this.waterlevel)
-	{
-		if(this.flags & FL_INWATER)
-		{	
-			// play leave water sound
-			_sound(this, CHAN_BODY, "misc/outwater.wav", 1, ATTN_NORM);
-			this.flags &= ~FL_INWATER;
-		}
-		return;
-	}
-
-	if(this.watertype == CONTENT_LAVA)
-	{	// do damage
-		if(this.dmgtime < time)
-		{
-			if(this.radsuit_finished > time)
-				this.dmgtime = time + 1;
-			else
-				this.dmgtime = time + 0.2;
-
-			T_Damage(this, NULL, NULL, 10*this.waterlevel);
-		}
-	}
-	else if(this.watertype == CONTENT_SLIME)
-	{	// do damage
-		if(this.dmgtime < time && this.radsuit_finished < time)
-		{
-			this.dmgtime = time + 1;
-			T_Damage(this, NULL, NULL, 4*this.waterlevel);
-		}
-	}
-	
-	if( !(this.flags & FL_INWATER) )
-	{	
-
-// player enter water sound
-
-		if(this.watertype == CONTENT_LAVA)
-			_sound(this, CHAN_BODY, "player/inlava.wav", 1, ATTN_NORM);
-		if(this.watertype == CONTENT_WATER)
-			_sound(this, CHAN_BODY, "player/inh2o.wav", 1, ATTN_NORM);
-		if(this.watertype == CONTENT_SLIME)
-			_sound(this, CHAN_BODY, "player/slimbrn2.wav", 1, ATTN_NORM);
-
-		this.flags |= FL_INWATER;
-		this.dmgtime = 0;
-	}
-	
-	if(!(this.flags & FL_WATERJUMP) ) // TODO: this isn't in QW
-		this.velocity = this.velocity - 0.8*this.waterlevel*frametime*this.velocity;
-}
-
-void CheckWaterJump(entity this)
-{
-// check for a jump-out-of-water
-	makevectors(this.angles);
-	vector start = this.origin;
-	start_z = start_z + 8; 
-	v_forward_z = 0;
-	normalize(v_forward);
-	vector end = start + v_forward*24;
-	traceline(start, end, true, this);
-	if(trace_fraction < 1)
-	{	// solid at waist
-		start_z = start_z + this.maxs_z - 8;
-		end = start + v_forward*24;
-		this.movedir = trace_plane_normal * -50;
-		traceline(start, end, true, this);
-		if(trace_fraction == 1)
-		{	// open at eye level
-			this.flags |= FL_WATERJUMP;
-			this.velocity_z = 225;
-			this.flags &= ~FL_JUMPRELEASED;
-			this.teleport_time = time + 2;	// safety net
-			return;
-		}
-	}
-}
-
-
 /*
 ================
 PlayerPreThink
@@ -865,6 +733,7 @@ void PlayerPreThink(entity this)
 		this.netname_previous = strzone(this.netname);
 	}
 
+	this.disableclientprediction = ((intermission_running || this.deadflag != DEAD_NO) ? 1 : -1);
 
 	if(intermission_running)
 	{
@@ -879,14 +748,6 @@ void PlayerPreThink(entity this)
 
 	this.deathtype = "";
 
-	CheckRules(this);
-	WaterMove(this);
-
-/*
-	if(this.waterlevel == 2)
-		CheckWaterJump(this);
-*/
-
 	if(this.deadflag >= DEAD_DEAD)
 	{
 		PlayerDeathThink(this);
@@ -896,22 +757,12 @@ void PlayerPreThink(entity this)
 	if(this.deadflag == DEAD_DYING)
 		return;	// dying, so do nothing
 
-	if(this.button2)
-	{
-		PlayerJump(this);
-	}
-	else
-		this.flags |= FL_JUMPRELEASED;
-
 // teleporters can force a non-moving pause time	
 	if(time < this.pausetime)
 		this.velocity = '0 0 0';
 
 	if(time > this.attack_finished && this.currentammo == 0 && this.weapon != IT_AXE)
-	{
-		this.weapon = W_BestWeapon(this);
-		W_SetCurrentAmmo(this);
-	}
+		W_SwitchWeapon(this, W_BestWeapon(this, 0));
 }
 	
 /*
@@ -1023,7 +874,7 @@ void CheckPowerups(entity this)
 				stuffcmd(this, "bf\n");
 				_sound(this, CHAN_AUTO, "items/damage2.wav", 1, ATTN_NORM);
 				this.super_time = time + 1;
-			}	  
+			}
 			
 			if(this.super_time < time)
 			{
@@ -1090,6 +941,21 @@ void CheckPowerups(entity this)
 
 }
 
+void Player_Physics(entity this)
+{
+	set_movetype(this, this.move_movetype);
+
+	if(!this.move_qcphysics)
+		return;
+
+	if(!frametime && !this.pm_frametime)
+		return;
+
+	Movetype_Physics_NoMatchTicrate(this, this.pm_frametime, true);
+
+	this.pm_frametime = 0;
+}
+
 
 /*
 ================
@@ -1098,33 +964,72 @@ PlayerPostThink
 Called every frame after physics are run
 ================
 */
+void SpectatorThink(entity this);
 void PlayerPostThink(entity this)
 {
-	if(this.view_ofs == '0 0 0')
-		return;		// intermission or finale
-	if(this.deadflag)
-		return;
+	Player_Physics(this);
 
-// check to see if player landed and play landing sound	
-	if((this.jump_flag < -300) &&(this.flags & FL_ONGROUND))
+	if(IS_SPEC(this))
 	{
-		if(this.watertype == CONTENT_WATER)
-			_sound(this, CHAN_BODY, "player/h2ojump.wav", 1, ATTN_NORM);
-		else if(this.jump_flag < -650)
-		{
-			this.deathtype = "falling";
-			T_Damage(this, NULL, NULL, 5); 
-			_sound(this, CHAN_VOICE, "player/land2.wav", 1, ATTN_NORM);
-		}
-		else
-			_sound(this, CHAN_VOICE, "player/land.wav", 1, ATTN_NORM);
+		SpectatorThink(this);
+		CSQCMODEL_AUTOUPDATE(this);
+		return;
 	}
 
-	this.jump_flag = this.velocity_z;
+	if(this.view_ofs == '0 0 0')
+	{
+		CSQCMODEL_AUTOUPDATE(this);
+		return;		// intermission or finale
+	}
+	if(this.deadflag == DEAD_NO)
+	{
+		// check to see if player landed and play landing sound	
+		if((this.jump_flag < -300) && IS_ONGROUND(this) && (this.health > 0))
+		{
+			if(this.watertype == CONTENT_WATER)
+				_sound(this, CHAN_BODY, "player/h2ojump.wav", 1, ATTN_NORM);
+			else if(this.jump_flag < -650)
+			{
+				T_Damage(this, NULL, NULL, 5); 
+				_sound(this, CHAN_VOICE, "player/land2.wav", 1, ATTN_NORM);
+				this.deathtype = "falling";
+			}
+			else
+				_sound(this, CHAN_VOICE, "player/land.wav", 1, ATTN_NORM);
 
-	CheckPowerups(this);
+			this.jump_flag = 0;
+		}
 
-	W_WeaponFrame(this);
+		if(!IS_ONGROUND(this))
+			this.jump_flag = this.velocity_z;
+
+		CheckPowerups(this);
+
+		W_WeaponFrame(this);
+	}
+
+	CSQCMODEL_AUTOUPDATE(this);
+}
+
+string getcdtrack(int numb)
+{
+	switch(numb)
+	{
+		default:
+		case 1: return "track001";
+		case 2: return "track002";
+		case 3: return "track003";
+		case 4: return "track004";
+		case 5: return "track005";
+		case 6: return "track006";
+		case 7: return "track007";
+		case 8: return "track008";
+		case 9: return "track009";
+		case 10: return "track010";
+		case 11: return "track011";
+	}
+
+	return "track001"; // because gmqcc
 }
 
 
@@ -1135,6 +1040,7 @@ ClientConnect
 called when a player connects to a server
 ============
 */
+void SpectatorConnect(entity this);
 void ClientConnect(entity this)
 {
 	bprintf("%s entered the game\n", this.netname);
@@ -1142,7 +1048,14 @@ void ClientConnect(entity this)
 	static int playerid_last;
 	this.playerid = ++playerid_last;
 
+	this.flags |= FL_CLIENT;
+
 	this.netname_previous = strzone(this.netname);
+
+	this.disableclientprediction = -1;
+
+	string thetrack = ((current_cdtrack) ? current_cdtrack : getcdtrack(world.sounds));
+	stuffcmd(this, strcat("cd loop ", thetrack, "\n"));
 
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":join:", ftos(this.playerid), ":", ftos(etof(this)), ":", this.netaddress, ":", this.netname));
@@ -1150,6 +1063,13 @@ void ClientConnect(entity this)
 // a client connecting during an intermission can cause problems
 	if(intermission_running)
 		GotoNextMap();
+
+	CSQCMODEL_AUTOINIT(this);
+
+	Physics_UpdateStats(this);
+
+	if(IS_SPEC(this))
+		SpectatorConnect(this);
 }
 
 
@@ -1160,8 +1080,15 @@ ClientDisconnect
 called when a player disconnects from a server
 ============
 */
+void SpectatorDisconnect(entity this);
 void ClientDisconnect(entity this)
 {
+	if(IS_SPEC(this))
+	{
+		SpectatorDisconnect(this);
+		return;
+	}
+
 	// let everyone else know
 	bprintf("%s left the game with %d frags\n", this.netname, this.frags);
 	if(autocvar_sv_eventlog)

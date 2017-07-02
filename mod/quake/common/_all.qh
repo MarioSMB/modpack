@@ -1,7 +1,42 @@
 #pragma once
 
-//#include "effects/all.qh"
+REGISTER_NET_LINKED(ENT_CLIENT_MODEL)
+
+#define fixedmakevectors makevectors
+noref vector _fixedvectoangles;
+#define fixedvectoangles(a) (_fixedvectoangles = vectoangles(a), _fixedvectoangles.x *= -1, _fixedvectoangles)
+noref vector _fixedvectoangles2;
+#define fixedvectoangles2(a, b) (_fixedvectoangles2 = vectoangles2(a, b), _fixedvectoangles2.x *= -1, _fixedvectoangles2)
+
+#include "stats.qh"
+
+#ifdef CSQC
+	float autocvar_cl_lerpexcess;
+#endif
+
+#include "physics.qh"
+
+#include "effects/all.qh"
 #include "models/all.qh"
 #include "sounds/all.qh"
 
 #include "items/item.qh"
+
+#ifndef BITCLR
+# define BITCLR(a,b) ((a) - ((a) & (b)))
+#endif
+#ifndef BITSET
+# define BITSET(a,b) ((a) | (b))
+#endif
+#ifndef BITXOR
+# define BITXOR(a,b) (((a) | (b)) - ((a) & (b)))
+#endif
+#ifndef BITCLR_ASSIGN
+# define BITCLR_ASSIGN(a,b) ((a) = (a) - ((a) & (b)))
+#endif
+#ifndef BITSET_ASSIGN
+# define BITSET_ASSIGN(a,b) ((a) |= (b))
+#endif
+#ifndef BITXOR_ASSIGN
+# define BITXOR_ASSIGN(a,b) ((a) = ((a) | (b)) - ((a) & (b)))
+#endif

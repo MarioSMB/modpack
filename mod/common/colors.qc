@@ -28,6 +28,15 @@ string mod_playername(entity p, bool team_colorize)
     else
         return mod_translate_clean(p.netname);
 }
+
+#if 0
+MUTATOR_HOOKFUNCTION(mutator_mod, PreFormatMessage)
+{
+	string themessage = M_ARGV(1, string);
+	themessage = mod_translate_clean(themessage);
+	M_ARGV(1, string) = themessage;
+}
+#endif
 #elif defined(CSQC)
 AUTOCVAR(cl_stripfancystuff, bool, false, "Turn off the fancy blinking colorful names");
 

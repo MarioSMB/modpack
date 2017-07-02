@@ -1,7 +1,7 @@
 #ifndef DEMON_H
 #define DEMON_H
 
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(MON_DEMON, M_Model("demon.mdl"));
 
 MSG_INFO_NOTIF(DEATH_SELF_MON_DEMON_JUMP,             1, 2, 1, "s1 s2loc spree_lost", "s1",    "notify_death",         "^BG%s^K1 was pounced on by a Demon%s%s", "")
@@ -15,20 +15,16 @@ REGISTER_DEATHTYPE(MONSTER_DEMON_MELEE,            				DEATH_SELF_MON_DEMON_MELE
 
 CLASS(Demon, Monster)
     ATTRIB(Demon, spawnflags, int, MONSTER_SIZE_QUAKE | MON_FLAG_HIDDEN | MON_FLAG_MELEE | MON_FLAG_RANGED);
-    ATTRIB(Demon, mins, vector, '-32 -32 -24');
-    ATTRIB(Demon, maxs, vector, '32 32 24');
-#ifndef MENUQC
+    ATTRIB(Demon, m_mins, vector, '-32 -32 -24');
+    ATTRIB(Demon, m_maxs, vector, '32 32 24');
+#ifdef GAMEQC
     ATTRIB(Demon, m_model, Model, MDL_MON_DEMON);
 #endif
     ATTRIB(Demon, netname, string, "demon");
     ATTRIB(Demon, monster_name, string, "Demon");
 ENDCLASS(Demon)
 
-REGISTER_MONSTER(DEMON, NEW(Demon)) {
-#ifndef MENUQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(DEMON, NEW(Demon));
 
 #endif
 
@@ -124,7 +120,7 @@ spawnfunc(monster_demon1) { Monster_Spawn(this, true, MON_DEMON.monsterid); }
 			return true;
 		}
 		#endif
-		#ifndef MENUQC
+		#ifdef GAMEQC
 		METHOD(Demon, mr_anim, bool(Monster thismon, entity actor))
 		{
 			vector none = '0 0 0';
@@ -152,10 +148,6 @@ spawnfunc(monster_demon1) { Monster_Spawn(this, true, MON_DEMON.monsterid); }
 			actor.monster_loot = ITEM_HealthBig;
 			actor.monster_attackfunc = M_Demon_Attack;
 
-			return true;
-		}
-		METHOD(Demon, mr_precache, bool(Monster thismon))
-		{
 			return true;
 		}
 		#endif

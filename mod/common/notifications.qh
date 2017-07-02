@@ -24,6 +24,9 @@ enum {
     MSG_INFO_NOTIF(JAILBREAK_CAPTURE,                   1,  2, 0, "s1 s2", "",                                  "",     _("^BG%s^BG captured %s"), "")
     MSG_INFO_NOTIF(JAILBREAK_FREE,                      1,  1, 0, "s1", "",                                     "",     _("^BG%s^3 has broken free!"), "")
 
+    MSG_INFO_NOTIF(RUNEMATCH_LOST,                      1,  3, 0, "s1 s2 s3", "",       "",                     _("^BG%s^K1 lost ^BG%s^K1 and ^BG%s"), "")
+    MSG_INFO_NOTIF(RUNEMATCH_PICKUP,                    1,  3, 0, "s1 s2 s3", "",       "",                     _("^BG%s^BG picked up ^BG%s^BG and ^BG%s"), "")
+
     MSG_INFO_NOTIF(VIP_DROP,                            1,  1, 0, "s1", "",             "",                     _("^BG%s^K1 dropped the soul gem"), "")
 	MSG_INFO_NOTIF(VIP_PICKUP,                          1,  1, 0, "s1", "",             "",                     _("^BG%s^K1 picked up the soul gem"), "")
 

@@ -96,7 +96,7 @@ void ClientBeam_Draw(entity this)
 	if(this.cnt)
 		tex = "particles/gauntletbeam";
 	//vector rgb = getcsqcplayercolor(this.sv_entnum - 1);
-	vector rgb = colormapPaletteColor(stof(getplayerkeyvalue(this.sv_entnum - 1, "colors")) & 0x0F, true);
+	vector rgb = colormapPaletteColor(entcs_GetClientColors(this.sv_entnum - 1) & 0x0F, true);
 	rgb *= (1 + autocvar_cl_vaporizerbeam_colorboost);
 
 	float fail = (this.nextthink - time);
@@ -162,9 +162,6 @@ int ClientBeam_HitCheck()
 
 void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, entity player)
 {
-	if(time < wep.last_beam)
-		return;
-
 	if(wep.activeweapon == WEP_VAPORIZER || wep.activeweapon == WEP_VORTEX)
 	if(held)// || (wep.activeweapon == WEP_VORTEX && WEP_CVAR(vortex, secondary) && attack2_held && !WEP_CVAR(vortex, charge)))
 	if(autocvar_cl_vaporizerbeam > 0 || (player.ping >= autocvar_cl_vaporizerbeam_minping && autocvar_cl_vaporizerbeam != -1))
@@ -189,7 +186,7 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 		{
 			if(autocvar_cl_particles_oldvortexbeam)
 			{ /* keep insta beam */ }
-			else if(autocvar_cl_particles_newvortexbeam)
+			else if(autocvar_cl_particles_newvortexbeam && particleeffectnum(EFFECT_VORTEX_BEAM_NEW) >= 0)
 				eff = particleeffectnum(EFFECT_VORTEX_BEAM_NEW);
 			else
 				eff = particleeffectnum(EFFECT_VORTEX_BEAM);
@@ -204,9 +201,9 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 
 		if(!(trace_dphitq3surfaceflags & (Q3SURFACEFLAG_SKY | Q3SURFACEFLAG_NOIMPACT)))
 		if(autocvar_cl_particles_newvortexbeam && wep.activeweapon == WEP_VORTEX)
-			__pointparticles(particleeffectnum(EFFECT_VORTEX_IMPACT_NEW), w_shotend, '0 0 0', 1);
+			pointparticles(EFFECT_VORTEX_IMPACT_NEW, w_shotend, '0 0 0', 1);
 		else
-			__pointparticles(particleeffectnum(EFFECT_VORTEX_IMPACT), w_shotend, '0 0 0', 1);
+			pointparticles(EFFECT_VORTEX_IMPACT, w_shotend, '0 0 0', 1);
 
 		if(wep.activeweapon == WEP_VAPORIZER)
 			wep.last_beam = time + vapedelay;
@@ -220,7 +217,7 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 	}
 }
 
-MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
+MUTATOR_HOOKFUNCTION(mutator_mod, DrawCrosshair)
 {
 	if((time < STAT(GAMESTARTTIME))
 	|| (time < STAT(ROUNDSTARTTIME))
@@ -246,6 +243,8 @@ MUTATOR_HOOKFUNCTION(mutator_mod, UpdateCrosshair)
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
 	{
 		entity wep = viewmodels[slot];
+		if(time < wep.last_beam)
+			continue;
 		DrawClientBeam(wep, vortex_pdelay, vaporizer_delay, attack1_held, localme);
 	}
 

@@ -3,12 +3,8 @@
 AUTOCVAR_NOREF(g_snafu, bool, false, "SNAFU: I don't even know");
 #endif
 #include "snafu.qh"
-#ifndef MENUQC
+#ifdef GAMEQC
 MODEL(SNAFU_TADPOLE, "models/snafu/tadpole.dpm");
-MODEL(SNAFU_PRINCESS, "models/snafu/princess.dpm");
-MODEL(SNAFU_FATTY, "models/snafu/fatone.dpm");
-MODEL(SNAFU_FATHEAD, "models/snafu/foneoneshead.md3");
-MODEL(SNAFU_CHICKENLEG, "models/snafu/chickenleg.md3");
 
 SOUND(SNAFU_ZOMBIE_ATTACK1, "snafu/zombie/attack1");
 SOUND(SNAFU_ZOMBIE_ATTACK2, "snafu/zombie/attack2");
@@ -156,12 +152,21 @@ bool SNAFU_CheckWinner()
 			for(i = 1; i != _idx; ++i)
 				e = e.chain;
 
-			if(random() < 0.25)
-				snafu_fatty_create(e);
-			else
-				snafu_princess_create(e);
+			RandomSelection_Init();
+			RandomSelection_AddFloat(1, autocvar_g_snafu_fatty_chance, 1);
+			RandomSelection_AddFloat(2, autocvar_g_snafu_princess_chance, 1);
+		#if 0
+			RandomSelection_AddFloat(3, autocvar_g_snafu_vprincess_chance, 1);
+		#endif
 
-			snafu_vprincess_create(e);
+			switch(RandomSelection_chosen_float)
+			{
+				case 1: snafu_fatty_create(e);
+				case 2: snafu_princess_create(e);
+			#if 0
+				case 3: snafu_vprincess_create(e);
+			#endif
+			}
 		}
 		return false;
 	}

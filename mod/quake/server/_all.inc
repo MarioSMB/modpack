@@ -2,6 +2,8 @@
 
 #include "../common/_all.inc"
 
+#include <lib/csqcmodel/sv_model.qc>
+
 //#include "defs.qc"
 #include "lib.qc"
 #include "subs.qc"
@@ -13,7 +15,6 @@
 #include "world.qc"
 #include "client.qc"
 #include "spectate.qc"
-//#include "physics.qc"
 #include "player.qc"
 #include "doors.qc"
 #include "buttons.qc"

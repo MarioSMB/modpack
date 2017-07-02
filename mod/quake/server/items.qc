@@ -1,3 +1,4 @@
+void W_SwitchWeapon(entity this, float to_wep);
 void W_SetCurrentAmmo(entity this);
 /* ALL LIGHTS SHOULD BE 0 1 0 IN COLOR ALL OTHER ITEMS SHOULD
 BE .8 .3 .4 IN COLOR */
@@ -66,7 +67,7 @@ void DropQuad(entity this, float timeleft)
 	
 	item.flags = FL_ITEM;
 	item.solid = SOLID_TRIGGER;
-	item.movetype = MOVETYPE_TOSS;
+	set_movetype(item, MOVETYPE_TOSS);
 	item.noise = "items/damage.wav";
 	_setmodel(item, "progs/quaddama.mdl");
 	setsize(item, '-16 -16 -24', '16 16 32');
@@ -112,7 +113,7 @@ void DropRing(entity this, float timeleft)
 	
 	item.flags = FL_ITEM;
 	item.solid = SOLID_TRIGGER;
-	item.movetype = MOVETYPE_TOSS;
+	set_movetype(item, MOVETYPE_TOSS);
 	item.noise = "items/inv1.wav";
 	_setmodel(item, "progs/invisibl.mdl");
 	setsize(item, '-16 -16 -24', '16 16 32');
@@ -151,7 +152,7 @@ void PlaceItem(entity this)
 	this.mdl = this.model;		// so it can be restored on respawn
 	this.flags = FL_ITEM;		// make extra wide
 	this.solid = SOLID_TRIGGER;
-	this.movetype = MOVETYPE_TOSS;	
+	set_movetype(this, MOVETYPE_TOSS);	
 	this.velocity = '0 0 0';
 	this.origin_z = this.origin_z + 6;
 	this.m_min = this.mins;
@@ -502,7 +503,14 @@ void Deathmatch_Weapon(entity this, int old, int new)
 	int or = RankForWeapon(this.weapon);
 	int nr = RankForWeapon(new);
 	if(nr < or)
-		this.weapon = new;
+		W_SwitchWeapon(this, new);
+}
+
+bool weapon_customize(entity this, entity client)
+{
+	if((deathmatch == 2 || coop) && (client.items & this.weapon))
+		return false;
+	return true;
 }
 
 /*
@@ -510,7 +518,7 @@ void Deathmatch_Weapon(entity this, int old, int new)
 weapon_touch
 =============
 */
-int W_BestWeapon(entity this);
+int W_BestWeapon(entity this, float except);
 
 void weapon_touch(entity this, entity toucher)
 {
@@ -528,56 +536,68 @@ void weapon_touch(entity this, entity toucher)
 
 	bool leave = (deathmatch == 2 || deathmatch == 3 || deathmatch == 5);
 	
-	if(this.classname == "weapon_nailgun")
+	switch(this.classname)
 	{
-		if(leave &&(toucher.items & IT_NAILGUN) )
-			return;
-		hadammo = toucher.ammo_nails;			
-		new = IT_NAILGUN;
-		toucher.ammo_nails = toucher.ammo_nails + 30;
+		case "weapon_nailgun":
+		{
+			if(leave && (toucher.items & IT_NAILGUN))
+				return;
+			hadammo = toucher.ammo_nails;			
+			new = IT_NAILGUN;
+			toucher.ammo_nails = toucher.ammo_nails + 30;
+			break;
+		}
+		case "weapon_supernailgun":
+		{
+			if(leave && (toucher.items & IT_SUPER_NAILGUN))
+				return;
+			hadammo = toucher.ammo_rockets;			
+			new = IT_SUPER_NAILGUN;
+			toucher.ammo_nails = toucher.ammo_nails + 30;
+			break;
+		}
+		case "weapon_supershotgun":
+		{
+			if(leave && (toucher.items & IT_SUPER_SHOTGUN))
+				return;
+			hadammo = toucher.ammo_rockets;			
+			new = IT_SUPER_SHOTGUN;
+			toucher.ammo_shells = toucher.ammo_shells + 5;
+			break;
+		}
+		case "weapon_rocketlauncher":
+		{
+			if(leave && (toucher.items & IT_ROCKET_LAUNCHER))
+				return;
+			hadammo = toucher.ammo_rockets;			
+			new = IT_ROCKET_LAUNCHER;
+			toucher.ammo_rockets = toucher.ammo_rockets + 5;
+			break;
+		}
+		case "weapon_grenadelauncher":
+		{
+			if(leave && (toucher.items & IT_GRENADE_LAUNCHER))
+				return;
+			hadammo = toucher.ammo_rockets;			
+			new = IT_GRENADE_LAUNCHER;
+			toucher.ammo_rockets = toucher.ammo_rockets + 5;
+			break;
+		}
+		case "weapon_lightning":
+		{
+			if(leave && (toucher.items & IT_LIGHTNING))
+				return;
+			hadammo = toucher.ammo_rockets;			
+			new = IT_LIGHTNING;
+			toucher.ammo_cells = toucher.ammo_cells + 15;
+			break;
+		}
+		default:
+		{
+			objerror(this, "weapon_touch: unknown classname");
+			break;
+		}
 	}
-	else if(this.classname == "weapon_supernailgun")
-	{
-		if(leave &&(toucher.items & IT_SUPER_NAILGUN) )
-			return;
-		hadammo = toucher.ammo_rockets;			
-		new = IT_SUPER_NAILGUN;
-		toucher.ammo_nails = toucher.ammo_nails + 30;
-	}
-	else if(this.classname == "weapon_supershotgun")
-	{
-		if(leave &&(toucher.items & IT_SUPER_SHOTGUN) )
-			return;
-		hadammo = toucher.ammo_rockets;			
-		new = IT_SUPER_SHOTGUN;
-		toucher.ammo_shells = toucher.ammo_shells + 5;
-	}
-	else if(this.classname == "weapon_rocketlauncher")
-	{
-		if(leave &&(toucher.items & IT_ROCKET_LAUNCHER) )
-			return;
-		hadammo = toucher.ammo_rockets;			
-		new = IT_ROCKET_LAUNCHER;
-		toucher.ammo_rockets = toucher.ammo_rockets + 5;
-	}
-	else if(this.classname == "weapon_grenadelauncher")
-	{
-		if(leave &&(toucher.items & IT_GRENADE_LAUNCHER) )
-			return;
-		hadammo = toucher.ammo_rockets;			
-		new = IT_GRENADE_LAUNCHER;
-		toucher.ammo_rockets = toucher.ammo_rockets + 5;
-	}
-	else if(this.classname == "weapon_lightning")
-	{
-		if(leave &&(toucher.items & IT_LIGHTNING) )
-			return;
-		hadammo = toucher.ammo_rockets;			
-		new = IT_LIGHTNING;
-		toucher.ammo_cells = toucher.ammo_cells + 15;
-	}
-	else
-		objerror(this, "weapon_touch: unknown classname");
 
 	if(this.netname != "")
 		sprint(toucher, sprintf("You got the %s\n", this.netname));
@@ -603,8 +623,6 @@ void weapon_touch(entity this, entity toucher)
 		else
 			Deathmatch_Weapon(toucher, old, new);
 	}
-
-	W_SetCurrentAmmo(toucher);
 
 	if(leave)
 		return;
@@ -637,6 +655,7 @@ spawnfunc(weapon_supershotgun)
 	this.weapon = IT_SUPER_SHOTGUN;
 	this.netname = "Double-barrelled Shotgun";
 	settouch(this, weapon_touch);
+	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
 }
@@ -653,6 +672,7 @@ spawnfunc(weapon_nailgun)
 	this.weapon = IT_NAILGUN;
 	this.netname = "nailgun";
 	settouch(this, weapon_touch);
+	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
 }
@@ -669,6 +689,7 @@ spawnfunc(weapon_supernailgun)
 	this.weapon = IT_SUPER_NAILGUN;
 	this.netname = "Super Nailgun";
 	settouch(this, weapon_touch);
+	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
 }
@@ -685,6 +706,7 @@ spawnfunc(weapon_grenadelauncher)
 	this.weapon = 3;
 	this.netname = "Grenade Launcher";
 	settouch(this, weapon_touch);
+	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
 }
@@ -701,6 +723,7 @@ spawnfunc(weapon_rocketlauncher)
 	this.weapon = 3;
 	this.netname = "Rocket Launcher";
 	settouch(this, weapon_touch);
+	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
 }
@@ -718,6 +741,7 @@ spawnfunc(weapon_lightning)
 	this.weapon = 3;
 	this.netname = "Thunderbolt";
 	settouch(this, weapon_touch);
+	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
 }
@@ -739,7 +763,7 @@ void ammo_touch(entity this, entity toucher)
 		return;
 
 // if the player was using his best weapon, change up to the new one if better		
-	int best = W_BestWeapon(toucher);
+	int best = W_BestWeapon(toucher, 0);
 
 
 // shotgun
@@ -787,10 +811,7 @@ void ammo_touch(entity this, entity toucher)
 // change to a better weapon if appropriate
 
 	if( toucher.weapon == best )
-	{
-		toucher.weapon = W_BestWeapon(toucher);
-		W_SetCurrentAmmo(toucher);
-	}
+		W_SwitchWeapon(toucher, W_BestWeapon(toucher, 0));
 
 // if changed current ammo, update it
 	W_SetCurrentAmmo(toucher);
@@ -1023,6 +1044,10 @@ void key_touch(entity this, entity toucher)
 	SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
 }
 
+bool key_customize(entity this, entity client)
+{
+	return !(client.items & this.items);
+}
 
 void key_setsounds(entity this)
 {
@@ -1072,6 +1097,7 @@ spawnfunc(item_key1)
 		this.netname = "silver keycard";
 	}
 	key_setsounds(this);
+	setcefc(this, key_customize);
 	settouch(this, key_touch);
 	this.items = IT_KEY1;
 	setsize(this, '-16 -16 -24', '16 16 32');
@@ -1107,6 +1133,7 @@ spawnfunc(item_key2)
 		this.netname = "gold keycard";
 	}
 	key_setsounds(this);
+	setcefc(this, key_customize);
 	settouch(this, key_touch);
 	this.items = IT_KEY2;
 	setsize(this, '-16 -16 -24', '16 16 32');
@@ -1410,11 +1437,12 @@ void BackpackTouch(entity this, entity toucher)
 	toucher.ammo_rockets = toucher.ammo_rockets + this.ammo_rockets;
 	toucher.ammo_cells = toucher.ammo_cells + this.ammo_cells;
 
-	int new = this.items;
-	if(!new)
-		new = toucher.weapon;
+	int newitem = this.items;
+	//if(!newitem)
+		//newitem = toucher.weapon;
 	int old = toucher.items;
-	toucher.items |= this.items;
+	if(newitem)
+		toucher.items |= newitem;
 	
 	bound_other_ammo(toucher);
 
@@ -1447,7 +1475,7 @@ void BackpackTouch(entity this, entity toucher)
 		sprint(toucher, sprintf("%d cells", this.ammo_cells));
 	}
 
-	if((deathmatch == 3 || deathmatch == 5) & ((WeaponCode(new) == 6) || (WeaponCode(new) == 7)) & (toucher.ammo_rockets < 5))
+	if((deathmatch == 3 || deathmatch == 5) & ((WeaponCode(newitem) == 6) || (WeaponCode(newitem) == 7)) & (toucher.ammo_rockets < 5))
 		toucher.ammo_rockets = 5;
 	
 	sprint(toucher, "\n");
@@ -1458,18 +1486,19 @@ void BackpackTouch(entity this, entity toucher)
 	delete(this);
 
 // change to the weapon
-	if(WeaponCode(new) <= b_switch)
+	if(newitem)
+	if(WeaponCode(newitem) <= b_switch)
 	{
 		if(this.flags & FL_INWATER)
 		{
-			if(new != IT_LIGHTNING)
-				Deathmatch_Weapon(toucher, old, new);
+			if(newitem != IT_LIGHTNING)
+				Deathmatch_Weapon(toucher, old, newitem);
 		}
 		else
-			Deathmatch_Weapon(toucher, old, new);
-	}
+			Deathmatch_Weapon(toucher, old, newitem);
 
-	W_SetCurrentAmmo(toucher);
+		W_SetCurrentAmmo(toucher);
+	}
 }
 
 /*
@@ -1510,7 +1539,7 @@ void DropBackpack(entity this)
 	
 	item.flags = FL_ITEM;
 	item.solid = SOLID_TRIGGER;
-	item.movetype = MOVETYPE_TOSS;
+	set_movetype(item, MOVETYPE_TOSS);
 	_setmodel(item, "progs/backpack.mdl");
 	setsize(item, '-16 -16 0', '16 16 56');
 	settouch(item, BackpackTouch);

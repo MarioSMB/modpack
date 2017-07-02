@@ -157,14 +157,14 @@ void Tar_JumpTouch(entity this, entity toucher)
 		_sound(this, CHAN_WEAPON, "blob/land1.wav", 1, ATTN_NORM);
 
 
-	if(!checkbottom(this))
+	if(!t_checkbottom(this))
 	{
-		if(this.flags & FL_ONGROUND)
+		if(IS_ONGROUND(this))
 		{	// jump randomly to not get hung up
 			//dprint("popjump\n");
 			settouch(this, func_null);
 			setthink(this, tbaby_run1);
-			this.movetype = MOVETYPE_STEP;
+			set_movetype(this, MOVETYPE_STEP);
 			this.nextthink = time + 0.1;
 
 		}
@@ -195,13 +195,13 @@ void tbaby_jump5(entity this)
 {
 	set_anim(this, anim_tbaby_jump5, tbaby_jump6);
 
-	this.movetype = MOVETYPE_BOUNCE;
+	set_movetype(this, MOVETYPE_BOUNCE);
 	settouch(this, Tar_JumpTouch);
 	makevectors(this.angles);
 	this.origin_z = this.origin_z + 1;
 	this.velocity = v_forward * 600 + '0 0 200';
 	this.velocity_z = this.velocity_z + random()*150;
-	this.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(this);
 	this.cnt = 0;
 }
 void tbaby_jump4(entity this) { set_anim(this, anim_tbaby_jump4, tbaby_jump5); ai_face(this); }
@@ -254,7 +254,7 @@ spawnfunc(monster_tarbaby)
 	precache_sound2("blob/sight1.wav");
 	
 	this.solid = SOLID_SLIDEBOX;
-	this.movetype = MOVETYPE_STEP;
+	set_movetype(this, MOVETYPE_STEP);
 
 	_setmodel(this, "progs/tarbaby.mdl");
 

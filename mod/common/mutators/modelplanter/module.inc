@@ -1,5 +1,5 @@
 #ifndef IMPLEMENTATION
-#ifndef MENUQC
+#ifdef GAMEQC
 	#include "modelplanter.qh"
 #endif
 #endif

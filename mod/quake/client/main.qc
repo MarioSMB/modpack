@@ -1,30 +1,50 @@
 // required engine functions
 
-bool oldjump;
+float deathmatch, coop;
+
+//bool oldjump;
+void Sbar_Precache();
 void CSQC_Init()
 {
+	{
+		int i = 0;
+		for ( ; i < 255; ++i)
+			if (getplayerkeyvalue(i, "viewentity") == "")
+				break;
+		maxclients = i;
+	}
+
 	// needs to be done so early because of the constants they create
 	static_init();
 	static_init_late();
 	static_init_precache();
 
-	oldjump = cvar("cl_movement_track_canjump");
-	cvar_set("cl_movement_track_canjump", "1");
+	Sbar_Precache();
 
-	localcmd("\ncd remap track001 track002 track003 track004 track005 track006 track007 track008 track009 track010 track011\n");
+	//localcmd("\ncd remap track001 track002 track003 track004 track005 track006 track007 track008 track009 track010 track011\n");
 }
 
+#if 0
 void CSQC_Shutdown()
 {
-	cvar_set("cl_movement_track_canjump", ftos(oldjump));
-	localcmd(sprintf("\ncd remap %s\n", cvar_string("g_cdtracks_remaplist")));
+	//localcmd(sprintf("\ncd remap %s\n", cvar_string("g_cdtracks_remaplist")));
 }
+#endif
 
 #define drawpic(position, pic, size, rgb, alpha, flag) \
 	drawpic_builtin(position, pic, size, rgb, alpha, flag)
 
 #define drawstring(position, text, scale, rgb, alpha, flag) \
 	drawstring_builtin(position, text, scale, rgb, alpha, flag)
+
+#define drawcolorcodedstring(position, text, scale, alpha, flag) \
+	drawcolorcodedstring_builtin(position, text, scale, alpha, flag)
+
+#define drawcolorcodedstring2(position, text, scale, rgb, alpha, flag) \
+	drawcolorcodedstring2_builtin(position, text, scale, rgb, alpha, flag)
+
+#define drawfill(position, size, rgb, alpha, flag) \
+	drawfill_builtin(position, size, rgb, alpha, flag)
 
 string draw_currentSkin;
 void draw_cursor(vector pos, vector ofs, string img, vector col, float a)
@@ -84,12 +104,20 @@ int cs_project_is_b0rked;
 float autocvar_vid_conwidth;
 float autocvar_vid_conheight;
 
-bool autocvar_cl_enginesbar = true;
+bool autocvar_cl_enginesbar = false;
 
 void Sbar_Draw();
 void HUD_Crosshair(entity this);
 void CSQC_UpdateView(entity this, float w, float h)
 {
+	++framecount;
+
+	stats_get();
+
+	CSQCPlayer_SetCamera();
+
+	ticrate = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
+
 	// ALWAYS Clear Current Scene First
 	clearscene();
 
@@ -143,6 +171,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	if(intermission && !completed_time)
 		completed_time = time;
+
+	IL_ENDFRAME();
 }
 
 bool CSQC_InputEvent(int inputType, float nPrimary, float nSecondary)
@@ -174,14 +204,91 @@ bool CSQC_ConsoleCommand(string command)
 	return false;
 }
 
-void CSQC_Ent_Update(entity this, bool isNew)
+void CSQC_Ent_Update(entity this, bool isnew)
 {
+	this.sourceLoc = __FILE__ ":" STR(__LINE__);
+	int t = ReadByte();
 
+	// set up the "time" global for received entities to be correct for interpolation purposes
+	float savetime = time;
+	if(servertime)
+	{
+		time = servertime;
+	}
+	else
+	{
+		serverprevtime = time;
+		serverdeltatime = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
+		time = serverprevtime + serverdeltatime;
+	}
+
+#ifdef DP_CSQC_ENTITY_REMOVE_IS_B0RKED
+	if (this.enttype)
+	{
+		if (t != this.enttype || isnew)
+		{
+			LOG_INFOF("A CSQC entity changed its type! (edict: %d, server: %d, type: %d -> %d)\n", etof(this), this.entnum, this.enttype, t);
+			Ent_Remove(this);
+			clearentity(this);
+			isnew = true;
+		}
+	}
+	else
+	{
+		if (!isnew)
+		{
+			LOG_INFOF("A CSQC entity appeared out of nowhere! (edict: %d, server: %d, type: %d)\n", etof(this), this.entnum, t);
+			isnew = true;
+		}
+	}
+#endif
+	this.enttype = t;
+	bool done = false;
+	FOREACH(LinkedEntities, it.m_id == t, {
+		if (isnew) this.classname = it.netname;
+		if (autocvar_developer_csqcentities)
+            LOG_INFOF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)\n", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
+		done = it.m_read(this, NULL, isnew);
+		//MUTATOR_CALLHOOK(Ent_Update, this, isnew);
+		break;
+	});
+	time = savetime;
+	if (!done)
+	{
+		LOG_FATALF("CSQC_Ent_Update(%d) at %f with this=%i {.entnum=%d, .enttype=%d} t=%s (%d)", isnew, savetime, this, this.entnum, this.enttype, this.classname, t);
+	}
 }
 
+// Destructor, but does NOT deallocate the entity by calling remove(). Also
+// used when an entity changes its type. For an entity that someone interacts
+// with others, make sure it can no longer do so.
+void Ent_Remove(entity this)
+{
+	if(this.entremove) this.entremove(this);
+
+	if(this.snd_looping > 0)
+	{
+		sound(this, this.snd_looping, SND_Null, VOL_BASE, 2);
+		this.snd_looping = 0;
+	}
+
+	this.enttype = 0;
+	this.classname = "";
+	//this.draw = func_null;
+	this.entremove = func_null;
+	// TODO possibly set more stuff to defaults
+}
+// CSQC_Ent_Remove : Called when the server requests a SSQC / CSQC entity to be removed.  Essentially call remove(this) as well.
 void CSQC_Ent_Remove(entity this)
 {
-
+	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Ent_Remove() with this=%i {.entnum=%d, .enttype=%d}\n", this, this.entnum, this.enttype);
+	if (wasfreed(this))
+	{
+		LOG_WARN("CSQC_Ent_Remove called for already removed entity. Packet loss?");
+		return;
+	}
+	if (this.enttype) Ent_Remove(this);
+	delete(this);
 }
 
 float sb_showscores;
@@ -192,6 +299,7 @@ STATIC_INIT_LATE(fix_hud)
 {
 	registercvar("_rrestarted", "0");
 
+	//if(autocvar_cl_enginesbar)
 	if(!cvar("_rrestarted"))
 	{
 		cvar_set("_rrestarted", "1");
@@ -358,8 +466,7 @@ void HUD_Crosshair(entity this)
 		vector view_forward = v_forward;
 
 		// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
-		wcross_origin = project_3d_to_2d(view_origin + 32768 * view_forward);
-		wcross_origin.z = 0;
+		wcross_origin = vec2(project_3d_to_2d(view_origin + 32768 * view_forward));
 		/*if(autocvar_crosshair_hittest)
 		{
 			vector wcross_oldorigin;

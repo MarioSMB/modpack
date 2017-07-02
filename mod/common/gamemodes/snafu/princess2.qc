@@ -1,3 +1,21 @@
+#ifdef GAMEQC
+MODEL(SNAFU_PRINCESS, "models/snafu/princess.dpm");
+#endif
+
+CLASS(Princess, Gai)
+    ATTRIB(Princess, m_mins, vector, '-16 -16 0');
+    ATTRIB(Princess, m_maxs, vector, '16 16 75');
+#ifdef GAMEQC
+    ATTRIB(Princess, m_model, Model, MDL_SNAFU_PRINCESS);
+#endif
+    ATTRIB(Princess, deadmins, vector, '-32 -32 0');
+    ATTRIB(Princess, deadmaxs, vector, '32 32 0');
+    ATTRIB(Princess, netname, string, "princess");
+    ATTRIB(Princess, monster_name, string, _("Princess"));
+ENDCLASS(Princess)
+
+REGISTER_GAI(PRINCESS, NEW(Princess));
+
 #ifdef SVQC
 
 void snafu_princess_die(entity this)
@@ -47,7 +65,7 @@ void snafu_princess_damage(entity this, entity inflictor, entity attacker, float
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 8, this, attacker);    
 	
 	this.health   -= damage;
-	this.velocity += force * 3;
+	//this.velocity += force * 3;
 	
 	snafu_damageswitch(this, attacker);
 	
@@ -57,8 +75,9 @@ void snafu_princess_damage(entity this, entity inflictor, entity attacker, float
 		{
 			if(IS_PLAYER(attacker))
 				UpdateFrags(attacker, 1);
-				
-			setsize(this, PRINCESS_DEAD_MIN, PRINCESS_DEAD_MAX);
+			
+			Gai info = Gais_from(this.gaid);
+			setsize(this, info.deadmins, info.deadmaxs);
 			setthink(this, snafu_princess_die);
 			this.nextthink = time;            
 			snafu_deathalert(this, attacker);
@@ -104,7 +123,7 @@ void snafu_princess_think(entity this)
 		this.enemy = NULL;
 	
 	if(this.snafu_ai_enemy_select_timer < time || this.enemy == NULL)
-		snafu_zombie_localtarget(this, autocvar_g_snafu_prinsess_range_target);
+		snafu_zombie_localtarget(this, autocvar_g_snafu_princess_range_target);
 
 	// Modal states: pain, fly, attack
 			
@@ -119,7 +138,7 @@ void snafu_princess_think(entity this)
 		return;
 	}
 	
-	this.velocity -= (this.velocity * (autocvar_g_snafu_prinsess_friction * _delta));
+	this.velocity -= (this.velocity * (autocvar_g_snafu_princess_friction * _delta));
 	
 	if(this.attack_finished_single[0] > time)
 	{
@@ -145,7 +164,7 @@ void snafu_princess_think(entity this)
 		{
 			if(trace_ent && trace_ent.takedamage && !trace_ent.snafu_ai_flags)
 			{   // Blocked by something we can kill
-				LOG_DEBUG("Kill-able blockade dist: ", ftos(vlen(this.origin - trace_ent.origin)));
+				//LOG_DEBUG("Kill-able blockade dist: ", ftos(vlen(this.origin - trace_ent.origin)));
 				this.enemy = trace_ent;
 				this.snafu_ai_enemy_select_timer = time + 15;
 			}
@@ -171,13 +190,13 @@ void snafu_princess_think(entity this)
 	
 	// Move?
 	//if(this.enemy)// != snafu_tadpole)
-	if(vdist(NearestPointOnBox(this.enemy, this.origin) - this.origin, >, autocvar_g_snafu_prinsess_range_walk))
+	if(vdist(NearestPointOnBox(this.enemy, this.origin) - this.origin, >, autocvar_g_snafu_princess_range_walk))
 		this.frame = princess_run;
 	else
 		this.frame = princess_walk;
 	
 	// Attack?
-	if(vdist(NearestPointOnBox(this.enemy, this.origin) - this.origin, <=, autocvar_g_snafu_prinsess_range_attack))
+	if(vdist(NearestPointOnBox(this.enemy, this.origin) - this.origin, <=, autocvar_g_snafu_princess_range_attack))
 	{
 		this.attack_finished_single[0] = time + 1.5;                
 		this.frame = princess_slap1 + rint(random() * 4);
@@ -207,17 +226,20 @@ void snafu_princess_think(entity this)
 	*/
 	
 	if(this.frame == princess_run)
-		this.velocity += v_forward * autocvar_g_snafu_prinsess_speed_run * _delta;
+		this.velocity += v_forward * autocvar_g_snafu_princess_speed_run * _delta;
 		
 	if(this.frame == princess_walk)
-		this.velocity += v_forward * autocvar_g_snafu_prinsess_speed_walk * _delta;
+		this.velocity += v_forward * autocvar_g_snafu_princess_speed_walk * _delta;
 }
 
 void snafu_princess_create(entity own)
 {
+	Gai info = GAI_PRINCESS;
 	entity zom = spawn();
-	setmodel(zom, MDL_SNAFU_PRINCESS);    
-	setsize(zom, PRINCESS_MIN, PRINCESS_MAX);
+	zom.gaid = info.gaid;
+
+	setmodel(zom, info.m_model);    
+	setsize(zom, info.m_mins, info.m_maxs);
 	
 	vector _where = own.origin;
 	_where_x += random() * own.mins_x;
@@ -225,18 +247,21 @@ void snafu_princess_create(entity own)
 	_where_y += random() * own.mins_y;
 	_where_y += random() * own.maxs_y;
 	
-	tracebox(_where + '0 0 64', PRINCESS_MIN, PRINCESS_MAX, _where - '0 0 1' * max_shot_distance, MOVE_NORMAL, own);    
+	tracebox(_where + '0 0 64', info.m_mins, info.m_maxs, _where - '0 0 1' * max_shot_distance, MOVE_NORMAL, own);    
 	setorigin(zom, trace_endpos);
-	
+
 	set_movetype(zom, MOVETYPE_WALK);
 	zom.solid = SOLID_BBOX;
 	zom.deadflag = DEAD_NO;
 	zom.takedamage = DAMAGE_AIM;
-	zom.event_damage = snafu_princess_damage;    
-	zom.snafu_ai_flags = SAF_ZOMBIE;
-	zom.health = autocvar_g_snafu_prinsess_health;
+	zom.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, zom);
+	zom.health = autocvar_g_snafu_princess_health;
 	setthink(zom, snafu_princess_think);
 	zom.nextthink = time;
+	zom.event_damage = snafu_princess_damage;    
+	zom.snafu_ai_flags = SAF_ZOMBIE;
+	zom.damageforcescale = 3;
 	zom.classname       = "zombie";
 	zom.netname         = "Princess";
 		

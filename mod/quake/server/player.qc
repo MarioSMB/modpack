@@ -466,7 +466,7 @@ void DeathBubblesSpawn(entity this)
 	entity bubble = new(bubble);
 	_setmodel(bubble, "progs/s_bubble.spr");
 	setorigin(bubble, this.owner.origin + '0 0 24');
-	bubble.movetype = MOVETYPE_NOCLIP;
+	set_movetype(bubble, MOVETYPE_NOCLIP);
 	bubble.solid = SOLID_NOT;
 	bubble.velocity = '0 0 15';
 	bubble.nextthink = time + 0.5;
@@ -485,7 +485,7 @@ void DeathBubbles(entity this, int num_bubbles)
 {
 	entity bubble_spawner = spawn();
 	setorigin(bubble_spawner, this.origin);
-	bubble_spawner.movetype = MOVETYPE_NONE;
+	set_movetype(bubble_spawner, MOVETYPE_NONE);
 	bubble_spawner.solid = SOLID_NOT;
 	bubble_spawner.nextthink = time + 0.1;
 	setthink(bubble_spawner, DeathBubblesSpawn);
@@ -568,21 +568,21 @@ vector VelocityForDamage(entity this, float dm)
 
 void ThrowGib(entity this, string gibname, float dm)
 {
-	entity new = spawn();
-	new.origin = this.origin;
-	_setmodel(new, gibname);
-	setsize(new, '0 0 0', '0 0 0');
-	new.velocity = VelocityForDamage(this, dm);
-	new.movetype = MOVETYPE_BOUNCE;
-	new.solid = SOLID_NOT;
-	new.avelocity_x = random()*600;
-	new.avelocity_y = random()*600;
-	new.avelocity_z = random()*600;
-	setthink(new, SUB_Remove);
-	new.ltime = time;
-	new.nextthink = time + 10 + random()*10;
-	new.frame = 0;
-	new.flags = 0;
+	entity gib = spawn();
+	setorigin(gib, this.origin);
+	_setmodel(gib, gibname);
+	setsize(gib, '0 0 0', '0 0 0');
+	gib.velocity = VelocityForDamage(this, dm);
+	set_movetype(gib, MOVETYPE_BOUNCE);
+	gib.solid = SOLID_NOT;
+	gib.avelocity_x = random()*600;
+	gib.avelocity_y = random()*600;
+	gib.avelocity_z = random()*600;
+	setthink(gib, SUB_Remove);
+	gib.ltime = time;
+	gib.nextthink = time + 10 + random()*10;
+	gib.frame = 0;
+	gib.flags = 0;
 }
 
 void ThrowHead(entity this, string gibname, float dm)
@@ -590,14 +590,14 @@ void ThrowHead(entity this, string gibname, float dm)
 	_setmodel(this, gibname);
 	this.frame = 0;
 	this.nextthink = -1;
-	this.movetype = MOVETYPE_BOUNCE;
+	set_movetype(this, MOVETYPE_BOUNCE);
 	this.takedamage = DAMAGE_NO;
 	this.solid = SOLID_NOT;
 	this.view_ofs = '0 0 8';
 	setsize(this, '-16 -16 0', '16 16 56');
 	this.velocity = VelocityForDamage(this, dm);
 	this.origin_z = this.origin_z - 24;
-	this.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(this);
 	this.avelocity = crandom() * '0 600 0';
 }
 
@@ -667,8 +667,8 @@ void PlayerDie(entity this, entity attacker)
 	this.view_ofs = '0 0 -8';
 	this.deadflag = DEAD_DYING;
 	this.solid = SOLID_NOT;
-	this.flags &= ~FL_ONGROUND;
-	this.movetype = MOVETYPE_TOSS;
+	UNSET_ONGROUND(this);
+	set_movetype(this, MOVETYPE_TOSS);
 	if(this.velocity_z < 10)
 		this.velocity_z = this.velocity_z + random()*300;
 
@@ -709,7 +709,7 @@ void set_suicide_frame(entity this)
 		return;	// allready gibbed
 	this.frame = anim_player_deatha11;
 	this.solid = SOLID_NOT;
-	this.movetype = MOVETYPE_TOSS;
+	set_movetype(this, MOVETYPE_TOSS);
 	this.deadflag = DEAD_DEAD;
 	this.nextthink = -1;
 }

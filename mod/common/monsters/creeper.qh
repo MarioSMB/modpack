@@ -12,8 +12,8 @@ MODEL(MON_CREEPER, M_Model("creeper.dpm"));
 
 CLASS(Creeper, Monster)
     ATTRIB(Creeper, spawnflags, int, MON_FLAG_MELEE | MON_FLAG_HIDDEN);
-    ATTRIB(Creeper, mins, vector, '-18 -18 -25');
-    ATTRIB(Creeper, maxs, vector, '18 18 40');
+    ATTRIB(Creeper, m_mins, vector, '-18 -18 -25');
+    ATTRIB(Creeper, m_maxs, vector, '18 18 40');
 #ifdef GAMEQC
     ATTRIB(Creeper, m_model, Model, MDL_MON_CREEPER);
 #endif
@@ -21,8 +21,4 @@ CLASS(Creeper, Monster)
     ATTRIB(Creeper, monster_name, string, _("Creeper"));
 ENDCLASS(Creeper)
 
-REGISTER_MONSTER(CREEPER, NEW(Creeper)) {
-#ifdef GAMEQC
-    this.mr_precache(this);
-#endif
-}
+REGISTER_MONSTER(CREEPER, NEW(Creeper));

@@ -84,8 +84,7 @@ int redgem_count, bluegem_count, yellowgem_count, pinkgem_count;
 .float drop_prevtime;
 .float pickup_antispam;
 
-const int VIP_TEAMS = 17;
-int vip_count[VIP_TEAMS];
+int vip_count[4];
 
 // score rule declarations
 const int ST_VIP_SCORE = 1;

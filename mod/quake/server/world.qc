@@ -10,11 +10,17 @@ void main()
 
 }
 
+#if 0
+#if 0
 bool sv_playerphysicsqc_backup;
+#endif
 void SV_Shutdown()
 {
+#if 0
 	cvar_set("sv_playerphysicsqc", ftos(sv_playerphysicsqc_backup));
+#endif
 }
+#endif
 
 //=======================
 /*QUAKED worldspawn(0 0 0) ?
@@ -244,6 +250,7 @@ void cvar_changes_init()
 		BADPREFIX("g_playerstats_");
 		BADPREFIX("g_voice_flood_");
 		BADPREFIX("log_file");
+		BADPREFIX("quit_");
 		BADPREFIX("rcon_");
 		BADPREFIX("sv_allowdownloads");
 		BADPREFIX("sv_autodemo");
@@ -532,6 +539,8 @@ void SV_OnEntityPreSpawnFunction(entity this)
 {
 	__spawnfunc_expecting = true;
 	__spawnfunc_expect = this;
+
+	set_movetype(this, this.movetype);
 }
 
 int nJoinAllowed(entity this, entity ignore);
@@ -752,8 +761,10 @@ spawnfunc(worldspawn)
 		cvar_set("sv_curl_serverpackages", s);
 	}
 
+#if 0
 	sv_playerphysicsqc_backup = cvar("sv_playerphysicsqc");
 	cvar_set("sv_playerphysicsqc", "0");
+#endif
 
 	SetMod();
 }
@@ -817,14 +828,139 @@ spawnfunc(__init_dedicated_server)
 	static_init_precache();
 }
 
+/*
+============
+CheckRules_World
+
+Exit deathmatch games upon conditions
+============
+*/
+void NextLevel();
+bool autocvar_quit_when_empty = true;
+void CheckRules_World()
+{
+	float timelimit = autocvar_timelimit * 60;
+	float fraglimit = autocvar_fraglimit;
+	
+	if(timelimit && time >= timelimit)
+	{
+		// crude hack to force restart of the server if we've reached the timelimit on a co-op level
+		if(server_is_dedicated && autocvar_quit_when_empty && !deathmatch && world.model != "maps/start.bsp" && world.model != "maps/rstart.bsp" && world.model != "maps/hipstart.bsp")
+			localcmd("\nmap start\n");
+		else
+			NextLevel();
+		return;
+	}
+
+	if(fraglimit)
+	{
+		FOREACH_CLIENT(IS_PLAYER(it),
+		{
+			if(it.frags >= fraglimit)
+			{
+				NextLevel();
+				return;
+			}
+		});
+	}
+}
+
 void StartFrame()
 {
 	timelimit = autocvar_timelimit * 60;
 	fraglimit = autocvar_fraglimit;
+
+	sys_frametime = autocvar_sys_ticrate * autocvar_slowmo;
+	if (sys_frametime <= 0) sys_frametime = 1.0 / 60.0; // somewhat safe fallback
+
+	serverprevtime = servertime;
+	servertime = time;
+	serverframetime = frametime;
+
 	teamplay = autocvar_teamplay;
 	//deathmatch = autocvar_deathmatch; // doesn't engine handle this?
 	//framecount = framecount + 1;
 
 	//delete_fn = remove_unsafely; // not during spawning!
 	delete_fn = remove_except_protected;
+
+	CheckRules_World();
+
+	FOREACH_CLIENT(true, GlobalStats_update(it));
+}
+
+bool autocvar_sv_gameplayfix_multiplethinksperframe;
+void RunThink(entity this)
+{
+	// don't let things stay in the past.
+	// it is possible to start that way by a trigger with a local time.
+	if(this.nextthink <= 0 || this.nextthink > time + frametime)
+		return;
+
+	float oldtime = time; // do we need to save this?
+
+	for (int iterations = 0; iterations < 128 && !wasfreed(this); iterations++)
+	{
+		time = max(oldtime, this.nextthink);
+		this.nextthink = 0;
+
+		if(getthink(this))
+			getthink(this)(this);
+		// mods often set nextthink to time to cause a think every frame,
+		// we don't want to loop in that case, so exit if the new nextthink is
+		// <= the time the qc was told, also exit if it is past the end of the
+		// frame
+		if(this.nextthink <= time || this.nextthink > oldtime + frametime || !autocvar_sv_gameplayfix_multiplethinksperframe)
+			break;
+	}
+
+	time = oldtime;
+}
+
+bool autocvar_sv_freezenonclients;
+bool autocvar_sv_gameplayfix_delayprojectiles;
+void Physics_Frame()
+{
+	if(autocvar_sv_freezenonclients)
+		return;
+
+	FOREACH_ENTITY_FLOAT(pure_data, false,
+	{
+		if(IS_CLIENT(it) || it.classname == "" || it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH || it.move_movetype == MOVETYPE_PHYSICS)
+			continue;
+
+		//set_movetype(it, it.move_movetype);
+		// inline the set_movetype function, since this is called a lot
+		it.movetype = (it.move_qcphysics) ? MOVETYPE_NONE : it.move_movetype;
+
+		if(it.move_movetype == MOVETYPE_NONE)
+			continue;
+
+		if(it.move_qcphysics)
+			Movetype_Physics_NoMatchTicrate(it, PHYS_INPUT_TIMELENGTH, false);
+
+		if(it.movetype >= MOVETYPE_USER_FIRST && it.movetype <= MOVETYPE_USER_LAST) // these cases have no think handling
+		{
+			// handle thinking here
+			if (getthink(it) && it.nextthink > 0 && it.nextthink <= time + frametime)
+				RunThink(it);
+		}
+	});
+
+	if(autocvar_sv_gameplayfix_delayprojectiles >= 0)
+		return;
+
+	FOREACH_ENTITY_FLOAT(move_qcphysics, true,
+	{
+		if(IS_CLIENT(it) || is_pure(it) || it.classname == "" || it.move_movetype == MOVETYPE_NONE)
+			continue;
+		Movetype_Physics_NoMatchTicrate(it, PHYS_INPUT_TIMELENGTH, false);
+	});
+}
+
+void EndFrame()
+{
+	Physics_Frame();
+
+	IL_ENDFRAME();
 }

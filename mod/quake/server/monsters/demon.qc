@@ -156,7 +156,7 @@ void demon1_jump4(entity this)
 	this.origin_z += 1;
 	makevectors(this.angles);
 	this.velocity = v_forward * 600 + '0 0 250';
-	this.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(this);
 }
 // if three seconds pass, assume demon is stuck and jump again
 void demon1_jump3(entity this) { set_anim(this, anim_demon_leap3, demon1_jump4); ai_face(this); }
@@ -313,7 +313,7 @@ bool DemonCheckAttack(entity this)
 void Demon_Melee(entity this, float side)
 {
 	ai_face(this);
-	walkmove(this, this.ideal_yaw, 12);	// allow a little closing
+	t_walkmove(this, this.ideal_yaw, 12);	// allow a little closing
 
 	if(vdist(this.enemy.origin - this.origin, >, 100))
 		return;
@@ -343,9 +343,9 @@ void Demon_JumpTouch(entity this, entity toucher)
 		}
 	}
 
-	if(!checkbottom(this))
+	if(!t_checkbottom(this))
 	{
-		if(this.flags & FL_ONGROUND)
+		if(IS_ONGROUND(this))
 		{	// jump randomly to not get hung up
 			//dprint("popjump\n");
 			settouch(this, func_null);
@@ -385,7 +385,7 @@ spawnfunc(monster_demon1)
 	precache_sound("demon/sight2.wav");
 
 	this.solid = SOLID_SLIDEBOX;
-	this.movetype = MOVETYPE_STEP;
+	set_movetype(this, MOVETYPE_STEP);
 
 	_setmodel(this, "progs/demon.mdl");
 

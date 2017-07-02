@@ -148,9 +148,9 @@ void Dog_JumpTouch(entity this, entity toucher)
 		}
 	}
 
-	if(!checkbottom(this))
+	if(!t_checkbottom(this))
 	{
-		if(this.flags & FL_ONGROUND)
+		if(IS_ONGROUND(this))
 		{	// jump randomly to not get hung up
 			//dprint("popjump\n");
 			settouch(this, func_null);
@@ -248,7 +248,7 @@ void dog_leap1(entity this)
 	makevectors(this.angles);
 	this.origin_z = this.origin_z + 1;
 	this.velocity = v_forward * 300 + '0 0 200';
-	this.flags &= ~FL_ONGROUND;
+	UNSET_ONGROUND(this);
 }
 
 void dog_pain6(entity this) { set_anim(this, anim_dog_pain6, dog_run1); }
@@ -417,7 +417,7 @@ spawnfunc(monster_dog)
 	precache_sound("dog/idle.wav");
 
 	this.solid = SOLID_SLIDEBOX;
-	this.movetype = MOVETYPE_STEP;
+	set_movetype(this, MOVETYPE_STEP);
 
 	_setmodel(this, "progs/dog.mdl");
 

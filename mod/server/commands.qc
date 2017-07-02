@@ -1,3 +1,7 @@
+AUTOCVAR(g_maplist_max_perpage, int, 200, "Maximum maps per maplist page (shouldn't be too low or too high, as last page will be filled with the remainder)");
+AUTOCVAR(g_maplist_generate_lists, bool, false, "Generate a new list for maps using paged design (may cause crashes)");
+AUTOCVAR(g_maplist_gotorandom_fancy, bool, false, "Attempt a fancy lookup for the next map (relies on hacky measures)");
+
 STATIC_INIT(mod_cmds)
 {
 	localcmd("\nalias ircmsg \"sv_cmd ircmsg ${* ?}\"\n");
@@ -5,6 +9,36 @@ STATIC_INIT(mod_cmds)
 	localcmd("\nalias chlevel \"sv_cmd chlevel ${* ?}\"\n");
 	localcmd("\nalias stufftoall \"sv_cmd stufftoall ${* ?}\"\n");
 	localcmd("\nalias dumpmodcvars \"sv_cmd dumpmodcvars ${* ?}\"\n");
+	localcmd("\nalias gotorandom \"sv_cmd gotorandom ${* ?}\"\n");
+}
+
+const int MAX_MAPLISTS = 8;
+string newmaplist[MAX_MAPLISTS];
+STATIC_INIT(mod_buildmaplist)
+{
+	if(!autocvar_g_maplist_generate_lists)
+		return;
+
+	// to make absolutely sure:
+	MapInfo_Enumerate();
+	MapInfo_FilterGametype(MapInfo_CurrentGametype(), MapInfo_CurrentFeatures(), MapInfo_RequiredFlags(), MapInfo_ForbiddenFlags(), 0);
+
+	int page = 0, curcount = 0;
+	for(int j = 0; j < MapInfo_count; ++j)
+	{
+		newmaplist[page] = strcat(newmaplist[page], " ", _MapInfo_GlobItem(MapInfo_FilterList_Lookup(j)));
+		curcount += 1;
+		if(curcount > autocvar_g_maplist_max_perpage && page < MAX_MAPLISTS)
+		{
+			curcount = 0;
+			page += 1; // note: fills up last page
+		}
+	}
+
+	for(int j = 0; j < MAX_MAPLISTS; ++j)
+	{
+		newmaplist[j] = strzone(newmaplist[j]);
+	}
 }
 
 void IRCSay(string msgstr)
@@ -42,6 +76,92 @@ void RegisterModCvars_Set(string name, string def, string desc, bool archive, st
     fputs(mod_cvar_file, thecvar);
 }
 
+void print_maplist(entity player, string nmaplist, float nargc)
+{
+	// note: requires command parameters
+
+	string param = strtolower(argv(1));
+	string col;
+	if(param == "new")
+	{
+		if(!g_race && !g_cts)
+		{
+			print_to(player, "This command only works in CTS and Race.");
+			return;
+		}
+		FOREACH_WORD(nmaplist, !race_readTime(it, 1),
+		{
+			col = ((i % 2) ? "^2" : "^3");
+			print_to(player, strcat(col, it));
+		});
+	}
+	else if(param == "any" && nargc > 2)
+	{
+		param = strtolower(argv(2));
+		FOREACH_WORD(nmaplist, strstrofs(strtolower(it), param, 0) >= 0,
+		{
+			if((g_race || g_cts) && !race_readTime(it, 1))
+				col = ((i % 2) ? "^4*" : "^5*");
+			else
+				col = ((i % 2) ? "^2" : "^3");
+			print_to(player, strcat(col, it));
+		});
+	}
+	else
+	{
+		FOREACH_WORD(nmaplist, startsWithNocase(strdecolorize(it), param),
+		{
+			if((g_race || g_cts) && !race_readTime(it, 1))
+				col = ((i % 2) ? "^4*" : "^5*");
+			else
+				col = ((i % 2) ? "^2" : "^3");
+			print_to(player, strcat(col, it));
+		});
+	}
+}
+
+.float mapquery_antispam;
+MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseClientCommand)
+{
+	if (MUTATOR_RETURNVALUE) // command was already handled?
+		return false;
+
+	entity player = M_ARGV(0, entity);
+	string cmd_name = M_ARGV(1, string);
+	int cmd_argc = M_ARGV(2, int);
+
+	if(cmd_name == "findmap")
+	{
+		if(cmd_argc > 1)
+		{
+			if(time < player.mapquery_antispam)
+			{
+				print_to(player, "You can only use this command once every 5 seconds.");
+				return true;
+			}
+
+			if(!autocvar_g_maplist_generate_lists)
+			{
+				string themaplist = ((autocvar_g_maplist == "") ? strdecolorize(strreplace("^7Maps in list: ", "", maplist_reply)) : autocvar_g_maplist);
+				print_maplist(player, themaplist, cmd_argc);
+			}
+			else
+			{
+				for(int j = 0; j < MAX_MAPLISTS; ++j)
+				{
+					string themaplist = newmaplist[j];
+					print_maplist(player, themaplist, cmd_argc);
+				}
+			}
+
+			player.mapquery_antispam = time + 5; // prevent using this command too often, to avoid lag issues
+		}
+		else
+			print_to(player, maplist_reply);
+		return true;
+	}
+}
+
 MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 {
 	if(MUTATOR_RETURNVALUE) // command was already handled?
@@ -55,6 +175,37 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 		string m = MapInfo_FixName(argv(1));
 		localcmd(strcat("\nchangelevel ", m, "\n"));
 		LOG_INFO("Switching to ", m, "\n");
+		return true;
+	}
+
+	if(cmd_name == "gotorandom")
+	{
+		if(autocvar_g_maplist == "")
+		{
+			localcmd("\nendmatch\n");
+			LOG_INFO("g_maplist is empty, ending match...\n");
+		}
+
+		if(autocvar_g_maplist_gotorandom_fancy)
+		{
+			// TODO: we can't actually rely on this...
+			string foundmap = _MapInfo_GlobItem(MapInfo_FilterList_Lookup(floor(random() * (MapInfo_count + 1))));
+			localcmd(strcat("\nchangelevel ", foundmap, "\n"));
+			LOG_INFO("Switching to ", foundmap, "\n");
+			return true;
+		}
+		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
+		Map_Current = bound(0, GetMaplistPosition(), Map_Count - 1);
+		int pos = MaplistMethod_Random();
+		if(pos == -1)
+		{
+			LOG_INFO("Failed to select a map, try again.\n");
+			return true;
+		}
+
+		string themap = argv(pos);
+		localcmd(strcat("\nchangelevel ", themap, "\n"));
+		LOG_INFO("Switching to ", themap, "\n");
 		return true;
 	}
 

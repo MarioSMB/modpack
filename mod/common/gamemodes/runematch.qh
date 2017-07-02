@@ -1,0 +1,61 @@
+#pragma once
+
+CLASS(Runematch, Gametype)
+    INIT(Runematch)
+    {
+        this.gametype_init(this, _("Runematch"),"rune","g_runematch",false,"","timelimit=20 pointlimit=200 leadlimit=0",_("Pick up and hold the runes, special items that give you points, a special power (rune) and a disadvantage (curse)"));
+    }
+    METHOD(Runematch, m_generate_mapinfo, void(Gametype this, string v))
+    {
+        if(v == "runematch_spawn_point")
+            MapInfo_Map_supportedGametypes |= this.m_flags;
+    }
+    METHOD(Runematch, m_setTeams, void(string sa))
+    {
+        cvar_set("fraglimit", sa);
+    }
+    METHOD(Runematch, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+    {
+        return true;
+    }
+ENDCLASS(Runematch)
+REGISTER_GAMETYPE(RUNEMATCH, NEW(Runematch));
+#define g_runematch IS_GAMETYPE(RUNEMATCH)
+
+#ifdef GAMEQC
+MODEL(RUNEMATCH_CURSE, "models/runematch/curse.mdl");
+MODEL(RUNEMATCH_RUNE, "models/runematch/rune.mdl");
+#endif
+
+#ifdef SVQC
+float runematch_point_time;
+
+int rune_numspawns;
+
+.int runes;
+const int RUNE_FIRST = BIT(0);
+const int RUNE_STRENGTH = BIT(0);
+const int RUNE_DEFENSE = BIT(1);
+const int RUNE_REGEN = BIT(2);
+const int RUNE_SPEED = BIT(3);
+const int RUNE_VAMPIRE = BIT(4);
+const int RUNE_LAST = BIT(4);
+
+const int CURSE_FIRST = 8192;
+const int CURSE_WEAK = 8192;
+const int CURSE_VULNER = 16384;
+const int CURSE_VENOM = 32768;
+const int CURSE_SLOW = 65536;
+const int CURSE_EMPATHY = 131072;
+const int CURSE_LAST = 131072;
+
+const int RUNE_MINSPAWNS = 5;
+
+void rune_respawn(entity this);
+
+IntrusiveList g_runematch_runes;
+STATIC_INIT(g_runematch_runes) { g_runematch_runes = IL_NEW(); }
+
+IntrusiveList g_runematch_spawnpoints;
+STATIC_INIT(g_runematch_spawnpoints) { g_runematch_spawnpoints = IL_NEW(); }
+#endif

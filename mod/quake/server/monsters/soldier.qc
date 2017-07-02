@@ -437,7 +437,7 @@ spawnfunc(monster_army)
 
 
 	this.solid = SOLID_SLIDEBOX;
-	this.movetype = MOVETYPE_STEP;
+	set_movetype(this, MOVETYPE_STEP);
 
 	_setmodel(this, "progs/soldier.mdl");
 

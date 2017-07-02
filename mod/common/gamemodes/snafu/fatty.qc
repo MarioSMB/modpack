@@ -1,9 +1,25 @@
-#ifdef SVQC
+#ifdef GAMEQC
+MODEL(SNAFU_FATTY, "models/snafu/fatone.dpm");
 
-const vector FATONE_MIN = '-30 -30 0';
-const vector FATONE_MAX = '30 30 90';
-const vector FATONE_DEAD_MIN = '-60 -60 0';
-const vector FATONE_DEAD_MAX = '60 60 60';
+MODEL(SNAFU_FATHEAD, "models/snafu/foneoneshead.md3");
+MODEL(SNAFU_CHICKENLEG, "models/snafu/chickenleg.md3");
+#endif
+
+CLASS(Fatty, Gai)
+    ATTRIB(Fatty, m_mins, vector, '-30 -30 0');
+    ATTRIB(Fatty, m_maxs, vector, '30 30 90');
+#ifdef GAMEQC
+    ATTRIB(Fatty, m_model, Model, MDL_SNAFU_FATTY);
+#endif
+    ATTRIB(Fatty, deadmins, vector, '-60 -60 0');
+    ATTRIB(Fatty, deadmaxs, vector, '60 60 60');
+    ATTRIB(Fatty, netname, string, "fatty");
+    ATTRIB(Fatty, monster_name, string, _("Fatty"));
+ENDCLASS(Fatty)
+
+REGISTER_GAI(FATTY, NEW(Fatty));
+
+#ifdef SVQC
 
 const int fatone_idle = 0;
 const int fatone_run = 1;
@@ -101,8 +117,8 @@ void snafu_fatty_damage(entity this, entity inflictor, entity attacker, float da
 	}*/
 	
 	this.health   -= damage;
-	this.velocity += force * 0.75;
-	
+	//this.velocity += force * 0.75;
+
 	if(this.health <= 0)
 	{
 		if(!IS_DEAD(this))
@@ -122,8 +138,9 @@ void snafu_fatty_damage(entity this, entity inflictor, entity attacker, float da
 
 			if(IS_PLAYER(attacker))
 				UpdateFrags(attacker, 1);
-				
-			setsize(this, FATONE_DEAD_MIN, FATONE_DEAD_MAX);
+			
+			Gai info = Gais_from(this.gaid);
+			setsize(this, info.deadmins, info.deadmaxs);
 			setthink(this, snafu_fatty_die);
 			this.nextthink = time;       
 			snafu_deathalert(this, attacker);
@@ -208,8 +225,8 @@ void snafu_fatty_think(entity this)
 	this.angles_x = this.angles_z = 0;    
 	//te_lightning1(this, this.origin + '0 0 128', this.moveto + '0 0 128');    
 	fixedmakevectors(this.angles);
-	
-	if(this.enemy.deadflag != DEAD_NO)
+
+	if(IS_DEAD(this.enemy))
 		this.enemy = NULL;
 	
 	if(this.snafu_ai_enemy_select_timer < time || this.enemy == NULL)
@@ -380,21 +397,24 @@ void snafu_fatty_create(entity own)
 	entity zom              = spawn();
 	zom.zombie_head         = spawn();
 	zom.zombie_projectile   = spawn();
+
+	Gai info = GAI_FATTY;
+	zom.gaid = info.gaid;
 	
-	setmodel(zom, MDL_SNAFU_FATTY);
+	setmodel(zom, info.m_model);
 	setmodel(zom.zombie_head, MDL_SNAFU_FATHEAD);
 	setmodel(zom.zombie_projectile, MDL_SNAFU_CHICKENLEG);
 	setattachment(zom.zombie_head, zom, "Bip001 Head");
 	setattachment(zom.zombie_projectile, zom, "Bip001 L Hand");
 	zom.zombie_head.owner       = own;
 	zom.zombie_projectile.owner = own;
-	setsize(zom, FATONE_MIN, FATONE_MAX);
+	setsize(zom, info.m_mins, info.m_maxs);
 	zom.zombie_head.solid = SOLID_SLIDEBOX;
 	vector _where = own.origin;
-	_where_x += random() * own.mins_x;
-	_where_x += random() * own.maxs_x;
-	_where_y += random() * own.mins_y;
-	_where_y += random() * own.maxs_y;
+	_where.x += random() * own.mins_x;
+	_where.x += random() * own.maxs_x;
+	_where.y += random() * own.mins_y;
+	_where.y += random() * own.maxs_y;
 	
 	tracebox(_where + '0 0 64', zom.mins, zom.maxs, _where - '0 0 1' * max_shot_distance, MOVE_NORMAL, own);    
 	setorigin(zom, trace_endpos);
@@ -403,8 +423,11 @@ void snafu_fatty_create(entity own)
 	zom.solid           = SOLID_SLIDEBOX;
 	zom.deadflag        = DEAD_NO;
 	zom.takedamage      = DAMAGE_AIM;
+	zom.damagedbycontents = true;
+	IL_PUSH(g_damagedbycontents, zom);
 	zom.event_damage    = snafu_fatty_damage;    
 	zom.snafu_ai_flags  = SAF_ZOMBIE;
+	zom.damageforcescale = 0.75;
 	zom.health          = autocvar_g_snafu_fatty_health;
 	setthink(zom, snafu_fatty_think);
 	zom.nextthink       = time;

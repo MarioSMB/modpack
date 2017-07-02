@@ -495,7 +495,7 @@ spawnfunc(monster_shambler)
 	precache_sound("shambler/smack.wav");
 
 	this.solid = SOLID_SLIDEBOX;
-	this.movetype = MOVETYPE_STEP;
+	set_movetype(this, MOVETYPE_STEP);
 	_setmodel(this, "progs/shambler.mdl");
 
 	setsize(this, VEC_HULL2_MIN, VEC_HULL2_MAX);
