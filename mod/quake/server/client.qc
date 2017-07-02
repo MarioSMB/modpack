@@ -206,12 +206,12 @@ void execute_changelevel(entity this)
 #endif
 
 	WriteByte(MSG_ALL, SVC_INTERMISSION);
-	WriteCoord(MSG_ALL, pos.origin_x);
+	/*WriteCoord(MSG_ALL, pos.origin_x);
 	WriteCoord(MSG_ALL, pos.origin_y);
 	WriteCoord(MSG_ALL, pos.origin_z);
 	WriteAngle(MSG_ALL, pos.mangle_x);
 	WriteAngle(MSG_ALL, pos.mangle_y);
-	WriteAngle(MSG_ALL, pos.mangle_z);
+	WriteAngle(MSG_ALL, pos.mangle_z);*/
 
 	if(pos)
 	{
@@ -222,6 +222,7 @@ void execute_changelevel(entity this)
 			set_movetype(it, MOVETYPE_NONE);
 			//it.modelindex = 0;
 			setmodel(it, MDL_Null);
+			//it.clientcamera = pos;
 		});
 	};
 }
