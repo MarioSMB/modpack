@@ -506,7 +506,7 @@ void Sbar_Score(int margin)
 		else
 			Sbar_DrawXNum(-12*2, 32, seconds, -2, 12, 1, 0, 0, 1, 0);
 	#else
-		string timestr = seconds_tostring(STAT(TIMELIMIT));
+		string timestr = seconds_tostring(max(0, STAT(TIMELIMIT) * 60 - time));
 		Sbar_DrawNum_lettersize(-12 * 3, 32, timestr, strlen(timestr), false, 12, '12 12 0');
 	#endif
 	}
