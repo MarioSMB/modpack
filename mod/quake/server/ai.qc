@@ -222,6 +222,8 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 			return true;
 		}
 		this.origin = oldorg;
+		if(relink)
+			setorigin(this, this.origin);
 		return false;
 	}
 
@@ -234,6 +236,8 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 		if(trace_plane_normal.z < 0.5)
 		{
 			this.origin = oldorg;
+			if(relink)
+				setorigin(this, this.origin);
 			return false;
 		}
 	}
@@ -296,24 +300,14 @@ void t_newchasedir(entity this, entity targ, float dist)
 {
 	float di_nodir = -1;
 	vector d;
-	float olddir = anglemods((rint(this.ideal_yaw / 45) * 45));
+	float olddir = anglemods(rint(this.ideal_yaw / 45) * 45);
 	float turnaround = anglemods(olddir - 180);
 	float tdir;
 
 	vector delta = vec2(targ.origin - this.origin);
 
-	if(delta.x > 10)
-		d.x = 0;
-	else if(delta.x < -10)
-		d.x = 180;
-	else
-		d.x = di_nodir;
-	if(delta.y < -10)
-		d.y = 270;
-	else if(delta.y > 10)
-		d.y = 90;
-	else
-		d.y = di_nodir;
+	d.x = ((delta.x > 10) ? 0 : ((delta.x < -10) ? 180 : di_nodir));
+	d.y = ((delta.y < -10) ? 270 : ((delta.y > 10) ? 90 : di_nodir));
 
 	// try direct route
 	if(d.x != di_nodir && d.y != di_nodir)

@@ -480,8 +480,9 @@ void W_FireLightning(entity this)
 
 	vector org = this.origin + '0 0 16';
 	
-	traceline(org, org + v_forward*600, true, this);
+	traceline(org, org + v_forward*600, MOVE_NOMONSTERS, this);
 
+#if 0
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_LIGHTNING2);
 	WriteEntity(MSG_BROADCAST, this);
@@ -491,6 +492,9 @@ void W_FireLightning(entity this)
 	WriteCoord(MSG_BROADCAST, trace_endpos.x);
 	WriteCoord(MSG_BROADCAST, trace_endpos.y);
 	WriteCoord(MSG_BROADCAST, trace_endpos.z);
+#else
+	te_lightning2(NULL, org, trace_endpos);
+#endif
 
 	LightningDamage(this.origin, trace_endpos + v_forward*4, this, 30);
 }
