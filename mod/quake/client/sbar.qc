@@ -866,16 +866,22 @@ void Sbar_Draw()
 				Sbar_DrawNum(136, 0, itos(rint(STAT(HEALTH))), 3, STAT(HEALTH) <= 25);
 
 				// ammo icon
+				string pic = string_null;
 				if(STAT(ITEMS) & IT_SHELLS)
-					Sbar_DrawPic(224, 0, "gfx/sb_shells");
+					pic = "gfx/sb_shells";
 				else if(STAT(ITEMS) & IT_NAILS)
-					Sbar_DrawPic(224, 0, "gfx/sb_nails");
+					pic = "gfx/sb_nails";
 				else if(STAT(ITEMS) & IT_ROCKETS)
-					Sbar_DrawPic(224, 0, "gfx/sb_rocket");
+					pic = "gfx/sb_rocket";
 				else if(STAT(ITEMS) & IT_CELLS)
-					Sbar_DrawPic(224, 0, "gfx/sb_cells");
+					pic = "gfx/sb_cells";
 
-				Sbar_DrawNum(248, 0, itos(getstati(STAT_AMMO)), 3, getstati(STAT_AMMO) <= 10);
+				if(pic)
+				{
+					Sbar_DrawPic(224, 0, pic);
+					Sbar_DrawNum(248, 0, itos(getstati(STAT_AMMO)), 3, getstati(STAT_AMMO) <= 10);
+				}
+
 
 				// LordHavoc: changed to draw the deathmatch overlays in any multiplayer mode
 				if(maxclients > 1 || !coop)
