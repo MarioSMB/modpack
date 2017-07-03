@@ -560,7 +560,7 @@ spawnfunc(weapon_grenadelauncher)
 {
 	precache_model("progs/g_rock.mdl");
 	_setmodel(this, "progs/g_rock.mdl");
-	this.weapon = 3;
+	this.weapon = IT_GRENADE_LAUNCHER;
 	this.netname = "Grenade Launcher";
 	settouch(this, weapon_touch);
 	setcefc(this, weapon_customize);
@@ -575,7 +575,7 @@ spawnfunc(weapon_rocketlauncher)
 {
 	precache_model("progs/g_rock2.mdl");
 	_setmodel(this, "progs/g_rock2.mdl");
-	this.weapon = 3;
+	this.weapon = IT_ROCKET_LAUNCHER;
 	this.netname = "Rocket Launcher";
 	settouch(this, weapon_touch);
 	setcefc(this, weapon_customize);
@@ -591,7 +591,7 @@ spawnfunc(weapon_lightning)
 {
 	precache_model("progs/g_light.mdl");
 	_setmodel(this, "progs/g_light.mdl");
-	this.weapon = 3;
+	this.weapon = IT_LIGHTNING;
 	this.netname = "Thunderbolt";
 	settouch(this, weapon_touch);
 	setcefc(this, weapon_customize);
