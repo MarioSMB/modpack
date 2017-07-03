@@ -850,13 +850,19 @@ void Sbar_Draw()
 				}
 				else
 				{
-					Sbar_DrawNum(24, 0, itos(getstati(STAT_ARMOR)), 3, getstati(STAT_ARMOR) <= 25);
+					string apic = string_null;
 					if(STAT(ITEMS) & IT_ARMOR3)
-						Sbar_DrawPic(0, 0, "gfx/sb_armor3");
+						apic = "gfx/sb_armor3";
 					else if(STAT(ITEMS) & IT_ARMOR2)
-						Sbar_DrawPic(0, 0, "gfx/sb_armor2");
+						apic = "gfx/sb_armor2";
 					else if(STAT(ITEMS) & IT_ARMOR1)
-						Sbar_DrawPic(0, 0, "gfx/sb_armor1");
+						apic = "gfx/sb_armor1";
+
+					if(apic)
+					{
+						Sbar_DrawPic(0, 0, apic);
+						Sbar_DrawNum(24, 0, itos(getstati(STAT_ARMOR)), 3, getstati(STAT_ARMOR) <= 25);
+					}
 				}
 
 				// face
