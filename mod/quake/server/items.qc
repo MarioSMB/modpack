@@ -804,7 +804,7 @@ spawnfunc(item_weapon)
 			setmodel(this, MDL_ITEM_SHELLS);
 			this.aflag = 20;
 		}
-		this.weapon = 1;
+		this.weapon = IT_SHOTGUN;
 		this.netname = "shells";
 	}
 
@@ -814,13 +814,14 @@ spawnfunc(item_weapon)
 		{
 			setmodel(this, MDL_ITEM_NAILS_BIG);
 			this.aflag = 40;
+			this.weapon = IT_SUPER_NAILGUN;
 		}
 		else
 		{
 			setmodel(this, MDL_ITEM_NAILS);
 			this.aflag = 20;
+			this.weapon = IT_NAILGUN;
 		}
-		this.weapon = 2;
 		this.netname = "spikes";
 	}
 
@@ -836,7 +837,7 @@ spawnfunc(item_weapon)
 			setmodel(this, MDL_ITEM_ROCKETS);
 			this.aflag = 5;
 		}
-		this.weapon = 3;
+		this.weapon = IT_ROCKET_LAUNCHER;
 		this.netname = "rockets";
 	}
 	
