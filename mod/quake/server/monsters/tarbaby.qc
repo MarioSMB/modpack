@@ -221,11 +221,7 @@ void tbaby_die2(entity this)
 	_sound(this, CHAN_VOICE, "blob/death1.wav", 1, ATTN_NORM);
 	this.origin = this.origin - 8 * normalize(this.velocity);
 
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_TAREXPLOSION);
-	WriteCoord(MSG_BROADCAST, this.origin_x);
-	WriteCoord(MSG_BROADCAST, this.origin_y);
-	WriteCoord(MSG_BROADCAST, this.origin_z);
+	te_tarexplosion(this.origin);
 	
 	BecomeExplosion(this);
 }

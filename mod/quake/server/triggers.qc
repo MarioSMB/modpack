@@ -298,11 +298,7 @@ void spawn_tfog(vector org)
 	s.nextthink = time + 0.2;
 	setthink(s, play_teleport);
 
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_TELEPORT);
-	WriteCoord(MSG_BROADCAST, org_x);
-	WriteCoord(MSG_BROADCAST, org_y);
-	WriteCoord(MSG_BROADCAST, org_z);
+	te_teleport(org);
 }
 
 

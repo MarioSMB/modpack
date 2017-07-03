@@ -59,11 +59,7 @@ void W_FireAxe(entity this)
 	else
 	{	// hit wall
 		_sound(this, CHAN_WEAPON, "player/axhit2.wav", 1, ATTN_NORM);
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_GUNSHOT);
-		WriteCoord(MSG_BROADCAST, org.x);
-		WriteCoord(MSG_BROADCAST, org.y);
-		WriteCoord(MSG_BROADCAST, org.z);
+		te_gunshot(org);
 	}
 }
 
@@ -212,13 +208,7 @@ void TraceAttack(float damage, vector dir)
 		AddMultiDamage(trace_ent, damage);
 	}
 	else
-	{
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_GUNSHOT);
-		WriteCoord(MSG_BROADCAST, org.x);
-		WriteCoord(MSG_BROADCAST, org.y);
-		WriteCoord(MSG_BROADCAST, org.z);
-	}
+		te_gunshot(org);
 }
 
 /*
@@ -347,11 +337,7 @@ void T_MissileTouch(entity this, entity toucher)
 //	_sound(this, CHAN_WEAPON, "weapons/r_exp3.wav", 1, ATTN_NORM);
 	this.origin = this.origin - 8*normalize(this.velocity);
 
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_EXPLOSION);
-	WriteCoord(MSG_BROADCAST, this.origin_x);
-	WriteCoord(MSG_BROADCAST, this.origin_y);
-	WriteCoord(MSG_BROADCAST, this.origin_z);
+	te_explosion(this.origin);
 
 	BecomeExplosion(this);
 }
@@ -482,19 +468,7 @@ void W_FireLightning(entity this)
 	
 	traceline(org, org + v_forward*600, MOVE_NOMONSTERS, this);
 
-#if 0
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_LIGHTNING2);
-	WriteEntity(MSG_BROADCAST, this);
-	WriteCoord(MSG_BROADCAST, org.x);
-	WriteCoord(MSG_BROADCAST, org.y);
-	WriteCoord(MSG_BROADCAST, org.z);
-	WriteCoord(MSG_BROADCAST, trace_endpos.x);
-	WriteCoord(MSG_BROADCAST, trace_endpos.y);
-	WriteCoord(MSG_BROADCAST, trace_endpos.z);
-#else
 	te_lightning2(NULL, org, trace_endpos);
-#endif
 
 	LightningDamage(this.origin, trace_endpos + v_forward*4, this, 30);
 }
@@ -507,11 +481,7 @@ void GrenadeExplode(entity this)
 {
 	T_RadiusDamage(this, this.owner, 120, NULL);
 
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_EXPLOSION);
-	WriteCoord(MSG_BROADCAST, this.origin_x);
-	WriteCoord(MSG_BROADCAST, this.origin_y);
-	WriteCoord(MSG_BROADCAST, this.origin_z);
+	te_explosion(this.origin);
 
 	BecomeExplosion(this);
 }
@@ -672,17 +642,12 @@ void spike_touch(entity this, entity toucher)
 	}
 	else
 	{
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		
 		if(this.classname == "wizspike")
-			WriteByte(MSG_BROADCAST, TE_WIZSPIKE);
+			te_wizspike(this.origin);
 		else if(this.classname == "knightspike")
-			WriteByte(MSG_BROADCAST, TE_KNIGHTSPIKE);
+			te_knightspike(this.origin);
 		else
-			WriteByte(MSG_BROADCAST, TE_SPIKE);
-		WriteCoord(MSG_BROADCAST, this.origin_x);
-		WriteCoord(MSG_BROADCAST, this.origin_y);
-		WriteCoord(MSG_BROADCAST, this.origin_z);
+			te_spike(this.origin);
 	}
 
 	delete(this);
@@ -710,13 +675,7 @@ void superspike_touch(entity this, entity toucher)
 		T_Damage(toucher, this, this.owner, 18);
 	}
 	else
-	{
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_SUPERSPIKE);
-		WriteCoord(MSG_BROADCAST, this.origin_x);
-		WriteCoord(MSG_BROADCAST, this.origin_y);
-		WriteCoord(MSG_BROADCAST, this.origin_z);
-	}
+		te_superspike(this.origin);
 
 	delete(this);
 

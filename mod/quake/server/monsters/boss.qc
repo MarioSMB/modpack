@@ -272,11 +272,8 @@ void boss_death9(entity this)
 {
 	set_anim(this, anim_boss_death9, boss_death10);
 	_sound(this, CH_PAIN, "boss1/out1.wav", 1, ATTN_NORM);
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_LAVASPLASH);
-	WriteCoord(MSG_BROADCAST, this.origin_x);
-	WriteCoord(MSG_BROADCAST, this.origin_y);
-	WriteCoord(MSG_BROADCAST, this.origin_z);
+
+	te_lavasplash(this.origin);
 }
 void boss_death8(entity this) { set_anim(this, anim_boss_death8, boss_death9); }
 void boss_death7(entity this) { set_anim(this, anim_boss_death7, boss_death8); }
@@ -345,11 +342,7 @@ void boss_awake(entity this, entity actor, entity trigger)
 
 	this.enemy = actor;
 
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_LAVASPLASH);
-	WriteCoord(MSG_BROADCAST, this.origin_x);
-	WriteCoord(MSG_BROADCAST, this.origin_y);
-	WriteCoord(MSG_BROADCAST, this.origin_z);
+	te_lavasplash(this.origin);
 
 	this.yaw_speed = 20;
 	boss_rise1(this);
@@ -396,10 +389,10 @@ void lightning_fire(entity this)
 	}
 	
 	vector p1 =(le1.mins + le1.maxs) * 0.5;
-	p1_z = le1.absmin_z - 16;
+	p1.z = le1.absmin_z - 16;
 	
 	vector p2 =(le2.mins + le2.maxs) * 0.5;
-	p2_z = le2.absmin_z - 16;
+	p2.z = le2.absmin_z - 16;
 	
 	// compensate for length of bolt
 	p2 = p2 - normalize(p2-p1)*100;
@@ -407,15 +400,17 @@ void lightning_fire(entity this)
 	this.nextthink = time + 0.1;
 	setthink(this, lightning_fire);
 
+	// msg_all for reliability, supposedly
+	// TODO: csqc lightning?
 	WriteByte(MSG_ALL, SVC_TEMPENTITY);
 	WriteByte(MSG_ALL, TE_LIGHTNING3);
 	WriteEntity(MSG_ALL, NULL);
-	WriteCoord(MSG_ALL, p1_x);
-	WriteCoord(MSG_ALL, p1_y);
-	WriteCoord(MSG_ALL, p1_z);
-	WriteCoord(MSG_ALL, p2_x);
-	WriteCoord(MSG_ALL, p2_y);
-	WriteCoord(MSG_ALL, p2_z);
+	WriteCoord(MSG_ALL, p1.x);
+	WriteCoord(MSG_ALL, p1.y);
+	WriteCoord(MSG_ALL, p1.z);
+	WriteCoord(MSG_ALL, p2.x);
+	WriteCoord(MSG_ALL, p2.y);
+	WriteCoord(MSG_ALL, p2.z);
 }
 
 void lightning_use(entity this, entity actor, entity trigger)

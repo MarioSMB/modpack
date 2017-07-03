@@ -289,15 +289,7 @@ void CastLightning(entity this)
 
 	traceline(org, this.origin + dir*600, true, this);
 
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_LIGHTNING1);
-	WriteEntity(MSG_BROADCAST, this);
-	WriteCoord(MSG_BROADCAST, org_x);
-	WriteCoord(MSG_BROADCAST, org_y);
-	WriteCoord(MSG_BROADCAST, org_z);
-	WriteCoord(MSG_BROADCAST, trace_endpos_x);
-	WriteCoord(MSG_BROADCAST, trace_endpos_y);
-	WriteCoord(MSG_BROADCAST, trace_endpos_z);
+	te_lightning1(NULL, org, trace_endpos); // TODO: entity breaks
 
 	LightningDamage(org, trace_endpos, this, 10);
 }

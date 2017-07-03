@@ -180,11 +180,7 @@ void OgreGrenadeExplode(entity this)
 	T_RadiusDamage(this, this.owner, 40, NULL);
 	_sound(this, CHAN_VOICE, "weapons/r_exp3.wav", 1, ATTN_NORM);
 
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_EXPLOSION);
-	WriteCoord(MSG_BROADCAST, this.origin_x);
-	WriteCoord(MSG_BROADCAST, this.origin_y);
-	WriteCoord(MSG_BROADCAST, this.origin_z);
+	te_explosion(this.origin);
 
 	this.velocity = '0 0 0';
 	settouch(this, func_null);

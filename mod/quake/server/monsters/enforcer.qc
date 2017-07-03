@@ -143,13 +143,7 @@ void Laser_Touch(entity this, entity toucher)
 		T_Damage(toucher, this, this.owner, 15);
 	}
 	else
-	{
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_GUNSHOT);
-		WriteCoord(MSG_BROADCAST, org_x);
-		WriteCoord(MSG_BROADCAST, org_y);
-		WriteCoord(MSG_BROADCAST, org_z);
-	}
+		te_gunshot(org);
 	
 	delete(this);	
 }

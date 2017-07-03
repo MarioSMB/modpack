@@ -214,11 +214,8 @@ void finale_2(entity this)
 
 	vector org = shub.origin - '0 100 0';
 	setorigin(this, org);
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_TELEPORT);
-	WriteCoord(MSG_BROADCAST, org.x);
-	WriteCoord(MSG_BROADCAST, org.y);
-	WriteCoord(MSG_BROADCAST, org.z);
+
+	te_teleport(org);
 
 	_sound(shub, CHAN_VOICE, "misc/r_tele1.wav", 1, ATTN_NORM);
 	
