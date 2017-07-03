@@ -194,7 +194,7 @@ void ShalMissile(entity this)
 void ShalHome(entity this)
 {
 	vector vtemp = this.enemy.origin + '0 0 10';
-	if(this.enemy.health < 1)
+	if(this.enemy.health < 1 || (this.enemy.flags & FL_NOTARGET))
 	{
 		delete(this);
 		return;
@@ -218,11 +218,15 @@ void ShalMissileTouch(entity this, entity toucher)
 	T_RadiusDamage(this, this.owner, 40, NULL);
 	_sound(this, CHAN_WEAPON, "weapons/r_exp3.wav", 1, ATTN_NORM);
 
+#if 0
 	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
 	WriteByte(MSG_BROADCAST, TE_EXPLOSION);
 	WriteCoord(MSG_BROADCAST, this.origin_x);
 	WriteCoord(MSG_BROADCAST, this.origin_y);
 	WriteCoord(MSG_BROADCAST, this.origin_z);
+#else
+	te_explosion(this.origin);
+#endif
 
 	this.velocity = '0 0 0';
 	settouch(this, func_null);

@@ -497,7 +497,7 @@ bool visible(entity this, entity targ)
 {
 	vector spot1 = this.origin + this.view_ofs;
 	vector spot2 = targ.origin + targ.view_ofs;
-	traceline(spot1, spot2, true, this); // see through other monsters
+	traceline(spot1, spot2, MOVE_NOMONSTERS, this); // see through other monsters
 	
 	if(trace_inopen && trace_inwater)
 		return false; // sight line crossed contents
