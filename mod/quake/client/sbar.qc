@@ -772,7 +772,7 @@ void Sbar_DrawFace()
 	string pic;
 
 	int myhealth = STAT(HEALTH);
-	if(oldhealth != myhealth && myhealth < oldhealth)
+	if(oldhealth != myhealth && myhealth < oldhealth && (oldhealth - myhealth) >= 3)
 		health_gettime = time + 0.2;
 	oldhealth = myhealth;
 
