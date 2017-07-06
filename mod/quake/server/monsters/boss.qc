@@ -126,20 +126,29 @@ const int anim_boss_shockc9 = 104;
 const int anim_boss_shockc10 = 105;
 
 void boss_missile(entity this, vector p);
+void boss_missile1(entity this);
 
 void boss_face(entity this)
 {
 // go for another player if multi player
-	if(this.enemy.health <= 0 || random() < 0.02)
+	if(this.enemy.health <= 0 || (coop && random() < 0.02))
+		this.enemy = NULL;
+
+	if(!this.enemy)
 	{
-		this.enemy = find(this.enemy, classname, STR_PLAYER);
-		if(!this.enemy)
-			this.enemy = find(this.enemy, classname, STR_PLAYER);
+		RandomSelection_Init();
+		FOREACH_CLIENT(IS_PLAYER(it) && this.enemy != it && it.health > 0,
+		{
+			RandomSelection_AddEnt(it, 1, 1);
+		});
+		this.enemy = RandomSelection_chosen_ent;
+
+		setthink(this, boss_missile1); // return to attack state
 	}
+
 	ai_face(this);
 }
 
-void boss_missile1(entity this);
 
 void boss_rise17(entity this) { set_anim(this, anim_boss_rise17, boss_missile1); }
 void boss_rise16(entity this) { set_anim(this, anim_boss_rise16, boss_rise17); }
