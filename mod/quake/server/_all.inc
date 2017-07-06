@@ -30,3 +30,5 @@
 
 // mission packs
 #include "hipnotic/_all.inc"
+#include "rogue/_all.inc"
+
