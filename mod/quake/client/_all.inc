@@ -12,4 +12,5 @@
 //#include <lib/csqcmodel/cl_player.qc>
 
 #include "main.qc"
+#include "crosshair.qc"
 #include "sbar.qc"

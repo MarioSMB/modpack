@@ -20,3 +20,7 @@ vector OFFSET_CURSOR = '0 0 0';
 
 int framecount;
 .float health;
+
+float sb_showscores; // engine global
+
+float deathmatch, coop; // also engine globals

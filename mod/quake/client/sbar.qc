@@ -25,7 +25,7 @@ string Sbar_PickWeapon_wepname(int wpn)
 	}
 }
 
-void Sbar_Precache()
+PRECACHE(Sbar)
 {
 	precache_pic("gfx/ranking");
 	precache_pic("gfx/sbar");
