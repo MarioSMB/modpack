@@ -14,6 +14,14 @@ noref vector _fixedvectoangles2;
 	float autocvar_cl_lerpexcess;
 #endif
 
+#ifdef SVQC
+	#define MP_HIPNOTIC autocvar_sv_missionpack_hipnotic
+	#define MP_ROGUE autocvar_sv_missionpack_rogue
+#elif defined(CSQC)
+	#define MP_HIPNOTIC (STAT(MISSIONPACKS) & MISSIONPACK_HIPNOTIC)
+	#define MP_ROGUE (STAT(MISSIONPACKS) & MISSIONPACK_ROGUE)
+#endif
+
 #include "physics.qh"
 
 #include "effects/all.qh"

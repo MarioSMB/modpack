@@ -825,7 +825,12 @@ void CheckRules_World()
 	{
 		// crude hack to force restart of the server if we've reached the timelimit on a co-op level
 		if(server_is_dedicated && autocvar_quit_when_empty && !deathmatch && world.model != "maps/start.bsp" && world.model != "maps/rstart.bsp" && world.model != "maps/hipstart.bsp")
-			localcmd("\nmap start\n");
+		{
+			if(MP_HIPNOTIC)
+				localcmd("\nmap hipstart\n");
+			else
+				localcmd("\nmap start\n");
+		}
 		else
 			NextLevel();
 		return;

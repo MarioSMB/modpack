@@ -163,7 +163,7 @@ void f_attack3(entity this) { set_anim(this, anim_fish_attack3, f_attack4); fish
 void f_attack2(entity this) { set_anim(this, anim_fish_attack2, f_attack3); ai_charge(this, 10); }
 void f_attack1(entity this) { set_anim(this, anim_fish_attack1, f_attack2); ai_charge(this, 10); }
 
-void f_death21(entity this) { set_anim(this, anim_fish_death18, f_death21); this.solid = SOLID_NOT; }
+void f_death21(entity this) { set_anim(this, anim_fish_death18, f_death21); if(!MP_HIPNOTIC) this.solid = SOLID_NOT; }
 void f_death20(entity this) { set_anim(this, anim_fish_death18, f_death21); }
 void f_death19(entity this) { set_anim(this, anim_fish_death18, f_death20); }
 void f_death18(entity this) { set_anim(this, anim_fish_death18, f_death19); }
@@ -179,7 +179,7 @@ void f_death9(entity this) { set_anim(this, anim_fish_death9, f_death10); }
 void f_death8(entity this) { set_anim(this, anim_fish_death8, f_death9); }
 void f_death7(entity this) { set_anim(this, anim_fish_death7, f_death8); }
 void f_death6(entity this) { set_anim(this, anim_fish_death6, f_death7); }
-void f_death5(entity this) { set_anim(this, anim_fish_death5, f_death6); }
+void f_death5(entity this) { set_anim(this, anim_fish_death5, f_death6); if(MP_HIPNOTIC) this.solid = SOLID_NOT; }
 void f_death4(entity this) { set_anim(this, anim_fish_death4, f_death5); }
 void f_death3(entity this) { set_anim(this, anim_fish_death3, f_death4); }
 void f_death2(entity this) { set_anim(this, anim_fish_death2, f_death3); }
@@ -198,6 +198,24 @@ void f_pain4(entity this) { set_anim(this, anim_fish_swim4, f_pain5); ai_pain(th
 void f_pain3(entity this) { set_anim(this, anim_fish_swim3, f_pain4); ai_pain(this, 6); }
 void f_pain2(entity this) { set_anim(this, anim_fish_swim2, f_pain3); ai_pain(this, 6); }
 void f_pain1(entity this) { set_anim(this, anim_fish_swim1, f_pain2); }
+
+void fish_die(entity this, entity attacker)
+{
+	// check for gib
+	if(this.health < -20)
+	{
+		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
+		ThrowGib(this, "progs/gib1.mdl", this.health);
+		ThrowGib(this, "progs/gib2.mdl", this.health);
+		ThrowGib(this, "progs/gib3.mdl", this.health);
+		setthink(this, SUB_Remove);
+		this.nextthink = time + 0.1;
+		return;
+	}
+
+	// regular death
+	f_death1(this, attacker);
+}
 
 void fish_pain(entity this, entity attacker, float damage)
 {
@@ -234,7 +252,10 @@ spawnfunc(monster_fish)
 	this.th_stand = f_stand1;
 	this.th_walk = f_walk1;
 	this.th_run = f_run1;
-	this.th_die = f_death1;
+	if(MP_HIPNOTIC)
+		this.th_die = fish_die;
+	else
+		this.th_die = f_death1;
 	this.th_pain = fish_pain;
 	this.th_melee = f_attack1;
 

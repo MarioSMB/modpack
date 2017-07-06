@@ -60,6 +60,17 @@ void multi_trigger(entity this)
 		this.nextthink = time + 0.1;
 		setthink(this, SUB_Remove);
 	}
+
+	if(MP_HIPNOTIC && this.cnt > 0)
+	{
+		this.cnt = this.cnt - 1;
+		if(this.cnt == 0)
+		{
+			settouch(this, func_null);
+			this.nextthink = time + 0.1;
+			setthink(this, SUB_Remove);
+		}
+	}
 }
 
 void multi_killed(entity this, entity attacker)
@@ -95,6 +106,7 @@ void multi_touch(entity this, entity toucher)
 Variable sized repeatable trigger.  Must be targeted at one or more entities.  If "health" is set, the trigger must be killed to activate each time.
 If "delay" is set, the trigger waits some time after activating before firing.
 "wait" : Seconds between triggerings.(.2 default)
+"cnt" how many times it can be triggered (infinite default in hipnotic)
 If notouch is set, the trigger is only fired by other entities, not by touching.
 NOTOUCH has been obsoleted by trigger_relay!
 sounds
@@ -145,6 +157,9 @@ spawnfunc(trigger_multiple)
 			settouch(this, multi_touch);
 		}
 	}
+
+	if(MP_HIPNOTIC && !this.cnt)
+		this.cnt = -1;
 }
 
 

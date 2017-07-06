@@ -4,6 +4,9 @@
 
 #include <lib/csqcmodel/sv_model.qc>
 
+// mission pack defs
+#include "hipnotic/hipdefs.qh"
+
 //#include "defs.qc"
 #include "lib.qc"
 #include "subs.qc"
@@ -24,3 +27,6 @@
 #include "chat.qc"
 
 #include "monsters/_all.inc"
+
+// mission packs
+#include "hipnotic/_all.inc"

@@ -1,0 +1,124 @@
+/* Level pack definitons
+   Copyright (c)1996 Hipnotic Interactive, Inc.
+   All rights reserved.
+   Distributed (unsupported) on 3.12.97
+*/
+
+entity bulletholes;
+entity lastbullet;
+int numbulletholes;
+const int IT_MJOLNIR = 128;
+const int IT_LASER_CANNON = 8388608;
+const int IT_PROXIMITY_GUN = 65536;
+const int HIP_IT_WETSUIT = BIT(1);
+const int HIP_IT_EMPATHY_SHIELDS = BIT(2);
+//float HIP_IT_HORN_OF_CONJURING = 8; // seemingly unused
+//added update stat message
+const int SVC_UPDATESTAT = 3;
+const int SVC_CUTSCENE   = 34;
+//added total monster message
+const int STAT_TOTALMONSTERS = 12;
+//float STAT_TOTALSECRETS = 11; // used only on client side
+.void(entity this) th_turn;
+const int AS_DODGING     = 5;
+const float CHARMED_RADIUS = 1500;
+const float MAX_CHARMER_DISTANCE = 200;
+const float MIN_CHARMER_DISTANCE = 150;
+const float TOOCLOSE_CHARMER_DISTANCE = 120;
+float visible_distance;
+entity damage_inflictor;
+bool footsteps;
+
+
+//MED 11/09/96 added new spawnflags
+const int SPAWNFLAG_SUPERSPIKE = BIT(0);
+const int SPAWNFLAG_LASER = BIT(1);
+const int SPAWNFLAG_LAVABALL = BIT(2);
+const int SPAWNFLAG_ROCKET = BIT(3);
+const int SPAWNFLAG_SILENT = BIT(4);
+
+// Hipnotic Constants
+const float MIN_ANGLE_DELTA = 10;
+
+.float wetsuit_finished = _STAT(WETSUIT_FINISHED);
+.float wetsuit_time;
+.float empathy_finished;
+.float empathy_time;
+.float empathy_sound;
+.float mycolor;
+
+.vector dest; // TODO
+
+//
+// Hipnotic entries
+//
+// have to use a new items flag because we ran out of bits in the original
+.int items2;
+// gremlin stuff
+.float      gorging;
+.float      stoleweapon;
+.entity     lastvictim;
+// spawn variables
+.string spawnfunction;
+.string     spawnclassname;
+.float      spawnsolidtype;
+.string     spawnmodel;
+.void(entity)     spawnthink;
+.entity     spawnmaster;
+.vector     spawnmins;
+.vector     spawnmaxs;
+.float      spawnsilent;
+.float      spawnmulti;
+// horn of conjuring
+.float      charmed;
+.entity     charmer;
+.float      huntingcharmer;
+bool horn_active;
+entity horn_charmer;
+// laser cannon
+.vector     old_velocity;
+//misc
+.float      duration;
+// used for linked list of entities
+.entity     next_ent;
+// Mjolnir
+.float      struck_by_mjolnir;
+// teleport invulnerability
+.float      last_teleport_time;
+
+// Rotation
+.vector neworigin;
+.vector rotate;
+.float  endtime;
+.float  rotate_type;
+.string path;
+.string group;
+.string event;
+
+// Miscellaneous
+.float gravity;
+
+//MED 01/05/97 added discharge variable
+float discharged;
+//MED 01/05/97 added hipnotic decoy
+//entity hipdecoy;
+//
+// Hipnotic's Prototypes
+//
+void earthquake_postthink(entity this);
+float counter_GetCount(entity counter);
+vector SUB_NormalizeAngles(vector ang);
+void SUB_CopyEntity(entity srcent, entity destent);
+//multi explosion
+void multi_explosion(vector loc, float rad, float damage, float dur, float pause, float vol);
+void become_decoy(string targ, vector orig);
+
+
+//void(vector origin, vector dir, float color, float count, float lifespan) particlestream = #79;
+
+void RotateTargets(entity this);
+void RotateTargetsFinal(entity this);
+void SetTargetOrigin(entity this);
+void LinkRotateTargets(entity this);
+
+const int FL_DECOY = BIT(20);

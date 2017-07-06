@@ -223,6 +223,7 @@ const int anim_zombie_cruc_5 = 196;
 const int anim_zombie_cruc_6 = 197;
 
 const int SPAWN_CRUCIFIED = BIT(0);
+const int SPAWN_LYINGDOWN = BIT(2); // HIPNOTIC
 
 //=============================================================================
 
@@ -649,14 +650,33 @@ void zombie_pain(entity this, entity attacker, float take)
 		zombie_paind1(this);
 }
 
+void zombie_lay12(entity this, entity attacker, float damage) { set_anim(this, anim_zombie_paine12, zombie_paine13); this.th_pain = zombie_pain; }
+
+void zombie_lay(entity this)
+{
+	set_anim(this, anim_zombie_paine11, zombie_lay);
+	this.nextthink += 0.1;
+	this.th_stand = zombie_stand1;
+	this.th_pain = zombie_lay12;
+	this.health = 60;
+
+	if(FindTarget(this))
+	{
+		zombie_lay12(this, NULL, 0);
+		return;
+	}
+}
+
 string zombie_sight(entity this) { return "zombie/z_idle.wav"; }
 string zombie_deathmessage(entity this) { return "joins the Zombies"; }
 
 //============================================================================
 
-/*QUAKED monster_zombie(1 0 0)(-16 -16 -24)(16 16 32) Crucified ambush
+/*QUAKED monster_zombie(1 0 0)(-16 -16 -24)(16 16 32) Crucified ambush lying_down
 
 If crucified, stick the bounding box 12 pixels back into a wall to look right.
+If lying_down in hipnotic, the zombie will be lying down when spawned and will rise up
+when awakened by the player.
 */
 spawnfunc(monster_zombie)
 {
@@ -706,4 +726,7 @@ spawnfunc(monster_zombie)
 	}
 	else
 		monster_start(this, 0);
+
+	if(MP_HIPNOTIC && (this.spawnflags & SPAWN_LYINGDOWN))
+		this.th_stand = zombie_lay;
 }

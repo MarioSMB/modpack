@@ -134,7 +134,8 @@ void Laser_Touch(entity this, entity toucher)
 		return;
 	}
 	
-	_sound(this, CHAN_WEAPON, "enforcer/enfstop.wav", 1, ATTN_STATIC);
+	if(!MP_HIPNOTIC || !(this.spawnflags & SPAWNFLAG_SILENT))
+		_sound(this, CHAN_WEAPON, "enforcer/enfstop.wav", 1, ATTN_STATIC);
 	vector org = this.origin - 8*normalize(this.velocity);
 
 	if(toucher.health)
@@ -148,7 +149,7 @@ void Laser_Touch(entity this, entity toucher)
 	delete(this);	
 }
 
-void LaunchLaser(entity this, vector org, vector vec)
+entity LaunchLaser(entity this, vector org, vector vec)
 {
 	if(this.classname == "monster_enforcer")
 		_sound(this, CHAN_WEAPON, "enforcer/enfire.wav", 1, ATTN_NORM);
@@ -172,6 +173,8 @@ void LaunchLaser(entity this, vector org, vector vec)
 	newmis.nextthink = time + 5;
 	setthink(newmis, SUB_Remove);
 	settouch(newmis, Laser_Touch);
+
+	return newmis;
 }
 
 void enforcer_fire(entity this)

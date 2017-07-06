@@ -201,6 +201,12 @@ void player_stand1(entity this)
 			this.walkframe = 0;
 		this.frame = anim_player_axstnd1 + this.walkframe;
 	}
+	else if(this.weapon == IT_MJOLNIR)
+	{
+		if(this.walkframe >= 12)
+			this.walkframe = 0;
+		this.frame = 6 + this.walkframe;
+	}
 	else
 	{
 		if(this.walkframe >= 5)
@@ -228,11 +234,49 @@ void player_run(entity this)
 			this.walkframe = 0;
 		this.frame = anim_player_axrun1 + this.walkframe;
 	}
+	else if(this.weapon == IT_MJOLNIR)
+	{
+		if(this.walkframe == 6)
+			this.walkframe = 0;
+		this.frame = this.walkframe;
+	}
 	else
 	{
 		if(this.walkframe == 6)
 			this.walkframe = 0;
 		this.frame = this.frame + this.walkframe;
+	}
+
+	if(HIPNOTIC && footsteps == 1)
+	{
+		this.spawnsilent = this.spawnsilent + vlen(this.origin - this.old_velocity);
+		this.old_velocity = this.origin;
+		if(IS_ONGROUND(this) && this.waterlevel <= 1)
+		{
+			if(this.spawnsilent > 95)
+			{
+				if(this.spawnsilent > 190)
+					this.spawnsilent = 0;
+				else
+					this.spawnsilent = 0.5 * (this.spawnsilent - 95);
+
+				float r = random();
+				if(r < 0.14)
+				_sound(this, CHAN_VOICE, "misc/foot1.wav", 0.5, ATTN_NORM);
+				else if(r < 0.29)
+				   _sound(this, CHAN_VOICE, "misc/foot2.wav", 0.5, ATTN_NORM);
+				else if(r < 0.43)
+				   _sound(this, CHAN_VOICE, "misc/foot3.wav", 0.5, ATTN_NORM);
+				else if(r < 0.58)
+				   _sound(this, CHAN_VOICE, "misc/foot4.wav", 0.5, ATTN_NORM);
+				else if(r < 0.72)
+				   _sound(this, CHAN_VOICE, "misc/foot5.wav", 0.5, ATTN_NORM);
+				else if(r < 0.86)
+				   _sound(this, CHAN_VOICE, "misc/foot6.wav", 0.5, ATTN_NORM);
+				else
+				   _sound(this, CHAN_VOICE, "misc/foot7.wav", 0.5, ATTN_NORM);
+			}
+		}
 	}
 	this.walkframe = this.walkframe + 1;
 }
@@ -336,6 +380,39 @@ void player_light2(entity this)
 //============================================================================
 
 
+//MED 10/18/96 added HIPWEAPONS
+//============================================================================
+
+void player_hammer6(entity this) { set_anim(this, 37, player_run); this.weaponframe = 4; }
+void player_hammer5(entity this) { set_anim(this, 36, player_hammer6); this.weaponframe = 4; }
+void player_hammer4(entity this) { set_anim(this, 35, player_hammer5); this.weaponframe = 4; HIP_FireMjolnir(this); }
+void player_hammer3(entity this) { set_anim(this, 34, player_hammer4); this.weaponframe = 3; }
+void player_hammer2(entity this) { set_anim(this, 33, player_hammer3); this.weaponframe = 2; }
+void player_hammer1(entity this) { set_anim(this, 32, player_hammer2); this.weaponframe = 1; }
+
+void player_mjolnir6(entity this) { set_anim(this, 43, player_run); this.weaponframe = 4; }
+void player_mjolnir5(entity this) { set_anim(this, 42, player_mjolnir6); this.weaponframe = 4; }
+void player_mjolnir4(entity this) { set_anim(this, 41, player_mjolnir5); this.weaponframe = 4; HIP_FireMjolnir(this); }
+void player_mjolnir3(entity this) { set_anim(this, 40, player_mjolnir4); this.weaponframe = 3; }
+void player_mjolnir2(entity this) { set_anim(this, 39, player_mjolnir3); this.weaponframe = 2; }
+void player_mjolnir1(entity this) { set_anim(this, 38, player_mjolnir2); this.weaponframe = 1; }
+
+//============================================================================
+
+//MED 10/18/96 added HIPSWEAPONS
+//void() player_laser1   =[$nailatt1, player_laser2  ] {this.attack_finished = time + 0.1;this.weaponframe=1;this.nextthink = time + 0.09;HIP_FireLaser(0);}
+//void() player_laser2   =[$nailatt2, player_laser4  ] {this.attack_finished = time + 0.1;this.weaponframe=2;this.nextthink = time + 0.09;}
+//void() player_laser3   =[$nailatt1, player_laser4  ] {this.attack_finished = time + 0.1;this.weaponframe=3;this.nextthink = time + 0.09;}
+//void() player_laser4   =[$nailatt2, player_laser5  ] {this.attack_finished = time + 0.1;this.weaponframe=4;this.nextthink = time + 0.09;HIP_FireLaser(1);}
+//void() player_laser5   =[$nailatt1, player_laser1  ] {this.attack_finished = time + 0.1;this.weaponframe=5;this.nextthink = time + 0.09;}
+//void() player_laser6   =[$nailatt2, player_laser1  ] {this.attack_finished = time + 0.1;this.weaponframe=6;this.nextthink = time + 0.09;}
+void player_laser1(entity this);
+void player_laser4(entity this) { set_anim(this, anim_player_nailatt1, player_laser1); this.attack_finished = time + 0.1; this.weaponframe = 5; this.nextthink = time + 0.1; }
+void player_laser3(entity this) { set_anim(this, anim_player_nailatt2, player_laser1); this.attack_finished = time + 0.1; this.weaponframe = 4; this.nextthink = time + 0.1; HIP_FireLaser(this, 1); }
+void player_laser2(entity this) { set_anim(this, anim_player_nailatt2, player_laser3); this.attack_finished = time + 0.1; this.weaponframe = 2; this.nextthink = time + 0.1; }
+void player_laser1(entity this) { set_anim(this, anim_player_nailatt1, player_laser3); this.attack_finished = time + 0.1; this.weaponframe = 1; this.nextthink = time + 0.1; HIP_FireLaser(this, 0); }
+
+
 void player_rocket6(entity this) { set_anim(this, anim_player_rockatt6, player_run); this.weaponframe = 6; }
 void player_rocket5(entity this) { set_anim(this, anim_player_rockatt5, player_rocket6); this.weaponframe = 5; }
 void player_rocket4(entity this) { set_anim(this, anim_player_rockatt4, player_rocket5); this.weaponframe = 4; }
@@ -435,6 +512,14 @@ void player_axpain3(entity this) { set_anim(this, anim_player_axpain3, player_ax
 void player_axpain2(entity this) { set_anim(this, anim_player_axpain2, player_axpain3); }
 void player_axpain1(entity this, entity attacker) { set_anim(this, anim_player_axpain1, player_axpain2); PainSound(this, attacker); this.weaponframe = 0; }
 
+// hipnotic
+void player_hampain6(entity this) { set_anim(this, 23, player_run); }
+void player_hampain5(entity this) { set_anim(this, 22, player_hampain6); }
+void player_hampain4(entity this) { set_anim(this, 21, player_hampain5); }
+void player_hampain3(entity this) { set_anim(this, 20, player_hampain4); }
+void player_hampain2(entity this) { set_anim(this, 19, player_hampain3); }
+void player_hampain1(entity this, entity attacker) { set_anim(this, 18, player_hampain2); PainSound(this, attacker); this.weaponframe = 0; }
+
 void player_pain(entity this, entity attacker, float damage)
 {
 	if(this.weaponframe)
@@ -445,6 +530,8 @@ void player_pain(entity this, entity attacker, float damage)
 
 	if(this.weapon == IT_AXE)
 		player_axpain1(this, attacker);
+	else if(this.weapon == IT_MJOLNIR)
+		player_hampain1(this, attacker);
 	else
 		player_pain1(this, attacker);
 }
@@ -455,6 +542,9 @@ void player_diec1(entity this);
 void player_died1(entity this);
 void player_diee1(entity this);
 void player_die_ax1(entity this);
+
+// hipnotic
+void player_die_ham1(entity this);
 
 void bubble_bob(entity this);
 
@@ -530,13 +620,24 @@ void PlayerDead(entity this)
 	this.deadflag = DEAD_DEAD;
 }
 
-vector VelocityForDamage(float dm)
+vector VelocityForDamage(entity this, float dm)
 {
 	vector v;
 
-	v_x = 100 * crandom();
-	v_y = 100 * crandom();
-	v_z = 200 + 100 * random();
+	if(MP_HIPNOTIC && vdist(damage_inflictor.velocity, >, 0))
+	{
+		v = 0.2 * damage_inflictor.velocity;
+		v = v + (25 * normalize(this.origin - damage_inflictor.origin));
+		v.z = 100 + 100 * random();
+		v.x = v.x + (50 * crandom());
+		v.y = v.y + (50 * crandom());
+	}
+	else
+	{
+		v.x = 100 * crandom();
+		v.y = 100 * crandom();
+		v.z = 200 + 100 * random();
+	}
 
 	if(dm > -50)
 	{
@@ -560,7 +661,7 @@ void ThrowGib(entity this, string gibname, float dm)
 	setorigin(gib, this.origin);
 	_setmodel(gib, gibname);
 	setsize(gib, '0 0 0', '0 0 0');
-	gib.velocity = VelocityForDamage(dm);
+	gib.velocity = VelocityForDamage(this, dm);
 	set_movetype(gib, MOVETYPE_BOUNCE);
 	gib.solid = SOLID_NOT;
 	gib.avelocity_x = random()*600;
@@ -573,6 +674,16 @@ void ThrowGib(entity this, string gibname, float dm)
 	gib.flags = 0;
 }
 
+void HeadThink(entity this)
+{
+   	this.nextthink = -1;
+   	if(world.worldtype != 2)
+	{
+	  	if(random() < 0.1)
+		 	_sound(this, 6, "misc/flys.wav", 0.7, ATTN_STATIC);
+	}
+}
+
 void ThrowHead(entity this, string gibname, float dm)
 {
 	_setmodel(this, gibname);
@@ -583,10 +694,17 @@ void ThrowHead(entity this, string gibname, float dm)
 	this.solid = SOLID_NOT;
 	this.view_ofs = '0 0 8';
 	setsize(this, '-16 -16 0', '16 16 56');
-	this.velocity = VelocityForDamage(dm);
+	this.velocity = VelocityForDamage(this, dm);
 	this.origin_z = this.origin_z - 24;
 	UNSET_ONGROUND(this);
 	this.avelocity = crandom() * '0 600 0';
+
+	if(MP_HIPNOTIC)
+	{
+		this.gorging = true;
+		setthink(this, HeadThink);
+		this.nextthink = time + 1.5;
+	}
 }
 
 
@@ -628,6 +746,11 @@ void PlayerDie(entity this, entity attacker)
 	this.radsuit_finished = 0;
 	this.modelindex = modelindex_player;	// don't use eyes
 
+	// hipnotic fields
+	this.wetsuit_finished = 0;
+	this.empathy_finished = 0;
+	this.items2 &= ~HIP_IT_EMPATHY_SHIELDS;
+
 	if(deathmatch || coop)
 		DropBackpack(this);
 	
@@ -654,6 +777,12 @@ void PlayerDie(entity this, entity attacker)
 	if(this.weapon == IT_AXE)
 	{
 		player_die_ax1(this);
+		return;
+	}
+	else if(this.weapon == IT_MJOLNIR)
+	{
+		this.modelindex = modelindex_hammer; // use hammer model
+		player_die_ham1(this);
 		return;
 	}
 	
@@ -749,3 +878,13 @@ void player_die_ax4(entity this) { set_anim(this, anim_player_axdeth4, player_di
 void player_die_ax3(entity this) { set_anim(this, anim_player_axdeth3, player_die_ax4); }
 void player_die_ax2(entity this) { set_anim(this, anim_player_axdeth2, player_die_ax3); }
 void player_die_ax1(entity this) { set_anim(this, anim_player_axdeth1, player_die_ax2); }
+
+// hipnotic animations
+void player_die_ham8(entity this) { set_anim(this, 31, player_die_ham8); PlayerDead(this); }
+void player_die_ham7(entity this) { set_anim(this, 30, player_die_ham8); }
+void player_die_ham6(entity this) { set_anim(this, 29, player_die_ham7); }
+void player_die_ham5(entity this) { set_anim(this, 28, player_die_ham6); }
+void player_die_ham4(entity this) { set_anim(this, 27, player_die_ham5); }
+void player_die_ham3(entity this) { set_anim(this, 26, player_die_ham4); }
+void player_die_ham2(entity this) { set_anim(this, 25, player_die_ham3); }
+void player_die_ham1(entity this) { set_anim(this, 24, player_die_ham2); }

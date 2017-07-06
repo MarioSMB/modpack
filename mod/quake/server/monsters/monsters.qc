@@ -86,5 +86,7 @@ void monster_start(entity this, int stype)
 	setthink(this, monster_start_go);
 	this.flags |= FL_MONSTER;
 	this.flags |= stype; // TODO?
-	total_monsters += 1;
+
+	if(!(stype & FL_DECOY))
+		total_monsters += 1;
 }
