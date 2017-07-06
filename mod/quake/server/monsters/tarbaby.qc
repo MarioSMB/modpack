@@ -10,6 +10,12 @@ $cd id1/models/tarbaby
 $origin 0 0 24
 $base base		
 
+// added by rogue
+//$skin skin
+$skin base
+$skin skin2
+// rogue (TODO)
+
 $skin skin
 
 const int anim_tbaby_walk1 = 0;
@@ -227,13 +233,90 @@ void tbaby_die2(entity this)
 }
 void tbaby_die1(entity this, entity attacker) { set_anim(this, anim_tbaby_exp, tbaby_die2); this.takedamage = DAMAGE_NO; }
 
+void tbaby_mitosis(entity targ, entity attacker, float damage);
+void tbaby_checknew(entity this)
+{
+	if(!walkmove(this, 0, 0))
+	{
+		delete(self);
+		return;
+	}
+	
+	self.enemy = self.enemy;
+	self.th_stand = tbaby_stand1;
+	self.th_walk = tbaby_walk1;
+	self.th_run = tbaby_run1;
+	self.th_missile = tbaby_jump1;
+	self.th_melee = tbaby_jump1;
+	self.th_die = tbaby_die1;       
+	self.origin_z = self.origin_z + 1;      // raise off floor a bit
+	WITHSELF(this, builtin_droptofloor());
+
+	if(!walkmove(this, 0,0))
+	{
+		self.owner.th_pain = tbaby_mitosis;
+		delete(self);
+		return;
+	}
+
+	self.takedamage = DAMAGE_AIM;
+	self.ideal_yaw = self.angles * '0 1 0';
+	if(!self.yaw_speed)
+		self.yaw_speed = 20;
+	self.view_ofs = '0 0 25';
+	self.use = monster_use;
+	self.flags |= FL_MONSTER;
+	self.pausetime = 99999999;
+	self.th_stand(this);
+	self.nextthink = self.nextthink + random()*0.5;
+
+	total_monsters = total_monsters + 1;
+
+	//WriteByte(MSG_BROADCAST, SVC_UPDATESTAT);
+	//WriteByte(MSG_BROADCAST, STAT_TOTALMONSTERS);
+	//WriteLong(MSG_BROADCAST, total_monsters);
+}
+
+void tbaby_mitosis(entity targ, entity attacker, float damage)
+{
+    if(random() < 0.35)
+	{
+		entity newSpawn = spawn();
+		newSpawn.classname = targ.classname;
+		set_movetype(newSpawn, MOVETYPE_STEP);
+		setsize (newSpawn, '-16 -16 -24', '16 16 40');
+		newSpawn.health = 80;
+		if(targ.skin == 1)
+			newSpawn.health = 60;
+		else if(targ.skin == 2)
+			newSpawn.health = 100;
+
+		newSpawn.owner = targ;
+		targ.th_pain = func_null;
+		
+		_setmodel(newSpawn, "progs/tarbaby.mdl");
+		newSpawn.solid = SOLID_SLIDEBOX;
+		newSpawn.skin = targ.skin;
+		
+		setorigin(newSpawn, targ.origin);
+		setthink(newSpawn, tbaby_checknew);
+		newSpawn.nextthink = time + 0.5;
+
+        _sound(newSpawn, CHAN_VOICE, "blob/mytosis.wav", 1, ATTN_NORM);
+	}
+}
+
 string tbaby_sight(entity this) { return "blob/sight1.wav"; }
 string tbaby_deathmessage(entity this) { return "was slimed by a Spawn"; }
 
 //=============================================================================
 
 
-/*QUAKED monster_tarbaby(1 0 0)(-16 -16 -24)(16 16 24) Ambush
+/*QUAKED monster_tarbaby (1 0 0) (-16 -16 -24) (16 16 24) Ambush Blue Green Spots
+The Spawn (and hellspawn)
+
+The spawn type is random by default.
+If you want a specific type, select "Blue", "Green", or "Spots".
 */
 spawnfunc(monster_tarbaby)
 {
@@ -248,6 +331,7 @@ spawnfunc(monster_tarbaby)
 	precache_sound2("blob/hit1.wav");
 	precache_sound2("blob/land1.wav");
 	precache_sound2("blob/sight1.wav");
+	precache_sound2("blob/mytosis.wav"); // don't bother checking for rogue
 	
 	this.solid = SOLID_SLIDEBOX;
 	set_movetype(this, MOVETYPE_STEP);
@@ -266,6 +350,44 @@ spawnfunc(monster_tarbaby)
 
 	this.sightsound = tbaby_sight;
 	this.deathmessage = tbaby_deathmessage;
-	
+
+	if(MP_ROGUE)
+	{
+		if(this.spawnflags & 8)
+		{
+			this.th_pain = tbaby_mitosis;
+			this.skin = 2;
+			this.health = 100;
+		}
+		else if(this.spawnflags & 4)
+		{
+			this.th_pain = tbaby_mitosis;
+			this.skin = 1;
+			this.health = 60;
+		}
+		else if(this.spawnflags & 2)
+			this.skin = 0;
+		else
+		{
+			float myskill = cvar("skill");
+			float r = myskill * 0.2;
+			r += random();
+			if(r > 0.8 && myskill > 1)
+			{
+				this.th_pain = tbaby_mitosis;
+				this.skin = 2;
+				this.health = 100;
+			}
+			else if(r > 0.5)
+			{
+				this.th_pain = tbaby_mitosis;
+				this.skin = 1;
+				this.health = 60;
+			}
+			else
+				this.skin = 0;
+		}
+	}
+
 	monster_start(this, 0);
 }

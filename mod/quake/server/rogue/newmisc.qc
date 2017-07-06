@@ -65,7 +65,7 @@ void rubble_throw(entity this)
 	this.nextthink = time + this.delay;
 }
 
-void rubble_use(entity this, entity actor, entity trigger)
+void rogue_rubble_use(entity this, entity actor, entity trigger)
 {
 	if(this.wait == 0)
 	{
@@ -100,10 +100,10 @@ spawnfunc(rubble_generator)
 		this.delay = 5;
 	
 	this.solid = SOLID_NOT;
-	this.use = rubble_use;
+	this.use = rogue_rubble_use;
 
 	if(this.spawnflags & 2)
-		rubble_use(this, NULL, NULL);		
+		rogue_rubble_use(this, NULL, NULL);		
 }
 
 

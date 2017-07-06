@@ -38,6 +38,19 @@ string Sbar_PickHIPWeapon_wepname(int wpn)
 	}
 }
 
+string Sbar_PickRogueWeapon_wepname(int wpn)
+{
+	switch(wpn)
+	{
+		default:
+		case 0: return "r_lava";
+		case 1: return "r_superlava";
+		case 2: return "r_gren";
+		case 3: return "r_multirock";
+		case 4: return "r_plasma";
+	}
+}
+
 PRECACHE(Sbar)
 {
 	precache_pic("gfx/ranking");
@@ -52,8 +65,15 @@ PRECACHE(Sbar)
 	precache_pic("gfx/face_inv2");
 	precache_pic("gfx/face_quad");
 
+	if(MP_ROGUE)
+	{
+		precache_pic("gfx/r_invbar1");
+		precache_pic("gfx/r_invbar2");
+	}
+
 	precache_pic("gfx/sbar");
-	precache_pic("gfx/ibar");
+	if(!MP_ROGUE)
+		precache_pic("gfx/ibar");
 
 	for(int j = 0; j < 7; j++)
 	{
@@ -79,6 +99,14 @@ PRECACHE(Sbar)
 			{
 				precache_pic(sprintf("gfx/inva%d_%s", j + 1, Sbar_PickHIPWeapon_wepname(k)));
 			}
+		}
+	}
+
+	if(MP_ROGUE)
+	{
+		for(int j = 0; j < 5; j++)
+		{
+			precache_pic(strcat("gfx/", Sbar_PickRogueWeapon_wepname(j)));
 		}
 	}
 
@@ -132,6 +160,16 @@ PRECACHE(Sbar)
 		precache_pic("gfx/sb_wsuit");
 		precache_pic("gfx/sb_eshld");
 	}
+
+	if(MP_ROGUE)
+	{
+		precache_pic("gfx/r_shield1");
+		precache_pic("gfx/r_agrav1");
+
+		precache_pic("gfx/r_ammolava");
+		precache_pic("gfx/r_ammomulti");
+		precache_pic("gfx/r_ammoplasma");
+	}
 }
 
 string Sbar_PickWeapon_inva(int cnum)
@@ -181,6 +219,16 @@ string Sbar_PickSigil(int frm)
 		case 1: return "gfx/sb_sigil2";
 		case 2: return "gfx/sb_sigil3";
 		case 3: return "gfx/sb_sigil4";
+	}
+}
+
+string Sbar_PickRogueItem(int frm)
+{
+	switch(frm)
+	{
+		default:
+		case 0: return "gfx/r_shield1";
+		case 1: return "gfx/r_agrav1";
 	}
 }
 
@@ -717,7 +765,15 @@ void Sbar_DrawInventory()
 	}
 	olditems = myitems;
 
-	Sbar_DrawAlphaPic(0, -24, "gfx/ibar", autocvar_sbar_alpha_bg);
+	if(MP_ROGUE)
+	{
+		if(STAT(ACTIVEWEAPON) >= IT_LAVA_NAILGUN)
+			Sbar_DrawAlphaPic(0, -24, "gfx/r_invbar1", autocvar_sbar_alpha_bg);
+		else
+			Sbar_DrawAlphaPic(0, -24, "gfx/r_invbar2", autocvar_sbar_alpha_bg);
+	}
+	else
+		Sbar_DrawAlphaPic(0, -24, "gfx/ibar", autocvar_sbar_alpha_bg);
 
 	// weapons
 	for(int j = 0; j < 7; j++)
@@ -789,6 +845,19 @@ void Sbar_DrawInventory()
 		}
 	}
 
+	if(MP_ROGUE)
+	{
+		// check for powered up weapon
+		if(STAT(ACTIVEWEAPON) >= IT_LAVA_NAILGUN)
+		{
+			for(int j = 0; j < 5; j++)
+			{
+				if(STAT(ACTIVEWEAPON) == (IT_LAVA_NAILGUN << j))
+					Sbar_DrawPic((j + 2) * 24, -16, strcat("gfx/", Sbar_PickRogueWeapon_wepname(j)));
+			}
+		}
+	}
+
 	// ammo counts
 	for(int j = 0; j < 4; j++)
 	{
@@ -833,11 +902,23 @@ void Sbar_DrawInventory()
 		}
 	}
 
-	// sigils
-	for(int j = 0; j < 4; j++)
+	if(MP_ROGUE)
 	{
-		if(STAT(SERVERFLAGS) & BIT(j))
-			Sbar_DrawPic(320 - 32 + j * 8, -16, Sbar_PickSigil(j));
+		for(int j = 0; j < 2; j++)
+		{
+			if(myitems & BIT(29 + j))
+				Sbar_DrawPic(288 + j * 16, -16, Sbar_PickRogueItem(j));
+		}
+	}
+
+	if(!MP_ROGUE)
+	{
+		// sigils
+		for(int j = 0; j < 4; j++)
+		{
+			if(STAT(SERVERFLAGS) & BIT(j))
+				Sbar_DrawPic(320 - 32 + j * 8, -16, Sbar_PickSigil(j));
+		}
 	}
 }
 
@@ -979,12 +1060,24 @@ void Sbar_Draw()
 				else
 				{
 					string apic = string_null;
-					if(STAT(ITEMS) & IT_ARMOR3)
-						apic = "gfx/sb_armor3";
-					else if(STAT(ITEMS) & IT_ARMOR2)
-						apic = "gfx/sb_armor2";
-					else if(STAT(ITEMS) & IT_ARMOR1)
-						apic = "gfx/sb_armor1";
+					if(MP_ROGUE)
+					{
+						if(STAT(ITEMS2) & IT2_ARMOR3)
+							apic = "gfx/sb_armor3";
+						else if(STAT(ITEMS2) & IT2_ARMOR2)
+							apic = "gfx/sb_armor2";
+						else if(STAT(ITEMS2) & IT2_ARMOR1)
+							apic = "gfx/sb_armor1";
+					}
+					else
+					{
+						if(STAT(ITEMS) & IT_ARMOR3)
+							apic = "gfx/sb_armor3";
+						else if(STAT(ITEMS) & IT_ARMOR2)
+							apic = "gfx/sb_armor2";
+						else if(STAT(ITEMS) & IT_ARMOR1)
+							apic = "gfx/sb_armor1";
+					}
 
 					if(apic)
 					{
@@ -1009,6 +1102,12 @@ void Sbar_Draw()
 					pic = "gfx/sb_rocket";
 				else if(STAT(ITEMS) & IT_CELLS)
 					pic = "gfx/sb_cells";
+				else if(STAT(ITEMS2) & IT2_LAVA_NAILS)
+					pic = "gfx/r_ammolava";
+				else if(STAT(ITEMS2) & IT2_PLASMA_AMMO)
+					pic = "gfx/r_ammomulti";
+				else if(STAT(ITEMS2) & IT2_MULTI_ROCKETS)
+					pic = "gfx/r_ammoplasma";
 
 				if(pic)
 				{

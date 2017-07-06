@@ -24,4 +24,15 @@ PRECACHE(Hipnotic)
 	precache_model ("progs/lasrspik.mdl");
 
 	footsteps = cvar("g_footsteps");
+
+	// weapons
+	precache_sound("enforcer/enfstop.wav");   // laser cannon
+	precache_sound("knight/sword1.wav");   // laser cannon
+	precache_sound("hipweap/laserg.wav");   // laser cannon
+	precache_sound("hipweap/laserric.wav");   // laser cannon ricochet
+	precache_sound("hipweap/proxwarn.wav");   // proximity bomb
+	precache_sound("hipweap/proxbomb.wav");   // proximity bomb
+	precache_sound("hipweap/mjolhit.wav");   // mjolnir
+	precache_sound("hipweap/mjolslap.wav");   // mjolnir
+	precache_sound("hipweap/mjoltink.wav");   // mjolnir
 }

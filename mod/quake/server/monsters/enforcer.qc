@@ -157,6 +157,8 @@ entity LaunchLaser(entity this, vector org, vector vec)
 	vector vec2 = normalize(vec);
 	
 	entity newmis = spawn();
+	if(MP_ROGUE)
+		newmis.classname = "enforcer_laser";
 	newmis.owner = this;
 	set_movetype(newmis, MOVETYPE_FLY);
 	newmis.solid = SOLID_BBOX;
@@ -164,6 +166,9 @@ entity LaunchLaser(entity this, vector org, vector vec)
 
 	_setmodel(newmis, "progs/laser.mdl");
 	setsize(newmis, '0 0 0', '0 0 0');		
+
+	if(this.classname == "monster_morph" && !this.owner)
+		newmis.skin = 1; // class check doesn't need rogue check
 
 	setorigin(newmis, org);
 

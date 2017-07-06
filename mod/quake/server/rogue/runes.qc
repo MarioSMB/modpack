@@ -179,6 +179,9 @@ float RuneApplyBlack(float damage, entity who)
 
 float RuneApplyHell(float tvalue, entity who)
 {
+	if(!MP_ROGUE)
+		return tvalue;
+
 	if (who.rune & ITEM_RUNE3)
 	{
 		if (who.rune3_last_noise_time < time)

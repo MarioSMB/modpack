@@ -160,7 +160,7 @@ spawnfunc(item_health)
 	StartItem(this);
 }
 
-
+bool RuneHasElder(entity who);
 void health_touch(entity this, entity toucher)
 {
 	if(!IS_PLAYER(toucher))
@@ -190,10 +190,15 @@ void health_touch(entity this, entity toucher)
 	this.solid = SOLID_NOT;
 
 	// Megahealth = rot down the player's super health
-	if(this.healtype == 2)
+	if(this.healtype == 2 && (!MP_ROGUE || !RuneHasElder(toucher)))
 	{
 		if(!MP_HIPNOTIC)
-			toucher.items |= IT_SUPERHEALTH;
+		{
+			if(MP_ROGUE)
+				toucher.items2 |= IT2_SUPERHEALTH;
+			else
+				toucher.items |= IT_SUPERHEALTH;
+		}
 		this.nextthink = time + 5;
 		setthink(this, item_megahealth_rot);
 		this.owner = toucher;
@@ -225,7 +230,12 @@ void item_megahealth_rot(entity this)
 // it is possible for a player to die and respawn between rots, so don't
 // just blindly subtract the flag off
 	if(!MP_HIPNOTIC)
-		this.owner.items &= ~IT_SUPERHEALTH;
+	{
+		if(MP_ROGUE)
+			this.owner.items2 &= ~IT2_SUPERHEALTH;
+		else
+			this.owner.items &= ~IT_SUPERHEALTH;
+	}
 	
 	if(deathmatch == 1)	// deathmatch 2 is silly old rules
 	{
@@ -256,27 +266,35 @@ void armor_touch(entity this, entity toucher)
 	{
 		type = 0.3;
 		value = 100;
-		bit = IT_ARMOR1;
+		bit = ((MP_ROGUE) ? IT2_ARMOR1 : IT_ARMOR1);
 	}
 	if(this.classname == "item_armor2")
 	{
 		type = 0.6;
 		value = 150;
-		bit = IT_ARMOR2;
+		bit = ((MP_ROGUE) ? IT2_ARMOR2 : IT_ARMOR2);
 	}
 	if(this.classname == "item_armorInv")
 	{
 		type = 0.8;
 		value = 200;
-		bit = IT_ARMOR3;
+		bit = ((MP_ROGUE) ? IT2_ARMOR3 : IT_ARMOR3);
 	}
 	if(toucher.armortype*toucher.armorvalue >= type*value)
 		return;
 		
 	toucher.armortype = type;
 	toucher.armorvalue = value;
-	toucher.items &= ~(IT_ARMOR1 | IT_ARMOR2 | IT_ARMOR3);
-	toucher.items |= bit;
+	if(MP_ROGUE)
+	{
+		toucher.items2 &= ~(IT2_ARMOR1 | IT2_ARMOR2 | IT2_ARMOR3);
+		toucher.items2 |= bit;
+	}
+	else
+	{
+		toucher.items &= ~(IT_ARMOR1 | IT_ARMOR2 | IT_ARMOR3);
+		toucher.items |= bit;
+	}
 
 	this.solid = SOLID_NOT;
 	this.model = string_null;
@@ -342,8 +360,33 @@ WEAPONS
 ===============================================================================
 */
 
+void rogue_bound_other_ammo(entity this)
+{
+	if(this.ammo_shells1 > 100)
+		this.ammo_shells1 = 100;
+	if(this.ammo_nails1 > 200)
+		this.ammo_nails1 = 200;
+	if(this.ammo_rockets1 > 100)
+		this.ammo_rockets1 = 100;		
+	if(this.ammo_cells1 > 100)
+		this.ammo_cells1 = 100;
+
+	if(this.ammo_lava_nails > 200)
+		this.ammo_lava_nails = 200;
+	if(this.ammo_multi_rockets > 100)
+		this.ammo_multi_rockets = 100;
+	if(this.ammo_plasma > 100)
+		this.ammo_plasma = 100;
+}
+
 void bound_other_ammo(entity this)
 {
+	if(MP_ROGUE)
+	{
+		rogue_bound_other_ammo(this);
+		return;
+	}
+
 	if(this.ammo_shells > 100)
 		this.ammo_shells = 100;
 	if(this.ammo_nails > 200)
@@ -351,7 +394,7 @@ void bound_other_ammo(entity this)
 	if(this.ammo_rockets > 100)
 		this.ammo_rockets = 100;		
 	if(this.ammo_cells > 100)
-		this.ammo_cells = 100;		
+		this.ammo_cells = 100;
 }
 
 int HIP_RankForWeapon(int w)
@@ -371,10 +414,31 @@ int HIP_RankForWeapon(int w)
 	}
 }
 
+int Rogue_RankForWeapon(int w)
+{
+	switch(w)
+	{
+		case IT_PLASMA_GUN:			return 1;
+		case IT_LIGHTNING: 			return 2;
+		case IT_MULTI_ROCKET: 		return 3;
+		case IT_ROCKET_LAUNCHER: 	return 4;
+		case IT_LAVA_SUPER_NAILGUN: return 5;
+		case IT_SUPER_NAILGUN: 		return 6;
+		case IT_MULTI_GRENADE: 		return 7;
+		case IT_GRENADE_LAUNCHER: 	return 8;
+		case IT_LAVA_NAILGUN: 		return 9;
+		case IT_SUPER_SHOTGUN: 		return 10;
+		case IT_NAILGUN: 			return 11;
+		default: 					return 12;
+	}
+}
+
 int RankForWeapon(int w)
 {
 	if(MP_HIPNOTIC)
 		return HIP_RankForWeapon(w);
+	if(MP_ROGUE)
+		return Rogue_RankForWeapon(w);
 
 	switch(w)
 	{
@@ -395,10 +459,15 @@ Deathmatch_Weapon
 Deathmatch weapon change rules for picking up a weapon
 
 .int		ammo_shells, ammo_nails, ammo_rockets, ammo_cells;
+or rogue:
+.int		ammo_shells1, ammo_nails1, ammo_rockets1, ammo_cells1;
 =============
 */
 void Deathmatch_Weapon(entity this, int old, int new)
 {
+	if(MP_ROGUE && this.weapon == IT_GRAPPLE && this.button0)
+		return;
+
 // change this.weapon if desired
 	int or = RankForWeapon(this.weapon);
 	int nr = RankForWeapon(new);
@@ -411,6 +480,60 @@ bool weapon_customize(entity this, entity client)
 	if((deathmatch == 2 || coop) && (client.items & this.weapon))
 		return false;
 	return true;
+}
+
+void EnableComboWeapons(entity this)
+{
+	if(!IS_PLAYER(this))
+		return;
+	
+	if (!(this.items & IT_LAVA_NAILGUN))
+	{
+		if (this.ammo_lava_nails > 0 && (this.items & IT_NAILGUN))
+		{
+			sprint (this, "Lava Enabled\n");
+			this.items |= IT_LAVA_NAILGUN;
+		}
+	}
+
+	if (!(this.items & IT_LAVA_SUPER_NAILGUN))
+	{
+		if (this.ammo_lava_nails > 0 && 
+							(this.items & IT_SUPER_NAILGUN))
+		{
+			sprint (this, "Super Lava Enabled\n");
+			this.items |= IT_LAVA_SUPER_NAILGUN;		
+		}
+	}
+
+	if (!(this.items & IT_MULTI_GRENADE))
+	{
+		if (this.ammo_multi_rockets > 0 && 
+							(this.items & IT_GRENADE_LAUNCHER))
+		{
+			sprint (this, "Multi Grenades Enabled\n");
+			this.items |= IT_MULTI_GRENADE;		
+		}
+	}
+
+	if (!(this.items & IT_MULTI_ROCKET))
+	{
+		if (this.ammo_multi_rockets > 0 && 
+							(this.items & IT_ROCKET_LAUNCHER))
+		{
+			sprint (this, "Multi Rockets Enabled\n");
+			this.items |= IT_MULTI_ROCKET;		
+		}
+	}
+
+	if (!(this.items & IT_PLASMA_GUN))
+	{
+		if (this.ammo_plasma > 0 && (this.items & IT_LIGHTNING))
+		{
+			sprint (this, "Plasma Gun Enabled\n");
+			this.items |= IT_PLASMA_GUN;		
+		}
+	}
 }
 
 /*
@@ -437,43 +560,61 @@ void weapon_touch(entity this, entity toucher)
 		{
 			if(leave && (toucher.items & IT_NAILGUN))
 				return;
-			hadammo = toucher.ammo_nails;			
+			hadammo = ((MP_ROGUE) ? toucher.ammo_nails1 : toucher.ammo_nails);			
 			new = IT_NAILGUN;
-			toucher.ammo_nails = toucher.ammo_nails + 30;
+			if(MP_ROGUE && leave)
+				toucher.ammo_lava_nails += 20;
+			if(MP_ROGUE)
+				toucher.ammo_nails1 = toucher.ammo_nails1 + 30;
+			else
+				toucher.ammo_nails = toucher.ammo_nails + 30;
 			break;
 		}
 		case "weapon_supernailgun":
 		{
 			if(leave && (toucher.items & IT_SUPER_NAILGUN))
 				return;
-			hadammo = toucher.ammo_rockets;			
+			hadammo = ((MP_ROGUE) ? toucher.ammo_rockets1 : toucher.ammo_rockets);			
 			new = IT_SUPER_NAILGUN;
-			toucher.ammo_nails = toucher.ammo_nails + 30;
+			if(MP_ROGUE && leave)
+				toucher.ammo_lava_nails += 20;
+			if(MP_ROGUE)
+				toucher.ammo_nails1 = toucher.ammo_nails1 + 30;
+			else
+				toucher.ammo_nails = toucher.ammo_nails + 30;
 			break;
 		}
 		case "weapon_supershotgun":
 		{
 			if(leave && (toucher.items & IT_SUPER_SHOTGUN))
 				return;
-			hadammo = toucher.ammo_rockets;			
+			hadammo = ((MP_ROGUE) ? toucher.ammo_rockets1 : toucher.ammo_rockets);		
 			new = IT_SUPER_SHOTGUN;
-			toucher.ammo_shells = toucher.ammo_shells + 5;
+			if(MP_ROGUE)
+				toucher.ammo_shells1 = toucher.ammo_shells1 + 5;
+			else
+				toucher.ammo_shells = toucher.ammo_shells + 5;
 			break;
 		}
 		case "weapon_rocketlauncher":
 		{
 			if(leave && (toucher.items & IT_ROCKET_LAUNCHER))
 				return;
-			hadammo = toucher.ammo_rockets;			
+			hadammo = ((MP_ROGUE) ? toucher.ammo_rockets1 : toucher.ammo_rockets);		
 			new = IT_ROCKET_LAUNCHER;
-			toucher.ammo_rockets = toucher.ammo_rockets + 5;
+			if(MP_ROGUE && leave)
+				toucher.ammo_multi_rockets += 3;
+			if(MP_ROGUE)
+				toucher.ammo_rockets1 = toucher.ammo_rockets1 + 5;
+			else
+				toucher.ammo_rockets = toucher.ammo_rockets + 5;
 			break;
 		}
 		case "weapon_grenadelauncher":
 		{
 			if(leave && (toucher.items & IT_GRENADE_LAUNCHER))
 				return;
-			hadammo = toucher.ammo_rockets;			
+			hadammo = ((MP_ROGUE) ? toucher.ammo_rockets1 : toucher.ammo_rockets);			
 			new = IT_GRENADE_LAUNCHER;
 			toucher.ammo_rockets = toucher.ammo_rockets + 5;
 			break;
@@ -482,36 +623,50 @@ void weapon_touch(entity this, entity toucher)
 		{
 			if(leave && (toucher.items & IT_LIGHTNING))
 				return;
-			hadammo = toucher.ammo_rockets;			
+			hadammo = ((MP_ROGUE) ? toucher.ammo_rockets1 : toucher.ammo_rockets);			
 			new = IT_LIGHTNING;
-			toucher.ammo_cells = toucher.ammo_cells + 15;
+			if(MP_ROGUE && leave)
+				toucher.ammo_plasma += 5;
+			if(MP_ROGUE)
+				toucher.ammo_cells1 = toucher.ammo_cells1 + 15;
+			else
+				toucher.ammo_cells = toucher.ammo_cells + 15;
 			break;
 		}
 		case "weapon_laser_gun":
 		{
 	      	if (leave && (toucher.items & IT_LASER_CANNON) )
 				return;
-			hadammo = toucher.ammo_rockets;
+			hadammo = ((MP_ROGUE) ? toucher.ammo_rockets1 : toucher.ammo_rockets);
 	      	new = IT_LASER_CANNON;
-	      	toucher.ammo_cells = toucher.ammo_cells + 30;
+		if(MP_ROGUE)
+			toucher.ammo_cells1 = toucher.ammo_cells1 + 30;
+		else
+	      		toucher.ammo_cells = toucher.ammo_cells + 30;
 	      	break;
 		}
 	   	case "weapon_mjolnir":
 		{
 	      	if (leave && (toucher.items & IT_MJOLNIR) )
 				return;
-			hadammo = toucher.ammo_rockets;
+			hadammo = ((MP_ROGUE) ? toucher.ammo_rockets1 : toucher.ammo_rockets);
 	      	new = IT_MJOLNIR;
-	      	toucher.ammo_cells = toucher.ammo_cells + 30;
+		if(MP_ROGUE)
+			toucher.ammo_cells1 = toucher.ammo_cells1 + 30;
+		else
+	      		toucher.ammo_cells = toucher.ammo_cells + 30;
 	      	break;
 		}
 	   	case "weapon_proximity_gun":
 		{
 	      	if(leave && (toucher.items & IT_PROXIMITY_GUN) )
 				return;
-			hadammo = toucher.ammo_rockets;
+			hadammo = ((MP_ROGUE) ? toucher.ammo_rockets1 : toucher.ammo_rockets);
 	      	new = IT_PROXIMITY_GUN;
-	      	toucher.ammo_rockets = toucher.ammo_rockets + 6;
+		if(MP_ROGUE)
+			toucher.ammo_rockets1 = toucher.ammo_rockets1 + 6;
+		else
+	      		toucher.ammo_rockets = toucher.ammo_rockets + 6;
 	      	break;
 		}
 		default:
@@ -535,10 +690,44 @@ void weapon_touch(entity this, entity toucher)
 	int old = toucher.items;
 	toucher.items |= new;
 
+	if(MP_ROGUE)
+		EnableComboWeapons(toucher);
+
+	// PGM - fake picking up the plasma gun.
+	if(!MP_ROGUE) { /* do nothing */ }
+	else if(new == IT_LIGHTNING)
+	{
+		if(toucher.ammo_plasma > 0)
+			new = IT_PLASMA_GUN;
+	}
+	else if(new == IT_ROCKET_LAUNCHER)
+	{
+		if(toucher.ammo_multi_rockets > 0)
+			new = IT_MULTI_ROCKET;
+	}
+	else if(new == IT_GRENADE_LAUNCHER)
+	{
+		if(toucher.ammo_multi_rockets > 0)
+			new = IT_MULTI_GRENADE;
+	}
+	else if(new == IT_SUPER_NAILGUN)
+	{
+		if(toucher.ammo_lava_nails > 1)
+			new = IT_LAVA_SUPER_NAILGUN;
+	}
+	else if(new == IT_NAILGUN)
+	{
+		if(toucher.ammo_lava_nails > 0)
+			new = IT_LAVA_NAILGUN;
+	}
+
 	if(!deathmatch)
 		W_SwitchWeapon(toucher, new);
 	else
 		Deathmatch_Weapon(toucher, old, new);
+
+	if(MP_ROGUE)
+		UpdateAmmoCounts(this);
 
 	if(leave)
 		return;
@@ -656,8 +845,87 @@ AMMO
 ===============================================================================
 */
 
+void rogue_ammo_touch(entity this, entity toucher)
+{
+	if(!IS_PLAYER(toucher))
+		return;
+	if(toucher.health <= 0)
+		return;
+
+// if the player was using his best weapon, change up to the new one if better		
+	int best = W_BestWeapon(toucher, 0);
+
+
+// shotgun
+	if(this.weapon == 1)
+	{
+		if(toucher.ammo_shells >= 100)
+			return;
+		toucher.ammo_shells = toucher.ammo_shells + this.aflag;
+	}
+
+// spikes
+	if(this.weapon == 2)
+	{
+		if(toucher.ammo_nails >= 200)
+			return;
+		toucher.ammo_nails = toucher.ammo_nails + this.aflag;
+	}
+
+//	rockets
+	if(this.weapon == 3)
+	{
+		if(toucher.ammo_rockets >= 100)
+			return;
+		toucher.ammo_rockets = toucher.ammo_rockets + this.aflag;
+	}
+
+//	cells
+	if(this.weapon == 4)
+	{
+		if(toucher.ammo_cells >= 100)
+			return;
+		toucher.ammo_cells = toucher.ammo_cells + this.aflag;
+	}
+
+	bound_other_ammo(toucher);
+
+	if(this.netname != "")
+		sprint(toucher, sprintf("You got the %s\n", this.netname));
+	else
+		sprint(toucher, sprintf("You picked up some ammo\n"));
+// ammo touch sound
+	_sound(toucher, CHAN_ITEM, "weapons/lock4.wav", 1, ATTN_NORM);
+	stuffcmd(toucher, "bf\n");
+
+// change to a better weapon if appropriate
+
+	if( toucher.weapon == best )
+		W_SwitchWeapon(toucher, W_BestWeapon(toucher, 0));
+
+// if changed current ammo, update it
+	W_SetCurrentAmmo(toucher);
+
+// remove it in single player, or setup for respawning in deathmatch
+	this.model = string_null;
+	this.solid = SOLID_NOT;
+	if(deathmatch == 1)
+	{
+		this.nextthink = time + 30;
+		setthink(this, SUB_regen);
+	}
+
+	SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
+}
+
 void ammo_touch(entity this, entity toucher)
 {
+	if(MP_ROGUE)
+	{
+		rogue_ammo_touch(this, toucher);
+		return;
+	}
+
 	if(!IS_PLAYER(toucher))
 		return;
 	if(toucher.health <= 0)
@@ -735,6 +1003,7 @@ void ammo_touch(entity this, entity toucher)
 const int WEAPON_BIG2 = BIT(0);
 
 /*QUAKED item_shells(0 .5 .8)(0 0 0)(32 32 32) big
+Small box is 20, Big box is 40.
 */
 
 spawnfunc(item_shells)
@@ -758,6 +1027,7 @@ spawnfunc(item_shells)
 }
 
 /*QUAKED item_spikes(0 .5 .8)(0 0 0)(32 32 32) big
+Small box is 25, Big box is 50.
 */
 
 spawnfunc(item_spikes)
@@ -780,7 +1050,37 @@ spawnfunc(item_spikes)
 	StartItem(this);
 }
 
+/*QUAKED item_lava_spikes (0 .5 .8) (0 0 0) (32 32 32) big
+Small box is 25, Big box is 50.
+*/
+
+spawnfunc(item_lava_spikes)
+{
+	if(!MP_ROGUE) { delete(this); return; }
+
+	settouch(this, ammo_touch);
+
+	if(this.spawnflags & WEAPON_BIG2)
+	{
+		precache_model("maps/b_lnail1.bsp");
+		_setmodel(this, "maps/b_lnail1.bsp");
+		this.aflag = 50;
+	}
+	else
+	{
+		precache_model("maps/b_lnail0.bsp");
+		_setmodel(this, "maps/b_lnail0.bsp");
+		this.aflag = 25;
+	}
+	this.weapon = 5;
+	this.netname = "lava nails";
+	setsize(this, '0 0 0', '32 32 56');
+	StartItem(this);
+}
+
+
 /*QUAKED item_rockets(0 .5 .8)(0 0 0)(32 32 32) big
+Small box is 5, Big box is 10.
 */
 
 spawnfunc(item_rockets)
@@ -804,7 +1104,37 @@ spawnfunc(item_rockets)
 }
 
 
+/*QUAKED item_multi_rockets (0 .5 .8) (0 0 0) (32 32 32) big
+Small box is 5, Big box is 10.
+*/
+
+spawnfunc(item_multi_rockets)
+{
+	if(!MP_ROGUE) { delete(this); return; }
+
+	settouch(this, ammo_touch);
+
+	if(this.spawnflags & WEAPON_BIG2)
+	{
+		precache_model("maps/b_mrock1.bsp");
+		_setmodel(this, "maps/b_mrock1.bsp");
+		this.aflag = 10;
+	}
+	else
+	{
+		precache_model("maps/b_mrock0.bsp");
+		_setmodel(this, "maps/b_mrock0.bsp");
+		this.aflag = 5;
+	}
+	this.weapon = 6;
+	this.netname = "multi rockets";
+	setsize(this, '0 0 0', '32 32 56');
+	StartItem(this);
+}
+
+
 /*QUAKED item_cells(0 .5 .8)(0 0 0)(32 32 32) big
+Small box is 6, Big box is 12.
 */
 
 spawnfunc(item_cells)
@@ -823,6 +1153,34 @@ spawnfunc(item_cells)
 	}
 	this.weapon = 4;
 	this.netname = "cells";
+	setsize(this, '0 0 0', '32 32 56');
+	StartItem(this);
+}
+
+
+/*QUAKED item_plasma (0 .5 .8) (0 0 0) (32 32 32) big
+Small box is 6, Big box is 12.
+*/
+spawnfunc(item_plasma)
+{
+	if(!MP_ROGUE) { delete(this); return; }
+
+	settouch(this, ammo_touch);
+
+	if(this.spawnflags & WEAPON_BIG2)
+	{
+		precache_model("maps/b_plas1.bsp");
+		_setmodel(this, "maps/b_plas1.bsp");
+		this.aflag = 12;
+	}
+	else
+	{
+		precache_model("maps/b_plas0.bsp");
+		_setmodel(this, "maps/b_plas0.bsp");
+		this.aflag = 6;
+	}
+	this.weapon = 7;
+	this.netname = "plasma";
 	setsize(this, '0 0 0', '32 32 56');
 	StartItem(this);
 }
@@ -1106,6 +1464,8 @@ POWERUPS
 ===============================================================================
 */
 
+void random_regen(entity this);
+
 void powerup_touch(entity this, entity toucher)
 {
 	if(!IS_PLAYER(toucher))
@@ -1122,13 +1482,21 @@ void powerup_touch(entity this, entity toucher)
 	{
 		this.mdl = this.model;
 		
-		if((this.classname == "item_artifact_invulnerability") ||
-			(this.classname == "item_artifact_invisibility"))
-			this.nextthink = time + 60*5;
+		if(this.classname == "item_random_powerup")
+		{
+			this.nextthink = time + 30;
+			setthink(this, random_regen);
+		}
 		else
-			this.nextthink = time + 60;
-		
-		setthink(this, SUB_regen);
+		{
+			if((this.classname == "item_artifact_invulnerability") ||
+				(this.classname == "item_artifact_invisibility"))
+				this.nextthink = time + 60*5;
+			else
+				this.nextthink = time + 60;
+			
+			setthink(this, SUB_regen);
+		}
 	}	
 
 	_sound(toucher, CHAN_VOICE, this.noise, 1, ATTN_NORM);
@@ -1138,25 +1506,31 @@ void powerup_touch(entity this, entity toucher)
 	this.model = string_null;
 
 // do the apropriate action
-	if(this.classname == "item_artifact_envirosuit")
+	bool cname;
+
+	cname = ((MP_ROGUE) ? (this.netname == "Biosuit") : (this.classname == "item_artifact_envirosuit"));
+	if(cname)
 	{
 		toucher.rad_time = 1;
 		toucher.radsuit_finished = time + 30;
 	}
-	
-	if(this.classname == "item_artifact_invulnerability")
+
+	cname = ((MP_ROGUE) ? (this.netname == "Pentagram of Protection") : (this.classname == "item_artifact_invulnerability"));
+	if(cname)
 	{
 		toucher.invincible_time = 1;
 		toucher.invincible_finished = time + 30;
 	}
-	
-	if(this.classname == "item_artifact_invisibility")
+
+	cname = ((MP_ROGUE) ? (this.netname == "Ring of Shadows") : (this.classname == "item_artifact_invisibility"));
+	if(cname)
 	{
 		toucher.invisible_time = 1;
 		toucher.invisible_finished = time + 30;
 	}
 
-	if(this.classname == "item_artifact_super_damage")
+	cname = ((MP_ROGUE) ? (this.netname == "Quad Damage") : (this.classname == "item_artifact_super_damage"));
+	if(cname)
 	{
 		toucher.super_time = 1;
 		toucher.super_damage_finished = time + 30;
@@ -1260,6 +1634,9 @@ void BackpackTouch(entity this, entity toucher)
 	if(toucher.health <= 0)
 		return;
 
+	if(MP_ROGUE && toucher == this.owner && ((this.nextthink - time) > 119))
+		return; // don't let owner pick up his own backpack for a second
+
 	bool acount = false;
 	sprint(toucher, "You get ");
 
@@ -1275,10 +1652,23 @@ void BackpackTouch(entity this, entity toucher)
 	//int best = W_BestWeapon(toucher);
 
 // change weapons
-	toucher.ammo_shells = toucher.ammo_shells + this.ammo_shells;
-	toucher.ammo_nails = toucher.ammo_nails + this.ammo_nails;
-	toucher.ammo_rockets = toucher.ammo_rockets + this.ammo_rockets;
-	toucher.ammo_cells = toucher.ammo_cells + this.ammo_cells;
+	if(MP_ROGUE)
+	{
+		toucher.ammo_shells1 = toucher.ammo_shells1 + this.ammo_shells1;
+		toucher.ammo_nails1 = toucher.ammo_nails1 + this.ammo_nails1;
+		toucher.ammo_rockets1 = toucher.ammo_rockets1 + this.ammo_rockets1;
+		toucher.ammo_cells1 = toucher.ammo_cells1 + this.ammo_cells1;
+		toucher.ammo_lava_nails += this.ammo_lava_nails;
+		toucher.ammo_multi_rockets += this.ammo_multi_rockets;
+		toucher.ammo_plasma += this.ammo_plasma;
+	}
+	else
+	{
+		toucher.ammo_shells = toucher.ammo_shells + this.ammo_shells;
+		toucher.ammo_nails = toucher.ammo_nails + this.ammo_nails;
+		toucher.ammo_rockets = toucher.ammo_rockets + this.ammo_rockets;
+		toucher.ammo_cells = toucher.ammo_cells + this.ammo_cells;
+	}
 
 	int newitem = this.items;
 	//if(!newitem)
@@ -1289,33 +1679,88 @@ void BackpackTouch(entity this, entity toucher)
 	
 	bound_other_ammo(toucher);
 
-	if(this.ammo_shells)
+	if(MP_ROGUE)
 	{
-		if(acount)
-			sprint(toucher, ", ");
-		acount = true;
-		sprint(toucher, sprintf("%d shells", this.ammo_shells));
+		if(this.ammo_shells1)
+		{
+			if(acount)
+				sprint(toucher, ", ");
+			acount = true;
+			sprint(toucher, sprintf("%d shells", this.ammo_shells1));
+		}
+		if(this.ammo_nails1)
+		{
+			if(acount)
+				sprint(toucher, ", ");
+			acount = true;
+			sprint(toucher, sprintf("%d nails", this.ammo_nails1));
+		}
+		if(this.ammo_rockets1)
+		{
+			if(acount)
+				sprint(toucher, ", ");
+			acount = true;
+			sprint(toucher, sprintf("%d rockets", this.ammo_rockets1));
+		}
+		if(this.ammo_cells1)
+		{
+			if(acount)
+				sprint(toucher, ", ");
+			acount = true;
+			sprint(toucher, sprintf("%d cells", this.ammo_cells1));
+		}
+		if(this.ammo_lava_nails)
+		{
+			if(acount)
+				sprint(toucher, ", ");
+			acount = true;
+			sprint(toucher, sprintf("%d cells", this.ammo_lava_nails));
+		}
+		if(this.ammo_multi_rockets)
+		{
+			if(acount)
+				sprint(toucher, ", ");
+			acount = true;
+			sprint(toucher, sprintf("%d cells", this.ammo_multi_rockets));
+		}
+		if(this.ammo_plasma)
+		{
+			if(acount)
+				sprint(toucher, ", ");
+			acount = true;
+			sprint(toucher, sprintf("%d cells", this.ammo_plasma));
+		}
 	}
-	if(this.ammo_nails)
+	else
 	{
-		if(acount)
-			sprint(toucher, ", ");
-		acount = true;
-		sprint(toucher, sprintf("%d nails", this.ammo_nails));
-	}
-	if(this.ammo_rockets)
-	{
-		if(acount)
-			sprint(toucher, ", ");
-		acount = true;
-		sprint(toucher, sprintf("%d rockets", this.ammo_rockets));
-	}
-	if(this.ammo_cells)
-	{
-		if(acount)
-			sprint(toucher, ", ");
-		acount = true;
-		sprint(toucher, sprintf("%d cells", this.ammo_cells));
+		if(this.ammo_shells)
+		{
+			if(acount)
+				sprint(toucher, ", ");
+			acount = true;
+			sprint(toucher, sprintf("%d shells", this.ammo_shells));
+		}
+		if(this.ammo_nails)
+		{
+			if(acount)
+				sprint(toucher, ", ");
+			acount = true;
+			sprint(toucher, sprintf("%d nails", this.ammo_nails));
+		}
+		if(this.ammo_rockets)
+		{
+			if(acount)
+				sprint(toucher, ", ");
+			acount = true;
+			sprint(toucher, sprintf("%d rockets", this.ammo_rockets));
+		}
+		if(this.ammo_cells)
+		{
+			if(acount)
+				sprint(toucher, ", ");
+			acount = true;
+			sprint(toucher, sprintf("%d cells", this.ammo_cells));
+		}
 	}
 	
 	sprint(toucher, "\n");
@@ -1326,12 +1771,18 @@ void BackpackTouch(entity this, entity toucher)
 // remove the backpack, change this to the player
 	delete(this);
 
+	if(MP_ROGUE)
+		EnableComboWeapons(toucher);
+
 // change to the weapon
 	if(newitem)
 	if(!deathmatch)
 		W_SwitchWeapon(toucher, newitem);
 	else
 		Deathmatch_Weapon(toucher, old, newitem);
+
+	if(MP_ROGUE)
+		UpdateAmmoCounts(toucher);
 }
 
 /*
@@ -1341,8 +1792,21 @@ DropBackpack
 */
 void DropBackpack(entity this)
 {
-	if(!(this.ammo_shells + this.ammo_nails + this.ammo_rockets + this.ammo_cells))
-		return;	// nothing in it
+	// this is to compensate for the new way we're hacking the ammo
+	// counts. If they're monsters, just copy shells->shells1 etc.
+	if(MP_ROGUE && IS_MONSTER(this))
+	{
+		this.ammo_shells1 = this.ammo_shells;
+		this.ammo_nails1 = this.ammo_nails;
+		this.ammo_rockets1 = this.ammo_rockets;
+		this.ammo_cells1 = this.ammo_cells;
+
+		if(!(this.ammo_shells1 + this.ammo_nails1 + this.ammo_rockets1 + this.ammo_cells1 + 
+				this.ammo_lava_nails + this.ammo_multi_rockets))
+			return;	// nothing in it
+	}
+	else if(!(this.ammo_shells + this.ammo_nails + this.ammo_rockets + this.ammo_cells))
+			return;	// nothing in it
 
 	entity item = spawn();
 	item.origin = this.origin - '0 0 24';
@@ -1361,13 +1825,31 @@ void DropBackpack(entity this)
 		case IT_LASER_CANNON: 		item.netname = "Laser Cannon"; break;
 		case IT_PROXIMITY_GUN: 		item.netname = "Proximity Gun"; break;
 		case IT_MJOLNIR: 			item.netname = "Mjolnir"; break;
+		case IT_LAVA_NAILGUN: 		item.netname = "Lava Nail Gun"; break;
+		case IT_LAVA_SUPER_NAILGUN: item.netname = "Super Lava Nail Gun"; break;
+		case IT_MULTI_GRENADE: 		item.netname = "Multi Grenade Launcher"; break;
+		case IT_MULTI_ROCKET: 		item.netname = "Multi Rocket Launcher"; break;
+		case IT_PLASMA_GUN: 		item.netname = "Plasma Gun"; break;
 		default: 					item.netname = ""; break;
 	}
 
-	item.ammo_shells = this.ammo_shells;
-	item.ammo_nails = this.ammo_nails;
-	item.ammo_rockets = this.ammo_rockets;
-	item.ammo_cells = this.ammo_cells;
+	if(MP_ROGUE)
+	{
+		item.ammo_shells1 = this.ammo_shells1;
+		item.ammo_nails1 = this.ammo_nails1;
+		item.ammo_rockets1 = this.ammo_rockets1;
+		item.ammo_cells1 = this.ammo_cells1;
+		item.ammo_lava_nails = this.ammo_lava_nails;
+		item.ammo_multi_rockets = this.ammo_multi_rockets;
+		item.ammo_plasma = this.ammo_plasma;
+	}
+	else
+	{
+		item.ammo_shells = this.ammo_shells;
+		item.ammo_nails = this.ammo_nails;
+		item.ammo_rockets = this.ammo_rockets;
+		item.ammo_cells = this.ammo_cells;
+	}
 
 	item.velocity_z = 300;
 	item.velocity_x = -100 +(random() * 200);

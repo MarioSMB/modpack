@@ -226,6 +226,7 @@ void fish_pain(entity this, entity attacker, float damage)
 
 string fish_deathmessage(entity this) { return "was fed to the Rotfish"; }
 
+// in rogue: (1 0 0) (-16 -16 -24) (16 16 32)
 /*QUAKED monster_fish(1 0 0)(-16 -16 -24)(16 16 24) Ambush
 */
 spawnfunc(monster_fish)
@@ -246,7 +247,10 @@ spawnfunc(monster_fish)
 
 	_setmodel(this, "progs/fish.mdl");
 
-	setsize(this, '-16 -16 -24', '16 16 24');
+	if(MP_ROGUE)
+		setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
+	else
+		setsize(this, '-16 -16 -24', '16 16 24');
 	this.health = 25;
 	
 	this.th_stand = f_stand1;

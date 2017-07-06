@@ -1,0 +1,80 @@
+#pragma once
+
+// New entity fields
+
+.float steam;		// selected team
+.float suicide_count; // how many times has this player done something silly?
+.float ctf_flags; // various flags for CTF
+.float ctf_killed;	// used for base spawning
+.float ctf_flagsince;	// when we picked up the flag
+.float ctf_lasthurtcarrier; // when we last hurt the carrier
+.float ctf_lastreturnedflag; // when we returned the flag
+.float ctf_lastfraggedcarrier; // when we last fragged the carrier
+
+const int TEAM1	= 5;  // color of team1 (red), note that this is this.team which
+				//is one more than the color setting, so 'color 4' is red.
+const int TEAM2 = 14;  // color of team2 (blue), note that this is this.team which
+				//is one more than the color setting, so 'color 13' is blue.
+const int TEAM3	= 1; // color of team3 (grey) in alt CTF
+
+entity team1_lastspawn;  // last spawn spot for team1
+entity team2_lastspawn;  // last spawn spot for team2
+float nextteamupdtime; // next time for a broadcast update
+
+// TEAMPLAY VALUES
+
+const int TEAM_NORMAL_NODAMAGE	=	1;	// id's normal teamplay, can't hurt this
+const int TEAM_NORMAL_DAMAGE	=	2;	// id's alt teamplay, can hurt this/team
+const int TEAM_DMATCH_TAG		=	3;	// deathmatch tag, no 'team' stuff
+const int TEAM_CTF				=	4;	// regular CTF, locked colors
+const int TEAM_CTF_ONEFLAG		=	5;	// one flag CTF
+const int TEAM_CTF_ALT			=	6;	// alternate CTF (three teams)
+
+// gamecfg cvar fields
+
+const int GAMECFG_ENABLE_RUNES		=	1; // enable runes (default is disabled)
+const int GAMECFG_TEAM_ARMOR_DMG	=	2; // 2 team damage affects armor (default is not)
+const int GAMECFG_TEAM_HEALTH_DMG	=	4; // 4 team damage affects health (default is not)
+const int GAMECFG_USE_COLOR			=	8; // use color player joins as (if you join and start with blue, you will go
+//    to blue team, same with red/green.  If you are an illegal color, you'll
+//    get assigned).
+const int GAMECFG_ALLOW_CHG			=	16; // allow people to change teams
+
+const int CTF_CAPTURE_BONUS = 15; // what you get for capture
+const int CTF_TEAM_BONUS = 10; // what your team gets for capture
+const int CTF_ALT_CAPTURE_BONUS = 8; // what you get for capture
+const int CTF_ALT_TEAM_BONUS = 4; // what your team gets for capture
+const int CTF_RECOVERY_BONUS = 1; // what you get for recovery
+const int CTF_FLAG_BONUS = 0; // what you get for picking up enemy flag
+const int CTF_FRAG_CARRIER_BONUS = 2; // what you get for fragging enemy flag carrier
+const float CTF_FLAG_RETURN_TIME = 40; // seconds until auto return
+const int CTF_CARRIER_DANGER_PROTECT_BONUS = 2; // bonus for fraggin someone
+	// who has recently hurt your flag carrier
+const int CTF_CARRIER_PROTECT_BONUS = 1; // bonus for fraggin someone while
+	// either you or your target are near your flag carrier
+const int CTF_FLAG_DEFENSE_BONUS = 1; // bonus for fraggin someone while
+	// either you or your target are near your flag
+const int CTF_RETURN_FLAG_ASSIST_BONUS = 1; // awarded for returning a flag that causes a
+	// capture to happen almost immediately
+const int CTF_FRAG_CARRIER_ASSIST_BONUS = 2; // award for fragging a flag carrier if a
+	// capture happens almost immediately
+const float CTF_TARGET_PROTECT_RADIUS = 400; // the radius around an object being
+	// defended where a target will be worth extra frags
+const float CTF_ATTACKER_PROTECT_RADIUS = 400; // the radius around an object being
+	// defended where an attacker will get extra frags when making kills
+const float CTF_CARRIER_DANGER_PROTECT_TIMEOUT = 4;
+const float CTF_CARRIER_FLAG_SINCE_TIMEOUT = 2;
+const float CTF_FRAG_CARRIER_ASSIST_TIMEOUT = 6;
+const float CTF_RETURN_FLAG_ASSIST_TIMEOUT = 4;
+const float CTF_UPDATE_TIME = 120;
+
+// CTF flags
+const int CTF_FLAG_FLAG			=	1;	// palyer has flag in one flag mode
+const int CTF_FLAG_TEAM1		=	1;	// player has team1's flag
+const int CTF_FLAG_TEAM2		=	2;	// player has team2's flag
+const int CTF_FLAG_STUFF_COLOR	=	4;	// gotta stuff his color
+
+// flag status used in cnt field of flag
+const int FLAG_AT_BASE = 0;
+const int FLAG_CARRIED = 1;
+const int FLAG_DROPPED = 2;

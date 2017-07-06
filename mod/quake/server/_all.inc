@@ -6,6 +6,7 @@
 
 // mission pack defs
 #include "hipnotic/hipdefs.qh"
+#include "rogue/_all.qh"
 
 //#include "defs.qc"
 #include "lib.qc"

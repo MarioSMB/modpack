@@ -109,3 +109,91 @@ float servertime, serverprevtime, serverframetime;
 
 const int SPAWNFLAG_SUPERSPIKE = BIT(0);
 const int SPAWNFLAG_LASER = BIT(1);
+
+.int items2;
+//.float		new_weapon;
+//.float		new_items;
+.float ammo_shells1, ammo_nails1, ammo_rockets1, ammo_cells1;
+.float ammo_lava_nails;
+.float ammo_multi_rockets;
+.float ammo_plasma;
+.float gravity;
+
+// rogue globals!
+float 	earthquake_active;
+float	earthquake_intensity;
+float	cutscene_running;
+entity  tag_token_owner;
+
+.float		shield_finished, antigrav_finished;
+.float		shield_time, antigrav_time;
+.entity		shield_entity;
+
+//
+// elevator fields
+//
+
+.float 		elevatorLastUse;
+.float		elevatorOnFloor;
+.float		elevatorToFloor;
+.vector		elevatorDestination; 
+
+//
+// plat2 fields
+//
+.float		plat2Called;
+.float		plat2LastMove;
+.float		plat2GoTime;
+.float		plat2GoTo;
+
+//
+// new AI fields
+//
+.float		orbitPosition;
+
+//
+// dragon specific fields
+// 
+.float playerInRoom;
+.float playerInTransit;
+.float dragonInRoom;
+.float dragonInTransit;
+.float dragonAttacking;
+.float dragonPainSequence;
+.vector dragonLastVelocity;
+
+//
+// Other Rogue Fields
+//
+.float		AGping;
+.float		childrenSpawned;
+.float		ltrailLastUsed;
+.float		shield_death_time;
+.float		shieldSoundTime;
+.float		dragonDeathState;
+
+.float		tag_frags;
+.float		tag_message_time;
+
+// 
+// new_items.qc
+//
+void UpdateAmmoCounts(entity theEntity);
+
+//
+// dmatch.qc
+//
+void tag_token_respawn();
+void tag_token_touch(entity this, entity toucher);
+void tag_token_drop();
+
+// sphere.qc
+void sphere_remove(entity this);
+
+// protocol bytes
+const int SVC_UPDATESTAT		= 3;		// pgm black magic
+const int SVC_CUTSCENE		    = 34;
+
+const int TE_EXPLOSION2     = 12;
+const int TE_BEAM			= 13;
+

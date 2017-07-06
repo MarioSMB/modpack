@@ -10,7 +10,8 @@ $cd id1/models/knight2
 $origin 0 0 24
 $base base
 $skin skin
-
+// rogue
+$skin statue2
 
 const int anim_hknight_stand1 = 0;
 const int anim_hknight_stand2 = 1;
@@ -306,7 +307,14 @@ void hknight_pain5(entity this) { set_anim(this, anim_hknight_pain5, hknight_run
 void hknight_pain4(entity this) { set_anim(this, anim_hknight_pain4, hknight_pain5); }
 void hknight_pain3(entity this) { set_anim(this, anim_hknight_pain3, hknight_pain4); }
 void hknight_pain2(entity this) { set_anim(this, anim_hknight_pain2, hknight_pain3); }
-void hknight_pain1(entity this) { set_anim(this, anim_hknight_pain1, hknight_pain2); _sound(this, CHAN_VOICE, "hknight/pain1.wav", 1, ATTN_NORM); }
+void hknight_pain1(entity this)
+{
+	set_anim(this, anim_hknight_pain1, hknight_pain2);
+	if(MP_ROGUE && (this.spawnflags & 2)) // statue
+		_sound(this, CHAN_VOICE, "statue/pain.wav", 1, ATTN_NORM);
+	else
+		_sound(this, CHAN_VOICE, "hknight/pain1.wav", 1, ATTN_NORM);
+}
 
 //============================================================================
 
@@ -340,14 +348,27 @@ void hknight_die(entity this, entity attacker)
 	{
 		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowHead(this, "progs/h_hellkn.mdl", this.health);
-		ThrowGib(this, "progs/gib1.mdl", this.health);
-		ThrowGib(this, "progs/gib2.mdl", this.health);
-		ThrowGib(this, "progs/gib3.mdl", this.health);
+		if(MP_ROGUE && (this.spawnflags & 2)) // statue
+		{
+			ThrowGib(this, "progs/statgib1.mdl", this.health);
+			ThrowGib(this, "progs/statgib2.mdl", this.health);
+			ThrowGib(this, "progs/statgib3.mdl", this.health);
+		}
+		else
+		{
+			ThrowGib(this, "progs/gib1.mdl", this.health);
+			ThrowGib(this, "progs/gib2.mdl", this.health);
+			ThrowGib(this, "progs/gib3.mdl", this.health);
+		}
+			
 		return;
 	}
 
 // regular death
-	_sound(this, CHAN_VOICE, "hknight/death1.wav", 1, ATTN_NORM);
+	if(MP_ROGUE && (this.spawnflags & 2)) // statue
+		_sound(this, CHAN_VOICE, "statue/death.wav", 1, ATTN_NORM);
+	else
+		_sound(this, CHAN_VOICE, "hknight/death1.wav", 1, ATTN_NORM);
 	if(random() > 0.5)
 		hknight_die1(this);
 	else
@@ -488,7 +509,12 @@ void hknight_watk1(entity this) { set_anim(this, anim_hknight_w_attack1, hknight
 void hk_idle_sound(entity this)
 {
 	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "hknight/idle.wav", 1, ATTN_NORM);
+	{
+		if(MP_ROGUE && (this.spawnflags & 2)) // statue
+			_sound(this, CHAN_VOICE, "statue/idle.wav", 1, ATTN_NORM);
+		else
+			_sound(this, CHAN_VOICE, "hknight/idle.wav", 1, ATTN_NORM);
+	}
 }
 
 void hknight_pain(entity this, entity attacker, float damage)
@@ -496,7 +522,10 @@ void hknight_pain(entity this, entity attacker, float damage)
 	if(this.pain_finished > time)
 		return;
 
-	_sound(this, CHAN_VOICE, "hknight/pain1.wav", 1, ATTN_NORM);
+	if(MP_ROGUE && (this.spawnflags & 2)) // statue
+		_sound(this, CHAN_VOICE, "statue/pain.wav", 1, ATTN_NORM);
+	else
+		_sound(this, CHAN_VOICE, "hknight/pain1.wav", 1, ATTN_NORM);
 
 	if(time - this.pain_finished > 5)
 	{	// allways go into pain frame if it has been a while
@@ -530,10 +559,44 @@ void hknight_melee(entity this)
 	}
 }
 
-string hknight_sight(entity this) { return "hknight/sight1.wav"; }
+void hknight_pause(entity this, entity actor, entity trigger)
+{
+	_sound(this, CHAN_VOICE, "statue/see.wav", 1, ATTN_NORM);
+
+	this.takedamage = DAMAGE_AIM;
+	this.th_stand = hknight_stand1;
+	this.th_walk = hknight_walk1;
+	this.th_run = hknight_run1;
+	this.th_melee = hknight_melee;
+	this.th_missile = hknight_magicc1;
+	this.th_pain = hknight_pain;
+	this.th_die = hknight_die;
+	this.use = func_null;
+
+	this.enemy = actor;
+	this.nextthink = time + 0.1;
+	setthink(this, FoundTarget);
+
+	this.delay = 0;
+}
+
+void hknight_pause1(entity this)
+{
+	this.takedamage = DAMAGE_NO;
+	this.use = hknight_pause;
+	setthink(this, hknight_pause1);
+	this.nextthink = time + 0.1;
+}
+
+string hknight_sight(entity this) { if(!MP_ROGUE || !this.skin) return "hknight/sight1.wav"; else return string_null; }
 string hknight_deathmessage(entity this) { return "was slain by a Death Knight"; }
 
-/*QUAKED monster_hell_knight(1 0 0)(-16 -16 -24)(16 16 40) Ambush
+/*QUAKED monster_hell_knight(1 0 0)(-16 -16 -24)(16 16 40) Ambush Statue
+
+Statue - (rogue only) select this to use the stone skin and have him frozen in place.
+
+delay: time from sight to attack (default 5)
+frame: frame to be frozen in. (default 73)
 */
 spawnfunc(monster_hell_knight)
 {
@@ -547,13 +610,26 @@ spawnfunc(monster_hell_knight)
 	precache_model2("progs/h_hellkn.mdl");
 
 	
+	if(MP_ROGUE && (this.spawnflags & 2)) // statue
+	{
+		precache_model("progs/statgib1.mdl");
+		precache_model("progs/statgib2.mdl");
+		precache_model("progs/statgib3.mdl");
+		precache_sound("statue/see.wav");
+		precache_sound("statue/idle.wav");
+		precache_sound("statue/pain.wav");
+		precache_sound("statue/death.wav");
+	}
+	else
+	{
+		precache_sound2("hknight/death1.wav");
+		precache_sound2("hknight/pain1.wav");
+		precache_sound2("hknight/sight1.wav");
+		precache_sound2("hknight/idle.wav");
+	}
 	precache_sound2("hknight/attack1.wav");
-	precache_sound2("hknight/death1.wav");
-	precache_sound2("hknight/pain1.wav");
-	precache_sound2("hknight/sight1.wav");
 	precache_sound("hknight/hit.wav");		// used by C code, so don't sound2
 	precache_sound2("hknight/slash1.wav");
-	precache_sound2("hknight/idle.wav");
 	precache_sound2("hknight/grunt.wav");
 
 	precache_sound("knight/sword1.wav");
@@ -567,13 +643,33 @@ spawnfunc(monster_hell_knight)
 	setsize(this, '-16 -16 -24', '16 16 40');
 	this.health = 250;
 
-	this.th_stand = hknight_stand1;
-	this.th_walk = hknight_walk1;
-	this.th_run = hknight_run1;
-	this.th_melee = hknight_melee;
-	this.th_missile = hknight_magicc1;
-	this.th_pain = hknight_pain;
-	this.th_die = hknight_die;
+	if(MP_ROGUE && (this.spawnflags & 2)) // statue
+	{
+		if(this.frame == 0)
+			this.frame = 73;
+		this.skin = 1;
+
+		if(!this.targetname || this.targetname == "")
+		{
+			LOG_DEBUGF("statue %s not targeted at %v\n", this.classname, this.origin);
+			return;
+		}
+
+		this.use = hknight_pause;
+		this.th_stand = hknight_pause1;
+		this.th_walk = hknight_pause1;
+		this.th_run = hknight_pause1;
+	}
+	else
+	{
+		this.th_stand = hknight_stand1;
+		this.th_walk = hknight_walk1;
+		this.th_run = hknight_run1;
+		this.th_melee = hknight_melee;
+		this.th_missile = hknight_magicc1;
+		this.th_pain = hknight_pain;
+		this.th_die = hknight_die;
+	}
 
 	this.sightsound = hknight_sight;
 	this.deathmessage = hknight_deathmessage;

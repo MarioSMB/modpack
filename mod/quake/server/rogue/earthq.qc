@@ -99,7 +99,7 @@ void earthquake_touch(entity this, entity toucher)
 	}
 }
 
-void earthquake_use(entity this, entity actor, entity trigger)
+void rogue_earthquake_use(entity this, entity actor, entity trigger)
 {
 	this.delay = !this.delay;
 }
@@ -127,7 +127,7 @@ spawnfunc(trigger_earthquake)
 
 	if(this.targetname)
 	{
-		this.use = earthquake_use;
+		this.use = rogue_earthquake_use;
 		this.delay = 0;
 	}
 

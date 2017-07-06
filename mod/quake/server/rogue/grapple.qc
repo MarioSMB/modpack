@@ -2,11 +2,6 @@
 // Jan'97 by ZOID <zoid@threewave.com>
 // Under contract to id software for Rogue Entertainment
 
-// New entity fields
-.entity hook; // this is my hook
-.bool on_hook; // we're on it
-.bool hook_out; // it's out
-
 // prototypes for WEAPONS.QC functions
 //float crandom();
 void SpawnBlood(vector org, vector vel, float damage);

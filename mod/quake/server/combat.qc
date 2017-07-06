@@ -1,3 +1,5 @@
+bool IsExplosionDamage;
+
 void ClientObituary(entity targ, entity attacker);
 
 //============================================================================
@@ -84,7 +86,14 @@ void Killed(entity targ, entity attacker)
 		killed_monsters = killed_monsters + 1;
 		WriteByte(MSG_ALL, SVC_KILLEDMONSTER);
 	}
-	
+
+	if(MP_ROGUE)
+	if(attacker.classname == "buzzsaw" || attacker.classname == "Vengeance" || attacker.classname == "pendulum")
+		targ.health = -99;
+
+	if(MP_ROGUE)
+		targ.gravity = 1.0;
+
 	targ.takedamage = DAMAGE_NO;
 	settouch(targ, func_null);
 
@@ -99,6 +108,11 @@ void Killed(entity targ, entity attacker)
 		targ.th_die(targ, attacker);
 }
 
+// ====
+// Function prototype for shield impact handler.
+// ====
+float shield_hit(entity targ, entity inflictor, entity attacker, float damage);
+
 
 /*
 ============
@@ -109,6 +123,10 @@ This should be the only function that ever reduces health.
 ============
 */
 bool empathyused; // hipnotic
+float RuneApplyBlack(float damage, entity who); // rogue
+bool TeamArmorDam(entity targ, entity inflictor, entity attacker, float damage); // also rogue
+bool TeamHealthDam(entity targ, entity inflictor, entity attacker, float damage);
+float RuneApplyEarth(float damage, entity who);
 void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 {
 	if(!targ.takedamage)
@@ -116,6 +134,18 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 
 	if(MP_HIPNOTIC && discharged && targ.wetsuit_finished)
 		return;
+	if(MP_ROGUE && targ.classname == "trigger_explosion" && !IsExplosionDamage)
+		return;
+	IsExplosionDamage = false;
+
+	if(MP_ROGUE)
+	if(targ.items2 & IT2_SHIELD)
+	{
+		// allow some damage to pass through
+		damage = shield_hit(targ, inflictor, attacker, damage);
+		if(damage == 0)
+			return;
+	}
 
 // check for quad damage powerup on the attacker
 	if(attacker.super_damage_finished > time)
@@ -134,14 +164,23 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 
 	damage_inflictor = inflictor; // hipnotic
 
+	if(MP_ROGUE && deathmatch)
+		damage = RuneApplyBlack(damage, attacker);
+
 // save damage based on the target's armor level
 
-	float save = ceil(targ.armortype*damage);
+	float save = ceil(targ.armortype * damage);
+	if(MP_ROGUE && !TeamArmorDam(targ, inflictor, attacker, damage))
+		save = 0;
+
 	if(save >= targ.armorvalue)
 	{
 		save = targ.armorvalue;
 		targ.armortype = 0;	// lost all armor
-		targ.items &= ~(IT_ARMOR1 | IT_ARMOR2 | IT_ARMOR3);
+		if(MP_ROGUE)
+			targ.items2 &= ~(IT2_ARMOR1 | IT2_ARMOR2 | IT2_ARMOR3);
+		else
+			targ.items &= ~(IT_ARMOR1 | IT_ARMOR2 | IT_ARMOR3);
 	}
 	
 	targ.armorvalue = targ.armorvalue - save;
@@ -194,6 +233,12 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 	if((teamplay == 1) &&(targ.team > 0)&&(targ.team == attacker.team) )
 		return;
 
+	if(MP_ROGUE && !TeamHealthDam(targ, inflictor, attacker, damage))
+		return; // same team
+
+	if(MP_ROGUE && deathmatch)
+		take = RuneApplyEarth(take, targ);
+
 // coop damage avoidance (if enabled)
 	if(coop && attacker != targ && IS_CLIENT(attacker) && IS_CLIENT(targ))
 	{
@@ -220,10 +265,13 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 		{
 			if(targ.classname != attacker.classname || targ.classname == "monster_army" || targ.classname == "monster_armagon")
 			{
-				if(IS_PLAYER(targ.enemy))
-					targ.oldenemy = targ.enemy;
-				targ.enemy = attacker;
-				FoundTarget(targ);
+				if(targ.classname != "monster_dragon")
+				{
+					if(IS_PLAYER(targ.enemy))
+						targ.oldenemy = targ.enemy;
+					targ.enemy = attacker;
+					FoundTarget(targ);
+				}
 			}
 		}
 	}
@@ -234,6 +282,40 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 	// nightmare mode monsters don't go into pain frames often
 		if(skill == 3)
 			targ.pain_finished = time + 5;		
+	}
+}
+
+/*
+============
+T_EELZap
+============
+*/
+void T_EELZap(entity inflictor, entity attacker, float damage)
+{
+	entity head = findradius(inflictor.origin, damage + 40);
+	
+	while(head)
+	{
+		if(head.takedamage)
+		{
+			vector org = head.origin + (head.mins + head.maxs) * 0.5;
+			float points = 0.5 * vlen(inflictor.origin - org);
+			if(points < 0)
+				points = 0;
+			points = damage - points;
+			if(head == attacker)
+				points = points * 0.5;
+			if(points > 0)
+			{
+				if (CanDamage(head, inflictor))
+				{	// eels take no damage from this attack
+					if (head.classname != "monster_eel" && 
+						(head.flags & FL_INWATER))					
+						T_Damage(head, inflictor, attacker, points);
+				}
+			}
+		}
+		head = head.chain;
 	}
 }
 
@@ -276,6 +358,7 @@ T_BeamDamage
 void T_BeamDamage(entity attacker, float damage)
 {
 	entity head = findradius(attacker.origin, damage + 40);
+	IsExplosionDamage = true;
 	
 	while(head)
 	{

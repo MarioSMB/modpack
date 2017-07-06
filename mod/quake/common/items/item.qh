@@ -15,6 +15,12 @@ const int IT_NAILS                = BIT(9);
 const int IT_ROCKETS              = BIT(10);
 const int IT_CELLS                = BIT(11);
 
+const int IT_LAVA_NAILGUN         = BIT(12);
+const int IT_LAVA_SUPER_NAILGUN   = BIT(13);         
+const int IT_MULTI_GRENADE        = BIT(14);
+const int IT_MULTI_ROCKET         = BIT(15);
+const int IT_PLASMA_GUN           = BIT(16);
+
 const int IT_ARMOR1               = BIT(13);
 const int IT_ARMOR2               = BIT(14);
 const int IT_ARMOR3               = BIT(15);
@@ -27,3 +33,17 @@ const int IT_INVISIBILITY         = BIT(19);
 const int IT_INVULNERABILITY      = BIT(20);
 const int IT_SUIT                 = BIT(21);
 const int IT_QUAD                 = BIT(22);
+const int IT_GRAPPLE              = BIT(23);
+
+const int IT2_ARMOR1              = BIT(0);
+const int IT2_ARMOR2              = BIT(1);
+const int IT2_ARMOR3              = BIT(2);
+const int IT2_LAVA_NAILS          = BIT(3);
+const int IT2_PLASMA_AMMO         = BIT(4);
+const int IT2_MULTI_ROCKETS       = BIT(5);
+const int IT2_SHIELD              = BIT(6);
+const int IT2_ANTIGRAV            = BIT(7);
+const int IT2_SUPERHEALTH         = BIT(8);
+const int IT2_EARTHQUAKE          = BIT(9);          
+const int IT2_V_SPHERE            = BIT(10);
+

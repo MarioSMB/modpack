@@ -174,6 +174,8 @@ const int anim_ogre_pull11 = 146;
 
 //=============================================================================
 
+const int OGRE_BOSS = BIT(1);
+const int OGRE_NORMAL = BIT(2);
 
 void OgreGrenadeExplode(entity this)
 {
@@ -208,6 +210,9 @@ void OgreGrenadeTouch(entity this, entity toucher)
 OgreFireGrenade
 ================
 */
+void MultiGrenadeTouch(entity this, entity toucher);
+void MultiGrenadeExplode(entity this);
+
 void OgreFireGrenade(entity this)
 {
 	this.effects |= EF_MUZZLEFLASH;
@@ -218,6 +223,8 @@ void OgreFireGrenade(entity this)
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_BOUNCE);
 	missile.solid = SOLID_BBOX;
+	if(MP_ROGUE)
+		missile.classname = "ogre_grenade";
 		
 // set missile speed	
 
@@ -231,15 +238,24 @@ void OgreFireGrenade(entity this)
 
 	missile.angles = vectoangles(missile.velocity);
 	
-	settouch(missile, OgreGrenadeTouch);
-	
-// set missile duration
-	missile.nextthink = time + 2.5;
-	setthink(missile, OgreGrenadeExplode);
-
-	_setmodel(missile, "progs/grenade.mdl");
-	setsize(missile, '0 0 0', '0 0 0');		
-	setorigin(missile, this.origin);
+	if(MP_ROGUE && (this.spawnflags & OGRE_BOSS))
+	{
+		settouch(missile, MultiGrenadeTouch);
+		missile.nextthink = time + 2.5;
+		setthink(missile, MultiGrenadeExplode);
+		_setmodel(missile, "progs/mervup.mdl");
+		setsize(missile, '0 0 0', '0 0 0');
+		missile.classname = "MultiGrenade";
+	}
+	else
+	{
+		settouch(missile, OgreGrenadeTouch);
+		missile.nextthink = time + 2.5;
+		setthink(missile, OgreGrenadeExplode);
+		_setmodel(missile, "progs/grenade.mdl");
+		setsize(missile, '0 0 0', '0 0 0');		
+		setorigin(missile, this.origin);
+	}
 }
 
 
@@ -489,7 +505,10 @@ void ogre_die3(entity this)
 {
 	set_anim(this, anim_ogre_death3, ogre_die4);
 	this.solid = SOLID_NOT;
-	this.ammo_rockets = 2;
+	if(MP_ROGUE && (this.spawnflags & OGRE_BOSS))
+		this.ammo_multi_rockets = 2;
+	else
+		this.ammo_rockets = 2;
 	DropBackpack(this);
 }
 void ogre_die2(entity this) { set_anim(this, anim_ogre_death2, ogre_die3); }
@@ -506,7 +525,10 @@ void ogre_bdie3(entity this)
 {
 	set_anim(this, anim_ogre_bdeath3, ogre_bdie4);
 	this.solid = SOLID_NOT;
-	this.ammo_rockets = 2;
+	if(MP_ROGUE && (this.spawnflags & OGRE_BOSS))
+		this.ammo_multi_rockets = 2;
+	else
+		this.ammo_rockets = 2;
 	DropBackpack(this);
 }
 void ogre_bdie2(entity this) { set_anim(this, anim_ogre_bdeath2, ogre_bdie3); ai_forward(this, 5); }
@@ -605,8 +627,11 @@ bool OgreCheckAttack(entity this)
 string ogre_sight(entity this) { return "ogre/ogwake.wav"; }
 string ogre_deathmessage(entity this) { return "was destroyed by an Ogre"; }
 
-/*QUAKED monster_ogre(1 0 0)(-32 -32 -24)(32 32 64) Ambush
+/*QUAKED monster_ogre(1 0 0)(-32 -32 -24)(32 32 64) Ambush Boss Normal
+The Ogre
 
+Boss: (rogue only) use the modified skin and fire multigrenades.
+Normal: use the original skin and fire normal grenades.
 */
 spawnfunc(monster_ogre)
 {
@@ -632,6 +657,18 @@ spawnfunc(monster_ogre)
 
 	_setmodel(this, "progs/ogre.mdl");
 
+	if(MP_ROGUE)
+	{
+		// none specified - choose random. 25% boss on normal, hard, bloodbath
+		if(this.spawnflags <= 1)
+			if(cvar("skill") > 0)
+				if(random() <= 0.25)
+					this.spawnflags |= OGRE_BOSS;
+		
+		if(this.spawnflags & OGRE_BOSS)
+			this.skin = 1;
+	}
+
 	setsize(this, VEC_HULL2_MIN, VEC_HULL2_MAX);
 	this.health = 200;
 
@@ -652,5 +689,6 @@ spawnfunc(monster_ogre)
 
 spawnfunc(monster_ogre_marksman)
 {
+	if(MP_ROGUE) { delete(this); return; }
 	spawnfunc_monster_ogre(this);
 }

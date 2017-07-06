@@ -221,13 +221,30 @@ const int anim_zombie_cruc_3 = 194;
 const int anim_zombie_cruc_4 = 195;
 const int anim_zombie_cruc_5 = 196;
 const int anim_zombie_cruc_6 = 197;
+// new frames added by rogue (TODO)
+const int anim_zombie_cruc_7 = 198;
+const int anim_zombie_cruc_8 = 199;
+const int anim_zombie_cruc_9 = 200;
+const int anim_zombie_cruc_10 = 201;
+const int anim_zombie_cruc_11 = 202;
+const int anim_zombie_cruc_12 = 203;
+const int anim_zombie_cruc_13 = 204;
+const int anim_zombie_cruc_14 = 205;
+const int anim_zombie_cruc_15 = 206;
+const int anim_zombie_cruc_16 = 207;
 
 const int SPAWN_CRUCIFIED = BIT(0);
 const int SPAWN_LYINGDOWN = BIT(2); // HIPNOTIC
 
+// ROGUE
+const int SPAWN_LYING = BIT(1);
+const int SPAWN_AMBUSH = BIT(2);
+const int SPAWN_SNEAKY = BIT(3);
+
 //=============================================================================
 
 .int inpain;
+void zombie_escape1(entity this);
 
 void zombie_stand1(entity this);
 void zombie_stand15(entity this) { set_anim(this, anim_zombie_stand15, zombie_stand1); ai_stand(this); }
@@ -246,15 +263,47 @@ void zombie_stand3(entity this) { set_anim(this, anim_zombie_stand3, zombie_stan
 void zombie_stand2(entity this) { set_anim(this, anim_zombie_stand2, zombie_stand3); ai_stand(this); }
 void zombie_stand1(entity this) { set_anim(this, anim_zombie_stand1, zombie_stand2); ai_stand(this); }
 
+void zombie_lurk(entity this)
+{
+	if(!MP_ROGUE)
+	{
+		this.nextthink = time + 0.1 + random() * 0.1;
+		return;
+	}
+
+	if(this.spawnflags & SPAWN_SNEAKY)
+	{
+		// not pausing before attack, but looking for player
+		if(!this.pain_finished)
+		{
+			if(FindTarget(this))
+				return;
+		}
+		else
+		{
+			// if we're waited long enough, pounce!
+			if(this.pain_finished < time)
+			{
+				setthink(this, zombie_escape1);
+				this.nextthink = time + 1;
+				return;
+			}
+		}
+	}
+	this.nextthink = time + 0.1 + random() * 0.1;
+}
+
 void zombie_cruc1(entity this);
-void zombie_cruc6(entity this) { set_anim(this, anim_zombie_cruc_6, zombie_cruc1); this.nextthink = time + 0.1 + random() * 0.1; }
-void zombie_cruc5(entity this) { set_anim(this, anim_zombie_cruc_5, zombie_cruc6); this.nextthink = time + 0.1 + random() * 0.1; }
-void zombie_cruc4(entity this) { set_anim(this, anim_zombie_cruc_4, zombie_cruc5); this.nextthink = time + 0.1 + random() * 0.1; }
-void zombie_cruc3(entity this) { set_anim(this, anim_zombie_cruc_3, zombie_cruc4); this.nextthink = time + 0.1 + random() * 0.1; }
-void zombie_cruc2(entity this) { set_anim(this, anim_zombie_cruc_2, zombie_cruc3); this.nextthink = time + 0.1 + random() * 0.1; }
+void zombie_cruc6(entity this) { set_anim(this, anim_zombie_cruc_6, zombie_cruc1); zombie_lurk(this); }
+void zombie_cruc5(entity this) { set_anim(this, anim_zombie_cruc_5, zombie_cruc6); zombie_lurk(this); }
+void zombie_cruc4(entity this) { set_anim(this, anim_zombie_cruc_4, zombie_cruc5); zombie_lurk(this); }
+void zombie_cruc3(entity this) { set_anim(this, anim_zombie_cruc_3, zombie_cruc4); zombie_lurk(this); }
+void zombie_cruc2(entity this) { set_anim(this, anim_zombie_cruc_2, zombie_cruc3); zombie_lurk(this); }
 void zombie_cruc1(entity this)
 {
 	set_anim(this, anim_zombie_cruc_1, zombie_cruc2);
+	if(MP_ROGUE)
+		zombie_lurk(this);
 	if(random() < 0.1)
 		_sound(this, CHAN_VOICE, "zombie/idle_w2.wav", 1, ATTN_STATIC);
 }
@@ -427,6 +476,8 @@ void zombie_attc1(entity this) { set_anim(this, anim_zombie_attc1, zombie_attc2)
 void zombie_missile(entity this)
 {
 	float r = random();
+	if(MP_ROGUE)
+		WITHSELF(this, builtin_droptofloor());
 	
 	if(r < 0.3)
 		zombie_atta1(this);
@@ -518,7 +569,7 @@ void zombie_paind5(entity this) { set_anim(this, anim_zombie_paind5, zombie_pain
 void zombie_paind4(entity this) { set_anim(this, anim_zombie_paind4, zombie_paind5); }
 void zombie_paind3(entity this) { set_anim(this, anim_zombie_paind3, zombie_paind4); }
 void zombie_paind2(entity this) { set_anim(this, anim_zombie_paind2, zombie_paind3); }
-void zombie_paind1(entity this) { set_anim(this, anim_zombie_paind1, zombie_paind2); _sound(this, CHAN_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM); }
+void zombie_paind1(entity this) { set_anim(this, anim_zombie_paind1, zombie_paind2); _sound(this, CHAN_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM); if(MP_ROGUE) WITHSELF(this, builtin_droptofloor()); }
 
 void zombie_paine11(entity this);
 void zombie_paine30(entity this) { set_anim(this, anim_zombie_paine30, zombie_run1); }
@@ -542,9 +593,13 @@ void zombie_paine13(entity this) { set_anim(this, anim_zombie_paine13, zombie_pa
 void zombie_paine12(entity this)
 {
 	set_anim(this, anim_zombie_paine12, zombie_paine13);
+	if(MP_ROGUE)
+		WITHSELF(this, builtin_droptofloor());
 	// see if ok to stand up
 	this.health = 60;
 	_sound(this, CHAN_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
+	if(MP_ROGUE)
+		setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	this.solid = SOLID_SLIDEBOX;
 	if(!t_walkmove(this, 0, 0))
 	{
@@ -667,12 +722,99 @@ void zombie_lay(entity this)
 	}
 }
 
+void zombie_sleep(entity this) { set_anim(this, anim_zombie_paine11, zombie_sleep); ai_stand(this); }
+
+void zombie_wake(entity this)
+{
+	this.th_stand = zombie_stand1;
+	this.th_walk = zombie_walk1;
+	this.th_pain = zombie_pain;
+	this.th_run = zombie_run1;
+	this.th_missile = zombie_missile;
+
+//	paine12 will handle setting solid, just make the size box correct.
+//	this.solid = SOLID_SLIDEBOX;
+//	setsize(this, '-16 -16 -24', '16 16 40');
+
+	zombie_paine12(this);
+}
+
+void zombie_wake_pain(entity this, entity attacker, float damage)
+{
+	zombie_wake(this);
+}
+
+void zombie_escape16(entity this)
+{
+	set_anim(this, anim_zombie_cruc_16, zombie_run1);
+
+	this.solid = SOLID_SLIDEBOX;
+	set_movetype(this, MOVETYPE_STEP);
+	this.takedamage = DAMAGE_AIM;
+	this.th_stand = zombie_stand1;
+	this.th_walk = zombie_walk1;
+	this.th_pain = zombie_pain;
+	this.th_run = zombie_run1;
+	this.th_missile = zombie_missile;
+	this.health = 60;
+	_sound(this, CHAN_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
+
+	WITHSELF(this, builtin_droptofloor());
+}
+void zombie_escape15(entity this)
+{
+	set_anim(this, anim_zombie_cruc_15, zombie_escape16);
+
+	makevectors(this.angles);
+	setorigin(this, this.origin + v_forward * 8);
+	this.nextthink = time + 0.15;
+}
+void zombie_escape14(entity this)
+{
+	set_anim(this, anim_zombie_cruc_14, zombie_escape15);
+
+	makevectors(this.angles);
+	setorigin(this, this.origin + v_forward * 8);
+	this.nextthink = time + 0.15;
+}
+void zombie_escape13(entity this) { set_anim(this, anim_zombie_cruc_13, zombie_escape14); this.nextthink = time + 0.10; }
+void zombie_escape12(entity this) { set_anim(this, anim_zombie_cruc_12, zombie_escape13); this.nextthink = time + 0.10; }
+void zombie_escape11(entity this) { set_anim(this, anim_zombie_cruc_11, zombie_escape12); this.nextthink = time + 0.10; }
+void zombie_escape10(entity this) { set_anim(this, anim_zombie_cruc_10, zombie_escape11); this.nextthink = time + 0.15; }
+void zombie_escape9(entity this) { set_anim(this, anim_zombie_cruc_9, zombie_escape10); this.nextthink = time + 0.15; }
+void zombie_escape8(entity this) { set_anim(this, anim_zombie_cruc_8, zombie_escape9); this.nextthink = time + 0.15; }
+void zombie_escape7(entity this) { set_anim(this, anim_zombie_cruc_7, zombie_escape8); this.nextthink = time + 0.15; }
+void zombie_escape6(entity this) { set_anim(this, anim_zombie_cruc_6, zombie_escape7); this.nextthink = time + 0.15; }
+void zombie_escape5(entity this) { set_anim(this, anim_zombie_cruc_5, zombie_escape6); this.nextthink = time + 0.15; }
+void zombie_escape4(entity this) { set_anim(this, anim_zombie_cruc_4, zombie_escape5); this.nextthink = time + 0.20; }
+void zombie_escape3(entity this) { set_anim(this, anim_zombie_cruc_3, zombie_escape4); this.nextthink = time + 0.20; }
+void zombie_escape2(entity this) { set_anim(this, anim_zombie_cruc_2, zombie_escape3); this.nextthink = time + 0.20; }
+void zombie_escape1(entity this) { set_anim(this, anim_zombie_cruc_1, zombie_escape2); this.nextthink = time + 0.20; }
+
+void zombie_escape(entity this) 
+{
+	if(!this.pain_finished)
+		this.pain_finished = time + this.delay;
+
+	setthink(this, zombie_cruc1);
+	this.nextthink = time + 0.1;
+}
+void zombie_escape_pain(entity this, entity attacker, float damage)
+{
+	zombie_escape(this);
+}
+
 string zombie_sight(entity this) { return "zombie/z_idle.wav"; }
 string zombie_deathmessage(entity this) { return "joins the Zombies"; }
 
 //============================================================================
 
-/*QUAKED monster_zombie(1 0 0)(-16 -16 -24)(16 16 32) Crucified ambush lying_down
+/*QUAKED monster_zombie(1 0 0)(-16 -16 -24)(16 16 32) Crucified Lying ambush Sneaky
+
+Crucified - Zombie stays stuck in the wall, moans and writhes.
+Lying - (rogue only) Zombie will start lying down, and stand when player spotted.
+Ambush - Just like all the other ambush flags.
+Sneaky - (rogue only) Zombie stays stuck in the wall, but breaks his chains, hops off the wall, and attacks after seeing the player.
 
 If crucified, stick the bounding box 12 pixels back into a wall to look right.
 If lying_down in hipnotic, the zombie will be lying down when spawned and will rise up
@@ -706,7 +848,10 @@ spawnfunc(monster_zombie)
 
 	_setmodel(this, "progs/zombie.mdl");
 
-	setsize(this, '-16 -16 -24', '16 16 40');
+	if(MP_ROGUE)
+		setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
+	else
+		setsize(this, '-16 -16 -24', '16 16 40');
 	this.health = 60;
 
 	this.th_stand = zombie_stand1;
@@ -724,8 +869,50 @@ spawnfunc(monster_zombie)
 		set_movetype(this, MOVETYPE_NONE);
 		zombie_cruc1(this);
 	}
-	else
+	else if(MP_ROGUE && (this.spawnflags & SPAWN_LYING))
+	{
+		this.solid = SOLID_NOT;
+		this.th_stand = zombie_sleep;
+		this.th_run = zombie_wake;
+		this.th_walk = zombie_wake;
+		this.th_pain = zombie_wake_pain;
+		this.th_missile = zombie_wake;
+		setsize(this, '-16 -16 -24', '16 16 -16');
+
+		// HOLY HACK, BATMAN! - Don't blame me. Check out FindTarget in ai.qc!
+		if(this.spawnflags & SPAWN_AMBUSH)
+			this.spawnflags = SPAWN_LYING;
+
 		monster_start(this, 0);
+	}
+	else if(MP_ROGUE && (this.spawnflags & SPAWN_SNEAKY))
+	{
+		set_movetype(this, MOVETYPE_NONE);
+		this.solid = SOLID_NOT;
+		this.th_stand = zombie_cruc1;
+		this.th_run = zombie_escape;
+		this.th_walk = zombie_escape;
+		this.th_pain = zombie_escape_pain;
+		this.th_missile = zombie_escape;
+
+		if(!this.delay)
+			this.delay = 3;
+
+		this.ideal_yaw = this.angles * '0 1 0';
+		if(!this.yaw_speed)
+			this.yaw_speed = 20;
+		this.view_ofs = '0 0 25';
+		this.flags |= FL_MONSTER;
+		this.th_stand(this);
+		this.nextthink = this.nextthink + random() * 0.5;
+		total_monsters += 1;
+	}
+	else
+	{
+		if(MP_ROGUE && (this.spawnflags & SPAWN_AMBUSH))
+			this.spawnflags = SPAWN_LYING;
+		monster_start(this, 0);
+	}
 
 	if(MP_HIPNOTIC && (this.spawnflags & SPAWN_LYINGDOWN))
 		this.th_stand = zombie_lay;

@@ -134,16 +134,17 @@ void FireAmbient(entity this)
 	ambientsound(this.origin, "ambience/fire1.wav", 0.5, ATTN_STATIC);
 }
 
-/*QUAKED light_torch_small_walltorch(0 .5 0)(-10 -10 -20)(10 10 20)
+/*QUAKED light_torch_small_walltorch(0 .5 0)(-10 -10 -20)(10 10 20) Quiet
 Short wall torch
-Default light value is 200
+Default light value is 200 (300 in rogue)
 Default style is 0
 */
 spawnfunc(light_torch_small_walltorch)
 {
 	precache_model("progs/flame.mdl");
 	_setmodel(this, "progs/flame.mdl");
-	FireAmbient(this);
+	if(!MP_ROGUE || !(this.spawnflags & 1))
+		FireAmbient(this);
 	makestatic(this);
 }
 
@@ -306,11 +307,27 @@ spawnfunc(misc_explobox2)
 
 //============================================================================
 
+const int SPAWNFLAG_LAVASPIKE = BIT(2);
+const int SPAWNFLAG_SUPERLAVA = BIT(3);
+const int SPAWNFLAG_LAVASKILL = BIT(4);
+const int SPAWNFLAG_FIREBALL = BIT(5);
+
 entity LaunchLaser(entity this, vector org, vector vec);
+entity launch_lava_spike(entity this, vector org, vector dir);
+void launch_fireball(entity this, vector org, vector dir);
 
 void spikeshooter_use(entity this, entity actor, entity trigger)
 {
-	if(this.spawnflags & SPAWNFLAG_LASER)
+	if(MP_ROGUE && ((this.spawnflags & SPAWNFLAG_SUPERSPIKE) || !this.spawnflags))
+	{
+		if(!MP_HIPNOTIC || !(this.spawnflags & SPAWNFLAG_SILENT))
+			_sound(this, CHAN_VOICE, "weapons/spike2.wav", 1, ATTN_NORM);
+		entity newmis = launch_spike(this, this.origin, this.movedir);
+		newmis.velocity = this.movedir * 500;
+		if(this.spawnflags & SPAWNFLAG_SUPERSPIKE)
+			settouch(newmis, superspike_touch);
+	}
+	else if(this.spawnflags & SPAWNFLAG_LASER)
 	{
 		if(!MP_HIPNOTIC || !(this.spawnflags & SPAWNFLAG_SILENT))
 			_sound(this, CHAN_VOICE, "enforcer/enfire.wav", 1, ATTN_NORM);
@@ -352,7 +369,14 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 			_sound(this, CHAN_VOICE, "weapons/spike2.wav", 1, ATTN_NORM);
 		entity newmis = launch_spike(this, this.origin, this.movedir);
 		newmis.velocity = this.movedir * 500;
-		if(this.spawnflags & SPAWNFLAG_SUPERSPIKE)
+		if(MP_ROGUE)
+		{
+			if(this.spawnflags & SPAWNFLAG_SUPERLAVA)
+				settouch(newmis, superlavaspike_touch);
+			else if((this.spawnflags & SPAWNFLAG_LAVASKILL) && skill > 1)
+				settouch(newmis, superlavaspike_touch);
+		}
+		else if(this.spawnflags & SPAWNFLAG_SUPERSPIKE)
 			settouch(newmis, superspike_touch);
 	}
 }
@@ -369,9 +393,9 @@ void shooter_think(entity this)
 }
 
 
-/*QUAKED trap_spikeshooter(0 .5 .8)(-8 -8 -8)(8 8 8) superspike laser lavaball rocket silent
+/*QUAKED trap_spikeshooter(0 .5 .8)(-8 -8 -8)(8 8 8) superspike laser lavaball rocket silent superlava skilllava fireball
 When triggered, fires a spike in the direction set in QuakeEd.
-Laser is only for REGISTERED.
+Laser, Lava and SuperLava are is only for REGISTERED.
 */
 
 spawnfunc(trap_spikeshooter)
@@ -396,6 +420,27 @@ spawnfunc(trap_spikeshooter)
 		precache_model("progs/missile.mdl");
 		precache_sound("weapons/sgun1.wav");
 	}
+	else if(this.spawnflags & SPAWNFLAG_LAVASPIKE)
+	{
+		precache_model2("progs/lspike.mdl");
+		precache_sound2("lavagun/snail.wav");		// lava nail gun cooldown
+		precache_sound2("weapons/rocket1i.wav");
+	}
+	else if(this.spawnflags & SPAWNFLAG_SUPERLAVA)
+	{
+		precache_model2("progs/lspike.mdl");
+		precache_sound2("lavagun/snail.wav");		// lava nail gun cooldown
+		precache_sound2("weapons/spike2.wav");
+	}
+	else if(this.spawnflags & SPAWNFLAG_LAVASKILL)
+	{
+		precache_model2("progs/lspike.mdl");
+		precache_sound2("lavagun/snail.wav");		// lava nail gun cooldown
+		precache_sound2("weapons/rocket1i.wav");
+		precache_sound2("weapons/spike2.wav");
+	}
+	else if(this.spawnflags & SPAWNFLAG_FIREBALL)
+		precache_model("progs/fireball.mdl");
 	else
 		precache_sound("weapons/spike2.wav");
 }
@@ -526,6 +571,23 @@ void bubble_remove(entity this, entity toucher)
 
 void bubble_bob(entity this)
 {
+	if(MP_ROGUE)
+	{
+		// PGM fix - 02/25/97 so bubbles won't go through walls
+		float bubcont = pointcontents(this.origin);
+		if(bubcont == CONTENT_SOLID)
+		{
+			delete(this);
+			return;
+		}
+		// PGM fix - 02/25/97 so bubbles pop 2 seconds after leaving water
+		else if(bubcont == CONTENT_EMPTY)
+		{
+			if(this.cnt < 16)
+				this.cnt = 16;
+		}
+	}
+
 	this.cnt = this.cnt + 1;
 	if(this.cnt == 4)
 		bubble_split(this);

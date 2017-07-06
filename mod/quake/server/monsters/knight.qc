@@ -10,6 +10,8 @@ $cd id1/models/knight
 $origin 0 0 24
 $base base
 $skin badass3
+// rogue
+$skin statue
 
 const int anim_knight_stand1 = 0;
 const int anim_knight_stand2 = 1;
@@ -123,6 +125,17 @@ const int anim_knight_deathb9 = 93;
 const int anim_knight_deathb10 = 94;
 const int anim_knight_deathb11 = 95;
 
+void kn_idle_sound(entity this)
+{
+	if(random() < 0.2)
+	{
+		if(MP_ROGUE && (this.spawnflags & 2)) // statue)
+			_sound(this, CHAN_VOICE, "statue/idle.wav", 1, ATTN_IDLE);
+		else
+			_sound(this, CHAN_VOICE, "knight/idle.wav", 1,  ATTN_IDLE);
+	}
+}
+
 void knight_stand1(entity this);
 void knight_stand9(entity this) { set_anim(this, anim_knight_stand9, knight_stand1); ai_stand(this); }
 void knight_stand8(entity this) { set_anim(this, anim_knight_stand8, knight_stand9); ai_stand(this); }
@@ -151,8 +164,7 @@ void knight_walk2(entity this) { set_anim(this, anim_knight_walk2, knight_walk3)
 void knight_walk1(entity this)
 {
 	set_anim(this, anim_knight_walk1, knight_walk2);
-	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "knight/idle.wav", 1,  ATTN_IDLE);
+	kn_idle_sound(this);
 	ai_walk(this, 3);
 }
 
@@ -167,8 +179,7 @@ void knight_run2(entity this) { set_anim(this, anim_knight_runb2, knight_run3); 
 void knight_run1(entity this)
 {
 	set_anim(this, anim_knight_runb1, knight_run2);
-	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "knight/idle.wav", 1,  ATTN_IDLE);
+	kn_idle_sound(this);
 	ai_run(this, 16);
 }
 
@@ -241,7 +252,10 @@ void knight_pain(entity this, entity attacker, float damage)
 
 	float r = random();
 	
-	_sound(this, CHAN_VOICE, "knight/khurt.wav", 1, ATTN_NORM);
+	if(this.spawnflags & 2) // statue)
+		_sound(this, CHAN_VOICE, "statue/pain.wav", 1, ATTN_NORM);
+	else
+		_sound(this, CHAN_VOICE, "knight/khurt.wav", 1, ATTN_NORM);
 	if(r < 0.85)
 	{
 		knight_pain1(this);
@@ -298,25 +312,72 @@ void knight_die(entity this, entity attacker)
 	if(this.health < -40)
 	{
 		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
-		ThrowHead(this, "progs/h_knight.mdl", this.health);
-		ThrowGib(this, "progs/gib1.mdl", this.health);
-		ThrowGib(this, "progs/gib2.mdl", this.health);
-		ThrowGib(this, "progs/gib3.mdl", this.health);
+		if(MP_ROGUE && (this.spawnflags & 2)) // statue)
+		{
+			ThrowGib(this, "progs/statgib1.mdl", this.health);
+			ThrowGib(this, "progs/statgib2.mdl", this.health);
+			ThrowGib(this, "progs/statgib3.mdl", this.health);
+		}
+		else
+		{
+			ThrowHead(this, "progs/h_knight.mdl", this.health);
+			ThrowGib(this, "progs/gib1.mdl", this.health);
+			ThrowGib(this, "progs/gib2.mdl", this.health);
+			ThrowGib(this, "progs/gib3.mdl", this.health);
+		}
 		return;
 	}
 
 // regular death
-	_sound(this, CHAN_VOICE, "knight/kdeath.wav", 1, ATTN_NORM);
+	if(MP_ROGUE && (this.spawnflags & 2)) // statue
+		_sound(this, CHAN_VOICE, "statue/death.wav", 1, ATTN_NORM);
+	else
+		_sound(this, CHAN_VOICE, "knight/kdeath.wav", 1, ATTN_NORM);
 	if(random() < 0.5)
 		knight_die1(this);
 	else
 		knight_dieb1(this);
 }
 
-string knight_sight(entity this) { return "knight/ksight.wav"; }
+void knight_pause(entity this, entity actor, entity trigger)
+{
+	_sound(this, CHAN_VOICE, "statue/see.wav", 1, ATTN_NORM);
+
+	this.takedamage = DAMAGE_AIM;
+	this.th_stand = knight_stand1;
+	this.th_walk = knight_walk1;
+	this.th_run = knight_run1;
+	this.th_melee = knight_atk1;
+	this.th_pain = knight_pain;
+	this.th_die = knight_die;
+	this.use = func_null;
+	
+	setthink(this, knight_run1);
+
+	this.enemy = actor;
+	this.nextthink = time + 0.1;
+	setthink(this, FoundTarget);
+
+	this.delay = 0;
+}
+
+void knight_pause1(entity this)
+{
+	this.takedamage = DAMAGE_NO;
+	this.use = knight_pause;
+	setthink(this, knight_pause1);
+    this.nextthink = time + 0.1;
+}
+
+string knight_sight(entity this) { if(!MP_ROGUE || !this.skin) return "knight/ksight.wav"; else return string_null; }
 string knight_deathmessage(entity this) { return "was slashed by a Knight"; }
 
-/*QUAKED monster_knight(1 0 0)(-16 -16 -24)(16 16 40) Ambush
+/*QUAKED monster_knight(1 0 0)(-16 -16 -24)(16 16 40) Ambush Statue
+
+Statue - (rogue only) select this to use the stone skin and have him frozen in place.
+
+delay: time from sight to attack (default 5)
+frame: frame to be frozen in. (default 44)
 */
 spawnfunc(monster_knight)
 {
@@ -328,12 +389,25 @@ spawnfunc(monster_knight)
 	precache_model("progs/knight.mdl");
 	precache_model("progs/h_knight.mdl");
 
-	precache_sound("knight/kdeath.wav");
-	precache_sound("knight/khurt.wav");
-	precache_sound("knight/ksight.wav");
+	if(MP_ROGUE && (this.spawnflags & 2)) // statue
+	{
+		precache_model("progs/statgib1.mdl");
+		precache_model("progs/statgib2.mdl");
+		precache_model("progs/statgib3.mdl");
+		precache_sound("statue/see.wav");
+		precache_sound("statue/idle.wav");
+		precache_sound("statue/pain.wav");
+		precache_sound("statue/death.wav");
+	}
+	else
+	{
+		precache_sound("knight/kdeath.wav");
+		precache_sound("knight/khurt.wav");
+		precache_sound("knight/ksight.wav");
+		precache_sound("knight/idle.wav");
+	}
 	precache_sound("knight/sword1.wav");
 	precache_sound("knight/sword2.wav");
-	precache_sound("knight/idle.wav");
 
 	this.solid = SOLID_SLIDEBOX;
 	set_movetype(this, MOVETYPE_STEP);
@@ -343,15 +417,35 @@ spawnfunc(monster_knight)
 	setsize(this, '-16 -16 -24', '16 16 40');
 	this.health = 75;
 
-	this.th_stand = knight_stand1;
-	this.th_walk = knight_walk1;
-	this.th_run = knight_run1;
-	this.th_melee = knight_attack;
-	this.th_pain = knight_pain;
-	this.th_die = knight_die;
-
 	this.sightsound = knight_sight;
 	this.deathmessage = knight_deathmessage;
+
+	if(MP_ROGUE && (this.spawnflags & 2)) // statue
+	{
+		if(this.frame == 0)
+			this.frame = 44;
+		this.skin = 1;
+
+		if(!this.targetname || this.targetname == "")
+		{
+			LOG_DEBUGF("statue %s not targeted at %v\n", this.classname, this.origin);
+			return;
+		}
+
+		this.use = knight_pause;
+		this.th_stand = knight_pause1;
+		this.th_walk = knight_pause1;
+		this.th_run = knight_pause1;
+	}
+	else
+	{
+		this.th_stand = knight_stand1;
+		this.th_walk = knight_walk1;
+		this.th_run = knight_run1;
+		this.th_melee = knight_attack;
+		this.th_pain = knight_pain;
+		this.th_die = knight_die;
+	}
 	
 	monster_start(this, 0);
 }

@@ -811,6 +811,7 @@ CheckRules_World
 Exit deathmatch games upon conditions
 ============
 */
+void TeamCheckUpdate();
 void NextLevel();
 bool autocvar_quit_when_empty = true;
 void CheckRules_World()
@@ -828,6 +829,8 @@ void CheckRules_World()
 		{
 			if(MP_HIPNOTIC)
 				localcmd("\nmap hipstart\n");
+			else if(MP_ROGUE)
+				localcmd("\nmap rstart\n");
 			else
 				localcmd("\nmap start\n");
 		}
@@ -847,6 +850,9 @@ void CheckRules_World()
 			}
 		});
 	}
+
+	if(MP_ROGUE)
+		TeamCheckUpdate();
 }
 
 void StartFrame()

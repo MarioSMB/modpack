@@ -13,9 +13,6 @@ const int IT_PROXIMITY_GUN = 65536;
 const int HIP_IT_WETSUIT = BIT(1);
 const int HIP_IT_EMPATHY_SHIELDS = BIT(2);
 //float HIP_IT_HORN_OF_CONJURING = 8; // seemingly unused
-//added update stat message
-const int SVC_UPDATESTAT = 3;
-const int SVC_CUTSCENE   = 34;
 //added total monster message
 const int STAT_TOTALMONSTERS = 12;
 //float STAT_TOTALSECRETS = 11; // used only on client side

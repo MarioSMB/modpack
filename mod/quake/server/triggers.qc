@@ -285,6 +285,7 @@ TELEPORT TRIGGERS
 
 const int PLAYER_ONLY = BIT(0);
 const int SILENT = BIT(1);
+const int CTF_ONLY = BIT(2);
 
 void play_teleport(entity this)
 {
@@ -432,13 +433,22 @@ void teleport_use(entity this, entity actor, entity trigger)
 	setthink(this, SUB_NullThink);
 }
 
-/*QUAKED trigger_teleport(.5 .5 .5) ? PLAYER_ONLY SILENT
+/*QUAKED trigger_teleport(.5 .5 .5) ? PLAYER_ONLY SILENT CTF_ONLY
 Any object touching this will be transported to the corresponding info_teleport_destination entity. You must set the "target" field, and create an object with a "targetname" field that matches.
 
 If the trigger_teleport has a targetname, it will only teleport entities when it has been fired.
 */
 spawnfunc(trigger_teleport)
 {
+	if(MP_ROGUE && (this.spawnflags & CTF_ONLY))
+	{
+		if(teamplay < TEAM_CTF || teamplay > TEAM_CTF_ALT)
+		{
+			delete(this);
+			return;
+		}
+	}
+
 	InitTrigger(this);
 	settouch(this, teleport_touch);
 	// find the destination 
@@ -588,10 +598,15 @@ spawnfunc(trigger_hurt)
 //============================================================================
 
 const int PUSH_ONCE = BIT(0);
+const int PUSH_TOGL = BIT(1);
+const int PUSH_ACTIVE = BIT(2);
 
 void trigger_push_touch(entity this, entity toucher)
 {
-	if(toucher.classname == "grenade")
+	if(MP_ROGUE && !(this.spawnflags & PUSH_ACTIVE))
+		return;
+
+	if(toucher.classname == "grenade" || toucher.classname == "MiniGrenade" || toucher.classname == "MultiGrenade")
 		toucher.velocity = this.speed * this.movedir * 10;
 	else if(toucher.health > 0)
 	{
@@ -609,12 +624,28 @@ void trigger_push_touch(entity this, entity toucher)
 		delete(this);
 }
 
+void trigger_push_use(entity this, entity actor, entity trigger)
+{
+	if(this.spawnflags & PUSH_ACTIVE)
+		this.spawnflags &= ~PUSH_ACTIVE;
+	else
+		this.spawnflags |= PUSH_ACTIVE;
+}
 
-/*QUAKED trigger_push(.5 .5 .5) ? PUSH_ONCE
-Pushes the player
+
+/*QUAKED trigger_push(.5 .5 .5) ? PUSH_ONCE PUSH_TOGL PUSH_ACTIVE
+Pushes the player.
+
+speed: velocity of push. (default 1000)
 */
 spawnfunc(trigger_push)
 {
+	if(MP_ROGUE)
+	if(this.spawnflags & PUSH_TOGL)
+		this.use = trigger_push_use;
+	else
+		this.spawnflags |= PUSH_ACTIVE;
+
 	InitTrigger(this);
 	precache_sound("ambience/windfly.wav");
 	settouch(this, trigger_push_touch);

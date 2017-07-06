@@ -912,8 +912,9 @@ bool FindTarget(entity this)
 			return false;
 		}
 	}
-	
-	FoundTarget(this);
+
+	if(this.classname != "monster_dragon")
+		FoundTarget(this);
 
 	return true;
 }

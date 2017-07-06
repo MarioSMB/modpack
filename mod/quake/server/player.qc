@@ -310,6 +310,46 @@ void player_axed1(entity this) { set_anim(this, anim_player_axattd1, player_axed
 
 
 //============================================================================
+//ZOID--
+void W_FireGrapple(entity this);
+
+void player_grapple3(entity this);
+void player_grapple5(entity this) { set_anim(this, anim_player_axattd4, player_run); this.weaponframe = 1; }
+void player_grapple4(entity this)
+{
+	set_anim(this, anim_player_deathc4, player_grapple4);
+	this.weaponframe = 2;
+	if(!this.hook_out)
+	{
+		player_grapple5(this);
+		return;
+	}
+	if(!this.on_hook || vdist(this.hook.origin - this.origin, <, 5))
+	{
+		player_grapple3(this);
+		return;
+	}
+}
+void player_grapple3(entity this)
+{
+	set_anim(this, anim_player_axattd3, player_grapple3);
+	this.weaponframe = 2;
+	if(!this.hook_out)
+	{
+		player_grapple5(this);
+		return;
+	}
+	if(this.on_hook && vdist(this.hook.origin - this.origin, >=, 50))
+	{
+		player_grapple4(this);
+		return;
+	}
+}
+void player_grapple2(entity this) { set_anim(this, anim_player_axattd2, player_grapple3); this.weaponframe = 2; }
+void player_grapple1(entity this) { set_anim(this, anim_player_axattd1, player_grapple2); this.weaponframe = 1; W_FireGrapple(this); }
+
+//--ZOID
+//============================================================================
 
 void player_nail2(entity this);
 void player_nail1(entity this)
@@ -345,6 +385,46 @@ void player_nail2(entity this)
 
 //============================================================================
 
+void W_FireLavaSpikes(entity this, float ox);
+
+void player_lava_nail2(entity this);
+void player_lava_nail1(entity this)
+{
+	set_anim(this, anim_player_nailatt1, player_lava_nail2);
+
+	this.effects |= EF_MUZZLEFLASH;
+
+	if(!this.button0)
+	{
+		player_run(this);
+		return;
+	}
+	this.weaponframe = this.weaponframe + 1;
+	if(this.weaponframe == 9)
+		this.weaponframe = 1;
+	SuperDamageSound(this);
+	W_FireLavaSpikes(this, 4);
+	this.attack_finished = time + 0.2;
+}
+void player_lava_nail2(entity this)
+{
+	set_anim(this, anim_player_nailatt2, player_lava_nail1);
+
+	this.effects |= EF_MUZZLEFLASH;
+
+	if(!this.button0)
+		{player_run(this);return;}
+	this.weaponframe = this.weaponframe + 1;
+	if(this.weaponframe == 9)
+		this.weaponframe = 1;
+	SuperDamageSound(this);
+	W_FireLavaSpikes(this, -4);
+	this.attack_finished = time + 0.2;
+}
+
+//============================================================================
+void W_FirePlasma(entity this);
+
 void player_light2(entity this);
 void player_light1(entity this)
 {
@@ -358,8 +438,17 @@ void player_light1(entity this)
 	if(this.weaponframe == 5)
 		this.weaponframe = 1;
 	SuperDamageSound(this);
-	W_FireLightning(this);
-	this.attack_finished = time + 0.2;
+	if(this.weapon == IT_PLASMA_GUN)
+	{
+		W_FirePlasma(this);
+		player_run(this);
+		return;
+	}
+	else
+	{
+		W_FireLightning(this);
+		this.attack_finished = time + 0.2;
+	}
 }
 void player_light2(entity this)
 {
@@ -373,8 +462,11 @@ void player_light2(entity this)
 	if(this.weaponframe == 5)
 		this.weaponframe = 1;
 	SuperDamageSound(this);
-	W_FireLightning(this);
-	this.attack_finished = time + 0.2;
+	if(this.weapon != IT_PLASMA_GUN)
+	{
+		W_FireLightning(this);
+		this.attack_finished = time + 0.2;
+	}
 }
 
 //============================================================================
@@ -735,6 +827,7 @@ void GibPlayer(entity this, entity attacker)
 		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NONE);
 }
 
+void DropRune(entity this);
 void PlayerDie(entity this, entity attacker)
 {
 	ClientObituary(this, attacker); // tell the world what happened
@@ -751,8 +844,26 @@ void PlayerDie(entity this, entity attacker)
 	this.empathy_finished = 0;
 	this.items2 &= ~HIP_IT_EMPATHY_SHIELDS;
 
+	// rogue fields
+	this.gravity = 1.0;
+	this.shield_finished = 0;
+	this.antigrav_finished = 0;
+
 	if(deathmatch || coop)
+	{
 		DropBackpack(this);
+		if(MP_ROGUE)
+		{
+			TeamDropFlagOfPlayer(this);
+			DropRune(this);
+		}
+	}
+
+	if(MP_ROGUE)
+	if(this.ctf_killed == 2)
+		this.ctf_killed = 0;
+	else
+		this.ctf_killed = 1;
 	
 	this.weaponmodel="";
 	this.view_ofs = '0 0 -8';
@@ -888,3 +999,55 @@ void player_die_ham4(entity this) { set_anim(this, 27, player_die_ham5); }
 void player_die_ham3(entity this) { set_anim(this, 26, player_die_ham4); }
 void player_die_ham2(entity this) { set_anim(this, 25, player_die_ham3); }
 void player_die_ham1(entity this) { set_anim(this, 24, player_die_ham2); }
+
+void shield_spawn(entity shieldOwner, vector dir);
+
+bool TeamArmorDam(entity targ, entity inflictor, entity attacker, float damage);
+void player_touch(entity this, entity toucher) 
+{
+	if(this.items2 & IT2_SHIELD)
+	{
+		if(IS_PLAYER(toucher))
+		{
+			makevectors(this.angles);
+			vector vec = normalize(toucher.origin - this.origin);
+			float dot = vec * v_forward;
+        	if(dot < 0.3)
+				return;
+				
+			makevectors(this.angles);
+		    toucher.velocity = v_forward * 500;
+			toucher.velocity_z = 250;
+	
+			bool doDamage = false;		
+			if(TeamArmorDam(toucher, this, this, 15))
+			{
+				if(this.shield_death_time < time)
+					doDamage = true;
+			}
+
+			// if shield has timed out, respawn it.
+			// don't do particles more than twice a second. 
+			if(this.shield_death_time < time)
+			{
+    	        _sound(this, CHAN_WEAPON, "enforcer/enfstop.wav", 1, ATTN_NORM);
+	
+				WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
+				WriteByte(MSG_BROADCAST, TE_EXPLOSION2);
+				WriteCoord(MSG_BROADCAST, toucher.origin_x);
+				WriteCoord(MSG_BROADCAST, toucher.origin_y);
+				WriteCoord(MSG_BROADCAST, toucher.origin_z);
+				WriteByte(MSG_BROADCAST, 230);
+				WriteByte(MSG_BROADCAST, 5);
+
+				shield_spawn(this, v_forward);
+			}
+
+			if(doDamage)
+				T_Damage(toucher, this.shield_entity, this.shield_entity, 15);
+
+//			this.shield_death_time = time + 0.5;
+		}
+	}
+}
+
