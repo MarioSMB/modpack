@@ -294,13 +294,13 @@ void ogre_stand2(entity this) { set_anim(this, anim_ogre_stand2, ogre_stand3); a
 void ogre_stand1(entity this) { set_anim(this, anim_ogre_stand1, ogre_stand2); ai_stand(this); }
 
 void ogre_walk1(entity this);
-void ogre_walk16(entity this) { set_anim(this, anim_ogre_walk9, ogre_walk1); ai_walk(this, 4); }
-void ogre_walk15(entity this) { set_anim(this, anim_ogre_walk9, ogre_walk16); ai_walk(this, 3); }
-void ogre_walk14(entity this) { set_anim(this, anim_ogre_walk9, ogre_walk15); ai_walk(this, 3); }
-void ogre_walk13(entity this) { set_anim(this, anim_ogre_walk9, ogre_walk14); ai_walk(this, 3); }
-void ogre_walk12(entity this) { set_anim(this, anim_ogre_walk9, ogre_walk13); ai_walk(this, 3); }
-void ogre_walk11(entity this) { set_anim(this, anim_ogre_walk9, ogre_walk12); ai_walk(this, 2); }
-void ogre_walk10(entity this) { set_anim(this, anim_ogre_walk9, ogre_walk11); ai_walk(this, 1); }
+void ogre_walk16(entity this) { set_anim(this, anim_ogre_walk16, ogre_walk1); ai_walk(this, 4); }
+void ogre_walk15(entity this) { set_anim(this, anim_ogre_walk15, ogre_walk16); ai_walk(this, 3); }
+void ogre_walk14(entity this) { set_anim(this, anim_ogre_walk14, ogre_walk15); ai_walk(this, 3); }
+void ogre_walk13(entity this) { set_anim(this, anim_ogre_walk13, ogre_walk14); ai_walk(this, 3); }
+void ogre_walk12(entity this) { set_anim(this, anim_ogre_walk12, ogre_walk13); ai_walk(this, 3); }
+void ogre_walk11(entity this) { set_anim(this, anim_ogre_walk11, ogre_walk12); ai_walk(this, 2); }
+void ogre_walk10(entity this) { set_anim(this, anim_ogre_walk10, ogre_walk11); ai_walk(this, 1); }
 void ogre_walk9(entity this) { set_anim(this, anim_ogre_walk9, ogre_walk10); ai_walk(this, 3); }
 void ogre_walk8(entity this) { set_anim(this, anim_ogre_walk8, ogre_walk9); ai_walk(this, 2); }
 void ogre_walk7(entity this) { set_anim(this, anim_ogre_walk7, ogre_walk8); ai_walk(this, 3); }

@@ -31,8 +31,7 @@ bool footsteps;
 
 
 //MED 11/09/96 added new spawnflags
-const int SPAWNFLAG_SUPERSPIKE = BIT(0);
-const int SPAWNFLAG_LASER = BIT(1);
+// standard spawnflags in defs.qh
 const int SPAWNFLAG_LAVABALL = BIT(2);
 const int SPAWNFLAG_ROCKET = BIT(3);
 const int SPAWNFLAG_SILENT = BIT(4);

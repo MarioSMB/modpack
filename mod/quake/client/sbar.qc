@@ -25,6 +25,19 @@ string Sbar_PickWeapon_wepname(int wpn)
 	}
 }
 
+string Sbar_PickHIPWeapon_wepname(int wpn)
+{
+	switch(wpn)
+	{
+		default:
+		case 0: return "laser";
+		case 1: return "mjolnir";
+		case 2: return "gren_prox";
+		case 3: return "prox_gren";
+		case 4: return "prox";
+	}
+}
+
 PRECACHE(Sbar)
 {
 	precache_pic("gfx/ranking");
@@ -53,6 +66,19 @@ PRECACHE(Sbar)
 		for(int k = 0; k < 7; k++)
 		{
 			precache_pic(sprintf("gfx/inva%d_%s", j + 1, Sbar_PickWeapon_wepname(k)));
+		}
+	}
+
+	if(MP_HIPNOTIC)
+	{
+		for(int j = 0; j < 5; j++)
+		{
+			precache_pic(strcat("gfx/inv_", Sbar_PickHIPWeapon_wepname(j)));
+			precache_pic(strcat("gfx/inv2_", Sbar_PickHIPWeapon_wepname(j)));
+			for(int k = 0; k < 5; k++)
+			{
+				precache_pic(sprintf("gfx/inva%d_%s", j + 1, Sbar_PickHIPWeapon_wepname(k)));
+			}
 		}
 	}
 
@@ -100,6 +126,12 @@ PRECACHE(Sbar)
 	precache_pic("gfx/sb_nails");
 	precache_pic("gfx/sb_rocket");
 	precache_pic("gfx/sb_cells");
+
+	if(MP_HIPNOTIC)
+	{
+		precache_pic("gfx/sb_wsuit");
+		precache_pic("gfx/sb_eshld");
+	}
 }
 
 string Sbar_PickWeapon_inva(int cnum)
@@ -119,6 +151,12 @@ string Sbar_PickWeapon(int cnum, int wpn)
 {
 	string prefix = ((cnum == 0) ? "inv" : ((cnum == 1) ? "inv2" : Sbar_PickWeapon_inva(cnum)));
 	return sprintf("gfx/%s_%s", prefix, Sbar_PickWeapon_wepname(wpn));
+}
+
+string Sbar_PickHIPWeapon(int cnum, int wpn)
+{
+	string prefix = ((cnum == 0) ? "inv" : ((cnum == 1) ? "inv2" : Sbar_PickWeapon_inva(cnum)));
+	return sprintf("gfx/%s_%s", prefix, Sbar_PickHIPWeapon_wepname(wpn));
 }
 
 string Sbar_PickFace(int frm, bool washurt)
@@ -157,6 +195,16 @@ string Sbar_PickItem(int frm)
 		case 3: return "gfx/sb_invuln";
 		case 4: return "gfx/sb_suit";
 		case 5: return "gfx/sb_quad";
+	}
+}
+
+string Sbar_PickHIPItem(int frm)
+{
+	switch(frm)
+	{
+		default:
+		case 0: return "gfx/sb_wsuit";
+		case 1: return "gfx/sb_eshld";
 	}
 }
 
@@ -627,6 +675,25 @@ void Sbar_FinaleOverlay()
 	drawpic(vec2((autocvar_vid_conwidth - pz.x) / 2, 16), "gfx/finale", pz, '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 }
 
+const int HIT_PROXIMITY_GUN_BIT = 16;
+const int HIT_MJOLNIR_BIT = 7;
+const int HIT_LASER_CANNON_BIT = 23;
+
+const int HIT_PROXIMITY_GUN = BIT(HIT_PROXIMITY_GUN_BIT);
+const int HIT_MJOLNIR = BIT(HIT_MJOLNIR_BIT);
+const int HIT_LASER_CANNON = BIT(HIT_LASER_CANNON_BIT);
+int HIP_GetWeaponBit(int numb)
+{
+	switch(numb)
+	{
+		default:
+		case 0: return HIT_PROXIMITY_GUN_BIT; // laser cannon
+		case 1: return HIT_MJOLNIR_BIT;
+		case 2: return 4; // 4??
+		case 3: return HIT_LASER_CANNON_BIT;
+	}
+}
+
 /*
 ===============
 Sbar_DrawInventory
@@ -673,6 +740,55 @@ void Sbar_DrawInventory()
 		}
 	}
 
+	if(MP_HIPNOTIC)
+	{
+		// hipnotic weapons
+		bool grenadeflashing = false;
+		for(int j = 0; j < 4; j++)
+		{
+			int hipweapon = HIP_GetWeaponBit(j);
+			if(myitems & BIT(hipweapon) )
+			{
+				float thetime = item_gettime[hipweapon];
+				flashon = rint((time - thetime) * 10);
+				if(flashon >= 10)
+				{
+					if(STAT(ACTIVEWEAPON) == BIT(hipweapon))
+						flashon = 1;
+					else
+						flashon = 0;
+				}
+				else
+					flashon = (flashon % 5) + 2;
+
+				// check grenade launcher
+				if(j == 2)
+				{
+					if(myitems & HIT_PROXIMITY_GUN)
+					{
+						if(flashon)
+						{
+							grenadeflashing = true;
+							Sbar_DrawPic(96, -16, Sbar_PickHIPWeapon(flashon, 2));
+						}
+					}
+				}
+				else if(j == 3)
+				{
+					if(myitems & (IT_SHOTGUN<<4))
+					{
+						if(!grenadeflashing)
+							Sbar_DrawPic(96, -16, Sbar_PickHIPWeapon(flashon, 3));
+					}
+					else
+						Sbar_DrawPic(96, -16, Sbar_PickHIPWeapon(flashon, 4));
+				}
+				else
+					Sbar_DrawPic(176 + (j * 24), -16, Sbar_PickHIPWeapon(flashon, j));
+			}
+		}
+	}
+
 	// ammo counts
 	for(int j = 0; j < 4; j++)
 	{
@@ -695,13 +811,25 @@ void Sbar_DrawInventory()
 	}
 
 	// items
-	for(int j = 0; j < 6; j++)
+	if(!MP_HIPNOTIC)
 	{
-		if(myitems & BIT(17 + j))
+		for(int j = 0; j < 6; j++)
 		{
-			//MED 01/04/97 changed keys
-			if(j > 1)
-				Sbar_DrawPic(192 + j * 16, -16, Sbar_PickItem(j));
+			if(myitems & BIT(17 + j))
+			{
+				//MED 01/04/97 changed keys
+				if(j > 1)
+					Sbar_DrawPic(192 + j * 16, -16, Sbar_PickItem(j));
+			}
+		}
+	}
+
+	if(MP_HIPNOTIC)
+	{
+		for(int j = 0; j < 2; j++)
+		{
+			if(STAT(ITEMS2) & BIT(j + 1))
+				Sbar_DrawPic(288 + j * 16, -16, Sbar_PickHIPItem(j));
 		}
 	}
 

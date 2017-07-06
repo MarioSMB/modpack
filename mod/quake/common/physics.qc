@@ -138,6 +138,7 @@ WaterMove
 #ifdef SVQC
 .float	dmgtime;
 void T_Damage(entity targ, entity inflictor, entity attacker, float damage);
+void DeathBubbles(entity this, int num_bubbles);
 #endif
 
 void WaterMove(entity this, float dt)
@@ -223,6 +224,31 @@ void WaterMove(entity this, float dt)
 #endif
 	if(!(this.flags & FL_WATERJUMP) )
 		this.velocity = this.velocity - 0.8*this.waterlevel*dt*this.velocity;
+
+	if(MP_HIPNOTIC && STAT(WETSUIT_FINISHED, this) > time)
+	{
+	#ifdef SVQC
+		if(this.waterlevel >= 2)
+		{
+			// play scuba sound
+			if(this.swim_flag < time)
+			{
+				this.swim_flag = time + 7;
+				_sound(this, CHAN_BODY, "misc/wetsuit.wav", 1, ATTN_NORM);
+			}
+			//MED 01/17/97
+			else
+			{
+				if(fabs(this.swim_flag - time - 6) < 0.04)
+					DeathBubbles(this, 1);
+				else if(fabs(this.swim_flag - time - 5.5) < 0.04)
+					DeathBubbles(this, 1);
+				else if(fabs(this.swim_flag - time - 5) < 0.04)
+					DeathBubbles(this, 1);
+			}
+		}
+	#endif
+	}
 }
 
 void CheckWaterJump(entity this)
@@ -262,9 +288,14 @@ void PM_WaterMove(entity this, float dt)
 		wishvel = '0 0 -60'; // drift towards bottom
 
 	vector wishdir = normalize(wishvel);
-	float wishspeed = vlen(wishvel);
-	if (wishspeed > PHYS_MAXSPEED(this))
-		wishspeed = PHYS_MAXSPEED(this);
+	float wishspeed = min(PHYS_MAXSPEED(this), vlen(wishvel));
+	if(MP_HIPNOTIC && STAT(WETSUIT_FINISHED, this) > time)
+	{
+		if(this.waterlevel == 2)
+			wishspeed *= 1.25;
+		else if(this.waterlevel == 3)
+			wishspeed *= 1.5;
+	}
 	wishspeed *= 0.7;
 
 	// water friction
@@ -283,6 +314,13 @@ void PM_WaterMove(entity this, float dt)
 		return;
 
 	float accel = ((PHYS_WATERACCELERATE(this)) < 0 ? PHYS_ACCELERATE(this) : PHYS_WATERACCELERATE(this));
+	if(MP_HIPNOTIC && STAT(WETSUIT_FINISHED, this) > time)
+	{
+		if(this.waterlevel == 2)
+			accel *= 0.8;
+		else if(this.waterlevel == 3)
+			accel *= 0.66;
+	}
 	float accelspeed = accel * wishspeed * dt;
 	if (accelspeed > addspeed)
 		accelspeed = addspeed;

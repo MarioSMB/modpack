@@ -77,6 +77,10 @@ bool gameover;
 
 .bool axhitme;
 
+.float		waitmin, waitmax;
+.float		distance;
+.float		volume;
+
 .int attack_state;
 const int AS_STRAIGHT = 1;
 const int AS_SLIDING = 2;
@@ -102,3 +106,6 @@ float sys_frametime;     // gets initialised in worldspawn, saves the value from
 float servertime, serverprevtime, serverframetime;
 
 .int prevweapon;
+
+const int SPAWNFLAG_SUPERSPIKE = BIT(0);
+const int SPAWNFLAG_LASER = BIT(1);

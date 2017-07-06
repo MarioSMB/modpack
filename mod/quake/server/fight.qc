@@ -38,7 +38,7 @@ bool CheckAttack(entity this)
 
 	traceline(spot1, spot2, false, this);
 
-	if(trace_ent != targ)
+	if(trace_ent != targ && !this.charmed) // hipnotic
 		return false;		// don't have a clear shot
 			
 	if(trace_inopen && trace_inwater)

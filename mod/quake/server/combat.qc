@@ -62,6 +62,13 @@ void Killed(entity targ, entity attacker)
 	if(targ.health < -99)
 		targ.health = -99; // don't let sbar look bad if a player
 
+	if(MP_HIPNOTIC)
+	{
+		if(targ.charmed)
+			targ.effects &= ~EF_DIMLIGHT;
+		targ.effects &= ~EF_BRIGHTFIELD;
+	}
+
 	if(targ.move_movetype == MOVETYPE_PUSH || targ.move_movetype == MOVETYPE_NONE)
 	{	// doors, triggers, etc
 		if(targ.th_die)
@@ -101,14 +108,31 @@ The damage is coming from inflictor, but get mad at attacker
 This should be the only function that ever reduces health.
 ============
 */
+bool empathyused; // hipnotic
 void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 {
 	if(!targ.takedamage)
 		return;
 
+	if(MP_HIPNOTIC && discharged && targ.wetsuit_finished)
+		return;
+
 // check for quad damage powerup on the attacker
 	if(attacker.super_damage_finished > time)
 		damage = damage * 4;
+
+	if(MP_HIPNOTIC)
+	{
+		if ((targ.items2 & HIP_IT_EMPATHY_SHIELDS) && !(inflictor.items2 & HIP_IT_EMPATHY_SHIELDS) && (targ != attacker))
+		{
+			empathyused = true;
+			damage = damage/2;
+			T_Damage (attacker,targ,targ,damage);
+			empathyused = false;
+		}
+	}
+
+	damage_inflictor = inflictor; // hipnotic
 
 // save damage based on the target's armor level
 
@@ -154,6 +178,18 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 		return;
 	}
 
+	if(MP_HIPNOTIC)
+	{
+		if(targ.items2 & HIP_IT_EMPATHY_SHIELDS)
+		{
+			if(targ.empathy_sound < time)
+			{
+				_sound(targ, CHAN_ITEM, "hipitems/empathy2.wav", 1, ATTN_NORM);
+				targ.empathy_sound = time + 0.5;
+			}
+		}
+	}
+
 // team play damage avoidance
 	if((teamplay == 1) &&(targ.team > 0)&&(targ.team == attacker.team) )
 		return;
@@ -180,9 +216,9 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 	if(IS_MONSTER(targ) && attacker != NULL)
 	{
 	// get mad unless of the same class(except for soldiers)
-		if(targ != attacker && attacker != targ.enemy)
+		if(targ != attacker && attacker != targ.enemy && targ.charmer != attacker)
 		{
-			if((targ.classname != attacker.classname) || (targ.classname == "monster_army"))
+			if(targ.classname != attacker.classname || targ.classname == "monster_army" || targ.classname == "monster_armagon")
 			{
 				if(IS_PLAYER(targ.enemy))
 					targ.oldenemy = targ.enemy;

@@ -247,7 +247,7 @@ void player_run(entity this)
 		this.frame = this.frame + this.walkframe;
 	}
 
-	if(HIPNOTIC && footsteps == 1)
+	if(MP_HIPNOTIC && footsteps == 1)
 	{
 		this.spawnsilent = this.spawnsilent + vlen(this.origin - this.old_velocity);
 		this.old_velocity = this.origin;

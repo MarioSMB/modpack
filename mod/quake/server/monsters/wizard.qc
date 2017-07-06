@@ -275,7 +275,6 @@ void Wiz_StartFast(entity this)
 	missile.movedir = VEC_ORIGIN - v_right;
 }
 
-.float waitmin;
 void Wiz_idle_sound(entity this)
 {
 	float wr = random() * 5;

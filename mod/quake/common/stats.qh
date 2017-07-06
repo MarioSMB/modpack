@@ -109,9 +109,10 @@ float autocvar_edgefriction;
 
 bool autocvar_sv_missionpack_hipnotic;
 bool autocvar_sv_missionpack_rogue;
+#endif
 const int MISSIONPACK_HIPNOTIC = BIT(0);
 const int MISSIONPACK_ROGUE = BIT(1);
-#endif
+
 REGISTER_STAT(GAMEPLAYFIX_NOSTEPMOVEONSTEEPSLOPES, int, autocvar_sv_gameplayfix_nostepmoveonsteepslopes)
 REGISTER_STAT(MOVEVARS_FRICTION_WATER, float, autocvar_sv_waterfriction)
 REGISTER_STAT(MOVEVARS_WATERACCELERATE, float, autocvar_sv_wateraccelerate)
@@ -137,3 +138,10 @@ REGISTER_STAT(MOVEVARS_MAXAIRSPEED, float, autocvar_sv_maxairspeed)
 REGISTER_STAT(MOVEVARS_AIRACCELERATE, float, autocvar_sv_airaccelerate)
 
 REGISTER_STAT(SERVERFLAGS, int, serverflags)
+
+REGISTER_STAT(WETSUIT_FINISHED, float)
+
+#ifdef SVQC
+.int items2;
+#endif
+REGISTER_STAT(ITEMS2, int, this.items2)

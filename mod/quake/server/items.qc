@@ -192,7 +192,8 @@ void health_touch(entity this, entity toucher)
 	// Megahealth = rot down the player's super health
 	if(this.healtype == 2)
 	{
-		toucher.items |= IT_SUPERHEALTH;
+		if(!MP_HIPNOTIC)
+			toucher.items |= IT_SUPERHEALTH;
 		this.nextthink = time + 5;
 		setthink(this, item_megahealth_rot);
 		this.owner = toucher;
@@ -223,7 +224,8 @@ void item_megahealth_rot(entity this)
 
 // it is possible for a player to die and respawn between rots, so don't
 // just blindly subtract the flag off
-	this.owner.items &= ~IT_SUPERHEALTH;
+	if(!MP_HIPNOTIC)
+		this.owner.items &= ~IT_SUPERHEALTH;
 	
 	if(deathmatch == 1)	// deathmatch 2 is silly old rules
 	{
@@ -352,9 +354,28 @@ void bound_other_ammo(entity this)
 		this.ammo_cells = 100;		
 }
 
+int HIP_RankForWeapon(int w)
+{
+	switch(w)
+	{
+		case IT_LIGHTNING: 			return 1;
+		case IT_ROCKET_LAUNCHER: 	return 2;
+		case IT_LASER_CANNON: 		return 3;
+		case IT_SUPER_NAILGUN: 		return 4;
+		case IT_PROXIMITY_GUN: 		return 5;
+		case IT_GRENADE_LAUNCHER: 	return 6;
+		case IT_SUPER_SHOTGUN: 		return 7;
+		case IT_NAILGUN: 			return 8;
+		case IT_MJOLNIR: 			return 9;
+		default: 					return 10;
+	}
+}
 
 int RankForWeapon(int w)
 {
+	if(MP_HIPNOTIC)
+		return HIP_RankForWeapon(w);
+
 	switch(w)
 	{
 		case IT_LIGHTNING: 			return 1;
@@ -465,6 +486,33 @@ void weapon_touch(entity this, entity toucher)
 			new = IT_LIGHTNING;
 			toucher.ammo_cells = toucher.ammo_cells + 15;
 			break;
+		}
+		case "weapon_laser_gun":
+		{
+	      	if (leave && (toucher.items & IT_LASER_CANNON) )
+				return;
+			hadammo = toucher.ammo_rockets;
+	      	new = IT_LASER_CANNON;
+	      	toucher.ammo_cells = toucher.ammo_cells + 30;
+	      	break;
+		}
+	   	case "weapon_mjolnir":
+		{
+	      	if (leave && (toucher.items & IT_MJOLNIR) )
+				return;
+			hadammo = toucher.ammo_rockets;
+	      	new = IT_MJOLNIR;
+	      	toucher.ammo_cells = toucher.ammo_cells + 30;
+	      	break;
+		}
+	   	case "weapon_proximity_gun":
+		{
+	      	if(leave && (toucher.items & IT_PROXIMITY_GUN) )
+				return;
+			hadammo = toucher.ammo_rockets;
+	      	new = IT_PROXIMITY_GUN;
+	      	toucher.ammo_rockets = toucher.ammo_rockets + 6;
+	      	break;
 		}
 		default:
 		{
@@ -1310,6 +1358,9 @@ void DropBackpack(entity this)
 		case IT_GRENADE_LAUNCHER: 	item.netname = "Grenade Launcher"; break;
 		case IT_ROCKET_LAUNCHER: 	item.netname = "Rocket Launcher"; break;
 		case IT_LIGHTNING: 			item.netname = "Thunderbolt"; break;
+		case IT_LASER_CANNON: 		item.netname = "Laser Cannon"; break;
+		case IT_PROXIMITY_GUN: 		item.netname = "Proximity Gun"; break;
+		case IT_MJOLNIR: 			item.netname = "Mjolnir"; break;
 		default: 					item.netname = ""; break;
 	}
 

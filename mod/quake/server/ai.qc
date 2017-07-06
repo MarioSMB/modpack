@@ -394,6 +394,8 @@ void t_movetogoal(entity this, float dist)
 entity sight_entity;
 float sight_entity_time;
 
+void FoundTarget(entity this);
+
 /*
 ==============================================================================
 
@@ -417,6 +419,7 @@ void t_movetarget(entity this, entity toucher);
 
 /*QUAKED path_corner(0.5 0.3 0)(-8 -8 -8)(8 8 8)
 Monsters will continue walking towards the next target corner.
+"delay" delay to wait before proceeding to next segment;
 */
 spawnfunc(path_corner)
 {
@@ -447,16 +450,133 @@ void t_movetarget(entity this, entity toucher)
 	if(toucher.classname == "monster_ogre")
 		_sound(toucher, CHAN_VOICE, "ogre/ogdrag.wav", 1, ATTN_IDLE); // play chainsaw drag sound
 
-	toucher.goalentity = toucher.movetarget = find (NULL, targetname, toucher.target);
-	toucher.ideal_yaw = vectoyaw(toucher.goalentity.origin - toucher.origin);
-	if (!toucher.movetarget)
+	if(this.target && this.target != "")
+	{
+		toucher.goalentity = toucher.movetarget = find (NULL, targetname, this.target);
+		if (!toucher.movetarget)
+		{
+			toucher.pausetime = -1;
+			toucher.th_stand(toucher);
+			return;
+		}
+		else if(MP_HIPNOTIC && this.delay)
+		{
+			toucher.pausetime = time + this.delay;
+			toucher.th_stand(toucher);
+		}
+		else
+			toucher.ideal_yaw = vectoyaw(toucher.goalentity.origin - toucher.origin);
+	}
+	else
 	{
 		toucher.pausetime = -1;
 		toucher.th_stand(toucher);
 		return;
 	}
-};
+}
 
+
+/*
+=============
+t_followtarget
+
+Something has bumped into a followtarget.  If it is a monster
+moving towards it, change the next destination and continue.
+==============
+*/
+void t_followtarget(entity this, entity toucher)
+{
+	if(!IS_MONSTER(toucher))
+		return;
+	if(toucher.classname == "monster_decoy")
+		return;
+//  if (toucher.enemy == NULL)
+//  	return;
+	if (toucher.wetsuit_time > time)
+		return;
+	entity targ = toucher.enemy;
+
+// see if any entities are in the way of the shot
+	vector spot1 = toucher.origin + toucher.view_ofs;
+	vector spot2 = targ.origin + targ.view_ofs;
+
+	traceline (spot1, spot2, false, toucher);
+	if(trace_fraction == 1)
+		return;
+
+	if (toucher.enemy)
+	{
+	  // make the monster tame
+		toucher.oldenemy = toucher.enemy;
+		toucher.enemy = NULL;
+		setthink(toucher, toucher.th_walk);
+	}
+
+	toucher.goalentity = toucher.movetarget = find (NULL, targetname, this.target);
+
+	toucher.ideal_yaw = vectoyaw(toucher.goalentity.origin - toucher.origin);
+	toucher.wetsuit_time = time + 2;
+	if(!toucher.movetarget)
+	{
+		if (toucher.oldenemy != NULL)
+		{
+			toucher.enemy = toucher.oldenemy;
+			FoundTarget(toucher);
+			return;
+		}
+		else
+		{
+			entity client = checkclient(toucher);
+			if (!client)
+			{
+				toucher.enemy = client;
+				FoundTarget(toucher);
+				return;
+			}
+			toucher.pausetime = time + 999999;
+			toucher.th_stand(toucher);
+		}
+	}
+}
+
+void followtarget_f(entity this)
+{
+//	if (!this.targetname)
+//      objerror ("monster_followtarget: no targetname");
+
+	this.solid = SOLID_TRIGGER;
+	settouch(this, t_followtarget);
+	_setmodel(this, this.model); // set size and link into NULL
+	set_movetype(this, MOVETYPE_NONE);
+	this.modelindex = 0;
+	this.model = "";
+//   setsize (this, '-8 -8 -8', '8 8 8');
+
+}
+
+/*QUAKED path_follow (0.5 0.3 0) ?
+Monsters will stop what they are doing and follow to the path
+*/
+
+spawnfunc(path_follow)
+{
+	if(!MP_HIPNOTIC) { delete(this); return; }
+	
+   followtarget_f(this);
+}
+
+/*QUAKED path_follow2 (0.5 0.3 0) (-8 -8 -8) (8 8 8)
+Monsters will stop what they are doing and follow to the path
+*/
+
+spawnfunc(path_follow2)
+{
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
+	this.solid = SOLID_TRIGGER;
+	settouch(this, t_followtarget);
+	setsize (this, '-8 -8 -8', '8 8 8');
+}
 
 
 //============================================================================
@@ -502,7 +622,11 @@ bool visible(entity this, entity targ)
 	if(trace_inopen && trace_inwater)
 		return false; // sight line crossed contents
 	if(trace_fraction == 1)
+	{
+		visible_distance = vlen(spot2 - spot1);
 		return true;
+	}
+
 	return false;
 }
 
@@ -529,6 +653,75 @@ bool infront(entity this, entity targ)
 //============================================================================
 
 
+//MED 10/18/96 added charmed stuff
+//============================================================================
+void UpdateCharmerGoal(entity this)
+{
+   vector d = normalize(this.origin - this.charmer.origin);
+
+	if (this.huntingcharmer == 1)
+	{
+		entity targ = spawn();
+		this.trigger_field = targ;
+		setorigin(targ,this.charmer.origin);
+		this.huntingcharmer = 2;
+		this.goalentity = targ;
+	}
+	// TODO: shouldn't this be else if?
+	else if (this.huntingcharmer == 2)
+	{
+		entity targ = this.trigger_field;
+		traceline(this.origin,this.charmer.origin,true,this);
+		if (trace_fraction == 1.0)
+		{
+//         dprint("can see ");
+//         dprint(vtos(this.charmer.origin));
+//         dprint("\n");
+			setorigin(targ,this.charmer.origin);
+		}
+	}
+	else
+	{
+		entity targ = this.trigger_field;
+		setorigin(targ, this.charmer.origin + (d*300));
+	}
+}
+
+//============================================================================
+void HuntCharmer(entity this)
+{
+	this.huntingcharmer = 1;
+	UpdateCharmerGoal(this);
+//	this.goalentity = this.charmer;
+	setthink(this, this.th_walk);
+	this.ideal_yaw = vectoyaw(this.goalentity.origin - this.origin);
+	this.nextthink = time + 0.1;
+}
+
+//============================================================================
+void FleeCharmer(entity this)
+{
+	this.huntingcharmer = 1;
+	UpdateCharmerGoal(this);
+	this.huntingcharmer = 3;
+//	this.goalentity = this.charmer;
+	setthink(this, this.th_walk);
+//	this.ideal_yaw = vectoyaw(this.originthis.goalentity.origin - this.origin);
+	this.nextthink = time + 0.1;
+}
+
+//============================================================================
+void StopHuntingCharmer(entity this)
+{
+	this.goalentity = NULL;
+	if (this.huntingcharmer > 1 && this.trigger_field)
+		delete(this.trigger_field);
+	this.huntingcharmer = 0;
+	setthink(this, this.th_stand);
+	this.nextthink = time + 0.1;
+}
+
+
 //============================================================================
 
 void HuntTarget(entity this)
@@ -543,16 +736,35 @@ void HuntTarget(entity this)
 .string(entity this) sightsound;
 void SightSound(entity this)
 {
+	if(this.classname == "monster_gremlin" && this.stoleweapon != 0)
+		return; // don't play a sound if we have a weapon?
+
+	float atten = ATTN_NORM;
+	if(this.classname == "monster_armagon")
+		atten = 0.1;
+
 	if(this.sightsound)
-		_sound(this, CHAN_VOICE, this.sightsound(this), 1, ATTN_NORM);
+		_sound(this, CHAN_VOICE, this.sightsound(this), 1, atten);
 }
 
 void FoundTarget(entity this)
 {
 	if(IS_PLAYER(this.enemy))
-	{	// let other monsters see this monster for a while
+	{
+		if(MP_HIPNOTIC && this.charmed && (this.charmer == this.enemy || this.charmer == this.enemy.charmer))
+		{
+			this.enemy = NULL;
+			return;
+		}
+
+		// let other monsters see this monster for a while
 		sight_entity = this;
 		sight_entity_time = time;
+	}
+	else if(MP_HIPNOTIC && this.charmed && (this.charmer == this.enemy.charmer))
+	{
+		this.enemy = NULL;
+		return;
 	}
 	
 	this.show_hostile = time + 1;		// wake up other monsters
@@ -588,11 +800,70 @@ bool FindTarget(entity this)
 // spawnflags & 3 is a big hack, because zombie crucified used the first
 // spawn flag prior to the ambush flag, and I forgot about it, so the second
 // spawn flag works as well
-	if(sight_entity_time >= time - 0.1 && !(this.spawnflags & 3) )
+	//MED 10/17/96 added charmed stuff
+	if(MP_HIPNOTIC && this.charmed)
+	{
+		this.effects |= EF_DIMLIGHT;
+		if(this.huntingcharmer > 0)
+		{
+			UpdateCharmerGoal(this);
+//          this.goalentity = this.charmer;
+			if(vdist(this.origin - this.goalentity.origin, <, MIN_CHARMER_DISTANCE))
+			{
+//              dprint("stopping\n");
+				if((this.huntingcharmer == 3) && (vdist(this.origin - this.goalentity.origin, >, TOOCLOSE_CHARMER_DISTANCE)))
+					return false;
+//              this.huntingcharmer = 0;
+				StopHuntingCharmer(this);
+				return true;
+			}
+		}
+		else if(vdist(this.origin - this.charmer.origin, >, MAX_CHARMER_DISTANCE))
+		{
+//          this.huntingcharmer = 1;
+//          dprint("hunting\n");
+			HuntCharmer(this);
+			return false;
+		}
+		else if(vdist(this.origin - this.charmer.origin, <, TOOCLOSE_CHARMER_DISTANCE))
+		{
+//          this.huntingcharmer = 1;
+//          dprint("fleeing\n");
+			FleeCharmer(this);
+			return false;
+		}
+	}
+
+	if(sight_entity_time >= time - 0.1 && !(this.spawnflags & 3) && !this.charmed)
 	{
 		client = sight_entity;
 		if(client.enemy == this.enemy)
 			return false;
+	}
+	else if (this.charmed)
+	{
+		entity selected = NULL;
+		float dist = CHARMED_RADIUS;
+		entity head = findradius(this.origin, CHARMED_RADIUS);
+		while(head)
+		{
+			if(!(head.flags & FL_NOTARGET) && IS_MONSTER(head))
+			{
+				if (visible(this, head) && (visible_distance < dist) && (head.health>0))
+				{
+					if ((head != this) && (head != this.charmer) && (head.charmer != this.charmer))
+					{
+						selected = head;
+						dist = visible_distance;
+					}
+				}
+			}
+			head = head.chain;
+		}
+		if (selected == world)
+			return false;
+
+		client = selected;
 	}
 	else
 	{
@@ -604,7 +875,7 @@ bool FindTarget(entity this)
 	if(client == this.enemy)
 		return false;
 
-	if(client.flags & FL_NOTARGET)
+	if(!this.charmed && (client.flags & FL_NOTARGET))
 		return false;
 	if(client.items & IT_INVISIBILITY)
 		return false;
@@ -616,7 +887,8 @@ bool FindTarget(entity this)
 	if(!visible(this, client))
 		return false;
 
-	if(r == RANGE_NEAR)
+	if(this.charmed) { /* do nothing */ }
+	else if(r == RANGE_NEAR)
 	{
 		if(client.show_hostile < time && !infront(this, client))
 			return false;
@@ -631,7 +903,7 @@ bool FindTarget(entity this)
 // got one
 //
 	this.enemy = client;
-	if(!IS_PLAYER(this.enemy))
+	if(!this.charmed && !this.enemy.charmed && !IS_PLAYER(this.enemy))
 	{
 		this.enemy = this.enemy.enemy;
 		if(!IS_PLAYER(this.enemy))
@@ -707,6 +979,9 @@ void ai_walk(entity this, float dist)
 		return;
 
 	t_movetogoal(this, dist);
+
+	if(MP_HIPNOTIC && this.huntingcharmer)
+		this.nextthink = time + ((this.nextthink - time) / 2);
 }
 
 
@@ -739,6 +1014,28 @@ void ai_turn(entity this)
 		return;
 	
 	changeyaw(this);
+}
+
+//MED 11/10/96 added ai_turn_in_place
+/*
+=============
+ai_turn_in_place
+
+don't move, but turn towards ideal_yaw
+=============
+*/
+void ai_turn_in_place(entity this)
+{
+	this.nextthink = time + 0.1;
+	this.enemy_yaw = vectoyaw(this.enemy.origin - this.origin);
+	float delta = fabs(this.angles_y - this.enemy_yaw);
+	if (delta > MIN_ANGLE_DELTA)
+	{
+		this.ideal_yaw = this.enemy_yaw;
+		changeyaw(this);
+	}
+	else
+		setthink(this, this.th_run);
 }
 
 //=============================================================================
@@ -857,6 +1154,57 @@ void ai_run_slide(entity this)
 }
 
 
+//MED
+/*
+=============
+ai_run_dodge
+
+Strafe sideways, but continue moving towards the enemy
+Used by the Scourge.
+=============
+*/
+void ai_run_dodge(entity this)
+{
+/*
+// attempt to jump over missiles
+   if (this.enemy.weaponframe == 1)
+	  {
+	  if (this.flags & FL_ONGROUND)
+		 {
+		 this.origin_z = this.origin_z + 1;
+		 this.velocity = this.velocity + '0 0 500';
+		 this.flags = this.flags - FL_ONGROUND;
+		 }
+	  this.ltime = this.ltime + 1.0;
+	  }
+*/
+	this.nextthink = time + 0.1;
+
+	float ofs = (this.lefty) ? 40 : -40;
+
+	if(time > this.ltime)
+	{
+		this.lefty = 1 - this.lefty;
+		this.ltime = time + 0.8;
+	}
+
+	float newyaw = this.enemy_yaw + ofs;
+	this.ideal_yaw = this.enemy_yaw;
+	if(t_walkmove(this, newyaw, this.move_dist))
+	{
+		changeyaw(this);
+		return;
+	}
+
+	this.lefty = 1 - this.lefty;
+	this.ltime = time + 0.8;
+	newyaw = this.enemy_yaw - ofs;
+	this.ideal_yaw = this.enemy_yaw;
+	t_walkmove(this, newyaw, this.move_dist);
+	changeyaw(this);
+}
+
+
 /*
 =============
 ai_run
@@ -864,13 +1212,19 @@ ai_run
 The monster has an enemy it is trying to kill
 =============
 */
+.bool run_straight;
 void ai_run(entity this, float dist)
 {
 	this.move_dist = dist;
 // see if the enemy is dead
-	if(this.enemy.health <= 0)
+	if(this.enemy.health <= 0 || (this.charmed && (this.charmer == this.enemy)))
 	{
 		this.enemy = NULL;
+		if(MP_HIPNOTIC && this.charmed)
+		{
+			HuntCharmer(this);
+			return;
+		}
 	// FIXME: look all around for other targets
 		if(this.oldenemy.health > 0)
 		{
@@ -895,7 +1249,7 @@ void ai_run(entity this, float dist)
 		this.search_time = time + 5;
 
 // look for other coop players
-	if(coop && this.search_time < time)
+	if(coop && this.search_time < time && !this.charmed)
 	{
 		if(FindTarget(this))
 			return;
@@ -904,6 +1258,17 @@ void ai_run(entity this, float dist)
 	//this.enemy_infront = infront(this, this.enemy);
 	this.enemy_range = range(this, this.enemy);
 	this.enemy_yaw = vectoyaw(this.enemy.origin - this.origin);
+
+	//MED
+	if (MP_HIPNOTIC && this.th_turn)
+	{
+		float angledelta = fabs(this.angles_y - this.enemy_yaw);
+		if (angledelta > MIN_ANGLE_DELTA)
+		{
+			this.th_turn(this);
+			return;
+		}
+	}
 	
 	if(this.attack_state == AS_MISSILE)
 	{
@@ -926,7 +1291,29 @@ void ai_run(entity this, float dist)
 		ai_run_slide(this);
 		return;
 	}
-		
-// head straight in
-	t_movetogoal(this, dist);		// done in C code...
+
+	if (MP_HIPNOTIC && this.attack_state == AS_DODGING)
+	{
+		ai_run_dodge(this);
+		return;
+	}
+
+//MED 11/11/96
+	if(MP_HIPNOTIC && this.run_straight && time > this.endtime)
+	{
+		this.run_straight = false;
+		bool axis = t_walkmove(this, this.angles_y, this.move_dist);
+		if (!axis)
+		{
+			this.endtime = time + 3;
+			t_movetogoal(this, dist);      // done in C code...
+		}
+//      else
+//         changeyaw();
+	}
+	else
+	{
+		// head straight in
+		t_movetogoal(this, dist);      // done in C code...
+	}
 }
