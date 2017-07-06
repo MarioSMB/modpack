@@ -443,5 +443,5 @@ spawnfunc(monster_enforcer)
 	this.sightsound = enf_sight;
 	this.deathmessage = enf_deathmessage;
 
-	walkmonster_start(this);
+	monster_start(this, 0);
 }

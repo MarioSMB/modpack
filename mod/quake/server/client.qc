@@ -804,7 +804,7 @@ void PlayerPreThink(entity this)
 		return;	// dying, so do nothing
 
 // teleporters can force a non-moving pause time	
-	if(time < this.pausetime)
+	if(this.pausetime != -1 && time < this.pausetime)
 		this.velocity = '0 0 0';
 
 	if(time > this.attack_finished && this.currentammo == 0 && this.weapon != IT_AXE)

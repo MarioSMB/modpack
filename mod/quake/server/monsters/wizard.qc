@@ -443,5 +443,5 @@ spawnfunc(monster_wizard)
 	this.checkattack = WizardCheckAttack;
 	this.deathmessage = wiz_deathmessage;
 		
-	flymonster_start(this);
+	monster_start(this, FL_FLY);
 }

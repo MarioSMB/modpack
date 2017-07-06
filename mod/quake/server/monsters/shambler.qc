@@ -505,5 +505,5 @@ spawnfunc(monster_shambler)
 	this.checkattack = ShamCheckAttack;
 	this.deathmessage = shambler_deathmessage;
 	
-	walkmonster_start(this);
+	monster_start(this, 0);
 }

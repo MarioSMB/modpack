@@ -239,7 +239,7 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 //
 
 	s = this.target;
-	if(s != "")
+	if(s && s != "")
 	{
 		for(entity t = NULL; (t = find(t, targetname, s)); )
 		{

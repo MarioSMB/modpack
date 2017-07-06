@@ -451,7 +451,7 @@ void t_movetarget(entity this, entity toucher)
 	toucher.ideal_yaw = vectoyaw(toucher.goalentity.origin - toucher.origin);
 	if (!toucher.movetarget)
 	{
-		toucher.pausetime = time + 999999;
+		toucher.pausetime = -1;
 		toucher.th_stand(toucher);
 		return;
 	}
@@ -721,15 +721,9 @@ void ai_stand(entity this)
 {
 	if(FindTarget(this))
 		return;
-	
-	if(time > this.pausetime)
-	{
-		this.th_walk(this);
-		return;
-	}
-	
-// change angle slightly
 
+	if(this.pausetime != -1 && time > this.pausetime)
+		this.th_walk(this);
 }
 
 /*
@@ -936,4 +930,3 @@ void ai_run(entity this, float dist)
 // head straight in
 	t_movetogoal(this, dist);		// done in C code...
 }
-

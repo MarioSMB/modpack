@@ -193,7 +193,7 @@ spawnfunc(func_plat)
 
 	plat_spawn_inside_trigger(this);	// the "start moving" trigger	
 
-	if(this.targetname)
+	if(this.targetname && this.targetname != "")
 	{
 		this.state = STATE_UP;
 		this.use = plat_use;
@@ -243,7 +243,7 @@ void train_next(entity this)
 
 	targ = find(NULL, targetname, this.target);
 	this.target = targ.target;
-	if(!this.target)
+	if(!this.target || this.target == "")
 		objerror(this, "train_next: no next target");
 	if(targ.wait)
 		this.wait = targ.wait;
@@ -260,7 +260,7 @@ void func_train_find(entity this)
 	targ = find(NULL, targetname, this.target);
 	this.target = targ.target;
 	setorigin(this, targ.origin - this.mins);
-	if(!this.targetname)
+	if(!this.targetname || this.targetname == "")
 	{	// not triggered, so start immediately
 		this.nextthink = this.ltime + 0.1;
 		setthink(this, train_next);
@@ -282,7 +282,7 @@ spawnfunc(func_train)
 {	
 	if(!this.speed)
 		this.speed = 100;
-	if(!this.target)
+	if(!this.target || this.target == "")
 		objerror(this, "func_train without a target");
 	if(!this.dmg)
 		this.dmg = 2;
@@ -327,7 +327,7 @@ spawnfunc(misc_teleporttrain)
 {	
 	if(!this.speed)
 		this.speed = 100;
-	if(!this.target)
+	if(!this.target || this.target == "")
 		objerror(this, "func_train without a target");
 
 	this.cnt = 1;

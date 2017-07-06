@@ -142,7 +142,6 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage);
 
 void WaterMove(entity this, float dt)
 {
-//dprint(ftos(this.waterlevel));
 	if(this.move_movetype == MOVETYPE_NOCLIP)
 		return;
 	if(PHYS_HEALTH(this) < 0)

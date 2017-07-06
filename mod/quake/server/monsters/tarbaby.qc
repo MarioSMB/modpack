@@ -267,6 +267,5 @@ spawnfunc(monster_tarbaby)
 	this.sightsound = tbaby_sight;
 	this.deathmessage = tbaby_deathmessage;
 	
-	walkmonster_start(this);
+	monster_start(this, 0);
 }
-

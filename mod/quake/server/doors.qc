@@ -296,7 +296,7 @@ void LinkDoors(entity this)
 
 		if(e.health)
 			starte.health = e.health;
-		if(e.targetname)
+		if(e.targetname && e.targetname != "")
 			starte.targetname = e.targetname;
 		if(e.message != "")
 			starte.message = e.message;
@@ -311,7 +311,7 @@ void LinkDoors(entity this)
 	
 			if(e.owner.health)
 				return;
-			if(e.owner.targetname)
+			if(e.owner.targetname && e.owner.targetname != "")
 				return;
 			if(e.owner.items)
 				return;
@@ -623,7 +623,7 @@ void fd_secret_move6(entity this)
 
 void fd_secret_done(entity this)
 {
-	if(!this.targetname || this.spawnflags&SECRET_YES_SHOOT)
+	if(!this.targetname || this.targetname == "" || (this.spawnflags & SECRET_YES_SHOOT))
 	{
 		this.health = 10000;
 		this.takedamage = DAMAGE_YES;
@@ -727,7 +727,7 @@ spawnfunc(func_door_secret)
 	setblocked(this, secret_blocked);
 	this.speed = 50;
 	this.use = fd_secret_use;
-	if( !this.targetname || this.spawnflags&SECRET_YES_SHOOT)
+	if(!this.targetname || this.targetname == "" || (this.spawnflags & SECRET_YES_SHOOT))
 	{
 		this.health = 10000;
 		this.takedamage = DAMAGE_YES;

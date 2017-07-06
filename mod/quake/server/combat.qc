@@ -1,7 +1,5 @@
 void ClientObituary(entity targ, entity attacker);
 
-void monster_death_use(entity this);
-
 //============================================================================
 
 /*
@@ -14,10 +12,13 @@ explosions and melee attacks.
 */
 bool CanDamage(entity targ, entity inflictor)
 {
+	if(!targ.takedamage)
+		return false;
+
 // bmodels need special checking because their origin is 0,0,0
 	if(targ.move_movetype == MOVETYPE_PUSH)
 	{
-		traceline(inflictor.origin, 0.5 *(targ.absmin + targ.absmax), true, targ);
+		traceline(inflictor.origin, 0.5 *(targ.absmin + targ.absmax), MOVE_NOMONSTERS, targ);
 		if(trace_fraction == 1)
 			return true;
 		if(trace_ent == targ)
@@ -25,24 +26,24 @@ bool CanDamage(entity targ, entity inflictor)
 		return false;
 	}
 	
-	traceline(inflictor.origin, targ.origin, true, targ);
+	traceline(inflictor.origin, targ.origin, MOVE_NOMONSTERS, targ);
 	if(trace_fraction == 1)
 		return true;
 #if 0
-	traceline(inflictor.origin, targ.origin + '15 15 0', true, targ);
+	traceline(inflictor.origin, targ.origin + '15 15 0', MOVE_NOMONSTERS, targ);
 	if(trace_fraction == 1)
 		return true;
-	traceline(inflictor.origin, targ.origin + '-15 -15 0', true, targ);
+	traceline(inflictor.origin, targ.origin + '-15 -15 0', MOVE_NOMONSTERS, targ);
 	if(trace_fraction == 1)
 		return true;
-	traceline(inflictor.origin, targ.origin + '-15 15 0', true, targ);
+	traceline(inflictor.origin, targ.origin + '-15 15 0', MOVE_NOMONSTERS, targ);
 	if(trace_fraction == 1)
 		return true;
-	traceline(inflictor.origin, targ.origin + '15 -15 0', true, targ);
+	traceline(inflictor.origin, targ.origin + '15 -15 0', MOVE_NOMONSTERS, targ);
 	if(trace_fraction == 1)
 		return true;
 #else
-	tracebox(inflictor.origin, '-15 -15 0', '15 15 0', targ.origin, true, targ);
+	tracebox(inflictor.origin, '-15 -15 0', '15 15 0', targ.origin, MOVE_NOMONSTERS, targ);
 	if(trace_fraction == 1)
 		return true;
 #endif
@@ -59,11 +60,12 @@ Killed
 void Killed(entity targ, entity attacker)
 {
 	if(targ.health < -99)
-		targ.health = -99;		// don't let sbar look bad if a player
+		targ.health = -99; // don't let sbar look bad if a player
 
 	if(targ.move_movetype == MOVETYPE_PUSH || targ.move_movetype == MOVETYPE_NONE)
 	{	// doors, triggers, etc
-		targ.th_die(targ, attacker);
+		if(targ.th_die)
+			targ.th_die(targ, attacker);
 		return;
 	}
 
@@ -75,14 +77,19 @@ void Killed(entity targ, entity attacker)
 		killed_monsters = killed_monsters + 1;
 		WriteByte(MSG_ALL, SVC_KILLEDMONSTER);
 	}
-
-	ClientObituary(targ, attacker);
 	
 	targ.takedamage = DAMAGE_NO;
 	settouch(targ, func_null);
 
-	monster_death_use(targ);
-	targ.th_die(targ, attacker);
+	// fall to ground
+	targ.flags &= ~FL_FLY;
+	targ.flags &= ~FL_SWIM;
+
+	if(targ.target && targ.target != "")
+		SUB_UseTargets(targ, attacker, NULL); // using attacker here probably negates the need for .enemy to be set, but oh well
+
+	if(targ.th_die)
+		targ.th_die(targ, attacker);
 }
 
 
@@ -175,8 +182,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 	// get mad unless of the same class(except for soldiers)
 		if(targ != attacker && attacker != targ.enemy)
 		{
-			if((targ.classname != attacker.classname) 
-			||(targ.classname == "monster_army" ) )
+			if((targ.classname != attacker.classname) || (targ.classname == "monster_army"))
 			{
 				if(IS_PLAYER(targ.enemy))
 					targ.oldenemy = targ.enemy;
@@ -202,7 +208,7 @@ T_RadiusDamage
 */
 void T_RadiusDamage(entity inflictor, entity attacker, float damage, entity ignore)
 {
-	entity head = findradius(inflictor.origin, damage+40);
+	entity head = findradius(inflictor.origin, damage + 40);
 	
 	while(head)
 	{
@@ -210,22 +216,15 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, entity igno
 		{
 			if(head.takedamage)
 			{
-				vector org = head.origin +(head.mins + head.maxs)*0.5;
-				float points = 0.5*vlen(inflictor.origin - org);
-				if(points < 0)
-					points = 0;
+				vector org = head.origin +(head.mins + head.maxs) * 0.5;
+				float points = max(0, 0.5 * vlen(inflictor.origin - org));
 				points = damage - points;
-				if(head == attacker)
-					points = points * 0.5;
+				if(head == attacker || head.classname == "monster_shambler")
+					points *= 0.5; // shambler takes half damage from all explosions
 				if(points > 0)
 				{
 					if(CanDamage(head, inflictor))
-					{	// shambler takes half damage from all explosions
-						if(head.classname == "monster_shambler")						
-							T_Damage(head, inflictor, attacker, points*0.5);
-						else
-							T_Damage(head, inflictor, attacker, points);
-					}
+						T_Damage(head, inflictor, attacker, points);
 				}
 			}
 		}
@@ -240,30 +239,22 @@ T_BeamDamage
 */
 void T_BeamDamage(entity attacker, float damage)
 {
-	entity head = findradius(attacker.origin, damage+40);
+	entity head = findradius(attacker.origin, damage + 40);
 	
 	while(head)
 	{
 		if(head.takedamage)
 		{
-			float points = 0.5*vlen(attacker.origin - head.origin);
-			if(points < 0)
-				points = 0;
+			float points = max(0, 0.5 * vlen(attacker.origin - head.origin));
 			points = damage - points;
-			if(head == attacker)
-				points = points * 0.5;
+			if(head == attacker || head.classname == "monster_shambler")
+				points *= 0.5;
 			if(points > 0)
 			{
 				if(CanDamage(head, attacker))
-				{
-					if(head.classname == "monster_shambler")						
-						T_Damage(head, attacker, attacker, points*0.5);
-					else
-						T_Damage(head, attacker, attacker, points);
-				}
+					T_Damage(head, attacker, attacker, points);
 			}
 		}
 		head = head.chain;
 	}
 }
-

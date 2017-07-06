@@ -705,5 +705,5 @@ spawnfunc(monster_zombie)
 		zombie_cruc1(this);
 	}
 	else
-		walkmonster_start(this);
+		monster_start(this, 0);
 }

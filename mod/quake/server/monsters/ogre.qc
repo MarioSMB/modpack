@@ -647,12 +647,10 @@ spawnfunc(monster_ogre)
 	this.checkattack = OgreCheckAttack;
 	this.deathmessage = ogre_deathmessage;
 
-	walkmonster_start(this);
+	monster_start(this, 0);
 }
 
 spawnfunc(monster_ogre_marksman)
 {
 	spawnfunc_monster_ogre(this);
 }
-
-

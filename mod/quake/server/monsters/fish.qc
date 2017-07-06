@@ -73,8 +73,6 @@ const int anim_fish_pain7 = 63;
 const int anim_fish_pain8 = 64;
 const int anim_fish_pain9 = 65;
 
-void swimmonster_start(entity this);
-
 void f_stand1(entity this);
 void f_stand18(entity this) { set_anim(this, anim_fish_swim18, f_stand1); ai_stand(this); }
 void f_stand17(entity this) { set_anim(this, anim_fish_swim17, f_stand18); ai_stand(this); }
@@ -242,6 +240,5 @@ spawnfunc(monster_fish)
 
 	this.deathmessage = fish_deathmessage;
 	
-	swimmonster_start(this);
+	monster_start(this, FL_SWIM);
 }
-

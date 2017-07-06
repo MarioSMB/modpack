@@ -404,6 +404,5 @@ spawnfunc(monster_demon1)
 	this.checkattack = DemonCheckAttack;
 	this.deathmessage = demon1_deathmessage;
 		
-	walkmonster_start(this);
+	monster_start(this, 0);
 }
-

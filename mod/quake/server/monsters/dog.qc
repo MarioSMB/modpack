@@ -436,5 +436,5 @@ spawnfunc(monster_dog)
 	this.checkattack = DogCheckAttack;
 	this.deathmessage = dog_deathmessage;
 
-	walkmonster_start(this);
+	monster_start(this, 0);
 }

@@ -619,6 +619,8 @@ void GibPlayer(entity this, entity attacker)
 
 void PlayerDie(entity this, entity attacker)
 {
+	ClientObituary(this, attacker); // tell the world what happened
+
 	this.items &= ~IT_INVISIBILITY;
 	this.invisible_finished = 0;	// don't die as eyes
 	this.invincible_finished = 0;

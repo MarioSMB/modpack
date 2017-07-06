@@ -578,5 +578,5 @@ spawnfunc(monster_hell_knight)
 	this.sightsound = hknight_sight;
 	this.deathmessage = hknight_deathmessage;
 
-	walkmonster_start(this);
+	monster_start(this, 0);
 }

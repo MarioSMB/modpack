@@ -455,5 +455,5 @@ spawnfunc(monster_army)
 	this.checkattack = SoldierCheckAttack;
 	this.deathmessage = army_deathmessage;
 
-	walkmonster_start(this);
+	monster_start(this, 0);
 }

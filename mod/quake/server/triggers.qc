@@ -404,7 +404,7 @@ spawnfunc(info_teleport_destination)
 	this.angles = '0 0 0';
 	this.model = "";
 	this.origin = this.origin + '0 0 27';
-	if(!this.targetname)
+	if(!this.targetname || this.targetname == "")
 		objerror(this, "no targetname");
 }
 
@@ -424,19 +424,17 @@ If the trigger_teleport has a targetname, it will only teleport entities when it
 */
 spawnfunc(trigger_teleport)
 {
-	vector o;
-
 	InitTrigger(this);
 	settouch(this, teleport_touch);
 	// find the destination 
-	if(!this.target)
+	if(!this.target || this.target == "")
 		objerror(this, "no target");
 	this.use = teleport_use;
 
 	if(!(this.spawnflags & SILENT))
 	{
 		precache_sound("ambience/hum1.wav");
-		o =(this.mins + this.maxs)*0.5;
+		vector o = (this.mins + this.maxs) * 0.5;
 		ambientsound(o, "ambience/hum1.wav",0.5 , ATTN_STATIC);
 	}
 }

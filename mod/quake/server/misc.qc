@@ -62,7 +62,7 @@ If targeted, it will toggle between on or off.
 */
 spawnfunc(light)
 {
-	if(!this.targetname)
+	if(!this.targetname || this.targetname == "")
 	{	// inert light
 		delete(this);
 		return;
