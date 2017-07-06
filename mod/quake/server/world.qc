@@ -10,18 +10,6 @@ void main()
 
 }
 
-#if 0
-#if 0
-bool sv_playerphysicsqc_backup;
-#endif
-void SV_Shutdown()
-{
-#if 0
-	cvar_set("sv_playerphysicsqc", ftos(sv_playerphysicsqc_backup));
-#endif
-}
-#endif
-
 //=======================
 /*QUAKED worldspawn(0 0 0) ?
 Only used for the world entity.
@@ -753,11 +741,6 @@ spawnfunc(worldspawn)
 		#undef X
 		cvar_set("sv_curl_serverpackages", s);
 	}
-
-#if 0
-	sv_playerphysicsqc_backup = cvar("sv_playerphysicsqc");
-	cvar_set("sv_playerphysicsqc", "0");
-#endif
 
 	SetMod();
 }
