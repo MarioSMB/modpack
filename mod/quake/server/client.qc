@@ -41,7 +41,7 @@ void SetChangeParms(entity this)
 
 // remove items
 	this.items &= ~(IT_KEY1 | IT_KEY2 | IT_INVISIBILITY | IT_INVULNERABILITY | IT_SUIT | IT_QUAD);
-	this.items &= ~(HIP_IT_WETSUIT | HIP_IT_EMPATHY_SHIELDS); // hipnotic
+	this.items &= ~(IT_WETSUIT | IT_EMPATHY_SHIELDS); // hipnotic
 	this.items &= ~(IT_ANTIGRAV | IT_SHIELD | IT_SUPERHEALTH); // rogue
 	this.gravity = 1.0;
 
@@ -1380,7 +1380,7 @@ void CheckPowerups(entity this)
 		if(this.wetsuit_finished < time)
 		{	// just stopped
 //MED
-			this.items &= ~HIP_IT_WETSUIT;
+			this.items &= ~IT_WETSUIT;
 			this.wetsuit_time = 0;
 			this.wetsuit_finished = 0;
 		}
@@ -1411,7 +1411,7 @@ void CheckPowerups(entity this)
 		if(this.empathy_finished < time)
 		{	// just stopped
 //MED
-			this.items &= ~HIP_IT_EMPATHY_SHIELDS;
+			this.items &= ~IT_EMPATHY_SHIELDS;
 			this.empathy_time = 0;
 			this.empathy_finished = 0;
 		}

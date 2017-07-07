@@ -152,7 +152,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 
 	if(MP_HIPNOTIC)
 	{
-		if ((targ.items & HIP_IT_EMPATHY_SHIELDS) && !(inflictor.items & HIP_IT_EMPATHY_SHIELDS) && (targ != attacker))
+		if ((targ.items & IT_EMPATHY_SHIELDS) && !(inflictor.items & IT_EMPATHY_SHIELDS) && (targ != attacker))
 		{
 			empathyused = true;
 			damage = damage/2;
@@ -215,7 +215,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 
 	if(MP_HIPNOTIC)
 	{
-		if(targ.items & HIP_IT_EMPATHY_SHIELDS)
+		if(targ.items & IT_EMPATHY_SHIELDS)
 		{
 			if(targ.empathy_sound < time)
 			{

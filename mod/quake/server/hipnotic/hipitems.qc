@@ -75,7 +75,7 @@ spawnfunc(item_artifact_wetsuit)
 	this.noise = "misc/weton.wav";
 	_setmodel(this, "progs/wetsuit.mdl");
 	this.netname = "Wetsuit";
-	this.items = HIP_IT_WETSUIT;
+	this.items = IT_WETSUIT;
 	setsize(this, '-16 -16 -24', '16 16 32');
 
 	StartItem(this);
@@ -107,10 +107,8 @@ void horn_touch(entity this, entity toucher)
 	sprint(toucher, "You got the Horn of Conjuring\n");
 	_sound(toucher, CHAN_VOICE, this.noise, 1, ATTN_NONE);
 	stuffcmd(toucher, "bf\n");
-	horn_active = 1;
-	horn_charmer = toucher;
+	//toucher.items |= IT_HORN_OF_CONJURING; // TODO: make a proper item out of this?
 	SUB_UseTargets(this, toucher, toucher); // fire all targets / killtargets
-	horn_active = 0;
 }
 
 /*QUAKED item_hornofconjuring (0 .5 .8) (-16 -16 0) (16 16 32)
@@ -126,6 +124,7 @@ spawnfunc(item_hornofconjuring)
 	precache_sound("hipitems/horn.wav");
 	_setmodel(this, "progs/horn.mdl");
 	this.noise = "hipitems/horn.wav";
+	this.items = IT_HORN_OF_CONJURING;
 	setsize(this, '-16 -16 0', '16 16 32');
 	StartItem(this);
 }
@@ -144,7 +143,7 @@ spawnfunc(item_artifact_empathy_shields)
 	_setmodel(this, "progs/empathy.mdl");
 	this.noise = "hipitems/empathy.wav";
 	this.netname = "Empathy Shields";
-	this.items = HIP_IT_EMPATHY_SHIELDS;
+	this.items = IT_EMPATHY_SHIELDS;
 	setsize(this, '-16 -16 0', '16 16 32');
 	StartItem(this);
 }

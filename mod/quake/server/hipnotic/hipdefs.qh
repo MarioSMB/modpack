@@ -7,7 +7,6 @@
 entity bulletholes;
 entity lastbullet;
 int numbulletholes;
-//float HIP_IT_HORN_OF_CONJURING = 8; // seemingly unused
 //added total monster message
 const int STAT_TOTALMONSTERS = 12;
 //float STAT_TOTALSECRETS = 11; // used only on client side
@@ -64,8 +63,6 @@ const float MIN_ANGLE_DELTA = 10;
 .float      charmed;
 .entity     charmer;
 .float      huntingcharmer;
-bool horn_active;
-entity horn_charmer;
 // laser cannon
 .vector     old_velocity;
 //misc

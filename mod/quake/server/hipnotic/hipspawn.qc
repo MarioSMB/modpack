@@ -25,6 +25,7 @@ void func_spawn_think(entity this)
 void spawn_use(entity this, entity actor, entity trigger)
 {
 	entity spawnentity;
+	bool horn_active = (trigger.items & IT_HORN_OF_CONJURING); // check the TRIGGER, as a player holding a horn might stumble upon a regular monster spawner!
 
 	if((this.spawnmulti == 1) || (horn_active))
 	{
@@ -56,7 +57,7 @@ void spawn_use(entity this, entity actor, entity trigger)
 	// call spawnentity think function
 	if(horn_active)
 	{
-		spawnentity.charmer = horn_charmer;
+		spawnentity.charmer = actor;
 		spawnentity.charmed = 1;
 	}
 //   if(spawnentity.think)
@@ -74,7 +75,7 @@ void spawn_use(entity this, entity actor, entity trigger)
 	// check to see if it is a monster
 	if(IS_MONSTER(spawnentity))
 	{
-		if((this.spawnmulti != 0) && (horn_active == 0))
+		if((this.spawnmulti != 0) && !horn_active)
 		{
 			total_monsters += 1;
 			WriteByte(MSG_BROADCAST, SVC_UPDATESTAT);
@@ -90,7 +91,7 @@ void spawn_use(entity this, entity actor, entity trigger)
 //         spawnentity.effects = spawnentity.effects | EF_BRIGHTFIELD;
 		}
 	}
-	if((this.spawnmulti == 0) && (horn_active == 0))
+	if((this.spawnmulti == 0) && !horn_active)
 		delete(this);
 }
 

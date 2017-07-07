@@ -842,7 +842,7 @@ void PlayerDie(entity this, entity attacker)
 	// hipnotic fields
 	this.wetsuit_finished = 0;
 	this.empathy_finished = 0;
-	this.items &= ~HIP_IT_EMPATHY_SHIELDS;
+	this.items &= ~IT_EMPATHY_SHIELDS;
 
 	// rogue fields
 	this.gravity = 1.0;

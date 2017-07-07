@@ -47,5 +47,6 @@ const int IT_ANTIGRAV            = BIT(18);
 const int IT_EARTHQUAKE          = BIT(19);
 const int IT_V_SPHERE            = BIT(20);
 
-const int HIP_IT_WETSUIT         = BIT(21);
-const int HIP_IT_EMPATHY_SHIELDS = BIT(22);
+const int IT_WETSUIT             = BIT(21);
+const int IT_EMPATHY_SHIELDS     = BIT(22);
+const int IT_HORN_OF_CONJURING   = BIT(23);

@@ -870,9 +870,9 @@ void Sbar_DrawInventory()
 
 	if(MP_HIPNOTIC)
 	{
-		if(myitems & HIP_IT_WETSUIT)
+		if(myitems & IT_WETSUIT)
 			Sbar_DrawPic(288, -16, "gfx/sb_wsuit");
-		if(myitems & HIP_IT_EMPATHY_SHIELDS)
+		if(myitems & IT_EMPATHY_SHIELDS)
 			Sbar_DrawPic(288 + 16, -16, "gfx/sb_eshld");
 	}
 
