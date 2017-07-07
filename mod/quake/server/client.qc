@@ -870,8 +870,11 @@ void PutClientInServer(entity this)
 	this.velocity = '0 0 0';
 
 // oh, this is a hack!
-	_setmodel(this, "progs/playham.mdl");
-	modelindex_hammer = this.modelindex;
+	if(MP_HIPNOTIC)
+	{
+		_setmodel(this, "progs/playham.mdl");
+		modelindex_hammer = this.modelindex;
+	}
 	_setmodel(this, "progs/eyes.mdl");
 	modelindex_eyes = this.modelindex;
 
