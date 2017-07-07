@@ -50,7 +50,6 @@ const int WATERLEVEL_SUBMERGED = 3;
 #define PHYS_PL_CROUCH_VIEWOFS(s)			STAT(PL_CROUCH_VIEW_OFS, s)
 
 #define PHYS_VIEWHEIGHT(s)					STAT(VIEWHEIGHT, s)
-#define PHYS_HEALTH(s)						STAT(HEALTH, s)
 
 // quake specific stats
 #define PHYS_WATERFRICTION(s)               STAT(MOVEVARS_FRICTION_WATER, s)
@@ -72,6 +71,8 @@ const int WATERLEVEL_SUBMERGED = 3;
 #define UPWARD_VELOCITY_CLEARS_ONGROUND(s)  STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND, s)
 
 #ifdef CSQC
+
+	#define PHYS_HEALTH(s)						STAT(HEALTH, s)
 
 	#define PHYS_GRAVITY(s)                     STAT(MOVEVARS_GRAVITY, s)
 
@@ -117,6 +118,8 @@ const int WATERLEVEL_SUBMERGED = 3;
 	#define PHYS_INPUT_BUTTON_BUTTON16(s)       boolean(input_buttons & BIT(18))
 
 #elif defined(SVQC)
+
+	#define PHYS_HEALTH(s)						((s).health)
 
 	#define PHYS_GRAVITY(s)                     autocvar_sv_gravity
 

@@ -855,6 +855,119 @@ void CheckRules_World()
 		TeamCheckUpdate();
 }
 
+.float dmgtime;
+void CreatureFrame_hotliquids(entity this)
+{
+	if(this.dmgtime > time)
+		return;
+
+	if (this.watertype == CONTENT_LAVA)
+	{
+		if(this.radsuit_finished > time)
+			this.dmgtime = time + 1;
+		else
+			this.dmgtime = time + 0.2;
+		T_Damage(this, NULL, NULL, 10 * this.waterlevel);
+	}
+	else if (this.watertype == CONTENT_SLIME)
+	{
+		if(this.dmgtime < time && this.radsuit_finished < time)
+		{
+			this.dmgtime = time + 1;
+			T_Damage(this, NULL, NULL, 4 * this.waterlevel);
+		}
+	}
+}
+
+void CreatureFrame_Liquids(entity this)
+{
+	if (this.watertype <= CONTENT_WATER && this.waterlevel > 0) // workaround a retarded bug made by id software :P (yes, it's that old of a bug)
+	{
+		if (!(this.flags & FL_INWATER))
+		{
+			if(IS_PLAYER(this)) // TODO: allow this on non-players? nothing else uses this currently
+			{
+				if(this.watertype == CONTENT_LAVA)
+					_sound(this, CHAN_BODY, "player/inlava.wav", 1, ATTN_NORM);
+				else if(this.watertype == CONTENT_WATER)
+					_sound(this, CHAN_BODY, "player/inh2o.wav", 1, ATTN_NORM);
+				else if(this.watertype == CONTENT_SLIME)
+					_sound(this, CHAN_BODY, "player/slimbrn2.wav", 1, ATTN_NORM);
+			}
+
+			this.flags |= FL_INWATER;
+			this.dmgtime = 0;
+		}
+
+		CreatureFrame_hotliquids(this);
+	}
+	else
+	{
+		if (this.flags & FL_INWATER)
+		{
+			// play leave water sound
+			if(IS_PLAYER(this))
+				_sound(this, CHAN_BODY, "misc/outwater.wav", 1, ATTN_NORM);
+			this.flags &= ~FL_INWATER;
+			this.dmgtime = 0;
+		}
+		this.air_finished = time + 12;
+		this.dmg = 2;
+	}
+}
+
+void CreatureFrame_FallDamage(entity this)
+{
+	// check to see if player landed and play landing sound	
+	if(this.velocity.z || this.jump_flag) // moving or has moved
+	{
+		if(this.jump_flag < -300 && IS_ONGROUND(this) && this.health > 0)
+		{
+			if(this.watertype == CONTENT_WATER)
+			{
+				if(IS_PLAYER(this))
+					_sound(this, CHAN_BODY, "player/h2ojump.wav", 1, ATTN_NORM);
+			}
+			else if(this.jump_flag < -650)
+			{
+				T_Damage(this, NULL, NULL, 5);
+				if(IS_PLAYER(this))
+				{
+					_sound(this, CHAN_VOICE, "player/land2.wav", 1, ATTN_NORM);
+					this.deathtype = "falling";
+				}
+			}
+			else if(IS_PLAYER(this))
+				_sound(this, CHAN_VOICE, "player/land.wav", 1, ATTN_NORM);
+
+			this.jump_flag = 0;
+		}
+	}
+
+	if(!IS_ONGROUND(this))
+		this.jump_flag = this.velocity_z; // always update
+}
+
+void CreatureFrame_All()
+{
+#if 0
+	IL_EACH(g_damagedbycontents, it.damagedbycontents,
+	{
+		if (it.move_movetype == MOVETYPE_NOCLIP) continue;
+		CreatureFrame_Liquids(it);
+		CreatureFrame_FallDamage(it);
+		it.oldvelocity = it.velocity;
+	});
+#else
+	FOREACH_CLIENT(IS_PLAYER(it) && it.deadflag == DEAD_NO,
+	{
+		if(it.move_movetype == MOVETYPE_NOCLIP) continue;
+		CreatureFrame_Liquids(it);
+		CreatureFrame_FallDamage(it);
+	});
+#endif
+}
+
 void StartFrame()
 {
 	sys_frametime = autocvar_sys_ticrate * autocvar_slowmo;
@@ -871,6 +984,7 @@ void StartFrame()
 	//delete_fn = remove_unsafely; // not during spawning!
 	delete_fn = remove_except_protected;
 
+	CreatureFrame_All();
 	CheckRules_World();
 
 	FOREACH_CLIENT(true, GlobalStats_update(it));

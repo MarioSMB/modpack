@@ -1474,6 +1474,33 @@ void CheckPowerups(entity this)
 	}
 }
 
+void DrownPlayer(entity this)
+{
+	if(this.deadflag != DEAD_NO)
+		return;
+
+	if (this.waterlevel != WATERLEVEL_SUBMERGED)
+	{
+		if(this.air_finished < time)
+			_sound(this, CHAN_VOICE, "player/gasp2.wav", 1, ATTN_NORM);
+		else if(this.air_finished < time + 9)
+			_sound(this, CHAN_VOICE, "player/gasp1.wav", 1, ATTN_NORM);
+		this.air_finished = time + 12;
+		this.dmg = 2;
+	}
+	else if (this.air_finished < time)
+	{	// drown!
+		if (this.pain_finished < time)
+		{
+			this.dmg = this.dmg + 2;
+			if(this.dmg > 15)
+				this.dmg = 10;
+			T_Damage(this, NULL, NULL, this.dmg);
+			this.pain_finished = time + 1;
+		}
+	}
+}
+
 void Player_Physics(entity this)
 {
 	set_movetype(this, this.move_movetype);
@@ -1521,28 +1548,11 @@ void PlayerPostThink(entity this)
 		// do weapon stuff
 		W_WeaponFrame(this);
 
-		// check to see if player landed and play landing sound	
-		if((this.jump_flag < -300) && IS_ONGROUND(this) && (this.health > 0))
-		{
-			if(this.watertype == CONTENT_WATER)
-				_sound(this, CHAN_BODY, "player/h2ojump.wav", 1, ATTN_NORM);
-			else if(this.jump_flag < -650)
-			{
-				T_Damage(this, NULL, NULL, 5); 
-				_sound(this, CHAN_VOICE, "player/land2.wav", 1, ATTN_NORM);
-				this.deathtype = "falling";
-			}
-			else
-				_sound(this, CHAN_VOICE, "player/land.wav", 1, ATTN_NORM);
-
-			this.jump_flag = 0;
-		}
-
-		if(!IS_ONGROUND(this))
-			this.jump_flag = this.velocity_z;
-
 		CheckPowerups(this);
 	}
+
+	if(IS_PLAYER(this))
+		DrownPlayer(this);
 
 	CSQCMODEL_AUTOUPDATE(this);
 }

@@ -1,6 +1,6 @@
+#ifdef SVQC
 void Physics_UpdateStats(entity this)
 {
-#ifdef SVQC
 	if(intermission_running)
 		STAT(PL_VIEW_OFS, this) = STAT(PL_CROUCH_VIEW_OFS, this) = '0 0 0';
 	else
@@ -8,19 +8,8 @@ void Physics_UpdateStats(entity this)
 
 	STAT(PL_MIN, this) = STAT(PL_CROUCH_MIN, this) = VEC_HULL_MIN;
 	STAT(PL_MAX, this) = STAT(PL_CROUCH_MAX, this) = VEC_HULL_MAX;	
-#endif
 }
-
-void PM_ClientMovement_UpdateStatus(entity this)
-{
-#if 0
-	if(!IS_PLAYER(this))
-		return;
-
-	if (IS_ONGROUND(this) || this.velocity.z <= 0 || this.teleport_time <= 0)
-		this.teleport_time = 0;
 #endif
-}
 
 void PM_FixClient(entity this)
 {
@@ -32,7 +21,6 @@ void PM_FixClient(entity this)
 	//this.items = STAT(ITEMS, this);
 	if (!(PHYS_INPUT_BUTTON_JUMP(this))) // !jump
 		UNSET_JUMP_HELD(this);           // canjump = true
-	PM_ClientMovement_UpdateStatus(this);
 #elif defined(SVQC)
 	Physics_UpdateStats(this);
 #endif
@@ -136,8 +124,6 @@ WaterMove
 ============
 */
 #ifdef SVQC
-.float	dmgtime;
-void T_Damage(entity targ, entity inflictor, entity attacker, float damage);
 void DeathBubbles(entity this, int num_bubbles);
 #endif
 
@@ -145,89 +131,18 @@ void WaterMove(entity this, float dt)
 {
 	if(this.move_movetype == MOVETYPE_NOCLIP)
 		return;
-	if(PHYS_HEALTH(this) < 0)
+	if(PHYS_HEALTH(this) <= 0)
 		return;
-
-#ifdef SVQC
-	if(this.waterlevel != 3)
-	{
-		if(this.air_finished < time)
-			_sound(this, CHAN_VOICE, "player/gasp2.wav", 1, ATTN_NORM);
-		else if(this.air_finished < time + 9)
-			_sound(this, CHAN_VOICE, "player/gasp1.wav", 1, ATTN_NORM);
-		this.air_finished = time + 12;
-		this.dmg = 2;
-	}
-	else if(this.air_finished < time)
-	{	// drown!
-		if(this.pain_finished < time)
-		{
-			this.dmg = this.dmg + 2;
-			if(this.dmg > 15)
-				this.dmg = 10;
-			T_Damage(this, NULL, NULL, this.dmg);
-			this.pain_finished = time + 1;
-		}
-	}
-#endif
 	
 	if(!this.waterlevel)
-	{
-	#ifdef SVQC
-		if(this.flags & FL_INWATER)
-		{	
-			// play leave water sound
-			_sound(this, CHAN_BODY, "misc/outwater.wav", 1, ATTN_NORM);
-			this.flags &= ~FL_INWATER;
-		}
-	#endif
 		return;
-	}
 
-#ifdef SVQC
-	if(this.watertype == CONTENT_LAVA)
-	{	// do damage
-		if(this.dmgtime < time)
-		{
-			if(this.radsuit_finished > time)
-				this.dmgtime = time + 1;
-			else
-				this.dmgtime = time + 0.2;
-
-			T_Damage(this, NULL, NULL, 10*this.waterlevel);
-		}
-	}
-	else if(this.watertype == CONTENT_SLIME)
-	{	// do damage
-		if(this.dmgtime < time && this.radsuit_finished < time)
-		{
-			this.dmgtime = time + 1;
-			T_Damage(this, NULL, NULL, 4*this.waterlevel);
-		}
-	}
-	
-	if( !(this.flags & FL_INWATER) )
-	{	
-
-		// player enter water sound
-
-		if(this.watertype == CONTENT_LAVA)
-			_sound(this, CHAN_BODY, "player/inlava.wav", 1, ATTN_NORM);
-		if(this.watertype == CONTENT_WATER)
-			_sound(this, CHAN_BODY, "player/inh2o.wav", 1, ATTN_NORM);
-		if(this.watertype == CONTENT_SLIME)
-			_sound(this, CHAN_BODY, "player/slimbrn2.wav", 1, ATTN_NORM);
-
-		this.flags |= FL_INWATER;
-		this.dmgtime = 0;
-	}
-#endif
 	if(!(this.flags & FL_WATERJUMP) )
 		this.velocity = this.velocity - 0.8*this.waterlevel*dt*this.velocity;
 
+#ifdef SVQC
 	if(MP_HIPNOTIC && STAT(WETSUIT_FINISHED, this) > time)
 	{
-	#ifdef SVQC
 		if(this.waterlevel >= 2)
 		{
 			// play scuba sound
@@ -247,8 +162,8 @@ void WaterMove(entity this, float dt)
 					DeathBubbles(this, 1);
 			}
 		}
-	#endif
 	}
+#endif
 }
 
 void CheckWaterJump(entity this)
@@ -439,15 +354,6 @@ void PM_AirMove(entity this, float dt)
 	}
 }
 
-bool PM_CheckDead(entity this)
-{
-#ifdef SVQC
-	return (this.health <= 0);
-#else
-	return PHYS_HEALTH(this) <= 0;
-#endif
-}
-
 void PM_RollView(entity this)
 {
 #ifdef SVQC
@@ -476,7 +382,7 @@ void PM_Main(entity this, float dt)
 
 	SV_check_punch(this, dt);
 
-	if(PM_CheckDead(this))
+	if(PHYS_HEALTH(this) <= 0)
 		return;
 
 	PM_RollView(this);
