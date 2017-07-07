@@ -33,7 +33,8 @@ spawnfunc(wallsprite)
 
 PRECACHE(InitBulletHoles)
 {
-	precache_model("progs/s_bullet.spr");
+	if(fexists("progs/s_bullet.spr")) // we can't tell if hipnotic is active this early, so just check if the file exists to silence the warning
+		precache_model("progs/s_bullet.spr");
 
 	bulletholes = NULL;
 	lastbullet = NULL;
