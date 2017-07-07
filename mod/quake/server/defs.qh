@@ -113,7 +113,7 @@ const int SPAWNFLAG_LASER = BIT(1);
 .int items2;
 //.float		new_weapon;
 //.float		new_items;
-.float ammo_shells1, ammo_nails1, ammo_rockets1, ammo_cells1;
+//.float ammo_shells1, ammo_nails1, ammo_rockets1, ammo_cells1;
 .float ammo_lava_nails;
 .float ammo_multi_rockets;
 .float ammo_plasma;
@@ -174,11 +174,6 @@ entity  tag_token_owner;
 
 .float		tag_frags;
 .float		tag_message_time;
-
-// 
-// new_items.qc
-//
-void UpdateAmmoCounts(entity theEntity);
 
 //
 // dmatch.qc

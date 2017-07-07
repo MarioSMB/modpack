@@ -4,24 +4,6 @@
 
 void sphere_spawn(entity this, entity toucher);
 
-void UpdateAmmoCounts(entity this)
-{
-	if(this.weapon >= WEP_LAVA_NAILGUN)
-	{
-		this.ammo_shells = this.ammo_shells1;
-		this.ammo_nails = this.ammo_lava_nails;
-		this.ammo_rockets = this.ammo_multi_rockets;
-		this.ammo_cells = this.ammo_plasma;
-	}
-	else
-	{
-		this.ammo_shells = this.ammo_shells1;
-		this.ammo_nails = this.ammo_nails1;
-		this.ammo_rockets = this.ammo_rockets1;
-		this.ammo_cells = this.ammo_cells1;
-	}
-}
-
 void newitems_touch(entity this, entity toucher)
 {
 	if(!IS_PLAYER(toucher))

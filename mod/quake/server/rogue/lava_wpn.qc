@@ -33,7 +33,6 @@ void W_FireSuperLavaSpikes(entity this)
 	_sound(this, CHAN_WEAPON, "weapons/spike2.wav", 1, ATTN_NORM);
 	this.attack_finished = time + 0.2;
 	this.currentammo = this.ammo_lava_nails = this.ammo_lava_nails - 2;
-	UpdateAmmoCounts(this);
 	
 	vector dir = aim(this, 1000);
 	entity newmis = launch_lava_spike(this, this.origin + '0 0 16', dir);
@@ -65,7 +64,6 @@ void W_FireLavaSpikes(entity this, float ox)
 	_sound(this, CHAN_WEAPON, "weapons/rocket1i.wav", 1, ATTN_NORM);
 	this.attack_finished = time + 0.2;
 	this.currentammo = this.ammo_lava_nails = this.ammo_lava_nails - 1;
-	UpdateAmmoCounts(this);
 	
 	vector dir = aim(this, 1000);
 	launch_lava_spike(this, this.origin + '0 0 16' + v_right * ox, dir);

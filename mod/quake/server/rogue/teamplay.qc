@@ -473,45 +473,45 @@ void TossBackpack(entity this)
 	// See if you have the Shotgun or Super Shotgun on
 	if((this.weapon == WEP_SHOTGUN) || (this.weapon == WEP_SUPER_SHOTGUN))
 	{
-		if(this.ammo_shells1 >= 20)
+		if(this.ammo_shells >= 20)
 		{
-			item.ammo_shells1 = 20;
-			this.ammo_shells1 = this.ammo_shells1 - 20;
+			item.ammo_shells = 20;
+			this.ammo_shells = this.ammo_shells - 20;
 		}
 		else
 		{
-			item.ammo_shells1 = this.ammo_shells1;
-			this.ammo_shells1 = 0;
+			item.ammo_shells = this.ammo_shells;
+			this.ammo_shells = 0;
 		}
 	}		
 	
 	// See if you have neither the Shotgun or Super Shotgun
 	if(!(this.weapons & WEP_SHOTGUN) && !(this.weapons & WEP_SUPER_SHOTGUN))
 	{
-		if(this.ammo_shells1 >= 20)
+		if(this.ammo_shells >= 20)
 		{
-			item.ammo_shells1 = 20;
-			this.ammo_shells1 = this.ammo_shells1 - 20;
+			item.ammo_shells = 20;
+			this.ammo_shells = this.ammo_shells - 20;
 		}
 		else
 		{
-			item.ammo_shells1 = this.ammo_shells1;
-			this.ammo_shells1 = 0;
+			item.ammo_shells = this.ammo_shells;
+			this.ammo_shells = 0;
 		}
 	}		
 	
 	// See if we are using a nailgun
 	if((this.weapon == WEP_NAILGUN) || (this.weapon == WEP_SUPER_NAILGUN))
 	{
-		if(this.ammo_nails1 >= 20)
+		if(this.ammo_nails >= 20)
 		{
-			item.ammo_nails1 = 20;
-			this.ammo_nails1 = this.ammo_nails1 - 20;
+			item.ammo_nails = 20;
+			this.ammo_nails = this.ammo_nails - 20;
 		}
 		else
 		{
-			item.ammo_nails1 = this.ammo_nails1;
-			this.ammo_nails1 = 0;
+			item.ammo_nails = this.ammo_nails;
+			this.ammo_nails = 0;
 		}
 	}	
 
@@ -534,15 +534,15 @@ void TossBackpack(entity this)
 	if(!(this.weapons & WEP_NAILGUN) && !(this.weapons & WEP_SUPER_NAILGUN))
 	{
 		// put both regular and lava nails in
-		if(this.ammo_nails1 >= 20)
+		if(this.ammo_nails >= 20)
 		{
-			item.ammo_nails1 = 20;
-			this.ammo_nails1 = this.ammo_nails1 - 20;
+			item.ammo_nails = 20;
+			this.ammo_nails = this.ammo_nails - 20;
 		}
 		else
 		{
-			item.ammo_nails1 = this.ammo_nails1;
-			this.ammo_nails1 = 0;
+			item.ammo_nails = this.ammo_nails;
+			this.ammo_nails = 0;
 		}
 		if(this.ammo_lava_nails >= 20)
 		{
@@ -559,12 +559,12 @@ void TossBackpack(entity this)
 	// See if we are using a grenade or rocket launcher
 	if((this.weapon == WEP_GRENADE_LAUNCHER) || (this.weapon == WEP_ROCKET_LAUNCHER))
 	{
-		if(this.ammo_rockets1 >= 10) {
-			item.ammo_rockets1 = 10;
-			this.ammo_rockets1 = this.ammo_rockets1 - 10;
+		if(this.ammo_rockets >= 10) {
+			item.ammo_rockets = 10;
+			this.ammo_rockets = this.ammo_rockets - 10;
 		} else {
-			item.ammo_rockets1 = this.ammo_rockets1;
-			this.ammo_rockets1 = 0;
+			item.ammo_rockets = this.ammo_rockets;
+			this.ammo_rockets = 0;
 		}
 	}
 
@@ -586,15 +586,15 @@ void TossBackpack(entity this)
 	// See if we have neither the Grenade or rocket launcher
 	if(!(this.weapons & WEP_GRENADE_LAUNCHER) && !(this.weapons & WEP_ROCKET_LAUNCHER))
 	{
-		if(this.ammo_rockets1 >= 10)
+		if(this.ammo_rockets >= 10)
 		{
-			item.ammo_rockets1 = 10;
-			this.ammo_rockets1 = this.ammo_rockets1 - 10;
+			item.ammo_rockets = 10;
+			this.ammo_rockets = this.ammo_rockets - 10;
 		}
 		else
 		{
-			item.ammo_rockets1 = this.ammo_rockets1;
-			this.ammo_rockets1 = 0;
+			item.ammo_rockets = this.ammo_rockets;
+			this.ammo_rockets = 0;
 		}
 		if(this.ammo_multi_rockets >= 10)
 		{
@@ -611,15 +611,15 @@ void TossBackpack(entity this)
 	// See if we're using the lightning gun
 	if(this.weapon == WEP_LIGHTNING)
 	{	
-		if(this.ammo_cells1 >= 20)
+		if(this.ammo_cells >= 20)
 		{
-			item.ammo_cells1 = 20;
-			this.ammo_cells1 = this.ammo_cells1 - 20;
+			item.ammo_cells = 20;
+			this.ammo_cells = this.ammo_cells - 20;
 		}
 		else
 		{
-			item.ammo_cells1 = this.ammo_cells1;
-			this.ammo_cells1 = 0;
+			item.ammo_cells = this.ammo_cells;
+			this.ammo_cells = 0;
 		}
 	}
 
@@ -641,15 +641,15 @@ void TossBackpack(entity this)
 	// see if we don't have the lightning gun
 	if(!(this.weapons & WEP_LIGHTNING))
 	{	
-		if(this.ammo_cells1 >= 20)
+		if(this.ammo_cells >= 20)
 		{
-			item.ammo_cells1 = 20;
-			this.ammo_cells1 = this.ammo_cells1 - 20;
+			item.ammo_cells = 20;
+			this.ammo_cells = this.ammo_cells - 20;
 		}
 		else
 		{
-			item.ammo_cells1 = this.ammo_cells1;
-			this.ammo_cells1 = 0;
+			item.ammo_cells = this.ammo_cells;
+			this.ammo_cells = 0;
 		}
 		if(this.ammo_plasma >= 10)
 		{
@@ -663,8 +663,8 @@ void TossBackpack(entity this)
 		}
 	}
 	 
-	if(item.ammo_shells1 + item.ammo_nails1 + item.ammo_lava_nails +
-		item.ammo_rockets1 + item.ammo_multi_rockets + item.ammo_cells1 +
+	if(item.ammo_shells + item.ammo_nails + item.ammo_lava_nails +
+		item.ammo_rockets + item.ammo_multi_rockets + item.ammo_cells +
 		item.ammo_plasma == 0)
 	{
 		sprint(this, "No ammo available!\n");
@@ -739,7 +739,6 @@ void Team_weapon_touch(entity this, entity toucher)
 		Deathmatch_Weapon(toucher, old, new);
 
 	EnableComboWeapons(toucher);
-	UpdateAmmoCounts(toucher);
 
 	W_SetCurrentAmmo(toucher);
 

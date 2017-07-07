@@ -103,7 +103,6 @@ void MultiGrenadeTouch(entity this, entity toucher)
 void W_FireMultiGrenade(entity this)
 {
 	this.currentammo = this.ammo_multi_rockets = this.ammo_multi_rockets - 1;
-	UpdateAmmoCounts(this);
 	
 	_sound(this, CHAN_WEAPON, "weapons/grenade.wav", 1, ATTN_NORM);
 
@@ -315,7 +314,6 @@ void MultiRocketLaunch(entity this, float offset, float frameNum)
 void W_FireMultiRocket(entity this)
 {
 	this.currentammo = this.ammo_multi_rockets = this.ammo_multi_rockets - 1;
-	UpdateAmmoCounts(this);
 	
 	_sound(this, CHAN_WEAPON, "weapons/sgun1.wav", 1, ATTN_NORM);
 
@@ -512,7 +510,6 @@ void W_FirePlasma(entity this)
 		return;
 	}
 	this.currentammo = this.ammo_plasma = this.ammo_plasma - 1;
-	UpdateAmmoCounts(this);
 	_sound(this, CHAN_WEAPON, "plasma/fire.wav", 0.5, ATTN_NORM);
 	this.punchangle_x = -2;
 

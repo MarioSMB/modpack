@@ -121,20 +121,10 @@ void DecodeLevelParms(entity this)
 	this.weapons = parm1;
 	this.health = parm2;
 	this.armorvalue = parm3;
-	if(MP_ROGUE)
-	{
-		this.ammo_shells1 = parm4;
-		this.ammo_nails1 = parm5;
-		this.ammo_rockets1 = parm6;
-		this.ammo_cells1 = parm7;
-	}
-	else
-	{
-		this.ammo_shells = parm4;
-		this.ammo_nails = parm5;
-		this.ammo_rockets = parm6;
-		this.ammo_cells = parm7;
-	}
+	this.ammo_shells = parm4;
+	this.ammo_nails = parm5;
+	this.ammo_rockets = parm6;
+	this.ammo_cells = parm7;
 	if(parm8 == WEP_GRAPPLE && teamplay < TEAM_CTF)
 		this.weapon = WEP_AXE;
 	else
