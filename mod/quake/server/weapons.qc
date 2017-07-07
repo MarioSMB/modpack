@@ -1113,7 +1113,7 @@ void W_FireSpikes(entity this, float ox)
 	
 	if(MP_ROGUE)
 	{
-		if(this.ammo_nails1 >= 2 && this.weapon == IT_SUPER_NAILGUN)
+		if(this.ammo_nails1 >= 2 && this.weapon == WEP_SUPER_NAILGUN)
 		{
 			W_FireSuperSpikes(this);
 			return;
@@ -1126,7 +1126,7 @@ void W_FireSpikes(entity this, float ox)
 	}
 	else
 	{
-		if(this.ammo_nails >= 2 && this.weapon == IT_SUPER_NAILGUN)
+		if(this.ammo_nails >= 2 && this.weapon == WEP_SUPER_NAILGUN)
 		{
 			W_FireSuperSpikes(this);
 			return;
@@ -1379,25 +1379,25 @@ void W_SetCurrentAmmo(entity this)
 	player_run(this);		// get out of any weapon firing states
 
 	this.items &= ~(IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS);
-	this.items2 &= ~(IT2_LAVA_NAILS | IT2_PLASMA_AMMO | IT2_MULTI_ROCKETS);
+	this.items &= ~(IT_LAVA_NAILS | IT_PLASMA_AMMO | IT_MULTI_ROCKETS);
 	
 	switch(this.weapon)
 	{
-		case IT_AXE:
+		case WEP_AXE:
 		{
 			this.currentammo = 0;
 			this.weaponmodel = "progs/v_axe.mdl";
 			this.weaponframe = 0;
 			break;
 		}
-		case IT_GRAPPLE:
+		case WEP_GRAPPLE:
 		{
 			this.currentammo = 0;
 			this.weaponmodel = "progs/v_grpple.mdl";
 			this.weaponframe = 0;
 			break;
 		}
-		case IT_SHOTGUN:
+		case WEP_SHOTGUN:
 		{
 			this.currentammo = ((MP_ROGUE) ? this.ammo_shells1 : this.ammo_shells);
 			this.weaponmodel = "progs/v_shot.mdl";
@@ -1405,7 +1405,7 @@ void W_SetCurrentAmmo(entity this)
 			this.items |= IT_SHELLS;
 			break;
 		}
-		case IT_SUPER_SHOTGUN:
+		case WEP_SUPER_SHOTGUN:
 		{
 			this.currentammo = ((MP_ROGUE) ? this.ammo_shells1 : this.ammo_shells);
 			this.weaponmodel = "progs/v_shot2.mdl";
@@ -1413,47 +1413,47 @@ void W_SetCurrentAmmo(entity this)
 			this.items |= IT_SHELLS;
 			break;
 		}
-		case IT_LAVA_NAILGUN:
+		case WEP_LAVA_NAILGUN:
 		{
 			this.currentammo = this.ammo_lava_nails;
 			this.weaponmodel = "progs/v_lava.mdl";
 			this.weaponframe = 0;
-			this.items2 |= IT2_LAVA_NAILS;
+			this.items |= IT_LAVA_NAILS;
 			break;
 		}
-		case IT_LAVA_SUPER_NAILGUN:
+		case WEP_LAVA_SUPER_NAILGUN:
 		{
 			this.currentammo = this.ammo_lava_nails;
 			this.weaponmodel = "progs/v_lava2.mdl";
 			this.weaponframe = 0;
-			this.items2 |= IT2_LAVA_NAILS;
+			this.items |= IT_LAVA_NAILS;
 			break;
 		}
-		case IT_MULTI_GRENADE:
+		case WEP_MULTI_GRENADE:
 		{
 			this.currentammo = this.ammo_multi_rockets;
 			this.weaponmodel = "progs/v_multi.mdl";
 			this.weaponframe = 0;
-			this.items2 |= IT2_MULTI_ROCKETS;
+			this.items |= IT_MULTI_ROCKETS;
 			break;
 		}
-		case IT_MULTI_ROCKET:
+		case WEP_MULTI_ROCKET:
 		{
 			this.currentammo = this.ammo_multi_rockets;
 			this.weaponmodel = "progs/v_multi2.mdl";
 			this.weaponframe = 0;
-			this.items2 |= IT2_MULTI_ROCKETS;
+			this.items |= IT_MULTI_ROCKETS;
 			break;
 		}
-		case IT_PLASMA_GUN:
+		case WEP_PLASMA_GUN:
 		{
 			this.currentammo = this.ammo_plasma;
 			this.weaponmodel = "progs/v_plasma.mdl";
 			this.weaponframe = 0;
-			this.items2 |= IT2_PLASMA_AMMO;
+			this.items |= IT_PLASMA_AMMO;
 			break;
 		}
-		case IT_NAILGUN:
+		case WEP_NAILGUN:
 		{
 			this.currentammo = ((MP_ROGUE) ? this.ammo_nails1 : this.ammo_nails);
 			this.weaponmodel = "progs/v_nail.mdl";
@@ -1461,7 +1461,7 @@ void W_SetCurrentAmmo(entity this)
 			this.items |= IT_NAILS;
 			break;
 		}
-		case IT_SUPER_NAILGUN:
+		case WEP_SUPER_NAILGUN:
 		{
 			this.currentammo = ((MP_ROGUE) ? this.ammo_nails1 : this.ammo_nails);
 			this.weaponmodel = "progs/v_nail2.mdl";
@@ -1469,7 +1469,7 @@ void W_SetCurrentAmmo(entity this)
 			this.items |= IT_NAILS;
 			break;
 		}
-		case IT_GRENADE_LAUNCHER:
+		case WEP_GRENADE_LAUNCHER:
 		{
 			this.currentammo = ((MP_ROGUE) ? this.ammo_rockets1 : this.ammo_rockets);
 			this.weaponmodel = "progs/v_rock.mdl";
@@ -1477,7 +1477,7 @@ void W_SetCurrentAmmo(entity this)
 			this.items |= IT_ROCKETS;
 			break;
 		}
-		case IT_ROCKET_LAUNCHER:
+		case WEP_ROCKET_LAUNCHER:
 		{
 			this.currentammo = ((MP_ROGUE) ? this.ammo_rockets1 : this.ammo_rockets);
 			this.weaponmodel = "progs/v_rock2.mdl";
@@ -1485,7 +1485,7 @@ void W_SetCurrentAmmo(entity this)
 			this.items |= IT_ROCKETS;
 			break;
 		}
-		case IT_LIGHTNING:
+		case WEP_LIGHTNING:
 		{
 			this.currentammo = ((MP_ROGUE) ? this.ammo_cells1 : this.ammo_cells);
 			this.weaponmodel = "progs/v_light.mdl";
@@ -1493,7 +1493,7 @@ void W_SetCurrentAmmo(entity this)
 			this.items |= IT_CELLS;
 			break;
 		}
-		case IT_LASER_CANNON:
+		case WEP_LASER_CANNON:
 		{
 			this.currentammo = ((MP_ROGUE) ? this.ammo_cells1 : this.ammo_cells);
 			this.weaponmodel = "progs/v_laserg.mdl";
@@ -1501,7 +1501,7 @@ void W_SetCurrentAmmo(entity this)
 			this.items |= IT_CELLS;
 			break;
 		}
-		case IT_MJOLNIR:
+		case WEP_MJOLNIR:
 		{
 			this.currentammo = ((MP_ROGUE) ? this.ammo_cells1 : this.ammo_cells);
 			this.weaponmodel = "progs/v_hammer.mdl";
@@ -1509,7 +1509,7 @@ void W_SetCurrentAmmo(entity this)
 			this.items |= IT_CELLS;
 			break;
 		}
-		case IT_PROXIMITY_GUN:
+		case WEP_PROXIMITY_GUN:
 		{
 			this.currentammo = ((MP_ROGUE) ? this.ammo_rockets1 : this.ammo_rockets);
 			this.weaponmodel = "progs/v_prox.mdl";
@@ -1532,28 +1532,28 @@ void W_SetCurrentAmmo(entity this)
 
 int W_BestRogueWeapon(entity this, float except)
 {
-	int itm = this.items;
+	int itm = this.weapons;
 
 	// pgm - fix for sandy. will not change to plasma gun
 	
-//	if(this.waterlevel <= 1 && this.ammo_plasma >= 1 && (it & IT_PLASMA_GUN))
-//		return IT_PLASMA_GUN;
+//	if(this.waterlevel <= 1 && this.ammo_plasma >= 1 && (it & WEP_PLASMA_GUN))
+//		return WEP_PLASMA_GUN;
 //	else 
-	if(this.waterlevel<=1 && this.ammo_cells1 >= 1 && (itm & IT_LIGHTNING) && except != IT_LIGHTNING)
-		return IT_LIGHTNING;
-	else if(this.ammo_lava_nails >= 2 && (itm & IT_LAVA_SUPER_NAILGUN) && except != IT_LAVA_SUPER_NAILGUN)
-		return IT_LAVA_SUPER_NAILGUN;
-	else if(this.ammo_nails1 >= 2 && (itm & IT_SUPER_NAILGUN) && except != IT_SUPER_NAILGUN)
-		return IT_SUPER_NAILGUN;
-	else if(this.ammo_lava_nails >= 1 && (itm & IT_LAVA_NAILGUN) && except != IT_LAVA_NAILGUN)
-		return IT_LAVA_NAILGUN;
-	else if(this.ammo_nails1 >= 1 && (itm & IT_NAILGUN) && except != IT_NAILGUN)
-		return IT_NAILGUN;
-	else if(this.ammo_shells1 >= 2 && (itm & IT_SUPER_SHOTGUN) && except != IT_SUPER_SHOTGUN)
-		return IT_SUPER_SHOTGUN;
-	else if(this.ammo_shells1 >= 1 && (itm & IT_SHOTGUN) && except != IT_SHOTGUN)
-		return IT_SHOTGUN;
-	return IT_AXE; // just fall back if all else fails
+	if(this.waterlevel<=1 && this.ammo_cells1 >= 1 && (itm & WEP_LIGHTNING) && except != WEP_LIGHTNING)
+		return WEP_LIGHTNING;
+	else if(this.ammo_lava_nails >= 2 && (itm & WEP_LAVA_SUPER_NAILGUN) && except != WEP_LAVA_SUPER_NAILGUN)
+		return WEP_LAVA_SUPER_NAILGUN;
+	else if(this.ammo_nails1 >= 2 && (itm & WEP_SUPER_NAILGUN) && except != WEP_SUPER_NAILGUN)
+		return WEP_SUPER_NAILGUN;
+	else if(this.ammo_lava_nails >= 1 && (itm & WEP_LAVA_NAILGUN) && except != WEP_LAVA_NAILGUN)
+		return WEP_LAVA_NAILGUN;
+	else if(this.ammo_nails1 >= 1 && (itm & WEP_NAILGUN) && except != WEP_NAILGUN)
+		return WEP_NAILGUN;
+	else if(this.ammo_shells1 >= 2 && (itm & WEP_SUPER_SHOTGUN) && except != WEP_SUPER_SHOTGUN)
+		return WEP_SUPER_SHOTGUN;
+	else if(this.ammo_shells1 >= 1 && (itm & WEP_SHOTGUN) && except != WEP_SHOTGUN)
+		return WEP_SHOTGUN;
+	return WEP_AXE; // just fall back if all else fails
 }
 
 int W_BestWeapon(entity this, float except)
@@ -1561,23 +1561,23 @@ int W_BestWeapon(entity this, float except)
 	if(MP_ROGUE)
 		return W_BestRogueWeapon(this, except);
 
-	int itm = this.items;
+	int itm = this.weapons;
 
-	if(this.waterlevel <= 1 && this.ammo_cells >= 1 && (itm & IT_LIGHTNING) && except != IT_LIGHTNING)
-		return IT_LIGHTNING;
-	if(this.ammo_cells >= 1 && (itm & IT_LASER_CANNON) && except != IT_LASER_CANNON)
-		return IT_LASER_CANNON;
-	if(this.ammo_nails >= 2 && (itm & IT_SUPER_NAILGUN) && except != IT_SUPER_NAILGUN)
-		return IT_SUPER_NAILGUN;
-	if(this.ammo_shells >= 2 && (itm & IT_SUPER_SHOTGUN) && except != IT_SUPER_SHOTGUN)
-		return IT_SUPER_SHOTGUN;
-	if(this.ammo_nails >= 1 && (itm & IT_NAILGUN) && except != IT_NAILGUN)
-		return IT_NAILGUN;
-	if(this.ammo_shells >= 1 && (itm & IT_SHOTGUN) && except != IT_SHOTGUN)
-		return IT_SHOTGUN;
-	if(itm & IT_MJOLNIR)
-		return IT_MJOLNIR;
-	return IT_AXE; // just fall back if all else fails
+	if(this.waterlevel <= 1 && this.ammo_cells >= 1 && (itm & WEP_LIGHTNING) && except != WEP_LIGHTNING)
+		return WEP_LIGHTNING;
+	if(this.ammo_cells >= 1 && (itm & WEP_LASER_CANNON) && except != WEP_LASER_CANNON)
+		return WEP_LASER_CANNON;
+	if(this.ammo_nails >= 2 && (itm & WEP_SUPER_NAILGUN) && except != WEP_SUPER_NAILGUN)
+		return WEP_SUPER_NAILGUN;
+	if(this.ammo_shells >= 2 && (itm & WEP_SUPER_SHOTGUN) && except != WEP_SUPER_SHOTGUN)
+		return WEP_SUPER_SHOTGUN;
+	if(this.ammo_nails >= 1 && (itm & WEP_NAILGUN) && except != WEP_NAILGUN)
+		return WEP_NAILGUN;
+	if(this.ammo_shells >= 1 && (itm & WEP_SHOTGUN) && except != WEP_SHOTGUN)
+		return WEP_SHOTGUN;
+	if(itm & WEP_MJOLNIR)
+		return WEP_MJOLNIR;
+	return WEP_AXE; // just fall back if all else fails
 }
 
 bool W_CheckRogueNoAmmo(entity this, int forwep)
@@ -1586,15 +1586,15 @@ bool W_CheckRogueNoAmmo(entity this, int forwep)
 	{
 		switch(forwep)
 		{
-			case IT_LIGHTNING: return (this.ammo_cells1 >= 1);
-			case IT_SUPER_NAILGUN: return (this.ammo_nails1 >= 2);
-			case IT_SUPER_SHOTGUN: return (this.ammo_shells1 >= 2);
-			case IT_NAILGUN: return (this.ammo_nails1 >= 1);
-			case IT_SHOTGUN: return (this.ammo_shells1 >= 1);
-			case IT_LAVA_SUPER_NAILGUN: return (this.ammo_lava_nails >= 2);
-			case IT_LAVA_NAILGUN: return (this.ammo_lava_nails >= 1);
-			case IT_PLASMA_GUN: return (this.ammo_plasma >= 1);
-			case IT_AXE:
+			case WEP_LIGHTNING: return (this.ammo_cells1 >= 1);
+			case WEP_SUPER_NAILGUN: return (this.ammo_nails1 >= 2);
+			case WEP_SUPER_SHOTGUN: return (this.ammo_shells1 >= 2);
+			case WEP_NAILGUN: return (this.ammo_nails1 >= 1);
+			case WEP_SHOTGUN: return (this.ammo_shells1 >= 1);
+			case WEP_LAVA_SUPER_NAILGUN: return (this.ammo_lava_nails >= 2);
+			case WEP_LAVA_NAILGUN: return (this.ammo_lava_nails >= 1);
+			case WEP_PLASMA_GUN: return (this.ammo_plasma >= 1);
+			case WEP_AXE:
 			default: return true; // axe doesn't use ammo, fallback
 		}
 	}
@@ -1602,7 +1602,7 @@ bool W_CheckRogueNoAmmo(entity this, int forwep)
 	if(this.currentammo > 0)
 		return true;
 
-	if(this.weapon == IT_AXE || this.weapon == IT_GRAPPLE)
+	if(this.weapon == WEP_AXE || this.weapon == WEP_GRAPPLE || this.weapon == WEP_MJOLNIR)
 		return true;
 	
 	W_SwitchWeapon(this, W_BestWeapon(this, 0));
@@ -1620,12 +1620,12 @@ bool W_CheckNoAmmo(entity this, int forwep)
 	{
 		switch(forwep)
 		{
-			case IT_LIGHTNING: return (this.ammo_cells >= 1);
-			case IT_SUPER_NAILGUN: return (this.ammo_nails >= 2);
-			case IT_SUPER_SHOTGUN: return (this.ammo_shells >= 2);
-			case IT_NAILGUN: return (this.ammo_nails >= 1);
-			case IT_SHOTGUN: return (this.ammo_shells >= 1);
-			case IT_AXE: case IT_MJOLNIR:
+			case WEP_LIGHTNING: return (this.ammo_cells >= 1);
+			case WEP_SUPER_NAILGUN: return (this.ammo_nails >= 2);
+			case WEP_SUPER_SHOTGUN: return (this.ammo_shells >= 2);
+			case WEP_NAILGUN: return (this.ammo_nails >= 1);
+			case WEP_SHOTGUN: return (this.ammo_shells >= 1);
+			case WEP_AXE: case WEP_MJOLNIR:
 			default: return true; // axe and hammer don't use ammo, fallback
 		}
 	}
@@ -1633,7 +1633,7 @@ bool W_CheckNoAmmo(entity this, int forwep)
 	if(this.currentammo > 0)
 		return true;
 
-	if(this.weapon == IT_AXE || this.weapon == IT_MJOLNIR)
+	if(this.weapon == WEP_AXE || this.weapon == WEP_MJOLNIR)
 		return true;
 	
 	W_SwitchWeapon(this, W_BestWeapon(this, 0));
@@ -1687,7 +1687,7 @@ void W_Attack(entity this)
 
 	switch(this.weapon)
 	{
-		case IT_AXE:
+		case WEP_AXE:
 		{
 			_sound(this, CHAN_WEAPON, "weapons/ax1.wav", 1, ATTN_NORM);
 			float r = random();
@@ -1702,7 +1702,7 @@ void W_Attack(entity this)
 			this.attack_finished = time + RuneApplyHell(0.5, this);
 			break;
 		}
-		case IT_GRAPPLE:
+		case WEP_GRAPPLE:
 		{
 			if(!this.hook_out)
 				player_grapple1(this);
@@ -1711,47 +1711,47 @@ void W_Attack(entity this)
 			this.attack_finished = time + 0.1;
 			break;
 		}
-		case IT_SHOTGUN:
+		case WEP_SHOTGUN:
 		{
 			player_shot1(this);
 			W_FireShotgun(this);
 			this.attack_finished = time + RuneApplyHell(0.5, this);
 			break;
 		}
-		case IT_SUPER_SHOTGUN:
+		case WEP_SUPER_SHOTGUN:
 		{
 			player_shot1(this);
 			W_FireSuperShotgun(this);
 			this.attack_finished = time + RuneApplyHell(0.7, this);
 			break;
 		}
-		case IT_LAVA_NAILGUN:
+		case WEP_LAVA_NAILGUN:
 		{
 			this.lavaGunFired = true;
 			player_lava_nail1(this);
 			break;
 		}
-		case IT_LAVA_SUPER_NAILGUN:
+		case WEP_LAVA_SUPER_NAILGUN:
 		{
 			this.lavaGunFired = true;
 			player_lava_nail1(this);
 			break;
 		}
-		case IT_MULTI_GRENADE:
+		case WEP_MULTI_GRENADE:
 		{
 			player_rocket1(this);
 			W_FireMultiGrenade(this);
 			this.attack_finished = time + RuneApplyHell(0.6, this);
 			break;
 		}
-		case IT_MULTI_ROCKET:
+		case WEP_MULTI_ROCKET:
 		{
 			player_rocket1(this);
 			W_FireMultiRocket(this);
 			this.attack_finished = time + RuneApplyHell(0.8, this);
 			break;
 		}
-		case IT_PLASMA_GUN:
+		case WEP_PLASMA_GUN:
 		{
 			// player_light1 determines choice of W_FireLightning 
 			//      or W_FirePlasma, but same lighting and frames...
@@ -1759,43 +1759,43 @@ void W_Attack(entity this)
 			player_light1(this);
 			break;
 		}
-		case IT_NAILGUN:
+		case WEP_NAILGUN:
 		{
 			player_nail1(this);
 			break;
 		}
-		case IT_SUPER_NAILGUN:
+		case WEP_SUPER_NAILGUN:
 		{
 			player_nail1(this);
 			break;
 		}
-		case IT_GRENADE_LAUNCHER:
+		case WEP_GRENADE_LAUNCHER:
 		{
 			player_rocket1(this);
 			W_FireGrenade(this);
 			this.attack_finished = time + RuneApplyHell(0.6, this);
 			break;
 		}
-		case IT_ROCKET_LAUNCHER:
+		case WEP_ROCKET_LAUNCHER:
 		{
 			player_rocket1(this);
 			W_FireRocket(this);
 			this.attack_finished = time + RuneApplyHell(0.8, this);
 			break;
 		}
-		case IT_LIGHTNING:
+		case WEP_LIGHTNING:
 		{
 			player_light1(this);
 			this.attack_finished = time + 0.1;
 			_sound(this, CHAN_AUTO, "weapons/lstart.wav", 1, ATTN_NORM);
 			break;
 		}
-		case IT_LASER_CANNON:
+		case WEP_LASER_CANNON:
 		{
 			player_laser1(this);
 			break;
 		}
-		case IT_MJOLNIR:
+		case WEP_MJOLNIR:
 		{
 			if(this.ammo_cells < 30)
 				player_hammer1(this);
@@ -1804,7 +1804,7 @@ void W_Attack(entity this)
 			this.attack_finished = time + 0.8;
 			break;
 		}
-		case IT_PROXIMITY_GUN:
+		case WEP_PROXIMITY_GUN:
 		{
 			player_rocket1(this);
 			W_FireProximityGrenade(this);
@@ -1832,43 +1832,43 @@ void W_ChangeRogueWeapon(entity this, int imp)
 	{
 		case 1:
 		{
-			if(this.weapon == IT_AXE && teamplay >= TEAM_CTF)
-				fl = IT_GRAPPLE;
+			if(this.weapon == WEP_AXE && teamplay >= TEAM_CTF)
+				fl = WEP_GRAPPLE;
 			else
-				fl = IT_AXE;
+				fl = WEP_AXE;
 			break;
 		}
 		case 22:
 		{
 			if(deathmatch && teamplay >= TEAM_CTF)
-				fl = IT_GRAPPLE;
+				fl = WEP_GRAPPLE;
 			break;
 		}
 		case 2:
 		{
-			fl = IT_SHOTGUN;
+			fl = WEP_SHOTGUN;
 			if(this.ammo_shells1 < 1)
 				am = true;
 			break;
 		}
 		case 3:
 		{
-			fl = IT_SUPER_SHOTGUN;
+			fl = WEP_SUPER_SHOTGUN;
 			if(this.ammo_shells1 < 2)
 				am = true;
 			break;
 		}		
 		case 4:
 		{
-			if((this.items & IT_LAVA_NAILGUN) && (this.weapon == IT_NAILGUN || this.ammo_nails1 < 1))
+			if((this.weapons & WEP_LAVA_NAILGUN) && (this.weapon == WEP_NAILGUN || this.ammo_nails1 < 1))
 			{
-				fl = IT_LAVA_NAILGUN;
+				fl = WEP_LAVA_NAILGUN;
 				if(this.ammo_lava_nails < 1)
 					am = true;
 			}
 			else
 			{
-				fl = IT_NAILGUN;
+				fl = WEP_NAILGUN;
 				if(this.ammo_nails1 < 1)
 					am = true;
 			}
@@ -1876,15 +1876,15 @@ void W_ChangeRogueWeapon(entity this, int imp)
 		}
 		case 5:
 		{
-			if((this.items & IT_LAVA_SUPER_NAILGUN) && (this.weapon == IT_SUPER_NAILGUN || this.ammo_nails1 < 2))
+			if((this.weapons & WEP_LAVA_SUPER_NAILGUN) && (this.weapon == WEP_SUPER_NAILGUN || this.ammo_nails1 < 2))
 			{
-				fl = IT_LAVA_SUPER_NAILGUN;
+				fl = WEP_LAVA_SUPER_NAILGUN;
 				if(this.ammo_lava_nails < 2)
 					am = true;
 			}
 			else
 			{
-				fl = IT_SUPER_NAILGUN;
+				fl = WEP_SUPER_NAILGUN;
 				if(this.ammo_nails1 < 2)
 					am = true;
 			}
@@ -1892,15 +1892,15 @@ void W_ChangeRogueWeapon(entity this, int imp)
 		}
 		case 6:
 		{
-			if((this.items & IT_MULTI_GRENADE) && (this.weapon == IT_GRENADE_LAUNCHER || this.ammo_rockets1 < 1))
+			if((this.weapons & WEP_MULTI_GRENADE) && (this.weapon == WEP_GRENADE_LAUNCHER || this.ammo_rockets1 < 1))
 			{
-				fl = IT_MULTI_GRENADE;
+				fl = WEP_MULTI_GRENADE;
 				if(this.ammo_multi_rockets < 1)
 					am = true;
 			}
 			else
 			{
-				fl = IT_GRENADE_LAUNCHER;
+				fl = WEP_GRENADE_LAUNCHER;
 				if(this.ammo_rockets1 < 1)
 					am = true;
 			}
@@ -1908,15 +1908,15 @@ void W_ChangeRogueWeapon(entity this, int imp)
 		}
 		case 7:
 		{
-			if((this.items & IT_MULTI_ROCKET) && (this.weapon == IT_ROCKET_LAUNCHER || this.ammo_rockets1 < 1))
+			if((this.weapons & WEP_MULTI_ROCKET) && (this.weapon == WEP_ROCKET_LAUNCHER || this.ammo_rockets1 < 1))
 			{
-				fl = IT_MULTI_ROCKET;
+				fl = WEP_MULTI_ROCKET;
 				if(this.ammo_multi_rockets < 1)
 					am = true;
 			}
 			else
 			{
-				fl = IT_ROCKET_LAUNCHER;
+				fl = WEP_ROCKET_LAUNCHER;
 				if(this.ammo_rockets1 < 1)
 					am = true;
 			}
@@ -1924,15 +1924,15 @@ void W_ChangeRogueWeapon(entity this, int imp)
 		}
 		case 8:
 		{
-			if((this.items & IT_PLASMA_GUN) && (this.weapon == IT_LIGHTNING || this.ammo_cells < 1))
+			if((this.weapons & WEP_PLASMA_GUN) && (this.weapon == WEP_LIGHTNING || this.ammo_cells < 1))
 			{
-				fl = IT_PLASMA_GUN;
+				fl = WEP_PLASMA_GUN;
 				if(this.ammo_plasma < 1)
 					am = true;
 			}
 			else
 			{
-				fl = IT_LIGHTNING;
+				fl = WEP_LIGHTNING;
 				if(this.ammo_cells1 < 1)
 					am = true;
 			}
@@ -1940,42 +1940,42 @@ void W_ChangeRogueWeapon(entity this, int imp)
 		}
 		case 60:
 		{
-			fl = IT_LAVA_NAILGUN;
+			fl = WEP_LAVA_NAILGUN;
 			if(this.ammo_lava_nails < 1)
 				am = true;
 			break;
 		}
 		case 61:
 		{
-			fl = IT_LAVA_SUPER_NAILGUN;
+			fl = WEP_LAVA_SUPER_NAILGUN;
 			if(this.ammo_lava_nails < 1)
 				am = true;
 			break;
 		}
 		case 62:
 		{
-			fl = IT_MULTI_GRENADE;
+			fl = WEP_MULTI_GRENADE;
 			if(this.ammo_multi_rockets < 1)
 				am = true;
 			break;
 		}
 		case 63:
 		{
-			fl = IT_MULTI_ROCKET;
+			fl = WEP_MULTI_ROCKET;
 			if(this.ammo_multi_rockets < 1)
 				am = true;
 			break;
 		}
 		case 64:
 		{
-			fl = IT_PLASMA_GUN;
+			fl = WEP_PLASMA_GUN;
 			if(this.ammo_plasma < 1)
 				am = true;
 			break;
 		}
 	}
 	
-	if(!(this.items & fl))
+	if(!(this.weapons & fl))
 	{	// don't have the weapon or the ammo
 		sprint(this, "no weapon.\n");
 		return;
@@ -1989,40 +1989,40 @@ void W_ChangeRogueWeapon(entity this, int imp)
 
 	if(this.weapon != fl)
 	{
-		if(this.weapon == IT_LAVA_NAILGUN || 
-				this.weapon == IT_LAVA_SUPER_NAILGUN)
+		if(this.weapon == WEP_LAVA_NAILGUN || 
+				this.weapon == WEP_LAVA_SUPER_NAILGUN)
 		{
-			if(fl == IT_NAILGUN || fl == IT_SUPER_NAILGUN)
+			if(fl == WEP_NAILGUN || fl == WEP_SUPER_NAILGUN)
 				sprint(this, "Normal Nails\n");
 		}
-		else if(this.weapon == IT_MULTI_GRENADE)
+		else if(this.weapon == WEP_MULTI_GRENADE)
 		{
-			if(fl == IT_GRENADE_LAUNCHER)
+			if(fl == WEP_GRENADE_LAUNCHER)
 				sprint(this, "Normal Grenades\n");
 		}
-		else if(this.weapon == IT_MULTI_ROCKET)
+		else if(this.weapon == WEP_MULTI_ROCKET)
 		{
-			if(fl == IT_ROCKET_LAUNCHER)
+			if(fl == WEP_ROCKET_LAUNCHER)
 				sprint(this, "Normal Rockets\n");
 		}
-		else if(this.weapon == IT_PLASMA_GUN)
+		else if(this.weapon == WEP_PLASMA_GUN)
 		{
-			if(fl == IT_LIGHTNING)
+			if(fl == WEP_LIGHTNING)
 				sprint(this, "Lightning Gun\n");
 		}
-		else if(fl == IT_LAVA_NAILGUN || fl == IT_LAVA_SUPER_NAILGUN)
+		else if(fl == WEP_LAVA_NAILGUN || fl == WEP_LAVA_SUPER_NAILGUN)
 		{
 			sprint(this, "Lava Nails!\n");
 		}
-		else if(fl == IT_MULTI_GRENADE)
+		else if(fl == WEP_MULTI_GRENADE)
 		{
 			sprint(this, "Multi-Grenades!\n");
 		}
-		else if(fl == IT_MULTI_ROCKET)
+		else if(fl == WEP_MULTI_ROCKET)
 		{
 			sprint(this, "Multi-Rockets!\n");
 		}
-		else if(fl == IT_PLASMA_GUN)
+		else if(fl == WEP_PLASMA_GUN)
 		{
 			sprint(this, "Plasma Gun!\n");
 		}
@@ -2049,88 +2049,88 @@ void W_ChangeWeapon(entity this, int imp)
 	{
 		case 1:
 		{
-			fl = IT_AXE;
+			fl = WEP_AXE;
 			break;
 		}
 		case 2:
 		{
-			fl = IT_SHOTGUN;
+			fl = WEP_SHOTGUN;
 			if(this.ammo_shells < 1)
 				am = true;
 			break;
 		}
 		case 3:
 		{
-			fl = IT_SUPER_SHOTGUN;
+			fl = WEP_SUPER_SHOTGUN;
 			if(this.ammo_shells < 2)
 				am = true;
 			break;
 		}		
 		case 4:
 		{
-			fl = IT_NAILGUN;
+			fl = WEP_NAILGUN;
 			if(this.ammo_nails < 1)
 				am = true;
 			break;
 		}
 		case 5:
 		{
-			fl = IT_SUPER_NAILGUN;
+			fl = WEP_SUPER_NAILGUN;
 			if(this.ammo_nails < 2)
 				am = true;
 			break;
 		}
 		case 6:
 		{
-			if(MP_HIPNOTIC && this.weapon == IT_GRENADE_LAUNCHER)
-				fl = IT_PROXIMITY_GUN;
+			if(MP_HIPNOTIC && this.weapon == WEP_GRENADE_LAUNCHER)
+				fl = WEP_PROXIMITY_GUN;
 			else
-				fl = IT_GRENADE_LAUNCHER;
+				fl = WEP_GRENADE_LAUNCHER;
 			if(this.ammo_rockets < 1)
 				am = true;
 			break;
 		}
 		case 7:
 		{
-			fl = IT_ROCKET_LAUNCHER;
+			fl = WEP_ROCKET_LAUNCHER;
 			if(this.ammo_rockets < 1)
 				am = true;
 			break;
 		}
 		case 8:
 		{
-			fl = IT_LIGHTNING;
+			fl = WEP_LIGHTNING;
 			if(this.ammo_cells < 1)
 				am = true;
 			break;
 		}
 		case 9:
 		{
-			fl = IT_LASER_CANNON;
+			fl = WEP_LASER_CANNON;
 			if(this.ammo_cells < 1)
 				am = true;
 			break;
 		}
 		case 14:
 		{
-			fl = IT_MJOLNIR;
+			fl = WEP_MJOLNIR;
 			break;
 		}
 		case 50:
 		{
-			fl = IT_PROXIMITY_GUN;
+			fl = WEP_PROXIMITY_GUN;
 			if(this.ammo_rockets < 1)
 				am = true;
 			break;
 		}
 	}
 	
-	if(!(this.items & fl))
+	if(!(this.weapons & fl))
 	{	// don't have the weapon or the ammo
-		if(MP_HIPNOTIC && fl == IT_GRENADE_LAUNCHER)
+		if(MP_HIPNOTIC && fl == WEP_GRENADE_LAUNCHER)
 		{
-			fl = IT_PROXIMITY_GUN;
-			if(!(this.items & fl))
+			fl = WEP_PROXIMITY_GUN;
+			if(!(this.weapons & fl))
 			{
 				sprint(this, "no weapon.\n");
 				return;
@@ -2184,28 +2184,28 @@ void CheatCommand(entity this)
 		this.ammo_shells = 100;
 		this.ammo_cells = 200;
 	}
-	this.items |= 
-		(IT_AXE |
-		IT_SHOTGUN |
-		IT_SUPER_SHOTGUN |
-		IT_NAILGUN |
-		IT_SUPER_NAILGUN |
-		IT_GRENADE_LAUNCHER |
-		IT_ROCKET_LAUNCHER |
-		IT_KEY1 | IT_KEY2);
+	this.weapons |= 
+		(WEP_AXE |
+		WEP_SHOTGUN |
+		WEP_SUPER_SHOTGUN |
+		WEP_NAILGUN |
+		WEP_SUPER_NAILGUN |
+		WEP_GRENADE_LAUNCHER |
+		WEP_ROCKET_LAUNCHER);
+	this.items |= (IT_KEY1 | IT_KEY2);
 
-	this.items |= IT_LIGHTNING;
+	this.weapons |= WEP_LIGHTNING;
 	if(MP_HIPNOTIC)
-		this.items |= (IT_LASER_CANNON | IT_MJOLNIR | IT_PROXIMITY_GUN);
+		this.weapons |= (WEP_LASER_CANNON | WEP_MJOLNIR | WEP_PROXIMITY_GUN);
 	if(MP_ROGUE)
 	{
-		this.items |= (IT_LAVA_NAILGUN | IT_LAVA_SUPER_NAILGUN | IT_MULTI_GRENADE | IT_MULTI_ROCKET);
+		this.weapons |= (WEP_LAVA_NAILGUN | WEP_LAVA_SUPER_NAILGUN | WEP_MULTI_GRENADE | WEP_MULTI_ROCKET);
 		this.ammo_lava_nails = 200;
 		this.ammo_multi_rockets = 100;
 		this.ammo_plasma = 100;
 	}
 
-	W_SwitchWeapon(this, IT_ROCKET_LAUNCHER);
+	W_SwitchWeapon(this, WEP_ROCKET_LAUNCHER);
 	this.impulse = 0;
 }
 
@@ -2218,7 +2218,7 @@ Go to the next weapon with ammo
 */
 void CycleRogueWeaponCommand(entity this)
 {
-	int myitems = this.items;
+	int myitems = this.weapons;
 	EnableComboWeapons(this);
 	UpdateAmmoCounts(this);
 
@@ -2231,102 +2231,102 @@ void CycleRogueWeaponCommand(entity this)
 
 		switch(this.weapon)
 		{
-			case IT_PLASMA_GUN:
+			case WEP_PLASMA_GUN:
 			{
-				this.weapon = IT_AXE;
+				this.weapon = WEP_AXE;
 				break;
 			}
-			case IT_AXE:
+			case WEP_AXE:
 			{
 				if(deathmatch && teamplay >= TEAM_CTF)
-					this.weapon = IT_GRAPPLE;
+					this.weapon = WEP_GRAPPLE;
 				else
 				{
-					this.weapon = IT_SHOTGUN;
+					this.weapon = WEP_SHOTGUN;
 					if(this.ammo_shells1 < 1)
 						am = true;
 				}
 				break;
 			}
-			case IT_GRAPPLE:
+			case WEP_GRAPPLE:
 			{
-				this.weapon = IT_SHOTGUN;
+				this.weapon = WEP_SHOTGUN;
 				if(this.ammo_shells1 < 1)
 					am = true;
 			}
-			case IT_SHOTGUN:
+			case WEP_SHOTGUN:
 			{
-				this.weapon = IT_SUPER_SHOTGUN;
+				this.weapon = WEP_SUPER_SHOTGUN;
 				if(this.ammo_shells1 < 2)
 					am = true;
 				break;
 			}		
-			case IT_SUPER_SHOTGUN:
+			case WEP_SUPER_SHOTGUN:
 			{
-				this.weapon = IT_NAILGUN;
+				this.weapon = WEP_NAILGUN;
 				if(this.ammo_nails1 < 1)
 					am = true;
 				break;
 			}
-			case IT_NAILGUN:
+			case WEP_NAILGUN:
 			{
-				this.weapon = IT_LAVA_NAILGUN;
+				this.weapon = WEP_LAVA_NAILGUN;
 				if(this.ammo_lava_nails < 1)
 					am = true;
 				break;
 			}
-			case IT_LAVA_NAILGUN:
+			case WEP_LAVA_NAILGUN:
 			{
-				this.weapon = IT_SUPER_NAILGUN;
+				this.weapon = WEP_SUPER_NAILGUN;
 				if(this.ammo_nails1 < 2)
 					am = true;
 				break;
 			}
-			case IT_SUPER_NAILGUN:
+			case WEP_SUPER_NAILGUN:
 			{
-				this.weapon = IT_LAVA_SUPER_NAILGUN;
+				this.weapon = WEP_LAVA_SUPER_NAILGUN;
 				if(this.ammo_lava_nails < 2)
 					am = true;
 				break;
 			}
-			case IT_LAVA_SUPER_NAILGUN:
+			case WEP_LAVA_SUPER_NAILGUN:
 			{
-				this.weapon = IT_GRENADE_LAUNCHER;
+				this.weapon = WEP_GRENADE_LAUNCHER;
 				if(this.ammo_rockets1 < 1)
 					am = true;
 				break;
 			}
-			case IT_GRENADE_LAUNCHER:
+			case WEP_GRENADE_LAUNCHER:
 			{
-				this.weapon = IT_MULTI_GRENADE;
+				this.weapon = WEP_MULTI_GRENADE;
 				if(this.ammo_multi_rockets < 1)
 					am = true;
 				break;
 			}
-			case IT_MULTI_GRENADE:
+			case WEP_MULTI_GRENADE:
 			{
-				this.weapon = IT_ROCKET_LAUNCHER;
+				this.weapon = WEP_ROCKET_LAUNCHER;
 				if(this.ammo_cells1 < 1)
 					am = true;
 				break;
 			}
-			case IT_ROCKET_LAUNCHER:
+			case WEP_ROCKET_LAUNCHER:
 			{
-				this.weapon = IT_MULTI_ROCKET;
+				this.weapon = WEP_MULTI_ROCKET;
 				if(this.ammo_multi_rockets < 1)
 					am = true;
 				break;
 			}
-			case IT_MULTI_ROCKET:
+			case WEP_MULTI_ROCKET:
 			{
-				this.weapon = IT_LIGHTNING;
+				this.weapon = WEP_LIGHTNING;
 				if(this.ammo_cells1 < 1)
 					am = true;
 				break;
 			}
-			case IT_LIGHTNING:
+			case WEP_LIGHTNING:
 			{
-				this.weapon = IT_PLASMA_GUN;
+				this.weapon = WEP_PLASMA_GUN;
 				if(this.ammo_plasma < 1)
 					am = true;
 				break;
@@ -2361,90 +2361,90 @@ void CycleWeaponCommand(entity this)
 
 		switch(this.weapon)
 		{
-			case IT_MJOLNIR:
+			case WEP_MJOLNIR:
 			{
-				this.weapon = IT_AXE;
+				this.weapon = WEP_AXE;
 				break;
 			}
-			case IT_AXE:
+			case WEP_AXE:
 			{
-				this.weapon = IT_SHOTGUN;
+				this.weapon = WEP_SHOTGUN;
 				if(this.ammo_shells < 1)
 					am = true;
 				break;
 			}
-			case IT_SHOTGUN:
+			case WEP_SHOTGUN:
 			{
-				this.weapon = IT_SUPER_SHOTGUN;
+				this.weapon = WEP_SUPER_SHOTGUN;
 				if(this.ammo_shells < 2)
 					am = true;
 				break;
 			}		
-			case IT_SUPER_SHOTGUN:
+			case WEP_SUPER_SHOTGUN:
 			{
-				this.weapon = IT_NAILGUN;
+				this.weapon = WEP_NAILGUN;
 				if(this.ammo_nails < 1)
 					am = true;
 				break;
 			}
-			case IT_NAILGUN:
+			case WEP_NAILGUN:
 			{
-				this.weapon = IT_SUPER_NAILGUN;
+				this.weapon = WEP_SUPER_NAILGUN;
 				if(this.ammo_nails < 2)
 					am = true;
 				break;
 			}
-			case IT_SUPER_NAILGUN:
+			case WEP_SUPER_NAILGUN:
 			{
-				this.weapon = IT_GRENADE_LAUNCHER;
+				this.weapon = WEP_GRENADE_LAUNCHER;
 				if(this.ammo_rockets < 1)
 					am = true;
 				break;
 			}
-			case IT_GRENADE_LAUNCHER:
+			case WEP_GRENADE_LAUNCHER:
 			{
 				if(MP_HIPNOTIC)
-					this.weapon = IT_PROXIMITY_GUN;
+					this.weapon = WEP_PROXIMITY_GUN;
 				else
-					this.weapon = IT_ROCKET_LAUNCHER;
+					this.weapon = WEP_ROCKET_LAUNCHER;
 				if(this.ammo_rockets < 1)
 					am = true;
 				break;
 			}
-			case IT_PROXIMITY_GUN:
+			case WEP_PROXIMITY_GUN:
 			{
-				this.weapon = IT_ROCKET_LAUNCHER;
+				this.weapon = WEP_ROCKET_LAUNCHER;
 				if(this.ammo_rockets < 1)
 					am = true;
 				break;
 			}
-			case IT_ROCKET_LAUNCHER:
+			case WEP_ROCKET_LAUNCHER:
 			{
-				this.weapon = IT_LIGHTNING;
+				this.weapon = WEP_LIGHTNING;
 				if(this.ammo_cells < 1)
 					am = true;
 				break;
 			}
-			case IT_LIGHTNING:
+			case WEP_LIGHTNING:
 			{
 				if(MP_HIPNOTIC)
 				{
-					this.weapon = IT_LASER_CANNON;
+					this.weapon = WEP_LASER_CANNON;
 					if(this.ammo_cells < 1)
 						am = true;
 				}
 				else
-					this.weapon = IT_AXE;
+					this.weapon = WEP_AXE;
 				break;
 			}
-			case IT_LASER_CANNON:
+			case WEP_LASER_CANNON:
 			{
-				this.weapon = IT_MJOLNIR;
+				this.weapon = WEP_MJOLNIR;
 				break;
 			}
 		}
 	
-		if((this.items & this.weapon) && am == false)
+		if((this.weapons & this.weapon) && am == false)
 		{
 			this.prevweapon = oldwep;
 			W_SetCurrentAmmo(this);
@@ -2464,7 +2464,7 @@ Go to the prev weapon with ammo
 */
 void CycleWeaponRogueReverseCommand(entity this)
 {
-	int myitems = this.items;
+	int myitems = this.weapons;
 	EnableComboWeapons(this);
 	UpdateAmmoCounts(this);
 	this.impulse = 0;
@@ -2476,101 +2476,101 @@ void CycleWeaponRogueReverseCommand(entity this)
 
 		switch(this.weapon)
 		{
-			case IT_PLASMA_GUN:
+			case WEP_PLASMA_GUN:
 			{
-				this.weapon = IT_LIGHTNING;
+				this.weapon = WEP_LIGHTNING;
 				if(this.ammo_cells1 < 1)
 					am = true;
 				break;
 			}
-			case IT_LIGHTNING:
+			case WEP_LIGHTNING:
 			{
-				this.weapon = IT_MULTI_ROCKET;
+				this.weapon = WEP_MULTI_ROCKET;
 				if(this.ammo_multi_rockets < 1)
 					am = true;
 				break;
 			}
-			case IT_MULTI_ROCKET:
+			case WEP_MULTI_ROCKET:
 			{
-				this.weapon = IT_ROCKET_LAUNCHER;
+				this.weapon = WEP_ROCKET_LAUNCHER;
 				if(this.ammo_rockets1 < 1)
 					am = true;
 				break;
 			}
-			case IT_ROCKET_LAUNCHER:
+			case WEP_ROCKET_LAUNCHER:
 			{
-				this.weapon = IT_MULTI_GRENADE;
+				this.weapon = WEP_MULTI_GRENADE;
 				if(this.ammo_multi_rockets < 1)
 					am = true;
 				break;
 			}
-			case IT_MULTI_GRENADE:
+			case WEP_MULTI_GRENADE:
 			{
-				this.weapon = IT_GRENADE_LAUNCHER;
+				this.weapon = WEP_GRENADE_LAUNCHER;
 				if(this.ammo_rockets1 < 1)
 					am = true;
 				break;
 			}
-			case IT_GRENADE_LAUNCHER:
+			case WEP_GRENADE_LAUNCHER:
 			{
-				this.weapon = IT_LAVA_SUPER_NAILGUN;
+				this.weapon = WEP_LAVA_SUPER_NAILGUN;
 				if(this.ammo_lava_nails < 2)
 					am = true;
 				break;
 			}
-			case IT_LAVA_SUPER_NAILGUN:
+			case WEP_LAVA_SUPER_NAILGUN:
 			{
-				this.weapon = IT_SUPER_NAILGUN;
+				this.weapon = WEP_SUPER_NAILGUN;
 				if(this.ammo_nails1 < 2)
 					am = true;
 				break;
 			}
-			case IT_SUPER_NAILGUN:
+			case WEP_SUPER_NAILGUN:
 			{
-				this.weapon = IT_LAVA_NAILGUN;
+				this.weapon = WEP_LAVA_NAILGUN;
 				if(this.ammo_lava_nails < 2)
 					am = true;
 				break;
 			}
-			case IT_LAVA_NAILGUN:
+			case WEP_LAVA_NAILGUN:
 			{
-				this.weapon = IT_NAILGUN;
+				this.weapon = WEP_NAILGUN;
 				if(this.ammo_nails1 < 1)
 					am = true;
 				break;
 			}
-			case IT_NAILGUN:
+			case WEP_NAILGUN:
 			{
-				this.weapon = IT_SUPER_SHOTGUN;
+				this.weapon = WEP_SUPER_SHOTGUN;
 				if(this.ammo_shells1 < 2)
 					am = true;
 				break;
 			}		
-			case IT_SUPER_SHOTGUN:
+			case WEP_SUPER_SHOTGUN:
 			{
-				this.weapon = IT_SHOTGUN;
+				this.weapon = WEP_SHOTGUN;
 				if(this.ammo_shells1 < 1)
 					am = true;
 				break;
 			}
-			case IT_SHOTGUN:
+			case WEP_SHOTGUN:
 			{
 				if(deathmatch && teamplay >= TEAM_CTF)
-					this.weapon = IT_GRAPPLE;
+					this.weapon = WEP_GRAPPLE;
 				else
-					this.weapon = IT_AXE;
+					this.weapon = WEP_AXE;
 				break;
 			}
 	//ZOID--
-			case IT_GRAPPLE:
+			case WEP_GRAPPLE:
 			{
-				this.weapon = IT_AXE;
+				this.weapon = WEP_AXE;
 				break;
 			}
 	//--ZOID
-			case IT_AXE:
+			case WEP_AXE:
 			{
-				this.weapon = IT_PLASMA_GUN;
+				this.weapon = WEP_PLASMA_GUN;
 				if(this.ammo_plasma < 1)
 					am = true;
 				break;
@@ -2596,7 +2596,7 @@ void CycleWeaponReverseCommand(entity this)
 		return;
 	}
 
-	int myitems = this.items;
+	int myitems = this.weapons;
 	this.impulse = 0;
 	float oldwep = this.weapon;
 
@@ -2606,84 +2606,84 @@ void CycleWeaponReverseCommand(entity this)
 
 		switch(this.weapon)
 		{
-			case IT_MJOLNIR:
+			case WEP_MJOLNIR:
 			{
-				this.weapon = IT_LASER_CANNON;
+				this.weapon = WEP_LASER_CANNON;
 				if(this.ammo_cells < 1)
 					am = true;
 				break;
 			}
-			case IT_LASER_CANNON:
+			case WEP_LASER_CANNON:
 			{
-				this.weapon = IT_LIGHTNING;
+				this.weapon = WEP_LIGHTNING;
 				if(this.ammo_cells < 1)
 					am = true;
 				break;
 			}
-			case IT_LIGHTNING:
+			case WEP_LIGHTNING:
 			{
-				this.weapon = IT_ROCKET_LAUNCHER;
+				this.weapon = WEP_ROCKET_LAUNCHER;
 				if(this.ammo_rockets < 1)
 					am = true;
 				break;
 			}
-			case IT_ROCKET_LAUNCHER:
+			case WEP_ROCKET_LAUNCHER:
 			{
 				if(MP_HIPNOTIC)
-					this.weapon = IT_PROXIMITY_GUN;
+					this.weapon = WEP_PROXIMITY_GUN;
 				else
-					this.weapon = IT_GRENADE_LAUNCHER;
+					this.weapon = WEP_GRENADE_LAUNCHER;
 				if(this.ammo_rockets < 1)
 					am = true;
 				break;
 			}
-			case IT_PROXIMITY_GUN:
+			case WEP_PROXIMITY_GUN:
 			{
-				this.weapon = IT_GRENADE_LAUNCHER;
+				this.weapon = WEP_GRENADE_LAUNCHER;
 				if(this.ammo_rockets < 1)
 					am = true;
 				break;
 			}
-			case IT_GRENADE_LAUNCHER:
+			case WEP_GRENADE_LAUNCHER:
 			{
-				this.weapon = IT_SUPER_NAILGUN;
+				this.weapon = WEP_SUPER_NAILGUN;
 				if(this.ammo_nails < 2)
 					am = true;
 				break;
 			}
-			case IT_SUPER_NAILGUN:
+			case WEP_SUPER_NAILGUN:
 			{
-				this.weapon = IT_NAILGUN;
+				this.weapon = WEP_NAILGUN;
 				if(this.ammo_nails < 1)
 					am = true;
 				break;
 			}
-			case IT_NAILGUN:
+			case WEP_NAILGUN:
 			{
-				this.weapon = IT_SUPER_SHOTGUN;
+				this.weapon = WEP_SUPER_SHOTGUN;
 				if(this.ammo_shells < 2)
 					am = true;
 				break;
 			}		
-			case IT_SUPER_SHOTGUN:
+			case WEP_SUPER_SHOTGUN:
 			{
-				this.weapon = IT_SHOTGUN;
+				this.weapon = WEP_SHOTGUN;
 				if(this.ammo_shells < 1)
 					am = true;
 				break;
 			}
-			case IT_SHOTGUN:
+			case WEP_SHOTGUN:
 			{
-				this.weapon = IT_AXE;
+				this.weapon = WEP_AXE;
 				break;
 			}
-			case IT_AXE:
+			case WEP_AXE:
 			{
 				if(MP_HIPNOTIC)
-					this.weapon = IT_MJOLNIR;
+					this.weapon = WEP_MJOLNIR;
 				else
 				{
-					this.weapon = IT_LIGHTNING;
+					this.weapon = WEP_LIGHTNING;
 					if(this.ammo_cells < 1)
 						am = true;
 				}
@@ -2717,7 +2717,7 @@ void QuadCheat(entity this)
 
 void W_LastWeapon(entity this)
 {
-	if ((this.items & this.prevweapon) && this.prevweapon != this.weapon && W_CheckNoAmmo(this, this.prevweapon))
+	if ((this.weapons & this.prevweapon) && this.prevweapon != this.weapon && W_CheckNoAmmo(this, this.prevweapon))
 		W_SwitchWeapon(this, this.prevweapon);
 	else
 		W_SwitchWeapon(this, W_BestWeapon(this, this.weapon));
@@ -2884,7 +2884,7 @@ void W_WeaponFrame(entity this)
 
 	if(this.lavaGunFired)
 	{
-		if(this.weapon == IT_LAVA_NAILGUN || this.weapon == IT_LAVA_SUPER_NAILGUN)
+		if(this.weapon == WEP_LAVA_NAILGUN || this.weapon == WEP_LAVA_SUPER_NAILGUN)
 			_sound(this, CHAN_WEAPON, "lavagun/snail.wav", 1, ATTN_NORM);
 		this.lavaGunFired = false;
 	}

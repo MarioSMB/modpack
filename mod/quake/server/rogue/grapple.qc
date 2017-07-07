@@ -185,7 +185,7 @@ void GrappleService(entity this)
 	}
 
 	// drop the hook if player lets go of button
-	if((!this.button0 && this.weapon == IT_GRAPPLE) || this.teleport_time > time) 
+	if((!this.button0 && this.weapon == WEP_GRAPPLE) || this.teleport_time > time) 
 	{ // release when we get 'ported
 		GrappleReset(this.hook);
 		return;

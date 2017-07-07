@@ -471,7 +471,7 @@ void TossBackpack(entity this)
 	entity item = spawn();
 
 	// See if you have the Shotgun or Super Shotgun on
-	if((this.weapon == IT_SHOTGUN) || (this.weapon == IT_SUPER_SHOTGUN))
+	if((this.weapon == WEP_SHOTGUN) || (this.weapon == WEP_SUPER_SHOTGUN))
 	{
 		if(this.ammo_shells1 >= 20)
 		{
@@ -486,7 +486,7 @@ void TossBackpack(entity this)
 	}		
 	
 	// See if you have neither the Shotgun or Super Shotgun
-	if(!(this.items & IT_SHOTGUN) && !(this.items & IT_SUPER_SHOTGUN))
+	if(!(this.weapons & WEP_SHOTGUN) && !(this.weapons & WEP_SUPER_SHOTGUN))
 	{
 		if(this.ammo_shells1 >= 20)
 		{
@@ -501,7 +501,7 @@ void TossBackpack(entity this)
 	}		
 	
 	// See if we are using a nailgun
-	if((this.weapon == IT_NAILGUN) || (this.weapon == IT_SUPER_NAILGUN))
+	if((this.weapon == WEP_NAILGUN) || (this.weapon == WEP_SUPER_NAILGUN))
 	{
 		if(this.ammo_nails1 >= 20)
 		{
@@ -516,7 +516,7 @@ void TossBackpack(entity this)
 	}	
 
 	// See if we are using the lava nailguns
-	if((this.weapon == IT_LAVA_NAILGUN) || (this.weapon == IT_LAVA_SUPER_NAILGUN))
+	if((this.weapon == WEP_LAVA_NAILGUN) || (this.weapon == WEP_LAVA_SUPER_NAILGUN))
 	{
 		if(this.ammo_lava_nails >= 20)
 		{
@@ -531,7 +531,7 @@ void TossBackpack(entity this)
 	}	
 
 	// Check to see if we have neither nailgun
-	if(!(this.items & IT_NAILGUN) && !(this.items & IT_SUPER_NAILGUN))
+	if(!(this.weapons & WEP_NAILGUN) && !(this.weapons & WEP_SUPER_NAILGUN))
 	{
 		// put both regular and lava nails in
 		if(this.ammo_nails1 >= 20)
@@ -557,7 +557,7 @@ void TossBackpack(entity this)
 	}	
 	
 	// See if we are using a grenade or rocket launcher
-	if((this.weapon == IT_GRENADE_LAUNCHER) || (this.weapon == IT_ROCKET_LAUNCHER))
+	if((this.weapon == WEP_GRENADE_LAUNCHER) || (this.weapon == WEP_ROCKET_LAUNCHER))
 	{
 		if(this.ammo_rockets1 >= 10) {
 			item.ammo_rockets1 = 10;
@@ -569,7 +569,7 @@ void TossBackpack(entity this)
 	}
 
 	// See if we are using the multi grenade or rocket launcher
-	if((this.weapon == IT_MULTI_GRENADE) || (this.weapon == IT_MULTI_ROCKET))
+	if((this.weapon == WEP_MULTI_GRENADE) || (this.weapon == WEP_MULTI_ROCKET))
 	{
 		if(this.ammo_multi_rockets >= 10)
 		{
@@ -584,7 +584,7 @@ void TossBackpack(entity this)
 	}
 
 	// See if we have neither the Grenade or rocket launcher
-	if(!(this.items & IT_GRENADE_LAUNCHER) && !(this.items & IT_ROCKET_LAUNCHER))
+	if(!(this.weapons & WEP_GRENADE_LAUNCHER) && !(this.weapons & WEP_ROCKET_LAUNCHER))
 	{
 		if(this.ammo_rockets1 >= 10)
 		{
@@ -609,7 +609,7 @@ void TossBackpack(entity this)
 	}
 
 	// See if we're using the lightning gun
-	if(this.weapon == IT_LIGHTNING)
+	if(this.weapon == WEP_LIGHTNING)
 	{	
 		if(this.ammo_cells1 >= 20)
 		{
@@ -624,7 +624,7 @@ void TossBackpack(entity this)
 	}
 
 	// see if we are using the plasma gun
-	if(this.weapon == IT_PLASMA_GUN)
+	if(this.weapon == WEP_PLASMA_GUN)
 	{	
 		if(this.ammo_plasma >= 10)
 		{
@@ -639,7 +639,7 @@ void TossBackpack(entity this)
 	}
 
 	// see if we don't have the lightning gun
-	if(!(this.items & IT_LIGHTNING))
+	if(!(this.weapons & WEP_LIGHTNING))
 	{	
 		if(this.ammo_cells1 >= 20)
 		{
@@ -702,19 +702,19 @@ void Team_weapon_touch(entity this, entity toucher)
 // if the player was using his best weapon, change up to the new one if better		
 	//int best = W_BestWeapon(toucher);
 
-	int new = IT_AXE;
+	int new = WEP_AXE;
 	if(this.classname == "weapon_nailgun")
-		new = IT_NAILGUN;
+		new = WEP_NAILGUN;
 	else if(this.classname == "weapon_supernailgun")
-		new = IT_SUPER_NAILGUN;
+		new = WEP_SUPER_NAILGUN;
 	else if(this.classname == "weapon_supershotgun")
-		new = IT_SUPER_SHOTGUN;
+		new = WEP_SUPER_SHOTGUN;
 	else if(this.classname == "weapon_rocketlauncher")
-		new = IT_ROCKET_LAUNCHER;
+		new = WEP_ROCKET_LAUNCHER;
 	else if(this.classname == "weapon_grenadelauncher")
-		new = IT_GRENADE_LAUNCHER;
+		new = WEP_GRENADE_LAUNCHER;
 	else if(this.classname == "weapon_lightning")
-		new = IT_LIGHTNING;
+		new = WEP_LIGHTNING;
 	else
 		objerror(this, "Team_weapon_touch: unknown classname");
 
@@ -728,8 +728,8 @@ void Team_weapon_touch(entity this, entity toucher)
 	bound_other_ammo(toucher);
 
 // change to the weapon
-	int old = toucher.items;
-	toucher.items |= new;
+	int old = toucher.weapons;
+	toucher.weapons |= new;
 	
 	delete(this);
 
@@ -755,8 +755,7 @@ void TossWeapon(entity this)
 	if(teamplay < 1)
 		return;
 
-	if((this.weapon == IT_AXE) || (this.weapon == IT_SHOTGUN) ||
-		(this.weapon == IT_GRAPPLE))
+	if((this.weapon == WEP_AXE) || (this.weapon == WEP_SHOTGUN) || (this.weapon == WEP_GRAPPLE) || (this.weapon == WEP_MJOLNIR))
 		return;
 		
 	entity item = spawn();
@@ -771,58 +770,58 @@ void TossWeapon(entity this)
 	item.solid = SOLID_TRIGGER;
 	set_movetype(item, MOVETYPE_BOUNCE);
 	
-	if(this.weapon == IT_SUPER_SHOTGUN)
+	if(this.weapon == WEP_SUPER_SHOTGUN)
 	{
 		_setmodel(item, "progs/g_shot.mdl");
-		item.weapon = IT_SUPER_SHOTGUN;
+		item.weapon = WEP_SUPER_SHOTGUN;
 		item.netname = "Double-barrelled Shotgun";
 		item.classname = "weapon_supershotgun";
-		this.items &= ~IT_SUPER_SHOTGUN;
+		this.weapons &= ~WEP_SUPER_SHOTGUN;
 	}
 
-	if(this.weapon == IT_NAILGUN || this.weapon == IT_LAVA_NAILGUN)
+	if(this.weapon == WEP_NAILGUN || this.weapon == WEP_LAVA_NAILGUN)
 	{
 		_setmodel(item, "progs/g_nail.mdl");
-		item.weapon = IT_NAILGUN;
+		item.weapon = WEP_NAILGUN;
 		item.netname = "nailgun";
 		item.classname = "weapon_nailgun";
-		this.items &= ~(IT_NAILGUN | IT_LAVA_NAILGUN);
+		this.weapons &= ~(WEP_NAILGUN | WEP_LAVA_NAILGUN);
 	}
 		
-	if(this.weapon == IT_SUPER_NAILGUN || this.weapon == IT_LAVA_SUPER_NAILGUN)
+	if(this.weapon == WEP_SUPER_NAILGUN || this.weapon == WEP_LAVA_SUPER_NAILGUN)
 	{
 		_setmodel(item, "progs/g_nail2.mdl");
-		item.weapon = IT_SUPER_NAILGUN;
+		item.weapon = WEP_SUPER_NAILGUN;
 		item.netname = "Super Nailgun";
 		item.classname = "weapon_supernailgun";
-		this.items &= ~(IT_SUPER_NAILGUN | IT_LAVA_SUPER_NAILGUN);
+		this.weapons &= ~(WEP_SUPER_NAILGUN | WEP_LAVA_SUPER_NAILGUN);
 	}
 	
-	if(this.weapon == IT_GRENADE_LAUNCHER || this.weapon == IT_MULTI_GRENADE)
+	if(this.weapon == WEP_GRENADE_LAUNCHER || this.weapon == WEP_MULTI_GRENADE)
 	{
 		_setmodel(item, "progs/g_rock.mdl");
-		item.weapon = IT_GRENADE_LAUNCHER;
+		item.weapon = WEP_GRENADE_LAUNCHER;
 		item.netname = "Grenade Launcher";
 		item.classname = "weapon_grenadelauncher";
-		this.items &= ~(IT_GRENADE_LAUNCHER | IT_MULTI_GRENADE);
+		this.weapons &= ~(WEP_GRENADE_LAUNCHER | WEP_MULTI_GRENADE);
 	}
 	
-	if(this.weapon == IT_ROCKET_LAUNCHER || this.weapon == IT_MULTI_ROCKET)
+	if(this.weapon == WEP_ROCKET_LAUNCHER || this.weapon == WEP_MULTI_ROCKET)
 	{
 		_setmodel(item, "progs/g_rock2.mdl");
-		item.weapon = IT_ROCKET_LAUNCHER;
+		item.weapon = WEP_ROCKET_LAUNCHER;
 		item.netname = "Rocket Launcher";
 		item.classname = "weapon_rocketlauncher";
-		this.items &= ~(IT_ROCKET_LAUNCHER | IT_MULTI_ROCKET);
+		this.weapons &= ~(WEP_ROCKET_LAUNCHER | WEP_MULTI_ROCKET);
 	}
 	
-	if(this.weapon == IT_LIGHTNING || this.weapon == IT_PLASMA_GUN)
+	if(this.weapon == WEP_LIGHTNING || this.weapon == WEP_PLASMA_GUN)
 	{
 		_setmodel(item, "progs/g_light.mdl");
-		item.weapon = IT_LIGHTNING;
+		item.weapon = WEP_LIGHTNING;
 		item.netname = "Thunderbolt";
 		item.classname = "weapon_lightning";
-		this.items &= ~(IT_LIGHTNING | IT_PLASMA_GUN);
+		this.weapons &= ~(WEP_LIGHTNING | WEP_PLASMA_GUN);
 	}
 	setsize(item, '-16 -16 0', '16 16 56');
 	settouch(item, Team_weapon_touch);
@@ -1103,7 +1102,7 @@ void TeamFlagTouch(entity this, entity toucher)
 		toucher.ctf_flags |= CTF_FLAG_TEAM1;
 	else
 		toucher.ctf_flags |= CTF_FLAG_TEAM2;
-	toucher.items = toucher.items | this.items;
+	toucher.items |= this.items;
 
 	toucher.ctf_flagsince = time;
 

@@ -42,7 +42,7 @@ void hip_powerup_touch(entity this, entity toucher)
 	_sound(toucher, CHAN_VOICE, this.noise, 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
 	this.solid = SOLID_NOT;
-	toucher.items2 |= this.items2;
+	toucher.items |= this.items;
 	this.model = string_null;
 
 // do the apropriate action
@@ -75,7 +75,7 @@ spawnfunc(item_artifact_wetsuit)
 	this.noise = "misc/weton.wav";
 	_setmodel(this, "progs/wetsuit.mdl");
 	this.netname = "Wetsuit";
-	this.items2 = HIP_IT_WETSUIT;
+	this.items = HIP_IT_WETSUIT;
 	setsize(this, '-16 -16 -24', '16 16 32');
 
 	StartItem(this);
@@ -144,7 +144,7 @@ spawnfunc(item_artifact_empathy_shields)
 	_setmodel(this, "progs/empathy.mdl");
 	this.noise = "hipitems/empathy.wav";
 	this.netname = "Empathy Shields";
-	this.items2 = HIP_IT_EMPATHY_SHIELDS;
+	this.items = HIP_IT_EMPATHY_SHIELDS;
 	setsize(this, '-16 -16 0', '16 16 32');
 	StartItem(this);
 }
@@ -163,9 +163,9 @@ spawnfunc(weapon_mjolnir)
 {
 	precache_model ("progs/g_hammer.mdl");
 	_setmodel(this, "progs/g_hammer.mdl");
-	this.weapon = IT_MJOLNIR;
+	this.weapon = WEP_MJOLNIR;
 	this.netname = "Mjolnir";
-	//this.items = IT_MJOLNIR;
+	//this.weapons = WEP_MJOLNIR;
 	settouch(this, weapon_touch);
 	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
@@ -179,9 +179,9 @@ spawnfunc(weapon_laser_gun)
 {
 	precache_model ("progs/g_laserg.mdl");
 	_setmodel(this, "progs/g_laserg.mdl");
-	this.weapon = IT_LASER_CANNON;
+	this.weapon = WEP_LASER_CANNON;
 	this.netname = "Laser Cannon";
-	//this.items = IT_LASER_CANNON;
+	//this.weapons = WEP_LASER_CANNON;
 	settouch(this, weapon_touch);
 	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');
@@ -195,9 +195,9 @@ spawnfunc(weapon_proximity_gun)
 {
 	precache_model ("progs/g_prox.mdl");
 	_setmodel(this, "progs/g_prox.mdl");
-	this.weapon = IT_PROXIMITY_GUN;
+	this.weapon = WEP_PROXIMITY_GUN;
 	this.netname = "Proximity Gun";
-	//this.items = IT_PROXIMITY_GUN;
+	//this.weapons = WEP_PROXIMITY_GUN;
 	settouch(this, weapon_touch);
 	setcefc(this, weapon_customize);
 	setsize(this, '-16 -16 0', '16 16 56');

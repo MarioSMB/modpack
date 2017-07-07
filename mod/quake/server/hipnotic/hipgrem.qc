@@ -244,100 +244,100 @@ bool GremlinAttemptWeaponSteal(entity this)
 	//
 	entity victim = this.enemy;
 	int best = victim.weapon;
-	if(best == IT_AXE || best == IT_SHOTGUN || best == IT_MJOLNIR)
+	if(best == WEP_AXE || best == WEP_SHOTGUN || best == WEP_MJOLNIR)
 		return false;
 	// take that weapon from the entity
-	victim.items = victim.items - (victim.items & best);
+	victim.weapons &= ~best;
 	// give it to our gremlin
-	this.items = this.items | best;
+	this.weapons |= best;
 	this.weapon = best;
 	// take some ammo while we are at it
-	this.items = this.items - ( this.items & (IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS ) );
-	if(best == IT_SUPER_SHOTGUN)
+	this.items &= ~(IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS);
+	if(best == WEP_SUPER_SHOTGUN)
 	{
 		amount = victim.ammo_shells;
 		if(amount > 20)
 			amount = 20;
 		victim.ammo_shells = victim.ammo_shells - amount;
 		this.ammo_shells = this.ammo_shells + amount;
-		this.items = this.items | IT_SHELLS;
+		this.items |= IT_SHELLS;
 		this.currentammo = this.ammo_shells;
 		sprint (victim, "Gremlin stole your Super Shotgun\n");
 	}
-	else if(best == IT_NAILGUN)
+	else if(best == WEP_NAILGUN)
 	{
 		amount = victim.ammo_nails;
 		if(amount > 40)
 			amount = 40;
 		victim.ammo_nails = victim.ammo_nails - amount;
 		this.ammo_nails = this.ammo_nails + amount;
-		this.items = this.items | IT_NAILS;
+		this.items |= IT_NAILS;
 		this.currentammo = this.ammo_nails;
 		sprint (victim, "Gremlin stole your Nailgun\n");
 	}
-	else if(best == IT_SUPER_NAILGUN)
+	else if(best == WEP_SUPER_NAILGUN)
 	{
 		amount = victim.ammo_nails;
 		if(amount > 40)
 			amount = 40;
 		victim.ammo_nails = victim.ammo_nails - amount;
 		this.ammo_nails = this.ammo_nails + amount;
-		this.items = this.items | IT_NAILS;
+		this.items |= IT_NAILS;
 		this.currentammo = this.ammo_nails;
 		sprint (victim, "Gremlin stole your Super Nailgun\n");
 	}
-	else if(best == IT_GRENADE_LAUNCHER)
+	else if(best == WEP_GRENADE_LAUNCHER)
 	{
 		amount = victim.ammo_rockets;
 		if(amount > 5)
 			amount = 5;
 		victim.ammo_rockets = victim.ammo_rockets - amount;
 		this.ammo_rockets = this.ammo_rockets + amount;
-		this.items = this.items | IT_ROCKETS;
+		this.items |= IT_ROCKETS;
 		this.currentammo = this.ammo_rockets;
 		sprint (victim, "Gremlin stole your Grenade Launcher\n");
 	}
-	else if(best == IT_ROCKET_LAUNCHER)
+	else if(best == WEP_ROCKET_LAUNCHER)
 	{
 		amount = victim.ammo_rockets;
 		if(amount > 5)
 			amount = 5;
 		victim.ammo_rockets = victim.ammo_rockets - amount;
 		this.ammo_rockets = this.ammo_rockets + amount;
-		this.items = this.items | IT_ROCKETS;
+		this.items |= IT_ROCKETS;
 		this.currentammo = this.ammo_rockets;
 		sprint (victim, "Gremlin stole your Rocket Launcher\n");
 	}
-	else if(best == IT_LIGHTNING)
+	else if(best == WEP_LIGHTNING)
 	{
 		amount = victim.ammo_cells;
 		if(amount > 40)
 			amount = 40;
 		victim.ammo_cells = victim.ammo_cells - amount;
 		this.ammo_cells = this.ammo_cells + amount;
-		this.items = this.items | IT_CELLS;
+		this.items |= IT_CELLS;
 		this.currentammo = this.ammo_cells;
 		sprint (victim, "Gremlin stole your Lightning Gun\n");
 	}
-	else if(best == IT_LASER_CANNON)
+	else if(best == WEP_LASER_CANNON)
 	{
 		amount = victim.ammo_cells;
 		if(amount > 40)
 			amount = 40;
 		victim.ammo_cells = victim.ammo_cells - amount;
 		this.ammo_cells = this.ammo_cells + amount;
-		this.items = this.items | IT_CELLS;
+		this.items |= IT_CELLS;
 		this.currentammo = this.ammo_cells;
 		sprint (victim, "Gremlin stole your Laser Cannon\n");
 	}
-	else if(best == IT_PROXIMITY_GUN)
+	else if(best == WEP_PROXIMITY_GUN)
 	{
 		amount = victim.ammo_rockets;
 		if(amount > 5)
 			amount = 5;
 		victim.ammo_rockets = victim.ammo_rockets - amount;
 		this.ammo_rockets = this.ammo_rockets + amount;
-		this.items = this.items | IT_ROCKETS;
+		this.items |= IT_ROCKETS;
 		this.currentammo = this.ammo_rockets;
 		sprint (victim, "Gremlin stole your Proximity Gun\n");
 	}
@@ -702,13 +702,13 @@ void gremlin_jump5(entity this)
 	set_anim(this, anim_gremlin_jump5, gremlin_jump6);
 	ai_face(this);
 
-	if(this.flags & FL_ONGROUND)
+	if(IS_ONGROUND(this))
 	{
 		settouch(this, Gremlin_JumpTouch);
 		makevectors(this.angles);
 		this.origin_z = this.origin_z + 1;
 		this.velocity = v_forward * 300 + '0 0 300';
-		this.flags &= ~FL_ONGROUND;
+		UNSET_ONGROUND(this);
 	}
 	else
 		gremlin_run1(this);
@@ -953,7 +953,7 @@ void gremlin_flip1(entity this)
 	makevectors (this.angles);
 	this.origin_z = this.origin_z + 1;
 	this.velocity = '0 0 350' - (v_forward * 200);
-	if(this.flags & FL_ONGROUND)
+	if(IS_ONGROUND(this))
 		this.flags &= ~FL_ONGROUND;
 	_sound(this, CHAN_VOICE, "grem/death.wav", 1, ATTN_NORM);
 }
@@ -970,28 +970,29 @@ void GremlinDropBackpack(entity this)
 
 	this.items &= ~(IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS);
 	item.items = this.items;
+	item.weapons = this.weapons;
 
-	if(item.items & IT_AXE)
+	if(item.weapons & WEP_AXE)
 		item.netname = "Axe";
-	else if(item.items & IT_SHOTGUN)
+	else if(item.weapons & WEP_SHOTGUN)
 		item.netname = "Shotgun";
-	else if(item.items & IT_SUPER_SHOTGUN)
+	else if(item.weapons & WEP_SUPER_SHOTGUN)
 		item.netname = "Double-barrelled Shotgun";
-	else if(item.items & IT_NAILGUN)
+	else if(item.weapons & WEP_NAILGUN)
 		item.netname = "Nailgun";
-	else if(item.items & IT_SUPER_NAILGUN)
+	else if(item.weapons & WEP_SUPER_NAILGUN)
 		item.netname = "Super Nailgun";
-	else if(item.items & IT_GRENADE_LAUNCHER)
+	else if(item.weapons & WEP_GRENADE_LAUNCHER)
 		item.netname = "Grenade Launcher";
-	else if(item.items & IT_ROCKET_LAUNCHER)
+	else if(item.weapons & WEP_ROCKET_LAUNCHER)
 		item.netname = "Rocket Launcher";
-	else if(item.items & IT_LIGHTNING)
+	else if(item.weapons & WEP_LIGHTNING)
 		item.netname = "Thunderbolt";
-	else if(item.items & IT_LASER_CANNON)
+	else if(item.weapons & WEP_LASER_CANNON)
 		item.netname = "Laser Cannon";
-	else if(item.items & IT_PROXIMITY_GUN)
+	else if(item.weapons & WEP_PROXIMITY_GUN)
 		item.netname = "Proximity Gun";
-	else if(item.items & IT_MJOLNIR)
+	else if(item.weapons & WEP_MJOLNIR)
 		item.netname = "Mjolnir";
 	else
 		item.netname = "";
@@ -1019,7 +1020,7 @@ void GremlinDropBackpack(entity this)
 void gremlin_die(entity this, entity attacker)
 {
 // check for gib
-	if(this.items & (IT_SUPER_SHOTGUN | IT_NAILGUN | IT_SUPER_NAILGUN | IT_GRENADE_LAUNCHER | IT_ROCKET_LAUNCHER | IT_LIGHTNING | IT_LASER_CANNON | IT_PROXIMITY_GUN))
+	if(this.weapons & (WEP_SUPER_SHOTGUN | WEP_NAILGUN | WEP_SUPER_NAILGUN | WEP_GRENADE_LAUNCHER | WEP_ROCKET_LAUNCHER | WEP_LIGHTNING | WEP_LASER_CANNON | WEP_PROXIMITY_GUN))
 	{
 		GremlinDropBackpack(this);
 		this.stoleweapon = false;
@@ -1038,7 +1039,7 @@ void gremlin_die(entity this, entity attacker)
 		ThrowGib(this, "progs/gib1.mdl", this.health);
 		return;
 	}
-	else if(dot > 0.7 && (random() < 0.5) && (this.flags & FL_ONGROUND))
+	else if(dot > 0.7 && (random() < 0.5) && IS_ONGROUND(this))
 	{
 		gremlin_flip1(this);
 		return;
@@ -1108,7 +1109,7 @@ entity GremlinFindVictim(entity this)
 	entity head = findradius(this.origin, 1000);
 	while(head)
 	{
-		if(!(head.flags & FL_NOTARGET) && ((head.flags & FL_MONSTER) || IS_CLIENT(head)))
+		if(!(head.flags & FL_NOTARGET) && (IS_MONSTER(head) || IS_CLIENT(head)))
 		{
 			if(visible(this, head) && (head.health > 0) && (head !=this))
 			{
@@ -1380,53 +1381,53 @@ bool GremlinWeaponAttack(entity this)
 
 	this.show_hostile = time + 1; // wake monsters up
 
-	if(this.weapon == IT_SHOTGUN)
+	if(this.weapon == WEP_SHOTGUN)
 	{
 		gremlin_shot1(this);
 		Gremlin_FireShotGun(this);
 		SUB_AttackFinished(this, 1);
 	}
-	else if(this.weapon == IT_SUPER_SHOTGUN)
+	else if(this.weapon == WEP_SUPER_SHOTGUN)
 	{
 		gremlin_shot1(this);
 		Gremlin_FireSuperShotGun(this);
 		SUB_AttackFinished(this, 1);
 	}
-	else if(this.weapon == IT_NAILGUN)
+	else if(this.weapon == WEP_NAILGUN)
 	{
 		gremlin_nail3(this);
 		SUB_AttackFinished(this, 1);
 	}
-	else if(this.weapon == IT_SUPER_NAILGUN)
+	else if(this.weapon == WEP_SUPER_NAILGUN)
 	{
 		gremlin_nail3(this);
 		SUB_AttackFinished(this, 1);
 	}
-	else if(this.weapon == IT_GRENADE_LAUNCHER)
+	else if(this.weapon == WEP_GRENADE_LAUNCHER)
 	{
 		gremlin_rocket1(this);
 		OgreFireGrenade(this);
 		this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
 		SUB_AttackFinished(this, 1);
 	}
-	else if(this.weapon == IT_ROCKET_LAUNCHER)
+	else if(this.weapon == WEP_ROCKET_LAUNCHER)
 	{
 		gremlin_rocket1(this);
 		Gremlin_FireRocket(this);
 		SUB_AttackFinished(this, 1);
 	}
-	else if(this.weapon == IT_LIGHTNING)
+	else if(this.weapon == WEP_LIGHTNING)
 	{
 		gremlin_light1(this);
 		SUB_AttackFinished(this, 1);
 		_sound(this, CHAN_AUTO, "weapons/lstart.wav", 1, ATTN_NORM);
 	}
-	else if(this.weapon == IT_LASER_CANNON)
+	else if(this.weapon == WEP_LASER_CANNON)
 	{
 		gremlin_laser3(this);
 		SUB_AttackFinished(this, 1);
 	}
-	else if(this.weapon == IT_PROXIMITY_GUN)
+	else if(this.weapon == WEP_PROXIMITY_GUN)
 	{
 		gremlin_rocket1(this);
 		GremlinFireProximityGrenade(this);
@@ -1441,13 +1442,13 @@ void Gremlin_MissileAttack(entity this)
 	{
 		if(GremlinWeaponAttack(this))
 			return;
-		else if((random() < 0.1) && (this.flags & FL_ONGROUND))
+		else if((random() < 0.1) && IS_ONGROUND(this))
 		{
 			gremlin_jump1(this);
 			return;
 		}
 	}
-	if(this.flags & FL_ONGROUND)
+	if(IS_ONGROUND(this))
 		gremlin_jump1(this);
 }
 
@@ -1717,7 +1718,7 @@ void Gremlin_JumpTouch(entity this, entity toucher)
 
 	if(!checkbottom(this))
 	{
-		if(this.flags & FL_ONGROUND)
+		if(IS_ONGROUND(this))
 		{
 			settouch(this, func_null);
 			setthink(this, gremlin_jump1);
@@ -1735,7 +1736,7 @@ void Gremlin_FlipTouch(entity this, entity toucher)
 {
 	if(!checkbottom(this))
 	{
-		if(this.flags & FL_ONGROUND)
+		if(IS_ONGROUND(this))
 		{
 			settouch(this, func_null);
 			setthink(this, gremlin_flip1);

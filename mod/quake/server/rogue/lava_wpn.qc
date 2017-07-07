@@ -49,7 +49,7 @@ void W_FireLavaSpikes(entity this, float ox)
 {
 	makevectors(this.v_angle);
 	
-	if(this.ammo_lava_nails >= 2 && this.weapon == IT_LAVA_SUPER_NAILGUN)
+	if(this.ammo_lava_nails >= 2 && this.weapon == WEP_LAVA_SUPER_NAILGUN)
 	{
 		W_FireSuperLavaSpikes(this);
 		return;
@@ -97,13 +97,13 @@ void lavaspike_touch(entity this, entity toucher)
 		{
 			float old_armortype = toucher.armortype;
 			float old_armorvalue = toucher.armorvalue;
-			int old_armormask = toucher.items2 &(IT2_ARMOR1|IT2_ARMOR2|IT2_ARMOR3);
+			int old_armormask = toucher.items & (IT_ARMOR1 | IT_ARMOR2 | IT_ARMOR3);
 			toucher.armortype = 0;
 			toucher.armorvalue = 0;
 			T_Damage(toucher, this, this.owner, 9);
 			toucher.armortype = old_armortype;
 			toucher.armorvalue = old_armorvalue;
-			toucher.items2 |= old_armormask;
+			toucher.items |= old_armormask;
 		}
 		else		// is a monster
 		{

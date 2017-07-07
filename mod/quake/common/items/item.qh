@@ -1,49 +1,51 @@
 #pragma once
 
-const int IT_AXE                  = BIT(12);
-const int IT_SHOTGUN              = BIT(0);
-const int IT_SUPER_SHOTGUN        = BIT(1);
-const int IT_NAILGUN              = BIT(2);
-const int IT_SUPER_NAILGUN        = BIT(3);
-const int IT_GRENADE_LAUNCHER     = BIT(4);
-const int IT_ROCKET_LAUNCHER      = BIT(5);
-const int IT_LIGHTNING            = BIT(6);
-const int IT_EXTRA_WEAPON         = BIT(7);
+const int WEP_AXE                  = BIT(0);
+const int WEP_SHOTGUN              = BIT(1);
+const int WEP_SUPER_SHOTGUN        = BIT(2);
+const int WEP_NAILGUN              = BIT(3);
+const int WEP_SUPER_NAILGUN        = BIT(4);
+const int WEP_GRENADE_LAUNCHER     = BIT(5);
+const int WEP_ROCKET_LAUNCHER      = BIT(6);
+const int WEP_LIGHTNING            = BIT(7);
 
-const int IT_SHELLS               = BIT(8);
-const int IT_NAILS                = BIT(9);
-const int IT_ROCKETS              = BIT(10);
-const int IT_CELLS                = BIT(11);
+const int WEP_LAVA_NAILGUN         = BIT(8);
+const int WEP_LAVA_SUPER_NAILGUN   = BIT(9);         
+const int WEP_MULTI_GRENADE        = BIT(10);
+const int WEP_MULTI_ROCKET         = BIT(11);
+const int WEP_PLASMA_GUN           = BIT(12);
 
-const int IT_LAVA_NAILGUN         = BIT(12);
-const int IT_LAVA_SUPER_NAILGUN   = BIT(13);         
-const int IT_MULTI_GRENADE        = BIT(14);
-const int IT_MULTI_ROCKET         = BIT(15);
-const int IT_PLASMA_GUN           = BIT(16);
+const int WEP_MJOLNIR              = BIT(13);
+const int WEP_LASER_CANNON         = BIT(14);
+const int WEP_PROXIMITY_GUN        = BIT(15);
+const int WEP_GRAPPLE              = BIT(16);
 
-const int IT_ARMOR1               = BIT(13);
-const int IT_ARMOR2               = BIT(14);
-const int IT_ARMOR3               = BIT(15);
-const int IT_SUPERHEALTH          = BIT(16);
 
-const int IT_KEY1                 = BIT(17);
-const int IT_KEY2                 = BIT(18);
+const int IT_SHELLS               = BIT(0);
+const int IT_NAILS                = BIT(1);
+const int IT_ROCKETS              = BIT(2);
+const int IT_CELLS                = BIT(3);
 
-const int IT_INVISIBILITY         = BIT(19);
-const int IT_INVULNERABILITY      = BIT(20);
-const int IT_SUIT                 = BIT(21);
-const int IT_QUAD                 = BIT(22);
-const int IT_GRAPPLE              = BIT(23);
+const int IT_ARMOR1               = BIT(4);
+const int IT_ARMOR2               = BIT(5);
+const int IT_ARMOR3               = BIT(6);
+const int IT_SUPERHEALTH          = BIT(7);
 
-const int IT2_ARMOR1              = BIT(0);
-const int IT2_ARMOR2              = BIT(1);
-const int IT2_ARMOR3              = BIT(2);
-const int IT2_LAVA_NAILS          = BIT(3);
-const int IT2_PLASMA_AMMO         = BIT(4);
-const int IT2_MULTI_ROCKETS       = BIT(5);
-const int IT2_SHIELD              = BIT(6);
-const int IT2_ANTIGRAV            = BIT(7);
-const int IT2_SUPERHEALTH         = BIT(8);
-const int IT2_EARTHQUAKE          = BIT(9);          
-const int IT2_V_SPHERE            = BIT(10);
+const int IT_KEY1                 = BIT(8);
+const int IT_KEY2                 = BIT(9);
 
+const int IT_INVISIBILITY         = BIT(10);
+const int IT_INVULNERABILITY      = BIT(11);
+const int IT_SUIT                 = BIT(12);
+const int IT_QUAD                 = BIT(13);
+
+const int IT_LAVA_NAILS          = BIT(14);
+const int IT_PLASMA_AMMO         = BIT(15);
+const int IT_MULTI_ROCKETS       = BIT(16);
+const int IT_SHIELD              = BIT(17);
+const int IT_ANTIGRAV            = BIT(18);
+const int IT_EARTHQUAKE          = BIT(19);
+const int IT_V_SPHERE            = BIT(20);
+
+const int HIP_IT_WETSUIT         = BIT(21);
+const int HIP_IT_EMPATHY_SHIELDS = BIT(22);

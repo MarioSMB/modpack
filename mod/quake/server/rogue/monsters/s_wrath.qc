@@ -579,7 +579,7 @@ spawnfunc(monster_super_wrath)
 	this.pain_finished = 0;
 	
 //    if(this.spawnflags & 2)
-//       this.items2 = IT2_SHIELD;
+//       this.items = IT_SHIELD;
 	this.th_stand = overlord_stand1;
 	this.th_walk = overlord_walk01;
 	this.th_run = overlord_run01;

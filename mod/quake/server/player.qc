@@ -195,13 +195,13 @@ void player_stand1(entity this)
 		return;
 	}
 
-	if(this.weapon == IT_AXE)
+	if(this.weapon == WEP_AXE)
 	{
 		if(this.walkframe >= 12)
 			this.walkframe = 0;
 		this.frame = anim_player_axstnd1 + this.walkframe;
 	}
-	else if(this.weapon == IT_MJOLNIR)
+	else if(this.weapon == WEP_MJOLNIR)
 	{
 		if(this.walkframe >= 12)
 			this.walkframe = 0;
@@ -228,13 +228,13 @@ void player_run(entity this)
 		return;
 	}
 
-	if(this.weapon == IT_AXE)
+	if(this.weapon == WEP_AXE)
 	{
 		if(this.walkframe == 6)
 			this.walkframe = 0;
 		this.frame = anim_player_axrun1 + this.walkframe;
 	}
-	else if(this.weapon == IT_MJOLNIR)
+	else if(this.weapon == WEP_MJOLNIR)
 	{
 		if(this.walkframe == 6)
 			this.walkframe = 0;
@@ -438,7 +438,7 @@ void player_light1(entity this)
 	if(this.weaponframe == 5)
 		this.weaponframe = 1;
 	SuperDamageSound(this);
-	if(this.weapon == IT_PLASMA_GUN)
+	if(this.weapon == WEP_PLASMA_GUN)
 	{
 		W_FirePlasma(this);
 		player_run(this);
@@ -462,7 +462,7 @@ void player_light2(entity this)
 	if(this.weaponframe == 5)
 		this.weaponframe = 1;
 	SuperDamageSound(this);
-	if(this.weapon != IT_PLASMA_GUN)
+	if(this.weapon != WEP_PLASMA_GUN)
 	{
 		W_FireLightning(this);
 		this.attack_finished = time + 0.2;
@@ -620,9 +620,9 @@ void player_pain(entity this, entity attacker, float damage)
 	if(this.invisible_finished > time)
 		return;		// eyes don't have pain frames
 
-	if(this.weapon == IT_AXE)
+	if(this.weapon == WEP_AXE)
 		player_axpain1(this, attacker);
-	else if(this.weapon == IT_MJOLNIR)
+	else if(this.weapon == WEP_MJOLNIR)
 		player_hampain1(this, attacker);
 	else
 		player_pain1(this, attacker);
@@ -842,7 +842,7 @@ void PlayerDie(entity this, entity attacker)
 	// hipnotic fields
 	this.wetsuit_finished = 0;
 	this.empathy_finished = 0;
-	this.items2 &= ~HIP_IT_EMPATHY_SHIELDS;
+	this.items &= ~HIP_IT_EMPATHY_SHIELDS;
 
 	// rogue fields
 	this.gravity = 1.0;
@@ -885,12 +885,12 @@ void PlayerDie(entity this, entity attacker)
 	this.angles_x = 0;
 	this.angles_z = 0;
 	
-	if(this.weapon == IT_AXE)
+	if(this.weapon == WEP_AXE)
 	{
 		player_die_ax1(this);
 		return;
 	}
-	else if(this.weapon == IT_MJOLNIR)
+	else if(this.weapon == WEP_MJOLNIR)
 	{
 		this.modelindex = modelindex_hammer; // use hammer model
 		player_die_ham1(this);
@@ -1005,7 +1005,7 @@ void shield_spawn(entity shieldOwner, vector dir);
 bool TeamArmorDam(entity targ, entity inflictor, entity attacker, float damage);
 void player_touch(entity this, entity toucher) 
 {
-	if(this.items2 & IT2_SHIELD)
+	if(this.items & IT_SHIELD)
 	{
 		if(IS_PLAYER(toucher))
 		{

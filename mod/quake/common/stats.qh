@@ -142,6 +142,6 @@ REGISTER_STAT(SERVERFLAGS, int, serverflags)
 REGISTER_STAT(WETSUIT_FINISHED, float)
 
 #ifdef SVQC
-.int items2;
+.int weapons;
 #endif
-REGISTER_STAT(ITEMS2, int, this.items2)
+REGISTER_STAT(WEAPONS, int, this.weapons)

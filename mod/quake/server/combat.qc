@@ -138,8 +138,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 		return;
 	IsExplosionDamage = false;
 
-	if(MP_ROGUE)
-	if(targ.items2 & IT2_SHIELD)
+	if(MP_ROGUE && (targ.items & IT_SHIELD))
 	{
 		// allow some damage to pass through
 		damage = shield_hit(targ, inflictor, attacker, damage);
@@ -153,7 +152,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 
 	if(MP_HIPNOTIC)
 	{
-		if ((targ.items2 & HIP_IT_EMPATHY_SHIELDS) && !(inflictor.items2 & HIP_IT_EMPATHY_SHIELDS) && (targ != attacker))
+		if ((targ.items & HIP_IT_EMPATHY_SHIELDS) && !(inflictor.items & HIP_IT_EMPATHY_SHIELDS) && (targ != attacker))
 		{
 			empathyused = true;
 			damage = damage/2;
@@ -177,10 +176,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 	{
 		save = targ.armorvalue;
 		targ.armortype = 0;	// lost all armor
-		if(MP_ROGUE)
-			targ.items2 &= ~(IT2_ARMOR1 | IT2_ARMOR2 | IT2_ARMOR3);
-		else
-			targ.items &= ~(IT_ARMOR1 | IT_ARMOR2 | IT_ARMOR3);
+		targ.items &= ~(IT_ARMOR1 | IT_ARMOR2 | IT_ARMOR3);
 	}
 	
 	targ.armorvalue = targ.armorvalue - save;
@@ -219,7 +215,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 
 	if(MP_HIPNOTIC)
 	{
-		if(targ.items2 & HIP_IT_EMPATHY_SHIELDS)
+		if(targ.items & HIP_IT_EMPATHY_SHIELDS)
 		{
 			if(targ.empathy_sound < time)
 			{

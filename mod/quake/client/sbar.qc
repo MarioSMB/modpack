@@ -222,16 +222,6 @@ string Sbar_PickSigil(int frm)
 	}
 }
 
-string Sbar_PickRogueItem(int frm)
-{
-	switch(frm)
-	{
-		default:
-		case 0: return "gfx/r_shield1";
-		case 1: return "gfx/r_agrav1";
-	}
-}
-
 string Sbar_PickItem(int frm)
 {
 	switch(frm)
@@ -243,16 +233,6 @@ string Sbar_PickItem(int frm)
 		case 3: return "gfx/sb_invuln";
 		case 4: return "gfx/sb_suit";
 		case 5: return "gfx/sb_quad";
-	}
-}
-
-string Sbar_PickHIPItem(int frm)
-{
-	switch(frm)
-	{
-		default:
-		case 0: return "gfx/sb_wsuit";
-		case 1: return "gfx/sb_eshld";
 	}
 }
 
@@ -723,22 +703,15 @@ void Sbar_FinaleOverlay()
 	drawpic(vec2((autocvar_vid_conwidth - pz.x) / 2, 16), "gfx/finale", pz, '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 }
 
-const int HIT_PROXIMITY_GUN_BIT = 16;
-const int HIT_MJOLNIR_BIT = 7;
-const int HIT_LASER_CANNON_BIT = 23;
-
-const int HIT_PROXIMITY_GUN = BIT(HIT_PROXIMITY_GUN_BIT);
-const int HIT_MJOLNIR = BIT(HIT_MJOLNIR_BIT);
-const int HIT_LASER_CANNON = BIT(HIT_LASER_CANNON_BIT);
 int HIP_GetWeaponBit(int numb)
 {
 	switch(numb)
 	{
 		default:
-		case 0: return HIT_PROXIMITY_GUN_BIT; // laser cannon
-		case 1: return HIT_MJOLNIR_BIT;
+		case 0: return 15; // proximity gun
+		case 1: return 13; // mjolnir
 		case 2: return 4; // 4??
-		case 3: return HIT_LASER_CANNON_BIT;
+		case 3: return 14; // laser cannon
 	}
 }
 
@@ -747,27 +720,29 @@ int HIP_GetWeaponBit(int numb)
 Sbar_DrawInventory
 ===============
 */
-int olditems;
-float item_gettime[32];
+int oldweapons;
+float weapon_gettime[32];
 void Sbar_DrawInventory()
 {
 	int flashon;
 
 	// set flash times
 	int myitems = STAT(ITEMS);
-	if(olditems != myitems)
+	int myweapons = STAT(WEAPONS);
+
+	if(oldweapons != myweapons)
 	{
 		for(int j = 0; j < 32; j++)
 		{
-			if((myitems & BIT(j)) != (olditems & BIT(j)))
-				item_gettime[j] = time;
+			if((myweapons & BIT(j)) != (oldweapons & BIT(j)))
+				weapon_gettime[j] = time;
 		}
 	}
-	olditems = myitems;
+	oldweapons = myweapons;
 
 	if(MP_ROGUE)
 	{
-		if(STAT(ACTIVEWEAPON) >= IT_LAVA_NAILGUN)
+		if(STAT(ACTIVEWEAPON) >= WEP_LAVA_NAILGUN)
 			Sbar_DrawAlphaPic(0, -24, "gfx/r_invbar1", autocvar_sbar_alpha_bg);
 		else
 			Sbar_DrawAlphaPic(0, -24, "gfx/r_invbar2", autocvar_sbar_alpha_bg);
@@ -778,13 +753,13 @@ void Sbar_DrawInventory()
 	// weapons
 	for(int j = 0; j < 7; j++)
 	{
-		if(myitems & (IT_SHOTGUN << j))
+		if(myweapons & (WEP_SHOTGUN << j))
 		{
-			float thetime = item_gettime[j];
+			float thetime = weapon_gettime[j];
 			flashon = rint(max(0, time - thetime) * 10);
 			if(flashon >= 10)
 			{
-				if(getstati(STAT_ACTIVEWEAPON) == (IT_SHOTGUN << j))
+				if(getstati(STAT_ACTIVEWEAPON) == (WEP_SHOTGUN << j))
 					flashon = 1;
 				else
 					flashon = 0;
@@ -803,9 +778,9 @@ void Sbar_DrawInventory()
 		for(int j = 0; j < 4; j++)
 		{
 			int hipweapon = HIP_GetWeaponBit(j);
-			if(myitems & BIT(hipweapon) )
+			if(myweapons & BIT(hipweapon))
 			{
-				float thetime = item_gettime[hipweapon];
+				float thetime = weapon_gettime[hipweapon];
 				flashon = rint((time - thetime) * 10);
 				if(flashon >= 10)
 				{
@@ -820,7 +795,7 @@ void Sbar_DrawInventory()
 				// check grenade launcher
 				if(j == 2)
 				{
-					if(myitems & HIT_PROXIMITY_GUN)
+					if(myweapons & WEP_PROXIMITY_GUN)
 					{
 						if(flashon)
 						{
@@ -831,7 +806,7 @@ void Sbar_DrawInventory()
 				}
 				else if(j == 3)
 				{
-					if(myitems & (IT_SHOTGUN<<4))
+					if(myweapons & (WEP_SHOTGUN<<4))
 					{
 						if(!grenadeflashing)
 							Sbar_DrawPic(96, -16, Sbar_PickHIPWeapon(flashon, 3));
@@ -848,11 +823,11 @@ void Sbar_DrawInventory()
 	if(MP_ROGUE)
 	{
 		// check for powered up weapon
-		if(STAT(ACTIVEWEAPON) >= IT_LAVA_NAILGUN)
+		if(STAT(ACTIVEWEAPON) >= WEP_LAVA_NAILGUN)
 		{
 			for(int j = 0; j < 5; j++)
 			{
-				if(STAT(ACTIVEWEAPON) == (IT_LAVA_NAILGUN << j))
+				if(STAT(ACTIVEWEAPON) == (WEP_LAVA_NAILGUN << j))
 					Sbar_DrawPic((j + 2) * 24, -16, strcat("gfx/", Sbar_PickRogueWeapon_wepname(j)));
 			}
 		}
@@ -884,7 +859,7 @@ void Sbar_DrawInventory()
 	{
 		for(int j = 0; j < 6; j++)
 		{
-			if(myitems & BIT(17 + j))
+			if(myitems & BIT(8 + j))
 			{
 				//MED 01/04/97 changed keys
 				if(j > 1)
@@ -895,20 +870,18 @@ void Sbar_DrawInventory()
 
 	if(MP_HIPNOTIC)
 	{
-		for(int j = 0; j < 2; j++)
-		{
-			if(STAT(ITEMS2) & BIT(j + 1))
-				Sbar_DrawPic(288 + j * 16, -16, Sbar_PickHIPItem(j));
-		}
+		if(myitems & HIP_IT_WETSUIT)
+			Sbar_DrawPic(288, -16, "gfx/sb_wsuit");
+		if(myitems & HIP_IT_EMPATHY_SHIELDS)
+			Sbar_DrawPic(288 + 16, -16, "gfx/sb_eshld");
 	}
 
 	if(MP_ROGUE)
 	{
-		for(int j = 0; j < 2; j++)
-		{
-			if(myitems & BIT(29 + j))
-				Sbar_DrawPic(288 + j * 16, -16, Sbar_PickRogueItem(j));
-		}
+		if(myitems & IT_SHIELD)
+			Sbar_DrawPic(288, -16, "gfx/r_shield1");
+		if(myitems & IT_ANTIGRAV)
+			Sbar_DrawPic(288 + 16, -16, "gfx/r_agrav1");
 	}
 
 	if(!MP_ROGUE)
@@ -1060,24 +1033,12 @@ void Sbar_Draw()
 				else
 				{
 					string apic = string_null;
-					if(MP_ROGUE)
-					{
-						if(STAT(ITEMS2) & IT2_ARMOR3)
-							apic = "gfx/sb_armor3";
-						else if(STAT(ITEMS2) & IT2_ARMOR2)
-							apic = "gfx/sb_armor2";
-						else if(STAT(ITEMS2) & IT2_ARMOR1)
-							apic = "gfx/sb_armor1";
-					}
-					else
-					{
-						if(STAT(ITEMS) & IT_ARMOR3)
-							apic = "gfx/sb_armor3";
-						else if(STAT(ITEMS) & IT_ARMOR2)
-							apic = "gfx/sb_armor2";
-						else if(STAT(ITEMS) & IT_ARMOR1)
-							apic = "gfx/sb_armor1";
-					}
+					if(STAT(ITEMS) & IT_ARMOR3)
+						apic = "gfx/sb_armor3";
+					else if(STAT(ITEMS) & IT_ARMOR2)
+						apic = "gfx/sb_armor2";
+					else if(STAT(ITEMS) & IT_ARMOR1)
+						apic = "gfx/sb_armor1";
 
 					if(apic)
 					{
@@ -1102,11 +1063,11 @@ void Sbar_Draw()
 					pic = "gfx/sb_rocket";
 				else if(STAT(ITEMS) & IT_CELLS)
 					pic = "gfx/sb_cells";
-				else if(STAT(ITEMS2) & IT2_LAVA_NAILS)
+				else if(STAT(ITEMS) & IT_LAVA_NAILS)
 					pic = "gfx/r_ammolava";
-				else if(STAT(ITEMS2) & IT2_PLASMA_AMMO)
+				else if(STAT(ITEMS) & IT_PLASMA_AMMO)
 					pic = "gfx/r_ammomulti";
-				else if(STAT(ITEMS2) & IT2_MULTI_ROCKETS)
+				else if(STAT(ITEMS) & IT_MULTI_ROCKETS)
 					pic = "gfx/r_ammoplasma";
 
 				if(pic)

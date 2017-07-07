@@ -41,8 +41,8 @@ void SetChangeParms(entity this)
 
 // remove items
 	this.items &= ~(IT_KEY1 | IT_KEY2 | IT_INVISIBILITY | IT_INVULNERABILITY | IT_SUIT | IT_QUAD);
-	this.items2 &= ~(HIP_IT_WETSUIT | HIP_IT_EMPATHY_SHIELDS); // hipnotic
-	this.items2 &= ~(IT2_ANTIGRAV | IT2_SHIELD | IT2_SUPERHEALTH); // rogue
+	this.items &= ~(HIP_IT_WETSUIT | HIP_IT_EMPATHY_SHIELDS); // hipnotic
+	this.items &= ~(IT_ANTIGRAV | IT_SHIELD | IT_SUPERHEALTH); // rogue
 	this.gravity = 1.0;
 
 	this.health = bound(50, this.health, 100); // cap super health
@@ -51,7 +51,7 @@ void SetChangeParms(entity this)
 		SetNewParms();
 	else
 	{
-		parm1 = this.items;
+		parm1 = this.weapons;
 		parm2 = this.health;
 		parm3 = this.armorvalue;
 		parm4 = max(25, this.ammo_shells);
@@ -60,11 +60,12 @@ void SetChangeParms(entity this)
 		parm7 = this.ammo_cells;
 		parm8 = this.weapon;
 		parm9 = this.armortype * 100;
-		parm10 = this.items2;
+		//parm10 = this.items2;
 		parm11 = this.ammo_lava_nails;
 		parm12 = this.ammo_multi_rockets;
 		parm13 = this.ammo_plasma;
 		parm15 = this.prevweapon;
+		parm16 = this.items;
 	}
 	parm14 = this.steam; // save team setting
 }
@@ -73,29 +74,29 @@ void SetNewParms()
 {
 	if(MP_ROGUE && deathmatch && teamplay >= TEAM_CTF)
 	{
-		parm1 = IT_SHOTGUN | IT_AXE | IT_GRAPPLE;
-		parm10 = IT2_ARMOR1;
+		parm1 = WEP_SHOTGUN | WEP_AXE | WEP_GRAPPLE;
 		parm3 = 50;
 		parm9 = 30;
+		parm16 = IT_ARMOR1;
 	}
 	else
 	{
-		parm1 = IT_SHOTGUN | IT_AXE;
+		parm1 = WEP_SHOTGUN | WEP_AXE;
 		parm3 = 0;
 		parm9 = 0;
-		parm10 = 0;
+		parm16 = 0;
 	}
 	parm2 = 100;
 	parm4 = 25;
 	parm5 = 0;
 	parm6 = 0;
 	parm7 = 0;
-	parm8 = IT_SHOTGUN;
+	parm8 = WEP_SHOTGUN;
 	parm11 = 0;
 	parm12 = 0;
 	parm13 = 0;
 	parm14 = -1; // CTF: reset current team selection
-	parm15 = IT_AXE; // always use axe as the alternate weapon
+	parm15 = WEP_AXE; // always use axe as the alternate weapon
 }
 
 bool TeamColorIsLegal(int thecolor);
@@ -117,7 +118,7 @@ void DecodeLevelParms(entity this)
 	if(world.model == "maps/rstart.bsp" || (world.model == "maps/r2m1.bsp" && !deathmatch))
 		SetNewParms(); // reset all stuff on level 8 and new episode
 	
-	this.items = parm1;
+	this.weapons = parm1;
 	this.health = parm2;
 	this.armorvalue = parm3;
 	if(MP_ROGUE)
@@ -134,12 +135,12 @@ void DecodeLevelParms(entity this)
 		this.ammo_rockets = parm6;
 		this.ammo_cells = parm7;
 	}
-	if(parm8 == IT_GRAPPLE && teamplay < TEAM_CTF)
-		this.weapon = IT_AXE;
+	if(parm8 == WEP_GRAPPLE && teamplay < TEAM_CTF)
+		this.weapon = WEP_AXE;
 	else
 		this.weapon = parm8;
 	this.armortype = parm9 * 0.01;
-	this.items2 = parm10;
+	//this.items2 = parm10;
 	this.ammo_lava_nails = parm11;
 	this.ammo_multi_rockets = parm12;
 	this.ammo_plasma = parm13;
@@ -150,6 +151,7 @@ void DecodeLevelParms(entity this)
 	}
 
 	this.prevweapon = parm15;
+	this.items = parm16;
 }
 
 /*
@@ -683,7 +685,7 @@ void ClientKill(entity this)
 			tag_token_drop();
 		}
 
-		if(this.items2 & IT2_V_SPHERE)
+		if(this.items & IT_V_SPHERE)
 		{
 			FOREACH_ENTITY_CLASS("Vengeance", it.owner == this,
 			{
@@ -835,7 +837,6 @@ void PutClientInServer(entity this)
 	// hipnotic fields
 	this.wetsuit_finished = 0;
 	this.empathy_finished = 0;
-	this.items2 = 0;
 	this.gravity = 1.0;
 
 	// rogue fields
@@ -1186,7 +1187,7 @@ void PlayerPreThink(entity this)
 
 	if(MP_ROGUE)
 	{
-		if((this.items2 & IT2_ANTIGRAV) && time > this.AGping)
+		if((this.items & IT_ANTIGRAV) && time > this.AGping)
 		{
 			_sound(this, CHAN_AUTO, "belt/use.wav", 0.4, ATTN_NORM);
 			this.AGping = time + 3;
@@ -1201,7 +1202,7 @@ void PlayerPreThink(entity this)
 	}
 
 	if(!MP_ROGUE)
-	if(time > this.attack_finished && this.currentammo == 0 && this.weapon != IT_AXE && this.weapon != IT_MJOLNIR)
+	if(time > this.attack_finished && this.currentammo == 0 && this.weapon != WEP_AXE && this.weapon != WEP_MJOLNIR)
 		W_SwitchWeapon(this, W_BestWeapon(this, 0));
 }
 	
@@ -1256,7 +1257,7 @@ void CheckPowerups(entity this)
 		this.frame = 0;
 		this.modelindex = modelindex_eyes;
 	}
-	else if(this.weapon == IT_MJOLNIR)
+	else if(this.weapon == WEP_MJOLNIR)
 		this.modelindex = modelindex_hammer; // don't use eyes
 	else
 		this.modelindex = modelindex_player; // don't use eyes
@@ -1386,7 +1387,7 @@ void CheckPowerups(entity this)
 		if(this.wetsuit_finished < time)
 		{	// just stopped
 //MED
-			this.items2 &= ~HIP_IT_WETSUIT;
+			this.items &= ~HIP_IT_WETSUIT;
 			this.wetsuit_time = 0;
 			this.wetsuit_finished = 0;
 		}
@@ -1417,7 +1418,7 @@ void CheckPowerups(entity this)
 		if(this.empathy_finished < time)
 		{	// just stopped
 //MED
-			this.items2 &= ~HIP_IT_EMPATHY_SHIELDS;
+			this.items &= ~HIP_IT_EMPATHY_SHIELDS;
 			this.empathy_time = 0;
 			this.empathy_finished = 0;
 		}
@@ -1449,7 +1450,7 @@ void CheckPowerups(entity this)
 		{
 			sprint(this, "Shield lost.\n");
 			this.shield_finished = 0;
-			this.items2 &= ~IT2_SHIELD;
+			this.items &= ~IT_SHIELD;
 		}
 	}
 
@@ -1474,7 +1475,7 @@ void CheckPowerups(entity this)
 		{
 			sprint(this, "Antigrav Lost.\n");
 			this.antigrav_finished = 0;
-			this.items2 &= ~IT2_ANTIGRAV;
+			this.items &= ~IT_ANTIGRAV;
 			this.gravity = 1.0;
 		}
 	}
@@ -1757,7 +1758,7 @@ void ClientObituary(entity targ, entity attacker)
 					bprint(" discharges into the water.\n");
 					return;
 				}
-				if(targ.weapon == IT_GRENADE_LAUNCHER)
+				if(targ.weapon == WEP_GRENADE_LAUNCHER)
 					bprint(" tries to put the pin back in\n");
 				else if(MP_HIPNOTIC)
 				{
@@ -1830,37 +1831,37 @@ void ClientObituary(entity targ, entity attacker)
 				}
 
 				rnum = attacker.weapon;
-				if(rnum == IT_AXE)
+				if(rnum == WEP_AXE)
 				{
 					deathstring = " was ax-murdered by ";
 					deathstring2 = "\n";
 				}
-				if(rnum == IT_GRAPPLE)
+				if(rnum == WEP_GRAPPLE)
 				{
 					deathstring = " was grappled by ";
 					deathstring2 = "\n";
 				}
-				if(rnum == IT_SHOTGUN)
+				if(rnum == WEP_SHOTGUN)
 				{
 					deathstring = " chewed on ";
 					deathstring2 = "'s boomstick\n";
 				}
-				if(rnum == IT_SUPER_SHOTGUN)
+				if(rnum == WEP_SUPER_SHOTGUN)
 				{
 					deathstring = " ate 2 loads of ";
 					deathstring2 = "'s buckshot\n";
 				}
-				if(rnum == IT_NAILGUN)
+				if(rnum == WEP_NAILGUN)
 				{
 					deathstring = " was nailed by ";
 					deathstring2 = "\n";
 				}
-				if(rnum == IT_SUPER_NAILGUN)
+				if(rnum == WEP_SUPER_NAILGUN)
 				{
 					deathstring = " was punctured by ";
 					deathstring2 = "\n";
 				}
-				if(rnum == IT_GRENADE_LAUNCHER)
+				if(rnum == WEP_GRENADE_LAUNCHER)
 				{
 					deathstring = " eats ";
 					deathstring2 = "'s pineapple\n";
@@ -1870,7 +1871,7 @@ void ClientObituary(entity targ, entity attacker)
 						deathstring2 = "'s grenade\n";
 					}
 				}
-				if(rnum == IT_ROCKET_LAUNCHER)
+				if(rnum == WEP_ROCKET_LAUNCHER)
 				{
 					deathstring = " rides ";
 					deathstring2 = "'s rocket\n";
@@ -1880,7 +1881,7 @@ void ClientObituary(entity targ, entity attacker)
 						deathstring2 = "'s rocket\n" ;
 					}
 				}
-				if(rnum == IT_LIGHTNING)
+				if(rnum == WEP_LIGHTNING)
 				{
 					deathstring = " accepts ";
 					if(attacker.waterlevel > 1)
@@ -1888,7 +1889,7 @@ void ClientObituary(entity targ, entity attacker)
 					else
 						deathstring2 = "'s shaft\n";
 				}
-				if(rnum == IT_LASER_CANNON)
+				if(rnum == WEP_LASER_CANNON)
 				{
 					if(random() < 0.5)
 						deathstring = " was toasted by ";
@@ -1896,22 +1897,22 @@ void ClientObituary(entity targ, entity attacker)
 						deathstring = " was radiated by ";
 					deathstring2 = "'s laser\n";
 				}
-				if(rnum == IT_MJOLNIR)
+				if(rnum == WEP_MJOLNIR)
 				{
 					deathstring = " was slammed by ";
 					deathstring2 = "'s hammer\n";
 				}
-				if(rnum == IT_LAVA_NAILGUN || rnum == IT_LAVA_SUPER_NAILGUN)
+				if(rnum == WEP_LAVA_NAILGUN || rnum == WEP_LAVA_SUPER_NAILGUN)
 				{
 					deathstring = " was burned by ";
 					deathstring2 = "\n";
 				}
-				if(rnum == IT_PLASMA_GUN)
+				if(rnum == WEP_PLASMA_GUN)
 				{
 					deathstring = " was fused by ";
 					deathstring2 = "\n";
 				}
-				if(rnum == IT_MULTI_GRENADE || rnum == IT_MULTI_ROCKET)
+				if(rnum == WEP_MULTI_GRENADE || rnum == WEP_MULTI_ROCKET)
 				{
 					deathstring = " was blasted to bits by ";
 					deathstring2 = "\n";

@@ -197,3 +197,4 @@ const int SVC_CUTSCENE		    = 34;
 const int TE_EXPLOSION2     = 12;
 const int TE_BEAM			= 13;
 
+.int weapons;

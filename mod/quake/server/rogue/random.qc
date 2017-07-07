@@ -23,7 +23,7 @@ void random_pick_type(entity this)
 		_setmodel(self, "progs/shield.mdl");
 		self.netname = "Power Shield";
 		self.items = 0;
-		self.items2 = IT2_SHIELD;
+		self.items = IT_SHIELD;
 //		if(norandom == 1)
 //			self.classname = "item_powerup_shield";
 	}
@@ -34,7 +34,7 @@ void random_pick_type(entity this)
 		_setmodel(self, "progs/beltup.mdl");
 		self.netname = "Anti-Grav Belt";
 		self.items = 0;
-		self.items2 = IT2_ANTIGRAV;
+		self.items = IT_ANTIGRAV;
 //		if(norandom == 1)
 //			self.classname = "item_powerup_belt";
 	}
@@ -44,7 +44,6 @@ void random_pick_type(entity this)
 		_setmodel(self, "progs/invulner.mdl");
 		self.netname = "Pentagram of Protection";
 		self.items = IT_INVULNERABILITY;
-		self.items2 = 0;
 //		if(norandom == 1)
 //			self.classname = "item_artifact_invulnerability";
 	}
@@ -54,7 +53,6 @@ void random_pick_type(entity this)
 		_setmodel(self, "progs/invisibl.mdl");
 		self.netname = "Ring of Shadows";
 		self.items = IT_INVISIBILITY;
-		self.items2 = 0;
 //		if(norandom == 1)
 //			self.classname = "item_artifact_invisibility";
 	}
@@ -64,7 +62,6 @@ void random_pick_type(entity this)
 		_setmodel(self, "progs/quaddama.mdl");
 		self.netname = "Quad Damage";
 		self.items = IT_QUAD;
-		self.items2 = 0;
 //		if(norandom == 1)
 //			self.classname = "item_artifact_super_damage";
 	}

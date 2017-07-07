@@ -7,11 +7,6 @@
 entity bulletholes;
 entity lastbullet;
 int numbulletholes;
-const int IT_MJOLNIR = 128;
-const int IT_LASER_CANNON = 8388608;
-const int IT_PROXIMITY_GUN = 65536;
-const int HIP_IT_WETSUIT = BIT(1);
-const int HIP_IT_EMPATHY_SHIELDS = BIT(2);
 //float HIP_IT_HORN_OF_CONJURING = 8; // seemingly unused
 //added total monster message
 const int STAT_TOTALMONSTERS = 12;

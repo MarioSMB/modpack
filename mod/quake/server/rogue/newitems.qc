@@ -6,7 +6,7 @@ void sphere_spawn(entity this, entity toucher);
 
 void UpdateAmmoCounts(entity this)
 {
-	if(this.weapon >= IT_LAVA_NAILGUN)
+	if(this.weapon >= WEP_LAVA_NAILGUN)
 	{
 		this.ammo_shells = this.ammo_shells1;
 		this.ammo_nails = this.ammo_lava_nails;
@@ -30,9 +30,8 @@ void newitems_touch(entity this, entity toucher)
 		return;
 		
 	// only one per person, please.
-	if(this.classname == "item_sphere")
-		if(toucher.items2 & IT2_V_SPHERE)
-			return;
+	if(this.classname == "item_sphere" && (toucher.items & IT_V_SPHERE))
+		return;
 
 	sprint(toucher, "You got the ");
 	sprint(toucher, this.netname);
@@ -63,7 +62,6 @@ void newitems_touch(entity this, entity toucher)
 	stuffcmd(toucher, "bf\n");
 	this.solid = SOLID_NOT;
 	toucher.items |= this.items;
-	toucher.items2 |= this.items2;
 	this.model = string_null;
 
 // do the apropriate action
@@ -80,7 +78,7 @@ void newitems_touch(entity this, entity toucher)
 	}
 	else if(this.classname == "item_sphere")
 	{
-		toucher.items2 |= IT2_V_SPHERE;
+		toucher.items |= IT_V_SPHERE;
 		sphere_spawn(this, toucher);
 	}
 
@@ -93,6 +91,8 @@ The shield upgrade
 */
 spawnfunc(item_powerup_shield)
 {
+	if(!MP_ROGUE) { delete(this); return; }
+
 	settouch(this, newitems_touch);
 
 	precache_model ("progs/shield.mdl");
@@ -103,7 +103,7 @@ spawnfunc(item_powerup_shield)
 	this.noise = "shield/pickup.wav";
 	_setmodel(this, "progs/shield.mdl");
 	this.netname = "Power Shield";
-	this.items2 = IT2_SHIELD;
+	this.items = IT_SHIELD;
 	setsize(this, '-16 -16 -24', '16 16 32');
 	StartItem(this);
 }
@@ -113,6 +113,8 @@ The anti-grav belt
 */
 spawnfunc(item_powerup_belt)
 {
+	if(!MP_ROGUE) { delete(this); return; }
+	
 	settouch(this, newitems_touch);
 
 	precache_model ("progs/beltup.mdl");
@@ -122,7 +124,7 @@ spawnfunc(item_powerup_belt)
 	this.noise = "belt/pickup.wav";
 	_setmodel(this, "progs/beltup.mdl");
 	this.netname = "Anti-Grav Belt";
-	this.items2 = IT2_ANTIGRAV;
+	this.items = IT_ANTIGRAV;
 	setsize(this, '-16 -16 -24', '16 16 32');
 	StartItem(this);
 }
