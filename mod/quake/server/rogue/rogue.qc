@@ -2,6 +2,9 @@
 
 PRECACHE(Rogue)
 {
+	if(!MP_ROGUE)
+		return;
+
 	RunePrecache();
 
 	precache_sound("enforcer/enfstop.wav");    // shield impact

@@ -2,6 +2,9 @@
 
 PRECACHE(Hipnotic)
 {
+	if(!MP_HIPNOTIC)
+		return;
+
 	precache_sound ("misc/flys.wav");
 	precache_sound ("misc/shortexp.wav");
 	precache_sound ("misc/longexpl.wav");
