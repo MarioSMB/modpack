@@ -443,6 +443,8 @@ Set "sounds" to one of the following:
 
 spawnfunc(func_new_plat)
 {
+	if(!MP_ROGUE) { delete(this); return; }
+	
 	float negativeHeight = 0;
 	
 	if(!this.t_length)

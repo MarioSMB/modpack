@@ -95,6 +95,8 @@ When a button is touched, it moves some distance in the direction of it's angle,
 */
 spawnfunc(func_elvtr_button)
 {
+	if(!MP_ROGUE) { delete(this); return; }
+	
 	if(this.sounds == 0)
 	{
 		precache_sound("buttons/airbut1.wav");

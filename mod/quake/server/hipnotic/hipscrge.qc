@@ -520,6 +520,7 @@ string scourge_deathmessage(entity this) { return "was stung by a Centroid"; }
 */
 spawnfunc(monster_scourge)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
 	if(deathmatch) { delete(this); return; }
 
 	precache_model2("progs/scor.mdl");

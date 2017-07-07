@@ -126,6 +126,8 @@ it specifies how high to count before reseting to zero.  Default is 10.
 
 spawnfunc(func_counter)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+	
 	if(!this.wait)
 		this.wait = 1;
 
@@ -163,6 +165,8 @@ reaches the value set by count, func_oncount triggers its targets.
 
 spawnfunc(func_oncount)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+	
 	this.count = floor(this.count);
 	if(this.count <= 0)
 		this.count = 1;

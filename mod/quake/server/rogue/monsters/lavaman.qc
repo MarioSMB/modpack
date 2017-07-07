@@ -514,11 +514,8 @@ string lavaman_deathmessage(entity this) { return "fries in Hephaestus' fury"; }
 */
 spawnfunc(monster_lava_man)
 {
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(!MP_ROGUE) { delete(this); return; }
+	if(deathmatch) { delete(this); return; }
 	
 	precache_model("progs/lavaman.mdl");
 	precache_model("progs/lavaball.mdl");

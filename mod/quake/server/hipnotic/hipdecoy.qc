@@ -141,6 +141,7 @@ void setup_decoy(entity decoy)
 */
 spawnfunc(monster_decoy)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
 	if(deathmatch) { delete(this); return; }
 
 	setup_decoy(this);

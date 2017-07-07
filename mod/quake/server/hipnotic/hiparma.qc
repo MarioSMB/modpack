@@ -794,6 +794,7 @@ string armagon_deathmessage(entity this) { return "was outgunned by Armagon"; }
 */
 spawnfunc(monster_armagon)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
 	if(deathmatch) { delete(this); return; }
 
 	this.lefty = 0;

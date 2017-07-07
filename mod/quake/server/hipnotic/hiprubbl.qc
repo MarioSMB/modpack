@@ -72,6 +72,8 @@ void rubble_use(entity this, entity actor, entity trigger)
 */
 spawnfunc(func_rubble)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	precache_model("progs/rubble1.mdl");
 	precache_model("progs/rubble2.mdl");
 	precache_model("progs/rubble3.mdl");
@@ -88,6 +90,8 @@ spawnfunc(func_rubble)
 */
 spawnfunc(func_rubble1)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	precache_model("progs/rubble1.mdl");
 	precache_sound("zombie/z_hit.wav");
 	this.classname = "rubble1";
@@ -102,6 +106,8 @@ spawnfunc(func_rubble1)
 */
 spawnfunc(func_rubble2)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	precache_model ("progs/rubble3.mdl");
 	precache_sound("zombie/z_hit.wav");
 	this.classname = "rubble2";
@@ -116,6 +122,8 @@ spawnfunc(func_rubble2)
 */
 spawnfunc(func_rubble3)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	precache_model ("progs/rubble2.mdl");
 	precache_sound("zombie/z_hit.wav");
 	this.classname = "rubble3";

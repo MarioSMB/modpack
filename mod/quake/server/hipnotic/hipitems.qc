@@ -66,6 +66,8 @@ Player takes no damage from electrical attacks and swims faster for 30 seconds
 */
 spawnfunc(item_artifact_wetsuit)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+	
 	settouch(this, hip_powerup_touch);
 
 	precache_model("progs/wetsuit.mdl");
@@ -118,6 +120,8 @@ to spawn the charmed creature.
 */
 spawnfunc(item_hornofconjuring)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	settouch(this, horn_touch);
 
 	precache_model("progs/horn.mdl");
@@ -134,6 +138,8 @@ Empathy Shield.
 */
 spawnfunc(item_artifact_empathy_shields)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	settouch(this, hip_powerup_touch);
 
 	precache_model("progs/empathy.mdl");
@@ -160,6 +166,8 @@ HIPNOTIC WEAPONS
 
 spawnfunc(weapon_mjolnir)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	precache_model ("progs/g_hammer.mdl");
 	_setmodel(this, "progs/g_hammer.mdl");
 	this.weapon = WEP_MJOLNIR;
@@ -176,6 +184,8 @@ spawnfunc(weapon_mjolnir)
 
 spawnfunc(weapon_laser_gun)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	precache_model ("progs/g_laserg.mdl");
 	_setmodel(this, "progs/g_laserg.mdl");
 	this.weapon = WEP_LASER_CANNON;
@@ -192,6 +202,8 @@ spawnfunc(weapon_laser_gun)
 
 spawnfunc(weapon_proximity_gun)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	precache_model ("progs/g_prox.mdl");
 	_setmodel(this, "progs/g_prox.mdl");
 	this.weapon = WEP_PROXIMITY_GUN;
@@ -317,6 +329,7 @@ void spike_mine_first_think(entity this)
 
 spawnfunc(trap_spike_mine)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
 	if(deathmatch) { delete(this); return; }
 
 	precache_model ("progs/spikmine.mdl");
@@ -505,6 +518,8 @@ When triggered, fires lightning in the direction set in QuakeEd.
 
 spawnfunc(trap_lightning_triggered)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	if(this.wait == 0)
 		this.wait = 1.0;
 	if(this.dmg == 0)
@@ -532,6 +547,8 @@ Continuously fire lightning.
 */
 spawnfunc(trap_lightning)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	spawnfunc_trap_lightning_triggered(this);
 	this.state = 1;
 }
@@ -553,6 +570,8 @@ Continuously fires lightning.
 */
 spawnfunc(trap_lightning_switched)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	spawnfunc_trap_lightning_triggered(this);
 	this.use = trap_lightning_switched_use;
 }
@@ -702,6 +721,8 @@ targets enemies in vicinity and fires at them
 */
 spawnfunc(trap_tesla_coil)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	precache_sound("misc/tesla.wav");
 	precache_sound("hipweap/mjolhit.wav");   // lightning sound
 	if(this.wait == 0)
@@ -748,6 +769,8 @@ targets enemies in vicinity and fires at them
 */
 spawnfunc(trap_gods_wrath)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	if(this.delay == 0)
 		this.delay = 5;
 	spawnfunc_trap_tesla_coil(this);
@@ -805,6 +828,8 @@ UNDERWATER cuts the pull in half for players wearing the wetsuit
 */
 spawnfunc(trap_gravity_well)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+	
 	this.solid = SOLID_TRIGGER;
 	set_movetype(this, MOVETYPE_NONE);
 	setsize( this, '-16 -16 -16','16 16 16');

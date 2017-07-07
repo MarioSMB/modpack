@@ -1461,6 +1461,7 @@ bool GremlinCheckAttack(entity this);
 */
 spawnfunc(monster_gremlin)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
 	if(deathmatch) { delete(this); return; }
 
 	NumGremlins = NumGremlins + 1;

@@ -402,6 +402,8 @@ PEND_TRG - the pendulum must be triggered to start swinging. The delay value sti
 */
 spawnfunc(pendulum)
 {
+	if(!MP_ROGUE) { delete(this); return; }
+	
 	precache_model ("progs/pendulum.mdl");
 	precache_sound ("pendulum/swing.wav");
 	precache_sound ("pendulum/hit.wav");

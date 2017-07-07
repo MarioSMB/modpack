@@ -614,11 +614,8 @@ Stronger - mummy starts with 1000 hitpoints, rather than 500.
 */
 spawnfunc(monster_mummy)
 {
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(!MP_ROGUE) { delete(this); return; }
+	if(deathmatch) { delete(this); return; }
 
 	precache_model("progs/mummy.mdl");
 	precache_model("progs/h_zombie.mdl");

@@ -74,11 +74,8 @@ Contains a random powerup.
 */
 spawnfunc(item_random_powerup)
 {
-	if(!deathmatch)
-	{
-		delete(self);
-		return;
-	}
+	if(!MP_ROGUE) { delete(this); return; }
+	if(!deathmatch) { delete(this); return; }
 	
 	// Precache the lot of it....
 	precache_model("progs/shield.mdl");

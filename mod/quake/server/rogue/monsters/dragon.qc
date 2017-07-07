@@ -747,11 +747,9 @@ string dragon_deathmessage(entity this) { return ((this.classname == "monster_dr
 */
 spawnfunc(monster_dragon)
 {
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(!MP_ROGUE) { delete(this); return; }
+	if(deathmatch) { delete(this); return; }
+
 	precache_model("progs/dragon.mdl");
 	precache_model("progs/fireball.mdl");
 	precache_model("progs/drggib01.mdl");
@@ -806,7 +804,9 @@ the direction the trigger points, he is entering the room.
 If not, he is leaving.
 */
 spawnfunc(trigger_dragon)
-{	
+{
+	if(!MP_ROGUE) { delete(this); return; }
+
 	delete(this);
 }
 
@@ -836,6 +836,8 @@ between rooms.
 */
 spawnfunc(dragon_corner)
 {
+	if(!MP_ROGUE) { delete(this); return; }
+	
 	if(!this.targetname || this.targetname == "")
 		objerror(this, "dragon_corner: no targetname");
 

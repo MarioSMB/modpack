@@ -44,6 +44,8 @@ play a sound when it is used
 */
 spawnfunc(play_sound_triggered)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	precache_sound(this.noise);
 	precache_sound("misc/null.wav");
 	if(this.volume == 0)
@@ -73,6 +75,8 @@ play a sound on a periodic basis
 */
 spawnfunc(play_sound)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	spawnfunc_play_sound_triggered(this);
 	if(this.wait == 0)
 		this.wait = 20;
@@ -95,6 +99,8 @@ spawnfunc(play_sound)
 */
 spawnfunc(random_thunder)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	this.noise = "ambience/thunder1.wav";
 	spawnfunc_play_sound(this);
 	this.impulse = 6;
@@ -111,6 +117,8 @@ spawnfunc(random_thunder)
 */
 spawnfunc(random_thunder_triggered)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	this.noise = "ambience/thunder1.wav";
 	spawnfunc_play_sound_triggered(this);
 	this.impulse = 6;
@@ -121,6 +129,8 @@ spawnfunc(random_thunder_triggered)
 */
 spawnfunc(ambient_humming)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	if(this.volume == 0)
 		this.volume = 0.5;
 	precache_sound("ambient/humming.wav");
@@ -132,6 +142,8 @@ spawnfunc(ambient_humming)
 */
 spawnfunc(ambient_rushing)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	if(this.volume == 0)
 		this.volume = 0.5;
 	precache_sound("ambient/rushing.wav");
@@ -143,6 +155,8 @@ spawnfunc(ambient_rushing)
 */
 spawnfunc(ambient_running_water)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	if(this.volume == 0)
 		this.volume = 0.5;
 	precache_sound("ambient/runwater.wav");
@@ -154,6 +168,8 @@ spawnfunc(ambient_running_water)
 */
 spawnfunc(ambient_fan_blowing)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	if(this.volume == 0)
 		this.volume = 0.5;
 	precache_sound("ambient/fanblow.wav");
@@ -165,6 +181,8 @@ spawnfunc(ambient_fan_blowing)
 */
 spawnfunc(ambient_waterfall)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	if(this.volume == 0)
 		this.volume = 0.5;
 	precache_sound("ambient/waterfal.wav");
@@ -176,6 +194,8 @@ spawnfunc(ambient_waterfall)
 */
 spawnfunc(ambient_riftpower)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	if(this.volume == 0)
 		this.volume = 0.5;
 	precache_sound("ambient/riftpowr.wav");
@@ -192,6 +212,8 @@ spawnfunc(ambient_riftpower)
 
 spawnfunc(info_command)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	if(this.message)
 		localcmd(strcat("\n", this.message, "\n"));
 }
@@ -213,6 +235,8 @@ void effect_teleport_use(entity this, entity actor, entity trigger)
 
 spawnfunc(effect_teleport)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	precache_sound("misc/r_tele1.wav");
 	this.use = effect_teleport_use;
 }
@@ -344,6 +368,8 @@ void effect_finale_use(entity this, entity actor, entity trigger)
 
 spawnfunc(effect_finale)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	if(deathmatch) { delete(this); return; }
 
 	initialize_field_db();
@@ -369,5 +395,7 @@ void info_startendtext_use(entity this, entity actor, entity trigger)
 
 spawnfunc(info_startendtext)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	this.use = info_startendtext_use;
 }

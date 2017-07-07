@@ -195,11 +195,9 @@ string eel_deathmessage(entity this) { return "was electrified by an Eel"; }
 */
 spawnfunc(monster_eel)
 {
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(!MP_ROGUE) { delete(this); return; }
+	if(deathmatch) { delete(this); return; }
+
 	precache_model ("progs/eel2.mdl");
 	precache_model ("progs/eelgib.mdl");
 	precache_model ("progs/gib1.mdl");

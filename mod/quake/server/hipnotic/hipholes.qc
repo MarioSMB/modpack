@@ -12,6 +12,8 @@ Places a sprite on a wall.  Angles should be opposite of face.
 */
 spawnfunc(wallsprite)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+	
 	if(!this.model)
 		this.model = "progs/s_blood1.spr";
 

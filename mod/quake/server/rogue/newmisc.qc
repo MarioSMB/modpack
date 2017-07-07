@@ -8,6 +8,8 @@ Default style is 0
 */
 spawnfunc(light_lantern)
 {
+	if(!MP_ROGUE) { delete(this); return; }
+
 	precache_model("progs/lantern.mdl");
 	_setmodel(this, "progs/lantern.mdl");
 	makestatic(this);
@@ -20,6 +22,8 @@ Default style is 0
 */
 spawnfunc(light_candle)
 {
+	if(!MP_ROGUE) { delete(this); return; }
+
 	precache_model("progs/candle.mdl");
 	_setmodel(this, "progs/candle.mdl");
 	makestatic(this);
@@ -91,6 +95,8 @@ delay - time between rubble pieces (Default 5 sec)
 */
 spawnfunc(rubble_generator)
 {
+	if(!MP_ROGUE) { delete(this); return; }
+
 	precache_model("progs/rubble.mdl");
 	
 	if(!this.target)
@@ -123,6 +129,8 @@ health: amount of damage needed to set off trigger.
 */
 spawnfunc(trigger_explosion)
 {
+	if(!MP_ROGUE) { delete(this); return; }
+
 	InitTrigger(this);
 
 	if(!this.health)

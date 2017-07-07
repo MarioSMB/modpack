@@ -266,11 +266,9 @@ string wrath_deathmessage(entity this) { return "was disintegrated by a Wrath"; 
 */
 spawnfunc(monster_wrath)
 {
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(!MP_ROGUE) { delete(this); return; }
+	if(deathmatch) { delete(this); return; }
+
 	precache_model("progs/wrath.mdl");
 	precache_model("progs/w_ball.mdl");
 	precache_model("progs/wrthgib1.mdl");

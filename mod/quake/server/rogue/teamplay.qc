@@ -1581,11 +1581,8 @@ to 90.
 */
 spawnfunc(item_flag_team1)
 {
-	if(!deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(!MP_ROGUE) { delete(this); return; }
+	if(!deathmatch) { delete(this); return; }
 
 	teamplay = cvar("teamplay");
 
@@ -1633,11 +1630,8 @@ to 90.
 */
 spawnfunc(item_flag_team2)
 {
-	if(!deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(!MP_ROGUE) { delete(this); return; }
+	if(!deathmatch) { delete(this); return; }
 
 	teamplay = cvar("teamplay");
 
@@ -1684,6 +1678,8 @@ to 90.
 */
 spawnfunc(item_flag)
 {
+	if(!MP_ROGUE) { delete(this); return; }
+
 	if(cvar("teamplay") != TEAM_CTF_ONEFLAG)
 	{
 		delete(this);
@@ -1712,6 +1708,7 @@ potential spawning position for CTF games team 1.
 */
 spawnfunc(info_player_team1) 
 {
+	if(!MP_ROGUE) { delete(this); return; }
 }
 
 /*QUAKED info_player_team2 (1 0 1) (-16 -16 -24) (16 16 24)
@@ -1719,6 +1716,7 @@ potential spawning position for CTF games team 2.
 */
 spawnfunc(info_player_team2) 
 {
+	if(!MP_ROGUE) { delete(this); return; }
 }
 
 void TeamSetUpdate()
@@ -1869,6 +1867,8 @@ Only appears in CTF teamplay
 */
 spawnfunc(func_ctf_wall)
 {
+	if(!MP_ROGUE) { delete(this); return; }
+
 	teamplay = cvar("teamplay");
 	if(teamplay == TEAM_CTF || teamplay == TEAM_CTF_ONEFLAG ||
 		teamplay == TEAM_CTF_ALT)

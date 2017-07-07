@@ -547,11 +547,9 @@ BossMode enables the superwrath's powershield and the random teleporting.
 */
 spawnfunc(monster_super_wrath)
 {
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(!MP_ROGUE) { delete(this); return; }
+	if(deathmatch) { delete(this); return; }
+
 	precache_model("progs/s_wrath.mdl");
 //
 	precache_model("progs/s_wrtgb1.mdl");
@@ -599,6 +597,8 @@ It does not require any other fields filled in.
 */
 spawnfunc(info_overlord_destination)
 {
+	if(!MP_ROGUE) { delete(this); return; }
+
 // this does nothing, just serves as a target spot
 	this.mangle = this.angles;
 	this.angles = '0 0 0';

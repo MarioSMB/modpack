@@ -143,6 +143,8 @@ Think of it like setting up a normal entity.
 
 spawnfunc(func_spawn)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	initialize_field_db();
 
 	entity monster;
@@ -239,5 +241,7 @@ Think of it like setting up a normal entity.
 
 spawnfunc(func_spawn_small)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	spawnfunc_func_spawn(this);
 }

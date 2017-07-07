@@ -74,6 +74,8 @@ Variable sized single use trigger that requires a key to trigger targets.  Must 
 
 spawnfunc(trigger_usekey)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	if(world.worldtype == 0)
 	{
 		precache_sound("doors/medtry.wav");
@@ -127,6 +129,8 @@ players.
 */
 spawnfunc(trigger_remove)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	this.cnt = FL_CLIENT | FL_MONSTER;
 	if(this.spawnflags & 1)
 		this.cnt &= ~FL_MONSTER;
@@ -168,6 +172,8 @@ set the gravity of a player
 */
 spawnfunc(trigger_setgravity)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	InitTrigger(this);
 	settouch(this, trigger_gravity_touch);
 	if(!this.gravity)
@@ -191,6 +197,8 @@ void trigger_command_use(entity this, entity actor, entity trigger)
 
 spawnfunc(trigger_command)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	this.use = oncount_use;
 	setthink(this, func_null);
 }
@@ -212,6 +220,8 @@ void trigger_decoy_touch(entity this, entity toucher)
 
 spawnfunc(trigger_decoy_use)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	if(deathmatch) { delete(this); return; }
 
 	InitTrigger(this);
@@ -238,6 +248,8 @@ void trigger_waterfall_touch(entity this, entity toucher)
 
 spawnfunc(trigger_waterfall)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	InitTrigger(this);
 	settouch(this, trigger_waterfall_touch);
 

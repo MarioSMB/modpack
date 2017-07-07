@@ -29,6 +29,8 @@ is the depth of the brush.
 */
 spawnfunc(func_bobbingwater)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+	
 	this.angles = '0 0 0';
 	set_movetype(this, MOVETYPE_STEP);
 	this.solid = SOLID_NOT;

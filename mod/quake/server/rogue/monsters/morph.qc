@@ -635,11 +635,8 @@ If the monster has a targetname (triggered by something) he will rise up out of 
 */
 spawnfunc(monster_morph)
 {
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(!MP_ROGUE) { delete(this); return; }
+	if(deathmatch) { delete(this); return; }
 
 	if(this.spawnflags & MORPH_AZTEC)		// Aztec
 	{

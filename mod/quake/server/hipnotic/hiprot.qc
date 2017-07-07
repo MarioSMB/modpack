@@ -47,6 +47,8 @@ Used as the point of rotation for rotatable objects.
 */
 spawnfunc(info_rotate)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 // remove self after a little while, to make sure that entities that
 // have targeted it have had a chance to spawn
 	this.nextthink = time + 2;
@@ -281,6 +283,8 @@ If "deathtype" is set with a string, this is the message that will appear when a
 
 spawnfunc(func_rotate_entity)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	this.solid = SOLID_NOT;
 	set_movetype(this, MOVETYPE_NONE);
 
@@ -324,6 +328,8 @@ spawnfunc(func_rotate_entity)
 */
 spawnfunc(path_rotate)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	if(this.noise)
 		precache_sound(this.noise);
 	if(this.noise1)
@@ -643,11 +649,17 @@ sounds
 
 spawnfunc(rotate_train)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	objerror (this, "rotate_train entities should be changed to rotate_object with\nfunc_rotate_train controllers\n");
 }
 
 spawnfunc(func_rotate_train)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	if(!this.speed)
 		this.speed = 100;
 	if(!this.target)
@@ -766,6 +778,8 @@ NONBLOCKING makes the brush non-solid.  This is useless if VISIBLE is set.
 */
 spawnfunc(func_movewall)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	this.angles = '0 0 0';
 	set_movetype(this, MOVETYPE_PUSH);
 	if(this.spawnflags & NONBLOCKING)
@@ -791,6 +805,8 @@ This defines an object to be rotated.  Used as the target of func_rotate_door.
 */
 spawnfunc(rotate_object)
 {
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
 	this.classname = "rotate_object";
 	this.solid = SOLID_BSP; // TODO: this was SOLID_NOT, why did it work in Quake?
 	set_movetype(this, MOVETYPE_NONE);
@@ -957,7 +973,9 @@ once door from closing again when it's blocked.
 
 spawnfunc(func_rotate_door)
 {
-	if(!this.target)
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
+	if(!this.target || this.target == "")
 		objerror(this, "rotate_door without target.");
 
 	this.dest1 = '0 0 0';
