@@ -56,7 +56,7 @@ const int anim_decoy_axstnd12 = 28;
 void decoy_stand1(entity this)
 {
 	set_anim(this, anim_decoy_axstnd1, decoy_stand1);
-	ChangeYaw(this);
+	changeyaw(this);
 	if(this.walkframe >= 5)
 		this.walkframe = 0;
 	this.frame = anim_decoy_stand1 + this.walkframe;

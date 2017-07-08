@@ -285,12 +285,12 @@ void dragon_move(entity this, float dist)
 
 
 	moveAngles = this.origin;
-	walkmove(this, this.angles_y, dist);
+	t_walkmove(this, this.angles_y, dist);
 
 	if(moveAngles == this.origin)
 	{
 //        bprint ( "Cannot move smoothly. movetogoal..\n");
-		movetogoal(this, dist);
+		t_movetogoal(this, dist);
 	}
 	this.enemy = oldEnemy;
 }
@@ -722,7 +722,7 @@ void dragon_activate(entity this)
 	this.flags |= FL_FLY;
 	this.flags |= FL_MONSTER;
 
-	if(!walkmove(this, 0, 0))
+	if(!t_walkmove(this, 0, 0))
 		LOG_DEBUGF("flymonster %s in wall at %v\n", this.classname, this.origin);
 	
 	if(this.target && this.target != "")

@@ -14,16 +14,16 @@ void push_use(entity this, entity actor, entity trigger)
 	if(dx > dy)
 	{
 		if(trigger.velocity_x > 0)
-			walkmove(this, 0, 16 * frametime);
+			t_walkmove(this, 0, 16 * frametime);
 		else
-			walkmove(this, 180, 16 * frametime);
+			t_walkmove(this, 180, 16 * frametime);
 	}
 	else
 	{
 		if(trigger.velocity_y > 0)
-			walkmove(this, 90, 16 * frametime);
+			t_walkmove(this, 90, 16 * frametime);
 		else
-			walkmove(this, 270, 16 * frametime);
+			t_walkmove(this, 270, 16 * frametime);
 	}
 
 	LOG_DEBUGF("%d, %d %s move\n\n\n\n", dx, dy, ((dx > dy) ? "x" : "y"));

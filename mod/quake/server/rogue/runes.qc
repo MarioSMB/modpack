@@ -44,7 +44,7 @@ void RuneTouch(entity this, entity toucher)
 	else if(this.rune & ITEM_RUNE3)
 		centerprint(toucher, "Hell Magic\n\nHASTE");
 	else if(this.rune & ITEM_RUNE4)
-		centerprint(toucher, "Edler Magic\n\nRegeneration");
+		centerprint(toucher, "Elder Magic\n\nREGENERATION");
 	delete(this);
 }
 

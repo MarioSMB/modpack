@@ -236,7 +236,7 @@ void tbaby_die1(entity this, entity attacker) { set_anim(this, anim_tbaby_exp, t
 void tbaby_mitosis(entity targ, entity attacker, float damage);
 void tbaby_checknew(entity this)
 {
-	if(!walkmove(this, 0, 0))
+	if(!t_walkmove(this, 0, 0))
 	{
 		delete(self);
 		return;
@@ -252,7 +252,7 @@ void tbaby_checknew(entity this)
 	self.origin_z = self.origin_z + 1;      // raise off floor a bit
 	WITHSELF(this, builtin_droptofloor());
 
-	if(!walkmove(this, 0,0))
+	if(!t_walkmove(this, 0,0))
 	{
 		self.owner.th_pain = tbaby_mitosis;
 		delete(self);

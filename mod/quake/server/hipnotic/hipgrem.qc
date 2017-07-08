@@ -226,7 +226,7 @@ bool GremlinAttemptWeaponSteal(entity this)
 {
 	if(this.stoleweapon)
 	{
-		dprint("gremlin trying to steal a weapon again\n");
+		LOG_DEBUG("gremlin trying to steal a weapon again\n");
 		return false;
 	}
 	if(!IS_CLIENT(this.enemy))
@@ -452,7 +452,7 @@ void gremlin_walk(entity this, float dist)
 	if(GremlinFindTarget(this))
 		return;
 
-	movetogoal(this, dist);
+	t_movetogoal(this, dist);
 }
 
 //============================================================================
@@ -518,14 +518,14 @@ void gremlin_run(entity this, float dist)
 				this.attack_state = AS_STRAIGHT;
 				return;
 			}
-			else if(walkmove(this, this.angles_y, dist) == false)
+			else if(t_walkmove(this, this.angles_y, dist) == false)
 			{
 				this.gorging = false;
 				return;
 			}
 			return;
 		}
-		movetogoal(this, dist);      // done in C code...
+		t_movetogoal(this, dist);      // done in C code...
 	}
 	else
 	{
@@ -599,8 +599,8 @@ void gremlin_run(entity this, float dist)
 					}
 					this.goalentity = this.trigger_field;
 					this.ideal_yaw = vectoyaw(normalize(this.goalentity.origin-this.origin));
-					ChangeYaw(this);
-					movetogoal(this, dist);      // done in C code...
+					changeyaw(this);
+					t_movetogoal(this, dist);      // done in C code...
 					this.nextthink = time + 0.1;
 					return;
 				}
@@ -1535,7 +1535,7 @@ void Gremlin_Melee(entity this, float side)
 {
 	ai_face(this);
 
-//   walkmove (this.ideal_yaw, 12);   // allow a little closing
+//   t_walkmove (this.ideal_yaw, 12);   // allow a little closing
 
 
 	vector delta = this.enemy.origin - this.origin;

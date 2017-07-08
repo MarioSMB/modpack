@@ -529,7 +529,7 @@ void mummy_paine12(entity this)
 	_sound(this, CHAN_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
 	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	this.solid = SOLID_SLIDEBOX;
-	if(!walkmove(this, 0, 0))
+	if(!t_walkmove(this, 0, 0))
 	{
 		setthink(this, mummy_paine11);
 		this.solid = SOLID_NOT;

@@ -22,7 +22,6 @@ void random_pick_type(entity this)
 		self.noise = "shield/pickup.wav";
 		_setmodel(self, "progs/shield.mdl");
 		self.netname = "Power Shield";
-		self.items = 0;
 		self.items = IT_SHIELD;
 //		if(norandom == 1)
 //			self.classname = "item_powerup_shield";
@@ -33,7 +32,6 @@ void random_pick_type(entity this)
 		self.noise = "belt/pickup.wav";
 		_setmodel(self, "progs/beltup.mdl");
 		self.netname = "Anti-Grav Belt";
-		self.items = 0;
 		self.items = IT_ANTIGRAV;
 //		if(norandom == 1)
 //			self.classname = "item_powerup_belt";
