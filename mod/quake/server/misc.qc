@@ -184,24 +184,6 @@ spawnfunc(light_flame_small_white)
 
 //============================================================================
 
-
-/*QUAKED misc_fireball(0 .5 .8)(-8 -8 -8)(8 8 8)
-Lava Balls
-*/
-
-void fire_fly(entity this);
-void fire_touch(entity this, entity toucher);
-spawnfunc(misc_fireball)
-{
-	
-	precache_model("progs/lavaball.mdl");
-	this.classname = "fireball";
-	this.nextthink = time +(random() * 5);
-	setthink(this, fire_fly);
-	if(!this.speed)
-		this.speed = 1000;
-}
-
 void fire_fly(entity this)
 {
 	entity fireball = spawn();
@@ -230,6 +212,22 @@ void fire_touch(entity this, entity toucher)
 	delete(this);
 }
 
+
+/*QUAKED misc_fireball(0 .5 .8)(-8 -8 -8)(8 8 8)
+Lava Balls
+*/
+
+spawnfunc(misc_fireball)
+{
+	
+	precache_model("progs/lavaball.mdl");
+	this.classname = "fireball";
+	this.nextthink = time +(random() * 5);
+	setthink(this, fire_fly);
+	if(!this.speed)
+		this.speed = 1000;
+}
+
 //============================================================================
 
 
@@ -242,8 +240,34 @@ void barrel_explode(entity this, entity attacker)
 	_sound(this, CHAN_VOICE, "weapons/r_exp3.wav", 1, ATTN_NORM);
 	particle(this.origin, '0 0 0', 75, 255);
 
+	setSendEntity(e, func_null); // some things are gonna happen to this barrel that the ChildrenS of QuakeC shouldn't see
+
 	this.origin_z = this.origin_z + 32;
 	BecomeExplosion(this);
+}
+
+void barrel_spawn(entity this)
+{
+	this.solid = SOLID_BBOX;
+	precache_model(this.model);
+	_setmodel(this, this.model);
+	precache_sound("weapons/r_exp3.wav");
+	if(!this.health)
+		this.health = 20;
+	this.th_die = barrel_explode;
+	this.takedamage = DAMAGE_AIM;
+
+	this.origin_z = this.origin_z + 2;
+	float oldz = this.origin_z;
+	WITHSELF(this, builtin_droptofloor());
+	if(oldz - this.origin_z > 250)
+	{
+		LOG_DEBUG("Exploding box fell out of the level at ", vtos(this.origin), "\n");
+		delete(this);
+		return;
+	}
+
+	CSQCMODEL_AUTOINIT(this);
 }
 
 
@@ -254,27 +278,9 @@ TESTING THING
 
 spawnfunc(misc_explobox)
 {
-	this.solid = SOLID_BBOX;
-	set_movetype(this, MOVETYPE_NONE);
-	precache_model("maps/b_explob.bsp");
-	_setmodel(this, "maps/b_explob.bsp");
-	precache_sound("weapons/r_exp3.wav");
-	this.health = 20;
-	this.th_die = barrel_explode;
-	this.takedamage = DAMAGE_AIM;
-
-	this.origin_z = this.origin_z + 2;
-	float oldz = this.origin_z;
-	WITHSELF(this, builtin_droptofloor());
-	if(oldz - this.origin_z > 250)
-	{
-		dprint("item fell out of level at ");
-		dprint(vtos(this.origin));
-		dprint("\n");
-		delete(this);
-	}
+	this.model = "maps/b_explob.bsp";
+	barrel_spawn(this);
 }
-
 
 
 
@@ -284,25 +290,8 @@ Smaller exploding box, REGISTERED ONLY
 
 spawnfunc(misc_explobox2)
 {
-	this.solid = SOLID_BBOX;
-	set_movetype(this, MOVETYPE_NONE);
-	precache_model2("maps/b_exbox2.bsp");
-	_setmodel(this, "maps/b_exbox2.bsp");
-	precache_sound("weapons/r_exp3.wav");
-	this.health = 20;
-	this.th_die = barrel_explode;
-	this.takedamage = DAMAGE_AIM;
-
-	this.origin_z = this.origin_z + 2;
-	float oldz = this.origin_z;
-	WITHSELF(this, builtin_droptofloor());
-	if(oldz - this.origin_z > 250)
-	{
-		dprint("item fell out of level at ");
-		dprint(vtos(this.origin));
-		dprint("\n");
-		delete(this);
-	}
+	this.model = "maps/b_exbox2.bsp";
+	barrel_spawn(this);
 }
 
 //============================================================================
