@@ -184,6 +184,12 @@ spawnfunc(light_flame_small_white)
 
 //============================================================================
 
+void fire_touch(entity this, entity toucher)
+{
+	T_Damage(toucher, this, this, 20);
+	delete(this);
+}
+
 void fire_fly(entity this)
 {
 	entity fireball = spawn();
@@ -203,13 +209,6 @@ void fire_fly(entity this)
 	
 	this.nextthink = time +(random() * 5) + 3;
 	setthink(this, fire_fly);
-}
-
-
-void fire_touch(entity this, entity toucher)
-{
-	T_Damage(toucher, this, this, 20);
-	delete(this);
 }
 
 
@@ -240,7 +239,7 @@ void barrel_explode(entity this, entity attacker)
 	_sound(this, CHAN_VOICE, "weapons/r_exp3.wav", 1, ATTN_NORM);
 	particle(this.origin, '0 0 0', 75, 255);
 
-	setSendEntity(e, func_null); // some things are gonna happen to this barrel that the ChildrenS of QuakeC shouldn't see
+	setSendEntity(this, func_null); // some things are gonna happen to this barrel that the ChildrenS of QuakeC shouldn't see
 
 	this.origin_z = this.origin_z + 32;
 	BecomeExplosion(this);

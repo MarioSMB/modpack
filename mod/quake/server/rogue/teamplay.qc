@@ -1192,7 +1192,7 @@ void TeamFlagBaseTouch(entity this, entity toucher)
 						it.frags = it.frags + CTF_FRAG_CARRIER_ASSIST_BONUS;
 					}
 				}
-				it.ctf_flags = it.ctf_flags - (it.ctf_flags & CTF_FLAG_FLAG);
+				it.ctf_flags &= ~CTF_FLAG_FLAG;
 			});
 			// respawn flags
 			TeamRegenFlags();
