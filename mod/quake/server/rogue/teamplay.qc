@@ -718,7 +718,7 @@ void Team_weapon_touch(entity this, entity toucher)
 	else
 		objerror(this, "Team_weapon_touch: unknown classname");
 
-	sprint(toucher, "You got the ");
+	sprint(toucher, "You captured the ");
 	sprint(toucher, this.netname);
 	sprint(toucher, "\n");
 // weapon touch sound
@@ -831,6 +831,7 @@ void TossWeapon(entity this)
 }
 
 .int cnt;
+.float touch_time;
 void RegenFlag(entity flg)
 {
 	set_movetype(flg, MOVETYPE_TOSS);
@@ -840,6 +841,7 @@ void RegenFlag(entity flg)
 	flg.angles = flg.mangle;
 	flg.cnt = FLAG_AT_BASE; // it's at home base
 	flg.owner = NULL;
+	flg.touch_time = time + 1; // prevent touching again for a bit, to prevent instant cap loops
 }
 
 void TeamReturnFlag(entity flg)
@@ -870,22 +872,24 @@ void TeamReturnFlag(entity flg)
 
 void TeamRegenFlags()
 {
-	entity f;
-
 	if(teamplay == TEAM_CTF_ONEFLAG)
 	{
-		f = find(NULL, classname, "item_flag");
-		if(f != NULL)
-			RegenFlag(f);
+		FOREACH_ENTITY_CLASS("item_flag", true,
+		{
+			RegenFlag(it);
+		});
 		return;
 	}
 
-	f = find(NULL, classname, "item_flag_team1");
-	if(f != NULL)
-		RegenFlag(f);
-	f = find(NULL, classname, "item_flag_team2");
-	if(f != NULL)
-		RegenFlag(f);
+	FOREACH_ENTITY_CLASS("item_flag_team1", true,
+	{
+		RegenFlag(it);
+	});
+
+	FOREACH_ENTITY_CLASS("item_flag_team2", true,
+	{
+		RegenFlag(it);
+	});
 }
 
 void TeamDropFlag(entity flg)
@@ -941,9 +945,10 @@ void TeamDropFlagOfPlayer(entity player)
 // flagbase to score
 void TeamFlagTouch(entity this, entity toucher)
 {
-	if(!IS_PLAYER(toucher))
+	if(!IS_PLAYER(toucher) || toucher.health <= 0)
 		return;
-	if(toucher.health <= 0)
+
+	if(this.touch_time > time)
 		return;
 
 	if(toucher.team != toucher.steam)
@@ -999,11 +1004,7 @@ void TeamFlagTouch(entity this, entity toucher)
 			if((this.team == TEAM1 && (toucher.ctf_flags & CTF_FLAG_TEAM2)) ||
 				(this.team == TEAM2 && (toucher.ctf_flags & CTF_FLAG_TEAM1)))
 			{
-				bprint(toucher.netname);
-				if(toucher.team == TEAM1)
-					bprint(" the ^4Blue flag^7!\n"); // blue
-				else
-					bprint(" the ^1Red flag^7!\n"); // red
+				bprintf("%s ^7captured the %s flag^7!\n", toucher.netname, ((toucher.team == TEAM1) ? "^4Blue" : "^1Red"));
 				toucher.items &= ~(IT_KEY1 | IT_KEY2);
 
 				_sound(toucher, CHAN_VOICE, "misc/flagcap.wav", 1, ATTN_NONE);
@@ -1060,11 +1061,7 @@ void TeamFlagTouch(entity this, entity toucher)
 			return; // its at home base already
 		}	
 		// hey, its not home.  return it by teleporting it back
-		bprint(toucher.netname);
-		if(toucher.team == TEAM1)
-			bprint(" the ^1Red flag^7!\n"); // red
-		else
-			bprint(" the ^4Blue flag^7!\n"); // blue
+		bprintf("%s ^7returned the %s flag^7!\n", toucher.netname, ((toucher.team == TEAM1) ? "^1Red" : "^4Blue"));
 		toucher.frags = toucher.frags + CTF_RECOVERY_BONUS;
 		toucher.ctf_lastreturnedflag = time;
 		_sound(toucher, CHAN_ITEM, this.noise1, 1, ATTN_NORM);
@@ -1077,11 +1074,7 @@ void TeamFlagTouch(entity this, entity toucher)
 		return;
 
 	// hey, its not our flag, pick it up
-	bprint(toucher.netname);
-	if(this.team == TEAM1)
-		bprint(" the ^1Red flag^7!\n"); // red
-	else
-		bprint(" the ^4Blue flag^7!\n"); // blue
+	bprintf("%s ^7got the %s flag^7!\n", toucher.netname, ((this.team == TEAM1) ? "^1Red" : "^4Blue"));
 	toucher.frags = toucher.frags + CTF_FLAG_BONUS;
 
 	// if in three team, messages are a little different
@@ -1165,8 +1158,7 @@ void TeamFlagBaseTouch(entity this, entity toucher)
 			(this.team == TEAM2 && toucher.steam == TEAM1)) && 
 			(toucher.ctf_flags & CTF_FLAG_FLAG)) {
 			// he just touched enemy base, capture it
-			bprint(toucher.netname);
-			bprint(" the ^9flag^7!\n"); // blue
+			bprint(strcat(toucher.netname, " ^7captured the ^9flag^7!\n"));
 			toucher.items &= ~(IT_KEY1 | IT_KEY2);
 			_sound(toucher, CHAN_VOICE, "misc/flagcap.wav", 1, ATTN_NONE);
 
@@ -1208,11 +1200,7 @@ void TeamFlagBaseTouch(entity this, entity toucher)
 		((toucher.ctf_flags & CTF_FLAG_TEAM2) && (this.team == TEAM1))) {
 		// third team captured
 
-		bprint(toucher.netname);
-		if(this.team == TEAM1)
-			bprint(" the ^4Blue flag^7!\n"); // blue
-		else
-			bprint(" the ^1Red flag^7!\n"); // red
+		bprintf("%s ^7captured the %s flag^7!\n", toucher.netname, ((this.team == TEAM1) ? "^4Blue" : "^1Red"));
 		toucher.items &= ~(IT_KEY1 | IT_KEY2);
 
 		_sound(toucher, CHAN_VOICE, "misc/flagcap.wav", 1, ATTN_NONE);

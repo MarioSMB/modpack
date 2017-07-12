@@ -535,7 +535,7 @@ void SetMod()
 		modname = cvar_string("g_mod_config");
 
 	//bool fullstatus = autocvar_g_full_getstatus_responses;
-	string s = "coop"; // the gametype
+	string s = ((coop) ? "coop" : "dm"); // the gametype
 	s = strcat(s, ":", autocvar_g_xonoticversion);
 	s = strcat(s, ":P", ftos(cvar_purechanges_count));
 	s = strcat(s, ":S", ftos(nJoinAllowed(NULL, NULL)));
@@ -752,7 +752,12 @@ void GotoFirstMap(entity this)
 		// we do NOT set this to 0 any more, so someone "accidentally" changing
 		// to this "init" map on a dedicated server will cause no permanent
 		// harm
-		mapname = "start";
+		if(MP_ROGUE)
+			mapname = "rstart";
+		else if(MP_HIPNOTIC)
+			mapname = "hipstart";
+		else
+			mapname = "start";
 		GotoNextMap();
 
 		return;
