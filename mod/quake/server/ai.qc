@@ -92,7 +92,7 @@ bool t_checkbottom(entity this)
 	// the midpoint must be within 16 of the bottom
 	vector stop;
 	start = stop = vec2((minz + maxz) * 0.5);
-	start.z = stop.z = 2 * PHYS_STEPHEIGHT(this);
+	start.z = stop.z = 2 * PHYS_STEPHEIGHT(NULL);
 
 	traceline(start, stop, MOVE_NOMONSTERS, this);
 	if(trace_fraction == 1.0)
@@ -112,7 +112,7 @@ bool t_checkbottom(entity this)
 
 			if(trace_fraction != 1.0 && trace_endpos.z > bottom)
 				bottom = trace_endpos.z;
-			if(trace_fraction == 1.0 || mid - trace_endpos.z > PHYS_STEPHEIGHT(this))
+			if(trace_fraction == 1.0 || mid - trace_endpos.z > PHYS_STEPHEIGHT(NULL))
 				return false;
 		}
 	}
@@ -127,7 +127,6 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 {
 	vector oldorg = this.origin;
 	vector neworg = this.origin + move;
-	entity targ;
 
 	// flying monsters don't step up
 	if((this.flags & FL_SWIM) || (this.flags & FL_FLY))
@@ -135,6 +134,7 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 		// try one move with vertical motion, then one without
 		for(int j = 0; j < 2; ++j)
 		{
+			entity targ;
 			neworg = this.origin + move;
 			if(noenemy)
 				targ = NULL;
@@ -154,7 +154,7 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 			tracebox(this.origin, this.mins, this.maxs, neworg, MOVE_NORMAL, this);
 			if(trace_fraction == 1)
 			{
-				if((this.flags & FL_SWIM) && (Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(trace_endpos)) & DPCONTENTS_LIQUIDSMASK))
+				if((this.flags & FL_SWIM) && !(Mod_Q1BSP_SuperContentsFromNativeContents(pointcontents(trace_endpos)) & DPCONTENTS_LIQUIDSMASK))
 					return false; // swim monster left water
 
 				this.origin = trace_endpos;
@@ -174,14 +174,14 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 	}
 
 	// push down from a step height above the desired position
-	neworg.z += PHYS_STEPHEIGHT(this);
+	neworg.z += PHYS_STEPHEIGHT(NULL);
 	vector end = neworg;
-	end.z -= PHYS_STEPHEIGHT(this) * 2;
+	end.z -= PHYS_STEPHEIGHT(NULL) * 2;
 
 	tracebox(neworg, this.mins, this.maxs, end, MOVE_NORMAL, this);
 	if(trace_startsolid)
 	{
-		neworg.z -= PHYS_STEPHEIGHT(this);
+		neworg.z -= PHYS_STEPHEIGHT(NULL);
 		tracebox(neworg, this.mins, this.maxs, end, MOVE_NORMAL, this);
 		if(trace_startsolid)
 			return false;
@@ -206,7 +206,11 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 	}
 
 	// check point traces down for dangling corners
-	setorigin(this, trace_endpos);
+	vector oldtracenormal = trace_plane_normal;
+	entity oldtraceent = trace_ent;
+	this.origin = trace_endpos;
+	if(relink)
+		setorigin(this, this.origin);
 
 	if(!t_checkbottom(this))
 	{
@@ -233,7 +237,7 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 	// gameplayfix: check if reached pretty steep plane and bail
 	if(!((this.flags & FL_SWIM) || (this.flags & FL_FLY)) && STAT(GAMEPLAYFIX_NOSTEPMOVEONSTEEPSLOPES, this))
 	{
-		if(trace_plane_normal.z < 0.5)
+		if(oldtracenormal.z < 0.5)
 		{
 			this.origin = oldorg;
 			if(relink)
@@ -242,7 +246,7 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 		}
 	}
 
-	this.groundentity = trace_ent;
+	this.groundentity = oldtraceent;
 
 	// the move is ok
 	if(relink)
@@ -270,7 +274,7 @@ bool t_walkmove(entity this, float yaw, float dist)
 }
 
 // hacked in version of movetogoal (to be rewritten)
-#if 0
+#if 1
 bool t_stepdirection(entity this, float yaw, float dist)
 {
 	this.ideal_yaw = yaw;
@@ -299,19 +303,19 @@ bool t_stepdirection(entity this, float yaw, float dist)
 void t_newchasedir(entity this, entity targ, float dist)
 {
 	float di_nodir = -1;
-	vector d;
 	float olddir = anglemods(rint(this.ideal_yaw / 45) * 45);
 	float turnaround = anglemods(olddir - 180);
-	float tdir;
 
 	vector delta = vec2(targ.origin - this.origin);
 
+	vector d;
 	d.x = ((delta.x > 10) ? 0 : ((delta.x < -10) ? 180 : di_nodir));
 	d.y = ((delta.y < -10) ? 270 : ((delta.y > 10) ? 90 : di_nodir));
 
 	// try direct route
 	if(d.x != di_nodir && d.y != di_nodir)
 	{
+		float tdir;
 		if(d.x == 0)
 			tdir = (d.y == 90) ? 45 : 315;
 		else
@@ -337,17 +341,17 @@ void t_newchasedir(entity this, entity targ, float dist)
 
 	if(random() < 0.5) // randomly determine direction of search
 	{
-		for(tdir = 0; tdir <= 315; tdir += 45)
+		for(int j = 0; j <= 315; j += 45)
 		{
-			if(tdir != turnaround && t_stepdirection(this, tdir, dist))
+			if(j != turnaround && t_stepdirection(this, j, dist))
 				return;
 		}
 	}
 	else
 	{
-		for(tdir = 315; tdir >= 0; tdir -= 45)
+		for(int j = 315; j >= 0; j -= 45)
 		{
-			if(tdir != turnaround && t_stepdirection(this, tdir, dist))
+			if(j != turnaround && t_stepdirection(this, j, dist))
 				return;
 		}
 	}
@@ -365,7 +369,7 @@ void t_newchasedir(entity this, entity targ, float dist)
 
 void t_movetogoal(entity this, float dist)
 {
-#if 0
+#if 1
 	if(!(IS_ONGROUND(this) || (this.flags & FL_SWIM) || (this.flags & FL_FLY)))
 		return;
 

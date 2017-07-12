@@ -329,18 +329,18 @@ void LinkDoors(entity this)
 			e.enemy = t;
 			e = t;
 
-			if(t.mins_x < cmins_x)
-				cmins_x = t.mins_x;
-			if(t.mins_y < cmins_y)
-				cmins_y = t.mins_y;
-			if(t.mins_z < cmins_z)
-				cmins_z = t.mins_z;
-			if(t.maxs_x > cmaxs_x)
-				cmaxs_x = t.maxs_x;
-			if(t.maxs_y > cmaxs_y)
-				cmaxs_y = t.maxs_y;
-			if(t.maxs_z > cmaxs_z)
-				cmaxs_z = t.maxs_z;
+			if(t.mins_x < cmins.x)
+				cmins.x = t.mins_x;
+			if(t.mins_y < cmins.y)
+				cmins.y = t.mins_y;
+			if(t.mins_z < cmins.z)
+				cmins.z = t.mins_z;
+			if(t.maxs_x > cmaxs.x)
+				cmaxs.x = t.maxs_x;
+			if(t.maxs_y > cmaxs.y)
+				cmaxs.y = t.maxs_y;
+			if(t.maxs_z > cmaxs.z)
+				cmaxs.z = t.maxs_z;
 		}
 	} while(1);
 
