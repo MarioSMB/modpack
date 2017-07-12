@@ -7,6 +7,7 @@ launch_lava_spike
 Used for both the player and the ogre
 ===============
 */
+void lavaspike_touch(entity this, entity toucher);
 entity launch_lava_spike(entity this, vector org, vector dir)
 {
 	entity newmis = new(lava_spike);
@@ -28,6 +29,7 @@ entity launch_lava_spike(entity this, vector org, vector dir)
 	return newmis;
 }
 
+void superlavaspike_touch(entity this, entity toucher);
 void W_FireSuperLavaSpikes(entity this)
 {
 	_sound(this, CHAN_WEAPON, "weapons/spike2.wav", 1, ATTN_NORM);

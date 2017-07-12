@@ -22,10 +22,9 @@ World Types:
 2: base
 */
 //=======================
-void PrecacheJunk()
+PRECACHE(Junk)
 {
 	// player precaches	
-	W_Precache();			// get weapon precaches
 
 // sounds used from C physics code
 	precache_sound("demon/dland2.wav");		// landing thud
@@ -695,8 +694,6 @@ spawnfunc(worldspawn)
 
 	static_init_late();
 	static_init_precache();
-
-	PrecacheJunk();
 
 	if(autocvar_sv_eventlog)
 	{

@@ -87,7 +87,7 @@ const float MIN_ANGLE_DELTA = 10;
 .float gravity;
 
 //MED 01/05/97 added discharge variable
-float discharged;
+bool discharged;
 //MED 01/05/97 added hipnotic decoy
 //entity hipdecoy;
 //
