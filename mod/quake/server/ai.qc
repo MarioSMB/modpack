@@ -235,7 +235,7 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 		this.flags &= ~FL_PARTIALGROUND;
 
 	// gameplayfix: check if reached pretty steep plane and bail
-	if(!((this.flags & FL_SWIM) || (this.flags & FL_FLY)) && STAT(GAMEPLAYFIX_NOSTEPMOVEONSTEEPSLOPES, this))
+	if(!((this.flags & FL_SWIM) || (this.flags & FL_FLY)) && STAT(GAMEPLAYFIX_NOSTEPMOVEONSTEEPSLOPES, NULL))
 	{
 		if(oldtracenormal.z < 0.5)
 		{
