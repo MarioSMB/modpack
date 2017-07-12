@@ -397,12 +397,12 @@ void enf_die(entity this, entity attacker)
 
 string enf_sight(entity this)
 {
-	switch(rint(random() * 3))
+	switch(floor(random() * 4))
 	{
-		case 1: return "enforcer/sight1.wav";
-		case 2: return "enforcer/sight2.wav";
-		case 0: return "enforcer/sight3.wav";
-		default: return "enforcer/sight4.wav";
+		case 0: return "enforcer/sight1.wav";
+		case 1: return "enforcer/sight2.wav";
+		case 2: return "enforcer/sight3.wav";
+		default: case 3: return "enforcer/sight4.wav";
 	}
 }
 
@@ -413,11 +413,8 @@ string enf_deathmessage(entity this) { return "was blasted by an Enforcer"; }
 */
 spawnfunc(monster_enforcer)
 {
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(deathmatch) { delete(this); return; }
+
 	precache_model2("progs/enforcer.mdl");
 	precache_model2("progs/h_mega.mdl");
 	precache_model2("progs/laser.mdl");

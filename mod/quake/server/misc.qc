@@ -301,8 +301,6 @@ const int SPAWNFLAG_LAVASKILL = BIT(4);
 const int SPAWNFLAG_FIREBALL = BIT(5);
 
 entity LaunchLaser(entity this, vector org, vector vec);
-entity launch_lava_spike(entity this, vector org, vector dir);
-void launch_fireball(entity this, vector org, vector dir);
 
 void spikeshooter_use(entity this, entity actor, entity trigger)
 {

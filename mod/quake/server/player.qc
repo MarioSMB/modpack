@@ -674,7 +674,6 @@ void DeathBubbles(entity this, int num_bubbles)
 	bubble_spawner.air_finished = 0;
 	bubble_spawner.owner = this;
 	bubble_spawner.bubble_count = num_bubbles;
-	return;
 }
 
 
@@ -701,7 +700,6 @@ void DeathSound(entity this)
 		this.noise = "player/death5.wav";
 
 	_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NONE);
-	return;
 }
 
 
