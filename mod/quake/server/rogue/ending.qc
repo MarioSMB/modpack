@@ -281,13 +281,7 @@ void ending_remove_stuff()
 	entity curEnt = find(NULL, classname, "item_time_core");
 	if(curEnt)
 	{
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_EXPLOSION2);
-		WriteCoord(MSG_BROADCAST, curEnt.origin_x);
-		WriteCoord(MSG_BROADCAST, curEnt.origin_y);
-		WriteCoord(MSG_BROADCAST, curEnt.origin_z);
-	    WriteByte(MSG_BROADCAST, 230);
-	    WriteByte(MSG_BROADCAST, 5);
+	    te_explosion2(curEnt.origin, 230, 5);
 		
 		setthink(curEnt, SUB_Remove);
 		curEnt.nextthink = time + 0.1;

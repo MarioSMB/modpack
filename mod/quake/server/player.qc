@@ -1030,13 +1030,7 @@ void player_touch(entity this, entity toucher)
 			{
     	        _sound(this, CHAN_WEAPON, "enforcer/enfstop.wav", 1, ATTN_NORM);
 	
-				WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-				WriteByte(MSG_BROADCAST, TE_EXPLOSION2);
-				WriteCoord(MSG_BROADCAST, toucher.origin_x);
-				WriteCoord(MSG_BROADCAST, toucher.origin_y);
-				WriteCoord(MSG_BROADCAST, toucher.origin_z);
-				WriteByte(MSG_BROADCAST, 230);
-				WriteByte(MSG_BROADCAST, 5);
+				te_explosion2(toucher.origin, 230, 5);
 
 				shield_spawn(this, v_forward);
 			}

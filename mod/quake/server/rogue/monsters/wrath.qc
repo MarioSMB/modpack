@@ -240,13 +240,7 @@ void wrath_die15(entity this)
 
 	this.origin = this.origin + '0 0 24';
 
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_EXPLOSION2);
-	WriteCoord(MSG_BROADCAST, this.origin_x);
-	WriteCoord(MSG_BROADCAST, this.origin_y);
-	WriteCoord(MSG_BROADCAST, this.origin_z);
-	WriteByte(MSG_BROADCAST, 0);
-	WriteByte(MSG_BROADCAST, 4);
+	te_explosion2(this.origin, 0, 4);
 
 	delete(this);
 }
@@ -391,11 +385,7 @@ void WrathMissileTouch(entity this, entity toucher)
 	T_RadiusDamage(this, this.owner, 20, NULL);
 	_sound(this, CHAN_WEAPON, "weapons/r_exp3.wav", 1, ATTN_NORM);
 
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_EXPLOSION);
-	WriteCoord(MSG_BROADCAST, this.origin_x);
-	WriteCoord(MSG_BROADCAST, this.origin_y);
-	WriteCoord(MSG_BROADCAST, this.origin_z);
+	te_explosion(this.origin);
 
 	this.velocity = '0 0 0';
 	settouch(this, func_null);

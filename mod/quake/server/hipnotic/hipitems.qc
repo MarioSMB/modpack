@@ -297,11 +297,7 @@ void spikemine_Touch(entity this, entity toucher)
 	T_RadiusDamage (this, this, 110, NULL);
 	_sound(this, CHAN_WEAPON, "weapons/r_exp3.wav", 1, ATTN_NORM);
 
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_EXPLOSION);
-	WriteCoord(MSG_BROADCAST, this.origin_x);
-	WriteCoord(MSG_BROADCAST, this.origin_y);
-	WriteCoord(MSG_BROADCAST, this.origin_z);
+	te_explosion(this.origin);
 
 	_sound(this, CHAN_VOICE, "misc/null.wav", 1, ATTN_NORM);
 	this.velocity = '0 0 0';

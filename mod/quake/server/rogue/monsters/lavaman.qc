@@ -354,11 +354,7 @@ void lavaman_death9(entity this)
 	set_anim(this, anim_lavaman_death9, lavaman_death10);
 
 	_sound(this, CHAN_BODY, "boss1/out1.wav", 1, ATTN_NORM);
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_LAVASPLASH);
-	WriteCoord(MSG_BROADCAST, this.origin_x);
-	WriteCoord(MSG_BROADCAST, this.origin_y);
-	WriteCoord(MSG_BROADCAST, this.origin_z);
+	te_lavasplash(this.origin);
 }
 void lavaman_death8(entity this) { set_anim(this, anim_lavaman_death8, lavaman_death9); }
 void lavaman_death7(entity this) { set_anim(this, anim_lavaman_death7, lavaman_death8); }
@@ -396,11 +392,7 @@ void lavaman_touch(entity this, entity toucher)
 	this.origin = this.origin - 8*normalize(this.velocity);
 
 // Change to an explosion2!!! Ramp in the non-diminishing reds...
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_EXPLOSION);
-	WriteCoord(MSG_BROADCAST, this.origin_x);
-	WriteCoord(MSG_BROADCAST, this.origin_y);
-	WriteCoord(MSG_BROADCAST, this.origin_z);
+	te_explosion(this.origin);
 
 	BecomeExplosion(this);
 }
@@ -487,11 +479,7 @@ void lavaman_awake(entity this, entity actor, entity trigger)
 	this.th_die = lavaman_death1;
 	this.th_melee = lavaman_fire1;
 
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_LAVASPLASH);
-	WriteCoord(MSG_BROADCAST, this.origin_x);
-	WriteCoord(MSG_BROADCAST, this.origin_y);
-	WriteCoord(MSG_BROADCAST, this.origin_z);
+	te_lavasplash(this.origin);
 
 	if(!(actor.items & IT_INVISIBILITY))
 	{

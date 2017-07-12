@@ -20,13 +20,7 @@ void exploder_fire(entity this)
 
 	T_RadiusDamage(this, this.owner, this.dmg, this.enemy);
 	if(this.spawnflags & USE_PARTICLES)
-	{
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_EXPLOSION);
-		WriteCoord(MSG_BROADCAST, this.origin_x);
-		WriteCoord(MSG_BROADCAST, this.origin_y);
-		WriteCoord(MSG_BROADCAST, this.origin_z);
-	}
+		te_explosion(this.origin);
 	BecomeExplosion(this);
 }
 
@@ -95,13 +89,7 @@ void multi_exploder_fire(entity this)
 	_sound(expl , CHAN_VOICE, "misc/shortexp.wav", this.volume, this.speed);
 	T_RadiusDamage(expl, this.owner, this.dmg, other);
 	if(this.spawnflags & USE_PARTICLES)
-	{
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_EXPLOSION);
-		WriteCoord(MSG_BROADCAST, expl.origin_x);
-		WriteCoord(MSG_BROADCAST, expl.origin_y);
-		WriteCoord(MSG_BROADCAST, expl.origin_z);
-	}
+		te_explosion(expl.origin);
 	BecomeExplosion(expl);
 }
 

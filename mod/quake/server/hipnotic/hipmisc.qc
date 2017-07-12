@@ -220,11 +220,7 @@ spawnfunc(info_command)
 
 void effect_teleport_use(entity this, entity actor, entity trigger)
 {
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_TELEPORT);
-	WriteCoord(MSG_BROADCAST, this.origin_x);
-	WriteCoord(MSG_BROADCAST, this.origin_y);
-	WriteCoord(MSG_BROADCAST, this.origin_z);
+	te_teleport(this.origin);
 
 	_sound(this, CHAN_VOICE, "misc/r_tele1.wav", 1, ATTN_NORM);
 }

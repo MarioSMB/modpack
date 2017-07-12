@@ -9,15 +9,7 @@ void SpawnBlood(vector org, vector vel, float damage);
 void GrappleTrail(entity h, entity player)
 {
 	// draw a line to the hook
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_BEAM);
-	WriteEntity(MSG_BROADCAST, h);
-	WriteCoord(MSG_BROADCAST, h.origin_x);
-	WriteCoord(MSG_BROADCAST, h.origin_y);
-	WriteCoord(MSG_BROADCAST, h.origin_z);
-	WriteCoord(MSG_BROADCAST, player.origin_x);
-	WriteCoord(MSG_BROADCAST, player.origin_y);
-	WriteCoord(MSG_BROADCAST, player.origin_z + 16);
+	te_beam(h, h.origin, player.origin + vec3(0, 0, 16));
 }
 
 void GrappleReset(entity this)

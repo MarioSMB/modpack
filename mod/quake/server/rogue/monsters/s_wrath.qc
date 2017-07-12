@@ -458,14 +458,8 @@ void overlord_die19(entity this)
 	set_anim(this, anim_swrath_s_wtdt17, overlord_die19);
 
 	int counter = 2;
-	
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_EXPLOSION2);
-	WriteCoord(MSG_BROADCAST, this.origin_x);
-	WriteCoord(MSG_BROADCAST, this.origin_y);
-	WriteCoord(MSG_BROADCAST, this.origin_z);
-	WriteByte(MSG_BROADCAST, 0);
-	WriteByte(MSG_BROADCAST, 4);
+
+	te_explosion2(this.origin, 0, 4);
 
 	while(counter > 0)
 	{
@@ -482,14 +476,8 @@ void overlord_die18(entity this)
 	set_anim(this, anim_swrath_s_wtdt17, overlord_die19);
 
 	int counter = 2;
-	
-	WriteByte (MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte (MSG_BROADCAST, TE_EXPLOSION2);
-	WriteCoord (MSG_BROADCAST, this.origin_x);
-	WriteCoord (MSG_BROADCAST, this.origin_y);
-	WriteCoord (MSG_BROADCAST, this.origin_z);
-	WriteByte (MSG_BROADCAST, 0);
-	WriteByte (MSG_BROADCAST, 4);
+
+	te_explosion2(this.origin, 0, 4);
 
 	while(counter>0)
 	{
@@ -505,14 +493,8 @@ void overlord_die17(entity this)
 	set_anim(this, anim_swrath_s_wtdt16, overlord_die18);
 
 	this.model = "";
-	
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_EXPLOSION2);
-	WriteCoord(MSG_BROADCAST, this.origin_x);
-	WriteCoord(MSG_BROADCAST, this.origin_y);
-	WriteCoord(MSG_BROADCAST, this.origin_z);
-	WriteByte(MSG_BROADCAST, 0);
-	WriteByte(MSG_BROADCAST, 4);
+
+	te_explosion2(this.origin, 0, 4);
 
 	ol_toss(this, "progs/s_wrtgb2.mdl");
 	ol_toss(this, "progs/s_wrtgb3.mdl");

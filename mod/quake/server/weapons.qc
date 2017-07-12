@@ -60,11 +60,7 @@ void HIP_LaserTouch(entity this, entity toucher)
 	}
 	else if((this.cnt == 3) ||(random()<0.15))
 	{
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_GUNSHOT);
-		WriteCoord(MSG_BROADCAST, org.x);
-		WriteCoord(MSG_BROADCAST, org.y);
-		WriteCoord(MSG_BROADCAST, org.z);
+		te_gunshot(org);
 	}
 	else
 	{
@@ -449,11 +445,7 @@ void HIP_FireMjolnir(entity this)
 		{
 //         _sound(this, CHAN_WEAPON, "player/axhit2.wav", 1, ATTN_NORM);
 			_sound(this, CHAN_WEAPON, "hipweap/mjoltink.wav", 1, ATTN_NORM);
-			WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-			WriteByte(MSG_BROADCAST, TE_GUNSHOT);
-			WriteCoord(MSG_BROADCAST, org.x);
-			WriteCoord(MSG_BROADCAST, org.y);
-			WriteCoord(MSG_BROADCAST, org.z);
+			te_gunshot(org);
 		}
 		else
 		{
@@ -1092,11 +1084,7 @@ void ProximityExplode(entity this)
 {
 	T_RadiusDamage(this, this.owner, 95, NULL);
 
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_EXPLOSION);
-	WriteCoord(MSG_BROADCAST, this.origin_x);
-	WriteCoord(MSG_BROADCAST, this.origin_y);
-	WriteCoord(MSG_BROADCAST, this.origin_z);
+	te_explosion(this.origin);
 
 	BecomeExplosion(this);
 }

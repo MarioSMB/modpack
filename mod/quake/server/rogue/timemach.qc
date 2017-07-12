@@ -18,11 +18,7 @@ void time_chunk(entity this)
 	timeChunk.angles = this.owner.angles;
 	
 	_sound(this, CHAN_WEAPON, "weapons/r_exp3.wav", 1, ATTN_NONE);
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_EXPLOSION);
-	WriteCoord(MSG_BROADCAST, timeChunk.origin_x);
-	WriteCoord(MSG_BROADCAST, timeChunk.origin_y);
-	WriteCoord(MSG_BROADCAST, timeChunk.origin_z);
+	te_explosion(timeChunk.origin);
 
 	this.owner.frame = 1;
 
@@ -61,23 +57,9 @@ void time_boom(entity this)
 	_sound(this, CHAN_WEAPON, "weapons/r_exp3.wav", 1, ATTN_NONE);
 
 	if(random() < 0.5)
-	{
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_EXPLOSION);
-		WriteCoord(MSG_BROADCAST, this.origin_x);
-		WriteCoord(MSG_BROADCAST, this.origin_y);
-		WriteCoord(MSG_BROADCAST, this.origin_z);
-	}
+		te_explosion(this.origin);
 	else
-	{
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_EXPLOSION2);
-		WriteCoord(MSG_BROADCAST, this.origin_x);
-		WriteCoord(MSG_BROADCAST, this.origin_y);
-		WriteCoord(MSG_BROADCAST, this.origin_z);
-		WriteByte(MSG_BROADCAST, 244);
-		WriteByte(MSG_BROADCAST, 3);
-	}
+		te_explosion2(this.origin, 244, 3);
 	
 	BecomeExplosion(this);
 	entity stopShakeEnt = spawn();
@@ -92,21 +74,11 @@ void time_fall(entity this)
 	{
 		if(this.origin_z < -20)
 		{
-			WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-			WriteByte(MSG_BROADCAST, TE_LAVASPLASH);
-			WriteCoord(MSG_BROADCAST, this.origin_x);
-			WriteCoord(MSG_BROADCAST, this.origin_y);
-			WriteCoord(MSG_BROADCAST, this.origin_z - 80);
+			te_lavasplash(this.origin - vec3(0, 0, 80));
 			this.pain_finished = 1;
 		}
 		else if(random() < 0.3)
-		{
-			WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-			WriteByte(MSG_BROADCAST, TE_EXPLOSION);
-			WriteCoord(MSG_BROADCAST, this.origin_x);
-			WriteCoord(MSG_BROADCAST, this.origin_y);
-			WriteCoord(MSG_BROADCAST, this.origin_z);
-		}
+			te_explosion(this.origin);
 	}
 	
 	this.velocity_z = this.velocity_z - 5;
