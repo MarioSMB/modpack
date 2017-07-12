@@ -47,6 +47,18 @@ REGISTER_STAT(PL_MAX, vector)
 REGISTER_STAT(PL_CROUCH_MAX, vector)
 
 #ifdef SVQC
+int monsters_killed, monsters_total;
+#endif
+REGISTER_STAT(MONSTERS_TOTAL, int, monsters_total)
+REGISTER_STAT(MONSTERS_KILLED, int, monsters_killed)
+
+#ifdef SVQC
+int secrets_found, secrets_total;
+#endif
+REGISTER_STAT(SECRETS_TOTAL, int, secrets_total)
+REGISTER_STAT(SECRETS_FOUND, int, secrets_found)
+
+#ifdef SVQC
 #include <common/physics/movetypes/movetypes.qh>
 #endif
 

@@ -905,7 +905,7 @@ spawnfunc(monster_zombie)
 		this.flags |= FL_MONSTER;
 		this.th_stand(this);
 		this.nextthink = this.nextthink + random() * 0.5;
-		total_monsters += 1;
+		monsters_total += 1;
 	}
 	else
 	{

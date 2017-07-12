@@ -88,5 +88,5 @@ void monster_start(entity this, int stype)
 	this.flags |= stype; // TODO?
 
 	if(!(stype & FL_DECOY))
-		total_monsters += 1;
+		monsters_total += 1;
 }

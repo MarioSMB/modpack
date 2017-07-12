@@ -289,8 +289,6 @@ void spikemine_Touch(entity this, entity toucher)
 			return;
 
 		T_Damage(this,this,this,this.health+10);
-//      killed_monsters = killed_monsters + 1;
-//      WriteByte (MSG_ALL, SVC_KILLEDMONSTER);
 	}
 //   this.effects = this.effects | EF_MUZZLEFLASH;
 
@@ -355,7 +353,7 @@ spawnfunc(trap_spike_mine)
 	this.th_melee = spikemine_Home;
 	this.th_missile = spikemine_Home;
 	this.nextthink = time + 0.2;
-	total_monsters += 1;
+	monsters_total += 1;
 	this.flags |= FL_MONSTER;
 	this.deathtype = "was blasted by a spike mine";
 }
@@ -374,15 +372,7 @@ void SpawnLightningThink(entity this)
 	setthink(this, SpawnLightningThink);
 	if(checkclient(this))
 	{
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_LIGHTNING2);
-		WriteEntity(MSG_BROADCAST, this);
-		WriteCoord(MSG_BROADCAST, this.origin_x);
-		WriteCoord(MSG_BROADCAST, this.origin_y);
-		WriteCoord(MSG_BROADCAST, this.origin_z);
-		WriteCoord(MSG_BROADCAST, this.oldorigin_x);
-		WriteCoord(MSG_BROADCAST, this.oldorigin_y);
-		WriteCoord(MSG_BROADCAST, this.oldorigin_z);
+		te_lightning2(NULL, this.origin, this.oldorigin); // should be this
 	}
 	LightningDamage(this.origin, this.oldorigin, this.lastvictim, this.dmg);
 	this.nextthink = time + 0.1;
@@ -440,15 +430,7 @@ void trap_lightning_use(entity this, entity actor, entity trigger)
 	}
 	else if(checkclient(this))
 	{
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_LIGHTNING2);
-		WriteEntity(MSG_BROADCAST, this);
-		WriteCoord(MSG_BROADCAST, p1_x);
-		WriteCoord(MSG_BROADCAST, p1_y);
-		WriteCoord(MSG_BROADCAST, p1_z);
-		WriteCoord(MSG_BROADCAST, p2_x);
-		WriteCoord(MSG_BROADCAST, p2_y);
-		WriteCoord(MSG_BROADCAST, p2_z);
+		te_lightning2(NULL, p1, p2); // should be this
 		LightningDamage(p1, p2, this, this.dmg);
 	}
 	else
@@ -620,15 +602,7 @@ void TeslaLightningThink(entity this)
 		delete(this);
 		return;
 	}
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_LIGHTNING2);
-	WriteEntity(MSG_BROADCAST, this);
-	WriteCoord(MSG_BROADCAST, this.origin_x);
-	WriteCoord(MSG_BROADCAST, this.origin_y);
-	WriteCoord(MSG_BROADCAST, this.origin_z);
-	WriteCoord(MSG_BROADCAST, trace_endpos_x);
-	WriteCoord(MSG_BROADCAST, trace_endpos_y);
-	WriteCoord(MSG_BROADCAST, trace_endpos_z);
+	te_lightning2(NULL, this.origin, trace_endpos); // should be this
 	LightningDamage(this.origin, trace_endpos, this.lastvictim, this.dmg);
 	this.nextthink = time + 0.1;
 }

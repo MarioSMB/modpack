@@ -514,13 +514,9 @@ void morph_wake1(entity this)
 //		this.solid = SOLID_SLIDEBOX;
 //		this.takedamage = DAMAGE_NO;
 
-		total_monsters = total_monsters + 1;
+		monsters_total += 1;
   
 		this.owner.childrenSpawned = this.owner.childrenSpawned + 1;
-		
-		//WriteByte(MSG_BROADCAST, SVC_UPDATESTAT);
-		//WriteByte(MSG_BROADCAST, STAT_TOTALMONSTERS);
-		//WriteLong(MSG_BROADCAST, total_monsters);
 	}
 }
 
@@ -665,7 +661,7 @@ spawnfunc(monster_morph)
 
 	this.deathmessage = morph_deathmessage;
 	
-	total_monsters = total_monsters + 1;
+	monsters_total += 1;
 	if(this.targetname && this.targetname != "")
 		this.use = morph_use;
 	else

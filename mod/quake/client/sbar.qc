@@ -377,15 +377,15 @@ void Sbar_SoloScoreboard()
 	//int seconds = rint(t - 60*floor(t/60));
 
 	// monsters and secrets are now both on the top row
-	if(getstati(STAT_TOTALMONSTERS))
-		Sbar_DrawString(8, 4, sprintf("Monsters:%3d /%d", getstati(STAT_MONSTERS), getstati(STAT_TOTALMONSTERS)));
-	else if(getstati(STAT_MONSTERS)) // LA: Display something if monsters_killed is non-zero, but total_monsters is zero
-		Sbar_DrawString(8, 4, sprintf("Monsters:%3d", getstati(STAT_MONSTERS)));
+	if(STAT(MONSTERS_TOTAL))
+		Sbar_DrawString(8, 4, sprintf("Monsters:%3d /%d", STAT(MONSTERS_KILLED), STAT(MONSTERS_TOTAL)));
+	else if(STAT(MONSTERS_KILLED)) // LA: Display something if monsters_killed is non-zero, but total_monsters is zero
+		Sbar_DrawString(8, 4, sprintf("Monsters:%3d", STAT(MONSTERS_KILLED)));
 
-	if(getstati(STAT_TOTALSECRETS))
-		Sbar_DrawString(8+22*8, 4, sprintf("Secrets:%3d /%3d", getstati(STAT_SECRETS), getstati(STAT_TOTALSECRETS)));
-	else if(getstati(STAT_SECRETS)) // LA: And similarly for secrets
-		Sbar_DrawString(8+22*8, 4, sprintf("Secrets:%3d", getstati(STAT_SECRETS)));
+	if(STAT(SECRETS_TOTAL))
+		Sbar_DrawString(8+22*8, 4, sprintf("Secrets:%3d /%3d", STAT(SECRETS_FOUND), STAT(SECRETS_TOTAL)));
+	else if(STAT(SECRETS_FOUND)) // LA: And similarly for secrets
+		Sbar_DrawString(8+22*8, 4, sprintf("Secrets:%3d", STAT(SECRETS_FOUND)));
 
 	// format is like this: e1m1:The Sligpate Complex
 	string worldstr = sprintf("%s:%s", autocvar_cl_worldbasename, autocvar_cl_worldmessage);
@@ -672,23 +672,23 @@ void Sbar_IntermissionOverlay()
 	Sbar_DrawNum(180, 64, timestr, strlen(timestr), 0);
 
 // LA: Display as "a" instead of "a/b" if b is 0
-	if(getstati(STAT_TOTALSECRETS))
+	if(STAT(SECRETS_TOTAL))
 	{
-		Sbar_DrawNum(160, 104, itos(getstati(STAT_SECRETS)), 3, 0);
+		Sbar_DrawNum(160, 104, itos(STAT(SECRETS_FOUND)), 3, 0);
 		Sbar_DrawPic(232, 104, "gfx/num_slash");
-		Sbar_DrawNum(240, 104, itos(getstati(STAT_TOTALSECRETS)), 3, 0);
+		Sbar_DrawNum(240, 104, itos(STAT(SECRETS_TOTAL)), 3, 0);
 	}
 	else
-		Sbar_DrawNum(240, 104, itos(getstati(STAT_SECRETS)), 3, 0);
+		Sbar_DrawNum(240, 104, itos(STAT(SECRETS_FOUND)), 3, 0);
 
-	if(getstati(STAT_TOTALMONSTERS))
+	if(STAT(MONSTERS_TOTAL))
 	{
-		Sbar_DrawNum(160, 144, itos(getstati(STAT_MONSTERS)), 3, 0);
+		Sbar_DrawNum(160, 144, itos(STAT(MONSTERS_KILLED)), 3, 0);
 		Sbar_DrawPic(232, 144, "gfx/num_slash");
-		Sbar_DrawNum(240, 144, itos(getstati(STAT_TOTALMONSTERS)), 3, 0);
+		Sbar_DrawNum(240, 144, itos(STAT(MONSTERS_TOTAL)), 3, 0);
 	}
 	else
-		Sbar_DrawNum(240, 144, itos(getstati(STAT_MONSTERS)), 3, 0);
+		Sbar_DrawNum(240, 144, itos(STAT(MONSTERS_KILLED)), 3, 0);
 }
 
 /*

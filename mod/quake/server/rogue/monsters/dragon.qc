@@ -779,7 +779,7 @@ spawnfunc(monster_dragon)
 
 	this.dragonPainSequence = 1;
 
-	total_monsters = total_monsters + 1;
+	monsters_total += 1;
 	this.nextthink = time + 0.1;
 	setthink(this, dragon_activate);
 }

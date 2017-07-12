@@ -1301,15 +1301,7 @@ void Gremlin_FireLightningGun(entity this)
 
 	traceline(org, this.origin + dir*600, true, this);
 
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_LIGHTNING2);
-	WriteEntity(MSG_BROADCAST, this);
-	WriteCoord(MSG_BROADCAST, org.x);
-	WriteCoord(MSG_BROADCAST, org.y);
-	WriteCoord(MSG_BROADCAST, org.z);
-	WriteCoord(MSG_BROADCAST, trace_endpos.x);
-	WriteCoord(MSG_BROADCAST, trace_endpos.y);
-	WriteCoord(MSG_BROADCAST, trace_endpos.z);
+	te_lightning2(NULL, org, trace_endpos); // should be this
 
 	LightningDamage(org, trace_endpos + (dir * 4), this, 30);
 }
@@ -1672,10 +1664,7 @@ void Gremlin_Split(entity this)
 //   grem.gorging = false;
 	grem.stoleweapon = false;
 	grem.items = 0;
-	total_monsters += 1;
-	WriteByte(MSG_BROADCAST, SVC_UPDATESTAT);
-	WriteByte(MSG_BROADCAST, STAT_TOTALMONSTERS);
-	WriteLong(MSG_BROADCAST, total_monsters);
+	monsters_total += 1;
 	setorigin(grem, pos);
 	gremlin_spawn1(grem);
 	grem.enemy = NULL;

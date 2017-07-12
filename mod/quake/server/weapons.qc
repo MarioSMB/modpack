@@ -291,15 +291,7 @@ void HIP_LightningThink(entity this)
 
 			traceline(owner_org, end, true, this);
 
-			WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-			WriteByte(MSG_BROADCAST, TE_LIGHTNING2);
-			WriteEntity(MSG_BROADCAST, this);
-			WriteCoord(MSG_BROADCAST, owner_org.x);
-			WriteCoord(MSG_BROADCAST, owner_org.y);
-			WriteCoord(MSG_BROADCAST, owner_org.z);
-			WriteCoord(MSG_BROADCAST, trace_endpos.x);
-			WriteCoord(MSG_BROADCAST, trace_endpos.y);
-			WriteCoord(MSG_BROADCAST, trace_endpos.z);
+			te_lightning2(NULL, owner_org, trace_endpos); // should be this, bug in te_lightning
 
 			this.nextthink = time + 0.1;
 	//      this.think = HIP_DiversionLightningThink;
@@ -322,15 +314,7 @@ void HIP_LightningThink(entity this)
 		this.nextthink = time + 0.1;
 		return;
 	}
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_LIGHTNING2);
-	WriteEntity(MSG_BROADCAST, this);
-	WriteCoord(MSG_BROADCAST, org.x);
-	WriteCoord(MSG_BROADCAST, org.y);
-	WriteCoord(MSG_BROADCAST, org.z);
-	WriteCoord(MSG_BROADCAST, trace_endpos.x);
-	WriteCoord(MSG_BROADCAST, trace_endpos.y);
-	WriteCoord(MSG_BROADCAST, trace_endpos.z);
+	te_lightning2(NULL, org, trace_endpos);
 	vector vec = normalize(this.enemy.origin - this.owner.origin);
 	float dot = vec * this.owner.movedir;
 	float dam =((oldstate == 0) ? 80 : 30);

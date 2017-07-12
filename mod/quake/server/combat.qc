@@ -82,10 +82,7 @@ void Killed(entity targ, entity attacker)
 
 // bump the monster counter
 	if(IS_MONSTER(targ))
-	{
-		killed_monsters = killed_monsters + 1;
-		WriteByte(MSG_ALL, SVC_KILLEDMONSTER);
-	}
+		monsters_killed += 1;
 
 	if(MP_ROGUE)
 	if(attacker.classname == "buzzsaw" || attacker.classname == "Vengeance" || attacker.classname == "pendulum")

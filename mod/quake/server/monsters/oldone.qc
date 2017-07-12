@@ -336,6 +336,5 @@ spawnfunc(monster_oldone)
 
 	this.deathmessage = oldone_deathmessage;
 	
-	total_monsters = total_monsters + 1;
+	monsters_total += 1;
 }
-

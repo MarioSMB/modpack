@@ -76,12 +76,7 @@ void spawn_use(entity this, entity actor, entity trigger)
 	if(IS_MONSTER(spawnentity))
 	{
 		if((this.spawnmulti != 0) && !horn_active)
-		{
-			total_monsters += 1;
-			WriteByte(MSG_BROADCAST, SVC_UPDATESTAT);
-			WriteByte(MSG_BROADCAST, STAT_TOTALMONSTERS);
-			WriteLong(MSG_BROADCAST, total_monsters);
-		}
+			monsters_total += 1;
 		// spawn the telefrag effect
 //      if(this.spawnsilent == 0)
 //         spawn_tdeath(spawnentity.origin, spawnentity);
@@ -159,7 +154,7 @@ spawnfunc(func_spawn)
 		monster = this;
 
 		// save off monster count so it doesn't get f'ed up
-		temptotal_monsters = total_monsters;
+		temptotal_monsters = monsters_total;
 
 		if(spawnchance < 0.5 && monster == this) { monster = func_spawn_spawnmob(this, spawnfunc_monster_dog, "monster_dog"); }
 		if(spawnchance < 0.8 && monster == this) { monster = func_spawn_spawnmob(this, spawnfunc_monster_ogre, "monster_ogre"); }
@@ -168,7 +163,7 @@ spawnfunc(func_spawn)
 		if(monster == this) { monster = func_spawn_spawnmob(this, spawnfunc_monster_shambler, "monster_shambler"); }
 
 		// make sure monster count is correct
-		total_monsters = temptotal_monsters + 1;
+		monsters_total = temptotal_monsters + 1;
 	}
 	else
 	{
@@ -179,7 +174,7 @@ spawnfunc(func_spawn)
 		SUB_CopyEntity(this, mon);
 
 		// save off monster count so it doesn't get f'ed up
-		temptotal_monsters = total_monsters;
+		temptotal_monsters = monsters_total;
 		if(!mon.spawnclassname || mon.spawnclassname == "")
 			objerror(mon, "No spawnclassname defined");
 
@@ -194,7 +189,7 @@ spawnfunc(func_spawn)
 		if(mon.spawnmulti != 0)
 		{
 			// make sure monster count is correct
-			total_monsters = temptotal_monsters;
+			monsters_total = temptotal_monsters;
 		}
 		mon.spawnmodel = mon.model;
 		mon.spawnmins = mon.mins;

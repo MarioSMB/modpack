@@ -7,9 +7,6 @@
 entity bulletholes;
 entity lastbullet;
 int numbulletholes;
-//added total monster message
-const int STAT_TOTALMONSTERS = 12;
-//float STAT_TOTALSECRETS = 11; // used only on client side
 .void(entity this) th_turn;
 const int AS_DODGING     = 5;
 const float CHARMED_RADIUS = 1500;

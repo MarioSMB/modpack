@@ -272,8 +272,7 @@ void boss_death10(entity this)
 {
 	// being removed, don't need new frame
 	//set_anim(this, anim_boss_death9, boss_death10);
-	killed_monsters = killed_monsters + 1;
-	WriteByte(MSG_ALL, SVC_KILLEDMONSTER);	// FIXME: reliable broadcast
+	monsters_killed += 1;
 	SUB_UseTargets(this, this.enemy, NULL);
 	delete(this);
 }
@@ -362,11 +361,8 @@ void boss_awake(entity this, entity actor, entity trigger)
 */
 spawnfunc(monster_boss)
 {
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(deathmatch) { delete(this); return; }
+
 	precache_model("progs/boss.mdl");
 	precache_model("progs/lavaball.mdl");
 
@@ -378,7 +374,7 @@ spawnfunc(monster_boss)
 	precache_sound("boss1/pain.wav");
 	precache_sound("boss1/death.wav");
 
-	total_monsters = total_monsters + 1;
+	monsters_total += 1;
 
 	this.use = boss_awake;
 }
@@ -409,17 +405,8 @@ void lightning_fire(entity this)
 	this.nextthink = time + 0.1;
 	setthink(this, lightning_fire);
 
-	// msg_all for reliability, supposedly
-	// TODO: csqc lightning?
-	WriteByte(MSG_ALL, SVC_TEMPENTITY);
-	WriteByte(MSG_ALL, TE_LIGHTNING3);
-	WriteEntity(MSG_ALL, NULL);
-	WriteCoord(MSG_ALL, p1.x);
-	WriteCoord(MSG_ALL, p1.y);
-	WriteCoord(MSG_ALL, p1.z);
-	WriteCoord(MSG_ALL, p2.x);
-	WriteCoord(MSG_ALL, p2.y);
-	WriteCoord(MSG_ALL, p2.z);
+	// was MSG_ALL (TODO?)
+	te_lightning3(NULL, p1, p2);
 }
 
 void lightning_use(entity this, entity actor, entity trigger)

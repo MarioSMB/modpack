@@ -21,15 +21,7 @@ void ltrail_fire(entity this)
 	{
 		_sound(this, CHAN_VOICE, "weapons/lhit.wav", 1, ATTN_NORM);
 		entity myTarget = find(world, targetname, this.target);	
-		WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-		WriteByte(MSG_BROADCAST, TE_LIGHTNING2);
-		WriteEntity(MSG_BROADCAST, this);
-		WriteCoord(MSG_BROADCAST, this.origin_x);
-		WriteCoord(MSG_BROADCAST, this.origin_y);
-		WriteCoord(MSG_BROADCAST, this.origin_z);
-		WriteCoord(MSG_BROADCAST, myTarget.origin_x);
-		WriteCoord(MSG_BROADCAST, myTarget.origin_y);
-		WriteCoord(MSG_BROADCAST, myTarget.origin_z);
+		te_lightning2(NULL, this.origin, myTarget.origin); // should be this
 		LightningDamage(this.origin, myTarget.origin, this, this.currentammo);
 	}
 

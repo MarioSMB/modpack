@@ -36,8 +36,7 @@ void multi_trigger(entity this)
 	{
 		if(!IS_PLAYER(this.enemy))
 			return;
-		found_secrets = found_secrets + 1;
-		WriteByte(MSG_ALL, SVC_FOUNDSECRET);
+		secrets_found += 1;
 	}
 
 	if(this.noise)
@@ -206,7 +205,7 @@ set "message" to text string
 */
 spawnfunc(trigger_secret)
 {
-	total_secrets = total_secrets + 1;
+	secrets_total += 1;
 	this.wait = -1;
 	if(!this.message)
 		this.message = "You found a secret area!";

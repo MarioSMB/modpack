@@ -362,15 +362,7 @@ void PlasmaDamage(vector p1, vector p2, entity from, float damage)
 //================================
 void PlasmaDischarge(entity this, entity current, float doDamage)
 {
-	WriteByte(MSG_BROADCAST, SVC_TEMPENTITY);
-	WriteByte(MSG_BROADCAST, TE_LIGHTNING2);
-	WriteEntity(MSG_BROADCAST, current);
-	WriteCoord(MSG_BROADCAST, current.origin_x);
-	WriteCoord(MSG_BROADCAST, current.origin_y);
-	WriteCoord(MSG_BROADCAST, current.origin_z);
-	WriteCoord(MSG_BROADCAST, this.origin_x);
-	WriteCoord(MSG_BROADCAST, this.origin_y);
-	WriteCoord(MSG_BROADCAST, this.origin_z);
+	te_lightning2(NULL, current.origin, this.origin); // should be for current
 
 	_sound(this, CHAN_VOICE, "weapons/lhit.wav", 1, ATTN_NORM);
 	if(doDamage == 1)
