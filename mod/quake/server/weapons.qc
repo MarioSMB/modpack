@@ -441,6 +441,9 @@ void HIP_FireMjolnir(entity this)
 
 void W_SwitchWeapon(entity this, float to_wep)
 {
+	if(this.weapon == to_wep)
+		return; // don't mess up the system by switching to it again!
+
 	this.prevweapon = this.weapon;
 	this.weapon = to_wep;
 
@@ -618,6 +621,8 @@ void TraceAttack(float damage, vector dir)
 	{
 		if(trace_ent.solid != SOLID_BSP) // not on walls (TODO: iscreature field)
 			SpawnBlood(org, vel*0.2, damage);
+		else
+			te_gunshot(org); // secret doors need bumps too!
 		AddMultiDamage(trace_ent, damage);
 	}
 	else
