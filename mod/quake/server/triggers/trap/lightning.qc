@@ -23,7 +23,7 @@ void trap_lightning_use(entity this, entity actor, entity trigger)
 {
 	vector p1, p2;
 
-	if(time >= this.pausetime)
+	if(this.pausetime != -1 && time >= this.pausetime)
 	{
 		if(this.spawnflags & LIGHTNING_BOOM)
 			_sound(this, CHAN_AUTO, "weapons/lstart.wav", 1, ATTN_NORM);
@@ -95,7 +95,7 @@ void lightning_think(entity this)
 		this.cnt = 1;
 		this.t_length = time + this.duration - 0.1;
 		this.pausetime = time + this.duration - 0.1;
-		if(this.pausetime  < time + 0.3)
+		if(this.pausetime < time + 0.3)
 			this.pausetime = time + 0.3;
 		if(timedelay < this.duration)
 			timedelay = this.duration;

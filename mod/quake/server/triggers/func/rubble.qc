@@ -2,7 +2,7 @@
 
 void hipRubbleTouch(entity this, entity toucher)
 {
-	if(this.ltime < this.pausetime)
+	if(this.pausetime == -1 || this.ltime < this.pausetime)
 		return;
 		
 	if(toucher.takedamage)

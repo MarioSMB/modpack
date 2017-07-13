@@ -314,7 +314,8 @@ void effect_finale_use(entity this, entity actor, entity trigger)
 		it.takedamage = DAMAGE_NO;
 		it.solid = SOLID_NOT;
 		set_movetype(it, MOVETYPE_NONE);
-		it.modelindex = 0;
+		//it.modelindex = 0;
+		setmodel(it, MDL_Null);
 		setorigin(it, pos.origin);
 		it.origin = pos.origin;
 		it.oldorigin = pos.origin;

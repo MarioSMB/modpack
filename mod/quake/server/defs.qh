@@ -36,6 +36,7 @@ float skill;
 .vector dest1, dest2;
 
 void set_anim(entity this, int frm, void(entity) tnk);
+void set_animofs(entity this, int frm, int offs, void(entity) tnk); // because we can
 
 .float air_finished;
 

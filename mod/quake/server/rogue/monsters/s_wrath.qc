@@ -1,5 +1,6 @@
 $skin s_wrtrst
 
+#if 0
 const int anim_swrath_s_wrtfrm = 0;
 
 // walk
@@ -121,6 +122,17 @@ const int anim_swrath_s_wtdt14 = 104;
 const int anim_swrath_s_wtdt15 = 105;
 const int anim_swrath_s_wtdt16 = 106;
 const int anim_swrath_s_wtdt17 = 107;
+#endif
+
+const int anim_swrath_s_wrtfrm = 0; //'0 0 0';
+const int anim_swrath_s_wtwk = 1; //'1 15 0';
+const int anim_swrath_s_wtaa = 16; //'16 25 0';
+const int anim_swrath_s_wtab = 26; //'26 39 0';
+const int anim_swrath_s_wtac = 40; //'40 53 0';
+const int anim_swrath_s_wtba = 54; //'54 65 0';
+const int anim_swrath_s_wtpa = 66; //'66 79 0';
+const int anim_swrath_s_wtpb = 80; //'80 90 0';
+const int anim_swrath_s_wtdt = 91; //'91 107 0';
 
 bool isSpawnPointEmpty(entity thePoint)
 {
@@ -264,87 +276,87 @@ void overlord_teleport(entity this)
 }
 // =======================================================
 
-void overlord_stand1(entity this) { set_anim(this, anim_swrath_s_wtwk01, overlord_stand1); ai_stand(this); }
+void overlord_stand1(entity this) { set_anim(this, anim_swrath_s_wtwk, overlord_stand1); ai_stand(this); }
 
 void overlord_walk01(entity this);
-void overlord_walk15(entity this) { set_anim(this, anim_swrath_s_wtwk15, overlord_walk01); ai_walk(this, 8); }
-void overlord_walk14(entity this) { set_anim(this, anim_swrath_s_wtwk14, overlord_walk15); ai_walk(this, 8); }
-void overlord_walk13(entity this) { set_anim(this, anim_swrath_s_wtwk13, overlord_walk14); ai_walk(this, 8); }
-void overlord_walk12(entity this) { set_anim(this, anim_swrath_s_wtwk12, overlord_walk13); ai_walk(this, 8); }
-void overlord_walk11(entity this) { set_anim(this, anim_swrath_s_wtwk11, overlord_walk12); ai_walk(this, 8); }
-void overlord_walk10(entity this) { set_anim(this, anim_swrath_s_wtwk10, overlord_walk11); ai_walk(this, 8); }
-void overlord_walk09(entity this) { set_anim(this, anim_swrath_s_wtwk09, overlord_walk10); ai_walk(this, 8); }
-void overlord_walk08(entity this) { set_anim(this, anim_swrath_s_wtwk08, overlord_walk09); ai_walk(this, 8); }
-void overlord_walk07(entity this) { set_anim(this, anim_swrath_s_wtwk07, overlord_walk08); ai_walk(this, 8); }
-void overlord_walk06(entity this) { set_anim(this, anim_swrath_s_wtwk06, overlord_walk07); ai_walk(this, 8); }
-void overlord_walk05(entity this) { set_anim(this, anim_swrath_s_wtwk05, overlord_walk06); ai_walk(this, 8); }
-void overlord_walk04(entity this) { set_anim(this, anim_swrath_s_wtwk04, overlord_walk05); ai_walk(this, 8); }
-void overlord_walk03(entity this) { set_anim(this, anim_swrath_s_wtwk03, overlord_walk04); ai_walk(this, 8); }
-void overlord_walk02(entity this) { set_anim(this, anim_swrath_s_wtwk02, overlord_walk03); ai_walk(this, 8); }
-void overlord_walk01(entity this) { set_anim(this, anim_swrath_s_wtwk01, overlord_walk02); ai_walk(this, 8); }
+void overlord_walk15(entity this) { set_animofs(this, anim_swrath_s_wtwk, 15, overlord_walk01); ai_walk(this, 8); }
+void overlord_walk14(entity this) { set_animofs(this, anim_swrath_s_wtwk, 14, overlord_walk15); ai_walk(this, 8); }
+void overlord_walk13(entity this) { set_animofs(this, anim_swrath_s_wtwk, 13, overlord_walk14); ai_walk(this, 8); }
+void overlord_walk12(entity this) { set_animofs(this, anim_swrath_s_wtwk, 12, overlord_walk13); ai_walk(this, 8); }
+void overlord_walk11(entity this) { set_animofs(this, anim_swrath_s_wtwk, 11, overlord_walk12); ai_walk(this, 8); }
+void overlord_walk10(entity this) { set_animofs(this, anim_swrath_s_wtwk, 10, overlord_walk11); ai_walk(this, 8); }
+void overlord_walk09(entity this) { set_animofs(this, anim_swrath_s_wtwk, 9, overlord_walk10); ai_walk(this, 8); }
+void overlord_walk08(entity this) { set_animofs(this, anim_swrath_s_wtwk, 8, overlord_walk09); ai_walk(this, 8); }
+void overlord_walk07(entity this) { set_animofs(this, anim_swrath_s_wtwk, 7, overlord_walk08); ai_walk(this, 8); }
+void overlord_walk06(entity this) { set_animofs(this, anim_swrath_s_wtwk, 6, overlord_walk07); ai_walk(this, 8); }
+void overlord_walk05(entity this) { set_animofs(this, anim_swrath_s_wtwk, 5, overlord_walk06); ai_walk(this, 8); }
+void overlord_walk04(entity this) { set_animofs(this, anim_swrath_s_wtwk, 4, overlord_walk05); ai_walk(this, 8); }
+void overlord_walk03(entity this) { set_animofs(this, anim_swrath_s_wtwk, 3, overlord_walk04); ai_walk(this, 8); }
+void overlord_walk02(entity this) { set_animofs(this, anim_swrath_s_wtwk, 2, overlord_walk03); ai_walk(this, 8); }
+void overlord_walk01(entity this) { set_animofs(this, anim_swrath_s_wtwk, 1, overlord_walk02); ai_walk(this, 8); }
 
 void overlord_run01(entity this);
-void overlord_run15(entity this) { set_anim(this, anim_swrath_s_wtwk15, overlord_run01); ai_run(this, 12); }
-void overlord_run14(entity this) { set_anim(this, anim_swrath_s_wtwk14, overlord_run15); ai_run(this, 12); }
-void overlord_run13(entity this) { set_anim(this, anim_swrath_s_wtwk13, overlord_run14); ai_run(this, 12); }
-void overlord_run12(entity this) { set_anim(this, anim_swrath_s_wtwk12, overlord_run13); ai_run(this, 12); }
-void overlord_run11(entity this) { set_anim(this, anim_swrath_s_wtwk11, overlord_run12); ai_run(this, 12); }
-void overlord_run10(entity this) { set_anim(this, anim_swrath_s_wtwk10, overlord_run11); ai_run(this, 12); }
-void overlord_run09(entity this) { set_anim(this, anim_swrath_s_wtwk09, overlord_run10); ai_run(this, 12); }
-void overlord_run08(entity this) { set_anim(this, anim_swrath_s_wtwk08, overlord_run09); ai_run(this, 12); }
-void overlord_run07(entity this) { set_anim(this, anim_swrath_s_wtwk07, overlord_run08); ai_run(this, 12); }
-void overlord_run06(entity this) { set_anim(this, anim_swrath_s_wtwk06, overlord_run07); ai_run(this, 12); }
-void overlord_run05(entity this) { set_anim(this, anim_swrath_s_wtwk05, overlord_run06); ai_run(this, 12); }
-void overlord_run04(entity this) { set_anim(this, anim_swrath_s_wtwk04, overlord_run05); ai_run(this, 12); }
-void overlord_run03(entity this) { set_anim(this, anim_swrath_s_wtwk03, overlord_run04); ai_run(this, 12); }
-void overlord_run02(entity this) { set_anim(this, anim_swrath_s_wtwk02, overlord_run03); ai_run(this, 12); }
-void overlord_run01(entity this) { set_anim(this, anim_swrath_s_wtwk01, overlord_run02); ai_run(this, 12); }
+void overlord_run15(entity this) { set_animofs(this, anim_swrath_s_wtwk, 15, overlord_run01); ai_run(this, 12); }
+void overlord_run14(entity this) { set_animofs(this, anim_swrath_s_wtwk, 14, overlord_run15); ai_run(this, 12); }
+void overlord_run13(entity this) { set_animofs(this, anim_swrath_s_wtwk, 13, overlord_run14); ai_run(this, 12); }
+void overlord_run12(entity this) { set_animofs(this, anim_swrath_s_wtwk, 12, overlord_run13); ai_run(this, 12); }
+void overlord_run11(entity this) { set_animofs(this, anim_swrath_s_wtwk, 11, overlord_run12); ai_run(this, 12); }
+void overlord_run10(entity this) { set_animofs(this, anim_swrath_s_wtwk, 10, overlord_run11); ai_run(this, 12); }
+void overlord_run09(entity this) { set_animofs(this, anim_swrath_s_wtwk, 9, overlord_run10); ai_run(this, 12); }
+void overlord_run08(entity this) { set_animofs(this, anim_swrath_s_wtwk, 8, overlord_run09); ai_run(this, 12); }
+void overlord_run07(entity this) { set_animofs(this, anim_swrath_s_wtwk, 7, overlord_run08); ai_run(this, 12); }
+void overlord_run06(entity this) { set_animofs(this, anim_swrath_s_wtwk, 6, overlord_run07); ai_run(this, 12); }
+void overlord_run05(entity this) { set_animofs(this, anim_swrath_s_wtwk, 5, overlord_run06); ai_run(this, 12); }
+void overlord_run04(entity this) { set_animofs(this, anim_swrath_s_wtwk, 4, overlord_run05); ai_run(this, 12); }
+void overlord_run03(entity this) { set_animofs(this, anim_swrath_s_wtwk, 3, overlord_run04); ai_run(this, 12); }
+void overlord_run02(entity this) { set_animofs(this, anim_swrath_s_wtwk, 2, overlord_run03); ai_run(this, 12); }
+void overlord_run01(entity this) { set_animofs(this, anim_swrath_s_wtwk, 1, overlord_run02); ai_run(this, 12); }
 
 // =================================================
 // overlord hand-to-hand attack
 // =================================================
 void overlord_smash(entity this);
 
-void overlord_at_a10(entity this) { set_anim(this, anim_swrath_s_wtaa10, overlord_run01); ai_charge(this, 12); }
-void overlord_at_a09(entity this) { set_anim(this, anim_swrath_s_wtaa09, overlord_at_a10); ai_charge(this, 12); }
-void overlord_at_a08(entity this) { set_anim(this, anim_swrath_s_wtaa08, overlord_at_a09); ai_charge(this, 12); }
-void overlord_at_a07(entity this) { set_anim(this, anim_swrath_s_wtaa07, overlord_at_a08); overlord_smash(this); }
-void overlord_at_a06(entity this) { set_anim(this, anim_swrath_s_wtaa06, overlord_at_a07); ai_charge(this, 12); }
-void overlord_at_a05(entity this) { set_anim(this, anim_swrath_s_wtaa05, overlord_at_a06); ai_charge(this, 12); }
-void overlord_at_a04(entity this) { set_anim(this, anim_swrath_s_wtaa04, overlord_at_a05); ai_charge(this, 12); }
-void overlord_at_a03(entity this) { set_anim(this, anim_swrath_s_wtaa03, overlord_at_a04); ai_charge(this, 12); }
-void overlord_at_a02(entity this) { set_anim(this, anim_swrath_s_wtaa02, overlord_at_a03); ai_charge(this, 12); }
-void overlord_at_a01(entity this) { set_anim(this, anim_swrath_s_wtaa01, overlord_at_a02); ai_charge(this, 12); }
+void overlord_at_a10(entity this) { set_animofs(this, anim_swrath_s_wtaa, 10, overlord_run01); ai_charge(this, 12); }
+void overlord_at_a09(entity this) { set_animofs(this, anim_swrath_s_wtaa, 9, overlord_at_a10); ai_charge(this, 12); }
+void overlord_at_a08(entity this) { set_animofs(this, anim_swrath_s_wtaa, 8, overlord_at_a09); ai_charge(this, 12); }
+void overlord_at_a07(entity this) { set_animofs(this, anim_swrath_s_wtaa, 7, overlord_at_a08); overlord_smash(this); }
+void overlord_at_a06(entity this) { set_animofs(this, anim_swrath_s_wtaa, 6, overlord_at_a07); ai_charge(this, 12); }
+void overlord_at_a05(entity this) { set_animofs(this, anim_swrath_s_wtaa, 5, overlord_at_a06); ai_charge(this, 12); }
+void overlord_at_a04(entity this) { set_animofs(this, anim_swrath_s_wtaa, 4, overlord_at_a05); ai_charge(this, 12); }
+void overlord_at_a03(entity this) { set_animofs(this, anim_swrath_s_wtaa, 3, overlord_at_a04); ai_charge(this, 12); }
+void overlord_at_a02(entity this) { set_animofs(this, anim_swrath_s_wtaa, 2, overlord_at_a03); ai_charge(this, 12); }
+void overlord_at_a01(entity this) { set_animofs(this, anim_swrath_s_wtaa, 1, overlord_at_a02); ai_charge(this, 12); }
 
-void overlord_at_b14(entity this) { set_anim(this, anim_swrath_s_wtab14, overlord_run01); ai_charge(this, 12); }
-void overlord_at_b13(entity this) { set_anim(this, anim_swrath_s_wtab13, overlord_at_b14); ai_charge(this, 12); }
-void overlord_at_b12(entity this) { set_anim(this, anim_swrath_s_wtab12, overlord_at_b13); ai_charge(this, 12); }
-void overlord_at_b11(entity this) { set_anim(this, anim_swrath_s_wtab11, overlord_at_b12); ai_charge(this, 12); }
-void overlord_at_b10(entity this) { set_anim(this, anim_swrath_s_wtab10, overlord_at_b11); ai_charge(this, 12); }
-void overlord_at_b09(entity this) { set_anim(this, anim_swrath_s_wtab09, overlord_at_b10); ai_charge(this, 12); }
-void overlord_at_b08(entity this) { set_anim(this, anim_swrath_s_wtab08, overlord_at_b09); overlord_smash(this); }
-void overlord_at_b07(entity this) { set_anim(this, anim_swrath_s_wtab07, overlord_at_b08); ai_charge(this, 12); }
-void overlord_at_b06(entity this) { set_anim(this, anim_swrath_s_wtab06, overlord_at_b07); ai_charge(this, 12); }
-void overlord_at_b05(entity this) { set_anim(this, anim_swrath_s_wtab05, overlord_at_b06); ai_charge(this, 12); }
-void overlord_at_b04(entity this) { set_anim(this, anim_swrath_s_wtab04, overlord_at_b05); ai_charge(this, 12); }
-void overlord_at_b03(entity this) { set_anim(this, anim_swrath_s_wtab03, overlord_at_b04); ai_charge(this, 12); }
-void overlord_at_b02(entity this) { set_anim(this, anim_swrath_s_wtab02, overlord_at_b03); ai_charge(this, 12); }
-void overlord_at_b01(entity this) { set_anim(this, anim_swrath_s_wtab01, overlord_at_b02); ai_charge(this, 12); }
+void overlord_at_b14(entity this) { set_animofs(this, anim_swrath_s_wtab, 14, overlord_run01); ai_charge(this, 12); }
+void overlord_at_b13(entity this) { set_animofs(this, anim_swrath_s_wtab, 13, overlord_at_b14); ai_charge(this, 12); }
+void overlord_at_b12(entity this) { set_animofs(this, anim_swrath_s_wtab, 12, overlord_at_b13); ai_charge(this, 12); }
+void overlord_at_b11(entity this) { set_animofs(this, anim_swrath_s_wtab, 11, overlord_at_b12); ai_charge(this, 12); }
+void overlord_at_b10(entity this) { set_animofs(this, anim_swrath_s_wtab, 10, overlord_at_b11); ai_charge(this, 12); }
+void overlord_at_b09(entity this) { set_animofs(this, anim_swrath_s_wtab, 9, overlord_at_b10); ai_charge(this, 12); }
+void overlord_at_b08(entity this) { set_animofs(this, anim_swrath_s_wtab, 8, overlord_at_b09); overlord_smash(this); }
+void overlord_at_b07(entity this) { set_animofs(this, anim_swrath_s_wtab, 7, overlord_at_b08); ai_charge(this, 12); }
+void overlord_at_b06(entity this) { set_animofs(this, anim_swrath_s_wtab, 6, overlord_at_b07); ai_charge(this, 12); }
+void overlord_at_b05(entity this) { set_animofs(this, anim_swrath_s_wtab, 5, overlord_at_b06); ai_charge(this, 12); }
+void overlord_at_b04(entity this) { set_animofs(this, anim_swrath_s_wtab, 4, overlord_at_b05); ai_charge(this, 12); }
+void overlord_at_b03(entity this) { set_animofs(this, anim_swrath_s_wtab, 3, overlord_at_b04); ai_charge(this, 12); }
+void overlord_at_b02(entity this) { set_animofs(this, anim_swrath_s_wtab, 2, overlord_at_b03); ai_charge(this, 12); }
+void overlord_at_b01(entity this) { set_animofs(this, anim_swrath_s_wtab, 1, overlord_at_b02); ai_charge(this, 12); }
 
-void overlord_at_c14(entity this) { set_anim(this, anim_swrath_s_wtac14, overlord_run01); ai_charge(this, 12); }
-void overlord_at_c13(entity this) { set_anim(this, anim_swrath_s_wtac13, overlord_at_c14); ai_charge(this, 12); }
-void overlord_at_c12(entity this) { set_anim(this, anim_swrath_s_wtac12, overlord_at_c13); ai_charge(this, 12); }
-void overlord_at_c11(entity this) { set_anim(this, anim_swrath_s_wtac11, overlord_at_c12); overlord_smash(this); }
-void overlord_at_c10(entity this) { set_anim(this, anim_swrath_s_wtac10, overlord_at_c11); ai_charge(this, 12); }
-void overlord_at_c09(entity this) { set_anim(this, anim_swrath_s_wtac09, overlord_at_c10); ai_charge(this, 12); }
-void overlord_at_c08(entity this) { set_anim(this, anim_swrath_s_wtac08, overlord_at_c09); ai_charge(this, 12); }
-void overlord_at_c07(entity this) { set_anim(this, anim_swrath_s_wtac07, overlord_at_c08); ai_charge(this, 12); }
-void overlord_at_c06(entity this) { set_anim(this, anim_swrath_s_wtac06, overlord_at_c07); overlord_smash(this); }
-void overlord_at_c05(entity this) { set_anim(this, anim_swrath_s_wtac05, overlord_at_c06); ai_charge(this, 12); }
-void overlord_at_c04(entity this) { set_anim(this, anim_swrath_s_wtac04, overlord_at_c05); ai_charge(this, 12); }
-void overlord_at_c03(entity this) { set_anim(this, anim_swrath_s_wtac03, overlord_at_c04); ai_charge(this, 12); }
-void overlord_at_c02(entity this) { set_anim(this, anim_swrath_s_wtac02, overlord_at_c03); ai_charge(this, 12); }
-void overlord_at_c01(entity this) { set_anim(this, anim_swrath_s_wtac01, overlord_at_c02); ai_charge(this, 12); }
+void overlord_at_c14(entity this) { set_animofs(this, anim_swrath_s_wtac, 14, overlord_run01); ai_charge(this, 12); }
+void overlord_at_c13(entity this) { set_animofs(this, anim_swrath_s_wtac, 13, overlord_at_c14); ai_charge(this, 12); }
+void overlord_at_c12(entity this) { set_animofs(this, anim_swrath_s_wtac, 12, overlord_at_c13); ai_charge(this, 12); }
+void overlord_at_c11(entity this) { set_animofs(this, anim_swrath_s_wtac, 11, overlord_at_c12); overlord_smash(this); }
+void overlord_at_c10(entity this) { set_animofs(this, anim_swrath_s_wtac, 10, overlord_at_c11); ai_charge(this, 12); }
+void overlord_at_c09(entity this) { set_animofs(this, anim_swrath_s_wtac, 9, overlord_at_c10); ai_charge(this, 12); }
+void overlord_at_c08(entity this) { set_animofs(this, anim_swrath_s_wtac, 8, overlord_at_c09); ai_charge(this, 12); }
+void overlord_at_c07(entity this) { set_animofs(this, anim_swrath_s_wtac, 7, overlord_at_c08); ai_charge(this, 12); }
+void overlord_at_c06(entity this) { set_animofs(this, anim_swrath_s_wtac, 6, overlord_at_c07); overlord_smash(this); }
+void overlord_at_c05(entity this) { set_animofs(this, anim_swrath_s_wtac, 5, overlord_at_c06); ai_charge(this, 12); }
+void overlord_at_c04(entity this) { set_animofs(this, anim_swrath_s_wtac, 4, overlord_at_c05); ai_charge(this, 12); }
+void overlord_at_c03(entity this) { set_animofs(this, anim_swrath_s_wtac, 3, overlord_at_c04); ai_charge(this, 12); }
+void overlord_at_c02(entity this) { set_animofs(this, anim_swrath_s_wtac, 2, overlord_at_c03); ai_charge(this, 12); }
+void overlord_at_c01(entity this) { set_animofs(this, anim_swrath_s_wtac, 1, overlord_at_c02); ai_charge(this, 12); }
 
 void overlord_smash(entity this)
 {
@@ -383,18 +395,18 @@ void overlord_melee(entity this)
 // ==================================================
 void WrathMissile(entity this, int AttackNumber);
 
-void overlord_msl_a12(entity this) { set_anim(this, anim_swrath_s_wtba12, overlord_run01); overlord_teleport(this); }
-void overlord_msl_a11(entity this) { set_anim(this, anim_swrath_s_wtba11, overlord_msl_a12); ai_charge(this, 12); }
-void overlord_msl_a10(entity this) { set_anim(this, anim_swrath_s_wtba10, overlord_msl_a11); ai_charge(this, 12); }
-void overlord_msl_a09(entity this) { set_anim(this, anim_swrath_s_wtba09, overlord_msl_a10); ai_charge(this, 12); }
-void overlord_msl_a08(entity this) { set_anim(this, anim_swrath_s_wtba08, overlord_msl_a09); ai_charge(this, 12); }
-void overlord_msl_a07(entity this) { set_anim(this, anim_swrath_s_wtba07, overlord_msl_a08); ai_charge(this, 12); }
-void overlord_msl_a06(entity this) { set_anim(this, anim_swrath_s_wtba06, overlord_msl_a07); WrathMissile(this, 4); }
-void overlord_msl_a05(entity this) { set_anim(this, anim_swrath_s_wtba05, overlord_msl_a06); ai_charge(this, 12); }
-void overlord_msl_a04(entity this) { set_anim(this, anim_swrath_s_wtba04, overlord_msl_a05); ai_charge(this, 12); }
-void overlord_msl_a03(entity this) { set_anim(this, anim_swrath_s_wtba03, overlord_msl_a04); ai_charge(this, 12); }
-void overlord_msl_a02(entity this) { set_anim(this, anim_swrath_s_wtba02, overlord_msl_a03); ai_charge(this, 12); }
-void overlord_msl_a01(entity this) { set_anim(this, anim_swrath_s_wtba01, overlord_msl_a02); ai_charge(this, 12); }
+void overlord_msl_a12(entity this) { set_animofs(this, anim_swrath_s_wtba, 12, overlord_run01); overlord_teleport(this); }
+void overlord_msl_a11(entity this) { set_animofs(this, anim_swrath_s_wtba, 11, overlord_msl_a12); ai_charge(this, 12); }
+void overlord_msl_a10(entity this) { set_animofs(this, anim_swrath_s_wtba, 10, overlord_msl_a11); ai_charge(this, 12); }
+void overlord_msl_a09(entity this) { set_animofs(this, anim_swrath_s_wtba, 9, overlord_msl_a10); ai_charge(this, 12); }
+void overlord_msl_a08(entity this) { set_animofs(this, anim_swrath_s_wtba, 8, overlord_msl_a09); ai_charge(this, 12); }
+void overlord_msl_a07(entity this) { set_animofs(this, anim_swrath_s_wtba, 7, overlord_msl_a08); ai_charge(this, 12); }
+void overlord_msl_a06(entity this) { set_animofs(this, anim_swrath_s_wtba, 6, overlord_msl_a07); WrathMissile(this, 4); }
+void overlord_msl_a05(entity this) { set_animofs(this, anim_swrath_s_wtba, 5, overlord_msl_a06); ai_charge(this, 12); }
+void overlord_msl_a04(entity this) { set_animofs(this, anim_swrath_s_wtba, 4, overlord_msl_a05); ai_charge(this, 12); }
+void overlord_msl_a03(entity this) { set_animofs(this, anim_swrath_s_wtba, 3, overlord_msl_a04); ai_charge(this, 12); }
+void overlord_msl_a02(entity this) { set_animofs(this, anim_swrath_s_wtba, 2, overlord_msl_a03); ai_charge(this, 12); }
+void overlord_msl_a01(entity this) { set_animofs(this, anim_swrath_s_wtba, 1, overlord_msl_a02); ai_charge(this, 12); }
 
 void overlord_missile(entity this)
 {
@@ -406,21 +418,21 @@ void overlord_missile(entity this)
 // ==================================================
 // pain
 // ==================================================
-void overlord_pn_a07(entity this) { set_anim(this, anim_swrath_s_wtpa07, overlord_run01); }
-void overlord_pn_a06(entity this) { set_anim(this, anim_swrath_s_wtpa06, overlord_pn_a07); }
-void overlord_pn_a05(entity this) { set_anim(this, anim_swrath_s_wtpa05, overlord_pn_a06); }
-void overlord_pn_a04(entity this) { set_anim(this, anim_swrath_s_wtpa04, overlord_pn_a05); }
-void overlord_pn_a03(entity this) { set_anim(this, anim_swrath_s_wtpa03, overlord_pn_a04); overlord_teleport(this); }
-void overlord_pn_a02(entity this) { set_anim(this, anim_swrath_s_wtpa02, overlord_pn_a03); }
-void overlord_pn_a01(entity this) { set_anim(this, anim_swrath_s_wtpa01, overlord_pn_a02); }
+void overlord_pn_a07(entity this) { set_animofs(this, anim_swrath_s_wtpa, 7, overlord_run01); }
+void overlord_pn_a06(entity this) { set_animofs(this, anim_swrath_s_wtpa, 6, overlord_pn_a07); }
+void overlord_pn_a05(entity this) { set_animofs(this, anim_swrath_s_wtpa, 5, overlord_pn_a06); }
+void overlord_pn_a04(entity this) { set_animofs(this, anim_swrath_s_wtpa, 4, overlord_pn_a05); }
+void overlord_pn_a03(entity this) { set_animofs(this, anim_swrath_s_wtpa, 3, overlord_pn_a04); overlord_teleport(this); }
+void overlord_pn_a02(entity this) { set_animofs(this, anim_swrath_s_wtpa, 2, overlord_pn_a03); }
+void overlord_pn_a01(entity this) { set_animofs(this, anim_swrath_s_wtpa, 1, overlord_pn_a02); }
 
-void overlord_pn_b07(entity this) { set_anim(this, anim_swrath_s_wtpb07, overlord_run01); }
-void overlord_pn_b06(entity this) { set_anim(this, anim_swrath_s_wtpb06, overlord_pn_b07); }
-void overlord_pn_b05(entity this) { set_anim(this, anim_swrath_s_wtpb05, overlord_pn_b06); }
-void overlord_pn_b04(entity this) { set_anim(this, anim_swrath_s_wtpb04, overlord_pn_b05); }
-void overlord_pn_b03(entity this) { set_anim(this, anim_swrath_s_wtpb03, overlord_pn_b04); overlord_teleport(this); }
-void overlord_pn_b02(entity this) { set_anim(this, anim_swrath_s_wtpb02, overlord_pn_b03); }
-void overlord_pn_b01(entity this) { set_anim(this, anim_swrath_s_wtpb01, overlord_pn_b02); }
+void overlord_pn_b07(entity this) { set_animofs(this, anim_swrath_s_wtpb, 7, overlord_run01); }
+void overlord_pn_b06(entity this) { set_animofs(this, anim_swrath_s_wtpb, 6, overlord_pn_b07); }
+void overlord_pn_b05(entity this) { set_animofs(this, anim_swrath_s_wtpb, 5, overlord_pn_b06); }
+void overlord_pn_b04(entity this) { set_animofs(this, anim_swrath_s_wtpb, 4, overlord_pn_b05); }
+void overlord_pn_b03(entity this) { set_animofs(this, anim_swrath_s_wtpb, 3, overlord_pn_b04); overlord_teleport(this); }
+void overlord_pn_b02(entity this) { set_animofs(this, anim_swrath_s_wtpb, 2, overlord_pn_b03); }
+void overlord_pn_b01(entity this) { set_animofs(this, anim_swrath_s_wtpb, 1, overlord_pn_b02); }
 
 void overlord_pain(entity this, entity attacker, float damage)
 {
@@ -455,7 +467,7 @@ void ol_toss(entity this, string gibName)
 // note - death frame 9 is intentionally done twice.
 void overlord_die19(entity this)
 {
-	set_anim(this, anim_swrath_s_wtdt17, overlord_die19);
+	set_animofs(this, anim_swrath_s_wtdt, 17, overlord_die19);
 
 	int counter = 2;
 
@@ -473,7 +485,7 @@ void overlord_die19(entity this)
 }
 void overlord_die18(entity this) 
 {
-	set_anim(this, anim_swrath_s_wtdt17, overlord_die19);
+	set_animofs(this, anim_swrath_s_wtdt, 17, overlord_die19);
 
 	int counter = 2;
 
@@ -490,7 +502,7 @@ void overlord_die18(entity this)
 }
 void overlord_die17(entity this)
 {
-	set_anim(this, anim_swrath_s_wtdt16, overlord_die18);
+	set_animofs(this, anim_swrath_s_wtdt, 16, overlord_die18);
 
 	this.model = "";
 
@@ -503,22 +515,22 @@ void overlord_die17(entity this)
 	ol_toss(this, "progs/wrthgib3.mdl");
 	this.nextthink = time + 0.1;
 }
-void overlord_die16(entity this) { set_anim(this, anim_swrath_s_wtdt15, overlord_die17); this.nextthink = time + 0.05; }
-void overlord_die15(entity this) { set_anim(this, anim_swrath_s_wtdt14, overlord_die16); this.nextthink = time + 0.05; }
-void overlord_die14(entity this) { set_anim(this, anim_swrath_s_wtdt13, overlord_die15); this.nextthink = time + 0.05; }
-void overlord_die13(entity this) { set_anim(this, anim_swrath_s_wtdt12, overlord_die14); this.nextthink = time + 0.05; }
-void overlord_die12(entity this) { set_anim(this, anim_swrath_s_wtdt11, overlord_die13); this.nextthink = time + 0.05; }
-void overlord_die11(entity this) { set_anim(this, anim_swrath_s_wtdt10, overlord_die12); this.nextthink = time + 0.05; }
-void overlord_die10(entity this) { set_anim(this, anim_swrath_s_wtdt09, overlord_die11); this.nextthink = time + 0.05; }
-void overlord_die09(entity this) { set_anim(this, anim_swrath_s_wtdt09, overlord_die10); this.nextthink = time + 0.05; }
-void overlord_die08(entity this) { set_anim(this, anim_swrath_s_wtdt08, overlord_die09); this.nextthink = time + 0.05; }
-void overlord_die07(entity this) { set_anim(this, anim_swrath_s_wtdt07, overlord_die08); this.nextthink = time + 0.05; }
-void overlord_die06(entity this) { set_anim(this, anim_swrath_s_wtdt06, overlord_die07); this.nextthink = time + 0.05; }
-void overlord_die05(entity this) { set_anim(this, anim_swrath_s_wtdt05, overlord_die06); this.nextthink = time + 0.05; }
-void overlord_die04(entity this) { set_anim(this, anim_swrath_s_wtdt04, overlord_die05); this.nextthink = time + 0.05; }
-void overlord_die03(entity this) { set_anim(this, anim_swrath_s_wtdt03, overlord_die04); this.nextthink = time + 0.05; }
-void overlord_die02(entity this, entity attacker) { set_anim(this, anim_swrath_s_wtdt02, overlord_die03); this.flags |= FL_FLY; this.nextthink = time + 0.05; }
-//oid overlord_die01(entity this) { set_anim(this, anim_swrath_s_wtdt01, overlord_die02); this.nextthink = time + 0.05; }
+void overlord_die16(entity this) { set_animofs(this, anim_swrath_s_wtdt, 15, overlord_die17); this.nextthink = time + 0.05; }
+void overlord_die15(entity this) { set_animofs(this, anim_swrath_s_wtdt, 14, overlord_die16); this.nextthink = time + 0.05; }
+void overlord_die14(entity this) { set_animofs(this, anim_swrath_s_wtdt, 13, overlord_die15); this.nextthink = time + 0.05; }
+void overlord_die13(entity this) { set_animofs(this, anim_swrath_s_wtdt, 12, overlord_die14); this.nextthink = time + 0.05; }
+void overlord_die12(entity this) { set_animofs(this, anim_swrath_s_wtdt, 11, overlord_die13); this.nextthink = time + 0.05; }
+void overlord_die11(entity this) { set_animofs(this, anim_swrath_s_wtdt, 10, overlord_die12); this.nextthink = time + 0.05; }
+void overlord_die10(entity this) { set_animofs(this, anim_swrath_s_wtdt, 9, overlord_die11); this.nextthink = time + 0.05; }
+void overlord_die09(entity this) { set_animofs(this, anim_swrath_s_wtdt, 9, overlord_die10); this.nextthink = time + 0.05; }
+void overlord_die08(entity this) { set_animofs(this, anim_swrath_s_wtdt, 8, overlord_die09); this.nextthink = time + 0.05; }
+void overlord_die07(entity this) { set_animofs(this, anim_swrath_s_wtdt, 7, overlord_die08); this.nextthink = time + 0.05; }
+void overlord_die06(entity this) { set_animofs(this, anim_swrath_s_wtdt, 6, overlord_die07); this.nextthink = time + 0.05; }
+void overlord_die05(entity this) { set_animofs(this, anim_swrath_s_wtdt, 5, overlord_die06); this.nextthink = time + 0.05; }
+void overlord_die04(entity this) { set_animofs(this, anim_swrath_s_wtdt, 4, overlord_die05); this.nextthink = time + 0.05; }
+void overlord_die03(entity this) { set_animofs(this, anim_swrath_s_wtdt, 3, overlord_die04); this.nextthink = time + 0.05; }
+void overlord_die02(entity this, entity attacker) { set_animofs(this, anim_swrath_s_wtdt, 2, overlord_die03); this.flags |= FL_FLY; this.nextthink = time + 0.05; }
+//oid overlord_die01(entity this) { set_animofs(this, anim_swrath_s_wtdt, 1, overlord_die02); this.nextthink = time + 0.05; }
 
 string overlord_deathmessage(entity this) { return "was obliterated by an Overlord"; }
 

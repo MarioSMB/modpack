@@ -16,18 +16,22 @@ $skin skin
 //
 
 const int anim_decoy_axrun1 = 0;
+#if 0
 const int anim_decoy_axrun2 = 1;
 const int anim_decoy_axrun3 = 2;
 const int anim_decoy_axrun4 = 3;
 const int anim_decoy_axrun5 = 4;
 const int anim_decoy_axrun6 = 5;
+#endif
 
 const int anim_decoy_rockrun1 = 6;
+#if 0
 const int anim_decoy_rockrun2 = 7;
 const int anim_decoy_rockrun3 = 8;
 const int anim_decoy_rockrun4 = 9;
 const int anim_decoy_rockrun5 = 10;
 const int anim_decoy_rockrun6 = 11;
+#endif
 
 
 //
@@ -35,12 +39,15 @@ const int anim_decoy_rockrun6 = 11;
 //
 
 const int anim_decoy_stand1 = 12;
+#if 0
 const int anim_decoy_stand2 = 13;
 const int anim_decoy_stand3 = 14;
 const int anim_decoy_stand4 = 15;
 const int anim_decoy_stand5 = 16;
+#endif
 
 const int anim_decoy_axstnd1 = 17;
+#if 0
 const int anim_decoy_axstnd2 = 18;
 const int anim_decoy_axstnd3 = 19;
 const int anim_decoy_axstnd4 = 20;
@@ -52,6 +59,7 @@ const int anim_decoy_axstnd9 = 25;
 const int anim_decoy_axstnd10 = 26;
 const int anim_decoy_axstnd11 = 27;
 const int anim_decoy_axstnd12 = 28;
+#endif
 
 void decoy_stand1(entity this)
 {
@@ -61,7 +69,7 @@ void decoy_stand1(entity this)
 		this.walkframe = 0;
 	this.frame = anim_decoy_stand1 + this.walkframe;
 	this.walkframe = this.walkframe + 1;
-	if(time > this.pausetime)
+	if(this.pausetime != -1 && time > this.pausetime)
 		this.th_walk(this);
 }
 
@@ -116,9 +124,10 @@ void setup_decoy(entity decoy)
 	setsize(decoy, VEC_HULL_MIN, VEC_HULL_MAX);
 	decoy.view_ofs = '0 0 22';
 
-	if(!decoy.damagedbycontents)
-		IL_PUSH(g_damagedbycontents, decoy);
-	decoy.damagedbycontents	= true;
+	// decoys are part of cutscenes, don't try to kill them!
+	//if(!decoy.damagedbycontents)
+		//IL_PUSH(g_damagedbycontents, decoy);
+	//decoy.damagedbycontents	= true;
 
 	decoy.solid = SOLID_SLIDEBOX;
 	set_movetype(decoy, MOVETYPE_STEP);
@@ -180,13 +189,13 @@ void become_decoy(string targ, vector orig)
 			decoy.th_walk(decoy);
 		else
 		{
-			decoy.pausetime = 99999999;
+			decoy.pausetime = -1;
 			decoy.th_stand(decoy);
 		}
 	}
 	else
 	{
-		decoy.pausetime = 99999999;
+		decoy.pausetime = -1;
 		decoy.th_stand(decoy);
 	}
 

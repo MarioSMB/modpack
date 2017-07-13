@@ -266,7 +266,7 @@ void tbaby_checknew(entity this)
 	this.view_ofs = '0 0 25';
 	this.use = monster_use;
 	this.flags |= FL_MONSTER;
-	this.pausetime = 99999999;
+	this.pausetime = -1;
 	this.th_stand(this);
 	this.nextthink = this.nextthink + random()*0.5;
 

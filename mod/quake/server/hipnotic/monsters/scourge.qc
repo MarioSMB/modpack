@@ -12,6 +12,7 @@ $base scorbase.asc
 
 $skin skin
 
+#if 0
 const int anim_scourge_stand1 = 0;
 const int anim_scourge_stand2 = 1;
 const int anim_scourge_stand3 = 2;
@@ -58,6 +59,14 @@ const int anim_scourge_death2 = 37;
 const int anim_scourge_death3 = 38;
 const int anim_scourge_death4 = 39;
 const int anim_scourge_death5 = 40;
+#endif
+
+const int anim_scourge_stand = 0; //'0 11 0';
+const int anim_scourge_walk = 12; //'12 17 0';
+const int anim_scourge_shoot = 18; //'18 19 0';
+const int anim_scourge_sting = 20; //'20 30 0';
+const int anim_scourge_pain = 31; //'31 35 0';
+const int anim_scourge_death = 36; //'36 40 0';
 
 // duplicates..
 #if 0
@@ -241,28 +250,28 @@ void ai_left(entity this, float dist)
 
 //void() scourge_wake1;
 void scourge_stand1(entity this);
-void scourge_stand12(entity this) { set_anim(this, anim_scourge_stand12, scourge_stand1); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
-void scourge_stand11(entity this) { set_anim(this, anim_scourge_stand11, scourge_stand12); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
-void scourge_stand10(entity this) { set_anim(this, anim_scourge_stand10, scourge_stand11); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
-void scourge_stand9(entity this) { set_anim(this, anim_scourge_stand9, scourge_stand10); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
-void scourge_stand8(entity this) { set_anim(this, anim_scourge_stand8, scourge_stand9); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
-void scourge_stand7(entity this) { set_anim(this, anim_scourge_stand7, scourge_stand8); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
-void scourge_stand6(entity this) { set_anim(this, anim_scourge_stand6, scourge_stand7); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
-void scourge_stand5(entity this) { set_anim(this, anim_scourge_stand5, scourge_stand6); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
-void scourge_stand4(entity this) { set_anim(this, anim_scourge_stand4, scourge_stand5); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
-void scourge_stand3(entity this) { set_anim(this, anim_scourge_stand3, scourge_stand4); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
-void scourge_stand2(entity this) { set_anim(this, anim_scourge_stand2, scourge_stand3); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
-void scourge_stand1(entity this) { set_anim(this, anim_scourge_stand1, scourge_stand2); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
+void scourge_stand12(entity this) { set_animofs(this, anim_scourge_stand, 12, scourge_stand1); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
+void scourge_stand11(entity this) { set_animofs(this, anim_scourge_stand, 11, scourge_stand12); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
+void scourge_stand10(entity this) { set_animofs(this, anim_scourge_stand, 10, scourge_stand11); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
+void scourge_stand9(entity this) { set_animofs(this, anim_scourge_stand, 9, scourge_stand10); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
+void scourge_stand8(entity this) { set_animofs(this, anim_scourge_stand, 8, scourge_stand9); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
+void scourge_stand7(entity this) { set_animofs(this, anim_scourge_stand, 7, scourge_stand8); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
+void scourge_stand6(entity this) { set_animofs(this, anim_scourge_stand, 6, scourge_stand7); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
+void scourge_stand5(entity this) { set_animofs(this, anim_scourge_stand, 5, scourge_stand6); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
+void scourge_stand4(entity this) { set_animofs(this, anim_scourge_stand, 4, scourge_stand5); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
+void scourge_stand3(entity this) { set_animofs(this, anim_scourge_stand, 3, scourge_stand4); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
+void scourge_stand2(entity this) { set_animofs(this, anim_scourge_stand, 2, scourge_stand3); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
+void scourge_stand1(entity this) { set_animofs(this, anim_scourge_stand, 1, scourge_stand2); this.spawnsilent = 0; ai_stand(this); scourge_think(this); }
 
 void scourge_walk1(entity this);
-void scourge_walk6(entity this) { set_anim(this, anim_scourge_walk6, scourge_walk1); ai_walk(this, 8); }
-void scourge_walk5(entity this) { set_anim(this, anim_scourge_walk5, scourge_walk6); ai_walk(this, 8); }
-void scourge_walk4(entity this) { set_anim(this, anim_scourge_walk4, scourge_walk5); ai_walk(this, 8); }
-void scourge_walk3(entity this) { set_anim(this, anim_scourge_walk3, scourge_walk4); ai_walk(this, 8); }
-void scourge_walk2(entity this) { set_anim(this, anim_scourge_walk2, scourge_walk3); ai_walk(this, 8); }
+void scourge_walk6(entity this) { set_animofs(this, anim_scourge_walk, 6, scourge_walk1); ai_walk(this, 8); }
+void scourge_walk5(entity this) { set_animofs(this, anim_scourge_walk, 5, scourge_walk6); ai_walk(this, 8); }
+void scourge_walk4(entity this) { set_animofs(this, anim_scourge_walk, 4, scourge_walk5); ai_walk(this, 8); }
+void scourge_walk3(entity this) { set_animofs(this, anim_scourge_walk, 3, scourge_walk4); ai_walk(this, 8); }
+void scourge_walk2(entity this) { set_animofs(this, anim_scourge_walk, 2, scourge_walk3); ai_walk(this, 8); }
 void scourge_walk1(entity this)
 {
-	set_anim(this, anim_scourge_walk1, scourge_walk2);
+	set_animofs(this, anim_scourge_walk, 1, scourge_walk2);
 	if(random() < 0.1)
 		_sound(this, CHAN_VOICE, "scourge/idle.wav", 1, ATTN_IDLE);
 	this.spawnsilent = 1;
@@ -271,14 +280,14 @@ void scourge_walk1(entity this)
 }
 
 void scourge_run1(entity this);
-void scourge_run6(entity this) { set_anim(this, anim_scourge_walk6, scourge_run1); ai_run(this, 14); }
-void scourge_run5(entity this) { set_anim(this, anim_scourge_walk5, scourge_run6); ai_run(this, 14); }
-void scourge_run4(entity this) { set_anim(this, anim_scourge_walk4, scourge_run5); ai_run(this, 14); }
-void scourge_run3(entity this) { set_anim(this, anim_scourge_walk3, scourge_run4); ai_run(this, 14); }
-void scourge_run2(entity this) { set_anim(this, anim_scourge_walk2, scourge_run3); scourge_think(this);ai_run(this, 14); }
+void scourge_run6(entity this) { set_animofs(this, anim_scourge_walk, 6, scourge_run1); ai_run(this, 14); }
+void scourge_run5(entity this) { set_animofs(this, anim_scourge_walk, 5, scourge_run6); ai_run(this, 14); }
+void scourge_run4(entity this) { set_animofs(this, anim_scourge_walk, 4, scourge_run5); ai_run(this, 14); }
+void scourge_run3(entity this) { set_animofs(this, anim_scourge_walk, 3, scourge_run4); ai_run(this, 14); }
+void scourge_run2(entity this) { set_animofs(this, anim_scourge_walk, 2, scourge_run3); scourge_think(this);ai_run(this, 14); }
 void scourge_run1(entity this)
 {
-	set_anim(this, anim_scourge_walk1, scourge_run2);
+	set_animofs(this, anim_scourge_walk, 1, scourge_run2);
 	if(random() < 0.1)
 		_sound(this, CHAN_VOICE, "scourge/idle.wav", 1, ATTN_IDLE);
 	this.spawnsilent = 1;
@@ -286,19 +295,19 @@ void scourge_run1(entity this)
 	ai_run(this, 18);
 }
 
-void scourge_strafeleft6(entity this) { set_anim(this, anim_scourge_walk6, scourge_run1); ai_left(this, 14); }
-void scourge_strafeleft5(entity this) { set_anim(this, anim_scourge_walk5, scourge_strafeleft6); ai_left(this, 14); }
-void scourge_strafeleft4(entity this) { set_anim(this, anim_scourge_walk4, scourge_strafeleft5); ai_left(this, 14); }
-void scourge_strafeleft3(entity this) { set_anim(this, anim_scourge_walk3, scourge_strafeleft4); ai_left(this, 20); }
-void scourge_strafeleft2(entity this) { set_anim(this, anim_scourge_walk2, scourge_strafeleft3); ai_left(this, 20); }
-void scourge_strafeleft1(entity this) { set_anim(this, anim_scourge_walk1, scourge_strafeleft2); this.spawnsilent = 1;scourge_think(this);ai_left(this, 20); }
+void scourge_strafeleft6(entity this) { set_animofs(this, anim_scourge_walk, 6, scourge_run1); ai_left(this, 14); }
+void scourge_strafeleft5(entity this) { set_animofs(this, anim_scourge_walk, 5, scourge_strafeleft6); ai_left(this, 14); }
+void scourge_strafeleft4(entity this) { set_animofs(this, anim_scourge_walk, 4, scourge_strafeleft5); ai_left(this, 14); }
+void scourge_strafeleft3(entity this) { set_animofs(this, anim_scourge_walk, 3, scourge_strafeleft4); ai_left(this, 20); }
+void scourge_strafeleft2(entity this) { set_animofs(this, anim_scourge_walk, 2, scourge_strafeleft3); ai_left(this, 20); }
+void scourge_strafeleft1(entity this) { set_animofs(this, anim_scourge_walk, 1, scourge_strafeleft2); this.spawnsilent = 1;scourge_think(this);ai_left(this, 20); }
 
-void scourge_straferight6(entity this) { set_anim(this, anim_scourge_walk6, scourge_run1); ai_right(this, 14); }
-void scourge_straferight5(entity this) { set_anim(this, anim_scourge_walk5, scourge_straferight6); ai_right(this, 14); }
-void scourge_straferight4(entity this) { set_anim(this, anim_scourge_walk4, scourge_straferight5); ai_right(this, 14); }
-void scourge_straferight3(entity this) { set_anim(this, anim_scourge_walk3, scourge_straferight4); ai_right(this, 20); }
-void scourge_straferight2(entity this) { set_anim(this, anim_scourge_walk2, scourge_straferight3); ai_right(this, 20); }
-void scourge_straferight1(entity this) { set_anim(this, anim_scourge_walk1, scourge_straferight2); this.spawnsilent = 1;scourge_think(this);ai_right(this, 20); }
+void scourge_straferight6(entity this) { set_animofs(this, anim_scourge_walk, 6, scourge_run1); ai_right(this, 14); }
+void scourge_straferight5(entity this) { set_animofs(this, anim_scourge_walk, 5, scourge_straferight6); ai_right(this, 14); }
+void scourge_straferight4(entity this) { set_animofs(this, anim_scourge_walk, 4, scourge_straferight5); ai_right(this, 14); }
+void scourge_straferight3(entity this) { set_animofs(this, anim_scourge_walk, 3, scourge_straferight4); ai_right(this, 20); }
+void scourge_straferight2(entity this) { set_animofs(this, anim_scourge_walk, 2, scourge_straferight3); ai_right(this, 20); }
+void scourge_straferight1(entity this) { set_animofs(this, anim_scourge_walk, 1, scourge_straferight2); this.spawnsilent = 1;scourge_think(this);ai_right(this, 20); }
 
 /*
 void()   scourge_wake1  =[ anim_scourge_stand2, scourge_wake2  ] {this.spawnsilent = 0;scourge_think(this); }
@@ -314,16 +323,16 @@ void()   scourge_wake6  =[ anim_scourge_stand7, scourge_run1  ]
 */
 
 void scourge_turn1(entity this);
-void scourge_turn6(entity this) { set_anim(this, anim_scourge_walk6, scourge_turn1); ai_turn_in_place(this); }
-void scourge_turn5(entity this) { set_anim(this, anim_scourge_walk5, scourge_turn6); ai_turn_in_place(this); }
-void scourge_turn4(entity this) { set_anim(this, anim_scourge_walk4, scourge_turn5); ai_turn_in_place(this); }
-void scourge_turn3(entity this) { set_anim(this, anim_scourge_walk3, scourge_turn4); ai_turn_in_place(this); }
-void scourge_turn2(entity this) { set_anim(this, anim_scourge_walk2, scourge_turn3); ai_turn_in_place(this); }
-void scourge_turn1(entity this) { set_anim(this, anim_scourge_walk1, scourge_turn2); this.spawnsilent = 1; scourge_think(this); ai_turn_in_place(this); }
+void scourge_turn6(entity this) { set_animofs(this, anim_scourge_walk, 6, scourge_turn1); ai_turn_in_place(this); }
+void scourge_turn5(entity this) { set_animofs(this, anim_scourge_walk, 5, scourge_turn6); ai_turn_in_place(this); }
+void scourge_turn4(entity this) { set_animofs(this, anim_scourge_walk, 4, scourge_turn5); ai_turn_in_place(this); }
+void scourge_turn3(entity this) { set_animofs(this, anim_scourge_walk, 3, scourge_turn4); ai_turn_in_place(this); }
+void scourge_turn2(entity this) { set_animofs(this, anim_scourge_walk, 2, scourge_turn3); ai_turn_in_place(this); }
+void scourge_turn1(entity this) { set_animofs(this, anim_scourge_walk, 1, scourge_turn2); this.spawnsilent = 1; scourge_think(this); ai_turn_in_place(this); }
 
 void scourge_atk8(entity this) 
 {
-	set_anim(this, anim_scourge_shoot2, scourge_run1);
+	set_animofs(this, anim_scourge_shoot, 2, scourge_run1);
 	this.effects |= EF_MUZZLEFLASH;
 	SCOURGE_FireSpikes(this, 56);
 //   SCOURGE_FireSpikes(-56);
@@ -331,49 +340,49 @@ void scourge_atk8(entity this)
 }
 void scourge_atk7(entity this) 
 {
-	set_anim(this, anim_scourge_shoot1, scourge_atk8);
+	set_animofs(this, anim_scourge_shoot, 1, scourge_atk8);
 	this.effects |= EF_MUZZLEFLASH;
 //   SCOURGE_FireSpikes(this, 40);
 	SCOURGE_FireSpikes(this, -40);
 }
 void scourge_atk6(entity this) 
 {
-	set_anim(this, anim_scourge_shoot2, scourge_atk7);
+	set_animofs(this, anim_scourge_shoot, 2, scourge_atk7);
 	this.effects |= EF_MUZZLEFLASH;
 //   SCOURGE_FireSpikes(this, 56);
 	SCOURGE_FireSpikes(this, -56);
 }
 void scourge_atk5(entity this) 
 {
-	set_anim(this, anim_scourge_shoot1, scourge_atk6);
+	set_animofs(this, anim_scourge_shoot, 1, scourge_atk6);
 	this.effects |= EF_MUZZLEFLASH;
 	SCOURGE_FireSpikes(this, 40);
 //   SCOURGE_FireSpikes(this, -40);
 }
 void scourge_atk4(entity this) 
 {
-	set_anim(this, anim_scourge_shoot2, scourge_atk5);
+	set_animofs(this, anim_scourge_shoot, 2, scourge_atk5);
 	this.effects |= EF_MUZZLEFLASH;
 	SCOURGE_FireSpikes(this, 56);
 //   SCOURGE_FireSpikes(this, -56);
 }
 void scourge_atk3(entity this) 
 {
-	set_anim(this, anim_scourge_shoot1, scourge_atk4);
+	set_animofs(this, anim_scourge_shoot, 1, scourge_atk4);
 	this.effects |= EF_MUZZLEFLASH;
 //   SCOURGE_FireSpikes(this, 40);
 	SCOURGE_FireSpikes(this, -40);
 }
 void scourge_atk2(entity this) 
 {
-	set_anim(this, anim_scourge_shoot2, scourge_atk3);
+	set_animofs(this, anim_scourge_shoot, 2, scourge_atk3);
 	this.effects |= EF_MUZZLEFLASH;
 //   SCOURGE_FireSpikes(this, 56);
 	SCOURGE_FireSpikes(this, -56);
 }
 void scourge_atk1(entity this) 
 {
-	set_anim(this, anim_scourge_shoot1, scourge_atk2);
+	set_animofs(this, anim_scourge_shoot, 1, scourge_atk2);
 	this.spawnsilent = 0;
 	scourge_think(this);
 	this.effects |= EF_MUZZLEFLASH;
@@ -382,23 +391,23 @@ void scourge_atk1(entity this)
 }
 
 void scourge_melee1(entity this);
-void scourge_melee11(entity this) { set_anim(this, anim_scourge_sting11, scourge_run1); ai_face(this); SUB_CheckRefire(this, scourge_melee1); }
-void scourge_melee10(entity this) { set_anim(this, anim_scourge_sting10, scourge_melee11); ai_face(this); }
-void scourge_melee9(entity this) { set_anim(this, anim_scourge_sting9, scourge_melee10); ai_face(this); }
-void scourge_melee8(entity this) { set_anim(this, anim_scourge_sting8, scourge_melee9); ai_face(this); }
-void scourge_melee7(entity this) { set_anim(this, anim_scourge_sting7, scourge_melee8); Attack_With_Tail(this); }
-void scourge_melee6(entity this) { set_anim(this, anim_scourge_sting6, scourge_melee7); ai_charge(this, 1); }
-void scourge_melee5(entity this) { set_anim(this, anim_scourge_sting5, scourge_melee6); _sound(this, CHAN_WEAPON, "scourge/tailswng.wav", 1, ATTN_NORM); ai_charge(this, 3); }
-void scourge_melee4(entity this) { set_anim(this, anim_scourge_sting4, scourge_melee5); ai_charge(this, 2); }
-void scourge_melee3(entity this) { set_anim(this, anim_scourge_sting3, scourge_melee4); ai_charge(this, 2); }
-void scourge_melee2(entity this) { set_anim(this, anim_scourge_sting2, scourge_melee3); ai_charge(this, 3); }
-void scourge_melee1(entity this) { set_anim(this, anim_scourge_sting1, scourge_melee2); this.spawnsilent = 0; scourge_think(this); ai_charge(this, 3); }
+void scourge_melee11(entity this) { set_animofs(this, anim_scourge_sting, 11, scourge_run1); ai_face(this); SUB_CheckRefire(this, scourge_melee1); }
+void scourge_melee10(entity this) { set_animofs(this, anim_scourge_sting, 10, scourge_melee11); ai_face(this); }
+void scourge_melee9(entity this) { set_animofs(this, anim_scourge_sting, 9, scourge_melee10); ai_face(this); }
+void scourge_melee8(entity this) { set_animofs(this, anim_scourge_sting, 8, scourge_melee9); ai_face(this); }
+void scourge_melee7(entity this) { set_animofs(this, anim_scourge_sting, 7, scourge_melee8); Attack_With_Tail(this); }
+void scourge_melee6(entity this) { set_animofs(this, anim_scourge_sting, 6, scourge_melee7); ai_charge(this, 1); }
+void scourge_melee5(entity this) { set_animofs(this, anim_scourge_sting, 5, scourge_melee6); _sound(this, CHAN_WEAPON, "scourge/tailswng.wav", 1, ATTN_NORM); ai_charge(this, 3); }
+void scourge_melee4(entity this) { set_animofs(this, anim_scourge_sting, 4, scourge_melee5); ai_charge(this, 2); }
+void scourge_melee3(entity this) { set_animofs(this, anim_scourge_sting, 3, scourge_melee4); ai_charge(this, 2); }
+void scourge_melee2(entity this) { set_animofs(this, anim_scourge_sting, 2, scourge_melee3); ai_charge(this, 3); }
+void scourge_melee1(entity this) { set_animofs(this, anim_scourge_sting, 1, scourge_melee2); this.spawnsilent = 0; scourge_think(this); ai_charge(this, 3); }
 
-void scourge_pain5(entity this) { set_anim(this, anim_scourge_pain5, scourge_run1); }
-void scourge_pain4(entity this) { set_anim(this, anim_scourge_pain4, scourge_pain5); }
-void scourge_pain3(entity this) { set_anim(this, anim_scourge_pain3, scourge_pain4); }
-void scourge_pain2(entity this) { set_anim(this, anim_scourge_pain2, scourge_pain3); }
-void scourge_pain1(entity this) { set_anim(this, anim_scourge_pain1, scourge_pain2); this.spawnsilent = 0; scourge_think(this); }
+void scourge_pain5(entity this) { set_animofs(this, anim_scourge_pain, 5, scourge_run1); }
+void scourge_pain4(entity this) { set_animofs(this, anim_scourge_pain, 4, scourge_pain5); }
+void scourge_pain3(entity this) { set_animofs(this, anim_scourge_pain, 3, scourge_pain4); }
+void scourge_pain2(entity this) { set_animofs(this, anim_scourge_pain, 2, scourge_pain3); }
+void scourge_pain1(entity this) { set_animofs(this, anim_scourge_pain, 1, scourge_pain2); this.spawnsilent = 0; scourge_think(this); }
 
 void scourge_pain(entity this, entity attacker, float damage)
 {
@@ -418,11 +427,11 @@ void scourge_pain(entity this, entity attacker, float damage)
 //============================================================================
 
 
-void scourge_die5(entity this) { set_anim(this, anim_scourge_death5, scourge_die5); }
-void scourge_die4(entity this) { set_anim(this, anim_scourge_death4, scourge_die5); }
-void scourge_die3(entity this) { set_anim(this, anim_scourge_death3, scourge_die4); this.solid = SOLID_NOT; }
-void scourge_die2(entity this) { set_anim(this, anim_scourge_death2, scourge_die3); }
-void scourge_die1(entity this) { set_anim(this, anim_scourge_death1, scourge_die2); this.spawnsilent = 0; scourge_think(this); }
+void scourge_die5(entity this) { set_animofs(this, anim_scourge_death, 5, scourge_die5); }
+void scourge_die4(entity this) { set_animofs(this, anim_scourge_death, 4, scourge_die5); }
+void scourge_die3(entity this) { set_animofs(this, anim_scourge_death, 3, scourge_die4); this.solid = SOLID_NOT; }
+void scourge_die2(entity this) { set_animofs(this, anim_scourge_death, 2, scourge_die3); }
+void scourge_die1(entity this) { set_animofs(this, anim_scourge_death, 1, scourge_die2); this.spawnsilent = 0; scourge_think(this); }
 
 void scourge_die(entity this, entity attacker)
 {

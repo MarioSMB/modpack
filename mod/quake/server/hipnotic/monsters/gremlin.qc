@@ -12,6 +12,7 @@ $base grembase.asc
 
 $skin grem
 
+#if 0
 const int anim_gremlin_stand1 = 0;
 const int anim_gremlin_stand2 = 1;
 const int anim_gremlin_stand3 = 2;
@@ -205,6 +206,24 @@ const int anim_gremlin_grun12 = 175;
 const int anim_gremlin_grun13 = 176;
 const int anim_gremlin_grun14 = 177;
 const int anim_gremlin_grun15 = 178;
+#endif
+
+const int anim_gremlin_stand = 0; //'0 16 0';
+const int anim_gremlin_walk = 17; //'17 28 0';
+const int anim_gremlin_run = 29; //'29 43 0';
+const int anim_gremlin_jump = 44; //'44 59 0';
+const int anim_gremlin_attk = 60; //'60 70 0';
+const int anim_gremlin_maul = 71; //'71 83 0';
+const int anim_gremlin_spawn = 84; //'84 89 0';
+const int anim_gremlin_look = 90; //'90 99 0';
+const int anim_gremlin_pain = 100; //'100 103 0';
+const int anim_gremlin_death = 104; //'104 115 0';
+const int anim_gremlin_flip = 116; //'116 123 0';
+const int anim_gremlin_lunge = 124; //'124 134 0';
+const int anim_gremlin_gfire = 135; //'135 140 0';
+const int anim_gremlin_glook = 141; //'141 160 0';
+const int anim_gremlin_gpain = 161; //'161 163 0';
+const int anim_gremlin_grun = 164; //'164 178 0';
 
 //============================================================================
 
@@ -233,9 +252,8 @@ bool GremlinAttemptWeaponSteal(entity this)
 		return false;
 
 	int amount;
-	vector delta = (this.enemy.origin - this.origin);
 
-	if(vdist(delta, >, 100))
+	if(vdist(this.enemy.origin - this.origin, >, 100))
 		return false;
 	if(random() < 0.5)
 		return false;
@@ -494,7 +512,7 @@ void gremlin_run(entity this, float dist)
 	this.move_dist = dist;
 
 	if(this.stoleweapon)
-		this.frame = this.frame + anim_gremlin_grun1 - anim_gremlin_run1;
+		this.frame = this.frame + anim_gremlin_grun - anim_gremlin_run;
 
 	if(this.gorging)
 	{
@@ -619,87 +637,87 @@ void Gremlin_Melee(entity this, float side);
 void Gremlin_Gorge(entity this, float side);
 
 void gremlin_stand1(entity this);
-void gremlin_stand17(entity this) { set_anim(this, anim_gremlin_stand17, gremlin_stand1); gremlin_stand(this); this.nextthink = time + 0.2; }
-void gremlin_stand16(entity this) { set_anim(this, anim_gremlin_stand16, gremlin_stand17); gremlin_stand(this); this.nextthink = time + 0.2; }
-void gremlin_stand15(entity this) { set_anim(this, anim_gremlin_stand15, gremlin_stand16); gremlin_stand(this); this.nextthink = time + 0.2; }
-void gremlin_stand14(entity this) { set_anim(this, anim_gremlin_stand14, gremlin_stand15); gremlin_stand(this); this.nextthink = time + 0.2; }
-void gremlin_stand13(entity this) { set_anim(this, anim_gremlin_stand13, gremlin_stand14); gremlin_stand(this); this.nextthink = time + 0.2; }
-void gremlin_stand12(entity this) { set_anim(this, anim_gremlin_stand12, gremlin_stand13); gremlin_stand(this); this.nextthink = time + 0.2; }
-void gremlin_stand11(entity this) { set_anim(this, anim_gremlin_stand11, gremlin_stand12); gremlin_stand(this); this.nextthink = time + 0.2; }
-void gremlin_stand10(entity this) { set_anim(this, anim_gremlin_stand10, gremlin_stand11); gremlin_stand(this); this.nextthink = time + 0.2; }
-void gremlin_stand9(entity this) { set_anim(this, anim_gremlin_stand9, gremlin_stand10); gremlin_stand(this); this.nextthink = time + 0.2; }
-void gremlin_stand8(entity this) { set_anim(this, anim_gremlin_stand8, gremlin_stand9); gremlin_stand(this); this.nextthink = time + 0.2; }
-void gremlin_stand7(entity this) { set_anim(this, anim_gremlin_stand7, gremlin_stand8); gremlin_stand(this); this.nextthink = time + 0.2; }
-void gremlin_stand6(entity this) { set_anim(this, anim_gremlin_stand6, gremlin_stand7); gremlin_stand(this); this.nextthink = time + 0.2; }
-void gremlin_stand5(entity this) { set_anim(this, anim_gremlin_stand5, gremlin_stand6); gremlin_stand(this); this.nextthink = time + 0.2; }
-void gremlin_stand4(entity this) { set_anim(this, anim_gremlin_stand4, gremlin_stand5); gremlin_stand(this); this.nextthink = time + 0.2; }
-void gremlin_stand3(entity this) { set_anim(this, anim_gremlin_stand3, gremlin_stand4); gremlin_stand(this); this.nextthink = time + 0.2; }
-void gremlin_stand2(entity this) { set_anim(this, anim_gremlin_stand2, gremlin_stand3); gremlin_stand(this); this.nextthink = time + 0.2; }
-void gremlin_stand1(entity this) { set_anim(this, anim_gremlin_stand1, gremlin_stand2); gremlin_stand(this); this.nextthink = time + 0.2; }
+void gremlin_stand17(entity this) { set_animofs(this, anim_gremlin_stand, 17, gremlin_stand1); gremlin_stand(this); this.nextthink = time + 0.2; }
+void gremlin_stand16(entity this) { set_animofs(this, anim_gremlin_stand, 16, gremlin_stand17); gremlin_stand(this); this.nextthink = time + 0.2; }
+void gremlin_stand15(entity this) { set_animofs(this, anim_gremlin_stand, 15, gremlin_stand16); gremlin_stand(this); this.nextthink = time + 0.2; }
+void gremlin_stand14(entity this) { set_animofs(this, anim_gremlin_stand, 14, gremlin_stand15); gremlin_stand(this); this.nextthink = time + 0.2; }
+void gremlin_stand13(entity this) { set_animofs(this, anim_gremlin_stand, 13, gremlin_stand14); gremlin_stand(this); this.nextthink = time + 0.2; }
+void gremlin_stand12(entity this) { set_animofs(this, anim_gremlin_stand, 12, gremlin_stand13); gremlin_stand(this); this.nextthink = time + 0.2; }
+void gremlin_stand11(entity this) { set_animofs(this, anim_gremlin_stand, 11, gremlin_stand12); gremlin_stand(this); this.nextthink = time + 0.2; }
+void gremlin_stand10(entity this) { set_animofs(this, anim_gremlin_stand, 10, gremlin_stand11); gremlin_stand(this); this.nextthink = time + 0.2; }
+void gremlin_stand9(entity this) { set_animofs(this, anim_gremlin_stand, 9, gremlin_stand10); gremlin_stand(this); this.nextthink = time + 0.2; }
+void gremlin_stand8(entity this) { set_animofs(this, anim_gremlin_stand, 8, gremlin_stand9); gremlin_stand(this); this.nextthink = time + 0.2; }
+void gremlin_stand7(entity this) { set_animofs(this, anim_gremlin_stand, 7, gremlin_stand8); gremlin_stand(this); this.nextthink = time + 0.2; }
+void gremlin_stand6(entity this) { set_animofs(this, anim_gremlin_stand, 6, gremlin_stand7); gremlin_stand(this); this.nextthink = time + 0.2; }
+void gremlin_stand5(entity this) { set_animofs(this, anim_gremlin_stand, 5, gremlin_stand6); gremlin_stand(this); this.nextthink = time + 0.2; }
+void gremlin_stand4(entity this) { set_animofs(this, anim_gremlin_stand, 4, gremlin_stand5); gremlin_stand(this); this.nextthink = time + 0.2; }
+void gremlin_stand3(entity this) { set_animofs(this, anim_gremlin_stand, 3, gremlin_stand4); gremlin_stand(this); this.nextthink = time + 0.2; }
+void gremlin_stand2(entity this) { set_animofs(this, anim_gremlin_stand, 2, gremlin_stand3); gremlin_stand(this); this.nextthink = time + 0.2; }
+void gremlin_stand1(entity this) { set_animofs(this, anim_gremlin_stand, 1, gremlin_stand2); gremlin_stand(this); this.nextthink = time + 0.2; }
 
 void gremlin_walk1(entity this);
-void gremlin_walk12(entity this) { set_anim(this, anim_gremlin_walk12, gremlin_walk1); gremlin_walk(this, 8); }
-void gremlin_walk11(entity this) { set_anim(this, anim_gremlin_walk11, gremlin_walk12); gremlin_walk(this, 8); }
-void gremlin_walk10(entity this) { set_anim(this, anim_gremlin_walk10, gremlin_walk11); gremlin_walk(this, 8); }
-void gremlin_walk9(entity this) { set_anim(this, anim_gremlin_walk9, gremlin_walk10); gremlin_walk(this, 8); }
-void gremlin_walk8(entity this) { set_anim(this, anim_gremlin_walk8, gremlin_walk9); gremlin_walk(this, 8); }
-void gremlin_walk7(entity this) { set_anim(this, anim_gremlin_walk7, gremlin_walk8); gremlin_walk(this, 8); }
-void gremlin_walk6(entity this) { set_anim(this, anim_gremlin_walk6, gremlin_walk7); gremlin_walk(this, 8); }
-void gremlin_walk5(entity this) { set_anim(this, anim_gremlin_walk5, gremlin_walk6); gremlin_walk(this, 8); }
-void gremlin_walk4(entity this) { set_anim(this, anim_gremlin_walk4, gremlin_walk5); gremlin_walk(this, 8); }
-void gremlin_walk3(entity this) { set_anim(this, anim_gremlin_walk3, gremlin_walk4); gremlin_walk(this, 8); }
-void gremlin_walk2(entity this) { set_anim(this, anim_gremlin_walk2, gremlin_walk3); gremlin_walk(this, 8); }
+void gremlin_walk12(entity this) { set_animofs(this, anim_gremlin_walk, 12, gremlin_walk1); gremlin_walk(this, 8); }
+void gremlin_walk11(entity this) { set_animofs(this, anim_gremlin_walk, 11, gremlin_walk12); gremlin_walk(this, 8); }
+void gremlin_walk10(entity this) { set_animofs(this, anim_gremlin_walk, 10, gremlin_walk11); gremlin_walk(this, 8); }
+void gremlin_walk9(entity this) { set_animofs(this, anim_gremlin_walk, 9, gremlin_walk10); gremlin_walk(this, 8); }
+void gremlin_walk8(entity this) { set_animofs(this, anim_gremlin_walk, 8, gremlin_walk9); gremlin_walk(this, 8); }
+void gremlin_walk7(entity this) { set_animofs(this, anim_gremlin_walk, 7, gremlin_walk8); gremlin_walk(this, 8); }
+void gremlin_walk6(entity this) { set_animofs(this, anim_gremlin_walk, 6, gremlin_walk7); gremlin_walk(this, 8); }
+void gremlin_walk5(entity this) { set_animofs(this, anim_gremlin_walk, 5, gremlin_walk6); gremlin_walk(this, 8); }
+void gremlin_walk4(entity this) { set_animofs(this, anim_gremlin_walk, 4, gremlin_walk5); gremlin_walk(this, 8); }
+void gremlin_walk3(entity this) { set_animofs(this, anim_gremlin_walk, 3, gremlin_walk4); gremlin_walk(this, 8); }
+void gremlin_walk2(entity this) { set_animofs(this, anim_gremlin_walk, 2, gremlin_walk3); gremlin_walk(this, 8); }
 void gremlin_walk1(entity this)
 {
-	set_anim(this, anim_gremlin_walk1, gremlin_walk2);
+	set_animofs(this, anim_gremlin_walk, 1, gremlin_walk2);
 	if(random() < 0.1)
 		_sound(this, CHAN_VOICE, "grem/idle.wav", 1, ATTN_IDLE);
 	gremlin_walk(this, 8);
 }
 
 void gremlin_run1(entity this);
-void gremlin_run15(entity this) { set_anim(this, anim_gremlin_run15, gremlin_run1); gremlin_run(this, 0); }
-void gremlin_run14(entity this) { set_anim(this, anim_gremlin_run14, gremlin_run15); gremlin_run(this, 8); }
-void gremlin_run13(entity this) { set_anim(this, anim_gremlin_run13, gremlin_run14); gremlin_run(this, 12); }
-void gremlin_run12(entity this) { set_anim(this, anim_gremlin_run12, gremlin_run1); gremlin_run(this, 16); }
-void gremlin_run11(entity this) { set_anim(this, anim_gremlin_run11, gremlin_run12); gremlin_run(this, 16); }
-void gremlin_run10(entity this) { set_anim(this, anim_gremlin_run10, gremlin_run11); gremlin_run(this, 12); }
-void gremlin_run9(entity this) { set_anim(this, anim_gremlin_run9, gremlin_run10); gremlin_run(this, 8); }
-void gremlin_run8(entity this) { set_anim(this, anim_gremlin_run8, gremlin_run9); gremlin_run(this, 0); }
-void gremlin_run7(entity this) { set_anim(this, anim_gremlin_run7, gremlin_run8); gremlin_run(this, 8); }
-void gremlin_run6(entity this) { set_anim(this, anim_gremlin_run6, gremlin_run7); gremlin_run(this, 12); }
-void gremlin_run5(entity this) { set_anim(this, anim_gremlin_run5, gremlin_run6); gremlin_run(this, 16); }
-void gremlin_run4(entity this) { set_anim(this, anim_gremlin_run4, gremlin_run5); gremlin_run(this, 16); }
-void gremlin_run3(entity this) { set_anim(this, anim_gremlin_run3, gremlin_run4); gremlin_run(this, 12); }
-void gremlin_run2(entity this) { set_anim(this, anim_gremlin_run2, gremlin_run3); gremlin_run(this, 8); }
+void gremlin_run15(entity this) { set_animofs(this, anim_gremlin_run, 15, gremlin_run1); gremlin_run(this, 0); }
+void gremlin_run14(entity this) { set_animofs(this, anim_gremlin_run, 14, gremlin_run15); gremlin_run(this, 8); }
+void gremlin_run13(entity this) { set_animofs(this, anim_gremlin_run, 13, gremlin_run14); gremlin_run(this, 12); }
+void gremlin_run12(entity this) { set_animofs(this, anim_gremlin_run, 12, gremlin_run1); gremlin_run(this, 16); }
+void gremlin_run11(entity this) { set_animofs(this, anim_gremlin_run, 11, gremlin_run12); gremlin_run(this, 16); }
+void gremlin_run10(entity this) { set_animofs(this, anim_gremlin_run, 10, gremlin_run11); gremlin_run(this, 12); }
+void gremlin_run9(entity this) { set_animofs(this, anim_gremlin_run, 9, gremlin_run10); gremlin_run(this, 8); }
+void gremlin_run8(entity this) { set_animofs(this, anim_gremlin_run, 8, gremlin_run9); gremlin_run(this, 0); }
+void gremlin_run7(entity this) { set_animofs(this, anim_gremlin_run, 7, gremlin_run8); gremlin_run(this, 8); }
+void gremlin_run6(entity this) { set_animofs(this, anim_gremlin_run, 6, gremlin_run7); gremlin_run(this, 12); }
+void gremlin_run5(entity this) { set_animofs(this, anim_gremlin_run, 5, gremlin_run6); gremlin_run(this, 16); }
+void gremlin_run4(entity this) { set_animofs(this, anim_gremlin_run, 4, gremlin_run5); gremlin_run(this, 16); }
+void gremlin_run3(entity this) { set_animofs(this, anim_gremlin_run, 3, gremlin_run4); gremlin_run(this, 12); }
+void gremlin_run2(entity this) { set_animofs(this, anim_gremlin_run, 2, gremlin_run3); gremlin_run(this, 8); }
 void gremlin_run1(entity this)
 {
-	set_anim(this, anim_gremlin_run1, gremlin_run2);
+	set_animofs(this, anim_gremlin_run, 1, gremlin_run2);
 	if(random() < 0.1)
 		_sound(this, CHAN_VOICE, "grem/idle.wav", 1, ATTN_IDLE);
 	gremlin_run(this, 0);
 }
 
 void gremlin_jump1(entity this);
-void gremlin_jump16(entity this) { set_anim(this, anim_gremlin_jump16, gremlin_run1); }
-void gremlin_jump15(entity this) { set_anim(this, anim_gremlin_jump15, gremlin_jump16); }
-void gremlin_jump14(entity this) { set_anim(this, anim_gremlin_jump14, gremlin_jump15); }
-void gremlin_jump13(entity this) { set_anim(this, anim_gremlin_jump13, gremlin_jump14); }
-void gremlin_jump12(entity this) { set_anim(this, anim_gremlin_jump12, gremlin_jump13); }
+void gremlin_jump16(entity this) { set_animofs(this, anim_gremlin_jump, 16, gremlin_run1); }
+void gremlin_jump15(entity this) { set_animofs(this, anim_gremlin_jump, 15, gremlin_jump16); }
+void gremlin_jump14(entity this) { set_animofs(this, anim_gremlin_jump, 14, gremlin_jump15); }
+void gremlin_jump13(entity this) { set_animofs(this, anim_gremlin_jump, 13, gremlin_jump14); }
+void gremlin_jump12(entity this) { set_animofs(this, anim_gremlin_jump, 12, gremlin_jump13); }
 void gremlin_jump11(entity this)
 {
-	set_anim(this, anim_gremlin_jump11, gremlin_jump1);
+	set_animofs(this, anim_gremlin_jump, 11, gremlin_jump1);
 	this.nextthink = time + 3;
 	// if three seconds pass, assume gremlin is stuck and jump again
 }
-void gremlin_jump10(entity this) { set_anim(this, anim_gremlin_jump10, gremlin_jump11); }
-void gremlin_jump9(entity this) { set_anim(this, anim_gremlin_jump9, gremlin_jump10); }
-void gremlin_jump8(entity this) { set_anim(this, anim_gremlin_jump8, gremlin_jump9); }
-void gremlin_jump7(entity this) { set_anim(this, anim_gremlin_jump7, gremlin_jump8); }
-void gremlin_jump6(entity this) { set_anim(this, anim_gremlin_jump6, gremlin_jump7); }
+void gremlin_jump10(entity this) { set_animofs(this, anim_gremlin_jump, 10, gremlin_jump11); }
+void gremlin_jump9(entity this) { set_animofs(this, anim_gremlin_jump, 9, gremlin_jump10); }
+void gremlin_jump8(entity this) { set_animofs(this, anim_gremlin_jump, 8, gremlin_jump9); }
+void gremlin_jump7(entity this) { set_animofs(this, anim_gremlin_jump, 7, gremlin_jump8); }
+void gremlin_jump6(entity this) { set_animofs(this, anim_gremlin_jump, 6, gremlin_jump7); }
 void gremlin_jump5(entity this)
 {
-	set_anim(this, anim_gremlin_jump5, gremlin_jump6);
+	set_animofs(this, anim_gremlin_jump, 5, gremlin_jump6);
 	ai_face(this);
 
 	if(IS_ONGROUND(this))
@@ -713,101 +731,101 @@ void gremlin_jump5(entity this)
 	else
 		gremlin_run1(this);
 }
-void gremlin_jump4(entity this) { set_anim(this, anim_gremlin_jump4, gremlin_jump5); ai_face(this); }
-void gremlin_jump3(entity this) { set_anim(this, anim_gremlin_jump3, gremlin_jump4); ai_face(this); }
-void gremlin_jump2(entity this) { set_anim(this, anim_gremlin_jump2, gremlin_jump3); ai_face(this); }
-void gremlin_jump1(entity this) { set_anim(this, anim_gremlin_jump1, gremlin_jump2); ai_face(this); }
+void gremlin_jump4(entity this) { set_animofs(this, anim_gremlin_jump, 4, gremlin_jump5); ai_face(this); }
+void gremlin_jump3(entity this) { set_animofs(this, anim_gremlin_jump, 3, gremlin_jump4); ai_face(this); }
+void gremlin_jump2(entity this) { set_animofs(this, anim_gremlin_jump, 2, gremlin_jump3); ai_face(this); }
+void gremlin_jump1(entity this) { set_animofs(this, anim_gremlin_jump, 1, gremlin_jump2); ai_face(this); }
 
-void gremlin_shot6(entity this) { set_anim(this, anim_gremlin_gfire6, gremlin_run1); }
-void gremlin_shot5(entity this) { set_anim(this, anim_gremlin_gfire5, gremlin_shot6); }
-void gremlin_shot4(entity this) { set_anim(this, anim_gremlin_gfire4, gremlin_shot5); }
-void gremlin_shot3(entity this) { set_anim(this, anim_gremlin_gfire3, gremlin_shot4); }
-void gremlin_shot2(entity this) { set_anim(this, anim_gremlin_gfire2, gremlin_shot3); }
-void gremlin_shot1(entity this) { set_anim(this, anim_gremlin_gfire1, gremlin_shot2); this.effects |= EF_MUZZLEFLASH; }
+void gremlin_shot6(entity this) { set_animofs(this, anim_gremlin_gfire, 6, gremlin_run1); }
+void gremlin_shot5(entity this) { set_animofs(this, anim_gremlin_gfire, 5, gremlin_shot6); }
+void gremlin_shot4(entity this) { set_animofs(this, anim_gremlin_gfire, 4, gremlin_shot5); }
+void gremlin_shot3(entity this) { set_animofs(this, anim_gremlin_gfire, 3, gremlin_shot4); }
+void gremlin_shot2(entity this) { set_animofs(this, anim_gremlin_gfire, 2, gremlin_shot3); }
+void gremlin_shot1(entity this) { set_animofs(this, anim_gremlin_gfire, 1, gremlin_shot2); this.effects |= EF_MUZZLEFLASH; }
 
 
 //============================================================================
 void Gremlin_FireNailGun(entity this, float ox);
 
-void gremlin_nail7(entity this) { set_anim(this, anim_gremlin_gfire1, gremlin_run1); }
-void gremlin_nail6(entity this) { set_anim(this, anim_gremlin_gfire1, gremlin_nail7); this.effects |= EF_MUZZLEFLASH; Gremlin_FireNailGun(this, 4); }
-void gremlin_nail5(entity this) { set_anim(this, anim_gremlin_gfire1, gremlin_nail6); this.effects |= EF_MUZZLEFLASH; Gremlin_FireNailGun(this, 4); }
-void gremlin_nail4(entity this) { set_anim(this, anim_gremlin_gfire1, gremlin_nail5); this.effects |= EF_MUZZLEFLASH; Gremlin_FireNailGun(this, 4); }
-void gremlin_nail3(entity this) { set_anim(this, anim_gremlin_gfire1, gremlin_nail4); this.effects |= EF_MUZZLEFLASH; Gremlin_FireNailGun(this, 4); }
-void gremlin_nail2(entity this) { set_anim(this, anim_gremlin_gfire1, gremlin_nail3); this.effects |= EF_MUZZLEFLASH; Gremlin_FireNailGun(this, 4); }
-void gremlin_nail1(entity this) { set_anim(this, anim_gremlin_gfire1, gremlin_nail2); this.effects |= EF_MUZZLEFLASH; Gremlin_FireNailGun(this, 4); }
+void gremlin_nail7(entity this) { set_anim(this, anim_gremlin_gfire, gremlin_run1); }
+void gremlin_nail6(entity this) { set_anim(this, anim_gremlin_gfire, gremlin_nail7); this.effects |= EF_MUZZLEFLASH; Gremlin_FireNailGun(this, 4); }
+void gremlin_nail5(entity this) { set_anim(this, anim_gremlin_gfire, gremlin_nail6); this.effects |= EF_MUZZLEFLASH; Gremlin_FireNailGun(this, 4); }
+void gremlin_nail4(entity this) { set_anim(this, anim_gremlin_gfire, gremlin_nail5); this.effects |= EF_MUZZLEFLASH; Gremlin_FireNailGun(this, 4); }
+void gremlin_nail3(entity this) { set_anim(this, anim_gremlin_gfire, gremlin_nail4); this.effects |= EF_MUZZLEFLASH; Gremlin_FireNailGun(this, 4); }
+void gremlin_nail2(entity this) { set_anim(this, anim_gremlin_gfire, gremlin_nail3); this.effects |= EF_MUZZLEFLASH; Gremlin_FireNailGun(this, 4); }
+void gremlin_nail1(entity this) { set_anim(this, anim_gremlin_gfire, gremlin_nail2); this.effects |= EF_MUZZLEFLASH; Gremlin_FireNailGun(this, 4); }
 
 
 void Gremlin_FireLaserGun(entity this, float ox);
 
-void gremlin_laser7(entity this) { set_anim(this, anim_gremlin_gfire1, gremlin_run1); }
-void gremlin_laser6(entity this) { set_anim(this, anim_gremlin_gfire1, gremlin_laser7); this.effects |= EF_MUZZLEFLASH; Gremlin_FireLaserGun(this, 4); }
-void gremlin_laser5(entity this) { set_anim(this, anim_gremlin_gfire1, gremlin_laser6); this.effects |= EF_MUZZLEFLASH; Gremlin_FireLaserGun(this, 4); }
-void gremlin_laser4(entity this) { set_anim(this, anim_gremlin_gfire1, gremlin_laser5); this.effects |= EF_MUZZLEFLASH; Gremlin_FireLaserGun(this, 4); }
-void gremlin_laser3(entity this) { set_anim(this, anim_gremlin_gfire1, gremlin_laser4); this.effects |= EF_MUZZLEFLASH; Gremlin_FireLaserGun(this, 4); }
-void gremlin_laser2(entity this) { set_anim(this, anim_gremlin_gfire1, gremlin_laser3); this.effects |= EF_MUZZLEFLASH; Gremlin_FireLaserGun(this, 4); }
-void gremlin_laser1(entity this) { set_anim(this, anim_gremlin_gfire1, gremlin_laser2); this.effects |= EF_MUZZLEFLASH; Gremlin_FireLaserGun(this, 4); }
+void gremlin_laser7(entity this) { set_anim(this, anim_gremlin_gfire, gremlin_run1); }
+void gremlin_laser6(entity this) { set_anim(this, anim_gremlin_gfire, gremlin_laser7); this.effects |= EF_MUZZLEFLASH; Gremlin_FireLaserGun(this, 4); }
+void gremlin_laser5(entity this) { set_anim(this, anim_gremlin_gfire, gremlin_laser6); this.effects |= EF_MUZZLEFLASH; Gremlin_FireLaserGun(this, 4); }
+void gremlin_laser4(entity this) { set_anim(this, anim_gremlin_gfire, gremlin_laser5); this.effects |= EF_MUZZLEFLASH; Gremlin_FireLaserGun(this, 4); }
+void gremlin_laser3(entity this) { set_anim(this, anim_gremlin_gfire, gremlin_laser4); this.effects |= EF_MUZZLEFLASH; Gremlin_FireLaserGun(this, 4); }
+void gremlin_laser2(entity this) { set_anim(this, anim_gremlin_gfire, gremlin_laser3); this.effects |= EF_MUZZLEFLASH; Gremlin_FireLaserGun(this, 4); }
+void gremlin_laser1(entity this) { set_anim(this, anim_gremlin_gfire, gremlin_laser2); this.effects |= EF_MUZZLEFLASH; Gremlin_FireLaserGun(this, 4); }
 
 //============================================================================
 
 void Gremlin_FireLightningGun(entity this);
-void gremlin_light5(entity this) { set_anim(this, anim_gremlin_gfire1, gremlin_run1); }
-void gremlin_light4(entity this) { set_anim(this, anim_gremlin_gfire1, gremlin_light5); Gremlin_FireLightningGun(this); }
-void gremlin_light3(entity this) { set_anim(this, anim_gremlin_gfire1, gremlin_light4); Gremlin_FireLightningGun(this); }
-void gremlin_light2(entity this) { set_anim(this, anim_gremlin_gfire1, gremlin_light3); Gremlin_FireLightningGun(this); }
-void gremlin_light1(entity this) { set_anim(this, anim_gremlin_gfire1, gremlin_light2); Gremlin_FireLightningGun(this); }
+void gremlin_light5(entity this) { set_anim(this, anim_gremlin_gfire, gremlin_run1); }
+void gremlin_light4(entity this) { set_anim(this, anim_gremlin_gfire, gremlin_light5); Gremlin_FireLightningGun(this); }
+void gremlin_light3(entity this) { set_anim(this, anim_gremlin_gfire, gremlin_light4); Gremlin_FireLightningGun(this); }
+void gremlin_light2(entity this) { set_anim(this, anim_gremlin_gfire, gremlin_light3); Gremlin_FireLightningGun(this); }
+void gremlin_light1(entity this) { set_anim(this, anim_gremlin_gfire, gremlin_light2); Gremlin_FireLightningGun(this); }
 
 //============================================================================
 
-void gremlin_rocket6(entity this) { set_anim(this, anim_gremlin_gfire6, gremlin_run1); }
-void gremlin_rocket5(entity this) { set_anim(this, anim_gremlin_gfire5, gremlin_rocket6); }
-void gremlin_rocket4(entity this) { set_anim(this, anim_gremlin_gfire4, gremlin_rocket5); }
-void gremlin_rocket3(entity this) { set_anim(this, anim_gremlin_gfire3, gremlin_rocket4); }
-void gremlin_rocket2(entity this) { set_anim(this, anim_gremlin_gfire2, gremlin_rocket3); }
-void gremlin_rocket1(entity this) { set_anim(this, anim_gremlin_gfire1, gremlin_rocket2); this.effects |= EF_MUZZLEFLASH; }
+void gremlin_rocket6(entity this) { set_animofs(this, anim_gremlin_gfire, 6, gremlin_run1); }
+void gremlin_rocket5(entity this) { set_animofs(this, anim_gremlin_gfire, 5, gremlin_rocket6); }
+void gremlin_rocket4(entity this) { set_animofs(this, anim_gremlin_gfire, 4, gremlin_rocket5); }
+void gremlin_rocket3(entity this) { set_animofs(this, anim_gremlin_gfire, 3, gremlin_rocket4); }
+void gremlin_rocket2(entity this) { set_animofs(this, anim_gremlin_gfire, 2, gremlin_rocket3); }
+void gremlin_rocket1(entity this) { set_animofs(this, anim_gremlin_gfire, 1, gremlin_rocket2); this.effects |= EF_MUZZLEFLASH; }
 
-void gremlin_lunge11(entity this) { set_anim(this, anim_gremlin_lunge11, gremlin_run1); ai_charge(this, 0); }
-void gremlin_lunge10(entity this) { set_anim(this, anim_gremlin_lunge10, gremlin_lunge11); ai_charge(this, 0); }
-void gremlin_lunge9(entity this) { set_anim(this, anim_gremlin_lunge9, gremlin_lunge10); ai_charge(this, 0); }
-void gremlin_lunge8(entity this) { set_anim(this, anim_gremlin_lunge8, gremlin_lunge9); ai_charge(this, 0); Gremlin_Melee(this, 0); }
-void gremlin_lunge7(entity this) { set_anim(this, anim_gremlin_lunge7, gremlin_lunge8); ai_charge(this, 15); }
-void gremlin_lunge6(entity this) { set_anim(this, anim_gremlin_lunge6, gremlin_lunge7); ai_charge(this, 0); }
-void gremlin_lunge5(entity this) { set_anim(this, anim_gremlin_lunge5, gremlin_lunge6); ai_charge(this, 0); }
-void gremlin_lunge4(entity this) { set_anim(this, anim_gremlin_lunge4, gremlin_lunge5); ai_charge(this, 0); }
-void gremlin_lunge3(entity this) { set_anim(this, anim_gremlin_lunge3, gremlin_lunge4); ai_charge(this, 0); }
-void gremlin_lunge2(entity this) { set_anim(this, anim_gremlin_lunge2, gremlin_lunge3); ai_charge(this, 0); }
-void gremlin_lunge1(entity this) { set_anim(this, anim_gremlin_lunge1, gremlin_lunge2); ai_charge(this, 0); }
+void gremlin_lunge11(entity this) { set_animofs(this, anim_gremlin_lunge, 11, gremlin_run1); ai_charge(this, 0); }
+void gremlin_lunge10(entity this) { set_animofs(this, anim_gremlin_lunge, 10, gremlin_lunge11); ai_charge(this, 0); }
+void gremlin_lunge9(entity this) { set_animofs(this, anim_gremlin_lunge, 9, gremlin_lunge10); ai_charge(this, 0); }
+void gremlin_lunge8(entity this) { set_animofs(this, anim_gremlin_lunge, 8, gremlin_lunge9); ai_charge(this, 0); Gremlin_Melee(this, 0); }
+void gremlin_lunge7(entity this) { set_animofs(this, anim_gremlin_lunge, 7, gremlin_lunge8); ai_charge(this, 15); }
+void gremlin_lunge6(entity this) { set_animofs(this, anim_gremlin_lunge, 6, gremlin_lunge7); ai_charge(this, 0); }
+void gremlin_lunge5(entity this) { set_animofs(this, anim_gremlin_lunge, 5, gremlin_lunge6); ai_charge(this, 0); }
+void gremlin_lunge4(entity this) { set_animofs(this, anim_gremlin_lunge, 4, gremlin_lunge5); ai_charge(this, 0); }
+void gremlin_lunge3(entity this) { set_animofs(this, anim_gremlin_lunge, 3, gremlin_lunge4); ai_charge(this, 0); }
+void gremlin_lunge2(entity this) { set_animofs(this, anim_gremlin_lunge, 2, gremlin_lunge3); ai_charge(this, 0); }
+void gremlin_lunge1(entity this) { set_animofs(this, anim_gremlin_lunge, 1, gremlin_lunge2); ai_charge(this, 0); }
 
-void gremlin_claw11(entity this) { set_anim(this, anim_gremlin_attk11, gremlin_run1); ai_charge(this, 0); }
-void gremlin_claw10(entity this) { set_anim(this, anim_gremlin_attk10, gremlin_claw11); ai_charge(this, 0); }
-void gremlin_claw9(entity this) { set_anim(this, anim_gremlin_attk9, gremlin_claw10); ai_charge(this, 0); }
-void gremlin_claw8(entity this) { set_anim(this, anim_gremlin_attk8, gremlin_claw9); ai_charge(this, 0); }
-void gremlin_claw7(entity this) { set_anim(this, anim_gremlin_attk7, gremlin_claw8); ai_charge(this, 15); }
-void gremlin_claw6(entity this) { set_anim(this, anim_gremlin_attk6, gremlin_claw7); ai_charge(this, 0); Gremlin_Melee(this, 200); }
-void gremlin_claw5(entity this) { set_anim(this, anim_gremlin_attk5, gremlin_claw6); ai_charge(this, 0); }
-void gremlin_claw4(entity this) { set_anim(this, anim_gremlin_attk4, gremlin_claw5); ai_charge(this, 0); }
-void gremlin_claw3(entity this) { set_anim(this, anim_gremlin_attk3, gremlin_claw4); ai_charge(this, 0); }
-void gremlin_claw2(entity this) { set_anim(this, anim_gremlin_attk2, gremlin_claw3); ai_charge(this, 0); }
-void gremlin_claw1(entity this) { set_anim(this, anim_gremlin_attk1, gremlin_claw2); ai_charge(this, 0); }
+void gremlin_claw11(entity this) { set_animofs(this, anim_gremlin_attk, 11, gremlin_run1); ai_charge(this, 0); }
+void gremlin_claw10(entity this) { set_animofs(this, anim_gremlin_attk, 10, gremlin_claw11); ai_charge(this, 0); }
+void gremlin_claw9(entity this) { set_animofs(this, anim_gremlin_attk, 9, gremlin_claw10); ai_charge(this, 0); }
+void gremlin_claw8(entity this) { set_animofs(this, anim_gremlin_attk, 8, gremlin_claw9); ai_charge(this, 0); }
+void gremlin_claw7(entity this) { set_animofs(this, anim_gremlin_attk, 7, gremlin_claw8); ai_charge(this, 15); }
+void gremlin_claw6(entity this) { set_animofs(this, anim_gremlin_attk, 6, gremlin_claw7); ai_charge(this, 0); Gremlin_Melee(this, 200); }
+void gremlin_claw5(entity this) { set_animofs(this, anim_gremlin_attk, 5, gremlin_claw6); ai_charge(this, 0); }
+void gremlin_claw4(entity this) { set_animofs(this, anim_gremlin_attk, 4, gremlin_claw5); ai_charge(this, 0); }
+void gremlin_claw3(entity this) { set_animofs(this, anim_gremlin_attk, 3, gremlin_claw4); ai_charge(this, 0); }
+void gremlin_claw2(entity this) { set_animofs(this, anim_gremlin_attk, 2, gremlin_claw3); ai_charge(this, 0); }
+void gremlin_claw1(entity this) { set_animofs(this, anim_gremlin_attk, 1, gremlin_claw2); ai_charge(this, 0); }
 
 void gremlin_gorge1(entity this);
-void gremlin_gorge13(entity this) { set_anim(this, anim_gremlin_maul13, gremlin_gorge1); ai_charge(this, 0); }
-void gremlin_gorge12(entity this) { set_anim(this, anim_gremlin_maul12, gremlin_gorge13); ai_charge(this, 0); }
-void gremlin_gorge11(entity this) { set_anim(this, anim_gremlin_maul11, gremlin_gorge12); ai_charge(this, 0); }
-void gremlin_gorge10(entity this) { set_anim(this, anim_gremlin_maul10, gremlin_gorge11); ai_charge(this, 0); }
-void gremlin_gorge9(entity this) { set_anim(this, anim_gremlin_maul9, gremlin_gorge10); ai_charge(this, 0); }
-void gremlin_gorge8(entity this) { set_anim(this, anim_gremlin_maul8, gremlin_gorge9); ai_charge(this, 0); Gremlin_Gorge(this, -200); }
-void gremlin_gorge7(entity this) { set_anim(this, anim_gremlin_maul7, gremlin_gorge8); ai_charge(this, 0); }
-void gremlin_gorge6(entity this) { set_anim(this, anim_gremlin_maul6, gremlin_gorge7); ai_charge(this, 0); Gremlin_Gorge(this, 200); }
-void gremlin_gorge5(entity this) { set_anim(this, anim_gremlin_maul5, gremlin_gorge6); ai_charge(this, 0); }
-void gremlin_gorge4(entity this) { set_anim(this, anim_gremlin_maul4, gremlin_gorge5); ai_charge(this, 0); }
-void gremlin_gorge3(entity this) { set_anim(this, anim_gremlin_maul3, gremlin_gorge4); ai_charge(this, 2); }
-void gremlin_gorge2(entity this) { set_anim(this, anim_gremlin_maul2, gremlin_gorge3); ai_charge(this, 1); }
-void gremlin_gorge1(entity this) { set_anim(this, anim_gremlin_maul1, gremlin_gorge2); ai_charge(this, 1); }
+void gremlin_gorge13(entity this) { set_animofs(this, anim_gremlin_maul, 13, gremlin_gorge1); ai_charge(this, 0); }
+void gremlin_gorge12(entity this) { set_animofs(this, anim_gremlin_maul, 12, gremlin_gorge13); ai_charge(this, 0); }
+void gremlin_gorge11(entity this) { set_animofs(this, anim_gremlin_maul, 11, gremlin_gorge12); ai_charge(this, 0); }
+void gremlin_gorge10(entity this) { set_animofs(this, anim_gremlin_maul, 10, gremlin_gorge11); ai_charge(this, 0); }
+void gremlin_gorge9(entity this) { set_animofs(this, anim_gremlin_maul, 9, gremlin_gorge10); ai_charge(this, 0); }
+void gremlin_gorge8(entity this) { set_animofs(this, anim_gremlin_maul, 8, gremlin_gorge9); ai_charge(this, 0); Gremlin_Gorge(this, -200); }
+void gremlin_gorge7(entity this) { set_animofs(this, anim_gremlin_maul, 7, gremlin_gorge8); ai_charge(this, 0); }
+void gremlin_gorge6(entity this) { set_animofs(this, anim_gremlin_maul, 6, gremlin_gorge7); ai_charge(this, 0); Gremlin_Gorge(this, 200); }
+void gremlin_gorge5(entity this) { set_animofs(this, anim_gremlin_maul, 5, gremlin_gorge6); ai_charge(this, 0); }
+void gremlin_gorge4(entity this) { set_animofs(this, anim_gremlin_maul, 4, gremlin_gorge5); ai_charge(this, 0); }
+void gremlin_gorge3(entity this) { set_animofs(this, anim_gremlin_maul, 3, gremlin_gorge4); ai_charge(this, 2); }
+void gremlin_gorge2(entity this) { set_animofs(this, anim_gremlin_maul, 2, gremlin_gorge3); ai_charge(this, 1); }
+void gremlin_gorge1(entity this) { set_animofs(this, anim_gremlin_maul, 1, gremlin_gorge2); ai_charge(this, 1); }
 
 void gremlin_look9(entity this)
 {
-	set_anim(this, anim_gremlin_look9, gremlin_run1);
+	set_animofs(this, anim_gremlin_look, 9, gremlin_run1);
 	if(this.oldenemy.health > 0)
 	{
 		this.enemy = this.oldenemy;
@@ -821,19 +839,19 @@ void gremlin_look9(entity this)
 			this.th_stand(this);
 	}
 }
-void gremlin_look8(entity this) { set_anim(this, anim_gremlin_look8, gremlin_look9); this.nextthink = time + 0.2; }
-void gremlin_look7(entity this) { set_anim(this, anim_gremlin_look7, gremlin_look8); this.nextthink = time + 0.2; }
-void gremlin_look6(entity this) { set_anim(this, anim_gremlin_look6, gremlin_look7); this.nextthink = time + 0.2; }
-void gremlin_look5(entity this) { set_anim(this, anim_gremlin_look5, gremlin_look6); this.nextthink = time + 0.2; }
-void gremlin_look4(entity this) { set_anim(this, anim_gremlin_look4, gremlin_look5); this.nextthink = time + 0.2; }
-void gremlin_look3(entity this) { set_anim(this, anim_gremlin_look3, gremlin_look4); this.nextthink = time + 0.2; }
-void gremlin_look2(entity this) { set_anim(this, anim_gremlin_look2, gremlin_look3); this.nextthink = time + 0.2; }
-void gremlin_look1(entity this) { set_anim(this, anim_gremlin_look1, gremlin_look2); this.nextthink = time + 0.2; }
+void gremlin_look8(entity this) { set_animofs(this, anim_gremlin_look, 8, gremlin_look9); this.nextthink = time + 0.2; }
+void gremlin_look7(entity this) { set_animofs(this, anim_gremlin_look, 7, gremlin_look8); this.nextthink = time + 0.2; }
+void gremlin_look6(entity this) { set_animofs(this, anim_gremlin_look, 6, gremlin_look7); this.nextthink = time + 0.2; }
+void gremlin_look5(entity this) { set_animofs(this, anim_gremlin_look, 5, gremlin_look6); this.nextthink = time + 0.2; }
+void gremlin_look4(entity this) { set_animofs(this, anim_gremlin_look, 4, gremlin_look5); this.nextthink = time + 0.2; }
+void gremlin_look3(entity this) { set_animofs(this, anim_gremlin_look, 3, gremlin_look4); this.nextthink = time + 0.2; }
+void gremlin_look2(entity this) { set_animofs(this, anim_gremlin_look, 2, gremlin_look3); this.nextthink = time + 0.2; }
+void gremlin_look1(entity this) { set_animofs(this, anim_gremlin_look, 1, gremlin_look2); this.nextthink = time + 0.2; }
 
 void GremlinDropBackpack(entity this);
 void gremlin_glook20(entity this)
 {
-	set_anim(this, anim_gremlin_glook20, gremlin_glook20);
+	set_animofs(this, anim_gremlin_glook, 20, gremlin_glook20);
 	GremlinDropBackpack(this);
 	this.stoleweapon = false;
 	if(this.oldenemy.health > 0)
@@ -849,34 +867,34 @@ void gremlin_glook20(entity this)
 			this.th_stand(this);
 	}
 }
-void gremlin_glook19(entity this) { set_anim(this, anim_gremlin_glook19, gremlin_glook20); }
-void gremlin_glook18(entity this) { set_anim(this, anim_gremlin_glook18, gremlin_glook19); }
-void gremlin_glook17(entity this) { set_anim(this, anim_gremlin_glook17, gremlin_glook18); }
-void gremlin_glook16(entity this) { set_anim(this, anim_gremlin_glook16, gremlin_glook17); }
-void gremlin_glook15(entity this) { set_anim(this, anim_gremlin_glook15, gremlin_glook16); }
-void gremlin_glook14(entity this) { set_anim(this, anim_gremlin_glook14, gremlin_glook15); }
-void gremlin_glook13(entity this) { set_anim(this, anim_gremlin_glook13, gremlin_glook14); }
-void gremlin_glook12(entity this) { set_anim(this, anim_gremlin_glook12, gremlin_glook13); }
-void gremlin_glook11(entity this) { set_anim(this, anim_gremlin_glook11, gremlin_glook12); }
-void gremlin_glook10(entity this) { set_anim(this, anim_gremlin_glook10, gremlin_glook11); }
-void gremlin_glook9(entity this) { set_anim(this, anim_gremlin_glook9, gremlin_glook10); }
-void gremlin_glook8(entity this) { set_anim(this, anim_gremlin_glook8, gremlin_glook9); }
-void gremlin_glook7(entity this) { set_anim(this, anim_gremlin_glook7, gremlin_glook8); }
-void gremlin_glook6(entity this) { set_anim(this, anim_gremlin_glook6, gremlin_glook7); }
-void gremlin_glook5(entity this) { set_anim(this, anim_gremlin_glook5, gremlin_glook6); }
-void gremlin_glook4(entity this) { set_anim(this, anim_gremlin_glook4, gremlin_glook5); }
-void gremlin_glook3(entity this) { set_anim(this, anim_gremlin_glook3, gremlin_glook4); }
-void gremlin_glook2(entity this) { set_anim(this, anim_gremlin_glook2, gremlin_glook3); }
-void gremlin_glook1(entity this) { set_anim(this, anim_gremlin_glook1, gremlin_glook2); }
+void gremlin_glook19(entity this) { set_animofs(this, anim_gremlin_glook, 19, gremlin_glook20); }
+void gremlin_glook18(entity this) { set_animofs(this, anim_gremlin_glook, 18, gremlin_glook19); }
+void gremlin_glook17(entity this) { set_animofs(this, anim_gremlin_glook, 17, gremlin_glook18); }
+void gremlin_glook16(entity this) { set_animofs(this, anim_gremlin_glook, 16, gremlin_glook17); }
+void gremlin_glook15(entity this) { set_animofs(this, anim_gremlin_glook, 15, gremlin_glook16); }
+void gremlin_glook14(entity this) { set_animofs(this, anim_gremlin_glook, 14, gremlin_glook15); }
+void gremlin_glook13(entity this) { set_animofs(this, anim_gremlin_glook, 13, gremlin_glook14); }
+void gremlin_glook12(entity this) { set_animofs(this, anim_gremlin_glook, 12, gremlin_glook13); }
+void gremlin_glook11(entity this) { set_animofs(this, anim_gremlin_glook, 11, gremlin_glook12); }
+void gremlin_glook10(entity this) { set_animofs(this, anim_gremlin_glook, 10, gremlin_glook11); }
+void gremlin_glook9(entity this) { set_animofs(this, anim_gremlin_glook, 9, gremlin_glook10); }
+void gremlin_glook8(entity this) { set_animofs(this, anim_gremlin_glook, 8, gremlin_glook9); }
+void gremlin_glook7(entity this) { set_animofs(this, anim_gremlin_glook, 7, gremlin_glook8); }
+void gremlin_glook6(entity this) { set_animofs(this, anim_gremlin_glook, 6, gremlin_glook7); }
+void gremlin_glook5(entity this) { set_animofs(this, anim_gremlin_glook, 5, gremlin_glook6); }
+void gremlin_glook4(entity this) { set_animofs(this, anim_gremlin_glook, 4, gremlin_glook5); }
+void gremlin_glook3(entity this) { set_animofs(this, anim_gremlin_glook, 3, gremlin_glook4); }
+void gremlin_glook2(entity this) { set_animofs(this, anim_gremlin_glook, 2, gremlin_glook3); }
+void gremlin_glook1(entity this) { set_animofs(this, anim_gremlin_glook, 1, gremlin_glook2); }
 
-void gremlin_pain4(entity this) { set_anim(this, anim_gremlin_pain4, gremlin_run1); }
-void gremlin_pain3(entity this) { set_anim(this, anim_gremlin_pain3, gremlin_pain4); ai_back(this, 2); }
-void gremlin_pain2(entity this) { set_anim(this, anim_gremlin_pain2, gremlin_pain3); ai_back(this, 4); }
-void gremlin_pain1(entity this) { set_anim(this, anim_gremlin_pain1, gremlin_pain2); ai_back(this, 4); }
+void gremlin_pain4(entity this) { set_animofs(this, anim_gremlin_pain, 4, gremlin_run1); }
+void gremlin_pain3(entity this) { set_animofs(this, anim_gremlin_pain, 3, gremlin_pain4); ai_back(this, 2); }
+void gremlin_pain2(entity this) { set_animofs(this, anim_gremlin_pain, 2, gremlin_pain3); ai_back(this, 4); }
+void gremlin_pain1(entity this) { set_animofs(this, anim_gremlin_pain, 1, gremlin_pain2); ai_back(this, 4); }
 
-void gremlin_gunpain3(entity this) { set_anim(this, anim_gremlin_gpain3, gremlin_run1); }
-void gremlin_gunpain2(entity this) { set_anim(this, anim_gremlin_gpain2, gremlin_gunpain3); ai_back(this, 2); }
-void gremlin_gunpain1(entity this) { set_anim(this, anim_gremlin_gpain1, gremlin_gunpain2); ai_back(this, 4); }
+void gremlin_gunpain3(entity this) { set_animofs(this, anim_gremlin_gpain, 3, gremlin_run1); }
+void gremlin_gunpain2(entity this) { set_animofs(this, anim_gremlin_gpain, 2, gremlin_gunpain3); ai_back(this, 2); }
+void gremlin_gunpain1(entity this) { set_animofs(this, anim_gremlin_gpain, 1, gremlin_gunpain2); ai_back(this, 4); }
 
 void gremlin_pain(entity this, entity attacker, float damage)
 {
@@ -910,25 +928,25 @@ void gremlin_pain(entity this, entity attacker, float damage)
 		gremlin_pain1(this);
 }
 
-void gremlin_spawn6(entity this) { set_anim(this, anim_gremlin_spawn6, gremlin_run1); this.th_pain = gremlin_pain; }
-void gremlin_spawn5(entity this) { set_anim(this, anim_gremlin_spawn5, gremlin_spawn6); this.nextthink = time + 0.3; }
-void gremlin_spawn4(entity this) { set_anim(this, anim_gremlin_spawn4, gremlin_spawn5); this.nextthink = time + 0.3; }
-void gremlin_spawn3(entity this) { set_anim(this, anim_gremlin_spawn3, gremlin_spawn4); this.nextthink = time + 0.3; }
-void gremlin_spawn2(entity this) { set_anim(this, anim_gremlin_spawn2, gremlin_spawn3); this.nextthink = time + 0.3; }
-void gremlin_spawn1(entity this) { set_anim(this, anim_gremlin_spawn1, gremlin_spawn2); this.nextthink = time + 0.3; this.th_pain = func_null; }
+void gremlin_spawn6(entity this) { set_animofs(this, anim_gremlin_spawn, 6, gremlin_run1); this.th_pain = gremlin_pain; }
+void gremlin_spawn5(entity this) { set_animofs(this, anim_gremlin_spawn, 5, gremlin_spawn6); this.nextthink = time + 0.3; }
+void gremlin_spawn4(entity this) { set_animofs(this, anim_gremlin_spawn, 4, gremlin_spawn5); this.nextthink = time + 0.3; }
+void gremlin_spawn3(entity this) { set_animofs(this, anim_gremlin_spawn, 3, gremlin_spawn4); this.nextthink = time + 0.3; }
+void gremlin_spawn2(entity this) { set_animofs(this, anim_gremlin_spawn, 2, gremlin_spawn3); this.nextthink = time + 0.3; }
+void gremlin_spawn1(entity this) { set_animofs(this, anim_gremlin_spawn, 1, gremlin_spawn2); this.nextthink = time + 0.3; this.th_pain = func_null; }
 
-void gremlin_die12(entity this) { set_anim(this, anim_gremlin_death12, gremlin_die12); }
-void gremlin_die11(entity this) { set_anim(this, anim_gremlin_death11, gremlin_die12); ai_forward(this, 2); }
-void gremlin_die10(entity this) { set_anim(this, anim_gremlin_death10, gremlin_die11); ai_forward(this, 1); }
-void gremlin_die9(entity this) { set_anim(this, anim_gremlin_death9, gremlin_die10); ai_forward(this, 2); }
-void gremlin_die8(entity this) { set_anim(this, anim_gremlin_death8, gremlin_die9); ai_forward(this, 1); }
-void gremlin_die7(entity this) { set_anim(this, anim_gremlin_death7, gremlin_die8); ai_forward(this, 2); }
-void gremlin_die6(entity this) { set_anim(this, anim_gremlin_death6, gremlin_die7); this.solid = SOLID_NOT; }
-void gremlin_die5(entity this) { set_anim(this, anim_gremlin_death5, gremlin_die6); ai_forward(this, 1); }
-void gremlin_die4(entity this) { set_anim(this, anim_gremlin_death4, gremlin_die5); ai_forward(this, 2); }
-void gremlin_die3(entity this) { set_anim(this, anim_gremlin_death3, gremlin_die4); ai_forward(this, 1); }
-void gremlin_die2(entity this) { set_anim(this, anim_gremlin_death2, gremlin_die3); ai_forward(this, 2); }
-void gremlin_die1(entity this) { set_anim(this, anim_gremlin_death1, gremlin_die2); _sound(this, CHAN_VOICE, "grem/death.wav", 1, ATTN_NORM); }
+void gremlin_die12(entity this) { set_animofs(this, anim_gremlin_death, 12, gremlin_die12); }
+void gremlin_die11(entity this) { set_animofs(this, anim_gremlin_death, 11, gremlin_die12); ai_forward(this, 2); }
+void gremlin_die10(entity this) { set_animofs(this, anim_gremlin_death, 10, gremlin_die11); ai_forward(this, 1); }
+void gremlin_die9(entity this) { set_animofs(this, anim_gremlin_death, 9, gremlin_die10); ai_forward(this, 2); }
+void gremlin_die8(entity this) { set_animofs(this, anim_gremlin_death, 8, gremlin_die9); ai_forward(this, 1); }
+void gremlin_die7(entity this) { set_animofs(this, anim_gremlin_death, 7, gremlin_die8); ai_forward(this, 2); }
+void gremlin_die6(entity this) { set_animofs(this, anim_gremlin_death, 6, gremlin_die7); this.solid = SOLID_NOT; }
+void gremlin_die5(entity this) { set_animofs(this, anim_gremlin_death, 5, gremlin_die6); ai_forward(this, 1); }
+void gremlin_die4(entity this) { set_animofs(this, anim_gremlin_death, 4, gremlin_die5); ai_forward(this, 2); }
+void gremlin_die3(entity this) { set_animofs(this, anim_gremlin_death, 3, gremlin_die4); ai_forward(this, 1); }
+void gremlin_die2(entity this) { set_animofs(this, anim_gremlin_death, 2, gremlin_die3); ai_forward(this, 2); }
+void gremlin_die1(entity this) { set_animofs(this, anim_gremlin_death, 1, gremlin_die2); _sound(this, CHAN_VOICE, "grem/death.wav", 1, ATTN_NORM); }
 
 void gremlin_gib(entity this)
 {
@@ -939,16 +957,16 @@ void gremlin_gib(entity this)
 	ThrowGib(this, "progs/gib1.mdl", -35);
 }
 
-void gremlin_flip8(entity this) { set_anim(this, anim_gremlin_flip8, gremlin_flip8); this.solid = SOLID_NOT; }
-void gremlin_flip7(entity this) { set_anim(this, anim_gremlin_flip7, gremlin_gib); this.nextthink = time + 3; } // if stuck for 3 seconds, jump again
-void gremlin_flip6(entity this) { set_anim(this, anim_gremlin_flip6, gremlin_flip7); settouch(this, Gremlin_FlipTouch); }
-void gremlin_flip5(entity this) { set_anim(this, anim_gremlin_flip5, gremlin_flip6); }
-void gremlin_flip4(entity this) { set_anim(this, anim_gremlin_flip4, gremlin_flip5); }
-void gremlin_flip3(entity this) { set_anim(this, anim_gremlin_flip3, gremlin_flip4); }
-void gremlin_flip2(entity this) { set_anim(this, anim_gremlin_flip2, gremlin_flip3); ai_face(this); }
+void gremlin_flip8(entity this) { set_animofs(this, anim_gremlin_flip, 8, gremlin_flip8); this.solid = SOLID_NOT; }
+void gremlin_flip7(entity this) { set_animofs(this, anim_gremlin_flip, 7, gremlin_gib); this.nextthink = time + 3; } // if stuck for 3 seconds, jump again
+void gremlin_flip6(entity this) { set_animofs(this, anim_gremlin_flip, 6, gremlin_flip7); settouch(this, Gremlin_FlipTouch); }
+void gremlin_flip5(entity this) { set_animofs(this, anim_gremlin_flip, 5, gremlin_flip6); }
+void gremlin_flip4(entity this) { set_animofs(this, anim_gremlin_flip, 4, gremlin_flip5); }
+void gremlin_flip3(entity this) { set_animofs(this, anim_gremlin_flip, 3, gremlin_flip4); }
+void gremlin_flip2(entity this) { set_animofs(this, anim_gremlin_flip, 2, gremlin_flip3); ai_face(this); }
 void gremlin_flip1(entity this)
 {
-	set_anim(this, anim_gremlin_flip1, gremlin_flip2);
+	set_animofs(this, anim_gremlin_flip, 1, gremlin_flip2);
 	ai_face(this);
 	makevectors (this.angles);
 	this.origin_z = this.origin_z + 1;

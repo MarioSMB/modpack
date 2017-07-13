@@ -537,7 +537,7 @@ void t_followtarget(entity this, entity toucher)
 				FoundTarget(toucher);
 				return;
 			}
-			toucher.pausetime = time + 999999;
+			toucher.pausetime = -1;
 			toucher.th_stand(toucher);
 		}
 	}

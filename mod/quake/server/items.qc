@@ -1568,7 +1568,7 @@ void BackpackTouch(entity this, entity toucher)
 	if(theitems != "")
 		sprint(toucher, strcat("You get ", ((wepmsg != "") ? strcat("the ", wepmsg, " and ") : ""), theitems, "\n"));
 	else if(wepmsg != "")
-		sprint(toucher, strcat("You get the", wepmsg, "\n"));
+		sprint(toucher, strcat("You get the ", wepmsg, "\n"));
 
 // backpack touch sound
 	_sound(toucher, CHAN_ITEM, "weapons/lock4.wav", 1, ATTN_NORM);
