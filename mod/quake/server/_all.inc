@@ -10,8 +10,6 @@
 
 //#include "defs.qc"
 #include "subs.qc"
-#include "fight.qc"
-#include "ai.qc"
 #include "combat.qc"
 #include "items.qc"
 #include "weapons.qc"

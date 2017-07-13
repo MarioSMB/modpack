@@ -14,54 +14,54 @@ void random_pick_type(entity this)
 	float randItem = random();
 	
 	settouch(this, powerup_touch);
-	setsize(self, '-16 -16 -24', '16 16 32');
+	setsize(this, '-16 -16 -24', '16 16 32');
 
 	if(randItem < 0.2)
 	{
 		settouch(this, newitems_touch);
-		self.noise = "shield/pickup.wav";
-		_setmodel(self, "progs/shield.mdl");
-		self.netname = "Power Shield";
-		self.items = IT_SHIELD;
+		this.noise = "shield/pickup.wav";
+		_setmodel(this, "progs/shield.mdl");
+		this.netname = "Power Shield";
+		this.items = IT_SHIELD;
 //		if(norandom == 1)
-//			self.classname = "item_powerup_shield";
+//			this.classname = "item_powerup_shield";
 	}
 	else if(randItem < 0.4)
 	{
 		settouch(this, newitems_touch);
-		self.noise = "belt/pickup.wav";
-		_setmodel(self, "progs/beltup.mdl");
-		self.netname = "Anti-Grav Belt";
-		self.items = IT_ANTIGRAV;
+		this.noise = "belt/pickup.wav";
+		_setmodel(this, "progs/beltup.mdl");
+		this.netname = "Anti-Grav Belt";
+		this.items = IT_ANTIGRAV;
 //		if(norandom == 1)
-//			self.classname = "item_powerup_belt";
+//			this.classname = "item_powerup_belt";
 	}
 	else if(randItem < 0.6)
 	{
-		self.noise = "items/protect.wav";
-		_setmodel(self, "progs/invulner.mdl");
-		self.netname = "Pentagram of Protection";
-		self.items = IT_INVULNERABILITY;
+		this.noise = "items/protect.wav";
+		_setmodel(this, "progs/invulner.mdl");
+		this.netname = "Pentagram of Protection";
+		this.items = IT_INVULNERABILITY;
 //		if(norandom == 1)
-//			self.classname = "item_artifact_invulnerability";
+//			this.classname = "item_artifact_invulnerability";
 	}
 	else if(randItem < 0.8)
 	{
-		self.noise = "items/inv1.wav";
-		_setmodel(self, "progs/invisibl.mdl");
-		self.netname = "Ring of Shadows";
-		self.items = IT_INVISIBILITY;
+		this.noise = "items/inv1.wav";
+		_setmodel(this, "progs/invisibl.mdl");
+		this.netname = "Ring of Shadows";
+		this.items = IT_INVISIBILITY;
 //		if(norandom == 1)
-//			self.classname = "item_artifact_invisibility";
+//			this.classname = "item_artifact_invisibility";
 	}
 	else
 	{
-		self.noise = "items/damage.wav";
-		_setmodel(self, "progs/quaddama.mdl");
-		self.netname = "Quad Damage";
-		self.items = IT_QUAD;
+		this.noise = "items/damage.wav";
+		_setmodel(this, "progs/quaddama.mdl");
+		this.netname = "Quad Damage";
+		this.items = IT_QUAD;
 //		if(norandom == 1)
-//			self.classname = "item_artifact_super_damage";
+//			this.classname = "item_artifact_super_damage";
 	}
 }
 

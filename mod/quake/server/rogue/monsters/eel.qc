@@ -22,7 +22,34 @@ const int anim_eel_eeldth8 = 13;
 const int anim_eel_eeldth9 = 14;
 const int anim_eel_eeldth10 = 15;
 
-void eel_pain1(entity this, entity attacker, float damage);
+void T_EELZap(entity inflictor, entity attacker, float damage)
+{
+	entity head = findradius(inflictor.origin, damage + 40);
+	
+	while(head)
+	{
+		if(head.takedamage)
+		{
+			vector org = head.origin + (head.mins + head.maxs) * 0.5;
+			float points = 0.5 * vlen(inflictor.origin - org);
+			if(points < 0)
+				points = 0;
+			points = damage - points;
+			if(head == attacker)
+				points = points * 0.5;
+			if(points > 0)
+			{
+				if (CanDamage(head, inflictor))
+				{	// eels take no damage from this attack
+					if (head.classname != "monster_eel" && 
+						(head.flags & FL_INWATER))					
+						T_Damage(head, inflictor, attacker, points);
+				}
+			}
+		}
+		head = head.chain;
+	}
+}
 
 void eel_pitch_change(entity this)
 {

@@ -1,4 +1,4 @@
-#include "combat.qh"
+#include "../combat.qh"
 
 /*
 
