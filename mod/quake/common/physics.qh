@@ -1,11 +1,5 @@
 #pragma once
 
-// water levels
-const int WATERLEVEL_NONE = 0;
-const int WATERLEVEL_WETFEET = 1;
-const int WATERLEVEL_SWIMMING = 2;
-const int WATERLEVEL_SUBMERGED = 3;
-
 .vector view_ofs;
 
 .float pm_frametime;
