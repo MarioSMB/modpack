@@ -1,8 +1,9 @@
+#include "main.qh"
+
 // required engine functions
 
 #define DP_CSQC_ENTITY_REMOVE_IS_B0RKED
 
-void LoadMenuSkinValues();
 void CSQC_Init()
 {
 	{
@@ -17,38 +18,11 @@ void CSQC_Init()
 	static_init();
 	static_init_late();
 	static_init_precache();
-
-	LoadMenuSkinValues();
 }
-
-#define drawpic(position, pic, size, rgb, alpha, flag) \
-	drawpic_builtin(position, pic, size, rgb, alpha, flag)
-
-#define drawstring(position, text, scale, rgb, alpha, flag) \
-	drawstring_builtin(position, text, scale, rgb, alpha, flag)
-
-#define drawcolorcodedstring(position, text, scale, alpha, flag) \
-	drawcolorcodedstring_builtin(position, text, scale, alpha, flag)
-
-#define drawcolorcodedstring2(position, text, scale, rgb, alpha, flag) \
-	drawcolorcodedstring2_builtin(position, text, scale, rgb, alpha, flag)
-
-#define drawfill(position, size, rgb, alpha, flag) \
-	drawfill_builtin(position, size, rgb, alpha, flag)
 
 string draw_currentSkin;
-void draw_cursor(vector pos, vector ofs, string img, vector col, float a)
-{
-	ofs = eX * (ofs.x * SIZE_CURSOR.x) + eY * (ofs.y * SIZE_CURSOR.y);
-	drawpic(pos - ofs, strcat(draw_currentSkin, img), SIZE_CURSOR, col, a, DRAWFLAG_NORMAL);
-}
 
-void draw_cursor_normal(vector pos, vector col, float a)
-{
-	draw_cursor(pos, OFFSET_CURSOR, "/cursor", col, a);
-}
-
-void LoadMenuSkinValues()
+STATIC_INIT_LATE(LoadMenuSkinValues)
 {
 	int fh = -1;
 	if(cvar_string("menu_skin") != "")
@@ -87,94 +61,6 @@ void LoadMenuSkinValues()
 		}
 		fclose(fh);
 	}
-}
-
-float drawtime;
-float drawframetime;
-
-int cs_project_is_b0rked;
-
-float autocvar_vid_conwidth;
-float autocvar_vid_conheight;
-
-bool autocvar_cl_enginesbar = false;
-
-void Sbar_Draw();
-void HUD_Crosshair(entity this);
-void HUD_Contents();
-void CSQC_UpdateView(entity this, float w, float h)
-{
-	++framecount;
-
-	stats_get();
-
-	CSQCPlayer_SetCamera();
-
-	ticrate = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
-
-	if(drawtime == 0)
-		drawframetime = 0.01666667; // when we don't know fps yet, we assume 60fps
-	else
-		drawframetime = bound(0.000001, time - drawtime, 1);
-	drawtime = time;
-
-	// ALWAYS Clear Current Scene First
-	clearscene();
-
-	// Assign Standard Viewflags
-	// Draw the World (and sky)
-	setproperty(VF_DRAWWORLD, 1);
-
-	// Draw the Crosshair
-	setproperty(VF_DRAWCROSSHAIR, 0);
-
-	// Draw the Engine Status Bar (the default Quake HUD)
-	setproperty(VF_DRAWENGINESBAR, autocvar_cl_enginesbar);
-
-	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
-	renderscene();
-
-	// now switch to 2D drawing mode by calling a 2D drawing function
-	// then polygon drawing will draw as 2D stuff, and NOT get queued until the
-	// next R_RenderScene call
-	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
-
-	HUD_Contents();
-
-	Sbar_Draw();
-	HUD_Crosshair(this);
-
-	// we must do this check AFTER a frame was rendered, or it won't work
-	if(cs_project_is_b0rked == 0)
-	{
-		string w0, h0;
-		w0 = ftos(autocvar_vid_conwidth);
-		h0 = ftos(autocvar_vid_conheight);
-		//setproperty(VF_VIEWPORT, '0 0 0', '640 480 0');
-		//setproperty(VF_FOV, '90 90 0');
-		setproperty(VF_ORIGIN, '0 0 0');
-		setproperty(VF_ANGLES, '0 0 0');
-		setproperty(VF_PERSPECTIVE, 1);
-		makevectors('0 0 0');
-		vector v1, v2;
-		cvar_set("vid_conwidth", "800");
-		cvar_set("vid_conheight", "600");
-		v1 = cs_project(v_forward);
-		cvar_set("vid_conwidth", "640");
-		cvar_set("vid_conheight", "480");
-		v2 = cs_project(v_forward);
-		if(v1 == v2)
-			cs_project_is_b0rked = 1;
-		else
-			cs_project_is_b0rked = -1;
-		cvar_set("vid_conwidth", w0);
-		cvar_set("vid_conheight", h0);
-	}
-
-	if(intermission && !completed_time)
-		completed_time = time;
-
-	IL_ENDFRAME();
 }
 
 bool CSQC_InputEvent(int inputType, float nPrimary, float nSecondary)

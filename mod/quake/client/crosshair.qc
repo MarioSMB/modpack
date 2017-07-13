@@ -31,6 +31,17 @@ float wcross_resolution_goal_prev, wcross_resolution_goal_prev_prev;
 float wcross_name_changestarttime, wcross_name_changedonetime;
 float wcross_name_alpha_goal_prev, wcross_name_alpha_goal_prev_prev;
 
+void draw_cursor(vector pos, vector ofs, string img, vector col, float a)
+{
+	ofs = eX * (ofs.x * SIZE_CURSOR.x) + eY * (ofs.y * SIZE_CURSOR.y);
+	drawpic(pos - ofs, strcat(draw_currentSkin, img), SIZE_CURSOR, col, a, DRAWFLAG_NORMAL);
+}
+
+void draw_cursor_normal(vector pos, vector col, float a)
+{
+	draw_cursor(pos, OFFSET_CURSOR, "/cursor", col, a);
+}
+
 vector project_3d_to_2d(vector vec)
 {
 	vec = cs_project(vec);

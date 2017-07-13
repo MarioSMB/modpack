@@ -1,3 +1,5 @@
+#include "view.qh"
+
 bool autocvar_hud_contents;
 float autocvar_hud_contents_fadeintime;
 float autocvar_hud_contents_fadeouttime;
@@ -7,9 +9,6 @@ float autocvar_hud_contents_slime_alpha;
 string autocvar_hud_contents_slime_color;
 float autocvar_hud_contents_water_alpha;
 string autocvar_hud_contents_water_color;
-
-float contentavgalpha, liquidalpha_prev;
-vector liquidcolor_prev;
 
 void HUD_Contents()
 {
@@ -61,4 +60,83 @@ void HUD_Contents()
 		if(contentavgalpha)
 			drawfill('0 0 0', vec2(autocvar_vid_conwidth, autocvar_vid_conheight), liquidcolor_prev, contentavgalpha * liquidalpha_prev, DRAWFLAG_NORMAL);
 	}
+}
+
+bool autocvar_cl_enginesbar = false;
+
+void Sbar_Draw();
+void HUD_Crosshair(entity this);
+void CSQC_UpdateView(entity this, float w, float h)
+{
+	++framecount;
+
+	stats_get();
+
+	CSQCPlayer_SetCamera();
+
+	ticrate = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
+
+	if(drawtime == 0)
+		drawframetime = 0.01666667; // when we don't know fps yet, we assume 60fps
+	else
+		drawframetime = bound(0.000001, time - drawtime, 1);
+	drawtime = time;
+
+	// ALWAYS Clear Current Scene First
+	clearscene();
+
+	// Assign Standard Viewflags
+	// Draw the World (and sky)
+	setproperty(VF_DRAWWORLD, 1);
+
+	// Draw the Crosshair
+	setproperty(VF_DRAWCROSSHAIR, 0);
+
+	// Draw the Engine Status Bar (the default Quake HUD)
+	setproperty(VF_DRAWENGINESBAR, autocvar_cl_enginesbar);
+
+	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
+	renderscene();
+
+	// now switch to 2D drawing mode by calling a 2D drawing function
+	// then polygon drawing will draw as 2D stuff, and NOT get queued until the
+	// next R_RenderScene call
+	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
+
+	HUD_Contents();
+
+	Sbar_Draw();
+	HUD_Crosshair(this);
+
+	// we must do this check AFTER a frame was rendered, or it won't work
+	if(cs_project_is_b0rked == 0)
+	{
+		string w0, h0;
+		w0 = ftos(autocvar_vid_conwidth);
+		h0 = ftos(autocvar_vid_conheight);
+		//setproperty(VF_VIEWPORT, '0 0 0', '640 480 0');
+		//setproperty(VF_FOV, '90 90 0');
+		setproperty(VF_ORIGIN, '0 0 0');
+		setproperty(VF_ANGLES, '0 0 0');
+		setproperty(VF_PERSPECTIVE, 1);
+		makevectors('0 0 0');
+		vector v1, v2;
+		cvar_set("vid_conwidth", "800");
+		cvar_set("vid_conheight", "600");
+		v1 = cs_project(v_forward);
+		cvar_set("vid_conwidth", "640");
+		cvar_set("vid_conheight", "480");
+		v2 = cs_project(v_forward);
+		if(v1 == v2)
+			cs_project_is_b0rked = 1;
+		else
+			cs_project_is_b0rked = -1;
+		cvar_set("vid_conwidth", w0);
+		cvar_set("vid_conheight", h0);
+	}
+
+	if(intermission && !completed_time)
+		completed_time = time;
+
+	IL_ENDFRAME();
 }
