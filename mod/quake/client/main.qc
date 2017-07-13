@@ -180,6 +180,26 @@ void CSQC_Ent_Remove(entity this)
 	delete(this);
 }
 
+// CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
+// You must ALWAYS first acquire the temporary ID, which is sent as a byte.
+// Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
+bool CSQC_Parse_TempEntity()
+{
+	// Acquire TE ID
+	int nTEID = ReadByte();
+
+	FOREACH(TempEntities, it.m_id == nTEID, {
+		if (autocvar_developer_csqcentities)
+			LOG_INFOF("CSQC_Parse_TempEntity() nTEID=%s (%d)\n", it.netname, nTEID);
+		return it.m_read(NULL, NULL, true);
+	});
+
+	if (autocvar_developer_csqcentities)
+		LOG_INFOF("CSQC_Parse_TempEntity() with nTEID=%d\n", nTEID);
+
+	// No special logic for this temporary entity; return 0 so the engine can handle it
+	return false;
+}
 
 // optional stuff
 STATIC_INIT_LATE(fix_hud)

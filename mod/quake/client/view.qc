@@ -138,5 +138,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	if(intermission && !completed_time)
 		completed_time = time;
 
+	Net_Flush();
+
 	IL_ENDFRAME();
 }
