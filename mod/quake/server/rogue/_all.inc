@@ -17,7 +17,6 @@
 #include "random.qc"
 #include "earthq.qc"
 #include "sphere.qc"
-#include "buzzsaw.qc"
 #include "dmatch.qc"
 
 #include "ending.qc"

@@ -130,9 +130,9 @@ spawnfunc(buzzsaw)
 	if(!this.currentammo)
 		this.currentammo = 10;
 	
-	this.pain_finished = time + random()*2;
+	this.pain_finished = time + random() * 2;
 	
-	if(!this.targetname)
+	if(!this.targetname || this.targetname == "")
 	{
 		setthink(this, buzzsaw_use_think);
 		this.nextthink = time + 0.2;		
