@@ -89,6 +89,9 @@ void LoadMenuSkinValues()
 	}
 }
 
+float drawtime;
+float drawframetime;
+
 int cs_project_is_b0rked;
 
 float autocvar_vid_conwidth;
@@ -98,6 +101,7 @@ bool autocvar_cl_enginesbar = false;
 
 void Sbar_Draw();
 void HUD_Crosshair(entity this);
+void HUD_Contents();
 void CSQC_UpdateView(entity this, float w, float h)
 {
 	++framecount;
@@ -107,6 +111,12 @@ void CSQC_UpdateView(entity this, float w, float h)
 	CSQCPlayer_SetCamera();
 
 	ticrate = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
+
+	if(drawtime == 0)
+		drawframetime = 0.01666667; // when we don't know fps yet, we assume 60fps
+	else
+		drawframetime = bound(0.000001, time - drawtime, 1);
+	drawtime = time;
 
 	// ALWAYS Clear Current Scene First
 	clearscene();
@@ -128,6 +138,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// then polygon drawing will draw as 2D stuff, and NOT get queued until the
 	// next R_RenderScene call
 	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
+
+	HUD_Contents();
 
 	Sbar_Draw();
 	HUD_Crosshair(this);
