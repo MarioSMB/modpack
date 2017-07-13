@@ -1,26 +1,10 @@
-//=====================================================================
-//
-// Spawning Functions (Hipnotic)
-//
-//=====================================================================
-
-//================
-//
-// func_spawn_think
-//
-//================
+#ifdef SVQC
 
 void func_spawn_think(entity this)
 {
 	setthink(this, func_spawn_think);
 	this.nextthink = time + 1;
 }
-
-//================
-//
-// spawn_use
-//
-//================
 
 void spawn_use(entity this, entity actor, entity trigger)
 {
@@ -120,11 +104,6 @@ entity func_spawn_spawnmob(entity this, void(entity) sfunc, string class)
 	return mon;
 }
 
-//================
-//
-// func_spawn
-//
-//================
 /*QUAKED func_spawn (0 .5 .8) (-32 -32 -24) (32 32 64) big/ambush megahealth
 This will spawn a thing upon being used. The thing that
 is spawned depends upon the value of "spawnfunction".
@@ -218,11 +197,6 @@ spawnfunc(func_spawn)
 	monster.flags |= FL_NOTARGET;
 }
 
-//================
-//
-// func_spawn_small
-//
-//================
 /*QUAKED func_spawn_small (0 .5 .8) (-16 -16 -24) (16 16 40) big/ambush megahealth
 This will spawn a thing upon being used. The thing that
 is spawned depends upon the value of "spawnfunction".
@@ -240,3 +214,5 @@ spawnfunc(func_spawn_small)
 
 	spawnfunc_func_spawn(this);
 }
+
+#endif

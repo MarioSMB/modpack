@@ -145,10 +145,14 @@ spawnfunc(func_train2)
 
 	if(!this.speed)
 		this.speed = 100;
-	if(!this.target)
+	if(!this.target || this.target == "")
 		objerror(this, "func_train without a target");
 	if(!this.dmg)
 		this.dmg = 2;
+
+	if (!InitMovingBrushTrigger(this))
+		return;
+	this.effects |= EF_LOWPRECISION;
 
 	if(!this.noise)
 	{
@@ -170,15 +174,9 @@ spawnfunc(func_train2)
 	precache_sound(this.noise1);
 
 	this.cnt = 1;
-	this.solid = SOLID_BSP;
-	set_movetype(this, MOVETYPE_PUSH);
 	setblocked(this, train_blocked);
 	this.use = hip_train_use;
 	this.classname = "train2";
-
-	_setmodel(this, this.model);
-	setsize(this, this.mins, this.maxs);
-	setorigin(this, this.origin);
 
 // start trains on the second frame, to make sure their targets have had
 // a chance to spawn

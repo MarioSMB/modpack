@@ -1,3 +1,5 @@
+#ifdef SVQC
+
 // button and multiple button
 
 void button_return(entity this);
@@ -26,7 +28,8 @@ void button_return(entity this)
 }
 
 void button_blocked(entity this, entity blocker)
-{	// do nothing, just don't come all the way back out
+{
+	// do nothing, just don't come all the way back out
 }
 
 void button_fire(entity this)
@@ -80,39 +83,18 @@ When a button is touched, it moves some distance in the direction of it's angle,
 */
 spawnfunc(func_button)
 {
-	switch(this.sounds)
-	{
-		case 0:
-		{
-			precache_sound("buttons/airbut1.wav");
-			this.noise = "buttons/airbut1.wav";
-			break;
-		}
-		case 1:
-		{
-			precache_sound("buttons/switch21.wav");
-			this.noise = "buttons/switch21.wav";
-			break;
-		}
-		case 2:
-		{
-			precache_sound("buttons/switch02.wav");
-			this.noise = "buttons/switch02.wav";
-			break;
-		}
-		case 3:
-		{
-			precache_sound("buttons/switch04.wav");
-			this.noise = "buttons/switch04.wav";
-			break;
-		}
-	}
-	
 	SetMovedir(this);
 
-	set_movetype(this, MOVETYPE_PUSH);
-	this.solid = SOLID_BSP;
-	_setmodel(this, this.model);
+	if (!InitMovingBrushTrigger(this))
+		return;
+
+	switch(this.sounds)
+	{
+		case 0: this.noise = "buttons/airbut1.wav"; break;
+		case 1: this.noise = "buttons/switch21.wav"; break;
+		case 2: this.noise = "buttons/switch02.wav"; break;
+		case 3: this.noise = "buttons/switch04.wav"; break;
+	}
 
 	setblocked(this, button_blocked);
 	this.use = button_use;
@@ -133,8 +115,13 @@ spawnfunc(func_button)
 	if(!this.lip)
 		this.lip = 4;
 
+	if(this.noise != "")
+        precache_sound(this.noise);
+
 	this.state = STATE_BOTTOM;
 
 	this.pos1 = this.origin;
 	this.pos2 = this.pos1 + this.movedir*(fabs(this.movedir*this.size) - this.lip);
 }
+
+#endif

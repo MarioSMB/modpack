@@ -1,0 +1,7 @@
+#pragma once
+
+#ifdef SVQC
+spawnfunc(trigger_multiple);
+
+void multi_trigger(entity this);
+#endif

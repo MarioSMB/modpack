@@ -1,12 +1,7 @@
-/* Breakaway walls QuickC program
-	 By Jim Dose'  9/11/96
-	 Copyright (c)1996 Hipnotic Interactive, Inc.
-	 All rights reserved.
-	 Distributed (unsupported) on 3.12.97
-*/
+#ifdef SVQC
 
-const int MULTI_USE = 1;
-const int INVISIBLE = 2;
+const int MULTI_USE = BIT(0);
+const int INVISIBLE = BIT(1);
 
 void damagethreshold_killed(entity this, entity attacker)
 {
@@ -93,3 +88,5 @@ spawnfunc(func_breakawaywall)
 	setsize (this, this.mins , this.maxs);
 	this.use = breakawaywall_remove;
 }
+
+#endif

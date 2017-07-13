@@ -383,6 +383,8 @@ spawnfunc(monster_boss)
 
 entity	le1, le2;
 float lightning_end;
+void door_go_down(entity this);
+void door_go_up(entity this);
 
 void lightning_fire(entity this)
 {

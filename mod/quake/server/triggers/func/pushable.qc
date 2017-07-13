@@ -1,9 +1,4 @@
-/* Pushable walls QuickC program
-   By Jim Dose'  9/16/96
-   Copyright (c)1996 Hipnotic Interactive, Inc.
-   All rights reserved.
-   Distributed (unsupported) on 3.12.97
-*/
+#ifdef SVQC
 
 void push_use(entity this, entity actor, entity trigger)
 {
@@ -63,12 +58,14 @@ spawnfunc(func_pushable)
 	proxy.solid = SOLID_BBOX;
 
 	set_movetype(proxy, MOVETYPE_STEP);
-	proxy.origin = ( this.mins + this.maxs ) * 0.5 + '0 0 1';
+	proxy.origin = (this.mins + this.maxs) * 0.5 + '0 0 1';
 	vector newsize = ( this.maxs - this.mins ) * 0.5;
    	proxy.mins = '-1 -1 0' - newsize;
    	proxy.maxs = '1 1 -2' + newsize;
-	setsize( proxy, proxy.mins, proxy.maxs );
-	setorigin( proxy, proxy.origin );
+	setsize(proxy, proxy.mins, proxy.maxs);
+	setorigin(proxy, proxy.origin);
 	proxy.oldorigin = proxy.origin;
  	settouch(proxy, push_touch);
 }
+
+#endif

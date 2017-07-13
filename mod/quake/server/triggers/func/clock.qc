@@ -1,9 +1,4 @@
-/* Clock QuickC program
-	By Jim Dose'  11/25/96
-	Copyright (c)1996 Hipnotic Interactive, Inc.
-	All rights reserved.
-	Distributed (unsupported) on 3.12.97
-*/
+#ifdef SVQC
 
 void clock_setpos(entity this)
 {
@@ -79,3 +74,5 @@ spawnfunc(func_clock)
 
 	this.cnt = this.cnt * (this.count / 12);
 }
+
+#endif

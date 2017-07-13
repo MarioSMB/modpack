@@ -1,0 +1,28 @@
+#ifdef SVQC
+
+void trigger_decoy_touch(entity this, entity toucher)
+{
+	if(toucher.classname != "monster_decoy")
+		return;
+	settouch(this, func_null);
+	this.nextthink = time + 0.1;
+	setthink(this, SUB_Remove);
+	SUB_UseTargets(this, NULL, toucher); // TODO? doesn't set activator
+}
+
+/*QUAKED trigger_decoy_use (.5 .5 .5) ?
+ only the decoy player can trigger this
+ once triggers, all targets are used
+*/
+
+spawnfunc(trigger_decoy_use)
+{
+	if(!MP_HIPNOTIC) { delete(this); return; }
+
+	if(deathmatch) { delete(this); return; }
+
+	InitTrigger(this);
+	settouch(this, trigger_decoy_touch);
+}
+
+#endif

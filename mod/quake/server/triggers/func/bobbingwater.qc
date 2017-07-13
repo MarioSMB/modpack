@@ -1,9 +1,4 @@
-/* Water QuickC program
-	 By Jim Dose'  12/16/96
-	 Copyright (c)1996 Hipnotic Interactive, Inc.
-	 All rights reserved.
-	 Distributed (unsupported) on 3.12.97
-*/
+#ifdef SVQC
 
 void bobbingwater_think(entity this)
 {
@@ -47,3 +42,5 @@ spawnfunc(func_bobbingwater)
 	this.nextthink = time + 0.02;
 	this.ltime = time;
 }
+
+#endif

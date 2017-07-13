@@ -1,12 +1,12 @@
-.vector		finaldest, finalangle; 		//plat.qc stuff
+.vector finaldest, finalangle; 		//plat.qc stuff
 .void(entity this) think1;
 .float state;
 
-.float	delay;
-.float	wait;
-.float	lip;
-.float	speed;
-.float	sounds;
+.float delay;
+.float wait;
+.float lip;
+.float speed;
+.float sounds;
 
 .string killtarget;
 
@@ -31,6 +31,67 @@ void SetMovedir(entity this)
 	}
 	
 	this.angles = '0 0 0';
+}
+
+void ApplyMinMaxScaleAngles(entity e)
+{
+	if(e.angles.x != 0 || e.angles.z != 0 || e.avelocity.x != 0 || e.avelocity.z != 0) // "weird" rotation
+	{
+		e.maxs = '1 1 1' * vlen(
+			'1 0 0' * max(-e.mins.x, e.maxs.x) +
+			'0 1 0' * max(-e.mins.y, e.maxs.y) +
+			'0 0 1' * max(-e.mins.z, e.maxs.z)
+		);
+		e.mins = -e.maxs;
+	}
+	else if(e.angles.y != 0 || e.avelocity.y != 0) // yaw only is a bit better
+	{
+		e.maxs_x = vlen(
+			'1 0 0' * max(-e.mins.x, e.maxs.x) +
+			'0 1 0' * max(-e.mins.y, e.maxs.y)
+		);
+		e.maxs_y = e.maxs.x;
+		e.mins_x = -e.maxs.x;
+		e.mins_y = -e.maxs.x;
+	}
+	if(e.scale)
+		setsize(e, e.mins * e.scale, e.maxs * e.scale);
+	else
+		setsize(e, e.mins, e.maxs);
+}
+
+void SetBrushEntityModelNoLOD(entity this)
+{
+ 	if(this.model != "")
+ 	{
+ 		precache_model(this.model);
+		if(this.mins != '0 0 0' || this.maxs != '0 0 0')
+		{
+			vector mi = this.mins;
+			vector ma = this.maxs;
+			_setmodel(this, this.model); // no precision needed
+			setsize(this, mi, ma);
+		}
+		else
+			_setmodel(this, this.model); // no precision needed
+ 	}
+	setorigin(this, this.origin);
+	ApplyMinMaxScaleAngles(this);
+}
+
+bool InitMovingBrushTrigger(entity this)
+{
+// trigger angles are used for one-way touches.  An angle of 0 is assumed
+// to mean no restrictions, so use a yaw of 360 instead.
+	this.solid = SOLID_BSP;
+	SetBrushEntityModelNoLOD(this); // SetBrushEntityModel was here
+	set_movetype(this, MOVETYPE_PUSH);
+	if(this.modelindex == 0)
+	{
+		objerror(this, "InitMovingBrushTrigger: no brushes found!");
+		return false;
+	}
+	return true;
 }
 
 /*

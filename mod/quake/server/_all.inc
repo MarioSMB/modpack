@@ -19,15 +19,12 @@
 #include "world.qc"
 #include "client.qc"
 #include "player.qc"
-#include "doors.qc"
-#include "buttons.qc"
-#include "triggers.qc"
-#include "plats.qc"
 #include "misc.qc"
 #include "commands.qc"
 #include "chat.qc"
 
 #include "monsters/_all.inc"
+#include "triggers/include.qc"
 
 // mission packs
 #include "hipnotic/_all.inc"

@@ -1,9 +1,4 @@
-/* Exploder QuickC program
-	 By Jim Dose'  9/13/96
-	 Copyright (c)1996 Hipnotic Interactive, Inc.
-	 All rights reserved.
-	 Distributed (unsupported) on 3.12.97
-*/
+#ifdef SVQC
 
 const int USE_PARTICLES = BIT(0);
 
@@ -163,3 +158,5 @@ spawnfunc(func_multi_exploder)
 		this.wait = 0.25;
 	this.state = 0;
 }
+
+#endif
