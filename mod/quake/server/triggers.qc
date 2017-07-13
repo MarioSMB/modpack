@@ -163,7 +163,7 @@ spawnfunc(trigger_multiple)
 
 
 /*QUAKED trigger_once(.5 .5 .5) ? notouch
-Variable sized trigger. Triggers once, then removes itthis.  You must set the key "target" to the name of another object in the level that has a matching
+Variable sized trigger. Triggers once, then removes itself.  You must set the key "target" to the name of another object in the level that has a matching
 "targetname".  If "health" is set, the trigger must be killed to activate.
 If notouch is set, the trigger is only fired by other entities, not by touching.
 if "killtarget" is set, any objects that have a matching "target" will be removed when the trigger is fired.
@@ -231,13 +231,21 @@ spawnfunc(trigger_secret)
 
 void counter_use(entity this, entity actor, entity trigger)
 {
-	this.count = this.count - 1;
+	this.count -= 1;
 	if(this.count < 0)
 		return;
-	
-	if(this.count != 0)
+
+	if(this.count == 0)
 	{
 		if(IS_PLAYER(actor) && !(this.spawnflags & SPAWNFLAG_NOMESSAGE))
+			centerprint(actor, "Sequence completed!");
+
+		this.enemy = actor;
+		multi_trigger(this);
+	}
+	else
+	{
+		if(IS_PLAYER(actor) && (this.spawnflags & SPAWNFLAG_NOMESSAGE))
 		{
 			if(this.count >= 4)
 				centerprint(actor, "There are more to go...");
@@ -248,21 +256,15 @@ void counter_use(entity this, entity actor, entity trigger)
 			else
 				centerprint(actor, "Only 1 more to go...");
 		}
-		return;
 	}
-	
-	if(IS_PLAYER(actor) && !(this.spawnflags & SPAWNFLAG_NOMESSAGE))
-		centerprint(actor, "Sequence completed!");
-	this.enemy = actor;
-	multi_trigger(this);
 }
 
 /*QUAKED trigger_counter(.5 .5 .5) ? nomessage
 Acts as an intermediary for an action that takes multiple inputs.
 
-If nomessage is not set, t will print "1 more.. " etc when triggered and "sequence complete" when finished.
+If nomessage is not set, it will print "1 more.. " etc when triggered and "sequence complete" when finished.
 
-After the counter has been triggered "count" times(default 2), it will fire all of it's targets and remove itthis.
+After the counter has been triggered "count" times(default 2), it will fire all of its targets and remove itself.
 */
 spawnfunc(trigger_counter)
 {
@@ -286,33 +288,9 @@ const int PLAYER_ONLY = BIT(0);
 const int SILENT = BIT(1);
 const int CTF_ONLY = BIT(2);
 
-void play_teleport(entity this)
-{
-	string tmpstr;
-
-	float v = random() * 5;
-	if(v < 1)
-		tmpstr = "misc/r_tele1.wav";
-	else if(v < 2)
-		tmpstr = "misc/r_tele2.wav";
-	else if(v < 3)
-		tmpstr = "misc/r_tele3.wav";
-	else if(v < 4)
-		tmpstr = "misc/r_tele4.wav";
-	else
-		tmpstr = "misc/r_tele5.wav";
-
-	_sound(this, CHAN_VOICE, tmpstr, 1, ATTN_NORM);
-	delete(this);
-}
-
 void spawn_tfog(vector org)
 {
-	entity s = spawn();
-	s.origin = org;
-	s.nextthink = time + 0.2;
-	setthink(s, play_teleport);
-
+	soundat(NULL, org, CHAN_VOICE, SND(TELE_RANDOM()), 1, ATTEN_NORM);
 	te_teleport(org);
 }
 
@@ -336,9 +314,7 @@ void tdeath_touch(entity this, entity toucher)
 	}
 
 	if(toucher.health)
-	{
 		T_Damage(toucher, this, this, 50000);
-	}
 }
 
 
@@ -376,27 +352,27 @@ void teleport_touch(entity this, entity toucher)
 // put a tfog where the player was
 	spawn_tfog(toucher.origin);
 
-	entity t = find(NULL, targetname, this.target);
-	if(!t)
+	entity targ = find(NULL, targetname, this.target);
+	if(!targ)
 		objerror(this, "couldn't find target");
 		
 // spawn a tfog flash in front of the destination
-	makevectors(t.mangle);
-	vector org = t.origin + 32 * v_forward;
+	makevectors(targ.mangle);
+	vector org = targ.origin + 32 * v_forward;
 
 	spawn_tfog(org);
-	spawn_tdeath(t.origin, toucher);
+	spawn_tdeath(targ.origin, toucher);
 
 // move the player and lock him down for a little while
 	if(!toucher.health)
 	{
-		toucher.origin = t.origin;
-		toucher.velocity =(v_forward * toucher.velocity_x) +(v_forward * toucher.velocity_y);
+		toucher.origin = targ.origin;
+		toucher.velocity = (v_forward * toucher.velocity_x) + (v_forward * toucher.velocity_y);
 		return;
 	}
 
-	setorigin(toucher, t.origin);
-	toucher.angles = t.mangle;
+	setorigin(toucher, targ.origin);
+	toucher.angles = targ.mangle;
 	if(IS_PLAYER(toucher))
 	{
 		toucher.fixangle = 1;		// turn this way immediately
@@ -459,7 +435,7 @@ spawnfunc(trigger_teleport)
 	{
 		precache_sound("ambience/hum1.wav");
 		vector o = (this.mins + this.maxs) * 0.5;
-		ambientsound(o, "ambience/hum1.wav",0.5 , ATTN_STATIC);
+		ambientsound(o, "ambience/hum1.wav", 0.5, ATTN_STATIC);
 	}
 }
 
@@ -674,7 +650,7 @@ void trigger_monsterjump_touch(entity this, entity toucher)
 
 	if(MP_HIPNOTIC && this.cnt > 0)
 	{
-		this.cnt = this.cnt - 1;
+		this.cnt -= 1;
 		if(this.cnt == 0)
 		{
 			settouch(this, func_null);

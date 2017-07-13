@@ -169,13 +169,10 @@ void TeamAssists(entity targ, entity attacker)
 		// NOTE: getting CARRIER_DANGER_PROTECT_BONUS precludes getting
 		// other kinds of bonuses for defending the flag carrier, since
 		// it's worth more points
-		bprint(attacker.netname);
-		bprint(" defends ");
-		bprint(s);
-		bprint("'s flag carrier against an agressive enemy\n");
+		bprintf("%s ^7defends %s^7's flag carrier against an aggressive enemy\n", attacker.netname, s);
 	}
 
-	// Bonusus for defending the flag carrier or the flag itthis.
+	// Bonusus for defending the flag carrier or the flag itself.
 	// Extra frags are awarded if either the attacker or the target are
 	// 1. within 40 feet of a flag carrier on the same team as the attacker
 	// 2. within 40 feet of the attacker's flag

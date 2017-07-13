@@ -43,11 +43,6 @@ PRECACHE(Junk)
 
 	precache_sound("misc/talk.wav");			// talk
 	precache_sound("player/teledth1.wav");		// telefrag
-	precache_sound("misc/r_tele1.wav");		// teleport sounds
-	precache_sound("misc/r_tele2.wav");
-	precache_sound("misc/r_tele3.wav");
-	precache_sound("misc/r_tele4.wav");
-	precache_sound("misc/r_tele5.wav");
 	precache_sound("weapons/lock4.wav");		// ammo pick up
 	precache_sound("weapons/pkup.wav");		// weapon up
 	precache_sound("items/armor1.wav");		// armor up

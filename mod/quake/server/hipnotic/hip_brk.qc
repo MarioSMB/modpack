@@ -31,7 +31,7 @@ Triggers only when a threshold of damage is exceeded.
 When used in conjunction with func_breakawaywall, allows
 walls that may be destroyed with a rocket blast.
 
-MULTI_USE tells the trigger to not to remove itthis after
+MULTI_USE tells the trigger to not to remove itself after
 being fired.  Allows the trigger to be used multiple times.
 
 INVISIBLE tells the trigger to not be visible.
@@ -75,7 +75,7 @@ void breakawaywall_remove(entity this, entity actor, entity trigger)
 }
 
 /*QUAKED func_breakawaywall (0 .5 .8) ?
-Special walltype that removes itthis when triggered.
+Special walltype that removes itself when triggered.
 */
 
 spawnfunc(func_breakawaywall)

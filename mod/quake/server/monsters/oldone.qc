@@ -217,7 +217,7 @@ void finale_2(entity this)
 
 	te_teleport(org);
 
-	_sound(shub, CHAN_VOICE, "misc/r_tele1.wav", 1, ATTN_NORM);
+	sound(shub, CHAN_VOICE, SND_TELE1, 1, ATTN_NORM);
 	
 	this.nextthink = time + 2;
 	setthink(this, finale_3);
