@@ -1509,6 +1509,13 @@ PLAYER BACKPACKS
 ===============================================================================
 */
 
+string cons_sep(string a, string sep, string b)
+{
+	if (a == "") return b;
+	if (b == "") return a;
+	return strcat(a, sep, b);
+}
+
 void BackpackTouch(entity this, entity toucher)
 {
 	if(!IS_PLAYER(toucher))
@@ -1519,16 +1526,9 @@ void BackpackTouch(entity this, entity toucher)
 	if(MP_ROGUE && toucher == this.owner && ((this.nextthink - time) > 119))
 		return; // don't let owner pick up his own backpack for a second
 
-	bool acount = false;
-	sprint(toucher, "You get ");
-
-	if(this.weapons)
-		if((toucher.weapons & this.weapons) == 0)
-		{
-			acount = true;
-			sprint(toucher, "the ");
-			sprint(toucher, this.netname);
-		}
+	string wepmsg = "";
+	if(this.weapons && !(toucher.weapons & this.weapons))
+		wepmsg = this.netname;
 
 // if the player was using his best weapon, change up to the new one if better
 	//int best = W_BestWeapon(toucher);
@@ -1551,96 +1551,30 @@ void BackpackTouch(entity this, entity toucher)
 	
 	bound_other_ammo(toucher);
 
-	if(MP_ROGUE)
-	{
-		if(this.ammo_shells)
-		{
-			if(acount)
-				sprint(toucher, ", ");
-			acount = true;
-			sprint(toucher, sprintf("%d shells", this.ammo_shells));
-		}
-		if(this.ammo_nails)
-		{
-			if(acount)
-				sprint(toucher, ", ");
-			acount = true;
-			sprint(toucher, sprintf("%d nails", this.ammo_nails));
-		}
-		if(this.ammo_rockets)
-		{
-			if(acount)
-				sprint(toucher, ", ");
-			acount = true;
-			sprint(toucher, sprintf("%d rockets", this.ammo_rockets));
-		}
-		if(this.ammo_cells)
-		{
-			if(acount)
-				sprint(toucher, ", ");
-			acount = true;
-			sprint(toucher, sprintf("%d cells", this.ammo_cells));
-		}
-		if(this.ammo_lava_nails)
-		{
-			if(acount)
-				sprint(toucher, ", ");
-			acount = true;
-			sprint(toucher, sprintf("%d cells", this.ammo_lava_nails));
-		}
-		if(this.ammo_multi_rockets)
-		{
-			if(acount)
-				sprint(toucher, ", ");
-			acount = true;
-			sprint(toucher, sprintf("%d cells", this.ammo_multi_rockets));
-		}
-		if(this.ammo_plasma)
-		{
-			if(acount)
-				sprint(toucher, ", ");
-			acount = true;
-			sprint(toucher, sprintf("%d cells", this.ammo_plasma));
-		}
-	}
-	else
-	{
-		if(this.ammo_shells)
-		{
-			if(acount)
-				sprint(toucher, ", ");
-			acount = true;
-			sprint(toucher, sprintf("%d shells", this.ammo_shells));
-		}
-		if(this.ammo_nails)
-		{
-			if(acount)
-				sprint(toucher, ", ");
-			acount = true;
-			sprint(toucher, sprintf("%d nails", this.ammo_nails));
-		}
-		if(this.ammo_rockets)
-		{
-			if(acount)
-				sprint(toucher, ", ");
-			acount = true;
-			sprint(toucher, sprintf("%d rockets", this.ammo_rockets));
-		}
-		if(this.ammo_cells)
-		{
-			if(acount)
-				sprint(toucher, ", ");
-			acount = true;
-			sprint(toucher, sprintf("%d cells", this.ammo_cells));
-		}
-	}
-	
-	sprint(toucher, "\n");
+	string theitems = "";
+	if(this.ammo_shells)
+		theitems = cons_sep(theitems, ", ", strcat(ftos(this.ammo_shells), " shells"));
+	if(this.ammo_rockets)
+		theitems = cons_sep(theitems, ", ", strcat(ftos(this.ammo_rockets), " rockets"));
+	if(this.ammo_cells)
+		theitems = cons_sep(theitems, ", ", strcat(ftos(this.ammo_cells), " cells"));
+	if(this.ammo_lava_nails)
+		theitems = cons_sep(theitems, ", ", strcat(ftos(this.ammo_lava_nails), " lava nails"));
+	if(this.ammo_multi_rockets)
+		theitems = cons_sep(theitems, ", ", strcat(ftos(this.ammo_multi_rockets), " multi rockets"));
+	if(this.ammo_plasma)
+		theitems = cons_sep(theitems, ", ", strcat(ftos(this.ammo_plasma), " plasma"));
+
+	if(theitems != "")
+		sprint(toucher, strcat("You get ", ((wepmsg != "") ? strcat("the ", wepmsg, " and ") : ""), theitems, "\n"));
+	else if(wepmsg != "")
+		sprint(toucher, strcat("You get the", wepmsg, "\n"));
+
 // backpack touch sound
 	_sound(toucher, CHAN_ITEM, "weapons/lock4.wav", 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
 
-// remove the backpack, change this to the player
+// remove the backpack
 	delete(this);
 
 	if(MP_ROGUE)
@@ -1648,10 +1582,12 @@ void BackpackTouch(entity this, entity toucher)
 
 // change to the weapon
 	if(newitem)
-	if(!deathmatch)
-		W_SwitchWeapon(toucher, newitem);
-	else
-		Deathmatch_Weapon(toucher, old, newitem);
+	{
+		if(!deathmatch)
+			W_SwitchWeapon(toucher, newitem);
+		else
+			Deathmatch_Weapon(toucher, old, newitem);
+	}
 }
 
 string Weapon_PrettyName(int wepid)

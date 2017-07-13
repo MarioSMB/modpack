@@ -14,6 +14,7 @@ void GameLogEcho(string s)
         dedicated_print(strcat(s, "\n"));
 }
 
+const float FRAME_TIME = 0.1;
 void set_anim(entity this, int frm, void(entity) tnk)
 {
 	this.frame = frm;
