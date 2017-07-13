@@ -63,3 +63,10 @@ void GenericCommand_script(float request, float argc, string command)
 }
 
 GENERIC_COMMAND(script, "Script interpreter") { GenericCommand_script(request, arguments, command); }
+
+STATIC_INIT_LATE(script_command)
+{
+	localcmd(strcat("\nalias script \"", GetProgramCommandPrefix(), " script ${* ?}\"\n"));
+
+	localcmd("\nalias runscript \"script file plugins/${* ?}.qs\"\n");
+}

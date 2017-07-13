@@ -17,7 +17,7 @@ entity pickspawns_Nearest_2D(entity this, vector pos, float max_dist)
 	float smallest_distance = 0, distance;
 
 	FOREACH_ENTITY_CLASS("info_player_deathmatch", true, LAMBDA(
-		if(teamplay && it.team != self.team) continue;
+		if(teamplay && it.team != this.team) continue;
 
 		delta = it.origin - pos;
 		delta.z = 0;
