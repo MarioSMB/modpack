@@ -374,12 +374,9 @@ void t_movetogoal(entity this, float dist)
 		return;
 
 	// if the next step hits the enemy, return immediately
-	if(this.enemy)
-	{
-		vector rdist = '1 1 1' * dist;
-		if(boxesoverlap(this.absmin - rdist, this.absmax + rdist, this.goalentity.absmin, this.goalentity.absmax))
-			return;
-	}
+	vector rdist = '1 1 1' * dist;
+	if(this.enemy && boxesoverlap(this.goalentity.absmin, this.goalentity.absmax, this.absmin - rdist, this.absmax + rdist))
+		return;
 
 	// bump around...
 	if(random() <= 0.25 || !t_stepdirection(this, this.ideal_yaw, dist))
@@ -971,7 +968,7 @@ void ai_painforward(entity this, float dist)
 =============
 ai_walk
 
-The monster is walking it's beat
+The monster is walking its beat
 =============
 */
 .float move_dist;
