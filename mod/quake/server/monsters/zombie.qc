@@ -660,6 +660,9 @@ FIXME: don't use pain_finished because of nightmare hack
 */
 void zombie_pain(entity this, entity attacker, float take)
 {
+	if(attacker.solid == SOLID_BSP || !attacker)
+		return; // if killed by trigger or world, don't reset health
+
 	this.health = 60;		// allways reset health
 
 	if(take < 9)
@@ -905,6 +908,9 @@ spawnfunc(monster_zombie)
 		this.flags |= FL_MONSTER;
 		this.th_stand(this);
 		this.nextthink = this.nextthink + random() * 0.5;
+		if(!this.damagedbycontents)
+			IL_PUSH(g_damagedbycontents, this);
+		this.damagedbycontents	= true;
 		monsters_total += 1;
 	}
 	else

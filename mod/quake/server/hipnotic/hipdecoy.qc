@@ -116,6 +116,10 @@ void setup_decoy(entity decoy)
 	setsize(decoy, VEC_HULL_MIN, VEC_HULL_MAX);
 	decoy.view_ofs = '0 0 22';
 
+	if(!decoy.damagedbycontents)
+		IL_PUSH(g_damagedbycontents, decoy);
+	decoy.damagedbycontents	= true;
+
 	decoy.solid = SOLID_SLIDEBOX;
 	set_movetype(decoy, MOVETYPE_STEP);
 

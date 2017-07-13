@@ -1,5 +1,7 @@
 #pragma once
 
+.bool damagedbycontents;
+
 int intermission_running;
 
 bool autocvar_sv_eventlog;
@@ -190,3 +192,9 @@ const int SVC_UPDATESTAT		= 3;		// pgm black magic
 const int SVC_CUTSCENE		    = 34;
 
 .int weapons;
+
+
+// intrusive lists
+
+IntrusiveList g_damagedbycontents;
+STATIC_INIT(g_damagedbycontents) { g_damagedbycontents = IL_NEW(); }

@@ -308,11 +308,7 @@ string oldone_deathmessage(entity this) { return "became one with Shub-Niggurath
 */
 spawnfunc(monster_oldone)
 {
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(deathmatch) { delete(this); return; }
 
 	precache_model2("progs/oldone.mdl");
 

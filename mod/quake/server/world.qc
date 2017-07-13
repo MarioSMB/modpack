@@ -516,6 +516,28 @@ void SV_OnEntityPreSpawnFunction(entity this)
 	__spawnfunc_expect = this;
 
 	set_movetype(this, this.movetype);
+
+	string myvar = strcat("sv_spawnreplace_", this.classname);
+	if(cvar_type(myvar) & CVAR_TYPEFLAG_EXISTS)
+	{
+		string thecvar = cvar_string(myvar);
+		if(thecvar == "")
+		{
+			delete(this);
+			__spawnfunc_expecting = false;
+			return; // empty string means remove?
+		}
+		else
+		{
+			RandomSelection_Init();
+			FOREACH_WORD(thecvar, true,
+			{
+				RandomSelection_AddString(it, 1, 1);
+			});
+			string thestring = RandomSelection_chosen_string;
+			this.classname = strzone(thestring); // NOTE: zoned, but never unzoned
+		}
+	}
 }
 
 int nJoinAllowed(entity this, entity ignore);
@@ -947,13 +969,12 @@ void CreatureFrame_FallDamage(entity this)
 
 void CreatureFrame_All()
 {
-#if 0
+#if 1
 	IL_EACH(g_damagedbycontents, it.damagedbycontents,
 	{
 		if (it.move_movetype == MOVETYPE_NOCLIP) continue;
 		CreatureFrame_Liquids(it);
 		CreatureFrame_FallDamage(it);
-		it.oldvelocity = it.velocity;
 	});
 #else
 	FOREACH_CLIENT(IS_PLAYER(it) && it.deadflag == DEAD_NO,

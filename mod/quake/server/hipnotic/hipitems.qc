@@ -356,6 +356,9 @@ spawnfunc(trap_spike_mine)
 	monsters_total += 1;
 	this.flags |= FL_MONSTER;
 	this.deathtype = "was blasted by a spike mine";
+
+	IL_PUSH(g_damagedbycontents, this);
+	this.damagedbycontents	= true;
 }
 
 //============================================================================

@@ -837,6 +837,10 @@ void PutClientInServer(entity this)
 	this.ctf_flagsince = -10;
 	this.ctf_lasthurtcarrier = -10;
 
+	if(!this.damagedbycontents)
+		IL_PUSH(g_damagedbycontents, this);
+	this.damagedbycontents	= true;
+
 	this.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_SOLID;
 	if (autocvar_g_playerclip_collisions)
 		this.dphitcontentsmask |= DPCONTENTS_PLAYERCLIP;

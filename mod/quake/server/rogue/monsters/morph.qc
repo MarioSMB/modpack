@@ -532,6 +532,10 @@ void morph_setup(entity theMorph)
 	theMorph.view_ofs = '0 0 25';
 	theMorph.frame = anim_morph_start01;
 
+	if(!theMorph.damagedbycontents)
+		IL_PUSH(g_damagedbycontents, theMorph);
+	theMorph.damagedbycontents	= true;
+
 	_setmodel(theMorph, theMorph.model);
 
 	setsize(theMorph, VEC_HULL_MIN, VEC_HULL_MAX);

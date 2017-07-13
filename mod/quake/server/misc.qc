@@ -496,11 +496,8 @@ testing air bubbles
 
 spawnfunc(air_bubbles)
 {
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(deathmatch) { delete(this); return; }
+
 	precache_model("progs/s_bubble.spr");
 	this.nextthink = time + 1;
 	setthink(this, make_bubbles);

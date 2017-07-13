@@ -238,37 +238,41 @@ void tbaby_checknew(entity this)
 {
 	if(!t_walkmove(this, 0, 0))
 	{
-		delete(self);
+		delete(this);
 		return;
 	}
 	
-	self.enemy = self.enemy;
-	self.th_stand = tbaby_stand1;
-	self.th_walk = tbaby_walk1;
-	self.th_run = tbaby_run1;
-	self.th_missile = tbaby_jump1;
-	self.th_melee = tbaby_jump1;
-	self.th_die = tbaby_die1;       
-	self.origin_z = self.origin_z + 1;      // raise off floor a bit
+	this.enemy = this.enemy;
+	this.th_stand = tbaby_stand1;
+	this.th_walk = tbaby_walk1;
+	this.th_run = tbaby_run1;
+	this.th_missile = tbaby_jump1;
+	this.th_melee = tbaby_jump1;
+	this.th_die = tbaby_die1;       
+	this.origin_z = this.origin_z + 1;      // raise off floor a bit
 	WITHSELF(this, builtin_droptofloor());
 
 	if(!t_walkmove(this, 0,0))
 	{
-		self.owner.th_pain = tbaby_mitosis;
-		delete(self);
+		this.owner.th_pain = tbaby_mitosis;
+		delete(this);
 		return;
 	}
 
-	self.takedamage = DAMAGE_AIM;
-	self.ideal_yaw = self.angles * '0 1 0';
-	if(!self.yaw_speed)
-		self.yaw_speed = 20;
-	self.view_ofs = '0 0 25';
-	self.use = monster_use;
-	self.flags |= FL_MONSTER;
-	self.pausetime = 99999999;
-	self.th_stand(this);
-	self.nextthink = self.nextthink + random()*0.5;
+	this.takedamage = DAMAGE_AIM;
+	this.ideal_yaw = this.angles * '0 1 0';
+	if(!this.yaw_speed)
+		this.yaw_speed = 20;
+	this.view_ofs = '0 0 25';
+	this.use = monster_use;
+	this.flags |= FL_MONSTER;
+	this.pausetime = 99999999;
+	this.th_stand(this);
+	this.nextthink = this.nextthink + random()*0.5;
+
+	if(!this.damagedbycontents)
+		IL_PUSH(g_damagedbycontents, this);
+	this.damagedbycontents	= true;
 
 	monsters_total += 1;
 }

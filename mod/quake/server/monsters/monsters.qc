@@ -87,6 +87,10 @@ void monster_start(entity this, int stype)
 	this.flags |= FL_MONSTER;
 	this.flags |= stype; // TODO?
 
+	if(!this.damagedbycontents)
+		IL_PUSH(g_damagedbycontents, this);
+	this.damagedbycontents	= true;
+
 	if(!(stype & FL_DECOY))
 		monsters_total += 1;
 }

@@ -78,6 +78,10 @@ void Killed(entity targ, entity attacker)
 		return;
 	}
 
+	if(targ.damagedbycontents)
+		IL_REMOVE(g_damagedbycontents, targ);
+	targ.damagedbycontents = false;
+
 	targ.enemy = attacker;
 
 // bump the monster counter

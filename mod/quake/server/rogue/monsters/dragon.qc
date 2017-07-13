@@ -717,6 +717,10 @@ void dragon_activate(entity this)
 	this.flags |= FL_FLY;
 	this.flags |= FL_MONSTER;
 
+	if(!this.damagedbycontents)
+		IL_PUSH(g_damagedbycontents, this);
+	this.damagedbycontents	= true;
+
 	if(!t_walkmove(this, 0, 0))
 		LOG_DEBUGF("flymonster %s in wall at %v\n", this.classname, this.origin);
 	
