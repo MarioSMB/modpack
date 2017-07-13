@@ -112,7 +112,6 @@ float servertime, serverprevtime, serverframetime;
 const int SPAWNFLAG_SUPERSPIKE = BIT(0);
 const int SPAWNFLAG_LASER = BIT(1);
 
-.int items2;
 //.float		new_weapon;
 //.float		new_items;
 //.float ammo_shells1, ammo_nails1, ammo_rockets1, ammo_cells1;

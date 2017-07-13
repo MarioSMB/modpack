@@ -5,7 +5,7 @@
 #include <lib/csqcmodel/sv_model.qc>
 
 // mission pack defs
-#include "hipnotic/hipdefs.qh"
+#include "hipnotic/_all.qh"
 #include "rogue/_all.qh"
 
 //#include "defs.qc"

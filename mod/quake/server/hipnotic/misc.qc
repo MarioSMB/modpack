@@ -238,15 +238,15 @@ spawnfunc(effect_teleport)
 
 
 const int SVC_UPDATEENTITY = 128; // Net.Protocol 0x80
-void UpdateCamera(entity me, entity camera)
+void UpdateCamera(entity this, entity camera)
 {
-  msg_entity = me;                         // target of message
-  WriteByte(MSG_ONE, SVC_UPDATEENTITY|15); // 0x80|1|2|4|8
-  WriteByte(MSG_ONE, 64); // 0x40
-  WriteEntity(MSG_ONE,camera);
-  WriteCoord(MSG_ONE,camera.origin_x);
-  WriteCoord(MSG_ONE,camera.origin_y);
-  WriteCoord(MSG_ONE,camera.origin_z);
+	msg_entity = this;                         // target of message
+	WriteByte(MSG_ONE, SVC_UPDATEENTITY|15); // 0x80|1|2|4|8
+	WriteByte(MSG_ONE, 64); // 0x40
+	WriteEntity(MSG_ONE,camera);
+	WriteCoord(MSG_ONE,camera.origin_x);
+	WriteCoord(MSG_ONE,camera.origin_y);
+	WriteCoord(MSG_ONE,camera.origin_z);
 }
 
 

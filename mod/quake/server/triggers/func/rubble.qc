@@ -1,9 +1,4 @@
-/* Rubble QuickC program 
-	By Jim Dose'  9/15/96
-	Copyright (c)1996 Hipnotic Interactive, Inc.
-	All rights reserved.
-	Distributed (unsupported) on 3.12.97
-*/
+#ifdef SVQC
 
 void hipRubbleTouch(entity this, entity toucher)
 {
@@ -130,3 +125,5 @@ spawnfunc(func_rubble3)
 	this.cnt = 3;
 	this.use = rubble_use;
 }
+
+#endif

@@ -37,7 +37,7 @@ void earthquake_postthink(entity this)
 		}
 //      lastearthquake = 1;
 //      this.savedz = this.view_ofs_z;
-		if(this.flags & FL_ONGROUND)
+		if(IS_ONGROUND(this))
 		{
 //         	this.view_ofs_z = this.view_ofs_z - 5 + random() * 10;
 			this.velocity = this.velocity + (random() * '0 0 150');

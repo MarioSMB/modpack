@@ -39,8 +39,6 @@ const float MIN_ANGLE_DELTA = 10;
 //
 // Hipnotic entries
 //
-// have to use a new items flag because we ran out of bits in the original
-.int items2;
 // gremlin stuff
 .float      gorging;
 .float      stoleweapon;

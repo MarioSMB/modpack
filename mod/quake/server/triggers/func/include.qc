@@ -12,6 +12,8 @@
 #include "oncount.qc"
 #include "plat.qc"
 #include "pushable.qc"
+#include "rotate.qc"
+#include "rubble.qc"
 #include "spawn.qc"
 #include "togglewall.qc"
 #include "train.qc"

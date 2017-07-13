@@ -65,8 +65,24 @@ void remove_bullethole(entity this)
 	numbulletholes -= 1;
 }
 
+void add_bullethole(entity this)
+{
+	if(lastbullet != NULL)
+		lastbullet.lastvictim = this;
+	else
+		bulletholes = this;
+
+	this.lastvictim = NULL;
+	lastbullet = this;
+
+	numbulletholes += 1;
+}
+
 void placebullethole(vector pos)
 {
+	if(numbulletholes >= 10)
+		return;
+
 	entity bullet = spawn();
 	bullet.owner = bullet;
 	set_movetype(bullet, MOVETYPE_NONE);
@@ -85,14 +101,5 @@ void placebullethole(vector pos)
 	setthink(bullet, remove_bullethole);
 	bullet.nextthink = time + 300;
 
-	numbulletholes = numbulletholes + 1;
-	if(numbulletholes > 10)
-		remove_bullethole(bullet);
-
-	if(lastbullet != NULL)
-		lastbullet.lastvictim = bullet;
-	else
-		bulletholes = bullet;
-	bullet.lastvictim = NULL;
-	lastbullet = bullet;
+	add_bullethole(bullet);
 }

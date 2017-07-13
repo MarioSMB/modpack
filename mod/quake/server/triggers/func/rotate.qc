@@ -1,9 +1,4 @@
-/* Rotate QuickC program
-	 By Jim Dose'  10/17/96
-	 Copyright (c)1996 Hipnotic Interactive, Inc.
-	 All rights reserved.
-	 Distributed (unsupported) on 3.12.97
-*/
+#ifdef SVQC
 
 const int STATE_ACTIVE      = 0;
 const int STATE_INACTIVE    = 1;
@@ -149,6 +144,7 @@ void LinkRotateTargets(entity this)
 	});
 }
 
+void hurt_setdamage(entity ent, float amount);
 void SetDamageOnTargets(entity this, float amount)
 {
 	FOREACH_ENTITY_STRING(targetname, this.target,
@@ -1031,3 +1027,5 @@ spawnfunc(func_rotate_door)
 	setthink(this, func_null);
 	this.nextthink = 0;
 }
+
+#endif
