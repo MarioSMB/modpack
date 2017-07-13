@@ -14,13 +14,7 @@ void Physics_UpdateStats(entity this)
 void PM_FixClient(entity this)
 {
 #ifdef CSQC
-	//this.team = myteam + 1; // is this correct?
-	//PHYS_WATERJUMP_TIME(this) -= dt;
-	//this.teleport_time -= dt; // TODO?
 	this.movement = PHYS_INPUT_MOVEVALUES(this);
-	//this.items = STAT(ITEMS, this);
-	if (!(PHYS_INPUT_BUTTON_JUMP(this))) // !jump
-		UNSET_JUMP_HELD(this);           // canjump = true
 #elif defined(SVQC)
 	Physics_UpdateStats(this);
 #endif
@@ -137,8 +131,8 @@ void WaterMove(entity this, float dt)
 	if(!this.waterlevel)
 		return;
 
-	if(!(this.flags & FL_WATERJUMP) )
-		this.velocity = this.velocity - 0.8*this.waterlevel*dt*this.velocity;
+	if(!(this.flags & FL_WATERJUMP))
+		this.velocity = this.velocity - 0.8 * this.waterlevel * dt * this.velocity;
 
 #ifdef SVQC
 	if(MP_HIPNOTIC && STAT(WETSUIT_FINISHED, this) > time)
@@ -179,7 +173,7 @@ void CheckWaterJump(entity this)
 	if(trace_fraction < 1)
 	{	// solid at waist
 		start.z = start.z + this.maxs_z - 8;
-		end = start + v_forward*24;
+		end = start + v_forward * 24;
 		this.movedir = trace_plane_normal * -50;
 		traceline(start, end, true, this);
 		if(trace_fraction == 1)
@@ -361,15 +355,7 @@ void PM_RollView(entity this)
 
 	this.angles_z = SV_CalcRoll(this) * 4;
 
-#if 1
 	if(!this.fixangle) { this.angles = '0 1 0' * vang.y; }
-#else
-	if (!this.fixangle)
-	{
-		this.angles_x = vang.x / 3;
-		this.angles_y = vang.y;
-	}
-#endif
 #endif
 }
 

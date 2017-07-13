@@ -2,7 +2,7 @@
 // pmack
 // sept 96
 
-// float ltrailLastUsed;		-- now an entity field.
+.float ltrailLastUsed;
 
 const int LT_TOGGLE = BIT(0);
 const int LT_ACTIVE = BIT(1);

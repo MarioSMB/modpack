@@ -1,5 +1,10 @@
 // dmatch - general deathmatch additions
 
+.float tag_frags;
+.float tag_message_time;
+
+void tag_token_touch(entity this, entity toucher);
+
 // =======================================
 // =======================================
 void tag_token_respawn()

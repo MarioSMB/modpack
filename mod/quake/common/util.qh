@@ -8,6 +8,10 @@ void wordwrap_sprint(entity to, string s, float l);
 #endif
 void wordwrap_cb(string s, float l, void(string) callback);
 
+// Some common varargs functions. Lowercase as they match C.
+//#define fprintf(file, ...) fputs(file, sprintf(__VA_ARGS__))
+#define bprintf(...) bprint(sprintf(__VA_ARGS__))
+
 #ifdef GAMEQC
 int Mod_Q1BSP_SuperContentsFromNativeContents(int nativecontents);
 int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents);

@@ -13,6 +13,11 @@ const int PLAT2_BOTTOM 	= BIT(5);
 
 .float ELV_BUTN_DIR;
 
+.float plat2Called;
+.float plat2LastMove;
+.float plat2GoTime;
+.float plat2GoTo;
+
 // ==================================
 // down N and wait code
 // ==================================

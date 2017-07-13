@@ -22,7 +22,7 @@ bool CanDamage(entity targ, entity inflictor)
 // bmodels need special checking because their origin is 0,0,0
 	if(targ.move_movetype == MOVETYPE_PUSH)
 	{
-		traceline(inflictor.origin, 0.5 *(targ.absmin + targ.absmax), MOVE_NOMONSTERS, targ);
+		traceline(inflictor.origin, 0.5 * (targ.absmin + targ.absmax), MOVE_NOMONSTERS, targ);
 		if(trace_fraction == 1)
 			return true;
 		if(trace_ent == targ)

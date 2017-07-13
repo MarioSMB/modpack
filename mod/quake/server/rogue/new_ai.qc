@@ -2,6 +2,8 @@
 //
 // pmack
 
+.float orbitPosition;
+
 // ================================================================
 // ai_orbit - used to have an object orbit an entity.
 //

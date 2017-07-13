@@ -4,16 +4,9 @@
 
 int intermission_running;
 
-bool autocvar_sv_eventlog;
-int autocvar_sv_eventlog_files_counter; // TODO
-
 .int playerid;
 
-void GameLogEcho(string s);
-
 float skill;
-
-#define bprintf(...) bprint(sprintf(__VA_ARGS__))
 
 .float t_width;
 .float t_length;
@@ -79,9 +72,9 @@ bool gameover;
 
 .bool axhitme;
 
-.float		waitmin, waitmax;
-.float		distance;
-.float		volume;
+.float waitmin, waitmax;
+.float distance;
+.float volume;
 
 .int attack_state;
 const int AS_STRAIGHT = 1;
@@ -109,86 +102,39 @@ float servertime, serverprevtime, serverframetime;
 
 .int prevweapon;
 
-const int SPAWNFLAG_SUPERSPIKE = BIT(0);
-const int SPAWNFLAG_LASER = BIT(1);
-
-//.float		new_weapon;
-//.float		new_items;
-//.float ammo_shells1, ammo_nails1, ammo_rockets1, ammo_cells1;
 .float ammo_lava_nails;
 .float ammo_multi_rockets;
 .float ammo_plasma;
 .float gravity;
 
 // rogue globals!
-float 	earthquake_active;
-float	earthquake_intensity;
-float	cutscene_running;
-entity  tag_token_owner;
+float earthquake_active;
+float earthquake_intensity;
+float cutscene_running;
+entity tag_token_owner;
 
-.float		shield_finished, antigrav_finished;
-.float		shield_time, antigrav_time;
-.entity		shield_entity;
+.float shield_finished, antigrav_finished;
+.float shield_time, antigrav_time;
+.entity shield_entity;
 
 //
 // elevator fields
 //
 
-.float 		elevatorLastUse;
-.float		elevatorOnFloor;
-.float		elevatorToFloor;
-.vector		elevatorDestination; 
-
-//
-// plat2 fields
-//
-.float		plat2Called;
-.float		plat2LastMove;
-.float		plat2GoTime;
-.float		plat2GoTo;
-
-//
-// new AI fields
-//
-.float		orbitPosition;
-
-//
-// dragon specific fields
-// 
-.float playerInRoom;
-.float playerInTransit;
-.float dragonInRoom;
-.float dragonInTransit;
-.float dragonAttacking;
-.float dragonPainSequence;
-.vector dragonLastVelocity;
+.float elevatorLastUse;
+.float elevatorOnFloor;
+.float elevatorToFloor;
+.vector elevatorDestination; 
 
 //
 // Other Rogue Fields
 //
-.float		AGping;
-.float		childrenSpawned;
-.float		ltrailLastUsed;
-.float		shield_death_time;
-.float		shieldSoundTime;
-.float		dragonDeathState;
-
-.float		tag_frags;
-.float		tag_message_time;
-
-//
-// dmatch.qc
-//
-void tag_token_respawn();
-void tag_token_touch(entity this, entity toucher);
-void tag_token_drop();
-
-// sphere.qc
-void sphere_remove(entity this);
+.float AGping;
+.float shield_death_time;
+.float shieldSoundTime;
 
 // protocol bytes
-const int SVC_UPDATESTAT		= 3;		// pgm black magic
-const int SVC_CUTSCENE		    = 34;
+const int SVC_CUTSCENE = 34;
 
 .int weapons;
 

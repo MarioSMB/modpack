@@ -566,6 +566,7 @@ void SetMod()
 	worldstatus = strzone(s);
 }
 
+void GameLogEcho(string s);
 bool world_already_spawned;
 int world_initialized;
 bool server_is_dedicated;

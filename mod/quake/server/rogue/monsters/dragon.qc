@@ -129,6 +129,19 @@ const int FIRE_PLASMA = 1;
 const int FIRE_FIREBALL = 2;
 
 // ===================================
+// entity fields
+// ===================================
+.float playerInRoom;
+.float playerInTransit;
+.float dragonInRoom;
+.float dragonInTransit;
+.float dragonAttacking;
+.float dragonPainSequence;
+.vector dragonLastVelocity;
+
+.float dragonDeathState;
+
+// ===================================
 // dragon_stop_attack 
 // ===================================
 void dragon_stop_attack(entity this)

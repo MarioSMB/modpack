@@ -1,5 +1,7 @@
 #ifdef SVQC
 
+const int SPAWNFLAG_SUPERSPIKE = BIT(0);
+const int SPAWNFLAG_LASER = BIT(1);
 const int SPAWNFLAG_LAVASPIKE = BIT(2);
 const int SPAWNFLAG_SUPERLAVA = BIT(3);
 const int SPAWNFLAG_LAVASKILL = BIT(4);

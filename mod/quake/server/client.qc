@@ -594,6 +594,7 @@ Player entered the suicide command
 ============
 */
 void TeamDropFlagOfPlayer(entity player);
+void tag_token_drop();
 void ClientKill(entity this)
 {
 	if(MP_ROGUE)
@@ -1038,6 +1039,7 @@ void TeamCheckLock(entity this);
 void CheckMOTD(entity this);
 void RuneApplyElder(entity who);
 void GrappleService(entity this);
+void GameLogEcho(string s);
 
 .string netname_previous;
 void PlayerPreThink(entity this)
@@ -1624,6 +1626,7 @@ ClientDisconnect
 called when a player disconnects from a server
 ============
 */
+void sphere_remove(entity this);
 void ClientDisconnect(entity this)
 {
 	if(gameover)

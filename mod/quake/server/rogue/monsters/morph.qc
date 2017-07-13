@@ -163,6 +163,8 @@ const int MORPH_AZTEC = BIT(1);
 const int MORPH_EGYPT = BIT(2);
 const int MORPH_GREEK = BIT(3);
 
+.float childrenSpawned;
+
 void morph_teleport(entity this);
 
 // ========================

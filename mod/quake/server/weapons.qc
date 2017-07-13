@@ -419,7 +419,7 @@ void HIP_FireMjolnir(entity this)
 		float damage = 50;
 		if(trace_ent.classname == "monster_zombie")
 			damage = 70;
-		trace_ent.axhitme = 1;
+		trace_ent.axhitme = true;
 		SpawnBlood(org, v_forward, damage);
 		T_Damage(trace_ent, this, this, damage);
 	}
@@ -467,7 +467,7 @@ void W_FireAxe(entity this)
 
 	if(trace_ent.takedamage)
 	{
-		trace_ent.axhitme = 1;
+		trace_ent.axhitme = true;
 		SpawnBlood(org, '0 0 0', 20);
 		T_Damage(trace_ent, this, this, 20);
 	}

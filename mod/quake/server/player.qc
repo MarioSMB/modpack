@@ -558,7 +558,7 @@ void PainSound(entity this, entity attacker)
 
 	if(this.pain_finished > time)
 	{
-		this.axhitme = 0;
+		this.axhitme = false;
 		return;
 	}
 	this.pain_finished = time + 0.5;
@@ -566,9 +566,9 @@ void PainSound(entity this, entity attacker)
 // don't make multiple pain sounds right after each other
 
 // ax pain sound
-	if(this.axhitme == 1)
+	if(this.axhitme)
 	{
-		this.axhitme = 0;
+		this.axhitme = false;
 		_sound(this, CHAN_VOICE, "player/axhit1.wav", 1, ATTN_NORM);
 		return;
 	}
