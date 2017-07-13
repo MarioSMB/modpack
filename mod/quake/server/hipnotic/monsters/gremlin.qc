@@ -590,7 +590,7 @@ void gremlin_run(entity this, float dist)
 								if(trace_fraction == 1.0)
 									done = true;
 							}
-							ang.y = anglemod(ang.y + 36);
+							ang.y = anglemods(ang.y + 36);
 							c = c + 1;
 							if(c == 10)
 								done = true;

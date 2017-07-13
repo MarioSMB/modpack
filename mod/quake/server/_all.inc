@@ -9,7 +9,6 @@
 #include "rogue/_all.qh"
 
 //#include "defs.qc"
-#include "lib.qc"
 #include "subs.qc"
 #include "fight.qc"
 #include "ai.qc"

@@ -321,7 +321,7 @@ void LinkDoors(entity this)
 			return;
 		}
 
-		if(EntitiesTouching(e,t))
+		if(boxesoverlap(e.mins, e.maxs, t.mins, t.maxs))
 		{
 			if(t.enemy)
 				objerror(this, "cross connected doors");

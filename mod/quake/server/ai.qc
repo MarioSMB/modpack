@@ -948,7 +948,7 @@ void ai_pain(entity this, float dist)
 {
 	ai_back(this, dist);
 /*
-	float away = anglemod(vectoyaw(this.origin - this.enemy.origin) 
+	float away = anglemods(vectoyaw(this.origin - this.enemy.origin) 
 	+ 180*(random()- 0.5) );
 	
 	t_walkmove(this, away, dist);
@@ -1078,7 +1078,7 @@ FacingIdeal
 */
 bool FacingIdeal(entity this)
 {
-	float delta = anglemod(this.angles_y - this.ideal_yaw);
+	float delta = anglemods(this.angles_y - this.ideal_yaw);
 	if(delta > 45 && delta < 315)
 		return false;
 	return true;

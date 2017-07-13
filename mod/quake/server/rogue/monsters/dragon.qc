@@ -228,8 +228,8 @@ void dragon_move(entity this, float dist)
 	if(turnOffset != 0)
 	{
 		float turnOffset = 180 - this.angles_y;
-		float leftTurn = anglemod ( moveAngles.y + turnOffset) - 180;
-		float rightTurn = 180 - anglemod ( moveAngles.y + turnOffset);
+		float leftTurn = anglemods( moveAngles.y + turnOffset) - 180;
+		float rightTurn = 180 - anglemods( moveAngles.y + turnOffset);
 		
 		if(leftTurn < 0)
 			leftTurn = 360;
