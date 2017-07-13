@@ -995,6 +995,9 @@ void StartFrame()
 	//delete_fn = remove_unsafely; // not during spawning!
 	delete_fn = remove_except_protected;
 
+	if(MP_HIPNOTIC)
+		earthquake_frame();
+
 	CreatureFrame_All();
 	CheckRules_World();
 

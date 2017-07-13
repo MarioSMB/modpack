@@ -89,6 +89,7 @@ bool discharged;
 // Hipnotic's Prototypes
 //
 void earthquake_postthink(entity this);
+void earthquake_frame();
 float counter_GetCount(entity counter);
 vector SUB_NormalizeAngles(vector ang);
 void SUB_CopyEntity(entity srcent, entity destent);

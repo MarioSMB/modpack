@@ -28,26 +28,25 @@ void EarthQuakeTime(float value)
 
 void earthquake_postthink(entity this)
 {
+	if(earthquake > time && IS_ONGROUND(this))
+		this.velocity = this.velocity + (random() * '0 0 150');
+}
+
+void earthquake_frame()
+{
 	if(earthquake > time)
 	{
 		if(!quakeactive)
 		{
-			_sound(this, CH_TRIGGER_SINGLE, "misc/quake.wav", 1, ATTN_NONE);
+			soundat(NULL, world.origin, CH_TRIGGER_SINGLE, "misc/quake.wav", 1, ATTEN_NONE); // just do it at world origin?
 			quakeactive = true;
-		}
-//      lastearthquake = 1;
-//      this.savedz = this.view_ofs_z;
-		if(IS_ONGROUND(this))
-		{
-//         	this.view_ofs_z = this.view_ofs_z - 5 + random() * 10;
-			this.velocity = this.velocity + (random() * '0 0 150');
 		}
 	}
 	else
 	{
 		if(quakeactive)
 		{
-			_sound(this, CH_TRIGGER_SINGLE, "misc/quakeend.wav", 1, ATTN_NONE);
+			stopsound(NULL, CH_TRIGGER_SINGLE);
 			quakeactive = false;
 		}
 	}
