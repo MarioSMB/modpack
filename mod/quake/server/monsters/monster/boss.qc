@@ -323,7 +323,7 @@ void boss_missile(entity this, vector p)
 	entity newmis = launch_spike(this, org, vec);
 	_setmodel(newmis, "progs/lavaball.mdl");
 	newmis.avelocity = '200 100 300';
-	setsize(newmis, VEC_ORIGIN, VEC_ORIGIN);		
+	setsize(newmis, '0 0 0', '0 0 0');		
 	newmis.velocity = vec*300;
 	settouch(newmis, T_MissileTouch); // rocket explosion
 	_sound(this, CH_SHOTS, "boss1/throw.wav", 1, ATTN_NORM);

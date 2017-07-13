@@ -214,7 +214,7 @@ void hknight_shot(entity this, float offset)
 	entity newmis = launch_spike(this, org, vec);
 	newmis.classname = "knightspike";
 	_setmodel(newmis, "progs/k_spike.mdl");
-	setsize(newmis, VEC_ORIGIN, VEC_ORIGIN);		
+	setsize(newmis, '0 0 0', '0 0 0');		
 	newmis.velocity = vec*300;
 	_sound(this, CHAN_WEAPON, "hknight/attack1.wav", 1, ATTN_NORM);
 }

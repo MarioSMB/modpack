@@ -242,7 +242,7 @@ void Wiz_FastFire(entity this)
 		newmis.owner = this.owner;
 		newmis.classname = "wizspike";
 		_setmodel(newmis, "progs/w_spike.mdl");
-		setsize(newmis, VEC_ORIGIN, VEC_ORIGIN);		
+		setsize(newmis, '0 0 0', '0 0 0');		
 	}
 
 	delete(this);
@@ -272,7 +272,7 @@ void Wiz_StartFast(entity this)
 	missile.enemy = this.enemy;
 	missile.nextthink = time + 0.3;
 	setthink(missile, Wiz_FastFire);
-	missile.movedir = VEC_ORIGIN - v_right;
+	missile.movedir = '0 0 0' - v_right;
 }
 
 void Wiz_idle_sound(entity this)

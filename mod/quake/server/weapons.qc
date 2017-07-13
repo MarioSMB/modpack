@@ -1008,7 +1008,7 @@ entity launch_spike(entity this, vector org, vector dir)
 	setthink(newmis, SUB_Remove);
 	newmis.nextthink = time + 6;
 	_setmodel(newmis, "progs/spike.mdl");
-	setsize(newmis, VEC_ORIGIN, VEC_ORIGIN);		
+	setsize(newmis, '0 0 0', '0 0 0');		
 	setorigin(newmis, org);
 
 	newmis.velocity = dir * 1000;
@@ -1025,7 +1025,7 @@ void W_FireSuperSpikes(entity this)
 	entity newmis = launch_spike(this, this.origin + '0 0 16', dir);
 	settouch(newmis, superspike_touch);
 	_setmodel(newmis, "progs/s_spike.mdl");
-	setsize(newmis, VEC_ORIGIN, VEC_ORIGIN);		
+	setsize(newmis, '0 0 0', '0 0 0');		
 	this.punchangle_x = -2;
 }
 

@@ -21,7 +21,7 @@ entity launch_lava_spike(entity this, vector org, vector dir)
 	setthink(newmis, SUB_Remove);
 	newmis.nextthink = time + 6;
 	_setmodel(newmis, "progs/lspike.mdl");	
-	setsize(newmis, VEC_ORIGIN, VEC_ORIGIN);		
+	setsize(newmis, '0 0 0', '0 0 0');		
 	setorigin(newmis, org);
 
 	newmis.velocity = dir * 1000;
@@ -42,7 +42,7 @@ void W_FireSuperLavaSpikes(entity this)
 
 //	setmodel(newmis, "progs/lspike.mdl");			
 
-	setsize(newmis, VEC_ORIGIN, VEC_ORIGIN);		
+	setsize(newmis, '0 0 0', '0 0 0');		
 	this.punchangle_x = -2;
 }
 
