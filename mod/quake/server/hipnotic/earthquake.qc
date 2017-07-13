@@ -32,7 +32,7 @@ void earthquake_postthink(entity this)
 	{
 		if(!quakeactive)
 		{
-			_sound(this, CHAN_VOICE, "misc/quake.wav", 1, ATTN_NONE);
+			_sound(this, CH_TRIGGER_SINGLE, "misc/quake.wav", 1, ATTN_NONE);
 			quakeactive = true;
 		}
 //      lastearthquake = 1;
@@ -47,7 +47,7 @@ void earthquake_postthink(entity this)
 	{
 		if(quakeactive)
 		{
-			_sound(this, CHAN_VOICE, "misc/quakeend.wav", 1, ATTN_NONE);
+			_sound(this, CH_TRIGGER_SINGLE, "misc/quakeend.wav", 1, ATTN_NONE);
 			quakeactive = false;
 		}
 	}
