@@ -81,8 +81,8 @@ void earthquake_touch(entity this, entity toucher)
 		{
 			_sound(this, CHAN_VOICE, "equake/rumble.wav", 1, ATTN_NORM );
 			this.attack_finished = time + 1;
-		}			
-		
+		}
+
 		if(IS_PLAYER(toucher))
 		{
 			if(toucher.flags & FL_ONGROUND)
