@@ -381,14 +381,11 @@ void armagon_stand_attack(entity this);
 .int arma_frame;
 void armagon_stand(entity this)
 {
-	if(getthink(this) != armagon_stand)
-		this.arma_frame = 0; // restart animation
-
 	if(this.arma_frame >= 20)
 		this.arma_frame = 0;
 
 	set_animofs(this, anim_armagon_lstand, this.arma_frame + 1, armagon_stand);
-	int frm = this.frame;
+	int frm = this.arma_frame + 1;
 	if(frm == 1 || frm == 10 || frm == 20)
 		ai_stand(this);
 
@@ -398,61 +395,68 @@ void armagon_stand(entity this)
 	this.arma_frame += 1;
 }
 
-void armagon_walk1(entity this);
-void armagon_walk12(entity this) { set_animofs(this, anim_armagon_lwalk, 12, armagon_walk1); t_movetogoal(this, 14); armagon_walkthink(this); }
-void armagon_walk11(entity this) { set_animofs(this, anim_armagon_lwalk, 11, armagon_walk12); _sound(this, 6, "armagon/footfall.wav", 1, ATTN_ARMAGON); t_movetogoal(this, 14); armagon_walkthink(this); }
-void armagon_walk10(entity this) { set_animofs(this, anim_armagon_lwalk, 10, armagon_walk11); t_movetogoal(this, 14); armagon_walkthink(this); }
-void armagon_walk9(entity this) { set_animofs(this, anim_armagon_lwalk, 9, armagon_walk10); _sound(this, 7, "armagon/servo.wav", SERVO_VOLUME, ATTN_ARMAGON); t_movetogoal(this, 14); armagon_walkthink(this); }
-void armagon_walk8(entity this) { set_animofs(this, anim_armagon_lwalk, 8, armagon_walk9); t_movetogoal(this, 14); armagon_walkthink(this); }
-void armagon_walk7(entity this) { set_animofs(this, anim_armagon_lwalk, 7, armagon_walk8); t_movetogoal(this, 14); armagon_walkthink(this); }
-void armagon_walk6(entity this) { set_animofs(this, anim_armagon_lwalk, 6, armagon_walk7); t_movetogoal(this, 14); armagon_walkthink(this); }
-void armagon_walk5(entity this) { set_animofs(this, anim_armagon_lwalk, 5, armagon_walk6); _sound(this, 6, "armagon/footfall.wav", 1, ATTN_ARMAGON); t_movetogoal(this, 14); armagon_walkthink(this); }
-void armagon_walk4(entity this) { set_animofs(this, anim_armagon_lwalk, 4, armagon_walk5); t_movetogoal(this, 14); armagon_walkthink(this); }
-void armagon_walk3(entity this) { set_animofs(this, anim_armagon_lwalk, 3, armagon_walk4); _sound(this, 7, "armagon/servo.wav", SERVO_VOLUME, ATTN_ARMAGON); t_movetogoal(this, 14); armagon_walkthink(this); }
-void armagon_walk2(entity this) { set_animofs(this, anim_armagon_lwalk, 2, armagon_walk3); t_movetogoal(this, 14); armagon_walkthink(this); }
-void armagon_walk1(entity this) { set_animofs(this, anim_armagon_lwalk, 1, armagon_walk2); t_movetogoal(this, 14); armagon_walkthink(this); }
+void armagon_walk(entity this)
+{
+	if(this.arma_frame >= 12)
+		this.arma_frame = 0;
+
+	set_animofs(this, anim_armagon_lwalk, this.arma_frame + 1, armagon_walk);
+	int frm = this.arma_frame + 1;
+	if(frm == 3 || frm == 9)
+		_sound(this, 7, "armagon/servo.wav", SERVO_VOLUME, ATTN_ARMAGON);
+	else if(frm == 5 || frm == 11)
+		_sound(this, 6, "armagon/footfall.wav", 1, ATTN_ARMAGON);
+
+	t_movetogoal(this, 14);
+	armagon_walkthink(this);
+
+	this.arma_frame += 1;
+}
 
 .bool run_straight;
 
-void armagon_run1(entity this);
-void armagon_run12(entity this)
+void armagon_run(entity this)
 {
-	set_animofs(this, anim_armagon_lwalk, 12, armagon_run1);
+	if(this.arma_frame >= 12)
+		this.arma_frame = 0;
+
+	set_animofs(this, anim_armagon_lwalk, this.arma_frame + 1, armagon_run);
+	int frm = this.arma_frame + 1;
+	if(frm == 3 || frm == 9)
+		_sound(this, 7, "armagon/servo.wav", SERVO_VOLUME, ATTN_ARMAGON);
+	else if(frm == 5 || frm == 11)
+		_sound(this, 6, "armagon/footfall.wav", 1, ATTN_ARMAGON);
+
 	changeyaw(this);
 	this.run_straight = true;
 	ai_run(this, 14);
 	armagon_think(this);
-	if((this.cnt == 1) && (time > this.attack_finished))
-	{
-		float delta;
-		delta = this.ideal_yaw - this.angles_y;
-		if(delta > 180) delta = delta - 360;
-		if(delta < -180) delta = delta + 360;
-		if(delta > 0)
-			setthink(this, armagon_overleft1);
-		else
-			setthink(this, armagon_overright1);
-		return;
-	}
-	if(this.lefty == 1)
-	{
-		this.lefty = 0;
-		setthink(this, this.th_missile);
-	}
-}
-void armagon_run11(entity this) { set_animofs(this, anim_armagon_lwalk, 11, armagon_run12); _sound(this, 6, "armagon/footfall.wav", 1, ATTN_ARMAGON); changeyaw(this); this.run_straight = true; ai_run(this, 14); armagon_think(this); }
-void armagon_run10(entity this) { set_animofs(this, anim_armagon_lwalk, 10, armagon_run11); changeyaw(this); this.run_straight = true; ai_run(this, 14); armagon_think(this); }
-void armagon_run9(entity this) { set_animofs(this, anim_armagon_lwalk, 9, armagon_run10); _sound(this, 7, "armagon/servo.wav", SERVO_VOLUME, ATTN_ARMAGON); changeyaw(this); this.run_straight = true; ai_run(this, 14); armagon_think(this); }
-void armagon_run8(entity this) { set_animofs(this, anim_armagon_lwalk, 8, armagon_run9); changeyaw(this); this.run_straight = true; ai_run(this, 14); armagon_think(this); }
-void armagon_run7(entity this) { set_animofs(this, anim_armagon_lwalk, 7, armagon_run8); changeyaw(this); this.run_straight = true; ai_run(this, 14); armagon_think(this); }
-void armagon_run6(entity this) { set_animofs(this, anim_armagon_lwalk, 6, armagon_run7); changeyaw(this); this.run_straight = true; ai_run(this, 14); armagon_think(this); }
-void armagon_run5(entity this) { set_animofs(this, anim_armagon_lwalk, 5, armagon_run6); _sound(this, 6, "armagon/footfall.wav", 1, ATTN_ARMAGON); changeyaw(this); this.run_straight = true; ai_run(this, 14); armagon_think(this); }
-void armagon_run4(entity this) { set_animofs(this, anim_armagon_lwalk, 4, armagon_run5); changeyaw(this); this.run_straight = true; ai_run(this, 14); armagon_think(this); }
-void armagon_run3(entity this) { set_animofs(this, anim_armagon_lwalk, 3, armagon_run4); _sound(this, 7, "armagon/servo.wav", SERVO_VOLUME, ATTN_ARMAGON); changeyaw(this); this.run_straight = true; ai_run(this, 14); armagon_think(this); }
-void armagon_run2(entity this) { set_animofs(this, anim_armagon_lwalk, 2, armagon_run3); changeyaw(this); this.run_straight = true; ai_run(this, 14); armagon_think(this); }
-void armagon_run1(entity this) { set_animofs(this, anim_armagon_lwalk, 1, armagon_run2); changeyaw(this); this.run_straight = true; ai_run(this, 14); armagon_think(this); }
 
-void armagon_watk13(entity this) { set_animofs(this, anim_armagon_lw0fir, 12, armagon_run1); changeyaw(this); t_walkmove(this, this.angles_y, 14); armagon_think(this); SUB_AttackFinished(this, 1.0); }
+	if(frm == 12)
+	{
+		if((this.cnt == 1) && (time > this.attack_finished))
+		{
+			float delta;
+			delta = this.ideal_yaw - this.angles_y;
+			if(delta > 180) delta = delta - 360;
+			if(delta < -180) delta = delta + 360;
+			if(delta > 0)
+				setthink(this, armagon_overleft1);
+			else
+				setthink(this, armagon_overright1);
+			return;
+		}
+		if(this.lefty == 1)
+		{
+			this.lefty = 0;
+			setthink(this, this.th_missile);
+		}
+	}
+
+	this.arma_frame += 1;
+}
+
+void armagon_watk13(entity this) { set_animofs(this, anim_armagon_lw0fir, 12, armagon_run); changeyaw(this); t_walkmove(this, this.angles_y, 14); armagon_think(this); SUB_AttackFinished(this, 1.0); }
 //void armagon_watk12(entity this) { set_animofs(this, anim_armagon_lw0fir, 12, armagon_watk13); changeyaw(this); t_walkmove(this, this.angles_y, 14); armagon_think(this); }
 void armagon_watk11(entity this) { set_animofs(this, anim_armagon_lw0fir, 11, armagon_watk13); changeyaw(this); t_walkmove(this, this.angles_y, 14); armagon_think(this); armagon_launch_missile(this, -40,0); }
 void armagon_watk10(entity this) { set_animofs(this, anim_armagon_lw0fir, 10, armagon_watk11); _sound(this, 6, "armagon/footfall.wav", 1, ATTN_ARMAGON);changeyaw(this); t_walkmove(this, this.angles_y, 14); armagon_think(this); }
@@ -466,7 +470,7 @@ void armagon_watk3(entity this) { set_animofs(this, anim_armagon_lw0fir, 3, arma
 void armagon_watk2(entity this) { set_animofs(this, anim_armagon_lw0fir, 2, armagon_watk3); _sound(this, 7, "armagon/servo.wav", SERVO_VOLUME, ATTN_ARMAGON);changeyaw(this); t_walkmove(this, this.angles_y, 14); armagon_think(this); }
 void armagon_watk1(entity this) { set_animofs(this, anim_armagon_lw0fir, 1, armagon_watk2); changeyaw(this); t_walkmove(this, this.angles_y, 14); armagon_think(this); }
 
-void armagon_wlaseratk13(entity this) { set_animofs(this, anim_armagon_lw0fir, 12, armagon_run1); changeyaw(this); t_walkmove(this, this.angles_y, 14); armagon_think(this); SUB_AttackFinished(this, 1.0); }
+void armagon_wlaseratk13(entity this) { set_animofs(this, anim_armagon_lw0fir, 12, armagon_run); changeyaw(this); t_walkmove(this, this.angles_y, 14); armagon_think(this); SUB_AttackFinished(this, 1.0); }
 //void armagon_wlaseratk12(entity this) { set_animofs(this, anim_armagon_lw0fir, 12, armagon_wlaseratk13); changeyaw(this); t_walkmove(this, this.angles_y, 14); armagon_think(this); }
 void armagon_wlaseratk11(entity this) { set_animofs(this, anim_armagon_lw0fir, 11, armagon_wlaseratk13); changeyaw(this); t_walkmove(this, this.angles_y, 14); armagon_think(this); armagon_launch_laser(this, -40); }
 void armagon_wlaseratk10(entity this) { set_animofs(this, anim_armagon_lw0fir, 10, armagon_wlaseratk11); _sound(this, 6, "armagon/footfall.wav", 1, ATTN_ARMAGON);changeyaw(this); t_walkmove(this, this.angles_y, 14); armagon_think(this); }
@@ -480,7 +484,7 @@ void armagon_wlaseratk3(entity this) { set_animofs(this, anim_armagon_lw0fir, 3,
 void armagon_wlaseratk2(entity this) { set_animofs(this, anim_armagon_lw0fir, 2, armagon_wlaseratk3); _sound(this, 7, "armagon/servo.wav", SERVO_VOLUME, ATTN_ARMAGON);changeyaw(this); t_walkmove(this, this.angles_y, 14); armagon_think(this); }
 void armagon_wlaseratk1(entity this) { set_animofs(this, anim_armagon_lw0fir, 1, armagon_wlaseratk2); changeyaw(this); t_walkmove(this, this.angles_y, 14); armagon_think(this); }
 
-void armagon_overleft15(entity this) { set_animofs(this, anim_armagon_lw1fir, 15, armagon_run1); armagon_overleft_think(this); SUB_AttackFinished(this, 1.0); }
+void armagon_overleft15(entity this) { set_animofs(this, anim_armagon_lw1fir, 15, armagon_run); armagon_overleft_think(this); SUB_AttackFinished(this, 1.0); }
 void armagon_overleft14(entity this) { set_animofs(this, anim_armagon_lw1fir, 14, armagon_overleft15); armagon_overleft_think(this); }
 void armagon_overleft13(entity this) { set_animofs(this, anim_armagon_lw1fir, 13, armagon_overleft14); armagon_overleft_think(this); }
 void armagon_overleft12(entity this) { set_animofs(this, anim_armagon_lw1fir, 12, armagon_overleft13); this.count=2; armagon_overleft_think(this); }
@@ -496,7 +500,7 @@ void armagon_overleft3(entity this) { set_animofs(this, anim_armagon_lw1fir, 3, 
 void armagon_overleft2(entity this) { set_animofs(this, anim_armagon_lw1fir, 2, armagon_overleft3); armagon_overleft_think(this); }
 void armagon_overleft1(entity this) { set_animofs(this, anim_armagon_lw1fir, 1, armagon_overleft2); this.count=0; armagon_overleft_think(this); }
 
-void armagon_overright12(entity this) { set_animofs(this, anim_armagon_lw2fir, 12, armagon_run1); armagon_overright_think(this); SUB_AttackFinished(this, 1.0); }
+void armagon_overright12(entity this) { set_animofs(this, anim_armagon_lw2fir, 12, armagon_run); armagon_overright_think(this); SUB_AttackFinished(this, 1.0); }
 void armagon_overright11(entity this) { set_animofs(this, anim_armagon_lw2fir, 11, armagon_overright12); armagon_overright_think(this); }
 void armagon_overright10(entity this) { set_animofs(this, anim_armagon_lw2fir, 10, armagon_overright11); _sound(this, 6, "armagon/footfall.wav", 1, ATTN_ARMAGON); armagon_overright_think(this); }
 void armagon_overright9(entity this) { set_animofs(this, anim_armagon_lw2fir, 9, armagon_overright10); armagon_overright_think(this); }
@@ -718,13 +722,13 @@ void armagon_stand_attack(entity this)
 
 	if(trace_ent != this.enemy)
 	{
-		armagon_run1(this);
+		armagon_run(this);
 		return;
 	}
 
 	if(trace_inopen && trace_inwater)
 	{
-		armagon_run1(this);
+		armagon_run(this);
 		return;
 	}
 
@@ -741,7 +745,7 @@ void armagon_stand_attack(entity this)
 
 	if(vdist(spot2 - spot1, >, 450))
 	{
-		armagon_run1(this);
+		armagon_run(this);
 		return;
 	}
 
@@ -752,7 +756,7 @@ void armagon_stand_attack(entity this)
 
 	if(this.cnt == 1)
 	{
-		armagon_run1(this);
+		armagon_run(this);
 		return;
 	}
 }
@@ -869,8 +873,8 @@ spawnfunc(monster_armagon)
 	this.endtime = 0;
 
 	this.th_stand = armagon_stand;
-	this.th_walk = armagon_walk1;
-	this.th_run = armagon_run1;
+	this.th_walk = armagon_walk;
+	this.th_run = armagon_run;
 	this.th_die = armagon_die1;
 	this.th_missile = armagon_missile_attack;
 	this.th_melee = armagon_stop1;
