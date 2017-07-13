@@ -1765,7 +1765,7 @@ void W_ChangeWeapon(entity this, int imp)
 		}
 		case 7:
 		{
-			if((this.weapons & WEP_MULTI_ROCKET) && (this.weapon == WEP_ROCKET_LAUNCHER || this.ammo_rockets < 1))
+			if(MP_ROGUE && (this.weapons & WEP_MULTI_ROCKET) && (this.weapon == WEP_ROCKET_LAUNCHER || this.ammo_rockets < 1))
 			{
 				fl = WEP_MULTI_ROCKET;
 				if(this.ammo_multi_rockets < 1)
@@ -1891,10 +1891,11 @@ void W_ChangeWeapon(entity this, int imp)
 CheatCommand
 ============
 */
+.bool maycheat;
 void CheatCommand(entity this)
 {
-	if(deathmatch || coop)
-		return;
+	if(!this.maycheat)
+		return; // no more singleplayer functionality, unless they're smart enough to enable this!
 
 	this.ammo_rockets = 100;
 	this.ammo_nails = 200;
@@ -2313,18 +2314,16 @@ void CycleWeaponReverseCommand(entity this)
 	this.weapon = oldwep; // we didn't save the switch
 }
 
-#ifdef QUAKE_CHEATS
 void QuadCheat(entity this)
 {
-	if(deathmatch || coop)
+	if(!this.maycheat)
 		return;
+
 	this.super_time = 1;
 	this.super_damage_finished = time + 30;
 	this.items |= IT_QUAD;
 	bprint("quad cheat\n");
 }
-
-#endif
 
 void W_LastWeapon(entity this)
 {
@@ -2446,14 +2445,10 @@ void ImpulseCommands(entity this)
 		case 99: // hehe
 			CheatCommand(this);
 			break;
+		case 255:
+			QuadCheat(this);
+			break;
 	}
-
-#ifdef QUAKE_CHEATS
-	switch(this.impulse)
-	{
-		case 255: QuadCheat(this); break;
-	}
-#endif
 
 	if(MP_ROGUE)
 	{
