@@ -1,5 +1,253 @@
 #include "util.qh"
 
+USING(textLengthUpToWidth_widthFunction_t, float(string s, vector size));
+USING(textLengthUpToLength_lenFunction_t, float(string s));
+
+bool isCaretEscaped(string theText, float pos)
+{
+	int i = 0;
+	while(pos - i >= 1 && substring(theText, pos - i - 1, 1) == "^")
+		++i;
+	return (i & 1);
+}
+
+int skipIncompleteTag(string theText, float pos, int len)
+{
+	int i = 0, ch = 0;
+	int tag_start = -1;
+
+	if(substring(theText, pos - 1, 1) == "^")
+	{
+		if(isCaretEscaped(theText, pos - 1) || pos >= len)
+			return 0;
+
+		ch = str2chr(theText, pos);
+		if(ch >= '0' && ch <= '9')
+			return 1; // ^[0-9] color code found
+		else if (ch == 'x')
+			tag_start = pos - 1; // ^x tag found
+		else
+			return 0;
+	}
+	else
+	{
+		for(i = 2; pos - i >= 0 && i <= 4; ++i)
+		{
+			if(substring(theText, pos - i, 2) == "^x")
+			{
+				tag_start = pos - i; // ^x tag found
+				break;
+			}
+		}
+	}
+
+	if(tag_start >= 0)
+	{
+		if(tag_start + 5 < len)
+		if(IS_HEXDIGIT(substring(theText, tag_start + 2, 1)))
+		if(IS_HEXDIGIT(substring(theText, tag_start + 3, 1)))
+		if(IS_HEXDIGIT(substring(theText, tag_start + 4, 1)))
+		{
+			if(!isCaretEscaped(theText, tag_start))
+				return 5 - (pos - tag_start); // ^xRGB color code found
+		}
+	}
+	return 0;
+}
+
+float textLengthUpToWidth(string theText, float maxWidth, vector theSize, textLengthUpToWidth_widthFunction_t w)
+{
+	// STOP.
+	// The following function is SLOW.
+	// For your safety and for the protection of those around you...
+	// DO NOT CALL THIS AT HOME.
+	// No really, don't.
+	if(w(theText, theSize) <= maxWidth)
+		return strlen(theText); // yeah!
+
+	bool colors = (w("^7", theSize) == 0);
+
+	// binary search for right place to cut string
+	int len, left, right, middle;
+	left = 0;
+	right = len = strlen(theText);
+	int ofs = 0;
+	do
+	{
+		middle = floor((left + right) / 2);
+		if(colors)
+			ofs = skipIncompleteTag(theText, middle, len);
+		if(w(substring(theText, 0, middle + ofs), theSize) <= maxWidth)
+			left = middle + ofs;
+		else
+			right = middle;
+	}
+	while(left < right - 1);
+
+	return left;
+}
+
+float textLengthUpToLength(string theText, float maxWidth, textLengthUpToLength_lenFunction_t w)
+{
+	// STOP.
+	// The following function is SLOW.
+	// For your safety and for the protection of those around you...
+	// DO NOT CALL THIS AT HOME.
+	// No really, don't.
+	if(w(theText) <= maxWidth)
+		return strlen(theText); // yeah!
+
+	bool colors = (w("^7") == 0);
+
+	// binary search for right place to cut string
+	int len, left, right, middle;
+	left = 0;
+	right = len = strlen(theText);
+	int ofs = 0;
+	do
+	{
+		middle = floor((left + right) / 2);
+		if(colors)
+			ofs = skipIncompleteTag(theText, middle, len);
+		if(w(substring(theText, 0, middle + ofs)) <= maxWidth)
+			left = middle + ofs;
+		else
+			right = middle;
+	}
+	while(left < right - 1);
+
+	return left;
+}
+
+string find_last_color_code(string s)
+{
+	int start = strstrofs(s, "^", 0);
+	if (start == -1) // no caret found
+		return "";
+	int len = strlen(s)-1;
+	int i;
+	for(i = len; i >= start; --i)
+	{
+		if(substring(s, i, 1) != "^")
+			continue;
+
+		int carets = 1;
+		while (i-carets >= start && substring(s, i-carets, 1) == "^")
+			++carets;
+
+		// check if carets aren't all escaped
+		if (carets & 1)
+		{
+			if(i+1 <= len)
+			if(IS_DIGIT(substring(s, i+1, 1)))
+				return substring(s, i, 2);
+
+			if(i+4 <= len)
+			if(substring(s, i+1, 1) == "x")
+			if(IS_HEXDIGIT(substring(s, i + 2, 1)))
+			if(IS_HEXDIGIT(substring(s, i + 3, 1)))
+			if(IS_HEXDIGIT(substring(s, i + 4, 1)))
+				return substring(s, i, 5);
+		}
+		i -= carets; // this also skips one char before the carets
+	}
+
+	return "";
+}
+
+string getWrappedLine_remaining;
+string getWrappedLine(float w, vector theFontSize, textLengthUpToWidth_widthFunction_t tw)
+{
+	float cantake;
+	float take;
+	string s;
+
+	s = getWrappedLine_remaining;
+
+	if(w <= 0)
+	{
+		getWrappedLine_remaining = string_null;
+		return s; // the line has no size ANYWAY, nothing would be displayed.
+	}
+
+	cantake = textLengthUpToWidth(s, w, theFontSize, tw);
+	if(cantake > 0 && cantake < strlen(s))
+	{
+		take = cantake - 1;
+		while(take > 0 && substring(s, take, 1) != " ")
+			--take;
+		if(take == 0)
+		{
+			getWrappedLine_remaining = substring(s, cantake, strlen(s) - cantake);
+			if(getWrappedLine_remaining == "")
+				getWrappedLine_remaining = string_null;
+			else if (tw("^7", theFontSize) == 0)
+				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, cantake)), getWrappedLine_remaining);
+			return substring(s, 0, cantake);
+		}
+		else
+		{
+			getWrappedLine_remaining = substring(s, take + 1, strlen(s) - take);
+			if(getWrappedLine_remaining == "")
+				getWrappedLine_remaining = string_null;
+			else if (tw("^7", theFontSize) == 0)
+				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take)), getWrappedLine_remaining);
+			return substring(s, 0, take);
+		}
+	}
+	else
+	{
+		getWrappedLine_remaining = string_null;
+		return s;
+	}
+}
+
+string getWrappedLineLen(float w, textLengthUpToLength_lenFunction_t tw)
+{
+	float cantake;
+	float take;
+	string s;
+
+	s = getWrappedLine_remaining;
+
+	if(w <= 0)
+	{
+		getWrappedLine_remaining = string_null;
+		return s; // the line has no size ANYWAY, nothing would be displayed.
+	}
+
+	cantake = textLengthUpToLength(s, w, tw);
+	if(cantake > 0 && cantake < strlen(s))
+	{
+		take = cantake - 1;
+		while(take > 0 && substring(s, take, 1) != " ")
+			--take;
+		if(take == 0)
+		{
+			getWrappedLine_remaining = substring(s, cantake, strlen(s) - cantake);
+			if(getWrappedLine_remaining == "")
+				getWrappedLine_remaining = string_null;
+			else if (tw("^7") == 0)
+				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, cantake)), getWrappedLine_remaining);
+			return substring(s, 0, cantake);
+		}
+		else
+		{
+			getWrappedLine_remaining = substring(s, take + 1, strlen(s) - take);
+			if(getWrappedLine_remaining == "")
+				getWrappedLine_remaining = string_null;
+			else if (tw("^7") == 0)
+				getWrappedLine_remaining = strcat(find_last_color_code(substring(s, 0, take)), getWrappedLine_remaining);
+			return substring(s, 0, take);
+		}
+	}
+	else
+	{
+		getWrappedLine_remaining = string_null;
+		return s;
+	}
+}
+
 string wordwrap_buffer;
 
 void wordwrap_buffer_put(string s)

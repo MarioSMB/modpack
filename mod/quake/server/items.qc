@@ -1654,6 +1654,31 @@ void BackpackTouch(entity this, entity toucher)
 		Deathmatch_Weapon(toucher, old, newitem);
 }
 
+string Weapon_PrettyName(int wepid)
+{
+	switch(wepid)
+	{
+		case WEP_AXE: 				 return "Axe";
+		case WEP_SHOTGUN: 			 return "Shotgun";
+		case WEP_SUPER_SHOTGUN: 	 return "Double-barrelled Shotgun";
+		case WEP_NAILGUN: 			 return "Nailgun";
+		case WEP_SUPER_NAILGUN: 	 return "Super Nailgun";
+		case WEP_GRENADE_LAUNCHER: 	 return "Grenade Launcher";
+		case WEP_ROCKET_LAUNCHER: 	 return "Rocket Launcher";
+		case WEP_LIGHTNING: 		 return "Thunderbolt";
+		case WEP_LASER_CANNON: 		 return "Laser Cannon";
+		case WEP_PROXIMITY_GUN: 	 return "Proximity Gun";
+		case WEP_MJOLNIR: 			 return "Mjolnir";
+		case WEP_LAVA_NAILGUN: 		 return "Lava Nail Gun";
+		case WEP_LAVA_SUPER_NAILGUN: return "Super Lava Nail Gun";
+		case WEP_MULTI_GRENADE: 	 return "Multi Grenade Launcher";
+		case WEP_MULTI_ROCKET: 		 return "Multi Rocket Launcher";
+		case WEP_PLASMA_GUN: 		 return "Plasma Gun";
+	}
+
+	return "";
+}
+
 /*
 ===============
 DropBackpack
@@ -1668,26 +1693,7 @@ void DropBackpack(entity this)
 	item.origin = this.origin - '0 0 24';
 	
 	item.weapons = this.weapon;
-	switch(this.weapons)
-	{
-		case WEP_AXE: 				item.netname = "Axe"; break;
-		case WEP_SHOTGUN: 			item.netname = "Shotgun"; break;
-		case WEP_SUPER_SHOTGUN: 	item.netname = "Double-barrelled Shotgun"; break;
-		case WEP_NAILGUN: 			item.netname = "Nailgun"; break;
-		case WEP_SUPER_NAILGUN: 	item.netname = "Super Nailgun"; break;
-		case WEP_GRENADE_LAUNCHER: 	item.netname = "Grenade Launcher"; break;
-		case WEP_ROCKET_LAUNCHER: 	item.netname = "Rocket Launcher"; break;
-		case WEP_LIGHTNING: 		item.netname = "Thunderbolt"; break;
-		case WEP_LASER_CANNON: 		item.netname = "Laser Cannon"; break;
-		case WEP_PROXIMITY_GUN: 	item.netname = "Proximity Gun"; break;
-		case WEP_MJOLNIR: 			item.netname = "Mjolnir"; break;
-		case WEP_LAVA_NAILGUN: 		item.netname = "Lava Nail Gun"; break;
-		case WEP_LAVA_SUPER_NAILGUN:item.netname = "Super Lava Nail Gun"; break;
-		case WEP_MULTI_GRENADE: 	item.netname = "Multi Grenade Launcher"; break;
-		case WEP_MULTI_ROCKET: 		item.netname = "Multi Rocket Launcher"; break;
-		case WEP_PLASMA_GUN: 		item.netname = "Plasma Gun"; break;
-		default: 					item.netname = ""; break;
-	}
+	item.netname = Weapon_PrettyName(item.weapons);
 
 	item.ammo_shells = this.ammo_shells;
 	item.ammo_nails = this.ammo_nails;
