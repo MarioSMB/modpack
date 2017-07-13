@@ -9,6 +9,7 @@ float autocvar_vid_conheight;
 float contentavgalpha, liquidalpha_prev;
 vector liquidcolor_prev;
 
+// TODO: item pickup flashing? maybe not (seizure fest)
 bool autocvar_hud_contents;
 float autocvar_hud_contents_fadeintime;
 float autocvar_hud_contents_fadeouttime;

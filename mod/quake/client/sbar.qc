@@ -247,32 +247,32 @@ int sb_lines;
 const int SBAR_HEIGHT = 24;
 const int SBAR_MAXWIDTH = 1; // TODO: this is pure guesswork!
 
-void Sbar_DrawString(int dx, int dy, string msg)
+void Sbar_DrawString(vector thepos, string msg)
 {
-	drawstring(sbar + vec2(dx + 4, dy), msg, '8 8 0', '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring(sbar + vec2(thepos.x + 4, thepos.y), msg, '8 8 0', '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 }
 
-void Sbar_DrawCharacter(int dx, int dy, int num)
+void Sbar_DrawCharacter(vector thepos, int num)
 {
-	Sbar_DrawString(dx, dy, sprintf("%c", num));
+	Sbar_DrawString(thepos, sprintf("%c", num));
 }
 
-void Sbar_DrawAlphaPic(int dx, int dy, string pic, float thealpha)
+void Sbar_DrawAlphaPic(vector thepos, string pic, float thealpha)
 {
-	drawpic(sbar + vec2(dx, dy), pic, drawgetimagesize(pic), '1 1 1', thealpha, DRAWFLAG_NORMAL);
+	drawpic(sbar + thepos, pic, drawgetimagesize(pic), '1 1 1', thealpha, DRAWFLAG_NORMAL);
 }
 
-void Sbar_DrawPic(int dx, int dy, string pic)
+void Sbar_DrawPic(vector thepos, string pic)
 {
-	Sbar_DrawAlphaPic(dx, dy, pic, 1 * autocvar_sbar_alpha_fg);
+	Sbar_DrawAlphaPic(thepos, pic, 1 * autocvar_sbar_alpha_fg);
 }
 
 const int STAT_MINUS = 10; // num frame for '-' stats digit
-void Sbar_DrawNum_lettersize(int dx, int dy, string num, int digits, bool thecolor, int lettersize, vector letterscale)
+void Sbar_DrawNum_lettersize(vector thepos, string num, int digits, bool thecolor, int lettersize, vector letterscale)
 {
 	int numlen = strlen(num);
 	if(numlen < digits)
-		dx += (digits - numlen) * lettersize;
+		thepos.x += (digits - numlen) * lettersize;
 
 	FOREACH_CHAR(num, true,
 	{
@@ -285,20 +285,20 @@ void Sbar_DrawNum_lettersize(int dx, int dy, string num, int digits, bool thecol
 			theframe = chr2str(it);
 		string thepic = Sbar_PickNum(thecolor, theframe);
 		if(!letterscale)
-			Sbar_DrawPic(dx, dy, thepic);
+			Sbar_DrawPic(thepos, thepic);
 		else
-			drawpic(sbar + vec2(dx, dy), thepic, letterscale, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+			drawpic(sbar + thepos, thepic, letterscale, '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
-		dx += lettersize;
+		thepos.x += lettersize;
 	});
 }
 
-void Sbar_DrawNum(int dx, int dy, string num, int digits, bool thecolor)
+void Sbar_DrawNum(vector thepos, string num, int digits, bool thecolor)
 {
-	Sbar_DrawNum_lettersize(dx, dy, num, digits, thecolor, 24, '0 0 0');
+	Sbar_DrawNum_lettersize(thepos, num, digits, thecolor, 24, '0 0 0');
 }
 
-void Sbar_DrawXNum(int dx, int dy, int num, int digits, int lettersize, vector col)
+void Sbar_DrawXNum(vector thepos, int num, int digits, int lettersize, vector col)
 {
 	string l;
 	if(digits < 0)
@@ -311,7 +311,7 @@ void Sbar_DrawXNum(int dx, int dy, int num, int digits, int lettersize, vector c
 
 	int numlen = strlen(l);
 	if(numlen < digits)
-		dx += (digits - numlen) * lettersize;
+		thepos.x += (digits - numlen) * lettersize;
 
 	FOREACH_CHAR(l, true,
 	{
@@ -322,9 +322,9 @@ void Sbar_DrawXNum(int dx, int dy, int num, int digits, int lettersize, vector c
 			theframe = "colon";
 		else
 			theframe = chr2str(it);
-		drawpic(sbar + vec2(dx, dy), Sbar_PickNum(false, theframe), vec2(lettersize, lettersize), col, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawpic(sbar + thepos, Sbar_PickNum(false, theframe), vec2(lettersize, lettersize), col, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
-		dx += lettersize;
+		thepos.x += lettersize;
 	});
 }
 
@@ -378,14 +378,14 @@ void Sbar_SoloScoreboard()
 
 	// monsters and secrets are now both on the top row
 	if(STAT(MONSTERS_TOTAL))
-		Sbar_DrawString(8, 4, sprintf("Monsters:%3d /%d", STAT(MONSTERS_KILLED), STAT(MONSTERS_TOTAL)));
+		Sbar_DrawString('8 4 0', sprintf("Monsters:%3d /%d", STAT(MONSTERS_KILLED), STAT(MONSTERS_TOTAL)));
 	else if(STAT(MONSTERS_KILLED)) // LA: Display something if monsters_killed is non-zero, but total_monsters is zero
-		Sbar_DrawString(8, 4, sprintf("Monsters:%3d", STAT(MONSTERS_KILLED)));
+		Sbar_DrawString('8 4 0', sprintf("Monsters:%3d", STAT(MONSTERS_KILLED)));
 
 	if(STAT(SECRETS_TOTAL))
-		Sbar_DrawString(8+22*8, 4, sprintf("Secrets:%3d /%3d", STAT(SECRETS_FOUND), STAT(SECRETS_TOTAL)));
+		Sbar_DrawString(vec2(8+22*8, 4), sprintf("Secrets:%3d /%3d", STAT(SECRETS_FOUND), STAT(SECRETS_TOTAL)));
 	else if(STAT(SECRETS_FOUND)) // LA: And similarly for secrets
-		Sbar_DrawString(8+22*8, 4, sprintf("Secrets:%3d", STAT(SECRETS_FOUND)));
+		Sbar_DrawString(vec2(8+22*8, 4), sprintf("Secrets:%3d", STAT(SECRETS_FOUND)));
 
 	// format is like this: e1m1:The Sligpate Complex
 	string worldstr = sprintf("%s:%s", autocvar_cl_worldbasename, autocvar_cl_worldmessage);
@@ -403,10 +403,10 @@ void Sbar_SoloScoreboard()
 		worldstr = substring(worldstr, 0, worldlen - (maxlen - worldlen));
 
 	// print the filename and message
-	Sbar_DrawString(8, 12, worldstr);
+	Sbar_DrawString('8 12 0', worldstr);
 
 	// print the time
-	Sbar_DrawString(8 + maxlen*8, 12, timestr);
+	Sbar_DrawString(vec2(8 + maxlen*8, 12), timestr);
 }
 
 /*
@@ -415,7 +415,7 @@ Sbar_DeathmatchOverlay
 
 ==================
 */
-float Sbar_PrintScoreboardItem(int fscore, float dx, float dy)
+float Sbar_PrintScoreboardItem(int fscore, vector thepos)
 {
 	bool myself = false;
 	float thescore = stof(getplayerkeyvalue(fscore, "frags"));
@@ -428,11 +428,11 @@ float Sbar_PrintScoreboardItem(int fscore, float dx, float dy)
 	vector pos;
 
 	thecolor = stov(getplayerkeyvalue(fscore, "bottomcolor"));
-	pos = vec2(dx + 9 * 8 * SBAR_MAXWIDTH, dy + 1);
+	pos = vec2(thepos.x + 9 * 8 * SBAR_MAXWIDTH, thepos.y + 1);
 	drawfill(pos, vec2(40 * SBAR_MAXWIDTH, 3), thecolor, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 	thecolor = stov(getplayerkeyvalue(fscore, "topcolor"));
-	pos = vec2(dx + 9 * 8 * SBAR_MAXWIDTH, dy + 4);
+	pos = vec2(thepos.x + 9 * 8 * SBAR_MAXWIDTH, thepos.y + 4);
 	drawfill(pos, vec2(40 * SBAR_MAXWIDTH, 3), thecolor, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 	// print the text
@@ -440,9 +440,9 @@ float Sbar_PrintScoreboardItem(int fscore, float dx, float dy)
 	float thepl = stof(getplayerkeyvalue(fscore, "pl"));
 	string thename = getplayerkeyvalue(fscore, "name");
 	if(theping || thepl)
-		drawcolorcodedstring2(vec2(dx, dy), sprintf("%4d %3d %5d %c%s", bound(0, theping, 9999), bound(0, thepl, 99), thescore, ((myself) ? 13 : ' '), thename), '8 8 0', '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawcolorcodedstring2(thepos, sprintf("%4d %3d %5d %c%s", bound(0, theping, 9999), bound(0, thepl, 99), thescore, ((myself) ? 13 : ' '), thename), '8 8 0', '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 	else
-		drawcolorcodedstring2(vec2(dx, dy), sprintf("         %5d %c%s", thescore, ((myself) ? 13 : ' '), thename), '8 8 0', '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawcolorcodedstring2(thepos, sprintf("         %5d %c%s", thescore, ((myself) ? 13 : ' '), thename), '8 8 0', '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 	return 8;
 }
@@ -453,23 +453,23 @@ Sbar_MiniDeathmatchOverlay
 
 ==================
 */
-void Sbar_MiniDeathmatchOverlay(int dx, int dy)
+void Sbar_MiniDeathmatchOverlay(vector thepos)
 {
 	// do not draw this if sbar_miniscoreboard_size is zero
 	if(autocvar_sbar_miniscoreboard_size == 0)
 		return;
 	// adjust the given dy if sbar_miniscoreboard_size doesn't indicate default (< 0)
 	if(autocvar_sbar_miniscoreboard_size > 0)
-		dy = (autocvar_vid_conheight - autocvar_sbar_miniscoreboard_size * 8);
+		thepos.y = (autocvar_vid_conheight - autocvar_sbar_miniscoreboard_size * 8);
 
 	// scores
 	Sbar_SortFrags();
 
 	// decide where to print
-	int numlines = (autocvar_vid_conheight - dy + 7) / 8;
+	int numlines = (autocvar_vid_conheight - thepos.y + 7) / 8;
 
 	// give up if there isn't room
-	if(dx >= autocvar_vid_conwidth || dy >= autocvar_vid_conheight || numlines < 1)
+	if(thepos.x >= autocvar_vid_conwidth || thepos.y >= autocvar_vid_conheight || numlines < 1)
 		return;
 
 	//find us
@@ -490,13 +490,13 @@ void Sbar_MiniDeathmatchOverlay(int dx, int dy)
 
 	if(range_end - found < numlines) // won't draw to bottom?
 	{
-		dy += 8 * (numlines - (range_end - found)); // bottom align
-		dy -= 8; // text size (b0rked)
+		thepos.y += 8 * (numlines - (range_end - found)); // bottom align
+		thepos.y -= 8; // text size (b0rked)
 	}
 
-	for(; found < range_end && dy < autocvar_vid_conheight; found++)
+	for(; found < range_end && thepos.y < autocvar_vid_conheight; found++)
 	{
-		dy += Sbar_PrintScoreboardItem(fragsort[found], dx, dy);
+		thepos.y += Sbar_PrintScoreboardItem(fragsort[found], thepos);
 	}
 }
 
@@ -533,27 +533,27 @@ void Sbar_Score(int margin)
 		}
 		int distribution = otherleader >= 0 ? score - stoi(getplayerkeyvalue(otherleader, "frags")) : 0;
 		if(place == 1)
-			Sbar_DrawXNum(-3*12, -12, place, 3, 12, '1 1 1');
+			Sbar_DrawXNum(vec2(-3*12, -12), place, 3, 12, '1 1 1');
 		else if(place == 2)
-			Sbar_DrawXNum(-3*12, -12, place, 3, 12, '1 1 0');
+			Sbar_DrawXNum(vec2(-3*12, -12), place, 3, 12, '1 1 0');
 		else
-			Sbar_DrawXNum(-3*12, -12, place, 3, 12, '1 0 0');
+			Sbar_DrawXNum(vec2(-3*12, -12), place, 3, 12, '1 0 0');
 		if(otherleader < 0)
-			Sbar_DrawXNum(-32*4,   0, score, 4, 32, '1 1 1');
+			Sbar_DrawXNum(vec2(-32*4, 0), score, 4, 32, '1 1 1');
 		if(distribution >= 0)
 		{
-			Sbar_DrawXNum(-7*12, -12, distribution, 4, 12, '1 1 1');
-			Sbar_DrawXNum(-32*4,   0, score, 4, 32, '1 1 1');
+			Sbar_DrawXNum(vec2(-7*12, -12), distribution, 4, 12, '1 1 1');
+			Sbar_DrawXNum(vec2(-32*4, 0), score, 4, 32, '1 1 1');
 		}
 		else if(distribution >= -5)
 		{
-			Sbar_DrawXNum(-7*12, -12, distribution, 4, 12, '1 1 0');
-			Sbar_DrawXNum(-32*4,   0, score, 4, 32, '1 1 0');
+			Sbar_DrawXNum(vec2(-7*12, -12), distribution, 4, 12, '1 1 0');
+			Sbar_DrawXNum(vec2(-32*4, 0), score, 4, 32, '1 1 0');
 		}
 		else
 		{
-			Sbar_DrawXNum(-7*12, -12, distribution, 4, 12, '1 0 0');
-			Sbar_DrawXNum(-32*4,   0, score, 4, 32, '1 0 0');
+			Sbar_DrawXNum(vec2(-7*12, -12), distribution, 4, 12, '1 0 0');
+			Sbar_DrawXNum(vec2(-32*4, 0), score, 4, 32, '1 0 0');
 		}
 	}
 
@@ -583,7 +583,7 @@ void Sbar_Score(int margin)
 			Sbar_DrawXNum(-12*2, 32, seconds, -2, 12, 1, 0, 0, 1, 0);
 	#else
 		string timestr = seconds_tostring(max(0, STAT(TIMELIMIT) * 60 - time));
-		Sbar_DrawNum_lettersize(-12 * 3, 32, timestr, strlen(timestr), false, 12, '12 12 0');
+		Sbar_DrawNum_lettersize(vec2(-12 * 3, 32), timestr, strlen(timestr), false, 12, '12 12 0');
 	#endif
 	}
 	else if(autocvar_sbar_gametime)
@@ -597,7 +597,7 @@ void Sbar_Score(int margin)
 		Sbar_DrawXNum(-12*2, 32, seconds, -2, 12, 1, 1, 1, 1, 0);
 	#else
 		string timestr = seconds_tostring(time);
-		Sbar_DrawNum_lettersize(-12 * 3, 32, timestr, strlen(timestr), false, 12, '12 12 0');
+		Sbar_DrawNum_lettersize(vec2(-12 * 3, 32), timestr, strlen(timestr), false, 12, '12 12 0');
 	#endif
 	}
 
@@ -630,7 +630,7 @@ void Sbar_DeathmatchOverlay()
 	dy += 8;
 
 	for(int j = 0; j < scoreboardlines && dy < autocvar_vid_conheight; j++)
-		dy += Sbar_PrintScoreboardItem(fragsort[j], xmin, dy);
+		dy += Sbar_PrintScoreboardItem(fragsort[j], vec2(xmin, dy));
 }
 
 void Sbar_DrawScoreboard()
@@ -669,26 +669,26 @@ void Sbar_IntermissionOverlay()
 	Sbar_DrawNum(246, 64, num / 10, 2, false);
 	Sbar_DrawNum(266, 64, num % 10, 2, false);*/
 	string timestr = seconds_tostring(completed_time);
-	Sbar_DrawNum(180, 64, timestr, strlen(timestr), 0);
+	Sbar_DrawNum('180 64 0', timestr, strlen(timestr), 0);
 
 // LA: Display as "a" instead of "a/b" if b is 0
 	if(STAT(SECRETS_TOTAL))
 	{
-		Sbar_DrawNum(160, 104, itos(STAT(SECRETS_FOUND)), 3, 0);
-		Sbar_DrawPic(232, 104, "gfx/num_slash");
-		Sbar_DrawNum(240, 104, itos(STAT(SECRETS_TOTAL)), 3, 0);
+		Sbar_DrawNum('160 104 0', itos(STAT(SECRETS_FOUND)), 3, 0);
+		Sbar_DrawPic('232 104 0', "gfx/num_slash");
+		Sbar_DrawNum('240 104 0', itos(STAT(SECRETS_TOTAL)), 3, 0);
 	}
 	else
-		Sbar_DrawNum(240, 104, itos(STAT(SECRETS_FOUND)), 3, 0);
+		Sbar_DrawNum('240 104 0', itos(STAT(SECRETS_FOUND)), 3, 0);
 
 	if(STAT(MONSTERS_TOTAL))
 	{
-		Sbar_DrawNum(160, 144, itos(STAT(MONSTERS_KILLED)), 3, 0);
-		Sbar_DrawPic(232, 144, "gfx/num_slash");
-		Sbar_DrawNum(240, 144, itos(STAT(MONSTERS_TOTAL)), 3, 0);
+		Sbar_DrawNum('160 144 0', itos(STAT(MONSTERS_KILLED)), 3, 0);
+		Sbar_DrawPic('232 144 0', "gfx/num_slash");
+		Sbar_DrawNum('240 144 0', itos(STAT(MONSTERS_TOTAL)), 3, 0);
 	}
 	else
-		Sbar_DrawNum(240, 144, itos(STAT(MONSTERS_KILLED)), 3, 0);
+		Sbar_DrawNum('240 144 0', itos(STAT(MONSTERS_KILLED)), 3, 0);
 }
 
 /*
@@ -743,12 +743,12 @@ void Sbar_DrawInventory()
 	if(MP_ROGUE)
 	{
 		if(STAT(ACTIVEWEAPON) >= WEP_LAVA_NAILGUN)
-			Sbar_DrawAlphaPic(0, -24, "gfx/r_invbar1", autocvar_sbar_alpha_bg);
+			Sbar_DrawAlphaPic('0 -24 0', "gfx/r_invbar1", autocvar_sbar_alpha_bg);
 		else
-			Sbar_DrawAlphaPic(0, -24, "gfx/r_invbar2", autocvar_sbar_alpha_bg);
+			Sbar_DrawAlphaPic('0 -24 0', "gfx/r_invbar2", autocvar_sbar_alpha_bg);
 	}
 	else
-		Sbar_DrawAlphaPic(0, -24, "gfx/ibar", autocvar_sbar_alpha_bg);
+		Sbar_DrawAlphaPic('0 -24 0', "gfx/ibar", autocvar_sbar_alpha_bg);
 
 	// weapons
 	for(int j = 0; j < 7; j++)
@@ -767,7 +767,7 @@ void Sbar_DrawInventory()
 			else
 				flashon = (flashon % 5) + 2;
 
-			Sbar_DrawPic(j * 24, -16, Sbar_PickWeapon(flashon, j));
+			Sbar_DrawPic(vec2(j * 24, -16), Sbar_PickWeapon(flashon, j));
 		}
 	}
 
@@ -800,7 +800,7 @@ void Sbar_DrawInventory()
 						if(flashon)
 						{
 							grenadeflashing = true;
-							Sbar_DrawPic(96, -16, Sbar_PickHIPWeapon(flashon, 2));
+							Sbar_DrawPic('96 -16 0', Sbar_PickHIPWeapon(flashon, 2));
 						}
 					}
 				}
@@ -809,13 +809,13 @@ void Sbar_DrawInventory()
 					if(myweapons & (WEP_SHOTGUN<<4))
 					{
 						if(!grenadeflashing)
-							Sbar_DrawPic(96, -16, Sbar_PickHIPWeapon(flashon, 3));
+							Sbar_DrawPic('96 -16 0', Sbar_PickHIPWeapon(flashon, 3));
 					}
 					else
-						Sbar_DrawPic(96, -16, Sbar_PickHIPWeapon(flashon, 4));
+						Sbar_DrawPic('96 -16 0', Sbar_PickHIPWeapon(flashon, 4));
 				}
 				else
-					Sbar_DrawPic(176 + (j * 24), -16, Sbar_PickHIPWeapon(flashon, j));
+					Sbar_DrawPic(vec2(176 + (j * 24), -16), Sbar_PickHIPWeapon(flashon, j));
 			}
 		}
 	}
@@ -828,7 +828,7 @@ void Sbar_DrawInventory()
 			for(int j = 0; j < 5; j++)
 			{
 				if(STAT(ACTIVEWEAPON) == (WEP_LAVA_NAILGUN << j))
-					Sbar_DrawPic((j + 2) * 24, -16, strcat("gfx/", Sbar_PickRogueWeapon_wepname(j)));
+					Sbar_DrawPic(vec2((j + 2) * 24, -16), strcat("gfx/", Sbar_PickRogueWeapon_wepname(j)));
 			}
 		}
 	}
@@ -851,7 +851,7 @@ void Sbar_DrawInventory()
 			Sbar_DrawCharacter((6 * j + iter_i) * 8 - 2, -24, 18 + it - '0');
 		});*/
 
-		Sbar_DrawString((6 * j) * 8 - 2, -24, ftos(itemstat));
+		Sbar_DrawString(vec2((6 * j) * 8 - 2, -24), ftos(itemstat));
 	}
 
 	// items
@@ -863,7 +863,7 @@ void Sbar_DrawInventory()
 			{
 				//MED 01/04/97 changed keys
 				if(j > 1)
-					Sbar_DrawPic(192 + j * 16, -16, Sbar_PickItem(j));
+					Sbar_DrawPic(vec2(192 + j * 16, -16), Sbar_PickItem(j));
 			}
 		}
 	}
@@ -871,17 +871,17 @@ void Sbar_DrawInventory()
 	if(MP_HIPNOTIC)
 	{
 		if(myitems & IT_WETSUIT)
-			Sbar_DrawPic(288, -16, "gfx/sb_wsuit");
+			Sbar_DrawPic('288 -16 0', "gfx/sb_wsuit");
 		if(myitems & IT_EMPATHY_SHIELDS)
-			Sbar_DrawPic(288 + 16, -16, "gfx/sb_eshld");
+			Sbar_DrawPic(vec2(288 + 16, -16), "gfx/sb_eshld");
 	}
 
 	if(MP_ROGUE)
 	{
 		if(myitems & IT_SHIELD)
-			Sbar_DrawPic(288, -16, "gfx/r_shield1");
+			Sbar_DrawPic('288 -16 0', "gfx/r_shield1");
 		if(myitems & IT_ANTIGRAV)
-			Sbar_DrawPic(288 + 16, -16, "gfx/r_agrav1");
+			Sbar_DrawPic(vec2(288 + 16, -16), "gfx/r_agrav1");
 	}
 
 	if(!MP_ROGUE)
@@ -890,7 +890,7 @@ void Sbar_DrawInventory()
 		for(int j = 0; j < 4; j++)
 		{
 			if(STAT(SERVERFLAGS) & BIT(j))
-				Sbar_DrawPic(320 - 32 + j * 8, -16, Sbar_PickSigil(j));
+				Sbar_DrawPic(vec2(320 - 32 + j * 8, -16), Sbar_PickSigil(j));
 		}
 	}
 }
@@ -919,11 +919,11 @@ void Sbar_DrawFrags()
 
 		thecolor = stov(getplayerkeyvalue(k, "bottomcolor"));
 		pos = sbar + vec2(dx + 10, -23);
-		drawfill(pos, vec2(28, 4), thecolor, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawfill(pos, '28 4 0', thecolor, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 		thecolor = stov(getplayerkeyvalue(k, "topcolor"));
 		pos = sbar + vec2(dx + 10, 4 - 23);
-		drawfill(pos, vec2(28, 3), thecolor, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+		drawfill(pos, '28 3 0', thecolor, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 		// draw number
 		int f = stoi(getplayerkeyvalue(k, "frags"));
@@ -931,12 +931,12 @@ void Sbar_DrawFrags()
 
 		if(k == player_localnum)
 		{
-			Sbar_DrawCharacter(dx      + 2, -24, 16);
-			Sbar_DrawCharacter(dx + 32 - 4, -24, 17);
+			Sbar_DrawCharacter(vec2(dx      + 2, -24), 16);
+			Sbar_DrawCharacter(vec2(dx + 32 - 4, -24), 17);
 		}
-		Sbar_DrawCharacter(dx +  8, -24, str2chr(num, 0));
-		Sbar_DrawCharacter(dx + 16, -24, str2chr(num, 1));
-		Sbar_DrawCharacter(dx + 24, -24, str2chr(num, 2));
+		Sbar_DrawCharacter(vec2(dx +  8, -24), str2chr(num, 0));
+		Sbar_DrawCharacter(vec2(dx + 16, -24), str2chr(num, 1));
+		Sbar_DrawCharacter(vec2(dx + 24, -24), str2chr(num, 2));
 		dx += 32;
 	}
 }
@@ -974,7 +974,7 @@ void Sbar_DrawFace()
 		pic = Sbar_PickFace(f, washurt);
 	}
 		
-	Sbar_DrawPic(112, 0, pic);
+	Sbar_DrawPic('112 0 0', pic);
 }
 
 void Sbar_Draw()
@@ -1015,20 +1015,20 @@ void Sbar_Draw()
 
 			if(sb_showscores || (STAT(HEALTH) <= 0 && autocvar_cl_deathscoreboard))
 			{
-				Sbar_DrawAlphaPic(0, 0, "gfx/scorebar", autocvar_sbar_alpha_bg);
+				Sbar_DrawAlphaPic('0 0 0', "gfx/scorebar", autocvar_sbar_alpha_bg);
 				Sbar_DrawScoreboard();
 			}
 			else if(sb_lines)
 			{
-				Sbar_DrawAlphaPic(0, 0, "gfx/sbar", autocvar_sbar_alpha_bg);
+				Sbar_DrawAlphaPic('0 0 0', "gfx/sbar", autocvar_sbar_alpha_bg);
 
 				// keys (hipnotic only)
 				//MED 01/04/97 moved keys here so they would not be overwritten
 				// armor
 				if(STAT(ITEMS) & IT_INVULNERABILITY)
 				{
-					Sbar_DrawNum(24, 0, itos(666), 3, 1);
-					Sbar_DrawPic(0, 0, "gfx/disc");
+					Sbar_DrawNum('24 0 0', itos(666), 3, 1);
+					Sbar_DrawPic('0 0 0', "gfx/disc");
 				}
 				else
 				{
@@ -1042,8 +1042,8 @@ void Sbar_Draw()
 
 					if(apic)
 					{
-						Sbar_DrawPic(0, 0, apic);
-						Sbar_DrawNum(24, 0, itos(getstati(STAT_ARMOR)), 3, getstati(STAT_ARMOR) <= 25);
+						Sbar_DrawPic('0 0 0', apic);
+						Sbar_DrawNum('24 0 0', itos(getstati(STAT_ARMOR)), 3, getstati(STAT_ARMOR) <= 25);
 					}
 				}
 
@@ -1051,7 +1051,7 @@ void Sbar_Draw()
 				Sbar_DrawFace();
 
 				// health
-				Sbar_DrawNum(136, 0, itos(rint(STAT(HEALTH))), 3, STAT(HEALTH) <= 25);
+				Sbar_DrawNum('136 0 0', itos(rint(STAT(HEALTH))), 3, STAT(HEALTH) <= 25);
 
 				// ammo icon
 				string pic = string_null;
@@ -1072,15 +1072,15 @@ void Sbar_Draw()
 
 				if(pic)
 				{
-					Sbar_DrawPic(224, 0, pic);
-					Sbar_DrawNum(248, 0, itos(getstati(STAT_AMMO)), 3, getstati(STAT_AMMO) <= 10);
+					Sbar_DrawPic('224 0 0', pic);
+					Sbar_DrawNum('248 0 0', itos(getstati(STAT_AMMO)), 3, getstati(STAT_AMMO) <= 10);
 				}
 
 
 				// LordHavoc: changed to draw the deathmatch overlays in any multiplayer mode
 				if(maxclients > 1 || !coop)
 				{
-					Sbar_MiniDeathmatchOverlay(sbar.x + 324, autocvar_vid_conheight - 8 * 8);
+					Sbar_MiniDeathmatchOverlay(vec2(sbar.x + 324, autocvar_vid_conheight - 8 * 8));
 					Sbar_Score(24);
 				}
 			}
