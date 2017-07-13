@@ -1,5 +1,13 @@
 #pragma once
 
+// this returns a tempstring containing a copy of s with additional \n newlines added, it also replaces \n in the text with a real newline
+// NOTE: s IS allowed to be a tempstring
+string wordwrap(string s, float l);
+#ifdef SVQC
+void wordwrap_sprint(entity to, string s, float l);
+#endif
+void wordwrap_cb(string s, float l, void(string) callback);
+
 #ifdef GAMEQC
 int Mod_Q1BSP_SuperContentsFromNativeContents(int nativecontents);
 int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents);

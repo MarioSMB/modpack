@@ -177,6 +177,15 @@ void GameCommand(string command)
 		return;
 	}
 
+	if(cmdname == "info")
+	{
+		string thecmd = builtin_cvar_string(strcat("sv_info_", argv(1)));
+
+		if (thecmd) wordwrap_sprint(NULL, thecmd, 1000);
+		else LOG_INFO("ERROR: unsupported info command");
+		return;
+	}
+
 	// nothing above caught the command, must be invalid
 	LOG_INFO(((command != "") ? strcat("Unknown server command \"", command, "\"") : "No command provided"), ".\n");
 }

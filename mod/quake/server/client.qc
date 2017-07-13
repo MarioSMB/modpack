@@ -2051,6 +2051,15 @@ void SV_ParseClientCommand(entity this, string command)
 		return;
 	}
 
+	if(cmd_name == "info")
+	{
+		string thecmd = builtin_cvar_string(strcat("sv_info_", argv(1)));
+
+		if (thecmd) wordwrap_sprint(this, thecmd, 1000);
+		else sprint(this, "ERROR: unsupported info command");
+		return;
+	}
+
 	clientcommand(this, command);
 }
 

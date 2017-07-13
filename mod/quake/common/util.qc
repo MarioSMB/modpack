@@ -1,5 +1,112 @@
 #include "util.qh"
 
+string wordwrap_buffer;
+
+void wordwrap_buffer_put(string s)
+{
+	wordwrap_buffer = strcat(wordwrap_buffer, s);
+}
+
+string wordwrap(string s, float l)
+{
+	string r;
+	wordwrap_buffer = "";
+	wordwrap_cb(s, l, wordwrap_buffer_put);
+	r = wordwrap_buffer;
+	wordwrap_buffer = "";
+	return r;
+}
+
+#ifdef SVQC
+entity _wordwrap_buffer_sprint_ent;
+void wordwrap_buffer_sprint(string s)
+{
+	wordwrap_buffer = strcat(wordwrap_buffer, s);
+	if(s == "\n")
+	{
+		sprint(_wordwrap_buffer_sprint_ent, wordwrap_buffer);
+		wordwrap_buffer = "";
+	}
+}
+
+void wordwrap_sprint(entity to, string s, float l)
+{
+	wordwrap_buffer = "";
+	_wordwrap_buffer_sprint_ent = to;
+	wordwrap_cb(s, l, wordwrap_buffer_sprint);
+	_wordwrap_buffer_sprint_ent = NULL;
+	if(wordwrap_buffer != "")
+		sprint(to, strcat(wordwrap_buffer, "\n"));
+	wordwrap_buffer = "";
+	return;
+}
+#endif
+
+void wordwrap_cb(string s, float l, void(string) callback)
+{
+	string c;
+	float lleft, i, j, wlen;
+
+	s = strzone(s);
+	lleft = l;
+	for (i = 0;i < strlen(s);++i)
+	{
+		if (substring(s, i, 2) == "\\n")
+		{
+			callback("\n");
+			lleft = l;
+			++i;
+		}
+		else if (substring(s, i, 1) == "\n")
+		{
+			callback("\n");
+			lleft = l;
+		}
+		else if (substring(s, i, 1) == " ")
+		{
+			if (lleft > 0)
+			{
+				callback(" ");
+				lleft = lleft - 1;
+			}
+		}
+		else
+		{
+			for (j = i+1;j < strlen(s);++j)
+				//    ^^ this skips over the first character of a word, which
+				//       is ALWAYS part of the word
+				//       this is safe since if i+1 == strlen(s), i will become
+				//       strlen(s)-1 at the end of this block and the function
+				//       will terminate. A space can't be the first character we
+				//       read here, and neither can a \n be the start, since these
+				//       two cases have been handled above.
+			{
+				c = substring(s, j, 1);
+				if (c == " ")
+					break;
+				if (c == "\\")
+					break;
+				if (c == "\n")
+					break;
+				// we need to keep this tempstring alive even if substring is
+				// called repeatedly, so call strcat even though we're not
+				// doing anything
+				callback("");
+			}
+			wlen = j - i;
+			if (lleft < wlen)
+			{
+				callback("\n");
+				lleft = l;
+			}
+			callback(substring(s, i, wlen));
+			lleft = lleft - wlen;
+			i = j - 1;
+		}
+	}
+	strunzone(s);
+}
+
 #ifdef GAMEQC
 int Mod_Q1BSP_SuperContentsFromNativeContents(int nativecontents)
 {

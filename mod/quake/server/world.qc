@@ -449,6 +449,7 @@ void cvar_changes_init()
 		BADCVAR("teamplay_mode");
 		BADCVAR("timelimit_override");
 		BADPREFIX("g_warmup_");
+		BADPREFIX("sv_info_");
 		BADPREFIX("sv_ready_restart_");
 
 		// mutators that announce themselves properly to the server browser
