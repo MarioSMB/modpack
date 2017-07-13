@@ -10,12 +10,8 @@ void MOTD(entity this)
 	if(this.motd_count < 5)
 	{
 		if(teamplay > 3 && teamplay < 7)
-		{
-			string tp = ftos(teamplay);
-			stuffcmd(this, "teamplay ");
-			stuffcmd(this, tp);
-			stuffcmd(this, "\n");
-		}
+			stuffcmd(this, "teamplay ", ftos(teamplay), "\n");
+
 		this.motd_time = time + 1;
 		this.motd_count = this.motd_count + 1;
 /*

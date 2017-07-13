@@ -691,11 +691,6 @@ void ClientKill(entity this)
 	respawn(this);
 }
 
-bool CheckSpawnPoint(vector v)
-{
-	return false;
-}
-
 /*
 ============
 SelectSpawnPoint
@@ -894,7 +889,7 @@ void PutClientInServer(entity this)
 	if(deathmatch || coop)
 	{
 		makevectors(this.angles);
-		spawn_tfog(this.origin + v_forward*20);
+		spawn_tfog(this.origin + v_forward * 20);
 	}
 
 	this.on_hook = false;
