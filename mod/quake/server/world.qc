@@ -970,21 +970,12 @@ void CreatureFrame_FallDamage(entity this)
 
 void CreatureFrame_All()
 {
-#if 1
 	IL_EACH(g_damagedbycontents, it.damagedbycontents,
 	{
 		if (it.move_movetype == MOVETYPE_NOCLIP) continue;
 		CreatureFrame_Liquids(it);
 		CreatureFrame_FallDamage(it);
 	});
-#else
-	FOREACH_CLIENT(IS_PLAYER(it) && it.deadflag == DEAD_NO,
-	{
-		if(it.move_movetype == MOVETYPE_NOCLIP) continue;
-		CreatureFrame_Liquids(it);
-		CreatureFrame_FallDamage(it);
-	});
-#endif
 }
 
 void StartFrame()
