@@ -1,4 +1,13 @@
-#include "view.qh"
+float drawtime;
+float drawframetime;
+
+int cs_project_is_b0rked;
+
+float autocvar_vid_conwidth;
+float autocvar_vid_conheight;
+
+float contentavgalpha, liquidalpha_prev;
+vector liquidcolor_prev;
 
 bool autocvar_hud_contents;
 float autocvar_hud_contents_fadeintime;

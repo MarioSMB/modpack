@@ -1,7 +1,5 @@
 #include "_all.qh"
 
-#include "autocvars.qh"
-
 #include "../common/_all.inc"
 
 #include "csqcmodel_hooks.qc" // needs to be done early

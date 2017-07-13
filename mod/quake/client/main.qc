@@ -1,4 +1,4 @@
-#include "main.qh"
+bool autocvar_developer_csqcentities;
 
 // required engine functions
 
