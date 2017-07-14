@@ -22,14 +22,14 @@ Usage
 
 On server launch, you'll need to set a few cvars to make everything work:
 
-`coop 1`
-`deathmatch 0`
-`registered 1`
-`sv_playerphysicsqc 1`
+`coop 1`  
+`deathmatch 0`  
+`registered 1`  
+`sv_playerphysicsqc 1`  
 
 
-If you wish to use the Scourge of Armagon mission pack, you'll need the following as well:
+If you wish to use the Scourge of Armagon mission pack, you'll need the following as well:  
 `set sv_missionpack_hipnotic 1`
 
-If you wish to use the Dissolution of Eternity mission pack, you'll need the following instead:
+If you wish to use the Dissolution of Eternity mission pack, you'll need the following instead:  
 `set sv_missionpack_rogue 1`
