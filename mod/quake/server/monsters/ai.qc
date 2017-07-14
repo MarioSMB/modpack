@@ -274,7 +274,7 @@ bool t_walkmove(entity this, float yaw, float dist)
 }
 
 // hacked in version of movetogoal (to be rewritten)
-#if 1
+#if 0
 bool t_stepdirection(entity this, float yaw, float dist)
 {
 	this.ideal_yaw = yaw;
@@ -369,7 +369,7 @@ void t_newchasedir(entity this, entity targ, float dist)
 
 void t_movetogoal(entity this, float dist)
 {
-#if 1
+#if 0
 	if(!(IS_ONGROUND(this) || (this.flags & FL_SWIM) || (this.flags & FL_FLY)))
 		return;
 
@@ -547,7 +547,7 @@ void followtarget_f(entity this)
 
 	this.solid = SOLID_TRIGGER;
 	settouch(this, t_followtarget);
-	_setmodel(this, this.model); // set size and link into NULL
+	_setmodel(this, this.model); // set size and link into world
 	set_movetype(this, MOVETYPE_NONE);
 	this.modelindex = 0;
 	this.model = "";
