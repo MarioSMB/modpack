@@ -19,7 +19,7 @@ void trigger_push_touch(entity this, entity toucher)
 			if(toucher.fly_sound < time)
 			{
 				toucher.fly_sound = time + 1.5;
-				_sound(toucher, CHAN_TRIGGER, "ambience/windfly.wav", 1, ATTN_NORM);
+				_sound(toucher, CH_TRIGGER, "ambience/windfly.wav", 1, ATTN_NORM);
 			}
 		}
 	}
