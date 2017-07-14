@@ -185,7 +185,7 @@ void wrath_attack(entity this)
 	else
 		wrath_at_c01(this);
 
-	_sound(this, CHAN_VOICE, "wrath/watt.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "wrath/watt.wav", 1, ATTN_NORM);
 }
 
 void wrath_pn_a06(entity this) { set_anim(this, anim_wrath_wrthpa06, wrath_run01); }
@@ -226,7 +226,7 @@ void wrath_pain(entity this, entity attacker, float damage)
 		wrath_pn_b01(this);
 
 	this.pain_finished = time + 3;
-	_sound(this, CHAN_VOICE, "wrath/wpain.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "wrath/wpain.wav", 1, ATTN_NORM);
 }
 
 void wrath_die15(entity this)
@@ -251,7 +251,7 @@ void wrath_die07(entity this) { set_anim(this, anim_wrath_wrthdt07, wrath_die09)
 void wrath_die05(entity this) { set_anim(this, anim_wrath_wrthdt05, wrath_die07); }
 void wrath_die04(entity this) { set_anim(this, anim_wrath_wrthdt04, wrath_die05); }
 void wrath_die03(entity this) { set_anim(this, anim_wrath_wrthdt03, wrath_die04); }
-void wrath_die02(entity this, entity attacker) { set_anim(this, anim_wrath_wrthdt02, wrath_die03); _sound(this, CHAN_VOICE, "wrath/wdthc.wav", 1, ATTN_NORM); }
+void wrath_die02(entity this, entity attacker) { set_anim(this, anim_wrath_wrthdt02, wrath_die03); _sound(this, CH_VOICE, "wrath/wdthc.wav", 1, ATTN_NORM); }
 
 string wrath_sight(entity this) { return "wrath/wsee.wav"; }
 string wrath_deathmessage(entity this) { return "was disintegrated by a Wrath"; }
@@ -383,7 +383,7 @@ void WrathMissileTouch(entity this, entity toucher)
 		T_Damage(toucher, this, this, 110);	
 		
 	T_RadiusDamage(this, this.owner, 20, NULL);
-	_sound(this, CHAN_WEAPON, "weapons/r_exp3.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
 
 	te_explosion(this.origin);
 

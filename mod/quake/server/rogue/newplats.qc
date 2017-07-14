@@ -28,13 +28,13 @@ void dn_and_wait_crush(entity this, entity blocker);
 
 void dn_and_wait_hit_top(entity this)
 {
-	_sound(this, CHAN_VOICE, this.noise1, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
 	this.state = STATE_TOP;
 }
 
 void dn_and_wait_hit_bottom(entity this)
 {
-	_sound(this, CHAN_VOICE, this.noise1, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
 	this.state = STATE_BOTTOM;
 	setthink(this, dn_and_wait_go_up);
 	this.nextthink = this.ltime + this.health;
@@ -42,14 +42,14 @@ void dn_and_wait_hit_bottom(entity this)
 
 void dn_and_wait_go_down(entity this)
 {
-	_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	this.state = STATE_DOWN;
 	SUB_CalcMove(this, this.pos2, this.speed, dn_and_wait_hit_bottom);
 }
 
 void dn_and_wait_go_up(entity this)
 {
-	_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	this.state = STATE_UP;
 	SUB_CalcMove(this, this.pos1, this.speed, dn_and_wait_hit_top);
 }
@@ -84,26 +84,26 @@ void toggle_crush(entity this, entity blocker);
 
 void toggle_hit_top(entity this)
 {
-	_sound(this, CHAN_VOICE, this.noise1, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
 	this.state = STATE_TOP;
 }
 
 void toggle_hit_bottom(entity this)
 {
-	_sound(this, CHAN_VOICE, this.noise1, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
 	this.state = STATE_BOTTOM;
 }
 
 void toggle_go_down(entity this)
 {
-	_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	this.state = STATE_DOWN;
 	SUB_CalcMove(this, this.pos2, this.speed, toggle_hit_bottom);
 }
 
 void toggle_go_up(entity this)
 {
-	_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	this.state = STATE_UP;
 	SUB_CalcMove(this, this.pos1, this.speed, toggle_hit_top);
 }
@@ -137,7 +137,7 @@ void elvtr_crush(entity this, entity blocker);
 void elvtr_stop(entity this)
 {
 	this.elevatorOnFloor = this.elevatorToFloor;
-	_sound(this, CHAN_VOICE, this.noise1, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
 	this.state = STATE_BOTTOM;
 	this.elevatorLastUse = time;
 }
@@ -147,7 +147,7 @@ void elvtr_go(entity this)
 	this.elevatorDestination = this.pos2;
 	this.elevatorDestination_z = this.pos2_z + 
 								(this.height * this.elevatorToFloor);
-	_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	this.state = STATE_UP;
 	SUB_CalcMove(this, this.elevatorDestination, this.speed, elvtr_stop);
 	this.elevatorLastUse = time;
@@ -261,7 +261,7 @@ void plat2_spawn_inside_trigger(entity this)
 
 void plat2_hit_top(entity this)
 {
-	_sound(this, CHAN_VOICE, this.noise1, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
 	this.state = STATE_TOP;
 	
 	this.plat2LastMove = time;
@@ -282,7 +282,7 @@ void plat2_hit_top(entity this)
 
 void plat2_hit_bottom(entity this)
 {
-	_sound(this, CHAN_VOICE, this.noise1, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
 	this.state = STATE_BOTTOM;
 
 	this.plat2LastMove = time;
@@ -303,14 +303,14 @@ void plat2_hit_bottom(entity this)
 
 void plat2_go_down(entity this)
 {
-	_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	this.state = STATE_DOWN;
 	SUB_CalcMove(this, this.pos2, this.speed, plat2_hit_bottom);
 }
 
 void plat2_go_up(entity this)
 {
-	_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	this.state = STATE_UP;
 	SUB_CalcMove(this, this.pos1, this.speed, plat2_hit_top);
 }

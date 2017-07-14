@@ -11,7 +11,7 @@ void particlefield_XZ(entity this, entity actor, entity trigger)
 
 	this.ltime = time + 0.25;
 	if(this.noise)
-		_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+		_sound(this, CH_AMBIENT, this.noise, 1, ATTN_NORM);
 
 	// Only show particles if client is visible.
 	// This helps to keep network traffic down to a minimum.
@@ -45,7 +45,7 @@ void particlefield_YZ(entity this, entity actor, entity trigger)
 //   dprint( "\n" );
 	this.ltime = time + 0.25;
 	if(this.noise)
-		_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+		_sound(this, CH_AMBIENT, this.noise, 1, ATTN_NORM);
 
 	// Only show particles if client is visible.
 	// This helps to keep network traffic down to a minimum.
@@ -75,7 +75,7 @@ void particlefield_XY(entity this, entity actor, entity trigger)
 //   dprint( "XY\n" );
 	this.ltime = time + 0.25;
 	if(this.noise)
-		_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+		_sound(this, CH_AMBIENT, this.noise, 1, ATTN_NORM);
 
 	// Only show particles if client is visible.
 	// This helps to keep network traffic down to a minimum.

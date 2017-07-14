@@ -384,9 +384,9 @@ void rotate_train_wait(entity this)
 	this.state = STATE_WAIT;
 
 	if(this.goalentity.noise)
-		_sound(this, CHAN_VOICE, this.goalentity.noise, 1, ATTN_NORM);
+		_sound(this, CH_TRIGGER_SINGLE, this.goalentity.noise, 1, ATTN_NORM);
 	else
-		_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+		_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	if(this.goalentity.spawnflags & ANGLES)
 	{
 		this.rotate = '0 0 0';
@@ -403,9 +403,9 @@ void rotate_train_stop(entity this)
 	this.state = STATE_STOP;
 
 	if(this.goalentity.noise)
-		_sound(this, CHAN_VOICE, this.goalentity.noise, 1, ATTN_NORM);
+		_sound(this, CH_TRIGGER_SINGLE, this.goalentity.noise, 1, ATTN_NORM);
 	else
-		_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+		_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	if( this.goalentity.spawnflags & ANGLES )
 	{
 		this.rotate = '0 0 0';
@@ -439,7 +439,7 @@ void rotate_train_next(entity this)
 	if(this.goalentity.noise1)
 		this.noise1 = this.goalentity.noise1;
 
-	_sound(this, CHAN_VOICE, this.noise1, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
 
 	this.goalentity = targ;
 	this.path = targ.target;
@@ -840,7 +840,7 @@ void rotate_door_think2(entity this)
 		this.state = STATE_CLOSED;
 	}
 
-	_sound(this, CHAN_VOICE, this.noise3, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
 	setthink(this, func_null);
 	this.nextthink = 0;
 
@@ -887,7 +887,7 @@ void rotate_door_reversedirection(entity this)
 		this.state = STATE_CLOSING;
 	}
 
-	_sound(this, CHAN_VOICE, this.noise2, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise2, 1, ATTN_NORM);
 
 	this.rotate = (this.dest - start) * (1 / this.speed);
 	setthink(this, rotate_door_think);
@@ -941,7 +941,7 @@ void rotate_door_use(entity this, entity actor, entity trigger)
 		this.state = STATE_CLOSING;
 	}
 
-	_sound(this, CHAN_VOICE, this.noise2, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise2, 1, ATTN_NORM);
 
 	this.rotate = (this.dest - start) * (1 / this.speed);
 	setthink(this, rotate_door_think);

@@ -84,9 +84,9 @@ void PlayerJump(entity this)
 		{
 			this.swim_flag = time + 1;
 			if(random() < 0.5)
-				_sound(this, CHAN_BODY, "misc/water1.wav", 1, ATTN_NORM);
+				_sound(this, CH_PLAYER, "misc/water1.wav", 1, ATTN_NORM);
 			else
-				_sound(this, CHAN_BODY, "misc/water2.wav", 1, ATTN_NORM);
+				_sound(this, CH_PLAYER, "misc/water2.wav", 1, ATTN_NORM);
 		}
 #endif
 
@@ -106,7 +106,7 @@ void PlayerJump(entity this)
 #ifdef SVQC
 	//this.button2 = 0;
 // player jumping sound
-	_sound(this, CHAN_BODY, "player/plyrjmp8.wav", 1, ATTN_NORM);
+	_sound(this, CH_PLAYER, "player/plyrjmp8.wav", 1, ATTN_NORM);
 #endif
 	this.velocity_z = this.velocity_z + 270;
 }
@@ -143,7 +143,7 @@ void WaterMove(entity this, float dt)
 			if(this.swim_flag < time)
 			{
 				this.swim_flag = time + 7;
-				_sound(this, CHAN_BODY, "misc/wetsuit.wav", 1, ATTN_NORM);
+				_sound(this, CH_PLAYER, "misc/wetsuit.wav", 1, ATTN_NORM);
 			}
 			//MED 01/17/97
 			else

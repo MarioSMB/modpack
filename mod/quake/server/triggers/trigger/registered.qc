@@ -19,7 +19,7 @@ void trigger_onlyregistered_touch(entity this, entity toucher)
 		if(this.message != "")
 		{
 			centerprint(toucher, this.message);
-			_sound(toucher, CHAN_BODY, "misc/talk.wav", 1, ATTN_NORM);
+			_sound(toucher, CH_PLAYER, "misc/talk.wav", 1, ATTN_NORM);
 		}
 	}
 }

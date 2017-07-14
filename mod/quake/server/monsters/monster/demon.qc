@@ -121,7 +121,7 @@ void demon1_walk1(entity this)
 {
 	set_anim(this, anim_demon_walk1, demon1_walk2);
 	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "demon/idle1.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "demon/idle1.wav", 1, ATTN_IDLE);
 	ai_walk(this, 8);
 }
 
@@ -135,7 +135,7 @@ void demon1_run1(entity this)
 {
 	set_anim(this, anim_demon_run1, demon1_run2);
 	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "demon/idle1.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "demon/idle1.wav", 1, ATTN_IDLE);
 	ai_run(this, 20);
 }
 
@@ -196,7 +196,7 @@ void demon1_pain(entity this, entity attacker, float damage)
 		return;
 
 	this.pain_finished = time + 1;
-    _sound(this, CHAN_VOICE, "demon/dpain1.wav", 1, ATTN_NORM);
+    _sound(this, CH_VOICE, "demon/dpain1.wav", 1, ATTN_NORM);
 
 	if(random()*200 > damage)
 		return;		// didn't flinch
@@ -215,7 +215,7 @@ void demon1_die2(entity this) { set_anim(this, anim_demon_death2, demon1_die3); 
 void demon1_die1(entity this)
 {
 	set_anim(this, anim_demon_death1, demon1_die2);
-	_sound(this, CHAN_VOICE, "demon/ddeath.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "demon/ddeath.wav", 1, ATTN_NORM);
 }
 
 void demon_die(entity this, entity attacker)
@@ -223,7 +223,7 @@ void demon_die(entity this, entity attacker)
 // check for gib
 	if(this.health < -80)
 	{
-		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowHead(this, "progs/h_demon.mdl", this.health);
 		ThrowGib(this, "progs/gib1.mdl", this.health);
 		ThrowGib(this, "progs/gib1.mdl", this.health);
@@ -300,7 +300,7 @@ bool DemonCheckAttack(entity this)
 	if(CheckDemonJump(this))
 	{
 		this.attack_state = AS_MISSILE;
-        _sound(this, CHAN_VOICE, "demon/djump.wav", 1, ATTN_NORM);
+        _sound(this, CH_VOICE, "demon/djump.wav", 1, ATTN_NORM);
 		return true;
 	}
 
@@ -320,7 +320,7 @@ void Demon_Melee(entity this, float side)
 	if(!CanDamage(this.enemy, this))
 		return;
 		
-    _sound(this, CHAN_WEAPON, "demon/dhit2.wav", 1, ATTN_NORM);
+    _sound(this, CH_WEAPON_SINGLE, "demon/dhit2.wav", 1, ATTN_NORM);
 	float ldmg = 10 + 5*random();
 	T_Damage(this.enemy, this, this, ldmg);	
 

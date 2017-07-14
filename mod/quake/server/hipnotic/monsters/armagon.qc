@@ -159,7 +159,7 @@ void armagon_launch_missile(entity this, float ofs, float turn)
 		vec = v_forward;
 	this.effects = this.effects | EF_MUZZLEFLASH;
 
-	_sound(this, CHAN_WEAPON, "weapons/sgun1.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/sgun1.wav", 1, ATTN_NORM);
 
 	this.punchangle_x = -2;
 
@@ -252,13 +252,13 @@ void armagon_think(entity this)
 		{
 			float r = random();
 			if(r < 0.25)
-				_sound(this, CHAN_VOICE, "armagon/idle1.wav", 1, ATTN_ARMAGON);
+				_sound(this, CH_VOICE, "armagon/idle1.wav", 1, ATTN_ARMAGON);
 			else if(r < 0.5)
-				_sound(this, CHAN_VOICE, "armagon/idle2.wav", 1, ATTN_ARMAGON);
+				_sound(this, CH_VOICE, "armagon/idle2.wav", 1, ATTN_ARMAGON);
 			else if(r < 0.75)
-				_sound(this, CHAN_VOICE, "armagon/idle3.wav", 1, ATTN_ARMAGON);
+				_sound(this, CH_VOICE, "armagon/idle3.wav", 1, ATTN_ARMAGON);
 			else
-				_sound(this, CHAN_VOICE, "armagon/idle4.wav", 1, ATTN_ARMAGON);
+				_sound(this, CH_VOICE, "armagon/idle4.wav", 1, ATTN_ARMAGON);
 		}
 	}
 }
@@ -290,13 +290,13 @@ void armagon_walkthink(entity this)
 		{
 			float r = random();
 			if(r < 0.25)
-				_sound(this, CHAN_VOICE, "armagon/idle1.wav", 1, ATTN_ARMAGON);
+				_sound(this, CH_VOICE, "armagon/idle1.wav", 1, ATTN_ARMAGON);
 			else if(r < 0.5)
-				_sound(this, CHAN_VOICE, "armagon/idle2.wav", 1, ATTN_ARMAGON);
+				_sound(this, CH_VOICE, "armagon/idle2.wav", 1, ATTN_ARMAGON);
 			else if(r < 0.75)
-				_sound(this, CHAN_VOICE, "armagon/idle3.wav", 1, ATTN_ARMAGON);
+				_sound(this, CH_VOICE, "armagon/idle3.wav", 1, ATTN_ARMAGON);
 			else
-				_sound(this, CHAN_VOICE, "armagon/idle4.wav", 1, ATTN_ARMAGON);
+				_sound(this, CH_VOICE, "armagon/idle4.wav", 1, ATTN_ARMAGON);
 		}
 	}
 	entity client = checkclient(this);
@@ -603,7 +603,7 @@ void armagon_die4(entity this)
 	set_animofs(this, anim_armagon_ldie, 2, armagon_die5);
 	armagon_think(this);
 	multi_explosion( this.origin + '0 0 48', 48, 10, 6, 0.3, 0.3);
-	_sound(this, CHAN_AUTO, "armagon/death.wav", 1, ATTN_NONE);
+	_sound(this, CH_TRIGGER, "armagon/death.wav", 1, ATTN_NONE);
 	this.nextthink = time + 0.2;
 }
 void armagon_die3(entity this) { set_animofs(this, anim_armagon_ldie, 1, armagon_die4); armagon_think(this); this.nextthink = time + 0.2; }
@@ -612,7 +612,7 @@ void armagon_die1(entity this, entity attacker) { set_animofs(this, anim_armagon
 
 void armagon_body_explode2(entity this)
 {
-	_sound(this, CHAN_AUTO, "misc/longexpl.wav", 1, ATTN_ARMAGON);
+	_sound(this, CH_TRIGGER, "misc/longexpl.wav", 1, ATTN_ARMAGON);
 	setthink(this, armagon_body_explode2);
 	ThrowGib(this, "progs/gib1.mdl", -200);
 	ThrowGib(this, "progs/gib2.mdl", -200);
@@ -666,7 +666,7 @@ void armagon_pain(entity this, entity attacker, float damage)
 		return;
 	this.pain_finished = time + 2;
 
-	_sound(this, CHAN_VOICE, "armagon/pain.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "armagon/pain.wav", 1, ATTN_NORM);
 }
 
 void armagon_missile_attack(entity this)
@@ -684,7 +684,7 @@ void armagon_repulse_attack(entity this)
 	if(this.state == 0)
 	{
 		SUB_AttackFinished(this, 0.5);
-		_sound(this, CHAN_BODY, "armagon/repel.wav", 1, ATTN_NORM);
+		_sound(this, CH_PLAYER, "armagon/repel.wav", 1, ATTN_NORM);
 		this.state = 1;
 		return;
 	}

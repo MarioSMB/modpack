@@ -280,7 +280,7 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 	{
 		centerprint(actor, this.message);
 		if(!this.noise)
-			_sound(actor, CHAN_VOICE, "misc/talk.wav", 1, ATTN_NORM);
+			_sound(actor, CH_INFO, "misc/talk.wav", 1, ATTN_NORM);
 	}
 
 //

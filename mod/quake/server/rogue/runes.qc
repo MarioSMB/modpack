@@ -35,7 +35,7 @@ void RuneTouch(entity this, entity toucher)
 
 	toucher.rune |= this.rune;
 
-	_sound(toucher, CHAN_ITEM, "weapons/pkup.wav", 1, ATTN_NORM);
+	_sound(toucher, CH_TRIGGER_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
 
 	if(this.rune & ITEM_RUNE1)
 		centerprint(toucher, "Earth Magic\n\nRESISTANCE");
@@ -148,7 +148,7 @@ float RuneApplyEarth(float damage, entity who)
 	{
 		if(who.rune1_last_noise_time < time)
 		{
-			_sound(who, CHAN_ITEM, "runes/end1.wav", 1, ATTN_NORM);
+			_sound(who, CH_TRIGGER_SINGLE, "runes/end1.wav", 1, ATTN_NORM);
 			// tune as needed
 			who.rune1_last_noise_time = time + 1.0;
 		}
@@ -163,7 +163,7 @@ void RuneApplyBlackNoise(entity who)
 	{
 		if(who.rune2_last_noise_time < time)
 		{
-			_sound(who, CHAN_ITEM, "runes/end2.wav", 1, ATTN_NORM);
+			_sound(who, CH_TRIGGER_SINGLE, "runes/end2.wav", 1, ATTN_NORM);
 			// tune as needed
 			who.rune2_last_noise_time = time + 1.0;
 		}
@@ -186,7 +186,7 @@ float RuneApplyHell(float tvalue, entity who)
 	{
 		if (who.rune3_last_noise_time < time)
 		{
-			_sound(who, CHAN_ITEM, "runes/end3.wav", 1, ATTN_NORM);
+			_sound(who, CH_TRIGGER_SINGLE, "runes/end3.wav", 1, ATTN_NORM);
 			// tune as needed
 			who.rune3_last_noise_time = time + 1.0;
 		}
@@ -201,7 +201,7 @@ void RuneApplyElder(entity who)
 	{
 		if (who.rune4_last_regen_time < time && who.health < 100)
 		{
-			_sound(who, CHAN_ITEM, "runes/end4.wav", 1, ATTN_NORM);
+			_sound(who, CH_TRIGGER_SINGLE, "runes/end4.wav", 1, ATTN_NORM);
 			who.health = who.health + 5;
 			if (who.health > 100)
 				who.health = 100;

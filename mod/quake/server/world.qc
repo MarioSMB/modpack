@@ -909,11 +909,11 @@ void CreatureFrame_Liquids(entity this)
 			if(IS_PLAYER(this)) // TODO: allow this on non-players? nothing else uses this currently
 			{
 				if(this.watertype == CONTENT_LAVA)
-					_sound(this, CHAN_BODY, "player/inlava.wav", 1, ATTN_NORM);
+					_sound(this, CH_PLAYER, "player/inlava.wav", 1, ATTN_NORM);
 				else if(this.watertype == CONTENT_WATER)
-					_sound(this, CHAN_BODY, "player/inh2o.wav", 1, ATTN_NORM);
+					_sound(this, CH_PLAYER, "player/inh2o.wav", 1, ATTN_NORM);
 				else if(this.watertype == CONTENT_SLIME)
-					_sound(this, CHAN_BODY, "player/slimbrn2.wav", 1, ATTN_NORM);
+					_sound(this, CH_PLAYER, "player/slimbrn2.wav", 1, ATTN_NORM);
 			}
 
 			this.flags |= FL_INWATER;
@@ -928,7 +928,7 @@ void CreatureFrame_Liquids(entity this)
 		{
 			// play leave water sound
 			if(IS_PLAYER(this))
-				_sound(this, CHAN_BODY, "misc/outwater.wav", 1, ATTN_NORM);
+				_sound(this, CH_PLAYER, "misc/outwater.wav", 1, ATTN_NORM);
 			this.flags &= ~FL_INWATER;
 			this.dmgtime = 0;
 		}
@@ -947,19 +947,19 @@ void CreatureFrame_FallDamage(entity this)
 			if(this.watertype == CONTENT_WATER)
 			{
 				if(IS_PLAYER(this))
-					_sound(this, CHAN_BODY, "player/h2ojump.wav", 1, ATTN_NORM);
+					_sound(this, CH_PLAYER, "player/h2ojump.wav", 1, ATTN_NORM);
 			}
 			else if(this.jump_flag < -650)
 			{
 				T_Damage(this, NULL, NULL, 5);
 				if(IS_PLAYER(this))
 				{
-					_sound(this, CHAN_VOICE, "player/land2.wav", 1, ATTN_NORM);
+					_sound(this, CH_VOICE, "player/land2.wav", 1, ATTN_NORM);
 					this.deathtype = "falling";
 				}
 			}
 			else if(IS_PLAYER(this))
-				_sound(this, CHAN_VOICE, "player/land.wav", 1, ATTN_NORM);
+				_sound(this, CH_VOICE, "player/land.wav", 1, ATTN_NORM);
 
 			this.jump_flag = 0;
 		}

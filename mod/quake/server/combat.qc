@@ -210,7 +210,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 	{
 		if(targ.invincible_sound < time)
 		{
-			_sound(targ, CHAN_ITEM, "items/protect3.wav", 1, ATTN_NORM);
+			_sound(targ, CH_TRIGGER_SINGLE, "items/protect3.wav", 1, ATTN_NORM);
 			targ.invincible_sound = time + 2;
 		}
 		return;
@@ -222,7 +222,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 		{
 			if(targ.empathy_sound < time)
 			{
-				_sound(targ, CHAN_ITEM, "hipitems/empathy2.wav", 1, ATTN_NORM);
+				_sound(targ, CH_TRIGGER_SINGLE, "hipitems/empathy2.wav", 1, ATTN_NORM);
 				targ.empathy_sound = time + 0.5;
 			}
 		}

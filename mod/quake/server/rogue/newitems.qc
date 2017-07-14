@@ -40,7 +40,7 @@ void newitems_touch(entity this, entity toucher)
 		}
 	}	
 
-	_sound(toucher, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+	_sound(toucher, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
 	this.solid = SOLID_NOT;
 	toucher.items |= this.items;

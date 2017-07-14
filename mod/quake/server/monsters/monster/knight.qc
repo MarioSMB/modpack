@@ -130,9 +130,9 @@ void kn_idle_sound(entity this)
 	if(random() < 0.2)
 	{
 		if(MP_ROGUE && (this.spawnflags & 2)) // statue)
-			_sound(this, CHAN_VOICE, "statue/idle.wav", 1, ATTN_IDLE);
+			_sound(this, CH_VOICE, "statue/idle.wav", 1, ATTN_IDLE);
 		else
-			_sound(this, CHAN_VOICE, "knight/idle.wav", 1,  ATTN_IDLE);
+			_sound(this, CH_VOICE, "knight/idle.wav", 1,  ATTN_IDLE);
 	}
 }
 
@@ -197,9 +197,9 @@ void knight_runatk1(entity this)
 {
 	set_anim(this, anim_knight_runattack1, knight_runatk2);
 	if(random() > 0.5)
-		_sound(this, CHAN_WEAPON, "knight/sword2.wav", 1, ATTN_NORM);
+		_sound(this, CH_WEAPON_SINGLE, "knight/sword2.wav", 1, ATTN_NORM);
 	else
-		_sound(this, CHAN_WEAPON, "knight/sword1.wav", 1, ATTN_NORM);
+		_sound(this, CH_WEAPON_SINGLE, "knight/sword1.wav", 1, ATTN_NORM);
 	ai_charge(this, 20);
 }
 
@@ -212,7 +212,7 @@ void knight_atk5(entity this) { set_anim(this, anim_knight_attackb5, knight_atk6
 void knight_atk4(entity this) { set_anim(this, anim_knight_attackb4, knight_atk5); ai_charge(this, 0); }
 void knight_atk3(entity this) { set_anim(this, anim_knight_attackb3, knight_atk4); ai_charge(this, 4); }
 void knight_atk2(entity this) { set_anim(this, anim_knight_attackb2, knight_atk3); ai_charge(this, 7); }
-void knight_atk1(entity this) { set_anim(this, anim_knight_attackb1, knight_atk2);  _sound(this, CHAN_WEAPON, "knight/sword1.wav", 1, ATTN_NORM); ai_charge(this, 0); }
+void knight_atk1(entity this) { set_anim(this, anim_knight_attackb1, knight_atk2);  _sound(this, CH_WEAPON_SINGLE, "knight/sword1.wav", 1, ATTN_NORM); ai_charge(this, 0); }
 
 void knight_attack(entity this)
 {
@@ -253,9 +253,9 @@ void knight_pain(entity this, entity attacker, float damage)
 	float r = random();
 	
 	if(this.spawnflags & 2) // statue)
-		_sound(this, CHAN_VOICE, "statue/pain.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "statue/pain.wav", 1, ATTN_NORM);
 	else
-		_sound(this, CHAN_VOICE, "knight/khurt.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "knight/khurt.wav", 1, ATTN_NORM);
 	if(r < 0.85)
 	{
 		knight_pain1(this);
@@ -311,7 +311,7 @@ void knight_die(entity this, entity attacker)
 // check for gib
 	if(this.health < -40)
 	{
-		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		if(MP_ROGUE && (this.spawnflags & 2)) // statue)
 		{
 			ThrowGib(this, "progs/statgib1.mdl", this.health);
@@ -330,9 +330,9 @@ void knight_die(entity this, entity attacker)
 
 // regular death
 	if(MP_ROGUE && (this.spawnflags & 2)) // statue
-		_sound(this, CHAN_VOICE, "statue/death.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "statue/death.wav", 1, ATTN_NORM);
 	else
-		_sound(this, CHAN_VOICE, "knight/kdeath.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "knight/kdeath.wav", 1, ATTN_NORM);
 	if(random() < 0.5)
 		knight_die1(this);
 	else
@@ -341,7 +341,7 @@ void knight_die(entity this, entity attacker)
 
 void knight_pause(entity this, entity actor, entity trigger)
 {
-	_sound(this, CHAN_VOICE, "statue/see.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "statue/see.wav", 1, ATTN_NORM);
 
 	this.takedamage = DAMAGE_AIM;
 	this.th_stand = knight_stand1;

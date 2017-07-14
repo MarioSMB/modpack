@@ -89,7 +89,7 @@ void tag_token_touch(entity this, entity toucher)
 	tag_token_owner = toucher;
 	this.tag_frags = 0;
 	
-	_sound(this, CHAN_AUTO, "runes/end1.wav", 1, ATTN_NORM);
+	_sound(this, CH_INFO, "runes/end1.wav", 1, ATTN_NORM);
 
 	bprint(toucher.netname);
 	bprint(" got the tag token!\n");
@@ -147,7 +147,7 @@ void dmatch_score(entity targ, entity attacker)
 				sprint(attacker, "You got the Quad Damage\n");
 				attacker.items |= IT_QUAD;
 				stuffcmd(attacker, "bf\n");
-				_sound(attacker,CHAN_VOICE,"items/damage.wav", 1, ATTN_NORM);
+				_sound(attacker,CH_VOICE,"items/damage.wav", 1, ATTN_NORM);
 				attacker.super_time = 1;
 				attacker.super_damage_finished = time + 30;
 			}
@@ -166,7 +166,7 @@ void dmatch_score(entity targ, entity attacker)
 			if(targ == tag_token_owner)
 			{
 				attacker.frags = attacker.frags + 5;
-				_sound(targ, CHAN_AUTO, "runes/end1.wav", 1, ATTN_NORM);
+				_sound(targ, CH_INFO, "runes/end1.wav", 1, ATTN_NORM);
 				if(IS_PLAYER(attacker))
 				{
 					tag_token_owner = attacker;

@@ -11,7 +11,7 @@ void earthquake_rumble(entity this)
 		stop_earthquake(this);
 	else
 	{
-		_sound(this, CHAN_VOICE, "equake/rumble.wav", 1, ATTN_NONE );
+		_sound(this, CH_TRIGGER_SINGLE, "equake/rumble.wav", 1, ATTN_NONE );
 		setthink(this, earthquake_rumble);
 		this.nextthink = time + 1;
 	}
@@ -79,7 +79,7 @@ void earthquake_touch(entity this, entity toucher)
 	{
 		if(this.attack_finished < time)
 		{
-			_sound(this, CHAN_VOICE, "equake/rumble.wav", 1, ATTN_NORM );
+			_sound(this, CH_TRIGGER_SINGLE, "equake/rumble.wav", 1, ATTN_NORM );
 			this.attack_finished = time + 1;
 		}
 

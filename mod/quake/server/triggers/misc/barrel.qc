@@ -6,7 +6,7 @@ void barrel_explode(entity this, entity attacker)
 	this.classname = "explo_box";
 	// did say this.owner
 	T_RadiusDamage(this, this, 160, NULL);
-	_sound(this, CHAN_VOICE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
 	particle(this.origin, '0 0 0', 75, 255);
 
 	setSendEntity(this, func_null); // some things are gonna happen to this barrel that the ChildrenS of QuakeC shouldn't see

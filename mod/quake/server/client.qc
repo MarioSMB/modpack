@@ -1121,7 +1121,7 @@ void PlayerPreThink(entity this)
 	{
 		if((this.items & IT_ANTIGRAV) && time > this.AGping)
 		{
-			_sound(this, CHAN_AUTO, "belt/use.wav", 0.4, ATTN_NORM);
+			_sound(this, CH_TRIGGER_SINGLE, "belt/use.wav", 0.4, ATTN_NORM);
 			this.AGping = time + 3;
 			if(this.AGping >= (this.antigrav_finished - 3))
 				this.AGping = this.antigrav_finished + 3;
@@ -1156,7 +1156,7 @@ void CheckPowerups(entity this)
 // sound and screen flash when items starts to run out
 		if(this.invisible_sound < time)
 		{
-			_sound(this, CHAN_AUTO, "items/inv3.wav", 0.5, ATTN_IDLE);
+			_sound(this, CH_TRIGGER_SINGLE, "items/inv3.wav", 0.5, ATTN_IDLE);
 			this.invisible_sound = time +((random() * 3) + 1);
 		}
 
@@ -1167,7 +1167,7 @@ void CheckPowerups(entity this)
 			{
 				sprint(this, "Ring of Shadows magic is fading\n");
 				stuffcmd(this, "bf\n");
-				_sound(this, CHAN_AUTO, "items/inv2.wav", 1, ATTN_NORM);
+				_sound(this, CH_TRIGGER_SINGLE, "items/inv2.wav", 1, ATTN_NORM);
 				this.invisible_time = time + 1;
 			}
 			
@@ -1204,7 +1204,7 @@ void CheckPowerups(entity this)
 			{
 				sprint(this, "Protection is almost burned out\n");
 				stuffcmd(this, "bf\n");
-				_sound(this, CHAN_AUTO, "items/protect2.wav", 1, ATTN_NORM);
+				_sound(this, CH_TRIGGER_SINGLE, "items/protect2.wav", 1, ATTN_NORM);
 				this.invincible_time = time + 1;
 			}
 			
@@ -1238,7 +1238,7 @@ void CheckPowerups(entity this)
 			{
 				sprint(this, "Quad Damage is wearing off\n");
 				stuffcmd(this, "bf\n");
-				_sound(this, CHAN_AUTO, "items/damage2.wav", 1, ATTN_NORM);
+				_sound(this, CH_TRIGGER_SINGLE, "items/damage2.wav", 1, ATTN_NORM);
 				this.super_time = time + 1;
 			}
 			
@@ -1273,7 +1273,7 @@ void CheckPowerups(entity this)
 			{
 				sprint(this, "Air supply in Biosuit expiring\n");
 				stuffcmd(this, "bf\n");
-				_sound(this, CHAN_AUTO, "items/suit2.wav", 1, ATTN_NORM);
+				_sound(this, CH_TRIGGER_SINGLE, "items/suit2.wav", 1, ATTN_NORM);
 				this.rad_time = time + 1;
 			}
 			
@@ -1305,7 +1305,7 @@ void CheckPowerups(entity this)
 			{
 				sprint(this, "Air supply in Wetsuit is running out\n");
 				stuffcmd(this, "bf\n");
-				_sound(this, CHAN_AUTO, "items/suit2.wav", 1, ATTN_NORM);
+				_sound(this, CH_TRIGGER_SINGLE, "items/suit2.wav", 1, ATTN_NORM);
 				this.wetsuit_time = time + 1;
 			}
 
@@ -1336,7 +1336,7 @@ void CheckPowerups(entity this)
 			{
 				sprint(this, "Empathy Shields are running out\n");
 				stuffcmd(this, "bf\n");
-				_sound(this, CHAN_AUTO, "items/suit2.wav", 1, ATTN_NORM);
+				_sound(this, CH_TRIGGER_SINGLE, "items/suit2.wav", 1, ATTN_NORM);
 				this.empathy_time = time + 1;
 			}
 
@@ -1368,7 +1368,7 @@ void CheckPowerups(entity this)
 			if(this.shield_time == 1)
 			{
 				sprint(this, "Shield failing...\n");
-				_sound(this, CHAN_AUTO, "shield/fadeout.wav", 1, ATTN_NORM);
+				_sound(this, CH_TRIGGER_SINGLE, "shield/fadeout.wav", 1, ATTN_NORM);
 				this.shield_time = 0;
 			}
 			if(this.shield_time < time)
@@ -1394,7 +1394,7 @@ void CheckPowerups(entity this)
 			{
 				sprint(this, "Antigrav failing...\n");
 				this.antigrav_time = 0;
-				_sound(this, CHAN_AUTO, "belt/fadeout.wav", 1, ATTN_NORM);
+				_sound(this, CH_TRIGGER_SINGLE, "belt/fadeout.wav", 1, ATTN_NORM);
 			}
 			if(this.antigrav_time < time)
 			{
@@ -1421,9 +1421,9 @@ void DrownPlayer(entity this)
 	if (this.waterlevel != WATERLEVEL_SUBMERGED)
 	{
 		if(this.air_finished < time)
-			_sound(this, CHAN_VOICE, "player/gasp2.wav", 1, ATTN_NORM);
+			_sound(this, CH_VOICE, "player/gasp2.wav", 1, ATTN_NORM);
 		else if(this.air_finished < time + 9)
-			_sound(this, CHAN_VOICE, "player/gasp1.wav", 1, ATTN_NORM);
+			_sound(this, CH_VOICE, "player/gasp1.wav", 1, ATTN_NORM);
 		this.air_finished = time + 12;
 		this.dmg = 2;
 	}
@@ -1638,7 +1638,7 @@ void ClientDisconnect(entity this)
 	bprintf("%s left the game with %d frags\n", this.netname, this.frags);
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":part:", ftos(this.playerid)));
-	_sound(this, CHAN_BODY, "player/tornoff2.wav", 1, ATTN_NONE);
+	_sound(this, CH_PLAYER, "player/tornoff2.wav", 1, ATTN_NONE);
 
 	if(MP_ROGUE)
 	{

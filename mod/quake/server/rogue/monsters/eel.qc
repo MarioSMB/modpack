@@ -93,7 +93,7 @@ void eel_walk1(entity this)
 	set_anim(this, anim_eel_eelswim1, eel_walk2);
 
 	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "eel/eactive1.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "eel/eactive1.wav", 1, ATTN_IDLE);
 	ai_walk(this, 6);
 	eel_pitch_change(this);
 }
@@ -109,7 +109,7 @@ void eel_run1(entity this)
 	set_anim(this, anim_eel_eelswim1, eel_run2);
 
 	if(random() < 0.4)
-		_sound(this, CHAN_VOICE, "eel/eactive1.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "eel/eactive1.wav", 1, ATTN_IDLE);
 	ai_run(this, 10);
 	eel_pitch_change(this);
 }
@@ -143,7 +143,7 @@ void eel_attack8(entity this)
 	this.skin = 1;
 	ai_charge(this, 8);
 	eel_pitch_change(this);
-	_sound(this, CHAN_WEAPON, "eel/eatt1.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "eel/eatt1.wav", 1, ATTN_NORM);
 }
 void eel_attack7(entity this) { set_anim(this, anim_eel_eelswim1, eel_attack8); ai_charge(this, 8); eel_pitch_change(this);}
 void eel_attack6(entity this) { set_anim(this, anim_eel_eelswim6, eel_attack7); ai_charge(this, 8); eel_pitch_change(this);}
@@ -174,7 +174,7 @@ void eel_death1(entity this)
 
 	this.skin = 0;
 	this.effects = 0;
-	_sound(this, CHAN_VOICE, "eel/edie3r.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "eel/edie3r.wav", 1, ATTN_NORM);
 }
 
 void eel_death(entity this, entity attacker)
@@ -211,7 +211,7 @@ void eel_pain1(entity this, entity attacker, float damage)
 		return;
 	
 	this.pain_finished = time + 1;
-	_sound(this, CHAN_VOICE, "eel/epain3.wav", 1, ATTN_NORM); 
+	_sound(this, CH_VOICE, "eel/epain3.wav", 1, ATTN_NORM); 
 	this.skin = 0;
 }
 

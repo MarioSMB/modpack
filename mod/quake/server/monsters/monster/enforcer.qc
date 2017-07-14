@@ -135,7 +135,7 @@ void Laser_Touch(entity this, entity toucher)
 	}
 	
 	if(!MP_HIPNOTIC || !(this.spawnflags & SPAWNFLAG_SILENT))
-		_sound(this, CHAN_WEAPON, "enforcer/enfstop.wav", 1, ATTN_STATIC);
+		_sound(this, CH_WEAPON_SINGLE, "enforcer/enfstop.wav", 1, ATTN_STATIC);
 	vector org = this.origin - 8*normalize(this.velocity);
 
 	if(toucher.health)
@@ -152,7 +152,7 @@ void Laser_Touch(entity this, entity toucher)
 entity LaunchLaser(entity this, vector org, vector vec)
 {
 	if(this.classname == "monster_enforcer")
-		_sound(this, CHAN_WEAPON, "enforcer/enfire.wav", 1, ATTN_NORM);
+		_sound(this, CH_WEAPON_SINGLE, "enforcer/enfire.wav", 1, ATTN_NORM);
 
 	vector vec2 = normalize(vec);
 	
@@ -223,7 +223,7 @@ void enf_walk1(entity this)
 {
 	set_anim(this, anim_enf_walk1, enf_walk2);
 	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "enforcer/idle1.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "enforcer/idle1.wav", 1, ATTN_IDLE);
 	ai_walk(this, 2);
 }
 
@@ -239,7 +239,7 @@ void enf_run1(entity this)
 {
 	set_anim(this, anim_enf_run1, enf_run2);
 	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "enforcer/idle1.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "enforcer/idle1.wav", 1, ATTN_IDLE);
 	ai_run(this, 18);
 }
 
@@ -306,9 +306,9 @@ void enf_pain(entity this, entity attacker, float damage)
 		return;
 
 	if(r < 0.5)
-		_sound(this, CHAN_VOICE, "enforcer/pain1.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "enforcer/pain1.wav", 1, ATTN_NORM);
 	else
-		_sound(this, CHAN_VOICE, "enforcer/pain2.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "enforcer/pain2.wav", 1, ATTN_NORM);
 
 	if(r < 0.2)
 	{
@@ -379,7 +379,7 @@ void enf_die(entity this, entity attacker)
 // check for gib
 	if(this.health < -35)
 	{
-		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowHead(this, "progs/h_mega.mdl", this.health);
 		ThrowGib(this, "progs/gib1.mdl", this.health);
 		ThrowGib(this, "progs/gib2.mdl", this.health);
@@ -388,7 +388,7 @@ void enf_die(entity this, entity attacker)
 	}
 
 // regular death
-	_sound(this, CHAN_VOICE, "enforcer/death1.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "enforcer/death1.wav", 1, ATTN_NORM);
 	if(random() > 0.5)
 		enf_die1(this);
 	else

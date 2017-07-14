@@ -71,7 +71,7 @@ void shal_walk1(entity this)
 {
 	set_anim(this, anim_shal_walk2, shal_walk2);
 	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "shalrath/idle.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "shalrath/idle.wav", 1, ATTN_IDLE);
 	ai_walk(this, 6);
 }
 
@@ -91,7 +91,7 @@ void shal_run1(entity this)
 {
 	set_anim(this, anim_shal_walk2, shal_run2);
 	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "shalrath/idle.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "shalrath/idle.wav", 1, ATTN_IDLE);
 	ai_run(this, 6);
 }
 
@@ -108,7 +108,7 @@ void shal_attack2(entity this) { set_anim(this, anim_shal_attack2, shal_attack3)
 void shal_attack1(entity this)
 {
 	set_anim(this, anim_shal_attack1, shal_attack2);
-	_sound(this, CHAN_VOICE, "shalrath/attack.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "shalrath/attack.wav", 1, ATTN_NORM);
 	ai_face(this);
 }
 
@@ -131,7 +131,7 @@ void shalrath_pain(entity this, entity attacker, float damage)
 	if(this.pain_finished > time)
 		return;
 
-	_sound(this, CHAN_VOICE, "shalrath/pain.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "shalrath/pain.wav", 1, ATTN_NORM);
 	shal_pain1(this);
 	this.pain_finished = time + 3;
 }
@@ -141,7 +141,7 @@ void shalrath_die(entity this, entity attacker)
 // check for gib
 	if(this.health < -90)
 	{
-		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowHead(this, "progs/h_shal.mdl", this.health);
 		ThrowGib(this, "progs/gib1.mdl", this.health);
 		ThrowGib(this, "progs/gib2.mdl", this.health);
@@ -149,7 +149,7 @@ void shalrath_die(entity this, entity attacker)
 		return;
 	}
 
-	_sound(this, CHAN_VOICE, "shalrath/death.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "shalrath/death.wav", 1, ATTN_NORM);
 	shal_death1(this);
 	this.solid = SOLID_NOT;
 	// insert death sounds here
@@ -171,7 +171,7 @@ void ShalMissile(entity this)
 		flytime = 0.1;
 
 	this.effects |= EF_MUZZLEFLASH;
-	_sound(this, CHAN_WEAPON, "shalrath/attack2.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "shalrath/attack2.wav", 1, ATTN_NORM);
 
 	entity missile = spawn();
 	missile.owner = this;
@@ -216,7 +216,7 @@ void ShalMissileTouch(entity this, entity toucher)
 	if(toucher.classname == "monster_zombie")
 		T_Damage(toucher, this, this, 110);	
 	T_RadiusDamage(this, this.owner, 40, NULL);
-	_sound(this, CHAN_WEAPON, "weapons/r_exp3.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
 
 	te_explosion(this.origin);
 

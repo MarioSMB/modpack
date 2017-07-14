@@ -9,9 +9,9 @@ void exploder_fire(entity this)
 	SUB_UseTargets(this, this.enemy, this.enemy);
 
 	if(this.dmg < 120)
-		_sound(this, CHAN_AUTO, "misc/shortexp.wav", this.volume, this.speed);
+		_sound(this, CH_TRIGGER, "misc/shortexp.wav", this.volume, this.speed);
 	else
-		_sound(this, CHAN_AUTO, "misc/longexpl.wav", this.volume, this.speed);
+		_sound(this, CH_TRIGGER, "misc/longexpl.wav", this.volume, this.speed);
 
 	T_RadiusDamage(this, this.owner, this.dmg, this.enemy);
 	if(this.spawnflags & USE_PARTICLES)
@@ -81,7 +81,7 @@ void multi_exploder_fire(entity this)
 	expl.origin_x = this.absmin_x + (random() * (this.absmax_x - this.absmin_x));
 	expl.origin_y = this.absmin_y + (random() * (this.absmax_y - this.absmin_y));
 	expl.origin_z = this.absmin_z + (random() * (this.absmax_z - this.absmin_z));
-	_sound(expl , CHAN_VOICE, "misc/shortexp.wav", this.volume, this.speed);
+	_sound(expl , CH_TRIGGER_SINGLE, "misc/shortexp.wav", this.volume, this.speed);
 	T_RadiusDamage(expl, this.owner, this.dmg, other);
 	if(this.spawnflags & USE_PARTICLES)
 		te_explosion(expl.origin);

@@ -8,7 +8,7 @@ void SUB_regen(entity this)
 {
 	this.model = this.mdl;		// restore original model
 	this.solid = SOLID_TRIGGER;	// allow it to be touched again
-	_sound(this, CHAN_VOICE, "items/itembk2.wav", 1, ATTN_NORM);	// play respawn sound
+	_sound(this, CH_VOICE, "items/itembk2.wav", 1, ATTN_NORM);	// play respawn sound
 	setorigin(this, this.origin);
 }
 
@@ -182,7 +182,7 @@ void health_touch(entity this, entity toucher)
 	sprint(toucher, sprintf("You receive %d health\n", this.healamount));
 	
 // health touch sound
-	_sound(toucher, CHAN_ITEM, this.noise, 1, ATTN_NORM);
+	_sound(toucher, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 
 	stuffcmd(toucher, "bf\n");
 	
@@ -289,7 +289,7 @@ void armor_touch(entity this, entity toucher)
 
 	sprint(toucher, "You got armor\n");
 // armor touch sound
-	_sound(toucher, CHAN_ITEM, "items/armor1.wav", 1, ATTN_NORM);
+	_sound(toucher, CH_TRIGGER_SINGLE, "items/armor1.wav", 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
 
 	SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
@@ -621,7 +621,7 @@ void weapon_touch(entity this, entity toucher)
 	else
 		sprint(toucher, sprintf("You picked up a weapon\n"));
 // weapon touch sound
-	_sound(toucher, CHAN_ITEM, "weapons/pkup.wav", 1, ATTN_NORM);
+	_sound(toucher, CH_TRIGGER_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
 
 	bound_other_ammo(toucher);
@@ -856,7 +856,7 @@ void ammo_touch(entity this, entity toucher)
 	else
 		sprint(toucher, sprintf("You picked up some ammo\n"));
 // ammo touch sound
-	_sound(toucher, CHAN_ITEM, "weapons/lock4.wav", 1, ATTN_NORM);
+	_sound(toucher, CH_TRIGGER_SINGLE, "weapons/lock4.wav", 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
 
 // change to a better weapon if appropriate
@@ -1156,7 +1156,7 @@ void key_touch(entity this, entity toucher)
 	else
 		sprint(toucher, sprintf("You picked up a key\n"));
 
-	_sound(toucher, CHAN_ITEM, this.noise, 1, ATTN_NORM);
+	_sound(toucher, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
 	toucher.items |= this.items;
 
@@ -1290,7 +1290,7 @@ void sigil_touch(entity this, entity toucher)
 
 	centerprint(toucher, "You got the rune!");
 
-	_sound(toucher, CHAN_ITEM, this.noise, 1, ATTN_NORM);
+	_sound(toucher, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
 	this.solid = SOLID_NOT;
 	this.model = string_null;
@@ -1381,7 +1381,7 @@ void powerup_touch(entity this, entity toucher)
 		}
 	}	
 
-	_sound(toucher, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+	_sound(toucher, CH_VOICE, this.noise, 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
 	this.solid = SOLID_NOT;
 	toucher.items |= this.items;
@@ -1571,7 +1571,7 @@ void BackpackTouch(entity this, entity toucher)
 		sprint(toucher, strcat("You get the ", wepmsg, "\n"));
 
 // backpack touch sound
-	_sound(toucher, CHAN_ITEM, "weapons/lock4.wav", 1, ATTN_NORM);
+	_sound(toucher, CH_TRIGGER_SINGLE, "weapons/lock4.wav", 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
 
 // remove the backpack

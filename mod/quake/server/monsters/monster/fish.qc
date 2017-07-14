@@ -127,7 +127,7 @@ void f_run1(entity this)
 	set_anim(this, anim_fish_swim1, f_run2);
 	ai_run(this, 12);
 	if(random() < 0.5)
-		_sound(this, CHAN_VOICE, "fish/idle.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "fish/idle.wav", 1, ATTN_NORM);
 }
 
 void fish_melee(entity this)
@@ -138,7 +138,7 @@ void fish_melee(entity this)
 	if(vdist(this.enemy.origin - this.origin, >, 60))
 		return;
 		
-	_sound(this, CHAN_VOICE, "fish/bite.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "fish/bite.wav", 1, ATTN_NORM);
 	float ldmg = (random() + random()) * 3;
 	T_Damage(this.enemy, this, this, ldmg);
 }
@@ -186,7 +186,7 @@ void f_death2(entity this) { set_anim(this, anim_fish_death2, f_death3); }
 void f_death1(entity this, entity attacker)
 {
 	set_anim(this, anim_fish_death1, f_death2);
-	_sound(this, CHAN_VOICE, "fish/death.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "fish/death.wav", 1, ATTN_NORM);
 }
 
 void f_pain9(entity this) { set_anim(this, anim_fish_swim9, f_run1); ai_pain(this, 6); }
@@ -204,7 +204,7 @@ void fish_die(entity this, entity attacker)
 	// check for gib
 	if(this.health < -20)
 	{
-		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowGib(this, "progs/gib1.mdl", this.health);
 		ThrowGib(this, "progs/gib2.mdl", this.health);
 		ThrowGib(this, "progs/gib3.mdl", this.health);

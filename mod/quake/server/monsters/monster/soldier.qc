@@ -179,7 +179,7 @@ void army_walk1(entity this)
 {
 	set_anim(this, anim_army_prowl_1, army_walk2);
 	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "soldier/idle.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "soldier/idle.wav", 1, ATTN_IDLE);
 	ai_walk(this, 1);
 }
 
@@ -195,7 +195,7 @@ void army_run1(entity this)
 {
 	set_anim(this, anim_army_run1, army_run2);
 	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "soldier/idle.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "soldier/idle.wav", 1, ATTN_IDLE);
 	ai_run(this, 11);
 }
 
@@ -265,19 +265,19 @@ void army_pain(entity this, entity attacker, float damage)
 	{
 		this.pain_finished = time + 0.6;
 		army_pain1(this);
-		_sound(this, CHAN_VOICE, "soldier/pain1.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "soldier/pain1.wav", 1, ATTN_NORM);
 	}
 	else if(r < 0.6)
 	{
 		this.pain_finished = time + 1.1;
 		army_painb1(this);
-		_sound(this, CHAN_VOICE, "soldier/pain2.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "soldier/pain2.wav", 1, ATTN_NORM);
 	}
 	else
 	{
 		this.pain_finished = time + 1.1;
 		army_painc1(this);
-		_sound(this, CHAN_VOICE, "soldier/pain2.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "soldier/pain2.wav", 1, ATTN_NORM);
 	}
 }
 
@@ -286,7 +286,7 @@ void army_fire(entity this)
 {
 	ai_face(this);
 	
-	_sound(this, CHAN_WEAPON, "soldier/sattck1.wav", 1, ATTN_NORM);	
+	_sound(this, CH_WEAPON_SINGLE, "soldier/sattck1.wav", 1, ATTN_NORM);	
 
 // fire somewhat behind the player, so a dodging player is harder to hit
 	entity en = this.enemy;
@@ -339,7 +339,7 @@ void army_die(entity this, entity attacker)
 // check for gib
 	if(this.health < -35)
 	{
-		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowHead(this, "progs/h_guard.mdl", this.health);
 		ThrowGib(this, "progs/gib1.mdl", this.health);
 		ThrowGib(this, "progs/gib2.mdl", this.health);
@@ -348,7 +348,7 @@ void army_die(entity this, entity attacker)
 	}
 
 // regular death
-	_sound(this, CHAN_VOICE, "soldier/death1.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "soldier/death1.wav", 1, ATTN_NORM);
 	if(random() < 0.5)
 		army_die1(this);
 	else

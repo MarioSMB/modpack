@@ -262,19 +262,19 @@ void player_run(entity this)
 
 				float r = random();
 				if(r < 0.14)
-				_sound(this, CHAN_VOICE, "misc/foot1.wav", 0.5, ATTN_NORM);
+				_sound(this, CH_VOICE, "misc/foot1.wav", 0.5, ATTN_NORM);
 				else if(r < 0.29)
-				   _sound(this, CHAN_VOICE, "misc/foot2.wav", 0.5, ATTN_NORM);
+				   _sound(this, CH_VOICE, "misc/foot2.wav", 0.5, ATTN_NORM);
 				else if(r < 0.43)
-				   _sound(this, CHAN_VOICE, "misc/foot3.wav", 0.5, ATTN_NORM);
+				   _sound(this, CH_VOICE, "misc/foot3.wav", 0.5, ATTN_NORM);
 				else if(r < 0.58)
-				   _sound(this, CHAN_VOICE, "misc/foot4.wav", 0.5, ATTN_NORM);
+				   _sound(this, CH_VOICE, "misc/foot4.wav", 0.5, ATTN_NORM);
 				else if(r < 0.72)
-				   _sound(this, CHAN_VOICE, "misc/foot5.wav", 0.5, ATTN_NORM);
+				   _sound(this, CH_VOICE, "misc/foot5.wav", 0.5, ATTN_NORM);
 				else if(r < 0.86)
-				   _sound(this, CHAN_VOICE, "misc/foot6.wav", 0.5, ATTN_NORM);
+				   _sound(this, CH_VOICE, "misc/foot6.wav", 0.5, ATTN_NORM);
 				else
-				   _sound(this, CHAN_VOICE, "misc/foot7.wav", 0.5, ATTN_NORM);
+				   _sound(this, CH_VOICE, "misc/foot7.wav", 0.5, ATTN_NORM);
 			}
 		}
 	}
@@ -521,7 +521,7 @@ void PainSound(entity this, entity attacker)
 
 	if(attacker.classname == "teledeath")
 	{
-		_sound(this, CHAN_VOICE, "player/teledth1.wav", 1, ATTN_NONE);
+		_sound(this, CH_VOICE, "player/teledth1.wav", 1, ATTN_NONE);
 		return;
 	}
 
@@ -530,9 +530,9 @@ void PainSound(entity this, entity attacker)
 	{
 		DeathBubbles(this, 1);
 		if(random() > 0.5)
-			_sound(this, CHAN_VOICE, "player/drown1.wav", 1, ATTN_NORM);
+			_sound(this, CH_VOICE, "player/drown1.wav", 1, ATTN_NORM);
 		else
-			_sound(this, CHAN_VOICE, "player/drown2.wav", 1, ATTN_NORM);
+			_sound(this, CH_VOICE, "player/drown2.wav", 1, ATTN_NORM);
 		return;
 	}
 
@@ -541,18 +541,18 @@ void PainSound(entity this, entity attacker)
 	{
 // FIX ME	put in some steam here
 		if(random() > 0.5)
-			_sound(this, CHAN_VOICE, "player/lburn1.wav", 1, ATTN_NORM);
+			_sound(this, CH_VOICE, "player/lburn1.wav", 1, ATTN_NORM);
 		else
-			_sound(this, CHAN_VOICE, "player/lburn2.wav", 1, ATTN_NORM);
+			_sound(this, CH_VOICE, "player/lburn2.wav", 1, ATTN_NORM);
 		return;
 	}
 
 	if(this.watertype == CONTENT_LAVA)
 	{
 		if(random() > 0.5)
-			_sound(this, CHAN_VOICE, "player/lburn1.wav", 1, ATTN_NORM);
+			_sound(this, CH_VOICE, "player/lburn1.wav", 1, ATTN_NORM);
 		else
-			_sound(this, CHAN_VOICE, "player/lburn2.wav", 1, ATTN_NORM);
+			_sound(this, CH_VOICE, "player/lburn2.wav", 1, ATTN_NORM);
 		return;
 	}
 
@@ -569,7 +569,7 @@ void PainSound(entity this, entity attacker)
 	if(this.axhitme)
 	{
 		this.axhitme = false;
-		_sound(this, CHAN_VOICE, "player/axhit1.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "player/axhit1.wav", 1, ATTN_NORM);
 		return;
 	}
 	
@@ -587,7 +587,7 @@ void PainSound(entity this, entity attacker)
 		default: this.noise = "player/pain6.wav"; break;
 	}
 
-	_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+	_sound(this, CH_VOICE, this.noise, 1, ATTN_NORM);
 }
 
 void player_pain6(entity this) { set_anim(this, anim_player_pain6, player_run); }
@@ -683,7 +683,7 @@ void DeathSound(entity this)
 	if(this.waterlevel == 3)
 	{
 		DeathBubbles(this, 20);
-		_sound(this, CHAN_VOICE, "player/h2odeath.wav", 1, ATTN_NONE);
+		_sound(this, CH_VOICE, "player/h2odeath.wav", 1, ATTN_NONE);
 		return;
 	}
 	
@@ -699,7 +699,7 @@ void DeathSound(entity this)
 	if(rs == 5)
 		this.noise = "player/death5.wav";
 
-	_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NONE);
+	_sound(this, CH_VOICE, this.noise, 1, ATTN_NONE);
 }
 
 
@@ -809,20 +809,20 @@ void GibPlayer(entity this, entity attacker)
 
 	if(attacker.classname == "teledeath")
 	{
-		_sound(this, CHAN_VOICE, "player/teledth1.wav", 1, ATTN_NONE);
+		_sound(this, CH_VOICE, "player/teledth1.wav", 1, ATTN_NONE);
 		return;
 	}
 
 	if(attacker.classname == "teledeath2")
 	{
-		_sound(this, CHAN_VOICE, "player/teledth1.wav", 1, ATTN_NONE);
+		_sound(this, CH_VOICE, "player/teledth1.wav", 1, ATTN_NONE);
 		return;
 	}
 		
 	if(random() < 0.5)
-		_sound(this, CHAN_VOICE, "player/gib.wav", 1, ATTN_NONE);
+		_sound(this, CH_VOICE, "player/gib.wav", 1, ATTN_NONE);
 	else
-		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NONE);
+		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NONE);
 }
 
 void DropRune(entity this);
@@ -1028,7 +1028,7 @@ void player_touch(entity this, entity toucher)
 			// don't do particles more than twice a second. 
 			if(this.shield_death_time < time)
 			{
-    	        _sound(this, CHAN_WEAPON, "enforcer/enfstop.wav", 1, ATTN_NORM);
+    	        _sound(this, CH_WEAPON_SINGLE, "enforcer/enfstop.wav", 1, ATTN_NORM);
 	
 				te_explosion2(toucher.origin, 230, 5);
 

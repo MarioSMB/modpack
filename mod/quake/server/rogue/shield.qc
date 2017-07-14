@@ -75,7 +75,7 @@ float shield_hit(entity targ, entity inflictor, entity attacker, float damage)
 
 	if(targ.shieldSoundTime < time)
 	{
-		_sound(targ, CHAN_ITEM, "shield/hit.wav", 1, ATTN_NORM);
+		_sound(targ, CH_TRIGGER_SINGLE, "shield/hit.wav", 1, ATTN_NORM);
 		targ.shieldSoundTime = time + 0.5;
 	}
 

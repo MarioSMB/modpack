@@ -449,7 +449,7 @@ void t_movetarget(entity this, entity toucher)
 		return; // fighting, not following a path
 
 	if(toucher.classname == "monster_ogre")
-		_sound(toucher, CHAN_VOICE, "ogre/ogdrag.wav", 1, ATTN_IDLE); // play chainsaw drag sound
+		_sound(toucher, CH_VOICE, "ogre/ogdrag.wav", 1, ATTN_IDLE); // play chainsaw drag sound
 
 	if(this.target && this.target != "")
 	{
@@ -745,7 +745,7 @@ void SightSound(entity this)
 		atten = 0.1;
 
 	if(this.sightsound)
-		_sound(this, CHAN_VOICE, this.sightsound(this), 1, atten);
+		_sound(this, CH_VOICE, this.sightsound(this), 1, atten);
 }
 
 void FoundTarget(entity this)

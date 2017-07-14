@@ -8,7 +8,7 @@ void hipRubbleTouch(entity this, entity toucher)
 	if(toucher.takedamage)
 	{
 		T_Damage(toucher, this, this.owner, 10 );
-		_sound(this, CHAN_WEAPON, "zombie/z_hit.wav", 1, ATTN_NORM);
+		_sound(this, CH_WEAPON_SINGLE, "zombie/z_hit.wav", 1, ATTN_NORM);
 		this.pausetime = this.ltime + 0.1;
 	}
 }

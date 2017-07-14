@@ -14,7 +14,7 @@ void buzzsaw_stand1(entity this)
 
 	if(this.pain_finished < time)
 	{
-		_sound(this, CHAN_VOICE, "buzz/buzz1.wav", 0.2, ATTN_NORM);
+		_sound(this, CH_TRIGGER_SINGLE, "buzz/buzz1.wav", 0.2, ATTN_NORM);
 		this.pain_finished = time + 1;
 	}
 	
@@ -26,7 +26,7 @@ void buzzsaw_fly(entity this)
 {
 	if(this.pain_finished < time)
 	{
-		_sound(this, CHAN_VOICE, "buzz/buzz1.wav", 0.2, ATTN_NORM);
+		_sound(this, CH_TRIGGER_SINGLE, "buzz/buzz1.wav", 0.2, ATTN_NORM);
 		this.pain_finished = time + 1;
 	}
 
@@ -46,7 +46,7 @@ void buzzsaw_touch(entity this, entity toucher)
 	{
 		if(this.attack_finished < time )
 		{
-			_sound(this, CHAN_WEAPON, "buzz/buzz.wav", 1, ATTN_NORM);
+			_sound(this, CH_WEAPON_SINGLE, "buzz/buzz.wav", 1, ATTN_NORM);
 			this.attack_finished = time + 2;
 		}
 		T_Damage(toucher, this, this, this.currentammo);

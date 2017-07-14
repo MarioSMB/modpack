@@ -48,7 +48,7 @@ void door_blocked(entity this, entity blocker)
 
 void door_hit_top(entity this)
 {
-	_sound(this, CHAN_VOICE, this.noise1, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
 	this.state = STATE_TOP;
 	if(this.spawnflags & DOOR_TOGGLE)
 		return;		// don't come down automatically
@@ -58,13 +58,13 @@ void door_hit_top(entity this)
 
 void door_hit_bottom(entity this)
 {
-	_sound(this, CHAN_VOICE, this.noise1, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
 	this.state = STATE_BOTTOM;
 }
 
 void door_go_down(entity this)
 {
-	_sound(this, CHAN_VOICE, this.noise2, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise2, 1, ATTN_NORM);
 	if(this.max_health)
 	{
 		this.takedamage = DAMAGE_YES;
@@ -86,7 +86,7 @@ void door_go_up(entity this)
 		return;
 	}
 	
-	_sound(this, CHAN_VOICE, this.noise2, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise2, 1, ATTN_NORM);
 	this.state = STATE_UP;
 	SUB_CalcMove(this, this.pos2, this.speed, door_hit_top);
 
@@ -110,7 +110,7 @@ void door_fire(entity this)
 // play use key sound
 
 	if(this.items)
-		_sound(this, CHAN_VOICE, this.noise4, 1, ATTN_NORM);
+		_sound(this, CH_TRIGGER_SINGLE, this.noise4, 1, ATTN_NORM);
 
 	this.message = string_null;		// no more message
 
@@ -185,7 +185,7 @@ void door_touch(entity this, entity toucher)
 	if(this.owner.message != "")
 	{
 		centerprint(toucher, this.owner.message);
-		_sound(toucher, CHAN_VOICE, "misc/talk.wav", 1, ATTN_NORM);
+		_sound(toucher, CH_TRIGGER_SINGLE, "misc/talk.wav", 1, ATTN_NORM);
 	}
 	
 // key door stuff
@@ -200,17 +200,17 @@ void door_touch(entity this, entity toucher)
 			if(world.worldtype == 2)
 			{
 				centerprint(toucher, "You need the silver keycard");
-				_sound(this, CHAN_VOICE, this.noise3, 1, ATTN_NORM);
+				_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
 			}
 			else if(world.worldtype == 1)
 			{
 				centerprint(toucher, "You need the silver runekey");
-				_sound(this, CHAN_VOICE, this.noise3, 1, ATTN_NORM);
+				_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
 			}
 			else if(world.worldtype == 0)
 			{
 				centerprint(toucher, "You need the silver key");
-				_sound(this, CHAN_VOICE, this.noise3, 1, ATTN_NORM);
+				_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
 			}
 		}
 		else
@@ -218,17 +218,17 @@ void door_touch(entity this, entity toucher)
 			if(world.worldtype == 2)
 			{
 				centerprint(toucher, "You need the gold keycard");
-				_sound(this, CHAN_VOICE, this.noise3, 1, ATTN_NORM);
+				_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
 			}
 			else if(world.worldtype == 1)
 			{
 				centerprint(toucher, "You need the gold runekey");
-				_sound(this, CHAN_VOICE, this.noise3, 1, ATTN_NORM);			
+				_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);			
 			}
 			else if(world.worldtype == 0)
 			{
 				centerprint(toucher, "You need the gold key");
-				_sound(this, CHAN_VOICE, this.noise3, 1, ATTN_NORM);
+				_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
 			}
 		}
 		return;

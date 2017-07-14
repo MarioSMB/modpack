@@ -181,7 +181,7 @@ void SCOURGE_FireSpikes(entity this, float ox)
 	vector src = this.origin - '0 0 19' + v_right * ox + v_forward * 14;
 	vector vec = (this.enemy.origin + (200 * v_forward)) - src;
 	vec = normalize(vec);
-	_sound(this, CHAN_WEAPON, "weapons/rocket1i.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/rocket1i.wav", 1, ATTN_NORM);
 	launch_spike(this, src, vec);
 
 	this.attack_finished = time + 0.2;
@@ -202,7 +202,7 @@ void Attack_With_Tail(entity this)
 
 	float ldmg = (random() + random() + random()) * 40;
 	T_Damage(this.enemy, this, this, ldmg);
-	_sound(this, CHAN_WEAPON, "shambler/smack.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "shambler/smack.wav", 1, ATTN_NORM);
 
 	SpawnMeatSpray(this, this.origin + v_forward * 16, crandom() * 50 * v_right);
 }
@@ -230,9 +230,9 @@ void scourge_think(entity this)
 		this.state = 1;
 	}
 	if((this.spawnsilent == 0) && (this.spawnmulti == 1))
-		_sound(this, CHAN_BODY, "misc/null.wav", 1, ATTN_IDLE);
+		_sound(this, CH_PLAYER, "misc/null.wav", 1, ATTN_IDLE);
 	else if((this.spawnsilent == 1) && (this.spawnmulti == 0))
-		_sound(this, CHAN_BODY, "scourge/walk.wav", 1, ATTN_IDLE);
+		_sound(this, CH_PLAYER, "scourge/walk.wav", 1, ATTN_IDLE);
 
 	this.spawnmulti = this.spawnsilent;
 }
@@ -273,7 +273,7 @@ void scourge_walk1(entity this)
 {
 	set_animofs(this, anim_scourge_walk, 1, scourge_walk2);
 	if(random() < 0.1)
-		_sound(this, CHAN_VOICE, "scourge/idle.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "scourge/idle.wav", 1, ATTN_IDLE);
 	this.spawnsilent = 1;
 	scourge_think(this);
 	ai_walk(this, 8);
@@ -289,7 +289,7 @@ void scourge_run1(entity this)
 {
 	set_animofs(this, anim_scourge_walk, 1, scourge_run2);
 	if(random() < 0.1)
-		_sound(this, CHAN_VOICE, "scourge/idle.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "scourge/idle.wav", 1, ATTN_IDLE);
 	this.spawnsilent = 1;
 	scourge_think(this);
 	ai_run(this, 18);
@@ -397,7 +397,7 @@ void scourge_melee9(entity this) { set_animofs(this, anim_scourge_sting, 9, scou
 void scourge_melee8(entity this) { set_animofs(this, anim_scourge_sting, 8, scourge_melee9); ai_face(this); }
 void scourge_melee7(entity this) { set_animofs(this, anim_scourge_sting, 7, scourge_melee8); Attack_With_Tail(this); }
 void scourge_melee6(entity this) { set_animofs(this, anim_scourge_sting, 6, scourge_melee7); ai_charge(this, 1); }
-void scourge_melee5(entity this) { set_animofs(this, anim_scourge_sting, 5, scourge_melee6); _sound(this, CHAN_WEAPON, "scourge/tailswng.wav", 1, ATTN_NORM); ai_charge(this, 3); }
+void scourge_melee5(entity this) { set_animofs(this, anim_scourge_sting, 5, scourge_melee6); _sound(this, CH_WEAPON_SINGLE, "scourge/tailswng.wav", 1, ATTN_NORM); ai_charge(this, 3); }
 void scourge_melee4(entity this) { set_animofs(this, anim_scourge_sting, 4, scourge_melee5); ai_charge(this, 2); }
 void scourge_melee3(entity this) { set_animofs(this, anim_scourge_sting, 3, scourge_melee4); ai_charge(this, 2); }
 void scourge_melee2(entity this) { set_animofs(this, anim_scourge_sting, 2, scourge_melee3); ai_charge(this, 3); }
@@ -418,7 +418,7 @@ void scourge_pain(entity this, entity attacker, float damage)
 		return;
 
 	//float r = random ();
-	_sound(this, CHAN_VOICE, "scourge/pain.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "scourge/pain.wav", 1, ATTN_NORM);
 
 	this.pain_finished = time + 2.0;
 	scourge_pain1(this);
@@ -443,7 +443,7 @@ void scourge_die(entity this, entity attacker)
 	scourge_think(this);
 	if(this.health < -35)
 	{
-		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowHead(this, "progs/h_scourg.mdl", this.health);
 		ThrowGib(this, "progs/gib1.mdl", this.health);
 		ThrowGib(this, "progs/gib2.mdl", this.health);
@@ -452,7 +452,7 @@ void scourge_die(entity this, entity attacker)
 	}
 
 // regular death
-	_sound(this, CHAN_VOICE, "scourge/pain2.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "scourge/pain2.wav", 1, ATTN_NORM);
 	scourge_die1(this);
 }
 

@@ -87,7 +87,7 @@ void MultiGrenadeTouch(entity this, entity toucher)
 		return;
 	}
 	// bounce sound
-	_sound(this, CHAN_WEAPON, "weapons/bounce.wav", 1, ATTN_NORM);	
+	_sound(this, CH_WEAPON_SINGLE, "weapons/bounce.wav", 1, ATTN_NORM);	
 	if(this.velocity == '0 0 0')
 		this.avelocity = '0 0 0';
 }
@@ -98,7 +98,7 @@ void W_FireMultiGrenade(entity this)
 {
 	this.currentammo = this.ammo_multi_rockets = this.ammo_multi_rockets - 1;
 	
-	_sound(this, CHAN_WEAPON, "weapons/grenade.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/grenade.wav", 1, ATTN_NORM);
 
 	this.punchangle_x = -2;
 
@@ -160,7 +160,7 @@ void MultiRocketExplode(entity this, entity directhitentity)
 
 	T_RadiusDamage(this, this.owner, 75, directhitentity);
 
-//	sound(this, CHAN_WEAPON, "weapons/r_exp3.wav", 1, ATTN_NORM);
+//	sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
 	this.origin = this.origin - 8*normalize(this.velocity);
 
 	te_explosion(this.origin);
@@ -305,7 +305,7 @@ void W_FireMultiRocket(entity this)
 {
 	this.currentammo = this.ammo_multi_rockets = this.ammo_multi_rockets - 1;
 	
-	_sound(this, CHAN_WEAPON, "weapons/sgun1.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/sgun1.wav", 1, ATTN_NORM);
 
 	this.punchangle_x = -2;
 	
@@ -364,7 +364,7 @@ void PlasmaDischarge(entity this, entity current, float doDamage)
 {
 	te_lightning2(NULL, current.origin, this.origin); // should be for current
 
-	_sound(this, CHAN_VOICE, "weapons/lhit.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "weapons/lhit.wav", 1, ATTN_NORM);
 	if(doDamage == 1)
         PlasmaDamage(this.origin, current.origin, this, 50);
 }
@@ -410,7 +410,7 @@ void PlasmaTouch(entity this, entity toucher)
 	}
 
 	float damg = 80 + random()*20;
-	_sound(this, CHAN_WEAPON, "plasma/explode.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "plasma/explode.wav", 1, ATTN_NORM);
 	
 	if(toucher.health)
 	{
@@ -457,7 +457,7 @@ void launch_plasma(entity this, vector org, vector dir)
 	setsize(missile, '0 0 0', '0 0 0');		
 	setorigin(missile, org);
 
-	_sound(missile, CHAN_WEAPON, "plasma/flight.wav", 1, ATTN_NORM);
+	_sound(missile, CH_WEAPON_SINGLE, "plasma/flight.wav", 1, ATTN_NORM);
 	if(!deathmatch && !coop)
 		missile.effects = EF_BRIGHTLIGHT;
 	
@@ -486,7 +486,7 @@ void W_FirePlasma(entity this)
 		return;
 	}
 	this.currentammo = this.ammo_plasma = this.ammo_plasma - 1;
-	_sound(this, CHAN_WEAPON, "plasma/fire.wav", 0.5, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "plasma/fire.wav", 0.5, ATTN_NORM);
 	this.punchangle_x = -2;
 
 	makevectors(this.v_angle);

@@ -305,7 +305,7 @@ void zombie_cruc1(entity this)
 	if(MP_ROGUE)
 		zombie_lurk(this);
 	if(random() < 0.1)
-		_sound(this, CHAN_VOICE, "zombie/idle_w2.wav", 1, ATTN_STATIC);
+		_sound(this, CH_VOICE, "zombie/idle_w2.wav", 1, ATTN_STATIC);
 }
 
 void zombie_walk1(entity this);
@@ -314,7 +314,7 @@ void zombie_walk19(entity this)
 	set_anim(this, anim_zombie_walk19, zombie_walk1);
 	ai_walk(this, 0);
 	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
 }
 void zombie_walk18(entity this) { set_anim(this, anim_zombie_walk18, zombie_walk19); ai_walk(this, 0); }
 void zombie_walk17(entity this) { set_anim(this, anim_zombie_walk17, zombie_walk18); ai_walk(this, 0); }
@@ -341,9 +341,9 @@ void zombie_run18(entity this)
 	set_anim(this, anim_zombie_run18, zombie_run1);
 	ai_run(this, 8);
 	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
 	if(random() > 0.8)
-		_sound(this, CHAN_VOICE, "zombie/z_idle1.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "zombie/z_idle1.wav", 1, ATTN_IDLE);
 }
 void zombie_run17(entity this) { set_anim(this, anim_zombie_run17, zombie_run18); ai_run(this, 3); }
 void zombie_run16(entity this) { set_anim(this, anim_zombie_run16, zombie_run17); ai_run(this, 7); }
@@ -382,11 +382,11 @@ void ZombieGrenadeTouch(entity this, entity toucher)
 	if(toucher.takedamage)
 	{
 		T_Damage(toucher, this, this.owner, 10 );
-		_sound(this, CHAN_WEAPON, "zombie/z_hit.wav", 1, ATTN_NORM);
+		_sound(this, CH_WEAPON_SINGLE, "zombie/z_hit.wav", 1, ATTN_NORM);
 		delete(this);
 		return;
 	}
-	_sound(this, CHAN_WEAPON, "zombie/z_miss.wav", 1, ATTN_NORM);	// bounce sound
+	_sound(this, CH_WEAPON_SINGLE, "zombie/z_miss.wav", 1, ATTN_NORM);	// bounce sound
 	this.velocity = '0 0 0';
 	this.avelocity = '0 0 0';
 	settouch(this, ZombieGrenadeTouch_Remove);
@@ -399,7 +399,7 @@ ZombieFireGrenade
 */
 void ZombieFireGrenade(entity this, vector st)
 {
-	_sound(this, CHAN_WEAPON, "zombie/z_shot1.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "zombie/z_shot1.wav", 1, ATTN_NORM);
 
 	entity missile = spawn();
 	missile.owner = this;
@@ -507,7 +507,7 @@ void zombie_paina5(entity this) { set_anim(this, anim_zombie_paina5, zombie_pain
 void zombie_paina4(entity this) { set_anim(this, anim_zombie_paina4, zombie_paina5); ai_pain(this, 1); }
 void zombie_paina3(entity this) { set_anim(this, anim_zombie_paina3, zombie_paina4); ai_painforward(this, 1); }
 void zombie_paina2(entity this) { set_anim(this, anim_zombie_paina2, zombie_paina3); ai_painforward(this, 3); }
-void zombie_paina1(entity this) { set_anim(this, anim_zombie_paina1, zombie_paina2); _sound(this, CHAN_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM); }
+void zombie_paina1(entity this) { set_anim(this, anim_zombie_paina1, zombie_paina2); _sound(this, CH_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM); }
 
 void zombie_painb28(entity this) { set_anim(this, anim_zombie_painb28, zombie_run1); }
 void zombie_painb27(entity this) { set_anim(this, anim_zombie_painb27, zombie_painb28); }
@@ -528,7 +528,7 @@ void zombie_painb13(entity this) { set_anim(this, anim_zombie_painb13, zombie_pa
 void zombie_painb12(entity this) { set_anim(this, anim_zombie_painb12, zombie_painb13); }
 void zombie_painb11(entity this) { set_anim(this, anim_zombie_painb11, zombie_painb12); }
 void zombie_painb10(entity this) { set_anim(this, anim_zombie_painb10, zombie_painb11); }
-void zombie_painb9(entity this) { set_anim(this, anim_zombie_painb9, zombie_painb10); _sound(this, CHAN_BODY, "zombie/z_fall.wav", 1, ATTN_NORM); }
+void zombie_painb9(entity this) { set_anim(this, anim_zombie_painb9, zombie_painb10); _sound(this, CH_PLAYER, "zombie/z_fall.wav", 1, ATTN_NORM); }
 void zombie_painb8(entity this) { set_anim(this, anim_zombie_painb8, zombie_painb9); }
 void zombie_painb7(entity this) { set_anim(this, anim_zombie_painb7, zombie_painb8); }
 void zombie_painb6(entity this) { set_anim(this, anim_zombie_painb6, zombie_painb7); }
@@ -536,7 +536,7 @@ void zombie_painb5(entity this) { set_anim(this, anim_zombie_painb5, zombie_pain
 void zombie_painb4(entity this) { set_anim(this, anim_zombie_painb4, zombie_painb5); ai_pain(this, 6); }
 void zombie_painb3(entity this) { set_anim(this, anim_zombie_painb3, zombie_painb4); ai_pain(this, 8); }
 void zombie_painb2(entity this) { set_anim(this, anim_zombie_painb2, zombie_painb3); ai_pain(this, 2); }
-void zombie_painb1(entity this) { set_anim(this, anim_zombie_painb1, zombie_painb2); _sound(this, CHAN_VOICE, "zombie/z_pain1.wav", 1, ATTN_NORM); }
+void zombie_painb1(entity this) { set_anim(this, anim_zombie_painb1, zombie_painb2); _sound(this, CH_VOICE, "zombie/z_pain1.wav", 1, ATTN_NORM); }
 
 void zombie_painc18(entity this) { set_anim(this, anim_zombie_painc18, zombie_run1); }
 void zombie_painc17(entity this) { set_anim(this, anim_zombie_painc17, zombie_painc18); }
@@ -555,7 +555,7 @@ void zombie_painc5(entity this) { set_anim(this, anim_zombie_painc5, zombie_pain
 void zombie_painc4(entity this) { set_anim(this, anim_zombie_painc4, zombie_painc5); ai_pain(this, 1); }
 void zombie_painc3(entity this) { set_anim(this, anim_zombie_painc3, zombie_painc4); ai_pain(this, 3); }
 void zombie_painc2(entity this) { set_anim(this, anim_zombie_painc2, zombie_painc3); }
-void zombie_painc1(entity this) { set_anim(this, anim_zombie_painc1, zombie_painc2); _sound(this, CHAN_VOICE, "zombie/z_pain1.wav", 1, ATTN_NORM); }
+void zombie_painc1(entity this) { set_anim(this, anim_zombie_painc1, zombie_painc2); _sound(this, CH_VOICE, "zombie/z_pain1.wav", 1, ATTN_NORM); }
 
 void zombie_paind13(entity this) { set_anim(this, anim_zombie_paind13, zombie_run1); }
 void zombie_paind12(entity this) { set_anim(this, anim_zombie_paind12, zombie_paind13); }
@@ -569,7 +569,7 @@ void zombie_paind5(entity this) { set_anim(this, anim_zombie_paind5, zombie_pain
 void zombie_paind4(entity this) { set_anim(this, anim_zombie_paind4, zombie_paind5); }
 void zombie_paind3(entity this) { set_anim(this, anim_zombie_paind3, zombie_paind4); }
 void zombie_paind2(entity this) { set_anim(this, anim_zombie_paind2, zombie_paind3); }
-void zombie_paind1(entity this) { set_anim(this, anim_zombie_paind1, zombie_paind2); _sound(this, CHAN_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM); if(MP_ROGUE) WITHSELF(this, builtin_droptofloor()); }
+void zombie_paind1(entity this) { set_anim(this, anim_zombie_paind1, zombie_paind2); _sound(this, CH_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM); if(MP_ROGUE) WITHSELF(this, builtin_droptofloor()); }
 
 void zombie_paine11(entity this);
 void zombie_paine30(entity this) { set_anim(this, anim_zombie_paine30, zombie_run1); }
@@ -597,7 +597,7 @@ void zombie_paine12(entity this)
 		WITHSELF(this, builtin_droptofloor());
 	// see if ok to stand up
 	this.health = 60;
-	_sound(this, CHAN_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
+	_sound(this, CH_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
 	if(MP_ROGUE)
 		setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	this.solid = SOLID_SLIDEBOX;
@@ -612,7 +612,7 @@ void zombie_paine11(entity this) { set_anim(this, anim_zombie_paine11, zombie_pa
 void zombie_paine10(entity this)
 {
 	set_anim(this, anim_zombie_paine10, zombie_paine11);
-	_sound(this, CHAN_BODY, "zombie/z_fall.wav", 1, ATTN_NORM);
+	_sound(this, CH_PLAYER, "zombie/z_fall.wav", 1, ATTN_NORM);
 	this.solid = SOLID_NOT;
 }
 void zombie_paine9(entity this) { set_anim(this, anim_zombie_paine9, zombie_paine10); ai_pain(this, 2); }
@@ -626,13 +626,13 @@ void zombie_paine2(entity this) { set_anim(this, anim_zombie_paine2, zombie_pain
 void zombie_paine1(entity this)
 {
 	set_anim(this, anim_zombie_paine1, zombie_paine2);
-	_sound(this, CHAN_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM);
 	this.health = 60;
 }
 
 void zombie_die(entity this, entity attacker)
 {
-	_sound(this, CHAN_VOICE, "zombie/z_gib.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "zombie/z_gib.wav", 1, ATTN_NORM);
 	ThrowHead(this, "progs/h_zombie.mdl", this.health);
 	ThrowGib(this, "progs/gib1.mdl", this.health);
 	ThrowGib(this, "progs/gib2.mdl", this.health);
@@ -760,7 +760,7 @@ void zombie_escape16(entity this)
 	this.th_run = zombie_run1;
 	this.th_missile = zombie_missile;
 	this.health = 60;
-	_sound(this, CHAN_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
+	_sound(this, CH_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
 
 	WITHSELF(this, builtin_droptofloor());
 }

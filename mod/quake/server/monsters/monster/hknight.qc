@@ -216,7 +216,7 @@ void hknight_shot(entity this, float offset)
 	_setmodel(newmis, "progs/k_spike.mdl");
 	setsize(newmis, '0 0 0', '0 0 0');		
 	newmis.velocity = vec*300;
-	_sound(this, CHAN_WEAPON, "hknight/attack1.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "hknight/attack1.wav", 1, ATTN_NORM);
 }
 
 void CheckForCharge(entity this)
@@ -247,9 +247,9 @@ void CheckContinueCharge(entity this)
 		return;		// done charging
 	}
 	if(random() > 0.5)
-		_sound(this, CHAN_WEAPON, "knight/sword2.wav", 1, ATTN_NORM);
+		_sound(this, CH_WEAPON_SINGLE, "knight/sword2.wav", 1, ATTN_NORM);
 	else
-		_sound(this, CHAN_WEAPON, "knight/sword1.wav", 1, ATTN_NORM);
+		_sound(this, CH_WEAPON_SINGLE, "knight/sword1.wav", 1, ATTN_NORM);
 }
 
 //===========================================================================
@@ -311,9 +311,9 @@ void hknight_pain1(entity this)
 {
 	set_anim(this, anim_hknight_pain1, hknight_pain2);
 	if(MP_ROGUE && (this.spawnflags & 2)) // statue
-		_sound(this, CHAN_VOICE, "statue/pain.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "statue/pain.wav", 1, ATTN_NORM);
 	else
-		_sound(this, CHAN_VOICE, "hknight/pain1.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "hknight/pain1.wav", 1, ATTN_NORM);
 }
 
 //============================================================================
@@ -346,7 +346,7 @@ void hknight_die(entity this, entity attacker)
 // check for gib
 	if(this.health < -40)
 	{
-		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowHead(this, "progs/h_hellkn.mdl", this.health);
 		if(MP_ROGUE && (this.spawnflags & 2)) // statue
 		{
@@ -366,9 +366,9 @@ void hknight_die(entity this, entity attacker)
 
 // regular death
 	if(MP_ROGUE && (this.spawnflags & 2)) // statue
-		_sound(this, CHAN_VOICE, "statue/death.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "statue/death.wav", 1, ATTN_NORM);
 	else
-		_sound(this, CHAN_VOICE, "hknight/death1.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "hknight/death1.wav", 1, ATTN_NORM);
 	if(random() > 0.5)
 		hknight_die1(this);
 	else
@@ -511,9 +511,9 @@ void hk_idle_sound(entity this)
 	if(random() < 0.2)
 	{
 		if(MP_ROGUE && (this.spawnflags & 2)) // statue
-			_sound(this, CHAN_VOICE, "statue/idle.wav", 1, ATTN_NORM);
+			_sound(this, CH_VOICE, "statue/idle.wav", 1, ATTN_NORM);
 		else
-			_sound(this, CHAN_VOICE, "hknight/idle.wav", 1, ATTN_NORM);
+			_sound(this, CH_VOICE, "hknight/idle.wav", 1, ATTN_NORM);
 	}
 }
 
@@ -523,9 +523,9 @@ void hknight_pain(entity this, entity attacker, float damage)
 		return;
 
 	if(MP_ROGUE && (this.spawnflags & 2)) // statue
-		_sound(this, CHAN_VOICE, "statue/pain.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "statue/pain.wav", 1, ATTN_NORM);
 	else
-		_sound(this, CHAN_VOICE, "hknight/pain1.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "hknight/pain1.wav", 1, ATTN_NORM);
 
 	if(time - this.pain_finished > 5)
 	{	// allways go into pain frame if it has been a while
@@ -547,7 +547,7 @@ void hknight_melee(entity this)
 {
 	this.hknight_type = this.hknight_type + 1;
 
-	_sound(this, CHAN_WEAPON, "hknight/slash1.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "hknight/slash1.wav", 1, ATTN_NORM);
 	if(this.hknight_type == 1)
 		hknight_slice1(this);
 	else if(this.hknight_type == 2)
@@ -561,7 +561,7 @@ void hknight_melee(entity this)
 
 void hknight_pause(entity this, entity actor, entity trigger)
 {
-	_sound(this, CHAN_VOICE, "statue/see.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "statue/see.wav", 1, ATTN_NORM);
 
 	this.takedamage = DAMAGE_AIM;
 	this.th_stand = hknight_stand1;

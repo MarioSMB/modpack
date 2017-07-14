@@ -15,7 +15,7 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 	if(MP_ROGUE && ((this.spawnflags & SPAWNFLAG_SUPERSPIKE) || !this.spawnflags))
 	{
 		if(!MP_HIPNOTIC || !(this.spawnflags & SPAWNFLAG_SILENT))
-			_sound(this, CHAN_VOICE, "weapons/spike2.wav", 1, ATTN_NORM);
+			_sound(this, CH_WEAPON_SINGLE, "weapons/spike2.wav", 1, ATTN_NORM);
 		entity newmis = launch_spike(this, this.origin, this.movedir);
 		newmis.velocity = this.movedir * 500;
 		if(this.spawnflags & SPAWNFLAG_SUPERSPIKE)
@@ -24,7 +24,7 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 	else if(this.spawnflags & SPAWNFLAG_LASER)
 	{
 		if(!MP_HIPNOTIC || !(this.spawnflags & SPAWNFLAG_SILENT))
-			_sound(this, CHAN_VOICE, "enforcer/enfire.wav", 1, ATTN_NORM);
+			_sound(this, CH_WEAPON_SINGLE, "enforcer/enfire.wav", 1, ATTN_NORM);
 		entity las = LaunchLaser(this, this.origin, this.movedir);
 		if(MP_HIPNOTIC)
 			las.spawnflags = this.spawnflags;
@@ -32,7 +32,7 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 	else if(MP_HIPNOTIC && (this.spawnflags & SPAWNFLAG_LAVABALL))
 	{
 		if(!this.spawnflags & SPAWNFLAG_SILENT)
-			_sound (this, CHAN_VOICE, "misc/spike.wav", 1, ATTN_NORM);
+			_sound (this, CH_WEAPON_SINGLE, "misc/spike.wav", 1, ATTN_NORM);
 		entity lavaball = new(lavaball);
 		set_movetype(lavaball, MOVETYPE_FLYMISSILE);
 		lavaball.solid = SOLID_BBOX;
@@ -51,7 +51,7 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 	else if(MP_HIPNOTIC && (this.spawnflags & SPAWNFLAG_ROCKET))
 	{
 		if(!this.spawnflags & SPAWNFLAG_SILENT)
-			_sound(this, CHAN_VOICE, "weapons/sgun1.wav", 1, ATTN_NORM);
+			_sound(this, CH_WEAPON_SINGLE, "weapons/sgun1.wav", 1, ATTN_NORM);
 		entity rocket = W_FireRocket(this);
 		rocket.velocity = this.movedir*1000;
 		rocket.angles = vectoangles(rocket.velocity);
@@ -60,7 +60,7 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 	else
 	{
 		if(!MP_HIPNOTIC || !(this.spawnflags & SPAWNFLAG_SILENT))
-			_sound(this, CHAN_VOICE, "weapons/spike2.wav", 1, ATTN_NORM);
+			_sound(this, CH_WEAPON_SINGLE, "weapons/spike2.wav", 1, ATTN_NORM);
 		entity newmis = launch_spike(this, this.origin, this.movedir);
 		newmis.velocity = this.movedir * 500;
 		if(MP_ROGUE)

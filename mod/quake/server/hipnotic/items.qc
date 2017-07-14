@@ -37,7 +37,7 @@ void hip_powerup_touch(entity this, entity toucher)
 		setthink(this, SUB_regen);
 	}
 
-	_sound(toucher, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+	_sound(toucher, CH_VOICE, this.noise, 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
 	this.solid = SOLID_NOT;
 	toucher.items |= this.items;
@@ -105,7 +105,7 @@ void horn_touch(entity this, entity toucher)
 	this.solid = SOLID_NOT;
 	this.model = string_null;
 	sprint(toucher, "You got the Horn of Conjuring\n");
-	_sound(toucher, CHAN_VOICE, this.noise, 1, ATTN_NONE);
+	_sound(toucher, CH_VOICE, this.noise, 1, ATTN_NONE);
 	stuffcmd(toucher, "bf\n");
 	//toucher.items |= IT_HORN_OF_CONJURING; // TODO: make a proper item out of this?
 	SUB_UseTargets(this, toucher, toucher); // fire all targets / killtargets

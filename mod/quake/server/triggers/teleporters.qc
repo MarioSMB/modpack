@@ -6,7 +6,7 @@ const int CTF_ONLY = BIT(2);
 
 void spawn_tfog(vector org)
 {
-	soundat(NULL, org, CHAN_VOICE, SND(TELE_RANDOM()), 1, ATTEN_NORM);
+	soundat(NULL, org, CH_TRIGGER, SND(TELE_RANDOM()), 1, ATTEN_NORM);
 	te_teleport(org);
 }
 

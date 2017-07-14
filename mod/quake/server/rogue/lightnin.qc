@@ -19,7 +19,7 @@ void ltrail_fire(entity this)
 {
 	if (this.classname != "ltrail_end")
 	{
-		_sound(this, CHAN_VOICE, "weapons/lhit.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "weapons/lhit.wav", 1, ATTN_NORM);
 		entity myTarget = find(world, targetname, this.target);	
 		te_lightning2(NULL, this.origin, myTarget.origin); // should be this
 		LightningDamage(this.origin, myTarget.origin, this, this.currentammo);

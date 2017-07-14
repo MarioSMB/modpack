@@ -138,7 +138,7 @@ void sham_walk12(entity this)
 	set_anim(this, anim_sham_walk12, sham_walk1);
 	ai_walk(this, 7);
 	if(random() > 0.8)
-		_sound(this, CHAN_VOICE, "shambler/sidle.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "shambler/sidle.wav", 1, ATTN_IDLE);
 }
 void sham_walk11(entity this) { set_anim(this, anim_sham_walk11, sham_walk12); ai_walk(this, 7); }
 void sham_walk10(entity this) { set_anim(this, anim_sham_walk10, sham_walk11); ai_walk(this, 9); }
@@ -158,7 +158,7 @@ void sham_run6(entity this)
 	set_anim(this, anim_sham_run6, sham_run1);
 	ai_run(this, 20);
 	if(random() > 0.8)
-		_sound(this, CHAN_VOICE, "shambler/sidle.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "shambler/sidle.wav", 1, ATTN_IDLE);
 }
 void sham_run5(entity this) { set_anim(this, anim_sham_run5, sham_run6); ai_run(this, 24); }
 void sham_run4(entity this) { set_anim(this, anim_sham_run4, sham_run5); ai_run(this, 20); }
@@ -182,7 +182,7 @@ void sham_smash10(entity this)
 		
 	float ldmg =(random() + random() + random()) * 40;
 	T_Damage(this.enemy, this, this, ldmg);
-	_sound(this, CHAN_VOICE, "shambler/smack.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "shambler/smack.wav", 1, ATTN_NORM);
 
 	SpawnMeatSpray(this, this.origin + v_forward*16, crandom() * 100 * v_right);
 	SpawnMeatSpray(this, this.origin + v_forward*16, crandom() * 100 * v_right);
@@ -195,7 +195,7 @@ void sham_smash5(entity this) { set_anim(this, anim_sham_smash5, sham_smash6); a
 void sham_smash4(entity this) { set_anim(this, anim_sham_smash4, sham_smash5); ai_charge(this, 5); }
 void sham_smash3(entity this) { set_anim(this, anim_sham_smash3, sham_smash4); ai_charge(this, 6); }
 void sham_smash2(entity this) { set_anim(this, anim_sham_smash2, sham_smash3); ai_charge(this, 6); }
-void sham_smash1(entity this) { set_anim(this, anim_sham_smash1, sham_smash2); _sound(this, CHAN_VOICE, "shambler/melee1.wav", 1, ATTN_NORM); ai_charge(this, 2); }
+void sham_smash1(entity this) { set_anim(this, anim_sham_smash1, sham_smash2); _sound(this, CH_VOICE, "shambler/melee1.wav", 1, ATTN_NORM); ai_charge(this, 2); }
 
 void sham_swingr1(entity this);
 
@@ -210,7 +210,7 @@ void ShamClaw(entity this, float side)
 		
 	float ldmg =(random() + random() + random()) * 20;
 	T_Damage(this.enemy, this, this, ldmg);
-	_sound(this, CHAN_VOICE, "shambler/smack.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "shambler/smack.wav", 1, ATTN_NORM);
 
 	if(side)
 	{
@@ -236,7 +236,7 @@ void sham_swingl2(entity this) { set_anim(this, anim_sham_swingl2, sham_swingl3)
 void sham_swingl1(entity this)
 {
 	set_anim(this, anim_sham_swingl1, sham_swingl2); 
-	_sound(this, CHAN_VOICE, "shambler/melee2.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "shambler/melee2.wav", 1, ATTN_NORM);
 	ai_charge(this, 5);
 }
 
@@ -258,7 +258,7 @@ void sham_swingr2(entity this) { set_anim(this, anim_sham_swingr2, sham_swingr3)
 void sham_swingr1(entity this)
 {
 	set_anim(this, anim_sham_swingr1, sham_swingr2); 
-	_sound(this, CHAN_VOICE, "shambler/melee1.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "shambler/melee1.wav", 1, ATTN_NORM);
 	ai_charge(this, 1);
 }
 
@@ -308,7 +308,7 @@ void sham_magic6(entity this)
 	set_anim(this, anim_sham_magic6, sham_magic9);
 	delete(this.owner);
 	CastLightning(this);
-	_sound(this, CHAN_WEAPON, "shambler/sboom.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "shambler/sboom.wav", 1, ATTN_NORM);
 }
 void sham_magic5(entity this)
 {
@@ -342,7 +342,7 @@ void sham_magic1(entity this)
 {
 	set_anim(this, anim_sham_magic1, sham_magic2);
 	ai_face(this);
-	_sound(this, CHAN_WEAPON, "shambler/sattck1.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "shambler/sattck1.wav", 1, ATTN_NORM);
 }
 
 void sham_pain6(entity this) { set_anim(this, anim_sham_pain6, sham_run1); }
@@ -354,7 +354,7 @@ void sham_pain1(entity this) { set_anim(this, anim_sham_pain1, sham_pain2); }
 
 void sham_pain(entity this, entity attacker, float damage)
 {
-	_sound(this, CHAN_VOICE, "shambler/shurt2.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "shambler/shurt2.wav", 1, ATTN_NORM);
 
 	if(this.health <= 0)
 		return;		// allready dying, don't go into pain frame
@@ -390,7 +390,7 @@ void sham_die(entity this, entity attacker)
 // check for gib
 	if(this.health < -60)
 	{
-		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowHead(this, "progs/h_shams.mdl", this.health);
 		ThrowGib(this, "progs/gib1.mdl", this.health);
 		ThrowGib(this, "progs/gib2.mdl", this.health);
@@ -399,7 +399,7 @@ void sham_die(entity this, entity attacker)
 	}
 
 // regular death
-	_sound(this, CHAN_VOICE, "shambler/sdeath.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "shambler/sdeath.wav", 1, ATTN_NORM);
 	sham_death1(this);
 }
 

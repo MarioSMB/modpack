@@ -32,13 +32,13 @@ void spikemine_Home(entity this)
 		}
 //      if(selected != NULL && selected != this.enemy)
 		if(selected != NULL)
-			_sound(this, CHAN_VOICE, "hipitems/spikmine.wav", 1, ATTN_NORM);
+			_sound(this, CH_TRIGGER_SINGLE, "hipitems/spikmine.wav", 1, ATTN_NORM);
 		this.enemy = selected;
 		this.search_time = time + 1.3;
 		}
 	if(this.enemy == NULL)
 	{
-		_sound(this, CHAN_VOICE, "misc/null.wav", 1, ATTN_NORM);
+		_sound(this, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTN_NORM);
 		this.velocity = '0 0 0';
 		return;
 	}
@@ -70,11 +70,11 @@ void spikemine_Touch(entity this, entity toucher)
 //   this.effects = this.effects | EF_MUZZLEFLASH;
 
 	T_RadiusDamage (this, this, 110, NULL);
-	_sound(this, CHAN_WEAPON, "weapons/r_exp3.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
 
 	te_explosion(this.origin);
 
-	_sound(this, CHAN_VOICE, "misc/null.wav", 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, "misc/null.wav", 1, ATTN_NORM);
 	this.velocity = '0 0 0';
 	settouch(this, func_null);
 	_setmodel(this, "progs/s_explod.spr");

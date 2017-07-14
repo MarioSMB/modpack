@@ -35,7 +35,7 @@ void keytrigger_use(entity this, entity actor, entity trigger)
 					else if(world.worldtype == 0)
 						centerprint(actor, "You need the gold key");
 				}
-				_sound(this, CHAN_VOICE, this.noise3, 1, ATTN_NORM);
+				_sound(this, CH_INFO, this.noise3, 1, ATTN_NORM);
 				return;
 			}
 		}
@@ -51,7 +51,7 @@ void keytrigger_use(entity this, entity actor, entity trigger)
 	setthink(this, SUB_Remove);
 	this.message = "";
 
-	_sound(this, CHAN_VOICE, this.noise4, 1, ATTN_NORM);
+	_sound(this, CH_INFO, this.noise4, 1, ATTN_NORM);
 
 	SUB_UseTargets(this, actor, trigger);
 }

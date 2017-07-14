@@ -180,7 +180,7 @@ const int OGRE_NORMAL = BIT(2);
 void OgreGrenadeExplode(entity this)
 {
 	T_RadiusDamage(this, this.owner, 40, NULL);
-	_sound(this, CHAN_VOICE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "weapons/r_exp3.wav", 1, ATTN_NORM);
 
 	te_explosion(this.origin);
 
@@ -200,7 +200,7 @@ void OgreGrenadeTouch(entity this, entity toucher)
 		OgreGrenadeExplode(this);
 		return;
 	}
-	_sound(this, CHAN_VOICE, "weapons/bounce.wav", 1, ATTN_NORM);	// bounce sound
+	_sound(this, CH_VOICE, "weapons/bounce.wav", 1, ATTN_NORM);	// bounce sound
 	if(this.velocity == '0 0 0')
 		this.avelocity = '0 0 0';
 }
@@ -217,7 +217,7 @@ void OgreFireGrenade(entity this)
 {
 	this.effects |= EF_MUZZLEFLASH;
 
-	_sound(this, CHAN_WEAPON, "weapons/grenade.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/grenade.wav", 1, ATTN_NORM);
 
 	entity missile = spawn();
 	missile.owner = this;
@@ -301,7 +301,7 @@ void ogre_stand5(entity this)
 {
 	set_anim(this, anim_ogre_stand5, ogre_stand6);
 	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "ogre/ogidle.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "ogre/ogidle.wav", 1, ATTN_IDLE);
 	ai_stand(this);
 }
 void ogre_stand4(entity this) { set_anim(this, anim_ogre_stand4, ogre_stand5); ai_stand(this); }
@@ -325,7 +325,7 @@ void ogre_walk6(entity this)
 	set_anim(this, anim_ogre_walk6, ogre_walk7);
 	ai_walk(this, 5);
 	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "ogre/ogdrag.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "ogre/ogdrag.wav", 1, ATTN_IDLE);
 }
 void ogre_walk5(entity this) { set_anim(this, anim_ogre_walk5, ogre_walk6); ai_walk(this, 2); }
 void ogre_walk4(entity this) { set_anim(this, anim_ogre_walk4, ogre_walk5); ai_walk(this, 2); }
@@ -334,7 +334,7 @@ void ogre_walk3(entity this)
 	set_anim(this, anim_ogre_walk3, ogre_walk4);
 	ai_walk(this, 2);
 	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "ogre/ogidle.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "ogre/ogidle.wav", 1, ATTN_IDLE);
 }
 void ogre_walk2(entity this) { set_anim(this, anim_ogre_walk2, ogre_walk3); ai_walk(this, 2); }
 void ogre_walk1(entity this) { set_anim(this, anim_ogre_walk1, ogre_walk2); ai_walk(this, 3); }
@@ -352,7 +352,7 @@ void ogre_run1(entity this)
 	set_anim(this, anim_ogre_run1, ogre_run2);
 	ai_run(this, 24);
 	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "ogre/ogidle2.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "ogre/ogidle2.wav", 1, ATTN_IDLE);
 }
 
 void ogre_swing14(entity this) { set_anim(this, anim_ogre_swing14, ogre_run1); ai_charge(this, 9); }
@@ -372,7 +372,7 @@ void ogre_swing1(entity this)
 {
 	set_anim(this, anim_ogre_swing1, ogre_swing2);
 	ai_charge(this, 11);
-	_sound(this, CHAN_WEAPON, "ogre/ogsawatk.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "ogre/ogsawatk.wav", 1, ATTN_NORM);
 }
 
 void ogre_smash14(entity this) { set_anim(this, anim_ogre_smash14, ogre_run1); ai_charge(this, 12); }
@@ -392,7 +392,7 @@ void ogre_smash1(entity this)
 {
 	set_anim(this, anim_ogre_smash1, ogre_smash2);
 	ai_charge(this, 6);
-	_sound(this, CHAN_WEAPON, "ogre/ogsawatk.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "ogre/ogsawatk.wav", 1, ATTN_NORM);
 }
 
 void ogre_nail7(entity this) { set_anim(this, anim_ogre_shoot6, ogre_run1); ai_face(this); }
@@ -459,7 +459,7 @@ void ogre_pain(entity this, entity attacker, float damage)
 	if(this.pain_finished > time)
 		return;
 
-	_sound(this, CHAN_VOICE, "ogre/ogpain1.wav", 1, ATTN_NORM);		
+	_sound(this, CH_VOICE, "ogre/ogpain1.wav", 1, ATTN_NORM);		
 
 	float r = random();
 	
@@ -539,7 +539,7 @@ void ogre_die(entity this, entity attacker)
 // check for gib
 	if(this.health < -80)
 	{
-		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowHead(this, "progs/h_ogre.mdl", this.health);
 		ThrowGib(this, "progs/gib3.mdl", this.health);
 		ThrowGib(this, "progs/gib3.mdl", this.health);
@@ -547,7 +547,7 @@ void ogre_die(entity this, entity attacker)
 		return;
 	}
 
-	_sound(this, CHAN_VOICE, "ogre/ogdth.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "ogre/ogdth.wav", 1, ATTN_NORM);
 	
 	if(random() < 0.5)
 		ogre_die1(this);

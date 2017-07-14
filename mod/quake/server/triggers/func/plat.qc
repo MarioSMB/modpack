@@ -41,7 +41,7 @@ void plat_spawn_inside_trigger(entity this)
 
 void plat_hit_top(entity this)
 {
-	_sound(this, CHAN_VOICE, this.noise1, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
 	this.state = STATE_TOP;
 	setthink(this, plat_go_down);
 	this.nextthink = this.ltime + 3;
@@ -49,20 +49,20 @@ void plat_hit_top(entity this)
 
 void plat_hit_bottom(entity this)
 {
-	_sound(this, CHAN_VOICE, this.noise1, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
 	this.state = STATE_BOTTOM;
 }
 
 void plat_go_down(entity this)
 {
-	_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	this.state = STATE_DOWN;
 	SUB_CalcMove(this, this.pos2, this.speed, plat_hit_bottom);
 }
 
 void plat_go_up(entity this)
 {
-	_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	this.state = STATE_UP;
 	SUB_CalcMove(this, this.pos1, this.speed, plat_hit_top);
 }

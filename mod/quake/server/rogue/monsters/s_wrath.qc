@@ -372,7 +372,7 @@ void overlord_smash(entity this)
 
 	float smashDmg = 20 + random () * 10;
 	
-	_sound(this, CHAN_WEAPON, "s_wrath/smash.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "s_wrath/smash.wav", 1, ATTN_NORM);
 	T_Damage(this.enemy, this, this, smashDmg);
 	vector delta = normalize (this.enemy.origin - this.origin + this.enemy.view_ofs);
 	SpawnBlood(this.enemy.origin - delta * 30, delta * -100, smashDmg);
@@ -450,7 +450,7 @@ void overlord_pain(entity this, entity attacker, float damage)
 		overlord_pn_b01(this);
 
 	this.pain_finished = time + 2;
-	_sound(this, CHAN_VOICE, "wrath/wpain.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "wrath/wpain.wav", 1, ATTN_NORM);
 }
 
 void ol_toss(entity this, string gibName)

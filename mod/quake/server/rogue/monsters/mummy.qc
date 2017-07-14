@@ -257,7 +257,7 @@ void mummy_walk19(entity this)
 
 	ai_walk(this, 0);
 	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
 }
 void mummy_walk18(entity this) { set_animofs(this, anim_mummy_walk, 18, mummy_walk19); ai_walk(this, 0); }
 void mummy_walk17(entity this) { set_animofs(this, anim_mummy_walk, 17, mummy_walk18); ai_walk(this, 0); }
@@ -285,9 +285,9 @@ void mummy_run18(entity this)
 
 	ai_run(this, 16);
 	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
 	if(random() > 0.8)
-		_sound(this, CHAN_VOICE, "zombie/z_idle1.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "zombie/z_idle1.wav", 1, ATTN_IDLE);
 }
 void mummy_run17(entity this) { set_animofs(this, anim_mummy_run, 17, mummy_run18); ai_run(this, 6); }
 void mummy_run16(entity this) { set_animofs(this, anim_mummy_run, 16, mummy_run17); ai_run(this, 14); }
@@ -330,11 +330,11 @@ void mummyGrenadeTouch(entity this, entity toucher)
 		float mummyDamage = 15 + random() * 15;
 		  
 		T_Damage(toucher, this, this.owner, mummyDamage );
-		_sound(this, CHAN_WEAPON, "zombie/z_hit.wav", 1, ATTN_NORM);
+		_sound(this, CH_WEAPON_SINGLE, "zombie/z_hit.wav", 1, ATTN_NORM);
 		delete(this);
 		return;
 	}
-	_sound(this, CHAN_WEAPON, "zombie/z_miss.wav", 1, ATTN_NORM);   // bounce sound
+	_sound(this, CH_WEAPON_SINGLE, "zombie/z_miss.wav", 1, ATTN_NORM);   // bounce sound
 	this.velocity = '0 0 0';
 	this.avelocity = '0 0 0';
 	settouch(this, mummyGrenadeRemove);
@@ -347,7 +347,7 @@ mummyFireGrenade
 */
 void mummyFireGrenade(entity this, vector st)
 {
-	_sound(this, CHAN_WEAPON, "zombie/z_shot1.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "zombie/z_shot1.wav", 1, ATTN_NORM);
 
 	entity missile = spawn();
 	missile.owner = this;
@@ -452,7 +452,7 @@ void mummy_paina5(entity this) { set_animofs(this, anim_mummy_paina, 5, mummy_pa
 void mummy_paina4(entity this) { set_animofs(this, anim_mummy_paina, 4, mummy_paina5); ai_pain(this, 1); }
 void mummy_paina3(entity this) { set_animofs(this, anim_mummy_paina, 3, mummy_paina4); ai_painforward(this, 1); }
 void mummy_paina2(entity this) { set_animofs(this, anim_mummy_paina, 2, mummy_paina3); ai_painforward(this, 3); }
-void mummy_paina1(entity this) { set_animofs(this, anim_mummy_paina, 1, mummy_paina2); _sound (this, CHAN_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM); }
+void mummy_paina1(entity this) { set_animofs(this, anim_mummy_paina, 1, mummy_paina2); _sound (this, CH_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM); }
 
 void mummy_painb28(entity this) { set_animofs(this, anim_mummy_painb, 28, mummy_run1); }
 void mummy_painb27(entity this) { set_animofs(this, anim_mummy_painb, 27, mummy_painb28); }
@@ -473,7 +473,7 @@ void mummy_painb13(entity this) { set_animofs(this, anim_mummy_painb, 13, mummy_
 void mummy_painb12(entity this) { set_animofs(this, anim_mummy_painb, 12, mummy_painb13); }
 void mummy_painb11(entity this) { set_animofs(this, anim_mummy_painb, 11, mummy_painb12); }
 void mummy_painb10(entity this) { set_animofs(this, anim_mummy_painb, 10, mummy_painb11); }
-void mummy_painb9(entity this) { set_animofs(this, anim_mummy_painb, 9, mummy_painb10); _sound (this, CHAN_BODY, "zombie/z_fall.wav", 1, ATTN_NORM); }
+void mummy_painb9(entity this) { set_animofs(this, anim_mummy_painb, 9, mummy_painb10); _sound (this, CH_PLAYER, "zombie/z_fall.wav", 1, ATTN_NORM); }
 void mummy_painb8(entity this) { set_animofs(this, anim_mummy_painb, 8, mummy_painb9); }
 void mummy_painb7(entity this) { set_animofs(this, anim_mummy_painb, 7, mummy_painb8); }
 void mummy_painb6(entity this) { set_animofs(this, anim_mummy_painb, 6, mummy_painb7); }
@@ -481,7 +481,7 @@ void mummy_painb5(entity this) { set_animofs(this, anim_mummy_painb, 5, mummy_pa
 void mummy_painb4(entity this) { set_animofs(this, anim_mummy_painb, 4, mummy_painb5); ai_pain(this, 6); }
 void mummy_painb3(entity this) { set_animofs(this, anim_mummy_painb, 3, mummy_painb4); ai_pain(this, 8); }
 void mummy_painb2(entity this) { set_animofs(this, anim_mummy_painb, 2, mummy_painb3); ai_pain(this, 2); }
-void mummy_painb1(entity this) { set_animofs(this, anim_mummy_painb, 1, mummy_painb2); _sound (this, CHAN_VOICE, "zombie/z_pain1.wav", 1, ATTN_NORM); }
+void mummy_painb1(entity this) { set_animofs(this, anim_mummy_painb, 1, mummy_painb2); _sound (this, CH_VOICE, "zombie/z_pain1.wav", 1, ATTN_NORM); }
 
 void mummy_painc18(entity this) { set_animofs(this, anim_mummy_painc, 18, mummy_run1); }
 void mummy_painc17(entity this) { set_animofs(this, anim_mummy_painc, 17, mummy_painc18); }
@@ -500,7 +500,7 @@ void mummy_painc5(entity this) { set_animofs(this, anim_mummy_painc, 5, mummy_pa
 void mummy_painc4(entity this) { set_animofs(this, anim_mummy_painc, 4, mummy_painc5); ai_pain(this, 1); }
 void mummy_painc3(entity this) { set_animofs(this, anim_mummy_painc, 3, mummy_painc4); ai_pain(this, 3); }
 void mummy_painc2(entity this) { set_animofs(this, anim_mummy_painc, 2, mummy_painc3); }
-void mummy_painc1(entity this) { set_animofs(this, anim_mummy_painc, 1, mummy_painc2); _sound (this, CHAN_VOICE, "zombie/z_pain1.wav", 1, ATTN_NORM); }
+void mummy_painc1(entity this) { set_animofs(this, anim_mummy_painc, 1, mummy_painc2); _sound (this, CH_VOICE, "zombie/z_pain1.wav", 1, ATTN_NORM); }
 
 void mummy_paind13(entity this) { set_animofs(this, anim_mummy_paind, 13, mummy_run1); }
 void mummy_paind12(entity this) { set_animofs(this, anim_mummy_paind, 12, mummy_paind13); }
@@ -514,7 +514,7 @@ void mummy_paind5(entity this) { set_animofs(this, anim_mummy_paind, 5, mummy_pa
 void mummy_paind4(entity this) { set_animofs(this, anim_mummy_paind, 4, mummy_paind5); }
 void mummy_paind3(entity this) { set_animofs(this, anim_mummy_paind, 3, mummy_paind4); }
 void mummy_paind2(entity this) { set_animofs(this, anim_mummy_paind, 2, mummy_paind3); }
-void mummy_paind1(entity this) { set_animofs(this, anim_mummy_paind, 1, mummy_paind2); _sound (this, CHAN_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM); }
+void mummy_paind1(entity this) { set_animofs(this, anim_mummy_paind, 1, mummy_paind2); _sound (this, CH_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM); }
 
 void mummy_paine11(entity this);
 void mummy_paine30(entity this) { set_animofs(this, anim_mummy_paine, 30, mummy_run1); }
@@ -539,7 +539,7 @@ void mummy_paine12(entity this)
 {
 	set_animofs(this, anim_mummy_paine, 12, mummy_paine13);
 	// see if ok to stand up
-	_sound(this, CHAN_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
+	_sound(this, CH_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
 	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	this.solid = SOLID_SLIDEBOX;
 	if(!t_walkmove(this, 0, 0))
@@ -550,7 +550,7 @@ void mummy_paine12(entity this)
 	}
 }
 void mummy_paine11(entity this) { set_animofs(this, anim_mummy_paine, 11, mummy_paine12); this.nextthink = this.nextthink + 5; }
-void mummy_paine10(entity this) { set_animofs(this, anim_mummy_paine, 10, mummy_paine11); _sound(this, CHAN_BODY, "zombie/z_fall.wav", 1, ATTN_NORM); this.solid = SOLID_NOT; }
+void mummy_paine10(entity this) { set_animofs(this, anim_mummy_paine, 10, mummy_paine11); _sound(this, CH_PLAYER, "zombie/z_fall.wav", 1, ATTN_NORM); this.solid = SOLID_NOT; }
 void mummy_paine9(entity this) { set_animofs(this, anim_mummy_paine, 9, mummy_paine10); ai_pain(this, 2); }
 void mummy_paine8(entity this) { set_animofs(this, anim_mummy_paine, 8, mummy_paine9); ai_pain(this, 1); }
 void mummy_paine7(entity this) { set_animofs(this, anim_mummy_paine, 7, mummy_paine8); ai_pain(this, 1); }
@@ -559,12 +559,12 @@ void mummy_paine5(entity this) { set_animofs(this, anim_mummy_paine, 5, mummy_pa
 void mummy_paine4(entity this) { set_animofs(this, anim_mummy_paine, 4, mummy_paine5); ai_pain(this, 3); }
 void mummy_paine3(entity this) { set_animofs(this, anim_mummy_paine, 3, mummy_paine4); ai_pain(this, 5); }
 void mummy_paine2(entity this) { set_animofs(this, anim_mummy_paine, 2, mummy_paine3); ai_pain(this, 8); }
-void mummy_paine1(entity this) { set_animofs(this, anim_mummy_paine, 1, mummy_paine2); _sound(this, CHAN_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM); }
+void mummy_paine1(entity this) { set_animofs(this, anim_mummy_paine, 1, mummy_paine2); _sound(this, CH_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM); }
 
 void mummy_die(entity this, entity attacker)
 {
 	this.health = -35;
-	_sound(this, CHAN_VOICE, "zombie/z_gib.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "zombie/z_gib.wav", 1, ATTN_NORM);
 	ThrowHead(this, "progs/h_zombie.mdl", this.health);
 	ThrowGib(this, "progs/gib1.mdl", this.health);
 	ThrowGib(this, "progs/gib2.mdl", this.health);

@@ -22,7 +22,7 @@ void train_wait(entity this)
 	if(this.wait)
 	{
 		this.nextthink = this.ltime + this.wait;
-		_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+		_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	}
 	else
 		this.nextthink = this.ltime + 0.1;
@@ -42,7 +42,7 @@ void train_next(entity this)
 		this.wait = targ.wait;
 	else
 		this.wait = 0;
-	_sound(this, CHAN_VOICE, this.noise1, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
 	SUB_CalcMove(this, targ.origin - this.mins, this.speed, train_wait);
 }
 
@@ -164,7 +164,7 @@ void hip_train_wait(entity this)
 {
 	if(this.wait)
 	{
-		_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+		_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 		if(this.wait != -1)
 		{
 			this.nextthink = this.ltime + this.wait;
@@ -193,7 +193,7 @@ void hip_train_next(entity this)
 	if(!this.target)
 		objerror(this, "hip_train_next: no next target");
 
-	_sound(this, CHAN_VOICE, this.noise1, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
 
 	this.wait = targ.wait;
 	if(targ.wait)

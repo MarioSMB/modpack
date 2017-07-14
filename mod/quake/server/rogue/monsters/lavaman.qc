@@ -178,8 +178,8 @@ void lavaman_rise6(entity this) { set_anim(this, anim_lavaman_rise6, lavaman_ris
 void lavaman_rise5(entity this) { set_anim(this, anim_lavaman_rise5, lavaman_rise6); }
 void lavaman_rise4(entity this) { set_anim(this, anim_lavaman_rise4, lavaman_rise5); }
 void lavaman_rise3(entity this) { set_anim(this, anim_lavaman_rise3, lavaman_rise4); }
-void lavaman_rise2(entity this) { set_anim(this, anim_lavaman_rise2, lavaman_rise3); _sound(this, CHAN_VOICE, "boss1/sight1.wav", 1, ATTN_NORM); }
-void lavaman_rise1(entity this) { set_anim(this, anim_lavaman_rise1, lavaman_rise2); _sound(this, CHAN_WEAPON, "boss1/out1.wav", 1, ATTN_NORM); }
+void lavaman_rise2(entity this) { set_anim(this, anim_lavaman_rise2, lavaman_rise3); _sound(this, CH_VOICE, "boss1/sight1.wav", 1, ATTN_NORM); }
+void lavaman_rise1(entity this) { set_anim(this, anim_lavaman_rise1, lavaman_rise2); _sound(this, CH_WEAPON_SINGLE, "boss1/out1.wav", 1, ATTN_NORM); }
 
 // ============
 // ============
@@ -207,7 +207,7 @@ void lavaman_idle1(entity this)
 	set_anim(this, anim_lavaman_walk1, lavaman_idle2);
 
 	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "boss1/sight1.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "boss1/sight1.wav", 1, ATTN_NORM);
 	// look for other players
 }
 
@@ -353,7 +353,7 @@ void lavaman_death9(entity this)
 {
 	set_anim(this, anim_lavaman_death9, lavaman_death10);
 
-	_sound(this, CHAN_BODY, "boss1/out1.wav", 1, ATTN_NORM);
+	_sound(this, CH_PLAYER, "boss1/out1.wav", 1, ATTN_NORM);
 	te_lavasplash(this.origin);
 }
 void lavaman_death8(entity this) { set_anim(this, anim_lavaman_death8, lavaman_death9); }
@@ -363,7 +363,7 @@ void lavaman_death5(entity this) { set_anim(this, anim_lavaman_death5, lavaman_d
 void lavaman_death4(entity this) { set_anim(this, anim_lavaman_death4, lavaman_death5); }
 void lavaman_death3(entity this) { set_anim(this, anim_lavaman_death3, lavaman_death4); }
 void lavaman_death2(entity this) { set_anim(this, anim_lavaman_death2, lavaman_death3); }
-void lavaman_death1(entity this, entity attacker) { set_anim(this, anim_lavaman_death1, lavaman_death2); _sound(this, CHAN_VOICE, "boss1/death.wav", 1, ATTN_NORM); }
+void lavaman_death1(entity this, entity attacker) { set_anim(this, anim_lavaman_death1, lavaman_death2); _sound(this, CH_VOICE, "boss1/death.wav", 1, ATTN_NORM); }
 
 void lavaman_touch(entity this, entity toucher)
 {
@@ -388,7 +388,7 @@ void lavaman_touch(entity this, entity toucher)
 	// was done in the impact
 	T_RadiusDamage(this, this.owner, 40, toucher);
 
-//	sound (this, CHAN_WEAPON, "weapons/r_exp3.wav", 1, ATTN_NORM);
+//	sound (this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
 	this.origin = this.origin - 8*normalize(this.velocity);
 
 // Change to an explosion2!!! Ramp in the non-diminishing reds...
@@ -444,7 +444,7 @@ void lavaman_missile(entity this, int AttackNumber)
 	setthink(fireball, SUB_Remove);
 	fireball.nextthink = time + 6;
 
-	_sound(this, CHAN_WEAPON, "boss1/throw.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "boss1/throw.wav", 1, ATTN_NORM);
 	
 // check for dead enemy
 	if(this.enemy.health <= 0)

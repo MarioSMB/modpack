@@ -217,7 +217,7 @@ void finale_2(entity this)
 
 	te_teleport(org);
 
-	sound(shub, CHAN_VOICE, SND_TELE1, 1, ATTN_NORM);
+	sound(shub, CH_VOICE, SND_TELE1, 1, ATTN_NORM);
 	
 	this.nextthink = time + 2;
 	setthink(this, finale_3);
@@ -228,7 +228,7 @@ void finale_3(entity this)
 	entity shub = this.owner;
 	// start shub thrashing wildly
 	setthink(shub, old_thrash1);
-	_sound(shub, CHAN_VOICE, "boss2/death.wav", 1, ATTN_NORM);
+	_sound(shub, CH_VOICE, "boss2/death.wav", 1, ATTN_NORM);
 	lightstyle(0, "abcdefghijklmlkjihgfedcb");	
 }
 
@@ -237,7 +237,7 @@ void finale_4(entity this)
 	//entity shub = this.owner;
 
 	// throw tons of meat chunks
-	_sound(this, CHAN_VOICE, "boss2/pop2.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "boss2/pop2.wav", 1, ATTN_NORM);
 	
 	vector oldo = this.origin;
 

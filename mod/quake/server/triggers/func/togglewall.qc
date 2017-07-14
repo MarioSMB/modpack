@@ -17,13 +17,13 @@ void blocker_use(entity this, entity actor, entity trigger)
 	{
 		this.state = 1;
 		setorigin( this, this.origin - '8000 8000 8000' );
-		_sound(this, CHAN_VOICE, this.noise1, 1, ATTN_NORM);
+		_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
 	}
 	else
 	{
 		this.state = 0;
 		setorigin( this, this.origin + '8000 8000 8000' );
-		_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+		_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	}
 }
 
@@ -65,7 +65,7 @@ spawnfunc(func_togglewall)
 	else
 	{
 		this.state = 1;
-		_sound(this, CHAN_VOICE, this.noise1, 1, ATTN_NORM);
+		_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
 	}
 }
 

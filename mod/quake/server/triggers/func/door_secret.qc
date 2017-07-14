@@ -36,7 +36,7 @@ void fd_secret_use(entity this, entity actor, entity trigger)
 
 	// Make a sound, wait a little...
 	
-	_sound(this, CHAN_VOICE, this.noise1, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
 	this.nextthink = this.ltime + 0.1;
 
 	int temp = 1 - (this.spawnflags & SECRET_1ST_LEFT);	// 1 or -1
@@ -60,7 +60,7 @@ void fd_secret_use(entity this, entity actor, entity trigger)
 		
 	this.dest2 = this.dest1 + v_forward * this.t_length;
 	SUB_CalcMove(this, this.dest1, this.speed, fd_secret_move1);
-	_sound(this, CHAN_VOICE, this.noise2, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise2, 1, ATTN_NORM);
 }
 
 void fd_secret_pain(entity this, entity attacker, float damage)
@@ -78,20 +78,20 @@ void fd_secret_move1(entity this)
 {
 	this.nextthink = this.ltime + 1.0;
 	setthink(this, fd_secret_move2);
-	_sound(this, CHAN_VOICE, this.noise3, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
 }
 
 // Start moving sideways w/sound...
 void fd_secret_move2(entity this)
 {
-	_sound(this, CHAN_VOICE, this.noise2, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise2, 1, ATTN_NORM);
 	SUB_CalcMove(this, this.dest2, this.speed, fd_secret_move3);
 }
 
 // Wait here until time to go back...
 void fd_secret_move3(entity this)
 {
-	_sound(this, CHAN_VOICE, this.noise3, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
 	if(!(this.spawnflags & SECRET_OPEN_ONCE))
 	{
 		this.nextthink = this.ltime + this.wait;
@@ -102,7 +102,7 @@ void fd_secret_move3(entity this)
 // Move backward...
 void fd_secret_move4(entity this)
 {
-	_sound(this, CHAN_VOICE, this.noise2, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise2, 1, ATTN_NORM);
 	SUB_CalcMove(this, this.dest1, this.speed, fd_secret_move5);		
 }
 
@@ -111,12 +111,12 @@ void fd_secret_move5(entity this)
 {
 	this.nextthink = this.ltime + 1.0;
 	setthink(this, fd_secret_move6);
-	_sound(this, CHAN_VOICE, this.noise3, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
 }
 
 void fd_secret_move6(entity this)
 {
-	_sound(this, CHAN_VOICE, this.noise2, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise2, 1, ATTN_NORM);
 	SUB_CalcMove(this, this.oldorigin, this.speed, fd_secret_done);
 }
 
@@ -128,7 +128,7 @@ void fd_secret_done(entity this)
 		this.takedamage = DAMAGE_YES;
 		this.th_pain = fd_secret_pain;	
 	}
-	_sound(this, CHAN_VOICE, this.noise3, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise3, 1, ATTN_NORM);
 }
 
 void secret_blocked(entity this, entity blocker)
@@ -158,7 +158,7 @@ void secret_touch(entity this, entity toucher)
 	if(this.message)
 	{
 		centerprint(toucher, this.message);
-		_sound(toucher, CHAN_BODY, "misc/talk.wav", 1, ATTN_NORM);
+		_sound(toucher, CH_PLAYER, "misc/talk.wav", 1, ATTN_NORM);
 	}
 }
 

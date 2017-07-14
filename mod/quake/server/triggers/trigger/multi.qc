@@ -30,7 +30,7 @@ void multi_trigger(entity this)
 	}
 
 	if(this.noise)
-		_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+		_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 
 // don't trigger again until reset
 	this.takedamage = DAMAGE_NO;

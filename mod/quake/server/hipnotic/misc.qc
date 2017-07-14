@@ -222,7 +222,7 @@ void effect_teleport_use(entity this, entity actor, entity trigger)
 {
 	te_teleport(this.origin);
 
-	sound(this, CHAN_VOICE, SND_TELE1, 1, ATTN_NORM);
+	sound(this, CH_VOICE, SND_TELE1, 1, ATTN_NORM);
 }
 
 /*QUAKED effect_teleport (0.3 0.1 0.6) (-8 -8 -8) (8 8 8)

@@ -46,8 +46,8 @@ void GrappleTrack(entity this)
 		// we need this to make the sound come from the right spot
 		setorigin(this, this.enemy.origin);
 		
-//		_sound(this, CHAN_WEAPON, "blob/land1.wav", 1, ATTN_NORM);
-		_sound(this, CHAN_WEAPON, "pendulum/hit.wav", 1, ATTN_NORM);
+//		_sound(this, CH_WEAPON_SINGLE, "blob/land1.wav", 1, ATTN_NORM);
+		_sound(this, CH_WEAPON_SINGLE, "pendulum/hit.wav", 1, ATTN_NORM);
 		T_Damage(this.enemy, this, this.owner, 1);
 		makevectors(this.v_angle);
 		vector spray;
@@ -87,12 +87,12 @@ void GrappleAnchor(entity this, entity toucher)
 			return;
 		}
 
-		_sound(this, CHAN_WEAPON, "player/axhit1.wav", 1, ATTN_NORM);
+		_sound(this, CH_WEAPON_SINGLE, "player/axhit1.wav", 1, ATTN_NORM);
 		T_Damage(toucher, this, this.owner, 10);
 	}
 	else
 	{
-		_sound(this, CHAN_WEAPON, "player/axhit2.wav", 1, ATTN_NORM);
+		_sound(this, CH_WEAPON_SINGLE, "player/axhit2.wav", 1, ATTN_NORM);
 
 		// One point of damage inflicted upon impact. Subsequent
 		// damage will only be done to PLAYERS... this way secret
@@ -106,7 +106,7 @@ void GrappleAnchor(entity this, entity toucher)
 
 	this.frame = 2; // anchored
 
-	_sound(this.owner, CHAN_WEAPON, "weapons/tink1.wav", 1, ATTN_NORM);
+	_sound(this.owner, CH_WEAPON_SINGLE, "weapons/tink1.wav", 1, ATTN_NORM);
 
 	if(!this.owner.button0)
 	{
@@ -139,7 +139,7 @@ void W_FireGrapple(entity this)
 	this.punchangle_x = -2; // bump him
 
 	// chain out sound (loops)
-	_sound(this, CHAN_WEAPON, "weapons/chain1.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/chain1.wav", 1, ATTN_NORM);
 
 	entity newmis = new(hook);
 	set_movetype(newmis, MOVETYPE_FLYMISSILE);

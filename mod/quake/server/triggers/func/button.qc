@@ -37,7 +37,7 @@ void button_fire(entity this)
 	if(this.state == STATE_UP || this.state == STATE_TOP)
 		return;
 
-	_sound(this, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+	_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 
 	this.state = STATE_UP;
 	SUB_CalcMove(this, this.pos2, this.speed, button_wait);

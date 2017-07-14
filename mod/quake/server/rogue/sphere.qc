@@ -12,7 +12,7 @@ void sphere_impact(entity this, entity toucher)
 	// was done in the impact
 	T_RadiusDamage(this, this, 300, toucher);
 
-//	sound (this, CHAN_WEAPON, "weapons/r_exp3.wav", 1, ATTN_NORM);
+//	sound (this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
 	this.origin = this.origin - 8 * normalize(this.velocity);
 
 	te_explosion(this.origin);
@@ -61,7 +61,7 @@ void sphere_think(entity this)
 {
 	if(this.shieldSoundTime < time)
 	{
-		_sound( this, CHAN_VOICE, "sphere/sphere.wav", 1, ATTN_NORM);
+		_sound( this, CH_VOICE, "sphere/sphere.wav", 1, ATTN_NORM);
 		this.shieldSoundTime = time + 4;
 	}
 	

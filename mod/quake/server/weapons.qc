@@ -74,18 +74,18 @@ void HIP_LaserTouch(entity this, entity toucher)
 		if(this.flags & FL_ONGROUND)
 			this.flags &= ~FL_ONGROUND;
 		//float r = random();
-		_sound(this, CHAN_WEAPON, "hipweap/laserric.wav", 1, ATTN_STATIC);
+		_sound(this, CH_WEAPON_SINGLE, "hipweap/laserric.wav", 1, ATTN_STATIC);
 /*
 		if(r<0.33)
-		_sound(this, CHAN_WEAPON, "weapons/ric1.wav", 1, ATTN_STATIC);
+		_sound(this, CH_WEAPON_SINGLE, "weapons/ric1.wav", 1, ATTN_STATIC);
 		else if(r<0.66)
-		_sound(this, CHAN_WEAPON, "weapons/ric2.wav", 1, ATTN_STATIC);
+		_sound(this, CH_WEAPON_SINGLE, "weapons/ric2.wav", 1, ATTN_STATIC);
 		else
-		_sound(this, CHAN_WEAPON, "weapons/ric3.wav", 1, ATTN_STATIC);
+		_sound(this, CH_WEAPON_SINGLE, "weapons/ric3.wav", 1, ATTN_STATIC);
 */
 		return;
 		}
-	_sound(this, CHAN_WEAPON, "enforcer/enfstop.wav", 1, ATTN_STATIC);
+	_sound(this, CH_WEAPON_SINGLE, "enforcer/enfstop.wav", 1, ATTN_STATIC);
 	delete(this);
 
 }
@@ -105,8 +105,8 @@ void HIP_LaserThink(entity this)
 
 entity HIP_LaunchLaser(entity this, vector org, vector vec, float light)
 {
-//   _sound(this ,CHAN_WEAPON, "weapons/shotgn2.wav", 1, ATTN_NORM);
-	_sound(this, CHAN_WEAPON, "hipweap/laserg.wav", 1, ATTN_NORM);
+//   _sound(this ,CH_WEAPON_SINGLE, "weapons/shotgn2.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "hipweap/laserg.wav", 1, ATTN_NORM);
 
 	vec = normalize(vec);
 
@@ -356,7 +356,7 @@ void HIP_SpawnMjolnirBase(entity this)
 	setthink(light, SUB_Remove);
 	light.nextthink = time + 1;
 	_sound(light, CHAN_AUTO, "hipweap/mjolslap.wav", 1, ATTN_NORM);
-	_sound(light, CHAN_WEAPON, "hipweap/mjolhit.wav", 1, ATTN_NORM);
+	_sound(light, CH_WEAPON_SINGLE, "hipweap/mjolhit.wav", 1, ATTN_NORM);
 	makevectors(this.v_angle);
 	light.movedir = v_forward;
 	HIP_SpawnMjolnirLightning(this, light, light, 350);
@@ -381,7 +381,7 @@ void HIP_FireMjolnirLightning(entity this)
 
 //   if(this.t_width < time)
 //   {
-//      _sound(this, CHAN_WEAPON, "weapons/lhit.wav", 1, ATTN_NORM);
+//      _sound(this, CH_WEAPON_SINGLE, "weapons/lhit.wav", 1, ATTN_NORM);
 //      this.t_width = time + 0.6;
 //   }
 //   this.punchangle_x = 12;
@@ -427,13 +427,13 @@ void HIP_FireMjolnir(entity this)
 	{  // hit wall
 		if(trace_fraction != 1.0)
 		{
-//         _sound(this, CHAN_WEAPON, "player/axhit2.wav", 1, ATTN_NORM);
-			_sound(this, CHAN_WEAPON, "hipweap/mjoltink.wav", 1, ATTN_NORM);
+//         _sound(this, CH_WEAPON_SINGLE, "player/axhit2.wav", 1, ATTN_NORM);
+			_sound(this, CH_WEAPON_SINGLE, "hipweap/mjoltink.wav", 1, ATTN_NORM);
 			te_gunshot(org);
 		}
 		else
 		{
-			_sound(this, CHAN_WEAPON, "knight/sword1.wav", 1, ATTN_NORM);
+			_sound(this, CH_WEAPON_SINGLE, "knight/sword1.wav", 1, ATTN_NORM);
 		}
 	}
 	this.attack_finished = time + 0.4;
@@ -473,7 +473,7 @@ void W_FireAxe(entity this)
 	}
 	else
 	{	// hit wall
-		_sound(this, CHAN_WEAPON, "player/axhit2.wav", 1, ATTN_NORM);
+		_sound(this, CH_WEAPON_SINGLE, "player/axhit2.wav", 1, ATTN_NORM);
 		te_gunshot(org);
 	}
 }
@@ -675,7 +675,7 @@ W_FireShotgun
 */
 void W_FireShotgun(entity this)
 {
-	_sound(this, CHAN_WEAPON, "weapons/guncock.wav", 1, ATTN_NORM);	
+	_sound(this, CH_WEAPON_SINGLE, "weapons/guncock.wav", 1, ATTN_NORM);	
 
 	this.punchangle_x = -2;
 
@@ -698,7 +698,7 @@ void W_FireSuperShotgun(entity this)
 		return;
 	}
 		
-	_sound(this ,CHAN_WEAPON, "weapons/shotgn2.wav", 1, ATTN_NORM);	
+	_sound(this ,CH_WEAPON_SINGLE, "weapons/shotgn2.wav", 1, ATTN_NORM);	
 
 	this.punchangle_x = -4;
 
@@ -758,7 +758,7 @@ void T_MissileTouch(entity this, entity toucher)
 	// was done in the impact
 	T_RadiusDamage(this, this.owner, 120, toucher);
 
-//	_sound(this, CHAN_WEAPON, "weapons/r_exp3.wav", 1, ATTN_NORM);
+//	_sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
 	this.origin = this.origin - 8 * normalize(this.velocity);
 
 	te_explosion(this.origin);
@@ -777,7 +777,7 @@ entity W_FireRocket(entity this)
 {
 	this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
 	
-	_sound(this, CHAN_WEAPON, "weapons/sgun1.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/sgun1.wav", 1, ATTN_NORM);
 
 	this.punchangle_x = -2;
 
@@ -891,7 +891,7 @@ void W_FireLightning(entity this)
 
 	if(this.t_width < time)
 	{
-		_sound(this, CHAN_WEAPON, "weapons/lhit.wav", 1, ATTN_NORM);
+		_sound(this, CH_WEAPON_SINGLE, "weapons/lhit.wav", 1, ATTN_NORM);
 		this.t_width = time + 0.6;
 	}
 	this.punchangle_x = -2;
@@ -929,7 +929,7 @@ void GrenadeTouch(entity this, entity toucher)
 		GrenadeExplode(this);
 		return;
 	}
-	_sound(this, CHAN_WEAPON, "weapons/bounce.wav", 1, ATTN_NORM);	// bounce sound
+	_sound(this, CH_WEAPON_SINGLE, "weapons/bounce.wav", 1, ATTN_NORM);	// bounce sound
 	if(this.velocity == '0 0 0')
 		this.avelocity = '0 0 0';
 }
@@ -943,7 +943,7 @@ void W_FireGrenade(entity this)
 {
 	this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
 	
-	_sound(this, CHAN_WEAPON, "weapons/grenade.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/grenade.wav", 1, ATTN_NORM);
 
 	this.punchangle_x = -2;
 
@@ -1018,7 +1018,7 @@ entity launch_spike(entity this, vector org, vector dir)
 
 void W_FireSuperSpikes(entity this)
 {
-	_sound(this, CHAN_WEAPON, "weapons/spike2.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/spike2.wav", 1, ATTN_NORM);
 	this.attack_finished = time + 0.2;
 	this.currentammo = this.ammo_nails = this.ammo_nails - 2;
 	vector dir = aim(this, 1000);
@@ -1060,7 +1060,7 @@ void W_FireSpikes(entity this, float ox)
 		}
 	}
 
-	_sound(this, CHAN_WEAPON, "weapons/rocket1i.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/rocket1i.wav", 1, ATTN_NORM);
 	this.attack_finished = time + 0.2;
 	this.currentammo = this.ammo_nails = this.ammo_nails - 1;
 	vector dir = aim(this, 1000);
@@ -1116,7 +1116,7 @@ void ProximityGrenadeTouch(entity this, entity toucher)
 		getthink(this)(this);
 		return;
 	}
-	_sound(this, CHAN_WEAPON, "weapons/bounce.wav", 1, ATTN_NORM); // bounce sound
+	_sound(this, CH_WEAPON_SINGLE, "weapons/bounce.wav", 1, ATTN_NORM); // bounce sound
 	set_movetype(this, MOVETYPE_NONE);
 	setsize(this, '-8 -8 -8', '8 8 8');
 	this.state = 1;
@@ -1152,7 +1152,7 @@ void ProximityBomb(entity this)
 			blowup = false;
 		if(blowup)
 		{
-			_sound(this, CHAN_WEAPON, "hipweap/proxwarn.wav", 1, ATTN_NORM);
+			_sound(this, CH_WEAPON_SINGLE, "hipweap/proxwarn.wav", 1, ATTN_NORM);
 			ProximityGrenadeExplode(this, NULL);
 			this.nextthink = time + 0.5;
 			return;
@@ -1172,7 +1172,7 @@ void W_FireProximityGrenade(entity this)
 	this.NumProximityGrenades += 1;
 	this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
 
-	_sound(this, CHAN_WEAPON, "hipweap/proxbomb.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "hipweap/proxbomb.wav", 1, ATTN_NORM);
 
 	this.punchangle_x = -2;
 
@@ -1547,7 +1547,7 @@ void W_Attack(entity this)
 	{
 		case WEP_AXE:
 		{
-			_sound(this, CHAN_WEAPON, "weapons/ax1.wav", 1, ATTN_NORM);
+			_sound(this, CH_WEAPON_SINGLE, "weapons/ax1.wav", 1, ATTN_NORM);
 			float r = random();
 			if(r < 0.25)
 				player_axe1(this);
@@ -2489,7 +2489,7 @@ void W_WeaponFrame(entity this)
 	if(this.lavaGunFired)
 	{
 		if(this.weapon == WEP_LAVA_NAILGUN || this.weapon == WEP_LAVA_SUPER_NAILGUN)
-			_sound(this, CHAN_WEAPON, "lavagun/snail.wav", 1, ATTN_NORM);
+			_sound(this, CH_WEAPON_SINGLE, "lavagun/snail.wav", 1, ATTN_NORM);
 		this.lavaGunFired = false;
 	}
 
@@ -2518,7 +2518,7 @@ void SuperDamageSound(entity this)
 		if(this.super_sound < time)
 		{
 			this.super_sound = time + 1;
-			_sound(this, CHAN_BODY, "items/damage3.wav", 1, ATTN_NORM);
+			_sound(this, CH_PLAYER, "items/damage3.wav", 1, ATTN_NORM);
 		}
 	}
 }

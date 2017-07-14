@@ -140,7 +140,7 @@ void pend_swing17(entity this)
 {
 	set_anim(this, anim_pend_frame10, pend_swing18);
 
-	_sound(this, CHAN_AUTO, "pendulum/swing.wav", 0.5, ATTN_NORM);
+	_sound(this, CH_TRIGGER, "pendulum/swing.wav", 0.5, ATTN_NORM);
 
 //	pend_frame = pend_frame + 1;
 //	0 104 17 (center)		W 68, H 68  (34, 34)
@@ -295,7 +295,7 @@ void pend_swing4(entity this)
 {
 	set_anim(this, anim_pend_frame4, pend_swing5);
 
-	_sound(this, CHAN_AUTO, "pendulum/swing.wav", 0.5, ATTN_NORM);
+	_sound(this, CH_TRIGGER, "pendulum/swing.wav", 0.5, ATTN_NORM);
 
 ////	pend_frame = pend_frame + 1;
 //	0 -104 -17 (center)		W 68, H 68  (34, 34)
@@ -350,7 +350,7 @@ void pend_touch(entity this, entity toucher)
 
 	if(this.attack_finished < time)
 	{
-		_sound(this, CHAN_VOICE, "pendulum/hit.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "pendulum/hit.wav", 1, ATTN_NORM);
 		this.attack_finished = time + 1;
 	}
 	

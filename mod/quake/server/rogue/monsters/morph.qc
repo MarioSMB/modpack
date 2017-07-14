@@ -239,7 +239,7 @@ void morph_stab2(entity this)
 
 	if(vdist(dist, <=, 90))
 	{
-		_sound(this, CHAN_WEAPON, "enforcer/enfstop.wav", 1, ATTN_STATIC);
+		_sound(this, CH_WEAPON_SINGLE, "enforcer/enfstop.wav", 1, ATTN_STATIC);
 		float attackDamage = (random() * 10) + 20;
 		T_Damage(this.enemy, this, this, attackDamage);
 		SpawnBlood(this.enemy.origin, v_forward * 150, 14);
@@ -415,7 +415,7 @@ void morph_pain(entity this, entity attacker, float damage)
 	float painChoice = random();
 	this.pain_finished = time + 2;
 
-	_sound(this, CHAN_VOICE, "guard/pain1.wav", 1, ATTN_NORM );
+	_sound(this, CH_VOICE, "guard/pain1.wav", 1, ATTN_NORM );
 
 	if(painChoice > 0.6)
 		setthink(this, morph_painB1);
@@ -452,7 +452,7 @@ void morph_die1(entity this) { set_anim(this, anim_morph_mfdth01, morph_die2); }
 
 void morph_die(entity this, entity attacker)
 {
-	_sound(this, CHAN_VOICE, "guard/death.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "guard/death.wav", 1, ATTN_NORM);
 	this.solid = SOLID_NOT;
 	setthink(this, morph_die1);
 	this.nextthink = time + 0.1;
@@ -510,7 +510,7 @@ void morph_wake1(entity this)
 {
 	set_anim(this, anim_morph_start01, morph_wake2);
 
-	_sound(this, CHAN_VOICE, "guard/see1.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "guard/see1.wav", 1, ATTN_NORM);
 	if(this.owner)
 	{
 //		this.solid = SOLID_SLIDEBOX;

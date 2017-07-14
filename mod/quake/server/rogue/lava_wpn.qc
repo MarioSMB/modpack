@@ -32,7 +32,7 @@ entity launch_lava_spike(entity this, vector org, vector dir)
 void superlavaspike_touch(entity this, entity toucher);
 void W_FireSuperLavaSpikes(entity this)
 {
-	_sound(this, CHAN_WEAPON, "weapons/spike2.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/spike2.wav", 1, ATTN_NORM);
 	this.attack_finished = time + 0.2;
 	this.currentammo = this.ammo_lava_nails = this.ammo_lava_nails - 2;
 	
@@ -63,7 +63,7 @@ void W_FireLavaSpikes(entity this, float ox)
 		return;
 	}
 
-	_sound(this, CHAN_WEAPON, "weapons/rocket1i.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/rocket1i.wav", 1, ATTN_NORM);
 	this.attack_finished = time + 0.2;
 	this.currentammo = this.ammo_lava_nails = this.ammo_lava_nails - 1;
 	

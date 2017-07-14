@@ -193,7 +193,7 @@ void dog_walk1(entity this)
 {
 	set_anim(this, anim_dog_walk1, dog_walk2);
 	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "dog/idle.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "dog/idle.wav", 1, ATTN_IDLE);
 	ai_walk(this, 8);
 }
 
@@ -213,7 +213,7 @@ void dog_run1(entity this)
 {
 	set_anim(this, anim_dog_run1, dog_run2);
 	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "dog/idle.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "dog/idle.wav", 1, ATTN_IDLE);
 	ai_run(this, 16);
 }
 
@@ -277,7 +277,7 @@ void dog_painb1(entity this) { set_anim(this, anim_dog_painb1, dog_painb2); }
 
 void dog_pain(entity this, entity attacker, float damage)
 {
-	_sound(this, CHAN_VOICE, "dog/dpain1.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "dog/dpain1.wav", 1, ATTN_NORM);
 
 	if(random() > 0.5)
 		dog_pain1(this);
@@ -310,7 +310,7 @@ void dog_die(entity this, entity attacker)
 // check for gib
 	if(this.health < -35)
 	{
-		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowGib(this, "progs/gib3.mdl", this.health);
 		ThrowGib(this, "progs/gib3.mdl", this.health);
 		ThrowGib(this, "progs/gib3.mdl", this.health);
@@ -319,7 +319,7 @@ void dog_die(entity this, entity attacker)
 	}
 
 // regular death
-	_sound(this, CHAN_VOICE, "dog/ddeath.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "dog/ddeath.wav", 1, ATTN_NORM);
 	this.solid = SOLID_NOT;
 
 	if(random() > 0.5)

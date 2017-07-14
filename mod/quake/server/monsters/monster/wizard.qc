@@ -236,7 +236,7 @@ void Wiz_FastFire(entity this)
 		vector dst = this.enemy.origin - 13*this.movedir;
 	
 		vector vec = normalize(dst - this.origin);
-		_sound(this, CHAN_WEAPON, "wizard/wattack.wav", 1, ATTN_NORM);
+		_sound(this, CH_WEAPON_SINGLE, "wizard/wattack.wav", 1, ATTN_NORM);
 		entity newmis = launch_spike(this, this.origin, vec);
 		newmis.velocity = vec*600;
 		newmis.owner = this.owner;
@@ -250,7 +250,7 @@ void Wiz_FastFire(entity this)
 
 void Wiz_StartFast(entity this)
 {
-	_sound(this, CHAN_WEAPON, "wizard/wattack.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "wizard/wattack.wav", 1, ATTN_NORM);
 	this.v_angle = this.angles;
 	makevectors(this.angles);
 
@@ -283,9 +283,9 @@ void Wiz_idle_sound(entity this)
 	{
 	 	this.waitmin = time + 2;
 	 	if(wr > 4.5) 
-	 		_sound(this, CHAN_VOICE, "wizard/widle1.wav", 1,  ATTN_IDLE);
+	 		_sound(this, CH_VOICE, "wizard/widle1.wav", 1,  ATTN_IDLE);
 	 	if(wr < 1.5)
-	 		_sound(this, CHAN_VOICE, "wizard/widle2.wav", 1, ATTN_IDLE);
+	 		_sound(this, CH_VOICE, "wizard/widle2.wav", 1, ATTN_IDLE);
 	}
 	return;
 }
@@ -366,7 +366,7 @@ void wiz_death1(entity this)
 	this.velocity_y = -200 + 400*random();
 	this.velocity_z = 100 + 100*random();
 	UNSET_ONGROUND(this);
-	_sound(this, CHAN_VOICE, "wizard/wdeath.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "wizard/wdeath.wav", 1, ATTN_NORM);
 }
 
 void wiz_die(entity this, entity attacker)
@@ -374,7 +374,7 @@ void wiz_die(entity this, entity attacker)
 // check for gib
 	if(this.health < -40)
 	{
-		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowHead(this, "progs/h_wizard.mdl", this.health);
 		ThrowGib(this, "progs/gib2.mdl", this.health);
 		ThrowGib(this, "progs/gib2.mdl", this.health);
@@ -387,7 +387,7 @@ void wiz_die(entity this, entity attacker)
 
 void Wiz_Pain(entity this, entity attacker, float damage)
 {
-	_sound(this, CHAN_VOICE, "wizard/wpain.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "wizard/wpain.wav", 1, ATTN_NORM);
 	if(random()*70 > damage)
 		return;		// didn't flinch
 

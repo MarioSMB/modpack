@@ -671,7 +671,7 @@ void gremlin_walk1(entity this)
 {
 	set_animofs(this, anim_gremlin_walk, 1, gremlin_walk2);
 	if(random() < 0.1)
-		_sound(this, CHAN_VOICE, "grem/idle.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "grem/idle.wav", 1, ATTN_IDLE);
 	gremlin_walk(this, 8);
 }
 
@@ -694,7 +694,7 @@ void gremlin_run1(entity this)
 {
 	set_animofs(this, anim_gremlin_run, 1, gremlin_run2);
 	if(random() < 0.1)
-		_sound(this, CHAN_VOICE, "grem/idle.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "grem/idle.wav", 1, ATTN_IDLE);
 	gremlin_run(this, 0);
 }
 
@@ -912,15 +912,15 @@ void gremlin_pain(entity this, entity attacker, float damage)
 
 	this.pain_finished = time + 1;
 //   if(random()<0.5)
-//      _sound(this, CHAN_VOICE, "grem/pain2.wav", 1, ATTN_NORM);
+//      _sound(this, CH_VOICE, "grem/pain2.wav", 1, ATTN_NORM);
 //   else
 	float r = random();
 	if(r < 0.33)
-		_sound(this, CHAN_VOICE, "grem/pain1.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "grem/pain1.wav", 1, ATTN_NORM);
 	else if(r < 0.66)
-		_sound(this, CHAN_VOICE, "grem/pain2.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "grem/pain2.wav", 1, ATTN_NORM);
 	else
-		_sound(this, CHAN_VOICE, "grem/pain3.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "grem/pain3.wav", 1, ATTN_NORM);
 
 	if(this.stoleweapon)
 		gremlin_gunpain1(this);
@@ -946,11 +946,11 @@ void gremlin_die5(entity this) { set_animofs(this, anim_gremlin_death, 5, gremli
 void gremlin_die4(entity this) { set_animofs(this, anim_gremlin_death, 4, gremlin_die5); ai_forward(this, 2); }
 void gremlin_die3(entity this) { set_animofs(this, anim_gremlin_death, 3, gremlin_die4); ai_forward(this, 1); }
 void gremlin_die2(entity this) { set_animofs(this, anim_gremlin_death, 2, gremlin_die3); ai_forward(this, 2); }
-void gremlin_die1(entity this) { set_animofs(this, anim_gremlin_death, 1, gremlin_die2); _sound(this, CHAN_VOICE, "grem/death.wav", 1, ATTN_NORM); }
+void gremlin_die1(entity this) { set_animofs(this, anim_gremlin_death, 1, gremlin_die2); _sound(this, CH_VOICE, "grem/death.wav", 1, ATTN_NORM); }
 
 void gremlin_gib(entity this)
 {
-	_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 	ThrowHead(this, "progs/h_grem.mdl", -35);
 	ThrowGib(this, "progs/gib1.mdl", -35);
 	ThrowGib(this, "progs/gib1.mdl", -35);
@@ -973,7 +973,7 @@ void gremlin_flip1(entity this)
 	this.velocity = '0 0 350' - (v_forward * 200);
 	if(IS_ONGROUND(this))
 		this.flags &= ~FL_ONGROUND;
-	_sound(this, CHAN_VOICE, "grem/death.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "grem/death.wav", 1, ATTN_NORM);
 }
 
 /*
@@ -1050,7 +1050,7 @@ void gremlin_die(entity this, entity attacker)
 
 	if(this.health < -35)
 	{
-		_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowHead(this, "progs/h_grem.mdl", this.health);
 		ThrowGib(this, "progs/gib1.mdl", this.health);
 		ThrowGib(this, "progs/gib1.mdl", this.health);
@@ -1164,7 +1164,7 @@ void Gremlin_FireRocket(entity this)
 	this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
 	this.effects |= EF_MUZZLEFLASH;
 
-	_sound(this, CHAN_WEAPON, "weapons/sgun1.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/sgun1.wav", 1, ATTN_NORM);
 
 	this.punchangle_x = -2;
 
@@ -1207,7 +1207,7 @@ void Gremlin_FireNailGun(entity this, float ox)
 	this.currentammo = this.ammo_nails = this.ammo_nails - 1;
 	this.effects |= EF_MUZZLEFLASH;
 
-	_sound(this, CHAN_WEAPON, "weapons/rocket1i.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/rocket1i.wav", 1, ATTN_NORM);
 	vector dir = normalize(this.enemy.origin - this.origin);
 	this.v_angle = vectoangles(dir);
 	makevectors(this.v_angle);
@@ -1228,7 +1228,7 @@ void Gremlin_FireLaserGun(entity this, float ox)
 	this.currentammo = this.ammo_cells = this.ammo_cells - 1;
 	this.effects |= EF_MUZZLEFLASH;
 
-	_sound(this, CHAN_WEAPON, "weapons/rocket1i.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/rocket1i.wav", 1, ATTN_NORM);
 	vector dir = normalize(this.enemy.origin - this.origin);
 	this.v_angle = vectoangles(dir);
 	makevectors(this.v_angle);
@@ -1249,7 +1249,7 @@ void Gremlin_FireShotGun(entity this)
 	this.currentammo = this.ammo_shells = this.ammo_shells - 1;
 	this.effects |= EF_MUZZLEFLASH;
 
-	_sound(this, CHAN_WEAPON, "weapons/guncock.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/guncock.wav", 1, ATTN_NORM);
 	vector dir = normalize(this.enemy.origin - this.origin);
 	this.v_angle = vectoangles(dir);
 	makevectors(this.v_angle);
@@ -1271,7 +1271,7 @@ void Gremlin_FireSuperShotGun(entity this)
 	this.currentammo = this.ammo_shells = this.ammo_shells - 2;
 	this.effects |= EF_MUZZLEFLASH;
 
-	_sound(this ,CHAN_WEAPON, "weapons/shotgn2.wav", 1, ATTN_NORM);
+	_sound(this ,CH_WEAPON_SINGLE, "weapons/shotgn2.wav", 1, ATTN_NORM);
 	vector dir = normalize(this.enemy.origin - this.origin);
 	this.v_angle = vectoangles(dir);
 	makevectors(this.v_angle);
@@ -1334,7 +1334,7 @@ void GremlinFireProximityGrenade(entity this)
 	this.NumProximityGrenades = this.NumProximityGrenades + 1;
 	this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
 
-	_sound(this, CHAN_WEAPON, "weapons/grenade.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/grenade.wav", 1, ATTN_NORM);
 
 	entity missile = new(proximity_grenade);
 	missile.owner = this;
@@ -1555,7 +1555,7 @@ void Gremlin_Melee(entity this, float side)
 	if(!CanDamage (this.enemy, this))
 		return;
 
-	_sound(this, CHAN_WEAPON, "grem/attack.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "grem/attack.wav", 1, ATTN_NORM);
 	float ldmg = 10 + 5*random();
 	T_Damage (this.enemy, this, this, ldmg);
 
@@ -1604,7 +1604,7 @@ void Gremlin_Damage(entity targ, entity inflictor, entity attacker, float damage
 	{
 		if(targ.invincible_sound < time)
 		{
-			_sound(targ, CHAN_ITEM, "items/protect3.wav", 1, ATTN_NORM);
+			_sound(targ, CH_TRIGGER_SINGLE, "items/protect3.wav", 1, ATTN_NORM);
 			targ.invincible_sound = time + 2;
 		}
 		return;
@@ -1693,7 +1693,7 @@ void Gremlin_Gorge(entity this, float side)
 {
 	//vector delta = this.enemy.origin - this.origin;
 
-	_sound(this, CHAN_WEAPON, "demon/dhit2.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "demon/dhit2.wav", 1, ATTN_NORM);
 	float ldmg = 7 + 5 * random();
 	Gremlin_Damage(this.enemy, this, this, ldmg);
 
@@ -1704,7 +1704,7 @@ void Gremlin_Gorge(entity this, float side)
 		if(this.enemy.gorging==false)
 		{
 			this.enemy.gorging = true;
-			_sound(this, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
+			_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 			Gremlin_ThrowHead(this.enemy, -15);
 			ldmg = 150 + 100 * random();
 			T_Heal(this, ldmg, false);

@@ -156,11 +156,11 @@ void Tar_JumpTouch(entity this, entity toucher)
 		{
 			float ldmg = 10 + 10*random();
 			T_Damage(toucher, this, this, ldmg);	
-			_sound(this, CHAN_WEAPON, "blob/hit1.wav", 1, ATTN_NORM);
+			_sound(this, CH_WEAPON_SINGLE, "blob/hit1.wav", 1, ATTN_NORM);
 		}
 	}
 	else
-		_sound(this, CHAN_WEAPON, "blob/land1.wav", 1, ATTN_NORM);
+		_sound(this, CH_WEAPON_SINGLE, "blob/land1.wav", 1, ATTN_NORM);
 
 
 	if(!t_checkbottom(this))
@@ -224,7 +224,7 @@ void tbaby_die2(entity this)
 	set_anim(this, anim_tbaby_exp, tbaby_run1);
 	T_RadiusDamage(this, this, 120, NULL);
 
-	_sound(this, CHAN_VOICE, "blob/death1.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "blob/death1.wav", 1, ATTN_NORM);
 	this.origin = this.origin - 8 * normalize(this.velocity);
 
 	te_tarexplosion(this.origin);
@@ -302,7 +302,7 @@ void tbaby_mitosis(entity targ, entity attacker, float damage)
 		setthink(newSpawn, tbaby_checknew);
 		newSpawn.nextthink = time + 0.5;
 
-        _sound(newSpawn, CHAN_VOICE, "blob/mytosis.wav", 1, ATTN_NORM);
+        _sound(newSpawn, CH_VOICE, "blob/mytosis.wav", 1, ATTN_NORM);
 	}
 }
 

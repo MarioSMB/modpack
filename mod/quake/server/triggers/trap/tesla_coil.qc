@@ -86,7 +86,7 @@ void trap_tesla_think(entity this)
 		if(tesla_numtargets > 0)
 		{
 			if(this.wait > 0)
-				_sound(this, CHAN_AUTO, "misc/tesla.wav", 1, ATTN_NORM);
+				_sound(this, CHAN_TRIGGER, "misc/tesla.wav", 1, ATTN_NORM);
 			this.attack_state = 1;
 			this.nextthink = time + this.wait;
 			return;

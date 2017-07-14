@@ -384,7 +384,7 @@ void dragon_walk1(entity this)
 	this.dragonPainSequence = 1;
 	dragon_move(this, 17);
 	if(random() < 0.2)
-		_sound(this, CHAN_VOICE, "dragon/active.wav", 0.6, ATTN_IDLE);
+		_sound(this, CH_VOICE, "dragon/active.wav", 0.6, ATTN_IDLE);
 }
 
 // ===================================
@@ -401,7 +401,7 @@ void FireballTouch(entity this, entity toucher)
 	else
 		T_RadiusDamage(this, this.owner, 30, NULL);
 	
-	_sound(this, CHAN_WEAPON, "weapons/r_exp3.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
 
 	te_explosion2(this.origin, 228, 5); // 247
 
@@ -437,7 +437,7 @@ void launch_fireball(entity this, vector org, vector dir)
 // ===========================================
 void dragon_fireball(entity this)
 {
-	_sound(this, CHAN_VOICE, "dragon/attack.wav", 1, ATTN_NORM);
+	_sound(this, CH_VOICE, "dragon/attack.wav", 1, ATTN_NORM);
 
 	makevectors(this.angles);
 	vector org = this.origin + v_forward*112 + v_up*32;
@@ -571,7 +571,7 @@ void dragon_pain(entity this, entity attacker, float damage)
 	{
 		dragon_stop_attack(this);
 
-		_sound(this, CHAN_VOICE, "dragon/pain.wav", 1, ATTN_NORM);
+		_sound(this, CH_VOICE, "dragon/pain.wav", 1, ATTN_NORM);
 		this.pain_finished = time + 2;
 		
 		if(this.dragonPainSequence == 1)
@@ -611,7 +611,7 @@ void dragon_boom1(entity this)
 	ThrowGib(this, "progs/drggib01.mdl", -100);
 	ThrowGib(this, "progs/drggib02.mdl", -100);
 	ThrowGib(this, "progs/drggib03.mdl", -100);
-	_sound(this, CHAN_BODY, "player/tornoff2.wav", 1, ATTN_NONE);
+	_sound(this, CH_PLAYER, "player/tornoff2.wav", 1, ATTN_NONE);
 	setthink(this, dragon_boom2);
 	this.nextthink = time + 0.1;
 }
@@ -695,7 +695,7 @@ void dragon_death1(entity this, entity attacker)
 	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	settouch(this, dragon_squish);
 
-	_sound(this, CHAN_VOICE, "dragon/death.wav", 1, ATTN_NONE);
+	_sound(this, CH_VOICE, "dragon/death.wav", 1, ATTN_NONE);
 	this.dragonAttacking = false;
 }
 

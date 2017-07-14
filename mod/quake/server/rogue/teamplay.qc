@@ -719,7 +719,7 @@ void Team_weapon_touch(entity this, entity toucher)
 	sprint(toucher, this.netname);
 	sprint(toucher, "\n");
 // weapon touch sound
-	_sound(toucher, CHAN_ITEM, "weapons/pkup.wav", 1, ATTN_NORM);
+	_sound(toucher, CH_TRIGGER_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
 
 	bound_other_ammo(toucher);
@@ -833,7 +833,7 @@ void RegenFlag(entity flg)
 {
 	set_movetype(flg, MOVETYPE_TOSS);
 	flg.solid = SOLID_TRIGGER;
-	_sound(flg, CHAN_VOICE, "items/itembk2.wav", 1, ATTN_NORM);	// play respawn sound
+	_sound(flg, CH_INFO, "items/itembk2.wav", 1, ATTN_NORM);	// play respawn sound
 	setorigin(flg, flg.oldorigin);
 	flg.angles = flg.mangle;
 	flg.cnt = FLAG_AT_BASE; // it's at home base
@@ -966,7 +966,7 @@ void TeamFlagTouch(entity this, entity toucher)
 		centerprint(toucher, "YOU GOT THE FLAG\n\nTAKE IT TO ENEMY BASE\n");
 		  //centerprint(toucher, "ÙÏÕ ÇÏÔ ÔÈÅ ÆÌÁÇ\n\nÔÁËÅ ÉÔ ÔÏ ÅÎÅÍÙ ÂÁÓÅ\n");
 
-		_sound(toucher, CHAN_ITEM, this.noise, 1, ATTN_NORM);
+		_sound(toucher, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 
 		toucher.ctf_flags |= CTF_FLAG_FLAG;
 		toucher.items |= this.items;
@@ -1004,7 +1004,7 @@ void TeamFlagTouch(entity this, entity toucher)
 				bprintf("%s ^7captured the %s flag^7!\n", toucher.netname, ((toucher.team == TEAM1) ? "^4Blue" : "^1Red"));
 				toucher.items &= ~(IT_KEY1 | IT_KEY2);
 
-				_sound(toucher, CHAN_VOICE, "misc/flagcap.wav", 1, ATTN_NONE);
+				_sound(toucher, CH_INFO, "misc/flagcap.wav", 1, ATTN_NONE);
 
 				// toucher gets antoucher 10 frag bonus
 				toucher.frags = toucher.frags + CTF_CAPTURE_BONUS;
@@ -1061,7 +1061,7 @@ void TeamFlagTouch(entity this, entity toucher)
 		bprintf("%s ^7returned the %s flag^7!\n", toucher.netname, ((toucher.team == TEAM1) ? "^1Red" : "^4Blue"));
 		toucher.frags = toucher.frags + CTF_RECOVERY_BONUS;
 		toucher.ctf_lastreturnedflag = time;
-		_sound(toucher, CHAN_ITEM, this.noise1, 1, ATTN_NORM);
+		_sound(toucher, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
 		TeamReturnFlag(this);
 		return;
 	}
@@ -1085,7 +1085,7 @@ void TeamFlagTouch(entity this, entity toucher)
 //		centerprint(toucher, "YOU GOT THE ENEMY FLAG!\n\nRETURN TO BASE!\n");
 		centerprint(toucher, "You got the enemy flag\n\nReturn to base!\n");
 	}
-	_sound(toucher, CHAN_ITEM, this.noise, 1, ATTN_NORM);
+	_sound(toucher, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 
 	if(this.team == TEAM1)
 		toucher.ctf_flags |= CTF_FLAG_TEAM1;
@@ -1157,7 +1157,7 @@ void TeamFlagBaseTouch(entity this, entity toucher)
 			// he just touched enemy base, capture it
 			bprint(strcat(toucher.netname, " ^7captured the ^9flag^7!\n"));
 			toucher.items &= ~(IT_KEY1 | IT_KEY2);
-			_sound(toucher, CHAN_VOICE, "misc/flagcap.wav", 1, ATTN_NONE);
+			_sound(toucher, CH_INFO, "misc/flagcap.wav", 1, ATTN_NONE);
 
 			// toucher gets antoucher 10 frag bonus
 			toucher.frags = toucher.frags + CTF_CAPTURE_BONUS;
@@ -1200,7 +1200,7 @@ void TeamFlagBaseTouch(entity this, entity toucher)
 		bprintf("%s ^7captured the %s flag^7!\n", toucher.netname, ((this.team == TEAM1) ? "^4Blue" : "^1Red"));
 		toucher.items &= ~(IT_KEY1 | IT_KEY2);
 
-		_sound(toucher, CHAN_VOICE, "misc/flagcap.wav", 1, ATTN_NONE);
+		_sound(toucher, CH_INFO, "misc/flagcap.wav", 1, ATTN_NONE);
 
 		// toucher gets antoucher 10 frag bonus
 		toucher.frags = toucher.frags + CTF_ALT_CAPTURE_BONUS;
