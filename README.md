@@ -17,7 +17,7 @@ Git
 
 Building tools
  - On Debian based systems, use `sudo apt-get install build-essential`
- - Windows: ??? (alternatively, use MSYS2, guide pending)
+ - Windows: MSYS2 (full guide pending)
  - Mac systems should already come with the required building tools once Git is installed
  
 Required content packs:
