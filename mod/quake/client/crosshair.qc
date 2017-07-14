@@ -72,7 +72,34 @@ vector crosshair_getcolor(entity this, float health_stat)
 	{
 		case 1: // crosshair_color_per_weapon
 		{
-			goto normalcolor;
+			if(STAT(ACTIVEWEAPON))
+			{
+				switch(STAT(ACTIVEWEAPON))
+				{
+					default: wcross_color = '0 0 0'; break;
+					case WEP_AXE: wcross_color = '1 0.5 0.5'; break;
+					case WEP_SHOTGUN: wcross_color = '0.5 0.25 0'; break;
+					case WEP_SUPER_SHOTGUN: wcross_color = '0.5 0.25 0'; break;
+					case WEP_NAILGUN: wcross_color = '1 1 0'; break;
+					case WEP_SUPER_NAILGUN: wcross_color = '1 1 0.5'; break;
+					case WEP_GRENADE_LAUNCHER: wcross_color = '1 0 0'; break;
+					case WEP_ROCKET_LAUNCHER: wcross_color = '1 1 0'; break;
+					case WEP_LIGHTNING: wcross_color = '1 1 1'; break;
+
+					case WEP_LAVA_NAILGUN: wcross_color = '1 0.75 0'; break;
+					case WEP_LAVA_SUPER_NAILGUN: wcross_color = '1 0.75 0.25'; break;
+					case WEP_MULTI_GRENADE: wcross_color = '0.5 1 0'; break;
+					case WEP_MULTI_ROCKET: wcross_color = '1 0.75 0'; break;
+					case WEP_PLASMA_GUN: wcross_color = '0 0.5 1'; break;
+
+					case WEP_MJOLNIR: wcross_color = '1 0.75 1'; break;
+					case WEP_LASER_CANNON: wcross_color = '0 1 0'; break;
+					case WEP_PROXIMITY_GUN: wcross_color = '0.75 1 0'; break;
+					case WEP_GRAPPLE: wcross_color = '0 0.5 0'; break;
+				}
+				break;
+			}
+			else { goto normalcolor; }
 		}
 
 		case 2: // crosshair_color_by_health
