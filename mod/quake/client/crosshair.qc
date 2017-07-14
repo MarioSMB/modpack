@@ -57,6 +57,7 @@ vector project_3d_to_2d(vector vec)
 	return vec;
 }
 
+bool autocvar_crosshair_per_weapon;
 int autocvar_crosshair_color_special;
 float autocvar_crosshair_color_special_rainbow_brightness;
 float autocvar_crosshair_color_special_rainbow_delay;
@@ -189,6 +190,35 @@ void HUD_Crosshair(entity this)
 
 		string wcross_name = "";
 		float wcross_scale = 1, wcross_blur = 0;
+
+		if(autocvar_crosshair_per_weapon)
+		{
+			int thewep = STAT(ACTIVEWEAPON);
+
+			switch(thewep)
+			{
+				default: wcross_resolution *= 1; wcross_name = "gfx/crosshairmoustache"; break;
+				case WEP_AXE: wcross_resolution *= 0.5; wcross_name = "gfx/crosshairlaser"; break;
+				case WEP_SHOTGUN: wcross_resolution *= 0.65; wcross_name = "gfx/crosshairshotgun"; break;
+				case WEP_SUPER_SHOTGUN: wcross_resolution *= 0.7; wcross_name = "gfx/crosshairshotgun"; break;
+				case WEP_NAILGUN: wcross_resolution *= 0.6; wcross_name = "gfx/crosshairuzi"; break;
+				case WEP_SUPER_NAILGUN: wcross_resolution *= 0.8; wcross_name = "gfx/crosshairhagar"; break;
+				case WEP_GRENADE_LAUNCHER: wcross_resolution *= 0.7; wcross_name = "gfx/crosshairgrenadelauncher"; break;
+				case WEP_ROCKET_LAUNCHER: wcross_resolution *= 0.7; wcross_name = "gfx/crosshairrocketlauncher"; break;
+				case WEP_LIGHTNING: wcross_resolution *= 0.7; wcross_name = "gfx/crosshairhlac"; break;
+
+				case WEP_LAVA_NAILGUN: wcross_resolution *= 0.6; wcross_name = "gfx/crosshairuzi"; break;
+				case WEP_LAVA_SUPER_NAILGUN: wcross_resolution *= 0.7; wcross_name = "gfx/crosshairuzi"; break;
+				case WEP_MULTI_GRENADE: wcross_resolution *= 0.8; wcross_name = "gfx/crosshairseeker"; break;
+				case WEP_MULTI_ROCKET: wcross_resolution *= 0.65; wcross_name = "gfx/crosshairfireball"; break;
+				case WEP_PLASMA_GUN: wcross_resolution *= 0.6; wcross_name = "gfx/crosshairelectro"; break;
+
+				case WEP_MJOLNIR: wcross_resolution *= 0.5; wcross_name = "gfx/crosshaircrylink"; break;
+				case WEP_LASER_CANNON: wcross_resolution *= 0.6; wcross_name = "gfx/crosshairhlac"; break;
+				case WEP_PROXIMITY_GUN: wcross_resolution *= 0.9; wcross_name = "gfx/crosshairminelayer"; break;
+				case WEP_GRAPPLE: wcross_resolution *= 0.5; wcross_name = "gfx/crosshairhook"; break;
+			}
+		}
 
 		if(wcross_name == "")
 			wcross_name = strcat("gfx/crosshair", wcross_style);
