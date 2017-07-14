@@ -6,12 +6,12 @@ string formatmessage(entity this, string msg)
 
 	string ammoitems = "batteries";
 	if(this.items & IT_LAVA_NAILS) ammoitems = "lava nails";
-	if(this.items & IT_PLASMA_AMMO) ammoitems = "plasma";
-	if(this.items & IT_MULTI_ROCKETS) ammoitems = "multi rockets";
-	if(this.items & IT_CELLS) ammoitems = "cells";
-	if(this.items & IT_ROCKETS) ammoitems = "rockets";
-	if(this.items & IT_NAILS) ammoitems = "nails";
-	if(this.items & IT_SHELLS) ammoitems = "shells";
+	else if(this.items & IT_PLASMA_AMMO) ammoitems = "plasma";
+	else if(this.items & IT_MULTI_ROCKETS) ammoitems = "multi rockets";
+	else if(this.items & IT_CELLS) ammoitems = "cells";
+	else if(this.items & IT_ROCKETS) ammoitems = "rockets";
+	else if(this.items & IT_NAILS) ammoitems = "nails";
+	else if(this.items & IT_SHELLS) ammoitems = "shells";
 
 	string wep = Weapon_PrettyName(this.weapon);
 
