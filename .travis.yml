@@ -4,7 +4,7 @@ services:
 
 git:
   submodules: false
-  depth: 300
+  depth: 200
 
 script:
   - ./update.sh
