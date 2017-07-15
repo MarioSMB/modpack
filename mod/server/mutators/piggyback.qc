@@ -239,7 +239,7 @@ MUTATOR_HOOKFUNCTION(piggyback, PlayerPreThink)
 		pb_FixPBEnt(player);
 
 	if(IS_MONSTER(player.pbhost))
-	if(player.movement || PHYS_INPUT_BUTTON_JUMP(player) || PHYS_INPUT_BUTTON_CROUCH(player))
+	if(CS(player).movement || PHYS_INPUT_BUTTON_JUMP(player) || PHYS_INPUT_BUTTON_CROUCH(player))
 	//if(!player.pbhost.enemy) // if player is trying to move, don't override
 	{
 		float forw, rit, updown = 0;
@@ -251,16 +251,16 @@ MUTATOR_HOOKFUNCTION(piggyback, PlayerPreThink)
 		else if(PHYS_INPUT_BUTTON_CROUCH(player))
 			updown = -300;
 
-		if(player.movement)
+		if(CS(player).movement)
 		{
-			forw = player.movement_x * 500;
-			rit = player.movement_y * 500;
-			//updown = player.movement_z * 100;
+			forw = CS(player).movement_x * 500;
+			rit = CS(player).movement_y * 500;
+			//updown = CS(player).movement_z * 100;
 			
 			wishvel = v_forward * forw + v_right * rit;
 		}
 		
-		//vector wishvel = normalize(('10 0 0' + v_forward * player.movement_x) + ('0 10 0' + v_right * player.movement_y) + ('0 0 1' * player.movement_z));
+		//vector wishvel = normalize(('10 0 0' + v_forward * CS(player).movement_x) + ('0 10 0' + v_right * CS(player).movement_y) + ('0 0 1' * CS(player).movement_z));
 		//print(vtos(player.origin), vtos(player.origin + wishvel), "\n");
 		player.pbhost.monster_moveto = player.origin + wishvel;
 		player.pbhost.monster_moveto_z = v_up_z * updown;

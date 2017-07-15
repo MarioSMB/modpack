@@ -7,7 +7,7 @@ MUTATOR_HOOKFUNCTION(muteban, ClientConnect)
 	entity player = M_ARGV(0, entity);
 
 	if(PlayerInList(player, autocvar_sv_muteban_list))
-		player.muted = true;
+		CS(player).muted = true;
 }
 
 MUTATOR_HOOKFUNCTION(muteban, SV_ParseServerCommand)
@@ -30,7 +30,7 @@ MUTATOR_HOOKFUNCTION(muteban, SV_ParseServerCommand)
 				theid = cons(theid, client.netaddress);
 			if(!PlayerInIDList(client, autocvar_sv_muteban_list))
 				theid = cons(theid, client.crypto_idfp);
-			client.muted = true;
+			CS(client).muted = true;
 			LOG_INFO(strcat("Mute-banning player ", GetCallerName(client), " (", argv(1), ").\n"));
 			cvar_set("sv_muteban_list", cons(autocvar_sv_muteban_list, theid));
 		}
@@ -60,7 +60,7 @@ MUTATOR_HOOKFUNCTION(muteban, SV_ParseServerCommand)
 
 			cvar_set("sv_muteban_list", tmp_string);
 			LOG_INFO(strcat("Unmuting player ", GetCallerName(client), " (", original_arg, ").\n"));
-			client.muted = false;
+			CS(client).muted = false;
 		}
 		else
 		{

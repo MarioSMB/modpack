@@ -35,8 +35,8 @@ MUTATOR_HOOKFUNCTION(boggle_timer, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(player.active_minigame)
-		STAT(BOGGLE_TIMER, player) = (player.active_minigame.boggle_timer_start + autocvar_sv_minigames_boggle_timelimit) - time;
+	if(CS(player).active_minigame)
+		STAT(BOGGLE_TIMER, player) = (CS(player).active_minigame.boggle_timer_start + autocvar_sv_minigames_boggle_timelimit) - time;
 	else
 		STAT(BOGGLE_TIMER, player) = 0;
 }
