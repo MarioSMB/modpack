@@ -6,7 +6,7 @@ MUTATOR_HOOKFUNCTION(muteban, ClientConnect)
 {
 	entity player = M_ARGV(0, entity);
 
-	if((player.crypto_idfp != "" && strhasword(autocvar_sv_muteban_list, player.crypto_idfp)) || strhasword(autocvar_sv_muteban_list, player.netaddress))
+	if(PlayerInList(player, autocvar_sv_muteban_list))
 		player.muted = true;
 }
 
@@ -25,11 +25,14 @@ MUTATOR_HOOKFUNCTION(muteban, SV_ParseServerCommand)
 
 		if (accepted > 0)
 		{
-			string with_crypto = ((client.crypto_idfp != "") ? strcat(" ", client.crypto_idfp) : "");
-
-			cvar_set("sv_muteban_list", strcat(autocvar_sv_muteban_list, with_crypto, " ", client.netaddress));
+			string theid = "";
+			if(!PlayerInIPList(client, autocvar_sv_muteban_list))
+				theid = cons(theid, client.netaddress);
+			if(!PlayerInIDList(client, autocvar_sv_muteban_list))
+				theid = cons(theid, client.crypto_idfp);
 			client.muted = true;
 			LOG_INFO(strcat("Mute-banning player ", GetCallerName(client), " (", argv(1), ").\n"));
+			cvar_set("sv_muteban_list", cons(autocvar_sv_muteban_list, theid));
 		}
 		else
 		{
@@ -47,14 +50,14 @@ MUTATOR_HOOKFUNCTION(muteban, SV_ParseServerCommand)
 
 		if (accepted > 0)
 		{
-			int argc = tokenizebyseparator(autocvar_sv_muteban_list, " ");
-
 			string tmp_string = "";
-			for(int i = 0; i < argc; ++i)
-				if(argv(i) != client.netaddress && argv(i) != client.crypto_idfp)
-					tmp_string = strcat(tmp_string, " ", argv(i));
+			FOREACH_WORD(autocvar_sv_muteban_list, it != client.netaddress,
+			{
+				if(client.crypto_idfp && it == substring(client.crypto_idfp, 0, strlen(it)))
+					continue;
+				tmp_string = cons(tmp_string, it);
+			});
 
-			tmp_string = substring(tmp_string, 1, strlen(tmp_string) - 1);
 			cvar_set("sv_muteban_list", tmp_string);
 			LOG_INFO(strcat("Unmuting player ", GetCallerName(client), " (", original_arg, ").\n"));
 			client.muted = false;
@@ -63,14 +66,12 @@ MUTATOR_HOOKFUNCTION(muteban, SV_ParseServerCommand)
 		{
 			LOG_INFO("mute-ban failed: ", GetClientErrorString(accepted, original_arg), ", attempting to unban by string.\n");
 
-			int argc = tokenizebyseparator(autocvar_sv_muteban_list, " ");
-
 			string tmp_string = "";
-			for(int i = 0; i < argc; ++i)
-				if(argv(i) != original_arg)
-					tmp_string = strcat(tmp_string, " ", argv(i));
+			FOREACH_WORD(autocvar_sv_muteban_list, it != original_arg,
+			{
+				tmp_string = cons(tmp_string, it);
+			});
 
-			tmp_string = substring(tmp_string, 1, strlen(tmp_string) - 1);
 			cvar_set("sv_muteban_list", tmp_string);
 		}
 		return true;

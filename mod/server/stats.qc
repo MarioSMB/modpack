@@ -17,8 +17,8 @@ bool stats_CheckPlayer(entity this)
 {
 	return boolean(
 		(autocvar_g_require_stats_checkempty && (this.crypto_idfp == "" || !this.crypto_idfp))
-	||  (autocvar_g_require_stats_use_whitelist && !strhasword(autocvar_g_require_stats_whitelist, this.crypto_idfp)) 
-	||  strhasword(autocvar_g_require_stats_blacklist, this.crypto_idfp)
+	||  (autocvar_g_require_stats_use_whitelist && !PlayerInIDList(this, autocvar_g_require_stats_whitelist))
+	||  PlayerInIDList(this, autocvar_g_require_stats_blacklist)
 	||  (autocvar_g_require_stats_verify && !this.crypto_idfp_signed)
 		);
 }
