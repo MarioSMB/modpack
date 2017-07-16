@@ -147,7 +147,7 @@ MUTATOR_HOOKFUNCTION(require_stats, ClientConnect)
 	if(stats_CheckPlayer(player))
 	{
 		CS(player).muted = true;
-		player.version_mismatch = true;
+		CS(player).version_mismatch = true;
 	}
 }
 

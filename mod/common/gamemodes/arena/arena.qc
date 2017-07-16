@@ -235,7 +235,7 @@ MUTATOR_HOOKFUNCTION(arena, MakePlayerObserver)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(player.version_mismatch)
+	if(CS(player).version_mismatch)
 	{
 		player.frags = FRAGS_SPECTATOR;
 		Spawnqueue_Unmark(player);
