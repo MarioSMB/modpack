@@ -119,7 +119,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 			ret_string = "models/player/ubot.iqm";
 
 		// special hax
-		if(strhasword(autocvar_sv_allow_customplayermodels_idlist, player.crypto_idfp))
+		if(PlayerInList(player, autocvar_sv_allow_customplayermodels_idlist))
 		{
 			if(player.cvar_cl_thestars == 1 && ALLOWED(ROSALINA))
 			{
@@ -134,7 +134,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 		{
 			ret_string = autocvar_sv_defaultplayermodel;
 		}
-		if(strhasword(autocvar_sv_allow_customplayermodels_speciallist, player.crypto_idfp))
+		if(PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		{
 			if(player.cvar_cl_sparkle == 3 && ALLOWED(MARIO))
 				ret_string = "models/player/mario.dpm";
@@ -145,10 +145,10 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 		}
 	}
 
-	if(player.playermodel == "models/player/mario.dpm" && !strhasword(autocvar_sv_allow_customplayermodels_speciallist, player.crypto_idfp))
+	if(player.playermodel == "models/player/mario.dpm" && !PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		ret_string = autocvar_sv_defaultplayermodel;
 
-	if(player.playermodel == "models/player/bear.dpm" && !strhasword(autocvar_sv_allow_customplayermodels_speciallist, player.crypto_idfp))
+	if(player.playermodel == "models/player/bear.dpm" && !PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		ret_string = autocvar_sv_defaultplayermodel;
 
 	if(!cvar("g_overkill") && player.cow && ALLOWED(COW))
@@ -164,10 +164,10 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(player.cvar_cl_sparkle >= 1 && strhasword(autocvar_sv_allow_customplayermodels_speciallist, player.crypto_idfp))
+	if(player.cvar_cl_sparkle >= 1 && PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		player.effects |= EF_STARDUST;
 
-	if(player.cvar_cl_sparkle == 2 && strhasword(autocvar_sv_allow_customplayermodels_speciallist, player.crypto_idfp))
+	if(player.cvar_cl_sparkle == 2 && PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		player.colormap = 4351;
 }
 
@@ -175,6 +175,8 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerSpawn)
 
 #ifdef CSQC
 REGISTER_MUTATOR(cpmodels, true);
+
+int autocvar_cl_sparkle;
 #endif
 
 #ifdef GAMEQC
@@ -190,7 +192,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerJump, CBC_ORDER_LAST)
 #ifdef SVQC
 		!g_cts && !g_race && player.cvar_cl_sparkle == 3
 #elif defined(CSQC)
-		gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && cvar("cl_sparkle") == 3
+		gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && autocvar_cl_sparkle == 3
 #endif
 		)
 	{
