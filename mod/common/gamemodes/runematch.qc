@@ -17,7 +17,7 @@ AUTOCVAR(g_runematch_point_leadlimit, float, -1, "Runematch point lead limit ove
 AUTOCVAR(g_runematch_point_limit, float, -1, "Runematch point limit overriding the mapinfo specified one (use 0 to play without limit, and -1 to use the mapinfo's limit)");
 AUTOCVAR(g_runematch_pointamt, float, 1, "");
 AUTOCVAR(g_runematch_pointrate, float, 5, "");
-AUTOCVAR(g_runematch_points_bykill, bool, false, "Count scores by kills instead of giving them over time");
+AUTOCVAR(g_runematch_points_bykill, bool, true, "Count scores by kills instead of giving them over time");
 AUTOCVAR(g_runematch_respawntime, float, 15, "How soon after being dropped to respawn");
 AUTOCVAR(g_runematch_rune_alpha, float, 0.78, "");
 AUTOCVAR(g_runematch_rune_color_strength, float, 1.0, "");

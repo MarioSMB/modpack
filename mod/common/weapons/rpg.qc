@@ -2,10 +2,10 @@
 #ifndef IMPLEMENTATION
 AUTOCVAR(g_balance_rpg_ammo, float, 5, "");
 AUTOCVAR(g_balance_rpg_animtime, float, 0.75, "");
-AUTOCVAR(g_balance_rpg_damage, float, 150, "");
+AUTOCVAR(g_balance_rpg_damage, float, 80, "");
 AUTOCVAR(g_balance_rpg_damageforcescale, float, 1, "");
-AUTOCVAR(g_balance_rpg_edgedamage, float, 90, "");
-AUTOCVAR(g_balance_rpg_force, float, 600, "");
+AUTOCVAR(g_balance_rpg_edgedamage, float, 40, "");
+AUTOCVAR(g_balance_rpg_force, float, 350, "");
 AUTOCVAR(g_balance_rpg_health, float, 30, "");
 AUTOCVAR(g_balance_rpg_lifetime, float, 10, "");
 AUTOCVAR(g_balance_rpg_radius, float, 350, "");
