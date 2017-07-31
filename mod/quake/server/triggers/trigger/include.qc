@@ -8,6 +8,7 @@
 #include "hurt.qc"
 #include "jumppads.qc"
 #include "multi.qc"
+#include "registered.qc"
 #include "relay.qc"
 #include "remove.qc"
 #include "secret.qc"

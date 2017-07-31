@@ -250,6 +250,14 @@ SPAWNING FUNCTIONS
 */
 
 
+/*
+=============
+LinkDoors
+
+
+=============
+*/
+#if 1
 entity spawn_field(entity this, vector fmins, vector fmaxs)
 {
 	entity trigger = spawn();
@@ -264,19 +272,11 @@ entity spawn_field(entity this, vector fmins, vector fmaxs)
 	return(trigger);
 }
 
-
-/*
-=============
-LinkDoors
-
-
-=============
-*/
 void LinkDoors(entity this)
 {
 	if(this.enemy)
 		return;		// already linked by another door
-	if(this.spawnflags & BIT(2))
+	if(this.spawnflags & 4)
 	{
 		this.owner = this.enemy = this;
 		return;		// don't want to link this door
@@ -345,6 +345,128 @@ void LinkDoors(entity this)
 	} while(1);
 
 }
+#else
+void door_spawnfield(entity this, vector fmins, vector fmaxs)
+{
+	entity	trigger;
+	vector	t1 = fmins, t2 = fmaxs;
+
+	trigger = new(doortriggerfield);
+	set_movetype(trigger, MOVETYPE_NONE);
+	trigger.solid = SOLID_TRIGGER;
+	trigger.owner = this;
+	settouch(trigger, door_trigger_touch);
+
+	setsize (trigger, t1 - '60 60 8', t2 + '60 60 8');
+}
+
+entity LinkDoors_nextent(entity cur, entity near, entity pass)
+{
+	while((cur = find(cur, classname, pass.classname)) && ((cur.spawnflags & 4) || cur.enemy))
+	{
+	}
+	return cur;
+}
+
+bool LinkDoors_isconnected(entity e1, entity e2, entity pass)
+{
+	float DELTA = 4;
+	if((e1.absmin_x > e2.absmax_x + DELTA)
+	|| (e1.absmin_y > e2.absmax_y + DELTA)
+	|| (e1.absmin_z > e2.absmax_z + DELTA)
+	|| (e2.absmin_x > e1.absmax_x + DELTA)
+	|| (e2.absmin_y > e1.absmax_y + DELTA)
+	|| (e2.absmin_z > e1.absmax_z + DELTA)
+	) { return false; }
+	return true;
+}
+
+void LinkDoors(entity this)
+{
+	if (this.enemy)
+		return;		// already linked by another door
+	if (this.spawnflags & 4)
+	{
+		this.owner = this.enemy = this;
+
+		if (this.health)
+			return;
+		if (this.targetname != "")
+			return;
+		if (this.items)
+			return;
+
+		door_spawnfield(this, this.absmin, this.absmax);
+
+		return;		// don't want to link this door
+	}
+
+	FindConnectedComponent(this, enemy, LinkDoors_nextent, LinkDoors_isconnected, this);
+
+	// set owner, and make a loop of the chain
+	LOG_TRACE("LinkDoors: linking doors:");
+	for(entity t = this; ; t = t.enemy)
+	{
+		LOG_TRACE(" ", etos(t));
+		t.owner = this;
+		if(t.enemy == NULL)
+		{
+			t.enemy = this;
+			break;
+		}
+	}
+	LOG_TRACE("");
+
+	// collect health, targetname, message, size
+	vector cmins = this.absmin;
+	vector cmaxs = this.absmax;
+	for(entity t = this; ; t = t.enemy)
+	{
+		if(t.health && !this.health)
+			this.health = t.health;
+		if((t.targetname != "") && (this.targetname == ""))
+			this.targetname = t.targetname;
+		if((t.message != "") && (this.message == ""))
+			this.message = t.message;
+		if (t.absmin_x < cmins_x)
+			cmins_x = t.absmin_x;
+		if (t.absmin_y < cmins_y)
+			cmins_y = t.absmin_y;
+		if (t.absmin_z < cmins_z)
+			cmins_z = t.absmin_z;
+		if (t.absmax_x > cmaxs_x)
+			cmaxs_x = t.absmax_x;
+		if (t.absmax_y > cmaxs_y)
+			cmaxs_y = t.absmax_y;
+		if (t.absmax_z > cmaxs_z)
+			cmaxs_z = t.absmax_z;
+		if(t.enemy == this)
+			break;
+	}
+
+	// distribute health, targetname, message
+	for(entity t = this; t; t = t.enemy)
+	{
+		t.health = this.health;
+		t.targetname = this.targetname;
+		t.message = this.message;
+		if(t.enemy == this)
+			break;
+	}
+
+	// shootable, or triggered doors just needed the owner/enemy links,
+	// they don't spawn a field
+
+	if (this.health)
+		return;
+	if (this.targetname != "")
+		return;
+	if (this.items)
+		return;
+
+	door_spawnfield(this, cmins, cmaxs);
+}
+#endif
 
 
 /*QUAKED func_door(0 .5 .8) ? START_OPEN x DOOR_DONT_LINK GOLD_KEY SILVER_KEY TOGGLE
@@ -374,72 +496,33 @@ Key doors are allways wait -1.
 
 spawnfunc(func_door)
 {
-	if(world.worldtype == 0)
-	{
-		precache_sound("doors/medtry.wav");
-		precache_sound("doors/meduse.wav");
-		this.noise3 = "doors/medtry.wav";
-		this.noise4 = "doors/meduse.wav";
-	}
-	else if(world.worldtype == 1)
-	{
-		precache_sound("doors/runetry.wav");
-		precache_sound("doors/runeuse.wav");
-		this.noise3 = "doors/runetry.wav";
-		this.noise4 = "doors/runeuse.wav";
-	}
-	else if(world.worldtype == 2)
-	{
-		precache_sound("doors/basetry.wav");
-		precache_sound("doors/baseuse.wav");
-		this.noise3 = "doors/basetry.wav";
-		this.noise4 = "doors/baseuse.wav";
-	}
-	else
-	{
-		dprint("no worldtype set!\n");
-	}
-	if(this.sounds == 0)
-	{
-		precache_sound("misc/null.wav");
-		precache_sound("misc/null.wav");
-		this.noise1 = "misc/null.wav";
-		this.noise2 = "misc/null.wav";
-	}
-	else if(this.sounds == 1)
-	{
-		precache_sound("doors/drclos4.wav");
-		precache_sound("doors/doormv1.wav");
-		this.noise1 = "doors/drclos4.wav";
-		this.noise2 = "doors/doormv1.wav";
-	}
-	else if(this.sounds == 2)
-	{
-		precache_sound("doors/hydro1.wav");
-		precache_sound("doors/hydro2.wav");
-		this.noise2 = "doors/hydro1.wav";
-		this.noise1 = "doors/hydro2.wav";
-	}
-	else if(this.sounds == 3)
-	{
-		precache_sound("doors/stndr1.wav");
-		precache_sound("doors/stndr2.wav");
-		this.noise2 = "doors/stndr1.wav";
-		this.noise1 = "doors/stndr2.wav";
-	}
-	else if(this.sounds == 4)
-	{
-		precache_sound("doors/ddoor1.wav");
-		precache_sound("doors/ddoor2.wav");
-		this.noise1 = "doors/ddoor2.wav";
-		this.noise2 = "doors/ddoor1.wav";
-	}
-
 	SetMovedir(this);
 
 	this.max_health = this.health;
 	if (!InitMovingBrushTrigger(this))
 		return;
+
+	switch(this.sounds)
+	{
+		case 0: this.noise1 = "misc/null.wav"; this.noise2 = "misc/null.wav"; break;
+		case 1: this.noise1 = "doors/drclos4.wav"; this.noise2 = "doors/doormv1.wav"; break;
+		case 2: this.noise1 = "doors/hydro2.wav"; this.noise2 = "doors/hydro1.wav"; break;
+		case 3: this.noise1 = "doors/stndr2.wav"; this.noise2 = "doors/stndr1.wav"; break;
+		case 4: this.noise1 = "doors/ddoor2.wav"; this.noise2 = "doors/ddoor1.wav"; break;
+	}
+
+	switch(world.worldtype)
+	{
+		case 0: this.noise3 = "doors/medtry.wav"; this.noise4 = "doors/meduse.wav"; break;
+		case 1: this.noise3 = "doors/runetry.wav"; this.noise4 = "doors/runeuse.wav"; break;
+		case 2: this.noise3 = "doors/basetry.wav"; this.noise4 = "doors/baseuse.wav"; break;
+		default: LOG_DEBUG("func_door: unhandled worldtype!\n"); break;
+	}
+
+	if(this.noise1 != "") precache_sound(this.noise1);
+	if(this.noise2 != "") precache_sound(this.noise2);
+	if(this.noise3 != "") precache_sound(this.noise3);
+	if(this.noise4 != "") precache_sound(this.noise4);
 
 	this.effects |= EF_LOWPRECISION;
 	this.classname = "door";

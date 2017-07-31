@@ -103,10 +103,9 @@ void InitTrigger(entity this)
 {
 // trigger angles are used for one-way touches.  An angle of 0 is assumed
 // to mean no restrictions, so use a yaw of 360 instead.
-	if(this.angles != '0 0 0')
-		SetMovedir(this);
+	SetMovedir(this);
 	this.solid = SOLID_TRIGGER;
-	_setmodel(this, this.model);	// set size and link into world
+	SetBrushEntityModelNoLOD(this);
 	set_movetype(this, MOVETYPE_NONE);
 	this.modelindex = 0;
 	this.model = "";

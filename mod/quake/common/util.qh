@@ -12,6 +12,10 @@ void wordwrap_cb(string s, float l, void(string) callback);
 //#define fprintf(file, ...) fputs(file, sprintf(__VA_ARGS__))
 #define bprintf(...) bprint(sprintf(__VA_ARGS__))
 
+USING(findNextEntityNearFunction_t, entity(entity cur, entity near, entity pass));
+USING(isConnectedFunction_t, float(entity a, entity b, entity pass));
+void FindConnectedComponent(entity e, .entity fld, findNextEntityNearFunction_t nxt, isConnectedFunction_t iscon, entity pass);
+
 #ifdef GAMEQC
 int Mod_Q1BSP_SuperContentsFromNativeContents(int nativecontents);
 int Mod_Q1BSP_NativeContentsFromSuperContents(int supercontents);
