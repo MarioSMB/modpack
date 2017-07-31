@@ -211,7 +211,7 @@ void lightapc_hitbox_touch2(entity this, entity toucher)
 			{
 				//Push player etc
 				makevectors(this.angles_x * '-1 0 0' + this.angles_y * '0 1 0' + this.angles_z * '0 0 1'); //Inverted pitch on models
-				movelib_move_simple(toucher, normalize(v_forward * this.owner.movement_x),autocvar_g_vehicle_lightapc_speed_forward,autocvar_g_vehicle_lightapc_movement_inertia);
+				movelib_move_simple(toucher, normalize(v_forward * CS(this.owner).movement_x),autocvar_g_vehicle_lightapc_speed_forward,autocvar_g_vehicle_lightapc_movement_inertia);
 			}
 
 			return; // Dont do thisdamage when hitting "soft targets".
@@ -367,13 +367,13 @@ bool lightapc_gunner_frame(entity this, float dt)
 			_out = autocvar_g_vehicle_lightapc_cannon_turnlimit_in;
 		}
 	
-		if(player.movement_y != 0)
+		if(CS(player).movement_y != 0)
 		{
 			if(turretmount.angles_y > 180)
 				turretmount.angles_y -= 360;
 			if(turretmount.angles_y < -180)
 				turretmount.angles_y += 360;
-			turretmount.angles_y = bound(-184,turretmount.angles_y + ((player.movement_y * PHYS_INPUT_FRAMETIME) / -6.66666),184);	
+			turretmount.angles_y = bound(-184,turretmount.angles_y + ((CS(player).movement_y * PHYS_INPUT_FRAMETIME) / -6.66666),184);	
 		
 			if(turretmount.angles_y >= -1 && turretmount.angles_y <= -1)
 				turretmount.angles_y = 0;	
@@ -383,8 +383,8 @@ bool lightapc_gunner_frame(entity this, float dt)
 			if(autocvar_g_vehicle_lightapc_snapview)
 			if(IS_REAL_CLIENT(player))
 			{
-				player.angles_y = player.angles_y + ((player.movement_y * PHYS_INPUT_FRAMETIME) / -6.66666);
-				float ydegrees = ((player.movement_y * PHYS_INPUT_FRAMETIME) / -6.66666);
+				player.angles_y = player.angles_y + ((CS(player).movement_y * PHYS_INPUT_FRAMETIME) / -6.66666);
+				float ydegrees = ((CS(player).movement_y * PHYS_INPUT_FRAMETIME) / -6.66666);
 				player.v_angle_y += ydegrees;
 
 				msg_entity = player;
@@ -637,7 +637,7 @@ bool lightapc_pilot_frame(entity this, float dt)
 	{
 		makevectors(pilot.v_angle);
 
-		if(pilot.movement == '0 0 0')
+		if(CS(pilot).movement == '0 0 0')
 		{
 			if(vehic.sound_nexttime < time || vehic.delay != 3)
 			{
@@ -653,18 +653,18 @@ bool lightapc_pilot_frame(entity this, float dt)
 			vehic.bomb3.gun1.avelocity_y = vehic.bomb3.gun2.avelocity_y = vehic.bomb4.gun1.avelocity_y = vehic.bomb4.gun2.avelocity_y = 0;
 		}
 	
-		if(pilot.movement_y != 0)
+		if(CS(pilot).movement_y != 0)
 		{
 			if(vehic.angles_y > 180)  vehic.angles_y -= 360;
 			if(vehic.angles_y < -180) vehic.angles_y += 360;
-			vehic.angles_y = bound(-184,vehic.angles_y + ((pilot.movement_y * PHYS_INPUT_FRAMETIME) / -6.66666),184);	
+			vehic.angles_y = bound(-184,vehic.angles_y + ((CS(pilot).movement_y * PHYS_INPUT_FRAMETIME) / -6.66666),184);	
 			
 			if(vehic.angles_y >= -1 && vehic.angles_y <= -1)
 				vehic.angles_y = 0;	
 
 			////float degree_y;
-			////pilot.angles_y = pilot.angles_y + ((pilot.movement_y * PHYS_INPUT_FRAMETIME) / -6.66666);
-			////degree_y = ((pilot.movement_y * PHYS_INPUT_FRAMETIME) / -6.66666);
+			////pilot.angles_y = pilot.angles_y + ((CS(pilot).movement_y * PHYS_INPUT_FRAMETIME) / -6.66666);
+			////degree_y = ((CS(pilot).movement_y * PHYS_INPUT_FRAMETIME) / -6.66666);
 			////pilot.v_angle_y += degree_y;
 
 			if(autocvar_g_vehicle_lightapc_snapview)
@@ -679,7 +679,7 @@ bool lightapc_pilot_frame(entity this, float dt)
 				WriteAngle(MSG_ONE, pilot.v_angle_z);
 			}
 			
-			////////pilot.angles_y = pilot.angles_y + (pilot.movement_y / -200);
+			////////pilot.angles_y = pilot.angles_y + (CS(pilot).movement_y / -200);
 			////////pilot.fixangle = true;
 			
 			//////msg_entity = pilot;
@@ -687,7 +687,7 @@ bool lightapc_pilot_frame(entity this, float dt)
 			//////WriteAngle( MSG_ONE, vehic.angles_x); 
 			//////WriteAngle( MSG_ONE, vehic.angles_y);
 			//////WriteAngle( MSG_ONE, vehic.angles_z);
-			if (pilot.movement_y > 0)
+			if (CS(pilot).movement_y > 0)
 			{
 				vehic.bomb1.gun1.avelocity_y = autocvar_g_vehicle_lightapc_gear_speed; //gear
 				vehic.bomb1.gun2.avelocity_y = autocvar_g_vehicle_lightapc_wheel_speed; //wheel
@@ -713,30 +713,30 @@ bool lightapc_pilot_frame(entity this, float dt)
 			}
 		}
 	 
-		if(pilot.movement_x != 0)
+		if(CS(pilot).movement_x != 0)
 		{
-			if(pilot.movement_x > 0)
+			if(CS(pilot).movement_x > 0)
 			{
-				pilot.movement_x = 1;
+				CS(pilot).movement_x = 1;
 				vehic.frame = 0;
 			}
-			else if(pilot.movement_x < 0)
+			else if(CS(pilot).movement_x < 0)
 			{
-				pilot.movement_x = -1;
+				CS(pilot).movement_x = -1;
 				vehic.frame = 1;
 			}
 			
-			vehic.bomb1.gun1.avelocity_y = autocvar_g_vehicle_lightapc_gear_speed * pilot.movement_x; //gear
-			vehic.bomb1.gun2.avelocity_y = autocvar_g_vehicle_lightapc_wheel_speed * pilot.movement_x; //wheel
-			vehic.bomb2.gun1.avelocity_y = autocvar_g_vehicle_lightapc_gear_speed * pilot.movement_x; //gear
-			vehic.bomb2.gun2.avelocity_y = autocvar_g_vehicle_lightapc_wheel_speed * pilot.movement_x; //wheel
+			vehic.bomb1.gun1.avelocity_y = autocvar_g_vehicle_lightapc_gear_speed * CS(pilot).movement_x; //gear
+			vehic.bomb1.gun2.avelocity_y = autocvar_g_vehicle_lightapc_wheel_speed * CS(pilot).movement_x; //wheel
+			vehic.bomb2.gun1.avelocity_y = autocvar_g_vehicle_lightapc_gear_speed * CS(pilot).movement_x; //gear
+			vehic.bomb2.gun2.avelocity_y = autocvar_g_vehicle_lightapc_wheel_speed * CS(pilot).movement_x; //wheel
 			
-			vehic.bomb3.gun1.avelocity_y = autocvar_g_vehicle_lightapc_gear_speed * pilot.movement_x; //gear
-			vehic.bomb3.gun2.avelocity_y = autocvar_g_vehicle_lightapc_wheel_speed * pilot.movement_x; //wheel
-			vehic.bomb4.gun1.avelocity_y = autocvar_g_vehicle_lightapc_gear_speed * pilot.movement_x; //gear
-			vehic.bomb4.gun2.avelocity_y = autocvar_g_vehicle_lightapc_wheel_speed * pilot.movement_x; //wheel
+			vehic.bomb3.gun1.avelocity_y = autocvar_g_vehicle_lightapc_gear_speed * CS(pilot).movement_x; //gear
+			vehic.bomb3.gun2.avelocity_y = autocvar_g_vehicle_lightapc_wheel_speed * CS(pilot).movement_x; //wheel
+			vehic.bomb4.gun1.avelocity_y = autocvar_g_vehicle_lightapc_gear_speed * CS(pilot).movement_x; //gear
+			vehic.bomb4.gun2.avelocity_y = autocvar_g_vehicle_lightapc_wheel_speed * CS(pilot).movement_x; //wheel
 			
-			pilot.movement_y = 0;
+			CS(pilot).movement_y = 0;
 			
 			//fixedmakevectors(vehic.angles);
 			makevectors(vehic.angles + '-2 0 0' * vehic.angles_x);
@@ -752,7 +752,7 @@ bool lightapc_pilot_frame(entity this, float dt)
 			else
 				myvehicspeed = autocvar_g_vehicle_lightapc_speed_forward;
 			
-			movelib_move_simple(vehic, normalize(v_forward * pilot.movement_x), myvehicspeed, autocvar_g_vehicle_lightapc_movement_inertia);
+			movelib_move_simple(vehic, normalize(v_forward * CS(pilot).movement_x), myvehicspeed, autocvar_g_vehicle_lightapc_movement_inertia);
 
 			if(vehic.sound_nexttime < time || vehic.delay != 1)
 			{

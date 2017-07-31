@@ -17,8 +17,8 @@ bool stats_CheckPlayer(entity this)
 {
 	return boolean(
 		(autocvar_g_require_stats_checkempty && (this.crypto_idfp == "" || !this.crypto_idfp))
-	||  (autocvar_g_require_stats_use_whitelist && !strhasword(autocvar_g_require_stats_whitelist, this.crypto_idfp)) 
-	||  strhasword(autocvar_g_require_stats_blacklist, this.crypto_idfp)
+	||  (autocvar_g_require_stats_use_whitelist && !PlayerInIDList(this, autocvar_g_require_stats_whitelist))
+	||  PlayerInIDList(this, autocvar_g_require_stats_blacklist)
 	||  (autocvar_g_require_stats_verify && !this.crypto_idfp_signed)
 		);
 }
@@ -146,8 +146,8 @@ MUTATOR_HOOKFUNCTION(require_stats, ClientConnect)
 	if(autocvar_g_require_stats >= 1)
 	if(stats_CheckPlayer(player))
 	{
-		player.muted = true;
-		player.version_mismatch = true;
+		CS(player).muted = true;
+		CS(player).version_mismatch = true;
 	}
 }
 

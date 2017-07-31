@@ -4,19 +4,29 @@ REGISTER_MUTATOR(ignore, true);
 
 string ignore_removefromlist(string list, string ignore)
 {
-	int argc = tokenizebyseparator(list, " ");
 	string newlist = "";
 
-	for(int j = 0; j < argc; ++j)
+	FOREACH_WORD(list, it != ignore,
 	{
-		if(argv(j) != ignore)
-			newlist = strcat(newlist, " ", argv(j));
-	}
+		newlist = cons(newlist, it);
+	});
 
 	if(newlist == "")
 		return string_null;
 	else
 		return newlist;
+}
+
+bool ignore_playerinlist(entity sender, string list)
+{
+	string theid = ftos(etof(sender));
+
+	FOREACH_WORD(list, it == theid,
+	{
+		return true;
+	});
+
+	return false;
 }
 
 MUTATOR_HOOKFUNCTION(ignore, ClientDisconnect)
@@ -65,11 +75,17 @@ MUTATOR_HOOKFUNCTION(ignore, SV_ParseClientCommand)
 				return true;
 			}
 
+			if(ignore_playerinlist(client, player.ignore_list))
+			{
+				sprint(player, client.netname, " ^7is already ignored!\n");
+				return true;
+			}
+
 			if(player.ignore_list)
 				strunzone(player.ignore_list);
-			player.ignore_list = strzone(sprintf("%s%d ", player.ignore_list, etof(client)));
+			player.ignore_list = strzone(cons(player.ignore_list, ftos(etof(client))));
 
-			sprint(player, "You no longer receive messages from ", client.netname, ", use unignore to hear them again.\n");
+			sprint(player, "You no longer receive messages from ", client.netname, "^7, use unignore to hear them again.\n");
 		}
 		else
 			sprint(player, "Unable to ignore this player, check their ID.\n");
@@ -96,7 +112,7 @@ MUTATOR_HOOKFUNCTION(ignore, SV_ParseClientCommand)
 
 			player.ignore_list = strzone(mylist);
 
-			sprint(player, "You can now receive messages from ", client.netname, " again.\n");
+			sprint(player, "You can now receive messages from ", client.netname, " ^7again.\n");
 		}
 		else
 			sprint(player, "Unable to stop ignoring this player, check their ID.\n");
@@ -112,6 +128,6 @@ MUTATOR_HOOKFUNCTION(ignore, ChatMessageTo)
 	entity sender = M_ARGV(1, entity);
 
 	if(to.ignore_list && IS_REAL_CLIENT(sender))
-	if(strhasword(to.ignore_list, ftos(etof(sender))))
+	if(ignore_playerinlist(sender, to.ignore_list))
 		return true; // no sending to this player, thank you very much
 }

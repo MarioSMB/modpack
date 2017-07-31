@@ -455,7 +455,7 @@ MUTATOR_HOOKFUNCTION(radio_cmd, SV_ParseClientCommand)
 
 	if(cmd_name == "radio")
 	{
-		if(!caller.scorekeeper)
+		if(!CS(caller).scorekeeper)
 			return true;
 
 		if(!sv_radio)
