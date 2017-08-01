@@ -1,3 +1,5 @@
+#ifdef SVQC
+
 $skin buzzsaw
 const int anim_buzzsaw = 0;
 
@@ -141,3 +143,4 @@ spawnfunc(buzzsaw)
 		this.use = buzzsaw_use;
 }
 
+#endif

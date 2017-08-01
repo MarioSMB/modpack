@@ -11,14 +11,14 @@ vector liquidcolor_prev;
 
 // TODO: item pickup flashing? maybe not (seizure fest)
 bool autocvar_hud_contents;
-float autocvar_hud_contents_fadeintime;
-float autocvar_hud_contents_fadeouttime;
-float autocvar_hud_contents_lava_alpha;
-string autocvar_hud_contents_lava_color;
-float autocvar_hud_contents_slime_alpha;
-string autocvar_hud_contents_slime_color;
-float autocvar_hud_contents_water_alpha;
-string autocvar_hud_contents_water_color;
+float autocvar_hud_contents_fadeintime = 0.02;
+float autocvar_hud_contents_fadeouttime = 0.1;
+float autocvar_hud_contents_lava_alpha = 0.7;
+vector autocvar_hud_contents_lava_color = '0.8 0.1 0';
+float autocvar_hud_contents_slime_alpha = 0.7;
+vector autocvar_hud_contents_slime_color = '0 0.4 0.1';
+float autocvar_hud_contents_water_alpha = 0.5;
+vector autocvar_hud_contents_water_color = '0.4 0.3 0.3';
 
 void HUD_Contents()
 {
@@ -32,19 +32,19 @@ void HUD_Contents()
 		{
 			case CONTENT_WATER:
 				liquidalpha = autocvar_hud_contents_water_alpha;
-				liquidcolor = stov(autocvar_hud_contents_water_color);
+				liquidcolor = autocvar_hud_contents_water_color;
 				incontent = 1;
 				break;
 
 			case CONTENT_LAVA:
 				liquidalpha = autocvar_hud_contents_lava_alpha;
-				liquidcolor = stov(autocvar_hud_contents_lava_color);
+				liquidcolor = autocvar_hud_contents_lava_color;
 				incontent = 1;
 				break;
 
 			case CONTENT_SLIME:
 				liquidalpha = autocvar_hud_contents_slime_alpha;
-				liquidcolor = stov(autocvar_hud_contents_slime_color);
+				liquidcolor = autocvar_hud_contents_slime_color;
 				incontent = 1;
 				break;
 
