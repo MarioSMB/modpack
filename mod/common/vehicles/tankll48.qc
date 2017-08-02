@@ -231,10 +231,6 @@ void tankll48_shlac(entity player, entity gunmount, float dt)
 		gunmount.cnt = time;
 		gunmount.misc_bulletcounter += 1;
 
-		makevectors(gunmount.angles);
-		//vector v = gettaginfo(gunmount, gettagindex(gunmount, "tag_mgun1"));
-		v_forward = normalize(v_forward);
-
 		vwep_shlac_attack(player, "tag_mgun1", gunmount, gunmount.gun1);
 		//vwep_shlac_attack(player, "tag_mgun2", gunmount);
 		//vwep_shlac_attack(player, "tag_mgun3", gunmount);

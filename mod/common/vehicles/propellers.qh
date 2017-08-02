@@ -35,10 +35,4 @@ void helicopter_rotor_think_noz(entity this);
 
 void helicopter_rotor_spawn_hitbox(int rotortype, entity vehic, entity hitbox, vector min_s, vector max_s, float fwd_s, float right_s, float up_s);
 
-
-// not really propeller stuff, but lazy
-void helicopter_delugegun_add (entity vehic, string mountspot);
-
-void helicopter_delugegun(entity gun, entity pilot, entity gunmount);
-
 #endif
