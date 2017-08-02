@@ -235,7 +235,7 @@ void tankll48_shlac(entity player, entity gunmount, float dt)
 		//vector v = gettaginfo(gunmount, gettagindex(gunmount, "tag_mgun1"));
 		v_forward = normalize(v_forward);
 
-		vwep_shlac_attack(player, "tag_mgun1", gunmount.gun1);
+		vwep_shlac_attack(player, "tag_mgun1", gunmount, gunmount.gun1);
 		//vwep_shlac_attack(player, "tag_mgun2", gunmount);
 		//vwep_shlac_attack(player, "tag_mgun3", gunmount);
 		//vwep_shlac_attack(player, "tag_mgun4", gunmount);
@@ -475,7 +475,8 @@ bool tankll48_frame(entity this, float dt)
 	else
 		this.vehicle_reload2 = 100 - ((vehic.gun2.cnt - time) / vehic.attack_finished_single[0]) * 100;
 
-	setorigin(this, vehic.origin + '0 0 1' * VEH_TANKLL48.maxs_z);
+	setorigin(this, vehic.origin + '0 0 1' * vehic.maxs_z);
+	this.oldorigin = this.origin; // negate fall damage
 	this.velocity = vehic.velocity;
 
 	VEHICLE_UPDATE_PLAYER(this, vehic, health, tankll48);
@@ -499,7 +500,7 @@ bool tankll48_frame(entity this, float dt)
 		//print(sprintf("m2 = %f\n", vehic.gun3.angles_y));
 	}
 
-	this.vehicle_ammo1 = (vehic.vehicle_ammo1 / autocvar_g_vehicle_tankll48_cannon_ammo_max) * 100;
+	//this.vehicle_ammo1 = (vehic.vehicle_ammo1 / autocvar_g_vehicle_tankll48_cannon_ammo_max) * 100;
 	this.vehicle_ammo2 = (vehic.vehicle_ammo2 / autocvar_g_vehicle_tankll48_cannon_ammo_max) * 100;   
 }
 

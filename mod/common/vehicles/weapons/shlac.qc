@@ -14,7 +14,7 @@ void vwep_shlac_touch(entity this, entity toucher)
 	delete(this);
 }
 
-void vwep_shlac_attack(entity actor, string tagname, entity fireentity)
+void vwep_shlac_attack(entity actor, string tagname, entity gunmount, entity fireentity)
 {
 	vector v = gettaginfo(fireentity, gettagindex(fireentity, tagname));
 
@@ -30,7 +30,7 @@ void vwep_shlac_attack(entity actor, string tagname, entity fireentity)
 
 	entity missile = new(hlacbolt);
 	//missile.owner = missile.realowner = actor;
-	missile.owner = fireentity;
+	missile.owner = gunmount;
 	missile.realowner = actor;
 	missile.bot_dodge = true;
 

@@ -21,7 +21,7 @@ REGISTER_DEATHTYPE(HELI_PROPELLER,                            DEATH_SELF_HELI_PR
 .entity rotorbox;
 
 .vector rotoroffset;
-.float rotor_is;
+.bool rotor_is;
 
 void helicopter_rotor_die(entity hitbox);
 
@@ -33,7 +33,7 @@ void helicopter_rotor_think(entity this);
 
 void helicopter_rotor_think_noz(entity this);
 
-void helicopter_rotor_spawn_hitbox(float rotortype, entity vehic, entity hitbox, vector min_s, vector max_s, float fwd_s, float right_s, float up_s);
+void helicopter_rotor_spawn_hitbox(int rotortype, entity vehic, entity hitbox, vector min_s, vector max_s, float fwd_s, float right_s, float up_s);
 
 
 // not really propeller stuff, but lazy

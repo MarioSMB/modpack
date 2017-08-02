@@ -85,12 +85,12 @@ void helicopter_rotor_think_noz(entity this)
 	this.nextthink = time;
 }
 
-void helicopter_rotor_spawn_hitbox(float rotortype, entity vehic, entity hitbox, vector min_s, vector max_s, float fwd_s, float right_s, float up_s)
+void helicopter_rotor_spawn_hitbox(int rotortype, entity vehic, entity hitbox, vector min_s, vector max_s, float fwd_s, float right_s, float up_s)
 {
 	hitbox.owner = vehic;
 	
 	settouch(hitbox, helicopter_rotor_touch_hitbox);
-	hitbox.rotor_is = 1; //We are a rotor. Other rotors will ignore touching us. Brothers in arms.
+	hitbox.rotor_is = true; //We are a rotor. Other rotors will ignore touching us. Brothers in arms.
 
 	hitbox.bot_attack         = false;
 	hitbox.iscreature         = true;
@@ -110,9 +110,7 @@ void helicopter_rotor_spawn_hitbox(float rotortype, entity vehic, entity hitbox,
 	setsize(hitbox, min_s, max_s);
 	makevectors(vehic.angles_x * '-1 0 0' + vehic.angles_y * '0 1 0' + vehic.angles_z * '0 0 1'); //Inverted pitch on models
 	setorigin(hitbox, (vehic.origin + (v_forward * fwd_s) + (v_right * right_s) + (v_up * up_s))); //Forward X qunits, up_s
-	hitbox.rotoroffset_x = fwd_s;
-	hitbox.rotoroffset_y = right_s;
-	hitbox.rotoroffset_z = up_s;
+	hitbox.rotoroffset = vec3(fwd_s, right_s, up_s);
 	
 	hitbox.damageforcescale = 0.03;
 	//hitbox.ballistics_density = autocvar_g_ballistics_density_metal;
