@@ -1,4 +1,6 @@
+#ifdef GAMEQC
 SOUND(DELUGE_FIRE, "machines/steam_fade");
+#endif
 
 int PROJECTILE_DELUGE;
 
@@ -22,7 +24,7 @@ void vwep_deluge_Water_Explode(entity this, entity directhitentity)
 	RadiusDamage (this, this.realowner, this.deluge_damage, this.deluge_edgedamage, this.deluge_radius, NULL, NULL,
 				this.deluge_force, this.projectiledeathtype, directhitentity);
 
-	delete (this);
+	delete(this);
 }
 
 void vwep_deluge_Water_Explode_use(entity this, entity actor, entity trigger)
@@ -51,7 +53,7 @@ void vwep_deluge_attack(
 	vector v = gettaginfo(spigot, gettagindex(spigot, tagname));
 	v_forward = normalize(v_forward);
 
-	W_SetupShot_ProjectileSize (actor, weaponentities[0], '0 0 -1', '0 0 -1', false, 2, SND_DELUGE_FIRE, CH_WEAPON_A, atk_damage);
+	W_SetupShot_ProjectileSize (actor, weaponentities[0], '0 0 -1', '0 0 -1', false, 2, SND_Null, CH_WEAPON_A, atk_damage);
 
 	w_shotdir = v_forward; // no TrueAim for grenades please
 
@@ -81,7 +83,7 @@ void vwep_deluge_attack(
 	set_movetype(proj, MOVETYPE_BOUNCE);
 	W_SetupProjVelocity_Explicit(proj, w_shotdir, v_up, atk_speed, 0, 0, atk_spread, false);
 	settouch(proj, vwep_deluge_Water_TouchExplode);
-	setsize(proj, '0 0 -1', '0 0 -1');
+	setsize(proj, '0 0 -4', '0 0 -4');
 	proj.takedamage = DAMAGE_YES;
 	proj.health = atk_health;
 	proj.event_damage = func_null; // there's checks to prevent this from being executed

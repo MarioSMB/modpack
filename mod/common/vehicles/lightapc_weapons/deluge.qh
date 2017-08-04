@@ -3,8 +3,8 @@
 AUTOCVAR(g_vehicle_lightapc_deluge_cannon_radius, float, 10, "");
 AUTOCVAR(g_vehicle_lightapc_deluge_cannon_force, float, 100, "");
 
-AUTOCVAR(g_vehicle_lightapc_deluge_damage, float, 0.001, "");
-AUTOCVAR(g_vehicle_lightapc_deluge_edgedamage, float, 0.001, "");
+AUTOCVAR(g_vehicle_lightapc_deluge_damage, float, 5, "");
+AUTOCVAR(g_vehicle_lightapc_deluge_edgedamage, float, 5, "");
 AUTOCVAR(g_vehicle_lightapc_deluge_refire, float, 0.03, "");
 AUTOCVAR(g_vehicle_lightapc_deluge_ammo_cost, int, 1, "");
 AUTOCVAR(g_vehicle_lightapc_deluge_ammo_max, int, 200, "");
