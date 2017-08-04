@@ -1,0 +1,199 @@
+#ifdef SVQC
+
+AUTOCVAR(g_vehicle_r22heli_rocket_refire, float, 2, "");
+AUTOCVAR(g_vehicle_r22heli_rocket_targetrange, float, 3000, "");
+AUTOCVAR(g_vehicle_r22heli_rocket_damage, float, 100, "");
+
+.float r22heli_lastget_time; // antispam
+entity r22heli_rocket_gettarget(entity player, entity therocket)
+{
+	if(therocket.r22heli_lastget_time > time)
+		return NULL;
+
+	therocket.r22heli_lastget_time = time + 0.5; // don't allow getting new targets immediately
+
+	entity closest = NULL;
+
+	IL_EACH(g_vehicles, IS_VEHICLE(it),
+	{
+		if(DIFF_TEAM(player, it))
+		if(!IS_DEAD(it))
+			if(vdist(it.origin - therocket.origin, <, autocvar_g_vehicle_r22heli_rocket_targetrange))
+			if(!closest || vlen2(it.origin - therocket.origin) < vlen2(it.origin - closest.origin))
+				closest = it;
+	});
+
+	if(!closest)
+	{
+		IL_EACH(g_turrets, IS_TURRET(it),
+		{
+			if(DIFF_TEAM(player, it))
+			if(!IS_DEAD(it))
+				if(vdist(it.origin - therocket.origin, <, autocvar_g_vehicle_r22heli_rocket_targetrange))
+				if(!closest || vlen2(it.origin - therocket.origin) < vlen2(it.origin - closest.origin))
+					closest = it;
+		});
+	}
+
+	if(!closest)
+	{
+		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
+			if(DIFF_TEAM(player, it))
+			if(!IS_DEAD(it))
+			if(!it.alpha || it.alpha > 0.5)
+				if(vdist(it.origin - therocket.origin, <, autocvar_g_vehicle_r22heli_rocket_targetrange))
+				if(!closest || vlen2(it.origin - therocket.origin) < vlen2(it.origin - closest.origin))
+					closest = it;
+		));
+	}
+
+	return closest;
+}
+
+void r22heli_rocket_tracker(entity this);
+void r22heli_rocket_groundhugger(entity this);
+
+void r22heli_fire_rocket(entity player, entity vehic, vector org, vector dir)
+{
+	entity rocket = vehicles_projectile(vehic, EFFECT_RACER_ROCKETLAUNCH.eent_eff_name, SND_ROCKET_FIRE,
+						   org, dir * autocvar_g_vehicle_racer_rocket_speed,
+						   autocvar_g_vehicle_r22heli_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
+						   DEATH_VH_WAKI_ROCKET.m_id, PROJECTILE_WAKIROCKET, 20, false, false, player);
+
+   entity trg = r22heli_rocket_gettarget(player, rocket);
+
+
+	rocket.lip			  = autocvar_g_vehicle_racer_rocket_accel * sys_frametime;
+	rocket.wait			 = autocvar_g_vehicle_racer_rocket_turnrate;
+	rocket.nextthink		= time;
+	rocket.enemy			= trg;
+	rocket.cnt			  = time + 15;
+	rocket.delay = time + random(); // slight offset so they don't collide
+
+	if(trg)
+		setthink(rocket, r22heli_rocket_tracker);
+	else
+		setthink(rocket, r22heli_rocket_groundhugger);
+}
+
+void r22heli_rocket_tracker(entity this)
+{
+	this.nextthink = time;
+
+	if (IS_DEAD(this.owner) || this.cnt < time)
+	{
+		this.use(this, NULL, NULL);
+		return;
+	}
+
+	if(!this.realowner.vehicle)
+		return;
+
+	UpdateCSQCProjectile(this); // update even if still in delay
+
+	if(time < this.delay)
+		return;
+
+	vector olddir = normalize(this.velocity);
+	float oldvel = vlen(this.velocity);
+	float newvel = oldvel + this.lip;
+	makevectors(vectoangles(olddir));
+
+	float time_to_impact = min(vlen2(this.enemy.origin - this.origin) / vlen2(this.velocity), 1);
+	vector predicted_origin = this.enemy.origin + this.enemy.velocity * time_to_impact;
+
+	traceline(this.origin, this.origin + v_forward * 64 - '0 0 32', MOVE_NORMAL, this);
+	vector newdir = normalize(predicted_origin - this.origin);
+
+	//vector
+	float height_diff = predicted_origin.z - this.origin_z;
+
+	if(vdist(newdir - v_forward, >, autocvar_g_vehicle_racer_rocket_locked_maxangle))
+	{
+		//bprint("Target lost!\n");
+		//dprint("OF:", ftos(vlen(newdir - v_forward)), "\n");
+	   // this.think = r22heli_rocket_groundhugger;
+		this.enemy = r22heli_rocket_gettarget(this.realowner, this);
+		return;
+	}
+
+	if(trace_fraction != 1.0 && trace_ent != this.enemy)
+		newdir_z += 16 * sys_frametime;
+
+	this.velocity = normalize(olddir + newdir * autocvar_g_vehicle_racer_rocket_turnrate) * newvel;
+	this.velocity_z -= 800 * sys_frametime;
+	this.velocity_z += max(height_diff, autocvar_g_vehicle_racer_rocket_climbspeed) * sys_frametime ;
+}
+
+void r22heli_rocket_groundhugger(entity this)
+{
+	this.nextthink  = time;
+
+	if(IS_DEAD(this.owner) || this.cnt < time)
+	{
+		this.use(this, NULL, NULL);
+		return;
+	}
+
+	if(!this.realowner.vehicle)
+	{
+		UpdateCSQCProjectile(this);
+		return;
+	}
+
+	vector olddir = normalize(this.velocity);
+	float oldvel = vlen(this.velocity);
+	float newvel = oldvel + this.lip;
+
+	tracebox(this.origin, this.mins, this.maxs, this.origin + olddir * 64, MOVE_WORLDONLY,this);
+	if(trace_fraction <= 0.5)
+	{
+		// Hitting somethign soon, just speed ahead
+		this.velocity = olddir * newvel;
+		UpdateCSQCProjectile(this);
+		return;
+	}
+
+	traceline(trace_endpos, trace_endpos - '0 0 64', MOVE_NORMAL, this);
+	if(trace_fraction != 1.0)
+	{
+		vector newdir = normalize(trace_endpos + '0 0 64' - this.origin) * autocvar_g_vehicle_racer_rocket_turnrate;
+		this.velocity = normalize(olddir + newdir) * newvel;
+	}
+	else
+	{
+		this.velocity = olddir * newvel;
+		this.velocity_z -= 1600 * sys_frametime; // 2x grav looks better for this one
+	}
+
+	int cont = pointcontents(this.origin - '0 0 32');
+	if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
+		this.velocity_z += 200;
+
+	UpdateCSQCProjectile(this);
+	return;
+}
+
+void r22heli_fire_rocket_aim(entity player, entity vehic, entity gunmount, string tagname)
+{
+	vector v = gettaginfo(gunmount, gettagindex(gunmount, tagname));
+	r22heli_fire_rocket(player, vehic, v, v_forward);
+}
+
+void r22heli_rocket(entity gun, entity pilot)
+{
+	if(time > gun.delay)
+	if(PHYS_INPUT_BUTTON_ATCK2(pilot))
+	if(!forbidWeaponUse(pilot)) // do this check last, as it's the heaviest
+	{
+		r22heli_fire_rocket_aim(pilot, gun, gun.bomb5, "tag_mgun");
+		r22heli_fire_rocket_aim(pilot, gun, gun.bomb6, "tag_mgun");
+
+		gun.lock_strength  = 0;
+		gun.lock_target	= NULL;
+		gun.delay = time + autocvar_g_vehicle_r22heli_rocket_refire;
+		gun.lip = time;
+	}
+}
+
+#endif

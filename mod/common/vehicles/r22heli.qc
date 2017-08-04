@@ -48,6 +48,8 @@ REGISTER_VEHICLE(R22HELI, NEW(R22Heli));
 
 //#include "r22heli_weapons.qc"
 #include "propellers.qh"
+// include for both client and server
+#include "r22heli_weapons/all.inc"
 
 #ifdef SVQC
 AUTOCVAR(g_vehicle_r22heli, bool, false, "Enable R22 Helicopter vehicle (if allowed by mods)");
@@ -69,10 +71,6 @@ AUTOCVAR(g_vehicle_r22heli_shield_regen_pause, float, 1.5, "");
 AUTOCVAR(g_vehicle_r22heli_energy, int, 100, "");
 AUTOCVAR(g_vehicle_r22heli_energy_regen, int, 10, "");
 AUTOCVAR(g_vehicle_r22heli_energy_regen_pause, float, 0.25, "");
-
-AUTOCVAR(g_vehicle_r22heli_rocket_refire, float, 2, "");
-AUTOCVAR(g_vehicle_r22heli_rocket_targetrange, float, 3000, "");
-AUTOCVAR(g_vehicle_r22heli_rocket_damage, float, 100, "");
 
 //AUTOCVAR(g_vehicle_r22heli_cannon_ammo, int, 100, "");
 //AUTOCVAR(g_vehicle_r22heli_cannon_ammo_regen, int, 100, "");
@@ -102,22 +100,16 @@ AUTOCVAR(g_vehicle_r22heli_turnspeed, float, 200, "");
 
 bool r22heli_takeoff(entity this, float dt);
 bool r22heli_pilot_frame(entity this, float dt);
-void r22heli_minigun(entity gun, entity pilot);
-void r22heli_hmg(entity gun, entity pilot);
-void r22heli_deluge(entity gun, entity player, entity gunmount);
 
 void r22heli_deluge_add(entity vehic, string mountspot)
 {
-	if(vehic.spawnflags & 32)
-	{
-		//delugegun
-		vehic.bomb11 = spawn();
-		vehic.bomb11.colormap = vehic.colormap;
-		setmodel(vehic.bomb11, MDL_MG_DELUGEGUN);
-		setattachment(vehic.bomb11, vehic, mountspot);
+	//delugegun
+	vehic.bomb11 = spawn();
+	vehic.bomb11.colormap = vehic.colormap;
+	setmodel(vehic.bomb11, MDL_MG_DELUGEGUN);
+	setattachment(vehic.bomb11, vehic, mountspot);
 		
-		vehic.bomb11.angles_z = -90; //So ammo hose travels into fuselage
-	}
+	vehic.bomb11.angles_z = -90; // So ammo hose travels into fuselage
 }
 
 void r22heli_land(entity this)
@@ -206,7 +198,8 @@ bool r22heli_takeoff(entity this, float dt)
 	}
 
 	// cannon firing
-	r22heli_deluge(vehic, this, vehic.bomb11);
+	if(vehic.spawnflags & 32)
+		r22heli_deluge(vehic, this, vehic.bomb11);
 	 
 	if(vehic.spawnflags >= 64)
 	{
@@ -356,7 +349,7 @@ bool r22heli_gunner_enter(entity this, entity player)
 	player.vehicle_reload1 	= vehic.vehicle_reload1;
 	player.vehicle_reload2 	= vehic.vehicle_reload2;
 	player.vehicle_energy 	= vehic.vehicle_energy;
-	player.flags 		   &= ~FL_ONGROUND;
+	UNSET_ONGROUND(player);
 
 	RemoveGrapplingHooks(player);
 
@@ -410,271 +403,6 @@ void r22heli_touch(entity this, entity toucher)
 	}
 
 	vehicles_touch(this, toucher);
-}
-
-void r22heli_minigun(entity gun, entity player)
-{
-	if(PHYS_INPUT_BUTTON_ATCK(player) && gun.vehicle_ammo1 >= autocvar_g_vehicle_lightapc_minigun_ammo_cost && gun.attack_finished_single[0] <= time)
-	{
-		gun.cnt = time;
-		vwep_minigun_attack("tag_mgun", player, gun.bomb3, gun.bomb3.gun1, DEATH_VH_SPID_MINIGUN.m_id, autocvar_g_vehicle_lightapc_minigun_damage, autocvar_g_vehicle_lightapc_minigun_spread,
-				autocvar_g_vehicle_lightapc_minigun_force, autocvar_g_vehicle_lightapc_minigun_solidpenetration, autocvar_g_vehicle_lightapc_minigun_expelbulletcasings);
-		vwep_minigun_attack("tag_mgun", player, gun.bomb4, gun.bomb4.gun1, DEATH_VH_SPID_MINIGUN.m_id, autocvar_g_vehicle_lightapc_minigun_damage, autocvar_g_vehicle_lightapc_minigun_spread,
-				autocvar_g_vehicle_lightapc_minigun_force, autocvar_g_vehicle_lightapc_minigun_solidpenetration, autocvar_g_vehicle_lightapc_minigun_expelbulletcasings);
-		gun.vehicle_ammo1 -= autocvar_g_vehicle_lightapc_minigun_ammo_cost;
-		gun.attack_finished_single[0] = time + autocvar_g_vehicle_lightapc_minigun_refire;
-		gun.count = 1; // something to do with reload, probably unused
-	}
-	else
-	{
-		vehicles_regen(gun, gun.cnt, vehicle_ammo1, autocvar_g_vehicle_lightapc_minigun_ammo_max,
-										   autocvar_g_vehicle_lightapc_minigun_ammo_regen_pause,
-										   autocvar_g_vehicle_lightapc_minigun_ammo_regen, frametime, false);
-	}
-
-	player.vehicle_ammo1 = (gun.vehicle_ammo1 / autocvar_g_vehicle_lightapc_minigun_ammo_max) * 100;
-}
-
-void r22heli_hmg(entity gun, entity player)
-{
-	if(PHYS_INPUT_BUTTON_ATCK(player) && gun.vehicle_ammo1 >= autocvar_g_vehicle_lightapc_hmg2_ammo_cost && gun.attack_finished_single[0] <= time)
-	{
-		gun.cnt = time;
-		vwep_hmg2_attack("tag_mgun", gun.bomb5, player, DEATH_VH_SPID_MINIGUN.m_id, autocvar_g_vehicle_lightapc_hmg2_damage, autocvar_g_vehicle_lightapc_hmg2_spread, autocvar_g_vehicle_lightapc_hmg2_force,
-				autocvar_g_vehicle_lightapc_hmg2_solidpenetration, autocvar_g_vehicle_lightapc_hmg2_expelbulletcasings);
-		vwep_hmg2_attack("tag_mgun", gun.bomb6, player, DEATH_VH_SPID_MINIGUN.m_id, autocvar_g_vehicle_lightapc_hmg2_damage, autocvar_g_vehicle_lightapc_hmg2_spread, autocvar_g_vehicle_lightapc_hmg2_force,
-				autocvar_g_vehicle_lightapc_hmg2_solidpenetration, autocvar_g_vehicle_lightapc_hmg2_expelbulletcasings);
-		gun.vehicle_ammo1 -= autocvar_g_vehicle_lightapc_hmg2_ammo_cost;
-		gun.attack_finished_single[0] = time + autocvar_g_vehicle_lightapc_hmg2_refire;
-	}
-	else
-	{
-		vehicles_regen(gun, gun.cnt, vehicle_ammo1, autocvar_g_vehicle_lightapc_hmg2_ammo_max,
-										   autocvar_g_vehicle_lightapc_hmg2_ammo_regen_pause,
-										   autocvar_g_vehicle_lightapc_hmg2_ammo_regen, frametime, false);
-	}
-
-	player.vehicle_ammo1 = (gun.vehicle_ammo1 / autocvar_g_vehicle_lightapc_hmg2_ammo_max) * 100;
-}
-
-void r22heli_deluge(entity gun, entity player, entity gunmount)
-{
-	if(!(gun.spawnflags & 32))
-		return;
-
-	if(PHYS_INPUT_BUTTON_ATCK(player) && gunmount.attack_finished_single[0] <= time && (player.waterlevel > 0 || gunmount.vehicle_ammo1 >= autocvar_g_vehicle_lightapc_deluge_ammo_cost))
-	{
-		gunmount.misc_bulletcounter += 1;
-		gunmount.cnt = time;
-
-		vwep_deluge_attack(player, "tag_mgun", gunmount, autocvar_g_vehicle_lightapc_deluge_damage, autocvar_g_vehicle_lightapc_deluge_edgedamage, autocvar_g_vehicle_lightapc_deluge_cannon_force,
-				autocvar_g_vehicle_lightapc_deluge_water_speed, autocvar_g_vehicle_lightapc_deluge_water_spread, WEP_CVAR_SEC(electro, health), autocvar_g_vehicle_lightapc_deluge_cannon_radius);
-
-		if(player.waterlevel <= 0) // if player is above water, consume water
-			gunmount.vehicle_ammo1 -= autocvar_g_vehicle_lightapc_deluge_ammo_cost;
-
-		gunmount.attack_finished_single[0] = time + autocvar_g_vehicle_lightapc_deluge_refire;
-	}
-	else
-	{
-		vehicles_regen(gunmount, gunmount.cnt, vehicle_ammo1, autocvar_g_vehicle_lightapc_deluge_ammo_max,
-										   autocvar_g_vehicle_lightapc_deluge_ammo_regen_pause,
-										   autocvar_g_vehicle_lightapc_deluge_ammo_regen, frametime, false);
-	}
-
-	player.vehicle_ammo1 = (gunmount.vehicle_ammo1 / autocvar_g_vehicle_lightapc_deluge_ammo_max) * 100;
-}
-
-.float r22heli_lastget_time; // antispam
-entity r22heli_rocket_gettarget(entity player, entity therocket)
-{
-	if(therocket.r22heli_lastget_time > time)
-		return NULL;
-
-	therocket.r22heli_lastget_time = time + 0.5; // don't allow getting new targets immediately
-
-	entity closest = NULL;
-
-	IL_EACH(g_vehicles, IS_VEHICLE(it),
-	{
-		if(DIFF_TEAM(player, it))
-		if(!IS_DEAD(it))
-			if(vdist(it.origin - therocket.origin, <, autocvar_g_vehicle_r22heli_rocket_targetrange))
-			if(!closest || vlen2(it.origin - therocket.origin) < vlen2(it.origin - closest.origin))
-				closest = it;
-	});
-
-	if(!closest)
-	{
-		IL_EACH(g_turrets, IS_TURRET(it),
-		{
-			if(DIFF_TEAM(player, it))
-			if(!IS_DEAD(it))
-				if(vdist(it.origin - therocket.origin, <, autocvar_g_vehicle_r22heli_rocket_targetrange))
-				if(!closest || vlen2(it.origin - therocket.origin) < vlen2(it.origin - closest.origin))
-					closest = it;
-		});
-	}
-
-	if(!closest)
-	{
-		FOREACH_CLIENT(IS_PLAYER(it), LAMBDA(
-			if(DIFF_TEAM(player, it))
-			if(!IS_DEAD(it))
-			if(!it.alpha || it.alpha > 0.5)
-				if(vdist(it.origin - therocket.origin, <, autocvar_g_vehicle_r22heli_rocket_targetrange))
-				if(!closest || vlen2(it.origin - therocket.origin) < vlen2(it.origin - closest.origin))
-					closest = it;
-		));
-	}
-
-	return closest;
-}
-
-void r22heli_rocket_tracker(entity this);
-void r22heli_rocket_groundhugger(entity this);
-
-void r22heli_fire_rocket(entity player, entity vehic, vector org, vector dir)
-{
-	entity rocket = vehicles_projectile(vehic, EFFECT_RACER_ROCKETLAUNCH.eent_eff_name, SND_ROCKET_FIRE,
-						   org, dir * autocvar_g_vehicle_racer_rocket_speed,
-						   autocvar_g_vehicle_r22heli_rocket_damage, autocvar_g_vehicle_racer_rocket_radius, autocvar_g_vehicle_racer_rocket_force, 3,
-						   DEATH_VH_WAKI_ROCKET.m_id, PROJECTILE_WAKIROCKET, 20, false, false, player);
-
-   entity trg = r22heli_rocket_gettarget(player, rocket);
-
-
-	rocket.lip			  = autocvar_g_vehicle_racer_rocket_accel * sys_frametime;
-	rocket.wait			 = autocvar_g_vehicle_racer_rocket_turnrate;
-	rocket.nextthink		= time;
-	rocket.enemy			= trg;
-	rocket.cnt			  = time + 15;
-	rocket.delay = time + random(); // slight offset so they don't collide
-
-	if(trg)
-		setthink(rocket, r22heli_rocket_tracker);
-	else
-		setthink(rocket, r22heli_rocket_groundhugger);
-}
-
-void r22heli_rocket_tracker(entity this)
-{
-	this.nextthink = time;
-
-	if (IS_DEAD(this.owner) || this.cnt < time)
-	{
-		this.use(this, NULL, NULL);
-		return;
-	}
-
-	if(!this.realowner.vehicle)
-		return;
-
-	UpdateCSQCProjectile(this); // update even if still in delay
-
-	if(time < this.delay)
-		return;
-
-	vector olddir = normalize(this.velocity);
-	float oldvel = vlen(this.velocity);
-	float newvel = oldvel + this.lip;
-	makevectors(vectoangles(olddir));
-
-	float time_to_impact = min(vlen2(this.enemy.origin - this.origin) / vlen2(this.velocity), 1);
-	vector predicted_origin = this.enemy.origin + this.enemy.velocity * time_to_impact;
-
-	traceline(this.origin, this.origin + v_forward * 64 - '0 0 32', MOVE_NORMAL, this);
-	vector newdir = normalize(predicted_origin - this.origin);
-
-	//vector
-	float height_diff = predicted_origin_z - this.origin_z;
-
-	if(vdist(newdir - v_forward, >, autocvar_g_vehicle_racer_rocket_locked_maxangle))
-	{
-		//bprint("Target lost!\n");
-		//dprint("OF:", ftos(vlen(newdir - v_forward)), "\n");
-	   // this.think = r22heli_rocket_groundhugger;
-		this.enemy = r22heli_rocket_gettarget(this.realowner, this);
-		return;
-	}
-
-	if(trace_fraction != 1.0 && trace_ent != this.enemy)
-		newdir_z += 16 * sys_frametime;
-
-	this.velocity = normalize(olddir + newdir * autocvar_g_vehicle_racer_rocket_turnrate) * newvel;
-	this.velocity_z -= 800 * sys_frametime;
-	this.velocity_z += max(height_diff, autocvar_g_vehicle_racer_rocket_climbspeed) * sys_frametime ;
-}
-
-void r22heli_rocket_groundhugger(entity this)
-{
-	this.nextthink  = time;
-
-	if(IS_DEAD(this.owner) || this.cnt < time)
-	{
-		this.use(this, NULL, NULL);
-		return;
-	}
-
-	if(!this.realowner.vehicle)
-	{
-		UpdateCSQCProjectile(this);
-		return;
-	}
-
-	vector olddir = normalize(this.velocity);
-	float oldvel = vlen(this.velocity);
-	float newvel = oldvel + this.lip;
-
-	tracebox(this.origin, this.mins, this.maxs, this.origin + olddir * 64, MOVE_WORLDONLY,this);
-	if(trace_fraction <= 0.5)
-	{
-		// Hitting somethign soon, just speed ahead
-		this.velocity = olddir * newvel;
-		UpdateCSQCProjectile(this);
-		return;
-	}
-
-	traceline(trace_endpos, trace_endpos - '0 0 64', MOVE_NORMAL, this);
-	if(trace_fraction != 1.0)
-	{
-		vector newdir = normalize(trace_endpos + '0 0 64' - this.origin) * autocvar_g_vehicle_racer_rocket_turnrate;
-		this.velocity = normalize(olddir + newdir) * newvel;
-	}
-	else
-	{
-		this.velocity = olddir * newvel;
-		this.velocity_z -= 1600 * sys_frametime; // 2x grav looks better for this one
-	}
-
-	int cont = pointcontents(this.origin - '0 0 32');
-	if(cont == CONTENT_WATER || cont == CONTENT_LAVA || cont == CONTENT_SLIME)
-		this.velocity_z += 200;
-
-	UpdateCSQCProjectile(this);
-	return;
-}
-
-void r22heli_fire_rocket_aim(entity player, entity vehic, entity gunmount, string tagname)
-{
-	vector v = gettaginfo(gunmount, gettagindex(gunmount, tagname));
-	r22heli_fire_rocket(player, vehic, v, v_forward);
-}
-
-void r22heli_rocket(entity gun, entity pilot)
-{
-	if(time > gun.delay)
-	if(PHYS_INPUT_BUTTON_ATCK2(pilot))
-	if(!forbidWeaponUse(pilot)) // do this check last, as it's the heaviest
-	{
-		r22heli_fire_rocket_aim(pilot, gun, gun.bomb5, "tag_mgun");
-		r22heli_fire_rocket_aim(pilot, gun, gun.bomb6, "tag_mgun");
-
-		gun.lock_strength  = 0;
-		gun.lock_target	= NULL;
-		gun.delay = time + autocvar_g_vehicle_r22heli_rocket_refire;
-		gun.lip = time;
-	}
 }
 
 bool r22heli_pilot_frame(entity this, float dt)
@@ -807,7 +535,8 @@ bool r22heli_pilot_frame(entity this, float dt)
 			df += v_up * autocvar_g_vehicle_r22heli_speed_up;
 		
 		//Cannon firing
-		r22heli_deluge(vehic, this, vehic.bomb11);
+		if(vehic.spawnflags & 32)
+			r22heli_deluge(vehic, this, vehic.bomb11);
 		 
 		if (vehic.spawnflags >= 64)
 		{
@@ -1058,158 +787,6 @@ void r22heli_rotor_anglefix(entity this)
 	this.nextthink = time + 15;
 }
 
-void r22heli_spawn(entity this)
-{
-	if(!this.gun1)
-	{
-		entity spinner;
-	
-		// for some reason, autosizing of the shield entity refuses to work for this one so set it up in advance.
-		this.vehicle_shieldent = spawn();
-		this.vehicle_shieldent.effects = EF_LOWPRECISION;
-		_setmodel(this.vehicle_shieldent, "models/vhshield.md3");
-		setattachment(this.vehicle_shieldent, this, "");
-		setorigin(this.vehicle_shieldent, real_origin(this) - this.origin);
-		this.vehicle_shieldent.scale       = 512 / vlen(this.maxs - this.mins);
-		setthink(this.vehicle_shieldent, shieldhit_think);
-		this.vehicle_shieldent.alpha = -1;
-		this.vehicle_shieldent.effects = EF_LOWPRECISION | EF_NODRAW;
-	 
-		this.frame = 0;
-
-		this.bomb1 = spawn();
-		this.bomb2 = spawn();
-		this.gun1  = spawn();
-		this.gun2  = spawn();
-
-		_setmodel(this.bomb1,"null");
-		_setmodel(this.bomb2,"null");
-		_setmodel(this.gun1, "null");
-		_setmodel(this.gun2, "null");
-		//_setmodel(this.tur_head, "models/vehicles/r22heliedits_body.iqm");
-
-		setattachment(this.bomb1, this, "bombmount_left");
-		setattachment(this.bomb2, this, "bombmount_right");
-		//setattachment(this.tur_head, this,"root");
-
-		// FIXMODEL guns mounts to angled bones
-		this.bomb1.angles = this.angles;
-		this.angles = '0 0 0';
-
-		this.angles = this.bomb1.angles;
-		this.bomb1.angles = '0 0 0';
-
-		spinner = spawn();
-		spinner.owner = this;
-		setmodel(spinner, MDL_R22HELI_SPINNER);
-		setattachment(spinner, this, "engine_left");
-		set_movetype(spinner, MOVETYPE_NOCLIP);
-		spinner.avelocity = '0 90 0';
-		//spinner.scale = 3.0;
-		this.bomb1.gun1 = spinner;
-
-		spinner = spawn();
-		spinner.owner = this;
-		setmodel(spinner, MDL_R22HELI_SMALLSPINNER);
-		setattachment(spinner, this, "engine_right");
-		set_movetype(spinner, MOVETYPE_NOCLIP);
-		spinner.avelocity = '0 -90 0';
-		this.bomb1.gun2 = spinner;
-
-		// sigh
-		setthink(this.bomb1, r22heli_rotor_anglefix);
-		this.bomb1.nextthink = time;
-
-		setattachment(this.vehicle_viewport, this, "tag_camera");
-		//this.mass               = 1 ;
-		this.mass               = autocvar_g_vehicle_r22heli_mass;
-		
-		this.vehicle_flags |= VHF_MULTISLOT;
-
-		this.gun1.owner = this;
-			
-		setattachment(this.gun1, this, "tag_pass1");
-		
-		vehicle_addplayerslot(this, this.gun1, HUD_BUMBLEBEE_GUN, MDL_Null, r22heli_gunner_frame, r22heli_gunner_exit, r22heli_gunner_enter);
-		
-		r22heli_deluge_add(this, "forwardmount_left");
-
-		this.rotorbox = spawn();
-	
-		if (this.spawnflags & 64)
-		{
-			// minigun left stuff
-			this.bomb3 = spawn();
-			setmodel(this.bomb3, MDL_MG_M134GUN);
-			setattachment(this.bomb3, this, "gunmount_left");
-				
-			// minigun left barrels
-			this.bomb3.gun1 = spawn();
-			setmodel(this.bomb3.gun1, MDL_MG_M134GUN_BARRELS);
-			setattachment(this.bomb3.gun1, this.bomb3, "tag_axis");
-			this.bomb3.gun1.count = 100; //autocvar_g_vehicle_lightapc_minigun_refire;
-			
-			this.bomb3.angles_z = -110; // so ammo chain travels into fuselage
-			
-			// minigun right stuff
-			this.bomb4 = spawn();
-			setmodel(this.bomb4, MDL_MG_M134GUN);
-			setattachment(this.bomb4, this, "gunmount_right");
-			
-			// minigun right barrels
-			this.bomb4.gun1 = spawn();
-			setmodel(this.bomb4.gun1, MDL_MG_M134GUN_BARRELS);
-			setattachment(this.bomb4.gun1, this.bomb4, "tag_axis");
-			this.bomb4.gun1.count = 100; //autocvar_g_vehicle_lightapc_minigun_refire;
-			
-			this.bomb4.angles_z = 120; // so ammo chain travels into fuselage
-		}
-	
-		if (this.spawnflags & 128)
-		{
-			// .50 left stuff
-			this.bomb5 = spawn();
-			setmodel(this.bomb5, MDL_MG_BROWNING50GUN);
-			setattachment(this.bomb5, this, "forwardmount_left");
-				
-			this.bomb5.angles_z = -90; // so ammo chain travels into fuselage
-			
-			// .50 right stuff
-			this.bomb6 = spawn();
-			setmodel(this.bomb6, MDL_MG_BROWNING50GUN);
-			setattachment(this.bomb6, this, "forwardmount_right");
-			
-			this.bomb6.angles_z = 90; // so ammo chain travels into fuselage
-		}
-	}
-
-	this.frame          = 0;
-	this.vehicle_health = autocvar_g_vehicle_r22heli_health;
-	this.vehicle_shield = autocvar_g_vehicle_r22heli_shield;
-	set_movetype(this, MOVETYPE_TOSS);
-	this.solid          = SOLID_SLIDEBOX;
-	this.vehicle_energy = 1;
-
-	this.bomb1.gun1.avelocity_y = 90;
-	this.bomb1.gun2.avelocity_y = -90;
-
-	//setsize(this, R22HELI_MIN, R22HELI_MAX );
-	this.delay = time;
-		
-	this.bouncefactor = autocvar_g_vehicle_r22heli_bouncefactor;
-	this.bouncestop = autocvar_g_vehicle_r22heli_bouncestop;
-	this.damageforcescale = 0.25;
-
-	float oldy = this.angles_y;
-	this.angles_y = 0; // so we can do the init math correctly
-
-	// spinning rotor death area
-	float R22HELIROTOR_HEIGHT = 145;
-	helicopter_rotor_spawn_hitbox(0, this, this.rotorbox, '-140 -140 -1', '140 140 1', 0, 0, R22HELIROTOR_HEIGHT);
-
-	this.angles_y = oldy; // done doing the init math, reset.
-}
-
 spawnfunc(vehicle_r22heli)
 {
 	if(!autocvar_g_vehicle_r22heli) { delete(this); return; }
@@ -1225,119 +802,268 @@ spawnfunc(vehicle_r22heli_milspec)
 	spawnfunc_vehicle_r22heli(this);
 }
 
-		METHOD(R22Heli, vr_impact, void(R22Heli thisveh, entity instance))
+METHOD(R22Heli, vr_impact, void(R22Heli thisveh, entity instance))
+{
+	if(autocvar_g_vehicle_r22heli_bouncepain)
+		vehicles_impact(instance, autocvar_g_vehicle_r22heli_bouncepain.x, autocvar_g_vehicle_r22heli_bouncepain.y, autocvar_g_vehicle_r22heli_bouncepain.z);
+}
+METHOD(R22Heli, vr_enter, void(R22Heli thisveh, entity instance))
+{
+	settouch(instance, r22heli_touch);
+	instance.nextthink = 0;
+	set_movetype(instance, MOVETYPE_BOUNCE);
+	//instance.vehicle_weapon2mode = RSM_BOMB;
+	instance.owner.PlayerPhysplug = r22heli_takeoff;
+	set_movetype(instance, MOVETYPE_BOUNCEMISSILE);
+	instance.solid          = SOLID_SLIDEBOX;
+	instance.velocity_z = 1; // Nudge upwards to takeoff sequense can work.
+	instance.tur_head.exteriormodeltoclient = instance.owner;
+
+	instance.delay = time + autocvar_g_vehicle_r22heli_bombs_refire;
+	instance.lip   = time;
+
+	CSQCVehicleSetup(instance.owner, 0);
+	instance.owner.vehicle_health = (instance.vehicle_health / autocvar_g_vehicle_r22heli_health) * 100;
+	instance.owner.vehicle_shield = (instance.vehicle_shield / autocvar_g_vehicle_r22heli_shield) * 100;
+
+	if(instance.owner.flagcarried)
+		setorigin(instance.owner.flagcarried, '-20 0 96');
+}
+METHOD(R22Heli, vr_think, void(R22Heli thisveh, entity instance))
+{
+	if(!instance.owner)
+	{	
+		if(instance.gunner1)
 		{
-			if(autocvar_g_vehicle_r22heli_bouncepain)
-				vehicles_impact(instance, autocvar_g_vehicle_r22heli_bouncepain.x, autocvar_g_vehicle_r22heli_bouncepain.y, autocvar_g_vehicle_r22heli_bouncepain.z);
+			if(instance.gun1.vehicle_exit)
+				instance.gun1.vehicle_exit(instance.gun1, VHEF_EJECT);
+			instance.phase = 0;
+			if(gettouch(instance))
+				gettouch(instance)(instance, instance.gunner1);
 		}
-		METHOD(R22Heli, vr_enter, void(R22Heli thisveh, entity instance))
-		{
-			settouch(instance, r22heli_touch);
-			instance.nextthink = 0;
-			set_movetype(instance, MOVETYPE_BOUNCE);
-			//instance.vehicle_weapon2mode = RSM_BOMB;
-			instance.owner.PlayerPhysplug = r22heli_takeoff;
-			set_movetype(instance, MOVETYPE_BOUNCEMISSILE);
-			instance.solid          = SOLID_SLIDEBOX;
-			instance.velocity_z = 1; // Nudge upwards to takeoff sequense can work.
-			instance.tur_head.exteriormodeltoclient = instance.owner;
-
-			instance.delay = time + autocvar_g_vehicle_r22heli_bombs_refire;
-			instance.lip   = time;
-
-			CSQCVehicleSetup(instance.owner, 0);
-			instance.owner.vehicle_health = (instance.vehicle_health / autocvar_g_vehicle_r22heli_health) * 100;
-			instance.owner.vehicle_shield = (instance.vehicle_shield / autocvar_g_vehicle_r22heli_shield) * 100;
-
-			if(instance.owner.flagcarried)
-				setorigin(instance.owner.flagcarried, '-20 0 96');
-		}
-		METHOD(R22Heli, vr_think, void(R22Heli thisveh, entity instance))
-		{
-			if(!instance.owner)
-			{	
-				if(instance.gunner1)
-				{
-					if(instance.gun1.vehicle_exit)
-						instance.gun1.vehicle_exit(instance.gun1, VHEF_EJECT);
-					instance.phase = 0;
-					gettouch(instance)(instance, instance.gunner1);
-				}
 				
-			}
-		}
-		METHOD(R22Heli, vr_death, void(R22Heli thisveh, entity actor))
-		{
-			CSQCModel_UnlinkEntity(actor); // networking the death scene would be a nightmare
-			r22heli_die(actor);
-		}
-		METHOD(R22Heli, vr_spawn, void(R22Heli thisveh, entity actor))
-		{
-			r22heli_spawn(actor);
-		}
-		METHOD(R22Heli, vr_setup, void(R22Heli thisveh, entity instance))
-		{
-			string bodymodel;
+	}
+}
+METHOD(R22Heli, vr_death, void(R22Heli thisveh, entity actor))
+{
+	CSQCModel_UnlinkEntity(actor); // networking the death scene would be a nightmare
+	r22heli_die(actor);
+}
+METHOD(R22Heli, vr_spawn, void(R22Heli thisveh, entity actor))
+{
+	if(!actor.gun1)
+	{
+		entity spinner;
+	
+		// for some reason, autosizing of the shield entity refuses to work for this one so set it up in advance.
+		actor.vehicle_shieldent = spawn();
+		actor.vehicle_shieldent.effects = EF_LOWPRECISION;
+		_setmodel(actor.vehicle_shieldent, "models/vhshield.md3");
+		setattachment(actor.vehicle_shieldent, actor, "");
+		setorigin(actor.vehicle_shieldent, real_origin(actor) - actor.origin);
+		actor.vehicle_shieldent.scale       = 512 / vlen(actor.maxs - actor.mins);
+		setthink(actor.vehicle_shieldent, shieldhit_think);
+		actor.vehicle_shieldent.alpha = -1;
+		actor.vehicle_shieldent.effects = EF_LOWPRECISION | EF_NODRAW;
+	 
+		actor.frame = 0;
 
-			//if(instance.spawnflags)
-			//{
-				//RandomSelection_Init();
+		actor.bomb1 = spawn();
+		actor.bomb2 = spawn();
+		actor.gun1  = spawn();
+		actor.gun2  = spawn();
 
-				//RandomSelection_Add(NULL, 0, string_null, 1, 1);
-				//RandomSelection_Add(NULL, 32, string_null, 1, 1);
-				//RandomSelection_Add(NULL, 64, string_null, 1, 1);
-				//RandomSelection_Add(NULL, 128, string_null, 1, 1);
+		_setmodel(actor.bomb1,"null");
+		_setmodel(actor.bomb2,"null");
+		_setmodel(actor.gun1, "null");
+		_setmodel(actor.gun2, "null");
+		//_setmodel(actor.tur_head, "models/vehicles/r22heliedits_body.iqm");
 
-				//instance.spawnflags = RandomSelection_chosen_float;
-				instance.spawnflags |= 128;
-			//}
+		setattachment(actor.bomb1, actor, "bombmount_left");
+		setattachment(actor.bomb2, actor, "bombmount_right");
+		//setattachment(actor.tur_head, actor,"root");
+
+		// FIXMODEL guns mounts to angled bones
+		actor.bomb1.angles = actor.angles;
+		actor.angles = '0 0 0';
+
+		actor.angles = actor.bomb1.angles;
+		actor.bomb1.angles = '0 0 0';
+
+		spinner = spawn();
+		spinner.owner = actor;
+		setmodel(spinner, MDL_R22HELI_SPINNER);
+		setattachment(spinner, actor, "engine_left");
+		set_movetype(spinner, MOVETYPE_NOCLIP);
+		spinner.avelocity = '0 90 0';
+		//spinner.scale = 3.0;
+		actor.bomb1.gun1 = spinner;
+
+		spinner = spawn();
+		spinner.owner = actor;
+		setmodel(spinner, MDL_R22HELI_SMALLSPINNER);
+		setattachment(spinner, actor, "engine_right");
+		set_movetype(spinner, MOVETYPE_NOCLIP);
+		spinner.avelocity = '0 -90 0';
+		actor.bomb1.gun2 = spinner;
+
+		// sigh
+		setthink(actor.bomb1, r22heli_rotor_anglefix);
+		actor.bomb1.nextthink = time;
+
+		setattachment(actor.vehicle_viewport, actor, "tag_camera");
+		//actor.mass               = 1 ;
+		actor.mass               = autocvar_g_vehicle_r22heli_mass;
+		
+		actor.vehicle_flags |= VHF_MULTISLOT;
+
+		actor.gun1.owner = actor;
 			
-			if(instance.spawnflags >= 64)
-				bodymodel = MDL_R22HELI_MILSPEC.model_str();
-			else
-				bodymodel = VEH_R22HELI.mdl;
+		setattachment(actor.gun1, actor, "tag_pass1");
+		
+		vehicle_addplayerslot(actor, actor.gun1, HUD_BUMBLEBEE_GUN, MDL_Null, r22heli_gunner_frame, r22heli_gunner_exit, r22heli_gunner_enter);
 
-			instance.mdl = bodymodel; // override default function
-			_setmodel(instance, instance.mdl);
-			setsize(instance, thisveh.m_mins, thisveh.m_maxs);
+		if(actor.spawnflags & 32)
+			r22heli_deluge_add(actor, "forwardmount_left");
 
-			if(autocvar_g_vehicle_r22heli_energy)
-			if(autocvar_g_vehicle_r22heli_energy_regen)
-				instance.vehicle_flags |= VHF_ENERGYREGEN;
-
-			if(autocvar_g_vehicle_r22heli_shield)
-				instance.vehicle_flags |= VHF_HASSHIELD;
-
-			if(autocvar_g_vehicle_r22heli_shield_regen)
-				instance.vehicle_flags |= VHF_SHIELDREGEN;
-
-			if(autocvar_g_vehicle_r22heli_health_regen)
-				instance.vehicle_flags |= VHF_HEALTHREGEN;
-
-			instance.vehicle_exit = r22heli_exit;
-			instance.respawntime = autocvar_g_vehicle_r22heli_respawntime;
-			instance.vehicle_health = autocvar_g_vehicle_r22heli_health;
-			instance.vehicle_shield = autocvar_g_vehicle_r22heli_shield;
-			instance.max_health = instance.vehicle_health;
+		actor.rotorbox = spawn();
+	
+		if(actor.spawnflags & 64)
+		{
+			// minigun left stuff
+			actor.bomb3 = spawn();
+			setmodel(actor.bomb3, MDL_MG_M134GUN);
+			setattachment(actor.bomb3, actor, "gunmount_left");
+				
+			// minigun left barrels
+			actor.bomb3.gun1 = spawn();
+			setmodel(actor.bomb3.gun1, MDL_MG_M134GUN_BARRELS);
+			setattachment(actor.bomb3.gun1, actor.bomb3, "tag_axis");
+			actor.bomb3.gun1.count = 100; //autocvar_g_vehicle_lightapc_minigun_refire;
+			
+			actor.bomb3.angles_z = -110; // so ammo chain travels into fuselage
+			
+			// minigun right stuff
+			actor.bomb4 = spawn();
+			setmodel(actor.bomb4, MDL_MG_M134GUN);
+			setattachment(actor.bomb4, actor, "gunmount_right");
+			
+			// minigun right barrels
+			actor.bomb4.gun1 = spawn();
+			setmodel(actor.bomb4.gun1, MDL_MG_M134GUN_BARRELS);
+			setattachment(actor.bomb4.gun1, actor.bomb4, "tag_axis");
+			actor.bomb4.gun1.count = 100; //autocvar_g_vehicle_lightapc_minigun_refire;
+			
+			actor.bomb4.angles_z = 120; // so ammo chain travels into fuselage
 		}
+	
+		if(actor.spawnflags & 128)
+		{
+			// .50 left stuff
+			actor.bomb5 = spawn();
+			setmodel(actor.bomb5, MDL_MG_BROWNING50GUN);
+			setattachment(actor.bomb5, actor, "forwardmount_left");
+				
+			actor.bomb5.angles_z = -90; // so ammo chain travels into fuselage
+			
+			// .50 right stuff
+			actor.bomb6 = spawn();
+			setmodel(actor.bomb6, MDL_MG_BROWNING50GUN);
+			setattachment(actor.bomb6, actor, "forwardmount_right");
+			
+			actor.bomb6.angles_z = 90; // so ammo chain travels into fuselage
+		}
+	}
+
+	actor.frame = 0;
+	actor.vehicle_health = autocvar_g_vehicle_r22heli_health;
+	actor.vehicle_shield = autocvar_g_vehicle_r22heli_shield;
+	set_movetype(actor, MOVETYPE_TOSS);
+	actor.solid = SOLID_SLIDEBOX;
+	actor.vehicle_energy = 1;
+
+	actor.bomb1.gun1.avelocity_y = 90;
+	actor.bomb1.gun2.avelocity_y = -90;
+
+	//setsize(actor, R22HELI_MIN, R22HELI_MAX );
+	actor.delay = time;
+		
+	actor.bouncefactor = autocvar_g_vehicle_r22heli_bouncefactor;
+	actor.bouncestop = autocvar_g_vehicle_r22heli_bouncestop;
+	actor.damageforcescale = 0.25;
+
+	float oldy = actor.angles_y;
+	actor.angles_y = 0; // so we can do the init math correctly
+
+	// spinning rotor death area
+	float R22HELIROTOR_HEIGHT = 145;
+	helicopter_rotor_spawn_hitbox(0, actor, actor.rotorbox, '-140 -140 -1', '140 140 1', 0, 0, R22HELIROTOR_HEIGHT);
+
+	actor.angles_y = oldy; // done doing the init math, reset.
+}
+METHOD(R22Heli, vr_setup, void(R22Heli thisveh, entity instance))
+{
+	string bodymodel;
+
+	//if(instance.spawnflags)
+	//{
+		//RandomSelection_Init();
+
+		//RandomSelection_Add(NULL, 0, string_null, 1, 1);
+		//RandomSelection_Add(NULL, 32, string_null, 1, 1);
+		//RandomSelection_Add(NULL, 64, string_null, 1, 1);
+		//RandomSelection_Add(NULL, 128, string_null, 1, 1);
+
+		//instance.spawnflags = RandomSelection_chosen_float;
+		instance.spawnflags |= 128;
+	//}
+			
+	if(instance.spawnflags >= 64)
+		bodymodel = MDL_R22HELI_MILSPEC.model_str();
+	else
+		bodymodel = VEH_R22HELI.mdl;
+
+	instance.mdl = bodymodel; // override default function
+	_setmodel(instance, instance.mdl);
+	setsize(instance, thisveh.m_mins, thisveh.m_maxs);
+
+	if(autocvar_g_vehicle_r22heli_energy)
+	if(autocvar_g_vehicle_r22heli_energy_regen)
+		instance.vehicle_flags |= VHF_ENERGYREGEN;
+
+	if(autocvar_g_vehicle_r22heli_shield)
+		instance.vehicle_flags |= VHF_HASSHIELD;
+
+	if(autocvar_g_vehicle_r22heli_shield_regen)
+		instance.vehicle_flags |= VHF_SHIELDREGEN;
+
+	if(autocvar_g_vehicle_r22heli_health_regen)
+		instance.vehicle_flags |= VHF_HEALTHREGEN;
+
+	instance.vehicle_exit = r22heli_exit;
+	instance.respawntime = autocvar_g_vehicle_r22heli_respawntime;
+	instance.vehicle_health = autocvar_g_vehicle_r22heli_health;
+	instance.vehicle_shield = autocvar_g_vehicle_r22heli_shield;
+	instance.max_health = instance.vehicle_health;
+}
 
 #elif defined(CSQC)
 
-		METHOD(R22Heli, vr_hud, void(R22Heli thisveh))
-		{
-			Vehicles_drawHUD(VEH_R22HELI.m_icon, "vehicle_helicopter_weapon1", "vehicle_helicopter_weapon2",
-							 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
-							 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo1_color);
-		}
-		METHOD(R22Heli, vr_crosshair, void(R22Heli thisveh, entity player))
-		{
-			Vehicles_drawCrosshair(vCROSS_LOCK);
-		}
-		METHOD(R22Heli, vr_setup, void(R22Heli thisveh, entity actor))
-		{
-			AuxiliaryXhair[0].axh_image = vCROSS_HINT; // Minigun1
-			AuxiliaryXhair[1].axh_image = vCROSS_HINT; // Minigun2
-		}
+METHOD(R22Heli, vr_hud, void(R22Heli thisveh))
+{
+	Vehicles_drawHUD(VEH_R22HELI.m_icon, "vehicle_helicopter_weapon1", "vehicle_helicopter_weapon2",
+					 "vehicle_icon_ammo1", autocvar_hud_progressbar_vehicles_ammo1_color,
+					 "vehicle_icon_ammo2", autocvar_hud_progressbar_vehicles_ammo1_color);
+}
+METHOD(R22Heli, vr_crosshair, void(R22Heli thisveh, entity player))
+{
+	Vehicles_drawCrosshair(vCROSS_LOCK);
+}
+METHOD(R22Heli, vr_setup, void(R22Heli thisveh, entity actor))
+{
+	AuxiliaryXhair[0].axh_image = vCROSS_HINT; // Minigun1
+	AuxiliaryXhair[1].axh_image = vCROSS_HINT; // Minigun2
+}
 
 #endif // CSQC
 
