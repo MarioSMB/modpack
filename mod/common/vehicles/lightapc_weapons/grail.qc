@@ -70,7 +70,7 @@ void lightapc_grail_Plasma_Explode(entity this, entity directhitentity)
 		RadiusDamage (this, this.realowner, autocvar_g_vehicle_lightapc_grail_cannon_damage, autocvar_g_vehicle_lightapc_grail_cannon_edgedamage,autocvar_g_vehicle_lightapc_grail_cannon_radius,
 					NULL, NULL, autocvar_g_vehicle_lightapc_grail_cannon_force, this.projectiledeathtype, directhitentity);
 
-	remove (this);
+	delete(this);
 }
 
 void lightapc_grail_Plasma_Explode_use(entity this, entity actor, entity trigger)
@@ -101,7 +101,8 @@ void lightapc_grail_linkattack (entity actor, string tagname, float putforward, 
 	if(autocvar_g_vehicle_lightapc_grail_link_joinexplode)
 		maxdmg += autocvar_g_vehicle_lightapc_grail_link_joinexplode_damage;
 
-	W_SetupShot (actor, weaponentities[0], false, 2, SND_CRYLINK_FIRE, CH_WEAPON_A, maxdmg);
+	.entity weaponentity = weaponentities[0]; // TODO?
+	W_SetupShot (actor, weaponentity, false, 2, SND_CRYLINK_FIRE, CH_WEAPON_A, maxdmg);
 	forward = v_forward;
 	right = v_right;
 	up = v_up;
@@ -117,6 +118,7 @@ void lightapc_grail_linkattack (entity actor, string tagname, float putforward, 
 		proj.owner = fireentity;
 		proj.realowner = actor;
 		proj.classname = "spike";
+		proj.weaponentity_fld = weaponentity;
 		proj.bot_dodge = true;
 		proj.bot_dodgerating = autocvar_g_vehicle_lightapc_grail_link_damage;
 		if(shots == 1) {
@@ -194,9 +196,9 @@ void lightapc_grail_linkattack (entity actor, string tagname, float putforward, 
 	if(proj)
 	if(autocvar_g_vehicle_lightapc_grail_link_joinspread != 0 || autocvar_g_vehicle_lightapc_grail_link_joindelay != 0)
 	{
-		actor.crylink_lastgroup = proj;
+		actor.(weaponentity).crylink_lastgroup = proj;
 		W_Crylink_CheckLinks(proj);
-		actor.crylink_waitrelease = 1;
+		actor.(weaponentity).crylink_waitrelease = 1;
 	}
 }
 

@@ -72,7 +72,7 @@ void M_Enforcer_Attack_Plasma_Explode(entity this, entity directhitentity)
 	RadiusDamage (this, this.realowner, autocvar_g_monster_enforcer_attack_plasma_damage, autocvar_g_monster_enforcer_attack_plasma_edgedamage, 
 				  autocvar_g_monster_enforcer_attack_plasma_radius, NULL, NULL, autocvar_g_monster_enforcer_attack_plasma_force, this.projectiledeathtype, directhitentity);
 
-	remove (this);
+	delete (this);
 }
 
 void M_Enforcer_Attack_Plasma_Explode_use(entity this, entity actor, entity trigger)

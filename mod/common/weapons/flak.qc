@@ -359,7 +359,7 @@ void W_Flak_Bomb_Explode(entity this, entity directhitentity)
 			p.owner = directhitentity;
 	}
 
-	remove (this);
+	delete (this);
 }
 
 void W_Flak_Bomb_Explode_use(entity this, entity actor, entity trigger)

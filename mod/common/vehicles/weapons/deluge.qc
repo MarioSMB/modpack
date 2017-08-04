@@ -22,7 +22,7 @@ void vwep_deluge_Water_Explode(entity this, entity directhitentity)
 	RadiusDamage (this, this.realowner, this.deluge_damage, this.deluge_edgedamage, this.deluge_radius, NULL, NULL,
 				this.deluge_force, this.projectiledeathtype, directhitentity);
 
-	remove (this);
+	delete (this);
 }
 
 void vwep_deluge_Water_Explode_use(entity this, entity actor, entity trigger)

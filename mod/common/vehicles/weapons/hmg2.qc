@@ -1,4 +1,4 @@
-SOUND(RIFLE_FIRE3_BASS, W_Sound("campingrifle_fire3_bass"));
+SOUND(VWEP_HMG2_FIRE, W_Sound("campingrifle_fire3_bass"));
 
 #ifdef SVQC
 
@@ -32,7 +32,7 @@ void vwep_hmg2_attack(
 	W_MachineGun_MuzzleFlash(player, weaponentity);
 	vwep_AttachToShotorg(player, player.(weaponentity).muzzle_flash, '5 0 0', "tag_flash", gunmount);
 	 
-	sound (gunmount, CH_WEAPON_SINGLE, SND_RIFLE_FIRE3_BASS, VOL_BASE, ATTN_NORM);
+	sound (gunmount, CH_WEAPON_SINGLE, SND_VWEP_HMG2_FIRE, VOL_BASE, ATTN_NORM);
 
 	if(atk_dropcasings)
 	{

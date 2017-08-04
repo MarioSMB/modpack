@@ -118,7 +118,7 @@ void M_Ogre_Attack_Grenade_Explode(entity this, entity directhitentity)
 	RadiusDamage (this, this.realowner, autocvar_g_monster_ogre_attack_grenade_damage, autocvar_g_monster_ogre_attack_grenade_edgedamage, autocvar_g_monster_ogre_attack_grenade_radius, 
 				NULL, NULL, autocvar_g_monster_ogre_attack_grenade_force, this.projectiledeathtype, directhitentity);
 
-	remove (this);
+	delete (this);
 }
 
 void M_Ogre_Attack_Grenade_Explode_use(entity this, entity actor, entity trigger)

@@ -1,5 +1,5 @@
 #ifdef GAMEQC
-SOUND(LIGHTAPC_HVYMINIGUN_FIRE, W_Sound("campingrifle_fire_bass"));
+SOUND(VWEP_HVYMINIGUN_FIRE, W_Sound("campingrifle_fire_bass"));
 #endif
 
 #ifdef SVQC
@@ -36,7 +36,7 @@ void vwep_hvyminigun_attack(
 	W_MachineGun_MuzzleFlash(player, weaponentity);
 	vwep_AttachToShotorg(player, player.(weaponentity).muzzle_flash, '5 0 0', "tag_flash", gunmount);
 	 
-	sound (gunmount, CH_WEAPON_A, SND_LIGHTAPC_HVYMINIGUN_FIRE, VOL_BASE, ATTN_NORM);
+	sound (gunmount, CH_WEAPON_A, SND_VWEP_HVYMINIGUN_FIRE, VOL_BASE, ATTN_NORM);
 
 	if (atk_dropcasings)
 	{
