@@ -1,4 +1,22 @@
 #ifndef IMPLEMENTATION
+
+MSG_INFO_NOTIF(DEATH_MURDER_VH_TANK_DEATH,              1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_death",         _("^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Tank exploded%s%s"), "")
+MSG_INFO_NOTIF(DEATH_SELF_VH_TANK_DEATH,                1,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 got caught in the blast of a Tank explosion%s%s"), "")
+MSG_CENTER_NOTIF(DEATH_SELF_VH_TANK_DEATH,          1,      0, 0, "",               CPID_Null,              "0 0",          _("^K1You got caught in the blast of a Tank explosion!"), "")
+MSG_MULTI_NOTIF(DEATH_MURDER_VH_TANK_DEATH,         1,  NULL,           INFO_DEATH_MURDER_VH_TANK_DEATH,        NULL)
+MSG_MULTI_NOTIF(DEATH_SELF_VH_TANK_DEATH,           1,  NULL,           INFO_DEATH_SELF_VH_TANK_DEATH,          CENTER_DEATH_SELF_VH_TANK_DEATH)
+
+REGISTER_DEATHTYPE(VH_TANK_DEATH,           DEATH_SELF_VH_TANK_DEATH,       DEATH_MURDER_VH_TANK_DEATH,     "vehicle")
+
+
+MSG_INFO_NOTIF(DEATH_MURDER_VH_TANK_CANNON,              1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_death",         _("^BG%s%s^K1 was obliterated by ^BG%s^K1's Tank Cannonball%s%s"), "")
+MSG_INFO_NOTIF(DEATH_SELF_VH_TANK_CANNON,                1,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 was obliterated by a Tank Cannonball%s%s"), "")
+MSG_CENTER_NOTIF(DEATH_SELF_VH_TANK_CANNON,          1,      0, 0, "",               CPID_Null,              "0 0",          _("^K1You were obliterated by a Tank Cannonball!"), "")
+MSG_MULTI_NOTIF(DEATH_MURDER_VH_TANK_CANNON,         1,  NULL,           INFO_DEATH_MURDER_VH_TANK_CANNON,        NULL)
+MSG_MULTI_NOTIF(DEATH_SELF_VH_TANK_CANNON,           1,  NULL,           INFO_DEATH_SELF_VH_TANK_CANNON,          CENTER_DEATH_SELF_VH_TANK_CANNON)
+
+REGISTER_DEATHTYPE(VH_TANK_CANNON,           DEATH_SELF_VH_TANK_CANNON,       DEATH_MURDER_VH_TANK_CANNON,     "vehicle")
+
 //#include "tankll48.qh"
 
 //#include "tankll48_weapons.qc"
@@ -202,7 +220,7 @@ void tankll48_fire_cannon(entity actor, entity vehic, string tagname)
 	IL_PUSH(g_damagedbycontents, missile);
 	set_movetype(missile, MOVETYPE_FLY);
 
-	missile.projectiledeathtype = DEATH_VH_SPID_DEATH.m_id;
+	missile.projectiledeathtype = DEATH_VH_TANK_CANNON.m_id;
 	setsize (missile, '-16 -16 -16', '16 16 16'); // give it some size so it can be shot
 
 	setorigin (missile, w_shotorg - v_forward * 3); // move it back so it hits the wall at the right point
@@ -608,7 +626,7 @@ void tankll48_blowup(entity this)
 	SUB_SetFade(g1, time, min(autocvar_g_vehicle_tankll48_respawntime, 10));
 	SUB_SetFade(g2, time, min(autocvar_g_vehicle_tankll48_respawntime, 10));
 
-	RadiusDamage (this, this.enemy, 250, 15, 250, NULL, NULL, 250, DEATH_VH_SPID_DEATH.m_id, NULL);
+	RadiusDamage (this, this.enemy, 250, 15, 250, NULL, NULL, 250, DEATH_VH_TANK_DEATH.m_id, NULL);
 
 	this.alpha = this.tur_head.alpha = this.gun1.alpha = this.gun2.alpha = this.bomb1.gun1.alpha = this.bomb1.gun2.alpha = this.bomb2.gun1.alpha = this.bomb2.gun2.alpha = -1;
 	set_movetype(this, MOVETYPE_NONE);
@@ -830,6 +848,19 @@ MUTATOR_HOOKFUNCTION(cl_tankll48, EditProjectile)
 		loopsound(proj, CH_SHOTS_SINGLE, SND_CANNONBALL_FLY, VOL_BASE, ATTEN_NORM);
 		proj.mins = '-16 -16 -16';
 		proj.maxs = '16 16 16';
+	}
+}
+
+MUTATOR_HOOKFUNCTION(cl_tankll48, DamageInfo)
+{
+	entity dmgent = M_ARGV(0, entity);
+	int w_deathtype = M_ARGV(1, int);
+
+	// the deathtype is marked as vehicle death, so we can get away with not performing the additional traces!
+	if(DEATH_ENT(w_deathtype) == DEATH_VH_TANK_CANNON || DEATH_ENT(w_deathtype) == DEATH_VH_TANK_DEATH)
+	{
+		sound(dmgent, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, 0.2);
+		pointparticles(EFFECT_EXPLOSION_BIG, dmgent.origin, w_backoff * 1000, 1);
 	}
 }
 

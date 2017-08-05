@@ -1,6 +1,14 @@
 #ifndef VEHICLE_LIGHTAPC
 #define VEHICLE_LIGHTAPC
 
+MSG_INFO_NOTIF(DEATH_MURDER_VH_LIGHTAPC_DEATH,          1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_death",         _("^BG%s%s^K1 got caught in the blast when ^BG%s^K1's LightAPC exploded%s%s"), "")
+MSG_INFO_NOTIF(DEATH_SELF_VH_LIGHTAPC_DEATH,            1,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 got caught in the blast of a LightAPC explosion%s%s"), "")
+MSG_CENTER_NOTIF(DEATH_SELF_VH_LIGHTAPC_DEATH,          1,  0, 0, "",       CPID_Null,              "0 0",                  _("^K1You got caught in the blast of a LightAPC explosion!"), "")
+MSG_MULTI_NOTIF(DEATH_MURDER_VH_LIGHTAPC_DEATH,         1,  NULL,           INFO_DEATH_MURDER_VH_LIGHTAPC_DEATH,            NULL)
+MSG_MULTI_NOTIF(DEATH_SELF_VH_LIGHTAPC_DEATH,           1,  NULL,           INFO_DEATH_SELF_VH_LIGHTAPC_DEATH,              CENTER_DEATH_SELF_VH_LIGHTAPC_DEATH)
+
+REGISTER_DEATHTYPE(VH_LIGHTAPC_DEATH,           DEATH_SELF_VH_LIGHTAPC_DEATH,       DEATH_MURDER_VH_LIGHTAPC_DEATH,         "vehicle")
+
 #ifdef GAMEQC
 MODEL(LIGHTAPC_DELUGE, "models/mountedguns/delugegun.iqm");
 MODEL(LIGHTAPC_SHLAC, "models/mountedguns/shlacgun.iqm");
@@ -1024,7 +1032,7 @@ void lightapc_blowup(entity this, entity toucher)
 					autocvar_g_vehicle_lightapc_blowup_edgedamage,
 					autocvar_g_vehicle_lightapc_blowup_radius, NULL, NULL,
 					autocvar_g_vehicle_lightapc_blowup_forceintensity,
-					DEATH_VH_WAKI_DEATH.m_id, NULL);
+					DEATH_VH_LIGHTAPC_DEATH.m_id, NULL);
 
 	delete(this);
 }
@@ -1495,6 +1503,23 @@ METHOD(LightAPCPassenger, vr_crosshair, void(LightAPCPassenger thisveh, entity p
 METHOD(LightAPCPassenger, vr_setup, void(LightAPCPassenger thisveh, entity instance))
 {
 	//AuxiliaryXhair[0].axh_image = vCROSS_LOCK; // Match all?
+}
+#endif
+
+#ifdef CSQC
+REGISTER_MUTATOR(cl_lightapc, true);
+
+MUTATOR_HOOKFUNCTION(cl_lightapc, DamageInfo)
+{
+	entity dmgent = M_ARGV(0, entity);
+	int w_deathtype = M_ARGV(1, int);
+
+	// the deathtype is marked as vehicle death, so we can get away with not performing the additional traces!
+	if(DEATH_ENT(w_deathtype) == DEATH_VH_LIGHTAPC_DEATH)
+	{
+		sound(dmgent, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, 0.2);
+		pointparticles(EFFECT_EXPLOSION_BIG, dmgent.origin, w_backoff * 1000, 1);
+	}
 }
 #endif
 

@@ -1067,4 +1067,21 @@ METHOD(R22Heli, vr_setup, void(R22Heli thisveh, entity actor))
 
 #endif // CSQC
 
+#ifdef CSQC
+REGISTER_MUTATOR(cl_r22heli, true);
+
+MUTATOR_HOOKFUNCTION(cl_r22heli, DamageInfo)
+{
+	entity dmgent = M_ARGV(0, entity);
+	int w_deathtype = M_ARGV(1, int);
+
+	// the deathtype is marked as vehicle death, so we can get away with not performing the additional traces!
+	if(DEATH_ENT(w_deathtype) == DEATH_VH_HELI_DEATH)
+	{
+		sound(dmgent, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, 0.2);
+		pointparticles(EFFECT_EXPLOSION_BIG, dmgent.origin, w_backoff * 1000, 1);
+	}
+}
+#endif
+
 #endif // IMPLEMENTATION?
