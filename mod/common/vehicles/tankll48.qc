@@ -749,6 +749,7 @@ METHOD(TankLL48, vr_spawn, void(TankLL48 thisveh, entity instance))
 	set_movetype(instance, MOVETYPE_WALK);
 	instance.solid = SOLID_SLIDEBOX;
 	instance.alpha = instance.tur_head.alpha = instance.gun1.alpha = instance.gun2.alpha = instance.bomb1.gun1.alpha = instance.bomb1.gun2.alpha = instance.bomb2.gun1.alpha = instance.bomb2.gun2.alpha = 1;
+	instance.gun3.alpha = -1;
 	instance.gun2.colormap = instance.bomb1.gun1.colormap = instance.bomb1.gun2.colormap = instance.bomb2.gun1.colormap = instance.bomb2.gun2.colormap = instance.colormap;
 	instance.tur_head.angles = '0 0 0';
 	instance.gun1.angles = instance.gun2.angles = '0 0 0';
