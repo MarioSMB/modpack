@@ -59,11 +59,13 @@ MUTATOR_HOOKFUNCTION(mutator_mod, CSQC_ConsoleCommand)
 
 	if(cmd_name == "itemlist")
 	{
-		LOG_INFO("Available items: \n");
+		LOG_INFO("Available items: ");
+		string thelist = "";
 		FOREACH(Items, true,
 		{
-			LOG_INFOF("%s (%s)\n", it.netname, it.m_name);
+			thelist = cons(thelist, strcat(it.netname, "(", it.m_name, ")"));
 		});
+		LOG_INFO(thelist);
 		return true;
 	}
 

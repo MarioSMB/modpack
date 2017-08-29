@@ -44,7 +44,7 @@ bool Find_Word_Entity(string wrd_name)
     }
     else
     {
-        LOG_INFO("Server/Client lacks dictionary files, this is bad!\n");
+        LOG_INFO("Server/Client lacks dictionary files, this is bad!");
         return false;
     }
 

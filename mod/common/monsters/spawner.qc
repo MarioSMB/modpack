@@ -43,7 +43,7 @@ bool M_Spawner_SpawnMonsters(entity this)
 		DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 512, 256))
 	{
 		Monster_Remove(e); // too bad
-		LOG_INFO("Fail!\n");
+		LOG_INFO("Couldn't find a location for monster spawner minions, fail!");
 		return false;
 	}
 
@@ -125,7 +125,7 @@ METHOD(Spawner, mr_setup, bool(Monster thismon, entity actor))
 	set_movetype(actor, MOVETYPE_NONE);
 	actor.monster_moveflags = 4;
 
-	LOG_INFO("Setting up spawner with spawnmob", actor.spawnmob, "\n");
+	LOG_INFO("Setting up spawner with spawnmob", actor.spawnmob);
 
 	return true;
 }

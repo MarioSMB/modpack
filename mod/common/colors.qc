@@ -129,7 +129,7 @@ string mod_translate(string s)
 
 void mod_parse_print(string strMessage)
 {
-	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_Print(\"%s\")\n", strMessage);
+	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_Print(\"%s\")", strMessage);
 	print(mod_translate_clean(strMessage));
 }
 

@@ -34,26 +34,13 @@ AUTOCVAR(g_arena_point_leadlimit, int, -1, "Arena point lead limit overriding th
 void arena_Initialize();
 REGISTER_MUTATOR(arena, false)
 {
+	MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
+		GameRules_limit_score(autocvar_g_arena_point_limit);
+		GameRules_limit_lead(autocvar_g_arena_point_leadlimit);
+
 		arena_Initialize();
-
-		SetLimits(autocvar_g_arena_point_limit, autocvar_g_arena_point_leadlimit, autocvar_timelimit_override, -1);
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back arena_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
 	}
 
 	return false;
@@ -371,17 +358,6 @@ MUTATOR_HOOKFUNCTION(arena, FilterItem)
 	if (autocvar_g_powerups <= 0)
 	if (item.flags & FL_POWERUP)
 		return true;
-}
-
-// scores
-void arena_ScoreRules(int teams)
-{
-	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true); // SFL_SORT_PRIO_PRIMARY
-	ScoreInfo_SetLabel_TeamScore(ST_JB_ROUNDS,			"rounds",		SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_JB_JBREAKS,		"arenas",		0);
-	ScoreInfo_SetLabel_PlayerScore(SP_JB_FREED,			"freed",		SFL_SORT_PRIO_SECONDARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_JB_DEFENSE,		"def",		0);
-	ScoreRules_basics_end();
 }
 
 // initialization

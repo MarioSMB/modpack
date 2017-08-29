@@ -328,8 +328,8 @@ void dotc_drone_damage(entity this, entity inflictor, entity attacker, float dam
 			if(IS_CLIENT(attacker))
 			{
 				// But only give player score for acctuall kill shots.
-				PlayerScore_Add(attacker, SP_DOTC_DRONE_KILLS, 1);
-				PlayerScore_Add(attacker, SP_SCORE, this.dotc_deathcredits);
+				GameRules_scoring_add(attacker, DOTC_DRONE_KILLS, 1);
+				GameRules_scoring_add(attacker, SCORE, this.dotc_deathcredits);
 			}
 		}
 		dotc_drone_die(this, false);

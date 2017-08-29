@@ -49,8 +49,8 @@ void dotc_CreditTouch(entity this, entity toucher)
 	if(need_credits > 0)
 		core.dotc_credits += this.cnt;
 
-	PlayerScore_Add(toucher, SP_DOTC_CREDITS_TAKEN, this.cnt);
-	PlayerScore_Add(toucher, SP_SCORE, +1);
+	GameRules_scoring_add(toucher, DOTC_CREDITS_TAKEN, this.cnt);
+	GameRules_scoring_add(toucher, SCORE, +1);
 
 	dotc_CreditRemove(this);
 }

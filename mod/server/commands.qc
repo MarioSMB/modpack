@@ -174,7 +174,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 	{
 		string m = MapInfo_FixName(argv(1));
 		localcmd(strcat("\nchangelevel ", m, "\n"));
-		LOG_INFO("Switching to ", m, "\n");
+		LOG_INFO("Switching to ", m);
 		return true;
 	}
 
@@ -183,7 +183,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 		if(autocvar_g_maplist == "")
 		{
 			localcmd("\nendmatch\n");
-			LOG_INFO("g_maplist is empty, ending match...\n");
+			LOG_INFO("g_maplist is empty, ending match...");
 		}
 
 		if(autocvar_g_maplist_gotorandom_fancy)
@@ -191,7 +191,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 			// TODO: we can't actually rely on this...
 			string foundmap = _MapInfo_GlobItem(MapInfo_FilterList_Lookup(floor(random() * (MapInfo_count + 1))));
 			localcmd(strcat("\nchangelevel ", foundmap, "\n"));
-			LOG_INFO("Switching to ", foundmap, "\n");
+			LOG_INFO("Switching to ", foundmap);
 			return true;
 		}
 		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
@@ -199,13 +199,13 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 		int pos = MaplistMethod_Random();
 		if(pos == -1)
 		{
-			LOG_INFO("Failed to select a map, try again.\n");
+			LOG_INFO("Failed to select a map, try again.");
 			return true;
 		}
 
 		string themap = argv(pos);
 		localcmd(strcat("\nchangelevel ", themap, "\n"));
-		LOG_INFO("Switching to ", themap, "\n");
+		LOG_INFO("Switching to ", themap);
 		return true;
 	}
 
@@ -223,12 +223,12 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 			if(accepted > 0)
 			{
 				stuffcmd(it, strcat("\n", argv(1), "\n"));
-				LOG_INFO(strcat("Command: \"", argv(1), "\" sent to ", GetCallerName(it), ".\n"));
+				LOG_INFO(strcat("Command: \"", argv(1), "\" sent to ", GetCallerName(it), "."));
 				continue;
 			}
 			else
 			{
-				LOG_INFO("stuffto failed on ", GetCallerName(it), ".\n");
+				LOG_INFO("stuffto failed on ", GetCallerName(it), ".");
 				continue;
 			}
 		));
@@ -246,11 +246,11 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 			fputs(mod_cvar_file, "\n\n\n// Mod Cvars:\n");
 			RegisterCvars(RegisterModCvars_Set);
 			fputs(mod_cvar_file, "\n");
-			LOG_INFO("Dumping mod cvars... File located in ^2data/data/mod_cvars.cfg^7.\n");
+			LOG_INFO("Dumping mod cvars... File located in ^2data/data/mod_cvars.cfg^7.");
 			fclose(mod_cvar_file);
 		}
 		else
-			LOG_INFO("^1Error: ^7Could not open file 'mod_cvars.cfg'!\n");
+			LOG_INFO("^1Error: ^7Could not open file 'mod_cvars.cfg'!");
 			
 		return true;
 	}

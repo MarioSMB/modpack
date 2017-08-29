@@ -34,7 +34,7 @@ MUTATOR_HOOKFUNCTION(nocross, SV_ParseServerCommand)
 			STAT(NOCROSS, it) = crossitoff;
 		});
 		nocross_active = crossitoff;
-		LOG_INFO("Crosshairs have been forced ", ((crossitoff) ? "off" : "on"), "\n");
+		LOG_INFO("Crosshairs have been forced ", ((crossitoff) ? "off" : "on"));
 		return true;
 	}
 }

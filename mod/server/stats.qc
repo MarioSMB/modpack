@@ -44,7 +44,7 @@ MUTATOR_HOOKFUNCTION(require_stats, SV_ParseServerCommand)
 			{
 				it.elo_bypass = true;
 			});
-			LOG_INFO("Allowing all players to bypass elo checks for this match.\n");
+			LOG_INFO("Allowing all players to bypass elo checks for this match.");
 			return true;
 		}
 		else if(argv(1) == "off")
@@ -53,7 +53,7 @@ MUTATOR_HOOKFUNCTION(require_stats, SV_ParseServerCommand)
 			{
 				it.elo_bypass = false;
 			});
-			LOG_INFO("Turning off elo bypassing for all players.\n");
+			LOG_INFO("Turning off elo bypassing for all players.");
 			return true;
 		}
 
@@ -63,11 +63,11 @@ MUTATOR_HOOKFUNCTION(require_stats, SV_ParseServerCommand)
 		if (accepted > 0)
 		{
 			client.elo_bypass = true;
-			LOG_INFO(strcat("Player ", GetCallerName(client), " is now allowed to join for this match, regardless of their elo.\n"));
+			LOG_INFO(strcat("Player ", GetCallerName(client), " is now allowed to join for this match, regardless of their elo."));
 		}
 		else
 		{
-			LOG_INFO("elo bypass failed: ", GetClientErrorString(accepted, argv(1)), ".\n");
+			LOG_INFO("elo bypass failed: ", GetClientErrorString(accepted, argv(1)), ".");
 		}
 		return true;
 	}
@@ -88,7 +88,7 @@ MUTATOR_HOOKFUNCTION(require_stats, PlayerPreThink)
 		return;
 	player.last_elocheck = time + 1; // we don't need to check too often
 
-	float my_elo = PlayerScore_Add(player, SP_ELO, 0);
+	float my_elo = GameRules_scoring_add(player, ELO, 0);
 	if(my_elo <= 0) // no elo or not loaded
 		return; // try to return before checking the gametype (slow)
 

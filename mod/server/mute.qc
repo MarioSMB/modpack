@@ -31,12 +31,12 @@ MUTATOR_HOOKFUNCTION(muteban, SV_ParseServerCommand)
 			if(!PlayerInIDList(client, autocvar_sv_muteban_list))
 				theid = cons(theid, client.crypto_idfp);
 			CS(client).muted = true;
-			LOG_INFO(strcat("Mute-banning player ", GetCallerName(client), " (", argv(1), ").\n"));
+			LOG_INFO(strcat("Mute-banning player ", GetCallerName(client), " (", argv(1), ")."));
 			cvar_set("sv_muteban_list", cons(autocvar_sv_muteban_list, theid));
 		}
 		else
 		{
-			LOG_INFO("mute-ban failed: ", GetClientErrorString(accepted, argv(1)), ".\n");
+			LOG_INFO("mute-ban failed: ", GetClientErrorString(accepted, argv(1)), ".");
 		}
 
 		return true;
@@ -59,12 +59,12 @@ MUTATOR_HOOKFUNCTION(muteban, SV_ParseServerCommand)
 			});
 
 			cvar_set("sv_muteban_list", tmp_string);
-			LOG_INFO(strcat("Unmuting player ", GetCallerName(client), " (", original_arg, ").\n"));
+			LOG_INFO(strcat("Unmuting player ", GetCallerName(client), " (", original_arg, ")."));
 			CS(client).muted = false;
 		}
 		else
 		{
-			LOG_INFO("mute-ban failed: ", GetClientErrorString(accepted, original_arg), ", attempting to unban by string.\n");
+			LOG_INFO("mute-ban failed: ", GetClientErrorString(accepted, original_arg), ", attempting to unban by string.");
 
 			string tmp_string = "";
 			FOREACH_WORD(autocvar_sv_muteban_list, it != original_arg,

@@ -193,12 +193,12 @@ bool W_Lightsabre_Melee_Block(entity this, entity player)
 		{
 			if(vdist(it.origin - myowner.origin, <, 256))
 			{
-				//LOG_INFO("Too close!\n");
+				//LOG_INFO("Too close!");
 				float dot = normalize(it.origin - myowner.origin) * v_forward;
-				//LOG_INFO("dot = ", ftos(dot), "\n");
+				//LOG_INFO("dot = ", ftos(dot));
 				if(dot <= 0.3) { continue; }
 
-				//LOG_INFO("We got one!\n");
+				//LOG_INFO("We got one!");
 
 				W_Devastator_Unregister(it);
 

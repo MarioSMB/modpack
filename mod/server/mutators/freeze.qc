@@ -157,7 +157,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 				FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, player), LAMBDA(
 					it.freeze_flag = FROZEN_RESPAWNING;
 					it.respawn_time = time + autocvar_g_freeze_respawn_time;
-					PlayerScore_Add(it, SP_SCORE, -1); // lose score for this
+					GameRules_scoring_add(it, SCORE, -1); // lose score for this
 				));
 
 				return true;
@@ -206,7 +206,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 
 				// EVERY team mate nearby gets a point (even if multiple!)
 				FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, LAMBDA(
-					PlayerScore_Add(it, SP_SCORE, +1);
+					GameRules_scoring_add(it, SCORE, +1);
 					nades_GiveBonus(it,autocvar_g_nades_bonus_score_low);
 				));
 

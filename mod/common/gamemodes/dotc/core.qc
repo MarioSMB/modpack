@@ -182,7 +182,7 @@ void dotc_CoreDamage(entity this, entity inflictor, entity attacker, float damag
 	if (this.health <= 0)
 	{
 		if(IS_CLIENT(attacker))
-			PlayerScore_Add(attacker, SP_DOTC_DESTROYED, +1);
+			GameRules_scoring_add(attacker, DOTC_DESTROYED, +1);
 		this.dotc_status = CORE_DYING;
 		this.deadflag = DEAD_DYING;
 		this.event_damage = func_null;
@@ -446,7 +446,7 @@ MUTATOR_HOOKFUNCTION(dotc, SV_ParseServerCommand)
 	{
 		if(argv(1) == "" || argv(2) == "")
 		{
-			LOG_INFO("Both team and level need to be set.\n");
+			LOG_INFO("Both team and level need to be set.");
 			return true;
 		}
 
