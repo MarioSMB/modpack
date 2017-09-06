@@ -168,6 +168,9 @@ bool hats_Customize(entity this, entity client)
 REPLICATE(cvar_cl_hat, string, "cl_magical_hax");
 REPLICATE(cvar_cl_nohats, bool, "cl_nohats");
 
+ATTRIB(Client, cvar_cl_hat, string, this.cvar_cl_hat);
+ATTRIB(Client, cvar_cl_nohats, bool, this.cvar_cl_nohats);
+
 void hats_SpawnHat(entity this)
 {
 	this.hatentity = spawn();
@@ -190,8 +193,8 @@ MUTATOR_HOOKFUNCTION(hats, PutClientInServer)
 
 	hats_SpawnHat(player);
 	player.hatentity.alpha = default_weapon_alpha;
-	if(player.cvar_cl_hat != "")
-		player.hatname = strzone(player.cvar_cl_hat);
+	if(CS(player).cvar_cl_hat != "")
+		player.hatname = strzone(CS(player).cvar_cl_hat);
 	else
 		player.hatname = strzone(autocvar_g_hats_default);
 }

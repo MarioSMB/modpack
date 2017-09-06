@@ -18,6 +18,8 @@ const int FROZEN_RESPAWNING = 2; // player released the key, respawn when we can
 
 REPLICATE(cvar_cl_freeze, bool, "cl_freeze");
 
+ATTRIB(Client, cvar_cl_freeze, bool, this.cvar_cl_freeze);
+
 void freeze_Unfreeze(entity ent)
 {
 	ent.freeze_flag = FROZEN_THAWING; // thawing is fine, as this is only checked when the player is frozen
@@ -50,7 +52,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerDies)
 
 	bool can_freeze = false;
 
-	if(frag_target.cvar_cl_freeze)
+	if(CS(frag_target).cvar_cl_freeze)
 	if(cvar("g_freeze") == 1)
 		can_freeze = true;
 

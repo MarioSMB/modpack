@@ -216,7 +216,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPreThink)
 
 	if(frametime) // reduce load by only doing it in server frames
 	{
-		if(!player.cvar_cl_sparkle)
+		if(!CS(player).cvar_cl_sparkle)
 			player.effects &= ~EF_STARDUST;
 		player.effects &= ~EF_DIMLIGHT;
 	}

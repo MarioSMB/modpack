@@ -1,6 +1,8 @@
 #ifdef SVQC
 .int cvar_cl_customhook;
 REPLICATE(cvar_cl_customhook, int, "cl_customhook");
+
+ATTRIB(Client, cvar_cl_customhook, int, this.cvar_cl_customhook);
 #elif defined(CSQC)
 .int hook_type;
 #endif
@@ -8,6 +10,21 @@ REPLICATE(cvar_cl_customhook, int, "cl_customhook");
 ENTCS_PROP(HOOKTYPE, true, cvar_cl_customhook, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, ent.cvar_cl_customhook); },
 	{ ent.hook_type = ReadByte(); })
+
+#ifdef SVQC
+REGISTER_MUTATOR(sv_hooks, true);
+
+MUTATOR_HOOKFUNCTION(sv_hooks, PlayerPreThink)
+{
+	// this hack is rather unfortunate, but entcs isn't smart enough to get fields from the clientstate yet
+	entity player = M_ARGV(0, entity);
+
+	if(!CS(player))
+		return;
+
+	player.cvar_cl_customhook = CS(player).cvar_cl_customhook;
+}
+#endif
 
 #ifdef CSQC
 AUTOCVAR_SAVE(cl_customhook, int, 0, "Replace grappling hook textures, 0=normal, 1='pro', 2=nexuiz, 3=muffins");

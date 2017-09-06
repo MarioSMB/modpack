@@ -9,6 +9,9 @@ AUTOCVAR(g_piggyback_ride_enemies, bool, false, _("Allow riding enemies"));
 REPLICATE(cvar_cl_nocarry, bool, "cl_nocarry");
 REPLICATE(cvar_cl_noride, bool, "cl_noride");
 
+ATTRIB(Client, cvar_cl_nocarry, bool, this.cvar_cl_nocarry);
+ATTRIB(Client, cvar_cl_noride, bool, this.cvar_cl_noride);
+
 .entity piggybacker;
 .entity pbent;
 .entity pbhost;
