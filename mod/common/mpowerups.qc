@@ -201,7 +201,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, ItemTouch)
 
 	if(item.health && STAT(LIFE_FINISHED, toucher) > time)
 	{
-		bool gave = Item_GiveAmmoTo(item, toucher, health, item.max_health * 2);
+		bool gave = Item_GiveAmmoTo(item, toucher, RESOURCE_HEALTH, item.max_health * 2);
 		if(!gave)
 			return MUT_ITEMTOUCH_RETURN;
 		return MUT_ITEMTOUCH_PICKUP;
@@ -348,8 +348,8 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPowerups)
 		{
 			float starthp = ((warmup_stage) ? warmup_start_health : start_health);
 
-			if(player.health > 0)
-				player.health = starthp * 2;
+			if(GetResourceAmount(player, RESOURCE_HEALTH) > 0)
+				SetResourceAmount(player, RESOURCE_HEALTH, starthp * 2);
 
 			player.mitems |= ITEM_Life.m_itemid;
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_LIFE, player.netname);

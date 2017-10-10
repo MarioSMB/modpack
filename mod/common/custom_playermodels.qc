@@ -65,15 +65,15 @@ void cpmodels_Precache()
 #undef CHECK_MODEL
 }
 
-ATTRIB(Client, cvar_cl_pony, bool, this.cvar_cl_pony);
-ATTRIB(Client, cvar_cl_pony_skin, int, this.cvar_cl_pony_skin);
-ATTRIB(Client, cvar_cl_robot, bool, this.cvar_cl_robot);
-ATTRIB(Client, cvar_cl_thestars, bool, this.cvar_cl_thestars);
-ATTRIB(Client, cvar_cl_sparkle, int, this.cvar_cl_sparkle);
-ATTRIB(Client, cvar_cl_goat, bool, this.cvar_cl_goat);
-ATTRIB(Client, cvar_cl_damnfurries, bool, this.cvar_cl_damnfurries);
-ATTRIB(Client, cvar_cl_brothersbear, bool, this.cvar_cl_brothersbear);
-ATTRIB(Client, cow, bool, this.cow);
+//ATTRIB(Client, cvar_cl_pony, bool, this.cvar_cl_pony);
+//ATTRIB(Client, cvar_cl_pony_skin, int, this.cvar_cl_pony_skin);
+//ATTRIB(Client, cvar_cl_robot, bool, this.cvar_cl_robot);
+//ATTRIB(Client, cvar_cl_thestars, bool, this.cvar_cl_thestars);
+//ATTRIB(Client, cvar_cl_sparkle, int, this.cvar_cl_sparkle);
+//ATTRIB(Client, cvar_cl_goat, bool, this.cvar_cl_goat);
+//ATTRIB(Client, cvar_cl_damnfurries, bool, this.cvar_cl_damnfurries);
+//ATTRIB(Client, cvar_cl_brothersbear, bool, this.cvar_cl_brothersbear);
+//ATTRIB(Client, cow, bool, this.cow);
 
 .bool cvar_cl_pony;
 .int cvar_cl_pony_skin;

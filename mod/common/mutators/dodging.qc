@@ -4,7 +4,7 @@
 
 REPLICATE(cvar_cl_dodging, bool, "cl_dodging");
 
-ATTRIB(Client, cvar_cl_dodging, bool, this.cvar_cl_dodging);
+//ATTRIB(Client, cvar_cl_dodging, bool, this.cvar_cl_dodging);
 
 REGISTER_MUTATOR(mod_dodging, cvar("g_dodging"));
 

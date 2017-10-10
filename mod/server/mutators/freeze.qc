@@ -18,7 +18,7 @@ const int FROZEN_RESPAWNING = 2; // player released the key, respawn when we can
 
 REPLICATE(cvar_cl_freeze, bool, "cl_freeze");
 
-ATTRIB(Client, cvar_cl_freeze, bool, this.cvar_cl_freeze);
+//ATTRIB(Client, cvar_cl_freeze, bool, this.cvar_cl_freeze);
 
 void freeze_Unfreeze(entity ent)
 {
@@ -193,7 +193,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 		if(n && STAT(FROZEN, player) == 1) // OK, there is at least one teammate reviving us
 		{
 			player.revive_progress = bound(0, player.revive_progress + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
-			player.health = max(1, player.revive_progress * start_health);
+			SetResourceAmount(player, RESOURCE_HEALTH, max(1, player.revive_progress * start_health));
 
 			if(player.revive_progress >= 1)
 			{
@@ -225,7 +225,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 		else if(!n && STAT(FROZEN, player) == 1) // only if no teammate is nearby will we reset
 		{
 			player.revive_progress = bound(0, player.revive_progress - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
-			player.health = max(1, player.revive_progress * start_health);
+			SetResourceAmount(player, RESOURCE_HEALTH, max(1, player.revive_progress * start_health));
 		}
 		else if(!n && !STAT(FROZEN, player))
 		{
@@ -239,9 +239,9 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 			rspeed *= (random() * autocvar_g_freeze_revive_speed_random);
 
 		player.revive_progress = bound(0, player.revive_progress + frametime * rspeed, 1);
-		player.health = max(1, player.revive_progress * start_health);
+		SetResourceAmount(player, RESOURCE_HEALTH, max(1, player.revive_progress * start_health));
 
-		if(player.health >= autocvar_g_freeze_revive_minhealth)
+		if(GetResourceAmount(player, RESOURCE_HEALTH) >= autocvar_g_freeze_revive_minhealth)
 			button_pressed = (PHYS_INPUT_BUTTON_JUMP(player) || PHYS_INPUT_BUTTON_USE(player)); // we're about to defrost, only detect jumps
 		else
 			button_pressed = (PHYS_INPUT_BUTTON_ATCK(player) || PHYS_INPUT_BUTTON_JUMP(player) || PHYS_INPUT_BUTTON_ATCK2(player) || PHYS_INPUT_BUTTON_HOOK(player) || PHYS_INPUT_BUTTON_USE(player));

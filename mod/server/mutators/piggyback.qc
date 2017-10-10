@@ -9,8 +9,8 @@ AUTOCVAR(g_piggyback_ride_enemies, bool, false, _("Allow riding enemies"));
 REPLICATE(cvar_cl_nocarry, bool, "cl_nocarry");
 REPLICATE(cvar_cl_noride, bool, "cl_noride");
 
-ATTRIB(Client, cvar_cl_nocarry, bool, this.cvar_cl_nocarry);
-ATTRIB(Client, cvar_cl_noride, bool, this.cvar_cl_noride);
+//ATTRIB(Client, cvar_cl_nocarry, bool, this.cvar_cl_nocarry);
+//ATTRIB(Client, cvar_cl_noride, bool, this.cvar_cl_noride);
 
 .entity piggybacker;
 .entity pbent;
@@ -197,7 +197,7 @@ MUTATOR_HOOKFUNCTION(piggyback, PlayerUseKey)
 
 #define LIMBO(v) (IS_DEAD(v) || STAT(FROZEN, v))
 
-	if(!player.cvar_cl_noride)
+	if(!CS(player).cvar_cl_noride)
 	if(!player.vehicle && !IS_DEAD(player) && !STAT(FROZEN, player))
 	{
 		entity head, closest_target = NULL;

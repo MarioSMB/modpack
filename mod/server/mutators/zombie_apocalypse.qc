@@ -166,7 +166,7 @@ MUTATOR_HOOKFUNCTION(za, PlayerDies)
 		frag_attacker.enemy = NULL;
 
 	frag_target.monsterid = mon.monsterid;
-	frag_target.health = frag_attacker.max_health;
+	SetResourceAmount(frag_target, RESOURCE_HEALTH, frag_attacker.max_health);
 	frag_target.za_maxhealth = frag_attacker.max_health;
 	frag_target.weapons = '0 0 0';
 	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)

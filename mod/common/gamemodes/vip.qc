@@ -108,7 +108,7 @@ bool VIP_CheckWinner()
 		FOREACH_CLIENT(IS_PLAYER(it),
 		{
 			nades_Clear(it);
-			if(STAT(VIP, it) && it.health > 0)
+			if(STAT(VIP, it) && GetResourceAmount(it, RESOURCE_HEALTH) > 0)
 				GameRules_scoring_add(it, VIP_SURVIVALS, 1);
 		});
 
@@ -131,7 +131,7 @@ bool VIP_CheckWinner()
 
 		FOREACH_CLIENT(IS_PLAYER(it),
 		{
-			if(STAT(VIP, it) && it.health > 0 && it.team == winner_team)
+			if(STAT(VIP, it) && GetResourceAmount(it, RESOURCE_HEALTH) > 0 && it.team == winner_team)
 				GameRules_scoring_add(it, VIP_SURVIVALS, 1);
 		});
 
@@ -144,7 +144,7 @@ bool VIP_CheckWinner()
 
 		FOREACH_CLIENT(IS_PLAYER(it),
 		{
-			if(STAT(VIP, it) && it.health > 0)
+			if(STAT(VIP, it) && GetResourceAmount(it, RESOURCE_HEALTH) > 0)
 				GameRules_scoring_add(it, VIP_SURVIVALS, 1);
 		});
 	}
@@ -176,7 +176,7 @@ void vip_SelectVIPs()
 {
 	bool usegems = g_vip_soulgems;
 	RandomSelection_Init();
-	FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0,
+	FOREACH_CLIENT(IS_PLAYER(it) && GetResourceAmount(it, RESOURCE_HEALTH) > 0,
 	{
 		if((redgem_count < 1 || !usegems) && it.team == NUM_TEAM_1 && vip_count[0] < 1)
 			RandomSelection_AddEnt(it, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
@@ -184,7 +184,7 @@ void vip_SelectVIPs()
 	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_1);
 
 	RandomSelection_Init();
-	FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0,
+	FOREACH_CLIENT(IS_PLAYER(it) && GetResourceAmount(it, RESOURCE_HEALTH) > 0,
 	{
 		if((bluegem_count < 1 || !usegems) && it.team == NUM_TEAM_2 && vip_count[1] < 1)
 			RandomSelection_AddEnt(it, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
@@ -192,7 +192,7 @@ void vip_SelectVIPs()
 	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_2);
 	
 	RandomSelection_Init();
-	FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0,
+	FOREACH_CLIENT(IS_PLAYER(it) && GetResourceAmount(it, RESOURCE_HEALTH) > 0,
 	{
 		if((yellowgem_count < 1 || !usegems) && it.team == NUM_TEAM_3 && vip_count[2] < 1)
 			RandomSelection_AddEnt(it, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
@@ -200,7 +200,7 @@ void vip_SelectVIPs()
 	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_3);
 	
 	RandomSelection_Init();
-	FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0,
+	FOREACH_CLIENT(IS_PLAYER(it) && GetResourceAmount(it, RESOURCE_HEALTH) > 0,
 	{
 		if((pinkgem_count < 1 || !usegems) && it.team == NUM_TEAM_4 && vip_count[3] < 1)
 			RandomSelection_AddEnt(it, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
@@ -268,7 +268,7 @@ void vip_DropSoulGem(entity player)
 		WaypointSprite_Kill(player.wps_vip);
 	}
 
-	player.health = 100; // reset these now?
+	SetResourceAmount(player, RESOURCE_HEALTH, 100); // reset these now?
 	player.armorvalue = 0;
 	STAT(VIP, player) = false;
 	GameRules_scoring_vip(player, false);
@@ -344,7 +344,7 @@ MUTATOR_HOOKFUNCTION(vip, PlayerPreThink)
 	entity player = M_ARGV(0, entity);
 
 	if(player.wps_vip)
-		WaypointSprite_UpdateHealth(player.wps_vip, ((g_instagib) ? player.armorvalue : '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)));
+		WaypointSprite_UpdateHealth(player.wps_vip, ((g_instagib) ? GetResourceAmount(player, RESOURCE_ARMOR) : '1 0 0' * healtharmor_maxdamage(GetResourceAmount(player, RESOURCE_HEALTH), player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)));
 
 	STAT(VIP_RED, player) = vip_count[0];
 	STAT(VIP_BLUE, player) = vip_count[1];
@@ -367,8 +367,8 @@ MUTATOR_HOOKFUNCTION(vip, PlayerSpawn)
 	if(STAT(VIP, player))
 	{
 		if(!g_instagib)
-			player.health = 200;
-		player.armorvalue = ((g_instagib) ? 5 : 200); // 5 lives in instagib
+			SetResourceAmount(player, RESOURCE_HEALTH, 200);
+		SetResourceAmount(player, RESOURCE_ARMOR, ((g_instagib) ? 5 : 200)); // 5 lives in instagib
 	}
 }
 
@@ -511,8 +511,8 @@ void vip_SetVIP(entity player, float tm)
 	STAT(VIP, player) = true;
 	GameRules_scoring_vip(player, true);
 	if(!g_instagib)
-		player.health = 200;
-	player.armorvalue = ((g_instagib) ? 5 : 200);
+		SetResourceAmount(player, RESOURCE_HEALTH, 200);
+	SetResourceAmount(player, RESOURCE_ARMOR, ((g_instagib) ? 5 : 200));
 	player.pickup_antispam = time + autocvar_g_vip_pickup_wait;
 
 	int theirteam = Team_TeamToNumber(tm);

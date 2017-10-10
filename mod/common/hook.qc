@@ -2,7 +2,7 @@
 .int cvar_cl_customhook;
 REPLICATE(cvar_cl_customhook, int, "cl_customhook");
 
-ATTRIB(Client, cvar_cl_customhook, int, this.cvar_cl_customhook);
+//ATTRIB(Client, cvar_cl_customhook, int, this.cvar_cl_customhook);
 #elif defined(CSQC)
 .int hook_type;
 #endif
