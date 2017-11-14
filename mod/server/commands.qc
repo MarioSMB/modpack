@@ -1,6 +1,7 @@
 AUTOCVAR(g_maplist_max_perpage, int, 200, "Maximum maps per maplist page (shouldn't be too low or too high, as last page will be filled with the remainder)");
 AUTOCVAR(g_maplist_generate_lists, bool, false, "Generate a new list for maps using paged design (may cause crashes)");
 AUTOCVAR(g_maplist_gotorandom_fancy, bool, false, "Attempt a fancy lookup for the next map (relies on hacky measures)");
+AUTOCVAR(g_maplist_allow_personal, bool, false, "List maps the player hasn't beaten yet in a different color (probably slow, be warned!)");
 
 STATIC_INIT(mod_cmds)
 {
@@ -76,13 +77,47 @@ void RegisterModCvars_Set(string name, string def, string desc, bool archive, st
     fputs(mod_cvar_file, thecvar);
 }
 
+bool race_HasRecord(entity player, string mname)
+{
+	string myuid = player.crypto_idfp;
+	if(myuid == "")
+		return false; // we can't search anyway
+	for(int j = 1; j <= RANKINGS_CNT; ++j)
+	{
+		if(race_readUID(mname, j) == myuid)
+			return true;
+	}
+
+	return false;
+}
+
 void print_maplist(entity player, string nmaplist, float nargc)
 {
 	// note: requires command parameters
 
 	string param = strtolower(argv(1));
 	string col;
-	if(param == "new")
+	if(param == "newforme")
+	{
+		if(!g_race && !g_cts)
+		{
+			print_to(player, "This command only works in CTS and Race.");
+			return;
+		}
+
+		if(!autocvar_g_maplist_allow_personal)
+		{
+			print_to(player, "This command is disabled.");
+			return;
+		}
+
+		FOREACH_WORD(nmaplist, !race_HasRecord(player, it),
+		{
+			col = ((i % 2) ? "^2" : "^3");
+			print_to(player, strcat(col, it));
+		});
+	}
+	else if(param == "new")
 	{
 		if(!g_race && !g_cts)
 		{
@@ -102,6 +137,8 @@ void print_maplist(entity player, string nmaplist, float nargc)
 		{
 			if((g_race || g_cts) && !race_readTime(it, 1))
 				col = ((i % 2) ? "^4*" : "^5*");
+			else if(autocvar_g_maplist_allow_personal && (g_race || g_cts) && !race_HasRecord(player, it))
+				col = ((i % 2) ? "^6**" : "^1**");
 			else
 				col = ((i % 2) ? "^2" : "^3");
 			print_to(player, strcat(col, it));
@@ -113,6 +150,8 @@ void print_maplist(entity player, string nmaplist, float nargc)
 		{
 			if((g_race || g_cts) && !race_readTime(it, 1))
 				col = ((i % 2) ? "^4*" : "^5*");
+			else if(autocvar_g_maplist_allow_personal && (g_race || g_cts) && !race_HasRecord(player, it))
+				col = ((i % 2) ? "^6**" : "^1**");
 			else
 				col = ((i % 2) ? "^2" : "^3");
 			print_to(player, strcat(col, it));
