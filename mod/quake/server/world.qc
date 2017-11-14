@@ -940,7 +940,7 @@ void CreatureFrame_Liquids(entity this)
 void CreatureFrame_FallDamage(entity this)
 {
 	// check to see if player landed and play landing sound	
-	if(this.velocity.z || this.jump_flag) // moving or has moved
+	if(this.jump_flag) // moving or has moved
 	{
 		if(this.jump_flag < -300 && IS_ONGROUND(this) && this.health > 0)
 		{
@@ -960,9 +960,9 @@ void CreatureFrame_FallDamage(entity this)
 			}
 			else if(IS_PLAYER(this))
 				_sound(this, CH_VOICE, "player/land.wav", 1, ATTN_NORM);
-
-			this.jump_flag = 0;
 		}
+
+		this.jump_flag = 0;
 	}
 
 	if(!IS_ONGROUND(this))

@@ -98,8 +98,12 @@ REGISTER_STAT(TIMELIMIT, float, autocvar_timelimit)
 REGISTER_STAT(MOVEVARS_TICRATE, float, autocvar_sys_ticrate)
 REGISTER_STAT(MOVEVARS_TIMESCALE, float, autocvar_slowmo)
 
-REGISTER_STAT(MOVEVARS_JUMPSTEP, int, cvar("sv_jumpstep"))
-REGISTER_STAT(NOSTEP, int, cvar("sv_nostep"))
+#ifdef SVQC
+int autocvar_sv_jumpstep;
+int autocvar_sv_nostep;
+#endif
+REGISTER_STAT(MOVEVARS_JUMPSTEP, int, autocvar_sv_jumpstep)
+REGISTER_STAT(NOSTEP, int, autocvar_sv_nostep)
 
 REGISTER_STAT(MOVEVARS_GRAVITY, float, autocvar_sv_gravity)
 .float gravity;

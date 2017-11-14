@@ -44,6 +44,9 @@ void SV_check_punch(entity this, float dt)
 }
 
 #ifdef SVQC
+float autocvar_cl_rollangle;
+float autocvar_cl_rollspeed;
+
 // yes, it is confusing seeing cl_ cvars on server side, don't ask
 float SV_CalcRoll(entity this)
 {
@@ -53,10 +56,10 @@ float SV_CalcRoll(entity this)
 	float sign = (side < 0) ? -1 : 1;
 	side = fabs(side);
 
-	float value = cvar("cl_rollangle");
+	float value = autocvar_cl_rollangle;
 
-	if(side < cvar("cl_rollspeed"))
-		side = side * value / cvar("cl_rollspeed");
+	if(side < autocvar_cl_rollspeed)
+		side = side * value / autocvar_cl_rollspeed;
 	else
 		side = value;
 
