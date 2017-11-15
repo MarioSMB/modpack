@@ -17,6 +17,7 @@
 #include "mutators/all.qh"
 #include "notifications.qh"
 #include "player_crush.qc"
+#include "polytrails.qh"
 #include "radio.qh"
 #include "special.qc"
 #include "vehicles/all.inc"

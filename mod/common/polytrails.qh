@@ -1,0 +1,5 @@
+#ifdef SVQC
+AUTOCVAR(g_glowtrails, int, 2, "Allow client-side glow trails on players (set to 2 for CTS only, 1 for any mode)");
+#endif
+
+REGISTER_STAT(POLYTRAILS_ALLOWED, int, autocvar_g_glowtrails);
