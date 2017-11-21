@@ -143,11 +143,11 @@ void giftbox_reset(entity this)
 }
 
 // not actually a map entity, don't use it as such
-spawnfunc(giftbox)
+void giftbox_init(entity this)
 {
 	this.flags = FL_ITEM;
 	this.bot_pickup = true;
-	this.bot_pickupevalfunc = commodity_pickupevalfunc;
+	this.bot_pickupevalfunc = ammo_pickupevalfunc;
 	this.bot_pickupbasevalue = 500;
 	IL_PUSH(g_items, this);
 	this.gravity = 1;
@@ -174,24 +174,39 @@ MUTATOR_HOOKFUNCTION(giftbox, OnEntityPreSpawn)
 	if(!item.team) // no teamed items
 	if(random() <= autocvar_g_giftbox_spawnrate)
 	if(item.classname == "item_rockets" || item.classname == "item_bullets" || item.classname == "item_shells" || item.classname == "item_cells" || startsWith(item.classname, "ammo_"))
-		item.classname = "giftbox";
+	{
+		entity e = spawn();
+		setthink(e, giftbox_init);
+
+		e.nextthink = time + 0.1;
+		e.spawnflags = item.spawnflags;
+		e.noalign = item.noalign;
+		setorigin(e, item.origin);
+
+		return true;
+	}
+
+	return false;
 }
 
 
 // implementation of effects
 
+MUTATOR_HOOKFUNCTION(giftbox, PlayerPhysics_UpdateStats)
+{
+	entity player = M_ARGV(0, entity);
+	// these automatically reset, no need to worry
+
+	if(player.gifts & GIFTBOX_GIFT_ROCKINGHORSE)
+		STAT(MOVEVARS_HIGHSPEED, player) *= (1 + get_gift_percent(GIFTBOX_GIFT_ROCKINGHORSE));
+}
+
 MUTATOR_HOOKFUNCTION(giftbox, PlayerPhysics)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(player.gifts & GIFTBOX_GIFT_ROCKINGHORSE)
-	{
-		player.stat_sv_maxspeed *= (1 + get_gift_percent(GIFTBOX_GIFT_ROCKINGHORSE));
-		player.stat_sv_airspeedlimit_nonqw *= (1 + get_gift_percent(GIFTBOX_GIFT_ROCKINGHORSE));
-	}
-
 	if(player.gifts & GIFTBOX_GIFT_FAIRYFLOSS)
-		player.stat_sv_jumpvelocity *= (1 + get_gift_percent(GIFTBOX_GIFT_FAIRYFLOSS));
+		STAT(MOVEVARS_JUMPVELOCITY, player) *= (1 + get_gift_percent(GIFTBOX_GIFT_FAIRYFLOSS));
 }
 
 MUTATOR_HOOKFUNCTION(giftbox, Damage_Calculate)
