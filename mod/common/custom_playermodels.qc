@@ -1,10 +1,10 @@
 #ifdef GAMEQC
 #ifdef SVQC
-AUTOCVAR(sv_jumpvelocity_crouch, float, 600, "");
+AUTOCVAR(sv_jumpvelocity_backflip, float, 600, "");
 int models_allowed;
 #endif
 
-REGISTER_STAT(JUMPVELOCITY_CROUCH, float, autocvar_sv_jumpvelocity_crouch);
+REGISTER_STAT(JUMPVELOCITY_CROUCH, float, autocvar_sv_jumpvelocity_backflip);
 REGISTER_STAT(MODELS_ALLOWED, int, models_allowed);
 
 // TODO
