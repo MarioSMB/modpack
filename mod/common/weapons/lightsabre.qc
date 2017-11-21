@@ -50,7 +50,7 @@ AUTOCVAR(g_balance_lightsabre_weaponstartoverride, float, -1, "");
 AUTOCVAR(g_balance_lightsabre_weaponthrowable, float, 0, "");
 
 CLASS(Lightsabre, Weapon)
-/* ammotype  */ //ATTRIB(Lightsabre, ammo_field, .int, ammo_shells);
+/* ammotype  */ ATTRIB(Lightsabre, ammo_type, int, RESOURCE_NONE);
 /* impulse   */ ATTRIB(Lightsabre, impulse, int, 1);
 /* flags     */ ATTRIB(Lightsabre, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE);
 /* rating    */ ATTRIB(Lightsabre, bot_pickupbasevalue, float, 6000);
@@ -403,7 +403,6 @@ void W_LightSabre_SetActive(entity actor, .entity weaponentity, bool newactive, 
 		}
 		METHOD(Lightsabre, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
 		{
-			actor.ammo_field = ammo_none;
 			W_LightSabre_SetActive(actor, weaponentity, false, false);
 		}
 		METHOD(Lightsabre, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))

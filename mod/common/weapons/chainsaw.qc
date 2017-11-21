@@ -47,7 +47,7 @@ AUTOCVAR(g_balance_chainsaw_weaponstartoverride, float, -1, "");
 AUTOCVAR(g_balance_chainsaw_weaponthrowable, float, 1, "");
 
 CLASS(Chainsaw, Weapon)
-/* ammotype  */ ATTRIB(Chainsaw, ammo_field, .int, ammo_fuel);
+/* ammotype  */ ATTRIB(Chainsaw, ammo_type, int, RESOURCE_FUEL);
 /* impulse   */ ATTRIB(Chainsaw, impulse, int, 5);
 /* flags     */ ATTRIB(Chainsaw, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_TYPE_MELEE_SEC);
 /* rating    */ ATTRIB(Chainsaw, bot_pickupbasevalue, float, 6000);
@@ -368,13 +368,13 @@ METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponenti
     if(time >= actor.(weaponentity).chainsaw_ammorot)
     {
     	actor.(weaponentity).chainsaw_ammorot = time + 1;
-    	if(actor.(thiswep.ammo_field) > 0 && !(actor.items & IT_UNLIMITED_WEAPON_AMMO))
-    		actor.(thiswep.ammo_field) -= 1; // we lose a bit of fuel every second
+    	if(GetResourceAmount(actor, thiswep.ammo_type) > 0 && !(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+    		SetResourceAmount(actor, thiswep.ammo_type, GetResourceAmount(actor, thiswep.ammo_type) - 1); // we lose a bit of fuel every second
     }
 }
 METHOD(Chainsaw, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(chainsaw, melee_ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(chainsaw, melee_ammo);
     ammo_amount += actor.(weapon_load[WEP_CHAINSAW.m_id]) >= WEP_CVAR(chainsaw, melee_ammo);
     return ammo_amount;
 }
@@ -383,7 +383,7 @@ METHOD(Chainsaw, wr_checkammo2, bool(entity thiswep, entity actor, .entity weapo
     if(IS_BOT_CLIENT(actor))
     if(vdist(actor.origin - actor.enemy.origin, >, WEP_CVAR(chainsaw, swing_range)))
         return false; // bots cannot use secondary out of range (fixes constant melee when out of ammo)
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(chainsaw, swing_ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(chainsaw, swing_ammo);
     ammo_amount += actor.(weapon_load[WEP_CHAINSAW.m_id]) >= WEP_CVAR(chainsaw, swing_ammo);
     return ammo_amount;
 }

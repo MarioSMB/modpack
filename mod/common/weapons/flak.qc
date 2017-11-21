@@ -76,7 +76,7 @@ AUTOCVAR(g_balance_flak_weaponstartoverride, float, -1, "");
 AUTOCVAR(g_balance_flak_weaponthrowable, float, 1, "");
 
 CLASS(Flak, Weapon)
-/* ammotype  */ ATTRIB(Flak, ammo_field, .int, ammo_shells);
+/* ammotype  */ ATTRIB(Flak, ammo_type, int, RESOURCE_SHELLS);
 /* impulse   */ ATTRIB(Flak, impulse, int,8);
 /* flags     */ ATTRIB(Flak, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Flak, bot_pickupbasevalue, float, 6000);
@@ -463,7 +463,7 @@ void W_Flak_Attack3(Weapon thiswep, entity actor, .entity weaponentity)
 		}
 		METHOD(Flak, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 		{
-			bool ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR_PRI(flak, ammo);
+			bool ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR_PRI(flak, ammo);
 			ammo_amount += actor.(weapon_load[WEP_FLAK.m_id]) >= WEP_CVAR_PRI(flak, ammo);
 			return ammo_amount;
 		}
