@@ -8,7 +8,10 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SetModname)
 			continue;
 		string thecvar = cvar_string(myvar);
 		if(thecvar == "")
-			return true; // empty string means remove?
+		{
+			delete(it); // just attempt to remove it
+			continue;
+		}
 		else
 		{
 			RandomSelection_Init();
