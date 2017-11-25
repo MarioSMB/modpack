@@ -34,6 +34,7 @@ AUTOCVAR(g_balance_uzi_weaponstartoverride, float, -1, "");
 AUTOCVAR(g_balance_uzi_weaponthrowable, float, 1, "");
 
 CLASS(Uzi, Weapon)
+/* spawnfunc */ ATTRIB(Uzi, m_canonical_spawnfunc, string, "weapon_mac10");
 /* ammotype  */ ATTRIB(Uzi, ammo_type, int, RESOURCE_BULLETS);
 /* impulse   */ ATTRIB(Uzi, impulse, int, 3);
 /* flags     */ ATTRIB(Uzi, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_DUALWIELD);
@@ -89,6 +90,7 @@ CLASS(Uzi, Weapon)
 ENDCLASS(Uzi)
 REGISTER_WEAPON(UZI, uzi, NEW(Uzi));
 
+SPAWNFUNC_WEAPON(weapon_mac10, WEP_UZI)
 
 MSG_INFO_NOTIF(WEAPON_UZI_MURDER_SNIPE,          1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponmac10",                _("^BG%s%s^K1 was semi-automatically nailed by ^BG%s^K1's Uzi%s%s"), "")
 MSG_INFO_NOTIF(WEAPON_UZI_MURDER_SPRAY,          1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponmac10",                _("^BG%s%s^K1 was pumped full of lead by ^BG%s^K1's Uzi%s%s"), "")
@@ -181,8 +183,6 @@ void muzzleflash_send(entity actor, entity wepent)
 #endif
 
 #ifdef SVQC
-
-spawnfunc(weapon_mac10) { weapon_defaultspawnfunc(this, WEP_UZI); }
 
 void W_Uzi_Attack(Weapon thiswep, int deathtype, entity actor, .entity weaponentity)
 {

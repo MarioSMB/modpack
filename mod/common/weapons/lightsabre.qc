@@ -50,6 +50,7 @@ AUTOCVAR(g_balance_lightsabre_weaponstartoverride, float, -1, "");
 AUTOCVAR(g_balance_lightsabre_weaponthrowable, float, 0, "");
 
 CLASS(Lightsabre, Weapon)
+/* spawnfunc */ ATTRIB(Lightsabre, m_canonical_spawnfunc, string, "weapon_lightsabre");
 /* ammotype  */ ATTRIB(Lightsabre, ammo_type, int, RESOURCE_NONE);
 /* impulse   */ ATTRIB(Lightsabre, impulse, int, 1);
 /* flags     */ ATTRIB(Lightsabre, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE);
@@ -93,6 +94,8 @@ CLASS(Lightsabre, Weapon)
 ENDCLASS(Lightsabre)
 REGISTER_WEAPON(LIGHTSABRE, lightsabre, NEW(Lightsabre));
 
+SPAWNFUNC_WEAPON(weapon_lightsabre, WEP_LIGHTSABRE)
+
 MSG_INFO_NOTIF(WEAPON_LIGHTSABRE_MURDER,   1,   3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponlightsabre",   _("^BG%s%s^K1's hand was sliced off by ^BG%s^K1's Lightsabre%s%s"), "")
 
 MSG_MULTI_NOTIF(WEAPON_LIGHTSABRE_MURDER,   1,   NULL,        INFO_WEAPON_LIGHTSABRE_MURDER,      NULL)
@@ -100,7 +103,6 @@ MSG_MULTI_NOTIF(WEAPON_LIGHTSABRE_MURDER,   1,   NULL,        INFO_WEAPON_LIGHTS
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_lightsabre) { weapon_defaultspawnfunc(this, WEP_LIGHTSABRE); }
 
 REGISTER_MUTATOR(lightsabre_evil, true);
 

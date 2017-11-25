@@ -76,6 +76,7 @@ AUTOCVAR(g_balance_flak_weaponstartoverride, float, -1, "");
 AUTOCVAR(g_balance_flak_weaponthrowable, float, 1, "");
 
 CLASS(Flak, Weapon)
+/* spawnfunc */ ATTRIB(Flak, m_canonical_spawnfunc, string, "weapon_flak");
 /* ammotype  */ ATTRIB(Flak, ammo_type, int, RESOURCE_SHELLS);
 /* impulse   */ ATTRIB(Flak, impulse, int,8);
 /* flags     */ ATTRIB(Flak, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
@@ -137,6 +138,8 @@ CLASS(Flak, Weapon)
 ENDCLASS(Flak)
 REGISTER_WEAPON(FLAK, flak, NEW(Flak));
 
+SPAWNFUNC_WEAPON(weapon_flak, WEP_FLAK)
+
 const int PROJECTILE_FLAK_PRIMARY = 45;
 const int PROJECTILE_FLAK_SECONDARY = 46;
 const int PROJECTILE_FLAK_BOMB = 47;
@@ -152,7 +155,6 @@ MSG_MULTI_NOTIF(WEAPON_FLAK_SUICIDE,            1, NULL,        INFO_WEAPON_FLAK
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_flak) { weapon_defaultspawnfunc(this, WEP_FLAK); }
 
 REGISTER_MUTATOR(flak_rockets, true);
 

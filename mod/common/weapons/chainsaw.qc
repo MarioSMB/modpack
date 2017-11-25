@@ -47,6 +47,7 @@ AUTOCVAR(g_balance_chainsaw_weaponstartoverride, float, -1, "");
 AUTOCVAR(g_balance_chainsaw_weaponthrowable, float, 1, "");
 
 CLASS(Chainsaw, Weapon)
+/* spawnfunc */ ATTRIB(Chainsaw, m_canonical_spawnfunc, string, "weapon_chainsaw");
 /* ammotype  */ ATTRIB(Chainsaw, ammo_type, int, RESOURCE_FUEL);
 /* impulse   */ ATTRIB(Chainsaw, impulse, int, 5);
 /* flags     */ ATTRIB(Chainsaw, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_TYPE_MELEE_SEC);
@@ -98,6 +99,8 @@ CLASS(Chainsaw, Weapon)
 ENDCLASS(Chainsaw)
 REGISTER_WEAPON(CHAINSAW, chainsaw, NEW(Chainsaw));
 
+SPAWNFUNC_WEAPON(weapon_chainsaw, WEP_CHAINSAW)
+
 MSG_INFO_NOTIF(WEAPON_CHAINSAW_MURDER,      1, 3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrpc",   _("^BG%s%s^K1 was sawn in half by ^BG%s^K1's Chainsaw%s%s"), "")
 MSG_INFO_NOTIF(WEAPON_CHAINSAW_SUICIDE,     1, 2, 1, "s1 s2loc spree_lost", "s1",                 "weaponrpc",   _("^BG%s^K1 played with their Chainsaw%s%s"), "")
 
@@ -107,9 +110,6 @@ MSG_MULTI_NOTIF(WEAPON_CHAINSAW_SUICIDE,     1, NULL,        INFO_WEAPON_CHAINSA
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_chainsaw) { weapon_defaultspawnfunc(this, WEP_CHAINSAW); }
-
-
 void W_Chainsaw_Attack1(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(chainsaw, melee_animtime), w_ready);
