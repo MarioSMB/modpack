@@ -30,6 +30,8 @@ spawnfunc(trigger_secret)
 	}
 
 	spawnfunc_trigger_multiple(this);
+
+	this.classname = "trigger_secret";
 }
 
 #endif

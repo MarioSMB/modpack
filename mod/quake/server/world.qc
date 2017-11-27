@@ -759,6 +759,8 @@ spawnfunc(worldspawn)
 	}
 
 	SetMod();
+
+	__spawnfunc_spawn_all();
 }
 
 void GotoNextMap();
