@@ -50,7 +50,8 @@ AUTOCVAR(g_balance_lightsabre_weaponstartoverride, float, -1, "");
 AUTOCVAR(g_balance_lightsabre_weaponthrowable, float, 0, "");
 
 CLASS(Lightsabre, Weapon)
-/* ammotype  */ //ATTRIB(Lightsabre, ammo_field, .int, ammo_shells);
+/* spawnfunc */ ATTRIB(Lightsabre, m_canonical_spawnfunc, string, "weapon_lightsabre");
+/* ammotype  */ ATTRIB(Lightsabre, ammo_type, int, RESOURCE_NONE);
 /* impulse   */ ATTRIB(Lightsabre, impulse, int, 1);
 /* flags     */ ATTRIB(Lightsabre, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE);
 /* rating    */ ATTRIB(Lightsabre, bot_pickupbasevalue, float, 6000);
@@ -93,6 +94,8 @@ CLASS(Lightsabre, Weapon)
 ENDCLASS(Lightsabre)
 REGISTER_WEAPON(LIGHTSABRE, lightsabre, NEW(Lightsabre));
 
+SPAWNFUNC_WEAPON(weapon_lightsabre, WEP_LIGHTSABRE)
+
 MSG_INFO_NOTIF(WEAPON_LIGHTSABRE_MURDER,   1,   3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponlightsabre",   _("^BG%s%s^K1's hand was sliced off by ^BG%s^K1's Lightsabre%s%s"), "")
 
 MSG_MULTI_NOTIF(WEAPON_LIGHTSABRE_MURDER,   1,   NULL,        INFO_WEAPON_LIGHTSABRE_MURDER,      NULL)
@@ -100,7 +103,6 @@ MSG_MULTI_NOTIF(WEAPON_LIGHTSABRE_MURDER,   1,   NULL,        INFO_WEAPON_LIGHTS
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_lightsabre) { weapon_defaultspawnfunc(this, WEP_LIGHTSABRE); }
 
 REGISTER_MUTATOR(lightsabre_evil, true);
 
@@ -193,12 +195,12 @@ bool W_Lightsabre_Melee_Block(entity this, entity player)
 		{
 			if(vdist(it.origin - myowner.origin, <, 256))
 			{
-				//LOG_INFO("Too close!\n");
+				//LOG_INFO("Too close!");
 				float dot = normalize(it.origin - myowner.origin) * v_forward;
-				//LOG_INFO("dot = ", ftos(dot), "\n");
+				//LOG_INFO("dot = ", ftos(dot));
 				if(dot <= 0.3) { continue; }
 
-				//LOG_INFO("We got one!\n");
+				//LOG_INFO("We got one!");
 
 				W_Devastator_Unregister(it);
 
@@ -403,7 +405,6 @@ void W_LightSabre_SetActive(entity actor, .entity weaponentity, bool newactive, 
 		}
 		METHOD(Lightsabre, wr_setup, void(entity thiswep, entity actor, .entity weaponentity))
 		{
-			actor.ammo_field = ammo_none;
 			W_LightSabre_SetActive(actor, weaponentity, false, false);
 		}
 		METHOD(Lightsabre, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))

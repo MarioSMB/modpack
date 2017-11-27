@@ -23,31 +23,17 @@ void vip_Initialize();
 
 REGISTER_MUTATOR(vip, false)
 {
+	MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
+		GameRules_teams(true);
+		GameRules_limit_score(autocvar_g_vip_point_limit);
+		GameRules_limit_lead(autocvar_g_vip_point_leadlimit);
+
 		vip_Initialize();
-
-		ActivateTeamplay();
-		SetLimits(autocvar_g_vip_point_limit, autocvar_g_vip_point_leadlimit, -1, -1);
-		have_team_spawns = -1; // request team spawns
 	}
 
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back vip_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
+	return false;
 }
 
 int red_players, blue_players, yellow_players, pink_players;
@@ -75,6 +61,7 @@ void vip_ClearVIPs()
 			WaypointSprite_Kill(it.wps_vip);
 		}
 		STAT(VIP, it) = false;
+		GameRules_scoring_vip(it, false);
 		it.gem_dropped = false;
 	});
 
@@ -121,8 +108,8 @@ bool VIP_CheckWinner()
 		FOREACH_CLIENT(IS_PLAYER(it),
 		{
 			nades_Clear(it);
-			if(STAT(VIP, it) && it.health > 0)
-				PlayerScore_Add(it, SP_VIP_SURVIVALS, 1);
+			if(STAT(VIP, it) && GetResourceAmount(it, RESOURCE_HEALTH) > 0)
+				GameRules_scoring_add(it, VIP_SURVIVALS, 1);
 		});
 
 		vip_ClearVIPs();
@@ -144,8 +131,8 @@ bool VIP_CheckWinner()
 
 		FOREACH_CLIENT(IS_PLAYER(it),
 		{
-			if(STAT(VIP, it) && it.health > 0 && it.team == winner_team)
-				PlayerScore_Add(it, SP_VIP_SURVIVALS, 1);
+			if(STAT(VIP, it) && GetResourceAmount(it, RESOURCE_HEALTH) > 0 && it.team == winner_team)
+				GameRules_scoring_add(it, VIP_SURVIVALS, 1);
 		});
 
 		play2all(SND(VIP_WIN(winner_team)));
@@ -157,8 +144,8 @@ bool VIP_CheckWinner()
 
 		FOREACH_CLIENT(IS_PLAYER(it),
 		{
-			if(STAT(VIP, it) && it.health > 0)
-				PlayerScore_Add(it, SP_VIP_SURVIVALS, 1);
+			if(STAT(VIP, it) && GetResourceAmount(it, RESOURCE_HEALTH) > 0)
+				GameRules_scoring_add(it, VIP_SURVIVALS, 1);
 		});
 	}
 
@@ -189,7 +176,7 @@ void vip_SelectVIPs()
 {
 	bool usegems = g_vip_soulgems;
 	RandomSelection_Init();
-	FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0,
+	FOREACH_CLIENT(IS_PLAYER(it) && GetResourceAmount(it, RESOURCE_HEALTH) > 0,
 	{
 		if((redgem_count < 1 || !usegems) && it.team == NUM_TEAM_1 && vip_count[0] < 1)
 			RandomSelection_AddEnt(it, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
@@ -197,7 +184,7 @@ void vip_SelectVIPs()
 	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_1);
 
 	RandomSelection_Init();
-	FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0,
+	FOREACH_CLIENT(IS_PLAYER(it) && GetResourceAmount(it, RESOURCE_HEALTH) > 0,
 	{
 		if((bluegem_count < 1 || !usegems) && it.team == NUM_TEAM_2 && vip_count[1] < 1)
 			RandomSelection_AddEnt(it, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
@@ -205,7 +192,7 @@ void vip_SelectVIPs()
 	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_2);
 	
 	RandomSelection_Init();
-	FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0,
+	FOREACH_CLIENT(IS_PLAYER(it) && GetResourceAmount(it, RESOURCE_HEALTH) > 0,
 	{
 		if((yellowgem_count < 1 || !usegems) && it.team == NUM_TEAM_3 && vip_count[2] < 1)
 			RandomSelection_AddEnt(it, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
@@ -213,7 +200,7 @@ void vip_SelectVIPs()
 	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_3);
 	
 	RandomSelection_Init();
-	FOREACH_CLIENT(IS_PLAYER(it) && it.health > 0,
+	FOREACH_CLIENT(IS_PLAYER(it) && GetResourceAmount(it, RESOURCE_HEALTH) > 0,
 	{
 		if((pinkgem_count < 1 || !usegems) && it.team == NUM_TEAM_4 && vip_count[3] < 1)
 			RandomSelection_AddEnt(it, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
@@ -281,9 +268,10 @@ void vip_DropSoulGem(entity player)
 		WaypointSprite_Kill(player.wps_vip);
 	}
 
-	player.health = 100; // reset these now?
+	SetResourceAmount(player, RESOURCE_HEALTH, 100); // reset these now?
 	player.armorvalue = 0;
 	STAT(VIP, player) = false;
+	GameRules_scoring_vip(player, false);
 	player.gem_dropped = true;
 	int theirteam = Team_TeamToNumber(player.team);
 	theirteam = ((theirteam == -1) ? 0 : theirteam - 1);
@@ -307,14 +295,15 @@ MUTATOR_HOOKFUNCTION(vip, PlayerDies)
 	{
 		if(IS_PLAYER(frag_attacker))
 		{
-			PlayerScore_Add(frag_attacker, SP_VIP_VIPKILLS, 1);
-			PlayerScore_Add(frag_attacker, SP_SCORE, 1);
+			GameRules_scoring_add(frag_attacker, VIP_VIPKILLS, 1);
+			GameRules_scoring_add(frag_attacker, SCORE, 1);
 		}
 
 		int theirteam = Team_TeamToNumber(frag_target.team);
 		theirteam = ((theirteam == -1) ? 0 : theirteam - 1);
 		vip_count[theirteam] -= 1;
 		STAT(VIP, frag_target) = false;
+		GameRules_scoring_vip(frag_target, false);
 
 		play2all(SND(VIP_GEM_DROPPED));
 
@@ -331,6 +320,7 @@ void vip_RemovePlayer(entity this)
 		theirteam = ((theirteam == -1) ? 0 : theirteam - 1);
 		vip_count[theirteam] -= 1;
 		STAT(VIP, this) = false;
+		GameRules_scoring_vip(this, false);
 		WaypointSprite_Kill(this.wps_vip);
 	}
 }
@@ -354,7 +344,7 @@ MUTATOR_HOOKFUNCTION(vip, PlayerPreThink)
 	entity player = M_ARGV(0, entity);
 
 	if(player.wps_vip)
-		WaypointSprite_UpdateHealth(player.wps_vip, ((g_instagib) ? player.armorvalue : '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)));
+		WaypointSprite_UpdateHealth(player.wps_vip, ((g_instagib) ? GetResourceAmount(player, RESOURCE_ARMOR) : '1 0 0' * healtharmor_maxdamage(GetResourceAmount(player, RESOURCE_HEALTH), player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)));
 
 	STAT(VIP_RED, player) = vip_count[0];
 	STAT(VIP_BLUE, player) = vip_count[1];
@@ -377,8 +367,8 @@ MUTATOR_HOOKFUNCTION(vip, PlayerSpawn)
 	if(STAT(VIP, player))
 	{
 		if(!g_instagib)
-			player.health = 200;
-		player.armorvalue = ((g_instagib) ? 5 : 200); // 5 lives in instagib
+			SetResourceAmount(player, RESOURCE_HEALTH, 200);
+		SetResourceAmount(player, RESOURCE_ARMOR, ((g_instagib) ? 5 : 200)); // 5 lives in instagib
 	}
 }
 
@@ -519,9 +509,10 @@ void vip_SetVIP(entity player, float tm)
 	if(!IS_PLAYER(player) || player == NULL || STAT(VIP, player))
 		return; // TODO: check how this can be called at all for non players
 	STAT(VIP, player) = true;
+	GameRules_scoring_vip(player, true);
 	if(!g_instagib)
-		player.health = 200;
-	player.armorvalue = ((g_instagib) ? 5 : 200);
+		SetResourceAmount(player, RESOURCE_HEALTH, 200);
+	SetResourceAmount(player, RESOURCE_ARMOR, ((g_instagib) ? 5 : 200));
 	player.pickup_antispam = time + autocvar_g_vip_pickup_wait;
 
 	int theirteam = Team_TeamToNumber(tm);
@@ -703,12 +694,11 @@ spawnfunc(item_soulgem_team4)
 // scoreboard setup
 void vip_ScoreRules(int teams)
 {
-	//CheckAllowedTeams(NULL);
-	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true);
-	ScoreInfo_SetLabel_PlayerScore(SP_VIP_SURVIVALS,	"survivals",	0);
-	ScoreInfo_SetLabel_PlayerScore(SP_VIP_VIPKILLS,		"vipkills",		SFL_SORT_PRIO_SECONDARY);
-	ScoreInfo_SetLabel_TeamScore(  ST_VIP_SCORE,		"scores",		SFL_SORT_PRIO_PRIMARY);
-	ScoreRules_basics_end();
+	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
+		field_team(ST_VIP_SCORE, "scores", SFL_SORT_PRIO_PRIMARY);
+		field(SP_VIP_SURVIVALS, "survivals", 0);
+		field(SP_VIP_VIPKILLS, "vipkills", SFL_SORT_PRIO_SECONDARY);
+	});
 }
 
 void vip_DelayedInit(entity this) // Do this check with a delay so we can wait for teams to be set up.

@@ -1,10 +1,10 @@
 #ifdef GAMEQC
 #ifdef SVQC
-AUTOCVAR(sv_jumpvelocity_crouch, float, 600, "");
+AUTOCVAR(sv_jumpvelocity_backflip, float, 600, "");
 int models_allowed;
 #endif
 
-REGISTER_STAT(JUMPVELOCITY_CROUCH, float, autocvar_sv_jumpvelocity_crouch);
+REGISTER_STAT(JUMPVELOCITY_CROUCH, float, autocvar_sv_jumpvelocity_backflip);
 REGISTER_STAT(MODELS_ALLOWED, int, models_allowed);
 
 // TODO
@@ -65,6 +65,16 @@ void cpmodels_Precache()
 #undef CHECK_MODEL
 }
 
+//ATTRIB(Client, cvar_cl_pony, bool, this.cvar_cl_pony);
+//ATTRIB(Client, cvar_cl_pony_skin, int, this.cvar_cl_pony_skin);
+//ATTRIB(Client, cvar_cl_robot, bool, this.cvar_cl_robot);
+//ATTRIB(Client, cvar_cl_thestars, bool, this.cvar_cl_thestars);
+//ATTRIB(Client, cvar_cl_sparkle, int, this.cvar_cl_sparkle);
+//ATTRIB(Client, cvar_cl_goat, bool, this.cvar_cl_goat);
+//ATTRIB(Client, cvar_cl_damnfurries, bool, this.cvar_cl_damnfurries);
+//ATTRIB(Client, cvar_cl_brothersbear, bool, this.cvar_cl_brothersbear);
+//ATTRIB(Client, cow, bool, this.cow);
+
 .bool cvar_cl_pony;
 .int cvar_cl_pony_skin;
 .bool cvar_cl_robot;
@@ -90,7 +100,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, FormatMessage)
 	string format_message = M_ARGV(3, string);
 
 	if(format_message == "moo")
-		player.cow = true;
+		CS(player).cow = true;
 }
 
 MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
@@ -105,14 +115,14 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 #define ALLOWED(d) (models_allowed & MODELS_##d)
 		// public hax
 		// stuff anyone can use
-		if(player.cvar_cl_pony && ALLOWED(PONY))
+		if(CS(player).cvar_cl_pony && ALLOWED(PONY))
 		{
 			ret_string = "models/player/pony.iqm";
-			ret_int = player.cvar_cl_pony_skin;
+			ret_int = CS(player).cvar_cl_pony_skin;
 		}
-		if(player.cvar_cl_robot == 1 && ALLOWED(ROBOT))
+		if(CS(player).cvar_cl_robot == 1 && ALLOWED(ROBOT))
 			ret_string = "models/player/terminusmale.iqm";
-		if(player.cvar_cl_goat && ALLOWED(GOAT))
+		if(CS(player).cvar_cl_goat && ALLOWED(GOAT))
 			ret_string = "models/player/draconimale.iqm";
 
 		if(ALLOWED(BOT) && IS_BOT_CLIENT(player) && autocvar_sv_allow_customplayermodels_bots)
@@ -121,13 +131,13 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 		// special hax
 		if(PlayerInList(player, autocvar_sv_allow_customplayermodels_idlist))
 		{
-			if(player.cvar_cl_thestars == 1 && ALLOWED(ROSALINA))
+			if(CS(player).cvar_cl_thestars == 1 && ALLOWED(ROSALINA))
 			{
 				if(autocvar_g_fullbrightplayers && autocvar_g_player_brightness)
 					player.colormod = '0.7 0.7 0.7'; // regular brightness is way too bright here
 				ret_string = "models/player/rosalina.dpm";
 			}
-			if(player.cvar_cl_damnfurries == 1 && ALLOWED(RENAMON))
+			if(CS(player).cvar_cl_damnfurries == 1 && ALLOWED(RENAMON))
 				ret_string = "models/player/renamon.iqm";
 		}
 		else if(player.playermodel == "models/player/renamon.iqm")
@@ -136,11 +146,11 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 		}
 		if(PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		{
-			if(player.cvar_cl_sparkle == 3 && ALLOWED(MARIO))
+			if(CS(player).cvar_cl_sparkle == 3 && ALLOWED(MARIO))
 				ret_string = "models/player/mario.dpm";
-			if(player.cvar_cl_sparkle >= 4 && ALLOWED(WEEGEE))
+			if(CS(player).cvar_cl_sparkle >= 4 && ALLOWED(WEEGEE))
 				ret_string = "models/player/luigi.dpm";
-			if(player.cvar_cl_brothersbear && ALLOWED(BEAR))
+			if(CS(player).cvar_cl_brothersbear && ALLOWED(BEAR))
 				ret_string = "models/player/bear.dpm";
 		}
 	}
@@ -151,7 +161,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 	if(player.playermodel == "models/player/bear.dpm" && !PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		ret_string = autocvar_sv_defaultplayermodel;
 
-	if(!cvar("g_overkill") && player.cow && ALLOWED(COW))
+	if(!cvar("g_overkill") && CS(player).cow && ALLOWED(COW))
 		ret_string = "models/player/cow.md3";
 
 	M_ARGV(0, string) = ret_string;
@@ -164,10 +174,10 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(player.cvar_cl_sparkle >= 1 && PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
+	if(CS(player).cvar_cl_sparkle >= 1 && PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		player.effects |= EF_STARDUST;
 
-	if(player.cvar_cl_sparkle == 2 && PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
+	if(CS(player).cvar_cl_sparkle == 2 && PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		player.colormap = 4351;
 }
 
@@ -190,7 +200,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerJump, CBC_ORDER_LAST)
 	if(STAT(JUMPVELOCITY_CROUCH, player) && PHYS_INPUT_BUTTON_CROUCH(player) && IS_ONGROUND(player) && vdist(player.velocity, <, PHYS_MAXSPEED(player) * 0.6) &&
 		player.model == "models/player/mario.dpm" && (STAT(MODELS_ALLOWED, player) & MODELS_MARIO) &&
 #ifdef SVQC
-		!g_cts && !g_race && player.cvar_cl_sparkle == 3
+		!g_cts && !g_race && CS(player).cvar_cl_sparkle == 3
 #elif defined(CSQC)
 		gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && autocvar_cl_sparkle == 3
 #endif

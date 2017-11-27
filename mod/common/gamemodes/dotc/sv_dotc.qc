@@ -65,31 +65,16 @@ const int ST_DOTC_DESTROYED	  	= 1;
 void dotc_Initialize();
 REGISTER_MUTATOR(dotc, false)
 {
+	MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
+		GameRules_teams(true);
+		GameRules_limit_score(autocvar_g_dotc_point_limit);
+
 		dotc_Initialize();
-
-		ActivateTeamplay();
-		SetLimits(autocvar_g_dotc_point_limit, -1, -1, -1);
-		have_team_spawns = -1; // request team spawns
 	}
 
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back dotc_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		error("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
+	return false;
 }
 
 #endif
@@ -333,30 +318,14 @@ MUTATOR_HOOKFUNCTION(dotc, TurretSpawn)
 // scoreboard setup
 void dotc_ScoreRules(int teams)
 {
-//	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, SFL_SORT_PRIO_PRIMARY, true);
-	FOREACH(Scores, true, {
-		ScoreInfo_SetLabel_PlayerScore(it, "", 0);
-    });
-	
-	for(int i = 0; i < MAX_TEAMSCORE; ++i)
-		ScoreInfo_SetLabel_TeamScore(i, "", 0);
-
-	ScoreRules_teams = teams;
-	
-	//ScoreInfo_SetLabel_TeamScore  (ST_SCORE,       "score", SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_TeamScore  (ST_DOTC_DESTROYED,  "destroyed",  SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore  (SP_DOTC_DESTROYED,  "destroyed",  SFL_SORT_PRIO_PRIMARY);
-	
-	ScoreInfo_SetLabel_PlayerScore(SP_KILLS,        "kills",     0);
-	ScoreInfo_SetLabel_PlayerScore(SP_DEATHS,       "deaths",    SFL_LOWER_IS_BETTER);	
-	ScoreInfo_SetLabel_PlayerScore(SP_SCORE,        "score",     SFL_SORT_PRIO_SECONDARY);
-	
-	ScoreInfo_SetLabel_PlayerScore(SP_DOTC_CREDITS_TAKEN, "credits", 0);
-	ScoreInfo_SetLabel_PlayerScore(SP_DOTC_DRONE_KILLS,   "dkills",  0);	
-	ScoreInfo_SetLabel_PlayerScore(SP_DOTC_TURRET_KILLS,  "tkills",  0);	
-	ScoreInfo_SetLabel_PlayerScore(SP_DOTC_FACTORY_KILLS, "fkills",  0);
-		
-	ScoreRules_basics_end();
+	GameRules_scoring(teams, 0, 0, {
+		field_team(ST_DOTC_DESTROYED, "destroyed", SFL_SORT_PRIO_PRIMARY);
+		field(SP_DOTC_DESTROYED, "destroyed", SFL_SORT_PRIO_PRIMARY);
+		field(SP_DOTC_CREDITS_TAKEN, "credits", 0);
+		field(SP_DOTC_DRONE_KILLS, "credits", 0);
+		field(SP_DOTC_TURRET_KILLS, "credits", 0);
+		field(SP_DOTC_FACTORY_KILLS, "credits", 0);
+	});
 }
 
 void dotc_DelayedInit(entity this)

@@ -108,8 +108,9 @@ MUTATOR_HOOKFUNCTION(sv_morningrescue, SV_ParseServerCommand)
 			{
 				Unfreeze(it);
 
-				if(it.health > 0)
-					it.health = max(it.health, 100);
+				float hp = GetResourceAmount(it, RESOURCE_HEALTH);
+				if(hp > 0)
+					SetResourceAmount(it, RESOURCE_HEALTH, max(hp, 100));
 			}
 		});
 		return true;

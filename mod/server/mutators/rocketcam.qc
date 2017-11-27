@@ -1,6 +1,6 @@
 AUTOCVAR(g_rocketcam, bool, false, _("Enable rocket cam (view follows the fired rocket), doesn't work in jailbreak"));
 
-REGISTER_MUTATOR(rocketcam, autocvar_g_rocketcam && !g_jailbreak);
+REGISTER_MUTATOR(rocketcam, !g_jailbreak);
 
 MUTATOR_HOOKFUNCTION(rocketcam, EditProjectile)
 {

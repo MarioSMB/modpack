@@ -17,7 +17,7 @@ void lightapc_shlac(entity player, entity gunmount)
 		//vector v = gettaginfo(gunmount, gettagindex(gunmount, "tag_mgun1"));
 		v_forward = normalize(v_forward);
 
-		vwep_shlac_attack(player, "tag_mgun1", gunmount);
+		vwep_shlac_attack(player, "tag_mgun1", gunmount, gunmount);
 		//vwep_shlac_attack(player, "tag_mgun2", gunmount);
 		//vwep_shlac_attack(player, "tag_mgun3", gunmount);
 		//vwep_shlac_attack(player, "tag_mgun4", gunmount);

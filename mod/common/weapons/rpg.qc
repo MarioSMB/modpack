@@ -23,7 +23,8 @@ AUTOCVAR(g_balance_rpg_weaponstartoverride, float, -1, "");
 AUTOCVAR(g_balance_rpg_weaponthrowable, float, 1, "");
 
 CLASS(RPG7, Weapon)
-/* ammotype  */ ATTRIB(RPG7, ammo_field, .int, ammo_rockets);
+/* spawnfunc */ ATTRIB(RPG7, m_canonical_spawnfunc, string, "weapon_rpg7");
+/* ammotype  */ ATTRIB(RPG7, ammo_type, int, RESOURCE_ROCKETS);
 /* impulse   */ ATTRIB(RPG7, impulse, int, 9);
 /* flags     */ ATTRIB(RPG7, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH | WEP_FLAG_NODUAL);
 /* rating    */ ATTRIB(RPG7, bot_pickupbasevalue, float, 8000);
@@ -68,6 +69,8 @@ CLASS(RPG7, Weapon)
 ENDCLASS(RPG7)
 REGISTER_WEAPON(RPG, rpg, NEW(RPG7));
 
+SPAWNFUNC_WEAPON(weapon_rpg7, WEP_RPG)
+
 MSG_INFO_NOTIF(WEAPON_RPG_MURDER_DIRECT,         1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponrpg",     _("^BG%s%s^K1 was instagibbed by ^BG%s^K1's RPG%s%s"), "")
 MSG_INFO_NOTIF(WEAPON_RPG_MURDER_SPLASH,         1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponrpg",     _("^BG%s%s^K1 was blown up by ^BG%s^K1's RPG%s%s"), "")
 MSG_INFO_NOTIF(WEAPON_RPG_SUICIDE,               1,  2, 1, "s1 s2loc spree_lost", "s1",                      "weaponrpg",     _("^BG%s^K1 blew themself up with their RPG-7%s%s"), "")
@@ -79,7 +82,6 @@ MSG_MULTI_NOTIF(WEAPON_RPG_SUICIDE,          	 1,  NULL,           INFO_WEAPON_R
 #endif
 #ifdef IMPLEMENTATION
 #ifdef SVQC
-spawnfunc(weapon_rpg7) { weapon_defaultspawnfunc(this, WEP_RPG); }
 
 void W_RPG7_Explode(entity this, entity directhitentity)
 {
@@ -114,7 +116,7 @@ void W_RPG7_Explode(entity this, entity directhitentity)
 	.entity weaponentity = this.weaponentity_fld;
 	if(this.realowner.(weaponentity).m_weapon == thiswep)
 	{
-		if(this.realowner.(thiswep.ammo_field) < WEP_CVAR(rpg, ammo))
+		if(GetResourceAmount(this.realowner, thiswep.ammo_type) < WEP_CVAR(rpg, ammo))
 		if(!(this.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			this.realowner.cnt = WEP_RPG.m_id;
@@ -253,7 +255,7 @@ METHOD(RPG7, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
 }
 METHOD(RPG7, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = actor.(thiswep.ammo_field) >= WEP_CVAR(rpg, ammo);
+    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(rpg, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[WEP_RPG.m_id]) >= WEP_CVAR(rpg, ammo);
     return ammo_amount;
 }

@@ -1,6 +1,7 @@
 AUTOCVAR(g_maplist_max_perpage, int, 200, "Maximum maps per maplist page (shouldn't be too low or too high, as last page will be filled with the remainder)");
 AUTOCVAR(g_maplist_generate_lists, bool, false, "Generate a new list for maps using paged design (may cause crashes)");
 AUTOCVAR(g_maplist_gotorandom_fancy, bool, false, "Attempt a fancy lookup for the next map (relies on hacky measures)");
+AUTOCVAR(g_maplist_allow_personal, bool, false, "List maps the player hasn't beaten yet in a different color (probably slow, be warned!)");
 
 STATIC_INIT(mod_cmds)
 {
@@ -76,13 +77,47 @@ void RegisterModCvars_Set(string name, string def, string desc, bool archive, st
     fputs(mod_cvar_file, thecvar);
 }
 
+bool race_HasRecord(entity player, string mname)
+{
+	string myuid = player.crypto_idfp;
+	if(myuid == "")
+		return false; // we can't search anyway
+	for(int j = 1; j <= RANKINGS_CNT; ++j)
+	{
+		if(race_readUID(mname, j) == myuid)
+			return true;
+	}
+
+	return false;
+}
+
 void print_maplist(entity player, string nmaplist, float nargc)
 {
 	// note: requires command parameters
 
 	string param = strtolower(argv(1));
 	string col;
-	if(param == "new")
+	if(param == "newforme")
+	{
+		if(!g_race && !g_cts)
+		{
+			print_to(player, "This command only works in CTS and Race.");
+			return;
+		}
+
+		if(!autocvar_g_maplist_allow_personal)
+		{
+			print_to(player, "This command is disabled.");
+			return;
+		}
+
+		FOREACH_WORD(nmaplist, !race_HasRecord(player, it),
+		{
+			col = ((i % 2) ? "^2" : "^3");
+			print_to(player, strcat(col, it));
+		});
+	}
+	else if(param == "new")
 	{
 		if(!g_race && !g_cts)
 		{
@@ -102,6 +137,8 @@ void print_maplist(entity player, string nmaplist, float nargc)
 		{
 			if((g_race || g_cts) && !race_readTime(it, 1))
 				col = ((i % 2) ? "^4*" : "^5*");
+			else if(autocvar_g_maplist_allow_personal && (g_race || g_cts) && !race_HasRecord(player, it))
+				col = ((i % 2) ? "^6**" : "^1**");
 			else
 				col = ((i % 2) ? "^2" : "^3");
 			print_to(player, strcat(col, it));
@@ -113,6 +150,8 @@ void print_maplist(entity player, string nmaplist, float nargc)
 		{
 			if((g_race || g_cts) && !race_readTime(it, 1))
 				col = ((i % 2) ? "^4*" : "^5*");
+			else if(autocvar_g_maplist_allow_personal && (g_race || g_cts) && !race_HasRecord(player, it))
+				col = ((i % 2) ? "^6**" : "^1**");
 			else
 				col = ((i % 2) ? "^2" : "^3");
 			print_to(player, strcat(col, it));
@@ -174,7 +213,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 	{
 		string m = MapInfo_FixName(argv(1));
 		localcmd(strcat("\nchangelevel ", m, "\n"));
-		LOG_INFO("Switching to ", m, "\n");
+		LOG_INFO("Switching to ", m);
 		return true;
 	}
 
@@ -183,7 +222,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 		if(autocvar_g_maplist == "")
 		{
 			localcmd("\nendmatch\n");
-			LOG_INFO("g_maplist is empty, ending match...\n");
+			LOG_INFO("g_maplist is empty, ending match...");
 		}
 
 		if(autocvar_g_maplist_gotorandom_fancy)
@@ -191,7 +230,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 			// TODO: we can't actually rely on this...
 			string foundmap = _MapInfo_GlobItem(MapInfo_FilterList_Lookup(floor(random() * (MapInfo_count + 1))));
 			localcmd(strcat("\nchangelevel ", foundmap, "\n"));
-			LOG_INFO("Switching to ", foundmap, "\n");
+			LOG_INFO("Switching to ", foundmap);
 			return true;
 		}
 		Map_Count = tokenizebyseparator(autocvar_g_maplist, " ");
@@ -199,13 +238,13 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 		int pos = MaplistMethod_Random();
 		if(pos == -1)
 		{
-			LOG_INFO("Failed to select a map, try again.\n");
+			LOG_INFO("Failed to select a map, try again.");
 			return true;
 		}
 
 		string themap = argv(pos);
 		localcmd(strcat("\nchangelevel ", themap, "\n"));
-		LOG_INFO("Switching to ", themap, "\n");
+		LOG_INFO("Switching to ", themap);
 		return true;
 	}
 
@@ -223,12 +262,12 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 			if(accepted > 0)
 			{
 				stuffcmd(it, strcat("\n", argv(1), "\n"));
-				LOG_INFO(strcat("Command: \"", argv(1), "\" sent to ", GetCallerName(it), ".\n"));
+				LOG_INFO(strcat("Command: \"", argv(1), "\" sent to ", GetCallerName(it), "."));
 				continue;
 			}
 			else
 			{
-				LOG_INFO("stuffto failed on ", GetCallerName(it), ".\n");
+				LOG_INFO("stuffto failed on ", GetCallerName(it), ".");
 				continue;
 			}
 		));
@@ -246,11 +285,11 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 			fputs(mod_cvar_file, "\n\n\n// Mod Cvars:\n");
 			RegisterCvars(RegisterModCvars_Set);
 			fputs(mod_cvar_file, "\n");
-			LOG_INFO("Dumping mod cvars... File located in ^2data/data/mod_cvars.cfg^7.\n");
+			LOG_INFO("Dumping mod cvars... File located in ^2data/data/mod_cvars.cfg^7.");
 			fclose(mod_cvar_file);
 		}
 		else
-			LOG_INFO("^1Error: ^7Could not open file 'mod_cvars.cfg'!\n");
+			LOG_INFO("^1Error: ^7Could not open file 'mod_cvars.cfg'!");
 			
 		return true;
 	}

@@ -140,14 +140,14 @@ void place_item(entity caller, string item)
 			fputs(fh, strcat("\"team\" \"", ftos(caller.team), "\"\n"));
 		fputs(fh, "}\n");
 
-		LOG_INFO("Completed item entity dump in ^2data/data/", mapname, "_item_ent.txt^7.\n");
+		LOG_INFO("Completed item entity dump in ^2data/data/", mapname, "_item_ent.txt^7.");
 		print_to(caller, "Successfully placed item!");
 
 		fclose(fh);
 	}
 	else
 	{
-		LOG_INFO("^1Error: ^7Could not dump to file!\n");
+		LOG_INFO("^1Error: ^7Could not dump to file!");
 		print_to(caller, "^1Error: ^7Could not open the entity file, item couldn't be placed.");
 	}
 }
@@ -196,10 +196,10 @@ MUTATOR_HOOKFUNCTION(itemplacer, SV_ParseServerCommand)
 		{
 			player.canplace = true;
 			print_to(player, "You're now allowed to place items!");
-			LOG_INFO(playername(player, false), " has been granted item placement abilities.\n");
+			LOG_INFO(playername(player, false), " has been granted item placement abilities.");
 		}
 		else
-			LOG_INFO("Invalid player.\n");
+			LOG_INFO("Invalid player.");
 		return true;
 	}
 
@@ -211,10 +211,10 @@ MUTATOR_HOOKFUNCTION(itemplacer, SV_ParseServerCommand)
 		{
 			player.canplace = false;
 			print_to(player, "You're no longer allowed to place items.");
-			LOG_INFO(playername(player, false), " has been revoked of item placement abilities.\n");
+			LOG_INFO(playername(player, false), " has been revoked of item placement abilities.");
 		}
 		else
-			LOG_INFO("Invalid player.\n");
+			LOG_INFO("Invalid player.");
 		return true;
 	}
 }

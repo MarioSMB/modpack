@@ -20,7 +20,7 @@ MUTATOR_HOOKFUNCTION(tp, SV_ParseServerCommand)
 
 		if(accepted <= 0 || !IS_PLAYER(to))
 		{
-			LOG_INFO("Could not teleport to ", to.netname, "^7.\n");
+			LOG_INFO("Could not teleport to ", to.netname, "^7.");
 			return true;
 		}
 
@@ -40,9 +40,9 @@ MUTATOR_HOOKFUNCTION(tp, SV_ParseServerCommand)
 			});
 
 			if(!fnd)
-				LOG_INFO("Found nobody to teleport...\n");
+				LOG_INFO("Found nobody to teleport...");
 			else
-				LOG_INFO("Teleported everyone to ", to.netname, "^7.\n");
+				LOG_INFO("Teleported everyone to ", to.netname, "^7.");
 		}
 		else if(teamplay && (arg == "red" || arg == "blue" || arg == "yellow" || arg == "pink"))
 		{
@@ -63,9 +63,9 @@ MUTATOR_HOOKFUNCTION(tp, SV_ParseServerCommand)
 			});
 
 			if(!fnd)
-				LOG_INFO("Found nobody to teleport...\n");
+				LOG_INFO("Found nobody to teleport...");
 			else
-				LOG_INFO("Teleported everyone on the ", arg, " team to ", to.netname, "^7.\n");
+				LOG_INFO("Teleported everyone on the ", arg, " team to ", to.netname, "^7.");
 		}
 		else
 		{
@@ -79,10 +79,10 @@ MUTATOR_HOOKFUNCTION(tp, SV_ParseServerCommand)
 				from.velocity = '0 0 0';
 				from.oldvelocity = '0 0 0';
 
-				LOG_INFO("Teleported ", from.netname, " ^7to ", to.netname, "^7.\n");
+				LOG_INFO("Teleported ", from.netname, " ^7to ", to.netname, "^7.");
 			}
 			else
-				LOG_INFO("Could not teleport ", from.netname, " ^7to ", to.netname, "^7.\n");
+				LOG_INFO("Could not teleport ", from.netname, " ^7to ", to.netname, "^7.");
 		}
 
 		return true;

@@ -33,6 +33,7 @@ void powerup_star_init(entity item)
 }
 #endif
 REGISTER_ITEM(Star, Powerup) {
+	this.m_canonical_spawnfunc = "item_starman";
 #ifdef GAMEQC
     this.m_model            =   MDL_Star_ITEM;
     this.m_sound            =   SND_Star;
@@ -49,6 +50,8 @@ REGISTER_ITEM(Star, Powerup) {
 #endif
 }
 
+SPAWNFUNC_ITEM(item_starman, ITEM_Star)
+
 #ifdef GAMEQC
 MODEL(Mini_ITEM, Item_Model("mini.md3"));
 SOUND(Mini, "items/powerup_mini");
@@ -64,6 +67,7 @@ void powerup_mini_init(entity item)
 }
 #endif
 REGISTER_ITEM(Mini, Powerup) {
+	this.m_canonical_spawnfunc = "item_minishroom";
 #ifdef GAMEQC
     this.m_model            =   MDL_Mini_ITEM;
     this.m_sound            =   SND_Mini;
@@ -80,6 +84,8 @@ REGISTER_ITEM(Mini, Powerup) {
 #endif
 }
 
+SPAWNFUNC_ITEM(item_minishroom, ITEM_Mini)
+
 #ifdef GAMEQC
 MODEL(Life_ITEM, Item_Model("life.md3"));
 SOUND(Life, "items/powerup_life");
@@ -95,6 +101,7 @@ void powerup_life_init(entity item)
 }
 #endif
 REGISTER_ITEM(Life, Powerup) {
+	this.m_canonical_spawnfunc = "item_lifeshroom";
 #ifdef GAMEQC
     this.m_model            =   MDL_Life_ITEM;
     this.m_sound            =   SND_Life;
@@ -110,6 +117,8 @@ REGISTER_ITEM(Life, Powerup) {
     this.m_iteminit         =   powerup_life_init;
 #endif
 }
+
+SPAWNFUNC_ITEM(item_lifeshroom, ITEM_Life)
 
 #ifdef SVQC
 AUTOCVAR(g_powerup_mini_water_minspeed, float, 100, "Need to be moving faster than this to stay above water");
@@ -171,6 +180,21 @@ void RemovePowerups(entity this)
 	sound(this, CH_TRIGGER_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 }
 
+void mario_minishroom(entity this)
+{
+	StartItem(this, ITEM_Mini);
+}
+
+void mario_lifeshroom(entity this)
+{
+	StartItem(this, ITEM_Life);
+}
+
+void mario_starman(entity this)
+{
+	StartItem(this, ITEM_Star);
+}
+
 MUTATOR_HOOKFUNCTION(mpowerups, ItemTouch)
 {
 	entity item = M_ARGV(0, entity);
@@ -201,7 +225,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, ItemTouch)
 
 	if(item.health && STAT(LIFE_FINISHED, toucher) > time)
 	{
-		bool gave = Item_GiveAmmoTo(item, toucher, health, item.max_health * 2, ITEM_MODE_HEALTH);
+		bool gave = Item_GiveAmmoTo(item, toucher, RESOURCE_HEALTH, item.max_health * 2);
 		if(!gave)
 			return MUT_ITEMTOUCH_RETURN;
 		return MUT_ITEMTOUCH_PICKUP;
@@ -216,7 +240,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPreThink)
 
 	if(frametime) // reduce load by only doing it in server frames
 	{
-		if(!player.cvar_cl_sparkle)
+		if(!CS(player).cvar_cl_sparkle)
 			player.effects &= ~EF_STARDUST;
 		player.effects &= ~EF_DIMLIGHT;
 	}
@@ -348,8 +372,8 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPowerups)
 		{
 			float starthp = ((warmup_stage) ? warmup_start_health : start_health);
 
-			if(player.health > 0)
-				player.health = starthp * 2;
+			if(GetResourceAmount(player, RESOURCE_HEALTH) > 0)
+				SetResourceAmount(player, RESOURCE_HEALTH, starthp * 2);
 
 			player.mitems |= ITEM_Life.m_itemid;
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_LIFE, player.netname);
@@ -385,6 +409,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, SpectateCopy)
 
 	STAT(STAR_FINISHED, client) = STAT(STAR_FINISHED, spectatee);
 	STAT(MINI_FINISHED, client) = STAT(MINI_FINISHED, spectatee);
+	STAT(LIFE_FINISHED, client) = STAT(LIFE_FINISHED, spectatee);
 	return false;
 }
 
@@ -434,16 +459,38 @@ MUTATOR_HOOKFUNCTION(mpowerups, FixPlayermodel)
 
 MUTATOR_HOOKFUNCTION(mpowerups, OnEntityPreSpawn, CBC_ORDER_FIRST)
 {
-	if(!autocvar_g_powerups_mario_replace) return false;
-
+	if (!autocvar_g_powerups) { return; }
+	if (!autocvar_g_powerups_mario_replace) { return; }
 	entity ent = M_ARGV(0, entity);
+	// Can't use .itemdef here
+	if (!(ent.classname == "item_strength" || ent.classname == "item_shield" || ent.classname == "item_health_mega" || ent.classname == "item_quad"))
+		return;
 
-	switch(ent.classname)
+	entity e = spawn();
+
+	float r = random();
+	if (r < 0.3)
 	{
-		case "item_strength": ent.classname = "item_minishroom"; break;
-		case "item_invincible": ent.classname = "item_starman"; break;
-		case "item_quad": ent.classname = "item_lifeshroom"; break;
+		e.classname = "item_minishroom";
+		setthink(e, mario_minishroom);
 	}
+	else if (r < 0.6)
+	{
+		e.classname = "item_lifeshroom";
+		setthink(e, mario_lifeshroom);
+	}
+	else
+	{
+		e.classname = "item_starman";
+		setthink(e, mario_starman);
+	}
+
+	e.nextthink = time + 0.1;
+	e.spawnflags = ent.spawnflags;
+	e.noalign = ent.noalign;
+	setorigin(e, ent.origin);
+
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(mpowerups, PlayerRegen)
@@ -463,27 +510,17 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerRegen)
 	}
 }
 
-spawnfunc(item_starman)
-{
-	if(!this.star_finished)
-		this.star_finished = autocvar_g_powerup_star_time;
-	StartItem(this, ITEM_Star);
-}
+#endif
 
-spawnfunc(item_minishroom)
+#ifdef SVQC
+MUTATOR_HOOKFUNCTION(mpowerups, PlayerPhysics_UpdateStats)
 {
-	if(!this.mini_finished)
-		this.mini_finished = autocvar_g_powerup_mini_time;
-	StartItem(this, ITEM_Mini);
-}
+	entity player = M_ARGV(0, entity);
+	// these automatically reset, no need to worry
 
-spawnfunc(item_lifeshroom)
-{
-	if(!this.life_finished)
-		this.life_finished = autocvar_g_powerup_life_time;
-	StartItem(this, ITEM_Life);
+	if(time < STAT(STAR_FINISHED, player))
+		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_powerup_star_speed;
 }
-
 #endif
 
 MUTATOR_HOOKFUNCTION(mpowerups, PlayerPhysics)
@@ -491,12 +528,6 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPhysics)
 	entity player = M_ARGV(0, entity);
 
 #ifdef SVQC
-	if(time < STAT(STAR_FINISHED, player))
-	{
-		player.stat_sv_maxspeed *= autocvar_g_powerup_star_speed;
-		player.stat_sv_airspeedlimit_nonqw *= autocvar_g_powerup_star_speed;
-	}
-
 	if(time < STAT(MINI_FINISHED, player))
 	{
 		float myscale = max(0, autocvar_g_powerup_mini_size);

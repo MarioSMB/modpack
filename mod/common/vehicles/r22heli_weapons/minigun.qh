@@ -1,0 +1,26 @@
+#ifdef SVQC
+
+void r22heli_minigun(entity gun, entity player)
+{
+	if(PHYS_INPUT_BUTTON_ATCK(player) && gun.vehicle_ammo1 >= autocvar_g_vehicle_lightapc_minigun_ammo_cost && gun.attack_finished_single[0] <= time)
+	{
+		gun.cnt = time;
+		vwep_minigun_attack("tag_mgun", player, gun.bomb3, gun.bomb3.gun1, DEATH_VH_SPID_MINIGUN.m_id, autocvar_g_vehicle_lightapc_minigun_damage, autocvar_g_vehicle_lightapc_minigun_spread,
+				autocvar_g_vehicle_lightapc_minigun_force, autocvar_g_vehicle_lightapc_minigun_solidpenetration, autocvar_g_vehicle_lightapc_minigun_expelbulletcasings);
+		vwep_minigun_attack("tag_mgun", player, gun.bomb4, gun.bomb4.gun1, DEATH_VH_SPID_MINIGUN.m_id, autocvar_g_vehicle_lightapc_minigun_damage, autocvar_g_vehicle_lightapc_minigun_spread,
+				autocvar_g_vehicle_lightapc_minigun_force, autocvar_g_vehicle_lightapc_minigun_solidpenetration, autocvar_g_vehicle_lightapc_minigun_expelbulletcasings);
+		gun.vehicle_ammo1 -= autocvar_g_vehicle_lightapc_minigun_ammo_cost;
+		gun.attack_finished_single[0] = time + autocvar_g_vehicle_lightapc_minigun_refire;
+		gun.count = 1; // something to do with reload, probably unused
+	}
+	else
+	{
+		vehicles_regen(gun, gun.cnt, vehicle_ammo1, autocvar_g_vehicle_lightapc_minigun_ammo_max,
+										   autocvar_g_vehicle_lightapc_minigun_ammo_regen_pause,
+										   autocvar_g_vehicle_lightapc_minigun_ammo_regen, frametime, false);
+	}
+
+	player.vehicle_ammo1 = (gun.vehicle_ammo1 / autocvar_g_vehicle_lightapc_minigun_ammo_max) * 100;
+}
+
+#endif

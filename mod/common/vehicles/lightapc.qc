@@ -1,6 +1,14 @@
 #ifndef VEHICLE_LIGHTAPC
 #define VEHICLE_LIGHTAPC
 
+MSG_INFO_NOTIF(DEATH_MURDER_VH_LIGHTAPC_DEATH,          1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_death",         _("^BG%s%s^K1 got caught in the blast when ^BG%s^K1's LightAPC exploded%s%s"), "")
+MSG_INFO_NOTIF(DEATH_SELF_VH_LIGHTAPC_DEATH,            1,  2, 1, "s1 s2loc spree_lost", "s1",      "notify_death",         _("^BG%s^K1 got caught in the blast of a LightAPC explosion%s%s"), "")
+MSG_CENTER_NOTIF(DEATH_SELF_VH_LIGHTAPC_DEATH,          1,  0, 0, "",       CPID_Null,              "0 0",                  _("^K1You got caught in the blast of a LightAPC explosion!"), "")
+MSG_MULTI_NOTIF(DEATH_MURDER_VH_LIGHTAPC_DEATH,         1,  NULL,           INFO_DEATH_MURDER_VH_LIGHTAPC_DEATH,            NULL)
+MSG_MULTI_NOTIF(DEATH_SELF_VH_LIGHTAPC_DEATH,           1,  NULL,           INFO_DEATH_SELF_VH_LIGHTAPC_DEATH,              CENTER_DEATH_SELF_VH_LIGHTAPC_DEATH)
+
+REGISTER_DEATHTYPE(VH_LIGHTAPC_DEATH,           DEATH_SELF_VH_LIGHTAPC_DEATH,       DEATH_MURDER_VH_LIGHTAPC_DEATH,         "vehicle")
+
 #ifdef GAMEQC
 MODEL(LIGHTAPC_DELUGE, "models/mountedguns/delugegun.iqm");
 MODEL(LIGHTAPC_SHLAC, "models/mountedguns/shlacgun.iqm");
@@ -137,6 +145,7 @@ AUTOCVAR(g_vehicle_lightapc_bouncepain, vector, '0 0 0', "");
 AUTOCVAR(g_vehicle_lightapc_ballistics_density, float, 4.55, "");
 
 AUTOCVAR(g_vehicle_lightapc_forcetype, int, 0, "");
+AUTOCVAR(g_vehicle_lightapc_changetype, bool, true, "Allow gunners to change the LightAPC turret types");
 
 #endif
 
@@ -467,7 +476,7 @@ bool lightapc_gunner_frame(entity this, float dt)
 		}
 
 		if(vehic.owner)
-			UpdateAuxiliaryXhair(vehic.owner, crossy, ('1 0 0' * player.vehicle_reload1) + ('0 0 0' *(1 - player.vehicle_reload1)), ((gunner == vehic.gun1) ? 1 : 2));
+			UpdateAuxiliaryXhair(vehic.owner, crossy, ('1 0 0' * player.vehicle_reload1) + ('0 1 0' *(1 - player.vehicle_reload1)), ((gunner == vehic.gun1) ? 1 : 2));
 
 		vehic.solid = SOLID_BBOX;
 		vehic.hitboxmf.solid = SOLID_SLIDEBOX;
@@ -479,6 +488,76 @@ bool lightapc_gunner_frame(entity this, float dt)
 		VEHICLE_UPDATE_PLAYER(player, vehic, shield, lightapc);
 
 	PHYS_INPUT_BUTTON_ATCK(this) = PHYS_INPUT_BUTTON_ATCK2(this) = PHYS_INPUT_BUTTON_CROUCH(this) = false;
+}
+
+void lightapc_setgunnertype(entity gunner, entity instance, entity bomber, int mytype);
+bool lightapc_gunner_impulse(entity this, int _imp)
+{
+	if(autocvar_g_vehicle_lightapc_forcetype)
+		return false; // no type cycling!
+	if(!autocvar_g_vehicle_lightapc_changetype)
+		return false; // at all
+
+	entity gunner = this.vehicle;
+	entity vehic = this.vehicle.vehicle;
+	entity turretmount = ((gunner == vehic.gun1) ? vehic.bomb5 : ((gunner == vehic.gun2) ? vehic.bomb6 : NULL));
+
+	if(!turretmount)
+		return false; // just to make sure this isn't some random passenger
+
+	switch(_imp)
+	{
+		case IMP_weapon_group_1.impulse:
+			lightapc_setgunnertype(gunner, vehic, turretmount, 1);
+			return true;
+		case IMP_weapon_group_2.impulse:
+			lightapc_setgunnertype(gunner, vehic, turretmount, 2);
+			return true;
+		case IMP_weapon_group_3.impulse:
+			lightapc_setgunnertype(gunner, vehic, turretmount, 3);
+			return true;
+		case IMP_weapon_group_4.impulse:
+			lightapc_setgunnertype(gunner, vehic, turretmount, 4);
+			return true;
+		case IMP_weapon_group_5.impulse:
+			lightapc_setgunnertype(gunner, vehic, turretmount, 5);
+			return true;
+		case IMP_weapon_group_6.impulse:
+			lightapc_setgunnertype(gunner, vehic, turretmount, 6);
+			return true;
+		case IMP_weapon_group_7.impulse:
+			lightapc_setgunnertype(gunner, vehic, turretmount, 7);
+			return true;
+		case IMP_weapon_group_8.impulse:
+			lightapc_setgunnertype(gunner, vehic, turretmount, 8);
+			return true;
+
+		case IMP_weapon_next_byid.impulse:
+		case IMP_weapon_next_bypriority.impulse:
+		case IMP_weapon_next_bygroup.impulse:
+			gunner.spawnflags += 1;
+			if(gunner.spawnflags > 8)
+				gunner.spawnflags = 1;
+
+			lightapc_setgunnertype(gunner, vehic, turretmount, gunner.spawnflags);
+			return true;
+		case IMP_weapon_last.impulse:
+		case IMP_weapon_prev_byid.impulse:
+		case IMP_weapon_prev_bypriority.impulse:
+		case IMP_weapon_prev_bygroup.impulse:
+			gunner.spawnflags -= 1;
+			if(gunner.spawnflags < 1)
+				gunner.spawnflags = 8;
+
+			lightapc_setgunnertype(gunner, vehic, turretmount, gunner.spawnflags);
+			return true;
+
+		/*
+		case IMP_weapon_reload.impulse: // Manual minigun reload?
+			break;
+		*/
+	}
+	return false;
 }
 
 void lightapc_gunner_exit(entity this, int _exitflag)
@@ -856,12 +935,13 @@ void lightapc_pilot_exit(entity this, int eject)
 	antilag_clear(player, CS(player));
 }
 
-void lightapc_setgunnertype(entity gunner, entity instance, entity bomber)
+void lightapc_setgunnertype(entity gunner, entity instance, entity bomber, int mytype)
 {
-	int mytype = bound(1, floor(random() * 9), 8);
-	if(autocvar_g_vehicle_lightapc_forcetype)
-		mytype = autocvar_g_vehicle_lightapc_forcetype;
 	gunner.spawnflags = mytype;
+
+	if(gunner.gun1)
+		delete(gunner.gun1);
+	gunner.gun1 = NULL; // reset extra parts when setting type
 
 	switch(mytype)
 	{
@@ -935,7 +1015,7 @@ void lightapc_setgunnertype(entity gunner, entity instance, entity bomber)
 		}
 		default:
 		{
-			string mytag = ((gunner == gunner.vehicle.gun1) ? "tag_pass1" : "tag_pass2");
+			string mytag = ((gunner == instance.gun1) ? "tag_pass1" : "tag_pass2");
 			setattachment(gunner, instance, mytag);
 			break;
 		}
@@ -952,7 +1032,7 @@ void lightapc_blowup(entity this, entity toucher)
 					autocvar_g_vehicle_lightapc_blowup_edgedamage,
 					autocvar_g_vehicle_lightapc_blowup_radius, NULL, NULL,
 					autocvar_g_vehicle_lightapc_blowup_forceintensity,
-					DEATH_VH_WAKI_DEATH.m_id, NULL);
+					DEATH_VH_LIGHTAPC_DEATH.m_id, NULL);
 
 	delete(this);
 }
@@ -1133,8 +1213,18 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 		instance.bomb5 = new(lightapcturret);
 		instance.bomb6 = new(lightapcturret);
 
-		lightapc_setgunnertype(instance.gun1, instance, instance.bomb5);
-		lightapc_setgunnertype(instance.gun2, instance, instance.bomb6);
+		int mytype;
+		if(autocvar_g_vehicle_lightapc_forcetype)
+			mytype = autocvar_g_vehicle_lightapc_forcetype;
+		else
+			mytype = bound(1, floor(random() * 9), 8);
+
+		lightapc_setgunnertype(instance.gun1, instance, instance.bomb5, mytype);
+		if(autocvar_g_vehicle_lightapc_forcetype)
+			mytype = autocvar_g_vehicle_lightapc_forcetype;
+		else
+			mytype = bound(1, floor(random() * 9), 8);
+		lightapc_setgunnertype(instance.gun2, instance, instance.bomb6, mytype);
 
 		if (instance.gun1.spawnflags)
 		{
@@ -1157,6 +1247,9 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 
 			vehicle_addplayerslot(instance, instance.gun1, VEH_LIGHTAPCGUNNER1.vehicleid, MDL_Null, lightapc_gunner_frame, lightapc_gunner_exit, lightapc_gunner_enter);
 			vehicle_addplayerslot(instance, instance.gun2, VEH_LIGHTAPCGUNNER2.vehicleid, MDL_Null, lightapc_gunner_frame, lightapc_gunner_exit, lightapc_gunner_enter);
+
+			instance.gun1.vehicles_impulse = lightapc_gunner_impulse;
+			instance.gun2.vehicles_impulse = lightapc_gunner_impulse;
 
 			lightapc_spawn_gunner(instance, "tag_pass3");
 			lightapc_spawn_gunner(instance, "tag_pass4");
@@ -1410,6 +1503,23 @@ METHOD(LightAPCPassenger, vr_crosshair, void(LightAPCPassenger thisveh, entity p
 METHOD(LightAPCPassenger, vr_setup, void(LightAPCPassenger thisveh, entity instance))
 {
 	//AuxiliaryXhair[0].axh_image = vCROSS_LOCK; // Match all?
+}
+#endif
+
+#ifdef CSQC
+REGISTER_MUTATOR(cl_lightapc, true);
+
+MUTATOR_HOOKFUNCTION(cl_lightapc, DamageInfo)
+{
+	entity dmgent = M_ARGV(0, entity);
+	int w_deathtype = M_ARGV(1, int);
+
+	// the deathtype is marked as vehicle death, so we can get away with not performing the additional traces!
+	if(DEATH_ENT(w_deathtype) == DEATH_VH_LIGHTAPC_DEATH)
+	{
+		sound(dmgent, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, 0.2);
+		pointparticles(EFFECT_EXPLOSION_BIG, dmgent.origin, w_backoff * 1000, 1);
+	}
 }
 #endif
 

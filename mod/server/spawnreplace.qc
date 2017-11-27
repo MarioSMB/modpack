@@ -1,12 +1,17 @@
-MUTATOR_HOOKFUNCTION(mutator_mod, OnEntityPreSpawn)
+MUTATOR_HOOKFUNCTION(mutator_mod, SetModname)
 {
-	entity ent = M_ARGV(0, entity);
-	string myvar = strcat("sv_spawnreplace_", ent.classname);
-	if(cvar_type(myvar) & CVAR_TYPEFLAG_EXISTS)
+	IL_EACH(g_spawn_queue, true,
 	{
+		entity ent = it;
+		string myvar = strcat("sv_spawnreplace_", ent.__spawnfunc_classname);
+		if(!(cvar_type(myvar) & CVAR_TYPEFLAG_EXISTS))
+			continue;
 		string thecvar = cvar_string(myvar);
 		if(thecvar == "")
-			return true; // empty string means remove?
+		{
+			delete(it); // just attempt to remove it
+			continue;
+		}
 		else
 		{
 			RandomSelection_Init();
@@ -15,7 +20,19 @@ MUTATOR_HOOKFUNCTION(mutator_mod, OnEntityPreSpawn)
 				RandomSelection_AddString(it, 1, 1);
 			});
 			string thestring = RandomSelection_chosen_string;
-			ent.classname = strzone(thestring); // NOTE: zoned, but never unzoned
+
+			string myfunc = strcat("spawnfunc_", thestring);
+			if(!isfunction(myfunc))
+				continue; // no good, just allow?
+
+			entity e = new(mock);
+			__spawnfunc_expecting = true;
+			__spawnfunc_expect = e; 
+			callfunction(myfunc);
+			void(entity) f = e.__spawnfunc_constructor; 
+			delete(e); 
+			ent.__spawnfunc_classname = strzone(thestring); // NOTE: zoned, but never unzoned
+			ent.__spawnfunc_constructor = f;
 		}
-	}
+	});
 }

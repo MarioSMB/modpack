@@ -46,7 +46,7 @@ MUTATOR_HOOKFUNCTION(ra, Damage_Calculate)
 			M_ARGV(5, float) = 0; // mirror damage
 			if (frag_target != frag_attacker)
 			{
-				if (frag_target.health >= 1 && IS_PLAYER(frag_target) && !STAT(FROZEN, frag_target) && !IS_DEAD(frag_target))
+				if (GetResourceAmount(frag_target, RESOURCE_HEALTH) >= 1 && IS_PLAYER(frag_target) && !STAT(FROZEN, frag_target) && !IS_DEAD(frag_target))
 					Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_SECONDARY_NODAMAGE);
 				M_ARGV(6, vector) = '0 0 0'; // the force is not strong with this one
 			}

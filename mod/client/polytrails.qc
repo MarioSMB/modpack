@@ -199,6 +199,11 @@ MUTATOR_HOOKFUNCTION(polytrails, TagIndex_Update)
 {
     return = false; // not needed?
 
+    if(!STAT(POLYTRAILS_ALLOWED))
+        return;
+    if(STAT(POLYTRAILS_ALLOWED) == 2 && gametype != MAPINFO_TYPE_CTS)
+        return;
+
     if(!autocvar_cl_glowtrails || (gametype != MAPINFO_TYPE_CTS && autocvar_cl_glowtrails == 1))
         return;
 

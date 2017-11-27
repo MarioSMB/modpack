@@ -67,28 +67,14 @@ AUTOCVAR(g_jailbreak_point_leadlimit, int, -1, "Jailbreak point lead limit overr
 void jb_Initialize();
 REGISTER_MUTATOR(jb, false)
 {
+	MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
+		GameRules_teams(true);
+		GameRules_limit_score(autocvar_g_jailbreak_point_limit);
+		GameRules_limit_lead(autocvar_g_jailbreak_point_leadlimit);
+
 		jb_Initialize();
-
-		ActivateTeamplay();
-		SetLimits(autocvar_g_jailbreak_point_limit, autocvar_g_jailbreak_point_leadlimit, autocvar_timelimit_override, -1);
-		have_team_spawns = -1; // request team spawns
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back jb_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
 	}
 
 	return false;
@@ -951,10 +937,10 @@ void JB_ControlPoint_Capture(entity this, entity player)
 		e.jb_lastmessage = time + 3;
 	}
 
-	PlayerScore_Add(player, SP_SCORE, ((this.team == 0)? autocvar_g_jailbreak_score_jbreak_neutralmultiplier : 1)
+	GameRules_scoring_add(player, SCORE, ((this.team == 0)? autocvar_g_jailbreak_score_jbreak_neutralmultiplier : 1)
 									* (autocvar_g_jailbreak_score_jbreak + autocvar_g_jailbreak_score_jbreak_perplayer * pc));
-	PlayerScore_Add(player, SP_JB_JBREAKS, 1);
-	PlayerScore_Add(player, SP_JB_FREED, pc);
+	GameRules_scoring_add(player, JB_JBREAKS, 1);
+	GameRules_scoring_add(player, JB_FREED, pc);
 	nades_GiveBonus(player, autocvar_g_nades_bonus_score_medium);
 	play2all(SND(KH_ALARM));
 
@@ -1181,7 +1167,7 @@ MUTATOR_HOOKFUNCTION(jb, PlayerDies)
 	float frag_deathtype = M_ARGV(3, float);
 
 	if(jb_roundover && frag_deathtype == DEATH_FIRE.m_id)
-		PlayerScore_Add(frag_target, SP_KILLS, +1); // dying negates 1, so we bring it back up
+		GameRules_scoring_add(frag_target, KILLS, +1); // dying negates 1, so we bring it back up
 
 	if(!round_handler_IsRoundStarted() || jb_roundover)
 		return;
@@ -1189,13 +1175,13 @@ MUTATOR_HOOKFUNCTION(jb, PlayerDies)
 	if(!STAT(JB_ISPRISONED, frag_target))
 	{
 		if(frag_attacker == frag_target || !frag_attacker)
-			PlayerScore_Add(frag_target, SP_SCORE, -autocvar_g_jailbreak_penalty_death);
+			GameRules_scoring_add(frag_target, SCORE, -autocvar_g_jailbreak_penalty_death);
 		else if(IS_PLAYER(frag_attacker))
 		{
 			if(DIFF_TEAM(frag_attacker, frag_target))
 			{
-				PlayerScore_Add(frag_target, SP_SCORE, -autocvar_g_jailbreak_penalty_death);
-				PlayerScore_Add(frag_attacker, SP_SCORE, autocvar_g_jailbreak_score_imprison);
+				GameRules_scoring_add(frag_target, SCORE, -autocvar_g_jailbreak_penalty_death);
+				GameRules_scoring_add(frag_attacker, SCORE, autocvar_g_jailbreak_score_imprison);
 
 				float rng = autocvar_g_jailbreak_defense_range;
 				entity cp;
@@ -1209,15 +1195,15 @@ MUTATOR_HOOKFUNCTION(jb, PlayerDies)
 						if(vdist(cp.origin - frag_target.origin, <, rng))
 						{
 							Send_Notification(NOTIF_ONE, frag_attacker, MSG_CENTER, CENTER_JAILBREAK_DEFENSE);
-							PlayerScore_Add(frag_attacker, SP_SCORE, autocvar_g_jailbreak_score_defense);
-							PlayerScore_Add(frag_attacker, SP_JB_DEFENSE, 1);
+							GameRules_scoring_add(frag_attacker, SCORE, autocvar_g_jailbreak_score_defense);
+							GameRules_scoring_add(frag_attacker, JB_DEFENSE, 1);
 							nades_GiveBonus(frag_attacker, autocvar_g_nades_bonus_score_minor);
 							break;
 						}
 					}
 				}
 			}
-			else PlayerScore_Add(frag_attacker, SP_SCORE, -autocvar_g_jailbreak_penalty_teamkill);
+			else GameRules_scoring_add(frag_attacker, SCORE, -autocvar_g_jailbreak_penalty_teamkill);
 		}
 
 		frag_target.jb_imprisoner = frag_attacker;
@@ -1436,12 +1422,12 @@ JB_SPAWNFUNC(jailbreak_controlpoint_neutral, JB_SetupControlPoint, 0)
 // scores
 void jb_ScoreRules(int teams)
 {
-	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true); // SFL_SORT_PRIO_PRIMARY
-	ScoreInfo_SetLabel_TeamScore(ST_JB_ROUNDS,			"rounds",		SFL_SORT_PRIO_PRIMARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_JB_JBREAKS,		"jbs",		0);
-	ScoreInfo_SetLabel_PlayerScore(SP_JB_FREED,			"freed",		SFL_SORT_PRIO_SECONDARY);
-	ScoreInfo_SetLabel_PlayerScore(SP_JB_DEFENSE,		"def",		0);
-	ScoreRules_basics_end();
+	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
+		field_team(ST_JB_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
+		field(SP_JB_JBREAKS, "jbs", 0);
+		field(SP_JB_FREED, "freed", SFL_SORT_PRIO_SECONDARY);
+		field(SP_JB_DEFENSE, "def", 0);
+	});
 }
 
 // initialization

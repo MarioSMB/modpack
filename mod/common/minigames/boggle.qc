@@ -124,7 +124,7 @@ string boggle_get_letter(int try)
 {
 	RandomSelection_Init();
 
-	//LOG_INFO(ftos(try), "\n");
+	//LOG_INFO(ftos(try));
 
 	FOREACH_WORD(boggle_letters[try], true, LAMBDA(RandomSelection_AddString(it, 1, 1)));
 

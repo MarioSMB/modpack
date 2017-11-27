@@ -349,7 +349,7 @@ bool chess_king_canmove(entity minigame, entity piece)
 
 			if(CHESS_GOOD_MOVE(try))
 			{
-				LOG_INFO("Can move to ", newpos, ", apparently\n");
+				LOG_INFO("Can move to ", newpos, ", apparently");
 				return true; // don't bother wasting more resources, we have a valid spot
 			}
 		}

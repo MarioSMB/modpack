@@ -93,8 +93,8 @@ void dotc_FactoryDamage(entity this, entity inflictor, entity attacker, float da
 	{
 		if(IS_CLIENT(attacker))
 		{
-			PlayerScore_Add(attacker, SP_SCORE, autocvar_g_dotc_factory_killscore);  
-			PlayerScore_Add(attacker, SP_DOTC_FACTORY_KILLS, 1);  
+			GameRules_scoring_add(attacker, SCORE, autocvar_g_dotc_factory_killscore);  
+			GameRules_scoring_add(attacker, DOTC_FACTORY_KILLS, 1);  
 		}
 			
 		dotc_Factory_Dead(this);
@@ -192,7 +192,7 @@ void dotc_DelayedFactorySetup(entity this) // called after a factory is placed o
 	// node target
 	entity next_node = dotc_squad_nextpath(this);
 	if(!next_node)
-		LOG_INFO("Warning: factory is missing a target, fix your map!\n");
+		LOG_INFO("Warning: factory is missing a target, fix your map!");
 
 	this.enemy = next_node;
 

@@ -28,29 +28,16 @@ void rune_Initialize();
 
 REGISTER_MUTATOR(rune, false)
 {
+	MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
+		GameRules_limit_score(autocvar_g_runematch_point_limit);
+		GameRules_limit_lead(autocvar_g_runematch_point_leadlimit);
+
 		rune_Initialize();
-
-		SetLimits(autocvar_g_runematch_point_limit, autocvar_g_runematch_point_leadlimit, -1, -1);
 	}
 
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back rune_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
-	}
-
-	return 0;
+	return false;
 }
 
 AUTOCVAR_NOREF(g_rune_respawn_delay_small, float, 0, "");
@@ -572,7 +559,7 @@ MUTATOR_HOOKFUNCTION(rune, PlayerDies)
 			runes_score += autocvar_g_runematch_pointamt;
 		});
 		if(runes_score)
-			PlayerScore_Add(frag_attacker, SP_SCORE, runes_score);
+			GameRules_scoring_add(frag_attacker, SCORE, runes_score);
 	}
 
 	DropAllRunes(frag_target);

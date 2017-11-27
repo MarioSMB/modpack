@@ -33,14 +33,14 @@ void dotc_ItemSpawn_Give(entity player)
 
 	FOREACH(Weapons, it != WEP_Null && (player.weapons & it.m_wepset),
 	{
-		switch (it.ammo_field)
+		switch (it.ammo_type)
 		{
-			case ammo_shells:  player.ammo_shells  = max(player.ammo_shells, autocvar_g_pickup_shells_weapon);  break;
-			case ammo_nails:   player.ammo_nails   = max(player.ammo_nails, autocvar_g_pickup_nails_weapon);   break;
-			case ammo_rockets: player.ammo_rockets = max(player.ammo_rockets, autocvar_g_pickup_rockets_weapon); break;
-			case ammo_cells:   player.ammo_cells   = max(player.ammo_cells, autocvar_g_pickup_cells_weapon);   break;
-			case ammo_plasma:  player.ammo_plasma  = max(player.ammo_plasma, autocvar_g_pickup_plasma_weapon);  break;
-			case ammo_fuel:    player.ammo_fuel    = max(player.ammo_fuel, autocvar_g_pickup_fuel_weapon);    break;
+			case RESOURCE_SHELLS:  player.ammo_shells  = max(player.ammo_shells, autocvar_g_pickup_shells_weapon);  break;
+			case RESOURCE_BULLETS: player.ammo_nails   = max(player.ammo_nails, autocvar_g_pickup_nails_weapon);   break;
+			case RESOURCE_ROCKETS: player.ammo_rockets = max(player.ammo_rockets, autocvar_g_pickup_rockets_weapon); break;
+			case RESOURCE_CELLS:   player.ammo_cells   = max(player.ammo_cells, autocvar_g_pickup_cells_weapon);   break;
+			case RESOURCE_PLASMA:  player.ammo_plasma  = max(player.ammo_plasma, autocvar_g_pickup_plasma_weapon);  break;
+			case RESOURCE_FUEL:    player.ammo_fuel    = max(player.ammo_fuel, autocvar_g_pickup_fuel_weapon);    break;
 		}
 	});
 }

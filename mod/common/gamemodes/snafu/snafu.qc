@@ -35,28 +35,12 @@ SOUND(SNAFU_ZOMBIE_GROWL2, "snafu/zombie/growl2");
 void snafu_Initialize();
 REGISTER_MUTATOR(snafu, false)
 {
+	MUTATOR_STATIC();
 	MUTATOR_ONADD
 	{
-		if (time > 1) // game loads at time 1
-			error("This is a game type and it cannot be added at runtime.");
+		GameRules_teams(true);
+
 		snafu_Initialize();
-
-		ActivateTeamplay();
-		//SetLimits(autocvar_g_snafu_point_limit, autocvar_leadlimit_override, autocvar_timelimit_override, -1);
-		have_team_spawns = -1; // request team spawns
-	}
-
-	MUTATOR_ONROLLBACK_OR_REMOVE
-	{
-		// we actually cannot roll back snafu_Initialize here
-		// BUT: we don't need to! If this gets called, adding always
-		// succeeds.
-	}
-
-	MUTATOR_ONREMOVE
-	{
-		LOG_INFO("This is a game type and it cannot be removed at runtime.");
-		return -1;
 	}
 
 	return false;
@@ -81,9 +65,9 @@ float snafu_spawn_delay;
 #define ST_SNAFU_ROUNDS 1
 void snafu_ScoreRules(int teams)
 {
-	ScoreRules_basics(teams, SFL_SORT_PRIO_PRIMARY, 0, true);
-	ScoreInfo_SetLabel_TeamScore(ST_SNAFU_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
-	ScoreRules_basics_end();
+	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
+		field_team(ST_SNAFU_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
+	});
 }
 
 int SNAFU_GetWinnerTeam()
