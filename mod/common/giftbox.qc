@@ -112,6 +112,18 @@ void giftbox_touch(entity this, entity toucher)
 		Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, GIFT_HEALTH, amnt);
 		toucher.health = bound(toucher.health, 200, toucher.health + amnt);
 	}
+	else if(this.gifts & GIFTBOX_GIFT_WEAPON)
+	{
+		RandomSelection_Init();
+		// include even mutator weapons, but don't include hidden weapons!
+		FOREACH(Weapons, it != WEP_Null && !(toucher.weapons & (it.m_wepset)) && !(it.spawnflags & WEP_FLAG_HIDDEN), {
+			RandomSelection_AddFloat(it.m_id, 1, 1);
+		});
+		if(RandomSelection_chosen_float)
+			W_GiveWeapon(toucher, RandomSelection_chosen_float);
+		else
+			Send_Notification(NOTIF_ONE, toucher, MSG_MULTI, GIFT_LOST);
+	}
 	else
 	{
 		toucher.gifts |= (this.gifts);
