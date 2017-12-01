@@ -81,7 +81,7 @@ int get_random_gift()
 	RandomSelection_AddFloat(GIFTBOX_GIFT_MUG, 1, 1);
 	RandomSelection_AddFloat(GIFTBOX_GIFT_RING, 1, 1);
 	RandomSelection_AddFloat(GIFTBOX_GIFT_BOMB, 0.75, 1);
-	RandomSelection_AddFloat(GIFTBOX_GIFT_WEAPON, 0.5, 1);
+	RandomSelection_AddFloat(GIFTBOX_GIFT_WEAPON, 0.75, 1);
 
 	return RandomSelection_chosen_float;
 }
