@@ -13,7 +13,7 @@ MUTATOR_HOOKFUNCTION(snow, HUD_Draw_overlay)
 
     vector org = view_origin + '0 0 1' * autocvar_cl_snowproblem_height;
     vector thesize = '1 1 0' * autocvar_cl_snowproblem_radius;
-    thesize.z = 5;
+    thesize.z = 3;
 
     te_particlesnow(org - thesize, org + thesize, autocvar_cl_snowproblem_speed, floor(autocvar_cl_snowproblem_count * drawframetime + random()), 12);
 }
