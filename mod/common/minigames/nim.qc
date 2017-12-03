@@ -11,10 +11,10 @@ const int NIM_TURN_TEAM  = 0x000f; // turn team mask
 // send flags
 const int NIM_SF_PLAYERSCORE  = MINIG_SF_CUSTOM;   // send minigame_player scores (won matches)
 
-const int NIM_LET_CNT = 7;
-const int NIM_NUM_CNT = 7;
+const int NIM_LET_CNT = 8;
+const int NIM_NUM_CNT = 6;
 
-const int NIM_TILE_SIZE = 7;
+//const int NIM_TILE_SIZE = 6;
 
 const int NIM_TEAMS = 2;
 
@@ -63,7 +63,7 @@ void nim_setup_pieces(entity minigame)
 {
 	int i, j;
 	int perteam = 2;
-	for(i = NIM_NUM_CNT - 2; i >= 0; --i)
+	for(i = NIM_NUM_CNT - 1; i >= 0; --i)
 	{
 		for(j = 0; j < perteam; ++j)
 		{
@@ -209,24 +209,40 @@ string nim_curr_pos; // identifier of the tile under the mouse
 vector nim_boardpos; // HUD board position
 vector nim_boardsize;// HUD board size
 
+#define nim_hud_fitboard(pos, mySize, xx) \
+	if ( mySize##_x > mySize##_y ) \
+	{ \
+		pos##_x += (mySize##_x-(mySize##_y / xx))/2; \
+		mySize##_x = mySize##_y / xx; \
+	} \
+	if(panel_bg_padding) \
+	{ \
+		pos += '1 1 0' * panel_bg_padding; \
+		mySize -= '2 2 0' * panel_bg_padding; \
+	}
+
+
 // Required function, draw the game board
 void nim_hud_board(vector pos, vector mySize)
 {
-	minigame_hud_fitsqare(pos, mySize);
+	float xsize = (NIM_NUM_CNT / NIM_LET_CNT);
+
+	nim_hud_fitboard(pos, mySize, xsize);
+	//minigame_hud_fitsqare(pos, mySize);
 
 	nim_boardpos = pos;
 	nim_boardsize = mySize;
 
 	minigame_hud_simpleboard(pos,mySize,minigame_texture("nim/board"));
 
-	vector tile_size = minigame_hud_denormalize_size('1 1 0' / NIM_TILE_SIZE,pos,mySize);
+	vector tile_size = minigame_hud_denormalize_size(vec2(1 / NIM_LET_CNT, 1 / NIM_NUM_CNT),pos,mySize);
 	vector tile_pos;
 
 	// draw the tiles
 	// must be separate from piece drawing, as pieces can be removed
 	int i, j;
 	int per_row = 2;
-	for(i = NIM_NUM_CNT - 2; i >= 0; --i)
+	for(i = NIM_NUM_CNT - 1; i >= 0; --i)
 	{
 		for(j = 0; j < per_row; ++j)
 		{
