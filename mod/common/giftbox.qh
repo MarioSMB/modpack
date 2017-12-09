@@ -16,6 +16,10 @@ MSG_INFO_NOTIF(GIFT_HEALTH,                   1,  0, 1, "f1", "",             ""
 MSG_CENTER_NOTIF(GIFT_HEALTH,                 1,  0, 1, "f1",                 CPID_Null,     "0 0",   "^BGYou got ^F2%s^K1 health^BG!", "")
 MSG_MULTI_NOTIF(GIFT_HEALTH,                  1,  NULL,                       INFO_GIFT_HEALTH,       CENTER_GIFT_HEALTH)
 
+MSG_INFO_NOTIF(GIFT_LOST,                   1,  0, 0, "", "",                 "",                     "^BGOh dear, looks like your gift was broken!", "")
+MSG_CENTER_NOTIF(GIFT_LOST,                 1,  0, 0, "",                     CPID_Null,     "0 0",   "^BGOh dear, looks like your gift was broken!", "")
+MSG_MULTI_NOTIF(GIFT_LOST,                  1,  NULL,                         INFO_GIFT_HEALTH,       CENTER_GIFT_HEALTH)
+
 MSG_CENTER_NOTIF(GIFT_NOTHING,                1,  0, 0, "",                   CPID_Null,     "0 0",   "^BGThis gift is not for you!", "")
 
 MSG_INFO_NOTIF(GIFT, 1, 2, 1, "s1 s2 f1", "", "", "^BGYou got ^F2%s^BG, ^F3%s^BG increased by ^F1%s%%^BG!", "")
@@ -40,6 +44,7 @@ MSG_MULTI_NOTIF(GIFT, 1, NULL, INFO_GIFT, CENTER_GIFT)
 	const int GIFTBOX_GIFT_MUG 					= BIT(12);
 	const int GIFTBOX_GIFT_RING 				= BIT(13);
 	const int GIFTBOX_GIFT_BOMB 				= BIT(14);
+	const int GIFTBOX_GIFT_WEAPON 				= BIT(15);
 #endif
 
 #ifdef SVQC
@@ -76,6 +81,7 @@ int get_random_gift()
 	RandomSelection_AddFloat(GIFTBOX_GIFT_MUG, 1, 1);
 	RandomSelection_AddFloat(GIFTBOX_GIFT_RING, 1, 1);
 	RandomSelection_AddFloat(GIFTBOX_GIFT_BOMB, 0.75, 1);
+	RandomSelection_AddFloat(GIFTBOX_GIFT_WEAPON, 0.75, 1);
 
 	return RandomSelection_chosen_float;
 }
