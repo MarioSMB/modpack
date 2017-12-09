@@ -127,6 +127,24 @@ void lightning_firstthink(entity this)
 	}
 }
 
+void lightning_init(entity this)
+{
+	if(!this.wait)
+		this.wait = 1.0;
+	if(!this.dmg)
+		this.dmg = 30;
+	if(!this.duration)
+		this.duration = 0.1;
+	this.cnt = 0;
+	this.use = trap_lightning_use;
+	precache_sound("weapons/lhit.wav");
+	precache_sound("weapons/lstart.wav");
+	this.huntingcharmer = this.nextthink;
+	setthink(this, lightning_firstthink);
+	this.nextthink = time + 0.25;
+	this.deathtype = "is electrocuted";
+}
+
 /*QUAKED trap_lightning_triggered (0 .5 .8) (-8 -8 -8) (8 8 8) random boom
 When triggered, fires lightning in the direction set in QuakeEd.
 "wait" how long to wait between blasts (1.0 default)
@@ -139,20 +157,9 @@ spawnfunc(trap_lightning_triggered)
 {
 	if(!MP_HIPNOTIC) { delete(this); return; }
 
-	if(this.wait == 0)
-		this.wait = 1.0;
-	if(this.dmg == 0)
-		this.dmg = 30;
-	if(this.duration == 0)
-		this.duration = 0.1;
-	this.cnt = 0;
-	this.use = trap_lightning_use;
-	precache_sound("weapons/lhit.wav");
-	precache_sound("weapons/lstart.wav");
-	this.huntingcharmer = this.nextthink;
-	setthink(this, lightning_firstthink);
-	this.nextthink = time + 0.25;
-	this.deathtype = "is electrocuted";
+	this.classname = "trap_lightning_triggered";
+
+	lightning_init(this);
 }
 
 
@@ -168,7 +175,9 @@ spawnfunc(trap_lightning)
 {
 	if(!MP_HIPNOTIC) { delete(this); return; }
 
-	spawnfunc_trap_lightning_triggered(this);
+	this.classname = "trap_lightning";
+
+	lightning_init(this);
 	this.state = 1;
 }
 
@@ -191,7 +200,9 @@ spawnfunc(trap_lightning_switched)
 {
 	if(!MP_HIPNOTIC) { delete(this); return; }
 
-	spawnfunc_trap_lightning_triggered(this);
+	this.classname = "trap_lightning_switched";
+
+	lightning_init(this);
 	this.use = trap_lightning_switched_use;
 }
 
