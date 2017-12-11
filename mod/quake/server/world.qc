@@ -997,7 +997,8 @@ void CreatureFrame_FallDamage(entity this)
 
 void CreatureFrame_All()
 {
-	IL_EACH(g_damagedbycontents, it.damagedbycontents,
+	//IL_EACH(g_damagedbycontents, it.damagedbycontents,
+	FOREACH_CLIENT(IS_PLAYER(it) && it.damagedbycontents,
 	{
 		if (it.move_movetype == MOVETYPE_NOCLIP) continue;
 		CreatureFrame_Liquids(it);
