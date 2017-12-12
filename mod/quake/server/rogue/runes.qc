@@ -63,12 +63,9 @@ entity RuneSpawnPoint()
 
 void RuneRespawn(entity this)
 {
-	entity spot = RuneSpawnPoint();
+	entity spot = RuneSpawnPoint(); // assume success, there *must* be a spawnpoint in the map!
 	setorigin(this, spot.origin);
-
-	this.velocity_z = 300;
-	this.velocity_x = -300 + (random() * 600);
-	this.velocity_y = -300 + (random() * 600);
+	this.velocity = vec3(-300 + (random() * 600), -300 + (random() * 600), 300);
 
 	this.nextthink = time + 120;
 }
@@ -82,9 +79,7 @@ void SpawnRune(float r, entity spot)
 	
 	setorigin(item, spot.origin);
 	item.rune = r;
-	item.velocity_z = 300;
-	item.velocity_x = -300 + (random() * 600);
-	item.velocity_y = -300 + (random() * 600);
+	item.velocity = vec3(-300 + (random() * 600), -300 + (random() * 600), 300);
 	
 	item.flags = FL_ITEM;
 	item.solid = SOLID_TRIGGER;
@@ -144,29 +139,28 @@ void SpawnRunes(entity this)
 
 float RuneApplyEarth(float damage, entity who)
 {
-	if(who.rune & ITEM_RUNE1)
+	if(!(who.rune & ITEM_RUNE1))
+		return damage;
+
+	if(who.rune1_last_noise_time < time)
 	{
-		if(who.rune1_last_noise_time < time)
-		{
-			_sound(who, CH_TRIGGER_SINGLE, "runes/end1.wav", 1, ATTN_NORM);
-			// tune as needed
-			who.rune1_last_noise_time = time + 1.0;
-		}
-		return damage/2;
+		_sound(who, CH_TRIGGER_SINGLE, "runes/end1.wav", 1, ATTN_NORM);
+		// tune as needed
+		who.rune1_last_noise_time = time + 1.0;
 	}
-	return damage;
+	return damage/2;
 }
 
 void RuneApplyBlackNoise(entity who)
 {
-	if(who.rune & ITEM_RUNE2)
+	if(!(who.rune & ITEM_RUNE2))
+		return;
+
+	if(who.rune2_last_noise_time < time)
 	{
-		if(who.rune2_last_noise_time < time)
-		{
-			_sound(who, CH_TRIGGER_SINGLE, "runes/end2.wav", 1, ATTN_NORM);
-			// tune as needed
-			who.rune2_last_noise_time = time + 1.0;
-		}
+		_sound(who, CH_TRIGGER_SINGLE, "runes/end2.wav", 1, ATTN_NORM);
+		// tune as needed
+		who.rune2_last_noise_time = time + 1.0;
 	}
 }
 
@@ -179,34 +173,30 @@ float RuneApplyBlack(float damage, entity who)
 
 float RuneApplyHell(float tvalue, entity who)
 {
-	if(!MP_ROGUE)
+	if(!(who.rune & ITEM_RUNE3))
 		return tvalue;
 
-	if (who.rune & ITEM_RUNE3)
+	if (who.rune3_last_noise_time < time)
 	{
-		if (who.rune3_last_noise_time < time)
-		{
-			_sound(who, CH_TRIGGER_SINGLE, "runes/end3.wav", 1, ATTN_NORM);
-			// tune as needed
-			who.rune3_last_noise_time = time + 1.0;
-		}
-		return (tvalue * 2) / 3;
+		_sound(who, CH_TRIGGER_SINGLE, "runes/end3.wav", 1, ATTN_NORM);
+		// tune as needed
+		who.rune3_last_noise_time = time + 1.0;
 	}
-	return tvalue;
+	return (tvalue * 2) / 3;
 }
 
 void RuneApplyElder(entity who)
 {
-	if (who.rune & ITEM_RUNE4)
+	if(!(who.rune & ITEM_RUNE4))
+		return;
+
+	if (who.rune4_last_regen_time < time && who.health < 100)
 	{
-		if (who.rune4_last_regen_time < time && who.health < 100)
-		{
-			_sound(who, CH_TRIGGER_SINGLE, "runes/end4.wav", 1, ATTN_NORM);
-			who.health = who.health + 5;
-			if (who.health > 100)
-				who.health = 100;
-			who.rune4_last_regen_time = time + 1.0;
-		}
+		_sound(who, CH_TRIGGER_SINGLE, "runes/end4.wav", 1, ATTN_NORM);
+		who.health = who.health + 5;
+		if (who.health > 100)
+			who.health = 100;
+		who.rune4_last_regen_time = time + 1.0;
 	}
 }
 

@@ -1,3 +1,5 @@
+#include "rogue/runes.qh"
+
 bool IsExplosionDamage;
 
 void ClientObituary(entity targ, entity attacker);
@@ -126,10 +128,8 @@ This should be the only function that ever reduces health.
 ============
 */
 bool empathyused; // hipnotic
-float RuneApplyBlack(float damage, entity who); // rogue
 bool TeamArmorDam(entity targ, entity inflictor, entity attacker, float damage); // also rogue
 bool TeamHealthDam(entity targ, entity inflictor, entity attacker, float damage);
-float RuneApplyEarth(float damage, entity who);
 void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 {
 	if(!targ.takedamage)

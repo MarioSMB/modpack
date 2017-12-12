@@ -1540,8 +1540,7 @@ void W_Attack(entity this)
 	makevectors	(this.v_angle);			// calculate forward angle for velocity
 	this.show_hostile = time + 1;	// wake monsters up
 
-	if(MP_ROGUE)
-		RuneApplyBlackNoise(this); // make rune noise
+	RuneApplyBlackNoise(this); // make rune noise
 
 	switch(this.weapon)
 	{

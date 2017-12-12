@@ -1,0 +1,13 @@
+#pragma once
+
+float RuneApplyEarth(float damage, entity who);
+
+void RuneApplyBlackNoise(entity who);
+
+float RuneApplyBlack(float damage, entity who);
+
+float RuneApplyHell(float tvalue, entity who);
+
+void RuneApplyElder(entity who);
+
+bool RuneHasElder(entity who);
