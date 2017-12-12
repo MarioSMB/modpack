@@ -185,7 +185,10 @@ void trap_lightning_switched_use(entity this, entity actor, entity trigger)
 {
 	this.state = 1 - this.state;
 	if(this.state == 1)
+	{
 		this.nextthink = this.huntingcharmer;
+		setthink(this, lightning_think);
+	}
 }
 /*QUAKED trap_lightning_switched (0 .5 .8) (-8 -8 -8) (8 8 8) random boom
 Continuously fires lightning.
