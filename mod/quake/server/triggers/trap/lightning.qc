@@ -101,6 +101,7 @@ void lightning_think(entity this)
 			timedelay = this.duration;
 		this.t_width = time + timedelay;
 	}
+	setthink(this, lightning_think);
 	if(time >= this.t_length)
 	{
 		this.cnt = 0;
