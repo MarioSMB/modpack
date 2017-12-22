@@ -545,6 +545,9 @@ void SetSpawnReplace()
 {
 	IL_EACH(g_spawn_queue, true,
 	{
+		it.save_nextthink = it.nextthink;
+		it.nextthink = 0;
+
 		entity ent = it;
 		string myvar = strcat("sv_spawnreplace_", ent.__spawnfunc_classname);
 		if(!(cvar_type(myvar) & CVAR_TYPEFLAG_EXISTS))

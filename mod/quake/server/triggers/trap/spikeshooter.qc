@@ -153,7 +153,7 @@ spawnfunc(trap_shooter)
 		this.wait = 1;
 	if(MP_HIPNOTIC)
 		this.state = 1;
-	this.nextthink = this.nextthink + this.wait + this.ltime;
+	this.nextthink = this.save_nextthink + this.wait + this.ltime;
 	setthink(this, shooter_think);
 }
 
@@ -176,7 +176,7 @@ spawnfunc(trap_switched_shooter)
 	if(this.wait == 0)
 		this.wait = 1;
 //MED 11/01/96 added state capability
-	this.nextthink = this.nextthink + this.wait + this.ltime;
+	this.nextthink = this.save_nextthink + this.wait + this.ltime;
 	setthink(this, shooter_think);
 	this.use = trap_shooter_use;
 

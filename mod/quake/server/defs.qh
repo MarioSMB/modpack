@@ -139,6 +139,8 @@ const int SVC_CUTSCENE = 34;
 
 .int weapons;
 
+.float save_nextthink;
+
 
 // intrusive lists
 

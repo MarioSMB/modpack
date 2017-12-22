@@ -140,7 +140,7 @@ void lightning_init(entity this)
 	this.use = trap_lightning_use;
 	precache_sound("weapons/lhit.wav");
 	precache_sound("weapons/lstart.wav");
-	this.huntingcharmer = this.nextthink;
+	this.huntingcharmer = this.save_nextthink;
 	setthink(this, lightning_firstthink);
 	this.nextthink = time + 0.25;
 	this.deathtype = "is electrocuted";
