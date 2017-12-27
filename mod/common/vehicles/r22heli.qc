@@ -199,18 +199,18 @@ bool r22heli_takeoff(entity this, float dt)
 
 	// cannon firing
 	if(vehic.spawnflags & 32)
-		r22heli_deluge(vehic, this, vehic.bomb11);
+		r22heli_deluge(vehic, this, vehic.bomb11, dt);
 	 
 	if(vehic.spawnflags >= 64)
 	{
 		if(vehic.spawnflags & 64)
 		{
-			r22heli_minigun(vehic, this);
+			r22heli_minigun(vehic, this, vehic.bomb3, vehic.bomb3.gun1, vehic.bomb4, vehic.bomb4.gun1, dt);
 		}
 	
 		if(vehic.spawnflags & 128)
 		{
-			r22heli_hmg(vehic, this);
+			r22heli_hmg(vehic, this, vehic.bomb5, vehic.bomb6, dt);
 		}
 	}
 
@@ -536,18 +536,16 @@ bool r22heli_pilot_frame(entity this, float dt)
 		
 		//Cannon firing
 		if(vehic.spawnflags & 32)
-			r22heli_deluge(vehic, this, vehic.bomb11);
+			r22heli_deluge(vehic, this, vehic.bomb11, dt);
 		 
-		if (vehic.spawnflags >= 64)
+		if(vehic.spawnflags >= 64)
 		{
 			if (vehic.spawnflags & 64)
-			{
-				r22heli_minigun(vehic, this);
-			}
+				r22heli_minigun(vehic, this, vehic.bomb3, vehic.bomb3.gun1, vehic.bomb4, vehic.bomb4.gun1, dt);
 		
 			if (vehic.spawnflags & 128)
 			{
-				r22heli_hmg(vehic, this);
+				r22heli_hmg(vehic, this, vehic.bomb5, vehic.bomb6, dt);
 
 				r22heli_rocket(vehic, this);
 			}
@@ -563,7 +561,7 @@ bool r22heli_pilot_frame(entity this, float dt)
 			UpdateAuxiliaryXhair(this, trace_endpos, ('1 0 0' * this.vehicle_reload1) + ('0 1 0' * (1 - this.vehicle_reload1)), 0);
 		}
 
-		vehic.velocity  += df * dt;
+		vehic.velocity += df * dt;
 		set_movetype(vehic, MOVETYPE_BOUNCEMISSILE);
 	}
 	else

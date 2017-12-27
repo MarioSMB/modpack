@@ -51,7 +51,7 @@ void lightapc_t17mm_muzzleflash(entity actor, entity flash)
 	flash.owner = flash.realowner = actor;
 }
 
-void lightapc_t17mm(entity player, entity gunmount) 
+void lightapc_t17mm(entity player, entity gunmount, float dt) 
 {
 	if(PHYS_INPUT_BUTTON_ATCK(player) && gunmount.vehicle_ammo1 >= autocvar_g_vehicle_lightapc_t17mm_ammo_cost && gunmount.attack_finished_single[0] <= time)
 	{
@@ -139,7 +139,7 @@ void lightapc_t17mm(entity player, entity gunmount)
 	{
 		vehicles_regen(gunmount, gunmount.cnt, vehicle_ammo1, autocvar_g_vehicle_lightapc_t17mm_ammo_max,
 										   autocvar_g_vehicle_lightapc_t17mm_ammo_regen_pause,
-										   autocvar_g_vehicle_lightapc_t17mm_ammo_regen, frametime, false);
+										   autocvar_g_vehicle_lightapc_t17mm_ammo_regen, dt, false);
 	}
 
 	player.vehicle_ammo1 = (gunmount.vehicle_ammo1 / autocvar_g_vehicle_lightapc_t17mm_ammo_max) * 100;

@@ -6,7 +6,7 @@ AUTOCVAR(g_vehicle_lightapc_shlac_ammo_max, int, 100, "");
 AUTOCVAR(g_vehicle_lightapc_shlac_ammo_regen, int, 20, "");
 AUTOCVAR(g_vehicle_lightapc_shlac_ammo_regen_pause, float, 1, "");
 
-void lightapc_shlac(entity player, entity gunmount) 
+void lightapc_shlac(entity player, entity gunmount, entity gun, float dt) 
 {
 	if(PHYS_INPUT_BUTTON_ATCK(player) && gunmount.vehicle_ammo1 >= autocvar_g_vehicle_lightapc_shlac_ammo_cost && gunmount.attack_finished_single[0] <= time)
 	{
@@ -17,7 +17,7 @@ void lightapc_shlac(entity player, entity gunmount)
 		//vector v = gettaginfo(gunmount, gettagindex(gunmount, "tag_mgun1"));
 		v_forward = normalize(v_forward);
 
-		vwep_shlac_attack(player, "tag_mgun1", gunmount, gunmount);
+		vwep_shlac_attack(player, "tag_mgun1", gunmount, gun);
 		//vwep_shlac_attack(player, "tag_mgun2", gunmount);
 		//vwep_shlac_attack(player, "tag_mgun3", gunmount);
 		//vwep_shlac_attack(player, "tag_mgun4", gunmount);
@@ -30,7 +30,7 @@ void lightapc_shlac(entity player, entity gunmount)
 	{
 		vehicles_regen(gunmount, gunmount.cnt, vehicle_ammo1, autocvar_g_vehicle_lightapc_shlac_ammo_max,
 										   autocvar_g_vehicle_lightapc_shlac_ammo_regen_pause,
-										   autocvar_g_vehicle_lightapc_shlac_ammo_regen, frametime, false);
+										   autocvar_g_vehicle_lightapc_shlac_ammo_regen, dt, false);
 	}
 
 	player.vehicle_ammo1 = (gunmount.vehicle_ammo1 / autocvar_g_vehicle_lightapc_shlac_ammo_max) * 100;
