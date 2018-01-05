@@ -16,7 +16,7 @@ void r22heli_hmg(entity instance, entity player, entity gunmount1, entity gunmou
 	{
 		vehicles_regen(instance, instance.cnt, vehicle_ammo1, autocvar_g_vehicle_lightapc_hmg2_ammo_max,
 										   autocvar_g_vehicle_lightapc_hmg2_ammo_regen_pause,
-										   autocvar_g_vehicle_lightapc_hmg2_ammo_regen, dt, false);
+										   autocvar_g_vehicle_lightapc_hmg2_ammo_regen, frametime, false);
 	}
 
 	player.vehicle_ammo1 = (instance.vehicle_ammo1 / autocvar_g_vehicle_lightapc_hmg2_ammo_max) * 100;

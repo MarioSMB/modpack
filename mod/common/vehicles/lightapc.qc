@@ -168,7 +168,7 @@ vector vehicle_aimturret2(entity _vehic, entity _turretmount, vector _target, en
 	vector vtmp = vectoangles(normalize(_target - vtag));
 	vtmp = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(_vehic.angles+_turretmount.angles), AnglesTransform_FromAngles(vtmp))) - _turrret.angles;
 	vtmp = AnglesTransform_Normalize(vtmp, true);
-	float ftmp = _aimspeed * dt;
+	float ftmp = _aimspeed * frametime; // TODO: use dt?
 	vtmp.y = bound(-ftmp, vtmp.y, ftmp);
 	vtmp.x = bound(-ftmp, vtmp.x, ftmp);
 	_turrret.angles_y = bound(_rotlimit_min, _turrret.angles_y + vtmp.y, _rotlimit_max);    
