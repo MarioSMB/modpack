@@ -1,11 +1,12 @@
 #ifdef GAMEQC
-#ifdef SVQC
 AUTOCVAR(sv_jumpvelocity_backflip, float, 600, "");
+
+#ifdef SVQC
 int models_allowed;
 #endif
 
-REGISTER_STAT(JUMPVELOCITY_CROUCH, float, autocvar_sv_jumpvelocity_backflip);
-REGISTER_STAT(MODELS_ALLOWED, int, models_allowed);
+//REGISTER_STAT(JUMPVELOCITY_CROUCH, float, autocvar_sv_jumpvelocity_backflip);
+//REGISTER_STAT(MODELS_ALLOWED, int, models_allowed);
 
 // TODO
 SOUND(MARIO_CJUMP, "player/mario/player/jump7");
@@ -197,16 +198,16 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerJump, CBC_ORDER_LAST)
 
 	entity player = M_ARGV(0, entity);
 
-	if(STAT(JUMPVELOCITY_CROUCH, player) && PHYS_INPUT_BUTTON_CROUCH(player) && IS_ONGROUND(player) && vdist(player.velocity, <, PHYS_MAXSPEED(player) * 0.6) &&
-		player.model == "models/player/mario.dpm" && (STAT(MODELS_ALLOWED, player) & MODELS_MARIO) &&
+	if(autocvar_sv_jumpvelocity_backflip && PHYS_INPUT_BUTTON_CROUCH(player) && IS_ONGROUND(player) && vdist(player.velocity, <, PHYS_MAXSPEED(player) * 0.6) &&
+		player.model == "models/player/mario.dpm" &&
 #ifdef SVQC
-		!g_cts && !g_race && CS(player).cvar_cl_sparkle == 3
+		!g_cts && !g_race && CS(player).cvar_cl_sparkle == 3 && (models_allowed & MODELS_MARIO)
 #elif defined(CSQC)
-		gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && autocvar_cl_sparkle == 3
+		gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && autocvar_cl_sparkle == 3 /* sorry csqc, no way to check allowed thanks to a stupid stats bug */
 #endif
 		)
 	{
-		M_ARGV(1, float) = STAT(JUMPVELOCITY_CROUCH, player);
+		M_ARGV(1, float) = autocvar_sv_jumpvelocity_backflip;
 		makevectors(PHYS_WORLD_ANGLES(player));
 		player.velocity -= v_forward * 50;
 	#ifdef SVQC
