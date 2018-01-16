@@ -9,4 +9,5 @@ STATIC_INIT(mod_cpmodels)
 	registercvar("cl_goat", "0");
 	registercvar("cl_brothersbear", "0");
 	registercvar("cl_monk", "0");
+	registercvar("cl_nexus", "0");
 }
