@@ -34,7 +34,7 @@ REGISTER_MUTATOR(cl_hooks, true);
 
 STATIC_INIT(cl_hooks_compat)
 {
-	localcmd("\nalias cl_hook \"cl_customhook ${* ?}; sendcvar cl_customhook\"\n");
+	localcmd("\nalias cl_hook \"seta cl_customhook ${* ?}; sendcvar cl_customhook\"\n");
 
 	if(autocvar_cl_customhook)
 		return;
