@@ -1,11 +1,12 @@
 #ifdef GAMEQC
-#ifdef SVQC
 AUTOCVAR(sv_jumpvelocity_backflip, float, 600, "");
+
+#ifdef SVQC
 int models_allowed;
 #endif
 
-REGISTER_STAT(JUMPVELOCITY_CROUCH, float, autocvar_sv_jumpvelocity_backflip);
-REGISTER_STAT(MODELS_ALLOWED, int, models_allowed);
+//REGISTER_STAT(JUMPVELOCITY_CROUCH, float, autocvar_sv_jumpvelocity_backflip);
+//REGISTER_STAT(MODELS_ALLOWED, int, models_allowed);
 
 // TODO
 SOUND(MARIO_CJUMP, "player/mario/player/jump7");
@@ -20,6 +21,8 @@ const int MODELS_RENAMON = BIT(6);
 const int MODELS_BOT = BIT(7);
 const int MODELS_MARIO = BIT(8);
 const int MODELS_BEAR = BIT(9);
+const int MODELS_MONK = BIT(10);
+const int MODELS_NEXUS = BIT(11);
 #endif
 
 #ifdef SVQC
@@ -61,6 +64,8 @@ void cpmodels_Precache()
 		CHECK_MODEL("rosalina.dpm", ROSALINA)
 		CHECK_MODEL("mario.dpm", MARIO)
 		CHECK_MODEL("bear.dpm", BEAR)
+		CHECK_MODEL("monk2.dpm", MONK)
+		CHECK_MODEL("nexus.zym", NEXUS)
 	}
 #undef CHECK_MODEL
 }
@@ -83,6 +88,8 @@ void cpmodels_Precache()
 .bool cvar_cl_goat;
 .bool cvar_cl_damnfurries;
 .bool cvar_cl_brothersbear;
+.bool cvar_cl_monk;
+.bool cvar_cl_nexus;
 .bool cow;
 
 REPLICATE(cvar_cl_pony, bool, "cl_pony");
@@ -93,6 +100,8 @@ REPLICATE(cvar_cl_sparkle, int, "cl_sparkle");
 REPLICATE(cvar_cl_goat, bool, "cl_goat");
 REPLICATE(cvar_cl_damnfurries, bool, "cl_damnfurries");
 REPLICATE(cvar_cl_brothersbear, bool, "cl_brothersbear");
+REPLICATE(cvar_cl_monk, bool, "cl_monk");
+REPLICATE(cvar_cl_nexus, bool, "cl_nexus");
 
 MUTATOR_HOOKFUNCTION(cpmodels, FormatMessage)
 {
@@ -124,6 +133,12 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 			ret_string = "models/player/terminusmale.iqm";
 		if(CS(player).cvar_cl_goat && ALLOWED(GOAT))
 			ret_string = "models/player/draconimale.iqm";
+
+		if(CS(player).cvar_cl_monk && ALLOWED(MONK))
+			ret_string = "models/player/monk2.dpm";
+
+		if(CS(player).cvar_cl_nexus && ALLOWED(NEXUS))
+			ret_string = "models/player/nexus.zym";
 
 		if(ALLOWED(BOT) && IS_BOT_CLIENT(player) && autocvar_sv_allow_customplayermodels_bots)
 			ret_string = "models/player/ubot.iqm";
@@ -197,16 +212,16 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerJump, CBC_ORDER_LAST)
 
 	entity player = M_ARGV(0, entity);
 
-	if(STAT(JUMPVELOCITY_CROUCH, player) && PHYS_INPUT_BUTTON_CROUCH(player) && IS_ONGROUND(player) && vdist(player.velocity, <, PHYS_MAXSPEED(player) * 0.6) &&
-		player.model == "models/player/mario.dpm" && (STAT(MODELS_ALLOWED, player) & MODELS_MARIO) &&
+	if(autocvar_sv_jumpvelocity_backflip && PHYS_INPUT_BUTTON_CROUCH(player) && IS_ONGROUND(player) && vdist(player.velocity, <, PHYS_MAXSPEED(player) * 0.6) &&
+		player.model == "models/player/mario.dpm" &&
 #ifdef SVQC
-		!g_cts && !g_race && CS(player).cvar_cl_sparkle == 3
+		!g_cts && !g_race && CS(player).cvar_cl_sparkle == 3 && (models_allowed & MODELS_MARIO)
 #elif defined(CSQC)
-		gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && autocvar_cl_sparkle == 3
+		gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && autocvar_cl_sparkle == 3 /* sorry csqc, no way to check allowed thanks to a stupid stats bug */
 #endif
 		)
 	{
-		M_ARGV(1, float) = STAT(JUMPVELOCITY_CROUCH, player);
+		M_ARGV(1, float) = autocvar_sv_jumpvelocity_backflip;
 		makevectors(PHYS_WORLD_ANGLES(player));
 		player.velocity -= v_forward * 50;
 	#ifdef SVQC

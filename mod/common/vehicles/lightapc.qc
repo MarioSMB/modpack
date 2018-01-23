@@ -162,13 +162,13 @@ AUTOCVAR(g_vehicle_lightapc_changetype, bool, true, "Allow gunners to change the
 
 vector vehicle_aimturret2(entity _vehic, entity _turretmount, vector _target, entity _turrret, string _tagname, 
 						  float _pichlimit_min, float _pichlimit_max, 
-						  float _rotlimit_min, float _rotlimit_max, float _aimspeed)
+						  float _rotlimit_min, float _rotlimit_max, float _aimspeed, float dt)
 {
 	vector vtag = gettaginfo(_turrret, gettagindex(_turrret, _tagname));
 	vector vtmp = vectoangles(normalize(_target - vtag));
 	vtmp = AnglesTransform_ToAngles(AnglesTransform_LeftDivide(AnglesTransform_FromAngles(_vehic.angles+_turretmount.angles), AnglesTransform_FromAngles(vtmp))) - _turrret.angles;
 	vtmp = AnglesTransform_Normalize(vtmp, true);
-	float ftmp = _aimspeed * frametime;
+	float ftmp = _aimspeed * frametime; // TODO: use dt?
 	vtmp.y = bound(-ftmp, vtmp.y, ftmp);
 	vtmp.x = bound(-ftmp, vtmp.x, ftmp);
 	_turrret.angles_y = bound(_rotlimit_min, _turrret.angles_y + vtmp.y, _rotlimit_max);    
@@ -406,7 +406,7 @@ bool lightapc_gunner_frame(entity this, float dt)
 
 		vehicle_aimturret2(vehic, turretmount, _ct, gunner, "fire",
 						  autocvar_g_vehicle_lightapc_cannon_pitchlimit_down * -1, autocvar_g_vehicle_lightapc_cannon_pitchlimit_up,
-						  _out * -1,  _in,  autocvar_g_vehicle_lightapc_cannon_turnspeed);
+						  _out * -1,  _in,  autocvar_g_vehicle_lightapc_cannon_turnspeed, dt);
 
 		vector angvec = gettaginfo(gunner, gettagindex(gunner, "tag_camera"));
 		setorigin(player, angvec);
@@ -418,13 +418,13 @@ bool lightapc_gunner_frame(entity this, float dt)
 		{
 			case 1:
 			{
-				lightapc_deluge(player, gunner);
+				lightapc_deluge(player, gunner, dt);
 				UpdateAuxiliaryXhair(player, crossy, '0.5 1 0.8', 0);
 				break;
 			}
 			case 2:
 			{
-				lightapc_shlac(player, gunner);
+				lightapc_shlac(player, gunner, gunner, dt);
 				UpdateAuxiliaryXhair(player, crossy, '1 0 0', 0);
 				break;
 			}
@@ -432,19 +432,19 @@ bool lightapc_gunner_frame(entity this, float dt)
 			{
 				if(PHYS_INPUT_BUTTON_ATCK(player))
 					PHYS_INPUT_BUTTON_ATCK2(player) = true;
-				lightapc_grail(player, gunner);
+				lightapc_grail(player, gunner, dt);
 				UpdateAuxiliaryXhair(player, crossy, '1 0 1', 0);
 				break;
 			}
 			case 4:
 			{
-				lightapc_autonex(player, gunner);
+				lightapc_autonex(player, gunner, dt);
 				UpdateAuxiliaryXhair(player, crossy, '0 1 1', 0);
 				break;
 			}
 			case 5:
 			{
-				lightapc_hmg2(player, gunner);	
+				lightapc_hmg2(player, gunner, dt);	
 				UpdateAuxiliaryXhair(player, crossy, '0 0 0', 0);
 				break;
 			}
@@ -452,19 +452,19 @@ bool lightapc_gunner_frame(entity this, float dt)
 			{
 				if(PHYS_INPUT_BUTTON_ATCK(player))
 					PHYS_INPUT_BUTTON_ATCK2(player) = true;
-				lightapc_t17mm(player, gunner);
+				lightapc_t17mm(player, gunner, dt);
 				UpdateAuxiliaryXhair(player, crossy, '0 0 0', 0);
 				break;
 			}
 			case 7:
 			{
-				lightapc_hvyminigun(player, gunner, gunner.gun1);
+				lightapc_hvyminigun(player, gunner, gunner.gun1, dt);
 				UpdateAuxiliaryXhair(player, crossy, '0 0 0', 0);
 				break;
 			}
 			case 8:
 			{
-				lightapc_minigun(player, gunner, gunner.gun1);
+				lightapc_minigun(player, gunner, gunner.gun1, dt);
 				UpdateAuxiliaryXhair(player, crossy, '0 0 0', 0);
 				break;
 			}

@@ -285,7 +285,7 @@ void lightapc_grail_bigattack(entity actor, string tagname, float putforward, fl
 	MUTATOR_CALLHOOK(EditProjectile, actor, proj);
 }
 
-void lightapc_grail(entity player, entity gunmount) 
+void lightapc_grail(entity player, entity gunmount, float dt) 
 {
 	if(PHYS_INPUT_BUTTON_ATCK(player) && gunmount.vehicle_ammo1 >= autocvar_g_vehicle_lightapc_grail_ammo_cost && gunmount.attack_finished_single[0] <= time)
 	{

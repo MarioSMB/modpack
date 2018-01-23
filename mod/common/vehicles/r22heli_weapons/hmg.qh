@@ -1,25 +1,25 @@
 #ifdef SVQC
 
-void r22heli_hmg(entity gun, entity player)
+void r22heli_hmg(entity instance, entity player, entity gunmount1, entity gunmount2, float dt)
 {
-	if(PHYS_INPUT_BUTTON_ATCK(player) && gun.vehicle_ammo1 >= autocvar_g_vehicle_lightapc_hmg2_ammo_cost && gun.attack_finished_single[0] <= time)
+	if(PHYS_INPUT_BUTTON_ATCK(player) && instance.vehicle_ammo1 >= autocvar_g_vehicle_lightapc_hmg2_ammo_cost && instance.attack_finished_single[0] <= time)
 	{
-		gun.cnt = time;
-		vwep_hmg2_attack("tag_mgun", gun.bomb5, player, DEATH_VH_SPID_MINIGUN.m_id, autocvar_g_vehicle_lightapc_hmg2_damage, autocvar_g_vehicle_lightapc_hmg2_spread, autocvar_g_vehicle_lightapc_hmg2_force,
+		instance.cnt = time;
+		vwep_hmg2_attack("tag_mgun", gunmount1, player, DEATH_VH_SPID_MINIGUN.m_id, autocvar_g_vehicle_lightapc_hmg2_damage, autocvar_g_vehicle_lightapc_hmg2_spread, autocvar_g_vehicle_lightapc_hmg2_force,
 				autocvar_g_vehicle_lightapc_hmg2_solidpenetration, autocvar_g_vehicle_lightapc_hmg2_expelbulletcasings);
-		vwep_hmg2_attack("tag_mgun", gun.bomb6, player, DEATH_VH_SPID_MINIGUN.m_id, autocvar_g_vehicle_lightapc_hmg2_damage, autocvar_g_vehicle_lightapc_hmg2_spread, autocvar_g_vehicle_lightapc_hmg2_force,
+		vwep_hmg2_attack("tag_mgun", gunmount2, player, DEATH_VH_SPID_MINIGUN.m_id, autocvar_g_vehicle_lightapc_hmg2_damage, autocvar_g_vehicle_lightapc_hmg2_spread, autocvar_g_vehicle_lightapc_hmg2_force,
 				autocvar_g_vehicle_lightapc_hmg2_solidpenetration, autocvar_g_vehicle_lightapc_hmg2_expelbulletcasings);
-		gun.vehicle_ammo1 -= autocvar_g_vehicle_lightapc_hmg2_ammo_cost;
-		gun.attack_finished_single[0] = time + autocvar_g_vehicle_lightapc_hmg2_refire;
+		instance.vehicle_ammo1 -= autocvar_g_vehicle_lightapc_hmg2_ammo_cost;
+		instance.attack_finished_single[0] = time + autocvar_g_vehicle_lightapc_hmg2_refire;
 	}
 	else
 	{
-		vehicles_regen(gun, gun.cnt, vehicle_ammo1, autocvar_g_vehicle_lightapc_hmg2_ammo_max,
+		vehicles_regen(instance, instance.cnt, vehicle_ammo1, autocvar_g_vehicle_lightapc_hmg2_ammo_max,
 										   autocvar_g_vehicle_lightapc_hmg2_ammo_regen_pause,
 										   autocvar_g_vehicle_lightapc_hmg2_ammo_regen, frametime, false);
 	}
 
-	player.vehicle_ammo1 = (gun.vehicle_ammo1 / autocvar_g_vehicle_lightapc_hmg2_ammo_max) * 100;
+	player.vehicle_ammo1 = (instance.vehicle_ammo1 / autocvar_g_vehicle_lightapc_hmg2_ammo_max) * 100;
 }
 
 #endif

@@ -118,11 +118,11 @@ void r22heli_rocket_tracker(entity this)
 	}
 
 	if(trace_fraction != 1.0 && trace_ent != this.enemy)
-		newdir_z += 16 * sys_frametime;
+		newdir.z += 16 * sys_frametime;
 
 	this.velocity = normalize(olddir + newdir * autocvar_g_vehicle_racer_rocket_turnrate) * newvel;
 	this.velocity_z -= 800 * sys_frametime;
-	this.velocity_z += max(height_diff, autocvar_g_vehicle_racer_rocket_climbspeed) * sys_frametime ;
+	this.velocity_z += max(height_diff, autocvar_g_vehicle_racer_rocket_climbspeed) * sys_frametime;
 }
 
 void r22heli_rocket_groundhugger(entity this)

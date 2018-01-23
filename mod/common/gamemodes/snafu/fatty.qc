@@ -259,7 +259,7 @@ void snafu_fatty_think(entity this)
 			p.cnt *= 512;
 			p.cnt = bound(32, p.cnt, 512);
 			
-			p.velocity = trigger_push_calculatevelocity(p.origin , this.enemy, p.cnt) + randomvec() * 64;
+			p.velocity = trigger_push_calculatevelocity(p.origin, this.enemy, p.cnt, p) + randomvec() * 64;
 			p.avelocity = randomvec() * 180;
 			p.owner = this;
 			settouch(p, snafu_fatty_projectile_touch);

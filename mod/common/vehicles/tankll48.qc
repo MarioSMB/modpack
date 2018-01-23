@@ -242,14 +242,14 @@ void tankll48_fire_cannon(entity actor, entity vehic, string tagname)
 	CSQCProjectile(missile, true, PROJECTILE_CANNONBALL, false);
 }
 
-void tankll48_shlac(entity player, entity gunmount, float dt) 
+void tankll48_shlac(entity player, entity gunmount, entity gun, float dt) 
 {
 	if(PHYS_INPUT_BUTTON_ATCK(player) && gunmount.vehicle_ammo1 >= autocvar_g_vehicle_lightapc_shlac_ammo_cost && gunmount.attack_finished_single[0] <= time)
 	{
 		gunmount.cnt = time;
 		gunmount.misc_bulletcounter += 1;
 
-		vwep_shlac_attack(player, "tag_mgun1", gunmount, gunmount.gun1);
+		vwep_shlac_attack(player, "tag_mgun1", gunmount, gun);
 		//vwep_shlac_attack(player, "tag_mgun2", gunmount);
 		//vwep_shlac_attack(player, "tag_mgun3", gunmount);
 		//vwep_shlac_attack(player, "tag_mgun4", gunmount);
@@ -309,8 +309,8 @@ bool tankll48_frame(entity this, float dt)
  
 	//Rotate Turret and stabilizing "gun3" (rotates faster than turret)
 	float ftmp = autocvar_g_vehicle_tankll48_turret_turnspeed * sys_frametime;    
-	ad_y = bound(-ftmp, ad_y, ftmp);
-	vehic.gun3.angles_y = bound(autocvar_g_vehicle_tankll48_turret_turnlimit * -1, vehic.gun3.angles_y + ad_y, autocvar_g_vehicle_tankll48_turret_turnlimit);
+	ad.y = bound(-ftmp, ad.y, ftmp);
+	vehic.gun3.angles_y = bound(autocvar_g_vehicle_tankll48_turret_turnlimit * -1, vehic.gun3.angles_y + ad.y, autocvar_g_vehicle_tankll48_turret_turnlimit);
 	vehic.tur_head.angles_y = vehic.gun3.angles_y;
 
 	/////////////////////////
@@ -325,14 +325,14 @@ bool tankll48_frame(entity this, float dt)
 	ad = AnglesTransform_Normalize(ad, true);
 	
 	//ftmp = autocvar_g_vehicle_tankll48_gun_turnspeed * sys_frametime;    
-	//ad_y = bound(-ftmp, ad_y, ftmp);
-	//vehic.gun1.angles_y = bound(autocvar_g_vehicle_tankll48_gun_turnlimit * -1, vehic.gun1.angles_y + ad_y, autocvar_g_vehicle_tankll48_gun_turnlimit);
+	//ad.y = bound(-ftmp, ad.y, ftmp);
+	//vehic.gun1.angles_y = bound(autocvar_g_vehicle_tankll48_gun_turnlimit * -1, vehic.gun1.angles_y + ad.y, autocvar_g_vehicle_tankll48_gun_turnlimit);
 
 	
 	// Pitch head
 	ftmp = autocvar_g_vehicle_tankll48_gun_pitchspeed * sys_frametime;    
-	ad_x = bound(ftmp * -1, ad_x, ftmp);
-	vehic.gun1.angles_x = bound(autocvar_g_vehicle_tankll48_gun_pitchlimit_down, vehic.gun1.angles_x + ad_x, autocvar_g_vehicle_tankll48_gun_pitchlimit_up);
+	ad.x = bound(ftmp * -1, ad.x, ftmp);
+	vehic.gun1.angles_x = bound(autocvar_g_vehicle_tankll48_gun_pitchlimit_down, vehic.gun1.angles_x + ad.x, autocvar_g_vehicle_tankll48_gun_pitchlimit_up);
 
 	//fixedmakevectors(vehic.angles);
 	makevectors(vehic.angles + '-2 0 0' * vehic.angles_x);
@@ -462,7 +462,7 @@ bool tankll48_frame(entity this, float dt)
 	
 	PHYS_INPUT_BUTTON_CROUCH(this) = false;
 	
-	tankll48_shlac(this, vehic, dt);
+	tankll48_shlac(this, vehic, vehic.gun1, dt);
 	
 	if(!forbidWeaponUse(this))
 	if(PHYS_INPUT_BUTTON_ATCK2(this) && vehic.vehicle_ammo2 >= autocvar_g_vehicle_tankll48_cannon_ammo_cost)
@@ -471,9 +471,6 @@ bool tankll48_frame(entity this, float dt)
 		vehicles_regen(vehic, vehic.count, vehicle_ammo2, autocvar_g_vehicle_tankll48_cannon_ammo_max,
 										   autocvar_g_vehicle_tankll48_cannon_ammo_regen_pause,
 										   autocvar_g_vehicle_tankll48_cannon_ammo_regen, dt, false);
-	
-	
-	//tankll48_rocket_do();
 
 	if(vehic.vehicle_flags  & VHF_SHIELDREGEN)
 		vehicles_regen(vehic, vehic.dmg_time, vehicle_shield, autocvar_g_vehicle_tankll48_shield, autocvar_g_vehicle_tankll48_shield_regen_pause, autocvar_g_vehicle_tankll48_shield_regen, dt, true);
@@ -503,15 +500,11 @@ bool tankll48_frame(entity this, float dt)
 	//print(sprintf("m1 = %f\n", vehic.gun3.angles_y));
 	if(vehic.gun3.angles_y > 180)
 	{
-		//print("here 1\n");
 		vehic.gun3.angles_y = vehic.gun3.angles_y - 360;
-	//print(sprintf("m2 = %f\n", vehic.gun3.angles_y));
 	}
 	else if(vehic.gun3.angles_y < -180)
 	{
-		//print("here 2\n");
 		vehic.gun3.angles_y = vehic.gun3.angles_y + 360;
-		//print(sprintf("m2 = %f\n", vehic.gun3.angles_y));
 	}
 
 	//this.vehicle_ammo1 = (vehic.vehicle_ammo1 / autocvar_g_vehicle_tankll48_cannon_ammo_max) * 100;
@@ -529,7 +522,10 @@ void tankll48_exit(entity this, int eject)
 	entity player = this.owner;
 
 	if(!player)
+	{
+		this.owner = NULL; // reset owner anyway?
 		return;
+	}
 
 	if(eject)
 	{

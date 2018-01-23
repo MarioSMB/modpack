@@ -16,18 +16,18 @@ STATIC_INIT(fix_weaponpriority)
 		string newprio = "";
 		FOREACH_WORD(curprio, true,
 		{
-			newprio = strcat(newprio, it, " ");
+			newprio = cons(newprio, it);
 
 			if(it == "hagar" && !have_flak)
-				newprio = strcat(newprio, "flak ");
+				newprio = cons(newprio, "flak");
 			if(it == "blaster" && !have_lightsabre)
-				newprio = strcat(newprio, "lightsabre ");
+				newprio = cons(newprio, "lightsabre");
 			if(it == "elector" && !have_chainsaw)
-				newprio = strcat(newprio, "chainsaw ");
+				newprio = cons(newprio, "chainsaw");
 			if(it == "machinegun" && !have_uzi)
-				newprio = strcat(newprio, "mac10 ");
+				newprio = cons(newprio, "mac10");
 			if(it == "devastator" && !have_rpg)
-				newprio = strcat(newprio, "rpg7 ");
+				newprio = cons(newprio, "rpg7");
 		});
 
 		cvar_set("cl_weaponpriority", newprio);
