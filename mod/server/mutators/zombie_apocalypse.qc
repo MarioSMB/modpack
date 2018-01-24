@@ -34,11 +34,12 @@ void za_SetEnemy(entity player)
 {
 	// prefer players
 	entity closest_targ = NULL;
-	FOREACH_CLIENT(IS_PLAYER(it) && it != player, LAMBDA(
+	FOREACH_CLIENT(IS_PLAYER(it) && it != player,
+	{
 		if(vdist(player.origin - it.origin, <, autocvar_g_monsters_target_range))
 		if(!closest_targ || vlen2(player.origin - closest_targ.origin) > vlen2(player.origin - it.origin))
 			closest_targ = it;
-	));
+	});
 
 	if(!closest_targ)
 	{
@@ -53,12 +54,13 @@ void za_SetEnemy(entity player)
 	// otherwise, attempt any entity nearby
 	if(!closest_targ)
 	{
-		FOREACH_ENTITY_FLOAT(monster_attack, true, LAMBDA(
+		FOREACH_ENTITY_FLOAT(monster_attack, true,
+		{
 			if(it.takedamage && it != player)
 			if(vdist(player.origin - it.origin, <, autocvar_g_monsters_target_range))
 			if(!closest_targ || vlen2(player.origin - closest_targ.origin) > vlen2(player.origin - it.origin))
 				closest_targ = it;
-		));
+		});
 	}
 
 	if(closest_targ)
