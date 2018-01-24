@@ -324,23 +324,23 @@ MUTATOR_HOOKFUNCTION(mdlplant, SV_ParseClientCommand)
 					STATUS("^3Object under cursor is ^1NOT^3 a mplant object!");
 				return true;
 			}
-			_add_x = stof(argv(1));
+			_add.x = stof(argv(1));
 		}
 		else if (cmd_argc == 3) // x y
 		{
-			_add_x = stof(argv(1));
-			_add_y = stof(argv(2));
+			_add.x = stof(argv(1));
+			_add.y = stof(argv(2));
 		}
 		else if (cmd_argc == 4) // x y z
 		{
-			_add_x = stof(argv(1));
-			_add_y = stof(argv(2));
-			_add_z = stof(argv(3));
+			_add.x = stof(argv(1));
+			_add.y = stof(argv(2));
+			_add.z = stof(argv(3));
 		}
 
-		player.mplant_cursorobject.pos1_x = bound(-360, _add_x + player.mplant_cursorobject.pos1_x, 360);
-		player.mplant_cursorobject.pos1_y = bound(-360, _add_y + player.mplant_cursorobject.pos1_y, 360);
-		player.mplant_cursorobject.pos1_z = bound(-360, _add_z + player.mplant_cursorobject.pos1_z, 360);
+		player.mplant_cursorobject.pos1_x = bound(-360, _add.x + player.mplant_cursorobject.pos1_x, 360);
+		player.mplant_cursorobject.pos1_y = bound(-360, _add.y + player.mplant_cursorobject.pos1_y, 360);
+		player.mplant_cursorobject.pos1_z = bound(-360, _add.z + player.mplant_cursorobject.pos1_z, 360);
 
 		return true;
 	}
