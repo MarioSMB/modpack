@@ -21,11 +21,11 @@ AUTOCVAR_NOREF(g_riflearena_rifle_secondary_damage, int, 40, "");
 
 void ra_SetCvars()
 {
-	cvar_settemp("g_balance_rifle_secondary_spread", ftos(cvar("g_riflearena_rifle_secondary_spread")));
-	cvar_settemp("g_balance_rifle_secondary_shots", ftos(cvar("g_riflearena_rifle_secondary_shots")));
-	cvar_settemp("g_balance_rifle_secondary_animtime", ftos(cvar("g_riflearena_rifle_secondary_animtime")));
-	cvar_settemp("g_balance_rifle_secondary_refire", ftos(cvar("g_riflearena_rifle_secondary_refire")));
-	cvar_settemp("g_balance_rifle_secondary_damage", ftos(cvar("g_riflearena_rifle_secondary_damage")));
+	cvar_settemp("g_balance_rifle_secondary_spread", cvar_string("g_riflearena_rifle_secondary_spread"));
+	cvar_settemp("g_balance_rifle_secondary_shots", cvar_string("g_riflearena_rifle_secondary_shots"));
+	cvar_settemp("g_balance_rifle_secondary_animtime", cvar_string("g_riflearena_rifle_secondary_animtime"));
+	cvar_settemp("g_balance_rifle_secondary_refire", cvar_string("g_riflearena_rifle_secondary_refire"));
+	cvar_settemp("g_balance_rifle_secondary_damage", cvar_string("g_riflearena_rifle_secondary_damage"));
 }
 
 MUTATOR_HOOKFUNCTION(ra, Damage_Calculate)

@@ -149,18 +149,20 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 		if(STAT(FROZEN, player) == 1)
 		{
 			int frozen_count = 0, nplayers = 0;
-			FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, player), LAMBDA(
+			FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, player),
+			{
 				++nplayers;
 				if(STAT(FROZEN, it) == 1)
 					++frozen_count;
-			));
+			});
 			if(nplayers == frozen_count)
 			{
-				FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, player), LAMBDA(
+				FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, player),
+				{
 					it.freeze_flag = FROZEN_RESPAWNING;
 					it.respawn_time = time + autocvar_g_freeze_respawn_time;
 					GameRules_scoring_add(it, SCORE, -1); // lose score for this
-				));
+				});
 
 				return true;
 			}
@@ -178,7 +180,8 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 		{
 			vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 			n = 0;
-			FOREACH_CLIENT(IS_PLAYER(it) && it != player && !IS_DEAD(it) && !STAT(FROZEN, it) && SAME_TEAM(it, player), LAMBDA(
+			FOREACH_CLIENT(IS_PLAYER(it) && it != player && !IS_DEAD(it) && !STAT(FROZEN, it) && SAME_TEAM(it, player),
+			{
 				if(boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
 				{
 					if(!o)
@@ -187,7 +190,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 						it.reviving = true;
 					++n;
 				}
-			));
+			});
 		}
 
 		if(n && STAT(FROZEN, player) == 1) // OK, there is at least one teammate reviving us
@@ -207,20 +210,22 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 				}
 
 				// EVERY team mate nearby gets a point (even if multiple!)
-				FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, LAMBDA(
+				FOREACH_CLIENT(IS_PLAYER(it) && it.reviving,
+				{
 					GameRules_scoring_add(it, SCORE, +1);
 					nades_GiveBonus(it,autocvar_g_nades_bonus_score_low);
-				));
+				});
 
 				Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_FREEZETAG_REVIVED, o.netname);
 				Send_Notification(NOTIF_ONE, o, MSG_CENTER, CENTER_FREEZETAG_REVIVE, player.netname);
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED, player.netname, o.netname);
 			}
 
-			FOREACH_CLIENT(IS_PLAYER(it) && it.reviving, LAMBDA(
+			FOREACH_CLIENT(IS_PLAYER(it) && it.reviving,
+			{
 				it.revive_progress = player.revive_progress;
 				it.reviving = false;
-			));
+			});
 		}
 		else if(!n && STAT(FROZEN, player) == 1) // only if no teammate is nearby will we reset
 		{

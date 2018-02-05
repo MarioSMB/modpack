@@ -66,14 +66,10 @@ void M_Koopa_Touch(entity this, entity toucher)
 	
 	if(toucher.items & ITEM_Shield.m_itemid)
 		return;
-	if(toucher.takedamage == DAMAGE_NO)
-		return;
-	if(!toucher.iscreature)
+	if(toucher.takedamage == DAMAGE_NO || !toucher.iscreature || toucher.monsterid == this.monsterid)
 		return;
 	if(time < this.attack_finished_single[0])
 		return;
-	if(toucher.monsterid == this.monsterid)
-		return; // friendly
 		
 	vector vdir = normalize(toucher.origin - this.origin);
 	if(vdir.z <= 0.7)
