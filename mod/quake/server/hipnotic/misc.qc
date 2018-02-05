@@ -381,6 +381,8 @@ spawnfunc(effect_finale)
 
 void info_startendtext_use(entity this, entity actor, entity trigger)
 {
+	server_reset();
+
 	intermission_running = 1;
 	ExitIntermission();
 }

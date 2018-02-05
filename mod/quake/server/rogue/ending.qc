@@ -212,6 +212,8 @@ void ending_for_coop(entity this)
 
 void xpackEnding(entity this)
 {
+	server_reset();
+
 	if(coop)
 	{
 		ending_for_coop(this);

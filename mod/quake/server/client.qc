@@ -474,6 +474,33 @@ void IntermissionThink(entity this)
 	ExitIntermission();
 }
 
+float autocvar_sv_quake_autoreset;
+void server_delayed_reset(entity this)
+{
+	if(deathmatch)
+		return; // don't wanna do a hard reset in these cases
+
+	// kicks everyone and resets the server!
+	string themap = "start";
+	if(MP_HIPNOTIC)
+		themap = "hipstart";
+	else if(MP_ROGUE)
+		themap = "rstart";
+
+	localcmd("\nmap ", themap, "\n");
+}
+
+void server_reset()
+{
+	if(autocvar_sv_quake_autoreset <= 0)
+		return;
+
+	// reset server after some time
+	entity reset_timer = spawn();
+	setthink(reset_timer, server_delayed_reset);
+	reset_timer.nextthink = time + autocvar_sv_quake_autoreset;
+}
+
 void execute_changelevel(entity this)
 {
 	intermission_running = 1;

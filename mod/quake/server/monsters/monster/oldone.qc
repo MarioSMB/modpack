@@ -170,6 +170,8 @@ void finale_1(entity this, entity attacker)
 	intermission_exittime = time + 10000000;	// never allow exit
 	intermission_running = 1;
 
+	server_reset();
+
 	// find the intermission spot
 	entity pos = find(NULL, classname, "info_intermission");
 	if(!pos)
