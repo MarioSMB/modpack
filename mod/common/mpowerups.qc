@@ -145,6 +145,7 @@ const vector PL_CROUCH_MIN_CONST = '-16 -16 -24';
 
 .float mini_oldgravity;
 .float star_touch_time;
+.vector star_oldcolormod;
 
 bool have_powerup(entity this)
 {
@@ -274,8 +275,10 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPowerups)
 	{
 		play_countdown(player, STAT(STAR_FINISHED, player), SND_POWEROFF);
 		player.effects = player.effects | (EF_DIMLIGHT | EF_FULLBRIGHT);
+		player.colormod = randomvec() * ((autocvar_g_player_brightness) ? autocvar_g_player_brightness : 1);
 		if (time > STAT(STAR_FINISHED, player))
 		{
+			player.colormod = player.star_oldcolormod;
 			player.mitems &= ~ITEM_Star.m_itemid;
 			//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_STAR, player.netname);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_STAR);
@@ -285,6 +288,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPowerups)
 	{
 		if (time < STAT(STAR_FINISHED, player))
 		{
+			player.star_oldcolormod = player.colormod;
 			player.mitems |= ITEM_Star.m_itemid;
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_STAR, player.netname);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_STAR);

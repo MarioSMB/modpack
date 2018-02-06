@@ -92,6 +92,11 @@ MUTATOR_HOOKFUNCTION(ra, ForbidThrowCurrentWeapon)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(ra, ForbidRandomStartWeapons)
+{
+	return true;
+}
+
 MUTATOR_HOOKFUNCTION(ra, BuildMutatorsString)
 {
 	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":RA");
