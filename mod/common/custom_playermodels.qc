@@ -40,6 +40,9 @@ AUTOCVAR(sv_allow_customplayermodels, bool, false, "");
 AUTOCVAR(sv_allow_customplayermodels_bots, bool, true, "");
 AUTOCVAR(sv_allow_customplayermodels_idlist, string, "", "");
 AUTOCVAR(sv_allow_customplayermodels_speciallist, string, "", "");
+AUTOCVAR(sv_smokeball_time, float, 2, "");
+AUTOCVAR(sv_smokeball_refire, float, 10, "");
+AUTOCVAR(sv_smokeball_alpha, float, 0, "");
 
 void cpmodels_Precache()
 {
@@ -91,6 +94,10 @@ void cpmodels_Precache()
 .bool cvar_cl_monk;
 .bool cvar_cl_nexus;
 .bool cow;
+
+.float ninja_sneak;
+.float ninja_cooldown;
+.float ninja_prevalpha;
 
 REPLICATE(cvar_cl_pony, bool, "cl_pony");
 REPLICATE(cvar_cl_pony_skin, int, "cl_pony_skin");
@@ -194,6 +201,42 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerSpawn)
 
 	if(CS(player).cvar_cl_sparkle == 2 && PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		player.colormap = 4351;
+}
+
+MUTATOR_HOOKFUNCTION(cpmodels, PlayerPreThink)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(time < player.ninja_sneak)
+		player.alpha = ((autocvar_sv_smokeball_alpha) ? autocvar_sv_smokeball_alpha : -1);
+	else if(player.ninja_sneak)
+	{
+		player.alpha = player.ninja_prevalpha;
+		player.ninja_sneak = 0;
+	}
+}
+
+MUTATOR_HOOKFUNCTION(cpmodels, PlayerUseKey)
+{
+	// NOTE: this doesn't stop if something else called use key, since it's supposed to always work!
+	//if(MUTATOR_RETURNVALUE) return;
+	if(game_stopped) return;
+
+	entity player = M_ARGV(0, entity);
+
+	if(time < player.ninja_cooldown || !PHYS_INPUT_BUTTON_CROUCH(player))
+		return;
+
+	if(player.playermodel != "models/player/monk2.dpm" || !PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
+		return;
+
+	Send_Effect(EFFECT_SMOKE_RING, player.origin, '0 0 50', 2);
+	sound(player, CH_TRIGGER, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
+	player.ninja_sneak = time + autocvar_sv_smokeball_time;
+	player.ninja_cooldown = time + autocvar_sv_smokeball_refire;
+	player.ninja_prevalpha = player.alpha;
+	player.alpha = ((autocvar_sv_smokeball_alpha) ? autocvar_sv_smokeball_alpha : -1);
+	return true;
 }
 
 #endif
