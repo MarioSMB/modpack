@@ -171,7 +171,7 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 		if(!rlplayer)
 			rlplayer = csqcplayer; // fall back to the global
 
-		makevectors(view_angles);
+		makevectors(rlplayer.v_angle);
 
 		//v_forward = view_forward;
 		//v_right = view_right;
@@ -221,7 +221,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, DrawCrosshair)
 {
 	if((time < STAT(GAMESTARTTIME))
 	|| (time < STAT(ROUNDSTARTTIME))
-	|| (autocvar_chase_active)
+	//|| (autocvar_chase_active)
 	|| (STAT(FROZEN))
 	|| (spectatee_status)
 	) { return false; }
