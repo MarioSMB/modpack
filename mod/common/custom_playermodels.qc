@@ -227,7 +227,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerUseKey)
 	if(time < player.ninja_cooldown || !PHYS_INPUT_BUTTON_CROUCH(player))
 		return;
 
-	if(player.playermodel != "models/player/monk2.dpm" || !PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
+	if(player.model != "models/player/monk2.dpm" || !PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		return;
 
 	Send_Effect(EFFECT_SMOKE_RING, player.origin, '0 0 50', 2);
