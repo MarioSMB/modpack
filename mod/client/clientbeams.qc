@@ -171,7 +171,9 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 		if(!rlplayer)
 			rlplayer = csqcplayer; // fall back to the global
 
-		makevectors(rlplayer.v_angle);
+		makevectors(getpropertyvec(VF_CL_VIEWANGLES));
+		//makevectors(rlplayer.v_angle);
+		//view_angles
 
 		//v_forward = view_forward;
 		//v_right = view_right;
