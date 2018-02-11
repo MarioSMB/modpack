@@ -461,39 +461,40 @@ MUTATOR_HOOKFUNCTION(mpowerups, FixPlayermodel)
 		M_ARGV(1, int) = 2;
 }
 
-MUTATOR_HOOKFUNCTION(mpowerups, OnEntityPreSpawn, CBC_ORDER_FIRST)
+MUTATOR_HOOKFUNCTION(mpowerups, FilterItem, CBC_ORDER_FIRST)
 {
-	if (!autocvar_g_powerups) { return; }
-	if (!autocvar_g_powerups_mario_replace) { return; }
-	entity ent = M_ARGV(0, entity);
-	// Can't use .itemdef here
-	if (!(ent.classname == "item_strength" || ent.classname == "item_shield" || ent.classname == "item_health_mega" || ent.classname == "item_quad"))
-		return;
+	entity item = M_ARGV(0, entity);
 
-	entity e = spawn();
+	switch(item.itemdef)
+	{
+		case ITEM_Star: return false;
+		case ITEM_Mini: return false;
+		case ITEM_Life: return false;
+	}
+	if (!autocvar_g_powerups || !autocvar_g_powerups_mario_replace)
+		return false;
+	if (!(item.classname == "item_strength" || item.classname == "item_shield" || item.classname == "item_health_mega"))
+		return false;
 
+	string newclass;
 	float r = random();
-	if (r < 0.3)
-	{
-		e.classname = "item_minishroom";
-		setthink(e, mario_minishroom);
-	}
-	else if (r < 0.6)
-	{
-		e.classname = "item_lifeshroom";
-		setthink(e, mario_lifeshroom);
-	}
+	if(r < 0.3)
+		newclass = "item_minishroom";
+	else if(r < 0.6)
+		newclass = "item_lifeshroom";
 	else
-	{
-		e.classname = "item_starman";
-		setthink(e, mario_starman);
-	}
+		newclass = "item_starman";
 
-	e.nextthink = time + 0.1;
-	e.spawnflags = ent.spawnflags;
-	e.noalign = ent.noalign;
-	setorigin(e, ent.origin);
 
+	entity newitem = spawn();
+	newitem.classname = newclass;
+	setorigin(newitem, item.origin);
+	newitem.ok_item = true;
+	newitem.noalign = Item_ShouldKeepPosition(item);
+	newitem.cnt = item.cnt;
+	newitem.team = item.team;
+	newitem.spawnfunc_checked = true;
+	Item_Initialize(newitem, newclass);
 	return true;
 }
 
