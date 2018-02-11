@@ -183,6 +183,9 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 	if(player.playermodel == "models/player/bear.dpm" && !PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		ret_string = autocvar_sv_defaultplayermodel;
 
+	if(player.playermodel == "models/player/rosalina.dpm" && !PlayerInList(player, autocvar_sv_allow_customplayermodels_idlist))
+		ret_string = autocvar_sv_defaultplayermodel;
+
 	if(!cvar("g_overkill") && CS(player).cow && ALLOWED(COW))
 		ret_string = "models/player/cow.md3";
 

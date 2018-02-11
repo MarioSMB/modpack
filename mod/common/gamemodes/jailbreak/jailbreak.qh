@@ -36,7 +36,7 @@ REGISTER_SP(JB_DEFENSE);
 
 REGISTER_STAT(JB_ISPRISONED, int)
 
-REGISTER_WAYPOINT(JB_ControlPoint, _("Control point"), '0 1 1', 1);
+REGISTER_WAYPOINT(JB_ControlPoint, _("Control point"), "", '0 1 1', 1);
 
 #ifdef SVQC
 
