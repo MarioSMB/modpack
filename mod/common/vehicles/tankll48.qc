@@ -64,8 +64,6 @@ STATIC_INIT(CannonballProjectile) { PROJECTILE_CANNONBALL = MOD_PROJECTILES++; }
 
 #ifdef SVQC
 
-.entity hitboxft, hitboxbk;
-
 AUTOCVAR(g_vehicle_tankll48, bool, false, _("Enable LL48 Tank vehicle (if allowed by mods)"));
 AUTOCVAR(g_vehicle_tankll48_respawntime, float, 45, "");
 
@@ -691,8 +689,8 @@ METHOD(TankLL48, vr_death, void(TankLL48 thisveh, entity instance))
 	instance.colormod			= instance.tur_head.colormod = instance.gun1.colormod = instance.gun2.colormod = '-1 -1 -1';
 	instance.frame				= 10;
 	set_movetype(instance, MOVETYPE_TOSS);
-	lightapc_kill_hitbox(instance.hitboxft);
-	lightapc_kill_hitbox(instance.hitboxbk);
+	vehicles_hitbox_kill(instance.hitboxft);
+	vehicles_hitbox_kill(instance.hitboxbk);
 			
 	CSQCModel_UnlinkEntity(instance); // networking the death scene would be a nightmare
 }
@@ -736,8 +734,8 @@ METHOD(TankLL48, vr_spawn, void(TankLL48 thisveh, entity instance))
 		setattachment(instance.vehicle_viewport, instance.tur_head, "tag_camera");
 			
 		instance.gun1.colormap = instance.colormap;
-		instance.hitboxft = spawn();
-		instance.hitboxbk = spawn();
+		instance.hitboxft = new(tankll48hitbox);
+		instance.hitboxbk = new(tankll48hitbox);
 	}
 
 	instance.frame = 5;
@@ -764,8 +762,8 @@ METHOD(TankLL48, vr_spawn, void(TankLL48 thisveh, entity instance))
 			
 	instance.PlayerPhysplug = tankll48_frame;
 
-	lightapc_spawn_hitbox(instance, instance.hitboxft, '-105 -105 2', '105 105 95', 95);
-	lightapc_spawn_hitbox(instance, instance.hitboxbk, '-60 -60 2', '60 60 50', -120);
+	vehicles_hitbox_spawn(instance, instance.hitboxft, '-105 -105 2', '105 105 95', 95, 0);
+	vehicles_hitbox_spawn(instance, instance.hitboxbk, '-60 -60 2', '60 60 50', -120, 0);
 }
 METHOD(TankLL48, vr_setup, void(TankLL48 thisveh, entity instance))
 {

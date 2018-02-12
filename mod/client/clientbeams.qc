@@ -48,11 +48,16 @@ int W_SetupShot_Dir_ProjectileSize_Range(entity ent, entity wepent, vector s_for
 	vector dv = v_right * -vecs.y + v_up * vecs.z;
 	w_shotorg = ent.origin + ent.view_ofs + dv;
 
+	int oldsurfaceflags = trace_dphitq3surfaceflags;
+
 	// now move the shotorg forward as much as requested if possible
 	tracebox(w_shotorg, mi, ma, w_shotorg + v_forward * (vecs.x + nudge), MOVE_NORMAL, ent);
 	w_shotorg = trace_endpos - v_forward * nudge;
 	// calculate the shotdir from the chosen shotorg
 	w_shotdir = normalize(w_shotend - w_shotorg);
+
+	// restore flags for later use
+	trace_dphitq3surfaceflags = oldsurfaceflags;
 
 	//vector prevdir = w_shotdir;
 	//vector prevorg = w_shotorg;
