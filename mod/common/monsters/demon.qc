@@ -66,7 +66,7 @@ void M_Demon_Attack_Leap_Touch(entity this, entity toucher)
 	{
 		angles_face = vectoangles(this.moveto - this.origin);
 		angles_face = normalize(angles_face) * (autocvar_g_monster_demon_attack_leap_force);
-		Damage(toucher, this, this, (autocvar_g_monster_demon_attack_leap_damage) * MONSTER_SKILLMOD(this), DEATH_MONSTER_DEMON_JUMP.m_id, toucher.origin, angles_face);
+		Damage(toucher, this, this, (autocvar_g_monster_demon_attack_leap_damage) * MONSTER_SKILLMOD(this), DEATH_MONSTER_DEMON_JUMP.m_id, DMG_NOWEP, toucher.origin, angles_face);
 		settouch(this, Monster_Touch); // instantly turn it off to stop damage spam
 		this.state = 0;
 	}

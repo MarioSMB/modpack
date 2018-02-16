@@ -254,7 +254,7 @@ bool snafu_zombie_domelee(entity this, float _up, float _range, float _dmg, floa
 	tracebox(_from, '-1 -1 -1', '1 1 1', _to, MOVE_NORMAL, this);
 	if(trace_ent && trace_ent.takedamage)
 	{
-		Damage(trace_ent, this, this, _dmg, DEATH_GENERIC.m_id, '0 0 0' , v_forward * _force);
+		Damage(trace_ent, this, this, _dmg, DEATH_GENERIC.m_id, DMG_NOWEP, '0 0 0' , v_forward * _force);
 		return true;
 	}
 
@@ -364,7 +364,7 @@ const int TADPOLE_FRAME_PAIN_FIRST = 1;
 const int TADPOLE_FRAME_PAIN_COUNT = 5;
 const int TADPOLE_FRAME_DIE = 6;
 
-void snafu_tadpole_damage(entity this, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void snafu_tadpole_damage(entity this, entity inflictor, entity attacker, float damage, float deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(!IS_PLAYER(attacker))
 		this.health -= damage;

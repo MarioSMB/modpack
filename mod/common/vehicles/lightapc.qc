@@ -887,7 +887,7 @@ void lightapc_blowup(entity this, entity toucher)
 					autocvar_g_vehicle_lightapc_blowup_edgedamage,
 					autocvar_g_vehicle_lightapc_blowup_radius, NULL, NULL,
 					autocvar_g_vehicle_lightapc_blowup_forceintensity,
-					DEATH_VH_LIGHTAPC_DEATH.m_id, NULL);
+					DEATH_VH_LIGHTAPC_DEATH.m_id, DMG_NOWEP, NULL);
 
 	delete(this);
 }

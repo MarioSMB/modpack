@@ -698,7 +698,7 @@ void r22heli_blowup(entity this)
 				 autocvar_g_vehicle_r22heli_blowup_edgedamage,
 				 autocvar_g_vehicle_r22heli_blowup_radius, this, NULL,
 				 autocvar_g_vehicle_r22heli_blowup_forceintensity,
-				 DEATH_VH_HELI_DEATH.m_id, NULL);
+				 DEATH_VH_HELI_DEATH.m_id, DMG_NOWEP, NULL);
 
 	sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_MIN);
 	Send_Effect(EFFECT_EXPLOSION_MEDIUM, (this.origin + '0 0 50') + (randomvec() * 80), '0 0 0', 1);

@@ -116,7 +116,7 @@ void M_Ogre_Attack_Grenade_Explode(entity this, entity directhitentity)
 	sound (this, CH_WEAPON_A, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_GRENADE_EXPLODE, this.origin, '0 0 0', 1);
 	RadiusDamage (this, this.realowner, autocvar_g_monster_ogre_attack_grenade_damage, autocvar_g_monster_ogre_attack_grenade_edgedamage, autocvar_g_monster_ogre_attack_grenade_radius, 
-				NULL, NULL, autocvar_g_monster_ogre_attack_grenade_force, this.projectiledeathtype, directhitentity);
+				NULL, NULL, autocvar_g_monster_ogre_attack_grenade_force, this.projectiledeathtype, DMG_NOWEP, directhitentity);
 
 	delete (this);
 }
@@ -126,7 +126,7 @@ void M_Ogre_Attack_Grenade_Explode_use(entity this, entity actor, entity trigger
 	M_Ogre_Attack_Grenade_Explode(this, trigger);
 }
 
-void M_Ogre_Attack_Grenade_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void M_Ogre_Attack_Grenade_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if (this.health <= 0)
 		return;
@@ -267,7 +267,7 @@ void M_Ogre_Attack_Chainsaw(entity this)
 			//print(strcat(this.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
 
 			Damage(target_victim, this.realowner, this.realowner,
-				swing_damage, DEATH_MONSTER_OGRE_MELEE.m_id,
+				swing_damage, DEATH_MONSTER_OGRE_MELEE.m_id, this.weaponentity_fld,
 				this.realowner.origin + this.realowner.view_ofs,
 				v_forward * 1);
 
@@ -315,6 +315,7 @@ bool M_Ogre_Attack(int attack_type, entity actor, entity targ, .entity weaponent
 			meleetemp.realowner = actor;
 			setthink(meleetemp, M_Ogre_Attack_Chainsaw);
 			meleetemp.nextthink = time + autocvar_g_monster_ogre_attack_melee_delay;
+			meleetemp.weaponentity_fld = weaponentity;
 			actor.attack_finished_single[0] = time + autocvar_g_monster_ogre_attack_melee_time + autocvar_g_monster_ogre_attack_melee_delay + 0.7;
 			actor.anim_finished = actor.attack_finished_single[0];
 			actor.state = MONSTER_ATTACK_MELEE;

@@ -155,7 +155,7 @@ void W_Chainsaw_Attack1(Weapon thiswep, entity actor, .entity weaponentity, int 
 		//print(strcat(actor.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(melee_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
 
 		Damage(target_victim, actor, actor,
-			melee_damage, WEP_CHAINSAW.m_id,
+			melee_damage, WEP_CHAINSAW.m_id, weaponentity,
 			actor.origin + actor.view_ofs,
 			v_forward * WEP_CVAR(chainsaw, melee_force));
 
@@ -234,7 +234,7 @@ void W_Chainsaw_Melee_Think(entity this)
 			//print(strcat(this.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
 
 			Damage(target_victim, this.realowner, this.realowner,
-				swing_damage, WEP_CHAINSAW.m_id | HITTYPE_SECONDARY,
+				swing_damage, WEP_CHAINSAW.m_id | HITTYPE_SECONDARY, this.weaponentity_fld,
 				this.realowner.origin + this.realowner.view_ofs,
 				v_forward * WEP_CVAR(chainsaw, swing_force));
 
@@ -286,6 +286,7 @@ void W_Chainsaw_Attack2(Weapon thiswep, entity actor, .entity weaponentity, int 
 	meleetemp.realowner = actor;
 	setthink(meleetemp, W_Chainsaw_Melee_Think);
 	meleetemp.nextthink = time + WEP_CVAR(chainsaw, swing_delay) * W_WeaponRateFactor(actor);
+	meleetemp.weaponentity_fld = weaponentity;
 	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR(chainsaw, swing_damage), WEP_CVAR(chainsaw, swing_range));
 }
 

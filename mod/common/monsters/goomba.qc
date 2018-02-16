@@ -78,7 +78,7 @@ void M_Goomba_Touch(entity this, entity toucher)
 	vector vdir = normalize(toucher.origin - this.origin);
 	if(vdir.z <= 0.7)
 	{
-		Damage(toucher, this, this, autocvar_g_monster_goomba_attack_melee_damage, DEATH_MONSTER_GOOMBA.m_id, toucher.origin, '0 0 0');
+		Damage(toucher, this, this, autocvar_g_monster_goomba_attack_melee_damage, DEATH_MONSTER_GOOMBA.m_id, DMG_NOWEP, toucher.origin, '0 0 0');
 		//this.frame = goomba_anim_hit;
 		this.attack_finished_single[0] = time + autocvar_g_monster_goomba_attack_melee_delay;
 	}

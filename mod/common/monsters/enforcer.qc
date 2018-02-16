@@ -70,7 +70,7 @@ void M_Enforcer_Attack_Plasma_Explode(entity this, entity directhitentity)
 	sound (this, CH_WEAPON_A, SND_TAG_IMPACT, VOL_BASE, ATTEN_NORM);
 	Send_Effect(EFFECT_ELECTRO_IMPACT, this.origin, '0 0 0', 1);
 	RadiusDamage (this, this.realowner, autocvar_g_monster_enforcer_attack_plasma_damage, autocvar_g_monster_enforcer_attack_plasma_edgedamage, 
-				  autocvar_g_monster_enforcer_attack_plasma_radius, NULL, NULL, autocvar_g_monster_enforcer_attack_plasma_force, this.projectiledeathtype, directhitentity);
+				  autocvar_g_monster_enforcer_attack_plasma_radius, NULL, NULL, autocvar_g_monster_enforcer_attack_plasma_force, this.projectiledeathtype, DMG_NOWEP, directhitentity);
 
 	delete (this);
 }

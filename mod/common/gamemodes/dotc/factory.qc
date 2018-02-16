@@ -80,7 +80,7 @@ void dotc_Factory_Dead(entity this)
 		WaypointSprite_Disown(this.wps_factorybase, waypointsprite_deadlifetime);
 }
 
-void dotc_FactoryDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void dotc_FactoryDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {	
 	if(DOTC_FFCHECK(this, attacker)) { return; }
 	

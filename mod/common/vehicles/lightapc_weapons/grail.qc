@@ -68,7 +68,7 @@ void lightapc_grail_Plasma_Explode(entity this, entity directhitentity)
 	
 	W_Electro_TriggerCombo(this.origin, autocvar_g_vehicle_lightapc_grail_cannon_comboradius, this.realowner);
 		RadiusDamage (this, this.realowner, autocvar_g_vehicle_lightapc_grail_cannon_damage, autocvar_g_vehicle_lightapc_grail_cannon_edgedamage,autocvar_g_vehicle_lightapc_grail_cannon_radius,
-					NULL, NULL, autocvar_g_vehicle_lightapc_grail_cannon_force, this.projectiledeathtype, directhitentity);
+					NULL, NULL, autocvar_g_vehicle_lightapc_grail_cannon_force, this.projectiledeathtype, DMG_NOWEP, directhitentity);
 
 	delete(this);
 }

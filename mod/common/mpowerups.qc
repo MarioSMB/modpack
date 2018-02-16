@@ -258,7 +258,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPreThink)
 			if(!IS_INDEPENDENT_PLAYER(it))
 			if(boxesoverlap(player.absmin, player.absmax, it.absmin, it.absmax))
 			{
-				Damage(it, player, player, 999, DEATH_CHEAT.m_id, it.origin, it.origin);
+				Damage(it, player, player, 999, DEATH_CHEAT.m_id, DMG_NOWEP, it.origin, it.origin);
 				player.star_touch_time = it.star_touch_time = time + autocvar_g_powerup_star_touch_delay;
 			}
 		));
@@ -333,7 +333,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPowerups)
 			tracebox(player.origin, player.mins, player.maxs, player.origin, MOVE_NOMONSTERS, player);
 			// if player is going to be stuck in solid when they grow, just kill them
 			if(trace_startsolid)
-				Damage(player, player, player, 100000, DEATH_VH_CRUSH.m_id, player.origin, '0 0 0');
+				Damage(player, player, player, 100000, DEATH_VH_CRUSH.m_id, DMG_NOWEP, player.origin, '0 0 0');
 		}
 	}
 	else

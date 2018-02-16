@@ -22,7 +22,7 @@ void vwep_deluge_Water_Explode(entity this, entity directhitentity)
 		directhitentity.fire_endtime *= 0.7;
 
 	RadiusDamage (this, this.realowner, this.deluge_damage, this.deluge_edgedamage, this.deluge_radius, NULL, NULL,
-				this.deluge_force, this.projectiledeathtype, directhitentity);
+				this.deluge_force, this.projectiledeathtype, DMG_NOWEP, directhitentity);
 
 	delete(this);
 }

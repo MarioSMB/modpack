@@ -293,7 +293,7 @@ void W_Lightsabre_Melee_Think(entity this)
 				//print(strcat(this.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
 
 				Damage(target_victim, this.realowner, this.realowner,
-					swing_damage, deathtype,
+					swing_damage, deathtype, this.weaponentity_fld,
 					this.realowner.origin + this.realowner.view_ofs,
 					v_forward * WEP_CVAR_BOTH(lightsabre, isprimary, force));
 

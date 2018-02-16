@@ -12,10 +12,10 @@ void vehicles_hitbox_touch(entity this, entity toucher)
 		gettouch(this.owner)(this.owner, toucher);
 }
 
-void vehicles_hitbox_damage(entity this, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void vehicles_hitbox_damage(entity this, entity inflictor, entity attacker, float damage, float deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.owner.event_damage)
-		this.owner.event_damage(this.owner, inflictor, attacker, damage, deathtype, hitloc, force);
+		this.owner.event_damage(this.owner, inflictor, attacker, damage, deathtype, weaponentity, hitloc, force);
 }
 
 void vehicles_hitbox_kill(entity this)

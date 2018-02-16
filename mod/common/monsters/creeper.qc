@@ -37,9 +37,9 @@ bool M_Creeper_Attack(int attack_type, entity actor, entity targ, .entity weapon
                 sound(actor, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
                 RadiusDamage(actor, actor, autocvar_g_monster_creeper_attack_explode_damage, autocvar_g_monster_creeper_attack_explode_edgedamage, autocvar_g_monster_creeper_attack_explode_radius,
-                        NULL, NULL, autocvar_g_monster_creeper_attack_explode_force, DEATH_MONSTER_CREEPER.m_id, NULL);
+                        NULL, NULL, autocvar_g_monster_creeper_attack_explode_force, DEATH_MONSTER_CREEPER.m_id, DMG_NOWEP, NULL);
 
-                Damage(actor, NULL, NULL, actor.health + actor.max_health + 200, DEATH_KILL.m_id, actor.origin, '0 0 0'); // ensure monster death
+                Damage(actor, NULL, NULL, actor.health + actor.max_health + 200, DEATH_KILL.m_id, DMG_NOWEP, actor.origin, '0 0 0'); // ensure monster death
                 actor.event_damage = func_null;
             }
             else

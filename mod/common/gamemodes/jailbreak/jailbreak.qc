@@ -711,7 +711,7 @@ void JB_Jail_Touch(entity this, entity toucher)
 		vector mymid = (this.absmin + this.absmax) * 0.5;
 		vector theirmid = (toucher.absmin + toucher.absmax) * 0.5;
 
-		Damage(toucher, this, this, 0, DEATH_HURTTRIGGER.m_id, mymid, normalize(theirmid - mymid) * min(500, vlen(toucher.velocity)));
+		Damage(toucher, this, this, 0, DEATH_HURTTRIGGER.m_id, DMG_NOWEP, mymid, normalize(theirmid - mymid) * min(500, vlen(toucher.velocity)));
 		Send_Notification(NOTIF_ONE, toucher, MSG_CENTER, CENTER_JAILBREAK_NOENTRY);
 		return;
 	}

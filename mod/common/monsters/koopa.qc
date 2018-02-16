@@ -74,7 +74,7 @@ void M_Koopa_Touch(entity this, entity toucher)
 	vector vdir = normalize(toucher.origin - this.origin);
 	if(vdir.z <= 0.7)
 	{
-		Damage(toucher, this, this, autocvar_g_monster_koopa_attack_melee_damage, DEATH_MONSTER_KOOPA.m_id, toucher.origin, '0 0 0');
+		Damage(toucher, this, this, autocvar_g_monster_koopa_attack_melee_damage, DEATH_MONSTER_KOOPA.m_id, DMG_NOWEP, toucher.origin, '0 0 0');
 		//this.frame = koopa_anim_hit;
 		this.attack_finished_single[0] = time + autocvar_g_monster_koopa_attack_melee_delay;
 	}

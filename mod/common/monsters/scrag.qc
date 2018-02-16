@@ -104,7 +104,7 @@ void M_Scrag_Attack_Spike_Explode(entity this, entity directhitentity)
 	entity own = this.realowner;
 
 	RadiusDamage(this, own, autocvar_g_monster_scrag_attack_spike_damage, autocvar_g_monster_scrag_attack_spike_edgedamage, autocvar_g_monster_scrag_attack_spike_force, 
-		NULL, NULL, autocvar_g_monster_scrag_attack_spike_radius, this.projectiledeathtype, directhitentity);
+		NULL, NULL, autocvar_g_monster_scrag_attack_spike_radius, this.projectiledeathtype, DMG_NOWEP, directhitentity);
 
 	delete(this);
 }

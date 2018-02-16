@@ -310,7 +310,7 @@ vector dotc_drone_move(entity this, vector move_where, float speed_min, float di
 	return mdir * bound(speed_min, (vlen(dist) / dist_max) * this.dotc_movespeed, this.dotc_movespeed);
 }
 
-void dotc_drone_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void dotc_drone_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(DOTC_FFCHECK(this, attacker))
 		return;

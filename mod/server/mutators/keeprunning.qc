@@ -13,7 +13,7 @@ MUTATOR_HOOKFUNCTION(kr, PlayerPreThink)
 	if(player.movement == '0 0 0' && vdist(player.velocity, <, 15) && !IS_DEAD(player) && time >= player.kr_timer && !player.vehicle)
 	{
 		if(player.event_damage)
-			player.event_damage(player, player, player, 1, DEATH_ROT.m_id, player.origin, '0 0 0');
+			player.event_damage(player, player, player, 1, DEATH_ROT.m_id, DMG_NOWEP, player.origin, '0 0 0');
 		player.kr_timer = time + 0.5 + random() * 0.5;
 	}
 }
