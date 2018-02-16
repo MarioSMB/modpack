@@ -305,9 +305,9 @@ METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponenti
 	if(WEP_CVAR(chainsaw, reload_ammo)) // forced reload // WEAPONTODO
     {
         float ammo_amount = 0;
-        if(actor.clip_load >= WEP_CVAR(chainsaw, melee_ammo))
+        if(actor.(weaponentity).clip_load >= WEP_CVAR(chainsaw, melee_ammo))
             ammo_amount = 1;
-        if(actor.clip_load >= WEP_CVAR(chainsaw, swing_ammo))
+        if(actor.(weaponentity).clip_load >= WEP_CVAR(chainsaw, swing_ammo))
             ammo_amount += 1;
 
         if(!ammo_amount)
@@ -317,7 +317,7 @@ METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponenti
         }
     }
 
-    if(actor.clip_load >= 0)
+    if(actor.(weaponentity).clip_load >= 0)
     if(fire & 1)
     if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(chainsaw, melee_refire)))
     {
@@ -356,7 +356,7 @@ METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponenti
     	}
     }
 
-    if(actor.clip_load >= 0) // we are not currently reloading
+    if(actor.(weaponentity).clip_load >= 0) // we are not currently reloading
     if(!actor.crouch) // no crouchmelee please
     if(fire & 2)
     if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR(chainsaw, swing_refire)))

@@ -161,7 +161,7 @@ void hat_Think(entity this)
 
 bool hats_Customize(entity this, entity client)
 {
-	if(client.cvar_cl_nohats) { return false; }
+	if(CS(client).cvar_cl_nohats) { return false; }
 	return true;
 }
 
@@ -173,8 +173,7 @@ REPLICATE(cvar_cl_nohats, bool, "cl_nohats");
 
 void hats_SpawnHat(entity this)
 {
-	this.hatentity = spawn();
-	this.hatentity.classname = "hatentity";
+	this.hatentity = new(hatentity);
 	this.hatentity.solid = SOLID_NOT;
 	this.hatentity.owner = this;
 	this.hatentity.hatentity = this.hatentity;
