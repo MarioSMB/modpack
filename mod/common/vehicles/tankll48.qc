@@ -197,7 +197,7 @@ void tankll48_fire_cannon(entity actor, entity vehic, string tagname)
 	vehic.vehicle_ammo2 -= autocvar_g_vehicle_tankll48_cannon_ammo_cost;
 	entity missile = new(cannonball);
 	vector v = gettaginfo(vehic.gun2, gettagindex(vehic.gun2, tagname));
-	W_SetupShot_ProjectileSize (actor, weaponentities[0], '-3 -3 -3', '3 3 3', false, 5, SND_TANK_FIRE, CH_WEAPON_A, autocvar_g_vehicle_tankll48_cannon_damage);
+	W_SetupShot_ProjectileSize (actor, weaponentities[0], '-3 -3 -3', '3 3 3', false, 5, SND_TANK_FIRE, CH_WEAPON_A, autocvar_g_vehicle_tankll48_cannon_damage, DEATH_VH_TANK_CANNON.m_id);
 
 	v_forward = normalize(v_forward);
 	v += v_forward * 12;

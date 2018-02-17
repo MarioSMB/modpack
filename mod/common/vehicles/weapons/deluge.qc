@@ -53,7 +53,7 @@ void vwep_deluge_attack(
 	vector v = gettaginfo(spigot, gettagindex(spigot, tagname));
 	v_forward = normalize(v_forward);
 
-	W_SetupShot_ProjectileSize (actor, weaponentities[0], '0 0 -1', '0 0 -1', false, 2, SND_Null, CH_WEAPON_A, atk_damage);
+	W_SetupShot_ProjectileSize (actor, weaponentities[0], '0 0 -1', '0 0 -1', false, 2, SND_Null, CH_WEAPON_A, atk_damage, DEATH_DROWN.m_id);
 
 	w_shotdir = v_forward; // no TrueAim for grenades please
 

@@ -15,7 +15,7 @@ void vwep_autonex_attack(
 	vector v = gettaginfo(fireentity, gettagindex(fireentity, tagname));
 	v_forward = normalize(v_forward);
 
-	W_SetupShot (player, weaponentities[0], true, 5, SND_NEXFIRE, CH_WEAPON_A, atk_damage);
+	W_SetupShot (player, weaponentities[0], true, 5, SND_NEXFIRE, CH_WEAPON_A, atk_damage, atk_deathtype);
 
 	FireRailgunBullet (player, weaponentities[0], v, v + w_shotdir * max_shot_distance,
 						atk_damage, atk_force, atk_mindist, atk_maxdist, atk_halflife, atk_forcehalflife, atk_deathtype);

@@ -41,7 +41,7 @@ void M_Soldier_Attack_Shotgun(entity this, .entity weaponentity)
 {
 	if (!IS_PLAYER(this)) w_shotdir = normalize((this.enemy.origin + '0 0 10') - this.origin);
 
-	W_SetupShot(this, weaponentity, true, 5, SND_SHOTGUN_FIRE, CH_WEAPON_A, autocvar_g_monster_soldier_attack_shotgun_damage * autocvar_g_monster_soldier_attack_shotgun_bullets);
+	W_SetupShot(this, weaponentity, true, 5, SND_SHOTGUN_FIRE, CH_WEAPON_A, autocvar_g_monster_soldier_attack_shotgun_damage * autocvar_g_monster_soldier_attack_shotgun_bullets, WEP_SHOTGUN.m_id);
 
 	for(int sc = 0; sc < autocvar_g_monster_soldier_attack_shotgun_bullets;sc = sc + 1)
 		fireBullet(this, weaponentity, w_shotdir, this.enemy.origin, autocvar_g_monster_soldier_attack_shotgun_spread, autocvar_g_monster_soldier_attack_shotgun_solidpenetration, autocvar_g_monster_soldier_attack_shotgun_damage, autocvar_g_monster_soldier_attack_shotgun_force, WEP_SHOTGUN.m_id, 0);

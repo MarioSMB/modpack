@@ -21,7 +21,7 @@ ENDCLASS(Scrag)
 REGISTER_MONSTER(SCRAG, NEW(Scrag));
 
 CLASS(ScragAttack, PortoLaunch)
-/* flags     */ ATTRIB(ScragAttack, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(ScragAttack, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(ScragAttack, impulse, int, 9);
 /* refname   */ ATTRIB(ScragAttack, netname, string, "scrag");
 /* wepname   */ ATTRIB(ScragAttack, message, string, "Scrag attack");
@@ -48,7 +48,7 @@ METHOD(ScragAttack, wr_think, void(ScragAttack thiswep, entity actor, .entity we
 	TC(ScragAttack, thiswep);
     if (fire & 1)
     if (time > actor.attack_finished_single[0] || weapon_prepareattack(thiswep, actor, weaponentity, false, 1.2)) {
-        if (IS_PLAYER(actor)) W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_SCRAG_FIRESPIKE, CH_WEAPON_B, 0);
+        if (IS_PLAYER(actor)) W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_SCRAG_FIRESPIKE, CH_WEAPON_B, 0, DEATH_MONSTER_WYVERN.m_id);
 		if (IS_MONSTER(actor)) {
 			actor.anim_finished = time + 1.2;
 			monster_makevectors(actor, actor.enemy);
