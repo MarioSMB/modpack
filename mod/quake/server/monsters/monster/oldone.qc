@@ -205,6 +205,7 @@ void finale_1(entity this, entity attacker)
 	// wait for 1 second
 	entity timer = spawn();
 	timer.owner = this;
+	timer.enemy = attacker;
 	timer.nextthink = time + 1;
 	setthink(timer, finale_2);
 }
@@ -228,6 +229,7 @@ void finale_2(entity this)
 void finale_3(entity this)
 {
 	entity shub = this.owner;
+	shub.enemy = this.enemy;
 	// start shub thrashing wildly
 	setthink(shub, old_thrash1);
 	_sound(shub, CH_VOICE, "boss2/death.wav", 1, ATTN_NORM);
@@ -275,7 +277,10 @@ void finale_4(entity this)
 
 // put a player model down
 	entity n = spawn();
-	_setmodel(n, "progs/player.mdl");
+	if(this.enemy)
+		_setmodel(n, get_playermodel(this.enemy));
+	else
+		_setmodel(n, "progs/player.mdl");
 	oldo = oldo - '32 264 0';
 	setorigin(n, oldo);
 	n.angles = '0 290 0';

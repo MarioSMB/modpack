@@ -10,7 +10,8 @@ void spawn_tdeath(vector org, entity death_owner);
 
 void(entity targ, entity attacker) dmatch_score;
 
-int modelindex_eyes, modelindex_player, modelindex_hammer;
+int modelindex_eyes, modelindex_hammer;
+.int modelindex_player;
 
 /*
 =============================================================================
@@ -61,6 +62,7 @@ void SetChangeParms(entity this)
 		parm8 = this.weapon;
 		parm9 = this.armortype * 100;
 		//parm10 = this.items2;
+		parm10 = this.model_randomizer;
 		parm11 = this.ammo_lava_nails;
 		parm12 = this.ammo_multi_rockets;
 		parm13 = this.ammo_plasma;
@@ -92,6 +94,7 @@ void SetNewParms()
 	parm6 = 0;
 	parm7 = 0;
 	parm8 = WEP_SHOTGUN;
+	parm10 = random();
 	parm11 = 0;
 	parm12 = 0;
 	parm13 = 0;
@@ -130,6 +133,7 @@ void DecodeLevelParms(entity this)
 	else
 		this.weapon = parm8;
 	this.armortype = parm9 * 0.01;
+	this.model_randomizer = parm10;
 	//this.items2 = parm10;
 	this.ammo_lava_nails = parm11;
 	this.ammo_multi_rockets = parm12;
@@ -142,6 +146,28 @@ void DecodeLevelParms(entity this)
 
 	this.prevweapon = parm15;
 	this.items = parm16;
+}
+
+bool have_katria;
+STATIC_INIT(check_katria)
+{
+	have_katria = fexists("progs/player_katria.mdl");
+}
+
+string get_playermodel(entity this)
+{
+	return ((this.model_randomizer < autocvar_sv_quake_katria && have_katria) ? "progs/player_katria.mdl" : "progs/player.mdl");
+}
+
+string get_playerhead(entity this)
+{
+	return ((this.model_randomizer < autocvar_sv_quake_katria && have_katria) ? "progs/h_player_katria.mdl" : "progs/h_player.mdl");
+}
+
+void player_sound(entity this, int chan, string sample, float atten)
+{
+	string soundpath = ((this.model_randomizer < autocvar_sv_quake_katria && have_katria) ? "player_katria/" : "player/");
+	_sound(this, chan, strcat(soundpath, sample), 1, atten);
 }
 
 /*
@@ -652,7 +678,7 @@ void ClientKill(entity this)
 
 	bprintf("%s suicides\n", this.netname);
 	set_suicide_frame(this);
-	this.modelindex = modelindex_player;
+	this.modelindex = this.modelindex_player;
 	this.frags = this.frags - 2;	// extra penalty
 	respawn(this);
 }
@@ -843,8 +869,8 @@ void PutClientInServer(entity this)
 	_setmodel(this, "progs/eyes.mdl");
 	modelindex_eyes = this.modelindex;
 
-	_setmodel(this, "progs/player.mdl");
-	modelindex_player = this.modelindex;
+	_setmodel(this, get_playermodel(this));
+	this.modelindex_player = this.modelindex;
 
 	setsize(this, VEC_HULL_MIN, VEC_HULL_MAX);
 	
@@ -1219,7 +1245,7 @@ void CheckPowerups(entity this)
 	else if(this.weapon == WEP_MJOLNIR)
 		this.modelindex = modelindex_hammer; // don't use eyes
 	else
-		this.modelindex = modelindex_player; // don't use eyes
+		this.modelindex = this.modelindex_player; // don't use eyes
 
 // invincibility
 	if(this.invincible_finished)
@@ -1448,9 +1474,9 @@ void DrownPlayer(entity this)
 	if (this.waterlevel != WATERLEVEL_SUBMERGED)
 	{
 		if(this.air_finished < time)
-			_sound(this, CH_VOICE, "player/gasp2.wav", 1, ATTN_NORM);
+			player_sound(this, CH_VOICE, "gasp2.wav", ATTN_NORM);
 		else if(this.air_finished < time + 9)
-			_sound(this, CH_VOICE, "player/gasp1.wav", 1, ATTN_NORM);
+			player_sound(this, CH_VOICE, "gasp1.wav", ATTN_NORM);
 		this.air_finished = time + 12;
 		this.dmg = 2;
 	}

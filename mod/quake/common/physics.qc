@@ -109,7 +109,7 @@ void PlayerJump(entity this)
 #ifdef SVQC
 	//this.button2 = 0;
 // player jumping sound
-	_sound(this, CH_PLAYER, "player/plyrjmp8.wav", 1, ATTN_NORM);
+	player_sound(this, CH_PLAYER, "plyrjmp8.wav", ATTN_NORM);
 #endif
 	this.velocity_z = this.velocity_z + 270;
 }

@@ -87,7 +87,7 @@ void GrappleAnchor(entity this, entity toucher)
 			return;
 		}
 
-		_sound(this, CH_WEAPON_SINGLE, "player/axhit1.wav", 1, ATTN_NORM);
+		player_sound(this, CH_WEAPON_SINGLE, "axhit1.wav", ATTN_NORM);
 		T_Damage(toucher, this, this.owner, 10);
 	}
 	else

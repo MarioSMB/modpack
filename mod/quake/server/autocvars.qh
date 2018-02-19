@@ -14,3 +14,4 @@ float autocvar_g_friendlyfire;
 bool autocvar_g_playerclip_collisions;
 bool autocvar_sv_eventlog;
 int autocvar_sv_eventlog_files_counter; // TODO
+float autocvar_sv_quake_katria = 0.3;

@@ -41,6 +41,15 @@ PRECACHE(Junk)
 	precache_sound("player/gasp2.wav");		// taking breath
 	precache_sound("player/h2odeath.wav");		// drowning death
 
+	precache_sound("player_katria/plyrjmp8.wav");		// player jump
+	precache_sound("player_katria/land.wav");			// player landing
+	precache_sound("player_katria/land2.wav");		// player hurt landing
+	precache_sound("player_katria/drown1.wav");		// drowning pain
+	precache_sound("player_katria/drown2.wav");		// drowning pain
+	precache_sound("player_katria/gasp1.wav");		// gasping for air
+	precache_sound("player_katria/gasp2.wav");		// taking breath
+	precache_sound("player_katria/h2odeath.wav");		// drowning death
+
 	precache_sound("misc/talk.wav");			// talk
 	precache_sound("player/teledth1.wav");		// telefrag
 	precache_sound("weapons/lock4.wav");		// ammo pick up
@@ -66,6 +75,13 @@ PRECACHE(Junk)
 	precache_sound("player/pain5.wav");
 	precache_sound("player/pain6.wav");
 
+	precache_sound("player_katria/pain1.wav");
+	precache_sound("player_katria/pain2.wav");
+	precache_sound("player_katria/pain3.wav");
+	precache_sound("player_katria/pain4.wav");
+	precache_sound("player_katria/pain5.wav");
+	precache_sound("player_katria/pain6.wav");
+
 // player death sounds
 	precache_sound("player/death1.wav");
 	precache_sound("player/death2.wav");
@@ -73,10 +89,18 @@ PRECACHE(Junk)
 	precache_sound("player/death4.wav");
 	precache_sound("player/death5.wav");
 
+	precache_sound("player_katria/death1.wav");
+	precache_sound("player_katria/death2.wav");
+	precache_sound("player_katria/death3.wav");
+	precache_sound("player_katria/death4.wav");
+	precache_sound("player_katria/death5.wav");
+
 // ax sounds	
 	precache_sound("weapons/ax1.wav");			// ax swoosh
 	precache_sound("player/axhit1.wav");		// ax hit meat
 	precache_sound("player/axhit2.wav");		// ax hit world
+
+	precache_sound("player_katria/axhit1.wav");
 
 	precache_sound("player/h2ojump.wav");		// player jumping into water
 	precache_sound("player/slimbrn2.wav");		// player enter slime
@@ -87,12 +111,17 @@ PRECACHE(Junk)
 	precache_sound("player/lburn1.wav");		// lava burn
 	precache_sound("player/lburn2.wav");		// lava burn
 
+	precache_sound("player_katria/lburn1.wav");		// lava burn
+	precache_sound("player_katria/lburn2.wav");		// lava burn
+
 	precache_sound("misc/water1.wav");			// swimming
 	precache_sound("misc/water2.wav");			// swimming
 
 	precache_model("progs/player.mdl");
+	precache_model("progs/player_katria.mdl");
 	precache_model("progs/eyes.mdl");
 	precache_model("progs/h_player.mdl");
+	precache_model("progs/h_player_katria.mdl");
 	precache_model("progs/gib1.mdl");
 	precache_model("progs/gib2.mdl");
 	precache_model("progs/gib3.mdl");
@@ -983,12 +1012,12 @@ void CreatureFrame_FallDamage(entity this)
 				T_Damage(this, NULL, NULL, 5);
 				if(IS_PLAYER(this))
 				{
-					_sound(this, CH_VOICE, "player/land2.wav", 1, ATTN_NORM);
+					player_sound(this, CH_VOICE, "land2.wav", ATTN_NORM);
 					this.deathtype = "falling";
 				}
 			}
 			else if(IS_PLAYER(this))
-				_sound(this, CH_VOICE, "player/land.wav", 1, ATTN_NORM);
+				player_sound(this, CH_VOICE, "land.wav", ATTN_NORM);
 		}
 
 		this.jump_flag = 0;

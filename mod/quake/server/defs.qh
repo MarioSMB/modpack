@@ -38,6 +38,10 @@ float skill;
 void set_anim(entity this, int frm, void(entity) tnk);
 void set_animofs(entity this, int frm, int offs, void(entity) tnk); // because we can
 
+void player_sound(entity this, int chan, string sample, float atten);
+string get_playermodel(entity this);
+string get_playerhead(entity this);
+
 .float air_finished;
 
 .entity movetarget;
@@ -140,6 +144,8 @@ const int SVC_CUTSCENE = 34;
 .int weapons;
 
 .float save_nextthink;
+
+.float model_randomizer;
 
 
 // intrusive lists

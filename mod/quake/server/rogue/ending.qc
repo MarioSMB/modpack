@@ -451,7 +451,7 @@ void spawn_actor(entity this)
 	theActor.solid = SOLID_SLIDEBOX;
 	set_movetype(theActor, MOVETYPE_STEP);
 	theActor.frame = this.frame;
-	_setmodel(theActor, "progs/player.mdl");
+	_setmodel(theActor, get_playermodel(this));
 	setorigin(theActor, this.origin);
 	setsize(theActor, VEC_HULL_MIN, VEC_HULL_MAX);
 	theActor.view_ofs = '0 0 22';

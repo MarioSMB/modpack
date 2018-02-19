@@ -157,6 +157,8 @@ REGISTER_STAT(SERVERFLAGS, int, serverflags)
 
 REGISTER_STAT(WETSUIT_FINISHED, float)
 
+//REGISTER_STAT(KATRIA, bool, (this.model_randomizer < autocvar_sv_quake_katria && have_katria))
+
 #ifdef SVQC
 .int weapons;
 #endif

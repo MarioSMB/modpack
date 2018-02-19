@@ -530,9 +530,9 @@ void PainSound(entity this, entity attacker)
 	{
 		DeathBubbles(this, 1);
 		if(random() > 0.5)
-			_sound(this, CH_VOICE, "player/drown1.wav", 1, ATTN_NORM);
+			player_sound(this, CH_VOICE, "drown1.wav", ATTN_NORM);
 		else
-			_sound(this, CH_VOICE, "player/drown2.wav", 1, ATTN_NORM);
+			player_sound(this, CH_VOICE, "drown2.wav", ATTN_NORM);
 		return;
 	}
 
@@ -541,18 +541,18 @@ void PainSound(entity this, entity attacker)
 	{
 // FIX ME	put in some steam here
 		if(random() > 0.5)
-			_sound(this, CH_VOICE, "player/lburn1.wav", 1, ATTN_NORM);
+			player_sound(this, CH_VOICE, "lburn1.wav", ATTN_NORM);
 		else
-			_sound(this, CH_VOICE, "player/lburn2.wav", 1, ATTN_NORM);
+			player_sound(this, CH_VOICE, "lburn2.wav", ATTN_NORM);
 		return;
 	}
 
 	if(this.watertype == CONTENT_LAVA)
 	{
 		if(random() > 0.5)
-			_sound(this, CH_VOICE, "player/lburn1.wav", 1, ATTN_NORM);
+			player_sound(this, CH_VOICE, "lburn1.wav", ATTN_NORM);
 		else
-			_sound(this, CH_VOICE, "player/lburn2.wav", 1, ATTN_NORM);
+			player_sound(this, CH_VOICE, "lburn2.wav", ATTN_NORM);
 		return;
 	}
 
@@ -569,7 +569,7 @@ void PainSound(entity this, entity attacker)
 	if(this.axhitme)
 	{
 		this.axhitme = false;
-		_sound(this, CH_VOICE, "player/axhit1.wav", 1, ATTN_NORM);
+		player_sound(this, CH_VOICE, "axhit1.wav", ATTN_NORM);
 		return;
 	}
 	
@@ -577,14 +577,30 @@ void PainSound(entity this, entity attacker)
 	int rs = rint((random() * 5) + 1);
 
 	this.noise = "";
-	switch(rs)
+
+	if(this.model_randomizer < autocvar_sv_quake_katria && have_katria)
 	{
-		case 1: this.noise = "player/pain1.wav"; break;
-		case 2: this.noise = "player/pain2.wav"; break;
-		case 3: this.noise = "player/pain3.wav"; break;
-		case 4: this.noise = "player/pain4.wav"; break;
-		case 5: this.noise = "player/pain5.wav"; break;
-		default: this.noise = "player/pain6.wav"; break;
+		switch(rs)
+		{
+			case 1: this.noise = "player_katria/pain1.wav"; break;
+			case 2: this.noise = "player_katria/pain2.wav"; break;
+			case 3: this.noise = "player_katria/pain3.wav"; break;
+			case 4: this.noise = "player_katria/pain4.wav"; break;
+			case 5: this.noise = "player_katria/pain5.wav"; break;
+			default: this.noise = "player_katria/pain6.wav"; break;
+		}
+	}
+	else
+	{
+		switch(rs)
+		{
+			case 1: this.noise = "player/pain1.wav"; break;
+			case 2: this.noise = "player/pain2.wav"; break;
+			case 3: this.noise = "player/pain3.wav"; break;
+			case 4: this.noise = "player/pain4.wav"; break;
+			case 5: this.noise = "player/pain5.wav"; break;
+			default: this.noise = "player/pain6.wav"; break;
+		}
 	}
 
 	_sound(this, CH_VOICE, this.noise, 1, ATTN_NORM);
@@ -683,21 +699,33 @@ void DeathSound(entity this)
 	if(this.waterlevel == 3)
 	{
 		DeathBubbles(this, 20);
-		_sound(this, CH_VOICE, "player/h2odeath.wav", 1, ATTN_NONE);
+		player_sound(this, CH_VOICE, "h2odeath.wav", ATTN_NONE);
 		return;
 	}
 	
 	int rs = rint((random() * 4) + 1);
-	if(rs == 1)
-		this.noise = "player/death1.wav";
-	if(rs == 2)
-		this.noise = "player/death2.wav";
-	if(rs == 3)
-		this.noise = "player/death3.wav";
-	if(rs == 4)
-		this.noise = "player/death4.wav";
-	if(rs == 5)
-		this.noise = "player/death5.wav";
+	if(this.model_randomizer < autocvar_sv_quake_katria && have_katria)
+	{
+		switch(rs)
+		{
+			case 1: this.noise = "player_katria/death1.wav"; break;
+			case 2: this.noise = "player_katria/death2.wav"; break;
+			case 3: this.noise = "player_katria/death3.wav"; break;
+			case 4: this.noise = "player_katria/death4.wav"; break;
+			case 5: this.noise = "player_katria/death5.wav"; break;
+		}
+	}
+	else
+	{
+		switch(rs)
+		{
+			case 1: this.noise = "player/death1.wav"; break;
+			case 2: this.noise = "player/death2.wav"; break;
+			case 3: this.noise = "player/death3.wav"; break;
+			case 4: this.noise = "player/death4.wav"; break;
+			case 5: this.noise = "player/death5.wav"; break;
+		}
+	}
 
 	_sound(this, CH_VOICE, this.noise, 1, ATTN_NONE);
 }
@@ -800,7 +828,7 @@ void ThrowHead(entity this, string gibname, float dm)
 
 void GibPlayer(entity this, entity attacker)
 {
-	ThrowHead(this, "progs/h_player.mdl", this.health);
+	ThrowHead(this, get_playerhead(this), this.health);
 	ThrowGib(this, "progs/gib1.mdl", this.health);
 	ThrowGib(this, "progs/gib2.mdl", this.health);
 	ThrowGib(this, "progs/gib3.mdl", this.health);
@@ -835,7 +863,7 @@ void PlayerDie(entity this, entity attacker)
 	this.invincible_finished = 0;
 	this.super_damage_finished = 0;
 	this.radsuit_finished = 0;
-	this.modelindex = modelindex_player;	// don't use eyes
+	this.modelindex = this.modelindex_player;	// don't use eyes
 
 	// hipnotic fields
 	this.wetsuit_finished = 0;
@@ -911,7 +939,7 @@ void PlayerDie(entity this, entity attacker)
 
 void set_suicide_frame(entity this)
 {	// used by kill command and diconnect command
-	if(this.model != "progs/player.mdl")
+	if(this.model != "progs/player.mdl" && this.model != "progs/player_katria.mdl")
 		return;	// allready gibbed
 	this.frame = anim_player_deatha11;
 	this.solid = SOLID_NOT;

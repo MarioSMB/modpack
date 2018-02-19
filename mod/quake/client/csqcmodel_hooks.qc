@@ -176,7 +176,7 @@ void CSQCModel_Hook_PreUpdate(entity this, bool isnew, bool isplayer, bool isloc
 void CSQCModel_Hook_PostUpdate(entity this, bool isnew, bool isplayer, bool islocalplayer)
 {
 	// is it a player model? (shared state)
-	this.isplayermodel = (this.model == "progs/player.mdl" || substring(this.model, 0, 14) == "models/player/" || substring(this.model, 0, 17) == "models/ok_player/" || 
+	this.isplayermodel = (this.model == "progs/player.mdl" || this.model == "progs/player_katria.mdl" || substring(this.model, 0, 14) == "models/player/" || substring(this.model, 0, 17) == "models/ok_player/" || 
 									(substring(this.model, 0, 16) == "models/monsters/" && (this.entnum >= 1 && this.entnum <= maxclients)));
 
 	// save values set by server
