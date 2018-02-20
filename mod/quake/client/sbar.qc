@@ -557,9 +557,23 @@ void Sbar_Score(int margin)
 		}
 	}
 
-	if(autocvar_sbar_gametime && STAT(TIMELIMIT))
+	if(autocvar_sbar_gametime)
 	{
-	#if 0
+		if(!deathmatch && STAT(TIMELIMIT))
+		{
+			string timestr = seconds_tostring(max(0, STAT(TIMELIMIT) * 60 - time));
+			Sbar_DrawNum_lettersize(vec2(-12 * 3, 32), timestr, strlen(timestr), false, 12, '12 12 0');
+		}
+		else
+		{
+			string timestr = seconds_tostring(time);
+			Sbar_DrawNum_lettersize(vec2(-12 * 3, 32), timestr, strlen(timestr), false, 12, '12 12 0');
+		}
+	}
+
+#if 0
+	if(autocvar_sbar_gametime && !deathmatch && STAT(TIMELIMIT))
+	{
 		float timeleft = max(0, STAT(TIMELIMIT) * 60 - time);
 		int minutes = (int)floor(timeleft / 60);
 		int seconds = (int)(floor(timeleft) - minutes * 60);
@@ -581,25 +595,17 @@ void Sbar_Score(int margin)
 			Sbar_DrawXNum(-12*2, 32, seconds, -2, 12, 1, 1, 1, 1, 0);
 		else
 			Sbar_DrawXNum(-12*2, 32, seconds, -2, 12, 1, 0, 0, 1, 0);
-	#else
-		string timestr = seconds_tostring(max(0, STAT(TIMELIMIT) * 60 - time));
-		Sbar_DrawNum_lettersize(vec2(-12 * 3, 32), timestr, strlen(timestr), false, 12, '12 12 0');
-	#endif
 	}
 	else if(autocvar_sbar_gametime)
 	{
-	#if 0
 		minutes = (int)floor(time / 60);
 		seconds = (int)(floor(time) - minutes * 60);
 		Sbar_DrawXNum(-12*6, 32, minutes,  3, 12, 1, 1, 1, 1, 0);
 		if(sb_colon && sb_colon->tex != r_texture_notexture)
 			DrawQ_Pic(sbar_x + -12*3, sbar_y + 32, sb_colon, 12, 12, 1, 1, 1, sbar_alpha_fg.value, 0);
 		Sbar_DrawXNum(-12*2, 32, seconds, -2, 12, 1, 1, 1, 1, 0);
-	#else
-		string timestr = seconds_tostring(time);
-		Sbar_DrawNum_lettersize(vec2(-12 * 3, 32), timestr, strlen(timestr), false, 12, '12 12 0');
-	#endif
 	}
+#endif
 
 	sbar = sbar_save;
 }
