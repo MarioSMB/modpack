@@ -162,7 +162,7 @@ bool pb_GiveItem(entity to, entity item)
 		item.superweapons_finished += time;
 	}
 
-	to.last_pickup = time;
+	STAT(LAST_PICKUP, to) = time;
 
 	_sound (to, CH_TRIGGER, item.item_pickupsound, VOL_BASE, ATTEN_NORM);
 	return true;
@@ -457,14 +457,14 @@ MUTATOR_HOOKFUNCTION(piggyback, BuffTouch)
 	if(toucher.piggybacker)
 		toucher = toucher.piggybacker;
 
-	if(toucher.buffs)
-	if(toucher.buffs == buff.buffs || !toucher.cvar_cl_buffs_autoreplace)
+	if(STAT(BUFFS, toucher))
+	if(STAT(BUFFS, toucher) == STAT(BUFFS, buff) || !toucher.cvar_cl_buffs_autoreplace)
 	{
 		entity p = toucher;
 		while(p.piggybacker)
 		{
 			p = p.piggybacker;
-			if(!p.buffs || (!p.piggybacker && (p.cvar_cl_buffs_autoreplace || p.buffs != buff.buffs)))
+			if(!STAT(BUFFS, p) || (!p.piggybacker && (p.cvar_cl_buffs_autoreplace || STAT(BUFFS, p) != STAT(BUFFS, buff))))
 			{
 				toucher = p;
 				break;

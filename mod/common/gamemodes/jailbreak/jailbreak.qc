@@ -170,10 +170,10 @@ void JB_count_alive_players()
 	});
 	FOREACH_CLIENT(IS_REAL_CLIENT(it),
 	{
-		it.redalive_stat = redalive;
-		it.bluealive_stat = bluealive;
-		it.yellowalive_stat = yellowalive;
-		it.pinkalive_stat = pinkalive;
+		STAT(REDALIVE, it) = redalive;
+		STAT(BLUEALIVE, it) = bluealive;
+		STAT(YELLOWALIVE, it) = yellowalive;
+		STAT(PINKALIVE, it) = pinkalive;
 	});
 }
 

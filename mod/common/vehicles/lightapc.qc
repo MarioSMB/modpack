@@ -444,7 +444,7 @@ void lightapc_gunner_exit(entity this, int _exitflag)
 	player.PlayerPhysplug = func_null;
 	player.view_ofs       = STAT(PL_VIEW_OFS, player);
 	player.event_damage   = PlayerDamage;
-	player.hud            = HUD_NORMAL;
+	STAT(HUD, player)            = HUD_NORMAL;
 	player.teleportable	  = TELEPORT_NORMAL;
 	player.vehicle_enter_delay = time + 2;
 
@@ -496,7 +496,7 @@ bool lightapc_gunner_enter(entity this, entity player)
 	set_movetype(player, MOVETYPE_NOCLIP);
 	player.event_damage 	= func_null;
 	player.view_ofs 		= '0 0 0';
-	player.hud 				= gunner.hud;
+	STAT(HUD, player) 				= STAT(HUD, gunner);
 	player.teleportable 	= false;
 	player.PlayerPhysplug 	= gunner.PlayerPhysplug;
 	player.vehicle_ammo1 	= vehic.vehicle_ammo1;
@@ -532,7 +532,7 @@ bool lightapc_gunner_enter(entity this, entity player)
 		WriteAngle(MSG_ONE, 	0); // roll
 	}
 
-	CSQCVehicleSetup(player, player.hud);
+	CSQCVehicleSetup(player, STAT(HUD, player));
 
 	MUTATOR_CALLHOOK(VehicleEnter, player, gunner);
 
