@@ -357,9 +357,9 @@ void Sbar_SortFrags()
 			int ff2 = stof(getplayerkeyvalue(j + 1, "frags"));
 			if(ffs < ff2)
 			{
-				k = fragsort[j];
+				int currentscore = fragsort[j];
 				fragsort[j] = fragsort[j + 1];
-				fragsort[j + 1] = k;
+				fragsort[j + 1] = currentscore;
 			}
 		}
 	}
