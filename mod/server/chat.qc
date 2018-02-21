@@ -72,15 +72,15 @@ MUTATOR_HOOKFUNCTION(mod_chat, PreFormatMessage)
 
 		if(!autocvar_chat_replacewords)
 		{
-			newmsg = strcat(newmsg, theword, " ");
+			newmsg = cons(newmsg, theword);
 			continue;
 		}
 
 		string myvar = strcat("chat_replace_", theword);
 		if(cvar_type(myvar) & CVAR_TYPEFLAG_EXISTS)
-			newmsg = strcat(newmsg, cvar_string(myvar), " ");
+			newmsg = cons(newmsg, cvar_string(myvar));
 		else
-			newmsg = strcat(newmsg, theword, " ");
+			newmsg = cons(newmsg, theword);
 	});
 	themsg = mod_translate_clean(newmsg);
 
