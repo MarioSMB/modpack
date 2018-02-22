@@ -137,10 +137,9 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 			if(CS(player).cvar_cl_model == "foxy" && ALLOWED(RENAMON))
 				ret_string = "models/player/renamon.iqm";
 		}
-		else if(player.playermodel == "models/player/renamon.iqm")
-		{
+		else if(player.playermodel == "models/player/renamon.iqm" || player.playermodel == "models/player/rosalina.dpm")
 			ret_string = autocvar_sv_defaultplayermodel;
-		}
+
 		if(PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		{
 			if(CS(player).cvar_cl_sparkle == 3 && ALLOWED(MARIO))
@@ -150,7 +149,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 			if(CS(player).cvar_cl_model == "bear" && ALLOWED(BEAR))
 				ret_string = "models/player/bear.dpm";
 		}
-		else if(player.playermodel == "models/player/mario.dpm" || player.playermodel == "models/player/bear.dpm" || player.playermodel == "models/player/rosalina.dpm")
+		else if(player.playermodel == "models/player/mario.dpm" || player.playermodel == "models/player/bear.dpm" || player.playermodel == "models/player/luigi.dpm")
 			ret_string = autocvar_sv_defaultplayermodel;
 
 		if(CS(player).cow && ALLOWED(COW))
