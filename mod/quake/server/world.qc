@@ -4,10 +4,40 @@ entity lastspawn;
 #define cvar_normal builtin_cvar
 #define cvar_set_normal builtin_cvar_set
 
-// unused
-void main()
-{
+void main() { /* unused */ }
 
+entity pingplreport;
+void PingPLReport_Think(entity this)
+{
+	float delta = 3 / maxclients;
+	if(delta < sys_frametime)
+		delta = 0;
+	this.nextthink = time + delta;
+
+	entity e = edict_num(this.cnt + 1);
+	if(IS_CLIENT(e) && IS_REAL_CLIENT(e))
+	{
+		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
+		WriteByte(MSG_BROADCAST, this.cnt);
+		WriteShort(MSG_BROADCAST, bound(1, e.ping, 65535));
+		WriteByte(MSG_BROADCAST, min(ceil(e.ping_packetloss * 255), 255));
+		WriteByte(MSG_BROADCAST, min(ceil(e.ping_movementloss * 255), 255));
+	}
+	else
+	{
+		WriteHeader(MSG_BROADCAST, TE_CSQC_PINGPLREPORT);
+		WriteByte(MSG_BROADCAST, this.cnt);
+		WriteShort(MSG_BROADCAST, 0);
+		WriteByte(MSG_BROADCAST, 0);
+		WriteByte(MSG_BROADCAST, 0);
+	}
+	this.cnt = (this.cnt + 1) % maxclients;
+}
+STATIC_INIT_LATE(PingPLReport_Spawn)
+{
+	pingplreport = new_pure(pingplreport);
+	setthink(pingplreport, PingPLReport_Think);
+	pingplreport.nextthink = time;
 }
 
 //=======================
@@ -612,6 +642,14 @@ void SetSpawnReplace()
 	});
 }
 
+STATIC_INIT_EARLY(maxclients)
+{
+	maxclients = 0;
+	for (entity head = nextent(NULL); head; head = nextent(head)) {
+		++maxclients;
+	}
+}
+
 void GameLogEcho(string s);
 bool world_already_spawned;
 int world_initialized;
@@ -702,12 +740,6 @@ spawnfunc(worldspawn)
 	delete_fn = remove_safely; // during spawning, watch what you remove!
 
 	cvar_changes_init(); // do this very early now so it REALLY matches the server config
-
-	maxclients = 0;
-	for(entity head = nextent(NULL); head; head = nextent(head))
-	{
-		++maxclients;
-	}
 
 	// needs to be done so early because of the constants they create
 	static_init();

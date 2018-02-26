@@ -201,6 +201,15 @@ bool CSQC_Parse_TempEntity()
 	return false;
 }
 
+STATIC_INIT(PlayerSlots_Spawn)
+{
+	for(int j = 0; j < maxclients; ++j)
+	{
+		entity e = playerslots[j] = new_pure(playerslot);
+		e.sv_entnum = j;
+	}
+}
+
 // optional stuff
 STATIC_INIT_LATE(fix_hud)
 {
@@ -212,4 +221,18 @@ STATIC_INIT_LATE(fix_hud)
 		cvar_set("_rrestarted", "1");
 		localcmd("\ndefer 1 r_restart\n");
 	}
+}
+
+NET_HANDLE(TE_CSQC_PINGPLREPORT, bool isNew)
+{
+	int i = ReadByte();
+	int pi = ReadShort();
+	int pl = ReadByte();
+	int ml = ReadByte();
+	return = true;
+	entity e = playerslots[i];
+	if (!e) { LOG_INFO(ftos(i), " not found!\n"); return; }
+	e.ping = pi;
+	e.ping_packetloss = pl / 255.0;
+	e.ping_movementloss = ml / 255.0;
 }

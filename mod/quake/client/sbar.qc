@@ -436,8 +436,9 @@ float Sbar_PrintScoreboardItem(int fscore, vector thepos)
 	drawfill(pos, vec2(40 * SBAR_MAXWIDTH, 3), thecolor, autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 	// print the text
-	float theping = stof(getplayerkeyvalue(fscore, "ping"));
-	float thepl = stof(getplayerkeyvalue(fscore, "pl"));
+	bool have_playerslots = (playerslots[fscore] != NULL);
+	float theping = ((have_playerslots) ? playerslots[fscore].ping : stof(getplayerkeyvalue(fscore, "ping")));
+	float thepl = ((have_playerslots) ? playerslots[fscore].ping_packetloss : stof(getplayerkeyvalue(fscore, "pl")));
 	string thename = getplayerkeyvalue(fscore, "name");
 	if(theping || thepl)
 		drawcolorcodedstring2(thepos, sprintf("%4d %3d %5d %c%s", bound(0, theping, 9999), bound(0, thepl, 99), thescore, ((myself) ? 13 : ' '), thename), '8 8 0', '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
@@ -610,16 +611,8 @@ void Sbar_Score(int margin)
 	sbar = sbar_save;
 }
 
-float last_ping_request;
-
 void Sbar_DeathmatchOverlay()
 {
-	if(time >= last_ping_request)
-	{
-		last_ping_request = time + 5; // not frequently
-		localcmd("pings\n");
-	}
-
 	// scores
 	Sbar_SortFrags();
 

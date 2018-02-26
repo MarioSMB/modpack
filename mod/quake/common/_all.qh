@@ -1,5 +1,7 @@
 #pragma once
 
+REGISTER_NET_TEMP(TE_CSQC_PINGPLREPORT)
+
 REGISTER_NET_LINKED(ENT_CLIENT_MODEL)
 
 #define fixedmakevectors makevectors

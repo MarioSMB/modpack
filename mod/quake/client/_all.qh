@@ -25,6 +25,9 @@ float sb_showscores; // engine global
 
 float deathmatch, coop; // also engine globals
 
+entity playerslots[255]; // 255 is engine limit on maxclients
+.float ping, ping_packetloss, ping_movementloss;
+
 #define drawpic(position, pic, size, rgb, alpha, flag) \
 	drawpic_builtin(position, pic, size, rgb, alpha, flag)
 
