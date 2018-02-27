@@ -15,6 +15,7 @@
 	#include "headshots.qc"
 	#include "monsters.qc"
 	#include "mute.qc"
+	#include "player_size.qc"
 	#include "prediction.qc"
 	#include "radio.qc"
 	#include "spawnreplace.qc"
