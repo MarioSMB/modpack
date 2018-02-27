@@ -51,4 +51,5 @@ MUTATOR_HOOKFUNCTION(player_size, PlayerSpawn)
 	setorigin(player, player.origin + '0 0 1' * (height_diff));
 
 	setsize(player, STAT(PL_MIN, player), STAT(PL_MAX, player));
+	player.view_ofs = STAT(PL_VIEW_OFS, player);
 }
