@@ -41,4 +41,14 @@ MUTATOR_HOOKFUNCTION(player_size, PlayerSpawn)
 	STAT(PL_CROUCH_MIN, player) = _PL_CROUCH_MIN_CONST * player.scale;
 	STAT(PL_CROUCH_MAX, player) = _PL_CROUCH_MAX_CONST * player.scale;
 	STAT(PL_CROUCH_VIEW_OFS, player) = _PL_CROUCH_VIEW_OFS_CONST * player.scale;
+
+	// attempt to get new height before adjusting hitbox
+	vector newsize = -STAT(PL_MIN, player);
+	float oldz = -PL_MIN_CONST.z;
+	float newz = newsize.z;
+	float height_diff = (newz - oldz);
+
+	setorigin(player, player.origin + '0 0 1' * (height_diff));
+
+	setsize(player, STAT(PL_MIN, player), STAT(PL_MAX, player));
 }
