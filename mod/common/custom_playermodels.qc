@@ -23,6 +23,7 @@ const int MODELS_MARIO = BIT(8);
 const int MODELS_BEAR = BIT(9);
 const int MODELS_MONK = BIT(10);
 const int MODELS_NEXUS = BIT(11);
+const int MODELS_IGGY = BIT(12);
 #endif
 
 #ifdef SVQC
@@ -69,6 +70,7 @@ void cpmodels_Precache()
 		CHECK_MODEL("bear.dpm", BEAR)
 		CHECK_MODEL("monk2.dpm", MONK)
 		CHECK_MODEL("nexus.zym", NEXUS)
+		CHECK_MODEL("iggy.dpm", IGGY)
 	}
 #undef CHECK_MODEL
 }
@@ -136,8 +138,10 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 			}
 			if(CS(player).cvar_cl_model == "foxy" && ALLOWED(RENAMON))
 				ret_string = "models/player/renamon.iqm";
+			if(CS(player).cvar_cl_model == "iggy" && ALLOWED(IGGY))
+				ret_string = "models/player/iggy.dpm";
 		}
-		else if(player.playermodel == "models/player/renamon.iqm" || player.playermodel == "models/player/rosalina.dpm")
+		else if(player.playermodel == "models/player/renamon.iqm" || player.playermodel == "models/player/rosalina.dpm" || player.playermodel == "models/player/iggy.dpm")
 			ret_string = autocvar_sv_defaultplayermodel;
 
 		if(PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
