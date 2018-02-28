@@ -14,7 +14,7 @@ const vector _PL_CROUCH_MIN_CONST = '-16 -16 -24';
 MUTATOR_HOOKFUNCTION(player_size, PlayerPhysics)
 {
 	entity player = M_ARGV(0, entity);
-	if((!autocvar_g_player_size || autocvar_g_player_size == 1) && !player.player_scale_override)
+	if(player.player_scale == 1 || !player.player_scale)
 		return;
 
 	STAT(PL_MIN, player) = PL_MIN_CONST * player.scale;
