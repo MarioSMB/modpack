@@ -48,7 +48,8 @@ MUTATOR_HOOKFUNCTION(player_size, PlayerSpawn)
 	float newz = newsize.z;
 	float height_diff = (newz - oldz);
 
-	setorigin(player, player.origin + '0 0 1' * (height_diff));
+	if(player.scale > 1) // below 1 doesn't need adjustment, the player will just be above the ground a bit
+		setorigin(player, player.origin + '0 0 1' * (height_diff));
 
 	setsize(player, STAT(PL_MIN, player), STAT(PL_MAX, player));
 	player.view_ofs = STAT(PL_VIEW_OFS, player);
