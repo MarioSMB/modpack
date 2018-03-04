@@ -21,8 +21,8 @@ Building tools
  - Mac systems should already come with the required building tools once Git is installed
  
 Required content packs:
- - http://dl.xonotic.co/zzz-misc-v006-93-g96720f2.pk3
- - http://dl.xonotic.co/zzz-quickmenu_022.pk3
+ - http://dl.xonotic.co/zzz-misc-v006-96-gf010d43.pk3
+ - http://dl.xonotic.co/zzz-quickmenu_025.pk3
  - http://dl.xonotic.co/zzz-minigames-v006-93-g96720f2.pk3
 
 Optional content packs:
