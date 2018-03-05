@@ -235,8 +235,7 @@ void snafu_deathalert(entity this, entity attacker)
 {
 	FOREACH_ENTITY_RADIUS(this.origin, 1024, it.snafu_ai_flags,
 	{
-		if(it.enemy.classname != "snafu_tadpole")
-		if(IS_PLAYER(attacker))
+		if(it.enemy.classname != "snafu_tadpole" && IS_PLAYER(attacker))
 		{
 			it.enemy = attacker;
 			it.snafu_ai_enemy_select_timer = time + 5;
