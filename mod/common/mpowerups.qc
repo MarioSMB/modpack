@@ -147,6 +147,8 @@ const vector PL_CROUCH_MIN_CONST = '-16 -16 -24';
 .float star_touch_time;
 .vector star_oldcolormod;
 
+.float player_scale; // TODO
+
 bool have_powerup(entity this)
 {
 	return ((this.mitems & ITEM_Star.m_itemid) || (this.mitems & ITEM_Mini.m_itemid) || (this.mitems & ITEM_Life.m_itemid));
@@ -160,7 +162,7 @@ void RemovePowerups(entity this)
 
 	this.mitems = 0;
 
-	this.scale = 0; // 0 is default, it'll do for now
+	this.scale = ((this.player_scale) ? this.player_scale : autocvar_sv_player_scale); // 0 is default, it'll do for now
 	if(this.mini_oldgravity)
 	{
 		this.gravity = ((this.trigger_gravity_check) ? this.trigger_gravity_check.enemy.gravity : this.mini_oldgravity);
