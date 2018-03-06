@@ -10,10 +10,10 @@ Requirements
 ============
  
 Required content packs:
- - http://dl.xonotic.co/zzz-quake1_07.pk3
+ - http://dl.xonotic.co/zzz-quake1_09.pk3
 
 Optional mission packs:
- - http://dl.xonotic.co/zzz-quake1-mp1_04.pk3
+ - http://dl.xonotic.co/zzz-quake1-mp1_05.pk3
  - http://dl.xonotic.co/zzz-quake1-mp2_03.pk3
 
 
