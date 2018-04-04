@@ -156,8 +156,6 @@ AUTOCVAR(g_vehicle_lightapc_changetype, bool, true, "Allow gunners to change the
 
 .LinkedList gunners;
 
-.entity hitboxmf;
-.entity hitboxmb;
 .entity bomb3, bomb4, bomb5, bomb6;
 
 vector vehicle_aimturret2(entity _vehic, entity _turretmount, vector _target, entity _turrret, string _tagname, 
@@ -174,151 +172,6 @@ vector vehicle_aimturret2(entity _vehic, entity _turretmount, vector _target, en
 	_turrret.angles_y = bound(_rotlimit_min, _turrret.angles_y + vtmp.y, _rotlimit_max);    
 	_turrret.angles_x = bound(_pichlimit_min, _turrret.angles_x + vtmp.x, _pichlimit_max);
 	return vtag;
-}
-
-void lightapc_kill_hitbox(entity hitbox)
-{
-	hitbox.health             = 0;
-	hitbox.event_damage       = func_null;
-	hitbox.takedamage         = DAMAGE_NO;
-	setthink(hitbox, func_null);
-	settouch(hitbox, func_null);
-	hitbox.deadflag           = DEAD_DEAD;
-	set_movetype(hitbox, MOVETYPE_NONE);
-	hitbox.solid      		  = SOLID_NOT;
-}
-
-void lightapc_hitbox_touch2(entity this, entity toucher)
-{
-	if(autocvar_g_vehicles_enter) { return; }
-
-	if(gettouch(this))
-		gettouch(this)(this, toucher);
-
-#if 0
-
-	//This is mostly the same as above but whatever is set as this.hitboxmf
-	//is tested for weather it is above or below other rather than this
-	//Used for tanks with hitboxes other than the main one: max is thus the max of the hitboxmf hitbox
-	//this.hitboxmf is set at tank_spawn (usually to the forward hitbox)
-	// Vehicle currently in use
-	if(this.owner)
-	{
-		if(toucher != NULL)
-		if(vehicles_crushable(toucher))
-		{
-			if((this.hitboxmf.origin_z + this.hitboxmf.maxs_z) > (toucher.origin_z))
-			{
-				//If player or creature is ontop of tank, do not crush.
-				if(this.velocity)
-				{
-					float dmgalgo = autocvar_g_vehicles_crush_dmg * (this.mass*(vlen((this.velocity-toucher.velocity)))*0.0000012);
-					Damage(toucher, this, this.owner, autocvar_g_vehicles_crush_dmg + dmgalgo, DEATH_VH_CRUSH.m_id, '0 0 0', normalize(toucher.origin - this.origin) * autocvar_g_vehicles_crush_force);
-				}
-			}
-			else if(this.velocity)
-			{
-				//Push player etc
-				makevectors(this.angles_x * '-1 0 0' + this.angles_y * '0 1 0' + this.angles_z * '0 0 1'); //Inverted pitch on models
-				movelib_move_simple(toucher, normalize(v_forward * CS(this.owner).movement_x),autocvar_g_vehicle_lightapc_speed_forward,autocvar_g_vehicle_lightapc_movement_inertia);
-			}
-
-			return; // Dont do thisdamage when hitting "soft targets".
-		}
-		else if(toucher.mass < 1000)
-		{
-			//This is for when hitting toucher light vehicles (cars, planes)
-			if(this.velocity)
-			{
-				float theirmass = (toucher.mass) ? toucher.mass : 1;
-				float totalmass = this.mass+theirmass;
-				float dmgalgo = autocvar_g_vehicles_crash_damage * (this.mass*(vlen((this.velocity-toucher.velocity)))*0.0000012);
-				float dmgtoucher = (this.mass/totalmass) * dmgalgo;
-				float dmgthis = (theirmass/totalmass) * dmgalgo;
-			
-				Damage(toucher, this, this.owner, dmgtoucher, DEATH_VH_CRUSH.m_id, '0 0 0', normalize(toucher.origin - this.origin) * autocvar_g_vehicles_crush_force);
-			
-				Damage(this, this, this.owner, dmgthis, DEATH_VH_CRUSH.m_id, '0 0 0', normalize(toucher.origin - this.origin) * autocvar_g_vehicles_crush_force);		
-			}
-		}
-		else if (toucher.mass >= 1000)
-		{
-			//Heavy vehicles use a different touch() routine,
-			//when we hit them with a light or med vehicle,
-			//we only hurt ourselves
-			if(this.velocity)
-			{
-				float theirmass = (toucher.mass) ? toucher.mass : 1;
-				float dmgalgo = autocvar_g_vehicles_crash_damage * (this.mass*(vlen((this.velocity-toucher.velocity)))*0.0000012);
-				float dmgthis = (theirmass/(this.mass+theirmass)) * dmgalgo;
-			
-				Damage(this, this, this.owner, dmgthis, DEATH_VH_CRUSH.m_id, '0 0 0', normalize(toucher.origin - this.origin) * autocvar_g_vehicles_crush_force);		
-			}
-		}
-
-		if(this.play_time < time)
-		{
-			Vehicle info = Vehicles_from(this.vehicleid);
-			info.vr_impact(info, this);
-		}
-
-		return;
-	}
-
-	if(!IS_PLAYER(toucher))
-		return;
-
-	if(IS_DEAD(toucher))
-		return;
-
-	if(toucher.vehicle != NULL)
-		return;
-
-	vehicles_enter(toucher, this);
-#endif
-}
-
-void lightapc_hitbox_touch(entity this, entity toucher)
-{
-	lightapc_hitbox_touch2(this.owner, toucher); // This way this.subordinate is tested for max_z rather than this
-}
-
-void lightapc_damage_hitbox(entity this, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
-{
-	if(this.owner.event_damage)
-		this.owner.event_damage(this.owner, inflictor, attacker, damage, deathtype, hitloc, force);
-}
-
-void lightapc_spawn_hitbox(entity vehic, entity hitbox, vector min_s, vector max_s, float fwd_s)
-{
-	hitbox.owner = vehic;
-	settouch(hitbox, lightapc_hitbox_touch);
-
-	hitbox.event_damage = lightapc_damage_hitbox;
-
-	if(!hitbox.bot_attack)
-		IL_PUSH(g_bot_targets, hitbox);
-	hitbox.bot_attack = true;
-	hitbox.iscreature = true;
-	hitbox.teleportable = false; // no teleporting for vehicles, too buggy
-	if(!hitbox.damagedbycontents)
-		IL_PUSH(g_damagedbycontents, hitbox);
-	hitbox.damagedbycontents = true;
-	set_movetype(hitbox, MOVETYPE_WALK);
-	hitbox.solid              = SOLID_SLIDEBOX;
-	hitbox.takedamage         = DAMAGE_AIM;
-	hitbox.deadflag           = DEAD_NO;
-	hitbox.flags              = FL_NOTARGET;
-	setthink(hitbox, func_null);
-	hitbox.vehicle_health = vehic.vehicle_health;
-	hitbox.netname = hitbox.owner.netname;
-	setsize(hitbox, min_s, max_s);
-	makevectors(vehic.angles_x * '-1 0 0' + vehic.angles_y * '0 1 0' + vehic.angles_z * '0 0 1'); // Inverted pitch on models
-	setorigin(hitbox, (vehic.origin + v_forward * fwd_s)); // Forward X qunits
-	follow_sameorigin(hitbox, vehic); // Follow vehic
-	
-	hitbox.damageforcescale = 0.03;
-	hitbox.ballistics_density = autocvar_g_vehicle_lightapc_ballistics_density;
 }
 
 void lightapc_regen(entity this, float dt)
@@ -348,6 +201,8 @@ bool lightapc_gunner_frame(entity this, float dt)
 	{
 		entity turretmount = ((gunner == vehic.gun1) ? vehic.bomb5 : vehic.bomb6);
 
+		// ugly hack: the vehicle's hitbox interferes with aiming of the turrets since it's so close to the vehicle
+		// preferably, the tank turret wouldn't be so close to the vehicle or aim so far down, but this will have to do for now
 		vehic.solid = SOLID_NOT;
 		vehic.hitboxmf.solid = SOLID_NOT;
 		vehic.hitboxmb.solid = SOLID_NOT;
@@ -589,7 +444,7 @@ void lightapc_gunner_exit(entity this, int _exitflag)
 	player.PlayerPhysplug = func_null;
 	player.view_ofs       = STAT(PL_VIEW_OFS, player);
 	player.event_damage   = PlayerDamage;
-	player.hud            = HUD_NORMAL;
+	STAT(HUD, player)            = HUD_NORMAL;
 	player.teleportable	  = TELEPORT_NORMAL;
 	player.vehicle_enter_delay = time + 2;
 
@@ -641,7 +496,7 @@ bool lightapc_gunner_enter(entity this, entity player)
 	set_movetype(player, MOVETYPE_NOCLIP);
 	player.event_damage 	= func_null;
 	player.view_ofs 		= '0 0 0';
-	player.hud 				= gunner.hud;
+	STAT(HUD, player) 				= STAT(HUD, gunner);
 	player.teleportable 	= false;
 	player.PlayerPhysplug 	= gunner.PlayerPhysplug;
 	player.vehicle_ammo1 	= vehic.vehicle_ammo1;
@@ -677,7 +532,7 @@ bool lightapc_gunner_enter(entity this, entity player)
 		WriteAngle(MSG_ONE, 	0); // roll
 	}
 
-	CSQCVehicleSetup(player, player.hud);
+	CSQCVehicleSetup(player, STAT(HUD, player));
 
 	MUTATOR_CALLHOOK(VehicleEnter, player, gunner);
 
@@ -1032,7 +887,7 @@ void lightapc_blowup(entity this, entity toucher)
 					autocvar_g_vehicle_lightapc_blowup_edgedamage,
 					autocvar_g_vehicle_lightapc_blowup_radius, NULL, NULL,
 					autocvar_g_vehicle_lightapc_blowup_forceintensity,
-					DEATH_VH_LIGHTAPC_DEATH.m_id, NULL);
+					DEATH_VH_LIGHTAPC_DEATH.m_id, DMG_NOWEP, NULL);
 
 	delete(this);
 }
@@ -1295,6 +1150,7 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 
 	instance.PlayerPhysplug = lightapc_pilot_frame;
 
+	instance.ballistics_density = autocvar_g_vehicle_lightapc_ballistics_density;
 	instance.bouncefactor = autocvar_g_vehicle_lightapc_bouncefactor;
 	instance.bouncestop = autocvar_g_vehicle_lightapc_bouncestop;
 	instance.damageforcescale = 0.02;
@@ -1311,8 +1167,8 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 	instance.bomb4.gun1.avelocity_y = 0;
 	instance.bomb4.gun2.avelocity_y = 0;
 
-	lightapc_spawn_hitbox(instance, instance.hitboxmf, thisveh.m_mins, thisveh.m_maxs, 90);	
-	lightapc_spawn_hitbox(instance, instance.hitboxmb, thisveh.m_mins, thisveh.m_maxs, -90);
+	vehicles_hitbox_spawn(instance, instance.hitboxmf, thisveh.m_mins, thisveh.m_maxs, 90, 0);	
+	vehicles_hitbox_spawn(instance, instance.hitboxmb, thisveh.m_mins, thisveh.m_maxs, -90, 0);
 #endif
 }
 
@@ -1388,8 +1244,8 @@ METHOD(LightAPC, vr_death, void(LightAPC thisveh, entity instance))
 	setthink(instance, vehicles_spawn);
 	setorigin(instance, instance.pos1);
 
-	lightapc_kill_hitbox(instance.hitboxmf); // Middle front //Fine, doesnt do anything tank specific
-	lightapc_kill_hitbox(instance.hitboxmb); // Mid back
+	vehicles_hitbox_kill(instance.hitboxmf); // Middle front
+	vehicles_hitbox_kill(instance.hitboxmb); // Mid back
 #endif
 }
 

@@ -145,6 +145,9 @@ const vector PL_CROUCH_MIN_CONST = '-16 -16 -24';
 
 .float mini_oldgravity;
 .float star_touch_time;
+.vector star_oldcolormod;
+
+.float player_scale; // TODO
 
 bool have_powerup(entity this)
 {
@@ -159,7 +162,7 @@ void RemovePowerups(entity this)
 
 	this.mitems = 0;
 
-	this.scale = 0; // 0 is default, it'll do for now
+	this.scale = ((this.player_scale) ? this.player_scale : autocvar_sv_player_scale); // 0 is default, it'll do for now
 	if(this.mini_oldgravity)
 	{
 		this.gravity = ((this.trigger_gravity_check) ? this.trigger_gravity_check.enemy.gravity : this.mini_oldgravity);
@@ -257,7 +260,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPreThink)
 			if(!IS_INDEPENDENT_PLAYER(it))
 			if(boxesoverlap(player.absmin, player.absmax, it.absmin, it.absmax))
 			{
-				Damage(it, player, player, 999, DEATH_CHEAT.m_id, it.origin, it.origin);
+				Damage(it, player, player, 999, DEATH_CHEAT.m_id, DMG_NOWEP, it.origin, it.origin);
 				player.star_touch_time = it.star_touch_time = time + autocvar_g_powerup_star_touch_delay;
 			}
 		));
@@ -274,8 +277,10 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPowerups)
 	{
 		play_countdown(player, STAT(STAR_FINISHED, player), SND_POWEROFF);
 		player.effects = player.effects | (EF_DIMLIGHT | EF_FULLBRIGHT);
+		player.colormod = randomvec() * ((autocvar_g_player_brightness) ? autocvar_g_player_brightness : 1);
 		if (time > STAT(STAR_FINISHED, player))
 		{
+			player.colormod = player.star_oldcolormod;
 			player.mitems &= ~ITEM_Star.m_itemid;
 			//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_STAR, player.netname);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_STAR);
@@ -285,6 +290,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPowerups)
 	{
 		if (time < STAT(STAR_FINISHED, player))
 		{
+			player.star_oldcolormod = player.colormod;
 			player.mitems |= ITEM_Star.m_itemid;
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_STAR, player.netname);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_STAR);
@@ -329,7 +335,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPowerups)
 			tracebox(player.origin, player.mins, player.maxs, player.origin, MOVE_NOMONSTERS, player);
 			// if player is going to be stuck in solid when they grow, just kill them
 			if(trace_startsolid)
-				Damage(player, player, player, 100000, DEATH_VH_CRUSH.m_id, player.origin, '0 0 0');
+				Damage(player, player, player, 100000, DEATH_VH_CRUSH.m_id, DMG_NOWEP, player.origin, '0 0 0');
 		}
 	}
 	else
@@ -457,39 +463,40 @@ MUTATOR_HOOKFUNCTION(mpowerups, FixPlayermodel)
 		M_ARGV(1, int) = 2;
 }
 
-MUTATOR_HOOKFUNCTION(mpowerups, OnEntityPreSpawn, CBC_ORDER_FIRST)
+MUTATOR_HOOKFUNCTION(mpowerups, FilterItem, CBC_ORDER_FIRST)
 {
-	if (!autocvar_g_powerups) { return; }
-	if (!autocvar_g_powerups_mario_replace) { return; }
-	entity ent = M_ARGV(0, entity);
-	// Can't use .itemdef here
-	if (!(ent.classname == "item_strength" || ent.classname == "item_shield" || ent.classname == "item_health_mega" || ent.classname == "item_quad"))
-		return;
+	entity item = M_ARGV(0, entity);
 
-	entity e = spawn();
+	switch(item.itemdef)
+	{
+		case ITEM_Star: return false;
+		case ITEM_Mini: return false;
+		case ITEM_Life: return false;
+	}
+	if (!autocvar_g_powerups || !autocvar_g_powerups_mario_replace)
+		return false;
+	if (!(item.classname == "item_strength" || item.classname == "item_shield" || item.classname == "item_health_mega"))
+		return false;
 
+	string newclass;
 	float r = random();
-	if (r < 0.3)
-	{
-		e.classname = "item_minishroom";
-		setthink(e, mario_minishroom);
-	}
-	else if (r < 0.6)
-	{
-		e.classname = "item_lifeshroom";
-		setthink(e, mario_lifeshroom);
-	}
+	if(r < 0.3)
+		newclass = "item_minishroom";
+	else if(r < 0.6)
+		newclass = "item_lifeshroom";
 	else
-	{
-		e.classname = "item_starman";
-		setthink(e, mario_starman);
-	}
+		newclass = "item_starman";
 
-	e.nextthink = time + 0.1;
-	e.spawnflags = ent.spawnflags;
-	e.noalign = ent.noalign;
-	setorigin(e, ent.origin);
 
+	entity newitem = spawn();
+	newitem.classname = newclass;
+	setorigin(newitem, item.origin);
+	newitem.ok_item = true;
+	newitem.noalign = Item_ShouldKeepPosition(item);
+	newitem.cnt = item.cnt;
+	newitem.team = item.team;
+	newitem.spawnfunc_checked = true;
+	Item_Initialize(newitem, newclass);
 	return true;
 }
 

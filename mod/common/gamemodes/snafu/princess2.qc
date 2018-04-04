@@ -54,11 +54,11 @@ void snafu_princess_die(entity this)
 	}
 }
 
-void snafu_princess_damage(entity this, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void snafu_princess_damage(entity this, entity inflictor, entity attacker, float damage, float deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(vdist(hitloc - this.origin, >, 256))
 	{
-		dprint("^1WARNING:^7 got fubar hitloc in damage()\n");
+		LOG_DEBUG("^1WARNING:^7 got fubar hitloc in damage()\n");
 		Violence_GibSplash_At(this.origin + '0 0 0.5' * this.maxs_z, force, 2, bound(0, damage, 200) / 8, this, attacker);
 	}
 	else

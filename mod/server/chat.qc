@@ -1,6 +1,7 @@
 REGISTER_MUTATOR(mod_chat, true);
 
 AUTOCVAR(chat_replacewords, bool, false, "Allow replacing words in chat via chat_replace_* cvars");
+AUTOCVAR(chat_water, bool, false, "Replace chat with a funny message while underwater");
 
 .entity lasthit;
 
@@ -58,6 +59,12 @@ MUTATOR_HOOKFUNCTION(mod_chat, PreFormatMessage)
 	if(!IS_CLIENT(player) || themsg == "")
 		return; // don't modify map entity strings or other formatted stuff
 
+	if(player.waterlevel >= WATERLEVEL_SUBMERGED && autocvar_chat_water)
+	{
+		M_ARGV(1, string) = "[glub glub glub]";
+		return;
+	}
+
 	string newmsg = "";
 	FOREACH_WORD(themsg, true,
 	{
@@ -72,15 +79,15 @@ MUTATOR_HOOKFUNCTION(mod_chat, PreFormatMessage)
 
 		if(!autocvar_chat_replacewords)
 		{
-			newmsg = strcat(newmsg, theword, " ");
+			newmsg = cons(newmsg, theword);
 			continue;
 		}
 
 		string myvar = strcat("chat_replace_", theword);
 		if(cvar_type(myvar) & CVAR_TYPEFLAG_EXISTS)
-			newmsg = strcat(newmsg, cvar_string(myvar), " ");
+			newmsg = cons(newmsg, cvar_string(myvar));
 		else
-			newmsg = strcat(newmsg, theword, " ");
+			newmsg = cons(newmsg, theword);
 	});
 	themsg = mod_translate_clean(newmsg);
 

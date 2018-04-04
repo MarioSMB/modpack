@@ -42,7 +42,7 @@ void M_Tarbaby_Attack_Explode(entity this, entity directhitentity)
 	sound(this, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
 
 	Send_Effect(EFFECT_EXPLOSION_SMALL, this.origin, '0 0 0', 1);
-	RadiusDamage (this, this, (autocvar_g_monster_spawn_attack_explode_damage), (autocvar_g_monster_spawn_attack_explode_damage) * 0.5, (autocvar_g_monster_spawn_attack_explode_radius), NULL, NULL, 50, DEATH_MONSTER_MAGE.m_id, directhitentity);
+	RadiusDamage (this, this, (autocvar_g_monster_spawn_attack_explode_damage), (autocvar_g_monster_spawn_attack_explode_damage) * 0.5, (autocvar_g_monster_spawn_attack_explode_radius), NULL, NULL, 50, DEATH_MONSTER_MAGE.m_id, DMG_NOWEP, directhitentity);
 
 	Monster_Remove(this);
 }

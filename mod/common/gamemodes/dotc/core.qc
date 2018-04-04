@@ -20,10 +20,10 @@ entity dotc_GetCore(int teamnumber)
 // Core addon handling
 // ===================
 
-void dotc_Core_Addons_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void dotc_Core_Addons_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.owner.event_damage)
-		this.owner.event_damage(this.owner, inflictor, attacker, damage, deathtype, hitloc, force);
+		this.owner.event_damage(this.owner, inflictor, attacker, damage, deathtype, weaponentity, hitloc, force);
 }
 
 void dotc_Core_Addons_Think(entity this)
@@ -169,7 +169,7 @@ void dotc_Core_SetLevel(entity core, int newlevel, bool silent)
 // Main core setup
 // ===============
 
-void dotc_CoreDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void dotc_CoreDamage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {	
 	if(DOTC_FFCHECK(this, attacker))
 		return;

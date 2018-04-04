@@ -15,7 +15,7 @@ void dotc_projectile_explode(entity this, entity directhitentity)
     else
         Send_Effect(this.explode_fx, findbetterlocation(this.origin, 8), trace_plane_normal, 1);
 
-    RadiusDamage(this, this.owner, this.shot_dmg, 0, this.shot_radius, NULL, NULL, this.shot_force, this.projectiledeathtype, directhitentity);
+    RadiusDamage(this, this.owner, this.shot_dmg, 0, this.shot_radius, NULL, NULL, this.shot_force, this.projectiledeathtype, DMG_NOWEP, directhitentity);
     sound(this, CH_SHOTS, this.explode_snd, VOL_BASE, ATTN_NORM);
 
 	delete(this);
@@ -33,7 +33,7 @@ void dotc_projectile_explode_think(entity this)
     dotc_projectile_explode(this, NULL);
 }
 
-void dotc_projectile_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void dotc_projectile_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
     this.health -= damage;
 

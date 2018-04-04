@@ -96,7 +96,7 @@ void giftbox_touch(entity this, entity toucher)
 		sound(this, CH_SHOTS, SND_ROCKET_IMPACT, VOL_BASE, ATTEN_NORM);
 
 		RadiusDamage (this, this, 50, 35, 150,
-					NULL, NULL, 120, DEATH_GENERIC.m_id, toucher);
+					NULL, NULL, 120, DEATH_GENERIC.m_id, DMG_NOWEP, toucher);
 	}
 	else if(this.gifts & GIFTBOX_GIFT_ARMOR)
 	{

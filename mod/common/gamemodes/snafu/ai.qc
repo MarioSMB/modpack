@@ -386,7 +386,7 @@ bool gai_write(entity this, entity _to, int _flags)
 	return true;
 }
 
-void gai_generic_damage(entity this, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void gai_generic_damage(entity this, entity inflictor, entity attacker, float damage, float deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 }
 

@@ -79,7 +79,7 @@ void snafu_fatty_die(entity this)
 	}
 }
 
-void snafu_fatty_damage(entity this, entity inflictor, entity attacker, float damage, float deathtype, vector hitloc, vector force)
+void snafu_fatty_damage(entity this, entity inflictor, entity attacker, float damage, float deathtype, .entity weaponentity, vector hitloc, vector force)
 {    
 	if(vdist(hitloc - this.origin, >, 256))
 	{
@@ -192,7 +192,7 @@ void snafu_fatty_projectile_touch(entity this, entity toucher)
 				50, 
 				25, 
 				100, NULL, NULL, 
-				150, DEATH_GENERIC.m_id, toucher);
+				150, DEATH_GENERIC.m_id, DMG_NOWEP, toucher);
 	
 	te_bloodshower(this.origin - '-20 -20 -20', this.origin + '20 20 20', 500, 1000);
 	

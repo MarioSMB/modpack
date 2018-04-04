@@ -38,7 +38,7 @@ void helicopter_rotor_touch(entity this, entity toucher)
 				else if (this.bomb1.gun1.avelocity_y < -1)
 					dmgalgo = 50 + bound(0, (autocvar_g_vehicles_crush_dmg * ((this.bomb1.gun1.avelocity_y * -1) / 2090)), autocvar_g_vehicles_crush_dmg*1.5);
 			
-				Damage(toucher, this, this.owner, autocvar_g_vehicles_crush_dmg + dmgalgo, DEATH_HELI_PROPELLER.m_id, '0 0 0', normalize(toucher.origin - this.origin) * autocvar_g_vehicles_crush_force);
+				Damage(toucher, this, this.owner, autocvar_g_vehicles_crush_dmg + dmgalgo, DEATH_HELI_PROPELLER.m_id, DMG_NOWEP, '0 0 0', normalize(toucher.origin - this.origin) * autocvar_g_vehicles_crush_force);
 			}
 
 			return; // Dont do self damage when hitting "soft targets".

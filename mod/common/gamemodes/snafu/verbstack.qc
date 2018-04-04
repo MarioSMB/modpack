@@ -45,141 +45,139 @@ const int VS_CALL_REMOVE    = -3;
 const int VS_CALL_WTF       = -100;
 
 /**
-    Push a new verb onto the specified stack. Set vrb_life to make it time-limited.
+	Push a new verb onto the specified stack. Set vrb_life to make it time-limited.
 **/
 entity verbstack_push(entity stack, float(entity, entity, int) vrb_call, float val_static, float vrb_life, entity verb_owner)
 {
-    entity vrb;
+	if(!stack || !vrb_call)
+		return NULL;
 
-    if(!stack)
-        return NULL;
+	entity vrb            = new(verb);
+	vrb.owner             = verb_owner;
+	vrb.verbstack         = stack;
+	vrb.verb_call         = vrb_call;
+	vrb.verb_static_value = val_static;
 
-    if(!vrb_call)
-        return NULL;
+	if(vrb_life)
+	{
+		setthink(vrb, SUB_Remove);
+		vrb.nextthink = time + vrb_life;
+	}
 
-    vrb                   = spawn();
-    vrb.owner             = verb_owner;
-    vrb.verbstack         = stack;
-    vrb.verb_call         = vrb_call;
-    vrb.verb_static_value = val_static;
+	//verbstack_updatechain(stack);
 
-    vrb.classname         = "verb";
-    stack.classname       = "verbstack";
-
-    if(vrb_life)
-    {
-        setthink(vrb, SUB_Remove);
-        vrb.nextthink = time + vrb_life;
-    }
-
-    //verbstack_updatechain(stack);
-
-    return vrb;
+	return vrb;
 }
 
 /**
-    Find the best verb in this stack and execurte it.
-    ALso remove any verbs returning VS_CALL_REMOVE on VCM_EVAL or VCM_DO
+	Find the best verb in this stack and execurte it.
+	ALso remove any verbs returning VS_CALL_REMOVE on VCM_EVAL or VCM_DO
 **/
 int verbstack_pop(entity stack)
 {
-    entity bestverb = NULL;
-    int value = 0, bestvalue = 0;
+	entity bestverb = NULL;
+	int value = 0, bestvalue = 0;
 
-    entity vrb = findchainentity(verbstack,stack);
-    //vrb = stack.vchain;
-    //dprint("owner:", stack.owner.classname, " vsn:", stack.classname,"\n");
-    while(vrb)
-    {
-        //dprint("vn:", vrb.classname,"\n");
-        entity verb  = vrb;
-        vrb   = vrb.chain;
-        value = verb.verb_call(verb, verb.owner, VCM_EVAL);
+	entity vrb = findchainentity(verbstack,stack);
+	//vrb = stack.vchain;
+	//dprint("owner:", stack.owner.classname, " vsn:", stack.classname,"\n");
+	while(vrb)
+	{
+		//dprint("vn:", vrb.classname,"\n");
+		entity verb = vrb;
+		vrb = vrb.chain;
+		value = verb.verb_call(verb, verb.owner, VCM_EVAL);
 
-        if(value < 0)
-        {
-            if(value == VS_CALL_REMOVE)
-                delete(verb);
-        }
-        else
-        {
-            if(value > bestvalue)
-            {
-                bestverb  = verb;
-                bestvalue = value;
-            }
-        }
-    }
+		if(value < 0)
+		{
+			if(value == VS_CALL_REMOVE)
+				delete(verb);
+		}
+		else
+		{
+			if(value > bestvalue)
+			{
+				bestverb  = verb;
+				bestvalue = value;
+			}
+		}
+	}
 
-    if(bestverb)
-    {
-        entity theverb  = bestverb;
-        value = theverb.verb_call(theverb, theverb.owner, VCM_DO);
+	if(bestverb)
+	{
+		entity theverb = bestverb;
+		value = theverb.verb_call(theverb, theverb.owner, VCM_DO);
 
-        if(value == VS_CALL_REMOVE)
-            delete(bestverb);
-    }
+		if(value == VS_CALL_REMOVE)
+			delete(bestverb);
+	}
 
-    return value;
+	return value;
 }
 
 /**
-    Find the best verb in this stack and return it.
-    ALso remove any verbs returning VS_CALL_REMOVE on VCM_EVAL.
+	Find the best verb in this stack and return it.
+	ALso remove any verbs returning VS_CALL_REMOVE on VCM_EVAL.
 **/
 entity verbstack_pull(entity stack)
 {
-    entity bestverb = NULL;
-    int value = 0, bestvalue = 0;
+	entity bestverb = NULL;
+	int value = 0, bestvalue = 0;
 
-    entity vrb = findchainentity(verbstack,stack);
-    while(vrb)
-    {
-        entity verb = vrb;
-        vrb = vrb.chain;
-        value = verb.verb_call(verb, verb.owner, VCM_EVAL);
+	entity vrb = findchainentity(verbstack,stack);
+	while(vrb)
+	{
+		entity verb = vrb;
+		vrb = vrb.chain;
+		value = verb.verb_call(verb, verb.owner, VCM_EVAL);
 
-        if(value < 0)
-        {
-            if(value == VS_CALL_REMOVE)
-                delete(verb);
-        }
-        else
-        {
-            if(value > bestvalue)
-            {
-                bestverb = verb;
-                bestvalue = value;
-            }
-        }
-    }
+		if(value < 0)
+		{
+			if(value == VS_CALL_REMOVE)
+				delete(verb);
+		}
+		else
+		{
+			if(value > bestvalue)
+			{
+				bestverb = verb;
+				bestvalue = value;
+			}
+		}
+	}
 
-    return bestverb;
+	return bestverb;
 }
 
 /**
-    Delete every verb on this stack, signaling them with VCM_REMOVE first.
+	Delete every verb on this stack, signaling them with VCM_REMOVE first.
 **/
 void verbstack_flush(entity stack)
 {
-    entity vrb = findchainentity(verbstack,stack);
-    while(vrb)
-    {
-        entity verb = vrb;
-        vrb  = vrb.chain;
-        verb.verb_call(verb, verb.owner, VCM_REMOVE);
-        delete(verb);
-    }
+	entity vrb = findchainentity(verbstack,stack);
+	while(vrb)
+	{
+		entity verb = vrb;
+		vrb  = vrb.chain;
+		verb.verb_call(verb, verb.owner, VCM_REMOVE);
+		delete(verb);
+	}
 
-    //stack.vchain = NULL;
+	//stack.vchain = NULL;
 }
 
 void verbstack_doverb(entity vrb)
 {
-    int value = vrb.verb_call(vrb, vrb.owner, VCM_DO);
+	int value = vrb.verb_call(vrb, vrb.owner, VCM_DO);
 
-    if(value == VS_CALL_REMOVE)
-        delete(vrb);
+	if(value == VS_CALL_REMOVE)
+		delete(vrb);
+}
+
+entity verbstack_new()
+{
+	entity stack = new(verbstack);
+	return stack;
 }
 
 #endif

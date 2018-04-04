@@ -293,7 +293,7 @@ void W_Lightsabre_Melee_Think(entity this)
 				//print(strcat(this.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
 
 				Damage(target_victim, this.realowner, this.realowner,
-					swing_damage, deathtype,
+					swing_damage, deathtype, this.weaponentity_fld,
 					this.realowner.origin + this.realowner.view_ofs,
 					v_forward * WEP_CVAR_BOTH(lightsabre, isprimary, force));
 
@@ -347,7 +347,7 @@ void W_Lightsabre_Attack(Weapon thiswep, entity actor, .entity weaponentity, int
 		meleetemp.projectiledeathtype |= HITTYPE_SECONDARY;
 	meleetemp.weaponentity_fld = weaponentity;
 	meleetemp.nextthink = time + WEP_CVAR_BOTH(lightsabre, isprimary, melee_delay) * W_WeaponRateFactor(actor);
-	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR_BOTH(lightsabre, isprimary, damage), WEP_CVAR_BOTH(lightsabre, isprimary, melee_range));
+	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR_BOTH(lightsabre, isprimary, damage), WEP_CVAR_BOTH(lightsabre, isprimary, melee_range), meleetemp.projectiledeathtype);
 }
 
 // HACK: use tuba_instrument to avoid the need to manually network this from mod

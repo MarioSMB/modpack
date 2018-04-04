@@ -116,7 +116,7 @@ void W_Chainsaw_Attack1(Weapon thiswep, entity actor, .entity weaponentity, int 
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(chainsaw, melee_ammo), weaponentity);
 
-	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR(chainsaw, melee_damage), WEP_CVAR(chainsaw, melee_range));
+	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR(chainsaw, melee_damage), WEP_CVAR(chainsaw, melee_range), WEP_CHAINSAW.m_id);
 
 	vector targpos = (actor.origin + actor.view_ofs
 			+ (v_forward * WEP_CVAR(chainsaw, melee_range)));
@@ -155,7 +155,7 @@ void W_Chainsaw_Attack1(Weapon thiswep, entity actor, .entity weaponentity, int 
 		//print(strcat(actor.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(melee_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
 
 		Damage(target_victim, actor, actor,
-			melee_damage, WEP_CHAINSAW.m_id,
+			melee_damage, WEP_CHAINSAW.m_id, weaponentity,
 			actor.origin + actor.view_ofs,
 			v_forward * WEP_CVAR(chainsaw, melee_force));
 
@@ -234,7 +234,7 @@ void W_Chainsaw_Melee_Think(entity this)
 			//print(strcat(this.realowner.netname, " hitting ", target_victim.netname, " with ", strcat(ftos(swing_damage), " damage (factor: ", ftos(swing_factor), ") at "), ftos(time), " seconds.\n"));
 
 			Damage(target_victim, this.realowner, this.realowner,
-				swing_damage, WEP_CHAINSAW.m_id | HITTYPE_SECONDARY,
+				swing_damage, WEP_CHAINSAW.m_id | HITTYPE_SECONDARY, this.weaponentity_fld,
 				this.realowner.origin + this.realowner.view_ofs,
 				v_forward * WEP_CVAR(chainsaw, swing_force));
 
@@ -286,7 +286,8 @@ void W_Chainsaw_Attack2(Weapon thiswep, entity actor, .entity weaponentity, int 
 	meleetemp.realowner = actor;
 	setthink(meleetemp, W_Chainsaw_Melee_Think);
 	meleetemp.nextthink = time + WEP_CVAR(chainsaw, swing_delay) * W_WeaponRateFactor(actor);
-	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR(chainsaw, swing_damage), WEP_CVAR(chainsaw, swing_range));
+	meleetemp.weaponentity_fld = weaponentity;
+	W_SetupShot_Range(actor, weaponentity, true, 0, SND_Null, 0, WEP_CVAR(chainsaw, swing_damage), WEP_CVAR(chainsaw, swing_range), WEP_CHAINSAW.m_id | HITTYPE_SECONDARY);
 }
 
 .float chainsaw_ammorot;
@@ -305,9 +306,9 @@ METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponenti
 	if(WEP_CVAR(chainsaw, reload_ammo)) // forced reload // WEAPONTODO
     {
         float ammo_amount = 0;
-        if(actor.clip_load >= WEP_CVAR(chainsaw, melee_ammo))
+        if(actor.(weaponentity).clip_load >= WEP_CVAR(chainsaw, melee_ammo))
             ammo_amount = 1;
-        if(actor.clip_load >= WEP_CVAR(chainsaw, swing_ammo))
+        if(actor.(weaponentity).clip_load >= WEP_CVAR(chainsaw, swing_ammo))
             ammo_amount += 1;
 
         if(!ammo_amount)
@@ -317,7 +318,7 @@ METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponenti
         }
     }
 
-    if(actor.clip_load >= 0)
+    if(actor.(weaponentity).clip_load >= 0)
     if(fire & 1)
     if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR(chainsaw, melee_refire)))
     {
@@ -356,7 +357,7 @@ METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponenti
     	}
     }
 
-    if(actor.clip_load >= 0) // we are not currently reloading
+    if(actor.(weaponentity).clip_load >= 0) // we are not currently reloading
     if(!actor.crouch) // no crouchmelee please
     if(fire & 2)
     if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR(chainsaw, swing_refire)))

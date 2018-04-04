@@ -8,14 +8,14 @@ string mod_scoreboard_getname(entity pl)
 	string pname = entcs_GetName(pl.sv_entnum);
 	string dcname = strtolower(strdecolorize(pname));
 
-	if(strstrofs(dcname, "antibody", 0) >= 0)
+	if(ready_waiting && pl.ready)
+		sbt_field_icon0 = "gfx/scoreboard/player_ready";
+	else if(strstrofs(dcname, "antibody", 0) >= 0)
 	{
 		int f = entcs_GetClientColors(pl.sv_entnum);
 		sbt_field_icon0 = "gfx/menu/luma/icon_mod_newtoys";
 		sbt_field_icon0_rgb = colormapPaletteColor(f % 16, 1);
 	}
-	else if(ready_waiting && pl.ready)
-		sbt_field_icon0 = "gfx/scoreboard/player_ready";
 	else if(!teamplay)
 	{
 		int f = entcs_GetClientColors(pl.sv_entnum);

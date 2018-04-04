@@ -183,7 +183,7 @@ void W_Flak_Projectile_Touch(entity this, entity toucher)
 			vector force = normalize(NearestPointOnBox(toucher, this.origin) - this.origin + this.velocity) * frc;
 
 			this.owner = this.realowner;
-			Damage(toucher, this, this.realowner, damage, this.projectiledeathtype, this.origin, force);
+			Damage(toucher, this, this.realowner, damage, this.projectiledeathtype, this.weaponentity_fld, this.origin, force);
 
 			if(accuracy_isgooddamage(this.realowner, toucher))
  				{ accuracy_add(this.realowner, WEP_FLAK.m_id, 0, damage); }
@@ -240,7 +240,7 @@ void W_Flak_Projectile_Think(entity this)
 	this.nextthink = time;
 }
 
-entity W_Flak_Projectile(entity o, bool isprimary, float damage, float grav, float lt, float spd, float upspd, float bnc, int deathtype)
+entity W_Flak_Projectile(entity o, .entity weaponentity, bool isprimary, float damage, float grav, float lt, float spd, float upspd, float bnc, int deathtype)
 {
 	entity e = new(flak_proj);
 	e.owner = e.realowner = o;
@@ -250,6 +250,7 @@ entity W_Flak_Projectile(entity o, bool isprimary, float damage, float grav, flo
 	set_movetype(e, MOVETYPE_BOUNCE);
 	PROJECTILE_MAKETRIGGER(e);
 	e.projectiledeathtype = deathtype;
+	e.weaponentity_fld = weaponentity,
 	e.gravity = grav;
 	e.bouncefactor = bnc;
 	setorigin(e, w_shotorg);
@@ -280,7 +281,7 @@ void W_Flak_Attack1(Weapon thiswep, entity actor, .entity weaponentity, bool isp
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_BOTH(flak, isprimary, ammo), weaponentity);
 
-	W_SetupShot_ProjectileSize(actor, weaponentity, '1 1 1', '1 1 1', false, 4, ((isprimary) ? SND_FLAK_FIRE2 : SND_FLAK_FIRE), CH_WEAPON_A, WEP_CVAR_BOTH(flak, isprimary, damage) * pcount);
+	W_SetupShot_ProjectileSize(actor, weaponentity, '1 1 1', '1 1 1', false, 4, ((isprimary) ? SND_FLAK_FIRE2 : SND_FLAK_FIRE), CH_WEAPON_A, WEP_CVAR_BOTH(flak, isprimary, damage) * pcount, dtype);
 	w_shotdir = v_forward;
 
 	for(int i = 0; i < pcount; ++i)
@@ -289,7 +290,7 @@ void W_Flak_Attack1(Weapon thiswep, entity actor, .entity weaponentity, bool isp
 
 		fixedmakevectors(a + '1 0 0' *  random() * WEP_CVAR_BOTH(flak, isprimary, spread_up) + '0 1 0' * crandom() * WEP_CVAR_BOTH(flak, isprimary, spread_side));
 
-		W_Flak_Projectile(actor, isprimary,
+		W_Flak_Projectile(actor, weaponentity, isprimary,
 						  WEP_CVAR_BOTH(flak, isprimary, damage),
 						  WEP_CVAR_BOTH(flak, isprimary, gravity),
 						  WEP_CVAR_BOTH(flak, isprimary, lifetime),
@@ -322,7 +323,7 @@ void W_Flak_Bomb_Explode(entity this, entity directhitentity)
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 	RadiusDamage(this, this.owner, WEP_CVAR(flak, bomb_damage), WEP_CVAR(flak, bomb_edgedamage), WEP_CVAR(flak, bomb_radius),
-				 world, world, WEP_CVAR(flak, bomb_force), this.projectiledeathtype, directhitentity);
+				 world, world, WEP_CVAR(flak, bomb_force), this.projectiledeathtype, this.weaponentity_fld, directhitentity);
 
 	float i, c = WEP_CVAR(flak, bomb_count);
 	w_shotorg = this.origin;
@@ -347,7 +348,7 @@ void W_Flak_Bomb_Explode(entity this, entity directhitentity)
 		fixedmakevectors(a + '1 0 0' * crandom() * spread_up
 						   + '0 1 0' * crandom() * spread_side);
 
-		entity p = W_Flak_Projectile(this.realowner, false,
+		entity p = W_Flak_Projectile(this.realowner, this.weaponentity_fld, false,
 						  WEP_CVAR_SEC(flak, damage),
 						  WEP_CVAR_SEC(flak, gravity),
 						  WEP_CVAR_SEC(flak, lifetime),
@@ -375,7 +376,7 @@ void W_Flak_Bomb_Touch(entity this, entity toucher)
 	this.use(this, NULL, toucher);
 }
 
-void W_Flak_Bomb_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_Flak_Bomb_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.health <= 0)
 		return;
@@ -396,7 +397,7 @@ void W_Flak_Attack3(Weapon thiswep, entity actor, .entity weaponentity)
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(flak, ammo), weaponentity);
 
-	W_SetupShot_ProjectileSize (actor, weaponentity, '-3 -3 -3', '3 3 3', false, 4, SND_FLAK_FIRE3, CH_WEAPON_A, WEP_CVAR(flak, bomb_damage));
+	W_SetupShot_ProjectileSize (actor, weaponentity, '-3 -3 -3', '3 3 3', false, 4, SND_FLAK_FIRE3, CH_WEAPON_A, WEP_CVAR(flak, bomb_damage), WEP_FLAK.m_id | HITTYPE_SECONDARY);
 	w_shotdir = v_forward;
 
 	entity e = spawn();
@@ -408,6 +409,7 @@ void W_Flak_Attack3(Weapon thiswep, entity actor, .entity weaponentity)
 	set_movetype(e, MOVETYPE_BOUNCE);
 	PROJECTILE_MAKETRIGGER(e);
 	e.projectiledeathtype = WEP_FLAK.m_id | HITTYPE_SECONDARY;
+	e.weaponentity_fld = weaponentity;
 	setsize(e, '-3 -3 -3', '3 3 3');
 	setorigin(e, w_shotorg);
 

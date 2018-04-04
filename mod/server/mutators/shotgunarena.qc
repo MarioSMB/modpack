@@ -65,6 +65,11 @@ MUTATOR_HOOKFUNCTION(sha, ForbidThrowCurrentWeapon)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(sha, ForbidRandomStartWeapons)
+{
+	return true;
+}
+
 MUTATOR_HOOKFUNCTION(sha, BuildMutatorsString)
 {
 	M_ARGV(0, string) = strcat(M_ARGV(0, string), ":SHA");

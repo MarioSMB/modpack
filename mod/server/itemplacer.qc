@@ -87,7 +87,7 @@ void try_itemspawn(entity caller, string item)
 			//itm.classname = item;
 			setorigin(itm, caller.origin);
 			itm.angles = caller.angles;
-			itm.buffs = it.m_itemid;
+			STAT(BUFFS, itm) = it.m_itemid;
 			itm.team = caller.team; // TODO?
 			buff_Init(itm);
 			return;

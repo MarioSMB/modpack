@@ -22,7 +22,7 @@ ENDCLASS(Vore)
 REGISTER_MONSTER(VORE, NEW(Vore));
 
 CLASS(VoreSpike, PortoLaunch)
-/* flags     */ ATTRIB(VoreSpike, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(VoreSpike, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
 /* impulse   */ ATTRIB(VoreSpike, impulse, int, 9);
 /* refname   */ ATTRIB(VoreSpike, netname, string, "vorespike");
 /* wepname   */ ATTRIB(VoreSpike, message, string, "Vore spike");
@@ -42,7 +42,7 @@ METHOD(VoreSpike, wr_think, void(VoreSpike thiswep, entity actor, .entity weapon
         if (!actor.target_range) actor.target_range = autocvar_g_monsters_target_range;
         if(!IS_MONSTER(actor))
         	actor.enemy = Monster_FindTarget(actor);
-        W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_VORE_FIRESPIKE, CH_WEAPON_B, 0);
+        W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_VORE_FIRESPIKE, CH_WEAPON_B, 0, DEATH_MONSTER_MAGE.m_id);
     	if (!IS_PLAYER(actor)) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
         M_Vore_Attack_Spike(actor, w_shotdir);
         weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, w_ready);
@@ -86,7 +86,7 @@ void M_Vore_Attack_Spike_Explode(entity this, entity directhitentity)
 	this.realowner.vore_spike = NULL;
 
 	Send_Effect(EFFECT_EXPLOSION_SMALL, this.origin, '0 0 0', 1);
-	RadiusDamage (this, this.realowner, (autocvar_g_monster_vore_attack_spike_damage), (autocvar_g_monster_vore_attack_spike_damage) * 0.5, (autocvar_g_monster_vore_attack_spike_radius), NULL, NULL, 0, DEATH_MONSTER_MAGE.m_id, directhitentity);
+	RadiusDamage (this, this.realowner, (autocvar_g_monster_vore_attack_spike_damage), (autocvar_g_monster_vore_attack_spike_damage) * 0.5, (autocvar_g_monster_vore_attack_spike_radius), NULL, NULL, 0, DEATH_MONSTER_MAGE.m_id, DMG_NOWEP, directhitentity);
 
 	delete (this);
 }

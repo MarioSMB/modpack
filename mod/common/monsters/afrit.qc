@@ -62,7 +62,7 @@ void M_Afrit_Attack_Fireball_Explode(entity this, entity directhitentity)
 		Send_Effect(EFFECT_FIREBALL_EXPLODE, this.origin, '0 0 0', 1);
 
 		RadiusDamage(this, this.realowner, (autocvar_g_monster_afrit_attack_fireball_damage), (autocvar_g_monster_afrit_attack_fireball_edgedamage), 
-					(autocvar_g_monster_afrit_attack_fireball_force), NULL, NULL, (autocvar_g_monster_afrit_attack_fireball_radius), this.projectiledeathtype, directhitentity);
+					(autocvar_g_monster_afrit_attack_fireball_force), NULL, NULL, (autocvar_g_monster_afrit_attack_fireball_radius), this.projectiledeathtype, DMG_NOWEP, directhitentity);
 
 		FOREACH_ENTITY_RADIUS(this.origin, autocvar_g_monster_afrit_attack_fireball_radius, it.takedamage == DAMAGE_AIM,
 		{

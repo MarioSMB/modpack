@@ -20,6 +20,7 @@
 #include "polytrails.qh"
 #include "radio.qh"
 #include "special.qc"
+#include "team_collisions.qc"
 #include "vehicles/all.inc"
 #include "weapons/all.inc"
 #include "weapons.qc"

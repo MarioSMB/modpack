@@ -99,6 +99,7 @@ void W_RPG7_Explode(entity this, entity directhitentity)
 	if(IS_VEHICLE(directhitentity))
 		damg *= 3;
 
+	.entity weaponentity = this.weaponentity_fld;
 	RadiusDamage(
 		this,
 		this.realowner,
@@ -109,11 +110,11 @@ void W_RPG7_Explode(entity this, entity directhitentity)
 		NULL,
 		WEP_CVAR(rpg, force),
 		this.projectiledeathtype,
+		weaponentity,
 		directhitentity
 	);
 
 	Weapon thiswep = WEP_RPG;
-	.entity weaponentity = this.weaponentity_fld;
 	if(this.realowner.(weaponentity).m_weapon == thiswep)
 	{
 		if(GetResourceAmount(this.realowner, thiswep.ammo_type) < WEP_CVAR(rpg, ammo))
@@ -160,7 +161,7 @@ void W_RPG7_Touch(entity this, entity toucher)
 	W_RPG7_Explode(this, toucher);
 }
 
-void W_RPG7_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, vector hitloc, vector force)
+void W_RPG7_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(this.health <= 0)
 		return;
@@ -179,7 +180,7 @@ void W_RPG7_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR(rpg, ammo), weaponentity);
 
-	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_RPG_FIRE, CH_WEAPON_A, WEP_CVAR(rpg, damage));
+	W_SetupShot_ProjectileSize(actor, weaponentity, '-3 -3 -3', '3 3 3', false, 5, SND_RPG_FIRE, CH_WEAPON_A, WEP_CVAR(rpg, damage), WEP_RPG.m_id);
 	Send_Effect(EFFECT_ROCKET_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
 	entity missile = WarpZone_RefSys_SpawnSameRefSys(actor);

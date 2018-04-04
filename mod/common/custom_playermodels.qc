@@ -23,6 +23,7 @@ const int MODELS_MARIO = BIT(8);
 const int MODELS_BEAR = BIT(9);
 const int MODELS_MONK = BIT(10);
 const int MODELS_NEXUS = BIT(11);
+const int MODELS_IGGY = BIT(12);
 #endif
 
 #ifdef SVQC
@@ -40,6 +41,9 @@ AUTOCVAR(sv_allow_customplayermodels, bool, false, "");
 AUTOCVAR(sv_allow_customplayermodels_bots, bool, true, "");
 AUTOCVAR(sv_allow_customplayermodels_idlist, string, "", "");
 AUTOCVAR(sv_allow_customplayermodels_speciallist, string, "", "");
+AUTOCVAR(sv_smokeball_time, float, 2, "");
+AUTOCVAR(sv_smokeball_refire, float, 10, "");
+AUTOCVAR(sv_smokeball_alpha, float, 0, "");
 
 void cpmodels_Precache()
 {
@@ -66,42 +70,23 @@ void cpmodels_Precache()
 		CHECK_MODEL("bear.dpm", BEAR)
 		CHECK_MODEL("monk2.dpm", MONK)
 		CHECK_MODEL("nexus.zym", NEXUS)
+		CHECK_MODEL("iggy.dpm", IGGY)
 	}
 #undef CHECK_MODEL
 }
 
-//ATTRIB(Client, cvar_cl_pony, bool, this.cvar_cl_pony);
-//ATTRIB(Client, cvar_cl_pony_skin, int, this.cvar_cl_pony_skin);
-//ATTRIB(Client, cvar_cl_robot, bool, this.cvar_cl_robot);
-//ATTRIB(Client, cvar_cl_thestars, bool, this.cvar_cl_thestars);
-//ATTRIB(Client, cvar_cl_sparkle, int, this.cvar_cl_sparkle);
-//ATTRIB(Client, cvar_cl_goat, bool, this.cvar_cl_goat);
-//ATTRIB(Client, cvar_cl_damnfurries, bool, this.cvar_cl_damnfurries);
-//ATTRIB(Client, cvar_cl_brothersbear, bool, this.cvar_cl_brothersbear);
-//ATTRIB(Client, cow, bool, this.cow);
-
-.bool cvar_cl_pony;
+.string cvar_cl_model;
 .int cvar_cl_pony_skin;
-.bool cvar_cl_robot;
-.bool cvar_cl_thestars;
 .int cvar_cl_sparkle;
-.bool cvar_cl_goat;
-.bool cvar_cl_damnfurries;
-.bool cvar_cl_brothersbear;
-.bool cvar_cl_monk;
-.bool cvar_cl_nexus;
 .bool cow;
 
-REPLICATE(cvar_cl_pony, bool, "cl_pony");
+.float ninja_sneak;
+.float ninja_cooldown;
+.float ninja_prevalpha;
+
 REPLICATE(cvar_cl_pony_skin, int, "cl_pony_skin");
-REPLICATE(cvar_cl_robot, bool, "cl_robot");
-REPLICATE(cvar_cl_thestars, bool, "cl_thestars");
 REPLICATE(cvar_cl_sparkle, int, "cl_sparkle");
-REPLICATE(cvar_cl_goat, bool, "cl_goat");
-REPLICATE(cvar_cl_damnfurries, bool, "cl_damnfurries");
-REPLICATE(cvar_cl_brothersbear, bool, "cl_brothersbear");
-REPLICATE(cvar_cl_monk, bool, "cl_monk");
-REPLICATE(cvar_cl_nexus, bool, "cl_nexus");
+REPLICATE(cvar_cl_model, string, "cl_custommodel");
 
 MUTATOR_HOOKFUNCTION(cpmodels, FormatMessage)
 {
@@ -118,26 +103,25 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 	int ret_int = M_ARGV(1, int);
 	entity player = M_ARGV(2, entity);
 
-	if(autocvar_sv_allow_customplayermodels)
-	if(!cvar("g_overkill"))
+	if(autocvar_sv_allow_customplayermodels && !cvar("g_overkill"))
 	{
 #define ALLOWED(d) (models_allowed & MODELS_##d)
 		// public hax
 		// stuff anyone can use
-		if(CS(player).cvar_cl_pony && ALLOWED(PONY))
+		if(CS(player).cvar_cl_model == "pony" && ALLOWED(PONY))
 		{
 			ret_string = "models/player/pony.iqm";
 			ret_int = CS(player).cvar_cl_pony_skin;
 		}
-		if(CS(player).cvar_cl_robot == 1 && ALLOWED(ROBOT))
+		if(CS(player).cvar_cl_model == "robot" && ALLOWED(ROBOT))
 			ret_string = "models/player/terminusmale.iqm";
-		if(CS(player).cvar_cl_goat && ALLOWED(GOAT))
+		if(CS(player).cvar_cl_model == "goat" && ALLOWED(GOAT))
 			ret_string = "models/player/draconimale.iqm";
 
-		if(CS(player).cvar_cl_monk && ALLOWED(MONK))
+		if(CS(player).cvar_cl_model == "monk" && ALLOWED(MONK))
 			ret_string = "models/player/monk2.dpm";
 
-		if(CS(player).cvar_cl_nexus && ALLOWED(NEXUS))
+		if(CS(player).cvar_cl_model == "nexus" && ALLOWED(NEXUS))
 			ret_string = "models/player/nexus.zym";
 
 		if(ALLOWED(BOT) && IS_BOT_CLIENT(player) && autocvar_sv_allow_customplayermodels_bots)
@@ -146,38 +130,35 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 		// special hax
 		if(PlayerInList(player, autocvar_sv_allow_customplayermodels_idlist))
 		{
-			if(CS(player).cvar_cl_thestars == 1 && ALLOWED(ROSALINA))
+			if(CS(player).cvar_cl_model == "rosalina" && ALLOWED(ROSALINA))
 			{
 				if(autocvar_g_fullbrightplayers && autocvar_g_player_brightness)
 					player.colormod = '0.7 0.7 0.7'; // regular brightness is way too bright here
 				ret_string = "models/player/rosalina.dpm";
 			}
-			if(CS(player).cvar_cl_damnfurries == 1 && ALLOWED(RENAMON))
+			if(CS(player).cvar_cl_model == "foxy" && ALLOWED(RENAMON))
 				ret_string = "models/player/renamon.iqm";
+			if(CS(player).cvar_cl_model == "iggy" && ALLOWED(IGGY))
+				ret_string = "models/player/iggy.dpm";
 		}
-		else if(player.playermodel == "models/player/renamon.iqm")
-		{
+		else if(player.playermodel == "models/player/renamon.iqm" || player.playermodel == "models/player/rosalina.dpm" || player.playermodel == "models/player/iggy.dpm")
 			ret_string = autocvar_sv_defaultplayermodel;
-		}
+
 		if(PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		{
 			if(CS(player).cvar_cl_sparkle == 3 && ALLOWED(MARIO))
 				ret_string = "models/player/mario.dpm";
 			if(CS(player).cvar_cl_sparkle >= 4 && ALLOWED(WEEGEE))
 				ret_string = "models/player/luigi.dpm";
-			if(CS(player).cvar_cl_brothersbear && ALLOWED(BEAR))
+			if(CS(player).cvar_cl_model == "bear" && ALLOWED(BEAR))
 				ret_string = "models/player/bear.dpm";
 		}
+		else if(player.playermodel == "models/player/mario.dpm" || player.playermodel == "models/player/bear.dpm" || player.playermodel == "models/player/luigi.dpm")
+			ret_string = autocvar_sv_defaultplayermodel;
+
+		if(CS(player).cow && ALLOWED(COW))
+			ret_string = "models/player/cow.md3";
 	}
-
-	if(player.playermodel == "models/player/mario.dpm" && !PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
-		ret_string = autocvar_sv_defaultplayermodel;
-
-	if(player.playermodel == "models/player/bear.dpm" && !PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
-		ret_string = autocvar_sv_defaultplayermodel;
-
-	if(!cvar("g_overkill") && CS(player).cow && ALLOWED(COW))
-		ret_string = "models/player/cow.md3";
 
 	M_ARGV(0, string) = ret_string;
 	M_ARGV(1, int) = ret_int;
@@ -194,6 +175,42 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerSpawn)
 
 	if(CS(player).cvar_cl_sparkle == 2 && PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		player.colormap = 4351;
+}
+
+MUTATOR_HOOKFUNCTION(cpmodels, PlayerPreThink)
+{
+	entity player = M_ARGV(0, entity);
+
+	if(time < player.ninja_sneak)
+		player.alpha = ((autocvar_sv_smokeball_alpha) ? autocvar_sv_smokeball_alpha : -1);
+	else if(player.ninja_sneak)
+	{
+		player.alpha = player.ninja_prevalpha;
+		player.ninja_sneak = 0;
+	}
+}
+
+MUTATOR_HOOKFUNCTION(cpmodels, PlayerUseKey)
+{
+	// NOTE: this doesn't stop if something else called use key, since it's supposed to always work!
+	//if(MUTATOR_RETURNVALUE) return;
+	if(game_stopped) return;
+
+	entity player = M_ARGV(0, entity);
+
+	if(time < player.ninja_cooldown || !PHYS_INPUT_BUTTON_CROUCH(player))
+		return;
+
+	if(player.model != "models/player/monk2.dpm" || !PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
+		return;
+
+	Send_Effect(EFFECT_SMOKE_RING, player.origin, '0 0 50', 2);
+	sound(player, CH_TRIGGER, SND_NEXIMPACT, VOL_BASE, ATTN_NORM);
+	player.ninja_sneak = time + autocvar_sv_smokeball_time;
+	player.ninja_cooldown = time + autocvar_sv_smokeball_refire;
+	player.ninja_prevalpha = player.alpha;
+	player.alpha = ((autocvar_sv_smokeball_alpha) ? autocvar_sv_smokeball_alpha : -1);
+	return true;
 }
 
 #endif

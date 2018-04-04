@@ -64,8 +64,6 @@ STATIC_INIT(CannonballProjectile) { PROJECTILE_CANNONBALL = MOD_PROJECTILES++; }
 
 #ifdef SVQC
 
-.entity hitboxft, hitboxbk;
-
 AUTOCVAR(g_vehicle_tankll48, bool, false, _("Enable LL48 Tank vehicle (if allowed by mods)"));
 AUTOCVAR(g_vehicle_tankll48_respawntime, float, 45, "");
 
@@ -148,7 +146,7 @@ void tankll48_cannon_explode(entity this, entity directhitentity)
 	this.takedamage = DAMAGE_NO;
 
 	RadiusDamage (this, this.realowner, autocvar_g_vehicle_tankll48_cannon_damage, autocvar_g_vehicle_tankll48_cannon_edgedamage, autocvar_g_vehicle_tankll48_cannon_radius, 
-					NULL, NULL, autocvar_g_vehicle_tankll48_cannon_force, this.projectiledeathtype, directhitentity);
+					NULL, NULL, autocvar_g_vehicle_tankll48_cannon_force, this.projectiledeathtype, DMG_NOWEP, directhitentity);
 
 	delete(this);
 }
@@ -179,7 +177,7 @@ void tankll48_cannon_think(entity this)
 
 	tracebox(this.origin, this.mins, this.maxs, this.origin + this.pos1 * (2 * this.wait), MOVE_NORMAL, this);
 	if(trace_ent.takedamage)
-		Damage (trace_ent, this, this.realowner, autocvar_g_vehicle_tankll48_cannon_damage2, this.projectiledeathtype, this.origin, normalize(this.origin - other.origin) * autocvar_g_vehicle_tankll48_cannon_force);
+		Damage (trace_ent, this, this.realowner, autocvar_g_vehicle_tankll48_cannon_damage2, this.projectiledeathtype, DMG_NOWEP, this.origin, normalize(this.origin - other.origin) * autocvar_g_vehicle_tankll48_cannon_force);
 
 	if(trace_allsolid || trace_startsolid)
 	{
@@ -199,7 +197,7 @@ void tankll48_fire_cannon(entity actor, entity vehic, string tagname)
 	vehic.vehicle_ammo2 -= autocvar_g_vehicle_tankll48_cannon_ammo_cost;
 	entity missile = new(cannonball);
 	vector v = gettaginfo(vehic.gun2, gettagindex(vehic.gun2, tagname));
-	W_SetupShot_ProjectileSize (actor, weaponentities[0], '-3 -3 -3', '3 3 3', false, 5, SND_TANK_FIRE, CH_WEAPON_A, autocvar_g_vehicle_tankll48_cannon_damage);
+	W_SetupShot_ProjectileSize (actor, weaponentities[0], '-3 -3 -3', '3 3 3', false, 5, SND_TANK_FIRE, CH_WEAPON_A, autocvar_g_vehicle_tankll48_cannon_damage, DEATH_VH_TANK_CANNON.m_id);
 
 	v_forward = normalize(v_forward);
 	v += v_forward * 12;
@@ -622,7 +620,7 @@ void tankll48_blowup(entity this)
 	SUB_SetFade(g1, time, min(autocvar_g_vehicle_tankll48_respawntime, 10));
 	SUB_SetFade(g2, time, min(autocvar_g_vehicle_tankll48_respawntime, 10));
 
-	RadiusDamage (this, this.enemy, 250, 15, 250, NULL, NULL, 250, DEATH_VH_TANK_DEATH.m_id, NULL);
+	RadiusDamage (this, this.enemy, 250, 15, 250, NULL, NULL, 250, DEATH_VH_TANK_DEATH.m_id, DMG_NOWEP, NULL);
 
 	this.alpha = this.tur_head.alpha = this.gun1.alpha = this.gun2.alpha = this.bomb1.gun1.alpha = this.bomb1.gun2.alpha = this.bomb2.gun1.alpha = this.bomb2.gun2.alpha = -1;
 	set_movetype(this, MOVETYPE_NONE);
@@ -691,8 +689,8 @@ METHOD(TankLL48, vr_death, void(TankLL48 thisveh, entity instance))
 	instance.colormod			= instance.tur_head.colormod = instance.gun1.colormod = instance.gun2.colormod = '-1 -1 -1';
 	instance.frame				= 10;
 	set_movetype(instance, MOVETYPE_TOSS);
-	lightapc_kill_hitbox(instance.hitboxft);
-	lightapc_kill_hitbox(instance.hitboxbk);
+	vehicles_hitbox_kill(instance.hitboxft);
+	vehicles_hitbox_kill(instance.hitboxbk);
 			
 	CSQCModel_UnlinkEntity(instance); // networking the death scene would be a nightmare
 }
@@ -736,8 +734,8 @@ METHOD(TankLL48, vr_spawn, void(TankLL48 thisveh, entity instance))
 		setattachment(instance.vehicle_viewport, instance.tur_head, "tag_camera");
 			
 		instance.gun1.colormap = instance.colormap;
-		instance.hitboxft = spawn();
-		instance.hitboxbk = spawn();
+		instance.hitboxft = new(tankll48hitbox);
+		instance.hitboxbk = new(tankll48hitbox);
 	}
 
 	instance.frame = 5;
@@ -764,8 +762,8 @@ METHOD(TankLL48, vr_spawn, void(TankLL48 thisveh, entity instance))
 			
 	instance.PlayerPhysplug = tankll48_frame;
 
-	lightapc_spawn_hitbox(instance, instance.hitboxft, '-105 -105 2', '105 105 95', 95);
-	lightapc_spawn_hitbox(instance, instance.hitboxbk, '-60 -60 2', '60 60 50', -120);
+	vehicles_hitbox_spawn(instance, instance.hitboxft, '-105 -105 2', '105 105 95', 95, 0);
+	vehicles_hitbox_spawn(instance, instance.hitboxbk, '-60 -60 2', '60 60 50', -120, 0);
 }
 METHOD(TankLL48, vr_setup, void(TankLL48 thisveh, entity instance))
 {
