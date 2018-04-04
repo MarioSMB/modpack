@@ -53,39 +53,39 @@ string Sbar_PickRogueWeapon_wepname(int wpn)
 
 PRECACHE(Sbar)
 {
-	precache_pic("gfx/ranking");
-	precache_pic("gfx/sbar");
-	precache_pic("gfx/scorebar");
-	precache_pic("gfx/complete");
-	precache_pic("gfx/finale");
-	precache_pic("gfx/inter");
+	precache_pic("gfx/quake/ranking");
+	precache_pic("gfx/quake/sbar");
+	precache_pic("gfx/quake/scorebar");
+	precache_pic("gfx/quake/complete");
+	precache_pic("gfx/quake/finale");
+	precache_pic("gfx/quake/inter");
 
-	precache_pic("gfx/face_invis");
-	precache_pic("gfx/face_invul2");
-	precache_pic("gfx/face_inv2");
-	precache_pic("gfx/face_quad");
+	precache_pic("gfx/quake/face_invis");
+	precache_pic("gfx/quake/face_invul2");
+	precache_pic("gfx/quake/face_inv2");
+	precache_pic("gfx/quake/face_quad");
 
 	if(MP_ROGUE)
 	{
-		precache_pic("gfx/r_invbar1");
-		precache_pic("gfx/r_invbar2");
+		precache_pic("gfx/quake/r_invbar1");
+		precache_pic("gfx/quake/r_invbar2");
 	}
 
-	precache_pic("gfx/sbar");
+	precache_pic("gfx/quake/sbar");
 	if(!MP_ROGUE)
-		precache_pic("gfx/ibar");
+		precache_pic("gfx/quake/ibar");
 
 	for(int j = 0; j < 7; j++)
 	{
-		precache_pic(strcat("gfx/inv_", Sbar_PickWeapon_wepname(j)));
-		precache_pic(strcat("gfx/inv2_", Sbar_PickWeapon_wepname(j)));
+		precache_pic(strcat("gfx/quake/inv_", Sbar_PickWeapon_wepname(j)));
+		precache_pic(strcat("gfx/quake/inv2_", Sbar_PickWeapon_wepname(j)));
 	}
 
 	for(int j = 0; j < 5; j++)
 	{
 		for(int k = 0; k < 7; k++)
 		{
-			precache_pic(sprintf("gfx/inva%d_%s", j + 1, Sbar_PickWeapon_wepname(k)));
+			precache_pic(sprintf("gfx/quake/inva%d_%s", j + 1, Sbar_PickWeapon_wepname(k)));
 		}
 	}
 
@@ -93,11 +93,11 @@ PRECACHE(Sbar)
 	{
 		for(int j = 0; j < 5; j++)
 		{
-			precache_pic(strcat("gfx/inv_", Sbar_PickHIPWeapon_wepname(j)));
-			precache_pic(strcat("gfx/inv2_", Sbar_PickHIPWeapon_wepname(j)));
+			precache_pic(strcat("gfx/quake/inv_", Sbar_PickHIPWeapon_wepname(j)));
+			precache_pic(strcat("gfx/quake/inv2_", Sbar_PickHIPWeapon_wepname(j)));
 			for(int k = 0; k < 5; k++)
 			{
-				precache_pic(sprintf("gfx/inva%d_%s", j + 1, Sbar_PickHIPWeapon_wepname(k)));
+				precache_pic(sprintf("gfx/quake/inva%d_%s", j + 1, Sbar_PickHIPWeapon_wepname(k)));
 			}
 		}
 	}
@@ -106,69 +106,69 @@ PRECACHE(Sbar)
 	{
 		for(int j = 0; j < 5; j++)
 		{
-			precache_pic(strcat("gfx/", Sbar_PickRogueWeapon_wepname(j)));
+			precache_pic(strcat("gfx/quake/", Sbar_PickRogueWeapon_wepname(j)));
 		}
 	}
 
 	for(int j = 0; j < 10; j++)
 	{
-		precache_pic(strcat("gfx/num_", itos(j)));
-		precache_pic(strcat("gfx/anum_", itos(j)));
+		precache_pic(strcat("gfx/quake/num_", itos(j)));
+		precache_pic(strcat("gfx/quake/anum_", itos(j)));
 	}
 
-	precache_pic("gfx/num_minus");
-	precache_pic("gfx/anum_minus");
-	precache_pic("gfx/num_slash");
-	precache_pic("gfx/num_colon");
+	precache_pic("gfx/quake/num_minus");
+	precache_pic("gfx/quake/anum_minus");
+	precache_pic("gfx/quake/num_slash");
+	precache_pic("gfx/quake/num_colon");
 
-	precache_pic("gfx/face1");
-	precache_pic("gfx/face_p1");
-	precache_pic("gfx/face2");
-	precache_pic("gfx/face_p2");
-	precache_pic("gfx/face3");
-	precache_pic("gfx/face_p3");
-	precache_pic("gfx/face4");
-	precache_pic("gfx/face_p4");
-	precache_pic("gfx/face5");
-	precache_pic("gfx/face_p5");
+	precache_pic("gfx/quake/face1");
+	precache_pic("gfx/quake/face_p1");
+	precache_pic("gfx/quake/face2");
+	precache_pic("gfx/quake/face_p2");
+	precache_pic("gfx/quake/face3");
+	precache_pic("gfx/quake/face_p3");
+	precache_pic("gfx/quake/face4");
+	precache_pic("gfx/quake/face_p4");
+	precache_pic("gfx/quake/face5");
+	precache_pic("gfx/quake/face_p5");
 
-	precache_pic("gfx/sb_sigil1");
-	precache_pic("gfx/sb_sigil2");
-	precache_pic("gfx/sb_sigil3");
-	precache_pic("gfx/sb_sigil4");
+	precache_pic("gfx/quake/sb_sigil1");
+	precache_pic("gfx/quake/sb_sigil2");
+	precache_pic("gfx/quake/sb_sigil3");
+	precache_pic("gfx/quake/sb_sigil4");
 
-	precache_pic("gfx/sb_key1");
-	precache_pic("gfx/sb_key2");
-	precache_pic("gfx/sb_invis");
-	precache_pic("gfx/sb_invuln");
-	precache_pic("gfx/sb_suit");
-	precache_pic("gfx/sb_quad");
+	precache_pic("gfx/quake/sb_key1");
+	precache_pic("gfx/quake/sb_key2");
+	precache_pic("gfx/quake/sb_invis");
+	precache_pic("gfx/quake/sb_invuln");
+	precache_pic("gfx/quake/sb_suit");
+	precache_pic("gfx/quake/sb_quad");
 
-	precache_pic("gfx/disc");
+	precache_pic("gfx/quake/disc");
 
-	precache_pic("gfx/sb_armor1");
-	precache_pic("gfx/sb_armor2");
-	precache_pic("gfx/sb_armor3");
+	precache_pic("gfx/quake/sb_armor1");
+	precache_pic("gfx/quake/sb_armor2");
+	precache_pic("gfx/quake/sb_armor3");
 
-	precache_pic("gfx/sb_shells");
-	precache_pic("gfx/sb_nails");
-	precache_pic("gfx/sb_rocket");
-	precache_pic("gfx/sb_cells");
+	precache_pic("gfx/quake/sb_shells");
+	precache_pic("gfx/quake/sb_nails");
+	precache_pic("gfx/quake/sb_rocket");
+	precache_pic("gfx/quake/sb_cells");
 
 	if(MP_HIPNOTIC)
 	{
-		precache_pic("gfx/sb_wsuit");
-		precache_pic("gfx/sb_eshld");
+		precache_pic("gfx/quake/sb_wsuit");
+		precache_pic("gfx/quake/sb_eshld");
 	}
 
 	if(MP_ROGUE)
 	{
-		precache_pic("gfx/r_shield1");
-		precache_pic("gfx/r_agrav1");
+		precache_pic("gfx/quake/r_shield1");
+		precache_pic("gfx/quake/r_agrav1");
 
-		precache_pic("gfx/r_ammolava");
-		precache_pic("gfx/r_ammomulti");
-		precache_pic("gfx/r_ammoplasma");
+		precache_pic("gfx/quake/r_ammolava");
+		precache_pic("gfx/quake/r_ammomulti");
+		precache_pic("gfx/quake/r_ammoplasma");
 	}
 }
 
@@ -188,13 +188,13 @@ string Sbar_PickWeapon_inva(int cnum)
 string Sbar_PickWeapon(int cnum, int wpn)
 {
 	string prefix = ((cnum == 0) ? "inv" : ((cnum == 1) ? "inv2" : Sbar_PickWeapon_inva(cnum)));
-	return sprintf("gfx/%s_%s", prefix, Sbar_PickWeapon_wepname(wpn));
+	return sprintf("gfx/quake/%s_%s", prefix, Sbar_PickWeapon_wepname(wpn));
 }
 
 string Sbar_PickHIPWeapon(int cnum, int wpn)
 {
 	string prefix = ((cnum == 0) ? "inv" : ((cnum == 1) ? "inv2" : Sbar_PickWeapon_inva(cnum)));
-	return sprintf("gfx/%s_%s", prefix, Sbar_PickHIPWeapon_wepname(wpn));
+	return sprintf("gfx/quake/%s_%s", prefix, Sbar_PickHIPWeapon_wepname(wpn));
 }
 
 string Sbar_PickFace(int frm, bool washurt)
@@ -202,11 +202,11 @@ string Sbar_PickFace(int frm, bool washurt)
 	switch(frm)
 	{
 		default:
-		case 4: return ((washurt) ? "gfx/face_p1" : "gfx/face1");
-		case 3: return ((washurt) ? "gfx/face_p2" : "gfx/face2");
-		case 2: return ((washurt) ? "gfx/face_p3" : "gfx/face3");
-		case 1: return ((washurt) ? "gfx/face_p4" : "gfx/face4");
-		case 0: return ((washurt) ? "gfx/face_p5" : "gfx/face5");
+		case 4: return ((washurt) ? "gfx/quake/face_p1" : "gfx/quake/face1");
+		case 3: return ((washurt) ? "gfx/quake/face_p2" : "gfx/quake/face2");
+		case 2: return ((washurt) ? "gfx/quake/face_p3" : "gfx/quake/face3");
+		case 1: return ((washurt) ? "gfx/quake/face_p4" : "gfx/quake/face4");
+		case 0: return ((washurt) ? "gfx/quake/face_p5" : "gfx/quake/face5");
 	}
 }
 
@@ -215,10 +215,10 @@ string Sbar_PickSigil(int frm)
 	switch(frm)
 	{
 		default:
-		case 0: return "gfx/sb_sigil1";
-		case 1: return "gfx/sb_sigil2";
-		case 2: return "gfx/sb_sigil3";
-		case 3: return "gfx/sb_sigil4";
+		case 0: return "gfx/quake/sb_sigil1";
+		case 1: return "gfx/quake/sb_sigil2";
+		case 2: return "gfx/quake/sb_sigil3";
+		case 3: return "gfx/quake/sb_sigil4";
 	}
 }
 
@@ -227,18 +227,18 @@ string Sbar_PickItem(int frm)
 	switch(frm)
 	{
 		default:
-		case 0: return "gfx/sb_key1";
-		case 1: return "gfx/sb_key2";
-		case 2: return "gfx/sb_invis";
-		case 3: return "gfx/sb_invuln";
-		case 4: return "gfx/sb_suit";
-		case 5: return "gfx/sb_quad";
+		case 0: return "gfx/quake/sb_key1";
+		case 1: return "gfx/quake/sb_key2";
+		case 2: return "gfx/quake/sb_invis";
+		case 3: return "gfx/quake/sb_invuln";
+		case 4: return "gfx/quake/sb_suit";
+		case 5: return "gfx/quake/sb_quad";
 	}
 }
 
 string Sbar_PickNum(bool col, string frm)
 {
-	return sprintf("gfx/%snum_%s", ((col) ? "a" : ""), frm);
+	return sprintf("gfx/quake/%snum_%s", ((col) ? "a" : ""), frm);
 }
 
 vector sbar;
@@ -620,8 +620,8 @@ void Sbar_DeathmatchOverlay()
 	float xmin = (autocvar_vid_conwidth - (16 + 25) * 8 * SBAR_MAXWIDTH) / 2; // TODO
 	//float xmax = autocvar_vid_conwidth - xmin;
 
-	vector pz = drawgetimagesize("gfx/ranking");
-	drawpic(vec2((autocvar_vid_conwidth - pz.x) / 2, 8), "gfx/ranking", pz, '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+	vector pz = drawgetimagesize("gfx/quake/ranking");
+	drawpic(vec2((autocvar_vid_conwidth - pz.x) / 2, 8), "gfx/quake/ranking", pz, '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 	// draw the text
 	int dy = 40;
@@ -657,14 +657,14 @@ void Sbar_IntermissionOverlay()
 	sbar.x = (autocvar_vid_conwidth - 320) >> 1;
 	sbar.y = (autocvar_vid_conheight - 200) >> 1;
 
-	drawpic(vec2(sbar.x + 64, sbar.y + 24), "gfx/complete", drawgetimagesize("gfx/complete"), '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
-	drawpic(vec2(sbar.x, sbar.y + 56), "gfx/inter", drawgetimagesize("gfx/inter"), '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(vec2(sbar.x + 64, sbar.y + 24), "gfx/quake/complete", drawgetimagesize("gfx/quake/complete"), '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(vec2(sbar.x, sbar.y + 56), "gfx/quake/inter", drawgetimagesize("gfx/quake/inter"), '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 // time
 	/*int dig = rint(completed_time / 60);
 	Sbar_DrawNum(160, 64, dig, 3, 0);
 	int num = rint(completed_time - dig * 60);
-	Sbar_DrawPic(234, 64, "gfx/num_colon");
+	Sbar_DrawPic(234, 64, "gfx/quake/num_colon");
 	Sbar_DrawNum(246, 64, num / 10, 2, false);
 	Sbar_DrawNum(266, 64, num % 10, 2, false);*/
 	string timestr = seconds_tostring(completed_time);
@@ -674,7 +674,7 @@ void Sbar_IntermissionOverlay()
 	if(STAT(SECRETS_TOTAL))
 	{
 		Sbar_DrawNum('160 104 0', itos(STAT(SECRETS_FOUND)), 3, 0);
-		Sbar_DrawPic('232 104 0', "gfx/num_slash");
+		Sbar_DrawPic('232 104 0', "gfx/quake/num_slash");
 		Sbar_DrawNum('240 104 0', itos(STAT(SECRETS_TOTAL)), 3, 0);
 	}
 	else
@@ -683,7 +683,7 @@ void Sbar_IntermissionOverlay()
 	if(STAT(MONSTERS_TOTAL))
 	{
 		Sbar_DrawNum('160 144 0', itos(STAT(MONSTERS_KILLED)), 3, 0);
-		Sbar_DrawPic('232 144 0', "gfx/num_slash");
+		Sbar_DrawPic('232 144 0', "gfx/quake/num_slash");
 		Sbar_DrawNum('240 144 0', itos(STAT(MONSTERS_TOTAL)), 3, 0);
 	}
 	else
@@ -698,8 +698,8 @@ Sbar_FinaleOverlay
 */
 void Sbar_FinaleOverlay()
 {
-	vector pz = drawgetimagesize("gfx/finale");
-	drawpic(vec2((autocvar_vid_conwidth - pz.x) / 2, 16), "gfx/finale", pz, '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+	vector pz = drawgetimagesize("gfx/quake/finale");
+	drawpic(vec2((autocvar_vid_conwidth - pz.x) / 2, 16), "gfx/quake/finale", pz, '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 int HIP_GetWeaponBit(int numb)
@@ -742,12 +742,12 @@ void Sbar_DrawInventory()
 	if(MP_ROGUE)
 	{
 		if(STAT(ACTIVEWEAPON) >= WEP_LAVA_NAILGUN)
-			Sbar_DrawAlphaPic('0 -24 0', "gfx/r_invbar1", autocvar_sbar_alpha_bg);
+			Sbar_DrawAlphaPic('0 -24 0', "gfx/quake/r_invbar1", autocvar_sbar_alpha_bg);
 		else
-			Sbar_DrawAlphaPic('0 -24 0', "gfx/r_invbar2", autocvar_sbar_alpha_bg);
+			Sbar_DrawAlphaPic('0 -24 0', "gfx/quake/r_invbar2", autocvar_sbar_alpha_bg);
 	}
 	else
-		Sbar_DrawAlphaPic('0 -24 0', "gfx/ibar", autocvar_sbar_alpha_bg);
+		Sbar_DrawAlphaPic('0 -24 0', "gfx/quake/ibar", autocvar_sbar_alpha_bg);
 
 	// weapons
 	for(int j = 0; j < 7; j++)
@@ -827,7 +827,7 @@ void Sbar_DrawInventory()
 			for(int j = 0; j < 5; j++)
 			{
 				if(STAT(ACTIVEWEAPON) == (WEP_LAVA_NAILGUN << j))
-					Sbar_DrawPic(vec2((j + 2) * 24, -16), strcat("gfx/", Sbar_PickRogueWeapon_wepname(j)));
+					Sbar_DrawPic(vec2((j + 2) * 24, -16), strcat("gfx/quake/", Sbar_PickRogueWeapon_wepname(j)));
 			}
 		}
 	}
@@ -870,17 +870,17 @@ void Sbar_DrawInventory()
 	if(MP_HIPNOTIC)
 	{
 		if(myitems & IT_WETSUIT)
-			Sbar_DrawPic('288 -16 0', "gfx/sb_wsuit");
+			Sbar_DrawPic('288 -16 0', "gfx/quake/sb_wsuit");
 		if(myitems & IT_EMPATHY_SHIELDS)
-			Sbar_DrawPic(vec2(288 + 16, -16), "gfx/sb_eshld");
+			Sbar_DrawPic(vec2(288 + 16, -16), "gfx/quake/sb_eshld");
 	}
 
 	if(MP_ROGUE)
 	{
 		if(myitems & IT_SHIELD)
-			Sbar_DrawPic('288 -16 0', "gfx/r_shield1");
+			Sbar_DrawPic('288 -16 0', "gfx/quake/r_shield1");
 		if(myitems & IT_ANTIGRAV)
-			Sbar_DrawPic(vec2(288 + 16, -16), "gfx/r_agrav1");
+			Sbar_DrawPic(vec2(288 + 16, -16), "gfx/quake/r_agrav1");
 	}
 
 	if(!MP_ROGUE)
@@ -958,13 +958,13 @@ void Sbar_DrawFace()
 	oldhealth = myhealth;
 
 	if((myitems & IT_INVISIBILITY) && (myitems & IT_INVULNERABILITY))
-		pic = "gfx/face_inv2";
+		pic = "gfx/quake/face_inv2";
 	else if(myitems & IT_QUAD)
-		pic = "gfx/face_quad";
+		pic = "gfx/quake/face_quad";
 	else if(myitems & IT_INVISIBILITY)
-		pic = "gfx/face_invis";
+		pic = "gfx/quake/face_invis";
 	else if(myitems & IT_INVULNERABILITY)
-		pic = "gfx/face_invul2";
+		pic = "gfx/quake/face_invul2";
 	else
 	{
 		int f = rint(STAT(HEALTH) / 20);
@@ -1014,12 +1014,12 @@ void Sbar_Draw()
 
 			if(sb_showscores || (STAT(HEALTH) <= 0 && autocvar_cl_deathscoreboard))
 			{
-				Sbar_DrawAlphaPic('0 0 0', "gfx/scorebar", autocvar_sbar_alpha_bg);
+				Sbar_DrawAlphaPic('0 0 0', "gfx/quake/scorebar", autocvar_sbar_alpha_bg);
 				Sbar_DrawScoreboard();
 			}
 			else if(sb_lines)
 			{
-				Sbar_DrawAlphaPic('0 0 0', "gfx/sbar", autocvar_sbar_alpha_bg);
+				Sbar_DrawAlphaPic('0 0 0', "gfx/quake/sbar", autocvar_sbar_alpha_bg);
 
 				// keys (hipnotic only)
 				//MED 01/04/97 moved keys here so they would not be overwritten
@@ -1027,17 +1027,17 @@ void Sbar_Draw()
 				if(STAT(ITEMS) & IT_INVULNERABILITY)
 				{
 					Sbar_DrawNum('24 0 0', itos(666), 3, 1);
-					Sbar_DrawPic('0 0 0', "gfx/disc");
+					Sbar_DrawPic('0 0 0', "gfx/quake/disc");
 				}
 				else
 				{
 					string apic = string_null;
 					if(STAT(ITEMS) & IT_ARMOR3)
-						apic = "gfx/sb_armor3";
+						apic = "gfx/quake/sb_armor3";
 					else if(STAT(ITEMS) & IT_ARMOR2)
-						apic = "gfx/sb_armor2";
+						apic = "gfx/quake/sb_armor2";
 					else if(STAT(ITEMS) & IT_ARMOR1)
-						apic = "gfx/sb_armor1";
+						apic = "gfx/quake/sb_armor1";
 
 					if(apic)
 					{
@@ -1055,19 +1055,19 @@ void Sbar_Draw()
 				// ammo icon
 				string pic = string_null;
 				if(STAT(ITEMS) & IT_SHELLS)
-					pic = "gfx/sb_shells";
+					pic = "gfx/quake/sb_shells";
 				else if(STAT(ITEMS) & IT_NAILS)
-					pic = "gfx/sb_nails";
+					pic = "gfx/quake/sb_nails";
 				else if(STAT(ITEMS) & IT_ROCKETS)
-					pic = "gfx/sb_rocket";
+					pic = "gfx/quake/sb_rocket";
 				else if(STAT(ITEMS) & IT_CELLS)
-					pic = "gfx/sb_cells";
+					pic = "gfx/quake/sb_cells";
 				else if(STAT(ITEMS) & IT_LAVA_NAILS)
-					pic = "gfx/r_ammolava";
+					pic = "gfx/quake/r_ammolava";
 				else if(STAT(ITEMS) & IT_PLASMA_AMMO)
-					pic = "gfx/r_ammomulti";
+					pic = "gfx/quake/r_ammomulti";
 				else if(STAT(ITEMS) & IT_MULTI_ROCKETS)
-					pic = "gfx/r_ammoplasma";
+					pic = "gfx/quake/r_ammoplasma";
 
 				if(pic)
 				{
