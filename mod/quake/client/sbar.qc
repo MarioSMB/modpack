@@ -560,7 +560,7 @@ void Sbar_Score(int margin)
 
 	if(autocvar_sbar_gametime)
 	{
-		if(!deathmatch && STAT(TIMELIMIT))
+		if(deathmatch && STAT(TIMELIMIT))
 		{
 			string timestr = seconds_tostring(max(0, STAT(TIMELIMIT) * 60 - time));
 			Sbar_DrawNum_lettersize(vec2(-12 * 3, 32), timestr, strlen(timestr), false, 12, '12 12 0');

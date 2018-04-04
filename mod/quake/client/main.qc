@@ -211,17 +211,6 @@ STATIC_INIT(PlayerSlots_Spawn)
 }
 
 // optional stuff
-STATIC_INIT_LATE(fix_hud)
-{
-	registercvar("_rrestarted", "0");
-
-	//if(autocvar_cl_enginesbar)
-	if(!cvar("_rrestarted"))
-	{
-		cvar_set("_rrestarted", "1");
-		localcmd("\ndefer 1 r_restart\n");
-	}
-}
 
 NET_HANDLE(TE_CSQC_PINGPLREPORT, bool isNew)
 {
@@ -231,7 +220,7 @@ NET_HANDLE(TE_CSQC_PINGPLREPORT, bool isNew)
 	int ml = ReadByte();
 	return = true;
 	entity e = playerslots[i];
-	if (!e) { LOG_INFO(ftos(i), " not found!\n"); return; }
+	if (!e) return;
 	e.ping = pi;
 	e.ping_packetloss = pl / 255.0;
 	e.ping_movementloss = ml / 255.0;
