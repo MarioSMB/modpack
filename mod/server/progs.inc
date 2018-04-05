@@ -4,6 +4,7 @@
 	#include "../common/all.inc"
 
 	#include "bots.qc"
+	#include "caz.qc"
 	#include "chat.qc"
 	#include "commands.qc"
 	#include "compat.qc"
