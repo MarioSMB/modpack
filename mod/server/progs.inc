@@ -22,7 +22,6 @@
 	#include "spawnreplace.qc"
 	#include "stats.qc"
 	#include "tp.qc"
-	#include "triggerbot.qc"
 
 	#include "mutators/all.qh"
 #endif
