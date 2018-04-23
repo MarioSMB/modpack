@@ -243,9 +243,9 @@ AUTOCVAR_NOREF_SAVE(cl_magical_hax,               string, "",      	"Magical hax
 
 string get_model_parameters_bone_head;
 
-class(Skeleton) .int bone_hat;
-class(Skeleton) .vector hat_height;
-class(Skeleton) .float hat_scale;
+classfield(Skeleton) .int bone_hat;
+classfield(Skeleton) .vector hat_height;
+classfield(Skeleton) .float hat_scale;
 
 MUTATOR_HOOKFUNCTION(mod_hats, TagIndex_Apply)
 {

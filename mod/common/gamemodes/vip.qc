@@ -344,7 +344,7 @@ MUTATOR_HOOKFUNCTION(vip, PlayerPreThink)
 	entity player = M_ARGV(0, entity);
 
 	if(player.wps_vip)
-		WaypointSprite_UpdateHealth(player.wps_vip, ((g_instagib) ? GetResourceAmount(player, RESOURCE_ARMOR) : '1 0 0' * healtharmor_maxdamage(GetResourceAmount(player, RESOURCE_HEALTH), player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)));
+		WaypointSprite_UpdateHealth(player.wps_vip, ((autocvar_g_instagib) ? GetResourceAmount(player, RESOURCE_ARMOR) : '1 0 0' * healtharmor_maxdamage(GetResourceAmount(player, RESOURCE_HEALTH), player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)));
 
 	STAT(VIP_RED, player) = vip_count[0];
 	STAT(VIP_BLUE, player) = vip_count[1];
@@ -366,9 +366,9 @@ MUTATOR_HOOKFUNCTION(vip, PlayerSpawn)
 
 	if(STAT(VIP, player))
 	{
-		if(!g_instagib)
+		if(!autocvar_g_instagib)
 			SetResourceAmount(player, RESOURCE_HEALTH, 200);
-		SetResourceAmount(player, RESOURCE_ARMOR, ((g_instagib) ? 5 : 200)); // 5 lives in instagib
+		SetResourceAmount(player, RESOURCE_ARMOR, ((autocvar_g_instagib) ? 5 : 200)); // 5 lives in instagib
 	}
 }
 
@@ -499,8 +499,8 @@ vector vip_SoulGemColormod(int theteam, bool iseffect)
 void vip_VIPWaypoints(entity player)
 {
 	WaypointSprite_Spawn(WP_VIP, 0, 0, player, FLAG_WAYPOINT_OFFSET, NULL, 0, player, wps_vip, true, RADARICON_FLAG);
-	WaypointSprite_UpdateMaxHealth(player.wps_vip, ((g_instagib) ? 5 : '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id) * 2));
-	WaypointSprite_UpdateHealth(player.wps_vip, ((g_instagib) ? player.armorvalue : '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)));
+	WaypointSprite_UpdateMaxHealth(player.wps_vip, ((autocvar_g_instagib) ? 5 : '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id) * 2));
+	WaypointSprite_UpdateHealth(player.wps_vip, ((autocvar_g_instagib) ? player.armorvalue : '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)));
 	WaypointSprite_UpdateTeamRadar(player.wps_vip, RADARICON_FLAGCARRIER, Team_ColorRGB(player.team));
 }
 
@@ -510,9 +510,9 @@ void vip_SetVIP(entity player, float tm)
 		return; // TODO: check how this can be called at all for non players
 	STAT(VIP, player) = true;
 	GameRules_scoring_vip(player, true);
-	if(!g_instagib)
+	if(!autocvar_g_instagib)
 		SetResourceAmount(player, RESOURCE_HEALTH, 200);
-	SetResourceAmount(player, RESOURCE_ARMOR, ((g_instagib) ? 5 : 200));
+	SetResourceAmount(player, RESOURCE_ARMOR, ((autocvar_g_instagib) ? 5 : 200));
 	player.pickup_antispam = time + autocvar_g_vip_pickup_wait;
 
 	int theirteam = Team_TeamToNumber(tm);

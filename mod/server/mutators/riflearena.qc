@@ -1,5 +1,5 @@
 void ra_SetCvars();
-REGISTER_MUTATOR(ra, cvar("g_riflearena") && !cvar("g_instagib") && !cvar("g_overkill") && !g_nexball)
+REGISTER_MUTATOR(ra, cvar("g_riflearena") && !autocvar_g_instagib && !cvar("g_overkill") && !g_nexball)
 {
 	MUTATOR_ONADD
 	{

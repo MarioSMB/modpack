@@ -1,5 +1,5 @@
 void sha_SetCvars();
-REGISTER_MUTATOR(sha, cvar("g_shotgunarena") && !cvar("g_instagib") && !cvar("g_overkill") && !cvar("g_riflearena") && !g_nexball)
+REGISTER_MUTATOR(sha, cvar("g_shotgunarena") && !autocvar_g_instagib && !cvar("g_overkill") && !cvar("g_riflearena") && !g_nexball)
 {
 	MUTATOR_ONADD
 	{
