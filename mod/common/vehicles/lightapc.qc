@@ -1,3 +1,5 @@
+//FEATURE-DISABLED New vehicle: LightAPC, a large tank that can hold many players
+
 #ifndef VEHICLE_LIGHTAPC
 #define VEHICLE_LIGHTAPC
 

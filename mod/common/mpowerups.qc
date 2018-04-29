@@ -1,3 +1,5 @@
+//FEATURE: Some classic SMB powerups, including the mini mushroom, super star and life shroom!
+
 const int MIT_STAR = BIT(0);
 const int MIT_MINI = BIT(1);
 const int MIT_LIFE = BIT(2);

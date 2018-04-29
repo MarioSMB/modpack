@@ -2,6 +2,6 @@
 #include "conquest/module.inc"
 #include "dotc/module.inc"
 #include "jailbreak/module.inc"
-#include "runematch.qc"
+#include "runematch/module.inc"
 #include "snafu/module.inc"
-#include "vip.qc"
+#include "vip/module.inc"

@@ -1,3 +1,5 @@
+//FEATURE: New weapon: Lightsabre, for embracing the dark side!
+
 #ifndef IMPLEMENTATION
 MODEL(LIGHTSABRE_ITEM, W_Model("g_lightsabre.md3"));
 MODEL(LIGHTSABRE_WORLD, W_Model("v_lightsabre.md3"));

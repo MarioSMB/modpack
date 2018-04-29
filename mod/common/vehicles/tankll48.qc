@@ -1,3 +1,5 @@
+//FEATURE-DISABLED New vehicle: LL48 Tank, a literal tank with a big cannon
+
 #ifndef IMPLEMENTATION
 
 MSG_INFO_NOTIF(DEATH_MURDER_VH_TANK_DEATH,              1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_death",         _("^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Tank exploded%s%s"), "")

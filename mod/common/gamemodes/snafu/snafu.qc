@@ -1,3 +1,5 @@
+//FEATURE: SNAFU gamemode... needs no explanation
+
 #ifndef IMPLEMENTATION
 #ifdef SVQC
 AUTOCVAR_NOREF(g_snafu, bool, false, "SNAFU: I don't even know");

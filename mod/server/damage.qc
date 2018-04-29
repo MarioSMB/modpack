@@ -1,3 +1,5 @@
+//FEATURE: %j and %k in chat will show the last killed player and last player to kill you, respectively
+
 REGISTER_MUTATOR(damage_mod, true);
 
 AUTOCVAR(g_turrets_player_damagerate, float, 1, _("Multiplier for the amount of damage a player takes from turrets"));

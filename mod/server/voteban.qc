@@ -1,3 +1,5 @@
+//FEATURE: Command to permanently prevent certain players from voting
+
 REGISTER_MUTATOR(voteban, true);
 
 AUTOCVAR(sv_voteban_list, string, "", "");

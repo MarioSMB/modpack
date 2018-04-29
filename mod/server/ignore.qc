@@ -1,3 +1,5 @@
+//FEATURE: Ignore command to keep spammers out of your personal chat log for a match
+
 REGISTER_MUTATOR(ignore, true);
 
 .string ignore_list; // stores player id's, maybe can be upgraded to store net address for reconnect protection

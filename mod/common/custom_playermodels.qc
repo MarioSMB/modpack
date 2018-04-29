@@ -1,8 +1,11 @@
+//FEATURE: Persistent custom player models, so you can always show off that pony complexion!
+
 #ifdef GAMEQC
 AUTOCVAR(sv_jumpvelocity_backflip, float, 600, "");
 
 #ifdef SVQC
 int models_allowed;
+bool g_overkill; // reliable check for overkill
 #endif
 
 //REGISTER_STAT(JUMPVELOCITY_CROUCH, float, autocvar_sv_jumpvelocity_backflip);
@@ -28,14 +31,7 @@ const int MODELS_IGGY = BIT(12);
 
 #ifdef SVQC
 
-void cpmodels_Precache();
-REGISTER_MUTATOR(cpmodels, true)
-{
-	MUTATOR_ONADD
-	{
-		cpmodels_Precache();
-	}
-}
+REGISTER_MUTATOR(cpmodels, true);
 
 AUTOCVAR(sv_allow_customplayermodels, bool, false, "");
 AUTOCVAR(sv_allow_customplayermodels_bots, bool, true, "");
@@ -45,8 +41,9 @@ AUTOCVAR(sv_smokeball_time, float, 2, "");
 AUTOCVAR(sv_smokeball_refire, float, 10, "");
 AUTOCVAR(sv_smokeball_alpha, float, 0, "");
 
-void cpmodels_Precache()
+PRECACHE(cpmodels_precache)
 {
+	g_overkill = MUTATOR_ok.mutatorcheck();
 	models_allowed = 0;
 #define CHECK_MODEL(d,o) \
 	if(fexists(strcat("models/player/", d))) \
@@ -99,33 +96,30 @@ MUTATOR_HOOKFUNCTION(cpmodels, FormatMessage)
 
 MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 {
-	string ret_string = M_ARGV(0, string);
-	int ret_int = M_ARGV(1, int);
-	entity player = M_ARGV(2, entity);
-
 	if(autocvar_sv_allow_customplayermodels && !cvar("g_overkill"))
 	{
+		entity player = M_ARGV(2, entity);
 #define ALLOWED(d) (models_allowed & MODELS_##d)
 		// public hax
 		// stuff anyone can use
 		if(CS(player).cvar_cl_model == "pony" && ALLOWED(PONY))
 		{
-			ret_string = "models/player/pony.iqm";
-			ret_int = CS(player).cvar_cl_pony_skin;
+			M_ARGV(0, string) = "models/player/pony.iqm";
+			M_ARGV(1, int) = CS(player).cvar_cl_pony_skin;
 		}
 		if(CS(player).cvar_cl_model == "robot" && ALLOWED(ROBOT))
-			ret_string = "models/player/terminusmale.iqm";
+			M_ARGV(0, string) = "models/player/terminusmale.iqm";
 		if(CS(player).cvar_cl_model == "goat" && ALLOWED(GOAT))
-			ret_string = "models/player/draconimale.iqm";
+			M_ARGV(0, string) = "models/player/draconimale.iqm";
 
 		if(CS(player).cvar_cl_model == "monk" && ALLOWED(MONK))
-			ret_string = "models/player/monk2.dpm";
+			M_ARGV(0, string) = "models/player/monk2.dpm";
 
 		if(CS(player).cvar_cl_model == "nexus" && ALLOWED(NEXUS))
-			ret_string = "models/player/nexus.zym";
+			M_ARGV(0, string) = "models/player/nexus.zym";
 
 		if(ALLOWED(BOT) && IS_BOT_CLIENT(player) && autocvar_sv_allow_customplayermodels_bots)
-			ret_string = "models/player/ubot.iqm";
+			M_ARGV(0, string) = "models/player/ubot.iqm";
 
 		// special hax
 		if(PlayerInList(player, autocvar_sv_allow_customplayermodels_idlist))
@@ -134,34 +128,31 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 			{
 				if(autocvar_g_fullbrightplayers && autocvar_g_player_brightness)
 					player.colormod = '0.7 0.7 0.7'; // regular brightness is way too bright here
-				ret_string = "models/player/rosalina.dpm";
+				M_ARGV(0, string) = "models/player/rosalina.dpm";
 			}
 			if(CS(player).cvar_cl_model == "foxy" && ALLOWED(RENAMON))
-				ret_string = "models/player/renamon.iqm";
+				M_ARGV(0, string) = "models/player/renamon.iqm";
 			if(CS(player).cvar_cl_model == "iggy" && ALLOWED(IGGY))
-				ret_string = "models/player/iggy.dpm";
+				M_ARGV(0, string) = "models/player/iggy.dpm";
 		}
 		else if(player.playermodel == "models/player/renamon.iqm" || player.playermodel == "models/player/rosalina.dpm" || player.playermodel == "models/player/iggy.dpm")
-			ret_string = autocvar_sv_defaultplayermodel;
+			M_ARGV(0, string) = autocvar_sv_defaultplayermodel;
 
 		if(PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		{
 			if(CS(player).cvar_cl_sparkle == 3 && ALLOWED(MARIO))
-				ret_string = "models/player/mario.dpm";
+				M_ARGV(0, string) = "models/player/mario.dpm";
 			if(CS(player).cvar_cl_sparkle >= 4 && ALLOWED(WEEGEE))
-				ret_string = "models/player/luigi.dpm";
+				M_ARGV(0, string) = "models/player/luigi.dpm";
 			if(CS(player).cvar_cl_model == "bear" && ALLOWED(BEAR))
-				ret_string = "models/player/bear.dpm";
+				M_ARGV(0, string) = "models/player/bear.dpm";
 		}
 		else if(player.playermodel == "models/player/mario.dpm" || player.playermodel == "models/player/bear.dpm" || player.playermodel == "models/player/luigi.dpm")
-			ret_string = autocvar_sv_defaultplayermodel;
+			M_ARGV(0, string) = autocvar_sv_defaultplayermodel;
 
 		if(CS(player).cow && ALLOWED(COW))
-			ret_string = "models/player/cow.md3";
+			M_ARGV(0, string) = "models/player/cow.md3";
 	}
-
-	M_ARGV(0, string) = ret_string;
-	M_ARGV(1, int) = ret_int;
 
 #undef ALLOWED
 }

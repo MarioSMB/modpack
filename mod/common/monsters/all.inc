@@ -1,3 +1,4 @@
+#if 0
 #include "vore.qc"
 #include "scrag.qc"
 #include "soldier.qc"
@@ -13,3 +14,4 @@
 #include "creeper.qc"
 //#include "troll.qc"
 //#include "spawner.qc"
+#endif

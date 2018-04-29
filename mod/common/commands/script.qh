@@ -1,5 +1,4 @@
-#ifndef SCRIPT_H
-#define SCRIPT_H
+#pragma once
 
 void GenericCommand_script(float request, float argc, string command);
 
@@ -20,6 +19,4 @@ float(float c, float s) atan2 = #474; // returns angle in radians for a given co
 float(float a) tan = #475; // returns tangent value (which is simply sin(a)/cos(a)) for the given angle in radians, the result is in the range -infinity to +infinity
 float(entity num) num_for_edict = #512;
 float(entity ent) wasfreed = #353; // same as in EXT_CSQC extension
-#endif
-
 #endif

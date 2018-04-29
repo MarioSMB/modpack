@@ -1,3 +1,5 @@
+//FEATURE: A miniature code scripting engine for all your hacking needs! Somewhat limited in functionality, but allows simple code files to be executed
+
 .float  script_type;
 .string script_value;
 .entity script_next;
@@ -22,10 +24,10 @@ void GenericCommand_script(float request, float argc, string command)
 				float file = fopen(argv(2),FILE_READ);
 				if ( file < 0 )
 				{
-					dprint("Script: unable to open file ",argv(2),"\n");
+					LOG_DEBUG("Script: unable to open file ",argv(2));
 					return;
 				}
-				dprint("Script: executing ",argv(2),"\n");
+				LOG_DEBUG("Script: executing ",argv(2));
 				
 				
 				string code_source = "";
@@ -37,9 +39,8 @@ void GenericCommand_script(float request, float argc, string command)
 				
 				context_push();
 				context_define_variable(current_context,"argc",ftos(argc-2));
-				float i;
-				for ( i = 2; i < argc; i++ )
-					context_define_variable(current_context,strcat("arg",ftos(i-2)),argv(i));
+				for (int j = 2; j < argc; j++ )
+					context_define_variable(current_context,strcat("arg",ftos(j-2)),argv(j));
 				script_evaluate(ast_root);
 				context_pop();
 				
@@ -48,7 +49,7 @@ void GenericCommand_script(float request, float argc, string command)
 			else
 			{
 				entity ast_root = script_compile(substring(command, 7, strlen(command)));
-				print(strcat(script_evaluate(ast_root),"\n"));
+				LOG_INFO(script_evaluate(ast_root));
 				script_cleanup(ast_root);
 			}
 			return;
@@ -56,8 +57,8 @@ void GenericCommand_script(float request, float argc, string command)
 		
 		default:
 		case CMD_REQUEST_USAGE:
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " script EXPRESSION...\n"));
-			print(strcat("\nUsage:^3 ", GetProgramCommandPrefix(), " script file filename\n"));
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " script EXPRESSION...");
+			LOG_INFO("Usage:^3 ", GetProgramCommandPrefix(), " script file filename");
 			return;
 	}
 }

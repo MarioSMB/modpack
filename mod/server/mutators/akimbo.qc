@@ -1,3 +1,5 @@
+//FEATURE: Akimbo mutator for all your dual wielding needs
+
 AUTOCVAR(g_akimbo, bool, false, "Enable Akimbo mutator (requires g_weaponswitch_debug 2)");
 
 REGISTER_MUTATOR(akimbo, autocvar_g_akimbo && !g_nexball && autocvar_g_weaponswitch_debug == 2);

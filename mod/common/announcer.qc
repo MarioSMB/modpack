@@ -1,3 +1,5 @@
+//FEATURE: Custom default announcers on the server side, that clients can override if desired
+
 #ifdef GAMEQC
 REGISTER_MUTATOR(announcer, true);
 #endif

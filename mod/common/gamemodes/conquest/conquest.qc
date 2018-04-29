@@ -1,3 +1,5 @@
+//FEATURE: Conquest gamemode, a more ambitious version of domination and a game of capture the spawn point
+
 #ifndef IMPLEMENTATION
 #ifdef SVQC
 	AUTOCVAR_NOREF(g_conquest, bool, false, "Conquest: take control points until the enemy has nowhere to spawn");
@@ -421,24 +423,16 @@ entity cq_Nearest_ControlPoint(entity this, vector pos, float max_dist)
  */
 entity cq_Nearest_ControlPoint_2D(entity this, vector pos, float max_dist)
 {
-	entity tmp_entity, closest_target = NULL;
-	vector delta;
-	float smallest_distance = 0, distance;
+	entity closest_target = NULL;
 
-	for(tmp_entity = cq_worldcplist; tmp_entity; tmp_entity = tmp_entity.cq_worldcpnext)
+	for(entity tmp_entity = cq_worldcplist; tmp_entity; tmp_entity = tmp_entity.cq_worldcpnext)
 	{
-		delta = tmp_entity.origin - pos;
-		delta_z = 0;
-		distance = vlen(delta);
+		vector my_delta = vec2(tmp_entity.origin - pos);
 
-		if(SAME_TEAM(tmp_entity, this))
-		if(tmp_entity.cq_status == CP_CAPTURED)
-		if(max_dist <= 0 || distance <= max_dist)
-		if(closest_target == NULL || distance <= smallest_distance )
-		{
+		if(tmp_entity.cq_status == CP_CAPTURED && SAME_TEAM(tmp_entity, this))
+		if(max_dist <= 0 || vdist(my_delta, <=, max_dist))
+		if(closest_target == NULL || vlen2(my_delta) <= vlen2(vec2(closest_target.origin - pos)))
 			closest_target = tmp_entity;
-			smallest_distance = distance;
-		}
 	}
 
 	return closest_target;

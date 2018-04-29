@@ -1,3 +1,5 @@
+//FEATURE: Customisable grappling hooks per player (visible to others), aesthetic change only
+
 #ifdef SVQC
 .int cvar_cl_customhook;
 REPLICATE(cvar_cl_customhook, int, "cl_customhook");

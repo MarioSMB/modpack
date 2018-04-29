@@ -1,3 +1,5 @@
+//FEATURE: Option to require players to have stats enabled, allows blocking players via whitelists and blacklists and even keeping players out with too much elo
+
 REGISTER_MUTATOR(require_stats, cvar("g_require_stats"));
 
 AUTOCVAR(g_require_stats, int, 0, "Require stats to be enabled to join the server");

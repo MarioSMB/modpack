@@ -168,10 +168,9 @@ float context_set_variable(entity context,string varname, string newvalue)
 }
 void context_define_variable(entity context,string varname, string newvalue)
 {
-	entity newvar = spawn();
+	entity newvar = new_pure(script_variable);
 	newvar.script_value = newvalue;
 	newvar.netname = varname;
-	newvar.classname = "script_variable";
 	newvar.script_next = context.context_variables;
 	context.context_variables = newvar;
 }
@@ -193,19 +192,17 @@ entity context_get_function(entity context, string funcname)
 }
 entity context_define_function(entity context, string funcname, entity executor, entity param_chain)
 {
-	entity function = spawn();
+	entity function = new_pure(script_function);
 	function.netname = funcname;
 	function.ast_operand1 = param_chain;
 	function.ast_operand2 = executor;
 	function.script_next = context.context_functions;
-	function.classname = "script_function";
 	context.context_functions = function;
 	return function;
 }
 void context_push()
 {
-	entity new_context = spawn();
-	new_context.classname = "script_context";
+	entity new_context = new_pure(script_context);
 	new_context.owner = current_context;
 	if ( current_context )
 	{
@@ -325,10 +322,9 @@ entity ast_tempvalue_evaluate(entity this)
 }
 entity ast_tempvalue(string newvalue)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_tempvalue);
 	ast_temp.script_value = newvalue;
 	ast_temp.ast_evaluate = ast_tempvalue_evaluate;
-	ast_temp.classname="ast_tempvalue";
 	return ast_temp;
 }
 entity ast_tempnull()
@@ -342,10 +338,9 @@ entity ast_simplevalue_evaluate(entity this)
 }
 entity ast_simplevalue(string newvalue)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_simplevalue);
 	ast_temp.script_value = newvalue;
 	ast_temp.ast_evaluate = ast_simplevalue_evaluate;
-	ast_temp.classname="ast_simplevalue";
 	return ast_temp;
 }
 
@@ -359,10 +354,9 @@ entity ast_variable_evaluate(entity this)
 }
 entity ast_variable(string var_name)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_variable);
 	ast_temp.script_value = var_name;
 	ast_temp.ast_evaluate = ast_variable_evaluate;
-	ast_temp.classname="ast_variable";
 	ast_temp.ast_lvalue = -1;
 	ast_temp.ast_lvalue_reference = var_name;
 	return ast_temp;
@@ -387,11 +381,10 @@ entity ast_field_evaluate(entity this)
 // entity field access
 entity ast_field(entity operand,string field_name)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_field);
 	ast_temp.script_value = field_name;
 	ast_temp.ast_operand1 = operand;
 	ast_temp.ast_evaluate = ast_field_evaluate;
-	ast_temp.classname="ast_field";
 	ast_temp.ast_lvalue = -1;
 	ast_temp.ast_lvalue_reference = field_name;
 	return ast_temp;
@@ -410,7 +403,7 @@ entity ast_assign_evaluate(entity this)
 	}
 	else if ( lval.ast_lvalue > 0 )
 	{
-		if ( !entity_set(float_to_entity(lval.ast_lvalue),lval.ast_lvalue_reference,rval.script_value) )
+		if ( !entity_set(ftoe(lval.ast_lvalue),lval.ast_lvalue_reference,rval.script_value) )
 			dprint("Assignment to invalid entity field: #",
 				   ftos(lval.ast_lvalue),".",lval.ast_lvalue_reference,"\n");
 	}
@@ -423,12 +416,11 @@ entity ast_assign_evaluate(entity this)
 }
 entity ast_assign(entity lvalue,entity rvalue)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_assign);
 	ast_temp.ast_operand1 = lvalue;
 	ast_temp.ast_operand2 = rvalue;
 	ast_temp.ast_evaluate = ast_assign_evaluate;
 	ast_temp.ast_lvalue = -1;
-	ast_temp.classname="ast_assign";
 	return ast_temp;
 }
 entity ast_assign_operator_evaluate(entity this)
@@ -444,12 +436,11 @@ entity ast_assign_operator_evaluate(entity this)
 }
 entity ast_assign_operator(entity lvalue,entity rvalue,entity(entity,entity) operator)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_assign_operator);
 	ast_temp.ast_operand1 = lvalue;
 	ast_temp.ast_operand2 = operator(NULL,rvalue);
 	ast_temp.ast_evaluate = ast_assign_operator_evaluate;
 	ast_temp.ast_lvalue = -1;
-	ast_temp.classname="ast_assign_operator";
 	return ast_temp;
 }
 
@@ -485,10 +476,9 @@ entity ast_function_evaluate(entity this)
 }
 entity ast_function(string newname)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_function);
 	ast_temp.script_value = newname;
 	ast_temp.ast_evaluate = ast_function_evaluate;
-	ast_temp.classname="ast_function";
 	return ast_temp;
 }
 
@@ -499,10 +489,9 @@ entity ast_function_declaration_evaluate(entity this)
 }
 entity ast_function_declaration(string newname)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_function_declaration);
 	ast_temp.script_value = newname;
 	ast_temp.ast_evaluate = ast_function_declaration_evaluate;
-	ast_temp.classname="ast_function_declaration";
 	return ast_temp;
 }
 
@@ -515,12 +504,11 @@ entity ast_if_evaluate(entity this)
 }
 entity ast_if(entity condition, entity branch_true, entity branch_false)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_if);
 	ast_temp.ast_operand1 = condition;
 	ast_temp.ast_operand2 = branch_true;
 	ast_temp.ast_operand3 = branch_false;
 	ast_temp.ast_evaluate = ast_if_evaluate;
-	ast_temp.classname="ast_if";
 	return ast_temp;
 }
 
@@ -545,12 +533,11 @@ entity ast_while_evaluate(entity this)
 }
 entity ast_while(entity condition, entity body)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_while);
 	ast_temp.ast_operand1 = condition;
 	ast_temp.ast_operand2 = body;
 	ast_temp.ast_evaluate = ast_while_evaluate;
 	ast_temp.ast_max_iterations = 1000; // TODO: cvar
-	ast_temp.classname="ast_while";
 	return ast_temp;
 }
 
@@ -576,9 +563,8 @@ entity ast_block_evaluate(entity this)
 }
 entity ast_block()
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_block);
 	ast_temp.ast_evaluate = ast_block_evaluate;
-	ast_temp.classname="ast_block";
 	return ast_temp;
 }
 
@@ -590,17 +576,15 @@ entity ast_break_evaluate(entity this)
 }
 entity ast_break()
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_break);
 	ast_temp.script_type = AST_TYPE_BREAK;
-	ast_temp.classname="ast_break";
 	ast_temp.ast_evaluate = ast_break_evaluate;
 	return ast_temp;
 }
 entity ast_continue()
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_continue);
 	ast_temp.script_type = AST_TYPE_CONTINUE;
-	ast_temp.classname="ast_continue";
 	ast_temp.ast_evaluate = ast_break_evaluate;
 	return ast_temp;
 }
@@ -613,9 +597,8 @@ entity ast_return_evaluate(entity this)
 }
 entity ast_return(entity newvalue)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_return);
 	ast_temp.script_type = AST_TYPE_RETURN;
-	ast_temp.classname="ast_return";
 	ast_temp.ast_evaluate = ast_return_evaluate;
 	ast_temp.ast_operand1 = newvalue;
 	return ast_temp;
@@ -629,10 +612,9 @@ entity ast_unaryminus_evaluate(entity this)
 }
 entity ast_unaryminus(entity operand)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_unaryminus);
 	ast_temp.ast_operand1 = operand;
 	ast_temp.ast_evaluate = ast_unaryminus_evaluate;
-	ast_temp.classname="ast_unaryminus";
 	return ast_temp;
 }
 entity ast_bitnot_evaluate(entity this)
@@ -642,10 +624,9 @@ entity ast_bitnot_evaluate(entity this)
 }
 entity ast_bitnot(entity operand)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_bitnot);
 	ast_temp.ast_operand1 = operand;
 	ast_temp.ast_evaluate = ast_bitnot_evaluate;
-	ast_temp.classname="ast_bitnot";
 	return ast_temp;
 }
 entity ast_not_evaluate(entity this)
@@ -655,10 +636,9 @@ entity ast_not_evaluate(entity this)
 }
 entity ast_not(entity operand)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_not);
 	ast_temp.ast_operand1 = operand;
 	ast_temp.ast_evaluate = ast_not_evaluate;
-	ast_temp.classname="ast_not";
 	return ast_temp;
 }
 
@@ -672,11 +652,10 @@ entity ast_mul_evaluate(entity this)
 }
 entity ast_mul(entity operand1, entity operand2)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_mul);
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_mul_evaluate;
-	ast_temp.classname="ast_mul";
 	return ast_temp;
 }
 entity ast_div_evaluate(entity this)
@@ -688,11 +667,10 @@ entity ast_div_evaluate(entity this)
 }
 entity ast_div(entity operand1, entity operand2)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_div);
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_div_evaluate;
-	ast_temp.classname="ast_div";
 	return ast_temp;
 }
 entity ast_mod_evaluate(entity this)
@@ -704,11 +682,10 @@ entity ast_mod_evaluate(entity this)
 }
 entity ast_mod(entity operand1, entity operand2)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_mod);
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_mod_evaluate;
-	ast_temp.classname="ast_mod";
 	return ast_temp;
 }
 entity ast_sum_evaluate(entity this)
@@ -721,11 +698,10 @@ entity ast_sum_evaluate(entity this)
 }
 entity ast_sum(entity operand1, entity operand2)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_sum);
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_sum_evaluate;
-	ast_temp.classname="ast_sum";
 	return ast_temp;
 }
 entity ast_sub_evaluate(entity this)
@@ -737,11 +713,10 @@ entity ast_sub_evaluate(entity this)
 }
 entity ast_sub(entity operand1, entity operand2)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_sub);
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_sub_evaluate;
-	ast_temp.classname="ast_sub";
 	return ast_temp;
 }
 entity ast_bitand_evaluate(entity this)
@@ -753,11 +728,10 @@ entity ast_bitand_evaluate(entity this)
 }
 entity ast_bitand(entity operand1, entity operand2)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_bitand);
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_bitand_evaluate;
-	ast_temp.classname="ast_bitand";
 	return ast_temp;
 }
 entity ast_bitor_evaluate(entity this)
@@ -769,11 +743,10 @@ entity ast_bitor_evaluate(entity this)
 }
 entity ast_bitor(entity operand1, entity operand2)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_bitor);
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_bitor_evaluate;
-	ast_temp.classname="ast_bitor";
 	return ast_temp;
 }
 entity ast_bitxor_evaluate(entity this)
@@ -785,11 +758,10 @@ entity ast_bitxor_evaluate(entity this)
 }
 entity ast_bitxor(entity operand1, entity operand2)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_bitxor);
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_bitxor_evaluate;
-	ast_temp.classname="ast_bitxor";
 	return ast_temp;
 }
 entity ast_bitlshift_evaluate(entity this)
@@ -801,11 +773,10 @@ entity ast_bitlshift_evaluate(entity this)
 }
 entity ast_bitlshift(entity operand1, entity operand2)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_bitlshift);
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_bitlshift_evaluate;
-	ast_temp.classname="ast_bitlshift";
 	return ast_temp;
 }
 entity ast_bitrshift_evaluate(entity this)
@@ -817,11 +788,10 @@ entity ast_bitrshift_evaluate(entity this)
 }
 entity ast_bitrshift(entity operand1, entity operand2)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_bitrshift);
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_bitrshift_evaluate;
-	ast_temp.classname="ast_bitrshift";
 	return ast_temp;
 }
 entity ast_eq_evaluate(entity this)
@@ -833,11 +803,10 @@ entity ast_eq_evaluate(entity this)
 }
 entity ast_eq(entity operand1, entity operand2)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_eq);
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_eq_evaluate;
-	ast_temp.classname="ast_eq";
 	return ast_temp;
 }
 entity ast_ne_evaluate(entity this)
@@ -850,11 +819,10 @@ entity ast_ne_evaluate(entity this)
 }
 entity ast_ne(entity operand1, entity operand2)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_ne);
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_ne_evaluate;
-	ast_temp.classname="ast_ne";
 	return ast_temp;
 }
 entity ast_lt_evaluate(entity this)
@@ -867,11 +835,10 @@ entity ast_lt_evaluate(entity this)
 }
 entity ast_lt(entity operand1, entity operand2)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_lt);
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_lt_evaluate;
-	ast_temp.classname="ast_lt";
 	return ast_temp;
 }
 entity ast_le_evaluate(entity this)
@@ -884,11 +851,10 @@ entity ast_le_evaluate(entity this)
 }
 entity ast_le(entity operand1, entity operand2)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_le);
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_le_evaluate;
-	ast_temp.classname="ast_le";
 	return ast_temp;
 }
 entity ast_gt_evaluate(entity this)
@@ -901,11 +867,10 @@ entity ast_gt_evaluate(entity this)
 }
 entity ast_gt(entity operand1, entity operand2)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_gt);
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_gt_evaluate;
-	ast_temp.classname="ast_gt";
 	return ast_temp;
 }
 entity ast_ge_evaluate(entity this)
@@ -918,11 +883,10 @@ entity ast_ge_evaluate(entity this)
 }
 entity ast_ge(entity operand1, entity operand2)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_ge);
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_ge_evaluate;
-	ast_temp.classname="ast_ge";
 	return ast_temp;
 }
 entity ast_and_evaluate(entity this)
@@ -934,11 +898,10 @@ entity ast_and_evaluate(entity this)
 }
 entity ast_and(entity operand1, entity operand2)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_and);
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_and_evaluate;
-	ast_temp.classname="ast_and";
 	return ast_temp;
 }
 entity ast_or_evaluate(entity this)
@@ -950,10 +913,9 @@ entity ast_or_evaluate(entity this)
 }
 entity ast_or(entity operand1, entity operand2)
 {
-	entity ast_temp = spawn();
+	entity ast_temp = new_pure(ast_or);
 	ast_temp.ast_operand1 = operand1;
 	ast_temp.ast_operand2 = operand2;
 	ast_temp.ast_evaluate = ast_or_evaluate;
-	ast_temp.classname="ast_or";
 	return ast_temp;
 }

@@ -1,3 +1,5 @@
+//FEATURE: VIP gamemode, a mode in which one player becomes the team's VIP (very important player), when they die the round is over
+
 #ifndef IMPLEMENTATION
 #ifdef SVQC
 AUTOCVAR_NOREF(g_vip, bool, false, "");

@@ -1,9 +1,9 @@
+//FEATURE: Client-side vaporizer and vortex beams, greatly easing the pain of high ping
+
 //bool autocvar_cl_particles_newvortexbeam;
 AUTOCVAR_SAVE(cl_vaporizerbeam,                    int,   0,      "Draw a client side beam when firing in instagib. -1: always disabled, 0: disabled unless ping is high, 1: enabled");
 AUTOCVAR_SAVE(cl_vaporizerbeam_minping,            int,   160,    "Minimum ping for the client side beams to automatically enable");
 AUTOCVAR_SAVE(cl_particles_newvortexbeam,          bool,  false,  "Draw a fancy new vortex beam");
-
-float autocvar_g_trueaim_minrange; // TODO: stat?
 
 .float last_beam;
 
@@ -36,8 +36,8 @@ int W_SetupShot_Dir_ProjectileSize_Range(entity ent, entity wepent, vector s_for
 	return = ClientBeam_HitCheck();
 
 	// un-adjust trueaim if shotend is too close
-	if(vdist(w_shotend - (ent.origin + ent.view_ofs), <, autocvar_g_trueaim_minrange))
-		w_shotend = ent.origin + ent.view_ofs + s_forward * autocvar_g_trueaim_minrange;
+	if(vdist(w_shotend - (ent.origin + ent.view_ofs), <, g_trueaim_minrange))
+		w_shotend = ent.origin + ent.view_ofs + s_forward * g_trueaim_minrange;
 
 	vector md = wepent.movedir;
 	if(md.x > 0)

@@ -1,3 +1,6 @@
+//FEATURE: Even more chat replacements: %p for last shot player, %H for current health and %A for current armor, both nicely colorized
+//FEATURE: Ability to use @#3 in chat to get player 3's full name (or any number you choose), making it easier to highlight those awkward names
+
 REGISTER_MUTATOR(mod_chat, true);
 
 AUTOCVAR(chat_replacewords, bool, false, "Allow replacing words in chat via chat_replace_* cvars");
@@ -89,7 +92,8 @@ MUTATOR_HOOKFUNCTION(mod_chat, PreFormatMessage)
 		else
 			newmsg = cons(newmsg, theword);
 	});
-	themsg = mod_translate_clean(newmsg);
 
 	M_ARGV(1, string) = themsg;
 }
+
+#undef FOREACH_CLIENTSLOT_REVERSE

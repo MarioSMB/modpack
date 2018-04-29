@@ -1,6 +1,9 @@
-REGISTER_MUTATOR(freeze, cvar("g_freeze") && !IS_GAMETYPE(FREEZETAG) && !IS_GAMETYPE(CA) && !IS_GAMETYPE(CTS) && !IS_GAMETYPE(RACE) && teamplay);
+//FEATURE: Freeze mutator, a portable version of freeze tag that can work in just about any gamemode (except freezetag!)
 
-AUTOCVAR_NOREF(g_freeze, bool, false, _("Enable freeze mutator (similar to freezetag, but for other modes)"));
+AUTOCVAR(g_freeze, bool, false, _("Enable freeze mutator (similar to freezetag, but for other modes)"));
+
+REGISTER_MUTATOR(freeze, autocvar_g_freeze && !IS_GAMETYPE(FREEZETAG) && !IS_GAMETYPE(CA) && !IS_GAMETYPE(CTS) && !IS_GAMETYPE(RACE) && teamplay);
+
 AUTOCVAR(g_freeze_noauto, bool, false, _("Don't automatically unfreeze the player"));
 AUTOCVAR(g_freeze_norespawn, bool, false, _("Don't allow re-spawning instantly by jumping"));
 AUTOCVAR(g_freeze_revive_speed, float, 0.2, "");

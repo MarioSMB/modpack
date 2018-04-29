@@ -1,3 +1,5 @@
+//FEATURE: Hats!
+
 vector get_model_parameters_hat_height;
 float get_model_parameters_hat_scale;
 vector get_model_parameters_hat_angles;

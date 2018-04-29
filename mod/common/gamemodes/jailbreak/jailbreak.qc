@@ -1,3 +1,5 @@
+//FEATURE: Jailbreak gamemode, a variation on clan arena in which you can free your fallen teammates from the enemy's jail cell
+
 #ifndef IMPLEMENTATION
 #ifdef GAMEQC
 REGISTER_NET_LINKED(ENT_CLIENT_JAILCAMERA)

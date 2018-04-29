@@ -1,3 +1,5 @@
+//FEATURE: Pick Spawns mutator, allowing you to choose where you spawn
+
 #ifdef GAMEQC
 
 REGISTER_MUTATOR(pickspawns, true);
@@ -13,23 +15,17 @@ AUTOCVAR(g_pick_spawns_click_radius, float, 350, "");
 entity pickspawns_Nearest_2D(entity this, vector pos, float max_dist)
 {
 	entity closest_target = NULL;
-	vector delta;
-	float smallest_distance = 0, distance;
 
-	FOREACH_ENTITY_CLASS("info_player_deathmatch", true, LAMBDA(
+	FOREACH_ENTITY_CLASS("info_player_deathmatch", true,
+	{
 		if(teamplay && it.team != this.team) continue;
 
-		delta = it.origin - pos;
-		delta.z = 0;
-		distance = vlen(delta);
+		vector my_delta = vec2(it.origin - pos);
 
-		if(max_dist <= 0 || distance <= max_dist)
-		if(!closest_target || distance <= smallest_distance)
-		{
+		if(max_dist <= 0 || vdist(my_delta, <=, max_dist))
+		if(!closest_target || vlen2(my_delta) <= vlen2(vec2(closest_target.origin - pos)))
 			closest_target = it;
-			smallest_distance = distance;
-		}
-	));
+	});
 
 	return closest_target;
 }

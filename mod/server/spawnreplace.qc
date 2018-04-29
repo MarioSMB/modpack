@@ -1,3 +1,5 @@
+//FEATURE: Options to replace any entity on maps
+
 MUTATOR_HOOKFUNCTION(mutator_mod, SetModname)
 {
 	IL_EACH(g_spawn_queue, true,

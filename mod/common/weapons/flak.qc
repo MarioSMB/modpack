@@ -1,3 +1,5 @@
+//FEATURE: New weapon: Flak Cannon, a UT-like weapon that fires a bunch of bouncing bullets
+
 #ifndef IMPLEMENTATION
 MODEL(FLAK_MUZZLEFLASH,           "models/flash.md3");
 MODEL(FLAK_VIEW,                  W_Model("h_flak.iqm"));

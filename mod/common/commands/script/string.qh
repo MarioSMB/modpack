@@ -1,4 +1,3 @@
-
 // ========================================================================
 //   String functions
 // ========================================================================
@@ -89,20 +88,10 @@ float is_numeric(string s)
 	return 1;
 }
 
-entity float_to_entity(float n)
-{
-#ifdef SVQC 
-	if ( n ) return edict_num(n);
-#elif defined(CSQC)
-	if ( n ) return entitybyindex(n);
-#elif defined(MENUQC)
-	if ( n ) return ftoe(n);
-#endif
-	return NULL;
-}
+ERASEABLE
 entity string_to_entity(string s)
 {
-	return float_to_entity(stof(s));
+	return ftoe(stof(s));
 }
 string entity_get(entity e, string newfield)
 {
