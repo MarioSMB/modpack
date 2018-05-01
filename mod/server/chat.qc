@@ -44,16 +44,6 @@ MUTATOR_HOOKFUNCTION(mod_chat, FormatMessage)
 	}
 }
 
-#define FOREACH_CLIENTSLOT_REVERSE(cond, body) \
-	MACRO_BEGIN { \
-		for(int _i = maxclients; _i >= 1; --_i) \
-		{ \
-			const noref int i = _i; \
-			ITER_CONST noref entity it = ftoe(i); \
-			if(cond) { LAMBDA(body) } \
-		} \
-	} MACRO_END
-
 MUTATOR_HOOKFUNCTION(mod_chat, PreFormatMessage)
 {
 	entity player = M_ARGV(0, entity);
@@ -95,5 +85,3 @@ MUTATOR_HOOKFUNCTION(mod_chat, PreFormatMessage)
 
 	M_ARGV(1, string) = themsg;
 }
-
-#undef FOREACH_CLIENTSLOT_REVERSE
