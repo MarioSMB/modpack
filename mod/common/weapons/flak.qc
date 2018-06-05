@@ -80,7 +80,7 @@ AUTOCVAR(g_balance_flak_weaponthrowable, float, 1, "");
 CLASS(Flak, Weapon)
 /* spawnfunc */ ATTRIB(Flak, m_canonical_spawnfunc, string, "weapon_flak");
 /* ammotype  */ ATTRIB(Flak, ammo_type, int, RESOURCE_SHELLS);
-/* impulse   */ ATTRIB(Flak, impulse, int,8);
+/* impulse   */ ATTRIB(Flak, impulse, int, 8);
 /* flags     */ ATTRIB(Flak, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH);
 /* rating    */ ATTRIB(Flak, bot_pickupbasevalue, float, 6000);
 /* color     */ ATTRIB(Flak, wpcolor, vector, '1 1 0');
@@ -164,7 +164,7 @@ MUTATOR_HOOKFUNCTION(flak_rockets, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 
-	if(item.weapons & WEPSET(FLAK))
+	if(STAT(WEAPONS, item) & WEPSET(FLAK))
 		item.ammo_rockets = cvar("g_pickup_rockets_weapon");
 }
 

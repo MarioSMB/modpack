@@ -12,7 +12,7 @@ MUTATOR_HOOKFUNCTION(akimbo, ItemTouch)
 	entity item = M_ARGV(0, entity);
 	entity player = M_ARGV(1, entity);
 
-	if(Item_IsLoot(item) && item.weapon && (player.weapons & item.itemdef.m_weapon.m_wepset) && item.owner != player && !(item.itemdef.m_weapon.spawnflags & WEP_FLAG_NODUAL))
+	if(Item_IsLoot(item) && item.weapon && (STAT(WEAPONS, player) & item.itemdef.m_weapon.m_wepset) && item.owner != player && !(item.itemdef.m_weapon.spawnflags & WEP_FLAG_NODUAL))
 		PS(player).dual_weapons |= item.itemdef.m_weapon.m_wepset; // dual it up!
 }
 
