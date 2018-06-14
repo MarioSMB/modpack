@@ -53,9 +53,7 @@ bool cq_ControlPoint_Send(entity this, entity to, int sf)
 
 	if(sf & CQSF_SETUP)
 	{
-		WriteCoord(MSG_ENTITY, this.origin_x);
-		WriteCoord(MSG_ENTITY, this.origin_y);
-		WriteCoord(MSG_ENTITY, this.origin_z);
+		WriteVector(MSG_ENTITY, this.origin);
 
 		WriteCoord(MSG_ENTITY, this.angles_y);
 

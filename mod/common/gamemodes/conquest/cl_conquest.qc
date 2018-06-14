@@ -99,9 +99,7 @@ NET_HANDLE(ENT_CLIENT_CONQUEST_CONTROLPOINT, bool is_new)
 
 	if(sf & CQSF_SETUP)
 	{
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 		this.drawmask = MASK_NORMAL;
 

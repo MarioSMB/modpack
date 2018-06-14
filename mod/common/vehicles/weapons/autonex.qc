@@ -22,12 +22,8 @@ void vwep_autonex_attack(
 
 	vector u = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 	WriteHeader(MSG_BROADCAST, TE_CSQC_VORTEXBEAMPARTICLE);
-	WriteCoord(MSG_BROADCAST, v.x);
-	WriteCoord(MSG_BROADCAST, v.y);
-	WriteCoord(MSG_BROADCAST, v.z);
-	WriteCoord(MSG_BROADCAST, u.x);
-	WriteCoord(MSG_BROADCAST, u.y);
-	WriteCoord(MSG_BROADCAST, u.z);
+	WriteVector(MSG_BROADCAST, v.x);
+	WriteVector(MSG_BROADCAST, u.x);
 	WriteByte(MSG_BROADCAST, 255);
 
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, v, v_forward, 1);

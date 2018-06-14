@@ -68,12 +68,8 @@ bool dotc_CreditSend(entity this, entity to, int sf)
 	if(sf & DOTC_CREDIT_SF_INIT)
 	{
 		WriteByte(MSG_ENTITY, this.team - 1);
-		WriteCoord(MSG_ENTITY, this.origin_x);
-		WriteCoord(MSG_ENTITY, this.origin_y);
-		WriteCoord(MSG_ENTITY, this.origin_z);
-		WriteCoord(MSG_ENTITY, this.velocity_x);
-		WriteCoord(MSG_ENTITY, this.velocity_y);
-		WriteCoord(MSG_ENTITY, this.velocity_z);
+		WriteVector(MSG_ENTITY, this.origin);
+		WriteVector(MSG_ENTITY, this.velocity);
 		WriteByte(MSG_ENTITY, autocvar_sv_simple_items);
 	}
 
@@ -84,12 +80,8 @@ bool dotc_CreditSend(entity this, entity to, int sf)
 
 	if(sf & DOTC_CREDIT_SF_MOVE)
 	{
-		WriteCoord(MSG_ENTITY, this.origin_x);
-		WriteCoord(MSG_ENTITY, this.origin_y);
-		WriteCoord(MSG_ENTITY, this.origin_z);
-		WriteCoord(MSG_ENTITY, this.velocity_x);
-		WriteCoord(MSG_ENTITY, this.velocity_y);
-		WriteCoord(MSG_ENTITY, this.velocity_z);
+		WriteVector(MSG_ENTITY, this.origin);
+		WriteVector(MSG_ENTITY, this.velocity);
 	}
 
 	return true;
@@ -215,14 +207,10 @@ NET_HANDLE(ENT_CLIENT_DOTC_CREDIT, bool isnew)
 		set_movetype(this, MOVETYPE_TOSS);
 
 		this.team = ReadByte();
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 		this.oldorigin = this.origin;
-		this.velocity_x = ReadCoord();
-		this.velocity_y = ReadCoord();
-		this.velocity_z = ReadCoord();
+		this.velocity = ReadVector();
 		this.dotc_credit_simple = ReadByte();
 		dotc_Credit_UpdateModel(this);
 		dotc_Credit_UpdateTeam(this, this.team);
@@ -236,12 +224,8 @@ NET_HANDLE(ENT_CLIENT_DOTC_CREDIT, bool isnew)
 
 	if(sf & DOTC_CREDIT_SF_MOVE)
 	{
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
-		this.velocity_x = ReadCoord();
-		this.velocity_y = ReadCoord();
-		this.velocity_z = ReadCoord();
+		this.origin = ReadVector();
+		this.velocity = ReadVector();
 		setorigin(this, this.origin);
 		this.oldorigin = this.origin;
 	}

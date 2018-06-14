@@ -35,9 +35,7 @@ MUTATOR_HOOKFUNCTION(cl_jb, DrawCrosshair)
 
 NET_HANDLE(ENT_CLIENT_JAILCAMERA, bool isnew)
 {
-	this.origin_x = ReadCoord();
-	this.origin_y = ReadCoord();
-	this.origin_z = ReadCoord();
+	this.origin = ReadVector();
 	setorigin(this, this.origin);
 		
 	this.angles_x = ReadAngle();
@@ -737,9 +735,7 @@ bool jailcamera_send(entity this, entity to, int sf)
 {
 	WriteHeader(MSG_ENTITY, ENT_CLIENT_JAILCAMERA);
 
-	WriteCoord(MSG_ENTITY, this.origin_x);
-	WriteCoord(MSG_ENTITY, this.origin_y);
-	WriteCoord(MSG_ENTITY, this.origin_z);
+	WriteVector(MSG_ENTITY, this.origin);
 
 	WriteAngle(MSG_ENTITY, this.angles_x);
 	WriteAngle(MSG_ENTITY, this.angles_y);
