@@ -10,6 +10,7 @@ float contentavgalpha, liquidalpha_prev;
 vector liquidcolor_prev;
 
 // TODO: item pickup flashing? maybe not (seizure fest)
+// requires some kind of stat
 bool autocvar_hud_contents;
 float autocvar_hud_contents_fadeintime = 0.02;
 float autocvar_hud_contents_fadeouttime = 0.1;
