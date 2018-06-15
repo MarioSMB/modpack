@@ -6,14 +6,9 @@
 	#include "clientbeams.qc"
 	#include "compat.qc"
 	#include "custom_playermodels.qc"
+	#include "cvars.qc"
 	#include "demo.qc"
-	#include "freeze.qc"
-	#include "piggyback.qc"
 	#include "polytrails.qc"
-	#include "radio.qc"
-	//#include "snow.qc"
-	#include "weapons.qc"
-	#include "zombie_apocalypse.qc"
 #endif
 
 #define QUAKE_ONE

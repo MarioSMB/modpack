@@ -1,3 +1,5 @@
+//FEATURE: Teammate collisions (if supported), pass through teammates instead of bumping into them!
+
 #ifdef GAMEQC
 REGISTER_MUTATOR(team_collisions, true);
 #endif

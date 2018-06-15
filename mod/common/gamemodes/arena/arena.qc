@@ -1,3 +1,5 @@
+//FEATURE: Arena gamemode returning from the early days, the duel gamemode that pits 2 players against eachother until someone scores enough victories
+
 #ifndef IMPLEMENTATION
 #ifdef SVQC
 AUTOCVAR_NOREF(g_arena, bool, false, "Arena: players compete in a sequence of duels, player with most victories is winner");
@@ -250,7 +252,7 @@ MUTATOR_HOOKFUNCTION(arena, ClientConnect)
 	entity player = M_ARGV(0, entity);
 
 	TRANSMUTE(Observer, player);
-	Spawnqueue_Insert(player);
+	Spawnqueue_Insert(player); // TODO: check spec time
 	return true;
 }
 

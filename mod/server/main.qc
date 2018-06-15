@@ -4,9 +4,10 @@ MUTATOR_HOOKFUNCTION(mutator_mod, BuildMutatorsString) {
     M_ARGV(0, string) = strcat(M_ARGV(0, string), ":mod");
 }
 
-MUTATOR_HOOKFUNCTION(mutator_mod, BuildMutatorsPrettyString) {
-    M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Mod");
-}
+// we now show a proper message in the about page
+//MUTATOR_HOOKFUNCTION(mutator_mod, BuildMutatorsPrettyString) {
+//    M_ARGV(0, string) = strcat(M_ARGV(0, string), ", Mod");
+//}
 
 MUTATOR_HOOKFUNCTION(mutator_mod, BuildGameplayTipsString, CBC_ORDER_LAST)
 {

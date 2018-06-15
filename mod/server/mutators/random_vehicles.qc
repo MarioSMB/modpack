@@ -1,6 +1,8 @@
-REGISTER_MUTATOR(rvehicles, cvar("g_random_vehicles") && cvar("g_vehicles"));
+//FEATURE: Little mutator to switch things up by replacing vehicle spawns with a random vehicle
 
-AUTOCVAR_NOREF(g_random_vehicles, bool, false, _("Enable random vehicles mutator"));
+AUTOCVAR(g_random_vehicles, bool, false, _("Enable random vehicles mutator"));
+
+REGISTER_MUTATOR(rvehicles, autocvar_g_random_vehicles && autocvar_g_vehicles);
 
 MUTATOR_HOOKFUNCTION(rvehicles, OnEntityPreSpawn)
 {

@@ -1,3 +1,5 @@
+//FEATURE: New weapon: Uzi, a short burst machine gun with some serious firepower
+
 #include "uzi.qh"
 #ifndef IMPLEMENTATION
 

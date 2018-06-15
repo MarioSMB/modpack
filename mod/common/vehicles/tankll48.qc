@@ -1,3 +1,5 @@
+//FEATURE-DISABLED New vehicle: LL48 Tank, a literal tank with a big cannon
+
 #ifndef IMPLEMENTATION
 
 MSG_INFO_NOTIF(DEATH_MURDER_VH_TANK_DEATH,              1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",               "notify_death",         _("^BG%s%s^K1 got caught in the blast when ^BG%s^K1's Tank exploded%s%s"), "")
@@ -94,9 +96,9 @@ AUTOCVAR(g_vehicle_tankll48_gun_pitchspeed, float, 50, "");
 AUTOCVAR(g_vehicle_tankll48_cannon_radius, float, 500, "");
 AUTOCVAR(g_vehicle_tankll48_cannon_force, float, 9, "");
 AUTOCVAR(g_vehicle_tankll48_cannon_speed, float, 9001, "");
-AUTOCVAR(g_vehicle_tankll48_cannon_spread, float, 0, "");
+//AUTOCVAR(g_vehicle_tankll48_cannon_spread, float, 0, "");
 AUTOCVAR(g_vehicle_tankll48_cannon_speedaccel, float, 6500, "");
-AUTOCVAR(g_vehicle_tankll48_cannon_speed_up, float, 0, "");
+//AUTOCVAR(g_vehicle_tankll48_cannon_speed_up, float, 0, "");
 AUTOCVAR(g_vehicle_tankll48_cannon_damage, float, 2000, "");
 AUTOCVAR(g_vehicle_tankll48_cannon_damage2, float, 1700, "");
 AUTOCVAR(g_vehicle_tankll48_cannon_edgedamage, float, 1500, "");

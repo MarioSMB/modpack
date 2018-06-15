@@ -1,3 +1,5 @@
+//FEATURE: Voracity minigame, a little number navigation game
+
 REGISTER_MINIGAME(vr, "Voracity");
 
 const int VR_TURN_TAKE  = 0x0100; // player has to take a piece (or more) from the board

@@ -1,3 +1,5 @@
+//FEATURE: snap command for 'snapping' good moments in matches (places a marker in the demo if you're recording it)
+
 AUTOCVAR(sv_demo_recordplayers, bool, false, "Send all player demos to the demo recording server if available, useful for tournaments");
 AUTOCVAR(sv_demo_moments, int, 3, "Number of moments per match a player is allowed to 'snap' for recording (if recording is available)");
 

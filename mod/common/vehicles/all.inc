@@ -1,6 +1,6 @@
-#ifndef MOD_VEHICLES
-	#define MOD_VEHICLES
-#endif
+//#ifndef MOD_VEHICLES
+	//#define MOD_VEHICLES
+//#endif
 #ifdef MOD_VEHICLES
 	#include "weapons/all.inc"
 #if 0

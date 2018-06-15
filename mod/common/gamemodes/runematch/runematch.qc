@@ -1,3 +1,5 @@
+//FEATURE: Runematch gamemode, another mode from the days of old making its return, in which random 'runes' appear on the map, and the player needs to collect and hold all of them
+
 #ifndef IMPLEMENTATION
 #ifdef SVQC
 AUTOCVAR_NOREF(g_runematch, bool, false, "");

@@ -1,5 +1,8 @@
+//FEATURE: Rifle Arena, a classic mode a bit like instagib, with the fabled sniper rifle and limited health
+
+AUTOCVAR(g_riflearena, bool, false, _("Enable rifle arena mutator"));
 void ra_SetCvars();
-REGISTER_MUTATOR(ra, cvar("g_riflearena") && !cvar("g_instagib") && !cvar("g_overkill") && !g_nexball)
+REGISTER_MUTATOR(ra, autocvar_g_riflearena && !autocvar_g_instagib && !cvar("g_overkill") && !g_nexball)
 {
 	MUTATOR_ONADD
 	{
@@ -11,21 +14,20 @@ REGISTER_MUTATOR(ra, cvar("g_riflearena") && !cvar("g_instagib") && !cvar("g_ove
 	}
 }
 
-AUTOCVAR_NOREF(g_riflearena, bool, false, _("Enable rifle arena mutator"));
 AUTOCVAR(g_riflearena_withlaser, bool, false, _("Enable blaster in the rifle arena mutator"));
-AUTOCVAR_NOREF(g_riflearena_rifle_secondary_spread, float, 0, "");
-AUTOCVAR_NOREF(g_riflearena_rifle_secondary_shots, int, 1, "");
-AUTOCVAR_NOREF(g_riflearena_rifle_secondary_animtime, float, 0.15, "");
-AUTOCVAR_NOREF(g_riflearena_rifle_secondary_refire, float, 0.15, "");
-AUTOCVAR_NOREF(g_riflearena_rifle_secondary_damage, int, 40, "");
+AUTOCVAR(g_riflearena_rifle_secondary_spread, string, "0", "");
+AUTOCVAR(g_riflearena_rifle_secondary_shots, string, "1", "");
+AUTOCVAR(g_riflearena_rifle_secondary_animtime, string, "0.15", "");
+AUTOCVAR(g_riflearena_rifle_secondary_refire, string, "0.15", "");
+AUTOCVAR(g_riflearena_rifle_secondary_damage, string, "40", "");
 
 void ra_SetCvars()
 {
-	cvar_settemp("g_balance_rifle_secondary_spread", cvar_string("g_riflearena_rifle_secondary_spread"));
-	cvar_settemp("g_balance_rifle_secondary_shots", cvar_string("g_riflearena_rifle_secondary_shots"));
-	cvar_settemp("g_balance_rifle_secondary_animtime", cvar_string("g_riflearena_rifle_secondary_animtime"));
-	cvar_settemp("g_balance_rifle_secondary_refire", cvar_string("g_riflearena_rifle_secondary_refire"));
-	cvar_settemp("g_balance_rifle_secondary_damage", cvar_string("g_riflearena_rifle_secondary_damage"));
+	cvar_settemp("g_balance_rifle_secondary_spread", autocvar_g_riflearena_rifle_secondary_spread);
+	cvar_settemp("g_balance_rifle_secondary_shots", autocvar_g_riflearena_rifle_secondary_shots);
+	cvar_settemp("g_balance_rifle_secondary_animtime", autocvar_g_riflearena_rifle_secondary_animtime);
+	cvar_settemp("g_balance_rifle_secondary_refire", autocvar_g_riflearena_rifle_secondary_refire);
+	cvar_settemp("g_balance_rifle_secondary_damage", autocvar_g_riflearena_rifle_secondary_damage);
 }
 
 MUTATOR_HOOKFUNCTION(ra, Damage_Calculate)

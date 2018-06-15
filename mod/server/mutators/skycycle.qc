@@ -1,7 +1,10 @@
+//FEATURE-DISABLED Day-night cycles
+
 void skycycle_Init(entity this);
 bool skycycle_enabled;
+AUTOCVAR_NOREF(g_skycycle, bool, false, _("Enable day-night cycles"));
 
-REGISTER_MUTATOR(skycycle, cvar("g_skycycle") || (cvar("g_skycycle_suggested") && cvar("g_skycycle_allow_suggested")))
+REGISTER_MUTATOR(skycycle, autocvar_g_skycycle || (cvar("g_skycycle_suggested") && cvar("g_skycycle_allow_suggested")))
 {
 	MUTATOR_ONADD
 	{
@@ -11,7 +14,6 @@ REGISTER_MUTATOR(skycycle, cvar("g_skycycle") || (cvar("g_skycycle_suggested") &
 	}
 }
 
-AUTOCVAR_NOREF(g_skycycle, bool, false, _("Enable day-night cycles"));
 AUTOCVAR(g_skycycle_time, float, 120, "");
 AUTOCVAR(g_skycycle_timebetween, float, 3, "");
 AUTOCVAR(g_skycycle_intensity_realmax, float, 0.75, "");

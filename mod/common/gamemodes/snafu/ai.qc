@@ -307,16 +307,12 @@ NET_HANDLE(ENT_CLIENT_GAI, bool isnew)
 	
 	if(sf & GAIN_VELOCITY)
 	{
-		this.gai_physics_movement_x = ReadCoord();
-		this.gai_physics_movement_y = ReadCoord();
-		this.gai_physics_movement_z = ReadCoord();
+		this.gai_physics_movement = ReadVector();
 	}
 	
 	if(sf & GAIN_ORIGIN)
 	{
-		this.gai_physics_move_origin_x = ReadCoord();
-		this.gai_physics_move_origin_y = ReadCoord();
-		this.gai_physics_move_origin_z = ReadCoord();
+		this.gai_physics_move_origin = ReadVector();
 
 		setorigin(this, this.gai_physics_move_origin);
 		this.gai_physics_lastupdate = time;
@@ -359,16 +355,12 @@ bool gai_write(entity this, entity _to, int _flags)
 	
 	if(_flags & GAIN_VELOCITY)
 	{
-		WriteCoord(MSG_ENTITY, this.gai_physics_movement_x);
-		WriteCoord(MSG_ENTITY, this.gai_physics_movement_y);
-		WriteCoord(MSG_ENTITY, this.gai_physics_movement_z);
+		WriteVector(MSG_ENTITY, this.gai_physics_movement);
 	}
 	
 	if(_flags & GAIN_ORIGIN)
 	{
-		WriteCoord(MSG_ENTITY, this.gai_physics_move_origin_x);
-		WriteCoord(MSG_ENTITY, this.gai_physics_move_origin_y);
-		WriteCoord(MSG_ENTITY, this.gai_physics_move_origin_z);
+		WriteVector(MSG_ENTITY, this.gai_physics_move_origin);
 	}
 	
 	if(_flags & GAIN_ANGLES)

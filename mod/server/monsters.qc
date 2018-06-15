@@ -1,3 +1,5 @@
+//FEATURE: Ability to replace monster model paths, to easily load in custom models
+
 AUTOCVAR(sv_monsters_modeloverride, string, "", _("Custom directory for monster models, set to something like myserver, end result will look like 'models/monsters_myserver/monster.md3'"));
 
 MUTATOR_HOOKFUNCTION(mutator_mod, MonsterModel)

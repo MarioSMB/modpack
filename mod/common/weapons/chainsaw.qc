@@ -1,3 +1,5 @@
+//FEATURE: New weapon: Chainsaw (chops people)
+
 #ifndef IMPLEMENTATION
 
 #ifdef GAMEQC

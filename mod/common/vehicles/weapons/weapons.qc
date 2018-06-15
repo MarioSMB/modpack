@@ -12,9 +12,7 @@ void vwep_SpawnCasing(vector vel, float randomvel, vector ang, vector avel, floa
 
 	WriteHeader(MSG_ALL, casings);
 	WriteByte(MSG_ALL, casingtype);
-	WriteCoord(MSG_ALL, org.x);
-	WriteCoord(MSG_ALL, org.y);
-	WriteCoord(MSG_ALL, org.z);
+	WriteVector(MSG_ALL, org);
 	WriteShort(MSG_ALL, compressShortVector(vel)); // actually compressed velocity
 	WriteByte(MSG_ALL, ang.x * 256 / 360);
 	WriteByte(MSG_ALL, ang.y * 256 / 360);

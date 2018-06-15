@@ -8,9 +8,7 @@ bool mplant_block_send(entity this, entity to, int sf)
 	WriteByte(MSG_ENTITY, sf);
 
 	if (sf & MPSF_ORIGIN) {
-		WriteCoord(MSG_ENTITY, this.origin_x);
-		WriteCoord(MSG_ENTITY, this.origin_y);
-		WriteCoord(MSG_ENTITY, this.origin_z);
+		WriteVector(MSG_ENTITY, this.origin);
 	}
 
 	if (sf & MPSF_MODEL) {
@@ -28,21 +26,13 @@ bool mplant_block_send(entity this, entity to, int sf)
 	}
 
 	if (sf & MPSF_SIZE) {
-		WriteCoord(MSG_ENTITY, this.mplant_org_mins_x);
-		WriteCoord(MSG_ENTITY, this.mplant_org_mins_y);
-		WriteCoord(MSG_ENTITY, this.mplant_org_mins_z);
+		WriteVector(MSG_ENTITY, this.mplant_org_mins);
 
-		WriteCoord(MSG_ENTITY, this.mplant_org_maxs_x);
-		WriteCoord(MSG_ENTITY, this.mplant_org_maxs_y);
-		WriteCoord(MSG_ENTITY, this.mplant_org_maxs_z);
+		WriteVector(MSG_ENTITY, this.mplant_org_maxs);
 
-		WriteCoord(MSG_ENTITY, this.mins_x);
-		WriteCoord(MSG_ENTITY, this.mins_y);
-		WriteCoord(MSG_ENTITY, this.mins_z);
+		WriteVector(MSG_ENTITY, this.mins);
 
-		WriteCoord(MSG_ENTITY, this.maxs_x);
-		WriteCoord(MSG_ENTITY, this.maxs_y);
-		WriteCoord(MSG_ENTITY, this.maxs_z);
+		WriteVector(MSG_ENTITY, this.maxs);
 	}
 
 	if (sf & MPSF_SCALE) {
@@ -60,9 +50,7 @@ bool mplant_player_info_send(entity this, entity to, int sf)
 		WriteByte(MSG_ENTITY, this.owner.mplant_active);
 
 	if (sf & MPPI_TOOL) {
-		WriteCoord(MSG_ENTITY, this.owner.mplant_tool_multiplier_x);
-		WriteCoord(MSG_ENTITY, this.owner.mplant_tool_multiplier_y);
-		WriteCoord(MSG_ENTITY, this.owner.mplant_tool_multiplier_z);
+		WriteVector(MSG_ENTITY, this.owner.mplant_tool_multiplier);
 		WriteString(MSG_ENTITY, this.owner.mplant_tool.mplant_tool_name);
 		WriteByte(MSG_ENTITY, this.owner.mplant_tool.mplant_tool_index);
 	}
@@ -92,9 +80,7 @@ NET_HANDLE(ENT_CLIENT_MPLANTPINFO, bool isnew)
 		this.mplant_active = ReadByte();
 
 	if (sf & MPPI_TOOL) {
-		this.mplant_tool_multiplier_x = ReadCoord();
-		this.mplant_tool_multiplier_y = ReadCoord();
-		this.mplant_tool_multiplier_z = ReadCoord();
+		this.mplant_tool_multiplier = ReadVector();
 		if (this.mplant_tool_name)
 			strunzone(this.mplant_tool_name);
 
@@ -127,9 +113,7 @@ NET_HANDLE(ENT_CLIENT_MPLANTBLOCK, bool isnew)
 	}
 
 	if (sf & MPSF_ORIGIN) {
-		this.origin_x = ReadCoord();
-		this.origin_y = ReadCoord();
-		this.origin_z = ReadCoord();
+		this.origin = ReadVector();
 		setorigin(this, this.origin);
 		_retransform = true;
 	}
@@ -177,21 +161,13 @@ NET_HANDLE(ENT_CLIENT_MPLANTBLOCK, bool isnew)
 
 	if (sf & MPSF_SIZE) {
 		dprint("^1---------------^2Read size\n");
-		this.mplant_org_mins_x = ReadCoord();
-		this.mplant_org_mins_y = ReadCoord();
-		this.mplant_org_mins_z = ReadCoord();
+		this.mplant_org_mins = ReadVector();
 
-		this.mplant_org_maxs_x = ReadCoord();
-		this.mplant_org_maxs_y = ReadCoord();
-		this.mplant_org_maxs_z = ReadCoord();
+		this.mplant_org_maxs = ReadVector();
 
-		this.mins_x = ReadCoord();
-		this.mins_y = ReadCoord();
-		this.mins_z = ReadCoord();
+		this.mins = ReadVector();
 
-		this.maxs_x = ReadCoord();
-		this.maxs_y = ReadCoord();
-		this.maxs_z = ReadCoord();
+		this.maxs = ReadVector();
 		setsize(this, this.mins, this.maxs);
 		_retransform = true;
 	}

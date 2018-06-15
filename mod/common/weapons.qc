@@ -1,3 +1,5 @@
+//FEATURE: Customisable weapon model and sound path, for cleanly applying replacement content on servers
+
 #ifdef GAMEQC
 REGISTER_MUTATOR(weapon_models, true);
 #endif
@@ -25,14 +27,15 @@ MUTATOR_HOOKFUNCTION(weapon_models, Ent_Init, CBC_ORDER_LAST)
 	sv_weapons_modeloverride = strzone(ReadString());
 	sv_weapons_sounddir = strzone(ReadString());
 	if(sv_weapons_modeloverride && sv_weapons_modeloverride != "" && sv_weapons_modeloverride != "default")
-		FOREACH(Weapons, true, LAMBDA({
+		FOREACH(Weapons, true,
+		{
 			string themdl = sprintf("models/weapons_%s/v_%s.md3", sv_weapons_modeloverride, it.mdl);
 			if(fexists(themdl)) { precache_model(themdl); }
 			themdl = sprintf("models/weapons_%s/h_%s.iqm", sv_weapons_modeloverride, it.mdl);
 			if(fexists(themdl)) { precache_model(themdl); }
 			themdl = sprintf("models/weapons_%s/g_%s.md3", sv_weapons_modeloverride, it.mdl);
 			if(fexists(themdl)) { precache_model(themdl); }
-		}));
+		});
 
 	if(sv_weapons_sounddir && sv_weapons_sounddir != "" && sv_weapons_sounddir != "default")
 		FOREACH(Sounds, true, it.sound_precache(it)); // re-run this so we have things fully up to date

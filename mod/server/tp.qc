@@ -1,3 +1,5 @@
+//FEATURE: tp command, so admins can sneak up on troublesome players!
+
 REGISTER_MUTATOR(tp, true);
 
 STATIC_INIT_LATE(tpcmd)

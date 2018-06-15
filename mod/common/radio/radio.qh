@@ -1,0 +1,3 @@
+#pragma once
+
+REGISTER_NET_TEMP(TE_CSQC_RADIO)

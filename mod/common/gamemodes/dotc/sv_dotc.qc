@@ -1,3 +1,5 @@
+//FEATURE: DotC (Defense of the Core) gamemode, a highly ambitious and unfinished mode based on the DotA series
+
 /** DotC - Defense Of The Core. Xonotic's version of DotA
 
 Summary

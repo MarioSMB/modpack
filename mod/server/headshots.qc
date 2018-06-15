@@ -1,4 +1,4 @@
-REGISTER_MUTATOR(headshots, cvar("sv_headshot"));
+//FEATURE: Rifle can once again headshot players, yay
 
 AUTOCVAR(sv_headshot, bool, true, _("Announce headshots and deal extra damage with the rifle"));
 AUTOCVAR(sv_headshot_damage, float, 1.5, _("Damage multiplier if hitting the head with a rifle"));
@@ -21,9 +21,10 @@ bool Headshot(entity targ, entity ent, entity weapon_ent, vector hitloc, vector 
 	return trace_hits_box(start, end, headmins, headmaxs);
 }
 
-MUTATOR_HOOKFUNCTION(headshots, FireBullet_Hit)
+MUTATOR_HOOKFUNCTION(mutator_mod, FireBullet_Hit)
 {
 	if(MUTATOR_RETURNVALUE) { return; }
+	if(!autocvar_sv_headshot) { return; }
 
     entity player = M_ARGV(0, entity);
     entity targ = M_ARGV(1, entity);

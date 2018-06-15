@@ -1,6 +1,8 @@
-REGISTER_MUTATOR(kr, cvar("g_keeprunning") && !g_cts);
+//FEATURE: Keep Running mutator which slowly kills players who stand still, a more extreme version of campcheck
 
-AUTOCVAR_NOREF(g_keeprunning, bool, false, _("Just keep moving!"));
+AUTOCVAR(g_keeprunning, bool, false, _("Just keep moving!"));
+
+REGISTER_MUTATOR(kr, autocvar_g_keeprunning && !g_cts);
 
 .float kr_timer;
 

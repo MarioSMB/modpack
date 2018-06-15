@@ -1,3 +1,5 @@
+//FEATURE: Player glowy trails in CTS
+
 // lib
 // TOOD: get this stuff in master!
 float lerpratio(float f0, float f1, float ratio) { return f0 * (1 - ratio) + f1 * ratio; }
@@ -106,6 +108,8 @@ CLASS(PolyTrail, Object)
         this.polytrail_follow = _follow;
     }
 ENDCLASS(PolyTrail)
+
+#undef POLYTRAIL_SEEK
 
 REGISTER_MUTATOR(polytrails, true);
 

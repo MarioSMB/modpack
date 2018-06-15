@@ -1,6 +1,9 @@
-REGISTER_MUTATOR(freeze, cvar("g_freeze") && !IS_GAMETYPE(FREEZETAG) && !IS_GAMETYPE(CA) && !IS_GAMETYPE(CTS) && !IS_GAMETYPE(RACE) && teamplay);
+//FEATURE: Freeze mutator, a portable version of freeze tag that can work in just about any gamemode (except freezetag!)
 
-AUTOCVAR_NOREF(g_freeze, bool, false, _("Enable freeze mutator (similar to freezetag, but for other modes)"));
+AUTOCVAR(g_freeze, bool, false, _("Enable freeze mutator (similar to freezetag, but for other modes)"));
+
+REGISTER_MUTATOR(freeze, autocvar_g_freeze && !IS_GAMETYPE(FREEZETAG) && !IS_GAMETYPE(CA) && !IS_GAMETYPE(CTS) && !IS_GAMETYPE(RACE) && teamplay);
+
 AUTOCVAR(g_freeze_noauto, bool, false, _("Don't automatically unfreeze the player"));
 AUTOCVAR(g_freeze_norespawn, bool, false, _("Don't allow re-spawning instantly by jumping"));
 AUTOCVAR(g_freeze_revive_speed, float, 0.2, "");
@@ -77,7 +80,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerDies)
 			Send_Notification(NOTIF_ONE_ONLY, frag_target, MSG_CENTER, CENTER_FREEZE_THAWING);
 		frag_target.health = 1; // "respawn" the player :P
 
-		if(g_instagib)
+		if(autocvar_g_instagib)
 			frag_target.ammo_cells = start_ammo_cells; // we need more ammo in instagib, otherwise the player will defrost & die again
 
 		if(frag_deathtype == DEATH_TEAMCHANGE.m_id || frag_deathtype == DEATH_AUTOTEAMCHANGE.m_id)

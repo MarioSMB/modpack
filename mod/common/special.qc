@@ -1,3 +1,5 @@
+//FEATURE: Moaning Lescue
+
 REGISTER_NET_TEMP(TE_CSQC_MORNINGRESCUE);
 
 #ifdef CSQC

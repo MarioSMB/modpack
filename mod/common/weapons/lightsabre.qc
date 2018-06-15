@@ -1,3 +1,5 @@
+//FEATURE: New weapon: Lightsabre, for embracing the dark side!
+
 #ifndef IMPLEMENTATION
 MODEL(LIGHTSABRE_ITEM, W_Model("g_lightsabre.md3"));
 MODEL(LIGHTSABRE_WORLD, W_Model("v_lightsabre.md3"));
@@ -117,7 +119,7 @@ MUTATOR_HOOKFUNCTION(lightsabre_evil, Damage_Calculate)
 	if(!IS_PLAYER(frag_target))
 		return;
 
-	if(DEATH_ISWEAPON(frag_deathtype, WEP_VORTEX) && (frag_target.weapons & WEPSET(LIGHTSABRE)))
+	if(DEATH_ISWEAPON(frag_deathtype, WEP_VORTEX) && (STAT(WEAPONS, frag_target) & WEPSET(LIGHTSABRE)))
 	{
 		bool have_lightsabre = false;
 		for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)

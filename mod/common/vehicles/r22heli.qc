@@ -1,3 +1,5 @@
+//FEATURE-DISABLED New vehicle: R22 Helicopter, it flies around and shoots things
+
 #ifndef IMPLEMENTATION
 //#include "r22heli.qh"
 

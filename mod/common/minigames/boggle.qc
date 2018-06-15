@@ -1,3 +1,5 @@
+//FEATURE: Boggle minigame, a fun word search game
+
 #include "words.qh" // defines MINIGAME_SUPPORT_WORDS
 
 #ifdef MINIGAME_SUPPORT_WORDS

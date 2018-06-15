@@ -1,3 +1,5 @@
+//FEATURE: Command to permanently mute troublesome players
+
 REGISTER_MUTATOR(muteban, true);
 
 AUTOCVAR(sv_muteban_list, string, "", "");

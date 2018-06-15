@@ -3,26 +3,25 @@
 
 	#include "../common/all.inc"
 
-	#include "bots.qc"
 	#include "chat.qc"
 	#include "commands.qc"
 	#include "compat.qc"
 	#include "damage.qc"
 	#include "demo.qc"
 	#include "ignore.qc"
-	#include "itemplacer.qc"
+	//#include "itemplacer.qc"
 	#include "items.qc"
 	#include "headshots.qc"
 	#include "monsters.qc"
 	#include "mute.qc"
 	#include "player_size.qc"
 	#include "prediction.qc"
-	#include "radio.qc"
 	#include "spawnreplace.qc"
 	#include "stats.qc"
 	#include "tp.qc"
+	#include "voteban.qc"
 
-	#include "mutators/all.qh"
+	#include "mutators/all.inc"
 #endif
 
 #define QUAKE_ONE

@@ -31,7 +31,7 @@ void dotc_ItemSpawn_Give(entity player)
 	if(player.items & ITEM_Jetpack.m_itemid)
 		player.ammo_fuel = max(player.ammo_fuel, g_pickup_fuel_jetpack);
 
-	FOREACH(Weapons, it != WEP_Null && (player.weapons & it.m_wepset),
+	FOREACH(Weapons, it != WEP_Null && (STAT(WEAPONS, player) & it.m_wepset),
 	{
 		switch (it.ammo_type)
 		{
@@ -112,7 +112,7 @@ void dotc_ItemSupply_TriggerTouch(entity this, entity toucher)
 		toucher.ammo_fuel = warmup_start_ammo_fuel;
 		toucher.health = warmup_start_health;
 		toucher.armorvalue = warmup_start_armorvalue;
-		toucher.weapons = WARMUP_START_WEAPONS;
+		STAT(WEAPONS, toucher) = WARMUP_START_WEAPONS;
 	}
 	else
 	{
@@ -124,7 +124,7 @@ void dotc_ItemSupply_TriggerTouch(entity this, entity toucher)
 		toucher.ammo_fuel = start_ammo_fuel;
 		toucher.health = start_health;
 		toucher.armorvalue = start_armorvalue;
-		toucher.weapons = start_weapons;
+		STAT(WEAPONS, toucher) = start_weapons;
 	}
 
 	dotc_ItemSpawn_Give(toucher);

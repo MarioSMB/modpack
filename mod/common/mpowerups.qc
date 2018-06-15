@@ -1,3 +1,5 @@
+//FEATURE: Some classic SMB powerups, including the mini mushroom, super star and life shroom!
+
 const int MIT_STAR = BIT(0);
 const int MIT_MINI = BIT(1);
 const int MIT_LIFE = BIT(2);
@@ -26,7 +28,7 @@ SOUND(Star, "items/powerup_star");
 #ifdef SVQC
 .float star_finished;
 AUTOCVAR(g_powerup_star_time, float, 33.616, "");
-void powerup_star_init(entity item)
+void powerup_star_init(Pickup this, entity item)
 {
     if(!item.star_finished)
         item.star_finished = autocvar_g_powerup_star_time;
@@ -60,7 +62,7 @@ SOUND(Mini, "items/powerup_mini");
 #ifdef SVQC
 .float mini_finished;
 AUTOCVAR(g_powerup_mini_time, float, 30, "");
-void powerup_mini_init(entity item)
+void powerup_mini_init(Pickup this, entity item)
 {
     if(!item.mini_finished)
         item.mini_finished = autocvar_g_powerup_mini_time;
@@ -94,7 +96,7 @@ SOUND(Life, "items/powerup_life");
 #ifdef SVQC
 .float life_finished;
 AUTOCVAR(g_powerup_life_time, float, 60, "");
-void powerup_life_init(entity item)
+void powerup_life_init(Pickup this, entity item)
 {
     if(!item.life_finished)
         item.life_finished = autocvar_g_powerup_life_time;

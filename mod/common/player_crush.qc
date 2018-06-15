@@ -1,3 +1,5 @@
+//FEATURE: Crushing, for all your goomba stomping needs
+
 REGISTER_MUTATOR(pc, true);
 
 #ifdef SVQC
@@ -178,6 +180,7 @@ MUTATOR_HOOKFUNCTION(pc, PlayerPhysics)
 	if(STAT(PLAYER_CRUSH_SIMPLE) != -1) return;
 
 	entity player = M_ARGV(0, entity);
+	if(gettouch(player) == pc_PlayerTouch) return; // getting is cheaper than setting
 
 	settouch(player, pc_PlayerTouch);
 }

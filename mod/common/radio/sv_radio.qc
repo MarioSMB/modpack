@@ -1,4 +1,6 @@
-//bool sv_radio;
+//FEATURE: Radio that can serve pk3 files created by a specialised web host (https://github.com/z/xonotic-radio-service)
+
+bool sv_radio;
 .bool radio_enabled;
 
 bool radio_playing;
@@ -13,7 +15,7 @@ string radio_filename;
 
 const int URI_GET_RADIO = 195;
 
-AUTOCVAR_NOREF(sv_radio, bool, false, "Enable radio");
+AUTOCVAR(sv_radio, bool, false, "Enable radio");
 AUTOCVAR(sv_radio_announce, bool, true, "");
 AUTOCVAR(sv_radio_announce_howto, bool, true, "");
 AUTOCVAR(sv_radio_log_skips, bool, false, "");
@@ -23,11 +25,11 @@ AUTOCVAR(sv_radio_queue_autofill, bool, false, "");
 AUTOCVAR(sv_radio_queue_autofill_retry, float, 10, "");
 AUTOCVAR(sv_radio_queue_autofill_server, string, "http://example.com/smb/radio", "");
 
-REGISTER_MUTATOR(radio, cvar("sv_radio"))
+REGISTER_MUTATOR(radio, autocvar_sv_radio)
 {
 	MUTATOR_ONADD
 	{
-		sv_radio = cvar("sv_radio");
+		sv_radio = autocvar_sv_radio;
 		radio_playing_queue = -1;
 
 		if(!sv_radio)

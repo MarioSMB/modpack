@@ -1,3 +1,5 @@
+//FEATURE: New weapon: RPG-7, for when a regular rocket launcher isn't enough
+
 #include "rpg.qh"
 #ifndef IMPLEMENTATION
 AUTOCVAR(g_balance_rpg_ammo, float, 5, "");

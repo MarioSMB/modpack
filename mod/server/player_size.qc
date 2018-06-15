@@ -1,3 +1,5 @@
+//FEATURE: Option to change all or individual player's size
+
 REGISTER_MUTATOR(player_size, true);
 
 AUTOCVAR(g_player_size, float, 1, "");
