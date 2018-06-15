@@ -369,6 +369,7 @@ void t_newchasedir(entity this, entity targ, float dist)
 
 void t_movetogoal(entity this, float dist)
 {
+	// doesn't work currently!
 #if 0
 	if(!(IS_ONGROUND(this) || (this.flags & FL_SWIM) || (this.flags & FL_FLY)))
 		return;
