@@ -73,8 +73,6 @@ void HUD_Contents()
 	}
 }
 
-bool autocvar_cl_enginesbar = false;
-
 void Sbar_Draw();
 void HUD_Crosshair(entity this);
 void CSQC_UpdateView(entity this, float w, float h)
@@ -104,7 +102,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	setproperty(VF_DRAWCROSSHAIR, 0);
 
 	// Draw the Engine Status Bar (the default Quake HUD)
-	setproperty(VF_DRAWENGINESBAR, autocvar_cl_enginesbar);
+	setproperty(VF_DRAWENGINESBAR, 0);
 
 	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
 	renderscene();
