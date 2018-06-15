@@ -8,12 +8,12 @@ void viewloc_SetTags(entity this) { }
 void viewloc_SetViewLocation() { }
 
 entityclass(Projectile);
-class(Projectile).int traileffect;
+classfield(Projectile).int traileffect;
 
-class(Projectile).vector trail_oldorigin;
-class(Projectile).float trail_oldtime;
+classfield(Projectile).vector trail_oldorigin;
+classfield(Projectile).float trail_oldtime;
 
-class(Projectile).int cnt;   // sound index
+classfield(Projectile).int cnt;   // sound index
 
 .float alpha;
 
