@@ -271,7 +271,7 @@ void vip_DropSoulGem(entity player)
 	}
 
 	SetResourceAmount(player, RESOURCE_HEALTH, 100); // reset these now?
-	player.armorvalue = 0;
+	SetResourceAmount(player, RESOURCE_ARMOR, 0);
 	STAT(VIP, player) = false;
 	GameRules_scoring_vip(player, false);
 	player.gem_dropped = true;
@@ -346,7 +346,11 @@ MUTATOR_HOOKFUNCTION(vip, PlayerPreThink)
 	entity player = M_ARGV(0, entity);
 
 	if(player.wps_vip)
-		WaypointSprite_UpdateHealth(player.wps_vip, ((autocvar_g_instagib) ? GetResourceAmount(player, RESOURCE_ARMOR) : '1 0 0' * healtharmor_maxdamage(GetResourceAmount(player, RESOURCE_HEALTH), player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)));
+	{
+		WaypointSprite_UpdateHealth(player.wps_vip, 
+			((autocvar_g_instagib) ? GetResourceAmount(player, RESOURCE_ARMOR) 
+				: '1 0 0' * healtharmor_maxdamage(GetResourceAmount(player, RESOURCE_HEALTH), GetResourceAmount(player, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)));
+	}
 
 	STAT(VIP_RED, player) = vip_count[0];
 	STAT(VIP_BLUE, player) = vip_count[1];
@@ -502,7 +506,8 @@ void vip_VIPWaypoints(entity player)
 {
 	WaypointSprite_Spawn(WP_VIP, 0, 0, player, FLAG_WAYPOINT_OFFSET, NULL, 0, player, wps_vip, true, RADARICON_FLAG);
 	WaypointSprite_UpdateMaxHealth(player.wps_vip, ((autocvar_g_instagib) ? 5 : '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id) * 2));
-	WaypointSprite_UpdateHealth(player.wps_vip, ((autocvar_g_instagib) ? player.armorvalue : '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)));
+	WaypointSprite_UpdateHealth(player.wps_vip, ((autocvar_g_instagib) ? GetResourceAmount(player, RESOURCE_HEALTH) : '1 0 0' * healtharmor_maxdamage(GetResourceAmount(player, RESOURCE_HEALTH), 
+																		GetResourceAmount(player, RESOURCE_HEALTH), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)));
 	WaypointSprite_UpdateTeamRadar(player.wps_vip, RADARICON_FLAGCARRIER, Team_ColorRGB(player.team));
 }
 

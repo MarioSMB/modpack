@@ -414,7 +414,7 @@ entity gai_fly_start(vector _where, Gai zom, float _health, bool _csqc)
 	_ai.takedamage       = DAMAGE_AIM;
 	_ai.deadflag		 = DEAD_NO;
 	_ai.event_damage     = gai_generic_damage;
-	_ai.health           = _health;
+	SetResourceAmountExplicit(_ai, RESOURCE_HEALTH, _health);
 	_ai.gai_physics_type = GAIP_FLY;
 	_ai.gai_physics      = gai_physics_fly;
 	setthink(_ai, gai_fly_think);
@@ -474,7 +474,7 @@ entity gai_walk_start(vector _where, Gai zom, float _health, bool _csqc)
 	_ai.solid            = SOLID_BBOX;
 	_ai.takedamage       = DAMAGE_AIM;
 	_ai.event_damage     = gai_generic_damage;
-	_ai.health           = _health;
+	SetResourceAmountExplicit(_ai, RESOURCE_HEALTH, _health);
 
 	_ai.gai_physics_type = GAIP_WALK;
 	_ai.gai_physics      = gai_physics_walk;

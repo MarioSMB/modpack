@@ -760,7 +760,7 @@ void r22heli_die(entity this)
 	
 	Send_Effect(EFFECT_EXPLOSION_SMALL, findbetterlocation(this.origin, 16), '0 0 0', 1);
 	
-	this.health			= 0;
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0);
 	this.event_damage	= func_null;
 	this.solid			= SOLID_CORPSE;
 	this.takedamage		= DAMAGE_NO;

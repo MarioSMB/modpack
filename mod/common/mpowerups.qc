@@ -228,7 +228,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, ItemTouch)
 		return MUT_ITEMTOUCH_PICKUP;
 	}
 
-	if(item.health && STAT(LIFE_FINISHED, toucher) > time)
+	if(GetResourceAmount(item, RESOURCE_HEALTH) && STAT(LIFE_FINISHED, toucher) > time)
 	{
 		bool gave = Item_GiveAmmoTo(item, toucher, RESOURCE_HEALTH, item.max_health * 2);
 		if(!gave)

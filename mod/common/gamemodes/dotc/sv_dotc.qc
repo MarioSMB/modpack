@@ -105,10 +105,10 @@ void dotc_count_cores()
 	{
 		switch(tmp_entity.team)
 		{
-			case NUM_TEAM_1: ++total_players; if(tmp_entity.health >= 1) ++redalive; break;
-			case NUM_TEAM_2: ++total_players; if(tmp_entity.health >= 1) ++bluealive; break;
-			case NUM_TEAM_3: ++total_players; if(tmp_entity.health >= 1) ++yellowalive; break;
-			case NUM_TEAM_4: ++total_players; if(tmp_entity.health >= 1) ++pinkalive; break;
+			case NUM_TEAM_1: ++total_players; if(GetResourceAmount(tmp_entity, RESOURCE_HEALTH) >= 1) ++redalive; break;
+			case NUM_TEAM_2: ++total_players; if(GetResourceAmount(tmp_entity, RESOURCE_HEALTH) >= 1) ++bluealive; break;
+			case NUM_TEAM_3: ++total_players; if(GetResourceAmount(tmp_entity, RESOURCE_HEALTH) >= 1) ++yellowalive; break;
+			case NUM_TEAM_4: ++total_players; if(GetResourceAmount(tmp_entity, RESOURCE_HEALTH) >= 1) ++pinkalive; break;
 		}
 	}
 }
@@ -306,12 +306,12 @@ MUTATOR_HOOKFUNCTION(dotc, TurretSpawn)
 	if(autocvar_g_dotc_turrets_healthabs)
 	{
 		turret.max_health = autocvar_g_dotc_turrets_healthabs;
-		turret.health = autocvar_g_dotc_turrets_healthabs;
+		SetResourceAmountExplicit(turret, RESOURCE_HEALTH, autocvar_g_dotc_turrets_healthabs);
 	}
 	else if(autocvar_g_dotc_turrets_healthmod)
 	{
 		turret.max_health *= autocvar_g_dotc_turrets_healthmod;
-		turret.health *= autocvar_g_dotc_turrets_healthmod;
+		SetResourceAmountExplicit(turret, RESOURCE_HEALTH, GetResourceAmount(turret, RESOURCE_HEALTH) * autocvar_g_dotc_turrets_healthmod);
 	}
 
 	turret.dotc_targetflags |= DOTC_TARGET_DRONES;

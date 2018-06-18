@@ -57,7 +57,7 @@ const float demon_anim_attack	= 6;
 
 void M_Demon_Attack_Leap_Touch(entity this, entity toucher)
 {
-	if (this.health <= 0)
+	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		return;
 
 	vector angles_face;
@@ -139,7 +139,7 @@ spawnfunc(monster_demon1) { Monster_Spawn(this, true, MON_DEMON.monsterid); }
 		.float speed;
 		METHOD(Demon, mr_setup, bool(Monster thismon, entity actor))
 		{
-			if(!actor.health) actor.health = (autocvar_g_monster_demon_health);
+			if(!GetResourceAmount(actor, RESOURCE_HEALTH)) SetResourceAmountExplicit(actor, RESOURCE_HEALTH, autocvar_g_monster_demon_health);
 			if(!actor.speed) { actor.speed = (autocvar_g_monster_demon_speed_walk); }
 			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_demon_speed_run); }
 			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_demon_speed_stop); }

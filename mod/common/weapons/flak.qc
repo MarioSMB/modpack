@@ -165,7 +165,7 @@ MUTATOR_HOOKFUNCTION(flak_rockets, FilterItem)
 	entity item = M_ARGV(0, entity);
 
 	if(STAT(WEAPONS, item) & WEPSET(FLAK))
-		item.ammo_rockets = cvar("g_pickup_rockets_weapon");
+		SetResourceAmountExplicit(item, RESOURCE_ROCKETS, cvar("g_pickup_rockets_weapon"));
 }
 
 void W_Flak_Projectile_Touch(entity this, entity toucher)
@@ -380,22 +380,22 @@ void W_Flak_Bomb_Touch(entity this, entity toucher)
 
 void W_Flak_Bomb_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		return;
 
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	this.health = this.health - damage;
+	TakeResource(this, RESOURCE_HEALTH, damage);
 
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, adaptor_think2use);
 }
 
 void W_Flak_Attack3(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
-		actor.ammo_rockets -= WEP_CVAR(flak, bomb_ammo);
+		TakeResource(actor, RESOURCE_ROCKETS, WEP_CVAR(flak, bomb_ammo));
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(flak, ammo), weaponentity);
 
@@ -420,7 +420,7 @@ void W_Flak_Attack3(Weapon thiswep, entity actor, .entity weaponentity)
 	e.use = W_Flak_Bomb_Explode_use;
 	settouch(e, W_Flak_Bomb_Touch);
 	e.takedamage = DAMAGE_YES;
-	e.health = WEP_CVAR(flak, bomb_health);
+	SetResourceAmountExplicit(e, RESOURCE_HEALTH, WEP_CVAR(flak, bomb_health));
 	e.damageforcescale = WEP_CVAR(flak, bomb_damageforcescale);
 	e.event_damage = W_Flak_Bomb_Damage;
 	W_SetupProjVelocity_Explicit(e, w_shotdir, v_up, WEP_CVAR(flak, bomb_speed), WEP_CVAR(flak, bomb_speed_up), 0, 0, false);
@@ -438,7 +438,7 @@ void W_Flak_Attack3(Weapon thiswep, entity actor, .entity weaponentity)
 
 		METHOD(Flak, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 		{
-			if(random() < 0.35 && WEP_CVAR(flak, bomb) && actor.ammo_rockets >= WEP_CVAR(flak, bomb_ammo))
+			if(random() < 0.35 && WEP_CVAR(flak, bomb) && GetResourceAmount(actor, RESOURCE_ROCKETS) >= WEP_CVAR(flak, bomb_ammo))
 				PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, WEP_CVAR(flak, bomb_speed), WEP_CVAR(flak, bomb_speed_up), WEP_CVAR(flak, bomb_lifetime), true);
 			else
 				PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR_PRI(flak, speed), WEP_CVAR_PRI(flak, speed_up), WEP_CVAR_PRI(flak, lifetime), true);
@@ -476,7 +476,7 @@ void W_Flak_Attack3(Weapon thiswep, entity actor, .entity weaponentity)
 		METHOD(Flak, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 		{
 			// can't use above logic here, as we have 2 ammo types - WEAPONTODO
-			return actor.ammo_shells >= WEP_CVAR_SEC(flak, ammo) && (!WEP_CVAR(flak, bomb) || actor.ammo_rockets >= WEP_CVAR(flak, bomb_ammo));
+			return GetResourceAmount(actor, RESOURCE_SHELLS) >= WEP_CVAR_SEC(flak, ammo) && (!WEP_CVAR(flak, bomb) || GetResourceAmount(actor, RESOURCE_ROCKETS) >= WEP_CVAR(flak, bomb_ammo));
 		}
 		METHOD(Flak, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 		{

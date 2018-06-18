@@ -368,9 +368,9 @@ const int TADPOLE_FRAME_DIE = 6;
 void snafu_tadpole_damage(entity this, entity inflictor, entity attacker, float damage, float deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(!IS_PLAYER(attacker))
-		this.health -= damage;
+		TakeResource(this, RESOURCE_HEALTH, damage);
 
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 	{
 		this.deadflag = DEAD_DEAD;
 		this.frame = TADPOLE_FRAME_DIE;
@@ -422,7 +422,7 @@ spawnfunc(snafu_tadpole)
 	this.deadflag = DEAD_NO;
 	this.takedamage = DAMAGE_AIM;
 	this.event_damage = snafu_tadpole_damage;
-	this.health = autocvar_g_snafu_tadpole_health;
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, autocvar_g_snafu_tadpole_health);
 	this.team = 10;
 	setthink(this, snafu_tadpole_think);
 

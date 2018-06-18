@@ -20,7 +20,7 @@ void vehicles_hitbox_damage(entity this, entity inflictor, entity attacker, floa
 
 void vehicles_hitbox_kill(entity this)
 {
-	this.health = 0;
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0);
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 	setthink(this, func_null);

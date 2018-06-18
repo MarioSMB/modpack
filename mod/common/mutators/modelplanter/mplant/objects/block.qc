@@ -10,11 +10,11 @@ void mplant_block_damage(entity this, entity inflictor, entity attacker, float d
 {
     if (cvar("g_mplant_explodingblocks"))
     {
-        if (this.health == 1) {
+        if (GetResourceAmount(this, RESOURCE_HEALTH) == 1) {
             this.effects = EF_FLAME;
             setthink(this, mplant_block_explode);
             this.nextthink = time + 0.25 + (random() * 2);
-            this.health = 0;
+            SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0);
             this.takedamage = DAMAGE_NO;
             this.event_damage = func_null;
             this.movetype = MOVETYPE_TOSS;
@@ -106,7 +106,7 @@ entity mplant_block_create(entity this, string _uid)
     _block.mplant_object_uid		= _uid;
     _block.mplant_object_delete		= mplant_block_delete;
 
-    //_block.health         = 1;
+    //SetResourceAmountExplicit(_block, RESOURCE_HEALTH, 1);
     //_block.takedamage     = DAMAGE_YES;
     //_block.event_damage   = mplant_block_damage;
 

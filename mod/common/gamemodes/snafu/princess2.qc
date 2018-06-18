@@ -64,12 +64,12 @@ void snafu_princess_damage(entity this, entity inflictor, entity attacker, float
 	else
 		Violence_GibSplash_At(hitloc, force, 2, bound(0, damage, 200) / 8, this, attacker);    
 	
-	this.health   -= damage;
+	TakeResource(this, RESOURCE_HEALTH, damage);
 	//this.velocity += force * 3;
 	
 	snafu_damageswitch(this, attacker);
 	
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 	{
 		if(this.deadflag == DEAD_NO)
 		{
@@ -256,7 +256,7 @@ void snafu_princess_create(entity own)
 	zom.takedamage = DAMAGE_AIM;
 	zom.damagedbycontents = true;
 	IL_PUSH(g_damagedbycontents, zom);
-	zom.health = autocvar_g_snafu_princess_health;
+	SetResourceAmountExplicit(zom, RESOURCE_HEALTH, autocvar_g_snafu_princess_health);
 	setthink(zom, snafu_princess_think);
 	zom.nextthink = time;
 	zom.event_damage = snafu_princess_damage;    

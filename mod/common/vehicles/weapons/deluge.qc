@@ -85,7 +85,7 @@ void vwep_deluge_attack(
 	settouch(proj, vwep_deluge_Water_TouchExplode);
 	setsize(proj, '0 0 -4', '0 0 -4');
 	proj.takedamage = DAMAGE_YES;
-	proj.health = atk_health;
+	SetResourceAmountExplicit(proj, RESOURCE_HEALTH, atk_health);
 	proj.event_damage = func_null; // there's checks to prevent this from being executed
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);

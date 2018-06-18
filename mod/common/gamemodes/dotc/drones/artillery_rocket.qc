@@ -144,7 +144,7 @@ void dotc_rart_frame(entity this, entity thesquad, vector formation_loc, float t
 
 void dotc_rart_init(entity this)
 {
-	this.health					 = autocvar_g_dotc_rart_health;
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, autocvar_g_dotc_rart_health);
 
 	this.shot_dmg				 = autocvar_g_dotc_rart_shot_dmg;
 	this.shot_radius			 = autocvar_g_dotc_rart_shot_radius;

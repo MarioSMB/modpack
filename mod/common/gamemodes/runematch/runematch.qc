@@ -508,33 +508,24 @@ MUTATOR_HOOKFUNCTION(rune, Damage_Calculate)
 	else if (frag_target.runes & CURSE_VULNER)
 		frag_damage *= autocvar_g_balance_curse_vulner_takedamage;
 		
-	if(IS_PLAYER(frag_target) && IS_PLAYER(frag_attacker) && frag_attacker != frag_target && frag_attacker.health > 2)
+	if(IS_PLAYER(frag_target) && IS_PLAYER(frag_attacker) && frag_attacker != frag_target && GetResourceAmount(frag_attacker, RESOURCE_HEALTH) > 2)
 	{
 		if (frag_attacker.runes & RUNE_VAMPIRE)
 		{
 			// apply vampire rune
 			if (frag_attacker.runes & CURSE_EMPATHY) // have the curse too
 			{
-				frag_attacker.health = bound(
-											 autocvar_g_balance_curse_empathy_minhealth,
-											 frag_attacker.health + frag_damage * autocvar_g_balance_rune_vampire_combo_absorb,
-											 autocvar_g_balance_rune_vampire_maxhealth);
+				Heal(frag_attacker, frag_attacker, frag_damage * autocvar_g_balance_rune_vampire_combo_absorb, autocvar_g_balance_rune_vampire_maxhealth);
 			}
 			else
 			{
-				frag_attacker.health = bound(
-											 frag_attacker.health,
-											 frag_attacker.health + frag_damage * autocvar_g_balance_rune_vampire_absorb,
-											 autocvar_g_balance_rune_vampire_maxhealth);
+				Heal(frag_attacker, frag_attacker, frag_damage * autocvar_g_balance_rune_vampire_absorb, autocvar_g_balance_rune_vampire_maxhealth);
 			}
 		}
 		else if (frag_attacker.runes & CURSE_EMPATHY)
 		{
 			// apply empathy curse
-			frag_attacker.health = bound(
-										 autocvar_g_balance_curse_empathy_minhealth,
-										 frag_attacker.health + frag_damage * autocvar_g_balance_curse_empathy_takedamage,
-										 frag_attacker.health);
+			TakeResourceWithLimit(frag_attacker, RESOURCE_HEALTH, frag_damage * autocvar_g_balance_curse_empathy_takedamage, autocvar_g_balance_curse_empathy_minhealth);
 		}
 	}
 

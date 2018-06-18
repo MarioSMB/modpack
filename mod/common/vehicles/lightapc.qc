@@ -1184,7 +1184,7 @@ METHOD(LightAPC, vr_death, void(LightAPC thisveh, entity instance))
 
 /*
 	setSendEntity(instance, func_null); // stop networking this lightapc (for now)
-	instance.health			= 0;
+	SetResourceAmountExplicit(instance, RESOURCE_HEALTH, 0);
 	instance.event_damage	= func_null;
 	instance.solid			= SOLID_CORPSE;
 	instance.takedamage		= DAMAGE_NO;
@@ -1231,7 +1231,7 @@ METHOD(LightAPC, vr_death, void(LightAPC thisveh, entity instance))
 	
 	Send_Effect(EFFECT_EXPLOSION_MEDIUM, instance.origin, '0 0 0', 1);
 	
-	instance.health			= 0;
+	SetResourceAmountExplicit(instance, RESOURCE_HEALTH, 0);
 	instance.event_damage	= func_null;
 	instance.solid			= SOLID_CORPSE;
 	instance.takedamage		= DAMAGE_NO;
