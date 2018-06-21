@@ -91,8 +91,10 @@ bool t_checkbottom(entity this)
 
 	// the midpoint must be within 16 of the bottom
 	vector stop;
-	start = stop = vec2((minz + maxz) * 0.5);
-	start.z = stop.z = 2 * PHYS_STEPHEIGHT(NULL);
+	start.x = stop.x = (minz.x + maxz.x) * 0.5;
+	start.y = stop.y = (minz.y + maxz.y) * 0.5;
+	//start = stop = vec2((minz + maxz) * 0.5);
+	stop.z = start.z - 2 * PHYS_STEPHEIGHT(NULL);
 
 	traceline(start, stop, MOVE_NOMONSTERS, this);
 	if(trace_fraction == 1.0)
@@ -121,6 +123,13 @@ bool t_checkbottom(entity this)
 #else
 	return checkbottom(this);
 #endif
+}
+
+void t_linkedict(entity this, bool touch_triggers)
+{
+	setorigin(this, this.origin); // calls SV_LinkEdict
+	if(touch_triggers)
+		_Movetype_LinkEdict_TouchAreaGrid(this);
 }
 
 bool t_movestep(entity this, vector move, bool relink, bool noenemy)
@@ -161,7 +170,7 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 				if(relink)
 				{
 					// do nothing for now
-					setorigin(this, this.origin);
+					t_linkedict(this, true);
 				}
 				return true;
 			}
@@ -196,7 +205,7 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 			if(relink)
 			{
 				// do nothing for now
-				setorigin(this, this.origin);
+				t_linkedict(this, true);
 			}
 			UNSET_ONGROUND(this);
 			return true;
@@ -210,7 +219,7 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 	entity oldtraceent = trace_ent;
 	this.origin = trace_endpos;
 	if(relink)
-		setorigin(this, this.origin);
+		t_linkedict(this, true);
 
 	if(!t_checkbottom(this))
 	{
@@ -221,13 +230,11 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 			if(relink)
 			{
 				// do nothing for now
-				setorigin(this, this.origin);
+				t_linkedict(this, true);
 			}
 			return true;
 		}
 		this.origin = oldorg;
-		if(relink)
-			setorigin(this, this.origin);
 		return false;
 	}
 
@@ -235,13 +242,11 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 		this.flags &= ~FL_PARTIALGROUND;
 
 	// gameplayfix: check if reached pretty steep plane and bail
-	if(!((this.flags & FL_SWIM) || (this.flags & FL_FLY)) && STAT(GAMEPLAYFIX_NOSTEPMOVEONSTEEPSLOPES, NULL))
+	if(!((this.flags & FL_SWIM) || (this.flags & FL_FLY)) && STAT(GAMEPLAYFIX_NOSTEPMOVEONSTEEPSLOPES))
 	{
 		if(oldtracenormal.z < 0.5)
 		{
 			this.origin = oldorg;
-			if(relink)
-				setorigin(this, this.origin);
 			return false;
 		}
 	}
@@ -252,7 +257,7 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 	if(relink)
 	{
 		// do nothing for now
-		setorigin(this, this.origin);
+		t_linkedict(this, true);
 	}
 
 	return true;
@@ -265,7 +270,10 @@ bool t_walkmove(entity this, float yaw, float dist)
 		return false;
 
 	yaw = yaw * M_PI * 2 / 360;
-	vector move = vec2(cos(yaw) * dist, sin(yaw) * dist);
+	vector move = '0 0 0';
+	move.x = cos(yaw) * dist;
+	move.y = sin(yaw) * dist;
+	//vector move = vec2(cos(yaw) * dist, sin(yaw) * dist);
 
 	return t_movestep(this, move, true, false);
 #else
@@ -274,14 +282,17 @@ bool t_walkmove(entity this, float yaw, float dist)
 }
 
 // hacked in version of movetogoal (to be rewritten)
-#if 0
+#if 1
 bool t_stepdirection(entity this, float yaw, float dist)
 {
 	this.ideal_yaw = yaw;
 	changeyaw(this);
 
 	yaw = yaw * M_PI * 2 / 360;
-	vector move = vec2(cos(yaw) * dist, sin(yaw) * dist);
+	vector move = '0 0 0';
+	move.x = cos(yaw) * dist;
+	move.y = sin(yaw) * dist;
+	//vector move = vec2(cos(yaw) * dist, sin(yaw) * dist);
 	vector oldorg = this.origin;
 
 	if(t_movestep(this, move, false, false))
@@ -290,30 +301,30 @@ bool t_stepdirection(entity this, float yaw, float dist)
 		if(delta > 45 && delta < 315)
 			this.origin = oldorg; // not turned far enough, so don't take the step
 		// leave the linking to the engine? TODO
-		setorigin(this, this.origin);
+		t_linkedict(this, true);
 		return true;
 	}
 
 	// relink...
-	setorigin(this, this.origin);
+	t_linkedict(this, true);
 
 	return false;
 }
 
+const int DI_NODIR = -1;
 void t_newchasedir(entity this, entity targ, float dist)
 {
-	float di_nodir = -1;
 	float olddir = anglemods(rint(this.ideal_yaw / 45) * 45);
 	float turnaround = anglemods(olddir - 180);
 
 	vector delta = vec2(targ.origin - this.origin);
 
 	vector d;
-	d.x = ((delta.x > 10) ? 0 : ((delta.x < -10) ? 180 : di_nodir));
-	d.y = ((delta.y < -10) ? 270 : ((delta.y > 10) ? 90 : di_nodir));
+	d.x = ((delta.x > 10) ? 0 : ((delta.x < -10) ? 180 : DI_NODIR));
+	d.y = ((delta.y < -10) ? 270 : ((delta.y > 10) ? 90 : DI_NODIR));
 
 	// try direct route
-	if(d.x != di_nodir && d.y != di_nodir)
+	if(d.x != DI_NODIR && d.y != DI_NODIR)
 	{
 		float tdir;
 		if(d.x == 0)
@@ -326,20 +337,20 @@ void t_newchasedir(entity this, entity targ, float dist)
 	}
 
 	// try other directions
-	if(random() < 0.5 || fabs(delta.y) > fabs(delta.x))
+	if(random() <= 0.333 || fabs(delta.y) > fabs(delta.x))
 		d = vec2(d.y, d.x);
 
-	if(d.x != di_nodir && d.x != turnaround && t_stepdirection(this, d.x, dist))
+	if(d.x != DI_NODIR && d.x != turnaround && t_stepdirection(this, d.x, dist))
 		return;
-	if(d.y != di_nodir && d.y != turnaround && t_stepdirection(this, d.y, dist))
+	if(d.y != DI_NODIR && d.y != turnaround && t_stepdirection(this, d.y, dist))
 		return;
 
 	// there is no direct path to the player, so pick another direction
 
-	if(olddir != di_nodir && t_stepdirection(this, olddir, dist))
+	if(olddir != DI_NODIR && t_stepdirection(this, olddir, dist))
 		return;
 
-	if(random() < 0.5) // randomly determine direction of search
+	if(random() <= 0.5) // randomly determine direction of search
 	{
 		for(int j = 0; j <= 315; j += 45)
 		{
@@ -356,7 +367,7 @@ void t_newchasedir(entity this, entity targ, float dist)
 		}
 	}
 
-	if(turnaround != di_nodir && t_stepdirection(this, turnaround, dist))
+	if(turnaround != DI_NODIR && t_stepdirection(this, turnaround, dist))
 		return;
 
 	this.ideal_yaw = olddir; // can't move
@@ -369,8 +380,7 @@ void t_newchasedir(entity this, entity targ, float dist)
 
 void t_movetogoal(entity this, float dist)
 {
-	// doesn't work currently!
-#if 0
+#if 1
 	if(!(IS_ONGROUND(this) || (this.flags & FL_SWIM) || (this.flags & FL_FLY)))
 		return;
 
@@ -380,7 +390,7 @@ void t_movetogoal(entity this, float dist)
 		return;
 
 	// bump around...
-	if(random() <= 0.25 || !t_stepdirection(this, this.ideal_yaw, dist))
+	if(random() <= 0.333 || !t_stepdirection(this, this.ideal_yaw, dist))
 		t_newchasedir(this, this.goalentity, dist);
 #else
 	movetogoal(this, dist);
