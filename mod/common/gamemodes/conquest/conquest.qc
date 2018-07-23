@@ -121,7 +121,7 @@ void cq_ControlPoint_SwitchTeam(entity this, int newteam, int newstatus, bool sh
 		case CP_CAPTURED:
 		{
 			act = this;
-			this.skin = Team_TeamToNumber(this.team) + 1;
+			this.skin = Team_TeamToIndex(this.team) + 1;
 
 			if(showmessage)
 			{
@@ -261,20 +261,26 @@ spawnfunc(conquest_controlpoint)
 // round handler
 void cq_CountAlivePlayers()
 {
-	total_players = redalive = bluealive = yellowalive = pinkalive = 0;
-
-	FOREACH_CLIENT(IS_PLAYER(it),
+	total_players = 0;
+	for (int i = 1; i <= NUM_TEAMS; ++i)
+	{
+		Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(i), 0);
+	}
+	FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),
 	{
 		++total_players;
-		redalive += boolean(it.team == NUM_TEAM_1 && !IS_DEAD(it));
-		bluealive += boolean(it.team == NUM_TEAM_2 && !IS_DEAD(it));
-		yellowalive += boolean(it.team == NUM_TEAM_3 && !IS_DEAD(it));
-		pinkalive += boolean(it.team == NUM_TEAM_4 && !IS_DEAD(it));
+		if (IS_DEAD(it))
+		{
+			continue;
+		}
+		entity team_ = Entity_GetTeam(it);
+		int num_alive = Team_GetNumberOfAlivePlayers(team_);
+		++num_alive;
+		Team_SetNumberOfAlivePlayers(team_, num_alive);
 	});
 }
 
-#define CQ_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0) + (yellowalive > 0) + (pinkalive > 0))
-#define CQ_ALIVE_TEAMS_OK() (CQ_ALIVE_TEAMS() == NumTeams(cq_teams))
+#define CQ_ALIVE_TEAMS_OK() (Team_GetNumberOfAliveTeams() == NumTeams(cq_teams))
 
 int cq_getWinnerTeam()
 {
@@ -370,24 +376,30 @@ bool cq_CheckTeams()
 		if(prev_missing_teams_mask > 0)
 			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
-		return 1;
+		return true;
 	}
 	if(total_players == 0)
 	{
 		if(prev_missing_teams_mask > 0)
 			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
-		return 0;
+		return false;
 	}
-	float missing_teams_mask = (!redalive) + (!bluealive) * 2;
-	if(ca_teams >= 3) missing_teams_mask += (!yellowalive) * 4;
-	if(ca_teams >= 4) missing_teams_mask += (!pinkalive) * 8;
+	int missing_teams_mask = 0;
+	for (int i = 1; i <= NUM_TEAMS; ++i)
+	{
+		if ((cq_teams & Team_IndexToBit(i)) &&
+			(Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) == 0))
+		{
+			missing_teams_mask |= Team_IndexToBit(i);
+		}
+	}
 	if(prev_missing_teams_mask != missing_teams_mask)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
 		prev_missing_teams_mask = missing_teams_mask;
 	}
-	return 0;
+	return false;
 }
 
 
@@ -900,7 +912,7 @@ MUTATOR_HOOKFUNCTION(cq, HavocBot_ChooseRole)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(cq, CheckAllowedTeams)
+MUTATOR_HOOKFUNCTION(cq, TeamBalance_CheckAllowedTeams)
 {
 	M_ARGV(0, float) = cq_teams;
 }
