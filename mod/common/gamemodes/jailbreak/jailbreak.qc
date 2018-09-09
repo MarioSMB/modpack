@@ -1355,6 +1355,7 @@ MUTATOR_HOOKFUNCTION(jb, GiveFragsForKill)
 MUTATOR_HOOKFUNCTION(jb, TeamBalance_CheckAllowedTeams)
 {
 	M_ARGV(0, float) = jb_teams;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(jb, AllowMobSpawning)

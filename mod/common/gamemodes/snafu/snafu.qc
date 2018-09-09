@@ -53,6 +53,7 @@ int snafu_teams;
 MUTATOR_HOOKFUNCTION(snafu, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(0, float) = snafu_teams;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(snafu, PlayHitsound)

@@ -468,6 +468,7 @@ MUTATOR_HOOKFUNCTION(vip, OnEntityPreSpawn)
 MUTATOR_HOOKFUNCTION(vip, TeamBalance_CheckAllowedTeams)
 {
 	M_ARGV(0, float) = vip_teams;
+	return true;
 }
 
 vector vip_SoulGemColormod(int theteam, bool iseffect)
