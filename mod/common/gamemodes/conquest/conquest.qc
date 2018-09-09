@@ -915,6 +915,7 @@ MUTATOR_HOOKFUNCTION(cq, HavocBot_ChooseRole)
 MUTATOR_HOOKFUNCTION(cq, TeamBalance_CheckAllowedTeams)
 {
 	M_ARGV(0, float) = cq_teams;
+	return true;
 }
 
 void cq_ScoreRules(int teams)
