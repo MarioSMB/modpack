@@ -182,7 +182,7 @@ void lightapc_regen(entity this, float dt)
 		vehicles_regen(this, this.dmg_time, vehicle_shield, autocvar_g_vehicle_lightapc_shield, autocvar_g_vehicle_lightapc_shield_regen_pause, autocvar_g_vehicle_lightapc_shield_regen, dt, true);
 
 	if(this.vehicle_flags & VHF_HEALTHREGEN)
-		vehicles_regen(this, this.dmg_time, vehicle_health, autocvar_g_vehicle_lightapc_health, autocvar_g_vehicle_lightapc_health_regen_pause, autocvar_g_vehicle_lightapc_health_regen, dt, false);
+		vehicles_regen_resource(this, this.dmg_time, vehicle_health, autocvar_g_vehicle_lightapc_health, autocvar_g_vehicle_lightapc_health_regen_pause, autocvar_g_vehicle_lightapc_health_regen, dt, false, RESOURCE_HEALTH);
 }
 
 bool lightapc_gunner_frame(entity this, float dt)
@@ -339,7 +339,7 @@ bool lightapc_gunner_frame(entity this, float dt)
 		vehic.hitboxmf.solid = SOLID_SLIDEBOX;
 		vehic.hitboxmb.solid = SOLID_SLIDEBOX;
 	}	
-	VEHICLE_UPDATE_PLAYER(player, vehic, health, lightapc);
+	VEHICLE_UPDATE_PLAYER_RESOURCE(player, vehic, health, lightapc, RESOURCE_HEALTH);
 
 	if(vehic.vehicle_flags & VHF_HASSHIELD)
 		VEHICLE_UPDATE_PLAYER(player, vehic, shield, lightapc);
@@ -718,7 +718,7 @@ bool lightapc_pilot_frame(entity this, float dt)
 	if(vehic.gun2.owner)
 		pilot.vehicle_ammo2 = vehic.gun2.owner.vehicle_ammo1;
 
-	VEHICLE_UPDATE_PLAYER(pilot, vehic, health, lightapc);
+	VEHICLE_UPDATE_PLAYER_RESOURCE(pilot, vehic, health, lightapc, RESOURCE_HEALTH);
 
 	if(vehic.vehicle_flags & VHF_HASSHIELD)
 		VEHICLE_UPDATE_PLAYER(pilot, vehic, shield, lightapc);
@@ -988,7 +988,7 @@ METHOD(LightAPC, vr_enter, void(LightAPC thisveh, entity instance))
 {
 #ifdef SVQC
 	set_movetype(instance, MOVETYPE_WALK);
-	instance.owner.vehicle_health = (instance.vehicle_health / autocvar_g_vehicle_lightapc_health) * 100;
+	instance.owner.vehicle_health = (GetResourceAmount(instance, RESOURCE_HEALTH) / autocvar_g_vehicle_lightapc_health) * 100;
 	instance.owner.vehicle_shield = (instance.vehicle_shield / autocvar_g_vehicle_lightapc_shield) * 100;
 
 	if(instance.owner.flagcarried)
@@ -1156,9 +1156,9 @@ METHOD(LightAPC, vr_spawn, void(LightAPC thisveh, entity instance))
 	instance.bouncefactor = autocvar_g_vehicle_lightapc_bouncefactor;
 	instance.bouncestop = autocvar_g_vehicle_lightapc_bouncestop;
 	instance.damageforcescale = 0.02;
-	instance.vehicle_health = autocvar_g_vehicle_lightapc_health;
+	SetResourceAmountExplicit(instance, RESOURCE_HEALTH, autocvar_g_vehicle_lightapc_health);
 	instance.vehicle_shield = autocvar_g_vehicle_lightapc_shield;
-	instance.max_health = instance.vehicle_health;
+	instance.max_health = GetResourceAmount(instance, RESOURCE_HEALTH);
 
 	instance.bomb1.gun1.avelocity_y = 0;
 	instance.bomb1.gun2.avelocity_y = 0;
@@ -1298,9 +1298,9 @@ METHOD(LightAPC, vr_setup, void(LightAPC thisveh, entity instance))
 		instance.vehicle_flags |= VHF_HEALTHREGEN;
 
 	instance.respawntime = autocvar_g_vehicle_lightapc_respawntime;
-	instance.vehicle_health = autocvar_g_vehicle_lightapc_health;
+	SetResourceAmountExplicit(instance, RESOURCE_HEALTH, autocvar_g_vehicle_lightapc_health);
 	instance.vehicle_shield = autocvar_g_vehicle_lightapc_shield;
-	instance.max_health = instance.vehicle_health;
+	instance.max_health = GetResourceAmount(instance, RESOURCE_HEALTH);
 #endif
 
 #ifdef CSQC
