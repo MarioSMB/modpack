@@ -1460,6 +1460,7 @@ bool W_CheckNoAmmo(entity this, int forwep)
 			case WEP_MULTI_ROCKET: return (this.ammo_multi_rockets >= 1);
 			case WEP_ROCKET_LAUNCHER: return (this.ammo_rockets >= 1);
 			case WEP_GRENADE_LAUNCHER: return (this.ammo_rockets >= 1);
+			case WEP_PROXIMITY_GUN: return (this.ammo_rockets >= 1);
 			case WEP_AXE: case WEP_MJOLNIR: case WEP_GRAPPLE:
 			default: return true; // axe and hammer don't use ammo, fallback
 		}
