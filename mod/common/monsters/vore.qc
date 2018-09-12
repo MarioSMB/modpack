@@ -103,7 +103,7 @@ void M_Vore_Attack_Spike_Touch(entity this, entity toucher)
 // copied from W_Seeker_Think
 void M_Vore_Attack_Spike_Think(entity this)
 {
-	if (time > this.ltime || (this.enemy && this.enemy.health <= 0) || this.owner.health <= 0) {
+	if (time > this.ltime || (this.enemy && GetResourceAmount(this.enemy, RESOURCE_HEALTH) <= 0) || GetResourceAmount(this.owner, RESOURCE_HEALTH) <= 0) {
 		this.projectiledeathtype |= HITTYPE_SPLASH;
 		M_Vore_Attack_Spike_Explode(this, NULL);
 	}
@@ -240,7 +240,7 @@ spawnfunc(monster_shalrath) { Monster_Spawn(this, true, MON_VORE.monsterid); }
 		.float speed;
 		METHOD(Vore, mr_setup, bool(Monster thismon, entity actor))
 		{
-			if(!actor.health) actor.health = (autocvar_g_monster_vore_health);
+			if(!GetResourceAmount(actor, RESOURCE_HEALTH)) SetResourceAmountExplicit(actor, RESOURCE_HEALTH, autocvar_g_monster_vore_health);
 			if(!actor.speed) { actor.speed = (autocvar_g_monster_vore_speed_walk); }
 			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_vore_speed_run); }
 			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_vore_speed_stop); }

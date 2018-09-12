@@ -225,7 +225,7 @@ bool r22heli_takeoff(entity this, float dt)
 		vehicles_regen(vehic, vehic.dmg_time, vehicle_shield, autocvar_g_vehicle_r22heli_shield, autocvar_g_vehicle_r22heli_shield_regen_pause, autocvar_g_vehicle_r22heli_shield_regen, dt, true);
 
 	if(vehic.vehicle_flags  & VHF_HEALTHREGEN)
-		vehicles_regen(vehic, vehic.dmg_time, vehicle_health, autocvar_g_vehicle_r22heli_health, autocvar_g_vehicle_r22heli_health_regen_pause, autocvar_g_vehicle_r22heli_health_regen, dt, false);
+		vehicles_regen_resource(vehic, vehic.dmg_time, vehicle_health, autocvar_g_vehicle_r22heli_health, autocvar_g_vehicle_r22heli_health_regen_pause, autocvar_g_vehicle_r22heli_health_regen, dt, false, RESOURCE_HEALTH);
 
 	if(vehic.vehicle_flags  & VHF_ENERGYREGEN)
 		vehicles_regen(vehic, vehic.wait, vehicle_energy, autocvar_g_vehicle_r22heli_energy, autocvar_g_vehicle_r22heli_energy_regen_pause, autocvar_g_vehicle_r22heli_energy_regen, dt, false);
@@ -233,7 +233,7 @@ bool r22heli_takeoff(entity this, float dt)
 	vehic.bomb1.alpha = vehic.bomb2.alpha = (time - vehic.lip) / (vehic.delay - vehic.lip);
 	this.vehicle_reload2 = bound(0, vehic.bomb1.alpha * 100, 100);
 
-	VEHICLE_UPDATE_PLAYER(this, vehic, health, r22heli);
+	VEHICLE_UPDATE_PLAYER_RESOURCE(this, vehic, health, r22heli, RESOURCE_HEALTH);
 	VEHICLE_UPDATE_PLAYER(this, vehic, energy, r22heli);
 	if(vehic.vehicle_flags & VHF_HASSHIELD)
 		VEHICLE_UPDATE_PLAYER(this, vehic, shield, r22heli);
@@ -250,7 +250,7 @@ bool r22heli_gunner_frame(entity this, float dt)
 	setorigin(this, vehic.origin);
 	this.velocity = vehic.velocity;
 
-	VEHICLE_UPDATE_PLAYER(this, vehic, health, r22heli);
+	VEHICLE_UPDATE_PLAYER_RESOURCE(this, vehic, health, r22heli, RESOURCE_HEALTH);
 
 	if(vehic.vehicle_flags & VHF_HASSHIELD)
 		VEHICLE_UPDATE_PLAYER(this, vehic, shield, r22heli);
@@ -592,7 +592,7 @@ bool r22heli_pilot_frame(entity this, float dt)
 		vehicles_regen(vehic, vehic.dmg_time, vehicle_shield, autocvar_g_vehicle_r22heli_shield, autocvar_g_vehicle_r22heli_shield_regen_pause, autocvar_g_vehicle_r22heli_shield_regen, dt, true);
 
 	if(vehic.vehicle_flags  & VHF_HEALTHREGEN)
-		vehicles_regen(vehic, vehic.dmg_time, vehicle_health, autocvar_g_vehicle_r22heli_health, autocvar_g_vehicle_r22heli_health_regen_pause, autocvar_g_vehicle_r22heli_health_regen, dt, false);
+		vehicles_regen_resource(vehic, vehic.dmg_time, vehicle_health, autocvar_g_vehicle_r22heli_health, autocvar_g_vehicle_r22heli_health_regen_pause, autocvar_g_vehicle_r22heli_health_regen, dt, false, RESOURCE_HEALTH);
 
 	if(vehic.vehicle_flags  & VHF_ENERGYREGEN)
 		vehicles_regen(vehic, vehic.wait, vehicle_energy, autocvar_g_vehicle_r22heli_energy, autocvar_g_vehicle_r22heli_energy_regen_pause, autocvar_g_vehicle_r22heli_energy_regen, dt, false);
@@ -628,7 +628,7 @@ bool r22heli_pilot_frame(entity this, float dt)
 
 	// weapons removed
 
-	VEHICLE_UPDATE_PLAYER(this, vehic, health, r22heli);
+	VEHICLE_UPDATE_PLAYER_RESOURCE(this, vehic, health, r22heli, RESOURCE_HEALTH);
 	VEHICLE_UPDATE_PLAYER(this, vehic, energy, r22heli);
 
 	if(vehic.vehicle_flags & VHF_HASSHIELD)
@@ -760,7 +760,7 @@ void r22heli_die(entity this)
 	
 	Send_Effect(EFFECT_EXPLOSION_SMALL, findbetterlocation(this.origin, 16), '0 0 0', 1);
 	
-	this.health			= 0;
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0);
 	this.event_damage	= func_null;
 	this.solid			= SOLID_CORPSE;
 	this.takedamage		= DAMAGE_NO;
@@ -823,7 +823,7 @@ METHOD(R22Heli, vr_enter, void(R22Heli thisveh, entity instance))
 	instance.lip   = time;
 
 	CSQCVehicleSetup(instance.owner, 0);
-	instance.owner.vehicle_health = (instance.vehicle_health / autocvar_g_vehicle_r22heli_health) * 100;
+	instance.owner.vehicle_health = (GetResourceAmount(instance, RESOURCE_HEALTH) / autocvar_g_vehicle_r22heli_health) * 100;
 	instance.owner.vehicle_shield = (instance.vehicle_shield / autocvar_g_vehicle_r22heli_shield) * 100;
 
 	if(instance.owner.flagcarried)
@@ -976,7 +976,7 @@ METHOD(R22Heli, vr_spawn, void(R22Heli thisveh, entity actor))
 	}
 
 	actor.frame = 0;
-	actor.vehicle_health = autocvar_g_vehicle_r22heli_health;
+	SetResourceAmountExplicit(actor, RESOURCE_HEALTH, autocvar_g_vehicle_r22heli_health);
 	actor.vehicle_shield = autocvar_g_vehicle_r22heli_shield;
 	set_movetype(actor, MOVETYPE_TOSS);
 	actor.solid = SOLID_SLIDEBOX;
@@ -1042,9 +1042,9 @@ METHOD(R22Heli, vr_setup, void(R22Heli thisveh, entity instance))
 
 	instance.vehicle_exit = r22heli_exit;
 	instance.respawntime = autocvar_g_vehicle_r22heli_respawntime;
-	instance.vehicle_health = autocvar_g_vehicle_r22heli_health;
+	SetResourceAmountExplicit(instance, RESOURCE_HEALTH, autocvar_g_vehicle_r22heli_health);
 	instance.vehicle_shield = autocvar_g_vehicle_r22heli_shield;
-	instance.max_health = instance.vehicle_health;
+	instance.max_health = GetResourceAmount(instance, RESOURCE_HEALTH);
 }
 
 #elif defined(CSQC)

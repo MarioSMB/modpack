@@ -38,18 +38,20 @@ REGISTER_MUTATOR(vip, false)
 	return false;
 }
 
-int red_players, blue_players, yellow_players, pink_players;
 void VIP_count_players()
 {
-	total_players = red_players = blue_players = yellow_players = pink_players = 0;
-
-	FOREACH_CLIENT(IS_PLAYER(it),
+	total_players = 0;
+	for (int i = 1; i <= NUM_TEAMS; ++i)
+	{
+		Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(i), 0);
+	}
+	FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),
 	{
 		++total_players;
-		red_players += (it.team == NUM_TEAM_1);
-		blue_players += (it.team == NUM_TEAM_2);
-		yellow_players += (it.team == NUM_TEAM_3);
-		pink_players += (it.team == NUM_TEAM_4);
+		entity team_ = Entity_GetTeam(it);
+		int num_alive = Team_GetNumberOfAlivePlayers(team_);
+		++num_alive;
+		Team_SetNumberOfAlivePlayers(team_, num_alive);
 	});
 }
 
@@ -71,8 +73,7 @@ void vip_ClearVIPs()
 		vip_count[j] = 0;
 }
 
-#define VIP_TEAMS_COUNT() ((red_players > 0) + (blue_players > 0) + (yellow_players > 0) + (pink_players > 0))
-#define VIP_TEAMS_OK() (VIP_TEAMS_COUNT() == NumTeams(vip_teams))
+#define VIP_TEAMS_OK() (Team_GetNumberOfAliveTeams() == NumTeams(ca_teams))
 #define VIP_COUNT() ((vip_count[0] > 0) + (vip_count[1] > 0) + (vip_count[2] > 0) + (vip_count[3] > 0))
 
 int VIP_GetWinnerTeam()
@@ -174,40 +175,27 @@ void VIP_RoundStart()
 	});
 }
 
+entity vip_FindVIP(int teamnum)
+{
+	RandomSelection_Init();
+	FOREACH_CLIENT(IS_PLAYER(it) && it.team == teamnum && GetResourceAmount(it, RESOURCE_HEALTH) > 0,
+	{
+		RandomSelection_AddEnt(it, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
+	});
+	return RandomSelection_chosen_ent;
+}
+
 void vip_SelectVIPs()
 {
 	bool usegems = g_vip_soulgems;
-	RandomSelection_Init();
-	FOREACH_CLIENT(IS_PLAYER(it) && GetResourceAmount(it, RESOURCE_HEALTH) > 0,
-	{
-		if((redgem_count < 1 || !usegems) && it.team == NUM_TEAM_1 && vip_count[0] < 1)
-			RandomSelection_AddEnt(it, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
-	});
-	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_1);
-
-	RandomSelection_Init();
-	FOREACH_CLIENT(IS_PLAYER(it) && GetResourceAmount(it, RESOURCE_HEALTH) > 0,
-	{
-		if((bluegem_count < 1 || !usegems) && it.team == NUM_TEAM_2 && vip_count[1] < 1)
-			RandomSelection_AddEnt(it, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
-	});
-	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_2);
-	
-	RandomSelection_Init();
-	FOREACH_CLIENT(IS_PLAYER(it) && GetResourceAmount(it, RESOURCE_HEALTH) > 0,
-	{
-		if((yellowgem_count < 1 || !usegems) && it.team == NUM_TEAM_3 && vip_count[2] < 1)
-			RandomSelection_AddEnt(it, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
-	});
-	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_3);
-	
-	RandomSelection_Init();
-	FOREACH_CLIENT(IS_PLAYER(it) && GetResourceAmount(it, RESOURCE_HEALTH) > 0,
-	{
-		if((pinkgem_count < 1 || !usegems) && it.team == NUM_TEAM_4 && vip_count[3] < 1)
-			RandomSelection_AddEnt(it, 1, ((IS_REAL_CLIENT(it) && !it.gem_dropped) ? 1 : 0.5));
-	});
-	vip_SetVIP(RandomSelection_chosen_ent, NUM_TEAM_4);
+	if((redgem_count < 1 || !usegems) && vip_count[0] < 1)
+		vip_SetVIP(vip_FindVIP(NUM_TEAM_1), NUM_TEAM_1);
+	if((bluegem_count < 1 || !usegems) && vip_count[1] < 1)
+		vip_SetVIP(vip_FindVIP(NUM_TEAM_2), NUM_TEAM_2);
+	if((yellowgem_count < 1 || !usegems) && vip_count[2] < 1)
+		vip_SetVIP(vip_FindVIP(NUM_TEAM_3), NUM_TEAM_3);
+	if((pinkgem_count < 1 || !usegems) && vip_count[3] < 1)
+		vip_SetVIP(vip_FindVIP(NUM_TEAM_4), NUM_TEAM_4);
 }
 bool VIP_CheckTeams()
 {
@@ -248,9 +236,15 @@ bool VIP_CheckTeams()
 		prev_missing_teams_mask = -1;
 		return false;
 	}
-	int missing_teams_mask = (!redalive) + (!bluealive) * 2;
-	if(NumTeams(vip_teams) >= 3) missing_teams_mask += (!yellowalive) * 4;
-	if(NumTeams(vip_teams) >= 4) missing_teams_mask += (!pinkalive) * 8;
+	int missing_teams_mask = 0;
+	for (int i = 1; i <= NUM_TEAMS; ++i)
+	{
+		if ((vip_teams & Team_IndexToBit(i)) &&
+			(Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) == 0))
+		{
+			missing_teams_mask |= Team_IndexToBit(i);
+		}
+	}
 	if(prev_missing_teams_mask != missing_teams_mask)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
@@ -271,11 +265,11 @@ void vip_DropSoulGem(entity player)
 	}
 
 	SetResourceAmount(player, RESOURCE_HEALTH, 100); // reset these now?
-	player.armorvalue = 0;
+	SetResourceAmount(player, RESOURCE_ARMOR, 0);
 	STAT(VIP, player) = false;
 	GameRules_scoring_vip(player, false);
 	player.gem_dropped = true;
-	int theirteam = Team_TeamToNumber(player.team);
+	int theirteam = Team_TeamToIndex(player.team);
 	theirteam = ((theirteam == -1) ? 0 : theirteam - 1);
 	vip_count[theirteam] -= 1;
 
@@ -301,7 +295,7 @@ MUTATOR_HOOKFUNCTION(vip, PlayerDies)
 			GameRules_scoring_add(frag_attacker, SCORE, 1);
 		}
 
-		int theirteam = Team_TeamToNumber(frag_target.team);
+		int theirteam = Team_TeamToIndex(frag_target.team);
 		theirteam = ((theirteam == -1) ? 0 : theirteam - 1);
 		vip_count[theirteam] -= 1;
 		STAT(VIP, frag_target) = false;
@@ -318,7 +312,7 @@ void vip_RemovePlayer(entity this)
 {
 	if(STAT(VIP, this))
 	{
-		int theirteam = Team_TeamToNumber(this.team);
+		int theirteam = Team_TeamToIndex(this.team);
 		theirteam = ((theirteam == -1) ? 0 : theirteam - 1);
 		vip_count[theirteam] -= 1;
 		STAT(VIP, this) = false;
@@ -346,7 +340,11 @@ MUTATOR_HOOKFUNCTION(vip, PlayerPreThink)
 	entity player = M_ARGV(0, entity);
 
 	if(player.wps_vip)
-		WaypointSprite_UpdateHealth(player.wps_vip, ((autocvar_g_instagib) ? GetResourceAmount(player, RESOURCE_ARMOR) : '1 0 0' * healtharmor_maxdamage(GetResourceAmount(player, RESOURCE_HEALTH), player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)));
+	{
+		WaypointSprite_UpdateHealth(player.wps_vip, 
+			((autocvar_g_instagib) ? GetResourceAmount(player, RESOURCE_ARMOR) 
+				: '1 0 0' * healtharmor_maxdamage(GetResourceAmount(player, RESOURCE_HEALTH), GetResourceAmount(player, RESOURCE_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)));
+	}
 
 	STAT(VIP_RED, player) = vip_count[0];
 	STAT(VIP_BLUE, player) = vip_count[1];
@@ -467,9 +465,10 @@ MUTATOR_HOOKFUNCTION(vip, OnEntityPreSpawn)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(vip, CheckAllowedTeams)
+MUTATOR_HOOKFUNCTION(vip, TeamBalance_CheckAllowedTeams)
 {
 	M_ARGV(0, float) = vip_teams;
+	return true;
 }
 
 vector vip_SoulGemColormod(int theteam, bool iseffect)
@@ -502,7 +501,8 @@ void vip_VIPWaypoints(entity player)
 {
 	WaypointSprite_Spawn(WP_VIP, 0, 0, player, FLAG_WAYPOINT_OFFSET, NULL, 0, player, wps_vip, true, RADARICON_FLAG);
 	WaypointSprite_UpdateMaxHealth(player.wps_vip, ((autocvar_g_instagib) ? 5 : '1 0 0' * healtharmor_maxdamage(start_health, start_armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id) * 2));
-	WaypointSprite_UpdateHealth(player.wps_vip, ((autocvar_g_instagib) ? player.armorvalue : '1 0 0' * healtharmor_maxdamage(player.health, player.armorvalue, autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)));
+	WaypointSprite_UpdateHealth(player.wps_vip, ((autocvar_g_instagib) ? GetResourceAmount(player, RESOURCE_HEALTH) : '1 0 0' * healtharmor_maxdamage(GetResourceAmount(player, RESOURCE_HEALTH), 
+																		GetResourceAmount(player, RESOURCE_HEALTH), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)));
 	WaypointSprite_UpdateTeamRadar(player.wps_vip, RADARICON_FLAGCARRIER, Team_ColorRGB(player.team));
 }
 
@@ -517,7 +517,7 @@ void vip_SetVIP(entity player, float tm)
 	SetResourceAmount(player, RESOURCE_ARMOR, ((autocvar_g_instagib) ? 5 : 200));
 	player.pickup_antispam = time + autocvar_g_vip_pickup_wait;
 
-	int theirteam = Team_TeamToNumber(tm);
+	int theirteam = Team_TeamToIndex(tm);
 	theirteam = ((theirteam == -1) ? 0 : theirteam - 1);
 	vip_count[theirteam] += 1;
 
@@ -575,7 +575,7 @@ void vip_SoulGem_think(entity this)
 	this.glow_size = 256 + cos(time * 2) * 64;
 	this.nextthink = time + 0.1;
 
-	int theirteam = Team_TeamToNumber(this.team);
+	int theirteam = Team_TeamToIndex(this.team);
 	theirteam = ((theirteam == -1) ? 0 : theirteam - 1);
 	if(vip_count[theirteam] < 1 && this.gem_pickedup && allowed_to_spawn && this.owner && !STAT(VIP, this.owner) && !round_handler_IsRoundStarted())
 		this.reset(this);

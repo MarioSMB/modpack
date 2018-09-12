@@ -117,7 +117,7 @@ spawnfunc(monster_koopa) { Monster_Spawn(this, true, MON_KOOPA.monsterid); }
 		.float speed;
 		METHOD(Koopa, mr_setup, bool(Monster thismon, entity actor))
 		{
-			if(!actor.health) actor.health = (autocvar_g_monster_koopa_health);
+			if(!GetResourceAmount(actor, RESOURCE_HEALTH)) SetResourceAmountExplicit(actor, RESOURCE_HEALTH, autocvar_g_monster_koopa_health);
 			if(!actor.speed) { actor.speed = (autocvar_g_monster_koopa_speed_walk); }
 			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_koopa_speed_walk); }
 			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_koopa_speed_stop); }

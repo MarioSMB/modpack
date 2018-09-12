@@ -72,7 +72,7 @@ bool cq_ControlPoint_Send(entity this, entity to, int sf)
 
 	if(sf & CQSF_HEALTH)
 	{
-		WriteByte(MSG_ENTITY, ceil((this.health / this.max_health) * 255));
+		WriteByte(MSG_ENTITY, ceil((GetResourceAmount(this, RESOURCE_HEALTH) / this.max_health) * 255));
 		WriteLong(MSG_ENTITY, autocvar_g_conquest_capture_sps);
 	}
 
@@ -121,7 +121,7 @@ void cq_ControlPoint_SwitchTeam(entity this, int newteam, int newstatus, bool sh
 		case CP_CAPTURED:
 		{
 			act = this;
-			this.skin = Team_TeamToNumber(this.team) + 1;
+			this.skin = Team_TeamToIndex(this.team) + 1;
 
 			if(showmessage)
 			{
@@ -152,7 +152,7 @@ void cq_ControlPoint_Think(entity this)
 
 	if(!round_handler_IsRoundStarted()) { return; }
 
-	float old_health = this.health;
+	float old_health = GetResourceAmount(this, RESOURCE_HEALTH);
 
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
@@ -166,15 +166,15 @@ void cq_ControlPoint_Think(entity this)
 				if(trace_fraction == 1.0)
 				{
 					if(SAME_TEAM(it, this))
-						this.health = min(this.max_health, this.health + autocvar_g_conquest_capture_sps * CQ_CP_THINKRATE);
+						SetResourceAmountExplicit(this, RESOURCE_HEALTH, min(this.max_health, GetResourceAmount(this, RESOURCE_HEALTH) + autocvar_g_conquest_capture_sps * CQ_CP_THINKRATE));
 					else
-						this.health = max(0, this.health - autocvar_g_conquest_capture_sps * CQ_CP_THINKRATE);
+						SetResourceAmountExplicit(this, RESOURCE_HEALTH, max(0, GetResourceAmount(this, RESOURCE_HEALTH) - autocvar_g_conquest_capture_sps * CQ_CP_THINKRATE));
 
 					switch(this.cq_status)
 					{
 						case CP_CAPTURED:
 						{
-							if(this.health == 0)
+							if(GetResourceAmount(this, RESOURCE_HEALTH) == 0)
 							{
 								GameRules_scoring_add(it, CONQUEST_LIBERATED, 1);
 								Send_Effect(EFFECT_EXPLOSION_BIG, findbetterlocation(this.origin, 16), '0 0 0', 1);
@@ -186,10 +186,10 @@ void cq_ControlPoint_Think(entity this)
 
 						case CP_NEUTRAL:
 						{
-							if(this.health == 0)
+							if(GetResourceAmount(this, RESOURCE_HEALTH) == 0)
 								cq_ControlPoint_SwitchTeam(this, it.team, CP_NEUTRAL, true);
 
-							if(this.health == this.max_health)
+							if(GetResourceAmount(this, RESOURCE_HEALTH) == this.max_health)
 							{
 								GameRules_scoring_add(it, CONQUEST_CAPTURED, 1);
 								cq_ControlPoint_SwitchTeam(this, it.team, CP_CAPTURED, true);
@@ -203,7 +203,7 @@ void cq_ControlPoint_Think(entity this)
 		}
 	});
 
-	if(this.health != old_health)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) != old_health)
 		this.SendFlags |= CQSF_HEALTH;
 }
 
@@ -214,7 +214,7 @@ void cq_ControlPoint_Reset(entity this)
 	else
 	{
 		this.cq_status = CP_NEUTRAL;
-		this.health = 0;
+		SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0);
 	}
 	this.SendFlags |= CQSF_HEALTH;
 	cq_ControlPoint_SwitchTeam(this, this.cq_originalteam, this.cq_status, false);
@@ -232,11 +232,11 @@ spawnfunc(conquest_controlpoint)
 	setsize(this, CQ_CP_MIN, CQ_CP_MAX);
 
 	if(this.netname == "")		{ this.netname = "a spawnpoint"; }
-	if(!this.health)			{ this.health = autocvar_g_conquest_controlpoint_health_default; }
+	if(!GetResourceAmount(this, RESOURCE_HEALTH))			{ SetResourceAmountExplicit(this, RESOURCE_HEALTH, autocvar_g_conquest_controlpoint_health_default); }
 	if(!this.cq_capdistance)	{ this.cq_capdistance = autocvar_g_conquest_capture_distance_default; }
 
 	this.classname = "conquest_controlpoint";
-	this.max_health = this.health;
+	this.max_health = GetResourceAmount(this, RESOURCE_HEALTH);
 	this.solid = SOLID_TRIGGER;
 	this.nextthink = time + CQ_CP_THINKRATE;
 	setthink(this, cq_ControlPoint_Think);
@@ -247,7 +247,7 @@ spawnfunc(conquest_controlpoint)
 	else
 	{
 		this.cq_status = CP_NEUTRAL;
-		this.health = 0;
+		SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0);
 	}
 
 	this.cq_originalteam = this.team;
@@ -261,20 +261,26 @@ spawnfunc(conquest_controlpoint)
 // round handler
 void cq_CountAlivePlayers()
 {
-	total_players = redalive = bluealive = yellowalive = pinkalive = 0;
-
-	FOREACH_CLIENT(IS_PLAYER(it),
+	total_players = 0;
+	for (int i = 1; i <= NUM_TEAMS; ++i)
+	{
+		Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(i), 0);
+	}
+	FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),
 	{
 		++total_players;
-		redalive += boolean(it.team == NUM_TEAM_1 && !IS_DEAD(it));
-		bluealive += boolean(it.team == NUM_TEAM_2 && !IS_DEAD(it));
-		yellowalive += boolean(it.team == NUM_TEAM_3 && !IS_DEAD(it));
-		pinkalive += boolean(it.team == NUM_TEAM_4 && !IS_DEAD(it));
+		if (IS_DEAD(it))
+		{
+			continue;
+		}
+		entity team_ = Entity_GetTeam(it);
+		int num_alive = Team_GetNumberOfAlivePlayers(team_);
+		++num_alive;
+		Team_SetNumberOfAlivePlayers(team_, num_alive);
 	});
 }
 
-#define CQ_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0) + (yellowalive > 0) + (pinkalive > 0))
-#define CQ_ALIVE_TEAMS_OK() (CQ_ALIVE_TEAMS() == NumTeams(cq_teams))
+#define CQ_ALIVE_TEAMS_OK() (Team_GetNumberOfAliveTeams() == NumTeams(cq_teams))
 
 int cq_getWinnerTeam()
 {
@@ -370,24 +376,30 @@ bool cq_CheckTeams()
 		if(prev_missing_teams_mask > 0)
 			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
-		return 1;
+		return true;
 	}
 	if(total_players == 0)
 	{
 		if(prev_missing_teams_mask > 0)
 			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
 		prev_missing_teams_mask = -1;
-		return 0;
+		return false;
 	}
-	float missing_teams_mask = (!redalive) + (!bluealive) * 2;
-	if(ca_teams >= 3) missing_teams_mask += (!yellowalive) * 4;
-	if(ca_teams >= 4) missing_teams_mask += (!pinkalive) * 8;
+	int missing_teams_mask = 0;
+	for (int i = 1; i <= NUM_TEAMS; ++i)
+	{
+		if ((cq_teams & Team_IndexToBit(i)) &&
+			(Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) == 0))
+		{
+			missing_teams_mask |= Team_IndexToBit(i);
+		}
+	}
 	if(prev_missing_teams_mask != missing_teams_mask)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
 		prev_missing_teams_mask = missing_teams_mask;
 	}
-	return 0;
+	return false;
 }
 
 
@@ -514,7 +526,7 @@ void havocbot_goalrating_defendpoints(entity this, float ratingscale, vector org
 	{
 		if (SAME_TEAM(head, this))
 		{
-			if (head.health < head.max_health)
+			if (GetResourceAmount(head, RESOURCE_HEALTH) < head.max_health)
 			{
 				distance = vlen(head.origin - org);
 				if (distance > sradius)
@@ -808,7 +820,7 @@ MUTATOR_HOOKFUNCTION(cq, SV_ParseClientCommand)
 			{
 				entity source_point = cq_Nearest_ControlPoint(player, player.origin, autocvar_g_conquest_teleport_radius);
 
-				if ( !source_point && player.health > 0 )
+				if ( !source_point && GetResourceAmount(player, RESOURCE_HEALTH) > 0 )
 				{
 					sprint(player, "\nYou need to be next to a control point\n");
 					return true;
@@ -823,7 +835,7 @@ MUTATOR_HOOKFUNCTION(cq, SV_ParseClientCommand)
 					return true;
 				}
 
-				if ( player.health <= 0 )
+				if ( GetResourceAmount(player, RESOURCE_HEALTH) <= 0 )
 				{
 					player.cq_spawn_by = closest_target;
 					player.respawn_flags = player.respawn_flags | RESPAWN_FORCE;
@@ -900,9 +912,10 @@ MUTATOR_HOOKFUNCTION(cq, HavocBot_ChooseRole)
 	return true;
 }
 
-MUTATOR_HOOKFUNCTION(cq, CheckAllowedTeams)
+MUTATOR_HOOKFUNCTION(cq, TeamBalance_CheckAllowedTeams)
 {
 	M_ARGV(0, float) = cq_teams;
+	return true;
 }
 
 void cq_ScoreRules(int teams)

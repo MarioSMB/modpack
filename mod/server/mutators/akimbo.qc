@@ -20,6 +20,6 @@ MUTATOR_HOOKFUNCTION(akimbo, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 
-	if(Item_IsLoot(item) && item.weapon && item.owner)
+	if(Item_IsLoot(item) && item.weapon && item.owner && IS_PLAYER(item.owner))
 		PS(item.owner).dual_weapons &= ~item.itemdef.m_weapon.m_wepset; // no longer akimbo'd (we don't check blacklist here, no need)
 }

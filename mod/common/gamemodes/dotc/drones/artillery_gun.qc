@@ -90,7 +90,7 @@ void dotc_gart_frame(entity this, entity thesquad, vector formation_loc, float t
 
 void dotc_gart_init(entity this)
 {
-	this.health					 = autocvar_g_dotc_gart_health;
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, autocvar_g_dotc_gart_health);
 
 	this.shot_dmg				 = autocvar_g_dotc_gart_shot_dmg;
 	this.shot_radius			 = autocvar_g_dotc_gart_shot_radius;

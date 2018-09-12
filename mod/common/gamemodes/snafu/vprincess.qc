@@ -240,7 +240,7 @@ void snafu_vprincess_create(entity spawnzone)
 	zom.event_damage    = snafu_princess_damage;    
 	zom.snafu_ai_flags  = SAF_ZOMBIE;
 	zom.damageforcescale = 3;
-	zom.health          = autocvar_g_snafu_princess_health;
+	SetResourceAmountExplicit(zom, RESOURCE_HEALTH, autocvar_g_snafu_princess_health);
 	setthink(zom, snafu_vprincess_think);
 	zom.nextthink       = time;
 	zom.classname       = "zombie";

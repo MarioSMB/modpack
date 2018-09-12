@@ -78,10 +78,10 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerDies)
 		if(!(teamplay && autocvar_g_freeze_noauto))
 		if(IS_REAL_CLIENT(frag_target))
 			Send_Notification(NOTIF_ONE_ONLY, frag_target, MSG_CENTER, CENTER_FREEZE_THAWING);
-		frag_target.health = 1; // "respawn" the player :P
+		SetResourceAmountExplicit(frag_target, RESOURCE_HEALTH, 1); // "respawn" the player :P
 
 		if(autocvar_g_instagib)
-			frag_target.ammo_cells = start_ammo_cells; // we need more ammo in instagib, otherwise the player will defrost & die again
+			SetResourceAmount(frag_target, RESOURCE_CELLS, start_ammo_cells); // we need more ammo in instagib, otherwise the player will defrost and die again
 
 		if(frag_deathtype == DEATH_TEAMCHANGE.m_id || frag_deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 		{

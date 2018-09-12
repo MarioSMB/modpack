@@ -100,50 +100,55 @@ void fix_mins_maxs_for_rotating(entity e)
 // Round handler
 void dotc_count_cores()
 {
-	total_players = redalive = bluealive = yellowalive = pinkalive = 0;
+	total_players = 0;
+	for (int i = 1; i <= NUM_TEAMS; ++i)
+	{
+		Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(i), 0);
+	}
 	for(entity tmp_entity = dotc_worldcorelist; tmp_entity; tmp_entity = tmp_entity.dotc_worldcorenext)
 	{
-		switch(tmp_entity.team)
-		{
-			case NUM_TEAM_1: ++total_players; if(tmp_entity.health >= 1) ++redalive; break;
-			case NUM_TEAM_2: ++total_players; if(tmp_entity.health >= 1) ++bluealive; break;
-			case NUM_TEAM_3: ++total_players; if(tmp_entity.health >= 1) ++yellowalive; break;
-			case NUM_TEAM_4: ++total_players; if(tmp_entity.health >= 1) ++pinkalive; break;
-		}
+		if(!Entity_HasValidTeam(tmp_entity))
+			continue;
+		++total_players;
+		if(GetResourceAmount(tmp_entity, RESOURCE_HEALTH) < 1)
+			continue;
+		entity team_ = Entity_GetTeam(tmp_entity);
+		int num_alive = Team_GetNumberOfAlivePlayers(team_);
+		++num_alive;
+		Team_SetNumberOfAlivePlayers(team_, num_alive);
 	}
 }
 
 int dotc_GetWinnerTeam()
 {
 	int winner_team = 0;
-	if(redalive >= 1)
+	if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(1)) >= 1)
+	{
 		winner_team = NUM_TEAM_1;
-	if(bluealive >= 1)
-	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_2;
 	}
-	if(yellowalive >= 1)
+	for (int i = 2; i <= NUM_TEAMS; ++i)
 	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_3;
+		if (Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) >= 1)
+		{
+			if (winner_team != 0)
+			{
+				return 0;
+			}
+			winner_team = Team_IndexToTeam(i);
+		}
 	}
-	if(pinkalive >= 1)
+	if (winner_team)
 	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_4;
-	}
-	if(winner_team)
 		return winner_team;
+	}
 	return -1; // no player left
 }
 
-#define DOTC_ALIVE_TEAMS() ((redalive > 0) + (bluealive > 0) + (yellowalive > 0) + (pinkalive > 0))
-#define DOTC_ALIVE_TEAMS_OK() (DOTC_ALIVE_TEAMS() == NumTeams(dotc_teams))
+#define DOTC_ALIVE_TEAMS_OK() (Team_GetNumberOfAliveTeams() == NumTeams(dotc_teams))
 bool dotc_CheckWinner()
 {
 	dotc_count_cores();
-	if(DOTC_ALIVE_TEAMS() > 1)
+	if(Team_GetNumberOfAliveTeams() > 1)
 		return 0;
 
 	int winner_team = dotc_GetWinnerTeam();
@@ -278,7 +283,7 @@ MUTATOR_HOOKFUNCTION(dotc, reset_map_global)
 	});
 }
 
-MUTATOR_HOOKFUNCTION(dotc, CheckAllowedTeams)
+MUTATOR_HOOKFUNCTION(dotc, TeamBalance_CheckAllowedTeams)
 {
 	M_ARGV(0, float) = dotc_teams;
 	return false;
@@ -306,12 +311,12 @@ MUTATOR_HOOKFUNCTION(dotc, TurretSpawn)
 	if(autocvar_g_dotc_turrets_healthabs)
 	{
 		turret.max_health = autocvar_g_dotc_turrets_healthabs;
-		turret.health = autocvar_g_dotc_turrets_healthabs;
+		SetResourceAmountExplicit(turret, RESOURCE_HEALTH, autocvar_g_dotc_turrets_healthabs);
 	}
 	else if(autocvar_g_dotc_turrets_healthmod)
 	{
 		turret.max_health *= autocvar_g_dotc_turrets_healthmod;
-		turret.health *= autocvar_g_dotc_turrets_healthmod;
+		SetResourceAmountExplicit(turret, RESOURCE_HEALTH, GetResourceAmount(turret, RESOURCE_HEALTH) * autocvar_g_dotc_turrets_healthmod);
 	}
 
 	turret.dotc_targetflags |= DOTC_TARGET_DRONES;

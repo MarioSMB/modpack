@@ -50,9 +50,10 @@ REGISTER_MUTATOR(snafu, false)
 
 int snafu_teams;
 
-MUTATOR_HOOKFUNCTION(snafu, CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
+MUTATOR_HOOKFUNCTION(snafu, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(0, float) = snafu_teams;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(snafu, PlayHitsound)
@@ -368,9 +369,9 @@ const int TADPOLE_FRAME_DIE = 6;
 void snafu_tadpole_damage(entity this, entity inflictor, entity attacker, float damage, float deathtype, .entity weaponentity, vector hitloc, vector force)
 {
 	if(!IS_PLAYER(attacker))
-		this.health -= damage;
+		TakeResource(this, RESOURCE_HEALTH, damage);
 
-	if(this.health <= 0)
+	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
 	{
 		this.deadflag = DEAD_DEAD;
 		this.frame = TADPOLE_FRAME_DIE;
@@ -422,7 +423,7 @@ spawnfunc(snafu_tadpole)
 	this.deadflag = DEAD_NO;
 	this.takedamage = DAMAGE_AIM;
 	this.event_damage = snafu_tadpole_damage;
-	this.health = autocvar_g_snafu_tadpole_health;
+	SetResourceAmountExplicit(this, RESOURCE_HEALTH, autocvar_g_snafu_tadpole_health);
 	this.team = 10;
 	setthink(this, snafu_tadpole_think);
 
