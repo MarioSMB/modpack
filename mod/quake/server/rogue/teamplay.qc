@@ -1520,8 +1520,6 @@ void place_flag(entity this)
 
 void place_flagbase(entity flg, string cname)
 {
-	teamplay = cvar("teamplay");
-
 	entity base = spawn();
 	base.classname = cname;
 	setorigin(base, flg.origin);
@@ -1569,8 +1567,6 @@ spawnfunc(item_flag_team1)
 	if(!MP_ROGUE) { delete(this); return; }
 	if(!deathmatch) { delete(this); return; }
 
-	teamplay = cvar("teamplay");
-
 	if(teamplay == TEAM_CTF_ONEFLAG)
 	{
 		precache_sound("misc/flagtk.wav");		// flag taken
@@ -1617,8 +1613,6 @@ spawnfunc(item_flag_team2)
 {
 	if(!MP_ROGUE) { delete(this); return; }
 	if(!deathmatch) { delete(this); return; }
-
-	teamplay = cvar("teamplay");
 
 	if(teamplay == TEAM_CTF_ONEFLAG) {
 		precache_sound ("misc/flagtk.wav");		// flag taken
@@ -1854,7 +1848,6 @@ spawnfunc(func_ctf_wall)
 {
 	if(!MP_ROGUE) { delete(this); return; }
 
-	teamplay = cvar("teamplay");
 	if(teamplay == TEAM_CTF || teamplay == TEAM_CTF_ONEFLAG ||
 		teamplay == TEAM_CTF_ALT)
 	{

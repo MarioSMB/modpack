@@ -234,6 +234,7 @@ void HUD_Crosshair(entity this)
 				case WEP_ROCKET_LAUNCHER: wcross_resolution *= 0.7; wcross_name = "gfx/crosshairrocketlauncher"; break;
 				case WEP_LIGHTNING: wcross_resolution *= 0.7; wcross_name = "gfx/crosshairhlac"; break;
 
+				case WEP_GRAPPLE: wcross_resolution *= 0.5; wcross_name = "gfx/crosshairhook"; break;
 				case WEP_LAVA_NAILGUN: wcross_resolution *= 0.6; wcross_name = "gfx/crosshairuzi"; break;
 				case WEP_LAVA_SUPER_NAILGUN: wcross_resolution *= 0.7; wcross_name = "gfx/crosshairuzi"; break;
 				case WEP_MULTI_GRENADE: wcross_resolution *= 0.8; wcross_name = "gfx/crosshairseeker"; break;
@@ -243,7 +244,6 @@ void HUD_Crosshair(entity this)
 				case WEP_MJOLNIR: wcross_resolution *= 0.5; wcross_name = "gfx/crosshaircrylink"; break;
 				case WEP_LASER_CANNON: wcross_resolution *= 0.6; wcross_name = "gfx/crosshairhlac"; break;
 				case WEP_PROXIMITY_GUN: wcross_resolution *= 0.9; wcross_name = "gfx/crosshairminelayer"; break;
-				case WEP_GRAPPLE: wcross_resolution *= 0.5; wcross_name = "gfx/crosshairhook"; break;
 			}
 		}
 

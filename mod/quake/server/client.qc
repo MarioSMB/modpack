@@ -47,8 +47,7 @@ void SetChangeParms(entity this)
 	this.gravity = 1.0;
 
 	this.health = bound(50, this.health, 100); // cap super health
-	teamplay = cvar("teamplay");
-	if(MP_ROGUE && teamplay >= TEAM_CTF) // don't carry items between level in CTF
+	if(teamplay >= TEAM_CTF) // don't carry items between level in CTF
 		SetNewParms();
 	else
 	{
@@ -74,7 +73,7 @@ void SetChangeParms(entity this)
 
 void SetNewParms()
 {
-	if(MP_ROGUE && deathmatch && teamplay >= TEAM_CTF)
+	if(deathmatch && teamplay >= TEAM_CTF)
 	{
 		parm1 = WEP_SHOTGUN | WEP_AXE | WEP_GRAPPLE;
 		parm3 = 50;
@@ -120,6 +119,9 @@ void DecodeLevelParms(entity this)
 
 	if(world.model == "maps/rstart.bsp" || (world.model == "maps/r2m1.bsp" && !deathmatch))
 		SetNewParms(); // reset all stuff on level 8 and new episode
+
+	if(deathmatch && teamplay >= TEAM_CTF)
+		SetNewParms(); // engine doesn't do this for us, apparently
 	
 	this.weapons = parm1;
 	this.health = parm2;

@@ -9,16 +9,16 @@ const int WEP_GRENADE_LAUNCHER     = BIT(5);
 const int WEP_ROCKET_LAUNCHER      = BIT(6);
 const int WEP_LIGHTNING            = BIT(7);
 
-const int WEP_LAVA_NAILGUN         = BIT(8);
-const int WEP_LAVA_SUPER_NAILGUN   = BIT(9);         
-const int WEP_MULTI_GRENADE        = BIT(10);
-const int WEP_MULTI_ROCKET         = BIT(11);
-const int WEP_PLASMA_GUN           = BIT(12);
+const int WEP_LASER_CANNON         = BIT(8);
+const int WEP_MJOLNIR              = BIT(9);
+const int WEP_PROXIMITY_GUN        = BIT(10);
 
-const int WEP_MJOLNIR              = BIT(13);
-const int WEP_LASER_CANNON         = BIT(14);
-const int WEP_PROXIMITY_GUN        = BIT(15);
-const int WEP_GRAPPLE              = BIT(16);
+const int WEP_GRAPPLE              = BIT(11);
+const int WEP_LAVA_NAILGUN         = BIT(12);
+const int WEP_LAVA_SUPER_NAILGUN   = BIT(13);
+const int WEP_MULTI_GRENADE        = BIT(14);
+const int WEP_MULTI_ROCKET         = BIT(15);
+const int WEP_PLASMA_GUN           = BIT(16);
 
 
 const int IT_SHELLS               = BIT(0);

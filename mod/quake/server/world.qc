@@ -744,6 +744,8 @@ spawnfunc(worldspawn)
 	// needs to be done so early because of the constants they create
 	static_init();
 
+	teamplay = cvar("teamplay"); // set it super early so other spawnfuncs can access it
+
 //
 // Setup light animation tables. 'a' is total darkness, 'z' is maxbright.
 //
