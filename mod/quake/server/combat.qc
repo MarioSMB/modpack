@@ -18,38 +18,36 @@ explosions and melee attacks.
 */
 bool CanDamage(entity targ, entity inflictor)
 {
-	if(!targ.takedamage)
+	if(targ.takedamage == DAMAGE_NO)
 		return false;
 
 // bmodels need special checking because their origin is 0,0,0
 	if(targ.move_movetype == MOVETYPE_PUSH)
 	{
-		traceline(inflictor.origin, 0.5 * (targ.absmin + targ.absmax), MOVE_NOMONSTERS, targ);
-		if(trace_fraction == 1)
-			return true;
-		if(trace_ent == targ)
+		traceline(inflictor.origin, 0.5 * (targ.absmin + targ.absmax), MOVE_NOMONSTERS, inflictor);
+		if(trace_fraction == 1 || trace_ent == targ)
 			return true;
 		return false;
 	}
 	
-	traceline(inflictor.origin, targ.origin, MOVE_NOMONSTERS, targ);
+	traceline(inflictor.origin, targ.origin, MOVE_NOMONSTERS, inflictor);
 	if(trace_fraction == 1)
 		return true;
 #if 0
-	traceline(inflictor.origin, targ.origin + '15 15 0', MOVE_NOMONSTERS, targ);
+	traceline(inflictor.origin, targ.origin + '15 15 0', MOVE_NOMONSTERS, inflictor);
 	if(trace_fraction == 1)
 		return true;
-	traceline(inflictor.origin, targ.origin + '-15 -15 0', MOVE_NOMONSTERS, targ);
+	traceline(inflictor.origin, targ.origin + '-15 -15 0', MOVE_NOMONSTERS, inflictor);
 	if(trace_fraction == 1)
 		return true;
-	traceline(inflictor.origin, targ.origin + '-15 15 0', MOVE_NOMONSTERS, targ);
+	traceline(inflictor.origin, targ.origin + '-15 15 0', MOVE_NOMONSTERS, inflictor);
 	if(trace_fraction == 1)
 		return true;
-	traceline(inflictor.origin, targ.origin + '15 -15 0', MOVE_NOMONSTERS, targ);
+	traceline(inflictor.origin, targ.origin + '15 -15 0', MOVE_NOMONSTERS, inflictor);
 	if(trace_fraction == 1)
 		return true;
 #else
-	tracebox(inflictor.origin, '-15 -15 0', '15 15 0', targ.origin, MOVE_NOMONSTERS, targ);
+	tracebox(inflictor.origin, '-15 -15 0', '15 15 0', targ.origin, MOVE_NOMONSTERS, inflictor);
 	if(trace_fraction == 1)
 		return true;
 #endif
