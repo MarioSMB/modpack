@@ -276,7 +276,7 @@ const int SBAR_MAXWIDTH = 1; // TODO: this is pure guesswork!
 
 void Sbar_DrawString(vector thepos, string msg)
 {
-	drawstring(sbar + vec2(thepos.x + 4, thepos.y), msg, '8 8 0', '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+	drawstring(sbar + vec2(thepos.x + 4, thepos.y), msg, '8 8 0', '0.6 0.2 0', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 void Sbar_DrawCharacter(vector thepos, int num)
