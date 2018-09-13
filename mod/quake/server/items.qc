@@ -363,24 +363,7 @@ void bound_other_ammo(entity this)
 		this.ammo_plasma = 100;
 }
 
-int HIP_RankForWeapon(int w)
-{
-	switch(w)
-	{
-		case WEP_LIGHTNING: 		return 1;
-		case WEP_ROCKET_LAUNCHER: 	return 2;
-		case WEP_LASER_CANNON: 		return 3;
-		case WEP_SUPER_NAILGUN: 	return 4;
-		case WEP_PROXIMITY_GUN: 	return 5;
-		case WEP_GRENADE_LAUNCHER: 	return 6;
-		case WEP_SUPER_SHOTGUN: 	return 7;
-		case WEP_NAILGUN: 			return 8;
-		case WEP_MJOLNIR: 			return 9;
-		default: 					return 10;
-	}
-}
-
-int Rogue_RankForWeapon(int w)
+int RankForWeapon(int w)
 {
 	switch(w)
 	{
@@ -388,33 +371,17 @@ int Rogue_RankForWeapon(int w)
 		case WEP_LIGHTNING: 		return 2;
 		case WEP_MULTI_ROCKET: 		return 3;
 		case WEP_ROCKET_LAUNCHER: 	return 4;
-		case WEP_LAVA_SUPER_NAILGUN:return 5;
-		case WEP_SUPER_NAILGUN: 	return 6;
-		case WEP_MULTI_GRENADE: 	return 7;
-		case WEP_GRENADE_LAUNCHER: 	return 8;
-		case WEP_LAVA_NAILGUN: 		return 9;
-		case WEP_SUPER_SHOTGUN: 	return 10;
-		case WEP_NAILGUN: 			return 11;
-		default: 					return 12;
-	}
-}
-
-int RankForWeapon(int w)
-{
-	if(MP_HIPNOTIC)
-		return HIP_RankForWeapon(w);
-	if(MP_ROGUE)
-		return Rogue_RankForWeapon(w);
-
-	switch(w)
-	{
-		case WEP_LIGHTNING: 		return 1;
-		case WEP_ROCKET_LAUNCHER: 	return 2;
-		case WEP_SUPER_NAILGUN: 	return 3;
-		case WEP_GRENADE_LAUNCHER: 	return 4;
-		case WEP_SUPER_SHOTGUN: 	return 5;
-		case WEP_NAILGUN: 			return 6;
-		default: 					return 7;
+		case WEP_LASER_CANNON: 		return 5;
+		case WEP_LAVA_SUPER_NAILGUN:return 6;
+		case WEP_SUPER_NAILGUN: 	return 7;
+		case WEP_MULTI_GRENADE: 	return 8;
+		case WEP_PROXIMITY_GUN: 	return 9;
+		case WEP_GRENADE_LAUNCHER: 	return 10;
+		case WEP_LAVA_NAILGUN: 		return 11;
+		case WEP_SUPER_SHOTGUN: 	return 12;
+		case WEP_NAILGUN: 			return 13;
+		case WEP_MJOLNIR: 			return 14;
+		default: 					return 15;
 	}
 }
 
