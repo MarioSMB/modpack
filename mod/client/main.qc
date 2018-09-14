@@ -36,7 +36,9 @@ STATIC_INIT_LATE(mod_cvars_override)
 	localcmd("\nalias unignore \"cmd unignore ${* ?}\"\n");
 
 	localcmd("\nalias itemlist \"cl_cmd itemlist ${* ?}\"\n");
-	localcmd("\nalias place_item \"cmd place_item ${* ?}\"\n");
+	localcmd("\nalias bufflist \"cl_cmd bufflist ${* ?}\"\n");
+	localcmd("\nalias place_item \"cmd placeitem spawn ${* ?}\"\n");
+	localcmd("\nalias itemplacer \"cmd placeitem ${* ?}\"\n");
 	localcmd("\nalias placeitems \"cl_cmd placeitems ${* ?}\"\n");
 
 	localcmd("\nalias findmap \"cmd findmap ${* ?}\"\n");
@@ -60,12 +62,20 @@ MUTATOR_HOOKFUNCTION(mutator_mod, CSQC_ConsoleCommand)
 	if(cmd_name == "itemlist")
 	{
 		LOG_INFO("Available items: ");
-		string thelist = "";
 		FOREACH(Items, true,
 		{
-			thelist = cons(thelist, strcat(it.netname, "(", it.m_name, ")"));
+			LOG_INFO("    ", it.netname, " (", it.m_name, "^7)");
 		});
-		LOG_INFO(thelist);
+		return true;
+	}
+
+	if(cmd_name == "bufflist")
+	{
+		LOG_INFO("Buffs:");
+		FOREACH(Buffs, true,
+		{
+			LOG_INFO("    ", it.netname, " (", BUFF_NAME(it.m_id), "^7)");
+		});
 		return true;
 	}
 

@@ -1,0 +1,4 @@
+#pragma once
+
+IntrusiveList g_itemplacer_objects;
+STATIC_INIT(g_itemplacer_objects) { g_itemplacer_objects = IL_NEW(); }

@@ -2,6 +2,7 @@
 
 #include "akimbo.qc"
 #include "freeze.qc"
+#include "itemplacer.qc"
 #include "keeprunning.qc"
 #include "piggyback.qc"
 #include "random_vehicles.qc"
