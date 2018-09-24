@@ -73,11 +73,6 @@ entity itemplacer_ObjectEdit_Get(entity this)
 
 bool itemplacer_ObjectCustomize(entity this, entity client)
 {
-	// update draggable status here per client!
-	if(autocvar_g_itemplacer_readonly || !client.canplace)
-		this.grab = 0; // no grabbing
-	else
-		this.grab = 3; // anyone
 	return (client.canplace);
 }
 
@@ -206,6 +201,8 @@ entity itemplacer_ObjectSpawn(entity this, float database)
 	set_movetype(e, MOVETYPE_NONE);
 	e.itemplacer_extrafields = string_null;
 	e.colormod = WPCOLOR_DROPPEDFLAG(e.team);
+	e.grab = 3;
+	e.draggable = itemplacer_ObjectCustomize;
 	//e.effects |= EF_SELECTABLE; // don't do this all the time, maybe just when editing objects?
 
 	setmodel(e, MDL_WAYPOINT);
