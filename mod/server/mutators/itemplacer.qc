@@ -6,7 +6,8 @@ bool autocvar_g_itemplacer_readonly = false;
 string autocvar_g_itemplacer_storage_name = "default";
 float autocvar_g_itemplacer_storage_autosave = 5;
 //float autocvar_g_itemplacer_storage_autoexport = 20; // don't do this often, it's heavy!
-bool autocvar_g_itemplacer_storage_autoload = 1;
+bool autocvar_g_itemplacer_storage_autoload = true;
+bool autocvar_g_itemplacer_storage_autoimport = false;
 float autocvar_g_itemplacer_editor_flood = 0.5;
 int autocvar_g_itemplacer_editor_maxobjects = 1000;
 float autocvar_g_itemplacer_editor_distance_spawn = 200;
@@ -838,6 +839,19 @@ MUTATOR_HOOKFUNCTION(itemplacer, SV_StartFrame)
 	itemplacer_Database_Export();
 
 	return true;
+}
+
+STATIC_INIT_LATE(itemplacer_importitems)
+{
+	// TODO: this is unable to tell when an pickup item is placed, so it ends up making duplicates!
+	// we can't simply use a global here, since the engine's prespawn function is disabled
+	// in the meantime, this will only function when item placer or spawnitems is off
+	if(autocvar_g_itemplacer_storage_autoimport && (!autocvar_g_itemplacer_spawnitems || !expr_evaluate(autocvar_g_itemplacer)))
+	{
+		string filename = strcat("data/itemplacer/exported_", autocvar_g_itemplacer_storage_name, "_", mapname, ".txt");
+		if(fexists(filename))
+			loadfromfile(filename);
+	}
 }
 
 STATIC_INIT_LATE(itemplacer_setvars)
