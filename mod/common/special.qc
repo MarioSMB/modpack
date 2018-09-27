@@ -108,7 +108,7 @@ MUTATOR_HOOKFUNCTION(sv_morningrescue, SV_ParseServerCommand)
 				MorningRescue(it);
 			if(IS_PLAYER(it))
 			{
-				Unfreeze(it);
+				Unfreeze(it, true);
 
 				float hp = GetResourceAmount(it, RESOURCE_HEALTH);
 				if(hp > 0)
