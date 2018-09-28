@@ -34,6 +34,7 @@ STATIC_INIT_LATE(mod_cvars_override)
 
 	localcmd("\nalias ignore \"cmd ignore ${* ?}\"\n");
 	localcmd("\nalias unignore \"cmd unignore ${* ?}\"\n");
+	localcmd("\nalias unignore_all \"cmd clear_ignores ${* ?}\"\n");
 
 	localcmd("\nalias itemlist \"cl_cmd itemlist ${* ?}\"\n");
 	localcmd("\nalias bufflist \"cl_cmd bufflist ${* ?}\"\n");
