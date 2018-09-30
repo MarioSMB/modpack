@@ -96,7 +96,7 @@ void M_Ogre_Attack_MachineGun(entity this)
 
 	.entity weaponentity = weaponentities[0];
 	fireBullet(this, weaponentity, org, dir, autocvar_g_monster_ogre_attack_machinegun_spread, autocvar_g_monster_ogre_attack_machinegun_solidpenetration, autocvar_g_monster_ogre_attack_machinegun_damage,
-			autocvar_g_monster_ogre_attack_machinegun_force, DEATH_MONSTER_OGRE_MACHINEGUN.m_id, 0);
+			autocvar_g_monster_ogre_attack_machinegun_force, DEATH_MONSTER_OGRE_MACHINEGUN.m_id, EFFECT_BULLET);
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, org, dir * 1000, 1);
 

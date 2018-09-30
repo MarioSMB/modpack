@@ -19,7 +19,7 @@ void vwep_minigun_attack(
 	v_forward = normalize(v_forward);
 	 
 	fireBullet(player, weaponentity, v, v_forward, atk_spread, atk_solidpenetration,
-								 atk_damage, atk_force, atk_deathtype, 0);
+								 atk_damage, atk_force, atk_deathtype, EFFECT_BULLET);
 
 
 	v = gettaginfo(gunmount, gettagindex(gunmount, "tag_flash"));

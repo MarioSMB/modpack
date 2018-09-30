@@ -199,9 +199,9 @@ void W_Uzi_Attack(Weapon thiswep, int deathtype, entity actor, .entity weaponent
 	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(uzi, first_refire) * W_WeaponRateFactor(actor);
 
 	if(actor.(weaponentity).misc_bulletcounter == 1)
-		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(uzi, first_spread), WEP_CVAR(uzi, solidpenetration), WEP_CVAR(uzi, first_damage), WEP_CVAR(uzi, first_force), deathtype, 0);
+		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(uzi, first_spread), WEP_CVAR(uzi, solidpenetration), WEP_CVAR(uzi, first_damage), WEP_CVAR(uzi, first_force), deathtype, EFFECT_BULLET_WEAK);
 	else
-		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(uzi, sustained_spread), WEP_CVAR(uzi, solidpenetration), WEP_CVAR(uzi, sustained_damage), WEP_CVAR(uzi, sustained_force), deathtype, 0);
+		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(uzi, sustained_spread), WEP_CVAR(uzi, solidpenetration), WEP_CVAR(uzi, sustained_damage), WEP_CVAR(uzi, sustained_force), deathtype, EFFECT_BULLET_WEAK);
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
@@ -281,7 +281,7 @@ void W_Uzi_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int f
 	}
 
 	uzi_spread = bound(WEP_CVAR(uzi, spread_min), WEP_CVAR(uzi, spread_min) + (WEP_CVAR(uzi, spread_add) * actor.(weaponentity).misc_bulletcounter), WEP_CVAR(uzi, spread_max));
-	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, uzi_spread, WEP_CVAR(uzi, solidpenetration), WEP_CVAR(uzi, sustained_damage), WEP_CVAR(uzi, sustained_force), WEP_UZI.m_id, 0);
+	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, uzi_spread, WEP_CVAR(uzi, solidpenetration), WEP_CVAR(uzi, sustained_damage), WEP_CVAR(uzi, sustained_force), WEP_UZI.m_id, EFFECT_BULLET_WEAK);
 
 	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
 
@@ -316,7 +316,7 @@ void W_Uzi_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, int 
 		actor.punchangle_y = random() - 0.5;
 	}
 
-	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(uzi, burst_speed), WEP_CVAR(uzi, solidpenetration), WEP_CVAR(uzi, burst_damage), WEP_CVAR(uzi, sustained_force), WEP_UZI.m_id, 0);
+	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(uzi, burst_speed), WEP_CVAR(uzi, solidpenetration), WEP_CVAR(uzi, burst_damage), WEP_CVAR(uzi, sustained_force), WEP_UZI.m_id, EFFECT_BULLET_WEAK);
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
