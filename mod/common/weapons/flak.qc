@@ -188,7 +188,7 @@ void W_Flak_Projectile_Touch(entity this, entity toucher)
 			Damage(toucher, this, this.realowner, damage, this.projectiledeathtype, this.weaponentity_fld, this.origin, force);
 
 			if(accuracy_isgooddamage(this.realowner, toucher))
- 				{ accuracy_add(this.realowner, WEP_FLAK.m_id, 0, damage); }
+ 				{ accuracy_add(this.realowner, WEP_FLAK, 0, damage); }
 		}
 
 		//Send_Effect(EFFECT_FLAK_BOUNCE, this.origin, this.velocity, 1);

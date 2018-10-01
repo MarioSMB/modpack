@@ -161,7 +161,7 @@ void W_Chainsaw_Attack1(Weapon thiswep, entity actor, .entity weaponentity, int 
 			actor.origin + actor.view_ofs,
 			v_forward * WEP_CVAR(chainsaw, melee_force));
 
-		if(accuracy_isgooddamage(actor, target_victim)) { accuracy_add(actor, WEP_CHAINSAW.m_id, 0, melee_damage); }
+		if(accuracy_isgooddamage(actor, target_victim)) { accuracy_add(actor, WEP_CHAINSAW, 0, melee_damage); }
 	}
 }
 
@@ -240,7 +240,7 @@ void W_Chainsaw_Melee_Think(entity this)
 				this.realowner.origin + this.realowner.view_ofs,
 				v_forward * WEP_CVAR(chainsaw, swing_force));
 
-			if(accuracy_isgooddamage(this.realowner, target_victim)) { accuracy_add(this.realowner, WEP_CHAINSAW.m_id, 0, swing_damage); }
+			if(accuracy_isgooddamage(this.realowner, target_victim)) { accuracy_add(this.realowner, WEP_CHAINSAW, 0, swing_damage); }
 
 			// draw large red flash for debugging
 			//te_customflash(targpos, 200, 2, '15 0 0');

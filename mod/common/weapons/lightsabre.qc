@@ -270,7 +270,7 @@ void W_Lightsabre_Melee_Think(entity this)
 		WarpZone_traceline_antilag(this, this.realowner.origin + this.realowner.view_ofs, targpos, false, this.realowner, ANTILAG_LATENCY(this.realowner));
 
 		if(W_Lightsabre_Melee_Block(this, NULL))
-			accuracy_add(this.realowner, WEP_LIGHTSABRE.m_id, 0, (WEP_CVAR_BOTH(lightsabre, isprimary, melee_nonplayerdamage) * min(1, swing_factor + 1)));
+			accuracy_add(this.realowner, WEP_LIGHTSABRE, 0, (WEP_CVAR_BOTH(lightsabre, isprimary, melee_nonplayerdamage) * min(1, swing_factor + 1)));
 
 		// draw lightning beams for debugging
 		//te_lightning2(NULL, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
@@ -301,7 +301,7 @@ void W_Lightsabre_Melee_Think(entity this)
 
 				spamsound(this.realowner, CH_WEAPON_A, SND_LIGHTSABRE_HIT_RANDOM(), VOL_BASE, ATTN_NORM);
 
-				if(accuracy_isgooddamage(this.realowner, target_victim)) { accuracy_add(this.realowner, WEP_LIGHTSABRE.m_id, 0, swing_damage); }
+				if(accuracy_isgooddamage(this.realowner, target_victim)) { accuracy_add(this.realowner, WEP_LIGHTSABRE, 0, swing_damage); }
 			}
 
 			// draw large red flash for debugging
