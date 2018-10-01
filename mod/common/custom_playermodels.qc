@@ -43,7 +43,7 @@ AUTOCVAR(sv_smokeball_alpha, float, 0, "");
 
 PRECACHE(cpmodels_precache)
 {
-	g_overkill = MUTATOR_ok.mutatorcheck();
+	g_overkill = MUTATOR_IS_ENABLED(ok);
 	models_allowed = 0;
 #define CHECK_MODEL(d,o) \
 	if(fexists(strcat("models/player/", d))) \
