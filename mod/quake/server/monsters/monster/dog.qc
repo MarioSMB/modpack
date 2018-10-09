@@ -402,11 +402,7 @@ string dog_deathmessage(entity this) { return "was mauled by a Rottweiler"; }
 */
 spawnfunc(monster_dog)
 {
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(deathmatch) { delete(this); return; }
 	precache_model("progs/h_dog.mdl");
 	precache_model("progs/dog.mdl");
 

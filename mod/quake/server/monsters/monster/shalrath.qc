@@ -236,11 +236,7 @@ string shalrath_deathmessage(entity this) { return "was exploded by a Vore"; }
 */
 spawnfunc(monster_shalrath)
 {
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(deathmatch) { delete(this); return; }
 	precache_model2("progs/shalrath.mdl");
 	precache_model2("progs/h_shal.mdl");
 	precache_model2("progs/v_spike.mdl");

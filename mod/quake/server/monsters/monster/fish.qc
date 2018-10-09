@@ -231,11 +231,7 @@ string fish_deathmessage(entity this) { return "was fed to the Rotfish"; }
 */
 spawnfunc(monster_fish)
 {
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(deathmatch) { delete(this); return; }
 	precache_model2("progs/fish.mdl");
 
 	precache_sound2("fish/death.wav");

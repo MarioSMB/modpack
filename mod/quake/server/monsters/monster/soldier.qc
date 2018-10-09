@@ -415,11 +415,7 @@ string army_deathmessage(entity this) { return "was shot by a Grunt"; }
 */
 spawnfunc(monster_army)
 {	
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(deathmatch) { delete(this); return; }
 	precache_model("progs/soldier.mdl");
 	precache_model("progs/h_guard.mdl");
 	precache_model("progs/gib1.mdl");

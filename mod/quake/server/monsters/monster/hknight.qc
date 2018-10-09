@@ -600,11 +600,7 @@ frame: frame to be frozen in. (default 73)
 */
 spawnfunc(monster_hell_knight)
 {
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(deathmatch) { delete(this); return; }
 	precache_model2("progs/hknight.mdl");
 	precache_model2("progs/k_spike.mdl");
 	precache_model2("progs/h_hellkn.mdl");

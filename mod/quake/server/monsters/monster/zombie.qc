@@ -840,11 +840,7 @@ when awakened by the player.
 */
 spawnfunc(monster_zombie)
 {
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(deathmatch) { delete(this); return; }
 
 	precache_model("progs/zombie.mdl");
 	precache_model("progs/h_zombie.mdl");

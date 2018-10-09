@@ -320,11 +320,7 @@ If you want a specific type, select "Blue", "Green", or "Spots".
 */
 spawnfunc(monster_tarbaby)
 {
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(deathmatch) { delete(this); return; }
 	precache_model2("progs/tarbaby.mdl");
 
 	precache_sound2("blob/death1.wav");

@@ -406,11 +406,7 @@ string wiz_deathmessage(entity this) { return "was scragged by a Scrag"; }
 */
 spawnfunc(monster_wizard)
 {
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(deathmatch) { delete(this); return; }
 	precache_model("progs/wizard.mdl");
 	precache_model("progs/h_wizard.mdl");
 	precache_model("progs/w_spike.mdl");

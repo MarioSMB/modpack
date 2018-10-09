@@ -466,11 +466,7 @@ string shambler_deathmessage(entity this) { return "was smashed by a Shambler"; 
 */
 spawnfunc(monster_shambler)
 {
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(deathmatch) { delete(this); return; }
 	precache_model("progs/shambler.mdl");
 	precache_model("progs/s_light.mdl");
 	precache_model("progs/h_shams.mdl");

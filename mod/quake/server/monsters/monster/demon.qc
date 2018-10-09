@@ -378,11 +378,7 @@ string demon1_deathmessage(entity this) { return "was eviscerated by a Fiend"; }
 */
 spawnfunc(monster_demon1)
 {
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(deathmatch) { delete(this); return; }
 	precache_model("progs/demon.mdl");
 	precache_model("progs/h_demon.mdl");
 

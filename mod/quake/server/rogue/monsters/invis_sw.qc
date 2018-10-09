@@ -156,11 +156,7 @@ delay - seconds after first sighting before it attacks (default 10)
 */
 spawnfunc(monster_sword)
 {
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(deathmatch) { delete(this); return; }
 	
 	precache_model("progs/sword.mdl");
 

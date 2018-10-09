@@ -635,11 +635,7 @@ Normal: use the original skin and fire normal grenades.
 */
 spawnfunc(monster_ogre)
 {
-	if(deathmatch)
-	{
-		delete(this);
-		return;
-	}
+	if(deathmatch) { delete(this); return; }
 	precache_model("progs/ogre.mdl");
 	precache_model("progs/h_ogre.mdl");
 	precache_model("progs/grenade.mdl");

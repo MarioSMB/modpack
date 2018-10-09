@@ -12,167 +12,167 @@ $base base
 $skin skin
 
 const int anim_player_axrun1 = 0;
-const int anim_player_axrun2 = 1;
-const int anim_player_axrun3 = 2;
-const int anim_player_axrun4 = 3;
-const int anim_player_axrun5 = 4;
-const int anim_player_axrun6 = 5;
+//const int anim_player_axrun2 = 1;
+//const int anim_player_axrun3 = 2;
+//const int anim_player_axrun4 = 3;
+//const int anim_player_axrun5 = 4;
+//const int anim_player_axrun6 = 5;
 
 const int anim_player_rockrun1 = 6;
-const int anim_player_rockrun2 = 7;
-const int anim_player_rockrun3 = 8;
-const int anim_player_rockrun4 = 9;
-const int anim_player_rockrun5 = 10;
-const int anim_player_rockrun6 = 11;
+//const int anim_player_rockrun2 = 7;
+//const int anim_player_rockrun3 = 8;
+//const int anim_player_rockrun4 = 9;
+//const int anim_player_rockrun5 = 10;
+//const int anim_player_rockrun6 = 11;
 
 const int anim_player_stand1 = 12;
-const int anim_player_stand2 = 13;
-const int anim_player_stand3 = 14;
-const int anim_player_stand4 = 15;
-const int anim_player_stand5 = 16;
+//const int anim_player_stand2 = 13;
+//const int anim_player_stand3 = 14;
+//const int anim_player_stand4 = 15;
+//const int anim_player_stand5 = 16;
 
 const int anim_player_axstnd1 = 17;
-const int anim_player_axstnd2 = 18;
-const int anim_player_axstnd3 = 19;
-const int anim_player_axstnd4 = 20;
-const int anim_player_axstnd5 = 21;
-const int anim_player_axstnd6 = 22;
-const int anim_player_axstnd7 = 23;
-const int anim_player_axstnd8 = 24;
-const int anim_player_axstnd9 = 25;
-const int anim_player_axstnd10 = 26;
-const int anim_player_axstnd11 = 27;
-const int anim_player_axstnd12 = 28;
+//const int anim_player_axstnd2 = 18;
+//const int anim_player_axstnd3 = 19;
+//const int anim_player_axstnd4 = 20;
+//const int anim_player_axstnd5 = 21;
+//const int anim_player_axstnd6 = 22;
+//const int anim_player_axstnd7 = 23;
+//const int anim_player_axstnd8 = 24;
+//const int anim_player_axstnd9 = 25;
+//const int anim_player_axstnd10 = 26;
+//const int anim_player_axstnd11 = 27;
+//const int anim_player_axstnd12 = 28;
 
 const int anim_player_axpain1 = 29;
-const int anim_player_axpain2 = 30;
-const int anim_player_axpain3 = 31;
-const int anim_player_axpain4 = 32;
-const int anim_player_axpain5 = 33;
-const int anim_player_axpain6 = 34;
+//const int anim_player_axpain2 = 30;
+//const int anim_player_axpain3 = 31;
+//const int anim_player_axpain4 = 32;
+//const int anim_player_axpain5 = 33;
+//const int anim_player_axpain6 = 34;
 
 const int anim_player_pain1 = 35;
-const int anim_player_pain2 = 36;
-const int anim_player_pain3 = 37;
-const int anim_player_pain4 = 38;
-const int anim_player_pain5 = 39;
-const int anim_player_pain6 = 40;
+//const int anim_player_pain2 = 36;
+//const int anim_player_pain3 = 37;
+//const int anim_player_pain4 = 38;
+//const int anim_player_pain5 = 39;
+//const int anim_player_pain6 = 40;
 
 const int anim_player_axdeth1 = 41;
-const int anim_player_axdeth2 = 42;
-const int anim_player_axdeth3 = 43;
-const int anim_player_axdeth4 = 44;
-const int anim_player_axdeth5 = 45;
-const int anim_player_axdeth6 = 46;
-const int anim_player_axdeth7 = 47;
-const int anim_player_axdeth8 = 48;
-const int anim_player_axdeth9 = 49;
+//const int anim_player_axdeth2 = 42;
+//const int anim_player_axdeth3 = 43;
+//const int anim_player_axdeth4 = 44;
+//const int anim_player_axdeth5 = 45;
+//const int anim_player_axdeth6 = 46;
+//const int anim_player_axdeth7 = 47;
+//const int anim_player_axdeth8 = 48;
+//const int anim_player_axdeth9 = 49;
 
 const int anim_player_deatha1 = 50;
-const int anim_player_deatha2 = 51;
-const int anim_player_deatha3 = 52;
-const int anim_player_deatha4 = 53;
-const int anim_player_deatha5 = 54;
-const int anim_player_deatha6 = 55;
-const int anim_player_deatha7 = 56;
-const int anim_player_deatha8 = 57;
-const int anim_player_deatha9 = 58;
-const int anim_player_deatha10 = 59;
-const int anim_player_deatha11 = 60;
+//const int anim_player_deatha2 = 51;
+//const int anim_player_deatha3 = 52;
+//const int anim_player_deatha4 = 53;
+//const int anim_player_deatha5 = 54;
+//const int anim_player_deatha6 = 55;
+//const int anim_player_deatha7 = 56;
+//const int anim_player_deatha8 = 57;
+//const int anim_player_deatha9 = 58;
+//const int anim_player_deatha10 = 59;
+//const int anim_player_deatha11 = 60;
 
 const int anim_player_deathb1 = 61;
-const int anim_player_deathb2 = 62;
-const int anim_player_deathb3 = 63;
-const int anim_player_deathb4 = 64;
-const int anim_player_deathb5 = 65;
-const int anim_player_deathb6 = 66;
-const int anim_player_deathb7 = 67;
-const int anim_player_deathb8 = 68;
-const int anim_player_deathb9 = 69;
+//const int anim_player_deathb2 = 62;
+//const int anim_player_deathb3 = 63;
+//const int anim_player_deathb4 = 64;
+//const int anim_player_deathb5 = 65;
+//const int anim_player_deathb6 = 66;
+//const int anim_player_deathb7 = 67;
+//const int anim_player_deathb8 = 68;
+//const int anim_player_deathb9 = 69;
 
 const int anim_player_deathc1 = 70;
-const int anim_player_deathc2 = 71;
-const int anim_player_deathc3 = 72;
-const int anim_player_deathc4 = 73;
-const int anim_player_deathc5 = 74;
-const int anim_player_deathc6 = 75;
-const int anim_player_deathc7 = 76;
-const int anim_player_deathc8 = 77;
-const int anim_player_deathc9 = 78;
-const int anim_player_deathc10 = 79;
-const int anim_player_deathc11 = 80;
-const int anim_player_deathc12 = 81;
-const int anim_player_deathc13 = 82;
-const int anim_player_deathc14 = 83;
-const int anim_player_deathc15 = 84;
+//const int anim_player_deathc2 = 71;
+//const int anim_player_deathc3 = 72;
+//const int anim_player_deathc4 = 73;
+//const int anim_player_deathc5 = 74;
+//const int anim_player_deathc6 = 75;
+//const int anim_player_deathc7 = 76;
+//const int anim_player_deathc8 = 77;
+//const int anim_player_deathc9 = 78;
+//const int anim_player_deathc10 = 79;
+//const int anim_player_deathc11 = 80;
+//const int anim_player_deathc12 = 81;
+//const int anim_player_deathc13 = 82;
+//const int anim_player_deathc14 = 83;
+//const int anim_player_deathc15 = 84;
 
 const int anim_player_deathd1 = 85;
-const int anim_player_deathd2 = 86;
-const int anim_player_deathd3 = 87;
-const int anim_player_deathd4 = 88;
-const int anim_player_deathd5 = 89;
-const int anim_player_deathd6 = 90;
-const int anim_player_deathd7 = 91;
-const int anim_player_deathd8 = 92;
-const int anim_player_deathd9 = 93;
+//const int anim_player_deathd2 = 86;
+//const int anim_player_deathd3 = 87;
+//const int anim_player_deathd4 = 88;
+//const int anim_player_deathd5 = 89;
+//const int anim_player_deathd6 = 90;
+//const int anim_player_deathd7 = 91;
+//const int anim_player_deathd8 = 92;
+//const int anim_player_deathd9 = 93;
 
 const int anim_player_deathe1 = 94;
-const int anim_player_deathe2 = 95;
-const int anim_player_deathe3 = 96;
-const int anim_player_deathe4 = 97;
-const int anim_player_deathe5 = 98;
-const int anim_player_deathe6 = 99;
-const int anim_player_deathe7 = 100;
-const int anim_player_deathe8 = 101;
-const int anim_player_deathe9 = 102;
+//const int anim_player_deathe2 = 95;
+//const int anim_player_deathe3 = 96;
+//const int anim_player_deathe4 = 97;
+//const int anim_player_deathe5 = 98;
+//const int anim_player_deathe6 = 99;
+//const int anim_player_deathe7 = 100;
+//const int anim_player_deathe8 = 101;
+//const int anim_player_deathe9 = 102;
 
 const int anim_player_nailatt1 = 103;
-const int anim_player_nailatt2 = 104;
+//const int anim_player_nailatt2 = 104;
 
 const int anim_player_light1 = 105;
-const int anim_player_light2 = 106;
+//const int anim_player_light2 = 106;
 
 const int anim_player_rockatt1 = 107;
-const int anim_player_rockatt2 = 108;
-const int anim_player_rockatt3 = 109;
-const int anim_player_rockatt4 = 110;
-const int anim_player_rockatt5 = 111;
-const int anim_player_rockatt6 = 112;
+//const int anim_player_rockatt2 = 108;
+//const int anim_player_rockatt3 = 109;
+//const int anim_player_rockatt4 = 110;
+//const int anim_player_rockatt5 = 111;
+//const int anim_player_rockatt6 = 112;
 
 const int anim_player_shotatt1 = 113;
-const int anim_player_shotatt2 = 114;
-const int anim_player_shotatt3 = 115;
-const int anim_player_shotatt4 = 116;
-const int anim_player_shotatt5 = 117;
-const int anim_player_shotatt6 = 118;
+//const int anim_player_shotatt2 = 114;
+//const int anim_player_shotatt3 = 115;
+//const int anim_player_shotatt4 = 116;
+//const int anim_player_shotatt5 = 117;
+//const int anim_player_shotatt6 = 118;
 
 const int anim_player_axatt1 = 119;
-const int anim_player_axatt2 = 120;
-const int anim_player_axatt3 = 121;
-const int anim_player_axatt4 = 122;
-const int anim_player_axatt5 = 123;
-const int anim_player_axatt6 = 124;
+//const int anim_player_axatt2 = 120;
+//const int anim_player_axatt3 = 121;
+//const int anim_player_axatt4 = 122;
+//const int anim_player_axatt5 = 123;
+//const int anim_player_axatt6 = 124;
 
 const int anim_player_axattb1 = 125;
-const int anim_player_axattb2 = 126;
-const int anim_player_axattb3 = 127;
-const int anim_player_axattb4 = 128;
-const int anim_player_axattb5 = 129;
-const int anim_player_axattb6 = 130;
+//const int anim_player_axattb2 = 126;
+//const int anim_player_axattb3 = 127;
+//const int anim_player_axattb4 = 128;
+//const int anim_player_axattb5 = 129;
+//const int anim_player_axattb6 = 130;
 
 const int anim_player_axattc1 = 131;
-const int anim_player_axattc2 = 132;
-const int anim_player_axattc3 = 133;
-const int anim_player_axattc4 = 134;
-const int anim_player_axattc5 = 135;
-const int anim_player_axattc6 = 136;
+//const int anim_player_axattc2 = 132;
+//const int anim_player_axattc3 = 133;
+//const int anim_player_axattc4 = 134;
+//const int anim_player_axattc5 = 135;
+//const int anim_player_axattc6 = 136;
 
 const int anim_player_axattd1 = 137;
-const int anim_player_axattd2 = 138;
-const int anim_player_axattd3 = 139;
-const int anim_player_axattd4 = 140;
-const int anim_player_axattd5 = 141;
-const int anim_player_axattd6 = 142;
+//const int anim_player_axattd2 = 138;
+//const int anim_player_axattd3 = 139;
+//const int anim_player_axattd4 = 140;
+//const int anim_player_axattd5 = 141;
+//const int anim_player_axattd6 = 142;
 
 
 /*
@@ -281,32 +281,32 @@ void player_run(entity this)
 	this.walkframe = this.walkframe + 1;
 }
 
-void player_shot6(entity this) { set_anim(this, anim_player_shotatt6, player_run); this.weaponframe = 6; }
-void player_shot5(entity this) { set_anim(this, anim_player_shotatt5, player_shot6); this.weaponframe = 5; }
-void player_shot4(entity this) { set_anim(this, anim_player_shotatt4, player_shot5); this.weaponframe = 4; }
-void player_shot3(entity this) { set_anim(this, anim_player_shotatt3, player_shot4); this.weaponframe = 3; }
-void player_shot2(entity this) { set_anim(this, anim_player_shotatt2, player_shot3); this.weaponframe = 2; }
-void player_shot1(entity this) { set_anim(this, anim_player_shotatt1, player_shot2); this.weaponframe = 1; this.effects |= EF_MUZZLEFLASH; }
+void player_shot6(entity this) { set_animofs(this, anim_player_shotatt1, 6, player_run); this.weaponframe = 6; }
+void player_shot5(entity this) { set_animofs(this, anim_player_shotatt1, 5, player_shot6); this.weaponframe = 5; }
+void player_shot4(entity this) { set_animofs(this, anim_player_shotatt1, 4, player_shot5); this.weaponframe = 4; }
+void player_shot3(entity this) { set_animofs(this, anim_player_shotatt1, 3, player_shot4); this.weaponframe = 3; }
+void player_shot2(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_shot3); this.weaponframe = 2; }
+void player_shot1(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_shot2); this.weaponframe = 1; this.effects |= EF_MUZZLEFLASH; }
 
-void player_axe4(entity this) { set_anim(this, anim_player_axatt4, player_run); this.weaponframe = 4; }
-void player_axe3(entity this) { set_anim(this, anim_player_axatt3, player_axe4); this.weaponframe = 3; W_FireAxe(this); }
-void player_axe2(entity this) { set_anim(this, anim_player_axatt2, player_axe3); this.weaponframe = 2; }
-void player_axe1(entity this) { set_anim(this, anim_player_axatt1, player_axe2); this.weaponframe = 1; }
+void player_axe4(entity this) { set_animofs(this, anim_player_axatt1, 4, player_run); this.weaponframe = 4; }
+void player_axe3(entity this) { set_animofs(this, anim_player_axatt1, 3, player_axe4); this.weaponframe = 3; W_FireAxe(this); }
+void player_axe2(entity this) { set_animofs(this, anim_player_axatt1, 2, player_axe3); this.weaponframe = 2; }
+void player_axe1(entity this) { set_animofs(this, anim_player_axatt1, 1, player_axe2); this.weaponframe = 1; }
 
-void player_axeb4(entity this) { set_anim(this, anim_player_axattb4, player_run); this.weaponframe = 8; }
-void player_axeb3(entity this) { set_anim(this, anim_player_axattb3, player_axeb4); this.weaponframe = 7; W_FireAxe(this); }
-void player_axeb2(entity this) { set_anim(this, anim_player_axattb2, player_axeb3); this.weaponframe = 6; }
-void player_axeb1(entity this) { set_anim(this, anim_player_axattb1, player_axeb2); this.weaponframe = 5; }
+void player_axeb4(entity this) { set_animofs(this, anim_player_axattb1, 4, player_run); this.weaponframe = 8; }
+void player_axeb3(entity this) { set_animofs(this, anim_player_axattb1, 3, player_axeb4); this.weaponframe = 7; W_FireAxe(this); }
+void player_axeb2(entity this) { set_animofs(this, anim_player_axattb1, 2, player_axeb3); this.weaponframe = 6; }
+void player_axeb1(entity this) { set_animofs(this, anim_player_axattb1, 1, player_axeb2); this.weaponframe = 5; }
 
-void player_axec4(entity this) { set_anim(this, anim_player_axattc4, player_run); this.weaponframe = 4; }
-void player_axec3(entity this) { set_anim(this, anim_player_axattc3, player_axec4); this.weaponframe = 3; W_FireAxe(this); }
-void player_axec2(entity this) { set_anim(this, anim_player_axattc2, player_axec3); this.weaponframe = 2; }
-void player_axec1(entity this) { set_anim(this, anim_player_axattc1, player_axec2); this.weaponframe = 1; }
+void player_axec4(entity this) { set_animofs(this, anim_player_axattc1, 4, player_run); this.weaponframe = 4; }
+void player_axec3(entity this) { set_animofs(this, anim_player_axattc1, 3, player_axec4); this.weaponframe = 3; W_FireAxe(this); }
+void player_axec2(entity this) { set_animofs(this, anim_player_axattc1, 2, player_axec3); this.weaponframe = 2; }
+void player_axec1(entity this) { set_animofs(this, anim_player_axattc1, 1, player_axec2); this.weaponframe = 1; }
 
-void player_axed4(entity this) { set_anim(this, anim_player_axattd4, player_run); this.weaponframe = 8; }
-void player_axed3(entity this) { set_anim(this, anim_player_axattd3, player_axed4); this.weaponframe = 7; W_FireAxe(this); }
-void player_axed2(entity this) { set_anim(this, anim_player_axattd2, player_axed3); this.weaponframe = 6; }
-void player_axed1(entity this) { set_anim(this, anim_player_axattd1, player_axed2); this.weaponframe = 5; }
+void player_axed4(entity this) { set_animofs(this, anim_player_axattd1, 4, player_run); this.weaponframe = 8; }
+void player_axed3(entity this) { set_animofs(this, anim_player_axattd1, 3, player_axed4); this.weaponframe = 7; W_FireAxe(this); }
+void player_axed2(entity this) { set_animofs(this, anim_player_axattd1, 2, player_axed3); this.weaponframe = 6; }
+void player_axed1(entity this) { set_animofs(this, anim_player_axattd1, 1, player_axed2); this.weaponframe = 5; }
 
 
 //============================================================================
@@ -314,10 +314,10 @@ void player_axed1(entity this) { set_anim(this, anim_player_axattd1, player_axed
 void W_FireGrapple(entity this);
 
 void player_grapple3(entity this);
-void player_grapple5(entity this) { set_anim(this, anim_player_axattd4, player_run); this.weaponframe = 1; }
+void player_grapple5(entity this) { set_animofs(this, anim_player_axattd1, 4, player_run); this.weaponframe = 1; }
 void player_grapple4(entity this)
 {
-	set_anim(this, anim_player_deathc4, player_grapple4);
+	set_animofs(this, anim_player_deathc1, 4, player_grapple4);
 	this.weaponframe = 2;
 	if(!this.hook_out)
 	{
@@ -332,7 +332,7 @@ void player_grapple4(entity this)
 }
 void player_grapple3(entity this)
 {
-	set_anim(this, anim_player_axattd3, player_grapple3);
+	set_animofs(this, anim_player_axattd1, 3, player_grapple3);
 	this.weaponframe = 2;
 	if(!this.hook_out)
 	{
@@ -345,8 +345,8 @@ void player_grapple3(entity this)
 		return;
 	}
 }
-void player_grapple2(entity this) { set_anim(this, anim_player_axattd2, player_grapple3); this.weaponframe = 2; }
-void player_grapple1(entity this) { set_anim(this, anim_player_axattd1, player_grapple2); this.weaponframe = 1; W_FireGrapple(this); }
+void player_grapple2(entity this) { set_animofs(this, anim_player_axattd1, 2, player_grapple3); this.weaponframe = 2; }
+void player_grapple1(entity this) { set_animofs(this, anim_player_axattd1, 1, player_grapple2); this.weaponframe = 1; W_FireGrapple(this); }
 
 //--ZOID
 //============================================================================
@@ -354,7 +354,7 @@ void player_grapple1(entity this) { set_anim(this, anim_player_axattd1, player_g
 void player_nail2(entity this);
 void player_nail1(entity this)
 {
-	set_anim(this, anim_player_nailatt1, player_nail2);
+	set_animofs(this, anim_player_nailatt1, 1, player_nail2);
 
 	this.effects |= EF_MUZZLEFLASH;
 
@@ -369,7 +369,7 @@ void player_nail1(entity this)
 }
 void player_nail2(entity this)
 {
-	set_anim(this, anim_player_nailatt2, player_nail1);
+	set_animofs(this, anim_player_nailatt1, 2, player_nail1);
 
 	this.effects |= EF_MUZZLEFLASH;
 
@@ -390,7 +390,7 @@ void W_FireLavaSpikes(entity this, float ox);
 void player_lava_nail2(entity this);
 void player_lava_nail1(entity this)
 {
-	set_anim(this, anim_player_nailatt1, player_lava_nail2);
+	set_animofs(this, anim_player_nailatt1, 1, player_lava_nail2);
 
 	this.effects |= EF_MUZZLEFLASH;
 
@@ -408,7 +408,7 @@ void player_lava_nail1(entity this)
 }
 void player_lava_nail2(entity this)
 {
-	set_anim(this, anim_player_nailatt2, player_lava_nail1);
+	set_animofs(this, anim_player_nailatt1, 2, player_lava_nail1);
 
 	this.effects |= EF_MUZZLEFLASH;
 
@@ -452,7 +452,7 @@ void player_light1(entity this)
 }
 void player_light2(entity this)
 {
-	set_anim(this, anim_player_light2, player_light1);
+	set_anim(this, anim_player_light1, player_light1);
 
 	this.effects |= EF_MUZZLEFLASH;
 
@@ -499,18 +499,18 @@ void player_mjolnir1(entity this) { set_anim(this, 38, player_mjolnir2); this.we
 //void() player_laser5   =[$nailatt1, player_laser1  ] {this.attack_finished = time + 0.1;this.weaponframe=5;this.nextthink = time + 0.09;}
 //void() player_laser6   =[$nailatt2, player_laser1  ] {this.attack_finished = time + 0.1;this.weaponframe=6;this.nextthink = time + 0.09;}
 void player_laser1(entity this);
-void player_laser4(entity this) { set_anim(this, anim_player_nailatt1, player_laser1); this.attack_finished = time + 0.1; this.weaponframe = 5; this.nextthink = time + 0.1; }
-void player_laser3(entity this) { set_anim(this, anim_player_nailatt2, player_laser1); this.attack_finished = time + 0.1; this.weaponframe = 4; this.nextthink = time + 0.1; HIP_FireLaser(this, 1); }
-void player_laser2(entity this) { set_anim(this, anim_player_nailatt2, player_laser3); this.attack_finished = time + 0.1; this.weaponframe = 2; this.nextthink = time + 0.1; }
-void player_laser1(entity this) { set_anim(this, anim_player_nailatt1, player_laser3); this.attack_finished = time + 0.1; this.weaponframe = 1; this.nextthink = time + 0.1; HIP_FireLaser(this, 0); }
+void player_laser4(entity this) { set_animofs(this, anim_player_nailatt1, 1, player_laser1); this.attack_finished = time + 0.1; this.weaponframe = 5; this.nextthink = time + 0.1; }
+void player_laser3(entity this) { set_animofs(this, anim_player_nailatt1, 2, player_laser1); this.attack_finished = time + 0.1; this.weaponframe = 4; this.nextthink = time + 0.1; HIP_FireLaser(this, 1); }
+void player_laser2(entity this) { set_animofs(this, anim_player_nailatt1, 2, player_laser3); this.attack_finished = time + 0.1; this.weaponframe = 2; this.nextthink = time + 0.1; }
+void player_laser1(entity this) { set_animofs(this, anim_player_nailatt1, 1, player_laser3); this.attack_finished = time + 0.1; this.weaponframe = 1; this.nextthink = time + 0.1; HIP_FireLaser(this, 0); }
 
 
-void player_rocket6(entity this) { set_anim(this, anim_player_rockatt6, player_run); this.weaponframe = 6; }
-void player_rocket5(entity this) { set_anim(this, anim_player_rockatt5, player_rocket6); this.weaponframe = 5; }
-void player_rocket4(entity this) { set_anim(this, anim_player_rockatt4, player_rocket5); this.weaponframe = 4; }
-void player_rocket3(entity this) { set_anim(this, anim_player_rockatt3, player_rocket4); this.weaponframe = 3; }
-void player_rocket2(entity this) { set_anim(this, anim_player_rockatt2, player_rocket3); this.weaponframe = 2; }
-void player_rocket1(entity this) { set_anim(this, anim_player_rockatt1, player_rocket2); this.weaponframe = 1; this.effects |= EF_MUZZLEFLASH; }
+void player_rocket6(entity this) { set_animofs(this, anim_player_rockatt1, 6, player_run); this.weaponframe = 6; }
+void player_rocket5(entity this) { set_animofs(this, anim_player_rockatt1, 5, player_rocket6); this.weaponframe = 5; }
+void player_rocket4(entity this) { set_animofs(this, anim_player_rockatt1, 4, player_rocket5); this.weaponframe = 4; }
+void player_rocket3(entity this) { set_animofs(this, anim_player_rockatt1, 3, player_rocket4); this.weaponframe = 3; }
+void player_rocket2(entity this) { set_animofs(this, anim_player_rockatt1, 2, player_rocket3); this.weaponframe = 2; }
+void player_rocket1(entity this) { set_animofs(this, anim_player_rockatt1, 1, player_rocket2); this.weaponframe = 1; this.effects |= EF_MUZZLEFLASH; }
 
 void DeathBubbles(entity this, int num_bubbles);
 
@@ -606,19 +606,19 @@ void PainSound(entity this, entity attacker)
 	_sound(this, CH_VOICE, this.noise, 1, ATTN_NORM);
 }
 
-void player_pain6(entity this) { set_anim(this, anim_player_pain6, player_run); }
-void player_pain5(entity this) { set_anim(this, anim_player_pain5, player_pain6); }
-void player_pain4(entity this) { set_anim(this, anim_player_pain4, player_pain5); }
-void player_pain3(entity this) { set_anim(this, anim_player_pain3, player_pain4); }
-void player_pain2(entity this) { set_anim(this, anim_player_pain2, player_pain3); }
-void player_pain1(entity this, entity attacker) { set_anim(this, anim_player_pain1, player_pain2); PainSound(this, attacker); this.weaponframe = 0; }
+void player_pain6(entity this) { set_animofs(this, anim_player_pain1, 6, player_run); }
+void player_pain5(entity this) { set_animofs(this, anim_player_pain1, 5, player_pain6); }
+void player_pain4(entity this) { set_animofs(this, anim_player_pain1, 4, player_pain5); }
+void player_pain3(entity this) { set_animofs(this, anim_player_pain1, 3, player_pain4); }
+void player_pain2(entity this) { set_animofs(this, anim_player_pain1, 2, player_pain3); }
+void player_pain1(entity this, entity attacker) { set_animofs(this, anim_player_pain1, 1, player_pain2); PainSound(this, attacker); this.weaponframe = 0; }
 
-void player_axpain6(entity this) { set_anim(this, anim_player_axpain6, player_run); }
-void player_axpain5(entity this) { set_anim(this, anim_player_axpain5, player_axpain6); }
-void player_axpain4(entity this) { set_anim(this, anim_player_axpain4, player_axpain5); }
-void player_axpain3(entity this) { set_anim(this, anim_player_axpain3, player_axpain4); }
-void player_axpain2(entity this) { set_anim(this, anim_player_axpain2, player_axpain3); }
-void player_axpain1(entity this, entity attacker) { set_anim(this, anim_player_axpain1, player_axpain2); PainSound(this, attacker); this.weaponframe = 0; }
+void player_axpain6(entity this) { set_animofs(this, anim_player_axpain1, 6, player_run); }
+void player_axpain5(entity this) { set_animofs(this, anim_player_axpain1, 5, player_axpain6); }
+void player_axpain4(entity this) { set_animofs(this, anim_player_axpain1, 4, player_axpain5); }
+void player_axpain3(entity this) { set_animofs(this, anim_player_axpain1, 3, player_axpain4); }
+void player_axpain2(entity this) { set_animofs(this, anim_player_axpain1, 2, player_axpain3); }
+void player_axpain1(entity this, entity attacker) { set_animofs(this, anim_player_axpain1, 1, player_axpain2); PainSound(this, attacker); this.weaponframe = 0; }
 
 // hipnotic
 void player_hampain6(entity this) { set_anim(this, 23, player_run); }
@@ -941,80 +941,80 @@ void set_suicide_frame(entity this)
 {	// used by kill command and diconnect command
 	if(this.model != "progs/player.mdl" && this.model != "progs/player_katria.mdl")
 		return;	// allready gibbed
-	this.frame = anim_player_deatha11;
+	this.frame = anim_player_deatha1 + (11 - 1); // frame 11, hax
 	this.solid = SOLID_NOT;
 	set_movetype(this, MOVETYPE_TOSS);
 	this.deadflag = DEAD_DEAD;
 	this.nextthink = -1;
 }
 
-void player_diea11(entity this) { set_anim(this, anim_player_deatha11, player_diea11); PlayerDead(this); }
-void player_diea10(entity this) { set_anim(this, anim_player_deatha10, player_diea11); }
-void player_diea9(entity this) { set_anim(this, anim_player_deatha9, player_diea10); }
-void player_diea8(entity this) { set_anim(this, anim_player_deatha8, player_diea9); }
-void player_diea7(entity this) { set_anim(this, anim_player_deatha7, player_diea8); }
-void player_diea6(entity this) { set_anim(this, anim_player_deatha6, player_diea7); }
-void player_diea5(entity this) { set_anim(this, anim_player_deatha5, player_diea6); }
-void player_diea4(entity this) { set_anim(this, anim_player_deatha4, player_diea5); }
-void player_diea3(entity this) { set_anim(this, anim_player_deatha3, player_diea4); }
-void player_diea2(entity this) { set_anim(this, anim_player_deatha2, player_diea3); }
-void player_diea1(entity this) { set_anim(this, anim_player_deatha1, player_diea2); }
+void player_diea11(entity this) { set_animofs(this, anim_player_deatha1, 11, player_diea11); PlayerDead(this); }
+void player_diea10(entity this) { set_animofs(this, anim_player_deatha1, 10, player_diea11); }
+void player_diea9(entity this) { set_animofs(this, anim_player_deatha1, 9, player_diea10); }
+void player_diea8(entity this) { set_animofs(this, anim_player_deatha1, 8, player_diea9); }
+void player_diea7(entity this) { set_animofs(this, anim_player_deatha1, 7, player_diea8); }
+void player_diea6(entity this) { set_animofs(this, anim_player_deatha1, 6, player_diea7); }
+void player_diea5(entity this) { set_animofs(this, anim_player_deatha1, 5, player_diea6); }
+void player_diea4(entity this) { set_animofs(this, anim_player_deatha1, 4, player_diea5); }
+void player_diea3(entity this) { set_animofs(this, anim_player_deatha1, 3, player_diea4); }
+void player_diea2(entity this) { set_animofs(this, anim_player_deatha1, 2, player_diea3); }
+void player_diea1(entity this) { set_animofs(this, anim_player_deatha1, 1, player_diea2); }
 
-void player_dieb9(entity this) { set_anim(this, anim_player_deathb9, player_dieb9); PlayerDead(this); }
-void player_dieb8(entity this) { set_anim(this, anim_player_deathb8, player_dieb9); }
-void player_dieb7(entity this) { set_anim(this, anim_player_deathb7, player_dieb8); }
-void player_dieb6(entity this) { set_anim(this, anim_player_deathb6, player_dieb7); }
-void player_dieb5(entity this) { set_anim(this, anim_player_deathb5, player_dieb6); }
-void player_dieb4(entity this) { set_anim(this, anim_player_deathb4, player_dieb5); }
-void player_dieb3(entity this) { set_anim(this, anim_player_deathb3, player_dieb4); }
-void player_dieb2(entity this) { set_anim(this, anim_player_deathb2, player_dieb3); }
-void player_dieb1(entity this) { set_anim(this, anim_player_deathb1, player_dieb2); }
+void player_dieb9(entity this) { set_animofs(this, anim_player_deathb1, 9, player_dieb9); PlayerDead(this); }
+void player_dieb8(entity this) { set_animofs(this, anim_player_deathb1, 8, player_dieb9); }
+void player_dieb7(entity this) { set_animofs(this, anim_player_deathb1, 7, player_dieb8); }
+void player_dieb6(entity this) { set_animofs(this, anim_player_deathb1, 6, player_dieb7); }
+void player_dieb5(entity this) { set_animofs(this, anim_player_deathb1, 5, player_dieb6); }
+void player_dieb4(entity this) { set_animofs(this, anim_player_deathb1, 4, player_dieb5); }
+void player_dieb3(entity this) { set_animofs(this, anim_player_deathb1, 3, player_dieb4); }
+void player_dieb2(entity this) { set_animofs(this, anim_player_deathb1, 2, player_dieb3); }
+void player_dieb1(entity this) { set_animofs(this, anim_player_deathb1, 1, player_dieb2); }
 
-void player_diec15(entity this) { set_anim(this, anim_player_deathc15, player_diec15); PlayerDead(this); }
-void player_diec14(entity this) { set_anim(this, anim_player_deathc14, player_diec15); }
-void player_diec13(entity this) { set_anim(this, anim_player_deathc13, player_diec14); }
-void player_diec12(entity this) { set_anim(this, anim_player_deathc12, player_diec13); }
-void player_diec11(entity this) { set_anim(this, anim_player_deathc11, player_diec12); }
-void player_diec10(entity this) { set_anim(this, anim_player_deathc10, player_diec11); }
-void player_diec9(entity this) { set_anim(this, anim_player_deathc9, player_diec10); }
-void player_diec8(entity this) { set_anim(this, anim_player_deathc8, player_diec9); }
-void player_diec7(entity this) { set_anim(this, anim_player_deathc7, player_diec8); }
-void player_diec6(entity this) { set_anim(this, anim_player_deathc6, player_diec7); }
-void player_diec5(entity this) { set_anim(this, anim_player_deathc5, player_diec6); }
-void player_diec4(entity this) { set_anim(this, anim_player_deathc4, player_diec5); }
-void player_diec3(entity this) { set_anim(this, anim_player_deathc3, player_diec4); }
-void player_diec2(entity this) { set_anim(this, anim_player_deathc2, player_diec3); }
-void player_diec1(entity this) { set_anim(this, anim_player_deathc1, player_diec2); }
+void player_diec15(entity this) { set_animofs(this, anim_player_deathc1, 15, player_diec15); PlayerDead(this); }
+void player_diec14(entity this) { set_animofs(this, anim_player_deathc1, 14, player_diec15); }
+void player_diec13(entity this) { set_animofs(this, anim_player_deathc1, 13, player_diec14); }
+void player_diec12(entity this) { set_animofs(this, anim_player_deathc1, 12, player_diec13); }
+void player_diec11(entity this) { set_animofs(this, anim_player_deathc1, 11, player_diec12); }
+void player_diec10(entity this) { set_animofs(this, anim_player_deathc1, 10, player_diec11); }
+void player_diec9(entity this) { set_animofs(this, anim_player_deathc1, 9, player_diec10); }
+void player_diec8(entity this) { set_animofs(this, anim_player_deathc1, 8, player_diec9); }
+void player_diec7(entity this) { set_animofs(this, anim_player_deathc1, 7, player_diec8); }
+void player_diec6(entity this) { set_animofs(this, anim_player_deathc1, 6, player_diec7); }
+void player_diec5(entity this) { set_animofs(this, anim_player_deathc1, 5, player_diec6); }
+void player_diec4(entity this) { set_animofs(this, anim_player_deathc1, 4, player_diec5); }
+void player_diec3(entity this) { set_animofs(this, anim_player_deathc1, 3, player_diec4); }
+void player_diec2(entity this) { set_animofs(this, anim_player_deathc1, 2, player_diec3); }
+void player_diec1(entity this) { set_animofs(this, anim_player_deathc1, 1, player_diec2); }
 
-void player_died9(entity this) { set_anim(this, anim_player_deathd9, player_died9); PlayerDead(this); }
-void player_died8(entity this) { set_anim(this, anim_player_deathd8, player_died9); }
-void player_died7(entity this) { set_anim(this, anim_player_deathd7, player_died8); }
-void player_died6(entity this) { set_anim(this, anim_player_deathd6, player_died7); }
-void player_died5(entity this) { set_anim(this, anim_player_deathd5, player_died6); }
-void player_died4(entity this) { set_anim(this, anim_player_deathd4, player_died5); }
-void player_died3(entity this) { set_anim(this, anim_player_deathd3, player_died4); }
-void player_died2(entity this) { set_anim(this, anim_player_deathd2, player_died3); }
-void player_died1(entity this) { set_anim(this, anim_player_deathd1, player_died2); }
+void player_died9(entity this) { set_animofs(this, anim_player_deathd1, 9, player_died9); PlayerDead(this); }
+void player_died8(entity this) { set_animofs(this, anim_player_deathd1, 8, player_died9); }
+void player_died7(entity this) { set_animofs(this, anim_player_deathd1, 7, player_died8); }
+void player_died6(entity this) { set_animofs(this, anim_player_deathd1, 6, player_died7); }
+void player_died5(entity this) { set_animofs(this, anim_player_deathd1, 5, player_died6); }
+void player_died4(entity this) { set_animofs(this, anim_player_deathd1, 4, player_died5); }
+void player_died3(entity this) { set_animofs(this, anim_player_deathd1, 3, player_died4); }
+void player_died2(entity this) { set_animofs(this, anim_player_deathd1, 2, player_died3); }
+void player_died1(entity this) { set_animofs(this, anim_player_deathd1, 1, player_died2); }
 
-void player_diee9(entity this) { set_anim(this, anim_player_deathe9, player_diee9); PlayerDead(this); }
-void player_diee8(entity this) { set_anim(this, anim_player_deathe8, player_diee9); }
-void player_diee7(entity this) { set_anim(this, anim_player_deathe7, player_diee8); }
-void player_diee6(entity this) { set_anim(this, anim_player_deathe6, player_diee7); }
-void player_diee5(entity this) { set_anim(this, anim_player_deathe5, player_diee6); }
-void player_diee4(entity this) { set_anim(this, anim_player_deathe4, player_diee5); }
-void player_diee3(entity this) { set_anim(this, anim_player_deathe3, player_diee4); }
-void player_diee2(entity this) { set_anim(this, anim_player_deathe2, player_diee3); }
-void player_diee1(entity this) { set_anim(this, anim_player_deathe1, player_diee2); }
+void player_diee9(entity this) { set_animofs(this, anim_player_deathe1, 9, player_diee9); PlayerDead(this); }
+void player_diee8(entity this) { set_animofs(this, anim_player_deathe1, 8, player_diee9); }
+void player_diee7(entity this) { set_animofs(this, anim_player_deathe1, 7, player_diee8); }
+void player_diee6(entity this) { set_animofs(this, anim_player_deathe1, 6, player_diee7); }
+void player_diee5(entity this) { set_animofs(this, anim_player_deathe1, 5, player_diee6); }
+void player_diee4(entity this) { set_animofs(this, anim_player_deathe1, 4, player_diee5); }
+void player_diee3(entity this) { set_animofs(this, anim_player_deathe1, 3, player_diee4); }
+void player_diee2(entity this) { set_animofs(this, anim_player_deathe1, 2, player_diee3); }
+void player_diee1(entity this) { set_animofs(this, anim_player_deathe1, 1, player_diee2); }
 
-void player_die_ax9(entity this) { set_anim(this, anim_player_axdeth9, player_die_ax9); PlayerDead(this); }
-void player_die_ax8(entity this) { set_anim(this, anim_player_axdeth8, player_die_ax9); }
-void player_die_ax7(entity this) { set_anim(this, anim_player_axdeth7, player_die_ax8); }
-void player_die_ax6(entity this) { set_anim(this, anim_player_axdeth6, player_die_ax7); }
-void player_die_ax5(entity this) { set_anim(this, anim_player_axdeth5, player_die_ax6); }
-void player_die_ax4(entity this) { set_anim(this, anim_player_axdeth4, player_die_ax5); }
-void player_die_ax3(entity this) { set_anim(this, anim_player_axdeth3, player_die_ax4); }
-void player_die_ax2(entity this) { set_anim(this, anim_player_axdeth2, player_die_ax3); }
-void player_die_ax1(entity this) { set_anim(this, anim_player_axdeth1, player_die_ax2); }
+void player_die_ax9(entity this) { set_animofs(this, anim_player_axdeth1, 9, player_die_ax9); PlayerDead(this); }
+void player_die_ax8(entity this) { set_animofs(this, anim_player_axdeth1, 8, player_die_ax9); }
+void player_die_ax7(entity this) { set_animofs(this, anim_player_axdeth1, 7, player_die_ax8); }
+void player_die_ax6(entity this) { set_animofs(this, anim_player_axdeth1, 6, player_die_ax7); }
+void player_die_ax5(entity this) { set_animofs(this, anim_player_axdeth1, 5, player_die_ax6); }
+void player_die_ax4(entity this) { set_animofs(this, anim_player_axdeth1, 4, player_die_ax5); }
+void player_die_ax3(entity this) { set_animofs(this, anim_player_axdeth1, 3, player_die_ax4); }
+void player_die_ax2(entity this) { set_animofs(this, anim_player_axdeth1, 2, player_die_ax3); }
+void player_die_ax1(entity this) { set_animofs(this, anim_player_axdeth1, 1, player_die_ax2); }
 
 // hipnotic animations
 void player_die_ham8(entity this) { set_anim(this, 31, player_die_ham8); PlayerDead(this); }
