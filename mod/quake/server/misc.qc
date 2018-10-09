@@ -28,14 +28,6 @@ void set_animofs(entity this, int frm, int offs, void(entity) tnk)
 	set_anim(this, frm + realoffset, tnk);
 }
 
-/*QUAKED info_null(0 0.5 0)(-4 -4 -4)(4 4 4)
-Used as a positional target for spotlights, etc.
-*/
-spawnfunc(info_null)
-{
-	delete(this);
-}
-
 /*QUAKED info_notnull(0 0.5 0)(-4 -4 -4)(4 4 4)
 Used as a positional target for lightning.
 */
