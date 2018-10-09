@@ -28,7 +28,7 @@ void elvtr_button_done(entity this)
 void elvtr_button_return(entity this)
 {
 	this.state = STATE_DOWN;
-	SUB_CalcMove(this, this.pos1, this.speed, elvtr_button_done);
+	SUB_CalcMove(this, this.pos1, TSPEED_LINEAR, this.speed, elvtr_button_done);
 	this.frame = 0;			// use normal textures
 	if(this.health)
 		this.takedamage = DAMAGE_YES;	// can be shot again
@@ -47,7 +47,7 @@ void elvtr_button_fire(entity this)
 	_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 
 	this.state = STATE_UP;
-	SUB_CalcMove(this, this.pos2, this.speed, elvtr_button_wait);
+	SUB_CalcMove(this, this.pos2, TSPEED_LINEAR, this.speed, elvtr_button_wait);
 }
 
 void elvtr_button_use(entity this, entity actor, entity trigger)

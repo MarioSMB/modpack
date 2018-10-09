@@ -1,5 +1,8 @@
 #include "combat.qh"
 
+//#include "ai.qh"
+bool visible(entity this, entity targ);
+
 .bool lavaGunFired;
 
 /*

@@ -72,7 +72,7 @@ void door_go_down(entity this)
 	}
 	
 	this.state = STATE_DOWN;
-	SUB_CalcMove(this, this.pos1, this.speed, door_hit_bottom);
+	SUB_CalcMove(this, this.pos1, TSPEED_LINEAR, this.speed, door_hit_bottom);
 }
 
 void door_go_up(entity this)
@@ -88,7 +88,7 @@ void door_go_up(entity this)
 	
 	_sound(this, CH_TRIGGER_SINGLE, this.noise2, 1, ATTN_NORM);
 	this.state = STATE_UP;
-	SUB_CalcMove(this, this.pos2, this.speed, door_hit_top);
+	SUB_CalcMove(this, this.pos2, TSPEED_LINEAR, this.speed, door_hit_top);
 
 	SUB_UseTargets(this, NULL, NULL);
 }

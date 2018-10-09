@@ -57,14 +57,14 @@ void plat_go_down(entity this)
 {
 	_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	this.state = STATE_DOWN;
-	SUB_CalcMove(this, this.pos2, this.speed, plat_hit_bottom);
+	SUB_CalcMove(this, this.pos2, TSPEED_LINEAR, this.speed, plat_hit_bottom);
 }
 
 void plat_go_up(entity this)
 {
 	_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	this.state = STATE_UP;
-	SUB_CalcMove(this, this.pos1, this.speed, plat_hit_top);
+	SUB_CalcMove(this, this.pos1, TSPEED_LINEAR, this.speed, plat_hit_top);
 }
 
 void plat_center_touch(entity this, entity toucher)

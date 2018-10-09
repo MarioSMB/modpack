@@ -59,7 +59,7 @@ void fd_secret_use(entity this, entity actor, entity trigger)
 		this.dest1 = this.origin + v_right *(this.t_width * temp);
 		
 	this.dest2 = this.dest1 + v_forward * this.t_length;
-	SUB_CalcMove(this, this.dest1, this.speed, fd_secret_move1);
+	SUB_CalcMove(this, this.dest1, TSPEED_LINEAR, this.speed, fd_secret_move1);
 	_sound(this, CH_TRIGGER_SINGLE, this.noise2, 1, ATTN_NORM);
 }
 
@@ -85,7 +85,7 @@ void fd_secret_move1(entity this)
 void fd_secret_move2(entity this)
 {
 	_sound(this, CH_TRIGGER_SINGLE, this.noise2, 1, ATTN_NORM);
-	SUB_CalcMove(this, this.dest2, this.speed, fd_secret_move3);
+	SUB_CalcMove(this, this.dest2, TSPEED_LINEAR, this.speed, fd_secret_move3);
 }
 
 // Wait here until time to go back...
@@ -103,7 +103,7 @@ void fd_secret_move3(entity this)
 void fd_secret_move4(entity this)
 {
 	_sound(this, CH_TRIGGER_SINGLE, this.noise2, 1, ATTN_NORM);
-	SUB_CalcMove(this, this.dest1, this.speed, fd_secret_move5);		
+	SUB_CalcMove(this, this.dest1, TSPEED_LINEAR, this.speed, fd_secret_move5);		
 }
 
 // Wait 1 second...
@@ -117,7 +117,7 @@ void fd_secret_move5(entity this)
 void fd_secret_move6(entity this)
 {
 	_sound(this, CH_TRIGGER_SINGLE, this.noise2, 1, ATTN_NORM);
-	SUB_CalcMove(this, this.oldorigin, this.speed, fd_secret_done);
+	SUB_CalcMove(this, this.oldorigin, TSPEED_LINEAR, this.speed, fd_secret_done);
 }
 
 void fd_secret_done(entity this)

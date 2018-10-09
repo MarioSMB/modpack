@@ -43,7 +43,7 @@ void train_next(entity this)
 	else
 		this.wait = 0;
 	_sound(this, CH_TRIGGER_SINGLE, this.noise1, 1, ATTN_NORM);
-	SUB_CalcMove(this, targ.origin - this.mins, this.speed, train_wait);
+	SUB_CalcMove(this, targ.origin - this.mins, TSPEED_LINEAR, this.speed, train_wait);
 }
 
 void func_train_find(entity this)
@@ -228,7 +228,7 @@ void hip_train_next(entity this)
 			this.speed = current;
 
 		// travel to the next path change
-		SUB_CalcMove(this, targ.origin - this.mins, this.speed, getthink(this));
+		SUB_CalcMove(this, targ.origin - this.mins, TSPEED_LINEAR, this.speed, getthink(this));
 	}
 }
 

@@ -44,14 +44,14 @@ void dn_and_wait_go_down(entity this)
 {
 	_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	this.state = STATE_DOWN;
-	SUB_CalcMove(this, this.pos2, this.speed, dn_and_wait_hit_bottom);
+	SUB_CalcMove(this, this.pos2, TSPEED_LINEAR, this.speed, dn_and_wait_hit_bottom);
 }
 
 void dn_and_wait_go_up(entity this)
 {
 	_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	this.state = STATE_UP;
-	SUB_CalcMove(this, this.pos1, this.speed, dn_and_wait_hit_top);
+	SUB_CalcMove(this, this.pos1, TSPEED_LINEAR, this.speed, dn_and_wait_hit_top);
 }
 
 void dn_and_wait_crush(entity this, entity blocker)
@@ -98,14 +98,14 @@ void toggle_go_down(entity this)
 {
 	_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	this.state = STATE_DOWN;
-	SUB_CalcMove(this, this.pos2, this.speed, toggle_hit_bottom);
+	SUB_CalcMove(this, this.pos2, TSPEED_LINEAR, this.speed, toggle_hit_bottom);
 }
 
 void toggle_go_up(entity this)
 {
 	_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	this.state = STATE_UP;
-	SUB_CalcMove(this, this.pos1, this.speed, toggle_hit_top);
+	SUB_CalcMove(this, this.pos1, TSPEED_LINEAR, this.speed, toggle_hit_top);
 }
 
 void toggle_crush(entity this, entity blocker)
@@ -149,7 +149,7 @@ void elvtr_go(entity this)
 								(this.height * this.elevatorToFloor);
 	_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	this.state = STATE_UP;
-	SUB_CalcMove(this, this.elevatorDestination, this.speed, elvtr_stop);
+	SUB_CalcMove(this, this.elevatorDestination, TSPEED_LINEAR, this.speed, elvtr_stop);
 	this.elevatorLastUse = time;
 }
 
@@ -305,14 +305,14 @@ void plat2_go_down(entity this)
 {
 	_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	this.state = STATE_DOWN;
-	SUB_CalcMove(this, this.pos2, this.speed, plat2_hit_bottom);
+	SUB_CalcMove(this, this.pos2, TSPEED_LINEAR, this.speed, plat2_hit_bottom);
 }
 
 void plat2_go_up(entity this)
 {
 	_sound(this, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	this.state = STATE_UP;
-	SUB_CalcMove(this, this.pos1, this.speed, plat2_hit_top);
+	SUB_CalcMove(this, this.pos1, TSPEED_LINEAR, this.speed, plat2_hit_top);
 }
 
 void plat2_use(entity this, entity actor, entity trigger) 

@@ -2,6 +2,8 @@
 
 #ifdef SVQC
 
+const int TSPEED_LINEAR = 0;
+
 float TemporaryDB;
 
 float target_spawn_initialized;
