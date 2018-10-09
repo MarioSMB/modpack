@@ -137,8 +137,7 @@ spawnfunc(item_health)
 		this.healamount = 15;
 		this.healtype = 0;
 	}
-	else
-	if(this.spawnflags & H_MEGA)
+	else if(this.spawnflags & H_MEGA)
 	{
 		precache_model("maps/b_bh100.bsp");
 		precache_sound("items/r_item2.wav");
@@ -259,13 +258,13 @@ void armor_touch(entity this, entity toucher)
 		value = 100;
 		bit = IT_ARMOR1;
 	}
-	if(this.classname == "item_armor2")
+	else if(this.classname == "item_armor2")
 	{
 		type = 0.6;
 		value = 150;
 		bit = IT_ARMOR2;
 	}
-	if(this.classname == "item_armorInv")
+	else if(this.classname == "item_armorInv")
 	{
 		type = 0.8;
 		value = 200;
@@ -480,7 +479,7 @@ void weapon_touch(entity this, entity toucher)
 		return;
 
 	int hadammo = 0, newitem = 0;
-// if the player was using his best weapon, change up to the new one if better		
+// if the player was using their best weapon, change up to the new one if better		
 	//int best = W_BestWeapon(toucher);
 
 	bool leave = (deathmatch == 2 || coop);
