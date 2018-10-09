@@ -11,6 +11,7 @@ $origin 0 -6 24
 $base base		
 $skin skin
 
+#if 0
 const int anim_enf_stand1 = 0;
 const int anim_enf_stand2 = 1;
 const int anim_enf_stand3 = 2;
@@ -122,6 +123,18 @@ const int anim_enf_paind16 = 98;
 const int anim_enf_paind17 = 99;
 const int anim_enf_paind18 = 100;
 const int anim_enf_paind19 = 101;
+#endif
+
+const int anim_enf_stand = 0; //'0 6 0'
+const int anim_enf_walk = 7; //'7 22 0'
+const int anim_enf_run = 23; //'23 30 0'
+const int anim_enf_attack = 31; //'31 40 0'
+const int anim_enf_death = 41; //'41 54 0'
+const int anim_enf_fdeath = 55; //'55 65 0'
+const int anim_enf_paina = 66; //'66 69 0'
+const int anim_enf_painb = 70; //'70 74 0'
+const int anim_enf_painc = 75; //'75 82 0'
+const int anim_enf_paind = 83; //'83 101 0'
 
 void Laser_Touch(entity this, entity toucher)
 {
@@ -195,109 +208,109 @@ void enforcer_fire(entity this)
 //============================================================================
 
 void enf_stand1(entity this);
-void enf_stand7(entity this) { set_anim(this, anim_enf_stand7, enf_stand1); ai_stand(this); }
-void enf_stand6(entity this) { set_anim(this, anim_enf_stand6, enf_stand7); ai_stand(this); }
-void enf_stand5(entity this) { set_anim(this, anim_enf_stand5, enf_stand6); ai_stand(this); }
-void enf_stand4(entity this) { set_anim(this, anim_enf_stand4, enf_stand5); ai_stand(this); }
-void enf_stand3(entity this) { set_anim(this, anim_enf_stand3, enf_stand4); ai_stand(this); }
-void enf_stand2(entity this) { set_anim(this, anim_enf_stand2, enf_stand3); ai_stand(this); }
-void enf_stand1(entity this) { set_anim(this, anim_enf_stand1, enf_stand2); ai_stand(this); }
+void enf_stand7(entity this) { set_animofs(this, anim_enf_stand, 7, enf_stand1); ai_stand(this); }
+void enf_stand6(entity this) { set_animofs(this, anim_enf_stand, 6, enf_stand7); ai_stand(this); }
+void enf_stand5(entity this) { set_animofs(this, anim_enf_stand, 5, enf_stand6); ai_stand(this); }
+void enf_stand4(entity this) { set_animofs(this, anim_enf_stand, 4, enf_stand5); ai_stand(this); }
+void enf_stand3(entity this) { set_animofs(this, anim_enf_stand, 3, enf_stand4); ai_stand(this); }
+void enf_stand2(entity this) { set_animofs(this, anim_enf_stand, 2, enf_stand3); ai_stand(this); }
+void enf_stand1(entity this) { set_animofs(this, anim_enf_stand, 1, enf_stand2); ai_stand(this); }
 
 void enf_walk1(entity this);
-void enf_walk16(entity this) { set_anim(this, anim_enf_walk16, enf_walk1); ai_walk(this, 2); }
-void enf_walk15(entity this) { set_anim(this, anim_enf_walk15, enf_walk16); ai_walk(this, 4); }
-void enf_walk14(entity this) { set_anim(this, anim_enf_walk14, enf_walk15); ai_walk(this, 3); }
-void enf_walk13(entity this) { set_anim(this, anim_enf_walk13, enf_walk14); ai_walk(this, 2); }
-void enf_walk12(entity this) { set_anim(this, anim_enf_walk12, enf_walk13); ai_walk(this, 1); }
-void enf_walk11(entity this) { set_anim(this, anim_enf_walk11, enf_walk12); ai_walk(this, 4); }
-void enf_walk10(entity this) { set_anim(this, anim_enf_walk10, enf_walk11); ai_walk(this, 4); }
-void enf_walk9(entity this) { set_anim(this, anim_enf_walk9, enf_walk10); ai_walk(this, 2); }
-void enf_walk8(entity this) { set_anim(this, anim_enf_walk8, enf_walk9); ai_walk(this, 1); }
-void enf_walk7(entity this) { set_anim(this, anim_enf_walk7, enf_walk8); ai_walk(this, 2); }
-void enf_walk6(entity this) { set_anim(this, anim_enf_walk6, enf_walk7); ai_walk(this, 2); }
-void enf_walk5(entity this) { set_anim(this, anim_enf_walk5, enf_walk6); ai_walk(this, 1); }
-void enf_walk4(entity this) { set_anim(this, anim_enf_walk4, enf_walk5); ai_walk(this, 3); }
-void enf_walk3(entity this) { set_anim(this, anim_enf_walk3, enf_walk4); ai_walk(this, 4); }
-void enf_walk2(entity this) { set_anim(this, anim_enf_walk2, enf_walk3); ai_walk(this, 4); }
+void enf_walk16(entity this) { set_animofs(this, anim_enf_walk, 16, enf_walk1); ai_walk(this, 2); }
+void enf_walk15(entity this) { set_animofs(this, anim_enf_walk, 15, enf_walk16); ai_walk(this, 4); }
+void enf_walk14(entity this) { set_animofs(this, anim_enf_walk, 14, enf_walk15); ai_walk(this, 3); }
+void enf_walk13(entity this) { set_animofs(this, anim_enf_walk, 13, enf_walk14); ai_walk(this, 2); }
+void enf_walk12(entity this) { set_animofs(this, anim_enf_walk, 12, enf_walk13); ai_walk(this, 1); }
+void enf_walk11(entity this) { set_animofs(this, anim_enf_walk, 11, enf_walk12); ai_walk(this, 4); }
+void enf_walk10(entity this) { set_animofs(this, anim_enf_walk, 10, enf_walk11); ai_walk(this, 4); }
+void enf_walk9(entity this) { set_animofs(this, anim_enf_walk, 9, enf_walk10); ai_walk(this, 2); }
+void enf_walk8(entity this) { set_animofs(this, anim_enf_walk, 8, enf_walk9); ai_walk(this, 1); }
+void enf_walk7(entity this) { set_animofs(this, anim_enf_walk, 7, enf_walk8); ai_walk(this, 2); }
+void enf_walk6(entity this) { set_animofs(this, anim_enf_walk, 6, enf_walk7); ai_walk(this, 2); }
+void enf_walk5(entity this) { set_animofs(this, anim_enf_walk, 5, enf_walk6); ai_walk(this, 1); }
+void enf_walk4(entity this) { set_animofs(this, anim_enf_walk, 4, enf_walk5); ai_walk(this, 3); }
+void enf_walk3(entity this) { set_animofs(this, anim_enf_walk, 3, enf_walk4); ai_walk(this, 4); }
+void enf_walk2(entity this) { set_animofs(this, anim_enf_walk, 2, enf_walk3); ai_walk(this, 4); }
 void enf_walk1(entity this)
 {
-	set_anim(this, anim_enf_walk1, enf_walk2);
+	set_animofs(this, anim_enf_walk, 1, enf_walk2);
 	if(random() < 0.2)
 		_sound(this, CH_VOICE, "enforcer/idle1.wav", 1, ATTN_IDLE);
 	ai_walk(this, 2);
 }
 
 void enf_run1(entity this);
-void enf_run8(entity this) { set_anim(this, anim_enf_run8, enf_run1); ai_run(this, 11); }
-void enf_run7(entity this) { set_anim(this, anim_enf_run7, enf_run8); ai_run(this, 7); }
-void enf_run6(entity this) { set_anim(this, anim_enf_run6, enf_run7); ai_run(this, 14); }
-void enf_run5(entity this) { set_anim(this, anim_enf_run5, enf_run6); ai_run(this, 14); }
-void enf_run4(entity this) { set_anim(this, anim_enf_run4, enf_run5); ai_run(this, 12); }
-void enf_run3(entity this) { set_anim(this, anim_enf_run3, enf_run4); ai_run(this, 7); }
-void enf_run2(entity this) { set_anim(this, anim_enf_run2, enf_run3); ai_run(this, 14); }
+void enf_run8(entity this) { set_animofs(this, anim_enf_run, 8, enf_run1); ai_run(this, 11); }
+void enf_run7(entity this) { set_animofs(this, anim_enf_run, 7, enf_run8); ai_run(this, 7); }
+void enf_run6(entity this) { set_animofs(this, anim_enf_run, 6, enf_run7); ai_run(this, 14); }
+void enf_run5(entity this) { set_animofs(this, anim_enf_run, 5, enf_run6); ai_run(this, 14); }
+void enf_run4(entity this) { set_animofs(this, anim_enf_run, 4, enf_run5); ai_run(this, 12); }
+void enf_run3(entity this) { set_animofs(this, anim_enf_run, 3, enf_run4); ai_run(this, 7); }
+void enf_run2(entity this) { set_animofs(this, anim_enf_run, 2, enf_run3); ai_run(this, 14); }
 void enf_run1(entity this)
 {
-	set_anim(this, anim_enf_run1, enf_run2);
+	set_animofs(this, anim_enf_run, 1, enf_run2);
 	if(random() < 0.2)
 		_sound(this, CH_VOICE, "enforcer/idle1.wav", 1, ATTN_IDLE);
 	ai_run(this, 18);
 }
 
 void enf_atk1(entity this);
-void enf_atk14(entity this) { set_anim(this, anim_enf_attack10, enf_run1); ai_face(this); SUB_CheckRefire(this, enf_atk1); }
-void enf_atk13(entity this) { set_anim(this, anim_enf_attack9, enf_atk14); ai_face(this); }
-void enf_atk12(entity this) { set_anim(this, anim_enf_attack8, enf_atk13); ai_face(this); }
-void enf_atk11(entity this) { set_anim(this, anim_enf_attack7, enf_atk12); ai_face(this); }
-void enf_atk10(entity this) { set_anim(this, anim_enf_attack6, enf_atk11); enforcer_fire(this); }
-void enf_atk9(entity this) { set_anim(this, anim_enf_attack5, enf_atk10); ai_face(this); }
-void enf_atk8(entity this) { set_anim(this, anim_enf_attack8, enf_atk9); ai_face(this); }
-void enf_atk7(entity this) { set_anim(this, anim_enf_attack7, enf_atk8); ai_face(this); }
-void enf_atk6(entity this) { set_anim(this, anim_enf_attack6, enf_atk7); enforcer_fire(this); }
-void enf_atk5(entity this) { set_anim(this, anim_enf_attack5, enf_atk6); ai_face(this); }
-void enf_atk4(entity this) { set_anim(this, anim_enf_attack4, enf_atk5); ai_face(this); }
-void enf_atk3(entity this) { set_anim(this, anim_enf_attack3, enf_atk4); ai_face(this); }
-void enf_atk2(entity this) { set_anim(this, anim_enf_attack2, enf_atk3); ai_face(this); }
-void enf_atk1(entity this) { set_anim(this, anim_enf_attack1, enf_atk2); ai_face(this); }
+void enf_atk14(entity this) { set_animofs(this, anim_enf_attack, 10, enf_run1); ai_face(this); SUB_CheckRefire(this, enf_atk1); }
+void enf_atk13(entity this) { set_animofs(this, anim_enf_attack, 9, enf_atk14); ai_face(this); }
+void enf_atk12(entity this) { set_animofs(this, anim_enf_attack, 8, enf_atk13); ai_face(this); }
+void enf_atk11(entity this) { set_animofs(this, anim_enf_attack, 7, enf_atk12); ai_face(this); }
+void enf_atk10(entity this) { set_animofs(this, anim_enf_attack, 6, enf_atk11); enforcer_fire(this); }
+void enf_atk9(entity this) { set_animofs(this, anim_enf_attack, 5, enf_atk10); ai_face(this); }
+void enf_atk8(entity this) { set_animofs(this, anim_enf_attack, 8, enf_atk9); ai_face(this); }
+void enf_atk7(entity this) { set_animofs(this, anim_enf_attack, 7, enf_atk8); ai_face(this); }
+void enf_atk6(entity this) { set_animofs(this, anim_enf_attack, 6, enf_atk7); enforcer_fire(this); }
+void enf_atk5(entity this) { set_animofs(this, anim_enf_attack, 5, enf_atk6); ai_face(this); }
+void enf_atk4(entity this) { set_animofs(this, anim_enf_attack, 4, enf_atk5); ai_face(this); }
+void enf_atk3(entity this) { set_animofs(this, anim_enf_attack, 3, enf_atk4); ai_face(this); }
+void enf_atk2(entity this) { set_animofs(this, anim_enf_attack, 2, enf_atk3); ai_face(this); }
+void enf_atk1(entity this) { set_animofs(this, anim_enf_attack, 1, enf_atk2); ai_face(this); }
 
-void enf_paina4(entity this) { set_anim(this, anim_enf_paina4, enf_run1); }
-void enf_paina3(entity this) { set_anim(this, anim_enf_paina3, enf_paina4); }
-void enf_paina2(entity this) { set_anim(this, anim_enf_paina2, enf_paina3); }
-void enf_paina1(entity this) { set_anim(this, anim_enf_paina1, enf_paina2); }
+void enf_paina4(entity this) { set_animofs(this, anim_enf_paina, 4, enf_run1); }
+void enf_paina3(entity this) { set_animofs(this, anim_enf_paina, 3, enf_paina4); }
+void enf_paina2(entity this) { set_animofs(this, anim_enf_paina, 2, enf_paina3); }
+void enf_paina1(entity this) { set_animofs(this, anim_enf_paina, 1, enf_paina2); }
 
-void enf_painb5(entity this) { set_anim(this, anim_enf_painb5, enf_run1); }
-void enf_painb4(entity this) { set_anim(this, anim_enf_painb4, enf_painb5); }
-void enf_painb3(entity this) { set_anim(this, anim_enf_painb3, enf_painb4); }
-void enf_painb2(entity this) { set_anim(this, anim_enf_painb2, enf_painb3); }
-void enf_painb1(entity this) { set_anim(this, anim_enf_painb1, enf_painb2); }
+void enf_painb5(entity this) { set_animofs(this, anim_enf_painb, 5, enf_run1); }
+void enf_painb4(entity this) { set_animofs(this, anim_enf_painb, 4, enf_painb5); }
+void enf_painb3(entity this) { set_animofs(this, anim_enf_painb, 3, enf_painb4); }
+void enf_painb2(entity this) { set_animofs(this, anim_enf_painb, 2, enf_painb3); }
+void enf_painb1(entity this) { set_animofs(this, anim_enf_painb, 1, enf_painb2); }
 
-void enf_painc8(entity this) { set_anim(this, anim_enf_painc8, enf_run1); }
-void enf_painc7(entity this) { set_anim(this, anim_enf_painc7, enf_painc8); }
-void enf_painc6(entity this) { set_anim(this, anim_enf_painc6, enf_painc7); }
-void enf_painc5(entity this) { set_anim(this, anim_enf_painc5, enf_painc6); }
-void enf_painc4(entity this) { set_anim(this, anim_enf_painc4, enf_painc5); }
-void enf_painc3(entity this) { set_anim(this, anim_enf_painc3, enf_painc4); }
-void enf_painc2(entity this) { set_anim(this, anim_enf_painc2, enf_painc3); }
-void enf_painc1(entity this) { set_anim(this, anim_enf_painc1, enf_painc2); }
+void enf_painc8(entity this) { set_animofs(this, anim_enf_painc, 8, enf_run1); }
+void enf_painc7(entity this) { set_animofs(this, anim_enf_painc, 7, enf_painc8); }
+void enf_painc6(entity this) { set_animofs(this, anim_enf_painc, 6, enf_painc7); }
+void enf_painc5(entity this) { set_animofs(this, anim_enf_painc, 5, enf_painc6); }
+void enf_painc4(entity this) { set_animofs(this, anim_enf_painc, 4, enf_painc5); }
+void enf_painc3(entity this) { set_animofs(this, anim_enf_painc, 3, enf_painc4); }
+void enf_painc2(entity this) { set_animofs(this, anim_enf_painc, 2, enf_painc3); }
+void enf_painc1(entity this) { set_animofs(this, anim_enf_painc, 1, enf_painc2); }
 
-void enf_paind19(entity this) { set_anim(this, anim_enf_paind19, enf_run1); }
-void enf_paind18(entity this) { set_anim(this, anim_enf_paind18, enf_paind19); }
-void enf_paind17(entity this) { set_anim(this, anim_enf_paind17, enf_paind18); ai_pain(this, 1); }
-void enf_paind16(entity this) { set_anim(this, anim_enf_paind16, enf_paind17); ai_pain(this, 1); }
-void enf_paind15(entity this) { set_anim(this, anim_enf_paind15, enf_paind16); }
-void enf_paind14(entity this) { set_anim(this, anim_enf_paind14, enf_paind15); }
-void enf_paind13(entity this) { set_anim(this, anim_enf_paind13, enf_paind14); ai_painforward(this, 1); }
-void enf_paind12(entity this) { set_anim(this, anim_enf_paind12, enf_paind13); ai_painforward(this, 1); }
-void enf_paind11(entity this) { set_anim(this, anim_enf_paind11, enf_paind12); ai_painforward(this, 1); }
-void enf_paind10(entity this) { set_anim(this, anim_enf_paind10, enf_paind11); }
-void enf_paind9(entity this) { set_anim(this, anim_enf_paind9, enf_paind10); }
-void enf_paind8(entity this) { set_anim(this, anim_enf_paind8, enf_paind9); }
-void enf_paind7(entity this) { set_anim(this, anim_enf_paind7, enf_paind8); }
-void enf_paind6(entity this) { set_anim(this, anim_enf_paind6, enf_paind7); }
-void enf_paind5(entity this) { set_anim(this, anim_enf_paind5, enf_paind6); ai_painforward(this, 1); }
-void enf_paind4(entity this) { set_anim(this, anim_enf_paind4, enf_paind5); ai_painforward(this, 2); }
-void enf_paind3(entity this) { set_anim(this, anim_enf_paind3, enf_paind4); }
-void enf_paind2(entity this) { set_anim(this, anim_enf_paind2, enf_paind3); }
-void enf_paind1(entity this) { set_anim(this, anim_enf_paind1, enf_paind2); }
+void enf_paind19(entity this) { set_animofs(this, anim_enf_paind, 19, enf_run1); }
+void enf_paind18(entity this) { set_animofs(this, anim_enf_paind, 18, enf_paind19); }
+void enf_paind17(entity this) { set_animofs(this, anim_enf_paind, 17, enf_paind18); ai_pain(this, 1); }
+void enf_paind16(entity this) { set_animofs(this, anim_enf_paind, 16, enf_paind17); ai_pain(this, 1); }
+void enf_paind15(entity this) { set_animofs(this, anim_enf_paind, 15, enf_paind16); }
+void enf_paind14(entity this) { set_animofs(this, anim_enf_paind, 14, enf_paind15); }
+void enf_paind13(entity this) { set_animofs(this, anim_enf_paind, 13, enf_paind14); ai_painforward(this, 1); }
+void enf_paind12(entity this) { set_animofs(this, anim_enf_paind, 12, enf_paind13); ai_painforward(this, 1); }
+void enf_paind11(entity this) { set_animofs(this, anim_enf_paind, 11, enf_paind12); ai_painforward(this, 1); }
+void enf_paind10(entity this) { set_animofs(this, anim_enf_paind, 10, enf_paind11); }
+void enf_paind9(entity this) { set_animofs(this, anim_enf_paind, 9, enf_paind10); }
+void enf_paind8(entity this) { set_animofs(this, anim_enf_paind, 8, enf_paind9); }
+void enf_paind7(entity this) { set_animofs(this, anim_enf_paind, 7, enf_paind8); }
+void enf_paind6(entity this) { set_animofs(this, anim_enf_paind, 6, enf_paind7); }
+void enf_paind5(entity this) { set_animofs(this, anim_enf_paind, 5, enf_paind6); ai_painforward(this, 1); }
+void enf_paind4(entity this) { set_animofs(this, anim_enf_paind, 4, enf_paind5); ai_painforward(this, 2); }
+void enf_paind3(entity this) { set_animofs(this, anim_enf_paind, 3, enf_paind4); }
+void enf_paind2(entity this) { set_animofs(this, anim_enf_paind, 2, enf_paind3); }
+void enf_paind1(entity this) { set_animofs(this, anim_enf_paind, 1, enf_paind2); }
 
 void enf_pain(entity this, entity attacker, float damage)
 {
@@ -335,44 +348,44 @@ void enf_pain(entity this, entity attacker, float damage)
 //============================================================================
 
 
-void enf_die14(entity this) { set_anim(this, anim_enf_death14, enf_die14); }
-void enf_die13(entity this) { set_anim(this, anim_enf_death13, enf_die14); }
-void enf_die12(entity this) { set_anim(this, anim_enf_death12, enf_die13); ai_forward(this, 5); }
-void enf_die11(entity this) { set_anim(this, anim_enf_death11, enf_die12); ai_forward(this, 5); }
-void enf_die10(entity this) { set_anim(this, anim_enf_death10, enf_die11); ai_forward(this, 5); }
-void enf_die9(entity this) { set_anim(this, anim_enf_death9, enf_die10); ai_forward(this, 3); }
-void enf_die8(entity this) { set_anim(this, anim_enf_death8, enf_die9); }
-void enf_die7(entity this) { set_anim(this, anim_enf_death7, enf_die8); }
-void enf_die6(entity this) { set_anim(this, anim_enf_death6, enf_die7); }
-void enf_die5(entity this) { set_anim(this, anim_enf_death5, enf_die6); ai_forward(this, 2); }
-void enf_die4(entity this) { set_anim(this, anim_enf_death4, enf_die5); ai_forward(this, 14); }
+void enf_die14(entity this) { set_animofs(this, anim_enf_death, 14, enf_die14); }
+void enf_die13(entity this) { set_animofs(this, anim_enf_death, 13, enf_die14); }
+void enf_die12(entity this) { set_animofs(this, anim_enf_death, 12, enf_die13); ai_forward(this, 5); }
+void enf_die11(entity this) { set_animofs(this, anim_enf_death, 11, enf_die12); ai_forward(this, 5); }
+void enf_die10(entity this) { set_animofs(this, anim_enf_death, 10, enf_die11); ai_forward(this, 5); }
+void enf_die9(entity this) { set_animofs(this, anim_enf_death, 9, enf_die10); ai_forward(this, 3); }
+void enf_die8(entity this) { set_animofs(this, anim_enf_death, 8, enf_die9); }
+void enf_die7(entity this) { set_animofs(this, anim_enf_death, 7, enf_die8); }
+void enf_die6(entity this) { set_animofs(this, anim_enf_death, 6, enf_die7); }
+void enf_die5(entity this) { set_animofs(this, anim_enf_death, 5, enf_die6); ai_forward(this, 2); }
+void enf_die4(entity this) { set_animofs(this, anim_enf_death, 4, enf_die5); ai_forward(this, 14); }
 void enf_die3(entity this)
 {
-	set_anim(this, anim_enf_death3, enf_die4);
+	set_animofs(this, anim_enf_death, 3, enf_die4);
 	this.solid = SOLID_NOT;
 	this.ammo_cells = 5;
 	DropBackpack(this);
 }
-void enf_die2(entity this) { set_anim(this, anim_enf_death2, enf_die3); }
-void enf_die1(entity this) { set_anim(this, anim_enf_death1, enf_die2); }
+void enf_die2(entity this) { set_animofs(this, anim_enf_death, 2, enf_die3); }
+void enf_die1(entity this) { set_animofs(this, anim_enf_death, 1, enf_die2); }
 
-void enf_fdie11(entity this) { set_anim(this, anim_enf_fdeath11, enf_fdie11); }
-void enf_fdie10(entity this) { set_anim(this, anim_enf_fdeath10, enf_fdie11); }
-void enf_fdie9(entity this) { set_anim(this, anim_enf_fdeath9, enf_fdie10); }
-void enf_fdie8(entity this) { set_anim(this, anim_enf_fdeath8, enf_fdie9); }
-void enf_fdie7(entity this) { set_anim(this, anim_enf_fdeath7, enf_fdie8); }
-void enf_fdie6(entity this) { set_anim(this, anim_enf_fdeath6, enf_fdie7); }
-void enf_fdie5(entity this) { set_anim(this, anim_enf_fdeath5, enf_fdie6); }
-void enf_fdie4(entity this) { set_anim(this, anim_enf_fdeath4, enf_fdie5); }
+void enf_fdie11(entity this) { set_animofs(this, anim_enf_fdeath, 11, enf_fdie11); }
+void enf_fdie10(entity this) { set_animofs(this, anim_enf_fdeath, 10, enf_fdie11); }
+void enf_fdie9(entity this) { set_animofs(this, anim_enf_fdeath, 9, enf_fdie10); }
+void enf_fdie8(entity this) { set_animofs(this, anim_enf_fdeath, 8, enf_fdie9); }
+void enf_fdie7(entity this) { set_animofs(this, anim_enf_fdeath, 7, enf_fdie8); }
+void enf_fdie6(entity this) { set_animofs(this, anim_enf_fdeath, 6, enf_fdie7); }
+void enf_fdie5(entity this) { set_animofs(this, anim_enf_fdeath, 5, enf_fdie6); }
+void enf_fdie4(entity this) { set_animofs(this, anim_enf_fdeath, 4, enf_fdie5); }
 void enf_fdie3(entity this)
 {
-	set_anim(this, anim_enf_fdeath3, enf_fdie4);
+	set_animofs(this, anim_enf_fdeath, 3, enf_fdie4);
 	this.solid = SOLID_NOT;
 	this.ammo_cells = 5;
 	DropBackpack(this);
 }
-void enf_fdie2(entity this) { set_anim(this, anim_enf_fdeath2, enf_fdie3); }
-void enf_fdie1(entity this) { set_anim(this, anim_enf_fdeath1, enf_fdie2); }
+void enf_fdie2(entity this) { set_animofs(this, anim_enf_fdeath, 2, enf_fdie3); }
+void enf_fdie1(entity this) { set_animofs(this, anim_enf_fdeath, 1, enf_fdie2); }
 
 void enf_die(entity this, entity attacker)
 {
