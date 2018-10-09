@@ -247,7 +247,7 @@ void HIP_LightningThink(entity this)
 	if(time > this.delay)
 	{
 		if(this.enemy != NULL)
-			this.enemy.struck_by_mjolnir = 0;
+			this.enemy.struck_by_mjolnir = false;
 		delete(this);
 		return;
 	}
@@ -267,7 +267,7 @@ void HIP_LightningThink(entity this)
 				{
 					float cur_dist = this.distance;
 					float head_dist = vlen(head.origin - this.lastvictim.origin);
-					if((head_dist < cur_dist) &&(head.struck_by_mjolnir == 0))
+					if((head_dist < cur_dist) && !head.struck_by_mjolnir)
 					{
 						selected = head;
 						cur_dist = head_dist;
@@ -280,7 +280,7 @@ void HIP_LightningThink(entity this)
 		{
 			this.state = 1;
 			this.enemy = selected;
-			this.enemy.struck_by_mjolnir = 1;
+			this.enemy.struck_by_mjolnir = true;
 		}
 		else
 		{
@@ -309,7 +309,7 @@ void HIP_LightningThink(entity this)
 
 	if(trace_fraction != 1.0 || this.enemy.health<=0)
 	{
-		this.enemy.struck_by_mjolnir = 0;
+		this.enemy.struck_by_mjolnir = false;
 		this.state = 0;
 		this.nextthink = time + 0.1;
 		return;
@@ -352,7 +352,7 @@ void HIP_SpawnMjolnirBase(entity this)
 	light.origin = trace_endpos;
 	light.flags = 0;
 	light.owner = this;
-	light.struck_by_mjolnir = 1;
+	light.struck_by_mjolnir = true;
 	setthink(light, SUB_Remove);
 	light.nextthink = time + 1;
 	_sound(light, CHAN_AUTO, "hipweap/mjolslap.wav", 1, ATTN_NORM);

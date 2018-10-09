@@ -10,7 +10,7 @@ Requirements
 ============
  
 Required content packs:
- - http://dl.xonotic.co/zzz-quake1_09.pk3
+ - http://dl.xonotic.co/zzz-quake1_10.pk3
 
 Optional mission packs:
  - http://dl.xonotic.co/zzz-quake1-mp1_05.pk3
@@ -26,6 +26,7 @@ On server launch, you'll need to set a few cvars to make everything work:
 `deathmatch 0`  
 `registered 1`  
 `sv_playerphysicsqc 1`  
+`sv_gameplayfix_droptofloorstartsolid 1`  
 
 
 If you wish to use the Scourge of Armagon mission pack, you'll need the following as well:  

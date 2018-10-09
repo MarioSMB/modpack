@@ -21,7 +21,7 @@ void trap_gravity_think(entity this)
 	int hit_targets = 0;
 	FOREACH_ENTITY_RADIUS(this.origin, this.distance, !(it.flags & FL_NOTARGET) && (it.flags & this.cnt),
 	{
-		if(it.health > 0 && it.struck_by_mjolnir == 0 && visible(this, it))
+		if(it.health > 0 && !it.struck_by_mjolnir && visible(this, it))
 		{
 			vector dir = normalize(this.origin - it.origin);
 			vector vel = dir * this.speed;

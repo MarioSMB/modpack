@@ -65,7 +65,7 @@ const float MIN_ANGLE_DELTA = 10;
 // used for linked list of entities
 .entity     next_ent;
 // Mjolnir
-.float      struck_by_mjolnir;
+.bool      struck_by_mjolnir;
 // teleport invulnerability
 .float      last_teleport_time;
 

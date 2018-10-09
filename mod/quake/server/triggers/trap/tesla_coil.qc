@@ -1,33 +1,27 @@
 #ifdef SVQC
 
-entity tesla_target;
-float tesla_numtargets;
-void trap_tesla_scan(entity this)
+.entity tesla_target;
+int trap_tesla_scan(entity this)
 {
+	// look in our immediate vicinity
+	int tesla_numtargets = 0;
 	entity prev = NULL;
-
-// look in our immediate vicinity
-
-	tesla_numtargets = 0;
-	entity head = findradius(this.origin, this.distance);
-	while(head)
+	FOREACH_ENTITY_RADIUS(this.origin, this.distance, !(it.flags & FL_NOTARGET) && (it.flags & this.cnt),
 	{
-		if(!(head.flags & FL_NOTARGET) && (head.flags & this.cnt))
+		if(it.health > 0 && !it.struck_by_mjolnir && visible(this, it))
 		{
-			if(visible(this, head) && (head.health > 0) && (head.struck_by_mjolnir == 0))
-			{
-				if(tesla_numtargets == 0)
-					tesla_target = head;
-				else
-					prev.next_ent = head;
-				tesla_numtargets = tesla_numtargets + 1;
-				prev = head;
-				if(tesla_numtargets == this.count)
-					return;
-			}
+			if(tesla_numtargets == 0)
+				this.tesla_target = it;
+			else
+				prev.next_ent = it;
+			tesla_numtargets += 1;
+			prev = it;
+			if(tesla_numtargets >= this.count)
+				break;
 		}
-		head = head.chain;
-	}
+	});
+
+	return tesla_numtargets;
 }
 
 void TeslaLightningThink(entity this)
@@ -35,7 +29,7 @@ void TeslaLightningThink(entity this)
 	this.owner.attack_state = 2;
 	if(time > this.delay)
 	{
-		this.enemy.struck_by_mjolnir = 0;
+		this.enemy.struck_by_mjolnir = false;
 		delete(this);
 		return;
 	}
@@ -43,7 +37,7 @@ void TeslaLightningThink(entity this)
 
 	if(trace_fraction != 1.0 || this.enemy.health <= 0 || vdist(this.origin - this.enemy.origin, >, (this.distance + 10)))
 	{
-		this.enemy.struck_by_mjolnir = 0;
+		this.enemy.struck_by_mjolnir = false;
 		delete(this);
 		return;
 	}
@@ -56,12 +50,12 @@ void SpawnTeslaLightning(entity this, entity targ)
 {
 	// spawn actual lightning
 	entity lgt = spawn();
-	if(this.duration>0)
+	if(this.duration > 0)
 		lgt.delay = time + this.duration;
 	else
 		lgt.delay = time + 9999;
 	lgt.enemy = targ;
-	targ.struck_by_mjolnir = 1;
+	targ.struck_by_mjolnir = true;
 	lgt.distance = this.distance;
 	lgt.owner = this;
 	lgt.lastvictim = this.lastvictim;
@@ -79,49 +73,56 @@ void trap_tesla_think(entity this)
 		this.nextthink = time + 0.25;
 		return;
 	}
-	if(this.attack_state == 0)
+	switch(this.attack_state)
 	{
-		setthink(this, trap_tesla_think);
-		trap_tesla_scan(this);
-		if(tesla_numtargets > 0)
+		case 0:
 		{
-			if(this.wait > 0)
-				_sound(this, CH_TRIGGER, "misc/tesla.wav", 1, ATTN_NORM);
-			this.attack_state = 1;
-			this.nextthink = time + this.wait;
-			return;
+			setthink(this, trap_tesla_think);
+			int numtargets = trap_tesla_scan(this);
+			if(numtargets > 0)
+			{
+				if(this.wait > 0)
+					_sound(this, CH_TRIGGER, "misc/tesla.wav", 1, ATTN_NORM);
+				this.attack_state = 1;
+				this.nextthink = time + this.wait;
+				break;
+			}
+			this.nextthink = time + 0.25;
+			if(this.delay > 0)
+			{
+				if(time > this.search_time)
+					this.attack_state = 3;
+			}
+			break;
 		}
-		this.nextthink = time + 0.25;
-		if(this.delay > 0)
+		case 1:
 		{
-			if(time > this.search_time)
-				this.attack_state = 3;
+			int numtargets = trap_tesla_scan(this);
+			while(numtargets > 0)
+			{
+				_sound(this, CHAN_AUTO, "hipweap/mjolhit.wav", 1, ATTN_NORM);
+				SpawnTeslaLightning(this, this.tesla_target);
+				this.tesla_target = this.tesla_target.next_ent;
+				numtargets = numtargets - 1;
+			}
+			this.attack_state = 2;
+			this.nextthink = time + 1;
+			break;
 		}
-	}
-	else if(this.attack_state == 1)
-	{
-		trap_tesla_scan(this);
-		while(tesla_numtargets > 0)
+		case 2:
 		{
-			_sound(this, CHAN_AUTO, "hipweap/mjolhit.wav", 1, ATTN_NORM);
-			SpawnTeslaLightning (this, tesla_target);
-			tesla_target = tesla_target.next_ent;
-			tesla_numtargets = tesla_numtargets - 1;
+			this.attack_state = 3;
+			this.nextthink = time + 0.2;
+			break;
 		}
-		this.attack_state = 2;
-		this.nextthink = time + 1;
-	}
-	else if(this.attack_state == 2)
-	{
-		this.attack_state = 3;
-		this.nextthink = time + 0.2;
-	}
-	else if(this.attack_state == 3)
-	{
-		this.attack_state = 0;
-		this.nextthink = time + 0.1;
-		if(this.classname == "trap_gods_wrath")
-			this.nextthink = -1;
+		case 3:
+		{
+			this.attack_state = 0;
+			this.nextthink = time + 0.1;
+			if(this.classname == "trap_gods_wrath")
+				this.nextthink = -1;
+			break;
+		}
 	}
 }
 
@@ -158,7 +159,6 @@ spawnfunc(trap_tesla_coil)
 	this.nextthink = time + random();
 	setthink(this, trap_tesla_think);
 	this.lastvictim = NULL;
-	tesla_numtargets = 0;
 	this.attack_state = 0;
 	this.deathtype = "is electrocuted";
 }
@@ -189,6 +189,7 @@ spawnfunc(trap_gods_wrath)
 	if(this.delay == 0)
 		this.delay = 5;
 	spawnfunc_trap_tesla_coil(this);
+	this.classname = "trap_gods_wrath"; // reset by spawnfunc
 	this.wait = 0;
 	this.state = 1;
 	this.nextthink = -1;
