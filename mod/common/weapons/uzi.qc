@@ -3,37 +3,37 @@
 #include "uzi.qh"
 #ifndef IMPLEMENTATION
 
-AUTOCVAR(g_balance_uzi_burst, float, 1, "");
-AUTOCVAR(g_balance_uzi_burst_ammo, float, 1, "");
-AUTOCVAR(g_balance_uzi_burst_animtime, float, 0.4, "");
-AUTOCVAR(g_balance_uzi_burst_damage, float, 16, "");
-AUTOCVAR(g_balance_uzi_burst_refire, float, 0.5, "");
-AUTOCVAR(g_balance_uzi_burst_refire2, float, 0.6, "");
-AUTOCVAR(g_balance_uzi_burst_speed, float, 0, "");
-AUTOCVAR(g_balance_uzi_first, float, 1, "");
-AUTOCVAR(g_balance_uzi_first_ammo, float, 1, "");
-AUTOCVAR(g_balance_uzi_first_damage, float, 14, "");
-AUTOCVAR(g_balance_uzi_first_force, float, 3, "");
-AUTOCVAR(g_balance_uzi_first_refire, float, 0.125, "");
-AUTOCVAR(g_balance_uzi_first_spread, float, 0.03, "");
-AUTOCVAR(g_balance_uzi_mode, float, 1, "");
-AUTOCVAR(g_balance_uzi_reload_ammo, float, 30, "");
-AUTOCVAR(g_balance_uzi_reload_time, float, 1.6, "");
-AUTOCVAR(g_balance_uzi_solidpenetration, float, 9, "");
-AUTOCVAR(g_balance_uzi_spread_add, float, 0.012, "");
-AUTOCVAR(g_balance_uzi_spread_max, float, 0.05, "");
-AUTOCVAR(g_balance_uzi_spread_min, float, 0.02, "");
-AUTOCVAR(g_balance_uzi_sustained_ammo, float, 1, "");
-AUTOCVAR(g_balance_uzi_sustained_damage, float, 7, "");
-AUTOCVAR(g_balance_uzi_sustained_force, float, 3, "");
-AUTOCVAR(g_balance_uzi_sustained_refire, float, 0.05, "");
-AUTOCVAR(g_balance_uzi_sustained_spread, float, 0.04, "");
-AUTOCVAR(g_balance_uzi_switchdelay_drop, float, 0.1, "");
-AUTOCVAR(g_balance_uzi_switchdelay_raise, float, 0.1, "");
-AUTOCVAR(g_balance_uzi_weaponreplace, string, "", "");
-AUTOCVAR(g_balance_uzi_weaponstart, float, 0, "");
-AUTOCVAR(g_balance_uzi_weaponstartoverride, float, -1, "");
-AUTOCVAR(g_balance_uzi_weaponthrowable, float, 1, "");
+AUTOCVAR(g_balance_mac10_burst, float, 1, "");
+AUTOCVAR(g_balance_mac10_burst_ammo, float, 1, "");
+AUTOCVAR(g_balance_mac10_burst_animtime, float, 0.4, "");
+AUTOCVAR(g_balance_mac10_burst_damage, float, 16, "");
+AUTOCVAR(g_balance_mac10_burst_refire, float, 0.5, "");
+AUTOCVAR(g_balance_mac10_burst_refire2, float, 0.6, "");
+AUTOCVAR(g_balance_mac10_burst_speed, float, 0, "");
+AUTOCVAR(g_balance_mac10_first, float, 1, "");
+AUTOCVAR(g_balance_mac10_first_ammo, float, 1, "");
+AUTOCVAR(g_balance_mac10_first_damage, float, 14, "");
+AUTOCVAR(g_balance_mac10_first_force, float, 3, "");
+AUTOCVAR(g_balance_mac10_first_refire, float, 0.125, "");
+AUTOCVAR(g_balance_mac10_first_spread, float, 0.03, "");
+AUTOCVAR(g_balance_mac10_mode, float, 1, "");
+AUTOCVAR(g_balance_mac10_reload_ammo, float, 30, "");
+AUTOCVAR(g_balance_mac10_reload_time, float, 1.6, "");
+AUTOCVAR(g_balance_mac10_solidpenetration, float, 9, "");
+AUTOCVAR(g_balance_mac10_spread_add, float, 0.012, "");
+AUTOCVAR(g_balance_mac10_spread_max, float, 0.05, "");
+AUTOCVAR(g_balance_mac10_spread_min, float, 0.02, "");
+AUTOCVAR(g_balance_mac10_sustained_ammo, float, 1, "");
+AUTOCVAR(g_balance_mac10_sustained_damage, float, 7, "");
+AUTOCVAR(g_balance_mac10_sustained_force, float, 3, "");
+AUTOCVAR(g_balance_mac10_sustained_refire, float, 0.05, "");
+AUTOCVAR(g_balance_mac10_sustained_spread, float, 0.04, "");
+AUTOCVAR(g_balance_mac10_switchdelay_drop, float, 0.1, "");
+AUTOCVAR(g_balance_mac10_switchdelay_raise, float, 0.1, "");
+AUTOCVAR(g_balance_mac10_weaponreplace, string, "", "");
+AUTOCVAR(g_balance_mac10_weaponstart, float, 0, "");
+AUTOCVAR(g_balance_mac10_weaponstartoverride, float, -1, "");
+AUTOCVAR(g_balance_mac10_weaponthrowable, float, 1, "");
 
 CLASS(Uzi, Weapon)
 /* spawnfunc */ ATTRIB(Uzi, m_canonical_spawnfunc, string, "weapon_mac10");
@@ -86,11 +86,11 @@ CLASS(Uzi, Weapon)
         P(class, prefix, weaponstart, float, NONE) \
         P(class, prefix, weaponthrowable, float, NONE) \
 	END()
-    W_MOD_PROPS(X, Uzi, uzi)
+    W_MOD_PROPS(X, Uzi, mac10)
 #undef X
 
 ENDCLASS(Uzi)
-REGISTER_WEAPON(UZI, uzi, NEW(Uzi));
+REGISTER_WEAPON(UZI, mac10, NEW(Uzi));
 
 SPAWNFUNC_WEAPON(weapon_mac10, WEP_UZI)
 
@@ -188,7 +188,7 @@ void muzzleflash_send(entity actor, entity wepent)
 
 void W_Uzi_Attack(Weapon thiswep, int deathtype, entity actor, .entity weaponentity)
 {
-	W_SetupShot(actor, weaponentity, true, 0, SND_MAC10_FIRE, CH_WEAPON_A, ((actor.(weaponentity).misc_bulletcounter == 1) ? WEP_CVAR(uzi, first_damage) : WEP_CVAR(uzi, sustained_damage)), deathtype);
+	W_SetupShot(actor, weaponentity, true, 0, SND_MAC10_FIRE, CH_WEAPON_A, ((actor.(weaponentity).misc_bulletcounter == 1) ? WEP_CVAR(mac10, first_damage) : WEP_CVAR(mac10, sustained_damage)), deathtype);
 	if(!autocvar_g_norecoil)
 	{
 		actor.punchangle_x = random() - 0.5;
@@ -196,12 +196,13 @@ void W_Uzi_Attack(Weapon thiswep, int deathtype, entity actor, .entity weaponent
 	}
 	int slot = weaponslot(weaponentity);
 	// this attack_finished just enforces a cooldown at the end of a burst
-	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(uzi, first_refire) * W_WeaponRateFactor(actor);
+	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(mac10, first_refire) * W_WeaponRateFactor(actor);
 
 	if(actor.(weaponentity).misc_bulletcounter == 1)
-		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(uzi, first_spread), WEP_CVAR(uzi, solidpenetration), WEP_CVAR(uzi, first_damage), WEP_CVAR(uzi, first_force), deathtype, EFFECT_BULLET_WEAK);
+		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(mac10, first_spread), WEP_CVAR(mac10, solidpenetration), WEP_CVAR(mac10, first_damage), WEP_CVAR(mac10, first_force), deathtype, EFFECT_BULLET_WEAK);
 	else
-		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(uzi, sustained_spread), WEP_CVAR(uzi, solidpenetration), WEP_CVAR(uzi, sustained_damage), WEP_CVAR(uzi, sustained_force), deathtype, EFFECT_BULLET_WEAK);
+		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(mac10, sustained_spread), WEP_CVAR(mac10, solidpenetration), WEP_CVAR(mac10, sustained_damage), WEP_CVAR(mac10, sustained_force), 
+						deathtype, EFFECT_BULLET_WEAK);
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
@@ -222,9 +223,9 @@ void W_Uzi_Attack(Weapon thiswep, int deathtype, entity actor, .entity weaponent
 	}
 
 	if(actor.(weaponentity).misc_bulletcounter == 1)
-		W_DecreaseAmmo(thiswep, actor, WEP_CVAR(uzi, first_ammo), weaponentity);
+		W_DecreaseAmmo(thiswep, actor, WEP_CVAR(mac10, first_ammo), weaponentity);
 	else
-		W_DecreaseAmmo(thiswep, actor, WEP_CVAR(uzi, sustained_ammo), weaponentity);
+		W_DecreaseAmmo(thiswep, actor, WEP_CVAR(mac10, sustained_ammo), weaponentity);
 }
 
 // weapon frames
@@ -246,10 +247,10 @@ void W_Uzi_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int 
 		}
 		actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
 		W_Uzi_Attack(WEP_UZI, WEP_UZI.m_id, actor, weaponentity);
-		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(uzi, sustained_refire), W_Uzi_Attack_Frame);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(mac10, sustained_refire), W_Uzi_Attack_Frame);
 	}
 	else
-		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(uzi, sustained_refire), w_ready);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(mac10, sustained_refire), w_ready);
 }
 
 
@@ -271,17 +272,17 @@ void W_Uzi_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int f
 		return;
 	}
 
-	W_DecreaseAmmo(WEP_UZI, actor, WEP_CVAR(uzi, sustained_ammo), weaponentity);
+	W_DecreaseAmmo(WEP_UZI, actor, WEP_CVAR(mac10, sustained_ammo), weaponentity);
 
-	W_SetupShot(actor, weaponentity, true, 0, SND_MAC10_FIRE, CH_WEAPON_A, WEP_CVAR(uzi, sustained_damage), WEP_UZI.m_id);
+	W_SetupShot(actor, weaponentity, true, 0, SND_MAC10_FIRE, CH_WEAPON_A, WEP_CVAR(mac10, sustained_damage), WEP_UZI.m_id);
 	if(!autocvar_g_norecoil)
 	{
 		actor.punchangle_x = random() - 0.5;
 		actor.punchangle_y = random() - 0.5;
 	}
 
-	uzi_spread = bound(WEP_CVAR(uzi, spread_min), WEP_CVAR(uzi, spread_min) + (WEP_CVAR(uzi, spread_add) * actor.(weaponentity).misc_bulletcounter), WEP_CVAR(uzi, spread_max));
-	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, uzi_spread, WEP_CVAR(uzi, solidpenetration), WEP_CVAR(uzi, sustained_damage), WEP_CVAR(uzi, sustained_force), WEP_UZI.m_id, EFFECT_BULLET_WEAK);
+	uzi_spread = bound(WEP_CVAR(mac10, spread_min), WEP_CVAR(mac10, spread_min) + (WEP_CVAR(mac10, spread_add) * actor.(weaponentity).misc_bulletcounter), WEP_CVAR(mac10, spread_max));
+	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, uzi_spread, WEP_CVAR(mac10, solidpenetration), WEP_CVAR(mac10, sustained_damage), WEP_CVAR(mac10, sustained_force), WEP_UZI.m_id, EFFECT_BULLET_WEAK);
 
 	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
 
@@ -303,20 +304,21 @@ void W_Uzi_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int f
 	}
 
 	int slot = weaponslot(weaponentity);
-	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(uzi, first_refire) * W_WeaponRateFactor(actor);
-	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(uzi, sustained_refire), W_Uzi_Attack_Auto);
+	ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(mac10, first_refire) * W_WeaponRateFactor(actor);
+	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(mac10, sustained_refire), W_Uzi_Attack_Auto);
 }
 
 void W_Uzi_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	W_SetupShot(actor, weaponentity, true, 0, SND_MAC10_FIRE, CH_WEAPON_A, WEP_CVAR(uzi, sustained_damage), WEP_UZI.m_id);
+	W_SetupShot(actor, weaponentity, true, 0, SND_MAC10_FIRE, CH_WEAPON_A, WEP_CVAR(mac10, sustained_damage), WEP_UZI.m_id);
 	if(!autocvar_g_norecoil)
 	{
 		actor.punchangle_x = random() - 0.5;
 		actor.punchangle_y = random() - 0.5;
 	}
 
-	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(uzi, burst_speed), WEP_CVAR(uzi, solidpenetration), WEP_CVAR(uzi, burst_damage), WEP_CVAR(uzi, sustained_force), WEP_UZI.m_id, EFFECT_BULLET_WEAK);
+	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(mac10, burst_speed), WEP_CVAR(mac10, solidpenetration), WEP_CVAR(mac10, burst_damage), WEP_CVAR(mac10, sustained_force), 
+							WEP_UZI.m_id, EFFECT_BULLET_WEAK);
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
@@ -339,12 +341,12 @@ void W_Uzi_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, int 
 	if(actor.(weaponentity).misc_bulletcounter == 0)
 	{
 		int slot = weaponslot(weaponentity);
-		ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(uzi, burst_refire2) * W_WeaponRateFactor(actor);
-		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(uzi, burst_animtime), w_ready);
+		ATTACK_FINISHED(actor, slot) = time + WEP_CVAR(mac10, burst_refire2) * W_WeaponRateFactor(actor);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(mac10, burst_animtime), w_ready);
 	}
 	else
 	{
-		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(uzi, burst_refire), W_Uzi_Attack_Burst);
+		weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(mac10, burst_refire), W_Uzi_Attack_Burst);
 	}
 
 }
@@ -358,10 +360,10 @@ METHOD(Uzi, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 }
 METHOD(Uzi, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
-    if(WEP_CVAR(uzi, reload_ammo) && actor.(weaponentity).clip_load < min(max(WEP_CVAR(uzi, sustained_ammo), WEP_CVAR(uzi, first_ammo)), WEP_CVAR(uzi, burst_ammo))) { // forced reload
+    if(WEP_CVAR(mac10, reload_ammo) && actor.(weaponentity).clip_load < min(max(WEP_CVAR(mac10, sustained_ammo), WEP_CVAR(mac10, first_ammo)), WEP_CVAR(mac10, burst_ammo))) { // forced reload
         thiswep.wr_reload(thiswep, actor, weaponentity);
     } else
-    if(WEP_CVAR(uzi, mode) == 1)
+    if(WEP_CVAR(mac10, mode) == 1)
     {
         if(fire & 1)
         if(weapon_prepareattack(thiswep, actor, weaponentity, false, 0))
@@ -381,9 +383,9 @@ METHOD(Uzi, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
                 return;
             }
 
-            W_DecreaseAmmo(thiswep, actor, WEP_CVAR(uzi, burst_ammo), weaponentity);
+            W_DecreaseAmmo(thiswep, actor, WEP_CVAR(mac10, burst_ammo), weaponentity);
 
-            actor.(weaponentity).misc_bulletcounter = WEP_CVAR(uzi, burst) * -1;
+            actor.(weaponentity).misc_bulletcounter = WEP_CVAR(mac10, burst) * -1;
             W_Uzi_Attack_Burst(thiswep, actor, weaponentity, fire);
         }
     }
@@ -395,55 +397,55 @@ METHOD(Uzi, wr_think, void(entity thiswep, entity actor, .entity weaponentity, i
         {
             actor.(weaponentity).misc_bulletcounter = 1;
             W_Uzi_Attack(WEP_UZI, WEP_UZI.m_id, actor, weaponentity); // sets attack_finished
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(uzi, sustained_refire), W_Uzi_Attack_Frame);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(mac10, sustained_refire), W_Uzi_Attack_Frame);
         }
 
-        if((fire & 2) && WEP_CVAR(uzi, first))
+        if((fire & 2) && WEP_CVAR(mac10, first))
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, 0))
         {
             actor.(weaponentity).misc_bulletcounter = 1;
             W_Uzi_Attack(WEP_UZI, WEP_UZI.m_id | HITTYPE_SECONDARY, actor, weaponentity); // sets attack_finished
-            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(uzi, first_refire), w_ready);
+            weapon_thinkf(actor, weaponentity, WFRAME_FIRE2, WEP_CVAR(mac10, first_refire), w_ready);
         }
     }
 }
 METHOD(Uzi, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount;
-    if(WEP_CVAR(uzi, mode) == 1)
-        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(uzi, sustained_ammo);
+    if(WEP_CVAR(mac10, mode) == 1)
+        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(mac10, sustained_ammo);
     else
-        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(uzi, first_ammo);
+        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(mac10, first_ammo);
 
-    if(WEP_CVAR(uzi, reload_ammo))
+    if(WEP_CVAR(mac10, reload_ammo))
     {
-        if(WEP_CVAR(uzi, mode) == 1)
-            ammo_amount += actor.(weaponentity).(weapon_load[WEP_UZI.m_id]) >= WEP_CVAR(uzi, sustained_ammo);
+        if(WEP_CVAR(mac10, mode) == 1)
+            ammo_amount += actor.(weaponentity).(weapon_load[WEP_UZI.m_id]) >= WEP_CVAR(mac10, sustained_ammo);
         else
-            ammo_amount += actor.(weaponentity).(weapon_load[WEP_UZI.m_id]) >= WEP_CVAR(uzi, first_ammo);
+            ammo_amount += actor.(weaponentity).(weapon_load[WEP_UZI.m_id]) >= WEP_CVAR(mac10, first_ammo);
     }
     return ammo_amount;
 }
 METHOD(Uzi, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponentity))
 {
     float ammo_amount;
-    if(WEP_CVAR(uzi, mode) == 1)
-        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(uzi, burst_ammo);
+    if(WEP_CVAR(mac10, mode) == 1)
+        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(mac10, burst_ammo);
     else
-        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(uzi, first_ammo);
+        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(mac10, first_ammo);
 
-    if(WEP_CVAR(uzi, reload_ammo))
+    if(WEP_CVAR(mac10, reload_ammo))
     {
-        if(WEP_CVAR(uzi, mode) == 1)
-            ammo_amount += actor.(weaponentity).(weapon_load[WEP_UZI.m_id]) >= WEP_CVAR(uzi, burst_ammo);
+        if(WEP_CVAR(mac10, mode) == 1)
+            ammo_amount += actor.(weaponentity).(weapon_load[WEP_UZI.m_id]) >= WEP_CVAR(mac10, burst_ammo);
         else
-            ammo_amount += actor.(weaponentity).(weapon_load[WEP_UZI.m_id]) >= WEP_CVAR(uzi, first_ammo);
+            ammo_amount += actor.(weaponentity).(weapon_load[WEP_UZI.m_id]) >= WEP_CVAR(mac10, first_ammo);
     }
     return ammo_amount;
 }
 METHOD(Uzi, wr_reload, void(entity thiswep, entity actor, .entity weaponentity))
 {
-    W_Reload(actor, weaponentity, min(max(WEP_CVAR(uzi, sustained_ammo), WEP_CVAR(uzi, first_ammo)), WEP_CVAR(uzi, burst_ammo)), SND_RELOAD);
+    W_Reload(actor, weaponentity, min(max(WEP_CVAR(mac10, sustained_ammo), WEP_CVAR(mac10, first_ammo)), WEP_CVAR(mac10, burst_ammo)), SND_RELOAD);
 }
 METHOD(Uzi, wr_suicidemessage, Notification(entity thiswep))
 {
