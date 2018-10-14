@@ -10,8 +10,4 @@
 	#include "hitbox.qc"
 
 	#include "lightapc.qc"
-#if 0
-	#include "r22heli.qc"
-	#include "tankll48.qc"
-#endif
 #endif
