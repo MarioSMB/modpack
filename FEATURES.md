@@ -16,7 +16,6 @@
 * Boggle minigame, a fun word search game
 * Nim minigame, the classic matchstick game with balls
 * Voracity minigame, a little number navigation game
-* Some classic SMB powerups, including the mini mushroom, super star and life shroom!
 * Hats!
 * Pick Spawns mutator, allowing you to choose where you spawn
 * Command to turn off crosshairs on all players, for an extra challenge
