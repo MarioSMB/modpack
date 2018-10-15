@@ -73,7 +73,7 @@ void vip_ClearVIPs()
 		vip_count[j] = 0;
 }
 
-#define VIP_TEAMS_OK() (Team_GetNumberOfAliveTeams() == NumTeams(ca_teams))
+#define VIP_TEAMS_OK() (Team_GetNumberOfAliveTeams() == NumTeams(vip_teams))
 #define VIP_COUNT() ((vip_count[0] > 0) + (vip_count[1] > 0) + (vip_count[2] > 0) + (vip_count[3] > 0))
 
 int VIP_GetWinnerTeam()
