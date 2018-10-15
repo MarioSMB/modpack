@@ -76,6 +76,14 @@ Sound SND_VIP_WIN(int teamid) {
 }
 
 #ifdef SVQC
+AUTOCVAR_NOREF(g_vip_respawn_delay_small, float, 0, "");
+AUTOCVAR_NOREF(g_vip_respawn_delay_small_count, float, 0, "");
+AUTOCVAR_NOREF(g_vip_respawn_delay_large, float, 0, "");
+AUTOCVAR_NOREF(g_vip_respawn_delay_large_count, float, 0, "");
+AUTOCVAR_NOREF(g_vip_respawn_delay_max, float, 0, "");
+AUTOCVAR_NOREF(g_vip_respawn_waves, float, 0, "");
+AUTOCVAR_NOREF(g_vip_weapon_stay, float, 0, "");
+
 void vip_SpawnSoulGem(vector orig, int theteam);
 void vip_SetVIP(entity player, int tm);
 

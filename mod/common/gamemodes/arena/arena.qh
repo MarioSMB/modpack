@@ -23,6 +23,14 @@ REGISTER_GAMETYPE(ARENA, NEW(Arena));
 
 #ifdef SVQC
 
+AUTOCVAR_NOREF(g_arena_respawn_delay_small, float, 0, "");
+AUTOCVAR_NOREF(g_arena_respawn_delay_small_count, float, 0, "");
+AUTOCVAR_NOREF(g_arena_respawn_delay_large, float, 0, "");
+AUTOCVAR_NOREF(g_arena_respawn_delay_large_count, float, 0, "");
+AUTOCVAR_NOREF(g_arena_respawn_delay_max, float, 0, "");
+AUTOCVAR_NOREF(g_arena_respawn_waves, float, 0, "");
+AUTOCVAR_NOREF(g_arena_weapon_stay, float, 0, "");
+
 int maxspawned;
 bool arena_roundbased;
 
