@@ -28,6 +28,13 @@ CLASS(VIP, Gametype)
             return true;
         return false;
     }
+    METHOD(VIP, m_isForcedSupported, bool(Gametype this))
+    {
+        // ALL CTF maps work in VIP!
+        if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_CTF.m_flags))
+            return true;
+        return false;
+    }
 #ifdef CSQC
     ATTRIB(VIP, m_modicons, void(vector pos, vector mySize), HUD_Mod_VIP);
     ATTRIB(VIP, m_modicons_reset, void(), HUD_Mod_VIP_Reset);

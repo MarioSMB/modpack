@@ -18,6 +18,13 @@ CLASS(Runematch, Gametype)
     {
         return true;
     }
+    METHOD(Runematch, m_isForcedSupported, bool(Gametype this))
+    {
+        // force all DM maps to work in runematch?!
+        if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
+            return true;
+        return false;
+    }
 ENDCLASS(Runematch)
 REGISTER_GAMETYPE(RUNEMATCH, NEW(Runematch));
 #define g_runematch IS_GAMETYPE(RUNEMATCH)

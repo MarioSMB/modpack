@@ -9,6 +9,14 @@ CLASS(Arena, Gametype)
     {
         return (diameter < 4096);
     }
+	METHOD(Arena, m_isForcedSupported, bool(Gametype this))
+    {
+        // force all DM maps to work in arena?!
+        // TODO: use duel instead (duel currently forces support for dm, but exclusive duel maps are possible!)
+        if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
+            return true;
+        return false;
+    }
 ENDCLASS(Arena)
 REGISTER_GAMETYPE(ARENA, NEW(Arena));
 #define g_arena IS_GAMETYPE(ARENA)
