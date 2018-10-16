@@ -3,7 +3,7 @@
 CLASS(Runematch, Gametype)
     INIT(Runematch)
     {
-        this.gametype_init(this, _("Runematch"),"rune","g_runematch",false,"","timelimit=20 pointlimit=200 leadlimit=0",_("Pick up and hold the runes, special items that give you points, a special power (rune) and a disadvantage (curse)"));
+        this.gametype_init(this, _("Runematch"),"rune","g_runematch",false,true,"","timelimit=20 pointlimit=200 leadlimit=0",_("Pick up and hold the runes, special items that give you points, a special power (rune) and a disadvantage (curse)"));
     }
     METHOD(Runematch, m_generate_mapinfo, void(Gametype this, string v))
     {
@@ -25,6 +25,7 @@ CLASS(Runematch, Gametype)
             return true;
         return false;
     }
+    ATTRIB(Runematch, m_legacydefaults, string, "200 20 0");
 ENDCLASS(Runematch)
 REGISTER_GAMETYPE(RUNEMATCH, NEW(Runematch));
 #define g_runematch IS_GAMETYPE(RUNEMATCH)

@@ -123,8 +123,7 @@ void W_RPG7_Explode(entity this, entity directhitentity)
 		if(!(this.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			this.realowner.cnt = WEP_RPG.m_id;
-			int slot = weaponslot(weaponentity);
-			ATTACK_FINISHED(this.realowner, slot) = time;
+			ATTACK_FINISHED(this.realowner, weaponentity) = time;
 			this.realowner.(weaponentity).m_switchweapon = w_getbestweapon(this.realowner, weaponentity);
 		}
 	}

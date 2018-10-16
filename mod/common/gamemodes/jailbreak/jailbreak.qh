@@ -3,7 +3,7 @@
 CLASS(Jailbreak, Gametype)
     INIT(Jailbreak)
     {
-        this.gametype_init(this, _("Jailbreak"),"jb","g_jailbreak",true,"","teams=2 timelimit=20 pointlimit=5 leadlimit=0",_("Kill enemies to send them to jail, capture control points to release teammates"));
+        this.gametype_init(this, _("Jailbreak"),"jb","g_jailbreak",true,true,"","teams=2 timelimit=20 pointlimit=5 leadlimit=0",_("Kill enemies to send them to jail, capture control points to release teammates"));
     }
     METHOD(Jailbreak, m_parse_mapinfo, bool(string k, string v))
     {
