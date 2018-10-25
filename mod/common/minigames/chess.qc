@@ -334,6 +334,7 @@ bool chess_tryallmoves(entity minigame, entity piece)
 	for(j = 0; j < CHESS_LET_CNT; ++j)
 	{
 		string newpos = minigame_tile_buildname(j, i);
+		if(newpos == piece.netname) continue;
 		int r = chess_move_try(minigame, piece.netname, newpos, true, NULL);
 
 		if(CHESS_GOOD_MOVE(r))
@@ -521,15 +522,19 @@ void chess_move(entity minigame, entity player, string thepiece, string pos, str
 
 		minigame.chess_nexteam = minigame_next_team(player.team,CHESS_TEAMS);
 
-		int pcount = 0;
+		int mypcount = 0, theirpcount = 0;
 		FOREACH_ENTITY_ENT_ORDERED(owner, minigame,
 		{
 			if(it.classname != "minigame_board_piece") continue;
-			if(it.team == player.team) continue;
-			++pcount;
+			if(it.team == player.team)
+				++mypcount;
+			else
+				++theirpcount;
 		});
 
-		if(!pcount)
+		if(mypcount <= 1 && theirpcount <= 1) // if both sides have no actual pieces, it's a draw (kings can't take eachother)
+			minigame.minigame_flags = CHESS_TURN_DRAW; // TODO: also end up in a draw if more than 20 checks have been made
+		else if(mypcount >= 1 && !theirpcount) // special rule: enemy has no pieces while we have some, call it a victory!
 			minigame.minigame_flags = CHESS_TURN_WIN | player.team;
 		else if(chess_kingstatus(minigame, minigame.chess_nexteam) == CHESS_CHECKMATE)
 			minigame.minigame_flags = CHESS_TURN_WIN | player.team;
@@ -702,6 +707,7 @@ void chess_set_curr_piece(entity minigame, entity piece)
 	for(j = 0; j < CHESS_LET_CNT; ++j)
 	{
 		string newpos = minigame_tile_buildname(j, i);
+		if(newpos == chess_curr_piece.netname) continue;
 		int r = chess_move_try(minigame, chess_curr_piece.netname, newpos, true, NULL);
 
 		if(CHESS_GOOD_MOVE(r))
