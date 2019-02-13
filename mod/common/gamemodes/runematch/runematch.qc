@@ -508,7 +508,7 @@ MUTATOR_HOOKFUNCTION(rune, Damage_Calculate)
 	else if (frag_target.runes & CURSE_VULNER)
 		frag_damage *= autocvar_g_balance_curse_vulner_takedamage;
 		
-	if(IS_PLAYER(frag_target) && IS_PLAYER(frag_attacker) && frag_attacker != frag_target && GetResourceAmount(frag_attacker, RESOURCE_HEALTH) > 2)
+	if(IS_PLAYER(frag_target) && IS_PLAYER(frag_attacker) && frag_attacker != frag_target && GetResource(frag_attacker, RES_HEALTH) > 2)
 	{
 		if (frag_attacker.runes & RUNE_VAMPIRE)
 		{
@@ -525,7 +525,7 @@ MUTATOR_HOOKFUNCTION(rune, Damage_Calculate)
 		else if (frag_attacker.runes & CURSE_EMPATHY)
 		{
 			// apply empathy curse
-			TakeResourceWithLimit(frag_attacker, RESOURCE_HEALTH, frag_damage * autocvar_g_balance_curse_empathy_takedamage, autocvar_g_balance_curse_empathy_minhealth);
+			TakeResourceWithLimit(frag_attacker, RES_HEALTH, frag_damage * autocvar_g_balance_curse_empathy_takedamage, autocvar_g_balance_curse_empathy_minhealth);
 		}
 	}
 

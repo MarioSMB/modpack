@@ -116,10 +116,10 @@ void snafu_fatty_damage(entity this, entity inflictor, entity attacker, float da
 		}
 	}*/
 
-	TakeResource(this, RESOURCE_HEALTH, damage);
+	TakeResource(this, RES_HEALTH, damage);
 	//this.velocity += force * 0.75;
 
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 	{
 		if(!IS_DEAD(this))
 		{        
@@ -365,9 +365,9 @@ void snafu_fatty_think(entity this)
 		if(this.wait < time)
 		{
 			te_blood(this.origin + '0 0 80', v_up * 200 + randomvec() * 75, 20 + random() * 20);
-			TakeResource(this, RESOURCE_HEALTH, 5);
+			TakeResource(this, RES_HEALTH, 5);
 			this.wait = time + 0.2;
-			if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+			if(GetResource(this, RES_HEALTH) <= 0)
 			{
 				setthink(this, snafu_fatty_die);
 				this.nextthink = time;
@@ -428,7 +428,7 @@ void snafu_fatty_create(entity own)
 	zom.event_damage    = snafu_fatty_damage;    
 	zom.snafu_ai_flags  = SAF_ZOMBIE;
 	zom.damageforcescale = 0.75;
-	SetResourceAmountExplicit(zom, RESOURCE_HEALTH, autocvar_g_snafu_fatty_health);
+	SetResourceExplicit(zom, RES_HEALTH, autocvar_g_snafu_fatty_health);
 	setthink(zom, snafu_fatty_think);
 	zom.nextthink       = time;
 	zom.classname       = "zombie";

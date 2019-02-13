@@ -39,7 +39,7 @@ bool M_Creeper_Attack(int attack_type, entity actor, entity targ, .entity weapon
                 RadiusDamage(actor, actor, autocvar_g_monster_creeper_attack_explode_damage, autocvar_g_monster_creeper_attack_explode_edgedamage, autocvar_g_monster_creeper_attack_explode_radius,
                         NULL, NULL, autocvar_g_monster_creeper_attack_explode_force, DEATH_MONSTER_CREEPER.m_id, DMG_NOWEP, NULL);
 
-                Damage(actor, NULL, NULL, GetResourceAmount(actor, RESOURCE_HEALTH) + actor.max_health + 200, DEATH_KILL.m_id, DMG_NOWEP, actor.origin, '0 0 0'); // ensure monster death
+                Damage(actor, NULL, NULL, GetResource(actor, RES_HEALTH) + actor.max_health + 200, DEATH_KILL.m_id, DMG_NOWEP, actor.origin, '0 0 0'); // ensure monster death
                 actor.event_damage = func_null;
             }
             else
@@ -71,7 +71,7 @@ METHOD(Creeper, mr_think, bool(Creeper this, entity actor))
     TC(Creeper, this);
     if(actor.creeper_primed && (!actor.enemy || vdist(actor.origin - actor.enemy.origin, >=, actor.attack_range * 2)))
         actor.creeper_primed = false;
-    if(GetResourceAmount(actor, RESOURCE_HEALTH) > 0 && time > actor.attack_finished_single[0])
+    if(GetResource(actor, RES_HEALTH) > 0 && time > actor.attack_finished_single[0])
         actor.colormod = '1 1 1';
     return true;
 }
@@ -109,7 +109,7 @@ METHOD(Creeper, mr_anim, bool(Creeper this, entity actor))
 METHOD(Creeper, mr_setup, bool(Creeper this, entity actor))
 {
     TC(Creeper, this);
-    if(!GetResourceAmount(actor, RESOURCE_HEALTH)) SetResourceAmountExplicit(actor, RESOURCE_HEALTH, autocvar_g_monster_creeper_health);
+    if(!GetResource(actor, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_creeper_health);
     if(!actor.attack_range) actor.attack_range = 150;
     if(!actor.speed) { actor.speed = (autocvar_g_monster_creeper_speed_walk); }
     if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_creeper_speed_run); }

@@ -77,9 +77,9 @@ void conquest_controlpoint_predraw(entity this)
 {
 	this.enemy.angles_y += 32 * frametime;
 	float step = this.cq_rate * frametime;
-	if ( this.cq_factor < GetResourceAmount(this, RESOURCE_HEALTH) - step/2 )
+	if ( this.cq_factor < GetResource(this, RES_HEALTH) - step/2 )
 		this.cq_factor += step;
-	else if ( this.cq_factor > GetResourceAmount(this, RESOURCE_HEALTH) + step/2 )
+	else if ( this.cq_factor > GetResource(this, RES_HEALTH) + step/2 )
 		this.cq_factor -= step;
 	setorigin(this.enemy, this.origin + '0 0 1' * (50 + (this.cq_factor * 140)));
 }
@@ -147,9 +147,9 @@ NET_HANDLE(ENT_CLIENT_CONQUEST_CONTROLPOINT, bool is_new)
 	{
 		float newhealth = ReadByte();
 		if(newhealth != 0) { newhealth /= 255; }
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, newhealth);
+		SetResourceExplicit(this, RES_HEALTH, newhealth);
 		this.cq_rate = ReadLong() / 100 * 0.2;
-		this.teamradar_color = Team_ColorRGB(this.team - 1) * GetResourceAmount(this, RESOURCE_HEALTH) + '1 1 1' * (1-GetResourceAmount(this, RESOURCE_HEALTH));
+		this.teamradar_color = Team_ColorRGB(this.team - 1) * GetResource(this, RES_HEALTH) + '1 1 1' * (1-GetResource(this, RES_HEALTH));
 	}
 
 	if(sf & CQSF_NAME)

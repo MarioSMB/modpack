@@ -313,9 +313,9 @@ void dotc_drone_damage(entity this, entity inflictor, entity attacker, float dam
 	if(IS_CLIENT(attacker))
 		this.dmgtime = time + 2;
 
-	TakeResource(this, RESOURCE_HEALTH, damage);
+	TakeResource(this, RES_HEALTH, damage);
 
-	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if (GetResource(this, RES_HEALTH) <= 0)
 	{
 		if(this.dmgtime >= time)
 		{

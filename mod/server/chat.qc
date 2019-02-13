@@ -39,8 +39,8 @@ MUTATOR_HOOKFUNCTION(mod_chat, FormatMessage)
 	switch(M_ARGV(1, string)) // escape
 	{
 		case "p": M_ARGV(2, string) = ((!player.lasthit || player.lasthit.netname == "") ? "(nobody)" : player.lasthit.netname); break;
-		case "H": M_ARGV(2, string) = sprintf("%s%d", rgb_to_hexcolor(('1 0 0' * GetResourceAmount(player, RESOURCE_HEALTH) / g_pickup_healthsmall_max) + ('0 0 1' * ( GetResourceAmount(player, RESOURCE_HEALTH) - 100) / g_pickup_healthsmall_max)), rint(GetResourceAmount(player, RESOURCE_HEALTH))); break;
-		case "A": M_ARGV(2, string) = sprintf("%s%d", rgb_to_hexcolor(('0 2 0' * GetResourceAmount(player, RESOURCE_ARMOR) / g_pickup_armorsmall_max) + ('0 0 1' * ( GetResourceAmount(player, RESOURCE_ARMOR) - 100) / g_pickup_armorsmall_max)), rint(GetResourceAmount(player, RESOURCE_ARMOR))); break;
+		case "H": M_ARGV(2, string) = sprintf("%s%d", rgb_to_hexcolor(('1 0 0' * GetResource(player, RES_HEALTH) / g_pickup_healthsmall_max) + ('0 0 1' * ( GetResource(player, RES_HEALTH) - 100) / g_pickup_healthsmall_max)), rint(GetResource(player, RES_HEALTH))); break;
+		case "A": M_ARGV(2, string) = sprintf("%s%d", rgb_to_hexcolor(('0 2 0' * GetResource(player, RES_ARMOR) / g_pickup_armorsmall_max) + ('0 0 1' * ( GetResource(player, RES_ARMOR) - 100) / g_pickup_armorsmall_max)), rint(GetResource(player, RES_ARMOR))); break;
 	}
 }
 

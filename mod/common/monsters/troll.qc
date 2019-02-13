@@ -91,7 +91,7 @@ METHOD(Troll, mr_anim, bool(Troll this, entity actor))
 METHOD(Troll, mr_setup, bool(Troll this, entity actor))
 {
     TC(Troll, this);
-    if(!GetResourceAmount(actor, RESOURCE_HEALTH)) SetResourceAmountExplicit(actor, RESOURCE_HEALTH, autocvar_g_monster_troll_health);
+    if(!GetResource(actor, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_troll_health);
     if(!actor.attack_range) actor.attack_range = 150;
     if(!actor.speed) { actor.speed = (autocvar_g_monster_troll_speed_walk); }
     if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_troll_speed_run); }

@@ -35,9 +35,9 @@ void dotc_projectile_explode_think(entity this)
 
 void dotc_projectile_damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-    TakeResource(this, RESOURCE_HEALTH, damage);
+    TakeResource(this, RES_HEALTH, damage);
 
-    if(GetResourceAmount(this, RESOURCE_HEALTH) >= 0)
+    if(GetResource(this, RES_HEALTH) >= 0)
         return;
 
     setthink(this, dotc_projectile_explode_think);
@@ -82,7 +82,7 @@ entity dotc_projectile( entity this,
 
     if(phealth)
     {
-        SetResourceAmountExplicit(proj, RESOURCE_HEALTH, phealth);
+        SetResourceExplicit(proj, RES_HEALTH, phealth);
         proj.takedamage = DAMAGE_YES;
         proj.event_damage = dotc_projectile_damage;
     }

@@ -72,7 +72,7 @@ bool cq_ControlPoint_Send(entity this, entity to, int sf)
 
 	if(sf & CQSF_HEALTH)
 	{
-		WriteByte(MSG_ENTITY, ceil((GetResourceAmount(this, RESOURCE_HEALTH) / this.max_health) * 255));
+		WriteByte(MSG_ENTITY, ceil((GetResource(this, RES_HEALTH) / this.max_health) * 255));
 		WriteLong(MSG_ENTITY, autocvar_g_conquest_capture_sps);
 	}
 
@@ -152,7 +152,7 @@ void cq_ControlPoint_Think(entity this)
 
 	if(!round_handler_IsRoundStarted()) { return; }
 
-	float old_health = GetResourceAmount(this, RESOURCE_HEALTH);
+	float old_health = GetResource(this, RES_HEALTH);
 
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
@@ -166,15 +166,15 @@ void cq_ControlPoint_Think(entity this)
 				if(trace_fraction == 1.0)
 				{
 					if(SAME_TEAM(it, this))
-						SetResourceAmountExplicit(this, RESOURCE_HEALTH, min(this.max_health, GetResourceAmount(this, RESOURCE_HEALTH) + autocvar_g_conquest_capture_sps * CQ_CP_THINKRATE));
+						SetResourceExplicit(this, RES_HEALTH, min(this.max_health, GetResource(this, RES_HEALTH) + autocvar_g_conquest_capture_sps * CQ_CP_THINKRATE));
 					else
-						SetResourceAmountExplicit(this, RESOURCE_HEALTH, max(0, GetResourceAmount(this, RESOURCE_HEALTH) - autocvar_g_conquest_capture_sps * CQ_CP_THINKRATE));
+						SetResourceExplicit(this, RES_HEALTH, max(0, GetResource(this, RES_HEALTH) - autocvar_g_conquest_capture_sps * CQ_CP_THINKRATE));
 
 					switch(this.cq_status)
 					{
 						case CP_CAPTURED:
 						{
-							if(GetResourceAmount(this, RESOURCE_HEALTH) == 0)
+							if(GetResource(this, RES_HEALTH) == 0)
 							{
 								GameRules_scoring_add(it, CONQUEST_LIBERATED, 1);
 								Send_Effect(EFFECT_EXPLOSION_BIG, findbetterlocation(this.origin, 16), '0 0 0', 1);
@@ -186,10 +186,10 @@ void cq_ControlPoint_Think(entity this)
 
 						case CP_NEUTRAL:
 						{
-							if(GetResourceAmount(this, RESOURCE_HEALTH) == 0)
+							if(GetResource(this, RES_HEALTH) == 0)
 								cq_ControlPoint_SwitchTeam(this, it.team, CP_NEUTRAL, true);
 
-							if(GetResourceAmount(this, RESOURCE_HEALTH) == this.max_health)
+							if(GetResource(this, RES_HEALTH) == this.max_health)
 							{
 								GameRules_scoring_add(it, CONQUEST_CAPTURED, 1);
 								cq_ControlPoint_SwitchTeam(this, it.team, CP_CAPTURED, true);
@@ -203,7 +203,7 @@ void cq_ControlPoint_Think(entity this)
 		}
 	});
 
-	if(GetResourceAmount(this, RESOURCE_HEALTH) != old_health)
+	if(GetResource(this, RES_HEALTH) != old_health)
 		this.SendFlags |= CQSF_HEALTH;
 }
 
@@ -214,7 +214,7 @@ void cq_ControlPoint_Reset(entity this)
 	else
 	{
 		this.cq_status = CP_NEUTRAL;
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0);
+		SetResourceExplicit(this, RES_HEALTH, 0);
 	}
 	this.SendFlags |= CQSF_HEALTH;
 	cq_ControlPoint_SwitchTeam(this, this.cq_originalteam, this.cq_status, false);
@@ -232,11 +232,11 @@ spawnfunc(conquest_controlpoint)
 	setsize(this, CQ_CP_MIN, CQ_CP_MAX);
 
 	if(this.netname == "")		{ this.netname = "a spawnpoint"; }
-	if(!GetResourceAmount(this, RESOURCE_HEALTH))			{ SetResourceAmountExplicit(this, RESOURCE_HEALTH, autocvar_g_conquest_controlpoint_health_default); }
+	if(!GetResource(this, RES_HEALTH))			{ SetResourceExplicit(this, RES_HEALTH, autocvar_g_conquest_controlpoint_health_default); }
 	if(!this.cq_capdistance)	{ this.cq_capdistance = autocvar_g_conquest_capture_distance_default; }
 
 	this.classname = "conquest_controlpoint";
-	this.max_health = GetResourceAmount(this, RESOURCE_HEALTH);
+	this.max_health = GetResource(this, RES_HEALTH);
 	this.solid = SOLID_TRIGGER;
 	this.nextthink = time + CQ_CP_THINKRATE;
 	setthink(this, cq_ControlPoint_Think);
@@ -247,7 +247,7 @@ spawnfunc(conquest_controlpoint)
 	else
 	{
 		this.cq_status = CP_NEUTRAL;
-		SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0);
+		SetResourceExplicit(this, RES_HEALTH, 0);
 	}
 
 	this.cq_originalteam = this.team;
@@ -526,7 +526,7 @@ void havocbot_goalrating_defendpoints(entity this, float ratingscale, vector org
 	{
 		if (SAME_TEAM(head, this))
 		{
-			if (GetResourceAmount(head, RESOURCE_HEALTH) < head.max_health)
+			if (GetResource(head, RES_HEALTH) < head.max_health)
 			{
 				distance = vlen(head.origin - org);
 				if (distance > sradius)
@@ -820,7 +820,7 @@ MUTATOR_HOOKFUNCTION(cq, SV_ParseClientCommand)
 			{
 				entity source_point = cq_Nearest_ControlPoint(player, player.origin, autocvar_g_conquest_teleport_radius);
 
-				if ( !source_point && GetResourceAmount(player, RESOURCE_HEALTH) > 0 )
+				if ( !source_point && GetResource(player, RES_HEALTH) > 0 )
 				{
 					sprint(player, "\nYou need to be next to a control point\n");
 					return true;
@@ -835,7 +835,7 @@ MUTATOR_HOOKFUNCTION(cq, SV_ParseClientCommand)
 					return true;
 				}
 
-				if ( GetResourceAmount(player, RESOURCE_HEALTH) <= 0 )
+				if ( GetResource(player, RES_HEALTH) <= 0 )
 				{
 					player.cq_spawn_by = closest_target;
 					player.respawn_flags = player.respawn_flags | RESPAWN_FORCE;

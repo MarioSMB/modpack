@@ -37,7 +37,7 @@ AUTOCVAR(g_balance_mac10_weaponthrowable, float, 1, "");
 
 CLASS(Uzi, Weapon)
 /* spawnfunc */ ATTRIB(Uzi, m_canonical_spawnfunc, string, "weapon_mac10");
-/* ammotype  */ ATTRIB(Uzi, ammo_type, int, RESOURCE_BULLETS);
+/* ammotype  */ ATTRIB(Uzi, ammo_type, int, RES_BULLETS);
 /* impulse   */ ATTRIB(Uzi, impulse, int, 3);
 /* flags     */ ATTRIB(Uzi, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_DUALWIELD);
 /* rating    */ ATTRIB(Uzi, bot_pickupbasevalue, float, 7000);
@@ -412,9 +412,9 @@ METHOD(Uzi, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponenti
 {
     float ammo_amount;
     if(WEP_CVAR(mac10, mode) == 1)
-        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(mac10, sustained_ammo);
+        ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(mac10, sustained_ammo);
     else
-        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(mac10, first_ammo);
+        ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(mac10, first_ammo);
 
     if(WEP_CVAR(mac10, reload_ammo))
     {
@@ -429,9 +429,9 @@ METHOD(Uzi, wr_checkammo2, bool(entity thiswep, entity actor, .entity weaponenti
 {
     float ammo_amount;
     if(WEP_CVAR(mac10, mode) == 1)
-        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(mac10, burst_ammo);
+        ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(mac10, burst_ammo);
     else
-        ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(mac10, first_ammo);
+        ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(mac10, first_ammo);
 
     if(WEP_CVAR(mac10, reload_ammo))
     {

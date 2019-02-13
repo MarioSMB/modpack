@@ -29,18 +29,18 @@ void dotc_ItemSpawn_Give(entity player)
 	});
 
 	if(player.items & ITEM_Jetpack.m_itemid)
-		SetResourceAmount(player, RESOURCE_FUEL, max(GetResourceAmount(player, RESOURCE_FUEL), g_pickup_fuel_jetpack));
+		SetResource(player, RES_FUEL, max(GetResource(player, RES_FUEL), g_pickup_fuel_jetpack));
 
 	FOREACH(Weapons, it != WEP_Null && (STAT(WEAPONS, player) & it.m_wepset),
 	{
 		switch (it.ammo_type)
 		{
-			case RESOURCE_SHELLS:  SetResourceAmount(player, RESOURCE_SHELLS, max(GetResourceAmount(player, RESOURCE_SHELLS), autocvar_g_pickup_shells_weapon)); break;
-			case RESOURCE_BULLETS: SetResourceAmount(player, RESOURCE_BULLETS, max(GetResourceAmount(player, RESOURCE_BULLETS), autocvar_g_pickup_nails_weapon)); break;
-			case RESOURCE_ROCKETS: SetResourceAmount(player, RESOURCE_ROCKETS, max(GetResourceAmount(player, RESOURCE_ROCKETS), autocvar_g_pickup_rockets_weapon)); break;
-			case RESOURCE_CELLS:   SetResourceAmount(player, RESOURCE_CELLS, max(GetResourceAmount(player, RESOURCE_CELLS), autocvar_g_pickup_cells_weapon)); break;
-			case RESOURCE_PLASMA:  SetResourceAmount(player, RESOURCE_PLASMA, max(GetResourceAmount(player, RESOURCE_PLASMA), autocvar_g_pickup_plasma_weapon)); break;
-			case RESOURCE_FUEL:    SetResourceAmount(player, RESOURCE_FUEL, max(GetResourceAmount(player, RESOURCE_FUEL), autocvar_g_pickup_fuel_weapon)); break;
+			case RES_SHELLS:  SetResource(player, RES_SHELLS, max(GetResource(player, RES_SHELLS), autocvar_g_pickup_shells_weapon)); break;
+			case RES_BULLETS: SetResource(player, RES_BULLETS, max(GetResource(player, RES_BULLETS), autocvar_g_pickup_nails_weapon)); break;
+			case RES_ROCKETS: SetResource(player, RES_ROCKETS, max(GetResource(player, RES_ROCKETS), autocvar_g_pickup_rockets_weapon)); break;
+			case RES_CELLS:   SetResource(player, RES_CELLS, max(GetResource(player, RES_CELLS), autocvar_g_pickup_cells_weapon)); break;
+			case RES_PLASMA:  SetResource(player, RES_PLASMA, max(GetResource(player, RES_PLASMA), autocvar_g_pickup_plasma_weapon)); break;
+			case RES_FUEL:    SetResource(player, RES_FUEL, max(GetResource(player, RES_FUEL), autocvar_g_pickup_fuel_weapon)); break;
 		}
 	});
 }
@@ -104,26 +104,26 @@ void dotc_ItemSupply_TriggerTouch(entity this, entity toucher)
 
 	if (warmup_stage)
 	{
-		SetResourceAmount(this, RESOURCE_SHELLS, warmup_start_ammo_shells);
-		SetResourceAmount(this, RESOURCE_BULLETS, warmup_start_ammo_nails);
-		SetResourceAmount(this, RESOURCE_ROCKETS, warmup_start_ammo_rockets);
-		SetResourceAmount(this, RESOURCE_CELLS, warmup_start_ammo_cells);
-		SetResourceAmount(this, RESOURCE_PLASMA, warmup_start_ammo_plasma);
-		SetResourceAmount(this, RESOURCE_FUEL, warmup_start_ammo_fuel);
-		SetResourceAmount(this, RESOURCE_HEALTH, warmup_start_health);
-		SetResourceAmount(this, RESOURCE_ARMOR, warmup_start_armorvalue);
+		SetResource(this, RES_SHELLS, warmup_start_ammo_shells);
+		SetResource(this, RES_BULLETS, warmup_start_ammo_nails);
+		SetResource(this, RES_ROCKETS, warmup_start_ammo_rockets);
+		SetResource(this, RES_CELLS, warmup_start_ammo_cells);
+		SetResource(this, RES_PLASMA, warmup_start_ammo_plasma);
+		SetResource(this, RES_FUEL, warmup_start_ammo_fuel);
+		SetResource(this, RES_HEALTH, warmup_start_health);
+		SetResource(this, RES_ARMOR, warmup_start_armorvalue);
 		STAT(WEAPONS, toucher) = WARMUP_START_WEAPONS;
 	}
 	else
 	{
-		SetResourceAmount(this, RESOURCE_SHELLS, start_ammo_shells);
-		SetResourceAmount(this, RESOURCE_BULLETS, start_ammo_nails);
-		SetResourceAmount(this, RESOURCE_ROCKETS, start_ammo_rockets);
-		SetResourceAmount(this, RESOURCE_CELLS, start_ammo_cells);
-		SetResourceAmount(this, RESOURCE_PLASMA, start_ammo_plasma);
-		SetResourceAmount(this, RESOURCE_FUEL, start_ammo_fuel);
-		SetResourceAmount(this, RESOURCE_HEALTH, start_health);
-		SetResourceAmount(this, RESOURCE_ARMOR, start_armorvalue);
+		SetResource(this, RES_SHELLS, start_ammo_shells);
+		SetResource(this, RES_BULLETS, start_ammo_nails);
+		SetResource(this, RES_ROCKETS, start_ammo_rockets);
+		SetResource(this, RES_CELLS, start_ammo_cells);
+		SetResource(this, RES_PLASMA, start_ammo_plasma);
+		SetResource(this, RES_FUEL, start_ammo_fuel);
+		SetResource(this, RES_HEALTH, start_health);
+		SetResource(this, RES_ARMOR, start_armorvalue);
 		STAT(WEAPONS, toucher) = start_weapons;
 	}
 

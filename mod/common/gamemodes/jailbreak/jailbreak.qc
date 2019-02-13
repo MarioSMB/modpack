@@ -465,8 +465,8 @@ void JB_Imprison(entity targ, entity attacker)
 		//return;
 	}
 
-	SetResourceAmountExplicit(targ, RESOURCE_HEALTH, autocvar_g_jailbreak_prisoner_health);
-	SetResourceAmountExplicit(targ, RESOURCE_ARMOR, autocvar_g_jailbreak_prisoner_armor);
+	SetResourceExplicit(targ, RES_HEALTH, autocvar_g_jailbreak_prisoner_health);
+	SetResourceExplicit(targ, RES_ARMOR, autocvar_g_jailbreak_prisoner_armor);
 
 	targ.jb_had_unlimited_ammo = (targ.items & IT_UNLIMITED_WEAPON_AMMO);
 
@@ -516,8 +516,8 @@ void JB_Release(entity player, entity saviour)
 
 	if(g_jailbreak_jail_deathmatch)
 	{
-		SetResourceAmountExplicit(player, RESOURCE_HEALTH, max(GetResourceAmount(player, RESOURCE_HEALTH), autocvar_g_jailbreak_prisoner_health));
-		SetResourceAmountExplicit(player, RESOURCE_ARMOR, max(GetResourceAmount(player, RESOURCE_ARMOR), autocvar_g_jailbreak_prisoner_armor));
+		SetResourceExplicit(player, RES_HEALTH, max(GetResource(player, RES_HEALTH), autocvar_g_jailbreak_prisoner_health));
+		SetResourceExplicit(player, RES_ARMOR, max(GetResource(player, RES_ARMOR), autocvar_g_jailbreak_prisoner_armor));
 	}
 }
 
@@ -971,7 +971,7 @@ void JB_ControlPoint_Touch(entity this, entity toucher)
 	if(jb_roundover)
 		return;
 
-	if(GetResourceAmount(toucher, RESOURCE_HEALTH) < 1 || STAT(FROZEN, toucher))
+	if(GetResource(toucher, RES_HEALTH) < 1 || STAT(FROZEN, toucher))
 		return;
 
 	if(game_stopped)

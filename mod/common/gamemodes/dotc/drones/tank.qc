@@ -93,7 +93,7 @@ void dotc_tank_frame(entity this, entity thesquad, vector formation_loc, float t
 
 void dotc_tank_init(entity this)
 {
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, autocvar_g_dotc_tank_health);
+	SetResourceExplicit(this, RES_HEALTH, autocvar_g_dotc_tank_health);
 
 	this.shot_dmg				 = autocvar_g_dotc_tank_shot_dmg;
 	this.shot_radius			 = autocvar_g_dotc_tank_shot_radius;

@@ -26,7 +26,7 @@ AUTOCVAR(g_balance_rpg7_weaponthrowable, float, 1, "");
 
 CLASS(RPG7, Weapon)
 /* spawnfunc */ ATTRIB(RPG7, m_canonical_spawnfunc, string, "weapon_rpg7");
-/* ammotype  */ ATTRIB(RPG7, ammo_type, int, RESOURCE_ROCKETS);
+/* ammotype  */ ATTRIB(RPG7, ammo_type, int, RES_ROCKETS);
 /* impulse   */ ATTRIB(RPG7, impulse, int, 9);
 /* flags     */ ATTRIB(RPG7, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH | WEP_FLAG_NODUAL);
 /* rating    */ ATTRIB(RPG7, bot_pickupbasevalue, float, 8000);
@@ -119,7 +119,7 @@ void W_RPG7_Explode(entity this, entity directhitentity)
 	Weapon thiswep = WEP_RPG;
 	if(this.realowner.(weaponentity).m_weapon == thiswep)
 	{
-		if(GetResourceAmount(this.realowner, thiswep.ammo_type) < WEP_CVAR(rpg7, ammo))
+		if(GetResource(this.realowner, thiswep.ammo_type) < WEP_CVAR(rpg7, ammo))
 		if(!(this.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
 		{
 			this.realowner.cnt = WEP_RPG.m_id;
@@ -164,16 +164,16 @@ void W_RPG7_Touch(entity this, entity toucher)
 
 void W_RPG7_Damage(entity this, entity inflictor, entity attacker, float damage, int deathtype, .entity weaponentity, vector hitloc, vector force)
 {
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		return;
 
 	if(!W_CheckProjectileDamage(inflictor.realowner, this.realowner, deathtype, -1)) // no exceptions
 		return; // g_projectiles_damage says to halt
 
-	TakeResource(this, RESOURCE_HEALTH, damage);
+	TakeResource(this, RES_HEALTH, damage);
 	this.angles = vectoangles(this.velocity);
 
-	if(GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if(GetResource(this, RES_HEALTH) <= 0)
 		W_PrepareExplosionByDamage(this, attacker, W_RPG7_Explode_think);
 }
 
@@ -193,7 +193,7 @@ void W_RPG7_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 
 	missile.takedamage = DAMAGE_YES;
 	missile.damageforcescale = WEP_CVAR(rpg7, damageforcescale);
-	SetResourceAmountExplicit(missile, RESOURCE_HEALTH, WEP_CVAR(rpg7, health));
+	SetResourceExplicit(missile, RES_HEALTH, WEP_CVAR(rpg7, health));
 	missile.event_damage = W_RPG7_Damage;
 	missile.damagedbycontents = true;
 	IL_PUSH(g_damagedbycontents, missile);
@@ -257,7 +257,7 @@ METHOD(RPG7, wr_think, void(entity thiswep, entity actor, .entity weaponentity, 
 }
 METHOD(RPG7, wr_checkammo1, bool(entity thiswep, entity actor, .entity weaponentity))
 {
-    float ammo_amount = GetResourceAmount(actor, thiswep.ammo_type) >= WEP_CVAR(rpg7, ammo);
+    float ammo_amount = GetResource(actor, thiswep.ammo_type) >= WEP_CVAR(rpg7, ammo);
     ammo_amount += actor.(weaponentity).(weapon_load[WEP_RPG.m_id]) >= WEP_CVAR(rpg7, ammo);
     return ammo_amount;
 }

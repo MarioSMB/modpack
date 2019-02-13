@@ -104,7 +104,7 @@ void dotc_ltank_frame(entity this, entity thesquad, vector formation_loc, float 
 
 void dotc_lighttank_init(entity this)
 {
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, autocvar_g_dotc_lighttank_health);
+	SetResourceExplicit(this, RES_HEALTH, autocvar_g_dotc_lighttank_health);
 
 	this.shot_dmg				 = autocvar_g_dotc_lighttank_shot_dmg;
 	this.shot_radius			 = autocvar_g_dotc_lighttank_shot_radius;

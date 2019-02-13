@@ -103,7 +103,7 @@ spawnfunc(monster_fish) { Monster_Spawn(this, true, MON_ROTFISH.monsterid); }
 		.float speed;
 		METHOD(Rotfish, mr_setup, bool(Monster thismon, entity actor))
 		{
-			if(!GetResourceAmount(actor, RESOURCE_HEALTH)) SetResourceAmountExplicit(actor, RESOURCE_HEALTH, autocvar_g_monster_rotfish_health);
+			if(!GetResource(actor, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_rotfish_health);
 			if(!actor.speed) { actor.speed = (autocvar_g_monster_rotfish_speed_walk); }
 			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_rotfish_speed_run); }
 			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_rotfish_speed_stop); }
