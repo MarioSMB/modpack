@@ -20,9 +20,11 @@ void ltrail_fire(entity this)
 	if (this.classname != "ltrail_end")
 	{
 		_sound(this, CH_VOICE, "weapons/lhit.wav", 1, ATTN_NORM);
-		entity myTarget = find(world, targetname, this.target);	
-		te_lightning2(NULL, this.origin, myTarget.origin); // should be this
-		LightningDamage(this.origin, myTarget.origin, this, this.currentammo);
+		entity targ = this.enemy;
+		if(this.target && this.target != "")
+			targ = find(NULL, targetname, this.target);
+		te_lightning2(NULL, this.origin, targ.origin); // should be this
+		LightningDamage(this.origin, targ.origin, this, this.currentammo);
 	}
 
 	if(this.items < time)
@@ -63,7 +65,7 @@ void ltrail_start_fire(entity this, entity actor, entity trigger)
 		else if(!(this.spawnflags & LT_ACTIVE))
 			return;
 	}
-		
+	this.enemy = actor;
 	if(this.classname ==  "ltrail_start")
 	{
 		this.items = time + this.weapon;
