@@ -153,6 +153,11 @@ REGISTER_STAT(MOVEVARS_STOPSPEED, float, autocvar_sv_stopspeed)
 REGISTER_STAT(MOVEVARS_MAXAIRSPEED, float, autocvar_sv_maxairspeed)
 REGISTER_STAT(MOVEVARS_AIRACCELERATE, float, autocvar_sv_airaccelerate)
 
+#ifdef SVQC
+int autocvar_sv_wallclip;
+#endif
+REGISTER_STAT(MOVEVARS_WALLCLIP, int, autocvar_sv_wallclip)
+
 REGISTER_STAT(SERVERFLAGS, int, serverflags)
 
 REGISTER_STAT(WETSUIT_FINISHED, float)
