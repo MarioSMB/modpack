@@ -13,7 +13,6 @@ void SpawnBlood(vector org, vector vel, float damage);
 void SuperDamageSound(entity this);
 
 // called by worldspawn
-void placebullethole(vector pos);
 PRECACHE(Weapons)
 {
 	precache_sound("weapons/r_exp3.wav");	// new rocket explosion
@@ -640,6 +639,7 @@ Used by shotgun, super shotgun, and enemy soldier firing
 Go to the trouble of combining multiple pellets into a single damage call.
 ================
 */
+void placebullethole(vector pos);
 void FireBullets(entity this, int shotcount, vector dir, vector spread)
 {
 	bool bullet = false; // hipnotic bullet holes
