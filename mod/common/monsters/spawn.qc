@@ -49,7 +49,7 @@ void M_Tarbaby_Attack_Explode(entity this, entity directhitentity)
 
 void M_Tarbaby_Attack_Leap_Touch(entity this, entity toucher)
 {
-	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if (GetResource(this, RES_HEALTH) <= 0)
 		return;
 
 	if(toucher.takedamage)
@@ -112,7 +112,7 @@ spawnfunc(monster_tarbaby) { Monster_Spawn(this, true, MON_TARBABY.monsterid); }
 		#ifdef SVQC
 		METHOD(Tarbaby, mr_setup, bool(Tarbaby thismon, entity actor))
 		{
-			if(!GetResourceAmount(actor, RESOURCE_HEALTH)) SetResourceAmountExplicit(actor, RESOURCE_HEALTH, autocvar_g_monster_spawn_health);
+			if(!GetResource(actor, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_spawn_health);
 			if(!actor.speed) { actor.speed = (autocvar_g_monster_spawn_speed_walk); }
 			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_spawn_speed_run); }
 			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_spawn_speed_stop); }

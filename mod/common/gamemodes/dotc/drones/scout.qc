@@ -136,7 +136,7 @@ void dotc_scout_frame(entity this, entity thesquad, vector formation_loc, float 
 
 void dotc_scout_init(entity this)
 {
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, autocvar_g_dotc_scout_health);
+	SetResourceExplicit(this, RES_HEALTH, autocvar_g_dotc_scout_health);
 
 	this.shot_dmg				 = autocvar_g_dotc_scout_shot_dmg;
 	this.shot_radius			 = autocvar_g_dotc_scout_shot_radius;

@@ -3,17 +3,34 @@
 CLASS(Arena, Gametype)
     INIT(Arena)
     {
-        this.gametype_init(this, _("Arena"),"arena","g_arena",false,"","timelimit=20 pointlimit=10 leadlimit=0",_("Emerge victorious in a series of duels to win the match!"));
+        this.gametype_init(this, _("Arena"),"arena","g_arena",false,true,"","timelimit=20 pointlimit=10 leadlimit=0",_("Emerge victorious in a series of duels to win the match!"));
     }
     METHOD(Arena, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
     {
         return (diameter < 4096);
     }
+	METHOD(Arena, m_isForcedSupported, bool(Gametype this))
+    {
+        // force all DM maps to work in arena?!
+        // TODO: use duel instead (duel currently forces support for dm, but exclusive duel maps are possible!)
+        if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
+            return true;
+        return false;
+    }
+    ATTRIB(Arena, m_legacydefaults, string, "10 20 0");
 ENDCLASS(Arena)
 REGISTER_GAMETYPE(ARENA, NEW(Arena));
 #define g_arena IS_GAMETYPE(ARENA)
 
 #ifdef SVQC
+
+AUTOCVAR_NOREF(g_arena_respawn_delay_small, float, 0, "");
+AUTOCVAR_NOREF(g_arena_respawn_delay_small_count, float, 0, "");
+AUTOCVAR_NOREF(g_arena_respawn_delay_large, float, 0, "");
+AUTOCVAR_NOREF(g_arena_respawn_delay_large_count, float, 0, "");
+AUTOCVAR_NOREF(g_arena_respawn_delay_max, float, 0, "");
+AUTOCVAR_NOREF(g_arena_respawn_waves, float, 0, "");
+AUTOCVAR_NOREF(g_arena_weapon_stay, float, 0, "");
 
 int maxspawned;
 bool arena_roundbased;

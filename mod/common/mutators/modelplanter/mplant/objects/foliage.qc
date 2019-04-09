@@ -112,7 +112,7 @@ entity mplant_foliage_create(entity this, string _uid)
     _block.mplant_object_type		= "block";
     _block.mplant_object_uid		= _uid;
     _block.mplant_object_delete	= mplant_foliage_delete;
-    //SetResourceAmountExplicit(_block, RESOURCE_HEALTH, 1);
+    //SetResourceExplicit(_block, RES_HEALTH, 1);
     //_block.takedamage     = DAMAGE_YES;
     //_block.event_damage   = mplant_foliage_damage;
 

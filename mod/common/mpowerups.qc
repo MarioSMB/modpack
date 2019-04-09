@@ -1,4 +1,4 @@
-//FEATURE: Some classic SMB powerups, including the mini mushroom, super star and life shroom!
+//FEATURE-DISABLED Some classic SMB powerups, including the mini mushroom, super star and life shroom!
 
 const int MIT_STAR = BIT(0);
 const int MIT_MINI = BIT(1);
@@ -228,9 +228,9 @@ MUTATOR_HOOKFUNCTION(mpowerups, ItemTouch)
 		return MUT_ITEMTOUCH_PICKUP;
 	}
 
-	if(GetResourceAmount(item, RESOURCE_HEALTH) && STAT(LIFE_FINISHED, toucher) > time)
+	if(GetResource(item, RES_HEALTH) && STAT(LIFE_FINISHED, toucher) > time)
 	{
-		bool gave = Item_GiveAmmoTo(item, toucher, RESOURCE_HEALTH, item.max_health * 2);
+		bool gave = Item_GiveAmmoTo(item, toucher, RES_HEALTH, item.max_health * 2);
 		if(!gave)
 			return MUT_ITEMTOUCH_RETURN;
 		return MUT_ITEMTOUCH_PICKUP;
@@ -380,8 +380,8 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPowerups)
 		{
 			float starthp = ((warmup_stage) ? warmup_start_health : start_health);
 
-			if(GetResourceAmount(player, RESOURCE_HEALTH) > 0)
-				SetResourceAmount(player, RESOURCE_HEALTH, starthp * 2);
+			if(GetResource(player, RES_HEALTH) > 0)
+				SetResource(player, RES_HEALTH, starthp * 2);
 
 			player.mitems |= ITEM_Life.m_itemid;
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_LIFE, player.netname);

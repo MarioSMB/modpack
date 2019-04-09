@@ -160,9 +160,9 @@ spawnfunc(monster_afrit) { Monster_Spawn(this, true, MON_AFRIT.monsterid); }
 				actor.anim_idle = animfixfps(actor, '2 1 0.5', '0 0 0');
 
 			if(IS_ONGROUND(actor))
-				SetResourceAmountExplicit(actor, RESOURCE_ARMOR, 0.95); // almost invincible
+				SetResourceExplicit(actor, RES_ARMOR, 0.95); // almost invincible
 			else
-				SetResourceAmountExplicit(actor, RESOURCE_ARMOR, autocvar_g_monsters_armor_blockpercent);
+				SetResourceExplicit(actor, RES_ARMOR, autocvar_g_monsters_armor_blockpercent);
 			return true;
 		}
 		METHOD(Afrit, mr_pain, float(Afrit thismon, entity actor, float damage_take, entity attacker, float deathtype))
@@ -198,7 +198,7 @@ spawnfunc(monster_afrit) { Monster_Spawn(this, true, MON_AFRIT.monsterid); }
 		#ifdef SVQC
 		METHOD(Afrit, mr_setup, bool(Afrit thismon, entity actor))
 		{
-			if(!GetResourceAmount(actor, RESOURCE_HEALTH)) SetResourceAmountExplicit(actor, RESOURCE_HEALTH, autocvar_g_monster_afrit_health);
+			if(!GetResource(actor, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_afrit_health);
 			if(!actor.speed) { actor.speed = (autocvar_g_monster_afrit_speed_walk); }
 			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_afrit_speed_run); }
 			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_afrit_speed_stop); }

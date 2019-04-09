@@ -44,7 +44,7 @@ void M_Soldier_Attack_Shotgun(entity this, .entity weaponentity)
 	W_SetupShot(this, weaponentity, true, 5, SND_SHOTGUN_FIRE, CH_WEAPON_A, autocvar_g_monster_soldier_attack_shotgun_damage * autocvar_g_monster_soldier_attack_shotgun_bullets, WEP_SHOTGUN.m_id);
 
 	for(int sc = 0; sc < autocvar_g_monster_soldier_attack_shotgun_bullets;sc = sc + 1)
-		fireBullet(this, weaponentity, w_shotdir, this.enemy.origin, autocvar_g_monster_soldier_attack_shotgun_spread, autocvar_g_monster_soldier_attack_shotgun_solidpenetration, autocvar_g_monster_soldier_attack_shotgun_damage, autocvar_g_monster_soldier_attack_shotgun_force, WEP_SHOTGUN.m_id, 0);
+		fireBullet(this, weaponentity, w_shotdir, this.enemy.origin, autocvar_g_monster_soldier_attack_shotgun_spread, autocvar_g_monster_soldier_attack_shotgun_solidpenetration, autocvar_g_monster_soldier_attack_shotgun_damage, autocvar_g_monster_soldier_attack_shotgun_force, WEP_SHOTGUN.m_id, EFFECT_BULLET_WEAK);
 
 	Send_Effect(EFFECT_SHOTGUN_MUZZLEFLASH, w_shotdir, w_shotdir * 1000, 1);
 
@@ -101,7 +101,7 @@ spawnfunc(monster_army) { Monster_Spawn(this, true, MON_SOLDIER.monsterid); }
 		.float speed;
 		METHOD(Soldier, mr_setup, bool(Monster thismon, entity actor))
 		{
-			if(!GetResourceAmount(actor, RESOURCE_HEALTH)) SetResourceAmountExplicit(actor, RESOURCE_HEALTH, autocvar_g_monster_soldier_health);
+			if(!GetResource(actor, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_soldier_health);
 			if(!actor.speed) { actor.speed = (autocvar_g_monster_soldier_speed_walk); }
 			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_soldier_speed_run); }
 			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_soldier_speed_stop); }

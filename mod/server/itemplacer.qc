@@ -6,19 +6,19 @@ bool map_has_entfile;
 
 REGISTER_MUTATOR(itemplacer, autocvar_g_itemplacer);
 
-void try_itemspawn(entity caller, string item)
+void try_itemspawn(entity caller, string item, int teamnumber)
 {
 	if(startsWith(item, "vehicle_"))
 	{
 		string theveh = substring(item, 8, strlen(item));
-		FOREACH(Vehicles, it.netname == theveh,
+		FOREACH(Vehicles, it.netname == theveh || it.m_canonical_spawnfunc == item,
 		{
 			entity veh = new(placed_item);
 			veh.spawnfunc_checked = true;
 			//veh.classname = item;
 			setorigin(veh, caller.origin);
 			veh.angles = caller.angles;
-			veh.team = caller.team;
+			veh.team = ((teamnumber) ? teamnumber : caller.team); // TODO: no
 			if(!vehicle_initialize(veh, it, false))
 				delete(veh);
 			return; // got our vehicle!
@@ -28,8 +28,8 @@ void try_itemspawn(entity caller, string item)
 
 	if(startsWith(item, "weapon_"))
 	{
-		string thewep = substring(item, 7, strlen(item));
-		FOREACH(Weapons, it.netname == thewep,
+		string thewep = W_UndeprecateName(substring(item, 7, strlen(item)));
+		FOREACH(Weapons, it.netname == thewep || it.m_canonical_spawnfunc == item,
 		{
 			entity wep = new(placed_item);
 			wep.spawnfunc_checked = true;
@@ -45,13 +45,14 @@ void try_itemspawn(entity caller, string item)
 	if(startsWith(item, "monster_"))
 	{
 		string themon = substring(item, 8, strlen(item));
-		FOREACH(Monsters, it.netname == themon,
+		FOREACH(Monsters, it.netname == themon || it.m_canonical_spawnfunc == item,
 		{
 			entity mon = new(placed_item);
 			mon.spawnfunc_checked = true;
 			//mon.classname = item;
 			setorigin(mon, caller.origin);
 			mon.angles = caller.angles;
+			mon.team = teamnumber;
 			Monster_Spawn(mon, true, it.monsterid);
 			return;
 		});
@@ -63,7 +64,7 @@ void try_itemspawn(entity caller, string item)
 		if(!g_ctf)
 			return; // don't even try to spawn a flag
 
-		int theteam = caller.team; // only reliable way to tell the team
+		int theteam = ((teamnumber) ? teamnumber : caller.team);
 		switch(item)
 		{
 			case "item_flag_team1": theteam = NUM_TEAM_1; break;
@@ -80,7 +81,7 @@ void try_itemspawn(entity caller, string item)
 	if(startsWith(item, "item_buff_"))
 	{
 		string thebuff = substring(item, 10, strlen(item));
-		FOREACH(Buffs, it.m_name == thebuff,
+		FOREACH(Buffs, it.netname == thebuff || it.m_canonical_spawnfunc == item,
 		{
 			entity itm = new(placed_item);
 			itm.spawnfunc_checked = true;
@@ -88,7 +89,7 @@ void try_itemspawn(entity caller, string item)
 			setorigin(itm, caller.origin);
 			itm.angles = caller.angles;
 			STAT(BUFFS, itm) = it.m_itemid;
-			itm.team = caller.team; // TODO?
+			itm.team = ((teamnumber) ? teamnumber : caller.team); // TODO: no
 			buff_Init(itm);
 			return;
 		});
@@ -98,14 +99,14 @@ void try_itemspawn(entity caller, string item)
 	if(startsWith(item, "turret_"))
 	{
 		string thetur = substring(item, 7, strlen(item));
-		FOREACH(Turrets, it.netname == thetur,
+		FOREACH(Turrets, it.netname == thetur || it.m_canonical_spawnfunc == item,
 		{
 			entity tur = new(placed_item);
 			tur.spawnfunc_checked = true;
 			//tur.classname = item;
 			setorigin(tur, caller.origin);
 			tur.angles = caller.angles;
-			tur.team = caller.team;
+			tur.team = ((teamnumber) ? teamnumber : caller.team); // TODO: no
 			if(!turret_initialize(tur, it))
 				delete(tur);
 			return; // got our turret!
@@ -114,7 +115,7 @@ void try_itemspawn(entity caller, string item)
 	}
 
 	string theitem = substring(item, 5, strlen(item));
-	FOREACH(Items, it.netname == theitem,
+	FOREACH(Items, it.netname == theitem || it.m_canonical_spawnfunc == item,
 	{
 		entity itm = new(placed_item);
 		itm.spawnfunc_checked = true;
@@ -125,7 +126,7 @@ void try_itemspawn(entity caller, string item)
 	});
 }
 
-void place_item(entity caller, string item)
+void place_item(entity caller, string item, int teamnumber)
 {
 	string filename = strcat(mapname, "_item_ent.txt");
 	int fh = fopen(filename, FILE_APPEND);
@@ -136,8 +137,7 @@ void place_item(entity caller, string item)
 		fputs(fh, strcat("\"classname\" \"", item, "\"\n"));
 		fputs(fh, strcat("\"origin\" \"", strcat(ftos(caller.origin_x), " ", ftos(caller.origin_y), " ", ftos(caller.origin_z)), "\"\n"));
 		fputs(fh, strcat("\"angles\" \"", strcat(ftos(caller.angles_x), " ", ftos(caller.angles_y), " ", ftos(caller.angles_z)), "\"\n"));
-		if(startsWith(item, "vehicle_"))
-			fputs(fh, strcat("\"team\" \"", ftos(caller.team), "\"\n"));
+		fputs(fh, strcat("\"team\" \"", ftos(((teamnumber) ? teamnumber : caller.team)), "\"\n"));
 		fputs(fh, "}\n");
 
 		LOG_INFO("Completed item entity dump in ^2data/data/", mapname, "_item_ent.txt^7.");
@@ -174,9 +174,13 @@ MUTATOR_HOOKFUNCTION(itemplacer, SV_ParseClientCommand)
 		}
 
 		string item = argv(1);
+		string arg2 = (argv(2) != "") ? argv(2) : "auto";
+		int teamnum = Team_ColorToTeam(arg2);
+		if(teamnum == -1)
+			teamnum = 0;
 		if(autocvar_g_itemplacer_spawnitems && !map_has_entfile)
-			try_itemspawn(caller, item);
-		place_item(caller, item);
+			try_itemspawn(caller, item, teamnum);
+		place_item(caller, item, teamnum);
 		return true;
 	}
 }

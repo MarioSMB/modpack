@@ -84,12 +84,12 @@ void dotc_FactoryDamage(entity this, entity inflictor, entity attacker, float da
 {	
 	if(DOTC_FFCHECK(this, attacker)) { return; }
 	
-	TakeResource(this, RESOURCE_HEALTH, damage);
+	TakeResource(this, RES_HEALTH, damage);
 
 	if(this.wps_factorybase)
-		WaypointSprite_UpdateHealth(this.wps_factorybase, GetResourceAmount(this, RESOURCE_HEALTH));
+		WaypointSprite_UpdateHealth(this.wps_factorybase, GetResource(this, RES_HEALTH));
 
-	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if (GetResource(this, RES_HEALTH) <= 0)
 	{
 		if(IS_CLIENT(attacker))
 		{
@@ -150,7 +150,7 @@ void dotc_SpawnWaypoints(entity this)
 		WaypointSprite_UpdateTeamRadar(this.wps_factorybase, RADARICON_FACTORY, ((this.team) ? colormapPaletteColor(this.team - 1, false) : '1 1 1'));
 		//WaypointSprite_UpdateRule(this.wps_factorybase, this.team, SPRITERULE_TEAMPLAY);
 		WaypointSprite_UpdateMaxHealth(this.wps_factorybase, this.max_health);
-		WaypointSprite_UpdateHealth(this.wps_factorybase, GetResourceAmount(this, RESOURCE_HEALTH));
+		WaypointSprite_UpdateHealth(this.wps_factorybase, GetResource(this, RES_HEALTH));
 
 		this.wps_factorybase.fade_rate = 4500;
 		this.wps_factorybase.SendFlags |= 16;
@@ -163,12 +163,12 @@ void dotc_FactoryReset(entity this)
 	this.deadflag 		= DEAD_NO;
 	setthink(this, dotc_FactoryThink);
 	this.nextthink 		= time;
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
+	SetResourceExplicit(this, RES_HEALTH, this.max_health);
 	this.cnt = 0;
 
 	if(this.wps_factorybase)
 	{
-		WaypointSprite_UpdateHealth(this.wps_factorybase, GetResourceAmount(this, RESOURCE_HEALTH));
+		WaypointSprite_UpdateHealth(this.wps_factorybase, GetResource(this, RES_HEALTH));
 		this.wps_factorybase.team = 0;
 		this.wps_factorybase.SendFlags |= 1;
 	}
@@ -218,8 +218,8 @@ void dotc_FactorySetup(int teamnumber, entity this) // called when spawning a fa
 	this.classname = "dotc_factory";
 	this.solid = SOLID_BSP;
 	this.takedamage = DAMAGE_AIM;
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, ((!GetResourceAmount(this, RESOURCE_HEALTH)) ? ((!autocvar_g_dotc_factory_health) ? 500 : autocvar_g_dotc_factory_health) : GetResourceAmount(this, RESOURCE_HEALTH)));
-	this.max_health = GetResourceAmount(this, RESOURCE_HEALTH);
+	SetResourceExplicit(this, RES_HEALTH, ((!GetResource(this, RES_HEALTH)) ? ((!autocvar_g_dotc_factory_health) ? 500 : autocvar_g_dotc_factory_health) : GetResource(this, RES_HEALTH)));
+	this.max_health = GetResource(this, RES_HEALTH);
 	this.event_damage = dotc_FactoryDamage;
 	this.velocity = '0 0 0';
 	this.reset = dotc_FactoryReset;

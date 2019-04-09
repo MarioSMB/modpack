@@ -431,7 +431,7 @@ int dotc_ai_valid_target(entity this, entity targ)
 	if(wasfreed(targ))
 		return -2;
 
-	if(GetResourceAmount(targ, RESOURCE_HEALTH) <= 0 || targ.takedamage == DAMAGE_NO)
+	if(GetResource(targ, RES_HEALTH) <= 0 || targ.takedamage == DAMAGE_NO)
 		return -3;
 
 	if(IS_DEAD(targ))

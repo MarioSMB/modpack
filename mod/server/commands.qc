@@ -13,6 +13,7 @@ STATIC_INIT(mod_cmds)
 	localcmd("\nalias stufftoall \"sv_cmd stufftoall ${* ?}\"\n");
 	localcmd("\nalias dumpmodcvars \"sv_cmd dumpmodcvars ${* ?}\"\n");
 	localcmd("\nalias gotorandom \"sv_cmd gotorandom ${* ?}\"\n");
+	localcmd("\nalias randomvar \"sv_cmd randomvar ${* ?}\"\n");
 }
 
 const int MAX_MAPLISTS = 8;
@@ -293,6 +294,22 @@ MUTATOR_HOOKFUNCTION(mutator_mod, SV_ParseServerCommand)
 		else
 			LOG_INFO("^1Error: ^7Could not open file 'mod_cvars.cfg'!");
 			
+		return true;
+	}
+
+	if(cmd_name == "randomvar")
+	{
+		string thevar = argv(2);
+		string thecount = strcat(thevar, "_count");
+		if(!(cvar_type(thecount) & CVAR_TYPEFLAG_EXISTS))
+		{
+			LOG_INFO("You need to define a _count cvar set to the same number as the last cvar in the list.\n");
+			return true;
+		}
+		string newvar = strcat(thevar, "_", ftos(floor(random() * cvar(thecount)) + 1)); // not zero indexed, so count is the same number as the final entry
+		if(!(cvar_type(newvar) & CVAR_TYPEFLAG_EXISTS))
+			return true; // nothing to be done
+		localcmd(strcat(argv(1), " ", cvar_string(newvar), "\n"));
 		return true;
 	}
 }

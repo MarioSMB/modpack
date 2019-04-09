@@ -24,6 +24,7 @@ MUTATOR_HOOKFUNCTION(cl_jb, WP_Format)
     {
     	M_ARGV(2, vector) = this.teamradar_color;
         M_ARGV(3, string) = strzone(sprintf(_("Point %s"), chr2str(str2chr("A", 0) + this.wp_extra)));
+        M_ARGV(4, string) = "dom_icon_blue-highlighted";
         return true;
     }
 }
@@ -165,7 +166,7 @@ void JB_count_alive_players()
 	FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),
 	{
 		++total_players;
-		if (STAT(JB_ISPRISONED, it))
+		if (IS_DEAD(it) || STAT(JB_ISPRISONED, it))
 		{
 			continue;
 		}
@@ -185,6 +186,8 @@ void JB_count_alive_players()
 		STAT(PINKALIVE, it) = Team_GetNumberOfAlivePlayers(
 			Team_GetTeamFromIndex(4));
 	});
+
+	eliminatedPlayers.SendFlags |= 1;
 }
 
 int JB_GetWinnerTeam()
@@ -216,7 +219,7 @@ bool JB_JailIsOpen(int theteam);
 void JB_ActivateCamera(int theteam);
 void JB_TorturePrisonersLater(int theteam, float thedelay);
 
-#define JB_ALIVE_TEAMS_OK() (Team_GetNumberOfAliveTeams() == NumTeams(cq_teams))
+#define JB_ALIVE_TEAMS_OK() (Team_GetNumberOfAliveTeams() == NumTeams(jb_teams))
 bool JB_CheckWinner()
 {
 	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
@@ -313,7 +316,7 @@ bool JB_CheckTeams()
 	int missing_teams_mask = 0;
 	for (int i = 1; i <= NUM_TEAMS; ++i)
 	{
-		if ((cq_teams & Team_IndexToBit(i)) &&
+		if ((jb_teams & Team_IndexToBit(i)) &&
 			(Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) == 0))
 		{
 			missing_teams_mask |= Team_IndexToBit(i);
@@ -462,8 +465,8 @@ void JB_Imprison(entity targ, entity attacker)
 		//return;
 	}
 
-	SetResourceAmountExplicit(targ, RESOURCE_HEALTH, autocvar_g_jailbreak_prisoner_health);
-	SetResourceAmountExplicit(targ, RESOURCE_ARMOR, autocvar_g_jailbreak_prisoner_armor);
+	SetResourceExplicit(targ, RES_HEALTH, autocvar_g_jailbreak_prisoner_health);
+	SetResourceExplicit(targ, RES_ARMOR, autocvar_g_jailbreak_prisoner_armor);
 
 	targ.jb_had_unlimited_ammo = (targ.items & IT_UNLIMITED_WEAPON_AMMO);
 
@@ -513,9 +516,16 @@ void JB_Release(entity player, entity saviour)
 
 	if(g_jailbreak_jail_deathmatch)
 	{
-		SetResourceAmountExplicit(player, RESOURCE_HEALTH, max(GetResourceAmount(player, RESOURCE_HEALTH), autocvar_g_jailbreak_prisoner_health));
-		SetResourceAmountExplicit(player, RESOURCE_ARMOR, max(GetResourceAmount(player, RESOURCE_ARMOR), autocvar_g_jailbreak_prisoner_armor));
+		SetResourceExplicit(player, RES_HEALTH, max(GetResource(player, RES_HEALTH), autocvar_g_jailbreak_prisoner_health));
+		SetResourceExplicit(player, RES_ARMOR, max(GetResource(player, RES_ARMOR), autocvar_g_jailbreak_prisoner_armor));
 	}
+}
+
+bool jailbreak_isEliminated(entity e)
+{
+	if(IS_PLAYER(e) && (STAT(JB_ISPRISONED, e) || IS_DEAD(e)))
+		return true;
+	return false;
 }
 
 //
@@ -903,15 +913,13 @@ void JB_TriggerTeamControlPoints(entity cp, entity player)
 
 string JB_ControlPoint_Name(entity p)
 {
-	string clr, tm, end;
+	string clr = Team_ColorCode(p.team);
+	string tm = Team_ColorName(p.team);
 
-	clr = Team_ColorCode(p.team);
-	tm = Team_ColorName(p.team);
-
-	end = strcat(" (Point ", chr2str(str2chr("A", 0) + p.cnt), ")");
+	string end = strcat(" ^7(^3Point ", chr2str(str2chr("A", 0) + p.cnt), "^7)");
 
 	if(!p.netname)
-		return strcat(clr, tm, " Control Point", end);
+		return strcat(clr, tm, " ^7Control Point", end);
 	return strcat(clr, strdecolorize(p.netname), end);
 }
 
@@ -963,7 +971,7 @@ void JB_ControlPoint_Touch(entity this, entity toucher)
 	if(jb_roundover)
 		return;
 
-	if(GetResourceAmount(toucher, RESOURCE_HEALTH) < 1 || STAT(FROZEN, toucher))
+	if(GetResource(toucher, RES_HEALTH) < 1 || STAT(FROZEN, toucher))
 		return;
 
 	if(game_stopped)
@@ -1068,10 +1076,14 @@ void JB_ControlPoint_Reset(entity this)
 
 bool jb_ControlPoint_Waypoint_Customize(entity this, entity client)
 {
-	if(!this.owner.team) { return true; }
-
+	// we actually want it to show when not active yet (progress bars)
+	//if(!this.owner.jb_active) { return false; }
 	entity e = WaypointSprite_getviewentity(client);
 
+	if(JB_TotalPlayersOnTeam(e.team) == JB_AlivePlayersOnTeam(e.team))
+		return false; // TODO: optimize so it isn't looping for every player each frame!
+
+	if(!this.owner.team) { return true; }
 	// hide from owner's team
 	if(SAME_TEAM(this.owner, e)) { return false; }
 
@@ -1452,20 +1464,14 @@ void jb_Initialize()
 {
 	jb_teams = autocvar_g_jailbreak_teams_override;
 	if (jb_teams < 2) jb_teams = autocvar_g_jailbreak_teams;
-	jb_teams = bound(2, jb_teams, 4);
-
-	int teams = 0;
-	if(jb_teams >= 1) teams |= BIT(0);
-	if(jb_teams >= 2) teams |= BIT(1);
-	if(jb_teams >= 3) teams |= BIT(2);
-	if(jb_teams >= 4) teams |= BIT(3);
-
-	jb_teams = teams; // now set it?
+	jb_teams = BITS(bound(2, jb_teams, 4));
 
 	jb_ScoreRules(jb_teams);
 
 	round_handler_Spawn(JB_CheckTeams, JB_CheckWinner, JB_RoundStart);
 	round_handler_Init(5, autocvar_g_jailbreak_warmup, autocvar_g_jailbreak_round_timelimit);
+
+	EliminatedPlayers_Init(jailbreak_isEliminated);
 
 	g_jailbreak_claim = autocvar_g_jailbreak_controlpoint_claim;
 

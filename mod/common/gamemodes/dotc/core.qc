@@ -120,9 +120,9 @@ void dotc_Core_SetLevel(entity core, int newlevel, bool silent)
 
 	if(autocvar_g_dotc_nextlevel_resethealth)
 	{
-		SetResourceAmountExplicit(core, RESOURCE_HEALTH, core.max_health);
+		SetResourceExplicit(core, RES_HEALTH, core.max_health);
 		if(core.wps_corebase)
-			WaypointSprite_UpdateHealth(core.wps_corebase, GetResourceAmount(core, RESOURCE_HEALTH));
+			WaypointSprite_UpdateHealth(core.wps_corebase, GetResource(core, RES_HEALTH));
 	}
 
 	dotc_Core_Addons_Clear(core);
@@ -174,12 +174,12 @@ void dotc_CoreDamage(entity this, entity inflictor, entity attacker, float damag
 	if(DOTC_FFCHECK(this, attacker))
 		return;
 
-	TakeResource(this, RESOURCE_HEALTH, damage);
+	TakeResource(this, RES_HEALTH, damage);
 	
 	if(this.wps_corebase)
-		WaypointSprite_UpdateHealth(this.wps_corebase, GetResourceAmount(this, RESOURCE_HEALTH));
+		WaypointSprite_UpdateHealth(this.wps_corebase, GetResource(this, RES_HEALTH));
 	
-	if (GetResourceAmount(this, RESOURCE_HEALTH) <= 0)
+	if (GetResource(this, RES_HEALTH) <= 0)
 	{
 		if(IS_CLIENT(attacker))
 			GameRules_scoring_add(attacker, DOTC_DESTROYED, +1);
@@ -201,7 +201,7 @@ void dotc_CoreDamage(entity this, entity inflictor, entity attacker, float damag
 
 void dotc_CoreReset(entity this)
 {
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, this.max_health);
+	SetResourceExplicit(this, RES_HEALTH, this.max_health);
 	this.dotc_status = CORE_IDLE;
 	this.deadflag = DEAD_NO;
 	this.event_damage = dotc_CoreDamage;
@@ -209,7 +209,7 @@ void dotc_CoreReset(entity this)
 
 	if(this.wps_corebase)
 	{
-		WaypointSprite_UpdateHealth(this.wps_corebase, GetResourceAmount(this, RESOURCE_HEALTH));
+		WaypointSprite_UpdateHealth(this.wps_corebase, GetResource(this, RES_HEALTH));
 		this.wps_corebase.team = 0;
 		this.wps_corebase.SendFlags |= 1;
 	}
@@ -377,7 +377,7 @@ void dotc_DelayedCoreSetup(entity this) // called after a core is placed on a ma
 		WaypointSprite_UpdateTeamRadar(this.wps_corebase, RADARICON_GENERATOR, ((this.team) ? colormapPaletteColor(this.team - 1, false) : '1 1 1'));
 		//WaypointSprite_UpdateRule(this.wps_corebase, this.team, SPRITERULE_TEAMPLAY);
 		WaypointSprite_UpdateMaxHealth(this.wps_corebase, this.max_health);
-		WaypointSprite_UpdateHealth(this.wps_corebase, GetResourceAmount(this, RESOURCE_HEALTH));
+		WaypointSprite_UpdateHealth(this.wps_corebase, GetResource(this, RES_HEALTH));
 	}
 
 	// set initial level
@@ -403,8 +403,8 @@ void dotc_CoreSetup(int teamnumber, entity this) // called when spawning a core 
 	this.dotc_status = CORE_IDLE;
 	this.dotc_corelevel = 0;
 	this.dotc_nextlevel = 100;
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, ((!GetResourceAmount(this, RESOURCE_HEALTH)) ? ((!autocvar_g_dotc_core_health) ? 1000 : autocvar_g_dotc_core_health) : GetResourceAmount(this, RESOURCE_HEALTH)));
-	this.max_health = GetResourceAmount(this, RESOURCE_HEALTH);
+	SetResourceExplicit(this, RES_HEALTH, ((!GetResource(this, RES_HEALTH)) ? ((!autocvar_g_dotc_core_health) ? 1000 : autocvar_g_dotc_core_health) : GetResource(this, RES_HEALTH)));
+	this.max_health = GetResource(this, RES_HEALTH);
 	this.event_damage = dotc_CoreDamage;
 	this.velocity = '0 0 0';
 	this.reset = dotc_CoreReset;

@@ -121,7 +121,7 @@ spawnfunc(monster_goomba) { Monster_Spawn(this, true, MON_GOOMBA.monsterid); }
 		.float speed;
 		METHOD(Goomba, mr_setup, bool(Monster thismon, entity actor))
 		{
-			if(!GetResourceAmount(actor, RESOURCE_HEALTH)) SetResourceAmountExplicit(actor, RESOURCE_HEALTH, autocvar_g_monster_goomba_health);
+			if(!GetResource(actor, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_goomba_health);
 			if(!actor.speed) { actor.speed = (autocvar_g_monster_goomba_speed_walk); }
 			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_goomba_speed_walk); }
 			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_goomba_speed_stop); }

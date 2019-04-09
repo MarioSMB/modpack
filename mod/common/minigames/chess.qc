@@ -69,11 +69,11 @@ enum {
 
 #define CHESS_GOOD_MOVE(X) (X == response__Ok || X == response__Promotion || X == response__CastleK || X == response__CastleQ)
 
-entity chess_find_piece(entity minig, string tile)
+entity chess_find_piece(entity minig, string tile, entity ignore)
 {
 	entity e = NULL;
 	while ( ( e = findentity(e,owner,minig) ) )
-		if ( e.classname == "minigame_board_piece" && e.netname == tile )
+		if ( e.classname == "minigame_board_piece" && e.netname == tile && e != ignore )
 			return e;
 	return NULL;
 }
@@ -92,10 +92,10 @@ bool chess_check(entity minig, entity piece);
 int chess_kingstatus(entity minigame, int pteam);
 bool chess_king_checkspot(entity minigame, entity king, string topos);
 #define sgn(x) (x > 0 ? 1 : x < 0 ? -1 : 0)
-int chess_move_try(entity minigame, string thepiece, string pos, bool recurse_king)
+int chess_move_try(entity minigame, string thepiece, string pos, bool recurse_king, entity ignore)
 {
-	entity p = chess_find_piece(minigame, thepiece);
-	entity to_p = chess_find_piece(minigame, pos);
+	entity p = chess_find_piece(minigame, thepiece, ignore);
+	entity to_p = chess_find_piece(minigame, pos, ignore);
 	int t = p.team;
 	int to_t = (to_p) ? to_p.team : 0;
 
@@ -115,7 +115,7 @@ int chess_move_try(entity minigame, string thepiece, string pos, bool recurse_ki
 	int x = fx, y = fy; \
 	do { \
 		x += sx, y += sy; \
-		to_p = chess_find_piece(minigame, minigame_tile_buildname(x, y)); \
+		to_p = chess_find_piece(minigame, minigame_tile_buildname(x, y), ignore); \
 		to_t = (to_p) ? to_p.team : 0; \
 		bool last = x == tx && y == ty; \
 		if (to_p && (!last || t == to_t)) return response__Obstructed; \
@@ -131,12 +131,12 @@ int chess_move_try(entity minigame, string thepiece, string pos, bool recurse_ki
 				if (fy != home) return response__Illegal;
 			}
 			bool want_capture = adx == 1 && ady == 1;
-			to_p = chess_find_piece(minigame, pos);
+			to_p = chess_find_piece(minigame, pos, ignore);
 			if(!to_p && want_capture)
 			{
 				int p_dir = 1; // default to right
 				if(sx == -1) p_dir = -1;
-				to_p = chess_find_piece(minigame, minigame_tile_buildname(fx + p_dir, fy));
+				to_p = chess_find_piece(minigame, minigame_tile_buildname(fx + p_dir, fy), ignore);
 				if(!to_p.chess_passant)
 					to_p = NULL; // nope
 			}
@@ -150,7 +150,7 @@ int chess_move_try(entity minigame, string thepiece, string pos, bool recurse_ki
 		}
 		case piece__Knight:
 			if (dx && dy && (adx + ady == 3)) {
-				to_p = chess_find_piece(minigame, minigame_tile_buildname(tx, ty));
+				to_p = chess_find_piece(minigame, minigame_tile_buildname(tx, ty), ignore);
 				to_t = (to_p) ? to_p.team : 0;
 				if (to_p && to_t == t) return response__Obstructed;
 			} else {
@@ -187,11 +187,11 @@ int chess_move_try(entity minigame, string thepiece, string pos, bool recurse_ki
 						return response__Illegal;
 
 					entity cto;
-					cto = chess_find_piece(minigame, minigame_tile_buildname(fx + 1, fy));
+					cto = chess_find_piece(minigame, minigame_tile_buildname(fx + 1, fy), ignore);
 					if(cto) { return response__Illegal; } // team doesn't matter, we don't want to go here
-					cto = chess_find_piece(minigame, minigame_tile_buildname(fx + 2, fy));
+					cto = chess_find_piece(minigame, minigame_tile_buildname(fx + 2, fy), ignore);
 					if(cto) { return response__Illegal; } // team doesn't matter, we don't want to go here
-					cto = chess_find_piece(minigame, minigame_tile_buildname(fx + 3, fy));
+					cto = chess_find_piece(minigame, minigame_tile_buildname(fx + 3, fy), ignore);
 
 					if(cto.chess_moved) { return response__Illegal; }
 
@@ -203,13 +203,13 @@ int chess_move_try(entity minigame, string thepiece, string pos, bool recurse_ki
 						return response__Illegal;
 
 					entity cto;
-					cto = chess_find_piece(minigame, minigame_tile_buildname(fx - 1, fy));
+					cto = chess_find_piece(minigame, minigame_tile_buildname(fx - 1, fy), ignore);
 					if(cto) { return response__Illegal; } // team doesn't matter, we don't want to go here
-					cto = chess_find_piece(minigame, minigame_tile_buildname(fx - 2, fy));
+					cto = chess_find_piece(minigame, minigame_tile_buildname(fx - 2, fy), ignore);
 					if(cto) { return response__Illegal; } // team doesn't matter, we don't want to go here
-					cto = chess_find_piece(minigame, minigame_tile_buildname(fx - 3, fy));
+					cto = chess_find_piece(minigame, minigame_tile_buildname(fx - 3, fy), ignore);
 					if(cto) { return response__Illegal; } // team doesn't matter, we don't want to go here
-					cto = chess_find_piece(minigame, minigame_tile_buildname(fx - 4, fy));
+					cto = chess_find_piece(minigame, minigame_tile_buildname(fx - 4, fy), ignore);
 
 					if(cto.chess_moved) { return response__Illegal; }
 
@@ -220,7 +220,7 @@ int chess_move_try(entity minigame, string thepiece, string pos, bool recurse_ki
 			else if (adx <= 1 && ady <= 1) {
 				scan();
 				if(recurse_king)
-				if(chess_king_checkspot(minigame, p, pos))
+				if(chess_king_checkspot(minigame, p, pos)) // NOTE: doesn't listen to ignore entity
 					return response__Illegal;
 			} else {
 				return response__Illegal;
@@ -234,44 +234,27 @@ int chess_move_try(entity minigame, string thepiece, string pos, bool recurse_ki
 
 bool chess_check_king_in_spot(entity minigame, string piece, string topos)
 {
-	entity thepiece = chess_find_piece(minigame, piece);
+	entity thepiece = chess_find_piece(minigame, piece, NULL);
 	if(!thepiece || thepiece.chess_id == piece__King) return false; // no use even attempting to continue, or king (king does its own checks)
 
-	entity oldpiece = chess_find_piece(minigame, topos);
-	string oldpos = string_null;
-	if(oldpiece)
-	{
-		oldpos = oldpiece.netname;
-		oldpiece.netname = "";
-		oldpiece.classname = "minigame_board_piece_disabled";
-	}
+	entity oldpiece = chess_find_piece(minigame, topos, NULL);
+	entity ignore = oldpiece;
 
 	string thepos = thepiece.netname;
-
 	thepiece.netname = topos;
 
 	entity e = NULL;
 	while ( ( e = findentity(e,owner,minigame) ) )
-		if ( e.classname == "minigame_board_piece" && e.team == thepiece.team && e.chess_id == piece__King )
+		if ( e.classname == "minigame_board_piece" && e.team == thepiece.team && e.chess_id == piece__King && e != ignore )
 		{
 			if(chess_check(minigame, e))
 			{
 				thepiece.netname = thepos;
-				if(oldpos)
-				{
-					oldpiece.netname = oldpos;
-					oldpiece.classname = "minigame_board_piece";
-				}
 				return true;
 			}
 		}
 
 	thepiece.netname = thepos;
-	if(oldpos)
-	{
-		oldpiece.netname = oldpos;
-		oldpiece.classname = "minigame_board_piece";
-	}
 
 	return false;
 }
@@ -280,39 +263,26 @@ bool chess_king_checkspot(entity minig, entity king, string topos)
 {
 	int kteam = king.team;
 	string oldpos = king.netname;
-	string foldpos = string_null;
-	entity oldpiece = chess_find_piece(minig, topos);
-	king.netname = topos; // we need to assume king is there to apply 'check'
-	if(oldpiece && oldpiece != king)
-	if(oldpiece.team != king.team) // since this is run from other places, we can't assume team is checked yet
-	{
-		foldpos = oldpiece.netname;
-		oldpiece.netname = "";
-	}
-	else if(oldpiece.team == king.team)
-	{
-		king.netname = oldpos;
-		if(foldpos)
-			oldpiece.netname = foldpos;
-		return false; // the existing piece is our team?!
-	}
+	entity oldpiece = chess_find_piece(minig, topos, NULL);
+
+	if(oldpiece && oldpiece.team == king.team)
+		return false; // can't move there!
+	king.netname = topos;
+
+	entity ignore = oldpiece;
 
 	entity e = NULL;
 	while ( ( e = findentity(e,owner,minig) ) )
 		if ( e.classname == "minigame_board_piece" && e.team != kteam )
 		{
-			int try = chess_move_try(minig, e.netname, topos, false);
+			int try = chess_move_try(minig, e.netname, topos, false, ignore);
 			if(CHESS_GOOD_MOVE(try))
 			{
 				king.netname = oldpos;
-				if(foldpos)
-					oldpiece.netname = foldpos;
 				return true;
 			}
 		}
 
-	if(foldpos)
-		oldpiece.netname = foldpos;
 	king.netname = oldpos;
 
 	return false;
@@ -326,7 +296,7 @@ bool chess_check(entity minig, entity king)
 	while ( ( e = findentity(e,owner,minig) ) )
 		if ( e.classname == "minigame_board_piece" && e.team != kteam && e.chess_id != piece__King )
 		{
-			int try = chess_move_try(minig, e.netname, king.netname, false);
+			int try = chess_move_try(minig, e.netname, king.netname, false, NULL);
 			if(CHESS_GOOD_MOVE(try))
 				return true;
 		}
@@ -345,7 +315,7 @@ bool chess_king_canmove(entity minigame, entity piece)
 			if(newpos == piece.netname) continue;
 			if(chess_king_checkspot(minigame, piece, newpos))
 				continue;
-			int try = chess_move_try(minigame, piece.netname, newpos, true);
+			int try = chess_move_try(minigame, piece.netname, newpos, true, NULL);
 
 			if(CHESS_GOOD_MOVE(try))
 			{
@@ -357,34 +327,40 @@ bool chess_king_canmove(entity minigame, entity piece)
 	return false;
 }
 
+bool chess_tryallmoves(entity minigame, entity piece)
+{
+	int i, j;
+	for(i = 0; i < CHESS_NUM_CNT; ++i)
+	for(j = 0; j < CHESS_LET_CNT; ++j)
+	{
+		string newpos = minigame_tile_buildname(j, i);
+		if(newpos == piece.netname) continue;
+		int r = chess_move_try(minigame, piece.netname, newpos, true, NULL);
+
+		if(CHESS_GOOD_MOVE(r))
+		{
+			if(chess_check_king_in_spot(minigame, piece.netname, newpos))
+				continue;
+			return true;
+		}
+	}
+
+	return false;
+}
+
 bool chess_king_canbesaved(entity minigame, entity king)
 {
-	int save_cnt = 0, total_cnt = 0;
-
 	entity e = NULL;
 	while ( ( e = findentity(e,owner,minigame) ) )
 	{
 		if(e.classname != "minigame_board_piece") continue;
-		if(e.team == king.team || e.chess_id == piece__King) continue;
+		if(e.team != king.team || e == king) continue;
 
-		int try = chess_move_try(minigame, e.netname, king.netname, true);
-		if(CHESS_GOOD_MOVE(try))
-		{
-			++total_cnt;
-			string myname = e.netname;
-			entity e2 = NULL;
-			while ( ( e2 = findentity(e2,owner,minigame) ) )
-			{
-				if(e2.classname != "minigame_board_piece") continue;
-				if(e2.team != king.team || e2.chess_id == piece__King) continue;
-				int try2 = chess_move_try(minigame, e2.netname, myname, true);
-				if(CHESS_GOOD_MOVE(try2))
-					++save_cnt;
-			}
-		}
+		if(chess_tryallmoves(minigame, e))
+			return true;
 	}
 
-	return (save_cnt >= total_cnt) ? true : false;
+	return false;
 }
 
 int chess_kingstatus(entity minigame, int pteam)
@@ -409,7 +385,7 @@ bool chess_move_piece(entity minigame, entity piece, string pos, int promote)
 {
 	if(!piece) { return false; }
 
-	entity thepiece = chess_find_piece(minigame, pos);
+	entity thepiece = chess_find_piece(minigame, pos, NULL);
 	if(thepiece.team == piece.team)
 	{
 		LOG_TRACE("Chess: Trying to move a piece onto an existing piece we own, THIS SHOULD NOT HAPPEN!");
@@ -438,7 +414,7 @@ bool chess_move_piece(entity minigame, entity piece, string pos, int promote)
 		if(letter - 1 == to_letter)
 			ang = -1;
 
-		thepiece = chess_find_piece(minigame, minigame_tile_buildname(letter + ang, number));
+		thepiece = chess_find_piece(minigame, minigame_tile_buildname(letter + ang, number), NULL);
 		if(!thepiece.chess_passant || thepiece.team == piece.team)
 			thepiece = NULL; // revert what we did, it's no use
 	}
@@ -490,16 +466,16 @@ void chess_move(entity minigame, entity player, string thepiece, string pos, str
 {
 	if(minigame.minigame_flags & CHESS_TURN_MOVE)
 	if(pos && player.team == (minigame.minigame_flags & CHESS_TURN_TEAM))
-	if(chess_valid_tile(pos) && chess_find_piece(minigame, thepiece))
+	if(chess_valid_tile(pos) && chess_find_piece(minigame, thepiece, NULL))
 	{
-		entity piece = chess_find_piece(minigame, thepiece);
+		entity piece = chess_find_piece(minigame, thepiece, NULL);
 		if(piece.team != player.team)
 			return; // fail!
 
 		if(piece.chess_id == piece__King)
 		if(chess_king_checkspot(minigame, piece, pos))
 			return;
-		int r = chess_move_try(minigame, thepiece, pos, true);
+		int r = chess_move_try(minigame, thepiece, pos, true, NULL);
 		int promote = piece__Empty;
 		int rletter = 0, rnumber = 0;
 		string thepos = string_null;
@@ -519,7 +495,7 @@ void chess_move(entity minigame, entity player, string thepiece, string pos, str
 				rletter = minigame_tile_letter(piece.netname);
 				rnumber = minigame_tile_number(piece.netname);
 				thepos = minigame_tile_buildname(rletter + 3, rnumber);
-				rook = chess_find_piece(minigame, thepos);
+				rook = chess_find_piece(minigame, thepos, NULL);
 				if(!rook)
 					return; // wtf
 				thenewpos = minigame_tile_buildname(rletter + 1, rnumber);
@@ -530,7 +506,7 @@ void chess_move(entity minigame, entity player, string thepiece, string pos, str
 				rletter = minigame_tile_letter(piece.netname);
 				rnumber = minigame_tile_number(piece.netname);
 				thepos = minigame_tile_buildname(rletter - 4, rnumber);
-				rook = chess_find_piece(minigame, thepos);
+				rook = chess_find_piece(minigame, thepos, NULL);
 				if(!rook)
 					return; // wtf
 				thenewpos = minigame_tile_buildname(rletter - 1, rnumber);
@@ -546,15 +522,19 @@ void chess_move(entity minigame, entity player, string thepiece, string pos, str
 
 		minigame.chess_nexteam = minigame_next_team(player.team,CHESS_TEAMS);
 
-		int pcount = 0;
+		int mypcount = 0, theirpcount = 0;
 		FOREACH_ENTITY_ENT_ORDERED(owner, minigame,
 		{
 			if(it.classname != "minigame_board_piece") continue;
-			if(it.team == player.team) continue;
-			++pcount;
+			if(it.team == player.team)
+				++mypcount;
+			else
+				++theirpcount;
 		});
 
-		if(!pcount)
+		if(mypcount <= 1 && theirpcount <= 1) // if both sides have no actual pieces, it's a draw (kings can't take eachother)
+			minigame.minigame_flags = CHESS_TURN_DRAW; // TODO: also end up in a draw if more than 20 checks have been made
+		else if(mypcount >= 1 && !theirpcount) // special rule: enemy has no pieces while we have some, call it a victory!
 			minigame.minigame_flags = CHESS_TURN_WIN | player.team;
 		else if(chess_kingstatus(minigame, minigame.chess_nexteam) == CHESS_CHECKMATE)
 			minigame.minigame_flags = CHESS_TURN_WIN | player.team;
@@ -662,7 +642,16 @@ int chess_server_event(entity minigame, string event, ...)
 			{
 				WriteByte(MSG_ENTITY,sent.chess_id);
 				if(sf & MINIG_SF_UPDATE)
-					WriteByte(MSG_ENTITY,sent.chess_passant);
+				{
+					int sendf = 0;
+					if(sent.chess_passant)
+						sendf |= BIT(0);
+					if(sent.chess_moved)
+						sendf |= BIT(1);
+					if(sent.chess_king_checked)
+						sendf |= BIT(2);
+					WriteByte(MSG_ENTITY,sendf);
+				}
 			}
 			return false;
 		}
@@ -689,7 +678,7 @@ entity chess_spawn_list_item(entity minigame, string pos, int resp)
 	entity e = new(chess_list_item);
 	e.netname = strzone(pos);
 	e.chess_avail_type = resp;
-	e.enemy = chess_find_piece(minigame, pos);
+	e.enemy = chess_find_piece(minigame, pos, NULL);
 	LL_PUSH(chess_available_moves, e);
 	return e;
 }
@@ -701,7 +690,7 @@ void chess_set_curr_piece(entity minigame, entity piece)
 	{
 		LL_DELETE(chess_available_moves,
 		{
-			if (it.netname) strunzone(it.netname);
+			strfree(it.netname);
 		});
 	}
 
@@ -718,56 +707,60 @@ void chess_set_curr_piece(entity minigame, entity piece)
 	for(j = 0; j < CHESS_LET_CNT; ++j)
 	{
 		string newpos = minigame_tile_buildname(j, i);
-		int r = chess_move_try(minigame, chess_curr_piece.netname, newpos, true);
+		if(newpos == chess_curr_piece.netname) continue;
+		int r = chess_move_try(minigame, chess_curr_piece.netname, newpos, true, NULL);
 
 		if(CHESS_GOOD_MOVE(r))
 		{
+			if(chess_curr_piece.chess_id == piece__King)
+			if(chess_king_checkspot(minigame, chess_curr_piece, newpos))
+				continue;
 			if(chess_check_king_in_spot(minigame, chess_curr_piece.netname, newpos))
 				continue;
-		}
 
-		switch (r)
-		{
-			case response__CastleK:
-				tpos = minigame_tile_buildname(j + 1, i);
+			switch (r)
+			{
+				case response__CastleK:
+					tpos = minigame_tile_buildname(j + 1, i);
 
-				chess_spawn_list_item(minigame, tpos, r);
-				chess_spawn_list_item(minigame, newpos, r);
-				break;
-			case response__CastleQ:
-				tpos = minigame_tile_buildname(j - 2, i);
+					chess_spawn_list_item(minigame, tpos, r);
+					chess_spawn_list_item(minigame, newpos, r);
+					break;
+				case response__CastleQ:
+					tpos = minigame_tile_buildname(j - 2, i);
 
-				chess_spawn_list_item(minigame, tpos, r);
-				chess_spawn_list_item(minigame, newpos, r);
-				break;
-			case response__Promotion:
-			case response__Ok:
-				chess_spawn_list_item(minigame, newpos, r);
+					chess_spawn_list_item(minigame, tpos, r);
+					chess_spawn_list_item(minigame, newpos, r);
+					break;
+				case response__Promotion:
+				case response__Ok:
+					chess_spawn_list_item(minigame, newpos, r);
 
-				int letter = minigame_tile_letter(chess_curr_piece.netname);
-				int number = minigame_tile_number(chess_curr_piece.netname);
+					int letter = minigame_tile_letter(chess_curr_piece.netname);
+					int number = minigame_tile_number(chess_curr_piece.netname);
 
-				int to_number = minigame_tile_number(newpos);
-				int to_letter = minigame_tile_letter(newpos);
+					int to_number = minigame_tile_number(newpos);
+					int to_letter = minigame_tile_letter(newpos);
 
-				entity thepiece = NULL;
+					entity thepiece = NULL;
 
-				if(chess_curr_piece.chess_id == piece__Pawn)
-				if(to_number != number && to_letter != letter)
-				{
-					int ang = 0;
-					if(letter + 1 == to_letter)
-						ang = 1;
-					if(letter - 1 == to_letter)
-						ang = -1;
+					if(chess_curr_piece.chess_id == piece__Pawn)
+					if(to_number != number && to_letter != letter)
+					{
+						int ang = 0;
+						if(letter + 1 == to_letter)
+							ang = 1;
+						if(letter - 1 == to_letter)
+							ang = -1;
 
-					thepiece = chess_find_piece(minigame, minigame_tile_buildname(letter + ang, number));
-					if(!thepiece.chess_passant || thepiece.team == chess_curr_piece.team)
-						thepiece = NULL; // revert what we did, it's no use
-				}
-				if(thepiece)
-					chess_spawn_list_item(minigame, thepiece.netname, r);
-				break;
+						thepiece = chess_find_piece(minigame, minigame_tile_buildname(letter + ang, number), NULL);
+						if(!thepiece.chess_passant || thepiece.team == chess_curr_piece.team)
+							thepiece = NULL; // revert what we did, it's no use
+					}
+					if(thepiece)
+						chess_spawn_list_item(minigame, thepiece.netname, r);
+					break;
+			}
 		}
 	}
 }
@@ -784,7 +777,7 @@ void chess_hud_board(vector pos, vector mySize)
 	vector tile_size = minigame_hud_denormalize_size('1 1 0' / CHESS_TILE_SIZE,pos,mySize);
 	vector tile_pos = '0 0 0';
 
-	entity thepiece = chess_find_piece(active_minigame, chess_curr_pos);
+	entity thepiece = chess_find_piece(active_minigame, chess_curr_pos, NULL);
 
 	if((active_minigame.minigame_flags & CHESS_TURN_TEAM) == minigame_self.team )
 	if(chess_valid_tile(chess_curr_pos))
@@ -842,7 +835,7 @@ void chess_hud_board(vector pos, vector mySize)
 				tile_pos = minigame_hud_denormalize(tile_pos,pos,mySize);
 				minigame_drawpic_centered(tile_pos,
 					minigame_texture("chess/tile_promoted"),
-					tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+					tile_size, '1 1 1', panel_fg_alpha * 0.7, DRAWFLAG_NORMAL);
 				pic = sprintf("chess/piece%d-%s", minigame_self.team, strtolower(piece_name[chess_curr_promotion]));
 			}
 			//LOG_DEBUG("Chess: drawing list item at tile: ", it.netname, "\n");
@@ -942,7 +935,7 @@ void chess_make_move(entity minigame)
 {
 	if ( minigame.minigame_flags == (CHESS_TURN_MOVE|minigame_self.team) )
 	{
-		entity piece = chess_find_piece(minigame,chess_curr_pos);
+		entity piece = chess_find_piece(minigame,chess_curr_pos,NULL);
 		if(piece.team == minigame_self.team)
 			chess_set_curr_piece(minigame, piece);
 		else if(chess_curr_piece)
@@ -1083,7 +1076,12 @@ int chess_client_event(entity minigame, string event, ...)
 				sent.chess_id = ReadByte();
 
 				if(sf & MINIG_SF_UPDATE)
-					sent.chess_passant = ReadByte();
+				{
+					int sendf = ReadByte();
+					sent.chess_passant = (sendf & BIT(0));
+					sent.chess_moved = (sendf & BIT(1));
+					sent.chess_king_checked = (sendf & BIT(2));
+				}
 			}
 
 			return false;

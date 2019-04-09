@@ -110,7 +110,7 @@ void dotc_count_cores()
 		if(!Entity_HasValidTeam(tmp_entity))
 			continue;
 		++total_players;
-		if(GetResourceAmount(tmp_entity, RESOURCE_HEALTH) < 1)
+		if(GetResource(tmp_entity, RES_HEALTH) < 1)
 			continue;
 		entity team_ = Entity_GetTeam(tmp_entity);
 		int num_alive = Team_GetNumberOfAlivePlayers(team_);
@@ -311,12 +311,12 @@ MUTATOR_HOOKFUNCTION(dotc, TurretSpawn)
 	if(autocvar_g_dotc_turrets_healthabs)
 	{
 		turret.max_health = autocvar_g_dotc_turrets_healthabs;
-		SetResourceAmountExplicit(turret, RESOURCE_HEALTH, autocvar_g_dotc_turrets_healthabs);
+		SetResourceExplicit(turret, RES_HEALTH, autocvar_g_dotc_turrets_healthabs);
 	}
 	else if(autocvar_g_dotc_turrets_healthmod)
 	{
 		turret.max_health *= autocvar_g_dotc_turrets_healthmod;
-		SetResourceAmountExplicit(turret, RESOURCE_HEALTH, GetResourceAmount(turret, RESOURCE_HEALTH) * autocvar_g_dotc_turrets_healthmod);
+		SetResourceExplicit(turret, RES_HEALTH, GetResource(turret, RES_HEALTH) * autocvar_g_dotc_turrets_healthmod);
 	}
 
 	turret.dotc_targetflags |= DOTC_TARGET_DRONES;

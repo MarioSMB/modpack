@@ -20,7 +20,7 @@ void vehicles_hitbox_damage(entity this, entity inflictor, entity attacker, floa
 
 void vehicles_hitbox_kill(entity this)
 {
-	SetResourceAmountExplicit(this, RESOURCE_HEALTH, 0);
+	SetResourceExplicit(this, RES_HEALTH, 0);
 	this.event_damage = func_null;
 	this.takedamage = DAMAGE_NO;
 	setthink(this, func_null);
@@ -51,7 +51,7 @@ void vehicles_hitbox_spawn(entity vehic, entity hitbox, vector min_s, vector max
 	hitbox.deadflag = vehic.deadflag;
 	hitbox.flags = FL_NOTARGET; // let bots and vehicles only target the main hitbox
 	setthink(hitbox, func_null);
-	SetResourceAmountExplicit(hitbox, RESOURCE_HEALTH, GetResourceAmount(vehic, RESOURCE_HEALTH));
+	SetResourceExplicit(hitbox, RES_HEALTH, GetResource(vehic, RES_HEALTH));
 	hitbox.netname = vehic.netname;
 	setsize(hitbox, min_s, max_s);
 	makevectors(vehic.angles_x * '-1 0 0' + vehic.angles_y * '0 1 0' + vehic.angles_z * '0 0 1'); // Inverted pitch on models

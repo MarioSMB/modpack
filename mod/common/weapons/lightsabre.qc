@@ -25,6 +25,7 @@ AUTOCVAR(g_balance_lightsabre_primary_melee_delay, float, 0.1, "");
 AUTOCVAR(g_balance_lightsabre_primary_melee_multihit, float, 1, "");
 AUTOCVAR(g_balance_lightsabre_primary_melee_no_doubleslap, float, 1, "");
 AUTOCVAR(g_balance_lightsabre_primary_melee_nonplayerdamage, float, 40, "");
+AUTOCVAR(g_balance_lightsabre_primary_melee_deflectrockets, bool, true, "");
 AUTOCVAR(g_balance_lightsabre_primary_melee_range, float, 120, "");
 AUTOCVAR(g_balance_lightsabre_primary_melee_swing_side, float, 80, "");
 AUTOCVAR(g_balance_lightsabre_primary_melee_swing_up, float, 60, "");
@@ -37,6 +38,7 @@ AUTOCVAR(g_balance_lightsabre_secondary_force, float, 200, "");
 AUTOCVAR(g_balance_lightsabre_secondary_melee_delay, float, 0.25, "");
 AUTOCVAR(g_balance_lightsabre_secondary_melee_multihit, float, 1, "");
 AUTOCVAR(g_balance_lightsabre_secondary_melee_no_doubleslap, float, 1, "");
+AUTOCVAR(g_balance_lightsabre_secondary_melee_deflectrockets, bool, false, "");
 AUTOCVAR(g_balance_lightsabre_secondary_melee_nonplayerdamage, float, 40, "");
 AUTOCVAR(g_balance_lightsabre_secondary_melee_range, float, 120, "");
 AUTOCVAR(g_balance_lightsabre_secondary_melee_swing_side, float, -80, "");
@@ -53,9 +55,9 @@ AUTOCVAR(g_balance_lightsabre_weaponthrowable, float, 0, "");
 
 CLASS(Lightsabre, Weapon)
 /* spawnfunc */ ATTRIB(Lightsabre, m_canonical_spawnfunc, string, "weapon_lightsabre");
-/* ammotype  */ ATTRIB(Lightsabre, ammo_type, int, RESOURCE_NONE);
+/* ammotype  */ ATTRIB(Lightsabre, ammo_type, int, RES_NONE);
 /* impulse   */ ATTRIB(Lightsabre, impulse, int, 1);
-/* flags     */ ATTRIB(Lightsabre, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_RELOADABLE);
+/* flags     */ ATTRIB(Lightsabre, spawnflags, int, WEP_FLAG_RELOADABLE);
 /* rating    */ ATTRIB(Lightsabre, bot_pickupbasevalue, float, 6000);
 /* color     */ ATTRIB(Lightsabre, wpcolor, vector, '1 0.25 0.25');
 /* modelname */ ATTRIB(Lightsabre, mdl, string, "lightsabre");
@@ -80,6 +82,7 @@ CLASS(Lightsabre, Weapon)
 		P(class, prefix, melee_swing_up, float, BOTH) \
 		P(class, prefix, melee_swing_side, float, BOTH) \
 		P(class, prefix, melee_nonplayerdamage, float, BOTH) \
+		P(class, prefix, melee_deflectrockets, float, BOTH) \
 		P(class, prefix, melee_multihit, float, BOTH) \
 		P(class, prefix, melee_delay, float, BOTH) \
 		P(class, prefix, melee_range, float, BOTH) \
@@ -191,6 +194,8 @@ bool W_Lightsabre_Melee_Block(entity this, entity player)
 	}
 	else if(!player)
 	{
+		int deathtype = this.projectiledeathtype;
+		bool isprimary = !(deathtype & HITTYPE_SECONDARY);
 		bool doneblock = false;
 		makevectors(myowner.v_angle);
 		IL_EACH(g_projectiles, time > it.lightsabre_hitshield,
@@ -202,14 +207,14 @@ bool W_Lightsabre_Melee_Block(entity this, entity player)
 				//LOG_INFO("dot = ", ftos(dot));
 				if(dot <= 0.3) { continue; }
 
-				//LOG_INFO("We got one!");
-
-				W_Devastator_Unregister(it);
-
-				it.velocity *= -1; // straight forward...?
-				it.realowner = it.owner = myowner;
+				if(!(it.classname == "rocket" || it.classname == "grenade") || WEP_CVAR_BOTH(lightsabre, isprimary, melee_deflectrockets))
+				{
+					it.velocity *= -1; // straight forward...?
+					UpdateCSQCProjectile(it);
+				}
 				it.lightsabre_hitshield = time + 0.15;
-				UpdateCSQCProjectile(it);
+				it.realowner = it.owner = myowner;
+
 				doneblock = true;
 			}
 		});
@@ -270,7 +275,7 @@ void W_Lightsabre_Melee_Think(entity this)
 		WarpZone_traceline_antilag(this, this.realowner.origin + this.realowner.view_ofs, targpos, false, this.realowner, ANTILAG_LATENCY(this.realowner));
 
 		if(W_Lightsabre_Melee_Block(this, NULL))
-			accuracy_add(this.realowner, WEP_LIGHTSABRE.m_id, 0, (WEP_CVAR_BOTH(lightsabre, isprimary, melee_nonplayerdamage) * min(1, swing_factor + 1)));
+			accuracy_add(this.realowner, WEP_LIGHTSABRE, 0, (WEP_CVAR_BOTH(lightsabre, isprimary, melee_nonplayerdamage) * min(1, swing_factor + 1)));
 
 		// draw lightning beams for debugging
 		//te_lightning2(NULL, targpos, this.realowner.origin + this.realowner.view_ofs + v_forward * 5 - v_up * 5);
@@ -301,7 +306,7 @@ void W_Lightsabre_Melee_Think(entity this)
 
 				spamsound(this.realowner, CH_WEAPON_A, SND_LIGHTSABRE_HIT_RANDOM(), VOL_BASE, ATTN_NORM);
 
-				if(accuracy_isgooddamage(this.realowner, target_victim)) { accuracy_add(this.realowner, WEP_LIGHTSABRE.m_id, 0, swing_damage); }
+				if(accuracy_isgooddamage(this.realowner, target_victim)) { accuracy_add(this.realowner, WEP_LIGHTSABRE, 0, swing_damage); }
 			}
 
 			// draw large red flash for debugging

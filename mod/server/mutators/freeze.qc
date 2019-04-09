@@ -32,7 +32,7 @@ void freeze_Unfreeze(entity ent)
 
 	Kill_Notification(NOTIF_ONE_ONLY, ent, MSG_CENTER, CPID_FREEZE);
 
-	Unfreeze(ent);
+	Unfreeze(ent, true);
 }
 
 
@@ -78,10 +78,10 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerDies)
 		if(!(teamplay && autocvar_g_freeze_noauto))
 		if(IS_REAL_CLIENT(frag_target))
 			Send_Notification(NOTIF_ONE_ONLY, frag_target, MSG_CENTER, CENTER_FREEZE_THAWING);
-		SetResourceAmountExplicit(frag_target, RESOURCE_HEALTH, 1); // "respawn" the player :P
+		SetResourceExplicit(frag_target, RES_HEALTH, 1); // "respawn" the player :P
 
 		if(autocvar_g_instagib)
-			SetResourceAmount(frag_target, RESOURCE_CELLS, start_ammo_cells); // we need more ammo in instagib, otherwise the player will defrost and die again
+			SetResource(frag_target, RES_CELLS, start_ammo_cells); // we need more ammo in instagib, otherwise the player will defrost and die again
 
 		if(frag_deathtype == DEATH_TEAMCHANGE.m_id || frag_deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 		{
@@ -97,6 +97,15 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerDies)
 		frag_target.freezetag_frozen_time = time;
 	}
 }
+
+#ifdef IS_REVIVING
+	#undef IS_REVIVING
+#endif
+
+// returns true if player is reviving it
+#define IS_REVIVING(player, it, revive_extra_size) \
+	(it != player && !STAT(FROZEN, it) && !IS_DEAD(it) && SAME_TEAM(it, player) \
+	&& boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
 
 MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 {
@@ -171,8 +180,8 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 			}
 		}
 
-		entity o;
-		o = NULL;
+		entity o = NULL;
+		vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 		//if(player.freezetag_frozen_timeout > 0 && time < player.freezetag_frozen_timeout)
 		//if(player.iceblock)
 			//player.iceblock.alpha = ICE_MIN_ALPHA + (ICE_MAX_ALPHA - ICE_MIN_ALPHA) * (player.freezetag_frozen_timeout - time) / (player.freezetag_frozen_timeout - player.freezetag_frozen_time);
@@ -181,25 +190,18 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 			n = -1;
 		else
 		{
-			vector revive_extra_size = '1 1 1' * autocvar_g_freezetag_revive_extra_size;
 			n = 0;
-			FOREACH_CLIENT(IS_PLAYER(it) && it != player && !IS_DEAD(it) && !STAT(FROZEN, it) && SAME_TEAM(it, player),
-			{
-				if(boxesoverlap(player.absmin - revive_extra_size, player.absmax + revive_extra_size, it.absmin, it.absmax))
-				{
-					if(!o)
-						o = it;
-					if(STAT(FROZEN, player) == 1)
-						it.reviving = true;
-					++n;
-				}
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
+				if(!o)
+					o = it;
+				++n;
 			});
 		}
 
 		if(n && STAT(FROZEN, player) == 1) // OK, there is at least one teammate reviving us
 		{
 			STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
-			SetResourceAmount(player, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * start_health));
+			SetResource(player, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * start_health));
 
 			if(STAT(REVIVE_PROGRESS, player) >= 1)
 			{
@@ -213,9 +215,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 				}
 
 				// EVERY team mate nearby gets a point (even if multiple!)
-				FOREACH_CLIENT(IS_PLAYER(it) && it.reviving,
-				{
-					GameRules_scoring_add(it, SCORE, +1);
+				FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
 					nades_GiveBonus(it,autocvar_g_nades_bonus_score_low);
 				});
 
@@ -224,16 +224,14 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_FREEZETAG_REVIVED, player.netname, o.netname);
 			}
 
-			FOREACH_CLIENT(IS_PLAYER(it) && it.reviving,
-			{
+			FOREACH_CLIENT(IS_PLAYER(it) && IS_REVIVING(player, it, revive_extra_size), {
 				STAT(REVIVE_PROGRESS, it) = STAT(REVIVE_PROGRESS, player);
-				it.reviving = false;
 			});
 		}
 		else if(!n && STAT(FROZEN, player) == 1) // only if no teammate is nearby will we reset
 		{
 			STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
-			SetResourceAmount(player, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * start_health));
+			SetResource(player, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * start_health));
 		}
 		else if(!n && !STAT(FROZEN, player))
 		{
@@ -247,9 +245,9 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 			rspeed *= (random() * autocvar_g_freeze_revive_speed_random);
 
 		STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) + frametime * rspeed, 1);
-		SetResourceAmount(player, RESOURCE_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * start_health));
+		SetResource(player, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * start_health));
 
-		if(GetResourceAmount(player, RESOURCE_HEALTH) >= autocvar_g_freeze_revive_minhealth)
+		if(GetResource(player, RES_HEALTH) >= autocvar_g_freeze_revive_minhealth)
 			button_pressed = (PHYS_INPUT_BUTTON_JUMP(player) || PHYS_INPUT_BUTTON_USE(player)); // we're about to defrost, only detect jumps
 		else
 			button_pressed = (PHYS_INPUT_BUTTON_ATCK(player) || PHYS_INPUT_BUTTON_JUMP(player) || PHYS_INPUT_BUTTON_ATCK2(player) || PHYS_INPUT_BUTTON_HOOK(player) || PHYS_INPUT_BUTTON_USE(player));
