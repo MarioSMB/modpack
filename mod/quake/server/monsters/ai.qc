@@ -778,6 +778,11 @@ void FoundTarget(entity this)
 		this.enemy = NULL;
 		return;
 	}
+	else if(MP_ROGUE && (this.spawnflags & 2) && this.classname == "monster_knight" && this.takedamage == DAMAGE_NO) // special case, could be tweaked!
+	{
+		this.enemy = NULL;
+		return;
+	}
 	
 	this.show_hostile = time + 1;		// wake up other monsters
 
