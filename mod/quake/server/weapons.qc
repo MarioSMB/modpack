@@ -611,13 +611,11 @@ TraceAttack
 */
 void TraceAttack(float damage, vector dir)
 {
-	vector	vel, org;
-	
-	vel = normalize(dir + v_up*crandom() + v_right*crandom());
+	vector vel = normalize(dir + v_up*crandom() + v_right*crandom());
 	vel = vel + 2*trace_plane_normal;
 	vel = vel * 200;
 
-	org = trace_endpos - dir*4;
+	vector org = trace_endpos - dir*4;
 
 	if(trace_ent.takedamage)
 	{
