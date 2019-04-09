@@ -5,6 +5,19 @@ CLASS(Conquest, Gametype)
     {
         this.gametype_init(this, _("Conquest"),"cq","g_conquest",true,true,"","timelimit=20 pointlimit=1 teams=2",_("Capture all the spawnpoint control points to win"));
     }
+    METHOD(Conquest, m_parse_mapinfo, bool(string k, string v))
+    {
+        if (!k) {
+            cvar_set("g_conquest_teams", cvar_defstring("g_conquest_teams"));
+            return true;
+        }
+        switch (k) {
+            case "teams":
+                cvar_set("g_conquest_teams", v);
+                return true;
+        }
+        return false;
+    }
     METHOD(Conquest, m_generate_mapinfo, void(Gametype this, string v))
     {
         if(v == "conquest_controlpoint")
@@ -16,7 +29,7 @@ CLASS(Conquest, Gametype)
     }
     METHOD(Conquest, m_setTeams, void(string sa))
     {
-        cvar_set("fraglimit", sa);
+        cvar_set("g_conquest_teams", sa);
     }
 ENDCLASS(Conquest)
 REGISTER_GAMETYPE(CONQUEST, NEW(Conquest));
@@ -35,6 +48,9 @@ const int CQSF_STATE 	= BIT(3);	//! Captured or not
 const int CQSF_NAME 	= BIT(4);	//! Display name (can be defined by mapper)
 
 #ifdef SVQC
+//int autocvar_g_conquest_teams;
+int autocvar_g_conquest_teams_override;
+
 // score rule declarations
 const int ST_CONQUEST_ROUNDS = 1;
 
@@ -49,11 +65,6 @@ const float CQ_CP_THINKRATE = 0.15;
 const vector CQ_CP_MIN = ('-35 -35 -3');
 const vector CQ_CP_MAX = ('35 35 195');
 
-// teleportation
-.float teleport_antispam;
-.vector cq_deathloc;
-.entity cq_spawn_by;
-
 // statuses
 const int CP_NEUTRAL = 1;
 const int CP_CAPTURED = 2;
@@ -67,5 +78,6 @@ const int COMPAT_ONS = 2;
 .int cq_compat; // for checking if a map already has conquest support
 
 .float cq_capdistance;
+.float cq_capspeed;
 .int cq_originalteam; // stored spawn team for resetting
 #endif

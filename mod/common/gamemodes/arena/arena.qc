@@ -232,7 +232,7 @@ MUTATOR_HOOKFUNCTION(arena, MakePlayerObserver)
 	}
 	else
 	{
-		player.frags = FRAGS_LMS_LOSER;
+		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 		Spawnqueue_Insert(player);
 	}
 	return true;

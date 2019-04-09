@@ -35,14 +35,9 @@ AUTOCVAR_NOREF(g_cq_respawn_delay_large_count, float, 0, "");
 AUTOCVAR_NOREF(g_cq_respawn_delay_max, float, 0, "");
 AUTOCVAR_NOREF(g_cq_respawn_waves, float, 0, "");
 AUTOCVAR_NOREF(g_cq_weapon_stay, float, 0, "");
-AUTOCVAR(g_conquest_spawn_close_to_death, bool, true, "default to closest spawnpoint to death location");
 AUTOCVAR(g_conquest_capture_distance_default, float, 512, "maximum distance from control point at which players can capture/liberate");
 AUTOCVAR(g_conquest_capture_sps, float, 100, "capture/liberation speed");
 AUTOCVAR(g_conquest_controlpoint_health_default, float, 500, "");
-AUTOCVAR(g_conquest_spawn_choose, bool, true, "Allow players to choose the control point to be spawned at");
-AUTOCVAR(g_conquest_teleport_radius, float, 1024, "");
-AUTOCVAR(g_conquest_teleport_wait, float, 5, "Time before player can teleport again");
-AUTOCVAR(g_conquest_click_radius, float, 500, "");
 AUTOCVAR(g_conquest_warmup, float, 5, "");
 AUTOCVAR(g_conquest_round_timelimit, float, 360, "");
 
@@ -73,7 +68,7 @@ bool cq_ControlPoint_Send(entity this, entity to, int sf)
 	if(sf & CQSF_HEALTH)
 	{
 		WriteByte(MSG_ENTITY, ceil((GetResource(this, RES_HEALTH) / this.max_health) * 255));
-		WriteLong(MSG_ENTITY, autocvar_g_conquest_capture_sps);
+		WriteCoord(MSG_ENTITY, this.cq_capspeed);
 	}
 
 	if(sf & CQSF_NAME)
@@ -138,7 +133,7 @@ void cq_ControlPoint_SwitchTeam(entity this, int newteam, int newstatus, bool sh
 			break;
 		}
 
-		default: { dprint("Control point without status?\n"); break; }
+		default: { LOG_DEBUG("Control point without status?"); break; }
 	}
 
 	SUB_UseTargets(this, act, NULL);
@@ -166,9 +161,9 @@ void cq_ControlPoint_Think(entity this)
 				if(trace_fraction == 1.0)
 				{
 					if(SAME_TEAM(it, this))
-						SetResourceExplicit(this, RES_HEALTH, min(this.max_health, GetResource(this, RES_HEALTH) + autocvar_g_conquest_capture_sps * CQ_CP_THINKRATE));
+						SetResourceExplicit(this, RES_HEALTH, min(this.max_health, GetResource(this, RES_HEALTH) + this.cq_capspeed * CQ_CP_THINKRATE));
 					else
-						SetResourceExplicit(this, RES_HEALTH, max(0, GetResource(this, RES_HEALTH) - autocvar_g_conquest_capture_sps * CQ_CP_THINKRATE));
+						SetResourceExplicit(this, RES_HEALTH, max(0, GetResource(this, RES_HEALTH) - this.cq_capspeed * CQ_CP_THINKRATE));
 
 					switch(this.cq_status)
 					{
@@ -209,15 +204,10 @@ void cq_ControlPoint_Think(entity this)
 
 void cq_ControlPoint_Reset(entity this)
 {
-	if(this.cq_originalteam)
-		this.cq_status = CP_CAPTURED;
-	else
-	{
-		this.cq_status = CP_NEUTRAL;
-		SetResourceExplicit(this, RES_HEALTH, 0);
-	}
+	this.cq_status = CP_NEUTRAL;
+	SetResourceExplicit(this, RES_HEALTH, 0);
 	this.SendFlags |= CQSF_HEALTH;
-	cq_ControlPoint_SwitchTeam(this, this.cq_originalteam, this.cq_status, false);
+	cq_ControlPoint_SwitchTeam(this, 0, this.cq_status, false);
 }
 
 spawnfunc(conquest_controlpoint)
@@ -232,30 +222,23 @@ spawnfunc(conquest_controlpoint)
 	setsize(this, CQ_CP_MIN, CQ_CP_MAX);
 
 	if(this.netname == "")		{ this.netname = "a spawnpoint"; }
-	if(!GetResource(this, RES_HEALTH))			{ SetResourceExplicit(this, RES_HEALTH, autocvar_g_conquest_controlpoint_health_default); }
 	if(!this.cq_capdistance)	{ this.cq_capdistance = autocvar_g_conquest_capture_distance_default; }
+	if(!this.cq_capspeed) 		{ this.cq_capspeed = autocvar_g_conquest_capture_sps; }
 
 	this.classname = "conquest_controlpoint";
-	this.max_health = GetResource(this, RES_HEALTH);
+	this.max_health = autocvar_g_conquest_controlpoint_health_default;
 	this.solid = SOLID_TRIGGER;
 	this.nextthink = time + CQ_CP_THINKRATE;
 	setthink(this, cq_ControlPoint_Think);
 	this.reset = cq_ControlPoint_Reset;
 
-	if(this.team)
-		this.cq_status = CP_CAPTURED;
-	else
-	{
-		this.cq_status = CP_NEUTRAL;
-		SetResourceExplicit(this, RES_HEALTH, 0);
-	}
-
-	this.cq_originalteam = this.team;
+	this.cq_status = CP_NEUTRAL;
+	SetResourceExplicit(this, RES_HEALTH, 0);
 
 	waypoint_spawnforitem(this);
 	Net_LinkEntity(this, false, 0, cq_ControlPoint_Send);
 	this.SendFlags = CQSF_SETUP | CQSF_STATE | CQSF_TEAM | CQSF_HEALTH | CQSF_NAME;
-	cq_ControlPoint_SwitchTeam(this, this.team, this.cq_status, false);
+	cq_ControlPoint_SwitchTeam(this, 0, this.cq_status, false);
 }
 
 // round handler
@@ -403,114 +386,6 @@ bool cq_CheckTeams()
 }
 
 
-// ======================
-// Teleportation Handling
-// ======================
-
-/*
- * Find control point or generator owned by the same team this which is nearest to pos
- * if max_dist is positive, only control points within this range will be considered
- */
-entity cq_Nearest_ControlPoint(entity this, vector pos, float max_dist)
-{
-	entity tmp_entity, closest_target = NULL;
-	for(tmp_entity = cq_worldcplist; tmp_entity; tmp_entity = tmp_entity.cq_worldcpnext)
-	{
-		if(SAME_TEAM(tmp_entity, this))
-		if(tmp_entity.cq_status == CP_CAPTURED)
-		if(max_dist <= 0 || vdist(tmp_entity.origin - pos, <=, max_dist))
-		if(vlen2(tmp_entity.origin - pos) <= vlen2(closest_target.origin - pos) || closest_target == NULL)
-			closest_target = tmp_entity;
-	}
-
-	return closest_target;
-}
-
-/*
- * Find control point or generator owned by the same team this which is nearest to pos
- * if max_dist is positive, only control points within this range will be considered
- * This function only check distances on the XY plane, disregarding Z
- */
-entity cq_Nearest_ControlPoint_2D(entity this, vector pos, float max_dist)
-{
-	entity closest_target = NULL;
-
-	for(entity tmp_entity = cq_worldcplist; tmp_entity; tmp_entity = tmp_entity.cq_worldcpnext)
-	{
-		vector my_delta = vec2(tmp_entity.origin - pos);
-
-		if(tmp_entity.cq_status == CP_CAPTURED && SAME_TEAM(tmp_entity, this))
-		if(max_dist <= 0 || vdist(my_delta, <=, max_dist))
-		if(closest_target == NULL || vlen2(my_delta) <= vlen2(vec2(closest_target.origin - pos)))
-			closest_target = tmp_entity;
-	}
-
-	return closest_target;
-}
-/**
- * find the number of control points and generators in the same team as this
- */
-int cq_Count_MyControlPoints(entity this)
-{
-	int n = 0;
-	entity tmp_entity;
-	for(tmp_entity = cq_worldcplist; tmp_entity; tmp_entity = tmp_entity.cq_worldcpnext)
-	{
-		if(SAME_TEAM(tmp_entity, this))
-		if(tmp_entity.cq_status == CP_CAPTURED)
-			n++;
-	}
-	return n;
-}
-
-/**
- * Teleport player to a random position near tele_target
- * if tele_effects is true, teleport sound+particles are created
- * return false on failure
- */
-bool cq_Teleport(entity player, entity tele_target, float range, bool tele_effects)
-{
-	if ( !tele_target )
-		return false;
-
-	int i;
-	vector loc;
-	float theta;
-	for(i = 0; i < 16; ++i)
-	{
-		theta = random() * 2 * M_PI;
-		loc_y = sin(theta);
-		loc_x = cos(theta);
-		loc_z = 0;
-		loc *= random() * range;
-
-		loc += tele_target.origin + '0 0 128';
-
-		tracebox(loc, PL_MIN_CONST, PL_MAX_CONST, loc, MOVE_NORMAL, player);
-		if(trace_fraction == 1.0 && !trace_startsolid)
-		{
-			traceline(tele_target.origin, loc, MOVE_NOMONSTERS, tele_target); // double check to make sure we're not spawning outside the NULL
-			if(trace_fraction == 1.0)
-			{
-				if ( tele_effects )
-				{
-					Send_Effect(EFFECT_TELEPORT, player.origin, '0 0 0', 1);
-					sound (player, CH_TRIGGER, SND_TELEPORT, VOL_BASE, ATTEN_NORM);
-				}
-				setorigin(player, loc);
-				player.teleport_antispam = time + autocvar_g_conquest_teleport_wait;
-
-				if ( tele_effects )
-					Send_Effect(EFFECT_TELEPORT, player.origin + v_forward * 32, '0 0 0', 1);
-				return true;
-			}
-		}
-	}
-
-	return false;
-}
-
-
 // ==================
 // Legacy Bot Support
 // ==================
@@ -519,16 +394,13 @@ void havocbot_role_cq_liberating(entity this);
 
 void havocbot_goalrating_defendpoints(entity this, float ratingscale, vector org, float sradius)
 {
-	entity head;
-	float distance;
-
-	for(head = cq_worldcplist; head; head = head.cq_worldcpnext)
+	for(entity head = cq_worldcplist; head; head = head.cq_worldcpnext)
 	{
 		if (SAME_TEAM(head, this))
 		{
 			if (GetResource(head, RES_HEALTH) < head.max_health)
 			{
-				distance = vlen(head.origin - org);
+				float distance = vlen(head.origin - org);
 				if (distance > sradius)
 					continue;
 				navigation_routerating(this, head, ratingscale, 2000);
@@ -637,25 +509,6 @@ void cq_Setup_Compat_dom(entity this)
 		return;
 	}
 
-	int redcp = 0, bluecp = 0, yellowcp = 0, pinkcp = 0;
-
-	entity head;
-	for(head = cq_worldcplist; head; head = head.cq_worldcpnext)
-	{
-		switch(head.team)
-		{
-			case NUM_TEAM_1: ++redcp; break;
-			case NUM_TEAM_2: ++bluecp; break;
-			case NUM_TEAM_3: ++yellowcp; break;
-			case NUM_TEAM_4: ++pinkcp; break;
-		}
-	}
-
-	if(!redcp) { this.team = NUM_TEAM_1; }
-	if(!bluecp) { this.team = NUM_TEAM_2; }
-	if(!yellowcp && NumTeams(cq_teams) >= 3) { this.team = NUM_TEAM_3; }
-	if(!pinkcp && NumTeams(cq_teams) >= 4) { this.team = NUM_TEAM_4; }
-
 	this.cq_compat = COMPAT_DOM; // compatibility flag
 
 	spawnfunc_conquest_controlpoint(this);
@@ -683,31 +536,6 @@ void cq_Setup_Compat_ons(entity this)
 // Hook Functions
 // ==============
 
-MUTATOR_HOOKFUNCTION(cq, MakePlayerObserver)
-{
-	entity player = M_ARGV(0, entity);
-
-	player.cq_deathloc = '0 0 0';
-}
-
-MUTATOR_HOOKFUNCTION(cq, ClientDisconnect)
-{
-	entity player = M_ARGV(0, entity);
-
-	player.cq_deathloc = '0 0 0';
-}
-
-MUTATOR_HOOKFUNCTION(cq, PlayerDies)
-{
-	entity frag_target = M_ARGV(2, entity);
-
-	frag_target.cq_deathloc = frag_target.origin;
-
-	if ( autocvar_g_conquest_spawn_choose )
-	if ( cq_Count_MyControlPoints(frag_target) > 1 )
-		stuffcmd(frag_target, "qc_cmd_cl hud clickradar\n");
-}
-
 MUTATOR_HOOKFUNCTION(cq, reset_map_global)
 {
 	for(entity e = cq_worldcplist; e; e = e.cq_worldcpnext)
@@ -719,166 +547,6 @@ MUTATOR_HOOKFUNCTION(cq, reset_map_global)
 	});
 }
 
-MUTATOR_HOOKFUNCTION(cq, PlayerSpawn)
-{
-	entity player = M_ARGV(0, entity);
-
-	if ( autocvar_g_conquest_spawn_choose )
-	if ( player.cq_spawn_by )
-	if ( cq_Teleport(player,player.cq_spawn_by,autocvar_g_conquest_teleport_radius,false) )
-	{
-		player.cq_spawn_by = NULL;
-		return;
-	}
-
-	bool random_target = !(autocvar_g_conquest_spawn_close_to_death);
-	int owned_count = cq_Count_MyControlPoints(player);
-	entity tmp_entity, closest_target = NULL;
-	vector spawn_loc = player.cq_deathloc;
-
-	// new joining player or round reset, don't bother checking
-	//if(spawn_loc == '0 0 0') { return false; }
-
-	if(random_target) { RandomSelection_Init(); }
-
-	for(tmp_entity = cq_worldcplist; tmp_entity; tmp_entity = tmp_entity.cq_worldcpnext)
-	{
-		if(SAME_TEAM(tmp_entity, player) || (!tmp_entity.team && !owned_count))
-		if(tmp_entity.cq_status == CP_CAPTURED || !owned_count)
-		if(random_target)
-			RandomSelection_AddEnt(tmp_entity, 1, 1);
-		else if(vlen2(tmp_entity.origin - spawn_loc) <= vlen2(closest_target.origin - spawn_loc) || closest_target == NULL)
-			closest_target = tmp_entity;
-	}
-
-	if(random_target) { closest_target = RandomSelection_chosen_ent; }
-
-	if(!closest_target)
-	{
-		for(tmp_entity = cq_worldcplist; tmp_entity; tmp_entity = tmp_entity.cq_worldcpnext)
-		{
-			if(SAME_TEAM(tmp_entity, player) || (!tmp_entity.team && !owned_count))
-			if(tmp_entity.cq_status == CP_CAPTURED || !owned_count)
-			{
-				closest_target = tmp_entity;
-				break;
-			}
-		}
-	}
-
-	if(closest_target)
-	{
-		int i;
-		vector loc;
-		for(i = 0; i < 10; ++i)
-		{
-			loc = closest_target.origin + '0 0 96';
-			if(random() >= 0.5)
-				loc += ('1 1 0' * random()) * 1024;
-			else
-				loc -= ('1 1 0' * random()) * 1024;
-			tracebox(loc, PL_MIN_CONST, PL_MAX_CONST, loc, MOVE_NORMAL, player);
-			if(trace_fraction == 1.0 && !trace_startsolid)
-			{
-				traceline(closest_target.origin, loc, MOVE_NOMONSTERS, closest_target); // double check to make sure we're not spawning outside the NULL
-				if(trace_fraction == 1.0)
-				{
-					setorigin(player, loc);
-					player.angles = normalize(loc - closest_target.origin);
-					return;
-				}
-			}
-		}
-	}
-
-	print("Warning: No spawns found for team ", ftos(player.team), "\n");
-}
-
-MUTATOR_HOOKFUNCTION(cq, SV_ParseClientCommand)
-{
-	if(MUTATOR_RETURNVALUE) // command was already handled?
-		return ;
-
-	entity player = M_ARGV(0, entity);
-	string cmd_name = M_ARGV(1, string);
-	int cmd_argc = M_ARGV(2, int);
-
-	if ( cmd_name == "ons_spawn" )
-	{
-		vector pos = player.origin;
-		if(cmd_argc > 1)
-			pos_x = stof(argv(1));
-		if(cmd_argc > 2)
-			pos_y = stof(argv(2));
-		if(cmd_argc > 3)
-			pos_z = stof(argv(3));
-
-		if ( IS_PLAYER(player) )
-		{
-			if(!player.vehicle)
-			if(!STAT(FROZEN, player))
-			{
-				entity source_point = cq_Nearest_ControlPoint(player, player.origin, autocvar_g_conquest_teleport_radius);
-
-				if ( !source_point && GetResource(player, RES_HEALTH) > 0 )
-				{
-					sprint(player, "\nYou need to be next to a control point\n");
-					return true;
-				}
-
-
-				entity closest_target = cq_Nearest_ControlPoint_2D(player, pos, autocvar_g_conquest_click_radius);
-
-				if ( closest_target == NULL )
-				{
-					sprint(player, "\nNo control point found\n");
-					return true;
-				}
-
-				if ( GetResource(player, RES_HEALTH) <= 0 )
-				{
-					player.cq_spawn_by = closest_target;
-					player.respawn_flags = player.respawn_flags | RESPAWN_FORCE;
-				}
-				else
-				{
-					if ( source_point == closest_target )
-					{
-						sprint(player, "\nTeleporting to the same point\n");
-						return true;
-					}
-
-					if ( !cq_Teleport(player,closest_target,autocvar_g_conquest_teleport_radius,true) )
-						sprint(player, "\nUnable to teleport there\n");
-				}
-
-				return true;
-			}
-
-			sprint(player, "\nNo teleportation for you\n");
-		}
-
-		return true;
-	}
-}
-
-MUTATOR_HOOKFUNCTION(cq, PlayerUseKey)
-{
-	if(MUTATOR_RETURNVALUE || game_stopped) { return false; }
-
-	entity player = M_ARGV(0, entity);
-
-	if((time > player.teleport_antispam) && (player.deadflag == DEAD_NO) && !player.vehicle && !STAT(FROZEN, player))
-	{
-		entity source_point = cq_Nearest_ControlPoint(player, player.origin, autocvar_g_conquest_teleport_radius);
-		if ( source_point )
-		{
-			stuffcmd(player, "qc_cmd_cl hud clickradar\n");
-			return true;
-		}
-	}
-}
-
 MUTATOR_HOOKFUNCTION(cq, OnEntityPreSpawn)
 {
 	entity ent = M_ARGV(0, entity);
@@ -887,7 +555,6 @@ MUTATOR_HOOKFUNCTION(cq, OnEntityPreSpawn)
 	if(ent.classname == "onslaught_generator" || ent.classname == "onslaught_controlpoint")
 	{
 		entity cp = spawn();
-		cp.team = ent.team;
 		setorigin(cp, ent.origin + '0 0 20');
 		droptofloor(cp);
 		InitializeEntity(cp, cq_Setup_Compat_ons, INITPRIO_FINDTARGET);
@@ -929,26 +596,11 @@ void cq_ScoreRules(int teams)
 
 void cq_DelayedInit(entity this)
 {
-	cq_teams = 0;
+	cq_teams = autocvar_g_conquest_teams_override;
+	if (cq_teams < 2)
+		cq_teams = cvar("g_conquest_teams"); // read the cvar directly as it gets written earlier in the same frame (not so, but whatever)
 
-	entity tmp_entity;
-	for(tmp_entity = cq_worldcplist; tmp_entity; tmp_entity = tmp_entity.cq_worldcpnext)
-	{
-		switch(tmp_entity.team)
-		{
-			case NUM_TEAM_1: BITSET_ASSIGN(cq_teams, BIT(0)); break;
-			case NUM_TEAM_2: BITSET_ASSIGN(cq_teams, BIT(1)); break;
-			case NUM_TEAM_3: BITSET_ASSIGN(cq_teams, BIT(2)); break;
-			case NUM_TEAM_4: BITSET_ASSIGN(cq_teams, BIT(3)); break;
-		}
-	}
-
-	if(NumTeams(cq_teams) < 2) // broken map or compatibility
-	{
-		cq_teams = 0; // so set the default red and blue teams
-		BITSET_ASSIGN(cq_teams, BIT(0));
-		BITSET_ASSIGN(cq_teams, BIT(1));
-	}
+	cq_teams = BITS(bound(2, cq_teams, 4));
 
 	cq_ScoreRules(cq_teams);
 
