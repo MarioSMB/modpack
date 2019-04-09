@@ -65,7 +65,7 @@ void buzzsaw_touch(entity this, entity toucher)
 void buzzsaw_use(entity this, entity actor, entity trigger)
 {
 	settouch(this, buzzsaw_touch);
-	if(this.target)
+	if(this.target && this.target != "")
 	{		
 		this.movetarget = find(NULL, targetname, this.target);
 		this.goalentity = this.movetarget;
