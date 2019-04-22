@@ -90,7 +90,7 @@ void pc_PlayerTouch(entity this, entity toucher)
 	if(!this.iscreature || !toucher.iscreature)
 		return;
 
-	if(forbidWeaponUse(this))
+	if(weaponLocked(this))
 		return;
 #elif defined(CSQC)
 	if(STAT(PLAYER_CRUSH_SIMPLE) != -1)
