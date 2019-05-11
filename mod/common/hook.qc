@@ -9,7 +9,7 @@ REPLICATE(cvar_cl_customhook, int, "cl_customhook");
 .int hook_type;
 #endif
 
-ENTCS_PROP(HOOKTYPE, true, cvar_cl_customhook, ENTCS_SET_NORMAL,
+ENTCS_PROP(HOOKTYPE, true, cvar_cl_customhook, cvar_cl_customhook, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, ent.cvar_cl_customhook); },
 	{ ent.hook_type = ReadByte(); })
 
