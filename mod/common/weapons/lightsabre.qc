@@ -57,7 +57,7 @@ CLASS(Lightsabre, Weapon)
 /* spawnfunc */ ATTRIB(Lightsabre, m_canonical_spawnfunc, string, "weapon_lightsabre");
 /* ammotype  */ ATTRIB(Lightsabre, ammo_type, int, RES_NONE);
 /* impulse   */ ATTRIB(Lightsabre, impulse, int, 1);
-/* flags     */ ATTRIB(Lightsabre, spawnflags, int, WEP_FLAG_RELOADABLE);
+/* flags     */ ATTRIB(Lightsabre, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE);
 /* rating    */ ATTRIB(Lightsabre, bot_pickupbasevalue, float, 6000);
 /* color     */ ATTRIB(Lightsabre, wpcolor, vector, '1 0.25 0.25');
 /* modelname */ ATTRIB(Lightsabre, mdl, string, "lightsabre");

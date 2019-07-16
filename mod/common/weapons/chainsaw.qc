@@ -52,7 +52,7 @@ CLASS(Chainsaw, Weapon)
 /* spawnfunc */ ATTRIB(Chainsaw, m_canonical_spawnfunc, string, "weapon_chainsaw");
 /* ammotype  */ ATTRIB(Chainsaw, ammo_type, int, RES_FUEL);
 /* impulse   */ ATTRIB(Chainsaw, impulse, int, 5);
-/* flags     */ ATTRIB(Chainsaw, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_TYPE_MELEE_SEC);
+/* flags     */ ATTRIB(Chainsaw, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_TYPE_MELEE_SEC);
 /* rating    */ ATTRIB(Chainsaw, bot_pickupbasevalue, float, 6000);
 /* color     */ ATTRIB(Chainsaw, wpcolor, vector, '0.5 0.45 0.25');
 /* modelname */ ATTRIB(Chainsaw, mdl, string, "chainsaw");
