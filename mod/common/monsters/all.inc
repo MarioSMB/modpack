@@ -1,3 +1,5 @@
+#include "goomba.qc"
+
 #if 0
 #include "vore.qc"
 #include "scrag.qc"
@@ -9,7 +11,6 @@
 #include "rotfish.qc"
 #include "demon.qc"
 #include "rottweiler.qc"
-#include "goomba.qc"
 #include "koopa.qc"
 #include "creeper.qc"
 //#include "troll.qc"
