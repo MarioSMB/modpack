@@ -159,15 +159,14 @@ REGISTER_NET_TEMP(muzzleflash)
 #ifdef CSQC
 NET_HANDLE(muzzleflash, bool isNew)
 {
+	return = true;
 	vector a = '5 0 0';
-	//a.x = ReadCoord();
-    //a.y = ReadCoord();
-    //a.z = ReadCoord();
+	//a = ReadVector();
     int slot = ReadByte();
+    if(!autocvar_r_drawviewmodel) return;
 	entity wepent = viewmodels[slot];
 	W_Uzi_MuzzleFlash(wepent);
 	W_Uzi_AttachToShotorg(wepent, wepent.muzzle_flash, a);
-	return true;
 }
 #endif
 #ifdef SVQC
@@ -255,8 +254,6 @@ void W_Uzi_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int 
 
 void W_Uzi_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	float uzi_spread;
-
 	if(!(fire & 1))
 	{
 		w_ready(thiswep, actor, weaponentity, fire);
@@ -280,7 +277,7 @@ void W_Uzi_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int f
 		actor.punchangle_y = random() - 0.5;
 	}
 
-	uzi_spread = bound(WEP_CVAR(mac10, spread_min), WEP_CVAR(mac10, spread_min) + (WEP_CVAR(mac10, spread_add) * actor.(weaponentity).misc_bulletcounter), WEP_CVAR(mac10, spread_max));
+	float uzi_spread = bound(WEP_CVAR(mac10, spread_min), WEP_CVAR(mac10, spread_min) + (WEP_CVAR(mac10, spread_add) * actor.(weaponentity).misc_bulletcounter), WEP_CVAR(mac10, spread_max));
 	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, uzi_spread, WEP_CVAR(mac10, solidpenetration), WEP_CVAR(mac10, sustained_damage), WEP_CVAR(mac10, sustained_force), WEP_UZI.m_id, EFFECT_BULLET_WEAK);
 
 	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
