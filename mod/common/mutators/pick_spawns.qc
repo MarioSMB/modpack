@@ -1,10 +1,10 @@
 //FEATURE: Pick Spawns mutator, allowing you to choose where you spawn
 
 #ifdef GAMEQC
-
 REGISTER_MUTATOR(pickspawns, true);
 
 REGISTER_STAT(PICK_SPAWNS, bool);
+#endif
 
 #ifdef SVQC
 AUTOCVAR(g_pick_spawns, bool, false, "Allow players to choose where they spawn");
@@ -125,6 +125,4 @@ MUTATOR_HOOKFUNCTION(pickspawns, Ent_Update)
 		ent.teamradar_color = ((serverflags & SERVERFLAG_TEAMPLAY) ? Team_ColorRGB(ent.team - 1) : '1 1 1');
 	}
 }
-#endif
-
 #endif

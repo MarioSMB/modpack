@@ -27,11 +27,9 @@ bool mplant_block_send(entity this, entity to, int sf)
 
 	if (sf & MPSF_SIZE) {
 		WriteVector(MSG_ENTITY, this.mplant_org_mins);
-
 		WriteVector(MSG_ENTITY, this.mplant_org_maxs);
 
 		WriteVector(MSG_ENTITY, this.mins);
-
 		WriteVector(MSG_ENTITY, this.maxs);
 	}
 
@@ -160,13 +158,11 @@ NET_HANDLE(ENT_CLIENT_MPLANTBLOCK, bool isnew)
 	}
 
 	if (sf & MPSF_SIZE) {
-		dprint("^1---------------^2Read size\n");
+		LOG_DEBUG("^1---------------^2Read size");
 		this.mplant_org_mins = ReadVector();
-
 		this.mplant_org_maxs = ReadVector();
 
 		this.mins = ReadVector();
-
 		this.maxs = ReadVector();
 		setsize(this, this.mins, this.maxs);
 		_retransform = true;

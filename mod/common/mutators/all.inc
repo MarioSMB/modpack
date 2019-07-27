@@ -1,8 +1,7 @@
 #include "hats.qc"
 #include "pick_spawns.qc"
-//#include "pots.qc"
 
-#if 1
+#if 0
 #include "modelplanter/module.inc"
 
 #define IMPLEMENTATION
