@@ -862,10 +862,10 @@ void HUD_Mod_VIP(vector pos, vector mySize)
 	}
 	vip_size = e1 * fs * size1 + e2 * size2;
 	
-	string red_icon = "", red_icon_prevstatus = "";
-	string blue_icon = "", blue_icon_prevstatus = "";
-	string yellow_icon = "", yellow_icon_prevstatus = "";
-	string pink_icon = "", pink_icon_prevstatus = "";
+	string red_icon = string_null, red_icon_prevstatus = string_null;
+	string blue_icon = string_null, blue_icon_prevstatus = string_null;
+	string yellow_icon = string_null, yellow_icon_prevstatus = string_null;
+	string pink_icon = string_null, pink_icon_prevstatus = string_null;
 	
 	if(redvip) { red_icon = "player_red"; }
 	if(bluevip) { blue_icon = "player_blue"; }
