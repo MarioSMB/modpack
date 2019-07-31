@@ -21,6 +21,7 @@ AUTOCVAR(cl_polytrails, bool, false, "");
 AUTOCVAR(cl_polytrail_segmentsize, float, 10, "");
 AUTOCVAR(cl_polytrail_lifetime, float, .2, "");
 AUTOCVAR(cl_polytrail_noise, float, 0, "");
+AUTOCVAR(cl_polytrail_reset_distance, float, 0, "");
 
 CLASS(PolyTrail, Object)
     ATTRIB(PolyTrail, polytrail_follow, entity, NULL);
@@ -50,6 +51,7 @@ CLASS(PolyTrail, Object)
     #define POLYTRAIL_SEEK(_p, _rel) ((POLYTRAIL_BUFSIZE + (_p).polytrail_bufidx + (_rel)) % POLYTRAIL_BUFSIZE)
 
     void Trail_draw(entity this);
+    void Trail_recreate(entity this);
     ATTRIB(PolyTrail, draw, void(entity this), Trail_draw);
     void Trail_draw(entity this) {
         if (wasfreed(this.polytrail_follow))
@@ -61,6 +63,8 @@ CLASS(PolyTrail, Object)
                 delete(this);
                 return;
             }
+        } else if(autocvar_cl_polytrail_reset_distance > 0 && this.polytrail_cnt > 0 && vdist(this.origin - this.polytrail_follow.origin, >, autocvar_cl_polytrail_reset_distance)) {
+        	Trail_recreate(this);
         } else {
             setorigin(this, this.polytrail_follow.origin);
             if (this.polytrail_cnt < 0 || vdist(this.origin - this.polytrail_bufpos[this.polytrail_bufidx], >=, autocvar_cl_polytrail_segmentsize)) {
@@ -111,11 +115,30 @@ ENDCLASS(PolyTrail)
 
 #undef POLYTRAIL_SEEK
 
+void Trail_recreate(entity this)
+{
+    PolyTrail t = NEW(PolyTrail, this.polytrail_follow);
+    t.polytrail_tex = this.polytrail_tex;
+    t.polytrail_rgb[0] = this.polytrail_rgb[0];
+    t.polytrail_rgb[1] = this.polytrail_rgb[1];
+    t.polytrail_rgb[2] = this.polytrail_rgb[2];
+    t.polytrail_alpha[0] = this.polytrail_alpha[0];
+    t.polytrail_alpha[1] = this.polytrail_alpha[1];
+    t.polytrail_alpha[2] = this.polytrail_alpha[2];
+    t.polytrail_thickness[0] = this.polytrail_thickness[0];
+    t.polytrail_thickness[1] = this.polytrail_thickness[1];
+    t.polytrail_thickness[2] = this.polytrail_thickness[2];
+
+    IL_PUSH(g_drawables, t);
+
+    this.polytrail_follow = NULL;
+}
+
 REGISTER_MUTATOR(polytrails, true);
 
 MUTATOR_HOOKFUNCTION(polytrails, EditProjectile) {
     return = false;
-    if (!autocvar_cl_polytrails || warpzone_warpzones_exist) return;
+    if (!autocvar_cl_polytrails || (warpzone_warpzones_exist && autocvar_cl_polytrail_reset_distance <= 0)) return;
     entity proj = M_ARGV(0, entity);
     PolyTrail t = NEW(PolyTrail, proj);
     t.polytrail_tex = "gfx/trails/plain.tga";

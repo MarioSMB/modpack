@@ -91,6 +91,7 @@ spawnfunc(monster_tarbaby) { Monster_Spawn(this, true, MON_TARBABY.monsterid); }
 		}
 		METHOD(Tarbaby, mr_death, bool(Tarbaby thismon, entity actor))
 		{
+			// TODO: explosive attacks will trigger recursive radiusdamage when this is called directly!
 			M_Tarbaby_Attack_Explode(actor, NULL);
 			return true;
 		}

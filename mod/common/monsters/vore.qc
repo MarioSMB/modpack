@@ -199,7 +199,7 @@ bool M_Vore_Attack(int attack_type, entity actor, entity targ, .entity weaponent
 			}
 
 			if(actor.vore_spike)
-				return true;
+				return 2;
 			else
 				return false;
 		}
