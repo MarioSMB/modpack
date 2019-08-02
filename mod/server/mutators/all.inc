@@ -9,6 +9,6 @@
 #include "riflearena.qc"
 #include "shotgunarena.qc"
 //#include "skycycle.qc"
-//#include "spawn_invisible.qc"
+#include "spawn_invisible.qc"
 #include "spawn_unique.qc"
 #include "zombie_apocalypse.qc"
