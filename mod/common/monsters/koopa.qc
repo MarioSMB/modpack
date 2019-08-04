@@ -123,7 +123,7 @@ void M_Koopa_Touch(entity this, entity toucher)
 		return; // no hurty while dead
 	}
 	
-	if(toucher.items & ITEM_Shield.m_itemid)
+	if((toucher.items & ITEM_Shield.m_itemid) && toucher.monsterid != this.monsterid)
 		return; // FIXME this assumes starman, which is incorrect
 	if(toucher.takedamage == DAMAGE_NO || !toucher.iscreature || (toucher.monsterid == this.monsterid && !this.fakedead))
 		return;
