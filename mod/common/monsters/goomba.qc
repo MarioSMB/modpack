@@ -36,7 +36,7 @@ AUTOCVAR(g_monster_goomba_attack_melee_delay, float, 0.55, "");
 AUTOCVAR(g_monster_goomba_speed_stop, float, 100, "");
 //AUTOCVAR(g_monster_goomba_speed_run, float, 220, "");
 AUTOCVAR(g_monster_goomba_speed_walk, float, 70, "");
-AUTOCVAR(g_monster_goomba_allow_jumpoff, bool, false, "");
+AUTOCVAR(g_monster_goomba_allow_jumpoff, bool, true, "");
 
 /*
 const float goomba_anim_idle = 0;
