@@ -12,8 +12,8 @@ REGISTER_DEATHTYPE(MONSTER_KOOPA,            				DEATH_SELF_MON_KOOPA,          
 
 CLASS(Koopa, Monster)
     ATTRIB(Koopa, spawnflags, int, MONSTER_TYPE_PASSIVE | MON_FLAG_CRUSH | MON_FLAG_HIDDEN);
-    ATTRIB(Koopa, m_mins, vector, '-15 -15 -32');
-    ATTRIB(Koopa, m_maxs, vector, '15 15 10');
+    ATTRIB(Koopa, m_mins, vector, '-15 -15 -15');
+    ATTRIB(Koopa, m_maxs, vector, '15 15 1');
 #ifdef GAMEQC
     ATTRIB(Koopa, m_model, Model, MDL_MON_KOOPA);
 #endif
@@ -194,7 +194,7 @@ spawnfunc(monster_koopa) { Monster_Spawn(this, true, MON_KOOPA.monsterid); }
 				}
 				return 0;
 			}
-			if((GetResource(actor, RES_HEALTH) - damage_take) <= 0 && deathtype != DEATH_KILL.m_id && !actor.fakedead)
+			if((GetResource(actor, RES_HEALTH) - damage_take) <= 0 && deathtype != DEATH_KILL.m_id && !actor.fakedead && attacker.monsterid != actor.monsterid)
 			{
 				M_Koopa_FakeDeath(thismon, actor);
 				return 0;
@@ -203,7 +203,8 @@ spawnfunc(monster_koopa) { Monster_Spawn(this, true, MON_KOOPA.monsterid); }
 		}
 		METHOD(Koopa, mr_death, bool(Monster thismon, entity actor))
 		{
-			//setanim(actor, actor.anim_die1, false, true, true);
+			// TODO: this animation isn't built into the model yet!
+			setanim(actor, actor.anim_idle, false, true, true);
 			//setmodel(actor, MDL_MON_KOOPA_DEAD);
 			actor.fakedead = 0;
 			actor.fakedead_time = 0;
