@@ -36,7 +36,8 @@ AUTOCVAR(g_monster_koopa_attack_melee_delay, float, 0.55, "");
 AUTOCVAR(g_monster_koopa_speed_stop, float, 100, "");
 AUTOCVAR(g_monster_koopa_speed_run, float, 350, "");
 AUTOCVAR(g_monster_koopa_speed_walk, float, 70, "");
-AUTOCVAR(g_monster_koopa_wakeuptime, bool, 10, "");
+AUTOCVAR(g_monster_koopa_wakeuptime, float, 10, "");
+AUTOCVAR(g_monster_koopa_jumpheight, float, 350, "");
 
 .int fakedead;
 .float fakedead_time;
@@ -173,7 +174,14 @@ spawnfunc(monster_koopa) { Monster_Spawn(this, true, MON_KOOPA.monsterid); }
 			if(actor.fakedead)
 				M_Koopa_Move_2D(actor, ((actor.fakedead == 2) ? autocvar_g_monster_koopa_speed_run : 0), true);
 			else
-				Monster_Move_2D(actor, autocvar_g_monster_koopa_speed_walk, !actor.skin);
+			{
+				Monster_Move_2D(actor, autocvar_g_monster_koopa_speed_walk, actor.skin != 1);
+				if(actor.skin == 2 && IS_ONGROUND(actor))
+				{
+					UNSET_ONGROUND(actor);
+					actor.velocity_z += autocvar_g_monster_koopa_jumpheight;
+				}
+			}
 			if(actor.fakedead_time && time >= actor.fakedead_time && actor.fakedead == 1)
 				M_Koopa_WakeUp(thismon, actor);
 			return false; // false means don't run regular move logic
