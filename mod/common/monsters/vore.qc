@@ -22,7 +22,7 @@ ENDCLASS(Vore)
 REGISTER_MONSTER(VORE, NEW(Vore));
 
 CLASS(VoreSpike, PortoLaunch)
-/* flags     */ ATTRIB(VoreSpike, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(VoreSpike, spawnflags, int, WEP_FLAG_SPECIALATTACK);
 /* impulse   */ ATTRIB(VoreSpike, impulse, int, 9);
 /* refname   */ ATTRIB(VoreSpike, netname, string, "vorespike");
 /* wepname   */ ATTRIB(VoreSpike, message, string, "Vore spike");

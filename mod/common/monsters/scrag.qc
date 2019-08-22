@@ -21,7 +21,7 @@ ENDCLASS(Scrag)
 REGISTER_MONSTER(SCRAG, NEW(Scrag));
 
 CLASS(ScragAttack, PortoLaunch)
-/* flags     */ ATTRIB(ScragAttack, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(ScragAttack, spawnflags, int, WEP_FLAG_SPECIALATTACK);
 /* impulse   */ ATTRIB(ScragAttack, impulse, int, 9);
 /* refname   */ ATTRIB(ScragAttack, netname, string, "scrag");
 /* wepname   */ ATTRIB(ScragAttack, message, string, "Scrag attack");
