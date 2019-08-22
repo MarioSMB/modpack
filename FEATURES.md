@@ -6,7 +6,7 @@
 * A miniature code scripting engine for all your hacking needs! Somewhat limited in functionality, but allows simple code files to be executed
 * Persistent custom player models, so you can always show off that pony complexion!
 * Arena gamemode returning from the early days, the duel gamemode that pits 2 players against eachother until someone scores enough victories
-* Conquest gamemode, a more ambitious version of domination and a game of capture the spawn point
+* Conquest gamemode, a more ambitious version of domination in which you need to stand by control points to capture them
 * DotC (Defense of the Core) gamemode, a highly ambitious and unfinished mode based on the DotA series
 * Jailbreak gamemode, a variation on clan arena in which you can free your fallen teammates from the enemy's jail cell
 * Runematch gamemode, another mode from the days of old making its return, in which random 'runes' appear on the map, and the player needs to collect and hold all of them
@@ -45,6 +45,7 @@
 * Little mutator to switch things up by replacing vehicle spawns with a random vehicle
 * Rifle Arena, a classic mode a bit like instagib, with the fabled sniper rifle and limited health
 * Shotgun Arena, a funny mode similar to overkill with just the shotgun, and crazy push force
+* Spawn Invisible mutator, to give spawning players a chance without making them completely invulnerable
 * Option to keep players from spawning at the same spawnpoint twice
 * Zombie Apocalypse mutator, which spawns random monsters around the map constantly
 * Command to permanently mute troublesome players
