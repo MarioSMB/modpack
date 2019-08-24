@@ -5,8 +5,8 @@ REGISTER_MUTATOR(piggyback, autocvar_g_piggyback);
 
 AUTOCVAR(g_piggyback_ride_enemies, bool, false, _("Allow riding enemies"));
 
-.float cvar_cl_nocarry;
-.float cvar_cl_noride;
+.bool cvar_cl_nocarry;
+.bool cvar_cl_noride;
 
 REPLICATE(cvar_cl_nocarry, bool, "cl_nocarry");
 REPLICATE(cvar_cl_noride, bool, "cl_noride");

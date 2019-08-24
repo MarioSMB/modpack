@@ -30,6 +30,19 @@ const int MODELS_IGGY = BIT(12);
 #endif
 
 #ifdef SVQC
+.string cvar_cl_model;
+.int cvar_cl_pony_skin;
+.int cvar_cl_sparkle;
+#elif defined(CSQC)
+string cvar_cl_model;
+int cvar_cl_pony_skin;
+int cvar_cl_sparkle;
+#endif
+REPLICATE(cvar_cl_pony_skin, int, "cl_pony_skin");
+REPLICATE(cvar_cl_sparkle, int, "cl_sparkle");
+REPLICATE(cvar_cl_model, string, "cl_custommodel");
+
+#ifdef SVQC
 
 REGISTER_MUTATOR(cpmodels, true);
 
@@ -72,9 +85,6 @@ PRECACHE(cpmodels_precache)
 #undef CHECK_MODEL
 }
 
-.string cvar_cl_model;
-.int cvar_cl_pony_skin;
-.int cvar_cl_sparkle;
 .bool cow;
 
 .float ninja_sneak;

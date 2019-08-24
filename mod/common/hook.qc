@@ -2,12 +2,13 @@
 
 #ifdef SVQC
 .int cvar_cl_customhook;
-REPLICATE(cvar_cl_customhook, int, "cl_customhook");
 
 //ATTRIB(Client, cvar_cl_customhook, int, this.cvar_cl_customhook);
 #elif defined(CSQC)
+int cvar_cl_customhook;
 .int hook_type;
 #endif
+REPLICATE(cvar_cl_customhook, int, "cl_customhook");
 
 ENTCS_PROP(HOOKTYPE, true, cvar_cl_customhook, cvar_cl_customhook, ENTCS_SET_NORMAL,
 	{ WriteByte(chan, ent.cvar_cl_customhook); },
