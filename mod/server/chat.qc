@@ -83,5 +83,5 @@ MUTATOR_HOOKFUNCTION(mod_chat, PreFormatMessage)
 			newmsg = cons(newmsg, theword);
 	});
 
-	M_ARGV(1, string) = themsg;
+	M_ARGV(1, string) = newmsg;
 }
