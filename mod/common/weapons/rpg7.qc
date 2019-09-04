@@ -1,90 +1,8 @@
 //FEATURE: New weapon: RPG-7, for when a regular rocket launcher isn't enough
 
-#include "rpg.qh"
-#ifndef IMPLEMENTATION
-AUTOCVAR(g_balance_rpg7_ammo, float, 5, "");
-AUTOCVAR(g_balance_rpg7_animtime, float, 0.75, "");
-AUTOCVAR(g_balance_rpg7_damage, float, 80, "");
-AUTOCVAR(g_balance_rpg7_damageforcescale, float, 1, "");
-AUTOCVAR(g_balance_rpg7_edgedamage, float, 40, "");
-AUTOCVAR(g_balance_rpg7_force, float, 350, "");
-AUTOCVAR(g_balance_rpg7_health, float, 30, "");
-AUTOCVAR(g_balance_rpg7_lifetime, float, 10, "");
-AUTOCVAR(g_balance_rpg7_radius, float, 350, "");
-AUTOCVAR(g_balance_rpg7_refire, float, 1.1, "");
-AUTOCVAR(g_balance_rpg7_reload_ammo, float, 5, "");
-AUTOCVAR(g_balance_rpg7_reload_time, float, 2, "");
-AUTOCVAR(g_balance_rpg7_speed, float, 2000, "");
-AUTOCVAR(g_balance_rpg7_speedaccel, float, 2000, "");
-AUTOCVAR(g_balance_rpg7_speedstart, float, 1600, "");
-AUTOCVAR(g_balance_rpg7_switchdelay_drop, float, 0.2, "");
-AUTOCVAR(g_balance_rpg7_switchdelay_raise, float, 0.2, "");
-AUTOCVAR(g_balance_rpg7_weaponreplace, string, "", "");
-AUTOCVAR(g_balance_rpg7_weaponstart, float, 0, "");
-AUTOCVAR(g_balance_rpg7_weaponstartoverride, float, -1, "");
-AUTOCVAR(g_balance_rpg7_weaponthrowable, float, 1, "");
+#include "rpg7.qh"
 
-CLASS(RPG7, Weapon)
-/* spawnfunc */ ATTRIB(RPG7, m_canonical_spawnfunc, string, "weapon_rpg7");
-/* ammotype  */ ATTRIB(RPG7, ammo_type, int, RES_ROCKETS);
-/* impulse   */ ATTRIB(RPG7, impulse, int, 9);
-/* flags     */ ATTRIB(RPG7, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH | WEP_FLAG_NODUAL);
-/* rating    */ ATTRIB(RPG7, bot_pickupbasevalue, float, 8000);
-/* color     */ ATTRIB(RPG7, wpcolor, vector, '0.6 0.8 0.7');
-/* modelname */ ATTRIB(RPG7, mdl, string, "rpg7");
-#ifdef GAMEQC
-/* model     */ ATTRIB(RPG7, m_model, Model, MDL_RPG_ITEM);
-#endif
-/* crosshair */ ATTRIB(RPG7, w_crosshair, string, "gfx/crosshair65");
-/* crosshair */ ATTRIB(RPG7, w_crosshair_size, float, 0.7);
-/* wepimg    */ ATTRIB(RPG7, model2, string, "weaponrpg");
-/* refname   */ ATTRIB(RPG7, netname, string, "rpg7");
-/* wepname   */ ATTRIB(RPG7, m_name, string, _("RPG-7"));
-
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, ammo, float, NONE) \
-        P(class, prefix, animtime, float, NONE) \
-        P(class, prefix, damageforcescale, float, NONE) \
-        P(class, prefix, damage, float, NONE) \
-        P(class, prefix, edgedamage, float, NONE) \
-        P(class, prefix, force, float, NONE) \
-        P(class, prefix, health, float, NONE) \
-        P(class, prefix, lifetime, float, NONE) \
-        P(class, prefix, radius, float, NONE) \
-        P(class, prefix, refire, float, NONE) \
-		P(class, prefix, reload_ammo, float, NONE) \
-		P(class, prefix, reload_time, float, NONE) \
-        P(class, prefix, speedaccel, float, NONE) \
-        P(class, prefix, speedstart, float, NONE) \
-        P(class, prefix, speed, float, NONE) \
-		P(class, prefix, switchdelay_drop, float, NONE) \
-		P(class, prefix, switchdelay_raise, float, NONE) \
-		P(class, prefix, weaponreplace, string,NONE) \
-		P(class, prefix, weaponstartoverride, float, NONE) \
-		P(class, prefix, weaponstart, float, NONE) \
-		P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-	W_MOD_PROPS(X, RPG7, rpg7)
-#undef X
-
-ENDCLASS(RPG7)
-REGISTER_WEAPON(RPG, rpg7, NEW(RPG7));
-
-SPAWNFUNC_WEAPON(weapon_rpg7, WEP_RPG)
-
-MSG_INFO_NOTIF(WEAPON_RPG_MURDER_DIRECT,         1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponrpg",     _("^BG%s%s^K1 was instagibbed by ^BG%s^K1's RPG%s%s"), "")
-MSG_INFO_NOTIF(WEAPON_RPG_MURDER_SPLASH,         1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponrpg",     _("^BG%s%s^K1 was blown up by ^BG%s^K1's RPG%s%s"), "")
-MSG_INFO_NOTIF(WEAPON_RPG_SUICIDE,               1,  2, 1, "s1 s2loc spree_lost", "s1",                      "weaponrpg",     _("^BG%s^K1 blew themself up with their RPG-7%s%s"), "")
-
-MSG_MULTI_NOTIF(WEAPON_RPG_MURDER_DIRECT,    	 1,  NULL,           INFO_WEAPON_RPG_MURDER_DIRECT,   NULL)
-MSG_MULTI_NOTIF(WEAPON_RPG_MURDER_SPLASH,    	 1,  NULL,           INFO_WEAPON_RPG_MURDER_SPLASH,   NULL)
-MSG_MULTI_NOTIF(WEAPON_RPG_SUICIDE,          	 1,  NULL,           INFO_WEAPON_RPG_SUICIDE,         CENTER_DEATH_SELF_GENERIC)
-
-#endif
-#ifdef IMPLEMENTATION
 #ifdef SVQC
-
 void W_RPG7_Explode(entity this, entity directhitentity)
 {
 	if(directhitentity.takedamage == DAMAGE_AIM)
@@ -341,5 +259,4 @@ MUTATOR_HOOKFUNCTION(cl_rpg, EditProjectile)
 	}
 }
 
-#endif
 #endif

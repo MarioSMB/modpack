@@ -27,5 +27,4 @@
 #include "gamemodes/all.inc"
 #include "monsters/all.inc"
 #include "vehicles/all.inc"
-#include "weapons/all.inc"
 #undef IMPLEMENTATION

@@ -1,8 +1,112 @@
 #pragma once
 
+#ifdef GAMEQC
 MODEL(UZI_MUZZLEFLASH,           "models/uziflash.md3");
 MODEL(UZI_VIEW,                  W_Model("h_mac10.iqm"));
 MODEL(UZI_WORLD,                 W_Model("v_mac10.md3"));
 MODEL(UZI_ITEM,                  W_Model("g_mac10.md3"));
 
 SOUND(MAC10_FIRE, W_Sound("mac10_fire"));
+#endif
+
+AUTOCVAR(g_balance_mac10_burst, float, 1, "");
+AUTOCVAR(g_balance_mac10_burst_ammo, float, 1, "");
+AUTOCVAR(g_balance_mac10_burst_animtime, float, 0.25, "");
+AUTOCVAR(g_balance_mac10_burst_damage, float, 16, "");
+AUTOCVAR(g_balance_mac10_burst_refire, float, 0.25, "");
+AUTOCVAR(g_balance_mac10_burst_refire2, float, 0.25, "");
+AUTOCVAR(g_balance_mac10_burst_speed, float, 0, "");
+AUTOCVAR(g_balance_mac10_first, float, 1, "");
+AUTOCVAR(g_balance_mac10_first_ammo, float, 1, "");
+AUTOCVAR(g_balance_mac10_first_damage, float, 14, "");
+AUTOCVAR(g_balance_mac10_first_force, float, 3, "");
+AUTOCVAR(g_balance_mac10_first_refire, float, 0.125, "");
+AUTOCVAR(g_balance_mac10_first_spread, float, 0.03, "");
+AUTOCVAR(g_balance_mac10_mode, float, 1, "");
+AUTOCVAR(g_balance_mac10_reload_ammo, float, 30, "");
+AUTOCVAR(g_balance_mac10_reload_time, float, 1.6, "");
+AUTOCVAR(g_balance_mac10_solidpenetration, float, 9, "");
+AUTOCVAR(g_balance_mac10_spread_add, float, 0.012, "");
+AUTOCVAR(g_balance_mac10_spread_max, float, 0.05, "");
+AUTOCVAR(g_balance_mac10_spread_min, float, 0.02, "");
+AUTOCVAR(g_balance_mac10_sustained_ammo, float, 1, "");
+AUTOCVAR(g_balance_mac10_sustained_damage, float, 7, "");
+AUTOCVAR(g_balance_mac10_sustained_force, float, 3, "");
+AUTOCVAR(g_balance_mac10_sustained_refire, float, 0.05, "");
+AUTOCVAR(g_balance_mac10_sustained_spread, float, 0.04, "");
+AUTOCVAR(g_balance_mac10_switchdelay_drop, float, 0.1, "");
+AUTOCVAR(g_balance_mac10_switchdelay_raise, float, 0.1, "");
+AUTOCVAR(g_balance_mac10_weaponreplace, string, "", "");
+AUTOCVAR(g_balance_mac10_weaponstart, float, 0, "");
+AUTOCVAR(g_balance_mac10_weaponstartoverride, float, -1, "");
+AUTOCVAR(g_balance_mac10_weaponthrowable, float, 1, "");
+
+CLASS(Uzi, Weapon)
+/* spawnfunc */ ATTRIB(Uzi, m_canonical_spawnfunc, string, "weapon_mac10");
+/* ammotype  */ ATTRIB(Uzi, ammo_type, int, RES_BULLETS);
+/* impulse   */ ATTRIB(Uzi, impulse, int, 3);
+/* flags     */ ATTRIB(Uzi, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_DUALWIELD);
+/* rating    */ ATTRIB(Uzi, bot_pickupbasevalue, float, 7000);
+/* color     */ ATTRIB(Uzi, wpcolor, vector, '1 0.9 0.1');
+/* modelname */ ATTRIB(Uzi, mdl, string, "mac10");
+#ifdef GAMEQC
+/* model     */ ATTRIB(Uzi, m_model, Model, MDL_UZI_ITEM);
+#endif
+/* crosshair */ ATTRIB(Uzi, w_crosshair, string, "gfx/crosshair63");
+/* crosshair */ ATTRIB(Uzi, w_crosshair_size, float, 0.6);
+/* wepimg    */ ATTRIB(Uzi, model2, string, "weaponmac10");
+/* refname   */ ATTRIB(Uzi, netname, string, "mac10");
+/* wepname   */ ATTRIB(Uzi, m_name, string, _("Uzi"));
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, burst, float, NONE) \
+		P(class, prefix, burst_ammo, float, NONE) \
+		P(class, prefix, burst_animtime, float, NONE) \
+		P(class, prefix, burst_damage, float, NONE) \
+		P(class, prefix, burst_refire2, float, NONE) \
+		P(class, prefix, burst_refire, float, NONE) \
+		P(class, prefix, burst_speed, float, NONE) \
+		P(class, prefix, first, float, NONE) \
+		P(class, prefix, first_ammo, float, NONE) \
+		P(class, prefix, first_damage, float, NONE) \
+		P(class, prefix, first_force, float, NONE) \
+		P(class, prefix, first_refire, float, NONE) \
+		P(class, prefix, first_spread, float, NONE) \
+		P(class, prefix, mode, float, NONE) \
+		P(class, prefix, reload_ammo, float, NONE) \
+        P(class, prefix, reload_time, float, NONE) \
+		P(class, prefix, solidpenetration, float, NONE) \
+		P(class, prefix, spread_add, float, NONE) \
+		P(class, prefix, spread_max, float, NONE) \
+		P(class, prefix, spread_min, float, NONE) \
+		P(class, prefix, sustained_ammo, float, NONE) \
+		P(class, prefix, sustained_damage, float, NONE) \
+		P(class, prefix, sustained_force, float, NONE) \
+		P(class, prefix, sustained_refire, float, NONE) \
+		P(class, prefix, sustained_spread, float, NONE) \
+        P(class, prefix, switchdelay_drop, float, NONE) \
+        P(class, prefix, switchdelay_raise, float, NONE) \
+        P(class, prefix, weaponreplace, string,NONE) \
+        P(class, prefix, weaponstartoverride, float, NONE) \
+        P(class, prefix, weaponstart, float, NONE) \
+        P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+    W_MOD_PROPS(X, Uzi, mac10)
+#undef X
+
+ENDCLASS(Uzi)
+REGISTER_WEAPON(UZI, mac10, NEW(Uzi));
+
+SPAWNFUNC_WEAPON(weapon_mac10, WEP_UZI)
+
+
+MSG_INFO_NOTIF(WEAPON_UZI_MURDER_SNIPE,          1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponmac10",                _("^BG%s%s^K1 was semi-automatically nailed by ^BG%s^K1's Uzi%s%s"), "")
+MSG_INFO_NOTIF(WEAPON_UZI_MURDER_SPRAY,          1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponmac10",                _("^BG%s%s^K1 was pumped full of lead by ^BG%s^K1's Uzi%s%s"), "")
+
+MSG_MULTI_NOTIF(WEAPON_UZI_MURDER_SNIPE,     1,  NULL,           INFO_WEAPON_UZI_MURDER_SNIPE,    NULL)
+MSG_MULTI_NOTIF(WEAPON_UZI_MURDER_SPRAY,     1,  NULL,           INFO_WEAPON_UZI_MURDER_SPRAY,    NULL)
+
+#ifdef SVQC
+AUTOCVAR_NOREF(g_random_items_weapon_mac10_probability, float, 0, "");
+#endif
