@@ -45,7 +45,7 @@ CLASS(AssaultRifle, Weapon)
 /* spawnfunc */ ATTRIB(AssaultRifle, m_canonical_spawnfunc, string, "weapon_assaultrifle");
 /* ammotype  */ ATTRIB(AssaultRifle, ammo_type, int, RES_BULLETS);
 /* impulse   */ ATTRIB(AssaultRifle, impulse, int, 3);
-/* flags     */ ATTRIB(AssaultRifle, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN);
+/* flags     */ ATTRIB(AssaultRifle, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_MUTATORBLOCKED);
 /* rating    */ ATTRIB(AssaultRifle, bot_pickupbasevalue, float, 7000);
 /* color     */ ATTRIB(AssaultRifle, wpcolor, vector, '1 0.9 0.6');
 /* modelname */ ATTRIB(AssaultRifle, mdl, string, "assaultrifle");

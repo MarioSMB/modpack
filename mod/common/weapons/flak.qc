@@ -9,8 +9,8 @@ MUTATOR_HOOKFUNCTION(flak_rockets, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 
-	if(STAT(WEAPONS, item) & WEPSET(FLAK))
-		SetResourceExplicit(item, RES_ROCKETS, cvar("g_pickup_rockets_weapon"));
+	if((STAT(WEAPONS, item) & WepSet_FromWeapon(WEP_FLAK)) && !GetResource(item, RES_ROCKETS) && !Item_IsLoot(item))
+		SetResource(item, RES_ROCKETS, cvar("g_pickup_rockets_weapon"));
 }
 
 void W_Flak_Projectile_Touch(entity this, entity toucher)

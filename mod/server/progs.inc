@@ -21,6 +21,7 @@
 	#include "stats.qc"
 	#include "tp.qc"
 	#include "voteban.qc"
+	#include "weapons.qc"
 
 	#include "mutators/all.inc"
 #endif
