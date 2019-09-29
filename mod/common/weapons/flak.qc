@@ -239,7 +239,7 @@ void W_Flak_Bomb_Damage(entity this, entity inflictor, entity attacker, float da
 
 void W_Flak_Attack3(Weapon thiswep, entity actor, .entity weaponentity)
 {
-	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+	if(!(actor.items & IT_UNLIMITED_AMMO))
 		TakeResource(actor, RES_ROCKETS, WEP_CVAR(flak, bomb_ammo));
 
 	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_SEC(flak, ammo), weaponentity);

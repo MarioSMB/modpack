@@ -283,7 +283,7 @@ METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponenti
     if(time >= actor.(weaponentity).chainsaw_ammorot)
     {
     	actor.(weaponentity).chainsaw_ammorot = time + 1;
-    	if(GetResource(actor, thiswep.ammo_type) > 0 && !(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+    	if(GetResource(actor, thiswep.ammo_type) > 0 && !(actor.items & IT_UNLIMITED_AMMO))
     		SetResource(actor, thiswep.ammo_type, GetResource(actor, thiswep.ammo_type) - 1); // we lose a bit of fuel every second
     }
 }

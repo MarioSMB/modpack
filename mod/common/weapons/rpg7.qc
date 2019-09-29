@@ -38,7 +38,7 @@ void W_RPG7_Explode(entity this, entity directhitentity)
 	if(this.realowner.(weaponentity).m_weapon == thiswep)
 	{
 		if(GetResource(this.realowner, thiswep.ammo_type) < WEP_CVAR(rpg7, ammo))
-		if(!(this.realowner.items & IT_UNLIMITED_WEAPON_AMMO))
+		if(!(this.realowner.items & IT_UNLIMITED_AMMO))
 		{
 			this.realowner.cnt = WEP_RPG.m_id;
 			ATTACK_FINISHED(this.realowner, weaponentity) = time;

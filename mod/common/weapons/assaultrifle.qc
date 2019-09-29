@@ -163,7 +163,7 @@ void W_AssaultRifle_Attack_Frame(Weapon thiswep, entity actor, .entity weaponent
 	if(PHYS_INPUT_BUTTON_ATCK(actor))
 	{
 		if(!thiswep.wr_checkammo2(thiswep, actor, weaponentity))
-		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+		if(!(actor.items & IT_UNLIMITED_AMMO))
 		{
 			W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 			w_ready(thiswep, actor, weaponentity, fire);
@@ -189,7 +189,7 @@ void W_AssaultRifle_Attack_Auto(Weapon thiswep, entity actor, .entity weaponenti
 	}
 
 	if(!thiswep.wr_checkammo1(thiswep, actor, weaponentity))
-	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+	if(!(actor.items & IT_UNLIMITED_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 		w_ready(thiswep, actor, weaponentity, fire);
@@ -292,7 +292,7 @@ METHOD(AssaultRifle, wr_think, void(entity thiswep, entity actor, .entity weapon
         if(weapon_prepareattack(thiswep, actor, weaponentity, true, 0))
         {
             if(!thiswep.wr_checkammo2(thiswep, actor, weaponentity))
-            if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+            if(!(actor.items & IT_UNLIMITED_AMMO))
             {
                 W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
                 w_ready(thiswep, actor, weaponentity, fire);

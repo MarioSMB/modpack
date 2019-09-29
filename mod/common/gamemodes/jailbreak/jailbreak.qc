@@ -468,10 +468,10 @@ void JB_Imprison(entity targ, entity attacker)
 	SetResourceExplicit(targ, RES_HEALTH, autocvar_g_jailbreak_prisoner_health);
 	SetResourceExplicit(targ, RES_ARMOR, autocvar_g_jailbreak_prisoner_armor);
 
-	targ.jb_had_unlimited_ammo = (targ.items & IT_UNLIMITED_WEAPON_AMMO);
+	targ.jb_had_unlimited_ammo = (targ.items & IT_UNLIMITED_AMMO);
 
 	if(!targ.jb_had_unlimited_ammo)
-		targ.items |= IT_UNLIMITED_WEAPON_AMMO;
+		targ.items |= IT_UNLIMITED_AMMO;
 
 	nades_Clear(targ);
 
@@ -512,7 +512,7 @@ void JB_Release(entity player, entity saviour)
 	player.player_blocked = false; // just incase
 
 	if(!player.jb_had_unlimited_ammo)
-		player.items &= ~IT_UNLIMITED_WEAPON_AMMO;
+		player.items &= ~IT_UNLIMITED_AMMO;
 
 	if(g_jailbreak_jail_deathmatch)
 	{
