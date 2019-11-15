@@ -223,8 +223,9 @@ entity itemplacer_ObjectSpawn(entity this, float database)
 		e.message2 = strzone(strftime(true, "%d-%m-%Y %H:%M:%S")); // last editing time
 
 		// set origin and direction based on player position and view angle
-		makevectors(this.v_angle);
-		WarpZone_TraceLine(this.origin + this.view_ofs, this.origin + this.view_ofs + v_forward * autocvar_g_itemplacer_editor_distance_spawn, MOVE_NORMAL, this);
+		vector forward, right, up;
+		MAKE_VECTORS(this.v_angle, forward, right, up);
+		WarpZone_TraceLine(this.origin + this.view_ofs, this.origin + this.view_ofs + forward * autocvar_g_itemplacer_editor_distance_spawn, MOVE_NORMAL, this);
 		setorigin(e, trace_endpos);
 		e.angles_y = this.v_angle.y;
 	}

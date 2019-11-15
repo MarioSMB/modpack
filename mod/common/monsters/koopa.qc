@@ -59,9 +59,10 @@ void M_Koopa_Move_2D(entity this, float mspeed, bool allow_jumpoff)
 		return;
 	}
 
-	makevectors(this.angles);
+	vector forward, right, up;
+	MAKE_VECTORS(this.angles, forward, right, up);
 	vector a = CENTER_OR_VIEWOFS(this);
-	vector b = CENTER_OR_VIEWOFS(this) + v_forward * 32;
+	vector b = CENTER_OR_VIEWOFS(this) + forward * 32;
 
 	traceline(a, b, MOVE_NORMAL, this);
 
@@ -77,7 +78,7 @@ void M_Koopa_Move_2D(entity this, float mspeed, bool allow_jumpoff)
 		makevectors(this.angles);
 	}
 
-	movelib_move_simple_gravity(this, v_forward, mspeed, 1);
+	movelib_move_simple_gravity(this, forward, mspeed, 1);
 
 	if(time > this.pain_finished && time > this.attack_finished_single[0])
 	{
@@ -113,9 +114,10 @@ void M_Koopa_Touch(entity this, entity toucher)
 	{
 		if(IS_PLAYER(toucher) && time >= this.pain_finished)
 		{
-			makevectors(this.angles);
-			vector a = CENTER_OR_VIEWOFS(this) - v_forward * 100;
-			vector b = CENTER_OR_VIEWOFS(this) + v_forward * 100;
+			vector forward, right, up;
+			MAKE_VECTORS(this.angles, forward, right, up);
+			vector a = CENTER_OR_VIEWOFS(this) - forward * 100;
+			vector b = CENTER_OR_VIEWOFS(this) + forward * 100;
 			if(vlen2(a - toucher.origin) > vlen2(b - toucher.origin)) // they're infront of us, turn around!
 				this.angles_y = anglemods(this.angles_y - 180);
 			this.fakedead = 2;

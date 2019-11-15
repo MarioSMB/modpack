@@ -50,6 +50,9 @@ MUTATOR_HOOKFUNCTION(mdlplant, PlayerPreThink)
 	if (!player.mplant_active)
 		return true;
 
+	vector forward, right, up;
+	MAKE_VECTORS(player.v_angle, forward, right, up);
+
 	.entity weaponentity = weaponentities[0];
 	switch(player.(weaponentity).m_weapon)
 	{
@@ -62,8 +65,7 @@ MUTATOR_HOOKFUNCTION(mdlplant, PlayerPreThink)
 	case WEP_ARC:
 	case WEP_MACHINEGUN:
 		player.mplant_cursorobject.effects &= ~EF_NODRAW;
-		makevectors(player.v_angle);
-		setorigin(player.mplant_cursorobject, player.origin + player.view_ofs + (v_forward * 256));
+		setorigin(player.mplant_cursorobject, player.origin + player.view_ofs + (forward * 256));
 		if (PHYS_INPUT_BUTTON_ATCK(player) && player.create_refire < time)
 		{
 			player.mplant_cursorobject.pos1_y += 90;
@@ -88,8 +90,7 @@ MUTATOR_HOOKFUNCTION(mdlplant, PlayerPreThink)
 	case WEP_SHOTGUN:
 		player.mplant_cursorobject.effects &= ~EF_NODRAW;
 		crosshair_trace(player);
-		makevectors(player.v_angle);
-		setorigin(player.mplant_cursorobject, player.origin + player.view_ofs + (v_forward * 256));
+		setorigin(player.mplant_cursorobject, player.origin + player.view_ofs + (forward * 256));
 		player.mplant_cursorobject.angles = vectoangles(normalize(player.mplant_cursorobject.origin - player.origin));
 		if (PHYS_INPUT_BUTTON_ATCK(player) && player.create_refire < time)
 		{
@@ -112,8 +113,7 @@ MUTATOR_HOOKFUNCTION(mdlplant, PlayerPreThink)
 	case WEP_MORTAR:
 		player.mplant_cursorobject.effects &= ~EF_NODRAW;
 		crosshair_trace(player);
-		makevectors(player.v_angle);
-		setorigin(player.mplant_cursorobject, player.origin + player.view_ofs + (v_forward * 256));
+		setorigin(player.mplant_cursorobject, player.origin + player.view_ofs + (forward * 256));
 
 		if (_MPLANT_SELECTABLE(trace_ent))
 			if (PHYS_INPUT_BUTTON_ATCK(player) && player.create_refire < time)

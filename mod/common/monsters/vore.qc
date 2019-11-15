@@ -42,6 +42,7 @@ METHOD(VoreSpike, wr_think, void(VoreSpike thiswep, entity actor, .entity weapon
         if (!actor.target_range) actor.target_range = autocvar_g_monsters_target_range;
         if(!IS_MONSTER(actor))
         	actor.enemy = Monster_FindTarget(actor);
+        monster_makevectors(actor, actor.enemy);
         W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_VORE_FIRESPIKE, CH_WEAPON_B, 0, DEATH_MONSTER_MAGE.m_id);
     	if (!IS_PLAYER(actor)) w_shotdir = normalize((actor.enemy.origin + '0 0 10') - actor.origin);
         M_Vore_Attack_Spike(actor, w_shotdir);
@@ -157,8 +158,6 @@ void M_Vore_Attack_Spike_Think(entity this)
 
 void M_Vore_Attack_Spike(entity this, vector dir)
 {
-	makevectors(this.angles);
-
 	entity missile = spawn();
 	missile.owner = missile.realowner = this;
 	setthink(missile, M_Vore_Attack_Spike_Think);

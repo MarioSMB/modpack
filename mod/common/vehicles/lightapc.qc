@@ -786,11 +786,12 @@ void lightapc_pilot_exit(entity this, int eject)
 	entity player = this.owner;
 	if(eject)
 	{
-		makevectors(this.angles);
-		vector spot = this.origin + v_forward * 100 + '0 0 64';
+		vector forward, right, up;
+		MAKE_VECTORS(this.angles, forward, right, up);
+		vector spot = this.origin + forward * 100 + '0 0 64';
 		spot = vehicles_findgoodexit(this, player, spot);
 		setorigin(player, spot);
-		player.velocity = (v_up + v_forward * 0.25) * 750;
+		player.velocity = (up + forward * 0.25) * 750;
 		player.oldvelocity = player.velocity;
 	}
 	else

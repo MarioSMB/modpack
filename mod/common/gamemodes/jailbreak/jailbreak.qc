@@ -552,7 +552,8 @@ void JB_Torture_Think(entity this)
 		return;
 	}
 
-	makevectors(this.angles);
+	//vector forward, right, up;
+	//MAKE_VECTORS(this.angles, forward, right, up);
 	//this.nextthink = time + JITTER(this.jb_torture_delay, this.jb_torture_delay_jitter);
 
 	float j = this.jb_torture_delay - JITTER(this.jb_torture_delay, this.jb_torture_delay_jitter);

@@ -51,7 +51,6 @@ METHOD(ScragAttack, wr_think, void(ScragAttack thiswep, entity actor, .entity we
         if (IS_PLAYER(actor)) W_SetupShot_Dir(actor, weaponentity, v_forward, false, 0, SND_SCRAG_FIRESPIKE, CH_WEAPON_B, 0, DEATH_MONSTER_WYVERN.m_id);
 		if (IS_MONSTER(actor)) {
 			actor.anim_finished = time + 1.2;
-			monster_makevectors(actor, actor.enemy);
 		}
 
 		actor.attack_finished_single[0] = time + 1.2;
@@ -135,8 +134,9 @@ bool M_Scrag_Attack(int attack_type, entity actor, entity targ, .entity weaponen
 
 			if(random() <= 0.1 || actor.monster_moveto)
 			{
-				makevectors(actor.angles);
-				actor.monster_moveto = actor.origin + '1 1 0' * (random() >= 0.5) ? (v_right * 300) : (v_right * -300);
+				vector forward, right, up;
+				MAKE_VECTORS(actor.angles, forward, right, up);
+				actor.monster_moveto = actor.origin + '1 1 0' * (random() >= 0.5) ? (right * 300) : (right * -300);
 				actor.monster_face = actor.enemy.origin; // but still look at enemy
 				if(random() <= 0.4)
 					actor.monster_moveto = actor.monster_face = '0 0 0';

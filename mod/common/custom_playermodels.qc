@@ -286,8 +286,9 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerJump, CBC_ORDER_LAST)
 		)
 	{
 		M_ARGV(1, float) = autocvar_sv_jumpvelocity_backflip;
-		makevectors(PHYS_WORLD_ANGLES(player));
-		player.velocity -= v_forward * 50;
+		vector forward, right, up;
+		MAKE_VECTORS(PHYS_WORLD_ANGLES(player), forward, right, up);
+		player.velocity -= forward * 50;
 	#ifdef SVQC
 		if(CS(player).cvar_cl_sparkle == 5)
 			sound(player, CH_VOICE, SND_MARIO64_CJUMP, VOL_BASE, ATTEN_NORM);
