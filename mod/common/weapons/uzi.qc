@@ -15,6 +15,28 @@ void W_Uzi_AttachToShotorg(entity wepent, entity flash, vector offset)
 	setorigin(flash, offset);
 }
 #endif
+#ifdef SVQC
+void W_Uzi_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector offset)
+{
+	flash.owner = actor;
+	flash.angles_z = random() * 360;
+
+	entity view = actor.(weaponentity);
+	entity exterior = actor.exteriorweaponentity;
+
+	if (view.oldorigin.x > 0)
+	{
+		setattachment(flash, exterior, "");
+		setorigin(flash, view.oldorigin + offset);
+	}
+	else
+	{
+		if (gettagindex(exterior, "shot")) setattachment(flash, exterior, "shot");
+		else setattachment(flash, exterior, "tag_shot");
+		setorigin(flash, offset);
+	}
+}
+#endif
 
 void W_Uzi_MuzzleFlash_Think(entity this)
 {
@@ -104,9 +126,13 @@ void W_Uzi_Attack(Weapon thiswep, int deathtype, entity actor, .entity weaponent
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	W_Uzi_MuzzleFlash(actor.(weaponentity));
-	actor.(weaponentity).muzzle_flash.nodrawtoclient = actor; // client side
-	W_AttachToShotorg(actor, weaponentity, actor.(weaponentity).muzzle_flash, '5 0 0');
+	// don't show a muzzle effect for the off-hand
+	if(weaponslot(weaponentity) == 0)
+	{
+		W_Uzi_MuzzleFlash(actor.exteriorweaponentity);
+		//actor.(weaponentity).muzzle_flash.nodrawtoclient = actor; // client side
+		W_Uzi_AttachToShotorg(actor, weaponentity, actor.exteriorweaponentity.muzzle_flash, '-15 0 -5');
+	}
 
 	FOREACH_CLIENT(it == actor || (IS_SPEC(it) && it.enemy == actor),
 	{
@@ -184,9 +210,12 @@ void W_Uzi_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int f
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	W_Uzi_MuzzleFlash(actor.(weaponentity));
-	actor.(weaponentity).muzzle_flash.nodrawtoclient = actor; // client side
-	W_AttachToShotorg(actor, weaponentity, actor.(weaponentity).muzzle_flash, '5 0 0');
+	if(weaponslot(weaponentity) == 0)
+	{
+		W_Uzi_MuzzleFlash(actor.exteriorweaponentity);
+		//actor.(weaponentity).muzzle_flash.nodrawtoclient = actor; // client side
+		W_Uzi_AttachToShotorg(actor, weaponentity, actor.exteriorweaponentity.muzzle_flash, '-15 0 -5');
+	}
 
 	FOREACH_CLIENT(it == actor || (IS_SPEC(it) && it.enemy == actor),
 	{
@@ -233,9 +262,12 @@ void W_Uzi_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, int 
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	W_Uzi_MuzzleFlash(actor.(weaponentity));
-	actor.(weaponentity).muzzle_flash.nodrawtoclient = actor; // client side
-	W_AttachToShotorg(actor, weaponentity, actor.(weaponentity).muzzle_flash, '5 0 0');
+	if(weaponslot(weaponentity) == 0)
+	{
+		W_Uzi_MuzzleFlash(actor.exteriorweaponentity);
+		//actor.(weaponentity).muzzle_flash.nodrawtoclient = actor; // client side
+		W_Uzi_AttachToShotorg(actor, weaponentity, actor.exteriorweaponentity.muzzle_flash, '-15 0 -5');
+	}
 
 	FOREACH_CLIENT(it == actor || (IS_SPEC(it) && it.enemy == actor),
 	{
