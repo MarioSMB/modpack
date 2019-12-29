@@ -25,6 +25,7 @@ int W_SetupShot_Dir_ProjectileSize_Range(entity ent, entity wepent, vector s_for
 	ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
 	vector viewangles = getpropertyvec(VF_CL_VIEWANGLES);
+	makevectors(viewangles); // make sure globals are setup for the transform
 	vector forward, right, up;
 	MAKE_VECTORS(viewangles, forward, right, up);
 	w_shotend = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos); // warpzone support
