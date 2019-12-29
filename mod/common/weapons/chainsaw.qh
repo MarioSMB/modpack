@@ -57,7 +57,7 @@ CLASS(Chainsaw, Weapon)
 #ifdef GAMEQC
 /* model     */ ATTRIB(Chainsaw, m_model, Model, MDL_CHAINSAW_ITEM);
 #endif
-/* crosshair */ ATTRIB(Chainsaw, w_crosshair, string, "gfx/crosshairrpc");
+/* crosshair */ ATTRIB(Chainsaw, w_crosshair, string, "gfx/crosshair19");
 /* crosshair */ ATTRIB(Chainsaw, w_crosshair_size, float, 0.75);
 /* wepimg    */ ATTRIB(Chainsaw, model2, string, "weaponchainsaw");
 /* refname   */ ATTRIB(Chainsaw, netname, string, "chainsaw");
