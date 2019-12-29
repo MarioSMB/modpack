@@ -24,14 +24,10 @@ int W_SetupShot_Dir_ProjectileSize_Range(entity ent, entity wepent, vector s_for
 	WarpZone_TraceLine(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * range, MOVE_NOMONSTERS, ent);
 	ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
+	vector viewangles = getpropertyvec(VF_CL_VIEWANGLES);
 	vector forward, right, up;
-	forward = v_forward;
-	right = v_right;
-	up = v_up;
+	MAKE_VECTORS(viewangles, forward, right, up);
 	w_shotend = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos); // warpzone support
-	v_forward = forward;
-	v_right = right;
-	v_up = up;
 
 	return = ClientBeam_HitCheck();
 
