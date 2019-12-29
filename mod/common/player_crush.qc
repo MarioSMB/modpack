@@ -24,9 +24,7 @@ float trace_hits_box_1d(float end, float thmi, float thma)
     if (end == 0)
     {
         // just check if x is in range
-        if (0 < thmi)
-            return false;
-        if (0 > thma)
+        if (0 < thmi || 0 > thma)
             return false;
     }
     else
