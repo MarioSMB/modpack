@@ -26,54 +26,72 @@ vector autocvar_hud_contents_water_color = '0.4 0.3 0.3';
 
 void HUD_Contents()
 {
+	if(!autocvar_hud_contents)
+		return;
+
 	// improved polyblend
-	if(autocvar_hud_contents)
+	float contentalpha_temp, incontent, liquidalpha, contentfadetime;
+	vector liquidcolor;
+
+	switch(pointcontents(view_origin))
 	{
-		float contentalpha_temp, incontent, liquidalpha, contentfadetime;
-		vector liquidcolor;
+		case CONTENT_WATER:
+			liquidalpha = autocvar_hud_contents_water_alpha;
+			liquidcolor = autocvar_hud_contents_water_color;
+			incontent = 1;
+			break;
 
-		switch(pointcontents(view_origin))
-		{
-			case CONTENT_WATER:
-				liquidalpha = autocvar_hud_contents_water_alpha;
-				liquidcolor = autocvar_hud_contents_water_color;
-				incontent = 1;
-				break;
+		case CONTENT_LAVA:
+			liquidalpha = autocvar_hud_contents_lava_alpha;
+			liquidcolor = autocvar_hud_contents_lava_color;
+			incontent = 1;
+			break;
 
-			case CONTENT_LAVA:
-				liquidalpha = autocvar_hud_contents_lava_alpha;
-				liquidcolor = autocvar_hud_contents_lava_color;
-				incontent = 1;
-				break;
+		case CONTENT_SLIME:
+			liquidalpha = autocvar_hud_contents_slime_alpha;
+			liquidcolor = autocvar_hud_contents_slime_color;
+			incontent = 1;
+			break;
 
-			case CONTENT_SLIME:
-				liquidalpha = autocvar_hud_contents_slime_alpha;
-				liquidcolor = autocvar_hud_contents_slime_color;
-				incontent = 1;
-				break;
-
-			default:
-				liquidalpha = 0;
-				liquidcolor = '0 0 0';
-				incontent = 0;
-				break;
-		}
-
-		if(incontent) // fade in/out at different speeds so you can do e.g. instant fade when entering water and slow when leaving it.
-		{ // also lets delcare previous values for blending properties, this way it isn't reset until after you have entered a different content
-			contentfadetime = autocvar_hud_contents_fadeintime;
-			liquidalpha_prev = liquidalpha;
-			liquidcolor_prev = liquidcolor;
-		}
-		else
-			contentfadetime = autocvar_hud_contents_fadeouttime;
-
-		contentalpha_temp = bound(0, drawframetime / max(0.0001, contentfadetime), 1);
-		contentavgalpha = contentavgalpha * (1 - contentalpha_temp) + incontent * contentalpha_temp;
-
-		if(contentavgalpha)
-			drawfill('0 0 0', vec2(autocvar_vid_conwidth, autocvar_vid_conheight), liquidcolor_prev, contentavgalpha * liquidalpha_prev, DRAWFLAG_NORMAL);
+		default:
+			liquidalpha = 0;
+			liquidcolor = '0 0 0';
+			incontent = 0;
+			break;
 	}
+
+	if(incontent) // fade in/out at different speeds so you can do e.g. instant fade when entering water and slow when leaving it.
+	{ // also lets delcare previous values for blending properties, this way it isn't reset until after you have entered a different content
+		contentfadetime = autocvar_hud_contents_fadeintime;
+		liquidalpha_prev = liquidalpha;
+		liquidcolor_prev = liquidcolor;
+	}
+	else
+		contentfadetime = autocvar_hud_contents_fadeouttime;
+
+	contentalpha_temp = bound(0, drawframetime / max(0.0001, contentfadetime), 1);
+	contentavgalpha = contentavgalpha * (1 - contentalpha_temp) + incontent * contentalpha_temp;
+
+	if(contentavgalpha)
+		drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), liquidcolor_prev, contentavgalpha * liquidalpha_prev, DRAWFLAG_NORMAL);
+}
+
+vector GetViewLocationFOV(float fov)
+{
+	float frustumy = tan(fov * M_PI / 360.0) * 0.75;
+	float frustumx = frustumy * vid_width / vid_height / vid_pixelheight;
+	float fovx = atan2(frustumx, 1) / M_PI * 360.0;
+	float fovy = atan2(frustumy, 1) / M_PI * 360.0;
+	return '1 0 0' * fovx + '0 1 0' * fovy;
+}
+
+float autocvar_fov;
+void View_UpdateFov()
+{
+	vector fov;
+	fov = GetViewLocationFOV(autocvar_fov);
+
+	setproperty(VF_FOV, fov);
 }
 
 void Sbar_Draw();
@@ -124,6 +142,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 	vid_conwidth = autocvar_vid_conwidth;
 	vid_conheight = autocvar_vid_conheight;
 	vid_pixelheight = autocvar_vid_pixelheight;
+
+	View_UpdateFov();
 
 	// Draw the Crosshair
 	setproperty(VF_DRAWCROSSHAIR, 0);
