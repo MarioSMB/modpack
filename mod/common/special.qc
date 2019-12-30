@@ -90,6 +90,65 @@ void MorningRescue(entity e)
 }
 #endif
 
+#ifdef CSQC
+const int MAX_QUADRATIC = 25;
+vector quadratic_slots[MAX_QUADRATIC];
+vector quadratic_dirs[MAX_QUADRATIC];
+const float QUADRATIC_SPEED = 150;
+const float QUADRATIC_TURNSPEED = 0.35;
+const float QUADRATIC_SIZE = 24;
+const float QUADRATIC_CHANCE = 0.35;
+float quadratic_spawntime, quadratic_fadetime;
+bool quadratic;
+void HUD_Quadratic()
+{
+	for(int j = MAX_QUADRATIC - 1; j >= 0; --j)
+	{
+		vector slot = quadratic_slots[j];
+		vector dirs = quadratic_dirs[j];
+		float oldz = slot.z;
+		if(slot)
+			slot += quadratic_dirs[j] * QUADRATIC_SPEED * frametime;
+		slot.z = oldz;
+		//if(slot.z)
+			//slot.z = sin(QUADRATIC_TURNSPEED * M_PI * time);
+		if(slot.y > vid_conheight || slot.x > vid_conwidth)
+			slot = '0 0 0';
+
+		if(slot == '0 0 0')
+		{
+			if(time > quadratic_spawntime && random() <= QUADRATIC_CHANCE) // low chance to spawn!
+			{
+				slot.x = bound(0, (random() * vid_conwidth + 1), vid_conwidth);
+				slot.y = bound(0, (random() * vid_conheight + 1), vid_conheight);
+				slot.z = 0;
+				dirs = vec2(randomvec());
+				quadratic_spawntime = time + bound(0.05, random() * 0.5, 0.4); // prevent spawning another one for this amount of time!
+			}
+		}
+		else
+		{
+			vector splash_size = vec2(QUADRATIC_SIZE, QUADRATIC_SIZE);
+			if(time > dirs.z)
+			{
+				if(random() <= 0.05)
+					slot.z = -1;
+				else
+					slot.z = floor(random() * 9) + 1;
+				dirs.z = time + QUADRATIC_TURNSPEED;
+			}
+			string chosen_number = ((slot.z == -1) ? "NOOB" : ftos(rint(slot.z)));
+			draw_beginBoldFont();
+			drawcolorcodedstring(vec2(slot), chosen_number, splash_size, 0.95, DRAWFLAG_NORMAL);
+			draw_endBoldFont();
+		}
+
+		quadratic_slots[j] = slot;
+		quadratic_dirs[j] = dirs;
+	}
+}
+#endif
+
 #ifdef SVQC
 REGISTER_MUTATOR(sv_morningrescue, true);
 
@@ -121,6 +180,11 @@ MUTATOR_HOOKFUNCTION(sv_morningrescue, SV_ParseServerCommand)
 #elif defined(CSQC)
 bool morningrescue;
 
+STATIC_INIT_LATE(cl_morningrescue_override)
+{
+	localcmd("\nalias solve_quadratic \"cl_cmd solve_quadratic ${* ?}\"\n");
+}
+
 REGISTER_MUTATOR(cl_morningrescue, true);
 
 MUTATOR_HOOKFUNCTION(cl_morningrescue, DrawScoreboard)
@@ -130,7 +194,7 @@ MUTATOR_HOOKFUNCTION(cl_morningrescue, DrawScoreboard)
 
 MUTATOR_HOOKFUNCTION(cl_morningrescue, HUD_Draw_overlay)
 {
-	if(!morningrescue)
+	if(!morningrescue && !quadratic)
 		return false;
 
 	if(time <= mr_fadetime)
@@ -141,7 +205,31 @@ MUTATOR_HOOKFUNCTION(cl_morningrescue, HUD_Draw_overlay)
 	else
 		morningrescue = false;
 
+	if(time <= quadratic_fadetime)
+	{
+		HUD_Quadratic();
+		// don't return true, we want regular HUD effects!
+	}
+	else
+		quadratic = false;
+
 	return false;
+}
+
+MUTATOR_HOOKFUNCTION(cl_morningrescue, CSQC_ConsoleCommand)
+{
+	if(MUTATOR_RETURNVALUE) // command was already handled?
+		return;
+
+	string cmd_name = M_ARGV(0, string);
+	//int cmd_argc = M_ARGV(2, int);
+
+	if(cmd_name == "solve_quadratic")
+	{
+		quadratic = true;
+		quadratic_fadetime = time + 5;
+		return true;
+	}
 }
 
 NET_HANDLE(TE_CSQC_MORNINGRESCUE, bool isNew)
