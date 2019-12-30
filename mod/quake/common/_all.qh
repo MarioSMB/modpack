@@ -4,12 +4,6 @@ REGISTER_NET_TEMP(TE_CSQC_PINGPLREPORT)
 
 REGISTER_NET_LINKED(ENT_CLIENT_MODEL)
 
-#define fixedmakevectors makevectors
-noref vector _fixedvectoangles;
-#define fixedvectoangles(a) (_fixedvectoangles = vectoangles(a), _fixedvectoangles.x *= -1, _fixedvectoangles)
-noref vector _fixedvectoangles2;
-#define fixedvectoangles2(a, b) (_fixedvectoangles2 = vectoangles2(a, b), _fixedvectoangles2.x *= -1, _fixedvectoangles2)
-
 #include "stats.qh"
 
 #ifdef CSQC

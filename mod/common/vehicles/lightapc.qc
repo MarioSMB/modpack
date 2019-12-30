@@ -105,6 +105,7 @@ AUTOCVAR(g_vehicle_lightapc_cannon_pitchlimit_down, float, 60, "");
 AUTOCVAR(g_vehicle_lightapc_cannon_pitchlimit_up, float, 60, "");
 AUTOCVAR(g_vehicle_lightapc_cannon_turnlimit_in, float, 20, "");
 AUTOCVAR(g_vehicle_lightapc_cannon_turnlimit_out, float, 80, "");
+AUTOCVAR(g_vehicle_lightapc_cannon_turnlimit_obey, bool, false, "");
 
 AUTOCVAR(g_vehicle_lightapc_tiltlimit, float, 90, "");
 AUTOCVAR(g_vehicle_lightapc_springlength, float, 150, "");
@@ -162,7 +163,7 @@ AUTOCVAR(g_vehicle_lightapc_changetype, bool, true, "Allow gunners to change the
 
 vector vehicle_aimturret2(entity _vehic, entity _turretmount, vector _target, entity _turrret, string _tagname, 
 						  float _pichlimit_min, float _pichlimit_max, 
-						  float _rotlimit_min, float _rotlimit_max, float _aimspeed, float dt)
+						  float _rotlimit_min, float _rotlimit_max, float _aimspeed, float dt, bool uselimits)
 {
 	vector vtag = gettaginfo(_turrret, gettagindex(_turrret, _tagname));
 	vector vtmp = vectoangles(normalize(_target - vtag));
@@ -171,8 +172,16 @@ vector vehicle_aimturret2(entity _vehic, entity _turretmount, vector _target, en
 	float ftmp = _aimspeed * frametime; // TODO: use dt?
 	vtmp.y = bound(-ftmp, vtmp.y, ftmp);
 	vtmp.x = bound(-ftmp, vtmp.x, ftmp);
-	_turrret.angles_y = bound(_rotlimit_min, _turrret.angles_y + vtmp.y, _rotlimit_max);    
-	_turrret.angles_x = bound(_pichlimit_min, _turrret.angles_x + vtmp.x, _pichlimit_max);
+	if(uselimits)
+	{
+		_turrret.angles_y = bound(_rotlimit_min, _turrret.angles_y + vtmp.y, _rotlimit_max);
+		_turrret.angles_x = bound(_pichlimit_min, _turrret.angles_x + vtmp.x, _pichlimit_max);
+	}
+	else
+	{
+		_turrret.angles_y = _turrret.angles_y + vtmp.y;
+		_turrret.angles_x = _turrret.angles_x + vtmp.x;
+	}
 	return vtag;
 }
 
@@ -263,7 +272,7 @@ bool lightapc_gunner_frame(entity this, float dt)
 
 		vehicle_aimturret2(vehic, turretmount, _ct, gunner, "fire",
 						  autocvar_g_vehicle_lightapc_cannon_pitchlimit_down * -1, autocvar_g_vehicle_lightapc_cannon_pitchlimit_up,
-						  _out * -1,  _in,  autocvar_g_vehicle_lightapc_cannon_turnspeed, dt);
+						  _out * -1,  _in,  autocvar_g_vehicle_lightapc_cannon_turnspeed, dt, autocvar_g_vehicle_lightapc_cannon_turnlimit_obey);
 
 		vector angvec = gettaginfo(gunner, gettagindex(gunner, "tag_camera"));
 		setorigin(player, angvec);
@@ -466,6 +475,7 @@ void lightapc_gunner_exit(entity this, int _exitflag)
 
 	player.velocity = 0.75 * vehic.velocity + normalize(spot - vehic.origin) * 200;
 	player.velocity_z += 10;
+	player.oldvelocity = player.velocity; // prevent fall damage
 
 	gunner.phase = time + 5;
 	gunner.owner = NULL;
@@ -776,11 +786,12 @@ void lightapc_pilot_exit(entity this, int eject)
 	entity player = this.owner;
 	if(eject)
 	{
-		makevectors(this.angles);
-		vector spot = this.origin + v_forward * 100 + '0 0 64';
+		vector forward, right, up;
+		MAKE_VECTORS(this.angles, forward, right, up);
+		vector spot = this.origin + forward * 100 + '0 0 64';
 		spot = vehicles_findgoodexit(this, player, spot);
 		setorigin(player, spot);
-		player.velocity = (v_up + v_forward * 0.25) * 750;
+		player.velocity = (up + forward * 0.25) * 750;
 		player.oldvelocity = player.velocity;
 	}
 	else

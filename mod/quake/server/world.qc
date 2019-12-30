@@ -1094,6 +1094,7 @@ void StartFrame()
 	CreatureFrame_All();
 	CheckRules_World();
 
+	GlobalStats_updateglobal();
 	FOREACH_CLIENT(true, GlobalStats_update(it));
 }
 

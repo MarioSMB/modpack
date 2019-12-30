@@ -30,7 +30,7 @@ spawnfunc(wallsprite)
 	// get rid of z sort errors.
 	makevectors(this.angles);
 	setorigin(this, this.origin - (v_forward * 0.2));
-	makestatic(this);
+	_makestatic_hidden(this);
 }
 
 PRECACHE(InitBulletHoles)

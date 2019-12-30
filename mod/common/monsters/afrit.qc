@@ -90,8 +90,6 @@ void M_Afrit_Attack_Fireball(entity this)
 	entity missile = spawn();
 	vector dir = normalize((this.enemy.origin + '0 0 10') - this.origin);
 
-	monster_makevectors(this, this.enemy);
-
 	missile.owner = missile.realowner = this;
 	missile.solid = SOLID_TRIGGER;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);

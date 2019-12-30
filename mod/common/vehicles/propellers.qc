@@ -71,8 +71,9 @@ void helicopter_rotor_think(entity this)
 	//	where they are correct pitch for models but not for bsp or 
 	//	sprite :P
 	vector ownang = this.owner.angles;
-	makevectors(vec3(ownang.x * -1, ownang.y, ownang.z));
-	setorigin(this, (this.owner.origin + (v_forward * this.rotoroffset_x) + (v_right * this.rotoroffset_y) + (v_up * this.rotoroffset_z))); //Forward X qunits, up_s
+	vector forward, right, up;
+	MAKE_VECTORS(vec3(ownang.x * -1, ownang.y, ownang.z), forward, right, up);
+	setorigin(this, (this.owner.origin + (forward * this.rotoroffset_x) + (v_right * this.rotoroffset_y) + (up * this.rotoroffset_z))); //Forward X qunits, up_s
 	this.nextthink = time;
 }
 
@@ -80,8 +81,9 @@ void helicopter_rotor_think_noz(entity this)
 {
 	//For this version, No spin for z:
 	vector ownang = this.owner.angles;
-	makevectors(vec2(ownang.x * -1, ownang.y));
-	setorigin(this, (this.owner.origin + (v_forward * this.rotoroffset_x) + (v_right * this.rotoroffset_y) + (v_up * this.rotoroffset_z))); //Forward X qunits, up_s
+	vector forward, right, up;
+	MAKE_VECTORS(vec2(ownang.x * -1, ownang.y), forward, right, up);
+	setorigin(this, (this.owner.origin + (forward * this.rotoroffset_x) + (v_right * this.rotoroffset_y) + (up * this.rotoroffset_z))); //Forward X qunits, up_s
 	this.nextthink = time;
 }
 

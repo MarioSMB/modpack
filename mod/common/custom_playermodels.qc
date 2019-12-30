@@ -13,6 +13,7 @@ bool g_overkill; // reliable check for overkill
 
 // TODO
 SOUND(MARIO_CJUMP, "player/mario/player/jump7");
+SOUND(MARIO64_CJUMP, "player/mario64/player/jump2");
 
 const int MODELS_PONY = BIT(0);
 const int MODELS_WEEGEE = BIT(1);
@@ -27,7 +28,21 @@ const int MODELS_BEAR = BIT(9);
 const int MODELS_MONK = BIT(10);
 const int MODELS_NEXUS = BIT(11);
 const int MODELS_IGGY = BIT(12);
+const int MODELS_MARIO64 = BIT(13);
 #endif
+
+#ifdef SVQC
+.string cvar_cl_model;
+.int cvar_cl_pony_skin;
+.int cvar_cl_sparkle;
+#elif defined(CSQC)
+string cvar_cl_model;
+int cvar_cl_pony_skin;
+int cvar_cl_sparkle;
+#endif
+REPLICATE(cvar_cl_pony_skin, int, "cl_pony_skin");
+REPLICATE(cvar_cl_sparkle, int, "cl_sparkle");
+REPLICATE(cvar_cl_model, string, "cl_custommodel");
 
 #ifdef SVQC
 
@@ -68,14 +83,13 @@ PRECACHE(cpmodels_precache)
 		CHECK_MODEL("monk2.dpm", MONK)
 		CHECK_MODEL("nexus.zym", NEXUS)
 		CHECK_MODEL("iggy.dpm", IGGY)
+		CHECK_MODEL("mario64.dpm", MARIO64)
 	}
 #undef CHECK_MODEL
 }
 
-.string cvar_cl_model;
-.int cvar_cl_pony_skin;
-.int cvar_cl_sparkle;
 .bool cow;
+.bool cow2;
 
 .float ninja_sneak;
 .float ninja_cooldown;
@@ -84,6 +98,27 @@ PRECACHE(cpmodels_precache)
 REPLICATE(cvar_cl_pony_skin, int, "cl_pony_skin");
 REPLICATE(cvar_cl_sparkle, int, "cl_sparkle");
 REPLICATE(cvar_cl_model, string, "cl_custommodel");
+
+void cpmodels_UpdateWeaponSkin(entity actor, int newskin)
+{
+	if(!IS_PLAYER(actor))
+		return;
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+		if(actor.(weaponentity))
+			actor.(weaponentity).skin = newskin;
+	}
+}
+
+MUTATOR_HOOKFUNCTION(cpmodels, ClientConnect)
+{
+	entity player = M_ARGV(0, entity);
+#define HASCODE(thecolor) (strstrofs(player.netname, (thecolor), 0) >= 0)
+	if(HASCODE("^x664") || HASCODE("^x665") || HASCODE("^x666") || HASCODE("^x667") || HASCODE("^x668") || HASCODE("^x669"))
+		player.cow2 = true;
+#undef HASCODE
+}
 
 MUTATOR_HOOKFUNCTION(cpmodels, FormatMessage)
 {
@@ -106,14 +141,21 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 		{
 			M_ARGV(0, string) = "models/player/pony.iqm";
 			M_ARGV(1, int) = CS(player).cvar_cl_pony_skin;
+			cpmodels_UpdateWeaponSkin(player, ((CS(player).cvar_cl_pony_skin) ? 2 : 7));
 		}
 		if(CS(player).cvar_cl_model == "robot" && ALLOWED(ROBOT))
+		{
 			M_ARGV(0, string) = "models/player/terminusmale.iqm";
+			cpmodels_UpdateWeaponSkin(player, 3);
+		}
 		if(CS(player).cvar_cl_model == "goat" && ALLOWED(GOAT))
 			M_ARGV(0, string) = "models/player/draconimale.iqm";
 
 		if(CS(player).cvar_cl_model == "monk" && ALLOWED(MONK))
+		{
 			M_ARGV(0, string) = "models/player/monk2.dpm";
+			cpmodels_UpdateWeaponSkin(player, 6);
+		}
 
 		if(CS(player).cvar_cl_model == "nexus" && ALLOWED(NEXUS))
 			M_ARGV(0, string) = "models/player/nexus.zym";
@@ -127,34 +169,45 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 			if(CS(player).cvar_cl_model == "rosalina" && ALLOWED(ROSALINA))
 			{
 				if(autocvar_g_fullbrightplayers && autocvar_g_player_brightness)
-					player.colormod = '0.7 0.7 0.7'; // regular brightness is way too bright here
+					player.colormod = '0.7 0.7 0.7'; // regular brightness is way too bright here TODO this is a model issue, should be fixed there!
 				M_ARGV(0, string) = "models/player/rosalina.dpm";
+				cpmodels_UpdateWeaponSkin(player, 2);
 			}
 			if(CS(player).cvar_cl_model == "foxy" && ALLOWED(RENAMON))
+			{
 				M_ARGV(0, string) = "models/player/renamon.iqm";
+				cpmodels_UpdateWeaponSkin(player, 4);
+			}
 			if(CS(player).cvar_cl_model == "iggy" && ALLOWED(IGGY))
+			{
 				M_ARGV(0, string) = "models/player/iggy.dpm";
+				cpmodels_UpdateWeaponSkin(player, 5);
+			}
 		}
 		else if(player.playermodel == "models/player/renamon.iqm" || player.playermodel == "models/player/rosalina.dpm" || player.playermodel == "models/player/iggy.dpm")
 			M_ARGV(0, string) = autocvar_sv_defaultplayermodel;
 
 		if(PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		{
+			cpmodels_UpdateWeaponSkin(player, 1);
 			if(CS(player).cvar_cl_sparkle == 3 && ALLOWED(MARIO))
 				M_ARGV(0, string) = "models/player/mario.dpm";
-			if(CS(player).cvar_cl_sparkle >= 4 && ALLOWED(WEEGEE))
+			if(CS(player).cvar_cl_sparkle == 4 && ALLOWED(WEEGEE))
 				M_ARGV(0, string) = "models/player/luigi.dpm";
+			if(CS(player).cvar_cl_sparkle == 5 && ALLOWED(MARIO64))
+				M_ARGV(0, string) = "models/player/mario64.dpm";
 			if(CS(player).cvar_cl_model == "bear" && ALLOWED(BEAR))
 				M_ARGV(0, string) = "models/player/bear.dpm";
 		}
-		else if(player.playermodel == "models/player/mario.dpm" || player.playermodel == "models/player/bear.dpm" || player.playermodel == "models/player/luigi.dpm")
+		else if(player.playermodel == "models/player/mario.dpm" || player.playermodel == "models/player/mario64.dpm" || player.playermodel == "models/player/bear.dpm" || player.playermodel == "models/player/luigi.dpm")
 			M_ARGV(0, string) = autocvar_sv_defaultplayermodel;
 
 		if(CS(player).cow && ALLOWED(COW))
 			M_ARGV(0, string) = "models/player/cow.md3";
-	}
 
 #undef ALLOWED
+	}
+
 }
 
 MUTATOR_HOOKFUNCTION(cpmodels, PlayerSpawn)
@@ -179,6 +232,9 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerPreThink)
 		player.alpha = player.ninja_prevalpha;
 		player.ninja_sneak = 0;
 	}
+
+	if(player.cow2)
+		cpmodels_UpdateWeaponSkin(player, 8);
 }
 
 MUTATOR_HOOKFUNCTION(cpmodels, PlayerUseKey)
@@ -221,19 +277,23 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerJump, CBC_ORDER_LAST)
 	entity player = M_ARGV(0, entity);
 
 	if(autocvar_sv_jumpvelocity_backflip && PHYS_INPUT_BUTTON_CROUCH(player) && IS_ONGROUND(player) && vdist(player.velocity, <, PHYS_MAXSPEED(player) * 0.6) &&
-		player.model == "models/player/mario.dpm" &&
+		(player.model == "models/player/mario.dpm" || player.model == "models/player/mario64.dpm") &&
 #ifdef SVQC
-		!g_cts && !g_race && CS(player).cvar_cl_sparkle == 3 && (models_allowed & MODELS_MARIO)
+		!g_cts && !g_race && (CS(player).cvar_cl_sparkle == 3 || CS(player).cvar_cl_sparkle == 5) && ((models_allowed & MODELS_MARIO) || (models_allowed & MODELS_MARIO64))
 #elif defined(CSQC)
-		gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && autocvar_cl_sparkle == 3 /* sorry csqc, no way to check allowed thanks to a stupid stats bug */
+		gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && (autocvar_cl_sparkle == 3 || autocvar_cl_sparkle == 5) /* sorry csqc, no way to check allowed thanks to a stupid stats bug */
 #endif
 		)
 	{
 		M_ARGV(1, float) = autocvar_sv_jumpvelocity_backflip;
-		makevectors(PHYS_WORLD_ANGLES(player));
-		player.velocity -= v_forward * 50;
+		vector forward, right, up;
+		MAKE_VECTORS(PHYS_WORLD_ANGLES(player), forward, right, up);
+		player.velocity -= forward * 50;
 	#ifdef SVQC
-		sound(player, CH_VOICE, SND_MARIO_CJUMP, VOL_BASE, ATTEN_NORM);
+		if(CS(player).cvar_cl_sparkle == 5)
+			sound(player, CH_VOICE, SND_MARIO64_CJUMP, VOL_BASE, ATTEN_NORM);
+		else
+			sound(player, CH_VOICE, SND_MARIO_CJUMP, VOL_BASE, ATTEN_NORM);
 	#endif
 	}
 }

@@ -140,9 +140,6 @@ AUTOCVAR(g_powerup_mini_size, float, 0.2, "Scale of the player when under the in
 const vector PL_VIEW_OFS_CONST = '0 0 35';
 const vector PL_CROUCH_VIEW_OFS_CONST = '0 0 20';
 
-const vector PL_CROUCH_MAX_CONST = '16 16 25';
-const vector PL_CROUCH_MIN_CONST = '-16 -16 -24';
-
 .int mitems;
 
 .float mini_oldgravity;

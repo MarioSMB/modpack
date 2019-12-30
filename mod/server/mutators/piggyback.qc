@@ -5,8 +5,8 @@ REGISTER_MUTATOR(piggyback, autocvar_g_piggyback);
 
 AUTOCVAR(g_piggyback_ride_enemies, bool, false, _("Allow riding enemies"));
 
-.float cvar_cl_nocarry;
-.float cvar_cl_noride;
+.bool cvar_cl_nocarry;
+.bool cvar_cl_noride;
 
 REPLICATE(cvar_cl_nocarry, bool, "cl_nocarry");
 REPLICATE(cvar_cl_noride, bool, "cl_noride");
@@ -250,7 +250,8 @@ MUTATOR_HOOKFUNCTION(piggyback, PlayerPreThink)
 		float forw, rit, updown = 0;
 		vector wishvel = '0 0 0';
 
-		makevectors(player.angles);
+		vector forward, right, up;
+		MAKE_VECTORS(player.angles, forward, right, up);
 		if(PHYS_INPUT_BUTTON_JUMP(player))
 			updown = 300;
 		else if(PHYS_INPUT_BUTTON_CROUCH(player))
@@ -262,13 +263,13 @@ MUTATOR_HOOKFUNCTION(piggyback, PlayerPreThink)
 			rit = CS(player).movement_y * 500;
 			//updown = CS(player).movement_z * 100;
 			
-			wishvel = v_forward * forw + v_right * rit;
+			wishvel = forward * forw + right * rit;
 		}
 		
 		//vector wishvel = normalize(('10 0 0' + v_forward * CS(player).movement_x) + ('0 10 0' + v_right * CS(player).movement_y) + ('0 0 1' * CS(player).movement_z));
 		//print(vtos(player.origin), vtos(player.origin + wishvel), "\n");
 		player.pbhost.monster_moveto = player.origin + wishvel;
-		player.pbhost.monster_moveto_z = v_up_z * updown;
+		player.pbhost.monster_moveto_z = up.z * updown;
 	}
 }
 

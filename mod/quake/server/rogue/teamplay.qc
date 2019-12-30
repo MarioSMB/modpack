@@ -673,7 +673,7 @@ void TossBackpack(entity this)
 	makevectors(this.v_angle);
 
 	setorigin(item, this.origin + '0 0 16');
-	item.velocity = aim(this, 1000);
+	item.velocity = qc_aim(this, 1000);
 	item.velocity = item.velocity * 500;
 	item.flags = FL_ITEM;
 	item.solid = SOLID_TRIGGER;
@@ -760,7 +760,7 @@ void TossWeapon(entity this)
 	item.weapon = 0;
 
 	setorigin(item, this.origin + '0 0 16');
-	item.velocity = aim(this, 1000);
+	item.velocity = qc_aim(this, 1000);
 	item.velocity = item.velocity * 500;
 	item.flags = FL_ITEM;
 	item.solid = SOLID_TRIGGER;

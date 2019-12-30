@@ -113,7 +113,7 @@ void W_FireMultiGrenade(entity this)
 		missile.velocity = v_forward*600 + v_up * 200 + crandom()*v_right*10 + crandom()*v_up*10;
 	else
 	{
-		missile.velocity = aim(this, 10000);
+		missile.velocity = qc_aim(this, 10000);
 		missile.velocity = missile.velocity * 600;
 		missile.velocity_z = 200;
 	}
@@ -219,7 +219,7 @@ void HomingMissileAcquire(entity this)
 
 	vector oldVelocity = this.velocity;
 	makevectors(this.v_angle);
-	this.velocity = aim(this, 1000);
+	this.velocity = qc_aim(this, 1000);
 	this.velocity = this.velocity * 1000;
 
 	vector aimangle = this.origin + this.velocity;	
@@ -268,7 +268,7 @@ void MultiRocketLaunch(entity this, float offset, float frameNum)
 		aimangle = this.v_angle;
 		aimangle_y = aimangle_y +(offset * 0.66);
 		makevectors(aimangle);
-		missile.velocity = aim(this, 1000);
+		missile.velocity = qc_aim(this, 1000);
 		missile.velocity = missile.velocity * 1000;
 		missile.angles = vectoangles(missile.velocity);
 
@@ -490,6 +490,6 @@ void W_FirePlasma(entity this)
 	this.punchangle_x = -2;
 
 	makevectors(this.v_angle);
-	vector dir = aim(this, 1000);
+	vector dir = qc_aim(this, 1000);
 	launch_plasma(this, this.origin + v_forward*24 + '0 0 16', dir);
 }

@@ -12,8 +12,9 @@ float mplant_tool_rotate(entity this)
     entity _targ = mplant_cursor_select(this);
 
     if (!_targ) {
-        makevectors(this.v_angle);
-        setorigin(this.mplant_cursorobject, this.origin + this.view_ofs + (v_forward * 256));
+        vector forward, right, up;
+        MAKE_VECTORS(this.v_angle, forward, right, up);
+        setorigin(this.mplant_cursorobject, this.origin + this.view_ofs + (forward * 256));
         this.mplant_cursorobject.effects &= ~EF_NODRAW;
         _targ = this.mplant_cursorobject;
         _targ.angles = _targ.pos1;

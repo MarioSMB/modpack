@@ -24,14 +24,11 @@ int W_SetupShot_Dir_ProjectileSize_Range(entity ent, entity wepent, vector s_for
 	WarpZone_TraceLine(ent.origin + ent.view_ofs, ent.origin + ent.view_ofs + s_forward * range, MOVE_NOMONSTERS, ent);
 	ent.dphitcontentsmask = DPCONTENTS_SOLID | DPCONTENTS_BODY | DPCONTENTS_CORPSE;
 
-	vector vf, vr, vu;
-	vf = v_forward;
-	vr = v_right;
-	vu = v_up;
+	vector viewangles = getpropertyvec(VF_CL_VIEWANGLES);
+	makevectors(viewangles); // make sure globals are setup for the transform
+	vector forward, right, up;
+	MAKE_VECTORS(viewangles, forward, right, up);
 	w_shotend = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos); // warpzone support
-	v_forward = vf;
-	v_right = vr;
-	v_up = vu;
 
 	return = ClientBeam_HitCheck();
 
@@ -45,14 +42,14 @@ int W_SetupShot_Dir_ProjectileSize_Range(entity ent, entity wepent, vector s_for
 	else
 		vecs = '0 0 0';
 
-	vector dv = v_right * -vecs.y + v_up * vecs.z;
+	vector dv = right * -vecs.y + up * vecs.z;
 	w_shotorg = ent.origin + ent.view_ofs + dv;
 
 	int oldsurfaceflags = trace_dphitq3surfaceflags;
 
 	// now move the shotorg forward as much as requested if possible
-	tracebox(w_shotorg, mi, ma, w_shotorg + v_forward * (vecs.x + nudge), MOVE_NORMAL, ent);
-	w_shotorg = trace_endpos - v_forward * nudge;
+	tracebox(w_shotorg, mi, ma, w_shotorg + forward * (vecs.x + nudge), MOVE_NORMAL, ent);
+	w_shotorg = trace_endpos - forward * nudge;
 	// calculate the shotdir from the chosen shotorg
 	w_shotdir = normalize(w_shotend - w_shotorg);
 
@@ -247,7 +244,10 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 	if(!rlplayer)
 		rlplayer = csqcplayer; // fall back to the global
 
-	makevectors(getpropertyvec(VF_CL_VIEWANGLES));
+	vector viewangles = getpropertyvec(VF_CL_VIEWANGLES);
+	vector forward, right, up;
+	MAKE_VECTORS(viewangles, forward, right, up);
+
 	//makevectors(rlplayer.v_angle);
 	//view_angles
 
@@ -259,7 +259,7 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 	float hit_damage = ((wep.activeweapon == WEP_VORTEX) ? WEP_CVAR_PRI(vortex, damage) : vaporizer_damage);
 	float hit_force = ((wep.activeweapon == WEP_VORTEX) ? WEP_CVAR_PRI(vortex, force) : 800);
 
-	int shottype = W_SetupShot_Dir_ProjectileSize_Range(rlplayer, wep, v_forward, '0 0 0', '0 0 0', false, 0, SND_Null, CH_WEAPON_A, 0, max_shot_distance);
+	int shottype = W_SetupShot_Dir_ProjectileSize_Range(rlplayer, wep, forward, '0 0 0', '0 0 0', false, 0, SND_Null, CH_WEAPON_A, 0, max_shot_distance);
 	FireRailgunBullet(rlplayer, wep, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, hit_damage, hit_force, 0, 0, 0, 0, wep.activeweapon.m_id);
 	vector shot_endpos = trace_endpos;
 

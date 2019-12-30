@@ -158,7 +158,7 @@ void dotc_ItemSupply_Init(entity this, int teamnumber)
 	this.angles_x = -this.angles.x; // ported from misc_gamemodel
 	set_movetype(this, MOVETYPE_NONE);
 	setmodel(this, MDL_DOTC_ITEMSUPPLY);
-	SetBrushEntityModelNoLOD(this);
+	SetBrushEntityModel(this, false);
 
 	setthink(this, dotc_ItemSupply_Think);
 	this.nextthink = time + 0.5;

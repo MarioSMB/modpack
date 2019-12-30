@@ -77,7 +77,7 @@ void M_Spawner_TrySpawning(entity this)
 	}
 }
 
-spawnfunc(monster_spawner) { Monster_Spawn(this, true, MON_SPAWNER.monsterid); }
+spawnfunc(monster_mobspawner) { Monster_Spawn(this, true, MON_SPAWNER.monsterid); }
 
 METHOD(Spawner, mr_think, bool(Monster thismon, entity actor))
 {

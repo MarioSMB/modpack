@@ -1,107 +1,7 @@
 //FEATURE: New weapon: Uzi, a short burst machine gun with some serious firepower
 
 #include "uzi.qh"
-#ifndef IMPLEMENTATION
 
-AUTOCVAR(g_balance_mac10_burst, float, 1, "");
-AUTOCVAR(g_balance_mac10_burst_ammo, float, 1, "");
-AUTOCVAR(g_balance_mac10_burst_animtime, float, 0.25, "");
-AUTOCVAR(g_balance_mac10_burst_damage, float, 16, "");
-AUTOCVAR(g_balance_mac10_burst_refire, float, 0.25, "");
-AUTOCVAR(g_balance_mac10_burst_refire2, float, 0.25, "");
-AUTOCVAR(g_balance_mac10_burst_speed, float, 0, "");
-AUTOCVAR(g_balance_mac10_first, float, 1, "");
-AUTOCVAR(g_balance_mac10_first_ammo, float, 1, "");
-AUTOCVAR(g_balance_mac10_first_damage, float, 14, "");
-AUTOCVAR(g_balance_mac10_first_force, float, 3, "");
-AUTOCVAR(g_balance_mac10_first_refire, float, 0.125, "");
-AUTOCVAR(g_balance_mac10_first_spread, float, 0.03, "");
-AUTOCVAR(g_balance_mac10_mode, float, 1, "");
-AUTOCVAR(g_balance_mac10_reload_ammo, float, 30, "");
-AUTOCVAR(g_balance_mac10_reload_time, float, 1.6, "");
-AUTOCVAR(g_balance_mac10_solidpenetration, float, 9, "");
-AUTOCVAR(g_balance_mac10_spread_add, float, 0.012, "");
-AUTOCVAR(g_balance_mac10_spread_max, float, 0.05, "");
-AUTOCVAR(g_balance_mac10_spread_min, float, 0.02, "");
-AUTOCVAR(g_balance_mac10_sustained_ammo, float, 1, "");
-AUTOCVAR(g_balance_mac10_sustained_damage, float, 7, "");
-AUTOCVAR(g_balance_mac10_sustained_force, float, 3, "");
-AUTOCVAR(g_balance_mac10_sustained_refire, float, 0.05, "");
-AUTOCVAR(g_balance_mac10_sustained_spread, float, 0.04, "");
-AUTOCVAR(g_balance_mac10_switchdelay_drop, float, 0.1, "");
-AUTOCVAR(g_balance_mac10_switchdelay_raise, float, 0.1, "");
-AUTOCVAR(g_balance_mac10_weaponreplace, string, "", "");
-AUTOCVAR(g_balance_mac10_weaponstart, float, 0, "");
-AUTOCVAR(g_balance_mac10_weaponstartoverride, float, -1, "");
-AUTOCVAR(g_balance_mac10_weaponthrowable, float, 1, "");
-
-CLASS(Uzi, Weapon)
-/* spawnfunc */ ATTRIB(Uzi, m_canonical_spawnfunc, string, "weapon_mac10");
-/* ammotype  */ ATTRIB(Uzi, ammo_type, int, RES_BULLETS);
-/* impulse   */ ATTRIB(Uzi, impulse, int, 3);
-/* flags     */ ATTRIB(Uzi, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_DUALWIELD);
-/* rating    */ ATTRIB(Uzi, bot_pickupbasevalue, float, 7000);
-/* color     */ ATTRIB(Uzi, wpcolor, vector, '1 0.9 0.1');
-/* modelname */ ATTRIB(Uzi, mdl, string, "mac10");
-#ifdef GAMEQC
-/* model     */ ATTRIB(Uzi, m_model, Model, MDL_UZI_ITEM);
-#endif
-/* crosshair */ ATTRIB(Uzi, w_crosshair, string, "gfx/crosshair63");
-/* crosshair */ ATTRIB(Uzi, w_crosshair_size, float, 0.6);
-/* wepimg    */ ATTRIB(Uzi, model2, string, "weaponmac10");
-/* refname   */ ATTRIB(Uzi, netname, string, "mac10");
-/* wepname   */ ATTRIB(Uzi, m_name, string, _("Uzi"));
-
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, burst, float, NONE) \
-		P(class, prefix, burst_ammo, float, NONE) \
-		P(class, prefix, burst_animtime, float, NONE) \
-		P(class, prefix, burst_damage, float, NONE) \
-		P(class, prefix, burst_refire2, float, NONE) \
-		P(class, prefix, burst_refire, float, NONE) \
-		P(class, prefix, burst_speed, float, NONE) \
-		P(class, prefix, first, float, NONE) \
-		P(class, prefix, first_ammo, float, NONE) \
-		P(class, prefix, first_damage, float, NONE) \
-		P(class, prefix, first_force, float, NONE) \
-		P(class, prefix, first_refire, float, NONE) \
-		P(class, prefix, first_spread, float, NONE) \
-		P(class, prefix, mode, float, NONE) \
-		P(class, prefix, reload_ammo, float, NONE) \
-        P(class, prefix, reload_time, float, NONE) \
-		P(class, prefix, solidpenetration, float, NONE) \
-		P(class, prefix, spread_add, float, NONE) \
-		P(class, prefix, spread_max, float, NONE) \
-		P(class, prefix, spread_min, float, NONE) \
-		P(class, prefix, sustained_ammo, float, NONE) \
-		P(class, prefix, sustained_damage, float, NONE) \
-		P(class, prefix, sustained_force, float, NONE) \
-		P(class, prefix, sustained_refire, float, NONE) \
-		P(class, prefix, sustained_spread, float, NONE) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string,NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-    W_MOD_PROPS(X, Uzi, mac10)
-#undef X
-
-ENDCLASS(Uzi)
-REGISTER_WEAPON(UZI, mac10, NEW(Uzi));
-
-SPAWNFUNC_WEAPON(weapon_mac10, WEP_UZI)
-
-MSG_INFO_NOTIF(WEAPON_UZI_MURDER_SNIPE,          1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponmac10",                _("^BG%s%s^K1 was semi-automatically nailed by ^BG%s^K1's Uzi%s%s"), "")
-MSG_INFO_NOTIF(WEAPON_UZI_MURDER_SPRAY,          1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponmac10",                _("^BG%s%s^K1 was pumped full of lead by ^BG%s^K1's Uzi%s%s"), "")
-
-MSG_MULTI_NOTIF(WEAPON_UZI_MURDER_SNIPE,     1,  NULL,           INFO_WEAPON_UZI_MURDER_SNIPE,    NULL)
-MSG_MULTI_NOTIF(WEAPON_UZI_MURDER_SPRAY,     1,  NULL,           INFO_WEAPON_UZI_MURDER_SPRAY,    NULL)
-
-#endif
-#ifdef IMPLEMENTATION
 #ifdef CSQC
 .entity muzzle_flash;
 
@@ -113,6 +13,28 @@ void W_Uzi_AttachToShotorg(entity wepent, entity flash, vector offset)
 	if (gettagindex(wepent, "shot")) setattachment(flash, wepent, "shot");
 	else setattachment(flash, wepent, "tag_shot");
 	setorigin(flash, offset);
+}
+#endif
+#ifdef SVQC
+void W_Uzi_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector offset)
+{
+	flash.owner = actor;
+	flash.angles_z = random() * 360;
+
+	entity view = actor.(weaponentity);
+	entity exterior = actor.exteriorweaponentity;
+
+	if (view.oldorigin.x > 0)
+	{
+		setattachment(flash, exterior, "");
+		setorigin(flash, view.oldorigin + offset);
+	}
+	else
+	{
+		if (gettagindex(exterior, "shot")) setattachment(flash, exterior, "shot");
+		else setattachment(flash, exterior, "tag_shot");
+		setorigin(flash, offset);
+	}
 }
 #endif
 
@@ -159,15 +81,14 @@ REGISTER_NET_TEMP(muzzleflash)
 #ifdef CSQC
 NET_HANDLE(muzzleflash, bool isNew)
 {
+	return = true;
 	vector a = '5 0 0';
-	//a.x = ReadCoord();
-    //a.y = ReadCoord();
-    //a.z = ReadCoord();
+	//a = ReadVector();
     int slot = ReadByte();
+    if(!autocvar_r_drawviewmodel || autocvar_chase_active) return;
 	entity wepent = viewmodels[slot];
 	W_Uzi_MuzzleFlash(wepent);
 	W_Uzi_AttachToShotorg(wepent, wepent.muzzle_flash, a);
-	return true;
 }
 #endif
 #ifdef SVQC
@@ -205,9 +126,13 @@ void W_Uzi_Attack(Weapon thiswep, int deathtype, entity actor, .entity weaponent
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	W_Uzi_MuzzleFlash(actor.(weaponentity));
-	actor.(weaponentity).muzzle_flash.nodrawtoclient = actor; // client side
-	W_AttachToShotorg(actor, weaponentity, actor.(weaponentity).muzzle_flash, '5 0 0');
+	// don't show a muzzle effect for the off-hand
+	if(weaponslot(weaponentity) == 0)
+	{
+		W_Uzi_MuzzleFlash(actor.exteriorweaponentity);
+		//actor.(weaponentity).muzzle_flash.nodrawtoclient = actor; // client side
+		W_Uzi_AttachToShotorg(actor, weaponentity, actor.exteriorweaponentity.muzzle_flash, '-15 0 -5');
+	}
 
 	FOREACH_CLIENT(it == actor || (IS_SPEC(it) && it.enemy == actor),
 	{
@@ -238,7 +163,7 @@ void W_Uzi_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int 
 	if(PHYS_INPUT_BUTTON_ATCK(actor))
 	{
 		if(!thiswep.wr_checkammo2(thiswep, actor, weaponentity))
-		if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+		if(!(actor.items & IT_UNLIMITED_AMMO))
 		{
 			W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 			w_ready(thiswep, actor, weaponentity, fire);
@@ -255,8 +180,6 @@ void W_Uzi_Attack_Frame(Weapon thiswep, entity actor, .entity weaponentity, int 
 
 void W_Uzi_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
-	float uzi_spread;
-
 	if(!(fire & 1))
 	{
 		w_ready(thiswep, actor, weaponentity, fire);
@@ -264,7 +187,7 @@ void W_Uzi_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int f
 	}
 
 	if(!thiswep.wr_checkammo1(thiswep, actor, weaponentity))
-	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+	if(!(actor.items & IT_UNLIMITED_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 		w_ready(thiswep, actor, weaponentity, fire);
@@ -280,16 +203,19 @@ void W_Uzi_Attack_Auto(Weapon thiswep, entity actor, .entity weaponentity, int f
 		actor.punchangle_y = random() - 0.5;
 	}
 
-	uzi_spread = bound(WEP_CVAR(mac10, spread_min), WEP_CVAR(mac10, spread_min) + (WEP_CVAR(mac10, spread_add) * actor.(weaponentity).misc_bulletcounter), WEP_CVAR(mac10, spread_max));
+	float uzi_spread = bound(WEP_CVAR(mac10, spread_min), WEP_CVAR(mac10, spread_min) + (WEP_CVAR(mac10, spread_add) * actor.(weaponentity).misc_bulletcounter), WEP_CVAR(mac10, spread_max));
 	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, uzi_spread, WEP_CVAR(mac10, solidpenetration), WEP_CVAR(mac10, sustained_damage), WEP_CVAR(mac10, sustained_force), WEP_UZI.m_id, EFFECT_BULLET_WEAK);
 
 	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	W_Uzi_MuzzleFlash(actor.(weaponentity));
-	actor.(weaponentity).muzzle_flash.nodrawtoclient = actor; // client side
-	W_AttachToShotorg(actor, weaponentity, actor.(weaponentity).muzzle_flash, '5 0 0');
+	if(weaponslot(weaponentity) == 0)
+	{
+		W_Uzi_MuzzleFlash(actor.exteriorweaponentity);
+		//actor.(weaponentity).muzzle_flash.nodrawtoclient = actor; // client side
+		W_Uzi_AttachToShotorg(actor, weaponentity, actor.exteriorweaponentity.muzzle_flash, '-15 0 -5');
+	}
 
 	FOREACH_CLIENT(it == actor || (IS_SPEC(it) && it.enemy == actor),
 	{
@@ -315,7 +241,7 @@ void W_Uzi_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, int 
 	}
 
 	if(!thiswep.wr_checkammo2(thiswep, actor, weaponentity))
-	if(!(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+	if(!(actor.items & IT_UNLIMITED_AMMO))
 	{
 		W_SwitchWeapon_Force(actor, w_getbestweapon(actor, weaponentity), weaponentity);
 		w_ready(thiswep, actor, weaponentity, fire);
@@ -336,9 +262,12 @@ void W_Uzi_Attack_Burst(Weapon thiswep, entity actor, .entity weaponentity, int 
 
 	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
 
-	W_Uzi_MuzzleFlash(actor.(weaponentity));
-	actor.(weaponentity).muzzle_flash.nodrawtoclient = actor; // client side
-	W_AttachToShotorg(actor, weaponentity, actor.(weaponentity).muzzle_flash, '5 0 0');
+	if(weaponslot(weaponentity) == 0)
+	{
+		W_Uzi_MuzzleFlash(actor.exteriorweaponentity);
+		//actor.(weaponentity).muzzle_flash.nodrawtoclient = actor; // client side
+		W_Uzi_AttachToShotorg(actor, weaponentity, actor.exteriorweaponentity.muzzle_flash, '-15 0 -5');
+	}
 
 	FOREACH_CLIENT(it == actor || (IS_SPEC(it) && it.enemy == actor),
 	{
@@ -470,5 +399,4 @@ METHOD(Uzi, wr_impacteffect, void(entity thiswep, entity actor))
         sound(actor, CH_SHOTS, SND_RIC_RANDOM(), VOL_BASE, ATTN_NORM);
 }
 
-#endif
 #endif

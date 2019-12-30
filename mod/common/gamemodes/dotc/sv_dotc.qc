@@ -283,10 +283,10 @@ MUTATOR_HOOKFUNCTION(dotc, reset_map_global)
 	});
 }
 
-MUTATOR_HOOKFUNCTION(dotc, TeamBalance_CheckAllowedTeams)
+MUTATOR_HOOKFUNCTION(dotc, TeamBalance_CheckAllowedTeams, CBC_ORDER_EXCLUSIVE)
 {
 	M_ARGV(0, float) = dotc_teams;
-	return false;
+	return true;
 }
 
 MUTATOR_HOOKFUNCTION(dotc, ForbidDropCurrentWeapon)

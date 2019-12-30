@@ -18,8 +18,12 @@ vector OFFSET_CURSOR = '0 0 0';
 .int enttype; // entity type sent from server
 .int sv_entnum; // entity number sent from server
 
+float vid_conheight;
+
 int framecount;
 .float health;
+
+vector view_origin, view_forward, view_right, view_up;
 
 float sb_showscores; // engine global
 

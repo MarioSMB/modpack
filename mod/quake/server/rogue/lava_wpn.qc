@@ -36,7 +36,7 @@ void W_FireSuperLavaSpikes(entity this)
 	this.attack_finished = time + 0.2;
 	this.currentammo = this.ammo_lava_nails = this.ammo_lava_nails - 2;
 	
-	vector dir = aim(this, 1000);
+	vector dir = qc_aim(this, 1000);
 	entity newmis = launch_lava_spike(this, this.origin + '0 0 16', dir);
 	settouch(newmis, superlavaspike_touch);
 
@@ -67,7 +67,7 @@ void W_FireLavaSpikes(entity this, float ox)
 	this.attack_finished = time + 0.2;
 	this.currentammo = this.ammo_lava_nails = this.ammo_lava_nails - 1;
 	
-	vector dir = aim(this, 1000);
+	vector dir = qc_aim(this, 1000);
 	launch_lava_spike(this, this.origin + '0 0 16' + v_right * ox, dir);
 
 	this.punchangle_x = -2;

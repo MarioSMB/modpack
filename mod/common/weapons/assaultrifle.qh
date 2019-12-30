@@ -1,0 +1,112 @@
+#pragma once
+
+#ifdef GAMEQC
+MODEL(ASSAULTRIFLE_MUZZLEFLASH,           "models/flash.md3");
+MODEL(ASSAULTRIFLE_VIEW,                  W_Model("h_assaultrifle.iqm"));
+MODEL(ASSAULTRIFLE_WORLD,                 W_Model("v_assaultrifle.md3"));
+MODEL(ASSAULTRIFLE_ITEM,                  W_Model("g_assaultrifle.md3"));
+
+SOUND(ASSAULTRIFLE_FIRE, W_Sound("assaultrifle_fire"));
+#endif
+
+AUTOCVAR(g_balance_assaultrifle_burst, float, 3, "");
+AUTOCVAR(g_balance_assaultrifle_burst_ammo, float, 1, "");
+AUTOCVAR(g_balance_assaultrifle_burst_animtime, float, 0.4, "");
+AUTOCVAR(g_balance_assaultrifle_burst_damage, float, 16, "");
+AUTOCVAR(g_balance_assaultrifle_burst_refire, float, 0.1, "");
+AUTOCVAR(g_balance_assaultrifle_burst_refire2, float, 0.3, "");
+AUTOCVAR(g_balance_assaultrifle_burst_speed, float, 0, "");
+AUTOCVAR(g_balance_assaultrifle_first, float, 1, "");
+AUTOCVAR(g_balance_assaultrifle_first_ammo, float, 1, "");
+AUTOCVAR(g_balance_assaultrifle_first_damage, float, 14, "");
+AUTOCVAR(g_balance_assaultrifle_first_force, float, 3, "");
+AUTOCVAR(g_balance_assaultrifle_first_refire, float, 0.125, "");
+AUTOCVAR(g_balance_assaultrifle_first_spread, float, 0.03, "");
+AUTOCVAR(g_balance_assaultrifle_mode, float, 1, "");
+AUTOCVAR(g_balance_assaultrifle_reload_ammo, float, 30, "");
+AUTOCVAR(g_balance_assaultrifle_reload_time, float, 1.6, "");
+AUTOCVAR(g_balance_assaultrifle_solidpenetration, float, 12, "");
+AUTOCVAR(g_balance_assaultrifle_spread_add, float, 0.012, "");
+AUTOCVAR(g_balance_assaultrifle_spread_max, float, 0.05, "");
+AUTOCVAR(g_balance_assaultrifle_spread_min, float, 0.02, "");
+AUTOCVAR(g_balance_assaultrifle_sustained_ammo, float, 1, "");
+AUTOCVAR(g_balance_assaultrifle_sustained_damage, float, 12, "");
+AUTOCVAR(g_balance_assaultrifle_sustained_force, float, 3, "");
+AUTOCVAR(g_balance_assaultrifle_sustained_refire, float, 0.15, "");
+AUTOCVAR(g_balance_assaultrifle_sustained_spread, float, 0.04, "");
+AUTOCVAR(g_balance_assaultrifle_switchdelay_drop, float, 0.2, "");
+AUTOCVAR(g_balance_assaultrifle_switchdelay_raise, float, 0.2, "");
+AUTOCVAR(g_balance_assaultrifle_weaponreplace, string, "", "");
+AUTOCVAR(g_balance_assaultrifle_weaponstart, float, 0, "");
+AUTOCVAR(g_balance_assaultrifle_weaponstartoverride, float, -1, "");
+AUTOCVAR(g_balance_assaultrifle_weaponthrowable, float, 1, "");
+
+CLASS(AssaultRifle, Weapon)
+/* spawnfunc */ ATTRIB(AssaultRifle, m_canonical_spawnfunc, string, "weapon_assaultrifle");
+/* ammotype  */ ATTRIB(AssaultRifle, ammo_type, int, RES_BULLETS);
+/* impulse   */ ATTRIB(AssaultRifle, impulse, int, 3);
+/* flags     */ ATTRIB(AssaultRifle, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_FLAG_MUTATORBLOCKED);
+/* rating    */ ATTRIB(AssaultRifle, bot_pickupbasevalue, float, 7000);
+/* color     */ ATTRIB(AssaultRifle, wpcolor, vector, '1 0.9 0.6');
+/* modelname */ ATTRIB(AssaultRifle, mdl, string, "assaultrifle");
+#ifdef GAMEQC
+/* model     */ ATTRIB(AssaultRifle, m_model, Model, MDL_ASSAULTRIFLE_ITEM);
+#endif
+/* crosshair */ ATTRIB(AssaultRifle, w_crosshair, string, "gfx/crosshair61");
+/* crosshair */ ATTRIB(AssaultRifle, w_crosshair_size, float, 0.6);
+/* wepimg    */ ATTRIB(AssaultRifle, model2, string, "weaponassaultrifle");
+/* refname   */ ATTRIB(AssaultRifle, netname, string, "assaultrifle");
+/* wepname   */ ATTRIB(AssaultRifle, m_name, string, _("Assault Rifle"));
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, burst, float, NONE) \
+		P(class, prefix, burst_ammo, float, NONE) \
+		P(class, prefix, burst_animtime, float, NONE) \
+		P(class, prefix, burst_damage, float, NONE) \
+		P(class, prefix, burst_refire2, float, NONE) \
+		P(class, prefix, burst_refire, float, NONE) \
+		P(class, prefix, burst_speed, float, NONE) \
+		P(class, prefix, first, float, NONE) \
+		P(class, prefix, first_ammo, float, NONE) \
+		P(class, prefix, first_damage, float, NONE) \
+		P(class, prefix, first_force, float, NONE) \
+		P(class, prefix, first_refire, float, NONE) \
+		P(class, prefix, first_spread, float, NONE) \
+		P(class, prefix, mode, float, NONE) \
+		P(class, prefix, reload_ammo, float, NONE) \
+        P(class, prefix, reload_time, float, NONE) \
+		P(class, prefix, solidpenetration, float, NONE) \
+		P(class, prefix, spread_add, float, NONE) \
+		P(class, prefix, spread_max, float, NONE) \
+		P(class, prefix, spread_min, float, NONE) \
+		P(class, prefix, sustained_ammo, float, NONE) \
+		P(class, prefix, sustained_damage, float, NONE) \
+		P(class, prefix, sustained_force, float, NONE) \
+		P(class, prefix, sustained_refire, float, NONE) \
+		P(class, prefix, sustained_spread, float, NONE) \
+        P(class, prefix, switchdelay_drop, float, NONE) \
+        P(class, prefix, switchdelay_raise, float, NONE) \
+        P(class, prefix, weaponreplace, string,NONE) \
+        P(class, prefix, weaponstartoverride, float, NONE) \
+        P(class, prefix, weaponstart, float, NONE) \
+        P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+    W_MOD_PROPS(X, AssaultRifle, assaultrifle)
+#undef X
+
+ENDCLASS(AssaultRifle)
+REGISTER_WEAPON(ASSAULTRIFLE, assaultrifle, NEW(AssaultRifle));
+
+SPAWNFUNC_WEAPON(weapon_assaultrifle, WEP_ASSAULTRIFLE)
+
+
+MSG_INFO_NOTIF(WEAPON_ASSAULTRIFLE_MURDER_SNIPE,          1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponassaultrifle",                _("^BG%s%s^K1 was semi-automatically nailed by ^BG%s^K1's Assault Rifle%s%s"), "")
+MSG_INFO_NOTIF(WEAPON_ASSAULTRIFLE_MURDER_SPRAY,          1,  3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",       "weaponassaultrifle",                _("^BG%s%s^K1 was tactically shredded by ^BG%s^K1's Assault Rifle%s%s"), "")
+
+MSG_MULTI_NOTIF(WEAPON_ASSAULTRIFLE_MURDER_SNIPE,     1,  NULL,           INFO_WEAPON_ASSAULTRIFLE_MURDER_SNIPE,    NULL)
+MSG_MULTI_NOTIF(WEAPON_ASSAULTRIFLE_MURDER_SPRAY,     1,  NULL,           INFO_WEAPON_ASSAULTRIFLE_MURDER_SPRAY,    NULL)
+
+#ifdef SVQC
+AUTOCVAR_NOREF(g_random_items_weapon_assaultrifle_probability, float, 0, "");
+#endif

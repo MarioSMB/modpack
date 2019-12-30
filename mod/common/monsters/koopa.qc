@@ -12,8 +12,8 @@ REGISTER_DEATHTYPE(MONSTER_KOOPA,            				DEATH_SELF_MON_KOOPA,          
 
 CLASS(Koopa, Monster)
     ATTRIB(Koopa, spawnflags, int, MONSTER_TYPE_PASSIVE | MON_FLAG_CRUSH | MON_FLAG_HIDDEN);
-    ATTRIB(Koopa, m_mins, vector, '-15 -15 -32');
-    ATTRIB(Koopa, m_maxs, vector, '15 15 10');
+    ATTRIB(Koopa, m_mins, vector, '-15 -15 -15');
+    ATTRIB(Koopa, m_maxs, vector, '15 15 1');
 #ifdef GAMEQC
     ATTRIB(Koopa, m_model, Model, MDL_MON_KOOPA);
 #endif
@@ -34,14 +34,60 @@ AUTOCVAR(g_monster_koopa_damageforcescale, float, 0.35, "");
 AUTOCVAR(g_monster_koopa_attack_melee_damage, float, 50, "");
 AUTOCVAR(g_monster_koopa_attack_melee_delay, float, 0.55, "");
 AUTOCVAR(g_monster_koopa_speed_stop, float, 100, "");
-//AUTOCVAR(g_monster_koopa_speed_run, float, 220, "");
+AUTOCVAR(g_monster_koopa_speed_run, float, 350, "");
 AUTOCVAR(g_monster_koopa_speed_walk, float, 70, "");
-AUTOCVAR(g_monster_koopa_allow_jumpoff, bool, false, "");
+AUTOCVAR(g_monster_koopa_wakeuptime, float, 10, "");
+AUTOCVAR(g_monster_koopa_jumpheight, float, 350, "");
+
+.int fakedead;
+.float fakedead_time;
 
 /*
 const float koopa_anim_idle = 0;
 const float koopa_anim_walk = 1;
 */
+
+void M_Koopa_Move_2D(entity this, float mspeed, bool allow_jumpoff)
+{
+	if(game_stopped || (round_handler_IsActive() && !round_handler_IsRoundStarted()) || this.draggedby != NULL || time < game_starttime || (autocvar_g_campaign && !campaign_bots_may_start) || time < this.spawn_time)
+	{
+		this.fakedead = 1;
+		mspeed = 0;
+		if(time >= this.spawn_time)
+			setanim(this, this.anim_idle, true, false, false);
+		movelib_brake_simple(this, 0.6);
+		return;
+	}
+
+	vector forward, right, up;
+	MAKE_VECTORS(this.angles, forward, right, up);
+	vector a = CENTER_OR_VIEWOFS(this);
+	vector b = CENTER_OR_VIEWOFS(this) + forward * 32;
+
+	traceline(a, b, MOVE_NORMAL, this);
+
+	bool reverse = false;
+	if(trace_fraction != 1.0)
+		reverse = true;
+	if(trace_ent && trace_ent.iscreature && !(trace_ent.items & ITEM_Strength.m_itemid))
+		reverse = false;
+
+	if(reverse)
+	{
+		this.angles_y = anglemods(this.angles_y - 180);
+		makevectors(this.angles);
+	}
+
+	movelib_move_simple_gravity(this, forward, mspeed, 1);
+
+	if(time > this.pain_finished && time > this.attack_finished_single[0])
+	{
+		if(vdist(this.velocity, >, 10))
+			setanim(this, this.anim_walk, true, false, false);
+		else
+			setanim(this, this.anim_idle, true, false, false);
+	}
+}
 
 void M_Koopa_Touch(entity this, entity toucher)
 {
@@ -63,12 +109,28 @@ void M_Koopa_Touch(entity this, entity toucher)
 		return;
 	}
 #endif
+
+	if(this.fakedead == 1 && vdist(this.velocity, <, 100))
+	{
+		if(IS_PLAYER(toucher) && time >= this.pain_finished)
+		{
+			vector forward, right, up;
+			MAKE_VECTORS(this.angles, forward, right, up);
+			vector a = CENTER_OR_VIEWOFS(this) - forward * 100;
+			vector b = CENTER_OR_VIEWOFS(this) + forward * 100;
+			if(vlen2(a - toucher.origin) > vlen2(b - toucher.origin)) // they're infront of us, turn around!
+				this.angles_y = anglemods(this.angles_y - 180);
+			this.fakedead = 2;
+			this.attack_finished_single[0] = time + 0.55;
+		}
+		return; // no hurty while dead
+	}
 	
-	if(toucher.items & ITEM_Shield.m_itemid)
+	if((toucher.items & ITEM_Shield.m_itemid) && toucher.monsterid != this.monsterid)
+		return; // FIXME this assumes starman, which is incorrect
+	if(toucher.takedamage == DAMAGE_NO || !toucher.iscreature || (toucher.monsterid == this.monsterid && !this.fakedead))
 		return;
-	if(toucher.takedamage == DAMAGE_NO || !toucher.iscreature || toucher.monsterid == this.monsterid)
-		return;
-	if(time < this.attack_finished_single[0])
+	if(time < this.attack_finished_single[0] && (!this.fakedead || IS_PLAYER(toucher))) // hits multiple times!
 		return;
 		
 	vector vdir = normalize(toucher.origin - this.origin);
@@ -80,6 +142,28 @@ void M_Koopa_Touch(entity this, entity toucher)
 	}
 }
 
+void M_Koopa_FakeDeath(Monster thismon, entity actor)
+{
+	SetResourceExplicit(actor, RES_HEALTH, actor.max_health);
+	setmodel(actor, MDL_MON_KOOPA_DEAD);
+	setsize(actor, thismon.m_mins, thismon.m_maxs);
+	actor.spawn_time = time + 0.25; // give it a slight delay before being kickable
+	actor.spawnshieldtime = actor.spawn_time;
+	actor.fakedead = 1;
+	actor.fakedead_time = time + autocvar_g_monster_koopa_wakeuptime;
+	actor.items |= ITEM_Shield.m_itemid; // a trick to make other sidescrolling monsters not hit this
+}
+
+void M_Koopa_WakeUp(Monster thismon, entity actor)
+{
+	SetResourceExplicit(actor, RES_HEALTH, actor.max_health);
+	setmodel(actor, MDL_MON_KOOPA);
+	setsize(actor, thismon.m_mins, thismon.m_maxs);
+	actor.fakedead = 0;
+	actor.fakedead_time = 0;
+	actor.items &= ~ITEM_Shield.m_itemid;
+}
+
 spawnfunc(monster_koopa) { Monster_Spawn(this, true, MON_KOOPA.monsterid); }
 
 #endif // SVQC
@@ -87,19 +171,54 @@ spawnfunc(monster_koopa) { Monster_Spawn(this, true, MON_KOOPA.monsterid); }
 		#ifdef SVQC
 		METHOD(Koopa, mr_think, bool(Monster thismon, entity actor))
 		{
-			Monster_Move_2D(actor, autocvar_g_monster_koopa_speed_walk, autocvar_g_monster_koopa_allow_jumpoff);
+			if(actor.skin == -1)
+				actor.skin = 0;
+			if(actor.fakedead)
+				M_Koopa_Move_2D(actor, ((actor.fakedead == 2) ? autocvar_g_monster_koopa_speed_run : 0), true);
+			else
+			{
+				Monster_Move_2D(actor, autocvar_g_monster_koopa_speed_walk, actor.skin != 1);
+				if(actor.skin == 2 && IS_ONGROUND(actor))
+				{
+					UNSET_ONGROUND(actor);
+					actor.velocity_z += autocvar_g_monster_koopa_jumpheight;
+				}
+			}
+			if(actor.fakedead_time && time >= actor.fakedead_time && actor.fakedead == 1)
+				M_Koopa_WakeUp(thismon, actor);
 			return false; // false means don't run regular move logic
 		}
 		METHOD(Koopa, mr_pain, float(Monster thismon, entity actor, float damage_take, entity attacker, float deathtype))
 		{
 			actor.pain_finished = time + 0.5;
 			//setanim(actor, actor.anim_pain1, true, true, false);
+			if(actor.fakedead && deathtype == DEATH_VH_CRUSH.m_id && IS_PLAYER(attacker))
+			{
+				actor.fakedead = ((actor.fakedead == 2) ? 1 : 2);
+				if(actor.fakedead == 1)
+					actor.fakedead_time = time + autocvar_g_monster_koopa_wakeuptime; // reset the delay
+				else if(actor.fakedead == 2)
+				{
+					makevectors(actor.angles); // turn it around too
+					actor.angles_y = anglemods(actor.angles_y - 180);
+				}
+				return 0;
+			}
+			if((GetResource(actor, RES_HEALTH) - damage_take) <= 0 && deathtype != DEATH_KILL.m_id && !actor.fakedead && attacker.monsterid != actor.monsterid)
+			{
+				M_Koopa_FakeDeath(thismon, actor);
+				return 0;
+			}
 			return damage_take;
 		}
 		METHOD(Koopa, mr_death, bool(Monster thismon, entity actor))
 		{
-			//setanim(actor, actor.anim_die1, false, true, true);
-			setmodel(actor, MDL_MON_KOOPA_DEAD);
+			// TODO: this animation isn't built into the model yet!
+			setanim(actor, actor.anim_idle, false, true, true);
+			//setmodel(actor, MDL_MON_KOOPA_DEAD);
+			actor.fakedead = 0;
+			actor.fakedead_time = 0;
+			actor.items &= ~ITEM_Shield.m_itemid;
 			return true;
 		}
 		#endif
@@ -126,8 +245,13 @@ spawnfunc(monster_koopa) { Monster_Spawn(this, true, MON_KOOPA.monsterid); }
 			actor.ticrate = sys_frametime; // accuracy required
 			//actor.monster_loot = ITEM_HealthBig;
 			actor.monster_attackfunc = func_null;
-			actor.spawn_time = time + 0.55;
+			actor.spawn_time = time + 0.25;
 			actor.spawnshieldtime = actor.spawn_time;
+			actor.fakedead = 0; // make sure
+			actor.fakedead_time = 0;
+			actor.items &= ~ITEM_Shield.m_itemid;
+			if(!actor.skin)
+				actor.skin = -1; // avoid random selection
 
 			settouch(actor, M_Koopa_Touch);
 

@@ -9,7 +9,7 @@ float autocvar_crosshair_size;
 float autocvar_crosshair_alpha;
 bool autocvar_crosshair_effect_scalefade;
 float autocvar_crosshair_effect_time;
-//int autocvar_chase_active;
+int autocvar_chase_active;
 //bool autocvar_crosshair_hittest_blur;
 float autocvar__menu_alpha;
 bool autocvar_crosshair_dot;
@@ -18,6 +18,7 @@ string autocvar_crosshair_dot_color;
 float autocvar_crosshair_dot_size;
 float autocvar_crosshair_dot_alpha;
 //bool autocvar_crosshair_hittest;
+bool autocvar_crosshair_chase = true;
 
 vector wcross_origin;
 float wcross_scale_prev, wcross_alpha_prev;
@@ -47,12 +48,8 @@ vector project_3d_to_2d(vector vec)
 	vec = cs_project(vec);
 	if(cs_project_is_b0rked > 0)
 	{
-		vector vf_size = getpropertyvec(VF_SIZE);
-		float vid_width = vf_size.x;
-		float vid_height = vf_size.y;
-
-		vec.x *= autocvar_vid_conwidth / vid_width;
-		vec.y *= autocvar_vid_conheight / vid_height;
+		vec.x *= vid_conwidth / vid_width;
+		vec.y *= vid_conheight / vid_height;
 	}
 	return vec;
 }
@@ -189,13 +186,15 @@ void HUD_Crosshair(entity this)
 		// TrueAim check
 		//int shottype;
 
-		vector view_origin = getpropertyvec(VF_ORIGIN);
-		vector view_angles = getpropertyvec(VF_ANGLES);
-		makevectors(view_angles);
-		vector view_forward = v_forward;
-
 		// wcross_origin = '0.5 0 0' * vid_conwidth + '0 0.5 0' * vid_conheight;
-		wcross_origin = vec2(project_3d_to_2d(view_origin + 32768 * view_forward));
+		if(autocvar_chase_active > 0 && autocvar_crosshair_chase)
+		{
+			vector player_org = ((csqcplayer) ? csqcplayer.origin + csqcplayer.view_ofs : view_origin);
+			traceline(player_org, player_org + 32768 * view_forward, MOVE_WORLDONLY, NULL);
+			wcross_origin = vec2(project_3d_to_2d(trace_endpos));
+		}
+		else
+			wcross_origin = vec2(project_3d_to_2d(view_origin + 32768 * view_forward));
 		/*if(autocvar_crosshair_hittest)
 		{
 			vector wcross_oldorigin;

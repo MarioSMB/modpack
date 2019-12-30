@@ -10,9 +10,10 @@ STATIC_INIT(fix_weaponpriority)
     bool have_chainsaw = strhasword(curprio, "chainsaw");
     bool have_uzi = strhasword(curprio, "mac10");
     bool have_rpg = strhasword(curprio, "rpg7");
+    bool have_assaultrifle = strhasword(curprio, "assaultrifle");
 
     // to save on rebuilding, only loop through if one of these is indeed missing
-    if(!have_flak || !have_lightsabre || !have_chainsaw || !have_uzi)
+    if(!have_flak || !have_lightsabre || !have_chainsaw || !have_uzi || !have_assaultrifle)
     {
         string newprio = "";
         FOREACH_WORD(curprio, true,
@@ -23,12 +24,14 @@ STATIC_INIT(fix_weaponpriority)
                 newprio = cons(newprio, "flak");
             if(it == "blaster" && !have_lightsabre)
                 newprio = cons(newprio, "lightsabre");
-            if(it == "elector" && !have_chainsaw)
+            if(it == "electro" && !have_chainsaw)
                 newprio = cons(newprio, "chainsaw");
             if(it == "machinegun" && !have_uzi)
                 newprio = cons(newprio, "mac10");
             if(it == "devastator" && !have_rpg)
                 newprio = cons(newprio, "rpg7");
+            if(it == "machinegun" && !have_assaultrifle)
+                newprio = cons(newprio, "assaultrifle");
         });
 
         cvar_set("cl_weaponpriority", newprio);
@@ -37,12 +40,11 @@ STATIC_INIT(fix_weaponpriority)
 #endif
 
 #define W_MOD_PROPS(L, class, prefix) \
-    L(W_PROP_BEGIN, W_MOD_PROP, W_PROP_END, class, prefix) \
+    L(W_PROP_BEGIN, W_MOD_PROP, W_MOD_PROP_END, class, prefix) \
     L(W_CONFIG_BEGIN, W_CONFIG, W_CONFIG_END, class, prefix) \
     L(W_UPDATE_BEGIN, W_UPDATE, W_UPDATE_END, class, prefix) \
     L(W_NET_BEGIN, W_NET, W_NET_END, class, prefix) \
     /**/ \
-
 
     #define W_MOD_PROP(class, wepname, fld, T, m)       W_MOD_PROP_##m(class, fld, T, wepname)
     #define W_MOD_PROP_NONE(class, fld, T, wepname)     _W_MOD_PROP(class, fld, T, wepname)
@@ -51,7 +53,14 @@ STATIC_INIT(fix_weaponpriority)
     #define W_MOD_PROP_BOTH(class, fld, T, wepname) \
             W_MOD_PROP_PRI(class, fld, T, wepname) \
             W_MOD_PROP_SEC(class, fld, T, wepname)
-        #define _W_MOD_PROP(class, fld, T, wepname) \
-            /* not needed (hack) */ /*T _W_MOD_PROP_CVAR(wepname, fld);*/ \
-            ATTRIB(class, wepvar_##fld, T, _W_MOD_PROP_CVAR(wepname, fld));
-        #define _W_MOD_PROP_CVAR(wepname, fld) autocvar_g_balance_##wepname##_##fld
+	#define W_MOD_PROP_BEGIN(class)
+		#ifdef GAMEQC
+			#define _W_MOD_PROP(class, fld, T, wepname) \
+				/* not needed (hack) T _W_MOD_PROP_CVAR(wepname, fld);*/ \
+				ATTRIB(class, wepvar_##fld, T, _W_MOD_PROP_CVAR(wepname, fld));
+			#define _W_MOD_PROP_CVAR(wepname, fld) autocvar_g_balance_##wepname##_##fld
+		#else
+			#define _W_MOD_PROP(class, fld, T, wepname)
+			#define _W_MOD_PROP_CVAR(wepname, fld)
+		#endif
+	#define W_MOD_PROP_END()

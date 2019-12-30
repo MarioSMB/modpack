@@ -1,117 +1,29 @@
 //FEATURE: New weapon: Chainsaw (chops people)
 
-#ifndef IMPLEMENTATION
+#include "chainsaw.qh"
 
-#ifdef GAMEQC
-MODEL(CHAINSAW_VIEW,                     W_Model("h_chainsaw.iqm"));
-MODEL(CHAINSAW_WORLD,                    W_Model("v_chainsaw.md3"));
-MODEL(CHAINSAW_ITEM,                     W_Model("g_chainsaw.md3"));
-
-SOUND(CHAINSAW_IDLE, W_Sound("chainsaw_idle"));
-SOUND(CHAINSAW_MELEE, W_Sound("chainsaw_melee"));
-SOUND(CHAINSAW_SWING, W_Sound("chainsaw_swing"));
-
-SOUND(IMPACT_STONE, "object/impact_stone_2");
-SOUND(IMPACT_FLESH, "object/impact_flesh_2");
-SOUND(IMPACT_METAL, "object/impact_metal_2");
-
-EFFECT(0, IMPACT_STONE,           "impact_stone")
-EFFECT(0, IMPACT_FLESH,           "impact_flesh")
-EFFECT(0, IMPACT_METAL,           "impact_metal")
-#endif
-
-AUTOCVAR(g_balance_chainsaw_reload_ammo, float, 0, "");
-AUTOCVAR(g_balance_chainsaw_reload_time, float, 2, "");
-AUTOCVAR(g_balance_chainsaw_melee_ammo, float, 1, "");
-AUTOCVAR(g_balance_chainsaw_melee_animtime, float, 0.07, "");
-AUTOCVAR(g_balance_chainsaw_melee_damage, float, 20, "");
-AUTOCVAR(g_balance_chainsaw_melee_force, float, 50, "");
-AUTOCVAR(g_balance_chainsaw_melee_nonplayerdamage, float, 20, "");
-AUTOCVAR(g_balance_chainsaw_melee_range, float, 160, "");
-AUTOCVAR(g_balance_chainsaw_melee_refire, float, 0.07, "");
-AUTOCVAR(g_balance_chainsaw_swing_ammo, float, 10, "");
-AUTOCVAR(g_balance_chainsaw_swing_animtime, float, 1.15, "");
-AUTOCVAR(g_balance_chainsaw_swing_damage, float, 15, "");
-AUTOCVAR(g_balance_chainsaw_swing_force, float, 75, "");
-AUTOCVAR(g_balance_chainsaw_swing_delay, float, 0.25, "");
-AUTOCVAR(g_balance_chainsaw_swing_nonplayerdamage, float, 10, "");
-AUTOCVAR(g_balance_chainsaw_swing_range, float, 140, "");
-AUTOCVAR(g_balance_chainsaw_swing_side, float, 120, "");
-AUTOCVAR(g_balance_chainsaw_swing_up, float, 30, "");
-AUTOCVAR(g_balance_chainsaw_swing_time, float, 0.3, "");
-AUTOCVAR(g_balance_chainsaw_swing_traces, float, 10, "");
-AUTOCVAR(g_balance_chainsaw_swing_refire, float, 1.25, "");
-AUTOCVAR(g_balance_chainsaw_switchdelay_drop, float, 0.2, "");
-AUTOCVAR(g_balance_chainsaw_switchdelay_raise, float, 0.2, "");
-AUTOCVAR(g_balance_chainsaw_weaponreplace, string, "", "");
-AUTOCVAR(g_balance_chainsaw_weaponstart, float, 0, "");
-AUTOCVAR(g_balance_chainsaw_weaponstartoverride, float, -1, "");
-AUTOCVAR(g_balance_chainsaw_weaponthrowable, float, 1, "");
-
-CLASS(Chainsaw, Weapon)
-/* spawnfunc */ ATTRIB(Chainsaw, m_canonical_spawnfunc, string, "weapon_chainsaw");
-/* ammotype  */ ATTRIB(Chainsaw, ammo_type, int, RES_FUEL);
-/* impulse   */ ATTRIB(Chainsaw, impulse, int, 5);
-/* flags     */ ATTRIB(Chainsaw, spawnflags, int, WEP_FLAG_RELOADABLE | WEP_TYPE_HITSCAN | WEP_TYPE_MELEE_SEC);
-/* rating    */ ATTRIB(Chainsaw, bot_pickupbasevalue, float, 6000);
-/* color     */ ATTRIB(Chainsaw, wpcolor, vector, '0.5 0.45 0.25');
-/* modelname */ ATTRIB(Chainsaw, mdl, string, "chainsaw");
-#ifdef GAMEQC
-/* model     */ ATTRIB(Chainsaw, m_model, Model, MDL_CHAINSAW_ITEM);
-#endif
-/* crosshair */ ATTRIB(Chainsaw, w_crosshair, string, "gfx/crosshairrpc");
-/* crosshair */ ATTRIB(Chainsaw, w_crosshair_size, float, 0.75);
-/* wepimg    */ ATTRIB(Chainsaw, model2, string, "weaponrpc");
-/* refname   */ ATTRIB(Chainsaw, netname, string, "chainsaw");
-/* wepname   */ ATTRIB(Chainsaw, m_name, string, _("Chainsaw"));
-
-#define X(BEGIN, P, END, class, prefix) \
-	BEGIN(class) \
-		P(class, prefix, melee_ammo, float, NONE) \
-		P(class, prefix, melee_animtime, float, NONE) \
-		P(class, prefix, melee_damage, float, NONE) \
-		P(class, prefix, melee_force, float, NONE) \
-		P(class, prefix, melee_nonplayerdamage, float, NONE) \
-		P(class, prefix, melee_range, float, NONE) \
-		P(class, prefix, melee_refire, float, NONE) \
-		P(class, prefix, swing_ammo, float, NONE) \
-		P(class, prefix, swing_animtime, float, NONE) \
-		P(class, prefix, swing_damage, float, NONE) \
-		P(class, prefix, swing_force, float, NONE) \
-		P(class, prefix, swing_delay, float, NONE) \
-		P(class, prefix, swing_nonplayerdamage, float, NONE) \
-		P(class, prefix, swing_range, float, NONE) \
-		P(class, prefix, swing_side, float, NONE) \
-		P(class, prefix, swing_up, float, NONE) \
-		P(class, prefix, swing_time, float, NONE) \
-		P(class, prefix, swing_traces, float, NONE) \
-		P(class, prefix, swing_refire, float, NONE) \
-		P(class, prefix, reload_ammo, float, NONE) \
-        P(class, prefix, reload_time, float, NONE) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, weaponreplace, string, NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
-	END()
-    W_MOD_PROPS(X, Chainsaw, chainsaw)
-#undef X
-
-ENDCLASS(Chainsaw)
-REGISTER_WEAPON(CHAINSAW, chainsaw, NEW(Chainsaw));
-
-SPAWNFUNC_WEAPON(weapon_chainsaw, WEP_CHAINSAW)
-
-MSG_INFO_NOTIF(WEAPON_CHAINSAW_MURDER,      1, 3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponrpc",   _("^BG%s%s^K1 was sawn in half by ^BG%s^K1's Chainsaw%s%s"), "")
-MSG_INFO_NOTIF(WEAPON_CHAINSAW_SUICIDE,     1, 2, 1, "s1 s2loc spree_lost", "s1",                 "weaponrpc",   _("^BG%s^K1 played with their Chainsaw%s%s"), "")
-
-MSG_MULTI_NOTIF(WEAPON_CHAINSAW_MURDER,      1, NULL,        INFO_WEAPON_CHAINSAW_MURDER,      NULL)
-MSG_MULTI_NOTIF(WEAPON_CHAINSAW_SUICIDE,     1, NULL,        INFO_WEAPON_CHAINSAW_SUICIDE,     CENTER_DEATH_SELF_GENERIC)
-
-#endif
-#ifdef IMPLEMENTATION
 #ifdef SVQC
+AUTOCVAR(g_balance_chainsaw_runspeed, float, 1.5, "Multiplier of run speed while holding the Chainsaw");
+
+REGISTER_MUTATOR(chainsaw_physics, true);
+
+MUTATOR_HOOKFUNCTION(chainsaw_physics, PlayerPhysics_UpdateStats)
+{
+	entity player = M_ARGV(0, entity);
+	// these automatically reset, no need to worry
+
+	for(int slot = 0; slot < MAX_WEAPONSLOTS; ++slot)
+	{
+		.entity weaponentity = weaponentities[slot];
+
+		if(player.(weaponentity).m_switchweapon == WEP_CHAINSAW)
+		{
+			STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_balance_chainsaw_runspeed;
+			break; // NOTE: multiple chainsaws will allow you to run twice as fast!
+		}
+	}
+}
+
 void W_Chainsaw_Attack1(Weapon thiswep, entity actor, .entity weaponentity, int fire)
 {
 	weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR(chainsaw, melee_animtime), w_ready);
@@ -371,7 +283,7 @@ METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponenti
     if(time >= actor.(weaponentity).chainsaw_ammorot)
     {
     	actor.(weaponentity).chainsaw_ammorot = time + 1;
-    	if(GetResource(actor, thiswep.ammo_type) > 0 && !(actor.items & IT_UNLIMITED_WEAPON_AMMO))
+    	if(GetResource(actor, thiswep.ammo_type) > 0 && !(actor.items & IT_UNLIMITED_AMMO))
     		SetResource(actor, thiswep.ammo_type, GetResource(actor, thiswep.ammo_type) - 1); // we lose a bit of fuel every second
     }
 }
@@ -432,5 +344,4 @@ METHOD(Chainsaw, wr_impacteffect, void(entity thiswep, entity actor))
     }
 }
 
-#endif
 #endif

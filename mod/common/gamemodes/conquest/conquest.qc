@@ -1,8 +1,8 @@
-//FEATURE: Conquest gamemode, a more ambitious version of domination and a game of capture the spawn point
+//FEATURE: Conquest gamemode, a more ambitious version of domination in which you need to stand by control points to capture them
 
 #ifndef IMPLEMENTATION
 #ifdef SVQC
-	AUTOCVAR_NOREF(g_conquest, bool, false, "Conquest: take control points until the enemy has nowhere to spawn");
+	AUTOCVAR_NOREF(g_conquest, bool, false, "Conquest: control the points to win the game");
 #endif
 #include "conquest.qh"
 
@@ -28,18 +28,19 @@ REGISTER_MUTATOR(cq, false)
 #ifdef IMPLEMENTATION
 
 #ifdef SVQC
-AUTOCVAR_NOREF(g_cq_respawn_delay_small, float, 0, "");
-AUTOCVAR_NOREF(g_cq_respawn_delay_small_count, float, 0, "");
-AUTOCVAR_NOREF(g_cq_respawn_delay_large, float, 0, "");
-AUTOCVAR_NOREF(g_cq_respawn_delay_large_count, float, 0, "");
+AUTOCVAR_NOREF(g_cq_respawn_delay_small, float, 1, "");
+AUTOCVAR_NOREF(g_cq_respawn_delay_small_count, float, 1, "");
+AUTOCVAR_NOREF(g_cq_respawn_delay_large, float, 5, "");
+AUTOCVAR_NOREF(g_cq_respawn_delay_large_count, float, 5, "");
 AUTOCVAR_NOREF(g_cq_respawn_delay_max, float, 0, "");
 AUTOCVAR_NOREF(g_cq_respawn_waves, float, 0, "");
 AUTOCVAR_NOREF(g_cq_weapon_stay, float, 0, "");
+AUTOCVAR(g_conquest_score_rate, float, 10, "time in seconds between score evaluations");
+AUTOCVAR(g_conquest_score_amount, float, 5, "amount of points each control point gives per evaluation");
 AUTOCVAR(g_conquest_capture_distance_default, float, 512, "maximum distance from control point at which players can capture/liberate");
-AUTOCVAR(g_conquest_capture_sps, float, 100, "capture/liberation speed");
+AUTOCVAR(g_conquest_capture_speed, float, 25, "capture/liberation speed, a score that reaches the control point's health value");
+AUTOCVAR(g_conquest_capture_vehicle, bool, false, "allow capturing control points while inside a vehicle");
 AUTOCVAR(g_conquest_controlpoint_health_default, float, 500, "");
-AUTOCVAR(g_conquest_warmup, float, 5, "");
-AUTOCVAR(g_conquest_round_timelimit, float, 360, "");
 
 bool cq_ControlPoint_Send(entity this, entity to, int sf)
 {
@@ -50,9 +51,9 @@ bool cq_ControlPoint_Send(entity this, entity to, int sf)
 	{
 		WriteVector(MSG_ENTITY, this.origin);
 
-		WriteCoord(MSG_ENTITY, this.angles_y);
+		WriteAngle(MSG_ENTITY, this.angles_y);
 
-		WriteLong(MSG_ENTITY, this.cq_capdistance);
+		WriteLong(MSG_ENTITY, this.target_range);
 	}
 
 	if(sf & CQSF_STATE)
@@ -68,7 +69,7 @@ bool cq_ControlPoint_Send(entity this, entity to, int sf)
 	if(sf & CQSF_HEALTH)
 	{
 		WriteByte(MSG_ENTITY, ceil((GetResource(this, RES_HEALTH) / this.max_health) * 255));
-		WriteCoord(MSG_ENTITY, this.cq_capspeed);
+		WriteCoord(MSG_ENTITY, this.speed);
 	}
 
 	if(sf & CQSF_NAME)
@@ -84,9 +85,9 @@ void cq_ControlPoint_SwitchTeam(entity this, int newteam, int newstatus, bool sh
 {
 	// TODO: add sounds
 	// TODO: clean this up!
+	int oldstatus = this.cq_status;
 
-	if(showmessage)
-	if(newstatus == CP_NEUTRAL && this.cq_status != CP_NEUTRAL)
+	if(showmessage && newstatus == CP_NEUTRAL && this.cq_status != CP_NEUTRAL)
 	{
 		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_CONQUEST_LIBERATE), this.netname);
 		Send_Notification(NOTIF_TEAM, this, MSG_CENTER, APP_TEAM_NUM(newteam, CENTER_CONQUEST_LOST), this.netname);
@@ -118,7 +119,7 @@ void cq_ControlPoint_SwitchTeam(entity this, int newteam, int newstatus, bool sh
 			act = this;
 			this.skin = Team_TeamToIndex(this.team) + 1;
 
-			if(showmessage)
+			if(showmessage && oldstatus != newstatus)
 			{
 				Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(this.team, INFO_CONQUEST_CAPTURE), this.netname);
 				Send_Notification(NOTIF_TEAM, this, MSG_CENTER, CENTER_CONQUEST_CAPTURE_TEAM, this.netname);
@@ -136,67 +137,95 @@ void cq_ControlPoint_SwitchTeam(entity this, int newteam, int newstatus, bool sh
 		default: { LOG_DEBUG("Control point without status?"); break; }
 	}
 
-	SUB_UseTargets(this, act, NULL);
+	if(oldstatus != newstatus)
+		SUB_UseTargets(this, act, NULL);
 
 	this.SendFlags |= CQSF_STATE | CQSF_TEAM;
 }
 
+int cq_found_players[17];
 void cq_ControlPoint_Think(entity this)
 {
+	if(game_stopped || time < game_starttime)
+		return;
+
 	this.nextthink = time + CQ_CP_THINKRATE;
 
-	if(!round_handler_IsRoundStarted()) { return; }
-
 	float old_health = GetResource(this, RES_HEALTH);
+	int found_teammates = 0, found_enemies = 0;
+	for(int j = 0; j < 17; ++j)
+		cq_found_players[j] = 0;
 
-	FOREACH_CLIENT(IS_PLAYER(it),
+	entity head = WarpZone_FindRadius(this.origin, this.target_range, true);
+	while(head)
 	{
-		if(!IS_DEAD(it))
-		if(!it.vehicle)
-		if(!STAT(FROZEN, it))
+		if(IS_PLAYER(head) && !STAT(FROZEN, head) && !IS_DEAD(head) && (!head.vehicle || autocvar_g_conquest_capture_vehicle))
 		{
-			if(vdist(it.origin - this.origin, <=, this.cq_capdistance))
+			if(SAME_TEAM(head, this))
+				++found_teammates;
+			else
 			{
-				traceline(CENTER_OR_VIEWOFS(it), CENTER_OR_VIEWOFS(this), MOVE_WORLDONLY, it);
-				if(trace_fraction == 1.0)
-				{
-					if(SAME_TEAM(it, this))
-						SetResourceExplicit(this, RES_HEALTH, min(this.max_health, GetResource(this, RES_HEALTH) + this.cq_capspeed * CQ_CP_THINKRATE));
-					else
-						SetResourceExplicit(this, RES_HEALTH, max(0, GetResource(this, RES_HEALTH) - this.cq_capspeed * CQ_CP_THINKRATE));
-
-					switch(this.cq_status)
-					{
-						case CP_CAPTURED:
-						{
-							if(GetResource(this, RES_HEALTH) == 0)
-							{
-								GameRules_scoring_add(it, CONQUEST_LIBERATED, 1);
-								Send_Effect(EFFECT_EXPLOSION_BIG, findbetterlocation(this.origin, 16), '0 0 0', 1);
-								cq_ControlPoint_SwitchTeam(this, it.team, CP_NEUTRAL, true);
-							}
-
-							break;
-						}
-
-						case CP_NEUTRAL:
-						{
-							if(GetResource(this, RES_HEALTH) == 0)
-								cq_ControlPoint_SwitchTeam(this, it.team, CP_NEUTRAL, true);
-
-							if(GetResource(this, RES_HEALTH) == this.max_health)
-							{
-								GameRules_scoring_add(it, CONQUEST_CAPTURED, 1);
-								cq_ControlPoint_SwitchTeam(this, it.team, CP_CAPTURED, true);
-							}
-
-							break;
-						}
-					}
-				}
+				cq_found_players[head.team] += 1;
+				++found_enemies;
 			}
 		}
-	});
+		head = head.chain;
+	}
+
+	// nasty hack to check if there's a stalemate (too many enemy teams to capture)
+	int highest_cnt = 0;
+	bool have_stalemate = false;
+	int best_team = 0;
+	for(int j = 0; j < 17; ++j)
+	{
+		int tempcnt = cq_found_players[j];
+		if(!tempcnt)
+			continue;
+		if(tempcnt == highest_cnt)
+			have_stalemate = true;
+		else if(tempcnt > highest_cnt || !highest_cnt)
+		{
+			have_stalemate = false;
+			highest_cnt = tempcnt;
+			best_team = j;
+		}
+	}
+
+	if(found_teammates)
+		SetResourceExplicit(this, RES_HEALTH, min(this.max_health, GetResource(this, RES_HEALTH) + (this.speed * found_teammates) * CQ_CP_THINKRATE));
+	if(found_enemies && found_enemies >= found_teammates) // if they're lower, then the teammates will be able to capture (TODO)
+		SetResourceExplicit(this, RES_HEALTH, max(0, GetResource(this, RES_HEALTH) - (this.speed * found_enemies) * CQ_CP_THINKRATE));
+
+	switch(this.cq_status)
+	{
+		case CP_CAPTURED:
+		{
+			if(GetResource(this, RES_HEALTH) == 0)
+			{
+				//GameRules_scoring_add(it, CONQUEST_LIBERATED, 1);
+				Send_Effect(EFFECT_EXPLOSION_BIG, findbetterlocation(this.origin, 16), '0 0 0', 1);
+				cq_ControlPoint_SwitchTeam(this, best_team, CP_NEUTRAL, true);
+			}
+
+			break;
+		}
+		case CP_NEUTRAL:
+		{
+			if(GetResource(this, RES_HEALTH) == 0)
+				cq_ControlPoint_SwitchTeam(this, ((have_stalemate) ? 0 : best_team), CP_NEUTRAL, false);
+
+			if(have_stalemate)
+				break; // if there's a stalemate, don't allow capturing!
+
+			if(GetResource(this, RES_HEALTH) == this.max_health)
+			{
+				//TeamScore_AddToTeam(this.team, ST_SCORE, score);
+				cq_ControlPoint_SwitchTeam(this, this.team, CP_CAPTURED, true);
+			}
+
+			break;
+		}
+	}
 
 	if(GetResource(this, RES_HEALTH) != old_health)
 		this.SendFlags |= CQSF_HEALTH;
@@ -221,9 +250,10 @@ spawnfunc(conquest_controlpoint)
 
 	setsize(this, CQ_CP_MIN, CQ_CP_MAX);
 
-	if(this.netname == "")		{ this.netname = "a spawnpoint"; }
-	if(!this.cq_capdistance)	{ this.cq_capdistance = autocvar_g_conquest_capture_distance_default; }
-	if(!this.cq_capspeed) 		{ this.cq_capspeed = autocvar_g_conquest_capture_sps; }
+	if(this.netname == "")		{ this.netname = "a control point"; }
+	if(!this.target_range)		{ this.target_range = autocvar_g_conquest_capture_distance_default; }
+	if(!this.speed) 			{ this.speed = autocvar_g_conquest_capture_speed; }
+	if(!this.frags) 			{ this.frags = autocvar_g_conquest_score_amount; }
 
 	this.classname = "conquest_controlpoint";
 	this.max_health = autocvar_g_conquest_controlpoint_health_default;
@@ -239,150 +269,6 @@ spawnfunc(conquest_controlpoint)
 	Net_LinkEntity(this, false, 0, cq_ControlPoint_Send);
 	this.SendFlags = CQSF_SETUP | CQSF_STATE | CQSF_TEAM | CQSF_HEALTH | CQSF_NAME;
 	cq_ControlPoint_SwitchTeam(this, 0, this.cq_status, false);
-}
-
-// round handler
-void cq_CountAlivePlayers()
-{
-	total_players = 0;
-	for (int i = 1; i <= NUM_TEAMS; ++i)
-	{
-		Team_SetNumberOfAlivePlayers(Team_GetTeamFromIndex(i), 0);
-	}
-	FOREACH_CLIENT(IS_PLAYER(it) && Entity_HasValidTeam(it),
-	{
-		++total_players;
-		if (IS_DEAD(it))
-		{
-			continue;
-		}
-		entity team_ = Entity_GetTeam(it);
-		int num_alive = Team_GetNumberOfAlivePlayers(team_);
-		++num_alive;
-		Team_SetNumberOfAlivePlayers(team_, num_alive);
-	});
-}
-
-#define CQ_ALIVE_TEAMS_OK() (Team_GetNumberOfAliveTeams() == NumTeams(cq_teams))
-
-int cq_getWinnerTeam()
-{
-	entity tmp_entity;
-	int redcp = 0, bluecp = 0, yellowcp = 0, pinkcp = 0;
-	for(tmp_entity = cq_worldcplist; tmp_entity; tmp_entity = tmp_entity.cq_worldcpnext)
-	{
-		if(tmp_entity.cq_status == CP_CAPTURED)
-		switch(tmp_entity.team)
-		{
-			case NUM_TEAM_1: ++redcp; break;
-			case NUM_TEAM_2: ++bluecp; break;
-			case NUM_TEAM_3: ++yellowcp; break;
-			case NUM_TEAM_4: ++pinkcp; break;
-		}
-	}
-
-	int winner_team = 0;
-	if(redcp >= 1) { winner_team = NUM_TEAM_1; }
-	if(bluecp >= 1)
-	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_2;
-	}
-	if(yellowcp >= 1)
-	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_3;
-	}
-	if(pinkcp >= 1)
-	{
-		if(winner_team) return 0;
-		winner_team = NUM_TEAM_4;
-	}
-	if(winner_team)
-		return winner_team;
-	return -1; // nobody owns anything
-}
-
-bool cq_CheckWinner()
-{
-	if(round_handler_GetEndTime() > 0 && round_handler_GetEndTime() - time <= 0)
-	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_OVER);
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_OVER);
-		round_handler_Init(5, autocvar_g_conquest_warmup, autocvar_g_conquest_round_timelimit);
-		return true;
-	}
-
-	cq_CountAlivePlayers();
-
-	entity tmp_entity;
-	int redcp = 0, bluecp = 0, yellowcp = 0, pinkcp = 0, neutralcp = 0;
-	for(tmp_entity = cq_worldcplist; tmp_entity; tmp_entity = tmp_entity.cq_worldcpnext)
-	{
-		if(tmp_entity.cq_status == CP_CAPTURED)
-		switch(tmp_entity.team)
-		{
-			case NUM_TEAM_1: ++redcp; break;
-			case NUM_TEAM_2: ++bluecp; break;
-			case NUM_TEAM_3: ++yellowcp; break;
-			case NUM_TEAM_4: ++pinkcp; break;
-		}
-		else { ++neutralcp; }
-	}
-	if(((redcp > 0) + (bluecp > 0) + (yellowcp > 0) + (pinkcp > 0) + (neutralcp > 0)) > 1) // more than 1 team owns control points
-		return false;
-
-	int winner_team = cq_getWinnerTeam();
-	if(winner_team > 0)
-	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, APP_TEAM_NUM(winner_team, CENTER_ROUND_TEAM_WIN));
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, APP_TEAM_NUM(winner_team, INFO_ROUND_TEAM_WIN));
-		TeamScore_AddToTeam(winner_team, ST_CONQUEST_ROUNDS, +1);
-	}
-	else if(winner_team == -1)
-	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_ROUND_TIED);
-		Send_Notification(NOTIF_ALL, NULL, MSG_INFO, INFO_ROUND_TIED);
-	}
-
-	round_handler_Init(5, autocvar_g_conquest_warmup, autocvar_g_conquest_round_timelimit);
-	return true;
-}
-
-bool cq_CheckTeams()
-{
-	static float prev_missing_teams_mask;
-	allowed_to_spawn = true;
-	cq_CountAlivePlayers();
-	if(CQ_ALIVE_TEAMS_OK())
-	{
-		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
-		prev_missing_teams_mask = -1;
-		return true;
-	}
-	if(total_players == 0)
-	{
-		if(prev_missing_teams_mask > 0)
-			Kill_Notification(NOTIF_ALL, NULL, MSG_CENTER, CPID_MISSING_TEAMS);
-		prev_missing_teams_mask = -1;
-		return false;
-	}
-	int missing_teams_mask = 0;
-	for (int i = 1; i <= NUM_TEAMS; ++i)
-	{
-		if ((cq_teams & Team_IndexToBit(i)) &&
-			(Team_GetNumberOfAlivePlayers(Team_GetTeamFromIndex(i)) == 0))
-		{
-			missing_teams_mask |= Team_IndexToBit(i);
-		}
-	}
-	if(prev_missing_teams_mask != missing_teams_mask)
-	{
-		Send_Notification(NOTIF_ALL, NULL, MSG_CENTER, CENTER_MISSING_TEAMS, missing_teams_mask);
-		prev_missing_teams_mask = missing_teams_mask;
-	}
-	return false;
 }
 
 
@@ -541,12 +427,29 @@ MUTATOR_HOOKFUNCTION(cq, reset_map_global)
 	for(entity e = cq_worldcplist; e; e = e.cq_worldcpnext)
 		e.reset(e); // do this now as teams aren't setup in time for PlayerSpawn
 
+	// TODO: is this actually necessary?
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
 		PutClientInServer(it);
 	});
 }
 
+MUTATOR_HOOKFUNCTION(cq, SV_StartFrame)
+{
+	if(game_stopped || time < game_starttime || time < conquest_scoretimer)	// game has ended, don't keep giving points
+		return;
+
+	conquest_scoretimer = time + autocvar_g_conquest_score_rate;
+
+	for(entity e = cq_worldcplist; e; e = e.cq_worldcpnext)
+	{
+		if(!e.team)
+			continue; // neutral
+		TeamScore_AddToTeam(e.team, ST_SCORE, e.frags);
+	}
+}
+
+// TODO: remove this, the maps aren't designed for gameplay
 MUTATOR_HOOKFUNCTION(cq, OnEntityPreSpawn)
 {
 	entity ent = M_ARGV(0, entity);
@@ -587,8 +490,7 @@ MUTATOR_HOOKFUNCTION(cq, TeamBalance_CheckAllowedTeams)
 
 void cq_ScoreRules(int teams)
 {
-	GameRules_scoring(teams, SFL_SORT_PRIO_PRIMARY, 0, {
-		field_team(ST_CONQUEST_ROUNDS, "rounds", SFL_SORT_PRIO_PRIMARY);
+	GameRules_scoring(teams, 0, SFL_SORT_PRIO_PRIMARY, {
 		field(SP_CONQUEST_LIBERATED, "liberated", 0);
 		field(SP_CONQUEST_CAPTURED, "captured", 0);
 	});
@@ -603,9 +505,6 @@ void cq_DelayedInit(entity this)
 	cq_teams = BITS(bound(2, cq_teams, 4));
 
 	cq_ScoreRules(cq_teams);
-
-	round_handler_Spawn(cq_CheckTeams, cq_CheckWinner, func_null);
-	round_handler_Init(5, autocvar_g_conquest_warmup, autocvar_g_conquest_round_timelimit);
 }
 #endif
 

@@ -5,15 +5,15 @@
 MODEL(MON_GOOMBA, M_Model("goomba.dpm"));
 MODEL(MON_GOOMBA_DEAD, M_Model("goomba_dead.md3"));
 
-MSG_INFO_NOTIF(DEATH_SELF_MON_GOOMBA,             			1, 2, 1, "s1 s2loc spree_lost", "s1",    	"notify_death",         			"^BG%s^K1 was eviscerated by a Goomba%s%s", "")
+MSG_INFO_NOTIF(DEATH_SELF_MON_GOOMBA,             			1, 2, 1, "s1 s2loc spree_lost", "s1",    	"notify_death",         			"^BG%s^K1 was devoured by a Goomba%s%s", "")
 MSG_MULTI_NOTIF(DEATH_SELF_MON_GOOMBA,                		1,  NULL,           						INFO_DEATH_SELF_MON_GOOMBA,   		CENTER_DEATH_SELF_MONSTER)
 REGISTER_DEATHTYPE(MONSTER_GOOMBA,            				DEATH_SELF_MON_GOOMBA,            			DEATH_MURDER_MONSTER,           	"monster")
 #endif
 
 CLASS(Goomba, Monster)
-    ATTRIB(Goomba, spawnflags, int, MONSTER_TYPE_PASSIVE | MON_FLAG_CRUSH | MON_FLAG_HIDDEN);
+    ATTRIB(Goomba, spawnflags, int, MON_FLAG_CRUSH | MON_FLAG_HIDDEN | MONSTER_TYPE_PASSIVE);
     ATTRIB(Goomba, m_mins, vector, '-15 -15 -32');
-    ATTRIB(Goomba, m_maxs, vector, '15 15 10');
+    ATTRIB(Goomba, m_maxs, vector, '15 15 -10');
 #ifdef GAMEQC
     ATTRIB(Goomba, m_model, Model, MDL_MON_GOOMBA);
 #endif
@@ -36,7 +36,7 @@ AUTOCVAR(g_monster_goomba_attack_melee_delay, float, 0.55, "");
 AUTOCVAR(g_monster_goomba_speed_stop, float, 100, "");
 //AUTOCVAR(g_monster_goomba_speed_run, float, 220, "");
 AUTOCVAR(g_monster_goomba_speed_walk, float, 70, "");
-AUTOCVAR(g_monster_goomba_allow_jumpoff, bool, false, "");
+AUTOCVAR(g_monster_goomba_allow_jumpoff, bool, true, "");
 
 /*
 const float goomba_anim_idle = 0;
@@ -65,15 +65,11 @@ void M_Goomba_Touch(entity this, entity toucher)
 #endif
 	
 	if(toucher.items & ITEM_Shield.m_itemid)
-		return;
-	if(toucher.takedamage == DAMAGE_NO)
-		return;
-	if(!toucher.iscreature)
+		return; // FIXME this assumes starman, which is incorrect
+	if(toucher.takedamage == DAMAGE_NO || !toucher.iscreature || toucher.monsterid == this.monsterid)
 		return;
 	if(time < this.attack_finished_single[0])
 		return;
-	if(toucher.monsterid == this.monsterid)
-		return; // friendly
 		
 	vector vdir = normalize(toucher.origin - this.origin);
 	if(vdir.z <= 0.7)
@@ -88,55 +84,55 @@ spawnfunc(monster_goomba) { Monster_Spawn(this, true, MON_GOOMBA.monsterid); }
 
 #endif // SVQC
 
-		#ifdef SVQC
-		METHOD(Goomba, mr_think, bool(Monster thismon, entity actor))
-		{
-			Monster_Move_2D(actor, autocvar_g_monster_goomba_speed_walk, autocvar_g_monster_goomba_allow_jumpoff);
-			return false; // false means don't run regular move logic
-		}
-		METHOD(Goomba, mr_pain, float(Monster thismon, entity actor, float damage_take, entity attacker, float deathtype))
-		{
-			actor.pain_finished = time + 0.5;
-			//setanim(actor, actor.anim_pain1, true, true, false);
-			return damage_take;
-		}
-		METHOD(Goomba, mr_death, bool(Monster thismon, entity actor))
-		{
-			//setanim(actor, actor.anim_die1, false, true, true);
-			setmodel(actor, MDL_MON_GOOMBA_DEAD);
-			return true;
-		}
-		#endif
-		#ifdef GAMEQC
-		METHOD(Goomba, mr_anim, bool(Monster thismon, entity actor))
-		{
-			vector none = '0 0 0';
-			actor.anim_walk = animfixfps(actor, '1 1 1', none);
-			actor.anim_idle = animfixfps(actor, '0 1 1', none);
+#ifdef SVQC
+METHOD(Goomba, mr_think, bool(Monster thismon, entity actor))
+{
+	Monster_Move_2D(actor, autocvar_g_monster_goomba_speed_walk, autocvar_g_monster_goomba_allow_jumpoff);
+	return false; // false means don't run regular move logic
+}
+METHOD(Goomba, mr_pain, float(Monster thismon, entity actor, float damage_take, entity attacker, float deathtype))
+{
+	actor.pain_finished = time + 0.5;
+	//setanim(actor, actor.anim_pain1, true, true, false);
+	return damage_take;
+}
+METHOD(Goomba, mr_death, bool(Monster thismon, entity actor))
+{
+	//setanim(actor, actor.anim_die1, false, true, true);
+	setmodel(actor, MDL_MON_GOOMBA_DEAD);
+	return true;
+}
+#endif
+#ifdef GAMEQC
+METHOD(Goomba, mr_anim, bool(Monster thismon, entity actor))
+{
+	vector none = '0 0 0';
+	actor.anim_walk = animfixfps(actor, '1 1 1', none);
+	actor.anim_idle = animfixfps(actor, '0 1 1', none);
 
-			return true;
-		}
-		#endif
-		#ifdef SVQC
-		.float speed;
-		METHOD(Goomba, mr_setup, bool(Monster thismon, entity actor))
-		{
-			if(!GetResource(actor, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_goomba_health);
-			if(!actor.speed) { actor.speed = (autocvar_g_monster_goomba_speed_walk); }
-			if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_goomba_speed_walk); }
-			if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_goomba_speed_stop); }
-			if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_goomba_damageforcescale); }
+	return true;
+}
+#endif
+#ifdef SVQC
+.float speed;
+METHOD(Goomba, mr_setup, bool(Monster thismon, entity actor))
+{
+	if(!GetResource(actor, RES_HEALTH)) SetResourceExplicit(actor, RES_HEALTH, autocvar_g_monster_goomba_health);
+	if(!actor.speed) { actor.speed = (autocvar_g_monster_goomba_speed_walk); }
+	if(!actor.speed2) { actor.speed2 = (autocvar_g_monster_goomba_speed_walk); }
+	if(!actor.stopspeed) { actor.stopspeed = (autocvar_g_monster_goomba_speed_stop); }
+	if(!actor.damageforcescale) { actor.damageforcescale = (autocvar_g_monster_goomba_damageforcescale); }
 
-			actor.ticrate = sys_frametime; // accuracy required
-			//actor.monster_loot = ITEM_HealthBig;
-			actor.monster_attackfunc = func_null;
-			actor.spawn_time = time + 0.55;
-			actor.spawnshieldtime = actor.spawn_time;
+	actor.ticrate = sys_frametime; // accuracy required
+	//actor.monster_loot = ITEM_HealthBig;
+	actor.monster_attackfunc = func_null;
+	actor.spawn_time = time + 0.25;
+	actor.spawnshieldtime = actor.spawn_time;
 
-			settouch(actor, M_Goomba_Touch);
+	settouch(actor, M_Goomba_Touch);
 
-			return true;
-		}
-		#endif
+	return true;
+}
+#endif
 
 #endif

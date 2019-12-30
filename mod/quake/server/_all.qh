@@ -1,5 +1,7 @@
 #pragma once
 
+void(entity e) _makestatic_hidden = #69;
+
 int maxclients;
 
 const string STR_PLAYER = "player";

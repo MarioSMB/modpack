@@ -64,26 +64,27 @@ REGISTER_STAT(SECRETS_FOUND, int, secrets_found)
 
 noref bool autocvar_sv_gameplayfix_nogravityonground;
 noref bool autocvar_sv_gameplayfix_q2airaccelerate;
-noref bool autocvar_sv_gameplayfix_gravityunaffectedbyticrate;
 REGISTER_STAT(MOVEFLAGS, int, MOVEFLAG_VALID
                               | (autocvar_sv_gameplayfix_q2airaccelerate ? MOVEFLAG_Q2AIRACCELERATE : 0)
                               | (autocvar_sv_gameplayfix_nogravityonground ? MOVEFLAG_NOGRAVITYONGROUND : 0)
                               | (autocvar_sv_gameplayfix_gravityunaffectedbyticrate ? MOVEFLAG_GRAVITYUNAFFECTEDBYTICRATE : 0))
 
+REGISTER_STAT(TIMELIMIT, float, autocvar_timelimit)
+
+REGISTER_STAT(MOVEVARS_TICRATE, float, autocvar_sys_ticrate)
+REGISTER_STAT(MOVEVARS_TIMESCALE, float, autocvar_slowmo)
+
 #ifdef SVQC
-int autocvar_sv_gameplayfix_downtracesupportsongroundflag;
-int autocvar_sv_gameplayfix_easierwaterjump;
-int autocvar_sv_gameplayfix_stepdown;
-int autocvar_sv_gameplayfix_stepmultipletimes;
-int autocvar_sv_gameplayfix_unstickplayers;
-int autocvar_sv_gameplayfix_fixedcheckwatertransition;
-
-bool autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag;
-
-float autocvar_sv_gravity;
-float autocvar_sv_stepheight;
-float autocvar_sys_ticrate;
-float autocvar_slowmo;
+int autocvar_sv_gameplayfix_downtracesupportsongroundflag = 1;
+int autocvar_sv_gameplayfix_easierwaterjump = 1;
+int autocvar_sv_gameplayfix_stepdown = 2;
+int autocvar_sv_gameplayfix_stepmultipletimes = 1;
+int autocvar_sv_gameplayfix_unstickplayers = 1;
+int autocvar_sv_gameplayfix_fixedcheckwatertransition = 1;
+int autocvar_sv_gameplayfix_slidemoveprojectiles = 1;
+int autocvar_sv_gameplayfix_grenadebouncedownslopes = 1;
+int autocvar_sv_gameplayfix_noairborncorpse = 1;
+int autocvar_sv_gameplayfix_noairborncorpse_allowsuspendeditems = 1;
 #endif
 REGISTER_STAT(GAMEPLAYFIX_DOWNTRACEONGROUND, int, autocvar_sv_gameplayfix_downtracesupportsongroundflag)
 REGISTER_STAT(GAMEPLAYFIX_EASIERWATERJUMP, int, autocvar_sv_gameplayfix_easierwaterjump)
@@ -92,11 +93,10 @@ REGISTER_STAT(GAMEPLAYFIX_STEPMULTIPLETIMES, int, autocvar_sv_gameplayfix_stepmu
 REGISTER_STAT(GAMEPLAYFIX_UNSTICKPLAYERS, int, autocvar_sv_gameplayfix_unstickplayers)
 REGISTER_STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND, int, autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag)
 REGISTER_STAT(GAMEPLAYFIX_WATERTRANSITION, int, autocvar_sv_gameplayfix_fixedcheckwatertransition)
-
-REGISTER_STAT(TIMELIMIT, float, autocvar_timelimit)
-
-REGISTER_STAT(MOVEVARS_TICRATE, float, autocvar_sys_ticrate)
-REGISTER_STAT(MOVEVARS_TIMESCALE, float, autocvar_slowmo)
+REGISTER_STAT(GAMEPLAYFIX_SLIDEMOVEPROJECTILES, int, autocvar_sv_gameplayfix_slidemoveprojectiles)
+REGISTER_STAT(GAMEPLAYFIX_GRENADEBOUNCESLOPES, int, autocvar_sv_gameplayfix_grenadebouncedownslopes)
+REGISTER_STAT(GAMEPLAYFIX_NOAIRBORNCORPSE, int, autocvar_sv_gameplayfix_noairborncorpse)
+REGISTER_STAT(NOAIRBORNCORPSE_ALLOWSUSPENDED, int, autocvar_sv_gameplayfix_noairborncorpse_allowsuspendeditems)
 
 #ifdef SVQC
 int autocvar_sv_jumpstep;

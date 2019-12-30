@@ -41,7 +41,6 @@ entity dotc_guardian_addpart(entity this, string s_bone, Model s_model, entity e
 
 vector dotc_guardian_stepto(entity this, vector v_target)
 {
-	vector v_step, v_dir;
 	fixedmakevectors(this.angles);
 
 	vector v_dir = v_forward;

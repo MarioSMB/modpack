@@ -93,8 +93,6 @@ void M_Enforcer_Attack_Plasma(entity this)
 	vector dir = normalize((this.enemy.origin + '0 0 10') - this.origin);
 	vector org = this.origin + v_forward * 14 + '0 0 5' + v_right * -14;
 
-	makevectors(this.angles);
-
 	Send_Effect(EFFECT_ELECTRO_MUZZLEFLASH, org, dir * 1000, 1);
 
 	entity gren = spawn ();

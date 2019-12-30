@@ -8,6 +8,85 @@ void FoundTarget(entity this);
 
 //============================================================================
 
+
+/*
+=============
+VM_SV_aim
+
+Pick a vector for the player to shoot along
+vector aim(entity, missilespeed)
+=============
+*/
+vector qc_aim(entity this, float missilespeed)
+{
+	// assume failure if it returns early
+	return = v_forward;
+	// if sv_aim is so high it can't possibly accept anything, skip out early
+	if (autocvar_sv_aim >= 1)
+		return;
+
+	if(!this || wasfreed(this))
+		return; // can not use free/world entity
+
+	//speed = PRVM_G_FLOAT(OFS_PARM1);
+
+	vector start = this.origin;
+	start.z += 20;
+
+	// try sending a trace straight
+	vector dir = v_forward;
+	vector end = start + 2048 * dir;
+
+	traceline(start, end, MOVE_NORMAL, this);
+
+	if(trace_ent && trace_ent.takedamage == DAMAGE_AIM && (!teamplay || this.team <= 0 || this.team != trace_ent.team))
+	{
+		return v_forward;
+	}
+
+	// try all possible entities
+	vector bestdir = dir;
+	float dist;
+	float bestdist = autocvar_sv_aim;
+	entity bestent = NULL;
+
+	FOREACH_ENTITY_FLOAT(takedamage, DAMAGE_AIM,
+	{
+		if(it == this)
+			continue;
+		if(teamplay && this.team > 0 && this.team == it.team)
+			continue; // don't aim at teammates
+		end.x = it.origin.x + 0.5 * (it.mins.x + it.maxs.x);
+		end.y = it.origin.y + 0.5 * (it.mins.y + it.maxs.y);
+		end.z = it.origin.z + 0.5 * (it.mins.z + it.maxs.z);
+		dir = normalize(end - start);
+		dist = (dir * v_forward);
+		if(dist < bestdist)
+			continue; // too far to turn
+		traceline(start, end, MOVE_NORMAL, this);
+		if(trace_ent == it)
+		{
+			// can shoot at this one
+			bestdist = dist;
+			bestent = it;
+		}
+	});
+
+	if(bestent)
+	{
+		dir = bestent.origin - this.origin;
+		dist = (dir * v_forward);
+		end = v_forward * dist;
+		end.z = dir.z;
+		end = normalize(end);
+		return end;
+	}
+	else
+	{
+		return bestdir;
+	}
+}
+
 /*
 ============
 CanDamage

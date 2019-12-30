@@ -167,7 +167,7 @@ void HIP_FireLaser(entity this, float stat)
 	out = normalize(out);
 	vector org = this.origin +((12-ofs) * v_up) +(12*out);
 //   org = this.origin +(1*v_forward);
-	vector dir = aim(this, 1000);
+	vector dir = qc_aim(this, 1000);
 	float aofs = ofs * 0.707;
 	if(stat == 0)
 	{
@@ -681,7 +681,7 @@ void W_FireShotgun(entity this)
 	this.punchangle_x = -2;
 
 	this.currentammo = this.ammo_shells = this.ammo_shells - 1;
-	vector dir = aim(this, 100000);
+	vector dir = qc_aim(this, 100000);
 	FireBullets(this, 6, dir, '0.04 0.04 0');
 }
 
@@ -704,7 +704,7 @@ void W_FireSuperShotgun(entity this)
 	this.punchangle_x = -4;
 
 	this.currentammo = this.ammo_shells = this.ammo_shells - 2;
-	vector dir = aim(this, 100000);
+	vector dir = qc_aim(this, 100000);
 	FireBullets(this, 14, dir, '0.14 0.08 0');
 }
 
@@ -791,7 +791,7 @@ entity W_FireRocket(entity this)
 // set missile speed	
 
 	makevectors(this.v_angle);
-	missile.velocity = aim(this, 1000);
+	missile.velocity = qc_aim(this, 1000);
 	missile.velocity = missile.velocity * 1000;
 	missile.angles = vectoangles(missile.velocity);
 	
@@ -950,7 +950,7 @@ void W_FireGrenade(entity this)
 		missile.velocity = v_forward*600 + v_up * 200 + crandom()*v_right*10 + crandom()*v_up*10;
 	else
 	{
-		missile.velocity = aim(this, 10000);
+		missile.velocity = qc_aim(this, 10000);
 		missile.velocity = missile.velocity * 600;
 		missile.velocity_z = 200;
 	}
@@ -1011,7 +1011,7 @@ void W_FireSuperSpikes(entity this)
 	_sound(this, CH_WEAPON_SINGLE, "weapons/spike2.wav", 1, ATTN_NORM);
 	this.attack_finished = time + 0.2;
 	this.currentammo = this.ammo_nails = this.ammo_nails - 2;
-	vector dir = aim(this, 1000);
+	vector dir = qc_aim(this, 1000);
 	entity newmis = launch_spike(this, this.origin + '0 0 16', dir);
 	settouch(newmis, superspike_touch);
 	_setmodel(newmis, "progs/s_spike.mdl");
@@ -1037,7 +1037,7 @@ void W_FireSpikes(entity this, float ox)
 	_sound(this, CH_WEAPON_SINGLE, "weapons/rocket1i.wav", 1, ATTN_NORM);
 	this.attack_finished = time + 0.2;
 	this.currentammo = this.ammo_nails = this.ammo_nails - 1;
-	vector dir = aim(this, 1000);
+	vector dir = qc_aim(this, 1000);
 	launch_spike(this, this.origin + '0 0 16' + v_right*ox, dir);
 
 	this.punchangle_x = -2;
@@ -1168,7 +1168,7 @@ void W_FireProximityGrenade(entity this)
 		missile.velocity = v_forward * 600 + v_up * 200 + crandom() * v_right * 10 + crandom() * v_up * 10;
 	else
 	{
-		missile.velocity = aim(this, 10000);
+		missile.velocity = qc_aim(this, 10000);
 		missile.velocity = missile.velocity * 600;
 		missile.velocity_z = 200;
 	}

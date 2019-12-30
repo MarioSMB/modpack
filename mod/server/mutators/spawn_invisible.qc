@@ -1,6 +1,7 @@
 //FEATURE: Spawn Invisible mutator, to give spawning players a chance without making them completely invulnerable
 
-AUTOCVAR(g_spawn_invisible, bool, false, _("Spawn invisible instead of shielded"));
+AUTOCVAR(g_spawn_invisible, bool, false, "Spawn invisible instead of shielded");
+AUTOCVAR(g_spawn_invisible_transparency, float, 0.05, "Opacity of players when spawning");
 REGISTER_MUTATOR(si, autocvar_g_spawn_invisible);
 
 .bool si_invis_check;
@@ -13,8 +14,8 @@ MUTATOR_HOOKFUNCTION(si, PlayerPowerups)
 	{
 		if(!player.si_invis_check)
 		{
-			player.alpha = 0.1;
-			player.exteriorweaponentity.alpha = 0.1;
+			player.alpha = autocvar_g_spawn_invisible_transparency;
+			player.exteriorweaponentity.alpha = autocvar_g_spawn_invisible_transparency;
 			player.si_invis_check = true;
 		}
 	}

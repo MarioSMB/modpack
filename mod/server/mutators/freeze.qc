@@ -17,7 +17,7 @@ const int FROZEN_THAWING = 0; // player is thawing, don't take any action
 const int FROZEN_WILLRESPAWN = 1; // waiting for player to release the trigger key
 const int FROZEN_RESPAWNING = 2; // player released the key, respawn when we can
 
-.int cvar_cl_freeze;
+.bool cvar_cl_freeze;
 
 REPLICATE(cvar_cl_freeze, bool, "cl_freeze");
 

@@ -5,6 +5,18 @@ float get_model_parameters_hat_scale;
 vector get_model_parameters_hat_angles;
 
 #ifdef SVQC
+.string cvar_cl_hat;
+.bool cvar_cl_nohats;
+#elif defined(CSQC)
+string cvar_cl_hat;
+bool cvar_cl_nohats;
+#endif
+#ifdef GAMEQC
+REPLICATE(cvar_cl_hat, string, "cl_magical_hax");
+REPLICATE(cvar_cl_nohats, bool, "cl_nohats");
+#endif
+
+#ifdef SVQC
 void hats_Precache(string pattern);
 
 AUTOCVAR(g_hats, bool, false, "Allow clients to use hats");
@@ -22,9 +34,10 @@ REGISTER_MUTATOR(hats, autocvar_g_hats && !cvar("g_overkill"))
 }
 
 .entity hatentity;
-.string cvar_cl_hat;
-.bool cvar_cl_nohats;
 .string hatname; // only update when the player spawns
+
+//ATTRIB(Client, cvar_cl_hat, string, this.cvar_cl_hat);
+//ATTRIB(Client, cvar_cl_nohats, bool, this.cvar_cl_nohats);
 
 void hats_Precache(string pattern)
 {
@@ -166,12 +179,6 @@ bool hats_Customize(entity this, entity client)
 	if(CS(client).cvar_cl_nohats) { return false; }
 	return true;
 }
-
-REPLICATE(cvar_cl_hat, string, "cl_magical_hax");
-REPLICATE(cvar_cl_nohats, bool, "cl_nohats");
-
-//ATTRIB(Client, cvar_cl_hat, string, this.cvar_cl_hat);
-//ATTRIB(Client, cvar_cl_nohats, bool, this.cvar_cl_nohats);
 
 void hats_SpawnHat(entity this)
 {

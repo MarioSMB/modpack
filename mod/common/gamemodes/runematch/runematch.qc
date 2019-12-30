@@ -133,9 +133,10 @@ void RuneCarriedThink(entity this)
 
 	vector ang = vec2(0, rnum * (360 / rcount) + (time % 360) * 45);
 
-	makevectors(ang);
+	vector forward, right, up;
+	MAKE_VECTORS(ang, forward, right, up);
 
-	setorigin(this, v_forward * 32);
+	setorigin(this, forward * 32);
 }
 
 void rune_unmark_spot(entity e)
@@ -205,8 +206,9 @@ bool rune_spawn_somewhere(entity this)
 			Send_Effect(EFFECT_ELECTRO_BALLEXPLODE, oldloc, '0 0 0', 1);
 			Send_Effect(EFFECT_ELECTRO_BALLEXPLODE, this.origin, '0 0 0', 1);
 			// great
-			makevectors(this.angles),
-			this.velocity = v_forward * 250;
+			vector forward, right, up;
+			MAKE_VECTORS(this.angles, forward, right, up);
+			this.velocity = forward * 250;
 			this.angles = '0 0 0';
 			UNSET_ONGROUND(this);
 			return true;
