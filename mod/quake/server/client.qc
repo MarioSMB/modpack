@@ -817,6 +817,7 @@ void PutClientInServer(entity this)
 	this.wetsuit_finished = 0;
 	this.empathy_finished = 0;
 	this.gravity = 1.0;
+	this.gorging = false;
 
 	// rogue fields
 	this.shield_finished = 0;

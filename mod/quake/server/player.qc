@@ -809,7 +809,7 @@ void ThrowGib(entity this, string gibname, float dm)
 void HeadThink(entity this)
 {
    	this.nextthink = -1;
-   	if(world.worldtype != 2)
+   	if(world.worldtype != 2 && this.gorging)
 	{
 	  	if(random() < 0.1)
 		 	_sound(this, 6, "misc/flys.wav", 0.7, ATTN_STATIC);
