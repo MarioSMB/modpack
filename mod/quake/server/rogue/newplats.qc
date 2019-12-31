@@ -471,10 +471,10 @@ spawnfunc(func_new_plat)
 
 	if(this.sounds == 2)
 	{
-		precache_sound ("plats/medplat1.wav");
-		precache_sound ("plats/medplat2.wav");
-		this.noise = "plats/medplat1.wav";
-		this.noise1 = "plats/medplat2.wav";
+		precache_sound ("plats/quake_medplat1.wav");
+		precache_sound ("plats/quake_medplat2.wav");
+		this.noise = "plats/quake_medplat1.wav";
+		this.noise1 = "plats/quake_medplat2.wav";
 	}
 
 	this.mangle = this.angles;

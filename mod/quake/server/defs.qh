@@ -1,5 +1,7 @@
 #pragma once
 
+const string QUAKE_TALKSOUND = "misc/quake_talk.wav";
+
 .bool damagedbycontents;
 
 int intermission_running;

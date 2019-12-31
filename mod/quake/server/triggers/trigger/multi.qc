@@ -114,8 +114,8 @@ spawnfunc(trigger_multiple)
 	}
 	else if(this.sounds == 2)
 	{
-		precache_sound("misc/talk.wav");
-		this.noise = "misc/talk.wav";
+		precache_sound(QUAKE_TALKSOUND);
+		this.noise = QUAKE_TALKSOUND;
 	}
 	else if(this.sounds == 3)
 	{

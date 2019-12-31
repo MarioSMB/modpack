@@ -80,7 +80,7 @@ PRECACHE(Junk)
 	precache_sound("player_katria/gasp2.wav");		// taking breath
 	precache_sound("player_katria/h2odeath.wav");		// drowning death
 
-	precache_sound("misc/talk.wav");			// talk
+	precache_sound(QUAKE_TALKSOUND);			// talk
 	precache_sound("player/teledth1.wav");		// telefrag
 	precache_sound("weapons/lock4.wav");		// ammo pick up
 	precache_sound("weapons/pkup.wav");		// weapon up
@@ -136,7 +136,7 @@ PRECACHE(Junk)
 	precache_sound("player/slimbrn2.wav");		// player enter slime
 	precache_sound("player/inh2o.wav");		// player enter water
 	precache_sound("player/inlava.wav");		// player enter lava
-	precache_sound("misc/outwater.wav");		// leaving water sound
+	precache_sound("misc/quake_outwater.wav");		// leaving water sound
 
 	precache_sound("player/lburn1.wav");		// lava burn
 	precache_sound("player/lburn2.wav");		// lava burn
@@ -1020,7 +1020,7 @@ void CreatureFrame_Liquids(entity this)
 		{
 			// play leave water sound
 			if(IS_PLAYER(this))
-				_sound(this, CH_PLAYER, "misc/outwater.wav", 1, ATTN_NORM);
+				_sound(this, CH_PLAYER, "misc/quake_outwater.wav", 1, ATTN_NORM);
 			this.flags &= ~FL_INWATER;
 			this.dmgtime = 0;
 		}

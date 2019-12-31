@@ -185,7 +185,7 @@ void door_touch(entity this, entity toucher)
 	if(this.owner.message != "")
 	{
 		centerprint(toucher, this.owner.message);
-		_sound(toucher, CH_TRIGGER_SINGLE, "misc/talk.wav", 1, ATTN_NORM);
+		_sound(toucher, CH_TRIGGER_SINGLE, QUAKE_TALKSOUND, 1, ATTN_NORM);
 	}
 	
 // key door stuff

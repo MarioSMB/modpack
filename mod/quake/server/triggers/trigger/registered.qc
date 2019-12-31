@@ -19,7 +19,7 @@ void trigger_onlyregistered_touch(entity this, entity toucher)
 		if(this.message != "")
 		{
 			centerprint(toucher, this.message);
-			_sound(toucher, CH_PLAYER, "misc/talk.wav", 1, ATTN_NORM);
+			_sound(toucher, CH_PLAYER, QUAKE_TALKSOUND, 1, ATTN_NORM);
 		}
 	}
 }
@@ -29,7 +29,7 @@ Only fires if playing the registered version, otherwise prints the message
 */
 spawnfunc(trigger_onlyregistered)
 {
-	precache_sound("misc/talk.wav");
+	precache_sound(QUAKE_TALKSOUND);
 	InitTrigger(this);
 	settouch(this, trigger_onlyregistered_touch);
 }
