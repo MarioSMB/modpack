@@ -265,7 +265,8 @@ string Sbar_PickItem(int frm)
 
 string Sbar_PickNum(bool col, string frm)
 {
-	return sprintf("gfx/quake/%snum_%s", ((col) ? "a" : ""), frm);
+	string with_color = ((col) ? "a" : "");
+	return strcat("gfx/quake/", with_color, "num_", frm);
 }
 
 vector sbar;
@@ -488,16 +489,16 @@ void Sbar_MiniDeathmatchOverlay(vector thepos)
 		return;
 	// adjust the given dy if sbar_miniscoreboard_size doesn't indicate default (< 0)
 	if(autocvar_sbar_miniscoreboard_size > 0)
-		thepos.y = (autocvar_vid_conheight - autocvar_sbar_miniscoreboard_size * 8);
+		thepos.y = (vid_conheight - autocvar_sbar_miniscoreboard_size * 8);
 
 	// scores
 	Sbar_SortFrags();
 
 	// decide where to print
-	int numlines = (autocvar_vid_conheight - thepos.y + 7) / 8;
+	int numlines = (vid_conheight - thepos.y + 7) / 8;
 
 	// give up if there isn't room
-	if(thepos.x >= autocvar_vid_conwidth || thepos.y >= autocvar_vid_conheight || numlines < 1)
+	if(thepos.x >= vid_conwidth || thepos.y >= vid_conheight || numlines < 1)
 		return;
 
 	//find us
@@ -522,7 +523,7 @@ void Sbar_MiniDeathmatchOverlay(vector thepos)
 		thepos.y -= 8; // text size (b0rked)
 	}
 
-	for(; found < range_end && thepos.y < autocvar_vid_conheight; found++)
+	for(; found < range_end && thepos.y < vid_conheight; found++)
 	{
 		thepos.y += Sbar_PrintScoreboardItem(fragsort[found], thepos);
 	}
@@ -532,7 +533,7 @@ void Sbar_Score(int margin)
 {
 	vector sbar_save = sbar;
 
-	sbar.y = (autocvar_vid_conheight - (32 + 12));
+	sbar.y = (vid_conheight - (32 + 12));
 	sbar.x -= margin;
 
 	int me = player_localnum; // was -1
@@ -644,18 +645,18 @@ void Sbar_DeathmatchOverlay()
 	Sbar_SortFrags();
 
 	// 16 characters until name, then we assume 25 character names (they can be longer but usually aren't)
-	float xmin = (autocvar_vid_conwidth - (16 + 25) * 8 * SBAR_MAXWIDTH) / 2; // TODO
-	//float xmax = autocvar_vid_conwidth - xmin;
+	float xmin = (vid_conwidth - (16 + 25) * 8 * SBAR_MAXWIDTH) / 2; // TODO
+	//float xmax = vid_conwidth - xmin;
 
 	vector pz = drawgetimagesize("gfx/quake/ranking");
-	drawpic(vec2((autocvar_vid_conwidth - pz.x) / 2, 8), "gfx/quake/ranking", pz, '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(vec2((vid_conwidth - pz.x) / 2, 8), "gfx/quake/ranking", pz, '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 
 	// draw the text
 	int dy = 40;
 	drawstring(vec2(xmin, dy), "ping pl% frags  name", '8 8 0', '1 1 1', autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 	dy += 8;
 
-	for(int j = 0; j < scoreboardlines && dy < autocvar_vid_conheight; j++)
+	for(int j = 0; j < scoreboardlines && dy < vid_conheight; j++)
 		dy += Sbar_PrintScoreboardItem(fragsort[j], vec2(xmin, dy));
 }
 
@@ -681,8 +682,8 @@ void Sbar_IntermissionOverlay()
 		return;
 	}
 
-	sbar.x = (autocvar_vid_conwidth - 320) >> 1;
-	sbar.y = (autocvar_vid_conheight - 200) >> 1;
+	sbar.x = (vid_conwidth - 320) >> 1;
+	sbar.y = (vid_conheight - 200) >> 1;
 
 	drawpic(vec2(sbar.x + 64, sbar.y + 24), "gfx/quake/complete", drawgetimagesize("gfx/quake/complete"), '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 	drawpic(vec2(sbar.x, sbar.y + 56), "gfx/quake/inter", drawgetimagesize("gfx/quake/inter"), '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
@@ -726,7 +727,7 @@ Sbar_FinaleOverlay
 void Sbar_FinaleOverlay()
 {
 	vector pz = drawgetimagesize("gfx/quake/finale");
-	drawpic(vec2((autocvar_vid_conwidth - pz.x) / 2, 16), "gfx/quake/finale", pz, '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
+	drawpic(vec2((vid_conwidth - pz.x) / 2, 16), "gfx/quake/finale", pz, '1 1 1', 1 * autocvar_sbar_alpha_fg, DRAWFLAG_NORMAL);
 }
 
 int HIP_GetWeaponBit(int numb)
@@ -1035,8 +1036,8 @@ void Sbar_Draw()
 			Sbar_FinaleOverlay();
 		else // Quake
 		{
-			sbar.x = (autocvar_vid_conwidth - 320)/2;
-			sbar.y = autocvar_vid_conheight - SBAR_HEIGHT;
+			sbar.x = (vid_conwidth - 320)/2;
+			sbar.y = vid_conheight - SBAR_HEIGHT;
 			sbar.z = 0;
 
 			if(sb_lines > 24)
@@ -1113,7 +1114,7 @@ void Sbar_Draw()
 				// LordHavoc: changed to draw the deathmatch overlays in any multiplayer mode
 				if(maxclients > 1 || !coop)
 				{
-					Sbar_MiniDeathmatchOverlay(vec2(sbar.x + 324, autocvar_vid_conheight - 8 * 8));
+					Sbar_MiniDeathmatchOverlay(vec2(sbar.x + 324, vid_conheight - 8 * 8));
 					Sbar_Score(24);
 				}
 			}
