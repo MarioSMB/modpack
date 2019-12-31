@@ -14,3 +14,4 @@
 #include "view.qc"
 #include "crosshair.qc"
 #include "sbar.qc"
+#include "centerprint.qc"

@@ -1,3 +1,5 @@
+void HUD_CenterPrint ();
+
 float drawtime;
 float drawframetime;
 
@@ -102,6 +104,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	++framecount;
 
+	drawfontscale = '1 1 0';
+
 	stats_get();
 
 	vf_size = getpropertyvec(VF_SIZE);
@@ -162,6 +166,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	HUD_Contents();
 
 	Sbar_Draw();
+	HUD_CenterPrint();
 	HUD_Crosshair(this);
 
 	// we must do this check AFTER a frame was rendered, or it won't work

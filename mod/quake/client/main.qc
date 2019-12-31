@@ -180,6 +180,14 @@ void CSQC_Ent_Remove(entity this)
 	delete(this);
 }
 
+void centerprint_hud(string strMessage);
+// CSQC_Parse_CenterPrint : Provides the centerprint_hud string in the first parameter that the server provided.
+void CSQC_Parse_CenterPrint(string strMessage)
+{
+	if (autocvar_developer_csqcentities) LOG_INFOF("CSQC_Parse_CenterPrint(\"%s\")", strMessage);
+	centerprint_hud(strMessage);
+}
+
 // CSQC_Parse_TempEntity : Handles all temporary entity network data in the CSQC layer.
 // You must ALWAYS first acquire the temporary ID, which is sent as a byte.
 // Return value should be 1 if CSQC handled the temporary entity, otherwise return 0 to have the engine process the event.
