@@ -262,7 +262,7 @@ void HIP_LightningThink(entity this)
 		entity head = findradius(this.owner.origin, this.distance);
 		while(head)
 		{
-			if(!(head.flags & FL_MONSTER) && (IS_MONSTER(head) || IS_CLIENT(head)))
+			if(!(head.flags & FL_NOTARGET) && (IS_MONSTER(head) || IS_CLIENT(head)))
 			{
 //            if(visible(head) &&(head!=this.owner.owner) &&(head.health>0))
 				if((visible(this, head)) &&(head!=this.owner.owner) &&(head.health>0))
