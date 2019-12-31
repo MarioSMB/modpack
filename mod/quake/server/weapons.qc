@@ -1038,7 +1038,8 @@ void W_FireSpikes(entity this, float ox)
 	this.attack_finished = time + 0.2;
 	this.currentammo = this.ammo_nails = this.ammo_nails - 1;
 	vector dir = qc_aim(this, 1000);
-	launch_spike(this, this.origin + '0 0 16' + v_right*ox, dir);
+	// NOTE: position fix by Seven and Sajt applied here
+	launch_spike(this, this.origin + this.view_ofs + v_up * -8 + v_right * ox, dir);
 
 	this.punchangle_x = -2;
 }
