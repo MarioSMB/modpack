@@ -43,6 +43,7 @@ void spawn_use(entity this, entity actor, entity trigger)
 	{
 		spawnentity.charmer = actor;
 		spawnentity.charmed = 1;
+		spawnentity.health = max(spawnentity.health, 1000);
 	}
 //   if(spawnentity.think)
 //      {
