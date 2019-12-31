@@ -447,10 +447,16 @@ void launch_plasma(entity this, vector org, vector dir)
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
 	missile.solid = SOLID_BBOX;
 	
-// set missile speed	
-	missile.velocity = dir * 0.01;
+// set missile speed
+//ooppee new code... it was that damn 0.01. I changed it to 600 to match the
+//enforecers laser speed (as they are basically the same speed) and it worked?	
+	missile.velocity = dir * 600;
 	missile.avelocity = '300 300 300';
 	missile.angles = vectoangles(missile.velocity);
+//ooppee old code below	
+	//missile.velocity = dir * 0.01;
+	//missile.avelocity = '300 300 300';
+	//missile.angles = vectoangles(missile.velocity);
 	settouch(missile, PlasmaTouch);
 	
 	_setmodel(missile, "progs/plasma.mdl");
@@ -491,5 +497,6 @@ void W_FirePlasma(entity this)
 
 	makevectors(this.v_angle);
 	vector dir = qc_aim(this, 1000);
-	launch_plasma(this, this.origin + v_forward*24 + '0 0 16', dir);
+	//launch_plasma(this, this.origin + v_forward*24 + '0 0 16', dir);//seven's postion fix -ooppee edit out
+	launch_plasma(this, this.origin + v_forward * 24 + this.view_ofs + v_up * -10 , dir); //seven's fix applied
 }

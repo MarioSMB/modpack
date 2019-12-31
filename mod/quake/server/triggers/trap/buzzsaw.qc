@@ -116,7 +116,10 @@ spawnfunc(buzzsaw)
 
 	this.takedamage = DAMAGE_NO;
 	this.solid = SOLID_TRIGGER;
-	set_movetype(this, MOVETYPE_FLY);
+	if(this.target == "grr")
+		set_movetype(this, MOVETYPE_FLY);
+	else
+		set_movetype(this, MOVETYPE_STEP);
 
 	if(this.angles_y == 0 || this.angles_y == 180)
 		setsize(this, '-18 0 -18', '18 0 18');

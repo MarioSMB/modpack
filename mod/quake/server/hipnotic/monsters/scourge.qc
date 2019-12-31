@@ -211,7 +211,7 @@ void ScourgeTriggerThink(entity this);
 void ScourgeTriggerTouch(entity this, entity toucher);
 void scourge_think(entity this)
 {
-	if(!this.state)
+	if(!this.state && this.health > 0)
 	{
 		entity trig = spawn();
 		trig.angles = '0 0 0';
@@ -438,7 +438,10 @@ void scourge_die(entity this, entity attacker)
 	// check for gib
 	// stop sound
 	if(this.lastvictim)
+	{
 		delete(this.lastvictim);
+		this.lastvictim = NULL;
+	}
 	this.spawnsilent = 0;
 	scourge_think(this);
 	if(this.health < -35)

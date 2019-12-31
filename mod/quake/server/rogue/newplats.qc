@@ -11,7 +11,7 @@ const int START_AT_TOP 	= BIT(3);
 const int PLAT2 		= BIT(4);
 const int PLAT2_BOTTOM 	= BIT(5);
 
-.float ELV_BUTN_DIR;
+.float ELV_BUTN_DIR;	// was   = 0
 
 .float plat2Called;
 .float plat2LastMove;

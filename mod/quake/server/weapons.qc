@@ -1496,6 +1496,7 @@ void player_nail1(entity this);
 void player_light1(entity this);
 void player_rocket1(entity this);
 void player_lava_nail1(entity this);
+void player_plasma1(entity this); //ooppee addon
 //ZOID--
 void player_grapple1(entity this);
 void player_grapple3(entity this);
@@ -1508,6 +1509,7 @@ void player_mjolnir1(entity this);
 
 void W_FireMultiGrenade(entity this);
 void W_FireMultiRocket(entity this);
+void W_FirePlasma(entity this); //ooppee addon
 
 void RuneApplyBlackNoise(entity who);
 float RuneApplyHell(float tvalue, entity who);
@@ -1592,8 +1594,11 @@ void W_Attack(entity this)
 		{
 			// player_light1 determines choice of W_FireLightning 
 			//      or W_FirePlasma, but same lighting and frames...
-			this.attack_finished = time + RuneApplyHell(1.0, this);
-			player_light1(this);
+			//this.attack_finished = time + RuneApplyHell(1.0, this);//ooppee edited line out
+			//player_light1(this);//ooppee edited line out
+			player_plasma1(this); //ooppee added
+			W_FirePlasma(this); //ooppee added
+			this.attack_finished = time + RuneApplyHell(1.0, this); //ooppee added (same as above code but needs to be executed AFTER)
 			break;
 		}
 		case WEP_NAILGUN:

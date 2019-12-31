@@ -364,7 +364,7 @@ void player_nail1(entity this)
 	if(this.weaponframe == 9)
 		this.weaponframe = 1;
 	SuperDamageSound(this);
-	W_FireSpikes(this, 4);
+	W_FireSpikes(this, 3);
 	this.attack_finished = time + 0.2;
 }
 void player_nail2(entity this)
@@ -379,7 +379,7 @@ void player_nail2(entity this)
 	if(this.weaponframe == 9)
 		this.weaponframe = 1;
 	SuperDamageSound(this);
-	W_FireSpikes(this, -4);
+	W_FireSpikes(this, -3);
 	this.attack_finished = time + 0.2;
 }
 
@@ -403,7 +403,7 @@ void player_lava_nail1(entity this)
 	if(this.weaponframe == 9)
 		this.weaponframe = 1;
 	SuperDamageSound(this);
-	W_FireLavaSpikes(this, 4);
+	W_FireLavaSpikes(this, 3);
 	this.attack_finished = time + 0.2;
 }
 void player_lava_nail2(entity this)
@@ -423,7 +423,7 @@ void player_lava_nail2(entity this)
 }
 
 //============================================================================
-void W_FirePlasma(entity this);
+//ooppee - the entire player_light1 had to be reverted back to id1 code so replace the old player_light1 and player_light2 code with this, I deleted the old code.
 
 void player_light2(entity this);
 void player_light1(entity this)
@@ -438,17 +438,17 @@ void player_light1(entity this)
 	if(this.weaponframe == 5)
 		this.weaponframe = 1;
 	SuperDamageSound(this);
-	if(this.weapon == WEP_PLASMA_GUN)
-	{
-		W_FirePlasma(this);
-		player_run(this);
-		return;
-	}
-	else
-	{
+	//if(this.weapon == WEP_PLASMA_GUN)
+	//{
+		//W_FirePlasma(this);
+		//player_run(this);
+		//return;
+	//}
+	//else
+	//{
 		W_FireLightning(this);
 		this.attack_finished = time + 0.2;
-	}
+	//}
 }
 void player_light2(entity this)
 {
@@ -462,13 +462,27 @@ void player_light2(entity this)
 	if(this.weaponframe == 5)
 		this.weaponframe = 1;
 	SuperDamageSound(this);
-	if(this.weapon != WEP_PLASMA_GUN)
-	{
+	//if(this.weapon != WEP_PLASMA_GUN)
+	//{
 		W_FireLightning(this);
 		this.attack_finished = time + 0.2;
-	}
+	//}
 }
+//ooppee end
+//ooppee the new plasma code it's a whole new addition. This gives the first person weapon a animation. It does however change the Thirdperson (Player model) animation.
+//it previously used the Shaft/Lightning Guns animation. That caused issues due to how short. So I gave it the RPG player model animation. More suiting after all you are
+//launching a fucking energy ball of death lol
+//A HUGE thanks to the guys at inside3d.com forums for guiding me in the right direction to figure this out!
+void W_FirePlasma(entity this);
 
+void player_plasma6(entity this) { set_animofs(this, anim_player_rockatt1, 6, player_run); this.weaponframe = 5; } //ooppee uses the rocket fire animation for thirdperson, it's 6 frames though, not 5 so had to dupe it.
+void player_plasma5(entity this) { set_animofs(this, anim_player_rockatt1, 5, player_plasma6); this.weaponframe = 5; }
+void player_plasma4(entity this) { set_animofs(this, anim_player_rockatt1, 4, player_plasma5); this.weaponframe = 4; }
+void player_plasma3(entity this) { set_animofs(this, anim_player_rockatt1, 3, player_plasma4); this.weaponframe = 3; }
+void player_plasma2(entity this) { set_animofs(this, anim_player_rockatt1, 2, player_plasma3); this.weaponframe = 2; }
+void player_plasma1(entity this) { set_animofs(this, anim_player_rockatt1, 1, player_plasma2); this.weaponframe = 1; this.effects |= EF_MUZZLEFLASH; }
+
+//ooppee end
 //============================================================================
 
 
