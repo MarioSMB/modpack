@@ -428,7 +428,6 @@ spawnfunc(monster_knight)
 			return;
 		}
 
-		this.use = knight_pause;
 		this.th_stand = knight_pause1;
 		this.th_walk = knight_pause1;
 		this.th_run = knight_pause1;
@@ -444,4 +443,7 @@ spawnfunc(monster_knight)
 	}
 	
 	monster_start(this, 0);
+
+	if(MP_ROGUE && (this.spawnflags & 2))
+		this.use = knight_pause; // do this AFTER monster_start, so .use isn't overridden!
 }

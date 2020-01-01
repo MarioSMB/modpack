@@ -671,4 +671,7 @@ spawnfunc(monster_hell_knight)
 	this.deathmessage = hknight_deathmessage;
 
 	monster_start(this, 0);
+
+	if(MP_ROGUE && (this.spawnflags & 2))
+		this.use = hknight_pause; // do this AFTER monster_start, so .use isn't overridden!
 }
