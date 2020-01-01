@@ -230,21 +230,21 @@ void scourge_think(entity this)
 		this.state = 1;
 	}
 	if((this.spawnsilent == 0) && (this.spawnmulti == 1))
-		_sound(this, CH_PLAYER, "misc/null.wav", 1, ATTN_IDLE);
+		_sound(this, CH_PLAYER_SINGLE, "misc/null.wav", 1, ATTEN_IDLE);
 	else if((this.spawnsilent == 1) && (this.spawnmulti == 0))
-		_sound(this, CH_PLAYER, "scourge/walk.wav", 1, ATTN_IDLE);
+		_sound(this, CH_PLAYER_SINGLE, "scourge/walk.wav", 1, ATTEN_IDLE);
 
 	this.spawnmulti = this.spawnsilent;
 }
 
 void ai_right(entity this, float dist)
 {
-	walkmove(this, (this.angles_y + 90), dist);
+	t_walkmove(this, (this.angles_y + 90), dist);
 }
 
 void ai_left(entity this, float dist)
 {
-	walkmove(this, (this.angles_y + 270), dist);
+	t_walkmove(this, (this.angles_y + 270), dist);
 }
 //============================================================================
 
@@ -273,7 +273,7 @@ void scourge_walk1(entity this)
 {
 	set_animofs(this, anim_scourge_walk, 1, scourge_walk2);
 	if(random() < 0.1)
-		_sound(this, CH_VOICE, "scourge/idle.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "scourge/idle.wav", 1, ATTEN_IDLE);
 	this.spawnsilent = 1;
 	scourge_think(this);
 	ai_walk(this, 8);
@@ -289,7 +289,7 @@ void scourge_run1(entity this)
 {
 	set_animofs(this, anim_scourge_walk, 1, scourge_run2);
 	if(random() < 0.1)
-		_sound(this, CH_VOICE, "scourge/idle.wav", 1, ATTN_IDLE);
+		_sound(this, CH_VOICE, "scourge/idle.wav", 1, ATTEN_IDLE);
 	this.spawnsilent = 1;
 	scourge_think(this);
 	ai_run(this, 18);
