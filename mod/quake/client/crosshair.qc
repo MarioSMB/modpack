@@ -9,7 +9,6 @@ float autocvar_crosshair_size;
 float autocvar_crosshair_alpha;
 bool autocvar_crosshair_effect_scalefade;
 float autocvar_crosshair_effect_time;
-int autocvar_chase_active;
 //bool autocvar_crosshair_hittest_blur;
 float autocvar__menu_alpha;
 bool autocvar_crosshair_dot;

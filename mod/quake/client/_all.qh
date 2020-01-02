@@ -4,6 +4,10 @@ float serverprevtime, serverdeltatime;
 
 float ticrate;
 
+float drawtime;
+
+.bool csqcmodel_isdead; // used by shownames and miscfunctions (entcs_IsDead) to know when a player is dead
+
 vector mousepos;
 
 float completed_time;
@@ -16,6 +20,8 @@ vector OFFSET_CURSOR = '0 0 0';
 .int		renderflags;
 
 .void(entity) entremove;
+
+int autocvar_chase_active;
 
 .int enttype; // entity type sent from server
 .int sv_entnum; // entity number sent from server

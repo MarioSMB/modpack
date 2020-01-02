@@ -1,6 +1,5 @@
 void HUD_CenterPrint ();
 
-float drawtime;
 float drawframetime;
 
 int cs_project_is_b0rked;
