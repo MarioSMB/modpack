@@ -234,6 +234,7 @@ void SendCDTrack(entity to, int numb)
 	stuffcmd(to, strcat("cd loop ", getcdtrack(numb), "\n"));
 }
 
+void server_reset();
 void ExitIntermission()
 {
 // skip any text in deathmatch
