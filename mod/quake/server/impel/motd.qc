@@ -3,7 +3,7 @@ void impel_MOTD(entity this)
 	if(!MP_IMPEL)
 		return; // just incase
 
-	if(world.model == "maps/start.bsp" && this.motd_count < 8)
+	if(world.model == "maps/aopstart.bsp" && this.motd_count < 8)
 	{
 		this.motd_time = time + 1;
 		this.motd_count = this.motd_count + 1;
