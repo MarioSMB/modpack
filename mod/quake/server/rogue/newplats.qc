@@ -589,7 +589,7 @@ spawnfunc(func_new_plat)
 			this.state = STATE_TOP;
 		}
 				
-		if(this.targetname)
+		if(this.targetname && this.targetname != "")
 		{
 			this.use = plat2_use;
 			this.state = this.state + 10;

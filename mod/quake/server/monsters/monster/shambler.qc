@@ -373,7 +373,7 @@ void sham_pain(entity this, entity attacker, float damage)
 //============================================================================
 
 
-void sham_death11(entity this) { set_anim(this, anim_sham_death11, sham_death11); }
+void sham_death11(entity this) { set_anim(this, anim_sham_death11, sham_death11); CorpseThink(this); }
 void sham_death10(entity this) { set_anim(this, anim_sham_death10, sham_death11); }
 void sham_death9(entity this) { set_anim(this, anim_sham_death9, sham_death10); }
 void sham_death8(entity this) { set_anim(this, anim_sham_death8, sham_death9); }
@@ -385,7 +385,7 @@ void sham_death3(entity this) { set_anim(this, anim_sham_death3, sham_death4); t
 void sham_death2(entity this) { set_anim(this, anim_sham_death2, sham_death3); }
 void sham_death1(entity this) { set_anim(this, anim_sham_death1, sham_death2); }
 
-void sham_die(entity this, entity attacker)
+void sham_die(entity this, entity inflictor, entity attacker)
 {
 // check for gib
 	if(this.health < -60)
@@ -422,11 +422,21 @@ bool ShamCheckAttack(entity this)
 		}
 	}
 
-	if(time < this.attack_finished)
-		return false;
-	
-	if(!this.enemy_vis)
-		return false;
+	if(MP_IMPEL)
+	{
+		if(this.enemy_range == RANGE_FAR)
+			return false;
+		if(time < this.attack_finished)
+			return false;
+	}
+	else
+	{
+		if(time < this.attack_finished)
+			return false;
+		
+		if(!this.enemy_vis)
+			return false;
+	}
 		
 	entity targ = this.enemy;
 	
@@ -448,7 +458,7 @@ bool ShamCheckAttack(entity this)
 	}
 			
 // missile attack
-	if(this.enemy_range == RANGE_FAR)
+	if(!MP_IMPEL && this.enemy_range == RANGE_FAR)
 		return false;
 		
 	this.attack_state = AS_MISSILE;
@@ -464,9 +474,25 @@ string shambler_deathmessage(entity this) { return "was smashed by a Shambler"; 
 
 /*QUAKED monster_shambler(1 0 0)(-32 -32 -24)(32 32 64) Ambush
 */
+spawnfunc(monster_blud);
+spawnfunc(monster_juggernaut);
 spawnfunc(monster_shambler)
 {
 	if(deathmatch) { delete(this); return; }
+	if(MP_IMPEL && coop == 2 && orig_random(this) < 0.2)
+	{
+		if(orig_random(this) < 0.1)
+		{
+			this.classname = "monster_blud";
+			spawnfunc_monster_blud(this);
+		}
+		else
+		{
+			this.classname = "monster_juggernaut";
+			spawnfunc_monster_juggernaut(this);
+		}
+		return;
+	}
 	precache_model("progs/shambler.mdl");
 	precache_model("progs/s_light.mdl");
 	precache_model("progs/h_shams.mdl");

@@ -136,7 +136,7 @@ void dog_bite(entity this)
 
 void Dog_JumpTouch(entity this, entity toucher)
 {
-	if(this.health <= 0)
+	if(this.health <= 0 || (MP_IMPEL && !this.takedamage))
 		return;
 		
 	if(toucher.takedamage)
@@ -150,7 +150,7 @@ void Dog_JumpTouch(entity this, entity toucher)
 
 	if(!t_checkbottom(this))
 	{
-		if(IS_ONGROUND(this))
+		if(IS_ONGROUND(this) && (!MP_IMPEL || this.exptime == 0))
 		{	// jump randomly to not get hung up
 			//dprint("popjump\n");
 			settouch(this, func_null);
@@ -166,6 +166,9 @@ void Dog_JumpTouch(entity this, entity toucher)
 	}
 
 	settouch(this, func_null);
+	if(MP_IMPEL && this.exptime != 0)
+		return;
+
 	setthink(this, dog_run1);
 	this.nextthink = time + 0.1;
 }
@@ -230,7 +233,7 @@ void dog_atta3(entity this) { set_anim(this, anim_dog_attack3, dog_atta4); ai_ch
 void dog_atta2(entity this) { set_anim(this, anim_dog_attack2, dog_atta3); ai_charge(this, 10); }
 void dog_atta1(entity this) { set_anim(this, anim_dog_attack1, dog_atta2); ai_charge(this, 10); }
 
-
+void dog_die1(entity this);
 void dog_leap9(entity this) { set_anim(this, anim_dog_leap9, dog_leap9); }
 void dog_leap8(entity this) { set_anim(this, anim_dog_leap8, dog_leap9); }
 void dog_leap7(entity this) { set_anim(this, anim_dog_leap7, dog_leap8); }
@@ -242,6 +245,13 @@ void dog_leap2(entity this) { set_anim(this, anim_dog_leap2, dog_leap3); ai_face
 void dog_leap1(entity this)
 {
 	set_anim(this, anim_dog_leap1, dog_leap2);
+	if(MP_IMPEL && this.health <= 0)
+	{
+		dprint("dog_leap2: dead\n");
+		settouch(this, func_null);
+		setthink(this, dog_die1);
+		return;
+	}
 	ai_face(this);
 
 	settouch(this, Dog_JumpTouch);
@@ -277,15 +287,26 @@ void dog_painb1(entity this) { set_anim(this, anim_dog_painb1, dog_painb2); }
 
 void dog_pain(entity this, entity attacker, float damage)
 {
+	if(MP_IMPEL && this.pain_finished > time)
+		return;
+
 	_sound(this, CH_VOICE, "dog/dpain1.wav", 1, ATTN_NORM);
 
 	if(random() > 0.5)
+	{
 		dog_pain1(this);
+		if(MP_IMPEL)
+			this.pain_finished = time + 1;
+	}
 	else
+	{
 		dog_painb1(this);
+		if(MP_IMPEL)
+			this.pain_finished = time + 1;
+	}
 }
 
-void dog_die9(entity this) { set_anim(this, anim_dog_death9, dog_die9); }
+void dog_die9(entity this) { set_anim(this, anim_dog_death9, dog_die9); CorpseThink(this); }
 void dog_die8(entity this) { set_anim(this, anim_dog_death8, dog_die9); }
 void dog_die7(entity this) { set_anim(this, anim_dog_death7, dog_die8); }
 void dog_die6(entity this) { set_anim(this, anim_dog_death6, dog_die7); }
@@ -295,7 +316,7 @@ void dog_die3(entity this) { set_anim(this, anim_dog_death3, dog_die4); }
 void dog_die2(entity this) { set_anim(this, anim_dog_death2, dog_die3); }
 void dog_die1(entity this) { set_anim(this, anim_dog_death1, dog_die2); }
 
-void dog_dieb9(entity this) { set_anim(this, anim_dog_deathb9, dog_dieb9); }
+void dog_dieb9(entity this) { set_anim(this, anim_dog_deathb9, dog_dieb9); CorpseThink(this); }
 void dog_dieb8(entity this) { set_anim(this, anim_dog_deathb8, dog_dieb9); }
 void dog_dieb7(entity this) { set_anim(this, anim_dog_deathb7, dog_dieb8); }
 void dog_dieb6(entity this) { set_anim(this, anim_dog_deathb6, dog_dieb7); }
@@ -305,13 +326,19 @@ void dog_dieb3(entity this) { set_anim(this, anim_dog_deathb3, dog_dieb4); }
 void dog_dieb2(entity this) { set_anim(this, anim_dog_deathb2, dog_dieb3); }
 void dog_dieb1(entity this) { set_anim(this, anim_dog_deathb1, dog_dieb2); }
 
-void dog_die(entity this, entity attacker)
+void dog_die(entity this, entity inflictor, entity attacker)
 {
 // check for gib
 	if(this.health < -35)
 	{
 		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowGib(this, "progs/gib3.mdl", this.health);
+		if(MP_IMPEL)
+		{
+			ThrowGib(this, "progs/grenbone.mdl", self.health);
+			ThrowGib(this, "progs/grenbone.mdl", self.health);
+			ThrowGib(this, "progs/grenbone.mdl", self.health);
+		}
 		ThrowGib(this, "progs/gib3.mdl", this.health);
 		ThrowGib(this, "progs/gib3.mdl", this.health);
 		ThrowHead(this, "progs/h_dog.mdl", this.health);
@@ -400,12 +427,21 @@ string dog_deathmessage(entity this) { return "was mauled by a Rottweiler"; }
 /*QUAKED monster_dog(1 0 0)(-32 -32 -24)(32 32 40) Ambush
 
 */
+spawnfunc(monster_spider);
 spawnfunc(monster_dog)
 {
 	if(deathmatch) { delete(this); return; }
+	if(MP_IMPEL && coop == 2 && orig_random(this) < 0.5)
+	{
+		this.classname = "monster_spider";
+		spawnfunc_monster_spider(this);
+		return;
+	}
+
 	precache_model("progs/h_dog.mdl");
 	precache_model("progs/dog.mdl");
-
+	if(MP_IMPEL)
+		precache_model("progs/grenbone.mdl");
 	precache_sound("dog/dattack1.wav");
 	precache_sound("dog/ddeath.wav");
 	precache_sound("dog/dpain1.wav");

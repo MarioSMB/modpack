@@ -119,7 +119,7 @@ void sword_dieb3(entity this) { set_anim(this, anim_sword_deathb3, sword_dieb4);
 void sword_dieb2(entity this) { set_anim(this, anim_sword_deathb2, sword_dieb3); }
 void sword_dieb1(entity this) { set_anim(this, anim_sword_deathb1, sword_dieb2); }
 
-void sword_die(entity this, entity attacker)
+void sword_die(entity this, entity inflictor, entity attacker)
 {
 // regular death
 	this.effects = 0;

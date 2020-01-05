@@ -129,7 +129,7 @@ spawnfunc(trigger_earthquake)
 	this.delay = 1;
 	settouch(this, earthquake_touch);
 
-	if(this.targetname)
+	if(this.targetname && this.targetname != "")
 	{
 		this.use = rogue_earthquake_use;
 		this.delay = 0;

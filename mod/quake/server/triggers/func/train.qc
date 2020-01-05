@@ -244,7 +244,7 @@ void hip_func_train_find(entity this)
 
 	this.target = targ.target;
 	setorigin(this, targ.origin - this.mins);
-	if(!this.targetname)
+	if(!this.targetname || this.targetname == "")
 	{	// not triggered, so start immediately
 		this.nextthink = this.ltime + 0.1;
 		setthink(this, hip_train_next);

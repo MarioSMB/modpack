@@ -1,6 +1,6 @@
 #ifdef SVQC
 
-void trigEx_die(entity this, entity attacker)
+void trigEx_die(entity this, entity inflictor, entity attacker)
 {
 	SUB_UseTargets(this, attacker, NULL);
 

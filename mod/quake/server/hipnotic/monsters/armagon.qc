@@ -608,7 +608,7 @@ void armagon_die4(entity this)
 }
 void armagon_die3(entity this) { set_animofs(this, anim_armagon_ldie, 1, armagon_die4); armagon_think(this); this.nextthink = time + 0.2; }
 void armagon_die2(entity this) { set_animofs(this, anim_armagon_tranl, 2, armagon_die3); armagon_think(this); this.nextthink = time + 0.2; }
-void armagon_die1(entity this, entity attacker) { set_animofs(this, anim_armagon_tranl, 1, armagon_die2); armagon_think(this); this.nextthink = time + 0.2; }
+void armagon_die1(entity this, entity inflictor, entity attacker) { set_animofs(this, anim_armagon_tranl, 1, armagon_die2); armagon_think(this); this.nextthink = time + 0.2; }
 
 void armagon_body_explode2(entity this)
 {

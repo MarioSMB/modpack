@@ -92,6 +92,11 @@ vector crosshair_getcolor(entity this, float health_stat)
 					case WEP_LASER_CANNON: wcross_color = '0 1 0'; break;
 					case WEP_PROXIMITY_GUN: wcross_color = '0.75 1 0'; break;
 					case WEP_GRAPPLE: wcross_color = '0 0.5 0'; break;
+
+					case WEP_LIGHTME: wcross_color = '0.5 1 1'; break;
+					case WEP_SPEAR: wcross_color = '0 0.75 1'; break;
+					case WEP_NAPALM: wcross_color = '1 0.5 0.75'; break;
+					case WEP_PULSERIFLE: wcross_color = '0.5 0.5 0.5'; break;
 				}
 				break;
 			}
@@ -242,6 +247,11 @@ void HUD_Crosshair(entity this)
 				case WEP_MJOLNIR: wcross_resolution *= 0.5; wcross_name = "gfx/crosshaircrylink"; break;
 				case WEP_LASER_CANNON: wcross_resolution *= 0.6; wcross_name = "gfx/crosshairhlac"; break;
 				case WEP_PROXIMITY_GUN: wcross_resolution *= 0.9; wcross_name = "gfx/crosshairminelayer"; break;
+
+				case WEP_LIGHTME: wcross_resolution *= 0.6; wcross_name = "gfx/crosshairminstanex"; break;
+				case WEP_SPEAR: wcross_resolution *= 0.6; wcross_name = "gfx/crosshair64"; break;
+				case WEP_NAPALM: wcross_resolution *= 0.7; wcross_name = "gfx/crosshair66"; break;
+				case WEP_PULSERIFLE: wcross_resolution *= 0.6; wcross_name = "gfx/crosshairporto"; break;
 			}
 		}
 

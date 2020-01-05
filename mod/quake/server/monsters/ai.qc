@@ -1,3 +1,4 @@
+void spider_wake1(entity this); // TODO?
 /*
 
 .enemy
@@ -783,6 +784,12 @@ void FoundTarget(entity this)
 		this.enemy = NULL;
 		return;
 	}
+	if(MP_IMPEL && this.classname == "monster_spider" && (!this.target || this.target == ""))
+	{
+		spider_wake1(this);
+		_sound(this, CHAN_AUTO, "monsters/spider/sactiv.wav", 1, ATTN_NORM);
+		return;
+	}
 	
 	this.show_hostile = time + 1;		// wake up other monsters
 
@@ -851,6 +858,9 @@ bool FindTarget(entity this)
 		}
 	}
 
+	if(MP_IMPEL && (this.spawnflags & 4))
+		return false;
+
 	if(sight_entity_time >= time - 0.1 && !(this.spawnflags & 3) && !this.charmed)
 	{
 		client = sight_entity;
@@ -894,25 +904,36 @@ bool FindTarget(entity this)
 
 	if(!this.charmed && (client.flags & FL_NOTARGET))
 		return false;
-	if(client.items & IT_INVISIBILITY)
+	if(client.powerups & POWERUP_INVISIBILITY)
 		return false;
 
-	int r = range(this, client);
-	if(r == RANGE_FAR)
-		return false;
-		
-	if(!visible(this, client))
+	if(client.classname == "monster_spider" || client.classname == "monster_legond")
 		return false;
 
-	if(this.charmed) { /* do nothing */ }
-	else if(r == RANGE_NEAR)
+	if(!MP_IMPEL || !angry_monsters)
 	{
-		if(client.show_hostile < time && !infront(this, client))
+		int r = range(this, client);
+		if(r == RANGE_FAR)
 			return false;
+			
+		if(!visible(this, client))
+			return false;
+
+		if(this.charmed) { /* do nothing */ }
+		else if(r == RANGE_NEAR)
+		{
+			if(client.show_hostile < time && !infront(this, client))
+				return false;
+		}
+		else if(r == RANGE_MID)
+		{
+			if( /* client.show_hostile < time || */ !infront(this, client))
+				return false;
+		}
 	}
-	else if(r == RANGE_MID)
+	else if(MP_IMPEL && this.enemy)
 	{
-		if( /* client.show_hostile < time || */ !infront(this, client))
+		if(!visible(this, client))
 			return false;
 	}
 	
@@ -923,7 +944,7 @@ bool FindTarget(entity this)
 	if(!this.charmed && !this.enemy.charmed && !IS_PLAYER(this.enemy))
 	{
 		this.enemy = this.enemy.enemy;
-		if(!IS_PLAYER(this.enemy))
+		if(!IS_PLAYER(this.enemy) || (MP_IMPEL && this.enemy.health < 1))
 		{
 			this.enemy = NULL;
 			return false;

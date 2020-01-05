@@ -118,7 +118,7 @@ void shal_pain3(entity this) { set_anim(this, anim_shal_pain3, shal_pain4); }
 void shal_pain2(entity this) { set_anim(this, anim_shal_pain2, shal_pain3); }
 void shal_pain1(entity this) { set_anim(this, anim_shal_pain1, shal_pain2); }
 
-void shal_death7(entity this) { set_anim(this, anim_shal_death7, shal_death7); }
+void shal_death7(entity this) { set_anim(this, anim_shal_death7, shal_death7); CorpseThink(this); }
 void shal_death6(entity this) { set_anim(this, anim_shal_death6, shal_death7); }
 void shal_death5(entity this) { set_anim(this, anim_shal_death5, shal_death6); }
 void shal_death4(entity this) { set_anim(this, anim_shal_death4, shal_death5); }
@@ -136,7 +136,7 @@ void shalrath_pain(entity this, entity attacker, float damage)
 	this.pain_finished = time + 3;
 }
 
-void shalrath_die(entity this, entity attacker)
+void shalrath_die(entity this, entity inflictor, entity attacker)
 {
 // check for gib
 	if(this.health < -90)
@@ -178,6 +178,8 @@ void ShalMissile(entity this)
 
 	missile.solid = SOLID_BBOX;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
+	if(MP_IMPEL)
+		missile.classname = "missile";
 	_setmodel(missile, "progs/v_spike.mdl");
 
 	setsize(missile, '0 0 0', '0 0 0');		
@@ -228,15 +230,22 @@ void ShalMissileTouch(entity this, entity toucher)
 }
 
 string shalrath_sight(entity this) { return "shalrath/sight.wav"; }
-string shalrath_deathmessage(entity this) { return "was exploded by a Vore"; }
+string shalrath_deathmessage(entity this) { return ((MP_IMPEL) ? "was exploded by a Shalrath" : "was exploded by a Vore"); }
 
 //=================================================================
 
 /*QUAKED monster_shalrath(1 0 0)(-32 -32 -24)(32 32 48) Ambush
 */
+spawnfunc(monster_legond);
 spawnfunc(monster_shalrath)
 {
 	if(deathmatch) { delete(this); return; }
+	if(MP_IMPEL && coop == 2 && orig_random(this) < 0.2)
+	{
+		this.classname = "monster_legond";
+		spawnfunc_monster_legond(this);
+		return;
+	}
 	precache_model2("progs/shalrath.mdl");
 	precache_model2("progs/h_shal.mdl");
 	precache_model2("progs/v_spike.mdl");
@@ -266,5 +275,6 @@ spawnfunc(monster_shalrath)
 	this.deathmessage = shalrath_deathmessage;
 
 	monster_start(this, 0);
-	this.nextthink = time + 0.1 + random()*0.1;	
+	if(!MP_IMPEL)
+		this.nextthink = time + 0.1 + random()*0.1;	
 }

@@ -71,6 +71,48 @@ void teleport_use(entity this, entity actor, entity trigger)
 	setthink(this, SUB_NullThink);
 }
 
+void trigger_start_go(entity this)
+{
+	// purely a dev print for wonky triggers
+	#if 0
+	entity temp = find(NULL, targetname, this.target);
+	if(!temp || (temp.classname != "info_teleport_destination" && temp.classname != "misc_teleporttrain"))
+	{
+		dprint("trigger_teleport");
+		if(this.targetname && this.targetname != "")
+		{
+			dprint(", targetname '");
+			dprint(this.targetname);
+			dprint("'");
+		}
+		dprint(", target '");
+		dprint(this.target);
+		if(!temp)
+		{
+			dprint("' has no target\n");
+		}
+		else
+		{
+			if(temp == this)
+			{
+				dprint("' targets itthis\n");
+			}
+			else
+			{
+				dprint("' has unusual target ");
+				dprint(temp.classname);
+				dprint("'\n");
+			}
+		}
+	}
+	#endif
+	if(angry_monsters && this.targetname && this.targetname != "")
+	{
+		if(world.model != "maps/end.bsp" || this.targetname != "t68")
+			this.use(this, NULL, NULL);
+	}
+}
+
 /*QUAKED trigger_teleport(.5 .5 .5) ? PLAYER_ONLY SILENT CTF_ONLY
 Any object touching this will be transported to the corresponding info_teleport_destination entity. You must set the "target" field, and create an object with a "targetname" field that matches.
 
@@ -99,6 +141,12 @@ spawnfunc(trigger_teleport)
 		precache_sound("ambience/hum1.wav");
 		vector o = (this.mins + this.maxs) * 0.5;
 		ambientsound(o, "ambience/hum1.wav", 0.5, ATTN_STATIC);
+	}
+
+	if(MP_IMPEL)
+	{
+		this.nextthink = this.nextthink + 0.5;
+		setthink(this, trigger_start_go);
 	}
 }
 

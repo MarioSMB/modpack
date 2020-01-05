@@ -70,6 +70,7 @@ string Sbar_PickWeapon_wepname_id(int wpn)
 		case WEP_MULTI_GRENADE: return "r_gren";
 		case WEP_MULTI_ROCKET: return "r_multirock";
 		case WEP_PLASMA_GUN: return "r_plasma";
+		// TODO: impel
 	}
 
 	// defaults
@@ -767,6 +768,10 @@ bool CanDrawWeapon(int wep)
 		case WEP_MULTI_GRENADE:
 		case WEP_MULTI_ROCKET:
 		case WEP_PLASMA_GUN:
+		case WEP_LIGHTME:
+		case WEP_SPEAR:
+		case WEP_NAPALM:
+		case WEP_PULSERIFLE:
 			return false;
 	}
 	return false;
@@ -820,6 +825,7 @@ void Sbar_DrawInventory()
 {
 	// set flash times
 	int myitems = STAT(ITEMS);
+	int mypowerups = STAT(POWERUPS);
 	int myweapons = STAT(WEAPONS);
 
 	if(oldweapons != myweapons)
@@ -891,7 +897,9 @@ void Sbar_DrawInventory()
 	// items
 	if(!MP_HIPNOTIC)
 	{
-		for(int j = 0; j < 6; j++)
+		// TODO: cleanup this mess
+		// keys
+		for(int j = 0; j < 2; j++)
 		{
 			if(myitems & BIT(8 + j))
 			{
@@ -900,21 +908,30 @@ void Sbar_DrawInventory()
 					Sbar_DrawPic(vec2(192 + j * 16, -16), Sbar_PickItem(j));
 			}
 		}
+		// base powerups
+		for(int j = 2; j < 6; j++)
+		{
+			if(mypowerups & BIT(j - 2))
+			{
+				if(j > 1)
+					Sbar_DrawPic(vec2(192 + j * 16, -16), Sbar_PickItem(j));
+			}
+		}
 	}
 
 	if(MP_HIPNOTIC)
 	{
-		if(myitems & IT_WETSUIT)
+		if(mypowerups & POWERUP_WETSUIT)
 			Sbar_DrawPic('288 -16 0', "gfx/quake/sb_wsuit");
-		if(myitems & IT_EMPATHY_SHIELDS)
+		if(mypowerups & POWERUP_EMPATHY_SHIELDS)
 			Sbar_DrawPic(vec2(288 + 16, -16), "gfx/quake/sb_eshld");
 	}
 
 	if(MP_ROGUE)
 	{
-		if(myitems & IT_SHIELD)
+		if(mypowerups & POWERUP_SHIELD)
 			Sbar_DrawPic('288 -16 0', "gfx/quake/r_shield1");
-		if(myitems & IT_ANTIGRAV)
+		if(mypowerups & POWERUP_ANTIGRAV)
 			Sbar_DrawPic(vec2(288 + 16, -16), "gfx/quake/r_agrav1");
 	}
 
@@ -984,7 +1001,8 @@ int oldhealth;
 float health_gettime;
 void Sbar_DrawFace()
 {
-	int myitems = STAT(ITEMS);
+	//int myitems = STAT(ITEMS); // changed field due to reaching bit limit
+	int mypowerups = STAT(POWERUPS);
 	string pic;
 
 	int myhealth = STAT(HEALTH);
@@ -992,13 +1010,13 @@ void Sbar_DrawFace()
 		health_gettime = time + 0.2;
 	oldhealth = myhealth;
 
-	if((myitems & IT_INVISIBILITY) && (myitems & IT_INVULNERABILITY))
+	if((mypowerups & POWERUP_INVISIBILITY) && (mypowerups & POWERUP_INVULNERABILITY))
 		pic = "gfx/quake/face_inv2";
-	else if(myitems & IT_QUAD)
+	else if(mypowerups & POWERUP_QUAD)
 		pic = "gfx/quake/face_quad";
-	else if(myitems & IT_INVISIBILITY)
+	else if(mypowerups & POWERUP_INVISIBILITY)
 		pic = "gfx/quake/face_invis";
-	else if(myitems & IT_INVULNERABILITY)
+	else if(mypowerups & POWERUP_INVULNERABILITY)
 		pic = "gfx/quake/face_invul2";
 	else
 	{
@@ -1059,7 +1077,7 @@ void Sbar_Draw()
 				// keys (hipnotic only)
 				//MED 01/04/97 moved keys here so they would not be overwritten
 				// armor
-				if(STAT(ITEMS) & IT_INVULNERABILITY)
+				if(STAT(POWERUPS) & POWERUP_INVULNERABILITY)
 				{
 					Sbar_DrawNum('24 0 0', itos(666), 3, 1);
 					Sbar_DrawPic('0 0 0', "gfx/quake/disc");

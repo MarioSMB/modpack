@@ -242,7 +242,7 @@ void morph_stab2(entity this)
 		_sound(this, CH_WEAPON_SINGLE, "enforcer/enfstop.wav", 1, ATTN_STATIC);
 		float attackDamage = (random() * 10) + 20;
 		T_Damage(this.enemy, this, this, attackDamage);
-		SpawnBlood(this.enemy.origin, v_forward * 150, 14);
+		SpawnBlood(this.enemy.origin, v_forward * 150, 14, this.enemy);
 	}
 	else
 	{
@@ -450,7 +450,7 @@ void morph_die3(entity this) { set_anim(this, anim_morph_mfdth03, morph_die4); }
 void morph_die2(entity this) { set_anim(this, anim_morph_mfdth02, morph_die3); }
 void morph_die1(entity this) { set_anim(this, anim_morph_mfdth01, morph_die2); }		// 122
 
-void morph_die(entity this, entity attacker)
+void morph_die(entity this, entity inflictor, entity attacker)
 {
 	_sound(this, CH_VOICE, "guard/death.wav", 1, ATTN_NORM);
 	this.solid = SOLID_NOT;

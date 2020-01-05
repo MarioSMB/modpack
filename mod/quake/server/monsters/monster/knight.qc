@@ -282,7 +282,7 @@ void knight_bow3(entity this) { set_anim(this, anim_knight_kneel3, knight_bow4);
 void knight_bow2(entity this) { set_anim(this, anim_knight_kneel2, knight_bow3); ai_turn(this); }
 void knight_bow1(entity this) { set_anim(this, anim_knight_kneel1, knight_bow2); ai_turn(this); }
 
-void knight_die10(entity this) { set_anim(this, anim_knight_death10, knight_die10); }
+void knight_die10(entity this) { set_anim(this, anim_knight_death10, knight_die10); CorpseThink(this); }
 void knight_die9(entity this) { set_anim(this, anim_knight_death9, knight_die10); }
 void knight_die8(entity this) { set_anim(this, anim_knight_death8, knight_die9); }
 void knight_die7(entity this) { set_anim(this, anim_knight_death7, knight_die8); }
@@ -293,7 +293,7 @@ void knight_die3(entity this) { set_anim(this, anim_knight_death3, knight_die4);
 void knight_die2(entity this) { set_anim(this, anim_knight_death2, knight_die3); }
 void knight_die1(entity this) { set_anim(this, anim_knight_death1, knight_die2); }
 
-void knight_dieb11(entity this) { set_anim(this, anim_knight_deathb11, knight_dieb11); }
+void knight_dieb11(entity this) { set_anim(this, anim_knight_deathb11, knight_dieb11); CorpseThink(this); }
 void knight_dieb10(entity this) { set_anim(this, anim_knight_deathb10, knight_dieb11); }
 void knight_dieb9(entity this) { set_anim(this, anim_knight_deathb9, knight_dieb10); }
 void knight_dieb8(entity this) { set_anim(this, anim_knight_deathb8, knight_dieb9); }
@@ -306,7 +306,7 @@ void knight_dieb2(entity this) { set_anim(this, anim_knight_deathb2, knight_dieb
 void knight_dieb1(entity this) { set_anim(this, anim_knight_deathb1, knight_dieb2); }
 
 
-void knight_die(entity this, entity attacker)
+void knight_die(entity this, entity inflictor, entity attacker)
 {
 // check for gib
 	if(this.health < -40)

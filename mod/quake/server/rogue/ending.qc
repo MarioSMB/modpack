@@ -330,7 +330,7 @@ void actor_run(entity this)
 	this.nextthink = time + 0.1;
 }
 
-void time_crash_die(entity this, entity attacker);
+void time_crash_die(entity this, entity inflictor, entity attacker);
 void time_crash_pain(entity this, entity attacker, float damage);
 
 void actor_fire21(entity this) { set_anim(this, anim_actor_stand5, actor_control); this.nextthink = time + 0.15; actorStage = STAGE_TO_POINT2; }

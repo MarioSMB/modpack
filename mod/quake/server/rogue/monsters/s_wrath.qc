@@ -375,7 +375,7 @@ void overlord_smash(entity this)
 	_sound(this, CH_WEAPON_SINGLE, "s_wrath/smash.wav", 1, ATTN_NORM);
 	T_Damage(this.enemy, this, this, smashDmg);
 	vector delta = normalize (this.enemy.origin - this.origin + this.enemy.view_ofs);
-	SpawnBlood(this.enemy.origin - delta * 30, delta * -100, smashDmg);
+	SpawnBlood(this.enemy.origin - delta * 30, delta * -100, smashDmg, this.enemy);
 }
 
 void overlord_melee(entity this)
@@ -529,7 +529,7 @@ void overlord_die06(entity this) { set_animofs(this, anim_swrath_s_wtdt, 6, over
 void overlord_die05(entity this) { set_animofs(this, anim_swrath_s_wtdt, 5, overlord_die06); this.nextthink = time + 0.05; }
 void overlord_die04(entity this) { set_animofs(this, anim_swrath_s_wtdt, 4, overlord_die05); this.nextthink = time + 0.05; }
 void overlord_die03(entity this) { set_animofs(this, anim_swrath_s_wtdt, 3, overlord_die04); this.nextthink = time + 0.05; }
-void overlord_die02(entity this, entity attacker) { set_animofs(this, anim_swrath_s_wtdt, 2, overlord_die03); this.flags |= FL_FLY; this.nextthink = time + 0.05; }
+void overlord_die02(entity this, entity inflictor, entity attacker) { set_animofs(this, anim_swrath_s_wtdt, 2, overlord_die03); this.flags |= FL_FLY; this.nextthink = time + 0.05; }
 //oid overlord_die01(entity this) { set_animofs(this, anim_swrath_s_wtdt, 1, overlord_die02); this.nextthink = time + 0.05; }
 
 string overlord_deathmessage(entity this) { return "was obliterated by an Overlord"; }
@@ -571,7 +571,7 @@ spawnfunc(monster_super_wrath)
 	this.pain_finished = 0;
 	
 //    if(this.spawnflags & 2)
-//       this.items = IT_SHIELD;
+//       this.powerups = POWERUP_SHIELD;
 	this.th_stand = overlord_stand1;
 	this.th_walk = overlord_walk01;
 	this.th_run = overlord_run01;

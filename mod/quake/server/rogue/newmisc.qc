@@ -99,7 +99,7 @@ spawnfunc(rubble_generator)
 
 	precache_model("progs/rubble.mdl");
 	
-	if(!this.target)
+	if(!this.target || this.target == "")
 		objerror(this, "rubble_generator has no target!");
 		
 	if(!this.delay)

@@ -12,7 +12,7 @@ void newitems_touch(entity this, entity toucher)
 		return;
 		
 	// only one per person, please.
-	if(this.classname == "item_sphere" && (toucher.items & IT_V_SPHERE))
+	if(this.classname == "item_sphere" && (toucher.powerups & POWERUP_V_SPHERE))
 		return;
 
 	sprint(toucher, "You got the ");
@@ -43,7 +43,8 @@ void newitems_touch(entity this, entity toucher)
 	_sound(toucher, CH_TRIGGER_SINGLE, this.noise, 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
 	this.solid = SOLID_NOT;
-	toucher.items |= this.items;
+	//toucher.items |= this.items;
+	toucher.powerups |= this.powerups;
 	this.model = string_null;
 
 // do the apropriate action
@@ -60,7 +61,7 @@ void newitems_touch(entity this, entity toucher)
 	}
 	else if(this.classname == "item_sphere")
 	{
-		toucher.items |= IT_V_SPHERE;
+		toucher.powerups |= POWERUP_V_SPHERE;
 		sphere_spawn(this, toucher);
 	}
 
@@ -85,7 +86,7 @@ spawnfunc(item_powerup_shield)
 	this.noise = "shield/pickup.wav";
 	_setmodel(this, "progs/shield.mdl");
 	this.netname = "Power Shield";
-	this.items = IT_SHIELD;
+	this.powerups = POWERUP_SHIELD;
 	setsize(this, '-16 -16 -24', '16 16 32');
 	StartItem(this);
 }
@@ -106,7 +107,7 @@ spawnfunc(item_powerup_belt)
 	this.noise = "belt/pickup.wav";
 	_setmodel(this, "progs/beltup.mdl");
 	this.netname = "Anti-Grav Belt";
-	this.items = IT_ANTIGRAV;
+	this.powerups = POWERUP_ANTIGRAV;
 	setsize(this, '-16 -16 -24', '16 16 32');
 	StartItem(this);
 }

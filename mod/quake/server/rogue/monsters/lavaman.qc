@@ -363,7 +363,7 @@ void lavaman_death5(entity this) { set_anim(this, anim_lavaman_death5, lavaman_d
 void lavaman_death4(entity this) { set_anim(this, anim_lavaman_death4, lavaman_death5); }
 void lavaman_death3(entity this) { set_anim(this, anim_lavaman_death3, lavaman_death4); }
 void lavaman_death2(entity this) { set_anim(this, anim_lavaman_death2, lavaman_death3); }
-void lavaman_death1(entity this, entity attacker) { set_anim(this, anim_lavaman_death1, lavaman_death2); _sound(this, CH_VOICE, "boss1/death.wav", 1, ATTN_NORM); }
+void lavaman_death1(entity this, entity inflictor, entity attacker) { set_anim(this, anim_lavaman_death1, lavaman_death2); _sound(this, CH_VOICE, "boss1/death.wav", 1, ATTN_NORM); }
 
 void lavaman_touch(entity this, entity toucher)
 {
@@ -481,7 +481,7 @@ void lavaman_awake(entity this, entity actor, entity trigger)
 
 	te_lavasplash(this.origin);
 
-	if(!(actor.items & IT_INVISIBILITY))
+	if(!(actor.powerups & POWERUP_INVISIBILITY))
 	{
 		if(!(actor.flags & FL_NOTARGET))
 		{

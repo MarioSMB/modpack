@@ -33,6 +33,9 @@ void door_go_up(entity this);
 void door_blocked(entity this, entity blocker)
 {
 	T_Damage(blocker, this, this, this.dmg);
+
+	if(MP_IMPEL && (!this.model || this.model == ""))
+		return;
 	
 // if a door has a negative wait, it would never come back if blocked,
 // so let it just squash the object to death real fast
@@ -158,7 +161,7 @@ void door_trigger_touch(entity this, entity toucher)
 }
 
 
-void door_killed(entity this, entity attacker)
+void door_killed(entity this, entity inflictor, entity attacker)
 {
 	this.owner.health = this.owner.max_health;
 	this.owner.takedamage = DAMAGE_NO;	// wil be reset upon return
@@ -276,7 +279,7 @@ void LinkDoors(entity this)
 {
 	if(this.enemy)
 		return;		// already linked by another door
-	if(this.spawnflags & 4)
+	if(this.spawnflags & DOOR_DONT_LINK)
 	{
 		this.owner = this.enemy = this;
 		return;		// don't want to link this door

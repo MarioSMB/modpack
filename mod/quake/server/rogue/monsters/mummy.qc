@@ -561,7 +561,7 @@ void mummy_paine3(entity this) { set_animofs(this, anim_mummy_paine, 3, mummy_pa
 void mummy_paine2(entity this) { set_animofs(this, anim_mummy_paine, 2, mummy_paine3); ai_pain(this, 8); }
 void mummy_paine1(entity this) { set_animofs(this, anim_mummy_paine, 1, mummy_paine2); _sound(this, CH_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM); }
 
-void mummy_die(entity this, entity attacker)
+void mummy_die(entity this, entity inflictor, entity attacker)
 {
 	this.health = -35;
 	_sound(this, CH_VOICE, "zombie/z_gib.wav", 1, ATTN_NORM);

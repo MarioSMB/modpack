@@ -52,6 +52,7 @@ void SUB_CopyEntity(entity srcent, entity destent)
 	destent.ammo_rockets = srcent.ammo_rockets;
 	destent.ammo_cells = srcent.ammo_cells;
 	destent.items = srcent.items;
+	destent.powerups = srcent.powerups;
 	destent.weapons = srcent.weapons;
 	destent.takedamage = srcent.takedamage;
 	destent.chain = srcent.chain;

@@ -11,7 +11,7 @@ $base base
 $skin skin
 $scale 1
 
-void finale_1(entity this, entity attacker);
+void finale_1(entity this, entity inflictor, entity attacker);
 void finale_2(entity this);
 void finale_3(entity this);
 void finale_4(entity this);
@@ -165,7 +165,7 @@ void old_thrash1(entity this) { set_anim(this, anim_old_shake1, old_thrash2); li
 
 //============================================================================
 
-void finale_1(entity this, entity attacker)
+void finale_1(entity this, entity inflictor, entity attacker)
 {
 	intermission_exittime = time + 10000000;	// never allow exit
 	intermission_running = 1;

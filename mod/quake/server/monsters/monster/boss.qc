@@ -331,6 +331,8 @@ void boss_missile(entity this, vector p)
 
 	entity newmis = launch_spike(this, org, vec);
 	_setmodel(newmis, "progs/lavaball.mdl");
+	if(MP_IMPEL)
+		newmis.owner = this;
 	newmis.avelocity = '200 100 300';
 	setsize(newmis, '0 0 0', '0 0 0');		
 	newmis.velocity = vec*300;
@@ -365,6 +367,7 @@ void boss_awake(entity this, entity actor, entity trigger)
 	boss_rise1(this);
 }
 
+string boss_deathmessage(entity this) { return "becomes one with Chthon"; }
 
 /*QUAKED monster_boss(1 0 0)(-128 -128 -24)(128 128 256)
 */
@@ -384,6 +387,9 @@ spawnfunc(monster_boss)
 	precache_sound("boss1/death.wav");
 
 	monsters_total += 1;
+
+	if(MP_IMPEL)
+		this.deathmessage = boss_deathmessage;
 
 	this.use = boss_awake;
 }
@@ -476,5 +482,3 @@ spawnfunc(event_lightning)
 {
 	this.use = lightning_use;
 }
-
-

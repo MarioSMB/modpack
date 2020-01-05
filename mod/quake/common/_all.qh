@@ -13,9 +13,11 @@ REGISTER_NET_LINKED(ENT_CLIENT_MODEL)
 #ifdef SVQC
 	#define MP_HIPNOTIC autocvar_sv_missionpack_hipnotic
 	#define MP_ROGUE autocvar_sv_missionpack_rogue
+	#define MP_IMPEL autocvar_sv_missionpack_impel
 #elif defined(CSQC)
 	#define MP_HIPNOTIC (STAT(MISSIONPACKS) & MISSIONPACK_HIPNOTIC)
 	#define MP_ROGUE (STAT(MISSIONPACKS) & MISSIONPACK_ROGUE)
+	#define MP_IMPEL (STAT(MISSIONPACKS) & MISSIONPACK_IMPEL)
 #endif
 
 #include "physics.qh"

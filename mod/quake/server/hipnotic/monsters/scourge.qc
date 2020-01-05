@@ -433,7 +433,7 @@ void scourge_die3(entity this) { set_animofs(this, anim_scourge_death, 3, scourg
 void scourge_die2(entity this) { set_animofs(this, anim_scourge_death, 2, scourge_die3); }
 void scourge_die1(entity this) { set_animofs(this, anim_scourge_death, 1, scourge_die2); this.spawnsilent = 0; scourge_think(this); }
 
-void scourge_die(entity this, entity attacker)
+void scourge_die(entity this, entity inflictor, entity attacker)
 {
 	// check for gib
 	// stop sound

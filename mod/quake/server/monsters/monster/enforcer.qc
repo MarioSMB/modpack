@@ -153,7 +153,7 @@ void Laser_Touch(entity this, entity toucher)
 
 	if(toucher.health)
 	{
-		SpawnBlood(org, this.velocity*0.2, 15);
+		SpawnBlood(org, this.velocity*0.2, 15, toucher);
 		T_Damage(toucher, this, this.owner, 15);
 	}
 	else
@@ -164,7 +164,7 @@ void Laser_Touch(entity this, entity toucher)
 
 entity LaunchLaser(entity this, vector org, vector vec)
 {
-	if(this.classname == "monster_enforcer")
+	if(this.classname == "monster_enforcer" || MP_IMPEL)
 		_sound(this, CH_WEAPON_SINGLE, "enforcer/enfire.wav", 1, ATTN_NORM);
 
 	vector vec2 = normalize(vec);
@@ -348,7 +348,7 @@ void enf_pain(entity this, entity attacker, float damage)
 //============================================================================
 
 
-void enf_die14(entity this) { set_animofs(this, anim_enf_death, 14, enf_die14); }
+void enf_die14(entity this) { set_animofs(this, anim_enf_death, 14, enf_die14); CorpseThink(this); }
 void enf_die13(entity this) { set_animofs(this, anim_enf_death, 13, enf_die14); }
 void enf_die12(entity this) { set_animofs(this, anim_enf_death, 12, enf_die13); ai_forward(this, 5); }
 void enf_die11(entity this) { set_animofs(this, anim_enf_death, 11, enf_die12); ai_forward(this, 5); }
@@ -387,7 +387,7 @@ void enf_fdie3(entity this)
 void enf_fdie2(entity this) { set_animofs(this, anim_enf_fdeath, 2, enf_fdie3); }
 void enf_fdie1(entity this) { set_animofs(this, anim_enf_fdeath, 1, enf_fdie2); }
 
-void enf_die(entity this, entity attacker)
+void enf_die(entity this, entity inflictor, entity attacker)
 {
 // check for gib
 	if(this.health < -35)
@@ -424,9 +424,25 @@ string enf_deathmessage(entity this) { return "was blasted by an Enforcer"; }
 /*QUAKED monster_enforcer(1 0 0)(-16 -16 -24)(16 16 40) Ambush
 
 */
+spawnfunc(monster_dknight);
+spawnfunc(monster_lenforcer);
 spawnfunc(monster_enforcer)
 {
+	if(world.model == "maps/aop2m2.bsp")
+	{
+		this.classname = "monster_dknight";
+		spawnfunc_monster_dknight(this);
+		return;
+	}
+
 	if(deathmatch) { delete(this); return; }
+
+	if (MP_IMPEL && coop == 2 && orig_random(this) < 0.5)
+	{
+		this.classname = "monster_lenforcer";
+		spawnfunc_monster_lenforcer(this);
+		return;
+	}
 
 	precache_model2("progs/enforcer.mdl");
 	precache_model2("progs/h_mega.mdl");

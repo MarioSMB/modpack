@@ -619,11 +619,24 @@ void zombie_paine12(entity this)
 	if(!t_walkmove(this, 0, 0))
 	{
 		setthink(this, zombie_paine11);
-		this.solid = SOLID_NOT;
+		if(MP_IMPEL)
+			this.nextthink = time + 1;
+		else
+			this.solid = SOLID_NOT;
 		return;
 	}
 }
-void zombie_paine11(entity this) { set_animofs(this, anim_zombie_paine, 11, zombie_paine12); }
+void zombie_paine11(entity this)
+{
+	set_animofs(this, anim_zombie_paine, 11, zombie_paine12);
+	if(MP_IMPEL)
+	{
+		this.solid = SOLID_NOT;
+		this.nextthink = time + 5;
+		this.health = 60;
+	}
+	// TODO: original quake has logic here missing from mine?!
+}
 void zombie_paine10(entity this)
 {
 	set_animofs(this, anim_zombie_paine, 10, zombie_paine11);
@@ -645,7 +658,7 @@ void zombie_paine1(entity this)
 	this.health = 60;
 }
 
-void zombie_die(entity this, entity attacker)
+void zombie_die(entity this, entity inflictor, entity attacker)
 {
 	_sound(this, CH_VOICE, "zombie/z_gib.wav", 1, ATTN_NORM);
 	ThrowHead(this, "progs/h_zombie.mdl", this.health);

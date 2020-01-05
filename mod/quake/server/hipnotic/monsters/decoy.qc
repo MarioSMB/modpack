@@ -78,7 +78,7 @@ void decoy_pain(entity this, entity attacker, float damage)
 	decoy_stand1(this);
 }
 
-void decoy_die(entity this, entity attacker)
+void decoy_die(entity this, entity inflictor, entity attacker)
 {
 	decoy_stand1(this);
 }
@@ -178,7 +178,7 @@ void become_decoy(string targ, vector orig)
 	decoy.use = monster_use;
 	decoy.flags |= FL_MONSTER;
 
-	if(decoy.target)
+	if(decoy.target && decoy.target != "")
 	{
 		decoy.goalentity = decoy.movetarget = find(NULL, targetname, decoy.target);
 		decoy.ideal_yaw = vectoyaw(decoy.goalentity.origin - decoy.origin);

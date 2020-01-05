@@ -1,8 +1,10 @@
 #include "rogue/runes.qh"
 
+void impale(entity this);
+
 bool IsExplosionDamage;
 
-void ClientObituary(entity targ, entity attacker);
+void ClientObituary(entity targ, entity inflictor, entity attacker);
 
 void FoundTarget(entity this);
 
@@ -140,7 +142,7 @@ bool CanDamage(entity targ, entity inflictor)
 Killed
 ============
 */
-void Killed(entity targ, entity attacker)
+void Killed(entity targ, entity inflictor, entity attacker)
 {
 	if(targ.health < -99)
 		targ.health = -99; // don't let sbar look bad if a player
@@ -155,7 +157,7 @@ void Killed(entity targ, entity attacker)
 	if(targ.move_movetype == MOVETYPE_PUSH || targ.move_movetype == MOVETYPE_NONE)
 	{	// doors, triggers, etc
 		if(targ.th_die)
-			targ.th_die(targ, attacker);
+			targ.th_die(targ, inflictor, attacker);
 		return;
 	}
 
@@ -186,8 +188,10 @@ void Killed(entity targ, entity attacker)
 	if(targ.target && targ.target != "")
 		SUB_UseTargets(targ, attacker, NULL); // using attacker here probably negates the need for .enemy to be set, but oh well
 
-	if(targ.th_die)
-		targ.th_die(targ, attacker);
+	if(MP_IMPEL && inflictor.classname == "impaler")
+		impale(targ);
+	else if(targ.th_die)
+		targ.th_die(targ, inflictor, attacker);
 }
 
 // ====
@@ -209,6 +213,8 @@ bool TeamArmorDam(entity targ, entity inflictor, entity attacker, float damage);
 bool TeamHealthDam(entity targ, entity inflictor, entity attacker, float damage);
 void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 {
+	float r = random();
+	bool showpain = true;
 	if(!targ.takedamage)
 		return;
 
@@ -218,7 +224,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 		return;
 	IsExplosionDamage = false;
 
-	if(MP_ROGUE && (targ.items & IT_SHIELD))
+	if(MP_ROGUE && (targ.powerups & POWERUP_SHIELD))
 	{
 		// allow some damage to pass through
 		damage = shield_hit(targ, inflictor, attacker, damage);
@@ -232,7 +238,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 
 	if(MP_HIPNOTIC)
 	{
-		if ((targ.items & IT_EMPATHY_SHIELDS) && !(inflictor.items & IT_EMPATHY_SHIELDS) && (targ != attacker))
+		if ((targ.powerups & POWERUP_EMPATHY_SHIELDS) && !(inflictor.powerups & POWERUP_EMPATHY_SHIELDS) && (targ != attacker))
 		{
 			empathyused = true;
 			damage = damage/2;
@@ -295,7 +301,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 
 	if(MP_HIPNOTIC)
 	{
-		if(targ.items & IT_EMPATHY_SHIELDS)
+		if(targ.powerups & POWERUP_EMPATHY_SHIELDS)
 		{
 			if(targ.empathy_sound < time)
 			{
@@ -324,11 +330,32 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 	}
 		
 // do the damage
+	if(MP_IMPEL && targ.field_generator_finished > time
+		&& inflictor.classname != "grenade" && inflictor.classname != "missile" && inflictor.classname != "juggy_rocket" && inflictor.classname != "explo_box"
+		&& !(!inflictor && targ.watertype == CONTENT_WATER) && !(!inflictor && targ.jump_flag < -650))
+	{
+		if(r < 0.3)
+			_sound(targ, CHAN_ITEM, "weapons/field/genhit1.wav", 1, ATTN_NORM);
+		else if (r < 0.6)
+			_sound(targ, CHAN_ITEM, "weapons/field/genhit2.wav", 1, ATTN_NORM);
+		else
+			_sound(targ, CHAN_ITEM, "weapons/field/genhit3.wav", 1, ATTN_NORM);
+		targ.field_generator_health = targ.field_generator_health - take;
+		showpain = false;
+		take = 0;
+		targ.effects |= EF_BRIGHTFIELD;
+		if(targ.field_generator_health < 0)
+		{
+			take = 0 - targ.field_generator_health;
+			showpain = true;
+		}
+	}
+
 	targ.health = targ.health - take;
 			
 	if(targ.health <= 0)
 	{
-		Killed(targ, attacker);
+		Killed(targ, inflictor, attacker);
 		return;
 	}
 
@@ -352,7 +379,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 		}
 	}
 
-	if(targ.th_pain)
+	if(targ.th_pain && (!MP_IMPEL || showpain))
 	{
 		targ.th_pain(targ, attacker, take);
 	// nightmare mode monsters don't go into pain frames often
@@ -366,10 +393,17 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 T_RadiusDamage
 ============
 */
+bool inside_radius = false;
 void T_RadiusDamage(entity inflictor, entity attacker, float damage, entity ignore)
 {
+	if(MP_IMPEL && inside_radius)
+	{
+		error("T_RadiusDamage: recursive");
+		return;
+	}
+	inside_radius = true;
+
 	entity head = findradius(inflictor.origin, damage + 40);
-	
 	while(head)
 	{
 		if(head != ignore)
@@ -379,7 +413,7 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, entity igno
 				vector org = head.origin +(head.mins + head.maxs) * 0.5;
 				float points = max(0, 0.5 * vlen(inflictor.origin - org));
 				points = damage - points;
-				if(head == attacker || head.classname == "monster_shambler")
+				if(head == attacker || head.classname == "monster_shambler" || head.classname == "monster_legond")
 					points *= 0.5; // shambler takes half damage from all explosions
 				if(points > 0)
 				{
@@ -390,6 +424,7 @@ void T_RadiusDamage(entity inflictor, entity attacker, float damage, entity igno
 		}
 		head = head.chain;
 	}
+	inside_radius = false;
 }
 
 /*

@@ -132,7 +132,7 @@ bool WizardCheckAttack(entity this)
 {
 	if(time < this.attack_finished)
 		return false;
-	if(!this.enemy_vis)
+	if(!MP_IMPEL && !this.enemy_vis)
 		return false;
 
 	if(this.enemy_range == RANGE_FAR)
@@ -352,7 +352,7 @@ void wiz_pain3(entity this) { set_anim(this, anim_wiz_pain3, wiz_pain4); }
 void wiz_pain2(entity this) { set_anim(this, anim_wiz_pain2, wiz_pain3); }
 void wiz_pain1(entity this) { set_anim(this, anim_wiz_pain1, wiz_pain2); }
 
-void wiz_death8(entity this) { set_anim(this, anim_wiz_death8, wiz_death8); }
+void wiz_death8(entity this) { set_anim(this, anim_wiz_death8, wiz_death8); CorpseThink(this); }
 void wiz_death7(entity this) { set_anim(this, anim_wiz_death7, wiz_death8); }
 void wiz_death6(entity this) { set_anim(this, anim_wiz_death6, wiz_death7); }
 void wiz_death5(entity this) { set_anim(this, anim_wiz_death5, wiz_death6); }
@@ -369,14 +369,22 @@ void wiz_death1(entity this)
 	_sound(this, CH_VOICE, "wizard/wdeath.wav", 1, ATTN_NORM);
 }
 
-void wiz_die(entity this, entity attacker)
+void wiz_die(entity this, entity inflictor, entity attacker)
 {
 // check for gib
 	if(this.health < -40)
 	{
 		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NORM);
 		ThrowHead(this, "progs/h_wizard.mdl", this.health);
-		ThrowGib(this, "progs/gib2.mdl", this.health);
+		if(MP_IMPEL)
+		{
+			ThrowGib(this, "progs/grenbone.mdl", this.health);
+			ThrowGib(this, "progs/grenbone.mdl", this.health);
+			ThrowGib(this, "progs/grenbone.mdl", this.health);
+			ThrowGib(this, "progs/grenbone.mdl", this.health);
+		}
+		else
+			ThrowGib(this, "progs/gib2.mdl", this.health);
 		ThrowGib(this, "progs/gib2.mdl", this.health);
 		ThrowGib(this, "progs/gib2.mdl", this.health);
 		return;
@@ -387,11 +395,18 @@ void wiz_die(entity this, entity attacker)
 
 void Wiz_Pain(entity this, entity attacker, float damage)
 {
-	_sound(this, CH_VOICE, "wizard/wpain.wav", 1, ATTN_NORM);
+	if(MP_IMPEL && this.pain_finished > time)
+		return;
+	if(!MP_IMPEL)
+		_sound(this, CH_VOICE, "wizard/wpain.wav", 1, ATTN_NORM);
 	if(random()*70 > damage)
 		return;		// didn't flinch
+	if(MP_IMPEL)
+		_sound(this, CH_VOICE, "wizard/wpain.wav", 1, ATTN_NORM);
 
 	wiz_pain1(this);
+	if(MP_IMPEL)
+		this.pain_finished = time + 1;
 }
 
 void Wiz_Missile(entity this)
@@ -404,13 +419,21 @@ string wiz_deathmessage(entity this) { return "was scragged by a Scrag"; }
 
 /*QUAKED monster_wizard(1 0 0)(-16 -16 -24)(16 16 40) Ambush
 */
+spawnfunc(monster_grenling);
 spawnfunc(monster_wizard)
 {
 	if(deathmatch) { delete(this); return; }
+	if(MP_IMPEL && coop == 2 && orig_random(this) < 0.5)
+	{
+		this.classname = "monster_grenling";
+		spawnfunc_monster_grenling(this);
+		return;
+	}
 	precache_model("progs/wizard.mdl");
 	precache_model("progs/h_wizard.mdl");
 	precache_model("progs/w_spike.mdl");
-
+	if(MP_IMPEL)
+		precache_model("progs/grenbone.mdl");
 	precache_sound("wizard/hit.wav");		// used by c code
 	precache_sound("wizard/wattack.wav");
 	precache_sound("wizard/wdeath.wav");

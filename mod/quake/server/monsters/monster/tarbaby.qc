@@ -150,6 +150,8 @@ void tbaby_jump1(entity this);
 
 void Tar_JumpTouch(entity this, entity toucher)
 {
+	if(MP_IMPEL && (this.health <= 0 || !this.takedamage))
+		return;
 	if(toucher.takedamage && toucher.classname != this.classname)
 	{
 		if( vdist(this.velocity, >, 400) )
@@ -231,7 +233,7 @@ void tbaby_die2(entity this)
 	
 	BecomeExplosion(this);
 }
-void tbaby_die1(entity this, entity attacker) { set_anim(this, anim_tbaby_exp, tbaby_die2); this.takedamage = DAMAGE_NO; }
+void tbaby_die1(entity this, entity inflictor, entity attacker) { set_anim(this, anim_tbaby_exp, tbaby_die2); this.takedamage = DAMAGE_NO; }
 
 void tbaby_mitosis(entity targ, entity attacker, float damage);
 void tbaby_checknew(entity this)

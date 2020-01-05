@@ -163,7 +163,13 @@ void f_attack3(entity this) { set_anim(this, anim_fish_attack3, f_attack4); fish
 void f_attack2(entity this) { set_anim(this, anim_fish_attack2, f_attack3); ai_charge(this, 10); }
 void f_attack1(entity this) { set_anim(this, anim_fish_attack1, f_attack2); ai_charge(this, 10); }
 
-void f_death21(entity this) { set_anim(this, anim_fish_death18, f_death21); if(!MP_HIPNOTIC) this.solid = SOLID_NOT; }
+void f_death21(entity this)
+{
+	set_anim(this, anim_fish_death18, f_death21);
+	if(!MP_HIPNOTIC && !MP_IMPEL)
+		this.solid = SOLID_NOT;
+	CorpseThink(this);
+}
 void f_death20(entity this) { set_anim(this, anim_fish_death18, f_death21); }
 void f_death19(entity this) { set_anim(this, anim_fish_death18, f_death20); }
 void f_death18(entity this) { set_anim(this, anim_fish_death18, f_death19); }
@@ -183,10 +189,12 @@ void f_death5(entity this) { set_anim(this, anim_fish_death5, f_death6); if(MP_H
 void f_death4(entity this) { set_anim(this, anim_fish_death4, f_death5); }
 void f_death3(entity this) { set_anim(this, anim_fish_death3, f_death4); }
 void f_death2(entity this) { set_anim(this, anim_fish_death2, f_death3); }
-void f_death1(entity this, entity attacker)
+void f_death1(entity this, entity inflictor, entity attacker)
 {
 	set_anim(this, anim_fish_death1, f_death2);
 	_sound(this, CH_VOICE, "fish/death.wav", 1, ATTN_NORM);
+	if(MP_IMPEL)
+		this.solid = SOLID_NOT;
 }
 
 void f_pain9(entity this) { set_anim(this, anim_fish_swim9, f_run1); ai_pain(this, 6); }
@@ -199,7 +207,7 @@ void f_pain3(entity this) { set_anim(this, anim_fish_swim3, f_pain4); ai_pain(th
 void f_pain2(entity this) { set_anim(this, anim_fish_swim2, f_pain3); ai_pain(this, 6); }
 void f_pain1(entity this) { set_anim(this, anim_fish_swim1, f_pain2); }
 
-void fish_die(entity this, entity attacker)
+void fish_die(entity this, entity inflictor, entity attacker)
 {
 	// check for gib
 	if(this.health < -20)
@@ -214,7 +222,7 @@ void fish_die(entity this, entity attacker)
 	}
 
 	// regular death
-	f_death1(this, attacker);
+	f_death1(this, inflictor, attacker);
 }
 
 void fish_pain(entity this, entity attacker, float damage)
@@ -224,7 +232,7 @@ void fish_pain(entity this, entity attacker, float damage)
 	f_pain1(this);
 }
 
-string fish_deathmessage(entity this) { return "was fed to the Rotfish"; }
+string fish_deathmessage(entity this) { return ((MP_IMPEL) ? "was eaten by a Rotfish" : "was fed to the Rotfish"); }
 
 // in rogue: (1 0 0) (-16 -16 -24) (16 16 32)
 /*QUAKED monster_fish(1 0 0)(-16 -16 -24)(16 16 24) Ambush

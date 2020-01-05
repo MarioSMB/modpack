@@ -8,6 +8,7 @@
 // mission pack defs
 #include "hipnotic/_all.qh"
 #include "rogue/_all.qh"
+#include "impel/_all.qh"
 
 //#include "defs.qc"
 #include "subs.qc"
@@ -27,4 +28,5 @@
 // mission packs
 #include "hipnotic/_all.inc"
 #include "rogue/_all.inc"
+#include "impel/_all.inc"
 

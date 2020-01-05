@@ -22,7 +22,7 @@ void random_pick_type(entity this)
 		this.noise = "shield/pickup.wav";
 		_setmodel(this, "progs/shield.mdl");
 		this.netname = "Power Shield";
-		this.items = IT_SHIELD;
+		this.powerups = POWERUP_SHIELD;
 //		if(norandom == 1)
 //			this.classname = "item_powerup_shield";
 	}
@@ -32,7 +32,7 @@ void random_pick_type(entity this)
 		this.noise = "belt/pickup.wav";
 		_setmodel(this, "progs/beltup.mdl");
 		this.netname = "Anti-Grav Belt";
-		this.items = IT_ANTIGRAV;
+		this.powerups = POWERUP_ANTIGRAV;
 //		if(norandom == 1)
 //			this.classname = "item_powerup_belt";
 	}
@@ -41,7 +41,7 @@ void random_pick_type(entity this)
 		this.noise = "items/protect.wav";
 		_setmodel(this, "progs/invulner.mdl");
 		this.netname = "Pentagram of Protection";
-		this.items = IT_INVULNERABILITY;
+		this.powerups = POWERUP_INVULNERABILITY;
 //		if(norandom == 1)
 //			this.classname = "item_artifact_invulnerability";
 	}
@@ -50,7 +50,7 @@ void random_pick_type(entity this)
 		this.noise = "items/inv1.wav";
 		_setmodel(this, "progs/invisibl.mdl");
 		this.netname = "Ring of Shadows";
-		this.items = IT_INVISIBILITY;
+		this.powerups = POWERUP_INVISIBILITY;
 //		if(norandom == 1)
 //			this.classname = "item_artifact_invisibility";
 	}
@@ -59,7 +59,7 @@ void random_pick_type(entity this)
 		this.noise = "items/damage.wav";
 		_setmodel(this, "progs/quaddama.mdl");
 		this.netname = "Quad Damage";
-		this.items = IT_QUAD;
+		this.powerups = POWERUP_QUAD;
 //		if(norandom == 1)
 //			this.classname = "item_artifact_super_damage";
 	}

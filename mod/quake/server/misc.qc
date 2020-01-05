@@ -142,7 +142,12 @@ spawnfunc(light_torch_small_walltorch)
 {
 	precache_model("progs/flame.mdl");
 	_setmodel(this, "progs/flame.mdl");
-	if(!MP_ROGUE || !(this.spawnflags & 1))
+	bool allow_fire = true;
+	if(MP_ROGUE && (this.spawnflags & 1))
+		allow_fire = false;
+	if(MP_IMPEL && (this.spawnflags & 2))
+		allow_fire = false;
+	if(allow_fire)
 		FireAmbient(this);
 	_makestatic_hidden(this);
 }
@@ -155,7 +160,11 @@ spawnfunc(light_flame_large_yellow)
 	precache_model("progs/flame2.mdl");
 	_setmodel(this, "progs/flame2.mdl");
 	this.frame = 1;
-	FireAmbient(this);
+	bool allow_fire = true;
+	if(MP_IMPEL && (this.spawnflags & 2))
+		allow_fire = false;
+	if(allow_fire)
+		FireAmbient(this);
 	_makestatic_hidden(this);
 }
 
@@ -166,7 +175,11 @@ spawnfunc(light_flame_small_yellow)
 {
 	precache_model("progs/flame2.mdl");
 	_setmodel(this, "progs/flame2.mdl");
-	FireAmbient(this);
+	bool allow_fire = true;
+	if(MP_IMPEL && (this.spawnflags & 2))
+		allow_fire = false;
+	if(allow_fire)
+		FireAmbient(this);
 	_makestatic_hidden(this);
 }
 
@@ -177,7 +190,11 @@ spawnfunc(light_flame_small_white)
 {
 	precache_model("progs/flame2.mdl");
 	_setmodel(this, "progs/flame2.mdl");
-	FireAmbient(this);
+	bool allow_fire = true;
+	if(MP_IMPEL && (this.spawnflags & 2))
+		allow_fire = false;
+	if(allow_fire)
+		FireAmbient(this);
 	_makestatic_hidden(this);
 }
 

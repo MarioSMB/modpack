@@ -68,7 +68,7 @@ void fd_secret_pain(entity this, entity attacker, float damage)
 	fd_secret_use(this, attacker, NULL);
 }
 
-void fd_secret_die(entity this, entity attacker)
+void fd_secret_die(entity this, entity inflictor, entity attacker)
 {
 	fd_secret_use(this, attacker, NULL);
 }

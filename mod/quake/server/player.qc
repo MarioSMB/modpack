@@ -130,7 +130,7 @@ const int anim_player_nailatt1 = 103;
 //const int anim_player_nailatt2 = 104;
 
 const int anim_player_light1 = 105;
-//const int anim_player_light2 = 106;
+const int anim_player_light2 = 106;
 
 const int anim_player_rockatt1 = 107;
 //const int anim_player_rockatt2 = 108;
@@ -242,7 +242,10 @@ void player_run(entity this)
 	}
 	else
 	{
-		if(this.walkframe == 6)
+		bool check_walkframe = (this.walkframe == 6);
+		if(MP_IMPEL)
+			check_walkframe = (this.walkframe >= 6);
+		if(check_walkframe)
 			this.walkframe = 0;
 		this.frame = this.frame + this.walkframe;
 	}
@@ -279,6 +282,57 @@ void player_run(entity this)
 		}
 	}
 	this.walkframe = this.walkframe + 1;
+
+	if(MP_IMPEL)
+	{
+		if(this.waterlevel == 0)
+		{
+			if(this.walkframe == 1 || this.walkframe == 4)
+			{
+				if(t_checkbottom(this))
+				{
+					float rand = random();
+					if(rand < 0.3)
+					{
+						if(random() < 0.5)
+							_sound(this, CHAN_BODY, "player/walk1.wav", 1, ATTN_NORM);
+						else
+							_sound(this, CHAN_BODY, "player/walk4.wav", 1, ATTN_NORM);
+					}
+					else if(rand < 0.6)
+					{
+						if(random() < 0.5)
+							_sound(this, CHAN_BODY, "player/walk2.wav", 1, ATTN_NORM);
+						else
+							_sound(this, CHAN_BODY, "player/walk5.wav", 1, ATTN_NORM);
+					}
+					else if(rand < 0.9)
+					{
+						if(random() < 0.5)
+							_sound(this, CHAN_BODY, "player/walk3.wav", 1, ATTN_NORM);
+						else
+							_sound(this, CHAN_BODY, "player/walk6.wav", 1, ATTN_NORM);
+					}
+				}
+			}
+		}
+		else if(this.waterlevel == 1)
+		{
+			if(this.walkframe == 1 || this.walkframe == 4)
+			{
+				if(t_checkbottom(this))
+				{
+					if(random() < 0.3)
+					{
+						if(random() < 0.5)
+							_sound(this, CHAN_BODY, "player/walkh2o1.wav", 1, ATTN_NORM);
+						else
+							_sound(this, CHAN_BODY, "player/walkh2o2.wav", 1, ATTN_NORM);
+					}
+				}
+			}
+		}
+	}
 }
 
 void player_shot6(entity this) { set_animofs(this, anim_player_shotatt1, 6, player_run); this.weaponframe = 6; }
@@ -287,6 +341,17 @@ void player_shot4(entity this) { set_animofs(this, anim_player_shotatt1, 4, play
 void player_shot3(entity this) { set_animofs(this, anim_player_shotatt1, 3, player_shot4); this.weaponframe = 3; }
 void player_shot2(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_shot3); this.weaponframe = 2; }
 void player_shot1(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_shot2); this.weaponframe = 1; this.effects |= EF_MUZZLEFLASH; }
+
+void player_shotimp10(entity this) { set_animofs(this, anim_player_shotatt1, 6, player_run); }
+void player_shotimp9(entity this) { set_animofs(this, anim_player_shotatt1, 5, player_shotimp10); this.weaponframe = 8; }
+void player_shotimp8(entity this) { set_animofs(this, anim_player_shotatt1, 4, player_shotimp9); this.weaponframe = 7; }
+void player_shotimp7(entity this) { set_animofs(this, anim_player_shotatt1, 3, player_shotimp8); this.weaponframe = 6; _sound(this, CHAN_AUTO, "weapons/impaler/impload.wav", 1, ATTN_NORM); }
+void player_shotimp6(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_shotimp7); this.weaponframe = 6; }
+void player_shotimp5(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_shotimp6); this.weaponframe = 5; }
+void player_shotimp4(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_shotimp5); this.weaponframe = 4; W_FireSpear(this); }
+void player_shotimp3(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_shotimp4); this.weaponframe = 3; this.effects |= EF_MUZZLEFLASH; }
+void player_shotimp2(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_shotimp3); this.weaponframe = 2; _sound(this, CHAN_WEAPON, "weapons/impaler/impfire.wav", 1, ATTN_NORM); }
+void player_shotimp1(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_shotimp2); this.weaponframe = 1; }
 
 void player_axe4(entity this) { set_animofs(this, anim_player_axatt1, 4, player_run); this.weaponframe = 4; }
 void player_axe3(entity this) { set_animofs(this, anim_player_axatt1, 3, player_axe4); this.weaponframe = 3; W_FireAxe(this); }
@@ -350,6 +415,13 @@ void player_grapple1(entity this) { set_animofs(this, anim_player_axattd1, 1, pl
 
 //--ZOID
 //============================================================================
+
+void player_rifle6(entity this) { set_animofs(this, anim_player_shotatt1, 6, player_run); }
+void player_rifle5(entity this) { set_animofs(this, anim_player_shotatt1, 5, player_rifle6); }
+void player_rifle4(entity this) { set_animofs(this, anim_player_shotatt1, 4, player_rifle5); }
+void player_rifle3(entity this) { set_animofs(this, anim_player_shotatt1, 3, player_rifle4); }
+void player_rifle2(entity this) { set_animofs(this, anim_player_shotatt1, 2, player_rifle3); }
+void player_rifle1(entity this) { set_animofs(this, anim_player_shotatt1, 1, player_rifle2); this.weaponframe = 0; this.effects |= EF_MUZZLEFLASH; }
 
 void player_nail2(entity this);
 void player_nail1(entity this)
@@ -421,6 +493,52 @@ void player_lava_nail2(entity this)
 	W_FireLavaSpikes(this, -4);
 	this.attack_finished = time + 0.2;
 }
+
+void player_superlight2(entity this);
+void player_superlight1(entity this)
+{
+	set_anim(this, anim_player_light1, player_superlight2);
+
+	if(this.ammo_cells < 1)
+	{
+		this.attack_finished = time + 0.5;
+		_sound(this, CHAN_WEAPON, "misc/power.wav", 1, ATTN_NORM);
+		this.ammo_cells = 0;
+		W_SetCurrentAmmo(this);
+		return;
+	}
+	this.attack_finished = time + 0.1;
+	_sound(this, CHAN_AUTO, "weapons/light2/lgstart1.wav", 1, ATTN_NORM);
+	this.effects |= EF_MUZZLEFLASH;
+	if(!this.button0)
+	{
+		player_run(this);
+		return;
+	}
+	this.weaponframe = this.weaponframe + 1;
+	if(this.weaponframe == 5)
+		this.weaponframe = 1;
+	SuperDamageSound(this);
+	W_FireSuperLightning(this);
+};
+
+void player_superlight2(entity this)
+{
+	set_anim(this, anim_player_light2, player_superlight1);
+
+	this.effects |= EF_MUZZLEFLASH;
+	if(!this.button0)
+	{
+		player_run(this);
+		return;
+	}
+	this.weaponframe = this.weaponframe + 1;
+	if(this.weaponframe == 5)
+		this.weaponframe = 1;
+	SuperDamageSound(this);
+	W_FireSuperLightning(this);
+	this.attack_finished = time + 0.1;
+};
 
 //============================================================================
 //ooppee - the entire player_light1 had to be reverted back to id1 code so replace the old player_light1 and player_light2 code with this, I deleted the old code.
@@ -575,7 +693,8 @@ void PainSound(entity this, entity attacker)
 		this.axhitme = false;
 		return;
 	}
-	this.pain_finished = time + 0.5;
+	if(!MP_IMPEL)
+		this.pain_finished = time + 0.5;
 
 // don't make multiple pain sounds right after each other
 
@@ -647,6 +766,9 @@ void player_pain(entity this, entity attacker, float damage)
 	if(this.weaponframe)
 		return;
 
+	if(MP_IMPEL && this.pain_finished > time)
+		return;
+
 	if(this.invisible_finished > time)
 		return;		// eyes don't have pain frames
 
@@ -656,6 +778,8 @@ void player_pain(entity this, entity attacker, float damage)
 		player_hampain1(this, attacker);
 	else
 		player_pain1(this, attacker);
+	if(MP_IMPEL)
+		this.pain_finished = time + 0.5;
 }
 
 void player_diea1(entity this);
@@ -771,7 +895,9 @@ vector VelocityForDamage(entity this, float dm)
 		v.z = 200 + 100 * random();
 	}
 
-	if(dm > -50)
+	if(MP_IMPEL && this.classname == "monster_blud")
+		v = v * 2;
+	else if(dm > -50)
 	{
 //		dprint("level 1\n");
 		v = v * 0.7;
@@ -821,6 +947,7 @@ void ThrowHead(entity this, string gibname, float dm)
 	_setmodel(this, gibname);
 	this.frame = 0;
 	this.nextthink = -1;
+	CorpseThink(this);
 	set_movetype(this, MOVETYPE_BOUNCE);
 	this.takedamage = DAMAGE_NO;
 	this.solid = SOLID_NOT;
@@ -839,12 +966,28 @@ void ThrowHead(entity this, string gibname, float dm)
 	}
 }
 
+void CorpseThink(entity this)
+{
+	if(!MP_IMPEL)
+		return;
+	if(corpse_removal && IS_MONSTER(this))
+	{
+		setthink(this, SUB_Remove);
+		this.nextthink = time + 30 + (random () * 30);
+	}
+}
 
 void GibPlayer(entity this, entity attacker)
 {
 	ThrowHead(this, get_playerhead(this), this.health);
 	ThrowGib(this, "progs/gib1.mdl", this.health);
 	ThrowGib(this, "progs/gib2.mdl", this.health);
+	if(MP_IMPEL)
+	{
+		ThrowGib(this, "progs/rawbone.mdl", this.health);
+		ThrowGib(this, "progs/rawbone.mdl", this.health);
+		ThrowGib(this, "progs/rawbone2.mdl", this.health);
+	}
 	ThrowGib(this, "progs/gib3.mdl", this.health);
 
 	this.deadflag = DEAD_DEAD;
@@ -861,28 +1004,37 @@ void GibPlayer(entity this, entity attacker)
 		return;
 	}
 		
-	if(random() < 0.5)
-		_sound(this, CH_VOICE, "player/gib.wav", 1, ATTN_NONE);
+	if(random() < ((MP_IMPEL) ? 0.1 : 0.5))
+	{
+		if(MP_IMPEL)
+		{
+			_sound(this, CHAN_BODY, "player/gib.wav", 1, ATTN_NONE);
+			_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NONE);
+		}
+		else
+			_sound(this, CH_VOICE, "player/gib.wav", 1, ATTN_NONE);
+	}
 	else
 		_sound(this, CH_VOICE, "player/udeath.wav", 1, ATTN_NONE);
 }
 
 void DropRune(entity this);
-void PlayerDie(entity this, entity attacker)
+void PlayerDie(entity this, entity inflictor, entity attacker)
 {
-	ClientObituary(this, attacker); // tell the world what happened
+	ClientObituary(this, inflictor, attacker); // tell the world what happened
 
-	this.items &= ~IT_INVISIBILITY;
+	this.powerups &= ~POWERUP_INVISIBILITY;
 	this.invisible_finished = 0;	// don't die as eyes
 	this.invincible_finished = 0;
 	this.super_damage_finished = 0;
+	this.field_generator_finished = 0;
 	this.radsuit_finished = 0;
 	this.modelindex = this.modelindex_player;	// don't use eyes
 
 	// hipnotic fields
 	this.wetsuit_finished = 0;
 	this.empathy_finished = 0;
-	this.items &= ~IT_EMPATHY_SHIELDS;
+	this.powerups &= ~POWERUP_EMPATHY_SHIELDS;
 
 	// rogue fields
 	this.gravity = 1.0;
@@ -910,6 +1062,8 @@ void PlayerDie(entity this, entity attacker)
 	this.deadflag = DEAD_DYING;
 	this.solid = SOLID_NOT;
 	UNSET_ONGROUND(this);
+	if(MP_IMPEL)
+		this.effects = 0;
 	set_movetype(this, MOVETYPE_TOSS);
 	if(this.velocity_z < 10)
 		this.velocity_z = this.velocity_z + random()*300;
@@ -1045,7 +1199,7 @@ void shield_spawn(entity shieldOwner, vector dir);
 bool TeamArmorDam(entity targ, entity inflictor, entity attacker, float damage);
 void player_touch(entity this, entity toucher) 
 {
-	if(this.items & IT_SHIELD)
+	if(this.powerups & POWERUP_SHIELD)
 	{
 		if(IS_PLAYER(toucher))
 		{

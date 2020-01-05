@@ -177,7 +177,7 @@ void eel_death1(entity this)
 	_sound(this, CH_VOICE, "eel/edie3r.wav", 1, ATTN_NORM);
 }
 
-void eel_death(entity this, entity attacker)
+void eel_death(entity this, entity inflictor, entity attacker)
 {
 	this.flags |= FL_SWIM;
 	setsize(this, '0 0 0', '0 0 0');

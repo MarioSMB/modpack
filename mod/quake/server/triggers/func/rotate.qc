@@ -601,7 +601,7 @@ void rotate_train_find(entity this)
 	SetTargetOrigin(this);
 	RotateTargetsFinal(this);
 	this.think1 = rotate_train_next;
-	if(!this.targetname)
+	if(!this.targetname || this.targetname == "")
 	{
 		// not triggered, so start immediately
 		this.endtime = this.ltime + 0.1;
@@ -658,7 +658,7 @@ spawnfunc(func_rotate_train)
 
 	if(!this.speed)
 		this.speed = 100;
-	if(!this.target)
+	if(!this.target || this.target == "")
 		objerror(this, "rotate_train without a target");
 
 	if(!this.noise)

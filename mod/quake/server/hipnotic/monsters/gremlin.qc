@@ -988,6 +988,7 @@ void GremlinDropBackpack(entity this)
 
 	this.items &= ~(IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS);
 	item.items = this.items;
+	item.powerups = this.powerups;
 	item.weapons = this.weapons;
 
 	if(item.weapons & WEP_AXE)
@@ -1035,7 +1036,7 @@ void GremlinDropBackpack(entity this)
 	setthink(item, SUB_Remove);
 }
 
-void gremlin_die(entity this, entity attacker)
+void gremlin_die(entity this, entity inflictor, entity attacker)
 {
 // check for gib
 	if(this.weapons & (WEP_SUPER_SHOTGUN | WEP_NAILGUN | WEP_SUPER_NAILGUN | WEP_GRENADE_LAUNCHER | WEP_ROCKET_LAUNCHER | WEP_LIGHTNING | WEP_LASER_CANNON | WEP_PROXIMITY_GUN))
@@ -1682,6 +1683,7 @@ void Gremlin_Split(entity this)
 //   grem.gorging = false;
 	grem.stoleweapon = false;
 	grem.items = 0;
+	grem.powerups = 0;
 	monsters_total += 1;
 	setorigin(grem, pos);
 	gremlin_spawn1(grem);

@@ -298,7 +298,7 @@ void army_fire(entity this)
 }
 
 
-void army_die10(entity this) { set_anim(this, anim_army_death10, army_die10); }
+void army_die10(entity this) { set_anim(this, anim_army_death10, army_die10); CorpseThink(this); }
 void army_die9(entity this) { set_anim(this, anim_army_death9, army_die10); }
 void army_die8(entity this) { set_anim(this, anim_army_death8, army_die9); }
 void army_die7(entity this) { set_anim(this, anim_army_death7, army_die8); }
@@ -315,7 +315,7 @@ void army_die3(entity this)
 void army_die2(entity this) { set_anim(this, anim_army_death2, army_die3); }
 void army_die1(entity this) { set_anim(this, anim_army_death1, army_die2); }
 
-void army_cdie11(entity this) { set_anim(this, anim_army_deathc11, army_cdie11); }
+void army_cdie11(entity this) { set_anim(this, anim_army_deathc11, army_cdie11); CorpseThink(this); }
 void army_cdie10(entity this) { set_anim(this, anim_army_deathc10, army_cdie11); }
 void army_cdie9(entity this) { set_anim(this, anim_army_deathc9, army_cdie10); }
 void army_cdie8(entity this) { set_anim(this, anim_army_deathc8, army_cdie9); }
@@ -334,7 +334,7 @@ void army_cdie3(entity this)
 void army_cdie2(entity this) { set_anim(this, anim_army_deathc2, army_cdie3); ai_back(this, 5); }
 void army_cdie1(entity this) { set_anim(this, anim_army_deathc1, army_cdie2); }
 
-void army_die(entity this, entity attacker)
+void army_die(entity this, entity inflictor, entity attacker)
 {
 // check for gib
 	if(this.health < -35)
@@ -366,6 +366,14 @@ Returns false if movement should continue
 bool SoldierCheckAttack(entity this)
 {
 	entity targ = this.enemy;
+
+	if(MP_IMPEL)
+	{
+		if(this.enemy_range == RANGE_FAR)
+			return false;
+		if(time < this.attack_finished)
+			return false;
+	}
 	
 // see if any entities are in the way of the shot
 	vector spot1 = this.origin + this.view_ofs;
@@ -381,11 +389,14 @@ bool SoldierCheckAttack(entity this)
 			
 	
 // missile attack
-	if(time < this.attack_finished)
-		return false;
-		
-	if(this.enemy_range == RANGE_FAR)
-		return false;
+	if(!MP_IMPEL)
+	{
+		if(time < this.attack_finished)
+			return false;
+			
+		if(this.enemy_range == RANGE_FAR)
+			return false;
+	}
 
 	float chance = 0;
 	if(this.enemy_range == RANGE_MELEE)

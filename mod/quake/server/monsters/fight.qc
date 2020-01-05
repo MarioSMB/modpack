@@ -30,6 +30,19 @@ Returns false if movement should continue
 */
 bool CheckAttack(entity this)
 {
+	if(MP_IMPEL)
+	{
+		if(this.enemy_range == RANGE_FAR)
+			return false;
+		if(this.enemy_range != RANGE_MELEE)
+		{
+			if(!this.th_missile)
+				return false;
+			if(time < this.attack_finished)
+				return false;
+		}
+	}
+
 	entity targ = this.enemy;
 	
 // see if any entities are in the way of the shot
@@ -54,14 +67,17 @@ bool CheckAttack(entity this)
 	}
 	
 // missile attack
-	if(!this.th_missile)
-		return false;
-		
-	if(time < this.attack_finished)
-		return false;
-		
-	if(this.enemy_range == RANGE_FAR)
-		return false;
+	if(!MP_IMPEL)
+	{
+		if(!this.th_missile)
+			return false;
+			
+		if(time < this.attack_finished)
+			return false;
+			
+		if(this.enemy_range == RANGE_FAR)
+			return false;
+	}
 
 	float chance;
 	if(this.enemy_range == RANGE_MELEE)
@@ -118,7 +134,6 @@ ai_charge
 The monster is in a melee attack, so get as close as possible to .enemy
 =============
 */
-bool visible(entity this, entity targ);
 bool infront(entity this, entity targ);
 int range(entity this, entity targ);
 void t_movetogoal(entity this, float dist);

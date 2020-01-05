@@ -225,6 +225,8 @@ void OgreFireGrenade(entity this)
 	missile.solid = SOLID_BBOX;
 	if(MP_ROGUE)
 		missile.classname = "ogre_grenade";
+	if(MP_IMPEL)
+		missile.classname = "grenade"; // NOTE: impel takes priority over rogue here!
 		
 // set missile speed	
 
@@ -490,7 +492,7 @@ void ogre_pain(entity this, entity attacker, float damage)
 	}
 }
 
-void ogre_die14(entity this) { set_anim(this, anim_ogre_death14, ogre_die14); }
+void ogre_die14(entity this) { set_anim(this, anim_ogre_death14, ogre_die14); CorpseThink(this); }
 void ogre_die13(entity this) { set_anim(this, anim_ogre_death13, ogre_die14); }
 void ogre_die12(entity this) { set_anim(this, anim_ogre_death12, ogre_die13); }
 void ogre_die11(entity this) { set_anim(this, anim_ogre_death11, ogre_die12); }
@@ -514,7 +516,7 @@ void ogre_die3(entity this)
 void ogre_die2(entity this) { set_anim(this, anim_ogre_death2, ogre_die3); }
 void ogre_die1(entity this) { set_anim(this, anim_ogre_death1, ogre_die2); }
 
-void ogre_bdie10(entity this) { set_anim(this, anim_ogre_bdeath10, ogre_bdie10); }
+void ogre_bdie10(entity this) { set_anim(this, anim_ogre_bdeath10, ogre_bdie10); CorpseThink(this); }
 void ogre_bdie9(entity this) { set_anim(this, anim_ogre_bdeath9, ogre_bdie10); }
 void ogre_bdie8(entity this) { set_anim(this, anim_ogre_bdeath8, ogre_bdie9); }
 void ogre_bdie7(entity this) { set_anim(this, anim_ogre_bdeath7, ogre_bdie8); ai_forward(this, 25); }
@@ -534,7 +536,7 @@ void ogre_bdie3(entity this)
 void ogre_bdie2(entity this) { set_anim(this, anim_ogre_bdeath2, ogre_bdie3); ai_forward(this, 5); }
 void ogre_bdie1(entity this) { set_anim(this, anim_ogre_bdeath1, ogre_bdie2); }
 
-void ogre_die(entity this, entity attacker)
+void ogre_die(entity this, entity inflictor, entity attacker)
 {
 // check for gib
 	if(this.health < -80)
@@ -582,12 +584,22 @@ bool OgreCheckAttack(entity this)
 		}
 	}
 
-	if(time < this.attack_finished)
-		return false;
-	
-	if(!this.enemy_vis)
-		return false;
+	if(MP_IMPEL)
+	{
+		if(this.enemy_range == RANGE_FAR)
+			return false;
+		if(time < this.attack_finished)
+			return false;
+	}
+	else
+	{
+		if(time < this.attack_finished)
+			return false;
 		
+		if(!this.enemy_vis)
+			return false;
+	}
+
 	entity targ = this.enemy;
 	
 // see if any entities are in the way of the shot
@@ -606,21 +618,35 @@ bool OgreCheckAttack(entity this)
 			
 // missile attack
 	float chance;
-	if(time < this.attack_finished)
-		return false;
-		
-	if(this.enemy_range == RANGE_FAR)
-		return false;
-	
-	else if(this.enemy_range == RANGE_NEAR)
-		chance = 0.10;
-	else if(this.enemy_range == RANGE_MID)
-		chance = 0.05;
+	if(MP_IMPEL)
+	{
+		if(this.enemy_range == RANGE_NEAR)
+			chance = 0.10;
+		else if(this.enemy_range == RANGE_MID)
+			chance = 0.05;
+		else
+			chance = 0;
+	}
 	else
-		chance = 0;
+	{
+		if(time < this.attack_finished)
+			return false;
+
+		if(this.enemy_range == RANGE_FAR)
+			return false;
+		else if(this.enemy_range == RANGE_NEAR)
+			chance = 0.10;
+		else if(this.enemy_range == RANGE_MID)
+			chance = 0.05;
+		else
+			chance = 0;
+	}
 
 	this.attack_state = AS_MISSILE;
-	SUB_AttackFinished(this, 1 + 2*random());
+	float extra_delay = 2;
+	if(MP_IMPEL)
+		extra_delay = 3;
+	SUB_AttackFinished(this, 1 + extra_delay*random());
 	return true;
 }
 
@@ -687,4 +713,5 @@ spawnfunc(monster_ogre_marksman)
 {
 	if(MP_ROGUE) { delete(this); return; }
 	spawnfunc_monster_ogre(this);
+	this.classname = "monster_ogre_marksman";
 }

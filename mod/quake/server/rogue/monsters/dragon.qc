@@ -679,7 +679,7 @@ void dragon_death5(entity this) { set_anim(this, anim_dragon_drgdth05, dragon_de
 void dragon_death4(entity this) { set_anim(this, anim_dragon_drgdth04, dragon_death5); dragon_explode(this); }
 void dragon_death3(entity this) { set_anim(this, anim_dragon_drgdth03, dragon_death4); dragon_explode(this); }
 void dragon_death2(entity this) { set_anim(this, anim_dragon_drgdth02, dragon_death3); dragon_explode(this); }
-void dragon_death1(entity this, entity attacker)
+void dragon_death1(entity this, entity inflictor, entity attacker)
 {
 	set_anim(this, anim_dragon_drgdth01, dragon_death2);
 

@@ -4,7 +4,7 @@
 
 // prototypes for WEAPONS.QC functions
 //float crandom();
-void SpawnBlood(vector org, vector vel, float damage);
+void SpawnBlood(vector org, vector vel, float damage, entity targ);
 
 void GrappleTrail(entity h, entity player)
 {
@@ -54,7 +54,7 @@ void GrappleTrack(entity this)
 		spray.x = 100 * crandom();
 		spray.y = 100 * crandom();
 		spray.z = 100 * crandom() + 50;
-		SpawnBlood(this.origin, spray, 20);
+		SpawnBlood(this.origin, spray, 20, this.enemy);
 	}
 	if(this.enemy.solid == SOLID_SLIDEBOX) {
 		this.velocity = '0 0 0';

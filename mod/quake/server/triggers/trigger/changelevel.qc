@@ -7,7 +7,7 @@ void changelevel_touch(entity this, entity toucher)
 	if(!IS_PLAYER(toucher))
 		return;
 
-	if((autocvar_noexit == 1) ||((autocvar_noexit == 2) &&(mapname != "start" && mapname != "hipstart" && mapname != "rstart")))
+	if((autocvar_noexit == 1) ||((autocvar_noexit == 2) &&(mapname != "start" && mapname != "hipstart" && mapname != "rstart" && mapname != "aopstart")))
 	{
 		T_Damage(toucher, this, this, 50000);
 		return;

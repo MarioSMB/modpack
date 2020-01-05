@@ -20,6 +20,11 @@ const int WEP_MULTI_GRENADE        = BIT(14);
 const int WEP_MULTI_ROCKET         = BIT(15);
 const int WEP_PLASMA_GUN           = BIT(16);
 
+const int WEP_LIGHTME              = BIT(17);
+const int WEP_SPEAR                = BIT(18);
+const int WEP_NAPALM               = BIT(19);
+const int WEP_PULSERIFLE           = BIT(20);
+
 
 const int IT_SHELLS               = BIT(0);
 const int IT_NAILS                = BIT(1);
@@ -34,19 +39,26 @@ const int IT_SUPERHEALTH          = BIT(7);
 const int IT_KEY1                 = BIT(8);
 const int IT_KEY2                 = BIT(9);
 
-const int IT_INVISIBILITY         = BIT(10);
-const int IT_INVULNERABILITY      = BIT(11);
-const int IT_SUIT                 = BIT(12);
-const int IT_QUAD                 = BIT(13);
-
 const int IT_LAVA_NAILS          = BIT(14);
 const int IT_PLASMA_AMMO         = BIT(15);
 const int IT_MULTI_ROCKETS       = BIT(16);
-const int IT_SHIELD              = BIT(17);
-const int IT_ANTIGRAV            = BIT(18);
-const int IT_EARTHQUAKE          = BIT(19);
-const int IT_V_SPHERE            = BIT(20);
+//const int IT_EARTHQUAKE          = BIT(19);
 
-const int IT_WETSUIT             = BIT(21);
-const int IT_EMPATHY_SHIELDS     = BIT(22);
-const int IT_HORN_OF_CONJURING   = BIT(23);
+const int IT_PULSEPOWER1         = BIT(17);
+const int IT_PULSEPOWER2         = BIT(18);
+
+
+const int POWERUP_INVISIBILITY         = BIT(0);
+const int POWERUP_INVULNERABILITY      = BIT(1);
+const int POWERUP_SUIT                 = BIT(2);
+const int POWERUP_QUAD                 = BIT(3);
+
+const int POWERUP_WETSUIT              = BIT(4);
+const int POWERUP_EMPATHY_SHIELDS      = BIT(5);
+const int POWERUP_HORN_OF_CONJURING    = BIT(6);
+
+const int POWERUP_SHIELD               = BIT(7);
+const int POWERUP_ANTIGRAV             = BIT(8);
+const int POWERUP_V_SPHERE             = BIT(9);
+
+const int POWERUP_FIELDGEN             = BIT(10);

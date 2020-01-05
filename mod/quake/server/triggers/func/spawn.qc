@@ -9,7 +9,7 @@ void func_spawn_think(entity this)
 void spawn_use(entity this, entity actor, entity trigger)
 {
 	entity spawnentity;
-	bool horn_active = (trigger.items & IT_HORN_OF_CONJURING); // check the TRIGGER, as a player holding a horn might stumble upon a regular monster spawner!
+	bool horn_active = (trigger.powerups & POWERUP_HORN_OF_CONJURING); // check the TRIGGER, as a player holding a horn might stumble upon a regular monster spawner!
 
 	if((this.spawnmulti == 1) || (horn_active))
 	{

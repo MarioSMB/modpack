@@ -855,7 +855,9 @@ void GotoFirstMap(entity this)
 		// we do NOT set this to 0 any more, so someone "accidentally" changing
 		// to this "init" map on a dedicated server will cause no permanent
 		// harm
-		if(MP_ROGUE)
+		if(MP_IMPEL)
+			mapname = "aopstart";
+		else if(MP_ROGUE)
 			mapname = "rstart";
 		else if(MP_HIPNOTIC)
 			mapname = "hipstart";
@@ -938,9 +940,12 @@ void CheckRules_World()
 	if(timelimit && time >= timelimit)
 	{
 		// crude hack to force restart of the server if we've reached the timelimit on a co-op level
-		if(server_is_dedicated && autocvar_quit_when_empty && !deathmatch && world.model != "maps/start.bsp" && world.model != "maps/rstart.bsp" && world.model != "maps/hipstart.bsp")
+		if(server_is_dedicated && autocvar_quit_when_empty && !deathmatch 
+			&& world.model != "maps/start.bsp" && world.model != "maps/rstart.bsp" && world.model != "maps/hipstart.bsp" && world.model != "maps/aopstart.bsp")
 		{
-			if(MP_HIPNOTIC)
+			if(MP_IMPEL)
+				localcmd("\nmap aopstart\n");
+			else if(MP_HIPNOTIC)
 				localcmd("\nmap hipstart\n");
 			else if(MP_ROGUE)
 				localcmd("\nmap rstart\n");
@@ -1043,11 +1048,19 @@ void CreatureFrame_FallDamage(entity this)
 			}
 			else if(this.jump_flag < -650)
 			{
-				T_Damage(this, NULL, NULL, 5);
-				if(IS_PLAYER(this))
+				if(MP_IMPEL && this.exptime != 0)
 				{
-					player_sound(this, CH_VOICE, "land2.wav", ATTN_NORM);
-					this.deathtype = "falling";
+					if(IS_PLAYER(this))
+						player_sound(this, CH_VOICE, "land2.wav", ATTN_NORM);
+				}
+				else
+				{
+					T_Damage(this, NULL, NULL, 5);
+					if(IS_PLAYER(this))
+					{
+						player_sound(this, CH_VOICE, "land2.wav", ATTN_NORM);
+						this.deathtype = "falling";
+					}
 				}
 			}
 			else if(IS_PLAYER(this))

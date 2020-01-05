@@ -148,10 +148,11 @@ void demon1_run1(entity this)
 	ai_run(this, 20);
 }
 
+void demon1_die1(entity this);
 void demon1_jump1(entity this);
 void demon1_jump12(entity this) { set_animofs(this, anim_demon_leap, 12, demon1_jump1); }
 void demon1_jump11(entity this) { set_animofs(this, anim_demon_leap, 11, demon1_jump12); }
-void demon1_jump10(entity this) { set_animofs(this, anim_demon_leap, 10, demon1_jump1); this.nextthink = time + 3; }
+void demon1_jump10(entity this) { set_animofs(this, anim_demon_leap, 10, demon1_jump1); if(!MP_IMPEL || this.exptime == 0) this.nextthink = time + 3; }
 void demon1_jump9(entity this) { set_animofs(this, anim_demon_leap, 9, demon1_jump10); }
 void demon1_jump8(entity this) { set_animofs(this, anim_demon_leap, 8, demon1_jump9); }
 void demon1_jump7(entity this) { set_animofs(this, anim_demon_leap, 7, demon1_jump8); }
@@ -160,6 +161,13 @@ void demon1_jump5(entity this) { set_animofs(this, anim_demon_leap, 5, demon1_ju
 void demon1_jump4(entity this)
 {
 	set_animofs(this, anim_demon_leap, 4, demon1_jump5);
+	if(MP_IMPEL && this.health <= 0)
+	{
+		dprint("demon1_jump4: dead\n");
+		settouch(this, func_null);
+		setthink(this, demon1_die1);
+		return;
+	}
 	ai_face(this);
 	settouch(this, Demon_JumpTouch);
 	this.origin_z += 1;
@@ -213,7 +221,7 @@ void demon1_pain(entity this, entity attacker, float damage)
 	demon1_pain1(this);
 }
 
-void demon1_die9(entity this) { set_animofs(this, anim_demon_death, 9, demon1_die9); }
+void demon1_die9(entity this) { set_animofs(this, anim_demon_death, 9, demon1_die9); CorpseThink(this); }
 void demon1_die8(entity this) { set_animofs(this, anim_demon_death, 8, demon1_die9); }
 void demon1_die7(entity this) { set_animofs(this, anim_demon_death, 7, demon1_die8); }
 void demon1_die6(entity this) { set_animofs(this, anim_demon_death, 6, demon1_die7); }
@@ -227,7 +235,7 @@ void demon1_die1(entity this)
 	_sound(this, CH_VOICE, "demon/ddeath.wav", 1, ATTN_NORM);
 }
 
-void demon_die(entity this, entity attacker)
+void demon_die(entity this, entity inflictor, entity attacker)
 {
 // check for gib
 	if(this.health < -80)
@@ -340,7 +348,7 @@ void Demon_Melee(entity this, float side)
 
 void Demon_JumpTouch(entity this, entity toucher)
 {
-	if(this.health <= 0)
+	if(this.health <= 0 || (MP_IMPEL && !this.takedamage))
 		return;
 		
 	if(toucher.takedamage)
@@ -354,7 +362,7 @@ void Demon_JumpTouch(entity this, entity toucher)
 
 	if(!t_checkbottom(this))
 	{
-		if(IS_ONGROUND(this))
+		if(IS_ONGROUND(this) && (!MP_IMPEL || this.exptime == 0))
 		{	// jump randomly to not get hung up
 			//dprint("popjump\n");
 			settouch(this, func_null);
@@ -365,6 +373,9 @@ void Demon_JumpTouch(entity this, entity toucher)
 	}
 
 	settouch(this, func_null);
+	if(MP_IMPEL && this.exptime != 0)
+		return;
+
 	setthink(this, demon1_jump11);
 	this.nextthink = time + 0.1;
 }

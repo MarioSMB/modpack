@@ -251,7 +251,7 @@ void wrath_die07(entity this) { set_anim(this, anim_wrath_wrthdt07, wrath_die09)
 void wrath_die05(entity this) { set_anim(this, anim_wrath_wrthdt05, wrath_die07); }
 void wrath_die04(entity this) { set_anim(this, anim_wrath_wrthdt04, wrath_die05); }
 void wrath_die03(entity this) { set_anim(this, anim_wrath_wrthdt03, wrath_die04); }
-void wrath_die02(entity this, entity attacker) { set_anim(this, anim_wrath_wrthdt02, wrath_die03); _sound(this, CH_VOICE, "wrath/wdthc.wav", 1, ATTN_NORM); }
+void wrath_die02(entity this, entity inflictor, entity attacker) { set_anim(this, anim_wrath_wrthdt02, wrath_die03); _sound(this, CH_VOICE, "wrath/wdthc.wav", 1, ATTN_NORM); }
 
 string wrath_sight(entity this) { return "wrath/wsee.wav"; }
 string wrath_deathmessage(entity this) { return "was disintegrated by a Wrath"; }

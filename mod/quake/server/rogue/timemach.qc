@@ -101,7 +101,7 @@ void time_crash(entity this)
 	SUB_UseTargets(this, NULL, NULL);
 }
 
-void time_crash_die(entity this, entity attacker)
+void time_crash_die(entity this, entity inflictor, entity attacker)
 {
 	time_crash(this);
 }
@@ -143,7 +143,7 @@ void time_pain(entity this, entity attacker, float take)
 	}
 }
 
-void time_die(entity this, entity attacker)
+void time_die(entity this, entity inflictor, entity attacker)
 {
 	time_pain(this, attacker, 0);
 }

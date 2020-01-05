@@ -9,7 +9,7 @@ bool visible(entity this, entity targ);
 */
 void player_run(entity this);
 void T_RadiusDamage(entity bomb, entity attacker, float rad, entity ignore);
-void SpawnBlood(vector org, vector vel, float damage);
+void SpawnBlood(vector org, vector vel, float damage, entity targ);
 void SuperDamageSound(entity this);
 
 // called by worldspawn
@@ -30,7 +30,7 @@ PRECACHE(Weapons)
 }
 
 //MED 10/18/96
-void spawn_touchblood(entity this, float damage);
+void spawn_touchblood(entity this, float damage, entity targ);
 /*
 ================
 HIPNOTIC WEAPONS
@@ -57,7 +57,7 @@ void HIP_LaserTouch(entity this, entity toucher)
 	{
 		if(this.lastvictim == toucher)
 			this.dmg = this.dmg / 2;
-		spawn_touchblood(this, this.dmg);
+		spawn_touchblood(this, this.dmg, toucher);
 		T_Damage(toucher, this, this.lastvictim, this.dmg);
 	}
 	else if((this.cnt == 3) ||(random()<0.15))
@@ -159,7 +159,7 @@ void HIP_FireLaser(entity this, float stat)
 		return;
 	}
 	SuperDamageSound(this);
-	this.effects = this.effects | EF_MUZZLEFLASH;
+	this.effects |= EF_MUZZLEFLASH;
 	makevectors(this.v_angle);
 
 	float ofs = 6;
@@ -296,11 +296,11 @@ void HIP_LightningThink(entity this)
 			te_lightning2(NULL, owner_org, trace_endpos); // should be this, bug in te_lightning
 
 			this.nextthink = time + 0.1;
-	//      this.think = HIP_DiversionLightningThink;
+	//      setthink(this, HIP_DiversionLightningThink);
 	//      this.nextthink = time;
 	//		this.delay = time + 0.30;
 	//		this.origin = this.owner.origin;
-	//		this.think();
+	//		getthink(this)(this);
 			return;
 		}
 	}
@@ -422,7 +422,7 @@ void HIP_FireMjolnir(entity this)
 		if(trace_ent.classname == "monster_zombie")
 			damage = 70;
 		trace_ent.axhitme = true;
-		SpawnBlood(org, v_forward, damage);
+		SpawnBlood(org, v_forward, damage, trace_ent);
 		T_Damage(trace_ent, this, this, damage);
 	}
 	else
@@ -450,6 +450,19 @@ void W_SwitchWeapon(entity this, float to_wep)
 	this.weapon = to_wep;
 
 	W_SetCurrentAmmo(this);
+
+	if(to_wep == WEP_PULSERIFLE)
+	{
+		if(this.items & IT_PULSEPOWER2)
+			centerprint(this, "[ LEVEL III LASER SYSTEM SELECTED ]\n");
+		else if(this.items & IT_PULSEPOWER1)
+			centerprint(this, "[ LEVEL II LASER SYSTEM SELECTED ]\n");
+		else
+			centerprint(this, "[ LEVEL I LASER SYSTEM SELECTED ]\n");
+		_sound(this, CHAN_AUTO, "weapons/pulse/install.wav", 1, ATTN_NORM);
+		_sound(this, CH_WEAPON_SINGLE, "enviro/pinhead/pinfire.wav", 1, ATTN_NORM);
+		stuffcmd(this, "bf\n");
+	}
 }
 
 /*
@@ -469,8 +482,45 @@ void W_FireAxe(entity this)
 
 	if(trace_ent.takedamage)
 	{
+		if(MP_IMPEL)
+		{
+			float r = random();
+			if(trace_ent.classname == "monster_juggernaut" || trace_ent.classname == "monster_juggernaut2")
+				_sound(this, CH_WEAPON_SINGLE, "monsters/juggers/jbent.wav", 1, ATTN_NORM);
+			else if(trace_ent.classname == "monster_hell_knight" || trace_ent.classname == "monster_knight" || trace_ent.classname == "monster_dknight")
+			{
+				if(r < 0.3)
+					_sound(trace_ent, CHAN_ITEM, "enviro/physics/axemet1.wav", 1, ATTN_NORM);
+				else if(r < 0.6)
+					_sound(trace_ent, CHAN_ITEM, "enviro/physics/axemet2.wav", 1, ATTN_NORM);
+				else
+					_sound(trace_ent, CHAN_ITEM, "enviro/physics/axemet3.wav", 1, ATTN_NORM);
+			}
+			else if(trace_ent.classname == "player" && trace_ent.armorvalue > 0)
+			{
+				if(r < 0.3)
+					_sound(trace_ent, CHAN_ITEM, "enviro/physics/axemet1.wav", 1, ATTN_NORM);
+				else if(r < 0.6)
+					_sound(trace_ent, CHAN_ITEM, "enviro/physics/axemet2.wav", 1, ATTN_NORM);
+				else
+					_sound(trace_ent, CHAN_ITEM, "enviro/physics/axemet3.wav", 1, ATTN_NORM);
+			}
+			else if(r < 0.5)
+			{
+				_sound(trace_ent, CHAN_ITEM, "enviro/physics/axecut1.wav", 1, ATTN_NORM);
+				SpawnBlood(org, '0 0 0', 20, trace_ent);
+				SpawnBlood(org, '0 0 0', 20, trace_ent);
+				SpawnBlood(org, '0 0 0', 20, trace_ent);
+			}
+			else
+			{
+				_sound(trace_ent, CHAN_ITEM, "enviro/physics/axecut2.wav", 1, ATTN_NORM);
+				SpawnBlood(org, '0 0 0', 20, trace_ent);
+			}
+		}
 		trace_ent.axhitme = true;
-		SpawnBlood(org, '0 0 0', 20);
+		if(!MP_IMPEL)
+			SpawnBlood(org, '0 0 0', 20, trace_ent);
 		T_Damage(trace_ent, this, this, 20);
 	}
 	else
@@ -528,9 +578,33 @@ void SpawnMeatSpray(entity this, vector org, vector vel)
 SpawnBlood
 ================
 */
-void SpawnBlood(vector org, vector vel, float damage)
+void SpawnBlood(vector org, vector vel, float damage, entity targ)
 {
-	particle(org, vel * 0.1, 73, damage * 2);
+	if(MP_IMPEL)
+	{
+		float r = random();
+		if(targ.takedamage != DAMAGE_AIM || targ.classname == "misc_explobox" || targ.classname == "wall_explode" || targ.classname == "misc_explobox2")
+			te_gunshot(org);
+		else
+		{
+			if(targ.classname == "monster_spider" || targ.classname == "monster_juggernaut" || targ.classname == "monster_juggernaut2")
+				particle(org, vel * 0.1, 5, damage * 2);
+			else
+			{
+				r = random();
+				if(r < 0.7)
+					particle(org, vel * 0.1, 73, damage * 2);
+				else
+				{
+					particle(org, vel * 0.1, 79, damage * 1);
+					particle(org, vel * 0.25, 74, damage * 5);
+					particle(org, vel * 0.15, 69, damage * 2);
+				}
+			}
+		}
+	}
+	else
+		particle(org, vel * 0.1, 73, damage * 2);
 }
 
 /*
@@ -538,10 +612,10 @@ void SpawnBlood(vector org, vector vel, float damage)
 spawn_touchblood
 ================
 */
-void spawn_touchblood(entity this, float damage)
+void spawn_touchblood(entity this, float damage, entity targ)
 {
 	vector vel = wall_velocity(this) * 0.2;
-	SpawnBlood(this.origin + vel * 0.01, vel, damage);
+	SpawnBlood(this.origin + vel * 0.01, vel, damage, targ);
 }
 
 
@@ -620,7 +694,7 @@ void TraceAttack(float damage, vector dir)
 	if(trace_ent.takedamage)
 	{
 		if(trace_ent.solid != SOLID_BSP) // not on walls (TODO: iscreature field)
-			SpawnBlood(org, vel*0.2, damage);
+			SpawnBlood(org, vel*0.2, damage, trace_ent);
 		else
 			te_gunshot(org); // secret doors need bumps too!
 		AddMultiDamage(trace_ent, damage);
@@ -750,7 +824,7 @@ void T_MissileTouch(entity this, entity toucher)
 	
 	if(toucher.health)
 	{
-		if(toucher.classname == "monster_shambler")
+		if(toucher.classname == "monster_shambler" || toucher.classname == "monster_legond")
 			damg = damg * 0.5;	// mostly immune
 		T_Damage(toucher, this, this.owner, damg );
 	}
@@ -808,6 +882,817 @@ entity W_FireRocket(entity this)
 	return missile;
 }
 
+
+/*
+====================================
+JUNK
+====================================
+*/
+
+vector VelocityForDamage(entity this, float dm);
+
+void PulseHome(entity this)
+{
+	vector vtemp = this.enemy.origin + '0 0 10';
+	vector dir = normalize(vtemp - this.origin);
+	this.velocity = dir * 800;
+	if(!this.enemy)
+	{
+		this.nextthink = time + 5;
+		setthink(this, SUB_Remove);
+	}
+	else
+	{
+		this.nextthink = time + 0.2;
+		setthink(this, PulseHome);
+	}
+}
+
+void missile_touchremove(entity this, entity toucher)
+{
+	delete(this);
+}
+
+void BecomePurpleExplosion(entity this, entity directhitentity, float dm)
+{
+	entity missile = spawn();
+	set_movetype(missile, MOVETYPE_BOUNCE);
+	missile.solid = SOLID_BBOX;
+	missile.velocity = VelocityForDamage(this, dm);
+	missile.avelocity_x = random() * 300;
+	missile.avelocity_y = random() * 300;
+	missile.avelocity_z = random() * 300;
+	settouch(missile, missile_touchremove);
+	missile.nextthink = time + 3;
+	setthink(missile, SUB_Remove);
+	if(directhitentity.classname == "monster_ogre" || directhitentity.classname == "monster_ogre_marksman" || directhitentity.classname == "monster_shambler"
+	|| directhitentity.classname == "monster_legond" || directhitentity.classname == "monster_blud" || directhitentity.classname == "monster_babyblud"
+	|| directhitentity.classname == "monster_shalrath" || directhitentity.classname == "monster_army" || directhitentity.classname == "monster_demon1"
+	|| directhitentity.classname == "monster_enforcer" || directhitentity.classname == "monster_lenforcer" || directhitentity.classname == "player")
+	{
+		_setmodel(missile, "progs/blpulse.mdl");
+	}
+	else
+		_setmodel(missile, "progs/wlpulse.mdl");
+	setsize(missile, '0 0 0', '0 0 0');
+	setorigin(missile, this.origin - v_forward * 8);
+}
+
+void BecomeBloodSpurt(entity this, float dm)
+{
+	entity missile = spawn();
+	set_movetype(missile, MOVETYPE_BOUNCE);
+	missile.solid = SOLID_BBOX;
+	missile.velocity = VelocityForDamage(this, dm);
+	missile.avelocity_x = random() * 300;
+	missile.avelocity_y = random() * 300;
+	missile.avelocity_z = random() * 300;
+	settouch(missile, missile_touchremove);
+	missile.nextthink = time + 3;
+	setthink(missile, SUB_Remove);
+	_setmodel(missile, "progs/blpulse.mdl");
+	setsize(missile, '0 0 0', '0 0 0');
+	setorigin(missile, this.origin - v_forward * 8);
+}
+
+void T_MediumPulseTouch(entity this, entity toucher)
+{
+	if(toucher == this.owner)
+		return;
+	if(pointcontents(this.origin) == CONTENT_SKY)
+	{
+		delete(this);
+		return;
+	}
+	float damg;
+	if(toucher.classname == "monster_zombie")
+		damg = 55 + (random() * 7);
+	else
+		damg = 40 + (random() * 20);
+	if(toucher.takedamage)
+	{
+		if(toucher.health <= damg && toucher.classname != "monster_juggernaut" && toucher.classname != "monster_juggernaut2"
+			&& toucher.solid != SOLID_BSP && toucher.move_movetype != MOVETYPE_NONE && !IS_PLAYER(toucher))
+		{
+			T_Damage(toucher, this, this.owner, ((35 + damg) + (random() * 60)));
+			toucher.origin_z = toucher.origin_z + 1;
+			setorigin(toucher, toucher.origin);
+			UNSET_ONGROUND(toucher);
+			makevectors(this.v_angle);
+			if(toucher.classname == "monster_hell_knight" || toucher.classname == "monster_ogre" || toucher.classname == "monster_ogre_marksman" || toucher.classname == "monster_shambler"
+				|| toucher.classname == "monster_legond" || toucher.classname == "monster_blud" || toucher.classname == "monster_babyblud" || toucher.classname == "monster_shalrath")
+			{
+				toucher.velocity = qc_aim(this, 25);
+				toucher.velocity = '0 0 25' + this.velocity;
+			}
+			else
+			{
+				toucher.velocity = qc_aim(this, 500);
+				toucher.velocity = '0 0 150' + this.velocity;
+			}
+			set_movetype(toucher, MOVETYPE_TOSS);
+			toucher.v_angle = this.angles;
+		}
+		T_Damage(toucher, this, this.owner, damg);
+	}
+	_sound(this, CH_WEAPON_SINGLE, "enforcer/enfstop.wav", 1, ATTN_NORM);
+	BecomePurpleExplosion(this, toucher, damg);
+	BecomePurpleExplosion(this, toucher, damg);
+	delete(this);
+}
+
+void T_SinglePulseTouch(entity this, entity toucher)
+{
+	if(toucher == this.owner)
+		return;
+	if(pointcontents(this.origin) == CONTENT_SKY)
+	{
+		delete(this);
+		return;
+	}
+	float damg;
+	if(toucher.classname == "monster_zombie")
+		damg = 55 + random() * 7;
+	else
+		damg = 35 + random() * 25;
+	if(toucher.takedamage)
+	{
+		T_Damage(toucher, this, this.owner, damg);
+		if(toucher.health <= 0 && toucher.classname != "monster_juggernaut" && toucher.classname != "monster_juggernaut2" && toucher.solid != SOLID_BSP && toucher.move_movetype != MOVETYPE_NONE)
+		{
+			if(!IS_PLAYER(toucher))
+			{
+				toucher.origin_z = toucher.origin_z + 1;
+				setorigin(toucher, toucher.origin);
+			}
+			UNSET_ONGROUND(toucher);
+			makevectors(this.v_angle);
+			if(toucher.classname == "monster_hell_knight" || toucher.classname == "monster_ogre" || toucher.classname == "monster_ogre_marksman" || toucher.classname == "monster_shambler"
+				|| toucher.classname == "monster_legond" || toucher.classname == "monster_blud" || toucher.classname == "monster_babyblud" || toucher.classname == "monster_shalrath")
+			{
+				toucher.velocity = qc_aim(this, 25);
+				toucher.velocity = '0 0 25' + this.velocity;
+			}
+			else
+			{
+				toucher.velocity = qc_aim(this, 500);
+				toucher.velocity = '0 0 150' + this.velocity;
+			}
+			if(!IS_PLAYER(toucher))
+			{
+				set_movetype(toucher, MOVETYPE_TOSS);
+				toucher.v_angle = this.angles;
+			}
+		}
+	}
+	_sound(this, CH_WEAPON_SINGLE, "enforcer/enfstop.wav", 1, ATTN_NORM);
+	BecomePurpleExplosion(this, toucher, damg);
+	BecomePurpleExplosion(this, toucher, damg);
+	delete(this);
+}
+
+void T_SmallPulseTouch(entity this, entity toucher)
+{
+	if(toucher == this.owner)
+		return;
+	if(pointcontents(this.origin) == CONTENT_SKY)
+	{
+		delete(this);
+		return;
+	}
+	float damg;
+	if(toucher.classname == "monster_zombie")
+		damg = 55 + random() * 7;
+	else
+		damg = 35 + random() * 25;
+	if(toucher.takedamage)
+	{
+		T_Damage(toucher, this, this.owner, damg);
+		if(toucher.health <= 0 && toucher.classname != "monster_juggernaut" && toucher.classname != "monster_juggernaut2" 
+					&& toucher.solid != SOLID_BSP && toucher.move_movetype != MOVETYPE_NONE && !IS_PLAYER(toucher))
+		{
+			toucher.origin_z = toucher.origin_z + 1;
+			setorigin(toucher, toucher.origin);
+			UNSET_ONGROUND(toucher);
+			makevectors(this.v_angle);
+			if(toucher.classname == "monster_hell_knight" || toucher.classname == "monster_ogre" || toucher.classname == "monster_ogre_marksman" || toucher.classname == "monster_shambler"
+				|| toucher.classname == "monster_legond" || toucher.classname == "monster_blud" || toucher.classname == "monster_babyblud" || toucher.classname == "monster_shalrath")
+			{
+				toucher.velocity = qc_aim(this, 25);
+				toucher.velocity = '0 0 25' + this.velocity;
+			}
+			else
+			{
+				toucher.velocity = qc_aim(this, 500);
+				toucher.velocity = '0 0 150' + this.velocity;
+			}
+			set_movetype(toucher, MOVETYPE_TOSS);
+			toucher.v_angle = this.angles;
+			return;
+		}
+	}
+	_sound(this, CH_WEAPON_SINGLE, "enforcer/enfstop.wav", 1, ATTN_NORM);
+	BecomePurpleExplosion(this, toucher, damg);
+	BecomePurpleExplosion(this, toucher, damg);
+	delete(this);
+}
+
+void W_FireRifleM(entity this)
+{
+	this.punchangle_x = -2;
+	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot1.wav", 1, ATTN_NORM);
+	entity missile = spawn();
+	missile.owner = this;
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
+	missile.solid = SOLID_BBOX;
+	missile.classname = "pulse";
+	makevectors(this.v_angle);
+	missile.velocity = qc_aim(this, 1000);
+	missile.velocity = missile.velocity * 1000;
+	missile.angles = vectoangles(missile.velocity);
+	settouch(missile, T_MediumPulseTouch);
+	missile.nextthink = time + 5;
+	setthink(missile, SUB_Remove);
+	_setmodel(missile, "progs/pulse.mdl");
+	setsize(missile, '0 0 0', '0 0 0');
+	setorigin(missile, this.origin - v_right * 16 + '0 0 8');
+}
+
+void W_FireRifleL(entity this)
+{
+	this.punchangle_x = -2;
+	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot1.wav", 1, ATTN_NORM);
+	this.currentammo = this.ammo_cells = this.ammo_cells - 2;
+	entity missile = spawn();
+	missile.owner = this;
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
+	missile.solid = SOLID_BBOX;
+	missile.classname = "pulse";
+	makevectors(this.v_angle);
+	missile.velocity = qc_aim(this, 1000);
+	missile.velocity = missile.velocity * 1000;
+	missile.angles = vectoangles(missile.velocity);
+	settouch(missile, T_MediumPulseTouch);
+	missile.nextthink = time + 5;
+	setthink(missile, SUB_Remove);
+	_setmodel(missile, "progs/pulse.mdl");
+	setsize(missile, '0 0 0', '0 0 0');
+	setorigin(missile, this.origin + v_right * 16 + '0 0 8');
+}
+
+void W_FireRifleK(entity this)
+{
+	this.punchangle_x = -2;
+	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot2.wav", 1, ATTN_NORM);
+	entity missile = spawn();
+	missile.owner = this;
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
+	missile.solid = SOLID_BBOX;
+	missile.classname = "pulse";
+	makevectors(this.v_angle);
+	missile.velocity = qc_aim(this, 1000);
+	missile.velocity = missile.velocity * 1000;
+	missile.angles = vectoangles(missile.velocity);
+	settouch(missile, T_MediumPulseTouch);
+	missile.nextthink = time + 5;
+	setthink(missile, SUB_Remove);
+	_setmodel(missile, "progs/pulse.mdl");
+	setsize(missile, '0 0 0', '0 0 0');
+	setorigin(missile, this.origin - v_right * 32 + '0 0 8');
+}
+
+void W_FireRifleJ(entity this)
+{
+	this.punchangle_x = -2;
+	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot1.wav", 1, ATTN_NORM);
+	this.currentammo = this.ammo_cells = this.ammo_cells - 2;
+	entity missile = spawn();
+	missile.owner = this;
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
+	missile.solid = SOLID_BBOX;
+	missile.classname = "pulse";
+	makevectors(this.v_angle);
+	missile.velocity = qc_aim(this, 1000);
+	missile.velocity = missile.velocity * 1000;
+	missile.angles = vectoangles(missile.velocity);
+	settouch(missile, T_MediumPulseTouch);
+	missile.nextthink = time + 5;
+	setthink(missile, SUB_Remove);
+	_setmodel(missile, "progs/pulse.mdl");
+	setsize(missile, '0 0 0', '0 0 0');
+	setorigin(missile, this.origin + v_right * 32 + '0 0 8');
+}
+
+void W_FireRifleI(entity this)
+{
+	this.punchangle_x = -2;
+	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot2.wav", 1, ATTN_NORM);
+	entity missile = spawn();
+	missile.owner = this;
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
+	missile.solid = SOLID_BBOX;
+	missile.classname = "pulse";
+	makevectors(this.v_angle);
+	missile.velocity = qc_aim(this, 1000);
+	missile.velocity = missile.velocity * 1000;
+	missile.angles = vectoangles(missile.velocity);
+	settouch(missile, T_MediumPulseTouch);
+	missile.nextthink = time + 5;
+	setthink(missile, SUB_Remove);
+	_setmodel(missile, "progs/pulse.mdl");
+	setsize(missile, '0 0 0', '0 0 0');
+	setorigin(missile, ((this.origin - (v_right * 48)) + '0 0 8'));
+}
+
+void W_FireRifleH(entity this)
+{
+	this.punchangle_x = -2;
+	_sound(this, CHAN_AUTO, "weapons/pulse/pulshot1.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot2.wav", 1, ATTN_NORM);
+	this.ammo_cells = (this.ammo_cells - 2);
+	this.currentammo = (this.ammo_cells - 2);
+	entity missile = spawn();
+	missile.owner = this;
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
+	missile.solid = SOLID_BBOX;
+	missile.classname = "pulse";
+	makevectors(this.v_angle);
+	missile.velocity = qc_aim(this, 1000);
+	missile.velocity = missile.velocity * 1000;
+	missile.angles = vectoangles(missile.velocity);
+	settouch(missile, T_MediumPulseTouch);
+	missile.nextthink = time + 5;
+	setthink(missile, SUB_Remove);
+	_setmodel(missile, "progs/pulse.mdl");
+	setsize(missile, '0 0 0', '0 0 0');
+	setorigin(missile, ((this.origin + (v_right * 48)) + '0 0 8'));
+}
+
+void W_FireRifleD(entity this)
+{
+	this.punchangle_x = -2;
+	_sound(this, CHAN_AUTO, "weapons/pulse/pulshot1.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot2.wav", 1, ATTN_NORM);
+	entity missile = spawn();
+	missile.owner = this;
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
+	missile.solid = SOLID_BBOX;
+	missile.classname = "pulse";
+	missile.enemy = this.enemy;
+	makevectors(this.v_angle);
+	missile.velocity = qc_aim(this, 1000);
+	missile.velocity = missile.velocity * 1000;
+	missile.angles = vectoangles(missile.velocity);
+	settouch(missile, T_SmallPulseTouch);
+	missile.nextthink = (time + 0.3);
+	setthink(missile, PulseHome);
+	_setmodel(missile, "progs/pulse.mdl");
+	setsize(missile, '0 0 0', '0 0 0');
+	setorigin(missile, ((this.origin + (v_right * 48)) + '0 0 8'));
+}
+
+void W_FireRifleC(entity this)
+{
+	this.punchangle_x = -2;
+	_sound(this, CHAN_AUTO, "weapons/pulse/pulshot1.wav", 1, ATTN_NORM);
+	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot2.wav", 1, ATTN_NORM);
+	entity missile = spawn();
+	missile.owner = this;
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
+	missile.solid = SOLID_BBOX;
+	missile.classname = "pulse";
+	missile.enemy = this.enemy;
+	makevectors(this.v_angle);
+	missile.velocity = qc_aim(this, 1000);
+	missile.velocity = missile.velocity * 1000;
+	missile.angles = vectoangles(missile.velocity);
+	settouch(missile, T_SmallPulseTouch);
+	missile.nextthink = time + 0.2;
+	setthink(missile, PulseHome);
+	_setmodel(missile, "progs/pulse.mdl");
+	setsize(missile, '0 0 0', '0 0 0');
+	setorigin(missile, ((this.origin + (v_right * 32)) + '0 0 8'));
+}
+
+void W_FireRifleB(entity this)
+{
+	this.punchangle_x = -2;
+	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot2.wav", 1, ATTN_NORM);
+	entity missile = spawn();
+	missile.owner = this;
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
+	missile.solid = SOLID_BBOX;
+	missile.classname = "pulse";
+	missile.enemy = this.enemy;
+	makevectors(this.v_angle);
+	missile.velocity = qc_aim(this, 1000);
+	missile.velocity = missile.velocity * 1000;
+	missile.angles = vectoangles(missile.velocity);
+	settouch(missile, T_SmallPulseTouch);
+	missile.nextthink = (time + 0.1);
+	setthink(missile, PulseHome);
+	_setmodel(missile, "progs/pulse.mdl");
+	setsize(missile, '0 0 0', '0 0 0');
+	setorigin(missile, ((this.origin + (v_right * 16)) + '0 0 8'));
+}
+
+void W_FireRifleA(entity this)
+{
+	this.punchangle_x = -2;
+	_sound(this, CHAN_AUTO, "weapons/pulse/pulshot1.wav", 1, ATTN_NORM);
+	this.ammo_cells = (this.ammo_cells - 3);
+	this.currentammo = (this.ammo_cells - 3);
+	entity missile = spawn();
+	missile.owner = this;
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
+	missile.solid = SOLID_BBOX;
+	setorigin(missile, ((this.origin + (v_right * 16)) + '0 0 8'));
+	missile.classname = "pulse";
+	vector vtemp = missile.origin + (v_right * 12) + (v_forward * 64);
+	makevectors(this.v_angle);
+	vector dir = normalize(vtemp - missile.origin);
+	missile.velocity = dir * 1000;
+	missile.angles = vectoangles(missile.velocity);
+	settouch(missile, T_SinglePulseTouch);
+	missile.nextthink = time + 5;
+	setthink(missile, SUB_Remove);
+	_setmodel(missile, "progs/pulse.mdl");
+	setsize(missile, '0 0 0', '0 0 0');
+}
+
+void W_FireRifle2A(entity this)
+{
+	this.punchangle_x = -2;
+	entity missile = spawn();
+	missile.owner = this;
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
+	missile.solid = SOLID_BBOX;
+	setorigin(missile, ((this.origin + (v_right * 16)) + '0 0 8'));
+	missile.classname = "pulse";
+	vector vtemp = missile.origin - (v_right * 12) + (v_forward * 64);
+	makevectors(this.v_angle);
+	vector dir = normalize((vtemp - missile.origin));
+	missile.velocity = dir * 1000;
+	missile.angles = vectoangles(missile.velocity);
+	settouch(missile, T_SinglePulseTouch);
+	missile.nextthink = time + 5;
+	setthink(missile, SUB_Remove);
+	_setmodel(missile, "progs/pulse.mdl");
+	setsize(missile, '0 0 0', '0 0 0');
+}
+
+void W_FireRifle3A(entity this)
+{
+	this.punchangle_x = -2;
+	entity missile = spawn();
+	missile.owner = this;
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
+	missile.solid = SOLID_BBOX;
+	setorigin(missile, ((this.origin + (v_right * 16)) + '0 0 8'));
+	missile.classname = "pulse";
+	makevectors(this.v_angle);
+	missile.velocity = qc_aim(this, 1000);
+	missile.velocity = missile.velocity * 1000;
+	missile.angles = vectoangles(missile.velocity);
+	settouch(missile, T_SinglePulseTouch);
+	missile.nextthink = time + 5;
+	setthink(missile, SUB_Remove);
+	_setmodel(missile, "progs/pulse.mdl");
+	setsize(missile, '0 0 0', '0 0 0');
+}
+
+void W_FireRifleTarget(entity this)
+{
+	this.punchangle_x = -2;
+	this.currentammo = this.ammo_cells = (this.ammo_cells - 4);
+	entity missile = spawn();
+	missile.owner = this;
+	this.enemy = missile;
+	set_movetype(missile, MOVETYPE_NOCLIP);
+	missile.solid = SOLID_BBOX;
+	missile.classname = "missile";
+	makevectors(this.v_angle);
+	missile.velocity = qc_aim(this, 1000);
+	missile.velocity = missile.velocity * 1000;
+	missile.angles = vectoangles(missile.velocity);
+	missile.nextthink = time + 3;
+	setthink(missile, SUB_Remove);
+	_setmodel(missile, "progs/null.mdl");
+	setsize(missile, '0 0 0', '0 0 0');
+	setorigin(missile, (this.origin + (v_forward * 8)));
+}
+
+void ExtraBlood(entity targ, vector org, vector vel, float damage)
+{
+	if(targ.classname == "wall_explode")
+	{
+		SpawnBlood(org, vel, damage, targ);
+		return;
+	}
+	particle(org, '0 0 100', 225, damage * 4);
+}
+
+void spawn_extrablood(entity this, entity targ, float damage)
+{
+	vector vel = wall_velocity(this) * 0.2;
+	ExtraBlood(targ, this.origin + vel * 0.01, vel, damage);
+}
+
+void SpawnSpark(vector org, vector vel, float damage)
+{
+	particle(org, vel * 0.1, 47, damage * 2);
+}
+
+void spawn_touchspark(entity this, float damage)
+{
+	vector vel = wall_velocity(this) * 0.2;
+	SpawnSpark(this.origin + vel * 0.01, vel, damage);
+}
+
+vector VelocityForJump(entity this, entity targ, float dm)
+{
+	vector v;
+
+	if(targ.classname == "spark")
+		return '0 0 0';
+	else if(targ.classname == "missile")
+		return '0 0 0';
+	else if(targ.classname == "monster_shambler" && targ.health > 16)
+		return '0 0 0';
+	else if(targ.classname == "monster_blud" && targ.health > 16)
+		return '0 0 0';
+	else if(targ.classname == "monster_babyblud" && targ.health > 16)
+		return '0 0 0';
+	else if((targ.classname == "monster_legond"))
+		return '0 0 0';
+	if(targ.classname == "missile")
+	{
+		v.x = 50 * crandom();
+		v.y = 50 * crandom();
+		v.z = 50 + 50 * random();
+	}
+	else if(this.owner.super_damage_finished > time && IS_PLAYER(this.owner))
+	{
+		v.x = 1000 * crandom();
+		v.y = 1000 * crandom();
+		v.z = 2000 + 1000 * random();
+	}
+	else if(targ.classname == "monster_ogre" || targ.classname == "monster_ogre_marksman")
+	{
+		v.x = 200 * crandom();
+		v.y = 200 * crandom();
+		v.z = 150 + 50 * random();
+	}
+	else if(targ.classname == "monster_hell_knight")
+	{
+		v.x = 200 * crandom();
+		v.y = 200 * crandom();
+		v.z = 150 + 50 * random();
+	}
+	else
+	{
+		v.x = 200 * crandom();
+		v.y = 200 * crandom();
+		v.z = 300 + 100 * random();
+	}
+	if(IS_PLAYER(targ))
+		set_movetype(targ, MOVETYPE_WALK);
+	v = v * 0.7;
+	return v;
+}
+
+void SpawnMeatBounce(entity this, entity targ, float dm)
+{
+	entity missile = spawn();
+	missile.owner = this;
+	set_movetype(missile, MOVETYPE_BOUNCE);
+	missile.solid = SOLID_NOT;
+	makevectors(this.angles);
+	missile.velocity = VelocityForJump(this, targ, dm);
+	missile.avelocity = '3000 1000 2000';
+	missile.nextthink = time + 1;
+	setthink(missile, SUB_Remove);
+	_setmodel(missile, "progs/zom_gib.mdl");
+	setorigin(missile, targ.origin);
+	setsize(missile, '0 0 0', '0 0 0');
+}
+
+void SpawnDischarge(entity this, float dm)
+{
+	entity missile = spawn();
+	missile.owner = this;
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
+	missile.solid = SOLID_NOT;
+	makevectors(this.angles);
+	missile.velocity = VelocityForJump(this, missile, dm);
+	missile.avelocity = '3000 1000 2000';
+	missile.nextthink = time + 0.2;
+	setthink(missile, SUB_Remove);
+	_setmodel(missile, "progs/bolt.mdl");
+	setsize(missile, '0 0 0', '0 0 0');
+	setorigin(missile, this.origin);
+}
+
+void gibhim(entity this)
+{
+	float r;
+
+	if(this.elec == 0)
+	{
+		this.effects = EF_MUZZLEFLASH;
+		r = random();
+		if(r < 0.3)
+			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgdis1.wav", 1, ATTN_NORM);
+		else if(r < 0.6)
+			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgdis2.wav", 1, ATTN_NORM);
+		else
+			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgdis3.wav", 1, ATTN_NORM);
+		if(this.classname == "player")
+			this.modelindex = modelindex_bolt;
+		else
+			_setmodel(this, "progs/bolt2.mdl");
+		this.frame = 0;
+		this.elec = 1;
+		this.exptime = this.exptime + 0.1;
+		spawn_touchspark(this, 10);
+	}
+	else if(this.elec == 1)
+	{
+		vector oldmin = this.mins, oldmax = this.maxs;
+		if(this.classname == "monster_ogre")
+			_setmodel(this, "progs/ogre.mdl");
+		else if(this.classname == "monster_ogre_marksman")
+			_setmodel(this, "progs/ogre.mdl");
+		else if(this.classname == "monster_dknight")
+			_setmodel(this, "progs/dknight.mdl");
+		else if(this.classname == "monster_blud")
+			_setmodel(this, "progs/blud.mdl");
+		else if(this.classname == "monster_legond")
+			_setmodel(this, "progs/legond.mdl");
+		else if(this.classname == "monster_spider")
+			_setmodel(this, "progs/spid.mdl");
+		else if(this.classname == "monster_hbot")
+			_setmodel(this, "progs/hbot.mdl");
+		else if(this.classname == "monster_grenling")
+			_setmodel(this, "progs/grenling.mdl");
+		else if(this.classname == "monster_gren")
+			_setmodel(this, "progs/grenling.mdl");
+		else if(this.classname == "monster_knight")
+			_setmodel(this, "progs/knight.mdl");
+		else if(this.classname == "monster_shambler")
+			_setmodel(this, "progs/shambler.mdl");
+		else if(this.classname == "monster_demon1")
+			_setmodel(this, "progs/demon.mdl");
+		else if(this.classname == "monster_wizard")
+			_setmodel(this, "progs/wizard.mdl");
+		else if(this.classname == "monster_zombie")
+			_setmodel(this, "progs/zombie.mdl");
+		else if(this.classname == "monster_dog")
+			_setmodel(this, "progs/dog.mdl");
+		else if(this.classname == "monster_hell_knight")
+			_setmodel(this, "progs/hknight.mdl");
+		else if(this.classname == "monster_tarbaby")
+			_setmodel(this, "progs/tarbaby.mdl");
+		else if(this.classname == "monster_army")
+			_setmodel(this, "progs/soldier.mdl");
+		else if(this.classname == "monster_shalrath")
+			_setmodel(this, "progs/shalrath.mdl");
+		else if(this.classname == "monster_fish")
+			_setmodel(this, "progs/fish.mdl");
+		else if(this.classname == "monster_enforcer")
+			_setmodel(this, "progs/enforcer.mdl");
+		else if(this.classname == "monster_lenforcer")
+			_setmodel(this, "progs/enforcer.mdl");
+		else if(this.classname == "monster_babyblud")
+			_setmodel(this, "progs/spawn.mdl");
+		else if(IS_PLAYER(this))
+		{
+			r = random();
+			this.modelindex = this.modelindex_player;
+			//_setmodel(this, "progs/player.mdl");
+			if(this.weapon == WEP_AXE)
+			{
+				if(r < 0.3)
+					this.frame = 31;
+				else if(r < 0.6)
+					this.frame = 35;
+				else
+					this.frame = 42;
+			}
+			else if(r < 0.3)
+				this.frame = 61;
+			else if(r < 0.6)
+				this.frame = 71;
+			else
+				this.frame = 87;
+		}
+		this.effects = EF_DIMLIGHT;
+		this.elec = 0;
+		this.exptime = this.exptime + 0.1;
+		if(!IS_PLAYER(this))
+			setsize(this, oldmin, oldmax);
+	}
+	if(this.exptime >= 1.6)
+	{
+		this.effects &= ~EF_DIMLIGHT;
+		this.effects &= ~EF_MUZZLEFLASH;
+		this.takedamage = DAMAGE_AIM;
+		set_movetype(this, MOVETYPE_STEP);
+		if(!IS_PLAYER(this))
+			T_RadiusDamage(this, this.owner, 120, NULL);
+		else
+			T_RadiusDamage(this, this.enemy, 120, NULL);
+		SpawnDischarge(this, 120);
+		SpawnDischarge(this, 120);
+		SpawnDischarge(this, 120);
+		r = random();
+		if(r < 0.3)
+			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgdis1.wav", 1, ATTN_NORM);
+		else if(r < 0.6)
+			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgdis2.wav", 1, ATTN_NORM);
+		else
+			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgdis3.wav", 1, ATTN_NORM);
+		this.exptime = 0;
+		return;
+	}
+	this.nextthink = time + 0.1;
+	setthink(this, gibhim);
+}
+
+void rebound(entity this)
+{
+	this.owner = this.owner;
+	_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lghit.wav", 1, ATTN_NORM);
+	this.velocity = normalize(this.velocity);
+	this.velocity = this.velocity * 1000;
+	set_movetype(this, MOVETYPE_FLYMISSILE);
+	this.angles = vectoangles(this.velocity);
+	setthink(this, SUB_Remove);
+	this.nextthink = time + 0.4;
+	spawn_touchspark(this, 1);
+	this.bounced = this.bounced + 1;
+	if(this.bounced == 5)
+	{
+		delete(this);
+		return;
+	}
+	if(!(this.flags & FL_INWATER))
+	{
+		if(this.watertype == CONTENT_WATER)
+		{
+			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgdis1.wav", 1, ATTN_NORM);
+			SpawnDischarge(this, 200);
+			SpawnDischarge(this, 200);
+			SpawnDischarge(this, 200);
+			T_RadiusDamage(this, this.owner, 200, NULL);
+			delete(this);
+			return;
+		}
+		if(this.watertype == CONTENT_SLIME)
+		{
+			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgdis2.wav", 1, ATTN_NORM);
+			SpawnDischarge(this, 150);
+			SpawnDischarge(this, 150);
+			T_RadiusDamage(this, this.owner, 150, NULL);
+			delete(this);
+			return;
+		}
+		if(this.watertype == CONTENT_LAVA)
+		{
+			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgdis3.wav", 1, ATTN_NORM);
+			SpawnDischarge(this, 100);
+			SpawnDischarge(this, 100);
+			T_RadiusDamage(this, this.owner, 100, NULL);
+			delete(this);
+			return;
+		}
+	}
+	this.owner = other;
+}
+
+void ThrowMe(entity this, entity targ, float dm)
+{
+	if(targ.move_movetype == MOVETYPE_PUSH)
+		return;
+	if(targ.classname == "door")
+		return;
+	if(targ.move_movetype == MOVETYPE_NONE)
+		return;
+	if(targ.classname == "monster_wizard")
+		return;
+	if(targ.classname == "monster_grenling" || targ.classname == "monster_gren")
+		return;
+	if(targ.classname == "monster_juggernaut" || targ.classname == "monster_juggernaut2")
+		return;
+	if(targ.classname == "monster_legond")
+		return;
+	if(targ.health <= 5 && IS_PLAYER(targ))
+		targ.health = 6;
+	targ.velocity = VelocityForJump(this, targ, dm);
+	UNSET_ONGROUND(targ);
+	targ.avelocity = crandom() * '0 600 0';
+}
+
 /*
 ===============================================================================
 
@@ -815,6 +1700,140 @@ LIGHTNING
 
 ===============================================================================
 */
+
+void LightningTouch(entity this, entity toucher)
+{
+	if(toucher.solid == SOLID_TRIGGER)
+		return;
+	if(pointcontents(this.origin) == CONTENT_SKY)
+	{
+		delete(this);
+		return;
+	}
+	if(toucher.takedamage && toucher.classname != "monster_juggernaut" && toucher.classname != "monster_juggernaut2")
+	{
+		if(toucher.takedamage == DAMAGE_AIM)
+			spawn_extrablood(this, toucher, 1000); // TODO: toucher?
+		float damg = 16;
+		if(this.owner.super_damage_finished > time && toucher.health <= (damg * 4))
+		{
+			if(toucher.move_movetype == MOVETYPE_PUSH)
+			{
+				T_Damage(toucher, this, this.owner, damg);
+				return;
+			}
+			if(toucher.classname == "door")
+			{
+				T_Damage(toucher, this, this.owner, damg);
+				return;
+			}
+			if(toucher.move_movetype == MOVETYPE_NONE)
+			{
+				T_Damage(toucher, this, this.owner, damg);
+				return;
+			}
+			ThrowMe(this, toucher, damg);
+			if(!IS_PLAYER(toucher))
+				toucher.owner = this.owner;
+			else
+				toucher.enemy = this.owner;
+			delete(this);
+			toucher.takedamage = DAMAGE_NO;
+			setthink(toucher, gibhim);
+			toucher.nextthink = time;
+			return;
+		}
+		if(toucher.health <= damg)
+		{
+			if(toucher.move_movetype == MOVETYPE_PUSH)
+			{
+				T_Damage(toucher, this, this.owner, damg);
+				return;
+			}
+			if(toucher.classname == "door")
+			{
+				T_Damage(toucher, this, this.owner, damg);
+				return;
+			}
+			if(toucher.move_movetype == MOVETYPE_NONE)
+			{
+				T_Damage(toucher, this, this.owner, damg);
+				return;
+			}
+			ThrowMe(this, toucher, damg);
+			if(!IS_PLAYER(toucher))
+				toucher.owner = this.owner;
+			else
+				toucher.enemy = this.owner;
+			delete(this);
+			toucher.takedamage = DAMAGE_NO;
+			setthink(toucher, gibhim);
+			toucher.nextthink = time;
+			return;
+		}
+		else
+		{
+			T_Damage(toucher, this, this.owner, damg);
+			if(toucher.takedamage == DAMAGE_AIM)
+				SpawnMeatBounce(this, toucher, damg);
+			ThrowMe(this, toucher, damg);
+			delete(this);
+		}
+	}
+	else
+	{
+		set_movetype(this, MOVETYPE_BOUNCE);
+		setthink(this, rebound);
+		this.ltime = this.nextthink;
+		this.nextthink = time + 0.1;
+		return;
+	}
+}
+
+void W_FireSuperLightning(entity this)
+{
+	float r = random();
+	if(this.waterlevel > 1)
+	{
+		float cells = this.ammo_cells;
+		this.ammo_cells = 0;
+		W_SetCurrentAmmo(this);
+		T_RadiusDamage(this, this, 35 * cells, NULL);
+		return;
+	}
+	this.currentammo = this.ammo_cells = this.ammo_cells - 1;
+	this.punchangle_x = -2;
+	entity missile = spawn();
+	missile.owner = this;
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
+	missile.solid = SOLID_BBOX;
+	missile.classname = "lightme";
+	makevectors(this.v_angle);
+	missile.velocity = qc_aim(this, 2000);
+	missile.velocity = missile.velocity * 2000;
+	missile.angles = vectoangles(missile.velocity);
+	settouch(missile, LightningTouch);
+	missile.nextthink = time + 5;
+	setthink(missile, SUB_Remove);
+	if(this.lightningmodel == 1)
+	{
+		if(r <= 0.3)
+			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgstart2.wav", 1, ATTN_NORM);
+		else if(r <= 0.6)
+			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgstart3.wav", 1, ATTN_NORM);
+		else
+			_sound(this, CH_WEAPON_SINGLE, "weapons/light2/lgstart1.wav", 1, ATTN_NORM);
+		_setmodel(missile, "progs/bolt2.mdl");
+		this.lightningmodel = 0;
+	}
+	else if(this.lightningmodel == 0)
+	{
+		_setmodel(missile, "progs/bolt.mdl");
+		this.lightningmodel = 1;
+	}
+	setsize(missile, '0 0 0', '0 0 0');
+	setorigin(missile, this.origin + '0 0 0' - v_forward * 0); // lol what
+}
 
 /*
 =================
@@ -830,7 +1849,18 @@ void LightningDamage(vector p1, vector p2, entity from, float damage)
 	traceline(p1, p2, false, from);
 	if(trace_ent.takedamage && !trace_ent.wetsuit_finished)
 	{
-		particle(trace_endpos, '0 0 100', 225, damage*4);
+		if(MP_IMPEL)
+		{
+			if(trace_ent.takedamage == DAMAGE_AIM)
+			{
+				if(trace_ent.classname != "monster_juggernaut")
+					particle(trace_endpos, '0 0 100', 225, damage*4);
+				else if(trace_ent.classname != "monster_juggernaut2")
+					particle(trace_endpos, '0 0 100', 225, damage * 4);
+			}
+		}
+		else
+			particle(trace_endpos, '0 0 100', 225, damage*4);
 		T_Damage(trace_ent, from, from, damage);
 		if(IS_PLAYER(from))
 		{
@@ -843,7 +1873,18 @@ void LightningDamage(vector p1, vector p2, entity from, float damage)
 	traceline(p1 + f, p2 + f, false, from);
 	if(trace_ent != e1 && trace_ent.takedamage && !trace_ent.wetsuit_finished)
 	{
-		particle(trace_endpos, '0 0 100', 225, damage*4);
+		if(MP_IMPEL)
+		{
+			if(trace_ent.takedamage == DAMAGE_AIM)
+			{
+				if(trace_ent.classname != "monster_juggernaut")
+					particle(trace_endpos, '0 0 100', 225, damage*4);
+				else if(trace_ent.classname != "monster_juggernaut2")
+					particle(trace_endpos, '0 0 100', 225, damage * 4);
+			}
+		}
+		else
+			particle(trace_endpos, '0 0 100', 225, damage*4);
 		T_Damage(trace_ent, from, from, damage);
 	}
 	entity e2 = trace_ent;
@@ -851,7 +1892,18 @@ void LightningDamage(vector p1, vector p2, entity from, float damage)
 	traceline(p1 - f, p2 - f, false, from);
 	if(trace_ent != e1 && trace_ent != e2 && trace_ent.takedamage && !trace_ent.wetsuit_finished)
 	{
-		particle(trace_endpos, '0 0 100', 225, damage*4);
+		if(MP_IMPEL)
+		{
+			if(trace_ent.takedamage == DAMAGE_AIM)
+			{
+				if(trace_ent.classname != "monster_juggernaut")
+					particle(trace_endpos, '0 0 100', 225, damage*4);
+				else if(trace_ent.classname != "monster_juggernaut2")
+					particle(trace_endpos, '0 0 100', 225, damage * 4);
+			}
+		}
+		else
+			particle(trace_endpos, '0 0 100', 225, damage*4);
 		T_Damage(trace_ent, from, from, damage);
 	}
 }
@@ -897,6 +1949,494 @@ void W_FireLightning(entity this)
 	LightningDamage(org, trace_endpos + v_forward*4, this, 30);
 }
 
+
+//=============================================================================
+
+
+bool inside_nradius;
+
+void NapalmFlameThink(entity this)
+{
+	if(!(this.flags & FL_INWATER) && this.cnt == 0)
+	{
+		if(this.watertype == CONTENT_WATER)
+		{
+			BecomeExplosion(this);
+			return;
+		}
+		if(this.watertype == CONTENT_SLIME)
+		{
+			BecomeExplosion(this);
+			return;
+		}
+		if(this.watertype == CONTENT_LAVA)
+		{
+			BecomeExplosion(this);
+			return;
+		}
+	}
+	if(inside_nradius)
+	{
+		error("NapalmFlameThink: recursive");
+		return;
+	}
+	inside_nradius = true;
+	entity head = findradius(this.origin, 55);
+	while(head)
+	{
+		if(head.takedamage)
+			T_Damage(head, this, this.owner.owner, 2 + (random() * 4));
+		head = head.chain;
+	}
+	inside_nradius = false;
+	this.nextthink = time + 0.35;
+	this.cnt = this.cnt + 1;
+	if(this.cnt >= 10 + random() * 5)
+	{
+		this.cnt = 0;
+		BecomeExplosion(this);
+		return;
+	}
+	setthink(this, NapalmFlameThink);
+}
+
+// TODO: additional frame information unknown!
+// NOTE: decompiled code alternates between first 2 frames, this is changed to use the frames available in the model
+//$frame flame1 flame2 flame3 flame4 flame5 flame6
+//$frame flameb1 flameb2 flameb3 flameb4 flameb5 flameb6 flameb7 flameb8 flameb9 flameb10
+//$frame flameb11
+
+const int anim_flame1 = 0;
+const int anim_flame2 = 1;
+const int anim_flame3 = 2;
+const int anim_flame4 = 3;
+const int anim_flame5 = 4;
+const int anim_flame6 = 5;
+
+const int anim_flameb1 = 0;
+const int anim_flameb2 = 1;
+const int anim_flameb3 = 2;
+const int anim_flameb4 = 3;
+const int anim_flameb5 = 4;
+const int anim_flameb6 = 5;
+const int anim_flameb7 = 6;
+const int anim_flameb8 = 7;
+const int anim_flameb9 = 8;
+const int anim_flameb10 = 9;
+const int anim_flameb11 = 10;
+
+void flameanimate1(entity this);
+void flameanimate6(entity this) { set_anim(this, anim_flame6, flameanimate1); }
+void flameanimate5(entity this) { set_anim(this, anim_flame5, flameanimate6); }
+void flameanimate4(entity this) { set_anim(this, anim_flame4, flameanimate5); }
+void flameanimate3(entity this) { set_anim(this, anim_flame3, flameanimate4); }
+void flameanimate2(entity this) { set_anim(this, anim_flame2, flameanimate3); }
+void flameanimate1(entity this) { set_anim(this, anim_flame1, flameanimate2); }
+
+void flamebanimate1(entity this);
+void flamebanimate11(entity this) { set_anim(this, anim_flameb11, flamebanimate1); }
+void flamebanimate10(entity this) { set_anim(this, anim_flameb10, flamebanimate11); }
+void flamebanimate9(entity this) { set_anim(this, anim_flameb9, flamebanimate10); }
+void flamebanimate8(entity this) { set_anim(this, anim_flameb8, flamebanimate9); }
+void flamebanimate7(entity this) { set_anim(this, anim_flameb7, flamebanimate8); }
+void flamebanimate6(entity this) { set_anim(this, anim_flameb6, flamebanimate7); }
+void flamebanimate5(entity this) { set_anim(this, anim_flameb5, flamebanimate6); }
+void flamebanimate4(entity this) { set_anim(this, anim_flameb4, flamebanimate5); }
+void flamebanimate3(entity this) { set_anim(this, anim_flameb3, flamebanimate4); }
+void flamebanimate2(entity this) { set_anim(this, anim_flameb2, flamebanimate3); }
+void flamebanimate1(entity this) { set_anim(this, anim_flameb1, flamebanimate2); }
+
+void MakeFlame(entity this, entity toucher)
+{
+	if(toucher.takedamage)
+	{
+		T_Damage (toucher, this, this.owner.owner, 16);
+		BecomeExplosion(this);
+		return;
+	}
+	if(toucher.classname == "door")
+	{
+		BecomeExplosion(this);
+		return;
+	}
+	if(toucher.move_movetype != MOVETYPE_PUSH)
+	{
+		BecomeExplosion(this);
+		return;
+	}
+	if(toucher.takedamage && toucher.health <= 0)
+	{
+		BecomeExplosion(this);
+		return;
+	}
+	if(toucher.classname == "monster_ogre" || toucher.classname == "monster_ogre_marksman" || toucher.classname == "monster_hell_knight")
+		_setmodel(this, "progs/flameo2.mdl");
+	else
+		_setmodel(this, "progs/flameo.mdl");
+	setsize(this, '0 0 0', '0 0 0');
+	this.v_angle = '0 0 0';
+	set_movetype(this, MOVETYPE_NONE);
+	if(random() > 0.6 && this.cnt == 0)
+		flameanimate1(this);
+	else
+		flamebanimate1(this);
+	this.nextthink = time + 0.1;
+	setthink(this, NapalmFlameThink);
+	this.effects |= EF_DIMLIGHT;
+	this.cnt = 0;
+}
+
+void SpawnFireSpark(entity this)
+{
+	entity missile = spawn();
+	set_movetype(missile, MOVETYPE_BOUNCE);
+	missile.solid = SOLID_BBOX;
+	missile.owner = this;
+	missile.classname = "flame";
+	missile.velocity = VelocityForDamage(this, 0);
+	missile.velocity_z = missile.velocity_z + 100 + 50 * random();
+	settouch(missile, MakeFlame);
+	_setmodel(missile, "progs/firesprk.mdl");
+	setsize(missile, '0 0 0', '0 0 0');
+	setorigin(missile, this.origin);
+}
+
+void NapalmCheckEnemyDead(entity this)
+{
+	if(!this.enemy)
+	{
+		BecomeExplosion(this);
+		return;
+	}
+	if(this.enemy.velocity == '0 0 0')
+	{
+		this.nextthink = time + 10 + random() * 5;
+		setthink(this, BecomeExplosion);
+		return;
+	}
+	setorigin(this, this.enemy.origin);
+	this.cnt = this.cnt + 0.1;
+	if(this.cnt > 5)
+	{
+		BecomeExplosion(this);
+		return;
+	}
+	this.nextthink = time + 0.1;
+	setthink(this, NapalmCheckEnemyDead);
+}
+
+void SpawnInternalFire2(entity this)
+{
+	setorigin(this, this.enemy.origin);
+	this.nextthink = time + 0.1;
+	setthink(this, NapalmCheckEnemyDead);
+}
+void ThrowGib(entity this, string gibname, float dm);
+
+void InternalFireThink(entity this)
+{
+	float damg = 65 + random() * 75;
+	if(this.enemy.classname == "monster_juggernaut" || this.enemy.classname == "monster_juggernaut2")
+	{
+		if(random() < 0.7)
+		{
+			BecomeExplosion(this);
+			return;
+		}
+	}
+	if(this.enemy.classname == "monster_legond")
+	{
+		BecomeExplosion(this);
+		return;
+	}
+	if(this.enemy.classname == "monster_shambler")
+	{
+		BecomeExplosion(this);
+		return;
+	}
+	if(this.enemy.classname == "monster_demon1")
+	{
+		BecomeExplosion(this);
+		return;
+	}
+	if(this.enemy.classname == "misc_explobox")
+	{
+		BecomeExplosion(this);
+		return;
+	}
+	if(this.enemy.classname == "misc_explobox2")
+	{
+		BecomeExplosion(this);
+		return;
+	}
+	if(this.enemy.classname == "wall_explode")
+	{
+		BecomeExplosion(this);
+		return;
+	}
+	if(this.enemy.health <= 0)
+	{
+		BecomeExplosion(this);
+		return;
+	}
+	if(!this.enemy)
+	{
+		BecomeExplosion(this);
+		return;
+	}
+	if(!(this.flags & FL_INWATER))
+	{
+		if(this.watertype == CONTENT_WATER)
+		{
+			BecomeExplosion(this);
+			return;
+		}
+		if(this.watertype == CONTENT_SLIME)
+		{
+			BecomeExplosion(this);
+			return;
+		}
+		if(this.watertype == CONTENT_LAVA)
+		{
+			BecomeExplosion(this);
+			return;
+		}
+	}
+	if(!(this.enemy.flags & FL_INWATER))
+	{
+		if(this.enemy.watertype == CONTENT_WATER)
+		{
+			BecomeExplosion(this);
+			return;
+		}
+		if(this.enemy.watertype == CONTENT_SLIME)
+		{
+			BecomeExplosion(this);
+			return;
+		}
+		if(this.enemy.watertype == CONTENT_LAVA)
+		{
+			BecomeExplosion(this);
+			return;
+		}
+	}
+	if(this.enemy.health <= 48 && this.owner.owner.super_damage_finished > time && this.enemy.classname != "monster_zombie")
+	{
+		if(this.enemy.health > 0)
+		{
+			if(this.enemy.classname == "monster_ogre" || this.enemy.classname == "monster_ogre_marksman")
+			{
+				T_Damage(this.enemy, this, this.owner.owner, damg);
+				BecomeExplosion(this);
+				return;
+			}
+			T_Damage (this.enemy, this, this.owner.owner, damg);
+			if(this.enemy.classname != "monster_juggernaut" && this.enemy.classname != "monster_juggernaut2" && this.enemy.classname != "monster_spider" 
+					&& this.enemy.classname != "misc_explobox" && this.enemy.classname != "misc_explobox2" && this.enemy.classname != "wall_explode")
+			{
+				_sound(this, CHAN_AUTO, "enviro/physics/bonexpl.wav", 1, ATTN_NORM);
+				if(this.enemy.classname == "monster_gren" || this.enemy.classname == "monster_grenling" || this.enemy.classname == "monster_wizard" || this.enemy.classname == "monster_dog")
+				{
+					ThrowGib(this, "progs/grenbone.mdl", ((this.enemy.health - 40) - (random() * 60)));
+					ThrowGib(this, "progs/grenbone.mdl", ((this.enemy.health - 40) - (random() * 60)));
+					ThrowGib(this, "progs/grenbone.mdl", ((this.enemy.health - 40) - (random() * 60)));
+					ThrowGib(this, "progs/grenbone.mdl", ((this.enemy.health - 40) - (random() * 60)));
+					ThrowGib(this, "progs/grenbone.mdl", ((this.enemy.health - 40) - (random() * 60)));
+					ThrowGib(this, "progs/grenbone.mdl", ((this.enemy.health - 40) - (random() * 60)));
+				}
+				else
+				{
+					ThrowGib(this, "progs/bone.mdl", ((this.enemy.health - 40) - (random() * 60)));
+					ThrowGib(this, "progs/bone2.mdl", ((this.enemy.health - 40) - (random() * 60)));
+					ThrowGib(this, "progs/bone.mdl", ((this.enemy.health - 40) - (random() * 60)));
+				}
+			}
+			else
+			{
+				if(this.enemy.classname == "wall_explode")
+					_sound(this, CHAN_AUTO, "enviro/physics/wallexpl.wav", 1, ATTN_NORM);
+				else
+					_sound(this, CHAN_AUTO, "weapons/r_exp3.wav", 1, ATTN_NORM);
+			}
+			this.cnt = 0;
+			SpawnInternalFire2(this);
+			return;
+		}
+	}
+	else
+	{
+		if(this.enemy.health <= 8 && this.enemy.classname != "monster_zombie")
+		{
+			if((this.enemy.classname == "monster_ogre" || this.enemy.classname == "monster_ogre_marksman") && (this.enemy.health - damg) > -80)
+			{
+				T_Damage(this.enemy, this, this.owner.owner, damg);
+				BecomeExplosion(this);
+				return;
+			}
+			if(this.enemy.health > 0)
+			{
+				T_Damage(this.enemy, this, this.owner.owner, damg);
+				if(this.enemy.classname != "monster_juggernaut" || this.enemy.classname != "monster_juggernaut2" || this.enemy.classname != "monster_spider" 
+						|| this.enemy.classname != "misc_explobox" || this.enemy.classname != "misc_explobox2" || this.enemy.classname != "wall_explode")
+				{
+					_sound(this, CHAN_AUTO, "enviro/physics/bonexpl.wav", 1, ATTN_NORM);
+					if(this.enemy.classname == "monster_gren" || this.enemy.classname == "monster_grenling" || this.enemy.classname == "monster_wizard" || this.enemy.classname == "monster_dog")
+					{
+						ThrowGib(this, "progs/grenbone.mdl", this.enemy.health - 40 - random() * 60);
+						ThrowGib(this, "progs/grenbone.mdl", this.enemy.health - 40 - random() * 60);
+						ThrowGib(this, "progs/grenbone.mdl", this.enemy.health - 40 - random() * 60);
+						ThrowGib(this, "progs/grenbone.mdl", this.enemy.health - 40 - random() * 60);
+						ThrowGib(this, "progs/grenbone.mdl", this.enemy.health - 40 - random() * 60);
+						ThrowGib(this, "progs/grenbone.mdl", this.enemy.health - 40 - random() * 60);
+					}
+					else
+					{
+						ThrowGib(this, "progs/bone.mdl", this.enemy.health - 80);
+						ThrowGib(this, "progs/xtragib.mdl", this.enemy.health - 80);
+						ThrowGib(this, "progs/bone2.mdl", this.enemy.health - 80);
+					}
+				}
+				else if(this.enemy.classname == "wall_explode")
+					_sound(this, CHAN_AUTO, "enviro/physics/wallexpl.wav", 1, ATTN_NORM);
+				else
+					_sound(this, CHAN_AUTO, "weapons/r_exp3.wav", 1, ATTN_NORM);
+				SpawnInternalFire2(this);
+				return;
+			}
+			else if(this.enemy.classname != "monster_zombie")
+			{
+				T_Damage(this.enemy, this, this.owner, damg);
+				BecomeExplosion(this);
+				return;
+			}
+		}
+	}
+	T_Damage(this.enemy, this, this.owner.owner, 7 + random() * 4);
+	if(this.enemy.health <= 5 && IS_PLAYER(this.enemy))
+		this.enemy.health = 6;
+	this.nextthink = time + 0.25;
+	if(this.cnt == 0)
+		flameanimate1(this);
+	this.cnt = this.cnt + 1;
+	if(this.cnt >= 18)
+	{
+		BecomeExplosion(this);
+		return;
+	}
+	if(this.enemy.classname != "monster_zombie" && this.enemy.classname != "monster_juggernaut" && this.enemy.classname != "monster_juggernaut2")
+		setorigin(this, this.enemy.origin);
+	if(this.enemy.classname == "monster_zombie")
+		setorigin(this, this.enemy.origin - v_up * 16);
+	if(this.enemy.classname == "monster_juggernaut" || this.enemy.classname == "monster_juggernaut2")
+		setorigin(this, this.enemy.origin + v_up * 32);
+	setthink(this, InternalFireThink);
+}
+
+void SpawnInternalFire(entity this, entity targ)
+{
+	entity missile = spawn();
+	set_movetype(missile, MOVETYPE_NONE);
+	missile.solid = SOLID_NOT;
+	missile.owner = this;
+	missile.enemy = targ;
+	missile.effects = EF_DIMLIGHT;
+	missile.nextthink = time + 0.3;
+	setthink(missile, InternalFireThink);
+	missile.classname = "flame";
+	if(targ.classname == "monster_ogre" || targ.classname == "monster_ogre_marksman" || targ.classname == "monster_hell_knight")
+		_setmodel(missile, "progs/flameo2.mdl");
+	else
+		_setmodel(missile, "progs/flameo.mdl");
+	setsize(missile, '0 0 0', '0 0 0');
+	if(targ.classname != "monster_zombie" && (targ.classname != "monster_juggernaut" || targ.classname != "monster_juggernaut2"))
+		setorigin(missile, targ.origin);
+	if(targ.classname == "monster_zombie")
+		setorigin(missile, targ.origin - v_up * 16);
+	if(targ.classname == "monster_juggernaut" || targ.classname == "monster_juggernaut2")
+		setorigin(missile, targ.origin - v_up * 32);
+}
+
+void BecomeBombExplosion(entity this)
+{
+	_sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+	SpawnFireSpark(this);
+	SpawnFireSpark(this);
+	SpawnFireSpark(this);
+	delete(this);
+}
+
+void napalmrebound(entity this)
+{
+	if(!(this.flags & FL_INWATER))
+	{
+		if(this.watertype == CONTENT_WATER)
+		{
+			_sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+			BecomeExplosion(this);
+			return;
+		}
+		if(this.watertype == CONTENT_SLIME)
+		{
+			_sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+			BecomeExplosion(this);
+			return;
+		}
+		if(this.watertype == CONTENT_LAVA)
+		{
+			_sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+			BecomeExplosion(this);
+			return;
+		}
+	}
+	_sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+	SpawnFireSpark(this);
+	SpawnFireSpark(this);
+	SpawnFireSpark(this);
+	BecomeExplosion(this);
+}
+
+void NapalmTouch(entity this, entity toucher)
+{
+	if(toucher.takedamage && toucher.takedamage == DAMAGE_AIM && toucher.classname != "monster_spider" && toucher.classname != "monster_zombie" 
+			&& toucher.classname != "monster_shambler" && toucher.classname != "monster_shalrath")
+	{
+		SpawnInternalFire(this, toucher);
+	}
+	setorigin(this, this.origin - 8 * normalize(this.velocity));
+	setthink(this, napalmrebound);
+	this.ltime = this.nextthink;
+	this.nextthink = time;
+}
+
+void W_FireNapalm(entity this)
+{
+	this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
+	_sound(this, CH_WEAPON_SINGLE, "weapons/grenade.wav", 1, ATTN_NORM);
+	this.punchangle_x = -2;
+	entity missile = spawn();
+	missile.owner = this;
+	set_movetype(missile, MOVETYPE_BOUNCE);
+	missile.solid = SOLID_BBOX;
+	missile.classname = "flame";
+	missile.takedamage = DAMAGE_NO;
+	makevectors(this.v_angle);
+	if(this.v_angle_x)
+		missile.velocity = v_forward * 800 + v_up * 250 + crandom() * v_right * 10 + crandom() * v_up * 10;
+	else
+	{
+		missile.velocity = qc_aim(this, 10000);
+		missile.velocity = missile.velocity * 600;
+		missile.velocity_z = 200;
+	}
+	missile.avelocity = '300 300 300';
+	missile.angles = vectoangles(missile.velocity);
+	settouch(missile, NapalmTouch);
+	missile.nextthink = time + 5;
+	setthink(missile, SUB_Remove);
+	_setmodel(missile, "progs/nbomb.mdl");
+	setsize(missile, '0 0 0', '0 0 0');
+	setorigin(missile, this.origin + v_right * 6);
+}
 
 //=============================================================================
 
@@ -1013,6 +2553,8 @@ void W_FireSuperSpikes(entity this)
 	this.currentammo = this.ammo_nails = this.ammo_nails - 2;
 	vector dir = qc_aim(this, 1000);
 	entity newmis = launch_spike(this, this.origin + '0 0 16', dir);
+	if(MP_IMPEL)
+		newmis.classname = "superspike";
 	settouch(newmis, superspike_touch);
 	_setmodel(newmis, "progs/s_spike.mdl");
 	setsize(newmis, '0 0 0', '0 0 0');		
@@ -1034,7 +2576,10 @@ void W_FireSpikes(entity this, float ox)
 		return;
 	}
 
-	_sound(this, CH_WEAPON_SINGLE, "weapons/rocket1i.wav", 1, ATTN_NORM);
+	if(MP_IMPEL && this.silencer)
+		_sound(this, CH_WEAPON_SINGLE, "weapons/rocketli.wav", 0.2, ATTN_NORM);
+	else
+		_sound(this, CH_WEAPON_SINGLE, "weapons/rocket1i.wav", 1, ATTN_NORM);
 	this.attack_finished = time + 0.2;
 	this.currentammo = this.ammo_nails = this.ammo_nails - 1;
 	vector dir = qc_aim(this, 1000);
@@ -1061,7 +2606,7 @@ void ProximityExplode(entity this)
 ProximityGrenadeExplode
 ================
 */
-void ProximityGrenadeExplode(entity this, entity attacker)
+void ProximityGrenadeExplode(entity this, entity inflictor, entity attacker)
 {
 	this.takedamage = DAMAGE_NO;
 	this.realowner.NumProximityGrenades -= 1;
@@ -1087,7 +2632,7 @@ void ProximityGrenadeTouch(entity this, entity toucher)
 		return;
 	if(vdist(toucher.velocity, >, 0) || toucher.takedamage == DAMAGE_AIM)
 	{
-		ProximityGrenadeExplode(this, NULL);
+		ProximityGrenadeExplode(this, NULL, NULL);
 		getthink(this)(this);
 		return;
 	}
@@ -1107,7 +2652,7 @@ void ProximityBomb(entity this)
 {
 	if((time > this.delay) || (this.realowner.NumProximityGrenades > 15) || vdist(this.spawnmaster.velocity, >, 0) )
 	{
-		ProximityGrenadeExplode(this, NULL);
+		ProximityGrenadeExplode(this, NULL, NULL);
 		getthink(this)(this);
 		return;
 	}
@@ -1128,7 +2673,7 @@ void ProximityBomb(entity this)
 		if(blowup)
 		{
 			_sound(this, CH_WEAPON_SINGLE, "hipweap/proxwarn.wav", 1, ATTN_NORM);
-			ProximityGrenadeExplode(this, NULL);
+			ProximityGrenadeExplode(this, NULL, NULL);
 			this.nextthink = time + 0.5;
 			return;
 		}
@@ -1208,7 +2753,7 @@ void spike_touch(entity this, entity toucher)
 // hit something that bleeds
 	if(toucher.takedamage)
 	{
-		spawn_touchblood(this, 9);
+		spawn_touchblood(this, 9, toucher);
 		T_Damage(toucher, this, this.owner, 9);
 	}
 	else
@@ -1242,7 +2787,7 @@ void superspike_touch(entity this, entity toucher)
 // hit something that bleeds
 	if(toucher.takedamage)
 	{
-		spawn_touchblood(this, 18);
+		spawn_touchblood(this, 18, toucher);
 		T_Damage(toucher, this, this.owner, 18);
 	}
 	else
@@ -1250,6 +2795,503 @@ void superspike_touch(entity this, entity toucher)
 
 	delete(this);
 
+}
+
+// impel weapon code
+
+void T_SpearTouch(entity this, entity toucher);
+void SpearThink(entity this);
+void Spear_Bounce_Think(entity this);
+void SpearExplosion(entity this);
+void SpearDig(entity this);
+
+void W_FireSpear(entity this)
+{
+	this.currentammo = this.ammo_rockets = this.ammo_rockets - 1;
+	entity missile = spawn();
+	missile.owner = this;
+	set_movetype(missile, MOVETYPE_FLYMISSILE);
+	missile.solid = SOLID_BBOX;
+	missile.classname = "spear";
+	makevectors(this.v_angle);
+	missile.velocity = qc_aim(this, 2000);
+	missile.velocity = missile.velocity * 2000;
+	missile.angles = vectoangles(missile.velocity);
+	missile.movedir = missile.velocity;
+	missile.avelocity_z = crandom() * 500;
+	missile.count = 0;
+	settouch(missile, T_SpearTouch);
+	missile.nextthink = time + 5;
+	setthink(missile, SUB_Remove);
+	_setmodel(missile, "progs/impaler.mdl");
+	setsize(missile, '0 0 0', '0 0 0');
+	setorigin(missile, this.origin + (v_forward * 8) + '0 0 16');
+	if(IS_ONGROUND(this))
+	{
+		UNSET_ONGROUND(this);
+		setorigin(this, this.origin + '0 0 1');
+	}
+	this.velocity = this.velocity - (v_forward * (600 - this.armorvalue)) + '0 0 50';
+	this.punchangle_x = -10;
+}
+
+void T_SpearTouch(entity this, entity toucher)
+{
+	if(toucher == this.owner)
+		return;
+
+	float knockback;
+	float r = random();
+	if(toucher.takedamage && (IS_CLIENT(toucher) || IS_MONSTER(toucher)))
+	{
+		_setmodel(this, "progs/impstuck.mdl");
+		if(IS_CLIENT(toucher))
+			knockback = 400 - (toucher.armorvalue * 3);
+		else if(toucher.classname == "monster_dog")
+			knockback = 550;
+		else if(toucher.classname == "monster_zombie")
+			knockback = 250;
+		else if(toucher.classname == "monster_army")
+			knockback = 450;
+		else if(toucher.classname == "monster_knight" || toucher.classname == "monster_dknight")
+			knockback = 250;
+		else if(toucher.classname == "monster_enforcer" || toucher.classname == "monster_lenforcer")
+			knockback = 300;
+		else if(toucher.classname == "monster_ogre" || toucher.classname == "monster_ogre_marksman")
+			knockback = 100;
+		else if(toucher.classname == "monster_hell_knight")
+			knockback = 150;
+		else if(toucher.classname == "monster_grenling" || toucher.classname == "monster_gren")
+			knockback = 550;
+		else if(toucher.classname == "monster_shalrath")
+			knockback = 100;
+		else
+			knockback = 0;
+		if(knockback > 10)
+		{
+			if(IS_ONGROUND(toucher))
+			{
+				UNSET_ONGROUND(toucher);
+				setorigin(toucher, toucher.origin + '0 0 1');
+			}
+			makevectors(this.angles);
+			toucher.velocity = toucher.velocity + v_forward * knockback;
+			toucher.velocity_z = toucher.velocity_z + knockback / 2;
+		}
+	}
+	if(toucher.takedamage 
+		&& (toucher.classname == "monster_juggernaut" || toucher.classname == "monster_juggernaut2" || toucher.classname == "monster_reactor" 
+			|| toucher.classname == "monster_boss" || toucher.classname == "monster_oldone" || toucher.classname == "monster_legond" 
+			|| toucher.classname == "monster_knight" || toucher.classname == "monster_dknight" || toucher.classname == "monster_hell_knight" || toucher.classname == "monster_shambler") 
+			|| (IS_PLAYER(toucher) && toucher.armorvalue > 1))
+	{
+		_setmodel(this, "progs/impdef.mdl");
+		T_Damage(toucher, this, this.owner, 50);
+		if(r < 0.4)
+			_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impdef1.wav", 1, ATTN_NORM);
+		else if(r < 0.7)
+			_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impdef2.wav", 1, ATTN_NORM);
+		else
+			_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impdef3.wav", 1, ATTN_NORM);
+		if(toucher.health > 0)
+			T_Damage(toucher, this, this.owner, 50);
+		set_movetype(this, MOVETYPE_BOUNCE);
+		this.velocity = this.velocity * 0.35;
+		this.avelocity = '300 300 300';
+		this.solid = SOLID_NOT;
+		setsize(this, '0 0 0', '0 0 0');
+		setthink(this, Spear_Bounce_Think);
+		this.nextthink = time + 0.5;
+		this.count = time + 3;
+	}
+	else if(((toucher.classname == "monster_army" || toucher.classname == "monster_wizard" || toucher.classname == "monster_dog") && random() < 0.5) || toucher.classname == "monster_fish")
+	{
+		T_Damage (toucher, this, this.owner, 5000);
+		entity missile = spawn();
+		missile.owner = this.owner;
+		set_movetype(missile, MOVETYPE_FLYMISSILE);
+		missile.solid = SOLID_BBOX;
+		missile.classname = "spear";
+		makevectors(this.angles);
+		missile.velocity = this.movedir;
+		missile.angles = vectoangles(missile.velocity);
+		missile.movedir = missile.velocity;
+		missile.avelocity_z = crandom() * 500;
+		missile.count = 0;
+		settouch(missile, T_SpearTouch);
+		toucher.nextthink = time + 4;
+		setthink(toucher, SUB_Remove);
+		_setmodel(missile, "progs/impstuck.mdl");
+		setsize(missile, '0 0 0', '0 0 0');
+		setorigin(missile, this.origin + v_forward);
+		delete(this);
+	}
+	else if(toucher.takedamage && (IS_CLIENT(toucher) || IS_MONSTER(toucher)) && toucher.armorvalue == 0 && 
+		(IS_PLAYER(toucher) || toucher.classname == "monster_enforcer" || toucher.classname == "monster_lenforcer" 
+		|| toucher.classname == "monster_ogre" || toucher.classname == "monster_ogre_marksman" || toucher.classname == "monster_demon1" 
+		|| toucher.classname == "monster_blud" || toucher.classname == "monster_babyblud" || toucher.classname == "monster_grenling" 
+		|| toucher.classname == "monster_gren" || toucher.classname == "monster_army" || toucher.classname == "monster_dog" || toucher.classname == "monster_wizard" || toucher.classname == "wall_explode"))
+	{
+		_setmodel(this, "progs/impstuck.mdl");
+		_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impale.wav", 1, ATTN_NORM);
+		if(toucher.classname == "player" || toucher.classname == "monster_enforcer" || toucher.classname == "monster_lenforcer")
+		{
+			BecomeBloodSpurt(this, 25);
+			T_Damage(toucher, this, this.owner, 25);
+			BecomeBloodSpurt(this, 25);
+		}
+		if(!(toucher.classname == "monster_grenling" || toucher.classname == "monster_gren" || toucher.classname == "monster_army" 
+				|| toucher.classname == "monster_dog" || toucher.classname == "monster_wizard" || toucher.classname == "monster_fish"))
+		{
+			BecomeBloodSpurt(this, 25);
+			T_Damage(toucher, this, this.owner, 25);
+			BecomeBloodSpurt(this, 25);
+		}
+		this.enemy = toucher;
+		this.cnt = this.enemy.health;
+		set_movetype(this, MOVETYPE_NONE);
+		this.solid = SOLID_NOT;
+		setorigin(this, this.origin + normalize(this.velocity) * 30);
+		this.v_angle = this.angles - this.enemy.angles;
+		this.mangle = this.origin - this.enemy.origin;
+		this.mangle_x = this.mangle_x * 0.05;
+		this.mangle_y = this.mangle_y * 0.05;
+		this.mangle_z = this.mangle_z * 0.1 + 10;
+		setthink(this, SpearThink);
+		this.nextthink = time + 0.1;
+		if(toucher.classname == "monster_grenling" || toucher.classname == "monster_gren" || toucher.classname == "monster_army" 
+			|| toucher.classname == "monster_dog" || toucher.classname == "monster_wizard" || toucher.classname == "monster_fish")
+		{
+			T_Damage (toucher, this, this.owner, 5000);
+			BecomeBloodSpurt(this, 5000);
+		}
+	}
+	else if(toucher.takedamage)
+	{
+		_setmodel(this, "progs/impdef.mdl");
+		_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impale.wav", 1, ATTN_NORM);
+		T_Damage (toucher, this, this.owner, 50);
+		BecomePurpleExplosion(this, toucher, 50);
+		if(r < 0.4)
+			_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impdef1.wav", 1, ATTN_NORM);
+		else if(r < 0.7)
+			_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impdef2.wav", 1, ATTN_NORM);
+		else
+			_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impdef3.wav", 1, ATTN_NORM);
+		BecomePurpleExplosion(this, toucher, 50);
+		set_movetype(this, MOVETYPE_BOUNCE);
+		this.velocity = this.velocity * 0.05;
+		this.avelocity = '300 300 300';
+		this.solid = SOLID_NOT;
+		setsize(this, '0 0 0', '0 0 0');
+		setthink(this, Spear_Bounce_Think);
+		this.nextthink = time + 0.5;
+		this.count = time + 3;
+	}
+	else if(toucher.classname == "door" || toucher.classname == "train" || toucher.classname == "plat" || IS_CLIENT(toucher) || IS_MONSTER(toucher))
+	{
+		_setmodel(this, "progs/impwall.mdl");
+		BecomePurpleExplosion(this, toucher, 50);
+		_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impwall.wav", 1, ATTN_NORM);
+		BecomePurpleExplosion(this, toucher, 50);
+		set_movetype(this, MOVETYPE_BOUNCE);
+		this.velocity = this.velocity * 0.35;
+		this.avelocity = '300 300 300';
+		this.solid = SOLID_NOT;
+		setsize(this, '0 0 0', '0 0 0');
+		setthink(this, Spear_Bounce_Think);
+		this.nextthink = time + 0.5;
+		this.count = time + 3;
+	}
+	else
+	{
+		_setmodel(this, "progs/impwall.mdl");
+		_sound(this, CH_WEAPON_SINGLE, "weapons/impaler/impwall.wav", 1, ATTN_NORM);
+		BecomePurpleExplosion(this, toucher, 50);
+		makevectors(this.angles);
+		setorigin(this, this.origin + normalize(this.velocity) * -4);
+		set_movetype(this, MOVETYPE_NONE);
+		this.solid = SOLID_NOT;
+		this.nextthink = time + 0.1;
+		setthink(this, SpearDig);
+	}
+}
+
+void SpearDig3(entity this)
+{
+	float r = random();
+	this.nextthink = time + r + 1;
+	setthink(this, SpearExplosion);
+	BecomePurpleExplosion(this, NULL, 0);
+	if(r < 0.3)
+		_sound(this, CHAN_AUTO, "weapons/impaler/shaft1.wav", 1, ATTN_NORM);
+	else if(r < 0.6)
+		_sound(this, CHAN_AUTO, "weapons/impaler/shaft2.wav", 1, ATTN_NORM);
+	else
+		_sound(this, CHAN_AUTO, "weapons/impaler/shaft3.wav", 1, ATTN_NORM);
+	BecomePurpleExplosion(this, NULL, 0);
+}
+
+void SpearDig2(entity this)
+{
+	float r = random();
+	this.nextthink = time + r;
+	setthink(this, SpearDig3);
+	BecomePurpleExplosion(this, NULL, 0);
+	if(r < 0.3)
+		_sound(this, CHAN_AUTO, "weapons/impaler/shaft1.wav", 1, ATTN_NORM);
+	else if(r < 0.6)
+		_sound(this, CHAN_AUTO, "weapons/impaler/shaft2.wav", 1, ATTN_NORM);
+	else
+		_sound(this, CHAN_AUTO, "weapons/impaler/shaft3.wav", 1, ATTN_NORM);
+	BecomePurpleExplosion(this, NULL, 0);
+}
+
+void SpearDig(entity this)
+{
+	float r = random();
+	this.nextthink = time + r;
+	setthink(this, SpearDig2);
+	BecomePurpleExplosion(this, NULL, 0);
+	if(r < 0.3)
+		_sound(this, CHAN_AUTO, "weapons/impaler/shaft1.wav", 1, ATTN_NORM);
+	if(r < 0.6)
+		_sound(this, CHAN_AUTO, "weapons/impaler/shaft2.wav", 1, ATTN_NORM);
+	else
+		_sound(this, CHAN_AUTO, "weapons/impaler/shaft3.wav", 1, ATTN_NORM);
+	BecomePurpleExplosion(this, NULL, 0);
+}
+void ThrowHead(entity this, string gibname, float dm);
+
+void ImpaledGibs(entity this)
+{
+	ThrowHead(this, "progs/gib3.mdl", this.health);
+	ThrowGib(this, "progs/gib2.mdl", this.health);
+	ThrowGib(this, "progs/gib2.mdl", this.health);
+	ThrowGib(this, "progs/gib1.mdl", this.health);
+	ThrowGib(this, "progs/rawbone.mdl", this.health);
+	ThrowGib(this, "progs/xtragib.mdl", this.health);
+	ThrowGib(this, "progs/rawbone2.mdl", this.health);
+	if(IS_PLAYER(this))
+		this.impaled = false;
+}
+
+void ImpaledExplosion(entity this)
+{
+	if(this.enemy.health <= 0)
+	{
+		T_RadiusDamage(this, this.owner, 60, NULL);
+		BecomeBloodSpurt(this, 60);
+		this.enemy.health = this.enemy.health - 60 - random() * 100;
+		setorigin(this, this.origin - 8 * normalize(this.velocity));
+		setthink(this.enemy, ImpaledGibs);
+		this.enemy.nextthink = time;
+		_sound(this.enemy, CHAN_VOICE, "player/udeath.wav", 1, ATTN_NORM);
+		BecomeBloodSpurt(this, 60);
+		_sound(this.enemy, CHAN_BODY, "weapons/impaler/impex.wav", 1, ATTN_NORM);
+	}
+	te_explosion(this.origin);
+	BecomeExplosion(this);
+}
+
+void SpearExplosion(entity this)
+{
+	T_RadiusDamage(this, this.owner, 60, NULL);
+	setorigin(this, this.origin - 16 * normalize(this.velocity));
+	te_explosion(this.origin);
+	BecomeExplosion(this);
+}
+
+void SpearGo3(entity this)
+{
+	float r = random();
+	BecomeBloodSpurt(this, 0);
+	this.nextthink = time + r + 1;
+	BecomeBloodSpurt(this, 0);
+	setthink(this, ImpaledExplosion);
+	BecomePurpleExplosion(this, NULL, 0);
+	if(r < 0.3)
+		_sound(this, CHAN_AUTO, "weapons/impaler/shaft1.wav", 1, ATTN_NORM);
+	else if((r < 0.6))
+		_sound(this, CHAN_AUTO, "weapons/impaler/shaft2.wav", 1, ATTN_NORM);
+	else
+		_sound(this, CHAN_AUTO, "weapons/impaler/shaft3.wav", 1, ATTN_NORM);
+	BecomePurpleExplosion(this, NULL, 0);
+}
+
+void SpearGo2(entity this)
+{
+	float r = random();
+	BecomeBloodSpurt(this, 0);
+	this.nextthink = time + 1 + r;
+	BecomeBloodSpurt(this, 0);
+	setthink(this, SpearGo3);
+	BecomePurpleExplosion(this, NULL, 0);
+	if(r < 0.3)
+		_sound(this, CHAN_AUTO, "weapons/impaler/shaft1.wav", 1, ATTN_NORM);
+	else if(r < 0.6)
+		_sound(this, CHAN_AUTO, "weapons/impaler/shaft2.wav", 1, ATTN_NORM);
+	else
+		_sound(this, CHAN_AUTO, "weapons/impaler/shaft3.wav", 1, ATTN_NORM);
+	BecomePurpleExplosion(this, NULL, 0);
+}
+
+void SpearGo(entity this)
+{
+	float r = random();
+	BecomeBloodSpurt(this, 0);
+	this.nextthink = time + 1 + r;
+	BecomeBloodSpurt(this, 0);
+	setthink(this, SpearGo2);
+	BecomePurpleExplosion(this, NULL, 0);
+	if(r < 0.3)
+		_sound(this, CHAN_AUTO, "weapons/impaler/shaft1.wav", 1, ATTN_NORM);
+	else if(r < 0.6)
+		_sound(this, CHAN_AUTO, "weapons/impaler/shaft2.wav", 1, ATTN_NORM);
+	else
+		_sound(this, CHAN_AUTO, "weapons/impaler/shaft3.wav", 1, ATTN_NORM);
+	BecomePurpleExplosion(this, NULL, 0);
+}
+
+void SpearThink(entity this)
+{
+	setorigin(this, this.enemy.origin + this.mangle);
+	this.angles = this.enemy.angles + this.v_angle;
+	if(IS_CLIENT(this.enemy) || this.enemy.classname == "monster_enforcer" || IS_PLAYER(this.enemy) || this.enemy.classname == "monster_lenforcer")
+	{
+		if(!(this.flags & FL_NOTARGET))
+		{
+			makevectors(this.angles);
+			traceline(this.origin + v_forward * 20, this.origin, true, this);
+			if(trace_startsolid)
+			{
+				this.classname = "impaler";
+				this.enemy.health = 1;
+				BecomeBloodSpurt(this, 15);
+				T_Damage(this.enemy, this, this.owner, 15);
+				BecomeBloodSpurt(this, 15);
+				entity fork = spawn();
+				fork.solid = SOLID_NOT;
+				setorigin(fork, this.origin - v_forward * 10);
+				fork.nextthink = time;
+				setthink(fork, func_null);
+				this.solid = SOLID_NOT;
+				this.nextthink = time + 0.1;
+				setthink(this, SpearGo);
+				return;
+			}
+		}
+	}
+	if(IS_ONGROUND(this.enemy) && !(this.flags & FL_NOTARGET))
+	{
+		this.flags = FL_NOTARGET;
+		BecomeBloodSpurt(this, 37);
+		T_Damage(this.enemy, this, this.owner, 37);
+		BecomeBloodSpurt(this, 37);
+	}
+	if(this.enemy.health <= 0 || this.enemy.health > this.cnt || random() < 0.01)
+	{
+		set_movetype(this, MOVETYPE_BOUNCE);
+		this.velocity = this.velocity * 0.05;
+		this.avelocity = '300 300 300';
+		this.solid = SOLID_NOT;
+		setsize(this, '0 0 0', '0 0 0');
+		setthink(this, Spear_Bounce_Think);
+		this.nextthink = time + 0.5;
+		this.count = time + 3;
+		return;
+	}
+	this.cnt = this.enemy.health;
+	this.count = this.count + 1;
+	if((random() * 10) < this.count)
+	{
+		SpawnBlood(this.origin, '0 0 0', this.count, this.enemy);
+		BecomeBloodSpurt(this, this.count / 2);
+		T_Damage(this.enemy, this, this.owner, this.count / 2);
+		if(this.enemy.health <= 5 && IS_PLAYER(this.enemy))
+			T_Damage(this.enemy, this, this.owner, 5);
+		BecomeBloodSpurt(this, this.count / 2);
+		this.count = 0;
+	}
+	this.nextthink = time + 0.1;
+}
+
+void Spear_Bounce_Think(entity this)
+{
+	if(this.velocity == '0 0 0' || this.count < time)
+		delete(this);
+	else
+		this.nextthink = time + 0.1;
+}
+void DeathSound(entity this);
+
+void impale(entity this)
+{
+	if(this.classname == "monster_enforcer" || this.classname == "monster_lenforcer")
+	{
+		_sound(this, CHAN_BODY, "player/udeath.wav", 1, ATTN_NORM);
+		BecomeBloodSpurt(this, 0);
+		_sound(this, CHAN_ITEM, "weapons/impaler/mimpale.wav", 1, ATTN_NORM);
+		BecomeBloodSpurt(this, 0);
+		set_movetype(this, MOVETYPE_NONE);
+		this.solid = SOLID_NOT;
+		setthink(this, func_null);
+		this.ammo_shells = 5;
+		DropBackpack(this);
+		if(random() < 0.2)
+			this.frame = 83;
+		else if(random() < 0.4)
+			this.frame = 79;
+		else if(random() < 0.6)
+			this.frame = 80;
+		else if(random() < 0.8)
+			this.frame = 78;
+		else
+			this.frame = 84;
+	}
+	else
+	{
+		if(this.classname == "player")
+		{
+			this.impaled = true;
+			this.powerups &= ~POWERUP_INVISIBILITY;
+			this.invisible_finished = 0;
+			this.invincible_finished = 0;
+			this.super_damage_finished = 0;
+			this.radsuit_finished = 0;
+			this.modelindex = this.modelindex_player;
+			if(deathmatch || coop)
+				DropBackpack(this);
+			this.weaponmodel = string_null;
+			this.view_ofs = '0 0 -4';
+			this.nextthink = -1;
+			this.deadflag = DEAD_DEAD;
+			this.solid = SOLID_NOT;
+			UNSET_ONGROUND(this);
+			set_movetype(this, MOVETYPE_NONE);
+			BecomeBloodSpurt(this, 0);
+			DeathSound(this);
+			BecomeBloodSpurt(this, 0);
+			_sound(this, CHAN_ITEM, "weapons/impaler/pimpale.wav", 1, ATTN_NORM);
+			BecomeBloodSpurt(this, 0);
+			this.angles_x = this.angles_z = 0;
+			if(this.weapon == WEP_AXE)
+			{
+				if(random() < 0.3)
+					this.frame = 31;
+				else if(random() < 0.6)
+					this.frame = 35;
+				else
+					this.frame = 42;
+			}
+			else if(random() < 0.3)
+				this.frame = 61;
+			else if(random() < 0.6)
+				this.frame = 71;
+			else
+				this.frame = 87;
+		}
+	}
 }
 
 
@@ -1263,6 +3305,8 @@ PLAYER WEAPON USE
 
 void W_SetCurrentAmmo(entity this)
 {
+	if(MP_IMPEL && this.exptime != 0)
+		return;
 	player_run(this);		// get out of any weapon firing states
 
 	this.items &= ~(IT_SHELLS | IT_NAILS | IT_ROCKETS | IT_CELLS);
@@ -1270,6 +3314,38 @@ void W_SetCurrentAmmo(entity this)
 	
 	switch(this.weapon)
 	{
+		case WEP_NAPALM:
+		{
+			this.currentammo = this.ammo_rockets;
+			this.weaponmodel = "progs/v_srock.mdl";
+			this.weaponframe = 0;
+			this.items |= IT_ROCKETS;
+			break;
+		}
+		case WEP_LIGHTME:
+		{
+			this.currentammo = this.ammo_cells;
+			this.weaponmodel = "progs/v_light2.mdl";
+			this.weaponframe = 0;
+			this.items |= IT_CELLS;
+			break;
+		}
+		case WEP_SPEAR:
+		{
+			this.currentammo = this.ammo_rockets;
+			this.weaponmodel = "progs/v_implr.mdl";
+			this.weaponframe = 0;
+			this.items |= IT_ROCKETS;
+			break;
+		}
+		case WEP_PULSERIFLE:
+		{
+			this.currentammo = this.ammo_cells;
+			this.weaponmodel = "progs/null.mdl"; // TODO?!
+			this.weaponframe = 0;
+			this.items |= IT_CELLS;
+			break;
+		}
 		case WEP_AXE:
 		{
 			this.currentammo = 0;
@@ -1444,6 +3520,14 @@ int W_BestWeapon(entity this, int except)
 	return WEP_AXE; // just fall back if all else fails
 }
 
+bool NoAmmo(entity this)
+{
+	if(!MP_IMPEL)
+		return false;
+	W_SwitchWeapon(this, W_BestWeapon(this, 0));
+	return false;
+}
+
 bool W_CheckNoAmmo(entity this, int forwep)
 {
 	if(forwep)
@@ -1463,21 +3547,37 @@ bool W_CheckNoAmmo(entity this, int forwep)
 			case WEP_ROCKET_LAUNCHER: return (this.ammo_rockets >= 1);
 			case WEP_GRENADE_LAUNCHER: return (this.ammo_rockets >= 1);
 			case WEP_PROXIMITY_GUN: return (this.ammo_rockets >= 1);
+			case WEP_LIGHTME: return (this.ammo_cells >= 1);
+			case WEP_SPEAR: return (this.ammo_rockets >= 1);
+			case WEP_NAPALM: return (this.ammo_rockets >= 1);
+			case WEP_PULSERIFLE:
+			{
+				if(this.items & IT_PULSEPOWER2)
+					return (this.ammo_cells >= 4);
+				else if(this.items & IT_PULSEPOWER1)
+					return (this.ammo_cells >= 3);
+				else
+					return (this.ammo_cells >= 2);
+			}
 			case WEP_AXE: case WEP_MJOLNIR: case WEP_GRAPPLE:
 			default: return true; // axe and hammer don't use ammo, fallback
 		}
 	}
+
+	if(MP_IMPEL && this.currentammo < 1 && this.weapon == WEP_SPEAR)
+		return NoAmmo(this);
 
 	if(this.currentammo > 0)
 		return true;
 
 	if(this.weapon == WEP_AXE || this.weapon == WEP_GRAPPLE || this.weapon == WEP_MJOLNIR)
 		return true;
-	
-	W_SwitchWeapon(this, W_BestWeapon(this, 0));
+
+	if(!MP_IMPEL)
+		W_SwitchWeapon(this, W_BestWeapon(this, 0));
 	
 // drop the weapon down
-	return false;
+	return NoAmmo(this);
 }
 
 /*
@@ -1511,11 +3611,18 @@ void W_FireMultiGrenade(entity this);
 void W_FireMultiRocket(entity this);
 void W_FirePlasma(entity this); //ooppee addon
 
+// impel
+void player_superlight1(entity this);
+void player_rifle1(entity this);
+void player_shotimp1(entity this);
+
 void RuneApplyBlackNoise(entity who);
 float RuneApplyHell(float tvalue, entity who);
 
 void W_Attack(entity this)
 {
+	if(MP_IMPEL && this.exptime != 0)
+		return;
 	if(!W_CheckNoAmmo(this, 0))
 		return;
 
@@ -1528,7 +3635,10 @@ void W_Attack(entity this)
 	{
 		case WEP_AXE:
 		{
-			_sound(this, CH_WEAPON_SINGLE, "weapons/ax1.wav", 1, ATTN_NORM);
+			if(!MP_IMPEL || random() < 0.7)
+				_sound(this, CH_WEAPON_SINGLE, "weapons/ax1.wav", 1, ATTN_NORM);
+			else
+				_sound(this, CH_WEAPON_SINGLE, "zombie/z_shot1.wav", 1, ATTN_NORM);
 			float r = random();
 			if(r < 0.25)
 				player_axe1(this);
@@ -1538,7 +3648,10 @@ void W_Attack(entity this)
 				player_axec1(this);
 			else
 				player_axed1(this);
-			this.attack_finished = time + RuneApplyHell(0.5, this);
+			float fire_delay = 0.5;
+			if(MP_IMPEL && random() < 0.5)
+				fire_delay = 0.4;
+			this.attack_finished = time + RuneApplyHell(fire_delay, this);
 			break;
 		}
 		case WEP_GRAPPLE:
@@ -1653,6 +3766,97 @@ void W_Attack(entity this)
 			this.attack_finished = time + 0.6;
 			break;
 		}
+		case WEP_NAPALM:
+		{
+			if(this.cnt < 3)
+			{
+				player_rocket1(this);
+				W_FireNapalm(this);
+				this.attack_finished = time + 0.6;
+				this.cnt += 1;
+			}
+			else
+			{
+				_sound(this, CH_WEAPON_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
+				this.attack_finished = time + 0.9;
+				this.cnt = 0;
+			}
+			break;
+		}
+		case WEP_LIGHTME:
+		{
+			player_superlight1(this);
+			if(this.ammo_cells < 1)
+			{
+				this.ammo_cells = 0;
+				W_SetCurrentAmmo(this);
+			}
+			break;
+		}
+		case WEP_SPEAR:
+		{
+			player_shotimp1(this);
+			this.attack_finished = time + 1;
+			break;
+		}
+		case WEP_PULSERIFLE:
+		{
+			if(this.items & IT_PULSEPOWER2)
+			{
+				if(this.currentammo < 4)
+				{
+					W_SwitchWeapon(this, W_BestWeapon(this, 0));
+					break;
+				}
+				player_rifle1(this);
+				if(this.cnt == 2)
+				{
+					W_FireRifleL(this);
+					W_FireRifleM(this);
+					this.attack_finished = time + 0.4;
+					this.cnt = 0;
+				}
+				else if(this.cnt == 1)
+				{
+					W_FireRifleJ(this);
+					W_FireRifleK(this);
+					this.attack_finished = time + 0.1;
+					this.cnt = 2;
+				}
+				else if(this.cnt == 0)
+				{
+					W_FireRifleH(this);
+					W_FireRifleI(this);
+					this.attack_finished = time + 0.1;
+					this.cnt = 1;
+				}
+			}
+			else if(this.items & IT_PULSEPOWER1)
+			{
+				if(this.currentammo < 3)
+				{
+					W_SwitchWeapon(this, W_BestWeapon(this, 0));
+					break;
+				}
+				player_rifle1(this);
+				W_FireRifleTarget(this);
+				W_FireRifleD(this);
+				W_FireRifleC(this);
+				W_FireRifleB(this);
+				this.attack_finished = time + 0.6;
+			}
+			else if(this.currentammo < 2)
+			{
+				W_SwitchWeapon(this, W_BestWeapon(this, 0));
+				break;
+			}
+			player_rifle1(this);
+			W_FireRifleA(this);
+			W_FireRifle2A(this);
+			W_FireRifle3A(this);
+			this.attack_finished = time + 0.7;
+			break;
+		}
 	}
 }
 
@@ -1738,8 +3942,11 @@ void W_ChangeWeapon(entity this, int imp)
 					am = true;
 				break; // prefer multi grenade
 			}
-			if((this.weapons & WEP_PROXIMITY_GUN) && ((this.weapon == WEP_GRENADE_LAUNCHER && !(this.weapons & WEP_MULTI_GRENADE)) || this.weapon == WEP_MULTI_GRENADE))
+			if((this.weapons & WEP_PROXIMITY_GUN) && ((this.weapon == WEP_GRENADE_LAUNCHER && !(this.weapons & WEP_MULTI_GRENADE)) || this.weapon == WEP_MULTI_GRENADE || !(this.weapons & WEP_GRENADE_LAUNCHER)))
 				fl = WEP_PROXIMITY_GUN;
+			else if((this.weapons & WEP_NAPALM) && 
+					((this.weapon == WEP_GRENADE_LAUNCHER && !(this.weapons & WEP_PROXIMITY_GUN) && !(this.weapons & WEP_MULTI_GRENADE)) || this.weapon == WEP_PROXIMITY_GUN || !(this.weapons & WEP_GRENADE_LAUNCHER)))
+				fl = WEP_NAPALM;
 			else
 				fl = WEP_GRENADE_LAUNCHER;
 			if(this.ammo_rockets < 1)
@@ -1748,7 +3955,7 @@ void W_ChangeWeapon(entity this, int imp)
 		}
 		case 7:
 		{
-			if((this.weapons & WEP_MULTI_ROCKET) && (this.weapon == WEP_ROCKET_LAUNCHER || this.ammo_rockets < 1))
+			if((this.weapons & WEP_MULTI_ROCKET) && (this.weapon == WEP_ROCKET_LAUNCHER || this.ammo_rockets < 1 || !(this.weapons & WEP_ROCKET_LAUNCHER)))
 			{
 				fl = WEP_MULTI_ROCKET;
 				if(this.ammo_multi_rockets < 1)
@@ -1756,7 +3963,10 @@ void W_ChangeWeapon(entity this, int imp)
 			}
 			else
 			{
-				fl = WEP_ROCKET_LAUNCHER;
+				if((this.weapons & WEP_SPEAR) && ((this.weapon == WEP_ROCKET_LAUNCHER && !(this.weapons & WEP_MULTI_ROCKET)) || this.weapon == WEP_MULTI_ROCKET || !(this.weapons & WEP_ROCKET_LAUNCHER)))
+					fl = WEP_SPEAR;
+				else
+					fl = WEP_ROCKET_LAUNCHER;
 				if(this.ammo_rockets < 1)
 					am = true;
 			}
@@ -1772,8 +3982,15 @@ void W_ChangeWeapon(entity this, int imp)
 			}
 			else
 			{
-				fl = WEP_LIGHTNING;
-				if(this.ammo_cells < 1)
+				float needed_cells = 1;
+				if((this.weapons & WEP_LIGHTME) && ((this.weapon == WEP_LIGHTNING && !(this.weapons & WEP_PLASMA_GUN)) || this.weapon == WEP_PLASMA_GUN || !(this.weapons & WEP_LIGHTNING)))
+				{
+					fl = WEP_LIGHTME;
+					needed_cells = 2;
+				}
+				else
+					fl = WEP_LIGHTNING;
+				if(this.ammo_cells < needed_cells)
 					am = true;
 			}
 			break;
@@ -1787,7 +4004,18 @@ void W_ChangeWeapon(entity this, int imp)
 		}
 		case 14:
 		{
-			if((this.weapons & WEP_MJOLNIR) || !(deathmatch && teamplay >= TEAM_CTF))
+			if((this.weapons & WEP_PULSERIFLE) && this.weapon != WEP_PULSERIFLE)
+			{
+				fl = WEP_PULSERIFLE;
+				float needed_cells = 2;
+				if(this.items & IT_PULSEPOWER2)
+					needed_cells = 4;
+				else if(this.items & IT_PULSEPOWER1)
+					needed_cells = 3;
+				if(this.ammo_cells < needed_cells)
+					am = true;
+			}
+			else if((this.weapons & WEP_MJOLNIR) || !(deathmatch && teamplay >= TEAM_CTF))
 				fl = WEP_MJOLNIR;
 			else
 				fl = WEP_GRAPPLE;
@@ -1832,6 +4060,44 @@ void W_ChangeWeapon(entity this, int imp)
 		{
 			fl = WEP_PLASMA_GUN;
 			if(this.ammo_plasma < 1)
+				am = true;
+			break;
+		}
+		case 65:
+		{
+			fl = WEP_LIGHTME;
+			if(this.ammo_cells < 1)
+				am = true;
+			break;
+		}
+		case 66:
+		{
+			fl = WEP_PULSERIFLE;
+			if(this.items & IT_PULSEPOWER2)
+			{
+				if(this.ammo_cells < 4)
+					am = true;
+			}
+			else if(this.items & IT_PULSEPOWER1)
+			{
+				if(this.ammo_cells < 3)
+					am = true;
+			}
+			else if(this.ammo_cells < 2)
+				am = true;
+			break;
+		}
+		case 67:
+		{
+			fl = WEP_SPEAR;
+			if(this.ammo_rockets < 1)
+				am = true;
+			break;
+		}
+		case 68:
+		{
+			fl = WEP_NAPALM;
+			if(this.ammo_rockets < 1)
 				am = true;
 			break;
 		}
@@ -1890,9 +4156,16 @@ void CheatCommand(entity this)
 		this.ammo_multi_rockets = 100;
 		this.ammo_plasma = 100;
 	}
+	if(MP_IMPEL)
+		this.weapons |= (WEP_LIGHTME | WEP_NAPALM | WEP_PULSERIFLE | WEP_SPEAR);
 
-	W_SwitchWeapon(this, WEP_ROCKET_LAUNCHER);
+	if(MP_IMPEL)
+		W_SwitchWeapon(this, WEP_GRENADE_LAUNCHER);
+	else
+		W_SwitchWeapon(this, WEP_ROCKET_LAUNCHER);
 	this.impulse = 0;
+	if(MP_IMPEL)
+		_sound(this, CH_WEAPON_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
 }
 
 /*
@@ -1920,7 +4193,9 @@ void CycleWeaponCommand(entity this)
 			}
 			case WEP_PLASMA_GUN:
 			{
-				this.weapon = WEP_LASER_CANNON;
+				this.weapon = WEP_LIGHTME;
+				if(this.ammo_cells < 1)
+					am = true;
 				break;
 			}
 			case WEP_AXE:
@@ -1986,7 +4261,7 @@ void CycleWeaponCommand(entity this)
 			}
 			case WEP_GRENADE_LAUNCHER:
 			{
-				this.weapon = WEP_PROXIMITY_GUN;
+				this.weapon = WEP_NAPALM;
 				if(this.ammo_rockets < 1)
 					am = true;
 				break;
@@ -1994,6 +4269,13 @@ void CycleWeaponCommand(entity this)
 			case WEP_MULTI_GRENADE:
 			{
 				this.weapon = WEP_ROCKET_LAUNCHER;
+				if(this.ammo_rockets < 1)
+					am = true;
+				break;
+			}
+			case WEP_NAPALM:
+			{
+				this.weapon = WEP_PROXIMITY_GUN;
 				if(this.ammo_rockets < 1)
 					am = true;
 				break;
@@ -2014,6 +4296,13 @@ void CycleWeaponCommand(entity this)
 			}
 			case WEP_MULTI_ROCKET:
 			{
+				this.weapon = WEP_SPEAR;
+				if(this.ammo_rockets < 1)
+					am = true;
+				break;
+			}
+			case WEP_SPEAR:
+			{
 				this.weapon = WEP_LIGHTNING;
 				if(this.ammo_cells < 1)
 					am = true;
@@ -2028,19 +4317,56 @@ void CycleWeaponCommand(entity this)
 			}
 			case WEP_LASER_CANNON:
 			{
+				this.weapon = WEP_PLASMA_GUN;
+				if(this.ammo_plasma < 1)
+					am = true;
+				break;
+			}
+			case WEP_LIGHTME:
+			{
+				this.weapon = WEP_PULSERIFLE;
+				if(this.items & IT_PULSEPOWER2)
+				{
+					if(this.ammo_cells < 4)
+						am = true;
+				}
+				else if(this.items & IT_PULSEPOWER1)
+				{
+					if(this.ammo_cells < 3)
+						am = true;
+				}
+				else if(this.ammo_cells < 2)
+					am = true;
+				break;
+			}
+			case WEP_PULSERIFLE:
+			{
 				this.weapon = WEP_MJOLNIR;
 				break;
 			}
 		}
 	
-		if((this.weapons & this.weapon) && am == false)
+		if((this.weapons & this.weapon) && !am)
 		{
 			this.prevweapon = oldwep;
 			W_SetCurrentAmmo(this);
+			if(this.weapon == WEP_PULSERIFLE)
+			{
+				if(this.items & IT_PULSEPOWER2)
+					centerprint(this, "[ LEVEL III LASER SYSTEM SELECTED ]\n");
+				else if(this.items & IT_PULSEPOWER1)
+					centerprint(this, "[ LEVEL II LASER SYSTEM SELECTED ]\n");
+				else
+					centerprint(this, "[ LEVEL I LASER SYSTEM SELECTED ]\n");
+				_sound(this, CHAN_AUTO, "weapons/pulse/install.wav", 1, ATTN_NORM);
+				_sound(this, CH_WEAPON_SINGLE, "enviro/pinhead/pinfire.wav", 1, ATTN_NORM);
+				stuffcmd(this, "bf\n");
+			}
 			return;
 		}
 	}
 
+	// TODO: can't get here!
 	this.weapon = oldwep; // didn't save the switch
 }
 
@@ -2063,31 +4389,62 @@ void CycleWeaponReverseCommand(entity this)
 
 		switch(this.weapon)
 		{
-			case WEP_MJOLNIR:
-			{
-				this.weapon = WEP_LASER_CANNON;
-				if(this.ammo_cells < 1)
-					am = true;
-				break;
-			}
-			case WEP_LASER_CANNON:
+			case WEP_LIGHTME:
 			{
 				this.weapon = WEP_PLASMA_GUN;
 				if(this.ammo_plasma < 1)
 					am = true;
 				break;
 			}
-			case WEP_PLASMA_GUN:
+			case WEP_PULSERIFLE:
+			{
+				this.weapon = WEP_LIGHTME;
+				if(this.ammo_cells < 1)
+					am = true;
+				break;
+			}
+			case WEP_MJOLNIR:
+			{
+				this.weapon = WEP_PULSERIFLE;
+				if(this.items & IT_PULSEPOWER2)
+				{
+					if(this.ammo_cells < 4)
+						am = true;
+				}
+				else if(this.items & IT_PULSEPOWER1)
+				{
+					if(this.ammo_cells < 3)
+						am = true;
+				}
+				else if(this.ammo_cells < 2)
+					am = true;
+				break;
+			}
+			case WEP_LASER_CANNON:
 			{
 				this.weapon = WEP_LIGHTNING;
 				if(this.ammo_cells < 1)
 					am = true;
 				break;
 			}
-			case WEP_LIGHTNING:
+			case WEP_PLASMA_GUN:
+			{
+				this.weapon = WEP_LASER_CANNON;
+				if(this.ammo_cells < 1)
+					am = true;
+				break;
+			}
+			case WEP_SPEAR:
 			{
 				this.weapon = WEP_MULTI_ROCKET;
 				if(this.ammo_multi_rockets < 1)
+					am = true;
+				break;
+			}
+			case WEP_LIGHTNING:
+			{
+				this.weapon = WEP_SPEAR;
+				if(this.ammo_rockets < 1)
 					am = true;
 				break;
 			}
@@ -2112,9 +4469,16 @@ void CycleWeaponReverseCommand(entity this)
 					am = true;
 				break;
 			}
-			case WEP_PROXIMITY_GUN:
+			case WEP_NAPALM:
 			{
 				this.weapon = WEP_GRENADE_LAUNCHER;
+				if(this.ammo_rockets < 1)
+					am = true;
+				break;
+			}
+			case WEP_PROXIMITY_GUN:
+			{
+				this.weapon = WEP_NAPALM;
 				if(this.ammo_rockets < 1)
 					am = true;
 				break;
@@ -2185,6 +4549,18 @@ void CycleWeaponReverseCommand(entity this)
 		{
 			this.prevweapon = oldwep;
 			W_SetCurrentAmmo(this);
+			if(this.weapon == WEP_PULSERIFLE)
+			{
+				if(this.items & IT_PULSEPOWER2)
+					centerprint(this, "[ LEVEL III LASER SYSTEM SELECTED ]\n");
+				else if(this.items & IT_PULSEPOWER1)
+					centerprint(this, "[ LEVEL II LASER SYSTEM SELECTED ]\n");
+				else
+					centerprint(this, "[ LEVEL I LASER SYSTEM SELECTED ]\n");
+				_sound(this, CHAN_AUTO, "weapons/pulse/install.wav", 1, ATTN_NORM);
+				_sound(this, CH_WEAPON_SINGLE, "enviro/pinhead/pinfire.wav", 1, ATTN_NORM);
+				stuffcmd(this, "bf\n");
+			}
 			return;
 		}
 	}
@@ -2199,13 +4575,13 @@ void QuadCheat(entity this)
 
 	this.super_time = 1;
 	this.super_damage_finished = time + 30;
-	this.items |= IT_QUAD;
+	this.powerups |= POWERUP_QUAD;
 	bprint("quad cheat\n");
 }
 
 void W_LastWeapon(entity this)
 {
-	if ((this.weapons & this.prevweapon) && this.prevweapon != this.weapon && W_CheckNoAmmo(this, this.prevweapon))
+	if((this.weapons & this.prevweapon) && this.prevweapon != this.weapon && W_CheckNoAmmo(this, this.prevweapon))
 		W_SwitchWeapon(this, this.prevweapon);
 	else
 		W_SwitchWeapon(this, W_BestWeapon(this, this.weapon));
@@ -2218,7 +4594,8 @@ int W_GetWeaponImpulse(int imp)
 		default: // default to axe
 		case 230: return 1; // blaster -> axe
 		case 244: return 14; // tuba -> mjolnir
-		case 231: case 248: return 2; // shotgun, shockwave -> shotgun
+		case 231: return 2; // shotgun -> shotgun
+		case 248: return 67; // shockwave -> spear
 		case 232: return 4; // machinegun -> nailgun
 		case 233: return 6; // mortar -> grenade launcher
 		case 235: return 62; // electro -> multi grenade
@@ -2231,8 +4608,11 @@ int W_GetWeaponImpulse(int imp)
 		case 236: return 3; // crylink -> super shotgun
 		case 239: return 7; // devastator -> rocket launcher
 		case 246: return 63; // fireball -> multi rocket
-		case 242: case 240: return 22; // hook, porto -> hook
-		case 237: case 241: return 64; // vortex, vaporizer -> plasma gun
+		case 242: return 22; // hook -> hook
+		case 240: return 66; // porto -> pulse rifle
+		case 237: return 64; // vortex -> plasma gun
+		case 241: return 65; // vaporizer -> lg-2 prototype
+		case 250: return 68; // napalm (no replacement!)
 	}
 }
 
@@ -2247,7 +4627,7 @@ void TossWeapon(entity this);
 void TeamFlagStatusReport(entity this);
 void ImpulseCommands(entity this)
 {
-	bool valid_wep_impulse = (this.impulse >= 1 && (this.impulse <= 9 || (this.impulse >= 230 && this.impulse <= 253) || this.impulse == 50 || this.impulse == 14) || (this.impulse >= 60 && this.impulse <= 64));
+	bool valid_wep_impulse = (this.impulse >= 1 && (this.impulse <= 9 || (this.impulse >= 230 && this.impulse <= 253) || this.impulse == 50 || this.impulse == 14) || (this.impulse >= 60 && this.impulse <= 68));
 
 	if(valid_wep_impulse)
 	{

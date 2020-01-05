@@ -1,8 +1,9 @@
 #ifdef SVQC
 
-void barrel_explode(entity this, entity attacker)
+void barrel_explode2(entity this)
 {
-	this.takedamage = DAMAGE_NO;
+	if(!MP_IMPEL)
+		this.takedamage = DAMAGE_NO;
 	this.classname = "explo_box";
 	// did say this.owner
 	T_RadiusDamage(this, this, 160, NULL);
@@ -12,7 +13,27 @@ void barrel_explode(entity this, entity attacker)
 	setSendEntity(this, func_null); // some things are gonna happen to this barrel that the ChildrenS of QuakeC shouldn't see
 
 	this.origin_z = this.origin_z + 32;
-	BecomeExplosion(this);
+	if(MP_IMPEL)
+	{
+		_setmodel(this, string_null);
+		setsize(this, '0 0 0', '0 0 0');
+		setthink(this, BecomeExplosion);
+		this.nextthink = time;
+	}
+	else
+		BecomeExplosion(this);
+}
+
+void barrel_explode(entity this, entity inflictor, entity attacker)
+{
+	if(MP_IMPEL)
+	{
+		this.takedamage = DAMAGE_NO;
+		setthink(this, barrel_explode2);
+		this.nextthink = time;
+	}
+	else
+		barrel_explode2(this);
 }
 
 void barrel_spawn(entity this)

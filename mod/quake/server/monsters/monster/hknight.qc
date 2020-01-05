@@ -318,7 +318,7 @@ void hknight_pain1(entity this)
 
 //============================================================================
 
-void hknight_die12(entity this) { set_anim(this, anim_hknight_death12, hknight_die12); }
+void hknight_die12(entity this) { set_anim(this, anim_hknight_death12, hknight_die12); CorpseThink(this); }
 void hknight_die11(entity this) { set_anim(this, anim_hknight_death11, hknight_die12); }
 void hknight_die10(entity this) { set_anim(this, anim_hknight_death10, hknight_die11); }
 void hknight_die9(entity this) { set_anim(this, anim_hknight_death9, hknight_die10); ai_forward(this, 11); }
@@ -331,7 +331,7 @@ void hknight_die3(entity this) { set_anim(this, anim_hknight_death3, hknight_die
 void hknight_die2(entity this) { set_anim(this, anim_hknight_death2, hknight_die3); ai_forward(this, 8); }
 void hknight_die1(entity this) { set_anim(this, anim_hknight_death1, hknight_die2); ai_forward(this, 10); }
 
-void hknight_dieb9(entity this) { set_anim(this, anim_hknight_deathb9, hknight_dieb9); }
+void hknight_dieb9(entity this) { set_anim(this, anim_hknight_deathb9, hknight_dieb9); CorpseThink(this); }
 void hknight_dieb8(entity this) { set_anim(this, anim_hknight_deathb8, hknight_dieb9); }
 void hknight_dieb7(entity this) { set_anim(this, anim_hknight_deathb7, hknight_dieb8); }
 void hknight_dieb6(entity this) { set_anim(this, anim_hknight_deathb6, hknight_dieb7); }
@@ -341,7 +341,7 @@ void hknight_dieb3(entity this) { set_anim(this, anim_hknight_deathb3, hknight_d
 void hknight_dieb2(entity this) { set_anim(this, anim_hknight_deathb2, hknight_dieb3); }
 void hknight_dieb1(entity this) { set_anim(this, anim_hknight_deathb1, hknight_dieb2); }
 
-void hknight_die(entity this, entity attacker)
+void hknight_die(entity this, entity inflictor, entity attacker)
 {
 // check for gib
 	if(this.health < -40)
@@ -519,6 +519,9 @@ void hk_idle_sound(entity this)
 
 void hknight_pain(entity this, entity attacker, float damage)
 {
+	if(MP_IMPEL && (random() * 30) > damage)
+		return;
+
 	if(this.pain_finished > time)
 		return;
 
@@ -527,17 +530,17 @@ void hknight_pain(entity this, entity attacker, float damage)
 	else
 		_sound(this, CH_VOICE, "hknight/pain1.wav", 1, ATTN_NORM);
 
-	if(time - this.pain_finished > 5)
+	if(!MP_IMPEL && time - this.pain_finished > 5)
 	{	// allways go into pain frame if it has been a while
 		hknight_pain1(this);
 		this.pain_finished = time + 1;
 		return;
 	}
 	
-	if((random()*30 > damage) )
+	if(!MP_IMPEL && (random()*30 > damage) )
 		return;		// didn't flinch
 
-	this.pain_finished = time + 1;
+	this.pain_finished = time + ((MP_IMPEL) ? 2 : 1);
 	hknight_pain1(this);
 }
 
@@ -598,9 +601,16 @@ Statue - (rogue only) select this to use the stone skin and have him frozen in p
 delay: time from sight to attack (default 5)
 frame: frame to be frozen in. (default 73)
 */
+spawnfunc(monster_dknight);
 spawnfunc(monster_hell_knight)
 {
 	if(deathmatch) { delete(this); return; }
+	if(MP_IMPEL && coop == 2 && orig_random(this) < 0.5)
+	{
+		this.classname = "monster_dknight";
+		spawnfunc_monster_dknight(this);
+		return;
+	}
 	precache_model2("progs/hknight.mdl");
 	precache_model2("progs/k_spike.mdl");
 	precache_model2("progs/h_hellkn.mdl");

@@ -1,5 +1,8 @@
 #pragma once
 
+const bool OPT_MOTD = true; // TODO: opt-out in non-impel!
+const int FL_MOTDVIEWED = 8192; // impel
+
 const string QUAKE_TALKSOUND = "misc/quake_talk.wav";
 
 .bool damagedbycontents;
@@ -9,6 +12,12 @@ int intermission_running;
 .int playerid;
 
 float skill;
+
+.bool elec;
+.bool lightningmodel;
+int modelindex_bolt; // aop
+int modelindex_eyes, modelindex_hammer;
+.int modelindex_player;
 
 .float t_width;
 .float t_length;
@@ -37,6 +46,8 @@ float skill;
 
 .vector dest1, dest2;
 
+bool t_checkbottom(entity this);
+
 void set_anim(entity this, int frm, void(entity) tnk);
 void set_animofs(entity this, int frm, int offs, void(entity) tnk); // because we can
 
@@ -63,6 +74,11 @@ bool gameover;
 .float super_damage_finished;
 .float radsuit_finished;
 
+.float field_generator_finished;
+.float field_generator_health;
+.float field_generator_time;
+.float field_generator_sound;
+
 .float invincible_time, invincible_sound;
 .float invisible_time, invisible_sound;
 .float super_time, super_sound;
@@ -83,6 +99,11 @@ bool gameover;
 .float distance;
 .float volume;
 
+// impel
+bool angry_monsters;
+bool corpse_removal;
+.entity other2;
+
 .int attack_state;
 const int AS_STRAIGHT = 1;
 const int AS_SLIDING = 2;
@@ -99,7 +120,8 @@ const int AS_MISSILE = 4;
 .void(entity this) th_missile;
 .void(entity this) th_melee;
 .void(entity this, entity attacker, float damage) th_pain;
-.void(entity this, entity attacker) th_die;
+.void(entity this, entity inflictor, entity attacker) th_die;
+//.void(entity this, entity inflictor, entity attacker) th_impale;
 
 string current_cdtrack;
 
@@ -144,6 +166,8 @@ entity tag_token_owner;
 const int SVC_CUTSCENE = 34;
 
 .int weapons;
+
+.int powerups;
 
 .float save_nextthink;
 

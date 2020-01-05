@@ -67,8 +67,8 @@ void sphere_think(entity this)
 	
 	if(time > this.delay)
 	{
-		if(this.owner.items & IT_V_SPHERE)
-			this.owner.items &= ~IT_V_SPHERE;
+		if(this.owner.powerups & POWERUP_V_SPHERE)
+			this.owner.powerups &= ~POWERUP_V_SPHERE;
 		sprint( this.owner, "Vengeance Sphere Lost\n");
 		delete(this);
 		return;
@@ -76,8 +76,8 @@ void sphere_think(entity this)
 
 	if(this.owner.health < 1)
 	{
-		if(this.owner.items & IT_V_SPHERE)
-			this.owner.items &= ~IT_V_SPHERE;
+		if(this.owner.powerups & POWERUP_V_SPHERE)
+			this.owner.powerups &= ~POWERUP_V_SPHERE;
 		if(IS_PLAYER(this.owner.enemy))
 		{
 			this.enemy = this.owner.enemy;

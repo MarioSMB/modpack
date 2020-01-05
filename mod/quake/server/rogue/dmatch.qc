@@ -145,7 +145,7 @@ void dmatch_score(entity targ, entity attacker)
 			if(tagToken.tag_frags == 5)
 			{
 				sprint(attacker, "You got the Quad Damage\n");
-				attacker.items |= IT_QUAD;
+				attacker.powerups |= POWERUP_QUAD;
 				stuffcmd(attacker, "bf\n");
 				_sound(attacker,CH_VOICE,"items/damage.wav", 1, ATTN_NORM);
 				attacker.super_time = 1;

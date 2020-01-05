@@ -1,3 +1,13 @@
+float orig_random(entity this);
+void CorpseThink(entity this);
+.float motd_time;
+.float motd_count;
+.bool impaled;
+//.float lightningmodel
+.float exptime;
+.float bounced;
+.float silencer;
+
 .vector finaldest, finalangle; 		//plat.qc stuff
 .void(entity this) think1;
 .float state;

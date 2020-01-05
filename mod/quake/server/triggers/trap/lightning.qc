@@ -32,7 +32,7 @@ void trap_lightning_use(entity this, entity actor, entity trigger)
 		if(this.classname == "trap_lightning_triggered")
 			this.pausetime = time + 0.1;
 	}
-	if(this.target)
+	if(this.target && this.target != "")
 	{
 		p1 = this.origin;
 		p2 = this.enemy.origin;
@@ -113,7 +113,7 @@ void lightning_think(entity this)
 
 void lightning_firstthink(entity this)
 {
-	if(this.target)
+	if(this.target && this.target != "")
 	{
 		entity targ = find(NULL,targetname,this.target);
 		this.dest = targ.origin;

@@ -162,6 +162,8 @@ spawnfunc(item_health)
 bool RuneHasElder(entity who);
 void health_touch(entity this, entity toucher)
 {
+	if(MP_IMPEL && toucher.exptime != 0)
+		return;
 	if(!IS_PLAYER(toucher))
 		return;
 	
@@ -323,6 +325,7 @@ spawnfunc(item_armor2)
 
 /*QUAKED item_armorInv(0 .5 .8)(-16 -16 0)(16 16 32)
 */
+spawnfunc(item_artifact_field_generator);
 
 spawnfunc(item_armorInv)
 {
@@ -368,19 +371,23 @@ int RankForWeapon(int w)
 	{
 		case WEP_PLASMA_GUN:		return 1;
 		case WEP_LIGHTNING: 		return 2;
-		case WEP_MULTI_ROCKET: 		return 3;
-		case WEP_ROCKET_LAUNCHER: 	return 4;
-		case WEP_LASER_CANNON: 		return 5;
-		case WEP_LAVA_SUPER_NAILGUN:return 6;
-		case WEP_SUPER_NAILGUN: 	return 7;
-		case WEP_MULTI_GRENADE: 	return 8;
-		case WEP_PROXIMITY_GUN: 	return 9;
-		case WEP_GRENADE_LAUNCHER: 	return 10;
-		case WEP_LAVA_NAILGUN: 		return 11;
-		case WEP_SUPER_SHOTGUN: 	return 12;
-		case WEP_NAILGUN: 			return 13;
-		case WEP_MJOLNIR: 			return 14;
-		default: 					return 15;
+		case WEP_PULSERIFLE: 		return 3;
+		case WEP_MULTI_ROCKET: 		return 4;
+		case WEP_ROCKET_LAUNCHER: 	return 5;
+		case WEP_LIGHTME: 			return 6;
+		case WEP_LASER_CANNON: 		return 7;
+		case WEP_SPEAR: 			return 8;
+		case WEP_LAVA_SUPER_NAILGUN:return 9;
+		case WEP_SUPER_NAILGUN: 	return 10;
+		case WEP_MULTI_GRENADE: 	return 11;
+		case WEP_PROXIMITY_GUN: 	return 12;
+		case WEP_GRENADE_LAUNCHER: 	return 13;
+		case WEP_NAPALM: 			return 14;
+		case WEP_LAVA_NAILGUN: 		return 15;
+		case WEP_SUPER_SHOTGUN: 	return 16;
+		case WEP_NAILGUN: 			return 17;
+		case WEP_MJOLNIR: 			return 18;
+		default: 					return 19;
 	}
 }
 
@@ -475,6 +482,8 @@ int W_BestWeapon(entity this, float except);
 
 void weapon_touch(entity this, entity toucher)
 {
+	if(MP_IMPEL && toucher.health <= 0)
+		return;
 	if(!IS_CLIENT(toucher))
 		return;
 
@@ -633,7 +642,14 @@ void weapon_touch(entity this, entity toucher)
 		Deathmatch_Weapon(toucher, old, newitem);
 
 	if(leave)
+	{
+		if(MP_IMPEL && this.state == 0)
+		{
+			SUB_UseTargets(this, toucher, NULL);
+			this.state = H_ROTTEN;
+		}
 		return;
+	}
 
 // remove it in single player, or setup for respawning in deathmatch
 	this.model = string_null;
@@ -651,8 +667,15 @@ void weapon_touch(entity this, entity toucher)
 /*QUAKED weapon_supershotgun(0 .5 .8)(-16 -16 0)(16 16 32)
 */
 
+spawnfunc(weapon_grenadelauncher);
 spawnfunc(weapon_supershotgun)
 {
+	if(world.model == "maps/aop2m3.bsp")
+	{
+		this.classname = "weapon_grenadelauncher";
+		spawnfunc_weapon_grenadelauncher(this);
+		return;
+	}
 	precache_model("progs/g_shot.mdl");
 	_setmodel(this, "progs/g_shot.mdl");
 	this.weapon = WEP_SUPER_SHOTGUN;
@@ -710,6 +733,7 @@ spawnfunc(weapon_grenadelauncher)
 
 /*QUAKED weapon_rocketlauncher(0 .5 .8)(-16 -16 0)(16 16 32)
 */
+spawnfunc(weapon_not_a_spear);
 
 spawnfunc(weapon_rocketlauncher)
 {
@@ -726,9 +750,16 @@ spawnfunc(weapon_rocketlauncher)
 
 /*QUAKED weapon_lightning(0 .5 .8)(-16 -16 0)(16 16 32)
 */
+spawnfunc(weapon_rifle);
 
 spawnfunc(weapon_lightning)
 {
+	if(world.model == "maps/aop2m2.bsp")
+	{
+		this.classname = "weapon_rifle";
+		spawnfunc_weapon_rifle(this);
+		return;
+	}
 	precache_model("progs/g_light.mdl");
 	_setmodel(this, "progs/g_light.mdl");
 	this.weapon = WEP_LIGHTNING;
@@ -738,6 +769,203 @@ spawnfunc(weapon_lightning)
 	setsize(this, '-16 -16 0', '16 16 56');
 	StartItem(this);
 }
+
+// impel weapons
+void impel_weapon_touch(entity this, entity toucher)
+{
+	if(!IS_CLIENT(toucher))
+		return;
+	float hadammo = 0;
+	int newitems = 0, new = 0;
+	bool leave = (deathmatch == 2 || coop);
+
+	if(this.classname == "weapon_lightme")
+	{
+		if(leave && (toucher.weapons & WEP_LIGHTME))
+			return;
+		hadammo = toucher.ammo_cells;
+		new = WEP_LIGHTME;
+		toucher.ammo_cells = toucher.ammo_cells + 12;
+	}
+	else if(this.classname == "weapon_napalm")
+	{
+		if(leave && (toucher.weapons & WEP_NAPALM))
+			return;
+		hadammo = toucher.ammo_rockets;
+		new = WEP_NAPALM;
+		toucher.ammo_rockets = (toucher.ammo_rockets + 9);
+	}
+	else if(this.classname == "weapon_not_a_spear")
+	{
+		if(leave && (toucher.weapons & WEP_SPEAR))
+			return;
+		hadammo = toucher.ammo_rockets;
+		new = WEP_SPEAR;
+		toucher.ammo_rockets = toucher.ammo_rockets + 10;
+	}
+	else if(this.classname == "weapon_rifle")
+	{
+		if(leave && (toucher.weapons & WEP_PULSERIFLE))
+			return;
+		hadammo = toucher.ammo_cells;
+		new = WEP_PULSERIFLE;
+		toucher.ammo_cells = toucher.ammo_cells + 24;
+	}
+	else if(this.classname == "weapon_rifleupgrade")
+	{
+		if(leave && (toucher.items & IT_PULSEPOWER2))
+			return;
+		if(!(toucher.weapons & WEP_PULSERIFLE))
+			return;
+		hadammo = toucher.ammo_cells;
+		toucher.ammo_cells = toucher.ammo_cells + 24;
+		if(toucher.items & IT_PULSEPOWER2)
+			newitems = IT_PULSEPOWER2;
+		else if(toucher.items & IT_PULSEPOWER1)
+			newitems = IT_PULSEPOWER2;
+		else if(toucher.weapons & WEP_PULSERIFLE)
+			newitems = IT_PULSEPOWER1;
+		else
+			return;
+	}
+	else
+	{
+		objerror(this, "impel_weapon_touch: unknown classname");
+		return; // don't try to give it anyway!
+	}
+	sprint(toucher, "You got the ");
+	if(this.classname == "weapon_rifleupgrade")
+	{
+		if(toucher.items & IT_PULSEPOWER2)
+		{
+			sprint(toucher, "ammo out of the upgrade ");
+			_sound(toucher, CHAN_ITEM, "enviro/pinhead/pinfire.wav", 1, ATTN_NORM);
+		}
+		else if(toucher.items & IT_PULSEPOWER1)
+		{
+			_sound(toucher, CHAN_AUTO, "weapons/pulse/install.wav", 1, ATTN_NORM);
+			_sound(toucher, CHAN_ITEM, "enviro/pinhead/pinfire.wav", 1, ATTN_NORM);
+			sprint(toucher, "Level III Laser System upgrade ");
+		}
+		else if(toucher.weapons & WEP_PULSERIFLE)
+		{
+			_sound(toucher, CHAN_AUTO, "weapons/pulse/install.wav", 1, ATTN_NORM);
+			_sound(toucher, CHAN_ITEM, "enviro/pinhead/pinfire.wav", 1, ATTN_NORM);
+			sprint(toucher, "Level II Laser System upgrade ");
+		}
+		else
+			return;
+	}
+	else
+		sprint(toucher, this.netname);
+	sprint(toucher, "\n");
+	if(this.classname == "weapon_rifle")
+	{
+		_sound(toucher, CHAN_AUTO, "weapons/pulse/install.wav", 1, ATTN_NORM);
+		_sound(toucher, CHAN_WEAPON, "enviro/pinhead/pinfire.wav", 1, ATTN_NORM);
+		centerprint(toucher, "[ ARMOR LASER SYSTEM ACTIVATED ]\n");
+	}
+	else
+		_sound(toucher, CHAN_ITEM, "weapons/pkup.wav", 1, ATTN_NORM);
+	stuffcmd(toucher, "bf\n");
+	bound_other_ammo(toucher);
+	toucher.items |= newitems;
+	toucher.weapons |= new;
+	if(newitems == IT_PULSEPOWER1 || newitems == IT_PULSEPOWER2)
+		new = WEP_PULSERIFLE;
+	toucher.weapon = new;
+	W_SetCurrentAmmo(toucher);
+	if(leave)
+	{
+		if(this.state == 0)
+		{
+			SUB_UseTargets(this, toucher, NULL);
+			this.state = H_ROTTEN;
+		}
+		return;
+	}
+	this.model = string_null;
+	this.solid = SOLID_NOT;
+	if(deathmatch == 1)
+		this.nextthink = time + 30;
+	setthink(this, SUB_regen);
+	SUB_UseTargets(this, toucher, NULL);
+}
+
+spawnfunc(weapon_lightme)
+{
+	precache_model("progs/g_light2.mdl");
+	_setmodel(this, "progs/g_light2.mdl");
+	this.weapon = 3;
+	this.netname = "LG-2 Prototype";
+	settouch(this, impel_weapon_touch);
+	setsize(this, '-16 -16 0', '16 16 56');
+	StartItem(this);
+}
+
+spawnfunc(weapon_rifle)
+{
+	precache_model("progs/g_tek.mdl");
+	_setmodel(this, "progs/g_tek.mdl");
+	this.weapon = 3;
+	this.netname = "Armor Laser System";
+	settouch(this, impel_weapon_touch);
+	setsize(this, '-16 -16 0', '16 16 56');
+	StartItem(this);
+}
+
+spawnfunc(weapon_rifleupgrade)
+{
+	precache_model("progs/wing.mdl");
+	_setmodel(this, "progs/wing.mdl");
+	this.weapon = 3;
+	this.netname = "Laser System Upgrade";
+	settouch(this, impel_weapon_touch);
+	setsize(this, '-16 -16 0', '16 16 56');
+	StartItem(this);
+}
+
+spawnfunc(weapon_napalm)
+{
+	precache_model("progs/g_rock.mdl");
+	_setmodel(this, "progs/g_rock.mdl");
+	this.weapon = 3;
+	this.netname = "Napalm Gun";
+	settouch(this, impel_weapon_touch);
+	setsize(this, '-16 -16 0', '16 16 56');
+	StartItem(this);
+}
+
+spawnfunc(weapon_not_a_spear)
+{
+	precache_model("progs/g_implr.mdl");
+	_setmodel(this, "progs/g_implr.mdl");
+	this.weapon = 3;
+	this.netname = "Rocket Powered Impaler";
+	settouch(this, impel_weapon_touch);
+	setsize(this, '-16 -16 0', '16 16 56');
+	StartItem(this);
+}
+
+#if 0
+void Impel_powerup_touch(entity this, entity toucher)
+{
+	if(toucher.classname != "player" || toucher.health <= 0)
+		return;
+	sprint(toucher, sprintf("You got the %s\n", this.netname));
+	if(deathmatch)
+	{
+		this.mdl = this.model;
+		this.nextthink = time + 60;
+		setthink(this, SUB_regen);
+	}
+	_sound(toucher, CHAN_VOICE, this.noise, 1, ATTN_NORM);
+	stuffcmd(toucher, "bf\n");
+	this.solid = SOLID_NOT;
+	this.model = string_null;
+	SUB_UseTargets(this, toucher, NULL);
+}
+#endif
 
 
 /*
@@ -1350,7 +1578,7 @@ void powerup_touch(entity this, entity toucher)
 	_sound(toucher, CH_VOICE, this.noise, 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
 	this.solid = SOLID_NOT;
-	toucher.items |= this.items;
+	toucher.powerups |= this.powerups;
 	this.model = string_null;
 
 // do the apropriate action
@@ -1382,6 +1610,12 @@ void powerup_touch(entity this, entity toucher)
 	{
 		toucher.super_time = 1;
 		toucher.super_damage_finished = time + 30;
+	}
+	if(this.netname == "item_artifact_field_generator")
+	{
+		toucher.field_generator_health = this.health;
+		toucher.field_generator_time = -150;
+		toucher.field_generator_finished = time + 30;
 	}	
 	SUB_UseTargets(this, toucher, NULL);				// fire all targets / killtargets
 }
@@ -1402,7 +1636,7 @@ spawnfunc(item_artifact_invulnerability)
 	this.noise = "items/protect.wav";
 	_setmodel(this, "progs/invulner.mdl");
 	this.netname = "Pentagram of Protection";
-	this.items = IT_INVULNERABILITY;
+	this.powerups = POWERUP_INVULNERABILITY;
 	setsize(this, '-16 -16 -24', '16 16 32');
 	StartItem(this);
 }
@@ -1420,7 +1654,7 @@ spawnfunc(item_artifact_envirosuit)
 	this.noise = "items/suit.wav";
 	_setmodel(this, "progs/suit.mdl");
 	this.netname = "Biosuit";
-	this.items = IT_SUIT;
+	this.powerups = POWERUP_SUIT;
 	setsize(this, '-16 -16 -24', '16 16 32');
 	StartItem(this);
 }
@@ -1440,7 +1674,7 @@ spawnfunc(item_artifact_invisibility)
 	this.noise = "items/inv1.wav";
 	_setmodel(this, "progs/invisibl.mdl");
 	this.netname = "Ring of Shadows";
-	this.items = IT_INVISIBILITY;
+	this.powerups = POWERUP_INVISIBILITY;
 	setsize(this, '-16 -16 -24', '16 16 32');
 	StartItem(this);
 }
@@ -1460,12 +1694,34 @@ spawnfunc(item_artifact_super_damage)
 	this.noise = "items/damage.wav";
 	_setmodel(this, "progs/quaddama.mdl");
 	this.netname = "Quad Damage";
-	this.items = IT_QUAD;
+	this.powerups = POWERUP_QUAD;
 	setsize(this, '-16 -16 -24', '16 16 32');
 	StartItem(this);
 }
 
 
+/*QUAKED item_artifact_field_generator(0 .5 .8)(-16 -16 -24)(16 16 32)
+Generates a force field around the player
+*/
+spawnfunc(item_artifact_field_generator)
+{
+	settouch(this, powerup_touch);
+	precache_model("progs/fieldgen.mdl");
+	precache_sound("weapons/field/genlev.wav");
+	precache_sound("weapons/field/genpulse.wav");
+	precache_sound("weapons/field/genhit1.wav");
+	precache_sound("weapons/field/genhit2.wav");
+	precache_sound("weapons/field/genhit3.wav");
+	precache_sound("weapons/field/genactiv.wav");
+	precache_sound("weapons/field/genstop.wav");
+	this.noise = "weapons/field/genactiv.wav";
+	_setmodel(this, "progs/fieldgen.mdl");
+	this.netname = "Force Field Generator";
+	this.powerups = POWERUP_FIELDGEN;
+	setsize(this, '-16 -16 -24', '16 16 32');
+	this.health = 200;
+	StartItem(this);
+};
 
 /*
 ===============================================================================
@@ -1512,10 +1768,13 @@ void BackpackTouch(entity this, entity toucher)
 	//if(!newitem)
 		//newitem = toucher.weapon;
 	int old = toucher.weapons;
-	if(newitem)
-		toucher.weapons |= newitem;
-	
-	bound_other_ammo(toucher);
+
+	if(!MP_IMPEL)
+	{
+		bound_other_ammo(toucher);
+		if(newitem)
+			toucher.weapons |= newitem;
+	}
 
 	string theitems = "";
 	if(this.ammo_shells)
@@ -1540,6 +1799,25 @@ void BackpackTouch(entity this, entity toucher)
 	_sound(toucher, CH_TRIGGER_SINGLE, "weapons/lock4.wav", 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
 
+	if(MP_IMPEL)
+	{
+		if(toucher.weapon == WEP_PULSERIFLE)
+		{
+			delete(this);
+			W_SetCurrentAmmo(toucher);
+			return;
+		}
+		if(IS_MONSTER(this.owner))
+		{
+			delete(this);
+			W_SetCurrentAmmo(toucher);
+			return;
+		}
+		if(newitem)
+			toucher.weapons |= newitem;
+		bound_other_ammo(toucher);
+		// continue as normal?
+	}
 // remove the backpack
 	delete(this);
 
@@ -1576,6 +1854,10 @@ string Weapon_PrettyName(int wepid)
 		case WEP_MULTI_GRENADE: 	 return "Multi Grenade Launcher";
 		case WEP_MULTI_ROCKET: 		 return "Multi Rocket Launcher";
 		case WEP_PLASMA_GUN: 		 return "Plasma Gun";
+		case WEP_LIGHTME:			 return "LG-2 Prototype";
+		case WEP_SPEAR:				 return "Rocket Powered Impaler";
+		case WEP_NAPALM:			 return "Napalm Gun";
+		case WEP_PULSERIFLE:		 return "Armor laser System";
 	}
 
 	return "";
@@ -1610,8 +1892,14 @@ void DropBackpack(entity this)
 	item.velocity_z = 300;
 	item.velocity_x = -100 +(random() * 200);
 	item.velocity_y = -100 +(random() * 200);
-	
-	item.flags = FL_ITEM;
+
+	if(MP_IMPEL)
+	{
+		item.flags |= FL_ITEM;
+		item.owner = this;
+	}
+	else
+		item.flags = FL_ITEM;
 	item.solid = SOLID_TRIGGER;
 	set_movetype(item, MOVETYPE_TOSS);
 	_setmodel(item, "progs/backpack.mdl");

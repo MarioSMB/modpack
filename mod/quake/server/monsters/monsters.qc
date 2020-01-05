@@ -19,7 +19,7 @@ Using a monster makes it angry at the current activator
 */
 void monster_use(entity this, entity actor, entity trigger)
 {
-	if(this.enemy || this.health <= 0 || (actor.items & IT_INVISIBILITY) || (actor.flags & FL_NOTARGET) || !IS_PLAYER(actor))
+	if(this.enemy || this.health <= 0 || (actor.powerups & POWERUP_INVISIBILITY) || (actor.flags & FL_NOTARGET) || !IS_PLAYER(actor))
 		return;
 	
 // delay reaction so if the monster is teleported, its sound is still
@@ -27,6 +27,12 @@ void monster_use(entity this, entity actor, entity trigger)
 	this.enemy = actor;
 	this.nextthink = time + 0.1;
 	setthink(this, FoundTarget);
+}
+
+float orig_random(entity this)
+{
+	float len = vlen(this.origin);
+	return len - floor(len);
 }
 
 
@@ -54,6 +60,9 @@ void monster_start_go(entity this)
 		if(!t_walkmove(this, 0, 0))
 			LOG_DEBUG("Monster in wall at ", vtos(this.origin), "\n");
 	}
+
+	if(MP_IMPEL && this.health <= 0)
+		return;
 
 	if(this.target && this.target != "")
 	{
@@ -91,6 +100,6 @@ void monster_start(entity this, int stype)
 		IL_PUSH(g_damagedbycontents, this);
 	this.damagedbycontents	= true;
 
-	if(!(stype & FL_DECOY))
+	if(!(stype & FL_DECOY) && (!MP_IMPEL || !(this.flags & FL_SWIM)))
 		monsters_total += 1;
 }

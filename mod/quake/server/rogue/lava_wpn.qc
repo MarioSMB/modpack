@@ -92,7 +92,7 @@ void lavaspike_touch(entity this, entity toucher)
 // hit something that bleeds
 	if(toucher.takedamage)
 	{
-		spawn_touchblood(this, 9);
+		spawn_touchblood(this, 9, toucher);
 		if(IS_PLAYER(toucher))
 		{
 			float old_armortype = toucher.armortype;
@@ -141,7 +141,7 @@ void superlavaspike_touch(entity this, entity toucher)
 // hit something that bleeds
 	if(toucher.takedamage)
 	{
-		spawn_touchblood(this, 18);
+		spawn_touchblood(this, 18, toucher);
 		
 		// halve the effectiveness of the armor for players..
 		if(IS_PLAYER(toucher))

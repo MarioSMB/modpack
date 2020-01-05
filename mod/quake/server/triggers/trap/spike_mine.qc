@@ -82,6 +82,11 @@ void spikemine_Touch(entity this, entity toucher)
 	s_explode1(this);
 }
 
+void spikemine_Die(entity this, entity inflictor, entity attacker)
+{
+	spikemine_Touch(this, attacker);
+}
+
 /*
 spike_mine_first_think
 */
@@ -123,7 +128,7 @@ spawnfunc(trap_spike_mine)
 	this.frame = 0;
 	setthink(this, spike_mine_first_think);
 	settouch(this, spikemine_Touch);
-	this.th_die = spikemine_Touch;
+	this.th_die = spikemine_Die;
 	this.th_stand = spikemine_Home;
 	this.th_walk = spikemine_Home;
 	this.th_run = spikemine_Home;

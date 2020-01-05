@@ -10,9 +10,6 @@ void spawn_tdeath(vector org, entity death_owner);
 
 void(entity targ, entity attacker) dmatch_score;
 
-int modelindex_eyes, modelindex_hammer;
-.int modelindex_player;
-
 /*
 =============================================================================
 
@@ -41,9 +38,8 @@ void SetChangeParms(entity this)
 	}
 
 // remove items
-	this.items &= ~(IT_KEY1 | IT_KEY2 | IT_INVISIBILITY | IT_INVULNERABILITY | IT_SUIT | IT_QUAD);
-	this.items &= ~(IT_WETSUIT | IT_EMPATHY_SHIELDS); // hipnotic
-	this.items &= ~(IT_ANTIGRAV | IT_SHIELD | IT_SUPERHEALTH); // rogue
+	this.items &= ~(IT_KEY1 | IT_KEY2);
+	this.items &= ~IT_SUPERHEALTH; // rogue
 	this.gravity = 1.0;
 
 	this.health = bound(50, this.health, 100); // cap super health
@@ -107,7 +103,7 @@ void DecodeLevelParms(entity this)
 {
 	if(serverflags)
 	{
-		if(world.model == "maps/start.bsp")
+		if(world.model == "maps/start.bsp" || world.model == "maps/aopstart.bsp")
 			SetNewParms();		// take away all stuff on starting new episode
 	}
 
@@ -117,7 +113,7 @@ void DecodeLevelParms(entity this)
 	|| world.model == "maps/hip3m1.bsp"
 	) SetNewParms(); // take away all stuff on starting new episode
 
-	if(world.model == "maps/rstart.bsp" || (world.model == "maps/r2m1.bsp" && !deathmatch))
+	if(world.model == "maps/rstart.bsp" || ((world.model == "maps/r2m1.bsp" || world.model == "maps/aop2m1.bsp") && !deathmatch))
 		SetNewParms(); // reset all stuff on level 8 and new episode
 
 	if(deathmatch && teamplay >= TEAM_CTF)
@@ -148,6 +144,7 @@ void DecodeLevelParms(entity this)
 
 	this.prevweapon = parm15;
 	this.items = parm16;
+	this.powerups = 0;
 }
 
 bool have_katria;
@@ -440,6 +437,34 @@ void ExitIntermission()
 			WriteString (MSG_ALL, "Victory! The Overlord's mangled\nremains are the evidence.  His evil\nWrath army?  Cast out to wander\naimlessly throughout time.\n\nAs the Slipgate fog surrounds you,\nthoughts rage into your consciousness:\nHas Quake's oppressive reign ended?\nIs it Salvation, or Damnation, which\nwaits beyond the Vortex?\n\nAnother thought, not quite your own,\nrazors through the haze.  \"Forgiveness\ncan yet be granted; Our Master remains\nto absolve your sins against his Chosen.\nFall down upon your knees-pray for\nQuake's mercy.\"");
 			return;
 		}
+		else if(world.model == "maps/aop1m6.bsp")
+		{
+		#if 0
+			WriteByte(MSG_ALL, SVC_CDTRACK);
+			WriteByte(MSG_ALL, 2);
+			WriteByte(MSG_ALL, 3);
+		#else
+			SendCDTrack(NULL, 3);
+		#endif
+			WriteByte(MSG_ALL, SVC_FINALE);
+			WriteString(MSG_ALL, "The stench of Blud's rotting gibs\nare enough to make even YOU sick.\n\nNever before have you fought a\ncreature as aggressive and vile as\nthis! You were to be its first victim\nsince being locked away so many ages\nago, without creatures to devour.\n\nDrained from the fight, you realize\nthe worst is far from over...");
+			return;
+		}
+		else if(world.model == "maps/aopend.bsp")
+		{
+		#if 0
+			WriteByte(MSG_ALL, SVC_CDTRACK);
+			WriteByte(MSG_ALL, 2);
+			WriteByte(MSG_ALL, 3);
+		#else
+			SendCDTrack(NULL, 3);
+		#endif
+			WriteByte(MSG_ALL, SVC_FINALE);
+			WriteString (MSG_ALL, "You find yourself standing before the\ncorpse of Quake's highest minion.\n\nThe vapor from her rockets, and the\nslight scent of ionized air particles\nsinge your lungs as you realize that\nyou have won the battle at last.\n\nLegond set out to take revenge on you\nand display your dead lifeless body\nto the citizens of the empire.\nShe wanted to humiliate, desecrate,\ndevour, and torture you for you were\nthe cause of the destruction of\nQuake, the center of her world.\n\nYou have won. It is time to rest\n\nAt least for now...");
+			intermission_exittime = time + 10000000;  // never allow exit
+			server_reset();
+			return;
+		}
 
 		GotoNextMap();
 	}
@@ -514,6 +539,8 @@ void server_delayed_reset(entity this)
 		themap = "hipstart";
 	else if(MP_ROGUE)
 		themap = "rstart";
+	else if(MP_IMPEL)
+		themap = "aopstart";
 
 	localcmd("\nmap ", themap, "\n");
 }
@@ -669,7 +696,7 @@ void ClientKill(entity this)
 			tag_token_drop();
 		}
 
-		if(this.items & IT_V_SPHERE)
+		if(this.powerups & POWERUP_V_SPHERE)
 		{
 			FOREACH_ENTITY_CLASS("Vengeance", it.owner == this,
 			{
@@ -778,7 +805,17 @@ entity SelectSpawnPoint(entity this)
 	
 	spot = find(NULL, classname, "info_player_start");
 	if(!spot)
-		error("PutClientInServer: no info_player_start on level");
+	{
+		if(MP_IMPEL)
+		{
+			if(!deathmatch)
+				spot = find(NULL, classname, "info_player_deathmatch");
+			if(!spot)
+				error("PutClientInServer: no info_player_start/deathmatch on level");
+		}
+		else
+			error("PutClientInServer: no info_player_start on level");
+	}
 	
 	return spot;
 }
@@ -791,7 +828,7 @@ called each time a player is spawned
 ============
 */
 void DecodeLevelParms(entity this);
-void PlayerDie(entity this, entity attacker);
+void PlayerDie(entity this, entity inflictor, entity attacker);
 void player_touch(entity this, entity toucher);
 
 void PutClientInServer(entity this)
@@ -810,6 +847,7 @@ void PutClientInServer(entity this)
 	this.radsuit_finished = 0;
 	this.invisible_finished = 0;
 	this.invincible_finished = 0;
+	this.field_generator_finished = 0;
 	this.effects = EF_TELEPORT_BIT;
 	this.invincible_time = 0;
 
@@ -871,6 +909,9 @@ void PutClientInServer(entity this)
 	}
 	_setmodel(this, "progs/eyes.mdl");
 	modelindex_eyes = this.modelindex;
+
+	_setmodel(this, "progs/bolt2.mdl");
+	modelindex_bolt = this.modelindex;
 
 	_setmodel(this, get_playermodel(this));
 	this.modelindex_player = this.modelindex;
@@ -959,7 +1000,20 @@ void NextLevel()
 {
 	entity o = NULL;
 
-	if(MP_HIPNOTIC)
+	if(MP_IMPEL)
+	{
+	// find a trigger changelevel
+		o = find(NULL, classname, "trigger_changelevel");
+
+		// go back to start if no trigger_changelevel
+		if(!o)
+		{
+			mapname = "aopstart";
+			o = spawn();
+			o.map = mapname;
+		}
+	}
+	else if(MP_HIPNOTIC)
 	{
 		// find a trigger changelevel
 		o = find(NULL, classname, "trigger_changelevel");
@@ -967,14 +1021,14 @@ void NextLevel()
 		// go back to start if no trigger_changelevel
 		if(!o)
 		{
-			mapname = "start";
+			mapname = "hipstart";
 			o = spawn();
 			o.map = mapname;
 		}
 	}
 	else if(MP_ROGUE)
 	{
-		if(mapname == "start" || mapname == "rstart" || mapname == "hipstart")
+		if(mapname == "start" || mapname == "rstart" || mapname == "hipstart" || mapname == "aopstart")
 		{
 			mapname = "r1m1";
 
@@ -1075,6 +1129,12 @@ void PlayerDeathThink(entity this)
 // wait for any button down
 	if(!this.button2 && !this.button1 && !this.button0)
 		return;
+	if(MP_IMPEL)
+	{
+		if(this.impaled)
+			return;
+		this.impaled = false;
+	}
 
 	this.button0 = 0;
 	this.button1 = 0;
@@ -1096,6 +1156,7 @@ void CheckMOTD(entity this);
 void RuneApplyElder(entity who);
 void GrappleService(entity this);
 void GameLogEcho(string s);
+void impel_MOTD(entity this);
 
 .string netname_previous;
 void PlayerPreThink(entity this)
@@ -1117,6 +1178,9 @@ void PlayerPreThink(entity this)
 
 	this.disableclientprediction = ((intermission_running || this.deadflag != DEAD_NO) ? 1 : -1);
 
+	if(MP_IMPEL && this.exptime != 0)
+		return;
+
 	if(intermission_running)
 	{
 		IntermissionThink(this);	// otherwise a button could be missed between
@@ -1136,7 +1200,7 @@ void PlayerPreThink(entity this)
 		if (this.invincible_finished >= time)
 		{
 			this.invincible_finished = 0;
-			this.items &= ~IT_INVULNERABILITY;
+			this.powerups &= ~POWERUP_INVULNERABILITY;
 			this.invincible_time = 0;
 			this.invincible_finished = 0;
 			this.effects &= ~EF_DIMLIGHT;
@@ -1150,6 +1214,9 @@ void PlayerPreThink(entity this)
 		this.velocity_y = this.velocity_y + (random() * earthquake_intensity * 2) - earthquake_intensity;
 		this.velocity_z = this.velocity_z + (random() * earthquake_intensity * 2) - earthquake_intensity;
 	}
+
+	if(MP_IMPEL && this.motd_time && this.motd_time < time && OPT_MOTD)
+		impel_MOTD(this);
 
 	//makevectors(this.v_angle);		// is this still used
 
@@ -1175,7 +1242,7 @@ void PlayerPreThink(entity this)
 
 	if(MP_ROGUE)
 	{
-		if((this.items & IT_ANTIGRAV) && time > this.AGping)
+		if((this.powerups & POWERUP_ANTIGRAV) && time > this.AGping)
 		{
 			_sound(this, CH_TRIGGER_SINGLE, "belt/use.wav", 0.4, ATTN_NORM);
 			this.AGping = time + 3;
@@ -1236,7 +1303,7 @@ void CheckPowerups(entity this)
 
 		if(this.invisible_finished < time)
 		{	// just stopped
-			this.items &= ~IT_INVISIBILITY;
+			this.powerups &= ~POWERUP_INVISIBILITY;
 			this.invisible_finished = 0;
 			this.invisible_time = 0;
 		}
@@ -1273,7 +1340,7 @@ void CheckPowerups(entity this)
 		
 		if(this.invincible_finished < time)
 		{	// just stopped
-			this.items &= ~IT_INVULNERABILITY;
+			this.powerups &= ~POWERUP_INVULNERABILITY;
 			this.invincible_time = 0;
 			this.invincible_finished = 0;
 		}
@@ -1307,7 +1374,7 @@ void CheckPowerups(entity this)
 
 		if(this.super_damage_finished < time)
 		{	// just stopped
-			this.items &= ~IT_QUAD;
+			this.powerups &= ~POWERUP_QUAD;
 			this.super_damage_finished = 0;
 			this.super_time = 0;
 		}
@@ -1317,7 +1384,70 @@ void CheckPowerups(entity this)
 			this.effects &= ~EF_DIMLIGHT;
 	}	
 
-// suit	
+// suit
+	if(MP_IMPEL)
+	{
+		if(this.field_generator_finished)
+		{
+			if(this.field_generator_sound < time)
+			{
+				_sound(this, CHAN_AUTO, "weapons/field/genpulse.wav", 1, ATTN_NORM);
+				stuffcmd(this, "bf\n");
+				this.field_generator_sound = time + 1.8;
+			}
+			if(this.field_generator_finished < time || this.field_generator_health <= 0)
+			{
+				this.powerups &= ~POWERUP_FIELDGEN;
+				this.field_generator_finished = 0;
+				this.field_generator_time = 0;
+				_sound(this, CHAN_AUTO, "weapons/field/genstop.wav", 1, ATTN_NORM);
+			}
+			else if(this.field_generator_finished < time + 10)
+			{
+				if(this.field_generator_time <= 1)
+				{
+					stuffcmd(this, "bf\n");
+					_sound(this, CHAN_AUTO, "weapons/field/genlev.wav", 1, ATTN_NORM);
+					this.field_generator_time = time + 1;
+				}
+				if(this.field_generator_time < time)
+					this.field_generator_time = time + 1;
+			}
+			else if(this.field_generator_health <= 10 && this.field_generator_time <= -10)
+			{
+				_sound(this, CHAN_AUTO, "weapons/field/genlev.wav", 1, ATTN_NORM);
+				this.field_generator_time = 1;
+				stuffcmd(this, "bf\n");
+				stuffcmd(this, "bf\n");
+			}
+			else if(this.field_generator_health <= 50 && this.field_generator_time <= -50)
+			{
+				_sound(this, CHAN_AUTO, "weapons/field/genlev.wav", 1, ATTN_NORM);
+				this.field_generator_time = -10;
+				stuffcmd(this, "bf\n");
+				stuffcmd(this, "bf\n");
+			}
+			else if(this.field_generator_health <= 150 && this.field_generator_time == -150)
+			{
+				_sound(this, CHAN_AUTO, "weapons/field/genlev.wav", 1, ATTN_NORM);
+				this.field_generator_time = -50;
+				stuffcmd(this, "bf\n");
+				stuffcmd(this, "bf\n");
+			}
+			else
+			{
+				if(this.field_generator_health <= 100 && random() > (this.field_generator_health / 50))
+					this.effects |= EF_BRIGHTFIELD;
+				else if(this.field_generator_finished < (time + 10) && random() > ((this.field_generator_finished - time) / 5))
+					this.effects |= EF_BRIGHTFIELD;
+				else
+					this.effects &= ~EF_BRIGHTFIELD;
+			}
+		}
+		else
+			this.effects &= ~EF_BRIGHTFIELD;
+	}
+
 	if(this.radsuit_finished)
 	{
 		this.air_finished = time + 12;		// don't drown
@@ -1342,11 +1472,11 @@ void CheckPowerups(entity this)
 
 		if(this.radsuit_finished < time)
 		{	// just stopped
-			this.items &= ~IT_SUIT;
+			this.powerups &= ~POWERUP_SUIT;
 			this.rad_time = 0;
 			this.radsuit_finished = 0;
 		}
-	}	
+	}
 
 	//JIM
 	// wetsuit
@@ -1375,7 +1505,7 @@ void CheckPowerups(entity this)
 		if(this.wetsuit_finished < time)
 		{	// just stopped
 //MED
-			this.items &= ~IT_WETSUIT;
+			this.powerups &= ~POWERUP_WETSUIT;
 			this.wetsuit_time = 0;
 			this.wetsuit_finished = 0;
 		}
@@ -1406,7 +1536,7 @@ void CheckPowerups(entity this)
 		if(this.empathy_finished < time)
 		{	// just stopped
 //MED
-			this.items &= ~IT_EMPATHY_SHIELDS;
+			this.powerups &= ~POWERUP_EMPATHY_SHIELDS;
 			this.empathy_time = 0;
 			this.empathy_finished = 0;
 		}
@@ -1438,7 +1568,7 @@ void CheckPowerups(entity this)
 		{
 			sprint(this, "Shield lost.\n");
 			this.shield_finished = 0;
-			this.items &= ~IT_SHIELD;
+			this.powerups &= ~POWERUP_SHIELD;
 		}
 	}
 
@@ -1463,7 +1593,7 @@ void CheckPowerups(entity this)
 		{
 			sprint(this, "Antigrav Lost.\n");
 			this.antigrav_finished = 0;
-			this.items &= ~IT_ANTIGRAV;
+			this.powerups &= ~POWERUP_ANTIGRAV;
 			this.gravity = 1.0;
 		}
 	}
@@ -1542,6 +1672,12 @@ void PlayerPostThink(entity this)
 
 		// do weapon stuff
 		W_WeaponFrame(this);
+
+		if(MP_IMPEL && this.cnt > 0 && !this.button0)
+		{
+			this.attack_finished = time + 0.8;
+			this.cnt = 0;
+		}
 
 		CheckPowerups(this);
 	}
@@ -1631,7 +1767,17 @@ called when a player connects to a server
 void SetMOTD(entity this);
 void ClientConnect(entity this)
 {
-	bprintf("%s entered the game\n", this.netname);
+	if(MP_IMPEL)
+	{
+		bprintf("%s enters the Abyss!\n", this.netname);
+		if(OPT_MOTD)
+		{
+			this.motd_time = time + 3;
+			this.motd_count = 0;
+		}
+	}
+	else
+		bprintf("%s entered the game\n", this.netname);
 
 	this.suicide_count = 0;
 	this.ctf_killed = 0;
@@ -1691,7 +1837,7 @@ void ClientDisconnect(entity this)
 	// since they aren't *really* leaving
 
 	// let everyone else know
-	bprintf("%s left the game with %d frags\n", this.netname, this.frags);
+	bprintf("%s left the %s with %d frags\n", this.netname, ((MP_IMPEL) ? "Abyss" : "game"), this.frags);
 	if(autocvar_sv_eventlog)
 		GameLogEcho(strcat(":part:", ftos(this.playerid)));
 	_sound(this, CH_PLAYER, "player/tornoff2.wav", 1, ATTN_NONE);
@@ -1718,7 +1864,7 @@ called when a player dies
 */
 void TeamResetCarrier(entity who);
 void TeamAssists(entity targ, entity attacker);
-void ClientObituary(entity targ, entity attacker)
+void ClientObituary(entity targ, entity inflictor, entity attacker)
 {
 	string deathstring = "", deathstring2 = "";
 	float rnum = random();
@@ -1757,7 +1903,32 @@ void ClientObituary(entity targ, entity attacker)
 					bprint(" discharges into the water.\n");
 					return;
 				}
-				if(targ.weapon == WEP_GRENADE_LAUNCHER)
+				if(MP_IMPEL)
+				{
+					if(inflictor == attacker && targ.weapon == WEP_LIGHTME && targ.waterlevel > 1)
+					{
+						bprint(" screwed up AGAIN with the LG-2.\n");
+						return;
+					}
+					if(targ.weapon == WEP_LIGHTME)
+					{
+						bprint(" screwed up with the LG-2 Prototype.\n");
+						return;
+					}
+					if(inflictor == attacker && targ.weapon == WEP_LIGHTME && targ.waterlevel > 1)
+					{
+						bprint(" discharges into the water.\n");
+						return;
+					}
+					if(inflictor.classname == "grenade")
+						bprint(" tries to put the pin back in!\n");
+					else if(inflictor.classname == "flame")
+						bprint(" went up in his own flames!\n");
+					else
+						bprint(" got bored with life.\n");
+					return;
+				}
+				else if(targ.weapon == WEP_GRENADE_LAUNCHER)
 					bprint(" tries to put the pin back in\n");
 				else if(MP_HIPNOTIC)
 				{
@@ -1779,6 +1950,7 @@ void ClientObituary(entity targ, entity attacker)
 			}
 			else if((teamplay == 2) &&(targ.team > 0)&&(targ.team == attacker.team) )
 			{
+				// NOTE: impel adds punctuation here, couldn't be bothered sorry!
 				if(rnum < 0.25)
 					deathstring = " mows down a teammate\n";
 				else if(rnum < 0.50)
@@ -1830,37 +2002,45 @@ void ClientObituary(entity targ, entity attacker)
 				}
 
 				rnum = attacker.weapon;
-				if(rnum == WEP_AXE)
+				if(rnum == WEP_AXE && (!MP_IMPEL || inflictor == attacker))
 				{
-					deathstring = " was ax-murdered by ";
-					deathstring2 = "\n";
+					if(MP_IMPEL)
+					{
+						deathstring = " was hacked up by ";
+						deathstring2 = "!\n";
+					}
+					else
+					{
+						deathstring = " was ax-murdered by ";
+						deathstring2 = "\n";
+					}
 				}
 				if(rnum == WEP_GRAPPLE)
 				{
 					deathstring = " was grappled by ";
 					deathstring2 = "\n";
 				}
-				if(rnum == WEP_SHOTGUN)
+				if(rnum == WEP_SHOTGUN && (!MP_IMPEL || inflictor == attacker))
 				{
 					deathstring = " chewed on ";
 					deathstring2 = "'s boomstick\n";
 				}
-				if(rnum == WEP_SUPER_SHOTGUN)
+				if(rnum == WEP_SUPER_SHOTGUN && (!MP_IMPEL || inflictor == attacker))
 				{
 					deathstring = " ate 2 loads of ";
 					deathstring2 = "'s buckshot\n";
 				}
-				if(rnum == WEP_NAILGUN)
+				if(rnum == WEP_NAILGUN || (MP_IMPEL && inflictor.classname == "spike"))
 				{
 					deathstring = " was nailed by ";
 					deathstring2 = "\n";
 				}
-				if(rnum == WEP_SUPER_NAILGUN)
+				if(rnum == WEP_SUPER_NAILGUN || (MP_IMPEL && inflictor.classname == "superspike"))
 				{
 					deathstring = " was punctured by ";
 					deathstring2 = "\n";
 				}
-				if(rnum == WEP_GRENADE_LAUNCHER)
+				if(rnum == WEP_GRENADE_LAUNCHER || (MP_IMPEL && inflictor.classname == "grenade"))
 				{
 					deathstring = " eats ";
 					deathstring2 = "'s pineapple\n";
@@ -1870,7 +2050,7 @@ void ClientObituary(entity targ, entity attacker)
 						deathstring2 = "'s grenade\n";
 					}
 				}
-				if(rnum == WEP_ROCKET_LAUNCHER)
+				if(rnum == WEP_ROCKET_LAUNCHER || (MP_IMPEL && inflictor.classname == "missile"))
 				{
 					deathstring = " rides ";
 					deathstring2 = "'s rocket\n";
@@ -1880,7 +2060,7 @@ void ClientObituary(entity targ, entity attacker)
 						deathstring2 = "'s rocket\n" ;
 					}
 				}
-				if(rnum == WEP_LIGHTNING)
+				if(rnum == WEP_LIGHTNING && (!MP_IMPEL || inflictor == attacker))
 				{
 					deathstring = " accepts ";
 					if(attacker.waterlevel > 1)
@@ -1916,6 +2096,39 @@ void ClientObituary(entity targ, entity attacker)
 					deathstring = " was blasted to bits by ";
 					deathstring2 = "\n";
 				}
+				if(rnum == WEP_LIGHTME)
+				{
+					if(attacker.waterlevel > 1)
+					{
+						deathstring = " accepts ";
+						deathstring2 = "'s shock beam!\n";
+					}
+					else
+					{
+						deathstring = " was killed by ";
+						deathstring2 = "'s shock beam!\n";
+					}
+				}
+				if(inflictor.classname == "flame")
+				{
+					deathstring = " was flamed by ";
+					deathstring2 = "!\n";
+				}
+				if(inflictor.classname == "pulse")
+				{
+					deathstring = " was zapped by ";
+					deathstring2 = "!\n";
+				}
+				if(inflictor.classname == "spear" || inflictor.classname == "impaler")
+				{
+					deathstring = " was impaled by ";
+					deathstring2 = "!\n";
+				}
+				if(MP_IMPEL && deathstring == "")
+				{
+					deathstring = " died at the hands of ";
+					deathstring2 = "!\n";
+				}
 				bprint(targ.netname);
 				bprint(deathstring);
 				bprint(attacker.netname);
@@ -1944,6 +2157,11 @@ void ClientObituary(entity targ, entity attacker)
 			}
 
 			// tricks and traps
+			if(targ.weapon == WEP_LIGHTME) // TODO: overrides all other deathtypes!
+			{
+				bprint(" couldn't control the LG-2 Prototype!\n");
+				return;
+			}
 			if(attacker.classname == "explo_box")
 			{
 				bprint(" blew up\n");
@@ -2014,7 +2232,7 @@ void ClientObituary(entity targ, entity attacker)
 
 			// in-water deaths
 			rnum = targ.watertype;
-			if(rnum == -3)
+			if(rnum == CONTENT_WATER)
 			{
 				if(random() < 0.5)
 					bprint(" sleeps with the fishes\n");
@@ -2022,7 +2240,7 @@ void ClientObituary(entity targ, entity attacker)
 					bprint(" sucks it down\n");
 				return;
 			}
-			else if(rnum == -4)
+			else if(rnum == CONTENT_SLIME)
 			{
 				if(random() < 0.5)
 					bprint(" gulped a load of slime\n");
@@ -2030,7 +2248,7 @@ void ClientObituary(entity targ, entity attacker)
 					bprint(" can't exist on slime alone\n");
 				return;
 			}
-			else if(rnum == -5)
+			else if(rnum == CONTENT_LAVA)
 			{
 				if(targ.health < -15)
 				{
@@ -2047,13 +2265,17 @@ void ClientObituary(entity targ, entity attacker)
 			// fell to their death?
 			if(targ.deathtype == "falling")
 			{
-				targ.deathtype = "";
+				if(!MP_IMPEL)
+					targ.deathtype = "";
 				bprint(" fell to their death\n");
 				return;
 			}
 
 			// hell if I know; he's just dead!!!
-			bprint(" died\n");
+			if(MP_IMPEL)
+				bprint(" died wickedly!\n");
+			else
+				bprint(" died\n");
 		}
 	}
 }
