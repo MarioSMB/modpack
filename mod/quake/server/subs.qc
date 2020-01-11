@@ -23,6 +23,7 @@ void CorpseThink(entity this);
 .int cnt;
 
 .float attack_finished;
+.float attack2_finished;
 
 // TODO
 void SUB_AttackFinished(entity this, float normal);

@@ -443,7 +443,7 @@ void HIP_FireMjolnir(entity this)
 
 void W_SwitchWeapon(entity this, float to_wep)
 {
-	if(this.weapon == to_wep)
+	if(this.weapon == to_wep || to_wep == WEP_PULSERIFLE)
 		return; // don't mess up the system by switching to it again!
 
 	this.prevweapon = this.weapon;
@@ -451,6 +451,7 @@ void W_SwitchWeapon(entity this, float to_wep)
 
 	W_SetCurrentAmmo(this);
 
+#if 0
 	if(to_wep == WEP_PULSERIFLE)
 	{
 		if(this.items & IT_PULSEPOWER2)
@@ -463,6 +464,7 @@ void W_SwitchWeapon(entity this, float to_wep)
 		_sound(this, CH_WEAPON_SINGLE, "enviro/pinhead/pinfire.wav", 1, ATTN_NORM);
 		stuffcmd(this, "bf\n");
 	}
+#endif
 }
 
 /*
@@ -1122,7 +1124,7 @@ void W_FireRifleL(entity this)
 {
 	this.punchangle_x = -2;
 	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot1.wav", 1, ATTN_NORM);
-	this.currentammo = this.ammo_cells = this.ammo_cells - 2;
+	this.ammo_cells = this.ammo_cells - 2;
 	entity missile = spawn();
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
@@ -1165,7 +1167,7 @@ void W_FireRifleJ(entity this)
 {
 	this.punchangle_x = -2;
 	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot1.wav", 1, ATTN_NORM);
-	this.currentammo = this.ammo_cells = this.ammo_cells - 2;
+	this.ammo_cells = this.ammo_cells - 2;
 	entity missile = spawn();
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
@@ -1209,8 +1211,7 @@ void W_FireRifleH(entity this)
 	this.punchangle_x = -2;
 	_sound(this, CHAN_AUTO, "weapons/pulse/pulshot1.wav", 1, ATTN_NORM);
 	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot2.wav", 1, ATTN_NORM);
-	this.ammo_cells = (this.ammo_cells - 2);
-	this.currentammo = (this.ammo_cells - 2);
+	this.ammo_cells = this.ammo_cells - 2;
 	entity missile = spawn();
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
@@ -1300,8 +1301,7 @@ void W_FireRifleA(entity this)
 {
 	this.punchangle_x = -2;
 	_sound(this, CHAN_AUTO, "weapons/pulse/pulshot1.wav", 1, ATTN_NORM);
-	this.ammo_cells = (this.ammo_cells - 3);
-	this.currentammo = (this.ammo_cells - 3);
+	this.ammo_cells = this.ammo_cells - 3;
 	entity missile = spawn();
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
@@ -1364,7 +1364,7 @@ void W_FireRifle3A(entity this)
 void W_FireRifleTarget(entity this)
 {
 	this.punchangle_x = -2;
-	this.currentammo = this.ammo_cells = (this.ammo_cells - 4);
+	this.ammo_cells = this.ammo_cells - 4;
 	entity missile = spawn();
 	missile.owner = this;
 	this.enemy = missile;
@@ -3338,6 +3338,7 @@ void W_SetCurrentAmmo(entity this)
 			this.items |= IT_ROCKETS;
 			break;
 		}
+	#if 0
 		case WEP_PULSERIFLE:
 		{
 			this.currentammo = this.ammo_cells;
@@ -3346,6 +3347,7 @@ void W_SetCurrentAmmo(entity this)
 			this.items |= IT_CELLS;
 			break;
 		}
+	#endif
 		case WEP_AXE:
 		{
 			this.currentammo = 0;
@@ -3494,6 +3496,8 @@ int W_BestWeapon(entity this, int except)
 {
 	int itm = this.weapons;
 
+	// TODO: missing impel weapons!
+
 	// pgm - fix for sandy. will not change to plasma gun
 	
 //	if(this.waterlevel <= 1 && this.ammo_plasma >= 1 && (it & WEP_PLASMA_GUN))
@@ -3520,15 +3524,17 @@ int W_BestWeapon(entity this, int except)
 	return WEP_AXE; // just fall back if all else fails
 }
 
-bool NoAmmo(entity this)
+bool NoAmmo(entity this, bool doswitch)
 {
 	if(!MP_IMPEL)
+		return false;
+	if(!doswitch)
 		return false;
 	W_SwitchWeapon(this, W_BestWeapon(this, 0));
 	return false;
 }
 
-bool W_CheckNoAmmo(entity this, int forwep)
+bool W_CheckNoAmmo(entity this, int forwep, bool doswitch)
 {
 	if(forwep)
 	{
@@ -3565,7 +3571,7 @@ bool W_CheckNoAmmo(entity this, int forwep)
 	}
 
 	if(MP_IMPEL && this.currentammo < 1 && this.weapon == WEP_SPEAR)
-		return NoAmmo(this);
+		return NoAmmo(this, doswitch);
 
 	if(this.currentammo > 0)
 		return true;
@@ -3573,11 +3579,11 @@ bool W_CheckNoAmmo(entity this, int forwep)
 	if(this.weapon == WEP_AXE || this.weapon == WEP_GRAPPLE || this.weapon == WEP_MJOLNIR)
 		return true;
 
-	if(!MP_IMPEL)
+	if(!MP_IMPEL && doswitch)
 		W_SwitchWeapon(this, W_BestWeapon(this, 0));
 	
 // drop the weapon down
-	return NoAmmo(this);
+	return NoAmmo(this, doswitch);
 }
 
 /*
@@ -3619,17 +3625,81 @@ void player_shotimp1(entity this);
 void RuneApplyBlackNoise(entity who);
 float RuneApplyHell(float tvalue, entity who);
 
-void W_Attack(entity this)
+void W_Attack(entity this, bool offhand)
 {
 	if(MP_IMPEL && this.exptime != 0)
 		return;
-	if(!W_CheckNoAmmo(this, 0))
+	if(!W_CheckNoAmmo(this, ((offhand) ? WEP_PULSERIFLE : 0), !offhand))
 		return;
 
 	makevectors	(this.v_angle);			// calculate forward angle for velocity
 	this.show_hostile = time + 1;	// wake monsters up
 
 	RuneApplyBlackNoise(this); // make rune noise
+
+	if(offhand)
+	{
+		if(this.weapons & WEP_PULSERIFLE)
+		{
+			if(this.items & IT_PULSEPOWER2)
+			{
+				if(this.ammo_cells < 4)
+				{
+					//W_SwitchWeapon(this, W_BestWeapon(this, 0));
+					return;
+				}
+				//player_rifle1(this);
+				if(this.cnt == 2)
+				{
+					W_FireRifleL(this);
+					W_FireRifleM(this);
+					this.attack2_finished = time + 0.4;
+					this.cnt = 0;
+				}
+				else if(this.cnt == 1)
+				{
+					W_FireRifleJ(this);
+					W_FireRifleK(this);
+					this.attack2_finished = time + 0.1;
+					this.cnt = 2;
+				}
+				else if(this.cnt == 0)
+				{
+					W_FireRifleH(this);
+					W_FireRifleI(this);
+					this.attack2_finished = time + 0.1;
+					this.cnt = 1;
+				}
+			}
+			else if(this.items & IT_PULSEPOWER1)
+			{
+				if(this.ammo_cells < 3)
+				{
+					//W_SwitchWeapon(this, W_BestWeapon(this, 0));
+					return;
+				}
+				//player_rifle1(this);
+				W_FireRifleTarget(this);
+				W_FireRifleD(this);
+				W_FireRifleC(this);
+				W_FireRifleB(this);
+				this.attack2_finished = time + 0.6;
+			}
+			else if(this.ammo_cells < 2)
+			{
+				//W_SwitchWeapon(this, W_BestWeapon(this, 0));
+				return;
+			}
+			//player_rifle1(this);
+			W_FireRifleA(this);
+			W_FireRifle2A(this);
+			W_FireRifle3A(this);
+			this.attack2_finished = time + 0.7;
+			return;
+		}
+
+		return;
+	}
 
 	switch(this.weapon)
 	{
@@ -3799,64 +3869,6 @@ void W_Attack(entity this)
 			this.attack_finished = time + 1;
 			break;
 		}
-		case WEP_PULSERIFLE:
-		{
-			if(this.items & IT_PULSEPOWER2)
-			{
-				if(this.currentammo < 4)
-				{
-					W_SwitchWeapon(this, W_BestWeapon(this, 0));
-					break;
-				}
-				player_rifle1(this);
-				if(this.cnt == 2)
-				{
-					W_FireRifleL(this);
-					W_FireRifleM(this);
-					this.attack_finished = time + 0.4;
-					this.cnt = 0;
-				}
-				else if(this.cnt == 1)
-				{
-					W_FireRifleJ(this);
-					W_FireRifleK(this);
-					this.attack_finished = time + 0.1;
-					this.cnt = 2;
-				}
-				else if(this.cnt == 0)
-				{
-					W_FireRifleH(this);
-					W_FireRifleI(this);
-					this.attack_finished = time + 0.1;
-					this.cnt = 1;
-				}
-			}
-			else if(this.items & IT_PULSEPOWER1)
-			{
-				if(this.currentammo < 3)
-				{
-					W_SwitchWeapon(this, W_BestWeapon(this, 0));
-					break;
-				}
-				player_rifle1(this);
-				W_FireRifleTarget(this);
-				W_FireRifleD(this);
-				W_FireRifleC(this);
-				W_FireRifleB(this);
-				this.attack_finished = time + 0.6;
-			}
-			else if(this.currentammo < 2)
-			{
-				W_SwitchWeapon(this, W_BestWeapon(this, 0));
-				break;
-			}
-			player_rifle1(this);
-			W_FireRifleA(this);
-			W_FireRifle2A(this);
-			W_FireRifle3A(this);
-			this.attack_finished = time + 0.7;
-			break;
-		}
 	}
 }
 
@@ -4004,6 +4016,7 @@ void W_ChangeWeapon(entity this, int imp)
 		}
 		case 14:
 		{
+		#if 0
 			if((this.weapons & WEP_PULSERIFLE) && this.weapon != WEP_PULSERIFLE)
 			{
 				fl = WEP_PULSERIFLE;
@@ -4015,7 +4028,9 @@ void W_ChangeWeapon(entity this, int imp)
 				if(this.ammo_cells < needed_cells)
 					am = true;
 			}
-			else if((this.weapons & WEP_MJOLNIR) || !(deathmatch && teamplay >= TEAM_CTF))
+			else
+		#endif
+			if((this.weapons & WEP_MJOLNIR) || !(deathmatch && teamplay >= TEAM_CTF))
 				fl = WEP_MJOLNIR;
 			else
 				fl = WEP_GRAPPLE;
@@ -4070,6 +4085,7 @@ void W_ChangeWeapon(entity this, int imp)
 				am = true;
 			break;
 		}
+	#if 0
 		case 66:
 		{
 			fl = WEP_PULSERIFLE;
@@ -4087,6 +4103,7 @@ void W_ChangeWeapon(entity this, int imp)
 				am = true;
 			break;
 		}
+	#endif
 		case 67:
 		{
 			fl = WEP_SPEAR;
@@ -4324,7 +4341,12 @@ void CycleWeaponCommand(entity this)
 			}
 			case WEP_LIGHTME:
 			{
+			#if 0
 				this.weapon = WEP_PULSERIFLE;
+			#else
+				this.weapon = WEP_MJOLNIR;
+			#endif
+			#if 0
 				if(this.items & IT_PULSEPOWER2)
 				{
 					if(this.ammo_cells < 4)
@@ -4337,19 +4359,23 @@ void CycleWeaponCommand(entity this)
 				}
 				else if(this.ammo_cells < 2)
 					am = true;
+			#endif
 				break;
 			}
+		#if 0
 			case WEP_PULSERIFLE:
 			{
 				this.weapon = WEP_MJOLNIR;
 				break;
 			}
+		#endif
 		}
 	
 		if((this.weapons & this.weapon) && !am)
 		{
 			this.prevweapon = oldwep;
 			W_SetCurrentAmmo(this);
+		#if 0
 			if(this.weapon == WEP_PULSERIFLE)
 			{
 				if(this.items & IT_PULSEPOWER2)
@@ -4362,6 +4388,7 @@ void CycleWeaponCommand(entity this)
 				_sound(this, CH_WEAPON_SINGLE, "enviro/pinhead/pinfire.wav", 1, ATTN_NORM);
 				stuffcmd(this, "bf\n");
 			}
+		#endif
 			return;
 		}
 	}
@@ -4396,6 +4423,7 @@ void CycleWeaponReverseCommand(entity this)
 					am = true;
 				break;
 			}
+		#if 0
 			case WEP_PULSERIFLE:
 			{
 				this.weapon = WEP_LIGHTME;
@@ -4403,8 +4431,10 @@ void CycleWeaponReverseCommand(entity this)
 					am = true;
 				break;
 			}
+		#endif
 			case WEP_MJOLNIR:
 			{
+			#if 0
 				this.weapon = WEP_PULSERIFLE;
 				if(this.items & IT_PULSEPOWER2)
 				{
@@ -4418,6 +4448,11 @@ void CycleWeaponReverseCommand(entity this)
 				}
 				else if(this.ammo_cells < 2)
 					am = true;
+			#else
+				this.weapon = WEP_LIGHTME;
+				if(this.ammo_cells < 1)
+					am = true;
+			#endif
 				break;
 			}
 			case WEP_LASER_CANNON:
@@ -4549,6 +4584,7 @@ void CycleWeaponReverseCommand(entity this)
 		{
 			this.prevweapon = oldwep;
 			W_SetCurrentAmmo(this);
+		#if 0
 			if(this.weapon == WEP_PULSERIFLE)
 			{
 				if(this.items & IT_PULSEPOWER2)
@@ -4561,6 +4597,7 @@ void CycleWeaponReverseCommand(entity this)
 				_sound(this, CH_WEAPON_SINGLE, "enviro/pinhead/pinfire.wav", 1, ATTN_NORM);
 				stuffcmd(this, "bf\n");
 			}
+		#endif
 			return;
 		}
 	}
@@ -4581,7 +4618,7 @@ void QuadCheat(entity this)
 
 void W_LastWeapon(entity this)
 {
-	if((this.weapons & this.prevweapon) && this.prevweapon != this.weapon && W_CheckNoAmmo(this, this.prevweapon))
+	if((this.weapons & this.prevweapon) && this.prevweapon != this.weapon && W_CheckNoAmmo(this, this.prevweapon, false))
 		W_SwitchWeapon(this, this.prevweapon);
 	else
 		W_SwitchWeapon(this, W_BestWeapon(this, this.weapon));
@@ -4693,24 +4730,34 @@ Called every frame so impulse events can be handled as well as possible
 */
 void W_WeaponFrame(entity this)
 {
-	if(time < this.attack_finished)
-		return;
-
-	if(this.lavaGunFired)
+	if(!(time < this.attack_finished))
 	{
-		if(this.weapon == WEP_LAVA_NAILGUN || this.weapon == WEP_LAVA_SUPER_NAILGUN)
-			_sound(this, CH_WEAPON_SINGLE, "lavagun/snail.wav", 1, ATTN_NORM);
-		this.lavaGunFired = false;
+		if(this.lavaGunFired)
+		{
+			if(this.weapon == WEP_LAVA_NAILGUN || this.weapon == WEP_LAVA_SUPER_NAILGUN)
+				_sound(this, CH_WEAPON_SINGLE, "lavagun/snail.wav", 1, ATTN_NORM);
+			this.lavaGunFired = false;
+		}
+
+		if(this.impulse) // fix imported from rogue, lowers resource usage a tiny bit
+			ImpulseCommands(this);
+		
+	// check for attack
+		if(this.button0)
+		{
+			SuperDamageSound(this);
+			W_Attack(this, false);
+		}
 	}
 
-	if(this.impulse) // fix imported from rogue, lowers resource usage a tiny bit
-		ImpulseCommands(this);
-	
-// check for attack
-	if(this.button0)
+	if(!(time < this.attack2_finished))
 	{
-		SuperDamageSound(this);
-		W_Attack(this);
+		// offhand attack (pulse rifle)
+		if(this.button3)
+		{
+			SuperDamageSound(this);
+			W_Attack(this, true);
+		}
 	}
 }
 

@@ -115,6 +115,7 @@ void SUB_CopyEntity(entity srcent, entity destent)
 	destent.attack_state = srcent.attack_state;
 	destent.walkframe = srcent.walkframe;
 	destent.attack_finished = srcent.attack_finished;
+	destent.attack2_finished = srcent.attack2_finished;
 	destent.pain_finished = srcent.pain_finished;
 	destent.invincible_finished = srcent.invincible_finished;
 	destent.invisible_finished = srcent.invisible_finished;

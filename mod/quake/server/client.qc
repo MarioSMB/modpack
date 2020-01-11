@@ -881,6 +881,7 @@ void PutClientInServer(entity this)
 	W_SetCurrentAmmo(this);
 
 	this.attack_finished = time;
+	this.attack2_finished = time;
 	this.th_pain = player_pain;
 	this.th_die = PlayerDie;
 	

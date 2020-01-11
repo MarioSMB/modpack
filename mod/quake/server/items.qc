@@ -873,8 +873,11 @@ void impel_weapon_touch(entity this, entity toucher)
 	toucher.weapons |= new;
 	if(newitems == IT_PULSEPOWER1 || newitems == IT_PULSEPOWER2)
 		new = WEP_PULSERIFLE;
-	toucher.weapon = new;
-	W_SetCurrentAmmo(toucher);
+	if(new != WEP_PULSERIFLE) // offhand
+	{
+		toucher.weapon = new;
+		W_SetCurrentAmmo(toucher);
+	}
 	if(leave)
 	{
 		if(this.state == 0)
@@ -1825,7 +1828,7 @@ void BackpackTouch(entity this, entity toucher)
 		EnableComboWeapons(toucher);
 
 // change to the weapon
-	if(newitem)
+	if(newitem && newitem != WEP_PULSERIFLE) // offhand
 	{
 		if(!deathmatch)
 			W_SwitchWeapon(toucher, newitem);

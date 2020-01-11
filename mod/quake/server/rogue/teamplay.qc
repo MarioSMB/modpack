@@ -730,10 +730,13 @@ void Team_weapon_touch(entity this, entity toucher)
 	
 	delete(this);
 
-	if(!deathmatch)
-		toucher.weapon = new;
-	else
-		Deathmatch_Weapon(toucher, old, new);
+	if(new != WEP_PULSERIFLE)
+	{
+		if(!deathmatch)
+			toucher.weapon = new;
+		else
+			Deathmatch_Weapon(toucher, old, new);
+	}
 
 	EnableComboWeapons(toucher);
 
