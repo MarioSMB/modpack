@@ -1,0 +1,6 @@
+#ifdef GAMEQC
+.int clipgroup;
+
+IntrusiveList g_clipgroup;
+STATIC_INIT(g_clipgroup) { g_clipgroup = IL_NEW(); }
+#endif

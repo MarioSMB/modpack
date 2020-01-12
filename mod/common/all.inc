@@ -1,7 +1,9 @@
 #include "cvars.qh"
+#include "clipgroup.qh"
 #include "sounds.qh"
 
 #include "announcer.qc"
+#include "clipgroup.qc"
 #include "commands/all.inc"
 #include "custom_playermodels.qc"
 #include "effects.inc"
