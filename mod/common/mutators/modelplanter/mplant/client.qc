@@ -100,7 +100,7 @@ void mplant_block_draw(entity this)
                 setmodel(this, MDL_Null);
 #define rgb '0.4 0.4 0.6' // todo: nicer shading
             // Top face
-            R_BeginPolygon("", DRAWFLAG_NORMAL);
+            R_BeginPolygon("", DRAWFLAG_NORMAL, false);
             R_PolygonVertex(this.mtu_point_topfwdright, '0 0 0', rgb, this.alpha);
             R_PolygonVertex(this.mtu_point_topfwdleft,  '0 1 0', rgb, this.alpha);
             R_PolygonVertex(this.mtu_point_topbckleft,  '1 1 0', rgb, this.alpha);
@@ -108,7 +108,7 @@ void mplant_block_draw(entity this)
             R_EndPolygon();
 
             // Botton face
-            R_BeginPolygon("", DRAWFLAG_NORMAL);
+            R_BeginPolygon("", DRAWFLAG_NORMAL, false);
             R_PolygonVertex(this.mtu_point_btmfwdright, '0 0 0', rgb, this.alpha);
             R_PolygonVertex(this.mtu_point_btmfwdleft,  '0 1 0', rgb, this.alpha);
             R_PolygonVertex(this.mtu_point_btmbckleft, '1 1 0', rgb, this.alpha);
@@ -116,7 +116,7 @@ void mplant_block_draw(entity this)
             R_EndPolygon();
 
             // Back face
-            R_BeginPolygon("", DRAWFLAG_NORMAL);
+            R_BeginPolygon("", DRAWFLAG_NORMAL, false);
             R_PolygonVertex(this.mtu_point_topbckright, '0 0 0', rgb, this.alpha);
             R_PolygonVertex(this.mtu_point_topbckleft,  '0 1 0', rgb, this.alpha);
             R_PolygonVertex(this.mtu_point_btmbckleft, '1 1 0', rgb, this.alpha);
@@ -124,7 +124,7 @@ void mplant_block_draw(entity this)
             R_EndPolygon();
 
             // Right face
-            R_BeginPolygon("", DRAWFLAG_NORMAL);
+            R_BeginPolygon("", DRAWFLAG_NORMAL, false);
             R_PolygonVertex(this.mtu_point_topbckright, '0 0 0', rgb, this.alpha);
             R_PolygonVertex(this.mtu_point_topfwdright,  '0 1 0', rgb, this.alpha);
             R_PolygonVertex(this.mtu_point_btmfwdright, '1 1 0', rgb, this.alpha);
@@ -132,7 +132,7 @@ void mplant_block_draw(entity this)
             R_EndPolygon();
 
             // Left face
-            R_BeginPolygon("", DRAWFLAG_NORMAL);
+            R_BeginPolygon("", DRAWFLAG_NORMAL, false);
             R_PolygonVertex(this.mtu_point_topbckleft, '0 0 0', rgb, this.alpha);
             R_PolygonVertex(this.mtu_point_topfwdleft,  '0 1 0', rgb, this.alpha);
             R_PolygonVertex(this.mtu_point_btmfwdleft, '1 1 0', rgb, this.alpha);
@@ -140,7 +140,7 @@ void mplant_block_draw(entity this)
             R_EndPolygon();
 
             // Front face
-            R_BeginPolygon("", DRAWFLAG_NORMAL);
+            R_BeginPolygon("", DRAWFLAG_NORMAL, false);
             R_PolygonVertex(this.mtu_point_topfwdright, '0 0 0', rgb, this.alpha);
             R_PolygonVertex(this.mtu_point_topfwdleft,  '0 1 0', rgb, this.alpha);
             R_PolygonVertex(this.mtu_point_btmfwdleft, '1 1 0', rgb, this.alpha);

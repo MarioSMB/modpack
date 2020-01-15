@@ -98,7 +98,7 @@ CLASS(PolyTrail, Object)
             vector B = from - thickdir;
             vector C = to + thickdir;
             vector D = to - thickdir;
-            R_BeginPolygon(this.polytrail_tex, DRAWFLAG_SCREEN);
+            R_BeginPolygon(this.polytrail_tex, DRAWFLAG_SCREEN, false);
             R_PolygonVertex(B, '0 0 0', rgb, a);
             R_PolygonVertex(A, '0 1 0', rgb, a);
             R_PolygonVertex(C, '1 1 0', rgb, a);

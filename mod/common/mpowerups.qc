@@ -636,7 +636,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, HUD_Draw_overlay)
 		vector tc_10 = '1.5 0 0' - '0.2 0 0' * sin(time * 0.5) + '0 0.5 0' * cos(time * 1.7);
 		//tc_11 = '1 1 0' + '0.6 0 0' * sin(time * 0.6) + '0 0.3 0' * cos(time * 0.1);
 		vector tc_11 = tc_01 + tc_10 - tc_00;
-		R_BeginPolygon("gfx/rainbow.tga", DRAWFLAG_ADDITIVE);
+		R_BeginPolygon("gfx/rainbow.tga", DRAWFLAG_ADDITIVE, true);
 		R_PolygonVertex('0 0 0', tc_00, rgb, a);
 		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0', tc_10, rgb, a);
 		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0' + autocvar_vid_conheight * '0 1 0', tc_11, rgb, a);
