@@ -646,6 +646,7 @@ void player_rocket1(entity this) { set_animofs(this, anim_player_rockatt1, 1, pl
 
 void DeathBubbles(entity this, int num_bubbles);
 
+string get_painsound(entity this, int chance);
 void PainSound(entity this, entity attacker)
 {
 	if(this.health < 0)
@@ -711,30 +712,7 @@ void PainSound(entity this, entity attacker)
 
 	this.noise = "";
 
-	if(this.model_randomizer < autocvar_sv_quake_katria && have_katria)
-	{
-		switch(rs)
-		{
-			case 1: this.noise = "player_katria/pain1.wav"; break;
-			case 2: this.noise = "player_katria/pain2.wav"; break;
-			case 3: this.noise = "player_katria/pain3.wav"; break;
-			case 4: this.noise = "player_katria/pain4.wav"; break;
-			case 5: this.noise = "player_katria/pain5.wav"; break;
-			default: this.noise = "player_katria/pain6.wav"; break;
-		}
-	}
-	else
-	{
-		switch(rs)
-		{
-			case 1: this.noise = "player/pain1.wav"; break;
-			case 2: this.noise = "player/pain2.wav"; break;
-			case 3: this.noise = "player/pain3.wav"; break;
-			case 4: this.noise = "player/pain4.wav"; break;
-			case 5: this.noise = "player/pain5.wav"; break;
-			default: this.noise = "player/pain6.wav"; break;
-		}
-	}
+	this.noise = get_painsound(this, rs);
 
 	_sound(this, CH_VOICE, this.noise, 1, ATTN_NORM);
 }
@@ -830,7 +808,7 @@ void DeathBubbles(entity this, int num_bubbles)
 	bubble_spawner.bubble_count = num_bubbles;
 }
 
-
+string get_deathsound(entity this, int chance);
 void DeathSound(entity this)
 {
 	// water death sounds
@@ -842,28 +820,7 @@ void DeathSound(entity this)
 	}
 	
 	int rs = rint((random() * 4) + 1);
-	if(this.model_randomizer < autocvar_sv_quake_katria && have_katria)
-	{
-		switch(rs)
-		{
-			case 1: this.noise = "player_katria/death1.wav"; break;
-			case 2: this.noise = "player_katria/death2.wav"; break;
-			case 3: this.noise = "player_katria/death3.wav"; break;
-			case 4: this.noise = "player_katria/death4.wav"; break;
-			case 5: this.noise = "player_katria/death5.wav"; break;
-		}
-	}
-	else
-	{
-		switch(rs)
-		{
-			case 1: this.noise = "player/death1.wav"; break;
-			case 2: this.noise = "player/death2.wav"; break;
-			case 3: this.noise = "player/death3.wav"; break;
-			case 4: this.noise = "player/death4.wav"; break;
-			case 5: this.noise = "player/death5.wav"; break;
-		}
-	}
+	this.noise = get_deathsound(this, rs);
 
 	_sound(this, CH_VOICE, this.noise, 1, ATTN_NONE);
 }
@@ -1107,7 +1064,7 @@ void PlayerDie(entity this, entity inflictor, entity attacker)
 
 void set_suicide_frame(entity this)
 {	// used by kill command and diconnect command
-	if(this.model != "progs/player.mdl" && this.model != "progs/player_katria.mdl")
+	if(this.model != "progs/player.mdl" && this.model != "progs/player_katria.mdl" && this.model != "progs/player_mario.mdl")
 		return;	// allready gibbed
 	this.frame = anim_player_deatha1 + (11 - 1); // frame 11, hax
 	this.solid = SOLID_NOT;

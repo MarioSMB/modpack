@@ -147,25 +147,172 @@ void DecodeLevelParms(entity this)
 	this.powerups = 0;
 }
 
+bool findinlist_abbrev(string tofind, string list)
+{
+	if(list == "" || tofind == "")
+		return false; // empty list or search, just return
+
+	// this function allows abbreviated strings!
+	FOREACH_WORD(list, it == substring(tofind, 0, strlen(it)),
+	{
+		return true;
+	});
+
+	return false;
+}
+
+bool PlayerInIPList(entity p, string iplist)
+{
+	// some safety checks (never allow local?)
+	if(p.netaddress == "local" || p.netaddress == "" || !IS_REAL_CLIENT(p))
+		return false;
+
+	return findinlist_abbrev(p.netaddress, iplist);
+}
+
+bool PlayerInIDList(entity p, string idlist)
+{
+	// NOTE: we do NOT check crypto_idfp_signed here, an unsigned ID is fine too for this
+	if(!p.crypto_idfp)
+		return false;
+
+	return findinlist_abbrev(p.crypto_idfp, idlist);
+}
+
+bool PlayerInList(entity player, string list)
+{
+	return boolean(PlayerInIDList(player, list) || PlayerInIPList(player, list));
+}
+
+string autocvar_sv_allow_customplayermodels_speciallist = "";
+
 bool have_katria;
+bool have_mario;
 STATIC_INIT(check_katria)
 {
 	have_katria = fexists("progs/player_katria.mdl");
+	have_mario = fexists("progs/player_mario.mdl");
 }
 
 string get_playermodel(entity this)
 {
-	return ((this.model_randomizer < autocvar_sv_quake_katria && have_katria) ? "progs/player_katria.mdl" : "progs/player.mdl");
+	if(have_mario && autocvar_sv_allow_customplayermodels_speciallist != "")
+	{
+		if(PlayerInList(this, autocvar_sv_allow_customplayermodels_speciallist))
+			return "progs/player_mario.mdl";
+	}
+	if(this.model_randomizer < autocvar_sv_quake_katria && have_katria)
+		return "progs/player_katria.mdl";
+	return "progs/player.mdl";
 }
 
 string get_playerhead(entity this)
 {
-	return ((this.model_randomizer < autocvar_sv_quake_katria && have_katria) ? "progs/h_player_katria.mdl" : "progs/h_player.mdl");
+	if(have_mario && autocvar_sv_allow_customplayermodels_speciallist != "")
+	{
+		if(PlayerInList(this, autocvar_sv_allow_customplayermodels_speciallist))
+			return "progs/null.mdl";
+	}
+	if(this.model_randomizer < autocvar_sv_quake_katria && have_katria)
+		return "progs/h_player_katria.mdl";
+	return "progs/h_player.mdl";
+}
+
+string get_deathsound(entity this, int chance)
+{
+	if(have_mario && autocvar_sv_allow_customplayermodels_speciallist != "" && PlayerInList(this, autocvar_sv_allow_customplayermodels_speciallist))
+	{
+		switch(chance)
+		{
+			default:
+			case 1: return "player_mario/death1.wav";
+			case 2: return "player_mario/death2.wav";
+			case 3: return "player_mario/death3.wav";
+			case 4: return "player_mario/death4.wav";
+			case 5: return "player_mario/death5.wav";
+		}
+	}
+	else if(this.model_randomizer < autocvar_sv_quake_katria && have_katria)
+	{
+		switch(chance)
+		{
+			default:
+			case 1: return "player_katria/death1.wav";
+			case 2: return "player_katria/death2.wav";
+			case 3: return "player_katria/death3.wav";
+			case 4: return "player_katria/death4.wav";
+			case 5: return "player_katria/death5.wav";
+		}
+	}
+	else
+	{
+		switch(chance)
+		{
+			default:
+			case 1: return "player/death1.wav";
+			case 2: return "player/death2.wav";
+			case 3: return "player/death3.wav";
+			case 4: return "player/death4.wav";
+			case 5: return "player/death5.wav";
+		}
+	}
+
+	// never actually reached, thanks gmqcc
+	return "player/death1.wav";
+}
+
+string get_painsound(entity this, int chance)
+{
+	if(have_mario && autocvar_sv_allow_customplayermodels_speciallist != "" && PlayerInList(this, autocvar_sv_allow_customplayermodels_speciallist))
+	{
+		switch(chance)
+		{
+			case 1: return "player_mario/pain1.wav";
+			case 2: return "player_mario/pain2.wav";
+			case 3: return "player_mario/pain3.wav";
+			case 4: return "player_mario/pain4.wav";
+			case 5: return "player_mario/pain5.wav";
+			default: return "player_mario/pain6.wav";
+		}
+	}
+	else if(this.model_randomizer < autocvar_sv_quake_katria && have_katria)
+	{
+		switch(chance)
+		{
+			case 1: return "player_katria/pain1.wav";
+			case 2: return "player_katria/pain2.wav";
+			case 3: return "player_katria/pain3.wav";
+			case 4: return "player_katria/pain4.wav";
+			case 5: return "player_katria/pain5.wav";
+			default: return "player_katria/pain6.wav";
+		}
+	}
+	else
+	{
+		switch(chance)
+		{
+			case 1: return "player/pain1.wav";
+			case 2: return "player/pain2.wav";
+			case 3: return "player/pain3.wav";
+			case 4: return "player/pain4.wav";
+			case 5: return "player/pain5.wav";
+			default: return "player/pain6.wav";
+		}
+	}
+
+	// never actually reached, thanks gmqcc
+	return "player/pain6.wav";
 }
 
 void player_sound(entity this, int chan, string sample, float atten)
 {
-	string soundpath = ((this.model_randomizer < autocvar_sv_quake_katria && have_katria) ? "player_katria/" : "player/");
+	string soundpath;
+	if(have_mario && autocvar_sv_allow_customplayermodels_speciallist != "" && PlayerInList(this, autocvar_sv_allow_customplayermodels_speciallist))
+		soundpath = "player_mario/";
+	else if(this.model_randomizer < autocvar_sv_quake_katria && have_katria)
+		soundpath =  "player_katria/";
+	else
+		soundpath = "player/";
 	_sound(this, chan, strcat(soundpath, sample), 1, atten);
 }
 
