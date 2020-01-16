@@ -160,13 +160,15 @@ void knight_walk6(entity this) { set_anim(this, anim_knight_walk6, knight_walk7)
 void knight_walk5(entity this) { set_anim(this, anim_knight_walk5, knight_walk6); ai_walk(this, 3); }
 void knight_walk4(entity this) { set_anim(this, anim_knight_walk4, knight_walk5); ai_walk(this, 4); }
 void knight_walk3(entity this) { set_anim(this, anim_knight_walk3, knight_walk4); ai_walk(this, 3); }
-void knight_walk2(entity this) { set_anim(this, anim_knight_walk2, knight_walk3); ai_walk(this, 2); }
+void knight_walk1(entity this) { set_anim(this, anim_knight_walk2, knight_walk3); kn_idle_sound(this); ai_walk(this, 2); }
+#if 0
 void knight_walk1(entity this)
 {
 	set_anim(this, anim_knight_walk1, knight_walk2);
 	kn_idle_sound(this);
 	ai_walk(this, 3);
 }
+#endif
 
 void knight_run1(entity this);
 void knight_run8(entity this) { set_anim(this, anim_knight_runb8, knight_run1); ai_run(this, 6); }
