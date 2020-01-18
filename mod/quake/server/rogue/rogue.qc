@@ -1,5 +1,13 @@
 // main file for the rogue mission pack
 
+STATIC_INIT(rogue_fixguardian)
+{
+	if(!MP_ROGUE)
+		return;
+	// copied fix from darkplaces, which disables this setting when rogue game is detected
+	cvar_settemp("sv_gameplayfix_findradiusdistancetobox", "0");
+}
+
 PRECACHE(Rogue)
 {
 	if(!MP_ROGUE)
