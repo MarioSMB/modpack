@@ -1,4 +1,4 @@
-//FEATURE: Option to make spectating predicted (less lag when moving around)
+//FEATURE-DISABLED: Option to make spectating predicted (less lag when moving around)
 
 AUTOCVAR(g_physics_predictall, bool, false, "Allow prediction for all move types (may have some issues, requires post-0.8.1 DarkPlaces engine on the server)");
 
