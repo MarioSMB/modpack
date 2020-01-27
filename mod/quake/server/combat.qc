@@ -258,14 +258,6 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 	if(MP_ROGUE && !TeamArmorDam(targ, inflictor, attacker, damage))
 		save = 0;
 
-	if(save >= targ.armorvalue)
-	{
-		save = targ.armorvalue;
-		targ.armortype = 0;	// lost all armor
-		targ.items &= ~(IT_ARMOR1 | IT_ARMOR2 | IT_ARMOR3);
-	}
-	
-	targ.armorvalue = targ.armorvalue - save;
 	float take = ceil(damage-save);
 
 // add to the damage total for clients, which will be sent as a single
@@ -352,6 +344,14 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 	}
 
 	targ.health = targ.health - take;
+	targ.armorvalue = targ.armorvalue - save;
+
+	if(save >= targ.armorvalue)
+	{
+		save = targ.armorvalue;
+		targ.armortype = 0;	// lost all armor
+		targ.items &= ~(IT_ARMOR1 | IT_ARMOR2 | IT_ARMOR3);
+	}
 			
 	if(targ.health <= 0)
 	{
