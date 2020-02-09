@@ -1,6 +1,7 @@
 //FEATURE: Akimbo mutator for all your dual wielding needs
 
 AUTOCVAR(g_akimbo, bool, false, "Enable Akimbo mutator (requires g_weaponswitch_debug 2)");
+AUTOCVAR(g_akimbo_atspawns, bool, false, "Allow Akimbo items to be collected from item spawnpoints, not just dropped items");
 
 REGISTER_MUTATOR(akimbo, autocvar_g_akimbo && !g_nexball && autocvar_g_weaponswitch_debug == 2);
 
@@ -12,7 +13,8 @@ MUTATOR_HOOKFUNCTION(akimbo, ItemTouch)
 	entity item = M_ARGV(0, entity);
 	entity player = M_ARGV(1, entity);
 
-	if(Item_IsLoot(item) && item.weapon && (STAT(WEAPONS, player) & item.itemdef.m_weapon.m_wepset) && item.owner != player && !(item.itemdef.m_weapon.spawnflags & WEP_FLAG_NODUAL))
+	if(Item_IsLoot(item) && (autocvar_g_akimbo_atspawns || item.weapon) && 
+							(STAT(WEAPONS, player) & item.itemdef.m_weapon.m_wepset) && item.owner != player && !(item.itemdef.m_weapon.spawnflags & WEP_FLAG_NODUAL))
 		PS(player).dual_weapons |= item.itemdef.m_weapon.m_wepset; // dual it up!
 }
 
@@ -20,6 +22,6 @@ MUTATOR_HOOKFUNCTION(akimbo, FilterItem)
 {
 	entity item = M_ARGV(0, entity);
 
-	if(Item_IsLoot(item) && item.weapon && item.owner && IS_PLAYER(item.owner))
+	if(Item_IsLoot(item) && (autocvar_g_akimbo_atspawns || item.weapon) && item.owner && IS_PLAYER(item.owner))
 		PS(item.owner).dual_weapons &= ~item.itemdef.m_weapon.m_wepset; // no longer akimbo'd (we don't check blacklist here, no need)
 }
