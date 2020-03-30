@@ -148,8 +148,6 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 			M_ARGV(0, string) = "models/player/terminusmale.iqm";
 			cpmodels_UpdateWeaponSkin(player, 3);
 		}
-		if(CS(player).cvar_cl_model == "goat" && ALLOWED(GOAT))
-			M_ARGV(0, string) = "models/player/draconimale.iqm";
 
 		if(CS(player).cvar_cl_model == "monk" && ALLOWED(MONK))
 		{
@@ -182,6 +180,12 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 			{
 				M_ARGV(0, string) = "models/player/iggy.dpm";
 				cpmodels_UpdateWeaponSkin(player, 5);
+			}
+
+			if(CS(player).cvar_cl_model == "goat" && ALLOWED(GOAT))
+			{
+				M_ARGV(0, string) = "models/player/draconimale.iqm";
+				cpmodels_UpdateWeaponSkin(player, 7);
 			}
 		}
 		else if(player.playermodel == "models/player/renamon.iqm" || player.playermodel == "models/player/rosalina.dpm" || player.playermodel == "models/player/iggy.dpm")
