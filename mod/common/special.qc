@@ -198,7 +198,7 @@ MUTATOR_HOOKFUNCTION(cl_morningrescue, HUD_Draw_overlay)
 	if(!morningrescue && !quadratic)
 		return false;
 
-	if(time <= mr_fadetime && !autocvar_hud_panel_radar_maximised_zoom_scale)
+	if(time <= mr_fadetime && autocvar_hud_panel_radar_maximised_zoom_scale == 1)
 	{
 		HUD_MorningRescue();
 		return true;
