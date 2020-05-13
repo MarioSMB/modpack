@@ -3,6 +3,7 @@
 REGISTER_NET_TEMP(TE_CSQC_MORNINGRESCUE);
 
 #ifdef CSQC
+float autocvar_hud_panel_radar_maximised_zoom_scale = 1;
 float mr_appeartime;
 float mr_fadetime;
 
@@ -197,7 +198,7 @@ MUTATOR_HOOKFUNCTION(cl_morningrescue, HUD_Draw_overlay)
 	if(!morningrescue && !quadratic)
 		return false;
 
-	if(time <= mr_fadetime)
+	if(time <= mr_fadetime && !autocvar_hud_panel_radar_maximised_zoom_scale)
 	{
 		HUD_MorningRescue();
 		return true;
