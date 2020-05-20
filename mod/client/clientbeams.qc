@@ -319,6 +319,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, DrawCrosshair)
 
 	float vaporizer_delay = WEP_CVAR_PRI(vaporizer, refire);
 	float vortex_pdelay = WEP_CVAR_PRI(vortex, refire);
+	float oknex_delay = WEP_CVAR_PRI(oknex, refire);
 	//float vortex_sdelay = WEP_CVAR_SEC(vortex, refire);
 	//float vortex_charge = STAT(VORTEX_CHARGE);
 
@@ -327,6 +328,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, DrawCrosshair)
 
 	if(!vaporizer_delay) vaporizer_delay = 0.75;
 	if(!vortex_pdelay) vortex_pdelay = 1.5;
+	if(!oknex_delay) oknex_delay = 1;
 	//if(!vortex_sdelay) vortex_sdelay = 0.75;
 
 	entity localme = playerslots[player_localnum];
@@ -336,7 +338,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, DrawCrosshair)
 		entity wep = viewmodels[slot];
 		if(time < wep.last_beam)
 			continue;
-		DrawClientBeam(wep, vortex_pdelay, vaporizer_delay, attack1_held, localme);
+		DrawClientBeam(wep, ((wep == WEP_OVERKILL_NEX) ? oknex_delay : vortex_pdelay), vaporizer_delay, attack1_held, localme);
 	}
 
 	return false;
