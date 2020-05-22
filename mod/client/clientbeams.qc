@@ -338,7 +338,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, DrawCrosshair)
 		entity wep = viewmodels[slot];
 		if(time < wep.last_beam)
 			continue;
-		DrawClientBeam(wep, ((wep == WEP_OVERKILL_NEX) ? oknex_delay : vortex_pdelay), vaporizer_delay, attack1_held, localme);
+		DrawClientBeam(wep, ((wep.activeweapon == WEP_OVERKILL_NEX) ? oknex_delay : vortex_pdelay), vaporizer_delay, attack1_held, localme);
 	}
 
 	return false;
