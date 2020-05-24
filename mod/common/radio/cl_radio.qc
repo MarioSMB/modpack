@@ -6,24 +6,24 @@ REGISTER_MUTATOR(radio, true);
 
 void Radio_Stopper_Think(entity this)
 {
-    if(this.cnt < -2 || intermission)
-    {
-        delete(this);
-        return;
-    }
+	if(this.cnt < -2 || intermission)
+	{
+		delete(this);
+		return;
+	}
 
-    float t = gettime(GETTIME_CDTRACK);
-    //print(ftos(t), "\n");
+	float t = gettime(GETTIME_CDTRACK);
+	//print(ftos(t), "\n");
 
-    if(this.cnt > t)
-    {
-        localcmd("\ncd stop\n");
-        delete(this);
-        return; // don't continue, we just removed this thing...
-    }
+	if(this.cnt > t)
+	{
+		localcmd("\ncd stop\n");
+		delete(this);
+		return; // don't continue, we just removed this thing...
+	}
 
-    this.cnt = t;
-    this.nextthink = time;
+	this.cnt = t;
+	this.nextthink = time;
 }
 
 void Radio_Think(entity this)
@@ -147,6 +147,12 @@ MUTATOR_HOOKFUNCTION(radio, CSQC_ConsoleCommand)
 
 		cvar_set("cl_radio", onoff);
 		localcmd("\ncmd radio ", cvar_string("cl_radio"), "\n");
+
+		if (onoff == "0")
+		{
+			localcmd("\ncd stop\n");
+		}
+
 		return true;
 	}
 }

@@ -75,7 +75,7 @@ void Radio_Announce(entity this)
 			desc = strcat(desc, "^7 - ", ftos(left), " in queue");
 
 		if(autocvar_sv_radio_announce_howto)
-			desc = strcat(desc, " ^2(NOTE: you can turn off radio with ^1radio off^2)");
+			desc = strcat(desc, " ^2(NOTE: you can turn off radio with ^1radio off^2 in ^1console^2)");
 
 		if(this)
 			sprint(this, strcat("\{1}", desc, "\n"));
