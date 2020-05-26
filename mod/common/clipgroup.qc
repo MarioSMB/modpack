@@ -1,11 +1,11 @@
 // Clip Group implementation in QC
 
 #ifdef GAMEQC
-void tracebox_old(vector v1, vector min, vector max, vector v2, float nomonsters, entity forent) { }
+void(vector v1, vector min, vector max, vector v2, float nomonsters, entity forent) tracebox_old = #90;
 #ifdef SVQC
-void traceline_old(vector v1, vector v2, float nomonsters, entity forent) { }
+void(vector v1, vector v2, float nomonsters, entity forent) traceline_old = #16;
 #elif defined(CSQC)
-float traceline_old(vector v1, vector v2, float tryents, entity ignoreentity) { return 0; }
+float(vector v1, vector v2, float tryents, entity ignoreentity) traceline_old = #16;
 #endif
 
 .float traceclipgroupsolid;
@@ -23,7 +23,6 @@ void trace_clipgroup(vector v1, vector min, vector max, vector v2, float nomonst
 	}
 
 	// save the solidity of all entities with the same clipgroup, then make them nonsolid so trace passes through them
-	// TODO: use intrusive lists here for performance!
 	IL_EACH(g_clipgroup, it != forent && it.clipgroup == forent.clipgroup,
 	{
 		it.traceclipgroupsolid = it.solid;
@@ -63,11 +62,6 @@ float traceline_clipgroup(vector v1, vector v2, float tryents, entity ignoreenti
 
 STATIC_INIT(clipgroup)
 {
-	// update the old traces so we have access to them
-	// replacing dummy functions made above
-	tracebox_old = tracebox;
-	traceline_old = traceline;
-
 	// overwrite the default functions so they apply to our evil hacks!
 	tracebox = tracebox_clipgroup;
 	traceline = traceline_clipgroup;
