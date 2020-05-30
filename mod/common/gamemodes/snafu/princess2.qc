@@ -76,7 +76,7 @@ void snafu_princess_damage(entity this, entity inflictor, entity attacker, float
 			if(IS_PLAYER(attacker))
 				UpdateFrags(attacker, 1);
 			
-			Gai info = Gais_from(this.gaid);
+			Gai info = REGISTRY_GET(Gais, this.gaid);
 			setsize(this, info.deadmins, info.deadmaxs);
 			setthink(this, snafu_princess_die);
 			this.nextthink = time;            

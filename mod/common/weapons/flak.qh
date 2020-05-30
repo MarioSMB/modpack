@@ -17,7 +17,7 @@ SOUND(FLAK_CASINGS1, W_Sound("casings1"));
 SOUND(FLAK_CASINGS2, W_Sound("casings2"));
 SOUND(FLAK_CASINGS3, W_Sound("casings3"));
 Sound SND_FLAK_CASINGS_RANDOM() {
-    return Sounds_from(SND_FLAK_CASINGS1.m_id + floor(prandom() * 3));
+    return REGISTRY_GET(Sounds, SND_FLAK_CASINGS1.m_id + floor(prandom() * 3));
 }
 
 SOUND(FLAK_FIRE, W_Sound("flak_fire"));

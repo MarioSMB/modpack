@@ -35,14 +35,14 @@ void sha_SetCvars()
 	cvar_settemp("g_balance_shotgun_secondary_refire", autocvar_g_shotgunarena_shotgun_secondary_refire);
 }
 
-MUTATOR_HOOKFUNCTION(sha, FilterItem)
+MUTATOR_HOOKFUNCTION(sha, FilterItemDefinition)
 {
-	entity item = M_ARGV(0, entity);
+	entity definition = M_ARGV(0, entity);
 
-	switch (item.items)
+	switch (definition)
 	{
-		case IT_5HP:
-		case IT_ARMOR_SHARD:
+		case ITEM_HealthSmall:
+		case ITEM_ArmorSmall:
 			return false;
 	}
 

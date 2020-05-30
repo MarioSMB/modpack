@@ -15,7 +15,7 @@ SOUND(LIGHTSABRE_HIT1, W_Sound("lightsabre_hit1"));
 SOUND(LIGHTSABRE_HIT2, W_Sound("lightsabre_hit2"));
 SOUND(LIGHTSABRE_HIT3, W_Sound("lightsabre_hit3"));
 Sound SND_LIGHTSABRE_HIT_RANDOM() {
-    return Sounds_from(SND_LIGHTSABRE_HIT1.m_id + floor(prandom() * 3));
+    return REGISTRY_GET(Sounds, SND_LIGHTSABRE_HIT1.m_id + floor(prandom() * 3));
 }
 #endif
 
