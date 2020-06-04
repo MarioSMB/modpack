@@ -79,6 +79,7 @@ AUTOCVAR(g_balance_flak_weaponstartoverride, float, -1, "");
 AUTOCVAR(g_balance_flak_weaponthrowable, float, 1, "");
 
 CLASS(Flak, Weapon)
+/* prio fix  */ ATTRIB(Flak, m_replacement, string, "hagar");
 /* spawnfunc */ ATTRIB(Flak, m_canonical_spawnfunc, string, "weapon_flak");
 /* ammotype  */ ATTRIB(Flak, ammo_type, int, RES_SHELLS);
 /* impulse   */ ATTRIB(Flak, impulse, int, 8);

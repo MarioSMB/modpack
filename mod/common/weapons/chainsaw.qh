@@ -47,6 +47,7 @@ AUTOCVAR(g_balance_chainsaw_weaponstartoverride, float, -1, "");
 AUTOCVAR(g_balance_chainsaw_weaponthrowable, float, 1, "");
 
 CLASS(Chainsaw, Weapon)
+/* prio fix  */ ATTRIB(Chainsaw, m_replacement, string, "electro");
 /* spawnfunc */ ATTRIB(Chainsaw, m_canonical_spawnfunc, string, "weapon_chainsaw");
 /* ammotype  */ ATTRIB(Chainsaw, ammo_type, int, RES_FUEL);
 /* impulse   */ ATTRIB(Chainsaw, impulse, int, 5);

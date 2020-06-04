@@ -42,6 +42,7 @@ AUTOCVAR(g_balance_mac10_weaponstartoverride, float, -1, "");
 AUTOCVAR(g_balance_mac10_weaponthrowable, float, 1, "");
 
 CLASS(Uzi, Weapon)
+/* prio fix  */ ATTRIB(Uzi, m_replacement, string, "machinegun");
 /* spawnfunc */ ATTRIB(Uzi, m_canonical_spawnfunc, string, "weapon_mac10");
 /* ammotype  */ ATTRIB(Uzi, ammo_type, int, RES_BULLETS);
 /* impulse   */ ATTRIB(Uzi, impulse, int, 3);

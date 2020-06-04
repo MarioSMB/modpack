@@ -42,6 +42,7 @@ AUTOCVAR(g_balance_assaultrifle_weaponstartoverride, float, -1, "");
 AUTOCVAR(g_balance_assaultrifle_weaponthrowable, float, 1, "");
 
 CLASS(AssaultRifle, Weapon)
+/* prio fix  */ ATTRIB(AssaultRifle, m_replacement, string, "machinegun");
 /* spawnfunc */ ATTRIB(AssaultRifle, m_canonical_spawnfunc, string, "weapon_assaultrifle");
 /* ammotype  */ ATTRIB(AssaultRifle, ammo_type, int, RES_BULLETS);
 /* impulse   */ ATTRIB(AssaultRifle, impulse, int, 3);

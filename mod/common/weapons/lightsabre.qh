@@ -55,6 +55,7 @@ AUTOCVAR(g_balance_lightsabre_weaponstartoverride, float, -1, "");
 AUTOCVAR(g_balance_lightsabre_weaponthrowable, float, 0, "");
 
 CLASS(Lightsabre, Weapon)
+/* prio fix  */ ATTRIB(Lightsabre, m_replacement, string, "machinegun");
 /* spawnfunc */ ATTRIB(Lightsabre, m_canonical_spawnfunc, string, "weapon_lightsabre");
 /* ammotype  */ ATTRIB(Lightsabre, ammo_type, int, RES_NONE);
 /* impulse   */ ATTRIB(Lightsabre, impulse, int, 1);
