@@ -38,7 +38,7 @@ CLASS(RPG7, Weapon)
 /* spawnfunc */ ATTRIB(RPG7, m_canonical_spawnfunc, string, "weapon_rpg7");
 /* ammotype  */ ATTRIB(RPG7, ammo_type, int, RES_ROCKETS);
 /* impulse   */ ATTRIB(RPG7, impulse, int, 9);
-/* flags     */ ATTRIB(RPG7, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH | WEP_FLAG_NODUAL | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(RPG7, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH | WEP_FLAG_NODUAL | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_MODWEAPON);
 /* rating    */ ATTRIB(RPG7, bot_pickupbasevalue, float, 8000);
 /* color     */ ATTRIB(RPG7, wpcolor, vector, '0.6 0.8 0.7');
 /* modelname */ ATTRIB(RPG7, mdl, string, "rpg7");

@@ -1,5 +1,8 @@
 #pragma once
 
+// highest bit used in Xonotic is 16
+const int WEP_FLAG_MODWEAPON = BIT(23); // indicates that this wepaon was added by the mod
+
 #ifdef CSQC
 STATIC_INIT(fix_weaponpriority)
 {
