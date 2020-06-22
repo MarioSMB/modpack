@@ -13,7 +13,7 @@ const vector _PL_CROUCH_MIN_CONST = '-16 -16 -24';
 .float player_scale;
 .float player_scale_override;
 
-MUTATOR_HOOKFUNCTION(player_size, PlayerPhysics)
+MUTATOR_HOOKFUNCTION(player_size, PlayerPhysics_PostUpdateStats)
 {
 	entity player = M_ARGV(0, entity);
 	if(player.player_scale == 1 || !player.player_scale)
