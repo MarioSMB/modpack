@@ -68,34 +68,36 @@ float hats_getscale(entity e)
 
 vector hats_getheight(entity e)
 {
-	vector s;
+	vector s, hat_offset = '0 0 0';
+	float myscale;
 	get_model_parameters(e.model, e.skin);
 	s = get_model_parameters_hat_height;
+	myscale = get_model_parameters_hat_scale;
 	get_model_parameters(string_null, 0);
 
-	if(s == '0 0 0' && autocvar_g_hats_nolegacy)
+	if(autocvar_g_hats_nolegacy)
 	{
 		// attempt to get default height
-		s = '0 10 -1';
+		hat_offset = '0 10 -1' * myscale; // legacy models are offset by a margin that varies depending on their size
 	}
-	
-	return s;
+
+	return hat_offset + s;
 }
 
 vector hats_getangles(entity e)
 {
-	vector s;
+	vector s, hat_offset = '0 0 0';
 	get_model_parameters(e.model, e.skin);
 	s = get_model_parameters_hat_angles;
 	get_model_parameters(string_null, 0);
 
-	if(s == '0 0 0' && autocvar_g_hats_nolegacy)
+	if(autocvar_g_hats_nolegacy)
 	{
 		// attempt to get default angle
-		s = '90 0 0';
+		hat_offset = '90 0 0';
 	}
-	
-	return s;
+
+	return hat_offset + s;
 }
 
 string hat_exists(string pattern)
