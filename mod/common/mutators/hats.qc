@@ -78,7 +78,7 @@ vector hats_getheight(entity e)
 	if(autocvar_g_hats_nolegacy)
 	{
 		// attempt to get default height
-		hat_offset = '0 10 -1' * myscale; // legacy models are offset by a margin that varies depending on their size
+		hat_offset = '0 10 -1' * ((myscale) ? myscale : 1); // legacy models are offset by a margin that varies depending on their size
 	}
 
 	return hat_offset + s;
