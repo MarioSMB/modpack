@@ -897,6 +897,8 @@ void impel_weapon_touch(entity this, entity toucher)
 
 spawnfunc(weapon_lightme)
 {
+	if(!MP_IMPEL) { delete(this); return; }
+
 	precache_model("progs/g_light2.mdl");
 	_setmodel(this, "progs/g_light2.mdl");
 	this.weapon = 3;
@@ -908,6 +910,8 @@ spawnfunc(weapon_lightme)
 
 spawnfunc(weapon_rifle)
 {
+	if(!MP_IMPEL) { delete(this); return; }
+
 	precache_model("progs/g_tek.mdl");
 	_setmodel(this, "progs/g_tek.mdl");
 	this.weapon = 3;
@@ -919,6 +923,8 @@ spawnfunc(weapon_rifle)
 
 spawnfunc(weapon_rifleupgrade)
 {
+	if(!MP_IMPEL) { delete(this); return; }
+
 	precache_model("progs/wing.mdl");
 	_setmodel(this, "progs/wing.mdl");
 	this.weapon = 3;
@@ -930,6 +936,8 @@ spawnfunc(weapon_rifleupgrade)
 
 spawnfunc(weapon_napalm)
 {
+	if(!MP_IMPEL) { delete(this); return; }
+
 	precache_model("progs/g_rock.mdl");
 	_setmodel(this, "progs/g_rock.mdl");
 	this.weapon = 3;
@@ -941,6 +949,8 @@ spawnfunc(weapon_napalm)
 
 spawnfunc(weapon_not_a_spear)
 {
+	if(!MP_IMPEL) { delete(this); return; }
+
 	precache_model("progs/g_implr.mdl");
 	_setmodel(this, "progs/g_implr.mdl");
 	this.weapon = 3;

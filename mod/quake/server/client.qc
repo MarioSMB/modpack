@@ -116,8 +116,8 @@ void DecodeLevelParms(entity this)
 	if(world.model == "maps/rstart.bsp" || ((world.model == "maps/r2m1.bsp" || world.model == "maps/aop2m1.bsp") && !deathmatch))
 		SetNewParms(); // reset all stuff on level 8 and new episode
 
-	if(deathmatch && teamplay >= TEAM_CTF)
-		SetNewParms(); // engine doesn't do this for us, apparently
+	//if(deathmatch && teamplay >= TEAM_CTF)
+		//SetNewParms(); // engine doesn't do this for us, apparently
 	
 	this.weapons = parm1;
 	this.health = parm2;
@@ -1936,7 +1936,8 @@ void ClientConnect(entity this)
 
 	// if this is our first connection, parm14 is < 0
 	// set lastteam negative
-	if(MP_ROGUE && parm14 < 0 && teamplay > 0)
+	// NOTE: parm14 is NOT < 0 here, spawn parameters are not adjusted on connect!
+	if(MP_ROGUE && parm14 <= 0 && teamplay > 0)
 	{
 		if(cvar("gamecfg") & GAMECFG_USE_COLOR)
 			this.steam = this.team; // accept joining player's color if legal

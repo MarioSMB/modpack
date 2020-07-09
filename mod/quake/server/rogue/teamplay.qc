@@ -327,18 +327,16 @@ void TeamCheckTeam(entity this)
 	// Assign the player to a team.
 
 	// Sum the players on all the teams.
-	int team1count = 0;
-	int team2count = 0;
-	int team3count = 0;
+	int team1count = 0, team2count = 0, team3count = 0;
 
 	FOREACH_CLIENT(IS_PLAYER(it) && it != this,
 	{
 		if(it.steam == TEAM1)
-			team1count = team1count + 1;
+			team1count += 1;
 		else if(it.steam == TEAM2)
-			team2count = team2count + 1;
+			team2count += 1;
 		else if(it.steam == TEAM3)
-			team3count = team3count + 1;
+			team3count += 1;
 	});
 
 	// Find the team with the least players.

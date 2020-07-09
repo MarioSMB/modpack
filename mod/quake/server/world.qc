@@ -847,6 +847,7 @@ spawnfunc(worldspawn)
 	// 63 testing
 	lightstyle(63, "a");
 
+	teamplay = autocvar_teamplay;
 	static_init_late();
 	static_init_precache();
 
