@@ -10,11 +10,12 @@ Requirements
 ============
  
 Required content packs:
- - http://dl.xonotic.co/zzz-quake1_10.pk3
+ - http://dl.xonotic.co/zzz-quake1_12.pk3
 
 Optional mission packs:
- - http://dl.xonotic.co/zzz-quake1-mp1_05.pk3
- - http://dl.xonotic.co/zzz-quake1-mp2_03.pk3
+ - http://dl.xonotic.co/zzz-quake1-mp1_07.pk3
+ - http://dl.xonotic.co/zzz-quake1-mp2_04.pk3
+ - http://dl.xonotic.co/zzz-quake1-mp3_01.pk3
 
 
 Usage
@@ -34,3 +35,6 @@ If you wish to use the Scourge of Armagon mission pack, you'll need the followin
 
 If you wish to use the Dissolution of Eternity mission pack, you'll need the following instead:  
 `set sv_missionpack_rogue 1`
+
+If you wish to use the experimental Abyss of Pandemonium mission pack, you'll need the following instead:
+`set sv_missionpack_impel 1`
