@@ -7,99 +7,99 @@ LavaMan (Smaller version of Boss E1M7)
 */
 
 const int anim_lavaman_rise1 = 0;
-const int anim_lavaman_rise2 = 1;
-const int anim_lavaman_rise3 = 2;
-const int anim_lavaman_rise4 = 3;
-const int anim_lavaman_rise5 = 4;
-const int anim_lavaman_rise6 = 5;
-const int anim_lavaman_rise7 = 6;
-const int anim_lavaman_rise8 = 7;
-const int anim_lavaman_rise9 = 8;
-const int anim_lavaman_rise10 = 9;
-const int anim_lavaman_rise11 = 10;
-const int anim_lavaman_rise12 = 11;
-const int anim_lavaman_rise13 = 12;
-const int anim_lavaman_rise14 = 13;
-const int anim_lavaman_rise15 = 14;
-const int anim_lavaman_rise16 = 15;
-const int anim_lavaman_rise17 = 16;
+//const int anim_lavaman_rise2 = 1;
+//const int anim_lavaman_rise3 = 2;
+//const int anim_lavaman_rise4 = 3;
+//const int anim_lavaman_rise5 = 4;
+//const int anim_lavaman_rise6 = 5;
+//const int anim_lavaman_rise7 = 6;
+//const int anim_lavaman_rise8 = 7;
+//const int anim_lavaman_rise9 = 8;
+//const int anim_lavaman_rise10 = 9;
+//const int anim_lavaman_rise11 = 10;
+//const int anim_lavaman_rise12 = 11;
+//const int anim_lavaman_rise13 = 12;
+//const int anim_lavaman_rise14 = 13;
+//const int anim_lavaman_rise15 = 14;
+//const int anim_lavaman_rise16 = 15;
+//const int anim_lavaman_rise17 = 16;
 
 const int anim_lavaman_walk1 = 17;
-const int anim_lavaman_walk2 = 18;
-const int anim_lavaman_walk3 = 19;
-const int anim_lavaman_walk4 = 20;
-const int anim_lavaman_walk5 = 21;
-const int anim_lavaman_walk6 = 22;
-const int anim_lavaman_walk7 = 23;
-const int anim_lavaman_walk8 = 24;
-const int anim_lavaman_walk9 = 25;
-const int anim_lavaman_walk10 = 26;
-const int anim_lavaman_walk11 = 27;
-const int anim_lavaman_walk12 = 28;
-const int anim_lavaman_walk13 = 29;
-const int anim_lavaman_walk14 = 30;
-const int anim_lavaman_walk15 = 31;
-const int anim_lavaman_walk16 = 32;
-const int anim_lavaman_walk17 = 33;
-const int anim_lavaman_walk18 = 34;
-const int anim_lavaman_walk19 = 35;
-const int anim_lavaman_walk20 = 36;
-const int anim_lavaman_walk21 = 37;
-const int anim_lavaman_walk22 = 38;
-const int anim_lavaman_walk23 = 39;
-const int anim_lavaman_walk24 = 40;
-const int anim_lavaman_walk25 = 41;
-const int anim_lavaman_walk26 = 42;
-const int anim_lavaman_walk27 = 43;
-const int anim_lavaman_walk28 = 44;
-const int anim_lavaman_walk29 = 45;
-const int anim_lavaman_walk30 = 46;
-const int anim_lavaman_walk31 = 47;
+//const int anim_lavaman_walk2 = 18;
+//const int anim_lavaman_walk3 = 19;
+//const int anim_lavaman_walk4 = 20;
+//const int anim_lavaman_walk5 = 21;
+//const int anim_lavaman_walk6 = 22;
+//const int anim_lavaman_walk7 = 23;
+//const int anim_lavaman_walk8 = 24;
+//const int anim_lavaman_walk9 = 25;
+//const int anim_lavaman_walk10 = 26;
+//const int anim_lavaman_walk11 = 27;
+//const int anim_lavaman_walk12 = 28;
+//const int anim_lavaman_walk13 = 29;
+//const int anim_lavaman_walk14 = 30;
+//const int anim_lavaman_walk15 = 31;
+//const int anim_lavaman_walk16 = 32;
+//const int anim_lavaman_walk17 = 33;
+//const int anim_lavaman_walk18 = 34;
+//const int anim_lavaman_walk19 = 35;
+//const int anim_lavaman_walk20 = 36;
+//const int anim_lavaman_walk21 = 37;
+//const int anim_lavaman_walk22 = 38;
+//const int anim_lavaman_walk23 = 39;
+//const int anim_lavaman_walk24 = 40;
+//const int anim_lavaman_walk25 = 41;
+//const int anim_lavaman_walk26 = 42;
+//const int anim_lavaman_walk27 = 43;
+//const int anim_lavaman_walk28 = 44;
+//const int anim_lavaman_walk29 = 45;
+//const int anim_lavaman_walk30 = 46;
+//const int anim_lavaman_walk31 = 47;
 
 const int anim_lavaman_death1 = 48;
-const int anim_lavaman_death2 = 49;
-const int anim_lavaman_death3 = 50;
-const int anim_lavaman_death4 = 51;
-const int anim_lavaman_death5 = 52;
-const int anim_lavaman_death6 = 53;
-const int anim_lavaman_death7 = 54;
-const int anim_lavaman_death8 = 55;
-const int anim_lavaman_death9 = 56;
+//const int anim_lavaman_death2 = 49;
+//const int anim_lavaman_death3 = 50;
+//const int anim_lavaman_death4 = 51;
+//const int anim_lavaman_death5 = 52;
+//const int anim_lavaman_death6 = 53;
+//const int anim_lavaman_death7 = 54;
+//const int anim_lavaman_death8 = 55;
+//const int anim_lavaman_death9 = 56;
 
 const int anim_lavaman_attack1 = 57;
-const int anim_lavaman_attack2 = 58;
-const int anim_lavaman_attack3 = 59;
-const int anim_lavaman_attack4 = 60;
-const int anim_lavaman_attack5 = 61;
-const int anim_lavaman_attack6 = 62;
-const int anim_lavaman_attack7 = 63;
-const int anim_lavaman_attack8 = 64;
-const int anim_lavaman_attack9 = 65;
-const int anim_lavaman_attack10 = 66;
-const int anim_lavaman_attack11 = 67;
-const int anim_lavaman_attack12 = 68;
-const int anim_lavaman_attack13 = 69;
-const int anim_lavaman_attack14 = 70;
-const int anim_lavaman_attack15 = 71;
-const int anim_lavaman_attack16 = 72;
-const int anim_lavaman_attack17 = 73;
-const int anim_lavaman_attack18 = 74;
-const int anim_lavaman_attack19 = 75;
-const int anim_lavaman_attack20 = 76;
-const int anim_lavaman_attack21 = 77;
-const int anim_lavaman_attack22 = 78;
-const int anim_lavaman_attack23 = 79;
+//const int anim_lavaman_attack2 = 58;
+//const int anim_lavaman_attack3 = 59;
+//const int anim_lavaman_attack4 = 60;
+//const int anim_lavaman_attack5 = 61;
+//const int anim_lavaman_attack6 = 62;
+//const int anim_lavaman_attack7 = 63;
+//const int anim_lavaman_attack8 = 64;
+//const int anim_lavaman_attack9 = 65;
+//const int anim_lavaman_attack10 = 66;
+//const int anim_lavaman_attack11 = 67;
+//const int anim_lavaman_attack12 = 68;
+//const int anim_lavaman_attack13 = 69;
+//const int anim_lavaman_attack14 = 70;
+//const int anim_lavaman_attack15 = 71;
+//const int anim_lavaman_attack16 = 72;
+//const int anim_lavaman_attack17 = 73;
+//const int anim_lavaman_attack18 = 74;
+//const int anim_lavaman_attack19 = 75;
+//const int anim_lavaman_attack20 = 76;
+//const int anim_lavaman_attack21 = 77;
+//const int anim_lavaman_attack22 = 78;
+//const int anim_lavaman_attack23 = 79;
 
 const int anim_lavaman_shocka1 = 80;
-const int anim_lavaman_shocka2 = 81;
-const int anim_lavaman_shocka3 = 82;
-const int anim_lavaman_shocka4 = 83;
-const int anim_lavaman_shocka5 = 84;
-const int anim_lavaman_shocka6 = 85;
-const int anim_lavaman_shocka7 = 86;
-const int anim_lavaman_shocka8 = 87;
-const int anim_lavaman_shocka9 = 88;
-const int anim_lavaman_shocka10 = 89;
+//const int anim_lavaman_shocka2 = 81;
+//const int anim_lavaman_shocka3 = 82;
+//const int anim_lavaman_shocka4 = 83;
+//const int anim_lavaman_shocka5 = 84;
+//const int anim_lavaman_shocka6 = 85;
+//const int anim_lavaman_shocka7 = 86;
+//const int anim_lavaman_shocka8 = 87;
+//const int anim_lavaman_shocka9 = 88;
+//const int anim_lavaman_shocka10 = 89;
 
 //$frame shockb1 shockb2 shockb3 shockb4 shockb5 shockb6
 
@@ -163,23 +163,23 @@ void lavaman_hunt(entity this)
 }
 
 void lavaman_fire1(entity this);
-void lavaman_rise17(entity this) { set_anim(this, anim_lavaman_rise17, lavaman_fire1); }
-void lavaman_rise16(entity this) { set_anim(this, anim_lavaman_rise16, lavaman_rise17); }
-void lavaman_rise15(entity this) { set_anim(this, anim_lavaman_rise15, lavaman_rise16); }
-void lavaman_rise14(entity this) { set_anim(this, anim_lavaman_rise14, lavaman_rise15); }
-void lavaman_rise13(entity this) { set_anim(this, anim_lavaman_rise13, lavaman_rise14); }
-void lavaman_rise12(entity this) { set_anim(this, anim_lavaman_rise12, lavaman_rise13); }
-void lavaman_rise11(entity this) { set_anim(this, anim_lavaman_rise11, lavaman_rise12); }
-void lavaman_rise10(entity this) { set_anim(this, anim_lavaman_rise10, lavaman_rise11); }
-void lavaman_rise9(entity this) { set_anim(this, anim_lavaman_rise9, lavaman_rise10); }
-void lavaman_rise8(entity this) { set_anim(this, anim_lavaman_rise8, lavaman_rise9); }
-void lavaman_rise7(entity this) { set_anim(this, anim_lavaman_rise7, lavaman_rise8); }
-void lavaman_rise6(entity this) { set_anim(this, anim_lavaman_rise6, lavaman_rise7); }
-void lavaman_rise5(entity this) { set_anim(this, anim_lavaman_rise5, lavaman_rise6); }
-void lavaman_rise4(entity this) { set_anim(this, anim_lavaman_rise4, lavaman_rise5); }
-void lavaman_rise3(entity this) { set_anim(this, anim_lavaman_rise3, lavaman_rise4); }
-void lavaman_rise2(entity this) { set_anim(this, anim_lavaman_rise2, lavaman_rise3); _sound(this, CH_VOICE, "boss1/sight1.wav", 1, ATTN_NORM); }
-void lavaman_rise1(entity this) { set_anim(this, anim_lavaman_rise1, lavaman_rise2); _sound(this, CH_WEAPON_SINGLE, "boss1/out1.wav", 1, ATTN_NORM); }
+void lavaman_rise17(entity this) { set_animofs(this, anim_lavaman_rise1, 17, lavaman_fire1); }
+void lavaman_rise16(entity this) { set_animofs(this, anim_lavaman_rise1, 16, lavaman_rise17); }
+void lavaman_rise15(entity this) { set_animofs(this, anim_lavaman_rise1, 15, lavaman_rise16); }
+void lavaman_rise14(entity this) { set_animofs(this, anim_lavaman_rise1, 14, lavaman_rise15); }
+void lavaman_rise13(entity this) { set_animofs(this, anim_lavaman_rise1, 13, lavaman_rise14); }
+void lavaman_rise12(entity this) { set_animofs(this, anim_lavaman_rise1, 12, lavaman_rise13); }
+void lavaman_rise11(entity this) { set_animofs(this, anim_lavaman_rise1, 11, lavaman_rise12); }
+void lavaman_rise10(entity this) { set_animofs(this, anim_lavaman_rise1, 10, lavaman_rise11); }
+void lavaman_rise9(entity this) { set_animofs(this, anim_lavaman_rise1, 9, lavaman_rise10); }
+void lavaman_rise8(entity this) { set_animofs(this, anim_lavaman_rise1, 8, lavaman_rise9); }
+void lavaman_rise7(entity this) { set_animofs(this, anim_lavaman_rise1, 7, lavaman_rise8); }
+void lavaman_rise6(entity this) { set_animofs(this, anim_lavaman_rise1, 6, lavaman_rise7); }
+void lavaman_rise5(entity this) { set_animofs(this, anim_lavaman_rise1, 5, lavaman_rise6); }
+void lavaman_rise4(entity this) { set_animofs(this, anim_lavaman_rise1, 4, lavaman_rise5); }
+void lavaman_rise3(entity this) { set_animofs(this, anim_lavaman_rise1, 3, lavaman_rise4); }
+void lavaman_rise2(entity this) { set_animofs(this, anim_lavaman_rise1, 2, lavaman_rise3); _sound(this, CH_VOICE, "boss1/sight1.wav", 1, ATTN_NORM); }
+void lavaman_rise1(entity this) { set_animofs(this, anim_lavaman_rise1, 1, lavaman_rise2); _sound(this, CH_WEAPON_SINGLE, "boss1/out1.wav", 1, ATTN_NORM); }
 
 // ============
 // ============
@@ -194,17 +194,17 @@ void lavaman_stand(entity this)
 }
 
 void lavaman_idle1(entity this);
-void lavaman_idle9(entity this) { set_anim(this, anim_lavaman_walk1, lavaman_idle1); lavaman_stand(this); }
-void lavaman_idle8(entity this) { set_anim(this, anim_lavaman_walk2, lavaman_idle9); lavaman_stand(this); }
-void lavaman_idle7(entity this) { set_anim(this, anim_lavaman_walk3, lavaman_idle8); lavaman_stand(this); }
-void lavaman_idle6(entity this) { set_anim(this, anim_lavaman_walk4, lavaman_idle7); lavaman_stand(this); }
-void lavaman_idle5(entity this) { set_anim(this, anim_lavaman_walk5, lavaman_idle6); lavaman_stand(this); }
-void lavaman_idle4(entity this) { set_anim(this, anim_lavaman_walk4, lavaman_idle5); lavaman_stand(this); }
-void lavaman_idle3(entity this) { set_anim(this, anim_lavaman_walk3, lavaman_idle4); lavaman_stand(this); }
-void lavaman_idle2(entity this) { set_anim(this, anim_lavaman_walk2, lavaman_idle3); lavaman_stand(this); }
+void lavaman_idle9(entity this) { set_animofs(this, anim_lavaman_walk1, 1, lavaman_idle1); lavaman_stand(this); }
+void lavaman_idle8(entity this) { set_animofs(this, anim_lavaman_walk1, 2, lavaman_idle9); lavaman_stand(this); }
+void lavaman_idle7(entity this) { set_animofs(this, anim_lavaman_walk1, 3, lavaman_idle8); lavaman_stand(this); }
+void lavaman_idle6(entity this) { set_animofs(this, anim_lavaman_walk1, 4, lavaman_idle7); lavaman_stand(this); }
+void lavaman_idle5(entity this) { set_animofs(this, anim_lavaman_walk1, 5, lavaman_idle6); lavaman_stand(this); }
+void lavaman_idle4(entity this) { set_animofs(this, anim_lavaman_walk1, 4, lavaman_idle5); lavaman_stand(this); }
+void lavaman_idle3(entity this) { set_animofs(this, anim_lavaman_walk1, 3, lavaman_idle4); lavaman_stand(this); }
+void lavaman_idle2(entity this) { set_animofs(this, anim_lavaman_walk1, 2, lavaman_idle3); lavaman_stand(this); }
 void lavaman_idle1(entity this)
 {
-	set_anim(this, anim_lavaman_walk1, lavaman_idle2);
+	set_animofs(this, anim_lavaman_walk1, 1, lavaman_idle2);
 
 	if(random() < 0.2)
 		_sound(this, CH_VOICE, "boss1/sight1.wav", 1, ATTN_NORM);
@@ -223,37 +223,37 @@ void lavaman_walk(entity this)
 }
 
 void lavaman_walk1(entity this);
-void lavaman_walk31(entity this) { set_anim(this, anim_lavaman_walk31, lavaman_walk1); }
-void lavaman_walk30(entity this) { set_anim(this, anim_lavaman_walk30, lavaman_walk31); lavaman_walk(this); }
-void lavaman_walk29(entity this) { set_anim(this, anim_lavaman_walk29, lavaman_walk30); lavaman_walk(this); }
-void lavaman_walk28(entity this) { set_anim(this, anim_lavaman_walk28, lavaman_walk29); lavaman_walk(this); }
-void lavaman_walk27(entity this) { set_anim(this, anim_lavaman_walk27, lavaman_walk28); lavaman_walk(this); }
-void lavaman_walk26(entity this) { set_anim(this, anim_lavaman_walk26, lavaman_walk27); lavaman_walk(this); }
-void lavaman_walk25(entity this) { set_anim(this, anim_lavaman_walk25, lavaman_walk26); lavaman_walk(this); }
-void lavaman_walk24(entity this) { set_anim(this, anim_lavaman_walk24, lavaman_walk25); lavaman_walk(this); }
-void lavaman_walk23(entity this) { set_anim(this, anim_lavaman_walk23, lavaman_walk24); lavaman_walk(this); }
-void lavaman_walk22(entity this) { set_anim(this, anim_lavaman_walk22, lavaman_walk23); lavaman_walk(this); }
-void lavaman_walk21(entity this) { set_anim(this, anim_lavaman_walk21, lavaman_walk22); lavaman_walk(this); }
-void lavaman_walk20(entity this) { set_anim(this, anim_lavaman_walk20, lavaman_walk21); lavaman_walk(this); }
-void lavaman_walk19(entity this) { set_anim(this, anim_lavaman_walk19, lavaman_walk20); lavaman_walk(this); }
-void lavaman_walk18(entity this) { set_anim(this, anim_lavaman_walk18, lavaman_walk19); lavaman_walk(this); }
-void lavaman_walk17(entity this) { set_anim(this, anim_lavaman_walk17, lavaman_walk18); lavaman_walk(this); }
-void lavaman_walk16(entity this) { set_anim(this, anim_lavaman_walk16, lavaman_walk17); lavaman_walk(this); }
-void lavaman_walk15(entity this) { set_anim(this, anim_lavaman_walk15, lavaman_walk16); lavaman_walk(this); }
-void lavaman_walk14(entity this) { set_anim(this, anim_lavaman_walk14, lavaman_walk15); lavaman_walk(this); }
-void lavaman_walk13(entity this) { set_anim(this, anim_lavaman_walk13, lavaman_walk14); lavaman_walk(this); }
-void lavaman_walk12(entity this) { set_anim(this, anim_lavaman_walk12, lavaman_walk13); lavaman_walk(this); }
-void lavaman_walk11(entity this) { set_anim(this, anim_lavaman_walk11, lavaman_walk12); lavaman_walk(this); }
-void lavaman_walk10(entity this) { set_anim(this, anim_lavaman_walk10, lavaman_walk11); lavaman_walk(this); }
-void lavaman_walk9(entity this) { set_anim(this, anim_lavaman_walk9, lavaman_walk10); lavaman_walk(this); }
-void lavaman_walk8(entity this) { set_anim(this, anim_lavaman_walk8, lavaman_walk9); lavaman_walk(this); }
-void lavaman_walk7(entity this) { set_anim(this, anim_lavaman_walk7, lavaman_walk8); lavaman_walk(this); }
-void lavaman_walk6(entity this) { set_anim(this, anim_lavaman_walk6, lavaman_walk7); lavaman_walk(this); }
-void lavaman_walk5(entity this) { set_anim(this, anim_lavaman_walk5, lavaman_walk6); lavaman_walk(this); }
-void lavaman_walk4(entity this) { set_anim(this, anim_lavaman_walk4, lavaman_walk5); lavaman_walk(this); }
-void lavaman_walk3(entity this) { set_anim(this, anim_lavaman_walk3, lavaman_walk4); lavaman_walk(this); }
-void lavaman_walk2(entity this) { set_anim(this, anim_lavaman_walk2, lavaman_walk3); lavaman_walk(this); }
-void lavaman_walk1(entity this) { set_anim(this, anim_lavaman_walk1, lavaman_walk2); lavaman_walk(this); }
+void lavaman_walk31(entity this) { set_animofs(this, anim_lavaman_walk1, 31, lavaman_walk1); }
+void lavaman_walk30(entity this) { set_animofs(this, anim_lavaman_walk1, 30, lavaman_walk31); lavaman_walk(this); }
+void lavaman_walk29(entity this) { set_animofs(this, anim_lavaman_walk1, 29, lavaman_walk30); lavaman_walk(this); }
+void lavaman_walk28(entity this) { set_animofs(this, anim_lavaman_walk1, 28, lavaman_walk29); lavaman_walk(this); }
+void lavaman_walk27(entity this) { set_animofs(this, anim_lavaman_walk1, 27, lavaman_walk28); lavaman_walk(this); }
+void lavaman_walk26(entity this) { set_animofs(this, anim_lavaman_walk1, 26, lavaman_walk27); lavaman_walk(this); }
+void lavaman_walk25(entity this) { set_animofs(this, anim_lavaman_walk1, 25, lavaman_walk26); lavaman_walk(this); }
+void lavaman_walk24(entity this) { set_animofs(this, anim_lavaman_walk1, 24, lavaman_walk25); lavaman_walk(this); }
+void lavaman_walk23(entity this) { set_animofs(this, anim_lavaman_walk1, 23, lavaman_walk24); lavaman_walk(this); }
+void lavaman_walk22(entity this) { set_animofs(this, anim_lavaman_walk1, 22, lavaman_walk23); lavaman_walk(this); }
+void lavaman_walk21(entity this) { set_animofs(this, anim_lavaman_walk1, 21, lavaman_walk22); lavaman_walk(this); }
+void lavaman_walk20(entity this) { set_animofs(this, anim_lavaman_walk1, 20, lavaman_walk21); lavaman_walk(this); }
+void lavaman_walk19(entity this) { set_animofs(this, anim_lavaman_walk1, 19, lavaman_walk20); lavaman_walk(this); }
+void lavaman_walk18(entity this) { set_animofs(this, anim_lavaman_walk1, 18, lavaman_walk19); lavaman_walk(this); }
+void lavaman_walk17(entity this) { set_animofs(this, anim_lavaman_walk1, 17, lavaman_walk18); lavaman_walk(this); }
+void lavaman_walk16(entity this) { set_animofs(this, anim_lavaman_walk1, 16, lavaman_walk17); lavaman_walk(this); }
+void lavaman_walk15(entity this) { set_animofs(this, anim_lavaman_walk1, 15, lavaman_walk16); lavaman_walk(this); }
+void lavaman_walk14(entity this) { set_animofs(this, anim_lavaman_walk1, 14, lavaman_walk15); lavaman_walk(this); }
+void lavaman_walk13(entity this) { set_animofs(this, anim_lavaman_walk1, 13, lavaman_walk14); lavaman_walk(this); }
+void lavaman_walk12(entity this) { set_animofs(this, anim_lavaman_walk1, 12, lavaman_walk13); lavaman_walk(this); }
+void lavaman_walk11(entity this) { set_animofs(this, anim_lavaman_walk1, 11, lavaman_walk12); lavaman_walk(this); }
+void lavaman_walk10(entity this) { set_animofs(this, anim_lavaman_walk1, 10, lavaman_walk11); lavaman_walk(this); }
+void lavaman_walk9(entity this) { set_animofs(this, anim_lavaman_walk1, 9, lavaman_walk10); lavaman_walk(this); }
+void lavaman_walk8(entity this) { set_animofs(this, anim_lavaman_walk1, 8, lavaman_walk9); lavaman_walk(this); }
+void lavaman_walk7(entity this) { set_animofs(this, anim_lavaman_walk1, 7, lavaman_walk8); lavaman_walk(this); }
+void lavaman_walk6(entity this) { set_animofs(this, anim_lavaman_walk1, 6, lavaman_walk7); lavaman_walk(this); }
+void lavaman_walk5(entity this) { set_animofs(this, anim_lavaman_walk1, 5, lavaman_walk6); lavaman_walk(this); }
+void lavaman_walk4(entity this) { set_animofs(this, anim_lavaman_walk1, 4, lavaman_walk5); lavaman_walk(this); }
+void lavaman_walk3(entity this) { set_animofs(this, anim_lavaman_walk1, 3, lavaman_walk4); lavaman_walk(this); }
+void lavaman_walk2(entity this) { set_animofs(this, anim_lavaman_walk1, 2, lavaman_walk3); lavaman_walk(this); }
+void lavaman_walk1(entity this) { set_animofs(this, anim_lavaman_walk1, 1, lavaman_walk2); lavaman_walk(this); }
 
 void lavaman_run(entity this)
 {
@@ -265,72 +265,72 @@ void lavaman_run(entity this)
 }
 
 void lavaman_run1(entity this);
-void lavaman_run31(entity this) { set_anim(this, anim_lavaman_walk31, lavaman_run1); }
-void lavaman_run30(entity this) { set_anim(this, anim_lavaman_walk30, lavaman_run31); lavaman_run(this);}
-void lavaman_run29(entity this) { set_anim(this, anim_lavaman_walk29, lavaman_run30); lavaman_run(this);}
-void lavaman_run28(entity this) { set_anim(this, anim_lavaman_walk28, lavaman_run29); lavaman_run(this);}
-void lavaman_run27(entity this) { set_anim(this, anim_lavaman_walk27, lavaman_run28); lavaman_run(this);}
-void lavaman_run26(entity this) { set_anim(this, anim_lavaman_walk26, lavaman_run27); lavaman_run(this);}
-void lavaman_run25(entity this) { set_anim(this, anim_lavaman_walk25, lavaman_run26); lavaman_run(this);}
-void lavaman_run24(entity this) { set_anim(this, anim_lavaman_walk24, lavaman_run25); lavaman_run(this);}
-void lavaman_run23(entity this) { set_anim(this, anim_lavaman_walk23, lavaman_run24); lavaman_run(this);}
-void lavaman_run22(entity this) { set_anim(this, anim_lavaman_walk22, lavaman_run23); lavaman_run(this);}
-void lavaman_run21(entity this) { set_anim(this, anim_lavaman_walk21, lavaman_run22); lavaman_run(this);}
-void lavaman_run20(entity this) { set_anim(this, anim_lavaman_walk20, lavaman_run21); lavaman_run(this);}
-void lavaman_run19(entity this) { set_anim(this, anim_lavaman_walk19, lavaman_run20); lavaman_run(this);}
-void lavaman_run18(entity this) { set_anim(this, anim_lavaman_walk18, lavaman_run19); lavaman_run(this);}
-void lavaman_run17(entity this) { set_anim(this, anim_lavaman_walk17, lavaman_run18); lavaman_run(this);}
-void lavaman_run16(entity this) { set_anim(this, anim_lavaman_walk16, lavaman_run17); lavaman_run(this);}
-void lavaman_run15(entity this) { set_anim(this, anim_lavaman_walk15, lavaman_run16); lavaman_run(this);}
-void lavaman_run14(entity this) { set_anim(this, anim_lavaman_walk14, lavaman_run15); lavaman_run(this);}
-void lavaman_run13(entity this) { set_anim(this, anim_lavaman_walk13, lavaman_run14); lavaman_run(this);}
-void lavaman_run12(entity this) { set_anim(this, anim_lavaman_walk12, lavaman_run13); lavaman_run(this);}
-void lavaman_run11(entity this) { set_anim(this, anim_lavaman_walk11, lavaman_run12); lavaman_run(this);}
-void lavaman_run10(entity this) { set_anim(this, anim_lavaman_walk10, lavaman_run11); lavaman_run(this);}
-void lavaman_run9(entity this) { set_anim(this, anim_lavaman_walk9, lavaman_run10); lavaman_run(this);}
-void lavaman_run8(entity this) { set_anim(this, anim_lavaman_walk8, lavaman_run9); lavaman_run(this);}
-void lavaman_run7(entity this) { set_anim(this, anim_lavaman_walk7, lavaman_run8); lavaman_run(this);}
-void lavaman_run6(entity this) { set_anim(this, anim_lavaman_walk6, lavaman_run7); lavaman_run(this);}
-void lavaman_run5(entity this) { set_anim(this, anim_lavaman_walk5, lavaman_run6); lavaman_run(this);}
-void lavaman_run4(entity this) { set_anim(this, anim_lavaman_walk4, lavaman_run5); lavaman_run(this);}
-void lavaman_run3(entity this) { set_anim(this, anim_lavaman_walk3, lavaman_run4); lavaman_run(this);}
-void lavaman_run2(entity this) { set_anim(this, anim_lavaman_walk2, lavaman_run3); lavaman_run(this);}
-void lavaman_run1(entity this) { set_anim(this, anim_lavaman_walk1, lavaman_run2); lavaman_run(this);}
+void lavaman_run31(entity this) { set_animofs(this, anim_lavaman_walk1, 31, lavaman_run1); }
+void lavaman_run30(entity this) { set_animofs(this, anim_lavaman_walk1, 30, lavaman_run31); lavaman_run(this);}
+void lavaman_run29(entity this) { set_animofs(this, anim_lavaman_walk1, 29, lavaman_run30); lavaman_run(this);}
+void lavaman_run28(entity this) { set_animofs(this, anim_lavaman_walk1, 28, lavaman_run29); lavaman_run(this);}
+void lavaman_run27(entity this) { set_animofs(this, anim_lavaman_walk1, 27, lavaman_run28); lavaman_run(this);}
+void lavaman_run26(entity this) { set_animofs(this, anim_lavaman_walk1, 26, lavaman_run27); lavaman_run(this);}
+void lavaman_run25(entity this) { set_animofs(this, anim_lavaman_walk1, 25, lavaman_run26); lavaman_run(this);}
+void lavaman_run24(entity this) { set_animofs(this, anim_lavaman_walk1, 24, lavaman_run25); lavaman_run(this);}
+void lavaman_run23(entity this) { set_animofs(this, anim_lavaman_walk1, 23, lavaman_run24); lavaman_run(this);}
+void lavaman_run22(entity this) { set_animofs(this, anim_lavaman_walk1, 22, lavaman_run23); lavaman_run(this);}
+void lavaman_run21(entity this) { set_animofs(this, anim_lavaman_walk1, 21, lavaman_run22); lavaman_run(this);}
+void lavaman_run20(entity this) { set_animofs(this, anim_lavaman_walk1, 20, lavaman_run21); lavaman_run(this);}
+void lavaman_run19(entity this) { set_animofs(this, anim_lavaman_walk1, 19, lavaman_run20); lavaman_run(this);}
+void lavaman_run18(entity this) { set_animofs(this, anim_lavaman_walk1, 18, lavaman_run19); lavaman_run(this);}
+void lavaman_run17(entity this) { set_animofs(this, anim_lavaman_walk1, 17, lavaman_run18); lavaman_run(this);}
+void lavaman_run16(entity this) { set_animofs(this, anim_lavaman_walk1, 16, lavaman_run17); lavaman_run(this);}
+void lavaman_run15(entity this) { set_animofs(this, anim_lavaman_walk1, 15, lavaman_run16); lavaman_run(this);}
+void lavaman_run14(entity this) { set_animofs(this, anim_lavaman_walk1, 14, lavaman_run15); lavaman_run(this);}
+void lavaman_run13(entity this) { set_animofs(this, anim_lavaman_walk1, 13, lavaman_run14); lavaman_run(this);}
+void lavaman_run12(entity this) { set_animofs(this, anim_lavaman_walk1, 12, lavaman_run13); lavaman_run(this);}
+void lavaman_run11(entity this) { set_animofs(this, anim_lavaman_walk1, 11, lavaman_run12); lavaman_run(this);}
+void lavaman_run10(entity this) { set_animofs(this, anim_lavaman_walk1, 10, lavaman_run11); lavaman_run(this);}
+void lavaman_run9(entity this) { set_animofs(this, anim_lavaman_walk1, 9, lavaman_run10); lavaman_run(this);}
+void lavaman_run8(entity this) { set_animofs(this, anim_lavaman_walk1, 8, lavaman_run9); lavaman_run(this);}
+void lavaman_run7(entity this) { set_animofs(this, anim_lavaman_walk1, 7, lavaman_run8); lavaman_run(this);}
+void lavaman_run6(entity this) { set_animofs(this, anim_lavaman_walk1, 6, lavaman_run7); lavaman_run(this);}
+void lavaman_run5(entity this) { set_animofs(this, anim_lavaman_walk1, 5, lavaman_run6); lavaman_run(this);}
+void lavaman_run4(entity this) { set_animofs(this, anim_lavaman_walk1, 4, lavaman_run5); lavaman_run(this);}
+void lavaman_run3(entity this) { set_animofs(this, anim_lavaman_walk1, 3, lavaman_run4); lavaman_run(this);}
+void lavaman_run2(entity this) { set_animofs(this, anim_lavaman_walk1, 2, lavaman_run3); lavaman_run(this);}
+void lavaman_run1(entity this) { set_animofs(this, anim_lavaman_walk1, 1, lavaman_run2); lavaman_run(this);}
 
-void lavaman_fire23(entity this) { set_anim(this, anim_lavaman_attack23, lavaman_run1); }
-void lavaman_fire22(entity this) { set_anim(this, anim_lavaman_attack22, lavaman_fire23); ai_charge(this, 1);}
-void lavaman_fire21(entity this) { set_anim(this, anim_lavaman_attack21, lavaman_fire22); ai_face(this);}
-void lavaman_fire20(entity this) { set_anim(this, anim_lavaman_attack20, lavaman_fire21); ai_face(this);}
-void lavaman_fire19(entity this) { set_anim(this, anim_lavaman_attack19, lavaman_fire20); ai_face(this);}
-void lavaman_fire18(entity this) { set_anim(this, anim_lavaman_attack18, lavaman_fire19); lavaman_missile(this, 2);}
-void lavaman_fire17(entity this) { set_anim(this, anim_lavaman_attack17, lavaman_fire18); ai_face(this);}
-void lavaman_fire16(entity this) { set_anim(this, anim_lavaman_attack16, lavaman_fire17); ai_charge(this, 1);}
-void lavaman_fire15(entity this) { set_anim(this, anim_lavaman_attack15, lavaman_fire16); ai_charge(this, 1);}
-void lavaman_fire14(entity this) { set_anim(this, anim_lavaman_attack14, lavaman_fire15); ai_face(this);}
-void lavaman_fire13(entity this) { set_anim(this, anim_lavaman_attack13, lavaman_fire14); ai_face(this);}
-void lavaman_fire12(entity this) { set_anim(this, anim_lavaman_attack12, lavaman_fire13); ai_charge(this, 1);}
-void lavaman_fire11(entity this) { set_anim(this, anim_lavaman_attack11, lavaman_fire12); ai_face(this);}
-void lavaman_fire10(entity this) { set_anim(this, anim_lavaman_attack10, lavaman_fire11); ai_charge(this, 1);}
-void lavaman_fire9(entity this) { set_anim(this, anim_lavaman_attack9, lavaman_fire10); ai_face(this);}
-void lavaman_fire8(entity this) { set_anim(this, anim_lavaman_attack8, lavaman_fire9); ai_face(this);}
-void lavaman_fire7(entity this) { set_anim(this, anim_lavaman_attack7, lavaman_fire8); lavaman_missile(this, 1);}
-void lavaman_fire6(entity this) { set_anim(this, anim_lavaman_attack6, lavaman_fire7); ai_face(this);}
-void lavaman_fire5(entity this) { set_anim(this, anim_lavaman_attack5, lavaman_fire6); ai_charge(this, 1);}
-void lavaman_fire4(entity this) { set_anim(this, anim_lavaman_attack4, lavaman_fire5); ai_face(this);}
-void lavaman_fire3(entity this) { set_anim(this, anim_lavaman_attack3, lavaman_fire4);  ai_face(this);}
-void lavaman_fire2(entity this) { set_anim(this, anim_lavaman_attack2, lavaman_fire3); ai_charge(this, 1);}
-void lavaman_fire1(entity this) { set_anim(this, anim_lavaman_attack1, lavaman_fire2);  ai_face(this);}
+void lavaman_fire23(entity this) { set_animofs(this, anim_lavaman_attack1, 23, lavaman_run1); }
+void lavaman_fire22(entity this) { set_animofs(this, anim_lavaman_attack1, 22, lavaman_fire23); ai_charge(this, 1);}
+void lavaman_fire21(entity this) { set_animofs(this, anim_lavaman_attack1, 21, lavaman_fire22); ai_face(this);}
+void lavaman_fire20(entity this) { set_animofs(this, anim_lavaman_attack1, 20, lavaman_fire21); ai_face(this);}
+void lavaman_fire19(entity this) { set_animofs(this, anim_lavaman_attack1, 19, lavaman_fire20); ai_face(this);}
+void lavaman_fire18(entity this) { set_animofs(this, anim_lavaman_attack1, 18, lavaman_fire19); lavaman_missile(this, 2);}
+void lavaman_fire17(entity this) { set_animofs(this, anim_lavaman_attack1, 17, lavaman_fire18); ai_face(this);}
+void lavaman_fire16(entity this) { set_animofs(this, anim_lavaman_attack1, 16, lavaman_fire17); ai_charge(this, 1);}
+void lavaman_fire15(entity this) { set_animofs(this, anim_lavaman_attack1, 15, lavaman_fire16); ai_charge(this, 1);}
+void lavaman_fire14(entity this) { set_animofs(this, anim_lavaman_attack1, 14, lavaman_fire15); ai_face(this);}
+void lavaman_fire13(entity this) { set_animofs(this, anim_lavaman_attack1, 13, lavaman_fire14); ai_face(this);}
+void lavaman_fire12(entity this) { set_animofs(this, anim_lavaman_attack1, 12, lavaman_fire13); ai_charge(this, 1);}
+void lavaman_fire11(entity this) { set_animofs(this, anim_lavaman_attack1, 11, lavaman_fire12); ai_face(this);}
+void lavaman_fire10(entity this) { set_animofs(this, anim_lavaman_attack1, 10, lavaman_fire11); ai_charge(this, 1);}
+void lavaman_fire9(entity this) { set_animofs(this, anim_lavaman_attack1, 9, lavaman_fire10); ai_face(this);}
+void lavaman_fire8(entity this) { set_animofs(this, anim_lavaman_attack1, 8, lavaman_fire9); ai_face(this);}
+void lavaman_fire7(entity this) { set_animofs(this, anim_lavaman_attack1, 7, lavaman_fire8); lavaman_missile(this, 1);}
+void lavaman_fire6(entity this) { set_animofs(this, anim_lavaman_attack1, 6, lavaman_fire7); ai_face(this);}
+void lavaman_fire5(entity this) { set_animofs(this, anim_lavaman_attack1, 5, lavaman_fire6); ai_charge(this, 1);}
+void lavaman_fire4(entity this) { set_animofs(this, anim_lavaman_attack1, 4, lavaman_fire5); ai_face(this);}
+void lavaman_fire3(entity this) { set_animofs(this, anim_lavaman_attack1, 3, lavaman_fire4);  ai_face(this);}
+void lavaman_fire2(entity this) { set_animofs(this, anim_lavaman_attack1, 2, lavaman_fire3); ai_charge(this, 1);}
+void lavaman_fire1(entity this) { set_animofs(this, anim_lavaman_attack1, 1, lavaman_fire2);  ai_face(this);}
 
-void lavaman_shocka10(entity this) { set_anim(this, anim_lavaman_shocka10, lavaman_run1); }
-void lavaman_shocka9(entity this) { set_anim(this, anim_lavaman_shocka9, lavaman_shocka10); }
-void lavaman_shocka8(entity this) { set_anim(this, anim_lavaman_shocka8, lavaman_shocka9); }
-void lavaman_shocka7(entity this) { set_anim(this, anim_lavaman_shocka7, lavaman_shocka8); }
-void lavaman_shocka6(entity this) { set_anim(this, anim_lavaman_shocka6, lavaman_shocka7); }
-void lavaman_shocka5(entity this) { set_anim(this, anim_lavaman_shocka5, lavaman_shocka6); }
-void lavaman_shocka4(entity this) { set_anim(this, anim_lavaman_shocka4, lavaman_shocka5); }
-void lavaman_shocka3(entity this) { set_anim(this, anim_lavaman_shocka3, lavaman_shocka4); }
-void lavaman_shocka2(entity this) { set_anim(this, anim_lavaman_shocka2, lavaman_shocka3); }
-void lavaman_shocka1(entity this) { set_anim(this, anim_lavaman_shocka1, lavaman_shocka2); }
+void lavaman_shocka10(entity this) { set_animofs(this, anim_lavaman_shocka1, 10, lavaman_run1); }
+void lavaman_shocka9(entity this) { set_animofs(this, anim_lavaman_shocka1, 9, lavaman_shocka10); }
+void lavaman_shocka8(entity this) { set_animofs(this, anim_lavaman_shocka1, 8, lavaman_shocka9); }
+void lavaman_shocka7(entity this) { set_animofs(this, anim_lavaman_shocka1, 7, lavaman_shocka8); }
+void lavaman_shocka6(entity this) { set_animofs(this, anim_lavaman_shocka1, 6, lavaman_shocka7); }
+void lavaman_shocka5(entity this) { set_animofs(this, anim_lavaman_shocka1, 5, lavaman_shocka6); }
+void lavaman_shocka4(entity this) { set_animofs(this, anim_lavaman_shocka1, 4, lavaman_shocka5); }
+void lavaman_shocka3(entity this) { set_animofs(this, anim_lavaman_shocka1, 3, lavaman_shocka4); }
+void lavaman_shocka2(entity this) { set_animofs(this, anim_lavaman_shocka1, 2, lavaman_shocka3); }
+void lavaman_shocka1(entity this) { set_animofs(this, anim_lavaman_shocka1, 1, lavaman_shocka2); }
 
 void lavaman_pain(entity this, entity attacker, float damage)
 {
@@ -346,24 +346,24 @@ void lavaman_pain(entity this, entity attacker, float damage)
 
 void lavaman_death10(entity this)
 {
-	set_anim(this, anim_lavaman_death9, lavaman_death10);
+	set_animofs(this, anim_lavaman_death1, 9, lavaman_death10);
 	delete(this);
 }
 void lavaman_death9(entity this)
 {
-	set_anim(this, anim_lavaman_death9, lavaman_death10);
+	set_animofs(this, anim_lavaman_death1, 9, lavaman_death10);
 
 	_sound(this, CH_PLAYER, "boss1/out1.wav", 1, ATTN_NORM);
 	te_lavasplash(this.origin);
 }
-void lavaman_death8(entity this) { set_anim(this, anim_lavaman_death8, lavaman_death9); }
-void lavaman_death7(entity this) { set_anim(this, anim_lavaman_death7, lavaman_death8); }
-void lavaman_death6(entity this) { set_anim(this, anim_lavaman_death6, lavaman_death7); }
-void lavaman_death5(entity this) { set_anim(this, anim_lavaman_death5, lavaman_death6); }
-void lavaman_death4(entity this) { set_anim(this, anim_lavaman_death4, lavaman_death5); }
-void lavaman_death3(entity this) { set_anim(this, anim_lavaman_death3, lavaman_death4); }
-void lavaman_death2(entity this) { set_anim(this, anim_lavaman_death2, lavaman_death3); }
-void lavaman_death1(entity this, entity inflictor, entity attacker) { set_anim(this, anim_lavaman_death1, lavaman_death2); _sound(this, CH_VOICE, "boss1/death.wav", 1, ATTN_NORM); }
+void lavaman_death8(entity this) { set_animofs(this, anim_lavaman_death1, 8, lavaman_death9); }
+void lavaman_death7(entity this) { set_animofs(this, anim_lavaman_death1, 7, lavaman_death8); }
+void lavaman_death6(entity this) { set_animofs(this, anim_lavaman_death1, 6, lavaman_death7); }
+void lavaman_death5(entity this) { set_animofs(this, anim_lavaman_death1, 5, lavaman_death6); }
+void lavaman_death4(entity this) { set_animofs(this, anim_lavaman_death1, 4, lavaman_death5); }
+void lavaman_death3(entity this) { set_animofs(this, anim_lavaman_death1, 3, lavaman_death4); }
+void lavaman_death2(entity this) { set_animofs(this, anim_lavaman_death1, 2, lavaman_death3); }
+void lavaman_death1(entity this, entity inflictor, entity attacker) { set_animofs(this, anim_lavaman_death1, 1, lavaman_death2); _sound(this, CH_VOICE, "boss1/death.wav", 1, ATTN_NORM); }
 
 void lavaman_touch(entity this, entity toucher)
 {

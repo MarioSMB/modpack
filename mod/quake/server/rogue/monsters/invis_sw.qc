@@ -8,13 +8,13 @@ const int anim_sword_stand1 = 0;
 //$stand2 stand3 stand4 stand5 stand6 stand7 stand8 stand9
 
 const int anim_sword_runb1 = 1;
-const int anim_sword_runb2 = 2;
-const int anim_sword_runb3 = 3;
-const int anim_sword_runb4 = 4;
-const int anim_sword_runb5 = 5;
-const int anim_sword_runb6 = 6;
-const int anim_sword_runb7 = 7;
-const int anim_sword_runb8 = 8;
+//const int anim_sword_runb2 = 2;
+//const int anim_sword_runb3 = 3;
+//const int anim_sword_runb4 = 4;
+//const int anim_sword_runb5 = 5;
+//const int anim_sword_runb6 = 6;
+//const int anim_sword_runb7 = 7;
+//const int anim_sword_runb8 = 8;
 
 //frame runc1 runc2 runc3 runc4 runc5 runc6
 
@@ -31,15 +31,15 @@ const int anim_sword_runb8 = 8;
 //frame attack8 attack9 attack10 attack11
 
 const int anim_sword_attackb1 = 9;
-const int anim_sword_attackb2 = 10;
-const int anim_sword_attackb3 = 11;
-const int anim_sword_attackb4 = 12;
-const int anim_sword_attackb5 = 13;
-const int anim_sword_attackb6 = 14;
-const int anim_sword_attackb7 = 15;
-const int anim_sword_attackb8 = 16;
-const int anim_sword_attackb9 = 17;
-const int anim_sword_attackb10 = 18;
+//const int anim_sword_attackb2 = 10;
+//const int anim_sword_attackb3 = 11;
+//const int anim_sword_attackb4 = 12;
+//const int anim_sword_attackb5 = 13;
+//const int anim_sword_attackb6 = 14;
+//const int anim_sword_attackb7 = 15;
+//const int anim_sword_attackb8 = 16;
+//const int anim_sword_attackb9 = 17;
+//const int anim_sword_attackb10 = 18;
 
 //$frame walk1 walk2 walk3 walk4 walk5 walk6 walk7 walk8 walk9
 //$frame walk10 walk11 walk12 walk13 walk14
@@ -49,75 +49,75 @@ const int anim_sword_attackb10 = 18;
 //$frame standing2 standing3 standing4 standing5
 
 const int anim_sword_death1 = 19;
-const int anim_sword_death2 = 20;
-const int anim_sword_death3 = 21;
-const int anim_sword_death4 = 22;
-const int anim_sword_death5 = 23;
-const int anim_sword_death6 = 24;
-const int anim_sword_death7 = 25;
-const int anim_sword_death8 = 26;
-const int anim_sword_death9 = 27;
-const int anim_sword_death10 = 28;
+//const int anim_sword_death2 = 20;
+//const int anim_sword_death3 = 21;
+//const int anim_sword_death4 = 22;
+//const int anim_sword_death5 = 23;
+//const int anim_sword_death6 = 24;
+//const int anim_sword_death7 = 25;
+//const int anim_sword_death8 = 26;
+//const int anim_sword_death9 = 27;
+//const int anim_sword_death10 = 28;
 
 const int anim_sword_deathb1 = 29;
-const int anim_sword_deathb2 = 30;
-const int anim_sword_deathb3 = 31;
-const int anim_sword_deathb4 = 32;
-const int anim_sword_deathb5 = 33;
-const int anim_sword_deathb6 = 34;
-const int anim_sword_deathb7 = 35;
-const int anim_sword_deathb8 = 36;
-const int anim_sword_deathb9 = 37;
-const int anim_sword_deathb10 = 38;
-const int anim_sword_deathb11 = 39;
+//const int anim_sword_deathb2 = 30;
+//const int anim_sword_deathb3 = 31;
+//const int anim_sword_deathb4 = 32;
+//const int anim_sword_deathb5 = 33;
+//const int anim_sword_deathb6 = 34;
+//const int anim_sword_deathb7 = 35;
+//const int anim_sword_deathb8 = 36;
+//const int anim_sword_deathb9 = 37;
+//const int anim_sword_deathb10 = 38;
+//const int anim_sword_deathb11 = 39;
 
 void sword_stand1(entity this) { set_anim(this, anim_sword_stand1, sword_stand1); ai_stand(this); }
 
 void sword_run1(entity this);
-void sword_run8(entity this) { set_anim(this, anim_sword_runb8, sword_run1); ai_run(this, 14); }
-void sword_run7(entity this) { set_anim(this, anim_sword_runb7, sword_run8); ai_run(this, 14); }
-void sword_run6(entity this) { set_anim(this, anim_sword_runb6, sword_run7); ai_run(this, 14); }
-void sword_run5(entity this) { set_anim(this, anim_sword_runb5, sword_run6); ai_run(this, 14); }
-void sword_run4(entity this) { set_anim(this, anim_sword_runb4, sword_run5); ai_run(this, 14); }
-void sword_run3(entity this) { set_anim(this, anim_sword_runb3, sword_run4); ai_run(this, 14); }
-void sword_run2(entity this) { set_anim(this, anim_sword_runb2, sword_run3); ai_run(this, 14); }
-void sword_run1(entity this) { set_anim(this, anim_sword_runb1, sword_run2); this.effects = EF_DIMLIGHT; ai_run(this, 14); }
+void sword_run8(entity this) { set_animofs(this, anim_sword_runb1, 8, sword_run1); ai_run(this, 14); }
+void sword_run7(entity this) { set_animofs(this, anim_sword_runb1, 7, sword_run8); ai_run(this, 14); }
+void sword_run6(entity this) { set_animofs(this, anim_sword_runb1, 6, sword_run7); ai_run(this, 14); }
+void sword_run5(entity this) { set_animofs(this, anim_sword_runb1, 5, sword_run6); ai_run(this, 14); }
+void sword_run4(entity this) { set_animofs(this, anim_sword_runb1, 4, sword_run5); ai_run(this, 14); }
+void sword_run3(entity this) { set_animofs(this, anim_sword_runb1, 3, sword_run4); ai_run(this, 14); }
+void sword_run2(entity this) { set_animofs(this, anim_sword_runb1, 2, sword_run3); ai_run(this, 14); }
+void sword_run1(entity this) { set_animofs(this, anim_sword_runb1, 1, sword_run2); this.effects = EF_DIMLIGHT; ai_run(this, 14); }
 
-void sword_atk10(entity this) { set_anim(this, anim_sword_attackb10, sword_run1); ai_charge(this, 14); }
-void sword_atk9(entity this) { set_anim(this, anim_sword_attackb9, sword_atk10); ai_charge(this, 14); }
-void sword_atk8(entity this) { set_anim(this, anim_sword_attackb8, sword_atk9); ai_charge(this, 14); }
-void sword_atk7(entity this) { set_anim(this, anim_sword_attackb7, sword_atk8); ai_melee(this); }
-void sword_atk6(entity this) { set_anim(this, anim_sword_attackb6, sword_atk7); ai_melee(this); }
-void sword_atk5(entity this) { set_anim(this, anim_sword_attackb5, sword_atk6); ai_melee(this); }
-void sword_atk4(entity this) { set_anim(this, anim_sword_attackb4, sword_atk5); ai_charge(this, 14); }
-void sword_atk3(entity this) { set_anim(this, anim_sword_attackb3, sword_atk4); ai_charge(this, 14); }
-void sword_atk2(entity this) { set_anim(this, anim_sword_attackb2, sword_atk3); ai_charge(this, 14); }
-void sword_atk1(entity this) { set_anim(this, anim_sword_attackb1, sword_atk2); _sound(this, 0, "knight/sword1.wav", 1, 1); ai_charge(this, 14); }
+void sword_atk10(entity this) { set_animofs(this, anim_sword_attackb1, 10, sword_run1); ai_charge(this, 14); }
+void sword_atk9(entity this) { set_animofs(this, anim_sword_attackb1, 9, sword_atk10); ai_charge(this, 14); }
+void sword_atk8(entity this) { set_animofs(this, anim_sword_attackb1, 8, sword_atk9); ai_charge(this, 14); }
+void sword_atk7(entity this) { set_animofs(this, anim_sword_attackb1, 7, sword_atk8); ai_melee(this); }
+void sword_atk6(entity this) { set_animofs(this, anim_sword_attackb1, 6, sword_atk7); ai_melee(this); }
+void sword_atk5(entity this) { set_animofs(this, anim_sword_attackb1, 5, sword_atk6); ai_melee(this); }
+void sword_atk4(entity this) { set_animofs(this, anim_sword_attackb1, 4, sword_atk5); ai_charge(this, 14); }
+void sword_atk3(entity this) { set_animofs(this, anim_sword_attackb1, 3, sword_atk4); ai_charge(this, 14); }
+void sword_atk2(entity this) { set_animofs(this, anim_sword_attackb1, 2, sword_atk3); ai_charge(this, 14); }
+void sword_atk1(entity this) { set_animofs(this, anim_sword_attackb1, 1, sword_atk2); _sound(this, 0, "knight/sword1.wav", 1, 1); ai_charge(this, 14); }
 
 //===========================================================================
 
-void sword_die10(entity this) { set_anim(this, anim_sword_death10, sword_die10); }
-void sword_die9(entity this) { set_anim(this, anim_sword_death9, sword_die10); }
-void sword_die8(entity this) { set_anim(this, anim_sword_death8, sword_die9); }
-void sword_die7(entity this) { set_anim(this, anim_sword_death7, sword_die8); _sound(this, 1, "player/axhit2.wav", 0.5, ATTN_NORM); }
-void sword_die6(entity this) { set_anim(this, anim_sword_death6, sword_die7); }
-void sword_die5(entity this) { set_anim(this, anim_sword_death5, sword_die6); }
-void sword_die4(entity this) { set_anim(this, anim_sword_death4, sword_die5); }
-void sword_die3(entity this) { set_anim(this, anim_sword_death3, sword_die4); this.solid = SOLID_NOT; }
-void sword_die2(entity this) { set_anim(this, anim_sword_death2, sword_die3); }
-void sword_die1(entity this) { set_anim(this, anim_sword_death1, sword_die2); }
+void sword_die10(entity this) { set_animofs(this, anim_sword_death1, 10, sword_die10); }
+void sword_die9(entity this) { set_animofs(this, anim_sword_death1, 9, sword_die10); }
+void sword_die8(entity this) { set_animofs(this, anim_sword_death1, 8, sword_die9); }
+void sword_die7(entity this) { set_animofs(this, anim_sword_death1, 7, sword_die8); _sound(this, 1, "player/axhit2.wav", 0.5, ATTN_NORM); }
+void sword_die6(entity this) { set_animofs(this, anim_sword_death1, 6, sword_die7); }
+void sword_die5(entity this) { set_animofs(this, anim_sword_death1, 5, sword_die6); }
+void sword_die4(entity this) { set_animofs(this, anim_sword_death1, 4, sword_die5); }
+void sword_die3(entity this) { set_animofs(this, anim_sword_death1, 3, sword_die4); this.solid = SOLID_NOT; }
+void sword_die2(entity this) { set_animofs(this, anim_sword_death1, 2, sword_die3); }
+void sword_die1(entity this) { set_animofs(this, anim_sword_death1, 1, sword_die2); }
 
-void sword_dieb11(entity this) { set_anim(this, anim_sword_deathb11, sword_dieb11); }
-void sword_dieb10(entity this) { set_anim(this, anim_sword_deathb10, sword_dieb11); }
-void sword_dieb9(entity this) { set_anim(this, anim_sword_deathb9, sword_dieb10); }
-void sword_dieb8(entity this) { set_anim(this, anim_sword_deathb8, sword_dieb9); }
-void sword_dieb7(entity this) { set_anim(this, anim_sword_deathb7, sword_dieb8); _sound(this, 1, "player/axhit2.wav", 0.5, ATTN_NORM); }
-void sword_dieb6(entity this) { set_anim(this, anim_sword_deathb6, sword_dieb7); }
-void sword_dieb5(entity this) { set_anim(this, anim_sword_deathb5, sword_dieb6); }
-void sword_dieb4(entity this) { set_anim(this, anim_sword_deathb4, sword_dieb5); }
-void sword_dieb3(entity this) { set_anim(this, anim_sword_deathb3, sword_dieb4); this.solid = SOLID_NOT; }
-void sword_dieb2(entity this) { set_anim(this, anim_sword_deathb2, sword_dieb3); }
-void sword_dieb1(entity this) { set_anim(this, anim_sword_deathb1, sword_dieb2); }
+void sword_dieb11(entity this) { set_animofs(this, anim_sword_deathb1, 11, sword_dieb11); }
+void sword_dieb10(entity this) { set_animofs(this, anim_sword_deathb1, 10, sword_dieb11); }
+void sword_dieb9(entity this) { set_animofs(this, anim_sword_deathb1, 9, sword_dieb10); }
+void sword_dieb8(entity this) { set_animofs(this, anim_sword_deathb1, 8, sword_dieb9); }
+void sword_dieb7(entity this) { set_animofs(this, anim_sword_deathb1, 7, sword_dieb8); _sound(this, 1, "player/axhit2.wav", 0.5, ATTN_NORM); }
+void sword_dieb6(entity this) { set_animofs(this, anim_sword_deathb1, 6, sword_dieb7); }
+void sword_dieb5(entity this) { set_animofs(this, anim_sword_deathb1, 5, sword_dieb6); }
+void sword_dieb4(entity this) { set_animofs(this, anim_sword_deathb1, 4, sword_dieb5); }
+void sword_dieb3(entity this) { set_animofs(this, anim_sword_deathb1, 3, sword_dieb4); this.solid = SOLID_NOT; }
+void sword_dieb2(entity this) { set_animofs(this, anim_sword_deathb1, 2, sword_dieb3); }
+void sword_dieb1(entity this) { set_animofs(this, anim_sword_deathb1, 1, sword_dieb2); }
 
 void sword_die(entity this, entity inflictor, entity attacker)
 {

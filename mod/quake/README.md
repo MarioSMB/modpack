@@ -36,5 +36,5 @@ If you wish to use the Scourge of Armagon mission pack, you'll need the followin
 If you wish to use the Dissolution of Eternity mission pack, you'll need the following instead:  
 `set sv_missionpack_rogue 1`
 
-If you wish to use the experimental Abyss of Pandemonium mission pack, you'll need the following instead:
+If you wish to use the experimental Abyss of Pandemonium mission pack, you'll need the following instead:  
 `set sv_missionpack_impel 1`

@@ -1,43 +1,49 @@
 $base dragrest
 $skin dragskin
 
-const int anim_dragon_dragon6 = 0;
+// unused?
+//const int anim_dragon_dragon6 = 0;
 
 const int anim_dragon_drgfly01 = 1;
-const int anim_dragon_drgfly02 = 2;
-const int anim_dragon_drgfly03 = 3;
-const int anim_dragon_drgfly04 = 4;
-const int anim_dragon_drgfly05 = 5;
-const int anim_dragon_drgfly06 = 6;
-const int anim_dragon_drgfly07 = 7;
-const int anim_dragon_drgfly08 = 8;
-const int anim_dragon_drgfly09 = 9;
-const int anim_dragon_drgfly10 = 10;
-const int anim_dragon_drgfly11 = 11;
-const int anim_dragon_drgfly12 = 12;
-const int anim_dragon_drgfly13 = 13;
+//const int anim_dragon_drgfly02 = 2;
+//const int anim_dragon_drgfly03 = 3;
+//const int anim_dragon_drgfly04 = 4;
+//const int anim_dragon_drgfly05 = 5;
+//const int anim_dragon_drgfly06 = 6;
+//const int anim_dragon_drgfly07 = 7;
+//const int anim_dragon_drgfly08 = 8;
+//const int anim_dragon_drgfly09 = 9;
+//const int anim_dragon_drgfly10 = 10;
+//const int anim_dragon_drgfly11 = 11;
+//const int anim_dragon_drgfly12 = 12;
+//const int anim_dragon_drgfly13 = 13;
 
+// unused?
+#if 0
 const int anim_dragon_drgtrn01 = 14;
 const int anim_dragon_drgtrn02 = 15;
 const int anim_dragon_drgtrn03 = 16;
 const int anim_dragon_drgtrn04 = 17;
 const int anim_dragon_drgtrn05 = 18;
 const int anim_dragon_drgtrn06 = 19;
+#endif
 
 const int anim_dragon_drgslh01 = 20;
-const int anim_dragon_drgslh02 = 21;
-const int anim_dragon_drgslh03 = 22;
-const int anim_dragon_drgslh04 = 23;
-const int anim_dragon_drgslh05 = 24;
-const int anim_dragon_drgslh06 = 25;
-const int anim_dragon_drgslh07 = 26;
-const int anim_dragon_drgslh08 = 27;
-const int anim_dragon_drgslh09 = 28;
-const int anim_dragon_drgslh10 = 29;
-const int anim_dragon_drgslh11 = 30;
-const int anim_dragon_drgslh12 = 31;
-const int anim_dragon_drgslh13 = 32;
+//const int anim_dragon_drgslh02 = 21;
+//const int anim_dragon_drgslh03 = 22;
+//const int anim_dragon_drgslh04 = 23;
+//const int anim_dragon_drgslh05 = 24;
+//const int anim_dragon_drgslh06 = 25;
+//const int anim_dragon_drgslh07 = 26;
+//const int anim_dragon_drgslh08 = 27;
+//const int anim_dragon_drgslh09 = 28;
+//const int anim_dragon_drgslh10 = 29;
+//const int anim_dragon_drgslh11 = 30;
+//const int anim_dragon_drgslh12 = 31;
+//const int anim_dragon_drgslh13 = 32;
 
+// unused?
+#if 0
 const int anim_dragon_drgfir01 = 33;
 const int anim_dragon_drgfir02 = 34;
 const int anim_dragon_drgfir03 = 35;
@@ -48,6 +54,7 @@ const int anim_dragon_drgfir07 = 39;
 const int anim_dragon_drgfir08 = 40;
 const int anim_dragon_drgfir09 = 41;
 const int anim_dragon_drgfir10 = 42;
+#endif
 
 const int anim_dragon_drgfix1a = 43;
 const int anim_dragon_drgfix1b = 44;
@@ -89,26 +96,26 @@ const int anim_dragon_drgpan6b = 78;
 const int anim_dragon_drgpan6c = 79;
 
 const int anim_dragon_drgdth01 = 80;
-const int anim_dragon_drgdth02 = 81;
-const int anim_dragon_drgdth03 = 82;
-const int anim_dragon_drgdth04 = 83;
-const int anim_dragon_drgdth05 = 84;
-const int anim_dragon_drgdth06 = 85;
-const int anim_dragon_drgdth07 = 86;
-const int anim_dragon_drgdth08 = 87;
-const int anim_dragon_drgdth09 = 88;
-const int anim_dragon_drgdth10 = 89;
-const int anim_dragon_drgdth11 = 90;
-const int anim_dragon_drgdth12 = 91;
-const int anim_dragon_drgdth13 = 92;
-const int anim_dragon_drgdth14 = 93;
-const int anim_dragon_drgdth15 = 94;
-const int anim_dragon_drgdth16 = 95;
-const int anim_dragon_drgdth17 = 96;
-const int anim_dragon_drgdth18 = 97;
-const int anim_dragon_drgdth19 = 98;
-const int anim_dragon_drgdth20 = 99;
-const int anim_dragon_drgdth21 = 100;
+//const int anim_dragon_drgdth02 = 81;
+//const int anim_dragon_drgdth03 = 82;
+//const int anim_dragon_drgdth04 = 83;
+//const int anim_dragon_drgdth05 = 84;
+//const int anim_dragon_drgdth06 = 85;
+//const int anim_dragon_drgdth07 = 86;
+//const int anim_dragon_drgdth08 = 87;
+//const int anim_dragon_drgdth09 = 88;
+//const int anim_dragon_drgdth10 = 89;
+//const int anim_dragon_drgdth11 = 90;
+//const int anim_dragon_drgdth12 = 91;
+//const int anim_dragon_drgdth13 = 92;
+//const int anim_dragon_drgdth14 = 93;
+//const int anim_dragon_drgdth15 = 94;
+//const int anim_dragon_drgdth16 = 95;
+//const int anim_dragon_drgdth17 = 96;
+//const int anim_dragon_drgdth18 = 97;
+//const int anim_dragon_drgdth19 = 98;
+//const int anim_dragon_drgdth20 = 99;
+//const int anim_dragon_drgdth21 = 100;
 
 void dragon_fireball(entity this);
 void dragon_melee1(entity this);
@@ -361,18 +368,18 @@ void dragon_atk_f1(entity this) { set_anim(this, anim_dragon_drgfix6a, dragon_at
 // dragon walk frames
 // ===================================
 
-void dragon_walk13(entity this) { set_anim(this, anim_dragon_drgfly13, dragon_walk1); 	this.th_missile = func_null; 		dragon_move(this, 17); this.dragonPainSequence = 1; }
-void dragon_walk12(entity this) { set_anim(this, anim_dragon_drgfly12, dragon_walk13); 	this.th_missile = func_null; 		dragon_move(this, 17); }
-void dragon_walk11(entity this) { set_anim(this, anim_dragon_drgfly11, dragon_walk12); 	this.th_missile = dragon_atk_f1; 	dragon_move(this, 17); this.dragonPainSequence = 6; }
-void dragon_walk10(entity this) { set_anim(this, anim_dragon_drgfly10, dragon_walk11); 	this.th_missile = func_null; 		dragon_move(this, 17); }
-void dragon_walk9(entity this) { set_anim(this, anim_dragon_drgfly09, dragon_walk10); 	this.th_missile = dragon_atk_e1; 	dragon_move(this, 17); this.dragonPainSequence = 5; }
-void dragon_walk8(entity this) { set_anim(this, anim_dragon_drgfly08, dragon_walk9); 	this.th_missile = func_null; 		dragon_move(this, 17); }
-void dragon_walk7(entity this) { set_anim(this, anim_dragon_drgfly07, dragon_walk8); 	this.th_missile = dragon_atk_d1; 	dragon_move(this, 17); this.dragonPainSequence = 4; }
-void dragon_walk6(entity this) { set_anim(this, anim_dragon_drgfly06, dragon_walk7); 	this.th_missile = func_null; 		dragon_move(this, 17); }
-void dragon_walk5(entity this) { set_anim(this, anim_dragon_drgfly05, dragon_walk6); 	this.th_missile = dragon_atk_c1; 	dragon_move(this, 17); this.dragonPainSequence = 3; }
-void dragon_walk4(entity this) { set_anim(this, anim_dragon_drgfly04, dragon_walk5); 	this.th_missile = func_null; 		dragon_move(this, 17); }
-void dragon_walk3(entity this) { set_anim(this, anim_dragon_drgfly03, dragon_walk4); 	this.th_missile = dragon_atk_b1; 	dragon_move(this, 17); this.dragonPainSequence = 2; }
-void dragon_walk2(entity this) { set_anim(this, anim_dragon_drgfly02, dragon_walk3); 	this.th_missile = func_null; 		dragon_move(this, 17); }
+void dragon_walk13(entity this) { set_animofs(this, anim_dragon_drgfly01, 13, dragon_walk1); 	this.th_missile = func_null; 		dragon_move(this, 17); this.dragonPainSequence = 1; }
+void dragon_walk12(entity this) { set_animofs(this, anim_dragon_drgfly01, 12, dragon_walk13); 	this.th_missile = func_null; 		dragon_move(this, 17); }
+void dragon_walk11(entity this) { set_animofs(this, anim_dragon_drgfly01, 11, dragon_walk12); 	this.th_missile = dragon_atk_f1; 	dragon_move(this, 17); this.dragonPainSequence = 6; }
+void dragon_walk10(entity this) { set_animofs(this, anim_dragon_drgfly01, 10, dragon_walk11); 	this.th_missile = func_null; 		dragon_move(this, 17); }
+void dragon_walk9(entity this) { set_animofs(this, anim_dragon_drgfly01, 9, dragon_walk10); 	this.th_missile = dragon_atk_e1; 	dragon_move(this, 17); this.dragonPainSequence = 5; }
+void dragon_walk8(entity this) { set_animofs(this, anim_dragon_drgfly01, 8, dragon_walk9); 		this.th_missile = func_null; 		dragon_move(this, 17); }
+void dragon_walk7(entity this) { set_animofs(this, anim_dragon_drgfly01, 7, dragon_walk8); 		this.th_missile = dragon_atk_d1; 	dragon_move(this, 17); this.dragonPainSequence = 4; }
+void dragon_walk6(entity this) { set_animofs(this, anim_dragon_drgfly01, 6, dragon_walk7); 		this.th_missile = func_null; 		dragon_move(this, 17); }
+void dragon_walk5(entity this) { set_animofs(this, anim_dragon_drgfly01, 5, dragon_walk6); 		this.th_missile = dragon_atk_c1; 	dragon_move(this, 17); this.dragonPainSequence = 3; }
+void dragon_walk4(entity this) { set_animofs(this, anim_dragon_drgfly01, 4, dragon_walk5); 		this.th_missile = func_null; 		dragon_move(this, 17); }
+void dragon_walk3(entity this) { set_animofs(this, anim_dragon_drgfly01, 3, dragon_walk4); 		this.th_missile = dragon_atk_b1; 	dragon_move(this, 17); this.dragonPainSequence = 2; }
+void dragon_walk2(entity this) { set_animofs(this, anim_dragon_drgfly01, 2, dragon_walk3); 		this.th_missile = func_null; 		dragon_move(this, 17); }
 void dragon_walk1(entity this)
 {
 	set_anim(this, anim_dragon_drgfly01, dragon_walk2);
@@ -519,19 +526,19 @@ void dragon_tail(entity this)
 	dragon_stop_attack(this);
 }
 
-void dragon_melee13(entity this) { set_anim(this, anim_dragon_drgslh13, dragon_walk1); dragon_move(this, 10); }
-void dragon_melee12(entity this) { set_anim(this, anim_dragon_drgslh12, dragon_melee13); dragon_move(this, 10); }
-void dragon_melee11(entity this) { set_anim(this, anim_dragon_drgslh11, dragon_melee12); dragon_move(this, 10); }
-void dragon_melee10(entity this) { set_anim(this, anim_dragon_drgslh10, dragon_melee11); dragon_tail(this); }
-void dragon_melee9(entity this) { set_anim(this, anim_dragon_drgslh09, dragon_melee10); dragon_move(this, 12); }
-void dragon_melee8(entity this) { set_anim(this, anim_dragon_drgslh08, dragon_melee9); dragon_move(this, 12); }
-void dragon_melee7(entity this) { set_anim(this, anim_dragon_drgslh07, dragon_melee8); dragon_move(this, 12); }
-void dragon_melee6(entity this) { set_anim(this, anim_dragon_drgslh06, dragon_melee7); dragon_move(this, 12); }
-void dragon_melee5(entity this) { set_anim(this, anim_dragon_drgslh05, dragon_melee6); dragon_move(this, 12); }
-void dragon_melee4(entity this) { set_anim(this, anim_dragon_drgslh04, dragon_melee5); dragon_move(this, 12); }
-void dragon_melee3(entity this) { set_anim(this, anim_dragon_drgslh03, dragon_melee4); dragon_move(this, 12); }
-void dragon_melee2(entity this) { set_anim(this, anim_dragon_drgslh02, dragon_melee3); dragon_move(this, 12); }
-void dragon_melee1(entity this) { set_anim(this, anim_dragon_drgslh01, dragon_melee2); dragon_move(this, 12); }
+void dragon_melee13(entity this) { set_animofs(this, anim_dragon_drgslh01, 13, dragon_walk1); dragon_move(this, 10); }
+void dragon_melee12(entity this) { set_animofs(this, anim_dragon_drgslh01, 12, dragon_melee13); dragon_move(this, 10); }
+void dragon_melee11(entity this) { set_animofs(this, anim_dragon_drgslh01, 11, dragon_melee12); dragon_move(this, 10); }
+void dragon_melee10(entity this) { set_animofs(this, anim_dragon_drgslh01, 10, dragon_melee11); dragon_tail(this); }
+void dragon_melee9(entity this) { set_animofs(this, anim_dragon_drgslh01, 9, dragon_melee10); dragon_move(this, 12); }
+void dragon_melee8(entity this) { set_animofs(this, anim_dragon_drgslh01, 8, dragon_melee9); dragon_move(this, 12); }
+void dragon_melee7(entity this) { set_animofs(this, anim_dragon_drgslh01, 7, dragon_melee8); dragon_move(this, 12); }
+void dragon_melee6(entity this) { set_animofs(this, anim_dragon_drgslh01, 6, dragon_melee7); dragon_move(this, 12); }
+void dragon_melee5(entity this) { set_animofs(this, anim_dragon_drgslh01, 5, dragon_melee6); dragon_move(this, 12); }
+void dragon_melee4(entity this) { set_animofs(this, anim_dragon_drgslh01, 4, dragon_melee5); dragon_move(this, 12); }
+void dragon_melee3(entity this) { set_animofs(this, anim_dragon_drgslh01, 3, dragon_melee4); dragon_move(this, 12); }
+void dragon_melee2(entity this) { set_animofs(this, anim_dragon_drgslh01, 2, dragon_melee3); dragon_move(this, 12); }
+void dragon_melee1(entity this) { set_animofs(this, anim_dragon_drgslh01, 1, dragon_melee2); dragon_move(this, 12); }
 
 // ===================================
 // pain
@@ -653,32 +660,32 @@ void dragon_squish(entity this, entity toucher)
 
 void dragon_death21(entity this)
 {
-	set_anim(this, anim_dragon_drgdth21, dragon_death21);
+	set_animofs(this, anim_dragon_drgdth01, 21, dragon_death21);
 
 	ViolentDeath(this, 39);
 	this.target = "dragondoor";
 	SUB_UseTargets(this, NULL, NULL);			
 	delete(this);
 }
-void dragon_death20(entity this) { set_anim(this, anim_dragon_drgdth20, dragon_death21); dragon_explode(this); }
-void dragon_death19(entity this) { set_anim(this, anim_dragon_drgdth19, dragon_death20); dragon_explode(this); }
-void dragon_death18(entity this) { set_anim(this, anim_dragon_drgdth18, dragon_death19); dragon_explode(this); }
-void dragon_death17(entity this) { set_anim(this, anim_dragon_drgdth17, dragon_death18); dragon_explode(this); }
-void dragon_death16(entity this) { set_anim(this, anim_dragon_drgdth16, dragon_death17); dragon_explode(this); }
-void dragon_death15(entity this) { set_anim(this, anim_dragon_drgdth15, dragon_death16); dragon_explode(this); }
-void dragon_death14(entity this) { set_anim(this, anim_dragon_drgdth14, dragon_death15); dragon_explode(this); }
-void dragon_death13(entity this) { set_anim(this, anim_dragon_drgdth13, dragon_death14); dragon_explode(this); }
-void dragon_death12(entity this) { set_anim(this, anim_dragon_drgdth12, dragon_death13); dragon_explode(this); }
-void dragon_death11(entity this) { set_anim(this, anim_dragon_drgdth11, dragon_death12); dragon_explode(this); }
-void dragon_death10(entity this) { set_anim(this, anim_dragon_drgdth10, dragon_death11); dragon_explode(this); }
-void dragon_death9(entity this) { set_anim(this, anim_dragon_drgdth09, dragon_death10); dragon_explode(this); }
-void dragon_death8(entity this) { set_anim(this, anim_dragon_drgdth08, dragon_death9); dragon_explode(this); }
-void dragon_death7(entity this) { set_anim(this, anim_dragon_drgdth07, dragon_death8); dragon_explode(this); }
-void dragon_death6(entity this) { set_anim(this, anim_dragon_drgdth06, dragon_death7); dragon_explode(this); }
-void dragon_death5(entity this) { set_anim(this, anim_dragon_drgdth05, dragon_death6); dragon_explode(this); }
-void dragon_death4(entity this) { set_anim(this, anim_dragon_drgdth04, dragon_death5); dragon_explode(this); }
-void dragon_death3(entity this) { set_anim(this, anim_dragon_drgdth03, dragon_death4); dragon_explode(this); }
-void dragon_death2(entity this) { set_anim(this, anim_dragon_drgdth02, dragon_death3); dragon_explode(this); }
+void dragon_death20(entity this) { set_animofs(this, anim_dragon_drgdth01, 20, dragon_death21); dragon_explode(this); }
+void dragon_death19(entity this) { set_animofs(this, anim_dragon_drgdth01, 19, dragon_death20); dragon_explode(this); }
+void dragon_death18(entity this) { set_animofs(this, anim_dragon_drgdth01, 18, dragon_death19); dragon_explode(this); }
+void dragon_death17(entity this) { set_animofs(this, anim_dragon_drgdth01, 17, dragon_death18); dragon_explode(this); }
+void dragon_death16(entity this) { set_animofs(this, anim_dragon_drgdth01, 16, dragon_death17); dragon_explode(this); }
+void dragon_death15(entity this) { set_animofs(this, anim_dragon_drgdth01, 15, dragon_death16); dragon_explode(this); }
+void dragon_death14(entity this) { set_animofs(this, anim_dragon_drgdth01, 14, dragon_death15); dragon_explode(this); }
+void dragon_death13(entity this) { set_animofs(this, anim_dragon_drgdth01, 13, dragon_death14); dragon_explode(this); }
+void dragon_death12(entity this) { set_animofs(this, anim_dragon_drgdth01, 12, dragon_death13); dragon_explode(this); }
+void dragon_death11(entity this) { set_animofs(this, anim_dragon_drgdth01, 11, dragon_death12); dragon_explode(this); }
+void dragon_death10(entity this) { set_animofs(this, anim_dragon_drgdth01, 10, dragon_death11); dragon_explode(this); }
+void dragon_death9(entity this) { set_animofs(this, anim_dragon_drgdth01, 9, dragon_death10); dragon_explode(this); }
+void dragon_death8(entity this) { set_animofs(this, anim_dragon_drgdth01, 8, dragon_death9); dragon_explode(this); }
+void dragon_death7(entity this) { set_animofs(this, anim_dragon_drgdth01, 7, dragon_death8); dragon_explode(this); }
+void dragon_death6(entity this) { set_animofs(this, anim_dragon_drgdth01, 6, dragon_death7); dragon_explode(this); }
+void dragon_death5(entity this) { set_animofs(this, anim_dragon_drgdth01, 5, dragon_death6); dragon_explode(this); }
+void dragon_death4(entity this) { set_animofs(this, anim_dragon_drgdth01, 4, dragon_death5); dragon_explode(this); }
+void dragon_death3(entity this) { set_animofs(this, anim_dragon_drgdth01, 3, dragon_death4); dragon_explode(this); }
+void dragon_death2(entity this) { set_animofs(this, anim_dragon_drgdth01, 2, dragon_death3); dragon_explode(this); }
 void dragon_death1(entity this, entity inflictor, entity attacker)
 {
 	set_anim(this, anim_dragon_drgdth01, dragon_death2);
