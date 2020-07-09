@@ -78,6 +78,7 @@ REGISTER_STAT(MOVEVARS_TIMESCALE, float, autocvar_slowmo)
 int autocvar_sv_gameplayfix_downtracesupportsongroundflag = 1;
 int autocvar_sv_gameplayfix_easierwaterjump = 1;
 int autocvar_sv_gameplayfix_stepdown = 2;
+float autocvar_sv_gameplayfix_stepdown_maxspeed = 0;
 int autocvar_sv_gameplayfix_stepmultipletimes = 1;
 int autocvar_sv_gameplayfix_unstickplayers = 1;
 int autocvar_sv_gameplayfix_fixedcheckwatertransition = 1;
@@ -89,6 +90,7 @@ int autocvar_sv_gameplayfix_noairborncorpse_allowsuspendeditems = 1;
 REGISTER_STAT(GAMEPLAYFIX_DOWNTRACEONGROUND, int, autocvar_sv_gameplayfix_downtracesupportsongroundflag)
 REGISTER_STAT(GAMEPLAYFIX_EASIERWATERJUMP, int, autocvar_sv_gameplayfix_easierwaterjump)
 REGISTER_STAT(GAMEPLAYFIX_STEPDOWN, int, autocvar_sv_gameplayfix_stepdown)
+REGISTER_STAT(GAMEPLAYFIX_STEPDOWN_MAXSPEED, float, autocvar_sv_gameplayfix_stepdown_maxspeed)
 REGISTER_STAT(GAMEPLAYFIX_STEPMULTIPLETIMES, int, autocvar_sv_gameplayfix_stepmultipletimes)
 REGISTER_STAT(GAMEPLAYFIX_UNSTICKPLAYERS, int, autocvar_sv_gameplayfix_unstickplayers)
 REGISTER_STAT(GAMEPLAYFIX_UPVELOCITYCLEARSONGROUND, int, autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag)

@@ -13,6 +13,7 @@
 #include "remove.qc"
 #include "secret.qc"
 #include "setgravity.qc"
+#include "setskill.qc"
 #include "teleport.qc"
 #include "usekey.qc"
 #include "waterfall.qc"

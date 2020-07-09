@@ -367,7 +367,7 @@ spawnfunc(monster_tarbaby)
 			this.skin = 0;
 		else
 		{
-			float myskill = cvar("skill");
+			float myskill = autocvar_skill;
 			float r = myskill * 0.2;
 			r += random();
 			if(r > 0.8 && myskill > 1)

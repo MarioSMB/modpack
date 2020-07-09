@@ -179,7 +179,7 @@ void GameCommand(string command)
 
 	if(cmdname == "info")
 	{
-		string thecmd = builtin_cvar_string(strcat("sv_info_", argv(1)));
+		string thecmd = cvar_string(strcat("sv_info_", argv(1)));
 
 		if (thecmd) wordwrap_sprint(NULL, thecmd, 1000);
 		else LOG_INFO("ERROR: unsupported info command");

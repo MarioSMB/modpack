@@ -50,9 +50,10 @@ float autocvar_cl_rollspeed;
 // yes, it is confusing seeing cl_ cvars on server side, don't ask
 float SV_CalcRoll(entity this)
 {
-	makevectors(this.angles);
+	vector forward, right, up;
+	MAKE_VECTORS(this.angles, forward, right, up);
 
-	float side = (this.velocity * v_right);
+	float side = (this.velocity * right);
 	float sign = (side < 0) ? -1 : 1;
 	side = fabs(side);
 
@@ -242,7 +243,7 @@ void PM_WaterMove(entity this, float dt)
 
 void PM_WaterJump(entity this)
 {
-	if(time > this.teleport_time || !this.waterlevel)
+	if(time > this.teleport_time || this.waterlevel == 0)
 	{
 		this.flags &= ~FL_WATERJUMP;
 		this.teleport_time = 0;

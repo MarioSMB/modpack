@@ -469,7 +469,7 @@ void lavaman_awake(entity this, entity actor, entity trigger)
 
 //    this.health = 1500;
 
-	this.health = 1250 +(250 * cvar("skill"));
+	this.health = 1250 +(250 * autocvar_skill);
 
 	this.th_stand = lavaman_idle1;
 	this.th_walk = lavaman_walk1;

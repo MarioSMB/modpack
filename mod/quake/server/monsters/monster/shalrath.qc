@@ -202,7 +202,7 @@ void ShalHome(entity this)
 		return;
 	}
 	vector dir = normalize(vtemp - this.origin);
-	if(skill == 3)
+	if(autocvar_skill == 3)
 		this.velocity = dir * 350;
 	else
 		this.velocity = dir * 250;

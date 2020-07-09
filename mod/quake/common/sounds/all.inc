@@ -7,5 +7,5 @@ SOUND(TELE3, "misc/r_tele3");
 SOUND(TELE4, "misc/r_tele4");
 SOUND(TELE5, "misc/r_tele5");
 Sound SND_TELE_RANDOM() {
-    return Sounds_from(SND_TELE1.m_id + floor(prandom() * 5));
+    return REGISTRY_GET(Sounds, SND_TELE1.m_id + floor(prandom() * 5));
 }

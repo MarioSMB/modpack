@@ -75,10 +75,12 @@ bool CSQC_InputEvent(int inputType, float nPrimary, float nSecondary)
 	return false;
 }
 
-STATIC_INIT(accuracy_commands)
+STATIC_INIT(fix_commands)
 {
 	registercommand("+showaccuracy");
 	registercommand("-showaccuracy");
+
+	cvar_settemp("cl_useenginerefdef", "1");
 }
 
 bool CSQC_ConsoleCommand(string command)
@@ -155,11 +157,13 @@ void Ent_Remove(entity this)
 {
 	if(this.entremove) this.entremove(this);
 
+#if 0
 	if(this.snd_looping > 0)
 	{
 		sound(this, this.snd_looping, SND_Null, VOL_BASE, 2);
 		this.snd_looping = 0;
 	}
+#endif
 
 	this.enttype = 0;
 	this.classname = "";

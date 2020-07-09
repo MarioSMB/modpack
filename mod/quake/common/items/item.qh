@@ -42,7 +42,6 @@ const int IT_KEY2                 = BIT(9);
 const int IT_LAVA_NAILS          = BIT(14);
 const int IT_PLASMA_AMMO         = BIT(15);
 const int IT_MULTI_ROCKETS       = BIT(16);
-//const int IT_EARTHQUAKE          = BIT(19);
 
 const int IT_PULSEPOWER1         = BIT(17);
 const int IT_PULSEPOWER2         = BIT(18);

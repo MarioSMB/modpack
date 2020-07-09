@@ -82,9 +82,10 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 // print the message
 //
 	if(IS_PLAYER(actor) && this.message != "")
+	if(IS_REAL_CLIENT(actor))
 	{
 		centerprint(actor, this.message);
-		if(!this.noise)
+		if(!this.noise || this.noise == "")
 			_sound(actor, CH_INFO, QUAKE_TALKSOUND, 1, ATTN_NORM);
 	}
 

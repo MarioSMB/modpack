@@ -3,7 +3,6 @@
 #include "model.qh"
 
 REGISTRY(Models, BITS(9))
-#define Models_from(i) _Models_from(i, MDL_Null)
 REGISTER_REGISTRY(Models)
 
 #define MODEL(name, thepath) \
@@ -20,4 +19,5 @@ PRECACHE(Models) {
 }
 
 MODEL(Null, "null");
+REGISTRY_DEFINE_GET(Models, MDL_Null)
 #include "all.inc"

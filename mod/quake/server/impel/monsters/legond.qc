@@ -127,11 +127,11 @@ void Legond_MissileTouch(entity this, entity toucher)
 		T_Damage(toucher, this, this.owner, damg);
 		this.health = this.health + damg;
 	}
-	if(skill == 3)
+	if(autocvar_skill == 3)
 		T_RadiusDamage(this, this.owner, 100, toucher);
-	if(skill == 2)
+	if(autocvar_skill == 2)
 		T_RadiusDamage(this, this.owner, 90, toucher);
-	if(skill == 1)
+	if(autocvar_skill == 1)
 		T_RadiusDamage(this, this.owner, 80, toucher);
 	else
 		T_RadiusDamage(this, this.owner, 70, toucher);

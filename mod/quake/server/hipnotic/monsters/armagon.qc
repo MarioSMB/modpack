@@ -147,7 +147,7 @@ void armagon_launch_missile(entity this, float ofs, float turn)
 	makevectors(ang);
 	vector src = this.origin + '0 0 66' + v_right*ofs + v_forward*84;
 	vector targ = this.enemy.origin + this.enemy.view_ofs;
-	if(skill != 0)
+	if(autocvar_skill != 0)
 	{
 		dist = vlen(targ - src);
 		targ = targ + (this.enemy.velocity * (dist / 1000));
@@ -191,7 +191,7 @@ void armagon_launch_laser(entity this, float ofs)
 	makevectors(ang);
 	vector src = this.origin + '0 0 66' + v_right*ofs + v_forward*84;
 	vector targ = this.enemy.origin + this.enemy.view_ofs;
-	if(skill!=0)
+	if(autocvar_skill!=0)
 	{
 		dist = vlen(targ-src);
 		targ = targ + (this.enemy.velocity * (dist/1000));
@@ -812,7 +812,7 @@ spawnfunc(monster_armagon)
 
 	this.lefty = 0;
 
-	int sk = cvar("skill");
+	int sk = autocvar_skill;
 
 	precache_model ("progs/armabody.mdl");
 	precache_model ("progs/armalegs.mdl");

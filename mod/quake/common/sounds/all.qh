@@ -3,7 +3,6 @@
 #include "sound.qh"
 
 REGISTRY(Sounds, BITS(9))
-#define Sounds_from(i) _Sounds_from(i, SND_Null)
 REGISTER_REGISTRY(Sounds)
 
 #define SOUND(name, thepath) \
@@ -18,5 +17,6 @@ PRECACHE(Sounds) {
 }
 
 SOUND(Null, "misc/null");
+REGISTRY_DEFINE_GET(Sounds, SND_Null)
 #include "all.inc"
 #include "all.qc"

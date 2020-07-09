@@ -238,7 +238,7 @@ some monsters refire twice automatically
 void SUB_AttackFinished(entity this, float normal)
 {
 	this.cnt = 0;		// refire count for nightmare
-	if(skill != 3)
+	if(autocvar_skill != 3)
 		this.attack_finished = time + normal;
 }
 
@@ -246,7 +246,7 @@ bool visible(entity this, entity targ);
 
 void SUB_CheckRefire(entity this, void(entity) thinkst)
 {
-	if(skill != 3)
+	if(autocvar_skill != 3)
 		return;
 	if(this.cnt == 1)
 		return;

@@ -25,6 +25,7 @@ vector autocvar_hud_contents_slime_color = '0 0.4 0.1';
 float autocvar_hud_contents_water_alpha = 0.5;
 vector autocvar_hud_contents_water_color = '0.4 0.3 0.3';
 
+// visual overlay while in liquids
 void HUD_Contents()
 {
 	if(!autocvar_hud_contents)
@@ -95,26 +96,32 @@ void View_UpdateFov()
 	setproperty(VF_FOV, fov);
 }
 
+bool autocvar__hud_showbinds_reload;
 void Sbar_Draw();
 void HUD_Crosshair(entity this);
 void CSQC_UpdateView(entity this, float w, float h)
 {
-	vector vf_size, vf_min;
-
 	++framecount;
 
 	drawfontscale = '1 1 0';
 
 	stats_get();
 
-	vf_size = getpropertyvec(VF_SIZE);
-	vf_min = getpropertyvec(VF_MIN);
+	if(autocvar__hud_showbinds_reload) // menu can set this one
+	{
+		// Xonotic expects this to be 0 and reloads the keybind database
+		// simply switch it off again to avoid an unnecessary reload upon joining a Xonotic server
+		cvar_set("_hud_showbinds_reload", "0");
+	}
+
+	vector vf_size = getpropertyvec(VF_SIZE);
+	vector vf_min = getpropertyvec(VF_MIN);
 	vid_width = vf_size.x;
 	vid_height = vf_size.y;
 
-	CSQCPlayer_SetCamera();
-
 	ticrate = STAT(MOVEVARS_TICRATE) * STAT(MOVEVARS_TIMESCALE);
+
+	CSQCPlayer_SetCamera();
 
 	// Render the Scene
 	view_origin = getpropertyvec(VF_ORIGIN);
@@ -157,10 +164,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	addentities(MASK_NORMAL | MASK_ENGINE | MASK_ENGINEVIEWMODELS);
 	renderscene();
 
-	// now switch to 2D drawing mode by calling a 2D drawing function
-	// then polygon drawing will draw as 2D stuff, and NOT get queued until the
-	// next R_RenderScene call
-	drawstring('0 0 0', "", '1 1 0', '1 1 1', 0, 0);
+	// Now the the scene has been rendered, begin with the 2D drawing functions
 
 	HUD_Contents();
 

@@ -360,7 +360,7 @@ void WrathHome(entity this)
 		return;
 	}
 
-	if(skill == 3)
+	if(autocvar_skill == 3)
 		ai_track(this, this.enemy, 550);
 	else
 		ai_track(this, this.enemy, 400);

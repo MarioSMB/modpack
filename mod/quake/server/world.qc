@@ -1,9 +1,5 @@
 entity lastspawn;
 
-#define cvar_string_normal builtin_cvar_string
-#define cvar_normal builtin_cvar
-#define cvar_set_normal builtin_cvar_set
-
 void main() { /* unused */ }
 
 entity pingplreport;
@@ -252,7 +248,6 @@ void cvar_changes_init()
 		BADPREFIX("cvar_check_");
 		BADCVAR("gamecfg");
 		BADCVAR("g_configversion");
-		BADCVAR("g_maplist_index");
 		BADCVAR("halflifebsp");
 		BADCVAR("sv_mapformat_is_quake2");
 		BADCVAR("sv_mapformat_is_quake3");
@@ -287,6 +282,8 @@ void cvar_changes_init()
 		BADCVAR("mastervolume");
 		BADCVAR("volume");
 		BADCVAR("bgmvolume");
+		BADCVAR("in_pitch_min");
+		BADCVAR("in_pitch_max");
 
 		// private
 		BADCVAR("developer");
@@ -327,6 +324,10 @@ void cvar_changes_init()
 
 		// these can contain player IDs, so better hide
 		BADPREFIX("g_forced_team_");
+		BADCVAR("sv_muteban_list");
+		BADCVAR("sv_voteban_list");
+		BADCVAR("sv_allow_customplayermodels_idlist");
+		BADCVAR("sv_allow_customplayermodels_speciallist");
 
 		// mapinfo
 		BADCVAR("fraglimit");
@@ -341,9 +342,12 @@ void cvar_changes_init()
 		BADCVAR("g_dm");
 		BADCVAR("g_domination");
 		BADCVAR("g_domination_default_teams");
+		BADCVAR("g_duel");
+		BADCVAR("g_duel_not_dm_maps");
 		BADCVAR("g_freezetag");
 		BADCVAR("g_freezetag_teams");
 		BADCVAR("g_invasion_teams");
+		BADCVAR("g_invasion_type");
 		BADCVAR("g_jailbreak");
 		BADCVAR("g_jailbreak_teams");
 		BADCVAR("g_keepaway");
@@ -356,15 +360,21 @@ void cvar_changes_init()
 		BADCVAR("g_race_laps_limit");
 		BADCVAR("g_race_qualifying_timelimit");
 		BADCVAR("g_race_qualifying_timelimit_override");
+		BADCVAR("g_runematch");
+		BADCVAR("g_shootfromeye");
 		BADCVAR("g_snafu");
 		BADCVAR("g_tdm");
+		BADCVAR("g_tdm_on_dm_maps");
 		BADCVAR("g_tdm_teams");
 		BADCVAR("g_vip");
 		BADCVAR("leadlimit");
 		BADCVAR("nextmap");
 		BADCVAR("teamplay");
 		BADCVAR("timelimit");
+		BADCVAR("g_mapinfo_settemp_acl");
 		BADCVAR("g_mapinfo_ignore_warnings");
+		BADCVAR("g_maplist_ignore_sizes");
+		BADCVAR("g_maplist_sizes_count_bots");
 
 		// long
 		BADCVAR("hostname");
@@ -391,52 +401,73 @@ void cvar_changes_init()
 
 		// does nothing gameplay relevant
 		BADCVAR("captureleadlimit_override");
+		BADCVAR("condump_stripcolors");
 		BADCVAR("gameversion");
+		BADCVAR("fs_gamedir");
 		BADCVAR("g_allow_oldvortexbeam");
 		BADCVAR("g_balance_kill_delay");
 		BADCVAR("g_buffs_pickup_anyway");
 		BADCVAR("g_buffs_randomize");
+		BADCVAR("g_buffs_randomize_teamplay");
 		BADCVAR("g_campcheck_distance");
+		BADCVAR("g_chatsounds");
 		BADCVAR("g_ca_point_leadlimit");
 		BADCVAR("g_ca_point_limit");
 		BADCVAR("g_ctf_captimerecord_always");
 		BADCVAR("g_ctf_flag_glowtrails");
+		BADCVAR("g_ctf_dynamiclights");
 		BADCVAR("g_ctf_flag_pickup_verbosename");
+		BADPRESUFFIX("g_ctf_flag_", "_model");
+		BADPRESUFFIX("g_ctf_flag_", "_skin");
 		BADCVAR("g_domination_point_leadlimit");
 		BADCVAR("g_forced_respawn");
 		BADCVAR("g_freezetag_point_leadlimit");
 		BADCVAR("g_freezetag_point_limit");
+		BADCVAR("g_glowtrails");
 		BADCVAR("g_hats");
+		BADCVAR("g_casings");
 		BADCVAR("g_invasion_point_limit");
 		BADCVAR("g_jump_grunt");
+		BADCVAR("g_keepaway_ballcarrier_effects");
+		BADCVAR("g_keepawayball_effects");
 		BADCVAR("g_keyhunt_point_leadlimit");
-		BADCVAR("g_maplist_selectrandom");
 		BADCVAR("g_nexball_goalleadlimit");
+		BADCVAR("g_new_toys_autoreplace");
 		BADCVAR("g_new_toys_use_pickupsound");
 		BADCVAR("g_physics_predictall");
 		BADCVAR("g_piggyback");
 		BADCVAR("g_playerclip_collisions");
+		BADCVAR("g_spawn_alloweffects");
 		BADCVAR("g_tdm_point_leadlimit");
 		BADCVAR("g_tdm_point_limit");
 		BADCVAR("leadlimit_and_fraglimit");
 		BADCVAR("leadlimit_override");
 		BADCVAR("pausable");
+		BADCVAR("sv_announcer");
 		BADCVAR("sv_checkforpacketsduringsleep");
+		BADCVAR("sv_damagetext");
+		BADCVAR("sv_db_saveasdump");
 		BADCVAR("sv_intermission_cdtrack");
+		BADCVAR("sv_mapchange_delay");
 		BADCVAR("sv_minigames");
 		BADCVAR("sv_namechangetimer");
 		BADCVAR("sv_precacheplayermodels");
+		BADCVAR("sv_radio");
 		BADCVAR("sv_stepheight");
 		BADCVAR("sv_timeout");
 		BADCVAR("sv_weapons_modeloverride");
+		BADCVAR("w_prop_interval");
+		BADPREFIX("chat_");
 		BADPREFIX("crypto_");
 		BADPREFIX("gameversion_");
 		BADPREFIX("g_chat_");
 		BADPREFIX("g_ctf_captimerecord_");
-		BADPREFIX("g_maplist_votable_");
+		BADPREFIX("g_hats_");
+		BADPREFIX("g_maplist_");
 		BADPREFIX("g_mod_");
 		BADPREFIX("g_respawn_");
 		BADPREFIX("net_");
+		BADPREFIX("notification_");
 		BADPREFIX("prvm_");
 		BADPREFIX("skill_");
 		BADPREFIX("sv_allow_");
@@ -455,6 +486,7 @@ void cvar_changes_init()
 		//   :%s,//\([^ ]*\).*,BADCVAR("\1");,
 		//   :%!sort
 		// yes, this does contain some redundant stuff, don't really care
+		BADPREFIX("bot_ai_");
 		BADCVAR("bot_config_file");
 		BADCVAR("bot_number");
 		BADCVAR("bot_prefix");
@@ -470,7 +502,9 @@ void cvar_changes_init()
 		BADCVAR("g_ban_sync_uri");
 		BADCVAR("g_buffs");
 		BADCVAR("g_ca_teams_override");
+		BADCVAR("g_ctf_fullbrightflags");
 		BADCVAR("g_ctf_ignore_frags");
+		BADCVAR("g_ctf_leaderboard");
 		BADCVAR("g_domination_point_limit");
 		BADCVAR("g_domination_teams_override");
 		BADCVAR("g_freezetag_teams_override");
@@ -481,13 +515,6 @@ void cvar_changes_init()
 		BADCVAR("g_keyhunt_teams_override");
 		BADCVAR("g_lms_lives_override");
 		BADCVAR("g_maplist");
-		BADCVAR("g_maplist_check_waypoints");
-		BADCVAR("g_maplist_mostrecent_count");
-		BADCVAR("g_maplist_shuffle");
-		BADCVAR("g_maplist_votable");
-		BADCVAR("g_maplist_votable_abstain");
-		BADCVAR("g_maplist_votable_nodetail");
-		BADCVAR("g_maplist_votable_suggestions");
 		BADCVAR("g_maxplayers");
 		BADCVAR("g_mirrordamage");
 		BADCVAR("g_nexball_goallimit");
@@ -495,6 +522,9 @@ void cvar_changes_init()
 		BADCVAR("g_physics_clientselect");
 		BADCVAR("g_pinata");
 		BADCVAR("g_powerups");
+		BADCVAR("g_player_brightness");
+		BADCVAR("g_rocket_flying");
+		BADCVAR("g_rocket_flying_disabledelays");
 		BADCVAR("g_spawnshieldtime");
 		BADCVAR("g_start_delay");
 		BADCVAR("g_superspectate");
@@ -505,6 +535,7 @@ void cvar_changes_init()
 		BADCVAR("log_file");
 		BADCVAR("maxplayers");
 		BADCVAR("minplayers");
+		BADCVAR("minplayers_per_team");
 		BADCVAR("net_address");
 		BADCVAR("port");
 		BADCVAR("rcon_password");
@@ -695,8 +726,8 @@ spawnfunc(worldspawn)
 			// localcmd("\nfs_rescan\n"); // FIXME: does more harm than good, has unintended side effects. What we really want is to unload temporary pk3s only
 			// restore csqc_progname too
 			string expect = "csprogs.dat";
-			wantrestart = cvar_string_normal("csqc_progname") != expect;
-			cvar_set_normal("csqc_progname", expect);
+			wantrestart = cvar_string("csqc_progname") != expect;
+			cvar_set("csqc_progname", expect);
 		}
 		else
 		{
@@ -707,9 +738,9 @@ spawnfunc(worldspawn)
 			// This always works; fall back to it if a versioned csprogs.dat is suddenly missing
 			string select = "csprogs.dat";
 			if (fexists(pk3csprogs)) select = pk3csprogs;
-			if (cvar_string_normal("csqc_progname") != select)
+			if (cvar_string("csqc_progname") != select)
 			{
-				cvar_set_normal("csqc_progname", select);
+				cvar_set("csqc_progname", select);
 				wantrestart = true;
 			}
 			// Check for updates on startup
@@ -728,13 +759,13 @@ spawnfunc(worldspawn)
 					string newprogs = sprintf("progs-%s.dat", switchversion);
 					if (fexists(newprogs))
 					{
-						cvar_set_normal("sv_progs", newprogs);
+						cvar_set("sv_progs", newprogs);
 						wantrestart = true;
 					}
 					string newcsprogs = sprintf("csprogs-%s.dat", switchversion);
 					if (fexists(newcsprogs))
 					{
-						cvar_set_normal("csqc_progname", newcsprogs);
+						cvar_set("csqc_progname", newcsprogs);
 						wantrestart = true;
 					}
 				}
@@ -751,10 +782,6 @@ spawnfunc(worldspawn)
 	lastspawn = NULL;
 
 // the area based ambient sounds MUST be the first precache_sounds
-
-	cvar = cvar_normal;
-	cvar_string = cvar_string_normal;
-	cvar_set = cvar_set_normal;
 
 	// custom map attributes
 	if(this.model == "maps/e1m8.bsp")
@@ -834,8 +861,6 @@ spawnfunc(worldspawn)
 		GameLogEcho(":gameinfo:end");
 	}
 
-	world_initialized = 1;
-
 	// fill sv_curl_serverpackages from .serverpackage files
 	if (autocvar_sv_curl_serverpackages_auto)
 	{
@@ -871,6 +896,7 @@ spawnfunc(worldspawn)
 
 	SetSpawnReplace();
 
+	world_initialized = 1;
 	__spawnfunc_spawn_all();
 }
 
@@ -920,9 +946,6 @@ spawnfunc(__init_dedicated_server)
 	// handler for _init/_init map (only for dedicated server initialization)
 
 	world_initialized = -1; // don't complain
-	cvar = cvar_normal;
-	cvar_string = cvar_string_normal;
-	cvar_set = cvar_set_normal;
 
 	delete_fn = remove_unsafely;
 
@@ -1124,7 +1147,6 @@ void StartFrame()
 	serverframetime = frametime;
 	
 	teamplay = autocvar_teamplay;
-	skill = autocvar_skill;
 	//framecount = framecount + 1;
 
 	//delete_fn = remove_unsafely; // not during spawning!
@@ -1175,7 +1197,7 @@ void Physics_Frame()
 	if(autocvar_sv_freezenonclients)
 		return;
 
-	FOREACH_ENTITY_FLOAT(pure_data, false,
+	IL_EACH(g_moveables, true,
 	{
 		if(IS_CLIENT(it) || it.classname == "" || it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH || it.move_movetype == MOVETYPE_PHYSICS)
 			continue;
@@ -1201,7 +1223,7 @@ void Physics_Frame()
 	if(autocvar_sv_gameplayfix_delayprojectiles >= 0)
 		return;
 
-	FOREACH_ENTITY_FLOAT(move_qcphysics, true,
+	IL_EACH(g_moveables, it.move_qcphysics,
 	{
 		if(IS_CLIENT(it) || is_pure(it) || it.classname == "" || it.move_movetype == MOVETYPE_NONE)
 			continue;

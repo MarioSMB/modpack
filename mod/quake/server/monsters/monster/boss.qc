@@ -315,7 +315,7 @@ void boss_missile(entity this, vector p)
 	vector org = this.origin + p_x*v_forward + p_y*v_right + p_z*'0 0 1';
 	
 // lead the player on hard mode
-	if(skill > 1)
+	if(autocvar_skill > 1)
 	{
 		float t = vlen(this.enemy.origin - org) / 300;
 		vec = this.enemy.velocity;
@@ -354,7 +354,7 @@ void boss_awake(entity this, entity actor, entity trigger)
 	_setmodel(this, "progs/boss.mdl");
 	setsize(this, '-128 -128 -24', '128 128 256');
 	
-	if(skill == 0)
+	if(autocvar_skill == 0)
 		this.health = 1;
 	else
 		this.health = 3;

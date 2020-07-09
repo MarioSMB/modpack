@@ -151,7 +151,7 @@ void dragon_stop_attack(entity this)
 
 //	skill ramp?
 	this.attack_finished = time + (random() * 2) + 4;
-	this.attack_finished = this.attack_finished - skill;
+	this.attack_finished = this.attack_finished - autocvar_skill;
 	
 	this.dragonAttacking = false;
 	traceline(this.origin, this.movetarget.origin, true, NULL);
@@ -446,14 +446,14 @@ void dragon_fireball(entity this)
 	if(random() > 0.66)
 	{
 		fireCount = 1;
-		if(skill > 1)
+		if(autocvar_skill > 1)
 			fireCount = 2;
 		fireType = FIRE_PLASMA;
 	}
 	else
 	{
 		fireType = FIRE_FIREBALL;
-		fireCount = random() * skill;			// easy 0, med 0-1, hard 0-2	
+		fireCount = random() * autocvar_skill;			// easy 0, med 0-1, hard 0-2	
 		fireCount = rint(fireCount) + 1;
 	// easy 1, med 1-2, hard 1-3
 	}
@@ -785,7 +785,7 @@ spawnfunc(monster_dragon)
 
 	_setmodel(this, "progs/dragon.mdl");
 	setsize(this, VEC_HULL2_MIN, VEC_HULL2_MAX);
-	this.health = 3000 + (1000 * cvar("skill"));
+	this.health = 3000 + (1000 * autocvar_skill);
 	
 	this.th_run = dragon_walk1;
 	this.th_pain = dragon_pain;

@@ -400,7 +400,7 @@ void morph_painB1(entity this) { set_anim(this, anim_morph_mfpbin01, morph_painB
 
 void morph_pain(entity this, entity attacker, float damage)
 {
-	if(skill == 3)
+	if(autocvar_skill == 3)
 	{
 		if(random() > 0.5)
 			morph_teleport(this);
@@ -603,7 +603,7 @@ void morph_teleport(entity this)
 	if(this.owner)
 		return;
 
-	if(this.childrenSpawned > (1 + skill))
+	if(this.childrenSpawned > (1 + autocvar_skill))
 		return;
 		
 	entity theDest = overlord_find_dest3();

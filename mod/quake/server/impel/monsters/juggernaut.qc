@@ -351,7 +351,7 @@ void juggernaut_launch_rocket(entity this)
 	newmis.effects = EF_MUZZLEFLASH;
 	this.ammo_rockets = (this.ammo_rockets - 1);
 	this.count = (this.count + 1);
-	if(this.count < floor(((random() * (skill + 1)) * 1.5)) && this.ammo_rockets > 0)
+	if(this.count < floor(((random() * (autocvar_skill + 1)) * 1.5)) && this.ammo_rockets > 0)
 		juggernaut_firea6(this);
 }
 

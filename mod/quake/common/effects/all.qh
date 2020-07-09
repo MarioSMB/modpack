@@ -8,11 +8,11 @@ void Send_Effect_(string eff_name, vector eff_loc, vector eff_vel, int eff_cnt);
 #endif
 
 REGISTRY(Effects, BITS(8))
-#define Effects_from(i) _Effects_from(i, EFFECT_Null)
 REGISTER_REGISTRY(Effects)
 REGISTRY_CHECK(Effects)
 #define EFFECT(istrail, name, realname) \
     REGISTER(Effects, EFFECT, name, m_id, Create_Effect_Entity(realname, istrail));
 
 EFFECT(0, Null, string_null)
+REGISTRY_DEFINE_GET(Effects, EFFECT_Null)
 #include "all.inc"

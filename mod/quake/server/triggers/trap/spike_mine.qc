@@ -45,9 +45,9 @@ void spikemine_Home(entity this)
 	vector vtemp = this.enemy.origin + '0 0 10';
 	vector dir = normalize(vtemp - this.origin);
 	if(infront(this, this.enemy))
-		this.velocity = dir * ((skill*50) + 50);
+		this.velocity = dir * ((autocvar_skill*50) + 50);
 	else
-		this.velocity = dir * ((skill*50) + 150);
+		this.velocity = dir * ((autocvar_skill*50) + 150);
 }
 
 void spikemine_Touch(entity this, entity toucher)
@@ -121,7 +121,7 @@ spawnfunc(trap_spike_mine)
 //   setsize(this, '0 0 0', '0 0 0');
 //   this.avelocity = '-100 100 -100';
 	this.avelocity = '-50 100 150';
-	if(cvar("skill") <= 1)
+	if(autocvar_skill <= 1)
 		this.health = 200;
 	else
 		this.health = 400;

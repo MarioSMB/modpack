@@ -109,7 +109,7 @@ spawnfunc(dmatch_tag_token)
 {
 	if(!MP_ROGUE) { delete(this); return; }
 	
-	if(cvar("teamplay") != TEAM_DMATCH_TAG)
+	if(teamplay != TEAM_DMATCH_TAG)
 	{
 		delete(this);
 		return;

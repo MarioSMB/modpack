@@ -683,7 +683,7 @@ spawnfunc(monster_ogre)
 	{
 		// none specified - choose random. 25% boss on normal, hard, bloodbath
 		if(this.spawnflags <= 1)
-			if(cvar("skill") > 0)
+			if(autocvar_skill > 0)
 				if(random() <= 0.25)
 					this.spawnflags |= OGRE_BOSS;
 		

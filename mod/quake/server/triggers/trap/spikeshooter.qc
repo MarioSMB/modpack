@@ -67,7 +67,7 @@ void spikeshooter_use(entity this, entity actor, entity trigger)
 		{
 			if(this.spawnflags & SPAWNFLAG_SUPERLAVA)
 				settouch(newmis, superlavaspike_touch);
-			else if((this.spawnflags & SPAWNFLAG_LAVASKILL) && skill > 1)
+			else if((this.spawnflags & SPAWNFLAG_LAVASKILL) && autocvar_skill > 1)
 				settouch(newmis, superlavaspike_touch);
 		}
 		else if(this.spawnflags & SPAWNFLAG_SUPERSPIKE)

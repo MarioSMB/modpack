@@ -1662,7 +1662,7 @@ spawnfunc(item_flag)
 {
 	if(!MP_ROGUE) { delete(this); return; }
 
-	if(cvar("teamplay") != TEAM_CTF_ONEFLAG)
+	if(teamplay != TEAM_CTF_ONEFLAG)
 	{
 		delete(this);
 		return;

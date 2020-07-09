@@ -4,7 +4,7 @@ void trigger_skill_touch(entity this, entity toucher)
 {
 	if(!IS_PLAYER(toucher))
 		return;
-		
+
 	cvar_set("skill", this.message);
 }
 

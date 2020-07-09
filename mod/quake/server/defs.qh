@@ -11,8 +11,6 @@ int intermission_running;
 
 .int playerid;
 
-float skill;
-
 .bool elec;
 .bool lightningmodel;
 int modelindex_bolt; // aop
@@ -177,4 +175,9 @@ const int SVC_CUTSCENE = 34;
 // intrusive lists
 
 IntrusiveList g_damagedbycontents;
-STATIC_INIT(g_damagedbycontents) { g_damagedbycontents = IL_NEW(); }
+IntrusiveList g_moveables;
+STATIC_INIT(defs)
+{
+	g_damagedbycontents = IL_NEW();
+	g_moveables = IL_NEW();
+}

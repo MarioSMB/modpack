@@ -383,7 +383,7 @@ void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 	{
 		targ.th_pain(targ, attacker, take);
 	// nightmare mode monsters don't go into pain frames often
-		if(skill == 3)
+		if(autocvar_skill == 3)
 			targ.pain_finished = time + 5;		
 	}
 }

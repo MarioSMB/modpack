@@ -144,7 +144,7 @@ spawnfunc(trap_tesla_coil)
 	if(this.wait == 0)
 		this.wait = 2;
 	if(this.dmg == 0)
-		this.dmg = 2 + (5*cvar("skill"));
+		this.dmg = 2 + (5*autocvar_skill);
 	if(this.duration == 0)
 		this.duration = -1;
 	if(this.distance == 0)

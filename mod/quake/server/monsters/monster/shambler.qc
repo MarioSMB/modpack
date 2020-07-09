@@ -298,7 +298,7 @@ void sham_magic12(entity this) { set_anim(this, anim_sham_magic12, sham_run1); }
 void sham_magic11(entity this)
 {
 	set_anim(this, anim_sham_magic11, sham_magic12);
-	if(skill == 3)
+	if(autocvar_skill == 3)
 		CastLightning(this);
 }
 void sham_magic10(entity this) { set_anim(this, anim_sham_magic10, sham_magic11); CastLightning(this); }

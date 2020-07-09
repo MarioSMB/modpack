@@ -33,7 +33,7 @@ void Projectile_DrawTrail(entity this, vector to)
 	if (this.traileffect)
 	{
 		particles_alphamin = particles_alphamax = particles_fade = sqrt(this.alpha);
-		boxparticles(particleeffectnum(Effects_from(this.traileffect)), this, from, to, this.velocity, this.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);
+		boxparticles(particleeffectnum(REGISTRY_GET(Effects, this.traileffect)), this, from, to, this.velocity, this.velocity, 1, PARTICLES_USEALPHA | PARTICLES_USEFADE | PARTICLES_DRAWASTRAIL);
 	}
 }
 
@@ -45,7 +45,6 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer);
 .bool isplayermodel;
 
 .entity tag_entity;
-.int tag_entity_lastmodelindex;
 .int tag_index;
 
 void CSQCModel_Effects_PreUpdate(entity this)
@@ -64,7 +63,6 @@ void CSQCModel_Effects_PostUpdate(entity this)
 	if(this.csqcmodel_teleported)
 		Projectile_ResetTrail(this, this.origin);
 }
-.int snd_looping;
 void CSQCModel_Effects_Apply(entity this)
 {
 	int eff = this.csqcmodel_effects & ~CSQCMODEL_EF_RESPAWNGHOST;
@@ -142,7 +140,6 @@ void CSQCModel_Effects_Apply(entity this)
 
 // general functions
 .int csqcmodel_predraw_run;
-.int anim_prev_pmove_flags;
 void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 {
 	if(this.csqcmodel_predraw_run == framecount)
@@ -156,11 +153,6 @@ void CSQCModel_Hook_PreDraw(entity this, bool isplayer)
 	}
 	else
 		this.drawmask = MASK_NORMAL;
-
-	//if(this.isplayermodel) // this checks if it's a player MODEL!
-		//CSQCPlayer_ModelAppearance_Apply(this, this.entnum == player_localnum + 1);
-
-	//CSQCModel_AutoTagIndex_Apply(this);
 
 	CSQCModel_Effects_Apply(this);
 }
@@ -176,18 +168,10 @@ void CSQCModel_Hook_PreUpdate(entity this, bool isnew, bool isplayer, bool isloc
 void CSQCModel_Hook_PostUpdate(entity this, bool isnew, bool isplayer, bool islocalplayer)
 {
 	// is it a player model? (shared state)
-	this.isplayermodel = (this.model == "progs/player.mdl" || this.model == "progs/player_katria.mdl" || this.model == "progs/player_mario.mdl"
+	bool is_playermodel = (this.model == "progs/player.mdl" || this.model == "progs/player_katria.mdl" || this.model == "progs/player_mario.mdl"
 									|| substring(this.model, 0, 14) == "models/player/" || substring(this.model, 0, 17) == "models/ok_player/" || 
-									(substring(this.model, 0, 16) == "models/monsters/" && (this.entnum >= 1 && this.entnum <= maxclients)));
+									(substring(this.model, 0, 16) == "models/monsters/" && (this.isplayermodel & BIT(1))));
+	this.isplayermodel = BITSET(this.isplayermodel, ISPLAYER_MODEL, is_playermodel);
 
-	// save values set by server
-	//if(this.isplayermodel)
-	//{
-		//CSQCPlayer_ModelAppearance_PostUpdate(this);
-		//if(isplayer)
-			//CSQCPlayer_AnimDecide_PostUpdate(this, isnew);
-		//else
-			//CSQCPlayer_FallbackFrame_PostUpdate(this, isnew);
-	//}
 	CSQCModel_Effects_PostUpdate(this);
 }
