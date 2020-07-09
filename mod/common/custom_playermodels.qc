@@ -148,8 +148,6 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 			M_ARGV(0, string) = "models/player/terminusmale.iqm";
 			cpmodels_UpdateWeaponSkin(player, 3);
 		}
-		if(CS(player).cvar_cl_model == "goat" && ALLOWED(GOAT))
-			M_ARGV(0, string) = "models/player/draconimale.iqm";
 
 		if(CS(player).cvar_cl_model == "monk" && ALLOWED(MONK))
 		{
@@ -182,6 +180,12 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 			{
 				M_ARGV(0, string) = "models/player/iggy.dpm";
 				cpmodels_UpdateWeaponSkin(player, 5);
+			}
+
+			if(CS(player).cvar_cl_model == "goat" && ALLOWED(GOAT))
+			{
+				M_ARGV(0, string) = "models/player/draconimale.iqm";
+				cpmodels_UpdateWeaponSkin(player, 7);
 			}
 		}
 		else if(player.playermodel == "models/player/renamon.iqm" || player.playermodel == "models/player/rosalina.dpm" || player.playermodel == "models/player/iggy.dpm")
@@ -288,7 +292,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerJump, CBC_ORDER_LAST)
 		M_ARGV(1, float) = autocvar_sv_jumpvelocity_backflip;
 		vector forward, right, up;
 		MAKE_VECTORS(PHYS_WORLD_ANGLES(player), forward, right, up);
-		player.velocity -= forward * 50;
+		player.velocity -= forward * 50; // NOTE: hardcoded backflip value? needs fixing!
 	#ifdef SVQC
 		if(CS(player).cvar_cl_sparkle == 5)
 			sound(player, CH_VOICE, SND_MARIO64_CJUMP, VOL_BASE, ATTEN_NORM);

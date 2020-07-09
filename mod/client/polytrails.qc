@@ -1,22 +1,5 @@
 //FEATURE: Player glowy trails in CTS
 
-// lib
-// TOOD: get this stuff in master!
-float lerpratio(float f0, float f1, float ratio) { return f0 * (1 - ratio) + f1 * ratio; }
-vector lerpvratio(vector f0, vector f1, float ratio) { return f0 * (1 - ratio) + f1 * ratio; }
-
-vector lerpv3ratio(vector f0, vector f1, vector f2, float ratio)
-{
-	int mid = 0.5;
-	return ratio < mid ? lerpvratio(f0, f1, ratio / mid) : ratio > mid ? lerpvratio(f1, f2, (ratio - mid) / mid) : f1;
-}
-
-float lerp3ratio(float f0, float f1, float f2, float ratio)
-{
-	int mid = 0.5;
-	return ratio < mid ? lerpratio(f0, f1, ratio / mid) : ratio > mid ? lerpratio(f1, f2, (ratio - mid) / mid) : f1;
-}
-
 AUTOCVAR(cl_polytrails, bool, false, "");
 AUTOCVAR(cl_polytrail_segmentsize, float, 10, "");
 AUTOCVAR(cl_polytrail_lifetime, float, .2, "");
@@ -98,7 +81,7 @@ CLASS(PolyTrail, Object)
             vector B = from - thickdir;
             vector C = to + thickdir;
             vector D = to - thickdir;
-            R_BeginPolygon(this.polytrail_tex, DRAWFLAG_SCREEN);
+            R_BeginPolygon(this.polytrail_tex, DRAWFLAG_SCREEN, false);
             R_PolygonVertex(B, '0 0 0', rgb, a);
             R_PolygonVertex(A, '0 1 0', rgb, a);
             R_PolygonVertex(C, '1 1 0', rgb, a);

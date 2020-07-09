@@ -1,41 +1,40 @@
 #pragma once
 
+// highest bit used in Xonotic is 16
+const int WEP_FLAG_MODWEAPON = BIT(23); // indicates that this wepaon was added by the mod
+.string m_replacement;
+
 #ifdef CSQC
+string strreplace_word(string search, string replace, string subject)
+{
+    string newval = "";
+    FOREACH_WORD(subject, true,
+    {
+        if(it == search)
+            newval = cons(newval, replace);
+        else
+            newval = cons(newval, it);
+    });
+    return newval;
+}
+
 STATIC_INIT(fix_weaponpriority)
 {
     string curprio = cvar_string("cl_weaponpriority");
-
-    bool have_flak = strhasword(curprio, "flak");
-    bool have_lightsabre = strhasword(curprio, "lightsabre");
-    bool have_chainsaw = strhasword(curprio, "chainsaw");
-    bool have_uzi = strhasword(curprio, "mac10");
-    bool have_rpg = strhasword(curprio, "rpg7");
-    bool have_assaultrifle = strhasword(curprio, "assaultrifle");
-
-    // to save on rebuilding, only loop through if one of these is indeed missing
-    if(!have_flak || !have_lightsabre || !have_chainsaw || !have_uzi || !have_assaultrifle)
+    string newprio = "";
+    bool did_replacement = false;
+    FOREACH(Weapons, it != WEP_Null && (it.spawnflags & WEP_FLAG_MODWEAPON) && it.m_replacement && it.m_replacement != "",
     {
-        string newprio = "";
-        FOREACH_WORD(curprio, true,
+        if(!strhasword(curprio, it.netname))
         {
-            newprio = cons(newprio, it);
+            // we need this weapon in the cvar!
+            newprio = strreplace_word(it.m_replacement, cons(it.m_replacement, it.netname), curprio);
+            did_replacement = true;
+        }
+    });
 
-            if(it == "hagar" && !have_flak)
-                newprio = cons(newprio, "flak");
-            if(it == "blaster" && !have_lightsabre)
-                newprio = cons(newprio, "lightsabre");
-            if(it == "electro" && !have_chainsaw)
-                newprio = cons(newprio, "chainsaw");
-            if(it == "machinegun" && !have_uzi)
-                newprio = cons(newprio, "mac10");
-            if(it == "devastator" && !have_rpg)
-                newprio = cons(newprio, "rpg7");
-            if(it == "machinegun" && !have_assaultrifle)
-                newprio = cons(newprio, "assaultrifle");
-        });
-
+    if(did_replacement) // one weapon was replacem
         cvar_set("cl_weaponpriority", newprio);
-    }
 }
 #endif
 

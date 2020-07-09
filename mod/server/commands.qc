@@ -7,7 +7,7 @@ AUTOCVAR(g_maplist_allow_personal, bool, false, "List maps the player hasn't bea
 
 STATIC_INIT(mod_cmds)
 {
-	localcmd("\nalias ircmsg \"sv_cmd ircmsg ${* ?}\"\n");
+	//localcmd("\nalias ircmsg \"sv_cmd ircmsg ${* ?}\"\n"); // NOTE: use the direct command in irc bots, this alias allows users to run any command unsafely
 	localcmd("\nalias _ircmessage \"ircmsg ${* ?}\"\n");
 	localcmd("\nalias chlevel \"sv_cmd chlevel ${* ?}\"\n");
 	localcmd("\nalias stufftoall \"sv_cmd stufftoall ${* ?}\"\n");

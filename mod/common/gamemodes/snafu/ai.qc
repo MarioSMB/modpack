@@ -265,7 +265,7 @@ NET_HANDLE(ENT_CLIENT_GAI, bool isnew)
 	if(sf & GAIN_SETUP)
 	{
 		this.gaid = ReadByte();
-		Gai info = Gais_from(this.gaid);
+		Gai info = REGISTRY_GET(Gais, this.gaid);
 
 		this.gai_physics_type = ReadByte();
 		this.gai_physics_stepheight   = ReadCoord();

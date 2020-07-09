@@ -54,14 +54,14 @@ MUTATOR_HOOKFUNCTION(ra, Damage_Calculate)
 	}
 }
 
-MUTATOR_HOOKFUNCTION(ra, FilterItem)
+MUTATOR_HOOKFUNCTION(ra, FilterItemDefinition)
 {
-	entity item = M_ARGV(0, entity);
+	entity definition = M_ARGV(0, entity);
 
-	switch (item.items)
+	switch (definition)
 	{
-		case IT_5HP:
-		case IT_ARMOR_SHARD:
+		case ITEM_HealthSmall:
+		case ITEM_ArmorSmall:
 			return false;
 	}
 

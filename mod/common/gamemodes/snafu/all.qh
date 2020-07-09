@@ -1,14 +1,15 @@
 #pragma once
 
 REGISTRY(Gais, BITS(5))
-#define Gais_from(i) _Gais_from(i, GAI_Null)
-#define get_gaiinfo(i) Gais_from(i)
 REGISTER_REGISTRY(Gais)
 REGISTRY_CHECK(Gais)
+
 const int GAI_FIRST = 1;
-#define GAI_LAST (Gais_COUNT - 1)
+#define GAI_LAST (REGISTRY_COUNT(Gais) - 1)
 #define REGISTER_GAI(id, inst) REGISTER(Gais, GAI, id, gaid, inst)
 
 #include "monster.qh"
 
 REGISTER_GAI(Null, NEW(Gai));
+// must come after the null Gai is registered
+REGISTRY_DEFINE_GET(Gais, GAI_Null)

@@ -37,7 +37,7 @@ MODEL(DOTC_GIB_4,                       "models/dotc/gib4.md3");
 MODEL(DOTC_GIB_5,                       "models/dotc/gib5.md3");
 Model MDL_DOTC_GIB_RANDOM() {
     int i = floor(random() * 5);
-    return Models_from(MDL_DOTC_GIB_1.m_id + i);
+    return REGISTRY_GET(Models, MDL_DOTC_GIB_1.m_id + i);
 }
 
 #else

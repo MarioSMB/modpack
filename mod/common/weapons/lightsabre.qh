@@ -15,7 +15,7 @@ SOUND(LIGHTSABRE_HIT1, W_Sound("lightsabre_hit1"));
 SOUND(LIGHTSABRE_HIT2, W_Sound("lightsabre_hit2"));
 SOUND(LIGHTSABRE_HIT3, W_Sound("lightsabre_hit3"));
 Sound SND_LIGHTSABRE_HIT_RANDOM() {
-    return Sounds_from(SND_LIGHTSABRE_HIT1.m_id + floor(prandom() * 3));
+    return REGISTRY_GET(Sounds, SND_LIGHTSABRE_HIT1.m_id + floor(prandom() * 3));
 }
 #endif
 
@@ -55,10 +55,11 @@ AUTOCVAR(g_balance_lightsabre_weaponstartoverride, float, -1, "");
 AUTOCVAR(g_balance_lightsabre_weaponthrowable, float, 0, "");
 
 CLASS(Lightsabre, Weapon)
+/* prio fix  */ ATTRIB(Lightsabre, m_replacement, string, "machinegun");
 /* spawnfunc */ ATTRIB(Lightsabre, m_canonical_spawnfunc, string, "weapon_lightsabre");
 /* ammotype  */ ATTRIB(Lightsabre, ammo_type, int, RES_NONE);
 /* impulse   */ ATTRIB(Lightsabre, impulse, int, 1);
-/* flags     */ ATTRIB(Lightsabre, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(Lightsabre, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_MODWEAPON);
 /* rating    */ ATTRIB(Lightsabre, bot_pickupbasevalue, float, 6000);
 /* color     */ ATTRIB(Lightsabre, wpcolor, vector, '1 0.25 0.25');
 /* modelname */ ATTRIB(Lightsabre, mdl, string, "lightsabre");

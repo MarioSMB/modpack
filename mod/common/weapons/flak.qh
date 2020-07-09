@@ -17,7 +17,7 @@ SOUND(FLAK_CASINGS1, W_Sound("casings1"));
 SOUND(FLAK_CASINGS2, W_Sound("casings2"));
 SOUND(FLAK_CASINGS3, W_Sound("casings3"));
 Sound SND_FLAK_CASINGS_RANDOM() {
-    return Sounds_from(SND_FLAK_CASINGS1.m_id + floor(prandom() * 3));
+    return REGISTRY_GET(Sounds, SND_FLAK_CASINGS1.m_id + floor(prandom() * 3));
 }
 
 SOUND(FLAK_FIRE, W_Sound("flak_fire"));
@@ -79,10 +79,11 @@ AUTOCVAR(g_balance_flak_weaponstartoverride, float, -1, "");
 AUTOCVAR(g_balance_flak_weaponthrowable, float, 1, "");
 
 CLASS(Flak, Weapon)
+/* prio fix  */ ATTRIB(Flak, m_replacement, string, "hagar");
 /* spawnfunc */ ATTRIB(Flak, m_canonical_spawnfunc, string, "weapon_flak");
 /* ammotype  */ ATTRIB(Flak, ammo_type, int, RES_SHELLS);
 /* impulse   */ ATTRIB(Flak, impulse, int, 8);
-/* flags     */ ATTRIB(Flak, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_NOTRUEAIM | WEP_FLAG_MUTATORBLOCKED);
+/* flags     */ ATTRIB(Flak, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_TYPE_SPLASH | WEP_FLAG_NOTRUEAIM | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_MODWEAPON);
 /* rating    */ ATTRIB(Flak, bot_pickupbasevalue, float, 6000);
 /* color     */ ATTRIB(Flak, wpcolor, vector, '1 1 0');
 /* modelname */ ATTRIB(Flak, mdl, string, "flak");

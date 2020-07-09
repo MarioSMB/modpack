@@ -15,7 +15,7 @@
 	#include "monsters.qc"
 	#include "mute.qc"
 	#include "player_size.qc"
-	#include "prediction.qc"
+	//#include "prediction.qc"
 	#include "settemp.qc"
 	#include "spawnreplace.qc"
 	#include "stats.qc"

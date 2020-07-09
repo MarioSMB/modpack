@@ -14,10 +14,10 @@ SOUND(SNAFU_ZOMBIE_ATTACK3, "snafu/zombie/attack3");
 SOUND(SNAFU_ZOMBIE_ATTACK4, "snafu/zombie/attack3");
 SOUND(SNAFU_ZOMBIE_ATTACK5, "snafu/zombie/attack3");
 Sound SND_SNAFU_ZOMBIE_ATTACK_RANDOM() {
-    return Sounds_from(SND_SNAFU_ZOMBIE_ATTACK1.m_id + floor(prandom() * 5));
+    return REGISTRY_GET(Sounds, SND_SNAFU_ZOMBIE_ATTACK1.m_id + floor(prandom() * 5));
 }
 Sound SND_SNAFU_ZOMBIE_ATTACK_FRAME(int frm) {
-	return Sounds_from(SND_SNAFU_ZOMBIE_ATTACK1.m_id + frm);
+	return REGISTRY_GET(Sounds, SND_SNAFU_ZOMBIE_ATTACK1.m_id + frm);
 }
 
 SOUND(SNAFU_ZOMBIE_DEATH1, "snafu/zombie/death1");

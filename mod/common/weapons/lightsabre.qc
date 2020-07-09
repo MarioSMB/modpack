@@ -94,7 +94,7 @@ bool W_Lightsabre_Melee_Block(entity this, entity player)
 		makevectors(myowner.v_angle);
 		IL_EACH(g_projectiles, time > it.lightsabre_hitshield,
 		{
-			if(vdist(it.origin - myowner.origin, <, 256))
+			if(it.classname != "grapplinghook" && vdist(it.origin - myowner.origin, <, 256))
 			{
 				//LOG_INFO("Too close!");
 				float dot = normalize(it.origin - myowner.origin) * v_forward;

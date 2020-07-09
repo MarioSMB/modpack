@@ -231,13 +231,15 @@ void FireRailgunBullet (entity this, entity weaponentity, vector start, vector e
 
 void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, entity player)
 {
-	if(wep.activeweapon != WEP_VAPORIZER && wep.activeweapon != WEP_VORTEX)
+	if(wep.activeweapon != WEP_VAPORIZER && wep.activeweapon != WEP_VORTEX && wep.activeweapon != WEP_OVERKILL_NEX)
 		return;
 	if(!held)
 	//if(held)// || (wep.activeweapon == WEP_VORTEX && WEP_CVAR(vortex, secondary) && attack2_held && !WEP_CVAR(vortex, charge)))
 		return;
 	if(!(autocvar_cl_vaporizerbeam > 0 || (player.ping >= autocvar_cl_vaporizerbeam_minping && autocvar_cl_vaporizerbeam != -1)))
 		return;
+
+	bool is_vortex = (wep.activeweapon == WEP_VORTEX || wep.activeweapon == WEP_OVERKILL_NEX);
 
 	//vector v = '0 0 1' * getstati(STAT_VIEWHEIGHT);
 	entity rlplayer = CSQCModel_server2csqc(player_localentnum - 1);
@@ -256,8 +258,8 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 	//v_up = view_up;
 
 	float vaporizer_damage = ((WEP_CVAR_PRI(vaporizer, damage) > 0) ? WEP_CVAR_PRI(vaporizer, damage) : 10000);
-	float hit_damage = ((wep.activeweapon == WEP_VORTEX) ? WEP_CVAR_PRI(vortex, damage) : vaporizer_damage);
-	float hit_force = ((wep.activeweapon == WEP_VORTEX) ? WEP_CVAR_PRI(vortex, force) : 800);
+	float hit_damage = ((is_vortex) ? WEP_CVAR_PRI(vortex, damage) : vaporizer_damage);
+	float hit_force = ((is_vortex) ? WEP_CVAR_PRI(vortex, force) : 800);
 
 	int shottype = W_SetupShot_Dir_ProjectileSize_Range(rlplayer, wep, forward, '0 0 0', '0 0 0', false, 0, SND_Null, CH_WEAPON_A, 0, max_shot_distance);
 	FireRailgunBullet(rlplayer, wep, w_shotorg, w_shotorg + w_shotdir * max_shot_distance, hit_damage, hit_force, 0, 0, 0, 0, wep.activeweapon.m_id);
@@ -266,7 +268,7 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 	bool hit = boolean(shottype == SHOTTYPE_HITENEMY || shottype == SHOTTYPE_HITTEAM); // also count team shots
 
 	int eff = particleeffectnum((hit ? EFFECT_VAPORIZER_HIT(myteam) : EFFECT_VAPORIZER(myteam)));
-	if(wep.activeweapon == WEP_VORTEX)
+	if(is_vortex)
 	{
 		if(autocvar_cl_particles_oldvortexbeam)
 		{ /* keep insta beam */ }
@@ -276,7 +278,7 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 			eff = particleeffectnum(EFFECT_VORTEX_BEAM);
 	}
 
-	if(wep.activeweapon == WEP_VORTEX)
+	if(is_vortex)
 		WarpZone_TrailParticles(player, eff, w_shotorg, WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos));
 	else if(wep.activeweapon == WEP_VAPORIZER)
 		FireClientBeam(w_shotorg, WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos), hit);
@@ -289,7 +291,7 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 		traceline(shot_endpos - normalize(force) * 16, shot_endpos + normalize(force) * 16, MOVE_NOMONSTERS, NULL);
 		w_backoff = -1 * normalize(force);
 		vector org2 = shot_endpos + w_backoff * 6;
-		if(autocvar_cl_particles_newvortexbeam && wep.activeweapon == WEP_VORTEX)
+		if(autocvar_cl_particles_newvortexbeam && is_vortex)
 			pointparticles(EFFECT_VORTEX_IMPACT_NEW, org2, '0 0 0', 1);
 		else
 			pointparticles(EFFECT_VORTEX_IMPACT, org2, '0 0 0', 1);
@@ -297,7 +299,7 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 
 	if(wep.activeweapon == WEP_VAPORIZER)
 		wep.last_beam = time + vapedelay;
-	else if(wep.activeweapon == WEP_VORTEX)
+	else if(is_vortex)
 	{
 		if(input_buttons & 1)
 			wep.last_beam = time + vordelay;
@@ -317,6 +319,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, DrawCrosshair)
 
 	float vaporizer_delay = WEP_CVAR_PRI(vaporizer, refire);
 	float vortex_pdelay = WEP_CVAR_PRI(vortex, refire);
+	float oknex_delay = WEP_CVAR_PRI(oknex, refire);
 	//float vortex_sdelay = WEP_CVAR_SEC(vortex, refire);
 	//float vortex_charge = STAT(VORTEX_CHARGE);
 
@@ -325,6 +328,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, DrawCrosshair)
 
 	if(!vaporizer_delay) vaporizer_delay = 0.75;
 	if(!vortex_pdelay) vortex_pdelay = 1.5;
+	if(!oknex_delay) oknex_delay = 1;
 	//if(!vortex_sdelay) vortex_sdelay = 0.75;
 
 	entity localme = playerslots[player_localnum];
@@ -334,7 +338,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, DrawCrosshair)
 		entity wep = viewmodels[slot];
 		if(time < wep.last_beam)
 			continue;
-		DrawClientBeam(wep, vortex_pdelay, vaporizer_delay, attack1_held, localme);
+		DrawClientBeam(wep, ((wep.activeweapon == WEP_OVERKILL_NEX) ? oknex_delay : vortex_pdelay), vaporizer_delay, attack1_held, localme);
 	}
 
 	return false;
@@ -342,7 +346,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, DrawCrosshair)
 
 MUTATOR_HOOKFUNCTION(mutator_mod, Weapon_ImpactEffect)
 {
-	if(autocvar_cl_particles_newvortexbeam && M_ARGV(0, entity) == WEP_VORTEX)
+	if(autocvar_cl_particles_newvortexbeam && (M_ARGV(0, entity) == WEP_VORTEX || M_ARGV(0, entity) == WEP_OVERKILL_NEX))
 	{
 		vector org2 = w_org + w_backoff * 6;
 		pointparticles(EFFECT_VORTEX_IMPACT_NEW, org2, '0 0 0', 1);

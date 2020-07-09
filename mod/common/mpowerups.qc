@@ -1,8 +1,9 @@
 //FEATURE-DISABLED Some classic SMB powerups, including the mini mushroom, super star and life shroom!
 
-const int MIT_STAR = BIT(0);
-const int MIT_MINI = BIT(1);
-const int MIT_LIFE = BIT(2);
+const int IT_STAR = BIT(23);
+const int IT_MINI = BIT(22);
+const int IT_LIFE = BIT(21);
+// last used bit in xonotic is 12 as of writing
 
 REGISTER_STAT(STAR_FINISHED, float);
 REGISTER_STAT(MINI_FINISHED, float);
@@ -46,7 +47,7 @@ REGISTER_ITEM(Star, Powerup) {
     this.m_color            =   '1 1 0';
     this.m_waypoint         =   "Starman";
     this.m_waypointblink    =   2;
-    this.m_itemid           =   MIT_STAR;
+    this.m_itemid           =   IT_STAR;
 #ifdef SVQC
     this.m_iteminit         =   powerup_star_init;
 #endif
@@ -80,7 +81,7 @@ REGISTER_ITEM(Mini, Powerup) {
     this.m_color            =   '0.25 0.25 1';
     this.m_waypoint         =   "Mini Mushroom";
     this.m_waypointblink    =   2;
-    this.m_itemid           =   MIT_MINI;
+    this.m_itemid           =   IT_MINI;
 #ifdef SVQC
     this.m_iteminit         =   powerup_mini_init;
 #endif
@@ -114,7 +115,7 @@ REGISTER_ITEM(Life, Powerup) {
     this.m_color            =   '1 0.25 0.25';
     this.m_waypoint         =   "Life Mushroom";
     this.m_waypointblink    =   2;
-    this.m_itemid           =   MIT_LIFE;
+    this.m_itemid           =   IT_LIFE;
 #ifdef SVQC
     this.m_iteminit         =   powerup_life_init;
 #endif
@@ -140,17 +141,25 @@ AUTOCVAR(g_powerup_mini_size, float, 0.2, "Scale of the player when under the in
 const vector PL_VIEW_OFS_CONST = '0 0 35';
 const vector PL_CROUCH_VIEW_OFS_CONST = '0 0 20';
 
-.int mitems;
-
 .float mini_oldgravity;
 .float star_touch_time;
 .vector star_oldcolormod;
 
 .float player_scale; // TODO
 
+void minishroom_ResetSize(entity this)
+{
+	STAT(PL_MIN, this) = autocvar_sv_player_mins;
+	STAT(PL_MAX, this) = autocvar_sv_player_maxs;
+	STAT(PL_VIEW_OFS, this) = autocvar_sv_player_viewoffset;
+	STAT(PL_CROUCH_MIN, this) = autocvar_sv_player_crouch_mins;
+	STAT(PL_CROUCH_MAX, this) = autocvar_sv_player_crouch_maxs;
+	STAT(PL_CROUCH_VIEW_OFS, this) = autocvar_sv_player_crouch_viewoffset;
+}
+
 bool have_powerup(entity this)
 {
-	return ((this.mitems & ITEM_Star.m_itemid) || (this.mitems & ITEM_Mini.m_itemid) || (this.mitems & ITEM_Life.m_itemid));
+	return ((this.items & ITEM_Star.m_itemid) || (this.items & ITEM_Mini.m_itemid) || (this.items & ITEM_Life.m_itemid));
 }
 
 void RemovePowerups(entity this)
@@ -158,8 +167,6 @@ void RemovePowerups(entity this)
 	STAT(STAR_FINISHED, this) = 0;
 	STAT(MINI_FINISHED, this) = 0;
 	STAT(LIFE_FINISHED, this) = 0;
-
-	this.mitems = 0;
 
 	this.scale = ((this.player_scale) ? this.player_scale : autocvar_sv_player_scale); // 0 is default, it'll do for now
 	if(this.mini_oldgravity)
@@ -172,12 +179,7 @@ void RemovePowerups(entity this)
 	this.dphitcontentsmask &= ~DPCONTENTS_LIQUIDSMASK;
 
 	// physics doesn't run while player is dead, so we must assume defaults here
-	STAT(PL_MIN, this) = autocvar_sv_player_mins;
-	STAT(PL_MAX, this) = autocvar_sv_player_maxs;
-	STAT(PL_VIEW_OFS, this) = autocvar_sv_player_viewoffset;
-	STAT(PL_CROUCH_MIN, this) = autocvar_sv_player_crouch_mins;
-	STAT(PL_CROUCH_MAX, this) = autocvar_sv_player_crouch_maxs;
-	STAT(PL_CROUCH_VIEW_OFS, this) = autocvar_sv_player_crouch_viewoffset;
+	minishroom_ResetSize(this);
 
 	sound(this, CH_TRIGGER_SINGLE, SND_Null, VOL_BASE, ATTEN_NORM);
 }
@@ -272,7 +274,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPowerups)
 {
 	entity player = M_ARGV(0, entity);
 
-	if (player.mitems & ITEM_Star.m_itemid)
+	if (player.items & ITEM_Star.m_itemid)
 	{
 		play_countdown(player, STAT(STAR_FINISHED, player), SND_POWEROFF);
 		player.effects = player.effects | (EF_DIMLIGHT | EF_FULLBRIGHT);
@@ -280,7 +282,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPowerups)
 		if (time > STAT(STAR_FINISHED, player))
 		{
 			player.colormod = player.star_oldcolormod;
-			player.mitems &= ~ITEM_Star.m_itemid;
+			player.items &= ~ITEM_Star.m_itemid;
 			//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_STAR, player.netname);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_STAR);
 		}
@@ -290,18 +292,18 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPowerups)
 		if (time < STAT(STAR_FINISHED, player))
 		{
 			player.star_oldcolormod = player.colormod;
-			player.mitems |= ITEM_Star.m_itemid;
+			player.items |= ITEM_Star.m_itemid;
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_STAR, player.netname);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_STAR);
 		}
 	}
 
-	if (player.mitems & ITEM_Mini.m_itemid)
+	if (player.items & ITEM_Mini.m_itemid)
 	{
 		play_countdown(player, STAT(MINI_FINISHED, player), SND_POWEROFF);
 		if (time > STAT(MINI_FINISHED, player))
 		{
-			if(player.crouch)
+			if(IS_DUCKED(player))
 				setsize(player, autocvar_sv_player_crouch_mins, autocvar_sv_player_crouch_maxs);
 			else
 				setsize(player, autocvar_sv_player_mins, autocvar_sv_player_maxs);
@@ -317,17 +319,12 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPowerups)
 			player.dphitcontentsmask &= ~DPCONTENTS_LIQUIDSMASK;
 
 			// physics doesn't run while player is dead, so we must assume defaults here
-			STAT(PL_MIN, player) = autocvar_sv_player_mins;
-			STAT(PL_MAX, player) = autocvar_sv_player_maxs;
-			STAT(PL_VIEW_OFS, player) = autocvar_sv_player_viewoffset;
-			STAT(PL_CROUCH_MIN, player) = autocvar_sv_player_crouch_mins;
-			STAT(PL_CROUCH_MAX, player) = autocvar_sv_player_crouch_maxs;
-			STAT(PL_CROUCH_VIEW_OFS, player) = autocvar_sv_player_crouch_viewoffset;
+			minishroom_ResetSize(player);
 
-			vector offset = vec3(0, 0, (PL_MIN_CONST.z - (PL_MIN_CONST.z * max(0, autocvar_g_powerup_mini_size))) * -1);
-			setorigin(player, player.origin + (offset + '0 0 1')); // restore player's location
+			vector offset = '0 0 -1' * (PL_MIN_CONST.z - (PL_MIN_CONST.z * max(0, autocvar_g_powerup_mini_size)));
+			setorigin(player, player.origin + offset + '0 0 1'); // restore player's location
 
-			player.mitems &= ~ITEM_Mini.m_itemid;
+			player.items &= ~ITEM_Mini.m_itemid;
 			//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_MINI, player.netname);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_MINI);
 
@@ -348,25 +345,25 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPowerups)
 			STAT(PL_CROUCH_MAX, player) = PL_CROUCH_MAX_CONST * myscale;
 			STAT(PL_VIEW_OFS, player) = PL_VIEW_OFS_CONST * myscale;
 			STAT(PL_CROUCH_VIEW_OFS, player) = PL_CROUCH_VIEW_OFS_CONST * myscale;
-			if(player.crouch)
+			if(IS_DUCKED(player))
 				setsize(player, STAT(PL_CROUCH_MIN, player), STAT(PL_CROUCH_MAX, player));
 			else
 				setsize(player, STAT(PL_MIN, player), STAT(PL_MAX, player));
 			player.mini_oldgravity = ((player.gravity != 0) ? player.gravity : 1);
 			player.scale = myscale;
 			player.gravity = autocvar_g_powerup_mini_gravity;
-			player.mitems |= ITEM_Mini.m_itemid;
+			player.items |= ITEM_Mini.m_itemid;
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_MINI, player.netname);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_MINI);
 		}
 	}
 
-	if (player.mitems & ITEM_Life.m_itemid)
+	if (player.items & ITEM_Life.m_itemid)
 	{
 		play_countdown(player, STAT(LIFE_FINISHED, player), SND_POWEROFF);
 		if (time > STAT(LIFE_FINISHED, player))
 		{
-			player.mitems &= ~ITEM_Life.m_itemid;
+			player.items &= ~ITEM_Life.m_itemid;
 			//Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERDOWN_LIFE, player.netname);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERDOWN_LIFE);
 		}
@@ -380,7 +377,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPowerups)
 			if(GetResource(player, RES_HEALTH) > 0)
 				SetResource(player, RES_HEALTH, starthp * 2);
 
-			player.mitems |= ITEM_Life.m_itemid;
+			player.items |= ITEM_Life.m_itemid;
 			Send_Notification(NOTIF_ALL, world, MSG_INFO, INFO_POWERUP_LIFE, player.netname);
 			Send_Notification(NOTIF_ONE, player, MSG_CENTER, CENTER_POWERUP_LIFE);
 		}
@@ -499,6 +496,15 @@ MUTATOR_HOOKFUNCTION(mpowerups, FilterItem, CBC_ORDER_FIRST)
 	return true;
 }
 
+MUTATOR_HOOKFUNCTION(mpowerups, GetResourceLimit)
+{
+	entity player = M_ARGV(0, entity);
+	int resource_type = M_ARGV(1, int);
+
+	if(time < STAT(LIFE_FINISHED, player) && resource_type == RES_HEALTH)
+		M_ARGV(2, float) *= 2; // limit
+}
+
 MUTATOR_HOOKFUNCTION(mpowerups, PlayerRegen)
 {
 	entity player = M_ARGV(0, entity);
@@ -512,7 +518,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerRegen)
 	if(time < STAT(LIFE_FINISHED, player))
 	{
 		M_ARGV(1, float) *= 2; // max_mod
-		M_ARGV(4, float) *= 2; // limit_mod
+		// limit handled by GetResourceLimit!
 	}
 }
 
@@ -527,13 +533,12 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPhysics_UpdateStats)
 	if(time < STAT(STAR_FINISHED, player))
 		STAT(MOVEVARS_HIGHSPEED, player) *= autocvar_g_powerup_star_speed;
 }
-#endif
 
-MUTATOR_HOOKFUNCTION(mpowerups, PlayerPhysics)
+MUTATOR_HOOKFUNCTION(mpowerups, PlayerPhysics_PostUpdateStats)
 {
 	entity player = M_ARGV(0, entity);
+	// these automatically reset, no need to worry
 
-#ifdef SVQC
 	if(time < STAT(MINI_FINISHED, player))
 	{
 		float myscale = max(0, autocvar_g_powerup_mini_size);
@@ -544,7 +549,12 @@ MUTATOR_HOOKFUNCTION(mpowerups, PlayerPhysics)
 		STAT(PL_VIEW_OFS, player) = PL_VIEW_OFS_CONST * myscale;
 		STAT(PL_CROUCH_VIEW_OFS, player) = PL_CROUCH_VIEW_OFS_CONST * myscale;
 	}
+}
 #endif
+
+MUTATOR_HOOKFUNCTION(mpowerups, PlayerPhysics)
+{
+	entity player = M_ARGV(0, entity);
 
 	if(time < STAT(MINI_FINISHED, player))
 	{
@@ -636,7 +646,7 @@ MUTATOR_HOOKFUNCTION(mpowerups, HUD_Draw_overlay)
 		vector tc_10 = '1.5 0 0' - '0.2 0 0' * sin(time * 0.5) + '0 0.5 0' * cos(time * 1.7);
 		//tc_11 = '1 1 0' + '0.6 0 0' * sin(time * 0.6) + '0 0.3 0' * cos(time * 0.1);
 		vector tc_11 = tc_01 + tc_10 - tc_00;
-		R_BeginPolygon("gfx/rainbow.tga", DRAWFLAG_ADDITIVE);
+		R_BeginPolygon("gfx/rainbow.tga", DRAWFLAG_ADDITIVE, true);
 		R_PolygonVertex('0 0 0', tc_00, rgb, a);
 		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0', tc_10, rgb, a);
 		R_PolygonVertex(autocvar_vid_conwidth * '1 0 0' + autocvar_vid_conheight * '0 1 0', tc_11, rgb, a);

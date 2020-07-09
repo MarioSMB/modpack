@@ -65,7 +65,7 @@ void W_RPG7_Think(entity this)
 
 	// accelerate
 	vector forward, right, up;
-	MAKE_VECTORS(this.angles.x * '-1 0 0 ' + this.angles.x * '0 1 0', forward, right, up);
+	MAKE_VECTORS(this.angles.x * '-1 0 0 ' + this.angles.y * '0 1 0', forward, right, up);
 	float velspeed = WEP_CVAR(rpg7, speed) * W_WeaponSpeedFactor(this.realowner) - (this.velocity * forward);
 	if(velspeed > 0)
 		this.velocity = this.velocity + forward * min(WEP_CVAR(rpg7, speedaccel) * W_WeaponSpeedFactor(this.realowner) * frametime, velspeed);
