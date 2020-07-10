@@ -11,168 +11,191 @@ $origin 0 -6 24
 $base base		
 $skin skin
 
+#if 0
 const int anim_player_axrun1 = 0;
-//const int anim_player_axrun2 = 1;
-//const int anim_player_axrun3 = 2;
-//const int anim_player_axrun4 = 3;
-//const int anim_player_axrun5 = 4;
-//const int anim_player_axrun6 = 5;
+const int anim_player_axrun2 = 1;
+const int anim_player_axrun3 = 2;
+const int anim_player_axrun4 = 3;
+const int anim_player_axrun5 = 4;
+const int anim_player_axrun6 = 5;
 
 const int anim_player_rockrun1 = 6;
-//const int anim_player_rockrun2 = 7;
-//const int anim_player_rockrun3 = 8;
-//const int anim_player_rockrun4 = 9;
-//const int anim_player_rockrun5 = 10;
-//const int anim_player_rockrun6 = 11;
+const int anim_player_rockrun2 = 7;
+const int anim_player_rockrun3 = 8;
+const int anim_player_rockrun4 = 9;
+const int anim_player_rockrun5 = 10;
+const int anim_player_rockrun6 = 11;
 
 const int anim_player_stand1 = 12;
-//const int anim_player_stand2 = 13;
-//const int anim_player_stand3 = 14;
-//const int anim_player_stand4 = 15;
-//const int anim_player_stand5 = 16;
+const int anim_player_stand2 = 13;
+const int anim_player_stand3 = 14;
+const int anim_player_stand4 = 15;
+const int anim_player_stand5 = 16;
 
 const int anim_player_axstnd1 = 17;
-//const int anim_player_axstnd2 = 18;
-//const int anim_player_axstnd3 = 19;
-//const int anim_player_axstnd4 = 20;
-//const int anim_player_axstnd5 = 21;
-//const int anim_player_axstnd6 = 22;
-//const int anim_player_axstnd7 = 23;
-//const int anim_player_axstnd8 = 24;
-//const int anim_player_axstnd9 = 25;
-//const int anim_player_axstnd10 = 26;
-//const int anim_player_axstnd11 = 27;
-//const int anim_player_axstnd12 = 28;
+const int anim_player_axstnd2 = 18;
+const int anim_player_axstnd3 = 19;
+const int anim_player_axstnd4 = 20;
+const int anim_player_axstnd5 = 21;
+const int anim_player_axstnd6 = 22;
+const int anim_player_axstnd7 = 23;
+const int anim_player_axstnd8 = 24;
+const int anim_player_axstnd9 = 25;
+const int anim_player_axstnd10 = 26;
+const int anim_player_axstnd11 = 27;
+const int anim_player_axstnd12 = 28;
 
 const int anim_player_axpain1 = 29;
-//const int anim_player_axpain2 = 30;
-//const int anim_player_axpain3 = 31;
-//const int anim_player_axpain4 = 32;
-//const int anim_player_axpain5 = 33;
-//const int anim_player_axpain6 = 34;
+const int anim_player_axpain2 = 30;
+const int anim_player_axpain3 = 31;
+const int anim_player_axpain4 = 32;
+const int anim_player_axpain5 = 33;
+const int anim_player_axpain6 = 34;
 
 const int anim_player_pain1 = 35;
-//const int anim_player_pain2 = 36;
-//const int anim_player_pain3 = 37;
-//const int anim_player_pain4 = 38;
-//const int anim_player_pain5 = 39;
-//const int anim_player_pain6 = 40;
+const int anim_player_pain2 = 36;
+const int anim_player_pain3 = 37;
+const int anim_player_pain4 = 38;
+const int anim_player_pain5 = 39;
+const int anim_player_pain6 = 40;
 
 const int anim_player_axdeth1 = 41;
-//const int anim_player_axdeth2 = 42;
-//const int anim_player_axdeth3 = 43;
-//const int anim_player_axdeth4 = 44;
-//const int anim_player_axdeth5 = 45;
-//const int anim_player_axdeth6 = 46;
-//const int anim_player_axdeth7 = 47;
-//const int anim_player_axdeth8 = 48;
-//const int anim_player_axdeth9 = 49;
+const int anim_player_axdeth2 = 42;
+const int anim_player_axdeth3 = 43;
+const int anim_player_axdeth4 = 44;
+const int anim_player_axdeth5 = 45;
+const int anim_player_axdeth6 = 46;
+const int anim_player_axdeth7 = 47;
+const int anim_player_axdeth8 = 48;
+const int anim_player_axdeth9 = 49;
 
 const int anim_player_deatha1 = 50;
-//const int anim_player_deatha2 = 51;
-//const int anim_player_deatha3 = 52;
-//const int anim_player_deatha4 = 53;
-//const int anim_player_deatha5 = 54;
-//const int anim_player_deatha6 = 55;
-//const int anim_player_deatha7 = 56;
-//const int anim_player_deatha8 = 57;
-//const int anim_player_deatha9 = 58;
-//const int anim_player_deatha10 = 59;
-//const int anim_player_deatha11 = 60;
+const int anim_player_deatha2 = 51;
+const int anim_player_deatha3 = 52;
+const int anim_player_deatha4 = 53;
+const int anim_player_deatha5 = 54;
+const int anim_player_deatha6 = 55;
+const int anim_player_deatha7 = 56;
+const int anim_player_deatha8 = 57;
+const int anim_player_deatha9 = 58;
+const int anim_player_deatha10 = 59;
+const int anim_player_deatha11 = 60;
 
 const int anim_player_deathb1 = 61;
-//const int anim_player_deathb2 = 62;
-//const int anim_player_deathb3 = 63;
-//const int anim_player_deathb4 = 64;
-//const int anim_player_deathb5 = 65;
-//const int anim_player_deathb6 = 66;
-//const int anim_player_deathb7 = 67;
-//const int anim_player_deathb8 = 68;
-//const int anim_player_deathb9 = 69;
+const int anim_player_deathb2 = 62;
+const int anim_player_deathb3 = 63;
+const int anim_player_deathb4 = 64;
+const int anim_player_deathb5 = 65;
+const int anim_player_deathb6 = 66;
+const int anim_player_deathb7 = 67;
+const int anim_player_deathb8 = 68;
+const int anim_player_deathb9 = 69;
 
 const int anim_player_deathc1 = 70;
-//const int anim_player_deathc2 = 71;
-//const int anim_player_deathc3 = 72;
-//const int anim_player_deathc4 = 73;
-//const int anim_player_deathc5 = 74;
-//const int anim_player_deathc6 = 75;
-//const int anim_player_deathc7 = 76;
-//const int anim_player_deathc8 = 77;
-//const int anim_player_deathc9 = 78;
-//const int anim_player_deathc10 = 79;
-//const int anim_player_deathc11 = 80;
-//const int anim_player_deathc12 = 81;
-//const int anim_player_deathc13 = 82;
-//const int anim_player_deathc14 = 83;
-//const int anim_player_deathc15 = 84;
+const int anim_player_deathc2 = 71;
+const int anim_player_deathc3 = 72;
+const int anim_player_deathc4 = 73;
+const int anim_player_deathc5 = 74;
+const int anim_player_deathc6 = 75;
+const int anim_player_deathc7 = 76;
+const int anim_player_deathc8 = 77;
+const int anim_player_deathc9 = 78;
+const int anim_player_deathc10 = 79;
+const int anim_player_deathc11 = 80;
+const int anim_player_deathc12 = 81;
+const int anim_player_deathc13 = 82;
+const int anim_player_deathc14 = 83;
+const int anim_player_deathc15 = 84;
 
 const int anim_player_deathd1 = 85;
-//const int anim_player_deathd2 = 86;
-//const int anim_player_deathd3 = 87;
-//const int anim_player_deathd4 = 88;
-//const int anim_player_deathd5 = 89;
-//const int anim_player_deathd6 = 90;
-//const int anim_player_deathd7 = 91;
-//const int anim_player_deathd8 = 92;
-//const int anim_player_deathd9 = 93;
+const int anim_player_deathd2 = 86;
+const int anim_player_deathd3 = 87;
+const int anim_player_deathd4 = 88;
+const int anim_player_deathd5 = 89;
+const int anim_player_deathd6 = 90;
+const int anim_player_deathd7 = 91;
+const int anim_player_deathd8 = 92;
+const int anim_player_deathd9 = 93;
 
 const int anim_player_deathe1 = 94;
-//const int anim_player_deathe2 = 95;
-//const int anim_player_deathe3 = 96;
-//const int anim_player_deathe4 = 97;
-//const int anim_player_deathe5 = 98;
-//const int anim_player_deathe6 = 99;
-//const int anim_player_deathe7 = 100;
-//const int anim_player_deathe8 = 101;
-//const int anim_player_deathe9 = 102;
+const int anim_player_deathe2 = 95;
+const int anim_player_deathe3 = 96;
+const int anim_player_deathe4 = 97;
+const int anim_player_deathe5 = 98;
+const int anim_player_deathe6 = 99;
+const int anim_player_deathe7 = 100;
+const int anim_player_deathe8 = 101;
+const int anim_player_deathe9 = 102;
 
 const int anim_player_nailatt1 = 103;
-//const int anim_player_nailatt2 = 104;
+const int anim_player_nailatt2 = 104;
 
 const int anim_player_light1 = 105;
 const int anim_player_light2 = 106;
 
 const int anim_player_rockatt1 = 107;
-//const int anim_player_rockatt2 = 108;
-//const int anim_player_rockatt3 = 109;
-//const int anim_player_rockatt4 = 110;
-//const int anim_player_rockatt5 = 111;
-//const int anim_player_rockatt6 = 112;
+const int anim_player_rockatt2 = 108;
+const int anim_player_rockatt3 = 109;
+const int anim_player_rockatt4 = 110;
+const int anim_player_rockatt5 = 111;
+const int anim_player_rockatt6 = 112;
 
 const int anim_player_shotatt1 = 113;
-//const int anim_player_shotatt2 = 114;
-//const int anim_player_shotatt3 = 115;
-//const int anim_player_shotatt4 = 116;
-//const int anim_player_shotatt5 = 117;
-//const int anim_player_shotatt6 = 118;
+const int anim_player_shotatt2 = 114;
+const int anim_player_shotatt3 = 115;
+const int anim_player_shotatt4 = 116;
+const int anim_player_shotatt5 = 117;
+const int anim_player_shotatt6 = 118;
 
 const int anim_player_axatt1 = 119;
-//const int anim_player_axatt2 = 120;
-//const int anim_player_axatt3 = 121;
-//const int anim_player_axatt4 = 122;
-//const int anim_player_axatt5 = 123;
-//const int anim_player_axatt6 = 124;
+const int anim_player_axatt2 = 120;
+const int anim_player_axatt3 = 121;
+const int anim_player_axatt4 = 122;
+const int anim_player_axatt5 = 123;
+const int anim_player_axatt6 = 124;
 
 const int anim_player_axattb1 = 125;
-//const int anim_player_axattb2 = 126;
-//const int anim_player_axattb3 = 127;
-//const int anim_player_axattb4 = 128;
-//const int anim_player_axattb5 = 129;
-//const int anim_player_axattb6 = 130;
+const int anim_player_axattb2 = 126;
+const int anim_player_axattb3 = 127;
+const int anim_player_axattb4 = 128;
+const int anim_player_axattb5 = 129;
+const int anim_player_axattb6 = 130;
 
 const int anim_player_axattc1 = 131;
-//const int anim_player_axattc2 = 132;
-//const int anim_player_axattc3 = 133;
-//const int anim_player_axattc4 = 134;
-//const int anim_player_axattc5 = 135;
-//const int anim_player_axattc6 = 136;
+const int anim_player_axattc2 = 132;
+const int anim_player_axattc3 = 133;
+const int anim_player_axattc4 = 134;
+const int anim_player_axattc5 = 135;
+const int anim_player_axattc6 = 136;
 
 const int anim_player_axattd1 = 137;
-//const int anim_player_axattd2 = 138;
-//const int anim_player_axattd3 = 139;
-//const int anim_player_axattd4 = 140;
-//const int anim_player_axattd5 = 141;
-//const int anim_player_axattd6 = 142;
+const int anim_player_axattd2 = 138;
+const int anim_player_axattd3 = 139;
+const int anim_player_axattd4 = 140;
+const int anim_player_axattd5 = 141;
+const int anim_player_axattd6 = 142;
+#endif
+
+const int anim_player_axrun1 = 0; //'0 5 0';
+const int anim_player_rockrun1 = 6; //'6 11 0';
+const int anim_player_stand1 = 12; //'12 16 0';
+const int anim_player_axstnd1 = 17; //'17 28 0';
+const int anim_player_axpain1 = 29; //'29 34 0';
+const int anim_player_pain1 = 35; //'35 40 0';
+const int anim_player_axdeth1 = 41; //'41 49 0';
+const int anim_player_deatha1 = 50; //'50 60 0';
+const int anim_player_deathb1 = 61; //'61 69 0';
+const int anim_player_deathc1 = 70; //'70 84 0';
+const int anim_player_deathd1 = 85; //'85 93 0';
+const int anim_player_deathe1 = 94; //'94 102 0';
+const int anim_player_nailatt1 = 103; //'103 104 0';
+const int anim_player_light1 = 105; //'105 106 0';
+const int anim_player_rockatt1 = 107; //'107 112 0';
+const int anim_player_shotatt1 = 113; //'113 118 0';
+const int anim_player_axatt1 = 119; //'119 124 0';
+const int anim_player_axattb1 = 125; //'125 130 0';
+const int anim_player_axattc1 = 131; //'131 136 0';
+const int anim_player_axattd1 = 137; //'137 142 0';
 
 
 /*
@@ -497,7 +520,7 @@ void player_lava_nail2(entity this)
 void player_superlight2(entity this);
 void player_superlight1(entity this)
 {
-	set_anim(this, anim_player_light1, player_superlight2);
+	set_animofs(this, anim_player_light1, 1, player_superlight2);
 
 	if(this.ammo_cells < 1)
 	{
@@ -524,7 +547,7 @@ void player_superlight1(entity this)
 
 void player_superlight2(entity this)
 {
-	set_anim(this, anim_player_light2, player_superlight1);
+	set_animofs(this, anim_player_light1, 2, player_superlight1);
 
 	this.effects |= EF_MUZZLEFLASH;
 	if(!this.button0)
@@ -546,7 +569,7 @@ void player_superlight2(entity this)
 void player_light2(entity this);
 void player_light1(entity this)
 {
-	set_anim(this, anim_player_light1, player_light2);
+	set_animofs(this, anim_player_light1, 1, player_light2);
 
 	this.effects |= EF_MUZZLEFLASH;
 
@@ -570,7 +593,7 @@ void player_light1(entity this)
 }
 void player_light2(entity this)
 {
-	set_anim(this, anim_player_light1, player_light1);
+	set_animofs(this, anim_player_light1, 1, player_light1);
 
 	this.effects |= EF_MUZZLEFLASH;
 

@@ -847,7 +847,6 @@ spawnfunc(worldspawn)
 	// 63 testing
 	lightstyle(63, "a");
 
-	teamplay = autocvar_teamplay;
 	static_init_late();
 	static_init_precache();
 
@@ -855,7 +854,7 @@ spawnfunc(worldspawn)
 	{
 		string s = sprintf("%d.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
 		//matchid = strzone(s);
-		string gtype = ((coop) ? "coop" : "dm");
+		string gtype = ((coop) ? "coop" : ((teamplay >= TEAM_CTF) ? "ctf" : "dm"));
 
 		GameLogEcho(sprintf(":gamestart:%s_%s:%s", gtype, mapname, s));
 

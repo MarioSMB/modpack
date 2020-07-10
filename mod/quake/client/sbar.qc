@@ -24,13 +24,13 @@ string Sbar_PickWeapon_wepname(int wpn)
 		case 4: return "rlaunch";
 		case 5: return "srlaunch";
 		case 6: return "lightng";
-		// hipnotic
+		// hipnotic (first index should match WEP_INDEXSTART_HIPNOTIC)
 		case 7:  return "mjolnir";
 		case 8:  return "laser";
 		case 9:  return "gren_prox";
 		case 10: return "prox_gren"; // file names treat this oddly, better keep it for now
+		// rogue (first index should match WEP_INDEXSTART_ROGUE)
 		case 11: return "prox";
-		// rogue
 		case 12: return "r_lava";
 		case 13: return "r_superlava";
 		case 14: return "r_gren";

@@ -22,7 +22,7 @@ void tdeath_touch(entity this, entity toucher)
 		if(toucher.invincible_finished > time)
 			this.classname = "teledeath2";
 		if(!IS_PLAYER(this.owner))
-		{	// toucher monsters explode themselves
+		{	// other monsters explode themselves
 			T_Damage(this.owner, this, this, 50000);
 			return;
 		}
