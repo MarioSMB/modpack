@@ -1,0 +1,59 @@
+#pragma once
+
+#ifdef CSQC
+void HUD_Mod_Survival(vector pos, vector mySize);
+#endif
+CLASS(Survival, Gametype)
+    INIT(Survival)
+    {
+        this.gametype_init(this, _("Survival"),"surv","g_survival",false,true,"","timelimit=20 pointlimit=20",_("Identify and eliminate all the hunters before all your allies are gone"));
+    }
+    METHOD(Survival, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+    {
+        return true;
+    }
+    METHOD(Survival, m_isForcedSupported, bool(Gametype this))
+    {
+        if(!cvar("g_survival_not_dm_maps"))
+        {
+            // if this is set, all DM maps support Survival too
+            if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
+                return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
+        }
+        return false;
+    }
+#ifdef CSQC
+    ATTRIB(Survival, m_modicons, void(vector pos, vector mySize), HUD_Mod_Survival);
+#endif
+ENDCLASS(Survival)
+REGISTER_GAMETYPE(SURVIVAL, NEW(Survival));
+
+REGISTER_SP(SURV_SURVIVALS);
+REGISTER_SP(SURV_HUNTS);
+
+// shared state signalling the player's survival status
+.int survival_status;
+const int SURV_STATUS_PREY = 1;
+const int SURV_STATUS_HUNTER = 2;
+
+// hardcoded player colors for survival
+const int SURV_COLOR_PREY = 51; // green
+const int SURV_COLOR_HUNTER = 68; // red
+
+// gamemode specific player survival status (independent of score and frags)
+ENTCS_PROP(SURVIVAL_STATUS, true, survival_status, survival_status, ENTCS_SET_NORMAL,
+	{ WriteShort(chan, ent.survival_status); },
+	{ ent.survival_status = ReadShort(); })
+
+#ifdef SVQC
+AUTOCVAR_NOREF(g_survival, bool, false, "");
+AUTOCVAR_NOREF(g_survival_not_dm_maps, bool, false, "");
+
+AUTOCVAR_NOREF(g_surv_respawn_delay_small, float, 0, "");
+AUTOCVAR_NOREF(g_surv_respawn_delay_small_count, float, 0, "");
+AUTOCVAR_NOREF(g_surv_respawn_delay_large, float, 0, "");
+AUTOCVAR_NOREF(g_surv_respawn_delay_large_count, float, 0, "");
+AUTOCVAR_NOREF(g_surv_respawn_delay_max, float, 0, "");
+AUTOCVAR_NOREF(g_surv_respawn_waves, float, 0, "");
+AUTOCVAR_NOREF(g_surv_weapon_stay, float, 0, "");
+#endif
