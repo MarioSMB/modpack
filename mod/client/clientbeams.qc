@@ -299,10 +299,9 @@ void DrawClientBeam(entity wep, float vordelay, float vapedelay, bool held, enti
 
 	if(wep.activeweapon == WEP_VAPORIZER)
 		wep.last_beam = time + vapedelay;
-	else if(is_vortex)
+	else if(is_vortex && (input_buttons & 1))
 	{
-		if(input_buttons & 1)
-			wep.last_beam = time + vordelay;
+		wep.last_beam = time + vordelay;
 		//else if(WEP_CVAR(vortex, secondary) && attack2_held)
 			//wep.last_beam = time + vortex_sdelay;
 	}
