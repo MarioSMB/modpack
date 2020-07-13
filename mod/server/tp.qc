@@ -27,6 +27,7 @@ MUTATOR_HOOKFUNCTION(tp, SV_ParseServerCommand)
 		}
 
 		string arg = argv(1);
+		int team_selection = Team_ColorToTeam(arg);
 
 		if(arg == "all" || arg == "@a")
 		{
@@ -46,15 +47,10 @@ MUTATOR_HOOKFUNCTION(tp, SV_ParseServerCommand)
 			else
 				LOG_INFO("Teleported everyone to ", to.netname, "^7.");
 		}
-		else if(teamplay && (arg == "red" || arg == "blue" || arg == "yellow" || arg == "pink"))
+		else if(teamplay && Team_IsValidTeam(team_selection))
 		{
-			int tnum = NUM_TEAM_1;
-			if(arg == "blue") tnum = NUM_TEAM_2;
-			if(arg == "yellow") tnum = NUM_TEAM_3;
-			if(arg == "pink") tnum = NUM_TEAM_4;
-
 			int fnd = 0;
-			FOREACH_CLIENT(IS_PLAYER(it) && it != to && it.team == tnum,
+			FOREACH_CLIENT(IS_PLAYER(it) && it != to && it.team == team_selection,
 			{
 				setorigin(it, to.origin);
 				it.oldorigin = to.origin;

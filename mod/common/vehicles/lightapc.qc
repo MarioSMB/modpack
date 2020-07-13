@@ -278,19 +278,23 @@ bool lightapc_gunner_frame(entity this, float dt)
 		setorigin(player, angvec);
 		traceline(angvec, angvec + v_forward * max_shot_distance, MOVE_WORLDONLY, gunner);
 		vector crossy = trace_endpos;
+
+		bool can_fire = (!weaponLocked(player) && !weaponUseForbidden(player));
 		
 		// Guns
 		switch(gunner.spawnflags)
 		{
 			case 1:
 			{
-				lightapc_deluge(player, gunner, dt);
+				if(can_fire)
+					lightapc_deluge(player, gunner, dt);
 				UpdateAuxiliaryXhair(player, crossy, '0.5 1 0.8', 0);
 				break;
 			}
 			case 2:
 			{
-				lightapc_shlac(player, gunner, gunner, dt);
+				if(can_fire)
+					lightapc_shlac(player, gunner, gunner, dt);
 				UpdateAuxiliaryXhair(player, crossy, '1 0 0', 0);
 				break;
 			}
@@ -298,19 +302,22 @@ bool lightapc_gunner_frame(entity this, float dt)
 			{
 				if(PHYS_INPUT_BUTTON_ATCK(player))
 					PHYS_INPUT_BUTTON_ATCK2(player) = true;
-				lightapc_grail(player, gunner, dt);
+				if(can_fire)
+					lightapc_grail(player, gunner, dt);
 				UpdateAuxiliaryXhair(player, crossy, '1 0 1', 0);
 				break;
 			}
 			case 4:
 			{
-				lightapc_autonex(player, gunner, dt);
+				if(can_fire)
+					lightapc_autonex(player, gunner, dt);
 				UpdateAuxiliaryXhair(player, crossy, '0 1 1', 0);
 				break;
 			}
 			case 5:
 			{
-				lightapc_hmg2(player, gunner, dt);	
+				if(can_fire)
+					lightapc_hmg2(player, gunner, dt);	
 				UpdateAuxiliaryXhair(player, crossy, '0 0 0', 0);
 				break;
 			}
@@ -318,19 +325,22 @@ bool lightapc_gunner_frame(entity this, float dt)
 			{
 				if(PHYS_INPUT_BUTTON_ATCK(player))
 					PHYS_INPUT_BUTTON_ATCK2(player) = true;
-				lightapc_t17mm(player, gunner, dt);
+				if(can_fire)
+					lightapc_t17mm(player, gunner, dt);
 				UpdateAuxiliaryXhair(player, crossy, '0 0 0', 0);
 				break;
 			}
 			case 7:
 			{
-				lightapc_hvyminigun(player, gunner, gunner.gun1, dt);
+				if(can_fire)
+					lightapc_hvyminigun(player, gunner, gunner.gun1, dt);
 				UpdateAuxiliaryXhair(player, crossy, '0 0 0', 0);
 				break;
 			}
 			case 8:
 			{
-				lightapc_minigun(player, gunner, gunner.gun1, dt);
+				if(can_fire)
+					lightapc_minigun(player, gunner, gunner.gun1, dt);
 				UpdateAuxiliaryXhair(player, crossy, '0 0 0', 0);
 				break;
 			}
