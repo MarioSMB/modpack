@@ -10,13 +10,13 @@ void HUD_Mod_Survival(vector pos, vector mySize)
 	string player_text = "";
 	vector player_color = '1 1 1';
 	//string player_icon = "";
-	if(mystatus == SURV_STATUS_HUNTER)
+	if(mystatus == SV_STATUS_HUNTER)
 	{
 		player_text = _("Hunter");
 		player_color = '1 0 0';
 		//player_icon = "player_red";
 	}
-	else if(mystatus == SURV_STATUS_PREY)
+	else if(mystatus == SV_STATUS_PREY)
 	{
 		player_text = _("Survivor");
 		player_color = '0 1 0';
@@ -32,9 +32,9 @@ void HUD_Mod_Survival(vector pos, vector mySize)
 	drawstring_aspect(pos, player_text, vec2(mySize.x, mySize.y), player_color, panel_fg_alpha, DRAWFLAG_NORMAL);
 }
 
-REGISTER_MUTATOR(cl_surv, true);
+REGISTER_MUTATOR(cl_sv, true);
 
-MUTATOR_HOOKFUNCTION(cl_surv, ForcePlayercolors_Skip, CBC_ORDER_LAST)
+MUTATOR_HOOKFUNCTION(cl_sv, ForcePlayercolors_Skip, CBC_ORDER_LAST)
 {
 	if(!ISGAMETYPE(SURVIVAL))
 		return false;
@@ -44,9 +44,9 @@ MUTATOR_HOOKFUNCTION(cl_surv, ForcePlayercolors_Skip, CBC_ORDER_LAST)
 	int surv_status = ((e) ? e.survival_status : 0);
 	int mystatus = entcs_receiver(player_localnum).survival_status;
 
-	int plcolor = SURV_COLOR_PREY; // default to survivor
-	if((mystatus == SURV_STATUS_HUNTER || intermission || STAT(GAME_STOPPED)) && surv_status == SURV_STATUS_HUNTER)
-		plcolor = SURV_COLOR_HUNTER;
+	int plcolor = SV_COLOR_PREY; // default to survivor
+	if((mystatus == SV_STATUS_HUNTER || intermission || STAT(GAME_STOPPED)) && surv_status == SV_STATUS_HUNTER)
+		plcolor = SV_COLOR_HUNTER;
 
 	player.colormap = 1024 + plcolor;
 	return true;
