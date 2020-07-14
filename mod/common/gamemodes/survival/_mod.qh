@@ -1,0 +1,8 @@
+// generated file; do not modify
+#include <common/gamemodes/gamemode/survival/survival.qh>
+#ifdef CSQC
+    #include <common/gamemodes/gamemode/survival/cl_survival.qh>
+#endif
+#ifdef SVQC
+    #include <common/gamemodes/gamemode/survival/sv_survival.qh>
+#endif

@@ -8,6 +8,7 @@ enum {
 ,   CPID_SNAFU
 ,   CPID_DOTC
 ,	CPID_CONQUEST
+,   CPID_SURVIVAL
 };
 
 
@@ -26,6 +27,9 @@ enum {
 
     MSG_INFO_NOTIF(RUNEMATCH_LOST,                      1,  3, 0, "s1 s2 s3", "",       "",                     _("^BG%s^K1 lost ^BG%s^K1 and ^BG%s"), "")
     MSG_INFO_NOTIF(RUNEMATCH_PICKUP,                    1,  3, 0, "s1 s2 s3", "",       "",                     _("^BG%s^BG picked up ^BG%s^BG and ^BG%s"), "")
+
+    MSG_INFO_NOTIF(SURVIVAL_HUNTER_WIN,                     1,  0, 0, "", "",           "",                     _("^K1Hunters^BG win the round"), "")
+    MSG_INFO_NOTIF(SURVIVAL_SURVIVOR_WIN,                   1,  0, 0, "", "",           "",                     _("^F1Survivors^BG win the round"), "")
 
     MSG_INFO_NOTIF(VIP_DROP,                            1,  1, 0, "s1", "",             "",                     _("^BG%s^K1 dropped the soul gem"), "")
 	MSG_INFO_NOTIF(VIP_PICKUP,                          1,  1, 0, "s1", "",             "",                     _("^BG%s^K1 picked up the soul gem"), "")
@@ -57,6 +61,11 @@ enum {
     MSG_CENTER_NOTIF(PIGGYBACK_RIDING,         1,   1, 0, "s1",           CPID_PIGGYBACK,       "0 0", "^BGYou are now riding %s^BG!", "")
 
     MSG_CENTER_NOTIF(SNAFU_ROUND_WON,                   1,      0, 4, "f1 f2 f3 f4",    CPID_SNAFU,             "5 0",  _("^K1Congratulations!\n^BGTadpole survived wave ^F1%s^BG (^F1%s^BG zombies) thanks to you!\n^F2Prepare for wave ^F1%s^BG (^F1%s^BG zombies)!"), "")
+
+    MSG_CENTER_NOTIF(SURVIVAL_HUNTER,                   1,    0, 0, "",               CPID_SURVIVAL,          "5 0",  strcat(BOLD_OPERATOR, _("^BGYou are a ^K1hunter^BG! Eliminate the survivor(s) without raising suspicion!")), "")
+    MSG_CENTER_NOTIF(SURVIVAL_HUNTER_WIN,               1,    0, 0, "",               CPID_ROUND,             "0 0",  _("^K1Hunters^BG win the round"), "")
+    MSG_CENTER_NOTIF(SURVIVAL_SURVIVOR,                 1,    0, 0, "",               CPID_SURVIVAL,          "5 0",  strcat(BOLD_OPERATOR, _("^BGYou are a ^F1survivor^BG! Identify and eliminate the hunter(s)!")), "")
+    MSG_CENTER_NOTIF(SURVIVAL_SURVIVOR_WIN,             1,    0, 0, "",               CPID_ROUND,             "0 0",  _("^F1Survivors^BG win the round"), "")
 
     MULTITEAM_CENTER(VIP_BEGIN,                         1,      0, 0, "",               CPID_VIP,               "4 0",  _("^BGYou are the ^TC^TT^BG VIP!\n^F2Survive or your team will lose!"), "", NAME)
 	MSG_CENTER_NOTIF(VIP_MISSING,                       1,      0, 0, "",               CPID_MISSING_TEAMS,     "0 0",  _("^BGWaiting for VIPs...\nPickup your Soul Gem to become a VIP"), "")
