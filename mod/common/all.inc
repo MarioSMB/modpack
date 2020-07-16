@@ -1,9 +1,7 @@
 #include "cvars.qh"
-#include "clipgroup.qh"
 #include "sounds.qh"
 
 #include "announcer.qc"
-#include "clipgroup.qc"
 #include "commands/all.inc"
 #include "custom_playermodels.qc"
 #include "effects.inc"
@@ -21,7 +19,6 @@
 #include "polytrails.qh"
 #include "radio/module.inc"
 #include "special.qc"
-#include "team_collisions.qc"
 #include "vehicles/all.inc"
 #include "weapons/all.inc"
 #include "weapons.qc"
