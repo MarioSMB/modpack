@@ -3,7 +3,7 @@
 CLASS(Snafu, Gametype)
     INIT(Snafu)
     {
-        this.gametype_init(this, _("SNAFU"),"snafu","g_snafu",true,true,"","timelimit=30 pointlimit=5",_("Situation normal..."));
+        this.gametype_init(this, _("SNAFU"),"snafu","g_snafu",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=30 pointlimit=5",_("Situation normal..."));
     }
     METHOD(Snafu, m_generate_mapinfo, void(Gametype this, string v))
     {

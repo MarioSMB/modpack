@@ -1,12 +1,15 @@
 #pragma once
 
+#include <common/gamemodes/gamemode/lms/lms.qh>
+#include <common/mapinfo.qh>
+
 #ifdef CSQC
 void HUD_Mod_Survival(vector pos, vector mySize);
 #endif
 CLASS(Survival, Gametype)
     INIT(Survival)
     {
-        this.gametype_init(this, _("Survival"),"sv","g_survival",false,true,"","timelimit=20 pointlimit=20",_("Identify and eliminate all the hunters before all your allies are gone"));
+        this.gametype_init(this, _("Survival"),"sv","g_survival",GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=20",_("Identify and eliminate all the hunters before all your allies are gone"));
     }
     METHOD(Survival, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
     {
@@ -28,9 +31,7 @@ CLASS(Survival, Gametype)
 ENDCLASS(Survival)
 REGISTER_GAMETYPE(SURVIVAL, NEW(Survival));
 
-REGISTER_SP(SV_SURVIVALS);
-REGISTER_SP(SV_HUNTS);
-
+#ifdef GAMEQC
 // shared state signalling the player's survival status
 .int survival_status;
 const int SV_STATUS_PREY = 1;
@@ -39,6 +40,10 @@ const int SV_STATUS_HUNTER = 2;
 // hardcoded player colors for survival
 const int SV_COLOR_PREY = 51; // green
 const int SV_COLOR_HUNTER = 68; // red
+#endif
+
+REGISTER_SP(SV_SURVIVALS);
+REGISTER_SP(SV_HUNTS);
 
 // gamemode specific player survival status (independent of score and frags)
 ENTCS_PROP(SURVIVAL_STATUS, true, survival_status, survival_status, ENTCS_SET_NORMAL,

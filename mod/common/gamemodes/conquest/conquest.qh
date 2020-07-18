@@ -3,7 +3,7 @@
 CLASS(Conquest, Gametype)
     INIT(Conquest)
     {
-        this.gametype_init(this, _("Conquest"),"cq","g_conquest",true,true,"","timelimit=20 pointlimit=200 teams=2",_("Capture all the spawnpoint control points to win"));
+        this.gametype_init(this, _("Conquest"),"cq","g_conquest",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=200 teams=2",_("Capture all the spawnpoint control points to win"));
     }
     METHOD(Conquest, m_parse_mapinfo, bool(string k, string v))
     {
