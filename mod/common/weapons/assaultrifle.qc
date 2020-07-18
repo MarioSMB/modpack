@@ -2,108 +2,6 @@
 
 #include "assaultrifle.qh"
 
-#ifdef CSQC
-.entity muzzle_flash;
-
-void W_AssaultRifle_AttachToShotorg(entity wepent, entity flash, vector offset)
-{
-	flash.owner = wepent;
-	flash.angles_z = random() * 360;
-
-	if (gettagindex(wepent, "shot")) setattachment(flash, wepent, "shot");
-	else setattachment(flash, wepent, "tag_shot");
-	setorigin(flash, offset);
-}
-#endif
-
-void W_AssaultRifle_MuzzleFlash_Think(entity this)
-{
-	this.frame += 2;
-	this.scale *= 0.5;
-	this.alpha -= 0.25;
-	this.nextthink = time + 0.05;
-
-	if(this.alpha <= 0)
-	{
-		setthink(this, SUB_Remove);
-		this.nextthink = time;
-		this.realowner.muzzle_flash = NULL;
-		return;
-	}
-
-}
-
-void W_AssaultRifle_MuzzleFlash(entity wepent)
-{
-	if(wepent.muzzle_flash == NULL)
-		wepent.muzzle_flash = spawn();
-
-	// muzzle flash for 1st person view
-	setmodel(wepent.muzzle_flash, MDL_ASSAULTRIFLE_MUZZLEFLASH); // precision set below
-
-	wepent.muzzle_flash.scale = 0.75;
-	setthink(wepent.muzzle_flash, W_AssaultRifle_MuzzleFlash_Think);
-	wepent.muzzle_flash.nextthink = time + 0.02;
-	wepent.muzzle_flash.frame = 2;
-	wepent.muzzle_flash.alpha = 0.75;
-	wepent.muzzle_flash.angles_z = random() * 180;
-	wepent.muzzle_flash.effects = EF_ADDITIVE | EF_FULLBRIGHT;
-	wepent.muzzle_flash.owner = wepent.muzzle_flash.realowner = wepent;
-
-#ifdef CSQC
-	wepent.muzzle_flash.drawmask = MASK_NORMAL;
-#endif
-}
-
-#ifdef SVQC
-void W_AssaultRifle_AttachToShotorg(entity actor, .entity weaponentity, entity flash, vector offset)
-{
-	flash.owner = actor;
-	flash.angles_z = random() * 360;
-
-	entity view = actor.(weaponentity);
-	entity exterior = actor.exteriorweaponentity;
-
-	if (view.oldorigin.x > 0)
-	{
-		setattachment(flash, exterior, "");
-		setorigin(flash, view.oldorigin + offset);
-	}
-	else
-	{
-		if (gettagindex(exterior, "shot")) setattachment(flash, exterior, "shot");
-		else setattachment(flash, exterior, "tag_shot");
-		setorigin(flash, offset);
-	}
-}
-#endif
-
-REGISTER_NET_TEMP(assaultrifle_muzzleflash)
-#ifdef CSQC
-NET_HANDLE(assaultrifle_muzzleflash, bool isnew)
-{
-	return = true;
-	vector a = '5 0 0';
-	//a = ReadVectir();
-    int slot = ReadByte();
-    if(!autocvar_r_drawviewmodel || autocvar_chase_active) return;
-	entity wepent = viewmodels[slot];
-	W_AssaultRifle_MuzzleFlash(wepent);
-	W_AssaultRifle_AttachToShotorg(wepent, wepent.muzzle_flash, a);
-}
-#endif
-#ifdef SVQC
-void assaultrifle_muzzleflash_send(entity actor, entity wepent)
-{
-	if (!IS_REAL_CLIENT(actor)) return;
-	int channel = MSG_ONE;
-	msg_entity = actor;
-	WriteHeader(channel, assaultrifle_muzzleflash);
-	//WriteVector(channel, a);
-	WriteByte(channel, weaponslot(wepent.weaponentity_fld));
-}
-#endif
-
 #ifdef SVQC
 
 void W_AssaultRifle_Attack(Weapon thiswep, int deathtype, entity actor, .entity weaponentity)
@@ -129,15 +27,7 @@ void W_AssaultRifle_Attack(Weapon thiswep, int deathtype, entity actor, .entity 
 															  WEP_CVAR(assaultrifle, sustained_damage), WEP_CVAR(assaultrifle, sustained_force), deathtype, EFFECT_BULLET);
 	}
 
-	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
-
-	W_AssaultRifle_MuzzleFlash(actor.exteriorweaponentity);
-	W_AssaultRifle_AttachToShotorg(actor, weaponentity, actor.exteriorweaponentity.muzzle_flash, '5 0 0');
-
-	FOREACH_CLIENT(it == actor || (IS_SPEC(it) && it.enemy == actor),
-	{
-		assaultrifle_muzzleflash_send(it, actor.(weaponentity));
-	});
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	// casing code
 	if(autocvar_g_casings >= 2)
@@ -213,15 +103,7 @@ void W_AssaultRifle_Attack_Auto(Weapon thiswep, entity actor, .entity weaponenti
 
 	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
 
-	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
-
-	W_AssaultRifle_MuzzleFlash(actor.exteriorweaponentity);
-	W_AssaultRifle_AttachToShotorg(actor, weaponentity, actor.exteriorweaponentity.muzzle_flash, '5 0 0');
-
-	FOREACH_CLIENT(it == actor || (IS_SPEC(it) && it.enemy == actor),
-	{
-		assaultrifle_muzzleflash_send(it, actor.(weaponentity));
-	});
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	if(autocvar_g_casings >= 2) // casing code
 	{
@@ -245,15 +127,7 @@ void W_AssaultRifle_Attack_Burst(Weapon thiswep, entity actor, .entity weaponent
 	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(assaultrifle, burst_speed), WEP_CVAR(assaultrifle, solidpenetration), 
 														  WEP_CVAR(assaultrifle, burst_damage), WEP_CVAR(assaultrifle, sustained_force), WEP_ASSAULTRIFLE.m_id, EFFECT_BULLET);
 
-	Send_Effect(EFFECT_MACHINEGUN_MUZZLEFLASH, w_shotorg, w_shotdir * 1000, 1);
-
-	W_AssaultRifle_MuzzleFlash(actor.exteriorweaponentity);
-	W_AssaultRifle_AttachToShotorg(actor, weaponentity, actor.exteriorweaponentity.muzzle_flash, '5 0 0');
-
-	FOREACH_CLIENT(it == actor || (IS_SPEC(it) && it.enemy == actor),
-	{
-		assaultrifle_muzzleflash_send(it, actor.(weaponentity));
-	});
+	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
 	if(autocvar_g_casings >= 2) // casing code
 	{

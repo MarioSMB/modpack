@@ -52,6 +52,8 @@ CLASS(AssaultRifle, Weapon)
 /* modelname */ ATTRIB(AssaultRifle, mdl, string, "assaultrifle");
 #ifdef GAMEQC
 /* model     */ ATTRIB(AssaultRifle, m_model, Model, MDL_ASSAULTRIFLE_ITEM);
+/* flash mdl */ ATTRIB(AssaultRifle, m_muzzlemodel, Model, MDL_ASSAULTRIFLE_MUZZLEFLASH);
+/* flash eff */ ATTRIB(AssaultRifle, m_muzzleeffect, entity, EFFECT_MACHINEGUN_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(AssaultRifle, w_crosshair, string, "gfx/crosshair61");
 /* crosshair */ ATTRIB(AssaultRifle, w_crosshair_size, float, 0.6);
