@@ -45,6 +45,8 @@ const int SV_COLOR_HUNTER = 68; // red
 REGISTER_SP(SV_SURVIVALS);
 REGISTER_SP(SV_HUNTS);
 
+REGISTER_STAT(SURVIVAL_ROUNDTIMER, float)
+
 // gamemode specific player survival status (independent of score and frags)
 ENTCS_PROP(SURVIVAL_STATUS, true, survival_status, survival_status, ENTCS_SET_NORMAL,
 	{ WriteShort(chan, ent.survival_status); },

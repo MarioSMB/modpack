@@ -10,6 +10,7 @@ void surv_FakeTimeLimit(entity e, float t)
 {
 	if(!IS_REAL_CLIENT(e))
 		return;
+#if 0
 	msg_entity = e;
 	WriteByte(MSG_ONE, 3); // svc_updatestat
 	WriteByte(MSG_ONE, 236); // STAT_TIMELIMIT
@@ -17,6 +18,9 @@ void surv_FakeTimeLimit(entity e, float t)
 		WriteCoord(MSG_ONE, autocvar_timelimit);
 	else
 		WriteCoord(MSG_ONE, (t + 1) / 60);
+#else
+	STAT(SURVIVAL_ROUNDTIMER, e) = t;
+#endif
 }
 
 void nades_Clear(entity player);
