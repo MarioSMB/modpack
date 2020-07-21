@@ -21,8 +21,8 @@ void Oregon_Begin()
 {
 	oregon_started = true;
 	localcmd("\ntoggleconsole\n"); // assumes console was open!
-	print("\{1}^7Beginning game of Oregon Trail\n");
-	print("\{1}^7Enter \"oregon stop\" in the console at any time to stop the game\n");
+	print("\{3}^7Beginning game of Oregon Trail\n");
+	print("\{3}^7Enter \"oregon stop\" in the console at any time to stop the game\n");
 	oregon_handler = new(oregon_handler);
 	setthink(oregon_handler, Oregon_HandlerThink);
 	oregon_handler.nextthink = time + OREGON_TICKRATE;
@@ -33,7 +33,7 @@ void Oregon_Finish(entity this)
 {
 	if(this)
 	{
-		print("\{1}^7Ending game of Oregon Trail\n");
+		print("\{3}^7Ending game of Oregon Trail\n");
 		delete(this);
 	}
 
@@ -96,7 +96,7 @@ void Oregon_ParseInput(string input)
 
 void Oregon_OpenInput(entity this)
 {
-	print("\{1}^3NOTE: Enter \"oregon\" in the console to progress if you accidentally close this window\n");
+	print("\{3}^3NOTE: Enter \"oregon\" in the console to progress if you accidentally close this window\n");
 	localcmd("\ncommandmode oregon \n");
 	this.oregon_waitforinput = true;
 }
@@ -116,13 +116,13 @@ string Oregon_get_tab_count(int tabs)
 void Oregon_Handle(entity this)
 {
 #define REM(s) dprint(strcat((s), "\n"));
-#define PRINT(s) print(strcat("\{1}^7", (s), "\n"));
+#define PRINT(s) print(strcat("\{3}^7", (s), "\n"));
 #define PRINTF(...) PRINT(sprintf(__VA_ARGS__))
 #define LINE(ln) if(this.oregon_line == ln)
 #define GOTO(ln) {this.oregon_line = ln - 1; return;}
 #define LET(a, b) oregon_##a = (b);
 #define LETSTR(a, b) strcpy(oregon_##a, (b));
-#define INPUT(in) {strfree(oregon_input); if((in) != "") print(strcat("\{1}^7", (in), "\n")); Oregon_OpenInput(this);}
+#define INPUT(in) {strfree(oregon_input); if((in) != "") print(strcat("\{3}^7", (in), "\n")); Oregon_OpenInput(this);}
 #define INPUTSET(s) oregon_##s = stof(oregon_input);
 #define IFINPUT(s) if(stof(oregon_input) == (s))
 #define IFINPUTSTR(s) if(oregon_input == (s))
