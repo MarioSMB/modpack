@@ -294,10 +294,15 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerJump, CBC_ORDER_LAST)
 		MAKE_VECTORS(PHYS_WORLD_ANGLES(player), forward, right, up);
 		player.velocity -= forward * 50; // NOTE: hardcoded backflip value? needs fixing!
 	#ifdef SVQC
-		if(CS(player).cvar_cl_sparkle == 5)
-			sound(player, CH_VOICE, SND_MARIO64_CJUMP, VOL_BASE, ATTEN_NORM);
-		else
-			sound(player, CH_VOICE, SND_MARIO_CJUMP, VOL_BASE, ATTEN_NORM);
+		if(sound_allowed(MSG_BROADCAST, player))
+		{
+			float myscale = ((player.scale) ? player.scale : 1); // safety net
+			float thepitch = ((myscale == 1) ? 0 : GlobalSound_pitch(myscale * 100));
+			if(CS(player).cvar_cl_sparkle == 5)
+				sound7(player, CH_VOICE, SND(MARIO64_CJUMP), VOL_BASE, ATTEN_NORM, thepitch, 0);
+			else
+				sound7(player, CH_VOICE, SND(MARIO_CJUMP), VOL_BASE, ATTEN_NORM, thepitch, 0);
+		}
 	#endif
 	}
 }
