@@ -52,6 +52,8 @@ CLASS(Uzi, Weapon)
 /* modelname */ ATTRIB(Uzi, mdl, string, "mac10");
 #ifdef GAMEQC
 /* model     */ ATTRIB(Uzi, m_model, Model, MDL_UZI_ITEM);
+/* flash mdl */ ATTRIB(Uzi, m_muzzlemodel, Model, MDL_UZI_MUZZLEFLASH);
+/* flash eff */ ATTRIB(Uzi, m_muzzleeffect, entity, EFFECT_MACHINEGUN_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(Uzi, w_crosshair, string, "gfx/crosshair63");
 /* crosshair */ ATTRIB(Uzi, w_crosshair_size, float, 0.6);

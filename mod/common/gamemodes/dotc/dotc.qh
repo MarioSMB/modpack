@@ -8,7 +8,7 @@ void HUD_Mod_DotC(vector pos, vector mySize);
 CLASS(DoTC, Gametype)
     INIT(DoTC)
     {
-        this.gametype_init(this, _("Defense of the Core"),"dotc","g_dotc",true,true,"","timelimit=20 pointlimit=1 teams=2",_("Defend your team's core while attacking the enemy core"));
+        this.gametype_init(this, _("Defense of the Core"),"dotc","g_dotc",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=1 teams=2",_("Defend your team's core while attacking the enemy core"));
     }
     METHOD(DoTC, m_generate_mapinfo, void(Gametype this, string v))
     {

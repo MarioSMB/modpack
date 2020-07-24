@@ -37,6 +37,7 @@ void HUD_MorningRescue()
 
 	string mycolor = "";
 	const string mrstring = _("^xFB0MMorning ^7Rescue");
+	const int mrstring_length = strlen(mrstring);
 
 	draw_beginBoldFont();
 
@@ -44,7 +45,7 @@ void HUD_MorningRescue()
 	{
 		mrpos_y = vid_conheight / 2 - 12;
 		mrpos_x = 0.5 * (vid_conwidth - 0.6025 * strlennocol(mrstring) * 24);
-		for(int j = 0; j < _length(mrstring); ++j)
+		for(int j = 0; j < mrstring_length; ++j)
 		{
 			string mychar = substring(mrstring, j, 1);
 
@@ -67,7 +68,6 @@ void HUD_MorningRescue()
 			offset_x = offset_y * ((j % 2) ? -1 : 1);
 			string resultstr = strcat(mycolor, mychar);
 
-			//dummyfunction(0, 0, 0, 0, 0, 0, 0, 0); // work around DP bug (set OFS_PARAM5 to 0)
 			mrpos_x += stringwidth(resultstr, true, '24 24 0');
 			drawcolorcodedstring(mrpos + offset, resultstr, '24 24 0', mralpha * 0.8, DRAWFLAG_ADDITIVE);
 		}
@@ -201,7 +201,7 @@ MUTATOR_HOOKFUNCTION(cl_morningrescue, HUD_Draw_overlay)
 	if(time <= mr_fadetime && autocvar_hud_panel_radar_maximised_zoom_scale == 1)
 	{
 		HUD_MorningRescue();
-		return true;
+		return false;
 	}
 	else
 		morningrescue = false;

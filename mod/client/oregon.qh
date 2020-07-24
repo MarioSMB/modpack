@@ -1,0 +1,64 @@
+#pragma once
+
+.int oregon_line;
+.int oregon_returnline;
+.bool oregon_waitforinput;
+.int oregon_data; // stored data position
+entity oregon_handler;
+const float OREGON_TICKRATE = 0.07; // rate at which lines are iterated
+const int OREGON_STARTLINE = 157; // indicates when to start the game at (skipping developer information)
+string oregon_input;
+
+bool oregon_started;
+
+void Oregon_HandleCommand(string input);
+
+void Oregon_Begin();
+
+void Oregon_Finish(entity this);
+
+void Oregon_HandlerThink(entity this);
+
+void Oregon_ParseInput(string input);
+
+void Oregon_OpenInput(entity this);
+
+void Oregon_Handle(entity this);
+
+// variables -- see identification of variables in oregon.qc
+float oregon_A;
+float oregon_B;
+float oregon_B1;
+float oregon_B3;
+float oregon_C;
+float oregon_C1;
+string oregon_CAND;
+int oregon_D; // data storage value
+float oregon_D1;
+float oregon_D3;
+//float oregon_D4;
+float oregon_D9;
+float oregon_E;
+float oregon_F;
+float oregon_F1;
+float oregon_F2;
+float oregon_F9;
+float oregon_K8;
+float oregon_L1;
+float oregon_M;
+float oregon_M1;
+float oregon_M2;
+float oregon_M9;
+float oregon_P;
+float oregon_R1;
+float oregon_S4;
+float oregon_S5;
+float oregon_S6;
+string oregon_SAND;
+float oregon_T;
+float oregon_T1;
+float oregon_X;
+float oregon_X1;
+
+int oregon_data_values[15] = {6, 11, 13, 15, 17, 22, 32, 35, 37, 42, 44, 54, 64, 69, 95};
+string oregon_shoot_words[4] = {"bang","blam","pow","wham"};

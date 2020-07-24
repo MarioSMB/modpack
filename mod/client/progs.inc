@@ -8,6 +8,7 @@
 	#include "custom_playermodels.qc"
 	#include "cvars.qc"
 	#include "demo.qc"
+	#include "oregon.qc"
 	#include "polytrails.qc"
 #endif
 

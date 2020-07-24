@@ -13,6 +13,7 @@
 * SNAFU gamemode... needs no explanation
 * VIP gamemode, a mode in which one player becomes the team's VIP (very important player), when they die the round is over
 * Customisable grappling hooks per player (visible to others), aesthetic change only
+* Command to add locations to maps for callouts in chat, useful for mappers who don't want to work from the editor
 * Boggle minigame, a fun word search game
 * Nim minigame, the classic matchstick game with balls
 * Voracity minigame, a little number navigation game
@@ -22,7 +23,7 @@
 * Crushing, for all your goomba stomping needs
 * Radio that can serve pk3 files created by a specialised web host (https://github.com/z/xonotic-radio-service)
 * Moaning Lescue
-* Teammate collisions (if supported), pass through teammates instead of bumping into them!
+* New weapon: Assault Rifle, a machinegun-like weapon with high accuracy
 * New weapon: Chainsaw (chops people)
 * New weapon: Flak Cannon, a UT-like weapon that fires a bunch of bouncing bullets
 * New weapon: Lightsabre, for embracing the dark side!
@@ -50,8 +51,8 @@
 * Zombie Apocalypse mutator, which spawns random monsters around the map constantly
 * Command to permanently mute troublesome players
 * Option to change all or individual player's size
-* Option to make spectating predicted (less lag when moving around)
 * Options to replace any entity on maps
 * Option to require players to have stats enabled, allows blocking players via whitelists and blacklists and even keeping players out with too much elo
+* Teammate collisions, pass through teammates instead of bumping into them!
 * tp command, so admins can sneak up on troublesome players!
 * Command to permanently prevent certain players from voting

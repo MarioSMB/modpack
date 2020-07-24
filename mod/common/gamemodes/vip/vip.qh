@@ -7,7 +7,7 @@ void HUD_Mod_VIP_Reset();
 CLASS(VIP, Gametype)
     INIT(VIP)
     {
-        this.gametype_init(this, _("VIP"),"vip","g_vip",true,true,"","timelimit=20 pointlimit=10 leadlimit=0",_("A VIP is chosen on each team, when a VIP dies, the round is over"));
+        this.gametype_init(this, _("VIP"),"vip","g_vip",GAMETYPE_FLAG_TEAMPLAY | GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=10 leadlimit=0",_("A VIP is chosen on each team, when a VIP dies, the round is over"));
     }
     METHOD(VIP, m_generate_mapinfo, void(Gametype this, string v))
     {

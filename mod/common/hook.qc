@@ -15,9 +15,9 @@ ENTCS_PROP(HOOKTYPE, true, cvar_cl_customhook, cvar_cl_customhook, ENTCS_SET_NOR
 	{ ent.hook_type = ReadByte(); })
 
 #ifdef SVQC
-REGISTER_MUTATOR(sv_hooks, true);
+REGISTER_MUTATOR(sv_customhook, true);
 
-MUTATOR_HOOKFUNCTION(sv_hooks, PlayerPreThink)
+MUTATOR_HOOKFUNCTION(sv_customhook, PlayerPreThink)
 {
 	// this hack is rather unfortunate, but entcs isn't smart enough to get fields from the clientstate yet
 	entity player = M_ARGV(0, entity);
@@ -33,7 +33,7 @@ MUTATOR_HOOKFUNCTION(sv_hooks, PlayerPreThink)
 AUTOCVAR_SAVE(cl_customhook, int, 0, "Replace grappling hook textures, 0=normal, 1='pro', 2=nexuiz, 3=muffins");
 AUTOCVAR_SAVE(cl_customhook_perplayer, bool, true, "Show other player's hook selections");
 
-REGISTER_MUTATOR(cl_hooks, true);
+REGISTER_MUTATOR(cl_customhook, true);
 
 STATIC_INIT(cl_hooks_compat)
 {
@@ -51,7 +51,7 @@ STATIC_INIT(cl_hooks_compat)
 		cvar_set("cl_customhook", "2");
 }
 
-MUTATOR_HOOKFUNCTION(cl_hooks, DrawGrapplingHook)
+MUTATOR_HOOKFUNCTION(cl_customhook, DrawGrapplingHook)
 {
 	entity thehook = M_ARGV(0, entity);
 	if(thehook.HookType != NET_ENT_CLIENT_HOOK)

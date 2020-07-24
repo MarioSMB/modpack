@@ -45,6 +45,8 @@ CLASS(RPG7, Weapon)
 /* modelname */ ATTRIB(RPG7, mdl, string, "rpg7");
 #ifdef GAMEQC
 /* model     */ ATTRIB(RPG7, m_model, Model, MDL_RPG_ITEM);
+/* flash mdl */ ATTRIB(RPG7, m_muzzlemodel, Model, MDL_RPG_MUZZLEFLASH);
+/* flash eff */ ATTRIB(RPG7, m_muzzleeffect, entity, EFFECT_ROCKET_MUZZLEFLASH);
 #endif
 /* crosshair */ ATTRIB(RPG7, w_crosshair, string, "gfx/crosshair65");
 /* crosshair */ ATTRIB(RPG7, w_crosshair_size, float, 0.7);

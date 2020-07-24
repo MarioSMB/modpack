@@ -19,6 +19,7 @@
 	#include "settemp.qc"
 	#include "spawnreplace.qc"
 	#include "stats.qc"
+	#include "team_collisions.qc"
 	#include "tp.qc"
 	#include "voteban.qc"
 	#include "weapons.qc"
