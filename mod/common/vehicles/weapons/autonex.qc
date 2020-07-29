@@ -18,7 +18,7 @@ void vwep_autonex_attack(
 	W_SetupShot (player, weaponentities[0], true, 5, SND_NEXFIRE, CH_WEAPON_A, atk_damage, atk_deathtype);
 
 	FireRailgunBullet (player, weaponentities[0], v, v + w_shotdir * max_shot_distance,
-						atk_damage, atk_force, atk_mindist, atk_maxdist, atk_halflife, atk_forcehalflife, atk_deathtype);
+						atk_damage, true, atk_force, atk_mindist, atk_maxdist, atk_halflife, atk_forcehalflife, atk_deathtype);
 
 	vector u = WarpZone_UnTransformOrigin(WarpZone_trace_transform, trace_endpos);
 	WriteHeader(MSG_BROADCAST, TE_CSQC_VORTEXBEAMPARTICLE);

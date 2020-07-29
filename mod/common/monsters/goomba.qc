@@ -66,7 +66,7 @@ void M_Goomba_Touch(entity this, entity toucher)
 	
 	if(toucher.items & ITEM_Shield.m_itemid)
 		return; // FIXME this assumes starman, which is incorrect
-	if(toucher.takedamage == DAMAGE_NO || !toucher.iscreature || toucher.monsterid == this.monsterid)
+	if(toucher.takedamage == DAMAGE_NO || !toucher.iscreature || toucher.monsterdef == this.monsterdef)
 		return;
 	if(time < this.attack_finished_single[0])
 		return;
@@ -80,7 +80,7 @@ void M_Goomba_Touch(entity this, entity toucher)
 	}
 }
 
-spawnfunc(monster_goomba) { Monster_Spawn(this, true, MON_GOOMBA.monsterid); }
+spawnfunc(monster_goomba) { Monster_Spawn(this, true, MON_GOOMBA); }
 
 #endif // SVQC
 

@@ -13,7 +13,6 @@ enum {
 
 
 // MSG_ANNCE_NOTIFICATIONS
-    MSG_ANNCE_NOTIF(HEADSHOT,       2,       "headshot",   CH_INFO,             VOL_BASEVOICE,  ATTEN_NONE)
 
 // MSG_INFO_NOTIFICATIONS
     MULTITEAM_INFO(CONQUEST_CAPTURE,                        1,  1, 0, "s1", "",                         "",                         _("^BG%s^BG was captured by the ^TC^TT^BG team"), "", NAME)
@@ -56,7 +55,6 @@ enum {
     MSG_CENTER_NOTIF(JAILBREAK_WRONGTEAM,         		1,  	0, 0, "",               CPID_JAILBREAK,         "0 0",  _("^BGYou can't capture your team's control points"), "")
 
     MSG_CENTER_NOTIF(FREEZE_THAWING,           1,   0, 0, "",             CPID_FREEZE,          "5 0", "^BGThawing slowly now\n^BGJump to re-spawn at base instantly", "")
-    MSG_CENTER_NOTIF(HEADSHOT,                 1,   0, 0, "",             CPID_Null,              "0 0", "^F2Headshot!", "")
     MSG_CENTER_NOTIF(PIGGYBACK_CARRYING,       1,   1, 0, "s1",           CPID_PIGGYBACK,       "0 0", "^BGYou are now carrying %s^BG!", "")
     MSG_CENTER_NOTIF(PIGGYBACK_RIDING,         1,   1, 0, "s1",           CPID_PIGGYBACK,       "0 0", "^BGYou are now riding %s^BG!", "")
 
@@ -77,7 +75,6 @@ enum {
 	MSG_CENTER_NOTIF(VIP_PICKUP_SELF,                   1,      0, 0, "",               CPID_VIP,               "0 0",  _("^F2You are now a VIP!"), "")
 
 // MSG_MULTI_NOTIFICATIONS
-    MSG_MULTI_NOTIF(HEADSHOT,                     1,  ANNCE_HEADSHOT,           NULL,                    CENTER_HEADSHOT)
 
 // MSG_CHOICE_NOTIFICATIONS
 

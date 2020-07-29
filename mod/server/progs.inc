@@ -11,7 +11,6 @@
 	#include "ignore.qc"
 	//#include "itemplacer.qc"
 	#include "items.qc"
-	#include "headshots.qc"
 	#include "monsters.qc"
 	#include "mute.qc"
 	#include "player_size.qc"

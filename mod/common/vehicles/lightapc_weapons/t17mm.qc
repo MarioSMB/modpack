@@ -70,7 +70,7 @@ void lightapc_t17mm(entity player, entity gunmount, float dt)
 		//		1, 1, autocvar_g_vehicle_lightapc_t17mm_bulletconstant, autocvar_g_vehicle_lightapc_t17mm_coreshotaddeddamage);
 		//endFireBallisticBullet();
 		fireBullet(player, weaponentity, v, v_forward, autocvar_g_vehicle_lightapc_t17mm_spread, autocvar_g_vehicle_lightapc_t17mm_solidpenetration,
-								 autocvar_g_vehicle_lightapc_t17mm_damage, autocvar_g_vehicle_lightapc_t17mm_force, DEATH_VH_SPID_MINIGUN.m_id, EFFECT_BULLET);
+								 autocvar_g_vehicle_lightapc_t17mm_damage, 0, autocvar_g_vehicle_lightapc_t17mm_force, DEATH_VH_SPID_MINIGUN.m_id, EFFECT_BULLET);
 		// End Ballistic bullet
 
 	 
@@ -106,7 +106,7 @@ void lightapc_t17mm(entity player, entity gunmount, float dt)
 		//		1, 1, autocvar_g_vehicle_lightapc_t17mm_bulletconstant, autocvar_g_vehicle_lightapc_t17mm_coreshotaddeddamage);
 		//endFireBallisticBullet();
 		fireBullet(player, weaponentity, v, v_forward, autocvar_g_vehicle_lightapc_t17mm_spread, autocvar_g_vehicle_lightapc_t17mm_solidpenetration,
-								 autocvar_g_vehicle_lightapc_t17mm_damage, autocvar_g_vehicle_lightapc_t17mm_force, DEATH_VH_SPID_MINIGUN.m_id, EFFECT_BULLET);
+								 autocvar_g_vehicle_lightapc_t17mm_damage, 0, autocvar_g_vehicle_lightapc_t17mm_force, DEATH_VH_SPID_MINIGUN.m_id, EFFECT_BULLET);
 		// End Ballistic bullet
 
 	 
