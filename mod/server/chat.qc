@@ -67,7 +67,7 @@ MUTATOR_HOOKFUNCTION(mod_chat, PreFormatMessage)
 		{
 			entity player = GetFilteredEntity(substring(theword, 1, strlen(theword)));
 			int accepted = VerifyClientEntity(player, false, false);
-			theword = strcat("^7", ((accepted >= 0) ? playername(player, false) : "(nobody)"), "^7");
+			theword = strcat("^7", ((accepted >= 0) ? playername(player.netname, player.team, false) : "(nobody)"), "^7");
 		}
 
 		if(!autocvar_chat_replacewords)
