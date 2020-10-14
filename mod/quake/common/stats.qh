@@ -86,6 +86,7 @@ int autocvar_sv_gameplayfix_slidemoveprojectiles = 1;
 int autocvar_sv_gameplayfix_grenadebouncedownslopes = 1;
 int autocvar_sv_gameplayfix_noairborncorpse = 1;
 int autocvar_sv_gameplayfix_noairborncorpse_allowsuspendeditems = 1;
+int autocvar_sv_gameplayfix_delayprojectiles = 0;
 #endif
 REGISTER_STAT(GAMEPLAYFIX_DOWNTRACEONGROUND, int, autocvar_sv_gameplayfix_downtracesupportsongroundflag)
 REGISTER_STAT(GAMEPLAYFIX_EASIERWATERJUMP, int, autocvar_sv_gameplayfix_easierwaterjump)
@@ -99,6 +100,7 @@ REGISTER_STAT(GAMEPLAYFIX_SLIDEMOVEPROJECTILES, int, autocvar_sv_gameplayfix_sli
 REGISTER_STAT(GAMEPLAYFIX_GRENADEBOUNCESLOPES, int, autocvar_sv_gameplayfix_grenadebouncedownslopes)
 REGISTER_STAT(GAMEPLAYFIX_NOAIRBORNCORPSE, int, autocvar_sv_gameplayfix_noairborncorpse)
 REGISTER_STAT(NOAIRBORNCORPSE_ALLOWSUSPENDED, int, autocvar_sv_gameplayfix_noairborncorpse_allowsuspendeditems)
+REGISTER_STAT(GAMEPLAYFIX_DELAYPROJECTILES, int, autocvar_sv_gameplayfix_delayprojectiles)
 
 #ifdef SVQC
 int autocvar_sv_jumpstep;

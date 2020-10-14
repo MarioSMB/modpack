@@ -1,5 +1,13 @@
 #pragma once
 
+//----------------
+// STATES & ACTIVE
+//----------------
+const int STATE_TOP = 0;
+const int STATE_BOTTOM = 1;
+const int STATE_UP = 2;
+const int STATE_DOWN = 3;
+
 const bool OPT_MOTD = true; // TODO: opt-out in non-impel!
 const int FL_MOTDVIEWED = 8192; // impel
 

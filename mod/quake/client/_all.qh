@@ -7,7 +7,6 @@ float ticrate;
 float drawtime;
 
 .bool csqcmodel_isdead; // used by shownames and miscfunctions (entcs_IsDead) to know when a player is dead
-#define IS_DEAD(s) (((s).classname == "csqcmodel") ? (s).csqcmodel_isdead : ((s).health <= 0))
 
 vector mousepos;
 
@@ -26,8 +25,6 @@ int autocvar_chase_active;
 
 .int enttype; // entity type sent from server
 .int sv_entnum; // entity number sent from server
-
-float vid_conheight;
 
 int framecount;
 .float health;

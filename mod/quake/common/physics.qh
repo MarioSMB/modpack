@@ -5,9 +5,6 @@
 .float pm_frametime;
 
 #ifdef CSQC
-	const int FL_WATERJUMP = 2048;  // player jumping out of water
-	const int FL_JUMPRELEASED = 4096;  // for jump debouncing
-
 	.float watertype;
 	.float waterlevel;
 
@@ -61,6 +58,8 @@
 #ifdef CSQC
 
 	#define PHYS_HEALTH(s)						STAT(HEALTH, s)
+
+	#define IS_DEAD(s)                          (((s).classname == "csqcmodel") ? (s).csqcmodel_isdead : ((s).health <= 0))
 
 	#define PHYS_INPUT_ANGLES(s)                input_angles
 // TODO

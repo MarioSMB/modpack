@@ -1191,7 +1191,6 @@ void RunThink(entity this)
 }
 
 bool autocvar_sv_freezenonclients;
-bool autocvar_sv_gameplayfix_delayprojectiles;
 void Physics_Frame()
 {
 	if(autocvar_sv_freezenonclients)
