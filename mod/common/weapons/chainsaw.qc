@@ -272,7 +272,7 @@ METHOD(Chainsaw, wr_think, void(entity thiswep, entity actor, .entity weaponenti
     }
 
     if(actor.(weaponentity).clip_load >= 0) // we are not currently reloading
-    if(!actor.crouch) // no crouchmelee please
+    if(!IS_DUCKED(actor)) // no crouchmelee please
     if(fire & 2)
     if(weapon_prepareattack(thiswep, actor, weaponentity, true, WEP_CVAR(chainsaw, swing_refire)))
     {

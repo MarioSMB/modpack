@@ -24,7 +24,7 @@ void za_SpawnMonster()
 	if(MoveToRandomMapLocation(e, DPCONTENTS_SOLID | DPCONTENTS_CORPSE | DPCONTENTS_PLAYERCLIP, DPCONTENTS_SLIME | DPCONTENTS_LAVA | DPCONTENTS_SKY | DPCONTENTS_BODY | DPCONTENTS_DONOTENTER, Q3SURFACEFLAG_SKY, 10, 1024, 256))
 	{
 		e.angles = '0 0 0';
-		spawnmonster(e, autocvar_g_za_spawnmonster, 0, NULL, NULL, e.origin, false, false, 2);
+		spawnmonster(e, autocvar_g_za_spawnmonster, MON_Null, NULL, NULL, e.origin, false, false, 2);
 	}
 }
 

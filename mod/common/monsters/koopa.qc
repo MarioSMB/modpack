@@ -126,9 +126,9 @@ void M_Koopa_Touch(entity this, entity toucher)
 		return; // no hurty while dead
 	}
 	
-	if((toucher.items & ITEM_Shield.m_itemid) && toucher.monsterid != this.monsterid)
+	if((toucher.items & ITEM_Shield.m_itemid) && toucher.monsterdef != this.monsterdef)
 		return; // FIXME this assumes starman, which is incorrect
-	if(toucher.takedamage == DAMAGE_NO || !toucher.iscreature || (toucher.monsterid == this.monsterid && !this.fakedead))
+	if(toucher.takedamage == DAMAGE_NO || !toucher.iscreature || (toucher.monsterdef == this.monsterdef && !this.fakedead))
 		return;
 	if(time < this.attack_finished_single[0] && (!this.fakedead || IS_PLAYER(toucher))) // hits multiple times!
 		return;
@@ -164,7 +164,7 @@ void M_Koopa_WakeUp(Monster thismon, entity actor)
 	actor.items &= ~ITEM_Shield.m_itemid;
 }
 
-spawnfunc(monster_koopa) { Monster_Spawn(this, true, MON_KOOPA.monsterid); }
+spawnfunc(monster_koopa) { Monster_Spawn(this, true, MON_KOOPA); }
 
 #endif // SVQC
 
@@ -204,7 +204,7 @@ spawnfunc(monster_koopa) { Monster_Spawn(this, true, MON_KOOPA.monsterid); }
 				}
 				return 0;
 			}
-			if((GetResource(actor, RES_HEALTH) - damage_take) <= 0 && deathtype != DEATH_KILL.m_id && !actor.fakedead && attacker.monsterid != actor.monsterid)
+			if((GetResource(actor, RES_HEALTH) - damage_take) <= 0 && deathtype != DEATH_KILL.m_id && !actor.fakedead && attacker.monsterdef != actor.monsterdef)
 			{
 				M_Koopa_FakeDeath(thismon, actor);
 				return 0;

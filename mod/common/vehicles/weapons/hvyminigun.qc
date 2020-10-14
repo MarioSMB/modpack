@@ -23,7 +23,7 @@ void vwep_hvyminigun_attack(
 	v_forward = normalize(v_forward);
 
 	fireBullet(player, weaponentity, v, v_forward, atk_spread, atk_solidpenetration,
-							 atk_damage, atk_force, atk_deathtype, EFFECT_BULLET);
+							 atk_damage, 0, atk_force, atk_deathtype, EFFECT_BULLET);
 
 	 
 	v = gettaginfo(gunmount, gettagindex(gunmount, tagname));

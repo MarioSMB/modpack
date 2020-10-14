@@ -372,12 +372,12 @@ MUTATOR_HOOKFUNCTION(piggyback, FixPlayermodel)
 	|| STAT(FROZEN, player)
 	) { do_crouch = false; }
 
-	if(!do_crouch && player.crouch)
+	if(!do_crouch && IS_DUCKED(player))
 	{
 		tracebox(player.origin, STAT(PL_MIN, player), STAT(PL_MAX, player), player.origin, false, player);
 		if (!trace_startsolid || player.pbhost)
 		{
-			player.crouch = false;
+			UNSET_DUCKED(player);
 			player.view_ofs = STAT(PL_VIEW_OFS, player);
 			setsize (player, STAT(PL_MIN, player), STAT(PL_MAX, player));
 		}

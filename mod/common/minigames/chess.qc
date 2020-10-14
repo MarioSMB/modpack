@@ -850,24 +850,24 @@ void chess_hud_board(vector pos, vector mySize)
 	if ( active_minigame.minigame_flags & CHESS_TURN_WIN )
 	{
 		vector winfs = hud_fontsize*2;
-		string playername = "";
+		string player_name = "";
 		FOREACH_ENTITY_ENT_ORDERED(owner, active_minigame,
 		{
 			if ( it.classname == "minigame_player" && 
 					it.team == (active_minigame.minigame_flags & CHESS_TURN_TEAM) )
-				playername = entcs_GetName(it.minigame_playerslot-1);
+				player_name = entcs_GetName(it.minigame_playerslot-1);
 		});
 		
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
 		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s^7 won the game!",playername), 
+			sprintf("%s^7 won the game!",player_name), 
 			winfs, 0, DRAWFLAG_NORMAL, 0.5);
 		
 		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
 		
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			sprintf("%s^7 won the game!",playername), 
+			sprintf("%s^7 won the game!",player_name), 
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
 }

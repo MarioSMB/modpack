@@ -19,12 +19,12 @@ void W_AssaultRifle_Attack(Weapon thiswep, int deathtype, entity actor, .entity 
 	if(actor.(weaponentity).misc_bulletcounter == 1)
 	{
 		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(assaultrifle, first_spread), WEP_CVAR(assaultrifle, solidpenetration), 
-															  WEP_CVAR(assaultrifle, first_damage), WEP_CVAR(assaultrifle, first_force), deathtype, EFFECT_BULLET);
+															  WEP_CVAR(assaultrifle, first_damage), 0, WEP_CVAR(assaultrifle, first_force), deathtype, EFFECT_BULLET);
 	}
 	else
 	{
 		fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(assaultrifle, sustained_spread), WEP_CVAR(assaultrifle, solidpenetration), 
-															  WEP_CVAR(assaultrifle, sustained_damage), WEP_CVAR(assaultrifle, sustained_force), deathtype, EFFECT_BULLET);
+															  WEP_CVAR(assaultrifle, sustained_damage), 0, WEP_CVAR(assaultrifle, sustained_force), deathtype, EFFECT_BULLET);
 	}
 
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
@@ -99,7 +99,7 @@ void W_AssaultRifle_Attack_Auto(Weapon thiswep, entity actor, .entity weaponenti
 							    WEP_CVAR(assaultrifle, spread_min) + (WEP_CVAR(assaultrifle, spread_add) * actor.(weaponentity).misc_bulletcounter), 
 							    WEP_CVAR(assaultrifle, spread_max));
 	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, assaultrifle_spread, WEP_CVAR(assaultrifle, solidpenetration), 
-																			   WEP_CVAR(assaultrifle, sustained_damage), WEP_CVAR(assaultrifle, sustained_force), WEP_ASSAULTRIFLE.m_id, EFFECT_BULLET);
+																			   WEP_CVAR(assaultrifle, sustained_damage), 0, WEP_CVAR(assaultrifle, sustained_force), WEP_ASSAULTRIFLE.m_id, EFFECT_BULLET);
 
 	actor.(weaponentity).misc_bulletcounter = actor.(weaponentity).misc_bulletcounter + 1;
 
@@ -125,7 +125,7 @@ void W_AssaultRifle_Attack_Burst(Weapon thiswep, entity actor, .entity weaponent
 	}
 
 	fireBullet(actor, weaponentity, w_shotorg, w_shotdir, WEP_CVAR(assaultrifle, burst_speed), WEP_CVAR(assaultrifle, solidpenetration), 
-														  WEP_CVAR(assaultrifle, burst_damage), WEP_CVAR(assaultrifle, sustained_force), WEP_ASSAULTRIFLE.m_id, EFFECT_BULLET);
+														  WEP_CVAR(assaultrifle, burst_damage), 0, WEP_CVAR(assaultrifle, sustained_force), WEP_ASSAULTRIFLE.m_id, EFFECT_BULLET);
 
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 

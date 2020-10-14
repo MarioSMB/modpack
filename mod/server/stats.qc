@@ -118,13 +118,13 @@ MUTATOR_HOOKFUNCTION(require_stats, PlayerPreThink)
 	{
 		if(!autocvar_sv_spectate)
 		{
-			bprintf("Player %s has too much elo! Spectating isn't allowed, so they will be kicked.\n", playername(player, false));
+			bprintf("Player %s has too much elo! Spectating isn't allowed, so they will be kicked.\n", playername(player.netname, player.team, false));
 			dropclient(player);
 			return;
 		}
 		player.elo_overlimit = true;
 
-		bprintf("Player %s has too much elo! They will be forced to spectate.\n", playername(player, false));
+		bprintf("Player %s has too much elo! They will be forced to spectate.\n", playername(player.netname, player.team, false));
 		if(IS_PLAYER(player))
 			ClientKill_TeamChange(player, -2);
 	}

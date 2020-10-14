@@ -200,7 +200,7 @@ MUTATOR_HOOKFUNCTION(itemplacer, SV_ParseServerCommand)
 		{
 			player.canplace = true;
 			print_to(player, "You're now allowed to place items!");
-			LOG_INFO(playername(player, false), " has been granted item placement abilities.");
+			LOG_INFO(playername(player.netname, player.team, false), " has been granted item placement abilities.");
 		}
 		else
 			LOG_INFO("Invalid player.");
@@ -215,7 +215,7 @@ MUTATOR_HOOKFUNCTION(itemplacer, SV_ParseServerCommand)
 		{
 			player.canplace = false;
 			print_to(player, "You're no longer allowed to place items.");
-			LOG_INFO(playername(player, false), " has been revoked of item placement abilities.");
+			LOG_INFO(playername(player.netname, player.team, false), " has been revoked of item placement abilities.");
 		}
 		else
 			LOG_INFO("Invalid player.");

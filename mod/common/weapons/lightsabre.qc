@@ -51,7 +51,7 @@ MUTATOR_HOOKFUNCTION(lightsabre_evil, Damage_Calculate)
 		M_ARGV(4, float) = 0; // no damage for this!
 		.entity weaponentity = player_melee.weaponentity_fld;
 		// no accuracy needed for this, really
-		FireRailgunBullet(frag_target, weaponentity, v_forward, frag_attacker.origin, frag_damage * 0.5, vlen(frag_force) * 0.5, 0, 0, 0, 0, WEP_VORTEX.m_id);
+		FireRailgunBullet(frag_target, weaponentity, v_forward, frag_attacker.origin, frag_damage * 0.5, true, vlen(frag_force) * 0.5, 0, 0, 0, 0, WEP_VORTEX.m_id);
 
 		animdecide_setaction(frag_target, ANIMACTION_SHOOT, 1);
 		spamsound(frag_target, CH_WEAPON_A, SND_LIGHTSABRE_HIT_RANDOM(), VOL_BASE, ATTN_NORM);

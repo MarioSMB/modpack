@@ -15,6 +15,8 @@ ENTCS_PROP(HOOKTYPE, true, cvar_cl_customhook, cvar_cl_customhook, ENTCS_SET_NOR
 	{ ent.hook_type = ReadByte(); })
 
 #ifdef SVQC
+AUTOCVAR(sv_customhook_default, int, 0, "Default grappling hook texture (does not override client setting), 0=normal, 1='pro', 2=nexuiz, 3=muffins");
+
 REGISTER_MUTATOR(sv_customhook, true);
 
 MUTATOR_HOOKFUNCTION(sv_customhook, PlayerPreThink)
@@ -25,7 +27,11 @@ MUTATOR_HOOKFUNCTION(sv_customhook, PlayerPreThink)
 	if(!CS(player))
 		return;
 
-	player.cvar_cl_customhook = CS(player).cvar_cl_customhook;
+	int myhook = CS(player).cvar_cl_customhook;
+	if(!myhook)
+		myhook = autocvar_sv_customhook_default;
+
+	player.cvar_cl_customhook = myhook;
 }
 #endif
 
@@ -61,6 +67,8 @@ MUTATOR_HOOKFUNCTION(cl_customhook, DrawGrapplingHook)
 	int hooktype = autocvar_cl_customhook;
 	int ownnum = thehook.sv_entnum;
 	entity e = entcs_receiver(ownnum - 1);
+	if(e && !hooktype && entcs_is_self(e) && !spectatee_status && e.hook_type)
+		hooktype = e.hook_type;
 
 	if(e && autocvar_cl_customhook_perplayer)
 	{
