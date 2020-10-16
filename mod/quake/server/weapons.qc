@@ -4105,7 +4105,7 @@ void CheatCommand(entity this)
 		WEP_SUPER_NAILGUN |
 		WEP_GRENADE_LAUNCHER |
 		WEP_ROCKET_LAUNCHER);
-	this.items |= (IT_KEY1 | IT_KEY2);
+	//this.items |= (IT_KEY1 | IT_KEY2); // breaks levels
 
 	this.weapons |= WEP_LIGHTNING;
 	if(MP_HIPNOTIC)
