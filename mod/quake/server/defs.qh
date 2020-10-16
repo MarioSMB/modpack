@@ -179,6 +179,9 @@ const int SVC_CUTSCENE = 34;
 
 .float model_randomizer;
 
+// impel
+.int rifle_cnt; // unique counter since this is a secondary attack function
+
 
 // intrusive lists
 

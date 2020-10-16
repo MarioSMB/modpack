@@ -1099,15 +1099,33 @@ void T_SmallPulseTouch(entity this, entity toucher)
 	delete(this);
 }
 
+void W_FireRifle_SetupShot(entity actor, entity proj, int shotammo, string snd1, string snd2)
+{
+	if(snd1)
+		_sound(actor, CHAN_AUTO, snd1, 1, ATTN_NORM);
+	if(snd2)
+		_sound(actor, CH_WEAPON_B, snd2, 1, ATTN_NORM);
+
+	if(shotammo)
+	{
+		actor.ammo_cells = actor.ammo_cells - shotammo;
+		if(actor.items & IT_CELLS)
+			actor.currentammo = actor.ammo_cells;
+	}
+
+	//actor.punchangle_x = -2;
+	proj.owner = actor;
+	set_movetype(proj, MOVETYPE_FLYMISSILE);
+	proj.solid = SOLID_BBOX;
+	_setmodel(proj, "progs/pulse.mdl");
+	setsize(proj, '0 0 0', '0 0 0');
+}
+
 void W_FireRifleM(entity this)
 {
-	this.punchangle_x = -2;
-	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot1.wav", 1, ATTN_NORM);
-	entity missile = spawn();
-	missile.owner = this;
-	set_movetype(missile, MOVETYPE_FLYMISSILE);
-	missile.solid = SOLID_BBOX;
-	missile.classname = "pulse";
+	entity missile = new(pulse);
+	W_FireRifle_SetupShot(this, missile, 0, string_null, "weapons/pulse/pulshot1.wav");
+
 	makevectors(this.v_angle);
 	missile.velocity = qc_aim(this, 1000);
 	missile.velocity = missile.velocity * 1000;
@@ -1115,22 +1133,14 @@ void W_FireRifleM(entity this)
 	settouch(missile, T_MediumPulseTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);
-	_setmodel(missile, "progs/pulse.mdl");
-	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, this.origin - v_right * 16 + '0 0 8');
 }
 
 void W_FireRifleL(entity this)
 {
-	this.punchangle_x = -2;
-	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot1.wav", 1, ATTN_NORM);
-	this.ammo_cells = this.ammo_cells - 2;
-	W_SetCurrentAmmo(this);
-	entity missile = spawn();
-	missile.owner = this;
-	set_movetype(missile, MOVETYPE_FLYMISSILE);
-	missile.solid = SOLID_BBOX;
-	missile.classname = "pulse";
+	entity missile = new(pulse);
+	W_FireRifle_SetupShot(this, missile, 2, string_null, "weapons/pulse/pulshot1.wav");
+
 	makevectors(this.v_angle);
 	missile.velocity = qc_aim(this, 1000);
 	missile.velocity = missile.velocity * 1000;
@@ -1138,20 +1148,14 @@ void W_FireRifleL(entity this)
 	settouch(missile, T_MediumPulseTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);
-	_setmodel(missile, "progs/pulse.mdl");
-	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, this.origin + v_right * 16 + '0 0 8');
 }
 
 void W_FireRifleK(entity this)
 {
-	this.punchangle_x = -2;
-	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot2.wav", 1, ATTN_NORM);
-	entity missile = spawn();
-	missile.owner = this;
-	set_movetype(missile, MOVETYPE_FLYMISSILE);
-	missile.solid = SOLID_BBOX;
-	missile.classname = "pulse";
+	entity missile = new(pulse);
+	W_FireRifle_SetupShot(this, missile, 2, string_null, "weapons/pulse/pulshot2.wav");
+
 	makevectors(this.v_angle);
 	missile.velocity = qc_aim(this, 1000);
 	missile.velocity = missile.velocity * 1000;
@@ -1159,22 +1163,14 @@ void W_FireRifleK(entity this)
 	settouch(missile, T_MediumPulseTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);
-	_setmodel(missile, "progs/pulse.mdl");
-	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, this.origin - v_right * 32 + '0 0 8');
 }
 
 void W_FireRifleJ(entity this)
 {
-	this.punchangle_x = -2;
-	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot1.wav", 1, ATTN_NORM);
-	this.ammo_cells = this.ammo_cells - 2;
-	W_SetCurrentAmmo(this);
-	entity missile = spawn();
-	missile.owner = this;
-	set_movetype(missile, MOVETYPE_FLYMISSILE);
-	missile.solid = SOLID_BBOX;
-	missile.classname = "pulse";
+	entity missile = new(pulse);
+	W_FireRifle_SetupShot(this, missile, 2, string_null, "weapons/pulse/pulshot1.wav");
+
 	makevectors(this.v_angle);
 	missile.velocity = qc_aim(this, 1000);
 	missile.velocity = missile.velocity * 1000;
@@ -1182,20 +1178,14 @@ void W_FireRifleJ(entity this)
 	settouch(missile, T_MediumPulseTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);
-	_setmodel(missile, "progs/pulse.mdl");
-	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, this.origin + v_right * 32 + '0 0 8');
 }
 
 void W_FireRifleI(entity this)
 {
-	this.punchangle_x = -2;
-	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot2.wav", 1, ATTN_NORM);
-	entity missile = spawn();
-	missile.owner = this;
-	set_movetype(missile, MOVETYPE_FLYMISSILE);
-	missile.solid = SOLID_BBOX;
-	missile.classname = "pulse";
+	entity missile = new(pulse);
+	W_FireRifle_SetupShot(this, missile, 0, string_null, "weapons/pulse/pulshot2.wav");
+
 	makevectors(this.v_angle);
 	missile.velocity = qc_aim(this, 1000);
 	missile.velocity = missile.velocity * 1000;
@@ -1203,23 +1193,14 @@ void W_FireRifleI(entity this)
 	settouch(missile, T_MediumPulseTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);
-	_setmodel(missile, "progs/pulse.mdl");
-	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, ((this.origin - (v_right * 48)) + '0 0 8'));
 }
 
 void W_FireRifleH(entity this)
 {
-	this.punchangle_x = -2;
-	_sound(this, CHAN_AUTO, "weapons/pulse/pulshot1.wav", 1, ATTN_NORM);
-	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot2.wav", 1, ATTN_NORM);
-	this.ammo_cells = this.ammo_cells - 2;
-	W_SetCurrentAmmo(this);
-	entity missile = spawn();
-	missile.owner = this;
-	set_movetype(missile, MOVETYPE_FLYMISSILE);
-	missile.solid = SOLID_BBOX;
-	missile.classname = "pulse";
+	entity missile = new(pulse);
+	W_FireRifle_SetupShot(this, missile, 2, "weapons/pulse/pulshot1.wav", "weapons/pulse/pulshot2.wav");
+
 	makevectors(this.v_angle);
 	missile.velocity = qc_aim(this, 1000);
 	missile.velocity = missile.velocity * 1000;
@@ -1227,21 +1208,14 @@ void W_FireRifleH(entity this)
 	settouch(missile, T_MediumPulseTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);
-	_setmodel(missile, "progs/pulse.mdl");
-	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, ((this.origin + (v_right * 48)) + '0 0 8'));
 }
 
 void W_FireRifleD(entity this)
 {
-	this.punchangle_x = -2;
-	_sound(this, CHAN_AUTO, "weapons/pulse/pulshot1.wav", 1, ATTN_NORM);
-	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot2.wav", 1, ATTN_NORM);
-	entity missile = spawn();
-	missile.owner = this;
-	set_movetype(missile, MOVETYPE_FLYMISSILE);
-	missile.solid = SOLID_BBOX;
-	missile.classname = "pulse";
+	entity missile = new(pulse);
+	W_FireRifle_SetupShot(this, missile, 0, "weapons/pulse/pulshot1.wav", "weapons/pulse/pulshot2.wav");
+
 	missile.enemy = this.enemy;
 	makevectors(this.v_angle);
 	missile.velocity = qc_aim(this, 1000);
@@ -1250,21 +1224,14 @@ void W_FireRifleD(entity this)
 	settouch(missile, T_SmallPulseTouch);
 	missile.nextthink = (time + 0.3);
 	setthink(missile, PulseHome);
-	_setmodel(missile, "progs/pulse.mdl");
-	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, ((this.origin + (v_right * 48)) + '0 0 8'));
 }
 
 void W_FireRifleC(entity this)
 {
-	this.punchangle_x = -2;
-	_sound(this, CHAN_AUTO, "weapons/pulse/pulshot1.wav", 1, ATTN_NORM);
-	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot2.wav", 1, ATTN_NORM);
-	entity missile = spawn();
-	missile.owner = this;
-	set_movetype(missile, MOVETYPE_FLYMISSILE);
-	missile.solid = SOLID_BBOX;
-	missile.classname = "pulse";
+	entity missile = new(pulse);
+	W_FireRifle_SetupShot(this, missile, 0, "weapons/pulse/pulshot1.wav", "weapons/pulse/pulshot2.wav");
+
 	missile.enemy = this.enemy;
 	makevectors(this.v_angle);
 	missile.velocity = qc_aim(this, 1000);
@@ -1273,20 +1240,14 @@ void W_FireRifleC(entity this)
 	settouch(missile, T_SmallPulseTouch);
 	missile.nextthink = time + 0.2;
 	setthink(missile, PulseHome);
-	_setmodel(missile, "progs/pulse.mdl");
-	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, ((this.origin + (v_right * 32)) + '0 0 8'));
 }
 
 void W_FireRifleB(entity this)
 {
-	this.punchangle_x = -2;
-	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot2.wav", 1, ATTN_NORM);
-	entity missile = spawn();
-	missile.owner = this;
-	set_movetype(missile, MOVETYPE_FLYMISSILE);
-	missile.solid = SOLID_BBOX;
-	missile.classname = "pulse";
+	entity missile = new(pulse);
+	W_FireRifle_SetupShot(this, missile, 0, string_null, "weapons/pulse/pulshot2.wav");
+
 	missile.enemy = this.enemy;
 	makevectors(this.v_angle);
 	missile.velocity = qc_aim(this, 1000);
@@ -1295,23 +1256,15 @@ void W_FireRifleB(entity this)
 	settouch(missile, T_SmallPulseTouch);
 	missile.nextthink = (time + 0.1);
 	setthink(missile, PulseHome);
-	_setmodel(missile, "progs/pulse.mdl");
-	setsize(missile, '0 0 0', '0 0 0');
 	setorigin(missile, ((this.origin + (v_right * 16)) + '0 0 8'));
 }
 
 void W_FireRifleA(entity this)
 {
-	this.punchangle_x = -2;
-	_sound(this, CHAN_AUTO, "weapons/pulse/pulshot1.wav", 1, ATTN_NORM);
-	this.ammo_cells = this.ammo_cells - 3;
-	W_SetCurrentAmmo(this);
-	entity missile = spawn();
-	missile.owner = this;
-	set_movetype(missile, MOVETYPE_FLYMISSILE);
-	missile.solid = SOLID_BBOX;
+	entity missile = new(pulse);
+	W_FireRifle_SetupShot(this, missile, 3, "weapons/pulse/pulshot1.wav", string_null);
+
 	setorigin(missile, ((this.origin + (v_right * 16)) + '0 0 8'));
-	missile.classname = "pulse";
 	vector vtemp = missile.origin + (v_right * 12) + (v_forward * 64);
 	makevectors(this.v_angle);
 	vector dir = normalize(vtemp - missile.origin);
@@ -1320,19 +1273,14 @@ void W_FireRifleA(entity this)
 	settouch(missile, T_SinglePulseTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);
-	_setmodel(missile, "progs/pulse.mdl");
-	setsize(missile, '0 0 0', '0 0 0');
 }
 
 void W_FireRifle2A(entity this)
 {
-	this.punchangle_x = -2;
-	entity missile = spawn();
-	missile.owner = this;
-	set_movetype(missile, MOVETYPE_FLYMISSILE);
-	missile.solid = SOLID_BBOX;
+	entity missile = new(pulse);
+	W_FireRifle_SetupShot(this, missile, 0, string_null, string_null);
+
 	setorigin(missile, ((this.origin + (v_right * 16)) + '0 0 8'));
-	missile.classname = "pulse";
 	vector vtemp = missile.origin - (v_right * 12) + (v_forward * 64);
 	makevectors(this.v_angle);
 	vector dir = normalize((vtemp - missile.origin));
@@ -1341,19 +1289,14 @@ void W_FireRifle2A(entity this)
 	settouch(missile, T_SinglePulseTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);
-	_setmodel(missile, "progs/pulse.mdl");
-	setsize(missile, '0 0 0', '0 0 0');
 }
 
 void W_FireRifle3A(entity this)
 {
-	this.punchangle_x = -2;
-	entity missile = spawn();
-	missile.owner = this;
-	set_movetype(missile, MOVETYPE_FLYMISSILE);
-	missile.solid = SOLID_BBOX;
+	entity missile = new(pulse);
+	W_FireRifle_SetupShot(this, missile, 0, string_null, string_null);
+
 	setorigin(missile, ((this.origin + (v_right * 16)) + '0 0 8'));
-	missile.classname = "pulse";
 	makevectors(this.v_angle);
 	missile.velocity = qc_aim(this, 1000);
 	missile.velocity = missile.velocity * 1000;
@@ -1361,13 +1304,11 @@ void W_FireRifle3A(entity this)
 	settouch(missile, T_SinglePulseTouch);
 	missile.nextthink = time + 5;
 	setthink(missile, SUB_Remove);
-	_setmodel(missile, "progs/pulse.mdl");
-	setsize(missile, '0 0 0', '0 0 0');
 }
 
 void W_FireRifleTarget(entity this)
 {
-	this.punchangle_x = -2;
+	//this.punchangle_x = -2;
 	this.ammo_cells = this.ammo_cells - 4;
 	W_SetCurrentAmmo(this);
 	entity missile = spawn();
@@ -3531,9 +3472,7 @@ int W_BestWeapon(entity this, int except)
 
 bool NoAmmo(entity this, bool doswitch)
 {
-	if(!MP_IMPEL)
-		return false;
-	if(!doswitch)
+	if(!MP_IMPEL || !doswitch)
 		return false;
 	W_SwitchWeapon(this, W_BestWeapon(this, 0));
 	return false;
@@ -3640,8 +3579,6 @@ void W_Attack(entity this, bool offhand)
 	makevectors	(this.v_angle);			// calculate forward angle for velocity
 	this.show_hostile = time + 1;	// wake monsters up
 
-	RuneApplyBlackNoise(this); // make rune noise
-
 	if(offhand)
 	{
 		if(this.weapons & WEP_PULSERIFLE)
@@ -3654,26 +3591,26 @@ void W_Attack(entity this, bool offhand)
 					return;
 				}
 				//player_rifle1(this);
-				if(this.cnt == 2)
+				if(this.rifle_cnt == 2)
 				{
 					W_FireRifleL(this);
 					W_FireRifleM(this);
 					this.attack2_finished = time + 0.4;
-					this.cnt = 0;
+					this.rifle_cnt = 0;
 				}
-				else if(this.cnt == 1)
+				else if(this.rifle_cnt == 1)
 				{
 					W_FireRifleJ(this);
 					W_FireRifleK(this);
 					this.attack2_finished = time + 0.1;
-					this.cnt = 2;
+					this.rifle_cnt = 2;
 				}
-				else if(this.cnt == 0)
+				else if(this.rifle_cnt == 0)
 				{
 					W_FireRifleH(this);
 					W_FireRifleI(this);
 					this.attack2_finished = time + 0.1;
-					this.cnt = 1;
+					this.rifle_cnt = 1;
 				}
 			}
 			else if(this.items & IT_PULSEPOWER1)
@@ -3705,6 +3642,8 @@ void W_Attack(entity this, bool offhand)
 
 		return;
 	}
+
+	RuneApplyBlackNoise(this); // make rune noise
 
 	switch(this.weapon)
 	{
@@ -4651,7 +4590,7 @@ int W_GetWeaponImpulse(int imp)
 		case 239: return 7; // devastator -> rocket launcher
 		case 246: return 63; // fireball -> multi rocket
 		case 242: return 22; // hook -> hook
-		case 240: return 66; // porto -> pulse rifle
+		//case 240: return 66; // porto -> pulse rifle
 		case 237: return 64; // vortex -> plasma gun
 		case 241: return 65; // vaporizer -> lg-2 prototype
 		case 250: return 68; // napalm (no replacement!)

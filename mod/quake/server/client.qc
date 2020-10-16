@@ -669,7 +669,7 @@ void IntermissionThink(entity this)
 	if(time < intermission_exittime)
 		return;
 
-	if(!this.button0 && !this.button1 && !this.button2)
+	if(!this.button0 && !this.button1 && !this.button2 && !this.button3)
 		return;
 	
 	ExitIntermission();
@@ -1269,14 +1269,14 @@ void PlayerDeathThink(entity this)
 // wait for all buttons released
 	if(this.deadflag == DEAD_DEAD)
 	{
-		if(this.button2 || this.button1 || this.button0)
+		if(this.button3 || this.button2 || this.button1 || this.button0)
 			return;
 		this.deadflag = DEAD_RESPAWNABLE;
 		return;
 	}
 
 // wait for any button down
-	if(!this.button2 && !this.button1 && !this.button0)
+	if(!this.button3 && !this.button2 && !this.button1 && !this.button0)
 		return;
 	if(MP_IMPEL)
 	{
@@ -1288,6 +1288,7 @@ void PlayerDeathThink(entity this)
 	this.button0 = 0;
 	this.button1 = 0;
 	this.button2 = 0;
+	this.button3 = 0;
 	respawn(this);
 }
 
@@ -1826,6 +1827,12 @@ void PlayerPostThink(entity this)
 		{
 			this.attack_finished = time + 0.8;
 			this.cnt = 0;
+		}
+
+		if(MP_IMPEL && this.rifle_cnt > 0 && !this.button3)
+		{
+			this.attack_finished = time + 0.8;
+			this.rifle_cnt = 0;
 		}
 
 		CheckPowerups(this);

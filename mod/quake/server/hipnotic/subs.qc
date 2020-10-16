@@ -61,6 +61,7 @@ void SUB_CopyEntity(entity srcent, entity destent)
 	destent.button0 = srcent.button0;
 	destent.button1 = srcent.button1;
 	destent.button2 = srcent.button2;
+	destent.button3 = srcent.button3;
 	destent.impulse = srcent.impulse;
 	destent.fixangle = srcent.fixangle;
 	destent.v_angle = srcent.v_angle;
