@@ -1125,6 +1125,7 @@ void W_FireRifleL(entity this)
 	this.punchangle_x = -2;
 	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot1.wav", 1, ATTN_NORM);
 	this.ammo_cells = this.ammo_cells - 2;
+	W_SetCurrentAmmo(this);
 	entity missile = spawn();
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
@@ -1168,6 +1169,7 @@ void W_FireRifleJ(entity this)
 	this.punchangle_x = -2;
 	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot1.wav", 1, ATTN_NORM);
 	this.ammo_cells = this.ammo_cells - 2;
+	W_SetCurrentAmmo(this);
 	entity missile = spawn();
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
@@ -1212,6 +1214,7 @@ void W_FireRifleH(entity this)
 	_sound(this, CHAN_AUTO, "weapons/pulse/pulshot1.wav", 1, ATTN_NORM);
 	_sound(this, CH_WEAPON_SINGLE, "weapons/pulse/pulshot2.wav", 1, ATTN_NORM);
 	this.ammo_cells = this.ammo_cells - 2;
+	W_SetCurrentAmmo(this);
 	entity missile = spawn();
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
@@ -1302,6 +1305,7 @@ void W_FireRifleA(entity this)
 	this.punchangle_x = -2;
 	_sound(this, CHAN_AUTO, "weapons/pulse/pulshot1.wav", 1, ATTN_NORM);
 	this.ammo_cells = this.ammo_cells - 3;
+	W_SetCurrentAmmo(this);
 	entity missile = spawn();
 	missile.owner = this;
 	set_movetype(missile, MOVETYPE_FLYMISSILE);
@@ -1365,6 +1369,7 @@ void W_FireRifleTarget(entity this)
 {
 	this.punchangle_x = -2;
 	this.ammo_cells = this.ammo_cells - 4;
+	W_SetCurrentAmmo(this);
 	entity missile = spawn();
 	missile.owner = this;
 	this.enemy = missile;

@@ -710,6 +710,16 @@ STATIC_INIT_EARLY(maxclients)
 	}
 }
 
+// hack to auto enable/disable mission packs if their content is detected
+STATIC_INIT_EARLY(missionpacks)
+{
+	cvar_set("sv_missionpack_impel", ftos(fexists("progs/legond.mdl")));
+
+	cvar_set("sv_missionpack_rogue", ftos(fexists("progs/dragon.mdl")));
+
+	cvar_set("sv_missionpack_hipnotic", ftos(fexists("progs/armabody.mdl")));
+}
+
 void GameLogEcho(string s);
 bool world_already_spawned;
 int world_initialized;
