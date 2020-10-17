@@ -22,7 +22,7 @@ void pc_PlayerTouch(entity this, entity toucher)
 		return;
 
 #ifdef SVQC
-	bool and_monster = IS_MONSTER(toucher) && ((REGISTRY_GET(Monsters, toucher.monsterid)).spawnflags & MON_FLAG_CRUSH);
+	bool and_monster = IS_MONSTER(toucher) && (this.monsterdef.spawnflags & MON_FLAG_CRUSH);
 
 	if(!autocvar_g_player_crush && !and_monster)
 		return;
