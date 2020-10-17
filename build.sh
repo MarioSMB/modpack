@@ -14,7 +14,7 @@ export PROGS_OUT
 : ${QCC:=$PWD/gmqcc/gmqcc}
 export QCC
 
-export QCCFLAGS_WATERMARK=$(git describe --tags --dirty=*)
+export QCCFLAGS_WATERMARK=$(git describe --tags --dirty='~')
 
 relpath() {
     b=; s=$(cd $(readlink -f ${1%%/}); pwd); d=$(cd $2; pwd)
