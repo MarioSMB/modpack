@@ -1,5 +1,6 @@
 #include "cl_survival.qh"
 
+#include <client/draw.qh>
 #include <client/hud/panel/modicons.qh>
 
 void HUD_Mod_Survival(vector pos, vector mySize)
