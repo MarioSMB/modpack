@@ -9,7 +9,7 @@ void HUD_Mod_Survival(vector pos, vector mySize);
 CLASS(Survival, Gametype)
     INIT(Survival)
     {
-        this.gametype_init(this, _("Survival"),"sv","g_survival",GAMETYPE_FLAG_USEPOINTS,"","timelimit=20 pointlimit=20",_("Identify and eliminate all the hunters before all your allies are gone"));
+        this.gametype_init(this, _("Survival"),"sv","g_survival",GAMETYPE_FLAG_USEPOINTS,"","timelimit=30 pointlimit=20",_("Identify and eliminate all the hunters before all your allies are gone"));
     }
     METHOD(Survival, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
     {
