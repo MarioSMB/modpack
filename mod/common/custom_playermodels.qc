@@ -2,6 +2,7 @@
 
 #ifdef GAMEQC
 AUTOCVAR(sv_jumpvelocity_backflip, float, 600, "");
+AUTOCVAR(sv_jumpvelocity_backflip_backspeed, float, 50, "");
 
 #ifdef SVQC
 int models_allowed;
@@ -11,9 +12,7 @@ bool g_overkill; // reliable check for overkill
 //REGISTER_STAT(JUMPVELOCITY_CROUCH, float, autocvar_sv_jumpvelocity_backflip);
 //REGISTER_STAT(MODELS_ALLOWED, int, models_allowed);
 
-// TODO
-SOUND(MARIO_CJUMP, "player/mario/player/jump7");
-SOUND(MARIO64_CJUMP, "player/mario64/player/jump2");
+REGISTER_PLAYERSOUND(cjump)
 
 const int MODELS_PONY = BIT(0);
 const int MODELS_WEEGEE = BIT(1);
@@ -285,24 +284,16 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerJump, CBC_ORDER_LAST)
 #ifdef SVQC
 		!g_cts && !g_race && (CS(player).cvar_cl_sparkle == 3 || CS(player).cvar_cl_sparkle == 5) && ((models_allowed & MODELS_MARIO) || (models_allowed & MODELS_MARIO64))
 #elif defined(CSQC)
-		gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && (autocvar_cl_sparkle == 3 || autocvar_cl_sparkle == 5) /* sorry csqc, no way to check allowed thanks to a stupid stats bug */
+		!ISGAMETYPE(CTS) && !ISGAMETYPE(RACE) && (autocvar_cl_sparkle == 3 || autocvar_cl_sparkle == 5) /* sorry csqc, no way to check allowed thanks to a stupid stats bug */
 #endif
 		)
 	{
 		M_ARGV(1, float) = autocvar_sv_jumpvelocity_backflip;
 		vector forward, right, up;
 		MAKE_VECTORS(PHYS_WORLD_ANGLES(player), forward, right, up);
-		player.velocity -= forward * 50; // NOTE: hardcoded backflip value? needs fixing!
+		player.velocity -= forward * autocvar_sv_jumpvelocity_backflip_backspeed; // NOTE: hardcoded backflip value? needs fixing!
 	#ifdef SVQC
-		if(sound_allowed(MSG_BROADCAST, player))
-		{
-			float myscale = ((player.scale) ? player.scale : 1); // safety net
-			float thepitch = ((myscale == 1) ? 0 : GlobalSound_pitch(myscale * 100));
-			if(CS(player).cvar_cl_sparkle == 5)
-				sound7(player, CH_VOICE, SND(MARIO64_CJUMP), VOL_BASE, ATTEN_NORM, thepitch, 0);
-			else
-				sound7(player, CH_VOICE, SND(MARIO_CJUMP), VOL_BASE, ATTEN_NORM, thepitch, 0);
-		}
+		PlayerSound(player, playersound_cjump, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
 	#endif
 	}
 }

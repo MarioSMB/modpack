@@ -326,7 +326,7 @@ void surv_LastPlayerForTeam_Notify(entity this)
 	{
 		entity pl = surv_LastPlayerForTeam(this);
 		if (pl)
-			Send_Notification(NOTIF_ONE, pl, MSG_CENTER, CENTER_ALONE);
+			Send_Notification(NOTIF_ONE_ONLY, pl, MSG_CENTER, CENTER_ALONE);
 	}
 }
 

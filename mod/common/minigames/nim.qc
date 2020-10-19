@@ -55,7 +55,7 @@ bool nim_valid_tile(string tile)
 
 void nim_spawn_piece(entity minigame, string pos)
 {
-	entity piece = msle_spawn(minigame,"minigame_board_piece");
+	entity piece = msle_spawn(minigame,new("minigame_board_piece"));
 	piece.team = 1; // not needed, but oh well
 	piece.netname = strzone(pos);
 	minigame_server_sendflags(piece,MINIG_SF_ALL);

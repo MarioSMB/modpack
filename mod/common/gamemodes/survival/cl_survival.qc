@@ -1,5 +1,6 @@
 #include "cl_survival.qh"
 
+#include <client/draw.qh>
 #include <client/hud/panel/modicons.qh>
 
 void HUD_Mod_Survival(vector pos, vector mySize)
@@ -72,4 +73,10 @@ MUTATOR_HOOKFUNCTION(cl_sv, ForcePlayercolors_Skip, CBC_ORDER_LAST)
 
 	player.colormap = 1024 + plcolor;
 	return true;
+}
+
+MUTATOR_HOOKFUNCTION(cl_sv, DrawScoreboard_Force)
+{
+	// show the scoreboard when the round ends, so players can see who the hunter was
+	return STAT(GAME_STOPPED);
 }
