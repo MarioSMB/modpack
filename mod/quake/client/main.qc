@@ -237,3 +237,60 @@ NET_HANDLE(TE_CSQC_PINGPLREPORT, bool isNew)
 	e.ping_packetloss = pl / 255.0;
 	e.ping_movementloss = ml / 255.0;
 }
+
+.string mdl;
+void togglewall_remove(entity this)
+{
+	strfree(this.mdl);
+}
+
+NET_HANDLE(ENT_CLIENT_TOGGLEWALL, bool isnew)
+{
+	InterpolateOrigin_Undo(this);
+	this.iflags = IFLAG_ANGLES | IFLAG_ORIGIN;
+
+	int sf = ReadByte();
+
+	if(sf & BIT(0))
+	{
+		this.skin = ReadByte();
+	}
+
+	if(sf & BIT(1))
+	{
+		this.origin = ReadVector();
+		setorigin(this, this.origin);
+	}
+
+	if(sf & BIT(2))
+	{
+		if(sf & 0x10)
+			this.angles = ReadAngleVector();
+		else
+			this.angles = '0 0 0';
+	}
+
+	if(sf & BIT(3))
+	{
+		strfree(this.mdl);
+		this.mdl = strzone(ReadString());
+		this.solid = ReadByte();
+		this.scale = ReadShort() / 256.0;
+		_setmodel(this, this.mdl);
+		if(sf & 0x20)
+		{
+			this.mins = ReadVector();
+			this.maxs = ReadVector();
+		}
+		else
+			this.mins = this.maxs = '0 0 0';
+		setsize(this, this.mins, this.maxs);
+		this.model = "null";
+	}
+
+	return = true;
+
+	this.entremove = togglewall_remove;
+
+	InterpolateOrigin_Note(this);
+}
