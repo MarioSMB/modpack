@@ -1,11 +1,11 @@
 //FEATURE: Freeze mutator, a portable version of freeze tag that can work in just about any gamemode (except freezetag!)
 
-AUTOCVAR(g_freeze, bool, false, _("Enable freeze mutator (similar to freezetag, but for other modes)"));
+AUTOCVAR(g_freeze, bool, false, "Enable freeze mutator (similar to freezetag, but for other teamplay modes)");
 
-REGISTER_MUTATOR(freeze, autocvar_g_freeze && !IS_GAMETYPE(FREEZETAG) && !IS_GAMETYPE(CA) && !IS_GAMETYPE(CTS) && !IS_GAMETYPE(RACE) && teamplay);
+REGISTER_MUTATOR(freeze, autocvar_g_freeze && !IS_GAMETYPE(FREEZETAG) && !IS_GAMETYPE(CA) && !IS_GAMETYPE(CTS) && !IS_GAMETYPE(RACE) && _MapInfo_GetTeamPlayBool(MapInfo_LoadedGametype));
 
-AUTOCVAR(g_freeze_noauto, bool, false, _("Don't automatically unfreeze the player"));
-AUTOCVAR(g_freeze_norespawn, bool, false, _("Don't allow re-spawning instantly by jumping"));
+AUTOCVAR(g_freeze_noauto, bool, false, "Don't automatically unfreeze the player");
+AUTOCVAR(g_freeze_norespawn, bool, false, "Don't allow re-spawning instantly by jumping");
 AUTOCVAR(g_freeze_revive_speed, float, 0.2, "");
 AUTOCVAR(g_freeze_revive_speed_random, float, 0, "");
 AUTOCVAR(g_freeze_revive_minhealth, int, 50, "");
@@ -23,30 +23,26 @@ REPLICATE(cvar_cl_freeze, bool, "cl_freeze");
 
 //ATTRIB(Client, cvar_cl_freeze, bool, this.cvar_cl_freeze);
 
-void freeze_Unfreeze(entity ent)
+MUTATOR_HOOKFUNCTION(freeze, Unfreeze)
 {
-	ent.freeze_flag = FROZEN_THAWING; // thawing is fine, as this is only checked when the player is frozen
-
-	ent.freezetag_frozen_time = 0;
-	ent.freezetag_frozen_timeout = 0;
-
-	Kill_Notification(NOTIF_ONE_ONLY, ent, MSG_CENTER, CPID_FREEZE);
-
-	Unfreeze(ent, true);
-}
-
-
-MUTATOR_HOOKFUNCTION(freeze, PlayerSpawn)
-{
-	entity player = M_ARGV(0, entity);
-
-	freeze_Unfreeze(player);
+	entity targ = M_ARGV(0, entity);
+	targ.freezetag_frozen_time = 0;
+	targ.freezetag_frozen_timeout = 0;
 }
 
 MUTATOR_HOOKFUNCTION(freeze, PlayerDies)
 {
 	entity frag_target = M_ARGV(2, entity);
 	float frag_deathtype = M_ARGV(3, float);
+
+	if(round_handler_IsActive() && round_handler_CountdownRunning())
+	{
+		if (STAT(FROZEN, frag_target) == FROZEN_NORMAL)
+			Unfreeze(frag_target, true);
+		frag_target.respawn_time = time;
+		frag_target.respawn_flags |= RESPAWN_FORCE;
+		return true;
+	}
 
 	if(frag_deathtype == DEATH_HURTTRIGGER.m_id)
 		return;
@@ -86,12 +82,11 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerDies)
 		if(frag_deathtype == DEATH_TEAMCHANGE.m_id || frag_deathtype == DEATH_AUTOTEAMCHANGE.m_id)
 		{
 			// let the player die, he will be automatically frozen when he respawns
-			if(STAT(FROZEN, frag_target) == 1)
-				freeze_Unfreeze(frag_target); // remove ice
+			if(STAT(FROZEN, frag_target) == FROZEN_NORMAL)
+				Unfreeze(frag_target, false); // remove ice
 			return true;
 		}
-
-		Freeze(frag_target, 0, 1, (teamplay && autocvar_g_freeze_noauto));
+		Freeze(frag_target, 0, FROZEN_NORMAL, (teamplay && autocvar_g_freeze_noauto));
 		if(autocvar_g_freeze_frozen_maxtime > 0)
 			frag_target.freezetag_frozen_timeout = time + autocvar_g_freeze_frozen_maxtime;
 		frag_target.freezetag_frozen_time = time;
@@ -111,26 +106,28 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(IS_DEAD(player) || !IS_PLAYER(player) || game_stopped)
+	if(IS_DEAD(player) || game_stopped)
 		return;
 
-	if(round_handler_IsActive())
-	if(!round_handler_IsRoundStarted())
+	if(round_handler_IsActive() && !round_handler_IsRoundStarted())
 		return;
+
+	if (!(frametime && IS_PLAYER(player)))
+		return true;
 
 	bool button_pressed = false;
-	int n;
+	int n = 0;
 
 	if(teamplay && autocvar_g_freeze_noauto)
 	{
 		// copied from freezetag
-		if(STAT(FROZEN, player) == 1)
+		if(STAT(FROZEN, player) == FROZEN_NORMAL)
 		{
 			// keep health = 1
 			player.pauseregen_finished = time + autocvar_g_balance_pause_health_regen;
 		}
 
-		if(STAT(FROZEN, player) == 1)
+		if(STAT(FROZEN, player) == FROZEN_NORMAL)
 		{
 			button_pressed = (!autocvar_g_freeze_norespawn && (PHYS_INPUT_BUTTON_JUMP(player) || PHYS_INPUT_BUTTON_USE(player))); // only detect jumps
 			if(IS_GAMETYPE(LMS) || IS_GAMETYPE(CA)) { player.freeze_flag = FROZEN_RESPAWNING; } // these modes require player to die
@@ -158,13 +155,13 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 			}
 		}
 
-		if(STAT(FROZEN, player) == 1)
+		if(STAT(FROZEN, player) == FROZEN_NORMAL)
 		{
 			int frozen_count = 0, nplayers = 0;
 			FOREACH_CLIENT(IS_PLAYER(it) && SAME_TEAM(it, player),
 			{
 				++nplayers;
-				if(STAT(FROZEN, it) == 1)
+				if(STAT(FROZEN, it) == FROZEN_NORMAL)
 					++frozen_count;
 			});
 			if(nplayers == frozen_count)
@@ -198,14 +195,14 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 			});
 		}
 
-		if(n && STAT(FROZEN, player) == 1) // OK, there is at least one teammate reviving us
+		if(n && STAT(FROZEN, player) == FROZEN_NORMAL) // OK, there is at least one teammate reviving us
 		{
 			STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) + frametime * max(1/60, autocvar_g_freezetag_revive_speed), 1);
 			SetResource(player, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * start_health));
 
 			if(STAT(REVIVE_PROGRESS, player) >= 1)
 			{
-				freeze_Unfreeze(player);
+				Unfreeze(player, true);
 
 				if(n == -1)
 				{
@@ -228,7 +225,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 				STAT(REVIVE_PROGRESS, it) = STAT(REVIVE_PROGRESS, player);
 			});
 		}
-		else if(!n && STAT(FROZEN, player) == 1) // only if no teammate is nearby will we reset
+		else if(!n && STAT(FROZEN, player) == FROZEN_NORMAL) // only if no teammate is nearby will we reset
 		{
 			STAT(REVIVE_PROGRESS, player) = bound(0, STAT(REVIVE_PROGRESS, player) - frametime * autocvar_g_freezetag_revive_clearspeed, 1);
 			SetResource(player, RES_HEALTH, max(1, STAT(REVIVE_PROGRESS, player) * start_health));
@@ -238,7 +235,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 			STAT(REVIVE_PROGRESS, player) = 0; // thawing nobody
 		}
 	}
-	else if(STAT(FROZEN, player) == 1) // auto revive
+	else if(STAT(FROZEN, player) == FROZEN_NORMAL) // auto revive
 	{
 		float rspeed = autocvar_g_freeze_revive_speed;
 		if(autocvar_g_freeze_revive_speed_random)
@@ -278,7 +275,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerPreThink)
 		}
 
 		if(STAT(REVIVE_PROGRESS, player) >= 1)
-			freeze_Unfreeze(player);
+			Unfreeze(player, true);
 	}
 }
 
