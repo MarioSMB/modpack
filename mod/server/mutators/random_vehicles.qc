@@ -1,6 +1,6 @@
 //FEATURE: Little mutator to switch things up by replacing vehicle spawns with a random vehicle
 
-AUTOCVAR(g_random_vehicles, bool, false, _("Enable random vehicles mutator"));
+AUTOCVAR(g_random_vehicles, bool, false, "Enable random vehicles mutator");
 
 REGISTER_MUTATOR(rvehicles, autocvar_g_random_vehicles && autocvar_g_vehicles);
 

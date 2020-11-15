@@ -1,7 +1,7 @@
 //FEATURE: Ability to load in custom item models and sounds cleanly with a replacement path option
 
-AUTOCVAR(sv_items_modeloverride, string, "", _("Custom directory for item models, set to something like myserver, end result will look like 'models/items_myserver/item.md3'"));
-AUTOCVAR(sv_items_sounddir, string, "", _("Custom directory for item sounds, set to something like myserver, end result will look like 'sound/misc_myserver/item.wav'"));
+AUTOCVAR(sv_items_modeloverride, string, "", "Custom directory for item models, set to something like myserver, end result will look like 'models/items_myserver/item.md3'");
+AUTOCVAR(sv_items_sounddir, string, "", "Custom directory for item sounds, set to something like myserver, end result will look like 'sound/misc_myserver/item.wav'");
 
 MUTATOR_HOOKFUNCTION(mutator_mod, ItemModel)
 {

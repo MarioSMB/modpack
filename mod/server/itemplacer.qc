@@ -1,5 +1,5 @@
-AUTOCVAR(g_itemplacer, bool, false, _("Item placement tool to spawn in some entities"));
-AUTOCVAR(g_itemplacer_spawnitems, bool, false, _("Also attempt to spawn in the items as they're placed"));
+AUTOCVAR(g_itemplacer, bool, false, "Item placement tool to spawn in some entities");
+AUTOCVAR(g_itemplacer_spawnitems, bool, false, "Also attempt to spawn in the items as they're placed");
 
 .bool canplace;
 bool map_has_entfile;

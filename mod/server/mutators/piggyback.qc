@@ -1,9 +1,9 @@
 //FEATURE: Piggy-backing lets you ride your teammates to victory
 
-AUTOCVAR(g_piggyback, bool, false, _("Enable piggyback mutator (riding teammates)"));
+AUTOCVAR(g_piggyback, bool, false, "Enable piggyback mutator (riding teammates)");
 REGISTER_MUTATOR(piggyback, autocvar_g_piggyback);
 
-AUTOCVAR(g_piggyback_ride_enemies, bool, false, _("Allow riding enemies"));
+AUTOCVAR(g_piggyback_ride_enemies, bool, false, "Allow riding enemies");
 
 .bool cvar_cl_nocarry;
 .bool cvar_cl_noride;

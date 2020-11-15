@@ -2,8 +2,8 @@
 
 REGISTER_MUTATOR(damage_mod, true);
 
-AUTOCVAR(g_turrets_player_damagerate, float, 1, _("Multiplier for the amount of damage a player takes from turrets"));
-AUTOCVAR(g_turrets_weapon_damagerate, float, 1, _("Multiplier for the amount of damage a turret takes from players"));
+AUTOCVAR(g_turrets_player_damagerate, float, 1, "Multiplier for the amount of damage a player takes from turrets");
+AUTOCVAR(g_turrets_weapon_damagerate, float, 1, "Multiplier for the amount of damage a turret takes from players");
 
 .entity lastkilled;
 .entity lastkiller;

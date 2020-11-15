@@ -1,6 +1,6 @@
 //FEATURE: Shotgun Arena, a funny mode similar to overkill with just the shotgun, and crazy push force
 
-AUTOCVAR(g_shotgunarena, bool, false, _("Enable shotgun arena mutator"));
+AUTOCVAR(g_shotgunarena, bool, false, "Enable shotgun arena mutator");
 void sha_SetCvars();
 REGISTER_MUTATOR(sha, autocvar_g_shotgunarena && !autocvar_g_instagib && !cvar("g_overkill") && !cvar("g_riflearena") && !g_nexball)
 {
