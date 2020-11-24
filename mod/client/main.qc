@@ -46,6 +46,8 @@ STATIC_INIT_LATE(mod_cvars_override)
 	localcmd("\nalias oregon \"cl_cmd oregon ${* ?}\"\n");
 
 	localcmd("\nalias findmap \"cmd findmap ${* ?}\"\n");
+
+	localcmd("\nalias snap \"cmd snap ${* ?}\"\n");
 }
 
 REGISTER_MUTATOR(mutator_mod, true);

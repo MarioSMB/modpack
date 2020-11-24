@@ -2,7 +2,7 @@
 
 void skycycle_Init(entity this);
 bool skycycle_enabled;
-AUTOCVAR_NOREF(g_skycycle, bool, false, _("Enable day-night cycles"));
+AUTOCVAR_NOREF(g_skycycle, bool, false, "Enable day-night cycles");
 
 REGISTER_MUTATOR(skycycle, autocvar_g_skycycle || (cvar("g_skycycle_suggested") && cvar("g_skycycle_allow_suggested")))
 {
@@ -31,8 +31,8 @@ AUTOCVAR(g_skycycle_daysky, string, "env/exosystem/exosystem_", "");
 AUTOCVAR(g_skycycle_nightsky_max, float, 0.1, "");
 AUTOCVAR(g_skycycle_dusksky_max, float, 0.2, "");
 AUTOCVAR(g_skycycle_startatnight, bool, false, "");
-AUTOCVAR(g_skycycle_startattime, float, 0, _("Start at specific time (percentage of time [0 to 1])"));
-AUTOCVAR(g_skycycle_timelock, bool, false, _("Don't advance time"));
+AUTOCVAR(g_skycycle_startattime, float, 0, "Start at specific time (percentage of time [0 to 1])");
+AUTOCVAR(g_skycycle_timelock, bool, false, "Don't advance time");
 AUTOCVAR_NOREF(g_skycycle_suggested, bool, false, "Map suggests using skycycles");
 AUTOCVAR_NOREF(g_skycycle_allow_suggested, bool, true, "Allow maps to turn on skycycle");
 

@@ -3,12 +3,12 @@
 REGISTER_MUTATOR(pc, true);
 
 #ifdef SVQC
-AUTOCVAR(g_player_crush, bool, false, _("Allow crushing players by jumping on their head"));
-AUTOCVAR(g_player_crush_simple, int, 1, _("Use simple height checking"));
+AUTOCVAR(g_player_crush, bool, false, "Allow crushing players by jumping on their head");
+AUTOCVAR(g_player_crush_simple, int, 1, "Use simple height checking");
 AUTOCVAR(g_player_crush_damage, float, 200, "");
 AUTOCVAR(g_player_crush_headheight, float, 0.9, "");
-AUTOCVAR(g_player_crush_bounce, float, 300, _("Bounce height in advanced trace mode"));
-AUTOCVAR(g_player_crush_bounce_jump, float, 600, _("Bounce height while holding jump in advanced trace mode"));
+AUTOCVAR(g_player_crush_bounce, float, 300, "Bounce height in advanced trace mode");
+AUTOCVAR(g_player_crush_bounce_jump, float, 600, "Bounce height while holding jump in advanced trace mode");
 #endif
 
 REGISTER_STAT(PLAYER_CRUSH, bool, autocvar_g_player_crush)

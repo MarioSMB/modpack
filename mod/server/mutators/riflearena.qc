@@ -1,6 +1,6 @@
 //FEATURE: Rifle Arena, a classic mode a bit like instagib, with the fabled sniper rifle and limited health
 
-AUTOCVAR(g_riflearena, bool, false, _("Enable rifle arena mutator"));
+AUTOCVAR(g_riflearena, bool, false, "Enable rifle arena mutator");
 void ra_SetCvars();
 REGISTER_MUTATOR(ra, autocvar_g_riflearena && !autocvar_g_instagib && !cvar("g_overkill") && !g_nexball)
 {
@@ -14,7 +14,7 @@ REGISTER_MUTATOR(ra, autocvar_g_riflearena && !autocvar_g_instagib && !cvar("g_o
 	}
 }
 
-AUTOCVAR(g_riflearena_withlaser, bool, false, _("Enable blaster in the rifle arena mutator"));
+AUTOCVAR(g_riflearena_withlaser, bool, false, "Enable blaster in the rifle arena mutator");
 AUTOCVAR(g_riflearena_rifle_secondary_spread, string, "0", "");
 AUTOCVAR(g_riflearena_rifle_secondary_shots, string, "1", "");
 AUTOCVAR(g_riflearena_rifle_secondary_animtime, string, "0.15", "");

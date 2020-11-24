@@ -1,6 +1,6 @@
 //FEATURE: Option to keep players from spawning at the same spawnpoint twice
 
-AUTOCVAR(g_spawn_unique, bool, false, _("Prevent spawning at the same spawn point twice if possible"));
+AUTOCVAR(g_spawn_unique, bool, false, "Prevent spawning at the same spawn point twice if possible");
 REGISTER_MUTATOR(su, autocvar_g_spawn_unique);
 
 .entity su_last_point;

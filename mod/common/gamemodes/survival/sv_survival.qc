@@ -1,6 +1,6 @@
 #include "sv_survival.qh"
 
-AUTOCVAR(g_survival_hunter_count, float, 0.25, "number of players who will become hunters, set between 0 and 0.9 to use a multiplier of the current players, or 1 and above to specify an exact number of players");
+AUTOCVAR(g_survival_hunter_count, float, 0.3, "number of players who will become hunters, set between 0 and 0.9 to use a multiplier of the current players, or 1 and above to specify an exact number of players");
 AUTOCVAR(g_survival_round_timelimit, float, 180, "round time limit in seconds");
 AUTOCVAR(g_survival_warmup, float, 10, "how long the players will have time to run around the map before the round starts");
 AUTOCVAR(g_survival_punish_teamkill, bool, true, "kill the player when they kill an ally");
