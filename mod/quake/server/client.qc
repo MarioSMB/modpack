@@ -1923,6 +1923,8 @@ called when a player connects to a server
 void SetMOTD(entity this);
 void ClientConnect(entity this)
 {
+	make_impure(this);
+	this.classname = "player_joining";
 	if(MP_IMPEL)
 	{
 		bprintf("%s enters the Abyss!\n", this.netname);
@@ -2010,6 +2012,8 @@ void ClientDisconnect(entity this)
 		this.team = 0;
 	}
 	set_suicide_frame(this);
+
+	ONREMOVE(this);
 }
 
 /*
