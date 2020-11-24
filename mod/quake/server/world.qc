@@ -860,7 +860,6 @@ spawnfunc(worldspawn)
 	static_init_late();
 	static_init_precache();
 
-	GameLogInit(); // prepare everything
 	if(autocvar_sv_eventlog)
 	{
 		string s = sprintf("%d.%s.%06d", itos(autocvar_sv_eventlog_files_counter), strftime(false, "%s"), floor(random() * 1000000));
@@ -902,6 +901,9 @@ spawnfunc(worldspawn)
 		#undef X
 		cvar_set("sv_curl_serverpackages", s);
 	}
+
+	// TODO: make an actual use of this or unreference it!
+	if(autocvar_physics_ode) {}
 
 	SetMod();
 

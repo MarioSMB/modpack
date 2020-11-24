@@ -8,9 +8,7 @@ REGISTER_NET_LINKED(ENT_CLIENT_TOGGLEWALL)
 
 #include "stats.qh"
 
-#ifdef CSQC
-	float autocvar_cl_lerpexcess;
-#endif
+#define PHYS_INVEHICLE(s) 					false
 
 #ifdef SVQC
 	#define MP_HIPNOTIC autocvar_sv_missionpack_hipnotic
