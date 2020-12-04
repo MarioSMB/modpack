@@ -1167,21 +1167,20 @@ void Physics_Frame()
 
 	IL_EACH(g_moveables, true,
 	{
-		if(IS_CLIENT(it) || it.classname == "" || it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH || it.move_movetype == MOVETYPE_PHYSICS)
+		if(IS_CLIENT(it) || it.move_movetype == MOVETYPE_PHYSICS)
 			continue;
 
 		//set_movetype(it, it.move_movetype);
 		// inline the set_movetype function, since this is called a lot
-		it.movetype = (it.move_qcphysics) ? MOVETYPE_NONE : it.move_movetype;
+		it.movetype = (it.move_qcphysics) ? MOVETYPE_QCENTITY : it.move_movetype;
 
-		if(it.move_movetype == MOVETYPE_NONE)
-			continue;
-
-		if(it.move_qcphysics)
+		if(it.move_qcphysics && it.move_movetype != MOVETYPE_NONE)
 			Movetype_Physics_NoMatchTicrate(it, PHYS_INPUT_TIMELENGTH, false);
 
 		if(it.movetype >= MOVETYPE_USER_FIRST && it.movetype <= MOVETYPE_USER_LAST) // these cases have no think handling
 		{
+			if(it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH)
+				continue; // these movetypes have no regular think function
 			// handle thinking here
 			if (getthink(it) && it.nextthink > 0 && it.nextthink <= time + frametime)
 				RunThink(it);
