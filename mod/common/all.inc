@@ -19,12 +19,10 @@
 #include "polytrails.qh"
 #include "radio/module.inc"
 #include "special.qc"
-#include "vehicles/all.inc"
 #include "weapons/all.inc"
 #include "weapons.qc"
 
 #define IMPLEMENTATION
 #include "gamemodes/all.inc"
 #include "monsters/all.inc"
-#include "vehicles/all.inc"
 #undef IMPLEMENTATION
