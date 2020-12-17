@@ -51,7 +51,7 @@ MUTATOR_HOOKFUNCTION(freeze, PlayerDies)
 
 	bool can_freeze = false;
 
-	if(CS(frag_target).cvar_cl_freeze)
+	if(CS_CVAR(frag_target).cvar_cl_freeze)
 	if(cvar("g_freeze") == 1)
 		can_freeze = true;
 

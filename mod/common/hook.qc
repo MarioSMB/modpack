@@ -22,12 +22,13 @@ REGISTER_MUTATOR(sv_customhook, true);
 MUTATOR_HOOKFUNCTION(sv_customhook, PlayerPreThink)
 {
 	// this hack is rather unfortunate, but entcs isn't smart enough to get fields from the clientstate yet
+	// NOTE: not CURRENTLY necessary, but should remain for when cvars are moved back to the clientstate!
 	entity player = M_ARGV(0, entity);
 
 	if(!CS(player))
 		return;
 
-	int myhook = CS(player).cvar_cl_customhook;
+	int myhook = CS_CVAR(player).cvar_cl_customhook;
 	if(!myhook)
 		myhook = autocvar_sv_customhook_default;
 

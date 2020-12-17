@@ -136,25 +136,25 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 #define ALLOWED(d) (models_allowed & MODELS_##d)
 		// public hax
 		// stuff anyone can use
-		if(CS(player).cvar_cl_model == "pony" && ALLOWED(PONY))
+		if(CS_CVAR(player).cvar_cl_model == "pony" && ALLOWED(PONY))
 		{
 			M_ARGV(0, string) = "models/player/pony.iqm";
-			M_ARGV(1, int) = CS(player).cvar_cl_pony_skin;
-			cpmodels_UpdateWeaponSkin(player, ((CS(player).cvar_cl_pony_skin) ? 2 : 7));
+			M_ARGV(1, int) = CS_CVAR(player).cvar_cl_pony_skin;
+			cpmodels_UpdateWeaponSkin(player, ((CS_CVAR(player).cvar_cl_pony_skin) ? 2 : 7));
 		}
-		if(CS(player).cvar_cl_model == "robot" && ALLOWED(ROBOT))
+		if(CS_CVAR(player).cvar_cl_model == "robot" && ALLOWED(ROBOT))
 		{
 			M_ARGV(0, string) = "models/player/terminusmale.iqm";
 			cpmodels_UpdateWeaponSkin(player, 3);
 		}
 
-		if(CS(player).cvar_cl_model == "monk" && ALLOWED(MONK))
+		if(CS_CVAR(player).cvar_cl_model == "monk" && ALLOWED(MONK))
 		{
 			M_ARGV(0, string) = "models/player/monk2.dpm";
 			cpmodels_UpdateWeaponSkin(player, 6);
 		}
 
-		if(CS(player).cvar_cl_model == "nexus" && ALLOWED(NEXUS))
+		if(CS_CVAR(player).cvar_cl_model == "nexus" && ALLOWED(NEXUS))
 			M_ARGV(0, string) = "models/player/nexus.zym";
 
 		if(ALLOWED(BOT) && IS_BOT_CLIENT(player) && autocvar_sv_allow_customplayermodels_bots)
@@ -163,25 +163,25 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 		// special hax
 		if(PlayerInList(player, autocvar_sv_allow_customplayermodels_idlist))
 		{
-			if(CS(player).cvar_cl_model == "rosalina" && ALLOWED(ROSALINA))
+			if(CS_CVAR(player).cvar_cl_model == "rosalina" && ALLOWED(ROSALINA))
 			{
 				if(autocvar_g_fullbrightplayers && autocvar_g_player_brightness)
 					player.colormod = '0.7 0.7 0.7'; // regular brightness is way too bright here TODO this is a model issue, should be fixed there!
 				M_ARGV(0, string) = "models/player/rosalina.dpm";
 				cpmodels_UpdateWeaponSkin(player, 2);
 			}
-			if(CS(player).cvar_cl_model == "foxy" && ALLOWED(RENAMON))
+			if(CS_CVAR(player).cvar_cl_model == "foxy" && ALLOWED(RENAMON))
 			{
 				M_ARGV(0, string) = "models/player/renamon.iqm";
 				cpmodels_UpdateWeaponSkin(player, 4);
 			}
-			if(CS(player).cvar_cl_model == "iggy" && ALLOWED(IGGY))
+			if(CS_CVAR(player).cvar_cl_model == "iggy" && ALLOWED(IGGY))
 			{
 				M_ARGV(0, string) = "models/player/iggy.dpm";
 				cpmodels_UpdateWeaponSkin(player, 5);
 			}
 
-			if(CS(player).cvar_cl_model == "goat" && ALLOWED(GOAT))
+			if(CS_CVAR(player).cvar_cl_model == "goat" && ALLOWED(GOAT))
 			{
 				M_ARGV(0, string) = "models/player/draconimale.iqm";
 				cpmodels_UpdateWeaponSkin(player, 7);
@@ -193,13 +193,13 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 		if(PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		{
 			cpmodels_UpdateWeaponSkin(player, 1);
-			if(CS(player).cvar_cl_sparkle == 3 && ALLOWED(MARIO))
+			if(CS_CVAR(player).cvar_cl_sparkle == 3 && ALLOWED(MARIO))
 				M_ARGV(0, string) = "models/player/mario.dpm";
-			if(CS(player).cvar_cl_sparkle == 4 && ALLOWED(WEEGEE))
+			if(CS_CVAR(player).cvar_cl_sparkle == 4 && ALLOWED(WEEGEE))
 				M_ARGV(0, string) = "models/player/luigi.dpm";
-			if(CS(player).cvar_cl_sparkle == 5 && ALLOWED(MARIO64))
+			if(CS_CVAR(player).cvar_cl_sparkle == 5 && ALLOWED(MARIO64))
 				M_ARGV(0, string) = "models/player/mario64.dpm";
-			if(CS(player).cvar_cl_model == "bear" && ALLOWED(BEAR))
+			if(CS_CVAR(player).cvar_cl_model == "bear" && ALLOWED(BEAR))
 				M_ARGV(0, string) = "models/player/bear.dpm";
 		}
 		else if(player.playermodel == "models/player/mario.dpm" || player.playermodel == "models/player/mario64.dpm" || player.playermodel == "models/player/bear.dpm" || player.playermodel == "models/player/luigi.dpm")
@@ -217,10 +217,10 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(CS(player).cvar_cl_sparkle >= 1 && PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
+	if(CS_CVAR(player).cvar_cl_sparkle >= 1 && PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		player.effects |= EF_STARDUST;
 
-	if(CS(player).cvar_cl_sparkle == 2 && PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
+	if(CS_CVAR(player).cvar_cl_sparkle == 2 && PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		player.colormap = 4351;
 }
 
@@ -282,7 +282,7 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerJump, CBC_ORDER_LAST)
 	if(autocvar_sv_jumpvelocity_backflip && PHYS_INPUT_BUTTON_CROUCH(player) && IS_ONGROUND(player) && vdist(player.velocity, <, PHYS_MAXSPEED(player) * 0.6) &&
 		(player.model == "models/player/mario.dpm" || player.model == "models/player/mario64.dpm") &&
 #ifdef SVQC
-		!g_cts && !g_race && (CS(player).cvar_cl_sparkle == 3 || CS(player).cvar_cl_sparkle == 5) && ((models_allowed & MODELS_MARIO) || (models_allowed & MODELS_MARIO64))
+		!g_cts && !g_race && (CS_CVAR(player).cvar_cl_sparkle == 3 || CS_CVAR(player).cvar_cl_sparkle == 5) && ((models_allowed & MODELS_MARIO) || (models_allowed & MODELS_MARIO64))
 #elif defined(CSQC)
 		!ISGAMETYPE(CTS) && !ISGAMETYPE(RACE) && (autocvar_cl_sparkle == 3 || autocvar_cl_sparkle == 5) /* sorry csqc, no way to check allowed thanks to a stupid stats bug */
 #endif

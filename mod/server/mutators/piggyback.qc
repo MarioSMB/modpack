@@ -199,7 +199,7 @@ MUTATOR_HOOKFUNCTION(piggyback, PlayerUseKey)
 
 #define LIMBO(v) (IS_DEAD(v) || STAT(FROZEN, v))
 
-	if(!CS(player).cvar_cl_noride)
+	if(!CS_CVAR(player).cvar_cl_noride)
 	if(!player.vehicle && !IS_DEAD(player) && !STAT(FROZEN, player))
 	{
 		entity head, closest_target = NULL;
@@ -210,7 +210,7 @@ MUTATOR_HOOKFUNCTION(piggyback, PlayerUseKey)
 			if(IS_PLAYER(head) || (IS_MONSTER(head) && (head.monsterdef.spawnflags & MON_FLAG_RIDE)))
 			if(SAME_TEAM(head, player) || autocvar_g_piggyback_ride_enemies || (IS_MONSTER(head) && head.realowner == player))
 			if(head != player)
-			if(!head.cvar_cl_nocarry)
+			if(!CS_CVAR(head).cvar_cl_nocarry)
 			if(!IS_DEAD(head)) // we check for trapped status here, but better to be safe than sorry, considering the madness happening
 			if(!head.vehicle)
 			if((!LIMBO(head) && !LIMBO(player)) || (LIMBO(head) || LIMBO(player))) // your guess is as good as mine
@@ -461,13 +461,13 @@ MUTATOR_HOOKFUNCTION(piggyback, BuffTouch)
 		toucher = toucher.piggybacker;
 
 	if(STAT(BUFFS, toucher))
-	if(STAT(BUFFS, toucher) == STAT(BUFFS, buff) || !toucher.cvar_cl_buffs_autoreplace)
+	if(STAT(BUFFS, toucher) == STAT(BUFFS, buff) || !CS_CVAR(toucher).cvar_cl_buffs_autoreplace)
 	{
 		entity p = toucher;
 		while(p.piggybacker)
 		{
 			p = p.piggybacker;
-			if(!STAT(BUFFS, p) || (!p.piggybacker && (p.cvar_cl_buffs_autoreplace || STAT(BUFFS, p) != STAT(BUFFS, buff))))
+			if(!STAT(BUFFS, p) || (!p.piggybacker && (CS_CVAR(p).cvar_cl_buffs_autoreplace || STAT(BUFFS, p) != STAT(BUFFS, buff))))
 			{
 				toucher = p;
 				break;
