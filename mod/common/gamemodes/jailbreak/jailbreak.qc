@@ -568,7 +568,7 @@ void JB_Torture_Think(entity this)
 
 	FOREACH_CLIENT(IS_PLAYER(it) && DIFF_TEAM(it, this) && STAT(JB_ISPRISONED, it),
 	{
-		if(!Fire_IsBurning(it))
+		if(!StatusEffects_active(STATUSEFFECT_Burning, it))
 			Fire_AddDamage(it, NULL, 100, 6, DEATH_FIRE.m_id);
 	});
 }

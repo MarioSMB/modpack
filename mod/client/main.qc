@@ -78,7 +78,7 @@ MUTATOR_HOOKFUNCTION(mutator_mod, CSQC_ConsoleCommand)
 	if(cmd_name == "bufflist")
 	{
 		LOG_INFO("Buffs:");
-		FOREACH(Buffs, true,
+		FOREACH(StatusEffect, it.instanceOfBuff,
 		{
 			LOG_INFO("    ", it.netname, " (", BUFF_NAME(it.m_id), "^7)");
 		});

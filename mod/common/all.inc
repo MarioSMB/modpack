@@ -10,7 +10,7 @@
 #include "location.qc"
 #include "projectiles.qh"
 #include "minigames/all.inc"
-#include "mpowerups.qc"
+//#include "mpowerups.qc"
 #include "monsters/all.inc"
 #include "nocross.qc"
 #include "mutators/all.inc"

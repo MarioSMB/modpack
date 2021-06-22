@@ -460,14 +460,18 @@ MUTATOR_HOOKFUNCTION(piggyback, BuffTouch)
 	if(toucher.piggybacker)
 		toucher = toucher.piggybacker;
 
-	if(STAT(BUFFS, toucher))
-	if(STAT(BUFFS, toucher) == STAT(BUFFS, buff) || !CS_CVAR(toucher).cvar_cl_buffs_autoreplace)
+	entity heldbuff = buff_FirstFromFlags(toucher);
+	entity thebuff = buff.buffdef;
+
+	if(heldbuff)
+	if(heldbuff == thebuff || !CS_CVAR(toucher).cvar_cl_buffs_autoreplace)
 	{
 		entity p = toucher;
 		while(p.piggybacker)
 		{
 			p = p.piggybacker;
-			if(!STAT(BUFFS, p) || (!p.piggybacker && (CS_CVAR(p).cvar_cl_buffs_autoreplace || STAT(BUFFS, p) != STAT(BUFFS, buff))))
+			entity theirbuff = buff_FirstFromFlags(p);
+			if(!theirbuff || (!p.piggybacker && (CS_CVAR(p).cvar_cl_buffs_autoreplace || theirbuff != thebuff)))
 			{
 				toucher = p;
 				break;

@@ -163,7 +163,7 @@ void boggle_setup_pieces(entity minigame)
 		int touse = boggle_get_unused(used);
 		used |= BIT(touse);
 	    string letter = strzone(boggle_get_letter(touse));
-		entity piece = msle_spawn(minigame,new("minigame_board_piece"));
+		entity piece = msle_spawn(minigame,new(minigame_board_piece));
 		piece.boggle_letter = letter;
 		piece.team = 1; // init default team?
 		piece.netname = strzone(minigame_tile_buildname(t,i));

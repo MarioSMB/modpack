@@ -1,4 +1,5 @@
 //FEATURE-DISABLED Some classic SMB powerups, including the mini mushroom, super star and life shroom!
+// TODO: needs a lot of updates to compile again!
 
 const int IT_STAR = BIT(23);
 const int IT_MINI = BIT(22);
@@ -587,11 +588,11 @@ MUTATOR_HOOKFUNCTION(mpowerups, HUD_Powerups_add)
 	float lifeTime = bound(0, STAT(LIFE_FINISHED) - time, 99);
 
 	if(starTime)
-		addPowerupItem("Starman", "star", autocvar_hud_progressbar_star_color, starTime, 33.616);
+		addPowerupItem("Starman", "star", autocvar_hud_progressbar_star_color, starTime, 33.616, false);
 	if(miniTime)
-		addPowerupItem("Mini Mushroom", "mini", autocvar_hud_progressbar_mini_color, miniTime, 30);
+		addPowerupItem("Mini Mushroom", "mini", autocvar_hud_progressbar_mini_color, miniTime, 30, false);
 	if(lifeTime)
-		addPowerupItem("Life Mushroom", "life", autocvar_hud_progressbar_life_color, lifeTime, 60);
+		addPowerupItem("Life Mushroom", "life", autocvar_hud_progressbar_life_color, lifeTime, 60, false);
 }
 
 MUTATOR_HOOKFUNCTION(mpowerups, HUD_Draw_overlay)
