@@ -2,7 +2,10 @@
 cd ${0%[\\/]*}
 set -eu
 
-git pull --tags
+git fetch --tags
+if [ -z "${CI-}" ]; then
+    git pull
+fi
 
 git submodule update --init --depth 100
 
