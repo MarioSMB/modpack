@@ -1,0 +1,8 @@
+#pragma once
+
+const int ATFLAG_SAMETEAM = BIT(0);
+
+#ifdef CSQC
+float last_attack_time;
+string last_attack_name;
+#endif

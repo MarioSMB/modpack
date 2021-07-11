@@ -3,6 +3,8 @@
 
 	#include "../common/all.inc"
 
+	//Please note that there are disabled features with //
+
 	#include "chat.qc"
 	#include "commands.qc"
 	#include "compat.qc"
@@ -10,8 +12,8 @@
 	#include "demo.qc"
 	#include "ignore.qc"
 	//#include "itemplacer.qc"
-	#include "items.qc"
-	#include "monsters.qc"
+	//#include "items.qc"
+	//#include "monsters.qc"
 	#include "mute.qc"
 	#include "player_size.qc"
 	#include "settemp.qc"
@@ -20,7 +22,7 @@
 	#include "team_collisions.qc"
 	#include "tp.qc"
 	#include "voteban.qc"
-	#include "weapons.qc"
+	//#include "weapons.qc"
 
 	#include "mutators/all.inc"
 #endif

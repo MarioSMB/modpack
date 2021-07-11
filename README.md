@@ -1,5 +1,7 @@
-SMB modpack
+Cyber modpack
 ===========
+
+Derived from SMB modpack.
 
 QuakeC source for the SMB server mods
 

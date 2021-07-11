@@ -3,12 +3,14 @@
 
 	#include "../common/all.inc"
 
-	#include "clientbeams.qc"
+	//Please note that there are disabled features with //
+
+	//#include "clientbeams.qc"
 	#include "compat.qc"
-	#include "custom_playermodels.qc"
+	//#include "custom_playermodels.qc"
 	#include "cvars.qc"
 	#include "oregon.qc"
-	#include "polytrails.qc"
+	//#include "polytrails.qc"
 #endif
 
 #ifdef QUAKE_ONE
