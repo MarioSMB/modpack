@@ -1,0 +1,67 @@
+#pragma once
+
+#include <common/gamemodes/gamemode/lms/lms.qh>
+#include <common/mapinfo.qh>
+
+#ifdef CSQC
+void HUD_Mod_MMM(vector pos, vector mySize);
+#endif
+CLASS(MurderinMegaerebusManor, Gametype)
+    INIT(MurderinMegaerebusManor)
+    {
+        this.gametype_init(this, _("Murder in Megaerebus Manor"),"mmm","g_mmm",GAMETYPE_FLAG_USEPOINTS,"","timelimit=30 pointlimit=20",_("A group of space civilians have murderers among them. Murderers must kill civilians, while the civilians have to try to find and kill the murderers"));
+    }
+    METHOD(MurderinMegaerebusManor, m_isAlwaysSupported, bool(Gametype this, int spawnpoints, float diameter))
+    {
+        return true;
+    }
+    METHOD(MurderinMegaerebusManor, m_isForcedSupported, bool(Gametype this))
+    {
+        if(!cvar("g_mmm_not_lms_maps"))
+        {
+            // if this is unset, all LMS maps support MurderinMegaerebusManor too
+            if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_LMS.m_flags))
+                return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
+        }
+        return false;
+    }
+#ifdef CSQC
+    ATTRIB(MurderinMegaerebusManor, m_modicons, void(vector pos, vector mySize), HUD_Mod_MMM);
+#endif
+ENDCLASS(MurderinMegaerebusManor)
+REGISTER_GAMETYPE(MMM, NEW(MurderinMegaerebusManor));
+
+#ifdef GAMEQC
+// shared state signalling the player's mmm status
+.int mmm_status;
+const int MMM_STATUS_CIVILIAN = 1;
+const int MMM_STATUS_MURDERER = 2;
+const int MMM_STATUS_DETECTIVE = 3;
+
+// hardcoded player colors for mmm
+const int MMM_COLOR_DETECTIVE = 221; // blue
+const int MMM_COLOR_CIVILIAN = 51; // green
+const int MMM_COLOR_MURDERER = 68; // red
+#endif
+
+REGISTER_SP(MMM_KARMA);
+
+REGISTER_STAT(MMM_ROUNDTIMER, float)
+
+// gamemode specific player mmm status (independent of score and frags)
+ENTCS_PROP(MMM_STATUS, true, mmm_status, mmm_status, ENTCS_SET_NORMAL,
+	{ WriteShort(chan, ent.mmm_status); },
+	{ ent.mmm_status = ReadShort(); })
+
+#ifdef SVQC
+AUTOCVAR_NOREF(g_mmm, bool, false, "");
+AUTOCVAR_NOREF(g_mmm_not_dm_maps, bool, false, "");
+
+AUTOCVAR_NOREF(g_mmm_respawn_delay_small, float, 0, "");
+AUTOCVAR_NOREF(g_mmm_respawn_delay_small_count, float, 0, "");
+AUTOCVAR_NOREF(g_mmm_respawn_delay_large, float, 0, "");
+AUTOCVAR_NOREF(g_mmm_respawn_delay_large_count, float, 0, "");
+AUTOCVAR_NOREF(g_mmm_respawn_delay_max, float, 0, "");
+AUTOCVAR_NOREF(g_mmm_respawn_waves, float, 0, "");
+AUTOCVAR_NOREF(g_mmm_weapon_stay, float, 0, "");
+#endif
