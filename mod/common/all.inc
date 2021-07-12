@@ -24,6 +24,10 @@
 //#include "weapons/all.inc"
 //#include "weapons.qc"
 
+#if 0
+#include "vehicles/all.inc"
+#endif
+
 /*#define IMPLEMENTATION
 #include "gamemodes/all.inc"
 #include "monsters/all.inc"

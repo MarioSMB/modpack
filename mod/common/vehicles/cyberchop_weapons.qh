@@ -1,0 +1,55 @@
+#pragma once
+
+#include <common/weapons/_all.qh>
+//copy here something similar to cyberchop_weapons.qh if this doesnt work
+
+CLASS(CyberChopMinigun, PortoLaunch)
+/* flags     */ ATTRIB(CyberChopMinigun, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
+/* impulse   */ ATTRIB(CyberChopMinigun, impulse, int, 4);
+/* refname   */ ATTRIB(CyberChopMinigun, netname, string, "cyberchopminigun");
+/* wepname   */ ATTRIB(CyberChopMinigun, m_name, string, _("Cyberchopper minigun"));
+ENDCLASS(CyberChopMinigun)
+REGISTER_WEAPON(CYBERCHOP, NEW(CyberChopMinigun));
+
+CLASS(CyberChopBomb, PortoLaunch)
+/* flags     */ ATTRIB(CyberChopBomb, spawnflags, int, WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
+/* impulse   */ ATTRIB(CyberChopBomb, impulse, int, 4);
+/* refname   */ ATTRIB(CyberChopBomb, netname, string, "cyberchopbomb");
+/* wepname   */ ATTRIB(CyberChopBomb, m_name, string, _("Cyberchopper bomb"));
+ENDCLASS(CyberChopBomb)
+REGISTER_WEAPON(CYBERCHOP_BOMB, NEW(CyberChopBomb));
+
+CLASS(CyberChopFlare, PortoLaunch)
+/* flags     */ ATTRIB(CyberChopFlare, spawnflags, int, WEP_TYPE_OTHER | WEP_FLAG_HIDDEN | WEP_FLAG_SPECIALATTACK | WEP_FLAG_CANCLIMB | WEP_TYPE_SPLASH);
+/* impulse   */ ATTRIB(CyberChopFlare, impulse, int, 4);
+/* refname   */ ATTRIB(CyberChopFlare, netname, string, "cyberchopflare");
+/* wepname   */ ATTRIB(CyberChopFlare, m_name, string, _("Cyberchopper flare"));
+ENDCLASS(CyberChopFlare)
+REGISTER_WEAPON(CYBERCHOP_FLARE, NEW(CyberChopFlare));
+
+#ifdef SVQC
+AUTOCVAR(g_vehicle_cyberchop_minigun_cost, float, 1, "");
+AUTOCVAR(g_vehicle_cyberchop_minigun_damage, float, 10, "");
+AUTOCVAR(g_vehicle_cyberchop_minigun_radius, float, 60, "");
+AUTOCVAR(g_vehicle_cyberchop_minigun_refire, float, 0.033333, "");
+AUTOCVAR(g_vehicle_cyberchop_minigun_speed, float, 24000, "");
+AUTOCVAR(g_vehicle_cyberchop_minigun_spread, float, 0.01, "");
+AUTOCVAR(g_vehicle_cyberchop_minigun_force, float, 25, "");
+
+AUTOCVAR(g_vehicle_cyberchop_bomblets, float, 8, "");
+AUTOCVAR(g_vehicle_cyberchop_bomblet_alt, float, 750, "");
+AUTOCVAR(g_vehicle_cyberchop_bomblet_time, float, 0.5, "");
+AUTOCVAR(g_vehicle_cyberchop_bomblet_damage, float, 55, "");
+AUTOCVAR(g_vehicle_cyberchop_bomblet_spread, float, 0.4, "");
+AUTOCVAR(g_vehicle_cyberchop_bomblet_edgedamage, float, 25, "");
+AUTOCVAR(g_vehicle_cyberchop_bomblet_radius, float, 350, "");
+AUTOCVAR(g_vehicle_cyberchop_bomblet_force, float, 150, "");
+AUTOCVAR(g_vehicle_cyberchop_bomblet_explode_delay, float, 0.4, "");
+
+AUTOCVAR(g_vehicle_cyberchop_bombs_refire, float, 5, "");
+
+AUTOCVAR(g_vehicle_cyberchop_flare_refire, float, 5, "");
+AUTOCVAR(g_vehicle_cyberchop_flare_lifetime, float, 10, "");
+AUTOCVAR(g_vehicle_cyberchop_flare_chase, float, 0.9, "");
+AUTOCVAR(g_vehicle_cyberchop_flare_range, float, 2000, "");
+#endif
