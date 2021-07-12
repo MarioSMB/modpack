@@ -44,7 +44,7 @@ Note: PATH is one of the following depending on your system
 |Mac|~/Library/Application Support/xonotic|
 Nothing should *ever* be added to the main installation folder of Xonotic, use these paths!
 
-1. Run this from a terminal in the modpack folder: `./update.sh`
+1. Run this from a terminal in the modpack folder: `./update.sh` (Optionally, you can use `./updatecyber.sh` to use specific contents (be warned, it can be used for experimental reasons))
 2. Run this from a terminal in the modpack folder: `./build.sh`
 3. Copy the compiled .dat files from modpack to `PATH/data`
 4. Download the content packs to `PATH/data` and make sure they're available on your map download server
