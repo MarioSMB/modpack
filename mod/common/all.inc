@@ -28,7 +28,7 @@
 #include "vehicles/all.inc"
 #endif
 
-/*#define IMPLEMENTATION
+#define IMPLEMENTATION
 #include "gamemodes/all.inc"
-#include "monsters/all.inc"
-#undef IMPLEMENTATION*/
+//#include "monsters/all.inc"
+#undef IMPLEMENTATION
