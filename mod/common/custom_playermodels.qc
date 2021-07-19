@@ -2,7 +2,6 @@
 
 #ifdef GAMEQC
 AUTOCVAR(sv_jumpvelocity_backflip, float, 600, "");
-AUTOCVAR(sv_jumpvelocity_backflip_backspeed, float, 50, "");
 
 #ifdef SVQC
 int models_allowed;
@@ -12,7 +11,9 @@ bool g_overkill; // reliable check for overkill
 //REGISTER_STAT(JUMPVELOCITY_CROUCH, float, autocvar_sv_jumpvelocity_backflip);
 //REGISTER_STAT(MODELS_ALLOWED, int, models_allowed);
 
-REGISTER_PLAYERSOUND(cjump)
+// TODO
+SOUND(MARIO_CJUMP, "player/mario/player/jump7");
+SOUND(MARIO64_CJUMP, "player/mario64/player/jump2");
 
 const int MODELS_PONY = BIT(0);
 const int MODELS_WEEGEE = BIT(1);
@@ -28,6 +29,7 @@ const int MODELS_MONK = BIT(10);
 const int MODELS_NEXUS = BIT(11);
 const int MODELS_IGGY = BIT(12);
 const int MODELS_MARIO64 = BIT(13);
+const int MODELS_SPONGEBOB = BIT(14);
 #endif
 
 #ifdef SVQC
@@ -83,6 +85,7 @@ PRECACHE(cpmodels_precache)
 		CHECK_MODEL("nexus.zym", NEXUS)
 		CHECK_MODEL("iggy.dpm", IGGY)
 		CHECK_MODEL("mario64.dpm", MARIO64)
+        CHECK_MODEL("spongebob.md3", SPONGEBOB)
 	}
 #undef CHECK_MODEL
 }
@@ -130,31 +133,31 @@ MUTATOR_HOOKFUNCTION(cpmodels, FormatMessage)
 
 MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 {
-	if(autocvar_sv_allow_customplayermodels && !g_overkill)
+	if(autocvar_sv_allow_customplayermodels && !cvar("g_overkill"))
 	{
 		entity player = M_ARGV(2, entity);
 #define ALLOWED(d) (models_allowed & MODELS_##d)
 		// public hax
 		// stuff anyone can use
-		if(CS_CVAR(player).cvar_cl_model == "pony" && ALLOWED(PONY))
+		if(CS(player).cvar_cl_model == "pony" && ALLOWED(PONY))
 		{
 			M_ARGV(0, string) = "models/player/pony.iqm";
-			M_ARGV(1, int) = CS_CVAR(player).cvar_cl_pony_skin;
-			cpmodels_UpdateWeaponSkin(player, ((CS_CVAR(player).cvar_cl_pony_skin) ? 2 : 7));
+			M_ARGV(1, int) = CS(player).cvar_cl_pony_skin;
+			cpmodels_UpdateWeaponSkin(player, ((CS(player).cvar_cl_pony_skin) ? 2 : 7));
 		}
-		if(CS_CVAR(player).cvar_cl_model == "robot" && ALLOWED(ROBOT))
+		if(CS(player).cvar_cl_model == "robot" && ALLOWED(ROBOT))
 		{
 			M_ARGV(0, string) = "models/player/terminusmale.iqm";
 			cpmodels_UpdateWeaponSkin(player, 3);
 		}
 
-		if(CS_CVAR(player).cvar_cl_model == "monk" && ALLOWED(MONK))
+		if(CS(player).cvar_cl_model == "monk" && ALLOWED(MONK))
 		{
 			M_ARGV(0, string) = "models/player/monk2.dpm";
 			cpmodels_UpdateWeaponSkin(player, 6);
 		}
 
-		if(CS_CVAR(player).cvar_cl_model == "nexus" && ALLOWED(NEXUS))
+		if(CS(player).cvar_cl_model == "nexus" && ALLOWED(NEXUS))
 			M_ARGV(0, string) = "models/player/nexus.zym";
 
 		if(ALLOWED(BOT) && IS_BOT_CLIENT(player) && autocvar_sv_allow_customplayermodels_bots)
@@ -163,28 +166,34 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 		// special hax
 		if(PlayerInList(player, autocvar_sv_allow_customplayermodels_idlist))
 		{
-			if(CS_CVAR(player).cvar_cl_model == "rosalina" && ALLOWED(ROSALINA))
+			if(CS(player).cvar_cl_model == "rosalina" && ALLOWED(ROSALINA))
 			{
 				if(autocvar_g_fullbrightplayers && autocvar_g_player_brightness)
 					player.colormod = '0.7 0.7 0.7'; // regular brightness is way too bright here TODO this is a model issue, should be fixed there!
 				M_ARGV(0, string) = "models/player/rosalina.dpm";
 				cpmodels_UpdateWeaponSkin(player, 2);
 			}
-			if(CS_CVAR(player).cvar_cl_model == "foxy" && ALLOWED(RENAMON))
+			if(CS(player).cvar_cl_model == "foxy" && ALLOWED(RENAMON))
 			{
 				M_ARGV(0, string) = "models/player/renamon.iqm";
 				cpmodels_UpdateWeaponSkin(player, 4);
 			}
-			if(CS_CVAR(player).cvar_cl_model == "iggy" && ALLOWED(IGGY))
+			if(CS(player).cvar_cl_model == "iggy" && ALLOWED(IGGY))
 			{
 				M_ARGV(0, string) = "models/player/iggy.dpm";
 				cpmodels_UpdateWeaponSkin(player, 5);
 			}
 
-			if(CS_CVAR(player).cvar_cl_model == "goat" && ALLOWED(GOAT))
+			if(CS(player).cvar_cl_model == "goat" && ALLOWED(GOAT))
 			{
 				M_ARGV(0, string) = "models/player/draconimale.iqm";
 				cpmodels_UpdateWeaponSkin(player, 7);
+			}
+
+			if(CS(player).cvar_cl_model == "spongebob" && ALLOWED(SPONGEBOB))
+			{
+				M_ARGV(0, string) = "models/player/spongebob.md3";
+				cpmodels_UpdateWeaponSkin(player, 8);
 			}
 		}
 		else if(player.playermodel == "models/player/renamon.iqm" || player.playermodel == "models/player/rosalina.dpm" || player.playermodel == "models/player/iggy.dpm")
@@ -193,16 +202,16 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 		if(PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		{
 			cpmodels_UpdateWeaponSkin(player, 1);
-			if(CS_CVAR(player).cvar_cl_sparkle == 3 && ALLOWED(MARIO))
+			if(CS(player).cvar_cl_sparkle == 3 && ALLOWED(MARIO))
 				M_ARGV(0, string) = "models/player/mario.dpm";
-			if(CS_CVAR(player).cvar_cl_sparkle == 4 && ALLOWED(WEEGEE))
+			if(CS(player).cvar_cl_sparkle == 4 && ALLOWED(WEEGEE))
 				M_ARGV(0, string) = "models/player/luigi.dpm";
-			if(CS_CVAR(player).cvar_cl_sparkle == 5 && ALLOWED(MARIO64))
+			if(CS(player).cvar_cl_sparkle == 5 && ALLOWED(MARIO64))
 				M_ARGV(0, string) = "models/player/mario64.dpm";
-			if(CS_CVAR(player).cvar_cl_model == "bear" && ALLOWED(BEAR))
+			if(CS(player).cvar_cl_model == "bear" && ALLOWED(BEAR))
 				M_ARGV(0, string) = "models/player/bear.dpm";
 		}
-		else if(player.playermodel == "models/player/mario.dpm" || player.playermodel == "models/player/mario64.dpm" || player.playermodel == "models/player/bear.dpm" || player.playermodel == "models/player/luigi.dpm")
+		else if(player.playermodel == "models/player/mario.dpm" || player.playermodel == "models/player/mario64.dpm" || player.playermodel == "models/player/bear.dpm" || player.playermodel == "models/player/luigi.dpm" || player.playermodel == "models/player/spongebob.md3")
 			M_ARGV(0, string) = autocvar_sv_defaultplayermodel;
 
 		if(CS(player).cow && ALLOWED(COW))
@@ -217,10 +226,10 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(CS_CVAR(player).cvar_cl_sparkle >= 1 && PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
+	if(CS(player).cvar_cl_sparkle >= 1 && PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		player.effects |= EF_STARDUST;
 
-	if(CS_CVAR(player).cvar_cl_sparkle == 2 && PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
+	if(CS(player).cvar_cl_sparkle == 2 && PlayerInList(player, autocvar_sv_allow_customplayermodels_speciallist))
 		player.colormap = 4351;
 }
 
@@ -282,19 +291,28 @@ MUTATOR_HOOKFUNCTION(cpmodels, PlayerJump, CBC_ORDER_LAST)
 	if(autocvar_sv_jumpvelocity_backflip && PHYS_INPUT_BUTTON_CROUCH(player) && IS_ONGROUND(player) && vdist(player.velocity, <, PHYS_MAXSPEED(player) * 0.6) &&
 		(player.model == "models/player/mario.dpm" || player.model == "models/player/mario64.dpm") &&
 #ifdef SVQC
-		!g_cts && !g_race && (CS_CVAR(player).cvar_cl_sparkle == 3 || CS_CVAR(player).cvar_cl_sparkle == 5) && ((models_allowed & MODELS_MARIO) || (models_allowed & MODELS_MARIO64))
+		!g_cts && !g_race && (CS(player).cvar_cl_sparkle == 3 || CS(player).cvar_cl_sparkle == 5) && ((models_allowed & MODELS_MARIO) || (models_allowed & MODELS_MARIO64))
 #elif defined(CSQC)
-		!ISGAMETYPE(CTS) && !ISGAMETYPE(RACE) && (autocvar_cl_sparkle == 3 || autocvar_cl_sparkle == 5) /* sorry csqc, no way to check allowed thanks to a stupid stats bug */
+		gametype != MAPINFO_TYPE_CTS && gametype != MAPINFO_TYPE_RACE && (autocvar_cl_sparkle == 3 || autocvar_cl_sparkle == 5) /* sorry csqc, no way to check allowed thanks to a stupid stats bug */
 #endif
 		)
 	{
 		M_ARGV(1, float) = autocvar_sv_jumpvelocity_backflip;
 		vector forward, right, up;
 		MAKE_VECTORS(PHYS_WORLD_ANGLES(player), forward, right, up);
-		player.velocity -= forward * autocvar_sv_jumpvelocity_backflip_backspeed; // NOTE: hardcoded backflip value? needs fixing!
+		player.velocity -= forward * 50; // NOTE: hardcoded backflip value? needs fixing!
 	#ifdef SVQC
-		PlayerSound(player, playersound_cjump, CH_PLAYER, VOL_BASE, VOICETYPE_PLAYERSOUND);
+		if(sound_allowed(MSG_BROADCAST, player))
+		{
+			float myscale = ((player.scale) ? player.scale : 1); // safety net
+			float thepitch = ((myscale == 1) ? 0 : GlobalSound_pitch(myscale * 100));
+			if(CS(player).cvar_cl_sparkle == 5)
+				sound7(player, CH_VOICE, SND(MARIO64_CJUMP), VOL_BASE, ATTEN_NORM, thepitch, 0);
+			else
+				sound7(player, CH_VOICE, SND(MARIO_CJUMP), VOL_BASE, ATTEN_NORM, thepitch, 0);
+		}
 	#endif
 	}
 }
 #endif
+
