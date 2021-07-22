@@ -23,7 +23,7 @@ MUTATOR_HOOKFUNCTION(attackertext, DrawInfoMessages)
 	{
 		vector pos = M_ARGV(0, vector);
 		vector mySize = M_ARGV(1, vector);
-		vector fontsize;
+		vector fontsize = '0.3 0.3 0' * mySize.y;
 		fontsize.x = autocvar_cl_attackertext_size * mySize.y;
 		fontsize.y = autocvar_cl_attackertext_size * mySize.y;
 		
