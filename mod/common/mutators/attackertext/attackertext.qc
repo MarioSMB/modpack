@@ -8,7 +8,7 @@ AUTOCVAR_SAVE(cl_attackertext_friendlyfire,           bool,   false,      "Show 
 AUTOCVAR_SAVE(cl_attackertext_time,                   float,  3,          "Time to show");
 AUTOCVAR_SAVE(cl_attackertext_fadetime,               float,  2,          "Time to fade");
 AUTOCVAR_SAVE(cl_attackertext_decolorize,             int,    1,          "1 = decolorize names when teamplay, 2 = decolorize always");
-AUTOCVAR_SAVE(cl_attackertext_size,                   float,  0.3,        "Fontt size");
+AUTOCVAR_SAVE(cl_attackertext_size,                   float,  0.3,        "Font size");
 
 REGISTER_MUTATOR(attackertext, true);
 
