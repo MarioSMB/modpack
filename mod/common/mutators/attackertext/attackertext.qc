@@ -18,14 +18,15 @@ MUTATOR_HOOKFUNCTION(attackertext, DrawInfoMessages)
 	
 	float fade_start = max(0, autocvar_cl_attackertext_time);
 	float fade_time = max(0, autocvar_cl_attackertext_fadetime);
-		
+	
 	if (last_attack_time && last_attack_time > time - fade_start - fade_time)
-    {
+	{
 		vector pos = M_ARGV(0, vector);
 		vector mySize = M_ARGV(1, vector);
 		vector fontsize = '0.3 0.3 0' * mySize.y;
 		fontsize.x = autocvar_cl_attackertext_size * mySize.y;
 		fontsize.y = autocvar_cl_attackertext_size * mySize.y;
+		
 		int img_curr_group = M_ARGV(2, int);
 		
 		float alpha_ = 0;
@@ -36,25 +37,25 @@ MUTATOR_HOOKFUNCTION(attackertext, DrawInfoMessages)
 			alpha_ = panel_fg_alpha - bound(0, (time - last_attack_time - fade_start) * (1 / fade_time), 1);
 		else
 			return true;
-			
+		
 		pos = InfoMessages_drawstring(last_attack_name, pos, mySize, alpha_, fontsize);
 		img_curr_group = -1;
 
 		return true;
-	}		
+	}
 	return false;
 }
 
 NET_HANDLE(attackertext, bool isNew)
 {
-    int server_entity_index = ReadByte();
+	int server_entity_index = ReadByte();
 	int flags = ReadByte();
-    bool friendlyfire = flags & ATFLAG_SAMETEAM;
+	bool friendlyfire = flags & ATFLAG_SAMETEAM;
 	
 	return = true;
 	
-    if (autocvar_cl_attackertext == 0) return;
-    if (friendlyfire && autocvar_cl_attackertext_friendlyfire == 0) return;
+	if (autocvar_cl_attackertext == 0) return;
+	if (friendlyfire && autocvar_cl_attackertext_friendlyfire == 0) return;
 	
 	string s = entcs_GetName(server_entity_index - 1);
 	if ((autocvar_cl_attackertext_decolorize == 1 && teamplay) || autocvar_cl_attackertext_decolorize == 2)
@@ -77,7 +78,7 @@ REGISTER_MUTATOR(attackertext, true);
 void attackertext_Send(entity to, entity attacker, int sf)
 {
 	if(IS_REAL_CLIENT(to))
-    {
+	{
 		msg_entity = to;
 		WriteHeader(MSG_ONE, attackertext);
 		WriteByte(MSG_ONE, etof(attacker));
@@ -87,10 +88,10 @@ void attackertext_Send(entity to, entity attacker, int sf)
 
 MUTATOR_HOOKFUNCTION(attackertext, PlayerDamaged)
 {
-    if (SV_ATTACKERTEXT_DISABLED()) return;
-	
-    entity attacker = M_ARGV(0, entity);
-    entity hit = M_ARGV(1, entity);
+	if (SV_ATTACKERTEXT_DISABLED()) return;
+
+	entity attacker = M_ARGV(0, entity);
+	entity hit = M_ARGV(1, entity);
 	
 	if (hit == attacker) return;
 	if (!IS_PLAYER(attacker)) return;
