@@ -25,4 +25,6 @@ STATIC_INIT(mod_cpmodels)
 		cvar_set("cl_custommodel", "rosalina");
 	if((cvar_type("cl_damnfurries") & CVAR_TYPEFLAG_EXISTS) && cvar("cl_damnfurries"))
 		cvar_set("cl_custommodel", "foxy");
+	if((cvar_type("cl_spongebob") & CVAR_TYPEFLAG_EXISTS) && cvar("cl_spongebob"))
+		cvar_set("cl_custommodel", "spongebob");
 }
