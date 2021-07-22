@@ -8,6 +8,7 @@ AUTOCVAR_SAVE(cl_attackertext_friendlyfire,           bool,   false,      "Show 
 AUTOCVAR_SAVE(cl_attackertext_time,                   float,  3,          "Time to show");
 AUTOCVAR_SAVE(cl_attackertext_fadetime,               float,  2,          "Time to fade");
 AUTOCVAR_SAVE(cl_attackertext_decolorize,             int,    1,          "1 = decolorize names when teamplay, 2 = decolorize always");
+AUTOCVAR_SAVE(cl_attackertext_size,                   float,  0.3,        "Fontt size");
 
 REGISTER_MUTATOR(attackertext, true);
 
@@ -23,6 +24,8 @@ MUTATOR_HOOKFUNCTION(attackertext, DrawInfoMessages)
 		vector pos = M_ARGV(0, vector);
 		vector mySize = M_ARGV(1, vector);
 		vector fontsize = '0.3 0.3 0' * mySize.y;
+		fontsize.x = autocvar_cl_attackertext_size * mySize.y;
+		fontsize.y = autocvar_cl_attackertext_size * mySize.y;
 		int img_curr_group = M_ARGV(2, int);
 		
 		float alpha_ = 0;
