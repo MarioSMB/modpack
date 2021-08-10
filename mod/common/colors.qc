@@ -7,10 +7,10 @@ string mod_translate_clean(string s)
 
 	if(s == "" || !s)
 		return s;
-    
-    s = strreplace("^x662", "^5", s);
+
+	s = strreplace("^x662", "^5", s);
     s = strreplace("^x663", "^6", s);
-	s = strreplace("^x664", "^7", s);
+    s = strreplace("^x664", "^7", s);
 	s = strreplace("^x665", "^3", s);
 	s = strreplace("^x666", "^1", s);
 	s = strreplace("^x667", "^2", s);
@@ -20,6 +20,19 @@ string mod_translate_clean(string s)
 }
 
 #ifdef SVQC
+
+string mod_playername(string thename, int teamid, bool team_colorize)
+{
+    if (team_colorize && teamplay && !intermission_running)
+    {
+        string t = Team_ColorCode(teamid);
+        return strcat(t, strdecolorize(thename));
+    }
+    else
+        return mod_translate_clean(thename);
+}
+
+#if 0
 string mod_playername(entity p, bool team_colorize)
 {
     if (team_colorize && teamplay && !intermission_running && IS_PLAYER(p))
@@ -30,7 +43,7 @@ string mod_playername(entity p, bool team_colorize)
     else
         return mod_translate_clean(p.netname);
 }
-
+#endif
 #if 0
 MUTATOR_HOOKFUNCTION(mutator_mod, PreFormatMessage)
 {
@@ -96,9 +109,9 @@ string mod_translate(string s)
 			{
 				switch(fc4)
 				{
-                    case 2: fancy = 8; break;
+					case 2: fancy = 8; break;
                     case 3: fancy = 7; break;
-					case 4: fancy = 6; break;
+                    case 4: fancy = 6; break;
 					case 5: fancy = 4; break;
 					default:
 					case 6: fancy = 2; break;
