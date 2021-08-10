@@ -7,9 +7,23 @@ if [ -z "${CI-}" ]; then
     git pull
 fi
 
+#Xonotic assets and gamecode:
+
+declare xonDir='xonotic'
+declare xonRepo='https://gitlab.com/xonotic/xonotic-data.pk3dir.git'
+declare xonBranch='LegendaryGuard/cyber'
+
 #git submodule update --init --depth 100
 #git submodule add -b LegendaryGuard/cyber https://gitlab.com/xonotic/xonotic-data.pk3dir.git $(dirname "$0")/xonotic
-git clone -b LegendaryGuard/cyber https://gitlab.com/xonotic/xonotic-data.pk3dir.git xonotic
+
+if [ ! -d "$xonDir" ]; then
+    git clone -b ${xonBranch} ${xonRepo} ${xonDir}
+else
+    pushd ${xonDir} && git pull
+    popd
+fi
+
+#gmqcc (compiler):
 
 declare qccDir='gmqcc'
 declare qccRepo='https://gitlab.com/xonotic/gmqcc.git'
