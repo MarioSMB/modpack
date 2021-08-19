@@ -6,3 +6,4 @@
 #include "lightsabre.qc"
 #include "rpg7.qc"
 #include "assaultrifle.qc"
+#include "zsaber.qc"

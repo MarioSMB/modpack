@@ -1,0 +1,113 @@
+#pragma once
+
+#ifdef GAMEQC
+MODEL(ZSABER_ITEM, W_Model("g_zsaber.md3"));
+MODEL(ZSABER_WORLD, W_Model("v_zsaber.md3"));
+MODEL(ZSABER_VIEW, W_Model("h_zsaber.iqm"));
+MODEL(ZSABER_ACTIVE_WORLD, W_Model("v_zsaber_active.md3"));
+MODEL(ZSABER_ACTIVE_VIEW, W_Model("h_zsaber_active.iqm"));
+
+SOUND(ZSABER_MELEE1, W_Sound("zsaber_melee1"));
+SOUND(ZSABER_MELEE2, W_Sound("zsaber_melee2"));
+SOUND(ZSABER_ACTIVATE, W_Sound("zsaber_activate"));
+SOUND(ZSABER_DEACTIVATE, W_Sound("zsaber_deactivate"));
+SOUND(ZSABER_HIT1, W_Sound("zsaber_hit1"));
+SOUND(ZSABER_HIT2, W_Sound("zsaber_hit2"));
+SOUND(ZSABER_HIT3, W_Sound("zsaber_hit3"));
+Sound SND_ZSABER_HIT_RANDOM() {
+    return REGISTRY_GET(Sounds, SND_ZSABER_HIT1.m_id + floor(prandom() * 3));
+}
+#endif
+
+AUTOCVAR(g_balance_zsaber_primary_animtime, float, 0.8, "");
+AUTOCVAR(g_balance_zsaber_primary_damage, float, 70, "");
+AUTOCVAR(g_balance_zsaber_primary_force, float, 200, "");
+AUTOCVAR(g_balance_zsaber_primary_melee_delay, float, 0.1, "");
+AUTOCVAR(g_balance_zsaber_primary_melee_multihit, float, 1, "");
+AUTOCVAR(g_balance_zsaber_primary_melee_no_doubleslap, float, 1, "");
+AUTOCVAR(g_balance_zsaber_primary_melee_nonplayerdamage, float, 40, "");
+AUTOCVAR(g_balance_zsaber_primary_melee_deflectrockets, bool, true, "");
+AUTOCVAR(g_balance_zsaber_primary_melee_range, float, 120, "");
+AUTOCVAR(g_balance_zsaber_primary_melee_swing_side, float, 80, "");
+AUTOCVAR(g_balance_zsaber_primary_melee_swing_up, float, 60, "");
+AUTOCVAR(g_balance_zsaber_primary_melee_time, float, 0.15, "");
+AUTOCVAR(g_balance_zsaber_primary_melee_traces, float, 10, "");
+AUTOCVAR(g_balance_zsaber_primary_refire, float, 0.5, "");
+AUTOCVAR(g_balance_zsaber_secondary_damage, float, 20, "");
+AUTOCVAR(g_balance_zsaber_secondary_animtime, float, 0.35, "");
+AUTOCVAR(g_balance_zsaber_secondary_force, float, 200, "");
+AUTOCVAR(g_balance_zsaber_secondary_melee_delay, float, 0.25, "");
+AUTOCVAR(g_balance_zsaber_secondary_melee_multihit, float, 1, "");
+AUTOCVAR(g_balance_zsaber_secondary_melee_no_doubleslap, float, 1, "");
+AUTOCVAR(g_balance_zsaber_secondary_melee_deflectrockets, bool, false, "");
+AUTOCVAR(g_balance_zsaber_secondary_melee_nonplayerdamage, float, 40, "");
+AUTOCVAR(g_balance_zsaber_secondary_melee_range, float, 120, "");
+AUTOCVAR(g_balance_zsaber_secondary_melee_swing_side, float, -80, "");
+AUTOCVAR(g_balance_zsaber_secondary_melee_swing_up, float, -50, "");
+AUTOCVAR(g_balance_zsaber_secondary_melee_time, float, 0.15, "");
+AUTOCVAR(g_balance_zsaber_secondary_melee_traces, float, 10, "");
+AUTOCVAR(g_balance_zsaber_secondary_refire, float, 0.35, "");
+AUTOCVAR(g_balance_zsaber_switchdelay_drop, float, 0.15, "");
+AUTOCVAR(g_balance_zsaber_switchdelay_raise, float, 0.15, "");
+AUTOCVAR(g_balance_zsaber_weaponreplace, string, "", "");
+AUTOCVAR(g_balance_zsaber_weaponstart, float, 0, "");
+AUTOCVAR(g_balance_zsaber_weaponstartoverride, float, -1, "");
+AUTOCVAR(g_balance_zsaber_weaponthrowable, float, 0, "");
+
+CLASS(ZSaber, Weapon)
+/* prio fix  */ ATTRIB(ZSaber, m_replacement, string, "machinegun");
+/* spawnfunc */ ATTRIB(ZSaber, m_canonical_spawnfunc, string, "weapon_zsaber");
+/* ammotype  */ ATTRIB(ZSaber, ammo_type, int, RES_NONE);
+/* impulse   */ ATTRIB(ZSaber, impulse, int, 1);
+/* flags     */ ATTRIB(ZSaber, spawnflags, int, WEP_FLAG_NORMAL | WEP_FLAG_HIDDEN | WEP_FLAG_RELOADABLE | WEP_FLAG_MUTATORBLOCKED | WEP_FLAG_MODWEAPON);
+/* rating    */ ATTRIB(ZSaber, bot_pickupbasevalue, float, 6000);
+/* color     */ ATTRIB(ZSaber, wpcolor, vector, '1 0.25 0.25');
+/* modelname */ ATTRIB(ZSaber, mdl, string, "zsaber");
+#ifdef GAMEQC
+/* model     */ ATTRIB(ZSaber, m_model, Model, MDL_ZSABER_ITEM);
+#endif
+/* crosshair */ ATTRIB(ZSaber, w_crosshair, string, "gfx/crosshairzsaber");
+/* crosshair */ ATTRIB(ZSaber, w_crosshair_size, float, 0.35);
+/* wepimg    */ ATTRIB(ZSaber, model2, string, "weaponzsaber");
+/* refname   */ ATTRIB(ZSaber, netname, string, "zsaber");
+/* wepname   */ ATTRIB(ZSaber, m_name, string, _("Z-Saber"));
+
+#define X(BEGIN, P, END, class, prefix) \
+	BEGIN(class) \
+		P(class, prefix, animtime, float, BOTH) \
+		P(class, prefix, refire, float, BOTH) \
+		P(class, prefix, damage, float, BOTH) \
+		P(class, prefix, force, float, BOTH) \
+		P(class, prefix, melee_time, float, BOTH) \
+		P(class, prefix, melee_no_doubleslap, float, BOTH) \
+		P(class, prefix, melee_traces, float, BOTH) \
+		P(class, prefix, melee_swing_up, float, BOTH) \
+		P(class, prefix, melee_swing_side, float, BOTH) \
+		P(class, prefix, melee_nonplayerdamage, float, BOTH) \
+		P(class, prefix, melee_deflectrockets, float, BOTH) \
+		P(class, prefix, melee_multihit, float, BOTH) \
+		P(class, prefix, melee_delay, float, BOTH) \
+		P(class, prefix, melee_range, float, BOTH) \
+        P(class, prefix, switchdelay_raise, float, NONE) \
+        P(class, prefix, switchdelay_drop, float, NONE) \
+        P(class, prefix, weaponreplace, string, NONE) \
+        P(class, prefix, weaponstart, float, NONE) \
+        P(class, prefix, weaponstartoverride, float, NONE) \
+        P(class, prefix, weaponthrowable, float, NONE) \
+	END()
+    W_MOD_PROPS(X, ZSaber, zsaber)
+#undef X
+
+ENDCLASS(ZSaber)
+REGISTER_WEAPON(ZSABER, zsaber, NEW(ZSaber));
+
+SPAWNFUNC_WEAPON(weapon_zsaber, WEP_ZSABER)
+
+
+MSG_INFO_NOTIF(WEAPON_ZSABER_MURDER,   1,   3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponzsaber",   _("^BG%s%s^K1's hand was sliced off by ^BG%s^K1's Z-Saber%s%s"), "")
+
+MSG_MULTI_NOTIF(WEAPON_ZSABER_MURDER,   1,   NULL,        INFO_WEAPON_ZSABER_MURDER,      NULL)
+
+#ifdef SVQC
+AUTOCVAR_NOREF(g_random_items_weapon_zsaber_probability, float, 0, "");
+#endif
