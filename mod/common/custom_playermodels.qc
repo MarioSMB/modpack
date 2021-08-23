@@ -201,6 +201,8 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 				M_ARGV(0, string) = "models/player/mario64.dpm";
 			if(CS_CVAR(player).cvar_cl_model == "bear" && ALLOWED(BEAR))
 				M_ARGV(0, string) = "models/player/bear.dpm";
+                        if(CS_CVAR(player).cvar_cl_model == "goat" && ALLOWED(GOAT))
+				M_ARGV(0, string) = "models/player/draconimale.iqm";
 		}
 		else if(player.playermodel == "models/player/mario.dpm" || player.playermodel == "models/player/mario64.dpm" || player.playermodel == "models/player/bear.dpm" || player.playermodel == "models/player/luigi.dpm")
 			M_ARGV(0, string) = autocvar_sv_defaultplayermodel;
