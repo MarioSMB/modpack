@@ -33,6 +33,8 @@ AUTOCVAR(g_balance_zsaber_primary_melee_swing_up, float, 60, "");
 AUTOCVAR(g_balance_zsaber_primary_melee_time, float, 0.15, "");
 AUTOCVAR(g_balance_zsaber_primary_melee_traces, float, 10, "");
 AUTOCVAR(g_balance_zsaber_primary_refire, float, 0.5, "");
+AUTOCVAR(g_balance_zsaber_primary_zshockwave_damage, float, 25, "");
+AUTOCVAR(g_balance_zsaber_primary_zshockwave_lifetime, float, 12, "");
 AUTOCVAR(g_balance_zsaber_secondary_damage, float, 20, "");
 AUTOCVAR(g_balance_zsaber_secondary_animtime, float, 0.35, "");
 AUTOCVAR(g_balance_zsaber_secondary_force, float, 200, "");
@@ -94,6 +96,8 @@ CLASS(ZSaber, Weapon)
         P(class, prefix, weaponstart, float, NONE) \
         P(class, prefix, weaponstartoverride, float, NONE) \
         P(class, prefix, weaponthrowable, float, NONE) \
+		P(class, prefix, zshockwave_damage, float, PRI) \
+		P(class, prefix, zshockwave_lifetime, float, PRI) \
 	END()
     W_MOD_PROPS(X, ZSaber, zsaber)
 #undef X
@@ -104,7 +108,7 @@ REGISTER_WEAPON(ZSABER, zsaber, NEW(ZSaber));
 SPAWNFUNC_WEAPON(weapon_zsaber, WEP_ZSABER)
 
 
-MSG_INFO_NOTIF(WEAPON_ZSABER_MURDER,   1,   3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponzsaber",   _("^BG%s%s^K1's hand was sliced off by ^BG%s^K1's Z-Saber%s%s"), "")
+MSG_INFO_NOTIF(WEAPON_ZSABER_MURDER,   1,   3, 2, "spree_inf s1 s2 s3loc spree_end", "s2 s1",  "weaponzsaber",   _("^BG%s%s^K1's has been cut by ^BG%s^K1's Z-Saber%s%s"), "")
 
 MSG_MULTI_NOTIF(WEAPON_ZSABER_MURDER,   1,   NULL,        INFO_WEAPON_ZSABER_MURDER,      NULL)
 

@@ -276,10 +276,64 @@ void W_ZSaber_SetActive(entity actor, .entity weaponentity, bool newactive, bool
 	weapon_thinkf(actor, weaponentity, WFRAME_RELOAD, 0.1, w_ready);
 }
 
-/*
+
 // TODO: Make Z-Saber shockwave projectile
 
-void W_ZSaber_Bolt_Think(entity this)
+void W_ZShockwave_Explode(entity this, entity directhitentity)
+{
+	this.event_damage = func_null;
+	this.takedamage = DAMAGE_NO;
+	this.velocity = this.movedir; // particle fx and decals need .velocity
+
+	/*if(this.move_movetype == MOVETYPE_BOUNCE)
+	{
+		RadiusDamage(
+			this,
+			this.realowner,
+			WEP_CVAR_SEC(zsaber, damage),
+			WEP_CVAR_SEC(zsaber, edgedamage),
+			WEP_CVAR_SEC(zsaber, radius),
+			NULL,
+			NULL,
+			WEP_CVAR_SEC(zsaber, force),
+			this.projectiledeathtype,
+			this.weaponentity_fld,
+			directhitentity
+		);
+	}
+	else
+	{
+		W_Electro_TriggerCombo(this.origin, WEP_CVAR_PRI(zsaber, comboradius), this.realowner);
+		RadiusDamage(
+			this,
+			this.realowner,
+			WEP_CVAR_PRI(zsaber, damage),
+			WEP_CVAR_PRI(zsaber, edgedamage),
+			WEP_CVAR_PRI(zsaber, radius),
+			NULL,
+			NULL,
+			WEP_CVAR_PRI(zsaber, force),
+			this.projectiledeathtype,
+			this.weaponentity_fld,
+			directhitentity
+		);
+	}*/
+
+	delete(this);
+}
+
+void W_ZShockwave_Explode_use(entity this, entity actor, entity trigger)
+{
+	W_ZShockwave_Explode(this, trigger);
+}
+
+void W_ZShockwave_TouchExplode(entity this, entity toucher)
+{
+	PROJECTILE_TOUCH(this, toucher);
+	W_ZShockwave_Explode(this, toucher);
+}
+
+void W_ZShockwave_Think(entity this)
 {
 	// sys_phys_update_single(this);
 	if(time >= this.ltime)
@@ -287,69 +341,16 @@ void W_ZSaber_Bolt_Think(entity this)
 		this.use(this, NULL, NULL);
 		return;
 	}
-
-	if(WEP_CVAR_PRI(zsaber, midaircombo_radius))
-	{
-		float found = 0;
-		entity e = WarpZone_FindRadius(this.origin, WEP_CVAR_PRI(zsaber, midaircombo_radius), true);
-
-		// loop through nearby orbs and trigger them
-		while(e)
-		{
-			if(e.classname == "zsaber_orb")
-			{
-				bool explode;
-				if (this.owner == e.owner)
-				{
-					explode = WEP_CVAR_PRI(zsaber, midaircombo_own);
-				}
-				else if (SAME_TEAM(this.owner, e.owner))
-				{
-					explode = WEP_CVAR_PRI(zsaber, midaircombo_teammate);
-				}
-				else
-				{
-					explode = WEP_CVAR_PRI(zsaber, midaircombo_enemy);
-				}
-
-				if (explode)
-				{
-					// change owner to whoever caused the combo explosion
-					e.realowner = this.realowner;
-					e.takedamage = DAMAGE_NO;
-					e.classname = "zsaber_orb_chain";
-
-					// Only first orb explosion uses midaircombo_speed, others use the normal combo_speed.
-					// This allows to avoid the delay on the first explosion which looks better
-					// (the bolt and orb should explode together because they interacted together)
-					// while keeping the chaining delay.
-					setthink(e, W_ZSaber_ExplodeCombo);
-					float delay = 0;
-					if (WEP_CVAR_PRI(zsaber, midaircombo_speed))
-						delay = vlen(e.WarpZone_findradius_dist) / WEP_CVAR_PRI(zsaber, midaircombo_speed);
-					e.nextthink = time + delay;
-
-					++found;
-				}
-			}
-			e = e.chain;
-		}
-
-		// if we triggered an orb, should we explode? if not, lets try again next time
-		if(found && WEP_CVAR_PRI(zsaber, midaircombo_explode))
-			{ this.use(this, NULL, NULL); }
-		else
-			{ this.nextthink = min(time + WEP_CVAR_PRI(zsaber, midaircombo_interval), this.ltime); }
-	}
-	else { this.nextthink = this.ltime; }
+	this.nextthink = this.ltime;
 	// this.nextthink = time;
 }
 
-void W_ZSaber_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
+void W_ZShockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 {
 	entity proj;
 
-	W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(zsaber, ammo), weaponentity);
+	// TODO: remove or decrease zsaber ammo?
+	//W_DecreaseAmmo(thiswep, actor, WEP_CVAR_PRI(zsaber, ammo), weaponentity);
 
 	W_SetupShot_ProjectileSize(
 		actor,
@@ -360,20 +361,20 @@ void W_ZSaber_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 		2,
 		SND_ELECTRO_FIRE,
 		CH_WEAPON_A,
-		WEP_CVAR_PRI(zsaber, damage),
+		WEP_CVAR_PRI(zsaber, zshockwave_damage),
 		thiswep.m_id
 	);
 
 	W_MuzzleFlash(thiswep, actor, weaponentity, w_shotorg, w_shotdir);
 
-	proj = new(zsaber_bolt);
+	proj = new(zsaber_shockwave);
 	proj.owner = proj.realowner = actor;
 	proj.bot_dodge = true;
-	proj.bot_dodgerating = WEP_CVAR_PRI(zsaber, damage);
-	proj.use = W_ZSaber_Explode_use;
-	setthink(proj, W_ZSaber_Bolt_Think);
+	proj.bot_dodgerating = WEP_CVAR_PRI(zsaber, zshockwave_damage);
+	proj.use = W_ZShockwave_Explode_use;
+	setthink(proj, W_ZShockwave_Think);
 	proj.nextthink = time;
-	proj.ltime = time + WEP_CVAR_PRI(zsaber, lifetime);
+	proj.ltime = time + WEP_CVAR_PRI(zsaber, zshockwave_lifetime);
 	PROJECTILE_MAKETRIGGER(proj);
 	proj.projectiledeathtype = thiswep.m_id;
 	proj.weaponentity_fld = weaponentity;
@@ -383,7 +384,7 @@ void W_ZSaber_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 	set_movetype(proj, MOVETYPE_FLY);
 	W_SetupProjVelocity_PRI(proj, zsaber);
 	proj.angles = vectoangles(proj.velocity);
-	settouch(proj, W_ZSaber_TouchExplode);
+	settouch(proj, W_ZShockwave_TouchExplode);
 	setsize(proj, '0 0 -3', '0 0 -3');
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
@@ -396,7 +397,6 @@ void W_ZSaber_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 	// proj.com_phys_pos = proj.origin;
 	// proj.com_phys_vel = proj.velocity;
 }
-*/
 
 		METHOD(ZSaber, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 		{
@@ -418,11 +418,25 @@ void W_ZSaber_Attack_Bolt(Weapon thiswep, entity actor, .entity weaponentity)
 				else
 				{
 					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, 0, W_ZSaber_Attack);
+					if (fire & 1)
+					{
+						W_ZShockwave_Attack(thiswep, actor, weaponentity);
+						weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(zsaber, animtime), w_ready);
+					}
 					//animdecide_setaction(actor, ANIMACTION_MELEE, true);
 					//if (actor.anim_upper_action == ANIMACTION_SHOOT || actor.anim_upper_action == ANIMACTION_MELEE)
 						//actor.anim_upper_action = 0;
 				}
 			}
+
+			/*if(fire & 1)
+			{
+				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(zsaber, refire)))
+				{
+					W_ZShockwave_Attack(thiswep, actor, weaponentity);
+					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(zsaber, animtime), w_ready);
+				}
+			}*/
 
 			if(actor.(weaponentity).m_switchweapon != WEP_ZSABER && actor.(weaponentity).tuba_instrument)
 				W_ZSaber_SetActive(actor, weaponentity, false, true);

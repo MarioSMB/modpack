@@ -22,7 +22,7 @@
 //#include "polytrails.qh"
 //#include "radio/module.inc"
 //#include "special.qc"
-//#include "weapons/all.inc"
+#include "weapons/all.inc"
 //#include "weapons.qc"
 
 #if 0
