@@ -11,7 +11,7 @@
 #include "gamemodes/all.inc"
 //#include "hook.qc"
 //#include "location.qc"
-//#include "projectiles.qh"
+#include "projectiles.qh"
 #include "minigames/all.inc"
 //#include "mpowerups.qc"
 //#include "monsters/all.inc"

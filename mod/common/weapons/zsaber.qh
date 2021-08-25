@@ -21,6 +21,7 @@ Sound SND_ZSABER_HIT_RANDOM() {
 
 AUTOCVAR(g_balance_zsaber_primary_animtime, float, 0.8, "");
 AUTOCVAR(g_balance_zsaber_primary_damage, float, 70, "");
+AUTOCVAR(g_balance_zsaber_primary_edgedamage, float, 20, "");
 AUTOCVAR(g_balance_zsaber_primary_force, float, 200, "");
 AUTOCVAR(g_balance_zsaber_primary_melee_delay, float, 0.1, "");
 AUTOCVAR(g_balance_zsaber_primary_melee_multihit, float, 1, "");
@@ -35,6 +36,10 @@ AUTOCVAR(g_balance_zsaber_primary_melee_traces, float, 10, "");
 AUTOCVAR(g_balance_zsaber_primary_refire, float, 0.5, "");
 AUTOCVAR(g_balance_zsaber_primary_zshockwave_damage, float, 25, "");
 AUTOCVAR(g_balance_zsaber_primary_zshockwave_lifetime, float, 12, "");
+AUTOCVAR(g_balance_zsaber_primary_zshockwave_radius, float, 100, "");
+AUTOCVAR(g_balance_zsaber_primary_zshockwave_shotangle, float, 0, "");
+AUTOCVAR(g_balance_zsaber_primary_zshockwave_speed, float, 1050, "");
+AUTOCVAR(g_balance_zsaber_primary_zshockwave_spread, float, 0, "");
 AUTOCVAR(g_balance_zsaber_secondary_damage, float, 20, "");
 AUTOCVAR(g_balance_zsaber_secondary_animtime, float, 0.35, "");
 AUTOCVAR(g_balance_zsaber_secondary_force, float, 200, "");
@@ -79,6 +84,7 @@ CLASS(ZSaber, Weapon)
 		P(class, prefix, animtime, float, BOTH) \
 		P(class, prefix, refire, float, BOTH) \
 		P(class, prefix, damage, float, BOTH) \
+		P(class, prefix, edgedamage, float, PRI) \
 		P(class, prefix, force, float, BOTH) \
 		P(class, prefix, melee_time, float, BOTH) \
 		P(class, prefix, melee_no_doubleslap, float, BOTH) \
@@ -90,20 +96,29 @@ CLASS(ZSaber, Weapon)
 		P(class, prefix, melee_multihit, float, BOTH) \
 		P(class, prefix, melee_delay, float, BOTH) \
 		P(class, prefix, melee_range, float, BOTH) \
-        P(class, prefix, switchdelay_raise, float, NONE) \
-        P(class, prefix, switchdelay_drop, float, NONE) \
-        P(class, prefix, weaponreplace, string, NONE) \
-        P(class, prefix, weaponstart, float, NONE) \
-        P(class, prefix, weaponstartoverride, float, NONE) \
-        P(class, prefix, weaponthrowable, float, NONE) \
+		P(class, prefix, switchdelay_raise, float, NONE) \
+		P(class, prefix, switchdelay_drop, float, NONE) \
+		P(class, prefix, weaponreplace, string, NONE) \
+		P(class, prefix, weaponstart, float, NONE) \
+		P(class, prefix, weaponstartoverride, float, NONE) \
+		P(class, prefix, weaponthrowable, float, NONE) \
 		P(class, prefix, zshockwave_damage, float, PRI) \
 		P(class, prefix, zshockwave_lifetime, float, PRI) \
+		P(class, prefix, zshockwave_radius, float, PRI) \
+		P(class, prefix, zshockwave_shotangle, float, PRI) \
+		P(class, prefix, zshockwave_speed, float, PRI) \
+		P(class, prefix, zshockwave_spread, float, PRI) \
 	END()
     W_MOD_PROPS(X, ZSaber, zsaber)
 #undef X
 
 ENDCLASS(ZSaber)
 REGISTER_WEAPON(ZSABER, zsaber, NEW(ZSaber));
+
+int PROJECTILE_ZSHOCKWAVE;
+STATIC_INIT(ZShockwaveProjectile) { PROJECTILE_ZSHOCKWAVE = MOD_PROJECTILES++; }
+
+MODEL(PROJECTILE_ZSHOCKWAVE, "models/zshockwave.iqm");
 
 SPAWNFUNC_WEAPON(weapon_zsaber, WEP_ZSABER)
 

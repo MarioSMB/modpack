@@ -277,7 +277,7 @@ void W_ZSaber_SetActive(entity actor, .entity weaponentity, bool newactive, bool
 }
 
 
-// TODO: Make Z-Saber shockwave projectile
+// Z-Saber shockwave projectile
 
 void W_ZShockwave_Explode(entity this, entity directhitentity)
 {
@@ -285,40 +285,20 @@ void W_ZShockwave_Explode(entity this, entity directhitentity)
 	this.takedamage = DAMAGE_NO;
 	this.velocity = this.movedir; // particle fx and decals need .velocity
 
-	/*if(this.move_movetype == MOVETYPE_BOUNCE)
-	{
-		RadiusDamage(
-			this,
-			this.realowner,
-			WEP_CVAR_SEC(zsaber, damage),
-			WEP_CVAR_SEC(zsaber, edgedamage),
-			WEP_CVAR_SEC(zsaber, radius),
-			NULL,
-			NULL,
-			WEP_CVAR_SEC(zsaber, force),
-			this.projectiledeathtype,
-			this.weaponentity_fld,
-			directhitentity
-		);
-	}
-	else
-	{
-		W_Electro_TriggerCombo(this.origin, WEP_CVAR_PRI(zsaber, comboradius), this.realowner);
-		RadiusDamage(
-			this,
-			this.realowner,
-			WEP_CVAR_PRI(zsaber, damage),
-			WEP_CVAR_PRI(zsaber, edgedamage),
-			WEP_CVAR_PRI(zsaber, radius),
-			NULL,
-			NULL,
-			WEP_CVAR_PRI(zsaber, force),
-			this.projectiledeathtype,
-			this.weaponentity_fld,
-			directhitentity
-		);
-	}*/
-
+	RadiusDamage(
+		this,
+		this.realowner,
+		WEP_CVAR_PRI(zsaber, zshockwave_damage),
+		WEP_CVAR_PRI(zsaber, edgedamage),
+		WEP_CVAR_PRI(zsaber, zshockwave_radius),
+		NULL,
+		NULL,
+		WEP_CVAR_PRI(zsaber, force),
+		this.projectiledeathtype,
+		this.weaponentity_fld,
+		directhitentity
+	);
+	
 	delete(this);
 }
 
@@ -341,6 +321,8 @@ void W_ZShockwave_Think(entity this)
 		this.use(this, NULL, NULL);
 		return;
 	}
+
+	UpdateCSQCProjectile(this);
 	this.nextthink = this.ltime;
 	// this.nextthink = time;
 }
@@ -355,12 +337,28 @@ void W_ZShockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	W_SetupShot_ProjectileSize(
 		actor,
 		weaponentity,
-		'0 0 -3',
-		'0 0 -3',
+		'0 0 -9',
+		'0 0 -9',
 		false,
 		2,
 		SND_ELECTRO_FIRE,
 		CH_WEAPON_A,
+		WEP_CVAR_PRI(zsaber, zshockwave_damage),
+		thiswep.m_id
+	);
+	
+	float zshocw_shotangle = WEP_CVAR_PRI(zsaber, zshockwave_shotangle);
+
+	vector s_forward = v_forward * cos(zshocw_shotangle * DEG2RAD) + v_up * sin(zshocw_shotangle * DEG2RAD);
+
+	W_SetupShot_Dir(
+		actor,
+		weaponentity,
+		s_forward,
+		false,
+		3,
+		SND_LASERGUN_FIRE,
+		CH_WEAPON_B,
 		WEP_CVAR_PRI(zsaber, zshockwave_damage),
 		thiswep.m_id
 	);
@@ -379,21 +377,33 @@ void W_ZShockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	proj.projectiledeathtype = thiswep.m_id;
 	proj.weaponentity_fld = weaponentity;
 	setorigin(proj, w_shotorg);
+	setmodel(proj, MDL_PROJECTILE_ZSHOCKWAVE);
 
 	// if (IS_CSQC)
 	set_movetype(proj, MOVETYPE_FLY);
 	W_SetupProjVelocity_PRI(proj, zsaber);
 	proj.angles = vectoangles(proj.velocity);
 	settouch(proj, W_ZShockwave_TouchExplode);
-	setsize(proj, '0 0 -3', '0 0 -3');
+	setsize(proj, '0 0 -9', '0 0 -9');
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
 	IL_PUSH(g_bot_dodge, proj);
 	proj.missile_flags = MIF_SPLASH;
 
-	CSQCProjectile(proj, true, PROJECTILE_ELECTRO_BEAM, true);
+	W_SetupProjVelocity_Explicit(
+		proj,
+		w_shotdir,
+		v_up,
+		WEP_CVAR_PRI(zsaber, zshockwave_speed),
+		0,
+		0,
+		WEP_CVAR_PRI(zsaber, zshockwave_spread),
+		false
+	);
 
-	MUTATOR_CALLHOOK(EditProjectile, actor, proj);
+	CSQCProjectile(proj, true, PROJECTILE_ZSHOCKWAVE, true);
+
+	//MUTATOR_CALLHOOK(EditProjectile, actor, proj);
 	// proj.com_phys_pos = proj.origin;
 	// proj.com_phys_vel = proj.velocity;
 }
@@ -429,15 +439,6 @@ void W_ZShockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 				}
 			}
 
-			/*if(fire & 1)
-			{
-				if(weapon_prepareattack(thiswep, actor, weaponentity, false, WEP_CVAR_PRI(zsaber, refire)))
-				{
-					W_ZShockwave_Attack(thiswep, actor, weaponentity);
-					weapon_thinkf(actor, weaponentity, WFRAME_FIRE1, WEP_CVAR_PRI(zsaber, animtime), w_ready);
-				}
-			}*/
-
 			if(actor.(weaponentity).m_switchweapon != WEP_ZSABER && actor.(weaponentity).tuba_instrument)
 				W_ZSaber_SetActive(actor, weaponentity, false, true);
 		}
@@ -467,7 +468,35 @@ METHOD(ZSaber, wr_viewmodel, string(ZSaber this, entity wep))
 {
 	return (wep.tuba_instrument) ? "zsaber_active" : "zsaber";
 }
-#endif
+
+REGISTER_MUTATOR(cl_zsaber, true);
+
+MUTATOR_HOOKFUNCTION(cl_zsaber, Ent_Projectile)
+{
+	entity proj = M_ARGV(0, entity);
+
+	if(proj.cnt == PROJECTILE_ZSHOCKWAVE)
+	{
+		setmodel(proj, MDL_PROJECTILE_ZSHOCKWAVE);
+		proj.traileffect = EFFECT_TR_WIZSPIKE.m_id;
+		return true;
+	}
+}
+
+MUTATOR_HOOKFUNCTION(cl_zsaber, EditProjectile)
+{
+	entity proj = M_ARGV(0, entity);
+
+	if(proj.cnt == PROJECTILE_ZSHOCKWAVE)
+	{
+		proj.colormod = '1 1 1';
+		proj.scale = 0.5;
+		loopsound(proj, CH_SHOTS_SINGLE, SND_ELECTRO_FIRE, VOL_BASE, ATTEN_NORM);
+		proj.mins = '-16 -16 -16';
+		proj.maxs = '16 16 16';
+	}
+}
+#endif //CSQC
 
 #ifdef SVQC
 METHOD(ZSaber, wr_reload, void(ZSaber this, entity actor, .entity weaponentity))
