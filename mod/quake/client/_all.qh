@@ -22,6 +22,9 @@ vector OFFSET_CURSOR = '0 0 0';
 .void(entity) entremove;
 
 int autocvar_chase_active;
+bool autocvar_chase_front;
+
+float spectatee_status; // NOTE: spectating not implemented, compiler error check!
 
 .int enttype; // entity type sent from server
 .int sv_entnum; // entity number sent from server

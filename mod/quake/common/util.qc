@@ -3,14 +3,6 @@
 USING(textLengthUpToWidth_widthFunction_t, float(string s, vector size));
 USING(textLengthUpToLength_lenFunction_t, float(string s));
 
-bool isCaretEscaped(string theText, float pos)
-{
-	int i = 0;
-	while(pos - i >= 1 && substring(theText, pos - i - 1, 1) == "^")
-		++i;
-	return (i & 1);
-}
-
 int skipIncompleteTag(string theText, float pos, int len)
 {
 	int i = 0, ch = 0;
