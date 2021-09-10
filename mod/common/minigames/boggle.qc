@@ -289,14 +289,14 @@ int boggle_server_event(entity minigame, string event, ...)
 		}
 		case "end":
 		{
-			LL_CLEAR(minigame.boggle_words, { if(it.netname) strunzone(it.netname); });
+			LL_CLEAR(minigame.boggle_words, { strfree(it.netname); });
 
 			entity e = NULL;
 			while( (e = findentity(e, owner, minigame)) )
 			if(e.classname == "minigame_board_piece")
 			{
-				if(e.netname) { strunzone(e.netname); }
-				if(e.boggle_letter) { strunzone(e.boggle_letter); }
+				strfree(e.netname);
+				strfree(e.boggle_letter);
 				delete(e);
 			}
 			return false;
@@ -491,8 +491,7 @@ string boggle_turn_to_string(int turnflags)
 
 void boggle_set_word(string s)
 {
-	if(boggle_word)
-		strunzone(boggle_word);
+	strfree(boggle_word);
 	if(s)
 		s = strzone(s);
 	boggle_word = s;
@@ -551,8 +550,7 @@ string boggle_tile_name(vector pos, int rows, int columns)
 
 void boggle_set_curr_pos(string s)
 {
-	if ( boggle_curr_pos )
-		strunzone(boggle_curr_pos);
+	strfree(boggle_curr_pos);
 	if ( s )
 		s = strzone(s);
 	boggle_curr_pos = s;
@@ -676,7 +674,7 @@ int boggle_client_event(entity minigame, string event, ...)
 			}
 			else if(sent.classname == "minigame_board_piece" && (sf & MINIG_SF_UPDATE))
 			{
-				if(sent.boggle_letter) { strunzone(sent.boggle_letter); }
+				strfree(sent.boggle_letter);
 				sent.boggle_letter = strzone(ReadString());
 			}
 			else if ( sent.classname == "minigame_player" && (sf & BOGGLE_SF_PLAYERSCORE ) )

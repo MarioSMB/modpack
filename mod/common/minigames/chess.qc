@@ -394,7 +394,7 @@ bool chess_move_piece(entity minigame, entity piece, string pos, int promote)
 
 	if(thepiece)
 	{
-		if(thepiece.netname) { strunzone(thepiece.netname); }
+		strfree(thepiece.netname);
 		delete(thepiece);
 		thepiece = NULL;
 	}
@@ -421,7 +421,7 @@ bool chess_move_piece(entity minigame, entity piece, string pos, int promote)
 
 	if(thepiece)
 	{
-		if(thepiece.netname) { strunzone(thepiece.netname); }
+		strfree(thepiece.netname);
 		delete(thepiece);
 	}
 
@@ -439,8 +439,7 @@ bool chess_move_piece(entity minigame, entity piece, string pos, int promote)
 	if(piece.chess_id == piece__Pawn && (number + num_dir) == to_number)
 		piece.chess_passant = true;
 
-	if(piece.netname) { strunzone(piece.netname); }
-	piece.netname = strzone(pos);
+	strcpy(piece.netname, pos);
 	piece.chess_moved = true;
 	if(promote)
 		piece.chess_id = promote;
@@ -602,11 +601,13 @@ int chess_server_event(entity minigame, string event, ...)
 		}
 		case "end":
 		{
-			FOREACH_ENTITY_ENT_ORDERED(owner, minigame,
+			entity e = NULL;
+			while( (e = findentity(e, owner, minigame)) )
+			if(e.classname == "minigame_board_piece")
 			{
-				if(it.netname) { strunzone(it.netname); }
-				delete(it);
-			});
+				strfree(e.netname);
+				delete(e);
+			}
 			return false;
 		}
 		case "join":
@@ -948,8 +949,7 @@ void chess_make_move(entity minigame)
 
 void chess_set_curr_pos(string s)
 {
-	if ( chess_curr_pos )
-		strunzone(chess_curr_pos);
+	strfree(chess_curr_pos);
 	if ( s )
 		s = strzone(s);
 	chess_curr_pos = s;

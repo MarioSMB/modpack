@@ -93,7 +93,7 @@ void nim_move(entity minigame, entity player, string pos )
 			{
 				entity thepiece = nim_find_piece(minigame, minigame_tile_buildname(i, number));
 				if(!thepiece) break;
-				if(thepiece.netname) { strunzone(thepiece.netname); }
+				strfree(thepiece.netname);
 				delete(thepiece);
 			}
 
@@ -128,11 +128,13 @@ void nim_next_match(entity minigame, entity player)
 	{
 		minigame.minigame_flags = NIM_TURN_PLACE | minigame.nim_nexteam;
 		minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
-		FOREACH_ENTITY_ENT(owner, minigame, LAMBDA(
-			if(it.classname != "minigame_board_piece") continue;
-			if(it.netname) { strunzone(it.netname); }
-			delete(it);
-		));
+		entity e = NULL;
+			while( (e = findentity(e, owner, minigame)) )
+			if(e.classname == "minigame_board_piece")
+			{
+				strfree(e.netname);
+				delete(e);
+			}
 
 		nim_setup_pieces(minigame);
 	}
@@ -154,11 +156,13 @@ int nim_server_event(entity minigame, string event, ...)
 		}
 		case "end":
 		{
-			FOREACH_ENTITY_ENT(owner, minigame, LAMBDA(
-				if(it.classname != "minigame_board_piece") continue;
-				if(it.netname) { strunzone(it.netname); }
-				delete(it);
-			));
+			entity e = NULL;
+			while( (e = findentity(e, owner, minigame)) )
+			if(e.classname == "minigame_board_piece")
+			{
+				strfree(e.netname);
+				delete(e);
+			}
 			return false;
 		}
 		case "join":
@@ -404,8 +408,7 @@ void nim_make_move(entity minigame)
 
 void nim_set_curr_pos(string s)
 {
-	if ( nim_curr_pos )
-		strunzone(nim_curr_pos);
+	strfree(nim_curr_pos);
 	if ( s )
 		s = strzone(s);
 	nim_curr_pos = s;

@@ -164,7 +164,7 @@ void vr_move(entity minigame, entity player, string dir )
 			{
 				string pos = minigame_tile_buildname(tlet + (bdir.x * j), tnum + (bdir.y * j));
 				entity piece = vr_find_piece(minigame, pos); // assume exists?!
-				if(piece.netname) { strunzone(piece.netname); }
+				strfree(piece.netname);
 				delete(piece);
 			}
 
@@ -205,7 +205,7 @@ int vr_server_event(entity minigame, string event, ...)
 			while( (e = findentity(e, owner, minigame)) )
 			if(e.classname == "minigame_board_piece")
 			{
-				if(e.netname) { strunzone(e.netname); }
+				strfree(e.netname);
 				delete(e);
 			}
 			minigame.vr_targ = NULL;
