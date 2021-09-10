@@ -64,7 +64,7 @@ void vip_ClearVIPs()
 			WaypointSprite_Ping(it.wps_vip);
 			WaypointSprite_Kill(it.wps_vip);
 		}
-		STAT(VIP, it) = false;
+		it.vip_held = false;
 		GameRules_scoring_vip(it, false);
 		it.gem_dropped = false;
 	});
@@ -111,7 +111,7 @@ bool VIP_CheckWinner()
 		FOREACH_CLIENT(IS_PLAYER(it),
 		{
 			nades_Clear(it);
-			if(STAT(VIP, it) && GetResource(it, RES_HEALTH) > 0)
+			if(it.vip_held && GetResource(it, RES_HEALTH) > 0)
 				GameRules_scoring_add(it, VIP_SURVIVALS, 1);
 		});
 
@@ -134,7 +134,7 @@ bool VIP_CheckWinner()
 
 		FOREACH_CLIENT(IS_PLAYER(it),
 		{
-			if(STAT(VIP, it) && GetResource(it, RES_HEALTH) > 0 && it.team == winner_team)
+			if(it.vip_held && GetResource(it, RES_HEALTH) > 0 && it.team == winner_team)
 				GameRules_scoring_add(it, VIP_SURVIVALS, 1);
 		});
 
@@ -147,7 +147,7 @@ bool VIP_CheckWinner()
 
 		FOREACH_CLIENT(IS_PLAYER(it),
 		{
-			if(STAT(VIP, it) && GetResource(it, RES_HEALTH) > 0)
+			if(it.vip_held && GetResource(it, RES_HEALTH) > 0)
 				GameRules_scoring_add(it, VIP_SURVIVALS, 1);
 		});
 	}
@@ -169,7 +169,7 @@ void VIP_RoundStart()
 {
 	FOREACH_CLIENT(IS_PLAYER(it),
 	{
-		if(STAT(VIP, it))
+		if(it.vip_held)
 			Send_Notification(NOTIF_ONE, it, MSG_CENTER, APP_TEAM_NUM(it.team, CENTER_VIP_BEGIN));
 		PutClientInServer(it);
 	});
@@ -255,7 +255,7 @@ bool VIP_CheckTeams()
 
 void vip_DropSoulGem(entity player)
 {
-	if(!STAT(VIP, player))
+	if(!player.vip_held)
 		return;
 
 	if(player.wps_vip)
@@ -266,7 +266,7 @@ void vip_DropSoulGem(entity player)
 
 	SetResource(player, RES_HEALTH, 100); // reset these now?
 	SetResource(player, RES_ARMOR, 0);
-	STAT(VIP, player) = false;
+	player.vip_held = false;
 	GameRules_scoring_vip(player, false);
 	player.gem_dropped = true;
 	int theirteam = Team_TeamToIndex(player.team);
@@ -287,7 +287,7 @@ MUTATOR_HOOKFUNCTION(vip, PlayerDies)
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
 
-	if(STAT(VIP, frag_target))
+	if(frag_target.vip_held)
 	{
 		if(IS_PLAYER(frag_attacker))
 		{
@@ -298,7 +298,7 @@ MUTATOR_HOOKFUNCTION(vip, PlayerDies)
 		int theirteam = Team_TeamToIndex(frag_target.team);
 		theirteam = ((theirteam == -1) ? 0 : theirteam - 1);
 		vip_count[theirteam] -= 1;
-		STAT(VIP, frag_target) = false;
+		frag_target.vip_held = false;
 		GameRules_scoring_vip(frag_target, false);
 
 		play2all(SND(VIP_GEM_DROPPED));
@@ -310,12 +310,12 @@ MUTATOR_HOOKFUNCTION(vip, PlayerDies)
 
 void vip_RemovePlayer(entity this)
 {
-	if(STAT(VIP, this))
+	if(this.vip_held)
 	{
 		int theirteam = Team_TeamToIndex(this.team);
 		theirteam = ((theirteam == -1) ? 0 : theirteam - 1);
 		vip_count[theirteam] -= 1;
-		STAT(VIP, this) = false;
+		this.vip_held = false;
 		GameRules_scoring_vip(this, false);
 		WaypointSprite_Kill(this.wps_vip);
 	}
@@ -346,10 +346,13 @@ MUTATOR_HOOKFUNCTION(vip, PlayerPreThink)
 				: '1 0 0' * healtharmor_maxdamage(GetResource(player, RES_HEALTH), GetResource(player, RES_ARMOR), autocvar_g_balance_armor_blockpercent, DEATH_WEAPON.m_id)));
 	}
 
-	STAT(VIP_RED, player) = vip_count[0];
-	STAT(VIP_BLUE, player) = vip_count[1];
-	STAT(VIP_YELLOW, player) = vip_count[2];
-	STAT(VIP_PINK, player) = vip_count[3];
+	int vip_status = 0;
+	vip_status = BITSET(vip_status, VIP_HELD, player.vip_held);
+	vip_status = BITSET(vip_status, VIP_RED, (vip_count[0] > 0));
+	vip_status = BITSET(vip_status, VIP_BLUE, (vip_count[1] > 0));
+	vip_status = BITSET(vip_status, VIP_YELLOW, (vip_count[2] > 0));
+	vip_status = BITSET(vip_status, VIP_PINK, (vip_count[3] > 0));
+	STAT(OBJECTIVE_STATUS, player) = vip_status;
 }
 
 MUTATOR_HOOKFUNCTION(vip, reset_map_players)
@@ -364,7 +367,7 @@ MUTATOR_HOOKFUNCTION(vip, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(STAT(VIP, player))
+	if(player.vip_held)
 	{
 		if(!autocvar_g_instagib)
 			SetResource(player, RES_HEALTH, 200);
@@ -377,19 +380,11 @@ MUTATOR_HOOKFUNCTION(vip, PlayerRegen)
 	entity player = M_ARGV(0, entity);
 
 	// VIP regens to 200
-	if(STAT(VIP, player))
+	if(player.vip_held)
 	{
 		M_ARGV(1, float) *= 2; // max_mod
 		M_ARGV(2, float) = 0.7; // but with slower regen
 	}
-}
-
-MUTATOR_HOOKFUNCTION(vip, SpectateCopy)
-{
-	entity spectatee = M_ARGV(0, entity);
-	entity client = M_ARGV(1, entity);
-
-	STAT(VIP, client) = STAT(VIP, spectatee); // make spectators see it too
 }
 
 MUTATOR_HOOKFUNCTION(vip, PlayerUseKey)
@@ -400,7 +395,7 @@ MUTATOR_HOOKFUNCTION(vip, PlayerUseKey)
 
 	if((time > player.pickup_antispam) && (player.deadflag == DEAD_NO) && !player.vehicle) //&& (!player.vehicle || autocvar_g_vip_allow_vehicle_touch)) vehicle support coming soon(?)
 	{
-		if(autocvar_g_vip_drop && STAT(VIP, player))
+		if(autocvar_g_vip_drop && player.vip_held)
 		{
 			if(player.drop_count == -1)
 			{
@@ -508,9 +503,9 @@ void vip_VIPWaypoints(entity player)
 
 void vip_SetVIP(entity player, float tm)
 {
-	if(!IS_PLAYER(player) || player == NULL || STAT(VIP, player))
+	if(!IS_PLAYER(player) || player == NULL || player.vip_held)
 		return; // TODO: check how this can be called at all for non players
-	STAT(VIP, player) = true;
+	player.vip_held = true;
 	GameRules_scoring_vip(player, true);
 	if(!autocvar_g_instagib)
 		SetResource(player, RES_HEALTH, 200);
@@ -538,7 +533,7 @@ void vip_SoulGem_touch(entity this, entity toucher)
 	if(this.gem_pickedup)
 		return;
 
-	if(STAT(VIP, toucher))
+	if(toucher.vip_held)
 		return;
 
 	if(STAT(FROZEN, toucher))
@@ -577,7 +572,7 @@ void vip_SoulGem_think(entity this)
 
 	int theirteam = Team_TeamToIndex(this.team);
 	theirteam = ((theirteam == -1) ? 0 : theirteam - 1);
-	if(vip_count[theirteam] < 1 && this.gem_pickedup && allowed_to_spawn && this.owner && !STAT(VIP, this.owner) && !round_handler_IsRoundStarted())
+	if(vip_count[theirteam] < 1 && this.gem_pickedup && allowed_to_spawn && this.owner && !this.owner.vip_held && !round_handler_IsRoundStarted())
 		this.reset(this);
 }
 
@@ -756,11 +751,12 @@ void HUD_Mod_VIP(vector pos, vector mySize)
 	float redvip, bluevip, yellowvip, pinkvip, is_vip; // current status
 	float redvip_statuschange_elapsedtime, bluevip_statuschange_elapsedtime, yellowvip_statuschange_elapsedtime, pinkvip_statuschange_elapsedtime; // time since the status changed
 	
-	redvip = (STAT(VIP_RED) != 0);
-	bluevip = (STAT(VIP_BLUE) != 0);
-	yellowvip = (STAT(VIP_YELLOW) != 0);
-	pinkvip = (STAT(VIP_PINK) != 0);
-	is_vip = (STAT(VIP) != 0);
+	int obj_status = STAT(OBJECTIVE_STATUS);
+	redvip = (obj_status & VIP_RED);
+	bluevip = (obj_status & VIP_BLUE);
+	yellowvip = (obj_status & VIP_YELLOW);
+	pinkvip = (obj_status & VIP_PINK);
+	is_vip = (obj_status & VIP_HELD);
 	
 	if(redvip || bluevip || yellowvip || pinkvip)
 		mod_active = 1;

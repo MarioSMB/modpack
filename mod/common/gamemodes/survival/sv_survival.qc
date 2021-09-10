@@ -345,11 +345,7 @@ MUTATOR_HOOKFUNCTION(sv, PlayerDies)
 	}
 	frag_target.respawn_flags |= RESPAWN_FORCE;
 	if (!warmup_stage)
-	{
 		eliminatedPlayers.SendFlags |= 1;
-		if (IS_BOT_CLIENT(frag_target))
-			bot_clear(frag_target);
-	}
 
 	// killed an ally! punishment is death
 	if(autocvar_g_survival_punish_teamkill && frag_attacker != frag_target && IS_PLAYER(frag_attacker) && IS_PLAYER(frag_target) && frag_attacker.survival_status == frag_target.survival_status && !ITEM_DAMAGE_NEEDKILL(frag_deathtype))

@@ -81,15 +81,16 @@ void try_itemspawn(entity caller, string item, int teamnumber)
 	if(startsWith(item, "item_buff_"))
 	{
 		string thebuff = substring(item, 10, strlen(item));
-		FOREACH(Buffs, it.netname == thebuff || it.m_canonical_spawnfunc == item,
+		// TODO: only supports basic buff names!
+		FOREACH(StatusEffect, it.instanceOfBuff && it.netname == thebuff,
 		{
 			entity itm = new(placed_item);
 			itm.spawnfunc_checked = true;
 			//itm.classname = item;
 			setorigin(itm, caller.origin);
 			itm.angles = caller.angles;
-			STAT(BUFFS, itm) = it.m_itemid;
-			itm.team = ((teamnumber) ? teamnumber : caller.team); // TODO: no
+			itm.buffdef = it;
+			itm.team_forced = ((teamnumber) ? teamnumber : caller.team); // TODO: no
 			buff_Init(itm);
 			return;
 		});

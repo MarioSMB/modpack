@@ -69,7 +69,7 @@ void M_Koopa_Move_2D(entity this, float mspeed, bool allow_jumpoff)
 	bool reverse = false;
 	if(trace_fraction != 1.0)
 		reverse = true;
-	if(trace_ent && trace_ent.iscreature && !(trace_ent.items & ITEM_Strength.m_itemid))
+	if(trace_ent && trace_ent.iscreature && !StatusEffects_active(STATUSEFFECT_Strength, trace_ent))
 		reverse = false;
 
 	if(reverse)

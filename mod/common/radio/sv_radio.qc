@@ -78,10 +78,10 @@ void Radio_Announce(entity this)
 			desc = strcat(desc, " ^2(NOTE: you can turn off radio with ^1radio off^2 in ^1console^2)");
 
 		if(this)
-			sprint(this, strcat("\{1}", desc, "\n"));
+			sprint(this, strcat("\{3}", desc, "\n"));
 		else
 		{
-			bprint("\{1}", desc, "\n");
+			bprint("\{3}", desc, "\n");
 		}
 	}
 }

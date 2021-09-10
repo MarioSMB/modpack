@@ -48,11 +48,11 @@ REGISTER_WAYPOINT(VIP, _("VIP"), "", '0.8 0.8 0', 1);
 REGISTER_SP(VIP_VIPKILLS);
 REGISTER_SP(VIP_SURVIVALS);
 
-REGISTER_STAT(VIP_RED, int)
-REGISTER_STAT(VIP_BLUE, int)
-REGISTER_STAT(VIP_YELLOW, int)
-REGISTER_STAT(VIP_PINK, int)
-REGISTER_STAT(VIP, bool)
+const int VIP_HELD = BIT(0);
+const int VIP_RED = BIT(1);
+const int VIP_BLUE = BIT(2);
+const int VIP_YELLOW = BIT(3);
+const int VIP_PINK = BIT(4);
 
 SOUND(VIP_GEM_DROPPED, "kh/destroy");
 SOUND(VIP_GEM_PICKUP, "kh/capture");
@@ -91,6 +91,8 @@ int g_vip_soulgems;
 
 .bool gem_pickedup;
 .bool gem_dropped;
+
+.bool vip_held;
 
 .entity wps_vip;
 int redgem_count, bluegem_count, yellowgem_count, pinkgem_count;

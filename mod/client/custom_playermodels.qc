@@ -26,3 +26,4 @@ STATIC_INIT(mod_cpmodels)
 	if((cvar_type("cl_damnfurries") & CVAR_TYPEFLAG_EXISTS) && cvar("cl_damnfurries"))
 		cvar_set("cl_custommodel", "foxy");
 }
+

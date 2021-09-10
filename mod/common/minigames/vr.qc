@@ -69,7 +69,7 @@ void vr_setup_pieces(entity minigame)
 	{
 		for(t = 0; t < VR_LET_CNT; ++t)
 		{
-			entity piece = msle_spawn(minigame,new("minigame_board_piece"));
+			entity piece = msle_spawn(minigame,new(minigame_board_piece));
 			piece.team = 1; // init default team?
 			piece.netname = strzone(minigame_tile_buildname(t,j));
 			piece.cnt = max(1, floor(random() * 8));

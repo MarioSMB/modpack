@@ -547,7 +547,7 @@ void chess_move(entity minigame, entity player, string thepiece, string pos, str
 
 void chess_spawn_piece(entity minigame, string pos, int pteam, int pid)
 {
-	entity piece = msle_spawn(minigame,new("minigame_board_piece"));
+	entity piece = msle_spawn(minigame,new(minigame_board_piece));
 	piece.team = pteam;
 	piece.chess_id = pid;
 	piece.netname = strzone(pos);

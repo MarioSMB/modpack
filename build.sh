@@ -1,4 +1,13 @@
 #!/usr/bin/env bash
+if [ -e $(dirname "$0")/compiled/csprogs.dat -o -e $(dirname "$0")/compiled/menu.dat -o -e $(dirname "$0")/compiled/progs.dat -o -e $(dirname "$0")/compiled/csprogs.lno -o -e $(dirname "$0")/compiled/menu.lno -o -e $(dirname "$0")/compiled/progs.lno -o -e $(dirname "$0")/csprogs.dat -o -e $(dirname "$0")/menu.dat -o -e $(dirname "$0")/progs.dat -o -e $(dirname "$0")/csprogs.lno -o -e $(dirname "$0")/menu.lno -o -e $(dirname "$0")/progs.lno ]; then
+	tput bold; tput setaf 3; echo "There are compiled files here. The operation will proceed to delete the current compiled files in and out of the 'compiled' directory, replace and get new compiled ones (*.dat and *.lno files will be removed)."
+	# deletes any remaining compiled files that weren't moved to 'compiled' directory
+	tput bold; tput setaf 1
+	rm -vf $(dirname "$0")/*.dat
+	rm -vf $(dirname "$0")/*.lno
+	tput sgr0
+fi
+
 cd ${0%[\\/]*}
 set -eu
 
@@ -25,3 +34,9 @@ relpath() {
 export BUILD_MOD="$(relpath xonotic/qcsrc $PWD)"
 export XONOTIC=0
 make -C ${base}
+
+tput bold; tput setaf 2; echo "Compiled successfully!"; tput sgr0
+mkdir -vp $(dirname "$0")/compiled
+mv -v *.lno $(dirname "$0")/compiled
+mv -v *.dat $(dirname "$0")/compiled
+tput bold; tput setaf 3; echo "Now you can look at the compiled files inside $(dirname "$0")/compiled directory."
