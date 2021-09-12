@@ -53,12 +53,12 @@ void karma_Control(entity it)
 			//do nothing
 			case 0: return;
 			//force to spec
-			case 1: PutObserverInServer(it); return;
+			case 1: PutObserverInServer(it, true); return;
 			//kick
 			case 2: dropclient(it); return;
 			//ban and kick
 			case 3: Ban_KickBanClient(it, bantime, masksize, "Too low karma"); return;
-			default: PutObserverInServer(it); return;
+			default: PutObserverInServer(it, true); return;
 		}
 	}
 }

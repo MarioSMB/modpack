@@ -38,7 +38,7 @@ AUTOCVAR(g_balance_zsaber_primary_zshockwave_damage, float, 25, "");
 AUTOCVAR(g_balance_zsaber_primary_zshockwave_lifetime, float, 12, "");
 AUTOCVAR(g_balance_zsaber_primary_zshockwave_radius, float, 100, "");
 AUTOCVAR(g_balance_zsaber_primary_zshockwave_shotangle, float, 0, "");
-AUTOCVAR(g_balance_zsaber_primary_zshockwave_speed, float, 1050, "");
+AUTOCVAR(g_balance_zsaber_primary_zshockwave_speed, float, 1950, "");
 AUTOCVAR(g_balance_zsaber_primary_zshockwave_spread, float, 0, "");
 AUTOCVAR(g_balance_zsaber_secondary_damage, float, 20, "");
 AUTOCVAR(g_balance_zsaber_secondary_animtime, float, 0.35, "");

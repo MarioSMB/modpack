@@ -337,8 +337,8 @@ void W_ZShockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	W_SetupShot_ProjectileSize(
 		actor,
 		weaponentity,
-		'0 0 -9',
-		'0 0 -9',
+		'0 -3 0',
+		'0 3 0',
 		false,
 		2,
 		SND_ELECTRO_FIRE,
@@ -346,7 +346,7 @@ void W_ZShockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 		WEP_CVAR_PRI(zsaber, zshockwave_damage),
 		thiswep.m_id
 	);
-	
+
 	float zshocw_shotangle = WEP_CVAR_PRI(zsaber, zshockwave_shotangle);
 
 	vector s_forward = v_forward * cos(zshocw_shotangle * DEG2RAD) + v_up * sin(zshocw_shotangle * DEG2RAD);
@@ -384,7 +384,7 @@ void W_ZShockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	W_SetupProjVelocity_PRI(proj, zsaber);
 	proj.angles = vectoangles(proj.velocity);
 	settouch(proj, W_ZShockwave_TouchExplode);
-	setsize(proj, '0 0 -9', '0 0 -9');
+	setsize(proj, '0 0 0', '0 0 0');
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
 	IL_PUSH(g_bot_dodge, proj);
@@ -402,6 +402,22 @@ void W_ZShockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	);
 
 	CSQCProjectile(proj, true, PROJECTILE_ZSHOCKWAVE, true);
+
+	setthink(proj, W_ZSaber_Melee_Think);
+	proj.projectiledeathtype |= HITTYPE_SECONDARY;
+	proj.nextthink = proj.ltime;
+
+	W_SetupShot_Range(
+		actor, 
+		weaponentity, 
+		true, 
+		0, 
+		SND_Null, 
+		0, 
+		WEP_CVAR_PRI(zsaber, zshockwave_damage), 
+		WEP_CVAR_BOTH(zsaber, 1, melee_range) + 100, 
+		proj.projectiledeathtype
+	);
 
 	//MUTATOR_CALLHOOK(EditProjectile, actor, proj);
 	// proj.com_phys_pos = proj.origin;
