@@ -349,12 +349,14 @@ void snake_move_head(entity minigame, entity head)
 	// above check makes sure it's not our team
 	if(autocvar_sv_minigames_snake_eat_players)
 	{
-		if(hit.cnt && hit.cnt < head.cnt)
+		entity tail = head.snake_last;
+		entity theirhead = snake_find_head(minigame, hit.team);
+		if(theirhead.snake_last.cnt && theirhead.snake_last.cnt < tail.cnt)
 		{
 			snake_eat_team(minigame, hit.team);
 			snake_add_score(minigame, head.team, 1);
 		}
-		else if(hit.cnt && hit.cnt >= head.cnt)
+		else if(theirhead.cnt && theirhead.cnt >= tail.cnt)
 		{
 			snake_add_score(minigame, head.team, -1);
 			snake_eat_team(minigame, head.team);
