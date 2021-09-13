@@ -3,7 +3,7 @@ Cyber modpack
 
 Derived from SMB modpack.
 
-QuakeC source for the SMB server mods
+QuakeC source for the SMB and Cyber server mods
 
 [![Build Status](https://travis-ci.org/MarioSMB/modpack.svg?branch=master)](https://travis-ci.org/MarioSMB/modpack)
 
