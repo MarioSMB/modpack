@@ -23,7 +23,7 @@ Building tools
 Required content packs:
  - http://dl.xonotic.fps.gratis/zzz-misc-v006-110-ge06fbb8.pk3
  - http://dl.xonotic.fps.gratis/zzz-quickmenu_029.pk3
- - http://dl.xonotic.fps.gratis/zzz-minigames-v006-93-g96720f2.pk3
+ - http://dl.xonotic.fps.gratis/zzz-minigames-v006-112-gbd79186.pk3
 
 Optional content packs:
  - http://dl.xonotic.fps.gratis/zzz-mod-extra-v006-62-g9667a44.pk3
