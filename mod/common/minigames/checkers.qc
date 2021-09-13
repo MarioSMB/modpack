@@ -83,7 +83,7 @@ bool checkers_valid_tile(string tile)
 	return 0 <= number && number < CHECKERS_NUM_CNT && 0 <= letter && letter < CHECKERS_LET_CNT;
 }
 
-int checkers_nomoves(entity minigame, int pteam);
+bool checkers_nomoves(entity minigame, int pteam);
 #define sgn(x) (x > 0 ? 1 : x < 0 ? -1 : 0)
 int checkers_move_try(entity minigame, string thepiece, string pos, bool force_jump, entity ignore)
 {
@@ -165,7 +165,7 @@ string checkers_tryallmoves(entity minigame, entity piece, bool force_jump)
 	return "";
 }
 
-int checkers_nomoves(entity minigame, int pteam)
+bool checkers_nomoves(entity minigame, int pteam)
 {
 	int safe = 0;
 	entity e = NULL;
@@ -301,7 +301,7 @@ void checkers_move(entity minigame, entity player, string thepiece, string pos, 
 			minigame.minigame_flags = CHECKERS_TURN_DRAW;
 		else if(mypcount >= 1 && !theirpcount) // special rule: enemy has no pieces while we have some, call it a victory!
 			minigame.minigame_flags = CHECKERS_TURN_WIN | player.team;
-		else if(checkers_nomoves(minigame, minigame.chess_nexteam) == CHECKERS_CHECKMATE)
+		else if(checkers_nomoves(minigame, minigame.chess_nexteam))
 			minigame.minigame_flags = CHECKERS_TURN_WIN | player.team;
 		else
 			minigame.minigame_flags = CHECKERS_TURN_MOVE | minigame.checkers_nexteam;
