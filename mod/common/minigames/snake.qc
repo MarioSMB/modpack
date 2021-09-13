@@ -16,6 +16,7 @@ const int SNAKE_NUM_CNT = 15;
 const int SNAKE_TILE_SIZE = 15;
 
 const int SNAKE_TEAMS = 6;
+const int SNAKE_SPECTATOR_TEAM = 255; // must be above max teams and equal to or below 255
 
 bool autocvar_sv_minigames_snake_wrap = true;
 float autocvar_sv_minigames_snake_delay_initial = 0.7;
@@ -452,7 +453,7 @@ int snake_server_event(entity minigame, string event, ...)
 		{
 			int pl_num = minigame_count_players(minigame);
 
-			if(pl_num >= SNAKE_TEAMS) { return false; }
+			if(pl_num >= SNAKE_TEAMS) { return SNAKE_SPECTATOR_TEAM; }
 
 			int t = 1; // Team 1 by default
 
@@ -482,9 +483,13 @@ int snake_server_event(entity minigame, string event, ...)
 		}
 		case "cmd":
 		{
+			entity player = ...(0,entity);
+			bool event_blocked = (player.team == SNAKE_SPECTATOR_TEAM);
 			switch(argv(0))
 			{
 				case "move":
+					if(event_blocked)
+						return true;
 					snake_move(minigame, ...(0,entity), ((...(1,int)) >= 2 ? argv(1) : string_null), ((...(1,int)) == 3 ? argv(2) : string_null));
 					return true;
 			}
@@ -707,7 +712,7 @@ void snake_hud_status(vector pos, vector mySize)
 	entity e;
 	FOREACH_MINIGAME_ENTITY(e)
 	{
-		if ( e.classname == "minigame_player" )
+		if ( e.classname == "minigame_player" && e.team != SNAKE_SPECTATOR_TEAM )
 		{
 			mypos = pos + eY * (e.team - 1) * ts.y;
 
@@ -736,6 +741,9 @@ void snake_hud_status(vector pos, vector mySize)
 // Turn a set of flags into a help message
 string snake_turn_to_string(int turnflags)
 {
+	if(minigame_self.team == SNAKE_SPECTATOR_TEAM)
+		return _("You are spectating");
+
 	if ( turnflags & SNAKE_TURN_LOSS )
 		return _("Game over!");
 
@@ -786,25 +794,36 @@ int snake_client_event(entity minigame, string event, ...)
 			return false;
 		}
 		case "key_pressed":
+		case "key_released":
 		{
+			bool event_blocked = ((event == "key_released")
+				|| minigame_self.team == SNAKE_SPECTATOR_TEAM);
 			//if((minigame.minigame_flags & SNAKE_TURN_TEAM) == minigame_self.team)
 			{
 				switch ( ...(0,int) )
 				{
 					case K_RIGHTARROW:
 					case K_KP_RIGHTARROW:
+						if (event_blocked)
+							return true;
 						snake_set_direction(minigame, 1, 0);
 						return true;
 					case K_LEFTARROW:
 					case K_KP_LEFTARROW:
+						if (event_blocked)
+							return true;
 						snake_set_direction(minigame, -1, 0);
 						return true;
 					case K_UPARROW:
 					case K_KP_UPARROW:
+						if (event_blocked)
+							return true;
 						snake_set_direction(minigame, 0, 1);
 						return true;
 					case K_DOWNARROW:
 					case K_KP_DOWNARROW:
+						if (event_blocked)
+							return true;
 						snake_set_direction(minigame, 0, -1);
 						return true;
 				}

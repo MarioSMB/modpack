@@ -15,6 +15,7 @@ const int CHESS_NUM_CNT = 8;
 const int CHESS_TILE_SIZE = 8;
 
 const int CHESS_TEAMS = 2;
+const int CHESS_SPECTATOR_TEAM = 255; // must be above max teams and equal to or below 255
 
 const int CHESS_FINE = 0;
 const int CHESS_CHECK = 1;
@@ -615,7 +616,7 @@ int chess_server_event(entity minigame, string event, ...)
 			int pl_num = minigame_count_players(minigame);
 
 			// Don't allow more than 2 players
-			if(pl_num >= CHESS_TEAMS) { return false; }
+			if(pl_num >= CHESS_TEAMS) { return CHESS_SPECTATOR_TEAM; }
 
 			// Get the right team
 			if(minigame.minigame_players)
@@ -626,9 +627,13 @@ int chess_server_event(entity minigame, string event, ...)
 		}
 		case "cmd":
 		{
+			entity player = ...(0,entity);
+			bool event_blocked = (player.team == CHESS_SPECTATOR_TEAM);
 			switch(argv(0))
 			{
-				case "move": 
+				case "move":
+					if(event_blocked)
+						return true;
 					chess_move(minigame, ...(0,entity), (...(1,int) >= 3 ? argv(1) : string_null), (...(1,int) >= 3 ? argv(2) : string_null), (...(1,int) >= 4 ? strtolower(argv(3)) : string_null));
 					return true;
 			}
@@ -891,37 +896,44 @@ void chess_hud_status(vector pos, vector mySize)
 	vector mypos;
 	vector tile_size = '48 48 0';
 
-	mypos = pos;
-	if ( (active_minigame.minigame_flags&CHESS_TURN_TEAM) == 2 )
-		mypos_y  += player_fontsize_y + ts_y;
-	drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
-	mypos_y += player_fontsize_y;
-	drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
-
-	FOREACH_ENTITY_ENT_ORDERED(owner, active_minigame,
+	if(minigame_self.team != CHESS_SPECTATOR_TEAM)
 	{
-		if ( it.classname == "minigame_player" )
+		mypos = pos;
+		if ( (active_minigame.minigame_flags&CHESS_TURN_TEAM) == 2 )
+			mypos_y  += player_fontsize_y + ts_y;
+		drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
+		mypos_y += player_fontsize_y;
+		drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
+	}
+
+	entity e;
+	FOREACH_MINIGAME_ENTITY(e)
+	{
+		if ( e.classname == "minigame_player" && e.team != CHESS_SPECTATOR_TEAM )
 		{
 			mypos = pos;
-			if ( it.team == 2 )
+			if ( e.team == 2 )
 				mypos_y  += player_fontsize_y + ts_y;
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
-				entcs_GetName(it.minigame_playerslot-1),
+				entcs_GetName(e.minigame_playerslot-1),
 				player_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 			
 			mypos_y += player_fontsize_y;
 			//drawpic( mypos,  
-					//minigame_texture(strcat("chess/piece",ftos(it.team))),
+					//minigame_texture(strcat("chess/piece",ftos(e.team))),
 					//ftile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
 			
 			mypos_x += tile_size_x;
 		}
-	});
+	};
 }
 
 // Turn a set of flags into a help message
 string chess_turn_to_string(int turnflags)
 {
+	if(minigame_self.team == CHESS_SPECTATOR_TEAM)
+		return _("You are spectating");
+
 	if ( turnflags & CHESS_TURN_WIN )
 		return "Well done, you win!";
 	
@@ -984,13 +996,18 @@ int chess_client_event(entity minigame, string event, ...)
 			return false;
 		}
 		case "key_pressed":
+		case "key_released":
 		{
-			if((minigame.minigame_flags & CHESS_TURN_TEAM) == minigame_self.team)
+			bool event_blocked = ((event == "key_released")
+				|| ((minigame.minigame_flags & CHESS_TURN_TEAM) != minigame_self.team));
+			if (!(minigame.minigame_flags & CHESS_TURN_WIN))
 			{
 				switch ( ...(0,int) )
 				{
 					case K_RIGHTARROW:
 					case K_KP_RIGHTARROW:
+						if (event_blocked)
+							return true;
 						if ( ! chess_curr_pos )
 							chess_set_curr_pos("e4");
 						else
@@ -998,6 +1015,8 @@ int chess_client_event(entity minigame, string event, ...)
 						return true;
 					case K_LEFTARROW:
 					case K_KP_LEFTARROW:
+						if (event_blocked)
+							return true;
 						if ( ! chess_curr_pos )
 							chess_set_curr_pos("c4");
 						else
@@ -1005,6 +1024,8 @@ int chess_client_event(entity minigame, string event, ...)
 						return true;
 					case K_UPARROW:
 					case K_KP_UPARROW:
+						if (event_blocked)
+							return true;
 						if ( ! chess_curr_pos )
 							chess_set_curr_pos("d5");
 						else
@@ -1012,6 +1033,8 @@ int chess_client_event(entity minigame, string event, ...)
 						return true;
 					case K_DOWNARROW:
 					case K_KP_DOWNARROW:
+						if (event_blocked)
+							return true;
 						if ( ! chess_curr_pos )
 							chess_set_curr_pos("d3");
 						else
@@ -1019,9 +1042,13 @@ int chess_client_event(entity minigame, string event, ...)
 						return true;
 					case K_ENTER:
 					case K_KP_ENTER:
+						if (event_blocked)
+							return true;
 						chess_make_move(minigame);
 						return true;
 					case K_SPACE:
+						if (event_blocked)
+							return true;
 						chess_select_promotion(minigame, chess_curr_pos);
 						return true;
 				}
@@ -1031,6 +1058,8 @@ int chess_client_event(entity minigame, string event, ...)
 		}
 		case "mouse_pressed":
 		{
+			if(minigame_self.team == CHESS_SPECTATOR_TEAM)
+				return false;
 			if(...(0,int) == K_MOUSE1)
 			{
 				chess_make_move(minigame);

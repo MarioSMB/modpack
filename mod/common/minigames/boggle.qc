@@ -13,6 +13,8 @@ const int BOGGLE_TURN_TYPE  = 0x0f00; // turn type mask
 
 const int BOGGLE_SF_PLAYERSCORE = MINIG_SF_CUSTOM;
 
+const int BOGGLE_SPECTATOR_TEAM = 255; // must be above max teams and equal to or below 255
+
 const int BOGGLE_LET_CNT = 4;
 const int BOGGLE_NUM_CNT = 4;
 
@@ -306,19 +308,25 @@ int boggle_server_event(entity minigame, string event, ...)
 			int pl_num = minigame_count_players(minigame);
 
 			// Don't allow more than 1 player
-			if(pl_num >= 1) { return false; }
+			if(pl_num >= 1) { return BOGGLE_SPECTATOR_TEAM; }
 
 			// Team 1 by default
 			return 1;
 		}
 		case "cmd":
 		{
+			entity player = ...(0,entity);
+			bool event_blocked = (player.team == BOGGLE_SPECTATOR_TEAM);
 			switch(argv(0))
 			{
 				case "move":
+					if(event_blocked)
+						return true;
 					boggle_move(minigame, ...(0,entity), (...(1,int) == 2 ? argv(1) : string_null));
 					return true;
 				case "ready":
+					if(event_blocked)
+						return true;
 					boggle_begin_round(minigame);
 					return true;
 			}
@@ -431,16 +439,19 @@ void boggle_hud_status(vector pos, vector mySize)
 	vector mypos;
 	//vector tile_size = '48 48 0';
 
-	mypos = pos;
-	drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
-	//mypos_y += player_fontsize_y;
-	//mypos_y += player_fontsize_y; // double it?
-	//drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
+	if(minigame_self.team != BOGGLE_SPECTATOR_TEAM)
+	{
+		mypos = pos;
+		drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
+		//mypos_y += player_fontsize_y;
+		//mypos_y += player_fontsize_y; // double it?
+		//drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
+	}
 
 	entity e;
 	FOREACH_MINIGAME_ENTITY(e)
 	{
-		if ( e.classname == "minigame_player" )
+		if ( e.classname == "minigame_player" && e.team != BOGGLE_SPECTATOR_TEAM )
 		{
 			mypos = pos;
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
@@ -477,6 +488,9 @@ void boggle_hud_status(vector pos, vector mySize)
 // Turn a set of flags into a help message
 string boggle_turn_to_string(int turnflags)
 {
+	if(minigame_self.team == BOGGLE_SPECTATOR_TEAM)
+		return _("You are spectating");
+
 	if (turnflags & BOGGLE_TURN_DRAW )
 		return "Game over!";
 
@@ -570,13 +584,18 @@ int boggle_client_event(entity minigame, string event, ...)
 			return false;
 		}
 		case "key_pressed":
+		case "key_released":
 		{
-			if(minigame.minigame_flags & BOGGLE_TURN_MOVE)
+			bool event_blocked = ((event == "key_released")
+				|| !(minigame.minigame_flags & BOGGLE_TURN_MOVE) || (minigame_self.team == BOGGLE_SPECTATOR_TEAM));
+			if (!(minigame.minigame_flags & BOGGLE_TURN_DRAW))
 			{
 				switch ( ...(0,int) )
 				{
 					case K_RIGHTARROW:
 					case K_KP_RIGHTARROW:
+						if (event_blocked)
+							return true;
 						if ( ! boggle_curr_pos )
 							boggle_set_curr_pos("a3");
 						else
@@ -584,6 +603,8 @@ int boggle_client_event(entity minigame, string event, ...)
 						return true;
 					case K_LEFTARROW:
 					case K_KP_LEFTARROW:
+						if (event_blocked)
+							return true;
 						if ( ! boggle_curr_pos )
 							boggle_set_curr_pos("c3");
 						else
@@ -591,6 +612,8 @@ int boggle_client_event(entity minigame, string event, ...)
 						return true;
 					case K_UPARROW:
 					case K_KP_UPARROW:
+						if (event_blocked)
+							return true;
 						if ( ! boggle_curr_pos )
 							boggle_set_curr_pos("a1");
 						else
@@ -598,6 +621,8 @@ int boggle_client_event(entity minigame, string event, ...)
 						return true;
 					case K_DOWNARROW:
 					case K_KP_DOWNARROW:
+						if (event_blocked)
+							return true;
 						if ( ! boggle_curr_pos )
 							boggle_set_curr_pos("a3");
 						else
@@ -605,9 +630,13 @@ int boggle_client_event(entity minigame, string event, ...)
 						return true;
 					case K_ENTER:
 					case K_KP_ENTER:
+						if (event_blocked)
+							return true;
 						boggle_make_move(minigame);
 						return true;
 					case K_SPACE:
+						if (event_blocked)
+							return true;
 						if(boggle_curr_pos && !strhasword(boggle_word, boggle_curr_pos))
 						if(boggle_adjacent(boggle_word, boggle_curr_pos))
 							boggle_set_next_letter(minigame, boggle_curr_pos);
@@ -645,6 +674,8 @@ int boggle_client_event(entity minigame, string event, ...)
 		}
 		case "mouse_moved":
 		{
+			if(minigame_self.team == BOGGLE_SPECTATOR_TEAM)
+				return true;
 			//vector mouse_pos = minigame_hud_normalize(mousepos,boggle_boardpos,boggle_boardsize);
 			if ( minigame.minigame_flags == BOGGLE_TURN_MOVE )
 				boggle_set_curr_pos(boggle_tile_name(mousepos,BOGGLE_NUM_CNT,BOGGLE_LET_CNT));
