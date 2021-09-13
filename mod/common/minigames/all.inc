@@ -1,6 +1,7 @@
 #include "art.qc"
 #include "boggle.qc"
 #include "chess.qc"
+#include "checkers.qc"
 #include "nim.qc"
 #include "snake.qc"
 #include "vr.qc"

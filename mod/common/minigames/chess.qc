@@ -231,7 +231,9 @@ int chess_move_try(entity minigame, string thepiece, string pos, bool recurse_ki
 			return response__Illegal;
 	}
 	return response__Ok;
+#undef scan
 }
+#undef sgn
 
 bool chess_check_king_in_spot(entity minigame, string piece, string topos)
 {
