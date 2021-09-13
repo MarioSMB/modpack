@@ -1,0 +1,29 @@
+name: QC Master Daily
+on:
+  schedule:
+    - cron: '19 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  qc-master-daily:
+
+    runs-on: ubuntu-20.04
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Prepare
+        env:
+          CI: true
+        run: ./update.sh
+
+      - name: Checkout xonotic-data master
+        run: |
+          git -C xonotic checkout master
+
+      - name: Build
+        env:
+          TERM: xterm
+        run: ./build.sh

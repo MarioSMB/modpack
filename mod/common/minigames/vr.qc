@@ -13,6 +13,8 @@ const int VR_NUM_CNT = 19;
 
 const int VR_TILE_SIZE = 19;
 
+const int VR_SPECTATOR_TEAM = 255; // must be above max teams and equal to or below 255
+
 const vector VR_DIR_UP = '0 1 0';
 const vector VR_DIR_DN = '0 -1 0';
 const vector VR_DIR_LF = '-1 0 0';
@@ -164,13 +166,12 @@ void vr_move(entity minigame, entity player, string dir )
 			{
 				string pos = minigame_tile_buildname(tlet + (bdir.x * j), tnum + (bdir.y * j));
 				entity piece = vr_find_piece(minigame, pos); // assume exists?!
-				if(piece.netname) { strunzone(piece.netname); }
+				strfree(piece.netname);
 				delete(piece);
 			}
 
 			string endpos = minigame_tile_buildname(tlet + (bdir.x * pscore), tnum + (bdir.y * pscore));
-			if(targ.netname) { strunzone(targ.netname); }
-			targ.netname = strzone(endpos);
+			strcpy(targ.netname, endpos);
 			minigame_server_sendflags(targ,MINIG_SF_ALL);
 
 			vr_add_score(minigame,pscore);
@@ -205,7 +206,7 @@ int vr_server_event(entity minigame, string event, ...)
 			while( (e = findentity(e, owner, minigame)) )
 			if(e.classname == "minigame_board_piece")
 			{
-				if(e.netname) { strunzone(e.netname); }
+				strfree(e.netname);
 				delete(e);
 			}
 			minigame.vr_targ = NULL;
@@ -217,16 +218,20 @@ int vr_server_event(entity minigame, string event, ...)
 
 			// Don't allow more than 1 player
 			// not sure if this should be a multiplayer game (might get crazy)
-			if(pl_num >= 1) { return false; }
+			if(pl_num >= 1) { return VR_SPECTATOR_TEAM; }
 
 			// Team 1 by default
 			return 1;
 		}
 		case "cmd":
 		{
+			entity player = ...(0,entity);
+			bool event_blocked = (player.team == VR_SPECTATOR_TEAM);
 			switch(argv(0))
 			{
 				case "move": 
+					if(event_blocked)
+						return true;
 					vr_move(minigame, ...(0,entity), ...(1,int) == 2 ? argv(1) : string_null ); 
 					return true;
 			}
@@ -298,7 +303,7 @@ void vr_hud_board(vector pos, vector mySize)
 	{
 		int scores = 0;
 		FOREACH_MINIGAME_ENTITY(e)
-			if(e.classname == "minigame_player")
+			if(e.classname == "minigame_player" && e.team != VR_SPECTATOR_TEAM)
 				scores = e.vr_score;
 
 		vector winfs = hud_fontsize*2;
@@ -337,15 +342,18 @@ void vr_hud_status(vector pos, vector mySize)
 	vector mypos;
 	vector tile_size = '48 48 0';
 
-	mypos = pos;
-	drawfill(mypos,eX*mySize.x+eY*player_fontsize.y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
-	mypos_y += player_fontsize.y;
-	drawfill(mypos,eX*mySize.x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
+	if(minigame_self.team != VR_SPECTATOR_TEAM)
+	{
+		mypos = pos;
+		drawfill(mypos,eX*mySize.x+eY*player_fontsize.y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
+		mypos_y += player_fontsize.y;
+		drawfill(mypos,eX*mySize.x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
+	}
 
 	entity e;
 	FOREACH_MINIGAME_ENTITY(e)
 	{
-		if ( e.classname == "minigame_player" )
+		if ( e.classname == "minigame_player" && e.team != VR_SPECTATOR_TEAM )
 		{
 			mypos = pos;
 			minigame_drawcolorcodedstring_trunc(mySize.x,mypos,
@@ -368,6 +376,9 @@ void vr_hud_status(vector pos, vector mySize)
 // Turn a set of flags into a help message
 string vr_turn_to_string(int turnflags)
 {
+	if(minigame_self.team == VR_SPECTATOR_TEAM)
+		return _("You are spectating");
+
 	if ( turnflags & VR_TURN_WIN )
 		return _("No more valid moves, you win");
 	
@@ -397,38 +408,41 @@ int vr_client_event(entity minigame, string event, ...)
 			return false;
 		}
 		case "key_pressed":
+		case "key_released":
 		{
-			//if((minigame.minigame_flags & VR_TURN_TEAM) == minigame_self.team)
+			bool event_blocked = ((event == "key_released")
+				|| !(minigame.minigame_flags & VR_TURN_TAKE) || (minigame_self.team == VR_SPECTATOR_TEAM));
+			if (!(minigame.minigame_flags & VR_TURN_WIN))
 			{
 				switch ( ...(0,int) )
 				{
 					case K_RIGHTARROW:
 					case K_KP_RIGHTARROW:
+						if (event_blocked)
+							return true;
 						vr_make_move(minigame, "r");
 						return true;
 					case K_LEFTARROW:
 					case K_KP_LEFTARROW:
+						if (event_blocked)
+							return true;
 						vr_make_move(minigame, "l");
 						return true;
 					case K_UPARROW:
 					case K_KP_UPARROW:
+						if (event_blocked)
+							return true;
 						vr_make_move(minigame, "u");
 						return true;
 					case K_DOWNARROW:
 					case K_KP_DOWNARROW:
+						if (event_blocked)
+							return true;
 						vr_make_move(minigame, "d");
 						return true;
 				}
 			}
 
-			return false;
-		}
-		case "mouse_pressed":
-		{
-			return false;
-		}
-		case "mouse_moved":
-		{
 			return false;
 		}
 		case "network_receive":
