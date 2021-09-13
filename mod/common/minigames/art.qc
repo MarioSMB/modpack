@@ -254,8 +254,11 @@ int art_server_event(entity minigame, string event, ...)
 
 #elif defined(CSQC)
 
+int autocvar_cl_minigames_art_extra = 16;
+
 vector art_curr_color;
 string art_curr_pos;
+int art_curr_index;
 
 vector art_boardpos; // HUD board position
 vector art_boardsize;// HUD board size
@@ -371,7 +374,7 @@ void art_editor_make_move(entity minigame)
 
 void art_editor_set_color()
 {
-	minigame_cmd(sprintf("color %v", art_curr_color));
+	minigame_cmd(sprintf("color \"%v\"", art_curr_color));
 }
 
 bool art_set_curr_pos(string s)
@@ -423,11 +426,36 @@ bool art_normal_move(entity minigame, int themove)
 	return false;
 }
 
+vector art_rainbow(int indx, int stlen, float len_offset, float randomizer)
+{
+	return hsl_to_rgb('1 0 0' * (len_offset * indx + randomizer) + '0 1 0.5');
+}
+
 void art_increment_color()
 {
-	art_curr_color.x += 0.1;
-	if(art_curr_color.x >= 1)
-		art_curr_color.x = 0;
+	if(autocvar_cl_minigames_art_extra)
+	{
+		float j = ((6 * max(1, floor(autocvar_cl_minigames_art_extra / 32 + random() * 2 - 1))) / autocvar_cl_minigames_art_extra) * (1 - 2 * (random() > 0.5));
+		float f = random() * 6;
+		art_curr_index += 1;
+		if(art_curr_index == autocvar_cl_minigames_art_extra)
+		{
+			art_curr_color = '1 1 1';
+		}
+		else if(art_curr_index > autocvar_cl_minigames_art_extra)
+		{
+			art_curr_index = 0;
+			art_curr_color = '0.01 0.01 0.01';
+		}
+		else
+			art_curr_color = art_rainbow(art_curr_index, autocvar_cl_minigames_art_extra, j, f);
+	}
+	else
+	{
+		art_curr_color.x += 0.1;
+		if(art_curr_color.x >= 1)
+			art_curr_color.x = 0;
+	}
 
 	art_editor_set_color();
 }

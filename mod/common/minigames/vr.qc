@@ -171,8 +171,7 @@ void vr_move(entity minigame, entity player, string dir )
 			}
 
 			string endpos = minigame_tile_buildname(tlet + (bdir.x * pscore), tnum + (bdir.y * pscore));
-			if(targ.netname) { strunzone(targ.netname); }
-			targ.netname = strzone(endpos);
+			strcpy(targ.netname, endpos);
 			minigame_server_sendflags(targ,MINIG_SF_ALL);
 
 			vr_add_score(minigame,pscore);
@@ -227,7 +226,7 @@ int vr_server_event(entity minigame, string event, ...)
 		case "cmd":
 		{
 			entity player = ...(0,entity);
-			bool event_blocked = (player.team == BD_SPECTATOR_TEAM);
+			bool event_blocked = (player.team == VR_SPECTATOR_TEAM);
 			switch(argv(0))
 			{
 				case "move": 
