@@ -468,7 +468,7 @@ void boggle_hud_status(vector pos, vector mySize)
 	mySize_y -= ts_y;
 
 	vector player_fontsize = hud_fontsize * 1.75;
-	ts_y = ( mySize_y - 2*player_fontsize_y ) / 2;
+	ts.y = player_fontsize.y + (mySize.y - BOGGLE_TEAMS * player_fontsize.y) / BOGGLE_TEAMS;
 	ts_x = mySize_x;
 	vector mypos;
 	//vector tile_size = '48 48 0';
