@@ -4,4 +4,5 @@
 #include "checkers.qc"
 #include "art.qc"
 #include "nim.qc"
+#include "sg.qc"
 //#include "vr.qc"

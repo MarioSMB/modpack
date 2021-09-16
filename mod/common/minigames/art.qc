@@ -517,6 +517,41 @@ bool art_editor_move(entity minigame, int themove)
 	return false;
 }
 
+// Export an pixelart as an ASCII .ppm file
+void art_export(entity minigame)
+{
+	entity controller;
+	string output_name = sprintf("pixelart/%s.ppm", strftime(true /*use local time*/, "%Y-%m-%d-%H-%M-%S"));
+	int rows = ART_NUM_CNT;
+	int cols = ART_LET_CNT;
+
+	float fh = fopen(output_name, FILE_WRITE);
+	if (fh < 0)
+	{
+		LOG_INFO("Unable to save image: ", output_name);
+		centerprint(strcat("Unable to save image: ", output_name));
+	}
+	else
+	{
+		fputs(fh, sprintf("P3 %d, %d, 255\n", rows, cols)); // write the .ppm header
+		for(int col = 1; col <= cols; ++col) // cols are stored in decrementing order
+		{
+			for(int row = 0; row < rows; ++row) // rows are stored in incrementing order
+			{
+				controller = art_find_controller(minigame, row);
+				vector pixel = controller.art_tilecolor[cols - col];
+				/* write the pixels [r, g ,b], and make sure they're bound to integers between 0 and 255
+				 * the space after the final %d is needed for all pixels in a row  except for the last one */
+				fputs(fh, sprintf("%d %d %d ", bound(0 , ceil(pixel.x * 255), 255), bound(0 , ceil(pixel.y * 255), 255), bound(0 , ceil(pixel.z * 255), 255)));
+			}
+			fputs(fh, "\n"); // separate rows in the image for easier debugging
+		}
+		fclose(fh);
+		LOG_INFO("Saved image: ", output_name);
+		centerprint(strcat("Saved image: ", output_name));
+	}
+}
+
 bool mouse1_pressed;
 
 // Required function, handle client events
@@ -608,12 +643,15 @@ int art_client_event(entity minigame, string event, ...)
 		}
 		case "menu_show":
 		{
+			HUD_MinigameMenu_CustomEntry(...(0,entity),_("Save"),"save");
 			HUD_MinigameMenu_CustomEntry(...(0,entity),_("Restart"),"restart");
 			return false;
 		}
 		case "menu_click":
 		{
-			if(...(0,string) == "restart")
+			if (...(0,string) == "save")
+				art_export(minigame);
+			else if(...(0,string) == "restart")
 				minigame_cmd("restart");
 			return false;
 		}
