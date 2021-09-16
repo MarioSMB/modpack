@@ -28,6 +28,7 @@ const int MODELS_MONK = BIT(10);
 const int MODELS_NEXUS = BIT(11);
 const int MODELS_IGGY = BIT(12);
 const int MODELS_MARIO64 = BIT(13);
+const int MODELS_WONG = BIT(14);
 #endif
 
 #ifdef SVQC
@@ -83,6 +84,7 @@ PRECACHE(cpmodels_precache)
 		CHECK_MODEL("nexus.zym", NEXUS)
 		CHECK_MODEL("iggy.dpm", IGGY)
 		CHECK_MODEL("mario64.dpm", MARIO64)
+		CHECK_MODEL("leilei.zym", WONG)
 	}
 #undef CHECK_MODEL
 }
@@ -184,6 +186,11 @@ MUTATOR_HOOKFUNCTION(cpmodels, FixPlayermodel)
 			{
 				M_ARGV(0, string) = "models/player/draconimale.iqm";
 				cpmodels_UpdateWeaponSkin(player, 7);
+			}
+			if(CS_CVAR(player).cvar_cl_model == "wong" && ALLOWED(WONG))
+			{
+				M_ARGV(0, string) = "models/player/leilei.zym";
+				cpmodels_UpdateWeaponSkin(player, 5);
 			}
 		}
 		else if(player.playermodel == "models/player/renamon.iqm" || player.playermodel == "models/player/rosalina.dpm" || player.playermodel == "models/player/iggy.dpm")

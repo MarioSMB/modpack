@@ -9,6 +9,7 @@ const int ART_NUM_CNT = 16;
 const int ART_TILE_SIZE = 16;
 
 const int ART_TEAMS = 6;
+const int ART_SPECTATOR_TEAM = 255; // must be above max teams and equal to or below 255
 
 // send flags
 const int ART_SF_COLOR = MINIG_SF_CUSTOM;
@@ -199,7 +200,7 @@ int art_server_event(entity minigame, string event, ...)
 		{
 			int pl_num = minigame_count_players(minigame);
 
-			if(pl_num >= ART_TEAMS) { return false; }
+			if(pl_num >= ART_TEAMS) { return ART_SPECTATOR_TEAM; }
 
 			// Get the right team
 			if(minigame.minigame_players)
@@ -210,15 +211,23 @@ int art_server_event(entity minigame, string event, ...)
 		}
 		case "cmd":
 		{
+			entity player = ...(0,entity);
+			bool event_blocked = (player.team == ART_SPECTATOR_TEAM);
 			switch(argv(0))
 			{
 				case "move":
+					if(event_blocked)
+						return true;
 					art_do_move(minigame, ...(0,entity), ((...(1,int)) >= 2 ? argv(1) : string_null));
 					return true;
 				case "color":
+					if(event_blocked)
+						return true;
 					art_set_color(minigame, ...(0,entity), ((...(1,int)) >= 2 ? argv(1) : string_null));
 					return true;
 				case "restart":
+					if(event_blocked)
+						return true;
 					art_setup_pieces(minigame);
 					return true;
 			}
@@ -245,8 +254,11 @@ int art_server_event(entity minigame, string event, ...)
 
 #elif defined(CSQC)
 
+int autocvar_cl_minigames_art_extra = 16;
+
 vector art_curr_color;
 string art_curr_pos;
+int art_curr_index;
 
 vector art_boardpos; // HUD board position
 vector art_boardsize;// HUD board size
@@ -322,7 +334,7 @@ void art_hud_status(vector pos, vector mySize)
 	entity e;
 	FOREACH_MINIGAME_ENTITY(e)
 	{
-		if ( e.classname == "minigame_player" )
+		if ( e.classname == "minigame_player" && e.team != ART_SPECTATOR_TEAM )
 		{
 			mypos = pos + eY * (e.team - 1) * ts.y;
 
@@ -349,6 +361,8 @@ void art_hud_status(vector pos, vector mySize)
 // Turn a set of flags into a help message
 string art_turn_to_string(int turnflags)
 {
+	if(minigame_self.team == ART_SPECTATOR_TEAM)
+		return _("You are spectating");
 	return _("Press the space bar or right click to change your currently selected color");
 }
 
@@ -360,7 +374,7 @@ void art_editor_make_move(entity minigame)
 
 void art_editor_set_color()
 {
-	minigame_cmd(sprintf("color %v", art_curr_color));
+	minigame_cmd(sprintf("color \"%v\"", art_curr_color));
 }
 
 bool art_set_curr_pos(string s)
@@ -380,22 +394,31 @@ bool art_set_curr_pos(string s)
 
 bool art_normal_move(entity minigame, int themove)
 {
+	bool event_blocked = (minigame_self.team == ART_SPECTATOR_TEAM);
 	switch ( themove )
 	{
 		case K_RIGHTARROW:
 		case K_KP_RIGHTARROW:
+			if (event_blocked)
+				return true;
 			art_editor_make_move(minigame);
 			return true;
 		case K_LEFTARROW:
 		case K_KP_LEFTARROW:
+			if (event_blocked)
+				return true;
 			art_editor_make_move(minigame);
 			return true;
 		case K_UPARROW:
 		case K_KP_UPARROW:
+			if (event_blocked)
+				return true;
 			art_editor_make_move(minigame);
 			return true;
 		case K_DOWNARROW:
 		case K_KP_DOWNARROW:
+			if (event_blocked)
+				return true;
 			art_editor_make_move(minigame);
 			return true;
 	}
@@ -403,21 +426,49 @@ bool art_normal_move(entity minigame, int themove)
 	return false;
 }
 
+vector art_rainbow(int indx, int stlen, float len_offset, float randomizer)
+{
+	return hsl_to_rgb('1 0 0' * (len_offset * indx + randomizer) + '0 1 0.5');
+}
+
 void art_increment_color()
 {
-	art_curr_color.x += 0.1;
-	if(art_curr_color.x >= 1)
-		art_curr_color.x = 0;
+	if(autocvar_cl_minigames_art_extra)
+	{
+		float j = ((6 * max(1, floor(autocvar_cl_minigames_art_extra / 32 + random() * 2 - 1))) / autocvar_cl_minigames_art_extra) * (1 - 2 * (random() > 0.5));
+		float f = random() * 6;
+		art_curr_index += 1;
+		if(art_curr_index == autocvar_cl_minigames_art_extra)
+		{
+			art_curr_color = '1 1 1';
+		}
+		else if(art_curr_index > autocvar_cl_minigames_art_extra)
+		{
+			art_curr_index = 0;
+			art_curr_color = '0.01 0.01 0.01';
+		}
+		else
+			art_curr_color = art_rainbow(art_curr_index, autocvar_cl_minigames_art_extra, j, f);
+	}
+	else
+	{
+		art_curr_color.x += 0.1;
+		if(art_curr_color.x >= 1)
+			art_curr_color.x = 0;
+	}
 
 	art_editor_set_color();
 }
 
 bool art_editor_move(entity minigame, int themove)
 {
+	bool event_blocked = (minigame_self.team == ART_SPECTATOR_TEAM);
 	switch ( themove )
 	{
 		case K_RIGHTARROW:
 		case K_KP_RIGHTARROW:
+			if (event_blocked)
+				return true;
 			if ( ! art_curr_pos )
 				art_set_curr_pos("a3");
 			else
@@ -425,6 +476,8 @@ bool art_editor_move(entity minigame, int themove)
 			return true;
 		case K_LEFTARROW:
 		case K_KP_LEFTARROW:
+			if (event_blocked)
+				return true;
 			if ( ! art_curr_pos )
 				art_set_curr_pos("c3");
 			else
@@ -432,6 +485,8 @@ bool art_editor_move(entity minigame, int themove)
 			return true;
 		case K_UPARROW:
 		case K_KP_UPARROW:
+			if (event_blocked)
+				return true;
 			if ( ! art_curr_pos )
 				art_set_curr_pos("a1");
 			else
@@ -439,6 +494,8 @@ bool art_editor_move(entity minigame, int themove)
 			return true;
 		case K_DOWNARROW:
 		case K_KP_DOWNARROW:
+			if (event_blocked)
+				return true;
 			if ( ! art_curr_pos )
 				art_set_curr_pos("a3");
 			else
@@ -446,9 +503,13 @@ bool art_editor_move(entity minigame, int themove)
 			return true;
 		case K_ENTER:
 		case K_KP_ENTER:
+			if (event_blocked)
+				return true;
 			art_editor_make_move(minigame);
 			return true;
 		case K_SPACE:
+			if (event_blocked)
+				return true;
 			art_increment_color();
 			return true;
 	}
@@ -481,8 +542,11 @@ int art_client_event(entity minigame, string event, ...)
 		}
 		case "mouse_pressed":
 		{
+			bool event_blocked = (minigame_self.team == ART_SPECTATOR_TEAM);
 			if(...(0,int) == K_MOUSE1)
 			{
+				if (event_blocked)
+					return true;
 				mouse1_pressed = true;
 				art_editor_make_move(minigame);
 				return true;
@@ -490,6 +554,8 @@ int art_client_event(entity minigame, string event, ...)
 
 			if(...(0,int) == K_MOUSE2)
 			{
+				if (event_blocked)
+					return true;
 				art_increment_color();
 				return true;
 			}
@@ -505,6 +571,8 @@ int art_client_event(entity minigame, string event, ...)
 		}
 		case "mouse_moved":
 		{
+			if(minigame_self.team == ART_SPECTATOR_TEAM)
+				return true;
 			vector mouse_pos = minigame_hud_normalize(mousepos,art_boardpos,art_boardsize);
 			bool changed = art_set_curr_pos(minigame_tile_name(mouse_pos,ART_LET_CNT,ART_NUM_CNT));
 			if ( ! art_valid_tile(art_curr_pos) )

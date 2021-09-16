@@ -19,6 +19,7 @@ const int NIM_NUM_CNT = 6;
 //const int NIM_TILE_SIZE = 6;
 
 const int NIM_TEAMS = 2;
+const int NIM_SPECTATOR_TEAM = 255; // must be above max teams and equal to or below 255
 
 .int nim_nexteam; // (minigame) next team (used to change the starting team on following matches)
 
@@ -93,7 +94,7 @@ void nim_move(entity minigame, entity player, string pos )
 			{
 				entity thepiece = nim_find_piece(minigame, minigame_tile_buildname(i, number));
 				if(!thepiece) break;
-				if(thepiece.netname) { strunzone(thepiece.netname); }
+				strfree(thepiece.netname);
 				delete(thepiece);
 			}
 
@@ -128,11 +129,13 @@ void nim_next_match(entity minigame, entity player)
 	{
 		minigame.minigame_flags = NIM_TURN_PLACE | minigame.nim_nexteam;
 		minigame_server_sendflags(minigame,MINIG_SF_UPDATE);
-		FOREACH_ENTITY_ENT(owner, minigame, LAMBDA(
-			if(it.classname != "minigame_board_piece") continue;
-			if(it.netname) { strunzone(it.netname); }
-			delete(it);
-		));
+		entity e = NULL;
+			while( (e = findentity(e, owner, minigame)) )
+			if(e.classname == "minigame_board_piece")
+			{
+				strfree(e.netname);
+				delete(e);
+			}
 
 		nim_setup_pieces(minigame);
 	}
@@ -154,11 +157,13 @@ int nim_server_event(entity minigame, string event, ...)
 		}
 		case "end":
 		{
-			FOREACH_ENTITY_ENT(owner, minigame, LAMBDA(
-				if(it.classname != "minigame_board_piece") continue;
-				if(it.netname) { strunzone(it.netname); }
-				delete(it);
-			));
+			entity e = NULL;
+			while( (e = findentity(e, owner, minigame)) )
+			if(e.classname == "minigame_board_piece")
+			{
+				strfree(e.netname);
+				delete(e);
+			}
 			return false;
 		}
 		case "join":
@@ -166,7 +171,7 @@ int nim_server_event(entity minigame, string event, ...)
 			int pl_num = minigame_count_players(minigame);
 
 			// Don't allow more than 2 players
-			if(pl_num >= NIM_TEAMS) { return false; }
+			if(pl_num >= NIM_TEAMS) { return NIM_SPECTATOR_TEAM; }
 
 			// Get the right team
 			if(minigame.minigame_players)
@@ -177,12 +182,18 @@ int nim_server_event(entity minigame, string event, ...)
 		}
 		case "cmd":
 		{
+			entity player = ...(0,entity);
+			bool event_blocked = (player.team == BD_SPECTATOR_TEAM);
 			switch(argv(0))
 			{
 				case "move":
+					if(event_blocked)
+						return true;
 					nim_move(minigame, ...(0,entity), ...(1,int) == 2 ? argv(1) : string_null );
 					return true;
 				case "next":
+					if(event_blocked)
+						return true;
 					nim_next_match(minigame,...(0,entity));
 					return true;
 			}
@@ -338,38 +349,47 @@ void nim_hud_status(vector pos, vector mySize)
 	vector mypos;
 	vector tile_size = '48 48 0';
 
-	mypos = pos;
-	if ( (active_minigame.minigame_flags&NIM_TURN_TEAM) == 2 )
-		mypos_y  += player_fontsize_y + ts_y;
-	drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
-	mypos_y += player_fontsize_y;
-	drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
-
-	FOREACH_ENTITY_ENT(owner, active_minigame,
+	if(minigame_self.team != NIM_SPECTATOR_TEAM)
 	{
-		if(it.classname != "minigame_player") continue;
 		mypos = pos;
-		if ( it.team == 2 )
+		if ( (active_minigame.minigame_flags&NIM_TURN_TEAM) == 2 )
 			mypos_y  += player_fontsize_y + ts_y;
-		minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
-			entcs_GetName(it.minigame_playerslot-1),
-			player_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
-
+		drawfill(mypos,eX*mySize_x+eY*player_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
 		mypos_y += player_fontsize_y;
-		drawpic( mypos,
-				minigame_texture("nim/piece"),
-				tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
+		drawfill(mypos,eX*mySize_x+eY*tile_size_y,'1 1 1',0.25,DRAWFLAG_ADDITIVE);
+	}
 
-		mypos_x += tile_size_x;
+	entity e;
+	FOREACH_MINIGAME_ENTITY(e)
+	{
+		if ( e.classname == "minigame_player" && e.team != NIM_SPECTATOR_TEAM )
+		{
+			mypos = pos;
+			if ( e.team == 2 )
+				mypos_y  += player_fontsize_y + ts_y;
+			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
+				entcs_GetName(e.minigame_playerslot-1),
+				player_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
-		drawstring(mypos,ftos(it.minigame_flags),tile_size,
-					'0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
-	});
+			mypos_y += player_fontsize_y;
+			drawpic( mypos,
+					minigame_texture("nim/piece"),
+					tile_size, '1 1 1', panel_fg_alpha, DRAWFLAG_NORMAL );
+
+			mypos_x += tile_size_x;
+
+			drawstring(mypos,ftos(e.minigame_flags),tile_size,
+						'0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
+		}
+	}
 }
 
 // Turn a set of flags into a help message
 string nim_turn_to_string(int turnflags)
 {
+	if(minigame_self.team == NIM_SPECTATOR_TEAM)
+		return _("You are spectating");
+
 	if ( turnflags & NIM_TURN_WIN )
 	{
 		if ( (turnflags&NIM_TURN_TEAM) != minigame_self.team )
@@ -404,8 +424,7 @@ void nim_make_move(entity minigame)
 
 void nim_set_curr_pos(string s)
 {
-	if ( nim_curr_pos )
-		strunzone(nim_curr_pos);
+	strfree(nim_curr_pos);
 	if ( s )
 		s = strzone(s);
 	nim_curr_pos = s;
@@ -423,13 +442,18 @@ int nim_client_event(entity minigame, string event, ...)
 			return false;
 		}
 		case "key_pressed":
+		case "key_released":
 		{
-			if((minigame.minigame_flags & NIM_TURN_TEAM) == minigame_self.team)
+			bool event_blocked = ((event == "key_released")
+				|| ((minigame.minigame_flags & NIM_TURN_TEAM) != minigame_self.team));
+			if (!(minigame.minigame_flags & NIM_TURN_WIN) && !(minigame.minigame_flags & NIM_TURN_NEXT))
 			{
 				switch ( ...(0,int) )
 				{
 					case K_RIGHTARROW:
 					case K_KP_RIGHTARROW:
+						if (event_blocked)
+							return true;
 						if ( ! nim_curr_pos )
 							nim_set_curr_pos("a3");
 						else
@@ -437,6 +461,8 @@ int nim_client_event(entity minigame, string event, ...)
 						return true;
 					case K_LEFTARROW:
 					case K_KP_LEFTARROW:
+						if (event_blocked)
+							return true;
 						if ( ! nim_curr_pos )
 							nim_set_curr_pos("c3");
 						else
@@ -444,6 +470,8 @@ int nim_client_event(entity minigame, string event, ...)
 						return true;
 					case K_UPARROW:
 					case K_KP_UPARROW:
+						if (event_blocked)
+							return true;
 						if ( ! nim_curr_pos )
 							nim_set_curr_pos("a1");
 						else
@@ -451,6 +479,8 @@ int nim_client_event(entity minigame, string event, ...)
 						return true;
 					case K_DOWNARROW:
 					case K_KP_DOWNARROW:
+						if (event_blocked)
+							return true;
 						if ( ! nim_curr_pos )
 							nim_set_curr_pos("a3");
 						else
@@ -459,6 +489,8 @@ int nim_client_event(entity minigame, string event, ...)
 					case K_ENTER:
 					case K_KP_ENTER:
 					case K_SPACE:
+						if (event_blocked)
+							return true;
 						nim_make_move(minigame);
 						return true;
 				}
