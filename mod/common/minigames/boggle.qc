@@ -17,7 +17,7 @@ const float BOGGLE_TURN_TEAM  = 0x000f; // turn team mask
 
 const int BOGGLE_SF_PLAYERSCORE = MINIG_SF_CUSTOM;
 
-const int BOGGLE_TEAMS = 6;
+const int BOGGLE_TEAMS = 5;
 const int BOGGLE_SPECTATOR_TEAM = 255; // must be above max teams and equal to or below 255
 
 const int BOGGLE_LET_CNT = 4;
@@ -51,17 +51,17 @@ MUTATOR_HOOKFUNCTION(boggle_timer, PlayerPreThink)
 }
 #endif
 
-entity boggle_spawn_list_item(entity minigame, string word)
+entity boggle_spawn_list_item(entity player, string word)
 {
 	entity e = new(boggle_list_item);
 	e.netname = strzone(word);
-	LL_PUSH(minigame.boggle_words, e);
+	LL_PUSH(player.boggle_words, e);
 	return e;
 }
 
-bool boggle_word_in_list(entity minigame, string word)
+bool boggle_word_in_list(entity player, string word)
 {
-	LL_EACH(minigame.boggle_words, true, LAMBDA(
+	LL_EACH(player.boggle_words, true, LAMBDA(
 		if(it.netname == word)
 			return true;
 	));
@@ -243,9 +243,9 @@ void boggle_move(entity minigame, entity player, string letters )
 		if(strlen(theword) <= 2)
 			return; // no 2 letter words
 
-		if(Find_Word_Entity(theword) && !boggle_word_in_list(minigame, theword))
+		if(Find_Word_Entity(theword) && !boggle_word_in_list(player, theword))
 		{
-			boggle_spawn_list_item(minigame, theword);
+			boggle_spawn_list_item(player, theword);
 			boggle_add_wordscore(minigame, player.team, 1);
 			boggle_add_score(minigame, player.team, strlen(theword) - 2); // 1 point per 3 letter word
 		}
@@ -307,15 +307,12 @@ int boggle_server_event(entity minigame, string event, ...)
 	{
 		case "start":
 		{
-			minigame.boggle_words = LL_NEW();
 			boggle_setup_pieces(minigame);
 			minigame.minigame_flags = BOGGLE_TURN_WAIT;
 			return true;
 		}
 		case "end":
 		{
-			LL_CLEAR(minigame.boggle_words, { strfree(it.netname); });
-
 			entity e = NULL;
 			while( (e = findentity(e, owner, minigame)) )
 			if(e.classname == "minigame_board_piece")
@@ -326,12 +323,22 @@ int boggle_server_event(entity minigame, string event, ...)
 			}
 			return false;
 		}
+		case "part":
+		{
+			entity player = ...(0,entity);
+			if(player.minigame_players)
+				LL_CLEAR(player.minigame_players.boggle_words, { strfree(it.netname); });
+			return false;
+		}
 		case "join":
 		{
 			int pl_num = minigame_count_players(minigame);
 
 			// Don't allow more than 1 player
 			if(pl_num >= BOGGLE_TEAMS) { return BOGGLE_SPECTATOR_TEAM; }
+
+			entity player_pointer = ...(1,entity);
+			player_pointer.boggle_words = LL_NEW();
 
 			// Get the right team
 			if(minigame.minigame_players)

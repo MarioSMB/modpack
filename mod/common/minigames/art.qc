@@ -522,8 +522,8 @@ void art_export(entity minigame)
 {
 	entity controller;
 	string output_name = sprintf("pixelart/%s.ppm", strftime(true /*use local time*/, "%Y-%m-%d-%H-%M-%S"));
-	int rows = ART_NUM_CNT;
-	int cols = ART_LET_CNT;
+	const int rows = ART_NUM_CNT;
+	const int cols = ART_LET_CNT;
 
 	float fh = fopen(output_name, FILE_WRITE);
 	if (fh < 0)
