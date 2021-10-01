@@ -1,5 +1,6 @@
 #pragma once
 
+#include <common/gamemodes/gamemode/deathmatch/deathmatch.qh>
 #include <common/gamemodes/gamemode/lms/lms.qh>
 #include <common/mapinfo.qh>
 
@@ -21,6 +22,12 @@ CLASS(Survival, Gametype)
         {
             // if this is unset, all LMS maps support Survival too
             if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_LMS.m_flags))
+                return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
+        }
+        if(!cvar("g_survival_not_dm_maps"))
+        {
+            // if this is unset, all DM maps support Survival too
+            if(!(MapInfo_Map_supportedGametypes & this.m_flags) && (MapInfo_Map_supportedGametypes & MAPINFO_TYPE_DEATHMATCH.m_flags))
                 return true; // TODO: references another gametype (alternatively, we could check which gamemodes are always enabled and append this if any are supported)
         }
         return false;
@@ -54,7 +61,8 @@ ENTCS_PROP(SURVIVAL_STATUS, true, survival_status, survival_status, ENTCS_SET_NO
 
 #ifdef SVQC
 AUTOCVAR_NOREF(g_survival, bool, false, "");
-AUTOCVAR_NOREF(g_survival_not_dm_maps, bool, false, "");
+AUTOCVAR_NOREF(g_survival_not_lms_maps, bool, false, "");
+AUTOCVAR_NOREF(g_survival_not_dm_maps, bool, true, "");
 
 AUTOCVAR_NOREF(g_sv_respawn_delay_small, float, 0, "");
 AUTOCVAR_NOREF(g_sv_respawn_delay_small_count, float, 0, "");

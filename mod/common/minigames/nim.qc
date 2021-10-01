@@ -183,7 +183,7 @@ int nim_server_event(entity minigame, string event, ...)
 		case "cmd":
 		{
 			entity player = ...(0,entity);
-			bool event_blocked = (player.team == BD_SPECTATOR_TEAM);
+			bool event_blocked = (player.team == NIM_SPECTATOR_TEAM);
 			switch(argv(0))
 			{
 				case "move":

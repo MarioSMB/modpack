@@ -11,8 +11,13 @@ const int BOGGLE_TURN_WAIT  = 0x0200; // player has to click ready
 const int BOGGLE_TURN_DRAW  = 0x0400; // player can make no more moves
 const int BOGGLE_TURN_TYPE  = 0x0f00; // turn type mask
 
+const float BOGGLE_TURN_TEAM1 = 0x0001;
+const float BOGGLE_TURN_TEAM2 = 0x0002;
+const float BOGGLE_TURN_TEAM  = 0x000f; // turn team mask
+
 const int BOGGLE_SF_PLAYERSCORE = MINIG_SF_CUSTOM;
 
+const int BOGGLE_TEAMS = 5;
 const int BOGGLE_SPECTATOR_TEAM = 255; // must be above max teams and equal to or below 255
 
 const int BOGGLE_LET_CNT = 4;
@@ -20,7 +25,7 @@ const int BOGGLE_NUM_CNT = 4;
 
 const int BOGGLE_TILE_SIZE = 5;
 
-AUTOCVAR(sv_minigames_boggle_timelimit, float, 180, ""); // 3 minutes
+AUTOCVAR(sv_minigames_boggle_timelimit, float, 60, "");
 
 .string boggle_letter;
 .int boggle_wordscore;
@@ -46,17 +51,17 @@ MUTATOR_HOOKFUNCTION(boggle_timer, PlayerPreThink)
 }
 #endif
 
-entity boggle_spawn_list_item(entity minigame, string word)
+entity boggle_spawn_list_item(entity player, string word)
 {
 	entity e = new(boggle_list_item);
 	e.netname = strzone(word);
-	LL_PUSH(minigame.boggle_words, e);
+	LL_PUSH(player.boggle_words, e);
 	return e;
 }
 
-bool boggle_word_in_list(entity minigame, string word)
+bool boggle_word_in_list(entity player, string word)
 {
-	LL_EACH(minigame.boggle_words, true, LAMBDA(
+	LL_EACH(player.boggle_words, true, LAMBDA(
 		if(it.netname == word)
 			return true;
 	));
@@ -238,9 +243,9 @@ void boggle_move(entity minigame, entity player, string letters )
 		if(strlen(theword) <= 2)
 			return; // no 2 letter words
 
-		if(Find_Word_Entity(theword) && !boggle_word_in_list(minigame, theword))
+		if(Find_Word_Entity(theword) && !boggle_word_in_list(player, theword))
 		{
-			boggle_spawn_list_item(minigame, theword);
+			boggle_spawn_list_item(player, theword);
 			boggle_add_wordscore(minigame, player.team, 1);
 			boggle_add_score(minigame, player.team, strlen(theword) - 2); // 1 point per 3 letter word
 		}
@@ -251,12 +256,30 @@ void boggle_move(entity minigame, entity player, string letters )
 	}
 }
 
+int boggle_get_winner(entity minigame)
+{
+	entity winner = NULL;
+	entity e;
+#ifdef SVQC
+	for(e = minigame.minigame_players; e; e = e.list_next)
+#elif defined(CSQC)
+	e = NULL;
+	while( (e = findentity(e,owner,minigame)) )
+		if ( e.classname == "minigame_player" )
+#endif
+	if(!winner || e.boggle_score >= winner.boggle_score) // TODO: handle ties?
+		winner = e;
+	return (winner) ? winner.team : 1; // default to first team
+}
+
 void boggle_end_round(entity this)
 {
 	if ( !this.descriptor || this.classname != "minigame" )
 		return;
 
-	this.minigame_flags = BOGGLE_TURN_DRAW;
+	int winning_team = boggle_get_winner(this);
+
+	this.minigame_flags = BOGGLE_TURN_DRAW | winning_team;
 	this.boggle_timer_start = 0;
 
 	minigame_server_sendflags(this,MINIG_SF_UPDATE);
@@ -284,15 +307,12 @@ int boggle_server_event(entity minigame, string event, ...)
 	{
 		case "start":
 		{
-			minigame.boggle_words = LL_NEW();
 			boggle_setup_pieces(minigame);
 			minigame.minigame_flags = BOGGLE_TURN_WAIT;
 			return true;
 		}
 		case "end":
 		{
-			LL_CLEAR(minigame.boggle_words, { strfree(it.netname); });
-
 			entity e = NULL;
 			while( (e = findentity(e, owner, minigame)) )
 			if(e.classname == "minigame_board_piece")
@@ -303,12 +323,26 @@ int boggle_server_event(entity minigame, string event, ...)
 			}
 			return false;
 		}
+		case "part":
+		{
+			entity player = ...(0,entity);
+			if(player.minigame_players)
+				LL_CLEAR(player.minigame_players.boggle_words, { strfree(it.netname); });
+			return false;
+		}
 		case "join":
 		{
 			int pl_num = minigame_count_players(minigame);
 
 			// Don't allow more than 1 player
-			if(pl_num >= 1) { return BOGGLE_SPECTATOR_TEAM; }
+			if(pl_num >= BOGGLE_TEAMS) { return BOGGLE_SPECTATOR_TEAM; }
+
+			entity player_pointer = ...(1,entity);
+			player_pointer.boggle_words = LL_NEW();
+
+			// Get the right team
+			if(minigame.minigame_players)
+				return minigame_next_team(minigame.minigame_players.team, BOGGLE_TEAMS);
 
 			// Team 1 by default
 			return 1;
@@ -406,17 +440,24 @@ void boggle_hud_board(vector pos, vector mySize)
 	if ( active_minigame.minigame_flags & BOGGLE_TURN_DRAW )
 	{
 		vector winfs = hud_fontsize*2;
-
+		string player_name = "";
+		FOREACH_ENTITY_ENT_ORDERED(owner, active_minigame,
+		{
+			if ( it.classname == "minigame_player" && 
+					it.team == (active_minigame.minigame_flags & BOGGLE_TURN_TEAM) )
+				player_name = entcs_GetName(it.minigame_playerslot-1);
+		});
+		
 		vector win_pos = pos+eY*(mySize_y-winfs_y)/2;
 		vector win_sz;
 		win_sz = minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			"Time's up!",
+			sprintf("%s^7 won the game!",player_name), 
 			winfs, 0, DRAWFLAG_NORMAL, 0.5);
-
+		
 		drawfill(win_pos-eY*hud_fontsize_y,win_sz+2*eY*hud_fontsize_y,'1 1 1',0.5,DRAWFLAG_ADDITIVE);
-
+		
 		minigame_drawcolorcodedstring_wrapped(mySize_x,win_pos,
-			"Time's up!",
+			sprintf("%s^7 won the game!",player_name), 
 			winfs, panel_fg_alpha, DRAWFLAG_NORMAL, 0.5);
 	}
 }
@@ -434,7 +475,7 @@ void boggle_hud_status(vector pos, vector mySize)
 	mySize_y -= ts_y;
 
 	vector player_fontsize = hud_fontsize * 1.75;
-	ts_y = ( mySize_y - 2*player_fontsize_y ) / 2;
+	ts.y = player_fontsize.y + (mySize.y - BOGGLE_TEAMS * player_fontsize.y) / BOGGLE_TEAMS;
 	ts_x = mySize_x;
 	vector mypos;
 	//vector tile_size = '48 48 0';
@@ -454,23 +495,23 @@ void boggle_hud_status(vector pos, vector mySize)
 		if ( e.classname == "minigame_player" && e.team != BOGGLE_SPECTATOR_TEAM )
 		{
 			mypos = pos;
+			mypos_y  += (e.team-1) * (player_fontsize_y + ts_y);
 			minigame_drawcolorcodedstring_trunc(mySize_x,mypos,
 				entcs_GetName(e.minigame_playerslot-1),
 				player_fontsize, panel_fg_alpha, DRAWFLAG_NORMAL);
 
-			mypos_y += player_fontsize_y;
 			//drawpic( mypos,
 			//		minigame_texture("boggle/piece"),
 			//		tile_size, '1 0 0', panel_fg_alpha, DRAWFLAG_NORMAL );
 
 			//mypos_x += tile_size_x;
 
-			drawstring(mypos,sprintf("Words: %d", e.boggle_wordscore),'28 28 0',
+			drawstring(mypos+eY*player_fontsize_y,sprintf("Words: %d", e.boggle_wordscore),'28 28 0',
 					   '0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			mypos_y += player_fontsize_y;
 
-			drawstring(mypos,sprintf("Score: %d", e.boggle_score),'28 28 0',
+			drawstring(mypos+eY*player_fontsize_y,sprintf("Score: %d", e.boggle_score),'28 28 0',
 					   '0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 
 			if(active_minigame.minigame_flags & BOGGLE_TURN_MOVE)
@@ -478,7 +519,7 @@ void boggle_hud_status(vector pos, vector mySize)
 			{
 				mypos_y += player_fontsize_y;
 
-				drawstring(mypos,sprintf("Time left: %s", count_seconds(STAT(BOGGLE_TIMER))),'28 28 0',
+				drawstring(mypos+eY*player_fontsize_y,sprintf("Time left: %s", count_seconds(STAT(BOGGLE_TIMER))),'28 28 0',
 						   '0.7 0.84 1', panel_fg_alpha, DRAWFLAG_NORMAL);
 			}
 		}
