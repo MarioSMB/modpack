@@ -337,8 +337,8 @@ void W_ZShockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	W_SetupShot_ProjectileSize(
 		actor,
 		weaponentity,
-		'0 -3 0',
-		'0 3 0',
+		'-1 -1 -1',
+		'80 56 7',
 		false,
 		2,
 		SND_ELECTRO_FIRE,
@@ -379,12 +379,14 @@ void W_ZShockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	setorigin(proj, w_shotorg);
 	setmodel(proj, MDL_PROJECTILE_ZSHOCKWAVE);
 
+	Send_Effect(EFFECT_ARC_MUZZLEFLASH, proj.origin, '0 0 0', 1);
+
 	// if (IS_CSQC)
 	set_movetype(proj, MOVETYPE_FLY);
 	W_SetupProjVelocity_PRI(proj, zsaber);
 	proj.angles = vectoangles(proj.velocity);
 	settouch(proj, W_ZShockwave_TouchExplode);
-	setsize(proj, '0 0 0', '0 0 0');
+	setsize(proj, '-1 -1 -1', '80 56 7');
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
 	IL_PUSH(g_bot_dodge, proj);
@@ -494,7 +496,8 @@ MUTATOR_HOOKFUNCTION(cl_zsaber, Ent_Projectile)
 	if(proj.cnt == PROJECTILE_ZSHOCKWAVE)
 	{
 		setmodel(proj, MDL_PROJECTILE_ZSHOCKWAVE);
-		proj.traileffect = EFFECT_TR_WIZSPIKE.m_id;
+		proj.traileffect = EFFECT_TR_VORESPIKE.m_id;
+		proj.alpha = 1;
 		return true;
 	}
 }
@@ -508,8 +511,31 @@ MUTATOR_HOOKFUNCTION(cl_zsaber, EditProjectile)
 		proj.colormod = '1 1 1';
 		proj.scale = 0.5;
 		loopsound(proj, CH_SHOTS_SINGLE, SND_ELECTRO_FIRE, VOL_BASE, ATTEN_NORM);
-		proj.mins = '-16 -16 -16';
-		proj.maxs = '16 16 16';
+		proj.mins = '-1 -1 -1';
+		proj.maxs = '80 56 7';
+	}
+}
+
+METHOD(ZSaber, wr_impacteffect, void(entity thiswep, entity actor))
+{
+    vector org2;
+    org2 = w_org + w_backoff * 6;
+	if(w_deathtype & HITTYPE_BOUNCE)
+	{
+		// this is sent as "primary (w_deathtype & HITTYPE_BOUNCE)" to distinguish it from (w_deathtype & HITTYPE_SECONDARY) bounced balls
+		//pointparticles(EFFECT_HAGAR_EXPLODE, org2, '0 0 0', 1);
+		pointparticles(EFFECT_SMOKE_LARGE, org2, '0 0 0', 1);
+		pointparticles(EFFECT_ARC_LIGHTNING, org2, '0 0 0', 1);
+		if(!w_issilent)
+			sound(actor, CH_SHOTS, SND_HAGEXP1, VOL_BASE, ATTEN_NORM);
+	}
+	else
+	{
+		//pointparticles(EFFECT_GRENADE_EXPLODE, org2, '0 0 0', 1);
+		pointparticles(EFFECT_SMOKE_LARGE, org2, '0 0 0', 1);
+		pointparticles(EFFECT_ARC_LIGHTNING, org2, '0 0 0', 1);
+		if(!w_issilent)
+			sound(actor, CH_SHOTS, SND_GRENADE_IMPACT, VOL_BASE, ATTEN_NORM);
 	}
 }
 #endif //CSQC
