@@ -1,13 +1,14 @@
 #include "sv_mmm.qh"
 
-AUTOCVAR(g_mmm_civilian_count, float, 0.625, "number of players who will become civilians, set between 0 and 0.9 to use a multiplier of the current players, or 1 and above to specify an exact number of players");
+AUTOCVAR(g_mmm_murderer_count, float, 0.25, "number of players who will become murderers, set between 0 and 0.9 to use a multiplier of the current players, or 1 and above to specify an exact number of players");
+AUTOCVAR(g_mmm_detective_count, float, 0.125, "number of players who will become detectives, set between 0 and 0.9 to use a multiplier of the current players, or 1 and above, to specify an exact number of players. 0 = no detectives");
 AUTOCVAR(g_mmm_round_timelimit, float, 180, "round time limit in seconds");
 AUTOCVAR(g_mmm_warmup, float, 10, "how long the players will have time to run around the map before the round starts");
 AUTOCVAR(g_mmm_punish_teamkill, bool, false, "enable option to kill the player when they kill an ally");
 AUTOCVAR(g_mmm_reward_civilian, bool, true, "give a point to all civilian players if the round timelimit is reached, in addition to the points given for kills");
 AUTOCVAR(g_mmm_reward_detective, bool, true, "give a point to all detective players if investigated corpses");
 AUTOCVAR(g_mmm_max_karma_points, float, 1000, "limit of maximum number of karma points will have in the server"); //LegendGuard sets Karma points 21-02-2021
-AUTOCVAR(g_mmm_min_karma_points, float, 500, "limit where number of karma points can be reached when are being decreased");
+AUTOCVAR(g_mmm_min_karma_points, float, 550, "limit where number of karma points can be reached when are being decreased");
 AUTOCVAR(g_mmm_karma_bankick_tool, int, 1, "tool for strict rules when karma is low: '0' nothing does, '1' forces player to spec, '2' kicks player, '3' bans player"); //LegendGuard sets a ban tool for server admins 11-03-2021
 AUTOCVAR(g_mmm_karma_bantime, float, 1800, "number of seconds to ban someone with very low karma"); //karma ban seconds
 AUTOCVAR(g_mmm_karma_damageactive, bool, true, "enable karma damage rule. If a player's karma is low, they will not do as much damage as a player who has high or full karma"); //LegendGuard sets Karma damage setting if active 20-03-2021
@@ -241,101 +242,34 @@ void mmm_RoundStart()
 		if(IS_PLAYER(it) && !IS_DEAD(it))
 		{
 			++playercount;
-			it.mmm_status = MMM_STATUS_CIVILIAN;
 		}
 		else
 			it.mmm_status = 0; // this is mostly a safety check; if a client manages to somehow maintain a mmm status, clear it before the round starts!
 		it.mmm_validkills = 0;
 	});
 	
-	int civilian_count = bound(1, ((autocvar_g_mmm_civilian_count >= 1) ? autocvar_g_mmm_civilian_count : floor(playercount * autocvar_g_mmm_civilian_count)), playercount - 1); // 20%, but ensure at least 1 and less than total
-	int total_civilians = 0;
-	//int murderer_count = bound(1, ((autocvar_g_mmm_murderer_count >= 1) ? autocvar_g_mmm_murderer_count : floor(playercount * autocvar_g_mmm_murderer_count)), playercount - 1); // 20%, but ensure at least 1 and less than total
+	int murderer_count = ((autocvar_g_mmm_murderer_count >= 1) ? autocvar_g_mmm_murderer_count : max(floor(playercount * autocvar_g_mmm_murderer_count), 1)); // There must be at least 1 murderer
+	int detective_count = ((autocvar_g_mmm_detective_count >= 1 || autocvar_g_mmm_detective_count == 0) ? autocvar_g_mmm_detective_count : floor(playercount * autocvar_g_mmm_detective_count)); // It's fine if there are no detectives
+	
 	int total_murderers = 0;
-	//int detective_count = bound(1, ((autocvar_g_mmm_detective_count >= 1) ? autocvar_g_mmm_detective_count : floor(playercount * autocvar_g_mmm_detective_count)), playercount - 1); // 20%, but ensure at least 1 and less than total
 	int total_detectives = 0;
+	int total_civilians = 0;
 
-	//civilians TOTAL
 	FOREACH_CLIENT_RANDOM(IS_PLAYER(it) && !IS_DEAD(it),
 	{
-		if(total_civilians >= civilian_count)
-			break;
-		//LegendGuard fixes the round start again 22-03-2021
-		total_civilians++;
-		if (total_civilians <= 1)
-		{
-			if (total_murderers <= 1)
-			{
-				total_murderers++;
-				it.mmm_status = MMM_STATUS_MURDERER;
-			}
-		}
-		else if (total_civilians == 2)
-		{
-			if (total_detectives >= 1)
-				break;
-			else
-			{
-				total_detectives++;
-				it.mmm_status = MMM_STATUS_DETECTIVE;
-			}
-		}
-		else if (total_civilians == 5)
-		{
-			if (total_murderers <= 2)
-				break;
-			else
-			{
-				total_murderers++;
-				it.mmm_status = MMM_STATUS_MURDERER;
-			}
-		}
-		else if (total_civilians == 6)
-		{
-			if (total_detectives >= 2)
-				break;
-			else
-			{
-				total_detectives++;
-				it.mmm_status = MMM_STATUS_DETECTIVE;
-			}
-		}
-		else if (total_civilians == 7)
-		{
-			if (total_detectives >= 3)
-				break;
-			else if (total_murderers == 3)
-			{
-				total_murderers++;
-				it.mmm_status = MMM_STATUS_MURDERER;
-			}
-			else
-			{
-				total_detectives++;
-				it.mmm_status = MMM_STATUS_DETECTIVE;
-			}
-		}
-		else if (total_civilians >= 8)
-		{
-			if (total_detectives >= 4)
-				break;
-			else if (total_murderers == 4)
-			{
-				total_murderers++;
-				it.mmm_status = MMM_STATUS_MURDERER;
-			}
-			else
-			{
-				total_detectives++;
-				it.mmm_status = MMM_STATUS_DETECTIVE;
-			}
-		}
-		else
-		{
-			total_murderers++; 
+		if (total_murderers < murderer_count) {
 			it.mmm_status = MMM_STATUS_MURDERER;
+			total_murderers++;
+		} else if (total_detectives < detective_count) {
+			it.mmm_status = MMM_STATUS_DETECTIVE;
+			total_detectives++;
+		} else {
+			it.mmm_status = MMM_STATUS_CIVILIAN;
+			total_civilians++;
 		}
 	});
+	
+	//LOG_INFOF("Total players: %d || Murderers: %d, Detectives: %d, Civilians: %d", playercount, total_murderers, total_detectives, total_civilians);
 
 	FOREACH_CLIENT(IS_PLAYER(it) && !IS_DEAD(it),
 	{
@@ -485,6 +419,23 @@ void ReduceKarmaPointsandFrags(entity frag_attacker, entity frag_target, float f
 // Hook Functions
 // ==============
 
+MUTATOR_HOOKFUNCTION(mmm, FragCenterMessage)
+{
+	entity attacker = M_ARGV(0, entity);
+	entity targ = M_ARGV(1, entity);
+	
+	// Conditions that count as team kill in MMM
+	if((attacker.mmm_status == targ.mmm_status) ||
+	   (attacker.mmm_status == MMM_STATUS_DETECTIVE && targ.mmm_status == MMM_STATUS_CIVILIAN) ||
+	   (attacker.mmm_status == MMM_STATUS_CIVILIAN  && targ.mmm_status == MMM_STATUS_DETECTIVE)
+	)
+	{
+		Send_Notification(NOTIF_ONE, attacker, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAG, targ.netname);
+		Send_Notification(NOTIF_ONE, targ, MSG_CENTER, CENTER_DEATH_TEAMKILL_FRAGGED, "???");
+		return true;
+	}
+}
+
 MUTATOR_HOOKFUNCTION(mmm, ClientObituary)
 {
 	// LegendGuard's IDEA: To adjust the grade of severity of karma, 
@@ -494,6 +445,7 @@ MUTATOR_HOOKFUNCTION(mmm, ClientObituary)
 	// in mmm, announcing a frag would tell everyone who the murderer is
 	entity frag_attacker = M_ARGV(1, entity);
 	entity frag_target = M_ARGV(2, entity);
+	M_ARGV(5, bool) = true; // anonymous attacker
 	
 	if(IS_PLAYER(frag_attacker) && frag_attacker != frag_target)
 	{
@@ -508,6 +460,7 @@ MUTATOR_HOOKFUNCTION(mmm, ClientObituary)
 		{
 			//PrintToChatAll("^1DEBUG^7: A ^2PLAYER^7 has fragged a ^2PLAYER OF HIS OWN TEAM^7, TOO BAD!");
 			ReduceKarmaPointsandFrags(frag_attacker, frag_target, frag_deathtype, wep_ent);
+			frag_attacker.killsound -= 1; frag_attacker.typehitsound += 1; // Teamkill sound
 			switch (frag_attacker.mmm_status)
 			{
 				case MMM_STATUS_CIVILIAN: frag_target.killerrole = "\n^3Killer role: ^2Civilian"; return;
@@ -520,10 +473,11 @@ MUTATOR_HOOKFUNCTION(mmm, ClientObituary)
 
 		if(frag_attacker.mmm_status == MMM_STATUS_DETECTIVE)
 		{
-			if (frag_target.mmm_status == MMM_STATUS_CIVILIAN || frag_target.mmm_status == MMM_STATUS_DETECTIVE)
+			if (frag_target.mmm_status == MMM_STATUS_CIVILIAN)
 			{	
 				//PrintToChatAll("^1DEBUG^7: A ^4Detective^7 fragged an ^2Civilian^7/^4Detective^7, TOO BAD!");
 				ReduceKarmaPointsandFrags(frag_attacker, frag_target, frag_deathtype, wep_ent);
+				frag_attacker.killsound -= 1; frag_attacker.typehitsound += 1; // Teamkill sound
 				frag_target.killerrole = "\n^3Killer role: ^4Detective";
 				//PrintToChatAll(sprintf("frag_attacker.karmapoints: ^1%f", frag_attacker.karmapoints));
 			}
@@ -540,6 +494,7 @@ MUTATOR_HOOKFUNCTION(mmm, ClientObituary)
 			{
 				//PrintToChatAll("^1DEBUG^7: An ^2Civilian^7 fragged a ^4Detective^7, TOO BAD!");
 				ReduceKarmaPointsandFrags(frag_attacker, frag_target, frag_deathtype, wep_ent);
+				frag_attacker.killsound -= 1; frag_attacker.typehitsound += 1; // Teamkill sound
 				frag_target.killerrole = "\n^3Killer role: ^2Civilian";
 			}
 			else
@@ -571,8 +526,6 @@ MUTATOR_HOOKFUNCTION(mmm, ClientObituary)
 		float frag_deathtype = M_ARGV(3, float);
 		checkWeaponDeathtype(frag_target, frag_deathtype);
 	}
-
-	M_ARGV(5, bool) = true; // anonymous attacker
 }
 
 //karma weapon damage, halve the damage attack when player has low karma 20-03-2021
