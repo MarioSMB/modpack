@@ -337,8 +337,8 @@ void W_ZShockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	W_SetupShot_ProjectileSize(
 		actor,
 		weaponentity,
-		'-1 -1 -1',
-		'80 56 7',
+		'0 0 0',
+		'75 20 0',
 		false,
 		2,
 		SND_ELECTRO_FIRE,
@@ -386,7 +386,7 @@ void W_ZShockwave_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 	W_SetupProjVelocity_PRI(proj, zsaber);
 	proj.angles = vectoangles(proj.velocity);
 	settouch(proj, W_ZShockwave_TouchExplode);
-	setsize(proj, '-1 -1 -1', '80 56 7');
+	setsize(proj, '0 0 0', '75 20 0');
 	proj.flags = FL_PROJECTILE;
 	IL_PUSH(g_projectiles, proj);
 	IL_PUSH(g_bot_dodge, proj);
@@ -511,8 +511,8 @@ MUTATOR_HOOKFUNCTION(cl_zsaber, EditProjectile)
 		proj.colormod = '1 1 1';
 		proj.scale = 0.5;
 		loopsound(proj, CH_SHOTS_SINGLE, SND_ELECTRO_FIRE, VOL_BASE, ATTEN_NORM);
-		proj.mins = '-1 -1 -1';
-		proj.maxs = '80 56 7';
+		proj.mins = '0 0 0';
+		proj.maxs = '75 20 0';
 	}
 }
 
