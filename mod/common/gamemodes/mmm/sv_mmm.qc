@@ -349,9 +349,9 @@ bool mmm_CheckPlayers()
 
 bool mmm_isEliminated(entity e)
 {
-	if(e.caplayer == 1 && (IS_DEAD(e) || e.frags == FRAGS_PLAYER_OUT_OF_GAME))
+	if(INGAME_JOINED(e) && (IS_DEAD(e) || e.frags == FRAGS_PLAYER_OUT_OF_GAME))
 		return true;
-	if(e.caplayer == 0.5)
+	if(INGAME_JOINING(e))
 		return true;
 	return false;
 }
@@ -648,7 +648,7 @@ MUTATOR_HOOKFUNCTION(mmm, PlayerPreThink)
 		});
 	}
 
-	if(IS_PLAYER(player) || player.caplayer)
+	if(IS_PLAYER(player) || INGAME(player))
 	{
 		if (player.karmaspectated != true)
 		{
@@ -696,7 +696,7 @@ MUTATOR_HOOKFUNCTION(mmm, PlayerSpawn)
 
 	player.mmm_status = 0;
 	player.mmm_validkills = 0;
-	player.caplayer = 1;
+	INGAME_STATUS_SET(player, INGAME_STATUS_JOINED);
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 }
@@ -708,7 +708,7 @@ MUTATOR_HOOKFUNCTION(mmm, ForbidSpawn)
 	// spectators / observers that weren't playing can join; they are
 	// immediately forced to observe in the PutClientInServer hook
 	// this way they are put in a team and can play in the next round
-	if (!allowed_to_spawn && player.caplayer)
+	if (!allowed_to_spawn && INGAME(player))
 		return true;
 	return false;
 }
@@ -720,9 +720,9 @@ MUTATOR_HOOKFUNCTION(mmm, PutClientInServer)
 	if (!allowed_to_spawn && IS_PLAYER(player)) // this is true even when player is trying to join
 	{
 		TRANSMUTE(Observer, player);
-		if (CS(player).jointime != time && !player.caplayer) // not when connecting
+		if (CS(player).jointime != time && !INGAME(player)) // not when connecting
 		{
-			player.caplayer = 0.5;
+			INGAME_STATUS_SET(player, INGAME_STATUS_JOINING);
 			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_JOIN_LATE);
 		}
 	}
@@ -734,12 +734,12 @@ MUTATOR_HOOKFUNCTION(mmm, reset_map_players)
 		CS(it).killcount = 0;
 		it.mmm_status = 0;
 		mmm_FakeTimeLimit(it, -1); // restore original timelimit
-		if (!it.caplayer && IS_BOT_CLIENT(it))
-			it.caplayer = 1;
-		if (it.caplayer)
+		if (!INGAME(it) && IS_BOT_CLIENT(it))
+			INGAME_STATUS_SET(it, INGAME_STATUS_JOINED);
+		if (INGAME(it))
 		{
 			TRANSMUTE(Player, it);
-			it.caplayer = 1;
+			INGAME_STATUS_SET(it, INGAME_STATUS_JOINED);
 			it.respawn_flags = RESPAWN_SILENT; //CSQC print output respawn lib.qh error fix
 			PutClientInServer(it);
 		}
@@ -848,12 +848,12 @@ MUTATOR_HOOKFUNCTION(mmm, MakePlayerObserver)
 	if (player.karmaspectated == true)
 		player.karmaspectated = false;
 	if (player.killindicator_teamchange == -2) // player wants to spectate
-		player.caplayer = 0;
-	if (player.caplayer)
+		INGAME_STATUS_CLEAR(player);
+	if (INGAME(player))
 		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
-	if (!player.caplayer)
+	if (!INGAME(player))
 	{
 		player.mmm_validkills = 0;
 		player.mmm_status = 0;
@@ -901,7 +901,7 @@ MUTATOR_HOOKFUNCTION(mmm, ReadLevelCvars)
 MUTATOR_HOOKFUNCTION(mmm, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 {
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
-		if (IS_PLAYER(it) || it.caplayer == 1)
+		if (IS_PLAYER(it) || INGAME_JOINED(it))
 			++M_ARGV(0, int);
 		++M_ARGV(1, int);
 	});
@@ -912,7 +912,7 @@ MUTATOR_HOOKFUNCTION(mmm, ClientCommand_Spectate)
 {
 	entity player = M_ARGV(0, entity);
 
-	if (player.caplayer)
+	if (INGAME(player))
 	{
 		// they're going to spec, we can do other checks
 		if (autocvar_sv_spectate && (IS_SPEC(player) || IS_OBSERVER(player)))
@@ -923,27 +923,16 @@ MUTATOR_HOOKFUNCTION(mmm, ClientCommand_Spectate)
 	return MUT_SPECCMD_CONTINUE;
 }
 
-MUTATOR_HOOKFUNCTION(mmm, GetPlayerStatus)
-{
-	entity player = M_ARGV(0, entity);
-
-	return player.caplayer == 1;
-}
-
 MUTATOR_HOOKFUNCTION(mmm, BotShouldAttack)
 {
 	entity bot = M_ARGV(0, entity);
 	entity targ = M_ARGV(1, entity);
 
 	if(targ.mmm_status == bot.mmm_status)
-	{
 		return true;
-	}
 	
 	// LegendGuard fixed the problem of Detectives and Civilians attacking each other 26-03-2021
 	if(bot.mmm_status == MMM_STATUS_DETECTIVE)
-	{
 		if(targ.mmm_status == MMM_STATUS_CIVILIAN)
 			return true;
-	}
 }
