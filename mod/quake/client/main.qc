@@ -80,7 +80,8 @@ STATIC_INIT(fix_commands)
 	registercommand("+showaccuracy");
 	registercommand("-showaccuracy");
 
-	cvar_settemp("cl_useenginerefdef", "1");
+	// TODO: why would this be needed? mismatch in the implementation?!
+	//cvar_settemp("cl_useenginerefdef", "1");
 }
 
 bool CSQC_ConsoleCommand(string command)
