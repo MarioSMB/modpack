@@ -184,9 +184,9 @@ bool Surv_CheckPlayers()
 
 bool surv_isEliminated(entity e)
 {
-	if(e.caplayer == 1 && (IS_DEAD(e) || e.frags == FRAGS_PLAYER_OUT_OF_GAME))
+	if(INGAME_JOINED(e) && (IS_DEAD(e) || e.frags == FRAGS_PLAYER_OUT_OF_GAME))
 		return true;
-	if(e.caplayer == 0.5)
+	if(INGAME_JOINING(e))
 		return true;
 	return false;
 }
@@ -231,7 +231,7 @@ MUTATOR_HOOKFUNCTION(sv, PlayerPreThink)
 {
 	entity player = M_ARGV(0, entity);
 
-	if(IS_PLAYER(player) || player.caplayer)
+	if(IS_PLAYER(player) || INGAME(player))
 	{
 		// update the scoreboard colour display to out the real killer at the end of the round
 		// running this every frame to avoid cheats
@@ -248,7 +248,7 @@ MUTATOR_HOOKFUNCTION(sv, PlayerSpawn)
 
 	player.survival_status = 0;
 	player.survival_validkills = 0;
-	player.caplayer = 1;
+	INGAME_STATUS_SET(player, INGAME_STATUS_JOINED);
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
 }
@@ -260,7 +260,7 @@ MUTATOR_HOOKFUNCTION(sv, ForbidSpawn)
 	// spectators / observers that weren't playing can join; they are
 	// immediately forced to observe in the PutClientInServer hook
 	// this way they are put in a team and can play in the next round
-	if (!allowed_to_spawn && player.caplayer)
+	if (!allowed_to_spawn && INGAME(player))
 		return true;
 	return false;
 }
@@ -272,9 +272,9 @@ MUTATOR_HOOKFUNCTION(sv, PutClientInServer)
 	if (!allowed_to_spawn && IS_PLAYER(player)) // this is true even when player is trying to join
 	{
 		TRANSMUTE(Observer, player);
-		if (CS(player).jointime != time && !player.caplayer) // not when connecting
+		if (CS(player).jointime != time && !INGAME(player)) // not when connecting
 		{
-			player.caplayer = 0.5;
+			INGAME_STATUS_SET(player, INGAME_STATUS_JOINING);
 			Send_Notification(NOTIF_ONE_ONLY, player, MSG_INFO, INFO_CA_JOIN_LATE);
 		}
 	}
@@ -286,12 +286,12 @@ MUTATOR_HOOKFUNCTION(sv, reset_map_players)
 		CS(it).killcount = 0;
 		it.survival_status = 0;
 		surv_FakeTimeLimit(it, -1); // restore original timelimit
-		if (!it.caplayer && IS_BOT_CLIENT(it))
-			it.caplayer = 1;
-		if (it.caplayer)
+		if (!INGAME(it) && IS_BOT_CLIENT(it))
+			INGAME_STATUS_SET(it, INGAME_STATUS_JOINED);
+		if (INGAME(it))
 		{
 			TRANSMUTE(Player, it);
-			it.caplayer = 1;
+			INGAME_STATUS_SET(it, INGAME_STATUS_JOINED);
 			PutClientInServer(it);
 		}
 	});
@@ -370,12 +370,12 @@ MUTATOR_HOOKFUNCTION(sv, MakePlayerObserver)
 	if (IS_PLAYER(player) && !IS_DEAD(player))
 		surv_LastPlayerForTeam_Notify(player);
 	if (player.killindicator_teamchange == -2) // player wants to spectate
-		player.caplayer = 0;
-	if (player.caplayer)
+		INGAME_STATUS_CLEAR(player);
+	if (INGAME(player))
 		player.frags = FRAGS_PLAYER_OUT_OF_GAME;
 	if (!warmup_stage)
 		eliminatedPlayers.SendFlags |= 1;
-	if (!player.caplayer)
+	if (!INGAME(player))
 	{
 		player.survival_validkills = 0;
 		player.survival_status = 0;
@@ -416,7 +416,7 @@ MUTATOR_HOOKFUNCTION(sv, CalculateRespawnTime)
 MUTATOR_HOOKFUNCTION(sv, Bot_FixCount, CBC_ORDER_EXCLUSIVE)
 {
 	FOREACH_CLIENT(IS_REAL_CLIENT(it), {
-		if (IS_PLAYER(it) || it.caplayer == 1)
+		if (IS_PLAYER(it) || INGAME_JOINED(it))
 			++M_ARGV(0, int);
 		++M_ARGV(1, int);
 	});
@@ -427,7 +427,7 @@ MUTATOR_HOOKFUNCTION(sv, ClientCommand_Spectate)
 {
 	entity player = M_ARGV(0, entity);
 
-	if (player.caplayer)
+	if (INGAME(player))
 	{
 		// they're going to spec, we can do other checks
 		if (autocvar_sv_spectate && (IS_SPEC(player) || IS_OBSERVER(player)))
@@ -436,13 +436,6 @@ MUTATOR_HOOKFUNCTION(sv, ClientCommand_Spectate)
 	}
 
 	return MUT_SPECCMD_CONTINUE;
-}
-
-MUTATOR_HOOKFUNCTION(sv, GetPlayerStatus)
-{
-	entity player = M_ARGV(0, entity);
-
-	return player.caplayer == 1;
 }
 
 MUTATOR_HOOKFUNCTION(sv, BotShouldAttack)

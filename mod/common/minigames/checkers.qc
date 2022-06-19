@@ -167,16 +167,15 @@ string checkers_tryallmoves(entity minigame, entity piece, bool force_jump)
 
 bool checkers_nomoves(entity minigame, int pteam)
 {
-	int safe = 0;
 	entity e = NULL;
 	while ( ( e = findentity(e,owner,minigame) ) )
 		if ( e.classname == "minigame_board_piece" )
 		{
 			if(e.team != pteam) continue;
 			if(checkers_tryallmoves(minigame, e, false) != "")
-				safe += 1;
+				return true; // safe
 		}
-	return (safe <= 0);
+	return false;
 }
 
 bool checkers_move_piece(entity minigame, entity piece, string pos, int promote)

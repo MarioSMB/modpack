@@ -215,7 +215,7 @@ MUTATOR_HOOKFUNCTION(arena, reset_map_players)
 			it.player_blocked = 1;
 		}
 		else
-			PutObserverInServer(it, true);
+			PutObserverInServer(it, true, true);
 	});
 	return true;
 }
