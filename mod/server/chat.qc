@@ -5,6 +5,7 @@ REGISTER_MUTATOR(mod_chat, true);
 
 AUTOCVAR(chat_replacewords, bool, false, "Allow replacing words in chat via chat_replace_* cvars");
 AUTOCVAR(chat_water, bool, false, "Replace chat with a funny message while underwater");
+AUTOCVAR(g_chat_allowed, bool, true, "Allow players to communicate via in-game chat");
 
 .entity lasthit;
 
@@ -51,6 +52,14 @@ MUTATOR_HOOKFUNCTION(mod_chat, PreFormatMessage)
 
 	if(!IS_CLIENT(player) || themsg == "")
 		return; // don't modify map entity strings or other formatted stuff
+
+	if(!autocvar_g_chat_allowed)
+	{
+		if(IS_REAL_CLIENT(player))
+			PrintToChat(player, "^1NOTE: ^7Chat is currently disabled on this server");
+		M_ARGV(1, string) = "";
+		return;
+	}
 
 	if(player.waterlevel >= WATERLEVEL_SUBMERGED && autocvar_chat_water)
 	{
