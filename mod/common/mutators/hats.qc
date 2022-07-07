@@ -197,7 +197,7 @@ void hats_SpawnHat(entity this)
 	CSQCMODEL_AUTOINIT(this.hatentity);
 }
 
-MUTATOR_HOOKFUNCTION(hats, PutClientInServer)
+MUTATOR_HOOKFUNCTION(hats, PlayerSpawn)
 {
 	entity player = M_ARGV(0, entity);
 
