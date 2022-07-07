@@ -3,8 +3,6 @@ Quake Mod
 
 QuakeC source for the SMB Quake 1 mod
 
-[![Build Status](https://travis-ci.org/MarioSMB/modpack.svg?branch=quake)](https://travis-ci.org/MarioSMB/modpack)
-
 
 Requirements
 ============
