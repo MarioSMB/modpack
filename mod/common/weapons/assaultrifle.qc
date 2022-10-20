@@ -151,9 +151,9 @@ void W_AssaultRifle_Attack_Burst(Weapon thiswep, entity actor, .entity weaponent
 METHOD(AssaultRifle, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     if(vdist(actor.origin - actor.enemy.origin, <, 3000 - bound(0, skill, 10) * 200))
-        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false);
+        PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false, true);
     else
-        PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false);
+        PHYS_INPUT_BUTTON_ATCK2(actor) = bot_aim(actor, weaponentity, 1000000, 0, 0.001, false, true);
 }
 METHOD(AssaultRifle, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
 {
