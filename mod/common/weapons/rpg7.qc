@@ -144,7 +144,7 @@ void W_RPG7_Attack(Weapon thiswep, entity actor, .entity weaponentity)
 METHOD(RPG7, wr_aim, void(entity thiswep, entity actor, .entity weaponentity))
 {
     // aim and decide to fire if appropriate
-    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR(rpg7, speed), 0, WEP_CVAR(rpg7, lifetime), false);
+    PHYS_INPUT_BUTTON_ATCK(actor) = bot_aim(actor, weaponentity, WEP_CVAR(rpg7, speed), 0, WEP_CVAR(rpg7, lifetime), false, true);
 }
 
 METHOD(RPG7, wr_think, void(entity thiswep, entity actor, .entity weaponentity, int fire))
