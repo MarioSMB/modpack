@@ -23,6 +23,7 @@ vector OFFSET_CURSOR = '0 0 0';
 
 int autocvar_chase_active;
 bool autocvar_chase_front;
+bool autocvar_cl_eventchase_death;
 
 float spectatee_status; // NOTE: spectating not implemented, compiler error check!
 
