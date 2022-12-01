@@ -1,0 +1,36 @@
+#pragma once
+
+#ifdef SVQC
+
+const int TSPEED_LINEAR = 0;
+
+float TemporaryDB;
+
+float target_spawn_initialized;
+.void(entity this) target_spawn_spawnfunc;
+float target_spawn_spawnfunc_field;
+
+void initialize_field_db()
+{
+	if(!target_spawn_initialized)
+	{
+		int n = numentityfields();
+		for(int i = 0; i < n; ++i)
+		{
+			string fn = entityfieldname(i);
+			int ft = entityfieldtype(i);
+			vector next = i * '1 0 0' + ft * '0 1 0' + '0 0 1';
+			vector prev = stov(db_get(TemporaryDB, strcat("/target_spawn/field/", fn)));
+			if(prev.y == 0)
+			{
+				db_put(TemporaryDB, strcat("/target_spawn/field/", fn), vtos(next));
+				if(fn == "target_spawn_spawnfunc")
+					target_spawn_spawnfunc_field = i;
+			}
+		}
+
+		target_spawn_initialized = 1;
+	}
+}
+
+#endif

@@ -1,0 +1,24 @@
+#pragma once
+
+#define setmodel(e, m) _setmodel((e), (m).model_str())
+
+CLASS(Model, Object)
+    ATTRIB(Model, m_id, int, 0);
+    ATTRIB(Model, model_str, string());
+    CONSTRUCTOR(Model, string() thepath)
+    {
+        CONSTRUCT(Model);
+        this.model_str = thepath;
+    }
+    METHOD(Model, model_precache, void(Model this))
+    {
+        TC(Model, this);
+        string s = this.model_str();
+        if (s != "" && s != "null" && !fexists(s)) {
+            LOG_WARNF("Missing model: \"%s\"", s);
+            return;
+        }
+        profile(sprintf("precache_model(\"%s\")", s));
+        precache_model(s);
+    }
+ENDCLASS(Model)

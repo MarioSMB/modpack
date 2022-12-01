@@ -25,6 +25,7 @@
 	#include "mutators/all.inc"
 #endif
 
-#ifdef QUAKE_ONE
-	#include "../quake/server/progs.inc"
+#define JUMPSDONEWELL
+#ifdef JUMPSDONEWELL
+	#include "../jumpsdonewell/server/progs.inc"
 #endif

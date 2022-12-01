@@ -32,7 +32,7 @@ relpath() {
 }
 
 export BUILD_MOD="$(relpath xonotic/qcsrc $PWD)"
-export XONOTIC=1
+export XONOTIC=0
 make -C ${base}
 
 tput bold; tput setaf 2; echo "Compiled successfully!"; tput sgr0

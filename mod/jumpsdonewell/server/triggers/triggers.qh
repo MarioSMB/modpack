@@ -1,0 +1,6 @@
+#pragma once
+
+#ifdef SVQC
+const int SPAWNFLAG_NOMESSAGE = BIT(0);
+const int SPAWNFLAG_NOTOUCH = BIT(0);
+#endif

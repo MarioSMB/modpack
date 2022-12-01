@@ -1,0 +1,18 @@
+#pragma once
+
+.float invuln_time;
+.bool takes_damage;
+
+.bool attack_released;
+.float attack_fired;
+
+.void(entity this) die;
+.void(entity this) hurt;
+
+void damage(entity attacker, entity victim, float dmg);
+
+void player_attack(entity this);
+
+void player_spin_attack(entity this);
+
+void player_weapons(entity this);

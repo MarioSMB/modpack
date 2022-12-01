@@ -1,0 +1,18 @@
+#pragma once
+
+void reset_centerprint_messages();
+
+bool autocvar_hud_panel_centerprint = true;
+float autocvar_hud_panel_centerprint_align = 0.5;
+float autocvar_hud_panel_centerprint_fade_in = 0.2;
+float autocvar_hud_panel_centerprint_fade_out = 0.5;
+float autocvar_hud_panel_centerprint_fade_subsequent = 1;
+float autocvar_hud_panel_centerprint_fade_subsequent_passone = 3;
+float autocvar_hud_panel_centerprint_fade_subsequent_passone_minalpha = 0.5;
+float autocvar_hud_panel_centerprint_fade_subsequent_passtwo = 10;
+float autocvar_hud_panel_centerprint_fade_subsequent_passtwo_minalpha = 0.5;
+float autocvar_hud_panel_centerprint_fade_subsequent_minfontsize = 0.75;
+float autocvar_hud_panel_centerprint_fade_minfontsize = 0;
+bool autocvar_hud_panel_centerprint_flip = false;
+float autocvar_hud_panel_centerprint_fontscale = 1;
+float autocvar_hud_panel_centerprint_time = 3;

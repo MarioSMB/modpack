@@ -1,0 +1,66 @@
+#pragma once
+
+REGISTER_NET_TEMP(TE_CSQC_TELEFADE)
+REGISTER_NET_TEMP(TE_CSQC_ITEMPICKUP)
+REGISTER_NET_TEMP(TE_CSQC_REVIVE)
+REGISTER_NET_TEMP(TE_CSQC_END1)
+REGISTER_NET_TEMP(TE_CSQC_END2)
+
+REGISTER_NET_LINKED(ENT_CLIENT_MODEL)
+REGISTER_NET_LINKED(ENT_CLIENT_BAMBOO)
+
+#include "stats.qh"
+
+#define PHYS_INVEHICLE(s) 					false
+
+// generic entity flags
+// engine flags can't be redefined as they are used by the engine (unfortunately), they are listed here for posterity
+#ifdef CSQC
+const int FL_FLY					= 1; /* BIT(0) */
+const int FL_SWIM					= 2; /* BIT(1) */
+const int FL_CLIENT					= 8; /* BIT(2) */	// set for all client edicts
+const int FL_INWATER				= 16; /* BIT(3) */	// for enter / leave water splash
+const int FL_MONSTER				= 32; /* BIT(4) */
+const int FL_GODMODE				= 64; /* BIT(5) */	// player cheat
+const int FL_NOTARGET				= 128; /* BIT(6) */	// player cheat
+const int FL_ITEM					= 256; /* BIT(7) */	// extra wide size for bonus items
+const int FL_ONGROUND				= 512; /* BIT(8) */	// standing on something
+const int FL_PARTIALGROUND			= 1024; /* BIT(9) */	// not all corners are valid
+const int FL_WATERJUMP				= 2048; /* BIT(10) */	// player jumping out of water
+const int FL_JUMPRELEASED			= 4096; /* BIT(11) */	// for jump debouncing
+#endif
+const int FL_WEAPON 				= BIT(12);
+const int FL_POWERUP 				= BIT(13);
+const int FL_PROJECTILE 			= BIT(14);
+const int FL_TOSSED 				= BIT(15);
+const int FL_SPAWNING 				= BIT(16);
+const int FL_PICKUPITEMS 			= BIT(17);
+const int FL_DUCKED 				= BIT(18);
+const int FL_ONSLICK 				= BIT(19);
+
+#include "physics.qh"
+
+#include "effects/all.qh"
+#include "models/all.qh"
+#include "sounds/all.qh"
+
+#include "items/item.qh"
+
+#ifndef BITCLR
+# define BITCLR(a,b) ((a) - ((a) & (b)))
+#endif
+#ifndef BITSET
+# define BITSET(a,b) ((a) | (b))
+#endif
+#ifndef BITXOR
+# define BITXOR(a,b) (((a) | (b)) - ((a) & (b)))
+#endif
+#ifndef BITCLR_ASSIGN
+# define BITCLR_ASSIGN(a,b) ((a) = (a) - ((a) & (b)))
+#endif
+#ifndef BITSET_ASSIGN
+# define BITSET_ASSIGN(a,b) ((a) |= (b))
+#endif
+#ifndef BITXOR_ASSIGN
+# define BITXOR_ASSIGN(a,b) ((a) = ((a) | (b)) - ((a) & (b)))
+#endif

@@ -1,0 +1,67 @@
+#pragma once
+
+float serverprevtime, serverdeltatime;
+
+float ticrate;
+
+float drawtime;
+
+.bool csqcmodel_isdead; // used by shownames and miscfunctions (entcs_IsDead) to know when a player is dead
+
+vector mousepos;
+
+vector drawfontscale;
+
+vector SIZE_CURSOR = '32 32 0';
+vector OFFSET_CURSOR = '0 0 0';
+
+.int		renderflags;
+
+.void(entity) entremove;
+
+int autocvar_chase_active;
+bool autocvar_chase_front;
+bool autocvar_cl_eventchase_death;
+
+float spectatee_status; // NOTE: spectating not implemented, compiler error check!
+
+.int enttype; // entity type sent from server
+.int sv_entnum; // entity number sent from server
+
+int framecount;
+.float health;
+
+vector view_origin, view_forward, view_right, view_up;
+
+entity playerslots[255]; // 255 is engine limit on maxclients
+.float ping, ping_packetloss, ping_movementloss;
+
+#define drawpic(position, pic, size, rgb, alpha, flag) \
+	drawpic_builtin(position, pic, size, rgb, alpha, flag)
+
+#define drawstring(position, text, scale, rgb, alpha, flag) \
+	drawstring_builtin(position, text, scale, rgb, alpha, flag)
+
+#define drawcolorcodedstring(position, text, scale, alpha, flag) \
+	drawcolorcodedstring_builtin(position, text, scale, alpha, flag)
+
+#define drawcolorcodedstring2(position, text, scale, rgb, alpha, flag) \
+	drawcolorcodedstring2_builtin(position, text, scale, rgb, alpha, flag)
+
+#define drawfill(position, size, rgb, alpha, flag) \
+	drawfill_builtin(position, size, rgb, alpha, flag)
+
+.void(entity) draw;
+IntrusiveList g_drawables;
+STATIC_INIT(main)
+{
+	g_drawables = IL_NEW();
+}
+
+float playerx, playerz;
+float telefade_time;
+float center_time;
+string centerprint_msg;
+float revive_time;
+bool which_end;
+float end_time;
