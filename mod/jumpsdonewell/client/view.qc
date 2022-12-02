@@ -191,6 +191,53 @@ void player_listen()
 		last_attack_frame = 0;
 }
 
+float turn_angle(float a, float b, float amount)
+{
+	a = anglemods(a);
+	b = anglemods(b);
+	float diff = b - a;
+	
+	if (fabs(diff) < amount)
+	{
+		return b;
+	}
+	
+	if (diff < -180)
+	{
+		b += 360;	
+	}
+	else if (diff > 180)
+	{
+		b -= 360;
+	}
+	
+	if (fabs(b - a) < amount)
+	{
+		return b;
+	}
+	if (a < b)
+		return a + amount;
+	else
+		return a - amount;	
+}
+
+vector player_model_angles;
+void CSQCPlayer_SmoothAngle(entity this)
+{
+	if(IS_DEAD(this) || time < STAT(NO_CONTROL_TIME))
+		return;
+
+	if(vdist(vec2(this.velocity), >, 0))
+	{
+		vector wanted_angles = vectoangles(vec2(this.velocity));
+		float framescale = ((IS_ONGROUND(this)) ? 1200 : 500);
+
+		player_model_angles.y = turn_angle(player_model_angles_y, wanted_angles_y, frametime * framescale);
+	}
+
+	this.angles.y = player_model_angles.y;
+}
+
 void JumpsDoneWell_SetCamera()
 {
 	vector v0 = pmove_vel; // TRICK: pmove_vel is set by the engine when we get here. No need to network velocity
@@ -240,6 +287,7 @@ void JumpsDoneWell_SetCamera()
 
 			//if (!IS_DEAD(e))
 				//e.angles.y = input_angles.y;
+			CSQCPlayer_SmoothAngle(e);
 		}
 
 		// relink
@@ -284,6 +332,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 	vid_height = vf_size.y;
 
 	cvar_settemp("chase_active", "1");
+	vector oldvangle = getpropertyvec(VF_CL_VIEWANGLES);
+	vector oldangle = getpropertyvec(VF_ANGLES);
 
 	vector moveval = input_movevalues;
 	moveval.y *= -1;
@@ -299,8 +349,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 
 	// Render the Scene
 	view_origin = getpropertyvec(VF_ORIGIN);
-	//view_angles = getpropertyvec(VF_ANGLES);
-	//if(cvar_string("cl_worldbasename") == "map2")
+	view_angles = getpropertyvec(VF_ANGLES);
+	if(cvar_string("cl_worldbasename") == "map2")
 		view_angles = '15 0 0';
 	MAKE_VECTORS(view_angles, view_forward, view_right, view_up);
 
@@ -311,6 +361,8 @@ void CSQC_UpdateView(entity this, float w, float h)
 	drawtime = time;
 
 	// ALWAYS Clear Current Scene First
+	setproperty(VF_CL_VIEWANGLES, oldvangle);
+	setproperty(VF_ANGLES, oldangle);
 	clearscene();
 
 	// jumps done well sets a custom view angle
@@ -321,13 +373,13 @@ void CSQC_UpdateView(entity this, float w, float h)
 	if(cameraz > playerz + 30)
 		cameraz = playerz + 30;
 	view_origin.z = cameraz;
-	//if(cvar_string("cl_worldbasename") == "map2")
+	if(cvar_string("cl_worldbasename") == "map2")
 		view_origin += '-600 0 150';
-	//else
-	//{
-		//view_origin -= view_forward * 600;
-		//view_origin += view_up * 150;
-	//}
+	else
+	{
+		view_origin -= view_forward * 600;
+		view_origin += view_up * 150;
+	}
 
 	setproperty(VF_ORIGIN, view_origin);
 	setproperty(VF_ANGLES, view_angles);

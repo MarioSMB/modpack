@@ -42,8 +42,15 @@ void ClientKill(entity this)
 
 vector get_spawn_point()
 {
-	entity spawnpoint = NULL;
-	spawnpoint = find(NULL, classname, "info_player_start");
+	//entity spawnpoint = NULL;
+
+	//spawnpoint = find(NULL, classname, "info_player_start");
+	RandomSelection_Init();
+	FOREACH_ENTITY_CLASS("info_player_start", true,
+	{
+		RandomSelection_AddEnt(it, 1, 1);
+	});
+	entity spawnpoint = RandomSelection_chosen_ent;
 
 	return spawnpoint.origin + '0 0 1';
 }

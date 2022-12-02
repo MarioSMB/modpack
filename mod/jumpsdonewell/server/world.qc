@@ -531,7 +531,8 @@ spawnfunc(worldspawn)
 // the area based ambient sounds MUST be the first precache_sounds
 
 	// custom map attributes
-	cvar_set("sv_gravity", "1050");
+	if(cvar_string("sv_worldbasename") == "map2")
+		cvar_set("sv_gravity", "1050");
 
 	if(world_already_spawned)
 		error("world already spawned - you may have EXACTLY ONE worldspawn!");

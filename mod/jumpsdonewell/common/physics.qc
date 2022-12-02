@@ -53,11 +53,34 @@ void PM_Main(entity this, float dt)
 	if(this.move_movetype == MOVETYPE_NONE)
 		return;
 
-	vector moveval = PHYS_INPUT_MOVEVALUES(this);
-	if(vdist(moveval, >, 350))
-		moveval = normalize(moveval) * 350;
-	moveval.y *= (time > STAT(ATTACK_FINISHED, this)) ? -1 : -0.4;
-	this.velocity = (STAT(NO_CONTROL_TIME, this) > time) ? this.velocity : moveval + vec3(0, 0, this.velocity.z);
+	vector forward, right, up;
+	MAKE_VECTORS(vmul(PHYS_INPUT_ANGLES(this), '1 1 0'), forward, right, up);
+	vector moveval;
+#ifdef SVQC
+	if(cvar_string("sv_worldbasename") == "map2")
+#else
+	if(cvar_string("cl_worldbasename") == "map2")
+#endif
+	{
+		moveval = PHYS_INPUT_MOVEVALUES(this);
+		moveval.y *= -1;
+	}
+	else
+		moveval = vec2(forward * PHYS_INPUT_MOVEVALUES(this).x + right * PHYS_INPUT_MOVEVALUES(this).y);
+
+	//if(vdist(moveval, >, 350))
+		//moveval = normalize(moveval) * 350;
+	//moveval.y *= (time > STAT(ATTACK_FINISHED, this)) ? -1 : -0.4;
+	if(STAT(NO_CONTROL_TIME, this) <= time)
+	{
+		float vel_z = this.velocity_z;
+		float wishspeed = 350;
+		if(STAT(ATTACK_FINISHED, this) > time)
+			wishspeed *= 0.4;
+		vector vel_xy = normalize(moveval) * wishspeed;
+		this.velocity = vel_xy + vel_z * '0 0 1';
+	}
+	//this.velocity = (STAT(NO_CONTROL_TIME, this) > time) ? this.velocity : moveval + vec3(0, 0, this.velocity.z);
 #ifdef SVQC
 	//this.fixangle = true;
 #endif
@@ -175,11 +198,63 @@ void PM_Main(entity this, float dt)
 }
 
 #ifdef SVQC
+float turn_angle(float a, float b, float amount)
+{
+	a = anglemods(a);
+	b = anglemods(b);
+	float diff = b - a;
+	
+	if (fabs(diff) < amount)
+	{
+		return b;
+	}
+	
+	if (diff < -180)
+	{
+		b += 360;	
+	}
+	else if (diff > 180)
+	{
+		b -= 360;
+	}
+	
+	if (fabs(b - a) < amount)
+	{
+		return b;
+	}
+	if (a < b)
+		return a + amount;
+	else
+		return a - amount;	
+}
+
 .float playery;
+void CSQCPlayer_SmoothAngle(entity this)
+{
+	if(time < STAT(NO_CONTROL_TIME, this))
+		return;
+
+	if(vdist(vec2(this.velocity), >, 0))
+	{
+		vector wanted_angles = vectoangles(vec2(this.velocity));
+		float framescale = ((IS_ONGROUND(this)) ? 1200 : 500);
+
+		this.playery = turn_angle(this.playery, wanted_angles_y, PHYS_INPUT_TIMELENGTH * framescale);
+	}
+
+	this.angles.y = this.playery;
+}
+
 void PM_UpdateButtons(entity this)
 {
 	if(this.health <= 0)
 		return;
+	if(cvar_string("sv_worldbasename") != "map2")
+	{
+		CSQCPlayer_SmoothAngle(this);
+		return;
+	}
+
 	vector moveval = this.movement;
 	moveval.y *= -1;
 	vector real_angles = vec3(0, this.playery, 0);
