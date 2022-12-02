@@ -7,9 +7,9 @@ void player_hurt(entity this)
 
 void player_die(entity this)
 {
-	this.dead_time = time + 3;
+	this.respawn_time = time + 3;
 	this.solid = SOLID_NOT;
-	this.takes_damage = false;
+	this.takedamage = DAMAGE_NO;
 	set_movetype(this, MOVETYPE_NONE);
 }
 

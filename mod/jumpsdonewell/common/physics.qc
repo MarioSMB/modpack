@@ -75,7 +75,7 @@ void PM_Main(entity this, float dt)
 	{
 		float vel_z = this.velocity_z;
 		float wishspeed = 350;
-		if(STAT(ATTACK_FINISHED, this) > time)
+		if(STAT(ATTACK_FINISHED, this) > time && IS_ONGROUND(this))
 			wishspeed *= 0.4;
 		vector vel_xy = normalize(moveval) * wishspeed;
 		this.velocity = vel_xy + vel_z * '0 0 1';
@@ -106,7 +106,6 @@ void PM_Main(entity this, float dt)
 #endif
 	}
 
-	float grav = PHYS_GRAVITY(this) * dt;
 
 	// Check ground
 	tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NORMAL, this);
@@ -134,6 +133,7 @@ void PM_Main(entity this, float dt)
 			do_jump(this);
 	}
 	
+	float grav = PHYS_GRAVITY(this) * dt;
 	if(!IS_ONGROUND(this))
 		this.velocity_z -= grav;	
 

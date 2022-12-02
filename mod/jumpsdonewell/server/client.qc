@@ -12,7 +12,7 @@ void SetNewParms()
 
 void GotoNextMap()
 {
-	changelevel(MAPNAME);
+	changelevel("map2");
 }
 
 
@@ -63,7 +63,7 @@ void revive(entity this)
 		setorigin(this, this.cp.origin);
 	this.health = this.max_health;
 	this.solid = SOLID_SLIDEBOX;
-	this.takes_damage = true;
+	this.takedamage = DAMAGE_YES;
 	this.invuln_time = time + 1;
 	set_movetype(this, MOVETYPE_JUMPSDONEWELL);
 
@@ -93,7 +93,7 @@ void PutClientInServer(entity this)
 	this.fixangle = true;
 	setsize(this, '-16 -16 0', '16 16 64');
 	this.view_ofs = '0 0 48';
-	this.takes_damage = true;
+	this.takedamage = DAMAGE_YES;
 	this.hurt = player_hurt;
 	this.die = player_die;
 	STAT(FEATHER, this) = 1;
@@ -186,7 +186,7 @@ void PlayerPreThink(entity this)
 	if(this.health <= 0)
 	{
 		this.frame = 6;
-		if(time > this.dead_time)
+		if(time > this.respawn_time)
 			revive(this);
 		return;
 	}

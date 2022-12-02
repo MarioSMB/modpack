@@ -6,7 +6,7 @@ void bamboo_die_proper(entity this)
 	setthink(this, spawnfunc_misc_bamboo);
 	this.nextthink = time + 20;
 	this.modelindex = 0;
-	this.takes_damage = false;
+	this.takedamage = DAMAGE_NO;
 	this.solid = SOLID_NOT;
 	sound(this, CHAN_AUTO, SND_SWORD2, 0.7, ATTEN_NORM);
 	pointparticles(EFFECT_ENEMY_DIE, this.origin + '0 0 32', '0 0 1', 1);
@@ -40,7 +40,7 @@ spawnfunc(misc_bamboo)
 	setmodel(this, MDL_BAMBOO2);
 	this.solid = SOLID_BBOX;
 	setsize(this, '-32 -32 -100', '32 32 225');
-	this.takes_damage = true;
+	this.takedamage = DAMAGE_YES;
 	this.die = bamboo_die;
 	this.hurt = bamboo_hurt;
 	this.health = 30;

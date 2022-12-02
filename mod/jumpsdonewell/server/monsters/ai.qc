@@ -425,6 +425,8 @@ Something has bumped into a movetarget.  If it is a monster
 moving towards it, change the next destination and continue.
 ==============
 */
+.entity movetarget;
+.float pausetime;
 void t_movetarget(entity this, entity toucher)
 {
 	if(toucher.movetarget != this)

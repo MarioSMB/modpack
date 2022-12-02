@@ -1,7 +1,6 @@
 #pragma once
 
 .float invuln_time;
-.bool takes_damage;
 
 .bool attack_released;
 .float attack_fired;

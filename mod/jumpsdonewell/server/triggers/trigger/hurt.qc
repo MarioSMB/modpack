@@ -2,7 +2,7 @@
 
 void hurt_touch(entity this, entity toucher)
 {
-	if(toucher.takes_damage)
+	if(toucher.takedamage)
 		damage(this, toucher, 10000);
 }
 

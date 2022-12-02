@@ -18,7 +18,7 @@ void damage(entity attacker, entity victim, float dmg)
 void player_attack(entity this)
 {
 	makevectors(this.v_angle);
-	FOREACH_ENTITY_RADIUS(this.origin + this.view_ofs, 90, it.takes_damage && it != this && (!autocvar_g_friendlyfire_virtual || !IS_PLAYER(it)),
+	FOREACH_ENTITY_RADIUS(this.origin + this.view_ofs, 90, it.takedamage && it != this && (!autocvar_g_friendlyfire_virtual || !IS_PLAYER(it)),
 	{
 		vector dir = normalize(it.origin - this.origin);
 		if((v_forward * dir) >= 0.5)
@@ -40,7 +40,7 @@ void player_spin_attack(entity this)
 	{
 		if(it.classname == "misc_vine" && it.solid != SOLID_NOT) // cheap death check
 			vine_destroy(it);
-		if(it.takes_damage && it != this && (!autocvar_g_friendlyfire_virtual || !IS_PLAYER(it)))
+		if(it.takedamage && it != this && (!autocvar_g_friendlyfire_virtual || !IS_PLAYER(it)))
 		{
 			vector dir = normalize(it.origin - this.origin);
 			pointparticles(EFFECT_ENEMY_HIT, it.origin + '0 0 32', -dir, 1);

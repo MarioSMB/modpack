@@ -2,20 +2,13 @@
 
 .int playerid;
 
-bool t_checkbottom(entity this);
-
-.entity movetarget;
-
-.float pausetime;
-
 float sys_frametime;     // gets initialised in worldspawn, saves the value from autocvar_sys_ticrate
 
 float servertime, serverprevtime, serverframetime;
 
+.float respawn_time;
 // properties unique to jumps done well
-.float dead_time;
 .entity cp;
-string MAPNAME = "map2";
 
 // intrusive lists
 

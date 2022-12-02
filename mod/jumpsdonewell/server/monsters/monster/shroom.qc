@@ -16,7 +16,7 @@ void shroom_die_proper(entity this)
 	sound(this, CHAN_AUTO, SND_SWORD2, 0.7, ATTEN_NORM);
 	pointparticles(EFFECT_ENEMY_DIE, this.origin + '0 0 32', '0 0 1', 1);
 	this.solid = SOLID_NOT;
-	this.takes_damage = false;
+	this.takedamage = DAMAGE_NO;
 	this.modelindex = 0;
 	this.nextthink = time + 20;
 	setthink(this, spawnfunc_monster_shroom); // respawn
@@ -171,7 +171,7 @@ void shroom_touch(entity this, entity toucher)
 {
 	if(!IS_PLAYER(toucher))
 		return;
-	if(toucher.origin_z > this.origin_z + 32)
+	if(toucher.origin_z > (this.origin_z + (this.maxs_z * 0.6)))
 	{
 		STAT(NO_CONTROL_TIME, toucher) = time + 0.25;
 		toucher.velocity = randomvec() * 100 + '0 0 250';
@@ -189,16 +189,16 @@ void spiky_touch(entity this, entity toucher)
 	damage(this, toucher, 1);
 }
 
-.float variant;
-const float VARIANT_NORMAL = 0;
-const float VARIANT_SPIKY = 1;
+.int variant;
+const int VARIANT_NORMAL = 0;
+const int VARIANT_SPIKY = 1;
 spawnfunc(monster_shroom)
 {
 	if(this.home == '0 0 0')
 		this.home = this.origin;
 	this.solid = SOLID_BBOX;
 	set_movetype(this, MOVETYPE_STEP);
-	this.takes_damage = true;
+	this.takedamage = DAMAGE_YES;
 	this.hurt = shroom_hurt;
 	this.die = shroom_die;
 	this.health = 30;
@@ -211,6 +211,7 @@ spawnfunc(monster_shroom)
 	
 	switch(this.variant)
 	{
+		default:
 		case VARIANT_NORMAL:
 		{
 			setmodel(this, MDL_MUSHROOM);

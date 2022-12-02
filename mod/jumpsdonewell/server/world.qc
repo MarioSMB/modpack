@@ -656,7 +656,7 @@ void GotoFirstMap(entity this)
 		// we do NOT set this to 0 any more, so someone "accidentally" changing
 		// to this "init" map on a dedicated server will cause no permanent
 		// harm
-		mapname = MAPNAME;
+		mapname = "map2";
 		GotoNextMap();
 
 		return;
@@ -681,7 +681,7 @@ void CheckRules_World()
 	
 	if(autocvar_quit_when_empty && timelimit && time >= timelimit)
 	{
-		mapname = MAPNAME;
+		mapname = "map2";
 		GotoNextMap();
 		return;
 	}
