@@ -96,21 +96,7 @@ void draw_ends()
 {
 	if(end_time > 0)
 	{
-		string line1 = "Congratulations!";
-		string line2 = (which_end == 1) ? "But you haven't found" : "You found the...";
-		string line3 = (which_end == 1) ? "many hearts..." : "TRUE ENDING!!";
-		
 		drawfill('0 0 0', vec2(vid_conwidth, vid_conheight), '0 0 0', sin(end_time * 0.4), DRAWFLAG_NORMAL);
-		float size = 16;
-		float xpos = (vid_conwidth / 2) - size * strlen(line1) * 0.5;
-		float ypos = 64;
-		drawstring(vec3(xpos, ypos, 0), line1, vec2(size, size), '1 1 1', min(1, end_time), DRAWFLAG_NORMAL);
-		xpos = (vid_conwidth / 2) - size * strlen(line2) * 0.5;
-		ypos += 64;
-		drawstring(vec3(xpos, ypos, 0), line2, vec2(size, size), '1 1 1', min(1, end_time), DRAWFLAG_NORMAL);
-		xpos = (vid_conwidth / 2) - size * strlen(line3) * 0.5;
-		ypos += 32;
-		drawstring(vec3(xpos, ypos, 0), line3, vec2(size, size), '1 1 1', min(1, end_time), DRAWFLAG_NORMAL);
 		end_time -= frametime;
 	}
 }
@@ -121,13 +107,4 @@ void draw_hud()
 	draw_feathers();
 	draw_sword();
 	draw_ends();
-	
-	if(center_time > 0)
-	{
-		float size = 16;
-		float xpos = (vid_conwidth / 2) - size * strlen(centerprint_msg) * 0.5;
-		float ypos = 96;
-		drawstring(vec3(xpos, ypos, 0), centerprint_msg, vec2(size, size), '1 1 1', min(center_time, 1), DRAWFLAG_NORMAL);
-		center_time -= frametime;
-	}
 }

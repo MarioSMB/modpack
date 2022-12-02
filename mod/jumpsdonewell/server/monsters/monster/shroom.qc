@@ -21,12 +21,14 @@ void shroom_die_proper(entity this)
 	this.nextthink = time + 20;
 	setthink(this, spawnfunc_monster_shroom); // respawn
 	setorigin(this, this.home);
+	CSQCMODEL_AUTOUPDATE(this);
 }
 void shroom_die2(entity this)
 {
 	this.frame = 3;
 	this.nextthink = time + 0.4;
 	setthink(this, shroom_die_proper);
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
 void shroom_die(entity this)
@@ -36,11 +38,13 @@ void shroom_die(entity this)
 	setthink(this, shroom_die2);
 	this.solid = SOLID_NOT;
 	set_movetype(this, MOVETYPE_NONE);
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
 void shroom_hurt(entity this)
 {
 	this.frame = 0;
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
 entity check_for_player(entity this)
@@ -80,6 +84,7 @@ void shroom_think(entity this)
 		this.frame = 3;
 		this.nextthink = time + 0.1;
 		setthink(this, shroom_think);
+		CSQCMODEL_AUTOUPDATE(this);
 		return;
 	}
 	switch(this.ai_state)
@@ -115,10 +120,11 @@ void shroom_think(entity this)
 			this.frame = 1;
 			if(check_for_player(this))
 				this.last_seen_time = time;
-			if(time - this.last_seen_time > 3)
+			if(time - this.last_seen_time > 3 || this.enemy.health <= 0)
 			{
 				this.enemy = NULL;
 				this.ai_state = STATE_STANDING;
+				break;
 			}
 			angles_to_player = vectoangles(this.enemy.origin - this.origin);
 			this.ideal_yaw = angles_to_player_y;
@@ -141,11 +147,12 @@ void shroom_think(entity this)
 			changeyaw(this);
 			if(time - this.ai_attack_time > 0.6 && !this.ai_attacked)
 			{
-				if(vdist(this.enemy.origin - this.origin, <, 65) && this.enemy)
+				if(vdist(this.enemy.origin - this.origin, <, 65) && this.enemy && this.enemy.health > 0)
 				{
 					damage(this, this.enemy, 1);
 					STAT(NO_CONTROL_TIME, this.enemy) = time + 0.35;
 					this.enemy.velocity = normalize(this.enemy.origin - this.origin) * 200 + '0 0 200';
+					UNSET_ONGROUND(this.enemy);
 				}
 				this.ai_attacked = true;
 			}
@@ -165,27 +172,32 @@ void shroom_think(entity this)
 	}
 	this.nextthink = time + 0.1;
 	setthink(this, shroom_think);
+	CSQCMODEL_AUTOUPDATE(this);
 }
 
 void shroom_touch(entity this, entity toucher)
 {
-	if(!IS_PLAYER(toucher))
+	if(!IS_PLAYER(toucher) || toucher.health <= 0)
 		return;
-	if(toucher.origin_z > (this.origin_z + (this.maxs_z * 0.6)))
+	if(toucher.origin_z > (this.origin_z + (this.maxs_z * 0.66)))
 	{
 		STAT(NO_CONTROL_TIME, toucher) = time + 0.25;
 		toucher.velocity = randomvec() * 100 + '0 0 250';
+		UNSET_ONGROUND(toucher);
+		setorigin(toucher, toucher.origin + '0 0 2');
 		damage(toucher, this, 5);
 	}
 }
 
 void spiky_touch(entity this, entity toucher)
 {
-	if(!IS_PLAYER(toucher))
+	if(!IS_PLAYER(toucher) || toucher.health <= 0)
 		return;
 	
 	STAT(NO_CONTROL_TIME, toucher) = time + 0.25;
 	toucher.velocity = randomvec() * 100 + '0 0 250';
+	UNSET_ONGROUND(toucher);
+	setorigin(toucher, toucher.origin + '0 0 2');
 	damage(this, toucher, 1);
 }
 
@@ -201,10 +213,7 @@ spawnfunc(monster_shroom)
 	this.takedamage = DAMAGE_YES;
 	this.hurt = shroom_hurt;
 	this.die = shroom_die;
-	this.health = 30;
 	this.yaw_speed = 10;
-	settouch(this, shroom_touch);
-	
 	this.nextthink = time + random() * 0.5;
 	setthink(this, shroom_think);
 	this.frame = -1;
@@ -215,6 +224,8 @@ spawnfunc(monster_shroom)
 		case VARIANT_NORMAL:
 		{
 			setmodel(this, MDL_MUSHROOM);
+			this.health = 30;
+			settouch(this, shroom_touch);
 			break;
 		}
 		case VARIANT_SPIKY:
@@ -226,4 +237,6 @@ spawnfunc(monster_shroom)
 		}
 	}
 	setsize(this, '-20 -20 0', '20 20 48');
+
+	CSQCMODEL_AUTOINIT(this);
 }

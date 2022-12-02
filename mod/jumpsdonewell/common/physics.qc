@@ -106,94 +106,25 @@ void PM_Main(entity this, float dt)
 #endif
 	}
 
-
 	// Check ground
-	tracebox(this.origin, this.mins, this.maxs, this.origin - '0 0 1', MOVE_NORMAL, this);
-	if(trace_fraction == 1)
+	if(!IS_ONGROUND(this))
 	{
 		// Player is not on a proper footing
 #ifdef SVQC
 		if(this.velocity_z <= 0 && time - STAT(ON_GROUND_TIME, this) > COYOTE_TIME) // walked from edge, take away first jump
 			STAT(JUMPS, this) = min(STAT(JUMPS, this), STAT(FEATHER, this) - 1);
 #endif
-		UNSET_ONGROUND(this);
 	}
 	else if(this.velocity_z <= 0)
 	{
 		// Player is on ground
 #ifdef SVQC
 		STAT(ON_GROUND_TIME, this) = time;
-#endif
-		SET_ONGROUND(this);
-#ifdef SVQC
 		STAT(JUMPS, this) = STAT(FEATHER, this);
 #endif
 		
 		if(time - STAT(JUMP_PRESSED_TIME, this) < PRELAND_TIME)
 			do_jump(this);
-	}
-	
-	float grav = PHYS_GRAVITY(this) * dt;
-	if(!IS_ONGROUND(this))
-		this.velocity_z -= grav;	
-
-	vector startpos = this.origin;
-	vector endpos = this.origin + this.velocity * dt;
-
-	tracebox(this.origin, this.mins, this.maxs, endpos, MOVE_NORMAL, this);
-	entity old_trace_ent = trace_ent;
-
-	setorigin(this, trace_endpos);
-	float move_left = 1 - trace_fraction;
-	if(trace_fraction < 1)
-	{
-		float oldz = this.velocity.z;
-		this.velocity = vector_bounce(this.velocity, trace_plane_normal);
-		if(this.velocity.z > oldz)
-		{
-			// just to prevent launching players in the air on tight slopes, avoid slopes in levels
-			this.velocity *= trace_plane_normal.z;
-		}
-		if(move_left > 0.1)
-		{
-			endpos = this.origin + this.velocity * move_left * dt;
-			tracebox(this.origin, this.mins, this.maxs, endpos, 0, this);
-			setorigin(this, trace_endpos);
-			this.velocity = vector_bounce(this.velocity, trace_plane_normal);
-			
-			if(trace_ent && trace_ent != old_trace_ent) // Other touches
-			{
-				if(gettouch(this))
-					gettouch(this)(this, trace_ent);
-				if(gettouch(trace_ent))
-					gettouch(trace_ent)(trace_ent, this);
-			}
-			
-			// Hack to prevent corner stuck
-			move_left = move_left - trace_fraction;
-			if(move_left > 0.9)
-			{
-				endpos = this.origin + vec3(0, 0, this.velocity.z) * move_left * dt;
-				tracebox(this.origin, this.mins, this.maxs, endpos, 0, this);
-				setorigin(this, trace_endpos);
-			}
-		}
-	}
-
-	if(old_trace_ent) // Other touches
-	{
-		if(gettouch(this))
-			gettouch(this)(this, old_trace_ent);
-		if(gettouch(old_trace_ent))
-			gettouch(old_trace_ent)(old_trace_ent, this);
-	}
-
-	// Go from initial start pos to final pos, check for triggers
-	tracebox(startpos, this.mins, this.maxs, this.origin, MOVE_NOMONSTERS, this);
-	if(trace_ent && trace_ent.solid == SOLID_TRIGGER) // TRIGGER touches
-	{
-		if(gettouch(this))
-			gettouch(this)(this, trace_ent);
 	}
 }
 

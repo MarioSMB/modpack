@@ -65,7 +65,7 @@ void revive(entity this)
 	this.solid = SOLID_SLIDEBOX;
 	this.takedamage = DAMAGE_YES;
 	this.invuln_time = time + 1;
-	set_movetype(this, MOVETYPE_JUMPSDONEWELL);
+	set_movetype(this, MOVETYPE_WALK);
 
 	msg_entity = this;
 	WriteHeader(MSG_ONE, TE_CSQC_REVIVE);
@@ -87,7 +87,7 @@ void PutClientInServer(entity this)
 	this.flags = FL_CLIENT;
 	this.solid = SOLID_SLIDEBOX;
 	setmodel(this, MDL_PLAYER);
-	set_movetype(this, MOVETYPE_JUMPSDONEWELL);
+	set_movetype(this, MOVETYPE_WALK);
 	this.health = this.max_health = 3;
 	setorigin(this, get_spawn_point());
 	this.fixangle = true;

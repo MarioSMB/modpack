@@ -60,8 +60,6 @@ STATIC_INIT(main)
 
 float playerx, playerz;
 float telefade_time;
-float center_time;
-string centerprint_msg;
 float revive_time;
 bool which_end;
 float end_time;

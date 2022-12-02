@@ -188,6 +188,7 @@ void CSQC_Ent_Remove(entity this)
 }
 
 void centerprint_hud(string strMessage);
+void centerprint_generic(int new_id, string strMessage, float duration, int countdown_num);
 // CSQC_Parse_CenterPrint : Provides the centerprint_hud string in the first parameter that the server provided.
 void CSQC_Parse_CenterPrint(string strMessage)
 {
@@ -234,14 +235,16 @@ NET_HANDLE(TE_CSQC_TELEFADE, bool isNew)
 NET_HANDLE(TE_CSQC_ITEMPICKUP, bool isNew)
 {
 	int whichitem = ReadByte();
-	center_time = 3;
+	string centerprint_msg = "";
 	switch(whichitem)
 	{
 		case 1: centerprint_msg = "Maximum health increased!"; break;
 		case 2: centerprint_msg = "Mid-air jumps increased!"; break;
 		case 3: centerprint_msg = "New attack obtained!"; break;
-		default: centerprint_msg = "Checkpoint reached!"; break;
+		default:
+		case 4: centerprint_msg = "Checkpoint reached!"; break;
 	}
+	centerprint_generic(0, centerprint_msg, 3, 0);
 	return true;
 }
 
@@ -255,6 +258,11 @@ NET_HANDLE(TE_CSQC_END1, bool isNew)
 {
 	which_end = 1;
 	end_time = 10;
+	string line1 = "Congratulations!\n";
+	string line2 = "But you haven't found\n";
+	string line3 = "many hearts...";
+
+	centerprint_generic(0, strcat(line1, line2, line3), 10, 0);
 	return true;
 }
 
@@ -262,6 +270,11 @@ NET_HANDLE(TE_CSQC_END2, bool isNew)
 {
 	which_end = 2;
 	end_time = 10;
+	string line1 = "Congratulations!\n";
+	string line2 = "You found the...\n";
+	string line3 = "TRUE ENDING!!";
+
+	centerprint_generic(0, strcat(line1, line2, line3), 10, 0);
 	return true;
 }
 

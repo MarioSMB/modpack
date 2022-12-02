@@ -4,8 +4,6 @@
 
 .float pm_frametime;
 
-const int MOVETYPE_JUMPSDONEWELL = 170;
-
 #ifdef CSQC
 	.float watertype;
 	.float waterlevel;
