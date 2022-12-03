@@ -65,6 +65,7 @@ void revive(entity this)
 	this.solid = SOLID_SLIDEBOX;
 	this.takedamage = DAMAGE_YES;
 	this.invuln_time = time + 1;
+	this.frame = 0;
 	set_movetype(this, MOVETYPE_WALK);
 
 	msg_entity = this;
