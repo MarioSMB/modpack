@@ -95,8 +95,8 @@ entity itemplacer_SpawnItem(entity itemdata)
 
 	if(startsWith(itemname, "weapon_"))
 	{
-		string thewep = W_UndeprecateName(substring(itemname, 7, strlen(itemname)));
-		FOREACH(Weapons, it.netname == thewep || it.m_canonical_spawnfunc == itemname,
+		string thewep = substring(itemname, 7, strlen(itemname));
+		FOREACH(Weapons, it.netname == thewep || it.m_deprecated_netname == thewep || it.m_canonical_spawnfunc == itemname,
 		{
 			entity newitem = spawn();
 			newitem.spawnfunc_checked = true;
