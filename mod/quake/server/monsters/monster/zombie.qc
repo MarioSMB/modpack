@@ -492,7 +492,7 @@ void zombie_missile(entity this)
 {
 	float r = random();
 	if(MP_ROGUE)
-		WITHSELF(this, builtin_droptofloor());
+		droptofloor(this);
 	
 	if(r < 0.3)
 		zombie_atta1(this);
@@ -584,7 +584,7 @@ void zombie_paind5(entity this) { set_animofs(this, anim_zombie_paind, 5, zombie
 void zombie_paind4(entity this) { set_animofs(this, anim_zombie_paind, 4, zombie_paind5); }
 void zombie_paind3(entity this) { set_animofs(this, anim_zombie_paind, 3, zombie_paind4); }
 void zombie_paind2(entity this) { set_animofs(this, anim_zombie_paind, 2, zombie_paind3); }
-void zombie_paind1(entity this) { set_animofs(this, anim_zombie_paind, 1, zombie_paind2); _sound(this, CH_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM); if(MP_ROGUE) WITHSELF(this, builtin_droptofloor()); }
+void zombie_paind1(entity this) { set_animofs(this, anim_zombie_paind, 1, zombie_paind2); _sound(this, CH_VOICE, "zombie/z_pain.wav", 1, ATTN_NORM); if(MP_ROGUE) droptofloor(this); }
 
 void zombie_paine11(entity this);
 void zombie_paine30(entity this) { set_animofs(this, anim_zombie_paine, 30, zombie_run1); }
@@ -609,7 +609,7 @@ void zombie_paine12(entity this)
 {
 	set_animofs(this, anim_zombie_paine, 12, zombie_paine13);
 	if(MP_ROGUE)
-		WITHSELF(this, builtin_droptofloor());
+		droptofloor(this);
 	// see if ok to stand up
 	this.health = 60;
 	_sound(this, CH_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
@@ -790,7 +790,7 @@ void zombie_escape16(entity this)
 	this.health = 60;
 	_sound(this, CH_VOICE, "zombie/z_idle.wav", 1, ATTN_IDLE);
 
-	WITHSELF(this, builtin_droptofloor());
+	droptofloor(this);
 }
 void zombie_escape15(entity this)
 {

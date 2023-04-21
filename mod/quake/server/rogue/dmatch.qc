@@ -22,7 +22,7 @@ void tag_token_respawn()
 	tagToken.nextthink = 0;
 	tagToken.owner = NULL;
 	tagToken.tag_frags = 0;
-	WITHSELF(tagToken, builtin_droptofloor());
+	droptofloor(tagToken);
 }
 
 void respawn_tagtoken(entity this)
@@ -37,7 +37,7 @@ void tag_token_fall(entity this)
 	this.tag_frags = 0;
 	setthink(this, respawn_tagtoken);
 	this.nextthink = time + 30;
-	WITHSELF(this, builtin_droptofloor());
+	droptofloor(this);
 }
 
 // =======================================

@@ -15,3 +15,5 @@ MODEL(ITEM_SILVERKEYCARD,                   "progs/b_s_key.mdl");
 MODEL(ITEM_GOLDKEY,                     	"progs/w_g_key.mdl");
 MODEL(ITEM_GOLDRUNEKEY,                   	"progs/m_g_key.mdl");
 MODEL(ITEM_GOLDKEYCARD,                   	"progs/b_g_key.mdl");
+
+MODEL(LAVABALL,                             "progs/lavaball.mdl");

@@ -489,7 +489,7 @@ void lavaman_awake(entity this, entity actor, entity trigger)
 				this.enemy = actor;
 		}
 	}
-	WITHSELF(this, builtin_droptofloor());
+	droptofloor(this);
 
 	lavaman_rise1(this);
 }

@@ -49,7 +49,7 @@ void barrel_spawn(entity this)
 
 	this.origin_z = this.origin_z + 2;
 	float oldz = this.origin_z;
-	WITHSELF(this, builtin_droptofloor());
+	droptofloor(this);
 	if(oldz - this.origin_z > 250)
 	{
 		LOG_DEBUG("Exploding box fell out of the level at ", vtos(this.origin), "\n");

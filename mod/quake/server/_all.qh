@@ -1,6 +1,7 @@
 #pragma once
 
-void(entity e) _makestatic_hidden = #69;
+//void(entity e) _makestatic_hidden = #69;
+void droptofloor(entity this);
 
 int maxclients;
 

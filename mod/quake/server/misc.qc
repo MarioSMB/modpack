@@ -123,7 +123,7 @@ spawnfunc(light_globe)
 {
 	precache_model("progs/s_light.spr");
 	_setmodel(this, "progs/s_light.spr");
-	_makestatic_hidden(this);
+	//_makestatic_hidden(this);
 }
 
 void FireAmbient(entity this)
@@ -149,7 +149,7 @@ spawnfunc(light_torch_small_walltorch)
 		allow_fire = false;
 	if(allow_fire)
 		FireAmbient(this);
-	_makestatic_hidden(this);
+	//_makestatic_hidden(this);
 }
 
 /*QUAKED light_flame_large_yellow(0 1 0)(-10 -10 -12)(12 12 18)
@@ -165,7 +165,7 @@ spawnfunc(light_flame_large_yellow)
 		allow_fire = false;
 	if(allow_fire)
 		FireAmbient(this);
-	_makestatic_hidden(this);
+	//_makestatic_hidden(this);
 }
 
 /*QUAKED light_flame_small_yellow(0 1 0)(-8 -8 -8)(8 8 8) START_OFF
@@ -180,7 +180,7 @@ spawnfunc(light_flame_small_yellow)
 		allow_fire = false;
 	if(allow_fire)
 		FireAmbient(this);
-	_makestatic_hidden(this);
+	//_makestatic_hidden(this);
 }
 
 /*QUAKED light_flame_small_white(0 1 0)(-10 -10 -40)(10 10 40) START_OFF
@@ -195,7 +195,7 @@ spawnfunc(light_flame_small_white)
 		allow_fire = false;
 	if(allow_fire)
 		FireAmbient(this);
-	_makestatic_hidden(this);
+	//_makestatic_hidden(this);
 }
 
 
@@ -371,7 +371,7 @@ spawnfunc(func_illusionary)
 	set_movetype(this, MOVETYPE_NONE);
 	this.solid = SOLID_NOT;
 	_setmodel(this, this.model);
-	_makestatic_hidden(this);
+	//_makestatic_hidden(this);
 }
 
 /*QUAKED func_episodegate(0 .5 .8) ? E1 E2 E3 E4

@@ -58,14 +58,7 @@ void PlaceItem(entity this)
 	this.m_max = this.maxs;
 	setthink(this, FixItem);
 	this.nextthink = time + 1; // initial delay
-	bool didit = false;
-	WITHSELF(this, didit = builtin_droptofloor());
-	if(!didit)
-	{
-		LOG_DEBUGF("Bonus item fell out of level at %v\n", this.origin);
-		delete(this);
-		return;
-	}
+	droptofloor(this);
 }
 
 /*

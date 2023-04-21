@@ -8,22 +8,22 @@ void fire_touch(entity this, entity toucher)
 
 void fire_fly(entity this)
 {
-	entity fireball = spawn();
+	entity fireball = new(fireball);
+	fireball.spawnfunc_checked = true;
 	fireball.solid = SOLID_TRIGGER;
 	set_movetype(fireball, MOVETYPE_TOSS);
 	fireball.velocity = '0 0 1000';
-	fireball.velocity_x =(random() * 100) - 50;
-	fireball.velocity_y =(random() * 100) - 50;
-	fireball.velocity_z = this.speed +(random() * 200);
-	fireball.classname = "fireball";
-	_setmodel(fireball, "progs/lavaball.mdl");
+	fireball.velocity_x = (random() * 100) - 50;
+	fireball.velocity_y = (random() * 100) - 50;
+	fireball.velocity_z = this.speed + (random() * 200);
+	setmodel(fireball, MDL_LAVABALL);
 	setsize(fireball, '0 0 0', '0 0 0');
 	setorigin(fireball, this.origin);
 	fireball.nextthink = time + 5;
 	setthink(fireball, SUB_Remove);
 	settouch(fireball, fire_touch);
 	
-	this.nextthink = time +(random() * 5) + 3;
+	this.nextthink = time + (random() * 5) + 3;
 	setthink(this, fire_fly);
 }
 
@@ -34,10 +34,8 @@ Lava Balls
 
 spawnfunc(misc_fireball)
 {
-	
-	precache_model("progs/lavaball.mdl");
-	this.classname = "fireball";
-	this.nextthink = time +(random() * 5);
+	set_movetype(this, MOVETYPE_NONE); // link to the physics logic
+	this.nextthink = time + 1 + (random() * 5);
 	setthink(this, fire_fly);
 	if(!this.speed)
 		this.speed = 1000;

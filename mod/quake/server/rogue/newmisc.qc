@@ -12,7 +12,7 @@ spawnfunc(light_lantern)
 
 	precache_model("progs/lantern.mdl");
 	_setmodel(this, "progs/lantern.mdl");
-	_makestatic_hidden(this);
+	//_makestatic_hidden(this);
 }
 
 /*QUAKED light_candle (0 .5 0) (-4 -4 -10) (4 4 10)
@@ -26,7 +26,7 @@ spawnfunc(light_candle)
 
 	precache_model("progs/candle.mdl");
 	_setmodel(this, "progs/candle.mdl");
-	_makestatic_hidden(this);
+	//_makestatic_hidden(this);
 }
 
 // ==========================================

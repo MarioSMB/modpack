@@ -47,7 +47,7 @@ void monster_start_go(entity this)
 	if(is_walker)
 	{
 		this.origin_z = this.origin_z + 1;	// raise off floor a bit
-		WITHSELF(this, builtin_droptofloor());
+		droptofloor(this);
 	}
 
 	this.view_ofs = ((this.flags & FL_SWIM) ? '0 0 10' : '0 0 25');

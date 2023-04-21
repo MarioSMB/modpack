@@ -1119,7 +1119,7 @@ void StartFrame()
 	//framecount = framecount + 1;
 
 	//delete_fn = remove_unsafely; // not during spawning!
-	delete_fn = remove_except_protected;
+	delete_fn = remove_except_protected; // we don't use remove_unsafely as quake does infact use spikes
 
 	if(MP_HIPNOTIC)
 		earthquake_frame();
@@ -1131,12 +1131,149 @@ void StartFrame()
 	FOREACH_CLIENT(true, GlobalStats_update(it));
 }
 
-bool autocvar_sv_gameplayfix_multiplethinksperframe;
-void RunThink(entity this)
+void WarpZoneLib_MoveOutOfSolid_Expand(entity e, vector by)
+{
+	const float eps = 0.0625;
+	tracebox(e.origin, e.mins - '1 1 1' * eps, e.maxs + '1 1 1' * eps, e.origin + by, MOVE_WORLDONLY, e);
+	if (trace_startsolid)
+		return;
+	if (trace_fraction < 1)
+	{
+		// hit something
+		// adjust origin in the other direction...
+		setorigin(e, e.origin - by * (1 - trace_fraction));
+	}
+}
+
+bool WarpZoneLib_MoveOutOfSolid(entity e)
+{
+	vector o = e.origin;
+	traceline(o, o, MOVE_WORLDONLY, e);
+	if (trace_startsolid)
+		return false;
+
+	tracebox(o, e.mins, e.maxs, o, MOVE_WORLDONLY, e);
+	if (!trace_startsolid)
+		return true;
+
+	vector m0 = e.mins;
+	vector m1 = e.maxs;
+	e.mins = '0 0 0';
+	e.maxs = '0 0 0';
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eX * m0.x); e.mins_x = m0.x;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eX * m1.x); e.maxs_x = m1.x;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eY * m0.y); e.mins_y = m0.y;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eY * m1.y); e.maxs_y = m1.y;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eZ * m0.z); e.mins_z = m0.z;
+	WarpZoneLib_MoveOutOfSolid_Expand(e, eZ * m1.z); e.maxs_z = m1.z;
+	setorigin(e, e.origin);
+
+	tracebox(e.origin, e.mins, e.maxs, e.origin, MOVE_WORLDONLY, e);
+	if (trace_startsolid)
+	{
+		setorigin(e, o);
+		return false;
+	}
+
+	return true;
+}
+
+bool WarpZoneLib_MoveOutOfSolid(entity e);
+#define move_out_of_solid(e) WarpZoneLib_MoveOutOfSolid(e)
+
+bool autocvar_sv_gameplayfix_droptofloorstartsolid;
+bool autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect;
+
+bool autocvar_sv_mapformat_is_quake3;
+bool autocvar_sv_mapformat_is_quake2;
+
+// deferred dropping
+// ported from VM_SV_droptofloor TODO: make a common function for the client-side?
+void DropToFloor_Handler(entity this)
+{
+	if(!this || wasfreed(this))
+	{
+		// no modifying free entities
+		return;
+	}
+
+	vector end = this.origin;
+	if (autocvar_sv_mapformat_is_quake3)
+		end.z -= 4096;
+	else if (autocvar_sv_mapformat_is_quake2)
+		end.z -= 128;
+	else
+		end.z -= 256; // Quake, QuakeWorld
+
+	// NOTE: SV_NudgeOutOfSolid is used in the engine here
+	if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+	{
+		_Movetype_UnstickEntity(this);
+		move_out_of_solid(this);
+	}
+
+	tracebox(this.origin, this.mins, this.maxs, end, MOVE_NORMAL, this);
+
+	if(trace_startsolid && autocvar_sv_gameplayfix_droptofloorstartsolid)
+	{
+		vector offset, org;
+		offset = 0.5 * (this.mins + this.maxs);
+		offset.z = this.mins.z;
+		org = this.origin + offset;
+		traceline(org, end, MOVE_NORMAL, this);
+		trace_endpos = trace_endpos - offset;
+		if(trace_startsolid)
+		{
+			LOG_DEBUGF("DropToFloor_Handler: %v could not fix badly placed entity", this.origin);
+			_Movetype_LinkEdict(this, false);
+			SET_ONGROUND(this);
+			this.groundentity = NULL;
+		}
+		else if(trace_fraction < 1)
+		{
+			LOG_DEBUGF("DropToFloor_Handler: %v fixed badly placed entity", this.origin);
+			setorigin(this, trace_endpos);
+			if(autocvar_sv_gameplayfix_droptofloorstartsolid_nudgetocorrect)
+			{
+				_Movetype_UnstickEntity(this);
+				move_out_of_solid(this);
+			}
+			SET_ONGROUND(this);
+			this.groundentity = trace_ent;
+			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
+			this.move_suspendedinair = true;
+		}
+	}
+	else
+	{
+		if(!trace_allsolid && trace_fraction < 1)
+		{
+			setorigin(this, trace_endpos);
+			SET_ONGROUND(this);
+			this.groundentity = trace_ent;
+			// if support is destroyed, keep suspended (gross hack for floating items in various maps)
+			this.move_suspendedinair = true;
+		}
+		else
+		{
+			// if we can't get the entity out of solid, mark it as on ground so physics doesn't attempt to drop it
+			// hacky workaround for #2774
+			SET_ONGROUND(this);
+		}
+	}
+}
+
+void droptofloor(entity this)
+{
+	DropToFloor_Handler(this);
+}
+
+bool autocvar_sv_gameplayfix_multiplethinksperframe = true;
+void RunThink(entity this, float dt)
 {
 	// don't let things stay in the past.
 	// it is possible to start that way by a trigger with a local time.
-	if(this.nextthink <= 0 || this.nextthink > time + frametime)
+	if(this.nextthink <= 0 || this.nextthink > time + dt)
 		return;
 
 	float oldtime = time; // do we need to save this?
@@ -1152,7 +1289,7 @@ void RunThink(entity this)
 		// we don't want to loop in that case, so exit if the new nextthink is
 		// <= the time the qc was told, also exit if it is past the end of the
 		// frame
-		if(this.nextthink <= time || this.nextthink > oldtime + frametime || !autocvar_sv_gameplayfix_multiplethinksperframe)
+		if(this.nextthink <= time || this.nextthink > oldtime + dt || !autocvar_sv_gameplayfix_multiplethinksperframe)
 			break;
 	}
 
@@ -1182,17 +1319,20 @@ void Physics_Frame()
 			if(it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH)
 				continue; // these movetypes have no regular think function
 			// handle thinking here
-			if (getthink(it) && it.nextthink > 0 && it.nextthink <= time + frametime)
-				RunThink(it);
+			if (getthink(it) && it.nextthink > 0 && it.nextthink <= time + PHYS_INPUT_TIMELENGTH)
+				RunThink(it, PHYS_INPUT_TIMELENGTH);
 		}
 	});
 
 	if(autocvar_sv_gameplayfix_delayprojectiles >= 0)
 		return;
 
+	// make a second pass to see if any ents spawned this frame and make
+	// sure they run their move/think. this is verified by checking .move_time, which will never be 0 if the entity has moved
+	// MOVETYPE_NONE is also checked as .move_time WILL be 0 with that movetype
 	IL_EACH(g_moveables, it.move_qcphysics,
 	{
-		if(IS_CLIENT(it) || is_pure(it) || it.classname == "" || it.move_movetype == MOVETYPE_NONE)
+		if(IS_CLIENT(it) || it.move_time || it.move_movetype == MOVETYPE_NONE || it.move_movetype == MOVETYPE_PHYSICS)
 			continue;
 		Movetype_Physics_NoMatchTicrate(it, PHYS_INPUT_TIMELENGTH, false);
 	});

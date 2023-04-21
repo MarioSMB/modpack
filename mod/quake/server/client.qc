@@ -1789,6 +1789,15 @@ void Player_Physics(entity this)
 	Movetype_Physics_NoMatchTicrate(this, this.pm_frametime, true);
 
 	this.pm_frametime = 0;
+
+	if(this.movetype >= MOVETYPE_USER_FIRST && this.movetype <= MOVETYPE_USER_LAST) // these cases have no think handling
+	{
+		if(this.move_movetype == MOVETYPE_PUSH || this.move_movetype == MOVETYPE_FAKEPUSH)
+			return; // these movetypes have no regular think function
+		// handle thinking here
+		if (getthink(this) && this.nextthink > 0 && this.nextthink <= time + PHYS_INPUT_TIMELENGTH)
+			RunThink(this, PHYS_INPUT_TIMELENGTH);
+	}
 }
 
 

@@ -1506,16 +1506,7 @@ void place_flag(entity this)
 	this.cnt = FLAG_AT_BASE;
 	this.mangle = this.angles;
 	this.effects |= EF_DIMLIGHT;
-	bool didit = false;
-	WITHSELF(this, didit = builtin_droptofloor());
-	if(!didit)
-	{
-		dprint("Flag fell out of level at ");
-		dprint(vtos(this.origin));
-		dprint("\n");
-		delete(this);
-		return;
-	}
+	droptofloor(this);
 	this.oldorigin = this.origin; // save for flag return
 }
 
@@ -1542,16 +1533,7 @@ void place_flagbase(entity flg, string cname)
 	}
 	else
 		base.solid = SOLID_NOT;
-	bool didit = false;
-	WITHSELF(base, didit = builtin_droptofloor());
-	if(!didit)
-	{
-		dprint ("Flagbase fell out of level at ");
-		dprint (vtos(base.origin));
-		dprint ("\n");
-		delete(base);
-		return;
-	}
+	droptofloor(base);
 }
 
 // ZOID Capture the flag
