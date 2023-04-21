@@ -50,7 +50,7 @@ void W_Chainsaw_Attack1(Weapon thiswep, entity actor, .entity weaponentity, int 
 			melee_damage = WEP_CVAR(chainsaw, melee_damage);
 		else
 			melee_damage = WEP_CVAR(chainsaw, melee_nonplayerdamage);
-		Damage_DamageInfo(trace_endpos, (trace_ent.solid == SOLID_BSP), melee_damage, 0, 0, v_forward * WEP_CVAR(chainsaw, melee_force), WEP_CHAINSAW.m_id, trace_ent.species, actor);
+		Damage_DamageInfo(trace_endpos, melee_damage, 0, 0, v_forward * WEP_CVAR(chainsaw, melee_force), WEP_CHAINSAW.m_id, trace_ent.species, actor);
 	}
 
 	entity target_victim;
@@ -130,7 +130,7 @@ void W_Chainsaw_Melee_Think(entity this)
 				swing_damage = (WEP_CVAR(chainsaw, swing_damage) * min(1, swing_factor + 1));
 			else
 				swing_damage = (WEP_CVAR(chainsaw, swing_nonplayerdamage) * min(1, swing_factor + 1));
-			Damage_DamageInfo(trace_endpos, (trace_ent.solid == SOLID_BSP), swing_damage, 0, 0, v_forward * WEP_CVAR(chainsaw, swing_force), WEP_CHAINSAW.m_id | HITTYPE_SECONDARY, trace_ent.species, this.realowner);
+			Damage_DamageInfo(trace_endpos, swing_damage, 0, 0, v_forward * WEP_CVAR(chainsaw, swing_force), WEP_CHAINSAW.m_id | HITTYPE_SECONDARY, trace_ent.species, this.realowner);
 		}
 
 		if((trace_fraction < 1) // if trace is good, apply the damage and remove this

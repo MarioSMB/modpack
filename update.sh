@@ -24,5 +24,5 @@ else
     popd
 fi
 
-pushd ${qccDir} && make -j $(nproc)
+pushd ${qccDir} && make
 popd
