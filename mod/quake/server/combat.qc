@@ -1,3 +1,6 @@
+#include "combat.qh"
+
+#include "monsters/ai.qh"
 #include "rogue/runes.qh"
 
 void impale(entity this);
@@ -7,6 +10,8 @@ bool IsExplosionDamage;
 void ClientObituary(entity targ, entity inflictor, entity attacker);
 
 void FoundTarget(entity this);
+
+void SUB_UseTargets(entity this, entity actor, entity trigger);
 
 //============================================================================
 

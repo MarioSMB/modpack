@@ -1,0 +1,40 @@
+#pragma once
+
+//const int SHOTTYPE_HITTEAM = 1;
+//const int SHOTTYPE_HITOBSTRUCTION = 2;
+//const int SHOTTYPE_HITWORLD = 3;
+//const int SHOTTYPE_HITENEMY = 4;
+
+bool autocvar_crosshair_enabled;
+string autocvar_crosshair;
+float autocvar_crosshair_size;
+float autocvar_crosshair_alpha;
+bool autocvar_crosshair_effect_scalefade;
+float autocvar_crosshair_effect_time;
+//bool autocvar_crosshair_hittest_blur;
+float autocvar__menu_alpha;
+bool autocvar_crosshair_dot;
+int autocvar_crosshair_dot_color_custom;
+string autocvar_crosshair_dot_color;
+float autocvar_crosshair_dot_size;
+float autocvar_crosshair_dot_alpha;
+//bool autocvar_crosshair_hittest;
+bool autocvar_crosshair_chase = true;
+
+vector wcross_origin;
+float wcross_scale_prev, wcross_alpha_prev;
+vector wcross_color_prev;
+float wcross_scale_goal_prev, wcross_alpha_goal_prev;
+vector wcross_color_goal_prev;
+float wcross_changedonetime;
+
+string wcross_name_goal_prev, wcross_name_goal_prev_prev;
+float wcross_resolution_goal_prev, wcross_resolution_goal_prev_prev;
+float wcross_name_changestarttime, wcross_name_changedonetime;
+float wcross_name_alpha_goal_prev, wcross_name_alpha_goal_prev_prev;
+
+bool autocvar_crosshair_per_weapon;
+int autocvar_crosshair_color_special;
+float autocvar_crosshair_color_special_rainbow_brightness;
+float autocvar_crosshair_color_special_rainbow_delay;
+string autocvar_crosshair_color;

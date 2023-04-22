@@ -1,0 +1,11 @@
+#pragma once
+
+.int weapons;
+
+.int powerups;
+
+.string mdl;
+
+.int aflag;
+
+.int worldtype;

@@ -1,6 +1,7 @@
 #include "include.qh"
 
 // some required common stuff
+#include "triggers.qc"
 #include "subs.qc"
 //#include "triggers.qc"
 //#include "platforms.qc"

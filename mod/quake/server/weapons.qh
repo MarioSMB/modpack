@@ -1,0 +1,12 @@
+#pragma once
+
+.bool elec;
+.bool lightningmodel;
+
+.bool axhitme;
+
+.int prevweapon;
+
+.float ammo_lava_nails;
+.float ammo_multi_rockets;
+.float ammo_plasma;

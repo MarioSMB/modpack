@@ -1,3 +1,5 @@
+#include "rogue.qh"
+
 // main file for the rogue mission pack
 
 STATIC_INIT(rogue_fixguardian)

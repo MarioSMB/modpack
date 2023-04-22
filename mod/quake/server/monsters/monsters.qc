@@ -1,3 +1,5 @@
+#include "monsters.qh"
+
 /* ALL MONSTERS SHOULD BE 1 0 0 IN COLOR */
 
 // name =[framenum,	nexttime, nextthink] {code}

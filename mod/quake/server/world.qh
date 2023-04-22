@@ -1,0 +1,26 @@
+#pragma once
+
+// protocol bytes
+const int SVC_CUTSCENE = 34;
+
+float sys_frametime;     // gets initialised in worldspawn, saves the value from autocvar_sys_ticrate
+
+float servertime, serverprevtime, serverframetime;
+
+const string QUAKE_TALKSOUND = "misc/quake_talk.wav";
+
+int intermission_running;
+
+bool gameover;
+
+.bool jump_flag;
+
+// intrusive lists
+
+IntrusiveList g_damagedbycontents;
+IntrusiveList g_moveables;
+STATIC_INIT(defs)
+{
+	g_damagedbycontents = IL_NEW();
+	g_moveables = IL_NEW();
+}

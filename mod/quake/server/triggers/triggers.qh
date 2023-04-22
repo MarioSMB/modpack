@@ -1,6 +1,74 @@
 #pragma once
 
 #ifdef SVQC
+.float save_nextthink;
+
+.float gravity;
+
+.float distance;
+.float volume;
+
+.float dmg;
+
+.vector mangle;
+
+.int count;
+
+.vector dest1, dest2;
+
+.string noise4;
+
+.entity trigger_field;
+
+.vector pos1, pos2;
+
+.float height;
+
+.float t_width;
+.float t_length;
+
+//----------------
+// STATES & ACTIVE
+//----------------
+const int STATE_TOP = 0;
+const int STATE_BOTTOM = 1;
+const int STATE_UP = 2;
+const int STATE_DOWN = 3;
+
+float orig_random(entity this);
+void CorpseThink(entity this);
+.float motd_time;
+.float motd_count;
+.bool impaled;
+//.float lightningmodel
+.float exptime;
+.float bounced;
+.float silencer;
+
+.vector finaldest, finalangle; 		//plat.qc stuff
+.void(entity this) think1;
+.float state;
+
+.float delay;
+.float wait;
+.float lip;
+.float speed;
+.float sounds;
+
+.string killtarget;
+
+.int cnt;
+
+.float attack_finished;
+.float attack2_finished;
+
+// TODO
+void SUB_AttackFinished(entity this, float normal);
+void SUB_CheckRefire(entity this, void(entity) thinkst);
+bool visible(entity this, entity targ);
+
+void SUB_UseTargets(entity this, entity actor, entity trigger);
+
 const int SPAWNFLAG_NOMESSAGE = BIT(0);
 const int SPAWNFLAG_NOTOUCH = BIT(0);
 #endif

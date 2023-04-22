@@ -1,14 +1,7 @@
+#include "client.qh"
+
 #include "combat.qh"
-
-// prototypes
-void W_WeaponFrame(entity this);
-void W_SetCurrentAmmo(entity this);
-void player_pain(entity this, entity attacker, float damage);
-void player_stand1(entity this);
-void spawn_tfog(vector org);
-void spawn_tdeath(vector org, entity death_owner);
-
-void(entity targ, entity attacker) dmatch_score;
+#include "rogue/teamplay.qh"
 
 /*
 =============================================================================
@@ -97,8 +90,6 @@ void SetNewParms()
 	parm15 = WEP_AXE; // always use axe as the alternate weapon
 }
 
-bool TeamColorIsLegal(int thecolor);
-void TeamSetSkin(entity this);
 void DecodeLevelParms(entity this)
 {
 	if(serverflags)

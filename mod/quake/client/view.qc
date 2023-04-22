@@ -1,29 +1,4 @@
-void HUD_CenterPrint ();
-
-float drawframetime;
-
-int cs_project_is_b0rked;
-int vid_width, vid_height;
-float vid_pixelheight;
-
-float autocvar_vid_conwidth;
-float autocvar_vid_conheight;
-float autocvar_vid_pixelheight;
-
-float contentavgalpha, liquidalpha_prev;
-vector liquidcolor_prev;
-
-// TODO: item pickup flashing? maybe not (seizure fest)
-// requires some kind of stat
-bool autocvar_hud_contents;
-float autocvar_hud_contents_fadeintime = 0.02;
-float autocvar_hud_contents_fadeouttime = 0.1;
-float autocvar_hud_contents_lava_alpha = 0.7;
-vector autocvar_hud_contents_lava_color = '0.8 0.1 0';
-float autocvar_hud_contents_slime_alpha = 0.7;
-vector autocvar_hud_contents_slime_color = '0 0.4 0.1';
-float autocvar_hud_contents_water_alpha = 0.5;
-vector autocvar_hud_contents_water_color = '0.4 0.3 0.3';
+#include "view.qh"
 
 // visual overlay while in liquids
 void HUD_Contents()

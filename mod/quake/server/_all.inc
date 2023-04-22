@@ -11,7 +11,6 @@
 #include "impel/_all.qh"
 
 //#include "defs.qc"
-#include "subs.qc"
 #include "combat.qc"
 #include "items.qc"
 #include "weapons.qc"

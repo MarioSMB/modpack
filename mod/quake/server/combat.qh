@@ -1,7 +1,15 @@
 #pragma once
 
+.float pain_finished;
+
+.bool damagedbycontents;
+
 bool CanDamage(entity targ, entity inflictor);
 
 void T_Damage(entity targ, entity inflictor, entity attacker, float damage);
 
 vector qc_aim(entity this, float missilespeed);
+
+.void(entity this, entity attacker, float damage) th_pain;
+.void(entity this, entity inflictor, entity attacker) th_die;
+//.void(entity this, entity inflictor, entity attacker) th_impale;

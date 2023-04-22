@@ -1,3 +1,5 @@
+#include "ai.qh"
+
 void spider_wake1(entity this); // TODO?
 /*
 

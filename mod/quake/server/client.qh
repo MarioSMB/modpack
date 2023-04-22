@@ -1,0 +1,51 @@
+#pragma once
+
+.float model_randomizer;
+
+string current_cdtrack;
+
+.string map;
+
+.int playerid;
+
+.float air_finished;
+
+.float invincible_finished;
+.float invisible_finished;
+.float super_damage_finished;
+.float radsuit_finished;
+
+.float field_generator_finished;
+.float field_generator_health;
+.float field_generator_time;
+.float field_generator_sound;
+
+.float invincible_time, invincible_sound;
+.float invisible_time, invisible_sound;
+.float super_time, super_sound;
+.float rad_time;
+.float fly_sound;
+
+int modelindex_bolt; // aop
+int modelindex_eyes, modelindex_hammer;
+.int modelindex_player;
+
+void player_sound(entity this, int chan, string sample, float atten);
+string get_playermodel(entity this);
+string get_playerhead(entity this);
+
+// prototypes
+void W_WeaponFrame(entity this);
+void W_SetCurrentAmmo(entity this);
+void player_pain(entity this, entity attacker, float damage);
+void player_stand1(entity this);
+void spawn_tfog(vector org);
+void spawn_tdeath(vector org, entity death_owner);
+
+.string deathtype;
+.string(entity this) deathmessage;
+
+void(entity targ, entity attacker) dmatch_score;
+
+const bool OPT_MOTD = true; // TODO: opt-out in non-impel!
+const int FL_MOTDVIEWED = 8192; // impel

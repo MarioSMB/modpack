@@ -1,3 +1,9 @@
+#include "items.qh"
+
+#include "rogue/rogue.qh"
+#include "triggers/triggers.qh"
+#include "weapons.qh"
+
 void W_SwitchWeapon(entity this, float to_wep);
 void W_SetCurrentAmmo(entity this);
 /* ALL LIGHTS SHOULD BE 0 1 0 IN COLOR ALL OTHER ITEMS SHOULD

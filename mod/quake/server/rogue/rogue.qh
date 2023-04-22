@@ -1,0 +1,27 @@
+#pragma once
+
+// rogue globals!
+float earthquake_active;
+float earthquake_intensity;
+float cutscene_running;
+entity tag_token_owner;
+
+.float shield_finished, antigrav_finished;
+.float shield_time, antigrav_time;
+.entity shield_entity;
+
+//
+// elevator fields
+//
+
+.float elevatorLastUse;
+.float elevatorOnFloor;
+.float elevatorToFloor;
+.vector elevatorDestination; 
+
+//
+// Other Rogue Fields
+//
+.float AGping;
+.float shield_death_time;
+.float shieldSoundTime;

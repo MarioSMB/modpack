@@ -1,0 +1,29 @@
+#pragma once
+
+.int attack_state;
+const int AS_STRAIGHT = 1;
+const int AS_SLIDING = 2;
+const int AS_MELEE = 3;
+const int AS_MISSILE = 4;
+
+.entity oldenemy;
+
+.void(entity this) th_stand;
+.void(entity this) th_walk;
+.void(entity this) th_run;
+.void(entity this) th_missile;
+.void(entity this) th_melee;
+
+.float lefty;
+
+.float pausetime;
+
+.entity movetarget;
+
+.float search_time;
+
+.float show_hostile;
+
+bool visible(entity this, entity targ);
+
+bool t_checkbottom(entity this);

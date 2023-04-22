@@ -78,3 +78,6 @@ const int CTF_FLAG_STUFF_COLOR	=	4;	// gotta stuff his color
 const int FLAG_AT_BASE = 0;
 const int FLAG_CARRIED = 1;
 const int FLAG_DROPPED = 2;
+
+bool TeamColorIsLegal(int thecolor);
+void TeamSetSkin(entity this);

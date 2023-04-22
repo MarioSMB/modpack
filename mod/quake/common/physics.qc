@@ -1,4 +1,8 @@
 #ifdef SVQC
+#include "../server/client.qh"
+#endif
+
+#ifdef SVQC
 void Physics_UpdateStats(entity this)
 {
 	if(intermission_running)

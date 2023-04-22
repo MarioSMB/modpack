@@ -1,3 +1,5 @@
+#include "misc.qh"
+
 #include "combat.qh"
 
 bool autocvar_sv_eventlog_console;

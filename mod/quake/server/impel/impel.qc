@@ -1,3 +1,5 @@
+#include "impel.qh"
+
 // main file for the impel mission pack
 
 PRECACHE(Impel)

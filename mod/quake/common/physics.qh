@@ -16,6 +16,8 @@
 
 #ifdef SVQC
 	.bool move_qcphysics;
+
+	.int swim_flag;
 #endif
 
 .float teleport_time;

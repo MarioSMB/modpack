@@ -1,39 +1,8 @@
-float orig_random(entity this);
-void CorpseThink(entity this);
-.float motd_time;
-.float motd_count;
-.bool impaled;
-//.float lightningmodel
-.float exptime;
-.float bounced;
-.float silencer;
-
-.vector finaldest, finalangle; 		//plat.qc stuff
-.void(entity this) think1;
-.float state;
-
-.float delay;
-.float wait;
-.float lip;
-.float speed;
-.float sounds;
-
-.string killtarget;
-
-.int cnt;
-
-.float attack_finished;
-.float attack2_finished;
-
-// TODO
-void SUB_AttackFinished(entity this, float normal);
-void SUB_CheckRefire(entity this, void(entity) thinkst);
-bool visible(entity this, entity targ);
+#ifdef SVQC
 
 
 //=============================================================================
 
-void SUB_UseTargets(entity this, entity actor, entity trigger);
 void DelayThink(entity this)
 {
 	SUB_UseTargets(this, this.enemy, NULL);
@@ -115,3 +84,5 @@ void SUB_UseTargets(entity this, entity actor, entity trigger)
 		}
 	}
 }
+
+#endif

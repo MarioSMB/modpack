@@ -1,17 +1,4 @@
-//float autocvar_r_letterbox;
-//int autocvar_cl_prydoncursor;
-int autocvar_cl_deathscoreboard;
-float autocvar_sbar_alpha_bg;
-string autocvar_cl_worldbasename;
-string autocvar_cl_worldmessage;
-float autocvar_sbar_alpha_fg;
-float autocvar_scr_viewsize;
-bool autocvar_sbar_gametime;
-bool autocvar_sbar_scorerank;
-float autocvar_sbar_miniscoreboard_size;
-
-const int WEP_INDEXSTART_HIPNOTIC = 7;
-const int WEP_INDEXSTART_ROGUE = 11;
+#include "sbar.qh"
 
 string Sbar_PickWeapon_wepname(int wpn)
 {

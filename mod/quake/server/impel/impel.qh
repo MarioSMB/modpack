@@ -1,0 +1,7 @@
+#pragma once
+
+.int rifle_cnt; // unique counter since this is a secondary attack function
+
+bool angry_monsters;
+bool corpse_removal;
+.entity other2;
