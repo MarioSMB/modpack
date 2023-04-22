@@ -17,7 +17,7 @@
 #include "world.qc"
 #include "client.qc"
 #include "player.qc"
-#include "misc.qc"
+#include "gamelog.qc"
 #include "commands.qc"
 #include "chat.qc"
 

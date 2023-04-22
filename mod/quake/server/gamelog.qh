@@ -1,0 +1,23 @@
+#pragma once
+
+bool autocvar_sv_eventlog;
+bool autocvar_sv_eventlog_console;
+bool autocvar_sv_eventlog_files;
+int autocvar_sv_eventlog_files_counter;
+string autocvar_sv_eventlog_files_nameprefix;
+string autocvar_sv_eventlog_files_namesuffix;
+bool autocvar_sv_eventlog_files_timestamps;
+bool autocvar_sv_eventlog_ipv6_delimiter = false;
+
+bool logfile_open = false;
+float logfile;
+
+string GameLog_ProcessIP(string s);
+
+void GameLogEcho(string s);
+
+#if 0
+void GameLogInit();
+
+void GameLogClose();
+#endif

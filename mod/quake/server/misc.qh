@@ -1,7 +1,0 @@
-#pragma once
-
-bool autocvar_sv_eventlog;
-int autocvar_sv_eventlog_files_counter; // TODO
-
-void set_anim(entity this, int frm, void(entity) tnk);
-void set_animofs(entity this, int frm, int offs, void(entity) tnk); // because we can

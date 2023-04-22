@@ -109,4 +109,11 @@ spawnfunc(trigger_monsterjump)
 		this.cnt = -1;
 }
 
+/*QUAKED info_notnull(0 0.5 0)(-4 -4 -4)(4 4 4)
+Used as a positional target for lightning.
+*/
+spawnfunc(info_notnull)
+{
+}
+
 #endif

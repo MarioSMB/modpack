@@ -23,6 +23,15 @@ bool gameover;
 
 .bool jump_flag;
 
+bool world_already_spawned;
+int world_initialized;
+bool server_is_dedicated;
+
+void dedicated_print(string input);
+
+void set_anim(entity this, int frm, void(entity) tnk);
+void set_animofs(entity this, int frm, int offs, void(entity) tnk); // because we can
+
 // intrusive lists
 
 IntrusiveList g_damagedbycontents;

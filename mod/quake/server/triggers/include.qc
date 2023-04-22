@@ -3,6 +3,7 @@
 // some required common stuff
 #include "triggers.qc"
 #include "subs.qc"
+#include "models.qc"
 //#include "triggers.qc"
 //#include "platforms.qc"
 #include "teleporters.qc"

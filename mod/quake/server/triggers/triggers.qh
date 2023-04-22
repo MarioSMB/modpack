@@ -1,6 +1,8 @@
 #pragma once
 
 #ifdef SVQC
+const int START_OFF = BIT(0);
+
 .float save_nextthink;
 
 .float gravity;

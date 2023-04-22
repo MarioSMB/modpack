@@ -3,7 +3,6 @@
 #include "combat.qh"
 #include "client.qh"
 #include "impel/impel.qh"
-#include "misc.qh"
 #include "monsters/ai.qh"
 
 .bool lavaGunFired;

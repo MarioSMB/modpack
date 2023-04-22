@@ -671,8 +671,6 @@ void player_rocket3(entity this) { set_animofs(this, anim_player_rockatt1, 3, pl
 void player_rocket2(entity this) { set_animofs(this, anim_player_rockatt1, 2, player_rocket3); this.weaponframe = 2; }
 void player_rocket1(entity this) { set_animofs(this, anim_player_rockatt1, 1, player_rocket2); this.weaponframe = 1; this.effects |= EF_MUZZLEFLASH; }
 
-void DeathBubbles(entity this, int num_bubbles);
-
 string get_painsound(entity this, int chance);
 void PainSound(entity this, entity attacker)
 {
@@ -797,7 +795,121 @@ void player_die_ax1(entity this);
 // hipnotic
 void player_die_ham1(entity this);
 
-void bubble_bob(entity this);
+/*QUAKED air_bubbles(0 .5 .8)(-8 -8 -8)(8 8 8)
+
+testing air bubbles
+*/
+
+spawnfunc(air_bubbles)
+{
+	if(deathmatch) { delete(this); return; }
+
+	precache_model("progs/s_bubble.spr");
+	this.nextthink = time + 1;
+	setthink(this, make_bubbles);
+}
+
+void make_bubbles(entity this)
+{
+	entity bubble = spawn();
+	_setmodel(bubble, "progs/s_bubble.spr");
+	setorigin(bubble, this.origin);
+	set_movetype(bubble, MOVETYPE_NOCLIP);
+	bubble.solid = SOLID_NOT;
+	bubble.velocity = '0 0 15';
+	bubble.nextthink = time + 0.5;
+	setthink(bubble, bubble_bob);
+	settouch(bubble, bubble_remove);
+	bubble.classname = "bubble";
+	bubble.frame = 0;
+	bubble.cnt = 0;
+	setsize(bubble, '-8 -8 -8', '8 8 8');
+	this.nextthink = time + random() + 0.5;
+	setthink(this, make_bubbles);
+}
+
+void bubble_split(entity this)
+{
+	entity bubble = spawn();
+	_setmodel(bubble, "progs/s_bubble.spr");
+	setorigin(bubble, this.origin);
+	set_movetype(bubble, MOVETYPE_NOCLIP);
+	bubble.solid = SOLID_NOT;
+	bubble.velocity = this.velocity;
+	bubble.nextthink = time + 0.5;
+	setthink(bubble, bubble_bob);
+	settouch(bubble, bubble_remove);
+	bubble.classname = "bubble";
+	bubble.frame = 1;
+	bubble.cnt = 10;
+	setsize(bubble, '-8 -8 -8', '8 8 8');
+	this.frame = 1;
+	this.cnt = 10;
+	if(this.waterlevel != 3)
+		delete(this);
+}
+
+void bubble_remove(entity this, entity toucher)
+{
+	if(toucher.classname == this.classname)
+	{
+//		dprint("bump");
+		return;
+	}
+	delete(this);
+}
+
+void bubble_bob(entity this)
+{
+	if(MP_ROGUE)
+	{
+		// PGM fix - 02/25/97 so bubbles won't go through walls
+		float bubcont = pointcontents(this.origin);
+		if(bubcont == CONTENT_SOLID)
+		{
+			delete(this);
+			return;
+		}
+		// PGM fix - 02/25/97 so bubbles pop 2 seconds after leaving water
+		else if(bubcont == CONTENT_EMPTY)
+		{
+			if(this.cnt < 16)
+				this.cnt = 16;
+		}
+	}
+
+	this.cnt = this.cnt + 1;
+	if(this.cnt == 4)
+		bubble_split(this);
+	if(this.cnt == 20)
+		delete(this);
+
+	float rnd1 = this.velocity_x +(-10 +(random() * 20));
+	float rnd2 = this.velocity_y +(-10 +(random() * 20));
+	float rnd3 = this.velocity_z + 10 + random() * 10;
+
+	if(rnd1 > 10)
+		rnd1 = 5;
+	if(rnd1 < -10)
+		rnd1 = -5;
+		
+	if(rnd2 > 10)
+		rnd2 = 5;
+	if(rnd2 < -10)
+		rnd2 = -5;
+		
+	if(rnd3 < 10)
+		rnd3 = 15;
+	if(rnd3 > 30)
+		rnd3 = 25;
+	
+	this.velocity_x = rnd1;
+	this.velocity_y = rnd2;
+	this.velocity_z = rnd3;
+		
+	this.nextthink = time + 0.5;
+	setthink(this, bubble_bob);
+}
 
 .int bubble_count;
 void DeathBubblesSpawn(entity this)

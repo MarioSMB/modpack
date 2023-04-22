@@ -1,6 +1,235 @@
+#include "world.qh"
+
+#include "gamelog.qh"
+
 entity lastspawn;
 
 void main() { /* unused */ }
+
+void dedicated_print(string input)
+{
+	if (server_is_dedicated) print(input);
+}
+
+const float FRAME_TIME = 0.1;
+void set_anim(entity this, int frm, void(entity) tnk)
+{
+	this.frame = frm;
+	setthink(this, tnk);
+	this.nextthink = time + FRAME_TIME;
+}
+
+void set_animofs(entity this, int frm, int offs, void(entity) tnk)
+{
+	int realoffset = offs - 1; // because frame1 should still look like frame1!
+	set_anim(this, frm + realoffset, tnk);
+}
+
+void light_use(entity this, entity actor, entity trigger)
+{
+	if(this.spawnflags & START_OFF)
+	{
+		lightstyle(this.style, "m");
+		this.spawnflags &= ~START_OFF;
+	}
+	else
+	{
+		lightstyle(this.style, "a");
+		this.spawnflags |= START_OFF;
+	}
+}
+
+void noise_think(entity this)
+{
+	this.nextthink = time + 0.5;
+	_sound(this, 1, "enforcer/enfire.wav", 1, ATTN_NORM);
+	_sound(this, 2, "enforcer/enfstop.wav", 1, ATTN_NORM);
+	_sound(this, 3, "enforcer/sight1.wav", 1, ATTN_NORM);
+	_sound(this, 4, "enforcer/sight2.wav", 1, ATTN_NORM);
+	_sound(this, 5, "enforcer/sight3.wav", 1, ATTN_NORM);
+	_sound(this, 6, "enforcer/sight4.wav", 1, ATTN_NORM);
+	_sound(this, 7, "enforcer/pain1.wav", 1, ATTN_NORM);
+}
+
+/*QUAKED misc_noisemaker(1 0.5 0)(-10 -10 -10)(10 10 10)
+
+For optimzation testing, starts a lot of sounds.
+*/
+
+spawnfunc(misc_noisemaker)
+{
+	precache_sound2("enforcer/enfire.wav");
+	precache_sound2("enforcer/enfstop.wav");
+	precache_sound2("enforcer/sight1.wav");
+	precache_sound2("enforcer/sight2.wav");
+	precache_sound2("enforcer/sight3.wav");
+	precache_sound2("enforcer/sight4.wav");
+	precache_sound2("enforcer/pain1.wav");
+	precache_sound2("enforcer/pain2.wav");
+	precache_sound2("enforcer/death1.wav");
+	precache_sound2("enforcer/idle1.wav");
+
+	this.nextthink = time + 0.1 + random();
+	setthink(this, noise_think);
+}
+
+/*QUAKED viewthing(0 .5 .8)(-8 -8 -8)(8 8 8)
+
+Just for the debugging level.  Don't use
+*/
+
+spawnfunc(viewthing)
+{
+	set_movetype(this, MOVETYPE_NONE);
+	this.solid = SOLID_NOT;
+	precache_model("progs/player.mdl");
+	_setmodel(this, "progs/player.mdl");
+}
+
+/*QUAKED light(0 1 0)(-8 -8 -8)(8 8 8) START_OFF
+Non-displayed light.
+Default light value is 300
+Default style is 0
+If targeted, it will toggle between on or off.
+*/
+spawnfunc(light)
+{
+	if(!this.targetname || this.targetname == "")
+	{	// inert light
+		delete(this);
+		return;
+	}
+	
+	if(this.style >= 32)
+	{
+		this.use = light_use;
+		if(this.spawnflags & START_OFF)
+			lightstyle(this.style, "a");
+		else
+			lightstyle(this.style, "m");
+	}
+}
+
+/*QUAKED light_fluoro(0 1 0)(-8 -8 -8)(8 8 8) START_OFF
+Non-displayed light.
+Default light value is 300
+Default style is 0
+If targeted, it will toggle between on or off.
+Makes steady fluorescent humming sound
+*/
+spawnfunc(light_fluoro)
+{
+	if(this.style >= 32)
+	{
+		this.use = light_use;
+		if(this.spawnflags & START_OFF)
+			lightstyle(this.style, "a");
+		else
+			lightstyle(this.style, "m");
+	}
+	
+	precache_sound("ambience/fl_hum1.wav");
+	ambientsound(this.origin, "ambience/fl_hum1.wav", 0.5, ATTN_STATIC);
+}
+
+/*QUAKED light_fluorospark(0 1 0)(-8 -8 -8)(8 8 8)
+Non-displayed light.
+Default light value is 300
+Default style is 10
+Makes sparking, broken fluorescent sound
+*/
+spawnfunc(light_fluorospark)
+{
+	if(!this.style)
+		this.style = 10;
+
+	precache_sound("ambience/buzz1.wav");
+	ambientsound(this.origin, "ambience/buzz1.wav", 0.5, ATTN_STATIC);
+}
+
+/*QUAKED light_globe(0 1 0)(-8 -8 -8)(8 8 8)
+Sphere globe light.
+Default light value is 300
+Default style is 0
+*/
+spawnfunc(light_globe)
+{
+	precache_model("progs/s_light.spr");
+	_setmodel(this, "progs/s_light.spr");
+	//_makestatic_hidden(this);
+}
+
+void FireAmbient(entity this)
+{
+	precache_sound("ambience/fire1.wav");
+// attenuate fast
+	ambientsound(this.origin, "ambience/fire1.wav", 0.5, ATTN_STATIC);
+}
+
+/*QUAKED light_torch_small_walltorch(0 .5 0)(-10 -10 -20)(10 10 20) Quiet
+Short wall torch
+Default light value is 200 (300 in rogue)
+Default style is 0
+*/
+spawnfunc(light_torch_small_walltorch)
+{
+	precache_model("progs/flame.mdl");
+	_setmodel(this, "progs/flame.mdl");
+	bool allow_fire = true;
+	if(MP_ROGUE && (this.spawnflags & 1))
+		allow_fire = false;
+	if(MP_IMPEL && (this.spawnflags & 2))
+		allow_fire = false;
+	if(allow_fire)
+		FireAmbient(this);
+	//_makestatic_hidden(this);
+}
+
+/*QUAKED light_flame_large_yellow(0 1 0)(-10 -10 -12)(12 12 18)
+Large yellow flame ball
+*/
+spawnfunc(light_flame_large_yellow)
+{
+	precache_model("progs/flame2.mdl");
+	_setmodel(this, "progs/flame2.mdl");
+	this.frame = 1;
+	bool allow_fire = true;
+	if(MP_IMPEL && (this.spawnflags & 2))
+		allow_fire = false;
+	if(allow_fire)
+		FireAmbient(this);
+	//_makestatic_hidden(this);
+}
+
+/*QUAKED light_flame_small_yellow(0 1 0)(-8 -8 -8)(8 8 8) START_OFF
+Small yellow flame ball
+*/
+spawnfunc(light_flame_small_yellow)
+{
+	precache_model("progs/flame2.mdl");
+	_setmodel(this, "progs/flame2.mdl");
+	bool allow_fire = true;
+	if(MP_IMPEL && (this.spawnflags & 2))
+		allow_fire = false;
+	if(allow_fire)
+		FireAmbient(this);
+	//_makestatic_hidden(this);
+}
+
+/*QUAKED light_flame_small_white(0 1 0)(-10 -10 -40)(10 10 40) START_OFF
+Small white flame ball
+*/
+spawnfunc(light_flame_small_white)
+{
+	precache_model("progs/flame2.mdl");
+	_setmodel(this, "progs/flame2.mdl");
+	bool allow_fire = true;
+	if(MP_IMPEL && (this.spawnflags & 2))
+		allow_fire = false;
+	if(allow_fire)
+		FireAmbient(this);
+	//_makestatic_hidden(this);
+}
 
 entity pingplreport;
 void PingPLReport_Think(entity this)
@@ -678,10 +907,6 @@ STATIC_INIT_EARLY(missionpacks)
 	cvar_set("sv_missionpack_hipnotic", ftos(fexists("progs/armabody.mdl")));
 }
 
-void GameLogEcho(string s);
-bool world_already_spawned;
-int world_initialized;
-bool server_is_dedicated;
 spawnfunc(worldspawn)
 {
 	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
