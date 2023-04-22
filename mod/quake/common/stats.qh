@@ -60,6 +60,11 @@ REGISTER_STAT(SECRETS_FOUND, int, secrets_found)
 
 #ifdef SVQC
 #include <common/physics/movetypes/movetypes.qh>
+
+bool autocvar_sv_gameplayfix_gravityunaffectedbyticrate = true;
+bool autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag = true;
+float autocvar_sv_gravity;
+float autocvar_sv_stepheight;
 #endif
 
 noref bool autocvar_sv_gameplayfix_nogravityonground;

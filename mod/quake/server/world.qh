@@ -1,5 +1,13 @@
 #pragma once
 
+float autocvar_slowmo;
+float autocvar_sys_ticrate;
+float autocvar_fraglimit;
+float autocvar_timelimit;
+int autocvar_skill;
+int autocvar_teamplay;
+bool autocvar_sv_curl_serverpackages_auto;
+
 // protocol bytes
 const int SVC_CUTSCENE = 34;
 

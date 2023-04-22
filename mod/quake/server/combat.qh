@@ -1,5 +1,9 @@
 #pragma once
 
+int autocvar_sv_aim = 2;
+bool autocvar_g_friendlyfire_virtual;
+float autocvar_g_friendlyfire;
+
 .float pain_finished;
 
 .bool damagedbycontents;

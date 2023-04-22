@@ -1,5 +1,7 @@
 #ifdef SVQC
 
+int autocvar_noexit;
+
 .entity chlevel_targ;
 void changelevel_touch(entity this, entity toucher)
 {

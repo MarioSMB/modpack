@@ -1,5 +1,13 @@
 #pragma once
 
+float autocvar_sv_quake_katria = 0.3;
+
+bool autocvar_g_playerclip_collisions;
+
+bool autocvar_samelevel;
+
+bool autocvar_registered = true; // to prevent being locked out of gpl levels
+
 .float model_randomizer;
 
 string current_cdtrack;
