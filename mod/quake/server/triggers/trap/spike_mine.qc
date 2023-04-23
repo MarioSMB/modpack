@@ -70,7 +70,7 @@ void spikemine_Touch(entity this, entity toucher)
 //   this.effects = this.effects | EF_MUZZLEFLASH;
 
 	T_RadiusDamage (this, this, 110, NULL);
-	_sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 
 	te_explosion(this.origin);
 
@@ -109,7 +109,6 @@ spawnfunc(trap_spike_mine)
 	if(deathmatch) { delete(this); return; }
 
 	precache_model ("progs/spikmine.mdl");
-	precache_sound("weapons/r_exp3.wav");
 	precache_sound("hipitems/spikmine.wav");
 	precache_sound("misc/null.wav");
 	_setmodel(this, "progs/spikmine.mdl");

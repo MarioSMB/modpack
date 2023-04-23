@@ -17,7 +17,7 @@ void time_chunk(entity this)
 	timeChunk.avelocity = '300 300 300';
 	timeChunk.angles = this.owner.angles;
 	
-	_sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NONE);
+	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NONE);
 	te_explosion(timeChunk.origin);
 
 	this.owner.frame = 1;
@@ -54,7 +54,7 @@ void time_boom(entity this)
 		}
 	}
 		
-	_sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NONE);
+	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NONE);
 
 	if(random() < 0.5)
 		te_explosion(this.origin);

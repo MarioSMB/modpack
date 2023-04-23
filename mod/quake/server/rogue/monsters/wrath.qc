@@ -384,7 +384,7 @@ void WrathMissileTouch(entity this, entity toucher)
 		T_Damage(toucher, this, this, 110);	
 		
 	T_RadiusDamage(this, this.owner, 20, NULL);
-	_sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 
 	te_explosion(this.origin);
 

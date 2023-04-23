@@ -408,7 +408,7 @@ void FireballTouch(entity this, entity toucher)
 	else
 		T_RadiusDamage(this, this.owner, 30, NULL);
 	
-	_sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 
 	te_explosion2(this.origin, 228, 5); // 247
 

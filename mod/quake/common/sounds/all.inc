@@ -9,3 +9,5 @@ SOUND(TELE5, "misc/r_tele5");
 Sound SND_TELE_RANDOM() {
     return REGISTRY_GET(Sounds, SND_TELE1.m_id + floor(prandom() * 5));
 }
+
+SOUND(ROCKET_EXPLOSION, "weapons/r_exp3.wav");

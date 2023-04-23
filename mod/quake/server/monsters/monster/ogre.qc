@@ -180,7 +180,7 @@ const int OGRE_NORMAL = BIT(2);
 void OgreGrenadeExplode(entity this)
 {
 	T_RadiusDamage(this, this.owner, 40, NULL);
-	_sound(this, CH_VOICE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+	sound(this, CH_VOICE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 
 	te_explosion(this.origin);
 

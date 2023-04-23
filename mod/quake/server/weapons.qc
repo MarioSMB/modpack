@@ -17,7 +17,6 @@ void SuperDamageSound(entity this);
 // called by worldspawn
 PRECACHE(Weapons)
 {
-	precache_sound("weapons/r_exp3.wav");	// new rocket explosion
 	precache_sound("weapons/rocket1i.wav");	// spike gun
 	precache_sound("weapons/sgun1.wav");
 	precache_sound("weapons/guncock.wav");	// player shotgun
@@ -808,7 +807,7 @@ void BecomeExplosion(entity this)
 	this.velocity = '0 0 0';
 	settouch(this, func_null);
 	_setmodel(this, "progs/s_explod.spr");
-	_sound(this, CH_SHOTS, "weapons/r_exp3.wav", 1, ATTN_NORM);
+	sound(this, CH_SHOTS, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	this.solid = SOLID_NOT;
 	s_explode1(this);
 }
@@ -837,7 +836,7 @@ void T_MissileTouch(entity this, entity toucher)
 	// was done in the impact
 	T_RadiusDamage(this, this.owner, 120, toucher);
 
-//	_sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+//	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	this.origin = this.origin - 8 * normalize(this.velocity);
 
 	te_explosion(this.origin);
@@ -2204,7 +2203,7 @@ void InternalFireThink(entity this)
 				if(this.enemy.classname == "wall_explode")
 					_sound(this, CHAN_AUTO, "enviro/physics/wallexpl.wav", 1, ATTN_NORM);
 				else
-					_sound(this, CHAN_AUTO, "weapons/r_exp3.wav", 1, ATTN_NORM);
+					sound(this, CHAN_AUTO, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 			}
 			this.cnt = 0;
 			SpawnInternalFire2(this);
@@ -2247,7 +2246,7 @@ void InternalFireThink(entity this)
 				else if(this.enemy.classname == "wall_explode")
 					_sound(this, CHAN_AUTO, "enviro/physics/wallexpl.wav", 1, ATTN_NORM);
 				else
-					_sound(this, CHAN_AUTO, "weapons/r_exp3.wav", 1, ATTN_NORM);
+					sound(this, CHAN_AUTO, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 				SpawnInternalFire2(this);
 				return;
 			}
@@ -2306,7 +2305,7 @@ void SpawnInternalFire(entity this, entity targ)
 
 void BecomeBombExplosion(entity this)
 {
-	_sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	SpawnFireSpark(this);
 	SpawnFireSpark(this);
 	SpawnFireSpark(this);
@@ -2319,24 +2318,24 @@ void napalmrebound(entity this)
 	{
 		if(this.watertype == CONTENT_WATER)
 		{
-			_sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+			sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 			BecomeExplosion(this);
 			return;
 		}
 		if(this.watertype == CONTENT_SLIME)
 		{
-			_sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+			sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 			BecomeExplosion(this);
 			return;
 		}
 		if(this.watertype == CONTENT_LAVA)
 		{
-			_sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+			sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 			BecomeExplosion(this);
 			return;
 		}
 	}
-	_sound(this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+	sound(this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	SpawnFireSpark(this);
 	SpawnFireSpark(this);
 	SpawnFireSpark(this);

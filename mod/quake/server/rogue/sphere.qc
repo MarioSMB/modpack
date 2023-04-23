@@ -12,7 +12,7 @@ void sphere_impact(entity this, entity toucher)
 	// was done in the impact
 	T_RadiusDamage(this, this, 300, toucher);
 
-//	sound (this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+//	sound (this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	this.origin = this.origin - 8 * normalize(this.velocity);
 
 	te_explosion(this.origin);

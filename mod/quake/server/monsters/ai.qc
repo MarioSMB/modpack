@@ -128,13 +128,6 @@ bool t_checkbottom(entity this)
 #endif
 }
 
-void t_linkedict(entity this, bool touch_triggers)
-{
-	setorigin(this, this.origin); // calls SV_LinkEdict
-	if(touch_triggers)
-		_Movetype_LinkEdict_TouchAreaGrid(this);
-}
-
 bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 {
 	vector oldorg = this.origin;
@@ -173,7 +166,7 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 				if(relink)
 				{
 					// do nothing for now
-					t_linkedict(this, true);
+					_Movetype_LinkEdict(this, true);
 				}
 				return true;
 			}
@@ -208,7 +201,7 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 			if(relink)
 			{
 				// do nothing for now
-				t_linkedict(this, true);
+				_Movetype_LinkEdict(this, true);
 			}
 			UNSET_ONGROUND(this);
 			return true;
@@ -222,7 +215,7 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 	entity oldtraceent = trace_ent;
 	this.origin = trace_endpos;
 	if(relink)
-		t_linkedict(this, true);
+		_Movetype_LinkEdict(this, true);
 
 	if(!t_checkbottom(this))
 	{
@@ -233,7 +226,7 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 			if(relink)
 			{
 				// do nothing for now
-				t_linkedict(this, true);
+				_Movetype_LinkEdict(this, true);
 			}
 			return true;
 		}
@@ -260,7 +253,7 @@ bool t_movestep(entity this, vector move, bool relink, bool noenemy)
 	if(relink)
 	{
 		// do nothing for now
-		t_linkedict(this, true);
+		_Movetype_LinkEdict(this, true);
 	}
 
 	return true;
@@ -304,12 +297,12 @@ bool t_stepdirection(entity this, float yaw, float dist)
 		if(delta > 45 && delta < 315)
 			this.origin = oldorg; // not turned far enough, so don't take the step
 		// leave the linking to the engine? TODO
-		t_linkedict(this, true);
+		_Movetype_LinkEdict(this, true);
 		return true;
 	}
 
 	// relink...
-	t_linkedict(this, true);
+	_Movetype_LinkEdict(this, true);
 
 	return false;
 }
@@ -659,9 +652,7 @@ bool infront(entity this, entity targ)
 	vector vec = normalize(targ.origin - this.origin);
 	float dot = vec * v_forward;
 	
-	if(dot > 0.3)
-		return true;
-	return false;
+	return (dot > 0.3);
 }
 
 

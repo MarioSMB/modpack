@@ -388,7 +388,7 @@ void lavaman_touch(entity this, entity toucher)
 	// was done in the impact
 	T_RadiusDamage(this, this.owner, 40, toucher);
 
-//	sound (this, CH_WEAPON_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+//	sound (this, CH_WEAPON_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	this.origin = this.origin - 8*normalize(this.velocity);
 
 // Change to an explosion2!!! Ramp in the non-diminishing reds...

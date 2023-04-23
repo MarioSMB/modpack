@@ -135,7 +135,7 @@ void wall_die(entity this, entity inflictor, entity attacker)
 		this.style = 1;
 	}
 	if(this.walltype == 0)
-		_sound(this, CHAN_AUTO, "weapons/r_exp3.wav", 1, ATTN_NORM);
+		sound(this, CHAN_AUTO, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	else if(this.walltype == 1)
 		_sound(this, CHAN_AUTO, "enviro/physics/wallexpl.wav", 1, ATTN_NORM);
 	else if(this.walltype == 2)
@@ -145,19 +145,19 @@ void wall_die(entity this, entity inflictor, entity attacker)
 		_sound(this, CHAN_AUTO, "enviro/physics/glassbit.wav", 1, ATTN_NORM);
 	}
 	else if(this.walltype == 3)
-		_sound(this, CHAN_AUTO, "weapons/r_exp3.wav", 1, ATTN_NORM);
+		sound(this, CHAN_AUTO, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	else if(this.walltype == 4)
-		_sound(this, CHAN_AUTO, "weapons/r_exp3.wav", 1, ATTN_NORM);
+		sound(this, CHAN_AUTO, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	else if(this.walltype == 5)
-		_sound(this, CHAN_AUTO, "weapons/r_exp3.wav", 1, ATTN_NORM);
+		sound(this, CHAN_AUTO, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	else if(this.walltype == 6)
-		_sound(this, CHAN_AUTO, "weapons/r_exp3.wav", 1, ATTN_NORM);
+		sound(this, CHAN_AUTO, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	else if(this.walltype == 7)
-		_sound(this, CHAN_AUTO, "weapons/r_exp3.wav", 1, ATTN_NORM);
+		sound(this, CHAN_AUTO, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	else if(this.walltype == 8)
-		_sound(this, CHAN_AUTO, "weapons/r_exp3.wav", 1, ATTN_NORM);
+		sound(this, CHAN_AUTO, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	else if(this.walltype == 9)
-		_sound(this, CHAN_AUTO, "weapons/r_exp3.wav", 1, ATTN_NORM);
+		sound(this, CHAN_AUTO, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 
 	if(this.style == 1)
 	{

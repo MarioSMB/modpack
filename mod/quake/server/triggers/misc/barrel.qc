@@ -7,7 +7,7 @@ void barrel_explode2(entity this)
 	this.classname = "explo_box";
 	// did say this.owner
 	T_RadiusDamage(this, this, 160, NULL);
-	_sound(this, CH_TRIGGER_SINGLE, "weapons/r_exp3.wav", 1, ATTN_NORM);
+	sound(this, CH_TRIGGER_SINGLE, SND_ROCKET_EXPLOSION, 1, ATTN_NORM);
 	particle(this.origin, '0 0 0', 75, 255);
 
 	setSendEntity(this, func_null); // some things are gonna happen to this barrel that the ChildrenS of QuakeC shouldn't see
@@ -41,7 +41,6 @@ void barrel_spawn(entity this)
 	this.solid = SOLID_BBOX;
 	precache_model(this.model);
 	_setmodel(this, this.model);
-	precache_sound("weapons/r_exp3.wav");
 	if(!this.health)
 		this.health = 20;
 	this.th_die = barrel_explode;
