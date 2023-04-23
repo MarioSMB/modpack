@@ -6,6 +6,11 @@
 // properties unique to jumps done well
 .entity cp;
 
+spawnfunc(info_player_deathmatch);
+
 int nJoinAllowed(entity this, entity ignore);
 
 void GotoNextMap();
+
+IntrusiveList g_spawnpoints;
+STATIC_INIT(g_spawnpoints) { g_spawnpoints = IL_NEW(); }

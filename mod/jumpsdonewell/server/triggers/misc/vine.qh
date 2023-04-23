@@ -1,0 +1,7 @@
+#pragma once
+
+#ifdef SVQC
+void vine_destroy(entity this);
+
+spawnfunc(misc_vine);
+#endif

@@ -44,11 +44,8 @@ void ClientKill(entity this)
 
 vector get_spawn_point()
 {
-	//entity spawnpoint = NULL;
-
-	//spawnpoint = find(NULL, classname, "info_player_start");
 	RandomSelection_Init();
-	FOREACH_ENTITY_CLASS("info_player_start", true,
+	IL_EACH(g_spawnpoints, true,
 	{
 		RandomSelection_AddEnt(it, 1, 1);
 	});
@@ -114,7 +111,7 @@ void PutClientInServer(entity this)
 
 	this.dphitcontentsmask = DPCONTENTS_BODY | DPCONTENTS_SOLID | DPCONTENTS_PLAYERCLIP;
 	
-	if(cvar_string("sv_worldbasename") == "map2")
+	if(getworldbasename() == "map2")
 		STAT(SWORDPOWER, this) = 0;
 	else
 	{
@@ -138,20 +135,21 @@ The normal starting point for a level.
 */
 spawnfunc(info_player_start)
 {
+	spawnfunc_info_player_deathmatch(this);
 }
 
 spawnfunc(info_player_deathmatch)
 {
-	this.classname = "info_player_start";
+	IL_PUSH(g_spawnpoints, this);
 }
 
 spawnfunc(info_player_team1)
 {
-	this.classname = "info_player_start";
+	spawnfunc_info_player_deathmatch(this);
 }
 spawnfunc(info_player_team2)
 {
-	this.classname = "info_player_start";
+	spawnfunc_info_player_deathmatch(this);
 }
 
 
@@ -163,7 +161,6 @@ PlayerPreThink
 Called every frame before physics are run
 ================
 */
-void GameLogEcho(string s);
 
 .string netname_previous;
 void revive(entity this);

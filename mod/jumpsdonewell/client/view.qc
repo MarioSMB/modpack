@@ -350,7 +350,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	// Render the Scene
 	view_origin = getpropertyvec(VF_ORIGIN);
 	view_angles = getpropertyvec(VF_ANGLES);
-	if(cvar_string("cl_worldbasename") == "map2")
+	if(getworldbasename() == "map2")
 		view_angles = '15 0 0';
 	MAKE_VECTORS(view_angles, view_forward, view_right, view_up);
 
@@ -373,7 +373,7 @@ void CSQC_UpdateView(entity this, float w, float h)
 	if(cameraz > playerz + 30)
 		cameraz = playerz + 30;
 	view_origin.z = cameraz;
-	if(cvar_string("cl_worldbasename") == "map2")
+	if(getworldbasename() == "map2")
 		view_origin += '-600 0 150';
 	else
 	{

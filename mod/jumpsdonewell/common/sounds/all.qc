@@ -114,13 +114,13 @@ void play2(entity e, string filename)
 
 .float spamtime;
 /** use this one if you might be causing spam (e.g. from touch functions that might get called more than once per frame) */
-float spamsound(entity e, int chan, string samp, float vol, float _atten)
+float spamsound(entity e, int chan, Sound samp, float vol, float _atten)
 {
 	if (!sound_allowed(MSG_BROADCAST, e)) return false;
 	if (time > e.spamtime)
 	{
 		e.spamtime = time;
-		_sound(e, chan, samp, vol, _atten);
+		sound(e, chan, samp, vol, _atten);
 		return true;
 	}
 	return false;

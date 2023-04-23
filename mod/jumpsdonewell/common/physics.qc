@@ -56,11 +56,7 @@ void PM_Main(entity this, float dt)
 	vector forward, right, up;
 	MAKE_VECTORS(vmul(PHYS_INPUT_ANGLES(this), '1 1 0'), forward, right, up);
 	vector moveval;
-#ifdef SVQC
-	if(cvar_string("sv_worldbasename") == "map2")
-#else
-	if(cvar_string("cl_worldbasename") == "map2")
-#endif
+	if(getworldbasename() == "map2")
 	{
 		moveval = PHYS_INPUT_MOVEVALUES(this);
 		moveval.y *= -1;
@@ -180,7 +176,7 @@ void PM_UpdateButtons(entity this)
 {
 	if(this.health <= 0)
 		return;
-	if(cvar_string("sv_worldbasename") != "map2")
+	if(getworldbasename() != "map2")
 	{
 		CSQCPlayer_SmoothAngle(this);
 		return;

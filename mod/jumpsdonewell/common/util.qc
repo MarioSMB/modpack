@@ -1,5 +1,16 @@
 #include "util.qh"
 
+#ifdef GAMEQC
+string getworldbasename()
+{
+#ifdef SVQC
+	return cvar_string("sv_worldbasename");
+#else
+	return cvar_string("cl_worldbasename");
+#endif
+}
+#endif
+
 USING(textLengthUpToWidth_widthFunction_t, float(string s, vector size));
 USING(textLengthUpToLength_lenFunction_t, float(string s));
 

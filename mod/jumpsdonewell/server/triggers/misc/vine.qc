@@ -1,6 +1,5 @@
 #ifdef SVQC
 
-spawnfunc(misc_vine);
 void vine_destroy(entity this)
 {
 	setmodel(this, MDL_VINE_BROKEN);

@@ -12,6 +12,7 @@ void shroom_die_proper(entity this)
 	setorigin(this, this.home);
 	CSQCMODEL_AUTOUPDATE(this);
 }
+
 void shroom_die2(entity this)
 {
 	this.frame = 3;

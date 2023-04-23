@@ -1,3 +1,5 @@
+#include "triggers/misc/vine.qh"
+
 void damage(entity attacker, entity victim, float dmg)
 {
 	if(!victim) return;
@@ -33,7 +35,6 @@ void player_attack(entity this)
 	});
 }
 
-void vine_destroy(entity vine);
 void player_spin_attack(entity this)
 {
 	FOREACH_ENTITY_RADIUS(this.origin, 110, true,
@@ -95,21 +96,21 @@ void player_weapons(entity this)
 	{
 		if(time > STAT(ATTACK_FINISHED, this) - 0.4 && this.attack_fired < 1)
 		{
-			this.attack_fired++;
+			++this.attack_fired;
 			player_spin_attack(this);
 			pointparticles(EFFECT_WEAPON_SPIN, this.origin + '0 0 48', '0 0 1', 1);
 			sound(this, CHAN_AUTO, SND_SWORD1, 1, ATTEN_NORM);
 		}
 		if(time > STAT(ATTACK_FINISHED, this) - 0.325 && this.attack_fired < 2)
 		{
-			this.attack_fired++;
+			++this.attack_fired;
 			player_spin_attack(this);
 			pointparticles(EFFECT_WEAPON_SPIN, this.origin + '0 0 48', '0 0 1', 1);
 			sound(this, CHAN_AUTO, SND_SWORD1, 0.85, ATTEN_NORM);
 		}
 		if(time > STAT(ATTACK_FINISHED, this) - 0.25 && this.attack_fired < 3)
 		{
-			this.attack_fired++;
+			++this.attack_fired;
 			player_spin_attack(this);
 			pointparticles(EFFECT_WEAPON_SPIN, this.origin + '0 0 48', '0 0 1', 1);
 			sound(this, CHAN_AUTO, SND_SWORD1, 0.75, ATTEN_NORM);
