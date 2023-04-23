@@ -1,5 +1,6 @@
 #include "_all.qh"
 
-// NOTE: no menu support for Quake stuff (yet?)
+#include "../common/sui_sys.qc"
 
 #include "main.qc"
+#include "menu.qc"

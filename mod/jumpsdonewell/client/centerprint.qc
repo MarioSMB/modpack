@@ -109,14 +109,6 @@ void reset_centerprint_messages()
 	}
 }
 
-float stringwidth(string text, float handleColors, vector sz)
-{
-	vector dfs = drawfontscale;
-	drawfontscale = '1 1 0';
-	float r = stringwidth_builtin(text, handleColors, sz);
-	drawfontscale = dfs;
-	return r;
-}
 vector autocvar_hud_panel_centerprint_pos = '0.175 0.22 0';
 vector autocvar_hud_panel_centerprint_size = '0.65 0.22 0';
 void HUD_CenterPrint ()

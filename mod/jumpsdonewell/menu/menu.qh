@@ -1,0 +1,26 @@
+#pragma once
+
+int current_menu;
+const int MENU_MAIN = 1;
+const int MENU_SETTINGS = 2;
+const int MENU_HELP = 3;
+
+void input_tester();
+
+float my_button(string id, vector pos, vector size, string text);
+
+float my_slider(string id, vector pos, vector size, vector minmaxsteps, float value);
+
+void cvar_slider(vector pos, vector size, vector minmaxsteps, string cvar_s, string name, string format);
+
+void bind_button(string id, vector pos, vector size, string name, string command);
+
+void bind_list(string id, vector pos, vector size);
+
+void settings_menu();
+
+void help_menu();
+
+void main_menu();
+
+void root_menu(vector size);

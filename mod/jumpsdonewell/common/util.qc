@@ -1,5 +1,16 @@
 #include "util.qh"
 
+#ifdef CSQC
+float stringwidth(string text, float handleColors, vector sz)
+{
+	vector dfs = drawfontscale;
+	drawfontscale = '1 1 0';
+	float r = stringwidth_builtin(text, handleColors, sz);
+	drawfontscale = dfs;
+	return r;
+}
+#endif
+
 #ifdef GAMEQC
 string getworldbasename()
 {

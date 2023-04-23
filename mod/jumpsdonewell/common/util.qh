@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef CSQC
+float stringwidth(string text, float handleColors, vector sz);
+#endif
+
 #ifdef GAMEQC
 string getworldbasename();
 #endif
