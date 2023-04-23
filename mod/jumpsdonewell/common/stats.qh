@@ -60,6 +60,9 @@ REGISTER_STAT(SECRETS_FOUND, int, secrets_found)
 
 #ifdef SVQC
 #include <common/physics/movetypes/movetypes.qh>
+
+bool autocvar_sv_gameplayfix_gravityunaffectedbyticrate = true;
+bool autocvar_sv_gameplayfix_upwardvelocityclearsongroundflag = true;
 #endif
 
 noref bool autocvar_sv_gameplayfix_nogravityonground;
@@ -104,6 +107,8 @@ REGISTER_STAT(GAMEPLAYFIX_DELAYPROJECTILES, int, autocvar_sv_gameplayfix_delaypr
 #ifdef SVQC
 int autocvar_sv_jumpstep;
 int autocvar_sv_nostep;
+float autocvar_sv_gravity;
+float autocvar_sv_stepheight;
 #endif
 REGISTER_STAT(MOVEVARS_JUMPSTEP, int, autocvar_sv_jumpstep)
 REGISTER_STAT(NOSTEP, int, autocvar_sv_nostep)

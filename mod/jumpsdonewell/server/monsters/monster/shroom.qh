@@ -1,0 +1,7 @@
+#pragma once
+
+.int variant;
+const int VARIANT_NORMAL = 0;
+const int VARIANT_SPIKY = 1;
+
+spawnfunc(monster_shroom);

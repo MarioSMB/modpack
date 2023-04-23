@@ -1,0 +1,11 @@
+#pragma once
+
+.int playerid;
+
+.float respawn_time;
+// properties unique to jumps done well
+.entity cp;
+
+int nJoinAllowed(entity this, entity ignore);
+
+void GotoNextMap();

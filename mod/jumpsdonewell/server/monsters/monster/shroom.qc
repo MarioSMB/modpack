@@ -1,15 +1,4 @@
-.int ai_state;
-const int STATE_STANDING = 0;
-const int STATE_MOVING = 1;
-const int STATE_CHASING = 2;
-const int STATE_ATTACKING = 3;
-const int STATE_HURTING = 4;
-.float last_seen_time;
-.float ai_attack_time;
-.bool ai_attacked;
-.vector home;
-
-spawnfunc(monster_shroom);
+#include "shroom.qh"
 
 void shroom_die_proper(entity this)
 {
@@ -127,7 +116,7 @@ void shroom_think(entity this)
 				break;
 			}
 			angles_to_player = vectoangles(this.enemy.origin - this.origin);
-			this.ideal_yaw = angles_to_player_y;
+			this.ideal_yaw = angles_to_player.y;
 			this.goalentity = this.enemy;
 			changeyaw(this);
 			t_movetogoal(this, 10);
@@ -143,7 +132,7 @@ void shroom_think(entity this)
 		{
 			this.frame = 2;
 			angles_to_player = vectoangles(this.enemy.origin - this.origin);
-			this.ideal_yaw = angles_to_player_y;
+			this.ideal_yaw = angles_to_player.y;
 			changeyaw(this);
 			if(time - this.ai_attack_time > 0.6 && !this.ai_attacked)
 			{
@@ -201,9 +190,6 @@ void spiky_touch(entity this, entity toucher)
 	damage(this, toucher, 1);
 }
 
-.int variant;
-const int VARIANT_NORMAL = 0;
-const int VARIANT_SPIKY = 1;
 spawnfunc(monster_shroom)
 {
 	if(this.home == '0 0 0')

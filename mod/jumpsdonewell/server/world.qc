@@ -1,4 +1,15 @@
+#include "world.qh"
+
+#include "client.qh"
+#include "gamelog.qh"
+
 void main() { /* unused */ }
+
+/** print(), but only print if the server is not local */
+void dedicated_print(string input)
+{
+	if(server_is_dedicated) print(input);
+}
 
 string cvar_changes, cvar_purechanges;
 int cvar_purechanges_count;
@@ -426,9 +437,6 @@ void SV_OnEntityPreSpawnFunction(entity this)
 	set_movetype(this, this.movetype);
 }
 
-int nJoinAllowed(entity this, entity ignore);
-//bool autocvar_g_full_getstatus_responses;
-string autocvar_g_xonoticversion;
 void SetMod()
 {
 	// MOD AUTHORS: change this, and possibly remove a few of the blocks below to ignore certain changes
@@ -459,10 +467,6 @@ STATIC_INIT_EARLY(maxclients)
 	}
 }
 
-void GameLogEcho(string s);
-bool world_already_spawned;
-int world_initialized;
-bool server_is_dedicated;
 spawnfunc(worldspawn)
 {
 	server_is_dedicated = boolean(stof(cvar_defstring("is_dedicated")));
@@ -646,8 +650,6 @@ spawnfunc(worldspawn)
 	__spawnfunc_spawn_all();
 }
 
-void GotoNextMap();
-bool autocvar__sv_init;
 void GotoFirstMap(entity this)
 {
 	if(autocvar__sv_init)
@@ -673,8 +675,6 @@ void GotoFirstMap(entity this)
 	}
 }
 
-bool autocvar_quit_when_empty = true;
-float autocvar_timelimit;
 void CheckRules_World()
 {
 	float timelimit = autocvar_timelimit * 60;
@@ -745,12 +745,12 @@ void StartFrame()
 	FOREACH_CLIENT(true, GlobalStats_update(it));
 }
 
-bool autocvar_sv_gameplayfix_multiplethinksperframe;
-void RunThink(entity this)
+bool autocvar_sv_gameplayfix_multiplethinksperframe = true;
+void RunThink(entity this, float dt)
 {
 	// don't let things stay in the past.
 	// it is possible to start that way by a trigger with a local time.
-	if(this.nextthink <= 0 || this.nextthink > time + frametime)
+	if(this.nextthink <= 0 || this.nextthink > time + dt)
 		return;
 
 	float oldtime = time; // do we need to save this?
@@ -766,7 +766,7 @@ void RunThink(entity this)
 		// we don't want to loop in that case, so exit if the new nextthink is
 		// <= the time the qc was told, also exit if it is past the end of the
 		// frame
-		if(this.nextthink <= time || this.nextthink > oldtime + frametime || !autocvar_sv_gameplayfix_multiplethinksperframe)
+		if(this.nextthink <= time || this.nextthink > oldtime + dt || !autocvar_sv_gameplayfix_multiplethinksperframe)
 			break;
 	}
 
@@ -796,17 +796,20 @@ void Physics_Frame()
 			if(it.move_movetype == MOVETYPE_PUSH || it.move_movetype == MOVETYPE_FAKEPUSH)
 				continue; // these movetypes have no regular think function
 			// handle thinking here
-			if (getthink(it) && it.nextthink > 0 && it.nextthink <= time + frametime)
-				RunThink(it);
+			if (getthink(it) && it.nextthink > 0 && it.nextthink <= time + PHYS_INPUT_TIMELENGTH)
+				RunThink(it, PHYS_INPUT_TIMELENGTH);
 		}
 	});
 
 	if(autocvar_sv_gameplayfix_delayprojectiles >= 0)
 		return;
 
+	// make a second pass to see if any ents spawned this frame and make
+	// sure they run their move/think. this is verified by checking .move_time, which will never be 0 if the entity has moved
+	// MOVETYPE_NONE is also checked as .move_time WILL be 0 with that movetype
 	IL_EACH(g_moveables, it.move_qcphysics,
 	{
-		if(IS_CLIENT(it) || is_pure(it) || it.classname == "" || it.move_movetype == MOVETYPE_NONE)
+		if(IS_CLIENT(it) || it.move_time || it.move_movetype == MOVETYPE_NONE || it.move_movetype == MOVETYPE_PHYSICS)
 			continue;
 		Movetype_Physics_NoMatchTicrate(it, PHYS_INPUT_TIMELENGTH, false);
 	});

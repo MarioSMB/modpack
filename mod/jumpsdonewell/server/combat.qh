@@ -1,5 +1,8 @@
 #pragma once
 
+float autocvar_g_friendlyfire;
+bool autocvar_g_friendlyfire_virtual;
+
 .float invuln_time;
 
 .bool attack_released;

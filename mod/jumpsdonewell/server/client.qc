@@ -1,3 +1,5 @@
+#include "client.qh"
+
 #include "combat.qh"
 
 .entity sword;
