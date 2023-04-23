@@ -102,7 +102,7 @@ void M_Ogre_Attack_MachineGun(entity this)
 
 	// casing code
 	if (autocvar_g_casings >= 2)
-		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), 2, vectoangles(v_forward),'0 250 0', 100, 3, this, weaponentities[0]);
+		SpawnCasing (((random () * 50 + 50) * v_right) - (v_forward * (random () * 25 + 25)) - ((random () * 5 - 70) * v_up), vectoangles(v_forward), 3, this, weaponentities[0]);
 }
 
 void M_Ogre_Attack_Grenade_Explode(entity this, entity directhitentity)

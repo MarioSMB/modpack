@@ -28,8 +28,8 @@ void try_itemspawn(entity caller, string item, int teamnumber)
 
 	if(startsWith(item, "weapon_"))
 	{
-		string thewep = W_UndeprecateName(substring(item, 7, strlen(item)));
-		FOREACH(Weapons, it.netname == thewep || it.m_canonical_spawnfunc == item,
+		string thewep = substring(item, 7, strlen(item));
+		FOREACH(Weapons, it.netname == thewep || it.m_deprecated_netname == thewep || it.m_canonical_spawnfunc == item,
 		{
 			entity wep = new(placed_item);
 			wep.spawnfunc_checked = true;
