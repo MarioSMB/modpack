@@ -1,3 +1,4 @@
+#include "ai.qh"
 #include "../combat.qh"
 
 /*
@@ -8,14 +9,6 @@ enemy.
 When it decides it can't attack, it goes into hunt mode.
 
 */
-
-void ChooseTurn(entity this, vector dest);
-
-
-.float enemy_vis;
-//.bool enemy_infront;
-.int enemy_range;
-.float enemy_yaw;
 
 
 //=============================================================================
@@ -49,7 +42,7 @@ bool CheckAttack(entity this)
 	vector spot1 = this.origin + this.view_ofs;
 	vector spot2 = targ.origin + targ.view_ofs;
 
-	traceline(spot1, spot2, false, this);
+	traceline(spot1, spot2, MOVE_NORMAL, this);
 
 	if(trace_ent != targ && !this.charmed) // hipnotic
 		return false;		// don't have a clear shot
@@ -105,14 +98,12 @@ bool CheckAttack(entity this)
 	if(random() < chance)
 	{
 		this.th_missile(this);
-		SUB_AttackFinished(this, 2*random());
+		SUB_AttackFinished(this, 2 * random());
 		return true;
 	}
 
 	return false;
 }
-
-void changeyaw(entity this);
 
 /*
 =============
@@ -134,10 +125,6 @@ ai_charge
 The monster is in a melee attack, so get as close as possible to .enemy
 =============
 */
-bool infront(entity this, entity targ);
-int range(entity this, entity targ);
-void t_movetogoal(entity this, float dist);
-bool t_walkmove(entity this, float yaw, float dist);
 
 void ai_charge(entity this, float d)
 {
@@ -153,12 +140,11 @@ void ai_charge_side(entity this)
 	changeyaw(this);
 
 	makevectors(this.angles);
-	vector dtemp = this.enemy.origin - 30*v_right;
+	vector dtemp = this.enemy.origin - 30 * v_right;
 	float heading = vectoyaw(dtemp - this.origin);
 	
 	t_walkmove(this, heading, 20);
 }
-
 
 /*
 =============
@@ -173,11 +159,10 @@ void ai_melee(entity this)
 
 	if(vdist(this.enemy.origin - this.origin, >, 60))
 		return;
-		
-	float ldmg =(random() + random() + random()) * 3;
+
+	float ldmg = (random() + random() + random()) * 3;
 	T_Damage(this.enemy, this, this, ldmg);
 }
-
 
 void ai_melee_side(entity this)
 {
@@ -190,6 +175,6 @@ void ai_melee_side(entity this)
 		return;
 	if(!CanDamage(this.enemy, this))
 		return;
-	float ldmg =(random() + random() + random()) * 3;
+	float ldmg = (random() + random() + random()) * 3;
 	T_Damage(this.enemy, this, this, ldmg);
 }

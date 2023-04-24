@@ -81,3 +81,6 @@ const int FLAG_DROPPED = 2;
 
 bool TeamColorIsLegal(int thecolor);
 void TeamSetSkin(entity this);
+
+bool TeamArmorDam(entity targ, entity inflictor, entity attacker, float damage); // also rogue
+bool TeamHealthDam(entity targ, entity inflictor, entity attacker, float damage);

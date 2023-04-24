@@ -8,11 +8,15 @@ float autocvar_g_friendlyfire;
 
 .bool damagedbycontents;
 
+bool empathyused; // hipnotic
+
 bool CanDamage(entity targ, entity inflictor);
 
 void T_Damage(entity targ, entity inflictor, entity attacker, float damage);
 
 vector qc_aim(entity this, float missilespeed);
+
+void impale(entity this);
 
 .void(entity this, entity attacker, float damage) th_pain;
 .void(entity this, entity inflictor, entity attacker) th_die;

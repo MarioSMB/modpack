@@ -299,7 +299,7 @@ void armagon_walkthink(entity this)
 				_sound(this, CH_VOICE, "armagon/idle4.wav", 1, ATTN_ARMAGON);
 		}
 	}
-	entity client = checkclient(this);
+	entity client = t_checkclient(this);
 	if(!client)
 		return;  // current check entity isn't in PVS
 	if(visible(this, client))

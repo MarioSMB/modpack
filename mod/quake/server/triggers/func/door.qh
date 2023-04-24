@@ -1,0 +1,6 @@
+#pragma once
+
+#ifdef SVQC
+void door_go_down(entity this);
+void door_go_up(entity this);
+#endif

@@ -1,4 +1,7 @@
+#include "boss.qh"
+
 #include "../../triggers/triggers.qh"
+#include "../../triggers/func/door.qh"
 
 /*
 ==============================================================================
@@ -136,9 +139,6 @@ const int anim_boss_shocka = 80; //'80 89 0'
 const int anim_boss_shockb = 90; //'90 95 0'
 const int anim_boss_shockc = 96; //'96 105 0'
 
-void boss_missile(entity this, vector p);
-void boss_missile1(entity this);
-
 void boss_face(entity this)
 {
 // go for another player if multi player
@@ -159,7 +159,6 @@ void boss_face(entity this)
 
 	ai_face(this);
 }
-
 
 void boss_rise17(entity this) { set_animofs(this, anim_boss_rise, 17, boss_missile1); }
 void boss_rise16(entity this) { set_animofs(this, anim_boss_rise, 16, boss_rise17); }
@@ -346,7 +345,6 @@ void boss_missile(entity this, vector p)
 		boss_idle1(this);
 }
 
-
 void boss_awake(entity this, entity actor, entity trigger)
 {
 	this.solid = SOLID_SLIDEBOX;
@@ -398,10 +396,8 @@ spawnfunc(monster_boss)
 
 //===========================================================================
 
-entity	le1, le2;
+entity le1, le2;
 float lightning_end;
-void door_go_down(entity this);
-void door_go_up(entity this);
 
 void lightning_fire(entity this)
 {
@@ -433,8 +429,8 @@ void lightning_use(entity this, entity actor, entity trigger)
 	if(lightning_end >= time + 1)
 		return;
 
-	le1 = find( NULL, target, "lightning");
-	le2 = find( le1, target, "lightning");
+	le1 = find(NULL, target, "lightning");
+	le2 = find(le1, target, "lightning");
 	if(!le1 || !le2)
 	{
 		dprint("missing lightning targets\n");

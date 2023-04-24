@@ -534,7 +534,7 @@ void t_followtarget(entity this, entity toucher)
 		}
 		else
 		{
-			entity client = checkclient(toucher);
+			entity client = t_checkclient(toucher);
 			if (!client)
 			{
 				toucher.enemy = client;
@@ -657,6 +657,60 @@ bool infront(entity this, entity targ)
 
 
 //============================================================================
+
+int t_checknewclient(entity this, int check)
+{
+	int j;
+	check = bound(1, check, maxclients);
+	if(check == maxclients)
+		j = 1;
+	else
+		j = check + 1;
+
+	for( ; ; ++j)
+	{
+		// wrap around
+		if(j == maxclients + 1)
+			j = 1;
+		// look up client
+		entity ent = edict_num(j);
+		// check if it is to be ignored, but never ignore the one we started on (prevent infinite loop)
+		if(j != check && (wasfreed(ent) || ent.health <= 0 || (ent.flags & FL_NOTARGET)))
+			continue;
+		// found a valid client (possibly the same one again)
+		break;
+	}
+
+	return j;
+}
+
+.int lastcheck;
+.float lastchecktime;
+entity t_checkclient(entity this)
+{
+#if 1
+	// find a new check if on a new frame
+	if(time - this.lastchecktime >= 0.1)
+	{
+		this.lastcheck = t_checknewclient(this, this.lastcheck);
+		this.lastchecktime = time;
+	}
+
+	// return check if it might be visible
+	entity ent = edict_num(this.lastcheck);
+	if(wasfreed(ent) || ent.health <= 0 || (ent.flags & FL_NOTARGET))
+		return NULL;
+
+	// if current entity can't possibly see the check entity, return 0
+	if(!checkpvs(this.origin + this.view_ofs, ent))
+		return NULL;
+
+	// might be able to see it
+	return ent;
+#else
+	return checkclient(this);
+#endif
+}
 
 
 //MED 10/18/96 added charmed stuff
@@ -887,7 +941,7 @@ bool FindTarget(entity this)
 	}
 	else
 	{
-		client = checkclient(this);
+		client = t_checkclient(this);
 		if(!client)
 			return false;	// current check entity isn't in PVS
 	}

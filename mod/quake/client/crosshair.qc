@@ -131,7 +131,7 @@ LABEL(normalcolor)
 
 void HUD_Crosshair(entity this)
 {
-	if(!sb_showscores && !intermission)
+	if(!sb_showscores && !intermission && !(STAT(HEALTH) <= 0))
 	{
 		if (!autocvar_crosshair_enabled) // main toggle for crosshair rendering
 			return;

@@ -11,7 +11,7 @@ void SpawnLightningThink(entity this)
 		return;
 	}
 	setthink(this, SpawnLightningThink);
-	if(checkclient(this))
+	if(t_checkclient(this))
 	{
 		te_lightning2(NULL, this.origin, this.oldorigin); // should be this
 	}
@@ -69,7 +69,7 @@ void trap_lightning_use(entity this, entity actor, entity trigger)
 		ltning.delay = time + this.duration;
 		SpawnLightningThink(ltning);
 	}
-	else if(checkclient(this))
+	else if(t_checkclient(this))
 	{
 		te_lightning2(NULL, p1, p2); // should be this
 		LightningDamage(p1, p2, this, this.dmg);

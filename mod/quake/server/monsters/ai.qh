@@ -24,6 +24,27 @@ const int AS_MISSILE = 4;
 
 .float show_hostile;
 
+.float enemy_vis;
+//.bool enemy_infront;
+.int enemy_range;
+.float enemy_yaw;
+
 bool visible(entity this, entity targ);
 
 bool t_checkbottom(entity this);
+
+entity t_checkclient(entity this);
+
+void ChooseTurn(entity this, vector dest);
+
+void changeyaw(entity this);
+
+bool infront(entity this, entity targ);
+
+int range(entity this, entity targ);
+
+void t_movetogoal(entity this, float dist);
+
+bool t_walkmove(entity this, float yaw, float dist);
+
+void FoundTarget(entity this);

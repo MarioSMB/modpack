@@ -50,6 +50,8 @@ void player_stand1(entity this);
 void spawn_tfog(vector org);
 void spawn_tdeath(vector org, entity death_owner);
 
+void ClientObituary(entity targ, entity inflictor, entity attacker);
+
 .string deathtype;
 .string(entity this) deathmessage;
 

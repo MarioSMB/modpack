@@ -2,16 +2,10 @@
 
 #include "monsters/ai.qh"
 #include "rogue/runes.qh"
-
-void impale(entity this);
+#include "rogue/teamplay.qh"
+#include "triggers/triggers.qh"
 
 bool IsExplosionDamage;
-
-void ClientObituary(entity targ, entity inflictor, entity attacker);
-
-void FoundTarget(entity this);
-
-void SUB_UseTargets(entity this, entity actor, entity trigger);
 
 //============================================================================
 
@@ -213,9 +207,6 @@ The damage is coming from inflictor, but get mad at attacker
 This should be the only function that ever reduces health.
 ============
 */
-bool empathyused; // hipnotic
-bool TeamArmorDam(entity targ, entity inflictor, entity attacker, float damage); // also rogue
-bool TeamHealthDam(entity targ, entity inflictor, entity attacker, float damage);
 void T_Damage(entity targ, entity inflictor, entity attacker, float damage)
 {
 	float r = random();

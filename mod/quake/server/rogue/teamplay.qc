@@ -141,9 +141,7 @@ void TeamAssists(entity targ, entity attacker)
 		else
 		{
 			attacker.frags = attacker.frags + CTF_FRAG_CARRIER_BONUS;
-			sprint(attacker, "Enemy flag carrier killed: ");
-			sprint(attacker, ftos(CTF_FRAG_CARRIER_BONUS));
-			sprint(attacker, " bonus frags\n");
+			sprint(attacker, strcat("Enemy flag carrier killed: ", ftos(CTF_FRAG_CARRIER_BONUS), " bonus frags\n"));
 		}
 	}
 	
@@ -195,10 +193,7 @@ void TeamAssists(entity targ, entity attacker)
 				// attacker was near his own flag carrier
 				attacker.frags = attacker.frags + CTF_CARRIER_PROTECT_BONUS;
 				flag_carrier_radius = 1;
-				bprint(attacker.netname);
-				bprint(" defends ");
-				bprint(s);
-				bprint("'s flag carrier\n");
+				bprintf("%s defends %s's flag carrier\n", attacker.netname, s);
 			}
 		}
 		if((attacker.steam == TEAM1 && head.classname == "item_flag_team1") ||
@@ -207,14 +202,8 @@ void TeamAssists(entity targ, entity attacker)
 		{  // one flag mode
 			// attacker was near his own flag
 			attacker.frags = attacker.frags + CTF_FLAG_DEFENSE_BONUS;
-			flag_radius = 1; 
-			bprint(attacker.netname);
-			bprint(" defends the");
-			if(teamplay != TEAM_CTF_ONEFLAG) {
-				bprint(" ");
-				bprint(s);
-			}
-			bprint(" flag\n");
+			flag_radius = 1;
+			bprintf("%s defends the %s flag\n", attacker.netname, ((teamplay != TEAM_CTF_ONEFLAG) ? strcat(" ", s) : ""));
 		}
 		head = head.chain;
 	}
@@ -233,10 +222,7 @@ void TeamAssists(entity targ, entity attacker)
 				// target was near attacker's flag carrier
 				attacker.frags = attacker.frags + CTF_CARRIER_PROTECT_BONUS;
 				flag_carrier_radius = 1;
-				bprint(attacker.netname);
-				bprint(" defends ");
-				bprint(s);
-				bprint("'s flag carrier\n");
+				bprintf("%s defends %s's flag carrier\n", attacker.netname, s);
 			}
 		}
 		if(((attacker.steam == TEAM1 && head.classname == "item_flag_team1") || (attacker.steam == TEAM2 && head.classname == "item_flag_team2") || head.classname == "item_flag") && !flag_radius)
@@ -244,14 +230,7 @@ void TeamAssists(entity targ, entity attacker)
 			// target was near attacker's flag
 			attacker.frags = attacker.frags + CTF_FLAG_DEFENSE_BONUS;
 			flag_radius = 1;
-			bprint(attacker.netname);
-			bprint(" defends the");
-			if(teamplay != TEAM_CTF_ONEFLAG)
-			{
-				bprint(" ");
-				bprint(s);
-			}
-			bprint(" flag\n");
+			bprintf("%s defends the %s flag\n", attacker.netname, ((teamplay != TEAM_CTF_ONEFLAG) ? strcat(" ", s) : ""));
 		}
 		head = head.chain;
 	}
@@ -361,9 +340,7 @@ void TeamCheckTeam(entity this)
 	this.ctf_flags |= CTF_FLAG_STUFF_COLOR;
 
 	string n = GetCTFTeam(newcolor);
-	sprint(this, "You have been assigned to ");
-	sprint(this, n);
-	sprint(this, " team.\n");
+	sprint(this, strcat("You have been assigned to ", n, " team.\n"));
 
 	this.steam = newcolor;      // Remember what team we're on
 	this.team = newcolor;
@@ -412,8 +389,7 @@ void TeamCheckLock(entity this)
 					{
 						sprint(this, "You were told you can't change teams.\nGo play color games somewhere else.\n");
 						stuffcmd(this, "disconnect\n");
-						bprint(this.netname);
-						bprint(" has bad color sense\n");
+						bprint(strcat(this.netname, " has bad color sense\n"));
 					}
 					// case base respawn
 					if(this.ctf_killed != 1)
@@ -423,10 +399,8 @@ void TeamCheckLock(entity this)
 					this.suicide_count = this.suicide_count + 1;
 
 					sprint(this, "You cannot change teams.\n");
-					stuffcmd(this, "color ");
 					n = this.steam - 1;
-					stuffcmd(this, ftos(n));
-					stuffcmd(this, "\n");
+					stuffcmd(this, strcat("color ", ftos(n), "\n"));
 					this.team = this.steam;
 					return;
 				}
@@ -713,9 +687,7 @@ void Team_weapon_touch(entity this, entity toucher)
 	else
 		objerror(this, "Team_weapon_touch: unknown classname");
 
-	sprint(toucher, "You captured the ");
-	sprint(toucher, this.netname);
-	sprint(toucher, "\n");
+	sprint(toucher, strcat("You captured the ", this.netname, "\n"));
 // weapon touch sound
 	_sound(toucher, CH_TRIGGER_SINGLE, "weapons/pkup.wav", 1, ATTN_NORM);
 	stuffcmd(toucher, "bf\n");
@@ -894,15 +866,14 @@ void TeamDropFlag(entity flg)
 {
 	entity own = flg.owner;
 
-	bprint(own.netname);
 	if(teamplay == TEAM_CTF_ONEFLAG)
-		bprint(" ìïóô the flag!\n");
+		bprint(strcat(own.netname, " the flag!\n"));
 	else
 	{
 		if(flg.team == TEAM1)
-			bprint(" the ^1Red flag^7!\n"); // red
+			bprint(strcat(own.netname, " the ^1Red flag^7!\n")); // red
 		else
-			bprint(" the ^4Blue flag^7!\n"); // blue
+			bprint(strcat(own.netname, " the ^4Blue flag^7!\n")); // blue
 	}
 
 	setorigin(flg, own.origin - '0 0 24');
@@ -960,8 +931,7 @@ void TeamFlagTouch(entity this, entity toucher)
 	{
 		// in one flag mode, we always pick up the flag.  The touch of the
 		// flagbase entities does the scoring
-		bprint(toucher.netname);
-		bprint(" the flag!\n");
+		bprint(strcat(toucher.netname, " the flag!\n"));
 		if(CTF_FLAG_BONUS)
 			toucher.frags = toucher.frags + CTF_FLAG_BONUS;
 		centerprint(toucher, "YOU GOT THE FLAG\n\nTAKE IT TO ENEMY BASE\n");
@@ -1036,17 +1006,15 @@ void TeamFlagTouch(entity this, entity toucher)
 						// award extra points for capture assists
 						if(it.ctf_lastreturnedflag + CTF_RETURN_FLAG_ASSIST_TIMEOUT > time)
 						{
-							bprint(it.netname);
 							if(it.team == TEAM1)
-								bprint(" gets an assist for returning the Red flag!\n");
+								bprint(strcat(it.netname, " gets an assist for returning the Red flag!\n"));
 							else
-								bprint(" gets an assist for returning the Blue flag!\n");
+								bprint(strcat(it.netname, " gets an assist for returning the Blue flag!\n"));
 							it.frags = it.frags + CTF_RETURN_FLAG_ASSIST_BONUS;
 						}
 						if(it.ctf_lastfraggedcarrier + CTF_FRAG_CARRIER_ASSIST_TIMEOUT > time)
 						{
-							bprint(it.netname);
-							bprint(" gets an assist for fragging the flag carrier!\n");
+							bprint(strcat(it.netname, " gets an assist for fragging the flag carrier!\n"));
 							it.frags = it.frags + CTF_FRAG_CARRIER_ASSIST_BONUS;
 						}
 					}
@@ -1177,8 +1145,7 @@ void TeamFlagBaseTouch(entity this, entity toucher)
 					// award extra points for capture assists
 					if(it.ctf_lastfraggedcarrier + CTF_FRAG_CARRIER_ASSIST_TIMEOUT > time)
 					{
-						bprint(it.netname);
-						bprint(" gets an assist for fragging the flag carrier!\n");
+						bprint(strcat(it.netname, " gets an assist for fragging the flag carrier!\n"));
 						it.frags = it.frags + CTF_FRAG_CARRIER_ASSIST_BONUS;
 					}
 				}
@@ -1245,7 +1212,6 @@ void TeamFlagBaseTouch(entity this, entity toucher)
 		return;
 	}
 }
-
 
 void TeamFlagThink(entity this)
 {
@@ -1377,20 +1343,18 @@ void TeamFlagStatusReport(entity this)
 
 		if(flag1 != NULL && flag1.cnt == FLAG_CARRIED)
 		{
-			sprint(this, flag1.owner.netname);
-			sprint(this, " has your flag. ");
+			sprint(this, strcat(flag1.owner.netname, " has your flag. "));
 		}
 		else
 		{
-			sprint(this, "Your flag is ");
 			if(flag1 == NULL)
-				sprint(this, "missing!\n");
+				sprint(this, "Your flag is missing!\n");
 			else if(flag1.cnt == FLAG_AT_BASE)
-				sprint(this, "in your base.\n");
+				sprint(this, "Your flag is in your base.\n");
 			else if(flag1.cnt == FLAG_DROPPED)
-				sprint(this, "lying about.\n");
+				sprint(this, "Your flag is lying about.\n");
 			else
-				sprint(this, "corrupt.\n");
+				sprint(this, "Your flag is corrupt.\n");
 		}
 
 		if(flag2 != NULL && flag2.cnt == FLAG_CARRIED)
@@ -1399,21 +1363,19 @@ void TeamFlagStatusReport(entity this)
 				sprint(this, "You have the enemy flag.\n");
 			else
 			{
-				sprint(this, flag2.owner.netname);
-				sprint(this, " has the enemy flag.\n");
+				sprint(this, strcat(flag2.owner.netname, " has the enemy flag.\n"));
 			}
 		}
 		else
 		{
-			sprint(this, "The enemy flag is ");
 			if(flag2 == NULL)
-				sprint(this, "missing!\n");
+				sprint(this, "The enemy flag is missing!\n");
 			else if(flag2.cnt == FLAG_AT_BASE)
-				sprint(this, "in their base.\n");
+				sprint(this, "The enemy flag is in their base.\n");
 			else if(flag2.cnt == FLAG_DROPPED)
-				sprint(this, "lying about.\n");
+				sprint(this, "The enemy flag is lying about.\n");
 			else
-				sprint(this, "corrupt.\n");
+				sprint(this, "The enemy flag is corrupt.\n");
 		}
 	}
 
@@ -1432,27 +1394,23 @@ void TeamFlagStatusReport(entity this)
 				sprint(this, "You have the Red flag!\n");
 			else
 			{
-				sprint(this, flag1.owner.netname);
 				n = GetCTFTeam(flag1.owner.steam);
-				sprint(this, " of the ");
-				sprint(this, n);
-				sprint(this, " team has the Red flag.\n");
+				sprint(this, sprintf("%s of the %s team has the Red Flag.\n", flag1.owner.netname, n));
 			}
 		}
 		else
 		{
-			if(this.steam == flag1.team)
-				sprint(this, "Your flag is ");
-			else
-				sprint(this, "Red flag is ");
+			string redmessage_you = ((this.steam == flag1.team) ? "Your" : "Red");
+			string redmessage_msg;
 			if(flag1 == NULL)
-				sprint(this, "missing!\n");
+				redmessage_msg = "missing!";
 			if(flag1.cnt == FLAG_AT_BASE)
-				sprint(this, "at base.\n");
+				redmessage_msg = "at base.";
 			else if(flag1.cnt == FLAG_DROPPED)
-				sprint(this, "lying about.\n");
+				redmessage_msg = "lying about.";
 			else
-				sprint(this, " corrupt.\n");
+				redmessage_msg = "corrupt.";
+			sprint(this, strcat(redmessage_you, " flag is ", redmessage_msg, "\n"));
 		}
 
 		if(flag2 != NULL && flag2.cnt == FLAG_CARRIED)
@@ -1461,27 +1419,23 @@ void TeamFlagStatusReport(entity this)
 				sprint(this, "You have the Blue flag.\n");
 			else
 			{
-				sprint(this, flag2.owner.netname);
 				n = GetCTFTeam(flag2.owner.steam);
-				sprint(this, " of the ");
-				sprint(this, n);
-				sprint(this, " team has the Blue flag.\n");
+				sprint(this, sprintf("%s of the %s team has the Blue Flag.\n", flag2.owner.netname, n));
 			}
 		}
 		else
 		{
-			if(this.steam == flag1.team)
-				sprint(this, "Your flag is ");
-			else
-				sprint(this, "Blue flag is ");
+			string bluemessage_you = ((this.steam == flag2.team) ? "Your" : "Blue");
+			string bluemessage_msg;
 			if(flag2 == NULL)
-				sprint(this, "missing!\n");
+				bluemessage_msg = "missing!";
 			if(flag2.cnt == FLAG_AT_BASE)
-				sprint(this, "at base.\n");
+				bluemessage_msg = "at base.";
 			else if(flag2.cnt == FLAG_DROPPED)
-				sprint(this, "lying about.\n");
+				bluemessage_msg = "lying about.";
 			else
-				sprint(this, " corrupt.\n");
+				bluemessage_msg = "corrupt.";
+			sprint(this, strcat(bluemessage_you, " flag is ", bluemessage_msg, "\n"));
 		}
 	}
 }
@@ -1717,107 +1671,65 @@ void TeamCheckUpdate()
 		{
 			if(total1 > total2)
 			{
-				bprint(ts1);
-				bprint(" team is leading by ");
 				s = ftos(total1 - total2);
-				bprint(s);
-				bprint(" points!\n");
+				bprintf("%s team is leading by %s points!\n", ts1, s);
 			}
 			else if(total1 < total2)
 			{
-				bprint(ts2);
-				bprint(" team is leading by ");
 				s = ftos(total2 - total1);
-				bprint(s);
-				bprint(" points!\n");
+				bprintf("%s team is leading by %s points\n", ts2, s);
 			}
 			else
 			{
-				bprint(ts1);
-				bprint(" and ");
-				bprint(ts2);
-				bprint(" teams are tied with ");
 				s = ftos(total1);
-				bprint(s);
-				bprint(" points!\n");
+				bprintf("%s and %s teams are tied with %s points!\n", ts1, ts2, s);
 			}
 		}
 		else if(teamplay == TEAM_CTF_ALT)
 		{
 			if(total1 > total2 && total1 > total3)
 			{
-				bprint(ts1);
-				bprint(" team is leading by ");
 				if(total2 > total3)
 					s = ftos(total1 - total2);
 				else
 					s = ftos(total1 - total3);
-				bprint(s);
-				bprint(" points!\n");
+				bprintf("%s team is leading by %s points!\n", ts1, s);
 			}
 			else if(total2 > total1 && total2 > total3)
 			{
-				bprint(ts2);
-				bprint(" team is leading by ");
 				if(total1 > total3)
 					s = ftos(total2 - total1);
 				else
 					s = ftos(total2 - total3);
-				bprint(s);
-				bprint(" points!\n");
+				bprintf("%s team is leading by %s points!\n", ts2, s);
 			}
 			else if(total3 > total1 && total3 > total2)
 			{
-				bprint(ts3);
-				bprint(" team is leading by ");
 				if(total1 > total2)
 					s = ftos(total3 - total1);
 				else
 					s = ftos(total3 - total2);
-				bprint(s);
-				bprint(" points!\n");
+				bprintf("%s team is leading by %s points!\n", ts3, s);
 			}
 			else if(total1 == total2)
 			{
-				bprint(ts1);
-				bprint(" and ");
-				bprint(ts2);
-				bprint(" teams are tied with ");
 				s = ftos(total1);
-				bprint(s);
-				bprint(" points!\n");
+				bprintf("%s and %s teams are tied with %s points!\n", ts1, ts2, s);
 			}
 			else if(total3 == total2)
 			{
-				bprint(ts2);
-				bprint(" and ");
-				bprint(ts3);
-				bprint(" teams are tied with ");
 				s = ftos(total3);
-				bprint(s);
-				bprint(" points!\n");
+				bprintf("%s and %s teams are tied with %s points!\n", ts2, ts3, s);
 			}
 			else if(total3 == total1)
 			{
-				bprint(ts1);
-				bprint(" and ");
-				bprint(ts3);
-				bprint(" teams are tied with ");
 				s = ftos(total1);
-				bprint(s);
-				bprint(" points!\n");
+				bprintf("%s and %s teams are tied with %s points!\n", ts1, ts3, s);
 			}
 			else
 			{
-				bprint(ts1);
-				bprint(", ");
-				bprint(ts2);
-				bprint(" and ");
-				bprint(ts3);
-				bprint(" teams are tied with ");
 				s = ftos(total1);
-				bprint(s);
-				bprint(" points!\n");
+				bprintf("%s, %s and %s teams are tied with %s points!\n", ts1, ts2, ts3, s);
 			}
 		}
 	}

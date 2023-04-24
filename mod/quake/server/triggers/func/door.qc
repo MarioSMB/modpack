@@ -27,9 +27,6 @@ THINK FUNCTIONS
 =============================================================================
 */
 
-void door_go_down(entity this);
-void door_go_up(entity this);
-
 void door_blocked(entity this, entity blocker)
 {
 	T_Damage(blocker, this, this, this.dmg);
