@@ -1,6 +1,5 @@
 void player_hurt(entity this)
 {
-	// print("hurt\n");
 	// this.frame = 5;
 	sound(this, CHAN_AUTO, SND_PLAYER_HURT, 1, ATTEN_NORM);
 }

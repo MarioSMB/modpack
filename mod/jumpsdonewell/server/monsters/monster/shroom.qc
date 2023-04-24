@@ -45,7 +45,7 @@ entity check_for_player(entity this)
 		float dot = v_forward * normalize(it.origin - this.origin);
 		if(dot < 0.5)
 			continue;
-		traceline(this.origin + '0 0 20', it.origin, MOVE_NOMONSTERS, this);
+		traceline(this.origin + this.view_ofs, it.origin, MOVE_NOMONSTERS, this);
 		if(trace_fraction < 1)
 			continue;
 		return it;
@@ -200,6 +200,7 @@ spawnfunc(monster_shroom)
 	this.takedamage = DAMAGE_YES;
 	this.hurt = shroom_hurt;
 	this.die = shroom_die;
+	this.view_ofs = '0 0 20';
 	this.yaw_speed = 10;
 	this.nextthink = time + random() * 0.5;
 	setthink(this, shroom_think);

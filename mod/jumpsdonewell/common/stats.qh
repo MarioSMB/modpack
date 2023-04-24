@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef SVQC
+#include "../server/world.qh"
+#endif
+
 // Full list of all stat constants, included in a single location for easy reference
 // 255 is the current limit (MAX_CL_STATS - 1), engine will need to be modified if you wish to add more stats
 

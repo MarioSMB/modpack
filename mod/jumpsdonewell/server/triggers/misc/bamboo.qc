@@ -1,6 +1,5 @@
 #ifdef SVQC
 
-spawnfunc(misc_bamboo);
 void bamboo_die_proper(entity this)
 {
 	setthink(this, spawnfunc_misc_bamboo);

@@ -1,8 +1,7 @@
 #include "client.qh"
 
+#include "chat.qh"
 #include "combat.qh"
-
-.entity sword;
 
 void SetChangeParms(entity this)
 {
@@ -14,7 +13,7 @@ void SetNewParms()
 
 void GotoNextMap()
 {
-	changelevel("map2");
+	changelevel(mapname);
 }
 
 
@@ -78,9 +77,6 @@ PutClientInServer
 called each time a player is spawned
 ============
 */
-void player_hurt(entity this);
-void player_die(entity this);
-void player_touch(entity this, entity toucher);
 void PutClientInServer(entity this)
 {
 	this.classname = STR_PLAYER;
@@ -163,7 +159,6 @@ Called every frame before physics are run
 */
 
 .string netname_previous;
-void revive(entity this);
 void PlayerPreThink(entity this)
 {
 	// Check for nameless players
@@ -296,7 +291,6 @@ void ClientDisconnect(entity this)
 	ONREMOVE(this);
 }
 
-int Say(entity source, int teamsay, entity privatesay, string msgin, bool floodcontrol);
 void SV_ParseClientCommand(entity this, string command)
 {
 	// If invalid UTF-8, don't even parse it

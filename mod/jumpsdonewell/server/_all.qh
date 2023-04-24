@@ -31,5 +31,3 @@ const string STR_PLAYER = "player";
 	} MACRO_END
 
 #define FOREACH_CLIENT(cond, body) FOREACH_CLIENTSLOT(IS_CLIENT(it) && (cond), body)
-
-#include "world.qh"
