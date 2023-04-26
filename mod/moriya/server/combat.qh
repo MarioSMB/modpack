@@ -1,0 +1,11 @@
+#pragma once
+
+//float autocvar_g_friendlyfire;
+//bool autocvar_g_friendlyfire_virtual;
+
+.void(entity targ, float amount, vector dir, entity dealer) hurt;
+.void(entity targ, float amount, vector dir, entity dealer) die;
+
+void damage(entity targ, float amount, vector dir, entity dealer);
+
+void radius_damage(vector origin, float radius, float mindmg, float maxdmg, entity dealer);

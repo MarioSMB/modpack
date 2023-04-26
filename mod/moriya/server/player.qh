@@ -1,0 +1,18 @@
+#pragma once
+
+//int combo_max;
+//float combo_timer_max;
+
+.float waterjumptime;
+
+.float jumpcombo;
+
+entity edit_reset_timer;
+
+void increase_combo(entity this);
+
+void increase_combo_time(entity this, float amount);
+
+void reset_combo(entity this);
+
+void reset_combo_ents();

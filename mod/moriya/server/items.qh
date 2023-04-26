@@ -1,0 +1,5 @@
+#pragma once
+
+spawnfunc(item_coin);
+
+spawnfunc(item_ring);

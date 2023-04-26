@@ -1,0 +1,9 @@
+#pragma once
+
+void cl_editor_update_selection();
+
+bool cl_editor_input_event(float evtype, float scanx, float chary, float devid);
+
+bool cl_editor_command(string cmd);
+
+void cl_editor_draw();

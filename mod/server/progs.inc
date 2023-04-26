@@ -25,7 +25,7 @@
 	#include "mutators/all.inc"
 #endif
 
-#define JUMPSDONEWELL
-#ifdef JUMPSDONEWELL
-	#include "../jumpsdonewell/server/progs.inc"
+#define MORIYA
+#ifdef MORIYA
+	#include "../moriya/server/progs.inc"
 #endif

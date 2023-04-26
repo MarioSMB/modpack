@@ -2,7 +2,7 @@
 	#include "main.qc"
 #endif
 
-#define JUMPSDONEWELL
-#ifdef JUMPSDONEWELL
-	#include "../jumpsdonewell/menu/progs.inc"
+#define MORIYA
+#ifdef MORIYA
+	#include "../moriya/menu/progs.inc"
 #endif

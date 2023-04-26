@@ -11,7 +11,7 @@
 	#include "polytrails.qc"
 #endif
 
-#define JUMPSDONEWELL
-#ifdef JUMPSDONEWELL
-	#include "../jumpsdonewell/client/progs.inc"
+#define MORIYA
+#ifdef MORIYA
+	#include "../moriya/client/progs.inc"
 #endif

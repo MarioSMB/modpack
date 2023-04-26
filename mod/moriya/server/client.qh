@@ -1,0 +1,14 @@
+#pragma once
+
+.int playerid;
+
+spawnfunc(info_player_deathmatch);
+
+int nJoinAllowed(entity this, entity ignore);
+
+void GotoNextMap();
+
+.float attack_finished;
+
+IntrusiveList g_spawnpoints;
+STATIC_INIT(g_spawnpoints) { g_spawnpoints = IL_NEW(); }

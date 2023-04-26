@@ -1,0 +1,9 @@
+#pragma once
+
+bool edit_mode;
+
+bool sv_editor_command(entity this, string cmd, float argc);
+
+void editor_reset();
+
+void editor_play();

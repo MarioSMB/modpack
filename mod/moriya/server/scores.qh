@@ -1,0 +1,8 @@
+#pragma once
+
+float moriya_scores[8]; 
+float mountain_scores[8];
+
+void read_scores();
+
+void write_scores(float map, float ring, float score);

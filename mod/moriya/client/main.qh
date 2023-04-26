@@ -1,0 +1,9 @@
+#pragma once
+
+bool alt_held;
+bool shift_held;
+bool ctrl_held;
+
+float the_score;
+
+bool cheats_used;
